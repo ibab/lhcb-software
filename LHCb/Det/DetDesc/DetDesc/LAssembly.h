@@ -1,4 +1,4 @@
-// $Id: LAssembly.h,v 1.12 2006-09-28 11:19:39 cattanem Exp $
+// $Id: LAssembly.h,v 1.13 2006-12-14 13:03:38 ranjard Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -212,7 +212,7 @@ public:
   double zMax() const   { return m_zMax;  }
   
   void   computeCover ();
-protected:
+  //protected:
   
   /** default constructor
    */

@@ -1,4 +1,4 @@
-// $Id: DetDesc_load.cpp,v 1.1 2005-12-07 17:30:33 cattanem Exp $
+// $Id: DetDesc_load.cpp,v 1.2 2006-12-14 13:03:41 ranjard Exp $
 // Include files
 #include "GaudiKernel/ObjectFactory.h"
 #include "GaudiKernel/DeclareFactoryEntries.h"
@@ -29,51 +29,16 @@
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
  *  @date 06 May 2002 
  */
-#define IMPLEMENT_OBJECT(x) \
- static const DataObjectFactory<x>         s_##x##Factory ;\
- const              IFactory& x##Factory = s_##x##Factory ;
-// ============================================================================
 
 // ============================================================================
-IMPLEMENT_OBJECT( DetectorElement   ) ;
-IMPLEMENT_OBJECT( Isotope           ) ;
-IMPLEMENT_OBJECT( Mixture           ) ;
-IMPLEMENT_OBJECT( Element           ) ;
-IMPLEMENT_OBJECT( LVolume           ) ;
-IMPLEMENT_OBJECT( LAssembly         ) ;
-IMPLEMENT_OBJECT( Surface           ) ;
-IMPLEMENT_OBJECT( TabulatedProperty ) ;
-// ============================================================================
-
-
-DECLARE_FACTORY_ENTRIES(DetDesc) {
-  
-  // data objects 
-  DECLARE_OBJECT(    LVolume                 ) ;
-  DECLARE_OBJECT(    LAssembly               ) ;
-  DECLARE_OBJECT(    DetectorElement         ) ;
-  DECLARE_OBJECT(    Isotope                 ) ;
-  DECLARE_OBJECT(    Element                 ) ;
-  DECLARE_OBJECT(    Mixture                 ) ;
-  DECLARE_OBJECT(    TabulatedProperty       ) ;
-  DECLARE_OBJECT(    Surface                 ) ;
-  
-  // solids 
-  DECLARE_SOLID(     SolidBox                ) ;
-  DECLARE_SOLID(     SolidTubs               ) ;
-  DECLARE_SOLID(     SolidCons               ) ;
-  DECLARE_SOLID(     SolidSphere             ) ;
-  DECLARE_SOLID(     SolidTrd                ) ;
-  DECLARE_SOLID(     SolidTrap               ) ;
-  DECLARE_SOLID(     SolidPolycone           ) ;
-  DECLARE_SOLID(     SolidChild              ) ;
-  DECLARE_SOLID(     SolidIntersection       ) ;
-  DECLARE_SOLID(     SolidSubtraction        ) ;
-  DECLARE_SOLID(     SolidUnion              ) ;
-  DECLARE_SOLID(     SolidPolycone           ) ;
-  
-};
-// ============================================================================
+DECLARE_DATAOBJECT_FACTORY( DetectorElement    ) ;
+DECLARE_DATAOBJECT_FACTORY( Isotope           ) ;
+DECLARE_DATAOBJECT_FACTORY( Mixture           ) ;
+DECLARE_DATAOBJECT_FACTORY( Element           ) ;
+DECLARE_DATAOBJECT_FACTORY( LVolume           ) ;
+DECLARE_DATAOBJECT_FACTORY( LAssembly         ) ;
+DECLARE_DATAOBJECT_FACTORY( Surface           ) ;
+DECLARE_DATAOBJECT_FACTORY( TabulatedProperty ) ;
 
 // ============================================================================
 // The END 

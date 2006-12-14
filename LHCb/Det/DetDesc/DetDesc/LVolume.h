@@ -1,4 +1,4 @@
-// $Id: LVolume.h,v 1.23 2006-02-01 19:39:09 marcocle Exp $ 
+// $Id: LVolume.h,v 1.24 2006-12-14 13:03:39 ranjard Exp $ 
 #ifndef     DETDESC_VOLUMES_LVOLUME_H
 #define     DETDESC_VOLUMES_LVOLUME_H
 
@@ -214,7 +214,7 @@ public:
     return LogVolBase::reset() ;
   };
   
-protected:
+  //protected:
   
   /** default constructor
    *  @param Name name of logical volume 
