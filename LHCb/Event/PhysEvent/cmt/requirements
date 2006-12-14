@@ -1,17 +1,13 @@
-# $Id: requirements,v 1.71 2006-08-30 07:06:06 cattanem Exp $
+# $Id: requirements,v 1.72 2006-12-14 14:38:42 ranjard Exp $
 # Created      : 20/06/2001
 # Maintainer   : P. Koppenburg
 #
 package           PhysEvent
-version           v10r1
+version           v11r0
 
 # Structure, i.e. directories to process. 
 #============================================================================
 branches          cmt doc src xml Event
-
-# Include directories
-#============================================================================
-include_dirs $(PHYSEVENTROOT)
 
 # Used packages. 
 #============================================================================
@@ -24,6 +20,8 @@ use GaudiKernel     v*
 # Produce Header-Files & dictionary from XML description
 #============================================================================
 document obj2doth PhysEventObj2Doth ../xml/*.xml
+apply_pattern install_more_includes more=Event
+
 document obj2dict PhysEventObj2Dict ../xml/*.xml
 
 # Build libraries (including dictionary)
