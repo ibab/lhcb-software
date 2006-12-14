@@ -1,11 +1,13 @@
-! $Id: release.notes,v 1.13 2006-12-14 12:51:16 ranjard Exp $
+! $Id: release.notes,v 1.14 2006-12-14 12:53:15 ranjard Exp $
 ! =============================================================================
 ! Package     : CaloDetXmlCnv
 ! Responsible : Vanya Belyaev Ivan.Belyaev@itep.ru
 ! =============================================================================
 
+!===================== CaloDetXmlCnv v3r0 2006-12-14 ========================
 ! 2006-12-06 - Florence RANJARD
  - remove include_dirs: it is a pure component
+ - fixes for new plugins (P.Mato)
 
 !===================== CaloDetXmlCnv v2r3p2 2005-12-19 =====================
 ! 2005-12-16 - Olivier Deschamps

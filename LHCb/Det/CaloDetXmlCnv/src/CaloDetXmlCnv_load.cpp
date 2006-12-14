@@ -1,9 +1,13 @@
-// $Id: CaloDetXmlCnv_load.cpp,v 1.1.1.1 2002-03-28 13:32:34 ibelyaev Exp $ 
+// $Id: CaloDetXmlCnv_load.cpp,v 1.2 2006-12-14 12:51:16 ranjard Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/03/28 13:32:34  ibelyaev
+// Det/CaloDetXmlCnv: new package
+//
 // ============================================================================
+#if 0
 #include "GaudiKernel/ICnvFactory.h"
 #include "GaudiKernel/ISvcFactory.h"
 #include "GaudiKernel/IAlgFactory.h"
@@ -30,7 +34,7 @@ void CaloDetXmlCnv_load()
 };
 
 extern "C" void CaloDetXmlCnv_loadRef() {  CaloDetXmlCnv_load(); }
-
+#endif
 // ============================================================================
 // The End 
 // ============================================================================
