@@ -4,7 +4,7 @@
 #============================================================================
 
 package Kernel/LHCbMath
-version v1r3
+version v2r0
 
 #============================================================================
 # Structure, i.e. directories to process. 
@@ -13,7 +13,7 @@ version v1r3
 branches cmt doc LHCbMath src
 
 include_path none
-include_dirs $(LHCBMATHROOT) $(ROOT_home)/include
+include_dirs $(ROOT_home)/include
 
 #============================================================================
 # Used packages
@@ -21,6 +21,8 @@ include_dirs $(LHCBMATHROOT) $(ROOT_home)/include
 use GaudiKernel     v*
 use ROOT            v*      LCG_Interfaces -no_auto_imports
 use GSL             v*      LCG_Interfaces
+
+apply_pattern install_more_includes more=LHCbMath
 
 macro LHCbMath_linkopts  " -L$(ROOT_home)/lib  -lMathCore -lSmatrix " \
          WIN32  " /LIBPATH:$(ROOT_home)/lib libMathCore.lib libSmatrix.lib "

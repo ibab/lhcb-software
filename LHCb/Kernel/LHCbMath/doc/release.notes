@@ -6,6 +6,10 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+!========================= LHCbMath v2r0 2006-12-14 ===========================
+! 2006-12-06 - Florence RANJARD
+ - apply_pattern install_more_includes
+
 !========================== LHCbMath v1r3 2006-11-02 ==========================
 ! 2006-11-02 - Chris Jones
  - Fix windows compilation error with ambiguity in pow with Gaudi::Math::cbrt
