@@ -1,4 +1,4 @@
-//$Id: CondDBCnvSvc.h,v 1.6 2006-07-14 09:27:33 marcocle Exp $
+//$Id: CondDBCnvSvc.h,v 1.7 2006-12-14 12:56:16 ranjard Exp $
 #ifndef DETCOND_CONDDBCNVSVC_H
 #define DETCOND_CONDDBCNVSVC_H 1
 
@@ -53,22 +53,6 @@ public:
 				     const std::string* par, 
 				     const unsigned long* ip,
 				     IOpaqueAddress*& refpAddress );
-
-  class CnvTest : public std::unary_function<WorkerEntry, bool>   {
-  protected:
-    const CLID m_test;
-  public:
-    CnvTest(const CLID& test) : m_test(test)    {
-    }
-    virtual ~CnvTest()    {
-    }
-    bool operator()( const WorkerEntry& testee )  {
-        return (m_test == testee.clID() || testee.clID() == 0) ? true : false;
-    }
-  };
-
-  /// Add converter object to conversion service.
-  virtual StatusCode addConverter(const CLID& clid);
 
 public:
 

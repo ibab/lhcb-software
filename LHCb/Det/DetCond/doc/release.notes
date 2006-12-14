@@ -1,9 +1,14 @@
-# $Id: release.notes,v 1.83 2006-09-05 06:34:04 marcocle Exp $
+# $Id: release.notes,v 1.84 2006-12-14 12:56:15 ranjard Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Det/DetCond
 ! Responsible : Marco Clemencic
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
+
+!================ Det/DetCond v10r0 2006-12-14 =============================
+! 2006-12-06 - Florence RANJARD
+ - apply_pattern install_more_includes
+ - fixes for new plugins (P.Mato)
 
 !================= Det/DetCond v9r1 2006-09-04 ==============================
 ! 2006-09-04 - Marco Clemencic

@@ -1,4 +1,4 @@
-//$Id: CondDBCnvSvc.cpp,v 1.10 2006-07-14 09:27:33 marcocle Exp $
+//$Id: CondDBCnvSvc.cpp,v 1.11 2006-12-14 12:56:16 ranjard Exp $
 #include <string>
 
 #include "CondDBCnvSvc.h"
@@ -9,7 +9,6 @@
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SvcFactory.h"
-#include "GaudiKernel/ICnvFactory.h"
 
 /// Instantiation of a static factory to create instances of this service
 DECLARE_SERVICE_FACTORY(CondDBCnvSvc)
@@ -110,51 +109,17 @@ StatusCode CondDBCnvSvc::createAddress( long svc_type,
 }
 
 //----------------------------------------------------------------------------
-extern const ICnvFactory &RelyConverterFactory;
-
-StatusCode CondDBCnvSvc::addConverter(const CLID& clid){
-  MsgStream log(msgSvc(), name() );
-  StatusCode status = ConversionSvc::addConverter(clid);
-  if (status.isSuccess()){
-    return status;
-  }else{ // not found in the std way, try the delegation one
-    long typ = repSvcType();
-    log << MSG::DEBUG << "converter not found, instantiating RelyConverter" << endmsg;
-    IConverter* pConverter = RelyConverterFactory.instantiate(serviceLocator());
-    if ( 0 != pConverter )    {
-      StatusCode status = configureConverter( typ, 0, pConverter );
-      if ( status.isSuccess() )   {
-        status = initializeConverter( typ, 0, pConverter );
-        if ( status.isSuccess() )   {
-          status = activateConverter( typ, 0, pConverter );
-          if ( status.isSuccess() )   {
-            return ConversionSvc::addConverter(pConverter);
-          }
-        }
-      }
-      pConverter->release();
-    }
-  }
-  return NO_CONVERTER;
-}
 
 /// Retrieve converter from list
 IConverter* CondDBCnvSvc::converter(const CLID& clid) {
   IConverter* cnv = 0;
-  Workers::iterator i = std::find_if(m_workers->begin(),m_workers->end(),CnvTest(clid));
-  if ( i != m_workers->end() )      {
-    cnv = (*i).converter();
+  cnv = ConversionSvc::converter(clid);
+  if ( cnv ) {
+    return cnv;
   }
-  if ( 0 == cnv )     {
-    StatusCode status = addConverter(clid);
-    if ( status.isSuccess() )   {
-      i = std::find_if(m_workers->begin(),m_workers->end(),CnvTest(clid));
-      if ( i != m_workers->end() )      {
-        cnv = (*i).converter();
-      }
-    }
-  }
-  return cnv;
+  else {
+    return ConversionSvc::converter(CLID_Any);
+  }  
 }
 
 //----------------------------------------------------------------------------

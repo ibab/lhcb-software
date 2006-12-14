@@ -1,4 +1,4 @@
-// $Id: RelyConverter.cpp,v 1.19 2006-09-04 11:38:10 marcocle Exp $
+// $Id: RelyConverter.cpp,v 1.20 2006-12-14 12:56:16 ranjard Exp $
 // Include files 
 #include "RelyConverter.h"
 
@@ -34,16 +34,13 @@
 // Instantiation of a static factory class used by clients to create
 // instances of this service
 // -----------------------------------------------------------------------
-static CnvFactory<RelyConverter> s_factoryRelyCnv;
-const ICnvFactory& RelyConverterFactory = s_factoryRelyCnv;
-
-const CLID RelyConverter::s_CLID_any = 0;
+DECLARE_CONVERTER_FACTORY(RelyConverter)
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
 RelyConverter::RelyConverter(ISvcLocator* svc):
-  CondDBGenericCnv(svc,0)
+  CondDBGenericCnv(svc,RelyConverter::classID())
 {}
 //=============================================================================
 // Destructor

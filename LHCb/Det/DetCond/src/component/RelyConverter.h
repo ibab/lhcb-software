@@ -1,4 +1,4 @@
-// $Id: RelyConverter.h,v 1.4 2006-08-31 13:53:04 marcocle Exp $
+// $Id: RelyConverter.h,v 1.5 2006-12-14 12:56:16 ranjard Exp $
 #ifndef COMPONENT_RELYCONVERTER_H 
 #define COMPONENT_RELYCONVERTER_H 1
 
@@ -99,7 +99,7 @@ public:
    * Accessor to the type of elements that this converter converts.
    * @return the classID for this type
    */  
-  static const CLID& classID () { return s_CLID_any; }
+  static const CLID& classID () { return CLID_Any; }
 
 protected:
   /// Standard constructor
@@ -107,9 +107,6 @@ protected:
   virtual ~RelyConverter( ); ///< Destructor
 
 private:
-
-  /// needed to implement classID()
-  static const CLID s_CLID_any;
 
   /**
    * Do the needed steps to perform a creation by delegation.
