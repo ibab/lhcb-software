@@ -3,12 +3,11 @@
 # Maintainer : Jose Hernando
 #============================================================================
 package           HltEvent
-version           v7r1
+version           v8r0
 
 # Structure, i.e. directories to process. 
 #============================================================================
 branches          cmt doc Event xml
-include_dirs      $(HLTEVENTROOT)
 
 # Used packages
 #============================================================================
@@ -19,11 +18,11 @@ use   GaudiKernel     v*
 
 #============================================================================
 #---- Produce Header-Files from XML description
-private
 document obj2doth HltEventObj2Doth ../xml/*.xml
+apply_pattern install_more_includes more=Event 
+
 document obj2dict HltEventObj2Dict ../xml/*.xml
 
-public
 library          HltEventDict     ../$(tag)/dict/HltEvent/*.cpp
 
 #============================================================================
