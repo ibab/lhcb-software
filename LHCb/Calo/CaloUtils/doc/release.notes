@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.73 2006-11-03 12:50:48 cattanem Exp $
+! $Id: release.notes,v 1.74 2006-12-14 10:38:54 ranjard Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
+
+! 2006-12-06 - Florence RANJARD
+ - apply_pattern install_more_includes
 
 !========================== CaloUtils v6r6 2006-11-03 =========================
 ! 2006-11-03 - Marco Cattaneo

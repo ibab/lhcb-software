@@ -1,19 +1,16 @@
-# $Id: requirements,v 1.39 2006-10-31 12:52:45 ibelyaev Exp $
+# $Id: requirements,v 1.40 2006-12-14 10:38:54 ranjard Exp $
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.39 $
+# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.40 $
 # =============================================================================
 # Created    : 02/11/2001
 # Author     : Vanya BELYAEV belyaev@lapp.in2p3.fr 
 # Maintainer : Olivier Deschamps odescham@in2p3.fr
 # =============================================================================
 package             CaloUtils
-version             v6r6
+version             v7r0
 
 # ================= structure =================================================
 branches            cmt doc src CaloUtils
-
-# ================= own includes ==============================================
-include_dirs        $(CALOUTILSROOT)
 
 # ================= dependencies ==============================================
 use CaloInterfaces   v*      Calo 
@@ -24,6 +21,9 @@ use PhysEvent        v*      Event
 use TrackEvent       v*      Event 
 use LHCbMath         v*      Kernel
 
+# ================= own includes ==============================================
+apply_pattern install_more_includes more=CaloUtils
+
 # ================= constituents: linker library ==============================
 library             CaloUtils    *.cpp
 
@@ -32,6 +32,9 @@ apply_pattern       linker_library library=CaloUtils
 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.39  2006/10/31 12:52:45  ibelyaev
+#  increment the minimal possible cluster size/spread
+#
 # =============================================================================
 # The END 
 # =============================================================================
