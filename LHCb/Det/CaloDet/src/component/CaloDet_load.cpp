@@ -1,16 +1,14 @@
-// $Id: CaloDet_load.cpp,v 1.6 2005-05-24 08:25:21 cattanem Exp $ 
+// $Id: CaloDet_load.cpp,v 1.7 2006-12-14 10:48:18 ranjard Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // includes 
-#include "GaudiKernel/ICnvFactory.h"
-#include "GaudiKernel/ISvcFactory.h"
-#include "GaudiKernel/IAlgFactory.h"
 // 
 #include "GaudiKernel/ObjectFactory.h"
 #include "GaudiKernel/ObjectVector.h"
 #include "GaudiKernel/ObjectList.h"
 
+#if 0
 // ============================================================================
 /** @file  CaloDet_load.cpp
  *
@@ -46,7 +44,7 @@ void CaloDet_load()
 
 
 extern "C" void CaloDet_loadRef()     {  CaloDet_load(); }
-
+#endif
 // ============================================================================
 // The End 
 // ============================================================================

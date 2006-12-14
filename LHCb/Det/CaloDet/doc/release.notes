@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.64 2006-06-28 12:56:45 cattanem Exp $ 
+! $Id: release.notes,v 1.65 2006-12-14 10:48:18 ranjard Exp $ 
 ! =============================================================================
 Package         : CaloDet   
 Package manager : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
+
+!======================== CaloDet v8r0 2006-12-14 ============================
+! 2006-12-06 - Florence RANJARD
+ - apply_pattern install_more_includes
+ - fixes for new Plugins
 
 !========================= CaloDet v7r4 2006-06-27 ============================
 ! 2006-06-27 - Olivier Deschamps

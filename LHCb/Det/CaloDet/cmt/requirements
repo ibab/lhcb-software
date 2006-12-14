@@ -1,13 +1,10 @@
-# $Id: requirements,v 1.53 2006-06-27 16:58:42 odescham Exp $ 
+# $Id: requirements,v 1.54 2006-12-14 10:48:18 ranjard Exp $ 
 # =============================================================================
 package  CaloDet 
-version  v7r4
+version  v8r0
 
 # =============== structure ===================================================
 branches         src cmt doc options CaloDet 
-
-# =============== own includes ================================================
-include_dirs      $(CALODETROOT)
 
 # =============== used packages ===============================================
 use GaudiAlg     v*
@@ -17,6 +14,9 @@ use DetDesc      v*     Det
 
 # =============== own options =================================================
 set CALODETOPTS  ${CALODETROOT}/options
+
+# =============== own includes ================================================
+apply_pattern install_more_includes more=CaloDet
 
 # =============== link library (base classes) =================================
 library          CaloDetLib        Lib/*.cpp 
