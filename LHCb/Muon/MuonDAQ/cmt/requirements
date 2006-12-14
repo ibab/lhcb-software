@@ -1,10 +1,8 @@
 package MuonDAQ
-version v2r3
+version v3r0
 
 # ================ structure ===========================================
 branches src MuonDAQ cmt doc
-
-include_dirs      $(MUONDAQROOT)
 
 # ================ used packages ========================================= 
 use MuonKernel  v*    Muon
@@ -13,6 +11,8 @@ use DigiEvent   v*    Event
 use DAQEvent    v*    Event
 use RecEvent    v*    Event
 use GaudiAlg    v*
+
+apply_pattern install_more_includes more=MuonDAQ
 
 # build a component library
 library MuonDAQ  *.cpp
