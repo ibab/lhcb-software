@@ -17,17 +17,30 @@ namespace LHCb  {
   class AMSDataHandler : public NetworkDataHandler  {
   public:
     /// amsu Callback on receiving ams message
-    static int s_receiveData(const amsuc_info* info, void* param)   {
-      return ((AMSDataHandler*)param)->i_receiveData(info);
+    static int s_receive_event(const amsuc_info* info, void* param)   {
+      AMSDataHandler* h = (AMSDataHandler*)param;
+      if ( h->check(info).isSuccess() )  {
+        if ( !h->handleEventData(info->source,info->length).isSuccess() )  {
+        }
+      }
+      return AMS_SUCCESS;
+    }
+    static int s_receive_request(const amsuc_info* info, void* param)   {
+      AMSDataHandler* h = (AMSDataHandler*)param;
+      if ( h->check(info).isSuccess() )  {
+        if ( !h->handleEventRequest(0,info->source,info->length).isSuccess() ) {
+        }
+      }
+      return AMS_SUCCESS;
     }
     /// Local callback when receiving data;
-    int i_receiveData(const amsuc_info* info)  {
+    StatusCode check(const amsuc_info* info)  {
       if ( info->status != AMS_SUCCESS )  {
-        error() << "Failed to spy on message. status:" << info->status << endmsg;
-        return AMS_SUCCESS;
+        MsgStream log(msgSvc(),name());
+        log << MSG::ERROR << "Failed to spy on message. status:" << info->status << endmsg;
+        return StatusCode::FAILURE;
       }
-      StatusCode sc = (this->*m_net_handler)(info->length);
-      return sc.isSuccess() ? AMS_SUCCESS : AMS_ERROR;
+      return StatusCode::SUCCESS;
     }
     /// amsu Callback on task dead
     static int s_taskDead(const amsuc_info* i, void* p)  {
@@ -39,9 +52,14 @@ namespace LHCb  {
     virtual ~AMSDataHandler()   {}
     /// Subscribe to network requests
     virtual StatusCode subscribeNetwork()  {
-      int sc = ::amsuc_subscribe(WT_FACILITY_DAQ_EVENT,s_receiveData,s_taskDead,this);
+      int sc = AMS_SUCCESS;
+      if ( isNetEventProducer() ) 
+        sc = ::amsuc_subscribe(WT_FACILITY_DAQ_EVENT,s_receive_request,s_taskDead,this);
+      else
+        sc = ::amsuc_subscribe(WT_FACILITY_DAQ_EVENT,s_receive_event,s_taskDead,this);
       if ( AMS_SUCCESS != sc )  {
-        error() << "amsuc_subscribe failed status:" << sc << endmsg;
+        MsgStream log(msgSvc(),name());
+        log << MSG::ERROR << "amsuc_subscribe failed status:" << sc << endmsg;
         return StatusCode::FAILURE;
       }
       return StatusCode::SUCCESS;
@@ -51,23 +69,27 @@ namespace LHCb  {
       ::amsuc_remove(WT_FACILITY_DAQ_EVENT);
       return StatusCode::SUCCESS;
     }
+    /// Networking layer overload: Read request for event data from network
+    virtual StatusCode readEventRequest(void* data, size_t* len)
+    {  return readData(data,len);                                          }
     /// Send data to target destination
-    virtual StatusCode sendData(const std::string& tar, const void* data, size_t len)  {
-      int sc = amsc_send_message(data,len,tar.c_str(),WT_FACILITY_DAQ_EVENT,0);
+    virtual StatusCode sendData(const Recipient& tar, const void* data, size_t len)  {
+      int sc = amsc_send_message(data,len,tar.name.c_str(),WT_FACILITY_DAQ_EVENT,0);
       if ( AMS_SUCCESS != sc )   {
-        error() << "Failed to send MDF to " << tar << ". status:" << sc << endmsg;
+        MsgStream log(msgSvc(),name());
+        log << MSG::ERROR << "Failed to send data to " << tar.name << ". status:" << sc << endmsg;
         return StatusCode::FAILURE;
       }
       return StatusCode::SUCCESS;
     }
     /// Read data from network
-    virtual StatusCode readData(void* data, size_t* len, char* source)  {
-      char         buff[128];
+    virtual StatusCode readData(void* data, size_t* len)  {
+      char         src[128];
       unsigned int facility;
-      char* src = source ? source : buff;
       int sc = ::amsc_read_message(data,len,src,&facility,0);
       if ( AMS_SUCCESS != sc )   {
-        error() << "Failed to read message. status:" << sc << endmsg;
+        MsgStream log(msgSvc(),name());
+        log << MSG::ERROR << "Failed to read message. status:" << sc << endmsg;
         return StatusCode::FAILURE;
       }
       return StatusCode::SUCCESS;

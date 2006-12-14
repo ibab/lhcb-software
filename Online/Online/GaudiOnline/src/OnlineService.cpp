@@ -1,11 +1,11 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/OnlineService.cpp,v 1.3 2006-11-27 17:36:17 frankb Exp $
-//	====================================================================
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/OnlineService.cpp,v 1.4 2006-12-14 18:59:21 frankb Exp $
+//  ====================================================================
 //  MEPManager.cpp
-//	--------------------------------------------------------------------
+//  --------------------------------------------------------------------
 //
-//	Author    : Markus Frank
+//  Author    : Markus Frank
 //
-//	====================================================================
+//  ====================================================================
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/IMonitorSvc.h"
 #include "GaudiOnline/OnlineService.h"
@@ -16,14 +16,12 @@
 #endif
 
 LHCb::OnlineService::OnlineService(const std::string& nam, ISvcLocator* svc) 
-: Service(nam, svc), m_pMonitorSvc(0), m_incidentSvc(0), m_error(0), m_info(0), m_debug(0)
+: Service(nam, svc), m_pMonitorSvc(0), m_incidentSvc(0)
 {
-  m_defMsg = new MsgStream(0,nam);
   declareProperty("MonitorSvcType",m_monitorSvcType = "MonitorSvc");
 }
 
 LHCb::OnlineService::~OnlineService()  {
-  delete m_defMsg;
 }
 
 /// IInterface implementation: Query interface
@@ -39,12 +37,6 @@ StatusCode LHCb::OnlineService::queryInterface(const InterfaceID& riid,void** pp
 /// Implementation of IService::initialize()
 StatusCode LHCb::OnlineService::initialize()  {
   StatusCode sc = Service::initialize();
-  m_error = new MsgStream(msgSvc(),name());
-  m_info  = new MsgStream(msgSvc(),name());
-  m_debug = new MsgStream(msgSvc(),name());
-  error() << MSG::ERROR;
-  info()  << MSG::INFO;
-  debug() << MSG::DEBUG;
   if ( !sc.isSuccess() )  {
     return error("Cannot initialize service base class.");
   }
@@ -61,18 +53,6 @@ StatusCode LHCb::OnlineService::initialize()  {
 
 /// Implementation of IService::finalize()
 StatusCode LHCb::OnlineService::finalize()  {
-  if ( m_error )  {
-    delete m_error;
-    m_error = 0;
-  }
-  if ( m_info )  {
-    delete m_info;
-    m_info = 0;
-  }
-  if ( m_debug )  {
-    delete m_debug;
-    m_debug = 0;
-  }
   if ( m_pMonitorSvc )  {
     m_pMonitorSvc->undeclareAll(this);
     m_pMonitorSvc->release();
@@ -84,24 +64,6 @@ StatusCode LHCb::OnlineService::finalize()  {
     m_incidentSvc = 0;
   }
   return Service::finalize();
-}
-
-/// Pointer to error message stream object
-MsgStream& LHCb::OnlineService::error()  const {
-  if ( m_error ) return *m_error;
-  return *m_defMsg;
-}
-
-/// Pointer to informational message stream object
-MsgStream& LHCb::OnlineService::info() const  {
-  if ( m_info ) return *m_info;
-  return *m_defMsg;
-}
-
-/// Pointer to debug message stream object
-MsgStream& LHCb::OnlineService::debug() const  {
-  if ( m_debug ) return *m_debug;
-  return *m_defMsg;
 }
 
 /// If not already located try to locate monitoring service with forcing a creation
@@ -155,14 +117,14 @@ StatusCode LHCb::OnlineService::throwError(const char* msg,...) const  {
 }
 
 StatusCode LHCb::OnlineService::error(const std::string& msg)   const {
-  MsgStream& err = error();
+  MsgStream err(msgSvc(), name());
   err << MSG::ERROR;
   if ( err.isActive() ) err << msg << endmsg;
   return StatusCode::FAILURE;
 }
 
 StatusCode LHCb::OnlineService::error(const char* msg,...)   const {
-  MsgStream& err = error();
+  MsgStream err(msgSvc(), name());
   err << MSG::ERROR;
   if ( err.isActive() )  {
     va_list args;
@@ -178,13 +140,13 @@ StatusCode LHCb::OnlineService::error(const char* msg,...)   const {
 }
 
 void LHCb::OnlineService::info(const std::string& msg)   const {
-  MsgStream& err = info();
+  MsgStream err(msgSvc(), name());
   err << MSG::INFO;
   if ( err.isActive() ) err << msg << endmsg;
 }
 
 void LHCb::OnlineService::info(const char* msg,...)   const {
-  MsgStream& err = info();
+  MsgStream err(msgSvc(), name());
   err << MSG::INFO;
   if ( err.isActive() )  {
     va_list args;
@@ -199,13 +161,13 @@ void LHCb::OnlineService::info(const char* msg,...)   const {
 }
 
 void LHCb::OnlineService::debug(const std::string& msg)   const {
-  MsgStream& err = debug();
+  MsgStream err(msgSvc(), name());
   err << MSG::DEBUG;
   if ( err.isActive() ) err << msg << endmsg;
 }
 
 void LHCb::OnlineService::debug(const char* msg,...)   const {
-  MsgStream& err = debug();
+  MsgStream err(msgSvc(), name());
   err << MSG::DEBUG;
   if ( err.isActive() )  {
     va_list args;

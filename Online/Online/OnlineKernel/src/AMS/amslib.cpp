@@ -1025,7 +1025,22 @@ static int _amsc_read_message (void* buffer, size_t* size, char* from, unsigned 
     _amsc_remove_node_if_mine(from, DEFAULT_STYLE);
     return (status == AMS_SUCCESS) ? status : errno=status;
   }
-  return errno = AMS_NOPEND;
+  return errno=AMS_NOPEND;
+}
+
+static int _amsc_read_message_long (void** buffer, size_t* size, char* from, unsigned int* facility, char* dest)  {
+  amsqueue_t *m = 0;
+  CheckInitialization();
+  int status  = _amsc_test_message();
+  if (status == AMS_SUCCESS)  {
+    remqhi (&_ams.message_Q, (qentry_t**)&m);
+    status = _amsc_move_msgptr_to_user(m, buffer, size, from, dest, facility);
+    m->message = 0;
+    m->release();
+    _amsc_remove_node_if_mine(from, DEFAULT_STYLE);
+    return (status == AMS_SUCCESS) ? status : errno=status;
+  }
+  return errno=AMS_NOPEND;
 }
 
 static int _amsc_get_message (void* buffer, size_t* size, char* from, char* r_source_in,
@@ -1051,11 +1066,11 @@ static int _amsc_get_message (void* buffer, size_t* size, char* from, char* r_so
     _ams.reqFac  = r_facility;
     _ams.msgWaiting  = 1;
     do  {
-      status  = _amsc_spy_next_message(buff,&siz,src,&fac,&tlen,&_ams.message_Q);
+      status = _amsc_spy_next_message(buff,&siz,src,&fac,&tlen,&_ams.message_Q);
       if (status == AMS_TIMEOUT)  {
         remqhi (&_ams.message_Q, (qentry_t**)&m);
         m->release();
-        status  = AMS_SUCCESS;
+        status = AMS_SUCCESS;
       }
       else   {
         if (status != AMS_NOPEND)  {
@@ -1083,7 +1098,7 @@ static int _amsc_get_message (void* buffer, size_t* size, char* from, char* r_so
       }
     } while(status==AMS_SUCCESS || status==AMS_CONNCLOSED || status==AMS_TASKDIED);
   }
-  status  = _amsc_test_message();
+  status = _amsc_test_message();
   if (status == AMS_SUCCESS)  {
     remqhi (&_ams.message_Q, (qentry_t**)&m);
     status = _amsc_move_to_user (m, buffer, size, from, dest, facility, false);
@@ -1136,12 +1151,12 @@ static int _amsc_disconnect_task(const char* task)   {
   strcpy(full_from, _ams.me.name);
   amsc_full_name(full_dest, task, sizeof(full_dest), DECNET_STYLE);
   amsentry_t *e = _amsc_find_connection(full_dest, full_from, FIND_ONLY);
-  if (e == 0)    {
-    return errno = AMS_TASKNOTFOUND;
+  if (e != 0)    {
+    _amsc_send_close_message (e);
+    _amsc_disconnect_from_task (e);
+    return AMS_SUCCESS;
   }
-  _amsc_send_close_message (e);
-  _amsc_disconnect_from_task (e);
-  return AMS_SUCCESS;
+  return errno = AMS_TASKNOTFOUND;
 }
 
 //----------------------------------------------------------------------------------
@@ -1261,6 +1276,11 @@ int amsc_get_message (void* buff, size_t* size, char* from, char* r_source_in,
 int amsc_read_message (void* buff, size_t* size, char* from, unsigned int* facility, char* dest)  {
   RTL::Lock lock(_ams.lockid);
   return _amsc_read_message(buff,size,from,facility,dest);
+}
+
+int amsc_read_message_long (void** buff, size_t* size, char* from, unsigned int* facility, char* dest)  {
+  RTL::Lock lock(_ams.lockid);
+  return _amsc_read_message_long(buff,size,from,facility,dest);
 }
 
 int amsc_declare_user_ast (int (*astadd)(void*),void* astpar) {

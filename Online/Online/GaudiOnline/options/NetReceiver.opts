@@ -1,0 +1,14 @@
+#include "$GAUDIONLINEROOT/options/OnlineEnvironment.opts"
+ApplicationMgr.HistogramPersistency  = "NONE";
+ApplicationMgr.EvtSel                = "NONE";
+ApplicationMgr.ExtSvc               += {"IncidentSvc"};
+ApplicationMgr.ExtSvc               += { "LHCb::DimDataReceiver/Receiver" };
+//ApplicationMgr.ExtSvc               += {"LHCb::AMSService/AMS"};
+//ApplicationMgr.ExtSvc               += { "LHCb::AmsDataReceiver/Receiver" };
+ApplicationMgr.Runable               = "LHCb::OnlineRunable/Runable";
+Runable.Wait                         = false;
+Receiver.Buffer                      = "Event";
+Receiver.PartitionID                 = @OnlineEnv.PartititonID;
+Receiver.MonitorSvcType              = @OnlineEnv.MonitorSvcType;
+//Receiver.UseEventRequests            = true;
+MessageSvc.OutputLevel               = 3;

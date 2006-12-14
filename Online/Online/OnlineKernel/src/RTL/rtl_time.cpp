@@ -19,13 +19,13 @@ int getfilesystemtime(struct timeval *time_Info)  {
   return 0;
 }
 
-int gettimeofday(struct timeval *time_Info, struct timezone *timezone_Info)  {	
+int gettimeofday(struct timeval *time_Info, struct timezone *timezone_Info)  {  
   __int64 timer;
   LARGE_INTEGER li;
   BOOL b;
   double dt;
   static struct timeval starttime = {0,0};
-  static __int64			lasttime, freq;
+  static __int64      lasttime, freq;
 
   /* Get the time, if they want it */
   if (time_Info != NULL) {
@@ -99,27 +99,22 @@ int gettimeofday(struct timeval *time_Info, struct timezone *timezone_Info)  {
 
 // this usleep isnt exactly accurate but should do ok
 void usleep(unsigned int useconds)    {
-  struct timeval tnow, tthen, t0;
-
-  gettimeofday(&tthen, NULL);
-  t0 = tthen;
-  tthen.tv_usec += useconds;
-  while (tthen.tv_usec > 1000000) {
-    tthen.tv_usec -= 1000000;
-    tthen.tv_sec++;
-  }
-  if (useconds > 10000) {
-    useconds -= 10000;
+  struct timeval tnow, tthen;
+  if (useconds >= 1000) {
     Sleep(useconds/1000);
+    useconds = useconds%1000000;
+    if ( 10 > useconds ) return;  // Inaccuracy ... forget about it!
   }
+  gettimeofday(&tthen, NULL);
+  tthen.tv_usec += useconds;
   while (1) {
     gettimeofday(&tnow, NULL);
-    if (tnow.tv_sec > tthen.tv_sec) {
-      break;
+    if (tnow.tv_sec >= tthen.tv_sec) {
+      return;
     }
     if (tnow.tv_sec == tthen.tv_sec) {
       if (tnow.tv_usec > tthen.tv_usec) {
-        break;
+        return;
       }
     }
   }

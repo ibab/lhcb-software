@@ -840,36 +840,37 @@ int _mbm_del_wsp (BMID /* bm */, USER* us) {
 }
 
 // check wait space queue
-int _mbm_check_wsp (BMID bm, int bit, int nbit)  {
+int _mbm_check_wsp (BMID bm)  {
   CONTROL *ctrl   = bm->ctrl;
   char    *bitmap = bm->bitmap;
   int      shift  = ctrl->shift_p_Bit;
-  int      size   = nbit << shift;
+
   MBMQueue<USER> que(&bm->usDesc->wsp_head, -USER_ws_off);
   for (USER* u=que.get(); u; u = que.get() )  {
     u->isValid();
+    //int s, l;
+
     _mbm_printf("WSP: User %s\n",u->name);
-    if ( u->p_state == S_wspace && u->ws_size <= size)      {
+    if ( u->p_state == S_wspace )      {
       int ubit = (u->ws_size + ctrl->bytes_p_Bit) >> shift;
-      ctrl->last_alloc = 0;
-      //int status = BF_alloc(bitmap+ctrl->last_alloc,ctrl->bm_size-(ctrl->last_alloc<<3),ubit,&bit);
-      //if (!lib_rtl_is_success(status))      {
-        //ctrl->last_alloc = 0;
+      int bit = 0, nbit = ubit;
+      if( BF_count(bitmap,ctrl->bm_size,&bit,&nbit) == 1) {    // find largest block 
+        ctrl->last_alloc = 0;
         int status = BF_alloc(bitmap,ctrl->bm_size,ubit,&bit);
-      //}
-      if (lib_rtl_is_success(status))       {
-        _mbm_printf("%s Allocated %d bits at position %d ",bm->bm_name, nbit, bit);
-        bit += ctrl->last_alloc<<3;
-        _mbm_printf(" [%d] \n", bit);
-        ctrl->last_alloc = (bit+ubit)>>3;
-        ctrl->last_bit   = bit;
-        ctrl->i_space   -= ubit;
-        u->ws_ptr        = bit << shift;
-        u->space_size    = ubit << shift;
-        u->space_add     = u->ws_ptr;
-        _mbm_del_wsp (bm, u);
-        _mbm_wake_process(BM_K_INT_SPACE, u);
-        break;
+        if (lib_rtl_is_success(status))       {
+          _mbm_printf("%s Allocated %d bits at position %d ",bm->bm_name, nbit, bit);
+          bit += ctrl->last_alloc<<3;
+          _mbm_printf(" [%d] \n", bit);
+          ctrl->last_alloc = (bit+ubit)>>3;
+          ctrl->last_bit   = bit;
+          ctrl->i_space   -= ubit;
+          u->ws_ptr        = bit << shift;
+          u->space_size    = ubit << shift;
+          u->space_add     = u->ws_ptr;
+          _mbm_del_wsp (bm, u);
+          _mbm_wake_process(BM_K_INT_SPACE, u);
+          break;
+        }
       }
     }
   }
@@ -1089,9 +1090,7 @@ int _mbm_sfree (BMID bm, int add, int size)  {
   _mbm_printf("%s Free space  add=%08X  size=%d [ %d bits at position %d]\n",
     bm->bm_name, add, size, nbit, bit);
   if ( bm->usDesc->next )  {
-    int s, l;
-    BF_count(bm->bitmap, ctrl->bm_size, &s, &l);    // find largest block 
-    _mbm_check_wsp (bm, s, l);                      // check the space wait queue 
+    _mbm_check_wsp(bm);   // check the space wait queue 
   }
   return MBM_NORMAL;
 }
@@ -1276,9 +1275,9 @@ int mbm_space_in_buffer (BMID bm, int* total, int* large)  {
   if ( lock )  {
     CONTROL *ctrl = bm->_control();
     if ( ctrl )  {
-      int s,l, shift = ctrl->shift_p_Bit;
+      int s, l = ctrl->i_space, shift = ctrl->shift_p_Bit;
       *total = ctrl->i_space << shift;
-      /* find largest block */
+      // find largest block (since asking for full space)
       BF_count(bm->bitmap, ctrl->bm_size, &s, &l);
       *large = l << shift;
       return MBM_NORMAL;

@@ -1,14 +1,14 @@
-//	============================================================
+//  ============================================================
 //
-//	MEPRxSys.cpp
-//	------------------------------------------------------------
+//  MEPRxSys.cpp
+//  ------------------------------------------------------------
 //
-//	Package   : GaudiOnline
+//  Package   : GaudiOnline
 //
-//	Author    : Niko Neufeld 
+//  Author    : Niko Neufeld 
 //                 
 //  System dependent parts of the eventbuilder MEPRxSvc
-//	===========================================================
+//  ===========================================================
 #include "GaudiOnline/MEPRxSys.h"
 #ifdef _WIN32
 #include <WinSock2.h>
@@ -56,36 +56,36 @@ struct IOVec: public iovec {
 static int s = -1;
 
 std::string sys_err_msg(void) {
-#ifdef _WIN32	
-	char msg[512];
-	FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, NULL, GetLastError(), 0, msg, 512, NULL);
-	std::string errstr(msg);
+#ifdef _WIN32  
+  char msg[512];
+  FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, NULL, GetLastError(), 0, msg, 512, NULL);
+  std::string errstr(msg);
 #else
-	std::string errstr(strerror(errno));
+  std::string errstr(strerror(errno));
 #endif
-	return errstr;
+  return errstr;
 }
 
 std::string dotted_addr(u_int32_t addr)
 {
-	struct in_addr in;
+  struct in_addr in;
 
 #ifdef _WIN32
-	in.S_un.S_addr = addr;
+  in.S_un.S_addr = addr;
 #else
-	in.s_addr = addr;
+  in.s_addr = addr;
 #endif
-	return inet_ntoa(in);
+  return inet_ntoa(in);
 }
 
 int open_sock(int ipproto, int rxbufsiz, int netdev, std::string ifname, 
-					bool mepreq, std::string &errmsg) 
+          bool mepreq, std::string &errmsg) 
 {
 #ifndef _WIN32
   char netdev_name[10];
   int fd;
   if ((fd = open("/proc/raw_cap_hack", O_RDONLY)) != -1) {
-    ioctl(fd, 0, 0);	
+    ioctl(fd, 0, 0);  
     close(fd);
   } // if we can't open the raw_cap_hack we have to be root 
 #endif
@@ -102,7 +102,7 @@ int open_sock(int ipproto, int rxbufsiz, int netdev, std::string ifname,
     goto drop_out;
   }
   if (setsockopt(s, SOL_SOCKET, SO_RCVBUF, (const char *)
-		 &rxbufsiz, sizeof(rxbufsiz))) {
+     &rxbufsiz, sizeof(rxbufsiz))) {
     errmsg = "setsockopt SO_RCVBUF";
     goto shut_out;
   }
@@ -110,7 +110,7 @@ int open_sock(int ipproto, int rxbufsiz, int netdev, std::string ifname,
 #ifdef linux
     sprintf(netdev_name, netdev < 0 ? "lo" : "eth%d", netdev);           
     if (setsockopt(s, SOL_SOCKET, SO_BINDTODEVICE, (void *) netdev_name,
-		   1 + strlen(netdev_name))) {
+       1 + strlen(netdev_name))) {
       errmsg = "setsockopt SO_BINDTODEVICE";
       goto shut_out;
     }
@@ -141,14 +141,14 @@ drop_out:
 
 int recv_msg(void *buf, int len,  int flags)
 {
-	int ioflags = 0;
+  int ioflags = 0;
 #ifndef _WIN32
-	struct IOVec bufs(buf, len);
-	struct MsgHdr msg(&bufs, 1);
+  struct IOVec bufs(buf, len);
+  struct MsgHdr msg(&bufs, 1);
 #endif
-	if (flags & MEPRX_PEEK) {
+  if (flags & MEPRX_PEEK) {
    ioflags |= MSG_PEEK;
-	}
+  }
 #ifdef _WIN32
   int rlen = recv(s, (char *) buf, len, ioflags);
   return ((rlen == -1 && WSAGetLastError() == WSAEMSGSIZE) ? len : rlen);  
@@ -159,21 +159,21 @@ int recv_msg(void *buf, int len,  int flags)
 
 #ifdef _WIN32
 int send_msg(u_int32_t addr, u_int8_t protocol, void *buf, int len, int flags) {
-	int ioflags = 0;
-	struct in_addr in;
-	in.S_un.S_addr = addr;
-	struct sockaddr_in sinaddr = {AF_INET, protocol, in, 0,}; 
-	return (sendto(s, (const char *) buf, len, ioflags, 
-		       (const struct sockaddr *) &sinaddr, sizeof(sinaddr)));
+  int ioflags = 0;
+  struct in_addr in;
+  in.S_un.S_addr = addr;
+  struct sockaddr_in sinaddr = {AF_INET, protocol, in, 0,}; 
+  return (sendto(s, (const char *) buf, len, ioflags, 
+           (const struct sockaddr *) &sinaddr, sizeof(sinaddr)));
 #else
 int send_msg(u_int32_t addr, u_int8_t protocol, void *buf, int len, int /* flags */) {
-	struct IOVec bufs(buf, len);	
-	struct MsgHdr msg(&bufs, 1);
-	struct in_addr in;
-	in.s_addr = addr;
-	static struct sockaddr_in _addr = { AF_INET, protocol, in, 0,};
-	msg.msg_name = &_addr;
-	msg.msg_namelen = sizeof(_addr);
+  struct IOVec bufs(buf, len);  
+  struct MsgHdr msg(&bufs, 1);
+  struct in_addr in;
+  in.s_addr = addr;
+  static struct sockaddr_in _addr = { AF_INET, protocol, in, 0,};
+  msg.msg_name = &_addr;
+  msg.msg_namelen = sizeof(_addr);
   return (sendmsg(s, &msg, MSG_DONTWAIT | MSG_CONFIRM));
 #endif
 }
@@ -181,8 +181,8 @@ int send_msg(u_int32_t addr, u_int8_t protocol, void *buf, int len, int /* flags
 int parse_addr(const std::string &straddr, u_int32_t &addr)
 {
 #ifdef _WIN32
-	if ((addr = inet_addr(straddr.c_str())) == INADDR_NONE) return 1;
-	else return 0;
+  if ((addr = inet_addr(straddr.c_str())) == INADDR_NONE) return 1;
+  else return 0;
 #else
   struct in_addr a;
   int rc = inet_aton(straddr.c_str(), &a);
@@ -201,7 +201,7 @@ name_from_addr(u_int32_t addr, std::string &hname, std::string &msg)
     return 1;
   } 
   hname = h->h_name;
-	msg = "";
+  msg = "";
   return 0;
 }
 
@@ -224,7 +224,7 @@ void usleep(int us)
   long millisecs = us/1000;
   ::Sleep( millisecs<=0 ? 1 : millisecs);
 #else
-	struct timespec t = { 0, 1000 * us }; // 0 s,  ns
+  struct timespec t = { 0, 1000 * us }; // 0 s,  ns
   nanosleep(&t, &t);
 #endif
 }
@@ -251,11 +251,11 @@ int rx_select(int sec)
 int rx_would_block() 
 {
 #ifdef _WIN32
-	if (WSAGetLastError() == WSAEWOULDBLOCK) return 1;
+  if (WSAGetLastError() == WSAEWOULDBLOCK) return 1;
 #else
-	if (errno == EAGAIN) return 1;
+  if (errno == EAGAIN) return 1;
 #endif
-	return 0;
+  return 0;
 }
 
 

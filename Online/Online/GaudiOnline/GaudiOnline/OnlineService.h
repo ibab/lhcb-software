@@ -34,14 +34,6 @@ namespace LHCb  {
     IMonitorSvc* monSvc()   const;
     /// Access incident service (Pointer invalid before initialize()!)
     IIncidentSvc* incidentSvc()  const;
-    /// Pointer to error message stream object
-    MsgStream*   m_error;
-    /// Pointer to informational message stream object
-    MsgStream*   m_info;
-    /// Pointer to debug message stream object
-    MsgStream*   m_debug;
-    /// Pointer to default message stream object (only works to stdout!)
-    MsgStream*   m_defMsg;
 
   public:
     /// Service constructor
@@ -83,15 +75,12 @@ namespace LHCb  {
     virtual void handle(const Incident& /* incident */ );
 
     /// Debug printout handling
-    MsgStream& debug() const;
     void debug(const char* msg,...) const;
     void debug(const std::string& msg) const;
     /// Info printout handling
-    MsgStream& info() const;
     void info(const char* msg,...) const;
     void info(const std::string& msg) const;
     /// Error handling
-    MsgStream& error() const;
     StatusCode error(const std::string& msg) const;
     StatusCode error(const char* msg,...) const;
     StatusCode throwError(const std::string& msg) const;

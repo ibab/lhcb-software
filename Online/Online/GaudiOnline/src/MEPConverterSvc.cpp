@@ -1,13 +1,13 @@
-//	============================================================
+//  ============================================================
 //
-//	MEPConverterSvc.cpp
-//	------------------------------------------------------------
+//  MEPConverterSvc.cpp
+//  ------------------------------------------------------------
 //
-//	Package   : GaudiOnline
+//  Package   : GaudiOnline
 //
-//	Author    : Markus Frank
+//  Author    : Markus Frank
 //
-//	===========================================================
+//  ===========================================================
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/ISvcLocator.h"

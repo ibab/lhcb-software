@@ -234,7 +234,12 @@ namespace {
                 int (*callback)(void*) = e->callback;
                 void* param = e->param;
                 RTL::Lock lock(m_mutex_id, true);
-                (*callback)(param);
+                try  {
+                  (*callback)(param);
+                }
+                catch(...)  {
+                  ::lib_rtl_printf("EntryMap::handle> Exception!\n");
+                }
               }
               if ( t == 1 && nb <= 0 )  {
                 k = find(fd);

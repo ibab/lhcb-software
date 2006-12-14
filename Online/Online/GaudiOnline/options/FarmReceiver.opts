@@ -1,8 +1,11 @@
 #include "$GAUDIONLINEROOT/options/MDFReceiver.opts"
 ApplicationMgr.TopAlg    = { "LHCb::AMSDataHandler/Receiver" };
 Receiver.DataSources     = { "Sender" };
+ApplicationMgr.TopAlg    = { "LHCb::DimDataHandler/Receiver" };
+Receiver.DataSources     = { "Sender/Event" };
 Receiver.Buffer          = "Event";
 Receiver.PartitionID     = @OnlineEnv.PartititonID;
 Receiver.PartitionBuffer = false;
 //ApplicationMgr.TopAlg    += { "LHCb::DelaySleepAlg/Delay" };
 //Delay.DelayTime           = 250;
+// MessageSvc.OutputLevel = 1;

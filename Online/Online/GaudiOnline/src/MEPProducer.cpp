@@ -1,11 +1,11 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MEPProducer.cpp,v 1.7 2006-10-02 14:46:59 frankb Exp $
-//	====================================================================
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MEPProducer.cpp,v 1.8 2006-12-14 18:59:20 frankb Exp $
+//  ====================================================================
 //  RawBufferCreator.cpp
-//	--------------------------------------------------------------------
+//  --------------------------------------------------------------------
 //
-//	Author    : Markus Frank
+//  Author    : Markus Frank
 //
-//	====================================================================
+//  ====================================================================
 #include "MDF/RawEventHelpers.h"
 #include "MDF/MEPEvent.h"
 #include "MBM/MepProducer.h"
@@ -130,7 +130,7 @@ extern "C" int mep_producer(int argc,char **argv) {
   cli.getopt("refcount",1,refCount);
   if ( debug ) ::lib_rtl_start_debugger();
   ::printf("%synchronous MEP Producer \"%s\" Partition:%d (pid:%d) included in buffers.\n",
-	   async ? "As" : "S", name.c_str(), partID, MEPProducer::pid());
+     async ? "As" : "S", name.c_str(), partID, MEPProducer::pid());
   MEPProducer p(name, partID, refCount, space);
   if ( async ) p.setNonBlocking(WT_FACILITY_DAQ_SPACE, true);
   return p.run();

@@ -24,7 +24,7 @@ MonitoringEngine::Histogram::Histogram(const string& nam,IMessageSvc* msg,IHisto
 : m_messageSvc(msg), m_hist(h)
 {
   MsgStream log(m_messageSvc,nam);
-	size_t size = 0;
+  size_t size = 0;
   switch(m_hist.HIST->dimension())  {
     case 1:
       // 1Hd data: dimension,nXBins,xMin,xMax,entries,2*(UNDERFLOW,"in range" bins, OVERFLOW): entries and errors
@@ -60,15 +60,15 @@ void MonitoringEngine::Histogram::fill_1d()  {
   int i, nx = h1->axis().bins();
   float *p = &m_data[5];
 
-	*p++ = Buffer::value_type(h1->allEntries());
+  *p++ = Buffer::value_type(h1->allEntries());
   // Entries (or should be height=entry*weight ?)
-	*p++ = Buffer::value_type(h1->binHeight(UFLW));
+  *p++ = Buffer::value_type(h1->binHeight(UFLW));
   for(i=0; i<nx; i++) *p++ = Buffer::value_type(h1->binHeight(i));
-	*p++ = Buffer::value_type(h1->binHeight(OFLW));
-	// Errors
-	*p++ = Buffer::value_type(h1->binError(UFLW));
+  *p++ = Buffer::value_type(h1->binHeight(OFLW));
+  // Errors
+  *p++ = Buffer::value_type(h1->binError(UFLW));
   for(i=0; i<nx; i++) *p++ = Buffer::value_type(h1->binError(i));
-	*p++ = Buffer::value_type(h1->binError(OFLW));
+  *p++ = Buffer::value_type(h1->binError(OFLW));
 }
 
 void MonitoringEngine::Histogram::fill_2d()  {
@@ -76,40 +76,40 @@ void MonitoringEngine::Histogram::fill_2d()  {
   IHistogram2D* h2 = m_hist.h2;
   int i, j, nx = h2->xAxis().bins(), ny = h2->yAxis().bins();
 
-	*p++ = Buffer::value_type(h2->allEntries());
+  *p++ = Buffer::value_type(h2->allEntries());
   // Entries (in fact, height=entry*weight ?)
-	*p++ = Buffer::value_type(h2->binHeight(UFLW,UFLW));
-	for(i=0;i<ny; i++) *p++ = Buffer::value_type(h2->binHeight(UFLW,i));
-	*p++ = Buffer::value_type(h2->binHeight(UFLW,OFLW));
+  *p++ = Buffer::value_type(h2->binHeight(UFLW,UFLW));
+  for(i=0;i<ny; i++) *p++ = Buffer::value_type(h2->binHeight(UFLW,i));
+  *p++ = Buffer::value_type(h2->binHeight(UFLW,OFLW));
   for(i=0; i<nx; i++) {
     *p++ = Buffer::value_type(h2->binHeight(i,UFLW));
     for (int j=0; j<ny; j++) 
       *p++= Buffer::value_type(h2->binHeight(i,i));
     *p++= Buffer::value_type(h2->binHeight(i,OFLW));
   }
-	*p++= Buffer::value_type(h2->binHeight(OFLW,UFLW));
-	for (i=0; i<ny; i++) *p++= Buffer::value_type(h2->binHeight(OFLW,i));
+  *p++= Buffer::value_type(h2->binHeight(OFLW,UFLW));
+  for (i=0; i<ny; i++) *p++= Buffer::value_type(h2->binHeight(OFLW,i));
   *p++= Buffer::value_type(h2->binHeight(OFLW,OFLW));
 
   // Errors
-	*p++= Buffer::value_type(h2->binError(UFLW,UFLW));
-	for (i=0; i<ny; i++) *p++= Buffer::value_type(h2->binError(UFLW,i));
-	*p++= Buffer::value_type(h2->binError(UFLW,OFLW));
-  for (i=0; i<nx; i++){		
+  *p++= Buffer::value_type(h2->binError(UFLW,UFLW));
+  for (i=0; i<ny; i++) *p++= Buffer::value_type(h2->binError(UFLW,i));
+  *p++= Buffer::value_type(h2->binError(UFLW,OFLW));
+  for (i=0; i<nx; i++){    
     *p++= Buffer::value_type(h2->binError(i,UFLW));
     for (j=0; j<ny; j++)
       *p++= Buffer::value_type(h2->binError(i,j));
     *p++= Buffer::value_type(h2->binError(i,OFLW));
   }
-	*p++= Buffer::value_type(h2->binError(OFLW,UFLW));
-	for (i=0; i<ny; i++) *p++= Buffer::value_type(h2->binError(OFLW,i));
+  *p++= Buffer::value_type(h2->binError(OFLW,UFLW));
+  for (i=0; i<ny; i++) *p++= Buffer::value_type(h2->binError(OFLW,i));
   *p++= Buffer::value_type(h2->binError(OFLW,OFLW));
 }
 
 void MonitoringEngine::Histogram::filldata()  {
   size_t size = 0;
   switch (m_hist.HIST->dimension()) {
-	case 1:
+  case 1:
     size = 5+2*(m_hist.h1->axis().bins()+2);
     if ( size == m_data.size() )  {
       fill_1d();
@@ -117,7 +117,7 @@ void MonitoringEngine::Histogram::filldata()  {
     }
     // Error: allocated space does not match!
     throw std::runtime_error("Histogram datasize mismatch while monitoring!");
-	case 2:
+  case 2:
     //Sum of the entries in all the IHistogram's bins, i.e in-range bins, UNDERFLOW and OVERFLOW. 
     //This is equivalent to the number of times the method fill was invoked.
     size = (8+2*(m_hist.h2->xAxis().bins()+2)*(m_hist.h2->yAxis().bins()+2));
@@ -128,7 +128,7 @@ void MonitoringEngine::Histogram::filldata()  {
     throw std::runtime_error("Histogram mismatch while monitoring!");
   default:
     throw std::runtime_error("Unknown Histogram type while monitoring! [Internal error]");
- 	} 
+   } 
 }
 
 StatusCode MonitoringEngine::initialize()  {
@@ -210,14 +210,14 @@ MemMonitorSvc::RegInfo MemMonitorSvc::regItem(CSTR nam,CSTR dsc,Client c) {
     MsgStream log(msgSvc(),name());
     auto_ptr<Item> itm(new Item(nam,dsc));
     pair<Items::iterator,bool> p = (*i).second.insert(itm.get());
-	  if( p.second ) {
+    if( p.second ) {
       itm.release();
       log << MSG::DEBUG << "Declaring monitor item:" << (*i).second.owner
           << "/" << nam << endreq;
       return RegInfo(i,p.first);
-	  }
-	  // Insertion failed: Name already exists
-	  log << MSG::ERROR << "Already existing monitor item:" << (*i).second.owner
+    }
+    // Insertion failed: Name already exists
+    log << MSG::ERROR << "Already existing monitor item:" << (*i).second.owner
         << "/" << nam << " not published" << endreq;
     return RegInfo(m_clients.end(),Items::iterator());
   }

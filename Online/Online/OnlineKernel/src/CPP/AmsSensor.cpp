@@ -60,7 +60,7 @@ namespace {
       name = node() + cand.node_process;
     }      
     if(m_address.facility == m1 || cand.facility == m1 || m_address.facility == cand.facility)
-      return str_match_wild(name.c_str(), m_address.node_process.c_str() );
+      return ::str_match_wild(name.c_str(), m_address.node_process.c_str() );
     return 0;
   }
 }
@@ -80,28 +80,28 @@ static int broadcast( const amsuc_info* /* info */, void* /* param */ ) {
 AmsSensor::AmsSensor() : Sensor( WT_FACILITY_RO1, "AmsSensor" )  {
 #define INIT_RETRY 32
   int status;
-  if ( AMS_SUCCESS != (status=amsuc_init()))  {
-    lib_rtl_signal_message(LIB_RTL_ERRNO,"amsuc_init Failed status = %d",status);
+  if ( AMS_SUCCESS != (status=::amsuc_init()))  {
+    ::lib_rtl_signal_message(LIB_RTL_ERRNO,"amsuc_init Failed status = %d",status);
   }
   int retry = INIT_RETRY;
   do  {
-    status=amsc_init(0);
+    status=::amsc_init(0);
     if ( AMS_SUCCESS == status ) {
       break;
     }
     fprintf(stderr,"Error in amsc_init. Status %d. Retrying....\n",status);
-    lib_rtl_sleep(100);
+    ::lib_rtl_sleep(100);
     retry--;
   } while(retry > 0);
 
   if ( AMS_SUCCESS != status ) {
-    fprintf(stderr,"This error CANNOT be recovered....EXIT...\n");
-    lib_rtl_signal_message(LIB_RTL_ERRNO,"amsc_init Failed status = %d",status);
-    exit(status);
+    ::fprintf(stderr,"This error CANNOT be recovered....EXIT...\n");
+    ::lib_rtl_signal_message(LIB_RTL_ERRNO,"amsc_init Failed status = %d",status);
+    ::exit(status);
   }
-  status=wtc_subscribe(WT_FACILITY_AMS,0,amsuc_dispatch);
+  status=::wtc_subscribe(WT_FACILITY_AMS,0,amsuc_dispatch);
   if ( status != WT_SUCCESS ) {
-    lib_rtl_signal_message(LIB_RTL_ERRNO,"wtc_subscribe Failed status = %d",status);
+    ::lib_rtl_signal_message(LIB_RTL_ERRNO,"wtc_subscribe Failed status = %d",status);
   }
 }
 
@@ -179,12 +179,12 @@ void AmsSensor::remove( Interactor* interactor, const Address* source )   {
 
 //----------------------------------------------------------------------------
 int AmsSensor::subscribe( int fac, bool listen_broadcast ) {
-  return amsuc_subscribe( fac, action, listen_broadcast ? broadcast : 0, this );
+  return ::amsuc_subscribe( fac, action, listen_broadcast ? broadcast : 0, this );
 }
 
 //----------------------------------------------------------------------------
 int AmsSensor::send( const Message* msg, const Address& dest)   {
-  return amsc_send_message((int*)msg+1,msg->size,dest.node_process.c_str(),dest.facility,0);
+  return ::amsc_send_message((int*)msg+1,msg->size,dest.node_process.c_str(),dest.facility,0);
 }
 
 //----------------------------------------------------------------------------

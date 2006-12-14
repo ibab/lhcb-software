@@ -28,13 +28,13 @@ StatusCode LHCb::GaudiDimFSM::initialize()  {
   return m_appMgr->initialize().isSuccess() ? DimTaskFSM::initialize()
     : printErr(1,"Failed to initialize Application manager.");
 }
-	
+  
 StatusCode LHCb::GaudiDimFSM::nextEvent(int /* num_event */)  {
   //_asm int 3
   return m_appMgr->nextEvent(1).isSuccess()  ? DimTaskFSM::nextEvent(1)
     : printErr(1,"Failed to execute single shot.");
 }
-	
+  
 StatusCode LHCb::GaudiDimFSM::finalize()  {
   if ( !m_appMgr->finalize().isSuccess() )
     printErr(0,"Failed to finalize Application manager.");

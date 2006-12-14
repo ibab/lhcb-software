@@ -1,13 +1,13 @@
-//	============================================================
+//  ============================================================
 //
-//	OnlineRunable.cpp
-//	------------------------------------------------------------
+//  OnlineRunable.cpp
+//  ------------------------------------------------------------
 //
-//	Package   : GaudiOnline
+//  Package   : GaudiOnline
 //
-//	Author    : Markus Frank
+//  Author    : Markus Frank
 //
-//	===========================================================
+//  ===========================================================
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiOnline/AMSService.h"

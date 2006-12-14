@@ -3,7 +3,7 @@ set msg_svc=MessageSvc
 set UTGID=MBMMon
 start "%UTGID%" %GAUDIONLINEROOT%\%CMTCONFIG%\Gaudi.exe OnlineKernel.dll mbm_mon
 set UTGID=TanMon
-start "%UTGID%" %GAUDIONLINEROOT%\%CMTCONFIG%\Gaudi.exe OnlineKernel.dll tanmon -c
+rem start "%UTGID%" %GAUDIONLINEROOT%\%CMTCONFIG%\Gaudi.exe OnlineKernel.dll tanmon -c
 set UTGID=OutputBuffer
 start "%UTGID%" %gaudi_exe% -main=%OPTS%/MBMinit.opts -opt=%OPTS%/Daemon.opts -msgsvc=%msg_svc%
 set UTGID=InputBuffer
@@ -13,7 +13,7 @@ rem start "%UTGID%" %gaudi_exe% -opt=%OPTS%/ErrorSrv.opts     -msgsvc=%msg_svc%
 set UTGID=ErrLog
 rem start "%UTGID%" %gaudi_exe% -opt=%OPTS%/ErrorLogger.opts  -msgsvc=MessageSvc
 
-sleep 5
+sleep 4
 set UTGID=Mon_0
 start "%UTGID%" %gaudi_exe% -opt=%OPTS%/Monitor.opts      -msgsvc=%msg_svc%
 rem
@@ -21,7 +21,7 @@ set UTGID=Sender
 start "%UTGID%" %gaudi_exe% -opt=%OPTS%/FarmSupply.opts    -msgsvc=%msg_svc%
 sleep 3
 set UTGID=Receiver
-start "%UTGID%" %gaudi_exe% -opt=%OPTS%/FarmReceiver.opts  -msgsvc=%msg_svc%
+start "%UTGID%" %gaudi_exe% -opt=%OPTS%/FarmReceiver.opts  -msgsvc=%msg_svc% 
 
 rem start /b xterm -132 -geometry 132x45  -title ErrorLogger  -e /bin/bash -l -c "export UTGID=ErrorLogger; cd J:/Gaudi/Online/UPI/cmt; ./upi.sh ../../GaudiOnline/%CMTCONFIG%/gaudi.exe ../../GaudiOnline/%CMTCONFIG%/GaudiOnline OnlineTask -opts=../../GaudiUPI/options/Errlog.opts -msgsvc=%msg_svc%"
 rem

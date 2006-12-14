@@ -285,9 +285,13 @@ int wtc_wait_with_mask (unsigned int* facility, void** userpar1, int* sub_status
       fac = _wtc_find_facility(entry->facility,fac_list);
       if ( fac != fac_list )  {
         if ( fac->action )    {
-          {
+          try  {
             WTLock unlock(wt_mutex_id,true);
             status = (*fac->action)(entry->facility, entry->userpar1);
+          }
+          catch(...)  {
+            ::lib_rtl_printf("wtc_wait_with_mask> Exception!\n");
+            status = WT_BADACTIONSTAT;
           }
           if ( status != WT_SUCCESS )    {
             if (sub_status != 0)   {

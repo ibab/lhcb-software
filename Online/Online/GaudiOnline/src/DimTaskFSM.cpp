@@ -81,9 +81,9 @@ LHCb::DimTaskFSM::DimTaskFSM(IInterface*)
   m_procName = RTL::processName();
   std::string svcname= m_procName+"/status";
   m_command = new Command(m_procName, this);
-	m_service = new DimService(svcname.c_str(),(char*)m_stateName.c_str());
+  m_service = new DimService(svcname.c_str(),(char*)m_stateName.c_str());
   svcname= m_procName+"/fsm_status";
-	m_subStateService = new DimService(svcname.c_str(),(char*)m_subStateName.c_str());
+  m_subStateService = new DimService(svcname.c_str(),(char*)m_subStateName.c_str());
   DimServer::start(m_procName.c_str());
   declareState(ST_NAME_NOT_READY);
   propertyMgr().declareProperty("HaveEventLoop",m_haveEventLoop);
@@ -249,12 +249,12 @@ void LHCb::DimTaskFSM::handle(const Event& ev)  {
 StatusCode LHCb::DimTaskFSM::configure()  {
   return declareState(ST_NAME_READY);
 }
-	
+  
 StatusCode LHCb::DimTaskFSM::initialize()  {
   IOCSENSOR.send(this, ENABLE);
   return StatusCode::SUCCESS;
 }
-	
+  
 StatusCode LHCb::DimTaskFSM::enable()  {
   m_continue = true;
   IOCSENSOR.send(this, NEXTEVENT);
@@ -272,7 +272,7 @@ StatusCode LHCb::DimTaskFSM::nextEvent(int /* num_event */)  {
   }
   return StatusCode::SUCCESS;
 }
-	
+  
 StatusCode LHCb::DimTaskFSM::disable()  {
   m_continue = false;
   cancel();

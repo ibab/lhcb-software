@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/MDFSender.h,v 1.2 2006-11-22 16:33:25 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/MDFSender.h,v 1.3 2006-12-14 18:59:15 frankb Exp $
 //	====================================================================
 //  MDFSender.h
 //	--------------------------------------------------------------------
@@ -24,6 +24,7 @@ namespace LHCb  {
     * @version: 1.0
     */
   class MDFSender : public MDFWriter  {
+  protected:
     typedef std::vector<std::string> Recipients;
     /// Property: Send target names
     Recipients             m_recipients;

@@ -1,11 +1,11 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MBMMonitorSvc.cpp,v 1.3 2006-11-27 19:20:40 frankb Exp $
-//	====================================================================
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MBMMonitorSvc.cpp,v 1.4 2006-12-14 18:59:19 frankb Exp $
+//  ====================================================================
 //  MBMMonitorSvc.cpp
-//	--------------------------------------------------------------------
+//  --------------------------------------------------------------------
 //
-//	Author    : Markus Frank
+//  Author    : Markus Frank
 //
-//	====================================================================
+//  ====================================================================
 #include "GaudiOnline/MBMMonitorSvc.h"
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/MsgStream.h"
@@ -230,8 +230,8 @@ void LHCb::MBMMonitorSvc::MBMDescriptor::revoke()   {
 }
 
 void LHCb::MBMMonitorSvc::MBMDescriptor::read()   {
-  MsgStream& log = svc->debug();
-  log << "Reading clients of buffer:" << name << endmsg;
+  MsgStream log(svc->msgSvc(), svc->name());
+  log << MSG::DEBUG << "Reading clients of buffer:" << name << endmsg;
   info.read();
   info.resetClients();
   for(USER::iterator i(id->user,id->ctrl->p_umax); i; ++i)  {

@@ -1,4 +1,4 @@
-// $Id: DimErrorLogger.cpp,v 1.7 2006-09-28 08:55:18 frankb Exp $
+// $Id: DimErrorLogger.cpp,v 1.8 2006-12-14 18:59:18 frankb Exp $
 #include "GaudiKernel/Message.h"
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/strcasecmp.h"
@@ -38,7 +38,7 @@ namespace LHCb  {
         m_logger.removeHandler(s);
       }
     }
-    void infoHandler()	{
+    void infoHandler()  {
       char c, *msg = getString();
       std::string svc, node;
       switch(c=msg[0]) {

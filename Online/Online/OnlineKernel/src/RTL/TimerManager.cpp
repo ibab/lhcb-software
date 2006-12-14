@@ -122,19 +122,19 @@ unsigned int RTL::TimerManager::check() {
         nent++;
         //lib_rtl_printf("%p [%d] Now: %lld Entry:%lld\n",e, nent, now, e->expire);
         if ( e->magic == 0xFEEDBABE ) {
-	        if ( now >= e->expire ) {
-	          lib_rtl_run_ast(e->ast, e->param, 0);
-	          if ( 0 == e->period ) {
-	            to_remove.push_back(e);
-	            continue;
-	          }
-	          e->expire += e->period;
-	        }
-	        if ( next > (e->expire-now) ) next = e->expire-now;
+          if ( now >= e->expire ) {
+            lib_rtl_run_ast(e->ast, e->param, 0);
+            if ( 0 == e->period ) {
+              to_remove.push_back(e);
+              continue;
+            }
+            e->expire += e->period;
+          }
+          if ( next > (e->expire-now) ) next = e->expire-now;
         }
-        else {	
-	        lib_rtl_printf("FATAL ERROR: BAD timer entry: %p\n",(void*)e);
-	        lib_rtl_sleep(10000);
+        else {  
+          lib_rtl_printf("FATAL ERROR: BAD timer entry: %p\n",(void*)e);
+          lib_rtl_sleep(10000);
         }
       }
       catch(...) {

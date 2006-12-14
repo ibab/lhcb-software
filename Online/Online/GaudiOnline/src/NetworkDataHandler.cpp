@@ -1,11 +1,11 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/NetworkDataHandler.cpp,v 1.2 2006-12-13 14:10:13 frankb Exp $
-//	====================================================================
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/NetworkDataHandler.cpp,v 1.3 2006-12-14 18:59:20 frankb Exp $
+//  ====================================================================
 //  NetworkDataHandler.cpp
-//	--------------------------------------------------------------------
+//  --------------------------------------------------------------------
 //
-//	Author    : Markus Frank
+//  Author    : Markus Frank
 //
-//	====================================================================
+//  ====================================================================
 #include "GaudiOnline/NetworkDataHandler.h"
 #include "GaudiOnline/ISuspendable.h"
 #include "GaudiKernel/SmartDataPtr.h"
@@ -20,6 +20,7 @@
 #include "MBM/mepdef.h"
 #include "RTL/Lock.h"
 #include "RTL/rtl.h"
+#include "WT/wtdef.h"
 #include <algorithm>
 #include <cmath>
 
@@ -28,17 +29,17 @@ static const std::string s_reqMsg("EVENT_REQUEST");
 
 // Standard algorithm constructor
 NetworkDataHandler::NetworkDataHandler(const std::string& nam, ISvcLocator* pSvc)
-:	MDFWriter(MDFIO::MDF_BANKS, nam, pSvc), m_evtSelector(0), m_prod(0),
+:  MDFWriter(MDFIO::MDF_BANKS, nam, pSvc), m_evtSelector(0),
   m_sendReq(0), m_sendError(0), m_sendBytes(0),
-  m_recvReq(0), m_recvError(0), m_recvBytes(0),
-  m_logger(0)
+  m_recvReq(0), m_recvError(0), m_recvBytes(0)
 {
-  m_procName = RTL::processName();
-  declareProperty("PrintFreq",      m_freq = 0.);
+  ::wtc_init();
   declareProperty("DataSources",    m_dataSources);
   declareProperty("PartitionID",    m_partitionID);
   declareProperty("Buffer",         m_buffer);
   declareProperty("PartitionBuffer",m_partitionBuffer);
+  declareProperty("BufferLength",   m_buffLength=128);  // In kBytes
+  declareProperty("AsyncRearm",     m_asynchRearm=true);
   lib_rtl_create_lock(0,&m_lock);
 }
 
@@ -47,118 +48,192 @@ NetworkDataHandler::~NetworkDataHandler()      {
   lib_rtl_delete_lock(m_lock);
 }
 
+
+int NetworkDataHandler::rearm_net_request(unsigned int,void* param)  {
+  RecvEntry* h = (RecvEntry*)param;
+  h->handler->rearmRequest(*h);
+  return WT_SUCCESS;
+}
+
 // Initialize the object: allocate all necessary resources
 StatusCode NetworkDataHandler::initialize()   {
   // Do NOT call base class initialization: we are not writing to file/socket!
   m_recipients.clear();
-  m_logger = new MsgStream(msgSvc(),name());
   declareInfo("SendCount",  m_sendReq=0,   "Total number of items sent to receiver(s).");
   declareInfo("SendErrors", m_sendError=0, "Total number of send errors to receiver(s).");
   declareInfo("SendBytes",  m_sendBytes=0, "Total number of bytes sent to receiver(s).");
   declareInfo("RecvCount",  m_recvReq=0,   "Total number of items received.");
   declareInfo("RecvErrors", m_recvError=0, "Total number of receive errors.");
   declareInfo("RecvBytes",  m_recvBytes=0, "Total number of bytes received from clients.");
-  m_net_handler = &NetworkDataHandler::handleEventRequest;
   StatusCode sc = subscribeNetwork();
   if ( !sc.isSuccess() )  {
     return sc;
   }
-  sc = m_dataSources.empty() ? configureSelector() : configureBuffer();
+  sc = isNetEventProducer() ? configureNetProducer() : configureNetConsumer();
+  ::wtc_subscribe(WT_FACILITY_DAQ_EVENT,0,rearm_net_request,this);
   return sc;
 }
 
 // Finalize the object: release all allocated resources
 StatusCode NetworkDataHandler::finalize()     {
+  ::wtc_flush(WT_FACILITY_DAQ_EVENT);
+  ::wtc_remove(WT_FACILITY_DAQ_EVENT);
   // Do NOT call base class finalization: we are not writing to file/socket!
   m_recipients.clear();
   StatusCode sc = unsubscribeNetwork();
-  if ( sc.isSuccess() )  {
-    if ( !m_dataSources.empty() )  {
-      if ( m_prod ) delete m_prod;
-      m_prod = 0;
-    }
+  for(Receivers::iterator i=m_receivers.begin(); i!=m_receivers.end();++i)  {
+    deleteNetRequest(*i);
+    delete (*i).producer;
+    (*i).producer = 0;
   }
-  if ( m_logger ) delete m_logger;
-  m_logger = 0;
+  m_receivers.clear();
   if ( m_evtSelector ) m_evtSelector->release();
   m_evtSelector = 0;
   return sc;
 }
 
+// Request message
+const std::string& NetworkDataHandler::requestMessage() const   {
+  return s_reqMsg;
+}
+
 // Configure access to the buffer manager to declare events
-StatusCode NetworkDataHandler::configureBuffer()  {
+StatusCode NetworkDataHandler::configureNetConsumer()  {
   m_bm_name = m_buffer;
   if ( m_partitionBuffer )  {
     char txt[32];
     m_bm_name += "_";
     m_bm_name += ::_itoa(m_partitionID,txt,16);
   }
-  m_prod = new MBM::Producer(m_bm_name,m_procName,m_partitionID);
-  m_net_handler = &NetworkDataHandler::handleEventData;
-  return requestEvents();
+  if ( isNetEventConsumer() )  {
+    int cnt = 0;
+    for(DataSources::const_iterator i=m_dataSources.begin(); i!=m_dataSources.end();++i,++cnt)  {
+      std::string proc = RTL::processName()+"_";
+      proc += char('0'+cnt);
+      MBM::Producer* prod = new MBM::Producer(m_bm_name,proc,m_partitionID);
+      m_receivers.push_back(RecvEntry(this,*i,prod));
+      RecvEntry& e = m_receivers.back();
+      if ( !createNetRequest(e).isSuccess() ) {
+        delete e.producer;
+        m_receivers.pop_back();
+        return StatusCode::FAILURE;
+      }
+      rearmRequest(e);
+    }
+    return StatusCode::SUCCESS;
+  }
+  MsgStream error(msgSvc(),name());
+  error << MSG::ERROR << "Bad component configuration: Need data sources defined." << endmsg;
+  return StatusCode::FAILURE;
 }
 
 // Configure access to the event selector to suspend/resume
-StatusCode NetworkDataHandler::configureSelector()  {
+StatusCode NetworkDataHandler::configureNetProducer()  {
   StatusCode sc = service("EventSelector",m_evtSelector,true);
   if ( !sc.isSuccess() )  {
-    error() << "Failed to access ISuspendable interface from event selector." << endmsg;
+    MsgStream error(msgSvc(),name());
+    error << MSG::ERROR << "Failed to access ISuspendable interface from event selector." << endmsg;
   }
   return sc;
 }
 
 // Incident handler implemenentation: Inform that a new incident has occured
 void NetworkDataHandler::handle(const Incident& inc)    {
-  info() << "Got incident:" << inc.source() << " of type " << inc.type() << endmsg;
+  MsgStream log(msgSvc(),name());
+  log << MSG::INFO << "Got incident:" << inc.source() << " of type " << inc.type() << endmsg;
   if ( inc.type() == "DAQ_CANCEL" )  {
   }
   else if ( inc.type() == "DAQ_ENABLE" )  {
   }
 }
 
-/// Rearm network request for a single source
-StatusCode NetworkDataHandler::rearmNetRequest(const std::string& src)  {
-  debug() << "Sending event request to data source:" << src << endmsg;
-  StatusCode sc = sendData(src,s_reqMsg.c_str(),s_reqMsg.length()+1);
+// Producer implementation: Request event from data source
+NetworkDataHandler::RecvEntry* NetworkDataHandler::receiver(const std::string& nam)  {
+  for(Receivers::iterator i=m_receivers.begin(); i!=m_receivers.end();++i)  {
+    if ( 0 == strcasecmp(nam.c_str(),(*i).name.c_str()) )  {
+      return &(*i);
+    }
+  }
+  return 0;
+}
+
+// Create network request for a single source
+StatusCode NetworkDataHandler::createNetRequest(RecvEntry& /* src */)  {
+  return StatusCode::SUCCESS;
+}
+
+// Rearm event request
+StatusCode NetworkDataHandler::rearmRequest(const RecvEntry& src)  {
+  rearmBufferSpace(src);
+  return rearmNetRequest(src);
+}
+
+// Reset event request
+StatusCode NetworkDataHandler::resetNetRequest(const RecvEntry& /* src */)  {
+  return StatusCode::SUCCESS;
+}
+
+// Rearm event buffer space
+StatusCode NetworkDataHandler::rearmBufferSpace(const RecvEntry& src)  {
+  if ( src.producer->getSpace(m_buffLength*1024)!=MBM_NORMAL ) {
+    // Cannot do anything - must handle later and throw away event data...
+    MsgStream log(msgSvc(),name());
+    log << MSG::ERROR << "Failed to get space for events from:" << src.name << endmsg;
+  }
+  return StatusCode::SUCCESS;
+}
+
+// Rearm network request for a single source
+StatusCode NetworkDataHandler::rearmNetRequest(const RecvEntry& src)  {
+  MsgStream log(msgSvc(),name());
+  log << MSG::DEBUG << "Sending event request to data source:" << src.name << endmsg;
+  StatusCode sc = sc = sendData(src,s_reqMsg.c_str(),s_reqMsg.length()+1);
   if ( !sc.isSuccess() ) {
-    error() << "Failed to send request for events to:" << src << endmsg;
+    log << MSG::ERROR << "Failed to send request for events from:" << src.name << endmsg;
   }
   return sc;
 }
 
-// Producer implementation: Request event from data source
-StatusCode NetworkDataHandler::requestEvents()  {
-  if ( !m_dataSources.empty() )  {
-    StatusCode status = StatusCode::SUCCESS;
-    for(DataSources::const_iterator i=m_dataSources.begin(); i!=m_dataSources.end();++i)  {
-      StatusCode sc = rearmNetRequest(*i);
-      if ( !sc.isSuccess() ) {
-        status = sc;
-      }
-    }
-    return status;
+// Rearm network request for a single source
+void NetworkDataHandler::deleteNetRequest(RecvEntry& /* src */)  {
+}
+
+// Resume event access from MBM
+StatusCode NetworkDataHandler::resumeEvents()  {
+  if ( !m_evtSelector->resume().isSuccess() )  {
+    // This always happens if the event selector is still busy
+    // Unclear is how a possible error can be handled. 
+    // Hence return success for now...
+    MsgStream log(msgSvc(),name());
+    log << MSG::WARNING << "Internal error: Cannot resume event selector." << endmsg;
   }
-  error() << "Bad component configuration: Need data sources defined." << endmsg;
-  return StatusCode::FAILURE;
+  return StatusCode::SUCCESS;
+}
+
+// Resume event access from MBM
+StatusCode NetworkDataHandler::suspendEvents()  {
+  StatusCode sc = m_evtSelector->suspend();
+  if ( !sc.isSuccess() )  {
+    MsgStream log(msgSvc(),name());
+    log << MSG::WARNING << "Failed to suspend event selector until further notice." << endmsg;
+  }
+  return sc;
+}
+
+// Add request to request queue
+StatusCode NetworkDataHandler::addRequest(const Recipient& task)  {
+  RTL::Lock lck(m_lock);  // Lock recipient queue to prevent damage
+  m_recipients.push_back(task);
+  return m_recipients.size() == 1 ? resumeEvents() : StatusCode::SUCCESS;
 }
 
 // Producer implementation: Handle client request to receive event over the network
-StatusCode NetworkDataHandler::handleEventRequest(size_t len)  {
-  char buff[256], task[256];
-  len = std::min(sizeof(buff),len);
-  if ( readData(buff,&len,task).isSuccess() )   {
+StatusCode NetworkDataHandler::handleEventRequest(long clientID,const std::string& source, size_t /*len */)  {
+  char buff[256];
+  size_t len = sizeof(buff);
+  if ( readEventRequest(buff,&len).isSuccess() )   {
     if ( ::strcasecmp(buff,s_reqMsg.c_str())==0 )  {
-      MsgStream log(msgSvc(),name());
-      RTL::Lock lck(m_lock);  // Lock recipient queue to prevent damage
-      log << MSG::DEBUG << "Received event request from target:" << task << endmsg;
-      m_recipients.push_back(task);
-      if ( m_recipients.size() == 1 )  {
-        if ( !m_evtSelector->resume().isSuccess() )  {
-          // This always happens if the event selector is still busy
-          log << MSG::WARNING << "Internal error: Cannot resume event selector." << endmsg;
-        }
-      }
-      return StatusCode::SUCCESS;
+      return addRequest(Recipient(this,source,clientID));
     }
     buff[sizeof(buff)-1] = 0;
     MsgStream log(msgSvc(),name());
@@ -168,39 +243,53 @@ StatusCode NetworkDataHandler::handleEventRequest(size_t len)  {
 }
 
 // Handle event declaration into the buffer manager
-StatusCode NetworkDataHandler::handleEventData(size_t len)  {
-  if ( m_prod->getSpace(len) == MBM_NORMAL ) {
-    char source[128];
-    StatusCode sc = StatusCode::SUCCESS;
-    MBM::EventDesc& e = m_prod->event();
-    if ( (sc=readData(e.data,&len,source)).isSuccess() )   {
-      RawBank*   b = (RawBank*)e.data;
-      MDFHeader* h = (MDFHeader*)b->data();
-      e.type       = EVENT_TYPE_EVENT;
-      e.len        = len;
-      ::memcpy(e.mask,h->subHeader().H1->triggerMask(),sizeof(e.mask));
-      sc = m_prod->sendEvent() == MBM_NORMAL ? StatusCode::SUCCESS : StatusCode::FAILURE;
+StatusCode NetworkDataHandler::handleEventData(const std::string& source, size_t len)  {
+  const RecvEntry* entry = receiver(source);
+  if ( entry )  {
+    MBM::Producer* prod = entry->producer;
+    MBM::EventDesc& e = prod->event();
+    if ( e.data && int(len) <= e.len )  {
+      StatusCode sc = readData(e.data,&len);
       if ( sc.isSuccess() )   {
-        return rearmNetRequest(source);
+        RawBank*   b = (RawBank*)e.data;
+        MDFHeader* h = (MDFHeader*)b->data();
+        e.type       = EVENT_TYPE_EVENT;
+        e.len        = len;
+        ::memcpy(e.mask,h->subHeader().H1->triggerMask(),sizeof(e.mask));
+        sc = prod->sendEvent()==MBM_NORMAL ? StatusCode::SUCCESS : StatusCode::FAILURE;
+        if ( sc.isSuccess() )   {
+          sc = resetNetRequest(*entry);
+          if ( m_asynchRearm )  {
+            ::wtc_insert(WT_FACILITY_DAQ_EVENT,(void*)entry);
+            return sc;
+          }
+          return rearmRequest(*entry);
+        }
+        MsgStream log(msgSvc(),name());
+        log << MSG::ERROR << "Cannot declare network event from:" << source << " to MBM." << endmsg;
+        return sc;
       }
-      error() << "Cannot declare network event to MBM." << endmsg;
+      MsgStream log(msgSvc(),name());
+      log << MSG::ERROR << "Failed to retrieve network event data from:" << source << endmsg;
       return sc;
     }
-    error() << "Failed to retrieve network event data." << endmsg;
-    return sc;
+    MsgStream log(msgSvc(),name());
+    log << MSG::ERROR << "Not sufficient data space availible to buffer event from:" << source << endmsg;
+    return StatusCode::SUCCESS;
   }
-  error() << "Failed to retrieve " << len << " bytes of space." << endmsg;
   return StatusCode::SUCCESS;
 }
 
 // Issue alarm message to error logger
 void NetworkDataHandler::sendAlarm(const std::string& msg)  {
-  error() << msg << endmsg;
+    MsgStream log(msgSvc(),name());
+    log << MSG::ERROR << msg << endmsg;
 }
 
 // Callback on task dead notification
 StatusCode NetworkDataHandler::taskDead(const std::string& task_name)  {
-  warning() << "Dead task:" << task_name << " died...." << endmsg;
+  MsgStream log(msgSvc(),name());
+  log << MSG::WARNING << "Dead task:" << task_name << " died...." << endmsg;
   if ( m_dataSources.empty() )    // This is a producer task to supply monitoring clients
     sendAlarm("Monitoring client:"+task_name+" died.");
   else                            // This is a consumer tasks receiving events
@@ -220,34 +309,25 @@ StatusCode NetworkDataHandler::execute()  {
   if ( pop )  {
     m_recipients.pop_front();
   }
-  if ( m_recipients.empty() )   {
-    sc = m_evtSelector->suspend();
-    if ( !sc.isSuccess() )  {
-      warning() << "Failed to suspend event selector until further notice." << endmsg;
-    }
-  }
-  return sc;
+  return m_recipients.empty() ? suspendEvents() : sc;
 }
 
 // Write MDF record from serialization buffer
 StatusCode NetworkDataHandler::writeBuffer(void* const /* ioDesc */, const void* data, size_t len)  {
-  longlong prtCount = fabs(m_freq) > 1./LONGLONG_MAX ? longlong(1./m_freq) : LONGLONG_MAX;
   // Now send the data ....
+  MsgStream log(msgSvc(),name());
   if ( m_recipients.empty() )  {
-    error() << "Failed to send MDF record [No known recipient]." << endmsg;
+    log << MSG::ERROR << "Failed to send MDF record [No known recipient]." << endmsg;
     return StatusCode::SUCCESS;
   }
-  std::string recipient = m_recipients.front();
-  debug() << "Handle event request for recipient:" << recipient << endmsg;
+  Recipient recipient(m_recipients.front());
+  log << MSG::DEBUG << "Handle event request for recipient:" << recipient.name << endmsg;
   if ( !sendData(recipient, data, len).isSuccess() )   {
-    error() << "Failed to send MDF to " << recipient << "." << endmsg;
+    log << MSG::ERROR << "Failed to send MDF to " << recipient.name << "." << endmsg;
     ++m_sendError;
     return StatusCode::FAILURE;
   }
   ++m_sendReq;
   m_sendBytes += len;
-  if ( 0 == (m_sendReq%prtCount) )  {
-    info() << "Sent " << m_sendReq << " Events with " << m_sendBytes << " Bytes." << endmsg;
-  }
   return StatusCode::SUCCESS;
 }

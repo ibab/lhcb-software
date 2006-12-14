@@ -1,11 +1,11 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MDFProducer.cpp,v 1.1 2006-12-07 09:36:08 frankb Exp $
-//	====================================================================
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MDFProducer.cpp,v 1.2 2006-12-14 18:59:19 frankb Exp $
+//  ====================================================================
 //  RawBufferCreator.cpp
-//	--------------------------------------------------------------------
+//  --------------------------------------------------------------------
 //
-//	Author    : Markus Frank
+//  Author    : Markus Frank
 //
-//	====================================================================
+//  ====================================================================
 #include "MDF/RawEventHelpers.h"
 #include "MDF/MDFHeader.h"
 #include "MBM/Producer.h"
@@ -126,7 +126,7 @@ extern "C" int mdf_producer(int argc,char **argv) {
   cli.getopt("partitionid",1,partID);
   if ( debug ) ::lib_rtl_start_debugger();
   ::printf("%synchronous MBM Producer \"%s\" Partition:%d (pid:%d) included in buffers.\n",
-	   async ? "As" : "S", name.c_str(), partID, MDFProducer::pid());
+     async ? "As" : "S", name.c_str(), partID, MDFProducer::pid());
   MDFProducer p(fname, buffer, name, partID, space);
   if ( async ) p.setNonBlocking(WT_FACILITY_DAQ_SPACE, true);
   return p.run();

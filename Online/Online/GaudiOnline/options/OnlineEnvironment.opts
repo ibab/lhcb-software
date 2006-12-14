@@ -4,6 +4,7 @@ OnlineEnv.PartititonID   = 333;
 //                              "LHCb::MemMonitoringEngine/MonitoringEngine" };
 // OnlineEnv.MonitoringSvcs = { "LHCb::MemMonitorSvc/MonitorSvc",
 //                              "LHCb::SharedMemMonitoringEngine/MonitoringEngine" };
+OnlineEnv.MonitorSvcType    = "LHCb::MemMonitorSvc/MonitorSvc";
 ApplicationMgr.ExtSvc       = { "LHCb::MemMonitorSvc/MonitorSvc",
                                 "LHCb::DimMonitoringEngine/MonitoringEngine" };
 // ApplicationMgr.ExtSvc   += { "MonitorSvc/MonitorSvc" };

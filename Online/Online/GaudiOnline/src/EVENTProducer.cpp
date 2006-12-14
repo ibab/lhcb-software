@@ -110,7 +110,7 @@ extern "C" int mep2event_prod(int argc,char **argv) {
   cli.getopt("partitionid",1,partID);
   cli.getopt("refcount",1,refCount);
   ::printf("%synchronous MEP Event generator \"%s\" (pid:%d) included in buffers.\n",
-	   async ? "As" : "S", name.c_str(),EVENTGenerator::pid());
+     async ? "As" : "S", name.c_str(),EVENTGenerator::pid());
   //_asm int 3
   EVENTGenerator c(name,partID, refCount);
   if ( async ) c.setNonBlocking(WT_FACILITY_DAQ_EVENT, true);

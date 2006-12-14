@@ -244,7 +244,7 @@ StatusCode LHCb::GaudiTask::nextEvent(int /* num_event */)  {
   }
   return DimTaskFSM::nextEvent(1);
 }
-	
+  
 StatusCode LHCb::GaudiTask::finalize()  {
 #if 0
   std::string nam, evtloop_name;

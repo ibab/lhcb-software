@@ -1,11 +1,11 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MDFSender.cpp,v 1.3 2006-11-28 13:54:22 frankb Exp $
-//	====================================================================
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MDFSender.cpp,v 1.4 2006-12-14 18:59:20 frankb Exp $
+//  ====================================================================
 //  MDFSender.cpp
-//	--------------------------------------------------------------------
+//  --------------------------------------------------------------------
 //
-//	Author    : Markus Frank
+//  Author    : Markus Frank
 //
-//	====================================================================
+//  ====================================================================
 #include "GaudiOnline/MDFSender.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/DataObject.h"
@@ -20,7 +20,7 @@ DECLARE_NAMESPACE_ALGORITHM_FACTORY(LHCb,MDFSender);
 
 /// Standard algorithm constructor
 LHCb::MDFSender::MDFSender(const std::string& nam, ISvcLocator* pSvc)
-:	MDFWriter(MDFIO::MDF_BANKS, nam, pSvc), m_current(0), m_allEvtSent(0), 
+:  MDFWriter(MDFIO::MDF_BANKS, nam, pSvc), m_current(0), m_allEvtSent(0), 
   m_allEvtError(0), m_allBytesSent(0)
 {
   declareProperty("PrintFreq",   m_freq = 0.);
@@ -76,7 +76,7 @@ StatusCode LHCb::MDFSender::writeBuffer(void* const /* ioDesc */, const void* da
     return StatusCode::FAILURE;
   }
   const std::string& tar = m_recipients[m_current];
-  int sc = amsc_send_message( data, len, tar.c_str(), WT_FACILITY_DAQ_EVENT, 0);
+  int sc = ::amsc_send_message( data, len, tar.c_str(), WT_FACILITY_DAQ_EVENT, 0);
   if ( AMS_SUCCESS != sc )   {
     MsgStream log(msgSvc(),name());
     log << MSG::ERROR << "Failed to send MDF to " << tar << ". status:" << sc << ". " << endmsg;

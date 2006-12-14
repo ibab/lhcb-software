@@ -1,6 +1,10 @@
 Package: GaudiOnline
 Author:  Markus Frank
 
+! 2006-12-18 Markus Frank
+ - Added classes for network data transfer between HLT farm ans storage layer.
+   Concrete implementations go along using AMS and DIM.
+
 ! 2006-12-17 Domenico Galli
  - Added FmcMessageSvc, an implementation of the Gaudi MessageSvc class,
    which streams messages from Gaudi to the FMC logger. This service

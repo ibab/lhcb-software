@@ -1,11 +1,11 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/NetworkDataHandler.h,v 1.1 2006-12-07 09:36:07 frankb Exp $
-//	====================================================================
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/NetworkDataHandler.h,v 1.2 2006-12-14 18:59:15 frankb Exp $
+//  ====================================================================
 //  NetworkDataHandler.h
-//	--------------------------------------------------------------------
+//  --------------------------------------------------------------------
 //
-//	Author    : Markus Frank
+//  Author    : Markus Frank
 //
-//	====================================================================
+//  ====================================================================
 #ifndef ONLINE_GAUDIONLINE_NETWORKDATAHANDLER_H
 #define ONLINE_GAUDIONLINE_NETWORKDATAHANDLER_H
 
@@ -36,29 +36,6 @@ namespace LHCb  {
     *  implement the actual networking capabilities. An suitable network messaging
     *  facility, which is name based may be used for a complete implementation.
     *
-    *  The protocol works as follows:
-    *
-    *      +----------+                 +----------+       +-----+
-    *      | Consumer |                 | Producer |       | MBM |
-    *      +----------+                 +----------+       +-----+
-    *           |                             |               |
-    *           |     Get space               |               |
-    *           +-------------------------------------------->|
-    *           |                             |               |
-    *           |     Request for event       |               |
-    *           +---------------------------->|  Get event    |
-    *           |                             +-------------->|
-    *           |     Send event data         |               |
-    *           |<----------------------------+               |
-    *           |                             |               |
-    *           |     Get space               |               |
-    *           +-------------------------------------------->|
-    *           |                             |               |
-    *           |     Declare event/Send space|               |
-    *           +-------------------------------------------->|
-    *           |                             |               |
-    *           |                             |               |
-    *
     * Note:
     * 1) The consumer executes on the monitoring farm.
     *    Consumer means "consumer of network data"
@@ -73,28 +50,50 @@ namespace LHCb  {
     */
   class NetworkDataHandler : public MDFWriter  {
   protected:
-    typedef std::list<std::string>   Recipients;
-    typedef std::vector<std::string> DataSources;
-    /// Reference to suspendable event selector
-    ISuspendable*   m_evtSelector;
-    lib_rtl_lock_t m_lock;
-
-    /// Property: Send target names
-    Recipients      m_recipients;
-    /// Property: printout frequence
-    float           m_freq;
-    /// Pointer to MBM producer
-    MBM::Producer*  m_prod;
-    /// Partition ID
+    struct Recipient  {
+      std::string         name;
+      long                identifier;
+      NetworkDataHandler* handler;
+      Recipient() : identifier(0), handler(0) {}
+      Recipient(const Recipient& e) 
+      : name(e.name), identifier(e.identifier), handler(e.handler) {}
+      Recipient(NetworkDataHandler* h, const std::string& n, long id)
+      : name(n), identifier(id), handler(h) {}
+      Recipient& operator=(const Recipient& e)  {
+        name = e.name;
+        identifier = e.identifier;
+        handler = e.handler;
+        return *this;
+      }
+    };
+    struct RecvEntry  : public Recipient  {
+      MBM::Producer* producer;
+      RecvEntry() : producer(0) {}
+      RecvEntry(const RecvEntry& e) : Recipient(e), producer(e.producer) {}
+      RecvEntry(NetworkDataHandler* h, const std::string& n,MBM::Producer* p)
+      : Recipient(h,n,0), producer(p) {}
+      RecvEntry& operator=(const RecvEntry& e)  {
+        Recipient::operator=(e);
+        producer = e.producer;
+        return *this;
+      }
+    };
+    typedef std::list<Recipient>                  Recipients;
+    typedef std::vector<std::string>              DataSources;
+    typedef std::vector<RecvEntry>                Receivers;
+    /// Property: Partition ID
     int             m_partitionID;
-    /// MBM buffer name
+    /// Property: [Consumer] MBM buffer name
     std::string     m_buffer, m_bm_name;
-    /// Process name
-    std::string     m_procName;
-    /// Consumer implementation: data source name. If empty component is in producer mode
+    /// Property: [Consumer] data source names. If empty component is in producer mode
     DataSources     m_dataSources;
-    /// Flag to indicate if a partitioned buffer should be connected
+    /// 
+    /// Property: Flag to indicate if a partitioned buffer should be connected
     bool            m_partitionBuffer;
+    /// Property: Buffer space [in kBytes] to be preallocated for event data.
+    int             m_buffLength;
+    /// Property: Flag to indicate asynchronous request ream mechanism
+    bool            m_asynchRearm;
     /// Monitoring item: Total number of items sent to receiver(s)
     int             m_sendReq;
     /// Monitoring item: Total number of send errors to receiver(s)
@@ -107,28 +106,37 @@ namespace LHCb  {
     int             m_recvError;
     /// Monitoring item: Total number of bytes received from clients
     int             m_recvBytes;
-    /// Pointer to member function for receive data action
-    StatusCode  (NetworkDataHandler::*m_net_handler)(size_t);
 
-    /// Helper for output messages
-    mutable MsgStream*  m_logger;
+    /// Reference to suspendable event selector
+    ISuspendable*   m_evtSelector;
+    /// Internal lock to synchronize access to queue of targets with pending event requests
+    lib_rtl_lock_t m_lock;
+    /// [Network Producer] Queue of targets with pending event requests
+    Recipients      m_recipients;
+    Receivers       m_receivers;
 
-    /// Helper for output messages
-    MsgStream& output() const     {  return *m_logger;                }
-    MsgStream& debug() const      {  return output() << MSG::DEBUG;   }
-    MsgStream& info() const       {  return output() << MSG::INFO;    }
-    MsgStream& error() const      {  return output() << MSG::ERROR;   }
-    MsgStream& warning() const    {  return output() << MSG::WARNING; }
-
+    /// WT callback for asynchronous request rearm
+    static int rearm_net_request(unsigned int facility,void* param);
     /// Issue alarm message to error logger
     virtual void sendAlarm(const std::string& msg);
-    /// Rearm network request for a single source
-    StatusCode rearmNetRequest(const std::string& src);
     /// Configure access to the event selector to suspend/resume
-    StatusCode configureSelector();
+    StatusCode configureNetProducer();
     /// Configure access to the buffer manager to declare events
-    StatusCode configureBuffer();
-
+    StatusCode configureNetConsumer();
+    /// Is the task a network event consumer or not ?
+    bool isNetEventConsumer() const { return !m_dataSources.empty();  }
+    /// Is the task a network event consumer or not ?
+    bool isNetEventProducer() const { return  m_dataSources.empty();  }
+    /// Access Request message content
+    const std::string& requestMessage() const;
+    /// Resume event access from MBM
+    StatusCode resumeEvents();
+    /// Resume event access from MBM
+    StatusCode suspendEvents();
+    /// Add request to request queue
+    StatusCode addRequest(const Recipient& task);
+    /// Retrieve receiver entry by name
+    RecvEntry* receiver(const std::string& nam);
   public:
     /// Standard algorithm constructor
     NetworkDataHandler(const std::string& nam, ISvcLocator* pSvc);
@@ -148,21 +156,32 @@ namespace LHCb  {
     virtual StatusCode subscribeNetwork()    
     {  return StatusCode::FAILURE;                                  }
     /// Networking layer overload: Unsubscribe from network requests
-    virtual StatusCode unsubscribeNetwork()
-    {  return StatusCode::FAILURE;                                  }
+    virtual StatusCode unsubscribeNetwork() = 0;
     /// Networking layer overload: Send data to target destination
-    virtual StatusCode sendData(const std::string& tar, const void* data, size_t len)
-    {  return StatusCode::FAILURE;                                  }
+    virtual StatusCode sendData(const Recipient& tar, const void* data, size_t len) = 0;
     /// Networking layer overload: Read data from network
-    virtual StatusCode readData(void* data, size_t* len, char* source)
-    {  return StatusCode::FAILURE;                                  }
+    virtual StatusCode readData(void* data, size_t* len) = 0;
 
-    /// Producer implementation: Handle client request to receive event over the network
-    virtual StatusCode handleEventRequest(size_t len);
-    /// Consumer implementation: Request event
-    virtual StatusCode requestEvents();
-    /// Consumer implementation: Handle event declaration into the buffer manager
-    virtual StatusCode handleEventData(size_t len);
+    /// Networking layer overload [Net consumer]: Formulate network request for a single event source
+    virtual StatusCode createNetRequest(RecvEntry& src);
+    /// Networking layer overload [Net consumer]: Rearm event request
+    virtual StatusCode rearmRequest(const RecvEntry& src);
+    /// Networking layer overload [Net consumer]: Reset event request
+    virtual StatusCode resetNetRequest(const RecvEntry& src);
+    /// Networking layer overload [Net consumer]: Rearm event buffer space
+    virtual StatusCode rearmBufferSpace(const RecvEntry& src);
+    /// Networking layer overload [Net consumer]: Rearm network request for a single event source
+    virtual StatusCode rearmNetRequest(const RecvEntry& src);
+    /// Networking layer overload [Net consumer]: Cancel network request for a single event source
+    virtual void deleteNetRequest(RecvEntry& src);
+    /// Networking layer overload [Net producer]: Read request for event data from network
+    virtual StatusCode readEventRequest(void* data, size_t* len) = 0;
+    /// Networking layer overload [Net consumer]: Handle event declaration into the buffer manager
+    virtual StatusCode handleEventData(const std::string& src, size_t len);
+
+    /// Networking layer overload [Net producer]: Handle client request to receive event over the network
+    virtual StatusCode handleEventRequest(long clientID,const std::string& source, size_t len);
+
     /// Write MDF record from serialization buffer
     virtual StatusCode writeBuffer(void* const /* ioDesc */, const void* data, size_t len);
     /// Need to override MDFWriter::execute: implement noop if no clients waiting.

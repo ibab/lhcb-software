@@ -1,78 +1,20 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MDFReceiver.cpp,v 1.4 2006-12-07 09:36:08 frankb Exp $
-//	====================================================================
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MDFReceiver.cpp,v 1.5 2006-12-14 18:59:19 frankb Exp $
+//  ====================================================================
 //  MDFReceiver.cpp
-//	--------------------------------------------------------------------
+//  --------------------------------------------------------------------
 //
-//	Author    : Markus Frank
+//  Author    : Markus Frank
 //
-//	====================================================================
-#include "GaudiKernel/Algorithm.h"
-#include "GaudiKernel/MsgStream.h"
-#include "GaudiKernel/xtoa.h"
-#include "Event/RawBank.h"
-#include "MDF/MDFHeader.h"
-#include "MBM/Producer.h"
-#include "MBM/mepdef.h"
-#include "AMS/amsdef.h"
-#include "WT/wtdef.h"
-
-using namespace MBM;
-
-/*
- *  LHCb namespace declaration
- */
-namespace LHCb  {
-
-  /**@class MDFReceiver MDFReceiver.cpp
-    *
-    *
-    * @author:  M.Frank
-    * @version: 1.0
-    */
-  class MDFReceiver : public Algorithm   {
-    /// Pointer to MBM producer
-    Producer*       m_prod;
-    /// Partition ID
-    int             m_partitionID;
-    /// MBM buffer name
-    std::string     m_buffer, m_bm_name;
-    /// Process name
-    std::string     m_procName;
-    /// Flag to indicate if a partitioned buffer should be connected
-    bool            m_partitionBuffer;
-    /// Monitoring quantity: Number of events received from network
-    int             m_evtCount;
-
-  public:
-    /// Standard algorithm constructor
-    MDFReceiver(const std::string& name, ISvcLocator* pSvcLocator);
-    /// Standard Destructor
-    virtual ~MDFReceiver();
-    /// amsu Callback on receiving ams message
-    static int s_receiveEvt(const amsuc_info* info, void* param)   
-    {  return ((MDFReceiver*)param)->receiveEvent(info);        }
-    /// amsu Callback on task dead
-    static int s_taskDead(const amsuc_info* info, void* param)
-    {  return ((MDFReceiver*)param)->taskDead(info);            }
-    /// Callback on receiving event
-    int receiveEvent(const amsuc_info* info);
-    /// Callback on task dead
-    int taskDead(const amsuc_info* info);
-    /// Initialize Algorithm
-    virtual StatusCode initialize();
-    /// Finalize Algorithm
-    virtual StatusCode finalize();
-    /// Execute procedure
-    virtual StatusCode execute();
-  };
-}
-
+//  ====================================================================
+#include "GaudiOnline/MDFReceiver.h"
 #include "GaudiKernel/AlgFactory.h"
 DECLARE_NAMESPACE_ALGORITHM_FACTORY(LHCb,MDFReceiver);
 
+using namespace LHCb;
+
 /// Standard algorithm constructor
-LHCb::MDFReceiver::MDFReceiver(const std::string& name, ISvcLocator* pSvcLocator)
-:	Algorithm(name, pSvcLocator), m_prod(0), m_evtCount(0)
+MDFReceiver::MDFReceiver(const std::string& name, ISvcLocator* pSvcLocator)
+:  Algorithm(name, pSvcLocator), m_prod(0), m_evtCount(0)
 {
   m_procName = RTL::processName();
   declareProperty("Buffer",          m_buffer = "EVENT");
@@ -82,13 +24,13 @@ LHCb::MDFReceiver::MDFReceiver(const std::string& name, ISvcLocator* pSvcLocator
 }
 
 /// Standard Destructor
-LHCb::MDFReceiver::~MDFReceiver()      {
+MDFReceiver::~MDFReceiver()      {
 }
 
-StatusCode LHCb::MDFReceiver::initialize()   {
+StatusCode MDFReceiver::initialize()   {
   MsgStream log(msgSvc(),name());
   m_bm_name = m_buffer;
-  int sc = amsuc_subscribe(WT_FACILITY_DAQ_EVENT,s_receiveEvt,s_taskDead,this);
+  int sc = ::amsuc_subscribe(WT_FACILITY_DAQ_EVENT,s_receiveEvt,s_taskDead,this);
   if ( AMS_SUCCESS != sc )  {
     log << MSG::ERROR << "amsuc_subscribe(WT_FACILITY_DAQ_EVENT) Failed status:" 
         << sc << ". " << endmsg;
@@ -99,7 +41,7 @@ StatusCode LHCb::MDFReceiver::initialize()   {
     m_bm_name += "_";
     m_bm_name += ::_itoa(m_partitionID,txt,16);
   }
-  m_prod = new Producer(m_bm_name,m_procName,m_partitionID);
+  m_prod = new MBM::Producer(m_bm_name,m_procName,m_partitionID);
   declareInfo("EvtCount",   m_evtCount=0, "Number of events received from network");
   declareInfo("MBMName",    m_bm_name,    "MBM buffer name");
   declareInfo("PartitionID",m_partitionID,"Partition identifier");
@@ -107,20 +49,21 @@ StatusCode LHCb::MDFReceiver::initialize()   {
 }
 
 /// Finalize
-StatusCode LHCb::MDFReceiver::finalize()     {    
+StatusCode MDFReceiver::finalize()     {    
   if ( m_prod ) delete m_prod;
   m_prod = 0;
   m_procName = "";
-  amsuc_remove(WT_FACILITY_DAQ_EVENT);
+  ::wtc_flush(WT_FACILITY_DAQ_EVENT);
+  ::amsuc_remove(WT_FACILITY_DAQ_EVENT);
   return StatusCode::SUCCESS;
 }
 
 /// Execute procedure
-StatusCode LHCb::MDFReceiver::execute()    {
+StatusCode MDFReceiver::execute()    {
   return StatusCode::SUCCESS;
 }
 
-int LHCb::MDFReceiver::receiveEvent(const amsuc_info* info)    {
+int MDFReceiver::receiveEvent(const amsuc_info* info)    {
   MsgStream log(msgSvc(),name());
   char     source[64];
   unsigned int facility;
@@ -130,7 +73,7 @@ int LHCb::MDFReceiver::receiveEvent(const amsuc_info* info)    {
   }
   int sc = m_prod->getSpace(info->length);
   if ( sc == MBM_NORMAL ) {
-    EventDesc& e = m_prod->event();
+    MBM::EventDesc& e = m_prod->event();
     size_t size = e.len;
     sc = ::amsc_read_message(e.data,&size,source,&facility,0);
     if ( AMS_SUCCESS != sc )   {
@@ -150,7 +93,7 @@ int LHCb::MDFReceiver::receiveEvent(const amsuc_info* info)    {
   return AMS_SUCCESS;
 }
 
-int LHCb::MDFReceiver::taskDead(const amsuc_info* info)  {
+int MDFReceiver::taskDead(const amsuc_info* info)  {
   MsgStream log(msgSvc(),name());
   log << MSG::WARNING << "Sender task:" << info->source << " died...." << endmsg;
   return AMS_SUCCESS;

@@ -46,18 +46,18 @@ namespace LHCb  {
 }
 #endif // GAUDIONLINE_ONLINECONTEXT_H
 
-// $Id: OnlineEvtSelector.cpp,v 1.23 2006-12-07 09:36:08 frankb Exp $
+// $Id: OnlineEvtSelector.cpp,v 1.24 2006-12-14 18:59:21 frankb Exp $
 //====================================================================
-//	OnlineEvtSelector.cpp
+//  OnlineEvtSelector.cpp
 //--------------------------------------------------------------------
 //
-//	Package    : GaudiOnline
+//  Package    : GaudiOnline
 //
 //  Description: The GaudiOnline::OnlineEvtSelector component is able
 //               to produce a list of event references given 
 //               a set of "selection criteria".
 //
-//	Author     : M.Frank, B.Jost
+//  Author     : M.Frank, B.Jost
 //====================================================================
 //
 //   State diagram(s) for blocking execution:

@@ -1,11 +1,11 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/DecisionSetterAlg.cpp,v 1.15 2006-04-19 11:43:20 frankb Exp $
-//	====================================================================
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/DecisionSetterAlg.cpp,v 1.16 2006-12-14 18:59:18 frankb Exp $
+//  ====================================================================
 //  DecisionSetterAlg.cpp
-//	--------------------------------------------------------------------
+//  --------------------------------------------------------------------
 //
-//	Author    : Markus Frank
+//  Author    : Markus Frank
 //
-//	====================================================================
+//  ====================================================================
 #include "GaudiKernel/Algorithm.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/IRegistry.h"
@@ -36,7 +36,7 @@ namespace LHCb  {
   public:
     /// Standard algorithm constructor
     DecisionSetterAlg(const std::string& name, ISvcLocator* pSvcLocator)
-    :	Algorithm(name, pSvcLocator), m_mepMgr(0), m_mepID(MEP_INV_DESC), m_prod(0) {                                
+    :  Algorithm(name, pSvcLocator), m_mepMgr(0), m_mepID(MEP_INV_DESC), m_prod(0) {                                
     }
     /// Standard Destructor
     virtual ~DecisionSetterAlg()      {                                 }
