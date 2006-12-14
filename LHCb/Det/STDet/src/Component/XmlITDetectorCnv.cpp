@@ -1,4 +1,4 @@
-// $Id: XmlITDetectorCnv.cpp,v 1.1 2005-12-19 15:18:25 mneedham Exp $
+// $Id: XmlITDetectorCnv.cpp,v 1.2 2006-12-14 13:41:07 ranjard Exp $
 
 // DetDesc
 #include "DetDescCnv/XmlUserDetElemCnv.h"
@@ -7,5 +7,4 @@
 #include "STDet/DeITDetector.h"
 
 typedef XmlUserDetElemCnv<DeITDetector>       XmlITDetectorCnv;
-static CnvFactory<XmlITDetectorCnv>           s_XmlITDetectorCnvFactory ;
-const ICnvFactory&  XmlITDetectorCnvFactory = s_XmlITDetectorCnvFactory ;
+DECLARE_CONVERTER_FACTORY(XmlITDetectorCnv)

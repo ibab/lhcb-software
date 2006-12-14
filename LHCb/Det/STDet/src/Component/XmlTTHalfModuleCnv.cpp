@@ -1,4 +1,4 @@
-// $Id: XmlTTHalfModuleCnv.cpp,v 1.1 2005-12-19 15:18:25 mneedham Exp $
+// $Id: XmlTTHalfModuleCnv.cpp,v 1.2 2006-12-14 13:41:07 ranjard Exp $
 
 // DetDesc
 #include "DetDescCnv/XmlUserDetElemCnv.h"
@@ -7,5 +7,4 @@
 #include "STDet/DeTTHalfModule.h"
 
 typedef XmlUserDetElemCnv<DeTTHalfModule>      XmlTTHalfModuleCnv;
-static CnvFactory<XmlTTHalfModuleCnv>          s_XmlTTHalfModuleCnvFactory ;
-const ICnvFactory& XmlTTHalfModuleCnvFactory = s_XmlTTHalfModuleCnvFactory ;
+DECLARE_CONVERTER_FACTORY(XmlTTHalfModuleCnv)

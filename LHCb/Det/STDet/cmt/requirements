@@ -1,13 +1,13 @@
 package STDet
-version v2r7
+version v3r0
 
 branches cmt doc src STDet
-
-include_dirs $(STDETROOT)
 
 use DetDescCnv	v*	Det
 use LHCbKernel	v* Kernel
 use Boost       v*      LCG_Interfaces
+
+apply_pattern install_more_includes more=STDet
 
 #---- link library
 library STDetLib ../src/Lib/*.cpp

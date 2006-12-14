@@ -1,4 +1,4 @@
-// $Id: XmlTTLayerCnv.cpp,v 1.1 2005-12-19 15:18:25 mneedham Exp $
+// $Id: XmlTTLayerCnv.cpp,v 1.2 2006-12-14 13:41:07 ranjard Exp $
 
 // DetDesc
 #include "DetDescCnv/XmlUserDetElemCnv.h"
@@ -7,5 +7,4 @@
 #include "STDet/DeTTLayer.h"
 
 typedef XmlUserDetElemCnv<DeTTLayer >        XmlTTLayerCnv;
-static CnvFactory<XmlTTLayerCnv>           s_XmlTTLayerCnvFactory ;
-const ICnvFactory&  XmlTTLayerCnvFactory = s_XmlTTLayerCnvFactory ;
+DECLARE_CONVERTER_FACTORY(XmlTTLayerCnv)

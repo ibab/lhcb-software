@@ -1,4 +1,4 @@
-// $Id: XmlTTSectorCnv.cpp,v 1.1 2005-12-19 15:18:25 mneedham Exp $
+// $Id: XmlTTSectorCnv.cpp,v 1.2 2006-12-14 13:41:07 ranjard Exp $
 
 // DetDesc
 #include "DetDescCnv/XmlUserDetElemCnv.h"
@@ -7,5 +7,4 @@
 #include "STDet/DeTTSector.h"
 
 typedef XmlUserDetElemCnv<DeTTSector >        XmlTTSectorCnv;
-static CnvFactory<XmlTTSectorCnv>           s_XmlTTSectorCnvFactory ;
-const ICnvFactory&  XmlTTSectorCnvFactory = s_XmlTTSectorCnvFactory ;
+DECLARE_CONVERTER_FACTORY(XmlTTSectorCnv)

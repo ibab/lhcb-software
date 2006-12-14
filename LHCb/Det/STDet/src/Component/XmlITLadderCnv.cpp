@@ -1,4 +1,4 @@
-// $Id: XmlITLadderCnv.cpp,v 1.1 2006-01-26 13:49:55 mneedham Exp $
+// $Id: XmlITLadderCnv.cpp,v 1.2 2006-12-14 13:41:07 ranjard Exp $
 
 // DetDesc
 #include "DetDescCnv/XmlUserDetElemCnv.h"
@@ -7,5 +7,4 @@
 #include "STDet/DeITLadder.h"
 
 typedef XmlUserDetElemCnv<DeITLadder >        XmlITLadderCnv;
-static CnvFactory<XmlITLadderCnv>           s_XmlITLadderCnvFactory ;
-const ICnvFactory&  XmlITLadderCnvFactory = s_XmlITLadderCnvFactory ;
+DECLARE_CONVERTER_FACTORY(XmlITLadderCnv)
