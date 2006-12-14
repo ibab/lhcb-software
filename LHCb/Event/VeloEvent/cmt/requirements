@@ -1,13 +1,11 @@
-# $Id: requirements,v 1.35 2006-02-20 12:23:18 cattanem Exp $
+# $Id: requirements,v 1.36 2006-12-14 14:46:07 ranjard Exp $
 # Maintainer: Chris Parkes, Tomasz Szumlak
 #
 package VeloEvent
 
-version v14r0
+version v15r0
 
 branches cmt doc xml VeloEvent
-
-include_dirs    $(VELOEVENTROOT)
 
 use LHCbKernel     v* Kernel
 
@@ -15,6 +13,8 @@ use LHCbKernel     v* Kernel
 macro VeloEventObj2Doth_GODflags " -s ../VeloEvent/ " \
       WIN32                      " -s ..\VeloEvent\ "
 document obj2doth VeloEventObj2Doth ../xml/*.xml
+
+apply_pattern install_more_includes more=VeloEvent
 
 private
 use GaudiObjDesc v* -no_auto_imports
