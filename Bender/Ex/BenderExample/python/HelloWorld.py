@@ -1,6 +1,6 @@
 #!/usr/bin/env python2.4
 # =============================================================================
-# $Id: HelloWorld.py,v 1.2 2006-11-28 18:26:45 ibelyaev Exp $
+# $Id: HelloWorld.py,v 1.3 2006-12-14 09:15:03 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ , version $Revison:$
 # =============================================================================
@@ -57,7 +57,16 @@ def configure ( **args ) :
 
     ## set it as main algorithm toebexecuted 
     gaudi.setAlgorithms ( hello )
+
+    ## get the input data
+    import data_Bs2Jpsiphi_mm as input 
     
+    ## get input data 
+    evtSel = gaudi.evtSel()    
+    evtSel.open ( input.PFNs ) 
+    evtSel.PrintFreq = 1
+    
+
     return SUCCESS 
     
 ## report about what is imported
@@ -72,6 +81,9 @@ if __name__ == '__main__' :
 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.2  2006/11/28 18:26:45  ibelyaev
+#  prepare for v6r1
+#
 # =============================================================================
 # The END 
 # =============================================================================
