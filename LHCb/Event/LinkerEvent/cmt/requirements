@@ -3,13 +3,12 @@
 # Maintainer : Olivier Callot
 #============================================================================
 package           LinkerEvent
-version           v2r2p2
+version           v3r0
 
 #============================================================================
 # Structure, i.e. directories to process. 
 #============================================================================
 branches          cmt doc src Event Linker xml
-include_dirs $(LINKEREVENTROOT)
 
 #============================================================================
 # Used packages.
@@ -19,11 +18,11 @@ use LHCbKernel	v*	Kernel
 #============================================================================
 #---- Produce Header-Files and from XML description
 #============================================================================
-private
 document obj2doth LinkerEventObj2Doth ../xml/*.xml
+install_more_includes more=Event offset=Linker
+
 document obj2dict LinkerEventObj2Dict ../xml/*.xml    
 
-public
 library          LinkerEvent         ../src/*.cpp
 library          LinkerEventDict     ../$(tag)/dict/LinkerEvent/*.cpp
 

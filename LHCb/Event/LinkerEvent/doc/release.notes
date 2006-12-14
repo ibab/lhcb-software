@@ -4,6 +4,10 @@
 ! Purpose     : Implementation of the Linker package, to associate objects
 !-----------------------------------------------------------------------------
 
+!======================= LinkerEvent v3r0 2006-12-14 ==========================
+! 2006-12-06 - Florence RANJARD
+ - replace include_dirs with apply_pattern install_more_includes
+
 !====================== LinkerEvent v2r2p2 2006-08-01 ========================
 ! 2006-08-01 - Marco Cattaneo
  - Add missing includes to LinkerWithKey.h, no longer picked up from SerializeStl
