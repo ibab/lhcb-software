@@ -1,8 +1,11 @@
-// $Id: CaloReCreateMCLinks.cpp,v 1.6 2006-02-23 14:03:40 ibelyaev Exp $
+// $Id: CaloReCreateMCLinks.cpp,v 1.7 2006-12-14 10:33:17 ranjard Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.6 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.7 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2006/02/23 14:03:40  ibelyaev
+//  change the default configuration of CaloReCreateMCLinks
+//
 // Revision 1.5  2005/12/20 13:35:28  ocallot
 // Fixes due to fault CaloEvent release
 //
@@ -134,32 +137,7 @@ private:
 // ============================================================================
 
 // ============================================================================
-/// anonymouse namesapce to hide local algorithm factory
-// ============================================================================
-namespace 
-{
-  // ==========================================================================
-  /** @var s_Factory
-   *  local concrete algorithm factory for instantiation of 
-   *  algorithm CaloReCreateMCLinks 
-   *  @see CaloReCreateMCLinks
-   *  @author Vanya BELYAEV Ivan.BElyaev@lapp.in2p3.fr
-   *  @date 2005-05-10
-   */
-  // ==========================================================================
-  const  AlgFactory<CaloReCreateMCLinks>         s_Factory ;
-  // ==========================================================================
-};
-// ============================================================================
-/** @var CaloReCreateMCLinksFactory
- *  exported abstract algorithm factory for instantiation of 
- *  algorithm CaloReCreateMCLinks 
- *  @see CaloReCreateMCLinks
- *  @author Vanya BELYAEV Ivan.BElyaev@lapp.in2p3.fr
- *  @date 2005-05-10
- */
-// ============================================================================
-const   IAlgFactory&CaloReCreateMCLinksFactory = s_Factory ; 
+DECLARE_ALGORITHM_FACTORY(CaloReCreateMCLinks)
 // ============================================================================
 
 // ============================================================================

@@ -4,6 +4,9 @@
 ! Purpose     : Convert Calo Digit and Trigger information to RawEvent banks.
 !-----------------------------------------------------------------------------
 
+! 2006-12-06 - Florence RANJARD
+ - apply_pattern install_more_includes
+
 !========================== CaloDAQ v2r6 2006-11-23 ==========================
 ! 2006-11-23 - Marco Cattaneo
  - Use DECLARE_xxx_FACTORY macros
