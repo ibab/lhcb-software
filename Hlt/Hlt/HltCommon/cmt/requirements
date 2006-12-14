@@ -20,6 +20,7 @@ use L0Event		v*    Event
 use HltBase             v*    Hlt
 use DetDesc             v*    Det
 
+use TrackInterfaces     v*    Tr
 use PatTools            v*    Pat
 
 #============================================================================

@@ -12,6 +12,8 @@ DECLARE_FACTORY_ENTRIES( HltCommon ) {
   DECLARE_ALGORITHM( HltTrackIPSelection );
   DECLARE_ALGORITHM( HltMonitor );
 
+  DECLARE_ALGORITHM( HltOffMonitorExample );
+
   DECLARE_TOOL( HltDataStore );
 
 }
