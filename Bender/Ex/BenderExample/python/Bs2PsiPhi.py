@@ -1,6 +1,6 @@
 #!/usr/bin/env python2.4
 # =============================================================================
-# $Id: Bs2PsiPhi.py,v 1.3 2006-11-28 18:26:44 ibelyaev Exp $
+# $Id: Bs2PsiPhi.py,v 1.4 2006-12-14 12:08:53 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ , version $Revison:$
 # =============================================================================
@@ -47,6 +47,14 @@ class Bs2PsiPhi(AlgoMC) :
     def analyse( self ) :
         """ standard method for analyses """
 
+        # get all primary vertices
+        primaries = self.vselect( 'PVs' , ISPRIMARY )
+
+        if primaries.empty() :
+            return self.Warning('No Primary vertices are found!', SUCCESS)
+
+        mips = MIPCHI2( primaries, self.geo() ) 
+        
         finder  = self.mcFinder()
         mcbs  = finder.find ( '[ B_s0 -> (  J/psi(1S) ->  mu+  mu- {, gamma } ) (  phi(1020) ->  K+  K- ) ]cc' )
         mcpsi = finder.find ( '[ B_s0 -> ( ^J/psi(1S) ->  mu+  mu- {, gamma } ) (  phi(1020) ->  K+  K- ) ]cc' )
@@ -121,7 +129,7 @@ class Bs2PsiPhi(AlgoMC) :
         phi = self.selected("phi")
         if phi.empty() : return self.Warning ( "No RC-phi" , SUCCESS) # RETURN         
 
-        ## loop over seelected psi & phi
+        ## loop over selected psi & phi
         bs = self.loop("psi phi", "B_s0")
         for b in bs :
             m12  = b.mass(1,2) / 1000 
@@ -142,7 +150,18 @@ class Bs2PsiPhi(AlgoMC) :
                 self.plot ( m , " psi     phi     mass MC " , 4 , 6 )
             if mcBs ( b ) and mcPsi ( psi ) and mcPhi ( phi ) :
                 self.plot ( m , " psi(MC) phi(MC) mass MC " , 4 , 6 )
-                b.save("Bs")
+
+            # find proper primary vertex
+            bp = b.particle()
+            bv = b.vertex()
+            if not bv or not bp : continue 
+            #pv = selectVertexMin( primaries , VIPCHI2 ( bp , self.geo() ) , 0.2 > VVDSIGN( bv ) )
+            pv = selectVertexMin( primaries , VIPCHI2 ( bp , self.geo() ) , VALL )
+            if not pv :
+                self.Warning('No proper primary vertex found!')
+                continue
+            
+            b.save("Bs")
                 
         Bs = self.selected("Bs")
         if not Bs.empty() :  self.setFilterPassed( True )        # IMPORTANT 
@@ -212,6 +231,9 @@ if __name__ == '__main__' :
 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.3  2006/11/28 18:26:44  ibelyaev
+#  prepare for v6r1
+#
 # =============================================================================
 # The END 
 # =============================================================================
