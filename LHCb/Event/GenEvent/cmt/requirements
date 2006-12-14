@@ -1,16 +1,15 @@
 package GenEvent
-version v4r6
+version v5r0
 
 branches cmt doc src xml Event
 
 use HepMC        v*	LCG_Interfaces
 use EventBase    v*     Event
 
-include_dirs $(GENEVENTROOT)
-
 # Produce Header-Files from XML description
 #============================================================================
 document obj2doth GenEventObj2Doth ../xml/*.xml
+apply_pattern install_more_includes more=Event
 
 # Generate dictionaries with lcgdict via GOD
 #============================================================================
