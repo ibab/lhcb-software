@@ -3,16 +3,16 @@
 # Maintainer : Matt Needham
 #============================================================================
 package           SiTools
-version           v1r0
+version           v1r1
 
 branches          cmt doc src
 include_path      none
 
-use MCEvent   v* Event
+use MCEvent     v* Event
 use LHCbKernel  v* Kernel
 use GaudiAlg    v*
 use GaudiKernel v*
-use GaudiGSL v*
+use GaudiGSL    v*
 
 #============================================================================
 # Component library building rule

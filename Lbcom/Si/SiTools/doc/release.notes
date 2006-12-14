@@ -2,8 +2,9 @@ Package         : Si/SiTools
 Package manager : Matt Needham
 !------------------------------------------------------------------------------
 
+!============================ SiTools v1r1 2006-12-14 =========================
 ! 2006-12-08
-- Update to Gaudi::Inits and new macros for declaring factories
+ - Update to Gaudi::Inits and new macros for declaring factories
 
 !============================ SiTools v1r0 2006-05-17 =========================
 ! 2006-05-16 - M.Needham
