@@ -1,4 +1,4 @@
-// $Id: RawEventCreator.cpp,v 1.2 2006-09-26 10:55:58 marcocle Exp $
+// $Id: RawEventCreator.cpp,v 1.3 2006-12-14 13:48:18 ranjard Exp $
 // Include files 
 
 // from Gaudi
@@ -17,9 +17,7 @@ using namespace LHCb;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-static const  AlgFactory<RawEventCreator>          s_factory ;
-const        IAlgFactory& RawEventCreatorFactory = s_factory ; 
-
+DECLARE_ALGORITHM_FACTORY(RawEventCreator)
 
 //=============================================================================
 // Standard constructor, initializes variables

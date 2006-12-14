@@ -1,4 +1,4 @@
-// $Id: ByteStreamTests.cpp,v 1.1 2005-10-14 12:48:50 cattanem Exp $
+// $Id: ByteStreamTests.cpp,v 1.2 2006-12-14 13:48:18 ranjard Exp $
 // Include files 
 #include <iostream>
 
@@ -20,9 +20,7 @@ using namespace LHCb;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-static const  AlgFactory<ByteStreamTests>          s_factory ;
-const        IAlgFactory& ByteStreamTestsFactory = s_factory ; 
-
+DECLARE_ALGORITHM_FACTORY(ByteStreamTests)
 
 //=============================================================================
 // Standard constructor, initializes variables

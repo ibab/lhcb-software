@@ -1,15 +1,17 @@
 package DAQEvent
-version v6r8
+version v7r0
 
 use GaudiKernel v*
 branches cmt doc Event src tests xml
 
-include_dirs $(DAQEVENTROOT)
 
 # Produce Header-Files & dictionary from XML description
 #============================================================================
 document obj2doth DAQEventObj2Doth ../xml/*.xml
+apply_pattern	install_more_includes more=Event offset=xml
+
 document obj2dict DAQEventObj2Dict ../xml/*.xml
+
 
 # ==================== Produce LCG dictionary ===============================
 apply_pattern     reflex_dictionary                            \
@@ -25,7 +27,6 @@ library DAQEventLib     *.cpp
 library DAQEvent        component/*.cpp -import=GaudiAlg
 
 # ==================== Standard patterns (order is important!) ==============
-apply_pattern component_library library=DAQEventDict
 apply_pattern component_library library=DAQEvent
 apply_pattern linker_library    library=DAQEventLib
 
