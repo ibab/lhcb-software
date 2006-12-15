@@ -1,8 +1,11 @@
-// $Id: Reporter.cpp,v 1.6 2006-11-09 18:26:53 ibelyaev Exp $
+// $Id: Reporter.cpp,v 1.7 2006-12-15 08:37:20 ranjard Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.6 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.7 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2006/11/09 18:26:53  ibelyaev
+//  fix welcome message
+//
 // Revision 1.5  2006/11/09 17:01:06  ibelyaev
 //  v1r8: improve printout
 //
@@ -154,29 +157,9 @@ namespace LoKi
   };
 }
 // ============================================================================
-// anonymouse namepsace to hide static factory
+using namespace LoKi;
+DECLARE_TOOL_FACTORY(Reporter)
 // ============================================================================
-namespace 
-{
-  // ==========================================================================
-  /** @var s_Factory
-   *  concrete factory for instantriation of class LoKi::Reporter 
-   *  @date 2006-01-17
-   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-   */
-  // ==========================================================================
-  const  ToolFactory<LoKi::Reporter>       s_Factory ;
-} ;
-// ============================================================================
-/** @var LoKiReporterFactory 
- *  abstract factory for instantriation of class LoKi::Reporter 
- *  @date 2006-01-17
- *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
- */
-// ============================================================================
-const   IToolFactory&LoKiReporterFactory = s_Factory ; 
-// ============================================================================
-
 
 // ============================================================================
 // The END 

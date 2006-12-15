@@ -1,8 +1,11 @@
-// $Id: LoKiSvc.cpp,v 1.6 2006-11-09 17:01:06 ibelyaev Exp $
+// $Id: LoKiSvc.cpp,v 1.7 2006-12-15 08:37:20 ranjard Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2006/11/09 17:01:06  ibelyaev
+//  v1r8: improve printout
+//
 // Revision 1.5  2006/06/24 17:18:41  ibelyaev
 //  reduce the printout
 //
@@ -287,29 +290,8 @@ private:
 };
 // ============================================================================
 
-
 // ============================================================================
-// anonymous namespace to hide static factory
-// ============================================================================
-namespace 
-{
-  // ==========================================================================
-  /** @var s_Factory
-   *  concrete factory for instantiation of LoKiSvc instances 
-   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-   *  @date 2006-01-17
-   */
-  // ==========================================================================
-  const SvcFactory<LoKiSvc> s_Factory;
-} ;
-// ============================================================================
-/** @var LoKiSvcFactory
- *  abstract factory for instantiation of LoKiSvc instances 
- *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
- *  @date 2006-01-17
- */
-// ============================================================================
-const ISvcFactory&LoKiSvcFactory = s_Factory ;
+DECLARE_SERVICE_FACTORY(LoKiSvc)
 // ============================================================================
 
 
