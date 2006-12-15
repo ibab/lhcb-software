@@ -3,9 +3,10 @@
 
 // Include files
 // -------------
+// local
+#include "Event/TrackTypes.h"
 // from LHCbKernel
 #include "GaudiKernel/SystemOfUnits.h"
-#include "Kernel/TrackTypes.h"
 
 /** @namespace TrackUnitsConverters
  *

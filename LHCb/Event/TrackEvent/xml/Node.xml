@@ -16,7 +16,7 @@
       <import name='Event/State' />
       <import name='Event/Measurement' />
       <import name='Event/TrackParameters' />
-      <import name='Kernel/TrackTypes' />
+      <import name='Event/TrackTypes' />
 
       &StlPtrVector;
 

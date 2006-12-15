@@ -2,7 +2,7 @@
 #define TRACKEVENT_STATEPARAMETERS_H 1
 
 // Include files
-#include "GaudiKernel/PhysicalConstants.h"
+#include "GaudiKernel/SystemOfUnits.h"
 
 /** @namespace StateParameters
  *

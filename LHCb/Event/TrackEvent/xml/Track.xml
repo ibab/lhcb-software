@@ -43,8 +43,8 @@
       <import name='Event/Measurement' />
       <import name='Event/Node' />
       <import name='Kernel/LHCbID' />
-      <import name='Kernel/Plane3DTypes' />
-      <import name='Kernel/GenericMatrixTypes' />
+      <import name='GaudiKernel/Plane3DTypes' />
+      <import name='GaudiKernel/GenericMatrixTypes' />
       <import name="GaudiKernel/VectorMap"/>
 
 <!--

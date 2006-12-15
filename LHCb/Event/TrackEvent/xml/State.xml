@@ -15,10 +15,10 @@
       keyedContTypeDef = 'TRUE'>
 
       <import name ="GaudiKernel/MsgStream"/>
-       <import name="Kernel/Point3DTypes.h"/>
-       <import name="Kernel/Vector3DTypes.h"/>
-       <import name="Kernel/SymmetricMatrixTypes.h"/>
-       <import name="Kernel/TrackTypes.h"/>
+       <import name="GaudiKernel/Point3DTypes.h"/>
+       <import name="GaudiKernel/Vector3DTypes.h"/>
+       <import name="GaudiKernel/SymmetricMatrixTypes.h"/>
+       <import name="Event/TrackTypes.h"/>
       &StlPtrVector;
 
 <!--

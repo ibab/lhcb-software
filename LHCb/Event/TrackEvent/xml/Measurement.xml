@@ -11,7 +11,7 @@
       desc        = 'Measurement is the base class for offline and online measurements.'
       serializers = 'FALSE' >
 
-      <import name='Kernel/TrackTypes.h' />
+      <import name='Event/TrackTypes.h' />
       <import name='Kernel/LHCbID' />
       <import name='Kernel/Trajectory' />
 

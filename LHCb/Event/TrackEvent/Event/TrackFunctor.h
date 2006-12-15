@@ -6,8 +6,8 @@
 #include <stdio.h>
 #include <functional>
 
-// from LHCbDefinitions
-#include "Kernel/Plane3DTypes.h"
+// from GaudiKernel
+#include "GaudiKernel/Plane3DTypes.h"
 
 // from TrackEvent
 #include "Event/Track.h"
