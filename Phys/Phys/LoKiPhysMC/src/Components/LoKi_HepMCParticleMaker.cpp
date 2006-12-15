@@ -1,8 +1,11 @@
-// $Id: LoKi_HepMCParticleMaker.cpp,v 1.5 2006-11-12 14:58:51 ibelyaev Exp $
+// $Id: LoKi_HepMCParticleMaker.cpp,v 1.6 2006-12-15 12:01:05 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2006/11/12 14:58:51  ibelyaev
+//  add phtons and disable smearing
+//
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -100,10 +103,10 @@ protected:
     , m_chargedcut ( LoKi::Cuts::GALL ) 
     , m_gammacut   ( LoKi::Cuts::GALL ) 
     //
-    , m_minPtGamma      ( 150 * Gaudi::Units::MeV ) 
-    , m_minThetaGamma   ( 32.0 / 1200.0 ) 
-    , m_maxThetaXGamma  ( 4.0  / 1200.0 ) 
-    , m_maxThetaYGamma  ( 3.0  / 1200.0 ) 
+    , m_minPtGamma      ( 150.0 * Gaudi::Units::MeV ) 
+    , m_minThetaGamma   (  32.0 * Gaudi::Units::cm     / 12.4 * Gaudi::Units::meter )  
+    , m_maxThetaXGamma  (   4.0 * Gaudi::Units::meter  / 12.4 * Gaudi::Units::meter ) 
+    , m_maxThetaYGamma  (   3.0 * Gaudi::Units::meter  / 12.4 * Gaudi::Units::meter ) 
     //
     , m_minPCharged     (   3 * Gaudi::Units::GeV  )
     , m_minPtCharged    (  10 * Gaudi::Units::MeV  )
@@ -236,13 +239,13 @@ StatusCode LoKi_HepMCParticleMaker::initialize()
   if ( 0 <  m_minThetaGamma ) 
   {
     m_gammacut = m_gammacut && 
-      abs(GPX/GPZ) > m_minThetaGamma && 
-      abs(GPY/GPZ) > m_minThetaGamma ;  
+      abs(atan2(GPX,GPZ)) > m_minThetaGamma && 
+      abs(atan2(GPY,GPZ)) > m_minThetaGamma ;  
   }
   if ( 0 <  m_maxThetaXGamma ) 
-  { m_gammacut = m_gammacut && abs(GPX/GPZ) < m_maxThetaXGamma ; }
+  { m_gammacut = m_gammacut && abs(atan2(GPX,GPZ)) < m_maxThetaXGamma ; }
   if ( 0 <  m_maxThetaYGamma ) 
-  { m_gammacut = m_gammacut && abs(GPY/GPZ) < m_maxThetaYGamma ; }
+  { m_gammacut = m_gammacut && abs(atan2(GPY,GPZ)) < m_maxThetaYGamma ; }
 
   m_charged = 
     ( "e+"  == GABSID || "mu+" == GABSID || 
