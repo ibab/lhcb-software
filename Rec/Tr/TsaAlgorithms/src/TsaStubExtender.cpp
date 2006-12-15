@@ -1,4 +1,4 @@
-// $Id: TsaStubExtender.cpp,v 1.1 2006-12-06 14:35:02 mneedham Exp $
+// $Id: TsaStubExtender.cpp,v 1.2 2006-12-15 09:47:34 mneedham Exp $
 
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -157,7 +157,7 @@ StatusCode TsaStubExtender::execute(int& sect, std::vector<SeedStub*> stubs[], s
       SeedTrack* seed = new SeedTrack(xPnts,6+stn); 
 
       // Fit parabola to all X hits on track 
-      if ( m_parabolaFit->fit(seed,csth) < 1 || seed->nx() < 4 || fabs( seed->sx() ) > 0.7 ) {
+      if ( m_parabolaFit->fit(seed,csth) < 1 || seed->nx() < 4 || fabs( seed->sx() ) > 0.6 ) {
         delete seed;
         continue;
       }
@@ -205,8 +205,8 @@ StatusCode TsaStubExtender::execute(int& sect, std::vector<SeedStub*> stubs[], s
       seed->setYPnts( yPnts );
 
       //  Fit line to Y hits
-      if ( m_fitLine->fit( seed ) < 1 || seed->ny() < 3 || fabs( seed->sy() ) > 0.04 || fabs( seed->y0() ) > 400. ||
-           seed->nx()+seed->ny() < 8 ) {
+      if ( m_fitLine->fit( seed ) < 1 || seed->ny() < 4 || fabs( seed->sy() ) > 0.04 || fabs( seed->y0() ) > 400. ||
+           seed->nx()+seed->ny() < 9 ) {
         delete seed;
         continue;
       }
@@ -231,7 +231,7 @@ StatusCode TsaStubExtender::execute(int& sect, std::vector<SeedStub*> stubs[], s
         }
 
         int rc = m_parabolaFit->fit( seed, csth );  //  Refit seed
-        if ( rc < 1 || seed->nx() < 4 || fabs( seed->sx() ) > 0.8 ) {
+        if ( rc < 1 || seed->nx() < 4 || fabs( seed->sx() ) > 0.6 ) {
           delete seed;
           continue;
         }
@@ -255,8 +255,8 @@ StatusCode TsaStubExtender::execute(int& sect, std::vector<SeedStub*> stubs[], s
           continue;
         }
 
-        if ( m_fitLine->fit(seed) < 1 || seed->ny() < 3 || fabs( seed->sy() ) > 0.04 || fabs( seed->y0() ) > 400. ||
-             seed->nx()+seed->ny() < 8 ) {
+        if ( m_fitLine->fit(seed) < 1 || seed->ny() < 4 || fabs( seed->sy() ) > 0.04 || fabs( seed->y0() ) > 400. ||
+             seed->nx()+seed->ny() < 9 ) {
           delete seed;
           continue;
         }

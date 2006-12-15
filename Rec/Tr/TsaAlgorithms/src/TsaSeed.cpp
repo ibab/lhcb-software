@@ -32,7 +32,7 @@ TsaSeed::TsaSeed(const std::string& name,
   TsaBaseAlg(name, pSvcLocator)
 {
   
-  declareProperty("maxNumHits", m_maxNumHits = 10000);
+  declareProperty("maxNumHits", m_maxNumHits = 14000);
   declareProperty("addHits", m_addHitsInITOverlap = true);
   declareProperty("calcLikelihood", m_calcLikelihood = true);
 

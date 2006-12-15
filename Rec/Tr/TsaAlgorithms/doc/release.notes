@@ -4,6 +4,10 @@
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
 
+! 2006-12-15 M Needham
+ - Better stub extension (less ghosts)
+ - Relax hot event rejection
+
 ! 2006-12-04
  - A major release !
     * Faster, more flexible, more efficient, less ghosts, 
