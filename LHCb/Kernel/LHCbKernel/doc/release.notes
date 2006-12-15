@@ -8,6 +8,7 @@
 ! 2006-12-15 - Marco Cattaneo
  - Add Kernel/LHCbConstants.h, moved from LHCbDefinitions
  - Remove all other LHCbDefinitions dependencies
+ - Add link dependency on MatchCore and SMatrix, previously from LHCbDefinitions
 
 ! 2006-12-06 - Florence RANJARD
  - apply_pattern install_more_includes

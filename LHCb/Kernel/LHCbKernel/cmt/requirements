@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.113 2006-12-15 14:21:10 cattanem Exp $
+# $Id: requirements,v 1.114 2006-12-15 15:54:02 cattanem Exp $
 # =============================================================================
 package LHCbKernel
 author  M.Frank    CERN/LHCb
@@ -41,14 +41,15 @@ library LHCbKernelDict ../$(tag)/dict/LHCbKernel/*.cpp
 # Debug flag for RichSmartID
 macro_append LHCbKernel_cppflags "" \
                    Linux&debug " -DRICHDEBUG "
-        
+
 # Standard patterns (order is essential)
 #============================================================================
 apply_pattern component_library library=LHCbKernelDict
 apply_pattern linker_library    library=LHCbKernel
 
-macro_append LHCbKernel_linkopts  "-L$(ROOT_home)/lib  -lReflex " \
-             WIN32  "/LIBPATH:$(ROOT_home)/lib libReflex.lib "
+macro_append LHCbKernel_linkopts  "-L$(ROOT_home)/lib  -lReflex -lMathCore -lSmatrix " \
+             WIN32  "/LIBPATH:$(ROOT_home)/lib libReflex.lib libMathCore.lib libSmatrix.lib "
+
 private
 #============================================================================
 use GaudiObjDesc v* -no_auto_imports
