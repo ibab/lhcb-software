@@ -1,4 +1,4 @@
-// $Id: TrajOTProjector.h,v 1.7 2006-05-25 12:54:33 erodrigu Exp $
+// $Id: TrajOTProjector.h,v 1.8 2006-12-15 19:11:39 graven Exp $
 #ifndef TRAJOTPROJECTOR_H 
 #define TRAJOTPROJECTOR_H 1
 
@@ -6,6 +6,7 @@
 
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
+#include "Kernel/GenericMatrixTypes.h"
 
 // local
 #include "TrackProjector.h"
@@ -29,6 +30,11 @@ public:
   /// It returns the chi squared of the projection
   virtual StatusCode project( const LHCb::State& state,
                               LHCb::Measurement& meas );
+  StatusCode project( const LHCb::State& state,
+                      LHCb::OTMeasurement& meas );
+
+  typedef Gaudi::Matrix1x6 Derivatives;
+  Derivatives alignmentDerivatives(const LHCb::Measurement& meas, const Gaudi::XYZPoint& pivot) const;
 
   /// initialize
   virtual StatusCode initialize();
@@ -42,6 +48,7 @@ public:
   virtual ~TrajOTProjector();
 
 private:
+  double driftDistance(const LHCb::OTMeasurement& meas, double arclen ) const;
 
   DeOTDetector*      m_det;
   IMagneticFieldSvc* m_pIMF;          ///< Pointer to the magn. field service

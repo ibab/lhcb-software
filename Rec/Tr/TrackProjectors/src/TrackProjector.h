@@ -1,4 +1,4 @@
-// $Id: TrackProjector.h,v 1.5 2006-06-15 08:29:26 graven Exp $
+// $Id: TrackProjector.h,v 1.6 2006-12-15 19:11:38 graven Exp $
 #ifndef TRACKPROJECTORS_TRACKPROJECTOR_H 
 #define TRACKPROJECTORS_TRACKPROJECTOR_H 1
 
@@ -28,12 +28,14 @@ class TrackProjector : public GaudiTool,
                        virtual public ITrackProjector {
 
 public:
+  /// Standard constructor
+  TrackProjector( const std::string& type, 
+                  const std::string& name,
+                  const IInterface* parent );
 
-  /// Project a state onto a measurement.
-  /// It returns the chi squared of the projection
-  virtual StatusCode project( const LHCb::State& state,
-                              LHCb::Measurement& meas );
-  
+  /// Destructor
+  virtual ~TrackProjector();
+
   /// Retrieve the projection matrix H of the (last) projection
   virtual const Gaudi::TrackProjectionMatrix& projectionMatrix() const;
 
@@ -47,23 +49,9 @@ public:
   double errResidual() const;
 
   /// Retrieve the error on the measurement of the (last) projection
-  double errMeasure() const { return m_errMeasure; };
-
-  /// Standard constructor
-  TrackProjector( const std::string& type, 
-                  const std::string& name,
-                  const IInterface* parent );
-
-  /// Destructor
-  virtual ~TrackProjector();
+  double errMeasure() const;
 
 protected:
-
-  void computeResidual( const LHCb::State& state,
-                        const LHCb::Measurement& meas );
-
-  void computeErrorResidual( const LHCb::State& state,
-                             const LHCb::Measurement& meas );
 
   double  m_residual;
   double  m_errResidual;
