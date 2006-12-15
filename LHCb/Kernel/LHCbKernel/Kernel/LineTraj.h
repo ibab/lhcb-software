@@ -1,4 +1,4 @@
-// $Id: LineTraj.h,v 1.14 2006-12-06 15:35:21 graven Exp $
+// $Id: LineTraj.h,v 1.15 2006-12-15 14:21:10 cattanem Exp $
 #ifndef LHCbKernel_LineTraj_H
 #define LHCbKernel_LineTraj_H 1
 
@@ -145,7 +145,7 @@ inline LHCb::LineTraj::LineTraj( const Point& middle,
 /// Constructor from the middle point and a unit direction vector
 inline LHCb::LineTraj::LineTraj( const Point& middle,
                     const Vector& dir,
-                                 const Range& range, bool normalized) 
+                                 const Range& range, bool /* normalized */ ) 
   : Trajectory(range),
     m_dir(dir),
     m_pos(middle)

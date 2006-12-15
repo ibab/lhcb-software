@@ -5,7 +5,7 @@
  *  Header file for RICH utility class : RichRadIntersection
  *
  *  CVS Log :-
- *  $Id: RichRadIntersection.h,v 1.1 2006-10-20 12:53:50 jonrob Exp $
+ *  $Id: RichRadIntersection.h,v 1.2 2006-12-15 14:21:10 cattanem Exp $
  *
  *  @author Antonis Papanestis
  *  @date   2006-02-28
@@ -19,8 +19,8 @@
 #include <functional>
 
 // Include files
-#include "Kernel/Point3DTypes.h"
-#include "Kernel/Vector3DTypes.h"
+#include "GaudiKernel/Point3DTypes.h"
+#include "GaudiKernel/Vector3DTypes.h"
 
 // DetDesc
 class DeRichRadiator;

@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.112 2006-12-14 15:03:01 ranjard Exp $
+# $Id: requirements,v 1.113 2006-12-15 14:21:10 cattanem Exp $
 # =============================================================================
 package LHCbKernel
 author  M.Frank    CERN/LHCb
@@ -9,7 +9,6 @@ version v6r16
 branches cmt doc Event Kernel src xml
 
 use GaudiKernel     v*
-use LHCbDefinitions v* Kernel
 use Boost           v* LCG_Interfaces
 
 # Produce Header-Files from XML description, overriding default destination

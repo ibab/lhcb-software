@@ -1,13 +1,14 @@
-// $Id: Trajectory.h,v 1.14 2006-07-11 09:49:54 mneedham Exp $
+// $Id: Trajectory.h,v 1.15 2006-12-15 14:21:10 cattanem Exp $
 #ifndef LHCbKernel_Trajectory_H
 #define LHCbKernel_Trajectory_H 1
 
 // Includes
 
-// from Kernel/LHCbDefinitions
-#include "Kernel/Point3DTypes.h"
-#include "Kernel/Vector3DTypes.h"
-#include "Kernel/GenericMatrixTypes.h"
+// from Gaudi
+#include "GaudiKernel/Point3DTypes.h"
+#include "GaudiKernel/Vector3DTypes.h"
+#include "GaudiKernel/GenericMatrixTypes.h"
+
 #include <utility>
 #include <memory>
 

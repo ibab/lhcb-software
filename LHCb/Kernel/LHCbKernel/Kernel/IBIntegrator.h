@@ -1,4 +1,4 @@
-// $Id: IBIntegrator.h,v 1.2 2005-12-08 15:19:23 cattanem Exp $
+// $Id: IBIntegrator.h,v 1.3 2006-12-15 14:21:09 cattanem Exp $
 #ifndef KERNEL_IBINTEGRATOR_H 
 #define KERNEL_IBINTEGRATOR_H 1
 
@@ -6,10 +6,8 @@
 // -------------
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
-
-// from LHCbDefinitions
-#include "Kernel/Point3DTypes.h"
-#include "Kernel/Vector3DTypes.h"
+#include "GaudiKernel/Point3DTypes.h"
+#include "GaudiKernel/Vector3DTypes.h"
 
 
 static const InterfaceID IID_IBIntegrator ( "IBIntegrator", 2, 0 );

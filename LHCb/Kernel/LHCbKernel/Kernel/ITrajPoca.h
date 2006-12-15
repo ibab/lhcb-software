@@ -1,13 +1,11 @@
-#ifndef TRACKINTERFACES_ITRAJPOCA_H 
-#define TRACKINTERFACES_ITRAJPOCA_H 1
+#ifndef KERNEL_ITRAJPOCA_H 
+#define KERNEL_ITRAJPOCA_H 1
 
 // Include files
 // -------------
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
-
-// from LHCbDefinitions
-#include "Kernel/Vector3DTypes.h"
+#include "GaudiKernel/Vector3DTypes.h"
 
 #include "Trajectory.h"
 
@@ -65,4 +63,4 @@ public:
   { return minimize( traj, arclength, false, pt, distance, precision); }
 
 };
-#endif // TRACKINTERFACES_ITRAJPOCA_H
+#endif // KERNEL_ITRAJPOCA_H
