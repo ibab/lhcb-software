@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/NetworkDataSender.cpp,v 1.2 2006-12-14 21:27:47 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/NetworkDataSender.cpp,v 1.3 2006-12-15 14:42:21 frankb Exp $
 //  ====================================================================
 //  NetworkDataSender.cpp
 //  --------------------------------------------------------------------
@@ -88,8 +88,8 @@ StatusCode NetworkDataSender::resumeEvents()  {
 StatusCode NetworkDataSender::suspendEvents()  {
   StatusCode sc = m_evtSelector->suspend();
   if ( !sc.isSuccess() )  {
-    MsgStream output(msgSvc(),name());
-    output << MSG::WARNING << "Failed to suspend event selector until further notice." << endmsg;
+    MsgStream log(msgSvc(),name());
+    log << MSG::WARNING << "Failed to suspend event selector until further notice." << endmsg;
   }
   return sc;
 }
@@ -136,8 +136,13 @@ StatusCode NetworkDataSender::execute()  {
     Recipient rcp = m_recipients.front();
     m_recipients.pop_front();
     // Mode without requests: add entry again at end....
-    if ( !m_useEventRequests ) m_recipients.push_back(rcp);
-    else if ( m_recipients.empty() ) suspendEvents();
+    if ( !m_useEventRequests ) {
+      m_recipients.push_back(rcp);
+      resumeEvents();
+    }
+    else if ( m_recipients.empty() ) {
+      suspendEvents();
+    }
     return sc;
   }
   sendAlarm("Spurious request to transfer event to unknown endpoint.");

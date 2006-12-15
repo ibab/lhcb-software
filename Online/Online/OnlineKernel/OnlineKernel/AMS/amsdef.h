@@ -78,6 +78,9 @@ enum AddressStyles   {
                         int timeout, unsigned int* facility, unsigned int r_facility, char* dest);
   /** Read message and move message buffer to user. It's the users responsability to delete the buffer! */
   int amsc_read_message_long (void** buff, size_t* size, char* from, unsigned int* facility, char* dest);
+  /** release long message pointer                                 */
+  int amsc_release_message_long(void* buff);
+
   /** Read message and copy data to target buffer                  */
   int amsc_read_message     ( void*, size_t*, char*, unsigned int*, char* );
   /** Retrieve AMS node name                                       */

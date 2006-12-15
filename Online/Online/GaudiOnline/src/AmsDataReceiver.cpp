@@ -29,20 +29,23 @@ namespace LHCb  {
     }
     /// amsu Callback on receiving ams message
     static int i_receive_evt(const amsuc_info* i, void* p) {
-      //amsuc_info* info = new amsuc_info(*i);
       AmsDataReceiver* r = (AmsDataReceiver*)p;
       size_t len = i->length;
-      void* buff = 0;
+      void* buff = ::operator new(i->length);
       char source[128];
       unsigned int facility;
       int sc = ::amsc_read_message_long(&buff,&len,source,&facility,0);
+      // int sc = ::amsc_read_message(buff,&len,source,&facility,0);
       if ( AMS_SUCCESS != sc )   {
         MsgStream err(r->msgSvc(), r->name());
         err << MSG::ERROR << "Failed to read message from " << i->source << " status:" << sc << endmsg;
         return WT_ERROR;
       }
       if ( !r->handleEventData(source, buff, len).isSuccess() )  {
-        if ( buff ) ::operator delete(buff);
+        MsgStream err(r->msgSvc(), r->name());
+        err << MSG::ERROR << "Failed to handle message from " << i->source << endmsg;
+        if ( buff ) ::amsc_release_message_long(buff);
+        return WT_ERROR;
       }
       return WT_SUCCESS;
     }
@@ -87,7 +90,7 @@ namespace LHCb  {
     /// Copy event data into buffer manager
     virtual StatusCode copyEventData(void* to, void* from, size_t len)  {
       ::memcpy(to,from,len);
-      ::operator delete(from);
+      ::amsc_release_message_long(from);
       return StatusCode::SUCCESS;
     }
   };

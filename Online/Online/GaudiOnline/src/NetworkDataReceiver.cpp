@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/NetworkDataReceiver.cpp,v 1.2 2006-12-14 21:27:47 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/NetworkDataReceiver.cpp,v 1.3 2006-12-15 14:42:21 frankb Exp $
 //  ====================================================================
 //  NetworkDataReceiver.cpp
 //  --------------------------------------------------------------------
@@ -17,6 +17,7 @@
 #include "RTL/rtl.h"
 #include "WT/wtdef.h"
 #include <algorithm>
+#include <memory>
 #include <cmath>
 
 using namespace LHCb;
@@ -41,8 +42,8 @@ NetworkDataReceiver::~NetworkDataReceiver()      {
 
 // WT callback to declare asynchronously event data to MBM
 int NetworkDataReceiver::rearm_net_request(unsigned int,void* param)  {
-  RecvEntry* h = (RecvEntry*)param;
-  h->handler->declareEventData(*h);
+  std::auto_ptr<RecvEntry> h((RecvEntry*)param);
+  h->handler->declareEventData(*h.get());
   return WT_SUCCESS;
 }
 
@@ -158,13 +159,13 @@ NetworkDataReceiver::handleEventData(const std::string& src,void* buf,size_t len
   try  {
     RecvEntry* entry = receiver(src);
     if ( entry )  {
-      MsgStream debug(msgSvc(), name());
-      entry->buffer = (char*)buf;
-      entry->size = len;
-      debug << MSG::DEBUG << "Received event from:" << entry->name 
-            << " [" << entry->service << "] Size:" << entry->size << endmsg;
+      // Need to clone entry - new message may be arriving before this one is handled...
+      // (In mode without explicit rearm)
+      RecvEntry* e = new RecvEntry(*entry);
+      e->buffer = (char*)buf;
+      e->size = len;
       StatusCode sc = resetNetRequest(*entry);
-      ::wtc_insert(WT_FACILITY_DAQ_EVENT,entry);
+      ::wtc_insert(WT_FACILITY_DAQ_EVENT,e);
       return sc;
     }
     error("Event receive entry from unknown source:"+src);
@@ -188,6 +189,7 @@ StatusCode NetworkDataReceiver::copyEventData(void* to, void* from, size_t len) 
 
 // Handle event declaration into the buffer manager
 StatusCode NetworkDataReceiver::declareEventData(RecvEntry& entry)  {
+  MsgStream log(msgSvc(), name());
   try {
     int ret = m_prod->getSpace(entry.size);
     if ( ret == MBM_NORMAL ) {
@@ -203,25 +205,21 @@ StatusCode NetworkDataReceiver::declareEventData(RecvEntry& entry)  {
           return rearmRequest(entry);
         }
       }
-      MsgStream error(msgSvc(), name());
-      error << MSG::ERROR << "Failed to retrieve network event data from:" << entry.name << endmsg;
+      log << MSG::ERROR << "Failed to retrieve network event data from:" << entry.name << endmsg;
       if ( ret != MBM_REQ_CANCEL ) rearmRequest(entry);
       return StatusCode::SUCCESS;
     }
-    MsgStream error(msgSvc(), name());
     // Cannot do anything - must handle and rearm new request
-    error << MSG::ERROR << "Failed to get space for buffer manager." << endmsg;
+    log << MSG::ERROR << "Failed to get space for buffer manager." << endmsg;
     if ( ret != MBM_REQ_CANCEL ) rearmRequest(entry);
     return StatusCode::SUCCESS;
   }
   catch(std::exception& e)  {
-    MsgStream error(msgSvc(), name());
-    error << MSG::ERROR << "Got exception when declaring event from:" << entry.name << endmsg;
-    error << e.what() << endmsg;
+    log << MSG::ERROR << "Got exception when declaring event from:" << entry.name << endmsg;
+    log << e.what() << endmsg;
   }
   catch(...)  {
-    MsgStream error(msgSvc(), name());
-    error << MSG::ERROR << "Got unknown exception when declaring event from:" << entry.name << endmsg;
+    log << MSG::ERROR << "Got unknown exception when declaring event from:" << entry.name << endmsg;
   }
   return StatusCode::FAILURE;
 }

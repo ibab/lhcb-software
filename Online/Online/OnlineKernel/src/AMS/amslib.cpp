@@ -40,36 +40,44 @@ static const int RCVBUF_VALUE = CHOP_SIZE;
   lib_rtl_enable_intercept(); 
 
 
-
+#define AMS_MAGIC 0xDEADCAFE
 //#define _amsc_printf printf
 static inline void _amsc_printf(const char*, ...) {}
 
-struct amsheader_t {
+namespace {
+
+  struct amsheader_t {
     unsigned int    size;
-    char	          dest [NAME_LENGTH];
-    char	          source [NAME_LENGTH];
+    char            dest[NAME_LENGTH];
+    char            source[NAME_LENGTH];
     unsigned int    reserved;
     unsigned int    msg_type;
     unsigned int    facility;
-    amsheader_t() : size(0), msg_type(AMS_MSG_DATA), facility(0) {}
-};
+    unsigned int    magic;
+    amsheader_t() : size(0), msg_type(AMS_MSG_DATA), facility(0), magic(AMS_MAGIC) {}
+    void reset() {
+      memset(this,0,sizeof(amsheader_t));
+      magic = AMS_MAGIC;
+    }
+  };
 
-struct amsqueue_t : public qentry_t {
+  struct amsqueue_t : public qentry_t {
     unsigned int   size;
     amsheader_t	  *message;
     amsqueue_t() : qentry_t(), size(0), message(0) {}
     amsqueue_t(size_t len) : qentry_t(), size(len)  {
-      message  = new (::operator new(len)) amsheader_t;
+      message  = new (::operator new(len)) amsheader_t();
       size     = len;
     }
     amsqueue_t* release()  {
       if (message) delete message;
+      message = 0;
       delete this;
       return 0;
     }
-};
+  };
 
-struct amsentry_t : public qentry_t {
+  struct amsentry_t : public qentry_t {
     int           chan;
     int           refCount;
     int           del_pending;
@@ -91,9 +99,8 @@ struct amsentry_t : public qentry_t {
       else del_pending = 1;
       return AMS_SUCCESS;
     }
-};
+  };
 
-namespace {
   struct  AMS  {
     AMS () : message_Q(0,0), park_Q(0,0), AMS_Q(0,0) {
       wt_enable_mask=0;
@@ -269,7 +276,7 @@ static void _amsc_fill_header(amsheader_t *amh, size_t size,
                               const char *src, const char *dest,
                               int fac, int mtype, const void *buf_ptr)
 {
-  ::memset(amh,0,sizeof(amsheader_t));
+  amh->reset();
   amh->size     = htonl(size);
   amh->facility = htonl(fac);
   amh->msg_type = htonl(mtype);
@@ -427,26 +434,6 @@ static int _amsc_tcp_send_exact (amsentry_t *db,const void *buffer,size_t siz,u_
   return AMS_SUCCESS;
 }
 
-#if 0
-static int _amsc_tcp_recv (amsentry_t *db, void *buff, size_t *sizptr, u_int flag)  {
-  WITHOUT_INTERCEPT(int got_now = recv (db->chan, (char*)buff, *sizptr, flag));
-  if (got_now == -1)  {
-    errno = lib_rtl_socket_error();
-    got_now = 0;
-    switch(errno)  {
-      case ESOCK_CONNREFUSED:
-      case ESOCK_NOTCONN:
-        return AMS_CONNCLOSED;
-      default:
-        if (errno != ESOCK_WOULDBLOCK)
-          return AMS_TERRIBLE;
-        break;
-    }
-  }
-  *sizptr = got_now;
-  return AMS_SUCCESS;
-}
-#endif
 static int _amsc_tcp_recv_exact (amsentry_t *db, void *buffer, size_t siz, unsigned int flag)  {
   u_int got = 0;
   int count = 0;
@@ -624,18 +611,20 @@ int _amsc_move_msgptr_to_user (amsqueue_t *m, void **buff, size_t *size,
   case AMS_TASKDIED:
   case AMS_CONNCLOSED:
   case AMS_TIMEOUT:
-    status = h->msg_type;
     if ( size ) *size = 0;
+    if ( buff ) *buff = 0;
+    status = h->msg_type;
     break;
   }
-  if (facility) *facility = h->facility;
+  if ( facility ) *facility = h->facility;
   if ( from ) ::memcpy (from, h->source, sizeof (h->source));
   if ( dest ) ::memcpy (dest, h->dest,   sizeof (h->dest));
   return status;
 }
 
 static int _amsc_move_to_user (amsqueue_t *m, void *buff, size_t *size, 
-                        char *from, char *dest, unsigned int *facility, bool partial=false)    
+                               char *from, char *dest, unsigned int *facility, 
+                               bool partial=false)    
 {
   size_t s = 0;
   void* ptr = 0;
@@ -728,8 +717,8 @@ static int _amsc_peek_action (unsigned int /* fac */, void* param)    {
   amsqueue_t* m = e ? e->pending : 0;
   if ( e->pending == 0 )  {  // brand new message: get its length (net_to_hosted)
     int length, status;
-    status  = _amsc_tcp_recv_exact(e,&length,sizeof(int),0);
-    length  = ntohl (length);
+    status = _amsc_tcp_recv_exact(e,&length,sizeof(int),0);
+    length = ntohl (length);
     _amsc_printf("amsc_peek_action: %d\n",status);
     switch (status)  {
     case AMS_SUCCESS:        // allocate memory for message
@@ -936,7 +925,7 @@ static int _amsc_receive_action (unsigned int /* fac */,void* param)   {
   }
   insqti (m, &_ams.AMS_Q);
 #ifdef _USE_FULL_WT
-  return wtc_insert (WT_FACILITY_TCPAMS, 0);
+  return wtc_insert(WT_FACILITY_TCPAMS, 0);
 #else
   return _amsc_mess_action(WT_FACILITY_TCPAMS,0);
 #endif
@@ -1033,8 +1022,8 @@ static int _amsc_read_message_long (void** buffer, size_t* size, char* from, uns
   CheckInitialization();
   int status  = _amsc_test_message();
   if (status == AMS_SUCCESS)  {
-    remqhi (&_ams.message_Q, (qentry_t**)&m);
-    status = _amsc_move_msgptr_to_user(m, buffer, size, from, dest, facility);
+    remqhi(&_ams.message_Q, (qentry_t**)&m);
+    status = _amsc_move_msgptr_to_user(m,buffer,size,from,dest,facility);
     m->message = 0;
     m->release();
     _amsc_remove_node_if_mine(from, DEFAULT_STYLE);
@@ -1281,6 +1270,20 @@ int amsc_read_message (void* buff, size_t* size, char* from, unsigned int* facil
 int amsc_read_message_long (void** buff, size_t* size, char* from, unsigned int* facility, char* dest)  {
   RTL::Lock lock(_ams.lockid);
   return _amsc_read_message_long(buff,size,from,facility,dest);
+}
+
+int amsc_release_message_long(void* buff) {
+  amsheader_t *h = (amsheader_t*)buff;
+  if ( h ) {
+    h = h - 1;
+    if ( h->magic == AMS_MAGIC ) {
+      delete h;
+      return AMS_SUCCESS;
+    }
+  }
+  // _amsc_
+printf("Failed to release long message buffer:%p\n",buff);
+  return AMS_NODATA;
 }
 
 int amsc_declare_user_ast (int (*astadd)(void*),void* astpar) {
