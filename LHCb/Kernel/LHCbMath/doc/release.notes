@@ -9,6 +9,7 @@
 !========================= LHCbMath v2r0 2006-12-15 ===========================
 ! 2006-12-15 - Marco Cattaneo
  - Added LHCbMath/LHCbMath.h and LHCbMath/LineTypes.h, moved from LHCbDefinitions
+ - Removed Root from include path, already in GaudiKernel
 
 ! 2006-12-06 - Florence RANJARD
  - apply_pattern install_more_includes

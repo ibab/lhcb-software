@@ -12,9 +12,6 @@ version v2r0
 
 branches cmt doc LHCbMath src
 
-include_path none
-include_dirs $(ROOT_home)/include
-
 #============================================================================
 # Used packages
 #============================================================================
