@@ -4,6 +4,10 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+!===================== RichRecBase v3r0 2006-12-14 =======================
+! 2006-12-06 - Florence RANJARD
+ - apply_pattern install_more_includes
+
 ! 2006-12-02 - Chris Jones
  - Add method to RichRecTrack to return pointer to RichRecSegemnt in a
    given radiator
