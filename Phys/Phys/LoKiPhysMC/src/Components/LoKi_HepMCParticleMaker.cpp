@@ -1,8 +1,11 @@
-// $Id: LoKi_HepMCParticleMaker.cpp,v 1.7 2006-12-15 13:03:25 ibelyaev Exp $
+// $Id: LoKi_HepMCParticleMaker.cpp,v 1.8 2006-12-15 13:06:55 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2006/12/15 13:03:25  ibelyaev
+//  more fixes
+//
 // Revision 1.6  2006/12/15 12:01:05  ibelyaev
 //  fix bugs
 //
@@ -246,9 +249,9 @@ StatusCode LoKi_HepMCParticleMaker::initialize()
         m_minThetaGamma < abs ( atan2 ( GPY , GPZ ) )  ) ;  
   }
   if ( 0 <  m_maxThetaXGamma ) 
-  { m_gammacut = m_gammacut && abs(atan2(GPX,GPZ)) < m_maxThetaXGamma ; }
+  { m_gammacut = m_gammacut && m_maxThetaXGamma > abs ( atan2 ( GPX , GPZ ) ) ; }
   if ( 0 <  m_maxThetaYGamma ) 
-  { m_gammacut = m_gammacut && abs(atan2(GPY,GPZ)) < m_maxThetaYGamma ; }
+  { m_gammacut = m_gammacut && m_maxThetaYGamma > abs ( atan2 ( GPY , GPZ ) ) ; }
 
   m_charged = 
     ( "e+"  == GABSID || "mu+" == GABSID || 
