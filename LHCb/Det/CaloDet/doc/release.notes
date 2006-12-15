@@ -1,10 +1,15 @@
-! $Id: release.notes,v 1.65 2006-12-14 10:48:18 ranjard Exp $ 
+! $Id: release.notes,v 1.66 2006-12-15 16:15:07 cattanem Exp $ 
 ! =============================================================================
 Package         : CaloDet   
 Package manager : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
 
-!======================== CaloDet v8r0 2006-12-14 ============================
+!======================== CaloDet v8r0 2006-12-15 ============================
+! 2006-12-15 - Marco Cattaneo
+ - Use SystemOfUnits.h from GaudiKernel
+ - Remove dependency on LHCbDefinitions
+ - Cleanup CaloDet_load.cpp
+
 ! 2006-12-06 - Florence RANJARD
  - apply_pattern install_more_includes
  - fixes for new Plugins

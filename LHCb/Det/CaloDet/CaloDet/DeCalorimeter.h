@@ -1,4 +1,4 @@
-// $Id: DeCalorimeter.h,v 1.24 2006-06-27 16:58:42 odescham Exp $ 
+// $Id: DeCalorimeter.h,v 1.25 2006-12-15 16:15:06 cattanem Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -8,11 +8,10 @@
 /// from STL
 #include <iostream>
 #include <vector>
-//From Kernel/LHCbDefintions
-#include "Kernel/Transform3DTypes.h"
-#include "Kernel/Plane3DTypes.h"
-#include "Kernel/Point3DTypes.h"
 /// GaudiKernel
+#include "GaudiKernel/Transform3DTypes.h"
+#include "GaudiKernel/Plane3DTypes.h"
+#include "GaudiKernel/Point3DTypes.h"
 #include "GaudiKernel/MsgStream.h"
 /// from Det/DetDesc
 #include "DetDesc/DetectorElement.h"

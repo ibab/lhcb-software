@@ -1,14 +1,4 @@
-// $Id: DeCalorimeter.cpp,v 1.32 2006-06-27 16:58:42 odescham Exp $ 
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.31  2006/06/15 14:39:46  ibelyaev
-//  remove own Assert and add subCalos
-//
-// Revision 1.30  2006/06/15 09:27:28  ibelyaev
-//  add DeCalorimeter::Cell_ function
-// 
+// $Id: DeCalorimeter.cpp,v 1.33 2006-12-15 16:15:07 cattanem Exp $ 
 // ============================================================================
 #define  CALODET_DECALORIMETER_CPP 1
 // ============================================================================
@@ -17,13 +7,9 @@
 #include <cmath>
 #include <algorithm>
 // ============================================================================
-// from Kernel/LHCbDefintions
-// ============================================================================
-#include "Kernel/SystemOfUnits.h"
-// ============================================================================
 // from Gaudi
 // ============================================================================
-#include "GaudiKernel/SmartDataPtr.h"
+#include "GaudiKernel/SystemOfUnits.h"
 // ============================================================================
 // DetDesc
 // ============================================================================
@@ -59,8 +45,8 @@ DeCalorimeter::DeCalorimeter( const std::string& name )
   ,  m_initialized       ( false      )
   ,  m_cardsInitialized  ( false      )
   ,  m_caloIndex         ( -1         )
-  ,  m_maxEtInCenter     ( 10.0 * GeV )
-  ,  m_maxEtSlope        ( 0.0  * GeV )
+  ,  m_maxEtInCenter     ( 10.0 * Gaudi::Units::GeV )
+  ,  m_maxEtSlope        ( 0.0  * Gaudi::Units::GeV )
   ,  m_adcMax            ( 4095       )
   ,  m_pedShift          ( 0.6        )
   ,  m_activeToTotal     ( 6.         )
