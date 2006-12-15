@@ -5,6 +5,74 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v22r0>2006-12-14 LHCbSys v22r0</A></H1><PRE>
+This version is using the InstallArea. It has been built with Gaudi from
+/afs/cern.ch/sw/app/nightlies/dev/Wed
+
+- LHCb is removed: use *Sys packages instead
+
+- in CaloDAQ v3r0 
+  apply_pattern install_more_includes
+  fix CaloReCreateMCLinks for new Plugins, 
+
+- in CaloInterfaces v7r0, CaloKernel v5r0, CaloUtils v7r0
+  apply_pattern install_more_includes
+
+- in DAQSys v3r0
+  use CaloDAQ v3r0, MuonDAQ v3r0, OTDAQ v5r0, SiDAQ v2r0
+
+- in CaloDet v8r0, CaloDetXmlCnv v3r0, DetCond v10r0, DetDesc v17r0, DetDescChecks v4r0,
+  DetDescCnv v4r0, MuonDet v6r0, OTDet v7r0, RichDet v10r0, STDet v3r0, VeloDet v10r0
+  apply_pattern install_more_includes
+  fixes for new Plugins
+
+- in DAQEvent v7r0, DigiEvent v2r0, EventBase v2r0, GenEvent v5r0, HltEvent v8r0, L0Event v16r0,
+  MCEvent v2r0, PackedEvent v3r0, PhysEvent v11r0, RecEvent v2r0, VeloEvent v15ro
+  apply_pattern install_more_includes
+  fixes for new Plugins
+  and some other fixes
+
+- in HltBase v2r0
+  apply_pattern install_more_includes
+  and some other fixes
+
+- in LHCbDefinitions v2r0, LHCbKernel v7r0, LHCbMath v2r0, Relations v5r0
+  apply_pattern install_more_includes
+  and some other fixes
+
+- in L0MuonKernel v6r0, ProcessorKernel v4r0
+  apply_pattern install_more_includes
+  and some other fixes
+
+- in MuonDAQ v3r0, MuonKernel v4r0
+  apply_pattern install_more_includes
+
+- in OTDAQ v5r0
+  apply_pattern install_more_includes
+
+- in PatTools v3r0
+  apply_pattern install_more_includes
+  fixes for new Plugins
+
+- in LokiCore v2r0, LoKiGen v2r0
+  apply_pattern install_more_includes
+  fixes for new Plugins
+
+- in RichKernel v7r0, RichRecBase v3r0
+  apply_pattern install_more_includes
+  and some other fixes
+
+- in SiDAQ v2r0
+ apply_pattern install_more_includes
+
+- in TrackInterfaces v3r0, TrackMCInterfaces v2r0, TsaKernel v2r0
+ apply_pattern install_more_includes
+ new version in TsaKernel
+
+
+
+
+!=====================================================================================
 </PRE><H1><A NAME=v21r12>2006-12-01 LHCbSys v21r12</A></H1><PRE>
 This version uses Gaudi v18r11 and is fully compatible with DC06 production data
 
