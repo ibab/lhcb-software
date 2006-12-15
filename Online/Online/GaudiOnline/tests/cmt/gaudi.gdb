@@ -38,3 +38,11 @@ end
 define mbmmon
 run libGaudiOnline.so OnlineStart libOnlineKernel.so mbm_mon
 end
+
+define Recv_0
+run libGaudiOnline.so OnlineTask -msgsvc=MessageSvc -auto -opt=../../options/NetReceiver.opts
+end
+
+define Send0_0
+run libGaudiOnline.so OnlineTask -msgsvc=MessageSvc -auto -opt=../../options/NetSend_0.opts
+end
