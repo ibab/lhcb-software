@@ -1,20 +1,14 @@
-// $Id: MaterialBudgetAlg.h,v 1.9 2005-12-07 15:22:59 cattanem Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $
+// $Id: MaterialBudgetAlg.h,v 1.10 2006-12-15 16:49:13 cattanem Exp $
 // ============================================================================
 #ifndef DETDESCCHECKS_MaterialBudgetALG_H 
 #define DETDESCCHECKS_MaterialBudgetALG_H 1
 // Include files
 // from STL
 #include <string>
-// LHCb Definitions
-#include "Kernel/Point3DTypes.h"
+// Math Definitions
+#include "GaudiKernel/Point3DTypes.h"
 // GaudiAlg
 #include "GaudiAlg/GaudiHistoAlg.h"
-
-class AIDA::IHistogram1D;
-class AIDA::IHistogram2D;
-
 
 /** @class MaterialBudgetAlg MaterialBudgetAlg.h
  *  

@@ -1,6 +1,4 @@
-// $Id: VolumeCheckAlg.h,v 1.4 2005-12-07 15:22:59 cattanem Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $
+// $Id: VolumeCheckAlg.h,v 1.5 2006-12-15 16:49:15 cattanem Exp $
 // ============================================================================
 #ifndef DETDESCCHECKS_VOLUMECHECKALG_H 
 #define DETDESCCHECKS_VOLUMECHECKALG_H 1
@@ -11,16 +9,15 @@
 // ============================================================================
 #include <string>
 // ============================================================================
-// LHCb definitions
+// Math Definitions
 // ============================================================================
-#include "Kernel/Point3DTypes.h"
+#include "GaudiKernel/Point3DTypes.h"
 // ============================================================================
 // from GaudiAlg
 // ============================================================================
 #include "GaudiAlg/GaudiHistoAlg.h"
 // ============================================================================
 class ILVolume     ;  // DETDESC 
-class IRndmGenSvc  ;  // GaudiKernel 
 // ============================================================================
 
 /** @class VolumeCheckAlg VolumeCheckAlg.h

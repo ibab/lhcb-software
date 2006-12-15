@@ -1,6 +1,4 @@
-// $Id: MaterialBudgetAlg.cpp,v 1.10 2006-12-14 13:10:51 ranjard Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $
+// $Id: MaterialBudgetAlg.cpp,v 1.11 2006-12-15 16:49:12 cattanem Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -9,24 +7,13 @@
 #include <functional>
 #include <algorithm>
 // ============================================================================
-// LHCbDefinitions
-// ============================================================================
-#include "Kernel/SystemOfUnits.h"
-#include "Kernel/PhysicalConstants.h"
-#include "Kernel/Point3DTypes.h"
-// ============================================================================
-// AIDA 
-// ============================================================================
-#include "AIDA/IHistogram1D.h"
-#include "AIDA/IHistogram2D.h"
-// ============================================================================
 // from Gaudi
 // ============================================================================
 #include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/IRndmGenSvc.h"
-#include "GaudiKernel/IHistogramSvc.h"
 #include "GaudiKernel/RndmGenerators.h"
+#include "GaudiKernel/SystemOfUnits.h"
+#include "GaudiKernel/Point3DTypes.h"
 // ============================================================================
 // DetDesc 
 // ============================================================================
@@ -35,7 +22,6 @@
 // local
 // ============================================================================
 #include "MaterialBudgetAlg.h"
-#include "DirHbookName.h"
 // ============================================================================
 // Boost 
 // ============================================================================
@@ -75,11 +61,11 @@ MaterialBudgetAlg::MaterialBudgetAlg
   , m_vrtx          ( 3 , 0.0        )
   , m_vertex        (                )
   , m_shots         ( 1000           )
-  , m_z             ( 12 * meter     )
-  , m_xMax          (  4 * meter     )
-  , m_yMax          (  3 * meter     )
-  , m_xMin          (  0 * meter     )
-  , m_yMin          (  0 * meter     )
+  , m_z             ( 12 * Gaudi::Units::meter     )
+  , m_xMax          (  4 * Gaudi::Units::meter     )
+  , m_yMax          (  3 * Gaudi::Units::meter     )
+  , m_xMin          (  0 * Gaudi::Units::meter     )
+  , m_yMin          (  0 * Gaudi::Units::meter     )
   , m_etaMax        (  5.5           )
   , m_phiMax        (  270.          )
   , m_etaMin        (  2.0           )
@@ -303,7 +289,7 @@ StatusCode MaterialBudgetAlg::makePsrapShots()
     for ( double xx = m_yMin + dxgrid/2 ; xx <= m_xMax ; xx += dxgrid )
     {
       const double theta = 2.0*atan(exp(-1.0*xx));
-      const double phi = yy*degree;
+      const double phi = yy*Gaudi::Units::degree;
       // make sure theta in not 90 or 270!!!!
       const double x = sin(theta)*cos(phi)*m_z/cos(theta);
       const double y = sin(theta)*sin(phi)*m_z/cos(theta);

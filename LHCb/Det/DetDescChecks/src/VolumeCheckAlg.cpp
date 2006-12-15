@@ -1,14 +1,4 @@
-// $Id: VolumeCheckAlg.cpp,v 1.6 2006-12-14 13:10:51 ranjard Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.5  2005/12/07 15:22:59  cattanem
-// migrate to MathCore
-//
-// Revision 1.4  2005/05/03 10:12:38  ibelyaev
-//  progress bar + use of 'plot2D'
-//
+// $Id: VolumeCheckAlg.cpp,v 1.7 2006-12-15 16:49:14 cattanem Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -17,25 +7,13 @@
 #include <functional>
 #include <algorithm>
 // ============================================================================
-// LHCb definitions
-// ============================================================================
-#include "Kernel/SystemOfUnits.h"
-#include "Kernel/Vector3DTypes.h"
-// ============================================================================
-// AIDA 
-// ============================================================================
-#include "AIDA/IHistogram2D.h"
-// ============================================================================
 /// from Gaudi
 // ============================================================================
 #include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/MsgStream.h" 
-#include "GaudiKernel/IDataProviderSvc.h"
-#include "GaudiKernel/SmartDataPtr.h"
-#include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/IRndmGenSvc.h"
-#include "GaudiKernel/IHistogramSvc.h"
 #include "GaudiKernel/RndmGenerators.h"
+#include "GaudiKernel/SystemOfUnits.h"
+#include "GaudiKernel/Vector3DTypes.h"
 // ============================================================================
 // DetDesc 
 // ============================================================================
@@ -49,7 +27,6 @@
 // local
 // ============================================================================
 #include "VolumeCheckAlg.h"
-#include "DirHbookName.h"
 // ============================================================================
 // Boost
 // ============================================================================
@@ -85,12 +62,12 @@ VolumeCheckAlg::VolumeCheckAlg
   : GaudiHistoAlg  ( name , svcloc ) 
   , m_volumeName   ( "Undefined Volume" )
   , m_volume       ( 0            )
-  , m_minx         ( -10 * m      ) 
-  , m_maxx         (  10 * m      ) 
-  , m_miny         ( -10 * m      ) 
-  , m_maxy         (  10 * m      ) 
-  , m_minz         ( -10 * m      ) 
-  , m_maxz         (  10 * m      )
+  , m_minx         ( -10 * Gaudi::Units::m      ) 
+  , m_maxx         (  10 * Gaudi::Units::m      ) 
+  , m_miny         ( -10 * Gaudi::Units::m      ) 
+  , m_maxy         (  10 * Gaudi::Units::m      ) 
+  , m_minz         ( -10 * Gaudi::Units::m      ) 
+  , m_maxz         (  10 * Gaudi::Units::m      )
   , m_shotsSphere  ( 50000        )
   , m_shotsXY      ( 10000        )  
   , m_shotsYZ      ( 10000        ) 
@@ -239,16 +216,16 @@ StatusCode VolumeCheckAlg::execute()
            0.0                                                    ,  
            VolumeIntersectionIntervals::AccumulateIntersections() );
       
-      plot2D ( vect.phi   () / degree , 
-               vect.theta () / degree , 
+      plot2D ( vect.phi   () / Gaudi::Units::degree , 
+               vect.theta () / Gaudi::Units::degree , 
                1      , " 3D-Material Budget     for " + m_volumeName ,
                -180.0 , 180.0                                         , 
                0.0    , 180.0                                         , 
                50     , 50                                            , 
                radLength                                              ) ;
       
-      plot2D ( vect.phi   () / degree , 
-               vect.theta () / degree , 
+      plot2D ( vect.phi   () / Gaudi::Units::degree , 
+               vect.theta () / Gaudi::Units::degree , 
                2      , " 3D-Material Budget (N) for " + m_volumeName ,
                -180.0 , 180.0                                         , 
                0.0    , 180.0                                         , 
