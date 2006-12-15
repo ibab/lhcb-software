@@ -1,13 +1,10 @@
-// $Id: Line.h,v 1.2 2006-06-06 12:36:46 jpalac Exp $
+// $Id: Line.h,v 1.3 2006-12-15 13:42:59 cattanem Exp $
 #ifndef LHCBMATH_LINE_H 
 #define LHCBMATH_LINE_H 1
 
 // Include files
 
 #include <iostream>
-
-// #include "Kernel/Point3DTypes.h"
-// #include "Kernel/Vector3DTypes.h"
 
 /** @class Line Line.h Kernel/Line.h
  *  
