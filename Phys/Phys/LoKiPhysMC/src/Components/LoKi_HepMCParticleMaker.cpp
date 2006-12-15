@@ -1,8 +1,11 @@
-// $Id: LoKi_HepMCParticleMaker.cpp,v 1.6 2006-12-15 12:01:05 ibelyaev Exp $
+// $Id: LoKi_HepMCParticleMaker.cpp,v 1.7 2006-12-15 13:03:25 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2006/12/15 12:01:05  ibelyaev
+//  fix bugs
+//
 // Revision 1.5  2006/11/12 14:58:51  ibelyaev
 //  add phtons and disable smearing
 //
@@ -239,8 +242,8 @@ StatusCode LoKi_HepMCParticleMaker::initialize()
   if ( 0 <  m_minThetaGamma ) 
   {
     m_gammacut = m_gammacut && 
-      abs(atan2(GPX,GPZ)) > m_minThetaGamma && 
-      abs(atan2(GPY,GPZ)) > m_minThetaGamma ;  
+      ( m_minThetaGamma < abs ( atan2 ( GPX , GPZ ) ) ||  
+        m_minThetaGamma < abs ( atan2 ( GPY , GPZ ) )  ) ;  
   }
   if ( 0 <  m_maxThetaXGamma ) 
   { m_gammacut = m_gammacut && abs(atan2(GPX,GPZ)) < m_maxThetaXGamma ; }
