@@ -1,4 +1,4 @@
-// $Id: TrajProjector.cpp,v 1.1 2006-12-15 19:11:40 graven Exp $
+// $Id: TrajProjector.cpp,v 1.2 2006-12-15 19:18:51 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -79,8 +79,6 @@ StatusCode TrajProjector<T>::project( const State& state,
   //    note that this is just - Dot(unit, dist+refTraj.derivative()*delta)
   m_residual = - ( dot(unit,dist)
                           + Vector1( m_H*(state.stateVector() - refVec))(0) ) ;
-
-  std::cout << meas.type() << " " << meas.lhcbID() << " " << m_residual << " " << m_H <<  std::endl;
 
   // Set the error on the measurement so that it can be used in the fit
   double errMeasure2 = meas.resolution2( refTraj.position(s1), 

@@ -1,4 +1,4 @@
-// $Id: TrajOTProjector.cpp,v 1.19 2006-12-15 19:11:39 graven Exp $
+// $Id: TrajOTProjector.cpp,v 1.20 2006-12-15 19:18:51 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -111,8 +111,6 @@ StatusCode TrajOTProjector::project( const State& state,
   // Calculate the residual: 
   m_residual = - ( distToWire - meas.ambiguity()*driftDistance(meas,s2) ) ;  
 
-  std::cout << meas.type() << " " << meas.lhcbID() << " " << m_residual << " " << m_H <<  std::endl;
-  
   // Set the error on the measurement so that it can be used in the fit
   double errMeasure2 = meas.resolution2( refTraj.position(s1), 
                                          refTraj.direction(s1) );
