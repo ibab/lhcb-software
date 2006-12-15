@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.31 2006-12-14 13:29:51 ranjard Exp $
+# $Id: requirements,v 1.32 2006-12-15 16:03:50 ranjard Exp $
 # =========================================================================
 
 package  OTDet 
@@ -14,7 +14,7 @@ use Boost        v*   LCG_Interfaces
 use GSL		 v*   LCG_Interfaces
 
 # =============== own includes ============================================
-include_dirs      $(OTDETROOT)
+apply_pattern install_more_includes more=OTDet
 
 # =============== link library (base classes) =============================
 library          OTDetLib        Lib/*.cpp 
