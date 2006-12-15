@@ -1,4 +1,4 @@
-// $Id: TrackKalmanFilter.h,v 1.15 2006-11-22 13:10:23 jvantilb Exp $
+// $Id: TrackKalmanFilter.h,v 1.16 2006-12-15 19:13:14 graven Exp $
 #ifndef TRACKFITTER_TRACKKALMANFILTER_H 
 #define TRACKFITTER_TRACKKALMANFILTER_H 1
 
@@ -9,7 +9,7 @@
 
 // from TrackInterfaces
 #include "TrackInterfaces/ITrackExtrapolator.h"            
-#include "TrackInterfaces/ITrackProjector.h"
+#include "TrackInterfaces/ITrackProjectorSelector.h"
 #include "TrackInterfaces/ITrackFitter.h"
 
 // from TrackEvent
@@ -80,13 +80,13 @@ private:
   //! extrapolator
   ITrackExtrapolator* m_extrapolator;
 
-  //! projector
-  ITrackProjector* m_projector;
+  //! projector selector
+  ITrackProjectorSelector* m_projectorSelector;
 
 
   // job options
   std::string m_extrapolatorName;   ///<  name of the extrapolator in Gaudi
-  std::string m_projectorName;      ///< name of the projector in Gaudi
+  std::string m_projectorSelectorName;      ///< name of the projector selector in Gaudi
   bool m_storeTransport;            ///< store the transport of the extrapolator
   bool m_biDirectionalFit;          ///< Flag for bidirectional fit
   bool m_unbiasedResiduals;         ///< Flag to calculate unbiased residuals

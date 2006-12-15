@@ -1,4 +1,4 @@
-// $Id: TrackKalmanFilter.cpp,v 1.36 2006-11-22 13:10:23 jvantilb Exp $
+// $Id: TrackKalmanFilter.cpp,v 1.37 2006-12-15 19:13:14 graven Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -10,6 +10,9 @@
 // from TrackEvent
 #include "Event/TrackFunctor.h"
 #include "Event/TrackUnitsConverters.h"
+
+// from TrackInterfaces
+#include "TrackInterfaces/ITrackProjector.h"
 
 // local
 #include "TrackKalmanFilter.h"
@@ -28,6 +31,7 @@ using namespace LHCb;
 //  Adapted: 20-10-2006  J. van Tilburg
 //-----------------------------------------------------------------------------
 
+
 DECLARE_TOOL_FACTORY( TrackKalmanFilter );
 
 //=========================================================================
@@ -42,8 +46,8 @@ TrackKalmanFilter::TrackKalmanFilter( const std::string& type,
 
   declareProperty( "Extrapolator"  , m_extrapolatorName =
                    "TrackMasterExtrapolator" );
-  declareProperty( "Projector"     , m_projectorName =
-                   "TrackMasterProjector" );
+  declareProperty( "Projector"     , m_projectorSelectorName =
+                   "TrackProjectorSelector" );
   declareProperty( "StoreTransport"   , m_storeTransport    = true   );
   declareProperty( "BiDirectionalFit" , m_biDirectionalFit  = true   );
   declareProperty( "UnbiasedResiduals", m_unbiasedResiduals = false  );
@@ -67,7 +71,7 @@ StatusCode TrackKalmanFilter::initialize()
 
   m_extrapolator = tool<ITrackExtrapolator>( m_extrapolatorName,
                                              "Extrapolator", this );
-  m_projector    = tool<ITrackProjector>( m_projectorName,
+  m_projectorSelector = tool<ITrackProjectorSelector>( m_projectorSelectorName,
                                           "Projector", this );
   m_debugLevel   = msgLevel( MSG::DEBUG );
   
@@ -110,16 +114,12 @@ StatusCode TrackKalmanFilter::fit( Track& track )
 
     // save predicted state
     if ( m_upstream ) node.setPredictedStateUp( state );
-    else node.setPredictedStateDown( state );
+    else              node.setPredictedStateDown( state );
 
     // update the reference vector
     refVec = state.stateVector();
 
     if ( node.hasMeasurement() ) {
-      // Projection step
-      sc = project( node, state );
-      if ( sc.isFailure() ) return failure( "unable to project node" );
-
       // Filter step
       sc = filter( node, state );
       if ( sc.isFailure() ) return failure( "unable to filter node" );
@@ -144,15 +144,14 @@ StatusCode TrackKalmanFilter::fit( Track& track )
     std::vector<Node*>::reverse_iterator irPrevNode = irNode;
     if ( irNode == nodes.rend() ) return failure( "zero nodes left" );
     while ( irNode != nodes.rend() ) {
-      FitNode& node     = *(dynamic_cast<FitNode*>(*irNode));
-      FitNode& prevNode = *(dynamic_cast<FitNode*>(*irPrevNode));
+      FitNode& node     = dynamic_cast<FitNode&>(**irNode);
+      FitNode& prevNode = dynamic_cast<FitNode&>(**irPrevNode);
 
       // Prediction step to next node
       if ( irPrevNode != irNode ) { // No prediction needed for 1st node
         if ( m_storeTransport ) {
           sc = predictReverseFit( prevNode, node, state );
-          if ( sc.isFailure() )
-            return failure( "unable to predict (reverse fit) node" );
+          if ( sc.isFailure() ) return failure( "unable to predict (reverse fit) node" );
         } else {
           sc = predict( node, state, refVec );
           if ( sc.isFailure() ) return failure( "unable to predict node" );
@@ -161,16 +160,12 @@ StatusCode TrackKalmanFilter::fit( Track& track )
 
       // save predicted state
       if ( !m_upstream ) node.setPredictedStateUp( state );
-      else node.setPredictedStateDown( state );
+      else               node.setPredictedStateDown( state );
 
       // set the reference vector
       refVec = state.stateVector();
 
       if ( node.hasMeasurement() ) {
-        // Projection step
-        sc = project( node, state );
-        if ( sc.isFailure() ) return failure( "unable to project node" );
-      
         // Filter step
         sc = filter( node, state );
         if ( sc.isFailure() ) return failure( "unable to filter node!" );
@@ -190,8 +185,7 @@ StatusCode TrackKalmanFilter::fit( Track& track )
       ++irNode;
     } // end of prediction and filter
     track.setFitHistory( Track::BiKalman );
-  }
-  else {
+  } else {
    // Loop in opposite direction for the old RTS smoother
     std::vector<Node*>::reverse_iterator iPrevNode = nodes.rbegin();
     std::vector<Node*>::reverse_iterator ithisNode = iPrevNode;
@@ -307,20 +301,20 @@ StatusCode TrackKalmanFilter::project(FitNode& aNode, const State& aState)
 {
   // project the state into the measurement
   Measurement& meas = aNode.measurement();
-  StatusCode sc = m_projector -> project( aState, meas );
+  ITrackProjector *proj = m_projectorSelector->projector(meas);
+  if ( proj==0 )
+    return failure( "could not get projector for measurement" );
+
+  StatusCode sc = proj -> project( aState, meas );
   if ( sc.isFailure() ) 
     return failure( "unable to project a state into a measurement" );
-  const TrackProjectionMatrix& H = m_projector -> projectionMatrix();
-
-  // calculate predicted residuals
-  double res       = m_projector -> residual();
-  double errorRes  = m_projector -> errResidual();
-  double errorMeas = m_projector -> errMeasure();
+  const TrackProjectionMatrix& H = proj -> projectionMatrix();
+  double res                     = proj -> residual();
   
   aNode.setProjectionMatrix( H );
   aNode.setResidual( res ) ;
-  aNode.setErrResidual( errorRes ) ;
-  aNode.setErrMeasure( errorMeas ) ;
+  aNode.setErrResidual( proj -> errResidual() ) ;
+  aNode.setErrMeasure( proj -> errMeasure() ) ;
   aNode.setProjectionTerm( res + Vector1(H*aState.stateVector())(0) );
   
   return StatusCode::SUCCESS;
@@ -331,6 +325,10 @@ StatusCode TrackKalmanFilter::project(FitNode& aNode, const State& aState)
 //=========================================================================
 StatusCode TrackKalmanFilter::filter(FitNode& node, State& state) 
 {
+  // Projection step
+  StatusCode sc = project( node, state );
+  if ( sc.isFailure() ) return sc;
+
   Measurement& meas = node.measurement();
 
   // check z position
@@ -358,8 +356,7 @@ StatusCode TrackKalmanFilter::filter(FitNode& node, State& state)
 
   // update the covariance matrix
   static const TrackSymMatrix unit = TrackSymMatrix( SMatrixIdentity());
-  C = Symmetrize( Similarity( unit - ( K*H ), C ) 
-                  +(errorMeas2*K)*Transpose(K) );
+  C = Symmetrize(Similarity( unit - ( K*H ), C )+(errorMeas2*K)*Transpose(K));
 
   // update the residual and the error on the residual
   double gain = 1.- Matrix1x1( H*K )(0,0);
