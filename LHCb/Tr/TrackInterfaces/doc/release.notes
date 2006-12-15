@@ -3,6 +3,9 @@
 ! Responsible : Jose Hernando, Eduardo Rodrigues
 ! Purpose     : package for tracking tools interfaces
 !-----------------------------------------------------------------------------
+! 2006-12-15 - Gerhard Raven
+ - add an interface to select projectors given a measurement
+ - add a method to obtain alignment derivatives to the projector interface
 
 !====================== TrackInterfaces v3r0 2006-12-15 =====================
 ! 2006-12-06 - Florence RANJARD

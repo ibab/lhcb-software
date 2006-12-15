@@ -6,7 +6,9 @@
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
 
+#include "Kernel/GenericMatrixTypes.h"
 #include "Kernel/TrackTypes.h"
+#include "Kernel/Point3DTypes.h"
 
 // Forward declarations
 namespace LHCb {
@@ -14,7 +16,7 @@ namespace LHCb {
   class Measurement;
 };
 
-static const InterfaceID IID_ITrackProjector ( "ITrackProjector", 1, 0 );
+static const InterfaceID IID_ITrackProjector ( "ITrackProjector", 2, 0 );
 
 /** @class ITrackProjector ITrackProjector.h
  *  
@@ -49,6 +51,11 @@ public:
   /// Retrieve the error on the measure of the (last) projection
   virtual double errMeasure() const = 0;
 
+  /// Retrieve the derivative of the residual wrt. the alignment parameters
+  /// of the measurement. The details of the alignment transformation are 
+  /// defined in AlignTraj.
+  typedef Gaudi::Matrix1x6 Derivatives;
+  virtual Derivatives alignmentDerivatives(const LHCb::Measurement& meas, const Gaudi::XYZPoint& pivot) const = 0;
 };
 
 //==============================================================================
