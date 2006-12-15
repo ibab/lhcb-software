@@ -1,4 +1,4 @@
-// $Id: TrajOTProjector.cpp,v 1.20 2006-12-15 19:18:51 graven Exp $
+// $Id: TrajOTProjector.cpp,v 1.21 2006-12-15 19:22:24 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -95,7 +95,6 @@ StatusCode TrajOTProjector::project( const State& state,
   int signDist = ( dist.x() > 0.0 ) ? 1 : -1 ;
 
   // set the ambiguity "on the fly"!
-  // if you ever change this, read the comment a few lines below...
   meas.setAmbiguity( signDist );
 
   // Determine the (oriented!) axis onto which we project
