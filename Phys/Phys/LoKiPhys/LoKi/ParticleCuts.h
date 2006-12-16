@@ -1,8 +1,11 @@
-// $Id: ParticleCuts.h,v 1.13 2006-11-27 12:01:31 ibelyaev Exp $
+// $Id: ParticleCuts.h,v 1.14 2006-12-16 13:22:25 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.13 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.14 $
 // ============================================================================
 //  $Log: not supported by cvs2svn $
+//  Revision 1.13  2006/11/27 12:01:31  ibelyaev
+//   prepare for LoKi v4r3
+//
 //
 // ============================================================================
 #ifndef LOKI_PHYSPARTICLECUTS_H 
@@ -3924,6 +3927,64 @@ namespace LoKi
      *  @date 2006-03-20
      */
     typedef LoKi::Particles::Filter                FILTER ;
+    // ========================================================================
+
+    // ========================================================================
+    /** @typedef DIRA
+     *  Simple function which evalutes teh coside of the angle inbetween
+     *  the particle momentum and the vector from the primary to the secondary
+     *  vertex 
+     * 
+     *  @code
+     * 
+     *  const LHCb::Particle* B = ... ;
+     *
+     *  // get the tool 
+     *  const LHCb::VertexBase* primary = ... ;
+     *
+     *  // construct a function
+     *  Fun dira = DIRA ( primary ) ;
+     *
+     *  // use it!
+     *  const dobuble cosTheta = dira( B ) ;
+     *
+     *  @endcode
+     *
+     *  @see LoKi::Particles::CosineDirectionAngle
+     *  @see LoKi::Cuts::DANG
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-03-20
+     */
+    typedef LoKi::Particles::CosineDirectionAngle         DIRA ;
+    // ========================================================================
+
+    // ========================================================================
+    /** @typedef DANG
+     *  Simple function which evalutes teh coside of the angle inbetween
+     *  the particle momentum and the vector from the primary to the secondary
+     *  vertex 
+     * 
+     *  @code
+     * 
+     *  const LHCb::Particle* B = ... ;
+     *
+     *  // get the tool 
+     *  const LHCb::VertexBase* primary = ... ;
+     *
+     *  // construct a function
+     *  Fun dang = DANG ( primary ) ;
+     *
+     *  // use it!
+     *  const dobuble cosTheta = DANG( B ) ;
+     *
+     *  @endcode
+     *
+     *  @see LoKi::Particles::CosineDirectionAngle
+     *  @see LoKi::Cuts::DIRA
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-03-20
+     */
+    typedef LoKi::Particles::CosineDirectionAngle         DANG ;
     // ========================================================================
     
 

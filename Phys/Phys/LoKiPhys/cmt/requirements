@@ -1,12 +1,12 @@
-# $Id: requirements,v 1.10 2006-12-01 08:31:11 ibelyaev Exp $ 
+# $Id: requirements,v 1.11 2006-12-16 13:22:28 ibelyaev Exp $ 
 # ============================================================================
-# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.10 $
+# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.11 $
 # ============================================================================
 # Created    : 2006-02-06
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu 
 # ============================================================================
 package           LoKiPhys
-version           v2r4
+version           v2r5
 	
 # =============== structure ==================================================
 branches          cmt doc src LoKi 
@@ -27,6 +27,9 @@ apply_pattern     linker_library library=LoKiPhys
 
 # ============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.10  2006/12/01 08:31:11  ibelyaev
+#  fix for VertexBase argument
+#
 # Revision 1.9  2006/11/27 12:01:32  ibelyaev
 #  prepare for LoKi v4r3
 #
