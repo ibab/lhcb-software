@@ -1,8 +1,11 @@
-// $Id: LoKi_HepMCParticleMaker.cpp,v 1.8 2006-12-15 13:06:55 ibelyaev Exp $
+// $Id: LoKi_HepMCParticleMaker.cpp,v 1.9 2006-12-16 11:42:38 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.9 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2006/12/15 13:06:55  ibelyaev
+//  more fixes
+//
 // Revision 1.7  2006/12/15 13:03:25  ibelyaev
 //  more fixes
 //
@@ -239,19 +242,19 @@ StatusCode LoKi_HepMCParticleMaker::initialize()
   
   m_gamma = "gamma" == GID ;
   
-  m_gammacut = GALL ;
+  m_gammacut = GALL && 0 < GPZ ;
   if ( 0 <  m_minPtGamma    ) 
   { m_gammacut = m_gammacut && m_minPtGamma < GPT ; }
   if ( 0 <  m_minThetaGamma ) 
   {
     m_gammacut = m_gammacut && 
-      ( m_minThetaGamma < abs ( atan2 ( GPX , GPZ ) ) ||  
-        m_minThetaGamma < abs ( atan2 ( GPY , GPZ ) )  ) ;  
+      ( m_minThetaGamma < atan2 ( abs ( GPX ) , GPZ ) ||  
+        m_minThetaGamma < atan2 ( abs ( GPY ) , GPZ ) ) ;  
   }
   if ( 0 <  m_maxThetaXGamma ) 
-  { m_gammacut = m_gammacut && m_maxThetaXGamma > abs ( atan2 ( GPX , GPZ ) ) ; }
+  { m_gammacut = m_gammacut && m_maxThetaXGamma > atan2 ( abs ( GPX ) , GPZ ) ; }
   if ( 0 <  m_maxThetaYGamma ) 
-  { m_gammacut = m_gammacut && m_maxThetaYGamma > abs ( atan2 ( GPY , GPZ ) ) ; }
+  { m_gammacut = m_gammacut && m_maxThetaYGamma > atan2 ( abs ( GPY ) , GPZ ) ; }
 
   m_charged = 
     ( "e+"  == GABSID || "mu+" == GABSID || 
