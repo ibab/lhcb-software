@@ -1,12 +1,12 @@
-# $Id: requirements,v 1.7 2006-11-27 11:45:24 ibelyaev Exp $ 
+# $Id: requirements,v 1.8 2006-12-16 13:28:24 ibelyaev Exp $ 
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $
+# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $
 # =============================================================================
 # Created    : 2006-04-09
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu
 # =============================================================================
 package           LoKi
-version           v4r3
+version           v4r4
 
 # =============== structure ===================================================
 branches          LoKi cmt doc src
@@ -28,6 +28,9 @@ apply_pattern     linker_library    library=LoKi
 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.7  2006/11/27 11:45:24  ibelyaev
+#  update for LoKi v4r3
+#
 # Revision 1.6  2006/11/09 16:37:01  ibelyaev
 #  v4r2: new version
 #
