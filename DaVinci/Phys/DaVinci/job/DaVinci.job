@@ -45,7 +45,7 @@ endif
 set current = $PWD
 #
 # set location of DaVinci executable
-set Dversion = "v17r6"
+set Dversion = "v17r7"
 setenv MYJOBROOT $HOME/cmtuser/Phys/DaVinci/$Dversion
 
 # == set the program environment
