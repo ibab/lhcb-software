@@ -1,9 +1,9 @@
 // $Id:
 // ============================================================================
 //CLHEP
-#include "Kernel/SystemOfUnits.h"
 // Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/AlgFactory.h" 
+#include "GaudiKernel/SystemOfUnits.h"
 // Event/CaloEvent
 #include "Event/MCCaloHit.h" 
 #include "Event/MCCaloDigit.h" 
@@ -78,7 +78,7 @@ StatusCode CaloDigitMonitor::execute() {
       nbHit   += 1.;
       sumHit  += (*sig)->activeE();
     }
-    sumHit    *= m_scaleHit / GeV ;
+    sumHit    *= m_scaleHit / Gaudi::Units::GeV ;
 
     plot1D(nbHit  , 1101 
            ,"Hits multiplicity " + m_nameOfDetector 
@@ -100,7 +100,7 @@ StatusCode CaloDigitMonitor::execute() {
       nbMCDigit    += 1.;
       sumMCDigit   += (*dep)->activeE();
     }
-    sumMCDigit     *= m_scaleHit / GeV ;
+    sumMCDigit     *= m_scaleHit / Gaudi::Units::GeV ;
 
     plot1D(nbMCDigit , 1102 
            ,"MCDigits multiplicity " + m_nameOfDetector
@@ -122,7 +122,7 @@ StatusCode CaloDigitMonitor::execute() {
       nbDigit  += 1.;
       sumDigit += (*dig)->e();
     }
-    sumDigit /= GeV;
+    sumDigit /= Gaudi::Units::GeV;
   
     plot1D(nbDigit  , 1103
            ,"Digits multiplicity " + m_nameOfDetector

@@ -1,11 +1,13 @@
-! $Id: release.notes,v 1.9 2006-03-23 08:01:29 cattanem Exp $
-! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $
+! $Id: release.notes,v 1.10 2006-12-18 15:32:02 cattanem Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloMoniDigi
 ! Responsible : Vanya BELYAEV belyaev@lapp.in2p3.fr
 ! Purpose     : monitoring of Calo content for Digi tape 
 ! -----------------------------------------------------------------------------
+
+!======================== CaloMoniDigi v2r2 2006-12-18 ========================
+! 2006-12-18 - Marco Cattaneo
+ - get units from GaudiKernel
 
 !======================== CaloMoniDigi v2r1 2006-03-22 ========================
 ! 2006-03-22 - Olivier Deschamps
