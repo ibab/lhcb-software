@@ -1,4 +1,4 @@
-// $Id: STClusterCreator.cpp,v 1.12 2006-05-02 06:24:17 mneedham Exp $
+// $Id: STClusterCreator.cpp,v 1.13 2006-12-18 10:09:55 cattanem Exp $
 //
 // This File contains the implementation of the STClusterCreator
 // C++ code for 'LHCb Tracking package(s)'
@@ -13,7 +13,7 @@
 // LHCbKernel includes
 #include "Kernel/STChannelID.h"
 #include "Kernel/STDataFunctor.h"
-#include "Kernel/LHCbMath.h"
+#include "LHCbMath/LHCbMath.h"
 #include "Kernel/LHCbConstants.h"
 #include "Kernel/ISTClusterPosition.h"
 
@@ -26,9 +26,8 @@
 #include "Kernel/ISTSignalToNoiseTool.h"
 
 using namespace LHCb;
-// Needed for the creation of TrSimpleLayersCreator objects.
-static const AlgFactory<STClusterCreator> s_factory;
-const IAlgFactory& STClusterCreatorFactory = s_factory;
+
+DECLARE_ALGORITHM_FACTORY( STClusterCreator );
 //_________________________________________________
 // STClusterCreator
 //

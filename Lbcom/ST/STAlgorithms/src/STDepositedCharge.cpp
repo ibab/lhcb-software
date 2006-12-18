@@ -1,7 +1,7 @@
 #include <math.h>
 
 #include "GaudiKernel/ToolFactory.h"
-#include "GaudiKernel/MsgStream.h"
+#include "GaudiKernel/SystemOfUnits.h"
 
 //Random Numbers
 #include "GaudiKernel/RndmGenerators.h"
@@ -12,13 +12,11 @@
 
 #include "Event/MCHit.h"
 
-#include "Kernel/SystemOfUnits.h"
 
 
 using namespace LHCb;
 
-static const ToolFactory<STDepositedCharge>  s_factory;
-const IToolFactory& STDepositedChargeFactory = s_factory;
+DECLARE_TOOL_FACTORY( STDepositedCharge );
 
 STDepositedCharge::STDepositedCharge(const std::string& type, 
                                      const std::string& name, 
@@ -26,7 +24,8 @@ STDepositedCharge::STDepositedCharge(const std::string& type,
   GaudiTool( type, name, parent )
 {
   // constructer
-  declareProperty("delta2", m_delta2 = 1800*keV*keV/cm);
+  declareProperty("delta2", m_delta2 = 1800*Gaudi::Units::keV*Gaudi::Units::keV /
+                                            Gaudi::Units::cm );
   declareProperty("scalingFactor", m_scalingFactor = 1.0);
  
   // need a line here to get the interface correct !!!!
@@ -107,7 +106,7 @@ double STDepositedCharge::landauMPV(const double beta,
   double dEffect = densityEffect(log10(betaGamma));  
 
   // MPV of landau
-  double mpv = scale*(log(2*electron_mass_c2*gsl_pow_2(betaGamma)/
+  double mpv = scale*(log(2*Gaudi::Units::electron_mass_c2*gsl_pow_2(betaGamma)/
                       LHCbConstants::SiExcitationEnergy) + 
                       log(scale/LHCbConstants::SiExcitationEnergy) +
                       0.2 - 

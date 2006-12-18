@@ -1,4 +1,4 @@
-// $Id: STEffCalculator.cpp,v 1.2 2005-12-20 15:50:25 cattanem Exp $
+// $Id: STEffCalculator.cpp,v 1.3 2006-12-18 10:09:55 cattanem Exp $
 //
 // This File contains the definition of the OTEffCaculator -class
 //
@@ -19,8 +19,7 @@
 // This tool is used to add ineffiency to IT
 //------------------------------------------------------------
 
-static ToolFactory<STEffCalculator> s_factory;
-const IToolFactory& STEffCalculatorFactory = s_factory;
+DECLARE_TOOL_FACTORY( STEffCalculator );
 
 STEffCalculator::STEffCalculator(const std::string& type, 
                 const std::string& name, const IInterface* parent): 

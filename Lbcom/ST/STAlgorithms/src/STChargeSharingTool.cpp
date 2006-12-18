@@ -1,15 +1,11 @@
 // Gaudi
 #include "GaudiKernel/ToolFactory.h"
-#include "GaudiKernel/MsgStream.h"
-#include "GaudiKernel/IDataProviderSvc.h"
-#include "GaudiKernel/IService.h"
 
 // ITAlgorithms
 #include "STChargeSharingTool.h"
 #include "GaudiMath/GaudiMath.h"
 
-static ToolFactory<STChargeSharingTool> s_factory;
-const IToolFactory& STChargeSharingToolFactory = s_factory;
+DECLARE_TOOL_FACTORY( STChargeSharingTool );
 
 STChargeSharingTool::STChargeSharingTool(const std::string& type, const std::string& name, const IInterface* parent) :
  GaudiTool(type, name, parent),

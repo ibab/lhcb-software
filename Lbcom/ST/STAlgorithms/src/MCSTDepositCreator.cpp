@@ -10,13 +10,11 @@
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
-
-// CLHEP
-#include "Kernel/SystemOfUnits.h"
+#include "GaudiKernel/SystemOfUnits.h"
 
 #include "Kernel/STChannelID.h"
 #include "Kernel/STDataFunctor.h"
-#include "Kernel/LHCbMath.h"
+#include "LHCbMath/LHCbMath.h"
 
 #include "MCSTDepositCreator.h"
 #include "Kernel/STDetSwitch.h"
@@ -32,8 +30,7 @@
 
 using namespace LHCb;
 
-static const AlgFactory<MCSTDepositCreator>  s_factory;
-const IAlgFactory& MCSTDepositCreatorFactory = s_factory;
+DECLARE_ALGORITHM_FACTORY( MCSTDepositCreator );
 
 MCSTDepositCreator::MCSTDepositCreator(const std::string& name, ISvcLocator* pSvcLocator) :
   GaudiAlgorithm(name, pSvcLocator)
@@ -41,23 +38,23 @@ MCSTDepositCreator::MCSTDepositCreator(const std::string& name, ISvcLocator* pSv
   // constructer
 
   m_SpillVector.push_back("/");
-  m_spillTimes.push_back(0.*ns);
+  m_spillTimes.push_back(0.*Gaudi::Units::ns);
 
   declareProperty("tofVector",m_TOFVector);
   declareProperty("spillVector", m_SpillVector);
   declareProperty("spillTimes", m_spillTimes);
-  declareProperty("minDist", m_minDistance = 10.0e-3*mm);
+  declareProperty("minDist", m_minDistance = 10.0e-3*Gaudi::Units::mm);
 
   declareProperty("chargeSharerName",m_chargeSharerName = "STChargeSharingTool");
   declareProperty("depChargeTool", m_depChargeToolName = "SiDepositedCharge");
 
-  declareProperty("siteSize",m_siteSize = 0.02*mm);
+  declareProperty("siteSize",m_siteSize = 0.02*Gaudi::Units::mm);
   declareProperty("maxNumSites",m_maxNumSites = 150);
 
   declareProperty("xTalkParams",m_xTalkParams);
 
   m_xTalkParams.push_back(0.08);
-  m_xTalkParams.push_back(0.092/(55*picofarad));
+  m_xTalkParams.push_back(0.092/(55*Gaudi::Units::picofarad));
 
   declareProperty("detType", m_detType = "TT"); 
 
@@ -365,7 +362,7 @@ double MCSTDepositCreator::beetleResponse(const double time,
   
   // choose the best spline for our needs...
   ISiAmplifierResponse* bResponse = 0;
-  double testCap = 9999.0*picofarad;
+  double testCap = 9999.0*Gaudi::Units::picofarad;
   std::vector<ISiAmplifierResponse*>::iterator iter = m_AmplifierResponse.begin();
   for (; iter != m_AmplifierResponse.end(); ++iter){
     ISiAmplifierResponse::Info properties = (*iter)->validity();

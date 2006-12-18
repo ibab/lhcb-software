@@ -1,4 +1,4 @@
-// $Id: STGeantDepositedCharge.cpp,v 1.1.1.1 2005-12-19 15:43:15 mneedham Exp $
+// $Id: STGeantDepositedCharge.cpp,v 1.2 2006-12-18 10:09:55 cattanem Exp $
 #include "GaudiKernel/ToolFactory.h"
 
 #include "STGeantDepositedCharge.h"
@@ -7,8 +7,7 @@
 
 using namespace LHCb;
 
-static const ToolFactory<STGeantDepositedCharge>  s_factory;
-const IToolFactory& STGeantDepositedChargeFactory = s_factory;
+DECLARE_TOOL_FACTORY( STGeantDepositedCharge );
 
 /// constructor
 STGeantDepositedCharge::STGeantDepositedCharge(const std::string& type, 

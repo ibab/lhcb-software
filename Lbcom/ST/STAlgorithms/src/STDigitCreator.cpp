@@ -1,4 +1,4 @@
-// $Id: STDigitCreator.cpp,v 1.11 2006-03-22 13:56:47 mneedham Exp $
+// $Id: STDigitCreator.cpp,v 1.12 2006-12-18 10:09:55 cattanem Exp $
 
 #include "gsl/gsl_math.h"
 
@@ -7,9 +7,6 @@
 //Random Numbers
 #include "GaudiKernel/RndmGenerators.h"
 #include "GaudiKernel/IRndmGenSvc.h"
-
-// Kernel
-#include "Kernel/SystemOfUnits.h"
 
 // Event
 #include "Event/MCTruth.h"
@@ -31,13 +28,11 @@
 
 #include <algorithm>
 
-#include "Kernel/LHCbMath.h"
+#include "LHCbMath/LHCbMath.h"
 
 using namespace LHCb;
 
-
-static const AlgFactory<STDigitCreator>  s_factory;
-const IAlgFactory& STDigitCreatorFactory = s_factory;
+DECLARE_ALGORITHM_FACTORY( STDigitCreator );
 
 STDigitCreator::STDigitCreator( const std::string& name, 
                                 ISvcLocator* pSvcLocator ) :

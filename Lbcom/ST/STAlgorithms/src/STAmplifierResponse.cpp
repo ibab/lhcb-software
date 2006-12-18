@@ -1,4 +1,4 @@
-// $Id: STAmplifierResponse.cpp,v 1.3 2006-02-06 10:10:38 mneedham Exp $
+// $Id: STAmplifierResponse.cpp,v 1.4 2006-12-18 10:09:54 cattanem Exp $
 
 // Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -6,11 +6,9 @@
 
 #include "GSLSpline.h"
 
-#include "Kernel/SystemOfUnits.h"
+#include "GaudiKernel/SystemOfUnits.h"
 
-
-static const ToolFactory<STAmplifierResponse>  s_factory;
-const IToolFactory& STAmplifierResponseFactory = s_factory;
+DECLARE_TOOL_FACTORY( STAmplifierResponse );
 
 /// constructer
 STAmplifierResponse::STAmplifierResponse(const std::string& type, 
@@ -24,7 +22,7 @@ STAmplifierResponse::STAmplifierResponse(const std::string& type,
 
   declareProperty("type", m_type = "signal");
   declareProperty("vfs", m_vfs  = 400);
-  declareProperty("capacitance",m_capacitance  = 18 * picofarad);
+  declareProperty("capacitance",m_capacitance  = 18 * Gaudi::Units::picofarad);
   
   // need a line here to get the interface correct !!!!
   declareInterface<ISTAmplifierResponse>(this); 

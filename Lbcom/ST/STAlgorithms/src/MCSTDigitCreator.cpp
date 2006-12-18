@@ -1,4 +1,4 @@
-// $Id: MCSTDigitCreator.cpp,v 1.1.1.1 2005-12-19 15:43:15 mneedham Exp $
+// $Id: MCSTDigitCreator.cpp,v 1.2 2006-12-18 10:09:54 cattanem Exp $
 //
 // This File contains the implementation of the MCSTDigitCreator
 // C++ code for 'LHCb Tracking package(s)'
@@ -18,8 +18,8 @@
 
 using namespace LHCb;
 
-static const AlgFactory<MCSTDigitCreator> s_factory;
-const IAlgFactory& MCSTDigitCreatorFactory = s_factory;
+DECLARE_ALGORITHM_FACTORY( MCSTDigitCreator );
+
 //_________________________________________________
 // ITDigitCreator
 //

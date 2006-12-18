@@ -1,4 +1,4 @@
-// $Id: STDepositedCharge.h,v 1.2 2005-12-20 15:50:25 cattanem Exp $
+// $Id: STDepositedCharge.h,v 1.3 2006-12-18 10:09:55 cattanem Exp $
 #ifndef _STDepositedCharge_H
 #define _STDepositedCharge_H
 
@@ -11,7 +11,7 @@
 #include "GaudiKernel/IRndmGen.h"
 #include "GaudiAlg/GaudiTool.h"
 
-#include "Kernel/SystemOfUnits.h"
+#include "GaudiKernel/SystemOfUnits.h"
 
 
 /** @class STDepositedCharge STDepositedCharge.h ITAlgorithms/STDepositedCharge.h
@@ -62,7 +62,7 @@ inline double STDepositedCharge::atomicBinding(const double pathLength) const{
 }
 
 inline double STDepositedCharge::landauScale(const double beta, const double pathLength) const{
-  return (0.017825*pathLength*micrometer/(pow(GSL_MAX(beta,0.1),2.)*keV));
+  return (0.017825*pathLength*Gaudi::Units::micrometer/(pow(GSL_MAX(beta,0.1),2.)*Gaudi::Units::keV));
 }
 
 #endif // _STDepositedCharge_H
