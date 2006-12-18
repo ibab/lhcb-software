@@ -47,18 +47,18 @@ use Bs2JpsiPhi          v3r2    PhysSel
 use JetsSel	        v1r1    PhysSel
 # use Radiative           v1r0    PhysSel
 ####################################################################
-use               LoKiSys          v4r3
+use               LoKiSys          v4r4
 #===================================================================
 use               LoKiMC           v1r6 Phys
 use               LoKiGenMC        v1r3 Phys
-use               LoKiPhys         v2r4 Phys
-use               LoKiPhysMC       v2r6 Phys
+use               LoKiPhys         v2r5 Phys
+use               LoKiPhysMC       v2r6p1 Phys
 use               LoKiAlgo         v2r2 Phys
 use               LoKiAlgoMC       v2r0 Phys
 use               LoKiJets         v2r1 Phys
-use               LoKiDict         v4r3 Phys 
-use               LoKi             v4r3 Phys
-use               LoKiAll          v4r3 Phys
+use               LoKiDict         v4r4 Phys 
+use               LoKi             v4r4 Phys
+use               LoKiAll          v4r4 Phys
 
 use               LoKiCoreTest     v1r2 Tests 
 use               LoKiMCTest       v1r0 Tests 
