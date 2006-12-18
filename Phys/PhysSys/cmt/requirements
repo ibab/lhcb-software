@@ -9,7 +9,7 @@ branches doc cmt
 ####################################################################
 use  PhysCoreSys      	v3r6   Phys
 #===================================================================
-use  DaVinciKernel      	v5r5     Phys
+use  DaVinciKernel      	v5r6     Phys
 use  DaVinciFilter      	v5r4     Phys
 use  ProtoParticleFilter        v1r2     Phys
 use  DaVinciTools       	v14r6    Phys
