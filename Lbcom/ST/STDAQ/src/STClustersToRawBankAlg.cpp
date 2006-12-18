@@ -1,4 +1,4 @@
-// $Id: STClustersToRawBankAlg.cpp,v 1.4 2006-03-25 15:51:13 mneedham Exp $
+// $Id: STClustersToRawBankAlg.cpp,v 1.5 2006-12-18 10:49:46 cattanem Exp $
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -39,9 +39,7 @@ using namespace LHCb;
 // 2004-08-01 : M. Needham
 //-----------------------------------------------------------------------------
 
-// Declaration of the Algorithm Factory
-static const  AlgFactory<STClustersToRawBankAlg>          s_factory ;
-const        IAlgFactory& STClustersToRawBankAlgFactory = s_factory ;
+DECLARE_ALGORITHM_FACTORY( STClustersToRawBankAlg );
 
 STClustersToRawBankAlg::STClustersToRawBankAlg( const std::string& name,
                                                       ISvcLocator* pSvcLocator )

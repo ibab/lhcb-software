@@ -1,24 +1,20 @@
 package STDAQ
-version v2r7
+version v2r8
 
 branches cmt doc src options
 include_path none
 
-# Use here packages needed by link library and public interface
+# Used packages
 use STDet        v*  Det
 use DigiEvent    v*  Event
 use DAQEvent     v*  Event
 use LHCbKernel   v*  Kernel
-use GaudiKernel  v*
 use SiDAQ        v*  Si
+use DetDesc      v*  Det
+use GaudiKernel  v*
+use GaudiAlg     v*
+use GSL          v*  LCG_Interfaces
 
 #component
-library STDAQ *.cpp -import=GSL -import=AIDA
+library STDAQ *.cpp
 apply_pattern component_library library=STDAQ
-
-
-private
-# Use here packages needed only by component library
-use DetDesc      v*  Det
-use GaudiAlg     v*
-use GSL          v*  LCG_Interfaces -no_auto_imports

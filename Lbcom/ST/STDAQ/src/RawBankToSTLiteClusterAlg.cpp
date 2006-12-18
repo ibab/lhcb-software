@@ -1,4 +1,4 @@
-// $Id: RawBankToSTLiteClusterAlg.cpp,v 1.6 2006-10-25 11:41:11 mneedham Exp $
+// $Id: RawBankToSTLiteClusterAlg.cpp,v 1.7 2006-12-18 10:49:46 cattanem Exp $
 
 
 #include <algorithm>
@@ -6,7 +6,6 @@
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/MsgStream.h"
 
 // local
 #include "RawBankToSTLiteClusterAlg.h"
@@ -41,9 +40,7 @@ using namespace LHCb;
 // 2004-01-07 : Matthew Needham   
 //-----------------------------------------------------------------------------
 
-// Declaration of the Algorithm Factory
-static const  AlgFactory<RawBankToSTLiteClusterAlg>          s_factory ;
-const IAlgFactory& RawBankToSTLiteClusterAlgFactory = s_factory ;
+DECLARE_ALGORITHM_FACTORY( RawBankToSTLiteClusterAlg );
 
 RawBankToSTLiteClusterAlg::RawBankToSTLiteClusterAlg( const std::string& name,
                                            ISvcLocator* pSvcLocator ):

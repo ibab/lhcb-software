@@ -1,44 +1,24 @@
-//  $
-//====================================================================
-//  ITAlgorithms_load.cpp
-//--------------------------------------------------------------------
-//  
-//  Package    : IT/STDAQ
+// $Id: STDAQ_load.cpp,v 1.2 2006-12-18 10:49:46 cattanem Exp $
+// Include files 
+
+
+#include "GaudiKernel/DeclareFactoryEntries.h"
+
+// Declare  OBJECT / CONVERTER / ALGORITHM / TOOL using the macros DECLARE_xxx
+// The statements are like that:
 //
-//  Description: Implementation of <Package>_load routine. This routine 
-//               is needed for forcing the linker to load all the components
-//               of the library.. 
+// DECLARE_ALGORITHM( MyAlgorithm );
+// DECLARE_TOOL( MyTool );
+// DECLARE_OBJECT( DataObject );
 //
-//====================================================================
+// They should be inside the 'DECLARE_FACTORY_ENTRIES' body.
 
-#include "GaudiKernel/ICnvFactory.h"
-#include "GaudiKernel/ISvcFactory.h"
-#include "GaudiKernel/IAlgFactory.h"
-#include "GaudiKernel/IToolFactory.h"
+DECLARE_FACTORY_ENTRIES(STDAQ) {
+  DECLARE_ALGORITHM( STClustersToRawBankAlg );
+  DECLARE_ALGORITHM( RawBankToSTClusterAlg );
+  DECLARE_ALGORITHM( RawBankToSTLiteClusterAlg );
+  DECLARE_ALGORITHM( STRawBankMonitor );
 
-#define DLL_DECL_SERVICE(x)    extern const ISvcFactory& x##Factory; x##Factory.addRef();
-#define DLL_DECL_CONVERTER(x)  extern const ICnvFactory& x##Factory; x##Factory.addRef();
-#define DLL_DECL_ALGORITHM(x)  extern const IAlgFactory& x##Factory; x##Factory.addRef();
-#define DLL_DECL_TOOL(x)       extern const IToolFactory& x##Factory; x##Factory.addRef();
-
-void STDAQ_load(){
-
-  DLL_DECL_ALGORITHM( STClustersToRawBankAlg );
-  DLL_DECL_ALGORITHM( RawBankToSTClusterAlg );
-  DLL_DECL_ALGORITHM( RawBankToSTLiteClusterAlg );
-  DLL_DECL_ALGORITHM( STRawBankMonitor );
-
-  DLL_DECL_TOOL( ITReadoutTool );
-  DLL_DECL_TOOL( TTReadoutTool );
-
+  DECLARE_TOOL( ITReadoutTool );
+  DECLARE_TOOL( TTReadoutTool );
 }
-
-extern "C" void STDAQ_loadRef() {
-  STDAQ_load();
-}
-
-
-
-
-
-

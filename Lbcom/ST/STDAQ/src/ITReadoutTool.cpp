@@ -1,4 +1,4 @@
-// $Id: ITReadoutTool.cpp,v 1.3 2006-03-25 15:51:13 mneedham Exp $
+// $Id: ITReadoutTool.cpp,v 1.4 2006-12-18 10:49:45 cattanem Exp $
 
 // Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -17,8 +17,7 @@
 
 using namespace LHCb;
 
-static const ToolFactory<ITReadoutTool>  s_factory;
-const IToolFactory& ITReadoutToolFactory = s_factory;
+DECLARE_TOOL_FACTORY( ITReadoutTool );
 
 ITReadoutTool::ITReadoutTool(const std::string& type,
                             const std::string& name,

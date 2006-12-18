@@ -1,10 +1,9 @@
-// $Id: RawBankToSTClusterAlg.cpp,v 1.12 2006-05-09 14:02:17 mneedham Exp $
+// $Id: RawBankToSTClusterAlg.cpp,v 1.13 2006-12-18 10:49:45 cattanem Exp $
 
 #include <algorithm>
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/MsgStream.h"
 
 // local
 #include "RawBankToSTClusterAlg.h"
@@ -40,9 +39,7 @@ using namespace LHCb;
 // 2004-01-07 : Matthew Needham   
 //-----------------------------------------------------------------------------
 
-// Declaration of the Algorithm Factory
-static const  AlgFactory<RawBankToSTClusterAlg>          s_factory ;
-const IAlgFactory& RawBankToSTClusterAlgFactory = s_factory ;
+DECLARE_ALGORITHM_FACTORY( RawBankToSTClusterAlg );
 
 RawBankToSTClusterAlg::RawBankToSTClusterAlg( const std::string& name,
                                            ISvcLocator* pSvcLocator ):
@@ -149,7 +146,9 @@ StatusCode RawBankToSTClusterAlg::createCluster(const STClusterWord& aWord,
 
   // make some consistancy checks
   if ((adcValues.size() - 1u  < aWord.pseudoSize())) {
-    warning() << "adc values do not match ! " << adcValues.size()-1 << " " <<  aWord.pseudoSize() << " chan " << aBoard->DAQToOffline(aWord.channelID()) << endmsg ;
+    warning() << "adc values do not match ! " << adcValues.size()-1 << " "
+              <<  aWord.pseudoSize() << " chan "
+              << aBoard->DAQToOffline(aWord.channelID()) << endmsg ;
     return StatusCode::FAILURE;
   }
 

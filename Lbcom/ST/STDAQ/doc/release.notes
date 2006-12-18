@@ -4,6 +4,10 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
+!=============================== STDAQ v2r8 2006-12-18 =======================
+! 2006-12-18 - Marco Cattaneo
+ - Use DECLARE_xxx_FACTORY macros
+
 !=============================== STDAQ v2r7 2006-11-03 =======================
 ! 2006-25-10 M. Needham
  - speed up light cluster making by factor of two

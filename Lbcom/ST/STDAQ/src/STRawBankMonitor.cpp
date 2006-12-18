@@ -18,9 +18,7 @@
 #include "STTell1ID.h"
 #include "STDAQGeneral.h"
 
-
-static const AlgFactory<STRawBankMonitor> s_Factory;
-const IAlgFactory& STRawBankMonitorFactory = s_Factory;
+DECLARE_ALGORITHM_FACTORY( STRawBankMonitor );
 
 using namespace LHCb;
 
