@@ -1,12 +1,9 @@
-// $Id: RichDigiDataObjVerifier.h,v 1.10 2006-03-12 12:09:26 jonrob Exp $
+// $Id: RichDigiDataObjVerifier.h,v 1.11 2006-12-18 15:38:55 cattanem Exp $
 #ifndef RICHDIGIQC_RICHDIGIDATOBJVERIFIER_H
 #define RICHDIGIQC_RICHDIGIDATOBJVERIFIER_H 1
 
 // base class
 #include "RichKernel/RichAlgBase.h"
-
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
 
 // Event model
 #include "Event/MCRichDigit.h"
@@ -16,9 +13,6 @@
 // Kernel
 #include "Kernel/RichSmartID.h"
 #include "Kernel/RichDetectorType.h"
-
-// Constants
-#include "Kernel/PhysicalConstants.h"
 
 /** @class RichDigiDataObjVerifier RichDigiDataObjVerifier.h RichDigiQC/RichDigiDataObjVerifier.h
  *

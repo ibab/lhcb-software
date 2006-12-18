@@ -1,25 +1,26 @@
 
-//------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------
 /** @file RichDigitQC.cpp
  *
  *  Implementation file for RICH Digitisation Quality Control algorithm : RichDigitQC
  *
  *  CVS Log :-
- *  $Id: RichDigitQC.cpp,v 1.30 2006-03-27 15:19:31 jonrob Exp $
+ *  $Id: RichDigitQC.cpp,v 1.31 2006-12-18 15:38:56 cattanem Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2003-09-08
  */
-//------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------
 
 // local
 #include "RichDigitQC.h"
 
-//------------------------------------------------------------------------------------
+// from Gaudi
+#include "GaudiKernel/AlgFactory.h"
 
-// Declaration of the Algorithm Factory
-static const  AlgFactory<RichDigitQC>          s_factory ;
-const        IAlgFactory& RichDigitQCFactory = s_factory ;
+//-------------------------------------------------------------------------------
+
+DECLARE_ALGORITHM_FACTORY( RichDigitQC );
 
 // Standard constructor, initializes variables
 RichDigitQC::RichDigitQC( const std::string& name,

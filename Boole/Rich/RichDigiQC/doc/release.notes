@@ -4,6 +4,10 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH digitisation
 !-----------------------------------------------------------------------------
 
+!======================== RichDigiQC v3r3 2006-12-18 ========================
+! 2006-12-18 - Marco Cattaneo
+ - Use DECLARE_ALGORITHM_FACTORY macro
+
 !======================== RichDigiQC v3r2 2006-09-01 ========================
 ! 2006-09-01 - Chris Jones
  - Adapt to new MCRichDigit

@@ -1,7 +1,10 @@
-// $Id: RichDigiDataObjVerifier.cpp,v 1.14 2006-09-01 10:47:33 jonrob Exp $
+// $Id: RichDigiDataObjVerifier.cpp,v 1.15 2006-12-18 15:38:55 cattanem Exp $
 
 // local
 #include "RichDigiDataObjVerifier.h"
+
+// from Gaudi
+#include "GaudiKernel/AlgFactory.h"
 
 // LHCb namespace
 using namespace LHCb;
@@ -12,9 +15,7 @@ using namespace LHCb;
 // 2002-11-20 : Andy Presland   (Andrew.Presland@cern.ch)
 //-----------------------------------------------------------------------------
 
-// Declaration of the Algorithm Factory
-static const  AlgFactory<RichDigiDataObjVerifier>          s_factory ;
-const        IAlgFactory& RichDigiDataObjVerifierFactory = s_factory ;
+DECLARE_ALGORITHM_FACTORY( RichDigiDataObjVerifier );
 
 // Standard constructor, initializes variables
 RichDigiDataObjVerifier::RichDigiDataObjVerifier( const std::string& name,

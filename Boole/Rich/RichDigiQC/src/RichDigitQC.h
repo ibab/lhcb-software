@@ -5,7 +5,7 @@
  *  Header file for RICH Digitisation Quality Control algorithm : RichDigitQC
  *
  *  CVS Log :-
- *  $Id: RichDigitQC.h,v 1.21 2006-09-01 10:47:33 jonrob Exp $
+ *  $Id: RichDigitQC.h,v 1.22 2006-12-18 15:38:56 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-09-08
@@ -24,9 +24,6 @@
 // base class
 #include "RichKernel/RichHistoAlgBase.h"
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 // Event model
 #include "Event/MCRichDigit.h"
 
@@ -44,9 +41,6 @@
 // RICH Interfaces
 #include "RichKernel/IRichSmartIDTool.h"
 #include "RichKernel/IRichMCTruthTool.h"
-
-// Constants
-#include "Kernel/PhysicalConstants.h"
 
 // LHCb namespace
 using namespace LHCb;
