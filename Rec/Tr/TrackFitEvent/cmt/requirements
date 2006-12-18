@@ -3,7 +3,7 @@
 # Maintainer : Jose Hernando, Eduardo Rodrigues
 #============================================================================
 package           TrackFitEvent
-version           v2r7
+version           v2r8
 
 #============================================================================
 # Structure, i.e. directories to process. 
