@@ -1,4 +1,4 @@
-// $Id: STSignalToNoiseTool.cpp,v 1.4 2006-02-28 15:37:05 mneedham Exp $
+// $Id: STSignalToNoiseTool.cpp,v 1.5 2006-12-18 10:24:46 cattanem Exp $
 //
 // This File contains the implementation of the STSignalToNoiseTool class
 //
@@ -11,8 +11,7 @@
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IRndmGenSvc.h"
 #include "GaudiKernel/RndmGenerators.h"
-
-#include "Kernel/SystemOfUnits.h"
+#include "GaudiKernel/SystemOfUnits.h"
 
 // ITEvent
 #include "Event/STCluster.h"
@@ -33,8 +32,7 @@
 // This tool is used to add crosstalk in IT
 //------------------------------------------------------------
 
-static ToolFactory<STSignalToNoiseTool> s_factory;
-const IToolFactory& STSignalToNoiseToolFactory = s_factory;
+DECLARE_TOOL_FACTORY( STSignalToNoiseTool );
 
 STSignalToNoiseTool::STSignalToNoiseTool(const std::string& type, 
                 const std::string& name, const IInterface* parent): 
@@ -48,7 +46,7 @@ m_tracker(0)
   declareProperty("detType", m_detType = "TT");
 
   m_paramsInElectron.push_back(776);
-  m_paramsInElectron.push_back(47.9/picofarad);
+  m_paramsInElectron.push_back(47.9/Gaudi::Units::picofarad);
 
   // to get correct interface
   declareInterface<ISTSignalToNoiseTool>(this);

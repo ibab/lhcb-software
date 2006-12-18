@@ -3,7 +3,7 @@
 # Maintainer : Matt Needham
 #============================================================================
 package           STTools
-version           v2r1p1
+version           v3r0
 
 branches          cmt doc src options
 include_path      none
@@ -11,6 +11,7 @@ include_path      none
 use DigiEvent   v* Event
 use STDet       v* Det
 use LHCbKernel  v* Kernel
+use LHCbMath    v* Kernel
 use GaudiAlg    v*
 use GaudiKernel v*
 

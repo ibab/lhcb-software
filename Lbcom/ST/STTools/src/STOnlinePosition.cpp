@@ -1,8 +1,8 @@
-// $Id: STOnlinePosition.cpp,v 1.7 2006-03-22 13:02:16 mneedham Exp $
+// $Id: STOnlinePosition.cpp,v 1.8 2006-12-18 10:24:45 cattanem Exp $
  
 // Kernel
 #include "GaudiKernel/ToolFactory.h"
-#include "Kernel/LHCbMath.h"
+#include "LHCbMath/LHCbMath.h"
  
 // Event
 #include "Event/STDigit.h"
@@ -19,8 +19,7 @@
 using namespace boost::assign;
 using namespace boost;
 
-static ToolFactory<STOnlinePosition> s_factory;
-const IToolFactory& STOnlinePositionFactory = s_factory;
+DECLARE_TOOL_FACTORY( STOnlinePosition );
  
 STOnlinePosition::STOnlinePosition(const std::string& type, const std::string& name, const IInterface* parent) :
  GaudiTool(type, name, parent)

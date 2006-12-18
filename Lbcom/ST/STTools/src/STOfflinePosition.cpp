@@ -1,4 +1,4 @@
-// $Id: STOfflinePosition.cpp,v 1.7 2006-03-22 13:02:16 mneedham Exp $
+// $Id: STOfflinePosition.cpp,v 1.8 2006-12-18 10:24:44 cattanem Exp $
 
  
 // Kernel
@@ -19,8 +19,7 @@
 using namespace boost::assign;
 using namespace boost;
 
-static ToolFactory<STOfflinePosition> s_factory;
-const IToolFactory& STOfflinePositionFactory = s_factory;
+DECLARE_TOOL_FACTORY( STOfflinePosition );
  
 STOfflinePosition::STOfflinePosition(const std::string& type, const std::string& name, const IInterface* parent) :
  GaudiTool(type, name, parent)
