@@ -5,7 +5,7 @@
  *  Header file for algorithm : MCPartToMCRichTrackAlg
  *
  *  CVS Log :-
- *  $Id: MCPartToMCRichTrackAlg.h,v 1.4 2006-03-13 13:15:03 jonrob Exp $
+ *  $Id: MCPartToMCRichTrackAlg.h,v 1.5 2006-12-18 15:44:47 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2004-02-11
@@ -14,9 +14,6 @@
 
 #ifndef RICHMCASSOCIATORS_MCPARTTOMCRICHTRACKALG_H
 #define RICHMCASSOCIATORS_MCPARTTOMCRICHTRACKALG_H 1
-
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
 
 // Linker
 #include "Linker/LinkerWithKey.h"

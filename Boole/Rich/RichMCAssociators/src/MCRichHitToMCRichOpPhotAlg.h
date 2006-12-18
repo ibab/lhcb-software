@@ -4,7 +4,7 @@
  *  Header file for algorithm : MCRichHitToMCRichOpPhotAlg
  *
  *  CVS Log :-
- *  $Id: MCRichHitToMCRichOpPhotAlg.h,v 1.3 2006-03-13 13:15:03 jonrob Exp $
+ *  $Id: MCRichHitToMCRichOpPhotAlg.h,v 1.4 2006-12-18 15:44:49 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2004-02-11
@@ -15,11 +15,6 @@
 
 // from STL
 #include <string>
-
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/MsgStream.h"
-#include "GaudiKernel/SmartDataPtr.h"
 
 // Linker
 #include "Linker/LinkerWithKey.h"

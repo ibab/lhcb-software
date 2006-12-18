@@ -5,7 +5,7 @@
  *  Header file for algorithm : MCRichDigitSummaryAlg
  *
  *  CVS Log :-
- *  $Id: MCRichDigitSummaryAlg.h,v 1.3 2006-09-01 10:45:20 jonrob Exp $
+ *  $Id: MCRichDigitSummaryAlg.h,v 1.4 2006-12-18 15:44:48 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   04/10/2005
@@ -14,9 +14,6 @@
 
 #ifndef RICHMCASSOCIATORS_MCRichDigitSummaryAlg_H
 #define RICHMCASSOCIATORS_MCRichDigitSummaryAlg_H 1
-
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
 
 // Event model
 #include "Event/MCRichDigit.h"

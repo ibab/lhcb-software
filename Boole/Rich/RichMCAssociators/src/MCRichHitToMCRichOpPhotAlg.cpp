@@ -5,7 +5,7 @@
  * Implementation file for class : MCRichHitToMCRichOpPhotAlg
  *
  * CVS Log :-
- * $Id: MCRichHitToMCRichOpPhotAlg.cpp,v 1.5 2006-03-13 19:38:50 jonrob Exp $
+ * $Id: MCRichHitToMCRichOpPhotAlg.cpp,v 1.6 2006-12-18 15:44:49 cattanem Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2004-02-11
@@ -15,12 +15,13 @@
 // local
 #include "MCRichHitToMCRichOpPhotAlg.h"
 
+// from Gaudi
+#include "GaudiKernel/AlgFactory.h"
+
 // namespace
 using namespace LHCb;
 
-// Declaration of the Algorithm Factory
-static const  AlgFactory<MCRichHitToMCRichOpPhotAlg>          s_factory;
-const        IAlgFactory& MCRichHitToMCRichOpPhotAlgFactory = s_factory;
+DECLARE_ALGORITHM_FACTORY( MCRichHitToMCRichOpPhotAlg );
 
 //=============================================================================
 // Standard constructor, initializes variables

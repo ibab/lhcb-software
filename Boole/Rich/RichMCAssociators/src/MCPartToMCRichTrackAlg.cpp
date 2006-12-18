@@ -5,7 +5,7 @@
  * Implementation file for class : MCPartToMCRichTrackAlg
  *
  * CVS Log :-
- * $Id: MCPartToMCRichTrackAlg.cpp,v 1.8 2006-03-13 19:38:50 jonrob Exp $
+ * $Id: MCPartToMCRichTrackAlg.cpp,v 1.9 2006-12-18 15:44:46 cattanem Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -15,12 +15,13 @@
 // local
 #include "MCPartToMCRichTrackAlg.h"
 
+// from Gaudi
+#include "GaudiKernel/AlgFactory.h"
+
 // namespace
 using namespace LHCb;
 
-// Declaration of the Algorithm Factory
-static const  AlgFactory<MCPartToMCRichTrackAlg>          s_factory;
-const        IAlgFactory& MCPartToMCRichTrackAlgFactory = s_factory;
+DECLARE_ALGORITHM_FACTORY( MCPartToMCRichTrackAlg );
 
 //=============================================================================
 // Standard constructor, initializes variables

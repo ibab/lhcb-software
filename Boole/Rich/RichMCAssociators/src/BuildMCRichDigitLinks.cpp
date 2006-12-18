@@ -4,7 +4,7 @@
  *  Implementation file for RICH DAQ algorithm : BuildMCRichDigitLinks
  *
  *  CVS Log :-
- *  $Id: BuildMCRichDigitLinks.cpp,v 1.2 2006-01-23 13:52:07 jonrob Exp $
+ *  $Id: BuildMCRichDigitLinks.cpp,v 1.3 2006-12-18 15:44:46 cattanem Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-09
@@ -12,7 +12,6 @@
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/MsgStream.h"
 
 // local
 #include "BuildMCRichDigitLinks.h"
@@ -22,9 +21,7 @@ using namespace LHCb;
 
 //-----------------------------------------------------------------------------
 
-// Declaration of the Algorithm Factory
-static const  AlgFactory<BuildMCRichDigitLinks>          s_factory ;
-const        IAlgFactory& BuildMCRichDigitLinksFactory = s_factory ;
+DECLARE_ALGORITHM_FACTORY( BuildMCRichDigitLinks );
 
 //=============================================================================
 // Standard constructor

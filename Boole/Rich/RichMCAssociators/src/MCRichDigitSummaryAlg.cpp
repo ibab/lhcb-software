@@ -5,7 +5,7 @@
  * Implementation file for class : MCRichDigitSummaryAlg
  *
  * CVS Log :-
- * $Id: MCRichDigitSummaryAlg.cpp,v 1.5 2006-09-01 10:45:20 jonrob Exp $
+ * $Id: MCRichDigitSummaryAlg.cpp,v 1.6 2006-12-18 15:44:48 cattanem Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2004-02-11
@@ -15,12 +15,13 @@
 // local
 #include "MCRichDigitSummaryAlg.h"
 
+// from Gaudi
+#include "GaudiKernel/AlgFactory.h"
+
 // namespace
 using namespace LHCb;
 
-// Declaration of the Algorithm Factory
-static const  AlgFactory<MCRichDigitSummaryAlg>          s_factory;
-const        IAlgFactory& MCRichDigitSummaryAlgFactory = s_factory;
+DECLARE_ALGORITHM_FACTORY( MCRichDigitSummaryAlg );
 
 //=============================================================================
 // Standard constructor, initializes variables
