@@ -1,4 +1,4 @@
-// $Id: DaVinciTools_load.cpp,v 1.72 2006-12-04 14:13:36 odescham Exp $
+// $Id: DaVinciTools_load.cpp,v 1.73 2006-12-18 11:17:01 jpalac Exp $
 // Include files 
 
 #include "GaudiKernel/DeclareFactoryEntries.h"
@@ -22,6 +22,7 @@ DECLARE_FACTORY_ENTRIES( DaVinciTools ) {
   DECLARE_TOOL( DecayFinder );     
   DECLARE_TOOL( DecodeSimpleDecayString );
   DECLARE_TOOL( GeomDispCalculator ) ;
+  DECLARE_TOOL( NeutralCCChangePIDTool ) ;
   DECLARE_TOOL( OnOfflineTool ) ;
   DECLARE_TOOL( ParticleDescendants ) ;
   DECLARE_TOOL( Particle2State ) ;
@@ -35,6 +36,7 @@ DECLARE_FACTORY_ENTRIES( DaVinciTools ) {
 
   // Algorithms
   DECLARE_ALGORITHM( CheckPV );  
+  DECLARE_ALGORITHM( ConjugateNeutralPID );
   DECLARE_ALGORITHM( MakeResonances ) ;
   DECLARE_ALGORITHM( SimplePlots );  
   DECLARE_ALGORITHM( Particle2VertexAsctAlg );  
