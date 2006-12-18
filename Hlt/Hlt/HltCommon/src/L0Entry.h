@@ -1,4 +1,4 @@
-// $Id: L0Entry.h,v 1.3 2006-10-24 09:44:03 hernando Exp $
+// $Id: L0Entry.h,v 1.4 2006-12-18 09:46:47 hernando Exp $
 #ifndef L0ENTRY_H 
 #define L0ENTRY_H 1
 
@@ -28,6 +28,8 @@ public:
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 protected:
+
+  enum AlleysEntries {Muon,Hadron,Calo};
 
   std::string m_l0Location;
 

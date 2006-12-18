@@ -1,4 +1,4 @@
-// $Id: L0Entry.cpp,v 1.4 2006-10-27 15:13:07 hernando Exp $
+// $Id: L0Entry.cpp,v 1.5 2006-12-18 09:46:47 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -56,6 +56,10 @@ StatusCode L0Entry::initialize() {
   std::vector< Config > configs;
 
   // TODO do not hardwire this!!!
+  configs.push_back( Config("electron",1) );
+  configs.push_back( Config("photon",3) );
+  configs.push_back( Config("localPi0",5) );
+  configs.push_back( Config("globalPi0",7) );
   configs.push_back( Config("hadron",9) );
   configs.push_back( Config("muon",11) );
   configs.push_back( Config("dimuon",13) );
@@ -92,6 +96,7 @@ StatusCode L0Entry::execute() {
   
   ok = m_l0->decision();
   if (!ok) return stop(" No L0 decsion");
+
 
   if (m_l0Channels.size()>0 ) {
     ok = false;
