@@ -8,6 +8,7 @@
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
+//#include "Kernel/SystemOfUnits.h"
 
 // Histogramming
 #include "AIDA/IHistogram1D.h"
@@ -32,9 +33,7 @@
 
 using namespace LHCb;
 
-#include "Kernel/PhysicalConstants.h"
-static const AlgFactory<STClusterResolution> s_Factory;
-const IAlgFactory& STClusterResolutionFactory = s_Factory;
+DECLARE_ALGORITHM_FACTORY( STClusterResolution );
 
 //--------------------------------------------------------------------
 //

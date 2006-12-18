@@ -18,8 +18,7 @@
 
 using namespace LHCb;
 
-static const AlgFactory<MCSTDigitChecker> s_Factory;
-const IAlgFactory& MCSTDigitCheckerFactory = s_Factory;
+DECLARE_ALGORITHM_FACTORY( MCSTDigitChecker );
 
 //--------------------------------------------------------------------
 //

@@ -1,14 +1,10 @@
-// $Id: LandauTest.cpp,v 1.1.1.1 2005-12-19 15:44:29 mneedham Exp $
+// $Id: LandauTest.cpp,v 1.2 2006-12-18 11:04:06 cattanem Exp $
 //
-// This File contains the implementation of the VeloMonitor
+// This File contains the implementation of the LandauTest
 // C++ code for 'LHCb Tracking package(s)'
 //
 //   Author:Matthew Needham
 //   Created: 18-05-1999
-
-//#include "TrAlgorithms/VeloMonitor.h"
-
-// Standard C++ Library
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -19,10 +15,7 @@
 
 #include "LandauTest.h"
 
-// Needed for the creation of LandauTest objects.
-#include "GaudiKernel/AlgFactory.h"
-static const AlgFactory<LandauTest>  s_factory;
-const IAlgFactory& LandauTestFactory = s_factory;
+DECLARE_ALGORITHM_FACTORY( LandauTest );
 
 ///_________________________________________________
 /// Test of Landau generator

@@ -1,5 +1,5 @@
 //
-// This File contains the definition of the OTSmearer -class
+// This File contains the definition of the DotDump -class
 //
 // C++ code for 'LHCb Tracking package(s)'
 //
@@ -15,11 +15,9 @@
 #include "DotDump.h"
 
 // xml geometry
-#include "DetDesc/IGeometryInfo.h"
 #include "DetDesc/DetectorElement.h"
 
-static const AlgFactory<DotDump> s_Factory;
-const IAlgFactory& DotDumpFactory = s_Factory;
+DECLARE_ALGORITHM_FACTORY( DotDump );
 
 //--------------------------------------------------------------------
 //
@@ -84,8 +82,5 @@ StatusCode DotDump::execute(){
 void DotDump::addToDot(const std::string aString){
   m_dStrings.push_back(aString);
 }
-
-
-
 
 

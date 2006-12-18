@@ -32,9 +32,7 @@ using namespace LHCb;
 using namespace boost::assign;
 using namespace boost;
 
-
-static const AlgFactory<STClusterClassification> s_Factory;
-const IAlgFactory& STClusterClassificationFactory = s_Factory;
+DECLARE_ALGORITHM_FACTORY( STClusterClassification );
 
 //--------------------------------------------------------------------
 //

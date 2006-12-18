@@ -13,9 +13,7 @@
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
-
-// CLHEP
-#include "Kernel/PhysicalConstants.h"
+//#include "GaudiKernel/SystemOfUnits.h"
 
 // Histogramming
 #include "AIDA/IHistogram1D.h"

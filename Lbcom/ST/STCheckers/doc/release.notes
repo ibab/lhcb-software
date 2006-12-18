@@ -2,6 +2,11 @@
 ! Package manager : Matt Needham
 !------------------------------------------------------------------------------
 
+!=========================== STCheckers v1r4 2006-12-14 =======================
+! 2006-12-14 - Marco Cattaneo
+ - Use DECLARE_ALGORITHM_FACTORY macros
+ - Use SystemOfUnits.h from GaudiKernel
+
 !=========================== STCheckers v1r3 2006-09-21 =======================
 ! 2006-09-21 - Olivier Callot
  - Adapt STEffMonitor to use the Linker and not the Relation.

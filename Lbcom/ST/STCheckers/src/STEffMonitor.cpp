@@ -8,6 +8,7 @@
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
+#include "GaudiKernel/SystemOfUnits.h"
 
 // Histogramming
 #include "AIDA/IHistogram1D.h"
@@ -26,10 +27,6 @@
 #include "Event/MCParticle.h"
 
 #include "Kernel/STDetSwitch.h"
-
-//CLHep
-#include "Kernel/PhysicalConstants.h"
-
 #include "Kernel/IMCParticleSelector.h"
 
 // BOOST
@@ -39,8 +36,7 @@
 
 using namespace LHCb;
 
-static const AlgFactory<STEffMonitor> s_Factory;
-const IAlgFactory& STEffMonitorFactory = s_Factory;
+DECLARE_ALGORITHM_FACTORY( STEffMonitor );
 
 //--------------------------------------------------------------------
 //
@@ -299,26 +295,29 @@ StatusCode STEffMonitor::layerEff(const MCParticle* aParticle){
        const Gaudi::XYZPoint midPoint = aHit->midPoint();
 
        // histo vs x
-       m_xLayerHistos[iHistoId]->fill(midPoint.x()/cm);    
+       m_xLayerHistos[iHistoId]->fill(midPoint.x()/Gaudi::Units::cm);    
 
        // histo vs y
-       m_yLayerHistos[iHistoId]->fill(midPoint.y()/cm); 
+       m_yLayerHistos[iHistoId]->fill(midPoint.y()/Gaudi::Units::cm); 
 
        //  xy 
-       m_xyLayerHistos[iHistoId]->fill(midPoint.x()/cm, midPoint.y()/cm);
+       m_xyLayerHistos[iHistoId]->fill(midPoint.x()/Gaudi::Units::cm,
+                                       midPoint.y()/Gaudi::Units::cm);
 
        if (found == true){
          if (m_pEff == true){
-           m_effXYLayerHistos[iHistoId]->fill(midPoint.x()/cm, midPoint.y()/cm);
-           m_effXLayerHistos[iHistoId]->fill(midPoint.x()/cm);  
-           m_effYLayerHistos[iHistoId]->fill(midPoint.y()/cm);  
+           m_effXYLayerHistos[iHistoId]->fill(midPoint.x()/Gaudi::Units::cm,
+                                              midPoint.y()/Gaudi::Units::cm);
+           m_effXLayerHistos[iHistoId]->fill(midPoint.x()/Gaudi::Units::cm);  
+           m_effYLayerHistos[iHistoId]->fill(midPoint.y()/Gaudi::Units::cm);  
          }
        } 
        else {
 	 if (m_pEff == false){
-           m_effXYLayerHistos[iHistoId]->fill(midPoint.x()/cm, midPoint.y()/cm);
-           m_effXLayerHistos[iHistoId]->fill(midPoint.x()/cm);
-           m_effYLayerHistos[iHistoId]->fill(midPoint.y()/cm);
+           m_effXYLayerHistos[iHistoId]->fill(midPoint.x()/Gaudi::Units::cm,
+                                              midPoint.y()/Gaudi::Units::cm);
+           m_effXLayerHistos[iHistoId]->fill(midPoint.x()/Gaudi::Units::cm);
+           m_effYLayerHistos[iHistoId]->fill(midPoint.y()/Gaudi::Units::cm);
          }
        }       
      } //if

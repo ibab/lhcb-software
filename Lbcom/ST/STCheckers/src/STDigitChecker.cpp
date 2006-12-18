@@ -26,8 +26,7 @@
 
 using namespace LHCb;
 
-static const AlgFactory<STDigitChecker> s_Factory;
-const IAlgFactory& STDigitCheckerFactory = s_Factory;
+DECLARE_ALGORITHM_FACTORY( STDigitChecker );
 
 //--------------------------------------------------------------------
 //

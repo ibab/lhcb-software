@@ -1,4 +1,4 @@
-// $Id: STClusterChecker.cpp,v 1.7 2006-05-04 12:44:44 jvantilb Exp $
+// $Id: STClusterChecker.cpp,v 1.8 2006-12-18 11:04:09 cattanem Exp $
 //
 // This File contains the implementation of the STClusterChecker class
 //
@@ -28,8 +28,7 @@
 
 using namespace LHCb;
 
-static const AlgFactory<STClusterChecker> s_Factory;
-const IAlgFactory& STClusterCheckerFactory = s_Factory;
+DECLARE_ALGORITHM_FACTORY( STClusterChecker );
 
 //--------------------------------------------------------------------
 //

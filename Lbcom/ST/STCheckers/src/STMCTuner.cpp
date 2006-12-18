@@ -8,6 +8,7 @@
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
+//#include "GaudiKernel/SystemOfUnits.h"
 
 // AIDA
 #include "AIDA/IHistogram1D.h"
@@ -31,9 +32,7 @@
 // STTools interfaces from LHCbKernel
 #include "Kernel/IMCParticleSelector.h"
 
-#include "Kernel/PhysicalConstants.h"
-static const AlgFactory<STMCTuner> s_Factory;
-const IAlgFactory& STMCTunerFactory = s_Factory;
+DECLARE_ALGORITHM_FACTORY( STMCTuner );
 
 using namespace LHCb;
 

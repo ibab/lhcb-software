@@ -1,4 +1,3 @@
-
 // This File contains the definition of the OTSmearer -class
 //
 // C++ code for 'LHCb Tracking package(s)'
@@ -11,19 +10,16 @@
 
 #include "Kernel/STDetSwitch.h"
 
-// CLHEP
-#include "Kernel/PhysicalConstants.h"
-
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
-#
+#include "GaudiKernel/SystemOfUnits.h"
+
 // Histogramming
 #include "AIDA/IHistogram2D.h"
 
 #include "MCSTDepositChecker.h"
 
 // xml geometry
-#include "DetDesc/IGeometryInfo.h"
 #include "STDet/DeSTDetector.h"
 
 // Event
@@ -32,8 +28,7 @@
 
 using namespace LHCb;
 
-static const AlgFactory<MCSTDepositChecker> s_Factory;
-const IAlgFactory& MCSTDepositCheckerFactory = s_Factory;
+DECLARE_ALGORITHM_FACTORY( MCSTDepositChecker );
 
 //--------------------------------------------------------------------
 //
@@ -105,7 +100,8 @@ StatusCode MCSTDepositChecker::initHistograms(){
      // x vs y
      std::string ID = boost::lexical_cast<std::string>(201+(int)iStation);
      aHisto2D = histoSvc()->book(tDirPath+ID,"x vs y"+ID,50,
-                          -1000./cm,1000./cm,50,-1000./cm,1000./cm);
+                          -1000./Gaudi::Units::cm,1000./Gaudi::Units::cm,50,
+                          -1000./Gaudi::Units::cm,1000./Gaudi::Units::cm);
      m_XvsYHistos.push_back(aHisto2D);
 
   } // loop station
@@ -136,8 +132,8 @@ StatusCode MCSTDepositChecker::fillHistograms(const MCSTDeposit* aDeposit) const
       Gaudi::XYZPoint impactPoint = aHit->midPoint();
 
       // fill x vs y scatter plots    
-      m_XvsYHistos[iStation-1]->fill(impactPoint.x()/cm,
-                                     impactPoint.y()/cm);
+      m_XvsYHistos[iStation-1]->fill(impactPoint.x()/Gaudi::Units::cm,
+                                     impactPoint.y()/Gaudi::Units::cm);
     }
   } // fullDetail
 

@@ -15,12 +15,10 @@
 #include "STDumpGeom.h"
 
 // xml geometry
-#include "DetDesc/IGeometryInfo.h"
 #include "STDet/DeSTDetector.h"
 #include "STDet/DeSTSector.h"
 
-static const AlgFactory<STDumpGeom> s_Factory;
-const IAlgFactory& STDumpGeomFactory = s_Factory;
+DECLARE_ALGORITHM_FACTORY( STDumpGeom );
 
 //--------------------------------------------------------------------
 //

@@ -1,5 +1,5 @@
 //
-// This File contains the definition of the OTSmearer -class
+// This File contains the definition of the ITOccupancy -class
 //
 // C++ code for 'LHCb Tracking package(s)'
 //
@@ -13,15 +13,12 @@
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
-
-// CLHEP
-#include "Kernel/PhysicalConstants.h"
+//#include "GaudiKernel/SystemOfUnits.h"
 
 // Histogramming
 #include "AIDA/IHistogram1D.h"
 
 // xml geometry
-#include "DetDesc/IGeometryInfo.h"
 #include "STDet/DeSTDetector.h"
 #include "STDet/DeSTLayer.h"
 #include "STDet/DeSTSector.h"
@@ -34,8 +31,7 @@
 
 using namespace LHCb;
 
-static const AlgFactory<ITOccupancy> s_Factory;
-const IAlgFactory& ITOccupancyFactory = s_Factory;
+DECLARE_ALGORITHM_FACTORY( ITOccupancy );
 
 //--------------------------------------------------------------------
 //
