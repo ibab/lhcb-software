@@ -1,4 +1,4 @@
-// $Id: SiDepositedCharge.h,v 1.1.1.1 2006-05-16 08:33:54 mneedham Exp $
+// $Id: SiDepositedCharge.h,v 1.2 2006-12-18 10:15:27 cattanem Exp $
 #ifndef _SiDepositedCharge_H
 #define _SiDepositedCharge_H
 
@@ -11,7 +11,7 @@
 #include "GaudiKernel/IRndmGen.h"
 #include "GaudiAlg/GaudiTool.h"
 
-#include "Kernel/SystemOfUnits.h"
+#include "GaudiKernel/SystemOfUnits.h"
 
 
 /** @class SiDepositedCharge SiDepositedCharge.h SiTools/SiDepositedCharge.h
@@ -66,7 +66,7 @@ inline double SiDepositedCharge::atomicBinding(const double pathLength) const{
 }
 
 inline double SiDepositedCharge::landauScale(const double beta, const double pathLength) const{
-  return (0.017825*pathLength*micrometer/(gsl_pow_2(GSL_MAX(beta,0.1))*keV));
+  return (0.017825*pathLength*Gaudi::Units::micrometer/(gsl_pow_2(GSL_MAX(beta,0.1))*Gaudi::Units::keV));
 }
 
 #endif // _SiDepositedCharge_H
