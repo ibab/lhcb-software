@@ -1,5 +1,5 @@
 package LbcomSys
-version v5r9
+version v6r0
 
 branches doc cmt
 
@@ -23,12 +23,15 @@ use RichTools         v2r9  Rich        # Chris Jones
 use RichMCTools       v3r3  Rich        # Chris Jones
 use RichMCMonitors    v1r0  Rich        # Chris Jones
 
+# Silicon detectors
+use SiTools           v1r1  Si          # Matt Needham
+
 # Silicon Tracker
-use STDAQ             v2r7  ST          # Matt Needham
-use STTools         v2r1p1  ST          # Matt Needham
-use STAlgorithms      v1r3  ST          # Matt Needham
-use STAssociators     v1r2  ST          # Matt Needham
-use STCheckers        v1r3  ST          # Matt Needham
+use STDAQ             v2r8  ST          # Matt Needham
+use STTools           v3r0  ST          # Matt Needham
+use STAlgorithms      v2r0  ST          # Matt Needham
+use STAssociators     v1r3  ST          # Matt Needham
+use STCheckers        v1r4  ST          # Matt Needham
 
 # Calorimeter
 use CaloAssociators   v6r3  Calo        # Olivier Deschamps

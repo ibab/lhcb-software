@@ -6,6 +6,24 @@
 !             : Contains packages shared by Boole and other applications   
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v6r0>2006-12-18 LbcomSys v6r0</A></H1><PRE>
+This version uses Gaudi v19r0 and LHCb v22r0.
+It introduces the use of CMT Install areas
+
+Packages added:    SiTools v1r1 - Tools shared by Velo and ST
+Packages modified: STAssociators v1r3, STCheckers v1r4, STAlgorithms v2r0
+                   STTools v3r0, STDAQ v2r8
+
+- In STAssociators v1r3, STCheckers v1r4, STAlgorithms v2r0, STTools v3r0,
+     STDAQ v2r8
+  . Use DECLARE_xxx_FACTORY macros
+
+- In STCheckers v1r4, STAlgorithms v2r0, STTools v3r0
+  . Get SystemOfUnits.h from GaudiKernel
+
+- In STAlgorithms v2r0, STTools v3r0
+  . Get LHCbMath.h from LHCbMath (needs LHCb v22r0)
+
 </PRE><H1><A NAME=v5r9>2006-12-01 LbcomSys v5r9</A></H1><PRE>
 This version uses Gaudi v18r11 and LHCb v21r12
 
