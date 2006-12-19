@@ -3,6 +3,9 @@ Desccription: This package contains a set of tools used to generate code from th
 Package manager : Stefan Roiser
 
 ============================ GaudiObjDesc v9r8 =========================
+! 2006-12-19 - Marco Cattaneo
+ - Added pp_cppflags to genreflex arguments in obj2dict_trailer
+
 ! 2006-12-19 Pere Mato
   - Modified fragments for dictionary generation to produce the rootmap in the install area or locally depending if building
     with or without install area.
