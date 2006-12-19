@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichRecInit
  *
  *  CVS Log :-
- *  $Id: RichRecInit.cpp,v 1.1 2006-02-16 16:03:21 jonrob Exp $
+ *  $Id: RichRecInit.cpp,v 1.2 2006-12-19 09:46:30 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -15,14 +15,15 @@
 // local
 #include "RichRecInit.h"
 
+// from Gaudi
+#include "GaudiKernel/AlgFactory.h"
+
 // namespaces
 using namespace LHCb;
 
 //--------------------------------------------------------------------------
 
-// Declaration of the Algorithm Factory
-static const  AlgFactory<RichRecInit>          s_factory ;
-const        IAlgFactory& RichRecInitFactory = s_factory ;
+DECLARE_ALGORITHM_FACTORY( RichRecInit );
 
 // Standard constructor, initializes variables
 RichRecInit::RichRecInit( const std::string& name,

@@ -5,7 +5,7 @@
  *  Header file for algorithm class : RichRecInit
  *
  *  CVS Log :-
- *  $Id: RichRecInit.h,v 1.1 2006-02-16 16:03:21 jonrob Exp $
+ *  $Id: RichRecInit.h,v 1.2 2006-12-19 09:46:30 cattanem Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   10/01/2003
@@ -17,9 +17,6 @@
 
 // Base class
 #include "RichRecBase/RichRecAlgBase.h"
-
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
 
 // Event
 #include "Event/RichRecStatus.h"

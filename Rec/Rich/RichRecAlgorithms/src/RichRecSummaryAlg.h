@@ -5,7 +5,7 @@
  *  Header file for algorithm class : RichRecSummaryAlg
  *
  *  CVS Log :-
- *  $Id: RichRecSummaryAlg.h,v 1.3 2006-10-20 13:02:33 jonrob Exp $
+ *  $Id: RichRecSummaryAlg.h,v 1.4 2006-12-19 09:46:30 cattanem Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   10/01/2003
@@ -17,9 +17,6 @@
 
 // Base class
 #include "RichRecBase/RichRecAlgBase.h"
-
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
 
 // Event
 #include "Event/RichRecStatus.h"

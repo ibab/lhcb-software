@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichRecBackgroundEsti
  *
  *  CVS Log :-
- *  $Id: RichRecBackgroundEsti.cpp,v 1.4 2006-01-23 14:07:23 jonrob Exp $
+ *  $Id: RichRecBackgroundEsti.cpp,v 1.5 2006-12-19 09:46:30 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -15,14 +15,15 @@
 // local
 #include "RichRecBackgroundEsti.h"
 
+// from Gaudi
+#include "GaudiKernel/AlgFactory.h"
+
 // namespaces
 using namespace LHCb;
 
 //--------------------------------------------------------------------------
 
-// Declaration of the Algorithm Factory
-static const  AlgFactory<RichRecBackgroundEsti>          s_factory ;
-const        IAlgFactory& RichRecBackgroundEstiFactory = s_factory ;
+DECLARE_ALGORITHM_FACTORY( RichRecBackgroundEsti );
 
 // Standard constructor, initializes variables
 RichRecBackgroundEsti::RichRecBackgroundEsti( const std::string& name,

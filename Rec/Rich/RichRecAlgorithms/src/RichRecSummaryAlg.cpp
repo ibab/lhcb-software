@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichRecSummaryAlg
  *
  *  CVS Log :-
- *  $Id: RichRecSummaryAlg.cpp,v 1.4 2006-10-20 13:02:33 jonrob Exp $
+ *  $Id: RichRecSummaryAlg.cpp,v 1.5 2006-12-19 09:46:30 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -15,14 +15,15 @@
 // local
 #include "RichRecSummaryAlg.h"
 
+// from Gaudi
+#include "GaudiKernel/AlgFactory.h"
+
 // namespaces
 using namespace LHCb;
 
 //--------------------------------------------------------------------------
 
-// Declaration of the Algorithm Factory
-static const  AlgFactory<RichRecSummaryAlg>          s_factory ;
-const        IAlgFactory& RichRecSummaryAlgFactory = s_factory ;
+DECLARE_ALGORITHM_FACTORY( RichRecSummaryAlg );
 
 // Standard constructor, initializes variables
 RichRecSummaryAlg::RichRecSummaryAlg( const std::string& name,
