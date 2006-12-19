@@ -2,6 +2,11 @@ Package LinkerInstances
 Package manager: T.Ruf
 Purpose: Creates dictionaries for the use of Linker relations in Python
 
+!===================== LinkerInstances v3r2 2006-12-19 ========================
+! 2006-12-19 - Marco Cattaneo
+ - Add an exclusion to avoid duplicate generation of dictionaries for std::vector
+   instances of classes used in Linkers
+
 !===================== LinkerInstances v3r1 2006-06-13 ========================
 ! 2006-06-13 - Thomas Ruf
  - instantiate MCHit2MCParticle linker table

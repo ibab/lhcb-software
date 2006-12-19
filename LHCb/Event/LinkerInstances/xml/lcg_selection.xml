@@ -1,4 +1,7 @@
 <lcgdict>
   <class pattern="LinkedTo<*"/>
   <class pattern="LinkedFrom<*"/>
+  <exclusion>
+    <class pattern="*::LRange"/>
+  </exclusion>
 </lcgdict>
