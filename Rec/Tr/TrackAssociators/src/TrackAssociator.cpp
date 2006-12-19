@@ -1,4 +1,4 @@
-// $Id: TrackAssociator.cpp,v 1.10 2006-06-09 15:50:39 erodrigu Exp $
+// $Id: TrackAssociator.cpp,v 1.11 2006-12-19 08:24:14 cattanem Exp $
 // Include files
 
 // local
@@ -37,9 +37,7 @@
 
 using namespace LHCb;
 
-// Declaration of the Algorithm Factory
-static const  AlgFactory<TrackAssociator>          s_factory ;
-const        IAlgFactory& TrackAssociatorFactory = s_factory ;
+DECLARE_ALGORITHM_FACTORY( TrackAssociator );
 
 //=============================================================================
 // Standard constructor, initializes variables
