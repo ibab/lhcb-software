@@ -1,4 +1,4 @@
-// $Id: VeloClusterPosition.cpp,v 1.3 2006-04-21 08:47:16 cattanem Exp $
+// $Id: VeloClusterPosition.cpp,v 1.4 2006-12-19 07:57:08 cattanem Exp $
 // Include files
 
 // stl
@@ -6,8 +6,10 @@
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
+#include "GaudiKernel/SystemOfUnits.h"
+
+// from LHCbDefinitions
 #include "Kernel/LHCbMath.h"
-#include "Kernel/SystemOfUnits.h"
 #include "Kernel/Point3DTypes.h"
 
 // Velo
@@ -288,11 +290,11 @@ void VeloClusterPosition::posAndError(
     clusterPos=rSens->rOfStrip(intDistanceID.strip(), fractionalPos);
     if(m_printInfo)
       info()<< " ==> The given cluster is on RType sensor" <<endmsg;
-    clusterPos=clusterPos/cm;
+    clusterPos=clusterPos/Gaudi::Units::cm;
     pitch=rSens->rPitch(intDistanceID.strip(), fractionalPos);
     userInfo.second=1.; // RType
-    errorPos=resolution(pitch/micrometer, resInfo);
-    errorPos=errorPos/(pitch/micrometer);
+    errorPos=resolution(pitch/Gaudi::Units::micrometer, resInfo);
+    errorPos=errorPos/(pitch/Gaudi::Units::micrometer);
     // return values for cluster position and position errorPos
     toolInfo=std::make_pair(clusterPos, errorPos);
     //
@@ -312,28 +314,28 @@ void VeloClusterPosition::posAndError(
       double frac=fractionalPos;
       clusterPos=phiSens->phiOfStrip(intDistanceID.strip(), frac, meanRadius);
       double phiOf=phiSens->phiOfStrip(intDistanceID.strip(), 0.0, meanRadius);
-      debug()<< "phi: " << phiOf/degree << ", " << frac <<endmsg;
+      debug()<< "phi: " << phiOf/Gaudi::Units::degree << ", " << frac <<endmsg;
       //
       if(m_printInfo)
         info()<< " ==> The given cluster is on PhiType sensor" <<endmsg;
-      clusterPos=clusterPos/degree;
+      clusterPos=clusterPos/Gaudi::Units::degree;
       //
       if(m_printInfo){
         info()<< "cluster pos: " << clusterPos <<endmsg;
-        info()<< "mean radius: " << meanRadius/cm <<endmsg;
+        info()<< "mean radius: " << meanRadius/Gaudi::Units::cm <<endmsg;
       }
       //
       pitch=phiSens->phiPitch(meanRadius);
       resInfo.second=0.; // phi type
-      errorPos=resolution(pitch/micrometer, resInfo);
-      double errorRad=errorPos/(meanRadius/micrometer);
-      double errorDeg=errorRad/degree;
+      errorPos=resolution(pitch/Gaudi::Units::micrometer, resInfo);
+      double errorRad=errorPos/(meanRadius/Gaudi::Units::micrometer);
+      double errorDeg=errorRad/Gaudi::Units::degree;
       if(m_printInfo){
         info()<< "Error [rad] " << errorRad
               << ", error [deg] " << errorDeg <<endmsg;
       }
       // error as a fraction of the strip distance
-      errorPos/=(pitch/micrometer);
+      errorPos/=(pitch/Gaudi::Units::micrometer);
       //
       toolInfo=std::make_pair(clusterPos, errorPos);
     }else{
@@ -342,17 +344,17 @@ void VeloClusterPosition::posAndError(
       if(m_printInfo)
         info()<< " ==> The given cluster is on PhiType sensor" <<endmsg;
       //
-      clusterPos=clusterPos/degree;
+      clusterPos=clusterPos/Gaudi::Units::degree;
       pitch=phiSens->phiPitch(rOfPhiCluster);
       resInfo.second=0.; //phi type
-      errorPos=resolution(pitch/micrometer, resInfo);
-      double errorRad=errorPos/(rOfPhiCluster/micrometer);
-      double errorDeg=errorRad/degree;
+      errorPos=resolution(pitch/Gaudi::Units::micrometer, resInfo);
+      double errorRad=errorPos/(rOfPhiCluster/Gaudi::Units::micrometer);
+      double errorDeg=errorRad/Gaudi::Units::degree;
       if(m_printInfo){
         info()<< " Error [rad] " << errorRad
               << ", errorDeg [deg] " << errorDeg <<endmsg;
       }
-      errorPos/=(pitch/micrometer);
+      errorPos/=(pitch/Gaudi::Units::micrometer);
       //
       toolInfo=std::make_pair(clusterPos, errorPos);
     }
