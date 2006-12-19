@@ -5,7 +5,7 @@
  *  Implementation file for RICH algorithm : RichHierarchicalPIDMerge
  *
  *  CVS Log :-
- *  $Id: RichHierarchicalPIDMerge.cpp,v 1.5 2006-08-28 11:07:15 jonrob Exp $
+ *  $Id: RichHierarchicalPIDMerge.cpp,v 1.6 2006-12-19 09:41:27 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-10
@@ -21,9 +21,7 @@
 // namespaces
 using namespace LHCb;
 
-// Declaration of the Algorithm Factory
-static const  AlgFactory<RichHierarchicalPIDMerge>          s_factory ;
-const        IAlgFactory& RichHierarchicalPIDMergeFactory = s_factory ;
+DECLARE_ALGORITHM_FACTORY( RichHierarchicalPIDMerge );
 
 
 // Standard constructor, initializes variables

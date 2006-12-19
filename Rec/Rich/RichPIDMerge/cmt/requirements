@@ -2,11 +2,11 @@
 # Created    : 05/04/2002
 # Maintainer : Christopher Rob Jones
 #============================================================================
-# $Id: requirements,v 1.13 2006-08-31 12:24:25 cattanem Exp $
+# $Id: requirements,v 1.14 2006-12-19 09:41:20 cattanem Exp $
 #============================================================================
 
 package RichPIDMerge
-version v2r1
+version v2r2
 
 # ================ structure ================================================
 branches src cmt doc options
