@@ -1,59 +1,74 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"><head><title>LHCb-UK Software Training</title>
-
     
     
-    <link rel="stylesheet" media="screen" type="text/css" href="DaVinci1_files/lhcb-cambridge-blue.css">
+    <link rel="stylesheet" media="screen" type="text/css" 
+      href="http://www.hep.phy.cam.ac.uk/lhcb/LHCbSoftTraining/documents/lhcb-cambridge-blue.css">
 
-      <link rel="stylesheet" media="print" type="text/css" href="DaVinci1_files/lhcb-cambridge-print.css"></head><body>
+      <link rel="stylesheet" media="print" type="text/css" 
+	href="http://www.hep.phy.cam.ac.uk/lhcb/LHCbSoftTraining/documents/lhcb-cambridge-print.css"></head><body>
 
-  
+  <body>
 
     <table id="titlebar">
       <tbody>
 	<tr style="vertical-align: bottom;">
+
 	  <td style="padding-bottom: 15px;">
 	    <h1>LHCb Software Training: DaVinci</h1></td>
 	  <td id="lhcblogo" style="text-align: right;">
 	    <a href="http://cern.ch/lhcb">
-	      <img src="DaVinci1_files/lhcblogo.gif"></a></td>
+	      <img src="http://lhcb.web.cern.ch/lhcb/lhcblogo.gif"></a></td>
 	</tr>
       </tbody>
     </table>
+
     
     <div id="content">
       
-      <h1><span lang="en-gb">Exercises linked to DaVinci session 1</span></h1>
-      
-      <p>
+            <h1><span lang="en-gb">Exercises linked to DaVinci session 1</span></h1>
+	    
+      <p>   
 	The purpose of these exercises is to allow you to write a complete
 	though simple selection algorithms for a typical decay: Bs-&gt;J/psiPhi.
 	We start with a very simple algorithm that looks 
 	at muons and fills some histograms.
+	
+		</p><h2>1. Creating Ganga template for DaVinci jobs, and intitial package build.</h2>
+			You might already have done part of this. It doesn't harm to redo it but look for CVS errors when you <code>getpack</code>.
+			<ul>
+			<li>Set environment for Ganga:</li>
+			
+<code class="display">GangaEnv 4.2.6</code>
+			<li>Start an interactive session:</li>
+<code class="display">ganga</code>
+You will be prompted for your grid password.
+			 <li>At the ganga prompt type:</li>
+<code class="display">t = JobTemplate( application = DaVinci( version = "v17r6" ) )
+t.application.getpack( "Tutorial/Analysis v6r2" )
+t.application.getpack( "Phys/DaVinci v17r6" )
+t.application.masterpackage = "DaVinci v17r6 Phys"
+t.application.optsfile = File( name = "~/cmtuser/Tutorial/Analysis/options/myOptions.txt" )
 
-		</p><h2>1. Setting up the environment</h2>
-		... You should already have done that all
-		<ul>
-			<li>Choose the DaVinci environment</li>
-			<code class="display">cd $HOME/cmtuser/
-DaVinciEnv v17r6
-getpack Tutorial/Analysis v6r2
-getpack Phys/DaVinci v17r6
-cd Phys/DaVinci/v17r6/cmt
-emacs requirements</code>
-                        <li>add the following line </li>
+!emacs $t.application.cmt_user_path/Phys/DaVinci/v17r6/cmt/requirements &</code>
+		Be very careful not to copy-paste leading <b>spaces</b>; python does 
+not like that at all.
+
+                        <li>Add the line:</li>
 <code class="display">use Analysis v6r2 Tutorial</code>
-                        <li>Then go ahead</li>
-<code class="display">cmt config
-cmt br make
-source setup.csh
-cd $ANALYSISROOT</code>
+and save.
+
+                        <li>At the ganga prompt:</li>
+<code class="display">t.application.make()</code>
+that may take a while...
 		</ul>
 		
-
 		<h2>2. Start to write the options</h2>
-		<ul>
-			<li>Open a new file in the options directory and write</li>
+
+			<ul>
+				<li>Open the main options file
+<code class="display">!emacs $t.application.optsfile.name &</code>
+			<li>Write in the options file:</li>
 <code class="display">#include "$DAVINCIROOT/options/DaVinciCommon.opts"
 // load options for creation of "standard muons":
 #include "$COMMONPARTICLESROOT/options/StandardMuons.opts"
@@ -81,15 +96,24 @@ Now we need to write the algorithm!
 			loops over muons and plots some variables.</p>
 		<ul>
 
-			<li>Open a file</li>
-<code class="display">emacs src/TutorialAlgorithm.{cpp,h} &amp;</code>
-            <p>Answer "D" for DVAlgorithm twice</p>
-
-			<li>Before you forget it, declare it to
+			<li>Before you forget it, declare your new algorithm to
 			Analysis_load.cpp:</li>
+<code class="display">!emacs ~cmtuser/Tutorial/Analysis/v6r2/src/Analysis_load.cpp &</code>
+and add the line:
 <code class="display">DECLARE_ALGORITHM(TutorialAlgorithm)</code>
 
-			<li>Now let's add something to the execute method:</li>
+			<li>Open the files for your algorithm:</li>
+<code class="display">!emacs ~cmtuser/Tutorial/Analysis/v6r2/src/TutorialAlgorithm.cpp &</code>
+            <p>Answer "D" for DVAlgorithm twice. You can also do that from the shell 
+	    prompt by opening another window.</p>
+
+			<li>Create a new private method in the header file:</li>
+<code class="display">private:
+  StatusCode loopOnMuons(const LHCb::Particle::ConstVector&amp;)const ;
+</code>	    
+
+			<li>Now let's add something to the execute method in the cpp:</li>
+
 <code class="display">StatusCode TutorialAlgorithm::execute() {
   debug() &lt;&lt; "==&gt; Execute" &lt;&lt; endmsg;
   StatusCode sc = StatusCode::SUCCESS ;
@@ -102,15 +126,11 @@ Now we need to write the algorithm!
   setFilterPassed(true);   // Set to true if event is accepted.
   return StatusCode::SUCCESS;
 }</code>
-                 <p>Here we get the particles from the hysDesktop tool 
-		    and added a method that will do the actual work.
+                 <p>Here we get the particles from the PhysDesktop tool 
+		    and call our new method.</p>
 		    
-			</p><li>Declare the method in the header file:</li>
-<code class="display">private:
-  StatusCode loopOnMuons(const LHCb::Particle::ConstVector&amp;)const ;
-</code>	    
+			<li>Now implement the method in the cpp file:</li>
 
-			<li>Create it in the cpp file:</li>
 <code class="display">//====================================================
 // loop on muons
 //====================================================
@@ -132,6 +152,7 @@ StatusCode TutorialAlgorithm::loopOnMuons(
     debug() &lt;&lt; "Mu Momentum: " &lt;&lt; (*im)-&gt;momentum() &lt;&lt; endmsg ;
   }</code>	    
 
+
 <li>Now get the primary vertices (outside the muons loop):</li>
 <code class="display">LHCb::RecVertex::ConstVector pvs = desktop()-&gt;primaryVertices();</code>	
 
@@ -148,6 +169,7 @@ StatusCode TutorialAlgorithm::loopOnMuons(
     }
 </code>	
 		</ul>
+
 		
 		<h2>3. Run!</h2>
 		<p>First we need some data</p>
@@ -157,13 +179,13 @@ StatusCode TutorialAlgorithm::loopOnMuons(
 		  </li>
 		  <ol>
 <li> Click "Dataset Search"
-</li><li> Select "Configuration = "<code>DC06 - v1-lumi2</code>"
-</li><li> Select "Event type = <code>13144000 - Bs_JpsiPhi,mm</code>"
+
+</li><li> Select "Configuration = <code>DC06 - v1-lumi2</code>"
+</li><li> Select "Event type = <code>13144000 - Bs_JpsiPhi,mm=CPV</code>"
 </li><li> Select "Step3 = <code>Brunel - v30r13</code>"  (or the latest available)
-</li><li> Select "Datasets replicated at CERN"
-</li><li> Select "Physical file name protocol = <code>castor</code>"
+</li><li> Select "Datasets replicated at : Anywhere (Grid only)"
 </li><li> Submit
-</li><li> You get a <a href="http://lbnts2.cern.ch:8080/BkkServlets/EvTypeInfo?prev_fname=/&amp;page_number=1&amp;configuration=DC06+-+v1-lumi2&amp;evt_type=13144001&amp;dbase_vers=ANY%5Ev30r13&amp;replicat_lab=CERN&amp;if_print=GaudiCard&amp;ndata_per_page=200&amp;ndata_per_job=&amp;cards_type=physical&amp;protocol=castor&amp;InputFile0=DST+1&amp;Program0=ANY%5EBrunel+-+v30r13&amp;InputFile1=ANY%5EDIGI+1&amp;Program1=ANY%5EBoole+-+v12r9&amp;InputFile2=ANY%5ESIM+1&amp;Program2=ANY%5EGauss+-+v25r6">new page</a> with the data cards.
+</li><li> You get a <a href="http://lbnts2.cern.ch:8080/BkkServlets/EvTypeInfo?prev_fname=/&page_number=1&configuration=DC06+-+v1-lumi2&evt_type=13144001&dbase_vers=ANY^v30r13&replicat_lab=ANY&if_print=GaudiCard&ndata_per_page=200&ndata_per_job=&cards_type=logical&protocol=rfio&InputFile0=DST+1&Program0=ANY^Brunel+-+v30r13&InputFile1=ANY^DIGI+1&Program1=ANY^Boole+-+v12r9&InputFile2=ANY^SIM+1&Program2=ANY^Gauss+-+v25r6">new page</a> with the data cards.
 </li><li> Paste the contents into your options.
 <p></p>
 The bookkeeping can be very slow. Especially when 30 people try to access it at the same
@@ -172,15 +194,36 @@ time...
 		<li>We don't want to run forever, so define the number of events:</li>
 <code class="display">ApplicationMgr.EvtMax = 1000 ;</code>	
 		</li>
+
 		<li>We want to save the histograms, so add the following line to your options:</li>
 <code class="display">HistogramPersistencySvc.OutputFile = "DVHistos.root";</code>	
-		<li>Now run:</li>
-<code class="display">DaVinci $ANALYSISROOT/options/MyOptions.opts </code>	
+		<li>Define a job:</li>
+		<ul>
+		<li>If you want the output to the terminal do:
+<code class="display">j = Job( t, backend = Interactive() )</code>	
+		<li>If you want the output in a file:
+<code class="display">j = Job( t, background = Local() )</code>	
+		<li>If you want to use LSF:
+<code class="display">j = Job( t, backend = LSF() )</code>	
+		<li>If you want to use the grid:
+<code class="display">j = Job( t, backend = LSF() )</code>	
+              </ul>
+For small tests, the first two options are usually best.  For larger
+    amounts of data, you'll need to run either on the LSF batch system
+    or on the Grid.
+		<li>Submit the job</li>
+<code class="display">j.submit()</code>	
+    When a job completes, unless you used the Interactive backend,
+    standard output/error can be viewed with:
+
+<code class="display">j.peek( "stdout" )
+j.peek( "stdin" )</code>	
               </ul>
 
 		<h2>4. Look at the histograms</h2>
 		<ul>
 		<li>Open root</li>
+
 <code class="display">root.exe</code>	
                 <p>This will get you the version of root 
 		   used by DaVinci. </p>
@@ -191,6 +234,7 @@ time...
 		<li>The simplest way to look at histograms is to use the TBrowser</li>
 <code class="display">TBrowser B</code>	
                 <p>Which has a Windows-like look and feel.</p>
+
 		<li>But if you just want to save the histograms, you could as well just paste the following in the root prompt</li>
 <code class="display">TCanvas* c1 = new TCanvas("c1","Edinburgh",800,800);
 c1-&gt;SetLogy();
@@ -223,6 +267,7 @@ H4-&gt;SetLineColor(2)
 H4-&gt;SetLineWidth(3)
 H4-&gt;Draw()
 gPad-&gt;SaveAs("H4.eps");
+
 </code>	
               <p>For sure one could do this shorter...</p>
 		<li>To quit root:</li>

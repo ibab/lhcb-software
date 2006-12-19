@@ -8,6 +8,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2006-12-19- P. Koppenburg for Raluca Muresan
+  - Use different cuts for J/psi and Phi
+
 ! 2006-12-15 - P. Koppenburg
   - Corrected DaVinci1.html following Raluca's suggestions
   - Use now v17r6
