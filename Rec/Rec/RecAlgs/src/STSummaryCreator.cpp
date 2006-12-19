@@ -14,8 +14,7 @@
 
 using namespace LHCb;
 
-static const AlgFactory<STSummaryCreator>  s_factory;
-const IAlgFactory& STSummaryCreatorFactory = s_factory;
+DECLARE_ALGORITHM_FACTORY( STSummaryCreator );
 
 STSummaryCreator::STSummaryCreator(const std::string& name, ISvcLocator* pSvcLocator) :
 GaudiAlgorithm(name, pSvcLocator)

@@ -4,6 +4,10 @@
 ! Purpose     : Holds generic reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+!========================== RecAlgs v1r2 2006-12-19 ==========================
+! 2006-12-19 - Marco Cattaneo
+ - Use DECLARE_ALGORITHM_FACTORY macro
+
 !========================== RecAlgs v1r2 2006-09-28 ==========================
 ! 2006-09-28 - Marco Cattaneo
  - Adapt RecInit to get event number and run number from DAQ/ODIN
