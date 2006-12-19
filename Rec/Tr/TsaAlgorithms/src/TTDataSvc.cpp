@@ -13,8 +13,7 @@
 
 #include <algorithm>
 
-static const ToolFactory<TTDataSvc>  s_factory;
-const IToolFactory& TTDataSvcFactory = s_factory;
+DECLARE_TOOL_FACTORY( TTDataSvc );
 
 TTDataSvc::TTDataSvc(const std::string& type,
                      const std::string& name,

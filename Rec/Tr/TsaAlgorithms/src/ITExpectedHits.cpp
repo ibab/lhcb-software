@@ -1,4 +1,4 @@
-// $Id: ITExpectedHits.cpp,v 1.7 2006-12-06 14:35:00 mneedham Exp $
+// $Id: ITExpectedHits.cpp,v 1.8 2006-12-19 07:39:51 cattanem Exp $
 
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -11,7 +11,6 @@
 #include "TsaKernel/TsaConstants.h"
 
 // Kernel
-#include "Kernel/PhysicalConstants.h"
 #include "Kernel/Plane3DTypes.h"
 #include "Kernel/STChannelID.h"
 #include "LHCbMath/GeomFun.h"
