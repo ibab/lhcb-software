@@ -33,8 +33,8 @@ Jpsi2MuMu.OutputLevel = 3 ;
 TutorialSeq.Members += { "TutorialAlgorithm/Phi2KK" };
 Phi2KK.PhysDesktop.InputLocations = { "Phys/StdLooseKaons" } ;
 Phi2KK.Particle =  "phi(1020)" ;
-Phi2KK.MassWindow = 50*MeV ;
-Phi2KK.MaxChi2 = 100 ;
+Phi2KK.MassWindow = 30*MeV ;
+Phi2KK.MaxChi2 = 20 ;
 Phi2KK.OutputLevel = 3 ;
 
 TutorialSeq.IgnoreFilterPassed = true ; // get all Phis

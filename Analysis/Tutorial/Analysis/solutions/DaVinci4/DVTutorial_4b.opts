@@ -20,9 +20,9 @@ ApplicationMgr.TopAlg += { "GaudiSequencer/TutorialSeq" };
 TutorialSeq.Members += { "MakeResonances/Jpsi2MuMu" };
 Jpsi2MuMu.PhysDesktop.InputLocations = { "Phys/StdLooseMuons" } ;
 Jpsi2MuMu.DecayDescriptor = "J/psi(1S) -> mu+ mu-" ;
-Jpsi2MuMu.Window = 50*MeV ;
+Jpsi2MuMu.Window = 30*MeV ;
 Jpsi2MuMu.MotherFilter.Selections = { "J/psi(1S)  : VtxFilterCriterion" };
-Jpsi2MuMu.VtxFilterCriterion.MaxChi2 = 100 ;
+Jpsi2MuMu.VtxFilterCriterion.MaxChi2 = 20 ;
 Jpsi2MuMu.OutputLevel = 3 ;
 //
 // Phi->KK selection
