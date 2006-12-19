@@ -5,7 +5,7 @@
  *  Implementation file for RICH Global PID algorithm class : RichGlobalPIDDigitSel
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDDigitSel.cpp,v 1.18 2006-06-14 18:53:46 jonrob Exp $
+ *  $Id: RichGlobalPIDDigitSel.cpp,v 1.19 2006-12-19 09:06:20 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -15,14 +15,15 @@
 // local
 #include "RichGlobalPIDDigitSel.h"
 
+// from Gaudi
+#include "GaudiKernel/AlgFactory.h"
+
 // namespaces
 using namespace LHCb;
 
 //--------------------------------------------------------------------------
 
-// Declaration of the Algorithm Factory
-static const  AlgFactory<RichGlobalPIDDigitSel>          s_factory ;
-const        IAlgFactory& RichGlobalPIDDigitSelFactory = s_factory ;
+DECLARE_ALGORITHM_FACTORY( RichGlobalPIDDigitSel );
 
 // Standard constructor, initializes variables
 RichGlobalPIDDigitSel::RichGlobalPIDDigitSel( const std::string& name,

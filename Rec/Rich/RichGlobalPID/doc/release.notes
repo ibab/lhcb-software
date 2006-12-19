@@ -4,6 +4,11 @@
 ! Purpose     : The Rich Global PID algorithm
 !-----------------------------------------------------------------------------
 
+!======================= RichGlobalPID v3r0 2006-12-19 =======================
+! 2006-12-19 - Marco Cattaneo
+ - Replace include_dirs pattern with install_more_includes
+ - Use DECLARE_ALGORITHM_FACTORY macro
+
 !====================== RichGlobalPID v2r4 2006-08-31 ========================
 ! 2006-08-31 - Marco Cattaneo
  - Get Gaudi::Units from GaudiKernel

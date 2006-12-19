@@ -5,7 +5,7 @@
  *  Implementation file for RICH Global PID algorithm class : RichGlobalPIDFinalize
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDFinalize.cpp,v 1.16 2006-06-14 18:53:46 jonrob Exp $
+ *  $Id: RichGlobalPIDFinalize.cpp,v 1.17 2006-12-19 09:06:20 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -15,14 +15,15 @@
 // local
 #include "RichGlobalPIDFinalize.h"
 
+// from Gaudi
+#include "GaudiKernel/AlgFactory.h"
+
 // namespaces
 using namespace LHCb;
 
 //--------------------------------------------------------------------------
 
-// Declaration of the Algorithm Factory
-static const  AlgFactory<RichGlobalPIDFinalize>          s_factory ;
-const        IAlgFactory& RichGlobalPIDFinalizeFactory = s_factory ;
+DECLARE_ALGORITHM_FACTORY( RichGlobalPIDFinalize );
 
 // Standard constructor, initializes variables
 RichGlobalPIDFinalize::RichGlobalPIDFinalize( const std::string& name,

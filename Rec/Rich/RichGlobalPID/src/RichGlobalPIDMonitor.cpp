@@ -4,11 +4,7 @@
  *  Implementation file for RICH Global PID algorithm class : RichGlobalPIDMonitor
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDMonitor.cpp,v 1.5 2006-06-14 18:53:46 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.4  2004/07/27 10:56:37  jonrob
- *  Add doxygen file documentation and CVS information
- *
+ *  $Id: RichGlobalPIDMonitor.cpp,v 1.6 2006-12-19 09:06:21 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -16,16 +12,13 @@
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/MsgStream.h"
 
 // local
 #include "RichGlobalPIDMonitor.h"
 
 //--------------------------------------------------------------------------
 
-// Declaration of the Algorithm Factory
-static const  AlgFactory<RichGlobalPIDMonitor>          s_factory ;
-const        IAlgFactory& RichGlobalPIDMonitorFactory = s_factory ;
+DECLARE_ALGORITHM_FACTORY( RichGlobalPIDMonitor );
 
 // Standard constructor, initializes variables
 RichGlobalPIDMonitor::RichGlobalPIDMonitor( const std::string& name,

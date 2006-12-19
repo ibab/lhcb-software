@@ -5,7 +5,7 @@
  *  Header file for RICH Global PID algorithm class : RichGlobalPIDInitialize
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDInitialize.h,v 1.3 2005-04-06 21:34:35 jonrob Exp $
+ *  $Id: RichGlobalPIDInitialize.h,v 1.4 2006-12-19 09:06:20 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/12/2002
@@ -17,9 +17,6 @@
 
 // base class
 #include "RichGlobalPIDAlgBase.h"
-
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
 
 // Event
 #include "Event/RichRecStatus.h"
