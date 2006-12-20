@@ -1,4 +1,4 @@
-// $Id: HltMonitor.cpp,v 1.3 2006-10-24 09:44:03 hernando Exp $
+// $Id: HltMonitor.cpp,v 1.4 2006-12-20 09:34:47 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -39,24 +39,8 @@ StatusCode HltMonitor::initialize() {
   StatusCode sc = HltMonitorAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  const std::vector< std::string >& des = m_histoDescriptor.value();
-  info() << " histo descriptor size " << des.size() << endreq;  
-  for (std::vector<std::string >::const_iterator it = des.begin();
-       it != des.end(); ++it) {
-    const std::string& des = *it;
-    std::string title = "";
-    int nbins = 100;
-    float x0 = 0.;
-    float xf = 100.;
-    info() << " descriptor " << des << endreq;
-    bool ok =  ParserDescriptor::parseHisto1D(des,title,nbins,x0,xf);
-    if (ok) {
-      m_keys.push_back(title);
-      book1D(title,x0,xf,nbins);
-      info() << " booking histo  " << title 
-             << "( "<< nbins << " , "<< x0 <<" , " << xf << ") ";  
-    }
-  }
+  initializeHistosFromDescriptor();
+
   return StatusCode::SUCCESS;
 }
 
@@ -71,9 +55,10 @@ StatusCode HltMonitor::execute() {
   bool ok = HltMonitorAlgorithm::beginExecute();
   if (!ok) return sc;
 
-  monitor(m_tracks,m_keys);
 
-  monitor(m_vertices,m_keys);
+  // TODO
+  // monitor(m_tracks,m_keys);
+  // monitor(m_vertices,m_keys);
 
   debug() << "==> Execute" << endmsg;
 

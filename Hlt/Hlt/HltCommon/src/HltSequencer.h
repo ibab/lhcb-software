@@ -1,10 +1,10 @@
-// $Id: HltSequencer.h,v 1.2 2006-10-24 09:44:03 hernando Exp $
+// $Id: HltSequencer.h,v 1.3 2006-12-20 09:34:49 hernando Exp $
 #ifndef GAUDISEQUENCER_H 
 #define GAUDISEQUENCER_H 1
 
 // Include files
 // from Gaudi
-#include "GaudiAlg/GaudiHistoAlg.h"
+#include "HltBase/HltBaseAlg.h"
 
 // using namespace Gaudi;
 
@@ -17,7 +17,7 @@ class ISequencerTimerTool;
  *  @author Olivier Callot
  *  @date   2004-05-13
  */
-class HltSequencer : public GaudiHistoAlg {
+class HltSequencer : public HltBaseAlg {
 public:
 
   /// Standard constructor

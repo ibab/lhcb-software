@@ -1,4 +1,4 @@
-// $Id: HltSequencer.cpp,v 1.4 2006-10-24 09:44:03 hernando Exp $
+// $Id: HltSequencer.cpp,v 1.5 2006-12-20 09:34:48 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -23,7 +23,7 @@ DECLARE_ALGORITHM_FACTORY( HltSequencer );
 //=============================================================================
 HltSequencer::HltSequencer( const std::string& name,
                                 ISvcLocator* pSvcLocator)
-  : GaudiHistoAlg ( name , pSvcLocator )
+  : HltBaseAlg ( name , pSvcLocator )
   , m_timerTool( 0 )
 {
   declareProperty( "Members"             , m_names                  );
@@ -31,7 +31,6 @@ HltSequencer::HltSequencer( const std::string& name,
   declareProperty( "IgnoreFilterPassed"  , m_ignoreFilter   = false );
   declareProperty( "MeasureTime"         , m_measureTime    = false );
   declareProperty( "ReturnOK"            , m_returnOK       = false );
-  declareProperty( "HistoDescriptor"       , m_hisDescriptor);
 
   m_names.declareUpdateHandler (& HltSequencer::membershipHandler, this );
 }
@@ -57,19 +56,6 @@ StatusCode HltSequencer::initialize() {
     m_timerTool->increaseIndent();
   }
 
-  m_histoTime = NULL;
-  m_histoRate = NULL;
-  const std::vector<std::string>& hdes = m_hisDescriptor.value();
-  for (std::vector<std::string>::const_iterator it = hdes.begin();
-       it != hdes.end(); it++){
-    std::string title = "";
-    int n = 100;
-    float x0 = 0.;
-    float xf = 1.;
-    if (ParserDescriptor::parseHisto1D(*it,title,n,x0,xf)) 
-      book1D(title,x0,xf,n);
-  }
-
   //== Initialize the algorithms
   int i = 0;
   std::vector<AlgorithmEntry>::iterator itE;
@@ -87,6 +73,9 @@ StatusCode HltSequencer::initialize() {
   }
 
   // generic histograms
+  m_histoTime = NULL;
+  m_histoRate = NULL;
+  initializeHistosFromDescriptor();
   m_histoTime = book1D("time",0.,50.,500);
   m_histoTime0 = book1D("time0",0.,50.,500);
   
@@ -245,12 +234,6 @@ StatusCode HltSequencer::decodeNames( )  {
   StatusCode final = StatusCode::SUCCESS;
   m_entries.clear();
 
-  //== Get the "Context" option if in the file...
-  IJobOptionsSvc* jos = svc<IJobOptionsSvc>( "JobOptionsSvc" );
-  Property* contextProperty = 0;  //= Have we added a property ?  
-  const std::vector<const Property*>* properties;
-  std::vector<const Property*>::const_iterator itProp;
-
   //= Get the Application manager, to see if algorithm exist
   IAlgManager* appMgr;
   StatusCode result = service( "ApplicationMgr", appMgr );
@@ -260,71 +243,33 @@ StatusCode HltSequencer::decodeNames( )  {
   const std::vector<std::string>& nameVector = m_names.value();
   std::vector<std::string>::const_iterator it;
   for ( it = nameVector.begin(); nameVector.end() != it; it++ ) {
+
     std::string theName = (*it);
     std::string theType = (*it);
     int slash = (*it).find_first_of( "/" );
     if ( 0 < slash ) {
       theType = (*it).substr( 0, slash );
       theName = (*it).substr( slash+1 );
+      debug() << " defined algorithm " << theName 
+              << " type " <<  theType << endreq;
     }
-    //== handling of extensions to the name ???
-
-    //== Check wether the specified algorithm already exists. If not, create it
-
+    
     IAlgorithm* myIAlg;
     Algorithm*  myAlg;
     result = appMgr->getAlgorithm( theName, myIAlg );
     if ( !result.isSuccess() ) {
-      //== Set the Context if not in the jobOptions list
-      if ( "" != context() ) {
-        bool found = false;
-        properties = jos->getProperties( theName );
-        if ( 0 != properties ) {
-          // Iterate over the list to set the options
-          for( itProp = properties->begin();
-               itProp != properties->end();
-               itProp++ )   {
-            const StringProperty* sp = dynamic_cast<const StringProperty*>(*itProp);
-            if ( 0 != sp )    {
-              if ( "Context" == (*itProp)->name() ) {
-                found = true;
-                break;
-              }
-            }
-          }
-        }
-        if ( !found ) {
-          StringProperty cp = StringProperty( "Context", '"'+context()+'"' );
-          jos->addPropertyToCatalogue( theName, cp );
-        }
-      }
       result = appMgr->createAlgorithm( theType, theName, myIAlg );
+      debug() << " created algorithm " << theName << theType << endreq;
     }
 
-    //== Remove the property, in case this is not a GaudiAlgorithm...
-    if ( 0 != contextProperty ) {
-      jos->removePropertyFromCatalogue( theName, "Context" );
-      contextProperty = 0;
-    }
+    myAlg = dynamic_cast<Algorithm*>( myIAlg );
+    AlgorithmEntry temp( myAlg );
+    m_entries.push_back( temp );
+    myAlg->addRef();                  //== Indicate it is used.
+    debug () << "Added algorithm " << theName << endreq;
     
-    //== Is it an Algorithm ?  Strange test...
-    if ( result.isSuccess() ) {
-      try {
-        myAlg = dynamic_cast<Algorithm*>( myIAlg );
-        AlgorithmEntry temp( myAlg );
-        m_entries.push_back( temp );
-        myAlg->addRef();                  //== Indicate it is used.
-        debug () << "Added algorithm " << theName << endreq;
-      } catch (...) {
-        warning() << theName << " is not an Algorithm - failed dynamic_cast"
-                  << endreq;
-        final = StatusCode::FAILURE;
-      }
-    } else {
-      warning() << "Unable to find or create " << theName << endreq;
-      final = result;
-    }
   }
+
   //== Print the list of algorithms
   MsgStream& msg = info();
   if ( m_modeOR ) msg << "OR ";
@@ -342,7 +287,7 @@ StatusCode HltSequencer::decodeNames( )  {
   msg << endreq;
 
   appMgr->release();
-  release( jos );
+  
   return final;
   
 }
