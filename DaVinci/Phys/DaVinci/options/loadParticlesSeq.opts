@@ -1,0 +1,62 @@
+ApplicationMgr.TopAlg += { "GaudiSequencer/SeqLoadStdParticles" } ;
+//
+SeqLoadStdParticles.Members += {"PreLoadParticles/LoadStdUnbiasedHeavyDimuon",
+                                "PreLoadParticles/LoadStdLooseDownstreamPions",
+                                "PreLoadParticles/LoadStdLooseDownstreamProtons",
+                                "PreLoadParticles/LoadStdLooseKaons",
+                                "PreLoadParticles/LoadStdLooseProtons",
+                                "PreLoadParticles/LoadStdLooseJpsi2ee",
+                                "PreLoadParticles/LoadStdLooseD02KK",
+                                "PreLoadParticles/LoadStdLooseLambda1115_LU",
+                                "PreLoadParticles/LoadStdLooseDs2KKPi",
+                                "PreLoadParticles/LoadStdLooseLambda1115_DD",
+                                "PreLoadParticles/LoadStdLooseLambda1115_LD",
+                                "PreLoadParticles/LoadStdLooseKsLL",
+                                "PreLoadParticles/LoadStdLooseD02KPi",
+                                "PreLoadParticles/LoadStdLooseLambda1115_DL",
+                                "PreLoadParticles/LoadStdLooseD02PiPi",
+                                "PreLoadParticles/LoadStdLoosePhi2KK",
+                                "PreLoadParticles/LoadStdLooseLambda1115_LL",
+                                "PreLoadParticles/LoadStdLooseDstarWithD02KPi",
+                                "PreLoadParticles/LoadStdLooseEtac2KKKK",
+                                "PreLoadParticles/LoadStdLooseD02KsKK",
+                                "PreLoadParticles/LoadStdLooseD02KsPiPi",
+                                "PreLoadParticles/LoadStdLooseKsDD",
+                                "PreLoadParticles/LoadStdLooseD2KPiPi",
+                                "PreLoadParticles/LoadStdLooseKstar2KPi",
+                                "PreLoadParticles/LoadStdLooseEtac2KKPiPi",
+                                "PreLoadParticles/LoadStdLooseEtac2PiPiPiPi",
+                                "PreLoadParticles/LoadStdLooseD02KKPiPi",
+                                "PreLoadParticles/LoadStdLooseD02KPiPiPi",
+                                "PreLoadParticles/LoadStdLooseD02KPiPiPiDCS"
+};
+LoadStdUnbiasedHeavyDimuon.PhysDesktop.InputLocations = {"Phys/StdUnbiasedHeavyDimuon"};
+LoadStdLooseDownstreamPions.PhysDesktop.InputLocations = {"Phys/StdLooseDownstreamPions"};
+LoadStdLooseDownstreamProtons.PhysDesktop.InputLocations = {"Phys/StdLooseDownstreamProtons"};
+LoadStdLooseKaons.PhysDesktop.InputLocations = {"Phys/StdLooseKaons"};
+LoadStdLooseProtons.PhysDesktop.InputLocations = {"Phys/StdLooseProtons"};
+LoadStdLooseJpsi2ee.PhysDesktop.InputLocations = {"Phys/StdLooseJpsi2ee"};
+LoadStdLooseD02KK.PhysDesktop.InputLocations = {"Phys/StdLooseD02KK"};
+LoadStdLooseLambda1115_LU.PhysDesktop.InputLocations = {"Phys/StdLooseLambda1115_LU"};
+LoadStdLooseDs2KKPi.PhysDesktop.InputLocations = {"Phys/StdLooseDs2KKPi"};
+LoadStdLooseLambda1115_DD.PhysDesktop.InputLocations = {"Phys/StdLooseLambda1115_DD"};
+LoadStdLooseLambda1115_LD.PhysDesktop.InputLocations = {"Phys/StdLooseLambda1115_LD"};
+LoadStdLooseKsLL.PhysDesktop.InputLocations = {"Phys/StdLooseKsLL"};
+LoadStdLooseD02KPi.PhysDesktop.InputLocations = {"Phys/StdLooseD02KPi"};
+LoadStdLooseLambda1115_DL.PhysDesktop.InputLocations = {"Phys/StdLooseLambda1115_DL"};
+LoadStdLooseD02PiPi.PhysDesktop.InputLocations = {"Phys/StdLooseD02PiPi"};
+LoadStdLoosePhi2KK.PhysDesktop.InputLocations = {"Phys/StdLoosePhi2KK"};
+LoadStdLooseLambda1115_LL.PhysDesktop.InputLocations = {"Phys/StdLooseLambda1115_LL"};
+LoadStdLooseDstarWithD02KPi.PhysDesktop.InputLocations = {"Phys/StdLooseDstarWithD02KPi"};
+LoadStdLooseEtac2KKKK.PhysDesktop.InputLocations = {"Phys/StdLooseEtac2KKKK"};
+LoadStdLooseD02KsKK.PhysDesktop.InputLocations = {"Phys/StdLooseD02KsKK"};
+LoadStdLooseD02KsPiPi.PhysDesktop.InputLocations = {"Phys/StdLooseD02KsPiPi"};
+LoadStdLooseKsDD.PhysDesktop.InputLocations = {"Phys/StdLooseKsDD"};
+LoadStdLooseD2KPiPi.PhysDesktop.InputLocations = {"Phys/StdLooseD2KPiPi"};
+LoadStdLooseKstar2KPi.PhysDesktop.InputLocations = {"Phys/StdLooseKstar2KPi"};
+LoadStdLooseEtac2KKPiPi.PhysDesktop.InputLocations = {"Phys/StdLooseEtac2KKPiPi"};
+LoadStdLooseEtac2PiPiPiPi.PhysDesktop.InputLocations = {"Phys/StdLooseEtac2PiPiPiPi"};
+LoadStdLooseD02KKPiPi.PhysDesktop.InputLocations = {"Phys/StdLooseD02KKPiPi"};
+LoadStdLooseD02KPiPiPi.PhysDesktop.InputLocations = {"Phys/StdLooseD02KPiPiPi"};
+LoadStdLooseD02KPiPiPiDCS.PhysDesktop.InputLocations = {"Phys/StdLooseD02KPiPiPiDCS"};
+SeqLoadStdParticles.MeasureTime  = true ;
