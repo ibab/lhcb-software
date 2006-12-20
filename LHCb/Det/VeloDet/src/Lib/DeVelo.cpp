@@ -1,4 +1,4 @@
-// $Id: DeVelo.cpp,v 1.77 2006-12-06 23:24:31 mjohn Exp $
+// $Id: DeVelo.cpp,v 1.78 2006-12-20 15:34:30 cattanem Exp $
 //
 // ============================================================================
 #define  VELODET_DEVELO_CPP 1
@@ -64,7 +64,7 @@ StatusCode DeVelo::initialize() {
   IJobOptionsSvc* jobSvc;
   ISvcLocator* svcLoc = Gaudi::svcLocator();
   StatusCode sc = svcLoc->service("JobOptionsSvc", jobSvc);
-  jobSvc->setMyProperties("DeVelo", pmgr);
+  if( sc.isSuccess() ) jobSvc->setMyProperties("DeVelo", pmgr);
   if ( 0 < outputLevel ) {
     msgSvc()->setOutputLevel("DeVelo", outputLevel);
   }
