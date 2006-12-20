@@ -985,7 +985,36 @@ class CondDB:
                     self.deleteTagRelation(path, parentTag.name)
             node.deleteTag(tagName)
 
-
+    def isTagReady(self, tagName, path = "/"):
+        """
+        Check if the given tag name is usable at the level of the specified path.
+        inputs:
+            tagName:          string; name of the tag to delete
+            path:             string; path to the node
+                              -> Default = '/'
+        outputs:
+            none
+        """
+        if self.db.existsFolderSet(path):
+            # the path points to a folderset, I check the tag in all its subnodes
+            nodes = self.getChildNodes(path)
+            try:
+                for n in nodes:
+                    if self.db.existsFolderSet(n):
+                        f = self.db.getFolderSet(n)
+                    else:
+                        f = self.db.getFolder(n)
+                    f.resolveTag(tagName)
+            except:
+                return False
+        else:
+            try:
+                f = self.db.getFolder(path)
+                f.resolveTag(tagName)
+            except:
+                return False
+        return True
+    
     #---------------------------------------------------------------------------------#
 
     #=============================#
