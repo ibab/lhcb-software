@@ -1,0 +1,47 @@
+#============================================================================
+# Created    : 2006-12-08
+# Maintainer : Jose Angel Hernando Morata
+#============================================================================
+package           HltPython
+version           v1r0
+
+#============================================================================
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc src python examples
+
+#============================================================================
+# Used packages.
+#============================================================================
+
+use     GaudiPython 	v*	 
+use     ROOT        v* LCG_Interfaces -no_auto_imports
+
+#------------------------------------------------------------------------------
+use	TrackEvent 	v*    Event
+use     TrackInterfaces v*    Tr
+
+use	L0Event		v*    Event
+use     HltEvent        v*    Event
+use     HltBase         v*    Hlt
+use     HltHadL0Conf    v*    Hlt
+
+#------------------------------------------------------------------------------
+
+# =============== LCG Dictionaries ============================================
+apply_pattern    reflex_dictionary                                     \ 
+                 dictionary=HltPython                                  \
+                 headerfiles=$(HLTPYTHONROOT)/src/HltPythonDict.h     \
+                 selectionfile=$(HLTPYTHONROOT)/src/HltPythonDict.xml \
+                 options="-U__MINGW32__"
+
+# =============== patterns ====================================================
+apply_pattern    library_path    library=HltPythonDict
+
+# =============== running options =============================================
+path_remove  PYTHONPATH "/GaudiPython/" WIN32 "\GaudiPython\"
+path_prepend PYTHONPATH "$(GAUDIPYTHONROOT)/python"
+path_remove  PYTHONPATH "/HltPython/" WIN32 "\HltPython\"
+path_append  PYTHONPATH "$(HLTPYTHONROOT)/python"
+path_append  LD_LIBRARY_PATH "$(HLTPYTHONROOT)/slc3_ia32_gcc323"
+

@@ -1,0 +1,5 @@
+<lcgdict>
+  <class name    = "IHltTrackL0CaloMatchTool"           />
+  <class name    = "IL0CaloStatesTool"           />
+  <class name    = "IHltDataStore"           />
+</lcgdict>
