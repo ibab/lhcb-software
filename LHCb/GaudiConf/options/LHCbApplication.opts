@@ -3,22 +3,12 @@
 // Allow units to be used in jobOptions
 #units "$STDOPTS/units.opts"
 
-// Framework
-ApplicationMgr.DLLs += { "GaudiAlg", "LHCbAlgs" };
-
 // Set up the transient data store
 EventDataSvc.ForceLeaves = true;
 EventDataSvc.RootCLID    =    1;
 
 // Geometry and magnetic field
 #include "$STDOPTS/DetDesc.opts"
-ApplicationMgr.DLLs += { "CaloDetXmlCnv" };
-ApplicationMgr.DLLs += { "RichDet" };
-ApplicationMgr.DLLs += { "MuonDet" };
-ApplicationMgr.DLLs += { "STDet" };
-ApplicationMgr.DLLs += { "OTDet" };
-ApplicationMgr.DLLs += { "VeloDet" };
-ApplicationMgr.DLLs += { "Magnet" };
 
 // Configure the DataOnDemand Service
 EventDataSvc.EnableFaultHandler = true ;

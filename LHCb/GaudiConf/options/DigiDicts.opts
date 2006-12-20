@@ -1,9 +1,2 @@
-// Dictionaries for reading/writing a Digi file
-
-// Needs the sim dictionaries
+// This file is obsolete, use SimDicts.opts directly
 #include "$STDOPTS/SimDicts.opts"
-
-PoolDbCacheSvc.Dlls += {"DigiEventDict" };
-PoolDbCacheSvc.Dlls += {"DAQEventDict" };
-PoolDbCacheSvc.Dlls += {"L0EventDict" };
-PoolDbCacheSvc.Dlls += {"LinkerEventDict" };

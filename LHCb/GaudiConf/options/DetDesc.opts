@@ -3,7 +3,6 @@
 //--------------------------------------------------------------
 ApplicationMgr.ExtSvc += { "DetDataSvc/DetectorDataSvc" }; 
 ApplicationMgr.ExtSvc += { "XmlCnvSvc" , "XmlParserSvc" };
-ApplicationMgr.DLLs   += { "XmlTools", "DetDescCnv", "DetDescSvc" };
 
 //--------------------------------------------------------------
 // Location of detector description XML database is a URL

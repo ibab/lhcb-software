@@ -1,14 +1,5 @@
 // Job options to configure the data on demand service for decoding the RawEvent
 
-// Load the DLLs
-ApplicationMgr.DLLs += { "VeloDAQ" };
-ApplicationMgr.DLLs += { "STDAQ" };
-ApplicationMgr.DLLs += { "OTDAQ" };
-//ApplicationMgr.DLLs += { "CaloDAQ" }; // already in CaloDigitsOnDemand.opts
-ApplicationMgr.DLLs += { "RichDAQ", "RichTools" };
-ApplicationMgr.DLLs += { "MuonDAQ" };
-ApplicationMgr.DLLs += { "L0DU" };
-
 // Set up the algorithms
 DataOnDemandSvc.Nodes += { "DATA='/Event/Raw'      TYPE='DataObject'" };
 DataOnDemandSvc.Nodes += { "DATA='/Event/Raw/Velo' TYPE='DataObject'" };

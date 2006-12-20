@@ -1,5 +1,11 @@
-package GaudiConf
-package manager: M.Cattaneo
+! package GaudiConf
+! package manager: M.Cattaneo
+!----------------------------------------------------------------------------
+
+!======================== GaudiConf v10r0 2006-12-20 ========================
+! 2006-12-20 - Marco Cattaneo
+ - Remove explicit loading of DLLs in job options, uses Reflex plugin 
+   mechanism since Gaudi v19r0
 
 !======================== GaudiConf v9r12 2006-11-16 ========================
 ! 2006-11-16 - Marco Cattaneo

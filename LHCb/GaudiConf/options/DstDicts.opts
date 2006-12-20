@@ -1,7 +1,2 @@
-// Dictionaries for reading/writing a DST file
-
-// Needs the digi dictionaries
-#include "$STDOPTS/DigiDicts.opts"
-
-PoolDbCacheSvc.Dlls += {"RecEventDict" };
-PoolDbCacheSvc.Dlls += {"TrackEventDict" };
+// This file is obsolete, use SimDicts.opts directly
+#include "$STDOPTS/SimDicts.opts"
