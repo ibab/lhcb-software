@@ -1,4 +1,4 @@
-// $Id: LbAppInit.cpp,v 1.5 2006-11-06 11:38:13 jonrob Exp $
+// $Id: LbAppInit.cpp,v 1.6 2006-12-20 14:54:33 cattanem Exp $
 // Include files
 #include <string>
 #include <vector>
@@ -163,7 +163,8 @@ StatusCode LbAppInit::initRndm( std::vector<long int>& seeds )
     }
   }
 
-  m_engine->setSeeds( seeds );
+  StatusCode sc = m_engine->setSeeds( seeds );
+  if( sc.isFailure() ) return Error( "Unable to set random number seeds", sc );
 
   // Optionally skip some random numbers
   if( 0 < m_skipFactor ) 
