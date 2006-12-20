@@ -1,0 +1,33 @@
+#============================================================================
+# Created    : 2005-11-15
+# Maintainer : Jose Angel Hernando Morata 
+#============================================================================
+package           HltBase
+version           v2r0
+
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc src HltBase
+include_dirs      $(HLTBASEROOT)
+
+# Used packages
+#============================================================================
+
+use GaudiAlg            v*
+use HltEvent            v*    Event
+use TrackEvent		v*    Event
+use RecEvent		v*    Event
+
+use DetDesc             v*    Det
+
+use PatTools            v*    Pat
+
+#============================================================================
+# library building rule
+#============================================================================
+library          HltBase    ../src/*.cpp
+
+#============================================================================
+# define linker library link options
+#============================================================================
+apply_pattern    linker_library library=HltBase

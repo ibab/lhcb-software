@@ -1,4 +1,4 @@
-// $Id: HltAlgorithm.cpp,v 1.4 2006-12-14 11:21:35 hernando Exp $
+// $Id: HltAlgorithm.cpp,v 1.5 2006-12-20 09:32:46 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -7,7 +7,6 @@
 // local
 #include "HltBase/HltAlgorithm.h"
 #include "HltBase/IHltDataStore.h"
-#include "HltBase/ParserDescriptor.h"
 
 #include "HltBase/ESequences.h"
 #include "Event/HltNames.h"
@@ -25,11 +24,9 @@ using namespace LHCb;
 //=============================================================================
 HltAlgorithm::HltAlgorithm( const std::string& name,
                             ISvcLocator* pSvcLocator)
-  : GaudiHistoAlg ( name , pSvcLocator )
+  : HltBaseAlg ( name , pSvcLocator )
 {
-  declareProperty( "NoFilterPeriod", m_noFilterPeriod = 0);  
-  declareProperty( "HistogramUpdatePeriod" , m_histogramUpdatePeriod = 0 );
-
+  
   // location of the summary and the summary box name
   declareProperty("SummaryName",
                   m_summaryName = LHCb::HltSummaryLocation::Default);
@@ -51,11 +48,6 @@ HltAlgorithm::HltAlgorithm( const std::string& name,
   // output location for tracks and vertices
   declareProperty("OutputTracksName",    m_outputTracksName = "");
   declareProperty("OutputverticesName",  m_outputVerticesName = "");
-  
-  // location of the condition DB xml input
-  declareProperty("ConditionsName",      m_conditionsName = "");
-
-  declareProperty("HistoDescriptor", m_histoDescriptor);
 
   m_selectionSummaryID = -1;
 
@@ -69,10 +61,8 @@ HltAlgorithm::~HltAlgorithm() {}
 // Initialization
 //=============================================================================
 StatusCode HltAlgorithm::initialize() {
-  StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
+  StatusCode sc = HltBaseAlg::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
-  
-  initMsg();
 
   if (m_selectionSummaryName != "") {
     info() << " selection summary Name " << m_selectionSummaryName << endreq;
@@ -88,10 +78,6 @@ StatusCode HltAlgorithm::initialize() {
   initCounters();
 
   initHistograms();
-  
-  initConditions();
-
-  m_debug = (outputLevel() >= MSG::DEBUG);
 
   debug() << "==> Initialize" << endreq;
   return StatusCode::SUCCESS;
@@ -131,8 +117,9 @@ void HltAlgorithm::init(PatVertexContainer*& con,
 
 bool HltAlgorithm::initContainers() {
   
-  // HltContainers of tracks and vertices
-  //--------------------------------------
+
+  // from HltDataStore
+
   m_hltDataStore     = tool<IHltDataStore>( "HltDataStore" );
   if (!m_hltDataStore) return false;
   
@@ -148,6 +135,7 @@ bool HltAlgorithm::initContainers() {
 
   //  release(m_hltDataStore);  
 
+  // from PatDataStore
   m_patDataStore = tool<PatDataStore>("PatDataStore");
   if (!m_hltDataStore) return false;
   
@@ -156,8 +144,9 @@ bool HltAlgorithm::initContainers() {
   init(m_patInputVertices,m_patDataStore,m_patInputVerticesName);
   
   // release(patstore);
-
   
+
+  // info of using containers...
   infoContainer(m_patInputTracks," pat input tracks ",m_patInputTracksName);
   infoContainer(m_patInputTracks2," pat input tracks 2",m_patInputTracks2Name);
   infoContainer(m_patInputVertices," pat input vertices ",
@@ -175,54 +164,10 @@ bool HltAlgorithm::initContainers() {
 void HltAlgorithm::initCounters() 
 {
 
-  // Input
-  initializeCounter(m_countInput ,        "Input");
-  initializeCounter(m_countNonEmpty ,     "NonEmpty");
-  initializeCounter(m_countEmptyTracks ,  "EmptyTracks");
-  initializeCounter(m_countEmptyTracks2,  "EmptyTracks2");
-  initializeCounter(m_countInputVertices, "InputVertices");
-  initializeCounter(m_countEmptyVertices, "EmptyVertices");
-  initializeCounter(m_countInputPVs,      "InputPVs");
-  initializeCounter(m_countEmptyPVs,      "EmptyPVs");
-  initializeCounter(m_countInputTracks ,  "InputTracks");
-  initializeCounter(m_countInputTracks2,  "Onputtracks2");
-  // Output
-  initializeCounter(m_countCandidates ,   "Candidates");
-  initializeCounter(m_countOverruled ,    "Overruled");
-  initializeCounter(m_countAccepted ,     "Accepted");
-  initializeCounter(m_countOutputVertices,"OutputVertices");
-  initializeCounter(m_countOutputTracks , "OutputTracks");
-  initializeCounter(m_countOutputTracks2, "Onputtracks2");
-
-  // new counters
-  initializeCounter(m_counterEntries,  "Entries");
   initializeCounter(m_counterInput,    "Input");
-  initializeCounter(m_counterPasses,   "Passes");
-  
+  initializeCounter(m_counterAccepted ,     "Accepted");  
   
 }
-
-void HltAlgorithm::initMsg() {
-
-  m_verbose = false;
-  m_debug   = false;
-  m_info    = false;
-  m_warning = false;
-  m_error   = false;
-  m_fatal   = true;
-
-  if (msgLevel(MSG::ERROR)) {m_error = true;}
-  if (msgLevel(MSG::WARNING)) {m_error = true; m_warning = true;}
-  if (msgLevel(MSG::INFO)) 
-  {m_error = true; m_warning = true; m_info = true;}
-  if (msgLevel(MSG::DEBUG)) 
-  {m_error = true; m_warning = true; m_info = true; m_debug = true;}
-  if (msgLevel(MSG::VERBOSE)) 
-  {m_error=true; m_warning = true; m_info = true; m_debug = true; m_verbose=true;}
-
-  info() << " msg level " << m_info << m_debug << m_verbose << endreq;
-}
-
 
 void HltAlgorithm::initHistograms() {
 
@@ -253,29 +198,6 @@ void HltAlgorithm::initHistograms() {
     initializeHisto(m_histoOutputTracks,  "OutputTracks");
 }
 
-bool HltAlgorithm::initConditions() 
-{  
-  // for conditions
-  //----------------------------------
-  m_conditions=NULL;
-  if (m_conditionsName != "") {
-    try {
-      registerCondition(m_conditionsName, m_conditions, 
-                        &HltAlgorithm::i_cacheConditions);
-      info() << " searching conditions at " << m_conditionsName << endreq;
-      m_conditions = getDet<Condition>(m_conditionsName);
-      if (m_conditions == NULL)
-        info() << " no condition found!" << endreq;
-      else
-        i_cacheConditions();
-    } catch (GaudiException) {
-      fatal() << " Problem with conditions at " << m_conditionsName << endreq;
-    }
-  }
-  return true;
-}
-
-//// Main execution
 
 //// Main execution
 StatusCode HltAlgorithm::execute() {
@@ -292,23 +214,12 @@ StatusCode HltAlgorithm::execute() {
 
 
 bool HltAlgorithm::beginExecute() {
-  bool ok = true;
-
-  increaseCounter( m_counterEntries );
+  bool ok = HltBaseAlg::beginExecute();
+  if (!ok) return ok;
 
   m_summary = NULL;
   m_selectionSummary = NULL;
   if (m_selectionSummaryID>0) selectionSummary();
-  
-  m_nCandidates = 0;
-  
-  m_filter =( m_noFilterPeriod <= 0? true:
-              ( !(m_counterEntries % m_noFilterPeriod) == 0 ) );
-
-  m_monitor =( m_histogramUpdatePeriod <= 0? false:
-               ( (m_counterEntries % m_histogramUpdatePeriod) == 0 ) );
-
-  if (m_filter) setDecision(false);
     
   ok = size(m_inputTracks,m_nInputTracks,m_histoInputTracks,
             " input tracks ");
@@ -341,11 +252,11 @@ bool HltAlgorithm::beginExecute() {
   increaseCounter(m_counterInput );
 
   // Increase input counters
-  increaseCounter( m_countNonEmpty );
-  increaseCounter( m_countInputVertices, m_nInputVertices );
-  increaseCounter( m_countInputPVs,      m_nPrimaryVertices );
-  increaseCounter( m_countInputTracks,   m_nInputTracks );
-  increaseCounter( m_countInputTracks2,  m_nInputTracks2 );
+  // increaseCounter( m_countNonEmpty );
+  // increaseCounter( m_countInputVertices, m_nInputVertices );
+  // increaseCounter( m_countInputPVs,      m_nPrimaryVertices );
+  // increaseCounter( m_countInputTracks,   m_nInputTracks );
+  // increaseCounter( m_countInputTracks2,  m_nInputTracks2 );
 
   return ok;
 }
@@ -363,238 +274,18 @@ bool HltAlgorithm::endExecute() {
             " output vertices ");
   if (!ok) return ok;
 
-  setDecision(true);
+  increaseCounter(m_counterAccepted);
 
-  increaseCounter(m_counterPasses);
-
+  ok = HltBaseAlg::endExecute();
   return ok;
 }
 
 ////  Finalize
 StatusCode HltAlgorithm::finalize() {
 
-  infoTotalEvents   ( m_counterEntries );
-  infoSubsetEvents  ( m_counterInput , m_counterEntries, " input/entries ");
-  infoSubsetEvents  ( m_counterPasses , m_counterInput,  " passed/inputs ");
-
-  std::vector<HltCounter> counters;
-  counters.push_back(m_counterEntries);
-  counters.push_back(m_counterInput );
-  counters.push_back(m_counterPasses);
-
-  int offset = m_counterEntries;
-  for (std::vector<HltCounter>::iterator it = counters.begin();
-       it != counters.end(); ++it) {
-    const HltCounter& counter = (*it);
-    const std::string& name = counter.m_name;
-    plot1D(1.,name,0.,2.,2,counter);
-    plot1D(0.,name,0.,2.,2,offset-counter);
-    offset = counter;
-  }
-
-  debug() << "==> Finalize" << endreq;
-  return GaudiAlgorithm::finalize();  // must be called after all other actions
+  infoSubsetEvents  ( m_counterPassed , m_counterInput,  " passed/inputs ");
+  infoSubsetEvents  ( m_counterAccepted , m_counterInput,  " accepted/inputs ");  
+  return HltBaseAlg::finalize();  
 }
-
-
-StatusCode HltAlgorithm::i_cacheConditions() {
-  
-  // m_conditions = getDet<Condition>(m_conditionsName);
-  if (m_conditions == NULL)
-    error() <<" Not posible to condition conditions " << endreq;
-
-  // cacheConditions(m_iconditions,*m_condition);
-  // cacheConditions(m_dconditions,*m_condition);
-  // cacheConditions(m_dvconditions,*m_condition);
-  
-  for (std::map<std::string, int*>::iterator it = m_iconditions.begin();
-       it != m_iconditions.end(); it++) {
-    const std::string& name = it->first;
-    *(it->second) = m_conditions->param<int>(name);
-    info() << " condition " << name << " = \t" << *(it->second) << endreq;
-    
-  }
-  
-  for (std::map<std::string, double*>::iterator it = m_dconditions.begin();
-       it != m_dconditions.end(); it++) {
-    const std::string& name = it->first;
-    *(it->second) = m_conditions->param<double>(name);
-    info() << " condition " << name << " = \t" << *(it->second) << endreq;
-  }
-
-  for (std::map<std::string, std::vector<double>*>::iterator it = 
-         m_dvconditions.begin(); it != m_dvconditions.end(); it++) {
-    const std::string& name = it->first;
-    *(it->second) = m_conditions->param< std::vector<double> >(name);
-    info() << " condition " << name << " = \t" << *(it->second) << endreq;
-  }
-
-
-  return StatusCode::SUCCESS;
-}
-
-
-//=====================================================================
-
-void HltAlgorithm::infoTotalEvents( int  nTotEvts )
-{info() << "N Entries:\t" << nTotEvts << endreq;}
-
-void HltAlgorithm::infoSubsetEvents(  int nEventsInSubset, int  nTotEvts, 
-                                 const std::string& subsetName)
-{
-  info() << "N " <<subsetName << "\t" << nEventsInSubset 
-         << " (" << 100.*float(nEventsInSubset)/float(nTotEvts)
-         << "%)" << endreq;
-}
-
-void HltAlgorithm::infoInputObjects(  int nInputObjects, int  nTotEvts, 
-                                 const std::string& objectsName)
-{
-  info() << "N " << objectsName << "\t" << nInputObjects
-         << "\t(" << float(nInputObjects)/float(nTotEvts)
-         << " per event)" << endreq;
-}
-void HltAlgorithm::infoAcceptedObjects(  int nAcceptedObjects, int nInputObjects, 
-                                    int  nTotEvts,
-                                    const std::string& objectsName)
-{
-  info() << "N " << objectsName << "\t" << nAcceptedObjects
-         << "\t(" << float(nAcceptedObjects)/float(nTotEvts)
-         << " per event)\t("  << 100.*float(nAcceptedObjects)/float(nInputObjects)
-         << " %)" << endreq;
-}
-
-
-void HltAlgorithm::increaseCounter( HltCounter& count, int increase) {
-  if ( ! count.m_initialized ) {
-    fatal() << "Counter not initialized:" << endreq;
-    return;
-  }
-  
-  count.m_counter += increase;
-  return;
-}
-
-
-//=============================================================================
-void HltAlgorithm::fillHisto( HltHisto& histo, float x, float weight) {
-  // if ( ! histo.m_initialized ) {
-//     fatal() << "Histo not initialized:" << endreq;
-//     return;
-//   }
-  
-//   int period;
-  
-//   if ( histo.m_updatePeriod > 0 ) {
-//     period = histo.m_updatePeriod;
-//   }
-//   else {
-//     period = this->m_histogramUpdatePeriod;
-//   }
-  
-  
-//   if ( m_countInput % period == 0 ) {
-  if (!m_monitor) return;
-  this->fill( histo.m_histo , x, weight);
-}
-  
-
-void HltAlgorithm::fillHistoCol( HistoCol& histoCol, 
-                                 const std::vector<bool>& inputBools,
-                                 const std::vector<float>& inputVariables, 
-                                 float weight) {
-  
-  if ( ! histoCol.m_initialized ) {
-    fatal() << "Histo collection not initialized:" << endreq;
-    return;
-  }  
-  
-  if ( m_countInput % this->m_histogramUpdatePeriod  == 0 ) {
-
-    if (inputBools.size() != histoCol.m_nCases ) {
-      fatal() << "Size of bool vector does not match number of cases of histogram collection!" << endreq;
-      return;
-    }
-    
-    if (inputVariables.size() != histoCol.m_nVariables ) {
-      fatal() << "Size of vector of variables does not match number of variables of histogram collection!" << endreq;
-      return;
-    }
-    
-    std::vector<AIDA::IHistogram1D*>::const_iterator iHisto = histoCol.m_histos.begin();
-    for ( std::vector<float>:: const_iterator iVar = inputVariables.begin();
-          iVar != inputVariables.end(); iVar++ ) {
-      for ( std::vector<bool>:: const_iterator iBool = inputBools.begin();
-            iBool != inputBools.end(); iBool++ ) {
-        if (*iBool)  this->fill( (*iHisto), (*iVar), weight);
-        iHisto++;
-      }
-    }
-    
-  }
-}
-
-void HltAlgorithm::initializeHisto( HltHisto& histo, 
-                                    const std::string& title ) {
-  int nbins = 100;
-  float x0 = 0.;
-  float xf = 100.;
-  initializeHisto(histo,title,x0,xf,nbins);
-};
-
-
-void HltAlgorithm::initializeHistoCol( HistoCol& histoCol, 
-                                       const std::string& inputString,
-                                       const std::vector<std::string>& inputVariables,
-                                       const std::vector<std::string>& inputCases ) { 
-  
-  histoCol.m_initialized = true;
-  histoCol.m_name = inputString;
-  histoCol.m_nCases = inputCases.size();
-  histoCol.m_nVariables = inputVariables.size();
-  
-  for ( std::vector<std::string>::const_iterator iVariable = inputVariables.begin();
-        iVariable != inputVariables.end(); iVariable++ ) {
-    
-    for ( std::vector<std::string>::const_iterator iCase = inputCases.begin();
-          iCase != inputCases.end(); iCase++ ) {
-      histoCol.m_histos.push_back( this->book1D( inputString + (*iVariable) + (*iCase), 0., 100., 100 ) );
-    }
-  }
-};
-
-
-void HltAlgorithm::initializeHisto( HltHisto& histo, 
-                                    const std::string& title,
-                                    float x0, float xf, int nbins) {
-  
-  const std::vector<std::string> values = m_histoDescriptor.value();
-  for (std::vector<std::string >::const_iterator it = values.begin();
-       it != values.end(); ++it) {
-    const std::string& des = *it;
-    std::string xtitle = "";
-    int n = 100;
-    float y0 = 0.;
-    float yf = 100.;
-    bool ok =  ParserDescriptor::parseHisto1D(des,xtitle,n,y0,yf);
-    if (ok && xtitle == title) { nbins = n; x0 = y0; xf = yf;}
-  }
-  histo.m_initialized = true;
-  histo.m_name = title;
-  histo.m_histo = this->book1D( title, x0, xf, nbins);
-  info() << " booking histo  " << title 
-         << "( "<< nbins << " , "<< x0 <<" , " << xf << ") " 
-         << endreq;
-};
-
-
-void HltAlgorithm::initializeCounter ( HltCounter& counter, 
-                                       const std::string& inputString) { 
-  
-  counter.m_initialized = true;
-  counter.m_name = inputString;
-  counter.m_counter = 0;
-};
-
 
 
