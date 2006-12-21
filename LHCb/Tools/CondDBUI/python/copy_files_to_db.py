@@ -46,6 +46,19 @@ def fix_env_vars(xml_data):
         m = envVarRE.search(data,pos+1)
     return data
 
+import codecs
+encodingRE = re.compile('encoding="([^"]*)"')
+def fix_encoding(xml_data):
+    data = xml_data
+    m = encodingRE.search(data)
+    if m:
+        name = m.group(1).lower().replace('utf-','utf_')
+        if name != 'iso-8859-1':
+            dec = codecs.getdecoder(name)
+            enc = codecs.getencoder('iso-8859-1')
+            data = enc(dec(data)[0])[0].replace(m.group(1),'ISO-8859-1')
+    return data
+
 #### connectStrings: ####
 # "oracle://intr1-v.cern.ch/INTR;schema=lhcb_cool;user=lhcb_cool;dbname=DDDB"
 # "sqlite://none;schema=XmlDDDB_v26r2.sqlite;user=none;password=none;dbname=DDDB"
@@ -148,11 +161,11 @@ def main():
 
             payload = {}
             for k in folder_keys:
-                xml_data = open(folderDict[folder_name][k]).read()
-                fixed_data = fix_system_ids(xml_data,"conddb:"+dbroot)
-                #fixed_data = xml_data
-                fixed_data = fix_env_vars(fixed_data)
-                payload[k] = fixed_data
+                xml_data = open(folderDict[folder_name][k],"rb").read()
+                xml_data = fix_encoding(xml_data)
+                xml_data = fix_system_ids(xml_data,"conddb:"+dbroot)
+                xml_data = fix_env_vars(xml_data)
+                payload[k] = xml_data
             db.storeXMLString(folder_path, payload, cool.ValidityKeyMin, cool.ValidityKeyMax, 0)
 
     print "Total files inserted = %d"%sum
