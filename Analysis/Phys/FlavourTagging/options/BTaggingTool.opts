@@ -50,6 +50,6 @@ ToolSvc.BTaggingTool.PhysDesktop.OutputLevel = 4;
 ToolSvc.BTaggingTool.TaggerKaonOppositeTool.GeomDispCalculator.OutputLevel=4;
 ToolSvc.BTaggingTool.TaggerKaonSameTool.GeomDispCalculator.OutputLevel=4;
 ToolSvc.BTaggingTool.TaggerPionSameTool.GeomDispCalculator.OutputLevel=4;
-ToolSvc.BTaggingTool..GeomDispCalculator.OutputLevel=4;
+ToolSvc.BTaggingTool.GeomDispCalculator.OutputLevel=4;
 
 //-----------------------------------------------------------------------
