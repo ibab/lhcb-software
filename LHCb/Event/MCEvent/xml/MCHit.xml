@@ -11,8 +11,8 @@
            desc='GEANT tracking hit' 
            id='230' >
       <import name="GaudiKernel/SystemOfUnits.h"/>
-      <import name="Kernel/Point3DTypes.h"/>
-      <import name="Kernel/Vector3DTypes.h"/>
+      <import name="GaudiKernel/Point3DTypes.h"/>
+      <import name="GaudiKernel/Vector3DTypes.h"/>
       <import name="MCParticle" soft="TRUE"/>
       &ContainedObject;
       <base     name="ContainedObject"/>

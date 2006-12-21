@@ -3,4 +3,11 @@
 
   <class name = "IMCDecayFinder"     />
   <class name = "ISiDepositedCharge" />
+
+  <exclusion>
+    <class name = "KeyedObject<LHCb::CaloCellID>" />
+    <class name = "KeyedObject<LHCb::STChannelID>" />
+    <class name = "KeyedObject<LHCb::VeloChannelID>" />
+  </exclusion>
+
 </lcgdict>

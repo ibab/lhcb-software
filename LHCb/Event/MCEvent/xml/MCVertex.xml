@@ -15,8 +15,8 @@
       location="MC/Vertices"
     >
        &KeyedObject;
-       <import name="Kernel/Point3DTypes.h"/>
-       <import name="Kernel/Point4DTypes.h"/>
+       <import name="GaudiKernel/Point3DTypes.h"/>
+       <import name="GaudiKernel/Point4DTypes.h"/>
        <import name="MCParticle" soft="TRUE"/>
        <enum
         desc="Describe the physics process related to the vertex"

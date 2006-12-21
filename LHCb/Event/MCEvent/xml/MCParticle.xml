@@ -16,8 +16,8 @@
      >
        &KeyedObject;
        <import name="GaudiKernel/SystemOfUnits"/>
+       <import name="GaudiKernel/Vector4DTypes"/>
        <import name="Kernel/ParticleID"/>
-       <import name="Kernel/Vector4DTypes"/>
        <import name="MCVertex" soft="TRUE"/>
        <base name="KeyedObject&lt;int&gt;"/>
        <attribute
