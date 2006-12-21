@@ -1,21 +1,9 @@
-//
-// This File contains the definition of the OTSmearer -class
-//
-// C++ code for 'LHCb Tracking package(s)'
-//
-//   Author: M. Needham
-//   Created: 19-09-2000
+// $Id: STMCTuner.cpp,v 1.7 2006-12-21 17:54:48 jvantilb Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
-//#include "GaudiKernel/SystemOfUnits.h"
 
-// AIDA
-#include "AIDA/IHistogram1D.h"
-
-#include "STMCTuner.h"
-
-//Event
+// Event
 #include "Event/STCluster.h"
 #include "Event/MCHit.h"
 
@@ -23,14 +11,13 @@
 #include "STDet/DeSTDetector.h"
 #include "STDet/DeSTSector.h"
 
+// LHCbKernel
 #include "Kernel/STDetSwitch.h"
-
 #include "Kernel/ISTSignalToNoiseTool.h"
-
-#include "Kernel/STDataFunctor.h"
-
-// STTools interfaces from LHCbKernel
 #include "Kernel/IMCParticleSelector.h"
+
+// local
+#include "STMCTuner.h"
 
 DECLARE_ALGORITHM_FACTORY( STMCTuner );
 
@@ -38,7 +25,7 @@ using namespace LHCb;
 
 //--------------------------------------------------------------------
 //
-//  STMCtuner : Check digitization procedure for the outer tracker
+//  STMCTuner: Plots S/N and charge of STClusters for each readout sector
 //
 //--------------------------------------------------------------------
 
@@ -48,17 +35,18 @@ STMCTuner::STMCTuner(const std::string& name,
  
 {
   // constructer
-  declareProperty("sigNoiseTool",m_sigNoiseToolName = "STSignalToNoiseTool");
-  this->declareProperty("detType", m_detType = "TT");
-  this->declareProperty("selectorName", m_selectorName = "MCParticleSelector" );
+  declareProperty("SigNoiseTool",m_sigNoiseToolName = "STSignalToNoiseTool");
+  this->declareProperty("DetType", m_detType = "TT");
+  this->declareProperty("SelectorName", m_selectorName = "MCParticleSelector" );
 }
 
-STMCTuner::~STMCTuner(){
+STMCTuner::~STMCTuner()
+{
   // destructer
 }
 
-StatusCode STMCTuner::initialize(){
-
+StatusCode STMCTuner::initialize()
+{
   // intialize
   if( "" == histoTopDir() ) setHistoTopDir(m_detType+"/");  
   StatusCode sc = GaudiHistoAlg::initialize();
@@ -70,8 +58,10 @@ StatusCode STMCTuner::initialize(){
   m_tracker =  getDet<DeSTDetector>(DeSTDetLocation::location(m_detType));
 
   // sig to noise tool
-  m_sigNoiseTool = tool<ISTSignalToNoiseTool>(m_sigNoiseToolName, m_sigNoiseToolName+m_detType);
+  m_sigNoiseTool = tool<ISTSignalToNoiseTool>( m_sigNoiseToolName,
+                                               m_sigNoiseToolName+m_detType );
 
+  // MCParticle selection tool
   m_selector = tool<IMCParticleSelector>(m_selectorName,m_selectorName,this);
 
   m_clusterLocation = STClusterLocation::TTClusters;
@@ -80,10 +70,8 @@ StatusCode STMCTuner::initialize(){
   return StatusCode::SUCCESS;
 }
 
-StatusCode STMCTuner::execute(){
-
-  // execute once per event
-  
+StatusCode STMCTuner::execute()
+{
   // retrieve clusters
   STClusters* clusterCont = get<STClusters>(m_clusterLocation);
 
@@ -97,11 +85,7 @@ StatusCode STMCTuner::execute(){
   for( ; iterClus != clusterCont->end(); ++iterClus){
     // get MC truth for this cluster
     Range range = aTable->relations(*iterClus);
-    if (range.empty()){
-      //empty range
-    }
-    else {
-      //   STCluster2MCHitAsct::DirectType::iterator iterHit = range.back();
+    if ( !range.empty() ) {
       this->fillHistograms(*iterClus,(*range.begin()).to());
     }
   } // loop iterClus
@@ -109,35 +93,20 @@ StatusCode STMCTuner::execute(){
   return StatusCode::SUCCESS;
 }
 
-
-StatusCode STMCTuner::fillHistograms(const STCluster* aCluster,
-                                     const MCHit* aHit){
+StatusCode STMCTuner::fillHistograms( const STCluster* aCluster,
+                                      const MCHit* aHit )
+{
   // fill histograms
   if (0 != aHit){ 
     // histo cluster size for physics tracks
-    if (m_selector->accept(aHit->mcParticle()) == true){
+    if ( m_selector->accept(aHit->mcParticle()) == true ) {
       DeSTSector* aSector = m_tracker->findSector(aCluster->channelID());
       if (aSector != 0){
-        plot(m_sigNoiseTool->signalToNoise(aCluster),"SN_"+aSector->type(),0., 50., 100);
-	plot(aCluster->totalCharge(),"charge_"+aSector->type(), 0., 200., 200);
+        plot(m_sigNoiseTool->signalToNoise(aCluster),"SN_"+aSector->type(),0.,
+             50., 100);
+        plot(aCluster->totalCharge(),"charge_"+aSector->type(), 0., 200., 200);
       }
     } 
-  } // if
-  // end
+  }
   return StatusCode::SUCCESS;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

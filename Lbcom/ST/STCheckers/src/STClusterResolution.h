@@ -1,9 +1,6 @@
-// $Id: STClusterResolution.h,v 1.3 2006-02-28 15:38:58 mneedham Exp $
-#ifndef _STClusterResolution_H
-#define _STClusterResolution_H
-
-#include <vector>
-#include <string>
+// $Id: STClusterResolution.h,v 1.4 2006-12-21 17:54:48 jvantilb Exp $
+#ifndef STClusterResolution_H
+#define STClusterResolution_H 1
 
 // base class
 #include "GaudiAlg/GaudiHistoAlg.h"
@@ -11,8 +8,8 @@
 #include "Linker/LinkerTool.h"
 
 namespace LHCb{
- class MCHit;
- class STCluster;
+  class MCHit;
+  class STCluster;
 };
 
 class DeSTDetector;
@@ -21,13 +18,19 @@ class AIDA::IHistogram1D;
 class STDetectionLayer;
 class IMCParticleSelector;
 class ISTClusterPosition;
+class ITrajPoca;
 
-/** @class STClusterResolution STClusterResolution.h STCheckers/STClusterResolution.h
+/** @class STClusterResolution STClusterResolution.h
  *
- *  Class for checking STClusters
+ *  Class for plotting the resolution of STClusters. It makes the following
+ *  histograms for 1, 2, 3 and 4 strip clusters:
+ *  - Offline resolution (rec. minus true position)
+ *  - Offline pull
+ *  - Online resolution
  *
  *  @author M.Needham
- *  @date   21/4/2001
+ *  @author J. van Tilburg
+ *  @date   04/12/2006
  */
 
 class STClusterResolution : public GaudiHistoAlg {
@@ -54,12 +57,12 @@ private:
   typedef Table::Range Range;
   typedef Table::iterator iterator;
 
-  virtual StatusCode initHistograms();
   virtual StatusCode fillHistograms(const LHCb::STCluster* aCluster,
                                     const LHCb::MCHit* aHit) const;
   int histoId(const int clusterSize) const;
 
-  double calculateUTrue(const LHCb::MCHit* aHit, const DeSTSector* aSector) const;
+  double calculateUTrue( const LHCb::MCHit* aHit, 
+                         const DeSTSector* aSector) const;
 
   std::string m_detType;
   std::string m_clusterLocation;
@@ -73,23 +76,9 @@ private:
   ISTClusterPosition* m_positionTool;
   std::string m_positionToolName;
 
-  std::vector<AIDA::IHistogram1D*> m_resHistoVector;
-  std::vector<AIDA::IHistogram1D*> m_pullHistoVector;
-  std::vector<AIDA::IHistogram1D*> m_onlineResHistoVector;
+  ITrajPoca*         m_poca; ///< Pointer to the ITrajPoca interface
 
 };
 
-#endif // _STClusterResolution_H
-
-
-
-
-
-
-
-
-
-
-
-
+#endif // STClusterResolution_H
 

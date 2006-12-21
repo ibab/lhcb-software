@@ -1,18 +1,13 @@
-// $Id: LandauTest.cpp,v 1.2 2006-12-18 11:04:06 cattanem Exp $
-//
-// This File contains the implementation of the LandauTest
-// C++ code for 'LHCb Tracking package(s)'
-//
-//   Author:Matthew Needham
-//   Created: 18-05-1999
+// $Id: LandauTest.cpp,v 1.3 2006-12-21 17:54:48 jvantilb Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
 
-//Random Numbers
+// Random Numbers
 #include "GaudiKernel/RndmGenerators.h"
 #include "GaudiKernel/IRndmGenSvc.h"
 
+// local
 #include "LandauTest.h"
 
 DECLARE_ALGORITHM_FACTORY( LandauTest );
@@ -21,7 +16,7 @@ DECLARE_ALGORITHM_FACTORY( LandauTest );
 /// Test of Landau generator
 
 LandauTest::LandauTest(const std::string& name,
-		     ISvcLocator* pSvcLocator):
+                       ISvcLocator* pSvcLocator):
   GaudiHistoAlg(name, pSvcLocator)
 {
   /// constructor
@@ -33,33 +28,23 @@ LandauTest::~LandauTest()
 }
 
 StatusCode LandauTest::initialize()
-{
- 
-  // Initialize
-  
+{ 
+  // Initialize 
   StatusCode sc = GaudiHistoAlg::initialize();
-  if (sc.isFailure()){
-    return Error("Failed to initialize", sc);
-  }
- 
-  sc = randSvc()->generator(Rndm::Landau(0.226,1.),m_landauDist.pRef());  
+  if (sc.isFailure()) return Error("Failed to initialize", sc);
 
+  // Initialize the Landau function
+  sc = randSvc()->generator(Rndm::Landau(0.226,1.), m_landauDist.pRef());  
+
+  // Sample the Landau funtion 10M times and plot it
   for (int i=0; i<1e7 ; ++i ){
-     plot(90+(5*m_landauDist->shoot()),"landau",0.,200.,2000);
-  } //i
+     plot(90+(5*m_landauDist->shoot()),"Landau",0.,200.,2000);
+  }
 
-  // end
- 
-  return StatusCode::SUCCESS;
-  
+  return sc;
 }
 
 StatusCode LandauTest::execute()
 {
-  /// Executes for one event.
- 
   return StatusCode::SUCCESS;
 }
-
-
-

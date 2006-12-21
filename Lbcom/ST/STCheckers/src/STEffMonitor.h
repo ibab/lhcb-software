@@ -1,13 +1,9 @@
-// $Id: STEffMonitor.h,v 1.5 2006-09-21 15:47:48 ocallot Exp $
-#ifndef _STEffMonitor_H
-#define _STEffMonitor_H
+// $Id: STEffMonitor.h,v 1.6 2006-12-21 17:54:48 jvantilb Exp $
+#ifndef STEffMonitor_H
+#define STEffMonitor_H 1
 
-#include <vector>
-#include <string>
-#include <map>
-
+// GaudiAlg
 #include "GaudiAlg/GaudiHistoAlg.h"
-
 
 // linkers
 #include "Linker/LinkerTool.h"
@@ -28,10 +24,18 @@ class AIDA::IHistogram2D;
 
 /** @class STEffMonitor STEffMonitor.h
  *
- *  Class for checking ITEffs
+ *  Class for checking ST efficiencies. It produces the following plots:
+ *  - x and y distributions of all MCHits in a IT or TT layer.
+ *  - x vs y distribution of all MCHits in a IT or TT layer.
+ *  - x and y distributions of MCHits which make an STCluster.
+ *  - x vs y distribution of MCHits which make an STCluster.
+ *  By dividing these histograms one gets the efficiency per layer.
  *
+ *  In the finalize method, a summary of the efficiency per layer is printed. 
+ * 
  *  @author M.Needham
- *  @date   21/4/2001
+ *  @author J. van Tilburg
+ *  @date   21/12/2006
  */
 
 class STEffMonitor : public GaudiHistoAlg {
@@ -39,8 +43,7 @@ class STEffMonitor : public GaudiHistoAlg {
 public:
  
   /// constructer
-  STEffMonitor(const std::string& name, 
-                 ISvcLocator *svcloc );
+  STEffMonitor(const std::string& name, ISvcLocator *svcloc );
 
   /// destructer
   virtual ~STEffMonitor();
@@ -70,8 +73,6 @@ private:
   int findHistoId(unsigned int aLayerId);
   int uniqueHistoID(const LHCb::STChannelID aChannel) const;
 
-  void unBookHistos();
-  void eraseHistos(); 
 
   Table* m_table;
   
@@ -94,7 +95,7 @@ private:
   std::string m_hitTableLocation;
  
   // mapping
-  std::map<unsigned int,int> m_Mapping;
+  std::map<unsigned int,int> m_mapping;
 
   std::vector<AIDA::IHistogram1D*> m_xLayerHistos;
   std::vector<AIDA::IHistogram1D*> m_yLayerHistos;
@@ -105,17 +106,7 @@ private:
 
 };
 
-#endif // _STEffMonitor_H
-
-
-
-
-
-
-
-
-
-
+#endif // STEffMonitor_H
 
 
 

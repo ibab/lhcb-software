@@ -1,8 +1,6 @@
-// $Id: STClusterChecker.h,v 1.2 2006-05-04 12:44:44 jvantilb Exp $
-#ifndef _STClusterChecker_H
-#define _STClusterChecker_H
-
-#include <string>
+// $Id: STClusterChecker.h,v 1.3 2006-12-21 17:54:48 jvantilb Exp $
+#ifndef STClusterChecker_H
+#define STClusterChecker_H 1
 
 #include "GaudiAlg/GaudiHistoAlg.h"
 
@@ -15,7 +13,7 @@ class DeSTDetector;
 
 /** @class STClusterChecker STClusterChecker.h
  *
- *  Class for checking STClusters
+ *  Class for monitoring STClusters
  *
  *  @author M.Needham
  *  @date   21/4/2001
@@ -53,4 +51,4 @@ private:
   
 };
 
-#endif // _MCSTDepositChecker_H
+#endif // MCSTClusterChecker_H

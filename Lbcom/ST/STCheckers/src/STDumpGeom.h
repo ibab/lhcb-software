@@ -1,8 +1,6 @@
-// $Id: STDumpGeom.h,v 1.1 2006-02-20 16:44:32 mneedham Exp $
-#ifndef _STDumpGeom_H
-#define _STDumpGeom_H
-
-#include <string>
+// $Id: STDumpGeom.h,v 1.2 2006-12-21 17:54:48 jvantilb Exp $
+#ifndef STDumpGeom_H
+#define STDumpGeom_H 1
 
 #include "GaudiAlg/GaudiAlgorithm.h"
 
@@ -10,10 +8,11 @@ class DeSTDetector;
 
 /** @class STDumpGeom STDumpGeom.h
  *
- *  Class for printing out geometry
+ *  Class for printing out the full geometry tree
  *
  *  @author M.Needham
- *  @date   21/4/2001
+ *  @author J. van Tilburg
+ *  @date   21/12/2006
  */
 
 class STDumpGeom : public GaudiAlgorithm {
@@ -21,8 +20,7 @@ class STDumpGeom : public GaudiAlgorithm {
 public:
  
   /// constructer
-  STDumpGeom(const std::string& name, 
-                 ISvcLocator *svcloc );
+  STDumpGeom(const std::string& name, ISvcLocator *svcloc );
 
   /// destructer
   virtual ~STDumpGeom();
@@ -33,25 +31,14 @@ public:
   /// execute
   StatusCode execute();
 
-
 private:
 
-  std::string m_detType;
-  DeSTDetector* m_tracker;
- 
+  /// Recursively print out the tree of the child DetectorElements
+  void children(std::string indent, DetectorElement* parent);
+
+  // job options
+  std::string m_detType;   ///< Switch between TT and IT
+  bool m_fullDetail;       ///< Print out the details of each DetectorElement
 };
 
-#endif // _STDumpGeom_H
-
-
-
-
-
-
-
-
-
-
-
-
-
+#endif // STDumpGeom_H

@@ -1,20 +1,18 @@
-// $Id $
-#ifndef _LandauTest_H
-#define _LandauTest_H
-
+// $Id: LandauTest.h,v 1.2 2006-12-21 17:54:48 jvantilb Exp $
+#ifndef LandauTest_H
+#define LandauTest_H 1
 
 #include "GaudiAlg/GaudiHistoAlg.h"
 #include "GaudiKernel/SmartIF.h"
 #include "GaudiKernel/IRndmGen.h"
 
-#include <string>
-
 /** class LandauTest, package ITCheckers
  *  Algorithm for checking Landau generator behave as they should
  *
  *  @author M.Needham
- *  @date   21/10/2000
-*/
+ *  @author J. van Tilburg
+ *  @date   21/12/2006
+ */
 
 class LandauTest: public GaudiHistoAlg {
 
@@ -32,9 +30,7 @@ public:
   /// execute
   virtual StatusCode execute();
 
-
 private:
-
 
   SmartIF<IRndmGen> m_landauDist;
 

@@ -1,9 +1,6 @@
-// $Id: STMCTuner.h,v 1.3 2006-03-03 16:01:22 mneedham Exp $
-#ifndef _STMCTuner_H
-#define _STMCTuner_H
-
-#include <vector>
-#include <string>
+// $Id: STMCTuner.h,v 1.4 2006-12-21 17:54:48 jvantilb Exp $
+#ifndef STMCTuner_H
+#define STMCTuner_H 1
 
 // base class
 #include "GaudiAlg/GaudiHistoAlg.h"
@@ -24,10 +21,11 @@ class ISTSignalToNoiseTool;
 
 /** @class STMCTuner STMCTuner.h
  *
- *  Class for checking STClusters
+ *  Checking class to plot S/N and charge of STClusters for each readout sector.
  *
  *  @author M.Needham
- *  @date   21/4/2001
+ *  @author J. van Tilburg
+ *  @date   21/12/2006
  */
 
 class STMCTuner : public GaudiHistoAlg {

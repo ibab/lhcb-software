@@ -1,10 +1,4 @@
-//
-// This File contains the definition of the OTSmearer -class
-//
-// C++ code for 'LHCb Tracking package(s)'
-//
-//   Author: M. Needham
-//   Created: 19-09-2000
+// $Id: STDigitChecker.cpp,v 1.4 2006-12-21 17:54:48 jvantilb Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -18,7 +12,6 @@
 
 #include "STDet/DeSTDetector.h"
 #include "STDet/DeSTSector.h"
-
 
 #include "Event/STDigit.h"
 
@@ -34,14 +27,14 @@ DECLARE_ALGORITHM_FACTORY( STDigitChecker );
 //
 //--------------------------------------------------------------------
 
-STDigitChecker::STDigitChecker(const std::string& name, 
-                              ISvcLocator* pSvcLocator) :
+STDigitChecker::STDigitChecker( const std::string& name, 
+                                ISvcLocator* pSvcLocator ) :
   GaudiHistoAlg(name, pSvcLocator),
   m_tracker(0)
 {
   // constructer
-  declareProperty("sigNoiseTool",m_sigNoiseToolName = "STSignalToNoiseTool");
-  this->declareProperty("detType", m_detType = "TT");
+  declareProperty("SigNoiseTool",m_sigNoiseToolName = "STSignalToNoiseTool");
+  this->declareProperty("DetType", m_detType = "TT");
 }
 
 STDigitChecker::~STDigitChecker(){

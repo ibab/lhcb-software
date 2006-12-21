@@ -1,9 +1,6 @@
-// $Id $
-#ifndef _STClusterClassification_H
-#define _STClusterClassification_H
-
-#include <map>
-#include <string>
+// $Id: STClusterClassification.h,v 1.2 2006-12-21 17:54:48 jvantilb Exp $
+#ifndef STClusterClassification_H
+#define STClusterClassification_H 1
 
 #include "GaudiAlg/GaudiAlgorithm.h"
 
@@ -14,18 +11,21 @@ namespace LHCb{
  class MCHit;
 };
 
-
-
 /** @class STClusterClassification STClusterClassification.h
  *
- *  Class for checking STNoiseClusters
+ *  This algorithm counts the total number of STClusters from
+ *  - a primary interaction
+ *  - a secondary interaction
+ *  - noise
+ *  - spillover
+ *  - unknown sources.
+ *  It prints out the statistics in the finalize method.
  *
  *  @author M.Needham
- *  @date   21/4/2001
+ *  @author J. van Tilburg
+ *  @date   04/12/2006
  */
 
-// from Associators
-#include "Linker/LinkerTool.h"
 
 class STClusterClassification : public GaudiAlgorithm {
 
@@ -59,7 +59,7 @@ private:
   
   unsigned int tCount() const;
 
-  std::vector<std::string> m_SpillVector;  // short names of spills
+  std::vector<std::string> m_spillVector;  // short names of spills
   std::vector<std::string>  m_spillNames; // full name of spills
      
   // index of event spill
@@ -76,7 +76,7 @@ private:
 
 };
 
-#endif // _STClusterClassification_H
+#endif // STClusterClassification_H
 
 
 

@@ -1,9 +1,4 @@
-// This File contains the definition of the OTSmearer -class
-//
-// C++ code for 'LHCb Tracking package(s)'
-//
-//   Author: M. Needham
-//   Created: 19-09-2000
+// $Id: MCSTDepositChecker.cpp,v 1.5 2006-12-21 17:54:48 jvantilb Exp $
 
 // BOOST!
 #include "boost/lexical_cast.hpp"
@@ -42,7 +37,7 @@ MCSTDepositChecker::MCSTDepositChecker(const std::string& name,
   m_tracker(0)  
 {
  // constructer
- declareProperty("detType", m_detType = "TT");
+ declareProperty("DetType", m_detType = "TT");
 }
 
 MCSTDepositChecker::~MCSTDepositChecker(){

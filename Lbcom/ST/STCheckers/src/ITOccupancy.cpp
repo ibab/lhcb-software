@@ -1,19 +1,10 @@
-//
-// This File contains the definition of the ITOccupancy -class
-//
-// C++ code for 'LHCb Tracking package(s)'
-//
-//   Author: M. Needham
-//   Created: 19-09-2000
-
+// $Id: ITOccupancy.cpp,v 1.6 2006-12-21 17:54:48 jvantilb Exp $
 
 // BOOST
 #include "boost/lexical_cast.hpp"
 
-
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
-//#include "GaudiKernel/SystemOfUnits.h"
 
 // Histogramming
 #include "AIDA/IHistogram1D.h"
@@ -39,18 +30,18 @@ DECLARE_ALGORITHM_FACTORY( ITOccupancy );
 //
 //--------------------------------------------------------------------
 
-ITOccupancy::ITOccupancy(const std::string& name, 
-                              ISvcLocator* pSvcLocator) :
+ITOccupancy::ITOccupancy( const std::string& name, 
+                          ISvcLocator* pSvcLocator ) :
   GaudiHistoAlg(name, pSvcLocator),
   m_sigNoiseTool(0),
   m_tracker(0)
 {
   // constructer
-  declareProperty("threshold",m_Threshold);
-  declareProperty("sigNoiseTool",m_sigNoiseToolName = "STSignalToNoiseTool");
-  declareProperty("binSize", m_binSize = 32);
-  declareProperty("dataLocation",m_dataLocation = STDigitLocation::ITDigits);
-  declareProperty("detType", m_detType = "IT");
+  declareProperty("Threshold",m_Threshold);
+  declareProperty("SigNoiseTool",m_sigNoiseToolName = "STSignalToNoiseTool");
+  declareProperty("BinSize", m_binSize = 32);
+  declareProperty("DataLocation",m_dataLocation = STDigitLocation::ITDigits);
+  declareProperty("DetType", m_detType = "IT");
 
   m_Threshold.reserve(3);
   for (int iThres=0;iThres<3;++iThres){
