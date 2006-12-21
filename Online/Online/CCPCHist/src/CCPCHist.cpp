@@ -64,11 +64,11 @@ Histo::Histo(char *name, char *title, int nx, float xmin, float xmax )
   {
     return m_h->fill(x);
   }
-  int Histo::fill (float x, bintype weight)
+  int Histo::fill (float x, float weight)
   {
     return m_h->fill(x, weight);
   }
-  int Histo::fill (float x,float y, bintype weight)
+  int Histo::fill (float x,float y, float weight)
   {
     return m_h->fill(x, y, weight);
   }
@@ -128,7 +128,7 @@ Histo::Histo(char *name, char *title, int nx, float xmin, float xmax )
     h = new CCPCHisto(name,title,nx,xmin,xmax, ny, ymin,ymax);
     return h;
   }
-  int hfill1 (void *id, float x, bintype weight)
+  int hfill1 (void *id, float x, float weight)
   {
     CCPCHisto *h = (CCPCHisto *)id;
     if (h->type() == H_1DIM)
@@ -147,7 +147,7 @@ Histo::Histo(char *name, char *title, int nx, float xmin, float xmax )
     CCPCHisto *h = (CCPCHisto *)id;
     return h->put(buf);
   }
-  int hfill2 (void *id, float x,float y, bintype weight)
+  int hfill2 (void *id, float x,float y, float weight)
   {
     CCPCHisto *h = (CCPCHisto *)id;
     if (h->type() == H_2DIM)

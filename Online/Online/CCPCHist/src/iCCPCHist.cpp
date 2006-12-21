@@ -393,7 +393,7 @@ int CCPCHisto::fill(float x)
   fill (x,1.0);
   return 0;
 }
-int CCPCHisto::fill (float x, bintype weight)
+int CCPCHisto::fill (float x, float weight)
 {
   int xbinnr;
   int binnr;
@@ -437,7 +437,7 @@ int CCPCHisto::fill (float x, bintype weight)
     return 1;
   }
 }
-int CCPCHisto::fill (float x, float y, bintype weight)
+int CCPCHisto::fill (float x, float y, float weight)
 {
   int xbinnr;
   int ybinnr;

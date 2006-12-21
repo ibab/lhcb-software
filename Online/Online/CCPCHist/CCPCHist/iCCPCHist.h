@@ -122,8 +122,8 @@ public:
   int modify (char *title, int nx, float xmin, float xmax,
                int ny, float ymin, float ymax);
   int fill (float x);
-  int fill (float x, bintype weight);
-  int fill (float x, float y, bintype weight);
+  int fill (float x, float weight);
+  int fill (float x, float y, float weight);
   void *getextid (void);
   bool nameeq(char *nam, int namlen);
 };
@@ -148,8 +148,8 @@ extern "C"{
   void *hccpc_profile(char *name, char *title, int nx, float xmin, float xmax );
   void *hccpc_book2(char *name, char *title, int nx, float xmin, float xmax, 
              int ny, float ymin, float ymax );
-  int hfill1 (void *id, float x, bintype weight);
-  int hfill2 (void *id, float x, float y, bintype weight);
+  int hfill1 (void *id, float x, float weight);
+  int hfill2 (void *id, float x, float y, float weight);
   int hfillp (void *id, float x, float y);
 #ifdef __cplusplus
 }
