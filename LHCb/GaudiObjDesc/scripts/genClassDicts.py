@@ -14,6 +14,7 @@ class genClassDicts:
     self.sIncludes        = []
     self.sDictInstances   = []
     self.sClassSelections = []
+    self.sClassExclusions = []
 #--------------------------------------------------------------------------------
   def conc(self, to, src):
     if src not in to : to.append(src)
@@ -157,11 +158,17 @@ class genClassDicts:
         elif (appendInstances) : self.sDictInstances = self.conc(self.sDictInstances, ' '.join(line[:-1].split()))
     elif tmplname == 'selection_xml':
       appendSelections = 0
+      appendExclusions = 0
       for line in file.readlines():
         if line.find('<lcgdict>') != -1    : appendSelections = 1
         elif line.find('</lcgdict>') != -1 : appendSelections = 0
-        elif (appendSelections): self.sClassSelections = self.conc(self.sClassSelections, line[:-1])
-#--------------------------------------------------------------------------------
+        elif line.find('<exclusion>')  != -1 : appendExclusions = 1
+        elif line.find('</exclusion>') != -1 : appendExclusions = 0
+        elif (appendExclusions):
+          if line != '\n' : self.sClassExclusions.append(line)
+        elif (appendSelections):
+          self.sClassSelections = self.conc(self.sClassSelections, line[:-1])
+ #--------------------------------------------------------------------------------
   def align(self, dictInstances):
     dictInstances2 = []
     maxlen = 0;
@@ -195,6 +202,7 @@ class genClassDicts:
     self.packageDict['includes']        = '\n'.join(self.sIncludes)
     self.packageDict['dictInstances']   = '\n'.join(self.sDictInstances)
     self.packageDict['classSelections'] = '\n'.join(self.sClassSelections)
+    self.packageDict['classExclusions'] = ''.join(self.sClassExclusions)
     # parse the template file and generate the content for the file
     g.parse(self.godRoot+'templates/'+tmplname+'.tpl',self.packageDict)
     # open file and write the parser content to it

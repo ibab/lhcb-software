@@ -1,23 +1,27 @@
-Package: GaudiObjDesc
-Desccription: This package contains a set of tools used to generate code from the XML description of the data object classes.
-Package manager : Stefan Roiser
+! Package:         GaudiObjDesc
+! Description:     This package contains a set of tools used to generate code
+!                  from the XML description of the data object classes.
+! Package manager: Stefan Roiser
+!-----------------------------------------------------------------------------
 
-============================ GaudiObjDesc v9r8 =========================
+!============================ GaudiObjDesc v9r8 =========================
+! 2006-12-21 - Marco Cattaneo
+ - Added support for exclusion block in selection file
+
 ! 2006-12-19 - Marco Cattaneo
  - Added pp_cppflags to genreflex arguments in obj2dict_trailer
 
 ! 2006-12-19 Pere Mato
-  - Modified fragments for dictionary generation to produce the rootmap in the install area or locally depending if building
-    with or without install area.
+  - Modified fragments for dictionary generation to produce the rootmap in the
+    install area or locally depending if building with or without install area.
  
-============================ GaudiObjDesc v9r7p1 =========================
-
+!============================ GaudiObjDesc v9r7p1 =========================
 ! 2006-08-16 Stefan
 
   - remove friendship for the ostream operator << overloading. This is not
     needed. Move all operator overloads into the LHCb namespace.
 
-=============================GaudiObjDesc v9r7============================
+!=============================GaudiObjDesc v9r7============================
 ! 2006-07-24 Stefan
 
   - the "pretty printing" of enums is now done on the std::ostream (was MsgStream
@@ -98,7 +102,7 @@ Package manager : Stefan Roiser
     GaudiCppExport.xml xml_files/GaudiCppExport.xml
 
 
-=============================GaudiObjDesc v9r6============================
+!=============================GaudiObjDesc v9r6============================
 ! 2006-06-11 - Marco Clemencic
  - patch #744. Reintroduced "operator new(size_t,void*)" and "operator
    delete(void*,void*)" because they are needed by libstdc++ 3.2.3 (at
@@ -124,7 +128,7 @@ Package manager : Stefan Roiser
    not needed with ROOT 5.11 (the change of default allocator for
    contained objects).
 
-=============================GaudiObjDesc v9r5============================
+!=============================GaudiObjDesc v9r5============================
 ! 2006-05-16 - Marco Clemencic
  - patch #716. It appears that the new feature is not working as
    expected when reading ObjectVector or KeyedContainer from a ROOT
@@ -154,7 +158,7 @@ Package manager : Stefan Roiser
 !2006-04-26 Stefan
 - turning on doxygen documentation for generated typedefs
 
-=============================GaudiObjDesc v9r4============================
+!=============================GaudiObjDesc v9r4============================
 !2006-03-28 Stefan
 - removing dictionary generation for const containers
 - removing typedefs for const containers from class definitions
@@ -180,7 +184,7 @@ Package manager : Stefan Roiser
 - fix for destructor implementation. An empty code element will result in 
   an empty inline implementation
 
-=============================GaudiObjDesc v9r3============================
+!=============================GaudiObjDesc v9r3============================
 !2006-01-27 Macro Cattaneo
 - allows tospecify additional flags to be passed to gccxml, by
   defining the macro use_obj2dict_gccxmlflags
@@ -188,11 +192,11 @@ Package manager : Stefan Roiser
 !2006-01-19 Pere Mato
 - Adapted to use genreflex command to generate dictionaries (Reflex from ROOT)
 
-===============================GaudiObjDesc v9r2============================
+!===============================GaudiObjDesc v9r2============================
 !2005-12-20 Stefan Roiser
 - fix on namespace python script.
 
-===============================GaudiObjDesc v9r1============================
+!===============================GaudiObjDesc v9r1============================
 !2005-12-13 Stefan Roiser
 - move typedef for container of objects (KeyedContainer, ObjectVector) inside the LHCb namspace
 
@@ -206,7 +210,7 @@ Package manager : Stefan Roiser
 	- nonconstaccessor [ TRUE | FALSE ] defaults to 'FALSE'
           when set to 'TRUE' will turn on the generation of non-const accessor methods
 
-===============================GaudiObjDesc v9r0============================
+!===============================GaudiObjDesc v9r0============================
 ! 2005-11-17 Stefan Roiser
 - merged in some more changes from the branch - better handling of enums for bitfields (offset not an int)
 - new features
@@ -239,7 +243,7 @@ Package manager : Stefan Roiser
 - Added description for bitfields enums in header files
 - Added automatic overloading to MsgStream for enums
 
-===============================GaudiObjDesc v8r1============================
+!===============================GaudiObjDesc v8r1============================
 ! 2005-10-17 - Marco Cattaneo
  - genClassDicts.py was ignoring "transient" tag in XML description of class 
    attributes 
@@ -247,12 +251,12 @@ Package manager : Stefan Roiser
 ! 2005-10-12 - Marco Cattaneo
  - Added class ID to xml generated by genClassDicts.py
 
-===============================GaudiObjDesc v8r0p1============================
+!===============================GaudiObjDesc v8r0p1============================
 !20051007 - Pere
 - added lcgdict.py and gendict2.py files in /scrips with patches included at SEAL head
 - modified requirements to make use of them 
 
-===============================GaudiObjDesc v8r0============================
+!===============================GaudiObjDesc v8r0============================
 !20050908 - Pere
 - modified nmake fragments for the production of lcgdict (reflex) based dictionaries
   fragments/nmake/obj2dict_header
@@ -283,7 +287,7 @@ Package manager : Stefan Roiser
 - added removal of the xml/gdd.dtd file for the clean target of the 
   makefile fragments. fixed bug #9584.
 
-===============================GaudiObjDesc v7r4============================
+!===============================GaudiObjDesc v7r4============================
 !20050706 - Hubert Degaudenzi
 - fixed end of lines in gdd.dtd
 
@@ -295,7 +299,7 @@ Package manager : Stefan Roiser
 - new <bitfield> attribute "exclusive" triggers inclusive or exclusive setting of the bitfield
 - fix for bitfield check-methods, bit to check shifted into right position
 
-===============================GaudiObjDesc v7r3============================
+!===============================GaudiObjDesc v7r3============================
 
 !20050206 - Stefan
 - lowering getter names of bitfields (as for all other getters) 
@@ -307,7 +311,7 @@ Package manager : Stefan Roiser
 - added support for transient attribute of <attribute> element
 - fix to not self include the header file after the class definition
 
-===============================GaudiObjDesc v7r2============================
+!===============================GaudiObjDesc v7r2============================
 
 !20050127 - Stefan
 - excluding types in namespace std from demangling 
@@ -326,7 +330,7 @@ Package manager : Stefan Roiser
 - import names stay unchanged if they contain a '.'. E.g. <import name='file.hh'/> will convert to #include "file.hh"
 - fix: all get/set/addTo/etc. methods are now public in the dictionaries by default
 
-===============================GaudiObjDesc v7r1============================
+!===============================GaudiObjDesc v7r1============================
 
 !20050111 - Stefan
 - generating of typedefs in classes unified. All typedefs are handled by a single function (std::vector,KeyedContainer,ContainedObject) 
@@ -338,7 +342,7 @@ Package manager : Stefan Roiser
 !20050103 - Stefan
 - fix: generate unique include line in case of stl includes (generated from forward declarations)
  
-===============================GaudiObjDesc v7r0============================
+!===============================GaudiObjDesc v7r0============================
 !20041213 - Stefan
 - changes necessary for windows compilation 
   . passing refs to pointers in dictionary stubfunctions needs a cast to the ref
@@ -367,18 +371,18 @@ Package manager : Stefan Roiser
   be removed in a future version
 - new script genGODsClassDB.py for generating the class database used by GOD
 
-===============================GaudiObjDesc v6r3p1==========================
+!===============================GaudiObjDesc v6r3p1==========================
 !20041117 - Stefan Roiser
 - fixed char* handling (has to be done through Xerces tools)
 
-===============================GaudiObjDesc v6r3============================
+!===============================GaudiObjDesc v6r3============================
 !20040716 - Pere Mato, Stefan Roiser
 - added test: xml file, python test, tec.
 
 !20040706 - Pere Mato
 - requirements: adapted to use new LCGCMT interface packages
 
-===============================GaudiObjDesc v6r2p3============================
+!===============================GaudiObjDesc v6r2p3============================
 !20040614 - Stefan
 - removed include for RelationsDict.h for general dictionary files (only for <assoc> left)
 
@@ -397,31 +401,31 @@ Package manager : Stefan Roiser
 !20040206 - Stefan
 - bugfix: errorReporter attached to Xerces parser was deleted too early
 
-===============================GaudiObjDesc v6r2p2============================
+!===============================GaudiObjDesc v6r2p2============================
 !20040122 - Stefan
 - added macros to KeyedDictionary.h and SealDictionary.h in order to allow instantion
   of dictionaries through macros (needed e.g. when dictionary production through GOD
   is not possible because of usage of non GOD compliant containers in Event packages)
 
-===============================GaudiObjDesc v6r2p1============================
+!===============================GaudiObjDesc v6r2p1============================
 !20040107 - Stefan
 - bugfix: <import> did not work for associations
 - bugfix: GaudiCppExport.xml added information for ITCluster, L1Track2d
           L1Track3d and OTCluster
 - new script to produce GaudiCppExport.xml automatically (not used for this version)
 
-===============================GaudiObjDesc v6r2==============================
+!===============================GaudiObjDesc v6r2==============================
 !20031219 - Stefan
 - bugfix: converting XMLCh* to char* when using string with possible replacement
 
-===============================GaudiObjDesc v6r1==============================
+!===============================GaudiObjDesc v6r1==============================
 !20031217 - Stefan
 - <assoc> is now a sub-element of <package> 
 - new attribute "from" for element <assoc>
 - a new file <packagename>_Associations_dict.cpp will be created containing 
   the initialisations for associations dictionaries for each package
 
-===============================GaudiObjDesc v6r0==============================
+!===============================GaudiObjDesc v6r0==============================
 !200312 - Stefan
 - new element <assoc> to specify associations between event objects
   - attributes "to" for the associated object
@@ -429,7 +433,7 @@ Package manager : Stefan Roiser
                "type" to specify the type of association (either "1D" or "2D")
 - new attribte "transient" for <attribute>-element (values "TRUE" or "FALSE")
 
-===============================GaudiObjDesc v6r0==============================
+!===============================GaudiObjDesc v6r0==============================
 
 !20031004 - Stefan
 - changes to DaDiCppDict to produce output which complies to SEAL dictionaries
@@ -442,20 +446,20 @@ Package manager : Stefan Roiser
     'bitfield64'. Old type 'bitfield' is equal 'bitfield32'
   - bitfield-attribute 'startAtOne' removed
 
-===============================GaudiObjDesc v5r2==============================
+!===============================GaudiObjDesc v5r2==============================
 !20031211 - Stefan
 - bugfix: replaced XMLString::release with delete[] for XMLCh[] in some cases
 
-===============================GaudiObjDesc v5r1==============================
+!===============================GaudiObjDesc v5r1==============================
 !20031126 - Pere Mato
 - Changes for Mac OSX (Guy Barrand)
 
-===============================GaudiObjDesc v5r0==============================
+!===============================GaudiObjDesc v5r0==============================
 !20030430 - Stefan
 - changed to new version of Xerces 2.2.0
 - fixes of memory-leaks after valgrind-tests
 
-===============================GaudiObjDesc v4r7==============================
+!===============================GaudiObjDesc v4r7==============================
 !20030115 - Stefan, Pere
 - removed SetDTD setup script from requirements
 - avoided to define GAUDIOBJDESCROOT when building packages
@@ -465,21 +469,21 @@ Package manager : Stefan Roiser
 - fillStream called also for base-classes
 - implementation of templated methods inside class-body (due to vc6 restrictions)
 
-===============================GaudiObjDesc v4r5p1============================
+!===============================GaudiObjDesc v4r5p1============================
 !20021112 - Stefan
 - bugfix: corrected the output for 'const' return-values of self-defined methods 
 
-===============================GaudiObjDesc v4r5============================
+!===============================GaudiObjDesc v4r5============================
 !20020925 - Stefan
 - new database of header-files generated
 - meta-information about constructors added to the dictionary-files
 
-===============================GaudiObjDesc v4r4p1============================
+!===============================GaudiObjDesc v4r4p1============================
 
 !20020910 - Flr
  requirements - use v* in "use" statements
 
-===============================GaudiObjDesc v4r4===============================
+!===============================GaudiObjDesc v4r4===============================
 
 !20020619 - Stefan
 - introduced new value for 'inout'-attribute of =arg=-element called 'BYVALUE' to be
@@ -491,12 +495,12 @@ Package manager : Stefan Roiser
 - no dictionary-information for private, protected, pure virtual and friend-functions
 - changes to dictionary-fragments to produce the class with the friend-class in the dict-directory
 
-===============================GaudiObjDesc v4r3===============================
+!===============================GaudiObjDesc v4r3===============================
 
 !20020514 - Stefan
  - Implementations of friend-functions will be done inside the class-body again, because of link-problems
 
-===============================GaudiObjDesc v4r3===============================
+!===============================GaudiObjDesc v4r3===============================
 
 !20020513 - Stefan
  - Added <attribute=- and <relation>-attribute 'serialize' to specify whether to persistify an object
@@ -505,7 +509,7 @@ Package manager : Stefan Roiser
  - Added new <bitfield>-element to handle bitpacking
  - friend-functions are now implemented outside the class-body
 
-================v4r2=====================================
+!================v4r2=====================================
 ! 20020503 Pere Mato
 - Small problem on the fragment obj2doth_header that forced the re-creation of 
   all header files each time.
@@ -514,14 +518,14 @@ Package manager : Stefan Roiser
   ~ The same for accessor methods
   ~ The return type for relations was not correct in the MetaMethod creation
 
-================v4r1=====================================
+!================v4r1=====================================
 
 ! 20020416 Stefan Roiser
  - Added <class>-attribute 'keyedContTypeDef' to force the production of typedefs for KeyedContainers which are inherited 
    indirectly from 'KeyedObject' but cannot be resolved through the xml-file (inheritance from a class defined in another xml-file)
  - Gaudi-type 'longlong' recognized as fundamental-one
 
-================v4r0=====================================
+!================v4r0=====================================
 ! 20020328 Stefan Roiser
   - changes to produce dictionary-information compliant to the new interface of GaudiIntrospection v4r0
 
@@ -541,13 +545,13 @@ Package manager : Stefan Roiser
 ! 20020319 - Stefan Roiser
  - bugfix when using stdVectorTypeDef to create type std::vector<classname*>
 
-==================v3r3p1=================================
+!==================v3r3p1=================================
 ! 20020404
  - automatic include of <utility> when using std::pair
  - automatic include of GaudiKernel/StreamBuffer.h for every class
  - bugfix for dict-fragment when processing more than one xml-file
 
-==================v3r3===================================
+!==================v3r3===================================
 ! 20020403
  - added command-line option '-l <path>' for GODWriteCppDict.exe to define the location of the .h-files
 
@@ -586,7 +590,7 @@ Package manager : Stefan Roiser
  - only one setter for 1-1-relations with SmartRef<Type> as argument 
  - only one addTo- and removeFrom-function for 1-M-relations with SmartRef<Type> as argument
 
-================v3r1=====================================
+!================v3r1=====================================
 ! 20020214 - Stefan Roiser
  - added <typedef> and <desc> as sub-elements of <namespace>
  - added 'author'-attribute to <namespace>
@@ -594,7 +598,7 @@ Package manager : Stefan Roiser
  - bugfix: classes created through xml-file will be added to 'class-database' ad Event/'ClassName'
  - handling of pointers as simple types
  
-================v3r0=====================================
+!================v3r0=====================================
 ! 20020130 - Stefan Roiser
  - added function to locate the place in the TDS
  - added possibility to make pure virtual functions

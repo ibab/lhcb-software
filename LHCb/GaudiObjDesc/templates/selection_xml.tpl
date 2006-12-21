@@ -16,4 +16,7 @@
 
 <lcgdict>
 @@@classSelections@@@
+  <exclusion>
+@@@classExclusions@@@
+  </exclusion>
 </lcgdict>
