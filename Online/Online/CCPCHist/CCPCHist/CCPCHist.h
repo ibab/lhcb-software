@@ -234,7 +234,7 @@ extern "C"{
 /*! Fills a profile histogram.
  \param id Pointer to the histogram as returned from the booking routine
  \param x abszissa of the bin
- \param weight weight to be added to bin statistics
+ \param y y-value to be added to bin statistics
 */
   int hfillp (void *id, float x, float y);
 /*! Load the bin contents of a histogram from a float array
