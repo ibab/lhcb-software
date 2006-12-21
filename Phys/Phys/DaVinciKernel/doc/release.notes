@@ -3,6 +3,9 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+! 2006-12-21 - Olivier Deschamps
+  - remove ICaloElectron interface (new release moved into CaloInterfaces)
+
 ! 2006-18-12 - Juan PALACIOS for Patrick SPRADLIN
 
   - Add Kernel/IChangePIDTool.h
