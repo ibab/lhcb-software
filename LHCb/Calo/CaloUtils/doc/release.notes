@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.74 2006-12-14 10:38:54 ranjard Exp $
+! $Id: release.notes,v 1.75 2006-12-21 17:53:39 odescham Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
+
+
+! 2006-12-21 - Olivier Deschamps 
+ - new tool added : CaloUtils/CaloElectron.h - src/CaloElectron.cpp 
 
 ! 2006-12-06 - Florence RANJARD
  - apply_pattern install_more_includes
