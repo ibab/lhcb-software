@@ -48,7 +48,7 @@ You will be prompted for your grid password.
 t.application.getpack( "Tutorial/Analysis v6r2" )
 t.application.getpack( "Phys/DaVinci v17r6" )
 t.application.masterpackage = "DaVinci v17r6 Phys"
-t.application.optsfile = File( name = "~/cmtuser/Tutorial/Analysis/options/myOptions.txt" )
+t.application.optsfile = File( name = "~/cmtuser/Tutorial/Analysis/v6r2/options/myOptions.opts" )
 
 !emacs $t.application.cmt_user_path/Phys/DaVinci/v17r6/cmt/requirements &</code>
 		Be very careful not to copy-paste leading <b>spaces</b>; python does 
@@ -83,10 +83,14 @@ ApplicationMgr.TopAlg += { "GaudiSequencer/TutorialSeq" };
 //
 TutorialSeq.Members += { "TutorialAlgorithm" };
 //
-// Get the input data:
+// Get the input data : all muons.
 //
 TutorialAlgorithm.PhysDesktop.InputLocations = { "Phys/StdLooseMuons" } ;
 </code>
+Since we want to make a J/psi->mumu we only need muons as input Particles.
+The <code>StdLooseMuons</code> are all charged tracks compatible with being a muon. They
+are made on demand when you need them.
+<p></p>
 Now we need to write the algorithm!
 		</ul>
 		
@@ -98,12 +102,12 @@ Now we need to write the algorithm!
 
 			<li>Before you forget it, declare your new algorithm to
 			Analysis_load.cpp:</li>
-<code class="display">!emacs ~cmtuser/Tutorial/Analysis/v6r2/src/Analysis_load.cpp &</code>
+<code class="display">!emacs ~/cmtuser/Tutorial/Analysis/v6r2/src/Analysis_load.cpp &</code>
 and add the line:
 <code class="display">DECLARE_ALGORITHM(TutorialAlgorithm)</code>
 
 			<li>Open the files for your algorithm:</li>
-<code class="display">!emacs ~cmtuser/Tutorial/Analysis/v6r2/src/TutorialAlgorithm.cpp &</code>
+<code class="display">!emacs ~/cmtuser/Tutorial/Analysis/v6r2/src/TutorialAlgorithm.{cpp,h} &</code>
             <p>Answer "D" for DVAlgorithm twice. You can also do that from the shell 
 	    prompt by opening another window.</p>
 
@@ -168,6 +172,9 @@ StatusCode TutorialAlgorithm::loopOnMuons(
       } 
     }
 </code>	
+<li>Now compile:</li>
+<code class="display">t.application.make()</code>
+<p>... and fix all compilation errors...</p>
 		</ul>
 
 		
@@ -181,7 +188,7 @@ StatusCode TutorialAlgorithm::loopOnMuons(
 <li> Click "Dataset Search"
 
 </li><li> Select "Configuration = <code>DC06 - v1-lumi2</code>"
-</li><li> Select "Event type = <code>13144000 - Bs_JpsiPhi,mm=CPV</code>"
+</li><li> Select "Event type = <code>13144001 - Bs_JpsiPhi,mm=CPV</code>"
 </li><li> Select "Step3 = <code>Brunel - v30r13</code>"  (or the latest available)
 </li><li> Select "Datasets replicated at : Anywhere (Grid only)"
 </li><li> Submit
@@ -202,11 +209,13 @@ time...
 		<li>If you want the output to the terminal do:
 <code class="display">j = Job( t, backend = Interactive() )</code>	
 		<li>If you want the output in a file:
-<code class="display">j = Job( t, background = Local() )</code>	
+<code class="display">j = Job( t, backend = Local() )</code>	
 		<li>If you want to use LSF:
 <code class="display">j = Job( t, backend = LSF() )</code>	
 		<li>If you want to use the grid:
-<code class="display">j = Job( t, backend = LSF() )</code>	
+<code class="display">j = Job( t, backend = Dirac() )</code>	
+		<li>Before you submit you can export the file:
+<code class="display">export (j , "Tutorial.py")</code>	
               </ul>
 For small tests, the first two options are usually best.  For larger
     amounts of data, you'll need to run either on the LSF batch system
@@ -217,16 +226,16 @@ For small tests, the first two options are usually best.  For larger
     standard output/error can be viewed with:
 
 <code class="display">j.peek( "stdout" )
-j.peek( "stdin" )</code>	
+j.peek( "stderr" )</code>	
               </ul>
 
 		<h2>4. Look at the histograms</h2>
+		We'll do that outside of ganga... so exit back to shell.
 		<ul>
+		<li>Source the root setup scripts</li>
+<code class="display">source $LHCBHOME/scripts/setup_external ROOT</code>	
 		<li>Open root</li>
-
 <code class="display">root.exe</code>	
-                <p>This will get you the version of root 
-		   used by DaVinci. </p>
                 <p>Note that  </p>
 <code class="display">root</code>	
                 <p>usually also works and gets you a nice welcome logo. 
@@ -235,12 +244,14 @@ j.peek( "stdin" )</code>
 <code class="display">TBrowser B</code>	
                 <p>Which has a Windows-like look and feel.</p>
 
-		<li>But if you just want to save the histograms, you could as well just paste the following in the root prompt</li>
+		<li>But if you just want to save the histograms, you could as well just paste 
+		the following in the root prompt</li>
 <code class="display">TCanvas* c1 = new TCanvas("c1","Edinburgh",800,800);
 c1-&gt;SetLogy();
 
-TFile* F = new TFile("DVHistos.root") 
-F-&gt;ls()
+TFile* F = new TFile("<some path>DVHistos.root")</code>
+... make sure you give the full path to your file...
+<code class="display">F-&gt;ls()
 F-&gt;cd("TutorialAlgorithm")               
 F-&gt;ls() 
 TH1D* H1 = F-&gt;Get("TutorialAlgorithm/1")
@@ -278,6 +289,6 @@ gPad-&gt;SaveAs("H4.eps");
 
 
 <hr>
-<p><span lang="en-gb">Last modified by P. Koppenburg, Dec 7 2006
+<p><span lang="en-gb">Last modified by P. Koppenburg, Dec 19 2006
 </span></p></div>
 </body></html>

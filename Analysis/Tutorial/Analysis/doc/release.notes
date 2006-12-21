@@ -8,7 +8,29 @@
 !
 !-----------------------------------------------------------------------------
 
-! 2006-12-19- P. Koppenburg for Raluca Muresan
+! 2006-12-21 - P. Koppenburg
+  - Added exercise 4 and solutions 5 & 6.
+    . exercises/DaVinci2.html
+    . exercises/DaVinci3.html
+    . options/BTaggingTool.opts
+    . solutions/DaVinci6/Analysis_load.cpp
+    . solutions/DaVinci6/DVTutorial_6.opts
+    . solutions/DaVinci6/TutorialChecker.cpp
+    . solutions/DaVinci6/TutorialChecker.h
+  - updated:
+    . cmt/requirements
+    . exercises/DaVinci1.html
+    . exercises/DaVinci4.html
+    . solutions/DaVinci5/DVTutorial_5.opts
+  - removed:
+    . exercises/DaVinci2and3.html
+    . exercises/DaVinci5.txt
+    . exercises/DaVinci6.txt
+    . exercises/DaVinci7.txt
+    . solutions/DaVinci5/DVTutorialDC04.opts
+
+
+! 2006-12-19 - P. Koppenburg for Raluca Muresan
   - Use different cuts for J/psi and Phi
 
 ! 2006-12-15 - P. Koppenburg

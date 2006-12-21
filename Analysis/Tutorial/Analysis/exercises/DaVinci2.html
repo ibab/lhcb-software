@@ -43,7 +43,7 @@
   double m_jPsiMassWin ; ///< Mass window
   double m_jPsiChi2 ;    ///< Max J/psi chi^2
 </code>
-			<li>Let's also add some statistics,
+			<li>Let's also add some counters,
 			and store a few things we will need in the 
 			execute()</li>
 <code class="display">  int m_jPsiID ;      ///< J/psi ID
@@ -157,6 +157,7 @@ Jpsi2MuMu.MassWindow = 30*MeV ;
 Jpsi2MuMu.MaxChi2 = 20 ;
 Jpsi2MuMu.OutputLevel = 3 ;
 </code>
+		</ul>
 
 		<h2>5. Help!</h2>
  		<ul>
@@ -239,6 +240,13 @@ Phi2KK.MaxChi2 = 100 ;
 Phi2KK.OutputLevel = 3 ;
 </code>
 
+The only necessary change in the C++ code is that you need a variable
+(<code>std::string</code>) that tells the algorithm which Particle
+to reconstruct. Then in <code>initialize()</code> you should ask the 
+<code>ParticlePropertySvc</code> to find the mass of this 
+Particle.
+<p></p>
+
 The solution is given in <code>solutions/DaVinci3</code>
 	  
 	</ul>
@@ -247,6 +255,6 @@ The solution is given in <code>solutions/DaVinci3</code>
 </p>
 
 <hr>
-<p><span lang="en-gb">Last modified by P. Koppenburg, Dec 7 2006
+<p><span lang="en-gb">Last modified by P. Koppenburg, Dec 19 2006
 </div>
 </body></html>
