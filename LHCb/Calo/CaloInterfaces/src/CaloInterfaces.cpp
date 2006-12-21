@@ -1,8 +1,11 @@
-// $Id: CaloInterfaces.cpp,v 1.3 2006-03-22 18:21:51 odescham Exp $
+// $Id: CaloInterfaces.cpp,v 1.4 2006-12-21 18:01:56 odescham Exp $
 // ============================================================================
 // CVS tag $Name:R
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2006/03/22 18:21:51  odescham
+// Migration to new Event Model
+//
 // Revision 1.2  2004/02/17 11:51:56  ibelyaev
 //  move IID* from CaloInterfaces to src directory
 //
@@ -12,6 +15,7 @@
 // ============================================================================
 // CaloInterfaces 
 // ============================================================================
+#include "CaloInterfaces/ICaloElectron.h"
 #include "CaloInterfaces/ICaloClusterSelector.h"
 #include "CaloInterfaces/ICaloClusterTool.h"
 #include "CaloInterfaces/ICaloCorrection.h"
@@ -48,6 +52,8 @@
  *  @date   2004-02-15 
  */
 
+// ============================================================================
+//ICaloElectron              :: ~ICaloElectron              () {} ;
 // ============================================================================
 ICaloClusterSelector       :: ~ICaloClusterSelector       () {} ;
 // ============================================================================
