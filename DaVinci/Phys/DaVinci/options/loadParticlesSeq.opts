@@ -1,10 +1,12 @@
 ApplicationMgr.TopAlg += { "GaudiSequencer/SeqLoadStdParticles" } ;
 //
-SeqLoadStdParticles.Members += {"PreLoadParticles/LoadStdUnbiasedHeavyDimuon",
+SeqLoadStdParticles.Members += {"PreLoadParticles/LoadStdLooseMuons",
+                                "PreLoadParticles/LoadStdLoosePions",
+                                "PreLoadParticles/LoadStdLooseProtons",
+                                "PreLoadParticles/LoadStdLooseKaons",
                                 "PreLoadParticles/LoadStdLooseDownstreamPions",
                                 "PreLoadParticles/LoadStdLooseDownstreamProtons",
-                                "PreLoadParticles/LoadStdLooseKaons",
-                                "PreLoadParticles/LoadStdLooseProtons",
+                                "PreLoadParticles/LoadStdUnbiasedHeavyDimuon",
                                 "PreLoadParticles/LoadStdLooseJpsi2ee",
                                 "PreLoadParticles/LoadStdLooseD02KK",
                                 "PreLoadParticles/LoadStdLooseLambda1115_LU",
@@ -12,6 +14,7 @@ SeqLoadStdParticles.Members += {"PreLoadParticles/LoadStdUnbiasedHeavyDimuon",
                                 "PreLoadParticles/LoadStdLooseLambda1115_DD",
                                 "PreLoadParticles/LoadStdLooseLambda1115_LD",
                                 "PreLoadParticles/LoadStdLooseKsLL",
+                                "PreLoadParticles/LoadStdLooseKsDD",
                                 "PreLoadParticles/LoadStdLooseD02KPi",
                                 "PreLoadParticles/LoadStdLooseLambda1115_DL",
                                 "PreLoadParticles/LoadStdLooseD02PiPi",
@@ -21,14 +24,14 @@ SeqLoadStdParticles.Members += {"PreLoadParticles/LoadStdUnbiasedHeavyDimuon",
                                 "PreLoadParticles/LoadStdLooseEtac2KKKK",
                                 "PreLoadParticles/LoadStdLooseD02KsKK",
                                 "PreLoadParticles/LoadStdLooseD02KsPiPi",
-                                "PreLoadParticles/LoadStdLooseKsDD",
                                 "PreLoadParticles/LoadStdLooseD2KPiPi",
                                 "PreLoadParticles/LoadStdLooseKstar2KPi",
                                 "PreLoadParticles/LoadStdLooseEtac2KKPiPi",
                                 "PreLoadParticles/LoadStdLooseEtac2PiPiPiPi",
-                                "PreLoadParticles/LoadStdLooseD02KKPiPi",
-                                "PreLoadParticles/LoadStdLooseD02KPiPiPi",
-                                "PreLoadParticles/LoadStdLooseD02KPiPiPiDCS"
+                                "PreLoadParticles/LoadStdLooseD02KKPiPiNoCC",
+                                "PreLoadParticles/LoadStdLooseD02KPiPiPiCA",
+                                "PreLoadParticles/LoadStdLooseD02KPiPiPiCACloned",
+                                "PreLoadParticles/LoadStdLooseD02KKPiPiNoCCCloned"
 };
 LoadStdUnbiasedHeavyDimuon.PhysDesktop.InputLocations = {"Phys/StdUnbiasedHeavyDimuon"};
 LoadStdLooseDownstreamPions.PhysDesktop.InputLocations = {"Phys/StdLooseDownstreamPions"};
@@ -56,7 +59,9 @@ LoadStdLooseD2KPiPi.PhysDesktop.InputLocations = {"Phys/StdLooseD2KPiPi"};
 LoadStdLooseKstar2KPi.PhysDesktop.InputLocations = {"Phys/StdLooseKstar2KPi"};
 LoadStdLooseEtac2KKPiPi.PhysDesktop.InputLocations = {"Phys/StdLooseEtac2KKPiPi"};
 LoadStdLooseEtac2PiPiPiPi.PhysDesktop.InputLocations = {"Phys/StdLooseEtac2PiPiPiPi"};
-LoadStdLooseD02KKPiPi.PhysDesktop.InputLocations = {"Phys/StdLooseD02KKPiPi"};
-LoadStdLooseD02KPiPiPi.PhysDesktop.InputLocations = {"Phys/StdLooseD02KPiPiPi"};
-LoadStdLooseD02KPiPiPiDCS.PhysDesktop.InputLocations = {"Phys/StdLooseD02KPiPiPiDCS"};
+LoadStdLooseD02KKPiPiNoCC.PhysDesktop.InputLocations = {"Phys/StdLooseD02KKPiPiNoCC"};
+LoadStdLooseD02KPiPiPiCA.PhysDesktop.InputLocations = {"Phys/StdLooseD02KPiPiPiCA"};
+LoadStdLooseD02KKPiPiNoCCCloned.PhysDesktop.InputLocations = {"Phys/StdLooseD02KKPiPiNoCCCloned"};
+LoadStdLooseD02KPiPiPiCACloned.PhysDesktop.InputLocations = {"Phys/StdLooseD02KPiPiPiCACloned"};
+
 SeqLoadStdParticles.MeasureTime  = true ;
