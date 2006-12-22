@@ -52,6 +52,11 @@ StdTightElectrons.PhysDesktop.CombinedParticleMaker.Electron.Selection = {"Requi
 StdTightElectrons.PhysDesktop.CombinedParticleMaker.TrackSelector.TrackTypes = {"Long"};
 StdTightElectrons.DecayDescriptor = "Electron" ;
 
+// Temporary correction on Brem energy :
+StdTightElectrons.PhysDesktop.CombinedParticleMaker.BremAdder.BremCor = 1.06;
+StdLooseElectrons.PhysDesktop.CombinedParticleMaker.BremAdder.BremCor = 1.06;
+StdNoPIDsElectrons.PhysDesktop.CombinedParticleMaker.BremAdder.BremCor = 1.06;
+
 // ============================================================================
 // The END 
 // ============================================================================
