@@ -1,17 +1,11 @@
-// $Id: TTOccupancy.h,v 1.2 2006-02-28 15:38:58 mneedham Exp $
-#ifndef _TTOccupancy_H
-#define _TTOccupancy_H
-
-#include <map>
-#include <vector>
-#include <string>
+// $Id: TTOccupancy.h,v 1.3 2006-12-22 12:23:01 jvantilb Exp $
+#ifndef TTOccupancy_H
+#define TTOccupancy_H 1
 
 #include "GaudiAlg/GaudiHistoAlg.h"
 
-class AIDA::IHistogram1D;
-
 namespace LHCb{
- class STDigit;
+  class STDigit;
 };
 
 class DeSTDetector;
@@ -19,10 +13,11 @@ class ISTSignalToNoiseTool;
 
 /** @class TTOccupancy TTOccupancy.h
  *
- *  Class for checking TTDigits
+ *  Class for plotting the occupancy of TTDigits
  *
  *  @author M.Needham
- *  @date   21/4/20014
+ *  @author J. van Tilburg
+ *  @date   04/12/2006
  */
 
 
@@ -31,8 +26,7 @@ class TTOccupancy : public GaudiHistoAlg {
 public:
  
   /// constructer
-  TTOccupancy(const std::string& name, 
-                 ISvcLocator *svcloc );
+  TTOccupancy( const std::string& name, ISvcLocator *svcloc );
 
   /// destructer
   virtual ~TTOccupancy();
@@ -49,31 +43,17 @@ private:
 
   double binValue(const unsigned int strip) const;
 
-  std::string m_dataLocation;
-  
+  std::string m_dataLocation;  
   
   std::string m_sigNoiseToolName;
   ISTSignalToNoiseTool* m_sigNoiseTool;
   
   DeSTDetector* m_tracker;
-  std::vector<double> m_Threshold;   
+  std::vector<double> m_threshold;   
   int m_binSize;
   int m_nBins;
   int m_hMax;  
 
 };
 
-#endif // _TTOccupancy_H
-
-
-
-
-
-
-
-
-
-
-
-
-
+#endif // TTOccupancy_H

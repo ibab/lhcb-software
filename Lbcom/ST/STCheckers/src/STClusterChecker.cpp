@@ -1,4 +1,4 @@
-// $Id: STClusterChecker.cpp,v 1.9 2006-12-21 17:54:48 jvantilb Exp $
+// $Id: STClusterChecker.cpp,v 1.10 2006-12-22 12:23:01 jvantilb Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -87,11 +87,11 @@ StatusCode STClusterChecker::fillHistograms(const STCluster* aCluster)
 
   // histogram by station
   const int iStation = aCluster->channelID().station();
-  plot((double)iStation,"n clus per stat",-0.5,4.5,5);
+  plot((double)iStation,"n clusters per station",-0.5,4.5,5);
  
   // by layer
   const int iLayer = aCluster->channelID().layer();
-  plot((double)(10*iStation+iLayer),"n clus per layer",-0.5,40.5,41);
+  plot((double)(10*iStation+iLayer),"n clusters per layer",-0.5,40.5,41);
 
   if (fullDetail() == true) {
  

@@ -1,18 +1,13 @@
-// $Id: MCSTDepositChecker.cpp,v 1.5 2006-12-21 17:54:48 jvantilb Exp $
+// $Id: MCSTDepositChecker.cpp,v 1.6 2006-12-22 12:23:00 jvantilb Exp $
 
 // BOOST!
 #include "boost/lexical_cast.hpp"
 
-#include "Kernel/STDetSwitch.h"
-
-// Gaudi
+// GaudiKernel
 #include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/SystemOfUnits.h"
 
-// Histogramming
-#include "AIDA/IHistogram2D.h"
-
-#include "MCSTDepositChecker.h"
+// LHCbKernel
+#include "Kernel/STDetSwitch.h"
 
 // xml geometry
 #include "STDet/DeSTDetector.h"
@@ -21,130 +16,94 @@
 #include "Event/MCSTDeposit.h"
 #include "Event/MCHit.h"
 
+// local
+#include "MCSTDepositChecker.h"
+
 using namespace LHCb;
 
 DECLARE_ALGORITHM_FACTORY( MCSTDepositChecker );
 
 //--------------------------------------------------------------------
 //
-//  MCSTDepositChecker : Check digitization procedure for the outer tracker
+//  MCSTDepositChecker : Make plots for MCSTDeposits
 //
 //--------------------------------------------------------------------
 
-MCSTDepositChecker::MCSTDepositChecker(const std::string& name, 
-                              ISvcLocator* pSvcLocator) :
+MCSTDepositChecker::MCSTDepositChecker( const std::string& name, 
+                                        ISvcLocator* pSvcLocator ) :
   GaudiHistoAlg(name, pSvcLocator),
   m_tracker(0)  
 {
- // constructer
- declareProperty("DetType", m_detType = "TT");
+  // constructer
+  declareProperty("DetType", m_detType = "TT");
 }
 
-MCSTDepositChecker::~MCSTDepositChecker(){
+MCSTDepositChecker::~MCSTDepositChecker()
+{
   // destructer
 }
 
-StatusCode MCSTDepositChecker::initialize(){
-
+StatusCode MCSTDepositChecker::initialize()
+{
   if( "" == histoTopDir() ) setHistoTopDir(m_detType+"/");
 
   StatusCode sc = GaudiHistoAlg::initialize();
-  if (sc.isFailure()){
-    return Error("Failed to initialize", sc);
-  }
-
+  if (sc.isFailure()) return Error("Failed to initialize", sc);
       
   // detector element     
-  m_tracker =  getDet<DeSTDetector>(DeSTDetLocation::location(m_detType));
+  m_tracker = getDet<DeSTDetector>(DeSTDetLocation::location(m_detType));
 
+  // Determine the location of the ST deposits
   m_depositLocation = MCSTDepositLocation::TTDeposits;
   STDetSwitch::flip(m_detType,m_depositLocation);
 
-  // book vectors of histos
-  if (fullDetail() == true) sc = initHistograms();
- 
   return StatusCode::SUCCESS;
 }
 
-StatusCode MCSTDepositChecker::execute(){
-
-
+StatusCode MCSTDepositChecker::execute()
+{
   // retrieve Digitizations
   MCSTDeposits* depositsCont = get<MCSTDeposits>(m_depositLocation); 
  
   // number of digits
-  plot((double)depositsCont->size(),1,"num dep",0.,10000.,200);
+  plot((double)depositsCont->size(),1,"Number of deposits", 0., 10000., 200);
 
   // histos per digit
-  for (MCSTDeposits::const_iterator iterDep = depositsCont->begin(); 
-      iterDep != depositsCont->end(); ++iterDep){
+  MCSTDeposits::const_iterator iterDep = depositsCont->begin(); 
+  for ( ; iterDep != depositsCont->end(); ++iterDep) {
     this->fillHistograms(*iterDep);
   } // loop iterDep
 
   return StatusCode::SUCCESS;
 }
 
-StatusCode MCSTDepositChecker::initHistograms(){
+StatusCode MCSTDepositChecker::fillHistograms(const MCSTDeposit* aDeposit) const
+{
+  // Plot deposited charge
+  plot(aDeposit->depositedCharge(), 2, "Deposited charge", 0., 500., 500);
 
-  // init 2-d histos -  
-
-  // histograms per station
-  AIDA::IHistogram2D* aHisto2D = 0;
-  std::string tDirPath = this->histoPath()+"/";
-  for (unsigned int iStation = m_tracker->firstStation();iStation<=m_tracker->lastStation();++iStation){
-     // x vs y
-     std::string ID = boost::lexical_cast<std::string>(201+(int)iStation);
-     aHisto2D = histoSvc()->book(tDirPath+ID,"x vs y"+ID,50,
-                          -1000./Gaudi::Units::cm,1000./Gaudi::Units::cm,50,
-                          -1000./Gaudi::Units::cm,1000./Gaudi::Units::cm);
-     m_XvsYHistos.push_back(aHisto2D);
-
-  } // loop station
- 
-  return StatusCode::SUCCESS;
-
-}
-
-StatusCode MCSTDepositChecker::fillHistograms(const MCSTDeposit* aDeposit) const{
-
-  // dep charge
-  plot(aDeposit->depositedCharge(),2,"dep charge", 0. , 500., 500);
-
-  // histogram by station
+  // Plot number of deposits per station
   const int iStation = aDeposit->channelID().station();
-  plot((double)iStation, 3, "n dep per stat", -0.5, 10.5, 11);
+  plot((double)iStation, 3, "Number of deposits per station", -0.5, 4.5, 5);
   
   // by layer
-  plot((double)(100*iStation+aDeposit->channelID().layer()),
-                 4, "n dep per layer",  -0.5, 600.5, 601);
+  plot((double)(10*iStation+aDeposit->channelID().layer()),
+       4, "Number of deposits per layer", -0.5, 40.5, 41);
       
    // detailed level histos
   if (fullDetail() == true){
-    SmartRef<MCHit> aHit = aDeposit->mcHit();
-    if (0 != aHit) {
-    
-      // take average
+    const MCHit* aHit = aDeposit->mcHit();
+    if (0 != aHit) {    
+      // take midPoint
       Gaudi::XYZPoint impactPoint = aHit->midPoint();
 
-      // fill x vs y scatter plots    
-      m_XvsYHistos[iStation-1]->fill(impactPoint.x()/Gaudi::Units::cm,
-                                     impactPoint.y()/Gaudi::Units::cm);
+      // fill x vs y scatter plots
+      std::string title = "x vs y " + m_detType + " station " +
+        boost::lexical_cast<std::string>(iStation);
+      plot2D( impactPoint.x(), impactPoint.y(), 200+iStation, title,
+              -1000.,1000., -1000.,1000., 50, 50);
     }
-  } // fullDetail
+  }
 
   return StatusCode::SUCCESS;
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-

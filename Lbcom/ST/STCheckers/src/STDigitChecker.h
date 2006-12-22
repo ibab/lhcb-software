@@ -1,10 +1,6 @@
-// $Id: STDigitChecker.h,v 1.1.1.1 2005-12-19 15:44:29 mneedham Exp $
-#ifndef _STDigitChecker_H
-#define _STDigitChecker_H
-
-#include <vector>
-#include <string>
-#include <map>
+// $Id: STDigitChecker.h,v 1.2 2006-12-22 12:23:01 jvantilb Exp $
+#ifndef STDigitChecker_H
+#define STDigitChecker_H 1
 
 #include "GaudiAlg/GaudiHistoAlg.h"
 
@@ -17,10 +13,11 @@ class DeSTDetector;
 
 /** @class STDigitChecker STDigitChecker.h
  *
- *  Class for checking STDigits
+ *  Class for monitoring STDigits
  *
  *  @author M.Needham
- *  @date   21/4/2001
+ *  @author J. van Tilburg
+ *  @date   04/12/2006
  */
 
 class STDigitChecker : public GaudiHistoAlg{
@@ -28,8 +25,8 @@ class STDigitChecker : public GaudiHistoAlg{
 public:
  
   /// constructer
-  STDigitChecker(const std::string& name, 
-                 ISvcLocator *svcloc );
+  STDigitChecker( const std::string& name, 
+                  ISvcLocator *svcloc );
 
   /// destructer
   virtual ~STDigitChecker();
@@ -39,7 +36,6 @@ public:
 
   /// execute
   StatusCode execute();
-
 
 private:
 
@@ -52,11 +48,9 @@ private:
   ISTSignalToNoiseTool* m_sigNoiseTool;
 
   std::string m_dataLocation;
-
-
 };
 
-#endif // _STDigitChecker_H
+#endif // STDigitChecker_H
 
 
 

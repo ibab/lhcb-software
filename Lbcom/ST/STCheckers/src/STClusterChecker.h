@@ -1,4 +1,4 @@
-// $Id: STClusterChecker.h,v 1.3 2006-12-21 17:54:48 jvantilb Exp $
+// $Id: STClusterChecker.h,v 1.4 2006-12-22 12:23:01 jvantilb Exp $
 #ifndef STClusterChecker_H
 #define STClusterChecker_H 1
 
@@ -16,7 +16,8 @@ class DeSTDetector;
  *  Class for monitoring STClusters
  *
  *  @author M.Needham
- *  @date   21/4/2001
+ *  @author J. van Tilburg
+ *  @date   04/12/2006
  */
 
 class STClusterChecker : public GaudiHistoAlg {
@@ -24,8 +25,8 @@ class STClusterChecker : public GaudiHistoAlg {
 public:
  
   /// constructer
-  STClusterChecker(const std::string& name, 
-                   ISvcLocator *svcloc );
+  STClusterChecker( const std::string& name, 
+                    ISvcLocator *svcloc );
 
   /// destructer
   virtual ~STClusterChecker();

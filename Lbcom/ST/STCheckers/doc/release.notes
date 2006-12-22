@@ -2,7 +2,10 @@
 ! Package manager : Matt Needham
 !------------------------------------------------------------------------------
 
-! 2006-11-29 - Jeroen VAN TILBURG
+! 2006-12-22 - Jeroen VAN TILBURG
+ - Additional clean up.
+
+! 2006-12-21 - Jeroen VAN TILBURG
  - Coding conventions: Joboptions start with a capital.
  - Started with clean up of the algorithms.
 

@@ -1,10 +1,6 @@
-// $Id: ITOccupancy.h,v 1.1.1.1 2005-12-19 15:44:29 mneedham Exp $
-#ifndef _ITOccupancy_H
-#define _ITOccupancy_H
-
-#include <map>
-#include <vector>
-#include <string>
+// $Id: ITOccupancy.h,v 1.2 2006-12-22 12:23:00 jvantilb Exp $
+#ifndef ITOccupancy_H
+#define ITOccupancy_H 1
 
 #include "GaudiAlg/GaudiHistoAlg.h"
 
@@ -24,7 +20,8 @@ class ISTSignalToNoiseTool;
  *  Class for checking STDigits
  *
  *  @author M.Needham
- *  @date   21/4/20014
+ *  @author J. van Tilburg
+ *  @date   04/12/2006
  */
 
 
@@ -33,8 +30,7 @@ class ITOccupancy : public GaudiHistoAlg {
 public:
  
   /// constructer
-  ITOccupancy(const std::string& name, 
-                 ISvcLocator *svcloc );
+  ITOccupancy( const std::string& name, ISvcLocator *svcloc );
 
   /// destructer
   virtual ~ITOccupancy();
@@ -54,7 +50,7 @@ private:
     
   double binValue(const unsigned int strip) const;
 
-  std::map<int,int> m_Mapping;
+  std::map<int,int> m_mapping;
   std::vector<double> m_nStripsVector;
   std::vector<double> m_layerOccVector;
   std::vector<AIDA::IHistogram1D*> m_layerOccHistos;
@@ -69,12 +65,10 @@ private:
   DeSTDetector* m_tracker;
 
 
-  std::vector<double> m_Threshold;   
+  std::vector<double> m_threshold;   
   int m_binSize;
   
 };
-
-
 
 #endif // _ITOccupancy_H
 

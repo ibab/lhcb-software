@@ -1,22 +1,20 @@
-// $Id: MCSTDigitChecker.h,v 1.1.1.1 2005-12-19 15:44:29 mneedham Exp $
-#ifndef _MCSTDigitChecker_H
-#define _MCSTDigitChecker_H
-
-#include <vector>
-#include <string>
+// $Id: MCSTDigitChecker.h,v 1.2 2006-12-22 12:23:01 jvantilb Exp $
+#ifndef MCSTDigitChecker_H
+#define MCSTDigitChecker_H 1
 
 #include "GaudiAlg/GaudiHistoAlg.h"
 
 namespace LHCb{
- class MCSTDigit;
+  class MCSTDigit;
 };
 
 /** @class MCSTDigitChecker MCSTDigitChecker.h
  *
- *  Class for checking MCSTDigits
+ *  Class for monitoring MCSTDigits
  *
  *  @author M.Needham
- *  @date   21/4/2001
+ *  @author J. van Tilburg
+ *  @date   04/12/2006
  */
 
 class MCSTDigitChecker : public GaudiHistoAlg{
@@ -24,8 +22,8 @@ class MCSTDigitChecker : public GaudiHistoAlg{
 public:
  
   /// constructer
-  MCSTDigitChecker(const std::string& name, 
-                 ISvcLocator *svcloc );
+  MCSTDigitChecker( const std::string& name, 
+                    ISvcLocator *svcloc );
 
   /// destructer
   virtual ~MCSTDigitChecker();
@@ -35,7 +33,6 @@ public:
 
   /// execute
   StatusCode execute();
-
 
 private:
 
@@ -47,7 +44,7 @@ private:
 
 };
 
-#endif // _MCSTDigitChecker_H
+#endif // MCSTDigitChecker_H
 
 
 

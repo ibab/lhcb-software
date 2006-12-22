@@ -1,4 +1,4 @@
-// $Id: STClusterResolution.cpp,v 1.9 2006-12-21 17:54:48 jvantilb Exp $
+// $Id: STClusterResolution.cpp,v 1.10 2006-12-22 12:23:01 jvantilb Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -58,8 +58,10 @@ STClusterResolution::~STClusterResolution()
 
 StatusCode STClusterResolution::initialize()
 {
-  // 
+  // Set the top directory to IT or TT.
   if ( "" == histoTopDir() ) setHistoTopDir(m_detType+"/");
+
+  // Initialize GaudiHistoAlg
   StatusCode sc = GaudiHistoAlg::initialize();
   if (sc.isFailure()) return Error("Failed to initialize", sc);
 

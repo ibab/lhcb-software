@@ -1,4 +1,4 @@
-// $Id: ITOccupancy.cpp,v 1.6 2006-12-21 17:54:48 jvantilb Exp $
+// $Id: ITOccupancy.cpp,v 1.7 2006-12-22 12:23:00 jvantilb Exp $
 
 // BOOST
 #include "boost/lexical_cast.hpp"
@@ -11,14 +11,16 @@
 
 // xml geometry
 #include "STDet/DeSTDetector.h"
-#include "STDet/DeSTLayer.h"
-#include "STDet/DeSTSector.h"
 #include "STDet/DeITLadder.h"
 
-#include "ITOccupancy.h"
+// GaudiKernel
 #include "Kernel/ISTSignalToNoiseTool.h"
 
+// Event
 #include "Event/STDigit.h"
+
+// local
+#include "ITOccupancy.h"
 
 using namespace LHCb;
 
@@ -37,51 +39,47 @@ ITOccupancy::ITOccupancy( const std::string& name,
   m_tracker(0)
 {
   // constructer
-  declareProperty("Threshold",m_Threshold);
+  declareProperty("Threshold",m_threshold);
   declareProperty("SigNoiseTool",m_sigNoiseToolName = "STSignalToNoiseTool");
   declareProperty("BinSize", m_binSize = 32);
   declareProperty("DataLocation",m_dataLocation = STDigitLocation::ITDigits);
   declareProperty("DetType", m_detType = "IT");
 
-  m_Threshold.reserve(3);
+  m_threshold.reserve(3);
   for (int iThres=0;iThres<3;++iThres){
-    m_Threshold.push_back(3.0);
+    m_threshold.push_back(3.0);
   } //i
 }
 
-ITOccupancy::~ITOccupancy(){
+ITOccupancy::~ITOccupancy()
+{
   // destructer
 }
 
-StatusCode ITOccupancy::initialize(){
-
-  //
+StatusCode ITOccupancy::initialize()
+{
+  // Set the top directory to IT or TT.
   if( "" == histoTopDir() ) setHistoTopDir(m_detType+"/");
+ 
+  // Initialize GaudiHistoAlg
   StatusCode sc = GaudiHistoAlg::initialize();
-  if (sc.isFailure()){
-    return Error("Failed to initialize", sc);
-  }
+  if (sc.isFailure()) return Error("Failed to initialize", sc);
 
   // detector element
-  m_tracker =  getDet<DeSTDetector>(DeSTDetLocation::IT);
-  m_sigNoiseTool = tool<ISTSignalToNoiseTool>(m_sigNoiseToolName, m_sigNoiseToolName+m_detType);
+  m_tracker = getDet<DeSTDetector>(DeSTDetLocation::IT);
+  m_sigNoiseTool = tool<ISTSignalToNoiseTool>(m_sigNoiseToolName, 
+                                              m_sigNoiseToolName+m_detType);
 
   // intialize histos
   this->initHistograms();
 
   return StatusCode::SUCCESS;
-
 }
 
-StatusCode ITOccupancy::execute(){
-
-  // execute once per event
-
-  // init
+StatusCode ITOccupancy::execute()
+{
   std::vector<double>::iterator iter = m_layerOccVector.begin();
-  for ( ; iter!=m_layerOccVector.end();++iter){
-    *iter=0.;
-  }
+  for ( ; iter!=m_layerOccVector.end();++iter) *iter=0.;
 
   // retrieve Digitizations
   STDigits* digitsCont = get<STDigits>(m_dataLocation);
@@ -106,15 +104,12 @@ StatusCode ITOccupancy::execute(){
   return StatusCode::SUCCESS;
 }
 
-
-
 StatusCode ITOccupancy::initHistograms()
 {
-
  int numInVector = 0;
  unsigned int nstrip = m_tracker->sectors().front()->nStrip();
   
- std::vector<DeSTLayer*>::const_iterator iterLayer = m_tracker->layers().begin();
+ std::vector<DeSTLayer*>::const_iterator iterLayer= m_tracker->layers().begin();
  for ( ; iterLayer != m_tracker->layers().end(); ++iterLayer){
 
    // uniquely id using station and layer
@@ -124,25 +119,25 @@ StatusCode ITOccupancy::initHistograms()
    unsigned int nStripInLayer = nstrip*tLayer->ladders().size();
 
    // add to map
-   m_Mapping[id] = numInVector;
+   m_mapping[id] = numInVector;
 
    // number of strips in layer.... 
    unsigned int bins = nStripInLayer/m_binSize;
    
    int histID = id;
 
-   IHistogram1D* stripOccHisto = book(histID,
-                                    "Number of hits on strips"+boost::lexical_cast<std::string>(histID),
-				    0., bins*m_binSize, bins);
+   IHistogram1D* stripOccHisto = 
+     book(histID, "Number of hits on strips"+
+          boost::lexical_cast<std::string>(histID), 0., bins*m_binSize, bins);
    m_stripOccVector.push_back(stripOccHisto);
-		       
-   histID = id + 2000;      
+
+   histID = id + 2000;
 
    m_layerOccVector.push_back(0.);
    m_nStripsVector.push_back((double)nStripInLayer);
 
-   IHistogram1D* layerOccHisto = book(histID,
-				   "layer  occupancy."+boost::lexical_cast<std::string>(histID),
+   IHistogram1D* layerOccHisto = 
+     book(histID, "layer  occupancy."+boost::lexical_cast<std::string>(histID),
 				    0.0, 0.2, 100);
    m_layerOccHistos.push_back(layerOccHisto);
  
@@ -154,22 +149,22 @@ StatusCode ITOccupancy::initHistograms()
 
 }
 
-StatusCode ITOccupancy::fillHistograms(const STDigit* aDigit){
-
+StatusCode ITOccupancy::fillHistograms(const STDigit* aDigit)
+{
   // retrieve geom info
-
   if (m_sigNoiseTool->signalToNoise(aDigit) >
-      m_Threshold[aDigit->channelID().station()-m_tracker->firstStation()]){
+      m_threshold[aDigit->channelID().station()-m_tracker->firstStation()]){
   
     const STChannelID aChan = aDigit->channelID();  
     DeSTSector* aSector = m_tracker->findSector(aChan);
 
     int id = uniqueInt(aChan);
-    int numInVector = m_Mapping[id];
+    int numInVector = m_mapping[id];
 
     const unsigned int nstrips = aSector->nStrip();
 
-    m_stripOccVector[numInVector]->fill(binValue(aChan.strip())+(nstrips*(aChan.sector()-1)));
+    m_stripOccVector[numInVector]->fill(binValue(aChan.strip())+
+                                        (nstrips*(aChan.sector()-1)));
     ++m_layerOccVector[numInVector];
 
   } // if above threshold
@@ -177,13 +172,14 @@ StatusCode ITOccupancy::fillHistograms(const STDigit* aDigit){
   return StatusCode::SUCCESS;
 }
 
-int ITOccupancy::uniqueInt(const STChannelID aChan) const {
+int ITOccupancy::uniqueInt(const STChannelID aChan) const 
+{
   return ((aChan.station()*100)+(10*aChan.detRegion())+aChan.layer());
 }
 
 
-double ITOccupancy::binValue(const unsigned int strip) const{
-
+double ITOccupancy::binValue(const unsigned int strip) const
+{
   // ensure get the correct bin....
   double value;
   unsigned int testValue = (strip-1)%m_binSize;
@@ -200,15 +196,3 @@ double ITOccupancy::binValue(const unsigned int strip) const{
   }
   return value;
 }
-
-
-
-
-
-
-
-
-
-
-
-

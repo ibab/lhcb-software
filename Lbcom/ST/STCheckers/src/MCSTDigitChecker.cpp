@@ -1,13 +1,16 @@
-// $Id: MCSTDigitChecker.cpp,v 1.4 2006-12-21 17:54:48 jvantilb Exp $
+// $Id: MCSTDigitChecker.cpp,v 1.5 2006-12-22 12:23:00 jvantilb Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
 
-#include "MCSTDigitChecker.h"
+// LHCbKernel
+#include "Kernel/STDetSwitch.h"
 
+// Event
 #include "Event/MCSTDigit.h"
 
-#include "Kernel/STDetSwitch.h"
+// local
+#include "MCSTDigitChecker.h"
 
 using namespace LHCb;
 
@@ -15,26 +18,26 @@ DECLARE_ALGORITHM_FACTORY( MCSTDigitChecker );
 
 //--------------------------------------------------------------------
 //
-//  MCSTDigitChecker : Check digitization procedure for the outer tracker
+//  MCSTDigitChecker : Make plots for MCSTDigits
 //
 //--------------------------------------------------------------------
 
-MCSTDigitChecker::MCSTDigitChecker(const std::string& name, 
-                              ISvcLocator* pSvcLocator) :
- GaudiHistoAlg(name, pSvcLocator)
- 
+MCSTDigitChecker::MCSTDigitChecker( const std::string& name, 
+                                    ISvcLocator* pSvcLocator ) :
+ GaudiHistoAlg(name, pSvcLocator) 
 {
   // constructer
-
   declareProperty("DetType", m_detType = "TT");
 }
 
-MCSTDigitChecker::~MCSTDigitChecker(){
+MCSTDigitChecker::~MCSTDigitChecker()
+{
   // destructer
 }
 
-StatusCode MCSTDigitChecker::initialize(){
- 
+StatusCode MCSTDigitChecker::initialize()
+{
+  // Set the top directory to IT or TT.
   if( "" == histoTopDir() ) setHistoTopDir(m_detType+"/");
   
   m_digitLocation = MCSTDigitLocation::TTDigits;
@@ -43,15 +46,13 @@ StatusCode MCSTDigitChecker::initialize(){
   return GaudiHistoAlg::initialize();
 }
 
-StatusCode MCSTDigitChecker::execute(){
-
-  // execute once per event
-
+StatusCode MCSTDigitChecker::execute()
+{
   // retrieve Digitizations
   MCSTDigits* digitsCont = get<MCSTDigits>(m_digitLocation);
 
   // number of digits
-  plot((double)digitsCont->size()," num MCDigits" ,  0., 10000., 100);
+  plot((double)digitsCont->size(),"Number of MCDigits" ,  0., 10000., 100);
 
   // histos per digit
   MCSTDigits::const_iterator iterDep = digitsCont->begin();
@@ -62,33 +63,21 @@ StatusCode MCSTDigitChecker::execute(){
   return StatusCode::SUCCESS;
 }
 
-StatusCode MCSTDigitChecker::fillHistograms(const MCSTDigit* aDigit) const{
-
-  // fill histos per digit
-
+StatusCode MCSTDigitChecker::fillHistograms(const MCSTDigit* aDigit) const
+{
   // number of deposits that contribute
-  plot((double)aDigit->mcDeposit().size()," num dep per digit", -0.5, 10.5, 11);
+  plot((double)aDigit->mcDeposit().size(),"Number of deposits per digit", 
+       -0.5, 10.5, 11);
 
   // histogram by station
   const int iStation = aDigit->channelID().station();
-  plot((double)iStation, " n dep per stat" ,-0.5 ,10.5, 11 );
+  plot((double)iStation, "Number of deposits per stat" ,-0.5 , 4.5, 11 );
   
   // by layer
   const int iLayer = aDigit->channelID().layer();
-  plot((double)(100*iStation+iLayer)," n dep per layer"  , -0.5, 600.5, 601);
+  plot((double)(10*iStation+iLayer), "Number of deposits per layer", 
+       -0.5, 40.5, 41);
 
   // end
   return StatusCode::SUCCESS;
 }
-
-
-
-
-
-
-
-
-
-
-
-

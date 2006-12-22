@@ -1,4 +1,4 @@
-// $Id: STMCTuner.cpp,v 1.7 2006-12-21 17:54:48 jvantilb Exp $
+// $Id: STMCTuner.cpp,v 1.8 2006-12-22 12:23:01 jvantilb Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -35,9 +35,9 @@ STMCTuner::STMCTuner(const std::string& name,
  
 {
   // constructer
-  declareProperty("SigNoiseTool",m_sigNoiseToolName = "STSignalToNoiseTool");
-  this->declareProperty("DetType", m_detType = "TT");
-  this->declareProperty("SelectorName", m_selectorName = "MCParticleSelector" );
+  declareProperty("SigNoiseTool", m_sigNoiseToolName = "STSignalToNoiseTool");
+  declareProperty("DetType",      m_detType          = "TT"                 );
+  declareProperty("SelectorName", m_selectorName     = "MCParticleSelector" );
 }
 
 STMCTuner::~STMCTuner()
