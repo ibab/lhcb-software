@@ -1,13 +1,14 @@
-# $Id: requirements,v 1.14 2006-12-14 14:41:17 ranjard Exp $
+# $Id: requirements,v 1.15 2006-12-22 10:45:08 odescham Exp $
 # Created    : 13/12/2005
 # Maintainer : Marco Cattaneo
 #
 package           RecEvent
-version           v2r0
+version           v1r9
 
 # Structure, i.e. directories to process. 
 #============================================================================
 branches          cmt doc xml Event src
+include_dirs $(RECEVENTROOT)
 
 # Used packages. 
 #============================================================================
