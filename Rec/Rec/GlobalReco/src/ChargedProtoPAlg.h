@@ -5,7 +5,7 @@
  * Header file for algorithm ChargedProtoPAlg
  *
  * CVS Log :-
- * $Id: ChargedProtoPAlg.h,v 1.23 2006-11-15 16:42:46 jonrob Exp $
+ * $Id: ChargedProtoPAlg.h,v 1.24 2006-12-22 10:50:45 odescham Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 29/03/2006
@@ -22,6 +22,7 @@
 // interfaces
 #include "TrackInterfaces/ITrackSelector.h"
 #include "TrackInterfaces/ITrackVelodEdxCharge.h"
+#include "CaloInterfaces/ICaloElectron.h"
 
 // from CaloUtils
 #include "CaloUtils/Calo2Track.h"
@@ -79,6 +80,7 @@ private: // methods
   // Add extra info from CaloDigits (Spd+Prs)
   double CaloSpd       ( const LHCb::CaloHypo*  hypo  )  const ;
   double CaloPrs       ( const LHCb::CaloHypo*  hypo  )  const ;
+  double CaloEcal      ( const LHCb::CaloHypo*  hypo  )  const ;
 
   /// Add Rich information to the given ProtoParticle
   bool addRich( LHCb::ProtoParticle * proto ) const;
@@ -107,6 +109,9 @@ private: // data
 
   /// Velo dE/dx charge tool
   ITrackVelodEdxCharge * m_velodEdx;
+
+  /// CaloElectron tool
+  ICaloElectron * m_electron;
 
   /// mapping type from Track to RichPID data objects
   typedef std::map<const LHCb::Track *, const LHCb::RichPID *> TrackToRichPID;

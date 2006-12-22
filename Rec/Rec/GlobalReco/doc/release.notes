@@ -4,6 +4,10 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+! 2006-12-22 - Olivier Deschamps
+ - add the possibility to disable some Det in ChargedProtoCombineDLLsAlg
+ - update Charged and Neutral ProtoPAlg (new CaloTrajectoryL info + ecalE)
+
 ! 2006-12-11 - Chris Jones
  - Rename ProtoPTupleAlg as ProtoParticleTupleAlg + fix some doxygen comments
 

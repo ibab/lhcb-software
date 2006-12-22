@@ -5,7 +5,7 @@
  * Header file for algorithm ChargedProtoCombineDLLsAlg
  *
  * CVS Log :-
- * $Id: ChargedProtoCombineDLLsAlg.h,v 1.2 2006-11-15 16:42:46 jonrob Exp $
+ * $Id: ChargedProtoCombineDLLsAlg.h,v 1.3 2006-12-22 10:50:45 odescham Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 15/11/2006
@@ -20,6 +20,8 @@
 
 // Event
 #include "Event/ProtoParticle.h"
+
+
 
 //-----------------------------------------------------------------------------
 /** @class ChargedProtoCombineDLLsAlg ChargedProtoCombineDLLsAlg.h
@@ -73,18 +75,20 @@ private: // utility classes
 private: // methods
 
   /// Add the Rich DLL information to the combined DLL
-  void addRich( LHCb::ProtoParticle * proto, CombinedLL & combDLL ) const;
+  void addRich( LHCb::ProtoParticle * proto, CombinedLL & combDLL );
 
   /// Add the Muon DLL information to the combined DLL
-  void addMuon( LHCb::ProtoParticle * proto, CombinedLL & combDLL ) const;
+  void addMuon( LHCb::ProtoParticle * proto, CombinedLL & combDLL );
 
   /// Add the Calo DLL information to the combined DLL
-  void addCalo( LHCb::ProtoParticle * proto, CombinedLL & combDLL ) const;
+  void addCalo( LHCb::ProtoParticle * proto, CombinedLL & combDLL );
 
 private: // data
 
   std::string m_protoPath;    ///< Location in TES of ProtoParticles
-
+  std::vector<std::string>m_elDisable,m_muDisable,m_kaDisable,m_prDisable,m_piDisable;
+  int                     m_elCombDll,m_muCombDll,m_prCombDll,m_piCombDll,m_kaCombDll;
+  std::map<std::string,int> m_maskTechnique;
 };
 
 #endif // GLOBALRECO_ChargedProtoCombineDLLsAlg_H

@@ -1,4 +1,4 @@
-// $Id: NeutralProtoPAlg.cpp,v 1.8 2006-09-26 10:18:09 odescham Exp $
+// $Id: NeutralProtoPAlg.cpp,v 1.9 2006-12-22 10:50:45 odescham Exp $
 // Include files
 
 // from Gaudi
@@ -180,9 +180,10 @@ StatusCode NeutralProtoPAlg::execute() {
       proto-> addInfo(LHCb::ProtoParticle::ShowerShape  , showerShape  ( hypo ) ) ;
       proto-> addInfo(LHCb::ProtoParticle::ClusterMass  , clusterMass  ( hypo ) ) ;
       proto-> addInfo(LHCb::ProtoParticle::PhotonID     , photonID     ( hypo ) ) ;
-      // Spd digit info (photon conversion)
+      // Spd digit info (photon conversion) + Prs + Ecal Cluster
       proto->addInfo(LHCb::ProtoParticle::CaloNeutralSpd, CaloSpd( hypo ));
       proto->addInfo(LHCb::ProtoParticle::CaloNeutralPrs, CaloPrs( hypo ));
+      proto->addInfo(LHCb::ProtoParticle::CaloNeutralEcal,CaloEcal(hypo ));          
       
       ++m_counts["All"];
       ++m_counts[(*location).substr(9) ] ;
@@ -195,6 +196,7 @@ StatusCode NeutralProtoPAlg::execute() {
       verbose() << "Estimator Ph ID   = " << proto -> info(LHCb::ProtoParticle::PhotonID    ,-1.) << endreq;
       verbose() << "Spd Digit         = " << proto -> info(LHCb::ProtoParticle::CaloNeutralSpd ,0.) << endreq;
       verbose() << "Prs Digit         = " << proto -> info(LHCb::ProtoParticle::CaloNeutralPrs ,0.) << endreq;
+      verbose() << "Ecal Cluster      = " << proto -> info(LHCb::ProtoParticle::CaloNeutralEcal ,0.) << endreq;
 
 
     } // loop over CaloHypos
@@ -355,4 +357,16 @@ double NeutralProtoPAlg::CaloPrs  ( const LHCb::CaloHypo*  hypo  )  const
     if(0 != *id)CaloPrs += (*id)->e();
   }  
   return CaloPrs  ;
+};
+// ============================================================================
+double NeutralProtoPAlg::CaloEcal  ( const LHCb::CaloHypo*  hypo  )  const
+{
+  //
+  if( 0 == hypo) return 0.;  
+  SmartRefVector<LHCb::CaloCluster> clusters = hypo->clusters();
+  if( 0 == clusters.size())return 0.;
+  SmartRefVector<LHCb::CaloCluster>::iterator icluster = clusters.begin();
+  LHCb::CaloCluster* cluster = *icluster;
+  if(NULL == cluster) return 0;
+  return cluster->e();  
 };

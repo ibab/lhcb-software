@@ -5,7 +5,7 @@
  * Implementation file for algorithm ChargedProtoPAlg
  *
  * CVS Log :-
- * $Id: ChargedProtoPAlg.cpp,v 1.48 2006-12-04 09:33:41 odescham Exp $
+ * $Id: ChargedProtoPAlg.cpp,v 1.49 2006-12-22 10:50:45 odescham Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 29/03/2006
@@ -76,6 +76,9 @@ StatusCode ChargedProtoPAlg::initialize()
 
   // Velo dE/dx tool
   m_velodEdx = tool<ITrackVelodEdxCharge>( "TrackVelodEdxCharge", "VeloCharge", this );
+
+  // CaloElectron tool
+  m_electron = tool<ICaloElectron>("CaloElectron","CaloElectron",this);
 
   // disabled CALO warnings
   if (!m_EcalPID) Warning( "ECAL PID HAS BEEN DISABLED", StatusCode::SUCCESS );
@@ -321,8 +324,12 @@ bool ChargedProtoPAlg::addCalo( LHCb::ProtoParticle * proto ) const
         hRange =  m_elecTrTable ->relations ( proto->track() ) ;
         if ( !hRange.empty() ){
           proto->addToCalo ( hRange.front().to() );
+          // CaloElectron->caloTrajectory must be after addToCalo
+          if( m_electron->set(proto) )
+            proto->addInfo(ProtoParticle::CaloTrajectoryL, m_electron->caloTrajectoryL(CaloPlane::ShowerMax,"hypo") );
           proto->addInfo(ProtoParticle::CaloChargedSpd, CaloSpd( hRange.front().to() ));
-          proto->addInfo(ProtoParticle::CaloChargedPrs, CaloPrs( hRange.front().to() ));
+          proto->addInfo(ProtoParticle::CaloChargedPrs, CaloPrs( hRange.front().to() ));          
+          proto->addInfo(ProtoParticle::CaloChargedEcal, CaloEcal( hRange.front().to() ));          
           proto->addInfo(ProtoParticle::CaloElectronMatch , hRange.front().weight() );
         }
 
@@ -362,6 +369,9 @@ bool ChargedProtoPAlg::addCalo( LHCb::ProtoParticle * proto ) const
                     << " Dllmu (Ecal) =" <<  proto->info(ProtoParticle::EcalPIDmu, -999.)
                     << " Spd Digits " <<  proto->info(ProtoParticle::CaloChargedSpd, 0.)
                     << " Prs Digits " <<  proto->info(ProtoParticle::CaloChargedPrs, 0.)
+                    << " Spd Digits " <<  proto->info(ProtoParticle::CaloChargedSpd, 0.)
+                    << " Ecal Cluster " <<  proto->info(ProtoParticle::CaloChargedEcal, 0.)
+                    << " TrajectoryL " <<  proto->info(ProtoParticle::CaloTrajectoryL, 0.)
                     << endreq;
 
       }else{
@@ -397,6 +407,7 @@ bool ChargedProtoPAlg::addCalo( LHCb::ProtoParticle * proto ) const
           proto->addToCalo ( hRange.front().to() );
           proto->addInfo(ProtoParticle::CaloNeutralSpd, CaloSpd( hRange.front().to() ));
           proto->addInfo(ProtoParticle::CaloNeutralPrs, CaloPrs( hRange.front().to() ));
+          proto->addInfo(ProtoParticle::CaloNeutralEcal, CaloEcal( hRange.front().to() ));          
           proto->addInfo(ProtoParticle::CaloBremMatch , hRange.front().weight() );
         }
 
@@ -415,6 +426,7 @@ bool ChargedProtoPAlg::addCalo( LHCb::ProtoParticle * proto ) const
                     << " Dlle (Brem) =" <<  proto->info(ProtoParticle::BremPIDe, -999.)
                     << " Spd Digits " <<  proto->info(ProtoParticle::CaloNeutralSpd, 0.)
                     << " Prs Digits " <<  proto->info(ProtoParticle::CaloNeutralPrs, 0.)
+                    << " Ecal Cluster " <<  proto->info(ProtoParticle::CaloNeutralEcal, 0.)
                     << endreq;
       }else{
 
@@ -816,6 +828,17 @@ double ChargedProtoPAlg::CaloPrs  ( const LHCb::CaloHypo*  hypo  )  const
     if(0 != *id)CaloPrs += (*id)->e();
   }  
   return CaloPrs  ;
+};
+double ChargedProtoPAlg::CaloEcal  ( const LHCb::CaloHypo*  hypo  )  const
+{
+  //
+  if( 0 == hypo) return 0;  
+  SmartRefVector<LHCb::CaloCluster> clusters = hypo->clusters();
+  if( 0 == clusters.size())return 0.;
+  SmartRefVector<LHCb::CaloCluster>::iterator icluster = clusters.begin();
+  LHCb::CaloCluster* cluster = *icluster;
+  if(NULL == cluster) return 0;
+  return cluster->e();  
 };
 
 
