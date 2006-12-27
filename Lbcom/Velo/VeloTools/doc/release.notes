@@ -3,6 +3,10 @@
 ! Responsible : Tomasz Szumlak
 ! Purpose     : Velo Tools for reconstruction
 !-----------------------------------------------------------------------------
+!============================= VeloAlgorithms v1r2 ===========================
+! 2006-12-19 - Tomasz Szumlak
+ - modification determined by new real data format for the TELL1
+
 
 !============================= VeloAlgorithms v1r1 ===========================
 ! 2006-12-19 - Marco Cattaneo

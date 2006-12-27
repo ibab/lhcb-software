@@ -1,4 +1,4 @@
-// $Id: VeloClusterPosition.cpp,v 1.4 2006-12-19 07:57:08 cattanem Exp $
+// $Id: VeloClusterPosition.cpp,v 1.5 2006-12-27 17:47:24 szumlat Exp $
 // Include files
 
 // stl
@@ -81,17 +81,14 @@ toolInfo VeloClusterPosition::weightedMeanPos(
   // calculate fractional position in units of 'strip'
   fPair=fractionalPosMean(cluster);
   fractionalPos=fPair.first;
-  intDistance=int(fPair.second);
+  intDistance=static_cast<int>(fPair.second);
+  // return floored nearest strip to the cluster centre - exactly as TELL1 
+  LHCb::VeloChannelID centreStripID=cluster->channelID();
   //
-  LHCb::VeloChannelID intDistanceID;
-  // determine the closest VeloChannelID (strip) to the cluster
-  const DeVeloSensor* sens=m_veloDet->sensor(cluster->firstChannel().sensor());
-  StatusCode sc=sens->neighbour(cluster->firstChannel(), intDistance, intDistanceID);
-  //
-    if(sc){
-      posAndError(cluster, intDistanceID, fractionalPos, userInfo, tempPair);
+    if(centreStripID!=0){
+      posAndError(cluster, centreStripID, fractionalPos, userInfo, tempPair);
       // fill the new wrapper object
-      myInfo.strip=intDistanceID;
+      myInfo.strip=centreStripID;
       myInfo.fractionalPosition=fractionalPos;
       myInfo.fractionalError=tempPair.second;
       //
@@ -223,17 +220,18 @@ Pair VeloClusterPosition::fractionalPosMean(
   const DeVeloSensor* sens=m_veloDet->sensor(chanCont[0].sensor());
   for(int i=0; i<stripNumber; i++){
     sc=sens->channelDistance(chanCont[0],chanCont[i],intDistance);
-    centre+=float(intDistance)*cluster->adcValue(i);
+    centre+=static_cast<double>(intDistance)*cluster->adcValue(i);
     sum+=cluster->adcValue(i);
   }
   //
   if(stripNumber==1){
     fractionalPos=0.0;
   }else{
-    centre=centre/sum;
-    intDistance=int(LHCbMath::round(centre));
+    centre/=sum;
+    intDistance=static_cast<int>(LHCbMath::round(centre));
     fractionalPos=centre-intDistance;
   }
+  if(fractionalPos<0) fractionalPos+=1;
   temp=std::make_pair(fractionalPos, intDistance);
   //  
   return  (temp);
