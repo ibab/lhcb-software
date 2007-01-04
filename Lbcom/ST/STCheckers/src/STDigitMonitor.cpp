@@ -1,4 +1,4 @@
-// $Id: STDigitChecker.cpp,v 1.6 2007-01-04 10:37:36 jvantilb Exp $
+// $Id: STDigitMonitor.cpp,v 1.1 2007-01-04 11:08:56 jvantilb Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -14,19 +14,19 @@
 #include "Event/STDigit.h"
 
 // local
-#include "STDigitChecker.h"
+#include "STDigitMonitor.h"
 
 using namespace LHCb;
 
-DECLARE_ALGORITHM_FACTORY( STDigitChecker );
+DECLARE_ALGORITHM_FACTORY( STDigitMonitor );
 
 //--------------------------------------------------------------------
 //
-//  STDigitChecker : Monitor the STDigits
+//  STDigitMonitor : Monitor the STDigits
 //
 //--------------------------------------------------------------------
 
-STDigitChecker::STDigitChecker( const std::string& name, 
+STDigitMonitor::STDigitMonitor( const std::string& name, 
                                 ISvcLocator* pSvcLocator ) :
   GaudiHistoAlg(name, pSvcLocator),
   m_tracker(0)
@@ -35,12 +35,12 @@ STDigitChecker::STDigitChecker( const std::string& name,
   declareProperty("DetType",      m_detType          = "TT"                  );
 }
 
-STDigitChecker::~STDigitChecker()
+STDigitMonitor::~STDigitMonitor()
 {
   // destructer
 }
 
-StatusCode STDigitChecker::initialize()
+StatusCode STDigitMonitor::initialize()
 {
   // Set the top directory to IT or TT.
   if( "" == histoTopDir() ) setHistoTopDir(m_detType+"/");
@@ -59,7 +59,7 @@ StatusCode STDigitChecker::initialize()
   return StatusCode::SUCCESS;
 }
 
-StatusCode STDigitChecker::execute()
+StatusCode STDigitMonitor::execute()
 {
   // retrieve STDigits
   STDigits* digitsCont = get<STDigits>(m_dataLocation);
@@ -76,7 +76,7 @@ StatusCode STDigitChecker::execute()
   return StatusCode::SUCCESS;
 }
 
-StatusCode STDigitChecker::fillHistograms(const STDigit* aDigit)
+StatusCode STDigitMonitor::fillHistograms(const STDigit* aDigit)
 {
   // histogram by station
   const int iStation = aDigit->channelID().station();

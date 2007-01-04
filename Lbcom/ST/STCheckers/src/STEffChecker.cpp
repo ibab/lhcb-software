@@ -1,4 +1,4 @@
-// $Id: STEffMonitor.cpp,v 1.10 2006-12-21 17:54:48 jvantilb Exp $
+// $Id: STEffChecker.cpp,v 1.1 2007-01-04 11:09:04 jvantilb Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -24,19 +24,19 @@
 #include "boost/lexical_cast.hpp"
 
 // local
-#include "STEffMonitor.h"
+#include "STEffChecker.h"
 
 using namespace LHCb;
 
-DECLARE_ALGORITHM_FACTORY( STEffMonitor );
+DECLARE_ALGORITHM_FACTORY( STEffChecker );
 
 //--------------------------------------------------------------------
 //
-//  STEffMonitor: Plot the ST efficiency
+//  STEffChecker: Plot the ST efficiency
 //
 //--------------------------------------------------------------------
 
-STEffMonitor::STEffMonitor( const std::string& name, 
+STEffChecker::STEffChecker( const std::string& name, 
                             ISvcLocator* pSvcLocator ) :
   GaudiHistoAlg(name, pSvcLocator),
   m_tracker(0)
@@ -47,12 +47,12 @@ STEffMonitor::STEffMonitor( const std::string& name,
   this->declareProperty("PrintEfficiency", m_pEff = true);
 }
 
-STEffMonitor::~STEffMonitor()
+STEffChecker::~STEffChecker()
 {
   // destructer
 }
 
-StatusCode STEffMonitor::initialize()
+StatusCode STEffChecker::initialize()
 {
   if( "" == histoTopDir() ) setHistoTopDir(m_detType+"/");
 
@@ -81,7 +81,7 @@ StatusCode STEffMonitor::initialize()
   return StatusCode::SUCCESS;
 }
 
-StatusCode STEffMonitor::initHistograms()
+StatusCode STEffChecker::initHistograms()
 {
   // Intialize histograms
 
@@ -150,7 +150,7 @@ StatusCode STEffMonitor::initHistograms()
   return StatusCode::SUCCESS;
 }
 
-StatusCode STEffMonitor::execute()
+StatusCode STEffChecker::execute()
 {
   // Get the MCParticles
   MCParticles* particles = get<MCParticles>(MCParticleLocation::Default);
@@ -176,7 +176,7 @@ StatusCode STEffMonitor::execute()
   return StatusCode::SUCCESS;
 }
 
-StatusCode STEffMonitor::finalize()
+StatusCode STEffChecker::finalize()
 {
   // init the message service
   if (m_pEff == true){
@@ -223,7 +223,7 @@ StatusCode STEffMonitor::finalize()
 }
 
 
-StatusCode STEffMonitor::layerEff(const MCParticle* aParticle)
+StatusCode STEffChecker::layerEff(const MCParticle* aParticle)
 {
   // find all MC hits for this particle
   HitTable::InverseType::Range hits = m_hitTable->relations( aParticle ) ;
@@ -290,18 +290,18 @@ StatusCode STEffMonitor::layerEff(const MCParticle* aParticle)
 }
 
 
-int STEffMonitor::findHistoId(unsigned int aLayerId)
+int STEffChecker::findHistoId(unsigned int aLayerId)
 {
   return m_mapping[aLayerId];
 } 
 
-int STEffMonitor::uniqueHistoID(const STChannelID aChan) const
+int STEffChecker::uniqueHistoID(const STChannelID aChan) const
 {
   return m_detType == "TT" ? aChan.station()*100 + aChan.layer()  :
     aChan.station()*100 + aChan.detRegion()*10 + aChan.layer();
 } 
 
-bool STEffMonitor::isInside(const DeSTLayer* aLayer, const MCHit* aHit) const
+bool STEffChecker::isInside(const DeSTLayer* aLayer, const MCHit* aHit) const
 {
   // check if expect hit to make cluster
   bool isFound = false;

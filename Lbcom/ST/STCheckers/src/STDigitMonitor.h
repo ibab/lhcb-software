@@ -1,6 +1,6 @@
-// $Id: STDigitChecker.h,v 1.3 2007-01-04 10:37:36 jvantilb Exp $
-#ifndef STDigitChecker_H
-#define STDigitChecker_H 1
+// $Id: STDigitMonitor.h,v 1.1 2007-01-04 11:08:59 jvantilb Exp $
+#ifndef STDigitMonitor_H
+#define STDigitMonitor_H 1
 
 #include "GaudiAlg/GaudiHistoAlg.h"
 
@@ -10,7 +10,7 @@ namespace LHCb{
 
 class DeSTDetector;
 
-/** @class STDigitChecker STDigitChecker.h
+/** @class STDigitMonitor STDigitMonitor.h
  *
  *  Class for monitoring STDigits
  *
@@ -19,16 +19,16 @@ class DeSTDetector;
  *  @date   04/12/2006
  */
 
-class STDigitChecker : public GaudiHistoAlg{
+class STDigitMonitor : public GaudiHistoAlg{
 
 public:
  
   /// constructer
-  STDigitChecker( const std::string& name, 
+  STDigitMonitor( const std::string& name, 
                   ISvcLocator *svcloc );
 
   /// destructer
-  virtual ~STDigitChecker();
+  virtual ~STDigitMonitor();
 
   /// initialize
   StatusCode initialize();
@@ -45,4 +45,4 @@ private:
   std::string m_dataLocation;
 };
 
-#endif // STDigitChecker_H
+#endif // STDigitMonitor_H

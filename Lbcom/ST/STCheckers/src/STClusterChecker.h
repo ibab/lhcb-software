@@ -1,23 +1,31 @@
-// $Id: STClusterChecker.h,v 1.4 2006-12-22 12:23:01 jvantilb Exp $
+// $Id: STClusterChecker.h,v 1.5 2007-01-04 11:08:48 jvantilb Exp $
 #ifndef STClusterChecker_H
 #define STClusterChecker_H 1
 
+// base class
 #include "GaudiAlg/GaudiHistoAlg.h"
 
-namespace LHCb{
-  class STCluster;
-};
-class ISTSignalToNoiseTool;
+// from Associators
+#include "Linker/LinkerTool.h"
+
 class DeSTDetector;
 
+namespace LHCb{
+  class MCHit;
+  class STCluster;
+  class MCParticle;
+};
+
+class IMCParticleSelector;
+class ISTSignalToNoiseTool;
 
 /** @class STClusterChecker STClusterChecker.h
  *
- *  Class for monitoring STClusters
+ *  Checking class to plot S/N and charge of STClusters for each readout sector.
  *
  *  @author M.Needham
  *  @author J. van Tilburg
- *  @date   04/12/2006
+ *  @date   21/12/2006
  */
 
 class STClusterChecker : public GaudiHistoAlg {
@@ -25,13 +33,11 @@ class STClusterChecker : public GaudiHistoAlg {
 public:
  
   /// constructer
-  STClusterChecker( const std::string& name, 
-                    ISvcLocator *svcloc );
+  STClusterChecker(const std::string& name, ISvcLocator *svcloc );
 
   /// destructer
   virtual ~STClusterChecker();
 
-  /// initialize
   StatusCode initialize();
 
   /// execute
@@ -39,17 +45,41 @@ public:
 
 private:
 
-  virtual StatusCode fillHistograms(const LHCb::STCluster* aCluster);
+  typedef LinkerTool<LHCb::STCluster, LHCb::MCHit> AsctTool;
+  typedef AsctTool::DirectType Table;
+  typedef Table::Range Range;
+  typedef Table::iterator iterator;
 
-  // histograms
-  DeSTDetector* m_tracker;
+  virtual StatusCode fillHistograms(const LHCb::STCluster* aCluster,
+                                    const LHCb::MCHit* aHit);
+
+  double betaGamma(const LHCb::MCParticle* aParticle) const;
   
+  DeSTDetector* m_tracker;
+  std::string m_detType;
+  std::string m_clusterLocation; 
+  std::string m_asctLocation; 
+
   std::string m_sigNoiseToolName;
   ISTSignalToNoiseTool* m_sigNoiseTool;
 
-  std::string m_clusterLocation;
-  std::string m_detType;
-  
+  // selector
+  std::string m_selectorName;
+  IMCParticleSelector* m_selector;
+
 };
 
-#endif // MCSTClusterChecker_H
+#endif // STClusterChecker_H
+
+
+
+
+
+
+
+
+
+
+
+
+

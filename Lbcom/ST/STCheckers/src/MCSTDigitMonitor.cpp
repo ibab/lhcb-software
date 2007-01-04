@@ -1,4 +1,4 @@
-// $Id: MCSTDigitChecker.cpp,v 1.6 2007-01-04 10:37:36 jvantilb Exp $
+// $Id: MCSTDigitMonitor.cpp,v 1.1 2007-01-04 11:08:40 jvantilb Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -10,19 +10,19 @@
 #include "Event/MCSTDigit.h"
 
 // local
-#include "MCSTDigitChecker.h"
+#include "MCSTDigitMonitor.h"
 
 using namespace LHCb;
 
-DECLARE_ALGORITHM_FACTORY( MCSTDigitChecker );
+DECLARE_ALGORITHM_FACTORY( MCSTDigitMonitor );
 
 //--------------------------------------------------------------------
 //
-//  MCSTDigitChecker : Make plots for MCSTDigits
+//  MCSTDigitMonitor : Make plots for MCSTDigits
 //
 //--------------------------------------------------------------------
 
-MCSTDigitChecker::MCSTDigitChecker( const std::string& name, 
+MCSTDigitMonitor::MCSTDigitMonitor( const std::string& name, 
                                     ISvcLocator* pSvcLocator ) :
  GaudiHistoAlg(name, pSvcLocator) 
 {
@@ -30,12 +30,12 @@ MCSTDigitChecker::MCSTDigitChecker( const std::string& name,
   declareProperty("DetType", m_detType = "TT");
 }
 
-MCSTDigitChecker::~MCSTDigitChecker()
+MCSTDigitMonitor::~MCSTDigitMonitor()
 {
   // destructer
 }
 
-StatusCode MCSTDigitChecker::initialize()
+StatusCode MCSTDigitMonitor::initialize()
 {
   // Set the top directory to IT or TT.
   if( "" == histoTopDir() ) setHistoTopDir(m_detType+"/");
@@ -46,7 +46,7 @@ StatusCode MCSTDigitChecker::initialize()
   return GaudiHistoAlg::initialize();
 }
 
-StatusCode MCSTDigitChecker::execute()
+StatusCode MCSTDigitMonitor::execute()
 {
   // retrieve Digitizations
   MCSTDigits* digitsCont = get<MCSTDigits>(m_digitLocation);
@@ -63,7 +63,7 @@ StatusCode MCSTDigitChecker::execute()
   return StatusCode::SUCCESS;
 }
 
-StatusCode MCSTDigitChecker::fillHistograms(const MCSTDigit* aDigit) const
+StatusCode MCSTDigitMonitor::fillHistograms(const MCSTDigit* aDigit) const
 {
   // number of deposits that contribute
   plot((double)aDigit->mcDeposit().size(),"Number of deposits per digit", 

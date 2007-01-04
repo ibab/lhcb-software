@@ -1,6 +1,6 @@
-// $Id: MCSTDepositChecker.h,v 1.2 2006-12-22 12:23:00 jvantilb Exp $
-#ifndef MCSTDepositChecker_H
-#define MCSTDepositChecker_H 1
+// $Id: MCSTDepositMonitor.h,v 1.1 2007-01-04 11:08:36 jvantilb Exp $
+#ifndef MCSTDepositMonitor_H
+#define MCSTDepositMonitor_H 1
 
 #include "GaudiAlg/GaudiHistoAlg.h"
 
@@ -10,7 +10,7 @@ namespace LHCb{
 
 class DeSTDetector;
 
-/** @class MCSTDepositChecker MCSTDepositChecker.h
+/** @class MCSTDepositMonitor MCSTDepositMonitor.h
  *
  *  Class for monitoring MCSTDeposits
  *
@@ -19,16 +19,16 @@ class DeSTDetector;
  *  @date   04/12/2006
  */
 
-class MCSTDepositChecker : public GaudiHistoAlg {
+class MCSTDepositMonitor : public GaudiHistoAlg {
 
 public:
  
   /// constructer
-  MCSTDepositChecker( const std::string& name, 
+  MCSTDepositMonitor( const std::string& name, 
                       ISvcLocator *svcloc );
 
   /// destructer
-  virtual ~MCSTDepositChecker();
+  virtual ~MCSTDepositMonitor();
 
   /// initialize
   StatusCode initialize();
@@ -45,4 +45,4 @@ private:
   std::string m_depositLocation;
 };
 
-#endif // MCSTDepositChecker_H
+#endif // MCSTDepositMonitor_H

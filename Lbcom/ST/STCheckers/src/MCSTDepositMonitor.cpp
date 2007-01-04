@@ -1,4 +1,4 @@
-// $Id: MCSTDepositChecker.cpp,v 1.7 2007-01-04 10:37:36 jvantilb Exp $
+// $Id: MCSTDepositMonitor.cpp,v 1.1 2007-01-04 11:08:34 jvantilb Exp $
 
 // BOOST!
 #include "boost/lexical_cast.hpp"
@@ -17,19 +17,19 @@
 #include "Event/MCHit.h"
 
 // local
-#include "MCSTDepositChecker.h"
+#include "MCSTDepositMonitor.h"
 
 using namespace LHCb;
 
-DECLARE_ALGORITHM_FACTORY( MCSTDepositChecker );
+DECLARE_ALGORITHM_FACTORY( MCSTDepositMonitor );
 
 //--------------------------------------------------------------------
 //
-//  MCSTDepositChecker : Make plots for MCSTDeposits
+//  MCSTDepositMonitor : Make plots for MCSTDeposits
 //
 //--------------------------------------------------------------------
 
-MCSTDepositChecker::MCSTDepositChecker( const std::string& name, 
+MCSTDepositMonitor::MCSTDepositMonitor( const std::string& name, 
                                         ISvcLocator* pSvcLocator ) :
   GaudiHistoAlg(name, pSvcLocator),
   m_tracker(0)  
@@ -38,12 +38,12 @@ MCSTDepositChecker::MCSTDepositChecker( const std::string& name,
   declareProperty("DetType", m_detType = "TT");
 }
 
-MCSTDepositChecker::~MCSTDepositChecker()
+MCSTDepositMonitor::~MCSTDepositMonitor()
 {
   // destructer
 }
 
-StatusCode MCSTDepositChecker::initialize()
+StatusCode MCSTDepositMonitor::initialize()
 {
   if( "" == histoTopDir() ) setHistoTopDir(m_detType+"/");
 
@@ -60,7 +60,7 @@ StatusCode MCSTDepositChecker::initialize()
   return StatusCode::SUCCESS;
 }
 
-StatusCode MCSTDepositChecker::execute()
+StatusCode MCSTDepositMonitor::execute()
 {
   // retrieve Digitizations
   MCSTDeposits* depositsCont = get<MCSTDeposits>(m_depositLocation); 
@@ -77,7 +77,7 @@ StatusCode MCSTDepositChecker::execute()
   return StatusCode::SUCCESS;
 }
 
-StatusCode MCSTDepositChecker::fillHistograms(const MCSTDeposit* aDeposit) const
+StatusCode MCSTDepositMonitor::fillHistograms(const MCSTDeposit* aDeposit) const
 {
   // Plot deposited charge
   plot(aDeposit->depositedCharge(), 2, "Deposited charge", 0., 100., 100);

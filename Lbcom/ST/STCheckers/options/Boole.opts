@@ -1,5 +1,5 @@
-MCITDepositChecker.DetType =  "IT";
-MCITDigitChecker.DetType = "IT";
-ITDigitChecker.DetType = "IT";
-ITClusterChecker.DetType = "IT";
-ITEffMonitor.DetType = "IT";
+MCITDepositMonitor.DetType =  "IT";
+MCITDigitMonitor.DetType = "IT";
+ITDigitMonitor.DetType = "IT";
+ITClusterMonitor.DetType = "IT";
+ITEffChecker.DetType = "IT";

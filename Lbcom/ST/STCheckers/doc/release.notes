@@ -1,8 +1,10 @@
 ! Package         : ST/STCheckers
-! Package manager : Matt Needham
+! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
 ! 2007-01-04 - Jeroen VAN TILBURG
+ - Change naming of checkers and monitor algorithms according to naming
+  convention.
  - Additional clean up.
 
 ! 2006-12-22 - Jeroen VAN TILBURG

@@ -1,6 +1,6 @@
-// $Id: STEffMonitor.h,v 1.6 2006-12-21 17:54:48 jvantilb Exp $
-#ifndef STEffMonitor_H
-#define STEffMonitor_H 1
+// $Id: STEffChecker.h,v 1.1 2007-01-04 11:09:06 jvantilb Exp $
+#ifndef STEffChecker_H
+#define STEffChecker_H 1
 
 // GaudiAlg
 #include "GaudiAlg/GaudiHistoAlg.h"
@@ -22,7 +22,7 @@ class IMCParticleSelector;
 class AIDA::IHistogram1D;
 class AIDA::IHistogram2D;
 
-/** @class STEffMonitor STEffMonitor.h
+/** @class STEffChecker STEffChecker.h
  *
  *  Class for checking ST efficiencies. It produces the following plots:
  *  - x and y distributions of all MCHits in a IT or TT layer.
@@ -38,15 +38,15 @@ class AIDA::IHistogram2D;
  *  @date   21/12/2006
  */
 
-class STEffMonitor : public GaudiHistoAlg {
+class STEffChecker : public GaudiHistoAlg {
 
 public:
  
   /// constructer
-  STEffMonitor(const std::string& name, ISvcLocator *svcloc );
+  STEffChecker(const std::string& name, ISvcLocator *svcloc );
 
   /// destructer
-  virtual ~STEffMonitor();
+  virtual ~STEffChecker();
 
   /// initialize
   StatusCode initialize();
@@ -106,7 +106,7 @@ private:
 
 };
 
-#endif // STEffMonitor_H
+#endif // STEffChecker_H
 
 
 
