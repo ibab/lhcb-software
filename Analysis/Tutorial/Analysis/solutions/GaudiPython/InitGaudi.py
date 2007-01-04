@@ -80,7 +80,11 @@ doubleVector   = std.vector('double')
 # open file and get access to event
 #
 sel  = appMgr.evtsel()
-sel.open(['PFN:/afs/cern.ch/lhcb/scratch/week/kerzel/00001438_00000001_5.dst'])
+# use a local copy of a DST
+# sel.open(['PFN:/afs/cern.ch/lhcb/scratch/week/kerzel/00001438_00000001_5.dst'])
+
+# use a (pre-staged) file from CASTOR
+sel.open(['PFN:/castor/cern.ch/grid/lhcb/production/DC06/v1-lumi2/00001438/DST/0000/00001438_00000001_5.dst'])
 evt  = appMgr.evtsvc()
 
 
