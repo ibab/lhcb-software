@@ -1,4 +1,4 @@
-// $Id: TTOccupancy.cpp,v 1.9 2006-12-22 12:23:01 jvantilb Exp $
+// $Id: TTOccupancy.cpp,v 1.10 2007-01-04 10:37:37 jvantilb Exp $
 
 // BOOST
 #include "boost/lexical_cast.hpp"
@@ -41,7 +41,7 @@ TTOccupancy::TTOccupancy( const std::string& name,
   declareProperty("BinSize", m_binSize = 32);
   declareProperty("DataLocation",m_dataLocation = STDigitLocation::TTDigits);
 
-  m_threshold.reserve(5);
+  m_threshold.reserve(2);
   for (int iThres=0; iThres<2; ++iThres ) {
     m_threshold.push_back(3.0);
   }
@@ -102,51 +102,32 @@ StatusCode TTOccupancy::fillHistograms(const STDigit* aDigit)
 
     const unsigned int nstrips = ttSector->nStrip();
 
-    // construct the histogram id...
-    std::string histo = 
-      "occ_st"+boost::lexical_cast<std::string>(aChan.station()) +
-      "_lay"+boost::lexical_cast<std::string>(aChan.layer()) +
-      "_dr"+boost::lexical_cast<std::string>(aChan.detRegion()) +
-      "_row"+boost::lexical_cast<std::string>(ttSector->row());
+    // construct the histogram title
+    std::string histo = "Number of digits station "
+      +boost::lexical_cast<std::string>(aChan.station()) +
+      ", layer "+boost::lexical_cast<std::string>(aChan.layer()) +
+      ", region "+boost::lexical_cast<std::string>(aChan.detRegion()) +
+      ", row "+boost::lexical_cast<std::string>(ttSector->row());
     
     int offset;
     if (aChan.detRegion() == 1) {
-      offset = ttSector->column();
+      offset = ttSector->column() - 1;
     }
     else if (aChan.detRegion() == 2) {
       aChan.station() == 1 ? 
-        offset = ttSector->column() - 6: offset = ttSector->column() - 7;
+        offset = ttSector->column() - 7: offset = ttSector->column() - 8;
     }
     else if (aChan.detRegion() == 3){
       aChan.station() == 1 ? 
-        offset = ttSector->column() - 9: offset = ttSector->column() - 10;
+        offset = ttSector->column() - 10: offset = ttSector->column() - 11;
     }
     else {
       return Warning( "unknown row " );
     } 
   
-    plot(binValue(aChan.strip())+(nstrips*(offset-1)),histo, 0.,m_hMax,m_nBins);
+    plot((double)aChan.strip()-1.+(nstrips*offset),histo, 0.,m_hMax,m_nBins);
 
   } // if above threshold
 
   return StatusCode::SUCCESS;
-}
-
-double TTOccupancy::binValue(const unsigned int strip) const
-{
-  // ensure get the correct bin....
-  double value;
-  unsigned int testValue = (strip-1)%m_binSize;
-  switch (testValue){
-  case (0):
-    value = 0.01+(strip-1);     
-    break;    
-  case(31):
-    value = strip-1-0.01;     
-    break;    
-  default:
-    value = strip-1;
-    break;  
-  }
-  return value;
 }

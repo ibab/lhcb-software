@@ -1,4 +1,4 @@
-// $Id: STMCTuner.cpp,v 1.8 2006-12-22 12:23:01 jvantilb Exp $
+// $Id: STMCTuner.cpp,v 1.9 2007-01-04 10:37:37 jvantilb Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -102,9 +102,10 @@ StatusCode STMCTuner::fillHistograms( const STCluster* aCluster,
     if ( m_selector->accept(aHit->mcParticle()) == true ) {
       DeSTSector* aSector = m_tracker->findSector(aCluster->channelID());
       if (aSector != 0){
-        plot(m_sigNoiseTool->signalToNoise(aCluster),"SN_"+aSector->type(),0.,
-             50., 100);
-        plot(aCluster->totalCharge(),"charge_"+aSector->type(), 0., 200., 200);
+        plot(aCluster->totalCharge(),"Charge of "+aSector->type()+" ladders",
+             0., 200., 200);
+        plot(m_sigNoiseTool->signalToNoise(aCluster),
+             "S/N of "+aSector->type()+" ladders",0.,100., 100);
       }
     } 
   }

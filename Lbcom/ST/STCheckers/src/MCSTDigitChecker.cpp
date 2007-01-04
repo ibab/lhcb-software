@@ -1,4 +1,4 @@
-// $Id: MCSTDigitChecker.cpp,v 1.5 2006-12-22 12:23:00 jvantilb Exp $
+// $Id: MCSTDigitChecker.cpp,v 1.6 2007-01-04 10:37:36 jvantilb Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -71,11 +71,11 @@ StatusCode MCSTDigitChecker::fillHistograms(const MCSTDigit* aDigit) const
 
   // histogram by station
   const int iStation = aDigit->channelID().station();
-  plot((double)iStation, "Number of deposits per stat" ,-0.5 , 4.5, 11 );
+  plot((double)iStation, "Number of digits per station" ,-0.5 , 4.5, 11 );
   
   // by layer
   const int iLayer = aDigit->channelID().layer();
-  plot((double)(10*iStation+iLayer), "Number of deposits per layer", 
+  plot((double)(10*iStation+iLayer), "Number of digits per layer", 
        -0.5, 40.5, 41);
 
   // end

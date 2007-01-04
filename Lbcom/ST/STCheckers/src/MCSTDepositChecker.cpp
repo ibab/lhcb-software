@@ -1,4 +1,4 @@
-// $Id: MCSTDepositChecker.cpp,v 1.6 2006-12-22 12:23:00 jvantilb Exp $
+// $Id: MCSTDepositChecker.cpp,v 1.7 2007-01-04 10:37:36 jvantilb Exp $
 
 // BOOST!
 #include "boost/lexical_cast.hpp"
@@ -80,7 +80,7 @@ StatusCode MCSTDepositChecker::execute()
 StatusCode MCSTDepositChecker::fillHistograms(const MCSTDeposit* aDeposit) const
 {
   // Plot deposited charge
-  plot(aDeposit->depositedCharge(), 2, "Deposited charge", 0., 500., 500);
+  plot(aDeposit->depositedCharge(), 2, "Deposited charge", 0., 100., 100);
 
   // Plot number of deposits per station
   const int iStation = aDeposit->channelID().station();

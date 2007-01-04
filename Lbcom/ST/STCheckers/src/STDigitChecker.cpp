@@ -1,10 +1,9 @@
-// $Id: STDigitChecker.cpp,v 1.5 2006-12-22 12:23:01 jvantilb Exp $
+// $Id: STDigitChecker.cpp,v 1.6 2007-01-04 10:37:36 jvantilb Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
 
 // LHCbKernel
-#include "Kernel/ISTSignalToNoiseTool.h"
 #include "Kernel/STDetSwitch.h"
 
 // STDet
@@ -33,7 +32,6 @@ STDigitChecker::STDigitChecker( const std::string& name,
   m_tracker(0)
 {
   // constructer
-  declareProperty("SigNoiseTool", m_sigNoiseToolName = "STSignalToNoiseTool" );
   declareProperty("DetType",      m_detType          = "TT"                  );
 }
 
@@ -54,9 +52,6 @@ StatusCode STDigitChecker::initialize()
   // detector element     
   m_tracker = getDet<DeSTDetector>(DeSTDetLocation::location(m_detType));
  
-  // sig to noise tool
-  m_sigNoiseTool = tool<ISTSignalToNoiseTool>(m_sigNoiseToolName);
-
   // Determine the location of the STDigits
   m_dataLocation = STDigitLocation::TTDigits;
   STDetSwitch::flip(m_detType,m_dataLocation); 
@@ -95,7 +90,8 @@ StatusCode STDigitChecker::fillHistograms(const STDigit* aDigit)
   if ( fullDetail() ){
     DeSTSector* aSector = m_tracker->findSector(aDigit->channelID());
     if (aSector != 0) {
-       plot(aDigit->depositedCharge(),aSector->type(), 0., 200., 200);
+       plot(aDigit->depositedCharge(),
+            "Deposited charge "+aSector->type()+" ladders", 0., 128., 128);
     }
   }
 

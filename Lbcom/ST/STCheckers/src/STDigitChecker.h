@@ -1,4 +1,4 @@
-// $Id: STDigitChecker.h,v 1.2 2006-12-22 12:23:01 jvantilb Exp $
+// $Id: STDigitChecker.h,v 1.3 2007-01-04 10:37:36 jvantilb Exp $
 #ifndef STDigitChecker_H
 #define STDigitChecker_H 1
 
@@ -8,7 +8,6 @@ namespace LHCb{
  class STDigit;
 };
 
-class ISTSignalToNoiseTool;
 class DeSTDetector;
 
 /** @class STDigitChecker STDigitChecker.h
@@ -43,25 +42,7 @@ private:
 
   DeSTDetector* m_tracker;
   std::string m_detType; 
- 
-  std::string m_sigNoiseToolName;
-  ISTSignalToNoiseTool* m_sigNoiseTool;
-
   std::string m_dataLocation;
 };
 
 #endif // STDigitChecker_H
-
-
-
-
-
-
-
-
-
-
-
-
-
-

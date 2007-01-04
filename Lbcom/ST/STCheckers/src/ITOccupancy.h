@@ -1,4 +1,4 @@
-// $Id: ITOccupancy.h,v 1.2 2006-12-22 12:23:00 jvantilb Exp $
+// $Id: ITOccupancy.h,v 1.3 2007-01-04 10:37:36 jvantilb Exp $
 #ifndef ITOccupancy_H
 #define ITOccupancy_H 1
 
@@ -47,40 +47,22 @@ private:
   virtual StatusCode fillHistograms(const LHCb::STDigit* aDigit);
 
   int uniqueInt(const LHCb::STChannelID aChan) const;
-    
-  double binValue(const unsigned int strip) const;
 
   std::map<int,int> m_mapping;
   std::vector<double> m_nStripsVector;
   std::vector<double> m_layerOccVector;
   std::vector<AIDA::IHistogram1D*> m_layerOccHistos;
   std::vector<AIDA::IHistogram1D*> m_stripOccVector;
-
-  std::string m_dataLocation;
   
-  std::string m_sigNoiseToolName;
-  ISTSignalToNoiseTool* m_sigNoiseTool;
-  
-  std::string m_detType;
+  ISTSignalToNoiseTool* m_sigNoiseTool;  
   DeSTDetector* m_tracker;
 
-
-  std::vector<double> m_threshold;   
-  int m_binSize;
+  // job options
+  std::vector<double> m_threshold;   ///< List of threshold values
+  std::string m_sigNoiseToolName;    ///< Name of the S/N tool 
+  int m_binSize;                     ///< Number of channels in each bin
+  std::string m_dataLocation;        ///< Location of the digits
   
 };
 
-#endif // _ITOccupancy_H
-
-
-
-
-
-
-
-
-
-
-
-
-
+#endif // ITOccupancy_H
