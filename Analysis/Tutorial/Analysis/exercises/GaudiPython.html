@@ -41,7 +41,7 @@
 			    ROOT (<code>5.13.04c</code> from the LCG area) and Python (<code>2.4.2</code>
 			    from the LCG area)</li>
 		        <li>Import the ROOT package </li>
-			<li>Open a ROOT <code>TCavas</code> </li>
+			<li>Open a ROOT <code>TCanvas</code> </li>
 			<li>Take the limits between which the functions is drawn
 			     as arguments</li>
 			<li>Define a new function using <code>TF1</code> from ROOT </li>
@@ -57,11 +57,11 @@
 			    (if you didn't do this already). Check that you have the right versions of
 			    ROOT (<code>5.13.04c</code> from the LCG area ) and Python (<code>2.4.2</code> 
 			    from the LCG area)</li>
-			<li>We will use DST files from the Bs -> J/psi Phi dataset. You can either
+			<li>We will use a DST files from the Bs -> J/psi Phi dataset. You can either
 			    make a copy of the file to some scratch area (e.g. <code> /tmp</code>
 			    via e.g. <code>rfcp /castor/cern.ch/grid/lhcb/production/DC06/v1-lumi2/00001438/DST/0000/00001438_00000001_5.dst /tmp</code>
 			    or use files from CASTOR</li>
-			<li>Go through the files and understand what happens. Execute the event-loop
+			<li>Go through the file and understand what happens. Execute the event-loop
 			    for some events and look at the histograms. You can do this following 
 			    the steps
 			    <ul>
@@ -75,8 +75,8 @@
  		<ul>
 		  <li>Extend the event-loop with own cuts and histograms. Reload the changed
 		      Python script with <code>reload(GaudiPyTutorial)</code> and jump back
-		      to the beginning of the data-file with <code>GaudiPyTuTorial.sel.rewind()</code>
-		      E.g. you could apply a cut on the combined Particle ID for the muons and
+		      to the beginning of the data-file with <code>GaudiPyTuTorial.sel.rewind()</code>.
+		      For example, you could apply a cut on the combined Particle ID for the muons and
 		      compare how the invariant mass distribution changes, apply a cut on the
 		      maximal chi**2 of the di-muon vertex fit, ...
 		  </li>    
