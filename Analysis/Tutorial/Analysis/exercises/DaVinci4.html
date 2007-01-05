@@ -73,9 +73,16 @@ B_s0                 58881.35   5369.20  58636.04   6722.81   7663.34  57743.07 
  Notice the low-energy gamma that is emitted by the J/psi in some events.
 		<li>Increase the <code>Depth</code> value to see all the particles created in the detector. Most of them are created in the calorimeters between 11 and 15m.
 		</ul>
+		<p></p>
+		<li><b>Filter you input kaons and muons according to the truth</b>
+		<ul>
+		<li>Add two <code>FilterDesktop</code> algorithms that run on the standard muons
+		and kaons are keep only the ones associated to the true particles of your B<sub>s</sub>.</code>
+                </ul>
+
 		</ol>	
 		The solution to this part is to be found in <code>solutions/DaVinci5/</code>	
-		
+
 		</p><h2>2. Checking algorithm</h2>
 		We will create a new algorithm that runs on the found B<sub>s</sub> and associates it to truth.
 		It will also fill an nTuple and add some more information about tagging and trigger. There is no chance that you
@@ -180,7 +187,7 @@ tuple->fill("category",cat);</code>
 		which is found at compilation because we have declared <code>DaVinciAssociators</code> in the 
 		<code>requirements</code> file.
                 <li>Initialise it in <code>initialize()</code>:
-		<code class="display">m_pLinker = new Particle2MCLinker(this,Particle2MCMethod::Chi2, ""); </code>	
+		<code class="display">m_pLinker = new Particle2MCLinker(this,Particle2MCMethod::Composite, ""); </code>	
                 <li>You can now use it in <code>fillTruth</code>:
 		<code class="display">const LHCb::MCParticle* MC = m_pLinker->firstMCP( b );</code>
 		You can the fill some tuple variables with the MC true B<sub>s</sub>. But be careful to
@@ -211,14 +218,13 @@ Later it would be
 		<li><b>Trigger</b>
 		</ul>			
 		<ul>
-		<li><i><b>Will be done next year...</b></i>
-		<li>It's probably a good idea to compile and run at this stage.
+		<li><i><b>The trigger is under development...</b></i>
 		</ul>			
 		</ol>
 		The solution to this part is to be found in <code>solutions/DaVinci6/</code>	
 
 
 <hr>
-<p><span lang="en-gb">Last modified by P. Koppenburg, Dec 21 2006
+<p><span lang="en-gb">Last modified by P. Koppenburg, Jan 5 2007.
 </span></p></div>
 </body></html>

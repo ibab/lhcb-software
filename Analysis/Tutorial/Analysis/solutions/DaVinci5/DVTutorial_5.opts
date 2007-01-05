@@ -18,6 +18,10 @@ ApplicationMgr.DLLs   += { "Analysis" };
 //
 ApplicationMgr.TopAlg += { "GaudiSequencer/TutorialSeq" };
 //
+// TrueMCFilterCriterionSeq
+//
+TutorialSeq.Members += { "GaudiSequencer/FilterTrueBsSeq" };
+//
 // J/psi->mumu selection
 //
 TutorialSeq.Members += { "TutorialAlgorithm/Jpsi2MuMu" };
@@ -77,6 +81,29 @@ PrintTrueBs.Depth = 2;  // down to the K and mu
 
 TutorialSeq.MeasureTime = true ;
 
+/*
+//
+// Optionally keep only true Bs daughters
+//
+FilterTrueBsSeq.Members += { "FilterDesktop/TrueMuons" };
+TrueMuons.PhysDesktop.InputLocations = { "Phys/StdLooseMuons" } ;
+TrueMuons.Filter.Selections = { "mu+ : TrueMCFilterCriterion" };
+TrueMuons.Filter.TrueMCFilterCriterion.MCDecayFinder.Decay =  
+   "[B_s0 -> (J/psi(1S) -> ^mu+ ^mu- {,gamma} {,gamma}) (phi(1020) -> ^K+ ^K-)]cc" ;
+
+FilterTrueBsSeq.Members += { "FilterDesktop/TrueKaons" };
+TrueKaons.PhysDesktop.InputLocations = { "Phys/StdLooseKaons" } ;
+TrueKaons.Filter.Selections = { "K+ : TrueMCFilterCriterion" };
+TrueKaons.Filter.TrueMCFilterCriterion.MCDecayFinder.Decay = 
+  "[B_s0 -> (J/psi(1S) -> ^mu+ ^mu- {,gamma} {,gamma}) (phi(1020) -> ^K+ ^K-)]cc" ;
+
+// overwrite locations
+Phi2KK.PhysDesktop.InputLocations = { "Phys/TrueKaons" } ;
+Jpsi2MuMu.PhysDesktop.InputLocations = { "Phys/TrueMuons" } ;
+
+FilterTrueBsSeq.MeasureTime = true ;
+// end of option
+*/
 
 ApplicationMgr.HistogramPersistency = "ROOT";
 HistogramPersistencySvc.OutputFile = "DVHistos.root";

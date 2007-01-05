@@ -8,6 +8,15 @@
 !
 !-----------------------------------------------------------------------------
 
+!===================== Tutorial/Analysis v6r2 2007-01-05 ======================#
+! 2007-01-05 - P. Koppenburg
+  Tagged as v6r2
+  - solutions/DaVinci6/TutorialChecker.cpp
+    . Added a loop on associated (MC)Particles
+  - solutions/DaVinci5/DVTutorial_5.opts
+  - solutions/DaVinci6/DVTutorial_6.opts
+    . Added a selection according to truth
+
 ! 2006-12-21 - P. Koppenburg
   - Added exercise 4 and solutions 5 & 6.
     . exercises/DaVinci2.html
@@ -28,7 +37,6 @@
     . exercises/DaVinci6.txt
     . exercises/DaVinci7.txt
     . solutions/DaVinci5/DVTutorialDC04.opts
-
 
 ! 2006-12-19 - P. Koppenburg for Raluca Muresan
   - Use different cuts for J/psi and Phi

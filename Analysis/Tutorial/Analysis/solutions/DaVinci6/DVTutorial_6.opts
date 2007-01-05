@@ -1,6 +1,6 @@
 /** @file 
  * 
- *  Options for exercise 5
+ *  Options for exercise 6
  *
  *  @author P. Koppenburg
  *  @date 2006-12-21
@@ -19,6 +19,12 @@ ApplicationMgr.DLLs   += { "Analysis", "FlavourTagging" };
 // Let's make it a sequence
 //
 ApplicationMgr.TopAlg += { "GaudiSequencer/TutorialSeq" };
+//
+// Keep only particles from true Bs
+//
+// TrueMCFilterCriterionSeq
+//
+TutorialSeq.Members += { "GaudiSequencer/FilterTrueBsSeq" };
 //
 // J/psi->mumu selection
 //
@@ -78,7 +84,31 @@ PrintTrueBs.Depth = 2;  // down to the K and mu
 // Checker
 TutorialSeq.Members += { "TutorialChecker" };
 TutorialChecker.PhysDesktop.InputLocations = { "Phys/Bs2JpsiPhi" } ;
+//TutorialChecker.OutputLevel = 2 ;
 
+/*
+//
+// Optionally keep only true Bs daughters
+//
+FilterTrueBsSeq.Members += { "FilterDesktop/TrueMuons" };
+TrueMuons.PhysDesktop.InputLocations = { "Phys/StdLooseMuons" } ;
+TrueMuons.Filter.Selections = { "mu+ : TrueMCFilterCriterion" };
+TrueMuons.Filter.TrueMCFilterCriterion.MCDecayFinder.Decay =  
+   "[B_s0 -> (J/psi(1S) -> ^mu+ ^mu- {,gamma} {,gamma}) (phi(1020) -> ^K+ ^K-)]cc" ;
+
+FilterTrueBsSeq.Members += { "FilterDesktop/TrueKaons" };
+TrueKaons.PhysDesktop.InputLocations = { "Phys/StdLooseKaons" } ;
+TrueKaons.Filter.Selections = { "K+ : TrueMCFilterCriterion" };
+TrueKaons.Filter.TrueMCFilterCriterion.MCDecayFinder.Decay = 
+  "[B_s0 -> (J/psi(1S) -> ^mu+ ^mu- {,gamma} {,gamma}) (phi(1020) -> ^K+ ^K-)]cc" ;
+
+// overwrite locations
+Phi2KK.PhysDesktop.InputLocations = { "Phys/TrueKaons" } ;
+Jpsi2MuMu.PhysDesktop.InputLocations = { "Phys/TrueMuons" } ;
+
+FilterTrueBsSeq.MeasureTime = true ;
+// end of option
+*/
 
 //TutorialSeq.IgnoreFilterPassed = true ; // get all Phis
 
@@ -90,11 +120,11 @@ HistogramPersistencySvc.OutputFile = "DVHistos.root";
 // ntuple
 NTupleSvc.Output={"FILE1 DATAFILE='Tuple.root' TYP='ROOT' OPT='NEW'"};
 
+ApplicationMgr.EvtMax = 5000 ;
 
-ApplicationMgr.EvtMax = 1000 ;
-
-//#include "$DAVINCITUTORIALDATA"
-#include "options/Bs2Jpsiphi_mm_CERN.opts"
+#include "$DAVINCITUTORIALDATA"
+//#include "options/Bs2Jpsiphi_mm_CERN.opts"
 
 
+EventSelector.PrintFreq = 1 ;
 
