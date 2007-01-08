@@ -3,14 +3,11 @@ version v4r6
 
 branches doc cmt
 
-# Temporary include Rec/GlobalReco v6r5 until released in REC.
-# use  GlobalReco                 v6r5     Rec
-
 ####################################################################
 use  PhysCoreSys      	v3r6   Phys
 #===================================================================
 use  DaVinciKernel      	v5r6     Phys
-use  DaVinciFilter      	v5r4     Phys
+use  DaVinciFilter      	v5r5p1   Phys
 use  ProtoParticleFilter        v1r2     Phys
 use  DaVinciTools       	v14r6    Phys
 use  DaVinciTransporter 	v3r5     Phys
@@ -18,7 +15,7 @@ use  ParticleMaker      	v2r6     Phys
 use  VertexFit			v3r3     Phys
 use  CommonParticles            v3r6     Phys
 use  PhysDict                   v2r0     Phys
-use  FlavourTagging             v7r1     Phys
+use  FlavourTagging             v7r1p1   Phys
 # Generic tools 
 use  Utilities          	v3r2   Tools
 
@@ -36,17 +33,17 @@ use  DaVinciUser      	        v7r1     Phys
 ####################################################################
 use  PhysSelSys      	v9r8   PhysSel
 #===================================================================
-use Ccbar	        v1r1    PhysSel
-use B2Dilepton		v1r0	PhysSel
+use Ccbar	        v1r2    PhysSel
+use B2Dilepton		v1r1	PhysSel
 use B2D0X		v1r6	PhysSel
 use B2DplusX		v1r0	PhysSel
-use B2DsX		v1r1	PhysSel
+use B2DsX		v1r2	PhysSel
 use B2DstarX		v1r3	PhysSel
 use B2uds	        v2r1    PhysSel
-use Bs2JpsiPhi          v3r2    PhysSel
+use Bs2JpsiPhi          v3r3    PhysSel
 use Bd2PiPiPi0          v3r0    PhysSel
 use JetsSel	        v1r1    PhysSel
-# use Radiative           v1r0    PhysSel
+use Radiative           v2r0    PhysSel
 ####################################################################
 use               LoKiSys          v4r4
 #===================================================================

@@ -3,7 +3,245 @@ Package     : PhysSys
 Package Coordinator : Juan Palacios
 Purpose     : LHCb physics packages
 
-</PRE><H1><A NAME=v4r6>200?-??-?? Phys v4r6 </A></H1><PRE>
+</PRE><H1><A NAME=v4r6>2007-01-08 Phys v4r6 </A></H1><PRE>
+
+Tenth release of PHYS with DC06 event model.
+
+ - Improvements and bug-fixes to pre-selections and CommonParticles for 
+   speed and retention rate.
+ - New ChangePIDTool to optimise selection of Cabido supressed modes (P. Spradlin).
+ - Fixes to DaVinciFilter to use related PV everywhere (P. Koppenburg).
+ - Bug-fixes to CheckVeloOverlap tool.
+ - First DC06 version of PhysSel/Radiative package (L. Shchutska).
+ - First DC06 version of PhysSel/Bd2PiPiPi0 (O. Deschamps).
+ - Built with LHCb v20r12, Gaudi v18r11, LCGCMT 48a.
+
+##################################### PHYS ####################################
+!========================== DaVinciKernel v5r6 2007-01-08 ===================
+
+! 2007-01-08 - Juan PALACIOS
+
+  - Restore ICaloElectron interface for next release. To be removed for
+    next version of LHCb.
+
+! 2006-12-21 - Olivier Deschamps
+  - remove ICaloElectron interface (new release moved into CaloInterfaces)
+
+! 2006-18-12 - Juan PALACIOS for Patrick SPRADLIN
+
+  - Add Kernel/IChangePIDTool.h
+  - cmt/requirements
+    . Increase version to v5r6
+
+! 2006-12-07 - Olivier Deschamps
+  - Update ICaloElectron interface
+
+!========================== DaVinciFilter v5r5p1 2007-01-08 =================
+
+! 2007-01-08 - Juan PALACIOS
+
+  -src/Momentum2FlightAngleFilterCriterion.cpp
+   . Fix bug in minimum cos angle cut.
+
+  - cmt/requirements
+    . Increase version to v5r5p1
+
+!========================== DaVinciFilter v5r5 2007-01-08 ===================
+
+! 2007-01-05 - P. Koppenburg
+  - src/Momentum2FlightAngleFilterCriterion.{h,cpp}
+    . Use related PV.
+    . Remove BestPV and TrgPV options.
+  - src/FlightDistanceFilterCriterion.h
+    . Small change in doxygen description. 
+  - requirements
+    . Increment to v5r5 
+
+!========================== DaVinciTools v14r6 2007-01-08 ===================
+
+! 2006-12-21 - Juan PALACIOS
+
+  - Restore CaloElectron tool for next release. To be removed for 
+    new version of LHCb.
+
+! 2006-12-21 - Olivier Deschamps
+  - remove CaloElectron tool (new released moved into CaloUtils)
+
+
+! 2006-12-13 - Juan PALACIOS
+
+  - src/CheckVeloOverlap.h
+    . Bug fix: m_maxClusterFraction should be double (was declared as int).
+    . Change default value to 0.75
+    . Remove MaxCommonClusters property and m_maxClusters variable.
+
+  - src/CheckVeloOverlap.cpp
+    . Fix bug in shareVeloClusters method.
+
+  - cmt/requirements
+    . Increase version number to v14r6.
+
+! 2006-12-07 - Olivier Deschamps
+    - Improvement in bremAdder and CaloElectron implementation tools
+
+!========================== CommonParticles v3r6 2007-01-08 ===================
+
+! 2006-12-22 - Juan Palacios for Andy Powell
+
+  - options/StandardD0.opts
+    . New D0 types: 
+      Replace StdLooseD02KKPiPi for StdLooseD02KKPiPiNoCC and
+      StdLooseD02KPiPiPi for StdLooseD02KPiPiPiCA. 
+      Remove StdLooseD02KPiPiPiDCS.
+
+  - cmt/requirements
+    . Increase version to v3r6.
+
+! 2006-12-22 - Olivier Deschamps
+  - Apply an (temporary) correction on Brem. energy
+
+! 2006-12-12 - Jan Amoraal
+  - Relax Jpsi VChi2 cut, from 6 -> 15, for Flavour Tagging WG 
+
+! 2006-12-12 - Juan PALACIOS
+
+  - options/StandardElectrons.opts
+    . Remove AddBrem @to-dos.
+
+!========================== FlavourTagging v7r1p1 2007-01-08 ==================
+
+! 2006-12-21 - Juan PALACIOS
+
+  - options/BTaggingTool.opts
+    . Fix typo to do with OutputLeve.
+
+  - cmt/requirements
+    . Increase version to v7r1p1
+
+
+
+#################################### PHYSSEL ##################################
+
+!========================== Ccbar v1r2 2007-01-08 ===================
+
+! 2007-01-08 - Juan PALACIOS for Jeremie BOREL
+
+  - options/StandardEtac.opts, PreselBs2PhiEtac.opts
+    . Tighten cuts in Bs->EtacPhi pre-selection.
+
+! 2007-01-05 - Patrick Koppenburg
+  - options/PreselBs2PhiEtac.opts
+    . Remove obsolete CutBestPV option for Momentum2FlightFC
+  - increment to v1r2
+
+! 2006-12-12 - Jan Amoraal
+ - Added monitoring and testing options.
+ - Added example options on how to tune standard jpsi.
+ - Added options containing inclusive Jpsi2MuMu data (Brunel v30r13)
+
+!========================== B2Dilepton v1r1 2007-01-08 ===================
+
+! 2007-01-05 - Patrick Koppenburg 
+  - options/PreselBd2KstarMuMu.opts
+    . Remove obsolete CutBestPV option for Momentum2FlightFC
+  - increment to v1r1
+
+!========================== B2D0X v1r6 2007-01-08 =========================
+
+! 2007-01-05 - Patrick Koppenburg
+  - options/PreselBu2D0K_D02HH.opts
+  - options/PreselBu2D0K_D02HHHH.opts
+    . Remove obsolete CutBestPV option for Momentum2FlightAngleFilterCriterion
+
+! 2006-21-12 - Juan PALACIOS for Andy POWELL
+
+  - options/DVPreselBu2D0K_D02HHHH.opts, PreselBu2D0K_D02HHHH.opts use new 
+    StandardD0.opts from Phys/CommonParticles v3r6 or higher.
+
+! 2006-21-12 - Juan PALACIOS for Marta Calvi
+
+  - options/DVPreselBu2D0Tau2PiPiPi.opts
+    . Filter D0 first, then reconstruct Tau.
+
+! 2006-21-12 - Juan PALACIOS
+
+  - options/DVPreselBu2D0K_D02KsPiPi.opts, PreselBu2D0K_D02KsPiPi.opts
+    . Run PreselBu2D0K_D02KsPiPi in a GaudiSequencer 
+      called SeqPreselBu2D0K_D02KsPiPi
+
+! 2006-21-21 - Juan PALACIOS
+
+  - cmt/requirements
+    . Increase version numver to v1r6
+
+!========================== B2DsX v1r2 2007-01-08 ===================
+
+! 2007-01-08 - Juan PALACIOS for Jeremie BOREL
+
+  - options/DoPreselBs2DsH.opts
+    . Tuned and rewritten for DC06, it now uses the Standard Ds. 
+      IPS cuts have been changed to pass the timing needs.
+
+! 2007-01-05 - Patrick Koppenburg
+  - options/DVPreselBs2DsRho.opts
+  - options/DoPreselBs2DsH.opts
+  - options/PreselBs2DsMuX.opts
+    . Remove obsolete CutBestPV option for Momentum2FlightAngleFilterCriterion
+  - increment to v1r2
+
+!========================== B2DstarX v1r3 2007-01-08 ===================
+
+! 2006-12-22 - Juan PALACIOS for Andy POWELL
+
+  - options/DVPreselDstar2D0Pi_D02HHHH.opts, PreselDstar2D0Pi_D02HHHH.opts
+    uses ned StandardD0.opts from Phys/CommonParticles v3r6 or higher.
+
+  - cmt/requirements
+    . Increase version to v1r3
+
+!========================== Bs2JpsiPhi v3r3 2007-01-08 ===================
+
+! 2007-01-08 - Juan PALACIOS
+  - cmt/requirements
+    . Increase version to v3r3
+
+! 2007-01-02 - Jan Amoraal
+ - Removed TDR and DC04 selections. This version is now incompatible with DaVinci v12r*.
+         Use Phys/PhysSelections for DaVinci v12r*.
+ 
+! 2006-12-12 - Jan Amoraal
+  - Fixed DC06 options
+  - Added monitoring and debugging options
+
+!========================== Bd2PiPiPi0 v3r0 2007-01-08 ======================
+
+! 2006-12-22- Olivier Deschamps 
+  - update for DC06 : first step towards a generic B2XNeutral code
+  - increment version number
+
+!========================== Radiative v2r0 2007-01-08 ===================
+
+! 2007-01-08 - Juan PALACIOS for Lesya SHCHUTSKA
+
+  - New DC06 pre-selection options:
+    options/DV_PreselXb2GammaX.opts, DVPreselXb2GammaX.opts, 
+    DoPreselXb2GammaX.opts
+  - src/
+    . New DC06 PreselXb2GammaX.cpp code.
+    . Remove AnalyzeLb2Lambda0Gamma algorithm, ILmdGammaFitter interface and
+      LmdGammaFitter tool.
+
+  - cmt/requirements
+    . Increase version to v2r0
+    . Use Calo/CaloUtils v*
+
+
+##################################### TOOLS ###################################
+
+##################################### TESTS ###################################
+
+###############################################################################
+###############################################################################
 
 </PRE><H1><A NAME=v4r5>2006-12-07 Phys v4r5 </A></H1><PRE>
 
