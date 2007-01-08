@@ -3,6 +3,11 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+! 2007-01-08 - Juan PALACIOS
+
+  - Restore ICaloElectron interface for next release. To be removed for
+    next version of LHCb.
+
 ! 2006-12-21 - Olivier Deschamps
   - remove ICaloElectron interface (new release moved into CaloInterfaces)
 
