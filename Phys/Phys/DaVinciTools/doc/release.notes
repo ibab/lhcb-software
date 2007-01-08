@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.242 2006-12-21 18:08:17 odescham Exp $
+! $Id: release.notes,v 1.243 2007-01-08 09:44:15 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2006-12-21 - Juan PALACIOS
+
+  - Restore CaloElectron tool for next release. To be removed for 
+    new version of LHCb.
 
 ! 2006-12-21 - Olivier Deschamps
   - remove CaloElectron tool (new released moved into CaloUtils)
