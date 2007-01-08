@@ -4,6 +4,16 @@
 ! Purpose     : Analysis program for LHCb
 !-----------------------------------------------------------------------------
 
+!========================== DaVinci v17r7 2007-01-08 ===================
+
+! 2007-01-08 - Juan PALACIOS
+
+  - cmt/requirements
+    . Use PhysSys v4r6, RecSys v3r14p1
+    . Increase version number to v17r7
+
+!========================== DaVinci v17r6 2006-12-07 ===================
+
 ! 2006-12-05 - Juan PALACIOS
 
   - cmt/requirements
