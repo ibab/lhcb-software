@@ -17,6 +17,7 @@ use   RichRecBase      v*    Rich
 use   RecEvent         v*    Event
 use   MCEvent          v*    Event
 use   TrackInterfaces  v*    Tr
+use   CaloInterfaces   v*    Calo
 use   CaloUtils        v*    Calo
 use   CaloDet          v*    Det
 use   Relations        v*    Kernel

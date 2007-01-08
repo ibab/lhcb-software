@@ -5,7 +5,7 @@
  * Implementation file for algorithm ChargedProtoCombineDLLsAlg
  *
  * CVS Log :-
- * $Id: ChargedProtoCombineDLLsAlg.cpp,v 1.4 2006-12-22 10:50:45 odescham Exp $
+ * $Id: ChargedProtoCombineDLLsAlg.cpp,v 1.5 2007-01-08 13:22:46 odescham Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 15/11/2006
@@ -14,7 +14,7 @@
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
-
+#include "boost/assign/list_of.hpp"
 // local
 #include "ChargedProtoCombineDLLsAlg.h"
 
@@ -44,14 +44,14 @@ ChargedProtoCombineDLLsAlg::ChargedProtoCombineDLLsAlg( const std::string& name,
   declareProperty("ProtonDllDisable"    , m_piDisable);
   declareProperty("PionllDisable"       , m_prDisable);
 
-  m_maskTechnique["Rich"] = 0x1;
-  m_maskTechnique["Muon"] = 0x2;
-  m_maskTechnique["Ecal"] = 0x4;
-  m_maskTechnique["Hcal"] = 0xF;
-  m_maskTechnique["Prs"]  = 0x10;
-  m_maskTechnique["Spd"]  = 0x20;
-  m_maskTechnique["Brem"] = 0x40;
-  m_maskTechnique["Calo"] = 0x7C;
+  m_maskTechnique["RICH"] = 0x1;
+  m_maskTechnique["MUON"] = 0x2;
+  m_maskTechnique["ECAL"] = 0x4;
+  m_maskTechnique["HCAL"] = 0xF;
+  m_maskTechnique["PRS"]  = 0x10;
+  m_maskTechnique["SPD"]  = 0x20;
+  m_maskTechnique["BREM"] = 0x40;
+  m_maskTechnique["CALO"] = 0x7C;
 }
 
 //=============================================================================
@@ -67,22 +67,43 @@ StatusCode ChargedProtoCombineDLLsAlg::initialize()
   const StatusCode sc = GaudiAlgorithm::initialize();
   if ( sc.isFailure() ) return sc;
   
+  StatusCode scc = StatusCode::SUCCESS;
   for(std::vector<std::string>::iterator itech = m_elDisable.begin(); itech != m_elDisable.end(); ++itech){
-    m_elCombDll &= ~m_maskTechnique[(*itech)] ;
+    if(0 == m_maskTechnique[to_upper(*itech)]){
+      error() << " PID technique " << *itech << " unknown"<< endreq;
+      scc = StatusCode::FAILURE;
+    }
+    m_elCombDll &= ~m_maskTechnique[to_upper(*itech)] ;
   }
   for(std::vector<std::string>::iterator itech = m_muDisable.begin(); itech != m_muDisable.end(); ++itech){
-    m_muCombDll &= ~m_maskTechnique[(*itech)] ;
+    if(0 == m_maskTechnique[to_upper(*itech)]){
+      error() << " PID technique " << *itech << " unknown"<< endreq;
+      scc = StatusCode::FAILURE;
+    }
+    m_muCombDll &= ~m_maskTechnique[to_upper(*itech)] ;
   }
   for(std::vector<std::string>::iterator itech = m_prDisable.begin(); itech != m_prDisable.end(); ++itech){
-    m_prCombDll &= ~m_maskTechnique[(*itech)] ;
+    if(0 == m_maskTechnique[to_upper(*itech)]){
+      error() << " PID technique " << *itech << " unknown"<< endreq;
+      scc = StatusCode::FAILURE;
+    }
+    m_prCombDll &= ~m_maskTechnique[to_upper(*itech)] ;
   }
   for(std::vector<std::string>::iterator itech = m_piDisable.begin(); itech != m_piDisable.end(); ++itech){
-    m_piCombDll &= ~m_maskTechnique[(*itech)] ;
+    if(0 == m_maskTechnique[to_upper(*itech)]){
+      error() << " PID technique " << *itech << " unknown"<< endreq;
+      scc = StatusCode::FAILURE;
+    }
+    m_piCombDll &= ~m_maskTechnique[to_upper(*itech)] ;
   }
   for(std::vector<std::string>::iterator itech = m_kaDisable.begin(); itech != m_kaDisable.end(); ++itech){
-    m_kaCombDll &= ~m_maskTechnique[(*itech)] ;
+    if(0 == m_maskTechnique[to_upper(*itech)]){
+      error() << " PID technique " << *itech << " unknown"<< endreq;
+      scc = StatusCode::FAILURE;
+    }
+    m_kaCombDll &= ~m_maskTechnique[to_upper(*itech)] ;
   }
-  return sc;
+  return scc;
 }
 
 //=============================================================================
@@ -141,7 +162,7 @@ StatusCode ChargedProtoCombineDLLsAlg::execute()
 void
 ChargedProtoCombineDLLsAlg::addRich( LHCb::ProtoParticle * proto, CombinedLL & combDLL ){
   // Add RICH Dll information. Default, for when not available is 0
-  int richMask = m_maskTechnique["Rich"];
+  int richMask = m_maskTechnique["RICH"];
   if( 0 !=  m_elCombDll & richMask )combDLL.elDLL += proto->info ( LHCb::ProtoParticle::RichDLLe  , 0 );
   if( 0 !=  m_muCombDll & richMask )combDLL.muDLL += proto->info ( LHCb::ProtoParticle::RichDLLmu , 0 );
   if( 0 !=  m_piCombDll & richMask )combDLL.piDLL += proto->info ( LHCb::ProtoParticle::RichDLLpi , 0 );
@@ -151,7 +172,7 @@ ChargedProtoCombineDLLsAlg::addRich( LHCb::ProtoParticle * proto, CombinedLL & c
 
 void
 ChargedProtoCombineDLLsAlg::addMuon( LHCb::ProtoParticle * proto, CombinedLL & combDLL ){
-  int muonMask = m_maskTechnique["Muon"];
+  int muonMask = m_maskTechnique["MUON"];
   if( 0 != m_elCombDll  & muonMask )combDLL.elDLL += proto->info ( LHCb::ProtoParticle::MuonBkgLL,0 );
   if( 0 != m_muCombDll  & muonMask )combDLL.muDLL += proto->info ( LHCb::ProtoParticle::MuonMuLL, 0 );
   if( 0 != m_piCombDll  & muonMask )combDLL.piDLL += proto->info ( LHCb::ProtoParticle::MuonBkgLL,0 );
@@ -161,10 +182,10 @@ ChargedProtoCombineDLLsAlg::addMuon( LHCb::ProtoParticle * proto, CombinedLL & c
 
 void
 ChargedProtoCombineDLLsAlg::addCalo( LHCb::ProtoParticle * proto, CombinedLL & combDLL ){
-  int ecalMask = m_maskTechnique["Ecal"];
-  int hcalMask = m_maskTechnique["Hcal"];
-  int prsMask  = m_maskTechnique["Prs"];
-  int bremMask = m_maskTechnique["Brem"];
+  int ecalMask = m_maskTechnique["ECAL"];
+  int hcalMask = m_maskTechnique["HCAL"];
+  int prsMask  = m_maskTechnique["PRS"];
+  int bremMask = m_maskTechnique["BREM"];
   // DLL(el)
   if( 0 != m_elCombDll & ecalMask )combDLL.elDLL += proto->info ( LHCb::ProtoParticle::EcalPIDe, 0  );
   if( 0 != m_elCombDll & hcalMask )combDLL.elDLL += proto->info ( LHCb::ProtoParticle::HcalPIDe, 0  );

@@ -5,7 +5,7 @@
  * Header file for algorithm ChargedProtoCombineDLLsAlg
  *
  * CVS Log :-
- * $Id: ChargedProtoCombineDLLsAlg.h,v 1.3 2006-12-22 10:50:45 odescham Exp $
+ * $Id: ChargedProtoCombineDLLsAlg.h,v 1.4 2007-01-08 13:22:47 odescham Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 15/11/2006
@@ -47,6 +47,16 @@ public:
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
+
+protected:
+  /// Converts a string to entirely upper case
+  inline std::string to_upper( const std::string & in )
+  {
+    std::string out( in );
+    std::transform( in.begin() , in.end() , out.begin () , ::toupper ) ;
+    return out ;
+  }
+
 
 private: // utility classes
 
@@ -92,3 +102,7 @@ private: // data
 };
 
 #endif // GLOBALRECO_ChargedProtoCombineDLLsAlg_H
+
+
+
+

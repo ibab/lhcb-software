@@ -4,6 +4,9 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+! 2007-01-08 - Olivier Deschamps
+ - add protections in ChargedProtoCombineDLLsAlg
+
 ! 2006-12-22 - Olivier Deschamps
  - add the possibility to disable some Det in ChargedProtoCombineDLLsAlg
  - update Charged and Neutral ProtoPAlg (new CaloTrajectoryL info + ecalE)
