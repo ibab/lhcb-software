@@ -3,6 +3,8 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+!========================== DaVinciKernel v5r6 2007-01-08 ===================
+
 ! 2007-01-08 - Juan PALACIOS
 
   - Restore ICaloElectron interface for next release. To be removed for
