@@ -3,6 +3,14 @@ Package     : Phys/DaVinci
 Package Coordinator : Juan Palacios
 Purpose     : LHCb analysis program 
 
+</PRE><H1><A NAME=v17r7>2006-12-07 DaVinci v17r7. Version for accept rate and CPU performance of DC06 pre-selectionss.</A></H1><PRE>
+Based on Phys v4r6, Rec v3r14p1, Lbcom v5r9 LHCb v21r12, Gaudi v18r11, LCGCMT 48a.
+Highlights from Phys v4r6:
+
+ - Speed improvements for pre-selections and CommonParticles.
+ - Bug-fixes
+ - New DC06 versions of PhysSel/Radiative (L. .Shchutska) and PhysSel/Bd2PiPiPi0 (O. Deschamps).
+
 </PRE><H1><A NAME=v17r6>2006-12-07 DaVinci v17r6. Version for validation of DC06 pre-selectionss.</A></H1><PRE>
 Based on Phys v4r5, Rec v3r14, Lbcom v5r9 LHCb v21r12, Gaudi v18r11, LCGCMT 48a.
 Highlights from Phys v4r5:
