@@ -1,7 +1,7 @@
 #include "GaudiKernel/DeclareFactoryEntries.h"
 
 DECLARE_FACTORY_ENTRIES( AlignTrTools ) {
-  DECLARE_TOOL( ATrackSelector );
-  DECLARE_ALGORITHM( AlignTrackSel );
+  DECLARE_ALGORITHM( AlignTrackMonitor );
+  DECLARE_TOOL( AlignSelTool );
 }
 

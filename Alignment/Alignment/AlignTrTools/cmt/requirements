@@ -1,47 +1,50 @@
 #============================================================================
-# Created    : 2006-09-31
+# Created     : 2006-09-31
 # Maintainers : Johan Blouw, Physikalisches Institut, Heidelberg
 #		Louis Nicolas, EPFL, Lausanne
 #		Adlene Hicheur, EPFL, Lausanne
 #============================================================================
 package           AlignTrTools
-version           v1r2
+version           v1r3
 
 #============================================================================
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          cmt doc src
-include_path      none
+branches          AlignTrTools cmt doc src
+include_dirs	  $(ALIGNTRTOOLSROOT)
 
 #============================================================================
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #    Put as many lines as needed, with all packages, without the '#'
 #============================================================================
-use     GSL           v*     LCG_Interfaces
+use   GSL             v*     LCG_Interfaces
 
 use   GaudiAlg        v*
-use   LHCbDefinitions v*     Kernel
 use   LHCbKernel      v*     Kernel
+use   LHCbDefinitions v*     Kernel
+use   LHCbMath        v*     Kernel
+use   Relations       v*     Kernel
+
+use   MCEvent         v*     Event
+use   RecEvent        v*     Event
 use   TrackEvent      v*     Event
 use   DigiEvent       v*     Event
+use   LinkerEvent     v*     Event
 
-use   AlignmentInterfaces v1r0    Alignment
-use   Relations       v*     Kernel
+use   TrackInterfaces v*     Tr
+use   TrackFitEvent   v*     Tr
+use   TsaKernel       v*     Tr
 
 use   STDet           v*     Det
 use   OTDet           v*     Det
 use   VeloDet         v*     Det
 
-use   LinkerEvent     v*     Event
-use   MCEvent         v*     Event
-use   RecEvent        v*     Event
-use   TrackFitEvent   v*     Tr
-use   TrackInterfaces v*     Tr
 #============================================================================
 # Component library building rule
 #============================================================================
-library          AlignTrTools    ../src/*.cpp 
+library          AlignTrTools    ../src/*.cpp -import=AIDA
 #============================================================================
 # define component library link options
 #============================================================================
 apply_pattern    component_library library=AlignTrTools
+set ALIGNTRTOOLSOPTS  ${ALIGNTRTOOLSROOT}/options
