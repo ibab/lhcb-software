@@ -7,6 +7,9 @@
 
 ! 2007-01-08 - Juan PALACIOS
 
+  - (I)PhysDesktop::particles() and secondaryVertices() now 
+    return by const reference.
+
   - Restore ICaloElectron interface for next release. To be removed for
     next version of LHCb.
 

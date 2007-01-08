@@ -53,13 +53,13 @@ public:
   StatusCode getEventInput();
 
   /// Retrieve the particles container 
-  const LHCb::Particle::ConstVector particles() const;
+  const LHCb::Particle::ConstVector& particles() const;
   
   /// Retrieve the PV from vertex container
-  const LHCb::RecVertex::ConstVector& primaryVertices() ;
+  const LHCb::RecVertex::ConstVector& primaryVertices();
 
   /// Retrieve the secondary vertices
-  const LHCb::Vertex::ConstVector secondaryVertices() const;
+  const LHCb::Vertex::ConstVector& secondaryVertices() const;
 
   /// Add a particle to the DeskTop to which it belongs
   const LHCb::Particle* save( const LHCb::Particle* partToSave );

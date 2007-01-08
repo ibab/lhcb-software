@@ -191,7 +191,7 @@ void PhysDesktop::handle(const Incident&){
 //=============================================================================
 // Provides a reference to its internal container of particles
 //=============================================================================
-const LHCb::Particle::ConstVector PhysDesktop::particles() const{
+const LHCb::Particle::ConstVector& PhysDesktop::particles() const{
   return m_parts;
 }
 //=============================================================================
@@ -212,7 +212,7 @@ const LHCb::RecVertex::ConstVector& PhysDesktop::primaryVertices(){
 //=============================================================================
 // Provides a reference to its internal container of vertices
 //=============================================================================
-const LHCb::Vertex::ConstVector PhysDesktop::secondaryVertices() const {
+const LHCb::Vertex::ConstVector& PhysDesktop::secondaryVertices() const {
   return m_secVerts;
 }
 

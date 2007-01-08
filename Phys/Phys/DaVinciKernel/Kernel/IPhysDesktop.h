@@ -1,4 +1,4 @@
-// $Id: IPhysDesktop.h,v 1.20 2006-10-22 13:15:55 pkoppenb Exp $
+// $Id: IPhysDesktop.h,v 1.21 2007-01-08 22:06:03 jpalac Exp $
 #ifndef DAVINCIKERNEL_IPHYSDESKTOP_H 
 #define DAVINCIKERNEL_IPHYSDESKTOP_H 1
 
@@ -31,13 +31,13 @@ public:
   virtual StatusCode getEventInput() = 0;
 
   /// Retrieve the particles containers
-  virtual const LHCb::Particle::ConstVector particles() const = 0;
+  virtual const LHCb::Particle::ConstVector& particles() const = 0;
 
   /// Retrieve the PV from vertex container
   virtual const LHCb::RecVertex::ConstVector& primaryVertices() = 0;
 
   /// Retrieve the secondary vertices
-  virtual const LHCb::Vertex::ConstVector secondaryVertices() const = 0;
+  virtual const LHCb::Vertex::ConstVector& secondaryVertices() const = 0;
 
   /// Add the particles  to the Desktop
   virtual const LHCb::Particle* save( const LHCb::Particle* input ) = 0;
