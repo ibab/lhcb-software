@@ -1,16 +1,15 @@
-// $Id: SiAmplifierResponse.h,v 1.1.1.1 2006-05-16 08:33:54 mneedham Exp $
-#ifndef _SiAmplifierResponse_H
-#define _SiAmplifierResponse_H
+// $Id: SiAmplifierResponse.h,v 1.2 2007-01-09 14:57:21 jvantilb Exp $
+#ifndef SiAmplifierResponse_H
+#define SiAmplifierResponse_H 1
 
-#include <string>
-#include <vector>
-
+// Gaudi
 #include "GaudiAlg/GaudiTool.h"
-#include "Kernel/ISiAmplifierResponse.h"
 #include "GaudiMath/GaudiMath.h"
 
+// Interface from LHCbKernel
+#include "Kernel/ISiAmplifierResponse.h"
 
-/** @class SiAmplifierResponse SiAmplifierResponse.h SiAlgorithms/SiAmplifierResponse.h
+/** @class SiAmplifierResponse SiAmplifierResponse.h
  *
  *  Class for estimating Beetle response
  *
@@ -18,7 +17,8 @@
  *  @date   13/3/2002
  */
 
-class SiAmplifierResponse : public GaudiTool, virtual public ISiAmplifierResponse {
+class SiAmplifierResponse : public GaudiTool, 
+                            virtual public ISiAmplifierResponse {
 
 public: 
 
@@ -34,7 +34,7 @@ public:
   virtual StatusCode initialize();
 
   /** calculate Beetle response
-  * @param time in ns 
+  * @param time in nanoseconds
   * @return response 
   */
   virtual double response(const double time) const;
@@ -47,27 +47,23 @@ public:
 
 private:
 
+  /// Internal method to convert the spline type from string to GaudiMath type
   GaudiMath::Interpolation::Type typeFromString() const;
 
-  std::vector<double> m_times;
-  std::vector<double> m_values;
+  ISiAmplifierResponse::Info m_info;         ///< Holds information on validity
+  GaudiMath::SimpleSpline* m_responseSpline; ///< The fitted spline
 
-  double m_tMin;
-  double m_tMax;
+  double m_tMin; ///< First entry in vector of times
+  double m_tMax; ///< Last entry in vector of times
 
-  double m_capacitance;
-  unsigned int m_vfs;
-  std::string m_type;
-  std::string m_splineType;
-
-  ISiAmplifierResponse::Info m_info;
-  GaudiMath::SimpleSpline* m_responseSpline;
+  // job options
+  std::vector<double> m_times;  ///< List of times in ns
+  std::vector<double> m_values; ///< Corresponding values
+  std::string m_splineType;     ///< Spline type (default is "Cspline")
+  std::string m_type;           ///< Info object: Type of data
+  unsigned int m_vfs;           ///< Info object: Signal shaping parameter
+  double m_capacitance;         ///< Info object: Capacitance
 
 };
 
-#endif // _SiAmplifierResponse_H
-
-
-
-
-
+#endif // SiAmplifierResponse_H

@@ -1,34 +1,37 @@
-// $Id: SiGeantDepositedCharge.cpp,v 1.2 2006-12-08 09:39:37 mneedham Exp $
+// $Id: SiGeantDepositedCharge.cpp,v 1.3 2007-01-09 14:57:21 jvantilb Exp $
+
+// Gaudi
 #include "GaudiKernel/ToolFactory.h"
 
-#include "SiGeantDepositedCharge.h"
+// LHCbKernel
 #include "Kernel/LHCbConstants.h"
+
+// MCEvent
 #include "Event/MCHit.h"
 
-using namespace LHCb;
+// local
+#include "SiGeantDepositedCharge.h"
 
 DECLARE_TOOL_FACTORY( SiGeantDepositedCharge );
 
-/// constructor
 SiGeantDepositedCharge::SiGeantDepositedCharge(const std::string& type, 
-                                     const std::string& name, 
-                                     const IInterface* parent): 
+                                               const std::string& name, 
+                                               const IInterface* parent): 
   GaudiTool( type, name, parent )
 {
+  /// constructor
   declareProperty("scalingFactor", m_scalingFactor = 1.0);
  
-  // need a line here to get the interface correct !!!!
+  // need a line here to get the interface correct !
   declareInterface<ISiDepositedCharge>(this);
 }
 
-/// destructer
-SiGeantDepositedCharge::~SiGeantDepositedCharge() {
+SiGeantDepositedCharge::~SiGeantDepositedCharge()
+{ 
+  // destructer
 }
 
-/// calc charge
-double SiGeantDepositedCharge::charge(const MCHit* aHit) const{
- return ((m_scalingFactor*aHit->energy())/LHCbConstants::SiEnergyPerIonPair);
+double SiGeantDepositedCharge::charge(const LHCb::MCHit* aHit) const
+{
+  return m_scalingFactor * aHit->energy() / LHCbConstants::SiEnergyPerIonPair;
 }
-
-
-

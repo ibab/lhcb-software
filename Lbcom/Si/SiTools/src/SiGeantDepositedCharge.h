@@ -1,11 +1,12 @@
-// $Id: SiGeantDepositedCharge.h,v 1.1.1.1 2006-05-16 08:33:54 mneedham Exp $
-#ifndef _SiGeantDepositedCharge_H
-#define _SiGeantDepositedCharge_H
+// $Id: SiGeantDepositedCharge.h,v 1.2 2007-01-09 14:57:21 jvantilb Exp $
+#ifndef SiGeantDepositedCharge_H
+#define SiGeantDepositedCharge_H 1
 
-
-#include "Kernel/ISiDepositedCharge.h"
-
+// Gaudi
 #include "GaudiAlg/GaudiTool.h"
+
+// Interface from MCEvent
+#include "Kernel/ISiDepositedCharge.h"
 
 /** @class SiGeantDepositedCharge SiGeantDepositedCharge.h
  *
@@ -15,15 +16,14 @@
  *  @date   13/3/2002
  */
 
-
-class SiGeantDepositedCharge : public GaudiTool, virtual public ISiDepositedCharge {
+class SiGeantDepositedCharge : public GaudiTool, 
+                               virtual public ISiDepositedCharge {
 
 public: 
 
   /** Constructer */
-  SiGeantDepositedCharge(const std::string& type, 
-              const std::string& name,
-              const IInterface* parent);
+  SiGeantDepositedCharge(const std::string& type, const std::string& name,
+                         const IInterface* parent);
 
   /** destructer */
   virtual ~SiGeantDepositedCharge();
@@ -36,11 +36,12 @@ public:
 
 private:
 
-  double m_scalingFactor;
+  // Job option
+  double m_scalingFactor; ///< Scaling factor for the conversion into electrons
  
 };
 
-#endif // _SiGeantDepositedCharge_H
+#endif // SiGeantDepositedCharge_H
 
 
 
