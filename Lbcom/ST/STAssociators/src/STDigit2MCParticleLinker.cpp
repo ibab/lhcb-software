@@ -1,55 +1,41 @@
-// $Id: STDigit2MCParticleLinker.cpp,v 1.4 2006-12-14 15:43:45 cattanem Exp $
-// Include files 
-
-#include "Event/STDigit.h"
-#include "Event/MCSTDigit.h"
-#include "Event/MCSTDeposit.h"
-#include "Event/MCParticle.h"
-
-#include "Linker/LinkerWithKey.h"
+// $Id: STDigit2MCParticleLinker.cpp,v 1.5 2007-01-09 15:05:00 jvantilb Exp $
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
+
+// Linker
+#include "Linker/LinkerWithKey.h"
+
+// Event
+#include "Event/STDigit.h"
+#include "Event/MCParticle.h"
+#include "Kernel/STDetSwitch.h"
 
 // local
 #include "STDigit2MCParticleLinker.h"
 #include "STTruthTool.h"
 
-#include "Kernel/STDetSwitch.h"
-
-#include <algorithm>
-
-//-----------------------------------------------------------------------------
-// Implementation file for class : STDigit2MCParticleChi2Alg
-//
-// 25/04/2002 : M. Needham
-//-----------------------------------------------------------------------------
+using namespace LHCb;
 
 DECLARE_ALGORITHM_FACTORY( STDigit2MCParticleLinker );
 
 STDigit2MCParticleLinker::STDigit2MCParticleLinker( const std::string& name,
-                                        ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm (name,pSvcLocator) 
+                                                    ISvcLocator* pSvcLocator) :
+  GaudiAlgorithm (name,pSvcLocator)
 {
-
-  // constructer
-  declareProperty("OutputData", m_outputData = LHCb::STDigitLocation::TTDigits);
-  declareProperty("InputData",  m_inputData  = LHCb::STDigitLocation::TTDigits);
-
-  declareProperty( "addSpillOverHits",m_addSpillOverHits = false); 
+  declareProperty("OutputData", m_outputData = STDigitLocation::TTDigits);
+  declareProperty("InputData",  m_inputData  = STDigitLocation::TTDigits);
+  declareProperty("addSpillOverHits",m_addSpillOverHits = false); 
   declareProperty("minfrac", m_minFrac = 0.3);
   declareProperty("oneRef",m_oneRef = false);
   declareProperty("detType", m_detType = "TT");
 }
 
-StatusCode STDigit2MCParticleLinker::initialize() {
-
+StatusCode STDigit2MCParticleLinker::initialize()
+{
   // initialize
   StatusCode sc = GaudiAlgorithm::initialize();
-  if (sc.isFailure()){
-    return Error("Failed to initialize", sc);
-  }
-
+  if (sc.isFailure()) return Error("Failed to initialize", sc);
 
   STDetSwitch::flip(m_detType,m_inputData);
   STDetSwitch::flip(m_detType,m_outputData);
@@ -57,27 +43,28 @@ StatusCode STDigit2MCParticleLinker::initialize() {
   return StatusCode::SUCCESS;
 }
 
-STDigit2MCParticleLinker::~STDigit2MCParticleLinker() {
+STDigit2MCParticleLinker::~STDigit2MCParticleLinker()
+{
   // destructer
-}; 
+} 
 
-StatusCode STDigit2MCParticleLinker::execute() {
+StatusCode STDigit2MCParticleLinker::execute()
+{
+  // get STDigits
+  STDigits* digitCont = get<STDigits>(m_inputData);
 
-  // get LHCb::STDigits
-  LHCb::STDigits* digitCont = get<LHCb::STDigits>(m_inputData);
-
-  // get LHCb::MCParticles
-  LHCb::MCParticles* mcParts = get<LHCb::MCParticles>(LHCb::MCParticleLocation::Default);
+  // get MCParticles
+  MCParticles* mcParts = get<MCParticles>(MCParticleLocation::Default);
  
-  // creating a linker which is the bastard spawn of satan
-  LinkerWithKey<LHCb::MCParticle,LHCb::STDigit> myLink( evtSvc(), msgSvc(), outputData() );
+  // creating a linker
+  LinkerWithKey<MCParticle,STDigit> myLink( evtSvc(), msgSvc(), outputData() );
 
-  // loop and link LHCb::STDigits to MC truth
-  LHCb::STDigits::const_iterator iterDigit = digitCont->begin() ;
+  // loop and link STDigits to MC truth
+  STDigits::const_iterator iterDigit = digitCont->begin() ;
   for( ; iterDigit != digitCont->end(); ++iterDigit){
 
     // find all particles
-    std::map<const LHCb::MCParticle*,double> partMap;
+    std::map<const MCParticle*,double> partMap;
     STTruthTool::associateToTruth(*iterDigit,partMap);
      
     // select references to add to table
@@ -91,7 +78,6 @@ StatusCode STDigit2MCParticleLinker::execute() {
         std::vector<partPair>::iterator iterPair = selectedRefs.begin();
         while (iterPair != selectedRefs.end()){
           myLink.link(*iterDigit,iterPair->first,iterPair->second);
-	  // std::cout << "link it" << std::endl;
           ++iterPair;
         } //iterPair
       }
@@ -106,10 +92,11 @@ StatusCode STDigit2MCParticleLinker::execute() {
 };
 
 
-double STDigit2MCParticleLinker::totalCharge(const std::map<const LHCb::MCParticle*,double>& partMap) const{
-
+double STDigit2MCParticleLinker::totalCharge(const std::map<const MCParticle*,
+                                             double>& partMap) const
+{
   double totCharge = 0.0;
-  std::map<const LHCb::MCParticle*,double>::const_iterator iterMap = partMap.begin();
+  std::map<const MCParticle*,double>::const_iterator iterMap = partMap.begin();
   while (iterMap != partMap.end()){
     totCharge += fabs((*iterMap).second);
     ++iterMap;
@@ -118,21 +105,23 @@ double STDigit2MCParticleLinker::totalCharge(const std::map<const LHCb::MCPartic
   return totCharge;
 }
 
-StatusCode STDigit2MCParticleLinker::refsToRelate(std::vector<partPair>& selectedRefs,
-                                            const std::map<const LHCb::MCParticle*,double>& partMap,
-                                            const double totCharge,
-                                            LHCb::MCParticles* particles) const{
+StatusCode
+STDigit2MCParticleLinker::refsToRelate(std::vector<partPair>& selRefs,
+                              const std::map<const MCParticle*,double>& partMap,
+                                       const double totCharge,
+                                       MCParticles* particles) const
+{
   // iterate over map
-  std::map<const LHCb::MCParticle*,double>::const_iterator iterMap = partMap.begin();
+  std::map<const MCParticle*,double>::const_iterator iterMap = partMap.begin();
   while (iterMap != partMap.end()){
-    const LHCb::MCParticle* aParticle = iterMap->first;
+    const MCParticle* aParticle = iterMap->first;
     double frac = -1.0;
     if (totCharge > 0.0){
      frac = iterMap->second/totCharge;
     }
     if ((0 != aParticle)&&(frac>m_minFrac)){
       if ((m_addSpillOverHits == true)||(particles == aParticle->parent())){
-	selectedRefs.push_back(std::make_pair(aParticle,frac));
+        selRefs.push_back(std::make_pair(aParticle,frac));
       }
     }
     ++iterMap;

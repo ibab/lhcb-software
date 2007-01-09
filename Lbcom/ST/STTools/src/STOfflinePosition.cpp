@@ -1,100 +1,101 @@
-// $Id: STOfflinePosition.cpp,v 1.8 2006-12-18 10:24:44 cattanem Exp $
-
+// $Id: STOfflinePosition.cpp,v 1.9 2007-01-09 15:02:24 jvantilb Exp $
  
 // Kernel
 #include "GaudiKernel/ToolFactory.h"
-
  
 // Event
 #include "Event/STDigit.h"
 #include "Event/STCluster.h"
 
-#include <math.h> 
+// Boost
+#include <boost/assign/std/vector.hpp>
 
+// local
 #include "STFun.h"
 #include "STOfflinePosition.h" 
 
-#include <boost/assign/std/vector.hpp>
-
 using namespace boost::assign;
-using namespace boost;
+using namespace LHCb;
 
 DECLARE_TOOL_FACTORY( STOfflinePosition );
  
-STOfflinePosition::STOfflinePosition(const std::string& type, const std::string& name, const IInterface* parent) :
- GaudiTool(type, name, parent)
+STOfflinePosition::STOfflinePosition(const std::string& type, 
+                                     const std::string& name,
+                                     const IInterface* parent) :
+  GaudiTool(type, name, parent)
 {
-  // constructer
-  m_ErrorVec += 0.22, 0.12, 0.24, 0.21;
-  this->declareProperty("errorVec",m_ErrorVec);
-
-  this->declareProperty("sharingCorr",m_sharingCorr = 112.);
-  this->declareProperty("maxNtoCorr",m_MaxNtoCorr = 4);
+  m_errorVec += 0.22, 0.12, 0.24, 0.21;
+  declareProperty("errorVec",m_errorVec);
+  declareProperty("sharingCorr",m_sharingCorr = 112.);
+  declareProperty("maxNtoCorr",m_maxNtoCorr = 4);
 
   declareInterface<ISTClusterPosition>(this);
 }
 
-STOfflinePosition::~STOfflinePosition() {
+STOfflinePosition::~STOfflinePosition() 
+{
   //destructer
 }
 
-ISTClusterPosition::Info STOfflinePosition::estimate(const LHCb::STCluster* aCluster) const{
-
+ISTClusterPosition::Info STOfflinePosition::estimate(const STCluster* 
+                                                     aCluster) const 
+{
   double stripNum = STFun::position(aCluster->stripValues());
   
-  LHCb::STChannelID firstChan = aCluster->firstChannel();
-  LHCb::STChannelID theChan = LHCb::STChannelID(firstChan.type(), firstChan.station(),
+  STChannelID firstChan = aCluster->firstChannel();
+  STChannelID theChan = STChannelID(firstChan.type(), firstChan.station(),
                                     firstChan.layer(), firstChan.detRegion(),
                                     firstChan.sector(), 
                                     (unsigned int)stripNum+firstChan.strip());
   
   ISTClusterPosition::Info theInfo; 
   theInfo.strip = theChan;
-  theInfo.fractionalPosition = stripFraction(stripNum - floor(stripNum),aCluster->size());
+  theInfo.fractionalPosition = stripFraction(stripNum, aCluster->size());
   theInfo.fractionalError = error(aCluster->size());
                                                                              
   return theInfo;
 }
 
-ISTClusterPosition::Info STOfflinePosition::estimate(const SmartRefVector<LHCb::STDigit>& digits) const{
-  
+ISTClusterPosition::Info
+STOfflinePosition::estimate(const SmartRefVector<STDigit>& digits) const
+{  
   double stripNum = STFun::position(digits);
  
-  LHCb::STChannelID firstChan = digits.front()->channelID();
-  LHCb::STChannelID theChan = LHCb::STChannelID(firstChan.type(), firstChan.station(),
+  STChannelID firstChan = digits.front()->channelID();
+  STChannelID theChan = STChannelID(firstChan.type(), firstChan.station(),
                                     firstChan.layer(), firstChan.detRegion(),
                                     firstChan.sector(), (unsigned int)stripNum);
                                                                              
   ISTClusterPosition::Info theInfo; 
   theInfo.strip = theChan;
-  theInfo.fractionalPosition = stripFraction(stripNum - floor(stripNum),digits.size());
+  theInfo.fractionalPosition = stripFraction( stripNum, digits.size() );
   theInfo.fractionalError = error(digits.size());
 
   return theInfo;
 }
 
-double STOfflinePosition::error(const unsigned int nStrips) const{
- 
+double STOfflinePosition::error(const unsigned int nStrips) const
+{ 
  // estimate of error
- return (nStrips < m_ErrorVec.size() ? m_ErrorVec[nStrips-1] : m_ErrorVec.back());
+ return (nStrips < m_errorVec.size() ? 
+         m_errorVec[nStrips-1] : m_errorVec.back());
 }
 
 double STOfflinePosition::stripFraction(const double stripNum,
-                                        const unsigned int clusterSize) const{
-
+                                        const unsigned int clusterSize) const
+{
   // 'S- shape correction' for non-linear charge sharing
   double corStripPos = stripNum - floor(stripNum);
-  if ((clusterSize>1)&&(clusterSize<(unsigned)m_MaxNtoCorr)) {
-     corStripPos = this->chargeSharingCorr(corStripPos);
+  if ( (clusterSize>1) && ((int)clusterSize < m_maxNtoCorr) ) {
+    corStripPos = this->chargeSharingCorr(corStripPos);
   }
 
   return corStripPos;
 }
 
-double STOfflinePosition::chargeSharingCorr(const double origDist) const{
- 
+double STOfflinePosition::chargeSharingCorr(const double origDist) const
+{ 
   // non-linear charge sharing correction
-
   double newDist = origDist-0.5;
 
   if (m_sharingCorr > 0.0) {
@@ -108,5 +109,3 @@ double STOfflinePosition::chargeSharingCorr(const double origDist) const{
 
   return newDist+0.5;
 }
-
-

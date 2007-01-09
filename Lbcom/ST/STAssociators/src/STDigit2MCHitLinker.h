@@ -1,15 +1,9 @@
-// $Id: STDigit2MCHitLinker.h,v 1.2 2006-02-07 08:46:39 mneedham Exp $
+// $Id: STDigit2MCHitLinker.h,v 1.3 2007-01-09 15:05:00 jvantilb Exp $
 #ifndef STDIGIT2MCHITLINKER_H
 #define STDIGIT2MCHITLINKER_H 1
 
-#include <string>
-#include <map>
-#include <utility>
-#include <vector>
-
 #include "GaudiAlg/GaudiAlgorithm.h"
 #include "Event/MCHit.h"
-
 
 /** @class STDigit2MCHitLinker STDigit2MCHitLinker.h
  *  
@@ -49,16 +43,16 @@ private:
                           const std::map<const LHCb::MCHit*,double>& hitMap,
                           const double& totCharge,
                           LHCb::MCHits* hits) const;
-  
-  std::string m_outputData;
-  std::string m_inputData;
-  bool m_addSpillOverHits;
-  double m_minFrac;  
-  bool m_oneRef;
- 
-  std::string m_hitLocation;
-  std::string m_detType;
 
+  std::string m_hitLocation;
+
+  // job options
+  std::string m_outputData;   ///< Location of the STDigits linker table
+  std::string m_inputData;    ///< Location of the STDigits
+  bool m_addSpillOverHits;    ///< Flag to add spill-over to linker table
+  double m_minFrac;           ///< Minimal charge fraction to link to MCParticle
+  bool m_oneRef;              ///< Flag to allow only 1 link for each digit
+  std::string m_detType;      ///< Detector type (IT or TT)
 };
 
 inline std::string STDigit2MCHitLinker::outputData() const {

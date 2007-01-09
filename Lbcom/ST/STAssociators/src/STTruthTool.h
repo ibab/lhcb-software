@@ -1,4 +1,4 @@
-// $Id: STTruthTool.h,v 1.2 2006-02-07 08:46:39 mneedham Exp $
+// $Id: STTruthTool.h,v 1.3 2007-01-09 15:05:00 jvantilb Exp $
 #ifndef STTRUTHTOOL_H
 #define STTRUTHTOOL_H 1
 
@@ -10,26 +10,23 @@
  *  @date   26/04/2002
 */
 
-#include "GaudiKernel/StatusCode.h"
 #include <map>
 
-
 namespace LHCb{
-class MCHit;
-class MCParticle;
-class STDigit;
+  class MCParticle;
+  class MCHit;
+  class STDigit;
 };
 
 namespace STTruthTool{
 
-
-  StatusCode associateToTruth(const LHCb::STDigit* aDigit,
-                              std::map<const LHCb::MCHit*,double>& hitMap,
-                              double& foundCharge);
+  void associateToTruth(const LHCb::STDigit* aDigit,
+                        std::map<const LHCb::MCHit*,double>& hitMap,
+                        double& foundCharge);
   
-  StatusCode associateToTruth(const LHCb::STDigit* aDigit,
-                              std::map<const LHCb::MCParticle*,double>& particleMap);
+  void associateToTruth(const LHCb::STDigit* aDigit,
+                        std::map<const LHCb::MCParticle*,double>& particleMap);
 
-}; // STTRUTHTOOL_H
+}; 
 
-#endif
+#endif // STTRUTHTOOL_H

@@ -1,13 +1,15 @@
-// $Id: STSignalToNoiseTool.h,v 1.2 2005-12-20 15:29:32 cattanem Exp $
-#ifndef _STSIGNALTONOISETOOL_H
-#define _STSIGNALTONOISETOOL_H
+// $Id: STSignalToNoiseTool.h,v 1.3 2007-01-09 15:02:25 jvantilb Exp $
+#ifndef STSIGNALTONOISETOOL_H
+#define STSIGNALTONOISETOOL_H 1
 
+// Gaudi
 #include "GaudiAlg/GaudiTool.h"
 
-// From STEvent
+// LHCbKernel
 #include "Kernel/ISTSignalToNoiseTool.h"
 
-#include <string>
+class DeSTDetector;
+class DeSTSector;
 
 /** @class STSignalToNoiseTool STSignalToNoiseTool.h
  *
@@ -17,31 +19,26 @@
  *  @date   14/3/2002
  */
 
-class DeSTDetector;
-class DeSTSector;
-
-class STSignalToNoiseTool : public GaudiTool, virtual public ISTSignalToNoiseTool {
+class STSignalToNoiseTool : public GaudiTool, 
+                            virtual public ISTSignalToNoiseTool {
 
 public: 
 
   /// constructer
-  STSignalToNoiseTool(const std::string& type, 
-                      const std::string& name,
-                      const IInterface* parent);
+  STSignalToNoiseTool( const std::string& type, 
+                       const std::string& name,
+                       const IInterface* parent );
 
   /// destructer
   virtual ~STSignalToNoiseTool();
 
-  /// init
+  /// initialize
   virtual StatusCode initialize();
-
   
   // S/N   
+  virtual double signalToNoise(const LHCb::STDigit* aDigit);
   virtual double signalToNoise(const LHCb::STCluster* aCluster) ;
   virtual double signalToNoise(const SmartRefVector<LHCb::STDigit>& digitCont);
-
-
-  virtual double signalToNoise(const LHCb::STDigit* aDigit);
 
   virtual double noiseInADC(const LHCb::STChannelID& aChan);
   virtual double noiseInElectrons(const LHCb::STChannelID& aChan);
@@ -52,21 +49,18 @@ public:
 
 private:
 
- double capacitance(const LHCb::STChannelID aChan) const;
+  DeSTDetector* m_tracker;
+  std::vector<double> m_paramsInADC;
 
- std::vector<double> m_paramsInADC;
- std::vector<double> m_paramsInElectron;
-
- double m_conversionToADC;
- 
-
- std::string m_detType;
- DeSTDetector* m_tracker;
+  // job options
+  std::vector<double> m_paramsInElectron;
+  double m_conversionToADC;
+  std::string m_detType;
 
 };
 
 
-#endif // _STSIGNALTONOISETOOL_H
+#endif // STSIGNALTONOISETOOL_H
 
 
 

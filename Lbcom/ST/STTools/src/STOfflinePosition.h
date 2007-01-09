@@ -1,13 +1,12 @@
-// $Id: STOfflinePosition.h,v 1.4 2006-02-28 15:37:05 mneedham Exp $
-#ifndef _STOfflinePosition_H
-#define _STOfflinePosition_H
+// $Id: STOfflinePosition.h,v 1.5 2007-01-09 15:02:24 jvantilb Exp $
+#ifndef STOfflinePosition_H
+#define STOfflinePosition_H 1
 
+// Gaudi
 #include "GaudiAlg/GaudiTool.h"
 
-// From LHCbKernel
+// LHCbKernel
 #include "Kernel/ISTClusterPosition.h"
-
-#include <vector>
 
 /** @class STOfflinePosition STOfflinePosition.h
  *
@@ -22,34 +21,34 @@ class STOfflinePosition: public GaudiTool, virtual public ISTClusterPosition {
 public: 
    
   /// constructer
-  STOfflinePosition(const std::string& type,
-                      const std::string& name,
-                      const IInterface* parent);
+  STOfflinePosition( const std::string& type,
+                     const std::string& name,
+                     const IInterface* parent );
 
   /// destructer
   virtual ~STOfflinePosition();
 
   /// method
-  virtual ISTClusterPosition::Info estimate(const LHCb::STCluster* aCluster) const;
+  virtual ISTClusterPosition::Info estimate(const LHCb::STCluster* 
+                                            aCluster) const;
 
-  virtual ISTClusterPosition::Info estimate(const SmartRefVector<LHCb::STDigit>& digits) const;
+  virtual ISTClusterPosition::Info 
+  estimate(const SmartRefVector<LHCb::STDigit>& digits) const;
 
   virtual double error(const unsigned int nStrips) const;
 
 private:
 
-  double stripFraction(const double stripNum,
-		       const unsigned int clusterSize) const;
+  double stripFraction( const double stripNum,
+                        const unsigned int clusterSize ) const;
 
-  double chargeSharingCorr(const double dist) const;
+  double chargeSharingCorr( const double dist ) const;
 
-  std::vector<double> m_ErrorVec;
-  double m_sharingCorr;
-  int m_MaxNtoCorr;
+  // job options
+  std::vector<double> m_errorVec;  ///< Error parametrized by cluster size
+  double m_sharingCorr;            ///< Charge sharing correction factor
+  int m_maxNtoCorr;                ///< Maximum size of cluster for S-shape corr
 
 };
 
-#endif // _STOfflinePosition_H
-
-
-
+#endif // STOfflinePosition_H

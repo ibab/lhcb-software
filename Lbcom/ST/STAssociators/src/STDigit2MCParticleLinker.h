@@ -1,11 +1,6 @@
-// $Id: STDigit2MCParticleLinker.h,v 1.2 2006-03-03 17:01:11 mneedham Exp $
+// $Id: STDigit2MCParticleLinker.h,v 1.3 2007-01-09 15:05:00 jvantilb Exp $
 #ifndef STDigit2MCPARTICLELINKER_H
 #define STDigit2MCPARTICLELINKER_H 1
-
-#include <string>
-#include <map>
-#include <utility>
-#include <vector>
 
 #include "GaudiAlg/GaudiAlgorithm.h"
 
@@ -17,6 +12,7 @@
  *  @author Matt Needham
  *  @date   26/04/2002
  */
+
 class STDigit2MCParticleLinker : public GaudiAlgorithm {
 
   friend class AlgFactory<STDigit2MCParticleLinker>;
@@ -43,33 +39,24 @@ public:
 
 private:
 
-  double totalCharge(const std::map<const LHCb::MCParticle*,double>& partMap) const;
+  double totalCharge(const std::map<const LHCb::MCParticle*,double>& partMap)
+    const;
   StatusCode refsToRelate(std::vector<partPair>& selectedRefs,
-                          const std::map<const LHCb::MCParticle*,double>& hitMap,
+                         const std::map<const LHCb::MCParticle*,double>& hitMap,
                           const double totCharge,
                           LHCb::MCParticles* particles) const;
 
-  std::string m_hitLocation;
-  std::string m_outputData;
-  std::string m_inputData;
-  
-  std::string m_detType;
-  bool m_addSpillOverHits;
-  double m_minFrac;  
-  bool m_oneRef;
-  
+  // job options
+  std::string m_outputData;   ///< Location of the STDigits linker table
+  std::string m_inputData;    ///< Location of the STDigits
+  bool m_addSpillOverHits;    ///< Flag to add spill-over to linker table
+  double m_minFrac;           ///< Minimal charge fraction to link to MCParticle
+  bool m_oneRef;              ///< Flag to allow only 1 link for each digit
+  std::string m_detType;      ///< Detector type (IT or TT)
 };
 
 inline std::string STDigit2MCParticleLinker::outputData() const {
   return  m_outputData;
 }
 
-
-#endif // STDIGIT2MCPARTICLEALG_H
-
-
-
-
-
-
-
+#endif // STDIGIT2MCPARTICLELINKER_H

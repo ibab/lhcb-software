@@ -1,44 +1,45 @@
-// $Id: STOnlinePosition.cpp,v 1.8 2006-12-18 10:24:45 cattanem Exp $
+// $Id: STOnlinePosition.cpp,v 1.9 2007-01-09 15:02:24 jvantilb Exp $
  
 // Kernel
 #include "GaudiKernel/ToolFactory.h"
 #include "LHCbMath/LHCbMath.h"
+
+// Boost
+#include <boost/assign/std/vector.hpp>
  
 // Event
 #include "Event/STDigit.h"
 #include "Event/STCluster.h"
 
-#include "STFun.h" 
-
-#include <math.h>
-
-#include "STOnlinePosition.h" 
-
-#include <boost/assign/std/vector.hpp>
+// local
+#include "STFun.h"
+#include "STOnlinePosition.h"
 
 using namespace boost::assign;
-using namespace boost;
+using namespace LHCb;
 
 DECLARE_TOOL_FACTORY( STOnlinePosition );
  
-STOnlinePosition::STOnlinePosition(const std::string& type, const std::string& name, const IInterface* parent) :
- GaudiTool(type, name, parent)
+STOnlinePosition::STOnlinePosition( const std::string& type, 
+                                    const std::string& name,
+                                    const IInterface* parent ) :
+  GaudiTool(type, name, parent)
 {
-  // constructer
-
-  m_ErrorVec += 0.22, 0.14, 0.25;
-
-  this->declareProperty("errorVec",m_ErrorVec);
+  m_errorVec += 0.22, 0.14, 0.25;
+  declareProperty("errorVec",m_errorVec);
   declareProperty("nBits",m_nBits = 2);
 
   declareInterface<ISTClusterPosition>(this);
 }
 
-STOnlinePosition::~STOnlinePosition() {
+STOnlinePosition::~STOnlinePosition()
+{
   //destructer
 }
 
-ISTClusterPosition::Info STOnlinePosition::estimate(const LHCb::STCluster* aCluster) const{
+ISTClusterPosition::Info STOnlinePosition::estimate( const LHCb::STCluster* 
+                                                     aCluster ) const
+{
   double stripNum = STFun::position(aCluster->stripValues());
   double interStripPos = stripFraction(stripNum - floor(stripNum));
 
@@ -47,11 +48,11 @@ ISTClusterPosition::Info STOnlinePosition::estimate(const LHCb::STCluster* aClus
     interStripPos = 0;
   }
 
-  LHCb::STChannelID firstChan = aCluster->firstChannel();
-  LHCb::STChannelID theChan = LHCb::STChannelID( firstChan.type(),
-                                    firstChan.station(),firstChan.layer(),
-                                    firstChan.detRegion(),firstChan.sector(), 
-                                    (unsigned int)stripNum+firstChan.strip());
+  STChannelID firstChan = aCluster->firstChannel();
+  STChannelID theChan = STChannelID( firstChan.type(), firstChan.station(),
+                                     firstChan.layer(), firstChan.detRegion(),
+                                     firstChan.sector(), 
+                                     (unsigned int)stripNum+firstChan.strip());
 
   ISTClusterPosition::Info theInfo; 
   theInfo.strip = theChan;
@@ -61,8 +62,9 @@ ISTClusterPosition::Info STOnlinePosition::estimate(const LHCb::STCluster* aClus
   return theInfo;
 }
 
-ISTClusterPosition::Info STOnlinePosition::estimate(const SmartRefVector<LHCb::STDigit>& digits) const{
-  
+ISTClusterPosition::Info 
+STOnlinePosition::estimate(const SmartRefVector<LHCb::STDigit>& digits) const
+{  
   double stripNum = STFun::position(digits);
   double interStripPos = stripFraction(stripNum - floor(stripNum));
   LHCb::STChannelID firstChan = digits.front()->channelID();
@@ -72,10 +74,10 @@ ISTClusterPosition::Info STOnlinePosition::estimate(const SmartRefVector<LHCb::S
     interStripPos = 0;
   }
 
-  LHCb::STChannelID theChan = LHCb::STChannelID( firstChan.type(),
-                                    firstChan.station(),firstChan.layer(),
-                                    firstChan.detRegion(),firstChan.sector(), 
-                                    (unsigned int)stripNum);
+  STChannelID theChan = STChannelID( firstChan.type(), firstChan.station(),
+                                     firstChan.layer(), firstChan.detRegion(),
+                                     firstChan.sector(), 
+                                     (unsigned int)stripNum);
 
   ISTClusterPosition::Info theInfo; 
   theInfo.strip = theChan;
@@ -85,13 +87,15 @@ ISTClusterPosition::Info STOnlinePosition::estimate(const SmartRefVector<LHCb::S
   return theInfo;
 }
 
-double STOnlinePosition::error(const unsigned int nStrips) const{
- 
+double STOnlinePosition::error(const unsigned int nStrips) const
+{ 
  // estimate of error
- return (nStrips < m_ErrorVec.size() ? m_ErrorVec[nStrips-1] : m_ErrorVec.back());
+ return ( nStrips < m_errorVec.size() ? 
+          m_errorVec[nStrips-1] : m_errorVec.back() );
 }
 
-double STOnlinePosition::stripFraction(const double interStripPos) const{
+double STOnlinePosition::stripFraction(const double interStripPos) const
+{
   return (LHCbMath::round((1<<m_nBits)*interStripPos))/double(1<<m_nBits);
 }
 

@@ -1,6 +1,9 @@
 Package         : S/STAssociators
-Package manager : M. Needham 
+Package manager : J. van Tilburg
 !------------------------------------------------------------------------------
+
+! 2007-01-04 - Jeroen VAN TILBURG
+ - Minor cosmetic changes. Removal of obsolete code.
 
 !======================= STAssociators v1r3 2006-12-14 ========================
 ! 2006-12-14 - Marco Cattaneo

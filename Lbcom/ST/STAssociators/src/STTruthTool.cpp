@@ -1,5 +1,6 @@
+// $Id: STTruthTool.cpp,v 1.3 2007-01-09 15:05:00 jvantilb Exp $
 
-#include "STTruthTool.h"
+// Event
 #include "Event/STCluster.h"
 #include "Event/STDigit.h"
 #include "Event/MCSTDigit.h"
@@ -8,51 +9,46 @@
 #include "Event/MCParticle.h"
 #include "Event/MCTruth.h"
 
-#include <map>
+// local
+#include "STTruthTool.h"
 
-StatusCode STTruthTool::associateToTruth(const LHCb::STDigit* aDigit,
-                                         std::map<const LHCb::MCHit*,double>& hitMap,
-                                         double& foundCharge){
-  // make link to truth  to LHCb::MCHit from Digit
-  StatusCode sc = StatusCode::SUCCESS;  
+using namespace LHCb;
 
-  const LHCb::MCSTDigit* mcDigit = mcTruth<LHCb::MCSTDigit>(aDigit); 
+void STTruthTool::associateToTruth(const STDigit* aDigit,
+                                   std::map<const MCHit*,double>& hitMap,
+                                   double& foundCharge)
+{
+  // make link to truth  to MCHit from Digit
+  const MCSTDigit* mcDigit = mcTruth<MCSTDigit>(aDigit); 
   if (0 != mcDigit){
 
     // link to deposits
-    SmartRefVector<LHCb::MCSTDeposit> depCont = mcDigit->mcDeposit();
-    SmartRefVector<LHCb::MCSTDeposit>::iterator iterDep = depCont.begin();
+    SmartRefVector<MCSTDeposit> depCont = mcDigit->mcDeposit();
+    SmartRefVector<MCSTDeposit>::iterator iterDep = depCont.begin();
     while (iterDep != depCont.end()){
-
-    // get hit
-    const LHCb::MCHit* aHit = (*iterDep)->mcHit(); 
-    foundCharge += (*iterDep)->depositedCharge(); 
-    hitMap[aHit] += (*iterDep)->depositedCharge();  
-    ++iterDep;
-
-    } // iterClus
+      const MCHit* aHit = (*iterDep)->mcHit(); 
+      foundCharge += (*iterDep)->depositedCharge(); 
+      hitMap[aHit] += (*iterDep)->depositedCharge();  
+      ++iterDep;
+    }
   }
-
-  return sc;
 }
 
-StatusCode STTruthTool::associateToTruth(const LHCb::STDigit* aDigit,
-                                         std::map<const LHCb::MCParticle*,double>& particleMap){
-
-  // make truth link to LHCb::MCParticle from Digit
-  StatusCode sc = StatusCode::SUCCESS;    
-
-  std::map<const LHCb::MCHit*,double> hitMap;
+void STTruthTool::associateToTruth(const STDigit* aDigit,
+                               std::map<const MCParticle*,double>& particleMap)
+{
+  // make truth link to MCParticle from Digit
+  std::map<const MCHit*,double> hitMap;
   double foundCharge = 0.0;
-  sc = STTruthTool::associateToTruth(aDigit,hitMap,foundCharge);
+  STTruthTool::associateToTruth(aDigit,hitMap,foundCharge);
   hitMap[0] += (aDigit->depositedCharge()-foundCharge);
 
-  if (sc.isSuccess()&&(hitMap.empty() == false)){
-    std::map<const LHCb::MCHit*,double>::const_iterator iterMap = iterMap = hitMap.begin();
+  if ( !(hitMap.empty()) ) {
+    std::map<const MCHit*,double>::const_iterator iterMap = hitMap.begin();
     while (iterMap != hitMap.end()){
-      const LHCb::MCHit* aHit = (*iterMap).first;
+      const MCHit* aHit = (*iterMap).first;
       double charge = (*iterMap).second;
-      const LHCb::MCParticle* aParticle = 0;
+      const MCParticle* aParticle = 0;
       if (0 != aHit){
         aParticle = aHit->mcParticle();
       }
@@ -60,8 +56,6 @@ StatusCode STTruthTool::associateToTruth(const LHCb::STDigit* aDigit,
       ++iterMap;
     }
   }
-
-  return sc;
 }
 
 
