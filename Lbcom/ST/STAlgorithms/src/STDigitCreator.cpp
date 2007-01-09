@@ -1,40 +1,33 @@
-// $Id: STDigitCreator.cpp,v 1.12 2006-12-18 10:09:55 cattanem Exp $
+// $Id: STDigitCreator.cpp,v 1.13 2007-01-09 15:34:35 jvantilb Exp $
 
-#include "gsl/gsl_math.h"
-
+// Gaudi
 #include "GaudiKernel/AlgFactory.h"
-#
-//Random Numbers
 #include "GaudiKernel/RndmGenerators.h"
-#include "GaudiKernel/IRndmGenSvc.h"
-
-// Event
-#include "Event/MCTruth.h"
-#include "Event/MCSTDeposit.h"
 
 // GSL
 #include "gsl/gsl_sf_erf.h"
 
-// STAlgorithms
-#include "ISTEffCalculator.h"
-#include "Kernel/ISTSignalToNoiseTool.h"
-#include "Kernel/STDataFunctor.h"
-#include "STDigitCreator.h"
-#include "Kernel/STDetSwitch.h"
+// Event
+#include "Event/MCTruth.h"
 
 // xml geometry
 #include "STDet/DeSTDetector.h"
 #include "STDet/DeSTSector.h"
 
-#include <algorithm>
+// LHCbKernel
+#include "Kernel/ISTSignalToNoiseTool.h"
+#include "Kernel/STDataFunctor.h"
+#include "Kernel/STDetSwitch.h"
 
-#include "LHCbMath/LHCbMath.h"
+// local
+#include "ISTEffCalculator.h"
+#include "STDigitCreator.h"
 
 using namespace LHCb;
 
 DECLARE_ALGORITHM_FACTORY( STDigitCreator );
 
-STDigitCreator::STDigitCreator( const std::string& name, 
+STDigitCreator::STDigitCreator( const std::string& name,
                                 ISvcLocator* pSvcLocator ) :
   GaudiAlgorithm(name, pSvcLocator),
   m_tracker(0)
@@ -42,109 +35,98 @@ STDigitCreator::STDigitCreator( const std::string& name,
   //constructer
   declareProperty("effToolName", m_effToolName="STEffCalculator");
   declareProperty("sigNoiseTool",m_sigNoiseToolName = "STSignalToNoiseTool");
-  declareProperty("inputLocation", m_inputLocation = MCSTDigitLocation::TTDigits);
-  declareProperty("outputLocation", m_outputLocation = STDigitLocation::TTDigits); 
+  declareProperty("inputLocation", m_inputLocation=MCSTDigitLocation::TTDigits);
+  declareProperty("outputLocation", m_outputLocation=STDigitLocation::TTDigits);
   declareProperty("tailStart", m_tailStart = 3.0);
-  declareProperty("saturation",m_saturation = 127.);
-  declareProperty("detType", m_detType = "TT"); 
-
+  declareProperty("saturation", m_saturation = 127.);
+  declareProperty("detType", m_detType = "TT");
 }
 
-STDigitCreator::~STDigitCreator() {
+STDigitCreator::~STDigitCreator()
+{
   //destructer
 }
 
-StatusCode STDigitCreator::initialize() {
- 
+StatusCode STDigitCreator::initialize()
+{
   StatusCode sc = GaudiAlgorithm::initialize();
-  if (sc.isFailure()){
-    return Error("Failed to initialize", sc);
-  }
-   
-  m_tracker =  getDet<DeSTDetector>(DeSTDetLocation::location(m_detType));
- 
+  if (sc.isFailure()) return Error("Failed to initialize", sc);
+
+  m_tracker = getDet<DeSTDetector>(DeSTDetLocation::location(m_detType));
+
   STDetSwitch::flip(m_detType,m_inputLocation);
   STDetSwitch::flip(m_detType,m_outputLocation);
 
    // eff tool
   m_effTool = tool<ISTEffCalculator>(m_effToolName,this);
 
-  m_sigNoiseTool = tool<ISTSignalToNoiseTool>(m_sigNoiseToolName, m_sigNoiseToolName+m_detType);
+  m_sigNoiseTool = tool<ISTSignalToNoiseTool>( m_sigNoiseToolName,
+                                               m_sigNoiseToolName+m_detType);
 
-  // random numbers
+  // random numbers generators (flat, gaussian and gaussian tail)
   sc = randSvc()->generator(Rndm::Flat(0.,1.),m_uniformDist.pRef());
-
-  // Gaussian
   sc = randSvc()->generator(Rndm::Gauss(0.,1.),m_gaussDist.pRef());
+  sc = randSvc()->generator(Rndm::GaussianTail(m_tailStart,1.),
+                            m_gaussTailDist.pRef());
 
-  // get a Gauss tail
-  sc = randSvc()->generator(Rndm::GaussianTail(m_tailStart,1.),m_gaussTailDist.pRef());
+  // cache the number of noise strips
+  double fracOfNoiseStrips = 0.5*gsl_sf_erfc(m_tailStart/sqrt(2.0));
+  m_numNoiseStrips = (int)(fracOfNoiseStrips*m_tracker->nStrip());
 
-  m_fracOfNoiseStrips = 0.5*gsl_sf_erfc(m_tailStart/sqrt(2.0));
-  m_numNoiseStrips = (int)(m_fracOfNoiseStrips*m_tracker->nStrip());
-
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
-StatusCode STDigitCreator::execute() {
+StatusCode STDigitCreator::execute()
+{
+  // Retrieve MCSTDigits
+  MCSTDigits* mcDigitCont = get<MCSTDigits>(m_inputLocation);
 
- 
+  // cache first and last mcdigit
+  m_lastIter = mcDigitCont->end();
+  m_cachedIter = mcDigitCont->begin();
 
-  // Retrieve digit 
-  MCSTDigits* mcDigitCont  = get<MCSTDigits>(m_inputLocation);
-  
-  // cache mcdigits
-  this->initCache(mcDigitCont);
-
-  // create digits
+  // create STDigits
   STDigits* digitsCont = new STDigits();
   createDigits(mcDigitCont,digitsCont);
-    
+
   // generate random noise
   std::vector<digitPair> noiseCont;
   genRanNoiseStrips(noiseCont);
-  
+
   // merge containers
   mergeContainers(noiseCont,digitsCont);
 
   // resort by channel
-  std::stable_sort(digitsCont->begin(),
-                   digitsCont->end(),
-                   STDataFunctor::Less_by_Channel<const STDigit*>());
+  std::stable_sort( digitsCont->begin(), digitsCont->end(),
+                    STDataFunctor::Less_by_Channel<const STDigit*>() );
 
   // Ensure that there is neighbours for all strips
   addNeighbours(digitsCont);
 
   // and finally resort
-  std::stable_sort(digitsCont->begin(),
-                   digitsCont->end(),
-                   STDataFunctor::Less_by_Channel<const STDigit*>());
+  std::stable_sort( digitsCont->begin(), digitsCont->end(),
+                    STDataFunctor::Less_by_Channel<const STDigit*>() );
 
+  // register STDigits in the transient data store
   put(digitsCont,m_outputLocation);
-    
+
+  // Make the link between digits and mcdigits
   StatusCode sc = setMCTruth( digitsCont , mcDigitCont );
-  if( sc.isFailure()){
-    return Error("Failed to set MCTruth info", sc) ;
-  }
- 
-  return StatusCode::SUCCESS;
+  if( sc.isFailure()) return Error("Failed to set MCTruth info", sc) ;
+
+  return sc;
 }
 
-void STDigitCreator::initCache(MCSTDigits* digits){
-
-  m_lastIter = digits->end();
-  m_cachedIter = digits->begin();
-}
-
-
-void STDigitCreator::genRanNoiseStrips(std::vector<digitPair>& noiseCont) const{
-
-  // random noise strips
+void STDigitCreator::genRanNoiseStrips(std::vector<digitPair>& noiseCont) const
+{
+  // generate random noise strips
   noiseCont.reserve(m_numNoiseStrips);
   unsigned int nSector = m_tracker->sectors().size();
+
+  // create noise strips in loop
   const DeSTDetector::Sectors& tSectors = m_tracker->sectors();
   for (unsigned int iNoiseStrip=0; iNoiseStrip<m_numNoiseStrips; ++iNoiseStrip){
-    // gen a random wafer
+    // generate a random readout sector
     int iSector = (int)(m_uniformDist->shoot()*nSector);
     DeSTSector* aSector = tSectors[iSector];
     int iStrip = (int)(m_uniformDist->shoot()*aSector->nStrip())+1;
@@ -154,86 +136,87 @@ void STDigitCreator::genRanNoiseStrips(std::vector<digitPair>& noiseCont) const{
                                     aSector->elementID().detRegion(),
                                     aSector->elementID().sector(),
                                     iStrip);
-   
-    double ranNoise = m_sigNoiseTool->noiseInADC(aSector) * m_gaussTailDist->shoot();
+
+    // Generate a ADC value following a gaussian tail distribution
+    double ranNoise = m_sigNoiseTool->noiseInADC(aSector) *
+      m_gaussTailDist->shoot();
     noiseCont.push_back(std::make_pair(ranNoise,aChan));
-  } // iNoiseStrip    
-    
-  std::sort(noiseCont.begin(),noiseCont.end(),Less_by_Channel());
-  
-}  
+  } // iNoiseStrip
 
-void STDigitCreator::createDigits(MCSTDigits* mcDigitCont,
-                                     STDigits* digitsCont){
+  // Sort the noise digits by STChannelID
+  std::sort( noiseCont.begin(), noiseCont.end(), Less_by_Channel() );
+}
 
+void STDigitCreator::createDigits(MCSTDigits* mcDigitCont, STDigits* digitsCont)
+{
   // add gaussian noise to real hit channels + allow xxx% dead channels
-  digitsCont->reserve(mcDigitCont->size()+m_numNoiseStrips);
-  for ( MCSTDigits::const_iterator iterMC = mcDigitCont->begin();
-       iterMC !=mcDigitCont->end();++iterMC){
+  digitsCont->reserve( mcDigitCont->size() + m_numNoiseStrips );
+  MCSTDigits::const_iterator iterMC = mcDigitCont->begin();
+  for ( ; iterMC != mcDigitCont->end(); ++iterMC ) {
 
-    if (m_effTool->accept() == true){
+    // Apply readout inefficiency/dead channels
+    if ( m_effTool->accept() ) {
 
       // charge including noise
       const SmartRefVector<MCSTDeposit> depositCont = (*iterMC)->mcDeposit();
-      double totalCharge = std::accumulate(depositCont.begin(),
-                      depositCont.end(),0.,
-                      STDataFunctor::Accumulate_Charge<const MCSTDeposit*>());
-      totalCharge += (m_gaussDist->shoot()*m_sigNoiseTool->noiseInADC((*iterMC)->channelID()));
+      double totalCharge =
+        std::accumulate(depositCont.begin(),depositCont.end(), 0.,
+                        STDataFunctor::Accumulate_Charge<const MCSTDeposit*>());
+      totalCharge += ( m_gaussDist->shoot() *
+                       m_sigNoiseTool->noiseInADC((*iterMC)->channelID()) );
 
-      // make digit and add to container.....    
-      STDigit* newDigit = new STDigit(GSL_MIN(LHCbMath::round(totalCharge),m_saturation));
+      // make digit and add to container.
+      STDigit* newDigit = new STDigit( adcValue( totalCharge ) );
       digitsCont->insert(newDigit,(*iterMC)->channelID());
     } // isOK
   } // iterDigit
 }
 
-void STDigitCreator::mergeContainers(const std::vector<digitPair>& noiseCont, 
-                     STDigits* digitsCont){
-
-  // trick bit merge the two containers (sort of...)
+void STDigitCreator::mergeContainers( const std::vector<digitPair>& noiseCont,
+                                      STDigits* digitsCont )
+{
+  // merge the two containers
   STChannelID prevChan(0u,0u,0u,0u,0u,0u);
-  std::vector<digitPair>::const_iterator iterNoise =  noiseCont.begin();
-  while (iterNoise != noiseCont.end()){
-    if ((0 == findDigit(iterNoise->second))&&
-     (prevChan != iterNoise->second)){
-     // strip was not hit add noise
-     if ( m_effTool->accept() == true){     
-       STDigit* newDigit = new STDigit(GSL_MIN(LHCbMath::round(iterNoise->first),m_saturation));
-       digitsCont->insert(newDigit,iterNoise->second);
+  std::vector<digitPair>::const_iterator iterNoise = noiseCont.begin();
+  while (iterNoise != noiseCont.end()) {
+    // if strip was not hit: add noise
+    if ((0 == findDigit(iterNoise->second)) && (prevChan != iterNoise->second)){
+      if ( m_effTool->accept() ) {
+        STDigit* newDigit = new STDigit( adcValue(iterNoise->first) );
+        digitsCont->insert(newDigit,iterNoise->second);
       } // alive
-    }   // findDigit  
-    prevChan = iterNoise->second;       
+    }   // findDigit
+    prevChan = iterNoise->second;
     ++iterNoise;
   } //iterNoise
 }
 
-MCSTDigit* STDigitCreator::findDigit(const STChannelID& aChan){
-
+MCSTDigit* STDigitCreator::findDigit(const STChannelID& aChan)
+{
   MCSTDigit* mcDigit = 0;
- 
+
   while ((m_cachedIter != m_lastIter)&&((*m_cachedIter)->channelID() < aChan)){
     ++m_cachedIter;
   } // m_cachedIter
- 
-  if ((m_cachedIter != m_lastIter)
-     &&((*m_cachedIter)->channelID() == aChan)){
+
+  if ((m_cachedIter != m_lastIter)&&((*m_cachedIter)->channelID() == aChan)){
     mcDigit = *m_cachedIter;
-  } 
- 
+  }
+
   return mcDigit;
 }
 
-void STDigitCreator::addNeighbours(STDigits* digitsCont) const{
-
+void STDigitCreator::addNeighbours(STDigits* digitsCont) const
+{
   STDigits::iterator curDigit = digitsCont->begin();
   std::vector<digitPair> tmpCont;
-  for( ; curDigit != digitsCont->end(); ++curDigit){ 
+  for( ; curDigit != digitsCont->end(); ++curDigit ) {
     if (curDigit != digitsCont->begin()){
       STDigits::iterator prevDigit = curDigit;
-      --prevDigit; 
+      --prevDigit;
       STChannelID leftChan = m_tracker->nextLeft((*curDigit)->channelID());
-      if (( (*prevDigit)->channelID() != leftChan) &&(leftChan != 0u)){
-         tmpCont.push_back(std::make_pair(genInverseTail(),leftChan));
+      if (( (*prevDigit)->channelID() != leftChan) && (leftChan != 0u) ){
+        tmpCont.push_back(std::make_pair(genInverseTail(),leftChan));
       } // prev test
     }
 
@@ -241,24 +224,25 @@ void STDigitCreator::addNeighbours(STDigits* digitsCont) const{
     ++nextDigit;
     if ((nextDigit != digitsCont->end())){
       STChannelID rightChan = m_tracker->nextRight((*curDigit)->channelID());
-      if ( ((*nextDigit)->channelID() != rightChan) && ((rightChan != 0u))){
-         tmpCont.push_back(std::make_pair(genInverseTail(),rightChan));
+      if ( ((*nextDigit)->channelID() != rightChan) && (rightChan != 0u) ){
+        tmpCont.push_back(std::make_pair(genInverseTail(),rightChan));
       } // prev test
     }
+    
+  } //iterDigit
 
-  } //iterDigit 
-
-  for ( std::vector<digitPair>::iterator iterP = tmpCont.begin(); iterP != tmpCont.end(); ++iterP){   
+  std::vector<digitPair>::iterator iterP = tmpCont.begin();
+  for ( ; iterP != tmpCont.end(); ++iterP){
     if (!digitsCont->object(iterP->second)){
       // do better sometimes we can make twice ie we start with 101
-      STDigit* aDigit = new STDigit(GSL_MIN(LHCbMath::round(iterP->first),m_saturation));
+      STDigit* aDigit = new STDigit( adcValue(iterP->first) );
       digitsCont->insert(aDigit,iterP->second);
     }
   } //iterP
-
 }
 
-double STDigitCreator::genInverseTail() const{
+double STDigitCreator::genInverseTail() const
+{
   double testVal;
   do {
     testVal = m_gaussDist->shoot();

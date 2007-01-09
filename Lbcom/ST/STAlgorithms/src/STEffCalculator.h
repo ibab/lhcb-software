@@ -1,16 +1,18 @@
-// $Id: STEffCalculator.h,v 1.2 2005-12-20 15:50:25 cattanem Exp $
-#ifndef _ITEFFCALCULATOR_H
-#define _ITEFFCALCULATOR_H
+// $Id: STEffCalculator.h,v 1.3 2007-01-09 15:34:37 jvantilb Exp $
+#ifndef STEFFCALCULATOR_H
+#define STEFFCALCULATOR_H 1
 
+// Gaudi
 #include "GaudiAlg/GaudiTool.h"
 #include "GaudiKernel/SmartIF.h"
 #include "GaudiKernel/IRndmGen.h"
 
+// local interface
 #include "ISTEffCalculator.h"
 
 /** @class STEffCalculator STEffCalculator.h STAlgorithms/STEffCalculator.h
  *
- *  Class for applying inefficiency for Inner Tracker 
+ *  Class for applying inefficiency for Silicon Tracker 
  *
  *  @author M.Needham
  *  @date   21/5/2002
@@ -21,8 +23,7 @@ class STEffCalculator : public GaudiTool, virtual public ISTEffCalculator {
 public:
 
   ///  Constructor
-  STEffCalculator(const std::string& type, 
-                  const std::string& name, 
+  STEffCalculator(const std::string& type, const std::string& name, 
                   const IInterface* parent);
 
   /// destructor
@@ -38,18 +39,9 @@ private:
   // smart interface to generator
   SmartIF<IRndmGen> m_GenEff;
  
-  // jobOptions  
-  double m_eff;  
+  // Job option: 
+  double m_eff;  ///< ST readout channel efficiency
  
 };
 
-#endif // _STEFFCALCULATOR_H
-
-
-
-
-
-
-
-
-
+#endif // STEFFCALCULATOR_H

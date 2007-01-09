@@ -8,55 +8,62 @@ MCITDepositCreator.spillTimes = {0.,-25.,-50., -3.3};
 
 // charge sharing function  for TT
 MCITDepositCreator.STChargeSharingTool.sharingFunction = {
-1.0, 1.0, 0.97, 0.935, 0.90, 0.83,
-0.73, 0.57, 0.44, 0.34, 0.20, 0.11,
-0.065, 0.038, 0.016, 0.0, 0.0};
+  1.0, 1.0, 0.97, 0.935, 0.90, 0.83,
+  0.73, 0.57, 0.44, 0.34, 0.20, 0.11,
+  0.065, 0.038, 0.016, 0.0, 0.0
+};
 
-
-
-MCITDepositCreator.responseTypes = {"LRsignal","LRcapCoupling" , "TBsignal", "TBcapCoupling"};
+MCITDepositCreator.responseTypes = { "LRsignal","LRcapCoupling", 
+                                     "TBsignal", "TBcapCoupling"};
 
 // LHCb 1 signal
-MCITDepositCreator.responseTBsignal.times = { -30., -26., -18.2, -10. , -5.,     0. , 5.,    9.8,   19.8,  24.8, 29.8, 59.8, 79.8,  85., 99.82 };
-MCITDepositCreator.responseTBsignal.values = {  0.0 , 0.03,  0.32,  0.74,  0.94,   1.0, 0.94 ,  0.8,   0.43,  0.26, 0.12, -0.11, -0.10, -0.099, -0.09};
-
+MCITDepositCreator.responseTBsignal.times = { -30., -26., -18.2, -10., -5., 
+                                              0., 5., 9.8, 19.8, 24.8, 29.8,
+                                              59.8, 79.8,  85., 99.82 };
+MCITDepositCreator.responseTBsignal.values = { 0.0, 0.03, 0.32, 0.74, 0.94, 
+                                               1.0, 0.94, 0.8, 0.43, 0.26, 0.12,
+                                               -0.11, -0.10, -0.099, -0.09};
 MCITDepositCreator.responseTBsignal.capacitance = 18.0*picofarad;
 
-
 // LHCb 1 cap coupling
-MCITDepositCreator.responseTBcapCoupling.times = { -30.2426, -26.2426, 
-     -22.2426, -18.2426, -14.2426, -10.2426, -6.24262,
-    -4.24262, -2.24262, -0.242623 ,1.75738 ,3.75738, 5.75738 ,9.75738,
-    14.7574, 19.7574, 24.7574 ,29.7574, 34.7574, 39.7574, 59.7574, 79.7574};
-
-MCITDepositCreator.responseTBcapCoupling.values = {0.00553926, 0.119517, 0.30299, 0.582403, 
-   0.864871, 1.07898, 1.15976 ,1.19488, 1.09999, 1.01967, 0.8575, 0.788192, 0.655131,
-  0.371741, 0.0303733, -0.176473, -0.34389, -0.422551, -0.448658,-0.472643, -0.184689, 
-  -0.0524401 };
-
+MCITDepositCreator.responseTBcapCoupling.times = { -30.2426, -26.2426, -22.2426,
+                                                   -18.2426, -14.2426, -10.2426,
+                                                   -6.24262, -4.24262, -2.24262,
+                                                   -0.242623, 1.75738, 3.75738,
+                                                   5.75738, 9.75738, 14.7574,
+                                                   19.7574, 24.7574, 29.7574,
+                                                   34.7574, 39.7574, 59.7574,
+                                                   79.7574};
+MCITDepositCreator.responseTBcapCoupling.values = {0.00553926, 0.119517, 
+                                                   0.30299, 0.582403, 0.864871,
+                                                   1.07898, 1.15976 ,1.19488,
+                                                   1.09999, 1.01967, 0.8575,
+                                                   0.788192, 0.655131, 0.371741,
+                                                   0.0303733, -0.176473,
+                                                   -0.34389, -0.422551,
+                                                   -0.448658, -0.472643,
+                                                   -0.184689, -0.0524401 };
 MCITDepositCreator.responseTBcapCoupling.capacitance = 18.0*picofarad;
 MCITDepositCreator.responseTBcapCoupling.type = "capCoupling";
 
-
-
 // LHCb 2 Vfs 0 - fast shaping 
-MCITDepositCreator.responseLRsignal.times = {-30.,-28. ,-21.5, -9.5, -5.,    0.,   5.,   8.5,   10.5,  16.5, 25., 30.5,  40.5, 60.5, 80.5, 100. };
-MCITDepositCreator.responseLRsignal.values = {0., 0.03 ,0.15,   0.76, 0.92  ,1., 0.92,   0.83,  0.76,  0.51, 0.23, 0.1,  0., -0.06, -0.08, -0.1};
-
+MCITDepositCreator.responseLRsignal.times = {-30., -28., -21.5, -9.5, -5., 0.,
+                                             5., 8.5, 10.5, 16.5, 25., 30.5,
+                                             40.5, 60.5, 80.5, 100. };
+MCITDepositCreator.responseLRsignal.values = {0., 0.03 ,0.15, 0.76, 0.92, 1.,
+                                              0.92, 0.83, 0.76, 0.51, 0.23, 0.1,
+                                              0., -0.06, -0.08, -0.1};
 MCITDepositCreator.responseLRsignal.vfs = 0;
 MCITDepositCreator.responseLRsignal.capacitance = 33.0*picofarad;
 
-
-MCITDepositCreator.responseLRcapCoupling.times = {-30.5125, -27.1 , -12.2,  -8.1,  -6.1, 
-                                                  -4.1, -0.2, 1.85, 7.85, 9.85,
-                                                  13.85, 17.85, 22.85, 27.85, 37.85,
-                                                  57.85, 77.85};
-
+MCITDepositCreator.responseLRcapCoupling.times = {-30.5125, -27.1 , -12.2, -8.1,
+                                                  -6.1, -4.1, -0.2, 1.85, 7.85,
+                                                  9.85,13.85, 17.85, 22.85, 
+                                                  27.85, 37.85, 57.85, 77.85};
 MCITDepositCreator.responseLRcapCoupling.values = {0.0,  0.12, 1.1, 1.18, 1.24, 
-                                                   1.16, 1.01, 0.91, 0.50, 0.27,   
-                                                   0.03, -0.21, -0.40, -0.56, -0.65, 
-                                                  -0.25 , -0.195 };
-
+                                                   1.16, 1.01, 0.91, 0.50, 0.27,
+                                                   0.03, -0.21, -0.40, -0.56,
+                                                   -0.65, -0.25 , -0.195 };
 MCITDepositCreator.responseLRcapCoupling.vfs = 0;
 MCITDepositCreator.responseLRcapCoupling.capacitance = 33.0*picofarad;
 MCITDepositCreator.responseLRcapCoupling.type = "capCoupling";
@@ -68,6 +75,3 @@ ITClusterCreator.detType = "IT";
 
 ToolSvc.STSignalToNoiseToolIT.detType = "IT";
 ToolSvc.STSignalToNoiseToolIT.conversionToADC = 0.0015;
-
-
-

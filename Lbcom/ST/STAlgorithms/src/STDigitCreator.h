@@ -1,84 +1,88 @@
-// $Id: STDigitCreator.h,v 1.4 2006-02-20 16:42:46 mneedham Exp $
-#ifndef _STDigitCreator_H_
-#define _STDigitCreator_H_
+// $Id: STDigitCreator.h,v 1.5 2007-01-09 15:34:36 jvantilb Exp $
+#ifndef STDigitCreator_H
+#define STDigitCreator_H 1
 
-
-/** @class STDigitCreator STDigitCreator.h STAlgorithms/STDigitCreator
- *
- *  Class for filling ST summary info
- *
- *  @author M.Needham
- *  @date   10/03/2002
- */
-
-#include <string>
-#include <vector>
-#include <utility>
-#include <functional>
-
-#include "Event/STDigit.h"
-#include "Event/MCSTDigit.h"
+// Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
 #include "GaudiKernel/SmartIF.h"
 #include "GaudiKernel/IRndmGen.h"
 
+// GSL
+#include "gsl/gsl_math.h"
+
+// Event
+#include "Event/STDigit.h"
+#include "Event/MCSTDigit.h"
+#include "LHCbMath/LHCbMath.h"
+
 class ISTSignalToNoiseTool;
-class IITEffCalculator;
+class ISTEffCalculator;
 class DeSTDetector;
 class DeSTSector;
+
+/** @class STDigitCreator STDigitCreator.h STAlgorithms/STDigitCreator
+ *
+ *  Algorithm for creating STDigits from MCSTDigits. The following processes
+ *  are simulated:
+ *  - Apply readout inefficiency/dead channels by masking MCSTDigits
+ *  - Add gaussian noise to total charge of signal digits.
+ *  - Generate flat noise over all readout sectors. The ADC value follows a \
+ *    gaussian tail distribution.
+ *  - Merge the signal and noise digits in one container.
+ *  - Add neighbours to each digit with an ADC value of a gaussian core noise.
+ *
+ *  @author M.Needham
+ *  @author J. van Tilburg
+ *  @date   05/01/2006
+ */
 
 class STDigitCreator : public GaudiAlgorithm {
 
 public:
-  // Constructor: A constructor of this form must be provided.
-  STDigitCreator(const std::string& name, 
-                 ISvcLocator* pSvcLocator); 
+  // Constructor
+  STDigitCreator( const std::string& name, ISvcLocator* pSvcLocator); 
+
   virtual ~STDigitCreator(); 
 
   StatusCode initialize();
+
   StatusCode execute();
   
 private:
 
   typedef std::pair<double,LHCb::STChannelID> digitPair;
 
-
-  std::string m_detType;
-  DeSTDetector* m_tracker;
-
-  void initCache(LHCb::MCSTDigits* digits);
   void genRanNoiseStrips(std::vector<digitPair>& noiseCont) const;
   void createDigits(LHCb::MCSTDigits* mcDigitCont,LHCb::STDigits* digitCont);
   void mergeContainers(const std::vector<digitPair>& noiseCont, 
-		       LHCb::STDigits* digitsCont);
-  
+                       LHCb::STDigits* digitsCont);
   void addNeighbours(LHCb::STDigits* digitsCont) const;
   double genInverseTail() const;
   LHCb::MCSTDigit* findDigit(const LHCb::STChannelID& aChan);
+  double adcValue( double value ) const;
  
-  std::string m_sigNoiseToolName;
-  ISTSignalToNoiseTool* m_sigNoiseTool;
-
-  double m_fracOfNoiseStrips;
-  double m_tailStart;
-
-  std::string m_inputLocation; 
-  std::string m_outputLocation;
-  
-  std::string m_effToolName;
-  ISTEffCalculator* m_effTool;
-
-  LHCb::MCSTDigits::iterator m_cachedIter;
-  LHCb::MCSTDigits::iterator m_lastIter;
-
-  double m_saturation;
-
-  unsigned int m_numNoiseStrips;  
-
   // smart interface to generators
   SmartIF<IRndmGen> m_uniformDist; 
   SmartIF<IRndmGen> m_gaussDist; 
   SmartIF<IRndmGen> m_gaussTailDist; 
+
+  DeSTDetector* m_tracker;
+  ISTSignalToNoiseTool* m_sigNoiseTool;  
+  ISTEffCalculator* m_effTool;
+
+  LHCb::MCSTDigits::iterator m_cachedIter;
+  LHCb::MCSTDigits::iterator m_lastIter;
+  unsigned int m_numNoiseStrips;  
+
+  // job options
+  std::string m_effToolName;
+  std::string m_sigNoiseToolName;
+  std::string m_inputLocation; 
+  std::string m_outputLocation;
+  double m_tailStart;
+  double m_saturation;
+  std::string m_detType;
+
 
   class Less_by_Channel
     : public std::binary_function<digitPair,digitPair,bool> 
@@ -100,4 +104,11 @@ private:
 
 };
 
-#endif // STDigitCreator
+inline double STDigitCreator::adcValue( double value ) const
+{
+  return GSL_MIN(LHCbMath::round(value), m_saturation);
+}
+
+
+
+#endif // STDigitCreator_H

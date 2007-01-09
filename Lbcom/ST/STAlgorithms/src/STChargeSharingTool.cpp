@@ -1,34 +1,37 @@
+// $Id: STChargeSharingTool.cpp,v 1.6 2007-01-09 15:34:33 jvantilb Exp $
+
 // Gaudi
 #include "GaudiKernel/ToolFactory.h"
 
-// ITAlgorithms
+// local
 #include "STChargeSharingTool.h"
-#include "GaudiMath/GaudiMath.h"
+
+using namespace GaudiMath;
+using namespace GaudiMath::Interpolation;
 
 DECLARE_TOOL_FACTORY( STChargeSharingTool );
 
-STChargeSharingTool::STChargeSharingTool(const std::string& type, const std::string& name, const IInterface* parent) :
- GaudiTool(type, name, parent),
- m_responseSpline(0)
+STChargeSharingTool::STChargeSharingTool( const std::string& type, 
+                                          const std::string& name,
+                                          const IInterface* parent ) :
+  GaudiTool(type, name, parent),
+  m_responseSpline(0)
 {
   // constructer
-  declareProperty("sharingFunction",m_sharingFunction);
- declareInterface<ISTChargeSharingTool>(this);
+  declareProperty("sharingFunction", m_sharingFunction );
+  declareInterface<ISTChargeSharingTool>(this);
 }
 
-STChargeSharingTool::~STChargeSharingTool() {
-  //destructer
-  if (0 != m_responseSpline ) delete  m_responseSpline;
+STChargeSharingTool::~STChargeSharingTool()
+{
+  // destructer
+  if (0 != m_responseSpline ) delete m_responseSpline;
 }
 
-StatusCode STChargeSharingTool::initialize(){
-
-  // initialize
+StatusCode STChargeSharingTool::initialize()
+{
   StatusCode sc = GaudiTool::initialize();
-  if (sc.isFailure()){
-    return Error("Failed to initialize", sc);
-  }
-
+  if (sc.isFailure()) return Error("Failed to initialize", sc);
 
   unsigned int nBin = m_sharingFunction.size();
   if (nBin == 0){
@@ -36,26 +39,21 @@ StatusCode STChargeSharingTool::initialize(){
   } 
 
   // bin centers
-  m_binCenters.reserve(nBin);  
+  std::vector<double> binCenters;
+  binCenters.reserve(nBin);  
   double binSize = 1.0/(double)nBin;
-  for (unsigned int iBin = 0; iBin<nBin; ++iBin){
+  for (unsigned int iBin = 0; iBin<nBin; ++iBin) {
     double binCenter = (0.5+(double)iBin)*binSize;
-    m_binCenters.push_back(binCenter);
+    binCenters.push_back(binCenter);
   } //iBin
 
-  // the spline...
-  m_responseSpline = new GaudiMath::SimpleSpline(m_binCenters,m_sharingFunction,GaudiMath::Interpolation::Linear);
+  // Fit the spline.
+  m_responseSpline = new SimpleSpline( binCenters, m_sharingFunction, Linear );
 
   return StatusCode::SUCCESS;
 }
 
-double STChargeSharingTool::sharing(const double relDist) const{
-  return  ((relDist > 0.) && (relDist<1.0)   ? m_responseSpline->eval(relDist) : 0  );
+double STChargeSharingTool::sharing(const double relDist) const
+{
+  return ((relDist>0.) && (relDist<1.0) ? m_responseSpline->eval(relDist) : 0);
 }
-
-
-
-
-
-
-

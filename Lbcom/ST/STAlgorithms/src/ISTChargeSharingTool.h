@@ -1,19 +1,19 @@
-// $Id: ISTChargeSharingTool.h,v 1.1 2005-12-20 15:50:25 cattanem Exp $
-#ifndef _ISTCHARGESHARINGTOOL_H
-#define _ISTCHARGESHARINGTOOL_H
+// $Id: ISTChargeSharingTool.h,v 1.2 2007-01-09 15:34:30 jvantilb Exp $
+#ifndef ISTCHARGESHARINGTOOL_H
+#define ISTCHARGESHARINGTOOL_H 1
 
 #include "GaudiKernel/IAlgTool.h"
 
-/** @class ISTChargeSharingTool ISTChargeSharingTool.h ITAlgorithms/ISTChargeSharingTool.h
+/** @class ISTChargeSharingTool ISTChargeSharingTool.h
  *
- *  Interface Class for charge sharing IT strip
+ *  Interface Class for charge sharing ST strip
  *
  *  @author M.Needham
  *  @date   14/3/2002
  */
 
-// Declaration of the interface ID ( interface id, major version, minor version) 
-static const InterfaceID IID_ISTChargeSharingTool("ISTChargeSharingTool", 0 , 0); 
+// Declaration of the interface ID ( interface id, major version, minor version)
+static const InterfaceID IID_ISTChargeSharingTool("ISTChargeSharingTool",0 ,0);
 
 class ISTChargeSharingTool : virtual public IAlgTool {
 
@@ -27,7 +27,4 @@ public:
 
 };
 
-#endif // _ISTCHARGESHARINGTOOL_H
-
-
-
+#endif // ISTCHARGESHARINGTOOL_H

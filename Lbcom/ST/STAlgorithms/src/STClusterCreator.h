@@ -1,8 +1,17 @@
-// $Id: STClusterCreator.h,v 1.2 2006-02-07 08:46:20 mneedham Exp $
-#ifndef _STCLUSTERCREATOR_H_
-#define _STCLUSTERCREATOR_H_
+// $Id: STClusterCreator.h,v 1.3 2007-01-09 15:34:34 jvantilb Exp $
+#ifndef STCLUSTERCREATOR_H
+#define STCLUSTERCREATOR_H 1
 
-/** @class ITClusterCreator ITClusterCreator.h ITAlgorithms/ITClusterCreator.h
+#include "GaudiAlg/GaudiAlgorithm.h"
+#include "Event/STDigit.h"
+#include "Event/STCluster.h"
+
+class DeSTSDetector;
+class DeSTSector;
+class ISTSignalToNoiseTool;
+class ISTClusterPosition;
+
+/** @class STClusterCreator STClusterCreator.h
  *
  *  Class for clustering in the ST tracker
  *
@@ -10,26 +19,12 @@
  *  @date   07/03/2002
  */
 
-#include <vector>
-#include <map>
-
-#include "GaudiAlg/GaudiAlgorithm.h"
-#include "Event/STDigit.h"
-#include "Event/STCluster.h"
-
-
-class DeSTSDetector;
-class DeSTSector;
-class ISTSignalToNoiseTool;
-class ISTClusterPosition;
-
 class STClusterCreator :public GaudiAlgorithm {
 
 public:
   
   // Constructors and destructor
-  STClusterCreator(const std::string& name, 
-                   ISvcLocator* pSvcLocator); 
+  STClusterCreator( const std::string& name, ISvcLocator* pSvcLocator); 
   virtual ~STClusterCreator();  
 
   // IAlgorithm members
@@ -38,26 +33,29 @@ public:
 
 private:
   
-  StatusCode createClusters(const LHCb::STDigits* digitsCont, 
-                            LHCb::STClusters* clustersCont) const ;
+  StatusCode createClusters( const LHCb::STDigits* digitsCont, 
+                             LHCb::STClusters* clustersCont) const ;
 
-  bool keepClustering(const LHCb::STDigit* firstDigit, 
-                      const LHCb::STDigit* secondDigit, 
-                      const DeSTSector* aSector) const;
+  bool keepClustering( const LHCb::STDigit* firstDigit, 
+                       const LHCb::STDigit* secondDigit, 
+                       const DeSTSector* aSector ) const;
+  
+  bool sameBeetle( const LHCb::STChannelID firstChan, 
+                   const LHCb::STChannelID secondChan ) const;
 
-  bool sameBeetle(const LHCb::STChannelID firstChan, const LHCb::STChannelID secondChan) const;
-
-  bool aboveDigitSignalToNoise(const LHCb::STDigit* aDigit, const DeSTSector* aSector) const;
-  bool aboveClusterSignalToNoise(const double charge, const DeSTSector* aSector) const;
+  bool aboveDigitSignalToNoise( const LHCb::STDigit* aDigit,
+                                const DeSTSector* aSector ) const;
+  bool aboveClusterSignalToNoise( const double charge,
+                                  const DeSTSector* sector ) const;
   bool hasHighThreshold(const double charge, const DeSTSector* aSector) const; 
 
-  double neighbourSum(LHCb::STDigits::const_iterator start, 
-                      LHCb::STDigits::const_iterator stop, 
-		      const LHCb::STDigits* digits) const;
+  double neighbourSum( LHCb::STDigits::const_iterator start, 
+                       LHCb::STDigits::const_iterator stop, 
+                       const LHCb::STDigits* digits ) const;
 
-
-  LHCb::STCluster::ADCVector strips(const SmartRefVector<LHCb::STDigit>& clusteredDigits,
-				   const LHCb::STChannelID closestChan) const;
+  LHCb::STCluster::ADCVector strips(const SmartRefVector<LHCb::STDigit>& 
+                                    clusteredDigits,
+                                    const LHCb::STChannelID closestChan) const;
  
   double m_digitSig2NoiseThreshold;
   double m_clusterSig2NoiseThreshold;
@@ -86,14 +84,4 @@ private:
  
 };
 
-
-#endif //_ITNEWCLUSTERSCREATOR_H_
-
-
-
-
-
-
-
-
-
+#endif // STCLUSTERSCREATOR_H

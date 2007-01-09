@@ -1,31 +1,20 @@
-// $Id: MCSTDigitCreator.cpp,v 1.2 2006-12-18 10:09:54 cattanem Exp $
-//
-// This File contains the implementation of the MCSTDigitCreator
-// C++ code for 'LHCb Tracking package(s)'
-//
+// $Id: MCSTDigitCreator.cpp,v 1.3 2007-01-09 15:34:31 jvantilb Exp $
 
-// stl
-#include <algorithm>
-
+// Gaudi
 #include "GaudiKernel/AlgFactory.h"
 
+// Event
 #include "Event/MCSTDeposit.h"
-
-// IT includes
-#include "MCSTDigitCreator.h"
-
+#include "Event/MCSTDigit.h"
 #include "Kernel/STDetSwitch.h"
+
+// local
+#include "MCSTDigitCreator.h"
 
 using namespace LHCb;
 
 DECLARE_ALGORITHM_FACTORY( MCSTDigitCreator );
 
-//_________________________________________________
-// ITDigitCreator
-//
-// An TrDigitCreator is a Gaudi sub algorithm that creates Inner tracker Digit 
-// from the digitizations and stores them in the correct layer
-// 
 MCSTDigitCreator::MCSTDigitCreator(const std::string& name,
                                              ISvcLocator* pSvcLocator):
   GaudiAlgorithm(name, pSvcLocator)
@@ -42,13 +31,10 @@ MCSTDigitCreator::~MCSTDigitCreator()
   // MCSTDigitCreator destructor
 }
 
-
-StatusCode MCSTDigitCreator::initialize() {
-
+StatusCode MCSTDigitCreator::initialize()
+{
   StatusCode sc = GaudiAlgorithm::initialize();
-  if (sc.isFailure()){
-    return Error("Failed to initialize", sc);
-  }
+  if (sc.isFailure()) return Error("Failed to initialize", sc);
 
   STDetSwitch::flip(m_detType,m_inputLocation);
   STDetSwitch::flip(m_detType,m_outputLocation);
@@ -58,9 +44,6 @@ StatusCode MCSTDigitCreator::initialize() {
 
 StatusCode MCSTDigitCreator::execute()
 {
-  // Executes MCSTDigitCreator for one event.
-  
- 
   // retrieve Deposits
   MCSTDeposits* depositCont = get<MCSTDeposits>(m_inputLocation);
 
@@ -68,20 +51,20 @@ StatusCode MCSTDigitCreator::execute()
   MCSTDigits* digitCont = new MCSTDigits();
   digitCont->reserve(depositCont->size());
 
-  // collect all deposits on 1 strip = MCSTDigit
+  // Collect all deposits on 1 strip (= MCSTDigit)
+  // this requires the list of deposits to be sorted by STChannelID
   MCSTDeposits::const_iterator iterDep = depositCont->begin();
   MCSTDeposits::const_iterator jterDep = iterDep;
-
   while (iterDep != depositCont->end()){
 
-    SmartRefVector<MCSTDeposit> depositVector;
-  
+    SmartRefVector<MCSTDeposit> depositVector;  
     do {
       depositVector.push_back(*jterDep);
       ++jterDep;
-    } while ((jterDep != depositCont->end())&&(keepAdding(*iterDep,*jterDep) == true));
+    } while ( (jterDep != depositCont->end())&&
+              (keepAdding(*iterDep,*jterDep) == true) );
 
-    // make a new MCSTDigit and add it to the vector !!!!
+    // make a new MCSTDigit and add it to the vector
     MCSTDigit* newDigit = new MCSTDigit();
     newDigit->setMcDeposit(depositVector);
     STChannelID aChan = (*iterDep)->channelID();
@@ -91,31 +74,15 @@ StatusCode MCSTDigitCreator::execute()
 
   } // iterDep
 
-  //register layers in the transient data store.....
+  // register MCSTDigits in the transient data store
   put(digitCont, m_outputLocation );
  
   return StatusCode::SUCCESS;
 }
 
 bool MCSTDigitCreator::keepAdding(const MCSTDeposit* firstDep,
-                                  const MCSTDeposit* secondDep) const{
- 
+                                  const MCSTDeposit* secondDep) const
+{ 
   // check whether to continueing adding deposits to vector
   return (firstDep->channelID() == secondDep->channelID());
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

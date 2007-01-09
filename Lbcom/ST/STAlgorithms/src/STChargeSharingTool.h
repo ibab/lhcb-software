@@ -1,51 +1,47 @@
-// $Id: STChargeSharingTool.h,v 1.3 2006-12-08 09:54:23 mneedham Exp $
-#ifndef _STCHARGESHARINGTOOL_H
-#define _STCHARGESHARINGTOOL_H
+// $Id: STChargeSharingTool.h,v 1.4 2007-01-09 15:34:34 jvantilb Exp $
+#ifndef STCHARGESHARINGTOOL_H
+#define STCHARGESHARINGTOOL_H 1
 
-#include <string>
-#include <vector>
-
+// Gaudi
 #include "GaudiAlg/GaudiTool.h"
-#include "ISTChargeSharingTool.h"
 #include "GaudiMath/GaudiMath.h"
 
+// local interface
+#include "ISTChargeSharingTool.h"
 
-/** @class STChargeSharingTool STChargeSharingTool.h STAlgorithms/STChargeSharingTool.h
+/** @class STChargeSharingTool STChargeSharingTool.h
  *
- *  Interface Class for charge sharing ST strip
+ *  Tool for charge sharing ST strip
  *
  *  @author M.Needham
  *  @date   14/3/2002
  */
 
-// Declaration of the interface ID ( interface id, major version, minor version) 
-
-class STChargeSharingTool : public GaudiTool, virtual public ISTChargeSharingTool {
+class STChargeSharingTool : public GaudiTool, 
+                            virtual public ISTChargeSharingTool {
 
 public: 
 
-  STChargeSharingTool(const std::string& type, 
-                      const std::string& name,
-                      const IInterface* parent);
+  STChargeSharingTool( const std::string& type, const std::string& name,
+                       const IInterface* parent );
 
   /// destructer
   virtual ~STChargeSharingTool();
 
   virtual StatusCode initialize();
 
-  /// calc rel fraction
+  /// calculate charge fraction as function of the relative distance
   double sharing(const double relDist) const;
 
 private:
- 
-  std::vector<double> m_sharingFunction;
-  std::vector<double> m_binCenters;
 
+  /// Spline function to fit to the charge sharing function
   GaudiMath::SimpleSpline* m_responseSpline;
+
+  // Job option:
+  /// Fraction of charge on strip as funtion of the relative distance
+  std::vector<double> m_sharingFunction; 
 
 };
 
-#endif // _STCHARGESHARINGTOOL_H
-
-
-
+#endif // STCHARGESHARINGTOOL_H

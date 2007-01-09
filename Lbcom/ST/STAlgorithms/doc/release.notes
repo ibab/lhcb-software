@@ -2,6 +2,9 @@
 ! Package manager : Matt Needham
 !-----------------------------------------------------------------------------
 
+! 2007-01-09 - Jeroen VAN TILBURG
+ - Cosmetic changes. Clean up of obsolete code.
+
 !======================= STAlgorithms v2r0 2006-12-18 ========================
 ! 2006-12-18 - Marco Cattaneo
  - DECLARE_xxx_FACTORY everywhere
