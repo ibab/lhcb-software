@@ -1,0 +1,36 @@
+#============================================================================
+# Created    : 2005-02-10
+# Maintainer : Jose Hernando
+#============================================================================
+package           HltEvent
+version           v7r1
+
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc Event xml
+include_dirs      $(HLTEVENTROOT)
+
+# Used packages
+#============================================================================
+use   TrackEvent      v*    Event
+use   RecEvent        v*    Event
+use   PhysEvent       v*    Event
+use   GaudiKernel     v*
+
+#============================================================================
+#---- Produce Header-Files from XML description
+private
+document obj2doth HltEventObj2Doth ../xml/*.xml
+document obj2dict HltEventObj2Dict ../xml/*.xml
+
+public
+library          HltEventDict     ../$(tag)/dict/HltEvent/*.cpp
+
+#============================================================================
+# define library link options
+#============================================================================
+apply_pattern component_library library=HltEventDict
+
+private
+use GaudiObjDesc v* -no_auto_imports
+
