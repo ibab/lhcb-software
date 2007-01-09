@@ -219,6 +219,14 @@ Tenth release of PHYS with DC06 event model.
   - update for DC06 : first step towards a generic B2XNeutral code
   - increment version number
 
+!========================== Radiative v2r0p1 2007-01-08 =================
+
+! 2007-01-09 - Juan PALACIOS
+
+  - Remove options/DVPreselLb2Lambda0Gamma.opts as is not DC06 compliant.
+  - cmt/requirements
+    Change version to v2r0p1
+
 !========================== Radiative v2r0 2007-01-08 ===================
 
 ! 2007-01-08 - Juan PALACIOS for Lesya SHCHUTSKA
