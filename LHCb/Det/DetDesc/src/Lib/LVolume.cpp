@@ -1,12 +1,11 @@
-// $Id: LVolume.cpp,v 1.32 2006-02-01 19:39:10 marcocle Exp $ 
+// $Id: LVolume.cpp,v 1.33 2007-01-09 15:39:52 cattanem Exp $ 
 
 /// STD & STL includes 
 #include <stdio.h> 
 #include <functional> 
 #include <algorithm> 
-/// LHCbDefinitions includes 
-#include "Kernel/Transform3DTypes.h"
 /// Gaudi Kernel includes
+#include "GaudiKernel/Transform3DTypes.h"
 #include "GaudiKernel/StatusCode.h"
 #include "GaudiKernel/SmartDataPtr.h" 
 /// DetDesc includes 
@@ -166,11 +165,12 @@ StatusCode LVolume::belongsTo
 // ============================================================================
 const Material* LVolume::findMaterial() const 
 {
-  const Material* mat = 0; 
   SmartDataPtr<const Material> material( dataSvc() , materialName() );
-  if( 0 != material) { mat = material ; }
-  Assert( 0 != mat , "Could not locate material=" + materialName() ); 
-  m_material = mat;
+  if( 0 == material ) {
+    throw LogVolumeException( "Could not locate material " + materialName(),
+                              this, StatusCode::FAILURE );
+  }
+  m_material = material;
   return m_material; 
 };
 

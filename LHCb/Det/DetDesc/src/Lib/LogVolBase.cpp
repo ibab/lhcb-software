@@ -1,10 +1,9 @@
-// $Id: LogVolBase.cpp,v 1.17 2006-04-20 14:39:56 ranjard Exp $
+// $Id: LogVolBase.cpp,v 1.18 2007-01-09 15:39:52 cattanem Exp $
 
 // GaudiKernel
 #include "GaudiKernel/System.h"
 #include "GaudiKernel/IDataProviderSvc.h"
-//#include "GaudiKernel/IJobOptionsSvc.h"
-//#include "GaudiKernel/PropertyMgr.h"
+
 // DetDesc 
 #include "DetDesc/DetDesc.h"
 #include "DetDesc/LogVolBase.h"
@@ -291,13 +290,9 @@ IPVolume* LogVolBase::createPVolume()
 // ===========================================================================
 IPVolume* LogVolBase::createPVolume ( const std::string&    PVname         , 
                                       const std::string&    LVnameForPV    ,
-                                      const Gaudi::XYZPoint&     Position       ,
-                                      const Gaudi::Rotation3D&   Rotation       ) 
+                                      const Gaudi::XYZPoint&     Position  ,
+                                      const Gaudi::Rotation3D&   Rotation    ) 
 {
-  //  const size_t copy_number = copyNumber( PVname ) ;
-  //Assert( !copyExist( copy_number ) ,
-  //        "LVolume::createPVolume, copy number if not unique " +
-  //        PVname+"(lv="+LVnameForPV+")" );
   PVolume* pv = 0; 
   try{ pv = new  PVolume ( PVname      , 
                            LVnameForPV , 
@@ -308,13 +303,15 @@ IPVolume* LogVolBase::createPVolume ( const std::string&    PVname         ,
     { Assert( false , "createPVolume() , exception caught! " , Exception ); } 
   catch(...)                        
     { Assert( false , "createPVolume() , unknown exception!"); } 
-  /// make
-  Assert( 0 != pv , 
-          "LVolume::createPVolume, could not create volume " + 
-          PVname+"(lv="+LVnameForPV+")" );
-  /// 
+
+  if( 0 == pv ) {
+    throw LogVolumeException( "LVolume::createPVolume, could not create volume "+
+                              PVname+"(lv="+LVnameForPV+")", 
+                              this, StatusCode::FAILURE );
+  }
+  
   m_pvolumes.push_back( pv ); 
-  ///  
+
   return m_pvolumes.back();
 };
 
@@ -332,11 +329,6 @@ LogVolBase::createPVolume
   const std::string&    LVnameForPV ,
   const Gaudi::Transform3D& Transform   )
 {
-  //
-  //  const size_t copy_number = copyNumber( PVname ) ;
-  //Assert( ! copyExist( copy_number ) ,
-  //        "LVolume::createPVolume, copy number if not unique " +
-  //        PVname+"(lv="+LVnameForPV+")" );
   PVolume* pv = 0; 
   try{ pv = new  PVolume ( PVname      , 
                            LVnameForPV , 
@@ -346,13 +338,13 @@ LogVolBase::createPVolume
     { Assert( false , "createPVolume() , exception caught! " , Exception ); } 
   catch(...)                        
     { Assert( false , "createPVolume() , unknown exception!"); } 
-  /// make
-  Assert( 0 != pv , 
-          "LVolume::createPVolume, could not create volume " + 
-          PVname+"(lv="+LVnameForPV+")" );
-  /// 
+
+  if( 0 == pv ) {
+    throw LogVolumeException( "LVolume::createPVolume, could not create volume "+
+                              PVname+"(lv="+LVnameForPV+")", 
+                              this, StatusCode::FAILURE );
+  }
   m_pvolumes.push_back( pv ); 
-  ///  
   return m_pvolumes.back();  
 };  
 
