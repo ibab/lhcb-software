@@ -1,4 +1,4 @@
-// $Id: SolidBoolean.cpp,v 1.16 2005-12-08 19:20:02 jpalac Exp $
+// $Id: SolidBoolean.cpp,v 1.17 2007-01-09 16:01:22 cattanem Exp $
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
@@ -87,7 +87,8 @@ StatusCode SolidBoolean::setBP()
   setRMax   ( base->rMax   () );
   setRhoMax ( base->rhoMax () );
   
-  return checkBP();
+  checkBP();
+  return StatusCode::SUCCESS;
 };
 // ============================================================================
 

@@ -1,6 +1,4 @@
-// $Id: SolidCons.cpp,v 1.18 2006-10-11 15:02:58 cattanem Exp $ 
-// ===========================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
+// $Id: SolidCons.cpp,v 1.19 2007-01-09 16:01:23 cattanem Exp $ 
 // ===========================================================================
 // Units
 #include "GaudiKernel/SystemOfUnits.h"
@@ -190,7 +188,8 @@ StatusCode SolidCons::setBP()
   }
 
   // check bounding parameters 
-  return checkBP() ;
+  checkBP() ;
+  return StatusCode::SUCCESS;
 };
 // ============================================================================
 

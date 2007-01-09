@@ -1,4 +1,4 @@
-// $Id: SolidPolycone.cpp,v 1.13 2006-10-11 15:02:58 cattanem Exp $
+// $Id: SolidPolycone.cpp,v 1.14 2007-01-09 16:01:23 cattanem Exp $
 // ============================================================================
 #include "DetDesc/SolidPolycone.h"
 
@@ -186,7 +186,8 @@ StatusCode SolidPolycone::setBP()
   }
 
   ///
-  return checkBP();
+  checkBP();
+  return StatusCode::SUCCESS;
 };
 // ============================================================================
 

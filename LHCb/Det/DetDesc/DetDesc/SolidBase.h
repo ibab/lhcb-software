@@ -1,4 +1,4 @@
-// $Id: SolidBase.h,v 1.14 2006-05-10 07:06:17 cattanem Exp $
+// $Id: SolidBase.h,v 1.15 2007-01-09 16:01:21 cattanem Exp $
 #ifndef DETDESC_SOLIDBASE_H 
 #define DETDESC_SOLIDBASE_H 1
 
@@ -381,9 +381,8 @@ protected:
   /** check bounding parameters 
    *  @exception SolidException 
    *  for wrong set of bounding parameters
-   *  @return status code
    */
-  StatusCode checkBP() const ;
+  void checkBP() const ;
   
   /** 
    *  accessor to massage service

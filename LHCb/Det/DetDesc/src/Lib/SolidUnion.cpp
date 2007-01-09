@@ -1,6 +1,4 @@
-// $Id: SolidUnion.cpp,v 1.13 2006-06-02 06:59:02 cattanem Exp $ 
-// ===========================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
+// $Id: SolidUnion.cpp,v 1.14 2007-01-09 16:01:25 cattanem Exp $ 
 // ===========================================================================
 /** STD & STL  */
 #include <iostream> 
@@ -181,7 +179,8 @@ StatusCode SolidUnion::updateBP()
   setRMax   ( base->rMax   () > rMax   () ? base->rMax   () : rMax   () );
   setRhoMax ( base->rhoMax () > rhoMax () ? base->rhoMax () : rhoMax () );
   //
-  return checkBP();
+  checkBP();
+  return StatusCode::SUCCESS;
 };
 // ============================================================================
 

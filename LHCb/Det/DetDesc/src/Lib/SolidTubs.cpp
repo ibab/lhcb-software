@@ -1,6 +1,4 @@
-// $Id: SolidTubs.cpp,v 1.16 2006-10-11 15:02:58 cattanem Exp $ 
-// ============================================================================
-// CVStag $Name: not supported by cvs2svn $ 
+// $Id: SolidTubs.cpp,v 1.17 2007-01-09 16:01:24 cattanem Exp $ 
 // ============================================================================
 // Units
 #include "GaudiKernel/SystemOfUnits.h"
@@ -170,7 +168,8 @@ StatusCode SolidTubs::setBP()
   }
 
   //
-  return checkBP();
+  checkBP();
+  return StatusCode::SUCCESS;
 };
 // ============================================================================
 

@@ -1,6 +1,4 @@
-// $Id: SolidBox.cpp,v 1.16 2006-10-17 11:56:41 mneedham Exp $ 
-// ===========================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
+// $Id: SolidBox.cpp,v 1.17 2007-01-09 16:01:23 cattanem Exp $ 
 // ===========================================================================
 // DetDesc 
 #include "DetDesc/DetDesc.h" 
@@ -67,7 +65,8 @@ StatusCode SolidBox::setBP()
   setRMax   ( sqrt( xMax() * xMax() + yMax() * yMax() + zMax() * zMax() ) );
   setRhoMax ( sqrt( xMax() * xMax() + yMax() * yMax()                   ) );
   //
-  return checkBP () ;
+  checkBP () ;
+  return StatusCode::SUCCESS;
 };
 // ============================================================================
 

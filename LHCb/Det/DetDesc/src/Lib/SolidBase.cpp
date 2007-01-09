@@ -1,4 +1,4 @@
-// $Id: SolidBase.cpp,v 1.16 2006-10-11 15:02:58 cattanem Exp $
+// $Id: SolidBase.cpp,v 1.17 2007-01-09 16:01:21 cattanem Exp $
 
 // Units
 #include "GaudiKernel/SystemOfUnits.h"
@@ -291,7 +291,7 @@ unsigned int SolidBase::intersectionTicksImpl( ISolid::Ticks&    ticks ) const
  *  @return status code
  */
 // ============================================================================
-StatusCode SolidBase::checkBP() const
+void SolidBase::checkBP() const
 {
   const std::string msg("SolidBase("+m_name+")::checkBP(): ");
   if     ( xMax()   <= xMin() ) 
@@ -398,7 +398,7 @@ StatusCode SolidBase::checkBP() const
                             + DetDesc::print( rhoMax() ) ); 
     }
   //
-  return StatusCode::SUCCESS ;
+  return;
 };
 // ============================================================================
   

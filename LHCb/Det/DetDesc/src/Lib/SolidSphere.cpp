@@ -1,14 +1,12 @@
-// $Id: SolidSphere.cpp,v 1.18 2006-10-11 15:02:58 cattanem Exp $ 
-// ===========================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
+// $Id: SolidSphere.cpp,v 1.19 2007-01-09 16:01:24 cattanem Exp $ 
 // ===========================================================================
 // STD & STL 
 #include <algorithm>
 // Units
 #include "GaudiKernel/SystemOfUnits.h" 
-// LHCbDefinitions 
-#include "Kernel/Point3DTypes.h" 
-#include "Kernel/Vector3DTypes.h" 
+// Geometry Definitions 
+#include "GaudiKernel/Point3DTypes.h" 
+#include "GaudiKernel/Vector3DTypes.h" 
 /// DetDesc 
 #include "DetDesc/DetDesc.h" 
 #include "DetDesc/SolidSphere.h" 
@@ -224,7 +222,8 @@ StatusCode SolidSphere::setBP()
   }
 
   ///
-  return checkBP();
+  checkBP();
+  return StatusCode::SUCCESS;
 };
 // ===========================================================================
 

@@ -1,10 +1,8 @@
-// $Id: SolidChild.cpp,v 1.18 2005-12-08 19:20:02 jpalac Exp $ 
+// $Id: SolidChild.cpp,v 1.19 2007-01-09 16:01:23 cattanem Exp $ 
 // ===========================================================================
-// CVS tag $Name: not supported by cvs2svn $
-// ===========================================================================
-/// CLHEP
-#include "Kernel/Transform3DTypes.h" 
-#include "Kernel/Point3DTypes.h" 
+/// Geometry definitions
+#include "GaudiKernel/Transform3DTypes.h" 
+#include "GaudiKernel/Point3DTypes.h" 
 /// DetDesc 
 #include "DetDesc/SolidChild.h" 
 #include "DetDesc/Solid.h"
@@ -108,7 +106,8 @@ StatusCode SolidChild::setBP()
         }
     }
   //
-  return checkBP();
+  checkBP();
+  return StatusCode::SUCCESS;
 };
 // ============================================================================
 
