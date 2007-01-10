@@ -1,4 +1,4 @@
-// $Id: STClusterChecker.cpp,v 1.12 2007-01-04 11:08:47 jvantilb Exp $
+// $Id: STClusterChecker.cpp,v 1.13 2007-01-10 16:02:22 cattanem Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -92,8 +92,8 @@ StatusCode STClusterChecker::execute()
   return StatusCode::SUCCESS;
 }
 
-StatusCode STClusterChecker::fillHistograms( const STCluster* aCluster,
-                                             const MCHit* aHit )
+void STClusterChecker::fillHistograms( const STCluster* aCluster,
+                                       const MCHit* aHit )
 {
   // fill histograms
   if (0 != aHit){ 
@@ -108,5 +108,5 @@ StatusCode STClusterChecker::fillHistograms( const STCluster* aCluster,
       }
     } 
   }
-  return StatusCode::SUCCESS;
+  return;
 }

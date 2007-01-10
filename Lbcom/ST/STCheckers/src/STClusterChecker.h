@@ -1,4 +1,4 @@
-// $Id: STClusterChecker.h,v 1.5 2007-01-04 11:08:48 jvantilb Exp $
+// $Id: STClusterChecker.h,v 1.6 2007-01-10 16:02:22 cattanem Exp $
 #ifndef STClusterChecker_H
 #define STClusterChecker_H 1
 
@@ -50,8 +50,7 @@ private:
   typedef Table::Range Range;
   typedef Table::iterator iterator;
 
-  virtual StatusCode fillHistograms(const LHCb::STCluster* aCluster,
-                                    const LHCb::MCHit* aHit);
+  void fillHistograms(const LHCb::STCluster* aCluster, const LHCb::MCHit* aHit);
 
   double betaGamma(const LHCb::MCParticle* aParticle) const;
   

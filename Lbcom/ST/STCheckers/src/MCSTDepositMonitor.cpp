@@ -1,4 +1,4 @@
-// $Id: MCSTDepositMonitor.cpp,v 1.1 2007-01-04 11:08:34 jvantilb Exp $
+// $Id: MCSTDepositMonitor.cpp,v 1.2 2007-01-10 16:02:21 cattanem Exp $
 
 // BOOST!
 #include "boost/lexical_cast.hpp"
@@ -77,7 +77,7 @@ StatusCode MCSTDepositMonitor::execute()
   return StatusCode::SUCCESS;
 }
 
-StatusCode MCSTDepositMonitor::fillHistograms(const MCSTDeposit* aDeposit) const
+void MCSTDepositMonitor::fillHistograms(const MCSTDeposit* aDeposit) const
 {
   // Plot deposited charge
   plot(aDeposit->depositedCharge(), 2, "Deposited charge", 0., 100., 100);
@@ -105,5 +105,5 @@ StatusCode MCSTDepositMonitor::fillHistograms(const MCSTDeposit* aDeposit) const
     }
   }
 
-  return StatusCode::SUCCESS;
+  return;
 }

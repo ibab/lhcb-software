@@ -1,4 +1,4 @@
-// $Id: STDigitMonitor.cpp,v 1.1 2007-01-04 11:08:56 jvantilb Exp $
+// $Id: STDigitMonitor.cpp,v 1.2 2007-01-10 16:02:23 cattanem Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -76,7 +76,7 @@ StatusCode STDigitMonitor::execute()
   return StatusCode::SUCCESS;
 }
 
-StatusCode STDigitMonitor::fillHistograms(const STDigit* aDigit)
+void STDigitMonitor::fillHistograms(const STDigit* aDigit)
 {
   // histogram by station
   const int iStation = aDigit->channelID().station();
@@ -95,5 +95,5 @@ StatusCode STDigitMonitor::fillHistograms(const STDigit* aDigit)
     }
   }
 
-  return StatusCode::SUCCESS;
+  return;
 }

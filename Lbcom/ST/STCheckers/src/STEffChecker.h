@@ -1,4 +1,4 @@
-// $Id: STEffChecker.h,v 1.1 2007-01-04 11:09:06 jvantilb Exp $
+// $Id: STEffChecker.h,v 1.2 2007-01-10 16:02:23 cattanem Exp $
 #ifndef STEffChecker_H
 #define STEffChecker_H 1
 
@@ -64,7 +64,7 @@ private:
   typedef Table::Range Range;
   typedef Table::iterator iterator;
 
-  virtual StatusCode initHistograms();
+  virtual void initHistograms();
   
   virtual StatusCode layerEff(const LHCb::MCParticle* aParticle);
 

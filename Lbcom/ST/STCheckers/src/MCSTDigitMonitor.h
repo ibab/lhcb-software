@@ -1,4 +1,4 @@
-// $Id: MCSTDigitMonitor.h,v 1.1 2007-01-04 11:08:43 jvantilb Exp $
+// $Id: MCSTDigitMonitor.h,v 1.2 2007-01-10 16:02:22 cattanem Exp $
 #ifndef MCSTDigitMonitor_H
 #define MCSTDigitMonitor_H 1
 
@@ -36,7 +36,7 @@ public:
 
 private:
 
-  StatusCode fillHistograms(const LHCb::MCSTDigit* aDigit) const;
+  void fillHistograms(const LHCb::MCSTDigit* aDigit) const;
   
   std::string m_detType;
   std::string m_digitLocation;

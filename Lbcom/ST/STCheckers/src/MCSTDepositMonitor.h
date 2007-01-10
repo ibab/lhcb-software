@@ -1,4 +1,4 @@
-// $Id: MCSTDepositMonitor.h,v 1.1 2007-01-04 11:08:36 jvantilb Exp $
+// $Id: MCSTDepositMonitor.h,v 1.2 2007-01-10 16:02:21 cattanem Exp $
 #ifndef MCSTDepositMonitor_H
 #define MCSTDepositMonitor_H 1
 
@@ -38,7 +38,7 @@ public:
 
 private:
 
-  StatusCode fillHistograms(const LHCb::MCSTDeposit* aDeposit) const;
+  void fillHistograms(const LHCb::MCSTDeposit* aDeposit) const;
 
   DeSTDetector* m_tracker;
   std::string m_detType;

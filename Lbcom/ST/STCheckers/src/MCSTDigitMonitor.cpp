@@ -1,4 +1,4 @@
-// $Id: MCSTDigitMonitor.cpp,v 1.1 2007-01-04 11:08:40 jvantilb Exp $
+// $Id: MCSTDigitMonitor.cpp,v 1.2 2007-01-10 16:02:22 cattanem Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -63,7 +63,7 @@ StatusCode MCSTDigitMonitor::execute()
   return StatusCode::SUCCESS;
 }
 
-StatusCode MCSTDigitMonitor::fillHistograms(const MCSTDigit* aDigit) const
+void MCSTDigitMonitor::fillHistograms(const MCSTDigit* aDigit) const
 {
   // number of deposits that contribute
   plot((double)aDigit->mcDeposit().size(),"Number of deposits per digit", 
@@ -79,5 +79,5 @@ StatusCode MCSTDigitMonitor::fillHistograms(const MCSTDigit* aDigit) const
        -0.5, 40.5, 41);
 
   // end
-  return StatusCode::SUCCESS;
+  return;
 }

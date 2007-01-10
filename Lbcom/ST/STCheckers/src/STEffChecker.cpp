@@ -1,4 +1,4 @@
-// $Id: STEffChecker.cpp,v 1.1 2007-01-04 11:09:04 jvantilb Exp $
+// $Id: STEffChecker.cpp,v 1.2 2007-01-10 16:02:23 cattanem Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -81,7 +81,7 @@ StatusCode STEffChecker::initialize()
   return StatusCode::SUCCESS;
 }
 
-StatusCode STEffChecker::initHistograms()
+void STEffChecker::initHistograms()
 {
   // Intialize histograms
 
@@ -147,7 +147,7 @@ StatusCode STEffChecker::initHistograms()
     ++numInVector;
   } // iLayer
   
-  return StatusCode::SUCCESS;
+  return;
 }
 
 StatusCode STEffChecker::execute()

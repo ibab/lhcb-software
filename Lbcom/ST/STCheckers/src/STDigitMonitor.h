@@ -1,4 +1,4 @@
-// $Id: STDigitMonitor.h,v 1.1 2007-01-04 11:08:59 jvantilb Exp $
+// $Id: STDigitMonitor.h,v 1.2 2007-01-10 16:02:23 cattanem Exp $
 #ifndef STDigitMonitor_H
 #define STDigitMonitor_H 1
 
@@ -38,7 +38,7 @@ public:
 
 private:
 
-  virtual StatusCode fillHistograms(const LHCb::STDigit* aDigit) ;
+  void fillHistograms(const LHCb::STDigit* aDigit) ;
 
   DeSTDetector* m_tracker;
   std::string m_detType; 

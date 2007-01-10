@@ -2,6 +2,10 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
+!=========================== STCheckers v2r0 2007-01-09 =======================
+! 2007-01-10 - Marco Cattaneo
+ - Remove unnecessary unchecked return StatusCodes
+
 ! 2007-01-04 - Jeroen VAN TILBURG
  - Change naming of checkers and monitor algorithms according to naming
   convention.
