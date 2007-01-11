@@ -4,6 +4,7 @@
 ! Purpose     : muon reconstruction for triggers 
 !-----------------------------------------------------------------------------
 
+!========================== HltMuon v1r2 2007-01-11 ==========================
 ! 2007-01-11 - Marco Cattaneo
  - Use DECLARE_xxx_FACTORY macros
 
