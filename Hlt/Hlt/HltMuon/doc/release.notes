@@ -3,6 +3,10 @@
 ! Responsible : Alessia Satta
 ! Purpose     : muon reconstruction for triggers 
 !-----------------------------------------------------------------------------
+
+! 2007-01-11 - Marco Cattaneo
+ - Use DECLARE_xxx_FACTORY macros
+
 !========================== HltMuon v1r1 2006-10-30 ==========================
 ! 2006-10-30 - Alessia Satta
  - Compatible with new HltTracking and HltMuonAlley

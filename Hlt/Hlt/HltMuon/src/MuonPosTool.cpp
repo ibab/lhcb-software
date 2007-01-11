@@ -1,4 +1,4 @@
-// $Id: MuonPosTool.cpp,v 1.1 2006-09-27 13:55:23 cattanem Exp $
+// $Id: MuonPosTool.cpp,v 1.2 2007-01-11 16:03:05 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -13,10 +13,7 @@
 // 2003-04-16 : Alessia Satta
 //-----------------------------------------------------------------------------
 
-// Declaration of the Tool Factory
-static const  ToolFactory<MuonPosTool>          s_factory ;
-const        IToolFactory& MuonPosToolFactory = s_factory ; 
-
+DECLARE_TOOL_FACTORY( MuonPosTool );
 
 //=============================================================================
 // Standard constructor, initializes variables

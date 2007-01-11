@@ -1,4 +1,4 @@
-// $Id: HltMuonRefine.cpp,v 1.2 2006-10-30 08:38:16 asatta Exp $
+// $Id: HltMuonRefine.cpp,v 1.3 2007-01-11 16:03:05 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -13,9 +13,7 @@
 // 2004-11-24 : Alessia Satta
 //-----------------------------------------------------------------------------
 
-// Declaration of the Algorithm Factory
-static const  AlgFactory<HltMuonRefine>          s_factory ;
-const        IAlgFactory& HltMuonRefineFactory = s_factory ; 
+DECLARE_ALGORITHM_FACTORY( HltMuonRefine );
 
 using namespace LHCb;
 
