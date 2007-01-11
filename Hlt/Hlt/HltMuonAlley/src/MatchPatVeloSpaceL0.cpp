@@ -1,17 +1,11 @@
-// $Id: MatchPatVeloSpaceL0.cpp,v 1.2 2006-10-30 08:39:45 asatta Exp $
+// $Id: MatchPatVeloSpaceL0.cpp,v 1.3 2007-01-11 16:11:46 cattanem Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/SmartDataPtr.h"
 
 // from Event 
 #include "Event/Track.h"
-
-
-//#include "Linker/LinkedTo.h"
-//#include "Event/MCParticle.h"
-
 
 // local
 #include "MatchPatVeloSpaceL0.h"
@@ -25,9 +19,7 @@
 // 2006-02-14 : Sandra Amato
 //-----------------------------------------------------------------------------
 
-// Declaration of the Algorithm Factory
-static const  AlgFactory<MatchPatVeloSpaceL0>          s_factory ;
-const        IAlgFactory& MatchPatVeloSpaceL0Factory = s_factory ; 
+DECLARE_ALGORITHM_FACTORY( MatchPatVeloSpaceL0 );
 
 using namespace LHCb;
 

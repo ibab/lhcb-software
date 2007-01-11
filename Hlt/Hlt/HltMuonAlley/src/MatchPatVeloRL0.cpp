@@ -1,18 +1,12 @@
-// $Id: MatchPatVeloRL0.cpp,v 1.1.1.1 2006-09-25 16:29:11 asatta Exp $
+// $Id: MatchPatVeloRL0.cpp,v 1.2 2007-01-11 16:11:46 cattanem Exp $
 // Include files 
-
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 
-// from Event 
-//#include "Event/L0MuonCandidate.h"
-//#include "Event/L0DUReport.h"
-
 // local
 #include "MatchPatVeloRL0.h"
-//#include "Linker/LinkedTo.h"
-//#include "Event/MCParticle.h"
+
 //-----------------------------------------------------------------------------
 // Implementation file for class : MatchPatVeloRL0
 //
@@ -20,9 +14,7 @@
 // adapt to the new track event model
 //-----------------------------------------------------------------------------
 
-// Declaration of the Algorithm Factory
-static const  AlgFactory<MatchPatVeloRL0>	       s_factory ;
-const	     IAlgFactory& MatchPatVeloRL0Factory = s_factory ; 
+DECLARE_ALGORITHM_FACTORY( MatchPatVeloRL0 );
 
 using namespace LHCb;
 

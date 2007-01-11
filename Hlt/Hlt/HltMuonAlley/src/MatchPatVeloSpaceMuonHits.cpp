@@ -1,8 +1,6 @@
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/SmartDataPtr.h"
 #include "Event/Track.h"
-
 
 // local
 #include "MatchPatVeloSpaceMuonHits.h"
@@ -13,9 +11,7 @@
 // 2005-09-21 : Sandra Amato
 //-----------------------------------------------------------------------------
 
-// Declaration of the Algorithm Factory
-static const  AlgFactory<MatchPatVeloSpaceMuonHits>          s_factory ;
-const        IAlgFactory& MatchPatVeloSpaceMuonHitsFactory = s_factory ; 
+DECLARE_ALGORITHM_FACTORY( MatchPatVeloSpaceMuonHits );
 
 using namespace LHCb;
 
