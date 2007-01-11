@@ -1,16 +1,29 @@
-
-
-! 2007-01-11 - Jose A. Hernando
-   - options/L0.opts to rerun the L0 or read it from the RawBuffer
-   - options/Hlt.opts to run the HLT (alleys for the moment)
-   - options/HltAlleysSequence.opts the sequence of the HltAlleys
-
 <PRE>
 Package: HltSys
 Package Coordinator: Jose Angel Hernando Morata
 Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
+
+</PRE><H1><A NAME=v1r1>2007-01-11 HltSys v1r1</A></H1><PRE>
+This version uses Gaudi v18r10 and LHCb v21r12.
+
+Packages modified: HltCaloAlley v1r1, HltCommon v1r2, HltMuon v1r2,
+                   HltMuonAlley v1r2
+
+- In HltSys v1r1:
+  . Added options files to allow running HLT from DaVinci (moved from HltApp)
+    + options/L0.opts to rerun the L0 or read it from the RawBuffer
+    + options/Hlt.opts to run the HLT (alleys for the moment)
+    + options/HltAlleysSequence.opts the sequence of the HltAlleys
+
+- In HltCommon v1r2:
+  . src/HltMonitor.cpp some cleaning
+  . src/L0Entry.cpp deal with the calo entries (still things TODO there!)
+  . src/HltOffMonitorExample.h/cpp algo example of how to deal with the summary
+
+- In HltMuon v1r2, HltMuonAlley v1r2
+  . Use DECLARE_xxx_FACTORY macros
 
 </PRE><H1><A NAME=v1r0>2006-12-06 HltSys v1r0</A></H1><PRE>
 This version uses Gaudi v18r10 and LHCb v21r12.
