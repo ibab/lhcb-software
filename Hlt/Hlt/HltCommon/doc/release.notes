@@ -4,6 +4,9 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !-----------------------------------------------------------------------------
 
+! 2007-01-11 - Jose A. Hernando
+ - src back compatibility with LHCb v21r12
+
 ! 2006-12-20 - Jose A. Hernando
  - src/HltSequencer.cpp minor modifications: reparing error at initialization when using the new base class HltBaseAlg (?)
  - src/HltMonitor.cpp some cleaning (TODO still here)
