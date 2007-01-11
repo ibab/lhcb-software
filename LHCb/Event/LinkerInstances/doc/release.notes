@@ -2,10 +2,10 @@ Package LinkerInstances
 Package manager: T.Ruf
 Purpose: Creates dictionaries for the use of Linker relations in Python
 
+!===================== LinkerInstances v3r2 2007-01-11 ========================
 ! 2007-01-08 - Thomas Ruf
  - added support for MuonDigit linker table
 
-!===================== LinkerInstances v3r2 2006-12-19 ========================
 ! 2006-12-19 - Florence Ranjard
  - remove explicit build of libLinkerInstancesDict.so, it is done by Reflex
 
