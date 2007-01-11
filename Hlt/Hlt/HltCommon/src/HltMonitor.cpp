@@ -1,4 +1,4 @@
-// $Id: HltMonitor.cpp,v 1.4 2006-12-20 09:34:47 hernando Exp $
+// $Id: HltMonitor.cpp,v 1.5 2007-01-11 14:07:13 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -39,7 +39,7 @@ StatusCode HltMonitor::initialize() {
   StatusCode sc = HltMonitorAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  initializeHistosFromDescriptor();
+  // initializeHistosFromDescriptor();
 
   return StatusCode::SUCCESS;
 }

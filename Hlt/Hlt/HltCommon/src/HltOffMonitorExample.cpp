@@ -1,4 +1,4 @@
-// $Id: HltOffMonitorExample.cpp,v 1.1 2006-12-14 11:24:17 hernando Exp $
+// $Id: HltOffMonitorExample.cpp,v 1.2 2007-01-11 14:07:14 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -8,7 +8,7 @@
 #include "HltOffMonitorExample.h"
 
 #include "Event/HltSummary.h"
-#include "Event/HltSummaryFunctor.h"
+//#include "Event/HltSummaryFunctor.h"
 #include "Event/HltNames.h"
 #include "Event/Track.h"
 #include "TrackInterfaces/ITrackCloneFinder.h"
@@ -80,34 +80,34 @@ StatusCode HltOffMonitorExample::execute() {
   debug() << " has selection " << m_idSelection << " "
           << HltNames::selectionSummaryStr(m_idSelection) << " ? "
           << ok << endreq;
-  //  if (!ok) return StatusCode::SUCCESS;
+  if (!ok) return StatusCode::SUCCESS;
 
-  std::vector<Track*> otracks;
-  HltSummaryFunctor::retrieve(*summary,m_idSelection,otracks);
-  debug() << " number of summary tracks " << otracks.size() << endreq;
+ //  std::vector<Track*> otracks;
+//   HltSummaryFunctor::retrieve(*summary,m_idSelection,otracks);
+//   debug() << " number of summary tracks " << otracks.size() << endreq;
   
-  ITrackCloneFinder* matchtool = tool<ITrackCloneFinder>("TrackCloneFinder");
+//   ITrackCloneFinder* matchtool = tool<ITrackCloneFinder>("TrackCloneFinder");
   
-  int nmatch0 = 0;
-  int nmatch1 = 0;
-  for (std::vector<Track*>::iterator it = otracks.begin();
-       it != otracks.end(); ++it) {
-    Track& ontrack = *(*it);
-    size_t n0 = ontrack.lhcbIDs().size();
-    size_t n1 = 0;
-    for (Tracks::iterator it2 = tracks->begin(); it2 != tracks->end();
-         ++it2) {
-      Track& offtrack = *(*it2);
-      size_t n = ELoop::count(ontrack.lhcbIDs(),offtrack.lhcbIDs());
-      if (HltUtils::matchIDs(ontrack,offtrack)) nmatch0++;
-      if (matchtool->areClones(ontrack,offtrack)) nmatch1++;  
-      if (n1 < n) n1 = n;
-    }
-    verbose() << " count number of ids together " 
-              << n1 << "/" << n0 << endreq;
-  }
-  debug() << "number of matched tracks [utils] " << nmatch0 << endreq;
-  debug() << "number of matched tracks [clone tool] " << nmatch1 << endreq;
+//   int nmatch0 = 0;
+//   int nmatch1 = 0;
+//   for (std::vector<Track*>::iterator it = otracks.begin();
+//        it != otracks.end(); ++it) {
+//     Track& ontrack = *(*it);
+//     size_t n0 = ontrack.lhcbIDs().size();
+//     size_t n1 = 0;
+//     for (Tracks::iterator it2 = tracks->begin(); it2 != tracks->end();
+//          ++it2) {
+//       Track& offtrack = *(*it2);
+//       size_t n = ELoop::count(ontrack.lhcbIDs(),offtrack.lhcbIDs());
+//       if (HltUtils::matchIDs(ontrack,offtrack)) nmatch0++;
+//       if (matchtool->areClones(ontrack,offtrack)) nmatch1++;  
+//       if (n1 < n) n1 = n;
+//     }
+//     verbose() << " count number of ids together " 
+//               << n1 << "/" << n0 << endreq;
+//   }
+//   debug() << "number of matched tracks [utils] " << nmatch0 << endreq;
+//   debug() << "number of matched tracks [clone tool] " << nmatch1 << endreq;
 
   return StatusCode::SUCCESS;
       
