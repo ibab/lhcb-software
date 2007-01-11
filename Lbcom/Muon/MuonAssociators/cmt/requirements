@@ -1,18 +1,21 @@
 package           MuonAssociators
-version           v2r0
+version           v2r1
         
 # =============== structure =================================================== 
 branches          src cmt doc
 
-include_path none
 
+
+include_dirs  $(MUONASSOCIATORSROOT)
 # =============== used packages ===============================================
 use DigiEvent     v*    Event 
 use MCEvent       v*    Event
 use LinkerEvent   v*    Event
 use EventBase     v*    Event
 use GaudiAlg      v*
-
+use MuonDet       v*    Det
+use RecEvent      v*    Event
+use MuonDAQ       v*    Muon
 # =============== component library ===========================================
 library       MuonAssociators  ../src/*.cpp
 apply_pattern component_library library=MuonAssociators

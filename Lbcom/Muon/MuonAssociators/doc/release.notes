@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.20 2006-02-15 11:24:38 cattanem Exp $
+! $Id: release.notes,v 1.21 2007-01-11 13:12:41 asatta Exp $
 ! Package     : MuonAssociators
 ! Responsible : David Hutchcroft
+
+!==================== MuonAssociators v2r1 2007-01-11 ======================
+! 2007-01-11 - Alessia Satta
+ - Add a link table between Coords and MCParticle
 
 !==================== MuonAssociators v2r0 2006-02-15 ======================
 ! 2006-02-15 - Marco Cattaneo

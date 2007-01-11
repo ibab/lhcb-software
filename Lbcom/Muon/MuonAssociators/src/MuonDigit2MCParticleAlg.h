@@ -1,4 +1,4 @@
-// $Id: MuonDigit2MCParticleAlg.h,v 1.4 2006-01-27 17:15:59 asarti Exp $
+// $Id: MuonDigit2MCParticleAlg.h,v 1.5 2007-01-11 13:12:45 asatta Exp $
 #ifndef MUONDIGIT2MCPARTICLEALG_H 
 #define MUONDIGIT2MCPARTICLEALG_H 1
 
@@ -32,6 +32,8 @@ public:
 protected:
 
 private:
+  bool m_associateAll;
+  
 
 };
 #endif // MUONDIGIT2MCPARTICLEALG_H
