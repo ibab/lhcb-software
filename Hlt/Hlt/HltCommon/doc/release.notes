@@ -4,6 +4,7 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !-----------------------------------------------------------------------------
 
+! ======================== HltCommon v1r2 2007-01-11 =========================
 ! 2007-01-11 - Jose A. Hernando
  - src back compatibility with LHCb v21r12
 
