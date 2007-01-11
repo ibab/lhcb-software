@@ -1,4 +1,4 @@
-// $Id: HltBaseAlg.cpp,v 1.1 2006-12-20 09:32:47 hernando Exp $
+// $Id: HltBaseAlg.cpp,v 1.2 2007-01-11 10:32:49 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -204,7 +204,7 @@ void HltBaseAlg::infoTotalEvents( int  nTotEvts )
 void HltBaseAlg::infoSubsetEvents(  int nEventsInSubset, int  nTotEvts, 
                                     const std::string& subsetName)
 {
-  double f = (nTotEvts>0? 0.: float(nEventsInSubset)/float(nTotEvts) );
+  double f = (nTotEvts<=0? 0.: float(nEventsInSubset)/float(nTotEvts) );
   info() << "N " <<subsetName << "\t" << nEventsInSubset 
          << " (" << 100.*f << "%)" << endreq;
 }
@@ -212,14 +212,14 @@ void HltBaseAlg::infoSubsetEvents(  int nEventsInSubset, int  nTotEvts,
 void HltBaseAlg::infoInputObjects(  int nInputObjects, int  nTotEvts, 
                                  const std::string& objectsName)
 {
-  double f = (nTotEvts>0? 0.: float(nInputObjects)/float(nTotEvts) );
+  double f = (nTotEvts<=0? 0.: float(nInputObjects)/float(nTotEvts) );
   info() << "N " << objectsName << "\t" << nInputObjects
          << "\t(" << f << " per event)" << endreq;
 }
 void HltBaseAlg::infoAcceptedObjects(int nAcceptedObjects, int  nTotEvts,
                                      const std::string& objectsName)
 {
-  double f = (nTotEvts>0? 0.: float(nAcceptedObjects)/float(nTotEvts));
+  double f = (nTotEvts<=0? 0.: float(nAcceptedObjects)/float(nTotEvts));
   info() << "N " << objectsName << "\t" << nAcceptedObjects
          << "\t(" << f << " per event)\t("  << 100.*f << " %)" << endreq;
 }

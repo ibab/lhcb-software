@@ -4,6 +4,9 @@
 ! Purpose     : Base classes and utilities for Hlt
 !-----------------------------------------------------------------------------
 
+! 2007-1-11 - Jose A. Hernando
+	- HltBase/IHltTrackL0CaloMatchTool - interface to match tracks to L0 calo candidates
+
 ! 2006-12-20 - Jose A. Hernando
 	- HltBase/HltBaseAlg : extension of Gaudi/Histo/Tuple base algorithm, adapted to the needs of Hlt algorithms 
   - HltBase/HltAlgorithms : base algorithm for Hlt algorithms, it uses Hlt types and containers (Hlt specific)
