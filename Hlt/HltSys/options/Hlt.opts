@@ -1,0 +1,4 @@
+
+ApplicationMgr.TopAlg += {"GaudiSequencer/Hlt"};
+
+#include "$HLTSYSROOT/options/HltAlleysSequence.opts"

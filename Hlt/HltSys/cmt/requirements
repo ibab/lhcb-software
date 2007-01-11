@@ -1,7 +1,7 @@
 package HltSys
 version v1r0
 
-branches cmt doc
+branches cmt doc options
  
 #=======================================================
 # LHCb High Level Trigger packages
