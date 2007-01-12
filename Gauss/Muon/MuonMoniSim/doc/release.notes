@@ -1,6 +1,10 @@
 Package         : MuonMoniSim
 Package manager : A Sarti
 
+!====================== MuonMoniSim v3r0 2007-01-12 =======================
+! 2007-01-12 - Gloria Corti
+ - update code to cope with Gaudi v19r0
+
 !!====================== MuonMoniSim v2r1 2006-04-12  ========================
  2006-04-12 - Gloria CORTI
  - Put message "Hello" in debug mode in execute method, not necessary in

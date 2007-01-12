@@ -1,21 +1,24 @@
-//
-// This File contains the monitor for muon Hit system
-//
-// C++ code for 'LHCb Muon package(s)'
-//
-//   Author: A. Sarti
-//   Created: 20-04-2005
+// $Id: MuonHitChecker.cpp,v 1.9 2007-01-12 15:55:06 ranjard Exp $
+// Include files 
 
-//Gaudi
+// from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 
-//Local
+// local
 #include "MuonDet/DeMuonDetector.h"
 #include "MuonHitChecker.h"
 #include "Event/MCHeader.h"
 
-static const  AlgFactory<MuonHitChecker>  s_Factory ;
-const        IAlgFactory& MuonHitCheckerFactory = s_Factory ; 
+//-----------------------------------------------------------------------------
+// This File contains the monitor for muon Hit system
+//
+// C++ code for 'LHCb Muon package(s)'
+//
+// 20-04-2005 : A. Sarti
+//-----------------------------------------------------------------------------
+
+// Declaration of the Algortihm Factory
+DECLARE_ALGORITHM_FACTORY( MuonHitChecker );
 
 //=============================================================================
 // Standard constructor, initializes variables
