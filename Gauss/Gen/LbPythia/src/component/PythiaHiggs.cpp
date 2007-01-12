@@ -1,10 +1,10 @@
-// $Id: PythiaHiggs.cpp,v 1.3 2006-10-01 22:45:48 robbep Exp $
+// $Id: PythiaHiggs.cpp,v 1.4 2007-01-12 15:21:18 ranjard Exp $
 // Include files 
 // local
 #include "PythiaHiggs.h"
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h"
+#include "GaudiKernel/DeclareFactoryEntries.h"
 
 // from HepMC
 #include "HepMC/GenParticle.h"
@@ -22,8 +22,8 @@ bool isHiggs( const HepMC::GenParticle * p ) {
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-static const  ToolFactory<PythiaHiggs>          s_factory ;
-const        IToolFactory& PythiaHiggsFactory = s_factory ; 
+
+DECLARE_TOOL_FACTORY( PythiaHiggs );
 
 
 //=============================================================================

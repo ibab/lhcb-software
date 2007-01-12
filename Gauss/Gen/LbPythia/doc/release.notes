@@ -4,6 +4,12 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!===================== LbPythia v5r0 2007-01-08 ===========================
+! 2007-01-08 - Florence Ranjard
+ - move GaussUserProcess.inc from LbPythia/ to src/Lib
+ - move PythiaProduction.cpp from src/component to src/Lib
+ - update PythiaHiggs.cpp and PythiaProduction.cpp to use new FACTORY
+
 ! ==================== LbPythia v4r9 2006-11-09 ===========================
 ! 2006-10-26 - Vanya Belyaev
  - src/component/PythiaProduction.cpp

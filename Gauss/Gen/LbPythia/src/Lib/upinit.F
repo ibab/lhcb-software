@@ -1,4 +1,4 @@
-C $Id: upinit.F,v 1.6 2006-10-25 11:29:47 ibelyaev Exp $ 
+C $Id: upinit.F,v 1.7 2007-01-12 15:21:18 ranjard Exp $ 
 C*********************************************************************
  
 C...UPINIT
@@ -27,7 +27,7 @@ C...User process initialization commonblock.
      &LPRUP(MAXPUP)
       SAVE /HEPRUP/
       
-#include "LbPythia/GaussUserProcess.inc" 
+#include "GaussUserProcess.inc" 
 
       
       IF ( PYTHIAGAUSSPROCESS .EQ. LHAREADPROCESS  ) THEN

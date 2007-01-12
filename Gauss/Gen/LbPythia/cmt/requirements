@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.17 2006-11-10 18:40:34 gcorti Exp $ 
+# $Id: requirements,v 1.18 2007-01-12 15:21:16 ranjard Exp $ 
 #============================================================================
 # Created    : 2005-06-21
 # Maintainer : Patrick ROBBE
@@ -7,18 +7,19 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package       LbPythia
-version       v4r9
+version       v5r0
 
 #============================================================================
 # Structure, i.e. directories to process. 
 #============================================================================
 branches      LbPythia doc cmt src
-include_dirs  $(LBPYTHIAROOT)
 
 #============================================================================
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #============================================================================
 use           Generators        v*          Gen
+
+apply_pattern install_more_includes more=LbPythia
 
 #============================================================================
 # Linker and Component library building rule

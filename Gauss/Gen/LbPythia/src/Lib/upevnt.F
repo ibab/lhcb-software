@@ -1,8 +1,8 @@
-C $Id: upevnt.F,v 1.6 2006-10-25 11:29:47 ibelyaev Exp $  
+C $Id: upevnt.F,v 1.7 2007-01-12 15:21:18 ranjard Exp $  
 C*********************************************************************
 
       BLOCK DATA GAUSSDATA
-#include "LbPythia/GaussUserProcess.inc"
+#include "GaussUserProcess.inc"
       SAVE /GAUSSUSERPROCESS/      
       DATA PYTHIAGAUSSPROCESS /0/
       END
@@ -35,7 +35,7 @@ C...User process event common block.
      &VTIMUP(MAXNUP),SPINUP(MAXNUP)
       SAVE /HEPEUP/
       
-#include "LbPythia/GaussUserProcess.inc"
+#include "GaussUserProcess.inc"
       
       IF ( PYTHIAGAUSSPROCESS .EQ. LHAREADPROCESS ) THEN
 C...Read info from file.

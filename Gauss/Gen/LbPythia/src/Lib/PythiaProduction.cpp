@@ -1,4 +1,4 @@
-// $Id: PythiaProduction.cpp,v 1.26 2006-10-26 14:08:31 ibelyaev Exp $
+// $Id: PythiaProduction.cpp,v 1.1 2007-01-12 15:21:17 ranjard Exp $
 
 // Include files
 
@@ -7,7 +7,7 @@
 #include "LbPythia/PythiaProduction.h"
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h"
+#include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiKernel/ParticleProperty.h"
 
 // from Event
@@ -34,8 +34,8 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-static const  ToolFactory<PythiaProduction>          s_factory ;
-const        IToolFactory& PythiaProductionFactory = s_factory ; 
+
+DECLARE_TOOL_FACTORY( PythiaProduction );
 
 
 //=============================================================================
