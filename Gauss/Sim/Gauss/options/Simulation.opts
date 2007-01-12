@@ -1,4 +1,4 @@
-// $Id: Simulation.opts,v 1.85 2006-10-16 14:38:40 ranjard Exp $ 
+// $Id: Simulation.opts,v 1.86 2007-01-12 16:41:26 ranjard Exp $ 
 
 /** @file 
  * 
@@ -56,7 +56,7 @@ DetectorsHits.Members += { "GetCaloHitsAlg/GetPrsHits" };       // Calo - Prs
 DetectorsHits.Members += { "GetCaloHitsAlg/GetEcalHits" };      // Calo - ECAL
 DetectorsHits.Members += { "GetCaloHitsAlg/GetHcalHits" };      // Calo - HCAL
 DetectorsHits.Members += { "GetMCRichHitsAlg" };                // RICHes
-#include "$GAUSSTRACKERROOT/options/TrackersHits.opts" 
+#include "$GAUSSTRACKEROPTS/TrackersHits.opts" 
 DetectorsHits.MeasureTime = true;
 
 
@@ -113,7 +113,7 @@ GiGa.TrackSeq.Members      += { "GaussPreTrackAction/PreTrack" };
 // all the subdetector specific actions should be added here:
 
 // specific RICH options
-#include "$GAUSSRICHROOT/options/Rich.opts"
+#include "$GAUSSRICHOPTS/Rich.opts"
 
 //////////////////////////////////////////////////////////////////////
 
@@ -159,5 +159,5 @@ GiGa.GiGaMgr.GiGaSetSimAttributes.OutputLevel = 4;
 
 // uncomment the following to produce and write VeLo, TT, IT and OT  extended
 // hit information
-//#include "$GAUSSTRACKERROOT/options/TrackersExtendedInfo.opts"
+//#include "$GAUSSTRACKEROPTS/TrackersExtendedInfo.opts"
 

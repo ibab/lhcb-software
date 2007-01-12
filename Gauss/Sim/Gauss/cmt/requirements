@@ -1,11 +1,11 @@
 package Gauss
-version v25r7
+version v30r1
 
 #=========================================================================
 #-- Structure
 branches src doc options cmt job
 
-#-- tags: AcerMC, Vis, GDML, Herwig
+#-- tags: Vis, GDML, Herwig, Hijing, BcVegPy, HidValley
 
 #=========================================================================
 #-- Databases
@@ -17,16 +17,17 @@ use ParamFiles          v5r0          -no_auto_imports
 use Geant4Files		v71r0	      -no_auto_imports
 
 #========================================================================
+
 #-- Optional Hijing
-macro LbHijing_use "" Linux&Hijing "LbHijing v1r1 Gen"
+macro LbHijing_use "" Linux&Hijing "LbHijing v2r0 Gen"
 use $(LbHijing_use)
 
 #-- Optional Herwig
-macro LbHerwig_use "" Linux&Herwig "LbHerwig v3r3 Gen"
+macro LbHerwig_use "" Linux&Herwig "LbHerwig v4r0 Gen"
 use $(LbHerwig_use)
 
 #-- Optional BcVegPy
-macro LbBcVegPy_use "" Linux&BcVegPy "LbBcVegPy v1r3 Gen"
+macro LbBcVegPy_use "" Linux&BcVegPy "LbBcVegPy v2r0 Gen"
 use $(LbBcVegPy_use)
 
 #-- Optional Hidden Valley
@@ -34,23 +35,23 @@ macro LbHidValley_use "" Linux&HidValley "LbHidValley v1r1 Gen"
 use $(LbHidValley_use)
 
 #-- Generator
-use ParticleGuns         v3r1    Gen
-use LbPythia             v4r9    Gen
-use Generators           v6r7p1  Gen
+use ParticleGuns         v4r0    Gen
+use LbPythia             v5r0    Gen
+use Generators           v7r0    Gen
 
 #-- Simulation
-use GiGa                 v18r3   Sim
-use GiGaCnv              v17r1   Sim
-use GaussTools           v12r5   Sim
-use GaussAlgs		 v2r3    Sim
-use GaussKine            v1r4    Sim
-use GaussPhysics         v3r2    Sim
-use GaussTracker         v5r6    Sim
-use GaussRICH            v6r8    Sim
-use GaussCalo            v8r4    Sim
+use GiGa                 v19r0   Sim
+use GiGaCnv              v18r0   Sim
+use GaussTools           v13r0   Sim
+use GaussAlgs		 v3r0    Sim
+use GaussKine            v2r0    Sim
+use GaussPhysics         v4r0    Sim
+use GaussTracker         v6r0    Sim
+use GaussRICH            v7r0    Sim
+use GaussCalo            v9r0    Sim
 
 #-- Optional visualisation and UI
-macro GiGaVisUI_use "" Linux&Vis "GiGaVisUI v3r1 Sim"
+macro GiGaVisUI_use "" Linux&Vis "GiGaVisUI v4r0 Sim"
 use $(GiGaVisUI_use)
 
 #-- Optional GDML
@@ -58,10 +59,10 @@ macro GDMLG4Writer_use "" Linux&GDML "GDMLG4Writer v2r0 Sim"
 use $(GDMLG4Writer_use)
 
 #-- Monitoring
-use GaussMonitor        v4r2    Sim
-use CaloMoniSim         v3r0    Calo
-use VeloGauss           v2r0    Velo
-use MuonMoniSim         v2r1    Muon
+use GaussMonitor        v5r0    Sim
+use CaloMoniSim         v4r0    Calo
+#use VeloGauss           v2r0    Velo
+use MuonMoniSim         v3r0    Muon
 
 #=========================================================================
 #-- LHCb
@@ -105,7 +106,6 @@ set NeutronHPCrossSections $(GEANT4FILESROOT)/data/G4NDL
 #-- Build Main Program 
 
 application Gauss "GaussMain.cpp"
-#application Gauss $(GAUDICONFROOT)/src/GaudiMain.cpp
 
 application GaussHijing "GaussMain.cpp"
 application GaussHerwig "GaussMain.cpp"
