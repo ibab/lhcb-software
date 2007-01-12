@@ -1,11 +1,11 @@
-// $Id: VariableLuminosity.cpp,v 1.4 2006-02-07 21:46:12 robbep Exp $
+// $Id: VariableLuminosity.cpp,v 1.5 2007-01-12 15:17:47 ranjard Exp $
 // Include files 
 
 // local
 #include "VariableLuminosity.h"
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h"
+#include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiKernel/IRndmGenSvc.h"
 
 // From CLHEP
@@ -21,8 +21,8 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-static const  ToolFactory<VariableLuminosity>          s_factory ;
-const        IToolFactory& VariableLuminosityFactory = s_factory ; 
+
+DECLARE_TOOL_FACTORY( VariableLuminosity );
 
 
 //=============================================================================

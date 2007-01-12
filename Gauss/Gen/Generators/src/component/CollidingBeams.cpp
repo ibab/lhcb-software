@@ -1,15 +1,15 @@
-// $Id: CollidingBeams.cpp,v 1.3 2006-02-01 21:28:58 robbep Exp $
+// $Id: CollidingBeams.cpp,v 1.4 2007-01-12 15:17:35 ranjard Exp $
 // Include files 
 
 // local
 #include "CollidingBeams.h"
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h"
+#include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiKernel/IRndmGenSvc.h"
 
 // From Kernel
-#include "Kernel/SystemOfUnits.h"
+#include "GaudiKernel/SystemOfUnits.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : CollidingBeams
@@ -18,8 +18,8 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-static const  ToolFactory<CollidingBeams>          s_factory ;
-const        IToolFactory& CollidingBeamsFactory = s_factory ; 
+
+DECLARE_TOOL_FACTORY( CollidingBeams );
 
 
 //=============================================================================
@@ -32,13 +32,13 @@ CollidingBeams::CollidingBeams( const std::string& type,
     m_angleSmear( 0. ) {
     declareInterface< IBeamTool >( this ) ;
     declareProperty( "VerticalCrossingAngle" , 
-                     m_verticalXAngle = 0. * milliradian ) ;
+                     m_verticalXAngle = 0. * Gaudi::Units::milliradian ) ;
     declareProperty( "HorizontalCrossingAngle" , 
-                     m_horizontalXAngle = 0.285 * milliradian ) ;
+                     m_horizontalXAngle = 0.285 * Gaudi::Units::milliradian ) ;
     declareProperty( "Emittance" , 
-                     m_emittance = 0.503 * 1.e-9 * radian * m  ) ;
-    declareProperty( "BetaStar" , m_betaStar = 10. * m ) ;
-    declareProperty( "BeamMomentum" , m_beamMomentum = 7. * TeV ) ;
+                     m_emittance = 0.503 * 1.e-9 * Gaudi::Units::radian * Gaudi::Units::m  ) ;
+    declareProperty( "BetaStar" , m_betaStar = 10. * Gaudi::Units::m ) ;
+    declareProperty( "BeamMomentum" , m_beamMomentum = 7. * Gaudi::Units::TeV ) ;
 }
 
 //=============================================================================
@@ -67,16 +67,16 @@ StatusCode CollidingBeams::initialize( ) {
   else m_angleSmear = 0.0 ;
 
   debug() << "Colliding Beam Parameters: " << endmsg ;
-  debug() << "Beam Momentum (TeV): " << m_beamMomentum / TeV << endmsg ;
+  debug() << "Beam Momentum (TeV): " << m_beamMomentum / Gaudi::Units::TeV << endmsg ;
   debug() << "Vertical crossing angle (microradian): " 
-          << m_verticalXAngle / ( milliradian * 1.e-3 ) << endmsg ;
+          << m_verticalXAngle / ( Gaudi::Units::milliradian * 1.e-3 ) << endmsg ;
   debug() << "Horizontal crossing angle (microradian): " 
-          << m_horizontalXAngle / ( milliradian * 1.e-3 ) << endmsg ;
+          << m_horizontalXAngle / ( Gaudi::Units::milliradian * 1.e-3 ) << endmsg ;
   debug() << "Emittance (1.e-9 rad.m): " 
-          << m_emittance / ( 1.e-9 * rad * m ) << endmsg ;
-  debug() << "Beta_star (m): " << m_betaStar / m << endmsg ;
+          << m_emittance / ( 1.e-9 * Gaudi::Units::rad * Gaudi::Units::m ) << endmsg ;
+  debug() << "Beta_star (m): " << m_betaStar / Gaudi::Units::m << endmsg ;
   debug() << "Angular beam smearing (microradian): " 
-          << m_angleSmear / ( milliradian * 1.e-3 ) << endmsg ;
+          << m_angleSmear / ( Gaudi::Units::milliradian * 1.e-3 ) << endmsg ;
 
   return sc ;
 }

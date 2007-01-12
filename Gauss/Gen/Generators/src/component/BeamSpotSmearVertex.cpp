@@ -1,18 +1,17 @@
-// $Id: BeamSpotSmearVertex.cpp,v 1.6 2006-07-04 10:12:03 gcorti Exp $
+// $Id: BeamSpotSmearVertex.cpp,v 1.7 2007-01-12 15:17:34 ranjard Exp $
 // Include files 
 
 // local
 #include "BeamSpotSmearVertex.h"
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h"
+#include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiKernel/IRndmGenSvc.h" 
 
 // from Event
 #include "Event/HepMCEvent.h"
 
-// from LHCb
-#include "Kernel/SystemOfUnits.h"
+#include "GaudiKernel/SystemOfUnits.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : LHCbAcceptance
@@ -21,8 +20,8 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-static const  ToolFactory<BeamSpotSmearVertex>          s_factory ;
-const        IToolFactory& BeamSpotSmearVertexFactory = s_factory ; 
+
+DECLARE_TOOL_FACTORY( BeamSpotSmearVertex );
 
 
 //=============================================================================

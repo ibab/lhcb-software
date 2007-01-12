@@ -1,14 +1,16 @@
-// $Id: ReadHepMCAsciiFile.cpp,v 1.1 2006-10-06 14:11:17 ibelyaev Exp $
+// $Id: ReadHepMCAsciiFile.cpp,v 1.2 2007-01-12 15:17:39 ranjard Exp $
 // ===========================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2006/10/06 14:11:17  ibelyaev
+//  add (Read,Write)HepMCAsciiFile components
+//
 // ===========================================================================
 // Include files 
 // ===========================================================================
 // GaudiKernel
 // ===========================================================================
-#include "GaudiKernel/ToolFactory.h" 
 #include "GaudiKernel/DeclareFactoryEntries.h"
 // ===========================================================================
 // GaudiAlg

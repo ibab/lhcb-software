@@ -1,15 +1,15 @@
-// $Id: FlatZSmearVertex.cpp,v 1.4 2006-07-04 10:12:03 gcorti Exp $
+// $Id: FlatZSmearVertex.cpp,v 1.5 2007-01-12 15:17:37 ranjard Exp $
 // Include files 
 
 // local
 #include "FlatZSmearVertex.h"
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h"
+#include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiKernel/IRndmGenSvc.h" 
+#include "GaudiKernel/SystemOfUnits.h"
 
 // from LHCb
-#include "Kernel/SystemOfUnits.h"
 #include "Kernel/Vector4DTypes.h"
 
 // from Event
@@ -22,8 +22,8 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-static const  ToolFactory<FlatZSmearVertex>          s_factory ;
-const        IToolFactory& FlatZSmearVertexFactory = s_factory ; 
+
+DECLARE_TOOL_FACTORY( FlatZSmearVertex );
 
 
 //=============================================================================

@@ -1,10 +1,10 @@
-// $Id: Special.cpp,v 1.6 2006-10-01 22:43:40 robbep Exp $
+// $Id: Special.cpp,v 1.7 2007-01-12 15:17:46 ranjard Exp $
 // Include files 
 
 // local
 #include "Special.h"
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h"
+#include "GaudiKernel/DeclareFactoryEntries.h"
 
 #include "Generators/IProductionTool.h"
 #include "Generators/IGenCutTool.h"
@@ -21,8 +21,8 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-static const  ToolFactory<Special>          s_factory ;
-const        IToolFactory& SpecialFactory = s_factory ; 
+
+DECLARE_TOOL_FACTORY( Special );
 
 
 //=============================================================================

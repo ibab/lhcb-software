@@ -1,11 +1,11 @@
-// $Id: Generation.cpp,v 1.24 2006-11-30 11:03:36 ibelyaev Exp $
+// $Id: Generation.cpp,v 1.25 2007-01-12 15:17:37 ranjard Exp $
 // Include files 
 
 // local
 #include "Generation.h"
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h"
+#include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiKernel/RndmGenerators.h"
 
 // from Event
@@ -37,8 +37,8 @@ extern Rndm::Numbers randgaudi ;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-static const  AlgFactory<Generation>          s_factory ;
-const        IAlgFactory& GenerationFactory = s_factory ;
+
+DECLARE_ALGORITHM_FACTORY( Generation );
 
 //=============================================================================
 // Standard constructor, initializes variables

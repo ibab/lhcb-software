@@ -1,10 +1,10 @@
-// $Id: LeptonInAcceptance.cpp,v 1.3 2006-03-22 22:54:53 robbep Exp $
+// $Id: LeptonInAcceptance.cpp,v 1.4 2007-01-12 15:17:38 ranjard Exp $
 // Include files 
 // local
 #include "LeptonInAcceptance.h"
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h"
+#include "GaudiKernel/DeclareFactoryEntries.h"
 
 // from Event
 #include "Event/HepMCEvent.h"
@@ -16,8 +16,8 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-static const  ToolFactory<LeptonInAcceptance>          s_factory ;
-const        IToolFactory& LeptonInAcceptanceFactory = s_factory ;
+
+DECLARE_TOOL_FACTORY(LeptonInAcceptance );
 
 // Function to test if particle is a lepton
 bool isLepton( const HepMC::GenParticle * p ) {

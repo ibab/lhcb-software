@@ -1,11 +1,11 @@
-// $Id: Inclusive.cpp,v 1.11 2006-10-01 22:43:38 robbep Exp $
+// $Id: Inclusive.cpp,v 1.12 2007-01-12 15:17:37 ranjard Exp $
 // Include files 
 
 // local
 #include "Inclusive.h"
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h"
+#include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/ParticleProperty.h"
 
@@ -21,8 +21,8 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-static const  ToolFactory<Inclusive>          s_factory ;
-const        IToolFactory& InclusiveFactory = s_factory ;
+
+DECLARE_TOOL_FACTORY( Inclusive );
 
 //=============================================================================
 // Standard constructor, initializes variables

@@ -1,4 +1,4 @@
-// $Id: EvtGenDecay.cpp,v 1.11 2006-10-01 22:43:38 robbep Exp $
+// $Id: EvtGenDecay.cpp,v 1.12 2007-01-12 15:17:36 ranjard Exp $
 // Header file
 #include "EvtGenDecay.h"
 
@@ -11,7 +11,7 @@
 #include "SealBase/TempFile.h"
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h"
+#include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiKernel/IRndmGenSvc.h"
 #include "GaudiKernel/IRndmGen.h"
 #include "GaudiKernel/IParticlePropertySvc.h"
@@ -20,7 +20,7 @@
 
 // from LHCb
 #include "Kernel/ParticleID.h"
-#include "Kernel/SystemOfUnits.h"
+#include "GaudiKernel/SystemOfUnits.h"
 
 // from Event
 #include "Event/HepMCEvent.h"
@@ -58,8 +58,8 @@ extern "C" {
 // 2003-10-15 : Patrick Robbe
 //-----------------------------------------------------------------------------
 // Declaration of the Tool Factory
-static const  ToolFactory<EvtGenDecay>          s_factory ;
-const        IToolFactory& EvtGenDecayFactory = s_factory ;
+
+DECLARE_TOOL_FACTORY( EvtGenDecay );
 
 extern MsgStream * evtgenStream ;
 

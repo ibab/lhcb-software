@@ -1,15 +1,14 @@
-// $Id: FixedTarget.cpp,v 1.2 2005-12-31 17:31:24 robbep Exp $
+// $Id: FixedTarget.cpp,v 1.3 2007-01-12 15:17:37 ranjard Exp $
 // Include files 
 
 // local
 #include "FixedTarget.h"
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h"
+#include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiKernel/IRndmGenSvc.h"
 
-// from LHCb
-#include "Kernel/SystemOfUnits.h"
+#include "GaudiKernel/SystemOfUnits.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : FixedTarget
@@ -18,8 +17,8 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-static const  ToolFactory<FixedTarget>          s_factory ;
-const        IToolFactory& FixedTargetFactory = s_factory ; 
+
+DECLARE_TOOL_FACTORY( FixedTarget );
 
 
 //=============================================================================
@@ -32,12 +31,12 @@ FixedTarget::FixedTarget( const std::string& type,
     m_angleSmear( 0. ) {
     declareInterface< IBeamTool >( this ) ;
     declareProperty( "VerticalCrossingAngle" , 
-                     m_verticalXAngle = 0. * milliradian ) ;
+                     m_verticalXAngle = 0. * Gaudi::Units::milliradian ) ;
     declareProperty( "HorizontalCrossingAngle" , 
-                     m_horizontalXAngle = 0.285 * milliradian ) ;
-    declareProperty( "Emittance" , m_emittance = 0.503 * 1.e-9 * radian * m ) ;
-    declareProperty( "BetaStar" , m_betaStar = 10. * m ) ;
-    declareProperty( "BeamMomentum" , m_beamMomentum = 7. * TeV ) ;
+                     m_horizontalXAngle = 0.285 * Gaudi::Units::milliradian ) ;
+    declareProperty( "Emittance" , m_emittance = 0.503 * 1.e-9 * Gaudi::Units::radian * Gaudi::Units::m ) ;
+    declareProperty( "BetaStar" , m_betaStar = 10. * Gaudi::Units::m ) ;
+    declareProperty( "BeamMomentum" , m_beamMomentum = 7. * Gaudi::Units::TeV ) ;
 }
 
 //=============================================================================
@@ -66,16 +65,16 @@ StatusCode FixedTarget::initialize( ) {
   else m_angleSmear = 0.0 ;
 
   debug() << "Collision with fixed target" << endmsg ;
-  debug() << "Beam Momentum (TeV): " << m_beamMomentum / TeV << endmsg ;
+  debug() << "Beam Momentum (TeV): " << m_beamMomentum / Gaudi::Units::TeV << endmsg ;
   debug() << "Vertical crossing angle (microradian): " 
-          << m_verticalXAngle / ( milliradian * 1.e-3 ) << endmsg ;
+          << m_verticalXAngle / ( Gaudi::Units::milliradian * 1.e-3 ) << endmsg ;
   debug() << "Horizontal crossing angle (microradian): " 
-          << m_horizontalXAngle / ( milliradian * 1.e-3 ) << endmsg ;
+          << m_horizontalXAngle / ( Gaudi::Units::milliradian * 1.e-3 ) << endmsg ;
   debug() << "Emittance (1.e-9 rad.m): " 
-          << m_emittance / ( 1.e-9 * rad * m ) << endmsg ;
-  debug() << "Beta_star (m): " << m_betaStar / m << endmsg ;
+          << m_emittance / ( 1.e-9 * Gaudi::Units::rad * Gaudi::Units::m ) << endmsg ;
+  debug() << "Beta_star (m): " << m_betaStar / Gaudi::Units::m << endmsg ;
   debug() << "Angular beam smearing (microradian): " 
-          << m_angleSmear / ( milliradian * 1.e-3 ) << endmsg ;
+          << m_angleSmear / ( Gaudi::Units::milliradian * 1.e-3 ) << endmsg ;
 
   return sc ;
 }

@@ -1,10 +1,10 @@
-// $Id: MinimumBias.cpp,v 1.3 2005-12-31 17:33:12 robbep Exp $
+// $Id: MinimumBias.cpp,v 1.4 2007-01-12 15:17:38 ranjard Exp $
 // Include files 
 
 // local
 #include "MinimumBias.h"
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h"
+#include "GaudiKernel/DeclareFactoryEntries.h"
 
 #include "Generators/IProductionTool.h"
 
@@ -19,8 +19,8 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-static const  ToolFactory<MinimumBias>          s_factory ;
-const        IToolFactory& MinimumBiasFactory = s_factory ; 
+
+DECLARE_TOOL_FACTORY( MinimumBias );
 
 
 //=============================================================================

@@ -1,11 +1,11 @@
-// $Id: LHCbAcceptance.cpp,v 1.5 2006-10-01 22:43:38 robbep Exp $
+// $Id: LHCbAcceptance.cpp,v 1.6 2007-01-12 15:17:38 ranjard Exp $
 // Include files 
 
 // local
 #include "LHCbAcceptance.h"
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h"
+#include "GaudiKernel/DeclareFactoryEntries.h"
 
 // from HepMC
 #include "HepMC/GenParticle.h"
@@ -17,8 +17,8 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-static const  ToolFactory<LHCbAcceptance>          s_factory ;
-const        IToolFactory& LHCbAcceptanceFactory = s_factory ; 
+
+DECLARE_TOOL_FACTORY( LHCbAcceptance );
 
 
 //=============================================================================

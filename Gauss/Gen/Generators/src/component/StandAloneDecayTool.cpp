@@ -1,9 +1,9 @@
-// $Id: StandAloneDecayTool.cpp,v 1.2 2006-08-28 21:27:28 robbep Exp $
+// $Id: StandAloneDecayTool.cpp,v 1.3 2007-01-12 15:17:47 ranjard Exp $
 // Include files 
 #include "StandAloneDecayTool.h"
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h"
+#include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/ParticleProperty.h"
 
@@ -17,8 +17,8 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the tool factory
-static const  ToolFactory< StandAloneDecayTool > s_factory ;
-const        IToolFactory & StandAloneDecayToolFactory = s_factory ;
+
+DECLARE_TOOL_FACTORY( StandAloneDecayTool );
 
 //=============================================================================
 // const constructor, initializes variables

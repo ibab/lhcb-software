@@ -1,14 +1,13 @@
-// $Id: FixedNInteractions.cpp,v 1.2 2006-02-05 21:01:44 robbep Exp $
+// $Id: FixedNInteractions.cpp,v 1.3 2007-01-12 15:17:36 ranjard Exp $
 // Include files 
 
 // local
 #include "FixedNInteractions.h"
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h"
+#include "GaudiKernel/DeclareFactoryEntries.h"
 
-// from LHCb
-#include "Kernel/SystemOfUnits.h"
+#include "GaudiKernel/SystemOfUnits.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : FixedNInteractions
@@ -17,8 +16,8 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-static const  ToolFactory<FixedNInteractions>          s_factory ;
-const        IToolFactory& FixedNInteractionsFactory = s_factory ; 
+
+DECLARE_TOOL_FACTORY( FixedNInteractions );
 
 
 //=============================================================================
@@ -30,7 +29,7 @@ FixedNInteractions::FixedNInteractions( const std::string& type,
   : GaudiTool ( type, name , parent ) {
     declareInterface< IPileUpTool >( this ) ;
     declareProperty ( "NInteractions" , m_nInteractions = 1 ) ;
-    declareProperty ( "Luminosity" , m_luminosity = 2.e32 /cm2/s ) ;
+    declareProperty ( "Luminosity" , m_luminosity = 2.e32 / Gaudi::Units::cm2/ Gaudi::Units::s ) ;
 }
 
 //=============================================================================

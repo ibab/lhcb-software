@@ -1,13 +1,15 @@
-// $Id: DumpHepMCTree.cpp,v 1.1 2006-10-25 11:23:11 ibelyaev Exp $
+// $Id: DumpHepMCTree.cpp,v 1.2 2007-01-12 15:17:35 ranjard Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2006/10/25 11:23:11  ibelyaev
+//  new algorithm DumpHepMCTree
+// 
 // ============================================================================
 // Include files
 // ============================================================================
 // GaudiKernel
-#include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/DeclareFactoryEntries.h" 
 // ============================================================================
 // Local

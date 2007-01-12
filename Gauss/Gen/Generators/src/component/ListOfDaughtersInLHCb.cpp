@@ -1,11 +1,11 @@
-// $Id: ListOfDaughtersInLHCb.cpp,v 1.1 2006-10-23 15:56:53 robbep Exp $
+// $Id: ListOfDaughtersInLHCb.cpp,v 1.2 2007-01-12 15:17:38 ranjard Exp $
 // Include files 
 
 // local
 #include "ListOfDaughtersInLHCb.h"
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h"
+#include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiKernel/IParticlePropertySvc.h" 
 #include "GaudiKernel/ParticleProperty.h"
 
@@ -28,8 +28,8 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-static const  ToolFactory<ListOfDaughtersInLHCb>          s_factory ;
-const        IToolFactory& ListOfDaughtersInLHCbFactory = s_factory ; 
+
+DECLARE_TOOL_FACTORY( ListOfDaughtersInLHCb );
 
 
 //=============================================================================
