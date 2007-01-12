@@ -1,5 +1,5 @@
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h"
+#include "GaudiKernel/DeclareFactoryEntries.h"
 //#include "GaudiKernel/GaudiException.h"
 #include "GaudiKernel/IIncidentSvc.h"
 #include "GaudiKernel/IAlgorithm.h"
@@ -28,8 +28,8 @@ typedef LHCb::RecVertex::ConstVector::const_iterator rv_iter;
 typedef LHCb::Vertex::ConstVector::const_iterator v_iter;
 
 // Declaration of the Tool Factory
-static const  ToolFactory<PhysDesktop>           s_factory ;
-const        IToolFactory& PhysDesktopFactory = s_factory ;
+
+DECLARE_TOOL_FACTORY( PhysDesktop );
 
 /// anonymous namespace to make functions local
 namespace

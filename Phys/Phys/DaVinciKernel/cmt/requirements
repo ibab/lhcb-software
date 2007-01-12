@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.37 2006-12-18 11:08:10 jpalac Exp $
+# $Id: requirements,v 1.38 2007-01-12 14:02:26 ranjard Exp $
 # Created    : 05/02/2002
 # Maintainer : P. Koppenburg, J. Palcios
 #
@@ -6,15 +6,12 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 
 package           DaVinciKernel
-version           v5r6
+version           v6r0
+
 
 # Structure, i.e. directories to process. 
 #============================================================================
 branches          cmt doc src Kernel
-
-# Exported header files
-#============================================================================
-include_dirs     $(DAVINCIKERNELROOT)
 
 # Used packages. 
 #============================================================================
@@ -22,6 +19,10 @@ use RecEvent   v* Event
 use PhysEvent  v* Event
 use GaudiAlg   v* 
 use Relations  v* Kernel
+
+# Exported header files
+#============================================================================
+apply_pattern install_more_includes more=Kernel
 
 # Linker library building rule
 #============================================================================
