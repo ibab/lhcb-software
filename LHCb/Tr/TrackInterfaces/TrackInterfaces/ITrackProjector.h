@@ -6,9 +6,10 @@
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
 
-#include "Kernel/GenericMatrixTypes.h"
-#include "Kernel/TrackTypes.h"
-#include "Kernel/Point3DTypes.h"
+// Geometry definitions
+#include "GaudiKernel/GenericMatrixTypes.h"
+#include "GaudiKernel/TrackTypes.h"
+#include "GaudiKernel/Point3DTypes.h"
 
 // Forward declarations
 namespace LHCb {

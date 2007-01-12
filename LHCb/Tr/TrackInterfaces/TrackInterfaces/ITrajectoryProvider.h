@@ -1,4 +1,4 @@
-// $Id: ITrajectoryProvider.h,v 1.6 2006-05-02 14:15:22 erodrigu Exp $
+// $Id: ITrajectoryProvider.h,v 1.7 2007-01-12 14:51:48 cattanem Exp $
 #ifndef TRACKINTERFACES_ITRAJECTORYPROVIDER_H 
 #define TRACKINTERFACES_ITRAJECTORYPROVIDER_H 1
 
@@ -7,8 +7,8 @@
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
 
-// from LHCbDefinitions
-#include "Kernel/TrackTypes.h"
+// from TrackEvent
+#include "Event/TrackTypes.h"
 
 #include <memory>
 

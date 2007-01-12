@@ -4,7 +4,10 @@
 ! Purpose     : package for tracking tools interfaces
 !-----------------------------------------------------------------------------
 
-!====================== TrackInterfaces v3r0 2006-12-15 =====================
+!====================== TrackInterfaces v3r0 2007-01-12 =====================
+! 2007-01-12 - Marco Cattaneo
+ - Remove LHCbDefinitions dependency. Now depends on TrackEvent
+
 ! 2006-12-06 - Florence RANJARD
  - apply_pattern install_more_includes
 

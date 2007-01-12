@@ -10,7 +10,8 @@ version           v3r0
 branches          cmt doc TrackInterfaces
 
 # =============== dependencies ==============================================
-use LHCbDefinitions  v* Kernel
+use TrackEvent       v* Event
+use LHCbKernel       v* Kernel
 use GaudiKernel      v*
 
 # =============== include directories =======================================

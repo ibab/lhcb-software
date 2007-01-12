@@ -1,4 +1,4 @@
-// $Id: ITrackExtrapolator.h,v 1.12 2006-06-09 12:30:30 ebos Exp $
+// $Id: ITrackExtrapolator.h,v 1.13 2007-01-12 14:51:47 cattanem Exp $
 #ifndef TRACKINTERFACES_ITRACKEXTRAPOLATOR_H
 #define TRACKINTERFACES_ITRACKEXTRAPOLATOR_H 1
 
@@ -7,15 +7,17 @@
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
 
+// Geometry Definitions
+#include "GaudiKernel/SymmetricMatrixTypes.h"
+#include "GaudiKernel/Point3DTypes.h"
+#include "GaudiKernel/Vector3DTypes.h"
+#include "GaudiKernel/Plane3DTypes.h"
+
 // from LHCbKernel
 #include "Kernel/ParticleID.h"
 
-// from LHCbDefinitions
-#include "Kernel/SymmetricMatrixTypes.h"
-#include "Kernel/Point3DTypes.h"
-#include "Kernel/Vector3DTypes.h"
-#include "Kernel/Plane3DTypes.h"
-#include "Kernel/TrackTypes.h"
+// from TrackEvent
+#include "Event/TrackTypes.h"
 
 // Forward declarations
 namespace LHCb {
