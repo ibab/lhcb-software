@@ -1,37 +1,37 @@
 package PhysSys
-version v4r6
+version v5r0
 
 branches doc cmt
 
 ####################################################################
-use  PhysCoreSys      	v3r6   Phys
+use  PhysCoreSys      	v4r0   Phys
 #===================================================================
-use  DaVinciKernel      	v5r6     Phys
-use  DaVinciFilter      	v5r5p1   Phys
+use  DaVinciKernel      	v6r0     Phys
+use  DaVinciFilter      	v6r0     Phys
 use  ProtoParticleFilter        v1r2     Phys
-use  DaVinciTools       	v14r6    Phys
+use  DaVinciTools       	v15r0    Phys
 use  DaVinciTransporter 	v3r5     Phys
-use  ParticleMaker      	v2r6     Phys
-use  VertexFit			v3r3     Phys
+use  ParticleMaker      	v3r0     Phys
+use  VertexFit			v4r0     Phys
 use  CommonParticles            v3r6     Phys
-use  PhysDict                   v2r0     Phys
+use  PhysDict                   v2r1     Phys
 use  FlavourTagging             v7r1p1   Phys
 # Generic tools 
 use  Utilities          	v3r2   Tools
 
 
 ####################################################################
-use  PhysMCSys      	v3r6   Phys
+use  PhysMCSys      	v4r0    Phys
 #===================================================================
-use  DaVinciMCKernel            v1r2p1   Phys
-use  DaVinciMCTools     	v8r2     Phys
-use  DaVinciAssociators         v7r0p2   Phys
+use  DaVinciMCKernel            v2r0     Phys
+use  DaVinciMCTools     	v9r0     Phys
+use  DaVinciAssociators         v8r0     Phys
 use  MCStandardParticles        v1r2     Phys
 use  FlavourTaggingChecker      v2r1     Phys
-use  DaVinciUser      	        v7r1     Phys
+use  DaVinciUser      	        v8r0     Phys
 
 ####################################################################
-use  PhysSelSys      	v9r8   PhysSel
+use  PhysSelSys      	v10r0   PhysSel
 #===================================================================
 use Ccbar	        v1r2    PhysSel
 use B2Dilepton		v1r1	PhysSel
@@ -44,18 +44,19 @@ use Bs2JpsiPhi          v3r3    PhysSel
 use Bd2PiPiPi0          v3r0    PhysSel
 use JetsSel	        v1r1    PhysSel
 use Radiative           v2r0p1  PhysSel
+
 ####################################################################
-use               LoKiSys          v4r4
+use               LoKiSys          v5r0
 #===================================================================
-use               LoKiMC           v1r6 Phys
-use               LoKiGenMC        v1r3 Phys
-use               LoKiPhys         v2r5 Phys
-use               LoKiPhysMC       v2r6p1 Phys
-use               LoKiAlgo         v2r2 Phys
-use               LoKiAlgoMC       v2r0 Phys
+use               LoKiMC           v2r0 Phys
+use               LoKiGenMC        v2r0 Phys
+use               LoKiPhys         v3r0 Phys
+use               LoKiPhysMC       v3r0 Phys
+use               LoKiAlgo         v3r0 Phys
+use               LoKiAlgoMC       v3r0 Phys
 use               LoKiJets         v2r1 Phys
-use               LoKiDict         v4r4 Phys 
-use               LoKi             v4r4 Phys
+use               LoKiDict         v4r5 Phys 
+use               LoKi             v5r0 Phys
 use               LoKiAll          v4r4 Phys
 
 use               LoKiCoreTest     v1r2 Tests 
@@ -67,7 +68,7 @@ use               LoKiAlgoMCTest   v1r0 Tests
 use               LoKiTests        v1r2 Tests
 
 ####################################################################
-use  Stripping          v5r4    Tools
+use  Stripping          v6r0    Tools
 
 ####################################################################
 use  KtJet              v1r0    External
