@@ -2,6 +2,7 @@
   <class name = "MCTrackInfo" />
 
   <class name = "IMCDecayFinder"     />
+  <class name = "IMCReconstructible" />
   <class name = "ISiDepositedCharge" />
   <class name = "IVisPrimVertTool"   />
 
