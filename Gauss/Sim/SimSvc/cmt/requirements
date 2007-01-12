@@ -1,9 +1,10 @@
 package SimSvc
-version v4r2
+version v5r0
 
 branches SimSvc doc cmt src
 
-include_dirs $(SIMSVCROOT)
+use GaudiPolicy v* 
+apply_pattern install_more_includes more=SimSvc
 
 use DetDescCnv     v* Det
 

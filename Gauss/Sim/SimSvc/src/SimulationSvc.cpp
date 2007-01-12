@@ -1,7 +1,7 @@
 // $ID: $
 
 // Include Files
-#include "GaudiKernel/SvcFactory.h"
+#include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiKernel/MsgStream.h"
 
 #include <xercesc/dom/DOMElement.hpp>
@@ -17,8 +17,10 @@
 // Instantiation of a static factory class used by clients to create
 // instances of this service
 // -----------------------------------------------------------------------
-static SvcFactory<SimulationSvc> xmlparsersvc_factory;
-const ISvcFactory& SimulationSvcFactory = xmlparsersvc_factory;
+
+// Declaration of the Service Factory
+DECLARE_SERVICE_FACTORY( SimulationSvc );
+
 
 
 // -----------------------------------------------------------------------
