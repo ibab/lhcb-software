@@ -1,8 +1,8 @@
-// $Id: GeneratorToG4.cpp,v 1.4 2006-06-07 12:43:18 robbep Exp $
+// $Id: GeneratorToG4.cpp,v 1.5 2007-01-12 15:25:29 ranjard Exp $
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
+#include "GaudiKernel/DeclareFactoryEntries.h" 
 
 // from GiGa
 #include "GiGa/IGiGaSvc.h" 
@@ -34,8 +34,7 @@ public:
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-static const  AlgFactory<GeneratorToG4>          s_factory ;
-const        IAlgFactory& GeneratorToG4Factory = s_factory ; 
+DECLARE_ALGORITHM_FACTORY( GeneratorToG4 );
 
 
 //=============================================================================

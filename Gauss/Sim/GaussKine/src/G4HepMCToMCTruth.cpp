@@ -1,8 +1,8 @@
-// $Id: G4HepMCToMCTruth.cpp,v 1.4 2006-05-02 18:33:00 gcorti Exp $
+// $Id: G4HepMCToMCTruth.cpp,v 1.5 2007-01-12 15:25:28 ranjard Exp $
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h"
+#include "GaudiKernel/DeclareFactoryEntries.h" 
 #include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/ParticleProperty.h"
 
@@ -39,18 +39,19 @@ public:
 
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : Test
+// Implementation file for class : G4HepMCToMCTruth
 //
 // 2005-09-23 : Witold Pokorski
+// 2006-01-31 : Gloria Corti
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-static const  AlgFactory<G4HepMCToMCTruth>         s_Factory;
-const        IAlgFactory&G4HepMCToMCTruthFactory = s_Factory;
+DECLARE_ALGORITHM_FACTORY( G4HepMCToMCTruth );
 
-// ============================================================================
+
+//=============================================================================
 // Standard constructor, initializes variables
-// ============================================================================
+//=============================================================================
 G4HepMCToMCTruth::G4HepMCToMCTruth(const std::string& name, 
                                    ISvcLocator* pSvcLocator) 
   : GaudiAlgorithm( name , pSvcLocator) 
@@ -66,14 +67,14 @@ G4HepMCToMCTruth::G4HepMCToMCTruth(const std::string& name,
   declareProperty( "KineCnvService", m_kineSvcName  = IGiGaCnvSvcLocation::Kine );
 };
 
-// ============================================================================
+//=============================================================================
 // Destructor
-// ============================================================================
+//=============================================================================
 G4HepMCToMCTruth::~G4HepMCToMCTruth(){};
 
-// ============================================================================
+//=============================================================================
 // Initialization
-// ============================================================================
+//=============================================================================
 StatusCode G4HepMCToMCTruth::initialize() 
 {
   const StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
@@ -90,9 +91,9 @@ StatusCode G4HepMCToMCTruth::initialize()
   return sc; 
 }
 
-// ============================================================================
+//=============================================================================
 // Main execution
-// ============================================================================
+//=============================================================================
 StatusCode G4HepMCToMCTruth::execute() {
 
   debug() << "==> Execute" << endmsg;
@@ -194,9 +195,9 @@ StatusCode G4HepMCToMCTruth::execute() {
   return StatusCode::SUCCESS;
 }
 
-// ============================================================================
+//=============================================================================
 // Convert method to fill a MCParticle
-// ============================================================================
+//=============================================================================
 void G4HepMCToMCTruth::convert(HepMC::GenParticle* part, 
                                LHCb::MCVertex* prodvertex) 
 {
@@ -219,7 +220,8 @@ void G4HepMCToMCTruth::convert(HepMC::GenParticle* part,
     prodvertex->addToProducts( mcpart );
   }
   else {
-    // the barcode > 10000000 indicates than the part represents
+    // the barcode > MCTruthManager::SplitBarCode indicates than the 
+    // part represents
     // the same physical partical as its mother; it was due to some
     // interaction that the new GenPart was instanciated
     //
@@ -263,9 +265,9 @@ void G4HepMCToMCTruth::convert(HepMC::GenParticle* part,
   return;
 }
 
-// ============================================================================
-//  vertexType
-// ============================================================================
+//=============================================================================
+// vertexType
+//=============================================================================
 LHCb::MCVertex::MCVertexType G4HepMCToMCTruth::vertexType( int id ) {
   
   LHCb::MCVertex::MCVertexType vType = LHCb::MCVertex::Unknown;
@@ -307,9 +309,9 @@ LHCb::MCVertex::MCVertexType G4HepMCToMCTruth::vertexType( int id ) {
 
 }
 
-// ============================================================================
+//=============================================================================
 //  Finalize
-// ============================================================================
+//=============================================================================
 StatusCode G4HepMCToMCTruth::finalize() 
 {   
   debug() << "==> Finalize" << endmsg;
