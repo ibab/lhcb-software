@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.244 2007-01-08 14:57:40 jpalac Exp $
+! $Id: release.notes,v 1.245 2007-01-12 14:04:41 ranjard Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+!========================== DaVinciTools v15r0 2007-01-11 ==================
+! 2007-01-11 - Florence RANJARD
+ - update some *.cpp to use new FACTORY
 
 !========================== DaVinciTools v14r6 2007-01-08 ===================
 
