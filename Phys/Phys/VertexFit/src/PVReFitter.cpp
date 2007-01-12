@@ -1,8 +1,8 @@
-// $Id: PVReFitter.cpp,v 1.6 2006-07-20 12:54:51 jpalac Exp $
+// $Id: PVReFitter.cpp,v 1.7 2007-01-12 14:17:54 ranjard Exp $
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h" 
+#include "GaudiKernel/DeclareFactoryEntries.h" 
 
 #include "Event/VertexBase.h"
 #include "Event/RecVertex.h"
@@ -21,8 +21,8 @@ using namespace Gaudi::Units;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-static const  ToolFactory<PVReFitter>          s_factory ;
-const        IToolFactory& PVReFitterFactory = s_factory ; 
+
+DECLARE_TOOL_FACTORY(PVReFitter);
 
 //=============================================================================
 // Standard constructor, initializes variables

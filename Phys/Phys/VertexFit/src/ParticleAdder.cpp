@@ -1,7 +1,7 @@
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h" 
+#include "GaudiKernel/DeclareFactoryEntries.h" 
 
 
 #include "Event/Vertex.h"
@@ -21,8 +21,8 @@ using namespace Gaudi::Units;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-static const  ToolFactory<ParticleAdder>          s_factory ;
-const        IToolFactory& ParticleAdderFactory = s_factory ; 
+
+DECLARE_TOOL_FACTORY(ParticleAdder);
 
 
 //=============================================================================

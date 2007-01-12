@@ -1,8 +1,8 @@
-// $Id: TrgVertexFitter.cpp,v 1.12 2006-04-05 14:56:49 jpalac Exp $
+// $Id: TrgVertexFitter.cpp,v 1.13 2007-01-12 14:17:57 ranjard Exp $
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h" 
+#include "GaudiKernel/DeclareFactoryEntries.h" 
 
 
 #include "Event/Vertex.h"
@@ -35,8 +35,8 @@ using namespace LHCb ;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-static const  ToolFactory<TrgVertexFitter>          s_factory ;
-const        IToolFactory& TrgVertexFitterFactory = s_factory ; 
+
+DECLARE_TOOL_FACTORY(TrgVertexFitter);
 
 //=============================================================================
 // Standard constructor, initializes variables

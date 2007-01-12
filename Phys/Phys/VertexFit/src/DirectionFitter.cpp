@@ -1,8 +1,8 @@
-// $Id: DirectionFitter.cpp,v 1.2 2006-10-22 22:35:52 xieyu Exp $
+// $Id: DirectionFitter.cpp,v 1.3 2007-01-12 14:17:53 ranjard Exp $
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h" 
+#include "GaudiKernel/DeclareFactoryEntries.h" 
 
 #include "Event/Vertex.h"
 #include "Event/RecVertex.h"
@@ -23,8 +23,8 @@ using namespace Gaudi::Units;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-static const  ToolFactory<DirectionFitter>          s_factory ;
-const        IToolFactory& DirectionFitterFactory = s_factory ; 
+
+DECLARE_TOOL_FACTORY( DirectionFitter );
 
 //=============================================================================
 // Standard constructor, initializes variables

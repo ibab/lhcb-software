@@ -1,8 +1,8 @@
-// $Id: OfflineVertexFitter.cpp,v 1.17 2006-12-06 14:49:46 jpalac Exp $
+// $Id: OfflineVertexFitter.cpp,v 1.18 2007-01-12 14:17:54 ranjard Exp $
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h" 
+#include "GaudiKernel/DeclareFactoryEntries.h" 
 
 
 #include "Event/Vertex.h"
@@ -26,8 +26,8 @@ using namespace Gaudi::Units;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-static const  ToolFactory<OfflineVertexFitter>          s_factory ;
-const        IToolFactory& OfflineVertexFitterFactory = s_factory ; 
+
+DECLARE_TOOL_FACTORY( OfflineVertexFitter );
 
 // ===========================================================================
 namespace PhotonParametersLocal

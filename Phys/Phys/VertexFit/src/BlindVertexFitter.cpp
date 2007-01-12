@@ -1,8 +1,11 @@
-// $Id: BlindVertexFitter.cpp,v 1.5 2006-12-06 14:49:46 jpalac Exp $
+// $Id: BlindVertexFitter.cpp,v 1.6 2007-01-12 14:17:53 ranjard Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ Vertsion $Revision: 1.5 $
+// CVS tag $Name: not supported by cvs2svn $ Vertsion $Revision: 1.6 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2006/12/06 14:49:46  jpalac
+// *** empty log message ***
+//
 // Revision 1.4  2006/07/20 15:23:19  jpalac
 // Minor SMatrix fixes. Re-tag as v3r0
 //
@@ -24,7 +27,7 @@
 // ============================================================================
 // GaudiKernel
 // ============================================================================
-#include "GaudiKernel/ToolFactory.h"
+#include "GaudiKernel/DeclareFactoryEntries.h"
 // ============================================================================
 // GaudiAlg 
 // ============================================================================

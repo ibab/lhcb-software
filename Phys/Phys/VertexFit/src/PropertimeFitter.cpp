@@ -1,8 +1,8 @@
-// $Id: PropertimeFitter.cpp,v 1.4 2006-10-22 22:35:53 xieyu Exp $
+// $Id: PropertimeFitter.cpp,v 1.5 2007-01-12 14:17:57 ranjard Exp $
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h" 
+#include "GaudiKernel/DeclareFactoryEntries.h" 
 
 #include "Event/Vertex.h"
 #include "Event/RecVertex.h"
@@ -23,8 +23,8 @@ using namespace Gaudi::Units;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-static const  ToolFactory<PropertimeFitter>          s_factory ;
-const        IToolFactory& PropertimeFitterFactory = s_factory ; 
+
+DECLARE_TOOL_FACTORY( PropertimeFitter );
 
 //=============================================================================
 // Standard constructor, initializes variables
