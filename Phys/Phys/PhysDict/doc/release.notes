@@ -4,6 +4,10 @@
 ! Purpose     : REFLEX dictionaries for Phys classes
 !-----------------------------------------------------------------------------
 
+!========================== PhysDict v2r1 2007-01-12 =======================
+! 2007-01-12 - Florence Ranjard
+ - remove build of libPhysDict, it is done by reflex
+
 !========================== PhysDict v2r0 2006-10-17 =========================
 
 ! 2006-10-17 - Juan PALACIOS
