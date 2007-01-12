@@ -1,10 +1,12 @@
-! $Id: release.notes,v 1.246 2007-01-12 14:33:33 pkoppenb Exp $
+! $Id: release.notes,v 1.247 2007-01-12 15:05:08 pkoppenb Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
 
 ! 2007-01-12 - P. Koppenburg
+  - RelatedPVFinder.cpp
+    . Bug fix. Kindly reported by Ulrich Kerzel.
   - NeutralChangePIDTool
     . Fix compiler warning
 !========================== DaVinciTools v15r0 2007-01-11 ==================
