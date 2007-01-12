@@ -5,6 +5,10 @@
 !                    tracker like detectors (Velo, OT, IT, Muon)
 !-----------------------------------------------------------------------------
 
+!======================== GaussTracker v6r0 2007-01-12 =====================
+! 2007-01-12 - Gloria Corti
+ - update code to cope with Gaudi v19r0
+
 !======================= GaussTracker v5r6 2006-07-28 ========================
 ! 2006-07-28 - Gloria CORTI
  - Introduce options to produce and write MCExtendedHits instead of MCHits

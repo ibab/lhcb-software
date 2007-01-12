@@ -1,34 +1,22 @@
-// ============================================================================
-#define GAUSSTRACKER_GAUSSTRACKER_LOAD_CPP 1 
-// ============================================================================
-// include 
-// GaudiKernel 
+// $Id: GaussTracker_load.cpp,v 1.3 2007-01-12 15:41:23 ranjard Exp $
+// Include files 
+
 #include "GaudiKernel/DeclareFactoryEntries.h" 
-// GiGa 
-#include "GiGa/GiGaMACROs.h"
 
-/** @file 
- *  The mandatory file for declaration of component library entries 
- *  @author Witold Pokorski Witold.Pokorski@cern.ch 
- *  @date 2002-09-26
- */
+// Declare  OBJECT / CONVERTER / ALGORITHM / TOOL using the macros DECLARE_xxx
+// The statements are like that:
+//
+// DECLARE_ALGORITHM( MyAlgorithm );
+// DECLARE_TOOL( MyTool );
+// DECLARE_OBJECT( DataObject );
+//
+// They should be inside the 'DECLARE_FACTORY_ENTRIES' body.
+DECLARE_FACTORY_ENTRIES(Test) {
 
-void GaussTracker_load() 
-{ 
   /// Sensitive Detector 
-  DECLARE_GiGaFactory( GiGaSensDetTracker );
+  DECLARE_TOOL( GiGaSensDetTracker );
  
   /// Algortihms to fill transient store
   DECLARE_ALGORITHM ( GetTrackerHitsAlg );  
-
-};
-// ============================================================================
-
-
-// ============================================================================
-extern "C" void GaussTracker_loadRef() { GaussTracker_load(); } ; 
-// ============================================================================
-
-// ============================================================================
-// The END 
-// ============================================================================
+  
+}

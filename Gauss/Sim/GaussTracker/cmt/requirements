@@ -3,7 +3,7 @@
 # Maintainer : Gloria CORTI
 #============================================================================
 package GaussTracker
-version v5r6
+version v6r0
 
 #============================================================================
 # Structure, i.e. directories to process. 
@@ -14,6 +14,8 @@ branches          cmt src doc options
 # Used packages. 
 #============================================================================
 use GaussTools    v*     Sim
+
+apply_pattern packageOpts 
 
 #============================================================================
 # Component library building rule

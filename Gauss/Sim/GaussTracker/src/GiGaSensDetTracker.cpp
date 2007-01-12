@@ -1,14 +1,15 @@
-// $Id: GiGaSensDetTracker.cpp,v 1.10 2006-07-27 12:59:08 gcorti Exp $
+// $Id: GiGaSensDetTracker.cpp,v 1.11 2007-01-12 15:41:23 ranjard Exp $
 // Include files 
 
 // from CLHEP
 #include "CLHEP/Geometry/Point3D.h"
 
 // from Gaudi
+#include "GaudiKernel/DeclareFactoryEntries.h" 
 #include "GaudiKernel/MsgStream.h"
 
 // from GiGa 
-#include "GiGa/GiGaMACROs.h"
+//#include "GiGa/GiGaMACROs.h"
 
 // from Geant4 
 #include "G4Step.hh"
@@ -30,8 +31,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Factory
-//DECLARE_TOOL_FACTORY( GiGaSensDetTracker );
-IMPLEMENT_GiGaFactory( GiGaSensDetTracker );
+DECLARE_TOOL_FACTORY( GiGaSensDetTracker );
 
 
 //=============================================================================

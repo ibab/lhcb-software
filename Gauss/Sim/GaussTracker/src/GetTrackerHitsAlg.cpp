@@ -1,8 +1,8 @@
-// $Id: GetTrackerHitsAlg.cpp,v 1.11 2006-07-27 15:37:47 gcorti Exp $
+// $Id: GetTrackerHitsAlg.cpp,v 1.12 2007-01-12 15:41:23 ranjard Exp $
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
+#include "GaudiKernel/DeclareFactoryEntries.h" 
 
 // from GiGa 
 #include "GiGa/IGiGaSvc.h"
@@ -31,8 +31,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-static const  AlgFactory<GetTrackerHitsAlg>          s_factory ;
-const        IAlgFactory& GetTrackerHitsAlgFactory = s_factory ; 
+DECLARE_ALGORITHM_FACTORY( GetTrackerHitsAlg );
 
 
 //=============================================================================

@@ -1,4 +1,4 @@
-// $Id: GiGaSensDetTracker.h,v 1.3 2006-07-27 12:59:08 gcorti Exp $
+// $Id: GiGaSensDetTracker.h,v 1.4 2007-01-12 15:41:23 ranjard Exp $
 #ifndef GIGASENSDETTRACKER_H
 #define GIGASENSDETTRACKER_H 1 
 
@@ -26,9 +26,10 @@ class G4TouchableHistory;
 class GiGaSensDetTracker: virtual public GiGaSensDetBase
 {
   /// friend factory 
-  friend class GiGaFactory<GiGaSensDetTracker>;
+  //friend class GiGaFactory<GiGaSensDetTracker>;
 
-protected:
+public:
+  //protected:
 
   /// Standard constructor
   GiGaSensDetTracker( const std::string& type   ,
