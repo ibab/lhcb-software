@@ -12,6 +12,9 @@
 #include "$COMMONPARTICLESROOT/options/StandardKaons.opts"
 /// B tagging options
 #include "$ANALYSISROOT/options/BTaggingTool.opts"
+// Run L0 and HLT
+#include "$HLTSYSROOT/options/L0.opts"
+#include "$HLTSYSROOT/options/Hlt.opts"
 //
 // Don't forget the DLL
 ApplicationMgr.DLLs   += { "Analysis", "FlavourTagging" };

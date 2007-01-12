@@ -1,8 +1,14 @@
-// $Id: TutorialChecker.cpp,v 1.2 2007-01-05 17:08:47 pkoppenb Exp $
+// $Id: TutorialChecker.cpp,v 1.3 2007-01-12 13:18:38 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h" 
+
+// from LHCb
+#include "Event/HltSummary.h"
+#include "Event/HltEnums.h"
+#include "Event/RecHeader.h"
+#include "Event/L0DUReport.h"
 
 // local
 #include "TutorialChecker.h"
@@ -59,9 +65,11 @@ StatusCode TutorialChecker::execute() {
   LHCb::Particle::ConstVector Bcands = desktop()->particles();
   for ( LHCb::Particle::ConstVector::const_iterator b = Bcands.begin(); 
         b != Bcands.end() ; ++b){
-    sc = fillReco(tuple,*b);
+    sc = fillHeader(tuple); // header filled for every B, not every event!
+    if (sc) sc = fillReco(tuple,*b);
     if (sc) sc = fillTruth(tuple,*b);
     if (sc) sc = fillTagging(tuple,*b);
+    if (sc) sc = fillTrigger(tuple);
     
     if (!sc) return sc ;
   }  
@@ -70,7 +78,6 @@ StatusCode TutorialChecker::execute() {
   setFilterPassed(true);   // Mandatory. Set to true if event is accepted.
   return sc ;
 }
-
 //=============================================================================
 //  Finalize
 //=============================================================================
@@ -173,9 +180,8 @@ StatusCode TutorialChecker::fillTruth(Tuple& tuple,const LHCb::Particle* b) {
        
   return StatusCode::SUCCESS;
 }
-
 //=============================================================================
-//  Truth
+//  Tagging
 //=============================================================================
 StatusCode TutorialChecker::fillTagging(Tuple& tuple,const LHCb::Particle* b) {
 
@@ -187,4 +193,35 @@ StatusCode TutorialChecker::fillTagging(Tuple& tuple,const LHCb::Particle* b) {
 
   return sc ;
 }
+//============================================================================
+//  Trigger
+//============================================================================
+StatusCode TutorialChecker::fillTrigger(Tuple& tuple){
+  debug() << "==> fillTrigger" << endmsg;
+  const LHCb::HltSummary* hlt = get<LHCb::HltSummary>(LHCb::HltSummaryLocation::Default);  
+  LHCb::L0DUReport* l0  = get<LHCb::L0DUReport>(LHCb::L0DUReportLocation::Default); // not const beacuse of bug in L0Decision
+  debug() << "L0 decision is " << l0->decision() << ", HLT: " << hlt->decision() << endmsg ;
+  tuple->column("L0",           l0->decision()); // total decision
+  tuple->column("Hlt",          hlt->decision()); // total decision
+  tuple->column("HltMuon",      hlt->checkDecisionType(LHCb::HltEnums::Muon));  
+  tuple->column("HltDiMuon",    hlt->checkDecisionType(LHCb::HltEnums::DiMuon));
+  tuple->column("HltJpsi",      hlt->checkDecisionType(LHCb::HltEnums::JPsi));
+  tuple->column("HltMuonHadron",hlt->checkDecisionType(LHCb::HltEnums::MuonHadron));
+  tuple->column("HltHadron",    hlt->checkDecisionType(LHCb::HltEnums::Hadron));
+  tuple->column("HltDiHadron",  hlt->checkDecisionType(LHCb::HltEnums::DiHadron));
+  tuple->column("HltElectron",  hlt->checkDecisionType(LHCb::HltEnums::Electron));
+  tuple->column("HltDiElectron",hlt->checkDecisionType(LHCb::HltEnums::DiElectron));
+  tuple->column("HltGamma",     hlt->checkDecisionType(LHCb::HltEnums::Gamma));
 
+  return StatusCode::SUCCESS ;
+}
+//============================================================================
+//  Event and run number 
+//============================================================================
+StatusCode TutorialChecker::fillHeader(Tuple& tuple){
+  const LHCb::RecHeader* header = get<LHCb::RecHeader>(LHCb::RecHeaderLocation::Default);  
+  info() << "Filling Tuple at Run " << header->runNumber() << ", Event " << header->evtNumber() << endmsg ;
+  tuple->column("Event", (int)header->evtNumber());
+  tuple->column("Event", (int)header->runNumber());
+  return StatusCode::SUCCESS ;
+}

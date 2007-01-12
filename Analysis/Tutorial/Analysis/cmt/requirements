@@ -1,12 +1,12 @@
-# $Id: requirements,v 1.23 2006-12-21 17:20:33 pkoppenb Exp $ 
+# $Id: requirements,v 1.24 2007-01-12 13:18:37 pkoppenb Exp $ 
 # ============================================================================
-# CVS tag $Name: not supported by cvs2svn $ , verison $Revision: 1.23 $
+# CVS tag $Name: not supported by cvs2svn $ , verison $Revision: 1.24 $
 # ============================================================================
 # Created    : 2004-11-04
 # Maintainer : P. Koppenburg
 # ============================================================================
 package           Analysis
-version           v6r2
+version           v6r2p1
 
 # ============================================================================
 # Structure, i.e. directories to process. 
@@ -19,6 +19,8 @@ branches          cmt doc src options solutions exercises
 use DaVinciKernel v*  Phys
 use DaVinciMCKernel v* Phys
 use DaVinciAssociators v* Phys
+use HltEvent v* Event
+use L0Event v* Event
 
 set DAVINCITUTORIALDATA $(ANALYSISROOT)/options/Bs2Jpsiphi_mm_Grid.opts \
     CERN_DATA           $(ANALYSISROOT)/options/Bs2Jpsiphi_mm_CERN.opts \
@@ -41,6 +43,9 @@ apply_pattern component_library library=Analysis
 
 # ============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.23  2006/12/21 17:20:33  pkoppenb
+# Exercise 4 done
+#
 # Revision 1.22  2006/12/18 12:54:04  pkoppenb
 # Grid data
 #

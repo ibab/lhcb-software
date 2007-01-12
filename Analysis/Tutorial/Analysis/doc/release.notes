@@ -7,8 +7,10 @@
 !   Read README.txt !
 !
 !-----------------------------------------------------------------------------
-
-!===================== Tutorial/Analysis v6r2 2007-01-05 ======================#
+!===================== Tutorial/Analysis v6r2p1 2007-01-12 ======================
+! 2007-01-12 - P. Koppenburg
+  - added Trigger. NEEDS DaVinci v17r8 at least.
+!===================== Tutorial/Analysis v6r2 2007-01-05 ======================
 ! 2007-01-05 - P. Koppenburg
   Tagged as v6r2
   - solutions/DaVinci6/TutorialChecker.cpp

@@ -215,13 +215,46 @@ Later it would be
 		<code class="display">T->Draw("TPID/Tag","Tag!=0")</code>
 		</ul>			
 <p></p>				
-		<li><b>Trigger</b>
-		</ul>			
+		<li><b>Trigger</b>			
+		<i><b>The following requires DaVinci v17r8!</b></i>
+		Do
+		<code class="display">cvs update -r v6r2p1</code>
+		in your <code>$ANALYSISROOT</code> directory.
+		This will get you the needed "uses" in your requirements. Also
+		switch to DaVinci v17r8, as you did for v17r6 
+		in exercise 1.
 		<ul>
-		<li><i><b>The trigger is under development...</b></i>
-		</ul>			
+		<li>The first step is already done for you, 
+		but if you want to use the trigger in some piece of code, you
+		need to add the following in the relevant package requirements:
+		<code class="display">use L0Event v* Event
+use HltEvent v* Event</code> 
+		<li>Then in your cpp file add the relevant headers:
+		<code class="display">#include "Event/L0DUReport.h"
+#include "Event/HltSummary.h"</code> 
+                <li>In your execute, or any other method, get the
+		objects:
+		<code class="display">const LHCb::HltSummary* hlt = get<LHCb::HltSummary>(LHCb::HltSummaryLocation::Default);  
+LHCb::L0DUReport* l0 = get<LHCb::L0DUReport>(LHCb::L0DUReportLocation::Default);
+debug() << "L0 decision is " << l0->decision() << ", HLT: " << hlt->decision() << endmsg ;</code>
+L0Report presently cannot be declared const as the <code>decision()</code> method is
+not const. This should be cured someday.
+                <li>And then fill it in your tuple.
+  <code class="display">tuple->column("L0",      l0->decision()); // total decision
+tuple->column("Hlt",     hlt->decision()); // total decision
+tuple->column("HltMuon", hlt->checkDecisionType(LHCb::HltEnums::Muon));  </code> 
+</ul>
+If you want to use the HLT enums you also have to include Event/HltEnums.
 		</ol>
-		The solution to this part is to be found in <code>solutions/DaVinci6/</code>	
+<br>
+		The solution to this part is to be found in 
+		<code>solutions/DaVinci6/</code>	
+<ul>
+<li>If you want the trigger part, getpack version v6r2p1, or do
+		<code class="display">cvs update -r v6r2p1</code>
+		in your <code>$ANALYSISROOT</code> directory.
+
+</ul>
 
 
 <hr>
