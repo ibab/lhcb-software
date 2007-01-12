@@ -1,6 +1,6 @@
 # =============================================================================
 package GiGaVisUI
-version v3r1
+version v4r0
 
 # =============== package structure ===========================================
 branches         cmt src doc
@@ -13,9 +13,6 @@ use VisSvc       v*        Vis
 # ============== component library ============================================
 library          GiGaVisUI   *.cpp                  
 
-# ============== standard includes ============================================
-include_dirs     $(GIGAVISUIROOT)
-        
 # ============== standard patterns ===========================================
 apply_pattern    component_library library=GiGaVisUI
 

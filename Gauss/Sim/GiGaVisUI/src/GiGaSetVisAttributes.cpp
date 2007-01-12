@@ -1,15 +1,11 @@
-// $Id: GiGaSetVisAttributes.cpp,v 1.2 2003-07-10 09:29:11 ranjard Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.1  2003/04/06 19:16:38  ibelyaev
-//  add new tool
-// 
-// ============================================================================
-// GaudiKernel
+// $Id: GiGaSetVisAttributes.cpp,v 1.3 2007-01-12 15:48:35 ranjard Exp $
+// Include files 
+
+// from Gaudi
+#include "GaudiKernel/DeclareFactoryEntries.h" 
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/SmartDataPtr.h"
+
 // DetDesc
 #include "DetDesc/ILVolume.h" 
 // VisSvc
@@ -19,7 +15,7 @@
 #include "G4LogicalVolume.hh"
 #include "G4LogicalVolumeStore.hh"
 // GiGa
-#include "GiGa/GiGaMACROs.h"
+//#include "GiGa/GiGaMACROs.h"
 // local 
 #include "GiGaSetVisAttributes.h"
 
@@ -30,9 +26,8 @@
  *  @date   2003-04-06
  */
 
-// ============================================================================
-IMPLEMENT_GiGaFactory ( GiGaSetVisAttributes ) ;
-// ============================================================================
+// Declaration of the Tool Factory
+DECLARE_TOOL_FACTORY( GiGaSetVisAttributes );
 
 // ============================================================================
 /** standard constructor

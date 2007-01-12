@@ -1,30 +1,12 @@
-// $Id: GiGaUIsession.cpp,v 1.4 2003-03-11 09:54:06 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.3  2003/03/05 12:52:47  ranjard
-// v1r2 - check if WIN32
-//
-// Revision 1.2  2003/02/18 08:14:04  ranjard
-// v1r2 - remove use of G4VIS_NONE and G4UI_NONE
-//
-// Revision 1.1.1.1  2002/12/12 14:46:26  witoldp
-// new package containing GiGa vis and UI
-//
-// Revision 1.2  2002/12/07 14:41:45  ibelyaev
-//  add new Calo stuff
-//
-// Revision 1.1  2002/12/04 21:17:38  ibelyaev
-//  add UI and Vis stuff
-// 
-// ============================================================================
+// $Id: GiGaUIsession.cpp,v 1.5 2007-01-12 15:48:35 ranjard Exp $
 // Include files
-/// GaudiKernel
+
+// from Gaudi
+#include "GaudiKernel/DeclareFactoryEntries.h" 
 #include "GaudiKernel/Bootstrap.h"
 #include "GaudiKernel/System.h"
 // GiGa 
-#include "GiGa/GiGaMACROs.h"
+//#include "GiGa/GiGaMACROs.h"
 // G4 
 #ifdef      G4UI_USE_WO
 #include   "G4UIWo.hh"   
@@ -58,11 +40,8 @@
  */
 // ============================================================================
 
-// ============================================================================
-/// factory business 
-// ============================================================================
-IMPLEMENT_GiGaFactory( GiGaUIsession ) ;
-// ============================================================================
+// Declaration of the Tool Factory
+DECLARE_TOOL_FACTORY( GiGaUIsession );
 
 // ============================================================================
 /** standard constructor 

@@ -1,19 +1,12 @@
-// $Id: GiGaVisManager.h,v 1.1.1.1 2002-12-12 14:46:26 witoldp Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.1  2002/12/04 21:17:38  ibelyaev
-//  add UI and Vis stuff
-// 
-// ============================================================================
+// $Id: GiGaVisManager.h,v 1.2 2007-01-12 15:48:39 ranjard Exp $
 #ifndef GIGA_GIGAVISMANAGER_H 
 #define GIGA_GIGAVISMANAGER_H 1
+
 // Include files
 #include "GiGa/IGiGaVisManager.h"
 #include "GiGa/GiGaBase.h"
 // forward declarations
-template <class TYPE> class GiGaFactory;
+//template <class TYPE> class GiGaFactory;
 
 /** @class GiGaVisManager GiGaVisManager.h
  *
@@ -27,7 +20,7 @@ class GiGaVisManager :
   public          GiGaBase       
 {
   /// friend factory for instantiation
-  friend class GiGaFactory<GiGaVisManager>;
+  //  friend class GiGaFactory<GiGaVisManager>;
 public:
   
   /** initialization method 
@@ -52,7 +45,7 @@ public:
    */
   virtual G4VVisManager* visMgr () const ;
   
-protected:
+  //protected:
   
   /** standard constructor 
    *  @param type type 

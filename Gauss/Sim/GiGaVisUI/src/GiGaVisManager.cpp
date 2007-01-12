@@ -1,26 +1,13 @@
-// $Id: GiGaVisManager.cpp,v 1.4 2003-09-25 12:17:59 ranjard Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.3  2003/02/18 08:14:04  ranjard
-// v1r2 - remove use of G4VIS_NONE and G4UI_NONE
-//
-// Revision 1.2  2003/02/11 15:50:48  ibelyaev
-//  package works now!
-//
-// Revision 1.1.1.1  2002/12/12 14:46:26  witoldp
-// new package containing GiGa vis and UI
-//
-// Revision 1.1  2002/12/04 21:17:38  ibelyaev
-//  add UI and Vis stuff
-// 
-// ============================================================================
+// $Id: GiGaVisManager.cpp,v 1.5 2007-01-12 15:48:37 ranjard Exp $
+// Include files 
+
 // from Gaudi
+#include "GaudiKernel/DeclareFactoryEntries.h" 
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/MsgStream.h"
 // from GiGa 
-#include "GiGa/GiGaMACROs.h"
+//#include "GiGa/GiGaMACROs.h"
+
 // local
 #include "GiGaVisManager.h"
 
@@ -159,11 +146,8 @@ namespace GiGaVisManagerLocal
  */
 // ============================================================================
 
-// ============================================================================
-/// Declaration of the Tool Factory
-// ============================================================================
-IMPLEMENT_GiGaFactory( GiGaVisManager ) ;
-// ============================================================================
+// Declaration of the Tool Factory
+DECLARE_TOOL_FACTORY( GiGaVisManager );
 
 
 // ============================================================================

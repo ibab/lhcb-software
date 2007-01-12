@@ -4,6 +4,10 @@
 ! Purpose          : GiGa visualisation and UI 
 !-----------------------------------------------------------------------------
 
+!========================= GiGaVisUI v4r0 2007-01-12 =====================
+! 2007-01-12 - Gloria Corti
+ - update code to cope withGaudi v19r0
+
 !========================= GiGaVisUI v3r1 2005-10-07 ======================
 ! 2005-10-07 - Florence Ranjard
  - requirements - move setting of DAWN related environment variables 

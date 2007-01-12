@@ -1,39 +1,21 @@
-// $Id: GiGaVisUI_load.cpp,v 1.2 2003-04-06 19:16:38 ibelyaev Exp $ 
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// ============================================================================
-#define GIGAVISUI_GIGAVISUI_LOAD_CPP 1 
-// ============================================================================
-// include 
-// GaudiKernel 
+// $Id: GiGaVisUI_load.cpp,v 1.3 2007-01-12 15:48:40 ranjard Exp $ 
+
 #include "GaudiKernel/DeclareFactoryEntries.h" 
-// GiGa 
-#include "GiGa/GiGaMACROs.h"
 
-/** @file 
- *  The mandatory file for declaration of component library entries 
- *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
- *  @date 2002-09-26
- */
+// Declare  OBJECT / CONVERTER / ALGORITHM / TOOL using the macros DECLARE_xxx
+// The statements are like that:
+//
+// DECLARE_ALGORITHM( MyAlgorithm );
+// DECLARE_TOOL( MyTool );
+// DECLARE_OBJECT( DataObject );
+//
+// They should be inside the 'DECLARE_FACTORY_ENTRIES' body.
 
-void GiGaVisUI_load() 
-{ 
-  
+DECLARE_FACTORY_ENTRIES(Test) {
+
   // UI & Vis 
-  DECLARE_GiGaFactory     (    GiGaUIsession           );
-  DECLARE_GiGaFactory     (    GiGaVisManager          );
-  DECLARE_GiGaFactory     (    GiGaSetVisAttributes    );
+  DECLARE_TOOL( GiGaUIsession );
+  DECLARE_TOOL( GiGaVisManager );
+  DECLARE_TOOL( GiGaSetVisAttributes );
   
-};
-// ============================================================================
-
-
-// ============================================================================
-extern "C" void GiGaVisUI_loadRef() { GiGaVisUI_load(); } ; 
-// ============================================================================
-
-// ============================================================================
-// The END 
-// ============================================================================
+}

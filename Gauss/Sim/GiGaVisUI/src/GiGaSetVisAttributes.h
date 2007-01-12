@@ -1,12 +1,7 @@
-// $Id: GiGaSetVisAttributes.h,v 1.1 2003-04-06 19:16:38 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $
-// ============================================================================
-// $Log: not supported by cvs2svn $ 
-// ============================================================================
+// $Id: GiGaSetVisAttributes.h,v 1.2 2007-01-12 15:48:35 ranjard Exp $
 #ifndef GIGAVISUI_GIGASETVISATTRIBUTES_H 
 #define GIGAVISUI_GIGASETVISATTRIBUTES_H 1
-// ============================================================================
+
 // Include files
 // GiGa 
 #include "GiGa/GiGaToolBase.h"
@@ -14,7 +9,7 @@
 class IVisualizationSvc ;
 class ILVolume          ;
 class G4LogicalVolume   ;
-// ============================================================================
+
 
 /** @class GiGaSetVisAttributes GiGaSetVisAttributes.h
  *
@@ -27,7 +22,7 @@ class G4LogicalVolume   ;
 class GiGaSetVisAttributes : public GiGaToolBase 
 {
   // friend factory for instantiation 
-  friend class GiGaFactory<GiGaSetVisAttributes>;  
+  //  friend class GiGaFactory<GiGaSetVisAttributes>;  
 public:
   
   /** the only one method 
@@ -55,7 +50,7 @@ public:
    */
   virtual StatusCode   finalize    () ;
   
-protected:
+  //protected:
   
   /** standard constructor
    *  @see GiGaToolBase 
