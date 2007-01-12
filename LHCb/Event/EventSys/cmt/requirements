@@ -1,21 +1,21 @@
 package EventSys
-version v22r8
+version v23r0
 
 branches doc cmt
 
 # LHCb Event libraries
 
-use EventBase   v1r2    Event
-use MCEvent     v1r7    Event
-use DigiEvent   v1r3    Event
-use RecEvent    v1r9    Event
-use L0Event     v15r3p1 Event
-use PhysEvent   v10r1   Event
-use DAQEvent    v6r8    Event
-use GenEvent    v4r6    Event
+use EventBase   v2r0    Event
+use MCEvent     v2r0    Event
+use DigiEvent   v2r0    Event
+use RecEvent    v2r0    Event
+use L0Event     v16r0   Event
+use PhysEvent   v11r0   Event
+use DAQEvent    v7r0    Event
+use GenEvent    v5r0    Event
 use EventAssoc  v3r4    Event
-use LinkerEvent v2r2p2  Event
-use TrackEvent  v3r5    Event
-use PackedEvent v2r1    Event
-use VeloEvent   v14r0   Event
-use HltEvent    v7r1    Event
+use LinkerEvent v3r0    Event
+use TrackEvent  v4r0    Event
+use PackedEvent v3r0    Event
+use VeloEvent   v15r0   Event
+use HltEvent    v8r0    Event

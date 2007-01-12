@@ -1,6 +1,12 @@
 package EventSys
 package manager: Marco Cattaneo
 
+!======================== EventSys v23r0 2007-01-12 ======================
+! 2006-12-07 - Florence RANJARD
+ - use DAQEvent v7r0, DigiEvent v2r0, EventBase v2r0, GenEvent v5r0,
+   HltEvent v8r0, L0Event v16r0, LinkerEvent v3r0, MCEvent v2r0, PackEvent v3r0
+   PhysEvent v11r0, RecEvent v2r0, TrackEvent v4r0, VeloEvent v15r0
+
 !======================== EventSys v22r8 2006-11-24 ======================
 ! 2006-11-24 - Marco Cattaneo
  - Use DAQEvent v6r8, DigiEvent v1r3, TrackEvent v3r5, EventAssoc v3r4,
