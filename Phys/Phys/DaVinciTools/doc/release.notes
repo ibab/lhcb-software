@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.245 2007-01-12 14:04:41 ranjard Exp $
+! $Id: release.notes,v 1.246 2007-01-12 14:33:33 pkoppenb Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
 
+! 2007-01-12 - P. Koppenburg
+  - NeutralChangePIDTool
+    . Fix compiler warning
 !========================== DaVinciTools v15r0 2007-01-11 ==================
 ! 2007-01-11 - Florence RANJARD
  - update some *.cpp to use new FACTORY

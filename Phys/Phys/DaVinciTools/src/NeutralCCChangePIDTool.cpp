@@ -1,4 +1,4 @@
-// $Id: NeutralCCChangePIDTool.cpp,v 1.1 2006-12-18 11:17:01 jpalac Exp $
+// $Id: NeutralCCChangePIDTool.cpp,v 1.2 2007-01-12 14:33:34 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -92,7 +92,7 @@ LHCb::Particle NeutralCCChangePIDTool::changePID( const LHCb::Particle &oldpart 
   /// Failure
   fatal() << " Input particle has an invalid ID.  Throwing an exception."  << endmsg;
   Exception( "invalid PID" );
-
+  return LHCb::Particle() ; // just to avoid a compiler warning
 }
 
 
