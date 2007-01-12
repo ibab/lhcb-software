@@ -6,7 +6,6 @@
   <class name="IPVolume"          />
   <class name="ISolid"            />
   <class name="ITransportSvc"     />
-  <!--class name="IUpdateManagerSvc" /-->
 
   <class name="IAlignment"        />
   <class name="ICalibration"      />
@@ -90,17 +89,13 @@
   <class name="DeMuonRegion"       />
   <class name="DeMuonGasGap"       />
   <class name="MuonBasicGeometry"  />
-  <!-- class name="MuonReadoutCond"    /-->
   <class name="MuonTSMap"          />
   <class name="MuonL1Board"        />
   <class name="MuonODEBoard"       />
   <class name="MuonStationCabling" />
   <class name="IMuonPosTool"       />
 
-  <!--class pattern="std::vector<*>"    contid="VECTOR" /-->
-  <class pattern="std::pair<*>"                      />
-  <!--class pattern="SmartRef<*>"                       /-->
-  <!--class pattern="SmartRefVector<*>" contid="VECTOR" /-->
+  <class pattern="std::pair<*>"    />
 
   <exclusion>
     <class name="SolidPolycone::CmpZ" />

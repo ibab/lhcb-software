@@ -4,16 +4,16 @@ version v9r0
 branches cmt doc dict
 
 use DetDesc             v17r0   Det
-use DetDescCnv		v4r0    Det
+use DetDescCnv          v4r0    Det
 use DetDescSvc          v1r8    Det
-use XmlTools		v4r0    Tools
-use VeloDet             v11r0  Det
+use XmlTools            v4r0    Tools
+use VeloDet             v11r0   Det
 use OTDet               v7r0    Det
-use CaloDet	   	v8r0    Det
-use CaloDetXmlCnv  	v3r0	Det
+use CaloDet             v8r0    Det
+use CaloDetXmlCnv       v3r0    Det
 use MuonDet             v6r0    Det
 use Magnet              v3r4    Det
-use RichDet             v10r0    Det
+use RichDet             v10r0   Det
 use STDet               v3r0    Det
 
 # =============== LCG Dictionaries ============================================
