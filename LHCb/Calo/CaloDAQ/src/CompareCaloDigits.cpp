@@ -1,4 +1,4 @@
-// $Id: CompareCaloDigits.cpp,v 1.6 2006-11-23 13:38:32 cattanem Exp $
+// $Id: CompareCaloDigits.cpp,v 1.7 2007-01-12 10:42:57 cattanem Exp $
 // Include files 
 
 // STL
@@ -7,7 +7,7 @@
 // from Gaudi
 #include "GaudiKernel/SystemOfUnits.h"
 #include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/IRegistry.h" 
+#include "GaudiKernel/IRegistry.h"
 
 // local
 #include "CompareCaloDigits.h"

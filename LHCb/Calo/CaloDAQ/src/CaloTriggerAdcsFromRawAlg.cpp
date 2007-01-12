@@ -1,8 +1,8 @@
-// $Id: CaloTriggerAdcsFromRawAlg.cpp,v 1.5 2006-11-22 12:29:33 ocallot Exp $
+// $Id: CaloTriggerAdcsFromRawAlg.cpp,v 1.6 2007-01-12 10:42:57 cattanem Exp $
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/AlgFactory.h" 
 #include "Event/L0CaloAdc.h" 
 
 // local
