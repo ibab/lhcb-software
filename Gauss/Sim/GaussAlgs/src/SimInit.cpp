@@ -1,4 +1,4 @@
-// $Id: SimInit.cpp,v 1.4 2006-05-02 18:35:21 gcorti Exp $
+// $Id: SimInit.cpp,v 1.5 2007-01-12 15:23:42 ranjard Exp $
 // Include files 
 
 // from Gaudi
@@ -42,7 +42,7 @@ SimInit::SimInit( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-SimInit::~SimInit() {}; 
+SimInit::~SimInit() {} 
 
 //=============================================================================
 // Initialization
@@ -65,7 +65,7 @@ StatusCode SimInit::initialize() {
   }
   
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Main execution
@@ -102,7 +102,7 @@ StatusCode SimInit::execute() {
   put( header, LHCb::MCHeaderLocation::Default );
 
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 //  Finalize

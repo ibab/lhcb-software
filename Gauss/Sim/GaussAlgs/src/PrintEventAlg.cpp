@@ -1,4 +1,4 @@
-// $Id: PrintEventAlg.cpp,v 1.4 2006-04-12 18:50:35 gcorti Exp $
+// $Id: PrintEventAlg.cpp,v 1.5 2007-01-12 15:23:42 ranjard Exp $
 // Include files 
 
 // from STL
@@ -41,22 +41,19 @@ DECLARE_ALGORITHM_FACTORY( PrintEventAlg );
 //=============================================================================
 PrintEventAlg::PrintEventAlg(const std::string& name, 
                                          ISvcLocator* pSvcLocator) 
-  ///
   : GaudiAlgorithm( name , pSvcLocator) 
-  , m_particles   ( LHCb::MCParticleLocation::Default )
-  , m_vertices    ( LHCb::MCVertexLocation::Default   )
   , m_licznik(0)
   , m_liczevent(0)
 { 
-  declareProperty( "Particles"  , m_particles  ) ; 
-  declareProperty( "Vertices"   , m_vertices   ) ; 
+  declareProperty( "Particles"  , m_particles = LHCb::MCParticleLocation::Default); 
+  declareProperty( "Vertices"   , m_vertices = LHCb::MCVertexLocation::Default ); 
   declareProperty( "DecayDepth" , m_depth = 99 ) ;
-};
+}
 
 //=============================================================================
 // Destructor
 //=============================================================================
-PrintEventAlg::~PrintEventAlg(){};
+PrintEventAlg::~PrintEventAlg(){}
 
 //=============================================================================
 // Initialization
@@ -68,7 +65,7 @@ StatusCode PrintEventAlg::initialize()
   
   m_ppSvc = svc<IParticlePropertySvc> ( "ParticlePropertySvc", true );
   return StatusCode::SUCCESS; 
-};
+}
 
 //=============================================================================
 // Main execution
@@ -142,7 +139,7 @@ StatusCode PrintEventAlg::execute()
   }
 
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 //  Finalize
@@ -203,30 +200,7 @@ void PrintEventAlg::printDecayTree(long depth, const std::string& prefix,
   } else {
     info() << " - no primary vertex!";
   }
-  info() << endmsg;  
-    
-//   if( mother->primaryVertex() ) { 
-//     info() << depth << prefix.substr(0, prefix.length()-1)
-//            << "+--->" << std::setw(12) << std::setiosflags(std::ios::left) 
-//            << name 
-//            << "    En(MeV):"   << std::setw(12) << mother->momentum().e()
-//            << " origin Vertex" << mother->originVertex()->position()
-//            << " y:" << std::setw(12) << mother->originVertex()->position().y()
-//            << " z:" << std::setw(12) << mother->originVertex()->position().z() 
-//            << " vertexType " << mother->originVertex()->type()
-//            << " primary vertex " << mother->primaryVertex()->position()
-//            << endmsg;
-//   }
-//   else {
-//     info() << depth << prefix.substr(0, prefix.length()-1)
-//            << "+--->" << std::setw(12) << std::setiosflags(std::ios::left) 
-//            << name 
-//            << "    En(MeV):"   << std::setw(12) << mother->momentum().e()
-//            << " x:" << std::setw(12) << x
-//            << " y:" << std::setw(12) << y
-//            << " z:" << std::setw(12) << z << " no primary vertex!"
-//            << endmsg;
-//   }
+  info() << endmsg;
   
   if( depth < m_depth ) {
     SmartRefVector<LHCb::MCVertex>::const_iterator ivtx;

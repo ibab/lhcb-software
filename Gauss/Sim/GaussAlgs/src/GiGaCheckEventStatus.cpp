@@ -1,8 +1,8 @@
-// $Id: GiGaCheckEventStatus.cpp,v 1.1 2005-04-20 15:00:06 gcorti Exp $
+// $Id: GiGaCheckEventStatus.cpp,v 1.2 2007-01-12 15:23:41 ranjard Exp $
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
+#include "GaudiKernel/DeclareFactoryEntries.h" 
 
 // from GiGa
 #include "GiGa/IGiGaSvc.h"
@@ -17,11 +17,11 @@
 // Implementation file for class : GiGaCheckEventStatus
 //
 // 2005-04-19 : Gloria Corti
+// 2007-01-11 : Gloria Corti
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-static const  AlgFactory<GiGaCheckEventStatus>          s_factory ;
-const        IAlgFactory& GiGaCheckEventStatusFactory = s_factory ; 
+DECLARE_ALGORITHM_FACTORY( GiGaCheckEventStatus );
 
 
 //=============================================================================
@@ -33,7 +33,7 @@ GiGaCheckEventStatus::GiGaCheckEventStatus( const std::string& name,
   , m_gigaSvc ( 0 )
 {
   declareProperty( "GiGa" , m_gigaSvcName = "GiGa" ) ; 
-};
+}
 
 //=============================================================================
 // Destructor
@@ -56,7 +56,7 @@ StatusCode GiGaCheckEventStatus::initialize() {
   }
   
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Main execution
@@ -80,7 +80,7 @@ StatusCode GiGaCheckEventStatus::execute() {
   debug() << "Event succesfully processed by G4" << endmsg;
   return StatusCode::SUCCESS;
   
-};
+}
 
 //=============================================================================
 //  Finalize

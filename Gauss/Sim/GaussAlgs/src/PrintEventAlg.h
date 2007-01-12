@@ -1,87 +1,39 @@
-// $Id: PrintEventAlg.h,v 1.3 2006-01-18 09:12:46 gcorti Exp $
+// $Id: PrintEventAlg.h,v 1.4 2007-01-12 15:23:42 ranjard Exp $
 #ifndef    GaussAlgs_PrintEventAlg_H 
 #define    GaussAlgs_PrintEventAlg_H 1 
 
 // Include files
 #include "GaudiAlg/GaudiAlgorithm.h"
 
-// forward declaration 
-template <class ALGORITHM>
-class AlgFactory            ; ///< GaudiKernel 
-
 /** @class PrintEventAlg.h 
  *
  *  Almost empty/primitive algorithm to print debugging info for
  *  MC event
  *
- *  @author  Witold Pokorski, G.Corti
- *  @date    2002-12-09, mod. 2006-01-16
+ *  @author  Witold Pokorski
+ *  @author  Gloria Corti
+ *  @date    2002-12-09, last modified 2007-01-11
  */
-class PrintEventAlg: 
-  public GaudiAlgorithm 
-{
-  /// friend factory for instantiation
-  friend class AlgFactory<PrintEventAlg>;
-  
+class PrintEventAlg : public GaudiAlgorithm {
 public:
+  /// Standard constructor
+  PrintEventAlg( const std::string& name, ISvcLocator* SvcLoc ); 
 
-  /** the standard Algorithm initialization method 
-   *  @see Algorithm
-   *  @return status code
-   */
-  virtual StatusCode initialize ();
-
-  /** the standard Algorithm execution method 
-   *  @see Algorithm
-   *  @return status code
-   */
-  virtual StatusCode execute    ();
-
-  /** the standard Algorithm finalization method 
-   *  @see Algorithm
-   *  @return status code
-   */
-  virtual StatusCode finalize   ();
+  virtual ~PrintEventAlg(); ///< Destructor
   
-protected:
-  
-  /** standard constructor
-   *  @param name name of teh algorithm 
-   *  @param SvcLoc pointer to service locator 
-   */
-  PrintEventAlg( const std::string& name   , 
-                       ISvcLocator*       SvcLoc ); 
+  virtual StatusCode initialize();    ///< Algorithm initialization
+  virtual StatusCode execute   ();    ///< Algorithm execution
+  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
-  /** destructor 
-   */
-  virtual ~PrintEventAlg();
-  
-private:
-  
-  /** default constructor is private! 
-   */
-  PrintEventAlg();
-
-  /** copy  constructor is private! 
-   *  @param copy object to be copied  
-   */
-  PrintEventAlg
-  ( const PrintEventAlg& copy );
-
-  /** assignement operator is private! 
-   *  @param copy object to be copied  
-   */
-  PrintEventAlg& operator= 
-  ( const PrintEventAlg& copy );
-  
 private:
 
   std::string    m_particles;   ///< Location in TES of MCParticles
   std::string    m_vertices;    ///< Location in TES of MCVertices
 
+  ///Depth to with to print the MCtrees (default = 99)
   long m_depth;
-  int  m_licznik;
-  int  m_liczevent;
+  int  m_licznik;               ///< Total number of MCParticles (all events)
+  int  m_liczevent;             ///< Number of events processed
 
   /** recursive method to print a decay tree from an MCParticle
    * @param depth  depth of tree to reach in printout

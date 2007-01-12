@@ -1,4 +1,4 @@
-// $Id: GiGaGetHitsAlg.h,v 1.6 2006-01-27 19:28:14 gcorti Exp $
+// $Id: GiGaGetHitsAlg.h,v 1.7 2007-01-12 15:23:42 ranjard Exp $
 #ifndef GIGAGETHITSALG_H 
 #define GIGAGETHITSALG_H 1
 
@@ -10,7 +10,8 @@
  *  
  *
  *  @author Witold Pokorski
- *  @date   2002-08-13
+ *  @author Gloria Corti
+ *  @date   2002-08-13, last modified 2006-01-27
  */
 
 class GiGaGetHitsAlg : public GaudiAlgorithm {

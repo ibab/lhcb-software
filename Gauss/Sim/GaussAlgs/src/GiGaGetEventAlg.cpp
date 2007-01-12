@@ -1,4 +1,4 @@
-// $Id: GiGaGetEventAlg.cpp,v 1.3 2006-01-18 09:12:46 gcorti Exp $ 
+// $Id: GiGaGetEventAlg.cpp,v 1.4 2007-01-12 15:23:41 ranjard Exp $ 
 // Include files 
 
 // from Gaudi
@@ -15,26 +15,25 @@
 //-----------------------------------------------------------------------------
 // Implementation file for class : GiGaGetEvent
 // 
-// 2004-02-20 : I.Belyaev 
-// 2005-02-02 : G.Corti   
-// 2006-01-16 : G.Corti
+// 2004-02-20 : Vanya Belyaev 
+// 2005-02-02 : Gloria Corti   
+// 2006-01-16 : Gloria Corti
+// 2007-01-11 : Gloria Corti
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
 DECLARE_ALGORITHM_FACTORY( GiGaGetEventAlg );
+
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
 GiGaGetEventAlg::GiGaGetEventAlg(const std::string& name, 
                                  ISvcLocator* pSvcLocator) 
-  ///
   : GaudiAlgorithm( name , pSvcLocator) 
-  , m_particles   ( LHCb::MCParticleLocation::Default )
-  , m_vertices    ( LHCb::MCVertexLocation::Default )
 { 
-  declareProperty( "Particles", m_particles ); 
-  declareProperty( "Vertices" , m_vertices ); 
+  declareProperty( "Particles", m_particles = LHCb::MCParticleLocation::Default); 
+  declareProperty( "Vertices" , m_vertices = LHCb::MCVertexLocation::Default); 
 };
 
 //=============================================================================

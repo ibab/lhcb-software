@@ -1,4 +1,4 @@
-// $Id: GenInit.cpp,v 1.3 2006-02-16 15:23:22 gcorti Exp $
+// $Id: GenInit.cpp,v 1.4 2007-01-12 15:23:40 ranjard Exp $
 // Include files 
 #include <cmath>
 
@@ -39,7 +39,7 @@ GenInit::GenInit( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-GenInit::~GenInit() {}; 
+GenInit::~GenInit() {} 
 
 //=============================================================================
 // Initialization
@@ -55,7 +55,7 @@ StatusCode GenInit::initialize() {
   m_memoryTool = tool<IGenericTool>( "MemoryTool", toolName, this, true );
 
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Main execution
@@ -87,7 +87,7 @@ StatusCode GenInit::execute() {
   put( header, LHCb::GenHeaderLocation::Default );    
 
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 //  Finalize

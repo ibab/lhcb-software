@@ -1,4 +1,4 @@
-// $Id: GiGaGetHitsAlg.cpp,v 1.10 2006-02-16 15:23:22 gcorti Exp $
+// $Id: GiGaGetHitsAlg.cpp,v 1.11 2007-01-12 15:23:41 ranjard Exp $
 // Include files
 
 // from Gaudi
@@ -20,7 +20,7 @@
 // Implementation file for class : GiGaGetHitsAlg
 //
 // 2002-08-13 : Witold Pokorski
-// 2004-11-22 : G.Corti
+// 2004-11-22 : Gloria Corti
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory

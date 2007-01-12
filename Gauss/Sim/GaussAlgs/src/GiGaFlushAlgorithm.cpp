@@ -1,49 +1,33 @@
-// $Id: GiGaFlushAlgorithm.cpp,v 1.3 2004-11-22 10:13:47 gcorti Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $
-// ============================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.2  2004/02/22 16:52:39  ibelyaev
-///  printout improvements
-///
-// ============================================================================
+// $Id: GiGaFlushAlgorithm.cpp,v 1.4 2007-01-12 15:23:41 ranjard Exp $
 // Include files
+
 // from Gaudi
-#include "GaudiKernel/ISvcLocator.h"
-#include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/MsgStream.h"
+#include "GaudiKernel/DeclareFactoryEntries.h" 
+
 // from GiGa 
 #include "GiGa/IGiGaSvc.h"
 #include "GiGa/DumpG4Event.h"
+
 // local
 #include "GiGaFlushAlgorithm.h"
 
 // From Geant4 
 class G4Event;
 
-// ============================================================================
-/** @file GiGaFlushAlgorithm.cpp
- * 
- *  Implementation file for class : GiGaFlushAlgorithm
- * 
- *  @author Vanya Belyaev Ivan.Belyaev@itep.ru 
- *  @date 22/01/2002 
- */
-// ============================================================================
+//-----------------------------------------------------------------------------
+// Implementation file for class : GiGaFlushAlgorithm
+//
+// 
+// 2002-01-22 : Vanya Belyaev
+// 2007-01-11 : Gloria Corti
+//-----------------------------------------------------------------------------
 
-// ============================================================================
-/** decalration of teh mandatory factory for instantiation
- */
-// ============================================================================
-static const  AlgFactory<GiGaFlushAlgorithm>         s_factory ;
-const        IAlgFactory&GiGaFlushAlgorithmFactory = s_factory ; 
+// Declaration of the Algorithm Factory
+DECLARE_ALGORITHM_FACTORY( GiGaFlushAlgorithm );
 
-// ============================================================================
-/** Standard constructor
- *  @param Name name of the algorithm 
- *  @param SvcLoc pointer to service locator 
- */
-// ============================================================================
+//=============================================================================
+// Standard constructor, initializes variables
+//=============================================================================
 GiGaFlushAlgorithm::GiGaFlushAlgorithm( const std::string& Name   ,
                                         ISvcLocator*       SvcLoc )
   : GaudiAlgorithm ( Name , SvcLoc ) 
@@ -51,19 +35,16 @@ GiGaFlushAlgorithm::GiGaFlushAlgorithm( const std::string& Name   ,
   , m_gigaSvc     ( 0         )
 { 
   declareProperty( "GiGa" , m_gigaSvcName ) ; 
-};
+}
 
-// ============================================================================
-/** destructor 
- */
-// ============================================================================
-GiGaFlushAlgorithm::~GiGaFlushAlgorithm() {}; 
+//=============================================================================
+// Destructor
+//=============================================================================
+GiGaFlushAlgorithm::~GiGaFlushAlgorithm() {} 
 
-// ============================================================================
-/** standard algorithm initialization 
- *  @return status code
- */
-// ============================================================================
+//=============================================================================
+// Initialization
+//=============================================================================
 StatusCode GiGaFlushAlgorithm::initialize() 
 {
   StatusCode sc = GaudiAlgorithm::initialize() ;
@@ -73,13 +54,10 @@ StatusCode GiGaFlushAlgorithm::initialize()
   
   return StatusCode::SUCCESS ;
 }
-// ============================================================================
 
-// ============================================================================
-/** standard algorithm execution 
- *  @return status code
- */
-// ============================================================================
+//=============================================================================
+// Main execution
+//=============================================================================
 StatusCode GiGaFlushAlgorithm::execute() 
 {  
   if ( 0 == gigaSvc() ) 
@@ -105,9 +83,7 @@ StatusCode GiGaFlushAlgorithm::execute()
   };
 
   return StatusCode::SUCCESS;
-};
+}
 
 
-// ============================================================================
-// The End 
-// ============================================================================
+//=============================================================================

@@ -4,6 +4,10 @@
 ! Responsible : G.Corti
 ! -----------------------------------------------------------------------------
 
+!===================== GaussAlgs v3r0 2007-01-12 =========================
+! 2007-01-12 - Gloria Corti
+ - update code to cope with Gaudi v19r0
+
 !===================== GaussAlgs v2r3 2006-05-02  =========================
 ! 2006-05-02 - Gloria CORTI
  - Fill vector of random numbers in MCHeader
