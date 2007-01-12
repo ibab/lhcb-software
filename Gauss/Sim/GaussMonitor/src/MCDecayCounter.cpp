@@ -1,8 +1,8 @@
-// $Id: MCDecayCounter.cpp,v 1.5 2006-03-23 12:04:11 jpalac Exp $
+// $Id: MCDecayCounter.cpp,v 1.6 2007-01-12 15:28:40 ranjard Exp $
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h"
+#include "GaudiKernel/DeclareFactoryEntries.h" 
 #include "GaudiKernel/MsgStream.h" 
 #include "GaudiKernel/SmartDataPtr.h"
 
@@ -19,8 +19,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-static const  AlgFactory<MCDecayCounter>          s_factory ;
-const        IAlgFactory& MCDecayCounterFactory = s_factory ; 
+DECLARE_ALGORITHM_FACTORY( MCDecayCounter );
 
 
 //=============================================================================
