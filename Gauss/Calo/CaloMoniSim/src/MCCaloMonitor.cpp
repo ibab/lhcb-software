@@ -1,4 +1,4 @@
-// $Id: MCCaloMonitor.cpp,v 1.6 2006-06-23 15:27:36 gcorti Exp $
+// $Id: MCCaloMonitor.cpp,v 1.7 2007-01-12 16:11:53 ranjard Exp $
 
 // Include files
 
@@ -38,8 +38,7 @@ using namespace LHCb;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-static const  AlgFactory<MCCaloMonitor>          s_factory ;
-const        IAlgFactory& MCCaloMonitorFactory = s_factory ;
+DECLARE_ALGORITHM_FACTORY( MCCaloMonitor );
 
 
 //=============================================================================

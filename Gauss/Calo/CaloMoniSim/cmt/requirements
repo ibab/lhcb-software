@@ -1,18 +1,18 @@
-# $Id: requirements,v 1.5 2006-06-23 15:27:35 gcorti Exp $ 
+# $Id: requirements,v 1.6 2007-01-12 16:11:52 ranjard Exp $ 
 # Created    : 2004-10-25
 # Maintainer : Olivier Deschamps
 # ============================================================================
 package           CaloMoniSim
-version           v3r0
+version           v4r0
 
 # =============== structure ==================================================
 branches          cmt doc src options 
 
 # =============== environment ================================================
-set               CALOMONISIMOPTS  $(CALOMONISIMROOT)/options 
 
 # =============== dependencies ===============================================
 use CaloDet        v*      Det 
+apply_pattern packageOpts 
 use MCEvent        v*      Event
 
 # =============== constituents ===============================================
