@@ -1,11 +1,13 @@
-! $Id: release.notes,v 1.15 2006-12-16 13:22:30 ibelyaev Exp $ 
-! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.15 $
+! $Id: release.notes,v 1.16 2007-01-12 14:12:47 ranjard Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhys
 ! Responsible : Vanya Belyaev
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
+
+!========================== LoKiPhys v3r0 2007-01-09 ==================
+! 2007-01-09 - Florence RANJARD
+ - install include files
 
 !========================== LoKiPhys v2r5 2006-12-16 ===================
 
@@ -99,6 +101,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.15  2006/12/16 13:22:30  ibelyaev
+!  add Particles16: DIRA&DANG
+!
 ! Revision 1.14  2006/12/01 08:31:11  ibelyaev
 !  fix for VertexBase argument
 !

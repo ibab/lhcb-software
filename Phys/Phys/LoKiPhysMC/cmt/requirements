@@ -1,13 +1,10 @@
-# $Id: requirements,v 1.15 2006-12-15 12:01:03 ibelyaev Exp $ 
-# ============================================================================
-# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.15 $
+# $Id: requirements,v 1.16 2007-01-12 14:11:44 ranjard Exp $ 
 # ============================================================================
 # Created    : 2006-03-11
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu 
 # ============================================================================
 package           LoKiPhysMC
-version           v2r6p1
-	
+version           v3r0
 # =============== structure ==================================================
 branches          cmt doc src LoKi options
 	
@@ -16,9 +13,7 @@ set LOKIPHYSMCOPTS              $(LOKIPHYSMCROOT)/options
 set HEPMCSTANDARDPARTICLESROOT  $(LOKIPHYSMCROOT)
 set HEPMCSTANDARDPARTICLESOPTS  $(LOKIPHYSMCOPTS)
 
-# =============== own includes ===============================================
-include_dirs      $(LOKIPHYSMCROOT)
-      
+
 # =============== dependencies ===============================================
 use               Relations          v* Kernel
 use               LoKiMC             v* Phys 
@@ -27,6 +22,9 @@ use               LoKiGenMC          v* Phys
 use               LinkerEvent        v* Event
 use               DaVinciMCKernel    v* Phys   
 
+# =============== own includes ===============================================
+apply_pattern install_more_includes more=LoKi
+      
 # =============== constituents ===============================================
 library           LoKiPhysMCLib ../src/*.cpp 
 library           LoKiPhysMC    ../src/Components/*.cpp 
@@ -37,6 +35,9 @@ apply_pattern     component_library library=LoKiPhysMC
 
 # ============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.15  2006/12/15 12:01:03  ibelyaev
+#  fix bugs
+#
 # Revision 1.14  2006/11/27 11:56:15  ibelyaev
 #  prepare for LoKi v4r3
 #
