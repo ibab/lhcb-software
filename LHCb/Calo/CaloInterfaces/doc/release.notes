@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.29 2006-12-21 18:01:56 odescham Exp $
+! $Id: release.notes,v 1.30 2007-01-12 13:20:45 cattanem Exp $
 ! =============================================================================
 ! Package     : CaloInterfaces
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
@@ -8,6 +8,7 @@
  - new interface added : ICaloElectron.cpp 
  - add dependency to PhysEvent, CaloUtils, CaloDet
 
+!========================== CaloInterfaces v7r0 2007-01-12  ===================
 ! 2006-12-06 - Florence RANJARD
  - apply_pattern install_more_includes
 
