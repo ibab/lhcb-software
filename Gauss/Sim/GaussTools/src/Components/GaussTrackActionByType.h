@@ -1,19 +1,9 @@
-// $Id: GaussTrackActionByType.h,v 1.2 2004-04-05 13:18:35 gcorti Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.1  2004/02/20 19:35:27  ibelyaev
-//  major update
-// 
-// ============================================================================
+// $Id: GaussTrackActionByType.h,v 1.3 2007-01-12 15:36:43 ranjard Exp $
 #ifndef GAUSSTOOLS_GAUSSTRACKACTIONBYTYPE_H 
 #define GAUSSTOOLS_GAUSSTRACKACTIONBYTYPE_H 1
-// ============================================================================
+
 // local
-// ============================================================================
 #include "GaussTools/GaussTrackActionZ.h"
-// ============================================================================
 
 class G4ParticleDefinition ;
 
@@ -28,7 +18,7 @@ class G4ParticleDefinition ;
 class GaussTrackActionByType : public GaussTrackActionZ 
 {
   /// friend factory for instantiation 
-  friend class GiGaFactory<GaussTrackActionByType> ;
+  //  friend class GiGaFactory<GaussTrackActionByType> ;
 public:
 
   /** initialize the track action  
@@ -52,7 +42,7 @@ public:
    */
   virtual void PostUserTrackingAction ( const G4Track* ) ;
   
-protected:
+  //protected:
   
   /** standard constructor 
    *  @see GiGaTrackActionBase 

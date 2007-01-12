@@ -1,11 +1,17 @@
-// ============================================================================
+// $Id: ZeroFieldMgr.cpp,v 1.2 2007-01-12 15:36:58 ranjard Exp $
+// Include files 
+
+// from Gaudi
+#include "GaudiKernel/DeclareFactoryEntries.h" 
+
 // include 
-#include "GiGa/GiGaMACROs.h"
+//#include "GiGa/GiGaMACROs.h"
 // GEANT4 
 #include "G4ChordFinder.hh"
 #include "G4FieldManager.hh"
 #include "G4TransportationManager.hh"
 #include "G4ChordFinder.hh"
+
 // local 
 #include "ZeroFieldMgr.h"
 
@@ -18,11 +24,8 @@
  */
 // ============================================================================
 
-// ============================================================================
-// Factory
-// ============================================================================
-IMPLEMENT_GiGaFactory( ZeroFieldMgr ) ;
-// ============================================================================
+// Declaration of the Tool Factory
+DECLARE_TOOL_FACTORY( ZeroFieldMgr );
 
 // ============================================================================
 /** standard constructor

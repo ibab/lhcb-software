@@ -1,28 +1,26 @@
-// $Id: GiGaRegionsTool.cpp,v 1.3 2006-04-12 19:32:08 gcorti Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: 
-// ============================================================================
+// $Id: GiGaRegionsTool.cpp,v 1.4 2007-01-12 15:36:53 ranjard Exp $
 // Include files
-// ============================================================================
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h"
+#include "GaudiKernel/DeclareFactoryEntries.h" 
 #include "GaudiKernel/MsgStream.h"
+
 // GiGa 
-#include "GiGa/GiGaMACROs.h"
+//#include "GiGa/GiGaMACROs.h"
+
 // GiGaCnv
 #include "GiGaCnv/GiGaVolumeUtils.h"
+
 // SimSvc 
 #include "SimSvc/ISimulationSvc.h"
 #include "SimSvc/RegionCuts.h"
+
 // local
 #include "GiGaRegionsTool.h"
+
 // G4 
 #include "G4Region.hh"
 #include "G4LogicalVolume.hh"
 #include "G4ProductionCuts.hh"
-// ============================================================================
 
 // ============================================================================
 /** @file 
@@ -34,9 +32,8 @@
  */
 // ============================================================================
 
-// ============================================================================
-IMPLEMENT_GiGaFactory ( GiGaRegionsTool ) ;
-// ============================================================================
+// Declaration of the Tool Factory
+DECLARE_TOOL_FACTORY( GiGaRegionsTool );
 
 // ============================================================================
 /** standard constructor

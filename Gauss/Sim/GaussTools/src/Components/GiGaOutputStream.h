@@ -1,20 +1,12 @@
-// $Id: GiGaOutputStream.h,v 1.1 2002-09-26 18:10:58 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.1  2002/01/22 18:20:53  ibelyaev
-//  Vanya: update for newer versions of Gaudi and Geant4
-// 
-// ============================================================================
+// $Id: GiGaOutputStream.h,v 1.2 2007-01-12 15:36:52 ranjard Exp $
 #ifndef GIGA_GIGAOutputSTREAM_H 
 #define GIGA_GIGAOutputSTREAM_H 1
-// ============================================================================
+
 // include
 // local (GiGa) 
 #include "GiGaStream.h"
 // forward decclaartion 
-template <class ALGORITHM> class AlgFactory ; 
+//template <class ALGORITHM> class AlgFactory ; 
 
 /** @class GiGaOutputStream GiGaOutputStream.h component/GiGaOutputStream.h
  *
@@ -27,13 +19,13 @@ template <class ALGORITHM> class AlgFactory ;
 class GiGaOutputStream : virtual public GiGaStream
 {
   ///
-  friend class AlgFactory<GiGaOutputStream>;
+  //  friend class AlgFactory<GiGaOutputStream>;
   ///
 public:
  
   virtual StatusCode execute   ();    ///< Algorithm execution
   
-protected:
+  //protected:
   
   /** Standard constructor
    *  @param name stream(algorithm) name 

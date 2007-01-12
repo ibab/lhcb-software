@@ -1,11 +1,11 @@
-// ============================================================================
+// $Id: TrCutsRunAction.h,v 1.7 2007-01-12 15:36:58 ranjard Exp $
 #ifndef GIGA_TRCUTSRUNACTION_H 
 #define GIGA_TRCUTSRUNACTION_H 1
-// ============================================================================
+
 // GiGa
 #include "GiGa/GiGaRunActionBase.h"
 // forward declarations
-template <class TYPE> class GiGaFactory;
+//template <class TYPE> class GiGaFactory;
 
 /** @class TrCutsRunAction TrCutsRunAction.h
  *  
@@ -17,7 +17,7 @@ template <class TYPE> class GiGaFactory;
 class TrCutsRunAction: public virtual GiGaRunActionBase
 {
   /// friend factory for instantiation
-  friend class GiGaFactory<TrCutsRunAction>;
+  //friend class GiGaFactory<TrCutsRunAction>;
   
 public:
   
@@ -31,7 +31,7 @@ public:
    */
   virtual void EndOfRunAction   ( const G4Run* run );
   
-protected:
+  //protected:
   
   /** standard constructor 
    *  @see GiGaPhysListBase

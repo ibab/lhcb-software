@@ -1,28 +1,14 @@
-// $Id: GiGaStepActionSequence.h,v 1.2 2004-02-20 19:35:29 ibelyaev Exp $ 
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.1  2002/12/12 15:19:33  witoldp
-// major repackaging
-//
-// Revision 1.1  2002/09/26 18:10:54  ibelyaev
-//  repackageing: add all concrete implementations from GiGa
-//
-// Revision 1.3  2002/05/07 12:21:36  ibelyaev
-//  see $GIGAROOT/doc/release.notes  7 May 2002
-//
-// ============================================================================
+// $Id: GiGaStepActionSequence.h,v 1.3 2007-01-12 15:36:57 ranjard Exp $ 
 #ifndef GIGA_GIGASTEPACTIONSEQUENCE_H 
 #define GIGA_GIGASTEPACTIONSEQUENCE_H 1
-// ============================================================================
+
 /// STD & STL 
 #include <string>
 #include <vector>
 /// GiGa 
 #include "GiGa/GiGaStepActionBase.h"
 /// forward declarations 
-template <class TYPE> class GiGaFactory;
+//template <class TYPE> class GiGaFactory;
 
 
 /** @class GiGaStepActionSequence GiGaStepActionSequence.h
@@ -37,7 +23,7 @@ template <class TYPE> class GiGaFactory;
 class GiGaStepActionSequence: public GiGaStepActionBase
 {
   /// the friend factory for instantiation   
-  friend class GiGaFactory<GiGaStepActionSequence> ;
+  //friend class GiGaFactory<GiGaStepActionSequence> ;
 
 public:
   
@@ -59,7 +45,7 @@ public:
    */
   virtual void UserSteppingAction ( const G4Step* step );
   
-protected:
+  //protected:
   
   /** standard constructor 
    *  @see GiGaStepActionBase 

@@ -1,11 +1,11 @@
-// $Id: GiGaSensDetSequence.cpp,v 1.1 2006-07-27 13:15:19 gcorti Exp $
+// $Id: GiGaSensDetSequence.cpp,v 1.2 2007-01-12 15:36:55 ranjard Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h" 
 
 // from GiGa 
-#include "GiGa/GiGaMACROs.h"
+//#include "GiGa/GiGaMACROs.h"
 #include "GiGaCnv/IGiGaGeomCnvSvc.h"
 
 // local
@@ -18,8 +18,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-//DECLARE_TOOL_FACTORY( GiGaSensDetSequence );
-IMPLEMENT_GiGaFactory( GiGaSensDetSequence );
+DECLARE_TOOL_FACTORY( GiGaSensDetSequence );
 
 //=============================================================================
 // Standard constructor, initializes variables

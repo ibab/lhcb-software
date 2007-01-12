@@ -1,41 +1,28 @@
-// $Id: GaussTrackActionStart.cpp,v 1.3 2004-04-20 04:27:15 ibelyaev Exp $ 
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.2  2004/02/22 16:51:54  ibelyaev
-//  few minor fixes
-//
-// Revision 1.1  2004/02/20 19:35:28  ibelyaev
-//  major update
-// 
-// ============================================================================
+// $Id: GaussTrackActionStart.cpp,v 1.4 2007-01-12 15:36:44 ranjard Exp $ 
 // Include files 
-// ============================================================================
+
+// from Gaudi
+#include "GaudiKernel/DeclareFactoryEntries.h" 
+
 // CLHEP
-// ============================================================================
 #include "CLHEP/Units/SystemOfUnits.h"
-// ============================================================================
+
 // Geant4
-// ============================================================================
 #include "G4TrackingManager.hh"
 #include "G4VProcess.hh"
 #include "G4ProcessType.hh"
-// ============================================================================
+
 // GiGa
-// ============================================================================
-#include "GiGa/GiGaMACROs.h"
+//#include "GiGa/GiGaMACROs.h"
 #include "GiGa/DumpG4Track.h"
-// ============================================================================
+
 // GaussTools 
-// ============================================================================
 #include "GaussTools/GaussTrajectory.h"
 #include "GaussTools/GaussTrackInformation.h"
-// ============================================================================
+
 // local
-// ============================================================================
 #include "GaussTrackActionStart.h"
-// ============================================================================
+
 
 /** @file 
  *  Implementation file for class GaussTrackActionStart
@@ -44,9 +31,8 @@
  *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
  */
 
-// ============================================================================
-IMPLEMENT_GiGaFactory( GaussTrackActionStart );
-// ============================================================================
+// Declaration of the Tool Factory
+DECLARE_TOOL_FACTORY( GaussTrackActionStart );
 
 // ============================================================================
 /** standard constructor 

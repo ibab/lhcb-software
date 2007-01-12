@@ -6,7 +6,7 @@
 // GiGa
 #include "GiGa/GiGaStepActionBase.h"
 // forward declarations 
-template <class TYPE> class GiGaFactory;
+//template <class TYPE> class GiGaFactory;
 
 /** @class GaussStepAction GaussStepAction.h
  *   
@@ -17,9 +17,10 @@ template <class TYPE> class GiGaFactory;
 class GaussStepAction: virtual public GiGaStepActionBase
 {
   /// friend factory for instantiation
-  friend class GiGaFactory<GaussStepAction>;
+  //  friend class GiGaFactory<GaussStepAction>;
 
-protected:
+  //protected:
+public:
 
   /** standard constructor 
    *  @see GiGaStepActionBase 

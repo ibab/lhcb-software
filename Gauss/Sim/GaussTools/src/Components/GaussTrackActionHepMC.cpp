@@ -1,21 +1,31 @@
-/// STD & STL 
+// $Id: GaussTrackActionHepMC.cpp,v 1.5 2007-01-12 15:36:44 ranjard Exp $
+// Include files 
+
+// STD & STL 
 #include <functional>
 #include <algorithm>
-// G4
-#include "G4TrackingManager.hh"
-// GaudiKernel
+
+// from Gaudi
+#include "GaudiKernel/DeclareFactoryEntries.h" 
 #include "GaudiKernel/PropertyMgr.h"
 #include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/ParticleProperty.h"
+
+// G4
+#include "G4TrackingManager.hh"
+
 // GiGa 
 #include "GiGa/IGiGaSvc.h"
 #include "GiGa/GiGaUtil.h"
-#include "GiGa/GiGaMACROs.h"
+//#include "GiGa/GiGaMACROs.h"
 #include "GiGaCnv/GiGaPrimaryParticleInformation.h"
+
 // LHCb
 #include "Event/MCVertex.h"
+
 // Gauss
 #include "GaussTools/GaussTrackInformation.h"
+
 // local 
 #include "GaussTrackActionHepMC.h"
 
@@ -28,10 +38,8 @@
  */
 // ============================================================================
 
-// ============================================================================
-/// Factory business 
-// ============================================================================
-IMPLEMENT_GiGaFactory( GaussTrackActionHepMC ) ;
+// Declaration of the Tool Factory
+DECLARE_TOOL_FACTORY( GaussTrackActionHepMC );
 
 // ============================================================================
 /** standard constructor 

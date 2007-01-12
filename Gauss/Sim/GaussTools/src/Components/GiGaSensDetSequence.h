@@ -1,4 +1,4 @@
-// $Id: GiGaSensDetSequence.h,v 1.1 2006-07-27 13:15:16 gcorti Exp $
+// $Id: GiGaSensDetSequence.h,v 1.2 2007-01-12 15:36:56 ranjard Exp $
 #ifndef GIGASENSDETSEQUENCE_H 
 #define GIGASENSDETSEQUENCE_H 1
 
@@ -15,9 +15,10 @@
 class GiGaSensDetSequence : virtual public GiGaSensDetBase {
 
   /// Friend factory for instantiation (constructor protected in base class)
-  friend class GiGaFactory<GiGaSensDetSequence>;
+  //  friend class GiGaFactory<GiGaSensDetSequence>;
 
-protected:
+public:
+  //protected:
 
   /// Standard constructor
   GiGaSensDetSequence( const std::string& type, 

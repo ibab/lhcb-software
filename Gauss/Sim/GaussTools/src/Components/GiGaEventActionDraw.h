@@ -1,23 +1,11 @@
-// $Id: GiGaEventActionDraw.h,v 1.1 2002-12-12 15:19:30 witoldp Exp $ 
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.1  2002/09/26 18:10:51  ibelyaev
-//  repackageing: add all concrete implementations from GiGa
-//
-// Revision 1.6  2002/05/07 12:21:34  ibelyaev
-//  see $GIGAROOT/doc/release.notes  7 May 2002
-//
-// ============================================================================
+// $Id: GiGaEventActionDraw.h,v 1.2 2007-01-12 15:36:45 ranjard Exp $ 
 #ifndef       GIGA_GiGaEventActionDraw_H
 #define       GIGA_GiGaEventActionDraw_H 1 
-// ============================================================================
 // include files  
 // GiGa
 #include "GiGa/GiGaEventActionBase.h"
 // forward declaration
-template <class TYPE> class GiGaFactory;
+//template <class TYPE> class GiGaFactory;
 
 /** @class GiGaEventActionDraw GiGaEventActionDraw.h
  *    
@@ -31,10 +19,11 @@ template <class TYPE> class GiGaFactory;
 class GiGaEventActionDraw: public GiGaEventActionBase
 {
   /// frined factory for instantiatio 
-  friend class GiGaFactory<GiGaEventActionDraw>;
+  //friend class GiGaFactory<GiGaEventActionDraw>;
   
-protected:
-  
+  //protected:
+public:
+
   /** standard constructor 
    *  @see GiGaEventActionBase
    *  @see GiGaBase 

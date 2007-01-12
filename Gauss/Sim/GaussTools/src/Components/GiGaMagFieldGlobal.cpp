@@ -1,24 +1,6 @@
-// $Id: GiGaMagFieldGlobal.cpp,v 1.5 2006-07-03 17:40:38 gcorti Exp $ 
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.4  2006/01/31 11:26:44  gcorti
-// adapt to changes in IMagneticFieldSvc
-//
-// Revision 1.3  2003/10/30 17:00:27  witoldp
-// G4cout replaced by std::cout
-//
-// Revision 1.2  2003/10/23 08:49:44  witoldp
-// command track action added
-//
-// Revision 1.1  2002/09/26 18:10:56  ibelyaev
-//  repackageing: add all concrete implementations from GiGa
-//
-// Revision 1.11  2002/05/07 12:21:35  ibelyaev
-//  see $GIGAROOT/doc/release.notes  7 May 2002
-//
-// ============================================================================
+// $Id: GiGaMagFieldGlobal.cpp,v 1.6 2007-01-12 15:36:51 ranjard Exp $ 
+// Include files 
+
 // CLHEP 
 #include "CLHEP/Geometry/Point3D.h"
 #include "CLHEP/Geometry/Vector3D.h"
@@ -29,10 +11,11 @@
 #include "ClhepTools/MathCore2Clhep.h"
 
 // GaudiKernel
+#include "GaudiKernel/DeclareFactoryEntries.h" 
 #include "GaudiKernel/IMagneticFieldSvc.h"
 #include "GaudiKernel/MsgStream.h"
 // GiGa 
-#include "GiGa/GiGaMACROs.h"
+//#include "GiGa/GiGaMACROs.h"
 
 // local 
 #include "GiGaMagFieldGlobal.h"
@@ -44,11 +27,8 @@
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
  */
 
-// ============================================================================
-// Factory
-// ============================================================================
-IMPLEMENT_GiGaFactory( GiGaMagFieldGlobal );
-// ============================================================================
+// Declaration of the Tool Factory
+DECLARE_TOOL_FACTORY( GiGaMagFieldGlobal );
 
 // ============================================================================
 /** standard constructor 

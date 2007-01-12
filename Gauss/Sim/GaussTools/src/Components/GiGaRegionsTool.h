@@ -1,15 +1,9 @@
-// $Id: GiGaRegionsTool.h,v 1.1 2003-06-04 16:56:10 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $ 
-// ============================================================================
+// $Id: GiGaRegionsTool.h,v 1.2 2007-01-12 15:36:54 ranjard Exp $
 #ifndef GAUSSTOOLS_GIGAREGIONSTOOL_H 
 #define GAUSSTOOLS_GIGAREGIONSTOOL_H 1
 // Include files
-// ============================================================================
 #include "GiGa/GiGaToolBase.h"
-// ============================================================================
+
 // forward declarations 
 class ISimulationSvc ;
 
@@ -23,7 +17,7 @@ class ISimulationSvc ;
 class GiGaRegionsTool : public GiGaToolBase 
 {
   // friend factory for instantiation 
-  friend class GiGaFactory<GiGaRegionsTool>;  
+  //  friend class GiGaFactory<GiGaRegionsTool>;  
 public:
   
   /** the only one method
@@ -52,7 +46,7 @@ public:
    */
   virtual StatusCode finalize   () ;
 
-protected:
+  //protected:
   
   /** standard constructor
    *  @see GiGaToolBase 

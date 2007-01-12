@@ -1,11 +1,8 @@
-// $Id: GiGaInputStream.cpp,v 1.2 2002-12-03 17:22:05 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// ============================================================================
+// $Id: GiGaInputStream.cpp,v 1.3 2007-01-12 15:36:48 ranjard Exp $
 // Include files
+
 // from Gaudi
+#include "GaudiKernel/DeclareFactoryEntries.h" 
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/IDataProviderSvc.h"
@@ -13,6 +10,7 @@
 #include "GaudiKernel/IOpaqueAddress.h"
 #include "GaudiKernel/IRegistry.h"
 #include "GaudiKernel/DataObject.h"
+
 // local
 #include "GiGaInputStream.h"
 
@@ -26,11 +24,8 @@
  */ 
 // ============================================================================
 
-// ============================================================================
 // Declaration of the Algorithm Factory
-// ============================================================================
-static const  AlgFactory<GiGaInputStream>          s_Factory ;
-const        IAlgFactory& GiGaInputStreamFactory = s_Factory ; 
+DECLARE_ALGORITHM_FACTORY( GiGaInputStream );
 
 // ============================================================================
 // Standard constructor, initializes variables

@@ -8,8 +8,9 @@
 #include "G4Gamma.hh"
 ///
 #include "GaudiKernel/MsgStream.h"
+#include "GaudiKernel/DeclareFactoryEntries.h" 
 /// GiGa 
-#include "GiGa/GiGaMACROs.h"
+//#include "GiGa/GiGaMACROs.h"
 //GaussTools
 #include "GaussTools/GaussTrackInformation.h"
 /// local
@@ -25,7 +26,7 @@
 // ============================================================================
 /// Factory
 // ============================================================================
-IMPLEMENT_GiGaFactory( CutsStepAction ) ;
+DECLARE_TOOL_FACTORY( CutsStepAction );
 // ============================================================================
 
 // ============================================================================

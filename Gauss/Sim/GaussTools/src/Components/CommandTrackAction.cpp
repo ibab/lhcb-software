@@ -2,9 +2,10 @@
 #include "G4Track.hh"
 #include "G4UImanager.hh"
 /// GaudiKernel
+#include "GaudiKernel/DeclareFactoryEntries.h" 
 #include "GaudiKernel/PropertyMgr.h"
 /// GiGa 
-#include "GiGa/GiGaMACROs.h"
+//#include "GiGa/GiGaMACROs.h"
 /// local
 #include "CommandTrackAction.h"
 ///
@@ -19,7 +20,8 @@
 // ============================================================================
 /// factory business 
 // ============================================================================
-IMPLEMENT_GiGaFactory( CommandTrackAction );
+DECLARE_TOOL_FACTORY( CommandTrackAction );
+
 // ============================================================================
 
 // ============================================================================

@@ -1,8 +1,11 @@
-// $Id: GaussTrackActionByEnergy.h,v 1.2 2004-04-05 13:18:35 gcorti Exp $
+// $Id: GaussTrackActionByEnergy.h,v 1.3 2007-01-12 15:36:42 ranjard Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2004/04/05 13:18:35  gcorti
+// do not save photoelectrons by default
+//
 // Revision 1.1  2004/02/20 19:35:26  ibelyaev
 //  major update
 // 
@@ -26,7 +29,7 @@
 class GaussTrackActionByEnergy : public GaussTrackActionZ 
 {
   /// friend factory for instantiation 
-  friend class GiGaFactory<GaussTrackActionByEnergy> ;
+  //  friend class GiGaFactory<GaussTrackActionByEnergy> ;
 public:
   
   /** perform action 
@@ -41,7 +44,7 @@ public:
    */
   virtual void PostUserTrackingAction ( const G4Track* ) ;
   
-protected:
+  //protected:
   
   /** standard constructor 
    *  @see GiGaTrackActionBase 

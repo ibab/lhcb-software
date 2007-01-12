@@ -1,19 +1,14 @@
-// $Id: GiGaRunActionSequence.cpp,v 1.4 2004-02-20 19:35:29 ibelyaev Exp $ 
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.3  2003/09/22 13:59:33  ibelyaev
-//  polishing of addRef/release/releaseTools/finalize
-//
-// ============================================================================
+// $Id: GiGaRunActionSequence.cpp,v 1.5 2007-01-12 15:36:54 ranjard Exp $ 
+// Include files 
+
 /// STD & STL 
 #include <algorithm>
-/// GaudiKernel
+// from Gaudi
+#include "GaudiKernel/DeclareFactoryEntries.h" 
 #include "GaudiKernel/PropertyMgr.h"
 /// GiGa 
 #include "GiGa/IGiGaSvc.h"
-#include "GiGa/GiGaMACROs.h"
+//#include "GiGa/GiGaMACROs.h"
 #include "GiGa/GiGaUtil.h"
 /// local 
 #include "GiGaRunActionSequence.h"
@@ -28,10 +23,8 @@
  */
 // ============================================================================
 
-// ============================================================================
-/// factory business 
-// ============================================================================
-IMPLEMENT_GiGaFactory( GiGaRunActionSequence ) ;
+// Declaration of the Tool Factory
+DECLARE_TOOL_FACTORY( GiGaRunActionSequence );
 
 // ============================================================================
 /** standard constructor 

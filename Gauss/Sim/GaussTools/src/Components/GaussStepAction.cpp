@@ -7,9 +7,10 @@
 #include "G4Positron.hh"
 #include "G4Gamma.hh"
 ///
+#include "GaudiKernel/DeclareFactoryEntries.h" 
 #include "GaudiKernel/MsgStream.h"
 /// GiGa 
-#include "GiGa/GiGaMACROs.h"
+//#include "GiGa/GiGaMACROs.h"
 //GaussTools
 #include "GaussTools/GaussTrackInformation.h"
 /// local
@@ -25,7 +26,7 @@
 // ============================================================================
 /// Factory
 // ============================================================================
-IMPLEMENT_GiGaFactory( GaussStepAction ) ;
+DECLARE_TOOL_FACTORY( GaussStepAction );
 // ============================================================================
 
 // ============================================================================

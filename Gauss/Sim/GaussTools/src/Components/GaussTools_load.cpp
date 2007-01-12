@@ -5,7 +5,7 @@
 // GaudiKernel 
 #include "GaudiKernel/DeclareFactoryEntries.h" 
 // GiGa 
-#include "GiGa/GiGaMACROs.h"
+//#include "GiGa/GiGaMACROs.h"
 
 /** @file 
  *  The mandatory file for declaration of component library entries 
@@ -14,70 +14,64 @@
  *  @date 2002-09-26
  */
 
-void GaussTools_load() 
-{ 
-  /// Streams 
-  DECLARE_ALGORITHM       (    GiGaInputStream         ) ;
-  DECLARE_ALGORITHM       (    GiGaOutputStream        ) ;
+DECLARE_FACTORY_ENTRIES(Test) {
+
+  /// Streams
+  DECLARE_ALGORITHM( GiGaInputStream );
+  DECLARE_ALGORITHM( GiGaOutputStream );
 
   /// Magnetic Field  
-  DECLARE_GiGaFactory     (    GiGaMagFieldGlobal      ) ;
-  DECLARE_GiGaFactory     (    GiGaMagFieldUniform     ) ;
+  DECLARE_TOOL( GiGaMagFieldGlobal );
+  DECLARE_TOOL( GiGaMagFieldUniform );
   
   /// Physics Lists 
-  DECLARE_GiGaFactory     (    GiGaPhysListModular     ) ;
-  DECLARE_GiGaFactory     (    GiGaPhysListGeantino    ) ;
+  DECLARE_TOOL( GiGaPhysListModular );
+  DECLARE_TOOL( GiGaPhysListGeantino );
   
   /// Sensitive Detector (Material budget evaluation) 
-  DECLARE_GiGaFactory     (    GiGaSensDetBudget       ) ;
+  DECLARE_TOOL( GiGaSensDetBudget );
   
   /// tracking action 
-  DECLARE_GiGaFactory     (    CommandTrackAction      );
-  DECLARE_GiGaFactory     (    GaussPreTrackAction     );
-  DECLARE_GiGaFactory     (    GaussPostTrackAction    );
-  DECLARE_GiGaFactory     (    GiGaTrackActionSequence );
-  DECLARE_GiGaFactory     (    GaussTrackActionHepMC   );
+  DECLARE_TOOL( CommandTrackAction );
+  DECLARE_TOOL( GaussPreTrackAction );
+  DECLARE_TOOL( GaussPostTrackAction );
+  DECLARE_TOOL( GiGaTrackActionSequence );
+  DECLARE_TOOL( GaussTrackActionHepMC );
   //
-  DECLARE_GiGaFactory     (    GaussTrackActionStart        ) ;
-  DECLARE_GiGaFactory     (    GaussTrackActionGeneral      ) ;
-  DECLARE_GiGaFactory     (    GaussTrackActionByEnergy     ) ;
-  DECLARE_GiGaFactory     (    GaussTrackActionByType       ) ;
-  DECLARE_GiGaFactory     (    GaussTrackActionByEnergyType ) ;
-  DECLARE_GiGaFactory     (    GaussTrackActionByProcess    ) ;
-  DECLARE_GiGaFactory     (    GaussTrackActionByEnergyProcess ) ;
-  DECLARE_GiGaFactory     (    GaussTrackActionFinal        ) ;
+  DECLARE_TOOL( GaussTrackActionStart );
+  DECLARE_TOOL( GaussTrackActionGeneral );
+  DECLARE_TOOL( GaussTrackActionByEnergy );
+  DECLARE_TOOL( GaussTrackActionByType );
+  DECLARE_TOOL( GaussTrackActionByEnergyType );
+  DECLARE_TOOL( GaussTrackActionByProcess );
+  DECLARE_TOOL( GaussTrackActionByEnergyProcess );
+  DECLARE_TOOL( GaussTrackActionFinal );
 
   /// stepping  action 
-  DECLARE_GiGaFactory     (    GiGaStepActionDraw      ) ;
-  DECLARE_GiGaFactory     (    GiGaStepActionSequence  ) ;
-  DECLARE_GiGaFactory     (    GaussStepAction         ) ;
-  DECLARE_GiGaFactory     (    CutsStepAction          ) ;
+  DECLARE_TOOL( GiGaStepActionDraw );
+  DECLARE_TOOL( GiGaStepActionSequence );
+  DECLARE_TOOL( GaussStepAction );
+  DECLARE_TOOL( CutsStepAction );
 
   /// run action
-  DECLARE_GiGaFactory     (    GiGaRunActionSequence   ) ;
-  DECLARE_GiGaFactory     (    GiGaRunActionCommand    ) ;
-  DECLARE_GiGaFactory     (    TrCutsRunAction         ) ;
+  DECLARE_TOOL( GiGaRunActionSequence );
+  DECLARE_TOOL( GiGaRunActionCommand );
+  DECLARE_TOOL(TrCutsRunAction );
 
   /// event action 
-  DECLARE_GiGaFactory     (    GaussEventActionHepMC   ) ;
-  DECLARE_GiGaFactory     (    GiGaEventActionDraw     ) ;
-  DECLARE_GiGaFactory     (    GiGaEventActionSequence ) ;
-  DECLARE_GiGaFactory     (    GiGaEventActionCommand  ) ;
+  DECLARE_TOOL( GaussEventActionHepMC );
+  DECLARE_TOOL( GiGaEventActionDraw );
+  DECLARE_TOOL( GiGaEventActionSequence );
+  DECLARE_TOOL( GiGaEventActionCommand );
 
   /// field manager 
-  DECLARE_GiGaFactory     (    GiGaFieldMgr            ) ;
-  DECLARE_GiGaFactory     (    ZeroFieldMgr            ) ;
-  DECLARE_GiGaFactory     (    GiGaSetSimAttributes    ) ;
+  DECLARE_TOOL( GiGaFieldMgr );
+  DECLARE_TOOL( ZeroFieldMgr );
+  DECLARE_TOOL( GiGaSetSimAttributes );
 
   // Regions 
-  DECLARE_GiGaFactory     (    GiGaRegionTool          ) ;
-  DECLARE_GiGaFactory     (    GiGaRegionsTool         ) ;
+  DECLARE_TOOL( GiGaRegionTool );
+  DECLARE_TOOL( GiGaRegionsTool );
 
-};
-// ============================================================================
-
-
-// ============================================================================
-extern "C" void GaussTools_loadRef() { GaussTools_load(); } ; 
-// ============================================================================
+}
 

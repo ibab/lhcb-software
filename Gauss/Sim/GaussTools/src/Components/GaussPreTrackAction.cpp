@@ -10,10 +10,11 @@
 #include "G4ParticleDefinition.hh"
 #include "G4ParticleTable.hh"
 /// GaudiKernel
+#include "GaudiKernel/DeclareFactoryEntries.h" 
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/PropertyMgr.h"
 /// GiGa 
-#include "GiGa/GiGaMACROs.h"
+//#include "GiGa/GiGaMACROs.h"
 // GaussTools
 #include "GaussTools/GaussTrajectory.h"
 #include "GaussTools/GaussTrackInformation.h"
@@ -32,7 +33,7 @@
 // ============================================================================
 /// factory business 
 // ============================================================================
-IMPLEMENT_GiGaFactory( GaussPreTrackAction );
+DECLARE_TOOL_FACTORY( GaussPreTrackAction );
 // ============================================================================
 
 // ============================================================================

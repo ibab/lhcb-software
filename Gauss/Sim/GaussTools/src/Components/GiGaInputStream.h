@@ -1,20 +1,12 @@
-// $Id: GiGaInputStream.h,v 1.1 2002-09-26 18:10:56 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.1  2002/01/22 18:20:53  ibelyaev
-//  Vanya: update for newer versions of Gaudi and Geant4
-// 
-// ============================================================================
+// $Id: GiGaInputStream.h,v 1.2 2007-01-12 15:36:49 ranjard Exp $
 #ifndef GIGA_GIGAINPUTSTREAM_H 
 #define GIGA_GIGAINPUTSTREAM_H 1
-// ============================================================================
+
 // include
 // local (GiGa) 
 #include "GiGaStream.h"
 // forward decclaartion 
-template <class ALGORITHM> class AlgFactory ; 
+//template <class ALGORITHM> class AlgFactory ; 
 
 /** @class GiGaInputStream GiGaInputStream.h component/GiGaInputStream.h
  *
@@ -27,13 +19,13 @@ template <class ALGORITHM> class AlgFactory ;
 class GiGaInputStream : virtual public GiGaStream
 {
   ///
-  friend class AlgFactory<GiGaInputStream>;
+  //  friend class AlgFactory<GiGaInputStream>;
   ///
 public:
  
   virtual StatusCode execute   ();    ///< Algorithm execution
   
-protected:
+  //protected:
   
   /** Standard constructor
    *  @param name stream(algorithm) name 

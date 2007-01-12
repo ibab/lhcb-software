@@ -8,7 +8,7 @@
 // GiGa
 #include "GiGa/GiGaTrackActionBase.h"
 // forward declarations 
-template <class TYPE> class GiGaFactory;
+//template <class TYPE> class GiGaFactory;
 class G4Track;
 class G4ParticleDefinition;
 
@@ -27,14 +27,14 @@ class G4ParticleDefinition;
 class GaussPostTrackAction: virtual public GiGaTrackActionBase
 {
   /// friend factory for instantiation 
-  friend class GiGaFactory<GaussPostTrackAction>;
+  //  friend class GiGaFactory<GaussPostTrackAction>;
 
 public: 
   /// useful typedefs
   typedef  std::vector<std::string>                  TypeNames; 
   typedef  std::vector<const G4ParticleDefinition*>  PartDefs; 
   ///
-protected:
+  //protected:
 
   /** standard constructor 
    *  @see GiGaTrackActionBase 

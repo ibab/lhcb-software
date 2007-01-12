@@ -1,4 +1,4 @@
-// $Id: GaussTrackActionHepMC.h,v 1.2 2006-04-12 19:32:08 gcorti Exp $
+// $Id: GaussTrackActionHepMC.h,v 1.3 2007-01-12 15:36:44 ranjard Exp $
 #ifndef COMPONENT_GAUSSTRACKACTIONHEPMC_H 
 #define COMPONENT_GAUSSTRACKACTIONHEPMC_H 1
 
@@ -10,7 +10,7 @@
 // Gauss
 #include "GaussTools/MCTruthManager.h"
 // forward decalrations 
-template <class TYPE> class GiGaFactory;
+//template <class TYPE> class GiGaFactory;
 class IParticlePropertySvc;
 
 /** @class GaussTrackActionHepMC GaussTrackActionHepMC.h
@@ -22,7 +22,7 @@ class IParticlePropertySvc;
 class GaussTrackActionHepMC: public GiGaTrackActionBase
 {
   /// friend factory for instantiation 
-  friend class GiGaFactory<GaussTrackActionHepMC>;
+  //friend class GiGaFactory<GaussTrackActionHepMC>;
   ///
 public:
     
@@ -56,7 +56,7 @@ public:
    */ 
   virtual void PostUserTrackingAction ( const G4Track* track );
   
-protected:
+  //protected:
   
   /** standard constructor 
    *  @see GiGaTrackActionBase 

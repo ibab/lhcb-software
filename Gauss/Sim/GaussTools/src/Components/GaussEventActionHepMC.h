@@ -1,4 +1,4 @@
-// $Id: GaussEventActionHepMC.h,v 1.2 2006-04-12 19:32:08 gcorti Exp $
+// $Id: GaussEventActionHepMC.h,v 1.3 2007-01-12 15:36:40 ranjard Exp $
 #ifndef COMPONENTS_GAUSSEVENTACTIONHEPMC_H 
 #define COMPONENTS_GAUSSEVENTACTIONHEPMC_H 1
 
@@ -9,7 +9,7 @@
 
 /// forward declarations
 class IParticlePropertySvc;
-template <class TYPE> class GiGaFactory;
+//template <class TYPE> class GiGaFactory;
 
 /** @class GaussEventActionHepMC GaussEventActionHepMC.h
  *  
@@ -24,7 +24,7 @@ template <class TYPE> class GiGaFactory;
 class GaussEventActionHepMC: public GiGaEventActionBase
 {
   /// friend factory for instantiation
-  friend class GiGaFactory<GaussEventActionHepMC>;
+  //  friend class GiGaFactory<GaussEventActionHepMC>;
   
 public:
 
@@ -56,7 +56,7 @@ public:
    */
   virtual void EndOfEventAction   ( const G4Event* event );
   
-protected:
+  //protected:
   
   /** standard constructor 
    *  @see GiGaBase 

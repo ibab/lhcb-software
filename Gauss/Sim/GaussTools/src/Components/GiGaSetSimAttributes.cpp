@@ -1,34 +1,13 @@
-// $Id: GiGaSetSimAttributes.cpp,v 1.8 2003-07-08 17:02:24 ranjard Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.7  2003/07/07 16:57:30  ranjard
-// v8r1 - fix for gcc3.2
-//
-// Revision 1.6  2003/06/03 17:45:06  ibelyaev
-//  fix for the problem, reported by P.Robbe
-//
-// Revision 1.5  2003/05/30 14:30:41  ibelyaev
-//  add the propagation of UserLimits along the geoemtry tree
-//
-// Revision 1.4  2003/05/05 13:51:27  witoldp
-// fix for G4.5.1, cuts per particle implemented
-//
-// Revision 1.3  2003/04/29 13:52:57  witoldp
-// added printing of one message
-//
-// Revision 1.2  2003/04/11 17:55:36  witoldp
-// new handling of user limits
-//
-// Revision 1.1  2003/04/06 19:07:33  ibelyaev
-//  update foe newer GiGa, add new tools
-// 
-// ============================================================================
+// $Id: GiGaSetSimAttributes.cpp,v 1.9 2007-01-12 15:36:56 ranjard Exp $
+// Include files 
+
 // STD & STL 
 #include <set>
+// from Gaudi
+#include "GaudiKernel/DeclareFactoryEntries.h" 
+
 // GiGa
-#include "GiGa/GiGaMACROs.h"
+//#include "GiGa/GiGaMACROs.h"
 // SimSvc 
 #include "SimSvc/ISimulationSvc.h"
 // Geant4 
@@ -37,7 +16,6 @@
 #include "GaussG4UserLimits.h"
 // local
 #include "GiGaSetSimAttributes.h"
-// ============================================================================
 
 // ============================================================================
 /** @file 
@@ -50,9 +28,8 @@
  */
 // ============================================================================
 
-// ============================================================================
-IMPLEMENT_GiGaFactory ( GiGaSetSimAttributes ) ;
-// ============================================================================
+// Declaration of the Tool Factory
+DECLARE_TOOL_FACTORY( GiGaSetSimAttributes );
 
 // ============================================================================
 /** standard constructor

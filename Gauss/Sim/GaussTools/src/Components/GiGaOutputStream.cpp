@@ -1,20 +1,14 @@
-// $Id: GiGaOutputStream.cpp,v 1.1 2002-09-26 18:10:58 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.1  2002/01/22 18:20:53  ibelyaev
-//  Vanya: update for newer versions of Gaudi and Geant4
-// 
-// ============================================================================
+// $Id: GiGaOutputStream.cpp,v 1.2 2007-01-12 15:36:51 ranjard Exp $
 // Include files
+
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h"
+#include "GaudiKernel/DeclareFactoryEntries.h" 
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/IConversionSvc.h"
 #include "GaudiKernel/IRegistry.h"
 #include "GaudiKernel/DataObject.h"
+
 // local
 #include "GiGaOutputStream.h"
 
@@ -28,11 +22,8 @@
  */ 
 // ============================================================================
 
-// ============================================================================
 // Declaration of the Algorithm Factory
-// ============================================================================
-static const  AlgFactory<GiGaOutputStream>          s_Factory ;
-const        IAlgFactory& GiGaOutputStreamFactory = s_Factory ; 
+DECLARE_ALGORITHM_FACTORY( GiGaOutputStream );
 
 // ============================================================================
 // Standard constructor, initializes variables

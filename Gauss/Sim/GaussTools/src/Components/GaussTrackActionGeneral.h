@@ -1,16 +1,10 @@
-// $Id: GaussTrackActionGeneral.h,v 1.1 2004-02-20 19:35:27 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $
-// ============================================================================
-// $Log: not supported by cvs2svn $ 
-// ============================================================================
+// $Id: GaussTrackActionGeneral.h,v 1.2 2007-01-12 15:36:44 ranjard Exp $
 #ifndef GAUSSTOOLS_GAUSSTRACKACTIONGENERAL_H 
 #define GAUSSTOOLS_GAUSSTRACKACTIONGENERAL_H 1
-// ============================================================================
+
 // local
-// ============================================================================
 #include "GaussTools/GaussTrackActionZ.h"
-// ============================================================================
+
 
 /** @class GaussTrackActionGeenral GaussTrackActionGeneral.h 
  *  
@@ -23,7 +17,7 @@
 class GaussTrackActionGeneral : virtual public GaussTrackActionZ 
 {
   /// friend factory for instantiation 
-  friend class GiGaFactory<GaussTrackActionGeneral> ;
+  //friend class GiGaFactory<GaussTrackActionGeneral> ;
 public:
   
   /** perform action 
@@ -38,7 +32,7 @@ public:
    */
   virtual void PostUserTrackingAction ( const G4Track* ) ;
   
-protected:
+  //protected:
   
   /** standard constructor 
    *  @see GiGaTrackActionBase 

@@ -1,16 +1,21 @@
-/// GaudiKernel
+// $Id: TrCutsRunAction.cpp,v 1.14 2007-01-12 15:36:58 ranjard Exp $
+// Include files 
+
+// from Gaudi
+#include "GaudiKernel/DeclareFactoryEntries.h" 
 #include "GaudiKernel/PropertyMgr.h"
 /// GiGa 
-#include "GiGa/GiGaMACROs.h"
-/// G4
+//#include "GiGa/GiGaMACROs.h"
+
+// G4
 #include "G4ParticleTable.hh"
 #include "G4ParticleDefinition.hh"
 #include "G4ProcessManager.hh"
-/// GaussTools
+
+// local
 #include "MinEkineCuts.h"
 #include "LoopCuts.h"
 #include "WorldCuts.h"
-/// Local 
 #include "TrCutsRunAction.h"
 
 // ============================================================================
@@ -23,11 +28,8 @@
  */
 // ============================================================================
 
-// ============================================================================
-/// Factory business
-// ============================================================================
-IMPLEMENT_GiGaFactory( TrCutsRunAction ) ;
-// ============================================================================
+// Declaration of the Tool Factory
+DECLARE_TOOL_FACTORY( TrCutsRunAction );
 
 // ============================================================================
 /** standard constructor 

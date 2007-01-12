@@ -1,16 +1,10 @@
-// $Id: GiGaRegionTool.h,v 1.1 2003-05-30 17:55:52 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $ 
-// ============================================================================
+// $Id: GiGaRegionTool.h,v 1.2 2007-01-12 15:36:53 ranjard Exp $
 #ifndef GAUSSTOOLS_GIGAREGIONTOOL_H 
 #define GAUSSTOOLS_GIGAREGIONTOOL_H 1
-// ============================================================================
+
 // Include files
-// ============================================================================
 #include "GiGa/GiGaToolBase.h"
-// ============================================================================
+
 
 /** @class GiGaRegionTool GiGaRegionTool.h Components/GiGaRegionTool.h
  *
@@ -22,7 +16,7 @@
 class GiGaRegionTool : public GiGaToolBase 
 {
   // friend factory for instantiation 
-  friend class GiGaFactory<GiGaRegionTool>;  
+  //  friend class GiGaFactory<GiGaRegionTool>;  
 public:
   
   /** the only one method
@@ -33,7 +27,7 @@ public:
    */
   virtual StatusCode process ( const std::string& region  = "" ) const ;
   
-protected:
+  //protected:
   
   /** standard constructor
    *  @see GiGaToolBase 

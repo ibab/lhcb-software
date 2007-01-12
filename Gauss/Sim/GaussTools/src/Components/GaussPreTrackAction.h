@@ -9,7 +9,7 @@
 #include "GiGa/GiGaTrackActionBase.h"
 
 // forward declarations 
-template <class TYPE> class GiGaFactory;
+//template <class TYPE> class GiGaFactory;
 class G4Track;
 class G4ParticleDefinition;
 
@@ -28,10 +28,11 @@ class G4ParticleDefinition;
 class GaussPreTrackAction: virtual public GiGaTrackActionBase
 {
   /// friend factory for instantiation 
-  friend class GiGaFactory<GaussPreTrackAction>;
+  //  friend class GiGaFactory<GaussPreTrackAction>;
   
   ///
-protected:
+  //protected:
+public:
   
   /** standard constructor 
    *  @see GiGaTrackActionBase 

@@ -1,15 +1,7 @@
-// $Id: GiGaSetSimAttributes.h,v 1.2 2003-05-30 14:30:41 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.1  2003/04/06 19:07:33  ibelyaev
-//  update foe newer GiGa, add new tools
-// 
-// ============================================================================
+// $Id: GiGaSetSimAttributes.h,v 1.3 2007-01-12 15:36:56 ranjard Exp $
 #ifndef GAUSSTOOLS_GIGASETSIMATTRIBUTES_H 
 #define GAUSSTOOLS_GIGASETSIMATTRIBUTES_H 1
-// ============================================================================
+
 // Include files
 #include "GiGa/GiGaToolBase.h"
 // SimSvc
@@ -29,7 +21,7 @@ class GaussG4USerLimits ;
 class GiGaSetSimAttributes : public GiGaToolBase 
 {
   // friend factory for instantiation 
-  friend class GiGaFactory<GiGaSetSimAttributes>;  
+  //  friend class GiGaFactory<GiGaSetSimAttributes>;  
 public:
   
   /** the only one method
@@ -57,7 +49,7 @@ public:
    */
   virtual StatusCode   finalize    () ;
   
-protected:
+  //protected:
   
   /** standard constructor
    *  @see GiGaToolBase 

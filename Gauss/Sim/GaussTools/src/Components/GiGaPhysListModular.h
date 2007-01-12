@@ -1,7 +1,6 @@
-// ============================================================================
 #ifndef    GIGA_GiGaPhysListModular_H
 #define    GIGA_GiGaPhysListModular_H 1 
-// ============================================================================
+
 // include files 
 
 // G4
@@ -12,7 +11,7 @@
 
 
 // forward declarations 
-template <class TYPE> class GiGaFactory;
+//template <class TYPE> class GiGaFactory;
 
 
 
@@ -20,11 +19,11 @@ class GiGaPhysListModular : public GiGaPhysListBase,
                             public virtual G4VModularPhysicsList
 {
   /// friend factory for instantiation 
-  friend class GiGaFactory<GiGaPhysListModular>;
+  //  friend class GiGaFactory<GiGaPhysListModular>;
 public:
   // typedef for list of constructors 
   typedef std::vector<IGiGaPhysicsConstructor*> Constructors;
-protected:
+  //protected:
   
   /** standard constructor 
    *  @see GiGaPhysListBase

@@ -1,29 +1,15 @@
-// $Id: GaussTrackActionBase.h,v 1.3 2004-04-20 04:27:14 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.2  2004/02/22 16:51:54  ibelyaev
-//  few minor fixes
-//
-// Revision 1.1  2004/02/20 19:35:25  ibelyaev
-//  major update
-// 
-// ============================================================================
+// $Id: GaussTrackActionBase.h,v 1.4 2007-01-12 15:36:38 ranjard Exp $
 #ifndef GAUSSTOOLS_GAUSSTRACKACTIONBASE_H 
 #define GAUSSTOOLS_GAUSSTRACKACTIONBASE_H 1
-// ============================================================================
 // Include files
-// ============================================================================
-// GaudiKernel
-// ============================================================================
-#include "GaudiKernel/Kernel.h"
-// ============================================================================
-// GiGa 
-// ============================================================================
-#include "GiGa/GiGaTrackActionBase.h"
-// ============================================================================
 
+// from Gaudi
+#include "GaudiKernel/Kernel.h"
+
+// from GiGa 
+#include "GiGa/GiGaTrackActionBase.h"
+
+// Forward declaration
 class GaussTrajectory       ;
 class GaussTrackInformation ;
 
@@ -37,7 +23,7 @@ class GaussTrackInformation ;
 class GaussTrackActionBase : public GiGaTrackActionBase 
 {
   /// friend factory for instantiation 
-  friend class GiGaFactory<GaussTrackActionBase> ;
+  //  friend class GiGaFactory<GaussTrackActionBase> ;
 public:
   
   /** initialize the track action  
@@ -115,8 +101,5 @@ private:
   
 };
 
-// ============================================================================
-// The END 
-// ============================================================================
+
 #endif // GAUSSTOOLS_GAUSSTRACKACTIONBASE_H
-// ============================================================================

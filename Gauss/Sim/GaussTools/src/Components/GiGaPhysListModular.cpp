@@ -1,10 +1,15 @@
-// ============================================================================
-// GaudiKernel
+// $Id: GiGaPhysListModular.cpp,v 1.16 2007-01-12 15:36:52 ranjard Exp $
+// Include files 
+
+// from Gaudi
+#include "GaudiKernel/DeclareFactoryEntries.h" 
 #include "GaudiKernel/PropertyMgr.h"
 #include "GaudiKernel/IToolSvc.h"
+
 // GiGa
-#include "GiGa/GiGaMACROs.h"
+//#include "GiGa/GiGaMACROs.h"
 #include "GiGa/IGiGaPhysicsConstructor.h"
+
 // G4 
 #include "G4ParticleTypes.hh"
 #include "G4ParticleDefinition.hh"
@@ -15,6 +20,7 @@
 #include "G4ParticleTable.hh"
 #include "G4Material.hh"
 #include "G4ios.hh"
+
 // local
 #include "GiGaPhysListModular.h"
 
@@ -25,11 +31,8 @@
  *  @author Witek Pokorski Witold.Pokorski@cern.ch
  */
 
-// ============================================================================
-/// Factory
-// ============================================================================
-IMPLEMENT_GiGaFactory( GiGaPhysListModular ) ;
-// ============================================================================
+// Declaration of the Tool Factory
+DECLARE_TOOL_FACTORY( GiGaPhysListModular );
 
 // ============================================================================
 /** standard constructor 

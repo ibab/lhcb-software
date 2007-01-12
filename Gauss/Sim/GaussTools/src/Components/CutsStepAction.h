@@ -6,7 +6,7 @@
 // GiGa
 #include "GiGa/GiGaStepActionBase.h"
 // forward declarations 
-template <class TYPE> class GiGaFactory;
+//template <class TYPE> class GiGaFactory;
 
 /** @class CutsStepAction CutsStepAction.h
  *   
@@ -17,9 +17,10 @@ template <class TYPE> class GiGaFactory;
 class CutsStepAction: virtual public GiGaStepActionBase
 {
   /// friend factory for instantiation
-  friend class GiGaFactory<CutsStepAction>;
+  //  friend class GiGaFactory<CutsStepAction>;
 
-protected:
+  //protected:
+public:
 
   /** standard constructor 
    *  @see GiGaStepActionBase 
@@ -46,7 +47,6 @@ public:
   virtual void UserSteppingAction ( const G4Step* );
   
 private:
-
   CutsStepAction(); ///< no default constructor
   CutsStepAction( const CutsStepAction& ); ///< no copy  
   CutsStepAction& operator=( const CutsStepAction& ) ; ///< no = 

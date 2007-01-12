@@ -1,22 +1,16 @@
-// $Id: GiGaFieldMgr.cpp,v 1.3 2004-02-20 19:35:28 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.2  2003/09/22 13:59:33  ibelyaev
-//  polishing of addRef/release/releaseTools/finalize
-//
-// Revision 1.1  2003/04/06 19:07:33  ibelyaev
-//  update foe newer GiGa, add new tools
-// 
-// ============================================================================
-// include 
-#include "GiGa/GiGaMACROs.h"
+// $Id: GiGaFieldMgr.cpp,v 1.4 2007-01-12 15:36:45 ranjard Exp $
+// Include files 
+
+// from Gaudi
+#include "GaudiKernel/DeclareFactoryEntries.h" 
+//#include "GiGa/GiGaMACROs.h"
+
 // GEANT4 
 #include "G4ChordFinder.hh"
 #include "G4FieldManager.hh"
 #include "G4TransportationManager.hh"
 #include "G4ChordFinder.hh"
+
 // local 
 #include "GiGaFieldMgr.h"
 
@@ -29,11 +23,8 @@
  */
 // ============================================================================
 
-// ============================================================================
-// Factory
-// ============================================================================
-IMPLEMENT_GiGaFactory( GiGaFieldMgr ) ;
-// ============================================================================
+// Declaration of the Tool Factory
+DECLARE_TOOL_FACTORY( GiGaFieldMgr );
 
 // ============================================================================
 /** standard constructor

@@ -1,10 +1,11 @@
 /// GaudiKernel
+#include "GaudiKernel/DeclareFactoryEntries.h" 
 #include "GaudiKernel/PropertyMgr.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/ParticleProperty.h"
 /// GiGa 
-#include "GiGa/GiGaMACROs.h"
+//#include "GiGa/GiGaMACROs.h"
 
 /// Local 
 #include "GaussEventActionHepMC.h"
@@ -22,7 +23,7 @@
 // ============================================================================
 // Factory business
 // ============================================================================
-IMPLEMENT_GiGaFactory( GaussEventActionHepMC );
+DECLARE_TOOL_FACTORY( GaussEventActionHepMC );
 
 // ============================================================================
 /** standard constructor 

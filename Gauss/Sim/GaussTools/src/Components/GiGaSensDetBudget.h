@@ -1,4 +1,4 @@
-// $Id: GiGaSensDetBudget.h,v 1.2 2006-07-27 13:15:35 gcorti Exp $
+// $Id: GiGaSensDetBudget.h,v 1.3 2007-01-12 15:36:55 ranjard Exp $
 #ifndef GIGA_GIGASENSDETBUDGET_H 
 #define GIGA_GIGASENSDETBUDGET_H 1
 
@@ -9,7 +9,7 @@
 #include "GiGa/GiGaHashMap.h"
 
 // Forward declaration
-template <class TYPE> class GiGaFactory;
+//template <class TYPE> class GiGaFactory;
 
 /** @class GiGaSensDetBudget GiGaSensDetBudget.h 
  *  
@@ -21,7 +21,7 @@ template <class TYPE> class GiGaFactory;
 class GiGaSensDetBudget : virtual public GiGaSensDetBase 
 {
   /// friend factory for instantiation
-  friend class GiGaFactory<GiGaSensDetBudget>;
+  //friend class GiGaFactory<GiGaSensDetBudget>;
 
 public:
   
@@ -43,7 +43,7 @@ public:
   ( G4Step* step                , 
     G4TouchableHistory* history ) ;
   
-protected:
+  //protected:
   
   /** standard constructor 
    *  @see GiGaSensDetBase 

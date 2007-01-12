@@ -1,28 +1,14 @@
-// $Id: GiGaTrackActionSequence.h,v 1.2 2004-02-20 19:35:29 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.1  2002/12/12 15:19:33  witoldp
-// major repackaging
-//
-// Revision 1.1  2002/09/26 18:10:55  ibelyaev
-//  repackageing: add all concrete implementations from GiGa
-//
-// Revision 1.4  2002/05/07 12:21:37  ibelyaev
-//  see $GIGAROOT/doc/release.notes  7 May 2002
-//
-// ============================================================================
+// $Id: GiGaTrackActionSequence.h,v 1.3 2007-01-12 15:36:58 ranjard Exp $
 #ifndef COMPONENT_GIGATRACKACTIONSEQUENCE_H 
 #define COMPONENT_GIGATRACKACTIONSEQUENCE_H 1
-// ============================================================================
+
 /// STD & STL 
 #include <string>
 #include <vector>
 /// GiGa 
 #include "GiGa/GiGaTrackActionBase.h"
 /// forward decalrations 
-template <class TYPE> class GiGaFactory;
+//template <class TYPE> class GiGaFactory;
 
 /** @class GiGaTrackActionSequence GiGaTrackActionSequence.h
  *
@@ -36,7 +22,7 @@ template <class TYPE> class GiGaFactory;
 class GiGaTrackActionSequence: public GiGaTrackActionBase
 {
   /// friend factory for instantiation 
-  friend class GiGaFactory<GiGaTrackActionSequence>;
+  //  friend class GiGaFactory<GiGaTrackActionSequence>;
   ///
 public:
   
@@ -64,7 +50,7 @@ public:
    */ 
   virtual void PostUserTrackingAction ( const G4Track* track );
   
-protected:
+  //protected:
   
   /** standard constructor 
    *  @see GiGaTrackActionBase 

@@ -1,12 +1,4 @@
-// $Id: GaussTrackActionByEnergyProcess.h,v 1.1 2004-04-20 04:27:15 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.1  2004/02/20 19:35:27  ibelyaev
-//  major update
-// 
-// ============================================================================
+// $Id: GaussTrackActionByEnergyProcess.h,v 1.2 2007-01-12 15:36:42 ranjard Exp $
 #ifndef GAUSSTOOLS_GAUSSTRACKACTIONBYENERGY_H 
 #define GAUSSTOOLS_GAUSSTRACKACTIONBYENERGY_H 1
 // ============================================================================
@@ -26,7 +18,7 @@
 class GaussTrackActionByEnergyProcess : public GaussTrackActionZ 
 {
   /// friend factory for instantiation 
-  friend class GiGaFactory<GaussTrackActionByEnergyProcess> ;
+  //  friend class GiGaFactory<GaussTrackActionByEnergyProcess> ;
 public:
 
   /// perform initialization
@@ -44,7 +36,7 @@ public:
    */
   virtual void PostUserTrackingAction ( const G4Track* ) ;
   
-protected:
+  //protected:
   
   /** standard constructor 
    *  @see GiGaTrackActionBase 

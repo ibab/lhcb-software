@@ -1,14 +1,7 @@
-// $Id: ZeroFieldMgr.h,v 1.1 2003-06-05 10:49:44 witoldp Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.1  2003/04/06 19:07:33  ibelyaev
-//  update foe newer GiGa, add new tools
-// 
-// ============================================================================
+// $Id: ZeroFieldMgr.h,v 1.2 2007-01-12 15:36:58 ranjard Exp $
 #ifndef GAUSSTOOLS_ZEROFIELDMGR_H 
 #define GAUSSTOOLS_ZEROFIELDMGR_H 1
+
 // Include files
 #include "GiGa/GiGaFieldMgrBase.h"
 class G4ChordFinder;
@@ -23,7 +16,7 @@ class G4ChordFinder;
 class ZeroFieldMgr : public GiGaFieldMgrBase
 {
   /// friend factory for instantiation 
-  friend class GiGaFactory<ZeroFieldMgr> ;
+  //friend class GiGaFactory<ZeroFieldMgr> ;
 
 public:
   
@@ -44,7 +37,7 @@ public:
    */
   virtual StatusCode   initialize     () ; 
   
-protected:
+  //protected:
   
   /** standard constructor
    *  @see GiGaFieldMgrBase 
