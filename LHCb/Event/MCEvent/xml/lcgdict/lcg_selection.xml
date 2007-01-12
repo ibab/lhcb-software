@@ -3,6 +3,7 @@
 
   <class name = "IMCDecayFinder"     />
   <class name = "ISiDepositedCharge" />
+  <class name = "IVisPrimVertTool"   />
 
   <exclusion>
     <class name = "KeyedObject<LHCb::CaloCellID>" />

@@ -1,4 +1,3 @@
-#include "GaudiKernel/ObjectContainerBase.h"
 #include "GaudiKernel/ContainedObject.h"
 #include "GaudiKernel/LinkManager.h"
 #include "GaudiKernel/IRegistry.h"
