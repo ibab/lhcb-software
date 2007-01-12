@@ -4,6 +4,12 @@
 ! Purpose     : collect Kernel packages
 !-----------------------------------------------------------------------------
 
+!======================== KernelSys v6r0 2007-01-12 ==========================
+! 2006-12-07 - Florence RANJARD
+ - use LHCbDefinitions v2r0, LHCbKernel v7r0, RichKernel v7r0, Relations v5r0
+   CaloKernel v5r0, MuonKernel v4r0, L0MuonKernel v6r0, ProcessorKernel v4r0,
+   LHCbMath v2r0
+
 !======================== KernelSys v5r15 2006-12-01 =========================
 ! 2006-12-01 - Marco Cattaneo
  - Use LHCbDefinitions v1r12, LHCbKernel v6r15, RichKernel v6r8, Relations v4r1
