@@ -1,24 +1,22 @@
-# $Id: requirements,v 1.8 2006-12-16 13:28:24 ibelyaev Exp $ 
-# =============================================================================
-# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $
+# $Id: requirements,v 1.9 2007-01-12 14:13:42 ranjard Exp $ 
 # =============================================================================
 # Created    : 2006-04-09
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu
 # =============================================================================
 package           LoKi
-version           v4r4
+version           v5r0
 
 # =============== structure ===================================================
 branches          LoKi cmt doc src
-
-# ================ own includes ===============================================
-include_dirs      $(LOKIROOT)
 
 # =============== dependencies ================================================
 use               LoKiAlgo      v*   Phys
 use               LoKiGenMC     v*   Phys
 use               LoKiAlgoMC    v*   Phys
 use               LoKiJets      v*   Phys 
+
+# ================ own includes ===============================================
+apply_pattern install_more_includes more=LoKi
 
 # ================ constituents ===============================================
 library           LoKi    ../src/*.cpp
@@ -28,6 +26,9 @@ apply_pattern     linker_library    library=LoKi
 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.8  2006/12/16 13:28:24  ibelyaev
+#  v4r4
+#
 # Revision 1.7  2006/11/27 11:45:24  ibelyaev
 #  update for LoKi v4r3
 #
