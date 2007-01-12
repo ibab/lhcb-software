@@ -44,18 +44,18 @@
 <code class="display">ganga</code>
 You will be prompted for your grid password.
 			 <li>At the ganga prompt type:</li>
-<code class="display">t = JobTemplate( application = DaVinci( version = "v17r6" ) )
-t.application.getpack( "Tutorial/Analysis v6r2" )
-t.application.getpack( "Phys/DaVinci v17r6" )
-t.application.masterpackage = "DaVinci v17r6 Phys"
+<code class="display">t = JobTemplate( application = DaVinci( version = "v17r8" ) )
+t.application.getpack( "Tutorial/Analysis v6r2p1" )
+t.application.getpack( "Phys/DaVinci v17r8" )
+t.application.masterpackage = "DaVinci v17r8 Phys"
 t.application.optsfile = File( name = "~/cmtuser/Tutorial/Analysis/v6r2/options/myOptions.opts" )
 
-!emacs $t.application.cmt_user_path/Phys/DaVinci/v17r6/cmt/requirements &</code>
+!emacs $t.application.cmt_user_path/Phys/DaVinci/v17r8/cmt/requirements &</code>
 		Be very careful not to copy-paste leading <b>spaces</b>; python does 
 not like that at all.
 
                         <li>Add the line:</li>
-<code class="display">use Analysis v6r2 Tutorial</code>
+<code class="display">use Analysis v6r2p1 Tutorial</code>
 and save.
 
                         <li>At the ganga prompt:</li>
