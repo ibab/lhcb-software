@@ -1,8 +1,8 @@
 // $Id
-// $Id: MergedPi0Maker.cpp,v 1.3 2006-11-28 10:35:53 odescham Exp $
+// $Id: MergedPi0Maker.cpp,v 1.4 2007-01-12 14:14:26 ranjard Exp $
 // ============================================================================
 // Include files
-#include "GaudiKernel/ToolFactory.h"
+#include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiKernel/IDataProviderSvc.h" 
 #include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/ParticleProperty.h"
@@ -28,9 +28,9 @@
  *  Declaration of mandatory  Tool Factory
  */
 // ============================================================================
-static const  ToolFactory<MergedPi0Maker>         s_Factory ;
-const        IToolFactory&MergedPi0MakerFactory = s_Factory ; 
-// ============================================================================
+
+DECLARE_TOOL_FACTORY( MergedPi0Maker );
+
 // ============================================================================
 /** Standard constructor
  *  @param type   tool type

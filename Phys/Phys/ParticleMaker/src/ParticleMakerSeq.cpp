@@ -1,14 +1,17 @@
-// $Id: ParticleMakerSeq.cpp,v 1.5 2006-03-19 16:33:09 ibelyaev Exp $
+// $Id: ParticleMakerSeq.cpp,v 1.6 2007-01-12 14:14:27 ranjard Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2006/03/19 16:33:09  ibelyaev
+//  minor changes in ParticleMakerSeq
+//
 // ============================================================================
 // Include files 
 // ============================================================================
 // from Gaudi
 // ============================================================================
-#include "GaudiKernel/ToolFactory.h"
+#include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiKernel/MsgStream.h" 
 // ============================================================================
 // from GaudiAlg

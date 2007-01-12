@@ -1,5 +1,7 @@
-// $Id: PreLoadParticles.cpp,v 1.5 2006-06-18 14:45:41 jonrob Exp $
+// $Id: PreLoadParticles.cpp,v 1.6 2007-01-12 14:14:29 ranjard Exp $
 // Include files
+
+#include "GaudiKernel/DeclareFactoryEntries.h"
 
 // from EventSys
 #include "Event/Particle.h"
@@ -15,8 +17,8 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-static const  AlgFactory<PreLoadParticles>          s_factory ;
-const        IAlgFactory& PreLoadParticlesFactory = s_factory ;
+
+DECLARE_ALGORITHM_FACTORY( PreLoadParticles);
 
 //=============================================================================
 // Standard constructor, initializes variables

@@ -1,7 +1,7 @@
 // $Id: 
 // ============================================================================
 // Include files
-#include "GaudiKernel/ToolFactory.h"
+#include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiKernel/IDataProviderSvc.h" 
 #include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/ParticleProperty.h"
@@ -30,9 +30,9 @@
  *  Declaration of mandatory  Tool Factory
  */
 // ============================================================================
-static const  ToolFactory<PhotonMaker>         s_Factory ;
-const        IToolFactory&PhotonMakerFactory = s_Factory ; 
-// ============================================================================
+
+DECLARE_TOOL_FACTORY(PhotonMaker);
+
 // ============================================================================
 /** Standard constructor
  *  @param type   tool type

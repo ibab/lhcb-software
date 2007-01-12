@@ -5,7 +5,7 @@
  * Implmentation file for Particle maker CombinedParticleMaker
  *
  * CVS Log :-
- * $Id: CombinedParticleMaker.cpp,v 1.19 2006-11-20 15:57:38 jonrob Exp $
+ * $Id: CombinedParticleMaker.cpp,v 1.20 2007-01-12 14:14:24 ranjard Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-05-03
@@ -13,7 +13,7 @@
 //-----------------------------------------------------------------------------
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h"
+#include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/GaudiException.h"
 #include "GaudiKernel/Tokenizer.h"
@@ -27,8 +27,8 @@ using namespace LHCb;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-static const  ToolFactory<CombinedParticleMaker>          s_factory ;
-const        IToolFactory& CombinedParticleMakerFactory = s_factory ;
+
+DECLARE_TOOL_FACTORY( CombinedParticleMaker );
 
 //=============================================================================
 // Standard constructor, initializes variables

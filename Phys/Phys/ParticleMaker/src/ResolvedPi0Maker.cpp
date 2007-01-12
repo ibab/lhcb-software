@@ -1,8 +1,8 @@
 // $Id
-// $Id: ResolvedPi0Maker.cpp,v 1.3 2006-10-13 21:57:19 odescham Exp $
+// $Id: ResolvedPi0Maker.cpp,v 1.4 2007-01-12 14:14:30 ranjard Exp $
 // ============================================================================
 // Include files
-#include "GaudiKernel/ToolFactory.h"
+#include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiKernel/IDataProviderSvc.h" 
 #include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/ParticleProperty.h"
@@ -27,9 +27,9 @@
  *  Declaration of mandatory  Tool Factory
  */
 // ============================================================================
-static const  ToolFactory<ResolvedPi0Maker>         s_Factory ;
-const        IToolFactory&ResolvedPi0MakerFactory = s_Factory ; 
-// ============================================================================
+
+DECLARE_TOOL_FACTORY( ResolvedPi0Maker );
+
 // ============================================================================
 /** Standard constructor
  *  @param type   tool type

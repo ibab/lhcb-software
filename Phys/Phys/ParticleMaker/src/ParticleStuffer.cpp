@@ -1,11 +1,11 @@
-// $Id: ParticleStuffer.cpp,v 1.8 2006-12-06 14:57:34 jpalac Exp $
+// $Id: ParticleStuffer.cpp,v 1.9 2007-01-12 14:14:28 ranjard Exp $
 // Include files 
 
 // 
 #include <math.h>
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h"
+#include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/ParticleProperty.h"
 
@@ -19,8 +19,8 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-static const  ToolFactory<ParticleStuffer>          s_factory ;
-const        IToolFactory& ParticleStufferFactory = s_factory ; 
+
+DECLARE_TOOL_FACTORY( ParticleStuffer );
 
 
 //=============================================================================
