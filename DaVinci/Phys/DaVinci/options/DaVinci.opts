@@ -15,8 +15,8 @@
 //--- Example of Particle with Assigned pID only for HLT studies
 // #include "$PARTICLEMAKERROOT/options/PreLoadNoPIDParticles.opts"
 //--- Uncomment for running HLT
-//#include "HLTSYSROOT/options/L0.opts"
-//#include "HLTSYSROOT/options/Hlt.opts"
+#include "$HLTSYSROOT/options/L0.opts"
+#include "$HLTSYSROOT/options/Hlt.opts"
 //--------------------------------------------------------------
 // >>>>>>>>>>>> To be customized for a specific job <<<<<<<<<<<<
 //----------------------------------------------------------------
@@ -71,9 +71,9 @@ MessageSvc.Format = "% F%40W%S%7W%R%T %0W%M";
 // Number of events to process, skip and printing frequency
 //---------------------------------------------------------------
 // Sample input file 
-#include "$DAVINCIROOT/options/DaVinciTestData.opts"
+#include "$BU2LLKROOT/options/DaVinciTestData.opts"
 
-ApplicationMgr.EvtMax    = 20;
+ApplicationMgr.EvtMax    = 200;
 EventSelector.FirstEvent = 1;
 EventSelector.PrintFreq  = 1;
 
