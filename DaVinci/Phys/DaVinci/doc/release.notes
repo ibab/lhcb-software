@@ -4,6 +4,16 @@
 ! Purpose     : Analysis program for LHCb
 !-----------------------------------------------------------------------------
 
+!========================== DaVinci v17r8 2007-01-12 ===================
+
+! 2007-01-12 - Juan PALACIOS
+
+  First DC06 version with HLT
+
+  - cmt/requirements
+    . Use HltSys v1r1
+    . Increase version to v1r1
+
 !========================== DaVinci v17r7 2007-01-08 ===================
 
 ! 2007-01-08 - Juan PALACIOS

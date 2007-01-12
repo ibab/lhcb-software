@@ -1,11 +1,11 @@
-# $Id: requirements,v 1.337 2006-12-18 10:55:55 jpalac Exp $
+# $Id: requirements,v 1.338 2007-01-12 07:38:37 jpalac Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg, J. Palacios
 #
 
 #============================================================================
 package           DaVinci
-version           v17r7
+version           v17r8
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -45,6 +45,9 @@ use LbcomSys    v5r9
 
 #-- Rec
 use RecSys      v3r14p1
+
+#-- Hlt
+use HltSys      v1r1
 
 #--Phys
 use PhysSys     v4r6
