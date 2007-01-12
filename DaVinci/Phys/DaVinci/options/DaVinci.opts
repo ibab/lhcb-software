@@ -14,7 +14,9 @@
 #include "$DAVINCIROOT/options/DaVinciCommon.opts"
 //--- Example of Particle with Assigned pID only for HLT studies
 // #include "$PARTICLEMAKERROOT/options/PreLoadNoPIDParticles.opts"
-
+//--- Uncomment for running HLT
+//#include "HLTSYSROOT/options/L0.opts"
+//#include "HLTSYSROOT/options/Hlt.opts"
 //--------------------------------------------------------------
 // >>>>>>>>>>>> To be customized for a specific job <<<<<<<<<<<<
 //----------------------------------------------------------------
