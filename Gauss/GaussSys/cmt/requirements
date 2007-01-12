@@ -11,7 +11,7 @@ branches cmt doc
 use Gauss		v30r1	  Sim
 
 # Generator stuff ...
-use GENSER              v1r140p1  Gen
+use GENSER              v1r141p1  Gen
 use EvtGen              v8r14     Gen
 use Generators          v7r0      Gen
 use LbPythia            v5r0      Gen
