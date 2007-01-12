@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.5 2006-10-06 15:50:26 gcorti Exp $
+! $Id: release.notes,v 1.6 2007-01-12 15:18:51 ranjard Exp $
 ! Package     : Gen/LbBcGen
 ! Responsible : Patrick ROBBE
+
+!===================== LbBcVegPy v2r0 2007-01-08 =====================
+! 2007-01-08 - Florence Ranjard
+ - update BcVegPyProduction.cpp to use new FACTORY.
 
 !====================== LbBcGen v1r3 2006-10-06 ======================
 ! 2006-10-06 - Gloria CORTI

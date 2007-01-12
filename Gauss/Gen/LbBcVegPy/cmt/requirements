@@ -1,13 +1,14 @@
-# $Id: requirements,v 1.6 2006-10-06 15:50:26 gcorti Exp $ 
+# $Id: requirements,v 1.7 2007-01-12 15:18:50 ranjard Exp $ 
 #============================================================================
 package       LbBcVegPy
-version       v1r3
+version       v2r0
 
 #============================================================================
 # Structure, i.e. directories to process. 
 #============================================================================
 branches      LbBcVegPy doc cmt src
-include_dirs  $(LBBCVEGPYROOT)
+use GaudiPolicy v* 
+apply_pattern install_more_includes more=LbBcVegPy
 
 #============================================================================
 # Used packages. Specify the version, * at the end specifies 'any revision'

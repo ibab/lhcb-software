@@ -1,4 +1,4 @@
-// $Id: BcVegPyProduction.cpp,v 1.2 2006-04-25 21:50:17 robbep Exp $
+// $Id: BcVegPyProduction.cpp,v 1.3 2007-01-12 15:18:51 ranjard Exp $
 // Include files 
 
 // local
@@ -6,7 +6,7 @@
 #include "LbBcVegPy/BcVegPy.h"
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h"
+#include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiKernel/ParticleProperty.h"
 
 // from Event
@@ -24,8 +24,8 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-static const  ToolFactory<BcVegPyProduction>           s_factory ;
-const         IToolFactory& BcVegPyProductionFactory = s_factory ; 
+
+DECLARE_TOOL_FACTORY( BcVegPyProduction );
 
 
 //=============================================================================
