@@ -1,4 +1,4 @@
-// $Id: MCDecayFinder.h,v 1.2 2006-03-16 12:59:36 pkoppenb Exp $
+// $Id: MCDecayFinder.h,v 1.3 2007-01-12 10:10:51 cattanem Exp $
 #ifndef TOOLS_MCDECAYFINDER_H 
 #define TOOLS_MCDECAYFINDER_H 1
 
@@ -17,7 +17,6 @@
 #include "Event/MCParticle.h"
 
 class IParticlePropertySvc;
-class IDataProviderSvc;
 struct yy_buffer_state;
 
 /** @class MCDecayFinder MCDecayFinder.h

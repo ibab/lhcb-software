@@ -1,7 +1,6 @@
-// $Id: MCHitMonitor.cpp,v 1.3 2006-05-10 14:55:00 cattanem Exp $
+// $Id: MCHitMonitor.cpp,v 1.4 2007-01-12 10:10:52 cattanem Exp $
 //
-// This File contains the implementation of the TrMCHitMonitor
-// C++ code for 'LHCb Tracking package(s)'
+// This File contains the implementation of the MCHitMonitor
 //
 //   Author:Matthew Needham
 //   Created: 18-05-1999
@@ -32,7 +31,7 @@
 
 #include "MCHitMonitor.h"
 
-// Needed for the creation of TrMCHitMonitor objects.
+// Needed for the creation of MCHitMonitor objects.
 #include "GaudiKernel/AlgFactory.h"
 DECLARE_ALGORITHM_FACTORY( MCHitMonitor );
 

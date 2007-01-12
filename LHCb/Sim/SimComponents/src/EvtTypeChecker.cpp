@@ -1,10 +1,8 @@
-// $Id: EvtTypeChecker.cpp,v 1.3 2007-01-12 10:01:00 cattanem Exp $
+// $Id: EvtTypeChecker.cpp,v 1.4 2007-01-12 10:10:51 cattanem Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/MsgStream.h" 
-#include "GaudiKernel/SmartDataPtr.h"
 
 // from Event
 #include "Event/HepMCEvent.h"
