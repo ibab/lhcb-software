@@ -2,7 +2,7 @@
 #define MCCheck 1
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
+#include "GaudiKernel/DeclareFactoryEntries.h" 
 #include "GaudiKernel/NTuple.h"
 #include "GaudiKernel/INTupleSvc.h"
 #include "Kernel/IDecayFinder.h"
@@ -41,8 +41,8 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-static const  AlgFactory<DecayChainNTuple>          s_factory ;
-const        IAlgFactory& DecayChainNTupleFactory = s_factory ; 
+
+DECLARE_ALGORITHM_FACTORY( DecayChainNTuple );
 
 
 //=============================================================================

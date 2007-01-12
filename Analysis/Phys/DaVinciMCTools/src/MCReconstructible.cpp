@@ -1,8 +1,8 @@
-// $Id: MCReconstructible.cpp,v 1.1 2006-05-25 09:57:11 pkoppenb Exp $
+// $Id: MCReconstructible.cpp,v 1.2 2007-01-12 14:03:52 ranjard Exp $
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h"
+#include "GaudiKernel/DeclareFactoryEntries.h"
 
 // local
 #include "MCReconstructible.h"
@@ -17,8 +17,8 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-static const  ToolFactory<MCReconstructible>          s_factory ;
-const        IToolFactory& MCReconstructibleFactory = s_factory ; 
+
+DECLARE_TOOL_FACTORY( MCReconstructible );
 
 
 //=============================================================================

@@ -1,8 +1,8 @@
-// $Id: PrintTree.cpp,v 1.4 2006-10-11 14:19:19 jpalac Exp $
+// $Id: PrintTree.cpp,v 1.5 2007-01-12 14:03:53 ranjard Exp $
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
+#include "GaudiKernel/DeclareFactoryEntries.h" 
 // from DaVinci
 #include "Kernel/IDebugTool.h"
 
@@ -16,9 +16,8 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-static const  AlgFactory<PrintTree>          s_factory ;
-const        IAlgFactory& PrintTreeFactory = s_factory ; 
 
+DECLARE_ALGORITHM_FACTORY( PrintTree );
 
 //=============================================================================
 // Standard constructor, initializes variables

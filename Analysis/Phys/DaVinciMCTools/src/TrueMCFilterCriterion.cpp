@@ -1,8 +1,8 @@
-// $Id: TrueMCFilterCriterion.cpp,v 1.13 2006-11-09 13:33:20 jpalac Exp $
+// $Id: TrueMCFilterCriterion.cpp,v 1.14 2007-01-12 14:03:53 ranjard Exp $
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h" 
+#include "GaudiKernel/DeclareFactoryEntries.h" 
 
 #include "Kernel/IMCDecayFinder.h"
 #include "DaVinciAssociators/Particle2MCLinker.h"
@@ -25,8 +25,8 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-static const  ToolFactory<TrueMCFilterCriterion>          s_factory ;
-const        IToolFactory& TrueMCFilterCriterionFactory = s_factory ;
+
+DECLARE_TOOL_FACTORY( TrueMCFilterCriterion );
 
 //=============================================================================
 // Standard constructor, initializes variables

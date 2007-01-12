@@ -1,8 +1,8 @@
-// $Id: IsBEvent.cpp,v 1.4 2006-04-04 06:29:06 jpalac Exp $
+// $Id: IsBEvent.cpp,v 1.5 2007-01-12 14:03:52 ranjard Exp $
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h"
+#include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/ParticleProperty.h"
 // local
@@ -16,8 +16,8 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-static const  AlgFactory<IsBEvent>          s_factory ;
-const        IAlgFactory& IsBEventFactory = s_factory ; 
+
+DECLARE_ALGORITHM_FACTORY( IsBEvent );
 
 
 //=============================================================================

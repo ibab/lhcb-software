@@ -1,8 +1,8 @@
-// $Id: PrintMCTree.cpp,v 1.4 2006-10-11 14:19:19 jpalac Exp $
+// $Id: PrintMCTree.cpp,v 1.5 2007-01-12 14:03:53 ranjard Exp $
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
+#include "GaudiKernel/DeclareFactoryEntries.h" 
 #include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/ParticleProperty.h"
 // from DaVinci
@@ -18,8 +18,8 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-static const  AlgFactory<PrintMCTree>          s_factory ;
-const        IAlgFactory& PrintMCTreeFactory = s_factory ; 
+
+DECLARE_ALGORITHM_FACTORY( PrintMCTree );
 
 
 //=============================================================================

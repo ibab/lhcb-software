@@ -1,8 +1,8 @@
-// $Id: FilterGoodDecay.cpp,v 1.2 2006-03-15 13:37:21 pkoppenb Exp $
+// $Id: FilterGoodDecay.cpp,v 1.3 2007-01-12 14:03:52 ranjard Exp $
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
+#include "GaudiKernel/DeclareFactoryEntries.h" 
 
 // local
 #include "FilterGoodDecay.h"
@@ -15,8 +15,8 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-static const  AlgFactory<FilterGoodDecay>          s_factory ;
-const        IAlgFactory& FilterGoodDecayFactory = s_factory ; 
+
+DECLARE_ALGORITHM_FACTORY(FilterGoodDecay );
 
 
 //=============================================================================

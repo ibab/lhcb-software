@@ -1,8 +1,8 @@
-// $Id: BackgroundCategory.cpp,v 1.23 2006-10-18 14:22:14 jpalac Exp $
+// $Id: BackgroundCategory.cpp,v 1.24 2007-01-12 14:03:51 ranjard Exp $
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h" 
+#include "GaudiKernel/DeclareFactoryEntries.h" 
 
 // local
 #include "BackgroundCategory.h"
@@ -14,8 +14,9 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-static const  ToolFactory<BackgroundCategory>          s_factory ;
-const        IToolFactory& BackgroundCategoryFactory = s_factory ; 
+
+DECLARE_TOOL_FACTORY( BackgroundCategory );
+
 using namespace Gaudi::Units;
 
 //=============================================================================

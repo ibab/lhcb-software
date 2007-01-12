@@ -1,8 +1,11 @@
-// $Id: MCParticleMaker.cpp,v 1.30 2006-10-11 14:19:19 jpalac Exp $
+// $Id: MCParticleMaker.cpp,v 1.31 2007-01-12 14:03:52 ranjard Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $, version $Revison:$
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.30  2006/10/11 14:19:19  jpalac
+// Major restructuring, increase version to v8r0
+//
 // Revision 1.29  2006/10/04 11:58:30  ibelyaev
 //  add (optional, switched-off in default) relation tables
 //
@@ -16,7 +19,7 @@
 // ============================================================================
 // from Gaudi
 // ============================================================================
-#include "GaudiKernel/ToolFactory.h"
+#include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/IRndmGenSvc.h"
 #include "GaudiKernel/IRndmEngine.h"
@@ -60,8 +63,8 @@ struct IsUnstable : std::unary_function<LHCb::MCParticle*,bool> {
 
 
 // Declaration of the Tool Factory
-static const  ToolFactory<MCParticleMaker>          s_factory ;
-const        IToolFactory& MCParticleMakerFactory = s_factory ;
+
+DECLARE_TOOL_FACTORY( MCParticleMaker );
 
 using namespace Gaudi::Units;
 

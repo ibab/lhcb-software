@@ -1,8 +1,8 @@
-// $Id: DebugTool.cpp,v 1.12 2006-07-27 11:55:03 jpalac Exp $
+// $Id: DebugTool.cpp,v 1.13 2007-01-12 14:03:52 ranjard Exp $
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h"
+#include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/GaudiException.h"
 #include "GaudiKernel/IParticlePropertySvc.h"
@@ -14,7 +14,7 @@
 #include "Event/Particle.h"
 
 // from LHCb
-#include "Kernel/PhysicalConstants.h"
+#include "GaudiKernel/PhysicalConstants.h"
 
 // local
 #include "DebugTool.h"
@@ -26,8 +26,10 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the AlgTool Factory
-static ToolFactory<DebugTool>          s_factory;
-const IToolFactory& DebugToolFactory = s_factory;
+
+DECLARE_TOOL_FACTORY( DebugTool );
+
+using namespace Gaudi::Units;
 
 //=============================================================================
 // Standard creator, initializes variables
