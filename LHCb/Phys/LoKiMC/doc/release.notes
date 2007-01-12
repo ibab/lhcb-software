@@ -1,6 +1,6 @@
-! $Id: release.notes,v 1.13 2006-11-29 14:27:49 ibelyaev Exp $ 
+! $Id: release.notes,v 1.14 2007-01-12 14:10:23 ranjard Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.13 $
+! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.14 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -16,6 +16,10 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 !
 ! -----------------------------------------------------------------------------
+
+!========================== LoKiMC v2r0 2007-01-09 ====================
+! 2007-01-09 - Florence RANJARD
+ - install include files
 
 !========================== LoKiMC v1r6 2006-11-25 ===================
 
@@ -231,6 +235,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.13  2006/11/29 14:27:49  ibelyaev
+!  add BuildMCTrees
+!
 ! Revision 1.12  2006/11/27 11:58:37  ibelyaev
 !  prepare for LoKi v4r3
 !
