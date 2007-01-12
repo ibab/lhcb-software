@@ -8,6 +8,7 @@
 ! 2007-01-09 - Florence RANJARD
  - install include files
  - remove IVisPrimVertTool.h moved to LHCb/Event/MCEvent/Kernel
+ - remove IMCReconstructible.h moved to LHCb/Event/MCEvent/Kernel
 
 !======================= DaVinciMCKernel v1r2p1 2006-12-06 ===================
 
