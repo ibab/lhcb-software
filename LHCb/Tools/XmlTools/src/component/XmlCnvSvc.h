@@ -1,4 +1,4 @@
-// $Id: XmlCnvSvc.h,v 1.9 2006-06-27 12:27:29 marcocle Exp $
+// $Id: XmlCnvSvc.h,v 1.10 2007-01-12 12:43:42 cattanem Exp $
 
 #ifndef DETDESCCNV_XMLCNVSVC_H
 #define DETDESCCNV_XMLCNVSVC_H
@@ -9,7 +9,7 @@
 #include "XmlTools/Evaluator.h"
 #include "GaudiKernel/IOpaqueAddress.h"
 #include "GaudiKernel/ConversionSvc.h"
-#include "GaudiKernel/ICnvManager.h"
+//#include "GaudiKernel/ICnvManager.h"
 #include "GaudiKernel/System.h"
 
 

@@ -1,4 +1,4 @@
-// $Id: XmlCnvSvc.cpp,v 1.10 2006-06-27 12:27:28 marcocle Exp $
+// $Id: XmlCnvSvc.cpp,v 1.11 2007-01-12 12:43:42 cattanem Exp $
 
 // Include Files
 #include <xercesc/util/PlatformUtils.hpp>
@@ -21,9 +21,7 @@
 // Instantiation of a static factory class used by clients to create
 // instances of this service
 // -----------------------------------------------------------------------
-static SvcFactory<XmlCnvSvc> xmlcnvsvc_factory;
-const ISvcFactory& XmlCnvSvcFactory = xmlcnvsvc_factory;
-
+DECLARE_SERVICE_FACTORY(XmlCnvSvc)
 
 // -----------------------------------------------------------------------
 // Standard Constructor

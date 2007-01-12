@@ -1,17 +1,18 @@
-# $Id: requirements,v 1.16 2006-06-27 13:27:42 cattanem Exp $ 
+# $Id: requirements,v 1.17 2007-01-12 12:43:41 cattanem Exp $ 
 # =============================================================================
 package       XmlTools
-version       v3r10
+version       v4r0
 
 # =========== structure =======================================================
 branches      XmlTools doc cmt src
 
-# =========== own includes ====================================================
-include_dirs  $(XMLTOOLSROOT)
 
 # =========== dependencies ====================================================
 use           GaudiKernel       v*
 use           XercesC           v*	LCG_Interfaces 
+
+# =========== own includes ====================================================
+apply_pattern install_more_includes more=XmlTools
 
 # =========== constituents =====================================================
 library       XmlToolsLib        Lib/*.cpp

@@ -1,4 +1,4 @@
-// $Id: XmlParserSvc.cpp,v 1.10 2005-10-13 16:52:01 marcocle Exp $
+// $Id: XmlParserSvc.cpp,v 1.11 2007-01-12 12:43:42 cattanem Exp $
 
 // Include Files
 #include <limits.h>
@@ -20,9 +20,7 @@
 // Instantiation of a static factory class used by clients to create
 // instances of this service
 // -----------------------------------------------------------------------
-static SvcFactory<XmlParserSvc> xmlparsersvc_factory;
-const ISvcFactory& XmlParserSvcFactory = xmlparsersvc_factory;
-
+DECLARE_SERVICE_FACTORY(XmlParserSvc)
 
 // -----------------------------------------------------------------------
 // Standard Constructor
