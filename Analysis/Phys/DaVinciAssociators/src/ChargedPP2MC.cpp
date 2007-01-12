@@ -1,8 +1,8 @@
-// $Id: ChargedPP2MC.cpp,v 1.10 2006-10-18 14:57:49 jpalac Exp $
+// $Id: ChargedPP2MC.cpp,v 1.11 2007-01-12 13:58:53 ranjard Exp $
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h"
+#include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/SmartDataPtr.h"
 
@@ -56,8 +56,8 @@ typedef RelationWeighted1D<ProtoParticle,MCParticle,double>  Table;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-static const  AlgFactory<ChargedPP2MC>          s_factory ;
-const        IAlgFactory& ChargedPP2MCFactory = s_factory ; 
+
+DECLARE_ALGORITHM_FACTORY( ChargedPP2MC )
 
 #define _verbose if( msgLevel(MSG::VERBOSE) ) verbose()
 #define _debug if( msgLevel(MSG::DEBUG) ) debug()

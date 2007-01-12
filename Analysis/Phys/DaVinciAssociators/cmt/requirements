@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.45 2006-11-16 13:03:36 jpalac Exp $
+# $Id: requirements,v 1.46 2007-01-12 13:58:52 ranjard Exp $
 # Created    : 24/04/2002
 # Maintainer : Philippe Charpentier
 #
@@ -6,17 +6,13 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 
 package           DaVinciAssociators
-version           v7r0p2
+version           v8r0
 
 # This template is an example for a standard Algorithm package
 #
 # Structure, i.e. directories to process. 
 #============================================================================
 branches          cmt doc src DaVinciAssociators
-
-# Exported header files
-#============================================================================
-include_dirs     $(DAVINCIASSOCIATORSROOT)
 
 # Used packages. 
 #============================================================================
@@ -28,8 +24,10 @@ use DaVinciKernel   v*     Phys
 use DaVinciMCKernel v*     Phys
 use Relations       v*     Kernel
 use CaloUtils       v*     Calo
-# Linker library building rule
-# library          DaVinciAssociatorsLib   ../src/Lib/*.cpp
+
+# Exported header files
+#============================================================================
+apply_pattern install_more_includes more=DaVinciAssociators
 
 # Component library building rule
 #============================================================================
@@ -37,11 +35,5 @@ library          DaVinciAssociators      ../src/*.cpp -import=AIDA
 
 # define component library link options
 #============================================================================
-#apply_pattern    package_Clinkopts
-#apply_pattern    packageShr
 apply_pattern    component_library  library=DaVinciAssociators
-#apply_pattern    linker_library     library=DaVinciAssociatorsLib
 
-#============================================================================
-private
-#apply_pattern    package_Cshlibflags

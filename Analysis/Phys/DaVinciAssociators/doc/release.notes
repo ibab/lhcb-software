@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.96 2006-11-16 13:03:36 jpalac Exp $
+! $Id: release.notes,v 1.97 2007-01-12 13:58:52 ranjard Exp $
 !==============================================================================
 ! Package     : DaVinciAssociators
 ! Responsible : Philippe Charpentier
 !==============================================================================
+
+!======================== DaVinciAssociators v8r0 2007-01-09 ================
+! 2007-01-09 - Florence RANJARD
+ - install include files
+ - fix some *.cpp files to use new FACTORY
 
 !======================== DaVinciAssociators v7r0p2 2006-11-16 ================
 
