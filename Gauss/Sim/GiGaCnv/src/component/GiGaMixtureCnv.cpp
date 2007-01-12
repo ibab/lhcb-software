@@ -1,18 +1,4 @@
-// $Id: GiGaMixtureCnv.cpp,v 1.6 2002-12-07 14:36:27 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.5  2002/01/22 18:24:44  ibelyaev
-//  Vanya: update for newer versions of Geant4 and Gaudi
-//
-// Revision 1.4  2001/08/12 17:24:54  ibelyaev
-// improvements with Doxygen comments
-//
-// Revision 1.3  2001/07/15 20:45:12  ibelyaev
-// the package restructurisation
-//
-// ============================================================================
+// $Id: GiGaMixtureCnv.cpp,v 1.7 2007-01-12 15:45:57 ranjard Exp $
 #define GIGACNV_GIGAMIXTURECNV_CPP 1 
 // ============================================================================
 #include "GaudiKernel/CnvFactory.h" 
@@ -34,8 +20,7 @@
 #include "AddTabulatedProperties.h"
 #include "GiGaMixtureCnv.h" 
 
-static const  CnvFactory<GiGaMixtureCnv> s_GiGaMixtureCnvFactory ;
-const ICnvFactory& GiGaMixtureCnvFactory = s_GiGaMixtureCnvFactory ;
+DECLARE_CONVERTER_FACTORY( GiGaMixtureCnv );
 
 /// constructor 
 GiGaMixtureCnv::GiGaMixtureCnv( ISvcLocator* Locator ) 
@@ -101,7 +86,8 @@ StatusCode GiGaMixtureCnv::updateRep
   if( 0 == registry ) { return Error("IRegistry* points to NULL!");}
   /// check if the mixture is already converted
   const std::string& mixtureName = registry->identifier() ;
-  if( 0 !=  G4Material::GetMaterial( mixtureName ) ) 
+  G4bool warning=false;  
+  if( 0 !=  G4Material::GetMaterial( mixtureName , warning) ) 
     { return StatusCode::SUCCESS; } 
   /// convert all items:
   {

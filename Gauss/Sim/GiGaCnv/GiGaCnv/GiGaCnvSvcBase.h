@@ -1,4 +1,4 @@
-// $Id: GiGaCnvSvcBase.h,v 1.13 2006-07-27 09:58:35 gcorti Exp $ 
+// $Id: GiGaCnvSvcBase.h,v 1.14 2007-01-12 15:45:54 ranjard Exp $ 
 #ifndef      GIGA_GIGACNVSVCBASE_H 
 #define      GIGA_GIGACNVSVCBASE_H  1 
 
@@ -132,7 +132,7 @@ protected:
   StatusCode    setNameOfDataProviderSvc( const std::string& Name ) 
   { m_dpName = Name ; return StatusCode::SUCCESS ; } 
   ///
-  StatusCode locateOwnCnvs();
+//   StatusCode locateOwnCnvs();
 
   /** @brief templated  access to the data in Gaudi transient store 
    * 

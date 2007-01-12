@@ -1,8 +1,11 @@
-// $Id: GiGaDataStoreAlgorithm.cpp,v 1.3 2004-02-20 19:12:00 ibelyaev Exp $
+// $Id: GiGaDataStoreAlgorithm.cpp,v 1.4 2007-01-12 15:45:55 ranjard Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2004/02/20 19:12:00  ibelyaev
+//  upgrade for newer GiGa
+//
 // Revision 1.2  2002/12/07 14:36:26  ibelyaev
 //  see $GIGACNVROOT/doc/release.notes
 //
@@ -39,8 +42,8 @@
 /** Declaration of the Algorithm Factory
  */
 // ============================================================================
-static const  AlgFactory<GiGaDataStoreAlgorithm>         s_Factory ;
-const        IAlgFactory&GiGaDataStoreAlgorithmFactory = s_Factory ; 
+DECLARE_ALGORITHM_FACTORY( GiGaDataStoreAlgorithm );
+
 
 // ============================================================================
 /** Standard constructor

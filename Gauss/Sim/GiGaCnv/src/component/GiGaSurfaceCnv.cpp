@@ -1,22 +1,4 @@
-// $Id: GiGaSurfaceCnv.cpp,v 1.13 2004-02-20 19:27:27 ibelyaev Exp $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.12  2003/12/15 14:05:38  witoldp
-// fix for G4.6.0
-//
-// Revision 1.11  2003/07/08 17:00:48  ranjard
-// v12r3 - new fix for gcc3.2
-//
-// Revision 1.10  2003/07/07 16:45:30  ranjard
-// v12r3 - fix for gcc3.2
-//
-// Revision 1.9  2002/12/07 14:36:27  ibelyaev
-//  see $GIGACNVROOT/doc/release.notes
-//
-// Revision 1.8  2002/07/09 20:33:54  ibelyaev
-//  move GiGaVolumeUtils into public location
-//
-// ============================================================================
+// $Id: GiGaSurfaceCnv.cpp,v 1.14 2007-01-12 15:45:58 ranjard Exp $
 #define GIGACNV_GIGASURFACECNV_CPP 1 
 // ============================================================================
 // GaudiKernel
@@ -56,8 +38,7 @@
 /** mandatory factory busines 
  */
 // ============================================================================
-static const  CnvFactory<GiGaSurfaceCnv> s_GiGaSurfaceCnvFactory ;
-const ICnvFactory& GiGaSurfaceCnvFactory = s_GiGaSurfaceCnvFactory ;
+DECLARE_CONVERTER_FACTORY( GiGaSurfaceCnv );
 
 // ============================================================================
 /** constructor 

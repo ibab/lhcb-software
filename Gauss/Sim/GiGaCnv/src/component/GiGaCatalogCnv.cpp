@@ -1,23 +1,7 @@
-// $Id: GiGaCatalogCnv.cpp,v 1.5 2003-12-10 14:04:24 ranjard Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.4  2003/01/23 09:20:37  ibelyaev
-//  few fixes for Win2K platform
-//
-// Revision 1.3  2002/12/07 14:36:25  ibelyaev
-//  see $GIGACNVROOT/doc/release.notes
-//
-// Revision 1.2  2002/01/22 18:24:43  ibelyaev
-//  Vanya: update for newer versions of Geant4 and Gaudi
-//
-// Revision 1.1  2001/11/19 18:27:00  ibelyaev
-//  bux fix and the new converter for catalogs
-// 
-// ============================================================================
+// $Id: GiGaCatalogCnv.cpp,v 1.6 2007-01-12 15:45:55 ranjard Exp $
 // Include files
-// GaudiKernel
+
+// from Gaudi
 #include "GaudiKernel/CnvFactory.h"
 #include "GaudiKernel/IConversionSvc.h"
 #include "GaudiKernel/IDataSelector.h"
@@ -29,7 +13,7 @@
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/SmartIF.h"
 #include "GaudiKernel/SmartDataPtr.h"
-// GiGaCnv
+// from GiGaCnv
 #include "GiGaCnv/IGiGaCnvSvc.h"
 #include "GiGaCnv/GiGaCnvUtils.h"
 #include "GiGaCnv/IGiGaCnvSvcLocation.h"
@@ -50,9 +34,7 @@
 /** Factory stuff 
  */
 // ============================================================================
-static const  CnvFactory<GiGaCatalogCnv>         s_Factory ;
-const        ICnvFactory&GiGaCatalogCnvFactory = s_Factory ;
-
+DECLARE_CONVERTER_FACTORY( GiGaCatalogCnv );
 
 // ============================================================================
 /** Standard Constructor

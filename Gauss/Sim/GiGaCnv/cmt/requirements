@@ -1,10 +1,10 @@
-# $Id: requirements,v 1.71 2006-07-27 09:58:53 gcorti Exp $ 
+# $Id: requirements,v 1.72 2007-01-12 15:45:54 ranjard Exp $ 
 #============================================================================
 # Created    : 2006-07-27
 # Maintainer : Gloria CORTI
 #============================================================================
 package          GiGaCnv 
-version          v17r1
+version          v18r0
 
 #============================================================================
 # Structure. 
@@ -21,10 +21,8 @@ use              DetDesc      v*     Det
 use              GiGa         v*     Sim 
 use              ClhepTools   v*     Tools
 
-#============================================================================
-# Export includes
-#============================================================================
-include_dirs     $(GIGACNVROOT)
+# ============== standard includes ============================================
+apply_pattern install_more_includes more=GiGaCnv
 
 #============================================================================
 # Linker and Component library building rule

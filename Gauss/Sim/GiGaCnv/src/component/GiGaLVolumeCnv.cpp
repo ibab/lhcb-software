@@ -1,9 +1,4 @@
-// $Id: GiGaLVolumeCnv.cpp,v 1.14 2003-04-06 18:55:32 ibelyaev Exp $ 
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// ============================================================================
+// $Id: GiGaLVolumeCnv.cpp,v 1.15 2007-01-12 15:45:57 ranjard Exp $ 
 #define GIGACNV_GIGALVOLUMECNV_CPP 1 
 // ============================================================================
 /// GaudiKernel
@@ -46,8 +41,7 @@
 /** mandatory factory business 
  */
 // ============================================================================
-static const  CnvFactory<GiGaLVolumeCnv>         s_Factory ;
-const        ICnvFactory&GiGaLVolumeCnvFactory = s_Factory ;
+DECLARE_CONVERTER_FACTORY( GiGaLVolumeCnv );
 
 // ============================================================================
 /** standard constructor 

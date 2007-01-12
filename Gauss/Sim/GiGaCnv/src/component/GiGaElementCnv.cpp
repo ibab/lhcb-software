@@ -1,8 +1,11 @@
-// $Id: GiGaElementCnv.cpp,v 1.6 2002-12-07 14:36:26 ibelyaev Exp $ 
+// $Id: GiGaElementCnv.cpp,v 1.7 2007-01-12 15:45:56 ranjard Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2002/12/07 14:36:26  ibelyaev
+//  see $GIGACNVROOT/doc/release.notes
+//
 // Revision 1.5  2002/01/22 18:24:43  ibelyaev
 //  Vanya: update for newer versions of Geant4 and Gaudi
 //
@@ -37,8 +40,7 @@
 
 
 // ============================================================================
-static const  CnvFactory<GiGaElementCnv>         s_GiGaElementCnvFactory ;
-const        ICnvFactory&GiGaElementCnvFactory = s_GiGaElementCnvFactory ;
+DECLARE_CONVERTER_FACTORY( GiGaElementCnv );
 // ============================================================================
 
 // ============================================================================
@@ -131,7 +133,8 @@ StatusCode GiGaElementCnv::updateRep
   if( 0 == element )
     { return Error("UpdateRep::Bad cast to Element*");} 
   /// Check if Element is already known to Geant4 
-  if( 0 != G4Element::GetElement( elementPath ) ) 
+  G4bool warning = false;
+  if( 0 != G4Element::GetElement( elementPath , warning ) ) 
     { return StatusCode::SUCCESS; } 
   
   /// create isotopes first
@@ -173,7 +176,8 @@ StatusCode GiGaElementCnv::updateRep
     }
   
   /// Check if Material is already known to Geant4
-  if( 0 != G4Material::GetMaterial( elementPath ) )
+  
+  if( 0 != G4Material::GetMaterial( elementPath , warning ) )
     { return StatusCode::SUCCESS; } 
   
   /// Here we could define simple materials 

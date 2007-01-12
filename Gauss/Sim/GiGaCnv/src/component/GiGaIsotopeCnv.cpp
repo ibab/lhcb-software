@@ -1,21 +1,4 @@
-// $Id: GiGaIsotopeCnv.cpp,v 1.7 2006-03-20 12:51:06 gcorti Exp $ 
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.6  2002/12/07 14:36:26  ibelyaev
-//  see $GIGACNVROOT/doc/release.notes
-//
-// Revision 1.5  2002/01/22 18:24:43  ibelyaev
-//  Vanya: update for newer versions of Geant4 and Gaudi
-//
-// Revision 1.4  2001/08/12 17:24:52  ibelyaev
-// improvements with Doxygen comments
-//
-// Revision 1.3  2001/07/15 20:45:10  ibelyaev
-// the package restructurisation
-// 
-// ============================================================================
+// $Id: GiGaIsotopeCnv.cpp,v 1.8 2007-01-12 15:45:56 ranjard Exp $ 
 #define GIGACNV_GIGAISOTOPECNV_CPP
 // ============================================================================
 #include "GaudiKernel/CnvFactory.h"
@@ -38,8 +21,7 @@
 // ============================================================================
 ///
 // ============================================================================
-static const CnvFactory<GiGaIsotopeCnv> s_GiGaIsotopeCnvFactory ;
-const ICnvFactory& GiGaIsotopeCnvFactory = s_GiGaIsotopeCnvFactory ;
+DECLARE_CONVERTER_FACTORY( GiGaIsotopeCnv );
 // ============================================================================
 
 // ============================================================================
@@ -143,7 +125,8 @@ StatusCode GiGaIsotopeCnv::updateRep
                               (int) isotope->N                () ,
                               isotope->A                      () );
   ///
-  if( 0 != G4Material::GetMaterial( isotope->registry()->identifier() ) ) 
+  G4bool warning = false;
+  if( 0 != G4Material::GetMaterial( isotope->registry()->identifier(),warning ) ) 
     { return StatusCode::SUCCESS; }
   /// per each Isotope we could create the "simple material" with the same name
   G4Material* NewMaterial = 0 ;

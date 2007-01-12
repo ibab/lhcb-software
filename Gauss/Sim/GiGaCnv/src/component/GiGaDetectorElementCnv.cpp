@@ -1,8 +1,11 @@
-// $Id: GiGaDetectorElementCnv.cpp,v 1.10 2002-12-07 14:36:26 ibelyaev Exp $ 
+// $Id: GiGaDetectorElementCnv.cpp,v 1.11 2007-01-12 15:45:55 ranjard Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.10  2002/12/07 14:36:26  ibelyaev
+//  see $GIGACNVROOT/doc/release.notes
+//
 // Revision 1.9  2002/07/09 20:33:54  ibelyaev
 //  move GiGaVolumeUtils into public location
 //
@@ -49,10 +52,7 @@
 // ============================================================================
 /// factory 
 // ============================================================================
-static const CnvFactory<GiGaDetectorElementCnv> 
-s_GiGaDetectorElementCnvFactory ;
-const       ICnvFactory&GiGaDetectorElementCnvFactory = 
-s_GiGaDetectorElementCnvFactory ;
+DECLARE_CONVERTER_FACTORY( GiGaDetectorElementCnv );
 
 // ============================================================================
 /** standard constructor 

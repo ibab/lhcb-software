@@ -1,42 +1,4 @@
-// $Id: GiGaGeo.cpp,v 1.18 2006-03-30 13:59:05 gcorti Exp $ 
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.17  2006/01/31 10:24:59  gcorti
-// adapt to LHcb geometry now using MathCore
-//
-// Revision 1.16  2005/01/13 15:04:41  gcorti
-// bug fix giving error in HepTransform3D
-//
-// Revision 1.15  2004/08/02 13:16:59  gcorti
-// adapt to new Gaudi
-//
-// Revision 1.14  2004/04/20 04:26:46  ibelyaev
-//  fix reference counters and add warning counter
-//
-// Revision 1.13  2004/02/20 19:12:00  ibelyaev
-//  upgrade for newer GiGa
-//
-// Revision 1.12  2003/12/08 16:16:00  ranjard
-// v13r6 - fix in GiGaGeo.cpp to cope with Geant4 5.2.ref06
-//
-// Revision 1.11  2003/10/09 15:44:39  witoldp
-// changed level of printouts
-//
-// Revision 1.10  2003/09/22 13:58:20  ibelyaev
-//  polishing of addRef/release/releaseTools/finalize
-//
-// Revision 1.9  2003/09/08 16:58:34  witoldp
-// fixing bug introduced in previous version
-//
-// Revision 1.8  2003/09/04 14:06:41  witoldp
-// fix to avoid the precision problem in G4
-//
-// Revision 1.7  2003/04/06 18:55:32  ibelyaev
-//  remove unnesessary dependencies and adapt for newer GiGa
-//
-// ===========================================================================
+// $Id: GiGaGeo.cpp,v 1.19 2007-01-12 15:45:56 ranjard Exp $ 
 #define GIGACNV_GiGaGeo_CPP 1 
 // ============================================================================
 #include <string>
@@ -46,7 +8,7 @@
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/IDataSelector.h"
 #include "GaudiKernel/IConverter.h"
-#include "GaudiKernel/IObjManager.h"
+//#include "GaudiKernel/IObjManager.h"
 #include "GaudiKernel/IToolSvc.h"
 #include "GaudiKernel/IRegistry.h"
 #include "GaudiKernel/SmartDataPtr.h"
@@ -112,8 +74,7 @@
  *  mandatory factory business 
  */
 // ============================================================================
-static const SvcFactory<GiGaGeo>         s_Factory ; 
-const       ISvcFactory&GiGaGeoFactory = s_Factory ;
+DECLARE_SERVICE_FACTORY( GiGaGeo );
 // ============================================================================
 
 // ============================================================================
@@ -176,10 +137,10 @@ GiGaGeo::GiGaGeo
  */
 // ============================================================================
 G4Material* GiGaGeo::material ( const std::string& Name )
-{
+{G4bool warning = false;
   /// first look throught G4MaterialTable
   {
-    G4Material* mat = G4Material::GetMaterial( Name ) ;
+    G4Material* mat = G4Material::GetMaterial( Name , warning) ;
     if( 0 != mat ) { return mat ; }
   }
   /// retrieve material by name and convert it to G4 representation  
@@ -195,7 +156,7 @@ G4Material* GiGaGeo::material ( const std::string& Name )
   object->registry()->setAddress( Address );
   /// look throught G4MaterialTable
   {
-    G4Material* mat = G4Material::GetMaterial( Name ) ;
+    G4Material* mat = G4Material::GetMaterial( Name , warning) ;
     if( 0 != mat ) { return mat ; } 
   }
   ///
