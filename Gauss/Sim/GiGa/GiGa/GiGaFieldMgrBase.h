@@ -1,8 +1,11 @@
-// $Id: GiGaFieldMgrBase.h,v 1.4 2005-10-25 17:21:40 gcorti Exp $
+// $Id: GiGaFieldMgrBase.h,v 1.5 2007-01-12 15:44:58 ranjard Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2005/10/25 17:21:40  gcorti
+// new properties
+//
 // Revision 1.3  2004/07/05 16:06:19  gcorti
 // introduce property DeltaChord
 //
@@ -19,7 +22,7 @@
 // Include files
 #include "GiGa/IGiGaFieldMgr.h"
 #include "GiGa/GiGaBase.h"
-#include "GiGa/GiGaFactory.h"
+//#include "GiGa/GiGaFactory.h"
 
 /** @class GiGaFieldMgrBase GiGaFieldMgrBase.h GiGa/GiGaFieldMgrBase.h
  *  

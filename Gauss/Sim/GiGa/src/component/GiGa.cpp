@@ -1,4 +1,4 @@
-// $Id: GiGa.cpp,v 1.12 2006-07-27 09:31:52 gcorti Exp $ 
+// $Id: GiGa.cpp,v 1.13 2007-01-12 15:45:04 ranjard Exp $ 
 #define GIGA_GIGASVC_CPP 1 
 
 // Include files 
@@ -12,7 +12,7 @@
 #include    "GaudiKernel/ISvcLocator.h"
 #include    "GaudiKernel/IMessageSvc.h"
 #include    "GaudiKernel/IChronoStatSvc.h"
-#include    "GaudiKernel/IObjManager.h"
+//#include    "GaudiKernel/IObjManager.h"
 #include    "GaudiKernel/IToolSvc.h"
 #include    "GaudiKernel/SvcFactory.h"
 #include    "GaudiKernel/MsgStream.h"
@@ -53,10 +53,9 @@
 // Last modified 2006-07-21 : G.Corti 
 //-----------------------------------------------------------------------------
 
-// Declaration of mandatory factory for service instantiation
-static const  SvcFactory<GiGa>         s_Factory ;
-extern const ISvcFactory&GiGaFactory = s_Factory ;
-
+// Instantiation of a static factory class used by clients to create
+// instances of this service
+DECLARE_SERVICE_FACTORY(GiGa)
 
 //=============================================================================
 // Standard constructor, initializes variables

@@ -1,50 +1,48 @@
-// $Id: GiGaRunManager.h,v 1.7 2004-04-20 04:26:06 ibelyaev Exp $ 
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.6  2003/04/06 18:49:48  ibelyaev
-//  see $GIGAROOT/doc/release.notes
-//
-// ============================================================================
+// $Id: GiGaRunManager.h,v 1.8 2007-01-12 15:45:05 ranjard Exp $ 
 #ifndef   GIGA_GIGARUNMANAGER_H
 #define   GIGA_GIGARUNMANAGER_H  1
-// ============================================================================
 
-/// STD & STL 
+// Include files
+// from STD & STL 
 #include <string>
 #include <list>
 #include <vector> 
-/// GaudiKernel
+
+// from Gaudi
 #include   "GaudiKernel/Kernel.h"
 #include   "GaudiKernel/StatusCode.h"
 #include   "GaudiKernel/IService.h"
 #include   "GaudiKernel/ISvcLocator.h"
 #include   "GaudiKernel/IMessageSvc.h"
 #include   "GaudiKernel/IChronoStatSvc.h"
-/// GiGa 
+
+// from GiGa 
 #include   "GiGa/GiGaException.h"
 #include   "GiGa/GiGaBase.h"
 #include   "GiGa/IGiGaRunManager.h"
 #include   "GiGa/IGiGaTool.h"
-/// Geant4 
+
+// from Geant4 
 #include   "G4RunManager.hh" 
-/// forward declarations (Gaudi)
+
+// forward declarations
 class     IParticlePropertySvc           ;
 class     IChronoStatSvc                 ;
 class     ISvcLocator                    ;
 class     IGiGaGeoSrc                    ;
 class     G4UIsession                    ;
 class     G4UImanager                    ; 
-template <class TOOL> class  GiGaFactory ;
+//template <class TOOL> class  GiGaFactory ;
 
 
-/** @class GiGaRunManager GiGaRunManager.h 
+/** @class GiGaRunManager GiGaRunManager.h src/component/GiGaRunManager.h
  *
  *  Customized version of Geant4 Run Manager 
  *
  *  @author Vanya Belyaev 
- *  @date xx/xx/xxx 
+ *  @date xxxx-xx-xx 
+ *  @author Gloria Corti 
+ *  @date 2007-01-08 
  */
 
 class GiGaRunManager: public  virtual IGiGaRunManager  ,
@@ -52,9 +50,10 @@ class GiGaRunManager: public  virtual IGiGaRunManager  ,
                       private virtual G4RunManager 
 {
   /// friend factory
-  friend class GiGaFactory<GiGaRunManager>;
+  //  friend class GiGaFactory<GiGaRunManager>;
   
-protected:
+  // protected:
+public:
 
   /** standard constructor
    *  @see  GiGaBase 
@@ -304,13 +303,7 @@ private:
   int                        m_verbosity       ;
   
 };
-// ============================================================================
-
-// ============================================================================
-// The END 
-// ============================================================================
 #endif  ///< GIGA_GIGARUNMANAGER_H
-// ============================================================================
 
 
 

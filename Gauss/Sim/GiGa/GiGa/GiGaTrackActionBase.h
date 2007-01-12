@@ -1,8 +1,11 @@
-// $Id: GiGaTrackActionBase.h,v 1.10 2002-05-07 12:21:30 ibelyaev Exp $ 
+// $Id: GiGaTrackActionBase.h,v 1.11 2007-01-12 15:45:01 ranjard Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.10  2002/05/07 12:21:30  ibelyaev
+//  see $GIGAROOT/doc/release.notes  7 May 2002
+//
 // ============================================================================
 #ifndef     GIGA_GiGaTrackActionBase_H
 #define     GIGA_GiGaTrackActionBase_H 1 
@@ -28,7 +31,8 @@ class GiGaTrackActionBase:
   public virtual IGiGaTrackAction ,
   public         GiGaBase
 {
-protected:
+  //protected:
+public:
 
   /** standard constructor 
    *  @see GiGaBase 

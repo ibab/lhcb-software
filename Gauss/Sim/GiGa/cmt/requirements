@@ -1,15 +1,17 @@
-# $Id: requirements,v 1.74 2006-09-19 22:13:23 gcorti Exp $ 
+# $Id: requirements,v 1.75 2007-01-12 15:45:02 ranjard Exp $ 
 #============================================================================
 # Created    : 2001-01-22
 # Maintainer : Gloria CORTI
 #============================================================================
 package          GiGa
-version          v18r3
+version          v19r0
 
 #============================================================================
 branches         cmt src doc GiGa
-include_dirs     $(GIGAROOT)
+use GaudiPolicy v* 
+apply_pattern install_more_includes more=GiGa
 
+apply_pattern packageOpts 
 #============================================================================
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #============================================================================

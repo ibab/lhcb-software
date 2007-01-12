@@ -1,17 +1,10 @@
-// $Id: GiGaRunManager.cpp,v 1.15 2004-04-20 04:26:06 ibelyaev Exp $ 
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.14  2004/02/20 18:13:35  ibelyaev
-//  major update in GiGaBase and GiGaTrajectory
-//
-// ============================================================================
-#define GIGA_GIGARUNMANAGER_CPP 1 
-// ============================================================================
+// $Id: GiGaRunManager.cpp,v 1.16 2007-01-12 15:45:05 ranjard Exp $ 
+// Include files
+
 // STD & STL 
 #include <string> 
 #include <typeinfo> 
+
 // GaudiKernel
 #include  "GaudiKernel/Kernel.h"
 #include  "GaudiKernel/System.h"
@@ -21,39 +14,36 @@
 #include  "GaudiKernel/IChronoStatSvc.h" 
 #include  "GaudiKernel/Chrono.h" 
 #include  "GaudiKernel/ToolFactory.h" 
+
 // GiGa 
 #include  "GiGa/GiGaException.h"
 #include  "GiGa/IGiGaGeoSrc.h" 
 #include  "GiGa/GiGaUtil.h" 
-#include  "GiGa/GiGaMACROs.h" 
+//#include  "GiGa/GiGaMACROs.h" 
+
 // Local 
 #include  "GiGaRunManager.h" 
+
 // G4 
 #include  "G4Timer.hh"
 #include  "G4StateManager.hh"
 #include  "G4UIsession.hh"
 #include  "G4UImanager.hh"
-// G4 
 #include  "G4VUserPrimaryGeneratorAction.hh"
 #include  "G4VUserDetectorConstruction.hh"
-//
 
-// ============================================================================
-/**  @file
- *   implementation of class GiGaRunManager
- *   @author: Vanya Belyaev
- *   @date: xx/xx/xxxx
- */
-// ============================================================================
 
-// ============================================================================
-/** @var GiGaRunManagerFacrtory 
- *  static factory for creation of GiGaRunNAnager object
- */
-// ============================================================================
-IMPLEMENT_GiGaFactory( GiGaRunManager ) ;
-// ============================================================================
+//-----------------------------------------------------------------------------
+// Implementation file for class : GiGaRunManager
+// 
+// xxxx-xx-xx : Vanya Belyaev (original author)
+// 2007-01-08 : Gloria Corti
+//-----------------------------------------------------------------------------
 
+// Declaration of the Tool Factory
+DECLARE_TOOL_FACTORY( GiGaRunManager );
+
+// Namespace for debugging
 namespace GiGaRunManagerLocal
 {
 #ifdef GIGA_DEBUG
@@ -64,21 +54,14 @@ namespace GiGaRunManagerLocal
 #endif   
 };
 
-// ============================================================================
-/** standard onstructor 
- *  @see  GiGaBase 
- *  @see   AlgTool
- *  @param type type of the run manager object
- *  @param name name of the run manager object
- *  @param parent pointer to parent object  
- */
-// ============================================================================
-GiGaRunManager::GiGaRunManager
-( const std::string&  type   , 
-  const std::string&  name   , 
-  const IInterface*   parent ) 
-  : G4RunManager     (         )
-  , GiGaBase         ( type , name , parent )
+//=============================================================================
+// Standard constructor, initializes variables
+//=============================================================================
+GiGaRunManager::GiGaRunManager( const std::string& type, 
+                                const std::string& name, 
+                                const IInterface* parent ) 
+  : GiGaBase         ( type , name , parent )
+  , G4RunManager     (         )
   , m_krn_st         (  false  ) 
   , m_run_st         (  false  ) 
   , m_pre_st         (  false  ) 
@@ -87,7 +70,7 @@ GiGaRunManager::GiGaRunManager
   , m_rootGeo        (    0    ) 
   , m_geoSrc         (    0    ) 
   , m_g4UIsession    (    0    ) 
-  ///
+  //
   , m_delDetConstr   ( true    ) 
   , m_delPrimGen     ( true    )
   , m_delPhysList    ( true    )
@@ -127,11 +110,10 @@ GiGaRunManager::GiGaRunManager
   GiGaRunManagerLocal::s_Counter.increment () ;
 #endif 
 };
-// ============================================================================
 
-// ============================================================================
-// destructor 
-// ============================================================================
+//=============================================================================
+// Destructor
+//=============================================================================
 GiGaRunManager::~GiGaRunManager() 
 {
   // increase the verbosity level for DEBUG mode 
@@ -164,14 +146,10 @@ GiGaRunManager::~GiGaRunManager()
 #endif
 
 };
-// ============================================================================
 
-// ============================================================================
-/** Retrieve the processed event 
- *  @param  event pointer to processed event  
- *  @return status code 
- */
-// ============================================================================
+//=============================================================================
+// Retrieve the processed event 
+//=============================================================================
 StatusCode GiGaRunManager::retrieveTheEvent( const G4Event*& event ) 
 {
   event = 0 ; 
@@ -194,13 +172,11 @@ StatusCode GiGaRunManager::retrieveTheEvent( const G4Event*& event )
   return Print("Geant4 Event is retrieved with success" , 
                StatusCode::SUCCESS                      , MSG::VERBOSE );
 };
-// ============================================================================
 
-// ============================================================================
-/** Process the prepared event 
- *  @return status code 
- */
-// ============================================================================
+
+//=============================================================================
+// Process the prepared event 
+//=============================================================================
 StatusCode GiGaRunManager::processTheEvent()
 {
   ///
@@ -257,7 +233,7 @@ StatusCode GiGaRunManager::processTheEvent()
   return Print("Geant4 Event is processed successfully" , 
                StatusCode::SUCCESS                      , MSG::VERBOSE ) ;
 };
-// ============================================================================
+
 
 // ============================================================================
 /** Prepare the event 
@@ -453,10 +429,6 @@ StatusCode GiGaRunManager::finalizeRunManager()
   return Print("Geant4 Run  is finalized  successfully" , 
                StatusCode::SUCCESS                      , MSG::VERBOSE );
 };
-// ============================================================================
 
-// ============================================================================
-// The End 
-// ============================================================================
 
 

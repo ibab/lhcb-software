@@ -1,8 +1,11 @@
-// $Id: GiGaStepActionBase.h,v 1.10 2002-05-07 12:21:30 ibelyaev Exp $ 
+// $Id: GiGaStepActionBase.h,v 1.11 2007-01-12 15:45:01 ranjard Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.10  2002/05/07 12:21:30  ibelyaev
+//  see $GIGAROOT/doc/release.notes  7 May 2002
+//
 // ============================================================================
 #ifndef     GIGA_GiGaStepActionBase_H
 #define     GIGA_GiGaStepActionBase_H 1 
@@ -28,8 +31,8 @@ class GiGaStepActionBase:
   public virtual IGiGaStepAction ,
   public          GiGaBase
 {
-protected:
-  
+  //protected:
+public:  
   /** standard constructor 
    *  @see GiGaBase 
    *  @see AlgTool 

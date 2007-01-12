@@ -1,8 +1,11 @@
-// $Id: GiGaPhysicsListBase.h,v 1.2 2003-12-05 16:18:24 witoldp Exp $
+// $Id: GiGaPhysicsListBase.h,v 1.3 2007-01-12 15:45:01 ranjard Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2003/12/05 16:18:24  witoldp
+// removed obsolete production cuts
+//
 // Revision 1.1  2003/04/06 18:49:46  ibelyaev
 //  see $GIGAROOT/doc/release.notes
 //
@@ -13,7 +16,7 @@
 /// base classes 
 #include "GiGa/IGiGaPhysList.h"
 #include "GiGa/GiGaBase.h"
-#include "GiGa/GiGaFactory.h"
+//#include "GiGa/GiGaFactory.h"
 
 /** @class GiGaPhysicsListBase GiGaPhysicsListBase.h GiGa/GiGaPhysicListBase.h
  * 

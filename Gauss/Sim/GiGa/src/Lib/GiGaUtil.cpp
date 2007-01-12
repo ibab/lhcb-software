@@ -1,14 +1,17 @@
-// $Id: GiGaUtil.cpp,v 1.6 2002-05-07 12:21:34 ibelyaev Exp $ 
+// $Id: GiGaUtil.cpp,v 1.7 2007-01-12 15:45:03 ranjard Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2002/05/07 12:21:34  ibelyaev
+//  see $GIGAROOT/doc/release.notes  7 May 2002
+//
 // ============================================================================
 /// STD & STL 
 #include <algorithm> 
 /// GaudiKernel
-#include "GaudiKernel/ISvcLocator.h"
-#include "GaudiKernel/IObjManager.h"
+//#include "GaudiKernel/ISvcLocator.h"
+//#include "GaudiKernel/IObjManager.h"
 /// GiGa 
 #include "GiGa/GiGaUtil.h"
 
@@ -41,7 +44,7 @@
  *  @return status code
  */  
 // ============================================================================
-StatusCode GiGaUtil::SplitTypeAndName 
+StatusCode GiGaUtil::SplitTypeAndName
 ( const std::string& TypeAndName ,
   std::string      & Type        , 
   std::string      & Name        )

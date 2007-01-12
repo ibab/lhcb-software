@@ -1,38 +1,33 @@
-// $Id: GiGaIGiGaSvc.cpp,v 1.2 2002-12-07 21:05:31 ibelyaev Exp $ 
-// ================================`============================================
-// CVS tag $Name: not supported by cvs2svn $ 
-// ================================`============================================
-// $Log: not supported by cvs2svn $
-// ============================================================================
-#define GIGA_GIGASVCIGIGASVC_CPP 1 
-// ============================================================================
-/// includes
-/// STD & STL 
+// $Id: GiGaIGiGaSvc.cpp,v 1.3 2007-01-12 15:45:05 ranjard Exp $ 
+// Include files 
+// STD & STL 
 #include <string>
 #include <list>
 #include <vector> 
 #include <algorithm>
-/// GaudiKernel
+
+// GaudiKernel
 #include    "GaudiKernel/ISvcLocator.h"
 #include    "GaudiKernel/IMessageSvc.h"
 #include    "GaudiKernel/IChronoStatSvc.h"
-#include    "GaudiKernel/IObjManager.h"
+//#include    "GaudiKernel/IObjManager.h"
 #include    "GaudiKernel/SvcFactory.h"
 #include    "GaudiKernel/MsgStream.h"
 #include    "GaudiKernel/ParticleProperty.h"
-/// GiGa 
+
+// GiGa 
 #include    "GiGa/GiGaException.h"
 #include    "GiGa/GiGaHitsByID.h"
 #include    "GiGa/GiGaHitsByName.h"
-/// local 
+// local 
 #include    "GiGa.h"
+
 // G4 
 #include    "G4Event.hh"
 #include    "G4VHitsCollection.hh"
 #include    "G4HCofThisEvent.hh"
 #include    "G4SDManager.hh"
 
-// ============================================================================
 /**  @file 
  *   Implementation of class GiGa  
  *   all methods from abstract interface IGiGaSvc 
@@ -40,7 +35,6 @@
  *   @author: Vanya Belyaev 
  *   @date xx/xx/xxxx
  */
-// ============================================================================
 
 // ============================================================================
 /** add  primary vertex into GiGa/G4 
