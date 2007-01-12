@@ -1,4 +1,8 @@
-// $Id: GetMCRichOpticalPhotonsAlg.cpp,v 1.9 2006-10-10 17:41:50 jonrob Exp $
+// $Id: GetMCRichOpticalPhotonsAlg.cpp,v 1.10 2007-01-12 15:32:13 ranjard Exp $
+// Include files 
+
+// from Gaudi
+#include "GaudiKernel/DeclareFactoryEntries.h" 
 
 // local
 #include "GetMCRichOpticalPhotonsAlg.h"
@@ -10,11 +14,11 @@ using namespace LHCb;
 // Implementation file for class : GetMCRichOpticalPhotonsAlg
 //
 // 2005-12-06 : Sajan EASO
+// 2007-01-11 : Gloria Corti, adapt to Gaudi v19 (also compatible with v18)
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-static const  AlgFactory<GetMCRichOpticalPhotonsAlg>          s_factory ;
-const        IAlgFactory& GetMCRichOpticalPhotonsAlgFactory = s_factory ;
+DECLARE_ALGORITHM_FACTORY( GetMCRichOpticalPhotonsAlg );
 
 //=============================================================================
 // Standard constructor, initializes variables

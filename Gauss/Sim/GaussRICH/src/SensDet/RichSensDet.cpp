@@ -1,13 +1,18 @@
-// ============================================================================
-/// CLHEP
+// $Id: RichSensDet.cpp,v 1.17 2007-01-12 15:32:20 ranjard Exp $
+// Include files 
+
+// from CLHEP
 #include "CLHEP/Geometry/Point3D.h"
-/// GaudiKernel
+
+// Gaudi
+#include "GaudiKernel/DeclareFactoryEntries.h" 
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/IDataProviderSvc.h"
-/// GiGa
-#include "GiGa/GiGaMACROs.h"
+
+// GiGa
 #include "GiGa/GiGaBase.h"
-/// Geant4
+
+// Geant4
 #include "G4Step.hh"
 #include "G4TouchableHistory.hh"
 #include "G4VPhysicalVolume.hh"
@@ -18,30 +23,29 @@
 #include "G4Electron.hh"
 #include "G4VProcess.hh"
 
+// LHCb and Gauss
 #include "DetDesc/DetectorElement.h"
 #include "GaussTools/GaussTrackInformation.h"
 
-/// local
+// local
 #include "RichSensDet.h"
 #include "RichInfo.h"
 #include "RichPEInfo.h"
 #include "RichPhotoElectron.h"
-// ============================================================================
-/// factory business
-// ============================================================================
-IMPLEMENT_GiGaFactory( RichSensDet );
-// ============================================================================
 
-// ============================================================================
-/** standard constructor
- *  @see GiGaSensDetBase
- *  @see GiGaBase
- *  @see AlgTool
- *  @param type type of the object (?)
- *  @param name name of the object
- *  @param parent  pointer to parent object
- */
-// ============================================================================
+//-----------------------------------------------------------------------------
+// Implementation file for class : RichSensDet
+//
+// 2007-01-11 : Gloria Corti, adapt to Gaudi v19 (compatible also with v18)
+//-----------------------------------------------------------------------------
+
+// Declaration of the Tool Factory
+DECLARE_TOOL_FACTORY( RichSensDet );
+
+
+//=============================================================================
+// Standard constructor, initializes variables
+//=============================================================================
 RichSensDet::RichSensDet
 ( const std::string& type   ,
   const std::string& name   ,
@@ -70,22 +74,18 @@ RichSensDet::RichSensDet
 
   }
 
-};
-// ============================================================================
+}
 
-// ============================================================================
-/// destructor
-// ============================================================================
-RichSensDet::~RichSensDet(){};
-// ============================================================================
+//=============================================================================
+// Destructor
+//=============================================================================
+RichSensDet::~RichSensDet(){}
 
-// ============================================================================
-/** process the hit
- *  @param step     pointer to current Geant4 step
- *  @param history  pointert to touchable history
- */
-// ============================================================================
-
+//=============================================================================
+// process the hit (G4VSensitiveDetector method
+//  step     pointer to current Geant4 step
+//  history  pointert to touchable history
+//=============================================================================
 bool RichSensDet::ProcessHits( G4Step* aStep ,
                                G4TouchableHistory* )
 {
@@ -369,10 +369,26 @@ bool RichSensDet::ProcessHits( G4Step* aStep ,
   }
 
   return true;
-};
-void RichSensDet::clear() {  };
-void RichSensDet::DrawAll() {  };
-void RichSensDet::PrintAll() {  };
+}
+
+//=============================================================================
+// clear (G4VSensitiveDetector method)
+//=============================================================================
+void RichSensDet::clear() {  }
+
+//=============================================================================
+// DrawAll (G4VSensitiveDetector method)
+//=============================================================================
+void RichSensDet::DrawAll() {  }
+
+//=============================================================================
+// PrintAll (G4VSensitiveDetector method)
+//=============================================================================
+void RichSensDet::PrintAll() {  }
+
+//=============================================================================
+//  (G4VSensitiveDetector method)
+//=============================================================================
 void RichSensDet::Initialize(G4HCofThisEvent* ) {
 
   MsgStream log( msgSvc() , name() );
@@ -394,7 +410,11 @@ void RichSensDet::Initialize(G4HCofThisEvent* ) {
   }
 
 
-};
+}
+
+//=============================================================================
+// EndOfEvent (G4VSensitiveDetector method)
+//=============================================================================
 void RichSensDet::EndOfEvent(G4HCofThisEvent* HCE) {
 
   for(int ihid=0; ihid<m_RichG4HCName->RichHCSize(); ++ihid ) {
@@ -408,12 +428,9 @@ void RichSensDet::EndOfEvent(G4HCofThisEvent* HCE) {
     HCE->AddHitsCollection( m_HpdHCID[ihid] , m_RichHC[ihid]  );
   }
 
-};
+}
 
-// ============================================================================
-// The END
-// ============================================================================
-
+//=============================================================================
 
 
 

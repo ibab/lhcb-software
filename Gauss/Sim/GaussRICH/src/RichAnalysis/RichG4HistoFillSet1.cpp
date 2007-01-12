@@ -1,10 +1,8 @@
-// $Id: RichG4HistoFillSet1.cpp,v 1.5 2006-02-10 17:36:00 seaso Exp $
+// $Id: RichG4HistoFillSet1.cpp,v 1.6 2007-01-12 15:32:10 ranjard Exp $
 // Include files
 
 // local
 #include "RichG4HistoFillSet1.h"
-// GiGa
-#include "GiGa/GiGaMACROs.h"
 // local
 #include "../SensDet/RichG4Hit.h"
 //GEANT4

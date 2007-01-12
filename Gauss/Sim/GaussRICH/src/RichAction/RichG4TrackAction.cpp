@@ -1,7 +1,13 @@
-// ============================================================================
-/// CLHEP
+// $Id: RichG4TrackAction.cpp,v 1.3 2007-01-12 15:32:04 ranjard Exp $
+// Include files 
+
+// from Gaudi
+#include "GaudiKernel/DeclareFactoryEntries.h" 
+
+// CLHEP
 #include "CLHEP/Geometry/Point3D.h"
-/// Geant4 
+
+// Geant4 
 #include "G4Track.hh"
 #include "G4TrackVector.hh"
 #include "G4TrackingManager.hh"
@@ -15,36 +21,44 @@
 #include "globals.hh"
 #include <math.h>
 #include "G4VProcess.hh"
-/// GaudiKernel
+
+// Gaudi
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/PropertyMgr.h"
-/// GiGa 
-#include "GiGa/GiGaMACROs.h"
-#include "GiGa/GiGaTrajectory.h"
-/// local
+
+// local
 #include "RichG4TrackAction.h"
 #include "RichG4AnalysisConstGauss.h"
-///
-// ============================================================================
-/// factory business 
-// ============================================================================
-IMPLEMENT_GiGaFactory( RichG4TrackAction );
-// ============================================================================
 
-// ============================================================================
+//-----------------------------------------------------------------------------
+// Implementation file for class : RichG4TrackAction
+//
+// xxxx-xx-xx : X X
+// 2007-01-11 : Gloria Corti, modified for Gaudi v19
+//-----------------------------------------------------------------------------
+
+// Declaration of the Tool Factory
+DECLARE_TOOL_FACTORY( RichG4TrackAction );
+
+
+//=============================================================================
+// Standard constructor, initializes variables
+//=============================================================================
 // ============================================================================
 RichG4TrackAction::RichG4TrackAction
 ( const std::string& type   ,
   const std::string& name   ,
   const IInterface*  parent ) 
-  : GiGaTrackActionBase( type , name , parent ) { ; }
-// ============================================================================
+  : GiGaTrackActionBase( type , name , parent ) {  }
 
-// ============================================================================
-/// destructor 
-// ============================================================================
-RichG4TrackAction::~RichG4TrackAction(){; }
+//=============================================================================
+// Destructor
+//=============================================================================
+RichG4TrackAction::~RichG4TrackAction(){ }
 
+//=============================================================================
+// PreUserTrackingAction (Geant4)
+//=============================================================================
 void RichG4TrackAction::PreUserTrackingAction  ( const G4Track* aTrack ) {
 
   if( 0 == aTrack || 0 == trackMgr()           )  { return ; } /// RETURN !!!
@@ -52,6 +66,9 @@ void RichG4TrackAction::PreUserTrackingAction  ( const G4Track* aTrack ) {
 }
 
 
+//=============================================================================
+// PostUserTrackingAction (Geant4)
+//=============================================================================
 void RichG4TrackAction::PostUserTrackingAction ( const G4Track* aTrack ) 
 {
   // Is the track valid? Is tracking manager valid?
@@ -188,11 +205,7 @@ void RichG4TrackAction::PostUserTrackingAction ( const G4Track* aTrack )
 
   //
 } 
-// ============================================================================
-
-// ============================================================================
-// The END 
-// ============================================================================
+//=============================================================================
 
 
 

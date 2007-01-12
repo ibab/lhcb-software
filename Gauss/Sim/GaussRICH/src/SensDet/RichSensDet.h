@@ -1,28 +1,29 @@
-//  SE 24-5-2002
-// ============================================================================
+// $Id: RichSensDet.h,v 1.4 2007-01-12 15:32:20 ranjard Exp $
 #ifndef       RichSensDet_H
 #define       RichSensDet_H 1
-// ============================================================================
+
+// Include files
+// from GiGa
 #include "GiGa/GiGaSensDetBase.h"
+
+// local
 #include "RichG4Hit.h"
 #include "RichG4HitCollName.h"
 #include "RichG4GeomProp.h"
 
-/// forward declarations
-template <class SD>
-class GiGaSensDetFactory;
+// forward declarations
 class G4HCofThisEvent;
 
-// class IDataProviderSvc;
-//class IMessageSvc;
-//class MsgStream;
+/** @class RichSensDet RichSensDet.h src/SensDet/RichSensDet.h
+ *  
+ *
+ *  @author Sajan Easo
+ *  @date   2002-05-24, last modified 2007-01-11
+ */
 
 class RichSensDet: virtual public GiGaSensDetBase
 {
-  /// friend factory
-  friend class GiGaFactory<RichSensDet>;
-
-protected:
+public:
 
   /** standard constructor
    *  @see GiGaSensDetBase
@@ -39,8 +40,6 @@ protected:
 
   /// destructor (virtual and protected)
   virtual ~RichSensDet();
-
-public:
 
   /** process the hit
    *  @param step     pointer to current Geant4 step
@@ -113,8 +112,4 @@ private:
   std::vector<G4int> m_HpdHCID;
 };
 
-// ============================================================================
-// The END
-// ============================================================================
 #endif
-// ============================================================================

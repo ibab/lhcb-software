@@ -1,7 +1,13 @@
-// ============================================================================
-/// CLHEP
+// $Id: Rich1G4TrackActionUpstrPhoton.cpp,v 1.4 2007-01-12 15:32:02 ranjard Exp $
+// Include files 
+
+// from Gaudi
+#include "GaudiKernel/DeclareFactoryEntries.h" 
+
+// CLHEP
 #include "CLHEP/Geometry/Point3D.h"
-/// Geant4
+
+// Geant4
 #include "G4Track.hh"
 #include "G4TrackVector.hh"
 #include "G4TrackingManager.hh"
@@ -13,36 +19,45 @@
 #include "globals.hh"
 #include <math.h>
 #include "G4VProcess.hh"
-/// GaudiKernel
+
+// GaudiKernel
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/PropertyMgr.h"
-/// GiGa
-#include "GiGa/GiGaMACROs.h"
+
+// GiGa
 #include "GiGa/GiGaTrajectory.h"
-/// local
+
+// local
 #include "Rich1G4TrackActionUpstrPhoton.h"
 #include "RichG4AnalysisConstGauss.h"
-///
-// ============================================================================
-/// factory business
-// ============================================================================
-IMPLEMENT_GiGaFactory( Rich1G4TrackActionUpstrPhoton );
-// ============================================================================
 
-// ============================================================================
-// ============================================================================
+//-----------------------------------------------------------------------------
+// Implementation file for class : Rich1G4TrackActionUpstrPhoton
+//
+// 2007-01-11 : Gloria Corti, modified for Gaudi v19
+//-----------------------------------------------------------------------------
+
+// Declaration of the Tool Factory
+DECLARE_TOOL_FACTORY( Rich1G4TrackActionUpstrPhoton );
+
+//=============================================================================
+// Standard constructor, initializes variables
+//=============================================================================
 Rich1G4TrackActionUpstrPhoton::Rich1G4TrackActionUpstrPhoton
 ( const std::string& type   ,
   const std::string& name   ,
   const IInterface*  parent )
-  : GiGaTrackActionBase( type , name , parent ) { ; }
-// ============================================================================
+  : GiGaTrackActionBase( type , name , parent ) {  }
 
-// ============================================================================
-/// destructor
-// ============================================================================
-Rich1G4TrackActionUpstrPhoton::~Rich1G4TrackActionUpstrPhoton(){; }
 
+//=============================================================================
+// Destructor
+//=============================================================================
+Rich1G4TrackActionUpstrPhoton::~Rich1G4TrackActionUpstrPhoton(){ }
+
+//=============================================================================
+// PreUserTrackingAction
+//=============================================================================
 void Rich1G4TrackActionUpstrPhoton::PreUserTrackingAction
 ( const G4Track* aTrack ) {
 
@@ -95,15 +110,11 @@ void Rich1G4TrackActionUpstrPhoton::PreUserTrackingAction
 
 }
 
-
-
+//=============================================================================
+// PostUserTrackingAction
+//=============================================================================
 void Rich1G4TrackActionUpstrPhoton::PostUserTrackingAction( const G4Track* /*aTrack*/ )
-{;}
-// ============================================================================
-
-// ============================================================================
-// The END
-// ============================================================================
+{ }
 
 
 

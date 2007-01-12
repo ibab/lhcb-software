@@ -1,8 +1,10 @@
-// ============================================================================
-// GaudiKernel
+// $Id: GiGaPhysConstructorHpd.cpp,v 1.9 2007-01-12 15:31:59 ranjard Exp $
+// Include files 
+
+// from Gaudi
+#include "GaudiKernel/DeclareFactoryEntries.h" 
 #include "GaudiKernel/PropertyMgr.h"
-// GiGa
-#include "GiGa/GiGaMACROs.h"
+
 // G4 
 #include "G4ParticleTypes.hh"
 #include "G4ParticleDefinition.hh"
@@ -15,50 +17,62 @@
 #include "G4Transportation.hh"
 #include "G4MultipleScattering.hh"
 #include "G4LossTableManager.hh"
-//#include "g4std/iomanip"                
+
 // local
 #include "GiGaPhysConstructorHpd.h"
 #include "RichPhotoElectron.h"
-//#include "G4Decay.hh"
 
-// ============================================================================
-/// Factory
-// ============================================================================
-IMPLEMENT_GiGaFactory( GiGaPhysConstructorHpd ) ;
-// ============================================================================
+//-----------------------------------------------------------------------------
+// Implementation file for class : GiGaPhysConstructorHpd
+//
+// 2002-12-12 : Witek Pokorski
+// 2003-04-29 : Sajan Easo
+// 2007-01-11 : Gloria Corti, modified for Gaudi v19
+//-----------------------------------------------------------------------------
 
-// ============================================================================
+// Declaration of the Tool Factory
+DECLARE_TOOL_FACTORY( GiGaPhysConstructorHpd );
+
+
+//=============================================================================
+// Standard constructor, initializes variables
+//=============================================================================
 GiGaPhysConstructorHpd::GiGaPhysConstructorHpd
 ( const std::string& type   ,
   const std::string& name   ,
   const IInterface*  parent )
   : GiGaPhysConstructorBase( type , name , parent )
-{};
-// ============================================================================
+{}
 
-// ============================================================================
-/// destructor 
-// ============================================================================
-GiGaPhysConstructorHpd::~GiGaPhysConstructorHpd(){};
-// ============================================================================
 
-// ============================================================================
-// ============================================================================
+//=============================================================================
+// Destructor
+//=============================================================================
+GiGaPhysConstructorHpd::~GiGaPhysConstructorHpd(){}
+
+
+//=============================================================================
+// ConstructParticle
+//=============================================================================
 void GiGaPhysConstructorHpd::ConstructParticle()
 {
       RichPhotoElectron::PhotoElectronDefinition(); 
 
-};
+}
 
-// ============================================================================
-// ============================================================================
+//=============================================================================
+// ConstructProcess
+//=============================================================================
 void GiGaPhysConstructorHpd::ConstructProcess()
 {  
   ConstructPeGenericProcess();
   ConstructHpdSiEnLoss();
 
-};
+}
 
+//=============================================================================
+// ConstructPeGenericProcess
+//=============================================================================
 void GiGaPhysConstructorHpd::ConstructPeGenericProcess() {
   // first remove any process assigned to this particle from elsewhere.
   // then add the Transportation, HpdSiEnergyloss process to it.
@@ -104,8 +118,13 @@ void GiGaPhysConstructorHpd::ConstructPeGenericProcess() {
       }
   }
 }
+
+//=============================================================================
 #include "RichHpdSiEnergyLoss.h"
 
+//=============================================================================
+// ConstructHpdSiEnLoss
+//=============================================================================
 void GiGaPhysConstructorHpd::ConstructHpdSiEnLoss()
 {
   // Add Decay Process
@@ -154,6 +173,4 @@ void GiGaPhysConstructorHpd::ConstructHpdSiEnLoss()
   }
 }
 
-// ============================================================================
-// The END 
-// ============================================================================
+//=============================================================================

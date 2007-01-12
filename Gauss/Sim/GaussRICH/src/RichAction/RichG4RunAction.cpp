@@ -1,10 +1,13 @@
-/// GaudiKernel
-#include "GaudiKernel/PropertyMgr.h"
-/// GiGa
-#include "GiGa/GiGaMACROs.h"
-/// G4
+// $Id: RichG4RunAction.cpp,v 1.9 2007-01-12 15:32:04 ranjard Exp $
+// Include files 
+
+// from Gaudi
+#include "GaudiKernel/DeclareFactoryEntries.h" 
+
+// G4
 #include "G4UImanager.hh"
-/// Local
+
+// Local
 #include "RichG4RunAction.h"
 #include "RichG4HistoDefineSet1.h"
 #include "RichG4HistoDefineSet2.h"
@@ -14,26 +17,21 @@
 #include "RichG4Counters.h"
 #include "RichG4GaussPathNames.h"
 #include "RichG4MatRadIdentifier.h"
-// ============================================================================
-// SE 21-8-2002
-// ============================================================================
 
-// ============================================================================
-/// Factory business
-// ============================================================================
-IMPLEMENT_GiGaFactory( RichG4RunAction ) ;
-// ============================================================================
+//-----------------------------------------------------------------------------
+// Implementation file for class : RichG4RunAction
+//
+// 2002-08-21 : Sajan Easo
+// 2007-01-11 : Gloria Corti, modified for Gaudi v19
+//-----------------------------------------------------------------------------
 
-// ============================================================================
-/** standard constructor
- *  @see GiGaPhysListBase
- *  @see GiGaBase
- *  @see AlgTool
- *  @param type type of the object (?)
- *  @param name name of the object
- *  @param parent  pointer to parent object
- */
-// ============================================================================
+// Declaration of the Tool Factory
+DECLARE_TOOL_FACTORY( RichG4RunAction );
+
+
+//=============================================================================
+// Standard constructor, initializes variables
+//=============================================================================
 RichG4RunAction::RichG4RunAction
 ( const std::string& type   ,
   const std::string& name   ,
@@ -63,23 +61,20 @@ RichG4RunAction::RichG4RunAction
   declareProperty("DefineRichG4HistoTimer",  m_defineRichG4HistoTimer);
 
 
-};
-// ============================================================================
+}
 
-// ============================================================================
-/// destructor
-// ============================================================================
+//=============================================================================
+// Destructor
+//=============================================================================
 RichG4RunAction::~RichG4RunAction()
 {
   m_beginCmds .clear();
   m_endCmds   .clear();
-};
+}
 
-// ============================================================================
-/** performe the action at the begin of each run
- *  @param run pointer to Geant4 run object
- */
-// ============================================================================
+//=============================================================================
+// performe the action at the begin of each run
+//=============================================================================
 void RichG4RunAction::BeginOfRunAction( const G4Run* run )
 {
   if( 0 == run )
@@ -137,16 +132,15 @@ void RichG4RunAction::BeginOfRunAction( const G4Run* run )
 
   RichG4Counters* aRichCounter=  RichG4Counters::getInstance();
 
-   m_FirstTimeOfBeginRichRun= false;
+  m_FirstTimeOfBeginRichRun= false;
+  }
+  
 }
-};
-// ============================================================================
 
-// ============================================================================
-/** performe the action at the end of each run
- *  @param run pointer to Geant4 run object
- */
-// ============================================================================
+
+//=============================================================================
+// performe the action at the end of each run
+//=============================================================================
 void RichG4RunAction::EndOfRunAction( const G4Run* run )
 {
   if( 0 == run )
@@ -166,12 +160,8 @@ void RichG4RunAction::EndOfRunAction( const G4Run* run )
   //        ui->ApplyCommand( *iCmd );
   //      }
   //  }
-};
+}
 
 
-// ============================================================================
-
-// ============================================================================
-// The End
-// ============================================================================
+//=============================================================================
 

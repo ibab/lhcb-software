@@ -1,7 +1,6 @@
-// ============================================================================
+// $Id: Rich1G4TrackActionUpstrPhoton.h,v 1.4 2007-01-12 15:32:03 ranjard Exp $
 #ifndef       Rich1G4TrackActionUpstrPhoton_h
 #define       Rich1G4TrackActionUpstrPhoton_h 1
-// ============================================================================
 
 // STL
 #include <string>
@@ -11,21 +10,17 @@
 #include "GiGa/GiGaTrackActionBase.h"
 
 // forward declarations
-template <class TYPE> class GiGaFactory;
 class G4Track;
 class G4particleDefinition;
 
 class Rich1G4TrackActionUpstrPhoton: virtual public GiGaTrackActionBase
 {
-  /// friend factory for instantiation
-  friend class GiGaFactory<Rich1G4TrackActionUpstrPhoton>;
 
 public:
   /// useful typedefs
   typedef  std::vector<std::string>                  TypeNames;
   typedef  std::vector<const G4ParticleDefinition*>  PartDefs;
   ///
-protected:
 
   Rich1G4TrackActionUpstrPhoton ( const std::string& type   ,
                                   const std::string& name   ,
@@ -34,7 +29,6 @@ protected:
   /// destructor (virtual and protected)
   virtual ~Rich1G4TrackActionUpstrPhoton();
 
-public:
 
   /** perform action
    *  @see G4UserTrackingAction

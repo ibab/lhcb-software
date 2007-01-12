@@ -1,9 +1,13 @@
-// $Id: RichG4TrackActionPhotOpt.cpp,v 1.3 2006-02-10 09:35:45 seaso Exp $
+// $Id: RichG4TrackActionPhotOpt.cpp,v 1.4 2007-01-12 15:32:06 ranjard Exp $
 // Include files 
 
-/// CLHEP
+// from Gaudi
+#include "GaudiKernel/DeclareFactoryEntries.h" 
+
+// CLHEP
 #include "CLHEP/Geometry/Point3D.h"
-/// Geant4 
+
+// Geant4 
 #include "G4Track.hh"
 #include "G4TrackVector.hh"
 #include "G4TrackingManager.hh"
@@ -15,34 +19,36 @@
 #include "globals.hh"
 #include <math.h>
 #include "G4VProcess.hh"
-/// GaudiKernel
+
+// GaudiKernel
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/PropertyMgr.h"
-/// GiGa 
-#include "GiGa/GiGaMACROs.h"
+
+// GiGa 
 #include "GiGa/GiGaTrajectory.h"
+
+// LHCb
 #include "DetDesc/DetectorElement.h"
 
-/// local
+// local
 #include "RichG4AnalysisConstGauss.h"
 #include "RichG4GaussPathNames.h"
 #include "RichG4TrackActionPhotOpt.h"
 #include "RichG4SvcLocator.h"
+
 //-----------------------------------------------------------------------------
 // Implementation file for class : RichG4TrackActionPhotOpt
 //
 // 2003-04-29 : Sajan EASO
+// 2007-01-11 : Gloria Corti, modified for Gaudi v19
 //-----------------------------------------------------------------------------
 
-/// factory business 
-// ============================================================================
-IMPLEMENT_GiGaFactory( RichG4TrackActionPhotOpt );
-// ============================================================================
+// Declaration of the Tool Factory
+DECLARE_TOOL_FACTORY( RichG4TrackActionPhotOpt );
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-// ============================================================================
 RichG4TrackActionPhotOpt::RichG4TrackActionPhotOpt
 ( const std::string& type   ,
   const std::string& name   ,
@@ -51,10 +57,17 @@ RichG4TrackActionPhotOpt::RichG4TrackActionPhotOpt
      m_MaxRich1Mirror1Reflect(0), m_MaxRich1Mirror2Reflect(0),
      m_MaxRich2Mirror1Reflect(0),  m_MaxRich2Mirror2Reflect(0),
       m_ZDownstreamOfRich1(0), m_Rich1TotPhotonSuppressFactor(0), 
-      m_Rich2TotPhotonSuppressFactor(0)  {; }
-// ============================================================================
-RichG4TrackActionPhotOpt::~RichG4TrackActionPhotOpt(){; }
+      m_Rich2TotPhotonSuppressFactor(0)  
+{ }
 
+//=============================================================================
+// Destructor
+//=============================================================================
+RichG4TrackActionPhotOpt::~RichG4TrackActionPhotOpt(){ }
+
+//=============================================================================
+// initialize
+//=============================================================================
 StatusCode RichG4TrackActionPhotOpt::initialize() 
 {
 
@@ -119,8 +132,9 @@ StatusCode RichG4TrackActionPhotOpt::initialize()
 
 }
 
-
-
+//=============================================================================
+// PreUserTrackingAction (Geant4)
+//=============================================================================
 void RichG4TrackActionPhotOpt::PreUserTrackingAction  
        ( const G4Track* aTrack ) {
    if( 0 == aTrack || 0 == trackMgr()) { return ; } /// RETURN !!!
@@ -147,11 +161,12 @@ void RichG4TrackActionPhotOpt::PreUserTrackingAction
   
 }
 
+//=============================================================================
+// PostUserTrackingAction (Geant4)
+//=============================================================================
 void RichG4TrackActionPhotOpt::PostUserTrackingAction 
    ( const G4Track* aTrack ) 
-{;} 
+{} 
 
 //=============================================================================
-// ============================================================================
-// The END 
-// ============================================================================
+

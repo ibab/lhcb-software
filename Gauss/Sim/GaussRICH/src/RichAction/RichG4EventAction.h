@@ -1,8 +1,11 @@
+// $Id: RichG4EventAction.h,v 1.11 2007-01-12 15:32:03 ranjard Exp $
 #ifndef RichG4EventAction_h
 #define RichG4EventAction_h 1
-// include files  
-// SE 19-8-2002.
+
+// Include files
+// from Gaudi
 #include "../SensDet/RichG4HitCollName.h"
+
 // GiGa
 #include <vector>
 #include "GiGa/GiGaEventActionBase.h"
@@ -15,15 +18,15 @@
 #include "../RichAnalysis/RichG4HitRecon.h"
 #include "../RichAnalysis/RichG4InputMon.h"
 
-// forward declaration
-template <class TYPE> class GiGaFactory;
-
+/** @class RichG4EventAction RichG4EventAction.h src/RichActions/RichG4EventAction.h
+ *  
+ *
+ *  @author Sajan Easo
+ *  @date   2002-08-19
+ */
 class RichG4EventAction : public GiGaEventActionBase
 {
-  /// friend factory for instantiation 
-  friend class GiGaFactory<RichG4EventAction>;
-  
-protected:
+public:
 
  /** standard constructor 
    *  @see GiGaEventActionBase
@@ -41,7 +44,6 @@ protected:
   ///  destructor (virtual and protected)
   virtual ~RichG4EventAction();
 
-public:
   
   virtual void BeginOfEventAction ( const G4Event* );
   virtual void EndOfEventAction   ( const G4Event* );
@@ -179,10 +181,5 @@ private:
   
   bool m_IsRichG4FirstEvent;
 };
-// ============================================================================
-
-// ============================================================================
-// The END 
-// ============================================================================
 
 #endif  // end of RichG4EventAction_H

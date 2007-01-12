@@ -1,13 +1,17 @@
-// ======================================================================
-// GiGa
-#include "GiGa/GiGaMACROs.h"
+// $Id: RichG4EventAction.cpp,v 1.15 2007-01-12 15:32:03 ranjard Exp $
+// Include files 
+
+// from Gaudi
+#include "GaudiKernel/DeclareFactoryEntries.h" 
+
 // local
 #include "RichG4EventAction.h"
 #include "../SensDet/RichG4Hit.h"
 #include "RichG4Counters.h"
 #include "RichG4EventHitCount.h"
 #include "RichG4QwAnalysis.h"
-//GEANT4
+
+// GEANT4
 #include "G4Event.hh"
 #include "G4EventManager.hh"
 #include "G4TrajectoryContainer.hh"
@@ -15,36 +19,28 @@
 #include "G4HCofThisEvent.hh"
 #include "G4VHitsCollection.hh"
 #include "G4SDManager.hh"
-/// GaudiKernel
+
+// Gaudi
 #include "GaudiKernel/IHistogramSvc.h"
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/MsgStream.h"
-// Histogramming
 
-/** @file
- *
- * implementation of class RichG4EventAction
- *
- *  @author SE 19-8-2002.
- */
 
-// =======================================================================
-// Factory
-// =======================================================================
-IMPLEMENT_GiGaFactory( RichG4EventAction );
-// =======================================================================
+//-----------------------------------------------------------------------------
+// Implementation file for class : RichG4EventAction
+//
+// 2002-08-19 : Sajan Easo
+// 2007-01-11 : Gloria Corti, modified for Gaudi v19
+//-----------------------------------------------------------------------------
 
-// ========================================================================
-/** standard constructor
- *  @see GiGaEventActionBase
- *  @see GiGaBase
- *  @see AlgTool
- *  @param type type of the object (?)
- *  @param name name of the object
- *  @param parent  pointer to parent object
- */
-// =========================================================================
+// Declaration of the Tool Factory
+DECLARE_TOOL_FACTORY( RichG4EventAction );
+
+
+//=============================================================================
+// Standard constructor, initializes variables
+//=============================================================================
 RichG4EventAction::RichG4EventAction( const std::string& type   ,
                                       const std::string& name   ,
                                       const IInterface*  parent )
@@ -144,12 +140,11 @@ RichG4EventAction::RichG4EventAction( const std::string& type   ,
   
   m_RichG4InputMon = new RichG4InputMon();
 
-};
-// ============================================================================
+}
 
-// ============================================================================
-/// Desctructor
-// ============================================================================
+//=============================================================================
+// Destructor
+//=============================================================================
 RichG4EventAction::~RichG4EventAction( ){
 
   delPointer( m_RichG4HistoFillSet1 );
@@ -159,12 +154,11 @@ RichG4EventAction::~RichG4EventAction( ){
   delPointer( m_RichG4HistoFillTimer );
   delPointer( m_RichG4EventHitCounter );
   delPointer( m_RichG4InputMon);
-};
-// ============================================================================
+}
 
-// ============================================================================
-/// G4
-// ============================================================================
+//=============================================================================
+// BeginOfEventAction (G4)
+//=============================================================================
 void RichG4EventAction::BeginOfEventAction ( const G4Event* /* aEvt */ )
 {
   if(m_RichEventActionHistoFillActivateTimer) {
@@ -246,12 +240,11 @@ void RichG4EventAction::BeginOfEventAction ( const G4Event* /* aEvt */ )
   }
 
   // Print("'BeginOfEventAction' method is invoked by RichG4EventAction");
-};
-// ============================================================================
+}
 
-// ============================================================================
+//=============================================================================
 // G4
-// ============================================================================
+//=============================================================================
 void RichG4EventAction::EndOfEventAction( const G4Event* anEvent  /* event */ )
 {
 
@@ -415,7 +408,11 @@ void RichG4EventAction::EndOfEventAction( const G4Event* anEvent  /* event */ )
 
   // Print("'EndOfEventAction' method is invoked by RichG4EventAction");
 
-};
+}
+
+//=============================================================================
+// PrintRichG4HitCounters
+//=============================================================================
 void RichG4EventAction::PrintRichG4HitCounters()
 {
 
@@ -563,11 +560,8 @@ void RichG4EventAction::PrintRichG4HitCounters()
 
 }
 
-// ============================================================================
+//=============================================================================
 
-// ============================================================================
-// The END
-// ============================================================================
 
 
 

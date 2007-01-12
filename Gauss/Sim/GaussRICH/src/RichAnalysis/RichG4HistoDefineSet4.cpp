@@ -1,4 +1,4 @@
-// $Id: RichG4HistoDefineSet4.cpp,v 1.3 2006-03-06 17:42:19 seaso Exp $
+// $Id: RichG4HistoDefineSet4.cpp,v 1.4 2007-01-12 15:32:09 ranjard Exp $
 // Include files 
 
 // from Gaudi
@@ -15,11 +15,7 @@
 // Histogramming
 #include "AIDA/IHistogram1D.h"
 #include "AIDA/IHistogram2D.h"
-// #include "AIDA/IProfile.h"
 
-// CLHEP
-// #include "CLHEP/Units/PhysicalConstants.h"
-#include "Kernel/SystemOfUnits.h"
 #include "globals.hh"
 
 // local

@@ -1,9 +1,11 @@
-// ============================================================================
-// GaudiKernel
+// $Id: GiGaPhysConstructorOp.cpp,v 1.20 2007-01-12 15:32:00 ranjard Exp $
+// Include files 
+
+// from Gaudi
+#include "GaudiKernel/DeclareFactoryEntries.h" 
 #include "GaudiKernel/PropertyMgr.h"
 #include "GaudiKernel/MsgStream.h"
-// GiGa
-#include "GiGa/GiGaMACROs.h"
+
 // G4 
 #include "globals.hh"
 #include "G4ParticleTypes.hh"
@@ -19,7 +21,6 @@
 #include "G4Material.hh"
 #include "G4MaterialTable.hh"
 
-//#include "g4std/iomanip"                
 // local
 #include "GiGaPhysConstructorOp.h"
 #include "RichPhotoElectron.h"
@@ -29,17 +30,24 @@
 #include "G4ProcessVector.hh"
 #include "G4LossTableManager.hh"
 #include <vector>
-// #include "RichG4AnalysisConstGauss.h"
 #include "RichG4GaussPathNames.h"
 #include "RichG4MatRadIdentifier.h"
 
-// ============================================================================
-/// Factory
-// ============================================================================
-IMPLEMENT_GiGaFactory( GiGaPhysConstructorOp ) ;
-// ============================================================================
+//-----------------------------------------------------------------------------
+// Implementation file for class : GiGaPhysConstructorOp
+//
+// 2002-12-12 : Witek Pokorski
+// 2003-04-29 : sajan Easo
+// 2007-01-11 : Gloria Corti, modified for Gaudi v19
+//-----------------------------------------------------------------------------
 
-// ============================================================================
+// Declaration of the Tool Factory
+DECLARE_TOOL_FACTORY( GiGaPhysConstructorOp );
+
+
+//=============================================================================
+// Standard constructor, initializes variables
+//=============================================================================
 GiGaPhysConstructorOp::GiGaPhysConstructorOp
 ( const std::string& type   ,
   const std::string& name   ,
@@ -88,30 +96,34 @@ GiGaPhysConstructorOp::GiGaPhysConstructorOp
 
   
 
-};
-// ============================================================================
+}
 
-// ============================================================================
-/// destructor 
-// ============================================================================
-GiGaPhysConstructorOp::~GiGaPhysConstructorOp(){};
-// ============================================================================
+//=============================================================================
+// Destructor
+//=============================================================================
+GiGaPhysConstructorOp::~GiGaPhysConstructorOp(){}
 
-// ============================================================================
-// ============================================================================
+
+//=============================================================================
+//
+//=============================================================================
 void GiGaPhysConstructorOp::ConstructParticle()
 {
   //     RichPhotoElectron::PhotoElectronDefinition(); 
-};
+}
 
-// ============================================================================
-// ============================================================================
+//=============================================================================
+// ConstructProcess
+//=============================================================================
 void GiGaPhysConstructorOp::ConstructProcess()
 {
   //  ConstructPeProcess();
   ConstructOp();
-};
+}
 
+//=============================================================================
+// ConstructPeProcess
+//=============================================================================
 void  GiGaPhysConstructorOp::ConstructPeProcess() 
 {
 
@@ -190,13 +202,17 @@ void  GiGaPhysConstructorOp::ConstructPeProcess()
   //  G4cout<<"NUm proc for pe so far = "<< an1<<G4endl;
 }
 
-// ============================================================================
+//=============================================================================
 #include "RichG4Cerenkov.hh"
 #include "G4OpAbsorption.hh"
 #include "RichG4OpRayleigh.hh"
 #include "RichG4OpBoundaryProcess.hh"
 #include "RichHpdPhotoElectricEffect.h"
-// ============================================================================
+
+
+//=============================================================================
+// ConstructOp
+//=============================================================================
 void GiGaPhysConstructorOp::ConstructOp() {
 
   MsgStream msg(msgSvc(), name());
@@ -302,7 +318,9 @@ void GiGaPhysConstructorOp::ConstructOp() {
   }
 }
 
-
+//=============================================================================
+// FindRichRadiatorMaterialIndices
+//=============================================================================
 std::vector<G4int> GiGaPhysConstructorOp::FindRichRadiatorMaterialIndices
   (std::vector<G4String> aRadiatorMaterialNames)
 {
@@ -332,11 +350,4 @@ std::vector<G4int> GiGaPhysConstructorOp::FindRichRadiatorMaterialIndices
 }
 
 
-  
-// void GiGaPhysConstructorOp::SetCuts() {
-//       G4double apeCut = 10.0*km;
-//     SetCutValue(apeCut,"pe-");
-// }
-// ============================================================================
-// The END 
-// ============================================================================
+//=============================================================================

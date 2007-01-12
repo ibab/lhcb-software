@@ -1,24 +1,27 @@
+// $Id: RichG4RunAction.h,v 1.9 2007-01-12 15:32:04 ranjard Exp $
 #ifndef RichG4RunAction_h 
 #define RichG4RunAction_h 1
-// ============================================================================
+
+// Include files
 // GiGa
 #include "GiGa/GiGaRunActionBase.h"
 
 // forward declarations
-template <class TYPE> class GiGaFactory;
 class RichG4HistoDefineSet1;
 class RichG4HistoDefineSet2;
 class RichG4HistoDefineSet3;
 class RichG4HistoDefineSet4;
 class RichG4HistoDefineTimer;
 
-// SE 21-8-2002
+/** @class GiGaRunActionBase GiGaRunActionBase.h src/RichActions//GiGaRunActionBase.h
+ *  
+ *  @author Sajan Easo
+ *  @author Gloria Corti (port to Gaudi v19)
+ *  @date   2002-08-21, last modified 2007-01-11
+ */
 
 class RichG4RunAction: public virtual GiGaRunActionBase
 {
-  /// friend factory for instantiation
-  friend class GiGaFactory<RichG4RunAction>;
-
 public:
 
   /// useful typedef
@@ -34,7 +37,6 @@ public:
    */
   virtual void EndOfRunAction   ( const G4Run* run );
 
-protected:
 
   /** standard constructor
    *  @see GiGaPhysListBase
@@ -125,10 +127,6 @@ private:
   bool  m_FirstTimeOfBeginRichRun;
 
 };
-// ============================================================================
 
-// ============================================================================
-// The END
-// ============================================================================
 #endif ///< GIGA_GIGARUNACTIONCOMMAND_H
-// ============================================================================
+

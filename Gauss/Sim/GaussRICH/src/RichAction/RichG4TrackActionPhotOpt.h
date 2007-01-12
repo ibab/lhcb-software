@@ -1,4 +1,4 @@
-// $Id: RichG4TrackActionPhotOpt.h,v 1.2 2004-02-10 10:14:11 jonesc Exp $
+// $Id: RichG4TrackActionPhotOpt.h,v 1.3 2007-01-12 15:32:07 ranjard Exp $
 #ifndef RICHACTION_RICHG4TRACKACTIONPHOTOPT_HH 
 #define RICHACTION_RICHG4TRACKACTIONPHOTOPT_HH 1
 
@@ -18,20 +18,16 @@
  *  
  *
  *  @author Sajan EASO
- *  @date   2003-04-29
+ *  @author Gloria Corti (adapt to Gaudi v19)
+ *  @date   2003-04-29, last modified 01
  */
 
 // forward declarations
-template <class TYPE> class GiGaFactory;
 class G4Track;
 class G4particleDefinition;
 
 class RichG4TrackActionPhotOpt: virtual public GiGaTrackActionBase 
 {
-
-  /// friend factory for instantiation 
-  friend class GiGaFactory<RichG4TrackActionPhotOpt>;
-
 public:
 
   /// useful typedefs
@@ -39,18 +35,15 @@ public:
   typedef  std::vector<const G4ParticleDefinition*>  PartDefs; 
   ///
 
-  virtual StatusCode initialize () ;
-  
+  virtual StatusCode initialize () ;   ///< initialize
 
-protected:
-
+  /// Standard constructor
   RichG4TrackActionPhotOpt ( const std::string& type   ,
                              const std::string& name   ,
                              const IInterface*  parent ) ;
 
    virtual ~RichG4TrackActionPhotOpt( ); ///< Destructor
 
-public: 
 
   virtual void PreUserTrackingAction  ( const G4Track* ) ;
 

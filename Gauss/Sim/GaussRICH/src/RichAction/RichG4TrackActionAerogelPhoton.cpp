@@ -1,5 +1,10 @@
-// $Id: RichG4TrackActionAerogelPhoton.cpp,v 1.1 2006-11-02 10:26:34 seaso Exp $
+// $Id: RichG4TrackActionAerogelPhoton.cpp,v 1.2 2007-01-12 15:32:05 ranjard Exp $// $Id: RichG4TrackActionAerogelPhoton.cpp,v 1.2 2007-01-12 15:32:05 ranjard Exp $
 // Include files 
+
+// from Gaudi
+#include "GaudiKernel/DeclareFactoryEntries.h" 
+
+// Geant4
 #include "G4Track.hh"
 #include "G4TrackVector.hh"
 #include "G4TrackingManager.hh"
@@ -11,19 +16,19 @@
 #include "globals.hh"
 #include <math.h>
 #include "G4VProcess.hh"
-/// GaudiKernel
+
+// Gaudi
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/PropertyMgr.h"
-/// GiGa
-#include "GiGa/GiGaMACROs.h"
+
+// GiGa
 #include "GiGa/GiGaTrajectory.h"
 #include "DetDesc/DetectorElement.h"
 #include "GaussTools/GaussTrackInformation.h"
 #include "RichInfo.h"
 #include "RichPhotInfo.h"
 
-
-/// local
+// local
 #include "RichG4AnalysisConstGauss.h"
 #include "RichG4GaussPathNames.h"
 #include "RichG4SvcLocator.h"
@@ -36,12 +41,12 @@
 // Implementation file for class : RichG4TrackActionAerogelPhoton
 //
 // 2006-11-01 : Sajan EASO
+// 2007-01-11 : Gloria Corti, modified for Gaudi v19
 //-----------------------------------------------------------------------------
-//
-/// factory business
-// ============================================================================
-IMPLEMENT_GiGaFactory( RichG4TrackActionAerogelPhoton );
-// ============================================================================
+
+// Declaration of the Tool Factory
+DECLARE_TOOL_FACTORY( RichG4TrackActionAerogelPhoton );
+
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -67,6 +72,8 @@ RichG4TrackActionAerogelPhoton::RichG4TrackActionAerogelPhoton
 RichG4TrackActionAerogelPhoton::~RichG4TrackActionAerogelPhoton() {} 
 
 //=============================================================================
+// Initialize
+//=============================================================================
 StatusCode RichG4TrackActionAerogelPhoton::initialize() 
 {
  // initialize the base
@@ -85,6 +92,9 @@ StatusCode RichG4TrackActionAerogelPhoton::initialize()
  return status; 
 }
 
+//=============================================================================
+// PreUserTrackingAction (Geant4)
+//=============================================================================
 void  RichG4TrackActionAerogelPhoton::PreUserTrackingAction
        ( const G4Track* aTrack ) {
   if( 0 == aTrack || 0 == trackMgr()) { return ; } /// RETURN !!!
@@ -119,13 +129,15 @@ void  RichG4TrackActionAerogelPhoton::PreUserTrackingAction
                       }
                   }}}}}}
 }
-void RichG4TrackActionAerogelPhoton::PostUserTrackingAction
-   ( const G4Track* aTrack )
-{;}
+
 
 //=============================================================================
-// ============================================================================
-// The END
-// ============================================================================
+// PostUserTrackingAction (Geant4)
+//=============================================================================
+void RichG4TrackActionAerogelPhoton::PostUserTrackingAction
+   ( const G4Track* aTrack )
+{ }
+
+//=============================================================================
 
 

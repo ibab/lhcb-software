@@ -1,4 +1,8 @@
-// $Id: GetMCRichHitsAlg.cpp,v 1.23 2006-10-10 17:41:50 jonrob Exp $
+// $Id: GetMCRichHitsAlg.cpp,v 1.24 2007-01-12 15:32:12 ranjard Exp $
+// Include files 
+
+// from Gaudi
+#include "GaudiKernel/DeclareFactoryEntries.h" 
 
 // local
 #include "GetMCRichHitsAlg.h"
@@ -11,11 +15,11 @@ using namespace LHCb;
 // Implementation file for class : GetMCRichHitsAlg
 //
 // 2005-12-06 : Sajan EASO
+// 2007-01-11 : Gloria Corti, adapt to Gaudi v19 (also compatible with v18)
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-static const  AlgFactory<GetMCRichHitsAlg>          s_factory ;
-const        IAlgFactory& GetMCRichHitsAlgFactory = s_factory ;
+DECLARE_ALGORITHM_FACTORY( GetMCRichHitsAlg );
 
 //=============================================================================
 // Standard constructor, initializes variables

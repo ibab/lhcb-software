@@ -1,4 +1,4 @@
-// $Id: RichG4TrackActionAerogelPhoton.h,v 1.1 2006-11-02 10:26:34 seaso Exp $
+// $Id: RichG4TrackActionAerogelPhoton.h,v 1.2 2007-01-12 15:32:06 ranjard Exp $
 #ifndef RICHACTION_RICHG4TRACKACTIONAEROGELPHOTON_H 
 #define RICHACTION_RICHG4TRACKACTIONAEROGELPHOTON_H 1
 
@@ -17,15 +17,12 @@
  *  @date   2006-11-01
  *
  */
+
 // forward declarations
-template <class TYPE> class GiGaFactory;
 class G4Track;
 class G4particleDefinition;
 
 class RichG4TrackActionAerogelPhoton: virtual public GiGaTrackActionBase {
-
-  /// friend factory for instantiation
-  friend class GiGaFactory<RichG4TrackActionAerogelPhoton>;
 
 public: 
 
@@ -36,7 +33,6 @@ public:
 
   virtual StatusCode initialize () ;
 
-protected:
   /// Standard constructor
   RichG4TrackActionAerogelPhoton(  const std::string& type   ,
                                    const std::string& name   ,

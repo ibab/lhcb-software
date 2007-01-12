@@ -2,12 +2,12 @@
 # Created    : 2002-12-12
 # Maintainer : Sajan Easo
 #============================================================================
-# $Id: requirements,v 1.45 2006-11-10 18:41:38 gcorti Exp $
+# $Id: requirements,v 1.46 2007-01-12 15:31:54 ranjard Exp $
 #============================================================================
 
 # =============================================================================
 package GaussRICH
-version v6r8
+version v7
 
 # =============== package structure ===========================================
 branches          cmt src doc
@@ -31,6 +31,7 @@ library          GaussRICH    *.cpp             \
                               Misc/*.cpp   
 
 # ============== standard includes ============================================
+private 
 include_dirs     $(GAUSSRICHROOT) \
                  $(GAUSSRICHROOT)/src/SensDet \
                  $(GAUSSRICHROOT)/src/PhysProcess \

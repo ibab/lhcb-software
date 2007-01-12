@@ -1,3 +1,6 @@
+// $Id: RichG4GeomProp.cpp,v 1.6 2007-01-12 15:32:19 ranjard Exp $
+// Include files 
+
 //local
 #include "RichG4GeomProp.h"
 #include "RichG4GaussPathNames.h"
@@ -9,12 +12,12 @@
 
 #include "DetDesc/DetectorElement.h"
 
-/// GiGa
-#include "GiGa/GiGaMACROs.h"
-
 #include "G4ios.hh"
 #include <vector>
 
+//-----------------------------------------------------------------------------
+// Implementation file for class : RichG4GeomProp
+//-----------------------------------------------------------------------------
 RichG4GeomProp::RichG4GeomProp(IDataProviderSvc* detSvc, IMessageSvc* msgSvc)
 {
   //  m_RichGeomPropVerboseLevel=1;

@@ -1,4 +1,4 @@
-// $Id: RichG4ReconFlatMirr.cpp,v 1.8 2006-11-01 09:41:55 seaso Exp $
+// $Id: RichG4ReconFlatMirr.cpp,v 1.9 2007-01-12 15:32:11 ranjard Exp $
 // Include files
 
 
@@ -23,7 +23,6 @@
 #include "Kernel/Point3DTypes.h"
 #include "Kernel/Vector3DTypes.h"
 #include "Kernel/Transform3DTypes.h"
-#include "Kernel/SystemOfUnits.h"
 #include "Kernel/Plane3DTypes.h"
                                                                                                                     
 

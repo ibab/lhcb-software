@@ -1,53 +1,34 @@
-// ============================================================================
-#define GAUSSRICH_GAUSSRICH_LOAD_CPP 1 
-// ============================================================================
+// $Id: GaussRICH_load.cpp,v 1.4 2007-01-12 15:31:55 ranjard Exp $
+// Include files 
 
-// GaudiKernel 
 #include "GaudiKernel/DeclareFactoryEntries.h" 
-// GiGa 
-#include "GiGa/GiGaMACROs.h"
 
-/** @file GaussRICH_load.cpp
- *  The mandatory file for declaration of component library entries 
- *  @author Sajan Easo Sajan.Easo@cern.ch
- *  @date 2002-09-26
- */
+//----------------------------------------------------------------------------
+// The mandatory file for declaration of component library entries
+//
+// 2002-09-26 : Sajan Easo 
+// 2007-01-11 : Gloria Corti, adapt to Gaudi v19 (also compatible with v18)
+//----------------------------------------------------------------------------
 
-void GaussRICH_load() 
-{ 
-
+DECLARE_FACTORY_ENTRIES( GaussRICH ) {
+  
   /// Sensitive Detector 
-  DECLARE_GiGaFactory     (  RichSensDet             );
+  DECLARE_TOOL( RichSensDet );
 
   /// run action
-  DECLARE_GiGaFactory     (  RichG4RunAction         );
+  DECLARE_TOOL( RichG4RunAction );
 
   /// event action 
-  DECLARE_GiGaFactory     (  RichG4EventAction       );
+  DECLARE_TOOL( RichG4EventAction );
   
   /// physics constructors
-  DECLARE_GiGaFactory     (  GiGaPhysConstructorOp   );
+  DECLARE_TOOL( GiGaPhysConstructorOp );
 
-  /// MCRichHit algorithm
-  DECLARE_ALGORITHM       (  GetMCRichHitsAlg           );
+  /// algorithms
+  DECLARE_ALGORITHM( GetMCRichHitsAlg );
+  DECLARE_ALGORITHM( GetMCRichOpticalPhotonsAlg );
+  DECLARE_ALGORITHM( GetMCRichSegmentsAlg );
+  DECLARE_ALGORITHM( GetMCRichTracksAlg );
 
-  /// MCRichOpticalPhoton algorithm
-  DECLARE_ALGORITHM       (  GetMCRichOpticalPhotonsAlg );
+}
 
-  /// MCRichSegment alorithm
-  DECLARE_ALGORITHM       (  GetMCRichSegmentsAlg       );
-
- /// MCRichTrack alorithm
-  DECLARE_ALGORITHM       (  GetMCRichTracksAlg         );
-
-};
-// ============================================================================
-
-
-// ============================================================================
-extern "C" void GaussRICH_loadRef() { GaussRICH_load(); } ; 
-// ============================================================================
-
-// ============================================================================
-// The END 
-// ============================================================================

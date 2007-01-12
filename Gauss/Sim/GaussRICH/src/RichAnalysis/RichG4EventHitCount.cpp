@@ -1,4 +1,4 @@
-// $Id: RichG4EventHitCount.cpp,v 1.11 2006-11-02 10:27:12 seaso Exp $
+// $Id: RichG4EventHitCount.cpp,v 1.12 2007-01-12 15:32:08 ranjard Exp $
 // Include files
 
 
@@ -8,8 +8,6 @@
 #include "RichG4Counters.h"
 #include "RichG4AnalysisConstGauss.h"
 
-// GiGa
-#include "GiGa/GiGaMACROs.h"
 // local
 #include "RichG4Hit.h"
 #include "RichG4RadiatorMaterialIdValues.h"
