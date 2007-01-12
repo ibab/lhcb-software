@@ -1,25 +1,19 @@
-// $Id: GaussSensPlaneDet.h,v 1.2 2004-01-14 13:38:10 ranjard Exp $ 
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.1  2003/07/08 19:40:58  ibelyaev
-//  Sensitive Plane Detector + improved printout
-//
-// ============================================================================
+// $Id: GaussSensPlaneDet.h,v 1.3 2007-01-12 15:24:49 ranjard Exp $ 
 #ifndef       GAUSS_GaussSensPlaneDet_H
 #define       GAUSS_GaussSensPlaneDet_H 1 
-// ============================================================================
+
 // GaudiKernel
-/// Ntupel Svc 
+// Ntuple Svc 
 #include "GaudiKernel/INTuple.h"
 #include "GaudiKernel/INTupleSvc.h"
 #include "GaudiKernel/NTuple.h"
-/// GiGa 
+
+// GiGa 
 #include "GiGa/GiGaSensDetBase.h"
-/// local
+
+// local
 #include "CaloHit.h"
-/// forward declarations 
+
 
 /** @class GaussSensPlaneDet GaussSensPlaneDet.h GaussSensPlaneDet.h
  *
@@ -30,7 +24,7 @@
 class GaussSensPlaneDet: public GiGaSensDetBase
 { 
   /// friend factory 
-  friend class GiGaFactory<GaussSensPlaneDet>;
+  //  friend class GiGaFactory<GaussSensPlaneDet>;
   
 public :
 
@@ -90,7 +84,7 @@ public:
    */
   virtual void EndOfEvent( G4HCofThisEvent* HCE ) ;
   
-protected:
+  //protected:
   
   /** standard constructor 
    *  @see GiGaSensDetBase 

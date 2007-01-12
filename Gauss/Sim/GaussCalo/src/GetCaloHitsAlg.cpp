@@ -1,8 +1,8 @@
-// $Id: GetCaloHitsAlg.cpp,v 1.3 2006-04-04 13:19:27 gcorti Exp $
+// $Id: GetCaloHitsAlg.cpp,v 1.4 2007-01-12 15:24:49 ranjard Exp $
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h"
+#include "GaudiKernel/DeclareFactoryEntries.h" 
 
 // from GiGa 
 #include "GiGa/IGiGaSvc.h"
@@ -28,8 +28,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-static const  AlgFactory<GetCaloHitsAlg>          s_factory ;
-const        IAlgFactory& GetCaloHitsAlgFactory = s_factory ; 
+DECLARE_ALGORITHM_FACTORY( GetCaloHitsAlg );
 
 
 //=============================================================================

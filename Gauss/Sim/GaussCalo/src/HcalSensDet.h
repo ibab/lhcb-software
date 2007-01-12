@@ -1,18 +1,7 @@
-// $Id: HcalSensDet.h,v 1.3 2004-01-14 13:38:10 ranjard Exp $ 
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.2  2003/07/07 16:27:46  ibelyaev
-//  substitupe G4Material with G4MaterialCutsCouple
-//
-// Revision 1.1  2003/07/07 08:21:12  ibelyaev
-//  split the general CaloSensDet class
-//
-// ============================================================================
+// $Id: HcalSensDet.h,v 1.4 2007-01-12 15:24:49 ranjard Exp $ 
 #ifndef       GAUSSCALO_HcalSensDet_H
 #define       GAUSSCALO_HcalSensDet_H 1 
-// ============================================================================
+
 // GaudiKernel
 /// Ntupel Svc 
 #include "GaudiKernel/INTuple.h"
@@ -25,8 +14,6 @@
 #include "CaloSim.h"
 #include "CaloHit.h"
 #include "EHCalSensDet.h"
-/// forward declarations 
-template <class SD> class GiGaSensDetFactory;
 
 class DeCalorimeter ;
 
@@ -41,8 +28,6 @@ class DeCalorimeter ;
 
 class HcalSensDet: public EHCalSensDet 
 {
-  /// friend factory 
-  friend class GiGaFactory<HcalSensDet>;
   
 protected:
   
@@ -74,7 +59,7 @@ protected:
     const G4MaterialCutsCouple* material    ,
     const G4Step*               step        ) const ;
   
-protected:
+public:
   
   /** standard constructor 
    *  @see CaloSensDet 
@@ -103,10 +88,4 @@ private:
   HcalSensDet& operator=( const HcalSensDet& ) ;
   
 };
-// ============================================================================
-
-// ============================================================================
-// The END 
-// ============================================================================
 #endif  ///< GAUSSCALO_HcalSensDet_H
-// ============================================================================

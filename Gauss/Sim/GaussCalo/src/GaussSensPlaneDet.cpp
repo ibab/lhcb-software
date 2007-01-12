@@ -1,40 +1,29 @@
-// $Id: GaussSensPlaneDet.cpp,v 1.5 2006-01-17 15:52:57 odescham Exp $ 
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.4  2004/02/22 13:13:42  ibelyaev
-//  update for new GiGa
-//
-// Revision 1.3  2004/01/14 13:38:10  ranjard
-// v6r0 - fix to be used with Gaudi v14r0
-//
-// Revision 1.2  2003/10/10 17:22:19  witoldp
-// changed message output level
-//
-// Revision 1.1  2003/07/08 19:40:58  ibelyaev
-//  Sensitive Plane Detector + improved printout
-//
-// ============================================================================
-/// SRD & STD 
+// $Id: GaussSensPlaneDet.cpp,v 1.6 2007-01-12 15:24:48 ranjard Exp $ 
+// Include files 
+
+// SRD & STD 
 #include <algorithm>
 #include <vector>
-/// CLHEP 
+
+// CLHEP 
 #include "CLHEP/Geometry/Point3D.h"
 #include "CLHEP/Units/PhysicalConstants.h"
-/// GaudiKernel
+
+// GaudiKernel
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SmartDataPtr.h" 
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/IHistogramSvc.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/ToolFactory.h"
-/// GiGa 
-#include "GiGa/GiGaMACROs.h"
+
+// GiGa 
 #include "GiGa/GiGaHashMap.h"
-/// GaussTools 
+
+// GaussTools 
 #include "GaussTools/GaussTrackInformation.h"
-/// Geant4 
+
+// Geant4 
 #include "G4Step.hh"
 #include "G4TouchableHistory.hh"
 #include "G4VPhysicalVolume.hh"
@@ -42,16 +31,18 @@
 #include "G4SDManager.hh"
 #include "G4EnergyLossTables.hh"
 #include "G4Material.hh"
-//
 #include "G4Gamma.hh"
 #include "G4Electron.hh"
 #include "G4Positron.hh"
 #include "G4MuonPlus.hh"
 #include "G4MuonMinus.hh"
+
 // GiGaCnv 
 #include "GiGaCnv/GiGaVolumeUtils.h"
+
 // CaloDet
 #include "CaloDet/DeCalorimeter.h"
+
 /// local
 #include "GaussSensPlaneHit.h"
 #include "GaussSensPlaneDet.h"
@@ -66,11 +57,8 @@
  */
 // ============================================================================
 
-// ============================================================================
-/// factory business 
-// ============================================================================
-IMPLEMENT_GiGaFactory( GaussSensPlaneDet );
-// ============================================================================
+// Declaration of the Tool Factory
+DECLARE_TOOL_FACTORY( GaussSensPlaneDet );
 
 
 // ============================================================================

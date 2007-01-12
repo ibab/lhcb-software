@@ -1,74 +1,60 @@
-// $Id: EHCalSensDet.cpp,v 1.4 2006-01-17 15:52:57 odescham Exp $ 
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.3  2004/01/14 13:38:10  ranjard
-// v6r0 - fix to be used with Gaudi v14r0
-//
-// Revision 1.2  2003/12/10 13:49:30  ranjard
-// v5r0 - fix code for Gaudi v13r0
-//
-// Revision 1.1  2003/07/07 08:21:07  ibelyaev
-//  split the general CaloSensDet class
-//
-// ============================================================================
-/// SRD & STD 
+// $Id: EHCalSensDet.cpp,v 1.5 2007-01-12 15:24:46 ranjard Exp $ 
+// Include files 
+
+// SRD & STD 
 #include <algorithm>
 #include <vector>
-/// CLHEP 
+
+// CLHEP 
 #include "CLHEP/Geometry/Point3D.h"
 #include "CLHEP/Units/PhysicalConstants.h"
-/// GaudiKernel
+
+// GaudiKernel
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SmartDataPtr.h" 
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/AlgFactory.h"
-/// GiGa 
-#include "GiGa/GiGaMACROs.h"
+
+// GiGa 
+//#include "GiGa/GiGaMACROs.h"
 #include "GiGa/GiGaHashMap.h"
-/// GaussTools 
+
+// GaussTools 
 #include "GaussTools/GaussTrackInformation.h"
-/// Geant4 
+
+// Geant4 
 #include "G4Step.hh"
 #include "G4TouchableHistory.hh"
 #include "G4VPhysicalVolume.hh"
 #include "G4LogicalVolume.hh"
 #include "G4SDManager.hh"
 #include "G4EnergyLossTables.hh"
+
 // GiGaCnv 
 #include "GiGaCnv/GiGaVolumeUtils.h"
+
 // CaloDet
 #include "CaloDet/DeCalorimeter.h"
-/// local
+
+// local
 #include "CaloHit.h"
 #include "CaloSimHash.h"
 #include "EHCalSensDet.h"
-///
+
+//
 #include "AIDA/IHistogram1D.h"
 
-// ============================================================================
-/** @file 
- * 
- *  Implementation of class EHCalSensDet
- *  
- *  @author  Vanya Belyaev Ivan.Belyaev@itep.ru
- *  @author  Patrick Robbe robbe@lal.in2p3.fr 
- *
- *  @date   23/01/2001 
- */
-// ============================================================================
+//-----------------------------------------------------------------------------
+//
+//  Implementation of class EHCalSensDet
+//
+//  2001-01-23 : Vanya Belyaev, Patrick Robbe
+//
+//-----------------------------------------------------------------------------
 
-// ============================================================================
-/** standard constructor 
- *  @see GiGaSensDetBase 
- *  @see GiGaBase 
- *  @see AlgTool 
- *  @param type type of the object (?)
- *  @param name name of the object
- *  @param parent  pointer to parent object
- */
-// ============================================================================
+//=============================================================================
+// Standard constructor, initializes variables
+//=============================================================================
 EHCalSensDet::EHCalSensDet
 ( const std::string& type   ,
   const std::string& name   ,
@@ -80,16 +66,10 @@ EHCalSensDet::EHCalSensDet
   declareProperty( "SlotWidth" , m_slotWidth ) ; 
 };
 
-// ============================================================================
-/** The fractions of energy deposited in consequitive time-slots 
- *  in the give Ecal/Hcal cell
- *  @param time global time of energy deposition
- *  @param cell cellID of the cell 
- *  @param slot (out) the first time slot 
- *  @param fracs the vector of frractions for subsequent time-bins;
- *  @return StatuscCode 
- */
-// ============================================================================
+//=============================================================================
+// The fractions of energy deposited in consequitive time-slots
+// in the given Ecal/Hcal cell
+//=============================================================================
 StatusCode EHCalSensDet::timing 
 ( const double             time      , 
   const LHCb::CaloCellID&        cell      ,
@@ -122,9 +102,3 @@ StatusCode EHCalSensDet::timing
   
   return StatusCode::SUCCESS ;
 };
-// ============================================================================
-
-
-// ============================================================================
-// The END 
-// ============================================================================

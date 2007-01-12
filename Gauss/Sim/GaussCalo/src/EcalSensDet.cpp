@@ -1,43 +1,49 @@
-// $Id: EcalSensDet.cpp,v 1.9 2006-06-24 16:23:44 ibelyaev Exp $ 
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// ============================================================================
-/// SRD & STD 
+// $Id: EcalSensDet.cpp,v 1.10 2007-01-12 15:24:46 ranjard Exp $ 
+// Include files 
+
+// SRD & STD 
 #include <algorithm>
 #include <vector>
-/// CLHEP 
+
+// CLHEP 
 #include "CLHEP/Geometry/Point3D.h"
 #include "CLHEP/Units/PhysicalConstants.h"
-/// GaudiKernel
+
+// GaudiKernel
+#include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SmartDataPtr.h" 
 #include "GaudiKernel/IDataProviderSvc.h"
-#include "GaudiKernel/AlgFactory.h"
-/// GiGa 
-#include "GiGa/GiGaMACROs.h"
+
+// GiGa 
 #include "GiGa/GiGaHashMap.h"
-/// LHCb
+
+// LHCb
 #include "Kernel/LHCbMath.h"
-/// GaussTools 
+
+// GaussTools 
 #include "GaussTools/GaussTrackInformation.h"
-/// Geant4 
+
+// Geant4 
 #include "G4Step.hh"
 #include "G4TouchableHistory.hh"
 #include "G4VPhysicalVolume.hh"
 #include "G4LogicalVolume.hh"
 #include "G4SDManager.hh"
 #include "G4EnergyLossTables.hh"
+
 // GiGaCnv 
 #include "GiGaCnv/GiGaVolumeUtils.h"
+
 // CaloDet
 #include "CaloDet/DeCalorimeter.h"
-/// local
+
+// local
 #include "CaloHit.h"
 #include "CaloSimHash.h"
 #include "EcalSensDet.h"
-///
+
+//
 #include "AIDA/IHistogram1D.h"
 
 // ============================================================================
@@ -52,11 +58,8 @@
  */
 // ============================================================================
 
-// ============================================================================
-/// factory business 
-// ============================================================================
-IMPLEMENT_GiGaFactory( EcalSensDet );
-// ============================================================================
+// Declaration of the Tool Factory
+DECLARE_TOOL_FACTORY( EcalSensDet );
 
 // ============================================================================
 /** standard constructor 

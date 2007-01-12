@@ -1,48 +1,22 @@
-// $Id: EcalSensDet.h,v 1.8 2006-07-04 16:57:17 gcorti Exp $ 
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.7  2006/06/24 16:23:45  ibelyaev
-//  many minor fixes
-//
-// Revision 1.6  2006/01/17 15:52:57  odescham
-// v8r0 - Adapt to new Event Model & LHCb v20 migration
-//
-// Revision 1.5  2004/01/14 13:38:10  ranjard
-// v6r0 - fix to be used with Gaudi v14r0
-//
-// Revision 1.4  2003/12/05 08:59:58  robbep
-// Put fonctions and constants for the non-uniformity. The local
-// non-uniformity (sin-like amplitude) is set to 0 for the moment.
-//
-// Revision 1.3  2003/07/08 10:22:50  robbep
-// Adaptation to the new GaussCalo interface
-//
-// Revision 1.2  2003/07/07 16:27:46  ibelyaev
-//  substitupe G4Material with G4MaterialCutsCouple
-//
-// Revision 1.1  2003/07/07 08:21:10  ibelyaev
-//  split the general CaloSensDet class
-//
-// ============================================================================
+// $Id: EcalSensDet.h,v 1.9 2007-01-12 15:24:47 ranjard Exp $ 
 #ifndef       GAUSSCALO_EcalSensDet_H
 #define       GAUSSCALO_EcalSensDet_H 1 
-// ============================================================================
-// GaudiKernel
-/// Ntupel Svc 
+
+// Ntuple Svc 
 #include "GaudiKernel/INTuple.h"
 #include "GaudiKernel/INTupleSvc.h"
 #include "GaudiKernel/NTuple.h"
-/// GiGa 
+
+// GiGa 
 #include "GiGa/GiGaSensDetBase.h"
 #include "GiGa/GiGaHashMap.h"
-/// local
+
+// local
 #include "CaloSim.h"
 #include "CaloHit.h"
 #include "EHCalSensDet.h"
 /// forward declarations 
-template <class SD> class GiGaSensDetFactory;
+//template <class SD> class GiGaSensDetFactory;
 
 class DeCalorimeter ;
 
@@ -58,7 +32,7 @@ class DeCalorimeter ;
 class EcalSensDet: public EHCalSensDet 
 {
   /// friend factory 
-  friend class GiGaFactory<EcalSensDet>;
+  //  friend class GiGaFactory<EcalSensDet>;
   
 protected:
   
@@ -90,7 +64,8 @@ protected:
     const G4MaterialCutsCouple* material    ,
     const G4Step*               step        ) const ;
   
-protected:
+public:
+  //protected:
   
   /** standard constructor 
    *  @see CaloSensDet 

@@ -1,6 +1,6 @@
-! $Id: release.notes,v 1.66 2006-07-04 16:57:14 gcorti Exp $
+! $Id: release.notes,v 1.67 2007-01-12 15:24:45 ranjard Exp $
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.66 $
+! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.67 $
 ! -----------------------------------------------------------------------------
 ! Package          : Sim/GaussCalo
 ! Contributors     : Vanya Belyaev, Grigori Rybkine, Alexei Berdiouguine,
@@ -9,6 +9,10 @@
 ! Purpose          : collection of sensitive detectors, converters, 
 !                  : G4 actions, etc for LHCb calorimeters
 ! -----------------------------------------------------------------------------
+
+!===================== GaussCalo v9r0 2007-01-12 ============================
+! 2007-01-12 - Gloria CORTI
+ - update code to cope with Gaudi v19r0
 
 !===================== GaussCalo v8r4 2006-07-04 =============================
 ! 2006-07-04 - Gloria CORTI
