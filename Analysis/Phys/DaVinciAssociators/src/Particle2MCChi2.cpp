@@ -1,8 +1,8 @@
-// $Id: Particle2MCChi2.cpp,v 1.13 2006-10-18 14:57:50 jpalac Exp $
+// $Id: Particle2MCChi2.cpp,v 1.14 2007-01-12 13:58:53 ranjard Exp $
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h"
+#include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/SmartDataPtr.h"
 
@@ -23,8 +23,8 @@ using namespace LHCb;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-static const  AlgFactory<Particle2MCChi2>          s_factory ;
-const        IAlgFactory& Particle2MCChi2Factory = s_factory ; 
+
+DECLARE_ALGORITHM_FACTORY( Particle2MCChi2 );
 
 #define _verbose if( msgLevel(MSG::VERBOSE) ) verbose()
 #define _debug if( msgLevel(MSG::DEBUG) ) debug()

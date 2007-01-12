@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.97 2007-01-12 13:58:52 ranjard Exp $
+! $Id: release.notes,v 1.98 2007-01-12 14:00:09 ranjard Exp $
 !==============================================================================
 ! Package     : DaVinciAssociators
 ! Responsible : Philippe Charpentier
@@ -157,7 +157,7 @@
     New object names: Particle2MCLinker and ProtoParticle2MCLinker (in header file Particle2MCLinker.h). Templated objects are 
     called now Object2MCLinker (one direction link) and Object2FromMC<class OBJ2MCP=LHCb::Particle>
 
-=======
+
 ! 2006-02-28 - P. Koppenburg
   Relations ASSOCIATORS/TOOLS removed (see Kernel/Relations package),
   affects DaVinciAssociators and DaVinciMCTools.
@@ -218,14 +218,14 @@
    . New property to ignore PID (IgnorePID), e.g. running on Bs -> KK data and 
      reconstructing B0 -> pi pi. Meant for hlt studies.
 
-!========================== DaVinciAssociators v5r4p1 2005-05-19 ===================
+!========================== DaVinciAssociators v5r4p1 2005-05-19 ==============
 ! 2005-05-19 - Ph.Charpentier
  - src/Lib/Particle2MCLink.cpp
    . Prevent adding /Particles to ProtoP containers
  - cmt/requirements
    . Go to v5r4p1
 
-!========================== DaVinciAssociators v5r4 2005-04-17 ===================
+!========================== DaVinciAssociators v5r4 2005-04-17 ================
 ! 2005-05-09 - P. Koppenburg
  - src/NeutralPP2MC.cpp
    . Fix compilation warning

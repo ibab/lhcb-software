@@ -1,8 +1,8 @@
-// $Id: CompositeParticle2MCLinks.cpp,v 1.15 2006-10-18 14:57:49 jpalac Exp $
+// $Id: CompositeParticle2MCLinks.cpp,v 1.16 2007-01-12 13:58:53 ranjard Exp $
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h"
+#include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/ParticleProperty.h"
 
@@ -27,8 +27,8 @@ using namespace LHCb;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-static const  AlgFactory<CompositeParticle2MCLinks>          s_factory ;
-const        IAlgFactory& CompositeParticle2MCLinksFactory = s_factory ; 
+
+DECLARE_ALGORITHM_FACTORY( CompositeParticle2MCLinks )
 
 #define _verbose if( msgLevel(MSG::VERBOSE) ) verbose()
 #define _debug if( msgLevel(MSG::DEBUG) ) debug()

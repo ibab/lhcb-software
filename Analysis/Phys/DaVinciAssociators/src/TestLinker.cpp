@@ -1,4 +1,4 @@
-// $Id: TestLinker.cpp,v 1.4 2006-08-02 15:57:01 phicharp Exp $
+// $Id: TestLinker.cpp,v 1.5 2007-01-12 13:58:54 ranjard Exp $
 #define TestLinker_CPP 
 
 // Include files
@@ -9,7 +9,7 @@
 //#include "Relations/Relation2D.h"
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h"
+#include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/IToolSvc.h"
@@ -41,8 +41,8 @@ using namespace LHCb;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-static const AlgFactory<TestLinker>    Factory;
-const IAlgFactory& TestLinkerFactory = Factory;
+
+DECLARE_ALGORITHM_FACTORY( TestLinker );
 
 //=============================================================================
 // Standard creator, initializes variables

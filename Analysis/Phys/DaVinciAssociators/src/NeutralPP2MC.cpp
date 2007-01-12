@@ -1,8 +1,11 @@
-// $Id: NeutralPP2MC.cpp,v 1.14 2006-10-18 14:57:50 jpalac Exp $
+// $Id: NeutralPP2MC.cpp,v 1.15 2007-01-12 13:58:53 ranjard Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.14 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.15 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.14  2006/10/18 14:57:50  jpalac
+// New version v7r0
+//
 // Revision 1.13  2006/10/16 17:16:58  ibelyaev
 //  update for Data-On-Demand usage
 //
@@ -15,7 +18,7 @@
 // ============================================================================
 // GaudiKernel
 // ============================================================================
-#include "GaudiKernel/AlgFactory.h"
+#include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SmartRef.h"
 #include "GaudiKernel/SmartRefVector.h"
@@ -126,7 +129,7 @@ namespace
    *  @see NeutralPP2MC
    */
   // ==========================================================================
-  const  AlgFactory<NeutralPP2MC>         s_Factory ;
+  //  const  AlgFactory<NeutralPP2MC>         s_Factory ;
   // ==========================================================================
 };
 // ============================================================================
@@ -135,7 +138,9 @@ namespace
  *  @see NeutralPP2MC
  */
 // ============================================================================
-const   IAlgFactory&NeutralPP2MCFactory = s_Factory ;
+//const   IAlgFactory&NeutralPP2MCFactory = s_Factory ;
+DECLARE_ALGORITHM_FACTORY( NeutralPP2MC );
+
 // ============================================================================
 
 // ============================================================================

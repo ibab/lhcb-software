@@ -1,8 +1,8 @@
-// $Id: Particle2MCLinks.cpp,v 1.22 2006-10-18 14:57:50 jpalac Exp $
+// $Id: Particle2MCLinks.cpp,v 1.23 2007-01-12 13:58:54 ranjard Exp $
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h"
+#include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/SmartDataPtr.h"
 
@@ -24,8 +24,8 @@ using namespace LHCb;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-static const  AlgFactory<Particle2MCLinks>          s_factory ;
-const        IAlgFactory& Particle2MCLinksFactory = s_factory ; 
+
+DECLARE_ALGORITHM_FACTORY(Particle2MCLinks );
 
 #define _verbose if( msgLevel(MSG::VERBOSE) ) verbose()
 #define _debug if( msgLevel(MSG::DEBUG) ) debug()
