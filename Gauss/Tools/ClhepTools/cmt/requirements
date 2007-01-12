@@ -5,7 +5,8 @@ version v1r0
 # =========== structure =======================================================
 branches ClhepTools doc cmt
 # =========== includes ========================================================
-include_dirs $(CLHEPTOOLSROOT)
+use GaudiPolicy v* 
+apply_pattern install_more_includes more=ClhepTools
 # =========== dependencies ====================================================
 use           CLHEP             v* LCG_Interfaces
 use           LHCbDefinitions   v* Kernel
