@@ -4,6 +4,11 @@
 ! Purpose     : MCEvent dependent interfaces and base classes.
 !-----------------------------------------------------------------------------
 
+!====================== DaVinciMCKernel v2r0 2007-01-09 =====================
+! 2007-01-09 - Florence RANJARD
+ - install include files
+ - remove IVisPrimVertTool.h moved to LHCb/Event/MCEvent/Kernel
+
 !======================= DaVinciMCKernel v1r2p1 2006-12-06 ===================
 
 ! 2006-11-27 - Vanya BELYAEV

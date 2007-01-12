@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.5 2006-11-27 16:57:06 ibelyaev Exp $
+# $Id: requirements,v 1.6 2007-01-12 14:03:17 ranjard Exp $
 # =============================================================================
 # Created    : 11/10/2006
 # Maintainer : J. Palacios
@@ -7,14 +7,10 @@
 # =============================================================================
 
 package           DaVinciMCKernel
-version           v1r2p1
+version           v2r0
 
 #============================================================================
 branches          cmt doc src options Kernel
-
-# Exported header files
-#============================================================================
-include_dirs     $(DAVINCIMCKERNELROOT)
 
 # Used packages. 
 #============================================================================
@@ -27,6 +23,10 @@ use  DaVinciKernel       v*  Phys
 use  LoKiCore            v*  Phys
 #use  CaloAssociators     v*  Calo
 #use  CaloUtils           v*  Calo 
+
+# Exported header files
+#============================================================================
+apply_pattern install_more_includes more=Kernel
 
 # Linker library building rule
 #============================================================================
