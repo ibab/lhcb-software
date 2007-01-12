@@ -1,4 +1,4 @@
-// $Id: DumpMCEventAlg.cpp,v 1.1.1.1 2005-12-15 14:29:30 gcorti Exp $
+// $Id: DumpMCEventAlg.cpp,v 1.2 2007-01-12 10:01:00 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -22,9 +22,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-static const  AlgFactory<DumpMCEventAlg>          s_factory ;
-const        IAlgFactory& DumpMCEventAlgFactory = s_factory ; 
-
+DECLARE_ALGORITHM_FACTORY(DumpMCEventAlg)
 
 //=============================================================================
 // Standard constructor, initializes variables

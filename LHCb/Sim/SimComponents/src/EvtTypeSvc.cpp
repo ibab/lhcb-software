@@ -1,4 +1,4 @@
-// $Id: EvtTypeSvc.cpp,v 1.1.1.1 2005-12-15 14:29:30 gcorti Exp $
+// $Id: EvtTypeSvc.cpp,v 1.2 2007-01-12 10:01:00 cattanem Exp $
 // Include files 
 
 #include "GaudiKernel/SvcFactory.h"
@@ -21,8 +21,7 @@
 
 // Instantiation of a static factory class used by clients to create
 // instances of this service
-static SvcFactory<EvtTypeSvc> s_factory;
-const ISvcFactory& EvtTypeSvcFactory = s_factory;
+DECLARE_SERVICE_FACTORY(EvtTypeSvc)
 
 //=============================================================================
 // Standard constructor, initializes variables

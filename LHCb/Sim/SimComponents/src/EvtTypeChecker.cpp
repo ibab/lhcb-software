@@ -1,4 +1,4 @@
-// $Id: EvtTypeChecker.cpp,v 1.2 2005-12-15 23:23:39 gcorti Exp $
+// $Id: EvtTypeChecker.cpp,v 1.3 2007-01-12 10:01:00 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -23,9 +23,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-static const  AlgFactory<EvtTypeChecker>          s_factory ;
-const        IAlgFactory& EvtTypeCheckerFactory = s_factory ; 
-
+DECLARE_ALGORITHM_FACTORY(EvtTypeChecker)
 
 //=============================================================================
 // Standard constructor, initializes variables

@@ -1,4 +1,4 @@
-// $Id: MCParticleSelector.cpp,v 1.2 2006-05-08 15:01:53 cattanem Exp $
+// $Id: MCParticleSelector.cpp,v 1.3 2007-01-12 10:01:00 cattanem Exp $
 
 #include "Event/MCParticle.h"
 
@@ -7,8 +7,7 @@
 
 #include "MCParticleSelector.h"
 
-static const ToolFactory<MCParticleSelector>  s_factory;
-const IToolFactory& MCParticleSelectorFactory = s_factory;
+DECLARE_TOOL_FACTORY(MCParticleSelector)
 
 MCParticleSelector::MCParticleSelector( const std::string& type,
                                         const std::string& name, 
