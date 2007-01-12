@@ -1,4 +1,4 @@
-// $Id: CaloElectron.cpp,v 1.1 2006-12-21 17:53:39 odescham Exp $
+// $Id: CaloElectron.cpp,v 1.2 2007-01-12 16:39:53 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -57,6 +57,7 @@ StatusCode CaloElectron::initialize(){
   m_extrapolator = tool<ITrackExtrapolator>( m_extrapolatorType,"Extrapolator",this );
   return StatusCode::SUCCESS;  
 }
+
 
 //=============================================================================
 bool CaloElectron::set(const LHCb::Particle* particle){

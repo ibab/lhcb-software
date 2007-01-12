@@ -1,4 +1,4 @@
-// $Id: CaloElectron.h,v 1.1 2006-12-21 17:53:39 odescham Exp $
+// $Id: CaloElectron.h,v 1.2 2007-01-12 16:39:52 odescham Exp $
 #ifndef CALOELECTRON_H 
 #define CALOELECTRON_H 1
 
@@ -11,7 +11,7 @@
 //
 #include "TrackInterfaces/ITrackExtrapolator.h"
 #include "CaloInterfaces/ICaloElectron.h"            
-
+#include "CaloUtils/CaloMomentum.h"
 
 
 

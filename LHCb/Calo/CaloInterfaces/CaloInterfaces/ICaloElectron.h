@@ -1,4 +1,4 @@
-// $Id: ICaloElectron.h,v 1.1 2006-12-21 18:01:55 odescham Exp $
+// $Id: ICaloElectron.h,v 1.2 2007-01-12 16:42:36 odescham Exp $
 #ifndef KERNEL_ICALOELECTRON_H 
 #define KERNEL_ICALOELECTRON_H 1
 
@@ -14,8 +14,12 @@
 #include "Event/Particle.h"
 #include "Event/State.h"
 
-#include "CaloUtils/CaloMomentum.h"
 #include "CaloDet/DeCalorimeter.h"
+
+namespace LHCb{
+  class CaloMomentum; 
+}
+
 
 static const InterfaceID IID_ICaloElectron ( "ICaloElectron", 1, 0 );
 
