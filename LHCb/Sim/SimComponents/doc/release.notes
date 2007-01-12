@@ -8,7 +8,8 @@
 !====================== SimComponents v2r0 2007-01-12 ========================
 ! 2007-01-12 - Marco Cattaneo
  - Use xxx_FACTORY macros
- - Add VisPrimVertTool (previously in DaVinciMCTools). Needs MCEvent v2r*
+ - Add VisPrimVertTool and MCReconstructible (previously in DaVinciMCTools).
+   Needs MCEvent v2r*
 
 !====================== SimComponents v1r2p1 2006-05-29 ======================
 ! 2006-05-29 - Marco Cattaneo
