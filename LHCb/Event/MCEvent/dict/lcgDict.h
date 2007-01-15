@@ -1,4 +1,4 @@
-// $Id: lcgDict.h,v 1.3 2007-01-12 14:17:34 cattanem Exp $
+// $Id: lcgDict.h,v 1.4 2007-01-15 16:11:54 cattanem Exp $
 #ifndef MCEVENT_LCGDICT_H 
 #define MCEVENT_LCGDICT_H 1
 
@@ -9,6 +9,7 @@
 
 #include "Kernel/IMCDecayFinder.h"
 #include "Kernel/IMCReconstructible.h"
+#include "Kernel/IMuonPad2MCTool.h"
 #include "Kernel/ISiDepositedCharge.h"
 #include "Kernel/IVisPrimVertTool.h"
 

@@ -1,10 +1,13 @@
-! $Id: release.notes,v 1.59 2007-01-12 14:17:34 cattanem Exp $
+! $Id: release.notes,v 1.60 2007-01-15 16:12:05 cattanem Exp $
 ! Package     : Event/MCEvent
 ! Responsible : Marco Cattaneo, Gloria Corti
 ! Purpose     : LHCb Event model. MC truth classes (Gauss and Boole output) 
 !-----------------------------------------------------------------------------
 
-!======================== MCEvent v2r0 2007-01-12 ============================
+!======================== MCEvent v2r0 2007-01-15 ============================
+! 2007-01-15 - Marco Cattaneo
+ - Add IMuonPad2MCTool interface
+
 ! 2007-01-12 - Marco Cattaneo
  - Add Kernel/IVisPrimVertTool.h, IMCReconstructible interfaces, previously
    in DaVinciMCKernel
