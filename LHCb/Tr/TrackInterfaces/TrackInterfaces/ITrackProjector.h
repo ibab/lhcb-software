@@ -8,8 +8,10 @@
 
 // Geometry definitions
 #include "GaudiKernel/GenericMatrixTypes.h"
-#include "GaudiKernel/TrackTypes.h"
 #include "GaudiKernel/Point3DTypes.h"
+
+// From TrackEvent
+#include "Event/TrackTypes.h"
 
 // Forward declarations
 namespace LHCb {
