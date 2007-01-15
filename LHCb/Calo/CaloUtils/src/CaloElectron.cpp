@@ -1,13 +1,13 @@
-// $Id: CaloElectron.cpp,v 1.2 2007-01-12 16:39:53 odescham Exp $
+// $Id: CaloElectron.cpp,v 1.3 2007-01-15 07:52:58 cattanem Exp $
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/ToolFactory.h" 
 
 // LHCb
-#include "Kernel/Plane3DTypes.h"
-#include "Kernel/Point3DTypes.h"
-#include "Kernel/Vector3DTypes.h"
+#include "GaudiKernel/Plane3DTypes.h"
+#include "GaudiKernel/Point3DTypes.h"
+#include "GaudiKernel/Vector3DTypes.h"
 #include "LHCbMath/Line.h"
 #include "LHCbMath/GeomFun.h"
 // local

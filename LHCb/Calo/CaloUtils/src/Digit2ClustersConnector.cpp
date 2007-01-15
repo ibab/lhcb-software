@@ -1,12 +1,7 @@
-// $Id: Digit2ClustersConnector.cpp,v 1.4 2006-03-22 18:25:06 odescham Exp $ 
-// ===========================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
+// $Id: Digit2ClustersConnector.cpp,v 1.5 2007-01-15 07:53:00 cattanem Exp $ 
 // ===========================================================================
 #define CALOUTILS_DIGIT2CLUSTERSCONNECTOR_CPP 1 
 // ===========================================================================
-// GaudiKernel
-#include "GaudiKernel/ObjectVector.h"
-#include "GaudiKernel/SmartRef.h"
 #include "CaloKernel/CaloException.h"
 #include "Event/CaloDigit.h"
 #include "Event/CaloCluster.h"

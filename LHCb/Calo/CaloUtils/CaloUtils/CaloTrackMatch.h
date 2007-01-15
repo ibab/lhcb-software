@@ -1,16 +1,14 @@
-// $Id: CaloTrackMatch.h,v 1.7 2006-07-19 07:37:42 cattanem Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.7 $ 
+// $Id: CaloTrackMatch.h,v 1.8 2007-01-15 07:52:45 cattanem Exp $
 // ============================================================================
 #ifndef CALOUTILS_CALOTRACKMATCH_H 
 #define CALOUTILS_CALOTRACKMATCH_H 1
 // ============================================================================
 // Include files
 // ============================================================================
-// LHCbDefinition/ROOT
+// Geometry Definitions (Gaudi+ROOT)
 // ============================================================================
-#include "Kernel/GenericVectorTypes.h"
-#include "Kernel/SymmetricMatrixTypes.h"
+#include "GaudiKernel/GenericVectorTypes.h"
+#include "GaudiKernel/SymmetricMatrixTypes.h"
 // ============================================================================
 // Event 
 // ============================================================================

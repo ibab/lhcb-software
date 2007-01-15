@@ -1,15 +1,7 @@
-// $Id: CaloTrackAlg.cpp,v 1.5 2006-06-18 18:32:55 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.4  2006/06/06 11:59:52  ibelyaev
-//  new base classes for PIDs & rewritten TrackUse
-//
+// $Id: CaloTrackAlg.cpp,v 1.6 2007-01-15 07:52:59 cattanem Exp $
 // ============================================================================
 // Include files
 // ============================================================================
-#include "GaudiKernel/MsgStream.h" 
 #include "Event/Track.h"
 #include "CaloUtils/CaloTrackAlg.h"
 // ============================================================================

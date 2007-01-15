@@ -1,11 +1,6 @@
-// $Id: SpreadEstimator.cpp,v 1.10 2006-10-31 12:52:45 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
+// $Id: SpreadEstimator.cpp,v 1.11 2007-01-15 07:53:01 cattanem Exp $
 // ============================================================================
 // Include files
-#include "GaudiKernel/SmartRef.h"
 #include "CaloDet/DeCalorimeter.h"
 #include "Event/CaloCluster.h"
 // local

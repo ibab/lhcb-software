@@ -1,14 +1,10 @@
-// $Id: CovarianceEstimator.cpp,v 1.15 2006-06-14 16:40:19 odescham Exp $ 
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
+// $Id: CovarianceEstimator.cpp,v 1.16 2007-01-15 07:53:00 cattanem Exp $ 
 // ============================================================================
 #define CALOUTILS_COVARIANCEESTIMATOR_CPP 1 
 // ============================================================================
 /// Include files
 #include<cmath>
-#include "Kernel/Point3DTypes.h"
-#include "Kernel/SymmetricMatrixTypes.h"
-#include "GaudiKernel/SmartRef.h"
+#include "GaudiKernel/Point3DTypes.h"
 #include "GaudiKernel/MsgStream.h"
 #include "CaloDet/DeCalorimeter.h"
 #include "Event/CaloCluster.h"

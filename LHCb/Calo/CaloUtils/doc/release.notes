@@ -1,18 +1,20 @@
-! $Id: release.notes,v 1.77 2007-01-12 16:39:52 odescham Exp $
+! $Id: release.notes,v 1.78 2007-01-15 07:52:56 cattanem Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
 
+!========================== CaloUtils v7r0 2007-01-15 =========================
+! 2007-01-15 - Marco Cattaneo
+ - Remove dependency on LHCbDefinitions
+ - Clean up includes
 
 ! 2007-01-12 - Olivier Deschamps 
  - include CaloMomentum.h in CaloElectron implementation instead in the interface
    to avoid circular depedency with CaloInterfaces
 
-
 ! 2006-12-21 - Olivier Deschamps 
  - new tool added : CaloUtils/CaloElectron.h - src/CaloElectron.cpp 
 
-!========================== CaloUtils v7r0 2007-01-12 =========================
 ! 2006-12-06 - Florence RANJARD
  - apply_pattern install_more_includes
 

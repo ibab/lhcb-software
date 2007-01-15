@@ -1,30 +1,11 @@
-// $Id: SharedCells.h,v 1.5 2006-04-19 16:33:20 odescham Exp $ 
-// =========================================================================== 
-// CVS tag $Name: not supported by cvs2svn $
-// =========================================================================== 
-// $Log: not supported by cvs2svn $
-// Revision 1.4  2005/11/07 11:57:13  odescham
-// v5r0 - Adapt to the new Track Event Model
-//
-// Revision 1.3  2002/04/02 10:59:30  ibelyaev
-//  update for new event model
-//
-// Revision 1.2  2001/11/08 20:04:23  ibelyaev
-//  update and bug fix
-//
-// Revision 1.1.1.1  2001/11/02 14:39:53  ibelyaev
-// New package: The first commit into CVS
-//
-// Revision 1.1  2001/07/04 18:15:54  ibelyaev
-// Shared cell algorimth implementation
-//
+// $Id: SharedCells.h,v 1.6 2007-01-15 07:52:53 cattanem Exp $ 
 // =========================================================================== 
 #ifndef CALOUTILS_SHAREDCELLS_H 
 #define CALOUTILS_SHAREDCELLS_H 1
 /// =========================================================================== 
 #include <cmath>
 // Include files
-#include "Kernel/Point3DTypes.h"
+#include "GaudiKernel/Point3DTypes.h"
 
 /** @namespace SharedCells SharedCells.h CaloUtils/SharedCells.h
  *

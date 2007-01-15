@@ -1,32 +1,10 @@
-// $Id: CellMatrix.h,v 1.7 2006-03-22 18:25:05 odescham Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.6  2005/11/07 11:57:13  odescham
-// v5r0 - Adapt to the new Track Event Model
-//
-// Revision 1.5  2004/05/27 01:42:11  ibelyaev
-//  fix a bug in CellMatrix::area method
-//
-// Revision 1.4  2001/11/25 15:26:20  ibelyaev
-//  update for newer CaloKernel package
-//
-// Revision 1.3  2001/11/22 16:02:33  ibelyaev
-//  new utilities
-//
-// Revision 1.2  2001/11/08 20:04:22  ibelyaev
-//  update and bug fix
-//
-// Revision 1.1  2001/11/07 17:24:48  ibelyaev
-//  new utilities for determination of relative positions of cells
-// 
+// $Id: CellMatrix.h,v 1.8 2007-01-15 07:52:46 cattanem Exp $
 // ============================================================================
 #ifndef CALOUTILS_CELLMATRIX_H 
 #define CALOUTILS_CELLMATRIX_H 1
 // Include files
 #include <functional>
-#include "Kernel/Point3DTypes.h"
+#include "GaudiKernel/Point3DTypes.h"
 #include "Kernel/CaloCellID.h"
 // forward declaration
 class DeCalorimeter ;   

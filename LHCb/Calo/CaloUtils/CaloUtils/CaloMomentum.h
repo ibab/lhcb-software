@@ -1,22 +1,17 @@
-#ifndef RecEvent_CaloMomentum_H
-#define RecEvent_CaloMomentum_H 1
+#ifndef CaloUtils_CaloMomentum_H
+#define CaloUtils_CaloMomentum_H 1
 
 // Include files
-#include "GaudiKernel/MsgStream.h"
 #include <vector>
-#include "Kernel/SymmetricMatrixTypes.h"
-#include "Kernel/Vector4DTypes.h"
-#include "Kernel/Point3DTypes.h"
+#include "GaudiKernel/SymmetricMatrixTypes.h"
+#include "GaudiKernel/Vector4DTypes.h"
+#include "GaudiKernel/Point3DTypes.h"
 #include "Event/CaloPosition.h"
-#include "GaudiKernel/SmartRefVector.h"
 //RecEvent
-//#include "Event/Vertex.h"
 #include "Event/RecVertex.h"
-//#include "Event/Particle.h"
 #include "Event/ProtoParticle.h"
 #include "Event/CaloCluster.h"
 #include "Event/CaloHypo.h"
-
 
 
 namespace LHCb 
@@ -216,6 +211,4 @@ inline void LHCb::CaloMomentum::setReferencePoint(const LHCb::RecVertex* vertex)
   this->addToFlag( LHCb::CaloMomentum::NewPointCovariance);
 } 
 
-#endif ///RecEvent_CaloMomentum_H
-
-
+#endif //CaloUtils_CaloMomentum_H
