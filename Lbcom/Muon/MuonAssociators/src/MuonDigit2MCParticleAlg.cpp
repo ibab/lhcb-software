@@ -1,4 +1,4 @@
-// $Id: MuonDigit2MCParticleAlg.cpp,v 1.11 2007-01-15 16:42:35 cattanem Exp $
+// $Id: MuonDigit2MCParticleAlg.cpp,v 1.12 2007-01-15 17:39:47 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -109,8 +109,8 @@ StatusCode MuonDigit2MCParticleAlg:: associateToTruth(LHCb::MuonDigit* digit,
   SmartRefVector<LHCb::MCHit>::const_iterator iHit;
   std::vector<LHCb::MCMuonHitHistory>::iterator itHistory=
     mcDigit->HitsHistory().begin();
-    info()<<" prima ricerca mu"<<mcDigit->HitsHistory().size()<<" "<<
-	mcDigit->mcHits().size()<<endreq;
+  //    info()<<" prima ricerca mu"<<mcDigit->HitsHistory().size()<<" "<<
+  //	mcDigit->mcHits().size()<<endreq;
 
   for( iHit = mcDigit->mcHits().begin() ;
        iHit != mcDigit->mcHits().end() ;
@@ -118,32 +118,32 @@ StatusCode MuonDigit2MCParticleAlg:: associateToTruth(LHCb::MuonDigit* digit,
     const LHCb::MCHit * mcHit = *iHit;
     // check the MCMuonHit is still available
     if(mcHit) {
-      info()<<" dopo "<<endreq;
+      //      info()<<" dopo "<<endreq;
       
       const LHCb::MCParticle * mcPart = mcHit->mcParticle();
       // check found mcParticle
       if(mcPart){  
-        info()<<" dopo 1 "<<mcPart<<endreq;
+        //  info()<<" dopo 1 "<<mcPart<<endreq;
       
-        info()<<" dopo 1 "<<mcPart->particleID().abspid()<<endreq;
+        //  info()<<" dopo 1 "<<mcPart->particleID().abspid()<<endreq;
           // check in the current event container
         if( mcParticles == mcPart->parent() ){  
           //check if muon    
-          info()<<" dopo 2"<<endreq;
+          //  info()<<" dopo 2"<<endreq;
           if(mcPart->particleID().abspid()==13){
             //if muon then ok and exit
             mcpart=mcPart;
             return StatusCode::SUCCESS;
           }          
         }  
-      info()<<" dopo 4"<<endreq;
+        //info()<<" dopo 4"<<endreq;
       }
     }
     itHistory++;    
   }
   //no muon then check the origin of the digit genat hit in current event?
-  info()<<" dopo ricerca mu"<<mcDigit->HitsHistory().size()<<" "<<
-	mcDigit->mcHits().size()<<endreq;
+  //info()<<" dopo ricerca mu"<<mcDigit->HitsHistory().size()<<" "<<
+  //	mcDigit->mcHits().size()<<endreq;
 
   if(digitinfo.isGeantHit()){
     if(digitinfo.doesFiringHitBelongToCurrentEvent()||m_associateAll){
@@ -153,17 +153,17 @@ StatusCode MuonDigit2MCParticleAlg:: associateToTruth(LHCb::MuonDigit* digit,
            iHit++ ){
         const LHCb::MCHit * mcHit = *iHit; 
         if(mcHit) {
-          info()<<" dopo hit "<<endreq;
-          info()<<" fired ? "<<itHistory->hasFired()<<endreq;
+          //          info()<<" dopo hit "<<endreq;
+          //info()<<" fired ? "<<itHistory->hasFired()<<endreq;
         
           if(itHistory->hasFired()){
-            info()<<mcHit<<" "<<endreq;
-            info()<<"part "<<mcHit->mcParticle()<<endreq;
+            //    info()<<mcHit<<" "<<endreq;
+            //info()<<"part "<<mcHit->mcParticle()<<endreq;
             
             const LHCb::MCParticle * mcPart = mcHit->mcParticle();
             if(mcPart){
               mcpart=mcPart;
-              info()<<" eccoci "<<endreq;
+              //  info()<<" eccoci "<<endreq;
               
               return StatusCode::SUCCESS;
             }           
@@ -175,7 +175,7 @@ StatusCode MuonDigit2MCParticleAlg:: associateToTruth(LHCb::MuonDigit* digit,
     }
   }
   mcpart=NULL;  
- info()<<" eccoci qui "<<endreq;
+  // info()<<" eccoci qui "<<endreq;
   return StatusCode::SUCCESS;
 }
 
