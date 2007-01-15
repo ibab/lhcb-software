@@ -1,11 +1,11 @@
-// $Id: MuonPad2MCTool.h,v 1.1 2007-01-11 13:12:46 asatta Exp $
+// $Id: MuonPad2MCTool.h,v 1.2 2007-01-15 16:42:37 cattanem Exp $
 #ifndef MUONPAD2MCTOOL_H 
 #define MUONPAD2MCTOOL_H 1
 
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
-#include "MuonAssociators/IMuonPad2MCTool.h"            // Interface
+#include "Kernel/IMuonPad2MCTool.h"            // Interface
 
 #include "MuonDet/DeMuonDetector.h"
 

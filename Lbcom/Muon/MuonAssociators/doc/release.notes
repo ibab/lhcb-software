@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.21 2007-01-11 13:12:41 asatta Exp $
+! $Id: release.notes,v 1.22 2007-01-15 16:42:26 cattanem Exp $
 ! Package     : MuonAssociators
-! Responsible : David Hutchcroft
+! Responsible : Alessia Satta
 
-!==================== MuonAssociators v2r1 2007-01-11 ======================
+!==================== MuonAssociators v3r0 2007-01-15 ======================
+! 2007-01-15 - Marco Cattaneo
+ - Move IMuonPad2MCTool interface to MCEvent
+ - Fix some unchecked StatusCodes
+ - Fix compilation warnings
+
 ! 2007-01-11 - Alessia Satta
  - Add a link table between Coords and MCParticle
 

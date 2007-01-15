@@ -1,12 +1,11 @@
 package           MuonAssociators
-version           v2r1
+version           v3r0
         
 # =============== structure =================================================== 
 branches          src cmt doc
 
+include_path      none
 
-
-include_dirs  $(MUONASSOCIATORSROOT)
 # =============== used packages ===============================================
 use DigiEvent     v*    Event 
 use MCEvent       v*    Event

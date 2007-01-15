@@ -1,8 +1,7 @@
-// $Id: MuonPad2MCTool.cpp,v 1.1 2007-01-11 13:12:45 asatta Exp $
+// $Id: MuonPad2MCTool.cpp,v 1.2 2007-01-15 16:42:36 cattanem Exp $
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h" 
 #include "GaudiKernel/ToolFactory.h"
 
 // local

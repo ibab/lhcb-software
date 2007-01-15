@@ -1,4 +1,4 @@
-// $Id: MuonCoord2MCParticleLink.cpp,v 1.1 2007-01-11 13:12:42 asatta Exp $
+// $Id: MuonCoord2MCParticleLink.cpp,v 1.2 2007-01-15 16:42:28 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -79,10 +79,14 @@ StatusCode MuonCoord2MCParticleLink::execute() {
     ///double w=1.0;
     std::map<const LHCb::MCParticle*,double> partMap;
 
-    associateToTruth(*iCoord,partMap);
-    std::map<const LHCb::MCParticle*,double>::const_iterator iterMap 
-      = partMap.begin();
-    for( iterMap ;iterMap!= partMap.end();iterMap++){
+    StatusCode sc=associateToTruth(*iCoord,partMap);
+    if( sc.isFailure() ) {
+      debug() << "Invalid layer/region" << endmsg;
+      continue;
+    }
+    
+    std::map<const LHCb::MCParticle*,double>::const_iterator iterMap;
+    for( iterMap = partMap.begin(); iterMap!= partMap.end(); iterMap++ ) {
       myLink.link(*iCoord,iterMap->first,iterMap->second);
     // info()<<" set link "<<iterMap->first<<" "<<iterMap->second<<" "<<iterMap->first->particleID().pid()<<endreq;
     }
@@ -159,8 +163,6 @@ StatusCode MuonCoord2MCParticleLink:: associateToTruth(MuonCoord *coord,std::map
       }  
     }    
   }
-  
-  
-
+  return StatusCode::SUCCESS;
 }
 

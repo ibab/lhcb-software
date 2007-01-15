@@ -1,4 +1,4 @@
-// $Id: MuonDigit2MCParticleAlg.cpp,v 1.10 2007-01-11 13:12:44 asatta Exp $
+// $Id: MuonDigit2MCParticleAlg.cpp,v 1.11 2007-01-15 16:42:35 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -66,12 +66,12 @@ StatusCode MuonDigit2MCParticleAlg::execute() {
     const LHCb::MCParticle* mcpart=NULL;
     debug()<<" qui 2 "<<endreq;
     
-    associateToTruth(*iDigit,mcpart);
+    StatusCode sc = associateToTruth(*iDigit,mcpart);
     debug()<<" qui 3 "<<endreq;
 
-    if(mcpart!=NULL){
+    if(mcpart!=NULL && sc.isSuccess() ){
       myLink.link( *iDigit, mcpart);
-    }    
+    }
   }
   return StatusCode::SUCCESS;
 };
