@@ -1,4 +1,4 @@
-// $Id: SimplePlots.cpp,v 1.4 2006-11-01 18:49:48 pkoppenb Exp $
+// $Id: SimplePlots.cpp,v 1.5 2007-01-15 10:32:38 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -14,9 +14,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-static const  AlgFactory<SimplePlots>          s_factory ;
-const        IAlgFactory& SimplePlotsFactory = s_factory ; 
-
+DECLARE_ALGORITHM_FACTORY( SimplePlots );
 
 //=============================================================================
 // Standard constructor, initializes variables

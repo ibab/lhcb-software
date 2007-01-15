@@ -1,4 +1,4 @@
-// $Id: GeomDispCalculator.cpp,v 1.15 2006-12-06 15:05:35 jpalac Exp $
+// $Id: GeomDispCalculator.cpp,v 1.16 2007-01-15 10:32:35 jpalac Exp $
 
 // Include files
 
@@ -31,8 +31,7 @@
 // Instantiation of a static factory class used by clients to create
 // instances of this service
 //==================================================================
-static ToolFactory<GeomDispCalculator> s_factory;
-const IToolFactory& GeomDispCalculatorFactory = s_factory;
+DECLARE_TOOL_FACTORY( GeomDispCalculator );
 
 //==================================================================
 // Standard Constructor

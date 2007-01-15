@@ -1,4 +1,4 @@
-// $Id: Algorithm2ID.cpp,v 1.1 2005-04-20 14:08:39 pkoppenb Exp $
+// $Id: Algorithm2ID.cpp,v 1.2 2007-01-15 10:32:25 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -14,16 +14,14 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-static const  ToolFactory<Algorithm2ID>          s_factory ;
-const        IToolFactory& Algorithm2IDFactory = s_factory ; 
-
+DECLARE_TOOL_FACTORY( Algorithm2ID);
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
 Algorithm2ID::Algorithm2ID( const std::string& type,
-                                const std::string& name,
-                                const IInterface* parent )
+                            const std::string& name,
+                            const IInterface* parent )
   : GaudiTool ( type, name , parent )
 {
   declareInterface<IAlgorithm2ID>(this);

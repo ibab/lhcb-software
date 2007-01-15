@@ -1,4 +1,4 @@
-// $Id: SimplePlotTool.cpp,v 1.16 2006-09-19 13:12:56 pkoppenb Exp $
+// $Id: SimplePlotTool.cpp,v 1.17 2007-01-15 10:32:38 jpalac Exp $
 // Include files 
 #include "gsl/gsl_math.h"
 // from Gaudi
@@ -22,9 +22,7 @@ using namespace Gaudi::Units;
 
 
 // Declaration of the Tool Factory
-static const  ToolFactory<SimplePlotTool>          s_factory ;
-const        IToolFactory& SimplePlotToolFactory = s_factory ; 
-
+DECLARE_TOOL_FACTORY( SimplePlotTool );
 
 //=============================================================================
 // Standard constructor, initializes variables

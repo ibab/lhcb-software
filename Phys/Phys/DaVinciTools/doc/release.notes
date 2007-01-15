@@ -1,8 +1,34 @@
-! $Id: release.notes,v 1.247 2007-01-12 15:05:08 pkoppenb Exp $
+! $Id: release.notes,v 1.248 2007-01-15 10:32:24 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2007-01-15 - Juan PALACIOS
+
+  - Fix use DECLARE_TOOL_FACTORY and DACLARE_ALGORITHM_FACTORY macros 
+    in remaining src/*.cpp files. Files modified.
+
+    Modified files:
+
+    src/Algorithm2ID.cpp
+    src/CheckVeloOverlap.cpp
+    src/CheckOverlap.cpp
+    src/CheckPV.cpp
+    src/ContextTool.cpp
+    src/DecayFinder.cpp
+    src/DecodeSimpleDecayString.cpp
+    src/GeomDispCalculator.cpp
+    src/MakeResonances.cpp
+    src/OnOfflineTool.cpp
+    src/ParticleDescendants.cpp
+    src/RecursivePlotTool.cpp
+    src/SimplePlotTool.cpp
+    src/SimplePlots.cpp
+    src/TrgDispCalculator.cpp
+
+    - cmt/requirements
+      . Increase version to v15r0p1
 
 ! 2007-01-12 - P. Koppenburg
   - RelatedPVFinder.cpp

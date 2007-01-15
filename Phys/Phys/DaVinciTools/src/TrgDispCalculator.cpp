@@ -1,4 +1,4 @@
-// $Id: TrgDispCalculator.cpp,v 1.6 2006-07-20 13:19:21 jpalac Exp $
+// $Id: TrgDispCalculator.cpp,v 1.7 2007-01-15 10:32:39 jpalac Exp $
 
 // Include files
 // from Gaudi
@@ -38,8 +38,7 @@
 // Instantiation of a static factory class used by clients to create
 // instances of this service
 //==================================================================
-static ToolFactory<TrgDispCalculator> s_factory;
-const IToolFactory& TrgDispCalculatorFactory = s_factory;
+DECLARE_TOOL_FACTORY( TrgDispCalculator );
 
 //==================================================================
 // Standard Constructor

@@ -1,4 +1,4 @@
-// $Id: CheckOverlap.cpp,v 1.12 2006-10-03 14:34:59 jpalac Exp $
+// $Id: CheckOverlap.cpp,v 1.13 2007-01-15 10:32:26 jpalac Exp $
 
 // Include files 
 
@@ -17,8 +17,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-static const  ToolFactory<CheckOverlap>          s_factory ;
-const        IToolFactory& CheckOverlapFactory = s_factory ;
+DECLARE_TOOL_FACTORY( CheckOverlap );
 
 //=============================================================================
 // Standard constructor, initializes variables

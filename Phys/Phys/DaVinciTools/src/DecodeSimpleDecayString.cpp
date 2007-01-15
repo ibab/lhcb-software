@@ -1,4 +1,4 @@
-// $Id: DecodeSimpleDecayString.cpp,v 1.5 2005-04-20 14:08:39 pkoppenb Exp $
+// $Id: DecodeSimpleDecayString.cpp,v 1.6 2007-01-15 10:32:29 jpalac Exp $
 // Include files 
 
 // from ANSI C++
@@ -33,8 +33,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-static const  ToolFactory<DecodeSimpleDecayString>          s_factory ;
-const        IToolFactory& DecodeSimpleDecayStringFactory = s_factory ;
+DECLARE_TOOL_FACTORY( DecodeSimpleDecayString );
 
 //=============================================================================
 // Standard constructor, initializes variables

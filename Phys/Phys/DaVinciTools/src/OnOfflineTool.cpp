@@ -1,4 +1,4 @@
-// $Id: OnOfflineTool.cpp,v 1.8 2006-09-19 13:12:55 pkoppenb Exp $
+// $Id: OnOfflineTool.cpp,v 1.9 2007-01-15 10:32:36 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -17,9 +17,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-static const  ToolFactory<OnOfflineTool>          s_factory ;
-const        IToolFactory& OnOfflineToolFactory = s_factory ; 
-
+DECLARE_TOOL_FACTORY( OnOfflineTool );
 
 //=============================================================================
 // Standard constructor, initializes variables

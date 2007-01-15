@@ -1,4 +1,4 @@
-// $Id: MakeResonances.cpp,v 1.22 2006-10-03 14:34:59 jpalac Exp $
+// $Id: MakeResonances.cpp,v 1.23 2007-01-15 10:32:36 jpalac Exp $
 
 #include <algorithm>
 
@@ -23,8 +23,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-static const  AlgFactory<MakeResonances>          s_factory ;
-const        IAlgFactory& MakeResonancesFactory = s_factory ;
+DECLARE_ALGORITHM_FACTORY( MakeResonances );
 
 //=============================================================================
 // Standard constructor, initializes variables

@@ -1,4 +1,4 @@
-// $Id: ParticleDescendants.cpp,v 1.2 2006-03-15 13:40:12 pkoppenb Exp $
+// $Id: ParticleDescendants.cpp,v 1.3 2007-01-15 10:32:37 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -14,9 +14,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-static const  ToolFactory<ParticleDescendants>          s_factory ;
-const        IToolFactory& ParticleDescendantsFactory = s_factory ; 
-
+DECLARE_TOOL_FACTORY( ParticleDescendants );
 
 //=============================================================================
 // Standard constructor, initializes variables

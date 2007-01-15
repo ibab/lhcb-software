@@ -1,4 +1,4 @@
-// $Id: ContextTool.cpp,v 1.2 2006-10-22 13:19:49 pkoppenb Exp $
+// $Id: ContextTool.cpp,v 1.3 2007-01-15 10:32:27 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -20,8 +20,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-static const  ToolFactory<ContextTool>          s_factory ;
-const        IToolFactory& ContextToolFactory = s_factory ; 
+DECLARE_TOOL_FACTORY( ContextTool );
 
 
 //=============================================================================

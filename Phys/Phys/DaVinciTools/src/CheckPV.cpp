@@ -1,4 +1,4 @@
-// $Id: CheckPV.cpp,v 1.11 2006-07-20 13:19:21 jpalac Exp $
+// $Id: CheckPV.cpp,v 1.12 2007-01-15 10:32:26 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -16,9 +16,8 @@
 // 2004-11-18 : Patrick KOPPENBURG
 //-----------------------------------------------------------------------------
 
-// Declaration of the Algorithm Factory
-static const  AlgFactory<CheckPV>          s_factory ;
-const        IAlgFactory& CheckPVFactory = s_factory ; 
+// Declaration of the Algorithm Factory 
+DECLARE_ALGORITHM_FACTORY( CheckPV );
 
 
 //=============================================================================

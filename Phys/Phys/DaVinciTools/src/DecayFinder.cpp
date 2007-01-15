@@ -1,4 +1,4 @@
-// $Id: DecayFinder.cpp,v 1.16 2006-05-17 16:28:46 jpalac Exp $
+// $Id: DecayFinder.cpp,v 1.17 2007-01-15 10:32:28 jpalac Exp $
 // Include files 
 #include <list>
 #include <functional>
@@ -23,9 +23,7 @@ using namespace Gaudi::Units;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-static const ToolFactory<DecayFinder>          s_factory ;
-const        IToolFactory& DecayFinderFactory = s_factory ; 
-
+DECLARE_TOOL_FACTORY( DecayFinder );
 
 //=============================================================================
 // Standard constructor, initializes variables

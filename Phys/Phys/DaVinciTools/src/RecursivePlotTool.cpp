@@ -1,4 +1,4 @@
-// $Id: RecursivePlotTool.cpp,v 1.4 2006-06-02 15:05:53 pkoppenb Exp $
+// $Id: RecursivePlotTool.cpp,v 1.5 2007-01-15 10:32:37 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -17,9 +17,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-static const  ToolFactory<RecursivePlotTool>          s_factory ;
-const        IToolFactory& RecursivePlotToolFactory = s_factory ; 
-
+DECLARE_TOOL_FACTORY( RecursivePlotTool );
 
 //=============================================================================
 // Standard constructor, initializes variables
