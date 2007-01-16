@@ -1,0 +1,146 @@
+
+// ====================================================================
+//  Tracking reconstruction phase - no field version
+// ====================================================================
+
+// no field options
+MagneticFieldSvc.UseConstantField = true;
+
+// --------------------------------------------------------------------
+// Load all necessary libraries
+// --------------------------------------------------------------------
+ApplicationMgr.DLLs += { "PatTools", "PatUtils",
+                         "PatVelo", "PatVeloTT",
+                         "PatForward", "PatKShort" };
+ApplicationMgr.DLLs += { "STAlgorithms" };
+#include "$TRACKSYSROOT/options/TrackLoad.opts"
+
+// --------------------------------------------------------------------
+// Pattern Recognition and Fitting
+// --------------------------------------------------------------------
+
+// Velo tracking
+RecoVELOSeq.Members += { "PatInitEvent"
+                         ,"DecodeVeloRawBuffer"
+                         ,"PatVeloLoadClusters"
+                         ,"PatVeloRTracking"
+                         ,"PatVeloSpaceTracking"
+};
+
+// Decode also VeloClusters, needed for track fit
+RecoVELOSeq.Members += { "DecodeVeloRawBuffer/DecodeVeloClusters" };
+DecodeVeloClusters.DecodeToVeloLiteClusters = false;
+DecodeVeloClusters.DecodeToVeloClusters     = true;
+
+// TT clusters for pattern recognition and track fit
+RecoTTSeq.Members += { "RawBankToSTClusterAlg/createTTClusters"
+                       ,"RawBankToSTLiteClusterAlg/createTTLiteClusters"
+                       ,"PatTTCoordFromRaw"
+};
+
+// IT clusters for pattern recognition and track fit
+RecoITSeq.Members += { "RawBankToSTClusterAlg/createITClusters"
+                       ,"RawBankToSTLiteClusterAlg/createITLiteClusters"
+};
+createITClusters.detType     = "IT";
+createITLiteClusters.detType = "IT";
+
+// OTTimes for pattern recognition and track fit
+RecoOTSeq.Members += {"OTTimeCreator" };
+
+// Velo-TT pattern
+//RecoTrSeq.Members += { "PatVeloTT" };
+
+// Velo-TT fit
+//RecoTrSeq.Members += { "TrackEventFitter/FitVeloTT" }; 
+FitVeloTT.TracksInContainer = "Rec/Track/VeloTT"; 
+FitVeloTT.Fitter.ZPositions        = { 990.0, 2165.0 };
+FitVeloTT.Fitter.SetRefInfo        = false;
+FitVeloTT.Fitter.ErrorP            = 1e-6;
+FitVeloTT.Fitter.MaxNumberOutliers = 1;
+FitVeloTT.Fitter.Extrapolator.ExtraSelector = "TrackSimpleExtraSelector";
+FitVeloTT.Fitter.NodeFitter.Extrapolator.ExtraSelector = "TrackSimpleExtraSelector";
+FitVeloTT.Fitter.Extrapolator.ExtraSelector.ExtrapolatorName = "TrackLinearExtrapolator";
+FitVeloTT.Extrapolator.Fitter.ApplyEnergyLossCorr = false;
+FitVeloTT.Fitter.NodeFitter.Extrapolator.ApplyEnergyLossCorr = false;
+
+// Forward pattern
+RecoTrSeq.Members += { "PatTCoordFromRaw", "PatForward"}; 
+#include "$PATFORWARDROOT/options/PatFwdTool.opts"
+
+// Forward fit
+RecoTrSeq.Members += { "TrackPrepareForFit/ForwardPrepareFit","TrackEventFitter/FitForward" };
+FitForward.TracksInContainer  = "Rec/Track/Forward"; 
+ForwardPrepareFit.inputLocation = "Rec/Track/Forward";
+FitForward.Fitter.NumberFitIterations = 2;
+FitForward.Extrapolator.Fitter.ApplyEnergyLossCorr = false;
+FitForward.Fitter.NodeFitter.Extrapolator.ApplyEnergyLossCorr = false;
+FitForward.Fitter.ErrorP = 1e-3;
+FitForward.Fitter.Extrapolator.ExtraSelector = "TrackSimpleExtraSelector";
+FitForward.Fitter.Extrapolator.ExtraSelector.ExtrapolatorName = "TrackLinearExtrapolator";
+FitForward.Fitter.NodeFitter.Extrapolator.ExtraSelector = "TrackSimpleExtraSelector";
+FitForward.Fitter.NodeFitter.Extrapolator.ExtraSelector.ExtrapolatorName = "TrackLinearExtrapolator";
+
+// Seed pattern and fit
+// NOTE:
+// 1. run one or the other
+// 2. do not forget to make the necessary change in the TrackMatching options
+// 3. do not forget to make the necessary change in the clone killer options
+// Seeding algorithm from Roger Forty
+#include "$TRACKSYSROOT/options/TsaNoField.opts"
+// Seeding algorithm from Henk Jan Bulten
+//#include "$TRACKSYSROOT/options/TrackSeeding.opts"
+
+// Match pattern
+RecoTrSeq.Members +={"TrackMatchVeloSeed/TrackMatch"};
+TrackMatch.Chi2MatchingCut = 4000;
+TrackMatch.MomentumCut = 0.;
+TrackMatch.ptCut = 0;
+TrackMatch.ExtrapolatorSeed = "TrackLinearExtrapolator";
+TrackMatch.TTClusterTool.Extrapolator =  "TrackLinearExtrapolator";
+
+
+// Match fit
+RecoTrSeq.Members += { "TrackPrepareForFit/PrepareFitMatch","TrackEventFitter/FitMatch" };
+PrepareFitMatch.inputLocation  = "Rec/Track/Match";
+FitMatch.TracksInContainer  = "Rec/Track/Match"; 
+FitMatch.Fitter.NumberFitIterations = 3;
+FitMatch.Fitter.ZPositions      = { 990.0, 2165.0, 2400., 9450., 11900 };
+FitMatch.Extrapolator.Fitter.ApplyEnergyLossCorr = false;
+FitMatch.Fitter.NodeFitter.Extrapolator.ApplyEnergyLossCorr = false;
+FitMatch.Fitter.ErrorP = 1e-3;
+FitMatch.Fitter.Extrapolator.ExtraSelector = "TrackSimpleExtraSelector";
+FitMatch.Fitter.Extrapolator.ExtraSelector.ExtrapolatorName = "TrackLinearExtrapolator";
+FitMatch.Fitter.NodeFitter.Extrapolator.ExtraSelector = "TrackSimpleExtraSelector";
+FitMatch.Fitter.NodeFitter.Extrapolator.ExtraSelector.ExtrapolatorName = "TrackLinearExtrapolator";
+
+
+// Clone tracks killer: output is "best" container 
+// -----------------------------------------------
+//RecoTrSeq.Members += { "TrackEventCloneKiller" };
+// use this when running the seeding algorithm from Henk Jan Bulten
+// (the default "TracksInContainers" as defined in the cpp file
+//  uses the output of Roger Forty's seeding)
+TrackEventCloneKiller.TracksInContainers  = { 
+                                            "Rec/Track/Forward"
+                                           , "Rec/Track/Match"
+                                           , "Rec/Track/Tsa" };
+
+// Prepare and fit velo tracks
+//RecoTrSeq.Members += { "TrackPrepareVelo",
+//                       "TrackEventFitter/FitVelo" };
+
+FitVelo.TracksInContainer = "Rec/Track/PreparedVelo";
+FitVelo.Fitter.ZPositions = {};
+FitVelo.Fitter.SetRefInfo = false;
+FitVelo.Fitter.ErrorP     = 0.01;
+FitVelo.Fitter.Extrapolator.ExtraSelector = "TrackSimpleExtraSelector";
+FitVelo.Fitter.NodeFitter.Extrapolator.ExtraSelector = "TrackSimpleExtraSelector";
+TrackSimpleExtraSelector.ExtrapolatorName = "TrackLinearExtrapolator";
+FitVelo.Fitter.Extrapolator.ApplyEnergyLossCorr = false;
+
+// Copy fitted velo tracks to Track/Best container
+//RecoTrSeq.Members += { "TrackContainerCopy/CopyVelo" };
+//CopyVelo.inputLocation = "Rec/Track/PreparedVelo";
+
+

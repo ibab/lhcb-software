@@ -16,3 +16,26 @@ FitTsaSeed.Fitter.NodeFitter.Extrapolator.ExtraSelector = "TrackSimpleExtraSelec
 
 //TsaSeedTrackCnv.LikCut = -30;
 
+
+//#include "$TSAALGORITHMSROOT/options/TsaSeeding.opts"
+
+TsaSeed.xSearchS0.sector = 0;
+TsaSeed.xSearchS1.sector = 1;
+TsaSeed.xSearchS2.sector = 2;
+TsaSeed.xSearchS3.sector = 3;
+TsaSeed.xSearchS4.sector = 4;
+
+TsaSeed.stereoS0.sector = 0;
+TsaSeed.stereoS1.sector = 1;
+TsaSeed.stereoS2.sector = 2;
+TsaSeed.stereoS3.sector = 3;
+TsaSeed.stereoS4.sector = 4;
+
+
+
+
+
+
+
+
+
