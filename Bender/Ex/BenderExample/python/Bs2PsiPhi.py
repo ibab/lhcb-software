@@ -1,6 +1,6 @@
 #!/usr/bin/env python2.4
 # =============================================================================
-# $Id: Bs2PsiPhi.py,v 1.4 2006-12-14 12:08:53 ibelyaev Exp $
+# $Id: Bs2PsiPhi.py,v 1.5 2007-01-16 15:57:05 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ , version $Revison:$
 # =============================================================================
@@ -160,6 +160,8 @@ class Bs2PsiPhi(AlgoMC) :
             if not pv :
                 self.Warning('No proper primary vertex found!')
                 continue
+            dira = DIRA( pv )
+            self.plot ( dira( b ) , "Cosine Direction Angle" , 0.995 , 1.0 ) 
             
             b.save("Bs")
                 
@@ -231,6 +233,9 @@ if __name__ == '__main__' :
 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.4  2006/12/14 12:08:53  ibelyaev
+#  add selectPVmin example
+#
 # Revision 1.3  2006/11/28 18:26:44  ibelyaev
 #  prepare for v6r1
 #
