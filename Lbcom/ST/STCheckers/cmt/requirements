@@ -9,6 +9,7 @@ use DigiEvent   v*   Event
 use STDet       v*   Det
 use LinkerEvent v*   Event
 use GaudiAlg    v*
+use GSL         v*   LCG_Interfaces
 
 # ================= component library ====================
 library STCheckers ../src/*.cpp -import=AIDA
