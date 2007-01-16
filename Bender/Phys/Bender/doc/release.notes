@@ -1,14 +1,26 @@
 <PRE>
 ! -----------------------------------------------------------------------------
-! $Id: release.notes,v 1.22 2006-12-14 10:40:43 ibelyaev Exp $
+! $Id: release.notes,v 1.23 2007-01-16 15:56:37 ibelyaev Exp $
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.22 $
+! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.23 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/Bender
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : The package is a result of "pythonization procedure"
 !                of the LoKi package
 ! -----------------------------------------------------------------------------
+
+! ==================== Phys/Bender v6r2 2007-01-16 ===========================
+
+! 2007-01-16 - Vanya BELYAEV
+
+   python/benderpcuts.py
+    add new symbols DIRA and DANG - 
+    shortcuts for LoKi::Particles::CosineDirectionAngle 
+
+   - version for DaVinci v17r8
+   - tiny fix for SLC4 platform 
+
 
 ! ==================== Phys/Bender v6r1 2006-12-14 ===========================
 

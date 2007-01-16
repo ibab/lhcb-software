@@ -1,7 +1,7 @@
 # =============================================================================
-# $Id: benderpcuts.py,v 1.4 2006-11-28 18:24:17 ibelyaev Exp $ 
+# $Id: benderpcuts.py,v 1.5 2007-01-16 15:56:37 ibelyaev Exp $ 
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $
+# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.5 $
 # =============================================================================
 ## This is helper module for decoration of LoKi particle functions/cuts 
 #
@@ -319,10 +319,13 @@ TRHISTFIT= _LoKi.Particles.TrackHistoryFit         ()
 ## @see LoKi::Cuts::TRSTATUS  
 TRSTATUS = _LoKi.Particles.TrackStatus             () 
 ## @see LoKi::Cuts::FILTER    
-FILTER   = _LoKi.Particles.Filter                      
+FILTER   = _LoKi.Particles.Filter
+## @see LoKi::Cuts::DANG
+DANG     = _LoKi.Particles.CosineDirectionAngle 
+## @see LoKi::Cuts::DIRA
+DIRA     = _LoKi.Particles.CosineDirectionAngle 
 ## @see LoKi::Cuts::MCTRUTH 
 MCTRUTH  = _LoKi.Particles.MCTruth
-
 
 
 if __name__ == '__main__' :
@@ -332,6 +335,9 @@ if __name__ == '__main__' :
 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.4  2006/11/28 18:24:17  ibelyaev
+#  prepare for v6r1
+#
 # =============================================================================
 # The END 
 # =============================================================================
