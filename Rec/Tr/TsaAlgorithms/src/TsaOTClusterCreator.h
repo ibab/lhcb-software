@@ -1,4 +1,4 @@
-// $Id: TsaOTClusterCreator.h,v 1.5 2006-12-06 14:35:01 mneedham Exp $
+// $Id: TsaOTClusterCreator.h,v 1.6 2007-01-16 08:06:38 mneedham Exp $
 #ifndef _TSAOTCLUSTERCREATOR_H_
 #define _TSAOTCLUSTERCREATOR_H_
 
@@ -71,6 +71,7 @@ private:
   unsigned int m_hotModule;
   double m_maxOcc;
   double m_distFudgeFactor;
+  std::vector<double> m_distVector;
   unsigned int m_clusterSize; 
 
   bool m_filterClusters;

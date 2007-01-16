@@ -1,4 +1,5 @@
-// $Id: TsaITXSearch.cpp,v 1.1 2006-12-06 14:35:01 mneedham Exp $
+
+// $Id: TsaITXSearch.cpp,v 1.2 2007-01-16 08:06:37 mneedham Exp $
 
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -34,15 +35,15 @@ TsaITXSearch::TsaITXSearch(const std::string& type,
   declareProperty("itDataSvcType", m_dataSvcType = "ITDataSvc");
   declareProperty("itDataSvcName", m_dataSvcName = "ITDataSvc");
  
-  declareProperty("sxCut", m_sxCut = 0.3);
+  declareProperty("sxCut", m_sxCut = 0.3); // was 0.3
   declareProperty("xsCut", m_xsCut = 0.3);
   declareProperty("x0Cut", m_x0Cut = 1500.);
-  declareProperty("sx2Cut",m_sx2Cut = 0.12);
-  declareProperty("dthCut", m_dthCut = 0.4);
-  declareProperty("tdCut",m_tdCut = 0.2);
-  declareProperty("win", m_win = 0.6);
+  declareProperty("sx2Cut",m_sx2Cut = 0.12); // was 0.12
+  declareProperty("dthCut", m_dthCut = 0.4); // was 0.3
+  declareProperty("tdCut",m_tdCut = 0.2); // was 0.2
+  declareProperty("win", m_win = 0.8);
   declareProperty("win2",m_win2 = 5.0);
-  declareProperty("nWin",m_nWin = 2);
+  declareProperty("nWin",m_nWin = 3);
   declareProperty("nWin2",m_nWin2 = 4);
   declareProperty("nxCut",m_nxCut = 4);
   declareProperty("nT2",m_nT2Conf = 0); 
@@ -100,6 +101,10 @@ StatusCode TsaITXSearch::execute(std::vector<SeedTrack*>& seeds, std::vector<See
         bool first = true;
         for ( std::vector<SeedHit*>::iterator it2 = start; hits[lay2].end() != it2; ++it2 ) {
           SeedHit* hit2 = (*it2);
+
+          // same box 
+          if (hit2->ITChan().detRegion() != hit1->ITChan().detRegion()) continue;
+
           double x2 = hit2->x();
           double z2 = hit2->z();
           double sx = (x2-x1) / (z2-z1);

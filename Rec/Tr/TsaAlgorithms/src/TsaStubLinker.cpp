@@ -1,4 +1,4 @@
-// $Id: TsaStubLinker.cpp,v 1.1 2006-12-06 14:35:03 mneedham Exp $
+// $Id: TsaStubLinker.cpp,v 1.2 2007-01-16 08:06:41 mneedham Exp $
 
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -148,9 +148,13 @@ StatusCode TsaStubLinker::execute(std::vector<SeedStub*> stubs[], std::vector<Se
             delete seed;
             continue;
           }
-          seed->setLik( 0. );       //  For now, don't bother calculating likelihood,
-          seed->setSelect( true );     //  just select all of these candidates
-          seeds.push_back( seed );  //  Add to vector of seed candidates
+            
+          // set the dth
+         const double sx = (seed->x(9400.,0.0) - seed->x(7900.,0.0))/1500.;
+         const double dth = atan( sx ) - atan( (x1 - (z1-TsaConstants::zMagnet)*sx)*TsaConstants::oneOverZMagnet );
+         seed->setDth(dth);
+	 //seed->setSelect( true );     //  just select all of these candidates
+         seeds.push_back( seed );  //  Add to vector of seed candidates
         }
       }
     }

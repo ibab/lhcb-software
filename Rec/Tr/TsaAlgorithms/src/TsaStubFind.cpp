@@ -1,4 +1,4 @@
-// $Id: TsaStubFind.cpp,v 1.1 2006-12-06 14:35:02 mneedham Exp $
+// $Id: TsaStubFind.cpp,v 1.2 2007-01-16 08:06:41 mneedham Exp $
 
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -29,9 +29,9 @@ TsaStubFind::TsaStubFind(const std::string& type,
 
   // constructer
  declareProperty("sector", m_sector = 0); 
- declareProperty("yTol", m_yTol = 1.0);
+ declareProperty("yTol", m_yTol = 3.0);
  declareProperty("xSearch_xsParam", m_xsParam = 1.0/3125.0);
- declareProperty("sxCut", m_sxCut = 0.5);
+ declareProperty("sxCut", m_sxCut = 0.4);
  declareProperty("dAngle", m_dAngle = 0.3);
  declareProperty("syCut", m_syCut = 0.25);
  declareProperty("yCut", m_yCut = 3.0);
@@ -78,7 +78,7 @@ StatusCode TsaStubFind::execute(std::vector<SeedHit*> hits[], std::vector<SeedHi
         //  Now for the stereo hits
         if (sHits[lay].empty() == true) continue;
         
-        SeedHit* firstHit3 = hits[lay].front();;
+        SeedHit* firstHit3 = hits[lay].front();
         Gaudi::XYZVector vec(1., TsaConstants::tilt*sx, -sx);
         double x3 = x1 + sx*(firstHit3->z()-z1);   //  Use straight line for stub in X projection
         Gaudi::XYZPoint point3(x3, firstHit3->clus()->yMid(), firstHit3->z());

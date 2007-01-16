@@ -1,4 +1,4 @@
-// $Id: TsaLikelihood.cpp,v 1.1 2006-12-06 14:35:01 mneedham Exp $
+// $Id: TsaLikelihood.cpp,v 1.2 2007-01-16 08:06:38 mneedham Exp $
 
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -139,10 +139,15 @@ StatusCode TsaLikelihood::execute(std::vector<SeedTrack*>& seeds, std::vector<Se
       expectationIT(aLine, aParab, pnts, m_xLayers, sect, nxFound, nxExp);       
       expectationIT(aLine, aParab, ypnts, m_uLayers,sect, nyFound, nyExp); 
     }
-    else {
+    else if (sect < 5){
       // OT case
       expectationOT(aLine, aParab, pnts, m_xLayers, sect, nxFound, nxExp, xLik);       
       expectationOT(aLine, aParab, ypnts, m_uLayers,sect ,nyFound, nyExp, yLik); 
+    }
+    else{
+      // mixed case
+      expectationMixed(aLine, aParab, pnts, m_xLayers, sect, nxFound, nxExp, xLik);       
+      expectationMixed(aLine, aParab, ypnts, m_uLayers,sect ,nyFound, nyExp, yLik);
     }
 
     if ( nxExp < 4 || nyExp < 4 || 
@@ -246,3 +251,30 @@ void TsaLikelihood::expectationIT(const Tsa::Line& aLine, const Tsa::Parabola& a
   } // station
 }
 
+void TsaLikelihood::expectationMixed(const Tsa::Line& aLine, const Tsa::Parabola& aParab, 
+                                     std::vector<SeedPnt>& pnts, int* layers, const int& sect,
+                                     int& nFound, 
+                                     int& nExp, double& lik) const{
+
+  // split into IT and OT part
+  std::vector<SeedPnt> itPnts; itPnts.reserve(20);
+  std::vector<SeedPnt> otPnts; otPnts.reserve(20); 
+
+  for (std::vector<SeedPnt>::const_iterator iterPnt = pnts.begin(); iterPnt != pnts.end(); ++iterPnt){
+    (*iterPnt).hit()->OT() ? otPnts.push_back(*iterPnt) : itPnts.push_back(*iterPnt); 
+  } // iterPnt
+
+  // OT part
+
+  if (otPnts.empty() == false) {
+    const double yTest = aLine.value(8600);
+    unsigned int otsect;
+    yTest < 0.0 ? otsect = 3 : otsect = 4;
+    expectationOT(aLine, aParab, otPnts, layers, sect, nFound, nExp, lik);      
+  }
+
+  // IT part - try all sectors for now...
+  if (itPnts.empty() == false){
+    for (int i= 0; i < 3; ++i) expectationIT(aLine, aParab, itPnts, layers, i , nFound, nExp);      
+  } //i
+}

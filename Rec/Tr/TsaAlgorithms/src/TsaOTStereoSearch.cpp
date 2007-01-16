@@ -1,4 +1,4 @@
-// $Id: TsaOTStereoSearch.cpp,v 1.1 2006-12-06 14:35:01 mneedham Exp $
+// $Id: TsaOTStereoSearch.cpp,v 1.2 2007-01-16 08:06:39 mneedham Exp $
 
 #include <algorithm>
 
@@ -34,11 +34,12 @@ TsaOTStereoSearch::TsaOTStereoSearch(const std::string& type,
   declareProperty("otDataSvcType", m_dataSvcType = "OTDataSvc");
   declareProperty("otDataSvcName", m_dataSvcName = "OTDataSvc");
  
-  declareProperty( "syCut" , m_syCut = 0.1);
+  declareProperty( "syCut" , m_syCut = 0.10);
   declareProperty( "win" , m_win = 100.0);
   declareProperty( "nWin" , m_nWin = 6);
   declareProperty( "yTol", m_yTol = 20.0);
-  declareProperty( "nY", m_nY = 5);
+  declareProperty("nHit", m_nHit = 15);
+  declareProperty( "nY", m_nY = 4);
   declareProperty("maxDriftRadius", m_maxDriftRadius = 2.7);
 
   m_scth = 1.0/TsaConstants::sth;
@@ -55,7 +56,7 @@ TsaOTStereoSearch::~TsaOTStereoSearch(){
 
 StatusCode TsaOTStereoSearch::initialize(){
 
-  StatusCode sc = GaudiTool::initialize();
+  StatusCode sc = TsaStereoBase::initialize();
   if (sc.isFailure()){
      return Error("Failed to initialize",sc);
   }
@@ -179,7 +180,7 @@ StatusCode TsaOTStereoSearch::execute(std::vector<SeedTrack*>& seeds, std::vecto
         seed->addToYPnts(pnt);
       } // i
       int rc = m_fitLine->fit( seed );
-      if ( seed->ny() < m_nY || rc < 1 || seed->nx()+seed->ny() < 15  ) seed->setLive( false );
+      if ( seed->ny() < m_nY || rc < 1 || seed->nx()+seed->ny() < m_nHit  ) seed->setLive( false );
     } 
     else {
       seed->setLive( false );

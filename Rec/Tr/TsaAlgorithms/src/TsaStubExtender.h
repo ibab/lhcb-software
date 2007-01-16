@@ -13,7 +13,7 @@
 
 class SeedParabolaFit;
 class SeedLineFit;
-class ITsaSeedStep;
+
 
 class TsaStubExtender:  public GaudiTool,
                          virtual public ITsaStubExtender {
@@ -38,8 +38,22 @@ private:
   double m_scth;
   SeedLineFit* m_fitLine;
   SeedParabolaFit* m_parabolaFit;
-  ITsaSeedStep* m_finalSelection;
 
+
+  double m_dSlopeCut; 
+  double m_searchTol;
+  int m_nxCut;
+  int m_nyCut;
+  double m_txCut;
+  double m_tyCut;
+  double m_yTol;
+  int m_nTotalCut1;
+  int m_nTotalCut2;
+  double m_y0Cut1;
+  double m_y0Cut2;
+  double m_dxCut;
+  double m_dyCut;
+  
 
 };
 

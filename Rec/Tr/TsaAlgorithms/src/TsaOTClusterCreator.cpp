@@ -1,4 +1,4 @@
-// $Id: TsaOTClusterCreator.cpp,v 1.9 2006-12-06 14:35:01 mneedham Exp $
+// $Id: TsaOTClusterCreator.cpp,v 1.10 2007-01-16 08:06:38 mneedham Exp $
 
 //GaudiKernel
 #include "GaudiKernel/AlgFactory.h"
@@ -23,6 +23,12 @@
 #include <algorithm>
 #include <map>
 
+#include <boost/assign/std/vector.hpp>
+#include <boost/assign/list_of.hpp>
+using namespace boost::assign;
+using namespace boost;
+
+
 DECLARE_ALGORITHM_FACTORY( TsaOTClusterCreator );
 
 
@@ -41,7 +47,10 @@ TsaOTClusterCreator::TsaOTClusterCreator(const std::string& name,
   // TsaOTClusterCreator constructor
   declareProperty("maxOcc", m_maxOcc = 0.40); 
   declareProperty("clusterSize", m_clusterSize = 6); 
-  declareProperty("distFudgeFactor",m_distFudgeFactor=75.387*Gaudi::Units::cm);
+  //declareProperty("distVector",m_distVector = 
+  //                  list_of(470.)(530.)(600.)(660.)(740.)(770.)(830.)(845.)(820.));
+  declareProperty("distVector",m_distVector = 
+                  list_of(773.)(773.)(773.)(773.)(773.)(773.)(773.)(773.)(773.));
   declareProperty("filterClusters", m_filterClusters = false );
   declareProperty("clusterFilterName", m_clusterFilterName = "TrackUsedLHCbID");
   declareProperty("outputLocation", m_outputLocation = Tsa::OTClusterLocation::Default);
@@ -80,24 +89,19 @@ StatusCode TsaOTClusterCreator::initialize()
 
 StatusCode TsaOTClusterCreator::execute(){
   // Executes TsaOTClusterCreator for one event.
-  // startTimer();
  
   // init
   m_hotModule = 0u;  
  
   // retrieve clusters
   LHCb::OTTimes* clustCont = get<LHCb::OTTimes>(LHCb::OTTimeLocation::Default);
-  //plot(clustCont->size(),"nC",0.,20000.,500); 
 
   // clusterize
   Tsa::OTClusters* pattClusCont = new Tsa::OTClusters();
   pattClusCont->reserve(clustCont->size());
-  //pattClusCont->reserve(10000);
   this->convert(clustCont, pattClusCont);
 
   put(pattClusCont,m_outputLocation);
-
-  //  stopTimer();
 
   if (m_hotModule != 0){
     return Warning(" hot module", StatusCode::SUCCESS, 1);
@@ -159,9 +163,9 @@ bool TsaOTClusterCreator::processModule(LHCb::OTTimes::iterator start,
  ModuleMap::iterator iter = m_modMap.find(startMod);
  iter != m_modMap.end() ? m_cachedModule = iter->second : 0;
 
- // m_cachedModule = m_tracker->findModule((*start)->channel());  
  double occ = (double)iCount/(double)m_cachedModule->nChannels();
- // plot(occ,"count", -0.005, 1.005, 101);
+ m_distFudgeFactor = m_distVector[m_cachedModule->elementID().module()-1];
+
  return (occ > m_maxOcc ? false : true);
 
 }

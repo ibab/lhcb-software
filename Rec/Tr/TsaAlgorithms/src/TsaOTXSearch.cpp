@@ -1,4 +1,4 @@
-// $Id: TsaOTXSearch.cpp,v 1.1 2006-12-06 14:35:01 mneedham Exp $
+// $Id: TsaOTXSearch.cpp,v 1.2 2007-01-16 08:06:39 mneedham Exp $
 
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -18,6 +18,7 @@
 // BOOST !
 #include <boost/assign/std/vector.hpp>
 #include <boost/assign/list_of.hpp>
+#include <boost/bind.hpp>
 using namespace boost::assign;
 using namespace boost;
 
@@ -144,8 +145,10 @@ StatusCode TsaOTXSearch::execute(std::vector<SeedTrack*>& seeds, std::vector<See
           if (select[0].size()+select[1].size()+select[2].size() < (unsigned int)m_nWin ) continue;
 
 	  // flag t3 hits as not used
-	  std::for_each(select[1].begin(), select[1].end(), std::bind2nd(std::mem_fun(&SeedHit::setUse),false) );
-	           
+	  // std::for_each(select[1].begin(), select[1].end(), std::bind2nd(std::mem_fun(&SeedHit::setUse),false) );
+          std::for_each(select[1].begin(), select[1].end(), bind(&SeedHit::setUse,_1,false) );
+          	     	     
+      
           const double dz = z2-z1;
 	  double csth = sqrt(1.0 + sx*sx);	
 	 

@@ -59,6 +59,12 @@ private:
                      int& nxFound, 
                      int& nxExp, double& xLik) const;
 
+ void expectationMixed(const Tsa::Line& aLine, const Tsa::Parabola& aParab, 
+                       std::vector<SeedPnt>& pnts, int* layers ,
+                       const int& sect,
+                       int& nxFound, 
+                       int& nxExp, double& xLik) const;
+
  
   double binomialTerm(int sect,const double f, const double n, const double r) const;
 

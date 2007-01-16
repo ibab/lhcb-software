@@ -5,9 +5,6 @@
 
 #include "TsaKernel/TimeSummary.h"
 
-#include "TsaKernel/SeedHit.h"
-#include "TsaKernel/SeedTrack.h"
-#include "TsaKernel/SeedStub.h"
 
 #include "Event/STLiteCluster.h"
 #include "Event/OTTime.h"
@@ -19,6 +16,10 @@
 #include "TsaKernel/ITsaStubExtender.h"
 #include "ITsaSeedAddHits.h"
 #include "TsaSeed.h"
+
+#include "TsaKernel/SeedStub.h"
+#include "TsaKernel/SeedTrack.h"
+#include "TsaKernel/SeedHit.h"
 
 // boost
 #include "boost/lexical_cast.hpp"
@@ -32,7 +33,7 @@ TsaSeed::TsaSeed(const std::string& name,
   TsaBaseAlg(name, pSvcLocator)
 {
   
-  declareProperty("maxNumHits", m_maxNumHits = 14000);
+  declareProperty("maxNumHits", m_maxNumHits = 12000);
   declareProperty("addHits", m_addHitsInITOverlap = true);
   declareProperty("calcLikelihood", m_calcLikelihood = true);
 
@@ -129,21 +130,31 @@ StatusCode TsaSeed::execute(){
     if (m_calcLikelihood == true) m_likelihood->execute(seeds); // likelihood
 
     m_finalSelection->execute(seeds); // final selection
-
-    if ( sector <= 2 ) m_stubFind->execute( hits, sHits, stubs );
-
-    //  After the IT stub finding is finished, try to link the stubs to make seed candidates
-    if ( sector == 2 ) m_stubLinker->execute( stubs, seeds );
-
+   
     //Delete the temporary objects that have been created
     for ( std::vector<SeedTrack*>::iterator it = seeds.begin(); seeds.end() != it; ++it ) {
         seedSel->insert( *it);
+    }
+
+    if ( sector <= 2 ) m_stubFind->execute( hits, sHits, stubs );
+    
+    //  After the IT stub finding is finished, try to link the stubs to make seed candidates
+    if ( sector == 2 ) {
+      std::vector<SeedTrack*> linkedSeeds; linkedSeeds.reserve(50);
+      m_stubLinker->execute( stubs, linkedSeeds );
+      if (m_calcLikelihood == true) m_likelihood->execute(linkedSeeds);
+      m_finalSelection->execute(linkedSeeds);
+      for ( std::vector<SeedTrack*>::iterator itLinked = linkedSeeds.begin(); linkedSeeds.end() != itLinked; ++itLinked ) {
+        seedSel->insert( *itLinked);
+      }  // it
     }
 
     //  For those IT stubs that remain, try to extend them into the OT
     if ( sector > 2 ) {
       std::vector<SeedTrack*> extendedSeeds; extendedSeeds.reserve(50);
       m_extendStubs->execute( sector, stubs, hits, sHits, extendedSeeds );
+      if (m_calcLikelihood == true) m_likelihood->execute(extendedSeeds);
+      m_finalSelection->execute(extendedSeeds);
       for ( std::vector<SeedTrack*>::iterator itEx = extendedSeeds.begin(); extendedSeeds.end() != itEx; ++itEx ) {
         seedSel->insert( *itEx);
       }

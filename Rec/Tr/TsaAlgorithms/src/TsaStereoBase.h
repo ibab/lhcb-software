@@ -27,6 +27,8 @@ public:
   // destructer
   virtual ~TsaStereoBase();
 
+  StatusCode initialize();
+
   virtual StatusCode execute(LHCb::State& hint, std::vector<SeedTrack*>& seeds, std::vector<SeedHit*> hits[6] = 0 ) ;
 
   virtual StatusCode execute(std::vector<SeedTrack*>& seeds, std::vector<SeedHit*> hits[6] = 0 ) ;

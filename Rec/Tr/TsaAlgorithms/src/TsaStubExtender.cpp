@@ -1,4 +1,4 @@
-// $Id: TsaStubExtender.cpp,v 1.2 2006-12-15 09:47:34 mneedham Exp $
+// $Id: TsaStubExtender.cpp,v 1.3 2007-01-16 08:06:40 mneedham Exp $
 
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -11,7 +11,6 @@
 #include "TsaKernel/SeedStub.h"
 #include "TsaKernel/SeedTrack.h"
 #include "TsaKernel/SeedPnt.h"
-#include "TsaKernel/ITsaSeedStep.h"
 #include "SeedParabolaFit.h"
 #include "SeedLineFit.h"
 
@@ -38,6 +37,20 @@ TsaStubExtender::TsaStubExtender(const std::string& type,
   GaudiTool(type, name, parent){
 
   // constructer
+  declareProperty("dSlopeCut", m_dSlopeCut = 0.03); 
+  declareProperty("seachTol", m_searchTol = 100.);
+  declareProperty("nxCut", m_nxCut = 4);
+  declareProperty("nyCut", m_nyCut = 4);
+  declareProperty("txCut", m_txCut = 0.6);
+  declareProperty("tyCut", m_tyCut = 0.04);
+  declareProperty("yTol", m_yTol = 20.0);
+  declareProperty("nTotalCut1", m_nTotalCut1 = 9);
+  declareProperty("nTotalCut2", m_nTotalCut2 = 11);
+  declareProperty("y0Cut1", m_y0Cut1 = 400);
+  declareProperty("y0Cut2", m_y0Cut2 = 100);
+  declareProperty("dxCut", m_dxCut = 1.0);
+  declareProperty("dyCut", m_dyCut = 40.0);
+
   m_parabolaFit = new SeedParabolaFit(TsaConstants::z0);
   m_fitLine = new SeedLineFit(TsaConstants::z0, TsaConstants::sth);
 
@@ -60,9 +73,6 @@ StatusCode TsaStubExtender::initialize(){
      return Error("Failed to initialize",sc);
   }
 
-  // selection tool
-  m_finalSelection = tool<ITsaSeedStep>("TsaSeedSimpleSelector", "finalSelection" , this);
-
   return StatusCode::SUCCESS;
 }
 
@@ -83,15 +93,15 @@ StatusCode TsaStubExtender::execute(int& sect, std::vector<SeedStub*> stubs[], s
       for ( int lay = 0; lay < 6; ++lay ) {
 
         double dSlope = 0.0;
-	std::vector<SeedHit*>::iterator it2 = SeedFun::startX(hits[lay], stub->x(), stub->z1(), stub->sx(),100.0); 
-	std::vector<SeedHit*>::iterator stop = SeedFun::stopX(hits[lay], stub->x(), stub->z1(), stub->sx(),100.0); 
+	std::vector<SeedHit*>::iterator it2 = SeedFun::startX(hits[lay], stub->x(), stub->z1(), stub->sx(),m_searchTol); 
+	std::vector<SeedHit*>::iterator stop = SeedFun::stopX(hits[lay], stub->x(), stub->z1(), stub->sx(),m_searchTol); 
         for ( ; stop != it2 ; ++it2 ) {
           SeedHit* hit = (*it2);
           if ( hit->onTrack() == true) continue;   // Hit not already used 
 	
           // Select OT hits in X layers that are within window defined using stub 
           dSlope =  fabs(((hit->x() - stub->x())/(hit->z() - stub->z1())) -  stub->sx());  
-          if (dSlope < 0.03) select.push_back(hit);
+          if (dSlope < m_dSlopeCut) select.push_back(hit);
         }
       }
 
@@ -129,7 +139,7 @@ StatusCode TsaStubExtender::execute(int& sect, std::vector<SeedStub*> stubs[], s
             double xSeed = dz*(ax*dz + bx) + x1;
             double dx1 = hit->x() - hit->r()*csth - xSeed;
             double dx2 = dx1 + 2*hit->r()*csth;
-            if ( fabs(dx1) < 1. || fabs(dx2) < 1. ) {
+            if ( fabs(dx1) < m_dxCut || fabs(dx2) < m_dxCut ) {
               iHit[nh] = hit;
               sHit[nh] = 1;
               if ( fabs(dx1) < fabs(dx2) ) sHit[nh] = -1;
@@ -147,17 +157,18 @@ StatusCode TsaStubExtender::execute(int& sect, std::vector<SeedStub*> stubs[], s
           }
         }
       }
-      if ( nMax < 1 ) continue;
+      if ( nMax == 0 ) continue;
       
       std::vector<SeedPnt> xPnts; xPnts.reserve(nMax+4);
       xPnts += SeedPnt(stub->xHit1()) , SeedPnt(stub->xHit2()) ;
       for ( int i = 0; i < nMax+1; ++i ) {
         xPnts.push_back( SeedPnt(iSel[i], sSel[i]) );
       }
-      SeedTrack* seed = new SeedTrack(xPnts,6+stn); 
 
+      SeedTrack* seed = new SeedTrack(xPnts,6+stn); 
+    
       // Fit parabola to all X hits on track 
-      if ( m_parabolaFit->fit(seed,csth) < 1 || seed->nx() < 4 || fabs( seed->sx() ) > 0.6 ) {
+      if ( m_parabolaFit->fit(seed,csth) < 1 || seed->nx() < m_nxCut || fabs( seed->sx() ) > m_txCut ) {
         delete seed;
         continue;
       }
@@ -179,8 +190,9 @@ StatusCode TsaStubExtender::execute(int& sect, std::vector<SeedStub*> stubs[], s
         Gaudi::XYZPoint iPoint;
         const double tol =  0.1*hits[lay].front()->clus()->length();;
         
+        std::vector<SeedHit*>::iterator stop =  SeedFun::endStereo(sHits[lay], point.x(),tol);
         for (std::vector<SeedHit*>::iterator it = SeedFun::startStereo(sHits[lay], point.x(),tol);
-	     it != SeedFun::endStereo(sHits[lay], point.x(),tol); ++it){ 
+	     it != stop; ++it){ 
           SeedHit* hit = (*it);
           if ( hit->onTrack() == true ) continue;   // Hit not already used    
         
@@ -190,7 +202,7 @@ StatusCode TsaStubExtender::execute(int& sect, std::vector<SeedStub*> stubs[], s
           double dy2 = dy + 2*hit->r()*m_scth;
 
           //  Require that they are within window defined by line from origin to the IT stub
-          if ( fabs( dy ) < 40. || fabs( dy2 ) < 40. ) {
+          if ( fabs( dy ) < m_dyCut || fabs( dy2 ) < m_dyCut ) {
             hit->setY( y );
             hit->setZ( iPoint.z() );
             if ( fabs( dy2 ) < fabs( dy ) ) {
@@ -205,8 +217,9 @@ StatusCode TsaStubExtender::execute(int& sect, std::vector<SeedStub*> stubs[], s
       seed->setYPnts( yPnts );
 
       //  Fit line to Y hits
-      if ( m_fitLine->fit( seed ) < 1 || seed->ny() < 4 || fabs( seed->sy() ) > 0.04 || fabs( seed->y0() ) > 400. ||
-           seed->nx()+seed->ny() < 9 ) {
+      if ( m_fitLine->fit( seed ) < 1 || seed->ny() < m_nyCut|| fabs( seed->sy() ) > m_tyCut 
+           || fabs( seed->y0() ) > m_y0Cut1 ||
+           seed->nx()+seed->ny() < m_nTotalCut1 ) {
         delete seed;
         continue;
       }
@@ -218,8 +231,8 @@ StatusCode TsaStubExtender::execute(int& sect, std::vector<SeedStub*> stubs[], s
         SeedPnt & pnt = *it;
         if ( pnt.skip() || pnt.hit()->OT() == 0 ) continue;
         double ySeed = seed->y(pnt.hit()->z(), 0.);
-        if ( ( ySeed > 0. && ySeed < pnt.hit()->clus()->yMin()-20. ) || 
-             ( ySeed < 0. && ySeed > pnt.hit()->clus()->yMax()+20. ) ) {
+        if ( ( ySeed > 0. && ySeed < pnt.hit()->clus()->yMin()-m_yTol ) || 
+             ( ySeed < 0. && ySeed > pnt.hit()->clus()->yMax()+m_yTol ) ) {
           pnt.setSkip( true );  // kill points that are in unphysical region
           ++nKill;
         }
@@ -231,7 +244,7 @@ StatusCode TsaStubExtender::execute(int& sect, std::vector<SeedStub*> stubs[], s
         }
 
         int rc = m_parabolaFit->fit( seed, csth );  //  Refit seed
-        if ( rc < 1 || seed->nx() < 4 || fabs( seed->sx() ) > 0.6 ) {
+        if ( rc < 1 || seed->nx() < m_nxCut || fabs( seed->sx() ) > m_txCut) {
           delete seed;
           continue;
         }
@@ -243,8 +256,8 @@ StatusCode TsaStubExtender::execute(int& sect, std::vector<SeedStub*> stubs[], s
       for ( std::vector<SeedPnt>::iterator it = ypnts.begin(); ypnts.end() != it; ++it ) {
         SeedPnt & pnt = *it;
         if ( pnt.skip() || pnt.hit()->OT() == 0 ) continue;
-        if ( ( pnt.coord() > 0. && pnt.coord() < pnt.hit()->clus()->yMin()-20. ) || 
-             ( pnt.coord() < 0. && pnt.coord() > pnt.hit()->clus()->yMax()+20. ) ) {
+        if ( ( pnt.coord() > 0. && pnt.coord() < pnt.hit()->clus()->yMin()-m_yTol ) || 
+             ( pnt.coord() < 0. && pnt.coord() > pnt.hit()->clus()->yMax()+m_yTol ) ) {
           pnt.setSkip( true );
           ++nKill;
         }
@@ -255,26 +268,28 @@ StatusCode TsaStubExtender::execute(int& sect, std::vector<SeedStub*> stubs[], s
           continue;
         }
 
-        if ( m_fitLine->fit(seed) < 1 || seed->ny() < 4 || fabs( seed->sy() ) > 0.04 || fabs( seed->y0() ) > 400. ||
-             seed->nx()+seed->ny() < 9 ) {
+        if ( m_fitLine->fit(seed) < 1 || seed->ny() < m_nyCut || fabs( seed->sy() ) > m_tyCut || 
+             fabs( seed->y0() ) > m_y0Cut1 ||
+             seed->nx()+seed->ny() < m_nTotalCut1 ) {
           delete seed;
           continue;
         }
       }
 
       //  Tighter cuts if stub not from first station (most overlap tracks have stub in first station)
-      if ( stn > 0 && ( fabs( seed->y0() ) > 100. || seed->nx()+seed->ny() < 11 )) {
+      if ( stn > 0 && ( fabs( seed->y0() ) > m_y0Cut2 || seed->nx()+seed->ny() < m_nTotalCut2 )) {
         delete seed;
         continue;
       }
-      seed->setLik( 0. );       //  For now, don't bother calculating likelihood,
-      //      seed->setSelect( true );     //  just select all of these candidates
+
+
+      // set the dth
+      const double sx = (seed->x(9400.,0.0) - seed->x(7900.,0.0))/1500.;
+      const double dth = atan( sx ) - atan( (x1 - (z1-TsaConstants::zMagnet)*sx)*TsaConstants::oneOverZMagnet );
+      seed->setDth(dth);
       seeds.push_back( seed );  //  Add to vector of seed candidates
     }
   }
-
-  // try to clean them
-  m_finalSelection->execute(seeds);
 
   return StatusCode::SUCCESS;
 }

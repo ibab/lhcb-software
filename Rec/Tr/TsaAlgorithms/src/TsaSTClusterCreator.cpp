@@ -1,4 +1,4 @@
-// $Id: TsaSTClusterCreator.cpp,v 1.6 2006-12-06 14:35:01 mneedham Exp $
+// $Id: TsaSTClusterCreator.cpp,v 1.7 2007-01-16 08:06:39 mneedham Exp $
 
 //GaudiKernel
 #include "GaudiKernel/AlgFactory.h"
@@ -38,7 +38,7 @@ TsaSTClusterCreator::TsaSTClusterCreator(const std::string& name,
   m_cachedSectorID(0)
 {
   // TsaSTClusterCreator constructor
-  declareProperty("maxOcc", m_maxOcc = 32);
+  declareProperty("maxOcc", m_maxOcc = 48);
   this->declareProperty("inputLocation", m_inputLocation = LHCb::STLiteClusterLocation::ITClusters);
   this->declareProperty("positionTool",m_positionToolName = "STOnlinePosition");
   this->declareProperty("detType", m_detType = "IT");

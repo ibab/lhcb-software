@@ -44,6 +44,7 @@ private:
 
   double m_scth;
   double m_maxDriftRadius;
+  int m_nHit;
 
 };
 

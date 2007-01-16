@@ -1,4 +1,4 @@
-// $Id: TsaStereoBase.cpp,v 1.1 2006-12-06 14:35:02 mneedham Exp $
+// $Id: TsaStereoBase.cpp,v 1.2 2007-01-16 08:06:40 mneedham Exp $
 
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -23,13 +23,28 @@ TsaStereoBase::TsaStereoBase(const std::string& type,
                                const IInterface* parent):
   GaudiTool(type, name, parent){
 
-  declareProperty("sector", m_sector = 0);
+  declareProperty("sector", m_sector = -1);
   m_fitLine = new SeedLineFit(TsaConstants::z0, TsaConstants::sth);
 }
+
 
 TsaStereoBase::~TsaStereoBase(){
   // destructer
   delete m_fitLine;
+}
+
+StatusCode TsaStereoBase::initialize(){
+
+  StatusCode sc = GaudiTool::initialize();
+  if (sc.isFailure()){
+     return Error("Failed to initialize",sc);
+  }
+
+  // sector must be set
+  if (m_sector == -1){
+    return Error("No sector set", StatusCode::FAILURE);
+  }
+  return StatusCode::SUCCESS;
 }
 
 StatusCode TsaStereoBase::execute(LHCb::State& , std::vector<SeedTrack*>& seeds, std::vector<SeedHit*> hits[6] ){

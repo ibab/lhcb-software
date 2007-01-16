@@ -1,4 +1,4 @@
-// $Id: TsaITStereoSearch.cpp,v 1.1 2006-12-06 14:35:01 mneedham Exp $
+// $Id: TsaITStereoSearch.cpp,v 1.2 2007-01-16 08:06:37 mneedham Exp $
 
 #include <algorithm>
 
@@ -38,7 +38,7 @@ TsaITStereoSearch::TsaITStereoSearch(const std::string& type,
   declareProperty( "win" , m_win = 4.0);
   declareProperty( "nWin" , m_nWin = 2);
   declareProperty( "yTol", m_yTol = 1.0);
-  declareProperty( "nY", m_nY = 5);
+  declareProperty( "nY", m_nY = 4);
 
   // constructer
   declareInterface<ITsaSeedStep>(this);
@@ -52,7 +52,7 @@ TsaITStereoSearch::~TsaITStereoSearch(){
 
 StatusCode TsaITStereoSearch::initialize(){
 
-  StatusCode sc = GaudiTool::initialize();
+  StatusCode sc = TsaStereoBase::initialize();
   if (sc.isFailure()){
      return Error("Failed to initialize",sc);
   }
@@ -84,8 +84,6 @@ StatusCode TsaITStereoSearch::execute(std::vector<SeedTrack*>& seeds, std::vecto
     if (seed->live() == false) continue;
 
     // collect hits hit in y window
-    //   std::vector<SeedHit*> yHits[6];
-    // for (unsigned int ii = 0 ; ii < 6 ; ++ii) yHits[ii].reserve(8);
     for (unsigned int ii = 0 ; ii < 6 ; ++ii) yHits[ii].clear();
     if (collectHits(seed, hits, yHits) < m_nY) continue;
 
@@ -167,30 +165,5 @@ void TsaITStereoSearch::loadData(std::vector<SeedHit*> hits[6]) const{
       std::sort( hits[lay].begin(), hits[lay].end(), SeedFunctor::increasingX<const SeedHit*>() );
     }
   }
-
-
-  //  Load hits with data from Tsa clusters
-  /*
-  for ( int station = 1; station < 4; ++station ) {
-    for ( int layer = 1; layer < 3; ++layer ) {
-      int lay = 2*(station-1);
-      if ( layer > 0 ) ++lay;
-        for ( int ib = 0; ib < 2; ++ib ) {
-          if ( sector() > 0 && ib > 0 ) continue;
-          int box = 2 + sector() - ib;
-          Tsa::STRange iRange =  m_dataSvc->partition(station,layer+1,box);
-          for (Tsa::STClusters::const_iterator itIter = iRange.begin(); itIter != iRange.end(); ++itIter){
-            if ((*itIter)->isHot() == false) {
-              SeedHit* hit = new SeedHit(*itIter); 
-              hits[lay].push_back( hit );
-	    }
-          } //clusters
-        } // box
-
-      std::sort( hits[lay].begin(), hits[lay].end(), SeedFunctor::increasingX<const SeedHit*>() );
-    } // layer
-  } // station
-  */
-
 }
 
