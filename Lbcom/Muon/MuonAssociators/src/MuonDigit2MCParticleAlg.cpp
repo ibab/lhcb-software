@@ -1,4 +1,4 @@
-// $Id: MuonDigit2MCParticleAlg.cpp,v 1.12 2007-01-15 17:39:47 cattanem Exp $
+// $Id: MuonDigit2MCParticleAlg.cpp,v 1.13 2007-01-16 07:17:05 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -69,7 +69,7 @@ StatusCode MuonDigit2MCParticleAlg::execute() {
     StatusCode sc = associateToTruth(*iDigit,mcpart);
     debug()<<" qui 3 "<<endreq;
 
-    if(mcpart!=NULL && sc.isSuccess() ){
+    if( sc.isSuccess() && mcpart!=NULL ){
       myLink.link( *iDigit, mcpart);
     }
   }
