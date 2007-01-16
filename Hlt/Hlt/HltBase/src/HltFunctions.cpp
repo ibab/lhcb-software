@@ -23,8 +23,8 @@ void Hlt::VertexCreator::operator()
 
 bool Hlt::SortTrackByPt::operator() (const Track* track0, 
                                      const Track* track1 ) const {
-  double pt0 = track0->pt();
-  double pt1 = track1->pt();
+  double pt0 = track0->pt()+0.00001*track0->key();
+  double pt1 = track1->pt()+0.00001*track1->key();
   return (pt0 > pt1);
 }
 
