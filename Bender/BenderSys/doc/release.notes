@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.7 2006-11-28 14:55:54 ibelyaev Exp $ 
+! $Id: release.notes,v 1.8 2007-01-16 16:00:51 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! -----------------------------------------------------------------------------
@@ -6,6 +6,15 @@
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@itep.ru
 ! Purpose     : Easy/interactive python-based LHCb physics analysis
 ! -----------------------------------------------------------------------------
+
+! ==================== BenderSys v6r2 2007-01-16 ===========================
+
+! 2007-01-16 - Vanya BELYAEV
+ - cmt/requirements
+    increment the versions for Bender, BenderLibs and BenderExample
+ - cmt/requirements 
+    incement version to v6r2 
+
 
 ! 2006-11-28 - Vanya BELYAEV
  - doc/* 
