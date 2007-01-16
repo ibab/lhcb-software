@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/src/DimEngine.h,v 1.2 2006-07-27 15:45:59 evh Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/src/DimEngine.h,v 1.3 2007-01-16 16:33:44 evh Exp $
 #ifndef GAUCHO_DIMENGINE_H
 #define GAUCHO_DIMENGINE_H 1
 
@@ -15,11 +15,12 @@ This class publishes Gaudi variables as Dim services.
 @author Philippe Vannerem
 @author Jose Helder Lopes Jan. 2005
 @author Jose Helder Lopes 27/07/2006
+@author Jose Helder Lopes 2006/12/26: Modified to publish general c-structures and AIDA::IProfile1D
+
 */
 
-namespace AIDA {class IHistogram;
-  class IHistogram1D;
-  class IHistogram2D;
+namespace AIDA {
+  class IBaseHistogram;
 }
 class DimHisto;
 class IMessageSvc;
@@ -36,7 +37,8 @@ public:
   void declSvc(std::string InfoName, const char* InfoVar);
   void declSvc(std::string InfoName, const std::string& InfoVar);
   void declSvc(std::string InfoName, const std::pair<double,double>& InfoVar);
-  void declSvc(std::string InfoName, const AIDA::IHistogram* InfoVar);
+  void declSvc(std::string InfoName, const AIDA::IBaseHistogram* InfoVar);
+  void declSvc(std::string InfoName, const std::string& format, const void* InfoVar, int size );
   void undeclSvc(std::string InfoName);
 private:
   std::string m_dimName;

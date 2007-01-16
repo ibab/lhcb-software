@@ -1,9 +1,10 @@
-// $Id: DimEngine.cpp,v 1.7 2006-07-27 15:45:59 evh Exp $
+// $Id: DimEngine.cpp,v 1.8 2007-01-16 16:33:44 evh Exp $
 
 #include "GaudiKernel/StatusCode.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "AIDA/IHistogram1D.h"
 #include "AIDA/IHistogram2D.h"
+#include "AIDA/IProfile1D.h"
 #include "DimHisto.h"
 #include "DimEngine.h"
 
@@ -136,31 +137,47 @@ void DimEngine::declSvc(std::string InfoName,
   }
 }
 
-void DimEngine::declSvc(std::string InfoName, const AIDA::IHistogram* InfoVar){
+void DimEngine::declSvc(std::string InfoName, const AIDA::IBaseHistogram* InfoVar){
   std::string diminfoname;
-  int dimension = InfoVar->dimension();
-  debug() << "AIDA::IHistogram: Dimension: " << dimension << endreq;
-  if( 2 >= dimension ) {
-    std::string hDim = (1==dimension ? "H1D" : "H2D");
-    diminfoname=hDim+"/"+m_dimName+"/"+InfoName;
-  	std::pair<DimHistoMapIt,bool> p = 
-      m_dimHistos.insert(DimHistoMap::value_type(InfoName,0));
-    if (p.second) {
-      m_dimHistos[InfoName]=new DimHisto(diminfoname, InfoVar,m_svclocator);
-      
-      info()  << "New DimHisto: " << diminfoname << " Dimension: " <<
-        dimension << endreq;
-      return;
-    }
-    else {
-      error() << "already existing DimHisto: " 
-              << diminfoname << " Dimension: " << dimension << endreq;
-      return;
-    }
-  }  
-  error() << "Unknown histogram type: " << diminfoname 
-          << " Dimension: " << dimension << endreq;
+  if( 0 != dynamic_cast<const AIDA::IProfile1D * >(InfoVar) ) 
+    diminfoname="HPD/"+m_dimName+"/"+InfoName;
+  else if( 0 != dynamic_cast<const AIDA::IHistogram1D * >(InfoVar) )
+    diminfoname="H1D/"+m_dimName+"/"+InfoName;
+  else if( 0 != dynamic_cast<const AIDA::IHistogram2D * >(InfoVar) )
+    diminfoname="H2D/"+m_dimName+"/"+InfoName;
+  else {
+    error() << "Unknown histogram type: " << diminfoname  << endreq;
+    return;
+  }
+  
+  std::pair<DimHistoMapIt,bool> p = 
+    m_dimHistos.insert(DimHistoMap::value_type(InfoName,0));
+  if (p.second) {
+    m_dimHistos[InfoName]=new DimHisto(diminfoname, InfoVar,m_svclocator);
+    
+    info()  << "New DimHisto: " << diminfoname << endreq;
+    return;
+  }
+  else {
+    error() << "already existing DimHisto: " << diminfoname << endreq;
+    return;
+  }
 }
+
+void DimEngine::declSvc(std::string InfoName, const std::string& format, const void* InfoVar, int size ) {
+  std::string diminfoname=m_dimName+"/"+InfoName;
+  std::pair<DimServiceMapIt,bool> p;
+  p = m_dimInfos.insert(DimServiceMap::value_type(InfoName,0));
+  if (p.second) {
+    m_dimInfos[InfoName]= new DimService(diminfoname.c_str(), (char *)format.c_str(), (void *)InfoVar, size);
+    info()  << "New DimService ( arbitrary structure ): " << diminfoname << endreq;
+  }
+  else {
+    error() << "already existing DimService:" << (*(p.first)).first
+            << " -> " << (*(p.first)).second << endreq;
+  }
+}
+
 void DimEngine::undeclSvc(std::string InfoName){
   debug() << "undeclSvc: Contents of dimInfos: " << endreq;
   for (m_dimInfosIt=m_dimInfos.begin();m_dimInfosIt!=m_dimInfos.end();

@@ -14,7 +14,7 @@ class DimEngine;
 class DimCmdServer;
 
 
-namespace AIDA { class IHistogram; }
+namespace AIDA { class IBaseHistogram; }
 
 /** @class MonitorSvc MonitorSvc.h GaudiKernel/MonitorSvc.h
     
@@ -27,6 +27,7 @@ the value of the property.
 
 @author Philippe Vannerem
 @author Jose Helder Lopes Jan. 2005
+@author Jose Helder Lopes 2006/12/26: Modified to publish general c-structures and AIDA::IProfile1D  
 */
 
 class MonitorSvc : public Service, virtual public IMonitorSvc {
@@ -58,8 +59,10 @@ public:
                    const std::string& desc, const IInterface* owner) ;
   void declareInfo(const std::string& name, const std::pair<double,double>&var,
                    const std::string& desc, const IInterface* owner) ;
-  void declareInfo(const std::string& name, const AIDA::IHistogram* var, 
+  void declareInfo(const std::string& name, const AIDA::IBaseHistogram* var, 
                    const std::string& desc, const IInterface* owner) ;
+  void declareInfo(const std::string& name, const std::string& format, const void * var, 
+                   int size, const std::string& desc, const IInterface* owner) ;
   
   /** Undeclare monitoring information
       @param name Monitoring information name knwon to the external system

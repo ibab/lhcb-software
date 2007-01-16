@@ -10,7 +10,7 @@
 #include "DimCmdServer.h"
 #include "RTL/rtl.h"
 
-namespace AIDA { class IHistogram; }
+namespace AIDA { class IBaseHistogram; }
 
 // Factory for instantiation of service objects
 static SvcFactory<MonitorSvc> s_factory;
@@ -276,7 +276,7 @@ void MonitorSvc::declareInfo(const std::string& name,
                      m_infoDescriptions[dimName].c_str() );
 }
 void MonitorSvc::declareInfo(const std::string& name, 
-                             const AIDA::IHistogram* var, 
+                             const AIDA::IBaseHistogram* var, 
                              const std::string& desc, const IInterface* owner) 
 {
   MsgStream msg(msgSvc(),"MonitorSvc");
@@ -306,6 +306,39 @@ void MonitorSvc::declareInfo(const std::string& name,
   m_dimeng->declSvc(dimName, var );
   m_infoDescriptions[dimName] = desc;
   m_dimeng->declSvc( dimName+"/gauchocomment", 
+                     m_infoDescriptions[dimName].c_str() );
+}
+
+void MonitorSvc::declareInfo(const std::string& name, const std::string& format, const void * var,
+                             int size, const std::string& desc, const IInterface* owner) 
+{
+  MsgStream msg(msgSvc(),"MonitorSvc");
+  m_InfoNamesMapIt = m_InfoNamesMap.find( owner );
+  std::string ownerName = infoOwnerName( owner );
+  if( m_InfoNamesMapIt != m_InfoNamesMap.end() ) {
+    std::pair<std::set<std::string>::iterator,bool> p =
+      (*m_InfoNamesMapIt).second.insert(name);
+    if( p.second) {
+      msg << MSG::INFO << endreq;
+      msg << MSG::INFO << "Declaring info: Owner: "
+          << infoOwnerName( owner ) << " Name: " << name << endreq;
+    }
+    else { // Insertion failed: Name already exists
+      msg << MSG::INFO << endreq;
+      msg << MSG::ERROR << "Already existing info " << name << " from owner "
+          << infoOwnerName( owner ) << " not published" << endreq;
+      return;
+    }
+  }
+  else { // Create a new set for this algo and insert name
+    m_InfoNamesMap[owner]=std::set<std::string>();
+    m_InfoNamesMap[owner].insert(name);
+  }
+  std::string dimName =ownerName+"/"+name;
+  msg << MSG::DEBUG << "dimName: " << dimName << endreq;
+  m_dimeng->declSvc(dimName, format, var, size );
+  m_infoDescriptions[dimName] = desc;
+  m_dimeng->declSvc( dimName+"/gauchocomment",
                      m_infoDescriptions[dimName].c_str() );
 }
 
