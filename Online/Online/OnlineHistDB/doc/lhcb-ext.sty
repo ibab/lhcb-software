@@ -1,0 +1,22 @@
+% These are macros for specific information one has to provide in an
+% LHCb note. By default, they are all defined as very thick black rules
+% so that nobody should forget to set them.
+
+\def\@missingfield{\hbox{\vrule width 4em height 1.5ex}}
+%\def\@title{\@missingfield}
+%\def\@author{\@missingfield}
+%\def\@date{\@missingfield}
+\def\@docref{\@missingfield}
+\def\@docrev{\@missingfield}
+\def\@dociss{\@missingfield}
+\def\@docmod{\@missingfield}
+\def\@doccre{\@missingfield}
+\def\@doctyp{\@missingfield}
+\newcommand{\docref}[1]{\def\@docref{\mbox{#1}}}
+\newcommand{\docrev}[1]{\def\@docrev{\mbox{#1}}}
+\newcommand{\dociss}[1]{\def\@dociss{\mbox{#1}}}
+\newcommand{\docmod}[1]{\def\@docmod{\mbox{#1}}}
+\newcommand{\doccre}[1]{\def\@doccre{\mbox{#1}}}
+\newcommand{\doctyp}[1]{\def\@doctyp{\mbox{#1}}}
+
+\newenvironment{status}{\def\entry##1##2##3##4{}}{}

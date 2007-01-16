@@ -1,0 +1,246 @@
+% (IF) Page setting
+
+\RequirePackage{a4wide}
+
+\oddsidemargin 0in      %   Note that \oddsidemargin = \evensidemargin
+\evensidemargin 0in
+\newlength{\backindent}\setlength{\backindent}{2cm}
+\marginparwidth 0.75 in
+\textwidth 5.375 in % Width of text line.
+\advance\textheight by1.4cm
+\advance\voffset by-1.4cm
+\advance\textwidth by\backindent
+
+% (IF) Fonts
+
+\RequirePackage{palatino}
+
+\renewenvironment{abstract}{\section*{Abstract}}{}
+
+\renewenvironment{status}
+{
+\section*{Document Status Sheet}
+\newbox\titlebox
+\setbox\titlebox\vtop{\hsize=11cm\sffamily\bfseries\@title\smallskip}
+\def\entry##1##2##3##4{\strut##1&##2&##3&##4\\\hline}
+\def\strut{\vrule height 12pt width0pt depth5pt}
+\begin{tabular}{|l|l|l|p{8cm}|}
+\hline
+\multicolumn{4}{|l|}{\strut\sffamily\bfseries1.\ Document Title:
+\usebox\titlebox}\\
+\hline
+\multicolumn{4}{|l|}{\strut\sffamily\bfseries2.\ Document Reference Number: \@docref}\\
+\hline
+\strut\sffamily\bfseries3.\ %
+Issue&
+\sffamily\bfseries4.\ %
+Revision&
+\sffamily\bfseries5.\ %
+Date&
+\sffamily\bfseries6.\ %
+Reason for change\\
+\hline
+}
+{\end{tabular}}
+
+
+\def\notetitlefont{\usefont{T1}{phv}{b}{n}\fontsize{32pt}{36pt}\selectfont}
+
+% Title page
+
+\renewcommand\maketitle{
+\begin{titlepage}%
+	\setcounter{page}{-1}
+      \let\footnotesize\small
+      \let\footnoterule\relax
+      \let \footnote \thanks
+      \null
+      \vskip 85.95\p@
+      \begin{raggedright}%
+        {\notetitlefont\@title\par}
+	\vskip170pt%
+        {\Huge\sffamily\bfseries
+	\@doctyp\par\medskip}
+	\large\parskip0pt plus1pt
+          \def\field##1##2{\leavevmode\noindent\hbox to2.09in{##1:\hfil}##2\par}
+	\field{Issue}{\@dociss}
+          \field{Revision}{\@docrev}
+	\vskip\baselineskip
+          \field{Reference}{\@docref}
+          \field{Created}{\@doccre}
+          \field{Last modified}{\@docmod}
+	\vskip\baselineskip
+	\field{\bf Prepared by}{\@author}
+      \end{raggedright}
+      \end{titlepage}%
+	\cleardoublepage
+      \setcounter{footnote}{0}%
+      }
+
+\def\cleardoublepage{\clearpage
+ \if@twoside
+  \ifodd\c@page\else
+   \null\thispagestyle{empty}\newpage
+   \if@twocolumn\null\newpage\fi
+   \fi
+  \fi
+ }%
+
+% (IF) section titles
+
+\setcounter{secnumdepth}{3}
+\renewcommand\section{\@startsection {section}{1}{-\backindent}%
+                                   {-3.5ex \@plus -1ex \@minus -.2ex}%
+                                   {2.3ex \@plus.2ex}%
+                                   {\normalfont\Large\sffamily\bfseries}}
+\renewcommand\subsection{\@startsection{subsection}{2}{-\backindent}%
+                                     {-3.25ex\@plus -1ex \@minus -.2ex}%
+                                     {1.5ex \@plus .2ex}%
+                                     {\normalfont\large\sffamily\bfseries}}
+\renewcommand\subsubsection{\@startsection{subsubsection}{3}{\z@}%
+                                     {-3.25ex\@plus -1ex \@minus -.2ex}%
+                                     {1.5ex \@plus .2ex}%
+                                     {\normalfont\normalsize\rm\itshape\bfseries}}
+\renewcommand\paragraph{\@startsection{paragraph}{4}{\z@}%
+                                    {3.25ex \@plus1ex \@minus.2ex}%
+                                    {-1em}%
+                                    {\normalfont\normalsize\sffamily\bfseries}}
+\renewcommand\subparagraph{\@startsection{subparagraph}{5}{\parindent}%
+                                       {3.25ex \@plus1ex \@minus .2ex}%
+                                       {-1em}%
+                                      {\normalfont\normalsize\sffamily\bfseries}}
+
+
+% (IF) Captions
+\setlength\abovecaptionskip{3\p@ plus 1\p@}
+\setlength\belowcaptionskip{0\p@ plus 1\p@}
+\long\def\@makecaption#1#2{%
+  \vskip\abovecaptionskip
+    \sffamily{\bfseries#1}\hskip1ex plus1ex#2\par
+  \vskip\belowcaptionskip}
+
+% (IF) parskip
+\frenchspacing
+\parskip5pt plus 2pt minus 3pt
+\parindent0pt
+
+% BIBLIO
+
+\renewenvironment{thebibliography}[1]
+     {\section{\refname}%
+      \@mkboth{\MakeUppercase\refname}{\MakeUppercase\refname}%
+      \list{\@biblabel{\@arabic\c@enumiv}}%
+           {
+%	    \def\@biblabel##1{{\sffamily\bfseries[##1]}}
+%	    \setlength  \labelsep  {2.5em}
+	    \settowidth\labelwidth{\@biblabel{#1}}%
+            \leftmargin\labelwidth
+            \advance\leftmargin\labelsep
+            \@openbib@code
+            \usecounter{enumiv}%
+            \let\p@enumiv\@empty
+            \renewcommand\theenumiv{\@arabic\c@enumiv}}%
+      \sloppy
+      \clubpenalty4000
+      \@clubpenalty \clubpenalty
+      \widowpenalty4000%
+      \sfcode`\.\@m}
+
+% (IF) description (BUG a cause de l'espace apres le trait)
+\renewcommand*\descriptionlabel[1]{\hspace\labelsep%
+                                \normalfont\itshape #1 ---}
+
+\newdimen\headwidth
+\headwidth=\textwidth
+\advance\headwidth by\backindent
+
+% (IF) headers and footer
+\headheight32pt
+\renewcommand{\sectionmark}[1]{\markboth{\thesection\hskip1em{}#1}
+					{\thesection\hskip1em{}#1}}
+\renewcommand{\@oddhead}{%
+\footnotesize\sffamily\itshape\bfseries\kern-1\backindent\vbox{%
+	\advance\hsize by\backindent\renewcommand{\newline}{ }%
+	\hbox to\headwidth{\@title\hfil {\upshape Ref:} \@docref}\par
+	\hbox to\headwidth{\@doctyp\hfil {\upshape Issue:} \@dociss}\par
+	\hbox to\headwidth{\leftmark\hfil {\upshape Date:} \@date}\par
+	\vskip2pt
+	\hrule
+\vfil}}
+\renewcommand{\@oddfoot}{%
+	\kern-1\backindent\vbox{%
+	\advance\hsize by\backindent%
+	\hrule
+	\vskip4pt
+	\hbox to\headwidth{\footnotesize\sffamily\hfil\bfseries page\ \thepage}\par
+}}
+\renewcommand{\@evenhead}{\@oddhead}
+\renewcommand{\@evenfoot}{%
+	\kern-\backindent\vbox{%
+	\advance\hsize by\backindent%
+	\hrule
+	\vskip4pt
+	\hbox to\headwidth{\footnotesize\sffamily\bfseries page\ \thepage\hfil}\par
+}}
+
+% TOC
+
+\renewcommand\@dotsep{8.0}
+\def\@dottedtocline#1#2#3#4#5{%
+  \ifnum #1>\c@tocdepth \else
+    \vskip \z@ \@plus.2\p@
+    {\leftskip #2\relax \rightskip \@tocrmarg \parfillskip -\rightskip
+     \parindent #2\relax\@afterindenttrue
+     \interlinepenalty\@M
+     \leavevmode
+     \@tempdima #3\relax
+     \advance\leftskip \@tempdima \null\nobreak\hskip -\leftskip
+     {#4}\nobreak
+     \leaders\hbox{$\m@th
+        \mkern \@dotsep mu\hbox{.}\mkern \@dotsep
+        mu$}\hfill
+     \nobreak
+     \hb@xt@\@pnumwidth{\hfil\normalfont \normalcolor #5}%
+     \par}%
+  \fi}
+
+
+\renewcommand*\l@section[2]{%
+  \ifnum \c@tocdepth >\z@
+    \addpenalty\@secpenalty
+    \addvspace{1.0em \@plus\p@}%
+    \setlength\@tempdima{1.5em}%
+    \begingroup
+      \parindent \z@ \rightskip \@pnumwidth
+      \parfillskip -\@pnumwidth
+      \leavevmode \bfseries
+      \advance\leftskip\@tempdima
+      \hskip -\leftskip
+      #1\nobreak
+     \leaders\hbox{$\m@th
+        \mkern \@dotsep mu\hbox{.}\mkern \@dotsep
+        mu$}\hfill
+ \nobreak\hb@xt@\@pnumwidth{\hss #2}\par
+    \endgroup
+  \fi}
+\renewcommand*\l@subsection{\@dottedtocline{2}{1.5em}{2.3em}}
+\renewcommand*\l@subsubsection{\@dottedtocline{3}{3.8em}{3.2em}}
+\renewcommand*\l@paragraph{\@dottedtocline{4}{7.0em}{4.1em}}
+\renewcommand*\l@subparagraph{\@dottedtocline{5}{10em}{5em}}
+\renewcommand\listoffigures{%
+    \section*{\listfigurename}%
+      \@mkboth{\MakeUppercase\listfigurename}%
+              {\MakeUppercase\listfigurename}%
+    \@starttoc{lof}%
+    }
+\renewcommand*\l@figure{\@dottedtocline{1}{1.5em}{2.3em}}
+\renewcommand\listoftables{%
+    \section*{\listtablename}%
+      \@mkboth{%
+          \MakeUppercase\listtablename}%
+         {\MakeUppercase\listtablename}%
+    \@starttoc{lot}%
+    }
+\let\l@table\l@figure
+
+

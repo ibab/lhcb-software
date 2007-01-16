@@ -1,0 +1,14 @@
+# =============================================================================
+# Created    : 21/12/2006
+# Maintainer : Giacomo Graziani 
+# =============================================================================
+package             OnlineHistDB
+version             v1r0
+
+branches            cmt doc src OnlineHistDB sql www
+include_dirs        $(ONLINEHISTDBROOT) $(oracle_home)/include
+use GaudiKernel    v*
+use oracle         v*  LCG_Interfaces
+library             OnlineHistDB    *.cpp
+apply_pattern  linker_library library=OnlineHistDB 
+macro_append oracle_linkopts " -locci"

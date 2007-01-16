@@ -1,0 +1,343 @@
+body {
+	font-family: Comic Sans MS,Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10pt ;
+	background-color: #E1E1E1;
+	margin-left: 10px;
+	margin-top: 10px;
+}
+
+body.listing { 
+  font-family: Comic Sans MS,Verdana, Arial, Helvetica, sans-serif;
+  font-size: 10pt ;
+  background-color: white;
+} 
+
+
+h3 {
+        font-family: Verdana, Arial, Helvetica, sans-serif;
+        font-size: 12pt ;
+        color:blue;
+}
+h4 {
+        font-family: Verdana, Arial, Helvetica, sans-serif;
+        font-size: 9pt ;
+        color:blue;
+}
+
+p {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10pt;
+}
+a {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10pt;
+	color: blue;
+}
+
+th {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10pt;
+}
+td {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10pt;
+}
+input{
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10pt;
+}
+select{
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10pt;
+}
+textarea{
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10pt;
+	border-style: outset;
+}
+hr{
+	height: 1px;
+	border-style: none;
+	color: black; /* need this for IE */
+	background-color: black;  /* need this for Mozilla */
+}
+
+
+/* the main big table that contain all the page */
+.main_table{
+	width: 100%;
+	height: 100%;
+	background-color: #FFCC99;
+	background-color: #E1E1E1;
+	padding: 10px; /* doesn't work with IE, cellpadding in header */
+	border-style: solid;
+	border-width: 1px;
+	border-color: black;
+	vertical-align: bottom;
+}
+
+/*******************************************************/
+/************************************************ RESULTS PAGE */
+
+/* "n records found" message */
+.n_results_found {
+	color:black;
+	font-weight: bold;
+}
+
+/* "page n of m" sentence */
+.page_n_of_m {
+	color:black;
+}
+
+/* links of the navigation bar ( << < 1 2 3......) */
+a.navig {
+	color:blue;
+}
+
+
+/* current page in the navigation bar ( << < 1 2 3......) */
+.navig {
+	color:black;
+}
+
+.asalink {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10pt;
+	color: blue;
+        border-style: none;
+        background-color: #E1E1E1;
+        margin-left:10;
+	text-decoration:underline;
+	padding:0;
+}
+a.asalink {
+ margin-left:12;
+}
+
+/* order by links */
+/* normal */
+a.order_link {
+	color:blue;
+	font-size: 8pt;
+	text-decoration: none;
+}
+/* currently selected */
+a.order_link_selected {
+	color:black;
+	font-size: 8pt;
+	text-decoration: none;
+}
+
+/* results table */
+
+table.results {
+	background-color: #D0DCE0; /* used to make the table bordered */
+}
+/* coloumn headings */
+th.results {
+	background-color: #EFEFEF;
+	white-space: nowrap;
+}
+/* result cells */
+/* results_1 and results_2 differ only for the background-color, this create the alternate row colors effect */
+td.results_1 {
+	font-size: 8pt;
+	vertical-align: top;
+	white-space: nowrap;
+	background-color: #EFEFEF;
+}
+td.results_2 {
+	font-size: 8pt;
+	vertical-align: top;
+	white-space: nowrap;
+	background-color: #ffffff;
+}
+/* control (edit, delete, details) cells */
+/* results_1 and results_2 differ only for the background-color, this create the alternate row colors effect */
+td.controls_1 {
+	font-size: 8pt;
+	background-color: #EFEFEF;
+}
+td.controls_2 {
+	font-size: 8pt;
+	background-color: #ffffff;
+}
+
+.export_to_csv{
+}
+
+/* "Total records: n" sentence */
+.total_records {
+}
+
+/* links of the bottom menu (insert, search, show all) */
+a.bottom_menu{
+	color: black;
+}
+
+/* home link */
+a.home{
+	color: red;
+}
+
+/* change table combo box  */
+.select_change_table{
+}
+
+/* change table button */
+.button_change_table{
+}
+/*******************************************************/
+
+/*******************************************************/
+/************************************************ FORM (insert, search and update form) */
+
+/* required field labels */
+/* if you change the color you should change also the "required_fields_red" sentence in your language file*/
+.required_field_labels{
+	color: red;
+}
+
+/* insert, save and search buttons */
+.button_form{
+}
+
+/* rows containing insert, save and search buttons */
+.tr_button_form {
+	text-align: center;
+}
+
+/* rows containing the all/any in the search form */
+.tr_operator_form{
+	text-align: center;
+}
+
+/* the cell that contains the label in the form */
+.td_label_form{
+	text-align: right;
+	vertical-align: top;
+}
+
+/* the cell that contains the input (textbox, textarea, etc) in the form */
+.td_input_form{
+	vertical-align: top;
+}
+
+/* the cell that contains the hint in the form */
+.td_hint_form{
+	vertical-align: top;
+}
+
+/* error messages (e.g. "You haven't filled out some required fields...." */
+.error_messages_form{
+	color: red;
+}
+
+.change_table{
+	margin-top: 0px;
+	margin-left: 0px;
+	}
+
+
+/*******************************************************/
+/************************************************ DETAIL PAGE */
+/* the cell that contains the label */
+.td_label_details{
+	text-align: right;
+	vertical-align: top;
+}
+
+/* the cell that contains the value */
+.td_value_details{
+	vertical-align: top;
+}
+/*******************************************************/
+
+/*******************************************************/
+/************************************************ LOGIN FORM */
+.table_login_form{
+border-width:1px;
+border-color: #000000;
+border-style: solid;
+background-color:#fffff;
+}
+
+.tr_header_login_form{
+background-color:#aaaaaa;
+font-weight:bold;
+color:#ffffff;
+}
+
+.input_login_form{
+border-width:1px;
+border-color: #000000;
+border-style: solid;
+}
+/*******************************************************/
+
+
+div.break {
+	page-break-before:always
+}
+table.labels {
+	width: 21cm
+}
+td.address {
+	height: 3.4cm;
+	width: 10cm;
+	text-align: left;
+	vertical-align: top;
+	margin-top: 10px;
+	margin-left: 10px;
+	font-size: 14px
+}
+td.marginvert {
+	width: 0.5cm
+}
+td.marginorizz {
+	height: 1.2cm
+}
+
+
+.table_login_form{
+text-align: center;
+border-width:1px;
+border-color: #000000;
+border-style: solid;
+text-align:"center";
+background-color:#fffff;
+}
+
+.connected_name {
+font-weight:bold;
+color:blue;
+font-family: Helvetica, sans-serif;
+font-size: 8pt;
+}
+
+.tr_header_login_form{
+background-color:#66666;
+font-weight:bold;
+color:#ffffff;
+}
+
+.input_login_form{
+border-width:1px;
+border-color: #000000;
+border-style: solid;
+}
+
+.normal {
+  color:blue;
+  font-size:1.1em;
+  font-weight:normal;
+  font-family:serif;
+  text-align:center;
+}
+
+a.listing {
+  color:blue;
+  font-family: Comic Sans MS, Verdana, Arial, Helvetica;
+  font-size: 1.5em;
+}
