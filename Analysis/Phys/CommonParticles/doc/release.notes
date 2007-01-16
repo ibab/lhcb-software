@@ -4,6 +4,11 @@
 ! Purpose     : Common particles
 !-----------------------------------------------------------------------------
 
+! 2007-01-16 - P. Koppenburg
+  - options/StandardD0.opts
+    . Apply Pt cut before vertex fit not after.
+  . increment to v3r7
+
 !========================== CommonParticles v3r6 2007-01-08 ===================
 
 ! 2006-12-22 - Juan Palacios for Andy Powell
