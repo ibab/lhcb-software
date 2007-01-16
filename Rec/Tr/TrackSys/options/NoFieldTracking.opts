@@ -4,7 +4,7 @@
 // ====================================================================
 
 // no field options
-MagneticFieldSvc.UseConstantField = true;
+//MagneticFieldSvc.UseConstantField = true;
 
 // --------------------------------------------------------------------
 // Load all necessary libraries
