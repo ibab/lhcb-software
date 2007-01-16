@@ -17,7 +17,8 @@ extern "C" int lib_rtl_lock_exithandler() {
     lib_rtl_lock_map_t m = allLocks();
     lib_rtl_lock_map_t::iterator i = m.begin();
     for( ; i != m.end(); ++i ) {
-      lib_rtl_delete_lock((*i).second);
+      // ::lib_rtl_printf("Deleting lock: %s\n",(*i).first.c_str());
+      ::lib_rtl_delete_lock((*i).second);
     }
     delete s_map.release();
   }
@@ -39,6 +40,7 @@ extern "C" int lib_rtl_lock_value(lib_rtl_lock_t handle, int* value)   {
 int lib_rtl_create_lock(const char* mutex_name, lib_rtl_lock_t* handle)   {
   std::auto_ptr<rtl_lock> h(new rtl_lock); 
   ::memset(h->name,0,sizeof(h->name));
+  bool created = false;
   if ( mutex_name )  {
     ::sprintf(h->name,"/%s",mutex_name);
     h->name[sizeof(h->name)-1] = 0;
@@ -47,6 +49,17 @@ int lib_rtl_create_lock(const char* mutex_name, lib_rtl_lock_t* handle)   {
 #if defined(USE_PTHREADS)
   int sc = 0;
   h->handle = h->name[0] ? ::sem_open(h->name, O_CREAT|O_EXCL, 0644, 1) : &h->handle2;
+  if (h->name[0] && !h->handle) {
+    h->handle = ::sem_open(h->name, O_CREAT, 0777, 1);
+    if ( !h->handle ) {
+      ::perror("SEVERE: sem_open: ");
+      return 0;
+    }
+  }
+  else if ( h->name[0] ) {
+    created = true;
+  }
+
   if ( h->handle ) {
     sc = ::sem_init(h->handle, h->name[0] ? 0 : 1, 1);
   }
@@ -67,7 +80,7 @@ int lib_rtl_create_lock(const char* mutex_name, lib_rtl_lock_t* handle)   {
   if ( h->handle == 0 )   {
     return lib_rtl_signal_message(LIB_RTL_OS,"error in creating lock %s %08X.",h->name,h->handle);
   }
-  else if ( mutex_name != 0 )  {
+  else if ( created && mutex_name != 0 )  {
     allLocks().insert(std::make_pair(h->name,h.get()));
   }
   *handle = h.release();

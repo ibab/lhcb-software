@@ -33,7 +33,8 @@ extern "C" int lib_rtl_event_exithandler() {
     lib_rtl_event_map_t m = allEventFlags();
     lib_rtl_event_map_t::iterator i = m.begin();
     for( ; i != m.end(); ++i ) {
-      lib_rtl_delete_event((*i).second);
+      // ::lib_rtl_printf("Deleting event flag:%s\n",(*i).first.c_str());
+      ::lib_rtl_delete_event((*i).second);
     }
     delete s_evtMap.release();
   }
@@ -44,21 +45,28 @@ extern "C" int lib_rtl_event_exithandler() {
 int lib_rtl_create_event (const char* name, lib_rtl_event_t* event_flag)    {
   std::auto_ptr<rtl_event> h(new rtl_event);
   ::memset(h->name,0,sizeof(h->name));
+  bool created = false;
   if ( name )  {
     ::sprintf(h->name,"/%s",name);
     h->name[sizeof(h->name)-1] = 0;
   }
 #if defined(USE_PTHREADS)
-  h->handle = h->name[0] ? ::sem_open(h->name, O_CREAT, 0777, 1) : &h->handle2;
+  h->handle = h->name[0] ? ::sem_open(h->name, O_CREAT|O_EXCL, 0777, 1) : &h->handle2;
   if (h->name[0] && !h->handle) {
-    ::perror("SEVERE: sem_open: ");
-    return 0;
+    h->handle = ::sem_open(h->name, O_CREAT, 0777, 1);
+    if ( !h->handle ) {
+      ::perror("SEVERE: sem_open: ");
+      return 0;
+    }
+  }
+  else if ( h->name[0] ) {
+    created = true;
   }
   if ( h->name[0] ) {
       std::string nn="/dev/shm/sem.";
       nn+=name;
-      int scc = chmod(nn.c_str(),0666);
-      // lib_rtl_printf("Settint protection of %s\n",nn.c_str());
+      int scc = ::chmod(nn.c_str(),0666);
+      // ::lib_rtl_printf("Settint protection of %s\n",nn.c_str());
       if ( 0 != scc ) ::perror("chmod.");
   }
   int sc = h->handle ? ::sem_init(h->handle, h->name[0] ? 1 : 0, 1) : (errno=EBADR); 
@@ -73,12 +81,12 @@ int lib_rtl_create_event (const char* name, lib_rtl_event_t* event_flag)    {
   }
 #endif
   if ( h->handle == 0 )  {
-    lib_rtl_signal_message(LIB_RTL_OS,"Failed to create %s event flag [%s]", 
+    ::lib_rtl_signal_message(LIB_RTL_OS,"Failed to create %s event flag [%s]", 
       name ? name : "<unnamed>");
     *event_flag = 0;
     return 0;
   }
-  if ( name )  {
+  if ( name && created )  {
     RTL::allEventFlags().insert(std::make_pair(h->name,h.get()));
   }
   *event_flag = h.release();
@@ -99,7 +107,7 @@ int lib_rtl_delete_event(lib_rtl_event_t handle)   {
 #elif defined(_WIN32)
     HRESULT sc = ::CloseHandle(h->handle);
     if ( sc != S_OK )  {
-      // return lib_rtl_signal_message(LIB_RTL_OS,"Failed to delete event flag \"%s\" 0x%08X", h->name, h->handle);
+      // return ::lib_rtl_signal_message(LIB_RTL_OS,"Failed to delete event flag \"%s\" 0x%08X", h->name, h->handle);
     }
 #endif
     if ( h->name[0] ) {
@@ -111,7 +119,7 @@ int lib_rtl_delete_event(lib_rtl_event_t handle)   {
     }
     return 1;
   }
-  lib_rtl_signal_message(LIB_RTL_DEFAULT,"Failed to delete event flag [UNKNOWN EVENT FLAG]");
+  ::lib_rtl_signal_message(LIB_RTL_DEFAULT,"Failed to delete event flag [UNKNOWN EVENT FLAG]");
   return 0;
 }
 
@@ -125,7 +133,7 @@ int lib_rtl_clear_event(lib_rtl_event_t h) {
     {
       return 1;
     }
-    lib_rtl_signal_message(LIB_RTL_OS,"Failed to clear event flag 0x%08X", h->handle);
+    ::lib_rtl_signal_message(LIB_RTL_OS,"Failed to clear event flag 0x%08X", h->handle);
     return 0;
   }
   return 1;
@@ -184,7 +192,7 @@ int lib_rtl_set_global_event(const char* name)   {
   event_map::const_iterator i = events->find(std::string(name));
   lib_rtl_event_t h;
   if ( i == events->end() ) {
-    int sc = lib_rtl_create_event(name, &h);
+    int sc = ::lib_rtl_create_event(name, &h);
     if ( sc == 1 ) {
       events->insert(event_map::value_type(name,h));
     }
@@ -199,17 +207,17 @@ int lib_rtl_wait_event_a_call(void* param)  {
   lib_rtl_action* pars = (lib_rtl_action*)param;
   while(pars->flag)  {
     try {
-      rtl_printf("wait...\n");
-      lib_rtl_wait_for_event(pars->flag);
-      lib_rtl_clear_event(pars->flag);
+      ::rtl_printf("wait...\n");
+      ::lib_rtl_wait_for_event(pars->flag);
+      ::lib_rtl_clear_event(pars->flag);
       if ( pars->action )  {
-        rtl_printf("action...\n");
+        ::rtl_printf("action...\n");
         (*pars->action)(pars->param);
-        rtl_printf("action...done.\n");
+        ::rtl_printf("action...done.\n");
       }
     }
     catch(...) {
-      rtl_printf("Exception!!!\n");
+      ::rtl_printf("Exception!!!\n");
     }
   }
   delete pars;
@@ -225,15 +233,15 @@ int lib_rtl_wait_for_event_a(lib_rtl_event_t flag, lib_rtl_thread_routine_t acti
     act->param  = param;
     act->flag   = flag;
     lib_rtl_thread_t thread;
-    sc = lib_rtl_start_thread(lib_rtl_wait_event_a_call, act, &thread);
+    sc = ::lib_rtl_start_thread(lib_rtl_wait_event_a_call, act, &thread);
     if ( !lib_rtl_is_success(sc) )  {
-      lib_rtl_signal_message(0,"Failed to manipulate asynchronous wait event thread");
+      ::lib_rtl_signal_message(0,"Failed to manipulate asynchronous wait event thread");
       return 0;
     }
     waitEventThreads().insert(std::make_pair(flag,thread));
   }
-  rtl_printf("Set event...\n");
-  lib_rtl_set_event(flag);
+  ::rtl_printf("Set event...\n");
+  ::lib_rtl_set_event(flag);
   return 1;
 }
 
@@ -246,11 +254,11 @@ extern "C" int rtl_set_event(int argc, char** argv)  {
   std::string name;
   RTL::CLI cli(argc, argv, help_set_event);
   cli.getopt("name",1,name);
-  int sc = lib_rtl_create_event(name.c_str(), &flag);
+  int sc = ::lib_rtl_create_event(name.c_str(), &flag);
   if ( !lib_rtl_is_success(sc) )  {
     return sc;
   }
-  sc = lib_rtl_set_global_event(name.c_str());
+  sc = ::lib_rtl_set_global_event(name.c_str());
   if ( !lib_rtl_is_success(sc) )  {
     return sc;
   }

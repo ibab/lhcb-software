@@ -22,11 +22,11 @@ extern "C" int rtl_testffx(int,char **) {
       int pos = 0;
       int s = start;
       int sc = lib_rtl_ffc (&s,&len,&val,&pos);
-      printf("FFC: %2ld  %2d  sc=%d %08X  %2d\t\t\t\t", i, s, sc, val, pos);
+      printf("FFC: %2ld  %2d  sc=%d %08X  %2d\t\t\t\t", long(i), s, sc, val, pos);
       val = ~val;
       s = start;
       sc = lib_rtl_ffs (&s,&len,&val,&pos);
-      printf("FFX: %2ld  %2d  sc=%d %08X  %2d\n", i, s, sc, val, pos);
+      printf("FFX: %2ld  %2d  sc=%d %08X  %2d\n", long(i), s, sc, val, pos);
     }
   }
   return 0;
@@ -36,19 +36,19 @@ extern "C" int rtl_testbits(int,char **) {
   int pos = 0, size = 15;
   char txt[32*sizeof(int)];
   int bf_len = 8*sizeof(txt);
-  memset(txt,0,sizeof(txt));
-  printf("Filed size: %ld bits\n",sizeof(txt)*8);
+  ::memset(txt,0,sizeof(txt));
+  ::printf("Filed size: %ld bits\n",long(sizeof(txt)*8));
   BF_set(txt,20,96);
-  printf("BF_set(txt,20,%d);\n",96);
+  ::printf("BF_set(txt,20,%d);\n",96);
   BF_print(txt,sizeof(txt));
   BF_count(txt,sizeof(txt),&pos,&size);
-  printf("BFCount: pos:%d size:%d\n",pos,size);
+  ::printf("BFCount: pos:%d size:%d\n",pos,size);
   BF_count(txt+8,bf_len-8*8,&pos,&size);
-  printf("BFCount: start:%d pos:%d size:%d  %d\n",8*8,pos,size, size+8*8+pos);
+  ::printf("BFCount: start:%d pos:%d size:%d  %d\n",8*8,pos,size, size+8*8+pos);
   BF_count(txt+16,bf_len-16*8,&pos,&size);
-  printf("BFCount: start:%d pos:%d size:%d  %d\n",16*8,pos,size, size+16*8+pos);
+  ::printf("BFCount: start:%d pos:%d size:%d  %d\n",16*8,pos,size, size+16*8+pos);
   BF_count(txt+32,bf_len-32*8,&pos,&size);
-  printf("BFCount: start:%d pos:%d size:%d  %d\n",32*8,pos,size,size+32*8+pos);
+  ::printf("BFCount: start:%d pos:%d size:%d  %d\n",32*8,pos,size,size+32*8+pos);
 
   BF_free(txt,21,94);
   printf("BF_free(txt,21,%d);\n",3*12);
