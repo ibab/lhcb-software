@@ -162,69 +162,69 @@ void listr_transfer (Linked_list* _from, Linked_list* _to)    {
 }
 
 void listr_convert (Linked_list* list)  {
-  int i;
-  if ((i = (int) list->first))  {
-    i += (int) list;
-    list->first = (Link*) i;
+  long i;
+  if ((i = (long)list->first))  {
+    i += (long)list;
+    list->first = (Link*)i;
   }
-  if ((i = (int) list->last))  {
-    i += (int) list;
-    list->last = (Link*) i;
+  if ((i = (long)list->last))  {
+    i += (long)list;
+    list->last = (Link*)i;
   }
-  for (Link* s=list->first; s; s = s->next )  {
-    if ((i = (int) s->prev))    {
-      i += (int) s;
-      s->prev = (Link*) i;
+  for(Link* s=list->first; s; s = s->next)  {
+    if ((i = (long)s->prev))    {
+      i += (long)s;
+      s->prev = (Link*)i;
     }
-    if ((i = (int) s->next))  {
-      i += (int) s;
-      s->next = (Link*) i;
+    if ((i = (long)s->next))  {
+      i += (long)s;
+      s->next = (Link*)i;
     }
-    if ((i = (int) s->father))    {
-      i += (int) s;
-      s->father = (Linked_list*) i;
+    if ((i = (long)s->father))    {
+      i += (long)s;
+      s->father = (Linked_list*)i;
     }
   }
 }
 
 Link* listr_first (Linked_list* list) {
-  return (list->first?(Link*)((int) list + (int) list->first):0);
+  return (list->first?(Link*)((long) list + (long) list->first):0);
 }
 
 Link* listr_last (Linked_list* list)  {
-  return (list->last?(Link*)((int) list + (int) list->last):0);
+  return (list->last?(Link*)((long) list + (long) list->last):0);
 }
 
 Link* listr_prev (Link* entry)  {
-  return (entry->prev?(Link*)((int) entry + (int) entry->prev):0);
+  return (entry->prev?(Link*)((long) entry + (long) entry->prev):0);
 }
 
 Link* listr_next (Link* entry)    {
-  return (entry->next?(Link*)((int) entry + (int) entry->next):0);
+  return (entry->next?(Link*)((long) entry + (long) entry->next):0);
 }
 
 Linked_list* listr_father (Link* entry)   {
-  return (entry->father?(Linked_list*)((int) entry + (int) entry->father):0);
+  return (entry->father?(Linked_list*)((long) entry + (long) entry->father):0);
 }
 
 void listr_set_first (Linked_list* list, Link* entry)   {
-  list->first = (Link*)(entry?((int) entry - (int) list):0);
+  list->first = (Link*)(entry?((long) entry - (long) list):0);
 }
 
 void listr_set_last (Linked_list* list, Link* entry)    {
-  list->last = (Link*)(entry?((int) entry - (int) list):0);
+  list->last = (Link*)(entry?((long) entry - (long) list):0);
 }
 
 void listr_set_next (Link* entry, Link* next)   {
-  entry->next = (Link*)(next?((int) next - (int) entry):0);
+  entry->next = (Link*)(next?((long) next - (long) entry):0);
 }
 
 void listr_set_prev (Link* entry, Link* prev)   {
-  entry->prev = (Link*)(prev?((int) prev - (int) entry):0);
+  entry->prev = (Link*)(prev?((long) prev - (long) entry):0);
 }
 
 void listr_set_father ( Link* entry, Linked_list* father) {
-  entry->father = (Linked_list*)(father?((int)father - (int)entry):0);
+  entry->father = (Linked_list*)(father?((long)father - (long)entry):0);
 }
 
 char* listr_malloc (int _size)  {

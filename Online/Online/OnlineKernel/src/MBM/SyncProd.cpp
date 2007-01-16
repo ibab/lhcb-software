@@ -14,20 +14,20 @@ static void help()  {
 extern "C" int mbm_prod(int argc,char **argv) {
   RTL::CLI cli(argc, argv, help);
   std::string name = "producer", buffer="0";
-  int trnumber = -1, len = 1792, nevt = 1000000, lower=0, upper=1024*1024;
+  int trnumber = -1, len = 1792, nevt = 1000000, lower=4, upper=1024*1024;
   cli.getopt("name",1,name);
   cli.getopt("m",1,nevt);
   cli.getopt("size",1,len);
   cli.getopt("buffer",1,buffer);
   cli.getopt("lower",1,lower);
   cli.getopt("upper",1,upper);
-  if ( lower > 0 ) len = lower;
+  if ( lower > 4 ) len = lower;
+  if ( lower < 4 ) len = lower;
   MBM::Producer p(buffer,name,0x103);
   ::lib_rtl_printf("Producer \"%s\" (pid:%d) included in buffer:\"%s\" len=%d [%d,%d] nevt=%d\n",
       name.c_str(), MBM::Producer::pid(), buffer.c_str(), len, lower, upper, nevt);
   while(nevt--)  {
-    //if ( p.getSpace(len) == MBM_NORMAL ) {
-    if ( p.getSpace(lower>0 ? upper : len) == MBM_NORMAL ) {
+    if ( p.getSpace(lower!=4 ? upper : len) == MBM_NORMAL ) {
       MBM::EventDesc& e = p.event();
       *e.data   = trnumber;
       *(int*)((char*)e.data+len-sizeof(int)) = trnumber;
@@ -38,7 +38,7 @@ extern "C" int mbm_prod(int argc,char **argv) {
       e.mask[2] = 0;
       e.mask[3] = 0;
       e.len     = len;
-      if ( lower > 0 ) {
+      if ( lower != 4 ) {
         ++len;
         if ( len > upper )  {
           len = lower;
@@ -49,6 +49,8 @@ extern "C" int mbm_prod(int argc,char **argv) {
       // lib_rtl_sleep(1);
    }
   }
-  //exit(0);
+  ::lib_rtl_printf("Max. event size of %d bytes reached. wrapping back to %d bytes.\n", upper, lower);
+  ::lib_rtl_sleep(1000);
+  //::exit(0);
   return 1;
 }

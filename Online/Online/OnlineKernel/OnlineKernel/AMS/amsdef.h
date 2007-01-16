@@ -53,7 +53,7 @@ extern "C" {
 
 struct amsuc_info  {
   char message[80];
-  char source[64];
+  char source[128];
   unsigned int  facility;
   size_t length;
   int  status;

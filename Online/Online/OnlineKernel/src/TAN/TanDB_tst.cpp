@@ -8,7 +8,7 @@
 
 extern "C" int rtl_tandb_test( int /* argc */, char** /*argv */ )  {
   char buff[32];
-  printf("Sizees: TANDB_ENTRY=%d TanMessage=%d Bytes\n",sizeof(TANDB_ENTRY),sizeof(TanMessage));
+  printf("Sizees: TANDB_ENTRY=%ld TanMessage=%ld Bytes\n",sizeof(TANDB_ENTRY),sizeof(TanMessage));
 
   // Start with clean pubarea...
   TanDataBase& db = TanDataBase::Instance();    

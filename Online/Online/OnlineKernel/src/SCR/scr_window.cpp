@@ -334,11 +334,11 @@ Window *scrc_next_window (Window *w)    {
 //----------------------------------------------------------------------------
 int scrc_show_window (Window *w, Display *d)    {
   Display *dd;
-  Screen *s;
   Window *ww;
+  Screen *s = System.cur;
   int scr;
 
-  if ((s = System.cur) && (ww = s->wind.cur))  {
+  if (s && (ww = s->wind.cur))  {
     switch (ww->type)    {
       case PULLDOWN_WINDOW :
         if (w != ww)        {
@@ -360,8 +360,8 @@ int scrc_show_window (Window *w, Display *d)    {
     int shift;
     Window *ww;
     int col;
-    int father = (int)&System.scr[ICONIFIED].wind;
-    if (w->father == (Linked_list *)father)  {
+    Linked_list* father = (Linked_list*)&System.scr[ICONIFIED].wind;
+    if (w->father == father)  {
       s = &System.scr[SEQUENTIAL];
       ww = s->wind.last;
       if (ww)  {

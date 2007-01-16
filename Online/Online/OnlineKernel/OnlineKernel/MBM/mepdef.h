@@ -20,26 +20,26 @@ typedef struct _MEPID {
   BMID    resBuffer;
   BMID    evtBuffer;
   BMID    mepBuffer;
-  int     resStart;
-  int     evtStart;
-  int     mepStart;
+  long    resStart;
+  long    evtStart;
+  long    mepStart;
   int     selection;
   char    processName[32];
   int     partitionID;
 } *MEPID;
 
 struct MEP_SINGLE_EVT  {
-  int begin;
-  int evID;
+  long begin;
+  int  evID;
 };
 
 struct MEPEVENT   {
-  int begin;
-  int evID;
-  int packing;
-  int refCount;
-  int valid;
-  int magic;
+  long begin;
+  int  evID;
+  int  packing;
+  int  refCount;
+  int  valid;
+  int  magic;
   char data[4];
 };
 

@@ -39,7 +39,7 @@ namespace {
       ev->refCount    = 1;
       ev->refCount   += PACKING_FACTOR; // saves mbm_register_alloc_event
       ev->evID        = mep_identifier;
-      ev->begin       = int(int(ev)-m_mepID->mepStart);
+      ev->begin       = long(ev)-m_mepID->mepStart;
       ev->packing     = PACKING_FACTOR;
       ev->valid       = 1;
       ev->magic       = mep_magic_pattern();
@@ -50,7 +50,7 @@ namespace {
       m_event.type    = EVENT_TYPE_MEP;
       for (int i = 0; i < PACKING_FACTOR; ++i )   {
         if ( m_evtProd->getSpace(sub_evt_len) == MBM_NORMAL ) {
-          MBM::EventDesc& e = m_evtProd->event();
+          MBM::EventDesc& e    = m_evtProd->event();
           MEP_SINGLE_EVT* sube = (MEP_SINGLE_EVT*)e.data;
           sube->begin = ev->begin;
           e.type    = EVENT_TYPE_EVENT;

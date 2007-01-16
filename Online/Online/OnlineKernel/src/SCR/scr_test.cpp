@@ -213,6 +213,10 @@ extern "C" int scr_test(int argc, char** argv)  {
   wait_next();
   scrc_clear_screen(pb);
   scrc_delete_pasteboard(pb);
+  ::printf("\n\n\n  +---------------------------------------+\n");
+  ::printf("  |    It looks like SCR seems to work    |\n");
+  ::printf("  +---------------------------------------+\n\n\n");
+
   return 0;
 }
 

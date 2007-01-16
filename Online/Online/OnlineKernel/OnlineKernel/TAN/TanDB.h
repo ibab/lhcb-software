@@ -88,7 +88,7 @@ public:
   /// Boolean flag to store if the connection is an alias
   u_short m_alias_flag;       /* this entry is an alias entry */
   /// Store the name of the network partner
-  char    m_name [32];
+  char    m_name [128];
   /// last message sent
   TanMessage m_msg;
 #ifdef _VMS

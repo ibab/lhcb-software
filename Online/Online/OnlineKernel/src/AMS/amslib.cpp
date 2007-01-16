@@ -11,15 +11,14 @@
 #define _USE_FULL_WT
 
 enum  {
- SAFE_NAME_LENGTH      =  64,
+ SAFE_NAME_LENGTH      =  128,
  HOST_NAME_LENGTH      =  32,
- PROC_NAME_LENGTH      =  32,
+ PROC_NAME_LENGTH      =  64,
  TRAILER_PATTERN       =  0xFEADBABE,
  AMS_MSG_DATA          =  2,
  AMS_K_COPY_LIMIT      = (8192*2),
  LINGER_VALUE          =  0,
- NAME_LENGTH           =  32,
- SAFE_HOST_NAME_LENGTH =  40,
+ NAME_LENGTH           =  127,
  CHOP_SIZE             = (8192*4),
  LOWER_CHOP            = 4096,
  MAX_TCP_ERRORS        = 20
@@ -474,7 +473,7 @@ static int _amsc_tcp_recv_exact (amsentry_t *db, void *buffer, size_t siz, unsig
 }
 
 static int _amsc_tcp_get_host_name (char *nodename,int length) {
-  char name [SAFE_HOST_NAME_LENGTH];
+  char name [HOST_NAME_LENGTH];
   WITHOUT_INTERCEPT(int status=tan_host_name(name, sizeof (name)));
   if (status != AMS_SUCCESS) {
     return AMS_HOSTNOTFOUND;
@@ -542,7 +541,7 @@ static int _amsc_restore_stack(int *cnt)  {
 
 // This function returns a pointer: when this is 0 then the error is stored in errno,
 static amsentry_t *_amsc_connect_to_task (char *dest, char *from)  {
-  if (strlen(dest) >= NAME_LENGTH) {
+  if (::strlen(dest) >= NAME_LENGTH) {
     errno = AMS_STRBUFFOVFL;
     return 0;
   }
@@ -961,8 +960,7 @@ static void _amsc_send_close_message(amsentry_t *e)  {
 static int _amsc_send_message (const void* buff, size_t size, const char* dest, int fac, const char* from)  {
   char  full_dest [SAFE_NAME_LENGTH], full_from [SAFE_NAME_LENGTH];
   // If facility is 0 used default
-  int facility = fac==0 ? FACILITIES__USER : fac;
-  int status;
+  int status, facility = fac==0 ? FACILITIES__USER : fac;
 
   // Build full source and destination names 
   if (size <= 0)  {
@@ -1035,7 +1033,8 @@ static int _amsc_read_message_long (void** buffer, size_t* size, char* from, uns
 static int _amsc_get_message (void* buffer, size_t* size, char* from, char* r_source_in,
                       int timeout, unsigned int* facility, unsigned int r_facility, char* dest)
 {
-  unsigned int timer_id = 0, w_fac, fac;
+  unsigned int w_fac, fac;
+  unsigned long timer_id = 0;
   int w_stat, status, rcnt, parking;
   void* w_par;
   amsqueue_t *m = 0;
@@ -1089,7 +1088,7 @@ static int _amsc_get_message (void* buffer, size_t* size, char* from, char* r_so
   }
   status = _amsc_test_message();
   if (status == AMS_SUCCESS)  {
-    remqhi (&_ams.message_Q, (qentry_t**)&m);
+    remqhi(&_ams.message_Q, (qentry_t**)&m);
     status = _amsc_move_to_user (m, buffer, size, from, dest, facility, false);
     m->release();
     _amsc_remove_node_if_mine(from, DEFAULT_STYLE);
@@ -1099,7 +1098,7 @@ static int _amsc_get_message (void* buffer, size_t* size, char* from, char* r_so
     _ams.msgWaiting = 1;
     int  message_timeout_ast_fired = 0;
     if (timeout != 0)    {
-      lib_rtl_set_timer(timeout,_amsc_message_timeout_ast,&message_timeout_ast_fired,&timer_id);
+      ::lib_rtl_set_timer(timeout,_amsc_message_timeout_ast,&message_timeout_ast_fired,&timer_id);
     }
     do  {
       status = wtc_wait_with_mask(&w_fac,&w_par,&w_stat,_ams.wt_enable_mask);

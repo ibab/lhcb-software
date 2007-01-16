@@ -13,14 +13,14 @@ struct amsu_fac_entry : public qentry_t {
 }; 
 
 struct amsu_deadfac_entry : public qentry_t {
-  char	  source[32];
-  int	    srclen;
-  int	    conv_fac;
+  char source[32];
+  int  srclen;
+  int  conv_fac;
 }; 
 
-static amsu_fac_entry *scan_entry;
-static qentry_t *fac_list;
-static qentry_t    *deadfac_list;
+static amsu_fac_entry *scan_entry = 0;
+static qentry_t *fac_list = 0;
+static qentry_t *deadfac_list = 0;
 static int inited = 0;
 
 #define _REMQHI(x,y)            remqhi((x),(y))
@@ -33,16 +33,16 @@ void start_fac_scan()   {
 }
 
 amsu_fac_entry *next_fac()    {
-  amsu_fac_entry *entry = (amsu_fac_entry*)((int)scan_entry->next+(int)scan_entry);
+  amsu_fac_entry *entry = (amsu_fac_entry*)((long)scan_entry->next+(long)scan_entry);
   scan_entry = entry;
   return entry;
 }
 
 static amsu_fac_entry *find_facility(unsigned int facility) {
   amsu_fac_entry *fac;
-  for (fac = (amsu_fac_entry*)((int)fac_list->next+(int)fac_list);
+  for (fac = (amsu_fac_entry*)((long)fac_list->next+(long)fac_list);
        fac != (amsu_fac_entry*)fac_list ; 
-       fac = (amsu_fac_entry*)((int)fac->next+(int)fac))
+       fac = (amsu_fac_entry*)((long)fac->next+(long)fac))
     if( fac->facility == facility ) break;
   return fac;
 }
@@ -50,9 +50,9 @@ static amsu_fac_entry *find_facility(unsigned int facility) {
 static amsu_deadfac_entry *find_deadfacility(const char* source) {
   amsu_deadfac_entry *fac;
   int srclen = strlen(source);
-  for (fac = (amsu_deadfac_entry*)((int)deadfac_list->next+(int)deadfac_list);
+  for (fac = (amsu_deadfac_entry*)((long)deadfac_list->next+(long)deadfac_list);
        fac != (amsu_deadfac_entry*)deadfac_list ; 
-       fac = (amsu_deadfac_entry*)((int)fac->next+(int)fac))    {
+       fac = (amsu_deadfac_entry*)((long)fac->next+(long)fac))    {
       if (srclen==fac->srclen)      {
         if (strncmp (fac->source, source, srclen) == 0)        {
           break;

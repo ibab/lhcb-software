@@ -57,7 +57,7 @@ namespace {
     int eventAction() {
       const MBM::EventDesc& evt = event();
       MEP_SINGLE_EVT* ev = (MEP_SINGLE_EVT*)evt.data;
-      MEPEVENT*       e  = (MEPEVENT*)(int*)(m_mepID->mepStart + ev->begin);
+      MEPEVENT*       e  = (MEPEVENT*)(long*)(m_mepID->mepStart + ev->begin);
       if ( e->valid == 0 || e->magic != mep_magic_pattern() || e->refCount<=1 ) {
         ::lib_rtl_printf("Found invalid MEP: %p [%d] magic:%08X id=%d refCount:%d valid:%d\n",
           (void*)e,e->evID,e->magic,e->evID,e->refCount,e->valid);

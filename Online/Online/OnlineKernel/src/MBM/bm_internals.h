@@ -80,7 +80,7 @@ extern "C" {
   int _mbm_map_sections (BMID bm);
   /// Unmap buffer manager memory sections
   int _mbm_unmap_sections(BMID bm);
-};
+}
 
 #define _CHECK( x )  { int sc = x ; if ( !(sc&1) ) { lib_rtl_printf ( "Error in:%s, status=%d\n", #x , sc ); return sc; } }
 

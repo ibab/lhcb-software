@@ -42,7 +42,7 @@ namespace MBM  {
     BM_K_INT_SPACE  = 2,
     BM_K_INT_ESLOT  = 4
   };
-};
+}
 #define TOPTYP    1
 
 //#define Shift_p_Bit  12  // = (20-Bits_p_MegaByte+1)

@@ -13,7 +13,7 @@
 #define INTERVAL3 600*INTERVAL_NORMAL
 #define INTERVAL4 6000*INTERVAL_NORMAL
 
-static unsigned int alarm1, alarm2, alarm3, alarm4;
+static unsigned long alarm1, alarm2, alarm3, alarm4;
 static int ast1_count = 0;
 static int ast2_count = 0;
 static int ast3_count = 0;

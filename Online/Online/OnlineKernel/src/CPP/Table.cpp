@@ -1,4 +1,5 @@
 #include "CPP/Table.h"
+#include <cstdlib>
 
 class TableEntry {
   friend class Table;
@@ -25,11 +26,11 @@ Table::~Table () {
 }
 
 inline TableEntry* Table::Probe (void* i) {
-  return first[(unsigned int)i & size];
+  return first[(size_t)i & size];
 }
 
 inline TableEntry** Table::ProbeAddr (void* i) {
-  return &first[(unsigned int)i & size];
+  return &first[(size_t)i & size];
 }
 
 void Table::Insert (void* k, void* v) {

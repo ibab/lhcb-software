@@ -9,7 +9,7 @@ struct QENTRY : public qentry_t  {
   size_t serial;
 };
 
-int rtl_testqhi() {
+extern "C" int rtl_testqhi() {
   int QUE_next_off = 0;
   QENTRY   entries[16];
   qentry_t head(0,0);
@@ -29,7 +29,7 @@ int rtl_testqhi() {
     QENTRY* ent = add_ptr(e,-QUE_next_off);
     int c = sizeof(entries)/sizeof(entries[0])-cnt;
     if ( ent != &entries[c] )  {
-      printf("rtl_testqhi> Addresses: 0x%p 0x%p Ent: %p %p Head: %p %p Serial:%d \n", 
+      printf("rtl_testqhi> Addresses: 0x%p 0x%p Ent: %p %p Head: %p %p Serial:%ld \n", 
        (void*)e, (void*)ent, (void*)ent->next, (void*)ent->prev, 
        (void*)head.next, (void*)head.prev, ent->serial);
     }
@@ -38,7 +38,7 @@ int rtl_testqhi() {
   for (sc=remqhi(&p_queue,(qentry_t**)&e), cnt=0;QR_success(sc);sc=remqhi(&p_queue,(qentry_t**)&e), ++cnt)  {
     insqhi(e, &head);
     QENTRY* ent = add_ptr(e,-QUE_next_off);
-    printf("rtl_testqhi> Addresses: 0x%p 0x%p Ent: %p %p Head: %p %p Serial:%d \n", 
+    printf("rtl_testqhi> Addresses: 0x%p 0x%p Ent: %p %p Head: %p %p Serial:%ld \n", 
        (void*)e, (void*)ent, (void*)ent->next, (void*)ent->prev, 
        (void*)head.next, (void*)head.prev, ent->serial);
   }
@@ -46,7 +46,7 @@ int rtl_testqhi() {
   return 0;
 }
 
-int rtl_testqti() {
+extern "C" int rtl_testqti() {
   int64_t QUE_next_off = 0;
   QENTRY   entries[16];
   qentry_t head(0,0);
@@ -66,13 +66,13 @@ int rtl_testqti() {
     QENTRY* ent = add_ptr(e,-QUE_next_off);
     int c = sizeof(entries)/sizeof(entries[0])-cnt;
     if ( ent != &entries[c] )  {
-      printf("rtl_testqti> Addresses: 0x%p 0x%p 0x%p Serial:%d \n", 
+      printf("rtl_testqti> Addresses: 0x%p 0x%p 0x%p Serial:%ld \n", 
        (void*)e, (void*)&entries[c], (void*)ent, ent->serial);
     }
   }
   printf("Start restoring: %p %p\n", (void*)head.next, (void*)head.prev);
   for (sc=remqti(&p_queue,(qentry_t**)&e), cnt=0;QR_success(sc);sc=remqti(&p_queue,(qentry_t**)&e), ++cnt)  {
-    printf("rtl_testqti> Restoring Queue element: 0x%p, %d\n", (void*)e, e->serial);
+    printf("rtl_testqti> Restoring Queue element: 0x%p, %ld\n", (void*)e, e->serial);
     insqti(e, &head);
   }
   printf("Done restoring: %p %p\n", (void*)p_queue.next, (void*)p_queue.prev);
@@ -99,13 +99,13 @@ extern "C" int rtl_testque2(int,char **) {
     QENTRY* ent = add_ptr(e,-QUE_next_off);
     int c = sizeof(entries)/sizeof(entries[0])-cnt;
     if ( ent != &entries[c] )  {
-      printf(" Addresses: 0x%p 0x%p 0x%p Serial:%d \n", 
+      printf(" Addresses: 0x%p 0x%p 0x%p Serial:%ld \n", 
        (void*)e, (void*)&entries[c], (void*)ent, ent->serial);
     }
   }
   printf("Start restoring: %p %p\n", (void*)head.next, (void*)head.prev);
   for (sc=remqhi(&p_queue,(qentry_t**)&e), cnt=0;QR_success(sc);sc=remqhi(&p_queue,(qentry_t**)&e), ++cnt)  {
-    printf("Restoring Queue element: 0x%p, %d\n", (void*)e, e->serial);
+    printf("Restoring Queue element: 0x%p, Serial:%ld\n", (void*)e, e->serial);
     insqhi(e, &head);
   }
   return 0;

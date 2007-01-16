@@ -1,9 +1,10 @@
 #/bin/csh
+killall test.exe
 rm /dev/shm/bm_*
 rm /dev/shm/sem.BM*
 rm /dev/shm/sem.bm*
 rm /dev/shm/sem.MEP*
-set EXEC=../slc3_ia32_gcc323/test.exe
+set EXEC=$ONLINEKERNELROOT/$CMTCONFIG/test.exe
 set MINITERM='xterm -geometry 60x6 -e '
 $MINITERM "$EXEC mbm_install -s=8096 -e=5  -u=4 -i=MEP" &
 sleep 1
@@ -23,4 +24,4 @@ $MINITERM "$EXEC mep_cons_a   -i=RESULT -n=LBMonit_0" &
 $MINITERM "$EXEC mep_cons_a   -i=RESULT -n=LBMonit_1" &
 $MINITERM "$EXEC mep_holder_a -i=MEP    -n=MepHold_0" &
 sleep 2
-$MINITERM "$EXEC mep_prod_a -n=Mep_0" &
+echo $MINITERM "$EXEC mep_prod_a -n=Mep_0" &

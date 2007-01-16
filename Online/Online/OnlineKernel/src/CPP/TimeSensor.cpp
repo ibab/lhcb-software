@@ -15,19 +15,19 @@ namespace {
   private:
     // ONESEC is the equivalent of ONE second in OS9 time
     static const int ONESEC = 100;
-    int          Time; 
-    unsigned int m_alrmID;
-    std::string  m_ascTime;
-    bool         m_rearmPending;
-    bool         m_cyclic;
-    Period*      m_next;
+    int           Time; 
+    unsigned long m_alrmID;
+    std::string   m_ascTime;
+    bool          m_rearmPending;
+    bool          m_cyclic;
+    Period*       m_next;
     friend class TimeSensor;
   public:
     Period( char* );
     ~Period();
     void Set();
     void cancel();
-    unsigned int& id()       {  return m_alrmID;   }
+    unsigned long& id()      {  return m_alrmID;   }
     Period* next()  const    {  return m_next;     }
     void setNext(Period* n)  {  m_next = n;        }
     static int ast( void* param );
@@ -82,8 +82,8 @@ namespace {
     return wtc_insert(WT_FACILITY_SENSOR1, param);
   }
 
-  static Period*     PeriodHead      = 0;
   typedef std::map<Period*, InteractorTarget*>  InteractorTable;
+  static Period*         s_periodHead      = 0;
   static InteractorTable s_interactorTable;
 }
 
@@ -105,8 +105,8 @@ void TimeSensor::add( Interactor* interactor, void* newperiod)    {
 void TimeSensor::add( Interactor* interactor, void* newperiod, void* data)    {
   Period *temperiod = new Period( (char*)newperiod );
   InteractorTarget *inttar = new InteractorTarget(interactor,data);
-  temperiod->setNext(PeriodHead); 
-  PeriodHead = temperiod;  
+  temperiod->setNext(s_periodHead); 
+  s_periodHead = temperiod;  
   s_interactorTable.insert( std::make_pair(temperiod,inttar));
   //---If the TimeSensor is the only active sensor, then it is necessary to
   // rearm it here and not delay it.
@@ -127,7 +127,7 @@ void TimeSensor::add( Interactor* interactor, int timesec, void* data ) {
 
 //----------------------------------------------------------------------------
 void TimeSensor::remove( Interactor* interactor, void* data ) {
-  for( Period* pd = PeriodHead, *last = 0; pd; last = pd, pd = pd->next())  {
+  for( Period* pd = s_periodHead, *last = 0; pd; last = pd, pd = pd->next())  {
     InteractorTable::iterator i = s_interactorTable.find(pd);
     if ( i != s_interactorTable.end() )  {
       InteractorTarget  *it = (*i).second;
@@ -135,7 +135,7 @@ void TimeSensor::remove( Interactor* interactor, void* data ) {
         s_interactorTable.erase(i);
         pd->cancel();
         if( !last )
-          PeriodHead = pd->next();
+          s_periodHead = pd->next();
         else
           last->setNext(pd->next());
         delete pd; 
@@ -160,11 +160,11 @@ void TimeSensor::dispatch( void* id ) {
       ev.target->handle(ev);       
     }
     else    { 
-      if ( period == PeriodHead ) {
-        PeriodHead = period->m_next;
+      if ( period == s_periodHead ) {
+        s_periodHead = period->m_next;
       }
       else  {
-        for(Period* pd = PeriodHead; pd; pd = pd->m_next)  {
+        for(Period* pd = s_periodHead; pd; pd = pd->m_next)  {
           if( pd->m_next == period ) { 
             pd->m_next = period->m_next; break; 
           }
@@ -183,7 +183,7 @@ void TimeSensor::dispatch( void* id ) {
 
 //----------------------------------------------------------------------------
 void TimeSensor::rearm()  {
-  for(Period * pd = PeriodHead; pd; pd = pd->m_next)  {
+  for(Period * pd = s_periodHead; pd; pd = pd->m_next)  {
     if ( pd->m_rearmPending )  {
       pd->Set();
       pd->m_rearmPending = false;

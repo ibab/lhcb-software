@@ -1,0 +1,42 @@
+
+Description of full package tests.
+
+@author M.Frank
+
+
+QUE tests:    [Basic absolute double list functionality]
+==========
+$ONLINEKERNELROOT/$CMTCONFIG/test.exe rtl_test_qhi
+$ONLINEKERNELROOT/$CMTCONFIG/test.exe rtl_test_qti
+$ONLINEKERNELROOT/$CMTCONFIG/test.exe rtl_test_que
+$ONLINEKERNELROOT/$CMTCONFIG/test.exe rtl_test_que2
+
+WT test:      [Test WT library using timers]
+========
+$ONLINEKERNELROOT/$CMTCONFIG/test.exe wtc_test
+
+SCR test:     [Test the SCR library for terminal I/O]
+=========
+$ONLINEKERNELROOT/$CMTCONFIG/test.exe scr_test
+
+MBM test:     [Test basic MBM functionality]
+=========
+csh -v $ONLINEKERNELROOT/cmt/mbm.csh
+
+MEP test:     [Test basic MEP functionality with multiple MBM buffers]
+=========
+csh -v $ONLINEKERNELROOT/cmt/mep.csh
+
+TAN test:     [Test AMS nameserver]
+=========
+csh -v $ONLINEKERNELROOT/cmt/tan.csh
+Note for all AMS,TAN tests:
+-- setenv TAN_NODE <other node interface>
+   to use other interface than the one identified by gethostname!
+-- setenv TAN_PORT YES
+   to use no inquiry service - just one single name server
+
+AMS test:     [Test AMS: bounce messages between tasks]
+=========
+csh -v $ONLINEKERNELROOT/cmt/ams.csh
+

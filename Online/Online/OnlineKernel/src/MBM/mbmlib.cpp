@@ -550,12 +550,12 @@ int mbm_get_space_a (BMID bm, int size, int** ptr, RTL_ast_t astadd, void* astpa
   return user.status();
 }
 
-int mbm_declare_event (BMID bm, int len, int evtype, const unsigned int* trmask, const char* dest,
-                       void** free_add, int* free_size, int part_id)
+int mbm_declare_event (BMID bm, int len, int evtype, const unsigned int* trmask,
+                       const char* dst, void** free_add, int* free_size, int part_id)
 {
   Lock lock(bm);
   if ( lock )  {
-    return _mbm_declare_event (bm, len, evtype, *(TriggerMask*)trmask, dest, free_add, free_size, part_id);
+    return _mbm_declare_event (bm,len,evtype,*(TriggerMask*)trmask,dst,free_add,free_size,part_id);
   }
   return lock.status();
 }
@@ -964,7 +964,7 @@ EVENT* _mbm_ealloc (BMID bm, USER* us)  {
         void* pars[4];
         pars[0] = bm;
         pars[1] = bm->alloc_event_param;
-        pars[2] = (void*)(us->space_add+(int)bm->buffer_add);
+        pars[2] = (void*)(us->space_add+bm->buffer_add);
         pars[3] = e;
         us->alloc_calls++;
         (*bm->alloc_event)(pars);
@@ -996,7 +996,7 @@ int _mbm_efree (BMID bm, EVENT* e)  {
     _mbm_return_err (MBM_INTERNAL);
   }
   USER* u = bm->_user();
-  int* evadd  = (int*)(e->ev_add+(int)bm->buffer_add);
+  int* evadd  = (int*)(e->ev_add+bm->buffer_add);
   _mbm_printf("Free slot: %d %d\n",e->eid, e->count);
   if ( bm->free_event )  {
     void* pars[4];
@@ -1477,7 +1477,7 @@ int mbm_get_event_ast(void* par) {
     return 1;
   }
   us->reason = S_wevent_ast_handled;
-  *us->we_ptr_add    = (int*)(ev->ev_add+(int)bm->buffer_add);
+  *us->we_ptr_add    = (int*)(ev->ev_add+bm->buffer_add);
   *us->we_size_add   = ev->ev_size;
   *us->we_evtype_add = ev->ev_type;
   *us->we_trmask_add = ev->tr_mask;
@@ -1600,7 +1600,7 @@ int _mbm_declare_event (BMID bm, int len, int evtype, TriggerMask& trmask,
   }
   *free_add = add + rlen;
   *free_size = us->space_size - rlen;
-  us->space_add  = (int)(*free_add) - (int)bm->buffer_add;
+  us->space_add  = long(*free_add) - (long)bm->buffer_add;
   us->space_size = *free_size;
   if (us->space_size == 0)  {
     us->space_add = 0;                    // if size zero, address zero

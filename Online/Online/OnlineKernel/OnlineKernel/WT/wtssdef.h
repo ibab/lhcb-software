@@ -1,11 +1,11 @@
 /*
- WTSSDEF.H
-
- From object module WTSSDEF
- Module version 0
- Compiled on  9-JAN-1995 13:51
- Compiled by 
-*/
+ * WTSSDEF.H
+ *
+ * From object module WTSSDEF
+ * Module version 0
+ * Compiled on  9-JAN-1995 13:51
+ *
+ */
 #define WT_SS_FAC_OUTRANGE	0X9E28052
 #define WT_SS_CLUSNOTEQ	0X9E2804A
 #define WT_SS_NOTINIT	0X9E28042

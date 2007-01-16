@@ -1,7 +1,7 @@
 #ifndef _RTL_H
 #define _RTL_H
 
-#define byte_offset(a,b,c) {a *ptr=0; c = (int)&(ptr->b);}
+#define byte_offset(a,b,c) {a *ptr=0; c = (long)&(ptr->b);}
 
 template <class T, class Q> static inline T* add_ptr(T* a, Q b)  {
   return (T*)((void*)((char*)(a)+(long)(b)));
@@ -29,9 +29,9 @@ extern "C" {
     unsigned int   information;
   };
   typedef _IOSB IOSB_t;
-#ifdef _WIN32
+#if defined(_WIN32)
   typedef __int64       int64_t;
-#else
+#elif !defined(__int8_t_defined)
   typedef long long int int64_t;
 #endif
   typedef void* lib_rtl_handle_t;
@@ -139,9 +139,9 @@ extern "C" {
   /// Time callback signature
   typedef int (*lib_rtl_timer_routine_t)(void*);
   /// Set timer with asynchronous callback. Process must be in alertable state
-  int lib_rtl_set_timer(int milli_seconds, lib_rtl_timer_routine_t ast, void* ast_param, unsigned int* timer_id);
+  int lib_rtl_set_timer(int milli_seconds, lib_rtl_timer_routine_t ast, void* ast_param, unsigned long* timer_id);
   /// Stop timer. Asynchronous callback will not be called
-  int lib_rtl_kill_timer(int timer_id);
+  int lib_rtl_kill_timer(long timer_id);
 
   /// Get tick count since image startup
   unsigned int lib_rtl_get_ticks();

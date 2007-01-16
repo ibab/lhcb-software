@@ -393,21 +393,21 @@ void PubArea::PubAreaPrint(int Severity, int ReturnCode, const char *message,...
   va_list args;
   char msg[500];
   static int PaDebug = PADEBUG;
-  static const char *Tmp = (char*)(-1);
+  static const char *Tmp = (char*)~0x0;
   const char *lvl[5] = {"_INFO__\0","WARNING\0","*ERROR*\0","*FATAL*\0","_______\0"};
 
   // Get the PADEBUG variable from the process environement variable
-  if ( (int)Tmp < 0 ) {
-    Tmp = (char*)getenv("PADEBUG");
+  if ( Tmp == (char*)~0x0 ) {
+    Tmp = ::getenv("PADEBUG");
     char Logical[10];
-    strcpy(Logical,Tmp != 0 ? Tmp : "4");
-    sscanf(Logical,"%d",&PaDebug);
+    ::strcpy(Logical,Tmp != 0 ? Tmp : "4");
+    ::sscanf(Logical,"%d",&PaDebug);
   }
   // if PADEBUG is zero all messages are printed
   if (Severity < PaDebug) return; 
 
   va_start(args, message);
-  length = vsprintf(msg, message, args);
+  length = ::vsprintf(msg, message, args);
   va_end(args);
   if (Severity>4) Severity = 4; //............................. Maximum accepted
   if (length>499)   { 
@@ -427,11 +427,9 @@ void PubArea::PubAreaPrint(int Severity, int ReturnCode, const char *message,...
 
 int PubArea::DeletePubArea()  {
   static const char* me="PubArea::DeletePubArea:";
-  int status = 0;
   PubAreaPrint(0,0,"%s called",me);
-
-#ifdef __VMS
-  status = sys$dgblsc (SEC$M_SYSGBL, m_name, SEC$K_MATALL );
+#if defined(__VMS)
+  int status = sys$dgblsc (SEC$M_SYSGBL, m_name, SEC$K_MATALL );
   if (status&1)   {
     PubAreaPrint(0,0,"%s Deleted Global Section",me);
     status = PA_SUCCESS;
@@ -441,17 +439,16 @@ int PubArea::DeletePubArea()  {
       "%s Cannot delete global section",me);
     status = PA_FAILURE;
   }
-#endif
-
-#ifdef _OSK
-  status = 0;
+#elif defined(_OSK)
+  int status = 0;
   while(status==0)  {
     PubAreaPrint(4,0,"%s unlinking PubArea...",me);
     status = system("unlink PubArea<>>>/nil");
   }
   status = PA_SUCCESS;
+#else
+  int status = 0;
 #endif
-
   //........................................... Lets clean pointers just in case
   m_ptr = 0;
   m_header = 0;

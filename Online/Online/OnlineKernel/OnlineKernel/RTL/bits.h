@@ -32,7 +32,7 @@ extern "C" {
   int BF_free     (char* base,int pos, int size);
   void BF_print   (const void* base, int bf_size, size_t ncols=4, bool prt_hdr=true);
 #ifdef __cplusplus
-};
+}
 #include <vector>
 #include <string>
 namespace Bits  {

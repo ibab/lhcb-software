@@ -22,11 +22,11 @@ extern "C" int rtl_testffx(int,char **) {
       int pos = 0;
       int s = start;
       int sc = lib_rtl_ffc (&s,&len,&val,&pos);
-      printf("FFC: %2d  %2d  sc=%d %08X  %2d\t\t\t\t", i, s, sc, val, pos);
+      printf("FFC: %2ld  %2d  sc=%d %08X  %2d\t\t\t\t", i, s, sc, val, pos);
       val = ~val;
       s = start;
       sc = lib_rtl_ffs (&s,&len,&val,&pos);
-      printf("FFX: %2d  %2d  sc=%d %08X  %2d\n", i, s, sc, val, pos);
+      printf("FFX: %2ld  %2d  sc=%d %08X  %2d\n", i, s, sc, val, pos);
     }
   }
   return 0;
@@ -37,7 +37,7 @@ extern "C" int rtl_testbits(int,char **) {
   char txt[32*sizeof(int)];
   int bf_len = 8*sizeof(txt);
   memset(txt,0,sizeof(txt));
-  printf("Filed size: %d bits\n",sizeof(txt)*8);
+  printf("Filed size: %ld bits\n",sizeof(txt)*8);
   BF_set(txt,20,96);
   printf("BF_set(txt,20,%d);\n",96);
   BF_print(txt,sizeof(txt));

@@ -57,9 +57,9 @@ int mep_scan(MEPID dsc, int loop_delay)  {
       for(EVENT* e=que.get(); e; e = que.get() )  {
         e->isValid();
         if ( e->umask0.mask_or(e->umask2,e->held_mask) == mask_value )  {
-          int* evadd  = (int*)(e->ev_add+(int)bm->buffer_add);
+          int* evadd  = (int*)(bm->buffer_add+e->ev_add);
           MEP_SINGLE_EVT* sevt = (MEP_SINGLE_EVT*)evadd;
-          MEPEVENT* m = (MEPEVENT*)(int*)(id->mepStart + sevt->begin);
+          MEPEVENT* m = (MEPEVENT*)(id->mepStart + sevt->begin);
           if ( m->refCount <= 1 )    {
             if ( m->refCount != 1 )    {
               ::lib_rtl_printf("MEP release [%d] Event@ %08X MEP@ %08X [%d] Pattern:%08X\n",
@@ -205,14 +205,14 @@ MEPID mep_include (const char* name, int partid, int selection) {
   }
   bm->owner = lib_rtl_pid();
   bm->selection = selection;
-  bm->mepBuffer  = ( bm->selection&USE_MEP_BUFFER ) 
+  bm->mepBuffer  = ( bm->selection&USE_MEP_BUFFER )
     ? mbm_include(mep_buff_name.c_str(), name, partid)
     : mbm_map_memory(mep_buff_name.c_str());
   if ( bm->mepBuffer == MBM_INV_DESC )  {
     lib_rtl_delete_lock(bm->lockid);
     return MEP_INV_DESC;
   }
-  bm->mepStart = (int)bm->mepBuffer->buffer_add;
+  bm->mepStart = (long)bm->mepBuffer->buffer_add;
   //mbm_register_free_event(bm->mepBuffer, mep_free, bm.get());
   //mbm_register_alloc_event(bm->mepBuffer, mep_declare, bm.get());
   bm->evtBuffer = ( bm->selection&USE_EVT_BUFFER )
@@ -223,7 +223,7 @@ MEPID mep_include (const char* name, int partid, int selection) {
     lib_rtl_delete_lock(bm->lockid);
     return MEP_INV_DESC;
   }
-  bm->evtStart = (int)bm->evtBuffer->buffer_add;
+  bm->evtStart = (long)bm->evtBuffer->buffer_add;
   mbm_register_free_event(bm->evtBuffer, mep_free, bm.get());
   mbm_register_alloc_event(bm->evtBuffer, mep_declare, bm.get());
   bm->resBuffer = ( bm->selection&USE_RES_BUFFER ) 
@@ -235,7 +235,7 @@ MEPID mep_include (const char* name, int partid, int selection) {
     lib_rtl_delete_lock(bm->lockid);
     return MEP_INV_DESC;
   }
-  bm->resStart = (int)bm->resBuffer->buffer_add;
+  bm->resStart = (long)bm->resBuffer->buffer_add;
   mbm_register_free_event(bm->resBuffer, mep_free, bm.get());
   mbm_register_alloc_event(bm->resBuffer, mep_declare, bm.get());
   bm->partitionID = partid;

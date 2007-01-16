@@ -50,10 +50,10 @@ void _wtc_print_entry(wt_queue_entry *e);
 
 //----------------------------STATIC STORAGE----------------------------
 
-static qentry    *fac_list;
-static qentry    *wt_queue;
-static qentry    *wt_stack;
-static qentry    *wt_fired;
+static qentry    *fac_list = 0;
+static qentry    *wt_queue = 0;
+static qentry    *wt_stack = 0;
+static qentry    *wt_fired = 0;
 static int        inited = FALSE;
 static void*      wt_mutex_id = 0;
 

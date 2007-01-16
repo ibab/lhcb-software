@@ -25,7 +25,7 @@ unsigned int lib_rtl_get_ticks()  {
   return RTL::SysTime::now();
 }
 
-int lib_rtl_set_timer(int milli_seconds, lib_rtl_timer_routine_t ast, void* ast_param, unsigned int* timer_id)  {
+int lib_rtl_set_timer(int milli_seconds, lib_rtl_timer_routine_t ast, void* ast_param, unsigned long* timer_id)  {
   std::auto_ptr<RTL::timer_entry_t> t(new RTL::timer_entry_t);
   t->next = t->prev = 0;
   t->magic = 0xFEEDBABE;
@@ -37,7 +37,7 @@ int lib_rtl_set_timer(int milli_seconds, lib_rtl_timer_routine_t ast, void* ast_
 #if defined(GENERIC_TIMERS)
   int sc = RTL::TimerManager::instance().add(t.get());
   if ( lib_rtl_is_success(sc) ) {
-    *timer_id = (int)t.release();
+    *timer_id = (long)t.release();
     return sc;
   }
 #elif defined(_WIN32)
@@ -56,7 +56,7 @@ int lib_rtl_set_timer(int milli_seconds, lib_rtl_timer_routine_t ast, void* ast_
   return 0;
 }
 
-int lib_rtl_kill_timer(int timer_id) {
+int lib_rtl_kill_timer(long timer_id) {
   RTL::timer_entry_t* t = (RTL::timer_entry_t*)timer_id;
   if ( t )  {
     if ( t->magic == 0xFEEDBABE ) {

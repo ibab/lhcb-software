@@ -1,7 +1,7 @@
 /*
-
-
-*/
+ *    T A N   database structure
+ *
+ */
 #define _TanDB_C_
 
 #include    <cstdio>
@@ -43,8 +43,8 @@ typedef void IOSB;
 #define _REMQHI(x,y)      lib$remqhi((void*)x,(void**)y)
 #define _REMQTI(x,y)      lib$remqti((void*)x,(void**)y)
 #else
-#define _PreviousEntry(x) (qentry_t*)((char*)(x) + (int)(x)->prev)
-#define _NextEntry(x)     (qentry_t*)((char*)(x) + (int)(x)->next)
+#define _PreviousEntry(x) (qentry_t*)((char*)(x) + (long)(x)->prev)
+#define _NextEntry(x)     (qentry_t*)((char*)(x) + (long)(x)->next)
 #define _INSQHI(x,y)      insqhi(x,y)
 #define _INSQTI(x,y)      insqti(x,y)
 #define _REMQHI(x,y)      remqhi(x,y)
@@ -338,7 +338,7 @@ int TanDataBase::_freePort (Entry* e)   {
     while (_REMQHI (&e->al, &dummy) != QUE_QUEWASEMPTY)  {
       // REMOVE ALIAS ENTRIES
       // ADJUST OFFSET OF THE REMOVED ENTRY
-      Entry* re = (Entry*)(2 * (u_int)dummy - (u_int)&((Entry*)dummy)->al);
+      Entry* re = (Entry*)(2 * (u_long)dummy - (u_long)&((Entry*)dummy)->al);
       _REMQHI( _PreviousEntry(&re->hl), &dummy);
       _freeEntry(re);
     }
@@ -482,7 +482,7 @@ TanDataBase::Entry* TanDataBase::_findEntry( const char* proc_name)  {
 #ifdef _OSK
     last = a, a = (Entry*) a->hl.next )
 #else
-    last = a, a  = (Entry*)((char*)a + (int)a->hl.next) )
+    last = a, a  = (Entry*)((char*)a + (long)a->hl.next) )
 #endif
   {
     if (::strlen(a->m_name) > 0 && ::strncmp(s,a->m_name,sizeof(a->m_name)) == 0)  {

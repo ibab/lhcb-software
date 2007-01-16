@@ -31,13 +31,13 @@ protected:
   /// Boolean indicating the validity of the connection after initialisation
   bool m_bValid;
   /// Channel to hold the socket connection 
-  Channel  m_socket;
+  Channel       m_socket;
   /// Port number
-  Port     m_port;
+  Port          m_port;
   /// Alarm identifier
-  unsigned int m_alarmID;
+  unsigned long m_alarmID;
   /// Buffer to store status code
-  unsigned int m_errno;
+  unsigned int  m_errno;
   //@Man: protected member functions
   /// Start timer before receiving data, if you don't want to wait forever
   void startTimer( int tmo );    
