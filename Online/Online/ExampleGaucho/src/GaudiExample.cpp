@@ -1,4 +1,4 @@
-// $Id: GaudiExample.cpp,v 1.1 2006-07-27 16:01:14 evh Exp $
+// $Id: GaudiExample.cpp,v 1.2 2007-01-16 16:48:25 evh Exp $
 
 // Include files
 #include "GaudiKernel/MsgStream.h"
@@ -6,6 +6,7 @@
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiExample.h"
+#include "AIDA/IAxis.h"
 
 #include <cstring>
 
@@ -55,32 +56,48 @@ StatusCode GaudiExample::initialize() {
   my1Dhisto1 = m_histosvc->book("1", "eventtype", 5, 0.5, 5.5 );
   my1Dhisto2 = m_histosvc->book("2", "mass", 30, 2900., 3200. );
   my2Dhisto  = m_histosvc->book("3", "Plot of position in XY plane",10,0.,400.,10,0.,300.); 
-
+  my1Dhprof  = m_histosvc->bookProf("4", "Profile  histo of y(x)",10,0.,400.);
+  nbinEntries=0;
+  sumOfWeights=0;
+  sumOfSquaredWeights=0;
+  
   // No need to instantiate explicitly the MonitorScv. The GaudKernel/Algorithm has
   // a method declareInfo that and do this automatically for you
   msg << MSG::INFO << "Declaring infos to be published" << endreq;
   declareInfo("counter1",counter1,"All events");
   declareInfo("counter2",counter2,"Event of type 1");
-
+  
   msg << MSG::INFO << "Test: Try to publish a second info with a name already used. Not possible" << endreq;
   declareInfo("counter2",counter2,"Event type 1");// Try to publish a second info with a name already used. For testing
-
+  
   declareInfo("efficiency1",efficiency1,"Ratio type 1/all");
   declareInfo("aboveRef",aboveRef,"#events is above reference");
   
   msg << MSG::INFO << "Test: No declareInfo for char* type. By default, will use bool instead!" << endreq; 
   declareInfo("oldStatus",oldStatus,"Previous Trigger status");
-
+  
   declareInfo("status",status,"Trigger status");
-
+  
   declareInfo("eventtype",my1Dhisto1,"Event type");
   declareInfo("Mass",my1Dhisto2,"mass plot");
   declareInfo("xyPosition",position,"Position in XY plane");
   declareInfo("xyPositionPlot", my2Dhisto, "Plot of position in XY plane");
   declareInfo("efficiency2",efficiency2,"Time rate 1-2");
-
+  
+  declareInfo("xyProfile", my1Dhprof,"Profile y(x)");
+  
+  myEvent = new event;
+  if( 0 == myEvent) {
+    msg << MSG::FATAL << "Unable to allocate structure event"  << endreq;
+    return StatusCode::FAILURE;
+  }
+  
+  myEvent->evt = 0;
+  declareInfo("Event", "I:1;D:2;C", myEvent, sizeof(event), "Event data" );
+  
+  
   time(&time_old);
-
+  
   // 
   // use Random Number Service to generate trigger events
   //
@@ -92,7 +109,12 @@ StatusCode GaudiExample::initialize() {
   if ( !sc.isSuccess() ) {
     return sc;
   }  
-
+  sc = random3.initialize(randSvc(), Rndm::Gauss(0.,4000.));
+  if ( !sc.isSuccess() ) {
+    return sc;
+  }
+  
+  
   return StatusCode::SUCCESS;
 }
 
@@ -102,7 +124,7 @@ StatusCode GaudiExample::execute() {
   //------------------------------------------------------------------------------
   MsgStream         msg( msgSvc(), name() );
   //  msg << MSG::INFO << "executing...." << endreq;
-
+  
   int eventtype;
   counter1++;
   float dice1=random1();
@@ -127,20 +149,45 @@ StatusCode GaudiExample::execute() {
   if(eventtype== 1)mass = random2();
   else             mass = 2800+random1()*500;
   my1Dhisto2->fill(mass);
-
+  
   position.first = random1()*400;
   position.second = random1()*300;
   //log << MSG::DEBUG <<  "position: " << position.first << " " << position.second << endreq;
   my2Dhisto->fill(position.first,position.second);
-
+  my1Dhprof->fill(position.first,position.second);
+  
+  // Track calculations for bin 3 in my1Dhprof:
+  int ixBin=3;
+  if (int(position.first/400*10) == ixBin ){
+    nbinEntries++;
+    sumOfWeights += position.second;
+    sumOfSquaredWeights += position.second*position.second;
+    msg << MSG::DEBUG << "my1Dhprof: all entries: " << counter1 << " x: " << position.first 
+        << " y: " << position.second <<  " bin: " << ixBin << " binEntries: " << nbinEntries << " sumOfWeights: " << sumOfWeights 
+        << " sumOfSquaredWeights: " << sumOfSquaredWeights << endreq;
+    msg << MSG::DEBUG << "my1Dhprof: ixBin " << ixBin << " entries " << my1Dhprof->binEntries(ixBin)
+        << " mean " << my1Dhprof->binHeight(ixBin) << " rms " << my1Dhprof->binRms(ixBin)
+        << " error " << my1Dhprof->binError(ixBin) << endreq;
+  }
+  
   if (counter1 % 50 == 0) {
     time(&time_new);
     efficiency2=float(counter2)/(time_new-time_old);
   }
+  
+  (myEvent->evt)++;
+  myEvent->px = random3();
+  myEvent->py = 2*random3();
+  if(fabs(myEvent->py) > 8000) strcpy(myEvent->status, "SELECTED");
+  else                         strcpy(myEvent->status, "REJECTED");
+  if(counter1 % 100 == 0) {
+    msg << MSG::DEBUG << "Structure myEvent: evt = " << myEvent->evt << " px = " << myEvent->px
+        << " py = " << myEvent->py << " status = " << myEvent->status << endreq;
+  }
 
   //  delay
   mysleep();
-
+  
   return StatusCode::SUCCESS;
 }
 
@@ -150,6 +197,25 @@ StatusCode GaudiExample::finalize() {
   //------------------------------------------------------------------------------
   MsgStream msg(msgSvc(), name());
   msg << MSG::INFO << "finalizing...." << endreq;
-
+  
+  // Print the final contents of the Profile1D histogram
+  msg << MSG::DEBUG << "GaudiExample: final contents of the Profile1D histogram my1Dhprof:" << endreq;
+  msg << MSG::DEBUG << "ixBin " << "UNDERFLOW" << " entries " << my1Dhprof->binEntries(AIDA::IAxis::UNDERFLOW_BIN) 
+      << " mean " << my1Dhprof->binHeight(AIDA::IAxis::UNDERFLOW_BIN) 
+      << " rms " << my1Dhprof->binRms(AIDA::IAxis::UNDERFLOW_BIN)  
+      << " error " << my1Dhprof->binError(AIDA::IAxis::UNDERFLOW_BIN) << endreq;
+  
+  int nXBins = my1Dhprof->axis().bins();
+  for (int ixBin=0; ixBin< nXBins; ixBin++){
+    msg << MSG::DEBUG << "ixBin " << ixBin << " entries " << my1Dhprof->binEntries(ixBin)
+        << " mean " << my1Dhprof->binHeight(ixBin) << " rms " << my1Dhprof->binRms(ixBin)
+        << " error " << my1Dhprof->binError(ixBin) << endreq;
+  }
+  
+  msg << MSG::DEBUG << "ixBin " << "OVERFLOW" << " entries " << my1Dhprof->binEntries(AIDA::IAxis::OVERFLOW_BIN)
+      << " mean " << my1Dhprof->binHeight(AIDA::IAxis::OVERFLOW_BIN) 
+      << " rms " << my1Dhprof->binRms(AIDA::IAxis::OVERFLOW_BIN)
+      << " error " << my1Dhprof->binError(AIDA::IAxis::OVERFLOW_BIN) << endreq;
+  
   return StatusCode::SUCCESS;
 }
