@@ -1,4 +1,4 @@
-// $Id: HltTracking.cpp,v 1.7 2006-10-27 15:14:14 hernando Exp $
+// $Id: HltTracking.cpp,v 1.8 2007-01-16 16:36:52 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -112,7 +112,7 @@ StatusCode HltTracking::iniRecoAlgorithm()
  
   m_recoKey     = HltNames::particleInfoID( recoName );
   m_prevrecoKey = HltNames::particleInfoID( prevrecoName );
-  m_recoHasPt   = HltNames::particleInfoID( "VeloTT");
+  m_recoHasPt   = HltNames::particleInfoID( "VeloTTKey" );
 
   IAlgManager* appMgr;
   StatusCode sc = service( "ApplicationMgr", appMgr );
@@ -225,9 +225,10 @@ void HltTracking::load() {
 
   if (m_inputTracks) loadTracks(*m_inputTracks);
   else loadTracks(*m_patInputTracks);
-
-  if ((m_outputTracks) && (m_recoKey >= m_recoHasPt))
-      std::sort(m_outputTracks->begin(),m_outputTracks->end(),_sortByPt);
+  
+  if ((m_outputTracks) && (m_recoKey >= m_recoHasPt)) 
+    std::sort(m_outputTracks->begin(),m_outputTracks->end(),_sortByPt);
+  
 
   if (m_measureTime) m_timer->stop(m_timeLoad);
   if (m_debug) {

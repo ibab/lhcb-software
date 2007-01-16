@@ -4,6 +4,9 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2007-1-16 - Jose A. Hernando
+  - HltTracking small bug with VeloTTKey
+
 ! ======================== HltTracking v1r2 2006-11-07 =======================
 ! 2006-10-27 - Jose A. Hernando
   - HltTracking setting timers and improve loadTracks
