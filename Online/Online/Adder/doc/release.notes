@@ -23,7 +23,7 @@ the subfarmnumber, and the fourth and fifth digits (01) indicate the nodenumber 
 the subfarm. For the adder, the taskname is "Adder". The last digit is the instance
 number of the task.  
 
-The names of the summed histograms are prefixed with the string "Summed". For example,
+The names of the summed histograms are prefixed with the string "Summed_". For example,
 a Moore task publishing a histogram with name "Mass" will create a DIM service with
 name:
 
@@ -32,16 +32,16 @@ name:
 The added "Mass" histogram will be published in a DIM service with name (provided the UTGID
 environment variable is set to "node00101_Adder_1"):
 
-   H1D/node00101_Adder_1/Adder/Summed Mass   
+   H1D/node00101_Adder_1/Adder/Summed_Mass   
 
 To add the summed histograms of a subfarm, the UTGID should be set to node001_Adder_1. The name of the
 DIM service containing the sum of the sums is set to 
 
-   H1D/node001_Adder_1/Adder/Summed Mass
+   H1D/node001_Adder_1/Adder/Summed_Mass
    
 One can continue adding the sums at the level of the entire farm in a similar way:
 
-   H1D/node_Adder_1/Adder/Summed Mass
+   H1D/node_Adder_1/Adder/Summed_Mass
 
 The configuration is done via joboptions:
 

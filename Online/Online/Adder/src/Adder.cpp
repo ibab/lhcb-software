@@ -351,7 +351,7 @@ StatusCode Adder::execute() {
 	      hsize=h.size();
 	   } 
 	   h.push_back(histoSvc->book("/stat/adder"+m_histogramname[j],j, m_histogramname[j], numberOfBinsX,lowerEdge, upperEdge));
-           declareInfo("Summed "+m_histogramname[j],h[hsize],"Summed "+m_histogramname[j]);
+           declareInfo("Summed_"+m_histogramname[j],h[hsize],"Summed_"+m_histogramname[j]);
            base.push_back(dynamic_cast<rootpart*>(h[hsize]));    
            if ( ! base[hsize] ) { 
               msg << MSG::ERROR << "Dynamic cast failed to get root part of aida h"  << endreq;       
@@ -375,7 +375,7 @@ StatusCode Adder::execute() {
 	      h2dsize=h2d.size();
 	   } 
 	   h2d.push_back(histoSvc->book("/stat/adder"+m_histogramname[j],j,m_histogramname[j], numberOfBinsX,lowerEdge, upperEdge, numberOfBinsY,ylowerEdge, yupperEdge));
-	   declareInfo("Summed "+m_histogramname[j],h2d[h2dsize],"Summed "+m_histogramname[j]);
+	   declareInfo("Summed_"+m_histogramname[j],h2d[h2dsize],"Summed_"+m_histogramname[j]);
            base2d.push_back(dynamic_cast<rootpart2d*>(h2d[h2dsize]));    
            if ( ! base2d[h2dsize] ) { 
               msg << MSG::ERROR << "Dynamic cast failed to get root part of aida h2d"  << endreq;       
@@ -398,7 +398,7 @@ StatusCode Adder::execute() {
 	      psize=p.size();
 	   } 
 	   p.push_back(histoSvc->bookProf("/stat/adder"+m_histogramname[j],j, m_histogramname[j], numberOfBinsX,lowerEdge, upperEdge));
-           declareInfo("Summed "+m_histogramname[j],p[psize],"Summed "+m_histogramname[j]);
+           declareInfo("Summed_"+m_histogramname[j],p[psize],"Summed_"+m_histogramname[j]);
            basep.push_back(dynamic_cast<rootpartp*>(p[psize]));    
            if ( ! base[psize] ) { 
               msg << MSG::ERROR << "Dynamic cast failed to get root part of aida p"  << endreq;       
