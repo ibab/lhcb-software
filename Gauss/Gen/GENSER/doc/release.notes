@@ -4,6 +4,11 @@
 ! Purpose     : interface package to GENSER
 !-----------------------------------------------------------------------------
 
+!======================= GENSER v2r49p0 2007-01-17 ===========================
+! 2007-01-17 - Florence Ranjard
+ - requirements - use the interface packages from LCGCMT/LCG_GeneratorsInterfaces
+                  fix the native versions beforehand
+
 !===================== GENSER v1r140p0 2006-09-19 ============================
 ! 2006-09-19 - Gloria Corti
  - requirements - use GENSER_1_4_0

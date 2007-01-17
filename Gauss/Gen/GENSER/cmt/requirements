@@ -1,37 +1,20 @@
 package GENSER
-version v1r140p0
+version v2r49p0
 
-branches doc cmt src
+branches doc cmt
 
 use LCG_Settings v*
 use GaudiPolicy  v*
 
 include_path none
 
-macro GENSER_native_version "GENSER_1_4_0"
-macro GENSER_path "$(LCG_releases)/GENSER/$(GENSER_native_version)"
-macro GENSER_home "$(GENSER_path)/$(LCG_system)/lib"
-
-# use archive libraries
-path_remove LD_LIBRARY_PATH "/GENSER/"
-path_append LD_LIBRARY_PATH "$(GENSERROOT)/$(BINDIR)"
-path_append LD_LIBRARY_PATH "$(GENSER_home)"
-
-macro pythia_native_version "6_325.2"
-
-macro pythia_linkopts " -lpythia$(pythia_native_version) -ldummy_pythia$(pythia_native_version) "\
-        WIN32         " pythia$(PYTHIA_native_version).lib dummy_pythia$(pythia_native_version)"
+macro pythia6_native_version "408.2"
+use pythia6  v* LCG_GeneratorsInterfaces
 
 macro photos_native_version "215.2"
-macro photos_linkopts " -lphotos$(photos_native_version) " \
-             WIN32    " photos$(photos_native_version).lib"
+use photos v* LCG_GeneratorsInterfaces
 
-macro lhapdf_native_version "5_2_2"
-set LHAPATH "$(GENSER_path)/src/lhapdf/$(lhapdf_native_version)/data/PDFsets"
+macro lhapdf_native_version "5.2.3"
+use lhapdf v* LCG_GeneratorsInterfaces
 
-macro lhapdf_linkopts " -llhapdf$(lhapdf_native_version) -llhapdf$(lhapdf_native_version)_dumm "
-
-# cernlib.f contains few routines from CERNLIB required by EvtGen and some generators
-library cern ../src/cernlib.f
-
-macro GENSER_linkopts "-L$(GENSER_home) $(pythia_linkopts) $(lhapdf_linkopts) $(photos_linkopts) -L$(GENSERROOT)/$(BINDIR) -lcern -lnsl -lcrypt -ldl -lg2c"
+macro GENSER_linkopts "$(pythia6_linkopts) $(lhapdf_linkopts) $(photos_linkopts) -lnsl -lcrypt -ldl -lg2c"
