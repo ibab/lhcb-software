@@ -2,7 +2,7 @@
 #include "HijingProduction.h"
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h"
+#include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiKernel/ParticleProperty.h"
 
 // from Event
@@ -26,8 +26,9 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-static const  ToolFactory<HijingProduction>          s_factory ;
-const        IToolFactory& HijingProductionFactory = s_factory ; 
+
+DECLARE_TOOL_FACTORY( HijingProduction );
+
 
 //=============================================================================
 // Standard constructor, initializes variables

@@ -4,6 +4,10 @@
 ! Purpose     : "Interface" to Hijing 
 !-----------------------------------------------------------------------------
 
+!========================= LbHijing v2r0 2007-01-08 =======================
+! 2007-01-08 - Florence Ranjard
+ - update HijingProduction.cpp to use new FACTORY
+
 ! 2006-11-15 - Gloria CORTI for Daniele GREGORI
  - Fix bug in example options were there is an extra "," before closing brakets
 
