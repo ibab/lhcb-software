@@ -1,8 +1,11 @@
-// $Id: GaussPhysics_load.cpp,v 1.8 2006-07-21 08:02:36 ranjard Exp $ 
+// $Id: GaussPhysics_load.cpp,v 1.9 2007-01-17 17:48:17 ranjard Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2006/07/21 08:02:36  ranjard
+// v4r0 - use new physics lists from geant4 8.1
+//
 // Revision 1.7  2006/01/09 20:52:22  robbep
 // Adapt to Geant4.8
 //
@@ -28,8 +31,6 @@
 // ============================================================================
 #include "GiGa/GiGaExtPhysics.h"
 // ============================================================================
-#include "GiGa/GiGaMACROs.h"
-// ============================================================================
 
 
 /** @file 
@@ -40,45 +41,31 @@
  */
 
 // Packaging
-#include "G4hadlists/G4EmStandardPhysics.hh"
-IMPLEMENT_ExtPhysics( G4EmStandardPhysics          ) ;
-#include "G4hadlists/G4EmExtraPhysics.hh"
-IMPLEMENT_ExtPhysics( G4EmExtraPhysics       ) ;
-#include "G4hadlists/G4IonPhysics.hh"
-IMPLEMENT_ExtPhysics( G4IonPhysics         ) ;
+#include "G4EmStandardPhysics.hh"
+#include "G4EmExtraPhysics.hh"
+#include "G4IonPhysics.hh"
 
-#include "G4hadlists/HadronPhysicsLHEP.hh"
-IMPLEMENT_ExtPhysics( HadronPhysicsLHEP    ) ;
-#include "G4hadlists/HadronPhysicsLHEP_BERT_HP.hh"
-IMPLEMENT_ExtPhysics( HadronPhysicsLHEP_BERT_HP ) ;
+#include "HadronPhysicsLHEP.hh"
+#include "HadronPhysicsLHEP_BERT_HP.hh"
 
-#include "G4hadlists/HadronPhysicsQGSP.hh"
-IMPLEMENT_ExtPhysics( HadronPhysicsQGSP    ) ;
-#include "G4hadlists/HadronPhysicsQGSP_HP.hh"
-IMPLEMENT_ExtPhysics( HadronPhysicsQGSP_HP ) ;
+#include "HadronPhysicsQGSP.hh"
+#include "HadronPhysicsQGSP_HP.hh"
 
-//#include "G4LHCblists/HadronPhysicsQGSP_BERT_HP.hh"
-#include "G4hadlists/HadronPhysicsQGSP_BERT_HP.hh"
-IMPLEMENT_ExtPhysics( HadronPhysicsQGSP_BERT_HP ) ;
+#include "HadronPhysicsQGSP_BERT_HP.hh"
 
-void GaussPhysics_load() 
+DECLARE_FACTORY_ENTRIES(GaussPhysics) 
 { 
   /// Physics Lists 
-  DECLARE_GiGaFactory     (    G4EmStandardPhysics               ) ;
-  DECLARE_GiGaFactory     (    G4EmExtraPhysics            ) ;
-  DECLARE_GiGaFactory     (    G4IonPhysics              ) ;
-  DECLARE_GiGaFactory     (    HadronPhysicsLHEP       ) ;
-  DECLARE_GiGaFactory     (    HadronPhysicsLHEP_BERT_HP  ) ;
-  DECLARE_GiGaFactory     (    HadronPhysicsQGSP       ) ;
-  DECLARE_GiGaFactory     (    HadronPhysicsQGSP_HP    ) ;
-  DECLARE_GiGaFactory     (    HadronPhysicsQGSP_BERT_HP  ) ;
+  DECLARE_TOOL     (    G4EmStandardPhysics       ) ;
+  DECLARE_TOOL     (    G4EmExtraPhysics          ) ;
+  DECLARE_TOOL     (    G4IonPhysics              ) ;
+  DECLARE_TOOL     (    HadronPhysicsLHEP         ) ;
+  DECLARE_TOOL     (    HadronPhysicsLHEP_BERT_HP ) ;
+  DECLARE_TOOL     (    HadronPhysicsQGSP         ) ;
+  DECLARE_TOOL     (    HadronPhysicsQGSP_HP      ) ;
+  DECLARE_TOOL     (    HadronPhysicsQGSP_BERT_HP ) ;
 
 };
-// ============================================================================
-
-// ============================================================================
-extern "C" void GaussPhysics_loadRef() { GaussPhysics_load(); } ; 
-// ============================================================================
 
 // ============================================================================
 // The END 

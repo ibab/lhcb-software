@@ -5,8 +5,8 @@ version v4r0
 branches          cmt src doc
 
 # =============== explicit dependencies =======================================
-use GaussTools    v*	Sim
-use G4hadlists    v*	Geant4  
+use GaussTools         v*	Sim
+use G4physics_lists    v*	Geant4  
 
 # ============== component library ============================================
 library          GaussPhysics      *.cpp  
