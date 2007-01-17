@@ -157,9 +157,9 @@ void DimInfoHistos::setHPData(){
   }
   
   for (int i=0;i<=nofbins+1;i++) {
-    m_hist->SetBinError(i,m_data[iData++]);
+    m_histp->SetBinError(i,sqrt(m_data[iData++]));
     //std::cerr << "DimInfoHistos(" << m_histoname << "), setHPData: errors: index in DimInfo data:  "
-    //          << iData-1 << " value: " << m_data[iData-1] <<std::endl;
+    //          << iData-1 << " value: " << sqrt(m_data[iData-1]) <<std::endl;
   }
   // Debug: Check the root histo just filled
 //  for (int i=0;i<=nofbins+1;i++) {
