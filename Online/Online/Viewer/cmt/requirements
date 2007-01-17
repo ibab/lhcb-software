@@ -1,13 +1,12 @@
 package Viewer
-version v1r1
+version v1r2
 
 branches doc src cmt
 
-include_path none
+use ROOT v* LCG_Interfaces
+use DIM v* Online
 
-use GaudiPolicy v*
-use ROOT        v* LCG_Interfaces
-use DIM         v* Online
+include_dirs $(VIEWERRROOT)
 
 # Viewer does not build library
 ignore_pattern package_stamps
@@ -20,12 +19,9 @@ application SaveHistos ../src/SaveHistos.cpp ../src/DimInfoHistos.cpp
 #macro Viewer_linkopts "C:\vanphil\dim_new\bin\dim.lib C:\root\lib\*.lib"
 
 # For linux:
-macro Viewer_cppflags " -Dunix -D_REENTRANT " WIN32 ""
+macro Viewer_cppflags "-Dunix -D_REENTRANT -I $(ROOTSYS)/include -I /afs/cern.ch/lhcb/online/control/DIM/v16r4/slc3_ia32_gcc323/include"
+macro Viewer_linkopts "-L$(ROOTSYS)/lib -lCore -lCint -lHist -lGraf -lGraf3d -lGpad -lTree -lRint -lPostscript -lMatrix -lPhysics -lpthread -lm -ldl -rdynamic /afs/cern.ch/lhcb/online/control/DIM/v16r4/slc3_ia32_gcc323/bin/libdim.a"
 
-macro SaveHistos_cppflags " -Dunix -D_REENTRANT " WIN32 ""
-
-private
-macro_append ROOT_linkopts " -lHist -lGraf -lGraf3d -lGpad -lRint -lPostscript -lMatrix -lPhysics -lm -ldl -rdynamic " \
-             WIN32 " libHist.lib libGpad.lib "
-
+macro SaveHistos_cppflags "-Dunix -D_REENTRANT -I $(ROOTSYS)/include -I /afs/cern.ch/lhcb/online/control/DIM/v16r4/slc3_ia32_gcc323/include"
+macro SaveHistos_linkopts "-L$(ROOTSYS)/lib -lCore -lCint -lHist -lGraf -lGraf3d -lGpad -lTree -lRint -lPostscript -lMatrix -lPhysics -lpthread -lm -ldl -rdynamic /afs/cern.ch/lhcb/online/control/DIM/v16r4/slc3_ia32_gcc323/bin/libdim.a"
 

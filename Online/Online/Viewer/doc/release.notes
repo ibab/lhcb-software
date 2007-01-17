@@ -1,6 +1,9 @@
-! $Id: release.notes,v 1.1.1.1 2006-07-27 16:37:07 evh Exp $
+! $Id: release.notes,v 1.2 2007-01-17 08:12:31 evh Exp $
 ! Package     : Viewer
 ! Responsible : Eric van Herwijnen
+
+! 20061226 - J. Helder Lopes
+             Viewer v1r2: Modified DimInfoHistos to implement 1D profile histogram viewing
 
 ! 20060727 - Viewer v1
              This is a simple ROOT viewer for histograms published by Gaucho

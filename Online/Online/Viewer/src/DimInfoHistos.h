@@ -10,7 +10,8 @@ class DimTimerHistos;
   A DimInfo that retrieve a histogram published by Gaucho
   and fill a root histogram
   
-  Author: J. Helder Lopes, 27/07/2006
+  Author: J. Helder Lopes, 16/12/2006
+  J. Helder Lopes,  2006/12/26: Added 1D profile viewing
   
 */
 
@@ -28,6 +29,7 @@ private:
   
   // ROOT histogram
 	std::string m_histoname;
+        std::string m_histType;
 	TH1* m_hist;
 	int m_dimension;
 	
@@ -36,4 +38,6 @@ private:
   // private methods to fill the histograms
   void setH1Data();
   void setH2Data();
+  void set1DProfData();
+
 };
