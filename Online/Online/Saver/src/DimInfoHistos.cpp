@@ -1,6 +1,7 @@
 #include "DimInfoHistos.h"
 #include "TH1.h"
 #include "TH2.h"
+#include "TProfile.h"
 #include <iostream>
 #ifdef WIN32
 namespace win {
@@ -22,6 +23,7 @@ DimInfoHistos::DimInfoHistos(std::string hSvcname, int refreshTime)
   m_histoname=hSvcname.substr(3,len-3);
   if(       "H1D" == hSvcname.substr(0,3) ) m_dimension = 1;
   else  if( "H2D" == hSvcname.substr(0,3) ) m_dimension = 2;
+  else  if( "HPD" == hSvcname.substr(0,3) ) m_dimension = 11;
   else  {
   	std::cerr << "DimInfoHistos(" << m_histoname << "): Unexpected histogram dimension: " 
               << m_dimension << std::endl;
@@ -63,7 +65,7 @@ void DimInfoHistos::infoHandler()
     exit(2);
   }
   // Initialize histos
-	if(( 0 == m_hist )&(0==m_hist2d)) {
+  if((( 0 == m_hist )&(0==m_hist2d))&(0==m_histp)) {
     if( 1 == m_dimension ) {
     //   std::cerr << "DimInfoHistos(" << m_histoname << "): Making ROot histogram" << std::endl;
        // 1Hd m_data: dimension,nXBins,xMin,xMax,2*(UNDERFLOW,"in range" bins, OVERFLOW): entries and errors
@@ -76,13 +78,19 @@ void DimInfoHistos::infoHandler()
       m_hist2d=new TH2F(m_histoname.c_str(),m_histoname.c_str(),(int)m_data[1],m_data[2],
                       m_data[3],(int)m_data[4],m_data[5],m_data[6]);	
     } 
+    else if( 11 == m_dimension ) {
+    //   std::cerr << "DimInfoHistos(" << m_histoname << "): Making ROot histogram" << std::endl;
+       // 1d profile data: dimension,nXBins,xMin,xMax,entries,3*(UNDERFLOW,"in range" bins, OVERFLOW): entries, weights and squares of weights 
+      m_histp=new TProfile(m_histoname.c_str(),m_histoname.c_str(),(int)m_data[1],m_data[2],m_data[3]);	
+    } 
 	}
-	if(( 0 == m_hist )&(0==m_hist2d)) {
+	if ((( 0 == m_hist )&(0==m_hist2d))&(0==m_histp)) {
     std::cerr << "DimInfoHistos(" << m_histoname << "): Unable to create root histogram"  << std::endl;
     exit(3);
 	}
   if( 1 == m_dimension ) setH1Data();
   if( 2 == m_dimension ) setH2Data();
+  if( 11 == m_dimension ) setHPData();
 } 
 
 
@@ -97,6 +105,12 @@ TH2* DimInfoHistos::get2DHisto() {
 //  std::cerr << "DimInfoHistos(" << m_histoname << "), get_hist " << m_hist 
 //            << " hasData: " << std::boolalpha << m_hasData << std::endl;
   if(m_hasData == true ) return m_hist2d;
+  return 0;
+}
+TProfile* DimInfoHistos::getPDHisto() {
+//  std::cerr << "DimInfoHistos(" << m_histoname << "), get_hist " << m_hist 
+//            << " hasData: " << std::boolalpha << m_hasData << std::endl;
+  if(m_hasData == true ) return m_histp;
   return 0;
 }
 
@@ -164,4 +178,31 @@ void DimInfoHistos::setH2Data(){
   m_hasData=true;
 }
 
+void DimInfoHistos::setHPData(){
+  // Set total number of entries
+  m_histp->SetEntries(m_data[4]);
+//  std::cerr << "DimInfoHistos(" << m_histoname << "), setH1Data: total entries: " << m_data[4] << std::endl;
+  // 1d profile data: dimension,nXBins,xMin,xMax,entries,3*(UNDERFLOW,"in range" bins, OVERFLOW): entries, weights and squares of weights 
+ 
+  // Remember root histo: bin 0: underflows, bin N+1: overflows
+  int nofbins = m_histp->GetNbinsX();
+  int iData=5;
+  for (int i=0;i<=nofbins+1;i++) {
+    m_histp->SetBinContent(i,m_data[iData++]);
+//    std::cerr << "DimInfoHistos(" << m_histoname << "), setHPData: entries: index in DimInfo data: "
+//              << iData-1 << " value: " << m_data[iData-1] << std::endl;
+  }
+  
+  for (int i=0;i<=nofbins+1;i++) {
+    m_histp->SetBinError(i,sqrt(m_data[iData++]));
+    //std::cerr << "DimInfoHistos(" << m_histoname << "), setHPData: errors: index in DimInfo data:  "
+    //          << iData-1 << " value: " << sqrt(m_data[iData-1]) <<std::endl;
+  }
+  // Debug: Check the root histo just filled
+//  for (int i=0;i<=nofbins+1;i++) {
+//    std::cerr << "DimInfoHistos(" << m_histoname << "), setHPData: Root histo content: bin: " << i 
+//              << " entries: " << m_histp->GetBinContent(i) << " error: " << m_histp->GetBinError(i) << std::endl;
+//  }   
+  m_hasData=true;
+}
 

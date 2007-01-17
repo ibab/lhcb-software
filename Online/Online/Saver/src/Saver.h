@@ -5,11 +5,10 @@
 #include "GaudiKernel/Algorithm.h"
 #include "GaudiKernel/Property.h"
 #include "GaudiKernel/IHistogramSvc.h"
-#include "AIDA/IHistogram1D.h"
-#include "AIDA/IHistogram2D.h"
 #include "TH1.h"
 #include "TH2.h"
 #include "TFile.h"
+#include "TProfile.h"
 #include "GaudiKernel/IIncidentListener.h"
 #include<time.h>
 
@@ -19,8 +18,6 @@
 */
 
 // Forward declarations
-class IHistogram1D;
-class IHistogram2D;
 class IIncidentSvc;
 class Saver : public Algorithm, virtual public IIncidentListener {
 public:

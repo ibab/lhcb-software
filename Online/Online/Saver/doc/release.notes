@@ -1,6 +1,8 @@
 ! Package     : Saver
 ! Responsible : Eric van Herwijnen/Monica Pepe-Altarelli
 
+! 20070117 - Saver v1r1 supports 1D profile histograms
+
 ! 20061127 - Saver v1r0
 
 This program saves histograms published by tasks using the Gaucho

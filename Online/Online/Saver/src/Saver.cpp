@@ -37,6 +37,7 @@
 #include "TStyle.h"
 #include "TH1.h"
 #include "TH2.h"
+#include "TProfile.h"
 #include "TAxis.h"
 #include "TSystem.h"
 #include <time.h>
@@ -102,12 +103,16 @@ StatusCode Saver::execute() {
   int type;
   int icount;
   int icount2d;
+  int icountp;
   std::string hSvcname;
   std::string hSvcname2d;
   std::string hSvcnames;
   std::string hSvcnames2d;
+  std::string pSvcname;
+  std::string pSvcnames;
   DimInfoHistos* hinfo=0;
   DimInfoHistos* hinfo2d=0;
+  DimInfoHistos* pinfo=0;
   time(&rawtime);
   timeinfo = localtime(&rawtime);
   int year=timeinfo->tm_year+1900;
@@ -150,16 +155,19 @@ StatusCode Saver::execute() {
      //j counts the histograms
      std::vector<TH1*> hist;
      std::vector<TH2*> hist2d;
+     std::vector<TProfile*> histp;
      hSvcnames="H1D/"+m_nodename+"*/"+m_histogramname[j];
      hSvcnames2d="H2D/"+m_nodename+"*/"+m_histogramname[j];
-
+     pSvcnames="HPD/"+m_nodename+"*/"+m_histogramname[j];
+     
      DimClient::setDnsNode(m_dimclientdns.c_str());
   
      DimBrowser dbr;  
      icount = 0;
      icount2d = 0;
+     icountp = 0;
       // icount is the number of tasks publishing histogram nr j
-     while (( icount==0 )|(icount2d==0))
+     while ((( icount==0 )|(icount2d==0))|(icountp==0))
         {
         //look for the services at each iteration of eventloop - task may have died
 
@@ -181,8 +189,19 @@ StatusCode Saver::execute() {
               msg << MSG::DEBUG << "Found 2D service: " << hSvcname2d << endreq;   
   	      icount2d++;
 	      } 
-	 }       
-        if ((icount>0)|(icount2d>0)) break;      
+	 }  
+	 if (icount2d==0) {
+              msg << MSG::DEBUG << "Looking for pSvcname: " << pSvcnames.c_str() << endreq;     
+              dbr.getServices(pSvcnames.c_str());
+              while( (type = dbr.getNextService(service, format)) )
+                 { 	
+	         pSvcname=service;
+                 msg << MSG::DEBUG << "Found profile service: " << hSvcname2d << endreq;   
+  	         icountp++;		 
+	         } 
+	   } 
+ 
+        if (((icount>0)|(icount2d>0))|(icountp>1)) break;      
         else lib_rtl_sleep(500);
      } 
   
@@ -192,6 +211,9 @@ StatusCode Saver::execute() {
      }
      if (icount2d>0) {
         hinfo2d = new DimInfoHistos(hSvcname2d,m_refreshtime);
+     }
+     if (icountp>0) {
+        pinfo = new DimInfoHistos(pSvcname,m_refreshtime);
      }
 
      // convert DIM buffer to ROOT
@@ -247,21 +269,38 @@ StatusCode Saver::execute() {
         } 
      }   
 
+     if (icountp>0) {
+        TProfile* histp=0;
+        int ntries=0;         
+        while (1)
+           {
+           histp=0;
 
-	  
-     
+	   histp= pinfo->getPDHisto();
+           if (histp != 0) {
+	      msg << MSG::DEBUG << "Histogram "<< histp->GetTitle() << " found." << endreq;   
+	      if ( 0 == f ) {	      
+	        f = new TFile(filename.c_str(),"create");
 
- 
+		}   
+	      histp->Write();	
+	 
+	      break;
+	   }    
+           ntries++;
+	   msg << MSG::DEBUG << "No histogram found after " << ntries << " attempts." << endreq;
+           if(ntries==10) break;
+          lib_rtl_sleep(500); 
+        } 
+     }   	       
    }
-
-
-
 
   f->Close();
 
   delete f;
   delete hinfo;
   delete hinfo2d;
+  delete pinfo;
   command="";
   }
 
