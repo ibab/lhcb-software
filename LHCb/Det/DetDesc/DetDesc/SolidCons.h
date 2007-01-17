@@ -1,6 +1,4 @@
-// $Id: SolidCons.h,v 1.16 2006-05-17 16:02:38 cattanem Exp $ 
-// ===========================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
+// $Id: SolidCons.h,v 1.17 2007-01-17 12:10:24 cattanem Exp $ 
 // ===========================================================================
 #ifndef     DETDESC_SOLIDCONS_H
 #define     DETDESC_SOLIDCONS_H 1   
@@ -9,9 +7,9 @@
 #include <iostream>
 // Units
 #include "GaudiKernel/SystemOfUnits.h"
-// LHCbDefinitions
-#include "Kernel/Point3DTypes.h"
-#include "Kernel/Vector3DTypes.h"
+// Geometry Definitions
+#include "GaudiKernel/Point3DTypes.h"
+#include "GaudiKernel/Vector3DTypes.h"
 // DetDesc 
 #include "DetDesc/SolidBase.h" 
 // forward declarations 

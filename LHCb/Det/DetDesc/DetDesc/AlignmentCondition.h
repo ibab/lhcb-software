@@ -1,4 +1,4 @@
-// $Id: AlignmentCondition.h,v 1.8 2006-03-08 11:05:25 jpalac Exp $
+// $Id: AlignmentCondition.h,v 1.9 2007-01-17 12:10:07 cattanem Exp $
 #ifndef DETDESC_ALIGNMENTCONDITION_H 
 #define DETDESC_ALIGNMENTCONDITION_H 1
 
@@ -6,9 +6,9 @@
 #include "DetDesc/Condition.h"
 #include "DetDesc/DetDesc.h"
 #include "DetDesc/CLIDAlignmentCondition.h"
-#include "Kernel/Point3DTypes.h"
-#include "Kernel/Vector3DTypes.h"
-#include "Kernel/Transform3DTypes.h"
+#include "GaudiKernel/Point3DTypes.h"
+#include "GaudiKernel/Vector3DTypes.h"
+#include "GaudiKernel/Transform3DTypes.h"
 /** @class AlignmentCondition AlignmentCondition.h DetDesc/AlignmentCondition.h
  *  
  *

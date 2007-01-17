@@ -1,4 +1,4 @@
-// $Id: LogVolBase.h,v 1.15 2006-02-01 19:39:09 marcocle Exp $ 
+// $Id: LogVolBase.h,v 1.16 2007-01-17 12:10:13 cattanem Exp $ 
 #ifndef     DETDESC_LOGVOLBASE_H
 #define     DETDESC_LOGVOLBASE_H
 /// STD and STL includes
@@ -7,6 +7,7 @@
 /// GaudiKernel includes 
 #include "GaudiKernel/IValidity.h"
 #include "GaudiKernel/IRegistry.h"
+#include "GaudiKernel/Transform3DTypes.h"
 /// DetDesc  includes
 #include "DetDesc/ISolid.h" 
 #include "DetDesc/Services.h" 
@@ -15,9 +16,6 @@
 #include "DetDesc/LogVolumeException.h"
 #include "DetDesc/Surface.h"
 #include "DetDesc/ValidDataObject.h"
-/// CLHEP includes 
-#include "Kernel/Transform3DTypes.h"
-#include "Kernel/Transform3DTypes.h"
 
 /// forward declarations 
 class IDataProviderSvc;

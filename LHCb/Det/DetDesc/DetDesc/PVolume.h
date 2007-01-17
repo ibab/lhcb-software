@@ -1,12 +1,9 @@
-// $Id: PVolume.h,v 1.5 2006-04-20 14:39:56 ranjard Exp $ 
+// $Id: PVolume.h,v 1.6 2007-01-17 12:10:14 cattanem Exp $ 
 #ifndef    DETDESC_PVOLUME_H
 #define    DETDESC_PVOLUME_H 1 
 
-/// CLHEP includes
-#include "Kernel/Transform3DTypes.h"
-#include "Kernel/Transform3DTypes.h"
 ///  GaudiKernel includes   
-#include "GaudiKernel/DataObject.h" 
+#include "GaudiKernel/Transform3DTypes.h"
 /// DetDesc includes 
 #include "DetDesc/Services.h"
 #include "DetDesc/IPVolume.h"

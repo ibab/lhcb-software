@@ -1,4 +1,4 @@
-// $Id: SolidChild.h,v 1.17 2005-12-08 19:20:01 jpalac Exp $ 
+// $Id: SolidChild.h,v 1.18 2007-01-17 12:10:21 cattanem Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
@@ -6,9 +6,8 @@
 #define       DETDESC_SOLIDCHILD_H 1
 /// STD and STL 
 #include <functional>
-// CLHEP
-#include "Kernel/Transform3DTypes.h"
-#include "Kernel/Transform3DTypes.h"
+// Geometry
+#include "GaudiKernel/Transform3DTypes.h"
 /// Detdesc 
 #include "DetDesc/SolidException.h" 
 #include "DetDesc/SolidBase.h" 

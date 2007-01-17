@@ -1,6 +1,4 @@
-// $Id: ISolid.h,v 1.12 2006-05-10 07:06:17 cattanem Exp $ 
-// ===========================================================================
-// CVS tag $Name: not supported by cvs2svn $
+// $Id: ISolid.h,v 1.13 2007-01-17 12:10:12 cattanem Exp $ 
 // ===========================================================================
 #ifndef DETDESC_ISOLID_H
 #define DETDESC_ISOLID_H 1
@@ -10,9 +8,8 @@
 #include  <vector>
 /// Gaudi Kernel
 #include "GaudiKernel/MsgStream.h"
-/// CLHEP
-#include "Kernel/Vector3DTypes.h"
-#include "Kernel/Point3DTypes.h"
+#include "GaudiKernel/Vector3DTypes.h"
+#include "GaudiKernel/Point3DTypes.h"
 
 /// Declaration of the interface ID ( interface id, major & minor versions)
 static const InterfaceID IID_ISolid( "ISolid" , 4 , 1 );

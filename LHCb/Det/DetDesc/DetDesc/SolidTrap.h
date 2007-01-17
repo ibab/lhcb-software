@@ -1,4 +1,4 @@
-// $Id: SolidTrap.h,v 1.14 2005-12-07 13:19:07 cattanem Exp $
+// $Id: SolidTrap.h,v 1.15 2007-01-17 12:10:25 cattanem Exp $
 /// ===========================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
@@ -9,10 +9,10 @@
 #include <cmath>
 #include <iostream> 
 
-/** LHCbDefinitions */
-#include "Kernel/Point3DTypes.h" 
-#include "Kernel/Vector3DTypes.h" 
-#include "Kernel/Plane3DTypes.h" 
+/** Geometry Definitions */
+#include "GaudiKernel/Point3DTypes.h" 
+#include "GaudiKernel/Vector3DTypes.h" 
+#include "GaudiKernel/Plane3DTypes.h" 
 
 /** DetDesc includes */ 
 #include "DetDesc/SolidBase.h" 

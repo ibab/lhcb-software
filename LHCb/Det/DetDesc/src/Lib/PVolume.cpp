@@ -1,16 +1,15 @@
-// $Id: PVolume.cpp,v 1.22 2006-04-20 14:39:56 ranjard Exp $ 
+// $Id: PVolume.cpp,v 1.23 2007-01-17 12:10:29 cattanem Exp $ 
 
-/// GaudiKernel includes 
+// GaudiKernel includes 
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/MsgStream.h" 
 #include "GaudiKernel/SmartDataPtr.h" 
-/// STD & STL includes 
+#include "GaudiKernel/Transform3DTypes.h"
+// STD & STL includes 
 #include <cassert>
 #include <vector>
 #include <algorithm>
-/// CLHEP includes 
-#include "Kernel/Transform3DTypes.h"
-/// DetDesc 
+// DetDesc 
 #include "DetDesc/DetDesc.h"
 #include "DetDesc/PVolume.h"
 #include "DetDesc/PVolumeException.h"

@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.86 2006-12-14 13:03:40 ranjard Exp $ 
+# $Id: requirements,v 1.87 2007-01-17 12:10:27 cattanem Exp $ 
 # =============================================================================
 package       DetDesc
 version       v17r0
@@ -8,7 +8,6 @@ branches      DetDesc doc cmt src
 
 # =========== dependencies ====================================================
 use           GaudiKernel       v*
-use           LHCbDefinitions   v* Kernel
 
 # =========== own includes ====================================================
 apply_pattern install_more_includes more=DetDesc

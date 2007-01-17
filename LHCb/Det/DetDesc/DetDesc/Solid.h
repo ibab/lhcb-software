@@ -1,4 +1,4 @@
-// $Id: Solid.h,v 1.5 2005-12-08 19:20:01 jpalac Exp $
+// $Id: Solid.h,v 1.6 2007-01-17 12:10:15 cattanem Exp $
 /// ===========================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
@@ -7,8 +7,8 @@
 /// STD & STL 
 #include <string>
 #include <functional>
-/// CLHEP 
-#include "Kernel/Point3DTypes.h"
+/// Geometry 
+#include "GaudiKernel/Point3DTypes.h"
 /// DetDesc 
 #include "DetDesc/ISolid.h"
 

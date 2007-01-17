@@ -1,16 +1,13 @@
-// $Id: IGeometryInfo.h,v 1.23 2006-10-10 18:11:20 marcocle Exp $ 
-// ===========================================================================
-// CVS tag $Name: not supported by cvs2svn $
+// $Id: IGeometryInfo.h,v 1.24 2007-01-17 12:10:09 cattanem Exp $ 
 // ===========================================================================
 #ifndef  DETDESC_IGEOMETRYINFO_H
 #define  DETDESC_IGEOMETRYINFO_H 1
 /** GaudiKernel includes */
 #include "GaudiKernel/IInterface.h"
+#include "GaudiKernel/Point3DTypes.h"
+#include "GaudiKernel/Transform3DTypes.h"
 /** STD & STL includes */
 #include <functional>
-/// CLHEP includes 
-#include "Kernel/Point3DTypes.h"
-#include "Kernel/Transform3DTypes.h"
 /// DetDesc include 
 #include "DetDesc/ILVolume.h"
 #include "DetDesc/AlignmentCondition.h"

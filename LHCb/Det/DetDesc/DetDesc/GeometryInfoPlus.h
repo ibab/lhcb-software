@@ -1,4 +1,4 @@
-// $Id: GeometryInfoPlus.h,v 1.3 2006-10-10 16:36:45 jpalac Exp $
+// $Id: GeometryInfoPlus.h,v 1.4 2007-01-17 12:10:08 cattanem Exp $
 #ifndef LIB_GEOMETRYINFOPLUS_H 
 #define LIB_GEOMETRYINFOPLUS_H 1
 
@@ -12,7 +12,6 @@
 #include "GaudiKernel/IMessageSvc.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/StatusCode.h"
-#include "GaudiKernel/DataObject.h"
 /** DetDesc includes */ 
 #include "DetDesc/Services.h"
 #include "DetDesc/ILVolume.h"

@@ -1,14 +1,12 @@
-// $Id: SolidPolyHedronHelper.h,v 1.12 2005-12-08 19:20:01 jpalac Exp $ 
-// ===========================================================================
-// CVS Tag $Name: not supported by cvs2svn $ 
+// $Id: SolidPolyHedronHelper.h,v 1.13 2007-01-17 12:10:24 cattanem Exp $ 
 // ===========================================================================
 #ifndef     DETDESC_SOLIDPOLYHEDRONHELPER_H
 #define     DETDESC_SOLIDPOLYHEDRONHELPER_H 1
 /// STD & STL 
 #include <vector>
-/// CLHEP 
-#include "Kernel/Point3DTypes.h"
-#include "Kernel/Plane3DTypes.h"
+/// Geometry definitions 
+#include "GaudiKernel/Point3DTypes.h"
+#include "GaudiKernel/Plane3DTypes.h"
 /// DetDesc 
 #include "DetDesc/SolidBase.h"
 #include "DetDesc/SolidException.h" 

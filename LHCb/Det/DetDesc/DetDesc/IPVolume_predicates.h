@@ -1,23 +1,13 @@
-// $Id: IPVolume_predicates.h,v 1.6 2005-12-02 18:36:55 jpalac Exp $ 
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.5  2001/11/18 15:32:44  ibelyaev
-//  update for Logical Assemblies
-//
-// Revision 1.4  2001/08/24 12:06:13  ibelyaev
-//  changes to take into account Assembly Volumes
-// 
+// $Id: IPVolume_predicates.h,v 1.7 2007-01-17 12:10:12 cattanem Exp $ 
 // ============================================================================
 #ifndef     DETDESC_IPVOLUME_PREDICATES_H
 #define     DETDESC_IPVOLUME_PREDICATES_H
 // STD & STL 
 #include <iostream>
 #include <functional>
-// CLHEP 
-#include "Kernel/Point3DTypes.h"
-#include "Kernel/Transform3DTypes.h"
+// Geometry definitions 
+#include "GaudiKernel/Point3DTypes.h"
+#include "GaudiKernel/Transform3DTypes.h"
 // DetDesc 
 #include "DetDesc/IPVolume.h"
 #include "DetDesc/ILVolume.h"

@@ -1,10 +1,10 @@
-// $Id: SU2LHCb.h,v 1.3 2006-08-08 14:27:45 jpalac Exp $
+// $Id: SU2LHCb.h,v 1.4 2007-01-17 12:10:15 cattanem Exp $
 #ifndef V16R7_SU2LHCB_H 
 #define V16R7_SU2LHCB_H 1
 
 // Include files
-#include "Kernel/Transform3DTypes.h"
-#include "Kernel/Point3DTypes.h"
+#include "GaudiKernel/Transform3DTypes.h"
+#include "GaudiKernel/Point3DTypes.h"
 #include "GaudiKernel/PhysicalConstants.h"
 /** @namespace DetDesc SU2LHCb.h v16r7/SU2LHCb.h
  *  

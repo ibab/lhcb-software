@@ -1,4 +1,4 @@
-// $Id: IDetectorElement.h,v 1.19 2005-12-07 13:19:07 cattanem Exp $
+// $Id: IDetectorElement.h,v 1.20 2007-01-17 12:10:09 cattanem Exp $
 // $ID:  $
 #ifndef  DETDESC_IDETECTORELEMENT_H 
 #define  DETDESC_IDETECTORELEMENT_H 1
@@ -10,8 +10,7 @@
 // Framework include files
 #include "GaudiKernel/IInterface.h"
 #include "GaudiKernel/SmartRef.h"
-
-#include "Kernel/Point3DTypes.h"
+#include "GaudiKernel/Point3DTypes.h"
 
 // Forward declarations
 class IGeometryInfo;

@@ -1,4 +1,4 @@
-// $Id: SolidTubs.h,v 1.14 2006-05-17 16:02:38 cattanem Exp $
+// $Id: SolidTubs.h,v 1.15 2007-01-17 12:10:26 cattanem Exp $
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
@@ -9,9 +9,9 @@
 #include <iostream>
 // Units
 #include "GaudiKernel/SystemOfUnits.h" 
-// LHCbDefinitions includes 
-#include "Kernel/Point3DTypes.h" 
-#include "Kernel/Vector3DTypes.h"
+// Geometry Definitions includes 
+#include "GaudiKernel/Point3DTypes.h" 
+#include "GaudiKernel/Vector3DTypes.h"
 // DetDesc 
 #include "DetDesc/SolidBase.h" 
 // forward declarations

@@ -1,6 +1,4 @@
-// $Id: ILVolume.h,v 1.11 2005-12-07 13:19:07 cattanem Exp $ 
-// ===========================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
+// $Id: ILVolume.h,v 1.12 2007-01-17 12:10:10 cattanem Exp $ 
 // ===========================================================================
 #ifndef  DETDESC_ILVOLUME_H
 #define  DETDESC_ILVOLUME_H 1 
@@ -10,11 +8,10 @@
 #include <vector> 
 /// GaudiKernel includes 
 #include "GaudiKernel/MsgStream.h"
+#include "GaudiKernel/Point3DTypes.h"
+#include "GaudiKernel/Vector3DTypes.h"
 /// DetDesc includes
 #include "DetDesc/ISolid.h"
-/// CLHEP includes 
-#include "Kernel/Point3DTypes.h"
-#include "Kernel/Vector3DTypes.h"
 
 /// Forward declarations 
 class StatusCode;

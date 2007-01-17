@@ -1,13 +1,13 @@
-// $Id: SolidBox.h,v 1.15 2005-12-08 19:20:01 jpalac Exp $
+// $Id: SolidBox.h,v 1.16 2007-01-17 12:10:17 cattanem Exp $
 // ===========================================================================
 #ifndef     DETDESC_SOLIDBOX_H
 #define     DETDESC_SOLIDBOX_H
 /// STD and STL 
 #include <cmath> 
 #include <iostream> 
-/// LHCbDefinitions 
-#include "Kernel/Point3DTypes.h"
-#include "Kernel/Vector3DTypes.h"
+/// Geometry Definitions 
+#include "GaudiKernel/Point3DTypes.h"
+#include "GaudiKernel/Vector3DTypes.h"
 /// DetDesc 
 #include "DetDesc/SolidBase.h" 
 /// forward declarations

@@ -1,6 +1,4 @@
-// $Id: IPVolume.h,v 1.11 2005-12-07 13:19:07 cattanem Exp $ 
-// ===========================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
+// $Id: IPVolume.h,v 1.12 2007-01-17 12:10:11 cattanem Exp $ 
 // ===========================================================================
 #ifndef  DETDESC_IPVOLUME_H 
 #define  DETDESC_IPVOLUME_H 1 
@@ -9,13 +7,12 @@
 #include <string> 
 /// GaudiKernel includes 
 #include "GaudiKernel/IInterface.h"
+#include "GaudiKernel/Point3DTypes.h"
+#include "GaudiKernel/Vector3DTypes.h"
+#include "GaudiKernel/Transform3DTypes.h"
 /// DetDesc includes
 #include "DetDesc/ILVolume.h"
 #include "DetDesc/ISolid.h"
-/// CLHEP includes 
-#include "Kernel/Point3DTypes.h"
-#include "Kernel/Vector3DTypes.h"
-#include "Kernel/Transform3DTypes.h"
 
 /** Declaration of the interface ID 
  * ( unique interface identifier , major & minor versions)
