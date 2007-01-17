@@ -2,7 +2,7 @@
 # Created    : 2002-12-12
 # Maintainer : Sajan Easo
 #============================================================================
-# $Id: requirements,v 1.46 2007-01-12 15:31:54 ranjard Exp $
+# $Id: requirements,v 1.47 2007-01-17 17:49:13 ranjard Exp $
 #============================================================================
 
 # =============================================================================
@@ -43,4 +43,4 @@ include_dirs     $(GAUSSRICHROOT) \
         
 # ============== standard patterns ===========================================
 apply_pattern    component_library library=GaussRICH
-
+apply_pattern packageOpts

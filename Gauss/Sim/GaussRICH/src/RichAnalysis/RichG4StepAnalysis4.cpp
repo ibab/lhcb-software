@@ -1,4 +1,4 @@
-// $Id: RichG4StepAnalysis4.cpp,v 1.5 2006-02-27 14:10:30 seaso Exp $
+// $Id: RichG4StepAnalysis4.cpp,v 1.6 2007-01-17 17:49:14 ranjard Exp $
 // Include files
 
 
@@ -23,8 +23,8 @@
 #include "GaudiKernel/IHistogramSvc.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/Bootstrap.h"
+#include "GaudiKernel/DeclareFactoryEntries.h"
 // GiGa
-#include "GiGa/GiGaMACROs.h"
 #include <math.h>
 #include "GaussTools/GaussTrackInformation.h"
 
@@ -41,7 +41,7 @@
 //
 // 2003-10-29 : Sajan EASO
 //-----------------------------------------------------------------------------
-IMPLEMENT_GiGaFactory(RichG4StepAnalysis4);
+DECLARE_TOOL_FACTORY(RichG4StepAnalysis4);
 
 //=============================================================================
 // Standard constructor, initializes variables
