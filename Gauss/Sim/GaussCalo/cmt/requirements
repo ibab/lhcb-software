@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.26 2007-01-12 15:24:45 ranjard Exp $ 
+# $Id: requirements,v 1.27 2007-01-17 17:50:45 ranjard Exp $ 
 #============================================================================
 # Created    : 2005-12-08
 # Maintainer : Patrick ROBBE
@@ -36,3 +36,4 @@ library          GaussCalo   *.cpp
 #============================================================================
 apply_pattern    component_library library=GaussCalo
 
+macro_remove constituents "GaussCaloRootMap"

@@ -1,8 +1,11 @@
-// $Id: GiGaCaloHitCnv.cpp,v 1.5 2006-01-17 15:52:57 odescham Exp $
+// $Id: GiGaCaloHitCnv.cpp,v 1.6 2007-01-17 17:50:49 ranjard Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2006/01/17 15:52:57  odescham
+// v8r0 - Adapt to new Event Model & LHCb v20 migration
+//
 // Revision 1.4  2004/01/14 13:38:10  ranjard
 // v6r0 - fix to be used with Gaudi v14r0
 //
@@ -59,8 +62,9 @@
  *  declaration of Converter Factory
  */
 // ============================================================================
-static const  CnvFactory<GiGaCaloHitCnv>         s_Factory ;
-const        ICnvFactory&GiGaCaloHitCnvFactory = s_Factory ;
+
+DECLARE_CONVERTER_FACTORY( GiGaCaloHitCnv );
+
 // ============================================================================
 
 // ============================================================================
