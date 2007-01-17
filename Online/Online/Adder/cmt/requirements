@@ -1,11 +1,11 @@
 package Adder
-version v1r0
+version v1r1
 
-branches cmt doc src Adder
+branches cmt doc src
 
 include_dirs $(ADDERROOT)
 
-use GaudiKernel v*
+use GaudiKernel v* /afs/cern.ch/user/e/evh/w0/cmtuser/GaudiKernel
 use GaudiAlg v*
 use AIDA v* LCG_Interfaces
 use ROOT v* LCG_Interfaces
@@ -15,7 +15,6 @@ use OnlineKernel v* Online
 use Gaucho v* Online
 use GaudiAud v*
 
-document intall_includes intall_includes
 library Adder ../src/Adder_dll.cpp ../src/Adder_load.cpp ../src/Adder.cpp ../src/Adder.h  ../src/DimInfoHistos.cpp
 
 apply_pattern component_library library=Adder
