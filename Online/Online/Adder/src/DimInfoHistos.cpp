@@ -84,7 +84,7 @@ void DimInfoHistos::infoHandler()
     } 
     
 	}
-	if(( 0 == m_hist )&(0==m_hist2d)) {
+    if ((( 0 == m_hist )&(0==m_hist2d))&(0==m_histp)) {
     std::cerr << "DimInfoHistos(" << m_histoname << "): Unable to create root histogram"  << std::endl;
     exit(3);
 	}
