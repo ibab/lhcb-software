@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDB.h,v 1.1.1.1 2007-01-16 15:18:12 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDB.h,v 1.2 2007-01-17 15:30:02 ggiacomo Exp $
 #ifndef ONLINEHISTDB_H
 #define ONLINEHISTDB_H 1
 /** @class  OnlineHistDB OnlineHistDB.h OnlineHistDB/OnlineHistDB.h
@@ -88,7 +88,7 @@ class  OnlineHistDB : public OnlineHistDBEnv
   Statement *m_stmt;
   int m_nit;
   int m_maxNit;
-  const int m_maxSNsize;
+  int m_maxSNsize;
   int m_debug;
   std::vector<OnlineHistPage*> m_myPage;
   std::vector<OnlineHistogram*> m_myHist;

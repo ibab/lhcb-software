@@ -1,10 +1,11 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistogram.cpp,v 1.1.1.1 2007-01-16 15:18:12 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistogram.cpp,v 1.2 2007-01-17 15:30:02 ggiacomo Exp $
 /*
    C++ interface to the Online Monitoring Histogram DB
    G. Graziani (INFN Firenze)
 
 */
 
+#include <math.h>
 #include "OnlineHistDB/OnlineHistogram.h"
 
 OnlineHistogram::OnlineHistogram(std::string Name,
