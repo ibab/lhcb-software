@@ -1,4 +1,4 @@
-// $Id: TsaSeedTrackCnv.cpp,v 1.8 2006-12-06 14:35:01 mneedham Exp $
+// $Id: TsaSeedTrackCnv.cpp,v 1.9 2007-01-17 17:47:55 cattanem Exp $
 //
 // This File contains the implementation of the TsaEff
 // C++ code for 'LHCb Tracking package(s)'
@@ -181,7 +181,10 @@ void TsaSeedTrackCnv::addState(const SeedTrack* aTrack, LHCb::Track* lTrack, con
     }
   }
   else {
-    m_ptKickTool->calculate(&aState);
+    StatusCode sc = m_ptKickTool->calculate(&aState);
+    if( sc.isFailure() ) {
+      Warning( "Pt Kick tool failed, but still adding State" );
+    }
   }
 
   // add to states

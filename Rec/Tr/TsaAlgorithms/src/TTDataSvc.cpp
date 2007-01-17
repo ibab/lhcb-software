@@ -47,7 +47,7 @@ StatusCode TTDataSvc::initialize() {
   return StatusCode::SUCCESS;
 }
 
-StatusCode TTDataSvc::initPartitions()  {
+void TTDataSvc::initPartitions()  {
 
   // Intialize partitions vector 
   int vectorSize = 0;
@@ -83,7 +83,7 @@ StatusCode TTDataSvc::initPartitions()  {
  m_nPartitions = vectorSize;
  m_iterVector.resize(m_nPartitions);
  
- return StatusCode::SUCCESS;
+ return;
 }
 
 StatusCode TTDataSvc::initializeEvent(){

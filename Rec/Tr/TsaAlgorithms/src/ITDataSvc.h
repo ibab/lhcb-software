@@ -1,4 +1,4 @@
-// $Id: ITDataSvc.h,v 1.8 2006-12-06 14:35:00 mneedham Exp $
+// $Id: ITDataSvc.h,v 1.9 2007-01-17 17:47:54 cattanem Exp $
 #ifndef _ITDataSvc_H
 #define _ITDataSvc_H
 
@@ -52,7 +52,7 @@ public:
 
 private:
 
-  StatusCode initPartitions();
+  void initPartitions();
 
   int offSet(const int& iStation, const int& iLayer) const;
 

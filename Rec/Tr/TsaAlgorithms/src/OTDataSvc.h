@@ -1,4 +1,4 @@
-// $Id: OTDataSvc.h,v 1.7 2006-12-06 14:35:00 mneedham Exp $
+// $Id: OTDataSvc.h,v 1.8 2007-01-17 17:47:54 cattanem Exp $
 #ifndef _OTDataSvc_H
 #define _OTDataSvc_H
 
@@ -53,7 +53,7 @@ public:
 
 private:
 
-  StatusCode initPartitions();
+  void initPartitions();
 
   unsigned int nModulesInPartition(const int& iStation, const int& iLayer) const;
   unsigned int lastQuad(const int& iStation, const int& iLayer) const;

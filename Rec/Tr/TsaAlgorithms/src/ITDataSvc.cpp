@@ -44,7 +44,7 @@ StatusCode ITDataSvc::initialize() {
   return StatusCode::SUCCESS;
 }
 
-StatusCode ITDataSvc::initPartitions()  {
+void ITDataSvc::initPartitions()  {
 
  // Intialize partitions vector 
  DeSTDetector::Sectors tSectors = m_tracker->sectors();
@@ -73,7 +73,7 @@ StatusCode ITDataSvc::initPartitions()  {
  m_partitionsPerLayer = m_partitionsPerStation/nBox;    
  m_sectorsPerPartition = tSectors.size()/m_nPartitions;
 
- return StatusCode::SUCCESS;
+ return;
 }
 
 StatusCode ITDataSvc::initializeEvent(){

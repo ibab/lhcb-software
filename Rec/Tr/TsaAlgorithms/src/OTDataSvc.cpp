@@ -53,7 +53,7 @@ StatusCode OTDataSvc::initialize() {
   return StatusCode::SUCCESS;
 }
 
-StatusCode OTDataSvc::initPartitions()  {
+void OTDataSvc::initPartitions()  {
 
  // Intialize partitions vector 
  int vectorSize = 0;
@@ -81,7 +81,7 @@ StatusCode OTDataSvc::initPartitions()  {
  m_iterVector.resize(vectorSize); 
  m_partitionsPerStation = vectorSize/(m_tracker->nStation()-m_firstStation+1);  
  
- return StatusCode::SUCCESS;
+ return;
 }
 
 StatusCode OTDataSvc::initializeEvent(){

@@ -1,4 +1,4 @@
-// $Id: TTDataSvc.h,v 1.5 2006-12-06 14:35:00 mneedham Exp $
+// $Id: TTDataSvc.h,v 1.6 2007-01-17 17:47:55 cattanem Exp $
 #ifndef _TTDataSvc_H
 #define _TTDataSvc_H
 
@@ -50,7 +50,7 @@ public:
 private:
 
  
-  StatusCode initPartitions();
+  void initPartitions();
   int offSet(const int& iStation, const int& iLayer) const;
 
   std::vector<Tsa::STRange> m_iterVector; 
