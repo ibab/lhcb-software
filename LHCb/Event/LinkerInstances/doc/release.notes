@@ -2,6 +2,9 @@ Package LinkerInstances
 Package manager: T.Ruf
 Purpose: Creates dictionaries for the use of Linker relations in Python
 
+! 2007-01-16 - Thomas Ruf
+ - added support for CaloDigit linker table
+
 !===================== LinkerInstances v3r2 2007-01-11 ========================
 ! 2007-01-08 - Thomas Ruf
  - added support for MuonDigit linker table
