@@ -29,19 +29,19 @@ name:
 
    H1D/node00101_Moore_1/Algorithmname/Mass
    
-The added "Mass" histogram will be published in a DIM service with name (provided the UTGID
+The added "Algorithmname/Mass" histogram will be published in a DIM service with name (provided the UTGID
 environment variable is set to "node00101_Adder_1"):
 
-   H1D/node00101_Adder_1/Adder/Summed_Mass   
+   H1D/node00101_Adder_1/Adder/Summed_Algorithmname/Mass   
 
 To add the summed histograms of a subfarm, the UTGID should be set to node001_Adder_1. The name of the
 DIM service containing the sum of the sums is set to 
 
-   H1D/node001_Adder_1/Adder/Summed_Mass
+   H1D/node001_Adder_1/Adder/Summed_Algorithmname/Mass
    
 One can continue adding the sums at the level of the entire farm in a similar way:
 
-   H1D/node_Adder_1/Adder/Summed_Mass
+   H1D/node_Adder_1/Adder/Summed_Algorithmname/Mass
 
 The configuration is done via joboptions:
 
@@ -55,7 +55,9 @@ to "node" (and the UTGID to node_Adder_1).
 
 - histogramname : This is a vector of strings containing the names of the
 histograms that have to be added. Constraint: if a name is already used for a 1D histogram,
-it can not be used for a 2D histogram and vice versa.
+it can not be used for a 2D histogram and vice versa. To preserve unicity, the
+histogramname should contain the Algorithmname, e.g.
+histogramname=Algorithmname/Histogramname. 
 
 - refreshtime : This is the time interval with which the sums are
 calculated.

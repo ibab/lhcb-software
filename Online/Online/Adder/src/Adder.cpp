@@ -63,6 +63,7 @@ Adder::Adder(const std::string& name, ISvcLocator* ploc)
   m_refreshtime(10),m_dimclientdns(){
   declareProperty("nodename",m_nodename);
   declareProperty("histogramname",m_histogramname);
+  declareProperty("algorithmname",m_algorithmname);
   declareProperty("refreshtime",m_refreshtime);
   declareProperty("dimclientdns",m_dimclientdns);
   }
@@ -80,7 +81,7 @@ StatusCode Adder::initialize() {
   }
 
   msg << MSG::DEBUG << "Looking for " << m_histogramname.size() << " histograms." << endreq;
-
+  counter=0;
   return StatusCode::SUCCESS;
 }
 
@@ -93,9 +94,6 @@ StatusCode Adder::execute() {
   char *service; 
   char *format;
   int type;
-  int icount;
-  int icount2d;
-  int icountp;
   int h2dsize;
   int hsize;
   int psize;
@@ -118,62 +116,63 @@ StatusCode Adder::execute() {
   std::vector<rootpart*> base;
   std::vector<rootpart2d*> base2d;
   std::vector<rootpartp*> basep;
-  
+  counter++;
+
   for (int j=0; j<= (int)m_histogramname.size()-1;j++) {
      //j counts the histograms
      std::vector<TH1*> hist;
      std::vector<TH2*> hist2d;
      std::vector<TProfile*> histp;
-     hSvcnames="H1D/"+m_nodename+"*/"+m_histogramname[j];
-     hSvcnames2d="H2D/"+m_nodename+"*/"+m_histogramname[j];
-     pSvcnames="HPD/"+m_nodename+"*/"+m_histogramname[j];
+     hSvcnames="H1D/"+m_nodename+"*/"+m_algorithmname[j]+"/"+m_histogramname[j];
+     hSvcnames2d="H2D/"+m_nodename+"*/"+m_algorithmname[j]+"/"+m_histogramname[j];
+     pSvcnames="HPD/"+m_nodename+"*/"+m_algorithmname[j]+"/"+m_histogramname[j];
      
      DimClient::setDnsNode(m_dimclientdns.c_str());
-  
-  
-     DimBrowser dbr;  
-     icount = 0;
-     icount2d = 0;
-     icountp = 0;
-     int jindex=0;
-      // icount is the number of tasks publishing histogram nr j
-     while ((( icount==0 )|(icount2d==0))|(icountp==0))
+     int jindex=0; 
+ //    if (counter == 1) {
+        DimBrowser dbr;  
+        icount = 0;
+        icount2d = 0;
+        icountp = 0;
+
+        // icount is the number of tasks publishing histogram nr j
+        while ((( icount==0 )|(icount2d==0))|(icountp==0))
         {
-        //look for the services at each iteration of eventloop - task may have died
-        msg << MSG::DEBUG << "Looking for hSvcname: " << hSvcnames.c_str() << endreq;     
-        dbr.getServices(hSvcnames.c_str());
-        hSvcname.clear();
-        while( (type = dbr.getNextService(service, format)) )
+           //look for the services at each iteration of eventloop - task may have died
+           msg << MSG::DEBUG << "Looking for hSvcname: " << hSvcnames.c_str() << endreq;     
+           dbr.getServices(hSvcnames.c_str());
+           hSvcname.clear();
+           while( (type = dbr.getNextService(service, format)) )
            { 
-           servicestr=service;
-	   std::string::size_type loc=servicestr.find("H1D/"+m_nodename+"_Adder_",0);
-	   if (loc == std::string::npos ) {
-	      hSvcname.push_back(servicestr);
-              msg << MSG::DEBUG << "Found service: " << servicestr << endreq;     
-	      icount++;
+              servicestr=service;
+	      std::string::size_type loc=servicestr.find("H1D/"+m_nodename+"_Adder_",0);
+	      if (loc == std::string::npos ) {
+	         hSvcname.push_back(servicestr);
+                 msg << MSG::DEBUG << "Found service: " << servicestr << endreq;     
+	         icount++;
 	      }
 	   }   
-	if (icount==0) {
-           msg << MSG::DEBUG << "Looking for hSvcname2d: " << hSvcnames2d.c_str() << endreq;     
-           dbr.getServices(hSvcnames2d.c_str());
-           hSvcname2d.clear();
+	   if (icount==0) {
+              msg << MSG::DEBUG << "Looking for hSvcname2d: " << hSvcnames2d.c_str() << endreq;     
+              dbr.getServices(hSvcnames2d.c_str());
+              hSvcname2d.clear();
 
-           while( (type = dbr.getNextService(service, format)) )
+              while( (type = dbr.getNextService(service, format)) )
               { 	
-	      servicestr=service;
-	      std::string::size_type loc2d=servicestr.find("H2D/"+m_nodename+"_Adder_",0);
+	         servicestr=service;
+	         std::string::size_type loc2d=servicestr.find("H2D/"+m_nodename+"_Adder_",0);
 	         if (loc2d == std::string::npos ) {
 	            hSvcname2d.push_back(servicestr);
                     msg << MSG::DEBUG << "Found 2D service: " << servicestr << endreq;   
   	            icount2d++;
 	         }
 	      }  
-	   if (icount2d==0) {
-              msg << MSG::DEBUG << "Looking for pSvcname: " << pSvcnames.c_str() << endreq;     
-              dbr.getServices(pSvcnames.c_str());
-              pSvcname.clear();
+	      if (icount2d==0) {
+                 msg << MSG::DEBUG << "Looking for pSvcname: " << pSvcnames.c_str() << endreq;     
+                 dbr.getServices(pSvcnames.c_str());
+                 pSvcname.clear();
 
-              while( (type = dbr.getNextService(service, format)) )
+                 while( (type = dbr.getNextService(service, format)) )
                  { 	
 	         servicestr=service;
 	         std::string::size_type locp=servicestr.find("HPD/"+m_nodename+"_Adder_",0);
@@ -183,27 +182,35 @@ StatusCode Adder::execute() {
   	               icountp++;
 	            }
 	         } 
-	   } 
-	}        
-        if (((icount>1)|(icount2d>1))|(icountp>1)) break;      
-        else lib_rtl_sleep(m_refreshtime*1000);
-     }  
-	     
+	      } 
+	   }        
+           if (((icount>1)|(icount2d>1))|(icountp>1)) break;      
+           else lib_rtl_sleep(m_refreshtime*1000);
+        }  
+  //   }	
+  //   msg << MSG::DEBUG << "hinfo.size: " << hinfo.size() << endreq;     
+     
      DimInfoHistos * temp;
      hinfo.clear();
      for (int i=0;i<=icount-1;i++) {
         temp = new DimInfoHistos(hSvcname[i],m_refreshtime);
         hinfo.push_back(temp);
+	msg << MSG::DEBUG << "Created Root object: " << hSvcname[i] << endreq;     
+
      }
      hinfo2d.clear();
      for (int i=0;i<=icount2d-1;i++) {
         temp = new DimInfoHistos(hSvcname2d[i],m_refreshtime);
         hinfo2d.push_back(temp);
+	msg << MSG::DEBUG << "Created Root object: " << hSvcname2d[i] << endreq;     
+
      }
      pinfo.clear();
      for (int i=0;i<=icountp-1;i++) {
         temp = new DimInfoHistos(pSvcname[i],m_refreshtime);
         pinfo.push_back(temp);
+	msg << MSG::DEBUG << "Created Root object: " << pSvcname[i] << endreq;     
+
      }
 
      // convert DIM buffer to ROOT
@@ -213,10 +220,14 @@ StatusCode Adder::execute() {
         TH1* hist1=0;
         int ntries=0;
         while (1)
-           {
-           hist1=0;
+        {
+     //      msg << MSG::DEBUG << "loop executed " << ntries << " times." << endreq;
+ 
+	   hist1=0;
 
 	   hist1= hinfo[i]->getHisto();
+	//    msg << MSG::DEBUG << "hist1 "<< hist1 << endreq;   
+
            if (hist1 != 0) {
 	      msg << MSG::DEBUG << "Histogram "<< hist1->GetTitle() << " found." << endreq;   
 	      hist.push_back(hist1);		 
@@ -225,14 +236,14 @@ StatusCode Adder::execute() {
            ntries++;
 	   msg << MSG::DEBUG << "No histogram found after " << ntries << " attempts." << endreq;
            if(ntries==10) break;
-           lib_rtl_sleep(m_refreshtime*500); 
+           lib_rtl_sleep(m_refreshtime*1000); 
         } 
      } 
      for (int i=0;i<=icount2d-1;i++) {
         TH2* hist1=0;
         int ntries=0;         
         while (1)
-           {
+        {
            hist1=0;
 
 	   hist1= hinfo2d[i]->get2DHisto();
@@ -244,7 +255,7 @@ StatusCode Adder::execute() {
            ntries++;
 	   msg << MSG::DEBUG << "No histogram found after " << ntries << " attempts." << endreq;
            if(ntries==10) break;
-           lib_rtl_sleep(m_refreshtime*500); 
+           lib_rtl_sleep(m_refreshtime*1000); 
         } 
      }   
      for (int i=0;i<=icountp-1;i++) {
@@ -263,7 +274,7 @@ StatusCode Adder::execute() {
            ntries++;
 	   msg << MSG::DEBUG << "No histogram found after " << ntries << " attempts." << endreq;
            if(ntries==10) break;
-           lib_rtl_sleep(m_refreshtime*500); 
+           lib_rtl_sleep(m_refreshtime*1000); 
         } 
      } 
      std::string title;
@@ -296,15 +307,15 @@ StatusCode Adder::execute() {
         yupperEdge = (hist2d[1]->GetYaxis() )->GetXmax(); 
      }
      if (icountp>0) {
-        titlep = hist[1]->GetTitle(); 
-        numberOfBinsX = hist[1]->GetNbinsX();
-        axis = hist[1]->GetXaxis(); 
-   	lowerEdge = (hist[1]->GetXaxis() )->GetXmin(); 
-        upperEdge = (hist[1]->GetXaxis() )->GetXmax(); 
+        titlep = histp[1]->GetTitle(); 
+        numberOfBinsX = histp[1]->GetNbinsX();
+        axis = histp[1]->GetXaxis(); 
+   	lowerEdge = (histp[1]->GetXaxis() )->GetXmin(); 
+        upperEdge = (histp[1]->GetXaxis() )->GetXmax(); 
      }		
  
      //check if the summed histogram was already booked, ie has an entry on the transient store
- 
+
      std::string  m_rootName;
      SmartDataPtr<DataObject> root(histoSvc,m_rootName);
      std::string store_name = "Unknown";
@@ -319,17 +330,17 @@ StatusCode Adder::execute() {
      pObj=root->registry();
      bool booked = false;	     	    	    
      SmartIF<IDataManagerSvc> mgr(histoSvc);
-     if ( mgr )    {
+     if ( mgr )    {      
         typedef std::vector<IRegistry*> Leaves;
         Leaves leaves;
         StatusCode sc = mgr->objectLeaves(pObj, leaves);
         if ( sc.isSuccess() )  {
-         //  msg << MSG::INFO << "Found leaves. "  << endreq;
+	   msg << MSG::DEBUG << "Leaves found. " << endreq;
            for ( Leaves::const_iterator i=leaves.begin(); 
               i != leaves.end(); i++ )   {
               const std::string& id = (*i)->identifier();
               msg << MSG::DEBUG << "Histogram found on TES with id " << id  <<endreq;
-	      if (id=="/stat/adder"+m_histogramname[j]) booked = true;
+	      if (id=="/stat/adder"+m_algorithmname[j]+m_histogramname[j]) booked = true;
            }
         }  
      } 
@@ -350,8 +361,8 @@ StatusCode Adder::execute() {
 	   else {
 	      hsize=h.size();
 	   } 
-	   h.push_back(histoSvc->book("/stat/adder"+m_histogramname[j],j, m_histogramname[j], numberOfBinsX,lowerEdge, upperEdge));
-           declareInfo("Summed_"+m_histogramname[j],h[hsize],"Summed_"+m_histogramname[j]);
+	   h.push_back(histoSvc->book("/stat/adder"+m_algorithmname[j]+m_histogramname[j],j, m_histogramname[j], numberOfBinsX,lowerEdge, upperEdge));
+           declareInfo("Summed_"+m_algorithmname[j]+"/"+m_histogramname[j],h[hsize],"Summed_"+m_algorithmname[j]+"/"+m_histogramname[j]);
            base.push_back(dynamic_cast<rootpart*>(h[hsize]));    
            if ( ! base[hsize] ) { 
               msg << MSG::ERROR << "Dynamic cast failed to get root part of aida h"  << endreq;       
@@ -374,8 +385,8 @@ StatusCode Adder::execute() {
 	   else {
 	      h2dsize=h2d.size();
 	   } 
-	   h2d.push_back(histoSvc->book("/stat/adder"+m_histogramname[j],j,m_histogramname[j], numberOfBinsX,lowerEdge, upperEdge, numberOfBinsY,ylowerEdge, yupperEdge));
-	   declareInfo("Summed_"+m_histogramname[j],h2d[h2dsize],"Summed_"+m_histogramname[j]);
+	   h2d.push_back(histoSvc->book("/stat/adder"+m_algorithmname[j]+m_histogramname[j],j,m_histogramname[j], numberOfBinsX,lowerEdge, upperEdge, numberOfBinsY,ylowerEdge, yupperEdge));
+	   declareInfo("Summed_"+m_algorithmname[j]+"/"+m_histogramname[j],h2d[h2dsize],"Summed_"+m_algorithmname[j]+"/"+m_histogramname[j]);
            base2d.push_back(dynamic_cast<rootpart2d*>(h2d[h2dsize]));    
            if ( ! base2d[h2dsize] ) { 
               msg << MSG::ERROR << "Dynamic cast failed to get root part of aida h2d"  << endreq;       
@@ -397,10 +408,11 @@ StatusCode Adder::execute() {
 	   else {
 	      psize=p.size();
 	   } 
-	   p.push_back(histoSvc->bookProf("/stat/adder"+m_histogramname[j],j, m_histogramname[j], numberOfBinsX,lowerEdge, upperEdge));
-           declareInfo("Summed_"+m_histogramname[j],p[psize],"Summed_"+m_histogramname[j]);
+
+	   p.push_back(histoSvc->bookProf("/stat/adder"+m_algorithmname[j]+m_histogramname[j],j, m_histogramname[j], numberOfBinsX,lowerEdge, upperEdge));
+	   declareInfo("Summed_"+m_algorithmname[j]+"/"+m_histogramname[j],p[psize],"Summed_"+m_algorithmname[j]+"/"+m_histogramname[j]);
            basep.push_back(dynamic_cast<rootpartp*>(p[psize]));    
-           if ( ! base[psize] ) { 
+           if ( ! basep[psize] ) { 
               msg << MSG::ERROR << "Dynamic cast failed to get root part of aida p"  << endreq;       
 	   }
            // representation gives us now the ROOT part of p[psize]
@@ -411,6 +423,7 @@ StatusCode Adder::execute() {
 	   }
 	   jpD.push_back(j);
 
+           msg << MSG::DEBUG << "histogram booked "  << m_histogramname[j] << endreq;       
 
 	 } 
 

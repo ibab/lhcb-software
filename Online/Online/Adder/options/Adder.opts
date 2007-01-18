@@ -19,5 +19,6 @@ ApplicationMgr.EvtSel   = "NONE"; // do not use any event input
 
 Adder.nodename="node00101";
 Adder.histogramname={"Mass","xyPositionPlot","eventtype","xyProfile"};
-Adder.refreshtime=10;
+Adder.algorithmname={"GaudiExample","GaudiExample","GaudiExample","GaudiExample"};
+Adder.refreshtime=5;
 Adder.dimclientdns="pclhcb11.cern.ch";

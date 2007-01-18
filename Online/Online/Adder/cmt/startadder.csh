@@ -27,4 +27,4 @@ GaudiOnline \
 -runable=LHCb::OnlineRunable \
 -options=/afs/cern.ch/user/e/evh/w0/cmtuser/Online/Adder/v1r0/options/Adder.opts \
 -msgsvc=MessageSvc \
--loop
+-loop -auto

@@ -46,12 +46,17 @@ private:
   
   std::string m_nodename; 
   std::vector<std::string> m_histogramname; 
+  std::vector<std::string> m_algorithmname; 
   int m_refreshtime;
-  std::string m_dimclientdns;
-  
+  std::string m_dimclientdns; 
   std::vector<int> j1D;
   std::vector<int> j2D;
   std::vector<int> jpD;
+  
+  int counter;
+  int icount;
+  int icount2d;
+  int icountp;
 };
 
 #endif    // Adder_Adder_H

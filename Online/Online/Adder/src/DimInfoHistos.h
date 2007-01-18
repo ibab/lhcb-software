@@ -1,5 +1,8 @@
 #include "dic.hxx"
 #include <string>
+#include "TH1.h"
+#include "TH2.h"
+#include "TProfile.h"
 
 //forward declaration
 class TH1;
