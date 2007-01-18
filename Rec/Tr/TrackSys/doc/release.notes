@@ -4,6 +4,23 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+!============================ TrackSys v4r0 2007-01-18 ======================
+! 2007-01-18 - Marco Cattaneo
+ - In RecoTracking.opts, introduce a "Track" process phase with Pat, PreFit and
+   Fit sequences for each track type, update other options files accordingly
+ - Modify NoFieldTracking.opt to have only options needed in addition to those
+   defined in RecoTracking.opts. Now this file should be included in addition
+   (and *after*) RecoTracking.opts to configure tracking for no magnetic field
+ - Remove TsaNoField.opts, contents moved to NoFieldTracking.opts
+ - Remove TrackLoad.opts since ApplicationMgr.DLLs options are no longer needed
+   with Gaudi v19r*
+
+! 2007-01-16 - Matt Needham
+ - Add NoFieldTracking.opts, and TsaNoField.opts
+
+! 2007-01-08 - Marco Cattaneo
+ - Update requirements to Gaudi v19r0 compatible versions
+
 !============================ TrackSys v3r6 2006-11-07 ======================
 ! 2006-11-07 - Marco Cattaneo for Mariusz Witek
  - Move VeloTT after Forward and Match in RecoTracking.opts

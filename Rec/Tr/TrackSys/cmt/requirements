@@ -3,7 +3,7 @@
 # Maintainer : Eduardo Rodrigues
 #============================================================================
 package           TrackSys
-version           v3r6
+version           v4r0
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -12,11 +12,11 @@ include_path      none
 
 # Used packages
 #============================================================================
-use   TrackEvent           v3r*    Event
-use   TrackFitEvent        v2r*    Tr
+use   TrackEvent           v4r*    Event
+use   TrackFitEvent        v3r*    Tr
 
-use   TrackMCInterfaces    v1r*    Tr
-use   TrackInterfaces      v2r*    Tr
+use   TrackMCInterfaces    v2r*    Tr
+use   TrackInterfaces      v3r*    Tr
 
 use   TrackExtrapolators   v2r*    Tr
 use   TrackProjectors      v2r*    Tr
@@ -27,8 +27,8 @@ use   TrackFitter          v2r*    Tr
 
 use   TrackUtils           v1r*    Tr
 
-use   TsaKernel            v1r*    Tr
-use   TsaAlgorithms        v1r*    Tr
+use   TsaKernel            v2r*    Tr
+use   TsaAlgorithms        v2r*    Tr
 use   TrackSeeding         v1r*    Tr
 use   TrackMatching        v2r*    Tr
 

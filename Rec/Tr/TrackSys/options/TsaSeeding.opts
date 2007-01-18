@@ -1,11 +1,11 @@
 // Seeding algorithm from Roger Forty
 // ----------------------------------
 // Seed pattern
-RecoTrSeq.Members += { "TsaOTClusterCreator", "TsaSTClusterCreator", 
-                       "TsaInitialization" ,"TsaSeed", "TsaSeedTrackCnv" };
+TrackSeedPatSeq.Members += { "TsaOTClusterCreator", "TsaSTClusterCreator", 
+                             "TsaInitialization" ,"TsaSeed", "TsaSeedTrackCnv" };
 
 // Seed fit
-RecoTrSeq.Members += { "TrackEventFitter/FitTsaSeed" };
+TrackSeedFitSeq.Members += { "TrackEventFitter/FitTsaSeed" };
 FitTsaSeed.TracksInContainer      = "Rec/Track/Tsa"; 
 FitTsaSeed.Fitter.ZPositions      = { 7500.0, 9450.0, 11900.0 };
 FitTsaSeed.Fitter.StateAtBeamLine = false;
