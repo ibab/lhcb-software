@@ -18,7 +18,7 @@ ApplicationMgr.EvtMax    = -1;   // events to be processed (default is 10)
 ApplicationMgr.EvtSel   = "NONE"; // do not use any event input
 
 Saver.nodename="node00101";
-Saver.histogramname={"Summed Mass","Summed xyPositionPlot","Summed eventtype"};
+Saver.histogramname={"Summed_Mass","Summed_xyPositionPlot","Summed_eventtype","Summed_xyProfile"};
 Saver.dimclientdns="pclhcb11.cern.ch";
 Saver.taskname="test";
 Saver.savedir="~/w0";

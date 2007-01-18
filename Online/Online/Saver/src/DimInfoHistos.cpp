@@ -15,7 +15,7 @@ namespace win {
 //constructor
 DimInfoHistos::DimInfoHistos(std::string hSvcname, int refreshTime)
   : DimInfo((hSvcname).c_str(),refreshTime,-1.0),
-    m_hist(0),m_hist2d(0),m_dimension(0),m_data(0),m_hasData(false){
+    m_hist(0),m_hist2d(0),m_histp(0),m_dimension(0),m_data(0),m_hasData(false){
 //  std::cerr << "DimInfoHistos constructor called "<< hSvcname.c_str() 
 //            << " refresh time: " << refreshTime << " seconds" << std::endl;
   m_rtime=refreshTime;
@@ -58,12 +58,12 @@ void DimInfoHistos::infoHandler()
 //    std::cerr << "DimInfoHistos(" << m_histoname << "): i = " << i 
 //              << " data[i] = " << m_data[i] << std::endl;
 //  	}
-  if( m_dimension != m_data[0] ){
-    std::cerr 
-      << "DimInfoHistos(" << m_histoname << "): Conflicting histogram dimensions. From DimService dim= " 
-      << m_data[0] << std::endl;
-    exit(2);
-  }
+//  if( m_dimension != m_data[0] ){
+//    std::cerr 
+//      << "DimInfoHistos(" << m_histoname << "): Conflicting histogram dimensions. From DimService dim= " 
+//      << m_data[0] << std::endl;
+//    exit(2);
+//  }
   // Initialize histos
   if((( 0 == m_hist )&(0==m_hist2d))&(0==m_histp)) {
     if( 1 == m_dimension ) {
@@ -188,8 +188,14 @@ void DimInfoHistos::setHPData(){
   int nofbins = m_histp->GetNbinsX();
   int iData=5;
   for (int i=0;i<=nofbins+1;i++) {
-    m_histp->SetBinContent(i,m_data[iData++]);
+    for (int i=0;i<=nofbins+1;i++) {
+    m_histp->SetBinEntries(i,m_data[iData++]);
 //    std::cerr << "DimInfoHistos(" << m_histoname << "), setHPData: entries: index in DimInfo data: "
+//              << iData-1 << " value: " << m_data[iData-1] << std::endl;
+  }
+  
+    m_histp->SetBinContent(i,m_data[iData++]);
+//    std::cerr << "DimInfoHistos(" << m_histoname << "), setHPData: content: index in DimInfo data: "
 //              << iData-1 << " value: " << m_data[iData-1] << std::endl;
   }
   
@@ -201,7 +207,7 @@ void DimInfoHistos::setHPData(){
   // Debug: Check the root histo just filled
 //  for (int i=0;i<=nofbins+1;i++) {
 //    std::cerr << "DimInfoHistos(" << m_histoname << "), setHPData: Root histo content: bin: " << i 
-//              << " entries: " << m_histp->GetBinContent(i) << " error: " << m_histp->GetBinError(i) << std::endl;
+//              << " entries: " << m_histp->GetBinEntries(i) << " content " << m_histp->GetBinContent(i) << " error: " << m_histp->GetBinError(i) << std::endl;
 //  }   
   m_hasData=true;
 }
