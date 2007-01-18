@@ -270,10 +270,10 @@ exception
  if mysn%NOTFOUND then -- if service name is known, do nothing
   savepoint beforeDHwrite;
   -- decode service name
-  dimension := REGEXP_REPLACE(ServiceName,'^H(.)D.*$','\1');
-  tk := REGEXP_REPLACE(ServiceName,'^.*_(.*)_.*/.*/.*$','\1');
-  algo := REGEXP_REPLACE(ServiceName,'^.*/(.*)/.*$','\1');
-  title := REGEXP_REPLACE(ServiceName,'^.*/.*/(.*)$','\1');
+  dimension := REGEXP_REPLACE(ServiceName,'^H(.)D/.*$','\1');
+  tk := REGEXP_REPLACE(ServiceName,'^H.D/.*_(.*)_.*/.*/.*$','\1');
+  algo := REGEXP_REPLACE(ServiceName,'^H.D/.*/(.*)/.*$','\1');
+  title := REGEXP_REPLACE(ServiceName,'^H.D/.*/.*/(.*)$','\1');
   if (INSTR(title,'_$$_') != 0) then
     hstitle :=  REGEXP_REPLACE(title,'^(.*)_\$\$_.*$','\1');
     subtitle :=  REGEXP_REPLACE(title,'^.*_\$\$_(.*)$','\1');
@@ -283,11 +283,10 @@ exception
   end if;
 
   -- see if histogram exists
-  DBMS_OUTPUT.PUT_LINE('histo e'' ___'||tk||'/'||algo||'/'||hstitle||'_$$_'||subtitle||'___');
+   --  DBMS_OUTPUT.PUT_LINE('histo e'' ___'||tk||'/'||algo||'/'||hstitle||'_$$_'||subtitle||'___');
   open myh(subtitle,hstitle,algo,tk);
   fetch myh into myhid,myhsid,myhstype;
   if myh%NOTFOUND then -- see if histogram set exists
-   DBMS_OUTPUT.PUT_LINE('sono qua');
    open myhs(hstitle,algo,tk);
    fetch myhs into myhsid,mynhs,mynana;
    if myhs%NOTFOUND then -- check that task exists

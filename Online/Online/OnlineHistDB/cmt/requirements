@@ -3,7 +3,7 @@
 # Maintainer : Giacomo Graziani 
 # =============================================================================
 package             OnlineHistDB
-version             v1r0
+version             v1r1
 
 branches            cmt doc src OnlineHistDB sql www
 include_dirs        $(ONLINEHISTDBROOT) $(oracle_home)/include

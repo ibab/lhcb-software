@@ -1,12 +1,15 @@
-! $Id: release.notes,v 1.1.1.1 2007-01-16 15:18:12 ggiacomo Exp $
+! $Id: release.notes,v 1.2 2007-01-18 12:12:57 ggiacomo Exp $
 ! Package     : OnlineHistDB
 ! Responsible : Giacomo Graziani
 
-! 20061221 - OnlineHistDB v1
+! 20061221 - OnlineHistDB v1r0
 	First release of software for Monitoring Histogram database:
 	- building the package will produce the C++ API library
 	- the sql folder contains SQL and PL/SQL code for DB 
 	  initialization. It is intended to be used by the DB administrator only
 	- the www folder contains PHP code for the Web interface, to 
 	  be used by the DB administrator only  
-	
+
+! 20070118 - OnlineHistDB v1r1
+	- small changes to compile on slc4 (gcc 3.4)
+	- use correct naming convention for histogram DIM services

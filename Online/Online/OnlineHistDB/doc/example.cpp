@@ -6,15 +6,15 @@ int main ()
 
  HistDB->declareTask("EXAMPLE","MUON","GAS","",true,true,false);
 
- string ServiceName="H1DnodeMF001_EXAMPLE_01/SafetyCheck/Trips";
+ string ServiceName="H1D/nodeMF001_EXAMPLE_01/SafetyCheck/Trips";
  HistDB->declareHistByServiceName(ServiceName);
- ServiceName="H1DnodeMF001_EXAMPLE_01/SafetyCheck/Trips after use of CRack";
+ ServiceName="H1D/nodeMF001_EXAMPLE_01/SafetyCheck/Trips after use of CRack";
  HistDB->declareHistByServiceName(ServiceName);
- ServiceName="H2DnodeMF001_EXAMPLE_01/OccupancyMap/Hit Map_$$_Region M1R1";
+ ServiceName="H2D/nodeMF001_EXAMPLE_01/OccupancyMap/Hit Map_$$_Region M1R1";
  HistDB->declareHistByServiceName(ServiceName); 
- ServiceName="H2DnodeMF001_EXAMPLE_01/OccupancyMap/Hit Map_$$_Region M1R2";
+ ServiceName="H2D/nodeMF001_EXAMPLE_01/OccupancyMap/Hit Map_$$_Region M1R2";
  HistDB->declareHistByServiceName(ServiceName);
- ServiceName="H2DnodeMF001_EXAMPLE_01/OccupancyMap/Hit Map_$$_Region M3R1";
+ ServiceName="H2D/nodeMF001_EXAMPLE_01/OccupancyMap/Hit Map_$$_Region M3R1";
  HistDB->declareHistByServiceName(ServiceName);
  HistDB->commit(); // needed to send histogram buffer to DB
 
@@ -49,6 +49,7 @@ int main ()
  pg->declareHistogram(h1,0. ,0. ,0.5,0.5);
  pg->declareHistogram(h2,0. ,0.5,0.5,0.5);
  pg->declareHistogram(h3,0. ,0. ,0.5,1. );
+ pg->save();
 
  int lc=2, fs=7, fc=3;
  float ymax=20000.;

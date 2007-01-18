@@ -5,7 +5,7 @@
 \title{Histogram DB for Online Monitoring -- User's Manual}
 \doctyp{}
 \dociss{1}
-\docrev{0}
+\docrev{1}
 \doccre{January 12, 2007}
 \docmod{\today}
 \docref{}
@@ -17,9 +17,9 @@
 %\begin{abstract}
 %\end{abstract}
 
-\begin{status}
-\entry{1}{0}{January 16, 2007}{First release}
-\end{status}
+%\begin{status}
+%\entry{1}{0}{January 16, 2007}{First release}
+%\end{status}
 
 
 \section{DB design}
@@ -54,7 +54,8 @@ the same set.
 
 \subsubsection{Properties of TASK}
 \begin{description}
-\item{TaskName} (string of max length 100) 
+\item{TaskName} (string of max length 100) \\
+unique task identifier
 \item{RunOnPhysics, RunOnCalib, RunOnEmpty} (boolean)\\
 specify for which type of data task is running 
 \item{Subsys1, Subsys2, Subsys3} (string of length 10)\\
@@ -78,7 +79,7 @@ number of analysis to be performed on set
 \item{Description} (string of max length 4000) 
 \item{Documentation} (string of max length 200)\\
 link to a more extensive documentation
-\item{HSDisplay} (valid DOID)
+\item{HSDisplay} (valid DOID)\\
 identifier of display option set associated to Histogram set 
 \end{description}
 
@@ -86,7 +87,9 @@ identifier of display option set associated to Histogram set
 \begin{description}
 \item{HID} (string of max length 12)\\
 {\it HSID}/{\it IHS}
-\item{Subtitle} (string of max length 50)\\
+\item{Subtitle} (string of max length 50)
+\item{DIMServiceName} (string of max length 500)\\
+Name of the DIM service that is currently publishing the histogram 
 \item{IsAnalysisHist} (boolean)\\
 true if histogram is produced at analysis level
 \item{CreationTime} (timestamp)\\
@@ -131,13 +134,15 @@ unique identifier
 \end{description}
 \subsubsection{Properties of PAGEFOLDER}
 \begin{description}
-\item{PageFolderName} (string of max length 30)
+\item{PageFolderName} (string of max length 30)\\
+unique page folder identifier
 \end{description}
 
 \subsubsection{Properties of PAGE}
 \begin{description}
-\item{PageName} (string of max length 50)
-\item{Folder} (valid PageFolderName) \\
+\item{PageName} (string of max length 50) \\
+unique page identifier
+\item{Folder} (valid PageFolderName) 
 \item{Nhisto} (integer) \\
 number of histograms on page
 \item{PageDoc} (string of max length 100)\\
@@ -152,7 +157,7 @@ short page description
 coordinates of the histogram pad on the page: Cx and Cy define the
 position of the top left corner, Sx and Sy the size, relatively to the
 window size
-\item{Sdisplay} (valid DOID)
+\item{Sdisplay} (valid DOID)\\
 identifier of display option set associated to this Histogram on this Page
 \end{description}
 
@@ -196,7 +201,7 @@ than once to the same histogram)
 \item{Histogram}  (valid HID)
 \item{Mask} (boolean)\\
 allow to mask the analysis for a single histogram
-\item{Warnings, Alarms} (arrays(Npars) of floats)
+\item{Warnings, Alarms} (arrays(Npars) of floats)\\
 2 sets of threshold levels
 \end{description}
 
@@ -245,6 +250,12 @@ in the LHCb code repository.
 The C++ API allows to perform any operation on the DB but the deletion
 of objects, that is reserved to the DB administrator.
 
+You can add entries to the DB through the methods beginning with {\it
+declare}, that create the specified entry if not existing, or 
+update its fields otherwise. Thus, running the same code twice is
+equivalent to run it once.
+
+
 \subsection{OnlineHistDB class}
 Each instantiation of this class opens a transaction with the DB
 server. Its methods allow the creation of histograms and pages, and
@@ -290,9 +301,9 @@ declares a  subsystem
 
 declares an Histogram by its DIM service name. In the LHCb
 DAQ, this is intended to be used only by the Experiment Control
-System to dynamically update the DB with the published histograms.
-Tasks not known to the DB are automatically created.
-
+System to dynamically update the DB with the published histograms.\\
+Tasks not known to the DB are automatically created.\\
+if histogram already exists, just updates the current DIM service name 
 
 \item void {\bf setHistogramBufferDepth}(int N);
 
@@ -301,8 +312,8 @@ method, the histogram list is actually send to the DB server every N
 histograms (or at commit) in order to optimize performance. The
 default buffer depth (recommended value) is 1000.  
 
-\item OnlineHistogram* {\bf declareAnalysisHistogram}(std::string
-Algorithm, std::string Title, std::vector$<$OnlineHistogram*$>$ \&Sources);
+\item OnlineHistogram* {\bf declareAnalysisHistogram}( std::string 
+Algorithm, std::string Title, std::vector $<$OnlineHistogram*$>$ \&Sources);
 
 declares an histogram to be produced at analysis
 level using algorithm Algorithm. Title is the histogram title. Sources
@@ -418,6 +429,8 @@ internal histogram ID (equivalent to hsid()/ihs())
 
 internal histogram set ID
 \item   std::string {\bf dimServiceName}();
+
+name of the DIM service that is currently publishing the histogram 
 \item   int {\bf nhs}();
 
 number of histograms in set
@@ -495,9 +508,8 @@ parameter names and the corresponding types are listed in section
 
 \item bool {\bf setDisplayOption}(std::string ParameterName, 
 			void* value);
+
 sets a display option for the present histogram.
-
-
 \item  bool {\bf setHistoPageDisplayOption}(std::string ParameterName, 
 				 void* value,
 				 std::string PageName = ``\_DEFAULT\_'');
@@ -530,22 +542,25 @@ vector of length {\it  nanalysis}() containing the analysis algorithm names
 
 true if the histogram is produced at analysis level
 \item  int {\bf declareAnalysis}(std::string Algorithm, 
-		      std::vector$<$float$>$* warningThr=NULL, 
-		      std::vector$<$float$>$* alarmThr=NULL, 
+		      std::vector $<$float$>$* warningThr=NULL,  
+		      std::vector $<$float$>$* alarmThr=NULL, 
 		      int instance=1); 
 
 declare an analysis to be performed on the histogram set. If the algorithm
 requires some parameters, the warning and alarm values must be
-specified as vectors of floats. You can create more than one analysis
+specified as vectors of floats and will be set for all histograms in
+set (then, you can specify values for single histograms with the {\it
+setAnalysis} method. 
+You can create more than one analysis
 with the same algorithm by using instance$>$1. If the analysis
 identified by Algorithm and instance already exists, parameters are
 updated. Returns the internal analysis ID.
 
-\item   void {\bf setAnalysis}(int AnaID, 
-		   std::vector$<$float$>$* warningThr=NULL, 
-		   std::vector$<$float$>$* alarmThr=NULL);
+\item   void {\bf setAnalysis}(int AnaID, \\
+		   std::vector$<$float$>$* warningThr = NULL, 
+		   std::vector$<$float$>$* alarmThr = NULL);
 
-updates parameters for analysis with ID AnaID
+updates parameters for analysis with ID AnaID (for this histogram only)
 \item   void {\bf getAnaSettings}(int AnaID,
 		      std::vector$<$float$>$* warn, 
 		      std::vector$<$float$>$* alarm); 
@@ -592,7 +607,7 @@ same histogram more than once.
 \item   void {\bf removeHistogram}(OnlineHistogram* h, unsigned int instance=1);
 
 remove histogram from page
-\item   const std::vector$<$OnlineHistogram*$>$\& hlist();
+\item   const std::vector$<$OnlineHistogram*$>$\& { \bf hlist}();
 
 returns the list of histograms on this page
 \item   bool {\bf getHistLayout}(OnlineHistogram* h,
@@ -604,6 +619,12 @@ returns the list of histograms on this page
 
 
 get the layout of given histogram 
+\item void {\bf save}();
+
+actually sends to DB the present page layout. This is automatically
+called by  {\it OnlineHistDB::commit}, but you may need to call it
+explicitly if you want to update page--specific histogram options
+before commit 
 \end{list}
 
 
@@ -675,6 +696,7 @@ histograms. Start by setting options for the whole histogram set
  pg->declareHistogram(h1,0. ,0. ,0.5,0.5);
  pg->declareHistogram(h2,0. ,0.5,0.5,0.5);
  pg->declareHistogram(h3,0. ,0. ,0.5,1. );
+ pg->save(); // // needed to actually send page definition to DB
 
  int lc=2, fs=7, fc=3;
  float ymax=20000.;
