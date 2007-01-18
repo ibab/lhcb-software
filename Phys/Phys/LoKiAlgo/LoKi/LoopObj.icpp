@@ -1,8 +1,11 @@
-// $Id: LoopObj.icpp,v 1.1 2006-05-26 12:14:19 ibelyaev Exp $ 
+// $Id: LoopObj.icpp,v 1.2 2007-01-18 13:06:09 ibelyaev Exp $ 
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ version $Revision: 1.1 $
+// CVS tag $Name: not supported by cvs2svn $ version $Revision: 1.2 $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2006/05/26 12:14:19  ibelyaev
+//  v1r1: many fixes for LoKi::Algo and LoKi::LoopObj
+// 
 // ============================================================================
 #ifndef LOKI_LOOPOBJ_ICPP
 #define LOKI_LOOPOBJ_ICPP 1
@@ -57,6 +60,29 @@ inline const LHCb::Particle*
 LoKi::LoopObj::daughter ( const size_t index ) const  
 { return particle ( index ) ; }
 // ============================================================================
+/** get the sum of LorentzVectors of all daughter paticles 
+ *  @attention The result is DIFFERENT from the result of LoKi::LoopObj::momentum(0)
+ *  @return lorentz vector of the combination 
+ */
+// ============================================================================
+inline LoKi::LorentzVector 
+LoKi::LoopObj::momentum ( ) const 
+{
+  LoKi::LorentzVector sum ;
+  // check ? 
+  if ( !valid() ) { Error( "momentum(): Invalid Combination" ) ; return sum ; } 
+  // The explicit loop over all components:
+  const Select& _current = current() ;
+  for ( Select::const_iterator iCur = _current.begin() ; 
+        _current.end() != iCur ; ++iCur )
+  {
+    const LHCb::Particle* _p  = **iCur ;
+    if   ( 0 != _p ) { sum += _p->momentum() ; }
+    else { Warning ( "momentum(): invalid component!") ; continue ; }
+  }  
+  return sum ;                                                    // RETURN
+} ;
+// ============================================================================
 /** get lorentz vector of the particle/daugher particles 
  *  @param  index  index of the first  daugter particle
  *  @attention <c>index==0</c> corresponds to the particle 
@@ -66,6 +92,24 @@ LoKi::LoopObj::daughter ( const size_t index ) const
 inline LoKi::LorentzVector 
 LoKi::LoopObj::momentum ( const size_t index ) const 
 {
+  // the special treatment 
+  if ( 0 == index ) 
+  {
+    LoKi::LorentzVector sum ;
+    // check ? 
+    if ( !valid() ) { Error( "momentum(): Invalid Combination" ) ; return sum ; } 
+    // The explicit loop over all components:
+    const Select& _current = current() ;
+    for ( Select::const_iterator iCur = _current.begin() ; 
+          _current.end() != iCur ; ++iCur )
+    {
+      const LHCb::Particle* _p  = **iCur ;
+      if   ( 0 != _p ) { sum += _p->momentum() ; }
+      else { Warning ( "momentum(): invalid component!") ; continue ; }
+    }  
+    return sum ;                                                    // RETURN
+  }
+  // The regular component? 
   const LHCb::Particle* p = particle ( index ) ;
   if ( 0 != p ) { return p->momentum() ; }
   Error ( "momentum (" + LoKi::Print::print ( index ) + ") : invalid index" ) ;

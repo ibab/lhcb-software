@@ -1,20 +1,8 @@
-// $Id: LoopObj.h,v 1.8 2006-08-16 17:15:16 ibelyaev Exp $
+// $Id: LoopObj.h,v 1.9 2007-01-18 13:06:09 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.9 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.7  2006/06/23 13:29:58  jpalac
-//
-// remove print method (now in LoKiGen, v1r5 or higher)
-//
-// Revision 1.6  2006/05/26 15:35:46  jpalac
-// *** empty log message ***
-//
-// Revision 1.5  2006/05/26 15:24:54  jpalac
-// *** empty log message ***
-//
-// Revision 1.4  2006/05/26 12:14:19  ibelyaev
-//  v1r1: many fixes for LoKi::Algo and LoKi::LoopObj
 //
 // ============================================================================
 #ifndef LOKI_LOOPOBJ_H 
@@ -81,7 +69,7 @@ namespace LoKi
     : public LoKi::Base 
   {
   public: 
-    /// the actual tyep of selection formula
+    /// the actual type of selection formula
     typedef std::vector<std::string>                       Formula ;
     /// the actual type of "Combiner" object
     typedef LoKi::Combiner_<LoKi::Types::Range::Container> Combiner ;
@@ -92,7 +80,7 @@ namespace LoKi
     const Formula& formula() const { return m_formula ; }
     /// get the effective dimension of the loop (== number of components)
     size_t dim   () const      { return m_combiner.dim  () ; }
-    /// Loop size (inclusing the invalid combinations!)
+    /// Loop size (including ALL invalid combinations!)
     size_t size  () const      { return m_combiner.size () ; }
     /// get current combination from the cominer 
     const Select& current() const { return m_combiner.current(); }
@@ -114,7 +102,7 @@ namespace LoKi
      *  It is an alias to the previouse method 
      *  @attention <c>index==0</c> corresponds to the particle itself
      *  Indices start from 1 
-     *  @param index index of the daughter 
+    *  @param index index of the daughter 
      */ 
     const LHCb::Particle* operator () ( const size_t index ) const 
     { return particle ( index ) ; }
@@ -135,19 +123,29 @@ namespace LoKi
      *  @param index index of the daughter 
      */ 
     inline const LHCb::Particle* daughter ( const size_t index ) const ;
+    /** get the sum of LorentzVectors of all daughter paticles 
+     *  @attention The result is DIFFERENT from the result of LoKi::LoopObj::momentum(0)
+     *  @return lorentz vector of the combination 
+     */
+    inline LoKi::LorentzVector momentum (                      ) const ;    
     /** get lorentz vector of the particle/daugher particles 
      *  @param  index  index of the first  daugter particle
      *  @attention <c>index==0</c> corresponds to the particle 
      *  @return lorentz vector of the combination 
      */
-    inline LoKi::LorentzVector momentum ( const size_t index = 0 ) const ;
+    inline LoKi::LorentzVector momentum ( const size_t index   ) const ;
+    /** get the sum of LorentzVectors of all daughter paticles 
+     *  @attention The result is DIFFERENT from the result of LoKi::LoopObj::p(0)
+     *  @return lorentz vector of the combination 
+     */
+    LoKi::LorentzVector p ( ) const { return momentum ( ) ; }
     /** get lorentz vector of the particle/daugher particles 
      *  @param  index  index of the first  daugter particle
      *  @attention <c>index==0</c> corresponds to the particle
      *  It is an alias to the previous method  
      *  @return lorentz vector of the combination 
      */
-    LoKi::LorentzVector p        ( const size_t index = 0 ) const 
+    LoKi::LorentzVector p        ( const size_t index     ) const 
     { return momentum ( index ) ; }
     /** get lorentz vector of combination of 2 daugher particles 
      *  @param  index1  index of the first  daugter particle
@@ -221,12 +219,16 @@ namespace LoKi
       const size_t index3    , 
       const size_t index4    ) const 
     { return momentum ( index1 , index2 , index3 , index4 ); }
+    /** get the kinematical mass (from sum of Lorentz Vectors)
+     *  for daughter particle with index  
+     *  @attention <c>index==0</c> corresponds to the particle 
+     */
+    double           mass ( ) const { return momentum ().M () ; }    
     /** get the kinematical mass (from evaluated LorentzVector)
      *  for daughter particle with index  
      *  @attention <c>index==0</c> corresponds to the particle 
      */
-    double           mass     
-    ( const size_t index = 0 ) const 
+    double           mass ( const size_t index ) const 
     { return momentum ( index ).M () ; }    
     /** get the kinematical mass (from evaluated LorentzVector)
      *  for pair of daughter particles with indices  

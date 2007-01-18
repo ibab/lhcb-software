@@ -1,10 +1,8 @@
-// $Id: Algo.h,v 1.8 2006-12-01 08:35:04 ibelyaev Exp $
+// $Id: Algo.h,v 1.9 2007-01-18 13:06:09 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.9 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.7  2006/10/10 09:10:52  ibelyaev
-//  tiny fix needed for good&valid dictionaries
 //
 // ============================================================================
 #ifndef LOKI_ALGO_H 
@@ -66,11 +64,13 @@ namespace LoKi
 {
   class LoopObj ;
   class Loop    ;  
-  /** @class Algo Algo.h LoKi/Algo.h
+  /** @class Algo LoKi/Algo.h
    *  
    *  The basic "working horse" of the whole LoKi project
    *
-   *  @author Vanya BELYAEV
+   *  @see DVAlgorithm
+   *
+   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date   2006-03-14
    */
   class Algo : public DVAlgorithm
@@ -705,244 +705,197 @@ namespace LoKi
     ( const LoKi::Types::RangeList& formula      , 
       const ParticleProperty*       pid      = 0 , 
       const IParticleCombiner*      combiner = 0 ) ;
+    
   public:    
-    /** shortcut for the following expression:
-     *{
+    
+    /** shortcut for the following symbolic expression:
+     * 
+     *  @code 
+     * 
+     * {
      *  loop->backup()  ;
      *  for ( ; loop ; ++loop ) 
      *   {
+     *     // get the mass from the sum of LorentzVectors 
+     *     const double mass = loop->mass() ;
+     *     // apply a mass window 
+     *     if ( low > mass || high > mass ) { continue ; } 
+     *     // use the explicit refitter (if needed) 
      *     if ( 0 != fitter && loop->reFit( fitter ).isFailure() ) { continue ; }
+     *     // apply the vertex cuts 
      *     if ( !vcut ( loop ) ) { continue ; }
+     *     // apply other cuts cuts 
      *     if ( ! cut ( loop ) ) { continue ; }
      *     loop->save ( tag ) ;
      *   }
      *  loop->restore() ;
      *  return selected ( tag ) ;
      * } ;
+     * 
+     *  @endcode 
+     *
+     *  @param tag  the symbolic unique tag 
+     *  @param loop the looping object itself 
+     *  @param low  low edge for mass window 
+     *  @param high high edge for mass window 
+     *  @param cut  cut to be used for filtering 
+     *  @param vcut vertex cut to be used for filtering 
+     *  @param fitter refitter to be applied before cuts 
+     *  @return the selected range of particles 
      */
     LoKi::Types::Range pattern
-    ( const std::string&        tag    , 
-      const LoKi::Loop&         loop   ,
-      const LoKi::Types::Cuts&  cut    , 
-      const LoKi::Types::VCuts& vcut   , 
-      const IParticleReFitter*  fitter ) ;    
+    ( const std::string&        tag        , 
+      const LoKi::Loop&         loop       ,
+      const double              low        , 
+      const double              high       ,
+      const LoKi::Types::Cuts&  cut        , 
+      const LoKi::Types::VCuts& vcut       , 
+      const IParticleReFitter*  fitter = 0 ) ;
+    
+    /** shortcut for the following symbolic expression:
+     * 
+     *  @code 
+     * 
+     * {
+     *  loop->backup()  ;
+     *  for ( ; loop ; ++loop ) 
+     *   {
+     *     // get the mass from the sum of LorentzVectors 
+     *     const double mass = loop->mass() ;
+     *     // apply a mass window 
+     *     if (  abs( mass - nominal ) > window ) { continue ; } 
+     *     // use the explicit refitter (if needed) 
+     *     if ( 0 != fitter && loop->reFit( fitter ).isFailure() ) { continue ; }
+     *     // apply the vertex cuts 
+     *     if ( !vcut ( loop ) ) { continue ; }
+     *     // apply other cuts cuts 
+     *     if ( ! cut ( loop ) ) { continue ; }
+     *     loop->save ( tag ) ;
+     *   }
+     *  loop->restore() ;
+     *  return selected ( tag ) ;
+     * } ;
+     * 
+     *  @endcode 
+     *
+     *  @param tag  the symbolic unique tag 
+     *  @param loop the looping object itself 
+     *  @param window the width of the mass window 
+     *  @param cut  cut to be used for filtering 
+     *  @param vcut vertex cut to be used for filtering 
+     *  @param fitter refitter to be applied before cuts 
+     *  @return the selected range of particles 
+     */
+    LoKi::Types::Range pattern
+    ( const std::string&        tag        , 
+      const LoKi::Loop&         loop       ,
+      const double              window     , 
+      const LoKi::Types::Cuts&  cut        , 
+      const LoKi::Types::VCuts& vcut       , 
+      const IParticleReFitter*  fitter = 0 ) ;
+    
     /** shortcut for the following expression:
+     *
+     *  @code 
+     *
      * { 
      *  loop->backup()  ;
      *  for ( ; loop ; ++loop ) 
      *   { 
+     *     // get the mass from the sum of LorentzVectors 
+     *     const double mass = loop->mass() ;
+     *     // apply a mass window 
+     *     if ( low > mass || high > mass ) { continue ; } 
+     *     // apply vertex selection cuts  
      *     if ( !vcut1 ( loop ) ) { continue ; }
+     *     // apply selection cuts 
      *     if ( ! cut1 ( loop ) ) { continue ; }
+     *     // refit 
      *     if ( loop->reFit( fitter ).isFailure() ) { continue ; }
+     *     // apply vertex selection cuts  
      *     if ( !vcut2 ( loop ) ) { continue ; }
+     *     // apply selection cuts 
      *     if ( ! cut2 ( loop ) ) { continue ; }
      *     loop->save ( tag ) ;
      *   }
      *  loop->restore() ;
      *  return selected ( tag ) ;
      * }
+     *
+     *  @endcode 
+     *
+     *  @param tag   the symbolic unique tag 
+     *  @param loop  the looping object itself 
+     *  @param low   low edge for mass window 
+     *  @param high  high edge for mass window 
+     *  @param cut1  cut to be used for filtering before refit
+     *  @param vcut1 vertex cut to be used for filtering before refitt
+     *  @param fitter refitter to be applied before cuts 
+     *  @param cut2  cut to be used for filtering after refit
+     *  @param vcut2 vertex cut to be used for filtering after refitt
+     *  @return the selected range of particles 
      */
     LoKi::Types::Range pattern
     ( const std::string&        tag    , 
       const LoKi::Loop&         loop   ,
+      const double              low    , 
+      const double              high   , 
       const LoKi::Types::Cuts&  cut1   , 
       const LoKi::Types::VCuts& vcut1  , 
       const IParticleReFitter*  fitter , 
       const LoKi::Types::Cuts&  cut2   , 
       const LoKi::Types::VCuts& vcut2  ) ;    
-    /** shortcut for following "standard" pattern:
-     *  
-     *  @code
-     *  
-     *  const std::string tag     = ... ; // "particle name 
-     *  const std::string formula = ... ; // combiner formula
-     *  const std::string pid     = ... ; // Particle ID 
-     *  const Cut         cut     = ... ; // particle cuts 
-     *  const Vcut        vcut    = ... ; // vertex   cuts 
-     *  const IParticleCombiner* combiner = ... ; // use this combiner (if valid)
-     *  const IParticleReFitter* fitter   = ... ; // use this refitter (if valid)
-     *
-     *  for ( Loop L = loop( formula , pid , combiner ) ; L ; ++L )
-     *   {
-     *     if ( 0 != fitter && L->reFit( fitter  ).isFailure() ) { continue ; }
-     *     if ( !vcut ( L )  ) { continue ; }     
-     *     if ( !cut  ( L )  ) { continue ; }     
-     *     L->save ( tag ) ;
-     *   }
-     *  Range result = selected( tag ) ;
-     *  @endcode 
-     * 
-     *  These lines are equivalent to one call of "pattern":
-     *
-     *  @code 
-     *
-     *  Range result = pattern ( tag , formula, pid , cut , vcut , combiner , fitter ) ;
-     
-     *  @endcode 
-     *
-     */
-    LoKi::Types::Range pattern 
-    ( const std::string&        tag          , 
-      const std::string&        formula      ,
-      const std::string&        pid          , 
-      const LoKi::Types::Cuts&  cut          , 
-      const LoKi::Types::VCuts& vcut         , 
-      const IParticleCombiner*  combiner = 0 , 
-      const IParticleReFitter*  fitter   = 0 ) 
-    {
-      return pattern ( tag , loop ( formula , pid , combiner ) , 
-                       cut , vcut , fitter ) ;
-    } ;
 
-    /** shortcut for following "standard" pattern:
-     *  
-     *  @code
-     *  
-     *  const std::string tag     = ... ; // "particle name 
-     *  const std::string formula = ... ; // combiner formula
-     *  const std::string pid     = ... ; // Particle ID 
-     *  const Cut         cut1    = ... ; // particle cuts 
-     *  const Vcut        vcut1   = ... ; // vertex   cuts 
-     *  const IParticleReFitter* fitter   = ... ; // use this refitter (if valid)
-     *  const Cut         cut2    = ... ; // particle cuts 
-     *  const Vcut        vcut2   = ... ; // vertex   cuts 
-     *  const IParticleCombiner* combiner = ... ; // use this combiner (if valid)
-     *
-     *  for ( Loop L = loop( formula , pid , combiner ) ; L ; ++L )
-     *   {
-     *     if ( !vcut1 ( L )  ) { continue ; }     
-     *     if ( !cut1  ( L )  ) { continue ; }     
-     *     if ( L->reFit( fitter  ).isFailure() ) { continue ; }
-     *     if ( !vcut2 ( L )  ) { continue ; }     
-     *     if ( !cut2  ( L )  ) { continue ; }     
-     *     L->save ( tag ) ;
-     *   }
-     *  Range result = selected( tag ) ;
-     *  @endcode 
-     * 
-     *  These lines are equivalent to one call of "pattern":
+    /** shortcut for the following expression:
      *
      *  @code 
      *
-     *  Range result = pattern ( tag    , formula, pid , 
-     *                           cut1   , vcut1 ,
-     *                           fitter , 
-     *                           cut2   , vcut2 , 
-     *                           combiner ) ;
-     *  @endcode 
-     *
-     */
-    LoKi::Types::Range pattern 
-    ( const std::string&        tag          , 
-      const std::string&        formula      ,
-      const std::string&        pid          , 
-      const LoKi::Types::Cuts&  cut1         , 
-      const LoKi::Types::VCuts& vcut1        , 
-      const IParticleReFitter*  fitter       ,
-      const LoKi::Types::Cuts&  cut2         , 
-      const LoKi::Types::VCuts& vcut2        , 
-      const IParticleCombiner*  combiner = 0 ) 
-    {
-      return pattern ( tag  , loop ( formula , pid , combiner ) , 
-                       cut1 , vcut1 , fitter , cut2 , vcut2 ) ;
-    } ;
-    
-    /** shortcut for following "standard" pattern:
-     *  
-     *  @code
-     *  
-     *  const std::string tag     = ... ; // "particle name 
-     *  const std::string formula = ... ; // combiner formula
-     *  const std::string pid     = ... ; // Particle ID 
-     *  const Cut         cut     = ... ; // particle cuts 
-     *  const Vcut        vcut    = ... ; // vertex   cuts 
-     *  const IParticleCombiner* combiner = ... ; // use this combiner (if valid)
-     *  const IParticleReFitter* fitter   = ... ; // use this refitter (if valid)
-     *
-     *  for ( Loop L = loop( formula , pid , combiner ) ; L ; ++L )
-     *   {
-     *     if ( 0 != fitter && L->reFit( fitter  ).isFailure() ) { continue ; }
-     *     if ( !vcut ( L )  ) { continue ; }     
-     *     if ( !cut  ( L )  ) { continue ; }     
-     *     L->save ( tag ) ;
+     * { 
+     *  loop->backup()  ;
+     *  for ( ; loop ; ++loop ) 
+     *   { 
+     *     // get the mass from the sum of LorentzVectors 
+     *     const double mass = loop->mass() ;
+     *     // apply a mass window 
+     *     if ( low > mass || high > mass ) { continue ; } 
+     *     // apply vertex selection cuts  
+     *     if ( !vcut1 ( loop ) ) { continue ; }
+     *     // apply selection cuts 
+     *     if ( ! cut1 ( loop ) ) { continue ; }
+     *     // refit 
+     *     if ( loop->reFit( fitter ).isFailure() ) { continue ; }
+     *     // apply vertex selection cuts  
+     *     if ( !vcut2 ( loop ) ) { continue ; }
+     *     // apply selection cuts 
+     *     if ( ! cut2 ( loop ) ) { continue ; }
+     *     loop->save ( tag ) ;
      *   }
-     *  Range result = selected( tag ) ;
-     *  @endcode 
-     * 
-     *  These lines are equivalent to one call of "pattern":
+     *  loop->restore() ;
+     *  return selected ( tag ) ;
+     * }
      *
-     *  @code 
-     *
-     *  Range result = pattern ( tag , formula, pid , cut , vcut , combiner , fitter ) ;
-     
      *  @endcode 
      *
+     *  @param tag    the symbolic unique tag 
+     *  @param loop   the looping object itself 
+     *  @param window the width of the mass window around nominal mass 
+     *  @param high  high edge for mass window 
+     *  @param cut1  cut to be used for filtering before refit
+     *  @param vcut1 vertex cut to be used for filtering before refitt
+     *  @param fitter refitter to be applied before cuts 
+     *  @param cut2  cut to be used for filtering after refit
+     *  @param vcut2 vertex cut to be used for filtering after refitt
+     *  @return the selected range of particles 
      */
-    LoKi::Types::Range pattern 
-    ( const std::string&            tag          , 
-      const LoKi::Types::RangeList& formula      ,
-      const std::string&            pid          , 
-      const LoKi::Types::Cuts&      cut          , 
-      const LoKi::Types::VCuts&     vcut         , 
-      const IParticleCombiner*      combiner = 0 , 
-      const IParticleReFitter*      fitter   = 0 ) 
-    {
-      return pattern ( tag , loop ( formula , pid , combiner ) , 
-                       cut , vcut , fitter ) ;
-    } ;
-
-    /** shortcut for following "standard" pattern:
-     *  
-     *  @code
-     *  
-     *  const std::string tag     = ... ; // "particle name 
-     *  const RangeList   formula = ... ; // combiner formula
-     *  const std::string pid     = ... ; // Particle ID 
-     *  const Cut         cut1    = ... ; // particle cuts 
-     *  const Vcut        vcut1   = ... ; // vertex   cuts 
-     *  const IParticleReFitter* fitter   = ... ; // use this refitter (if valid)
-     *  const Cut         cut2    = ... ; // particle cuts 
-     *  const Vcut        vcut2   = ... ; // vertex   cuts 
-     *  const IParticleCombiner* combiner = ... ; // use this combiner (if valid)
-     *
-     *  for ( Loop L = loop( formula , pid , combiner ) ; L ; ++L )
-     *   {
-     *     if ( !vcut1 ( L )  ) { continue ; }     
-     *     if ( !cut1  ( L )  ) { continue ; }     
-     *     if ( L->reFit( fitter  ).isFailure() ) { continue ; }
-     *     if ( !vcut2 ( L )  ) { continue ; }     
-     *     if ( !cut2  ( L )  ) { continue ; }     
-     *     L->save ( tag ) ;
-     *   }
-     *  Range result = selected( tag ) ;
-     *  @endcode 
-     * 
-     *  These lines are equivalent to one call of "pattern":
-     *
-     *  @code 
-     *
-     *  Range result = pattern ( tag    , formula, pid , 
-     *                           cut1   , vcut1 ,
-     *                           fitter , 
-     *                           cut2   , vcut2 , 
-     *                           combiner ) ;
-     *  @endcode 
-     *
-     */
-    LoKi::Types::Range pattern 
-    ( const std::string&            tag          , 
-      const LoKi::Types::RangeList& formula      ,
-      const std::string&            pid          , 
-      const LoKi::Types::Cuts&      cut1         , 
-      const LoKi::Types::VCuts&     vcut1        , 
-      const IParticleReFitter*      fitter       ,
-      const LoKi::Types::Cuts&      cut2         , 
-      const LoKi::Types::VCuts&     vcut2        , 
-      const IParticleCombiner*      combiner = 0 ) 
-    {
-      return pattern ( tag  , loop ( formula , pid , combiner ) , 
-                       cut1 , vcut1 , fitter , cut2 , vcut2 ) ;
-    } ;
+    LoKi::Types::Range pattern
+    ( const std::string&        tag    , 
+      const LoKi::Loop&         loop   ,
+      const double              window , 
+      const LoKi::Types::Cuts&  cut1   , 
+      const LoKi::Types::VCuts& vcut1  , 
+      const IParticleReFitter*  fitter , 
+      const LoKi::Types::Cuts&  cut2   , 
+      const LoKi::Types::VCuts& vcut2  ) ;    
 
   public:
     
@@ -1077,7 +1030,24 @@ namespace LoKi
       }
       return ifind->second ;
     } ;
-
+  public:
+    /// static accessor to the current algorithm 
+    static LoKi::Algo* currentAlgo    () ;
+  protected:
+    /// static  setter  to the current algorithm 
+    static LoKi::Algo* setCurrentAlgo ( LoKi::Algo* ) ;
+  protected:
+    class Lock
+    {
+    public:
+      Lock ( LoKi::Algo* algo ) ;
+      ~Lock() ;
+    private:
+      Lock() ;
+      Lock( const Lock& ) ;
+    private:
+      LoKi::Algo* m_old ;       
+    } ;
   public:
     /// get the proper error reporter 
     const LoKi::IReporter* reporter ( const std::string& name = "" ) const ;
@@ -1121,6 +1091,9 @@ namespace LoKi
     typedef std::map<std::string,double> CutValues ;
     /// local storage of cut values 
     mutable CutValues m_cutValues ;
+  private:
+    // the static pointer to current algorithm 
+    static LoKi::Algo* s_currentAlgo ;
   } ;  
 } ; // end of namespace LoKi
 // ============================================================================

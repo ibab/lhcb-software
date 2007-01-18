@@ -1,11 +1,231 @@
-! $Id: release.notes,v 1.9 2007-01-12 14:07:40 ranjard Exp $ 
+! $Id: release.notes,v 1.10 2007-01-18 13:06:10 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.9 $
+! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.10 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiAlgo
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : LoKi-algorthm related stuff 
 ! -----------------------------------------------------------------------------
+
+!========================= LoKiAlgo v3r1 2007-01-18 ====================
+
+! 2007-01-18 - Vanya BELYAEV
+ - cmt/requirements   
+     version increment to v3r1 
+
+ - Loop/LoopObj.h, src/LoopObj.icpp
+   reimplement the methods momentum(),p() and mass() 
+   to get a result *ONLY* through the 4-momentum addition.
+   In particular it means that from now: 
+  
+     momentum ( ) != momentum ( 0 ) 
+     p        ( ) != p        ( 0 ) 
+     mass     ( ) != mass     ( 0 ) 
+
+ - LoKi/Algo.h, src/Algo.cpp 
+
+    change the signature for LoKi::Algo::pattern functions 
+      in BACKWARD INCOMPATIBLE way: 
+
+    /** shortcut for the following symbolic expression:
+     * 
+     *  @code 
+     * 
+     * {
+     *  loop->backup()  ;
+     *  for ( ; loop ; ++loop ) 
+     *   {
+     *     // get the mass from the sum of LorentzVectors 
+     *     const double mass = loop->mass() ;
+     *     // apply a mass window 
+     *     if ( low > mass || high > mass ) { continue ; } 
+     *     // use the explicit refitter (if needed) 
+     *     if ( 0 != fitter && loop->reFit( fitter ).isFailure() ) { continue ; }
+     *     // apply the vertex cuts 
+     *     if ( !vcut ( loop ) ) { continue ; }
+     *     // apply other cuts cuts 
+     *     if ( ! cut ( loop ) ) { continue ; }
+     *     loop->save ( tag ) ;
+     *   }
+     *  loop->restore() ;
+     *  return selected ( tag ) ;
+     * } ;
+     * 
+     *  @endcode 
+     *
+     *  @param tag  the symbolic unique tag 
+     *  @param loop the looping object itself 
+     *  @param low  low edge for mass window 
+     *  @param high high edge for mass window 
+     *  @param cut  cut to be used for filtering 
+     *  @param vcut vertex cut to be used for filtering 
+     *  @param fitter refitter to be applied before cuts 
+     *  @return the selected range of particles 
+     */
+    LoKi::Types::Range pattern
+    ( const std::string&        tag        , 
+      const LoKi::Loop&         loop       ,
+      const double              low        , 
+      const double              high       ,
+      const LoKi::Types::Cuts&  cut        , 
+      const LoKi::Types::VCuts& vcut       , 
+      const IParticleReFitter*  fitter = 0 ) ;
+    
+    /** shortcut for the following symbolic expression:
+     * 
+     *  @code 
+     * 
+     * {
+     *  loop->backup()  ;
+     *  for ( ; loop ; ++loop ) 
+     *   {
+     *     // get the mass from the sum of LorentzVectors 
+     *     const double mass = loop->mass() ;
+     *     // apply a mass window 
+     *     if (  abs( mass - nominal ) > window ) { continue ; } 
+     *     // use the explicit refitter (if needed) 
+     *     if ( 0 != fitter && loop->reFit( fitter ).isFailure() ) { continue ; }
+     *     // apply the vertex cuts 
+     *     if ( !vcut ( loop ) ) { continue ; }
+     *     // apply other cuts cuts 
+     *     if ( ! cut ( loop ) ) { continue ; }
+     *     loop->save ( tag ) ;
+     *   }
+     *  loop->restore() ;
+     *  return selected ( tag ) ;
+     * } ;
+     * 
+     *  @endcode 
+     *
+     *  @param tag  the symbolic unique tag 
+     *  @param loop the looping object itself 
+     *  @param window the width of the mass window 
+     *  @param cut  cut to be used for filtering 
+     *  @param vcut vertex cut to be used for filtering 
+     *  @param fitter refitter to be applied before cuts 
+     *  @return the selected range of particles 
+     */
+    LoKi::Types::Range pattern
+    ( const std::string&        tag        , 
+      const LoKi::Loop&         loop       ,
+      const double              window     , 
+      const LoKi::Types::Cuts&  cut        , 
+      const LoKi::Types::VCuts& vcut       , 
+      const IParticleReFitter*  fitter = 0 ) ;
+    
+    /** shortcut for the following expression:
+     *
+     *  @code 
+     *
+     * { 
+     *  loop->backup()  ;
+     *  for ( ; loop ; ++loop ) 
+     *   { 
+     *     // get the mass from the sum of LorentzVectors 
+     *     const double mass = loop->mass() ;
+     *     // apply a mass window 
+     *     if ( low > mass || high > mass ) { continue ; } 
+     *     // apply vertex selection cuts  
+     *     if ( !vcut1 ( loop ) ) { continue ; }
+     *     // apply selection cuts 
+     *     if ( ! cut1 ( loop ) ) { continue ; }
+     *     // refit 
+     *     if ( loop->reFit( fitter ).isFailure() ) { continue ; }
+     *     // apply vertex selection cuts  
+     *     if ( !vcut2 ( loop ) ) { continue ; }
+     *     // apply selection cuts 
+     *     if ( ! cut2 ( loop ) ) { continue ; }
+     *     loop->save ( tag ) ;
+     *   }
+     *  loop->restore() ;
+     *  return selected ( tag ) ;
+     * }
+     *
+     *  @endcode 
+     *
+     *  @param tag   the symbolic unique tag 
+     *  @param loop  the looping object itself 
+     *  @param low   low edge for mass window 
+     *  @param high  high edge for mass window 
+     *  @param cut1  cut to be used for filtering before refit
+     *  @param vcut1 vertex cut to be used for filtering before refitt
+     *  @param fitter refitter to be applied before cuts 
+     *  @param cut2  cut to be used for filtering after refit
+     *  @param vcut2 vertex cut to be used for filtering after refitt
+     *  @return the selected range of particles 
+     */
+    LoKi::Types::Range pattern
+    ( const std::string&        tag    , 
+      const LoKi::Loop&         loop   ,
+      const double              low    , 
+      const double              high   , 
+      const LoKi::Types::Cuts&  cut1   , 
+      const LoKi::Types::VCuts& vcut1  , 
+      const IParticleReFitter*  fitter , 
+      const LoKi::Types::Cuts&  cut2   , 
+      const LoKi::Types::VCuts& vcut2  ) ;    
+
+    /** shortcut for the following expression:
+     *
+     *  @code 
+     *
+     * { 
+     *  loop->backup()  ;
+     *  for ( ; loop ; ++loop ) 
+     *   { 
+     *     // get the mass from the sum of LorentzVectors 
+     *     const double mass = loop->mass() ;
+     *     // apply a mass window 
+     *     if ( low > mass || high > mass ) { continue ; } 
+     *     // apply vertex selection cuts  
+     *     if ( !vcut1 ( loop ) ) { continue ; }
+     *     // apply selection cuts 
+     *     if ( ! cut1 ( loop ) ) { continue ; }
+     *     // refit 
+     *     if ( loop->reFit( fitter ).isFailure() ) { continue ; }
+     *     // apply vertex selection cuts  
+     *     if ( !vcut2 ( loop ) ) { continue ; }
+     *     // apply selection cuts 
+     *     if ( ! cut2 ( loop ) ) { continue ; }
+     *     loop->save ( tag ) ;
+     *   }
+     *  loop->restore() ;
+     *  return selected ( tag ) ;
+     * }
+     *
+     *  @endcode 
+     *
+     *  @param tag    the symbolic unique tag 
+     *  @param loop   the looping object itself 
+     *  @param window the width of the mass window around nominal mass 
+     *  @param high  high edge for mass window 
+     *  @param cut1  cut to be used for filtering before refit
+     *  @param vcut1 vertex cut to be used for filtering before refitt
+     *  @param fitter refitter to be applied before cuts 
+     *  @param cut2  cut to be used for filtering after refit
+     *  @param vcut2 vertex cut to be used for filtering after refitt
+     *  @return the selected range of particles 
+     */
+    LoKi::Types::Range pattern
+    ( const std::string&        tag    , 
+      const LoKi::Loop&         loop   ,
+      const double              window , 
+      const LoKi::Types::Cuts&  cut1   , 
+      const LoKi::Types::VCuts& vcut1  , 
+      const IParticleReFitter*  fitter , 
+      const LoKi::Types::Cuts&  cut2   , 
+      const LoKi::Types::VCuts& vcut2  ) ;    
+
+  - LoKi/Algo.h. src/Algo.cpp 
+    add a *STATIC* accessors to "currently executing LoKi-based algorithm"
+    ( needed to enhance drastically the planned LoKiHybrid functionality) 
+  
+      One can access it through: 
+        
+    LoKi::Algo* current = LoKi::Algo::currentAlgo() ;
+   
+
+
 
 !========================= LoKiAlgo v3r0 2007-01-09 ====================
 ! 2007-01-09 - Florence RANJARD
