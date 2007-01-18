@@ -1,7 +1,5 @@
 // Track checking on long tracks in the "best" container
 // -----------------------------------------------------
-ApplicationMgr.DLLs += { "TrackMCTools", "TrackCheckers" };
-
 CheckTrSeq.Members  += { "TrackChecker/CheckBestLong" };
 CheckBestLong.RejectFitFailures = true;
 
