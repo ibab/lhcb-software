@@ -1,4 +1,4 @@
-// $Id: TrackChecker.h,v 1.10 2006-10-11 14:24:32 erodrigu Exp $
+// $Id: TrackChecker.h,v 1.11 2007-01-19 16:23:33 cattanem Exp $
 #ifndef TRACKCHECKER_H 
 #define TRACKCHECKER_H 1
 
@@ -13,7 +13,7 @@
 
 // from Tr/TrackInterfaces
 #include "TrackInterfaces/ITrackExtrapolator.h"
-#include "TrackInterfaces/ITrackProjector.h"
+#include "TrackInterfaces/ITrackProjectorSelector.h"
 
 // Forward declarations
 namespace LHCb
@@ -85,15 +85,16 @@ private:
 
 
   // Interfaces
-  ITrackCriteriaSelector* m_trackSelector;// Pointer to TrackCriteriaSelector
-  IIdealStateCreator*     m_stateCreator; // Pointer to IdealStateCreator
-  ITrackExtrapolator*     m_extrapolator; // Pointer to TrackMasterExtrapolator
-  ITrackProjector*        m_projector;    // Pointer to TrackMasterProjector
+  ITrackCriteriaSelector*  m_trackSelector;     // Pointer to TrackCriteriaSelector
+  IIdealStateCreator*      m_stateCreator;      // Pointer to IdealStateCreator
+  ITrackExtrapolator*      m_extrapolator;      // Pointer to TrackMasterExtrapolator
+  ITrackProjectorSelector* m_projectorSelector; // Pointer to projector selector
 
   // jobOptions
-  std::string m_tracksInContainer; // Input Tracks container location
-  std::string m_linkerInTable;     // Input Linker table location
-  std::string m_trackSelectorName; // Tracks selector tool name
+  std::string m_tracksInContainer;      // Input Tracks container location
+  std::string m_linkerInTable;          // Input Linker table location
+  std::string m_trackSelectorName;      // Tracks selector tool name
+  std::string m_projectorSelectorName;  // Name of the projector selector
   // Additional z-positions where to determine resolutions and pulls
   std::vector<double> m_zPositions;
   // Produce series of plots for each Measurement type

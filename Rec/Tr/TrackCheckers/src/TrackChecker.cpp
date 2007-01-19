@@ -1,4 +1,4 @@
-// $Id: TrackChecker.cpp,v 1.19 2006-11-30 14:46:59 ebos Exp $
+// $Id: TrackChecker.cpp,v 1.20 2007-01-19 16:23:31 cattanem Exp $
 // Include files 
 
 // local
@@ -26,6 +26,9 @@
 #include "Event/VeloRMeasurement.h"
 #include "Event/VeloPhiMeasurement.h"
 #include "Event/StateTraj.h"
+
+// from Tr/TrackInterfaces
+#include "TrackInterfaces/ITrackProjector.h"
 
 #include "gsl/gsl_cdf.h"
 
@@ -75,6 +78,8 @@ TrackChecker::TrackChecker( const std::string& name,
   declareProperty( "RejectFitFailures", m_rejectFitFailures = false );
   declareProperty( "CheckAmbiguity",    m_checkAmbiguity    = true  );
   declareProperty( "MinToCountAmb",     m_minToCountAmb     = 8     );
+  declareProperty( "Projector",
+                   m_projectorSelectorName = "TrackProjectorSelector" );
 
 }
 
@@ -102,7 +107,8 @@ StatusCode TrackChecker::initialize()
   
   m_stateCreator = tool<IIdealStateCreator>( "IdealStateCreator"       );
   m_extrapolator = tool<ITrackExtrapolator>( "TrackMasterExtrapolator" );
-  m_projector    = tool<ITrackProjector>( "TrackMasterProjector",
+
+  m_projectorSelector = tool<ITrackProjectorSelector>( m_projectorSelectorName,
                                           "Projector", this );
   
   // Retrieve the magnetic field and the poca tool
@@ -490,12 +496,15 @@ StatusCode TrackChecker::resolutionHistos( Track* track, MCParticle* mcPart )
                   ID+20, "Delta(P)/P"+title, 0., 0.01, 100 );
 
           // Monitor unbiased measurement resolutions
-          StatusCode sc = m_projector -> project( *trueState, *(*it) );
+          ITrackProjector* proj = m_projectorSelector -> projector( *(*it) );
+          if ( proj==0 )
+            return Error( "could not get projector for measurement" );
+          StatusCode sc = proj -> project( *trueState, *(*it) );
           if ( sc.isFailure() )
             return Error( "not able to project a state into a measurement" );
-          double res       = m_projector -> residual();
-          double errorMeas = m_projector -> errMeasure();
-          double chi2      = m_projector -> chi2();
+          double res       = proj -> residual();
+          double errorMeas = proj -> errMeasure();
+          double chi2      = proj -> chi2();
           plot1D( res, ID+30, measType( (*it)->type() ) + 
                   " Measurement resolution (residual)", -0.5, 0.5, 100 );
           plot1D( res/errorMeas, ID+31, measType( (*it)->type() ) + 

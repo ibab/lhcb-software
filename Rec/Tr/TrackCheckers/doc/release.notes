@@ -4,6 +4,10 @@
 ! Purpose     : Package for track checking algorithms
 !-----------------------------------------------------------------------------
 
+!======================= TrackCheckers v2r11 2007-01-19 ======================
+! 2007-01-19 - Eduardo Rodrigues
+ - Replacement of master projector by the new projector selector
+
 !======================= TrackCheckers v2r10 2006-11-30 ======================
 ! 2006-11-30 - Edwin Bos
  - Calls to TrajPoca minimize now handle returned StatusCode
