@@ -123,9 +123,9 @@ StatusCode Adder::execute() {
      std::vector<TH1*> hist;
      std::vector<TH2*> hist2d;
      std::vector<TProfile*> histp;
-     hSvcnames="H1D/"+m_nodename+"*/"+m_algorithmname[j]+"/"+m_histogramname[j];
-     hSvcnames2d="H2D/"+m_nodename+"*/"+m_algorithmname[j]+"/"+m_histogramname[j];
-     pSvcnames="HPD/"+m_nodename+"*/"+m_algorithmname[j]+"/"+m_histogramname[j];
+     hSvcnames="H1D/"+m_nodename+"*"+m_algorithmname[j]+"/"+m_histogramname[j];
+     hSvcnames2d="H2D/"+m_nodename+"*"+m_algorithmname[j]+"/"+m_histogramname[j];
+     pSvcnames="HPD/"+m_nodename+"*"+m_algorithmname[j]+"/"+m_histogramname[j];
      
      DimClient::setDnsNode(m_dimclientdns.c_str());
      int jindex=0; 

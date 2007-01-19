@@ -52,7 +52,8 @@ histograms that have to be saved.
 
 - algorithmname : This is a vector of strings containing the names of the
 corresponding algorithms of the histograms that have to be saved (there must be
-as many algorithms as there are histograms).
+as many algorithms as there are histograms). To select only summed histograms,
+prefix the algorithmname by the string "Summed_".
 
 - dimclientdns : This is the DIM_DNS_NODE used by the tasks producing the histograms.
 If it is not set, the DIM_DNS_NODE is taken from the environment variable (the default). 
