@@ -5,74 +5,147 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v22r0>2006-12-14 LHCbSys v22r0</A></H1><PRE>
-This version is using the InstallArea. It has been built with Gaudi from
-/afs/cern.ch/sw/app/nightlies/dev/Wed
+</PRE><H1><A NAME=v22r0>2007-01-16 LHCbSys v22r0</A></H1><PRE>
+This version is using the InstallArea. Uses Gaudi v19r1
 
-- LHCb is removed: use *Sys packages instead
+- Packages removed: LHCb - use *Sys packages instead
 
-- in CaloDAQ v3r0 
-  apply_pattern install_more_includes
-  fix CaloReCreateMCLinks for new Plugins, 
+- Packages modified: GaudiConf v10r0, GaudiObjDesc v9r8, KernelSys v6r0,
+    LHCbDefinitions v2r0, LHCbKernel v7r0, LHCbMath v2r0, Relations v5r0,
+    CaloKernel v5r0, MuonKernel v4r0, RichKernel v7r0, L0MuonKernel v6r0,
+    ProcessorKernel v4r0, DetSys v9r0, CaloDet v8r0, CaloDetXmlCnv v3r0,
+    DetDesc v17r0, DetDescCnv v4r0, XmlTools v4r0, VeloDet v11r0, OTDet v7r0,
+    MuonDet v6r0, RichDet v10r0, STDet v3r0, DetCond v10r0, EventSys v23r0,
+    DAQEvent v7r0, DigiEvent v2r0, EventBase v2r0, GenEvent v5r0, HltEvent v8r0,
+    L0Event v16r0, LinkerEvent v3r0, MCEvent v2r0, PackedEvent v3r0,
+    LinkerInstances v3r2, PhysEvent v11r0, RecEvent v2r0, TrackEvent v4r0,
+    VeloEvent v15r0, DAQSys v3r0, CaloDAQ v3r0, MuonDAQ v3r0, OTDAQ v5r0,
+    SiDAQ v2r0, CaloInterfaces v7r0, CaloUtils v7r0, HltBase v2r0, PatTools v3r0,
+    LokiCore v2r0, LoKiGen v2r0, RichRecBase v3r0, TrackInterfaces v3r0,
+    TrackMCInterfaces v2r0, TsaKernel v2r1, SimComponents v2r0,DetDescChecks v4r0
 
-- in CaloInterfaces v7r0, CaloKernel v5r0, CaloUtils v7r0
-  apply_pattern install_more_includes
+- In GaudiConf v10r0
+  . Remove ApplicationMgr.DLLs options, not needed with Gaudi v19r0 plugins
 
-- in DAQSys v3r0
-  use CaloDAQ v3r0, MuonDAQ v3r0, OTDAQ v5r0, SiDAQ v2r0
+- In LHCbDefinitions v2r0
+  . This package is now obsolete. Includes have been moved to other packages,
+    this package kept temporarily for backward compatibility  
 
-- in CaloDet v8r0, CaloDetXmlCnv v3r0, DetCond v10r0, DetDesc v17r0, DetDescChecks v4r0,
-  DetDescCnv v4r0, MuonDet v6r0, OTDet v7r0, RichDet v10r0, STDet v3r0, VeloDet v10r0
-  apply_pattern install_more_includes
-  fixes for new Plugins
+- In LHCbKernel v7r0
+  . Add Kernel/LHCbConstants.h, moved from LHCbDefinitions
+  . Add link dependency on MathCore and SMatrix, previously from LHCbDefinitions
+  . Add AlignTraj (an implementation of DifTraj), which takes an existing
+    Trajectory, and rotates/translates it. Note: this class defines a
+    convention for the order of the rotations/translations.
+  . Add a pure virtual 'parameters' method to DifTraj, which returns the
+    parameter values (wrt. to which 'derivatives' returns the derivatives).
+  . Make CircleTraj,LineTraj and ParabolaTraj inherit from Trajectory instead
+    of DifTraj
+  . Improve ParabolaTraj::arclength
+  . Fix ParticleID::hasQuark() so it works also if particle IS a quark
+  . ParticleID::abspid() now returns unsigned int
 
-- in DAQEvent v7r0, DigiEvent v2r0, EventBase v2r0, GenEvent v5r0, HltEvent v8r0, L0Event v16r0,
-  MCEvent v2r0, PackedEvent v3r0, PhysEvent v11r0, RecEvent v2r0, VeloEvent v15ro
-  apply_pattern install_more_includes
-  fixes for new Plugins
-  and some other fixes
+- In LHCbMath v2r0
+  . Added LHCbMath/LHCbMath.h and LineTypes.h, moved from LHCbDefinitions
+  . Removed Root from include path, already in GaudiKernel
+
+- In RichKernel v7r0
+  . Add new method to ray tracing interface
+
+- In L0MuonKernel v6r0
+  . Add a new unit: OLDumpUnit to write out the OL link content to feed the
+    PU injection buffer (test mode)
+  . CoreUnit: add 2 new methods to allow partial replay of the events
+    (search of candidates with new FOI)
+  . MuonCandidate: add copy constructor
+
+- In OTDet v7r0
+  . Map IDs to detector elements. Speeds up findModule() and OTTimeCreator
+  . Minor clean-ups in DeOTModule
+
+- In RichDet v10r0
+  . Add method to DeRichBeamPipe to only test for intersection (slightly faster)
+
+- In HltEvent v8r0
+  . In HltSummaryFunctor.h, add functor for simpler retrieval of tracks, vertices
+
+- In MCEvent v2r0
+  . Add Kernel/IVisPrimVertTool, IMCReconstructible interfaces, previously in 
+    DaVinciMCKernel, and new IMuonPad2MCTool interface
+
+- In TrackEvent v4r0
+  . Add Event/TrackTypes.h, moved from LHCbDefinitions
+  . Move Measurement::checkType from cpp to xml, and remove Measurement.cpp
+  . Use Measurement::Type instead of unsigned int in Measurement::type and
+    Measurement::checkType
+
+- In LinkerInstances v3r2
+  . Add support for MuonDigit and CaloDigit linker tables
 
 - in HltBase v2r0
-  apply_pattern install_more_includes
-  and some other fixes
+  . HltBase/HltUtils : function to compare two tracks via its LHCbIDs
+  . HltBase/ESequences : algos to count the number of objts
+  . HltBase/HltAlgorithm : minor changes to simplify use with the summary
 
-- in LHCbDefinitions v2r0, LHCbKernel v7r0, LHCbMath v2r0, Relations v5r0
-  apply_pattern install_more_includes
-  and some other fixes
+- In RichRecBase v3r0
+  . Add method to RichRecTrack to return pointer to RichRecSegemnt in a
+    given radiator
 
-- in L0MuonKernel v6r0, ProcessorKernel v4r0
-  apply_pattern install_more_includes
-  and some other fixes
+- In TrackInterfaces v3r0
+  . add an interface to select projectors given a measurement
+  . add a method to obtain alignment derivatives to the projector interface
 
-- in MuonDAQ v3r0, MuonKernel v4r0
-  apply_pattern install_more_includes
+- In SimComponents v2r0
+  . Add VisPrimVertTool and MCReconstructible (previously in DaVinciMCTools)
 
-- in OTDAQ v5r0
-  apply_pattern install_more_includes
+- In CaloInterfaces v7r0
+  . Add ICaloElectron interface
 
-- in PatTools v3r0
-  apply_pattern install_more_includes
-  fixes for new Plugins
+- In CaloUtils v7r0
+  . Add CaloElectron tool
 
-- in LokiCore v2r0, LoKiGen v2r0
-  apply_pattern install_more_includes
-  fixes for new Plugins
+- In TsaKernel v2r1
+  . Add interfaces for Seed tracking tools
+  . Add Roger's data classes (SeedXXX)
+  . Minor modifications in ITsaCollector/xxxDataSvc interfaces
 
-- in RichKernel v7r0, RichRecBase v3r0
-  apply_pattern install_more_includes
-  and some other fixes
+- In LoKiGen v2r0
+  . Add BuildGenTrees.h: new utilities to select the independent trees from 
+    the flat list of HepMC-particles
 
-- in SiDAQ v2r0
- apply_pattern install_more_includes
+- In DetSys v9r0, MCEvent v2r0, LinkerInstances v3r2, GaudiObjDesc v9r8
+  . Fixes to avoid generation of duplicate dictionaries 
 
-- in TrackInterfaces v3r0, TrackMCInterfaces v2r0, TsaKernel v2r0
- apply_pattern install_more_includes
- new version in TsaKernel
+- In MuonDAQ v3r0, OTDAQ v5r0, SiDAQ v2r0, LHCbDefinitions v2r0, LHCbMath v2r0,
+     LHCbKernel v7r0, Relations v5r0, CaloKernel v5r0, MuonKernel v4r0,
+     RichKernel v7r0, L0MuonKernel v6r0, ProcessorKernel v4r0, RichDet v10r0,
+     STDet v3r0, DetCond v10r0, DigiEvent v2r0, EventBase v4r0, GenEvent v5r0,
+     HltEvent v8r0, L0Event v16r0, LinkerEvent v3r0, MCEvent v2r0, RecEvent v2r0,
+     PhysEvent v11r0, TrackEvent v4r0, VeloEvent v15r0, CaloInterfaces v7r0,
+     CaloUtils v7r0, HltBase v2r0, LoKiGen v2r0, RichRecBase v3r0,
+     TrackInterfaces v3r0, TrackMCInterfaces v2r0, TsaKernel v2r1
+  . Fixes in requirements, for InstallArea
 
+- In CaloDAQ v3r0, CaloDet v8r0, CaloDetXmlCnv v3r0, DetDesc v17r0,
+     DetDescCnv v4r0, XmlTools v4r0, VeloDet v11r0, OTDet v7r0, MuonDet v6r0,
+     DAQEvent v7r0, PackedEvent v3r0, PatTools v3r0, LoKiCore v2r0,
+     GaudiObjDesc v9r8
+  . Fixes in requirements for InstallArea
+  . Fixes for Gaudi v19r0 plugins
 
+- In LinkerInstances v3r2, DetDescChecks v4r0
+  . Fixes for Gaudi v19r0 plugins
 
+- In LHCbKernel v7r0, CaloDet v8r0, MCEvent v2r0, TrackEvent v4r0,
+     TrackInterfaces v3r0, DetDescChecks v4r0, CaloUtils v7r0, TsaKernel v2r1
+  . Remove LHCbDefinitions dependency
 
-!=====================================================================================
+- In DetDesc v8r0, VeloDet v11r0
+  . Fix some unchecked StatusCodes
+
+- In STDet v3r0
+  . Improvements to documentation
+
 </PRE><H1><A NAME=v21r12>2006-12-01 LHCbSys v21r12</A></H1><PRE>
 This version uses Gaudi v18r11 and is fully compatible with DC06 production data
 

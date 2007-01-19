@@ -7,8 +7,8 @@ branches doc cmt
 # LHCb packages visible to all applications
 #===============================================================
 
-use GaudiConf	         v9r12
-use GaudiObjDesc         v9r7p1
+use GaudiConf	         v10r0
+use GaudiObjDesc         v9r8
 
 #                                         Maintainer
 # Kernel packages
@@ -44,7 +44,7 @@ use EventBase             v2r0    Event   # Marco Cattaneo, Gloria Corti
 use MCEvent               v2r0    Event   # Gloria Corti and sub-det experts
 use DigiEvent             v2r0    Event   # Marco Cattaneo and sub-det experts
 use RecEvent              v2r0    Event   # Marco Cattaneo and sub-det experts
-use L0Event               v16r0   Event   # O.Callot,O.Deschamps,A.Tsaregorodtsev
+use L0Event               v16r0   Event   # Julien Cogan
 use PhysEvent             v11r0   Event   # Patrick Koppenburg, Juan Palacios
 use DAQEvent	          v7r0    Event   # Marco Cattaneo, Markus Frank
 use GenEvent              v5r0    Event   # Gloria Corti
@@ -71,14 +71,14 @@ use RichRecBase           v3r0   Rich    # Chris Jones
 use PatTools              v3r0   Pat     # Olivier Callot
 use TrackInterfaces       v3r0   Tr      # Eduardo Rodrigues, Jose Hernando
 use TrackMCInterfaces     v2r0   Tr      # Eduardo Rodrigues
-use TsaKernel             v2r0   Tr      # Matt Needham
+use TsaKernel             v2r1   Tr      # Matt Needham
 use HltBase               v2r0   Hlt     # Jose Angel Hernando-Morata
-use LinkerInstances       v3r1   Event   # Eduardo Rodrigues, Thomas Ruf
+use LinkerInstances       v3r2   Event   # Eduardo Rodrigues, Thomas Ruf
 use DetCond               v10r0  Det     # Marco Clemencic
 use CondDBEntityResolver  v3r0   Tools   # Marco Clemencic
 use LoKiCore              v2r0   Phys    # Ivan Belyaev
 use LoKiGen               v2r0   Phys	 # Ivan Belyaev
-use SimComponents         v1r2p1 Sim     # Gloria Corti, Marco Cattaneo
+use SimComponents         v2r0   Sim     # Gloria Corti, Marco Cattaneo
 
 # LHCb  Examples
 use DetDescChecks         v4r0   Det     # Ivan Belyaev
