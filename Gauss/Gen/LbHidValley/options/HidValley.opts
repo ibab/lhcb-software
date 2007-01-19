@@ -1,35 +1,27 @@
-// $Id: 43900006.opts,v 1.1.1.1 2006-10-28 14:06:41 ibelyaev Exp $ 
+// $Id: HidValley.opts,v 1.1 2007-01-19 15:13:07 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1.1.1 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.1 $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
-// ============================================================================
-/** @file
- * 
- *  Configuration file to run Hidden Valley through Higgses  production 
- *  
- *  M(H0) = 180 GeV 
- *  t(A0) =  70 GeV 
- *  t(A0) =   1 ps  
- *
+/** @file 
+ *  The generic configuration file for GEn/LbHidValley package 
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
- *  @date 2006-10-28
+ *  @date 2007-01-19
  */
 // ============================================================================
-// include "common" configuration file:
+// make usage of LoKi
 // ============================================================================
-#include "$LBHIDVALLEYOPTS/HidValleyH.opts"
+#include "$DECFILESROOT/options/LoKi.opts"
 // ============================================================================
-// define the event type 
+// Load the library
 // ============================================================================
-Generation.EventType = 43900006 ;
+ApplicationMgr.DLLs += { "LbHidValley" } ;
 // ============================================================================
-// define the particular properties of H_20 and H_30 
+
+
 // ============================================================================
-ParticlePropertySvc.Particles = {
-  "H_20 88 35 0.0 180.0 9.4e-26   Higgs'0 35 0.0e+00" ,
-  "H_30 89 36 0.0  70.0 1.0e-12      A0 36 0.0e+00"
-} ;
+// $Log: not supported by cvs2svn $ 
+//
 // ============================================================================
-/// The END 
+// The END 
 // ============================================================================
+ 
