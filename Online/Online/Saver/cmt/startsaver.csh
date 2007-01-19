@@ -27,4 +27,4 @@ GaudiOnline \
 -runable=LHCb::OnlineRunable \
 -options=/afs/cern.ch/user/e/evh/w0/cmtuser/Online/Saver/v1r0/options/Saver.opts \
 -msgsvc=MessageSvc \
--loop 
+-loop -auto

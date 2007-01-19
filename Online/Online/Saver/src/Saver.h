@@ -35,6 +35,7 @@ private:
  // TFile *f;
   std::string m_nodename; 
   std::vector<std::string> m_histogramname; 
+  std::vector<std::string> m_algorithmname; 
   int m_refreshtime;
   std::string m_dimclientdns;
   std::string m_taskname;

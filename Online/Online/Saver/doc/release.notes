@@ -8,7 +8,8 @@
 This program saves histograms published by tasks using the Gaucho
 MonitorSvc, specifically the adder.
 
-The saver only saves when the command "save_histos" is sent to it via DIM.
+The saver only saves when the command "save_histos" is sent to it via DIM (to
+the cmd service UTGID/, e.g. node00101_Saver_1/).
 
 The saver saves histograms produced on a node. The histogram DIM
 service names have to be of the following format (n=histogram dimension):
@@ -24,16 +25,17 @@ following format:
 the subfarmnumber, and the fourth and fifth digits (01) indicate the nodenumber inside
 the subfarm.  
 
-The names of the summed histograms are prefixed with the string "Summed". For example,
-a Moore task publishing a histogram with name "Mass" will create a DIM service with
+The names of the algorithms of the summed histograms are prefixed with the
+string "Summed_". For example,
+a Moore task publishing a histogram with name "Mass" in an algorithm "TopAlg" will create a DIM service with
 name:
 
-   H1D/node00101_Moore_1/Algorithmname/Mass
+   H1D/node00101_Moore_1/TopAlg/Mass
    
 The added "Mass" histogram will be published in a DIM service with name (provided the UTGID
 environment variable UTGID is set to "node00101_Adder_1):
 
-   H1D/node00101_Adder_1/Adder/Summed Mass   
+   H1D/node00101_Adder_1/Adder/Summed_TopAlg/Mass   
 
 The configuration is done via joboptions:
 
@@ -47,6 +49,10 @@ to "node".
 
 - histogramname : This is a vector of strings containing the names of the
 histograms that have to be saved. 
+
+- algorithmname : This is a vector of strings containing the names of the
+corresponding algorithms of the histograms that have to be saved (there must be
+as many algorithms as there are histograms).
 
 - dimclientdns : This is the DIM_DNS_NODE used by the tasks producing the histograms.
 If it is not set, the DIM_DNS_NODE is taken from the environment variable (the default). 

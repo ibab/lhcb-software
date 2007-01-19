@@ -188,12 +188,11 @@ void DimInfoHistos::setHPData(){
   int nofbins = m_histp->GetNbinsX();
   int iData=5;
   for (int i=0;i<=nofbins+1;i++) {
-    for (int i=0;i<=nofbins+1;i++) {
     m_histp->SetBinEntries(i,m_data[iData++]);
 //    std::cerr << "DimInfoHistos(" << m_histoname << "), setHPData: entries: index in DimInfo data: "
 //              << iData-1 << " value: " << m_data[iData-1] << std::endl;
   }
-  
+  for (int i=0;i<=nofbins+1;i++) {
     m_histp->SetBinContent(i,m_data[iData++]);
 //    std::cerr << "DimInfoHistos(" << m_histoname << "), setHPData: content: index in DimInfo data: "
 //              << iData-1 << " value: " << m_data[iData-1] << std::endl;

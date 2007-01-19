@@ -64,6 +64,7 @@ Saver::Saver(const std::string& name, ISvcLocator* ploc) : Algorithm(name, ploc)
   {
   declareProperty("nodename",m_nodename);
   declareProperty("histogramname",m_histogramname);
+  declareProperty("algorithmname",m_algorithmname);
   declareProperty("dimclientdns",m_dimclientdns);
   declareProperty("taskname",m_taskname);
   declareProperty("savedir",m_savedir);
@@ -156,9 +157,9 @@ StatusCode Saver::execute() {
      std::vector<TH1*> hist;
      std::vector<TH2*> hist2d;
      std::vector<TProfile*> histp;
-     hSvcnames="H1D/"+m_nodename+"*/"+m_histogramname[j];
-     hSvcnames2d="H2D/"+m_nodename+"*/"+m_histogramname[j];
-     pSvcnames="HPD/"+m_nodename+"*/"+m_histogramname[j];
+     hSvcnames="H1D/"+m_nodename+"*/"+m_algorithmname[j]+"/"+m_histogramname[j];
+     hSvcnames2d="H2D/"+m_nodename+"*/"+m_algorithmname[j]+"/"+m_histogramname[j];
+     pSvcnames="HPD/"+m_nodename+"*/"+m_algorithmname[j]+"/"+m_histogramname[j];
      
      DimClient::setDnsNode(m_dimclientdns.c_str());
   
