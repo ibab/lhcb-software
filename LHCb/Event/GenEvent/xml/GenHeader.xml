@@ -23,7 +23,7 @@
         init="0.0"
        />
        <attribute
-        desc="LHCb event type. Code used in BookKeeping to identify samples"
+        desc='LHCb event type. Code used in BookKeeping to identify samples, as defined in &lt;a href="http://cdsweb.cern.ch/record-restricted/855452/"&gt;LHCb-2005-034&lt;/a&gt;'
         name="evType"
         type="int"
         init="0"
