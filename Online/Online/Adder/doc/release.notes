@@ -55,9 +55,12 @@ to "node" (and the UTGID to node_Adder_1).
 
 - histogramname : This is a vector of strings containing the names of the
 histograms that have to be added. Constraint: if a name is already used for a 1D histogram,
-it can not be used for a 2D histogram and vice versa. To preserve unicity, the
-histogramname should contain the Algorithmname, e.g.
-histogramname=Algorithmname/Histogramname. 
+it can not be used for a 2D histogram and vice versa.
+
+
+- algorithmname : This is a vector of strings containing the names of the
+corresponding algorithms of the histograms that have to be saved (there must be
+as many algorithms as there are histograms).
 
 - refreshtime : This is the time interval with which the sums are
 calculated.
