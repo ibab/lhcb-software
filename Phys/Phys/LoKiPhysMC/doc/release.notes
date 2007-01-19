@@ -1,9 +1,17 @@
-! $Id: release.notes,v 1.20 2007-01-12 14:11:45 ranjard Exp $ 
+! $Id: release.notes,v 1.21 2007-01-19 13:14:56 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhysMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : RC <--> MC part of LoKi 
 ! -----------------------------------------------------------------------------
+
+!========================== LoKiPhysMC v3r0 2007-01-19 =======================
+
+! 2007-01-19 - Vanya BELYAEV
+
+ - LoKi/DecayChain.h
+     add the printout for many additional classes
+
 
 !========================== LoKiPhysMC v3r0 2007-01-09 =======================
 ! 2007-01-09 - Florence RANJARD

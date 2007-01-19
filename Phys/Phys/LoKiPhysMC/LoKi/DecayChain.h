@@ -1,13 +1,8 @@
-// $Id: DecayChain.h,v 1.3 2006-11-27 11:56:15 ibelyaev Exp $
+// $Id: DecayChain.h,v 1.4 2007-01-19 13:14:56 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.2  2006/06/25 12:09:13  ibelyaev
-//  update
-//
-// Revision 1.1  2006/05/27 11:47:14  ibelyaev
-//  add DecayChain utilities
 //
 // ============================================================================
 #ifndef LOKI_DECAYCHAIN_H 
@@ -32,8 +27,12 @@
 // ============================================================================
 // LoKi 
 // ============================================================================
-#include "LoKi/PhysTypes.h"
 #include "LoKi/MCTypes.h"
+#include "LoKi/GenTypes.h"
+#include "LoKi/PhysTypes.h"
+#include "LoKi/PhysRangeTypes.h"
+#include "LoKi/BuildMCTrees.h"
+#include "LoKi/BuildGenTrees.h"
 // ============================================================================
 
 namespace LoKi
@@ -443,6 +442,219 @@ namespace LoKi
       return stream ;
     };
     
+    /** print the decay chain for HepMC::GenEvent
+     * 
+     *  Essentially it prints the decay tree from "signal_vertex" 
+     *  or vertex with barcode equal to -1 
+     *
+     *  @code 
+     *
+     *    DecayChain dc ;
+     *    const HepMC::GenEvent* event = ... ; 
+     *
+     *    /// print decay chain to standard output 
+     *    dc.print ( event , std::cout , std::endl ) ;
+     *    
+     *    /// print decay chain to gaudi message stream
+     *    MsgStream log( msgSvc() , name() ) ;
+     *    dc.print ( event , log , endreq          ) ;
+     *
+     *  @endcode 
+     * 
+     *  @param event    pointer to the event  
+     *  @param stream   reference to output stream 
+     *  @param term     stream terminator 
+     */
+    template < class STREAM     , 
+               class TERMINATOR , 
+               class ACCEPT     ,
+               class MARK       > 
+    STREAM& print ( const HepMC::GenEvent*     event          , 
+                    STREAM&                    stream         , 
+                    TERMINATOR                 term           ,
+                    const ACCEPT&              accept         ,
+                    const MARK&                mark           ,
+                    const std::string&         prefix  = " "  ,
+                    const size_t               depth   = 0    ) const    
+    {
+      // invalid event 
+      if ( 0 == event ) 
+      { 
+        Error ( " HepMC::GenEvent* points to NULL" ) ; 
+        stream << term  ; return stream ; 
+      }
+      // use "signal vertex"
+      HepMC::GenVertex* vertex = event->signal_process_vertex() ;
+      if ( 0 == vertex ) 
+      {
+        // use the convention :
+        vertex = event->barcode_to_vertex ( -1 ) ;
+      }
+      if ( 0 != vertex ) 
+      {
+        return print 
+          ( vertex->particles_begin( HepMC::children ) , 
+            vertex->particles_end  ( HepMC::children ) , 
+            stream , term , accept , mark , prefix , depth ) ;
+      }
+      // select the trees 
+      LoKi::GenTypes::GenContainer trees ;
+      trees.reserve( event->particles_size() ) ;
+      LoKi::GenTrees::buildTrees 
+        ( event->particles_begin () ,
+          event->particles_end   () , 
+          std::back_inserter( trees ) );
+      // print the trees 
+      return print 
+        ( trees.begin () , 
+          trees.end   () , 
+          stream , term , accept , mark , prefix , depth ) ;
+    } ;
+
+    /** print the decay chain for LHCb::HepMCEvent
+     * 
+     *  Essentially it prints the underlying HepMC::GenEvent 
+     *
+     *  @code 
+     *
+     *    DecayChain dc ;
+     *    const LHCb::HepMCEvent* event = ... ; 
+     *
+     *    /// print decay chain to standard output 
+     *    dc.print ( event , std::cout , std::endl ) ;
+     *    
+     *    /// print decay chain to gaudi message stream
+     *    MsgStream log( msgSvc() , name() ) ;
+     *    dc.print ( event , log , endreq          ) ;
+     *
+     *  @endcode 
+     * 
+     *  @param event    pointer to the event  
+     *  @param stream   reference to output stream 
+     *  @param term     stream terminator 
+     */
+    template < class STREAM     , 
+               class TERMINATOR , 
+               class ACCEPT     ,
+               class MARK       > 
+    STREAM& print ( const LHCb::HepMCEvent*    event          , 
+                    STREAM&                    stream         , 
+                    TERMINATOR                 term           ,
+                    const ACCEPT&              accept         ,
+                    const MARK&                mark           ,
+                    const std::string&         prefix  = " "  ,
+                    const size_t               depth   = 0    ) const    
+    {
+      // invalid event 
+      if ( 0 == event ) 
+      { 
+        Error ( " LHCb::HepMCEvent* points to NULL" ) ; 
+        stream << term  ; return stream ; 
+      }
+      // print HepMC::GenEvent
+      return print 
+        ( event->pGenEvt() , stream , term , accept , mark , prefix , depth ) ;
+    }
+    
+    /** print the decay chain for LoKi::Types::GenContainer
+     * 
+     *  Essentially it prints the decay tree from "signal_vertex" 
+     *  or vertex with barcode equal to -1 
+     *
+     *  @code 
+     *
+     *    DecayChain dc ;
+     *    const LoKi::Types::GenContainer particles  ... ; 
+     *
+     *    /// print decay chain to standard output 
+     *    dc.print ( particles , std::cout , std::endl ) ;
+     *    
+     *    /// print decay chain to gaudi message stream
+     *    MsgStream log( msgSvc() , name() ) ;
+     *    dc.print ( particles , log , endreq          ) ;
+     *
+     *  @endcode 
+     * 
+     *  @param particles container of particles
+     *  @param stream   reference to output stream 
+     *  @param term     stream terminator 
+     */
+    template < class STREAM     , 
+               class TERMINATOR , 
+               class ACCEPT     ,
+               class MARK       > 
+    STREAM& print ( const LoKi::GenTypes::GenContainer& particles   , 
+                    STREAM&                          stream         , 
+                    TERMINATOR                       term           ,
+                    const ACCEPT&                    accept         ,
+                    const MARK&                      mark           ,
+                    const std::string&               prefix  = " "  ,
+                    const size_t                     depth   = 0    ) const    
+    {
+      // select the trees 
+      LoKi::GenTypes::GenContainer trees ;
+      trees.reserve( particles.size() ) ;
+      LoKi::GenTrees::buildTrees 
+        ( particles.begin () ,
+          particles.end   () , 
+          std::back_inserter( trees ) );
+      // print the trees 
+      return print 
+        ( trees.begin () , 
+          trees.end   () , 
+          stream , term , accept , mark , prefix , depth ) ;
+    } ;
+
+
+    /** print the decay chain for LoKi::Types::GRange
+     * 
+     *  Essentially it prints the decay tree from "signal_vertex" 
+     *  or vertex with barcode equal to -1 
+     *
+     *  @code 
+     *
+     *    DecayChain dc ;
+     *    const LoKi::Types::GRange particles  ... ; 
+     *
+     *    /// print decay chain to standard output 
+     *    dc.print ( particles , std::cout , std::endl ) ;
+     *    
+     *    /// print decay chain to gaudi message stream
+     *    MsgStream log( msgSvc() , name() ) ;
+     *    dc.print ( particles , log , endreq          ) ;
+     *
+     *  @endcode 
+     * 
+     *  @param particles container of particles
+     *  @param stream   reference to output stream 
+     *  @param term     stream terminator 
+     */
+    template < class STREAM     , 
+               class TERMINATOR , 
+               class ACCEPT     ,
+               class MARK       > 
+    STREAM& print ( const LoKi::Types::GRange&       particles      , 
+                    STREAM&                          stream         , 
+                    TERMINATOR                       term           ,
+                    const ACCEPT&                    accept         ,
+                    const MARK&                      mark           ,
+                    const std::string&               prefix  = " "  ,
+                    const size_t                     depth   = 0    ) const    
+    {
+      // select the trees 
+      LoKi::GenTypes::GenContainer trees ;
+      trees.reserve( particles.size() ) ;
+      LoKi::GenTrees::buildTrees 
+        ( particles.begin () ,
+          particles.end   () , 
+          std::back_inserter( trees ) );
+      // print the trees 
+      return print 
+        ( trees.begin () , 
+          trees.end   () , 
+          stream , term , accept , mark , prefix , depth ) ;
+    } ;
+
     /** print decay chain for sequence of Particles/MCParticles/HepMCParticles
      * 
      *  @param first    begin of sequence to (MC/HepMC) particles 
@@ -468,6 +680,328 @@ namespace LoKi
       { print ( *first , stream , term , accept , mark , prefix , depth ) ; }
       return stream ;
     };
+
+    /** print the decay chain for LHCb::HepMCEvent::Container
+     * 
+     *  Essentially it prints sequentially all LHCb::HepMCEvent
+     *
+     *  @code 
+     *
+     *    DecayChain dc ;
+     *    const LHCb::HepMCEvent::Container* events = ... ; 
+     *
+     *    /// print decay chain to standard output 
+     *    dc.print ( events , std::cout , std::endl ) ;
+     *    
+     *    /// print decay chain to gaudi message stream
+     *    MsgStream log( msgSvc() , name() ) ;
+     *    dc.print ( events , log , endreq          ) ;
+     *
+     *  @endcode 
+     * 
+     *  @param event    pointer to the container of events 
+     *  @param stream   reference to output stream 
+     *  @param term     stream terminator 
+     */
+    template < class STREAM     , 
+               class TERMINATOR , 
+               class ACCEPT     ,
+               class MARK       > 
+    STREAM& print ( const LHCb::HepMCEvent::Container* events         , 
+                    STREAM&                            stream         , 
+                    TERMINATOR                         term           ,
+                    const ACCEPT&                      accept         ,
+                    const MARK&                        mark           ,
+                    const std::string&                 prefix  = " "  ,
+                    const size_t                       depth   = 0    ) const    
+    {
+      // invalid event 
+      if ( 0 == events ) 
+      { 
+        Error ( " LHCb::HepMCEvent::Container* points to NULL" ) ; 
+        stream << term  ; return stream ; 
+      }
+      // print HepMC::GenEvent
+      return print 
+        ( events -> begin () , 
+          events -> end   () , stream , term , accept , mark , prefix , depth ) ;
+    } ;
+    
+    /** print all independent MC-trees from LHCb::MCParticle::Container
+     * 
+     *  @code 
+     *
+     *    DecayChain dc ;
+     *    const LHCb::MCParticle::Container* particles = ... ; 
+     *
+     *    /// print decay chain to standard output 
+     *    dc.print ( particles , std::cout , std::endl ) ;
+     *    
+     *    /// print decay chain to gaudi message stream
+     *    MsgStream log( msgSvc() , name() ) ;
+     *    dc.print ( particles , log , endreq          ) ;
+     *
+     *  @endcode 
+     * 
+     *  @see LoKi::MCTrees::buildTrees 
+     *  @param event    pointer to the container of particles 
+     *  @param stream   reference to output stream 
+     *  @param term     stream terminator 
+     */
+    template < class STREAM     , 
+               class TERMINATOR , 
+               class ACCEPT     ,
+               class MARK       > 
+    STREAM& print ( const LHCb::MCParticle::Container* particles , 
+                    STREAM&                            stream         , 
+                    TERMINATOR                         term           ,
+                    const ACCEPT&                      accept         ,
+                    const MARK&                        mark           ,
+                    const std::string&                 prefix  = " "  ,
+                    const size_t                       depth   = 0    ) const    
+    {
+      // invalid event 
+      if ( 0 == particles ) 
+      { 
+        Error ( " LHCb::MCParticle::Container* points to NULL" ) ; 
+        stream << term  ; return stream ; 
+      }
+      // temporary storage of particles 
+      LHCb::MCParticle::ConstVector trees ;
+      trees.reserve ( particles->size() ) ;
+      LoKi::MCTrees::buildTrees 
+        ( particles -> begin () , 
+          particles -> end   () , std::back_inserter( trees ) ) ;
+      return print 
+        ( trees.begin () , 
+          trees.end   () , stream , term , accept , mark , prefix , depth ) ;
+    } ;
+
+    /** print all independent MC-trees from LHCb::MCParticle::ConstVector
+     * 
+     *  @code 
+     *
+     *    DecayChain dc ;
+     *    const LHCb::MCParticle::ConstVector particles = ... ; 
+     *
+     *    /// print decay chain to standard output 
+     *    dc.print ( particles , std::cout , std::endl ) ;
+     *    
+     *    /// print decay chain to gaudi message stream
+     *    MsgStream log( msgSvc() , name() ) ;
+     *    dc.print ( particles , log , endreq          ) ;
+     *
+     *  @endcode 
+     * 
+     *  @see LoKi::MCTrees::buildTrees 
+     *  @param event    pointer to the container of particles 
+     *  @param stream   reference to output stream 
+     *  @param term     stream terminator 
+     */
+    template < class STREAM     , 
+               class TERMINATOR , 
+               class ACCEPT     ,
+               class MARK       > 
+    STREAM& print ( const LHCb::MCParticle::ConstVector& particles , 
+                    STREAM&                              stream         , 
+                    TERMINATOR                           term           ,
+                    const ACCEPT&                        accept         ,
+                    const MARK&                          mark           ,
+                    const std::string&                   prefix  = " "  ,
+                    const size_t                         depth   = 0    ) const    
+    {
+      // temporary storage of particles 
+      LHCb::MCParticle::ConstVector trees ;
+      trees.reserve ( particles.size() ) ;
+      LoKi::MCTrees::buildTrees 
+        ( particles.begin () , 
+          particles.end   () , std::back_inserter( trees ) ) ;
+      return print 
+        ( trees.begin () , 
+          trees.end   () , stream , term , accept , mark , prefix , depth ) ;
+    } ;
+
+    /** print all independent MC-trees from LHCb::MCParticle::Vector
+     * 
+     *  @code 
+     *
+     *    DecayChain dc ;
+     *    const LHCb::MCParticle::Vector particles = ... ; 
+     *
+     *    /// print decay chain to standard output 
+     *    dc.print ( particles , std::cout , std::endl ) ;
+     *    
+     *    /// print decay chain to gaudi message stream
+     *    MsgStream log( msgSvc() , name() ) ;
+     *    dc.print ( particles , log , endreq          ) ;
+     *
+     *  @endcode 
+     * 
+     *  @see LoKi::MCTrees::buildTrees 
+     *  @param event    pointer to the container of particles 
+     *  @param stream   reference to output stream 
+     *  @param term     stream terminator 
+     */
+    template < class STREAM     , 
+               class TERMINATOR , 
+               class ACCEPT     ,
+               class MARK       > 
+    STREAM& print ( const LHCb::MCParticle::Vector&      particles , 
+                    STREAM&                              stream         , 
+                    TERMINATOR                           term           ,
+                    const ACCEPT&                        accept         ,
+                    const MARK&                          mark           ,
+                    const std::string&                   prefix  = " "  ,
+                    const size_t                         depth   = 0    ) const    
+    {
+      // temporary storage of particles 
+      LHCb::MCParticle::ConstVector trees ;
+      trees.reserve ( particles.size() ) ;
+      LoKi::MCTrees::buildTrees 
+        ( particles.begin () , 
+          particles.end   () , std::back_inserter( trees ) ) ;
+      return print 
+        ( trees.begin () , 
+          trees.end   () , stream , term , accept , mark , prefix , depth ) ;
+    } ;
+
+    /** print all independent MC-trees from LoKi::Types::MCRange
+     * 
+     *  @code 
+     *
+     *    DecayChain dc ;
+     *    const LoKi::Types::MCRange particles = ... ; 
+     *
+     *    /// print decay chain to standard output 
+     *    dc.print ( particles , std::cout , std::endl ) ;
+     *    
+     *    /// print decay chain to gaudi message stream
+     *    MsgStream log( msgSvc() , name() ) ;
+     *    dc.print ( particles , log , endreq          ) ;
+     *
+     *  @endcode 
+     * 
+     *  @see LoKi::MCTrees::buildTrees 
+     *  @param event    pointer to the container of particles 
+     *  @param stream   reference to output stream 
+     *  @param term     stream terminator 
+     */
+    template < class STREAM     , 
+               class TERMINATOR , 
+               class ACCEPT     ,
+               class MARK       > 
+    STREAM& print ( const LoKi::Types::MCRange&          particles      , 
+                    STREAM&                              stream         , 
+                    TERMINATOR                           term           ,
+                    const ACCEPT&                        accept         ,
+                    const MARK&                          mark           ,
+                    const std::string&                   prefix  = " "  ,
+                    const size_t                         depth   = 0    ) const    
+    {
+      // temporary storage of particles 
+      LHCb::MCParticle::ConstVector trees ;
+      trees.reserve ( particles.size() ) ;
+      LoKi::MCTrees::buildTrees 
+        ( particles.begin () , 
+          particles.end   () , std::back_inserter( trees ) ) ;
+      return print 
+        ( trees.begin () , 
+          trees.end   () , stream , term , accept , mark , prefix , depth ) ;
+    } ;
+
+  public:
+    
+    // atomic 
+    
+    /// predefined printout 
+    void print
+    ( const LHCb::Particle*       p                                                                   , 
+      const LoKi::Types::Cuts&    accept = LoKi::BooleanConstant<const LHCb::Particle*>     ( true  ) , 
+      const LoKi::Types::Cuts&    mark   = LoKi::BooleanConstant<const LHCb::Particle*>     ( false ) ) const ;
+    /// predefined printout    
+    void print 
+    ( const LHCb::MCParticle*     p                                                                   , 
+      const LoKi::Types::MCCuts&  accept = LoKi::BooleanConstant<const LHCb::MCParticle*>   ( true  ) , 
+      const LoKi::Types::MCCuts&  mark   = LoKi::BooleanConstant<const LHCb::MCParticle*>   ( false ) ) const ;
+    /// predefined printout    
+    void print 
+    ( const HepMC::GenParticle*   p                                                                   , 
+      const LoKi::Types::GCuts&   accept = LoKi::BooleanConstant<const HepMC::GenParticle*> ( true  ) , 
+      const LoKi::Types::GCuts&   mark   = LoKi::BooleanConstant<const HepMC::GenParticle*> ( false ) ) const ;
+    
+    // ranges
+
+    /// predefined printout    
+    void print 
+    ( const LoKi::Types::Range&   p                                                                   ,
+      const LoKi::Types::Cuts&    accept = LoKi::BooleanConstant<const LHCb::Particle*>     ( true  ) , 
+      const LoKi::Types::Cuts&    mark   = LoKi::BooleanConstant<const LHCb::Particle*>     ( false ) ) const ;
+    /// predefined printout    
+    void print 
+    ( const LoKi::Types::MCRange& p                                                                   ,
+      const LoKi::Types::MCCuts&  accept = LoKi::BooleanConstant<const LHCb::MCParticle*>   ( true  ) , 
+      const LoKi::Types::MCCuts&  mark   = LoKi::BooleanConstant<const LHCb::MCParticle*>   ( false ) ) const ;
+    /// predefined printout    
+    void print 
+    ( const LoKi::Types::GRange&  p                                                                   ,
+      const LoKi::Types::GCuts&   accept = LoKi::BooleanConstant<const HepMC::GenParticle*> ( true  ) , 
+      const LoKi::Types::GCuts&   mark   = LoKi::BooleanConstant<const HepMC::GenParticle*> ( false ) ) const ;
+    
+    // vectors 
+    
+    /// predefined printout    
+    void print 
+    ( const LHCb::Particle::Vector& p                                                                 ,
+      const LoKi::Types::Cuts&    accept = LoKi::BooleanConstant<const LHCb::Particle*>     ( true  ) , 
+      const LoKi::Types::Cuts&    mark   = LoKi::BooleanConstant<const LHCb::Particle*>     ( false ) ) const ;
+    /// predefined printout
+    void print 
+    ( const LHCb::MCParticle::Vector& p                                                               ,
+      const LoKi::Types::MCCuts&  accept = LoKi::BooleanConstant<const LHCb::MCParticle*>   ( true  ) , 
+      const LoKi::Types::MCCuts&  mark   = LoKi::BooleanConstant<const LHCb::MCParticle*>   ( false ) ) const ;
+    /// predefined printout
+    void print 
+    ( const LHCb::Particle::ConstVector& p                                                            ,
+      const LoKi::Types::Cuts&    accept = LoKi::BooleanConstant<const LHCb::Particle*>     ( true  ) , 
+      const LoKi::Types::Cuts&    mark   = LoKi::BooleanConstant<const LHCb::Particle*>     ( false ) ) const ;
+    /// predefined printout
+    void print 
+    ( const LHCb::MCParticle::ConstVector&  p                                                         ,
+      const LoKi::Types::MCCuts&  accept = LoKi::BooleanConstant<const LHCb::MCParticle*>   ( true  ) , 
+      const LoKi::Types::MCCuts&  mark   = LoKi::BooleanConstant<const LHCb::MCParticle*>   ( false ) ) const ;
+    /// predefined printout    
+    void print 
+    ( const LoKi::GenTypes::GenContainer&   p                                                         ,
+      const LoKi::Types::GCuts&   accept = LoKi::BooleanConstant<const HepMC::GenParticle*> ( true  ) , 
+      const LoKi::Types::GCuts&   mark   = LoKi::BooleanConstant<const HepMC::GenParticle*> ( false ) ) const ;
+    
+    // other containers
+    
+    /// predefined printout    
+    void print 
+    ( const LHCb::Particle::Container*      p                                                         ,
+      const LoKi::Types::Cuts&    accept = LoKi::BooleanConstant<const LHCb::Particle*>     ( true  ) , 
+      const LoKi::Types::Cuts&    mark   = LoKi::BooleanConstant<const LHCb::Particle*>     ( false ) ) const ;
+    /// predefined printout    
+    void print 
+    ( const LHCb::MCParticle::Container*    p                                                         ,
+      const LoKi::Types::MCCuts&  accept = LoKi::BooleanConstant<const LHCb::MCParticle*>   ( true  ) , 
+      const LoKi::Types::MCCuts&  mark   = LoKi::BooleanConstant<const LHCb::MCParticle*>   ( false ) ) const ;
+    /// predefined printout    
+    void print 
+    ( const HepMC::GenEvent*      p                                                                   , 
+      const LoKi::Types::GCuts&   accept = LoKi::BooleanConstant<const HepMC::GenParticle*> ( true  ) , 
+      const LoKi::Types::GCuts&   mark   = LoKi::BooleanConstant<const HepMC::GenParticle*> ( false ) ) const ;
+    /// predefined printout    
+    void print 
+    ( const LHCb::HepMCEvent*     p                                                                   , 
+      const LoKi::Types::GCuts&   accept = LoKi::BooleanConstant<const HepMC::GenParticle*> ( true  ) , 
+      const LoKi::Types::GCuts&   mark   = LoKi::BooleanConstant<const HepMC::GenParticle*> ( false ) ) const ;
+    /// predefined printout      
+    void print 
+    ( const LHCb::HepMCEvent::Container*    p                                                         ,
+      const LoKi::Types::GCuts&   accept = LoKi::BooleanConstant<const HepMC::GenParticle*> ( true  ) , 
+      const LoKi::Types::GCuts&   mark   = LoKi::BooleanConstant<const HepMC::GenParticle*> ( false ) ) const ;
     
   protected:
     

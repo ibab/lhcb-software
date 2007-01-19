@@ -1,8 +1,11 @@
-// $Id: DecayChain.cpp,v 1.1 2006-05-27 11:47:14 ibelyaev Exp $
+// $Id: DecayChain.cpp,v 1.2 2007-01-19 13:14:57 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2006/05/27 11:47:14  ibelyaev
+//  add DecayChain utilities
+//
 // ============================================================================
 // Include files
 // ============================================================================
@@ -305,6 +308,146 @@ StatusCode LoKi::DecayChain::Error
   return report.Error( "LoKi::DecayChain " + msg , sc , mx ) ;
 };
 // ============================================================================
+// atomic 
+// ============================================================================
+/// predefined printout 
+// ============================================================================
+void LoKi::DecayChain::print 
+( const LHCb::Particle*       p      , 
+  const LoKi::Types::Cuts&    accept , 
+  const LoKi::Types::Cuts&    mark   ) const 
+{ print ( p , std::cout , '\n' , accept , mark ) ; }
+// ============================================================================
+/// predefined printout 
+// ============================================================================
+void LoKi::DecayChain::print
+( const LHCb::MCParticle*     p      , 
+  const LoKi::Types::MCCuts&  accept , 
+  const LoKi::Types::MCCuts&  mark   ) const 
+{ print ( p , std::cout , '\n' , accept , mark ) ; }
+// ============================================================================
+/// predefined printout 
+// ============================================================================
+void LoKi::DecayChain::print
+( const HepMC::GenParticle*   p      , 
+  const LoKi::Types::GCuts&   accept , 
+  const LoKi::Types::GCuts&   mark   ) const 
+{ print ( p , std::cout , '\n' , accept , mark ) ; }
+// ============================================================================
+/// ranges 
+// ============================================================================
+/// predefined printout 
+// ============================================================================
+void LoKi::DecayChain::print
+( const LoKi::Types::Range&   p      ,
+  const LoKi::Types::Cuts&    accept , 
+  const LoKi::Types::Cuts&    mark   ) const 
+{ print ( p.begin() , p.end() , std::cout , '\n' , accept , mark ) ; }
+// ============================================================================
+/// predefined printout 
+// ============================================================================
+void LoKi::DecayChain::print
+( const LoKi::Types::MCRange& p      ,
+  const LoKi::Types::MCCuts&  accept , 
+  const LoKi::Types::MCCuts&  mark   ) const
+{ print ( p , std::cout , '\n' , accept , mark ) ; }
+// ============================================================================
+/// predefined printout 
+// ============================================================================
+void LoKi::DecayChain::print
+( const LoKi::Types::GRange&  p      ,
+  const LoKi::Types::GCuts&   accept , 
+  const LoKi::Types::GCuts&   mark   ) const 
+{ print ( p , std::cout , '\n' , accept , mark ) ; }
+// ============================================================================
+/// vectors 
+// ============================================================================
+/// predefined printout 
+// ============================================================================
+void LoKi::DecayChain::print
+( const LHCb::Particle::Vector& p    ,
+  const LoKi::Types::Cuts&    accept , 
+  const LoKi::Types::Cuts&    mark   ) const 
+{ print ( p.begin() , p.end() , std::cout , '\n' , accept , mark ) ; }
+// ============================================================================
+/// predefined printout 
+// ============================================================================
+void LoKi::DecayChain::print
+( const LHCb::MCParticle::Vector& p  ,
+  const LoKi::Types::MCCuts&  accept , 
+  const LoKi::Types::MCCuts&  mark   ) const 
+{ print ( p , std::cout , '\n' , accept , mark ) ; }
+// ============================================================================
+/// predefined printout 
+// ============================================================================
+void LoKi::DecayChain::print
+( const LHCb::Particle::ConstVector& p ,
+  const LoKi::Types::Cuts&    accept   , 
+  const LoKi::Types::Cuts&    mark     ) const 
+{ print ( p.begin() , p.end() , std::cout , '\n' , accept , mark ) ; }
+// ============================================================================
+/// predefined printout 
+// ============================================================================
+void LoKi::DecayChain::print
+( const LHCb::MCParticle::ConstVector&  p ,
+  const LoKi::Types::MCCuts&  accept      , 
+  const LoKi::Types::MCCuts&  mark        ) const 
+{ print ( p , std::cout , '\n' , accept , mark ) ; }
+// ============================================================================
+/// predefined printout 
+// ============================================================================
+void LoKi::DecayChain::print
+( const LoKi::GenTypes::GenContainer&   p ,
+  const LoKi::Types::GCuts&   accept      , 
+  const LoKi::Types::GCuts&   mark        ) const 
+{ print ( p , std::cout , '\n' , accept , mark ) ; }
+// ============================================================================
+/// other containers
+// ============================================================================
+/// predefined printout 
+// ============================================================================
+void LoKi::DecayChain::print
+( const LHCb::Particle::Container* p ,
+  const LoKi::Types::Cuts&    accept , 
+  const LoKi::Types::Cuts&    mark   ) const 
+{ 
+  if ( 0 != p ) 
+  { print ( p->begin() , p->end() , std::cout , '\n' , accept , mark ) ; } 
+}
+// ============================================================================
+/// predefined printout 
+// ============================================================================
+void LoKi::DecayChain::print
+( const LHCb::MCParticle::Container* p ,
+  const LoKi::Types::MCCuts&   accept , 
+  const LoKi::Types::MCCuts&   mark   ) const 
+{ print ( p , std::cout , '\n' , accept , mark ) ; }
+// ============================================================================
+/// predefined printout 
+// ============================================================================
+void LoKi::DecayChain::print
+( const HepMC::GenEvent*      p      , 
+  const LoKi::Types::GCuts&   accept , 
+  const LoKi::Types::GCuts&   mark   ) const 
+{ print ( p , std::cout , '\n' , accept , mark ) ; }
+// ============================================================================
+/// predefined printout 
+// ============================================================================
+void LoKi::DecayChain::print
+( const LHCb::HepMCEvent*     p      , 
+  const LoKi::Types::GCuts&   accept , 
+  const LoKi::Types::GCuts&   mark   ) const 
+{ print ( p , std::cout , '\n' , accept , mark ) ; }
+// ============================================================================
+/// predefined printout 
+// ============================================================================
+void LoKi::DecayChain::print
+( const LHCb::HepMCEvent::Container* p,
+  const LoKi::Types::GCuts&   accept  , 
+  const LoKi::Types::GCuts&   mark    ) const 
+{ print ( p , std::cout , '\n' , accept , mark ) ; }
+// ============================================================================
+
 
 // ============================================================================
 // The END 
