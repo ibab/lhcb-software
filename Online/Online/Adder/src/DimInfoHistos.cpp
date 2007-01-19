@@ -182,7 +182,7 @@ void DimInfoHistos::setH2Data(){
   int nofbinsX = m_hist2d->GetNbinsX();
   int nofbinsY = m_hist2d->GetNbinsY();
   int iData=8;
-  std::cerr << "DimInfoHistos(" << m_histoname << "), setH2Data: nbinsx: " << m_hist2d->GetNbinsX() << std::endl;
+//  std::cerr << "DimInfoHistos(" << m_histoname << "), setH2Data: nbinsx: " << m_hist2d->GetNbinsX() << std::endl;
 
   for (int i=0; i<=nofbinsX+1; ++i) {
     for (int j=0; j<=nofbinsY+1; ++j) {
