@@ -1,0 +1,4 @@
+Check.DetectorList += { "MUON" };
+ApplicationMgr.DLLs  += { "MuonPIDChecker" };
+CheckMUONSeq.Members += { "MuonPIDChecker" };
+MuonPIDChecker.HistoTopDir = "Muon/MuonPID";
