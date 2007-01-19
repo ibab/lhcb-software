@@ -440,8 +440,12 @@ StatusCode Adder::execute() {
          else {
             msg << MSG::INFO <<  "Summing..." << m_histogramname[j] << endreq;       
             sum[jindex]->Reset();
+	    double entries=0;
             for (int i=0;i<=icount-1;i++) {
+	       entries+=hist[i]->GetEntries();
+	       msg << MSG::DEBUG << "entries summed "  << entries << endreq;  
                sum[jindex]->Add(hist[i],1.);
+	       sum[jindex]->SetEntries(entries);
             }
          }
       }
@@ -456,8 +460,11 @@ StatusCode Adder::execute() {
         else {
            msg << MSG::INFO <<  "Summing..." << m_histogramname[j]  << endreq;       
            sum2d[jindex]->Reset();
+	   double entries=0;
            for (int i=0;i<=icount2d-1;i++) {
+	      entries+=hist2d[i]->GetEntries();
               sum2d[jindex]->Add(hist2d[i],1.);
+	      sum2d[jindex]->SetEntries(entries);
            }
         }
       }	
@@ -471,10 +478,13 @@ StatusCode Adder::execute() {
             msg << MSG::ERROR <<  "no root histogram available for summing" << endreq;       
          }
          else {
-            msg << MSG::INFO <<  "Summing..." << m_histogramname[j] << endreq;       
+            msg << MSG::INFO <<  "Summing..." << m_histogramname[j] << endreq;  
+	    double entries=0;     
             sump[jindex]->Reset();
             for (int i=0;i<=icountp-1;i++) {
+	       entries+=histp[i]->GetEntries();
                sump[jindex]->Add(histp[i],1.);
+	       sump[jindex]->SetEntries(entries);
             }
          }
       }	  
