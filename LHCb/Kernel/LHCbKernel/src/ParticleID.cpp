@@ -1,4 +1,4 @@
-// $Id: ParticleID.cpp,v 1.2 2005-11-25 16:15:48 cattanem Exp $
+// $Id: ParticleID.cpp,v 1.3 2007-01-19 15:10:33 cattanem Exp $
 // Include files 
 
 #include "Kernel/ParticleID.h"
@@ -190,6 +190,9 @@ bool LHCb::ParticleID::hasQuarks() const {
 // Quark content
 //=============================================================================
 bool LHCb::ParticleID::hasQuark( const Quark& q ) const {
+
+  if ( abspid() == ::abs(q) ) { return true ; } // Special case for quarks
+
   if( hasQuarks() ) {
     if( digit(nq3) == q || digit(nq2) == q || digit(nq1) == q ) {
       return true;

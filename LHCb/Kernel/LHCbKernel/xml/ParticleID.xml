@@ -9,7 +9,7 @@
   <package name='LHCbKernel'>
      <class
       author="Gloria Corti"
-      desc="Holds PDG+LHCb extention particle code. Based on HepPDT class"
+      desc='Holds PDG+LHCb extension particle code, following the &lt;a href="http://pdg.lbl.gov/2006/reviews/montecarlorpp.pdf"&gt;PDG particle numbering scheme&lt;/a&gt;. Based on HepPDT class'
       name="ParticleID"
      >
        <import name="iostream" std="TRUE"/>
@@ -75,7 +75,7 @@
         const="TRUE"
         desc="Absolute value of PDG code"
         name="abspid"
-        type="int"
+        type="unsigned int"
         >
           <code>return (m_pid &lt; 0) ? -m_pid : m_pid ;</code>
        </method>

@@ -4,7 +4,12 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
-!===================== LHCbKernel v7r0 2006-12-15 ========================
+!===================== LHCbKernel v7r0 2006-12-19 ========================
+! 2007-01-19 - Marco Cattaneo
+ - Fix ParticleID::hasQuark() so it works also if particle IS a quark
+ - ParticleID::abspid() now returns unsigned int
+ - Add URL to PDG particle code convention in ParticleID doxygen documentation
+
 ! 2006-12-15 - Marco Cattaneo
  - Add Kernel/LHCbConstants.h, moved from LHCbDefinitions
  - Remove all other LHCbDefinitions dependencies
