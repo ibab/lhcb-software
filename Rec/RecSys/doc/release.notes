@@ -5,6 +5,63 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
+</PRE><H1><A NAME=v4r0>2007-01-19 RecSys v4r0</A></H1><PRE>
+This version uses Gaudi v19r0 and LHCb v22r0.
+
+- Packages updated: TrackFitEvent v3r0, TrackSys v4r0, RichRecSys v3r0,
+    VeloTools v1r1, PatFitParams v2r3, TrackAssociators v2r3,TrackCheckers v2r11,
+    PatKShort v1r3, PatUtils v1r3, PatChecker v2r111, RecAlgs v1r3,
+    RichLocalPID v3r0, RichGlobalPID v3r0, RichPIDMerge v2r2,
+    RichRecAlgorithms v2r4, TrackExtrapolators v2r8, TrackFitter v2r12,
+    TrackProjectors v2r9, TrackUtils v1r10, TsaAlgorithms v2r0
+
+- In RecSys v4r0, TrackSys v4r0
+  . Remove obsolete ApplicationMgr.DLLs options from options files, no longer
+    needed with new Gaudi plugin mechanism
+
+- In TrackSys v4r0
+  . In RecoTracking.opts, introduce a "Track" process phase with Pat, PreFit and
+    Fit sequences for each track type, update other options files accordingly
+  . Add NoFieldTracking.opts, contains options needed in addition to those
+    defined in RecoTracking.opts. This file should be included in addition
+    (and *after*) RecoTracking.opts to configure tracking for no magnetic field
+
+- In TsaAlgorithms v2r0
+  . Major new release. Faster, more flexible, more efficient, less ghosts, 
+    less outliers, etc. - See release notes for details
+  . Fix some untested status codes
+
+- In TrackUtils v1r10
+  . Add new TrackPrepareForFit algorithm
+
+- In TrackExtrapolators v2r8
+  . Bug fix in TrackExtrapolator, for the extrapolation to a plane:
+    the distance point-plane is signed!
+
+- In TrackProjectors v2r9
+  . General consolidation of various projectors into less code
+  . Remove of old non-trajectory projectors
+  . Addition of derivatives wrt. alignment parameters
+  . Add a 'projector selector' to replace the 'call-thru' master selector
+
+- In TrackFitter v2r12, TrackCheckers v2r11
+  . use the projector selector tool to obtain the relevant projector
+    instead of using the master projector
+
+- In TrackFitEvent v3r0, RichLocalPID v3r0
+  . Fixes in requirements, for InstallArea
+
+- In TrackFitEvent v3r0
+  . Remove LHCbDefinitions dependency
+
+- In PatFitParams v2r3, TrackAssociators v2r3, PatKShort v1r3, PatUtils v1r3,
+     PatChecker v2r11, RecAlgs v1r3, RichLocalPID v3r0, RichPIDMerge v2r2,
+     RichRecAlgorithms v2r4, TsaAlgorithms v2r0
+  . Use DECLARE_xxx_FACTORY macros, needed for Gaudi v19r0 plugins
+
+- In VeloTools v1r1, PatFitParams v2r3, PatKShort v1r3
+  . Get SystemOfUnits.h from GaudiKernel
+
 </PRE><H1><A NAME=v3r14p1>2006-12-06 RecSys v3r14p1</A></H1><PRE>
 This version uses Gaudi v18r10 and LHCb v21r12. It is identical to v3r14 but 
 with the HLT packages removed

@@ -17,26 +17,20 @@ Reco.DetectorList = {
 #include "$TRACKSYSROOT/options/RecoTracking.opts"
 
 // Primary vertex
-ApplicationMgr.DLLs += { "PatPV" };
 RecoTrSeq.Members   += { "PatPVOffline" };
 
 // Rich
-ApplicationMgr.DLLs += { "RichTools", "RichRecTools", "RichRecAlgorithms",
-                         "RichGlobalPID", "RichLocalPID", "RichPIDMerge" };
 #include "$RICHRECSYSOPTS/RecoToolPara.opts"
 #include "$RICHRECSYSOPTS/RecoOfflineAlgs.opts"
 
 // Calorimeter reconstruction
-ApplicationMgr.DLLs += { "CaloReco", "CaloPIDs" };
 #include "$CALORECOOPTS/Brunel.opts"
 #include "$CALOPIDSOPTS/PhotonPDF.opts"
 
 // Muon ID
-ApplicationMgr.DLLs += { "MuonID" };
 RecoMUONSeq.Members += { "MuonRec" };
 RecoMUONSeq.Members += { "MuonID" };
 #include "$MUONIDROOT/options/MuonID.opts"
 
 // Global Reco (ProtoParticles)
-ApplicationMgr.DLLs += { "GlobalReco" };
 #include "$GLOBALRECOOPTS/Reco.opts"
