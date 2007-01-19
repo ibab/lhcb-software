@@ -85,6 +85,7 @@
   <class name="DeRichSingleSolidRadiator" />
   <class name="RichMirrorSegPosition"     />
 
+  <class name="DeMuonDetector"      />
   <class name="DeMuonChamber"      />
   <class name="DeMuonRegion"       />
   <class name="DeMuonGasGap"       />

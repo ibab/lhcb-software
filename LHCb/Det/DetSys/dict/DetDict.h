@@ -1,4 +1,4 @@
-// $Id: DetDict.h,v 1.18 2006-11-21 17:39:40 jpalac Exp $
+// $Id: DetDict.h,v 1.19 2007-01-19 15:43:45 jpalac Exp $
 // ============================================================================
 #ifndef DETSYS_DETDICT_H 
 #define DETSYS_DETDICT_H 1
@@ -129,6 +129,7 @@
 // ============================================================================
 // MuonDet
 // ============================================================================
+#include "MuonDet/DeMuonDetector.h"
 #include "MuonDet/DeMuonChamber.h"
 #include "MuonDet/DeMuonRegion.h" 
 #include "MuonDet/DeMuonGasGap.h"   
