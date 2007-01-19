@@ -1,8 +1,11 @@
-// $Id: LoKiGen.h,v 1.5 2006-05-27 11:38:44 ibelyaev Exp $
+// $Id: LoKiGen.h,v 1.6 2007-01-19 13:11:47 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.5 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.6 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2006/05/27 11:38:44  ibelyaev
+//  add PrintHepMCDecay utilities
+//
 // Revision 1.4  2006/05/02 14:30:28  ibelyaev
 //  censored
 //
@@ -21,6 +24,7 @@
 #include "LoKi/GenAlgs.h"
 #include "LoKi/GenKinematics.h"
 #include "LoKi/PrintHepMCDecay.h"
+#include "LoKi/BuildGenTrees.h"
 // ============================================================================
 
 // ============================================================================

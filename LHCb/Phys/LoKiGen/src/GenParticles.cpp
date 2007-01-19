@@ -1,19 +1,8 @@
-// $Id: GenParticles.cpp,v 1.10 2006-08-26 11:42:08 ibelyaev Exp $
+// $Id: GenParticles.cpp,v 1.11 2007-01-19 13:11:49 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.10 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.11 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.9  2006/08/26 11:28:02  ibelyaev
-//  add GSTATUS functor: HepMC::GenParticle::status()
-//
-// Revision 1.8  2006/06/13 09:05:13  ibelyaev
-//  fix compiler warnings for gcc3.4.5
-//
-// Revision 1.7  2006/05/26 17:32:12  ibelyaev
-//  update to allow HepMCParticleMaker to be OK
-//
-// Revision 1.6  2006/05/02 14:30:28  ibelyaev
-//  censored
 //
 // ============================================================================
 // Include files 
@@ -851,13 +840,29 @@ void LoKi::GenParticles::FromHepMCTree::_add
   { m_vertices.push_back( const_cast<HepMC::GenVertex*> ( v ) ) ; }
 }
 // ============================================================================
+LoKi::GenParticles::FromHepMCTree&
+LoKi::GenParticles::FromHepMCTree::remove
+( const HepMC::GenVertex* vertex ) 
+{
+  VERTICES::iterator ifind = 
+    std::remove( m_vertices.begin() , m_vertices.end() , vertex ) ;
+  m_vertices.erase ( ifind , m_vertices.end() ) ;
+  return *this ;
+} ;
+// ============================================================================
+LoKi::GenParticles::FromHepMCTree&
+LoKi::GenParticles::FromHepMCTree::remove
+( const HepMC::GenParticle* particle ) 
+{
+  if ( 0 == particle ) { return *this ; }
+  return remove ( particle->end_vertex() ) ;
+} ;
+// ============================================================================
 /// MANDATORY: clone method ("virtual constructor")
 // ============================================================================
 LoKi::GenParticles::FromHepMCTree*
 LoKi::GenParticles::FromHepMCTree::clone() const 
 { return new LoKi::GenParticles::FromHepMCTree(*this) ; }
-// ============================================================================
-
 // ============================================================================
 /// MANDATORY: the only one essential method 
 // ============================================================================
