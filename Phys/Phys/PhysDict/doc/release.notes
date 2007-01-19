@@ -4,6 +4,10 @@
 ! Purpose     : REFLEX dictionaries for Phys classes
 !-----------------------------------------------------------------------------
 
+! 2007-01-19 - Juan PALACIOS
+  - Remove std::ostream& operator<< for StatusCode as this is now 
+    available in Gaudi.
+
 !========================== PhysDict v2r1 2007-01-12 =======================
 ! 2007-01-12 - Florence Ranjard
  - remove build of libPhysDict, it is done by reflex

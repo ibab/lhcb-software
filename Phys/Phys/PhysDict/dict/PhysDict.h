@@ -1,4 +1,4 @@
-// $Id: PhysDict.h,v 1.2 2006-10-17 17:40:24 jpalac Exp $
+// $Id: PhysDict.h,v 1.3 2007-01-19 10:09:03 jpalac Exp $
 #ifndef DICT_PHYSDICT_H 
 #define DICT_PHYSDICT_H 1
 
@@ -59,18 +59,5 @@
 // ============================================================================
 #include "Kernel/IMCDecayFinder.h"
 // ============================================================================
-namespace {
-
-/// @todo remove ostream operator when included in new Gaudi
-  std::ostream& operator<< ( std::ostream& s , const StatusCode& sc ) 
-  {
-    if ( sc.isSuccess() ) { return s << "SUCCESS" ; }
-    s << "FAILURE" ;
-    if ( StatusCode::FAILURE != sc.getCode() ) 
-    { s << "(" << sc.getCode() << ")" ;}
-    return s ;
-  }
-
-}
 
 #endif // DICT_PHYSDICT_H
