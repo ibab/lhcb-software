@@ -70,6 +70,7 @@ void DimInfoHistos::infoHandler()
     //   std::cerr << "DimInfoHistos(" << m_histoname << "): Making ROot histogram" << std::endl;
        // 1Hd m_data: dimension,nXBins,xMin,xMax,2*(UNDERFLOW,"in range" bins, OVERFLOW): entries and errors
       m_hist=new TH1F(m_histoname.c_str(),m_histoname.c_str(),(int)m_data[1],m_data[2],m_data[3]);	
+      m_hist->Sumw2();
     }      
     else if( 2 == m_dimension ) {
       // 2Hd data: dimension,nXBins,xMin,xMax,nYBins,yMin,yMax,
@@ -77,11 +78,13 @@ void DimInfoHistos::infoHandler()
    //   std::cerr << "DimInfoHistos(" << m_histoname << "): Making ROot histogram" << std::endl;
       m_hist2d=new TH2F(m_histoname.c_str(),m_histoname.c_str(),(int)m_data[1],m_data[2],
                       m_data[3],(int)m_data[4],m_data[5],m_data[6]);	
+      m_hist2d->Sumw2();
     } 
     else if( 11 == m_dimension ) {
     //   std::cerr << "DimInfoHistos(" << m_histoname << "): Making ROot histogram" << std::endl;
        // 1d profile data: dimension,nXBins,xMin,xMax,entries,3*(UNDERFLOW,"in range" bins, OVERFLOW): entries, weights and squares of weights 
       m_histp=new TProfile(m_histoname.c_str(),m_histoname.c_str(),(int)m_data[1],m_data[2],m_data[3]);	
+      m_histp->Sumw2();
     } 
 	}
 	if ((( 0 == m_hist )&(0==m_hist2d))&(0==m_histp)) {
@@ -115,9 +118,7 @@ TProfile* DimInfoHistos::getPDHisto() {
 }
 
 void DimInfoHistos::setH1Data(){
-  // Set total number of entries
-  m_hist->SetEntries(m_data[4]);
-//  std::cerr << "DimInfoHistos(" << m_histoname << "), setH1Data: total entries: " << m_data[4] << std::endl;
+
   
   // Remember root histo: bin 0: underflows, bin N+1: overflows
   int nofbins = m_hist->GetNbinsX();
@@ -137,14 +138,15 @@ void DimInfoHistos::setH1Data(){
 //  for (int i=0;i<=nofbins+1;i++) {
 //    std::cerr << "DimInfoHistos(" << m_histoname << "), setH1Data: Root histo content: bin: " << i 
 //              << " entries: " << m_hist->GetBinContent(i) << " error: " << m_hist->GetBinError(i) << std::endl;
-//  }   
+//  } 
+  // Set total number of entries
+  m_hist->SetEntries(m_data[4]); 
+  //  std::cerr << "DimInfoHistos(" << m_histoname << "), setH1Data: total entries: " << m_data[4] << std::endl; 
   m_hasData=true;
 }
 
 void DimInfoHistos::setH2Data(){ 
-  // Set total number of entries
-  //  std::cerr << "DimInfoHistos(" << m_histoname << "), setH2Data: total entries: " << m_data[7] << std::endl;
-  m_hist2d->SetEntries(m_data[7]);
+
   
   int nofbinsX = m_hist2d->GetNbinsX();
   int nofbinsY = m_hist2d->GetNbinsY();
@@ -174,14 +176,13 @@ void DimInfoHistos::setH2Data(){
  //               << " error: " << m_hist->GetBinError(i,j) << std::endl;
  //   }
  // }
-  
+  // Set total number of entries
+  //  std::cerr << "DimInfoHistos(" << m_histoname << "), setH2Data: total entries: " << m_data[7] << std::endl;
+  m_hist2d->SetEntries(m_data[7]);
   m_hasData=true;
 }
 
 void DimInfoHistos::setHPData(){
-  // Set total number of entries
-  m_histp->SetEntries(m_data[4]);
-//  std::cerr << "DimInfoHistos(" << m_histoname << "), setH1Data: total entries: " << m_data[4] << std::endl;
   // 1d profile data: dimension,nXBins,xMin,xMax,entries,3*(UNDERFLOW,"in range" bins, OVERFLOW): entries, weights and squares of weights 
  
   // Remember root histo: bin 0: underflows, bin N+1: overflows
@@ -208,6 +209,10 @@ void DimInfoHistos::setHPData(){
 //    std::cerr << "DimInfoHistos(" << m_histoname << "), setHPData: Root histo content: bin: " << i 
 //              << " entries: " << m_histp->GetBinEntries(i) << " content " << m_histp->GetBinContent(i) << " error: " << m_histp->GetBinError(i) << std::endl;
 //  }   
+  // Set total number of entries
+  m_histp->SetEntries(m_data[4]);
+//  std::cerr << "DimInfoHistos(" << m_histoname << "), setHPData: total entries: " << m_data[4] << std::endl;
+
   m_hasData=true;
 }
 

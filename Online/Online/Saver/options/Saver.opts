@@ -19,7 +19,7 @@ ApplicationMgr.EvtSel   = "NONE"; // do not use any event input
 
 Saver.nodename="node00101";
 Saver.histogramname={"Mass","xyPositionPlot","eventtype","xyProfile"};
-Saver.algorithmname={"GaudiExample","GaudiExample","GaudiExample","GaudiExample"};
+Saver.algorithmname={"Summed_GaudiExample","Summed_GaudiExample","Summed_GaudiExample","Summed_GaudiExample"};
 Saver.dimclientdns="pclhcb11.cern.ch";
 Saver.taskname="test";
 Saver.savedir="~/w0";
