@@ -1,8 +1,11 @@
-// $Id: PhysMCParticles.h,v 1.4 2006-10-27 13:41:25 ibelyaev Exp $
+// $Id: PhysMCParticles.h,v 1.5 2007-01-20 14:47:14 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2006/10/27 13:41:25  ibelyaev
+//  fix for SLC4 platform
+//
 // Revision 1.3  2006/09/06 12:37:20  ibelyaev
 //  remove duplicated constructor
 //
@@ -18,6 +21,7 @@
 // LoKiCore
 // ============================================================================
 #include "LoKi/Keeper.h"
+#include "LoKi/Interface.h"
 // ============================================================================
 // LoKiPhys 
 // ============================================================================
@@ -27,11 +31,16 @@
 // LoKiMC  
 // ============================================================================
 #include "LoKi/MCTypes.h"
+#include "LoKi/GenTypes.h"
 // ============================================================================
 // LoKiPhysMC 
 // ============================================================================
 #include "LoKi/PhysMCTypes.h"
 #include "LoKi/MCMatch.h"
+// ============================================================================
+// DaVinciMCKernel
+// ============================================================================
+#include "Kernel/HepMC2MC.h"
 // ============================================================================
 
 // ============================================================================
@@ -61,8 +70,33 @@ namespace LoKi
   
   namespace Particles 
   {
-    /** @class MCTruth MCTruth.h LoKi/MCTruth.h
+    /** @class MCTruth PhysMCParticles.h LoKi/PhysMCParticles.h
      *  
+     *  Helper and useful function to be used to check the matching of  
+     *  LHCb::Particle and some LHCb::MCParticle
+     *
+     *  @code 
+     * 
+     *  // some sequence of mc-particle
+     *  SEQUENCE mcps = ...  ;
+     *  // get mc-matcher 
+     *  MCMatch   mc =  ... ;
+     *  // create the function 
+     *  Cut cut = MCTRUTH( mc , mcps.begin() , mcps.end() ) ;
+     *  
+     *
+     *  const LHCb::Particle* B = ... ;
+     *  // use the predicate!
+     * 
+     *  const bool good = cut( B ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::Cuts::MCTRUTH
+     *  @see LoKi::MCMatchObj
+     *  @see LoKi::MCMatch
+     *  @see LHCb::Particle
+     *  @see LHCb::MCParticle
      *
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date   2003-01-28
@@ -229,13 +263,155 @@ namespace LoKi
       // match-object 
       LoKi::MCMatch m_match     ; ///< match-object 
     } ;
-
+    
+    /** @class GenMCTruth PhysMCParticles.h LoKi/PhysMCParticles.h
+     *
+     *  Helper and useful function to be used to check the matching of  
+     *  LHCb::Particle and some HepMC::GenParticle
+     *
+     *  @code 
+     * 
+     *  // some sequence of HepMC-particles
+     *  SEQUENCE hepmcps = ...  ;
+     *  // get RC<-->MC-matcher 
+     *  MCMatch   mc =  ... ;
+     *  // get HepMC<-->MC matcher
+     *  const LHCb::HepMC2MC* table = ... ;
+     *  // create the function 
+     *  Cut cut = GMCTRUTH( table , mc , hepmcps.begin() , hepmcps.end() ) ;
+     *  
+     *  const LHCb::Particle* B = ... ;
+     *
+     *  // use the predicate!
+     * 
+     *  const bool good = cut( B ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::Cuts::GMCTRUTH 
+     *  @see HepMC::GenParticle
+     *  @see LHCb::Particle
+     *  @see LoKi::MCMathch
+     *  @see LoKi::MCMathchObj
+     *  @see LHCb::HepMC2MC 
+     *  @author Vanya BELYAEV ibelyaev@physics.sye.edu
+     *  @date   2003-01-28
+     */
+    class GenMCTruth 
+      : public LoKi::Predicate<const LHCb::Particle*>
+    {
+    public:
+      /// constructor from HepMC::GenVertex
+      GenMCTruth 
+      ( const HepMC::GenVertex*             particle   , 
+        const LHCb::HepMC2MC*               table      , 
+        const LoKi::MCMatch&                matcher    ) ;
+      /// constructor from HepMC::GenParticle
+      GenMCTruth 
+      ( const HepMC::GenParticle*           particle   , 
+        const LHCb::HepMC2MC*               table      , 
+        const LoKi::MCMatch&                matcher    ) ;
+      /// constructor from container of HepMC::GenParticles
+      GenMCTruth 
+      ( const LoKi::GenTypes::GenContainer& particles  , 
+        const LHCb::HepMC2MC*               table      , 
+        const LoKi::MCMatch&                matcher    ) ;
+      /// constructor from range of HepMC::GenParticles
+      GenMCTruth 
+      ( const LoKi::Types::GRange&          particles  , 
+        const LHCb::HepMC2MC*               table      , 
+        const LoKi::MCMatch&                matcher    ) ;
+      /// templated constructor 
+      template <class GENERATOR>
+      GenMCTruth 
+      ( GENERATOR                 first    ,
+        GENERATOR                 last     ,
+        const LHCb::HepMC2MC*     table    , 
+        const LoKi::MCMatch&      match    ) 
+        : LoKi::Predicate<const LHCb::Particle*> () 
+        , m_table ( table ) 
+        , m_match ( match ) 
+        , m_hepmc () 
+        , m_mc    () 
+      { add ( first , last ) ; } ;
+      /// MANDATORY: copy constructor 
+      GenMCTruth ( const GenMCTruth& right ) ;
+      /// MANDATORY: virtual destructor
+      virtual ~GenMCTruth() ;
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual GenMCTruth* clone () const ; 
+      /// MANDATORY: the only one essential method ("function")
+      virtual result_type operator () ( argument ) const ;
+      /// OPTIONAL: the specific printout 
+      virtual std::ostream& fillStream ( std::ostream& s ) const ;
+    public:
+      /// rebuild the internal storages 
+      StatusCode rebuild() ;
+      /// add HepMC::GenParticle
+      GenMCTruth& add ( const HepMC::GenParticle*           p ) ;
+      /// add HepMC::GenVertex
+      GenMCTruth& add ( const HepMC::GenVertex*             p ) ;
+      /// add LoKi::GenTypes::GenContainer
+      GenMCTruth& add ( const LoKi::GenTypes::GenContainer& p ) ;
+      /// add LoKi::Types::GRange 
+      GenMCTruth& add ( const LoKi::Types::GRange&          p ) ;
+      /// add a sequence of something 
+      template <class OBJECT>
+      GenMCTruth& add ( OBJECT first , 
+                        OBJECT last  ) 
+      {
+        _add ( first , last ) ;
+        rebuild() ;
+        return *this ;
+      } ;
+    public:
+      /// conversion operator to relation table:
+      operator const LoKi::Interface<LHCb::HepMC2MC>&        () const 
+      { return m_table ; }
+      /// conversion operator to the HepMC-storage
+      operator const LoKi::UniqueKeeper<HepMC::GenParticle>& () const 
+      { return m_hepmc ; }
+      // conversion operator to LoKi::MCMatch object 
+      operator const LoKi::MCMatch&                          () const 
+      { return m_match ; }
+    protected:
+      /// add HepMC::GenParticle
+      void _add ( const HepMC::GenParticle*              p ) ;
+      /// add HepMC::GenVertex
+      void _add ( const HepMC::GenVertex*                p ) ;
+      /// add LoKi::GenTypes::GenContainer
+      void _add ( const LoKi::GenTypes::GenContainer&    p ) ;
+      /// add LoKi::Types::GRange 
+      void _add ( const LoKi::Types::GRange&             p ) ;
+      /// add a sequence of something 
+      template <class OBJECT>
+      void _add ( OBJECT first , OBJECT last  ) 
+      { for ( ; first != last ; ++first ) { _add ( *first ) ; } }
+    private:
+      // the first relation table HepMC -> MC  
+      LoKi::Interface<LHCb::HepMC2MC>        m_table ;
+      // the helper object for MC->RC relations 
+      LoKi::MCMatch                          m_match ;
+      // local storage of generator particles 
+      LoKi::UniqueKeeper<HepMC::GenParticle> m_hepmc ;
+      // local storage of MC-particles 
+      LoKi::UniqueKeeper<LHCb::MCParticle>   m_mc    ;
+    } ;
+    
   } ; // end of namespace Particles
   
   namespace MCParticles
   {    
-    /** @class RCTruth PhsyMCParticles.h LoKi/PhysMCParticles.h
+    /** @class RCTruth PhysMCParticles.h LoKi/PhysMCParticles.h
      *  
+     *  Helper and useful function to be used to check the matching of  
+     *  LHCb::Particle and some LHCb::MCParticle
+     *
+     *  @see LoKi::MCMatchObj
+     *  @see LoKi::MCMatch
+     *  @see LHCb::Particle
+     *  @see LHCb::MCParticle
+     *  @see LoKi::Cuts::RCTRUTH
      *
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date   2003-01-28

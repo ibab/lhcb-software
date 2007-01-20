@@ -1,11 +1,52 @@
-! $Id: release.notes,v 1.21 2007-01-19 13:14:56 ibelyaev Exp $ 
+! $Id: release.notes,v 1.22 2007-01-20 14:47:22 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhysMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : RC <--> MC part of LoKi 
 ! -----------------------------------------------------------------------------
 
-!========================== LoKiPhysMC v3r0 2007-01-19 =======================
+!========================== LoKiPhysMC v3r0 2007-01-20 =======================
+
+! 2007-01-20 - Vanya BELYAEV
+ - LoKi/PhysMCParticles.h, 
+   src/PhysMCParticles.cpp 
+    
+    add new function LoKi::Particles::GenMCTruth for association of 
+    LHCb::Particle objects and HepMC::GenParticle objects
+   ( it is needed e.g. for parton-jet matching in higgs/jet studies)
+
+    /** @class GenMCTruth PhysMCParticles.h LoKi/PhysMCParticles.h
+     *
+     *  Helper and useful function to be used to check the matching of  
+     *  LHCb::Particle and some HepMC::GenParticle
+     *
+     *  @code 
+     * 
+     *  // some sequence of HepMC-particles
+     *  SEQUENCE hepmcps = ...  ;
+     *  // get RC<-->MC-matcher 
+     *  MCMatch   mc =  ... ;
+     *  // get HepMC<-->MC matcher
+     *  const LHCb::HepMC2MC* table = ... ;
+     *  // create the function 
+     *  Cut cut = GMCTRUTH( table , mc , hepmcps.begin() , hepmcps.end() ) ;
+     *  
+     *  const LHCb::Particle* B = ... ;
+     *
+     *  // use the predicate!
+     * 
+     *  const bool good = cut( B ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::Cuts::GMCTRUTH 
+     *  @author Vanya BELYAEV ibelyaev@physics.sye.edu
+     *  @date   2003-01-28
+     */
+
+ - LoKi/PhysMCParticleCuts.h:
+
+    add a shortcut (LoKi::Cuts::)GMCTRUTH for new class LoKi::Particles::GenMCTruth
 
 ! 2007-01-19 - Vanya BELYAEV
 

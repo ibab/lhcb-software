@@ -1,8 +1,11 @@
-// $Id: PhysMCParticles.cpp,v 1.4 2006-10-27 13:41:27 ibelyaev Exp $
+// $Id: PhysMCParticles.cpp,v 1.5 2007-01-20 14:47:25 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2006/10/27 13:41:27  ibelyaev
+//  fix for SLC4 platform
+//
 // Revision 1.3  2006/09/06 12:37:21  ibelyaev
 //  remove duplicated constructor
 //
@@ -230,17 +233,17 @@ LoKi::Particles::MCTruth::operator()
 {
   if ( 0 == p ) 
   {
-    Error("Invalid Particle! return 'false'") ;
+    Error("Invalid Particle! return 'False'") ;
     return false ;                                         // RETURN 
   }
   if ( empty() ) 
   { 
-    Warning("Empty conatiner of MC, return 'false'");
+    Warning("Empty conatiner of MC, return 'False'");
     return false ;                                         // RETURN 
   }
   if ( !m_match.validPointer() ) 
   {
-    Error("MCMatchObj* is invalid! return 'false'") ;
+    Error("LoKi::MCMatch is invalid! return 'False'") ;
     return false ;                                         // RETURN 
   }
   //
@@ -438,17 +441,17 @@ LoKi::MCParticles::RCTruth::operator()
 {
   if ( 0 == p ) 
   {
-    Error("Invalid Particle! return 'false'") ;
+    Error("Invalid Particle! return 'False'") ;
     return false ;                                         // RETURN 
   }
   if ( empty() ) 
   { 
-    Warning("Empty container of RC, return 'false'");
+    Warning("Empty container of RC, return 'False'");
     return false ;                                         // RETURN 
   }
   if ( !m_match.validPointer() ) 
   {
-    Error("MCMatchObj* is invalid! return 'false'") ;
+    Error("MCMatchObj* is invalid! return 'False'") ;
     return false ;                                         // RETURN 
   }
   //
@@ -462,6 +465,202 @@ std::ostream& LoKi::MCParticles::RCTruth::fillStream
 // ============================================================================
 
 
+// ============================================================================
+/// constructor from HepMC::GenVertex
+// ============================================================================
+LoKi::Particles::GenMCTruth::GenMCTruth 
+( const HepMC::GenVertex*             particle   , 
+  const LHCb::HepMC2MC*               table      , 
+  const LoKi::MCMatch&                match      ) 
+  : LoKi::Predicate<const LHCb::Particle*>() 
+  , m_table ( table ) 
+  , m_match ( match ) 
+  , m_hepmc () 
+  , m_mc    () 
+{
+  _add ( particle ) ;
+  rebuild() ;
+} ;  
+// ============================================================================
+/// constructor from HepMC::GenParticle
+// ============================================================================
+LoKi::Particles::GenMCTruth::GenMCTruth 
+( const HepMC::GenParticle*           particle   , 
+  const LHCb::HepMC2MC*               table      , 
+  const LoKi::MCMatch&                match      ) 
+  : LoKi::Predicate<const LHCb::Particle*>() 
+  , m_table ( table ) 
+  , m_match ( match ) 
+  , m_hepmc () 
+  , m_mc    () 
+{
+  _add ( particle ) ;
+  rebuild() ;
+} ;  
+// ============================================================================
+/// constructor from container of HepMC::GenParticles
+// ============================================================================
+LoKi::Particles::GenMCTruth::GenMCTruth 
+( const LoKi::GenTypes::GenContainer& particles  , 
+  const LHCb::HepMC2MC*               table      , 
+  const LoKi::MCMatch&                match      ) 
+  : LoKi::Predicate<const LHCb::Particle*>() 
+  , m_table ( table ) 
+  , m_match ( match ) 
+  , m_hepmc () 
+  , m_mc    () 
+{
+  _add ( particles.begin() , particles.end() ) ;
+  rebuild() ;
+} ;
+// ============================================================================
+/// constructor from range of HepMC::GenParticles
+// ============================================================================
+LoKi::Particles::GenMCTruth::GenMCTruth 
+( const LoKi::Types::GRange&          particles  , 
+  const LHCb::HepMC2MC*               table      , 
+  const LoKi::MCMatch&                match      ) 
+  : LoKi::Predicate<const LHCb::Particle*>() 
+  , m_table ( table ) 
+  , m_match ( match ) 
+  , m_hepmc () 
+  , m_mc    () 
+{
+  _add ( particles.begin() , particles.end() ) ;
+  rebuild() ;
+} ;
+// ============================================================================
+/// MANDATORY: copy constructor 
+// ============================================================================
+LoKi::Particles::GenMCTruth::GenMCTruth
+( const LoKi::Particles::GenMCTruth& right ) 
+  : LoKi::AuxFunBase                       ( right )
+  , LoKi::Predicate<const LHCb::Particle*> ( right ) 
+  , m_table ( right.m_table ) 
+  , m_match ( right.m_match ) 
+  , m_hepmc ( right.m_hepmc ) 
+  , m_mc    ( right.m_mc    ) 
+{}
+// ============================================================================
+/// MANDATORY: virtual destructor
+// ============================================================================
+LoKi::Particles::GenMCTruth::~GenMCTruth() {}
+// ============================================================================
+/// MANDATORY: clone method ("virtual constructor")
+// ============================================================================
+LoKi::Particles::GenMCTruth*
+LoKi::Particles::GenMCTruth::clone() const 
+{ return new LoKi::Particles::GenMCTruth(*this) ; }
+// ============================================================================
+/// add HepMC::GenParticle
+// ============================================================================
+void LoKi::Particles::GenMCTruth::_add ( const HepMC::GenParticle* p ) 
+{
+  if ( 0 == p ) { return ; }
+  m_hepmc.insert ( p ) ;
+  _add ( p->end_vertex() ) ;
+}
+// ============================================================================
+/// add HepMC::GenVertex
+// ============================================================================
+void LoKi::Particles::GenMCTruth::_add ( const HepMC::GenVertex* p ) 
+{
+  if ( 0 == p ) { return ; }
+  HepMC::GenVertex* _p  = const_cast<HepMC::GenVertex*> ( p ) ;
+  _add ( _p->particles_begin ( HepMC::children ) , 
+         _p->particles_end   ( HepMC::children ) ) ;       
+}
+// ============================================================================
+/// add LoKi::GenTypes::GenContainer
+// ============================================================================
+void LoKi::Particles::GenMCTruth::_add 
+( const LoKi::GenTypes::GenContainer&    p ) 
+{ _add ( p.begin() , p.end() ) ; }
+// ============================================================================
+/// add LoKi::Types::GRange 
+// ============================================================================
+void LoKi::Particles::GenMCTruth::_add 
+( const LoKi::Types::GRange&             p ) 
+{ _add ( p.begin() , p.end() ) ; }
+// ============================================================================
+/// add HepMC::GenParticle
+// ============================================================================
+LoKi::Particles::GenMCTruth& LoKi::Particles::GenMCTruth::add 
+( const HepMC::GenParticle*           p ) 
+{ _add ( p ) ; rebuild() ; return *this ; }
+// ============================================================================
+/// add HepMC::GenVertex
+// ============================================================================
+LoKi::Particles::GenMCTruth& LoKi::Particles::GenMCTruth::add 
+( const HepMC::GenVertex*             p ) 
+{ _add ( p ) ; rebuild() ; return *this ; }
+// ============================================================================
+/// add LoKi::GenTypes::GenContainer
+// ============================================================================
+LoKi::Particles::GenMCTruth& LoKi::Particles::GenMCTruth::add 
+( const LoKi::GenTypes::GenContainer& p ) 
+{ _add ( p ) ; rebuild() ; return *this ; }
+// ============================================================================
+/// add LoKi::Types::GRange 
+// ============================================================================
+LoKi::Particles::GenMCTruth& LoKi::Particles::GenMCTruth::add 
+( const LoKi::Types::GRange&          p ) 
+{ _add ( p ) ; rebuild() ; return *this ; }
+// ============================================================================
+/// rebuild the internal storages 
+// ============================================================================
+StatusCode LoKi::Particles::GenMCTruth::rebuild() 
+{
+  m_mc.clear() ;
+  if( !m_table.validPointer() ) 
+  { Exception ( "LHCb::HepMC2MC table is invalid" ) ; }
+  if ( m_hepmc.empty() ) 
+  { return Warning ( "Empty container of input HepMC::GenParticles" ) ; }
+  //
+  typedef LoKi::UniqueKeeper<HepMC::GenParticle> GPs ;
+  for ( GPs::const_iterator igp = m_hepmc.begin() ; 
+        m_hepmc.end() != igp ; ++igp )
+  {
+    const LHCb::HepMC2MC::Range links = m_table->relations( *igp ) ;
+    for ( LHCb::HepMC2MC::Range::iterator link = links.begin() ; 
+          links.end() != link ; ++link ) { m_mc.insert ( link->to() ) ; }
+  }
+  if ( m_mc.empty() ) 
+  { return Warning ( "Empty intermediate container of LHCb::MCPaticles" ) ; }  
+  //
+  return StatusCode::SUCCESS ;
+} ;
+// ============================================================================
+/// MANDATORY: the only one essential method ("function")
+// ============================================================================
+LoKi::Particles::GenMCTruth::result_type 
+LoKi::Particles::GenMCTruth::operator() 
+  ( LoKi::Particles::GenMCTruth::argument p ) const 
+{
+  if ( 0 == p ) 
+  {
+    Error ( "LHCb::Particle* pointd to NULL, return False" ) ;
+    return false ;                                         // RETURN 
+  }
+  if ( m_mc.empty() ) 
+  { 
+    Warning ( "Empty container of LHCb::MCPaticles, return False" ) ; 
+    return false ;                                         // RETURN 
+  }
+  if ( !m_match.validPointer() ) 
+  {
+    Error ( "LoKi::MCMatch is invalid! return False" ) ;
+    return false ;                                         // RETURN 
+  }
+  //
+  return m_mc.end() != m_match->match ( p , m_mc.begin () ,  m_mc.end() ) ; 
+} ;
+// ============================================================================
+/// OPTIONAL: the specific printout 
+// ============================================================================
+std::ostream& LoKi::Particles::GenMCTruth::fillStream 
+( std::ostream& s ) const { return s << "GMCTRUTH" ; }
+// ============================================================================
 
 
 // ============================================================================
