@@ -1,8 +1,11 @@
-// $Id: Keeper.h,v 1.8 2006-11-25 19:12:55 ibelyaev Exp $
+// $Id: Keeper.h,v 1.9 2007-01-20 14:25:43 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.9 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2006/11/25 19:12:55  ibelyaev
+//  improve Doxygen
+//
 // Revision 1.7  2006/10/10 09:03:21  ibelyaev
 //  many tiny fixed needed for good&valid dictionaries
 //
@@ -109,6 +112,9 @@ namespace LoKi
     reverse_iterator rbegin () const { return m_objects.rbegin () ; }
     //
     reverse_iterator rend   () const { return m_objects.rend   () ; }
+  public:
+    /// clear the underlying container 
+    void clear() { m_objects.clear() ; }
   public:
     /// get the object by index 
     const OBJECT*  object     ( const int index ) const 
