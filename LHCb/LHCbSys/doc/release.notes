@@ -5,7 +5,7 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v22r0>2007-01-16 LHCbSys v22r0</A></H1><PRE>
+</PRE><H1><A NAME=v22r0>2007-01-22 LHCbSys v22r0</A></H1><PRE>
 This version is using the InstallArea. Uses Gaudi v19r1
 
 - Packages removed: LHCb - use *Sys packages instead
@@ -22,7 +22,8 @@ This version is using the InstallArea. Uses Gaudi v19r1
     VeloEvent v15r0, DAQSys v3r0, CaloDAQ v3r0, MuonDAQ v3r0, OTDAQ v5r0,
     SiDAQ v2r0, CaloInterfaces v7r0, CaloUtils v7r0, HltBase v2r0, PatTools v3r0,
     LokiCore v2r0, LoKiGen v2r0, RichRecBase v3r0, TrackInterfaces v3r0,
-    TrackMCInterfaces v2r0, TsaKernel v2r1, SimComponents v2r0,DetDescChecks v4r0
+    TrackMCInterfaces v2r0, TsaKernel v2r1, SimComponents v2r0,
+    EventAssoc v4r0, DetDescChecks v4r0
 
 - In GaudiConf v10r0
   . Remove ApplicationMgr.DLLs options, not needed with Gaudi v19r0 plugins
@@ -136,7 +137,7 @@ This version is using the InstallArea. Uses Gaudi v19r1
   . Fixes in requirements for InstallArea
   . Fixes for Gaudi v19r0 plugins
 
-- In LinkerInstances v3r2, DetDescChecks v4r0
+- In LinkerInstances v3r2, DetDescChecks v4r0, EventAssoc v4r0
   . Fixes for Gaudi v19r0 plugins
 
 - In LHCbKernel v7r0, CaloDet v8r0, MCEvent v2r0, TrackEvent v4r0,
