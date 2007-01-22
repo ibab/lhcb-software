@@ -1,13 +1,17 @@
-! $Id: release.notes,v 1.2 2006-05-30 17:32:26 gcorti Exp $
+! $Id: release.notes,v 1.3 2007-01-22 16:43:24 gcorti Exp $
 ! Package     : Gen/BcVegPy
 ! Responsible : 
 
+! ====================== BcVegPy v1r0p1 2007-01-22 ========================
+! 2007-01-22 - Florence RANJARD
+ - Remove compilation of *.F in requirements (not existing in src)
+
 ! ======================BcVegPy v1r0 2006-06-31 ===========================
 ! 2006-03-13 - Jibo He
-  -New Package: this package is somehow a copy of BCVEGPY 2.0 (C. H. Chang,
+ - New Package: this package is somehow a copy of BCVEGPY 2.0 (C. H. Chang,
    J. X. Wang, X. G. Wu, Comp. Phys. Comm. 174 (2006) 241). We made it in
    CMT format.
-  -To interface with LbBcVegPy and LbPythia easily, we made some modification
+ - To interface with LbBcVegPy and LbPythia easily, we made some modification
    on the program structure.
-  -To generate both B_c+ and B_c-, we modified the color flow subroutine. 	  
+ - To generate both B_c+ and B_c-, we modified the color flow subroutine. 	  
 ! =========================================================================
