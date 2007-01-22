@@ -1,6 +1,6 @@
-! $Id: release.notes,v 1.44 2007-01-20 14:25:45 ibelyaev Exp $ 
+! $Id: release.notes,v 1.45 2007-01-22 09:30:20 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.44 $
+! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.45 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -23,7 +23,6 @@
    LoKi/UniqueKeeper.h
      add the method "clear()" to clear the underlying container 
 
-!=========================== LoKiCore v2r0 2006-12-15 ======================
 ! 2006-12-06 - Florence RANJARD
  - apply_pattern install_more_includes
  - fix for new PlugIns (P.Mato)
@@ -252,6 +251,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.44  2007/01/20 14:25:45  ibelyaev
+!  add <...>Keeper::clear() method
+!
 ! Revision 1.43  2006/12/15 08:37:20  ranjard
 ! v2r0 - InstallArea and new Plugins
 !
