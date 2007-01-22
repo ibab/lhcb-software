@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.2 2007-01-18 12:12:57 ggiacomo Exp $
+! $Id: release.notes,v 1.3 2007-01-22 17:07:48 ggiacomo Exp $
 ! Package     : OnlineHistDB
 ! Responsible : Giacomo Graziani
 
@@ -13,3 +13,9 @@
 ! 20070118 - OnlineHistDB v1r1
 	- small changes to compile on slc4 (gcc 3.4)
 	- use correct naming convention for histogram DIM services
+
+! 20070122 - OnlineHistDB v1r2
+	- bug fixes in the C++ API page editing part
+	- new methods to get page lists and declare an histogram by its attributes
+	- compatibility check between DB schema and C++ API version (obsolete codes
+	  can't modify the DB)

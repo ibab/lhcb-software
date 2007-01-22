@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDB.cpp,v 1.1.1.1 2007-01-16 15:18:12 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDB.cpp,v 1.2 2007-01-22 17:07:59 ggiacomo Exp $
 /*
    C++ interface to the Online Monitoring Histogram DB
    G. Graziani (INFN Firenze)
@@ -12,8 +12,9 @@
 OnlineHistDB::OnlineHistDB(std::string passwd, 
 			   std::string user, 
 			   std::string db) : 
-  OnlineHistDBEnv(),
-  m_stmt(0), m_nit(0), m_maxNit(1000), m_maxSNsize(500) , m_debug(0)
+  OnlineHistDBEnv(), m_DBschema(2),
+  m_stmt(0), m_nit(0), m_maxNit(1000), 
+  m_maxSNsize(500) , m_maxANsize(100), m_maxTNsize(250), m_debug(0)
 {
   m_env = Environment::createEnvironment (Environment::OBJECT);
   m_conn = m_env->createConnection (user, passwd, db);
@@ -35,11 +36,12 @@ void OnlineHistDB::commit() {
   // send to DB the cached histogram creation statements 
   HistoStmtExec();
   // send the current page configurations
-  std::vector<OnlineHistPage*>::iterator ip;
-  for (ip = m_myPage.begin();ip != m_myPage.end(); ++ip) 
-    (*ip)->save(); 
-  Statement *fstmt=m_conn->createStatement ("begin OnlineHistDB.mycommit; end;");
+  //std::vector<OnlineHistPage*>::iterator ip;
+  //for (ip = m_myPage.begin();ip != m_myPage.end(); ++ip) 
+  //  (*ip)->save(); 
+  Statement *fstmt=m_conn->createStatement ("begin OnlineHistDB.mycommit(:x1); end;");
   try{
+    fstmt->setInt(1,m_DBschema);
     fstmt->executeUpdate ();
     if (m_debug>2) cout << "session terminated"<<endl; 
   }catch(SQLException ex) {
@@ -103,21 +105,37 @@ void OnlineHistDB::declareSubSystem(std::string SubSys)
 }
 
 
+
 void OnlineHistDB::declareHistByServiceName(const std::string &ServiceName)
+{
+  declareHistogram(ServiceName,"","",0);
+}
+
+
+
+void OnlineHistDB::declareHistogram(std::string TaskName,
+				    std::string AlgorithmName,
+				    std::string Title,
+				    int Dimension)
 {
   if(m_stmt) {
     m_stmt->addIteration();
     if (m_debug >2) cout << "added iteration "<<m_nit <<"/"<<m_maxNit;
   } else {
     m_stmt=m_conn->createStatement 
-      ("begin OnlineHistDB.DeclareHistByServiceName(:x1); end;");
+      ("begin OnlineHistDB.DeclareHistogram(:x1,:x2,:x3,:x4); end;");
     m_stmt->setMaxIterations(m_maxNit);
     m_stmt->setMaxParamSize(1, m_maxSNsize);
+    m_stmt->setMaxParamSize(2, m_maxANsize);
+    m_stmt->setMaxParamSize(3, m_maxTNsize);
     if (m_debug >2) cout << "created first iteration "<<m_nit <<"/"<<m_maxNit;
   }
-  m_stmt->setString(1, ServiceName);
+  m_stmt->setString(1, TaskName);
+  m_stmt->setString(2, AlgorithmName);
+  m_stmt->setString(3, Title);
+  m_stmt->setInt(4, Dimension);
   m_nit++;
-  if (m_debug >2) cout <<"   : " << ServiceName<<endl;
+  if (m_debug >2) cout <<"   : " << TaskName <<"/"<<AlgorithmName<<"/"<< Title<<endl;
   if (m_nit == m_maxNit) HistoStmtExec();
 }
 
@@ -215,12 +233,14 @@ OnlineHistPage* OnlineHistDB::getPage(std::string Name,
 }
 
 OnlineHistogram* OnlineHistDB::getHistogram(std::string Name, 
-					    std::string Page) {
+					    std::string Page,
+					    int Instance) {
   OnlineHistogram* h=0;
   // see if the histogram object exists already
   std::vector<OnlineHistogram*>::iterator ih;
   for (ih = m_myHist.begin(); ih != m_myHist.end(); ++ih) {
-    if ((*ih)->name() == Name && (*ih)->page() == Page) {
+    if ((*ih)->name() == Name && (*ih)->page() == Page && 
+	(*ih)->instance() == Instance ) {
       h = *ih;
       break;
     }
@@ -237,7 +257,7 @@ OnlineHistogram* OnlineHistDB::getHistogram(std::string Name,
       dumpError(ex,"OnlineHistDB::getHistogram");
     }
     if(astmt->getInt(1)) {
-      h= new OnlineHistogram(Name,m_conn,Page);
+      h= new OnlineHistogram(Name,m_conn,Page,Instance);
       if (h->isAbort()) {
 	cout<<"Error from OnlineHistDB::getHistogram : cannot create histogram object " 
 	    << Name <<endl;
@@ -350,6 +370,8 @@ int OnlineHistDB::getHistograms(std::string query,std::vector<OnlineHistogram*>&
   return nout;
 }
 
+
+
 int OnlineHistDB::getHistogramsWithAnalysis(std::vector<OnlineHistogram*>& list)
 {
   return getHistograms(",HISTOGRAMSET HS WHERE VH.HSID=HS.HSID AND HS.NANALYSIS>0",list);
@@ -382,7 +404,7 @@ int OnlineHistDB::getHistogramsByPage(std::string Page,
 				       std::vector<OnlineHistogram*>& list)
 {  
   stringstream ss;
-  ss << " , SHOWHISTO SH WHERE SH.HISTO = VH.HID AND SH.PAGE='" << Page << "'";
+  ss << " , SHOWHISTO SH WHERE SH.HISTO = VH.HID AND SH.PAGE='" << Page << "' ORDER BY SH.INSTANCE";
   return getHistograms( ss.str() , list);
 }
 int OnlineHistDB::getHistogramsBySet(std::string SetName,std::vector<OnlineHistogram*>& list)
@@ -397,4 +419,38 @@ int OnlineHistDB::getHistogramsBySet(const OnlineHistogram& Set,std::vector<Onli
   stringstream ss;
   ss << " WHERE VH.HSID=" << Set.hsid() ;
   return getHistograms( ss.str() , list);
+}
+
+int OnlineHistDB::getPageFolderNames(std::vector<string>& list)
+{
+  int nout=0;
+  std::string command = "SELECT PAGEFOLDERNAME from PAGEFOLDER";
+  Statement *qst=m_conn->createStatement(command);
+  ResultSet *rset = qst->executeQuery ();
+  while(rset->next ()) {
+    list.push_back(rset->getString(1));
+    nout++;
+  }
+  return nout;
+}
+
+int OnlineHistDB::getPageNames(std::vector<string>& list)
+{
+  return getPageNamesByFolder("_ALL_",list);
+}
+
+int OnlineHistDB::getPageNamesByFolder(std::string Folder,
+				       std::vector<string>& list)
+{
+  int nout=0;
+  std::string command = "SELECT PAGENAME from PAGE";
+  if (Folder != "_ALL_") 
+    command += " WHERE FOLDER='" + Folder + "'";
+  Statement *qst=m_conn->createStatement(command);
+  ResultSet *rset = qst->executeQuery ();
+  while(rset->next ()) {
+    list.push_back(rset->getString(1));
+    nout++;
+  }
+  return nout;
 }

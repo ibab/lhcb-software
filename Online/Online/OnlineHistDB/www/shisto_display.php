@@ -10,7 +10,8 @@ $act = $canwrite ? 'Display/Update' : '';
 
 $doid=$_GET["doid"];
 $hid=$_GET["hid"];
-$page=$_GET["page"];
+$page=fromGet($_GET["page"]);
+$instance=$_GET["instance"];
 ?>
 <H2 ALIGN="CENTER"><?php echo $act ?> Default Display Options for histogram <?php echo $hid ?> <br>in Page <?php echo $page ?></H2><hr>
 
@@ -21,6 +22,9 @@ if (!$doid) {
   OCIExecute($stid);
 }
 $histo["NHS"]=1; $histo["DISPLAY"]=$doid;$histo["PAGE"]=$page;
+$histo["INSTANCE"]=$instance;
+//echo "instance is $instance\n";
+
 histo_display($hid,"SHID","display");
 
 ocilogoff($conn);

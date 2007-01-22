@@ -5,7 +5,7 @@
 \title{Histogram DB for Online Monitoring -- User's Manual}
 \doctyp{}
 \dociss{1}
-\docrev{1}
+\docrev{2}
 \doccre{January 12, 2007}
 \docmod{\today}
 \docref{}
@@ -150,9 +150,13 @@ short page description
 \end{description}
 
 \subsubsection{Properties of SHOWHISTO}
+The unique identifier is the combination (Page,Histo,Instance)
 \begin{description}
 \item{Page} (valid PageName)
 \item{Histo} (valid HID)
+\item{Instance} (int)\\
+sequence number (starting from 1) to distinguish different instances
+of the same histogram on the same page
 \item{Cx, Cy, Sx, Sy} (float numbers from 0 to 1)\\
 coordinates of the histogram pad on the page: Cx and Cy define the
 position of the top left corner, Sx and Sy the size, relatively to the
@@ -305,6 +309,14 @@ System to dynamically update the DB with the published histograms.\\
 Tasks not known to the DB are automatically created.\\
 if histogram already exists, just updates the current DIM service name 
 
+
+\item void {\bf declareHistogram}(std::string TaskName, 
+			std::string AlgorithmName, 
+			std::string Title, 
+			int Dimension); 
+
+declares an Histogram by its identifying attributes
+
 \item void {\bf setHistogramBufferDepth}(int N);
 
 when creating histograms with the {\it declareHistByServiceName}
@@ -400,6 +412,22 @@ int {\bf getHistogramsBySet}(const OnlineHistogram\& Set,std::vector$<$OnlineHis
 
   gets the list of histograms in a Set. Returns the
 number of histograms found. list must be created by the user.
+
+\item   int {\bf getPageFolderNames}(std::vector<string>\& list);
+
+ gets the list of available page folders. Returns the
+number of folders found. list must be created by the user.
+
+\item   int {\bf getPageNamesByFolder}(std::string Folder,
+			   std::vector<string>\& list);
+
+  gets the list of pages in a folder. Returns the
+number of pages found. list must be created by the user.
+
+\item   int {\bf getPageNames}(std::vector<string>\& list);
+
+gets the list of all available pages. Returns the
+number of pages found. list must be created by the user.
 
 \end{list}
 
@@ -617,14 +645,8 @@ returns the list of histograms on this page
 		     float \&Sy,
 		     unsigned int instance=1);
 
-
 get the layout of given histogram 
-\item void {\bf save}();
 
-actually sends to DB the present page layout. This is automatically
-called by  {\it OnlineHistDB::commit}, but you may need to call it
-explicitly if you want to update page--specific histogram options
-before commit 
 \end{list}
 
 
@@ -696,7 +718,6 @@ histograms. Start by setting options for the whole histogram set
  pg->declareHistogram(h1,0. ,0. ,0.5,0.5);
  pg->declareHistogram(h2,0. ,0.5,0.5,0.5);
  pg->declareHistogram(h3,0. ,0. ,0.5,1. );
- pg->save(); // // needed to actually send page definition to DB
 
  int lc=2, fs=7, fc=3;
  float ymax=20000.;
@@ -717,6 +738,32 @@ you want to keep the less specific options
  h3->initHistoPageDisplayOptionsFromSet("Example Page");
  h3->setHistoPageDisplayOption("FILLCOLOR",(void*) &fc);
 \end{verbatim}
+Now display the list of pages with their histograms
+\begin{verbatim}
+ std::vector<string> folders;
+ std::vector<string> pages;
+ std::vector<OnlineHistogram*> histos; 
+ int nfold=HistDB->getPageFolderNames(folders);
+ int i,j,k;
+
+ for (i=0;i<nfold;i++) {
+   cout << "Folder " << folders[i] <<endl;
+   pages.clear();
+   int np=HistDB->getPageNamesByFolder(folders[i],pages);
+   for (j=0;j<np;j++) {
+     cout << "     Page " << pages[j] <<endl;
+     histos.clear();
+     int nh=HistDB->getHistogramsByPage(pages[j],histos);
+     for (k=0;k<nh;k++) {
+       cout << "           Histogram " << histos[k]->name() <<endl;
+     }    
+   }
+ }
+\end{verbatim}
+
+
+
+
 finally commit changes to the DB
 \begin{verbatim}
  HistDB->commit();

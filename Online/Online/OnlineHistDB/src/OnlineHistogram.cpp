@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistogram.cpp,v 1.2 2007-01-17 15:30:02 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistogram.cpp,v 1.3 2007-01-22 17:08:03 ggiacomo Exp $
 /*
    C++ interface to the Online Monitoring Histogram DB
    G. Graziani (INFN Firenze)
@@ -10,8 +10,10 @@
 
 OnlineHistogram::OnlineHistogram(std::string Name,
 				 Connection* Conn,
-				 std::string Page) :
-  OnlineHistDBEnv(Conn), m_isAbort(false), m_name(Name), m_page(Page), 
+				 std::string Page,
+				 int Instance) :
+  OnlineHistDBEnv(Conn), m_isAbort(false), m_name(Name), 
+  m_page(Page), m_instance(Instance),
   m_domode(NONE), m_hsdisp(0), m_hdisp(0), m_shdisp(0) {
     load();
   }
@@ -28,19 +30,22 @@ void OnlineHistogram::update() {
     load();
 }
 
-void OnlineHistogram::setPage(std::string Page) {
+void OnlineHistogram::setPage(std::string Page,
+			      int Instance) {
   m_page =Page;
+  m_instance =Instance;
   load();
 }
 
 void OnlineHistogram::load() {
-  std::string com="begin :out := OnlineHistDB.GetHistogramData(:2,:3,:4,:5,:6,:7,:8,:9,:10,:11,:12,:13,:14,:15,:16,:17,:18,:19,:20,:21,:22); end;";
+  std::string com="begin :out := OnlineHistDB.GetHistogramData(:2,:3,:4,:5,:6,:7,:8,:9,:10,:11,:12,:13,:14,:15,:16,:17,:18,:19,:20,:21,:22, :23); end;";
   Statement *query = m_conn->createStatement(com);
   try{
     int ip=1;
     query->registerOutParam(ip++,OCCIINT);
     query->setString(ip++, m_name);
     query->setString(ip++, m_page);
+    query->setInt(ip++, m_instance);
     query->registerOutParam(ip++,OCCISTRING,12);
     query->registerOutParam(ip++,OCCIINT);
     query->registerOutParam(ip++,OCCIINT);
@@ -69,7 +74,7 @@ void OnlineHistogram::load() {
   if (!(query->getInt(1))) 
     m_isAbort=true;
   else {
-    int ip=4;
+    int ip=5;
     m_hid=query->getString(ip++);
     m_hsid=query->getInt(ip++);
     m_ihs=query->getInt(ip++);
@@ -89,7 +94,6 @@ void OnlineHistogram::load() {
     m_hsdisp=query->getInt(ip++);
     m_shdisp=query->getInt(ip++);
     m_dimServiceName=query->getString(ip++);
-
     m_conn->terminateStatement (query);
 
     if (m_nanalysis>0) {
@@ -266,8 +270,10 @@ bool OnlineHistogram::initDisplayOptionsFromSet() {
   return out;
 }
 
-bool OnlineHistogram::initHistoPageDisplayOptionsFromSet(std::string PageName) {
+bool OnlineHistogram::initHistoPageDisplayOptionsFromSet(std::string PageName,
+							 int Instance) {
   bool out=true;
+  if(Instance == -1) Instance=m_instance;
   if (PageName == "_DEFAULT_") PageName = m_page;
   if (PageName == "_NONE_") {
     cout << "OnlineHistogram::initHistoPageDisplayOptionsFromSet aborted:" <<
@@ -292,11 +298,14 @@ bool OnlineHistogram::initHistoPageDisplayOptionsFromSet(std::string PageName) {
 	    getDisplayOptions(m_hsdisp);
 	    m_domode = SET;
 	  }
-	  std::string function="DeclareHistoPageDisplayOptions('" + 
-	    m_hid + "','" + PageName + "'";
-	  if ((m_shdisp=setDisplayOptions(function)) > 0) {
+	  stringstream function;
+	  function << "DeclareHistoPageDisplayOptions(theHID => '" <<
+	    m_hid << "',thePage => '" << PageName << "',TheInstance =>" << 
+	    Instance;
+	  if ((m_shdisp=setDisplayOptions(function.str())) > 0) {
 	    m_domode = HISTPAGE;
 	    m_page = PageName;
+	    m_instance = Instance;
 	  }
 //	  }
 	}
@@ -304,8 +313,10 @@ bool OnlineHistogram::initHistoPageDisplayOptionsFromSet(std::string PageName) {
   return out;
 }
 
-bool OnlineHistogram::initHistoPageDisplayOptionsFromHist(std::string PageName) {
+bool OnlineHistogram::initHistoPageDisplayOptionsFromHist(std::string PageName,
+							  int Instance) {
   bool out=true;
+  if(Instance == -1) Instance=m_instance;
   if (PageName == "_DEFAULT_") PageName = m_page;
   if (PageName == "_NONE_") {
     cout << "OnlineHistogram::initHistoPageDisplayOptionsFromHist aborted:" <<
@@ -330,11 +341,14 @@ bool OnlineHistogram::initHistoPageDisplayOptionsFromHist(std::string PageName) 
 	getDisplayOptions(m_hdisp);
 	m_domode = HIST;
       }
-      std::string function="DeclareHistoPageDisplayOptions('" + 
-	m_hid + "','" + PageName + "'";
-      if ((m_shdisp=setDisplayOptions(function)) > 0) {
+      stringstream function;
+      function << "DeclareHistoPageDisplayOptions(theHID => '" <<
+	m_hid << "',thePage => '" << PageName << "',TheInstance =>" << 
+	Instance;
+      if ((m_shdisp=setDisplayOptions(function.str())) > 0) {
 	m_domode = HISTPAGE;
 	m_page = PageName;
+	m_instance = Instance;
       }
     }
 // 	}
@@ -444,8 +458,10 @@ bool OnlineHistogram::setDisplayOption(std::string ParameterName,
 
 bool OnlineHistogram::setHistoPageDisplayOption(std::string ParameterName, 
 						void* value,
-						std::string PageName) {
+						std::string PageName,
+						int Instance) {
   bool out = true;
+  if (Instance == -1) Instance=m_instance;
   if (PageName == "_DEFAULT_") PageName = m_page;
   if (PageName == "_NONE_") {
     cout << "OnlineHistogram::setHistoPageDisplayOption aborted:" <<
@@ -455,14 +471,15 @@ bool OnlineHistogram::setHistoPageDisplayOption(std::string ParameterName,
   else {
     int thedoid=0;
     stringstream statement;
-    statement << "begin :out := OnlineHistDB.DeclareHistoPageDisplayOptions(:x1,:x2,K" 
-	      << ParameterName << " => :x3);end;";
+    statement << "begin :out := OnlineHistDB.DeclareHistoPageDisplayOptions(:x1,:x2,:x3,K" 
+	      << ParameterName << " => :x4);end;";
     Statement *fstmt=m_conn->createStatement (statement.str());
     try{
       fstmt->registerOutParam(1, OCCIINT);
       fstmt->setString(2,m_hid);
       fstmt->setString(3,PageName);
-      if (!linkDisplayParameter(ParameterName,fstmt,4,value)) {
+      fstmt->setInt(4,Instance);
+      if (!linkDisplayParameter(ParameterName,fstmt,5,value)) {
 	m_conn->terminateStatement (fstmt); 
 	out = false;
       }
@@ -479,6 +496,7 @@ bool OnlineHistogram::setHistoPageDisplayOption(std::string ParameterName,
     if(out && m_domode <= HISTPAGE  && thedoid > 0 ) { // update current display options
       m_domode = HISTPAGE;
       m_page = PageName;
+      m_instance = Instance;
       getDisplayOptions(thedoid);
     }
   }

@@ -31,9 +31,10 @@ function update_histo_analysis() {
       ( $_POST["htype"] == "HID" ? "HISTO='$id'" : "REGEXP_REPLACE(HISTO,'^(.*)/.*\$','\\1')=$id");
   
   $stid = OCIParse($conn,$command);
-  ocibindbyname($stid,":out",$out,10);
+  if (! $aid)
+    ocibindbyname($stid,":out",$out,10);
   $r=OCIExecute($stid,OCI_DEFAULT);
-  if (!$out) return 0;
+  if (!$aid && !$out) return 0;
   ocicommit($conn);
   ocifreestatement($stid);
   return 1;  

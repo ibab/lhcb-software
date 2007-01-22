@@ -22,11 +22,11 @@ if ($nh == 0)
   echo "No histograms specified.. writing aborted<br>";
 else {
   $command="begin OnlineHistDB.DeclarePage(theName => '${page}',theFolder => '${folder}',theDoc => '".$_POST["PAGEDOC"]."',".
-    "hlist => OnlineHistDB.histolist('".implode("','",SingleHist($data["HISTO"]))."'),".
-    "Cx => OnlineHistDB.floatlist(".implode(",",$data["CENTER_X"])."),".
-    "Cy => OnlineHistDB.floatlist(".implode(",",$data["CENTER_Y"])."),".
-    "Sx => OnlineHistDB.floatlist(".implode(",",$data["SIZE_X"])."),".
-    "Sy => OnlineHistDB.floatlist(".implode(",",$data["SIZE_Y"]).")); end;";
+    "hlist => OnlineHistDB.histotlist('".implode("','",SingleHist($data["HISTO"]))."'),".
+    "Cx => OnlineHistDB.floattlist(".implode(",",$data["CENTER_X"])."),".
+    "Cy => OnlineHistDB.floattlist(".implode(",",$data["CENTER_Y"])."),".
+    "Sx => OnlineHistDB.floattlist(".implode(",",$data["SIZE_X"])."),".
+    "Sy => OnlineHistDB.floattlist(".implode(",",$data["SIZE_Y"]).")); end;";
   //echo "command is $command <br>";
   $stid = OCIParse($conn,$command);
   $r=OCIExecute($stid,OCI_DEFAULT);

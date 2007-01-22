@@ -1,11 +1,11 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistPage.cpp,v 1.1.1.1 2007-01-16 15:18:12 ggiacomo Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistPage.cpp,v 1.2 2007-01-22 17:08:02 ggiacomo Exp $
 
 #include "OnlineHistDB/OnlineHistPage.h"
 
 OnlineHistPage::OnlineHistPage(std::string Name, 
 			       std::string Folder,
 			       Connection* Conn) :
-  OnlineHistDBEnv(Conn), m_name(Name), m_folder(Folder), m_modified(true)
+  OnlineHistDBEnv(Conn), m_name(Name), m_folder(Folder)
 {
   // check if page exists already in DB
   int out=0;
@@ -30,12 +30,11 @@ OnlineHistPage::OnlineHistPage(std::string Name,
 	   << endl;
     }
     m_doc = astmt->getString(4);
-    m_modified = false;
     m_conn->terminateStatement (astmt); 
 
     ResultSet *rset=0;
     astmt=m_conn->createStatement
-      ("select VH.NAME,CENTER_X,CENTER_Y,SIZE_X,SIZE_Y FROM SHOWHISTO SH,VIEWHISTOGRAM VH WHERE SH.PAGE=:1 and VH.HID= SH.HISTO");
+      ("select VH.NAME,CENTER_X,CENTER_Y,SIZE_X,SIZE_Y,INSTANCE FROM SHOWHISTO SH,VIEWHISTOGRAM VH WHERE SH.PAGE=:1 and VH.HID= SH.HISTO ORDER BY SH.INSTANCE");
     try{
       astmt->setString(1, Name);
       rset =  astmt->executeQuery ();
@@ -44,7 +43,13 @@ OnlineHistPage::OnlineHistPage(std::string Name,
 	dumpError(ex,"OnlineHistPage::OnlineHistPage");
       }
     while ( rset->next () ) {
-      m_h.push_back(new OnlineHistogram(rset->getString(1),m_conn));
+      //cout << "found histogram " << rset->getString(1) <<" on page "<<Name <<endl;
+      OnlineHistogram* newh= new OnlineHistogram(rset->getString(1),
+						 m_conn,
+						 Name,
+						 rset->getInt(6));
+      m_h.push_back(newh);
+      m_privh.push_back(newh);
       m_cx.push_back(rset->getFloat(2));
       m_cy.push_back(rset->getFloat(3));
       m_sx.push_back(rset->getFloat(4));
@@ -58,7 +63,12 @@ OnlineHistPage::OnlineHistPage(std::string Name,
 
 
 
-OnlineHistPage::~OnlineHistPage(){};
+OnlineHistPage::~OnlineHistPage(){
+  // delete all histograms created here
+  std::vector<OnlineHistogram*>::iterator ih;
+  for (ih = m_privh.begin();ih != m_privh.end(); ++ih) 
+    delete *ih; 
+};
 
 
 void OnlineHistPage::declareHistogram(OnlineHistogram* h,
@@ -69,7 +79,8 @@ void OnlineHistPage::declareHistogram(OnlineHistogram* h,
 				  unsigned int instance) {
   if (h->isAbort() == false) {
     int ih=findHistogram(h,instance);
-    if (0 == ih ) { // new histogram
+    
+    if (-1 == ih ) { // new histogram
       m_h.push_back(h);
       m_cx.push_back(Cx);
       m_cy.push_back(Cy);
@@ -82,12 +93,14 @@ void OnlineHistPage::declareHistogram(OnlineHistogram* h,
       m_sx[ih] = Sx;
       m_sy[ih] = Sy;
     }
+    save();
+    h->setPage(m_name,instance);
   }
 }
 
 int OnlineHistPage::findHistogram(OnlineHistogram* h,
 				  unsigned int instance) const {
-  unsigned int ih=0;
+  int ih=-1;
   unsigned int ii=0;
   for (unsigned int jh=0; jh<m_h.size() ; jh++) {
     if ((m_h[jh])->hid() == h->hid()) { 
@@ -107,7 +120,8 @@ bool OnlineHistPage::getHistLayout(OnlineHistogram* h,
 				   float &Sy,
 				   unsigned int instance) const {
   bool found=false;
-  if (int jh=findHistogram(h,instance)) {
+  int jh=findHistogram(h,instance);
+  if (-1 != jh) {
     found = true;
     Cx = m_cx[jh];
     Cy = m_cy[jh];
@@ -119,12 +133,14 @@ bool OnlineHistPage::getHistLayout(OnlineHistogram* h,
 
 void OnlineHistPage::removeHistogram(OnlineHistogram* h,
 				     unsigned int instance) {
-  if (int jh=findHistogram(h,instance)) {
+  int jh=findHistogram(h,instance);
+  if (-1 != jh) {
     m_h.erase(m_h.begin()+jh);
     m_cx.erase(m_cx.begin()+jh);
     m_cy.erase(m_cy.begin()+jh);
     m_sx.erase(m_sx.begin()+jh);
     m_sy.erase(m_sy.begin()+jh);
+    save();
   }
 }
 
@@ -132,49 +148,46 @@ void OnlineHistPage::removeHistogram(OnlineHistogram* h,
 
 
 void OnlineHistPage::save() {
-  if (m_modified) {
-    stringstream hlist,cx,cy,sx,sy;
-    hlist << "OnlineHistDB.histolist('";
-    cx << "OnlineHistDB.floatlist(";
-    cy << "OnlineHistDB.floatlist(";
-    sx << "OnlineHistDB.floatlist(";
-    sy << "OnlineHistDB.floatlist(";
-    for (unsigned int jh=0; jh<m_h.size() ; jh++) {
-      hlist << m_h[jh]->hid(); 
-      cx << m_cx[jh] ;
-      cy << m_cy[jh] ;
-      sx << m_sx[jh] ;
-      sy << m_sy[jh] ;
-      if (jh < m_h.size()-1) {
-	hlist << "','";
-	cx <<  ",";
-	cy <<  ",";
-	sx <<  ",";
-	sy <<  ",";
-      }
+  stringstream hlist,cx,cy,sx,sy;
+  hlist << "OnlineHistDB.histotlist('";
+  cx << "OnlineHistDB.floattlist(";
+  cy << "OnlineHistDB.floattlist(";
+  sx << "OnlineHistDB.floattlist(";
+  sy << "OnlineHistDB.floattlist(";
+  for (unsigned int jh=0; jh<m_h.size() ; jh++) {
+    hlist << m_h[jh]->hid(); 
+    cx << m_cx[jh] ;
+    cy << m_cy[jh] ;
+    sx << m_sx[jh] ;
+    sy << m_sy[jh] ;
+    if (jh < m_h.size()-1) {
+      hlist << "','";
+      cx <<  ",";
+      cy <<  ",";
+      sx <<  ",";
+      sy <<  ",";
     }
-    hlist << "')";
-    cx <<  ")";
-    cy <<  ")";
-    sx <<  ")";
-    sy <<  ")";
-    stringstream command;
-    command << "begin OnlineHistDB.DeclarePage(theName => '"<< m_name <<
-      "',theFolder => '"<< m_folder <<
-      "',theDoc => '"<< m_doc <<
-      "',hlist => " << hlist.str() <<
-      ",Cx => " << cx.str() <<
-      ",Cy => " << cy.str() <<
-      ",Sx => " << sx.str() <<
-      ",Sy => " << sy.str() << "); end;";
-    
-    Statement *astmt=m_conn->createStatement(command.str()); 
-    try{
-      astmt->execute();
-      m_modified = false;
-    }catch(SQLException ex)
-      {
-	dumpError(ex,"OnlineHistPage::save");
-      }
   }
+  hlist << "')";
+  cx <<  ")";
+  cy <<  ")";
+  sx <<  ")";
+  sy <<  ")";
+  stringstream command;
+  command << "begin OnlineHistDB.DeclarePage(theName => '"<< m_name <<
+    "',theFolder => '"<< m_folder <<
+    "',theDoc => '"<< m_doc <<
+    "',hlist => " << hlist.str() <<
+    ",Cx => " << cx.str() <<
+    ",Cy => " << cy.str() <<
+    ",Sx => " << sx.str() <<
+    ",Sy => " << sy.str() << "); end;";
+  
+  Statement *astmt=m_conn->createStatement(command.str()); 
+  try{
+    astmt->execute();
+  }catch(SQLException ex)
+    {
+      dumpError(ex,"OnlineHistPage::save");
+    }
 };

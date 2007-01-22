@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistogram.h,v 1.1.1.1 2007-01-16 15:18:12 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistogram.h,v 1.2 2007-01-22 17:07:32 ggiacomo Exp $
 #ifndef ONLINEHISTOGRAM_H
 #define ONLINEHISTOGRAM_H 1
 /** @class  OnlineHistogram OnlineHistogram.h OnlineHistDB/OnlineHistogram.h
@@ -16,21 +16,26 @@ class  OnlineHistogram : public OnlineHistDBEnv
   typedef enum { NONE, SET, HIST, HISTPAGE } DisplayOptionMode;
   OnlineHistogram(std::string Name,
 		  Connection* conn,
-		  std::string Page="_NONE_");
+		  std::string Page="_NONE_",
+		  int Instance=1);
   virtual ~OnlineHistogram();
   void update();
-  void setPage(std::string Page);
+  void setPage(std::string Page,
+	       int Instance=1);
   // DISPLAY OPTIONS
   bool initDisplayOptionsFromSet(); 
-  bool initHistoPageDisplayOptionsFromSet(std::string PageName = "_DEFAULT_");
-  bool initHistoPageDisplayOptionsFromHist(std::string PageName = "_DEFAULT_"); 
+  bool initHistoPageDisplayOptionsFromSet(std::string PageName = "_DEFAULT_",
+					  int Instance=-1);
+  bool initHistoPageDisplayOptionsFromHist(std::string PageName = "_DEFAULT_",
+					   int Instance=-1); 
   bool setHistoSetDisplayOption(std::string ParameterName, 
 				void* value);
   bool setDisplayOption(std::string ParameterName, 
 			void* value);
   bool setHistoPageDisplayOption(std::string ParameterName, 
 				 void* value,
-				 std::string PageName = "_DEFAULT_");
+				 std::string PageName = "_DEFAULT_",
+				 int Instance=-1);
   bool getDisplayOption(std::string ParameterName,
 					 void* option);
 
@@ -52,6 +57,7 @@ class  OnlineHistogram : public OnlineHistDBEnv
   bool isAbort() const {return m_isAbort;}
   std::string name() const {return m_name;}
   std::string page() const {return m_page;}
+  int instance() const {return m_instance;}
   std::string hid() const {return m_hid;}
   std::string dimServiceName() const  {return m_dimServiceName;}
   int hsid() const {return m_hsid;}
@@ -101,6 +107,7 @@ class  OnlineHistogram : public OnlineHistDBEnv
   bool m_isAbort;
   std::string m_name;
   std::string m_page;
+  int m_instance;
   std::string m_hid;
   std::string m_dimServiceName;
   int m_hsid;

@@ -12,8 +12,10 @@ function update_histo_display() {
   global $conn;
 
   $command="begin :out := OnlineHistDB.".
-    ( $_POST["htype"] == "SHID" ? "DeclareHistoPageDisplayOptions('".$_POST["id"]."','".$_POST["PAGE"]."'" :
-      ($_POST["htype"] == "HSID" ? "DeclareHistoSetDisplayOptions(".$_POST["id"] :
+    ( $_POST["htype"] == "SHID" ? 
+      "DeclareHistoPageDisplayOptions('".$_POST["id"]."','".$_POST["PAGE"]."',".$_POST["INSTANCE"] :
+      ($_POST["htype"] == "HSID" ? 
+       "DeclareHistoSetDisplayOptions(".$_POST["id"] :
        "DeclareHistDisplayOptions('".$_POST["id"]."'") );
   foreach  (array('LABEL_X','LABEL_Y','LABEL_Z','YMIN','YMAX','STATS','FILLSTYLE','FILLCOLOR',
                   'LINESTYLE','LINECOLOR','LINEWIDTH','DRAWOPTS') as $var) 
@@ -54,9 +56,10 @@ else {
 ocilogoff($conn);
 echo "<p><a href='../Histogram.php?".strtolower($_POST["htype"])."=${id}'> Back to Histogram Record $id </a></p>";
 
-if ($page)
-  echo "<br> <a href='../Viewpage.php?page=${page}> Back to Page Record $page </a>";
-
+if ($page) {
+  $getp=toGet($page);
+  echo "<br> <a href='../Viewpage.php?page=${getp}> Back to Page Record $page </a>";
+}
 
 ?>
 

@@ -7,7 +7,7 @@
 $debug=0;
 include 'util.php';
 
-function showhisto_display($hid,$doid)
+function showhisto_display($hid,$doid,$instance)
 {
   global $canwrite;
   global $conn;
@@ -31,8 +31,10 @@ function showhisto_display($hid,$doid)
       echo "Using Histogram Default Display Options<br>";
     }
     $page=$_POST["PAGENAME"];
-    if ($act)
-      echo "<a href=shisto_display.php?doid=${doid}&hid=${hid}&page=${page}>$act special Display Options for Histogram in this page </a>\n";
+    if ($act) {
+      $getp=toGet($page);
+      echo "<a href=shisto_display.php?doid=${doid}&hid=${hid}&page=${getp}&instance=${instance}>$act special Display Options for Histogram in this page </a>\n";
+    }
     echo "</table>";
   }
   ocifreestatement($hstid);
@@ -77,7 +79,7 @@ function page_form($page) {
 	     $_POST["SIZE_X_SH${i}"],$_POST["SIZE_Y_SH${i}"]);
       if ($i<=$_POST["NHISTO"]){
 	echo "<tr><td colspan=5>";
-	showhisto_display($_POST["HISTO_SH${i}"],$_POST["SDISPLAY_SH${i}"]);
+	showhisto_display($_POST["HISTO_SH${i}"],$_POST["SDISPLAY_SH${i}"],$_POST["INSTANCE_SH${i}"]);
 	echo"</td></tr><tr><td colspan=5><hr></tr>\n";
       }
 
@@ -95,7 +97,7 @@ function page_form($page) {
 	"<td>&nbsp&nbsp&nbsp X size <span class='normal' >".$_POST["SIZE_X_SH${i}"]."</span></td>".
 	"<td>&nbsp&nbsp&nbsp Y size <span class='normal' >".$_POST["SIZE_Y_SH${i}"]."</span></td></tr>\n";    
       echo "<tr><td colspan=5>";
-      showhisto_display($_POST["HISTO_SH${i}"],$_POST["SDISPLAY_SH${i}"]);
+      showhisto_display($_POST["HISTO_SH${i}"],$_POST["SDISPLAY_SH${i}"],$_POST["INSTANCE_SH${i}"]);
       echo"</td></tr><tr><td colspan=5><hr></tr>\n";
     }
   } 
@@ -113,12 +115,12 @@ if (array_key_exists("page",$_GET)) {
     foreach (array("PAGENAME","NHISTO","PAGEDOC","FOLDER")
              as $field)
       $_POST[$field]=$mypage[$field];
-    $shtid = OCIParse($conn,"SELECT * from SHOWHISTO where PAGE='${page}' order by HISTO");
+    $shtid = OCIParse($conn,"SELECT * from SHOWHISTO where PAGE='${page}' order by HISTO,INSTANCE");
     OCIExecute($shtid);
     $i=0;
     while( OCIFetchInto($shtid, $showhisto, OCI_ASSOC )) {
       $i++;
-      foreach (array("HISTO","CENTER_X","CENTER_Y","SIZE_X","SIZE_Y","SDISPLAY")
+      foreach (array("HISTO","INSTANCE","CENTER_X","CENTER_Y","SIZE_X","SIZE_Y","SDISPLAY")
 	       as $field)
 	$_POST[$field."_SH${i}"]=$showhisto[$field];
     }

@@ -1,11 +1,15 @@
 create or replace package OnlineHistDB as
  TYPE sourceh is VARRAY(8) of HCREATOR.SOURCEH1%TYPE; 
- TYPE histolist is TABLE OF HISTOGRAM.HID%TYPE;
- TYPE floatlist is TABLE OF real;
+ TYPE histotlist is TABLE OF HISTOGRAM.HID%TYPE;
+ TYPE floattlist is TABLE OF real;
+ TYPE inttlist is TABLE OF int;
  procedure DeclareSubSystem(subsys varchar2);	
  procedure DeclareTask (Name varchar2, ss1 varchar2:='NONE', ss2 varchar2:='NONE', ss3 varchar2:='NONE',
 	KRunOnPhysics number :=1, KRunOnCalib number :=0, KRunOnEmpty number :=0);
+ procedure DeclareHistogram(tk IN varchar2,algo IN  varchar2 := '_NULL_', title IN  varchar2:= '_NULL_', dimension IN int:= 0);
  procedure DeclareHistByServiceName(ServiceName IN varchar2);
+ function DeclareHistByAttributes(tk IN varchar2,algo IN  varchar2, title IN  varchar2, dimension IN int) 
+   return varchar2 ;
  procedure DeclareCheckAlgorithm(Name varchar2,pars parameters,doc varchar2:=NULL);
  procedure DeclareCreatorAlgorithm(Name varchar2,Ninp number:=0,doc varchar2:=NULL);
 
@@ -24,7 +28,7 @@ create or replace package OnlineHistDB as
 			KYMIN IN float := NULL,KYMAX IN float := NULL,KSTATS IN smallint := NULL, KFILLSTYLE IN smallint := NULL,
 		        KFILLCOLOR  IN smallint := NULL, KLINESTYLE IN smallint := NULL,KLINECOLOR IN smallint := NULL,KLINEWIDTH IN smallint := NULL,
 			KDRAWOPTS IN varchar2 := NULL,reset IN int :=0) return number;
- function DeclareHistoPageDisplayOptions(theHID IN HISTOGRAM.HID%TYPE, thePage PAGE.PAGENAME%TYPE, 
+ function DeclareHistoPageDisplayOptions(theHID IN HISTOGRAM.HID%TYPE, thePage PAGE.PAGENAME%TYPE, TheInstance IN int := 1, 
                         KLABEL_X varchar2 := NULL,KLABEL_Y varchar2 := NULL,KLABEL_Z varchar2 := NULL,
 			KYMIN IN float := NULL,KYMAX IN float := NULL,KSTATS IN smallint := NULL, KFILLSTYLE IN smallint := NULL,
 		        KFILLCOLOR  IN smallint := NULL, KLINESTYLE IN smallint := NULL,KLINECOLOR IN smallint := NULL,KLINEWIDTH IN smallint := NULL,
@@ -33,7 +37,7 @@ create or replace package OnlineHistDB as
 			KYMIN OUT float ,KYMAX OUT float ,KSTATS OUT smallint , KFILLSTYLE OUT smallint ,
 		        KFILLCOLOR  OUT smallint , KLINESTYLE OUT smallint ,KLINECOLOR OUT smallint ,KLINEWIDTH OUT smallint ,
 			KDRAWOPTS OUT varchar2 )   return number;	
- function GetBestDO(theHID IN HISTOGRAM.HID%TYPE, thePage IN PAGE.PAGENAME%TYPE := NULL) return number;
+ function GetBestDO(theHID IN HISTOGRAM.HID%TYPE, thePage IN PAGE.PAGENAME%TYPE := NULL,TheInstance IN int := 1) return number;
 
  function GetHID(theHistoName IN varchar2,Subindex OUT HISTOGRAM.IHS%TYPE) return number;
  procedure GetAlgoNpar(theAlg IN varchar2, Npar OUT integer);
@@ -42,11 +46,12 @@ create or replace package OnlineHistDB as
  function GetHistoAnalysis(theHistoSet IN int, anaids OUT intlist, ananames OUT analist) return number;
  procedure DeclareAnalysisHistogram(theAlg IN varchar2,theTitle IN varchar2,theSet IN HISTOGRAMSET.HSID%TYPE := 0,theSources sourceh := NULL);
  procedure DeclarePageFolder(theFolder IN varchar2);
- procedure DeclarePage(theName IN varchar2,theFolder IN varchar2,theDoc IN varchar2,hlist IN histolist,
-			Cx IN floatlist,Cy IN floatlist,Sx IN floatlist,Sy IN floatlist);
+ procedure DeclarePage(theName IN varchar2,theFolder IN varchar2,theDoc IN varchar2,hlist IN histotlist,
+			Cx IN floattlist,Cy IN floattlist,Sx IN floattlist,Sy IN floattlist);
  function GetPage(theName IN varchar2,theFolder OUT varchar2,theDoc OUT varchar2) return number; 
  PROCEDURE DeletePage(theName IN varchar2);
- function GetHistogramData(theName IN varchar2, thePage IN varchar2, theHid OUT varchar2,theHsid OUT int,
+ function GetHistogramData(theName IN varchar2, thePage IN varchar2,  theInstance IN int,
+	theHid OUT varchar2,theHsid OUT int,
 	theIhs OUT int,theNhs OUT int, theHstype OUT string, theHstitle OUT string, theSubtitle OUT string,
 	theTask OUT string, theAlgo OUT string, theNanalysis OUT int,
 	theDescr OUT string, theDoc OUT string, theIsanalysishist OUT int, theCreation OUT int,
@@ -54,7 +59,7 @@ create or replace package OnlineHistDB as
 	theDIMServiceName OUT varchar2)
 	return number;
 
- procedure mycommit;
+ procedure mycommit(dbschema int := 0);
 end OnlineHistDB;
 /
 
@@ -239,30 +244,28 @@ exception
  end DeclareTask;
  
 -----------------------
- procedure DeclareHistByServiceName(ServiceName varchar2) is
+ 
+
+procedure DeclareHistogram(tk IN varchar2,algo IN  varchar2 := '_NULL_', title IN  varchar2:= '_NULL_', dimension IN int:= 0) is
+ out int;
+ begin
+ if (dimension = 0) then
+   DeclareHistByServiceName(tk);
+ else
+   out := DeclareHistByAttributes(tk,algo,title,dimension);
+ end if;
+end DeclareHistogram;
+	  
+-----------------------
+
+procedure DeclareHistByServiceName(ServiceName IN varchar2) is
  dimension int; -- still missing a convention for profile histograms
- newdim  VIEWHISTOGRAM.HSTYPE%TYPE;
  tk TASK.TASKNAME%TYPE;
  algo HISTOGRAMSET.HSALGO%TYPE;
  title varchar2(300);
- hstitle HISTOGRAMSET.HSTITLE%TYPE;
- subtitle  HISTOGRAM.SUBTITLE%TYPE;
- cursor myh(Xsubtit HISTOGRAM.SUBTITLE%TYPE, Xtit HISTOGRAMSET.HSTITLE%TYPE, Xalg HISTOGRAMSET.HSALGO%TYPE, Xtask TASK.TASKNAME%TYPE) is 
-	select HID,HSID,HSTYPE from VIEWHISTOGRAM where (SUBTITLE=Xsubtit or (Xsubtit is NULL and SUBTITLE is NULL)) 
-	AND TITLE=Xtit AND ALGO=Xalg and TASK=Xtask;
- myhstype VIEWHISTOGRAM.HSTYPE%TYPE;
- cursor myhs(Xtit HISTOGRAMSET.HSTITLE%TYPE, Xalg HISTOGRAMSET.HSALGO%TYPE, Xtask HISTOGRAMSET.HSTASK%TYPE) is 
-	select HSID,NHS,NANALYSIS from HISTOGRAMSET where HSTITLE=Xtit AND HSALGO=Xalg and HSTASK=Xtask;
- myhid HISTOGRAM.HID%TYPE;
- myhsid HISTOGRAMSET.HSID%TYPE;
- mynhs HISTOGRAMSET.NHS%TYPE;
- mynana HISTOGRAMSET.NANALYSIS%TYPE;
  cursor mysn(Xsn DIMSERVICENAME.SN%TYPE) is select SN from DIMSERVICENAME where SN=Xsn;
  myfsn  DIMSERVICENAME.SN%TYPE;
- cursor myans(Xhisto HISTOGRAM.HID%TYPE) is select ANA,WARNINGS,ALARMS from ANASETTINGS where HISTO=Xhisto;
- myana ANASETTINGS.ANA%TYPE;
- mywn thresholds;
- myal thresholds;
+ hid HISTOGRAM.HID%TYPE := '';
 
  begin
  open mysn(ServiceName);
@@ -274,30 +277,61 @@ exception
   tk := REGEXP_REPLACE(ServiceName,'^H.D/.*_(.*)_.*/.*/.*$','\1');
   algo := REGEXP_REPLACE(ServiceName,'^H.D/.*/(.*)/.*$','\1');
   title := REGEXP_REPLACE(ServiceName,'^H.D/.*/.*/(.*)$','\1');
-  if (INSTR(title,'_$$_') != 0) then
-    hstitle :=  REGEXP_REPLACE(title,'^(.*)_\$\$_.*$','\1');
-    subtitle :=  REGEXP_REPLACE(title,'^.*_\$\$_(.*)$','\1');
-  else
-    hstitle := title;
-    subtitle := NULL;
+  hid := DeclareHistByAttributes(tk,algo,title,dimension);
+  if (hid != '') then 
+   -- update service name (the dimension or the node or the task serial number could have changed)
+   DELETE FROM DIMSERVICENAME WHERE PUBHISTO=hid;
+   INSERT INTO DIMSERVICENAME VALUES(ServiceName,hid);
   end if;
+ end if;
+end  DeclareHistByServiceName;
+-----------------------
+
+function DeclareHistByAttributes(tk IN varchar2,algo IN  varchar2, title IN  varchar2, dimension IN int) 
+  return varchar2 is
+ hstitle HISTOGRAMSET.HSTITLE%TYPE;
+ subtitle  HISTOGRAM.SUBTITLE%TYPE;
+ cursor myh(Xsubtit HISTOGRAM.SUBTITLE%TYPE, Xtit HISTOGRAMSET.HSTITLE%TYPE, Xalg HISTOGRAMSET.HSALGO%TYPE, Xtask TASK.TASKNAME%TYPE) is 
+	select HID,HSID,HSTYPE from VIEWHISTOGRAM where (SUBTITLE=Xsubtit or (Xsubtit is NULL and SUBTITLE is NULL)) 
+	AND TITLE=Xtit AND ALGO=Xalg and TASK=Xtask;
+ myhstype VIEWHISTOGRAM.HSTYPE%TYPE;
+ cursor myhs(Xtit HISTOGRAMSET.HSTITLE%TYPE, Xalg HISTOGRAMSET.HSALGO%TYPE, Xtask HISTOGRAMSET.HSTASK%TYPE) is 
+	select HSID,NHS,NANALYSIS from HISTOGRAMSET where HSTITLE=Xtit AND HSALGO=Xalg and HSTASK=Xtask;
+ myhid HISTOGRAM.HID%TYPE := '';
+ myhsid HISTOGRAMSET.HSID%TYPE;
+ mynhs HISTOGRAMSET.NHS%TYPE;
+ mynana HISTOGRAMSET.NANALYSIS%TYPE;
+ cursor myans(Xhisto HISTOGRAM.HID%TYPE) is select ANA,WARNINGS,ALARMS from ANASETTINGS where HISTO=Xhisto;
+ myana ANASETTINGS.ANA%TYPE;
+ mywn thresholds;
+ myal thresholds;
+ newdim  VIEWHISTOGRAM.HSTYPE%TYPE;
+
+ begin
+ if (INSTR(title,'_$$_') != 0) then
+   hstitle :=  REGEXP_REPLACE(title,'^(.*)_\$\$_.*$','\1');
+   subtitle :=  REGEXP_REPLACE(title,'^.*_\$\$_(.*)$','\1');
+ else
+   hstitle := title;
+   subtitle := NULL;
+ end if;
 
   -- see if histogram exists
-   --  DBMS_OUTPUT.PUT_LINE('histo e'' ___'||tk||'/'||algo||'/'||hstitle||'_$$_'||subtitle||'___');
-  open myh(subtitle,hstitle,algo,tk);
-  fetch myh into myhid,myhsid,myhstype;
-  if myh%NOTFOUND then -- see if histogram set exists
-   open myhs(hstitle,algo,tk);
-   fetch myhs into myhsid,mynhs,mynana;
-   if myhs%NOTFOUND then -- check that task exists
-      DeclareTask(tk);
-      -- create histogram set and histogram
-      INSERT INTO HISTOGRAMSET(HSID,NHS,HSTASK,HSALGO,HSTITLE,HSTYPE) 
-	VALUES(HistogramSet_ID.NEXTVAL,1,tk,algo,hstitle,dimension||'D');
-      INSERT INTO HISTOGRAM(HID,HSET,IHS,SUBTITLE,CREATION) 
-	VALUES(HistogramSet_ID.CURRVAL||'/1',HistogramSet_ID.CURRVAL,1,subtitle,SYSTIMESTAMP);
-      SELECT HistogramSet_ID.CURRVAL||'/1' INTO myhid from ERGOSUM;
-   else -- histogram set exists, create histogram object and update number in set
+  --  DBMS_OUTPUT.PUT_LINE('histo e'' ___'||tk||'/'||algo||'/'||hstitle||'_$$_'||subtitle||'___');
+ open myh(subtitle,hstitle,algo,tk);
+ fetch myh into myhid,myhsid,myhstype;
+ if myh%NOTFOUND then -- see if histogram set exists
+  open myhs(hstitle,algo,tk);
+  fetch myhs into myhsid,mynhs,mynana;
+  if myhs%NOTFOUND then -- check that task exists
+    DeclareTask(tk);
+    -- create histogram set and histogram
+    INSERT INTO HISTOGRAMSET(HSID,NHS,HSTASK,HSALGO,HSTITLE,HSTYPE) 
+       VALUES(HistogramSet_ID.NEXTVAL,1,tk,algo,hstitle,dimension||'D');
+    INSERT INTO HISTOGRAM(HID,HSET,IHS,SUBTITLE,CREATION) 
+       VALUES(HistogramSet_ID.CURRVAL||'/1',HistogramSet_ID.CURRVAL,1,subtitle,SYSTIMESTAMP);
+    SELECT HistogramSet_ID.CURRVAL||'/1' INTO myhid from ERGOSUM;
+  else -- histogram set exists, create histogram object and update number in set
     mynhs := mynhs+1;
     myhid := myhsid||'/'||mynhs;
     INSERT INTO HISTOGRAM(HID,HSET,IHS,SUBTITLE,CREATION) VALUES(myhid,myhsid,mynhs,subtitle,SYSTIMESTAMP);
@@ -308,22 +342,19 @@ exception
        INSERT INTO ANASETTINGS(ANA,HISTO,MASK,WARNINGS,ALARMS) VALUES(aset.ANA,myhid,1,aset.WARNINGS,aset.ALARMS);
       end LOOP;     
     end if;
-   end if;	
-  else -- histogram exists, only check dimension 
-   newdim:=dimension||'D'; -- convention for profile histogram ?? 
-   if (newdim != myhstype) then
-    UPDATE HISTOGRAMSET SET HSTYPE=newdim where HSID=myhsid;
-   end if;
+  end if;	
+ else -- histogram exists, only check dimension 
+  newdim:=dimension||'D'; -- convention for profile histogram ?? 
+  if (newdim != myhstype) then
+   UPDATE HISTOGRAMSET SET HSTYPE=newdim where HSID=myhsid;
   end if;
-  -- update service name (the dimension or the node or the task serial number could have changed)
-  DELETE FROM DIMSERVICENAME WHERE PUBHISTO=myhid;
-  INSERT INTO DIMSERVICENAME VALUES(ServiceName,myhid);
  end if;
+ return myhid;
 exception
  when OTHERS then 
   ROLLBACK TO beforeDHwrite;
   raise_application_error(-20050,SQLERRM);
- end DeclareHistByServiceName;
+ end DeclareHistByAttributes;
 
 -----------------------
 procedure DeclareCheckAlgorithm(Name varchar2,pars parameters,doc varchar2) is
@@ -489,14 +520,13 @@ end DeclareHistDisplayOptions;
 
 -----------------------
 
-function DeclareHistoPageDisplayOptions(theHID IN HISTOGRAM.HID%TYPE, thePage PAGE.PAGENAME%TYPE, 
+function DeclareHistoPageDisplayOptions(theHID IN HISTOGRAM.HID%TYPE, thePage PAGE.PAGENAME%TYPE, TheInstance IN int := 1, 
                         KLABEL_X varchar2 := NULL,KLABEL_Y varchar2 := NULL,KLABEL_Z varchar2 := NULL,
 			KYMIN IN float := NULL,KYMAX IN float := NULL,KSTATS IN smallint := NULL, KFILLSTYLE IN smallint := NULL,
 		        KFILLCOLOR  IN smallint := NULL, KLINESTYLE IN smallint := NULL,KLINECOLOR IN smallint := NULL,KLINEWIDTH IN smallint := NULL,
 			KDRAWOPTS IN varchar2 := NULL, reset IN int :=0) return number is
- cursor checko is select SDISPLAY from SHOWHISTO where HISTO=theHID and PAGE=thePage; 
+ cursor checko is select SDISPLAY from SHOWHISTO where HISTO=theHID and PAGE=thePage and INSTANCE=TheInstance; 
  myDisp HISTOGRAM.DISPLAY%TYPE := NULL;
-
  mydoid DISPLAYOPTIONS.DOID%TYPE;
 begin
  savepoint beforeDHPDOwrite;
@@ -508,7 +538,7 @@ begin
  mydoid := DeclareDisplayOptions(KLABEL_X,KLABEL_Y,KLABEL_Z,KYMIN,KYMAX,KSTATS,
 		KFILLSTYLE,KFILLCOLOR,KLINESTYLE,KLINECOLOR,KLINEWIDTH,KDRAWOPTS,myDisp,reset);
  if (myDisp is NULL) then
-   update SHOWHISTO set SDISPLAY=mydoid where HISTO=theHID and PAGE=thePage;
+   update SHOWHISTO set SDISPLAY=mydoid where HISTO=theHID and PAGE=thePage and INSTANCE=TheInstance;
  end if;
  return mydoid;
 EXCEPTION
@@ -548,8 +578,9 @@ end if;
 end GetDisplayOptions;
 -----------------------
 
-function GetBestDO(theHID IN HISTOGRAM.HID%TYPE, thePage IN PAGE.PAGENAME%TYPE := NULL) return number is
- cursor checkp is select SDISPLAY from SHOWHISTO where HISTO=theHID and PAGE=thePage; 
+function GetBestDO(theHID IN HISTOGRAM.HID%TYPE, thePage IN PAGE.PAGENAME%TYPE := NULL,
+	TheInstance IN int := 1) return number is
+ cursor checkp is select SDISPLAY from SHOWHISTO where HISTO=theHID and PAGE=thePage and INSTANCE=TheInstance; 
  cursor checkh is select H.DISPLAY,HS.HSDISPLAY from HISTOGRAMSET HS,HISTOGRAM H where H.HID=theHID and H.HSET=HS.HSID; 
  doid int := NULL;
  disp int;
@@ -736,14 +767,16 @@ end DeclarePageFolder;
 
 
 -----------------------
-procedure DeclarePage(theName IN varchar2,theFolder IN varchar2,theDoc IN varchar2,hlist IN histolist,
-			Cx IN floatlist,Cy IN floatlist,Sx IN floatlist,Sy IN floatlist) is
+procedure DeclarePage(theName IN varchar2,theFolder IN varchar2,theDoc IN varchar2,hlist IN histotlist,
+			Cx IN floattlist,Cy IN floattlist,Sx IN floattlist,Sy IN floattlist) is
  CURSOR cpg is select PAGENAME from PAGE where PAGENAME=theName;
  myPName  PAGE.PAGENAME%TYPE;
  Nin int;
  condition varchar2(500);
- CURSOR sh(Xpage PAGE.PAGENAME%TYPE,Xhisto SHOWHISTO.HISTO%TYPE) is 
-	select PAGE from SHOWHISTO where PAGE=Xpage and HISTO=Xhisto;
+ CURSOR sh(Xpage PAGE.PAGENAME%TYPE,Xhisto SHOWHISTO.HISTO%TYPE,Xinstance SHOWHISTO.INSTANCE%TYPE) is 
+	select PAGE from SHOWHISTO where PAGE=Xpage and HISTO=Xhisto and INSTANCE=Xinstance;
+ inst int;
+ instlist inttlist := inttlist();
 begin
  savepoint beforeDPwrite;
  Nin := hlist.COUNT;
@@ -751,6 +784,18 @@ begin
    raise_application_error(-20003,'incomplete input variables');
  end if;
  DeclarePageFolder(theFolder);
+ -- see if some histogram is present more than once and assign "instance" order parameter 
+ instlist.EXTEND(Nin);
+ for i IN 1..Nin LOOP
+  inst :=0;
+  for j IN 1..i LOOP
+   if hlist(i) = hlist(j) then
+     inst := inst +1;
+   end if;
+  end LOOP;
+  instlist(i) := inst;
+ end LOOP;
+
  open cpg;
  fetch cpg into myPName;
  if (cpg%NOTFOUND) then -- new page
@@ -760,7 +805,7 @@ begin
   -- remove all showhisto entry related to this page that are no more in the definition
   condition := ' WHERE PAGE='''||theName||'''';
   for i IN 1..Nin LOOP
-   condition := condition||' AND HISTO != '''||hlist(i)||'''';
+   condition := condition||' AND ( HISTO != '''||hlist(i)||''' OR INSTANCE != '||instlist(i)||' )';
   end LOOP; 
   --    first, remove DISPLAYOPTIONS that may have been set for the SHOWHISTO to be deleted, then remove SHOWHISTO entries
   EXECUTE IMMEDIATE
@@ -770,12 +815,14 @@ begin
  end if;
  -- now create/update SHOWHISTO entries
  for i IN 1..Nin LOOP
-   open sh(theName,hlist(i));
+   open sh(theName,hlist(i),instlist(i));
    fetch sh into myPName;
    if (sh%NOTFOUND) then
-    INSERT INTO SHOWHISTO(PAGE,HISTO,CENTER_X,CENTER_Y,SIZE_X,SIZE_Y) VALUES(theName,hlist(i),Cx(i),Cy(i),Sx(i),Sy(i)); 
+    INSERT INTO SHOWHISTO(PAGE,HISTO,INSTANCE,CENTER_X,CENTER_Y,SIZE_X,SIZE_Y) 
+	VALUES(theName,hlist(i),instlist(i),Cx(i),Cy(i),Sx(i),Sy(i)); 
    else
-    UPDATE SHOWHISTO SET CENTER_X=Cx(i),CENTER_Y=Cy(i),SIZE_X=Sx(i),SIZE_Y=Sy(i) WHERE PAGE=theName AND HISTO=hlist(i);
+    UPDATE SHOWHISTO SET CENTER_X=Cx(i),CENTER_Y=Cy(i),SIZE_X=Sx(i),SIZE_Y=Sy(i) WHERE 
+	PAGE=theName AND HISTO=hlist(i) AND INSTANCE=instlist(i);
    end if;
    close sh;
  end LOOP;
@@ -807,7 +854,8 @@ begin
 end DeletePage;
 -----------------------
 
-function GetHistogramData(theName IN varchar2, thePage IN varchar2, theHid OUT varchar2,theHsid OUT int,
+function GetHistogramData(theName IN varchar2, thePage IN varchar2, theInstance IN int , 
+	theHid OUT varchar2,theHsid OUT int,
 	theIhs OUT int,theNhs OUT int, theHstype OUT string, theHstitle OUT string, theSubtitle OUT string,
 	theTask OUT string, theAlgo OUT string, theNanalysis OUT int,
 	theDescr OUT string, theDoc OUT string, theIsanalysishist OUT int, theCreation OUT int,
@@ -820,7 +868,8 @@ cursor myh(Xhid HISTOGRAM.HID%TYPE) is SELECT HS.NANALYSIS,HS.DESCR,HS.DOC,HS.HS
 	(NEW_TIME(H.CREATION,'EST','GMT')-TO_DATE('01-JAN-1970','DD-MON-YYYY'))*(86400),
 	(NEW_TIME(H.OBSOLETENESS,'EST','GMT')-TO_DATE('01-JAN-1970','DD-MON-YYYY'))*(86400),
 	H.DISPLAY FROM HISTOGRAMSET HS,HISTOGRAM H WHERE H.HID=Xhid AND H.HSET=HS.HSID;
-cursor mysh(Xhid HISTOGRAM.HID%TYPE) is SELECT SDISPLAY FROM SHOWHISTO WHERE PAGE=thePage AND HISTO=Xhid;
+cursor mysh(Xhid HISTOGRAM.HID%TYPE) is SELECT SDISPLAY FROM SHOWHISTO 
+	WHERE PAGE=thePage AND HISTO=Xhid AND INSTANCE=theInstance;
 cursor mysn(Xhid HISTOGRAM.HID%TYPE) is SELECT SN from DIMSERVICENAME where PUBHISTO=Xhid;
 begin
 open vh;
@@ -846,9 +895,21 @@ end GetHistogramData;
 
 
 -----------------------
-procedure mycommit is
+procedure mycommit(dbschema int := 0) is
+ curschema ERGOSUM.version%TYPE;
+ curapi ERGOSUM.apiversion%TYPE;
  begin
- commit;
+ SELECT version,apiversion into curschema,curapi  from ERGOSUM;
+ if (dbschema != curschema) then
+   raise_application_error(-20999,'
+-----------------------------------------------------------------------------
+You are using an HistDB API version incompatible with the current DB schema. 
+No changes can be committed. Please update to OnlineHistDB '||curapi||' 
+-----------------------------------------------------------------------------
+');
+ else 
+  commit;
+ end if;
 end mycommit;
 
 end OnlineHistDB; -- end of package

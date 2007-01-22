@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDB.h,v 1.2 2007-01-17 15:30:02 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDB.h,v 1.3 2007-01-22 17:07:29 ggiacomo Exp $
 #ifndef ONLINEHISTDB_H
 #define ONLINEHISTDB_H 1
 /** @class  OnlineHistDB OnlineHistDB.h OnlineHistDB/OnlineHistDB.h
@@ -39,6 +39,11 @@ class  OnlineHistDB : public OnlineHistDBEnv
   void declareSubSystem(std::string SubSys);
   /// declare an Histogram to the DB by its DIM service name
   void declareHistByServiceName(const std::string &ServiceName);
+  /// declare an Histogram to the DB by its attributes
+  void declareHistogram(std::string TaskName,
+			std::string AlgorithmName,
+			std::string Title,
+			int Dimension);
   /// declare an Histogram to be produced at analysis level
   OnlineHistogram* declareAnalysisHistogram(std::string Algorithm,
 				std::string Title,
@@ -58,7 +63,8 @@ class  OnlineHistDB : public OnlineHistDBEnv
   OnlineHistPage* getPage(std::string Name, std::string Folder="");
   /// get an OnlineHistogram object, holding informations of an existing histogram, that can be used to view/edit an histogram record
   OnlineHistogram* getHistogram(std::string Name,
-				std::string Page="_NONE_");
+				std::string Page="_NONE_",
+				int Instance = 1);
   /// get number of parameters needed by algorithm AlgName
   int getAlgorithmNpar(std::string AlgName) const;
   /// get the name of parameter Ipar of algorithm AlgName
@@ -80,15 +86,24 @@ class  OnlineHistDB : public OnlineHistDBEnv
   /// get the list of histograms in a Set
   int getHistogramsBySet(std::string SetName,std::vector<OnlineHistogram*>& list);
   int getHistogramsBySet(const OnlineHistogram& Set,std::vector<OnlineHistogram*>& list);
+  /// get the list of folders
+  int getPageFolderNames(std::vector<string>& list);
+  /// get the list of pages in a folder
+  int getPageNamesByFolder(std::string Folder,
+			   std::vector<string>& list);
+  int getPageNames(std::vector<string>& list);
 
  private:
   // private dummy copy constructor and assignment operator
   OnlineHistDB(const OnlineHistDB&) : OnlineHistDBEnv() {}
   OnlineHistDB& operator= (const OnlineHistDB&)  {return *this;}
+  int m_DBschema;
   Statement *m_stmt;
   int m_nit;
   int m_maxNit;
   int m_maxSNsize;
+  int m_maxANsize;
+  int m_maxTNsize;
   int m_debug;
   std::vector<OnlineHistPage*> m_myPage;
   std::vector<OnlineHistogram*> m_myHist;

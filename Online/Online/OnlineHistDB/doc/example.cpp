@@ -49,7 +49,6 @@ int main ()
  pg->declareHistogram(h1,0. ,0. ,0.5,0.5);
  pg->declareHistogram(h2,0. ,0.5,0.5,0.5);
  pg->declareHistogram(h3,0. ,0. ,0.5,1. );
- pg->save();
 
  int lc=2, fs=7, fc=3;
  float ymax=20000.;
@@ -68,6 +67,26 @@ int main ()
  h3->initHistoPageDisplayOptionsFromSet("Example Page");
  h3->setHistoPageDisplayOption("FILLCOLOR",(void*) &fc);
 
+ std::vector<string> folders;
+ std::vector<string> pages;
+ std::vector<OnlineHistogram*> histos; 
+ int nfold=HistDB->getPageFolderNames(folders);
+ int i,j,k;
+
+ for (i=0;i<nfold;i++) {
+   cout << "Folder " << folders[i] <<endl;
+   pages.clear();
+   int np=HistDB->getPageNamesByFolder(folders[i],pages);
+   for (j=0;j<np;j++) {
+     cout << "     Page " << pages[j] <<endl;
+     histos.clear();
+     int nh=HistDB->getHistogramsByPage(pages[j],histos);
+     for (k=0;k<nh;k++) {
+       cout << "           Histogram " << histos[k]->name() <<endl;
+     }    
+   }
+ }
+ 
  HistDB->commit();
  delete HistDB;
 }

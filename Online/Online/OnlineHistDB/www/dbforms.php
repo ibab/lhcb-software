@@ -165,6 +165,7 @@ function histo_display($id,$htype,$mode)
     else if($htype == 'SHID'){
       $MYDISPLAY=$histo["DISPLAY"];
       $_POST["PAGE"]=$histo["PAGE"];
+      $_POST["INSTANCE"]=$histo["INSTANCE"];
     }
     get_displayoptions($MYDISPLAY);
   }
@@ -189,8 +190,10 @@ function histo_display($id,$htype,$mode)
     echo "<input type='hidden' name='${field}' value='".$_POST[$field]."'>\n";
   echo "<input type='hidden' name='id' value='${id}'>\n";
   echo "<input type='hidden' name='htype' value='${htype}'>\n";
-  if ($htype == "SHID") 
+  if ($htype == "SHID") {
     echo "<input type='hidden' name='PAGE' value='".$_POST["PAGE"]."'>\n";
+    echo "<input type='hidden' name='INSTANCE' value='".$_POST["INSTANCE"]."'>\n";
+  }
 
   printf("X Label <input name='LABEL_X' size=15 value='%s' %s> &nbsp&nbsp \n",$_POST["LABEL_X"],
     ($canwrite ? "" : "readonly"));
