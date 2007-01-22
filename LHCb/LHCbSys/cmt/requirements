@@ -48,7 +48,7 @@ use L0Event               v16r0   Event   # Julien Cogan
 use PhysEvent             v11r0   Event   # Patrick Koppenburg, Juan Palacios
 use DAQEvent	          v7r0    Event   # Marco Cattaneo, Markus Frank
 use GenEvent              v5r0    Event   # Gloria Corti
-use EventAssoc            v3r4    Event   # Ivan Belyaev
+use EventAssoc            v4r0    Event   # Ivan Belyaev
 use LinkerEvent           v3r0    Event   # Olivier Callot
 use PackedEvent           v3r0    Event   # Marco Cattaneo, Olivier Callot
 use TrackEvent            v4r0    Event   # Eduardo Rodrigues, Jose Hernando
