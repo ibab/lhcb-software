@@ -109,6 +109,9 @@ This version is using the InstallArea. Uses Gaudi v19r1
   . Add Roger's data classes (SeedXXX)
   . Minor modifications in ITsaCollector/xxxDataSvc interfaces
 
+- In LoKiCore v2r0
+  . In Keeper.h and UniqueKeeper.h, add method to clear the underlying container 
+
 - In LoKiGen v2r0
   . Add BuildGenTrees.h: new utilities to select the independent trees from 
     the flat list of HepMC-particles
