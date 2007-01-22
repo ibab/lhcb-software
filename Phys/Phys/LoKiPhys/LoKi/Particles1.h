@@ -1,6 +1,6 @@
-// $Id: Particles1.h,v 1.4 2006-11-27 12:01:31 ibelyaev Exp $
+// $Id: Particles1.h,v 1.5 2007-01-22 11:18:24 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $ 
 // ============================================================================
 // ============================================================================
 #ifndef LOKI_PARTICLES1_H 
@@ -68,7 +68,7 @@ namespace LoKi
     public:
       /// constructor 
       VertexDistance 
-      ( const LHCb::Vertex*                   vertex ) ;
+      ( const LHCb::VertexBase*               vertex ) ;
       /// constructor 
       VertexDistance 
       ( const LoKi::Point3D&                  vertex ) ;
@@ -92,9 +92,9 @@ namespace LoKi
       /// the actual computation 
       result_type distance           ( argument p ) const ;
     public:
-      void setVertex ( const LHCb::Vertex*   vertex ) const 
+      void setVertex ( const LHCb::VertexBase* vertex ) const 
       { m_fun.setVertex ( vertex )  ; }
-      void setVertex ( const LoKi::Point3D&  vertex ) const 
+      void setVertex ( const LoKi::Point3D&    vertex ) const 
       { m_fun.setVertex ( vertex )  ; }
     private:
       /// default constructor is private
@@ -131,7 +131,7 @@ namespace LoKi
     public:
       /// constructor 
       VertexSignedDistance 
-      ( const LHCb::Vertex*                   vertex ) ;
+      ( const LHCb::VertexBase*               vertex ) ;
       /// constructor 
       VertexSignedDistance 
       ( const LoKi::Point3D&                  vertex ) ;
@@ -187,7 +187,7 @@ namespace LoKi
     public:
       /// constructor 
       VertexDotDistance 
-      ( const LHCb::Vertex*                   vertex ) ;
+      ( const LHCb::VertexBase*               vertex ) ;
       /// constructor 
       VertexDotDistance 
       ( const LoKi::Point3D&                  vertex ) ;
@@ -237,7 +237,7 @@ namespace LoKi
     public:
       /// constructor 
       VertexChi2Distance 
-      ( const LHCb::Vertex*                   vertex ) ;
+      ( const LHCb::VertexBase*               vertex ) ;
       /// constructor 
       VertexChi2Distance 
       ( const LoKi::Point3D&                  vertex ) ;

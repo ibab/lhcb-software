@@ -1,8 +1,11 @@
-// $Id: Particles2.cpp,v 1.3 2006-10-27 13:39:32 ibelyaev Exp $
+// $Id: Particles2.cpp,v 1.4 2007-01-22 11:18:31 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2006/10/27 13:39:32  ibelyaev
+//  fix for SLC4 platform
+//
 // Revision 1.2  2006/03/08 14:14:52  ibelyaev
 //  add Particles14.h/.cpp
 //
@@ -52,7 +55,7 @@
 /// constructor 
 // ============================================================================
 LoKi::Particles::TimeDistance::TimeDistance
-( const LHCb::Vertex* vertex ) 
+( const LHCb::VertexBase* vertex ) 
   : LoKi::Function<const LHCb::Particle*>() 
   , m_fun ( vertex )
 {}
@@ -157,7 +160,7 @@ LoKi::Particles::TimeDistance::fillStream
 /// constructor 
 // ============================================================================
 LoKi::Particles::TimeSignedDistance::TimeSignedDistance
-( const LHCb::Vertex* vertex ) 
+( const LHCb::VertexBase* vertex ) 
   : LoKi::Function<const LHCb::Particle*>() 
   , m_fun ( vertex )
 {}
@@ -263,7 +266,7 @@ LoKi::Particles::TimeSignedDistance::fillStream
 /// constructor 
 // ============================================================================
 LoKi::Particles::TimeDotDistance::TimeDotDistance
-( const LHCb::Vertex* vertex ) 
+( const LHCb::VertexBase* vertex ) 
   : LoKi::Function<const LHCb::Particle*>() 
   , m_fun ( vertex )
 {}

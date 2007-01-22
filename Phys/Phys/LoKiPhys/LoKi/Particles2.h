@@ -1,8 +1,11 @@
-// $Id: Particles2.h,v 1.2 2006-11-27 12:01:31 ibelyaev Exp $
+// $Id: Particles2.h,v 1.3 2007-01-22 11:18:25 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/11/27 12:01:31  ibelyaev
+//  prepare for LoKi v4r3
+//
 // Revision 1.1  2006/02/19 21:49:12  ibelyaev
 //  restructirisation + new funtions
 //
@@ -68,10 +71,10 @@ namespace LoKi
     public:
       /// constructor 
       TimeDistance 
-      ( const LHCb::Vertex*  vertex );
+      ( const LHCb::VertexBase*  vertex );
       /// constructor 
       TimeDistance 
-      ( const LoKi::Point3D& vertex );
+      ( const LoKi::Point3D&     vertex );
       /// constructor
       TimeDistance 
       ( const LoKi::Vertices::VertexHolder& base ) ;
@@ -123,10 +126,10 @@ namespace LoKi
     public:
       /// constructor 
       TimeSignedDistance 
-      ( const LHCb::Vertex*  vertex );
+      ( const LHCb::VertexBase*  vertex );
       /// constructor 
       TimeSignedDistance 
-      ( const LoKi::Point3D& vertex );
+      ( const LoKi::Point3D&     vertex );
       /// constructor
       TimeSignedDistance 
       ( const LoKi::Vertices::VertexHolder& base ) ;
@@ -178,7 +181,7 @@ namespace LoKi
     public:
       /// constructor 
       TimeDotDistance 
-      ( const LHCb::Vertex* vertex ) ;
+      ( const LHCb::VertexBase* vertex ) ;
       /// constructor 
       TimeDotDistance 
       ( const LoKi::Point3D& vertex ) ;

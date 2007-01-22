@@ -1,8 +1,11 @@
-// $Id: ParticleCuts.h,v 1.14 2006-12-16 13:22:25 ibelyaev Exp $
+// $Id: ParticleCuts.h,v 1.15 2007-01-22 11:18:22 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.14 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.15 $
 // ============================================================================
 //  $Log: not supported by cvs2svn $
+//  Revision 1.14  2006/12/16 13:22:25  ibelyaev
+//   add Particles16: DIRA&DANG
+//
 //  Revision 1.13  2006/11/27 12:01:31  ibelyaev
 //   prepare for LoKi v4r3
 //
@@ -3985,6 +3988,107 @@ namespace LoKi
      *  @date 2006-03-20
      */
     typedef LoKi::Particles::CosineDirectionAngle         DANG ;
+    // ========================================================================
+    
+    
+    // ========================================================================
+    /** @typedef LV0 
+     *
+     *  For partice, which has a some daughter particles, 
+     *  it evaluates the cosine of the angle between daughter's 
+     *  momentum and mother flight direction in the rest 
+     *  system of mother particle. For 2-body decays it is just 
+     *  a polarization angle of mother particle.
+     *  
+     *  The name comes from KAL language by H.Algrecht 
+     *   used in ARGUS collaboaration
+     *
+     *  @see LoKi::Particles::DecayAngle 
+     *
+     *  @author Vanya Belyaev ibelyaev@physics.syr.edu
+     *  @date   2002-11-02
+     */
+    typedef LoKi::Particles::DecayAngle                   LV0  ;
+    // ========================================================================
+    
+    // ========================================================================
+    /** @var LV01
+     *
+     *  For partice, which has a some daughter particles, 
+     *  it evaluates the cosine of the angle between the first 
+     *  daughter's momentum and mother flight direction in the rest 
+     *  system of mother particle. 
+     *  
+     *  The name comes from KAL language by H.Algrecht 
+     *   used in ARGUS collaboaration
+     *
+     *  @see LoKi::Cuts::LV0 
+     *  @see LoKi::Particles::DecayAngle 
+     *
+     *  @author Vanya Belyaev ibelyaev@physics.syr.edu
+     *  @date   2002-11-02
+     */
+    const LoKi::Particles::DecayAngle                   LV01(1);
+    // ========================================================================
+
+    // ========================================================================
+    /** @var LV02
+     *
+     *  For partice, which has a some daughter particles, 
+     *  it evaluates the cosine of the angle between the second
+     *  daughter's momentum and mother flight direction in the rest 
+     *  system of mother particle. 
+     *  
+     *  The name comes from KAL language by H.Algrecht 
+     *   used in ARGUS collaboaration
+     *
+     *  @see LoKi::Cuts::LV0 
+     *  @see LoKi::Particles::DecayAngle 
+     *
+     *  @author Vanya Belyaev ibelyaev@physics.syr.edu
+     *  @date   2002-11-02
+     */
+    const LoKi::Particles::DecayAngle                   LV02(2);
+    // ========================================================================
+
+    // ========================================================================
+    /** @var LV03
+     *
+     *  For partice, which has a some daughter particles, 
+     *  it evaluates the cosine of the angle between the third
+     *  daughter's momentum and mother flight direction in the rest 
+     *  system of mother particle. 
+     *  
+     *  The name comes from KAL language by H.Algrecht 
+     *   used in ARGUS collaboaration
+     *
+     *  @see LoKi::Cuts::LV0 
+     *  @see LoKi::Particles::DecayAngle 
+     *
+     *  @author Vanya Belyaev ibelyaev@physics.syr.edu
+     *  @date   2002-11-02
+     */
+    const LoKi::Particles::DecayAngle                   LV03(3);
+    // ========================================================================
+
+    // ========================================================================
+    /** @var LV04
+     *
+     *  For partice, which has a some daughter particles, 
+     *  it evaluates the cosine of the angle between the fourth
+     *  daughter's momentum and mother flight direction in the rest 
+     *  system of mother particle. 
+     *  
+     *  The name comes from KAL language by H.Algrecht 
+     *   used in ARGUS collaboaration
+     *
+     *  @see LoKi::Cuts::LV0 
+     *  @see LoKi::Particles::DecayAngle 
+     *
+     *  @author Vanya Belyaev ibelyaev@physics.syr.edu
+     *  @date   2002-11-02
+     */
+    const LoKi::Particles::DecayAngle                   LV04(4);
     // ========================================================================
     
 

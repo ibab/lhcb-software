@@ -1,8 +1,11 @@
-// $Id: Particles1.cpp,v 1.4 2006-10-27 13:39:32 ibelyaev Exp $
+// $Id: Particles1.cpp,v 1.5 2007-01-22 11:18:28 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2006/10/27 13:39:32  ibelyaev
+//  fix for SLC4 platform
+//
 // Revision 1.3  2006/08/15 15:13:26  ibelyaev
 //  update for new inheritance scheme Vertex<--VertexBase-->RecVertex
 //
@@ -55,7 +58,7 @@
 /// constructor 
 // ============================================================================
 LoKi::Particles::VertexDistance::VertexDistance
-( const LHCb::Vertex* vertex ) 
+( const LHCb::VertexBase* vertex ) 
   : LoKi::Function<const LHCb::Particle*>() 
   , m_fun ( vertex )
 {}
@@ -136,7 +139,7 @@ LoKi::Particles::VertexDistance::fillStream ( std::ostream & s ) const
 /// constructor 
 // ============================================================================
 LoKi::Particles::VertexSignedDistance::VertexSignedDistance
-( const LHCb::Vertex* vertex ) 
+( const LHCb::VertexBase* vertex ) 
   : LoKi::Function<const LHCb::Particle*>() 
   , m_fun ( vertex )
 {}
@@ -226,7 +229,7 @@ LoKi::Particles::VertexSignedDistance::fillStream ( std::ostream & s ) const
 /// constructor 
 // ============================================================================
 LoKi::Particles::VertexDotDistance::VertexDotDistance
-( const LHCb::Vertex* vertex ) 
+( const LHCb::VertexBase* vertex ) 
   : LoKi::Function<const LHCb::Particle*>() 
   , LoKi::Vertices::VertexHolder ( vertex )
 {}
@@ -324,7 +327,7 @@ LoKi::Particles::VertexDotDistance::fillStream ( std::ostream& s ) const
 /// constructor 
 // ============================================================================
 LoKi::Particles::VertexChi2Distance::VertexChi2Distance
-( const LHCb::Vertex* vertex ) 
+( const LHCb::VertexBase* vertex ) 
   : LoKi::Function<const LHCb::Particle*>() 
   , m_fun ( vertex )
 {}
