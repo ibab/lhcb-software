@@ -4,6 +4,10 @@
 ! Purpose     : Define and build the POOL dictionaries for the relations
 !-----------------------------------------------------------------------------
 
+!======================= EventAssoc v4r0 2007-01-22 ==========================
+! 2007-01-22 - Marco Cattaneo
+ - Fix for new plugins: EventAssocDict is not a component library
+
 !======================= EventAssoc v3r4 2006-11-27 ==========================
 ! 2006-11-27 - Vanya BELYAEV
  - dict/selection.py
