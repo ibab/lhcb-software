@@ -1,39 +1,46 @@
 package Brunel
-version v30r14
+version v31r0
 
 branches doc cmt job options
 
 #-- CMT and GaudiPolicy
-use GaudiPolicy v6r1
+use GaudiPolicy v6r3
 
 #-- External libraries now taken from LCG, version defined by GaudiEnv
 use RELAX v* LCG_Interfaces          -no_auto_imports
 
-#-- Gaudi libraries
-use GaudiKernel		v20r12
-use GaudiSvc 		v14r12       -no_auto_imports
-use GaudiAlg 		v9r9         -no_auto_imports
-use GaudiAud 	        v7r1         -no_auto_imports
-use GaudiGSL		v6r4         -no_auto_imports
-use GaudiPoolDb	        v2r9         -no_auto_imports
-use RootHistCnv         v9r10        -no_auto_imports
+#-- Gaudi libraries (from GAUDI_v19r1)
+use GaudiKernel		v22r0
+use GaudiSvc 		v15r1        -no_auto_imports
+use GaudiAlg 		v9r11        -no_auto_imports
+use GaudiAud 	        v8r0         -no_auto_imports
+use GaudiGSL		v6r5         -no_auto_imports
+use GaudiPoolDb	        v2r10        -no_auto_imports
+use RootHistCnv         v9r11        -no_auto_imports
 
 #-- Database
 use XmlDDDB             v30r14  Det  -no_auto_imports
-use XmlConditions       v2r4    Det  -no_auto_imports
+use XmlConditions       v2r5    Det  -no_auto_imports
 use FieldMap		v4r7         -no_auto_imports
 use ParamFiles          v5r0         -no_auto_imports
 
-#-- LHCb libraries (from LHCB_v21r12)
-use LHCb                v21r12       -no_auto_imports
-use PatTools            v2r9    Pat  -no_auto_imports
-use GaudiObjDesc 	v9r7p1       -no_auto_imports
+#-- LHCb libraries (from LHCB_v22r0)
+use GaudiConf           v10r0          -no_auto_imports
+use GaudiObjDesc        v9r8           -no_auto_imports
+use KernelSys           v6r0    Kernel -no_auto_imports
+use DetSys              v9r0    Det    -no_auto_imports
+use EventSys            v23r0   Event  -no_auto_imports
+use DAQSys              v3r0    DAQ    -no_auto_imports
+use LHCbAlgs            v2r5    Kernel -no_auto_imports
+use SimComponents       v2r0    Sim    -no_auto_imports
+use PatTools            v3r0    Pat    -no_auto_imports
+use GaudiObjDesc 	v9r8           -no_auto_imports
 
-#-- Lbcom packages (from LBCOM_v5r9)
-use LbcomSys            v5r9         -no_auto_imports
+#-- Lbcom packages (from LBCOM_v6r0)
+use LbcomSys            v6r0         -no_auto_imports
 
-#-- Rec packages (from REC_v3r14)
-use RecSys              v3r14        -no_auto_imports
+#-- Rec packages (from REC_v4r0)
+use RecSys              v4r0         -no_auto_imports
 
 #
 #===== build Brunel =========================
