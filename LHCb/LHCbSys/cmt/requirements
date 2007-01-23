@@ -84,4 +84,4 @@ use SimComponents         v2r0   Sim     # Gloria Corti, Marco Cattaneo
 use DetDescChecks         v4r0   Det     # Ivan Belyaev
 use DetDescExample        v7r2   Ex      # Marco Clemencic
 use IOExample             v2r0p2 Ex      # Marco Cattaneo
-use DetCondExample        v9r3   Ex      # Marco Clemencic
+use DetCondExample        v9r4   Ex      # Marco Clemencic
