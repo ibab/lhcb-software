@@ -3,6 +3,47 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+</PRE><H1><A NAME=v31r0>2006-12-23 Brunel v31r0</A></H1><PRE>
+This version uses projects Gaudi v19r1, LHCb v22r0, Lbcom v6r0, Rec v4r0
+ and databases XmlDDDB v30r14, XmlConditions v2r4, ParamFiles v5r0, FieldMap v4r7
+
+It introduces a new working environment, based on CMT projects.
+
+Compatible with DC06 data
+
+HltApp has been removed, moved to MOORE project
+
+- New features
+  . Support for tracking without magnetic field (TrackSys v4r0, TrackUtils v4r0)
+    - NoFieldTracking.opts, contains options needed in addition to those
+      defined in RecoTracking.opts. This file should be included in addition
+      (and *after*) RecoTracking.opts to configure tracking for no magnetic field
+    - Add new TrackPrepareForFit algorithm
+  . In RecoTracking.opts, introduce a "Track" process phase with Pat, PreFit and
+    Fit sequences for each track type (TrackSys v4r0)
+
+- New tuning
+  . Update ShowerMax condition for Ecal (XmlConditions v2r5)
+  . Major new release. Faster, more flexible, more efficient, less ghosts, 
+    less outliers, etc. (TsaAlgorithms v2r0, see release notes for details)
+  . Minor speed ups to detector elements  (OTDet v7r0, RichDet v10r0)
+
+- Bug fixes
+  . Fix in TrackExtrapolator, for extrapolation to a plane: the distance
+    point-plane is signed! (TrackExtrapolators v2r8)
+
+- Monitoring changes
+  . Change naming of ST checkers, monitors and job options according to naming
+    convention (STCheckers v2r0)
+
+- Maintenance changes
+  . Fix some unchecked StatusCodes
+  . Remove ApplicationMgr.DLLs options, not needed with new plugin manager
+  . Adapt valgrind.job to work with new CMT environment
+  . General consolidation of track projectors - see release notes for details
+    (TrackProjectors v2r9, TrackFitter v2r12, TrackCheckers v2r11,
+     LHCbKernel v7r0)
+
 </PRE><H1><A NAME=v30r14>2006-12-04 Brunel v30r14</A></H1><PRE>
 This version uses projects Gaudi v18r11, LHCb v21r12, Lbcom v5r9, Rec v3r14
  and databases XmlDDDB v30r14, XmlConditions v2r4, ParamFiles v5r0, FieldMap v4r7
