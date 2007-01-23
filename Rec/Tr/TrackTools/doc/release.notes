@@ -4,6 +4,10 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2007-01-23 - Eduardo Rodrigues
+ - bug fix in the TrackCloneFinder tool
+   (affects comparisons of hits in the seeding stations)
+
 !======================== TrackTools v2r10 2006-11-30 ========================
 ! 2006-11-30 - Edwin Bos
  - Calls to TrajPoca minimize now handle returned StatusCode

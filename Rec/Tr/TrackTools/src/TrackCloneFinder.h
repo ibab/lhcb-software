@@ -1,4 +1,4 @@
-// $Id: TrackCloneFinder.h,v 1.5 2006-08-15 15:51:55 erodrigu Exp $
+// $Id: TrackCloneFinder.h,v 1.6 2007-01-23 16:36:39 erodrigu Exp $
 #ifndef TRACKCLONEFINDER_H 
 #define TRACKCLONEFINDER_H 1
 
@@ -12,6 +12,9 @@
 
 // from TrackInterfaces
 #include "TrackInterfaces/ITrackCloneFinder.h"
+
+// from TrackEvent
+#include "Event/Track.h"
 
 // from TrackFitEvent
 #include "Event/Measurement.h"

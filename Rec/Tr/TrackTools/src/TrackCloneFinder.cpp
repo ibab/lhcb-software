@@ -1,4 +1,4 @@
-// $Id: TrackCloneFinder.cpp,v 1.8 2006-08-15 15:51:55 erodrigu Exp $
+// $Id: TrackCloneFinder.cpp,v 1.9 2007-01-23 16:36:39 erodrigu Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -6,9 +6,6 @@
 
 // from GSL
 #include "gsl/gsl_math.h" 
-
-// from TrackEvent
-#include "Event/TrackFunctor.h"
 
 // local
 #include "TrackCloneFinder.h"
@@ -113,12 +110,21 @@ bool TrackCloneFinder::clones( const LHCb::Track& track1,
 
   // Determine the number of common seed hits. Seed = IT + OT (not TT!)
   // ------------------------------------------------------------------
-  unsigned int nSeed1 = 0;
-  unsigned int nSeed2 = 0;
+  unsigned int nIT1, nOT1 = 0;
+  unsigned int nIT2, nOT2 = 0;
   unsigned int nSeedCommon =
-    nCommonHits( track1, track2, LHCb::LHCbID::IT, nSeed1, nSeed2 ) + 
-    nCommonHits( track1, track2, LHCb::LHCbID::OT, nSeed1, nSeed2 );
-  unsigned int nSeedMin = GSL_MIN( nSeed1, nSeed2 );
+    nCommonHits( track1, track2, LHCb::LHCbID::IT, nIT1, nIT2 ) +
+    nCommonHits( track1, track2, LHCb::LHCbID::OT, nOT1, nOT2 );
+  unsigned int nSeedMin = GSL_MIN( nIT1 + nOT1 , nIT2 + nOT2 );
+  
+  if ( m_debugLevel ) {
+    debug() << "nVelo1, nVelo2, nVeloCommon = " << nVelo1 << ", "
+            << nVelo2 << ", "
+            << nVeloCommon << endreq
+            << "nSeed1, nSeed2, nSeedCommon = " << ( nIT1 + nOT1 ) << ", "
+            << ( nIT2 + nOT2 ) << ", "
+            << nSeedCommon << endreq;
+  }
 
   // Decide whether these tracks are clones
   // --------------------------------------
