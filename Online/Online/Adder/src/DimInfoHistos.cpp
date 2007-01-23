@@ -83,7 +83,8 @@ void DimInfoHistos::infoHandler()
     //   std::cerr << "DimInfoHistos(" << m_histoname << "): Making ROot histogram" << std::endl;
        // 1d profile data: dimension,nXBins,xMin,xMax,entries,3*(UNDERFLOW,"in range" bins, OVERFLOW): entries, weights and squares of weights 
       m_histp=new TProfile(m_histoname.c_str(),m_histoname.c_str(),(int)m_data[1],m_data[2],m_data[3]);	
-      m_histp->Sumw2();
+     // m_histp->Sumw2();
+     //not necessary already done by default for profiles
     } 
     
 	}

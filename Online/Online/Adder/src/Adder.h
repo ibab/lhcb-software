@@ -57,6 +57,14 @@ private:
   int icount;
   int icount2d;
   int icountp;
+  int svcsize;
+  //we only call the dimbrowser once, so store found service names in these arrays
+  std::vector<std::vector <std::string> > hSvcname;
+  std::vector<std::vector <std::string> >  hSvcname2d;
+  std::vector<std::vector <std::string> > pSvcname;
+  std::vector<int> nbof1dhistos;
+  std::vector<int> nbof2dhistos;
+  std::vector<int> nbofphistos; 
 };
 
 #endif    // Adder_Adder_H

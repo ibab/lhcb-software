@@ -56,6 +56,7 @@
 static const AlgFactory<Adder>  Factory;
 const IAlgFactory& AdderFactory = Factory;
 
+
 // Constructor
 //------------------------------------------------------------------------------
 Adder::Adder(const std::string& name, ISvcLocator* ploc)
@@ -79,9 +80,12 @@ StatusCode Adder::initialize() {
     msg << MSG::FATAL << "Unable to locate HistogramSvc" << endreq;
     return sc;
   }
-
-  msg << MSG::DEBUG << "Looking for " << m_histogramname.size() << " histograms." << endreq;
+  svcsize=m_histogramname.size();
+  msg << MSG::DEBUG << "Looking for " << svcsize << " histograms." << endreq;
   counter=0;
+  std::vector<std::vector <std::string> > hSvcname;
+  std::vector<std::vector <std::string> > hSvcname2d;
+  std::vector<std::vector <std::string> > pSvcname; 
   return StatusCode::SUCCESS;
 }
 
@@ -97,9 +101,8 @@ StatusCode Adder::execute() {
   int h2dsize;
   int hsize;
   int psize;
-  std::vector<std::string> hSvcname;
-  std::vector<std::string> hSvcname2d;
-  std::vector<std::string> pSvcname;
+
+
   std::string hSvcnames;
   std::string hSvcnames2d;
   std::string pSvcnames;
@@ -118,6 +121,7 @@ StatusCode Adder::execute() {
   std::vector<rootpartp*> basep;
   counter++;
 
+  
   for (int j=0; j<= (int)m_histogramname.size()-1;j++) {
      //j counts the histograms
      std::vector<TH1*> hist;
@@ -126,108 +130,109 @@ StatusCode Adder::execute() {
      hSvcnames="H1D/"+m_nodename+"*"+m_algorithmname[j]+"/"+m_histogramname[j];
      hSvcnames2d="H2D/"+m_nodename+"*"+m_algorithmname[j]+"/"+m_histogramname[j];
      pSvcnames="HPD/"+m_nodename+"*"+m_algorithmname[j]+"/"+m_histogramname[j];
-     
-     DimClient::setDnsNode(m_dimclientdns.c_str());
+     std::vector<std::string> tmphSvcnames;	    
+     std::vector<std::string> tmphSvcnames2d;	
+     std::vector<std::string> tmppSvcnames;	
      int jindex=0; 
- //    if (counter == 1) {
+     if (counter==1) {
+        //only do this once
+	DimClient::setDnsNode(m_dimclientdns.c_str());
         DimBrowser dbr;  
-        icount = 0;
-        icount2d = 0;
-        icountp = 0;
+        msg << MSG::DEBUG << "Looking for hSvcname: " << hSvcnames.c_str() << endreq;     
+        dbr.getServices(hSvcnames.c_str());
+	icount=0;
+	icount2d=0;
+	icountp=0;
 
-        // icount is the number of tasks publishing histogram nr j
-        while ((( icount==0 )|(icount2d==0))|(icountp==0))
-        {
-           //look for the services at each iteration of eventloop - task may have died
-           msg << MSG::DEBUG << "Looking for hSvcname: " << hSvcnames.c_str() << endreq;     
-           dbr.getServices(hSvcnames.c_str());
-           hSvcname.clear();
-           while( (type = dbr.getNextService(service, format)) )
-           { 
-              servicestr=service;
-	      std::string::size_type loc=servicestr.find("H1D/"+m_nodename+"_Adder_",0);
-	      if (loc == std::string::npos ) {
-	         hSvcname.push_back(servicestr);
-                 msg << MSG::DEBUG << "Found service: " << servicestr << endreq;     
-	         icount++;
-	      }
-	   }   
-	   if (icount==0) {
-              msg << MSG::DEBUG << "Looking for hSvcname2d: " << hSvcnames2d.c_str() << endreq;     
-              dbr.getServices(hSvcnames2d.c_str());
-              hSvcname2d.clear();
+        while( (type = dbr.getNextService(service, format)) )
+        {               
+	   servicestr=service;
+	   std::string::size_type loc=servicestr.find("H1D/"+m_nodename+"_Adder_",0);
+	   if (loc == std::string::npos ) {  
+	      tmphSvcnames.push_back(servicestr);
+              msg << MSG::DEBUG << "Found service: " << servicestr  <<endreq;     
+	      icount++;
+	   }
+	}  
+        msg << MSG::DEBUG << "Looking for hSvcname2d: " << hSvcnames2d.c_str() << endreq;     
+        dbr.getServices(hSvcnames2d.c_str());
+        while( (type = dbr.getNextService(service, format)) )
+        { 	
+	   servicestr=service;
+	   std::string::size_type loc2d=servicestr.find("H2D/"+m_nodename+"_Adder_",0);
+	   if (loc2d == std::string::npos ) {
+	      tmphSvcnames2d.push_back(servicestr);
+              msg << MSG::DEBUG << "Found 2D service: " << servicestr << endreq;   
+	      icount2d++;  	         
+	   }
+	}   
+        msg << MSG::DEBUG << "Looking for pSvcname: " << pSvcnames.c_str() << endreq;     
+        dbr.getServices(pSvcnames.c_str());
+        while( (type = dbr.getNextService(service, format)) )
+        { 	
 
-              while( (type = dbr.getNextService(service, format)) )
-              { 	
-	         servicestr=service;
-	         std::string::size_type loc2d=servicestr.find("H2D/"+m_nodename+"_Adder_",0);
-	         if (loc2d == std::string::npos ) {
-	            hSvcname2d.push_back(servicestr);
-                    msg << MSG::DEBUG << "Found 2D service: " << servicestr << endreq;   
-  	            icount2d++;
-	         }
-	      }  
-	      if (icount2d==0) {
-                 msg << MSG::DEBUG << "Looking for pSvcname: " << pSvcnames.c_str() << endreq;     
-                 dbr.getServices(pSvcnames.c_str());
-                 pSvcname.clear();
+	   servicestr=service;
+	   std::string::size_type locp=servicestr.find("HPD/"+m_nodename+"_Adder_",0);
+	   if (locp == std::string::npos ) {
+	     // pSvcname[j].push_back(servicestr);
+	      tmppSvcnames.push_back(servicestr);
+	      msg << MSG::DEBUG << "Found profile service: " << servicestr << endreq;   
+	      icountp++;  	            
+	    }
+	 } 
+	 nbof1dhistos.push_back(icount);
+         nbof2dhistos.push_back(icount2d);
+         nbofphistos.push_back(icountp); 
+	 hSvcname.push_back(tmphSvcnames);
+         hSvcname2d.push_back(tmphSvcnames2d);
+         pSvcname.push_back(tmppSvcnames);
+     }  
+     else {
+        icount=nbof1dhistos[j];
+	icount2d=nbof2dhistos[j];
+	icountp=nbofphistos[j];
+     }	
 
-                 while( (type = dbr.getNextService(service, format)) )
-                 { 	
-	         servicestr=service;
-	         std::string::size_type locp=servicestr.find("HPD/"+m_nodename+"_Adder_",0);
-	            if (locp == std::string::npos ) {
-	               pSvcname.push_back(servicestr);
-                       msg << MSG::DEBUG << "Found profile service: " << servicestr << endreq;   
-  	               icountp++;
-	            }
-	         } 
-	      } 
-	   }        
-           if (((icount>1)|(icount2d>1))|(icountp>1)) break;      
-           else lib_rtl_sleep(m_refreshtime*1000);
-        }  
-  //   }	
-  //   msg << MSG::DEBUG << "hinfo.size: " << hinfo.size() << endreq;     
-     
+     msg << MSG::DEBUG << "icount: " << icount << " icount2d " << icount2d << " icountp " << icountp << endreq; 
      DimInfoHistos * temp;
-     hinfo.clear();
-     for (int i=0;i<=icount-1;i++) {
-        temp = new DimInfoHistos(hSvcname[i],m_refreshtime);
-        hinfo.push_back(temp);
-	msg << MSG::DEBUG << "Created Root object: " << hSvcname[i] << endreq;     
+     if (icount>0) {
+        hinfo.clear();
+        for (int i=0;i<=icount-1;i++) { 
+           temp = new DimInfoHistos(hSvcname[j][i],m_refreshtime);
+           hinfo.push_back(temp);
+	   msg << MSG::DEBUG << "Created Root object: " << hSvcname[j][i] << endreq;     
 
+        }
      }
-     hinfo2d.clear();
-     for (int i=0;i<=icount2d-1;i++) {
-        temp = new DimInfoHistos(hSvcname2d[i],m_refreshtime);
-        hinfo2d.push_back(temp);
-	msg << MSG::DEBUG << "Created Root object: " << hSvcname2d[i] << endreq;     
+     if (icount2d>0) {
+        hinfo2d.clear();
+        for (int i=0;i<=icount2d-1;i++) {
+           temp = new DimInfoHistos(hSvcname2d[j][i],m_refreshtime);
+           hinfo2d.push_back(temp);
+	   msg << MSG::DEBUG << "Created Root object: " << hSvcname2d[j][i] << endreq;     
 
+        }
      }
-     pinfo.clear();
-     for (int i=0;i<=icountp-1;i++) {
-        temp = new DimInfoHistos(pSvcname[i],m_refreshtime);
-        pinfo.push_back(temp);
-	msg << MSG::DEBUG << "Created Root object: " << pSvcname[i] << endreq;     
+     if (icountp>0) {
+        pinfo.clear();
+        for (int i=0;i<=icountp-1;i++) {
+           temp = new DimInfoHistos(pSvcname[j][i],m_refreshtime);
+           pinfo.push_back(temp);
+	   msg << MSG::DEBUG << "Created Root object: " << pSvcname[j][i] << endreq;     
 
+        }
      }
 
      // convert DIM buffer to ROOT
 
-    
+     
      for (int i=0;i<=icount-1;i++) {
         TH1* hist1=0;
         int ntries=0;
         while (1)
-        {
-     //      msg << MSG::DEBUG << "loop executed " << ntries << " times." << endreq;
- 
+        { 
 	   hist1=0;
-
-	   hist1= hinfo[i]->getHisto();
-	//    msg << MSG::DEBUG << "hist1 "<< hist1 << endreq;   
-
+	   hist1= hinfo[i]->getHisto(); 
            if (hist1 != 0) {
 	      msg << MSG::DEBUG << "Histogram "<< hist1->GetTitle() << " found." << endreq;   
 	      hist.push_back(hist1);		 
@@ -345,11 +350,7 @@ StatusCode Adder::execute() {
         }  
      } 
   
-  
-     //if ( ! axis->IsVariableBinSize()) {  
-     // equal bins histograms
-
-  
+     // equal bins histograms  
      // Create the AIDA histogram that will contain the summed result
      // and that will be published
      
@@ -362,7 +363,7 @@ StatusCode Adder::execute() {
 	      hsize=h.size();
 	   } 
 	   h.push_back(histoSvc->book("/stat/adder"+m_algorithmname[j]+m_histogramname[j],j, m_histogramname[j], numberOfBinsX,lowerEdge, upperEdge));
-           declareInfo("Summed_"+m_algorithmname[j]+"/"+m_histogramname[j],h[hsize],"Summed_"+m_algorithmname[j]+"/"+m_histogramname[j]);
+           declareInfo(m_algorithmname[j]+"/"+m_histogramname[j],h[hsize],m_algorithmname[j]+"/"+m_histogramname[j]);
            base.push_back(dynamic_cast<rootpart*>(h[hsize]));    
            if ( ! base[hsize] ) { 
               msg << MSG::ERROR << "Dynamic cast failed to get root part of aida h"  << endreq;       
@@ -386,7 +387,7 @@ StatusCode Adder::execute() {
 	      h2dsize=h2d.size();
 	   } 
 	   h2d.push_back(histoSvc->book("/stat/adder"+m_algorithmname[j]+m_histogramname[j],j,m_histogramname[j], numberOfBinsX,lowerEdge, upperEdge, numberOfBinsY,ylowerEdge, yupperEdge));
-	   declareInfo("Summed_"+m_algorithmname[j]+"/"+m_histogramname[j],h2d[h2dsize],"Summed_"+m_algorithmname[j]+"/"+m_histogramname[j]);
+	   declareInfo(m_algorithmname[j]+"/"+m_histogramname[j],h2d[h2dsize],m_algorithmname[j]+"/"+m_histogramname[j]);
            base2d.push_back(dynamic_cast<rootpart2d*>(h2d[h2dsize]));    
            if ( ! base2d[h2dsize] ) { 
               msg << MSG::ERROR << "Dynamic cast failed to get root part of aida h2d"  << endreq;       
@@ -410,7 +411,7 @@ StatusCode Adder::execute() {
 	   } 
 
 	   p.push_back(histoSvc->bookProf("/stat/adder"+m_algorithmname[j]+m_histogramname[j],j, m_histogramname[j], numberOfBinsX,lowerEdge, upperEdge));
-	   declareInfo("Summed_"+m_algorithmname[j]+"/"+m_histogramname[j],p[psize],"Summed_"+m_algorithmname[j]+"/"+m_histogramname[j]);
+	   declareInfo(m_algorithmname[j]+"/"+m_histogramname[j],p[psize],m_algorithmname[j]+"/"+m_histogramname[j]);
            basep.push_back(dynamic_cast<rootpartp*>(p[psize]));    
            if ( ! basep[psize] ) { 
               msg << MSG::ERROR << "Dynamic cast failed to get root part of aida p"  << endreq;       
@@ -488,7 +489,7 @@ StatusCode Adder::execute() {
             }
          }
       }	  
-     
+
  //   lib_rtl_sleep(m_refreshtime*1000); 
  
    }
