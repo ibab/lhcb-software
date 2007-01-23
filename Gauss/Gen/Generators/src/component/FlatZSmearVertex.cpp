@@ -1,4 +1,4 @@
-// $Id: FlatZSmearVertex.cpp,v 1.5 2007-01-12 15:17:37 ranjard Exp $
+// $Id: FlatZSmearVertex.cpp,v 1.6 2007-01-23 10:49:23 gcorti Exp $
 // Include files 
 
 // local
@@ -34,8 +34,8 @@ FlatZSmearVertex::FlatZSmearVertex( const std::string& type,
                                     const IInterface* parent )
   : GaudiTool ( type, name , parent ) {
     declareInterface< IVertexSmearingTool >( this ) ;
-    declareProperty( "SigmaX" , m_sigmaX = 0.07 * Gaudi::Units::mm ) ;
-    declareProperty( "SigmaY" , m_sigmaY = 0.07 * Gaudi::Units::mm ) ;
+    declareProperty( "SigmaX" , m_sigmaX = 0.100 * Gaudi::Units::mm ) ;
+    declareProperty( "SigmaY" , m_sigmaY = 0.100 * Gaudi::Units::mm ) ;
     declareProperty( "ZMin"   , m_zmin   = -800. * Gaudi::Units::mm ) ;
     declareProperty( "ZMax"   , m_zmax   =  900. * Gaudi::Units::mm ) ;
     

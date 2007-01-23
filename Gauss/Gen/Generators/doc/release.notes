@@ -1,11 +1,16 @@
-! $Id: release.notes,v 1.85 2007-01-12 15:17:34 ranjard Exp $
+! $Id: release.notes,v 1.86 2007-01-23 10:49:23 gcorti Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Gen/Generators
 ! Responsible : Patrick ROBBE
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
 
-!====================== Generators v7r0 2007-01-08 ===========================
+! 2007-01-23 - Gloria Corti
+ - Modify requirements to have a version with all changes in code but 
+   compatible with DC06.
+ - Change default for flat smearing of primary vertex, to have correct values
+   at 7 TeV for beam gas, i.e. 100 microns in x and y
+
 ! 2007-01-08 - Florence Ranjard
  - update in many *.cpp to use new FACTORY and SystemOfUnits from GaudiKernel
 
