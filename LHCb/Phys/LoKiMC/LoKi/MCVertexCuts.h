@@ -1,8 +1,11 @@
-// $Id: MCVertexCuts.h,v 1.5 2006-11-27 11:58:37 ibelyaev Exp $
+// $Id: MCVertexCuts.h,v 1.6 2007-01-23 13:27:18 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.5 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.6 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2006/11/27 11:58:37  ibelyaev
+//  prepare for LoKi v4r3
+//
 // Revision 1.4  2006/10/10 09:14:05  ibelyaev
 //  tiny fixes needed for good&valid dictionaries
 //
@@ -114,6 +117,25 @@ namespace LoKi
      *  @date 2004-07-07
      */
     const LoKi::MCVertices::TypeOfMCVertex MCVTYPE ;
+
+    /** @var MCVVALID 
+     *
+     *  The trivial checker of "the validity" of the pointer to 
+     *   LHCb::MCVertex objects
+     *
+     *  @code
+     * 
+     *   const MCVertex* v  = ...         ;
+     *   const bool valid =   = MCVVALID ( v ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::Valid
+     *  @authot Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2007-01-21
+     */
+    const LoKi::Valid<const LHCb::MCVertex*>                    MCVVALID ;
+    
 
     /** @var MCVFOT
      *  the time of flight for  MC vertex ( MCVertex::timeOfFlight )

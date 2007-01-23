@@ -1,8 +1,11 @@
-// $Id: MCParticleCuts.h,v 1.4 2006-11-27 11:58:37 ibelyaev Exp $
+// $Id: MCParticleCuts.h,v 1.5 2007-01-23 13:27:18 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.4 $
+// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.5 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2006/11/27 11:58:37  ibelyaev
+//  prepare for LoKi v4r3
+//
 // Revision 1.3  2006/02/18 18:10:57  ibelyaev
 //  fix a typo
 //
@@ -130,6 +133,24 @@ namespace LoKi
      *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
      */
     typedef LoKi::Switch<const LHCb::MCParticle*>                    MCSWITCH;
+
+    /** @var MCVALID 
+     *
+     *  The trivial checker of "the validity" of the pointer to 
+     *   LHCb::MCParticle objects
+     *
+     *  @code
+     * 
+     *   const MCParticle* p  = ...         ;
+     *   const bool valid =   = MCVALID (  p ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::Valid
+     *  @authot Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2007-01-21
+     */
+    const LoKi::Valid<const LHCb::MCParticle*>                      MCVALID ;
     
     /** @var MCP 
      *  MCParticle momentum
