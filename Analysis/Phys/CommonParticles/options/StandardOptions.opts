@@ -1,13 +1,13 @@
-// $Id: StandardOptions.opts,v 1.7 2006-05-24 08:59:48 pkoppenb Exp $
+// $Id: StandardOptions.opts,v 1.8 2007-01-23 19:48:13 jpalac Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.7 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.8 $
 // ============================================================================
 
 /** @file 
  *
  *  The configuration file for "standard" particles, created "on-demand"
  * 
- *  There are a set of standard basic particle and a set
+ *  There are a set of standard basic particle, standard Pi0s and a set
  *  of standard intermediate states: D0, Ds, D*, J/psi, K*, Phi.
  *  
  *  The relevant algorithms are fired on demand when one wants to read
@@ -35,6 +35,8 @@
  *  @see StandardRho0.opts : The standard Rho0
  *  @see StandardKs.opts : The standard Ks
  *  @see StandardLambda.opts : The standard Lambda
+ *  @see StandardMergedPi0s.opts : The standard marged Pi0
+ *  @see StandardResolvedPi0s.opts : The standard resolved Pi0
  *
  *  @author P. Koppenburg
  *  @date 2006-01-30
@@ -52,3 +54,5 @@
 #include "$COMMONPARTICLESROOT/options/StandardRho0.opts"
 #include "$COMMONPARTICLESROOT/options/StandardKs.opts"
 #include "$COMMONPARTICLESROOT/options/StandardLambda.opts"
+#include "$COMMONPARTICLESROOT/options/StandardMergedPi0s.opts"
+#include "$COMMONPARTICLESROOT/options/StandardResolvedPi0s.opts"

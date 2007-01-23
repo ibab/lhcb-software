@@ -4,6 +4,10 @@
 ! Purpose     : Common particles
 !-----------------------------------------------------------------------------
 
+! 2007-01-23 - Juan PALACIOS
+  - options/StandardOptions.opts
+    . Add StandardMergedPi0s.opts and StandardResolvedPi0s.opts
+
 ! 2007-01-16 - Juan PALACIOS
   - Remove src/CommonParticles_load.cpp and _dll.cpp
  
