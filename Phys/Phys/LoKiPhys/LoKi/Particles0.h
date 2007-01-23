@@ -1,8 +1,11 @@
-// $Id: Particles0.h,v 1.7 2006-11-27 12:01:31 ibelyaev Exp $
+// $Id: Particles0.h,v 1.8 2007-01-23 13:30:44 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2006/11/27 12:01:31  ibelyaev
+//  prepare for LoKi v4r3
+//
 // Revision 1.6  2006/10/28 10:31:27  ibelyaev
 //  fix for WIn32 platform
 //
@@ -190,9 +193,10 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class Identifier : 
-      public LoKi::Function<const LHCb::Particle*>
-    {    
+    class Identifier 
+      : public LoKi::Function<const LHCb::Particle*>
+    {  
+    public:
       /// clone method (mandatory!)
       virtual Identifier* clone() const ;
       /// the only one essential method 
@@ -210,8 +214,8 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class AbsIdentifier : 
-      public LoKi::Function<const LHCb::Particle*>
+    class AbsIdentifier 
+      : public LoKi::Function<const LHCb::Particle*>
     {  
     public:
       /// clone method (mandatory!)
