@@ -16,7 +16,7 @@
       <import name='Event/Measurement' />
       <import name='Event/VeloCluster' />
       <import name='VeloDet/DeVelo'/>
-      <import name='Kernel/TrackTypes.h'/>
+      <import name='Event/TrackTypes.h'/>
       <import name='Kernel/IVeloClusterPosition.h'/>
 
       <constructor

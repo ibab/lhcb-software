@@ -3,13 +3,12 @@
 # Maintainer : Jose Hernando, Eduardo Rodrigues
 #============================================================================
 package           TrackFitEvent
-version           v2r8
+version           v3r0
 
 #============================================================================
 # Structure, i.e. directories to process. 
 #============================================================================
 branches          cmt doc dict Event xml
-include_dirs      $(TRACKFITEVENTROOT)
 
 #============================================================================
 # Used packages.
@@ -23,12 +22,11 @@ use   OTDet           v*      Det
 use   STDet           v*      Det
 use   VeloDet         v*      Det
 
-use   LHCbDefinitions v*      Kernel
-
 #============================================================================
 #---- Produce Header-Files from XML description
 private
 document obj2doth TrackFitEventObj2Doth ../xml/*.xml
+apply_pattern install_more_includes more=Event
 
 # Make custom dictionary. Must be before GOD generation
 #============================================================================
