@@ -1,8 +1,11 @@
-// $Id: GenParticles.cpp,v 1.11 2007-01-19 13:11:49 ibelyaev Exp $
+// $Id: GenParticles.cpp,v 1.12 2007-01-23 10:59:08 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.11 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.12 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.11  2007/01/19 13:11:49  ibelyaev
+//  add BuildGenTrees.h file
+//
 //
 // ============================================================================
 // Include files 
@@ -808,7 +811,19 @@ LoKi::GenParticles::FromHepMCTree::FromHepMCTree
   : LoKi::Predicate<const HepMC::GenParticle*> ()
   , m_vertices () { _add ( p ) ; }
 // ============================================================================
-
+/// constructor from range of particles 
+// ============================================================================
+LoKi::GenParticles::FromHepMCTree::FromHepMCTree 
+( const LoKi::Types::GRange& r  ) 
+  : LoKi::Predicate<const HepMC::GenParticle*> ()
+  , m_vertices () { _add ( r.begin() , r.end() ) ; }
+// ============================================================================
+/// constructor from range of particles 
+// ============================================================================
+LoKi::GenParticles::FromHepMCTree::FromHepMCTree 
+( const LoKi::GenTypes::GenContainer& r  ) 
+  : LoKi::Predicate<const HepMC::GenParticle*> ()
+  , m_vertices () { _add ( r.begin() , r.end() ) ; }
 // ============================================================================
 /** constructor from vertex  ("head")
  *  @param v pointer to HepMC::GenParticle 

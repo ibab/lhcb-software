@@ -1,8 +1,11 @@
-// $Id: GenParticles.h,v 1.11 2007-01-19 13:11:46 ibelyaev Exp $
+// $Id: GenParticles.h,v 1.12 2007-01-23 10:59:03 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.11 $ 
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.12 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.11  2007/01/19 13:11:46  ibelyaev
+//  add BuildGenTrees.h file
+//
 // Revision 1.10  2006/11/25 19:14:19  ibelyaev
 //  improve Doxygen
 //
@@ -608,6 +611,12 @@ namespace LoKi
        */
       FromHepMCTree 
       ( const HepMC::GenParticle* p ) ;
+      /// constructor from vector of particles 
+      FromHepMCTree 
+      ( const LoKi::GenTypes::GenContainer& r  ) ;
+      /// constructor from range of particles 
+      FromHepMCTree 
+      ( const LoKi::Types::GRange& r  ) ;
       /** constructor from vertex  ("head")
        *  @param v pointer to HepMC::GenParticle 
        */
@@ -636,10 +645,12 @@ namespace LoKi
       template <class ITERATOR>
       FromHepMCTree& add ( ITERATOR first , ITERATOR last  ) 
       { _add ( first , last ) ; return *this ; }
-      FromHepMCTree& add ( const HepMC::GenParticle* p ) 
+      FromHepMCTree& add ( const HepMC::GenParticle*    p ) 
       { _add ( p ) ; return *this  ; }
-      FromHepMCTree& add ( const HepMC::GenVertex*   p ) 
+      FromHepMCTree& add ( const HepMC::GenVertex*      p ) 
       { _add ( p ) ; return *this  ; }
+      FromHepMCTree& add ( const LoKi::Types::GRange&   p ) 
+      { _add ( p.begin() , p.end() ) ; return *this  ; }
       FromHepMCTree& remove ( const HepMC::GenVertex*   v ) ;
       FromHepMCTree& remove ( const HepMC::GenParticle* v ) ;      
     protected:
@@ -891,7 +902,7 @@ namespace LoKi
      *  @date 2006-02-08
      */
     class AdapterToProductionVertex 
-      : LoKi::Function<const HepMC::GenParticle*>
+      : public LoKi::Function<const HepMC::GenParticle*>
     {
     public:
       /** constructor from vertex function and "bad" value 
@@ -922,7 +933,7 @@ namespace LoKi
       LoKi::Types::GVFun    m_fun ;
       double                m_bad ;
     };
-    
+
     /** @class AdapterToEndVertex 
      *
      *  Simple adapter, which delegates the evaluation of 
@@ -933,7 +944,7 @@ namespace LoKi
      *  @date 2006-02-08
      */
     class AdapterToEndVertex 
-      : LoKi::Function<const HepMC::GenParticle*>
+      : public LoKi::Function<const HepMC::GenParticle*>
     {
     public:
       /** constructor from vertex function and "bad" value 

@@ -1,12 +1,12 @@
-# $Id: requirements,v 1.12 2006-12-15 08:40:24 ranjard Exp $ 
+# $Id: requirements,v 1.13 2007-01-23 10:59:05 ibelyaev Exp $ 
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.12 $
+# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.13 $
 # =============================================================================
 # Created    : 2006-01-16
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu 
 # =============================================================================
 package            LoKiGen
-version            v2r0
+version            v2r1
 
 # ================ structure ==================================================
 branches           cmt doc src LoKi 
@@ -26,8 +26,6 @@ apply_pattern      linker_library library=LoKiGenLib
 
 # =============================================================================
 # $Log: not supported by cvs2svn $
-# Revision 1.11  2006/11/25 19:14:19  ibelyaev
-#  improve Doxygen
 #
 # =============================================================================
 # The END 
