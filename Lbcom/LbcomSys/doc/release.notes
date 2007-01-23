@@ -6,8 +6,8 @@
 !             : Contains packages shared by Boole and other applications   
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v6r0>2007-01-19 LbcomSys v6r0</A></H1><PRE>
-This version uses Gaudi v19r0 and LHCb v22r0.
+</PRE><H1><A NAME=v6r0>2007-01-23 LbcomSys v6r0</A></H1><PRE>
+This version uses Gaudi v19r1 and LHCb v22r0.
 It introduces the use of CMT Install areas
 
 Packages added:    SiTools v1r1         - Tools shared by Velo and ST
