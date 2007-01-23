@@ -1,4 +1,4 @@
-// $Id: XmlDummyDECnv.cpp,v 1.2 2006-01-19 18:32:11 marcocle Exp $
+// $Id: XmlDummyDECnv.cpp,v 1.3 2007-01-23 07:54:54 cattanem Exp $
 // Include files 
 
 #include "GaudiKernel/CnvFactory.h"
@@ -14,13 +14,7 @@
 // 2005-04-11 : Marco CLEMENCIC
 //-----------------------------------------------------------------------------
 
-// -----------------------------------------------------------------------
-// Instantiation of a static factory class used by clients to create
-// instances of this service
-// -----------------------------------------------------------------------
-static CnvFactory<XmlDummyDECnv> dummyde_factory;
-const ICnvFactory& XmlDummyDECnvFactory = dummyde_factory;
-
+DECLARE_CONVERTER_FACTORY( XmlDummyDECnv );
 
 //=============================================================================
 // Standard constructor, initializes variables
