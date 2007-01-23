@@ -2,11 +2,11 @@
 # Created    : 2003-07-01
 # Maintainer : Chris Jones   Christopher.Rob.Jones@cern.ch
 #============================================================================
-# $Id: requirements,v 1.60 2006-12-13 12:26:12 ranjard Exp $
+# $Id: requirements,v 1.61 2007-01-23 12:53:53 cattanem Exp $
 #============================================================================
 
 package           RichRecSys
-version           v2r8
+version           v3r0
 
 # ================ structure ================================================
 branches          cmt doc options
@@ -17,13 +17,13 @@ set RICHRECSYSOPTS $(RICHRECSYSROOT)/options
 # ================ dependencies =============================================
 
 # Common RICH reconstruction packages
-use RichRecBase         v2r*   Rich
+use RichRecBase         v3r*   Rich
 use RichRecTools        v3r*   Rich
 use RichRecAlgorithms   v2r*    Rich
 
 # "Offline" PID packages
-use RichGlobalPID       v2r*   Rich
-use RichLocalPID        v2r*   Rich
+use RichGlobalPID       v3r*   Rich
+use RichLocalPID        v3r*   Rich
 
 # Result merging algorithms
 use RichPIDMerge        v2r*    Rich
