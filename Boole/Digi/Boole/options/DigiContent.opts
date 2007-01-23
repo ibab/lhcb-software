@@ -3,7 +3,6 @@
 DigiWriter.Preload     = false;
 
 // Pack MC truth containers if not already done on input file
-ApplicationMgr.DLLs += { "SimComponents" };
 DataOnDemandSvc.Nodes += { "DATA='/Event/pSim' TYPE='DataObject'" };
 DataOnDemandSvc.Algorithms += {
   "DATA='/Event/pSim/MCParticles'   TYPE='PackMCParticle'"

@@ -1,26 +1,26 @@
 ///////////////////////////////////////////////////////////////////////////////
-//  Job options for Boole, for data produced by Gauss v24r3 or greater and   //
-//  geometry lhcb-200601 (DC06)                                              //
+//  Job options for Boole, for data produced by Gauss v24r3 or greater,      //
+//  geometry lhcb-200601 pilot run conditions (field off, no spillover)      //
 ///////////////////////////////////////////////////////////////////////////////
 #pragma print off
 #include "$BOOLEOPTS/Boole.opts"              // Generic options for all jobs
 ApplicationMgr.OutStream += { "DigiWriter" }; // Comment to switch off output
+InitDataSeq.Members -= { "MergeEventAlg/SpilloverAlg" }; // Remove spillover
 //---------------------------------------------------------------------------
 // Uncomment one or more of following lines for optional behaviour
 //--------------------------------------------------------------------------- 
 //#include "$BOOLEOPTS/ExpertCheck.opts"     // Switch on expert check histos
-//InitDataSeq.Members -= { "MergeEventAlg/SpilloverAlg" }; // Remove spillover
 //#include "$STDOPTS/ExtendedDigi.opts"      // Add MCHits to .digi file
 
 //---------------------------------------------------------------------------
-// Set up DC06 geometry, conditions, magnetic field
+// Database specific options
 //--------------------------------------------------------------------------- 
 #pragma print on
-#include "$STDOPTS/DC06Conditions.opts"
-// By default, Boole uses GCALOR parameterisation for Muon background
-// Uncomment next two lines to use new G4 parameterisation instead
-//#include "$MUONBACKGROUNDROOT/options/MuonFlatSpillover-G4.opts"
-//#include "$MUONBACKGROUNDROOT/options/MuonLowEnergy-G4.opts"
+DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200601.xml";
+MagneticFieldSvc.UseConstantField = true; // Constant (zero) field
+// Switch off muon background
+InitMUONSeq.Members -= { "MuonBackground/MuonLowEnergy" };
+InitMUONSeq.Members -= { "MuonBackground/MuonFlatSpillover" };
 
 //---------------------------------------------------------------------------
 // Number of events to process, optionally skipping some events
@@ -31,10 +31,10 @@ ApplicationMgr.EvtMax = -1;
 //SpilloverSelector.FirstEvent = 497; // Skip corresponding spillover events
 
 //---------------------------------------------------------------------------
-// Input and output files. Same as production job ID 7173814
+// Input and output files.
 //---------------------------------------------------------------------------
 
-HistogramPersistencySvc.OutputFile = "00001330_00000103_4.root"; // Monitoring histos
+HistogramPersistencySvc.OutputFile = "PilotRun.root"; // Monitoring histos
 
 // POOL file catalogs. First one is read-write, others are read only
 PoolDbCacheSvc.Catalog = {
@@ -43,28 +43,13 @@ PoolDbCacheSvc.Catalog = {
 };
 
 //---------------------------------------------------------------------------
-// Spillover 
-//---------------------------------------------------------------------------
-SpilloverSelector.Input = { 
-  "DATAFILE='PFN:rfio:/castor/cern.ch/grid/lhcb/production/DC06/v1-lumi2/00001330/SIM/00001330_00000103_2.sim' TYP='POOL_ROOTTREE' OPT='READ'",
-  "DATAFILE='PFN:rfio:/castor/cern.ch/grid/lhcb/production/DC06/v1-lumi2/00001330/SIM/00001330_00000103_3.sim' TYP='POOL_ROOTTREE' OPT='READ'"
-};  // Minimum bias events with Gauss v25r0, XmlDDDB v30r8
-
-//---------------------------------------------------------------------------
 // Main event input
 //---------------------------------------------------------------------------
 EventSelector.Input = {
-  "DATAFILE='PFN:rfio:/castor/cern.ch/grid/lhcb/production/DC06/v1-lumi2/00001330/SIM/00001330_00000103_1.sim' TYP='POOL_ROOTTREE' OPT='READ'"
-};  // B->J/Psi(mumu)Ks events with Gauss v25r0, XmlDDDB v30r8
+  "DATAFILE='PFN:rfio:/castor/cern.ch/lhcb/background/Pilot_2007/30000000.5k.B_OFF.VeloClose.sim' TYP='POOL_ROOT' OPT='READ'"
+}; // 450 GeV on 450 GeV pp collisions, single interactions, no beam crossing angle, beam sigma(X) = sigma(Y) = 280 microns, magnetic field OFF, Velo closed
 
 //---------------------------------------------------------------------------
 // Output file
 //---------------------------------------------------------------------------
-DigiWriter.Output = "DATAFILE='PFN:00001330_00000103_4.digi' TYP='POOL_ROOTTREE' OPT='REC'";
-
-//---------------------------------------------------------------------------
-// Possible second output stream emulating real Raw Data (i.e. no MC truth)
-//---------------------------------------------------------------------------
-//#include "$BOOLEOPTS/RawWriter.opts"
-//RawWriter.Output = "DATAFILE='PFN:00001330_00000103_4.raw' TYP='POOL_ROOTTREE' OPT='REC'";
-
+DigiWriter.Output = "DATAFILE='PFN:PilotRun.digi' TYP='POOL_ROOTTREE' OPT='REC'";

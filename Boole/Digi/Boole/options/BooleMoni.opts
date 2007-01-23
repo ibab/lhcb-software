@@ -41,41 +41,36 @@ MoniVELOSeq.Members += {
                         };
 
 // IT and TT
-ApplicationMgr.DLLs += {"STCheckers"};
 #include "$STCHECKERSROOT/options/Boole.opts"
-MoniITSeq.Members += { "MCSTDepositChecker/MCITDepositChecker" };
-MoniITSeq.Members += { "MCSTDigitChecker/MCITDigitChecker" };
-MoniITSeq.Members += { "STDigitChecker/ITDigitChecker" };
-MoniITSeq.Members += { "STClusterChecker/ITClusterChecker" };
+MoniITSeq.Members += { "MCSTDepositMonitor/MCITDepositMonitor" };
+MoniITSeq.Members += { "MCSTDigitMonitor/MCITDigitMonitor" };
+MoniITSeq.Members += { "STDigitMonitor/ITDigitMonitor" };
+MoniITSeq.Members += { "STClusterMonitor/ITClusterMonitor" };
                                                      
-MoniTTSeq.Members += { "MCSTDepositChecker/MCTTDepositChecker" };
-MoniTTSeq.Members += { "MCSTDigitChecker/MCTTDigitChecker" };
-MoniTTSeq.Members += { "STDigitChecker/TTDigitChecker" };
-MoniTTSeq.Members += { "STClusterChecker/TTClusterChecker" };
+MoniTTSeq.Members += { "MCSTDepositMonitor/MCTTDepositMonitor" };
+MoniTTSeq.Members += { "MCSTDigitMonitor/MCTTDigitMonitor" };
+MoniTTSeq.Members += { "STDigitMonitor/TTDigitMonitor" };
+MoniTTSeq.Members += { "STClusterMonitor/TTClusterMonitor" };
 
-ApplicationMgr.DLLs   += { "Associators" };
 MCP2ITMCHitAlg.MCHitPath  = "MC/IT/Hits"; // MCHitLocation::IT
 MCP2ITMCHitAlg.OutputData = "/Event/MC/Particles2MCITHits";
 MoniITSeq.Members += { "MCParticle2MCHitAlg/MCP2ITMCHitAlg"
-                      ,"STEffMonitor/ITEffMonitor" };
+                      ,"STEffChecker/ITEffChecker" };
 
 MCP2TTMCHitAlg.MCHitPath  = "MC/TT/Hits"; // MCHitLocation::TT
 MCP2TTMCHitAlg.OutputData = "/Event/MC/Particles2MCTTHits";
 MoniTTSeq.Members += { "MCParticle2MCHitAlg/MCP2TTMCHitAlg"
-                      ,"STEffMonitor/TTEffMonitor" };
+                      ,"STEffChecker/TTEffChecker" };
 
 // OT
-ApplicationMgr.DLLs += {"OTMonitor"};
 MoniOTSeq.Members += { "MCOTDepositMonitor" };
 MoniOTSeq.Members += { "OTTimeMonitor" };
 MoniOTSeq.Members += { "OTTimeChecker" };
 
 // Rich
-ApplicationMgr.DLLs += { "RichDigiQC" };
 #include "$RICHDIGIQCOPTS/DigiQC_Boole.opts"
 
 // Calorimeters
-ApplicationMgr.DLLs += { "CaloMoniDigi" };
 #include "$CALOMONIDIGIOPTS/MoniDigi.opts"
 MoniCALOSeq.Members += { "CaloDigitMonitor/SpdMoni" };
 MoniCALOSeq.Members += { "CaloDigitMonitor/PrsMoni" };
@@ -83,7 +78,6 @@ MoniCALOSeq.Members += { "CaloDigitMonitor/EcalMoni" };
 MoniCALOSeq.Members += { "CaloDigitMonitor/HcalMoni" };
 
 // Muon
-ApplicationMgr.DLLs += { "MuonMoniDigi" };
 MoniMUONSeq.Members += { "MuonDigitChecker" };
 
 // MC truth

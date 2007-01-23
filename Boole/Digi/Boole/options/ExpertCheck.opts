@@ -3,10 +3,14 @@
 //------------------------------------------------------------------------------
 
 // IT+TT detailed monitoring
-TTEffMonitor.fullDetail = true;
-ITEffMonitor.fullDetail = true;
-TTClusterChecker.fullDetail = true;
-ITClusterChecker.fullDetail = true;
+MCTTDepositMonitor.FullDetail = true;
+MCITDepositMonitor.FullDetail = true;
+TTDigitMonitor.FullDetail = true;
+ITDigitMonitor.FullDetail = true;
+TTClusterMonitor.FullDetail = true;
+ITClusterMonitor.FullDetail = true;
+TTEffChecker.FullDetail = true;
+ITEffChecker.FullDetail = true;
 
 // Rich detailed monitoring
 #include "$RICHREADOUTOPTS/BooleDigiMoni.opts"
@@ -14,7 +18,6 @@ ITClusterChecker.fullDetail = true;
 //--------------------------------------------------------------
 // Set up some profiling. Enable/Disable setting lines below to true/false
 //--------------------------------------------------------------
-ApplicationMgr.DLLs += { "GaudiAud" };
 AuditorSvc.Auditors  = { "NameAuditor", "ChronoAuditor", "MemoryAuditor" };
 NameAuditor.Enable   = false;
 ChronoAuditor.Enable = true;

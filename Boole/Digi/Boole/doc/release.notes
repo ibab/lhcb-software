@@ -3,6 +3,15 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v13r0>2007-01-23 Boole v13r0</A></H1><PRE>
+ - Adapt requirements to Lbcom v6r0, LHCb v22r0, Gaudi v19r1
+ - Use XmlConditions v2r5
+ - Remove ApplicationMgr.DLLs options, not needed with new plugin manager
+ - Adapt monitoring options to new names of STChecker algorithms
+ - Adapt valgrind.job to work with new CMT environment
+ - Add PilotRun.opts for processing in Pilot Run conditions
+ - Remove obsolete rttc.opts and L0Filter.opts
+
 </PRE><H1><A NAME=v12r10>2006-12-01 Boole v12r10</A></H1><PRE>
  - Adapt requirements to Lbcom v5r9, LHCb v21r12, Gaudi v18r11
  - Use XmlDDDB v30r14

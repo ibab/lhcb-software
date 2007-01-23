@@ -3,6 +3,30 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v13r0>2007-01-23 Boole v13r0</A></H1><PRE>
+This version uses projects Gaudi v19r1, LHCb v22r0, Lbcom v6r0
+ and databases XmlDDDB v30r14, XmlConditions v2r5, ParamFiles v5r0, FieldMap v4r7
+
+It introduces a new working environment, based on CMT projects.
+
+Compatible with DC06 data
+
+- New features
+  . Add PilotRun.opts for processing in Pilot Run conditions
+
+- New tuning
+  . Update ShowerMax condition for Ecal (XmlConditions v2r5)
+
+- Monitoring changes
+  . Change naming of ST checkers, monitors and job options according to naming
+    convention (STCheckers v2r0)
+
+- Maintenance changes
+  . Fix some unchecked StatusCodes
+  . Remove ApplicationMgr.DLLs options, not needed with new plugin manager
+  . Adapt valgrind.job to work with new CMT environment
+  . Remove obsolete rttc.opts and L0Filter.opts
+
 </PRE><H1><A NAME=v12r10>2006-11-23 Boole v12r10</A></H1><PRE>
 This version uses projects Gaudi v18r11, LHCb v21r12, Lbcom v5r9
  and databases XmlDDDB v30r14, XmlConditions v2r4, ParamFiles v5r0, FieldMap v4r7

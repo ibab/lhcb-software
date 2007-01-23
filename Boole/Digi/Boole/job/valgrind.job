@@ -19,14 +19,14 @@ else
   shift
 endif
 #   
-set Bversion = "v12r10"
+set Bversion = "v13r0"
 echo "Excuting Boole $Bversion using options file $Dver.opts"
 #
 
 if ($?LS_SUBCWD) then 
 # in BATCH, WORKDIR is set by the system
 # in BATCH, location of executable has to be given explicitly
-  setenv MYJOBROOT ~/cmtuser/Digi/Boole/$Bversion
+  setenv MYJOBROOT ~/cmtuser/Boole_$Bversion/Digi/Boole/$Bversion
 else
 # in interactive set WORKDIR to submission directory
   set WORKDIR = $PWD
@@ -39,11 +39,6 @@ endif
 # == set the program environment
 source /afs/cern.ch/lhcb/group/rich/vol4/jonrob/scripts/new-valgrind.csh
 
-if ($?Boole_release_area) then
-  source $Boole_release_area/BooleEnv/$Bversion/cmt/setup.csh
-else
-  source $LHCBRELEASES/BooleEnv/$Bversion/cmt/setup.csh
-endif
 source $MYJOBROOT/cmt/setup.csh -tag=$CMTDEB
 
 # Go to working directory
