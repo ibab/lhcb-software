@@ -7,6 +7,8 @@
 #include "TrackExtrapolator.h"
 #include "Event/TrackParameters.h"
 
+#include <math.h>
+
 using namespace LHCb;
 using namespace Gaudi;
 
@@ -79,11 +81,11 @@ StatusCode TrackExtrapolator::propagate( State& state,
   StatusCode sc = StatusCode::FAILURE;
 
   // the distance is signed!
-  double distance = abs( plane.Distance( state.position() ) );
+  double distance = fabs( plane.Distance( state.position() ) );
   if( distance < tolerance ) { return StatusCode::SUCCESS; }
 
   for( int iter = 0; iter < m_maxIter; ++iter ) {
-    distance = abs( plane.Distance( state.position() ) );
+    distance = fabs( plane.Distance( state.position() ) );
     XYZPoint inPlane( plane.ProjectOntoPlane( state.position() ) ); 
     sc = propagate( state, inPlane.z(), pid );
     if( sc.isFailure() ) {
