@@ -1,4 +1,4 @@
-// $Id: UpdateManagerSvc.cpp,v 1.9 2006-10-25 13:46:06 marcocle Exp $
+// $Id: UpdateManagerSvc.cpp,v 1.10 2007-01-23 07:16:24 cattanem Exp $
 // Include files 
 
 #include "GaudiKernel/SvcFactory.h"
@@ -18,9 +18,7 @@
 
 #include "ConditionParser.h"
 
-// Factory implementation
-static SvcFactory<UpdateManagerSvc> s_factory;
-const ISvcFactory &UpdateManagerSvcFactory = s_factory;
+DECLARE_SERVICE_FACTORY( UpdateManagerSvc );
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : UpdateManagerSvc
