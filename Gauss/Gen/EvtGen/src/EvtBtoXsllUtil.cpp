@@ -37,6 +37,7 @@
 #include "EvtGenModels/EvtBtoXsllUtil.hh"
 #include "EvtGenBase/EvtComplex.hh"
 #include "EvtGenBase/EvtConst.hh"
+#include "EvtGenBase/EvtDiLog.hh"
 
 EvtComplex EvtBtoXsllUtil::GetC7Eff0(double sh, bool nnlo) 
 {

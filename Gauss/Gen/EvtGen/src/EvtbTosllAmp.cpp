@@ -32,6 +32,7 @@
 #include "EvtGenBase/EvtAmp.hh"
 #include "EvtGenBase/EvtScalarParticle.hh"
 #include "EvtGenBase/EvtVectorParticle.hh"
+#include "EvtGenBase/EvtDiLog.hh"
 
 double EvtbTosllAmp::CalcMaxProb( EvtId parent, EvtId meson, 
 				  EvtId lepton1, EvtId lepton2,
