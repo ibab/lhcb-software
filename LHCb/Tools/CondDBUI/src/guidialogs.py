@@ -1060,8 +1060,9 @@ class condDBConnectDialog(qt.QDialog):
         '''
         alias  = str(self.choseAlias.currentText())
         dbname = str(self.editDBName.text())
+        # FIXME: this check does not work always (CORAL alias can have a '/')
         if alias.find(os.sep) != -1:
-            self.connectString = 'sqlite://none;schema=%s;dbname=%s'%(alias, dbname)
+            self.connectString = 'sqlite_file:%s/%s'%(alias, dbname)
         else:
             self.connectString = '%s/%s'%(alias, dbname)
         return qt.QDialog.accept(self)
