@@ -153,9 +153,9 @@ int LHCb::MEPConverterSvc::declareSubEvent(const EventDesc& evt, int evID, const
     h->setOffsetOfMissing(0);
     for(size_t j=0; j<frags.size(); ++j)  {
       LHCb::MEPFragment* f = frags[j];
-      int off =  int(int(f)-id->mepStart);
-      // printf("mep:%p Event:%d fragment:%p %d offset:%d size:%d\n",
-      //        id->mepStart,evID,f,j,off,int(f->size()));
+      long off =  long(long(f)-id->mepStart);
+      // printf("mep:%p Event:%d fragment:%p %d offset:%ld size:%ld\n",
+      //        id->mepStart,evID,f,j,off,long(f->size()));
       h->setOffset(j, off);
     }
     e.mask[0] = id->partitionID;

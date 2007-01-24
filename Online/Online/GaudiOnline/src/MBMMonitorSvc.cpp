@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MBMMonitorSvc.cpp,v 1.4 2006-12-14 18:59:19 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MBMMonitorSvc.cpp,v 1.5 2007-01-24 19:21:08 frankb Exp $
 //  ====================================================================
 //  MBMMonitorSvc.cpp
 //  --------------------------------------------------------------------
@@ -249,11 +249,9 @@ void LHCb::MBMMonitorSvc::MBMDescriptor::read()   {
 
 /// Standard service constructor
 LHCb::MBMMonitorSvc::MBMMonitorSvc(const std::string& nam, ISvcLocator* loc)    
-: OnlineService(nam, loc), m_partitionID(0x103), m_bm_all(0), m_alarmID(0)
+: OnlineService(nam, loc), m_bm_all(0), m_alarmID(0)
 {
   declareProperty("DeviceType",       m_deviceType  = NO_DEVICES);
-  declareProperty("ProcessName",      m_procName    = RTL::processName());
-  declareProperty("PartitionID",      m_partitionID = 0x103);
   declareProperty("TimerFacility",    m_timerFac    = WT_FACILITY_TIMER1);
 }
 

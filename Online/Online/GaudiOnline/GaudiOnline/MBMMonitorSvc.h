@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/MBMMonitorSvc.h,v 1.1 2006-11-27 13:46:37 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/MBMMonitorSvc.h,v 1.2 2007-01-24 19:21:08 frankb Exp $
 //	====================================================================
 //  MBMMonitorSvc.cpp
 //	--------------------------------------------------------------------
@@ -113,10 +113,6 @@ namespace LHCb    {
     };
     typedef std::map<std::string, MBMDescriptor*> MBMBuffers;
 
-
-    std::string               m_procName;
-    int                       m_partitionID;
-
     MBMBuffers     m_buffers;
     /// Array of MBM descriptors for monitoring
     MBMDescriptor* m_bms;
@@ -127,7 +123,7 @@ namespace LHCb    {
     /// Number of connected buffers
     int            m_numBM;
     /// Alarm identifier when timer is active
-    unsigned int   m_alarmID;
+    unsigned long  m_alarmID;
     /// Property: Timer facility used for WT (default:WT_FACILITY_TIMER1)
     int            m_timerFac;
     /// Property: use devices for clients connected to MBM
@@ -152,9 +148,9 @@ namespace LHCb    {
     /// Standard destructor
     virtual ~MBMMonitorSvc();
     /// Access to partition ID as specified in the job options
-    int partitionID()  const                 {   return m_partitionID;  }
+    //int partitionID()  const                 {   return m_partitionID;  }
     /// Access to process name
-    const std::string& processName()  const  {  return m_procName;      }
+    //const std::string& processName()  const  {  return m_procName;      }
     /// Flag to indicate that MBM users should be represented as devices.
     int  deviceType() const                  {  return m_deviceType;    }
 

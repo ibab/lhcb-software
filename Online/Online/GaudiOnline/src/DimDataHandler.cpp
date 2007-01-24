@@ -1,9 +1,10 @@
-#include "GaudiOnline/NetworkDataHandler.h"
-#include "GaudiKernel/AlgFactory.h"
-#include "MBM/Producer.h"
+#define GAUDIKERNEL_KERNEL_H    // disable include
 #include "dic.hxx"
 #include "dis.hxx"
 #include "WT/wtdef.h"
+#include "MBM/Producer.h"
+#include "GaudiKernel/AlgFactory.h"
+#include "GaudiOnline/NetworkDataHandler.h"
 
 /*
  *   LHCb namespace declaration

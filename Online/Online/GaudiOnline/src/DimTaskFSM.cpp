@@ -1,3 +1,5 @@
+#define GAUDIKERNEL_KERNEL_H    // disable include
+#include "dis.hxx"
 #include "GaudiKernel/IMessageSvc.h"
 #include "GaudiOnline/DimTaskFSM.h"
 #include "CPP/IocSensor.h"
@@ -5,7 +7,6 @@
 #include "RTL/rtl.h"
 #include <iostream>
 #include <cstdarg>
-#include "dis.hxx"
 
 #define ST_NAME_UNKNOWN     "UNKNOWN"
 #define ST_NAME_ERROR       "ERROR"

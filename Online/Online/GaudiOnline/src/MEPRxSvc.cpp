@@ -8,7 +8,7 @@
 //  Author    : Niko Neufeld
 //                  using code by B. Gaidioz and M. Frank
 //
-//      Version   : $Id: MEPRxSvc.cpp,v 1.45 2006-12-14 18:59:20 frankb Exp $
+//      Version   : $Id: MEPRxSvc.cpp,v 1.46 2007-01-24 19:21:08 frankb Exp $
 //
 //  ===========================================================
 #ifdef _WIN32
@@ -321,7 +321,7 @@ int MEPRx::addMEP(const MEPHdr *hdr, int srcid) {
   if (m_nrx == 0) {
     e->refCount    = m_refCount;
     e->evID        = hdr->m_l0ID;
-    e->begin       = int(int(e)-m_mepID->mepStart);
+    e->begin       = long(long(e)-m_mepID->mepStart);
     e->packing     = -1;
     e->valid       = 1;
     e->magic       = mep_magic_pattern();

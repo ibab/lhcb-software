@@ -1,7 +1,9 @@
+#define GAUDIKERNEL_KERNEL_H    // disable include
+
+#include "dis.hxx"
+#include "RTL/rtl.h"
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiOnline/MemMonitorSvc.h"
-#include "RTL/rtl.h"
-#include "dis.hxx"
 
 using namespace LHCb;
 

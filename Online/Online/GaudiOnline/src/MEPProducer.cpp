@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MEPProducer.cpp,v 1.8 2006-12-14 18:59:20 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MEPProducer.cpp,v 1.9 2007-01-24 19:21:08 frankb Exp $
 //  ====================================================================
 //  RawBufferCreator.cpp
 //  --------------------------------------------------------------------
@@ -66,9 +66,9 @@ namespace {
       include();
       m_bmid = m_mepID->mepBuffer;
       ::printf(" Buffer space: %d bytes\n",m_spaceSize);
-      ::printf(" MEP    buffer start: %08X\n",m_mepID->mepStart);
-      ::printf(" EVENT  buffer start: %08X\n",m_mepID->evtStart);
-      ::printf(" RESULT buffer start: %08X\n",m_mepID->resStart);
+      ::printf(" MEP    buffer start: %08lX\n",m_mepID->mepStart);
+      ::printf(" EVENT  buffer start: %08lX\n",m_mepID->evtStart);
+      ::printf(" RESULT buffer start: %08lX\n",m_mepID->resStart);
     }
     ~MEPProducer()  {
     }
@@ -86,7 +86,7 @@ namespace {
       MEPEVENT* e = (MEPEVENT*)dsc.data;
       e->refCount    = m_refCount;
       e->evID        = ++id;
-      e->begin       = int(int(e)-m_mepID->mepStart);
+      e->begin       = long(long(e)-m_mepID->mepStart);
       e->packing     = -1;
       e->valid       = 1;
       e->magic       = mep_magic_pattern();

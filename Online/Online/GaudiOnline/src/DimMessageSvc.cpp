@@ -1,9 +1,10 @@
-// $Id: DimMessageSvc.cpp,v 1.2 2006-12-07 09:36:08 frankb Exp $
+// $Id: DimMessageSvc.cpp,v 1.3 2007-01-24 19:21:08 frankb Exp $
 
+#define GAUDIKERNEL_KERNEL_H    // disable include
+#include "dis.hxx"
+#include "RTL/rtl.h"
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiOnline/DimMessageSvc.h"
-#include "RTL/rtl.h"
-#include "dis.hxx"
 
 DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,DimMessageSvc);
 

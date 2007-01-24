@@ -29,9 +29,9 @@ namespace  {
       m_bmid = m_mepID->mepBuffer;
       m_evtProd = new MBM::Producer((BMID)m_mepID->evtBuffer, nam, partitionID());
       addRequest(EVENT_TYPE_MEP,trmask,vetomask,BM_MASK_ANY,BM_REQ_VIP,BM_FREQ_PERC,100.);
-      ::printf(" MEP    buffer start: %08X\n",m_mepID->mepStart);
-      ::printf(" EVENT  buffer start: %08X\n",m_mepID->evtStart);
-      ::printf(" RESULT buffer start: %08X\n",m_mepID->resStart);
+      ::printf(" MEP    buffer start: %08lX\n",m_mepID->mepStart);
+      ::printf(" EVENT  buffer start: %08lX\n",m_mepID->evtStart);
+      ::printf(" RESULT buffer start: %08lX\n",m_mepID->resStart);
       //mbm_register_alloc_event(m_mepID->evtBuffer,0,0);
     }
     virtual ~EVENTGenerator()  {
@@ -40,7 +40,7 @@ namespace  {
     virtual void declareSubEvents(const EventDesc& evt, SubEvents& events)  {
       int evID = 0;
       size_t numEvt = events.size();
-      if ( prt ) ::printf("Declare MEP..%d subevents..\n",numEvt);
+      if ( prt ) ::printf("Declare MEP..%ld subevents..\n",long(numEvt));
       for(SubEvents::const_iterator i=events.begin(); i!=events.end(); ++i)  {
         if ( prt ) ::printf("----> Declare subevent:%d\n",evID+1);
         declareSubEvent(evt, ++evID, (*i).second);
@@ -64,7 +64,7 @@ namespace  {
         for(size_t j=0; j<frags.size(); ++j)  {
           LHCb::MEPFragment* f = frags[j];
           if ( prt ) LHCb::checkFragment(f);
-          h->setOffset(j, int(int(f)-m_mepID->mepStart));
+          h->setOffset(j, long(long(f)-m_mepID->mepStart));
         }
         e.mask[0] = partitionID();
         e.mask[1] = 0;

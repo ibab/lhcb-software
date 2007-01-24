@@ -1,4 +1,8 @@
 // Include files
+#define GAUDIKERNEL_KERNEL_H    // disable include
+#include <memory>
+#include "dis.hxx"
+
 #include "GaudiKernel/IAlgorithm.h"
 #include "GaudiKernel/IAlgTool.h"
 #include "GaudiKernel/SvcFactory.h"
@@ -8,9 +12,6 @@
 #include "AIDA/IHistogram1D.h"
 #include "AIDA/IHistogram2D.h"
 #include "AIDA/IHistogram3D.h"
-//#include "RTL/rtl.h"
-#include <memory>
-#include "dis.hxx"
 
 using namespace AIDA;
 using namespace LHCb;

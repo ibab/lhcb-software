@@ -62,7 +62,7 @@ namespace  {
     virtual void declareSubEvents(SubEvents& events)  {
       int evID = 0;
       size_t numEvt = events.size();
-      if ( prt ) ::printf("Declare MEP..%d subevents..\n",numEvt);
+      if ( prt ) ::printf("Declare MEP..%ld subevents..\n",long(numEvt));
       for(SubEvents::const_iterator i=events.begin(); i!=events.end(); ++i)  {
         if ( prt ) ::printf("----> Declare subevent:%d\n",evID+1);
         declareSubEvent(++evID, (*i).second);
@@ -83,7 +83,7 @@ namespace  {
       for(size_t j=0; j<frags.size(); ++j)  {
         LHCb::MEPFragment* f = frags[j];
         if ( prt ) LHCb::checkFragment(f);
-        h->setOffset(j, int(int(f)-int(m_mepData)));
+        h->setOffset(j, int(long(f)-long(m_mepData)));
       }
     }
     int run()  {

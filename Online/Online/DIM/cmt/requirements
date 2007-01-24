@@ -23,8 +23,9 @@ macro_append DIM_linkopts " -lpthread -lrt " WIN32 " "
 
 apply_pattern dim_exe name=DNS files=dns.c
 apply_pattern dim_exe name=did files=did/make_did.c
-macro_append  didlinkopts " -L/usr/X11R6/lib -lXt -lXm -lX11 " WIN32 " "
-
+macro_append  didlinkopts " -L/usr/X11R6/lib   -lXt -lXm -lX11 " \
+ x86_64                   " -L/usr/X11R6/lib64 -lXt -lXm -lX11 " \
+ WIN32                    " "
 apply_pattern dim_exe name=test_server       files=examples/test_server.c
 apply_pattern dim_exe name=test_client       files=examples/test_client.c
 apply_pattern dim_exe name=test_big_server   files=examples/test_big_server.c

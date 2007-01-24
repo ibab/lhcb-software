@@ -1,9 +1,11 @@
-// $Id: DimErrorLogger.cpp,v 1.8 2006-12-14 18:59:18 frankb Exp $
-#include "GaudiKernel/Message.h"
-#include "GaudiKernel/SvcFactory.h"
-#include "GaudiKernel/strcasecmp.h"
+// $Id: DimErrorLogger.cpp,v 1.9 2007-01-24 19:21:08 frankb Exp $
+
+#define GAUDIKERNEL_KERNEL_H    // disable include
 #include "GaudiOnline/DimMessageSvc.h"
 #include "GaudiOnline/DimErrorLogger.h"
+#include "GaudiKernel/SvcFactory.h"
+#include "GaudiKernel/strcasecmp.h"
+#include "GaudiKernel/Message.h"
 #include "RTL/strdef.h"
 #include "RTL/Lock.h"
 
