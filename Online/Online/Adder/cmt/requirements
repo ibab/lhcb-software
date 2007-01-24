@@ -5,7 +5,7 @@ branches cmt doc src
 
 include_dirs $(ADDERROOT)
 
-use GaudiKernel v*  /afs/cern.ch/user/e/evh/w0/cmtuser
+use GaudiKernel v* 
 use GaudiAlg v*
 use AIDA v* LCG_Interfaces
 use ROOT v* LCG_Interfaces
