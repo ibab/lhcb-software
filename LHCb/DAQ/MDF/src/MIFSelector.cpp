@@ -1,4 +1,4 @@
-// $Id: MIFSelector.cpp,v 1.5 2007-01-24 19:21:50 frankb Exp $
+// $Id: MIFSelector.cpp,v 1.6 2007-01-24 20:42:24 frankb Exp $
 //====================================================================
 //	MIFSelector.cpp
 //--------------------------------------------------------------------
@@ -186,8 +186,7 @@ Next:
 }
 
 /// Skip N events
-StatusCode 
-LHCb::MIFContext::skipEvents(IMessageSvc* /* msg */,int numEvt)  {
+StatusCode LHCb::MIFContext::skipEvents(IMessageSvc* /* msg */,int numEvt)  {
   for(int i=0; i<numEvt; ++i)  {
   }
   return StatusCode::FAILURE;
