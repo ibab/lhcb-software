@@ -40,6 +40,7 @@
 
 // for adder 
 #include "DimInfoHistos.h"
+#include "DimInfoTitle.h"
 #include "BaseHistogram.h"
 #include "GaudiPI/AIDA_ROOT/Histogram1D.h"
 #include "GaudiPI/AIDA_ROOT/Histogram2D.h"
@@ -86,6 +87,7 @@ StatusCode Adder::initialize() {
   std::vector<std::vector <std::string> > hSvcname;
   std::vector<std::vector <std::string> > hSvcname2d;
   std::vector<std::vector <std::string> > pSvcname; 
+  std::vector<std::vector <std::string> > commentSvcname; 
   return StatusCode::SUCCESS;
 }
 
@@ -106,6 +108,7 @@ StatusCode Adder::execute() {
   std::string hSvcnames;
   std::string hSvcnames2d;
   std::string pSvcnames;
+  std::string commentSvcnames;
   std::string servicestr;
   std::vector<DimInfoHistos*> hinfo;
   std::vector<DimInfoHistos*> hinfo2d;
@@ -133,6 +136,8 @@ StatusCode Adder::execute() {
      std::vector<std::string> tmphSvcnames;	    
      std::vector<std::string> tmphSvcnames2d;	
      std::vector<std::string> tmppSvcnames;	
+     commentSvcnames=m_nodename+"*"+m_algorithmname[j]+"/"+m_histogramname[j]+"/gauchocomment";
+     std::vector<std::string> tmpcommentSvcnames;	    
      int jindex=0; 
      if (counter==1) {
         //only do this once
@@ -186,6 +191,17 @@ StatusCode Adder::execute() {
 	 hSvcname.push_back(tmphSvcnames);
          hSvcname2d.push_back(tmphSvcnames2d);
          pSvcname.push_back(tmppSvcnames);
+	 dbr.getServices(commentSvcnames.c_str());
+         while( (type = dbr.getNextService(service, format)) )
+         {               
+	   servicestr=service;
+	   std::string::size_type loc=servicestr.find(m_nodename+"_Adder_",0);
+	   if (loc == std::string::npos ) {  
+	      tmpcommentSvcnames.push_back(servicestr);
+              msg << MSG::DEBUG << "Found comment service: " << servicestr  <<endreq;     
+	   }
+	} 
+	commentSvcname.push_back(tmpcommentSvcnames);
      }  
      else {
         icount=nbof1dhistos[j];
@@ -195,13 +211,13 @@ StatusCode Adder::execute() {
 
      msg << MSG::DEBUG << "icount: " << icount << " icount2d " << icount2d << " icountp " << icountp << endreq; 
      DimInfoHistos * temp;
+
      if (icount>0) {
         hinfo.clear();
         for (int i=0;i<=icount-1;i++) { 
            temp = new DimInfoHistos(hSvcname[j][i],m_refreshtime);
            hinfo.push_back(temp);
 	   msg << MSG::DEBUG << "Created Root object: " << hSvcname[j][i] << endreq;     
-
         }
      }
      if (icount2d>0) {
@@ -225,19 +241,30 @@ StatusCode Adder::execute() {
 
      // convert DIM buffer to ROOT
 
-     
+     DimInfoTitle * ttemp;
+     char* temptitle=0;  
      for (int i=0;i<=icount-1;i++) {
         TH1* hist1=0;
         int ntries=0;
+
         while (1)
         { 
 	   hist1=0;
 	   hist1= hinfo[i]->getHisto(); 
+
            if (hist1 != 0) {
-	      msg << MSG::DEBUG << "Histogram "<< hist1->GetTitle() << " found." << endreq;   
-	      hist.push_back(hist1);		 
+//	      msg << MSG::DEBUG << "Looking for title  svc "<< commentSvcname[j][i] <<  endreq; 
+	      ttemp = new DimInfoTitle(commentSvcname[j][i],m_refreshtime);
+//	      msg << MSG::DEBUG << "Getting title. " << endreq;
+	      lib_rtl_sleep(m_refreshtime*100);    	
+	      temptitle =ttemp->getTitle();
+              if (temptitle!=0) { 		 
+	           hist1->SetTitle(temptitle);
+	      }
+	      hist.push_back(hist1);
+	      msg << MSG::DEBUG << "Histogram "<< hist1->GetTitle() << " found." << endreq;   		 
 	      break;
-	   }    
+	   }	 
            ntries++;
 	   msg << MSG::DEBUG << "No histogram found after " << ntries << " attempts." << endreq;
            if(ntries==10) break;
@@ -253,6 +280,12 @@ StatusCode Adder::execute() {
 
 	   hist1= hinfo2d[i]->get2DHisto();
            if (hist1 != 0) {
+	      ttemp = new DimInfoTitle(commentSvcname[j][i],m_refreshtime);
+              lib_rtl_sleep(m_refreshtime*100);    	
+	      temptitle =ttemp->getTitle();
+              if (temptitle!=0) { 
+	      	  hist1->SetTitle(temptitle);
+	      }
 	      msg << MSG::DEBUG << "Histogram "<< hist1->GetTitle() << " found." << endreq;   
 	      hist2d.push_back(hist1);		 
 	      break;
@@ -272,6 +305,12 @@ StatusCode Adder::execute() {
 
 	   hist1= pinfo[i]->getpHisto();
            if (hist1 != 0) {
+	      ttemp = new DimInfoTitle(commentSvcname[j][i],m_refreshtime);
+              lib_rtl_sleep(m_refreshtime*100);    	
+	      temptitle =ttemp->getTitle();
+              if (temptitle!=0) { 
+	      	  hist1->SetTitle(temptitle);
+	      }
 	      msg << MSG::DEBUG << "Histogram "<< hist1->GetTitle() << " found." << endreq;   
 	      histp.push_back(hist1);		 
 	      break;
@@ -363,7 +402,7 @@ StatusCode Adder::execute() {
 	      hsize=h.size();
 	   } 
 	   h.push_back(histoSvc->book("/stat/adder"+m_algorithmname[j]+m_histogramname[j],j, m_histogramname[j], numberOfBinsX,lowerEdge, upperEdge));
-           declareInfo(m_algorithmname[j]+"/"+m_histogramname[j],h[hsize],m_algorithmname[j]+"/"+m_histogramname[j]);
+           declareInfo(m_algorithmname[j]+"/"+m_histogramname[j],h[hsize],title);
            base.push_back(dynamic_cast<rootpart*>(h[hsize]));    
            if ( ! base[hsize] ) { 
               msg << MSG::ERROR << "Dynamic cast failed to get root part of aida h"  << endreq;       
@@ -387,7 +426,7 @@ StatusCode Adder::execute() {
 	      h2dsize=h2d.size();
 	   } 
 	   h2d.push_back(histoSvc->book("/stat/adder"+m_algorithmname[j]+m_histogramname[j],j,m_histogramname[j], numberOfBinsX,lowerEdge, upperEdge, numberOfBinsY,ylowerEdge, yupperEdge));
-	   declareInfo(m_algorithmname[j]+"/"+m_histogramname[j],h2d[h2dsize],m_algorithmname[j]+"/"+m_histogramname[j]);
+	   declareInfo(m_algorithmname[j]+"/"+m_histogramname[j],h2d[h2dsize],title2d);
            base2d.push_back(dynamic_cast<rootpart2d*>(h2d[h2dsize]));    
            if ( ! base2d[h2dsize] ) { 
               msg << MSG::ERROR << "Dynamic cast failed to get root part of aida h2d"  << endreq;       
@@ -411,7 +450,7 @@ StatusCode Adder::execute() {
 	   } 
 
 	   p.push_back(histoSvc->bookProf("/stat/adder"+m_algorithmname[j]+m_histogramname[j],j, m_histogramname[j], numberOfBinsX,lowerEdge, upperEdge));
-	   declareInfo(m_algorithmname[j]+"/"+m_histogramname[j],p[psize],m_algorithmname[j]+"/"+m_histogramname[j]);
+	   declareInfo(m_algorithmname[j]+"/"+m_histogramname[j],p[psize],titlep);
            basep.push_back(dynamic_cast<rootpartp*>(p[psize]));    
            if ( ! basep[psize] ) { 
               msg << MSG::ERROR << "Dynamic cast failed to get root part of aida p"  << endreq;       
