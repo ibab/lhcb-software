@@ -3,6 +3,7 @@
 #include "TH2.h"
 #include "TProfile.h"
 #include <iostream>
+#include <string>
 #ifdef WIN32
 namespace win {
 #include <windows.h>
@@ -21,6 +22,9 @@ DimInfoHistos::DimInfoHistos(std::string hSvcname, int refreshTime)
   m_rtime=refreshTime;
   int len = hSvcname.length();
   m_histoname=hSvcname.substr(3,len-3);
+  std::string::size_type slash=m_histoname.find_last_of("/",len);
+  m_histoname=m_histoname.substr(slash+1);
+  std::cerr<< "DimInfoHistos " << m_histoname << std::endl;
   if(       "H1D" == hSvcname.substr(0,3) ) m_dimension = 1;
   else  if( "H2D" == hSvcname.substr(0,3) ) m_dimension = 2;
   else  if( "HPD" == hSvcname.substr(0,3) ) m_dimension = 11;
@@ -84,7 +88,8 @@ void DimInfoHistos::infoHandler()
     //   std::cerr << "DimInfoHistos(" << m_histoname << "): Making ROot histogram" << std::endl;
        // 1d profile data: dimension,nXBins,xMin,xMax,entries,3*(UNDERFLOW,"in range" bins, OVERFLOW): entries, weights and squares of weights 
       m_histp=new TProfile(m_histoname.c_str(),m_histoname.c_str(),(int)m_data[1],m_data[2],m_data[3]);	
-      m_histp->Sumw2();
+    //  m_histp->Sumw2();
+    // not necessary, already done by default for profiles
     } 
 	}
 	if ((( 0 == m_hist )&(0==m_hist2d))&(0==m_histp)) {

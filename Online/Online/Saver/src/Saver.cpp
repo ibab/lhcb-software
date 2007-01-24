@@ -43,8 +43,9 @@
 #include <time.h>
 
 
-// for adder 
+// for saver
 #include "DimInfoHistos.h"
+#include "DimInfoTitle.h"
 
 // for online monitoring
 #include "GaudiKernel/IMonitorSvc.h" 
@@ -102,15 +103,17 @@ StatusCode Saver::execute() {
   time_t rawtime;
   struct tm * timeinfo;
   int type;
-  int icount;
-  int icount2d;
-  int icountp;
+  int icount=0;
+  int icount2d=0;
+  int icountp=0;
   std::string hSvcname;
   std::string hSvcname2d;
   std::string hSvcnames;
   std::string hSvcnames2d;
   std::string pSvcname;
   std::string pSvcnames;
+  std::string commentSvcnames;
+  std::string commentSvcname;
   DimInfoHistos* hinfo=0;
   DimInfoHistos* hinfo2d=0;
   DimInfoHistos* pinfo=0;
@@ -160,48 +163,53 @@ StatusCode Saver::execute() {
      hSvcnames="H1D/"+m_nodename+"*"+m_algorithmname[j]+"/"+m_histogramname[j];
      hSvcnames2d="H2D/"+m_nodename+"*"+m_algorithmname[j]+"/"+m_histogramname[j];
      pSvcnames="HPD/"+m_nodename+"*"+m_algorithmname[j]+"/"+m_histogramname[j];
+     commentSvcnames=m_nodename+"*"+m_algorithmname[j]+"/"+m_histogramname[j]+"/gauchocomment";
      
-     DimClient::setDnsNode(m_dimclientdns.c_str());
-  
+     DimClient::setDnsNode(m_dimclientdns.c_str());  
      DimBrowser dbr;  
      icount = 0;
      icount2d = 0;
      icountp = 0;
       // icount is the number of tasks publishing histogram nr j
      while ((( icount==0 )|(icount2d==0))|(icountp==0))
-        {
+     {
         //look for the services at each iteration of eventloop - task may have died
 
 	msg << MSG::DEBUG << "Looking for hSvcname: " << hSvcnames.c_str() << endreq;     
         dbr.getServices(hSvcnames.c_str());
         while( (type = dbr.getNextService(service, format)) )
-           { 
+        { 
 	   hSvcname=service;
            msg << MSG::DEBUG << "Found service: " << hSvcname << endreq;     
 	   icount++;
 
-	   }   
+	}   
 	if (icount==0) {
            msg << MSG::DEBUG << "Looking for hSvcname2d: " << hSvcnames2d.c_str() << endreq;     
            dbr.getServices(hSvcnames2d.c_str());
            while( (type = dbr.getNextService(service, format)) )
-              { 	
+           { 	
 	      hSvcname2d=service;
               msg << MSG::DEBUG << "Found 2D service: " << hSvcname2d << endreq;   
   	      icount2d++;
-	      } 
-	 }  
-	 if (icount2d==0) {
-              msg << MSG::DEBUG << "Looking for pSvcname: " << pSvcnames.c_str() << endreq;     
-              dbr.getServices(pSvcnames.c_str());
-              while( (type = dbr.getNextService(service, format)) )
-                 { 	
-	         pSvcname=service;
-                 msg << MSG::DEBUG << "Found profile service: " << hSvcname2d << endreq;   
-  	         icountp++;		 
-	         } 
 	   } 
- 
+	}  
+	if (icount2d==0) {
+           msg << MSG::DEBUG << "Looking for pSvcname: " << pSvcnames.c_str() << endreq;     
+           dbr.getServices(pSvcnames.c_str());
+           while( (type = dbr.getNextService(service, format)) )
+           { 	
+	      pSvcname=service;
+              msg << MSG::DEBUG << "Found profile service: " << hSvcname2d << endreq;   
+  	      icountp++;		 
+	   } 
+	} 
+ 	dbr.getServices(commentSvcnames.c_str());
+        while( (type = dbr.getNextService(service, format)) )
+        {               
+	   commentSvcname=service;
+           msg << MSG::DEBUG << "Found comment service: " << commentSvcname  <<endreq;     
+	}
         if (((icount>0)|(icount2d>0))|(icountp>1)) break;      
         else lib_rtl_sleep(500);
      } 
@@ -223,12 +231,20 @@ StatusCode Saver::execute() {
      if (icount>0) {
         TH1* hist1=0;
         int ntries=0;
+	DimInfoTitle * ttemp;
+        char* temptitle=0;  
         while (1)
-           {
+        {
            hist1=0;
-
 	   hist1= hinfo->getHisto();
            if (hist1 != 0) {
+	      ttemp = new DimInfoTitle(commentSvcname,m_refreshtime);
+	      lib_rtl_sleep(m_refreshtime*100);    	
+	      temptitle =ttemp->getTitle();
+              if (temptitle!=0) { 		 
+	           hist1->SetTitle(temptitle);
+	      }
+
 	      msg << MSG::DEBUG << "Histogram "<< hist1->GetTitle() << " found." << endreq;   
 	      if ( 0 == f ) {
 	         f = new TFile(filename.c_str(),"create");
@@ -247,13 +263,22 @@ StatusCode Saver::execute() {
      } 
      if (icount2d>0) {
         TH2* hist2=0;
-        int ntries=0;         
+        int ntries=0;  
+        DimInfoTitle * ttemp;
+        char* temptitle=0;         
         while (1)
            {
            hist2=0;
 
 	   hist2= hinfo2d->get2DHisto();
            if (hist2 != 0) {
+	      ttemp = new DimInfoTitle(commentSvcname,m_refreshtime);
+	      lib_rtl_sleep(m_refreshtime*100);    	
+	      temptitle =ttemp->getTitle();
+              if (temptitle!=0) { 		 
+	           hist2->SetTitle(temptitle);
+	      }
+
 	      msg << MSG::DEBUG << "Histogram "<< hist2->GetTitle() << " found." << endreq;   
 	      if ( 0 == f ) {	      
 	        f = new TFile(filename.c_str(),"create");
@@ -266,19 +291,28 @@ StatusCode Saver::execute() {
            ntries++;
 	   msg << MSG::DEBUG << "No histogram found after " << ntries << " attempts." << endreq;
            if(ntries==10) break;
-          lib_rtl_sleep(500); 
+           lib_rtl_sleep(500); 
         } 
      }   
 
      if (icountp>0) {
         TProfile* histp=0;
-        int ntries=0;         
+        int ntries=0;
+	DimInfoTitle * ttemp;
+        char* temptitle=0;           
         while (1)
            {
            histp=0;
 
 	   histp= pinfo->getPDHisto();
            if (histp != 0) {
+	      ttemp = new DimInfoTitle(commentSvcname,m_refreshtime);
+	      lib_rtl_sleep(m_refreshtime*100);    	
+	      temptitle =ttemp->getTitle();
+              if (temptitle!=0) { 		 
+	           histp->SetTitle(temptitle);
+	      }
+
 	      msg << MSG::DEBUG << "Histogram "<< histp->GetTitle() << " found." << endreq;   
 	      if ( 0 == f ) {	      
 	        f = new TFile(filename.c_str(),"create");
@@ -304,7 +338,6 @@ StatusCode Saver::execute() {
   delete pinfo;
   command="";
   }
-
  
   return StatusCode::SUCCESS;
 }

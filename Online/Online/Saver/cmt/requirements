@@ -16,7 +16,7 @@ use Gaucho v* Online
 use GaudiAud v*
 
 
-library Saver ../src/Saver_dll.cpp ../src/Saver_load.cpp ../src/Saver.cpp ../src/Saver.h  ../src/DimInfoHistos.cpp 
+library Saver ../src/Saver_dll.cpp ../src/Saver_load.cpp ../src/Saver.cpp ../src/Saver.h  ../src/DimInfoHistos.cpp ../src/DimInfoTitle.cpp
 
 apply_pattern component_library library=Saver
 

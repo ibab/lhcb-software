@@ -17,9 +17,9 @@ Saver.OutputLevel = 1;
 ApplicationMgr.EvtMax    = -1;   // events to be processed (default is 10)
 ApplicationMgr.EvtSel   = "NONE"; // do not use any event input
 
-Saver.nodename="node00101";
+Saver.nodename="node00101_Adder_1";
 Saver.histogramname={"Mass","xyPositionPlot","eventtype","xyProfile"};
-Saver.algorithmname={"Summed_GaudiExample","Summed_GaudiExample","Summed_GaudiExample","Summed_GaudiExample"};
+Saver.algorithmname={"GaudiExample","GaudiExample","GaudiExample","GaudiExample"};
 Saver.dimclientdns="pclhcb11.cern.ch";
-Saver.taskname="test";
+Saver.taskname="Test";
 Saver.savedir="~/w0";
