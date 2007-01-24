@@ -4,6 +4,15 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2007-01-24 - Patrick Robbe
+ - Add new class EvtDiLog to replace di-logarithm function DDILOG from
+   the CERNLIB.
+ - Modify code to use this new class: 
+   . EvtGenModels/EvtbTosllAmp.hh
+   . src/EvtBtoXsllUtil.cpp
+   . src/EvtVubdGamma.cpp
+   . src/EvtbTosllAmp.cpp
+
 !======================== EvtGen v8r14 2006-12-05 =========================
 ! 2006-12-05 - Patrick Robbe
  - Fix sign convention in EvtPVVCPLH

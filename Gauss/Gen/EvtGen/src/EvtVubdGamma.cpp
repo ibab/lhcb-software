@@ -36,18 +36,12 @@
 //-----------------------
 #include "CLHEP/config/CLHEP.h"
 #include "EvtGenModels/EvtVubdGamma.hh"
+#include "EvtGenBase/EvtDiLog.hh"
 
 //---------------
 // C Headers --
 //---------------
 #include <math.h>
-#ifdef WIN32
-extern "C" double __stdcall DDILOG(const double *);
-#else
-extern "C" {
-  double ddilog_(const double *);
-}
-#endif
 //----------------
 // Constructors --
 //----------------
@@ -162,11 +156,7 @@ double EvtVubdGamma::getW1delta(const double &x, const double &z)
   // I take ddilog_(&mz) where mz=1-z in order to satisfy Neubert's definition
   // and to compare with Maple the argument in maple should be (1-mz) ...
 
-#ifdef WIN32
-  double dl = 4.*DDILOG(&mz) + 4.*pow(M_PI,2)/3.;
-#else
-  double dl = 4.*ddilog_(&mz) + 4.*pow(M_PI,2)/3.;
-#endif
+  double dl = 4.*EvtDiLog::DiLog(mz) + 4.*pow(M_PI,2)/3.;
 
   double w = -(8.*pow(log(z),2) - 10.*log(z) + 2.*lz + dl + 5.)
     + (8.*log(z)-7.)*log(_epsilon3) - 2.*pow(log(_epsilon3),2); 

@@ -550,59 +550,31 @@ double EvtbTosllAmp::dGdsProb(double mb, double ms, double ml,
 
   double alphas = 0.119/
      (1 + 0.119*log(pow(4.8,2)/pow(91.1867,2))*23.0/12.0/EvtConst::pi);
-#ifdef WIN32
-  double omega9 = -2.0/9.0*EvtConst::pi*EvtConst::pi - 4.0/3.0*DDILOG(sh)
-                 - 2.0/3.0*log(sh)*log(1.0-sh)
-                 - (5.0+4.0*sh)/(3.0*(1.0+2.0*sh)) * log(1.0-sh)
-                 - 2.0*sh*(1.0+sh)*(1.0-2.0*sh)
-                 /(3.0*pow(1.0-sh,2)*(1.0+2.0*sh)) * log(sh)
-                 + (5.0+9.0*sh-6.0*sh*sh)/(6.0*(1.0-sh)*(1.0+2.0*sh));
-#else
-  double omega9 = -2.0/9.0*EvtConst::pi*EvtConst::pi - 4.0/3.0*ddilog_(sh)
-                 - 2.0/3.0*log(sh)*log(1.0-sh)
-                 - (5.0+4.0*sh)/(3.0*(1.0+2.0*sh)) * log(1.0-sh)
-                 - 2.0*sh*(1.0+sh)*(1.0-2.0*sh)
-                 /(3.0*pow(1.0-sh,2)*(1.0+2.0*sh)) * log(sh)
-                 + (5.0+9.0*sh-6.0*sh*sh)/(6.0*(1.0-sh)*(1.0+2.0*sh));
-#endif
+  double omega9 = -2.0/9.0*EvtConst::pi*EvtConst::pi - 
+    4.0/3.0*EvtDiLog::DiLog(sh)
+    - 2.0/3.0*log(sh)*log(1.0-sh)
+    - (5.0+4.0*sh)/(3.0*(1.0+2.0*sh)) * log(1.0-sh)
+    - 2.0*sh*(1.0+sh)*(1.0-2.0*sh)
+    /(3.0*pow(1.0-sh,2)*(1.0+2.0*sh)) * log(sh)
+    + (5.0+9.0*sh-6.0*sh*sh)/(6.0*(1.0-sh)*(1.0+2.0*sh));
 
   double eta9 = 1.0 + alphas*omega9/EvtConst::pi;
-#ifdef WIN32
   double omega7 = -8.0/3.0*log(4.8/mb)
-                  -4.0/3.0*DDILOG(sh) 
-                  -2.0/9.0*EvtConst::pi*EvtConst::pi
-                  -2.0/3.0*log(sh)*log(1.0-sh)
-                  -log(1-sh)*(8.0+sh)/(2.0+sh)/3.0 
+    -4.0/3.0*EvtDiLog::DiLog(sh) 
+    -2.0/9.0*EvtConst::pi*EvtConst::pi
+    -2.0/3.0*log(sh)*log(1.0-sh)
+    -log(1-sh)*(8.0+sh)/(2.0+sh)/3.0 
     -2.0/3.0*sh*(2.0 - 2.0*sh - sh*sh)*log(sh)/pow((1.0 - sh),2)/(2.0 + sh)
     -(16.0 - 11.0*sh - 17.0*sh*sh)/18.0/(2.0 + sh)/(1.0 - sh);
-#else
-  double omega7 = -8.0/3.0*log(4.8/mb)
-                  -4.0/3.0*ddilog_(sh) 
-                  -2.0/9.0*EvtConst::pi*EvtConst::pi
-                  -2.0/3.0*log(sh)*log(1.0-sh)
-                  -log(1-sh)*(8.0+sh)/(2.0+sh)/3.0 
-    -2.0/3.0*sh*(2.0 - 2.0*sh - sh*sh)*log(sh)/pow((1.0 - sh),2)/(2.0 + sh)
-    -(16.0 - 11.0*sh - 17.0*sh*sh)/18.0/(2.0 + sh)/(1.0 - sh);
-#endif
   double eta7 = 1.0 + alphas*omega7/EvtConst::pi;
 
-#ifdef WIN32
   double omega79 = -4.0/3.0*log(4.8/mb)
-                   -4.0/3.0*DDILOG(sh) 
-                   -2.0/9.0*EvtConst::pi*EvtConst::pi
-                   -2.0/3.0*log(sh)*log(1.0-sh)
-                   -1.0/9.0*(2.0+7.0*sh)*log(1.0 - sh)/sh
-                   -2.0/9.0*sh*(3.0 - 2.0*sh)*log(sh)/pow((1.0 - sh),2) 
-                   +1.0/18.0*(5.0 - 9.0*sh)/(1.0 - sh);
-#else
-  double omega79 = -4.0/3.0*log(4.8/mb)
-                   -4.0/3.0*ddilog_(sh) 
-                   -2.0/9.0*EvtConst::pi*EvtConst::pi
-                   -2.0/3.0*log(sh)*log(1.0-sh)
-                   -1.0/9.0*(2.0+7.0*sh)*log(1.0 - sh)/sh
-                   -2.0/9.0*sh*(3.0 - 2.0*sh)*log(sh)/pow((1.0 - sh),2) 
-                   +1.0/18.0*(5.0 - 9.0*sh)/(1.0 - sh);
-#endif
+    -4.0/3.0*EvtDiLog::DiLog(sh) 
+    -2.0/9.0*EvtConst::pi*EvtConst::pi
+    -2.0/3.0*log(sh)*log(1.0-sh)
+    -1.0/9.0*(2.0+7.0*sh)*log(1.0 - sh)/sh
+    -2.0/9.0*sh*(3.0 - 2.0*sh)*log(sh)/pow((1.0 - sh),2) 
+    +1.0/18.0*(5.0 - 9.0*sh)/(1.0 - sh);
   double eta79 = 1.0 + alphas*omega79/EvtConst::pi;
 
   double c7c9 = abs(c7eff)*real(c9eff);
@@ -651,59 +623,31 @@ double EvtbTosllAmp::dGdsdupProb(double mb, double ms, double ml,
 
   double alphas = 0.119/
      (1 + 0.119*log(pow(4.8,2)/pow(91.1867,2))*23.0/12.0/EvtConst::pi);
-#ifdef WIN32
-  double omega9 = - 2.0/9.0*EvtConst::pi*EvtConst::pi - 4.0/3.0*DDILOG(sh)
-                 - 2.0/3.0*log(sh)*log(1.0-sh)
-                 - (5.0+4.0*sh)/(3.0*(1.0+2.0*sh)) * log(1.0-sh)
-                 - 2.0*sh*(1.0+sh)*(1.0-2.0*sh)
-                 /(3.0*pow(1.0-sh,2)*(1.0+2.0*sh)) * log(sh)
-                 + (5.0+9.0*sh-6.0*sh*sh)/(6.0*(1.0-sh)*(1.0+2.0*sh));
-#else
-  double omega9 = - 2.0/9.0*EvtConst::pi*EvtConst::pi - 4.0/3.0*ddilog_(sh)
-                 - 2.0/3.0*log(sh)*log(1.0-sh)
-                 - (5.0+4.0*sh)/(3.0*(1.0+2.0*sh)) * log(1.0-sh)
-                 - 2.0*sh*(1.0+sh)*(1.0-2.0*sh)
-                 /(3.0*pow(1.0-sh,2)*(1.0+2.0*sh)) * log(sh)
-                 + (5.0+9.0*sh-6.0*sh*sh)/(6.0*(1.0-sh)*(1.0+2.0*sh));
-#endif
+  double omega9 = - 2.0/9.0*EvtConst::pi*EvtConst::pi 
+    - 4.0/3.0*EvtDiLog::DiLog(sh)
+    - 2.0/3.0*log(sh)*log(1.0-sh)
+    - (5.0+4.0*sh)/(3.0*(1.0+2.0*sh)) * log(1.0-sh)
+    - 2.0*sh*(1.0+sh)*(1.0-2.0*sh)
+    /(3.0*pow(1.0-sh,2)*(1.0+2.0*sh)) * log(sh)
+    + (5.0+9.0*sh-6.0*sh*sh)/(6.0*(1.0-sh)*(1.0+2.0*sh));
   double eta9 = 1.0 + alphas*omega9/EvtConst::pi;
 
-#ifdef WIN32
   double omega7 = -8.0/3.0*log(4.8/mb)
-                  -4.0/3.0*DDILOG(sh) 
-                  -2.0/9.0*EvtConst::pi*EvtConst::pi
-                  -2.0/3.0*log(sh)*log(1.0-sh)
-                  -log(1-sh)*(8.0+sh)/(2.0+sh)/3.0 
+    -4.0/3.0*EvtDiLog::DiLog(sh) 
+    -2.0/9.0*EvtConst::pi*EvtConst::pi
+    -2.0/3.0*log(sh)*log(1.0-sh)
+    -log(1-sh)*(8.0+sh)/(2.0+sh)/3.0 
     -2.0/3.0*sh*(2.0 - 2.0*sh - sh*sh)*log(sh)/pow((1.0 - sh),2)/(2.0 + sh)
     -(16.0 - 11.0*sh - 17.0*sh*sh)/18.0/(2.0 + sh)/(1.0 - sh);
-#else
-  double omega7 = -8.0/3.0*log(4.8/mb)
-                  -4.0/3.0*ddilog_(sh) 
-                  -2.0/9.0*EvtConst::pi*EvtConst::pi
-                  -2.0/3.0*log(sh)*log(1.0-sh)
-                  -log(1-sh)*(8.0+sh)/(2.0+sh)/3.0 
-    -2.0/3.0*sh*(2.0 - 2.0*sh - sh*sh)*log(sh)/pow((1.0 - sh),2)/(2.0 + sh)
-    -(16.0 - 11.0*sh - 17.0*sh*sh)/18.0/(2.0 + sh)/(1.0 - sh);
-#endif
   double eta7 = 1.0 + alphas*omega7/EvtConst::pi;
-
-#ifdef WIN32
+  
   double omega79 = -4.0/3.0*log(4.8/mb)
-                   -4.0/3.0*DDILOG(sh) 
-                   -2.0/9.0*EvtConst::pi*EvtConst::pi
-                   -2.0/3.0*log(sh)*log(1.0-sh)
-                   -1.0/9.0*(2.0+7.0*sh)*log(1.0 - sh)/sh
-                   -2.0/9.0*sh*(3.0 - 2.0*sh)*log(sh)/pow((1.0 - sh),2) 
-                   +1.0/18.0*(5.0 - 9.0*sh)/(1.0 - sh);
-#else
-  double omega79 = -4.0/3.0*log(4.8/mb)
-                   -4.0/3.0*ddilog_(sh) 
-                   -2.0/9.0*EvtConst::pi*EvtConst::pi
-                   -2.0/3.0*log(sh)*log(1.0-sh)
-                   -1.0/9.0*(2.0+7.0*sh)*log(1.0 - sh)/sh
-                   -2.0/9.0*sh*(3.0 - 2.0*sh)*log(sh)/pow((1.0 - sh),2) 
-                   +1.0/18.0*(5.0 - 9.0*sh)/(1.0 - sh);
-#endif
+    -4.0/3.0*EvtDiLog::DiLog(sh) 
+    -2.0/9.0*EvtConst::pi*EvtConst::pi
+    -2.0/3.0*log(sh)*log(1.0-sh)
+    -1.0/9.0*(2.0+7.0*sh)*log(1.0 - sh)/sh
+    -2.0/9.0*sh*(3.0 - 2.0*sh)*log(sh)/pow((1.0 - sh),2) 
+    +1.0/18.0*(5.0 - 9.0*sh)/(1.0 - sh);
   double eta79 = 1.0 + alphas*omega79/EvtConst::pi;
 
   double c7c9 = abs(c7eff)*real(c9eff);

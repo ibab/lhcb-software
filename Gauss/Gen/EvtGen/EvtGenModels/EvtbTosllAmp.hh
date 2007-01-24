@@ -20,11 +20,6 @@
 
 #ifndef EVTBTOSLLAMP_HH
 #define EVTBTOSLLAMP_HH
-#ifdef WIN32
-extern "C" double __stdcall DDILOG( const double & sh ) ;
-#else
-extern "C" double ddilog_(const double & sh);
-#endif
 class EvtAmp;
 class EvtId;
 class EvtbTosllFF;
