@@ -1,11 +1,12 @@
 ! =============================================================================
-! $Id: release.notes,v 1.28 2006-12-21 10:37:23 marcocle Exp $
+! $Id: release.notes,v 1.29 2007-01-24 14:59:28 marcocle Exp $
 ! =============================================================================
 ! package Tools/CondDBUI
 ! package manager : Marco Clemencic / Nicolas Gilardi
 ! =============================================================================
 
-! 2006-12-21 - Marco CLEMENCIC
+!=========== Tools/CondDBUI v1r1 2007-01-24 ===================================
+! 2006-12-21 - Marco Clemencic
  - Added a function to change the encoding of XML files to ISO-8895-1 before
    storing them (it is the default encoding on Oracle at CERN).
  - Added alias CondDBBrowser
