@@ -1,4 +1,6 @@
+#if !defined(i386) && !defined(_WIN32)
 #define GAUDIKERNEL_KERNEL_H    // disable include
+#endif
 
 #include "dis.hxx"
 #include "RTL/rtl.h"

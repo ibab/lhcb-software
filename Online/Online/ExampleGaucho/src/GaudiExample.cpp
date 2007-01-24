@@ -1,4 +1,4 @@
-// $Id: GaudiExample.cpp,v 1.2 2007-01-16 16:48:25 evh Exp $
+// $Id: GaudiExample.cpp,v 1.3 2007-01-24 20:42:24 frankb Exp $
 
 // Include files
 #include "GaudiKernel/MsgStream.h"
@@ -22,8 +22,7 @@ namespace win {
 
 
 // Static Factory declaration
-static const AlgFactory<GaudiExample>  Factory;
-const IAlgFactory& GaudiExampleFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(GaudiExample)
 
 // Constructor
 //------------------------------------------------------------------------------

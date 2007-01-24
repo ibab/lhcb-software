@@ -1,4 +1,7 @@
+#if !defined(i386) && !defined(_WIN32)
 #define GAUDIKERNEL_KERNEL_H    // disable include
+#endif
+
 #include "dis.hxx"
 #include "GaudiKernel/IMessageSvc.h"
 #include "GaudiOnline/DimTaskFSM.h"

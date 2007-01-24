@@ -13,8 +13,7 @@
 namespace AIDA { class IBaseHistogram; }
 
 // Factory for instantiation of service objects
-static SvcFactory<MonitorSvc> s_factory;
-const  ISvcFactory& MonitorSvcFactory = s_factory;
+DECLARE_SERVICE_FACTORY(MonitorSvc)
 
 // UNIQUE Interface identifiers defined elsewhere
 //! need the next declaration ?  compiler seems to find the static var

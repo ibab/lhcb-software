@@ -1,4 +1,4 @@
-// $Id: DimHisto.cpp,v 1.2 2007-01-16 16:33:44 evh Exp $
+// $Id: DimHisto.cpp,v 1.3 2007-01-24 20:42:24 frankb Exp $
 
 #include "GaudiKernel/StatusCode.h"
 #include "GaudiKernel/ISvcLocator.h"
@@ -333,7 +333,7 @@ void DimHistoService::serviceHandler() {
         << " iDataEntries = " << iDataEntries-1 << " binEntries = " << entries << " binHeight = " << mean << " binRms = " << rms
         << " binError = " << m_hprof->binError(AIDA::IAxis::UNDERFLOW_BIN)
         << " iDataSumOfWeights = " << iDataSumOfWeights-1 << " sumOfWeights = " << sumOfWeights
-        << " iDataSumOfSquaredWeights = " << iDataSumOfSquaredWeights-1 << " sumOfSquaredWeights = " << sumOfSquaredWeights i
+        << " iDataSumOfSquaredWeights = " << iDataSumOfSquaredWeights-1 << " sumOfSquaredWeights = " << sumOfSquaredWeights 
         << endmsg;
 
     // The "in range" bins
@@ -353,7 +353,7 @@ void DimHistoService::serviceHandler() {
           << " iDataEntries = " << iDataEntries-1 << " binEntries = " << entries << " binHeight = " << mean << " binRms = " << rms
           << " binError = " << m_hprof->binError(ixBin)
           << " iDataSumOfWeights = " << iDataSumOfWeights-1 << " sumOfWeights = " << sumOfWeights
-          << " iDataSumOfSquaredWeights = " << iDataSumOfSquaredWeights-1 << " sumOfSquaredWeights = " << sumOfSquaredWeights i
+          << " iDataSumOfSquaredWeights = " << iDataSumOfSquaredWeights-1 << " sumOfSquaredWeights = " << sumOfSquaredWeights 
           << endmsg;
 
     }
@@ -374,7 +374,7 @@ void DimHistoService::serviceHandler() {
         << " iDataEntries = " << iDataEntries-1 << " binEntries = " << entries << " binHeight = " << mean << " binRms = " << rms
         << " binError = " << m_hprof->binError(AIDA::IAxis::OVERFLOW_BIN)
         << " iDataSumOfWeights = " << iDataSumOfWeights-1 << " sumOfWeights = " << sumOfWeights
-        << " iDataSumOfSquaredWeights = " << iDataSumOfSquaredWeights-1 << " sumOfSquaredWeights = " << sumOfSquaredWeights i
+        << " iDataSumOfSquaredWeights = " << iDataSumOfSquaredWeights-1 << " sumOfSquaredWeights = " << sumOfSquaredWeights
         << endmsg;
  
 

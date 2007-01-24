@@ -1,4 +1,4 @@
-// $Id: ParentAlg.cpp,v 1.2 2006-07-27 16:01:14 evh Exp $
+// $Id: ParentAlg.cpp,v 1.3 2007-01-24 20:42:24 frankb Exp $
 
 // Include files
 #include "GaudiKernel/MsgStream.h"
@@ -18,11 +18,8 @@ namespace win {
 #endif
 
 
-
-
 // Static Factory declaration
-static const AlgFactory<ParentAlg>  Factory;
-const IAlgFactory& ParentAlgFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(ParentAlg)
 
 // Constructor
 //------------------------------------------------------------------------------

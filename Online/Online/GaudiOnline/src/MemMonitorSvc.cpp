@@ -290,3 +290,6 @@ string MemMonitorSvc::clientName(Client owner)  {
   // NULL pointer or Unknown interface:
   return "";
 }
+
+void MemMonitorSvc::declareInfo(CSTR nam, const AIDA::IBaseHistogram* var,CSTR dsc,Client own) 
+{ i_publish(regItem(nam,dsc,own),dynamic_cast<const AIDA::IHistogram*>(var)); }

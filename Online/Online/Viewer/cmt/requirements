@@ -4,24 +4,24 @@ version v1r2
 branches doc src cmt
 
 use ROOT v* LCG_Interfaces
-use DIM v* Online
+use DIM v*  Online
 
 include_dirs $(VIEWERRROOT)
 
 # Viewer does not build library
 ignore_pattern package_stamps
 
-application Viewer ../src/Viewer.cpp ../src/DimInfoHistos.cpp
-application SaveHistos ../src/SaveHistos.cpp ../src/DimInfoHistos.cpp
+application Viewer     -import=ROOT ../src/Viewer.cpp ../src/DimInfoHistos.cpp
+application SaveHistos -import=ROOT ../src/SaveHistos.cpp ../src/DimInfoHistos.cpp
 
 # ========================= set macros ============================
-#macro Viewer_cppflags "/I C:\root\include /I C:\vanphil\dim_new\dim"
-#macro Viewer_linkopts "C:\vanphil\dim_new\bin\dim.lib C:\root\lib\*.lib"
-
 # For linux:
-macro Viewer_cppflags "-Dunix -D_REENTRANT -I $(ROOTSYS)/include -I /afs/cern.ch/lhcb/online/control/DIM/v16r4/slc3_ia32_gcc323/include"
-macro Viewer_linkopts "-L$(ROOTSYS)/lib -lCore -lCint -lHist -lGraf -lGraf3d -lGpad -lTree -lRint -lPostscript -lMatrix -lPhysics -lpthread -lm -ldl -rdynamic /afs/cern.ch/lhcb/online/control/DIM/v16r4/slc3_ia32_gcc323/bin/libdim.a"
+macro_append Viewer_cppflags "-Dunix -D_REENTRANT" WIN32 ""
+macro_append Viewer_linkopts "-lHist -lGraf -lGraf3d -lGpad -lTree -lRint -lPostscript -lMatrix -lPhysics -lpthread -lm -ldl -rdynamic" \
+  WIN32 ""
 
-macro SaveHistos_cppflags "-Dunix -D_REENTRANT -I $(ROOTSYS)/include -I /afs/cern.ch/lhcb/online/control/DIM/v16r4/slc3_ia32_gcc323/include"
-macro SaveHistos_linkopts "-L$(ROOTSYS)/lib -lCore -lCint -lHist -lGraf -lGraf3d -lGpad -lTree -lRint -lPostscript -lMatrix -lPhysics -lpthread -lm -ldl -rdynamic /afs/cern.ch/lhcb/online/control/DIM/v16r4/slc3_ia32_gcc323/bin/libdim.a"
 
+macro_append SaveHistos_cppflags "-Dunix -D_REENTRANT " WIN32 ""
+
+macro_append SaveHistos_linkopts "-lHist -lGraf -lGraf3d -lGpad -lTree -lRint -lPostscript -lMatrix -lPhysics -lpthread -lm -ldl -rdynamic" \
+ WIN32 ""

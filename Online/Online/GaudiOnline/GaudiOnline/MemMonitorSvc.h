@@ -10,6 +10,7 @@
 class MsgStream;
 namespace AIDA {
   class IHistogram;
+  class IBaseHistogram;
   class IHistogram1D;
   class IHistogram2D;
   class IHistogram3D;
@@ -204,6 +205,10 @@ namespace LHCb  {
     {  i_publish(regItem(nam,dsc,own),var);                   }
     virtual void declareInfo(CSTR nam,const AIDA::IHistogram* var,  CSTR dsc,Client own)
     {  i_publish(regItem(nam,dsc,own),var);                   }
+    /// Temp hack !
+    virtual void declareInfo(CSTR nam, const AIDA::IBaseHistogram* var,CSTR dsc,Client own);
+    virtual void declareInfo(CSTR /*nam*/,CSTR /*format*/,const void* /*var*/,int /*size*/,CSTR /*desc*/,Client /*own*/) 
+    {}
 
     /** Undeclare monitoring information
       * @param name Monitoring information name knwon to the external system

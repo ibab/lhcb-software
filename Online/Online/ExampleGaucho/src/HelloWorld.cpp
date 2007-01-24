@@ -1,4 +1,4 @@
-// $Id: HelloWorld.cpp,v 1.1.1.1 2005-06-15 16:19:21 cattanem Exp $
+// $Id: HelloWorld.cpp,v 1.2 2007-01-24 20:42:24 frankb Exp $
 
 // Include files
 #include "GaudiKernel/MsgStream.h"
@@ -9,8 +9,7 @@
 
 
 // Static Factory declaration
-static const AlgFactory<HelloWorld>  Factory;
-const IAlgFactory& HelloWorldFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(HelloWorld)
 
 // Constructor
 //------------------------------------------------------------------------------
