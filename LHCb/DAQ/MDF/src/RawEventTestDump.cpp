@@ -1,4 +1,4 @@
-// $Id: RawEventTestDump.cpp,v 1.5 2006-10-05 16:38:02 frankb Exp $
+// $Id: RawEventTestDump.cpp,v 1.6 2007-01-24 19:21:50 frankb Exp $
 // Include files from Gaudi
 #include "GaudiKernel/Algorithm.h" 
 #include "GaudiKernel/IDataProviderSvc.h" 
@@ -80,7 +80,7 @@ namespace LHCb  {
               int cnt = 0;
               std::stringstream s;
               for(const int* p=r->begin<int>(); p != r->end<int>(); ++p)  {
-                s << std::hex << std::setw(8) << (void*)*p << " ";
+                s << std::hex << std::setw(8) << std::hex << *p << " ";
                 if ( ++cnt == 10 ) {
                   info << "  Data:" << s.str() << endmsg;
                   s.str("");

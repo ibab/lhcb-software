@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MDFIO.cpp,v 1.12 2006-10-27 16:11:18 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MDFIO.cpp,v 1.13 2007-01-24 19:21:50 frankb Exp $
 //	====================================================================
 //  MDFIO.cpp
 //	--------------------------------------------------------------------
@@ -241,7 +241,7 @@ bool LHCb::MDFIO::checkSumOk(int checksum, const char* src, int datSize, bool pr
         if ( prt )  {
           MsgStream log(m_msgSvc, m_parent);
           log << MSG::ERROR << "Data corruption. [Invalid checksum] expected:" 
-            << (void*)checksum << " got:" << (void*)chk << endmsg;
+              << std::hex << checksum << " got:" << std::hex << chk << endmsg;
         }
         return false;
       }

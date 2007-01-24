@@ -11,6 +11,7 @@ use GaudiKernel   v*
 use DAQEvent      v* Event            -no_auto_imports
 use CASTOR        v* LCG_Interfaces   -no_auto_imports
 #use dCache        v* LCG_Interfaces -no_auto_imports
+macro LCG_system slc4_amd64_gcc34
 
 # ==================== libraries ==================================
 document install_includes install_includes

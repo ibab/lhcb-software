@@ -6,7 +6,7 @@
 //
 //	Author     : M.Frank
 //====================================================================
-// $Id: StreamDescriptor.cpp,v 1.8 2006-10-19 12:35:13 frankb Exp $
+// $Id: StreamDescriptor.cpp,v 1.9 2007-01-24 19:21:50 frankb Exp $
 
 // Include files
 #include "MDF/StreamDescriptor.h"
@@ -55,7 +55,7 @@ namespace Networking {
   #include <netdb.h>
   int (*closesocket)(int) = ::close;
   typedef int SockOpt_t;
-  typedef size_t AddrLen_t;
+  typedef socklen_t AddrLen_t;
 #endif
   static const int _SOCK_STREAM = SOCK_STREAM;
   static const int _IPPROTO_IP  = IPPROTO_IP;
