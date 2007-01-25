@@ -85,7 +85,7 @@ int thr_flag;
 {
 struct sigaction sig_info;
 sigset_t set;
-int i, pid, ret = 0;
+int pid, ret = 0;
 
 	pid = getpid();
 	if( !sigvec_done) 
@@ -93,11 +93,13 @@ int i, pid, ret = 0;
 	    Inside_ast = 0;
 	    Alarm_runs = 0;
 	    DIM_last_time = 0;
+/*
 	    for(i = 0; i < MAX_TIMER_QUEUES + 2; i++)
 	    {
 	        timer_queues[i].queue_head = 0;
 			timer_queues[i].remove_entries = 0;
 	    }
+*/
 		if( timer_queues[SPECIAL_QUEUE].queue_head == NULL ) {
 			timer_queues[SPECIAL_QUEUE].queue_head = (TIMR_ENT *)malloc(sizeof(TIMR_ENT));
 			memset(timer_queues[SPECIAL_QUEUE].queue_head, 0, sizeof(TIMR_ENT));
@@ -147,18 +149,20 @@ int num;
 int dim_dtq_init(thr_flag)
 int thr_flag;
 {
-	int i, tid = 1;
+	int tid = 1;
 	void create_alrm_thread(void);
 
 	if( !sigvec_done ) {
 		Inside_ast = 0;
 	    Alarm_runs = 0;
 	    DIM_last_time = 0;
+/*
 	    for(i = 0; i < MAX_TIMER_QUEUES + 2; i++)
 	    {
 	        timer_queues[i].queue_head = 0;
 			timer_queues[i].remove_entries = 0;
 	    }
+*/
 		if( timer_queues[SPECIAL_QUEUE].queue_head == NULL ) {
 			timer_queues[SPECIAL_QUEUE].queue_head = (TIMR_ENT *)malloc(sizeof(TIMR_ENT));
 			memset(timer_queues[SPECIAL_QUEUE].queue_head, 0, sizeof(TIMR_ENT));
@@ -184,6 +188,24 @@ int thr_flag;
 }
 
 #endif
+
+void dim_dtq_stop()
+{
+/*
+	int i;
+
+	for(i = 0; i < MAX_TIMER_QUEUES + 2; i++)
+	{
+		if( timer_queues[i].queue_head != NULL)
+		{
+			dtq_delete(i);
+			free((TIMR_ENT *)timer_queues[i].queue_head);
+			timer_queues[i].queue_head = 0;
+		}
+	}
+*/
+	sigvec_done = 0;
+}
 
 static int get_current_time(millies)
 int *millies;

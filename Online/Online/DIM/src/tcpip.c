@@ -68,13 +68,13 @@ typedef int pid_t;
 static int Threads_on = 0;
 
 static int init_done = FALSE;		/* Is this module initialized? */
-static int	queue_id;
+static int	queue_id = 0;
 
 #ifdef WIN32
 static struct sockaddr_in DIM_sockname;
 #endif
 
-static int DIM_IO_path[2];
+static int DIM_IO_path[2] = {0,0};
 static int DIM_IO_valid = 1;
 
 static int Write_timeout = 5;
@@ -197,21 +197,29 @@ int thr_flag;
 	if(Threads_on)
 	{
 #ifdef WIN32
-		if( (DIM_IO_path[0] = socket(AF_INET, SOCK_STREAM, 0)) == -1 ) 
+		if(!DIM_IO_path[0])
 		{
-			perror("socket");
-			return(0);
+			if( (DIM_IO_path[0] = socket(AF_INET, SOCK_STREAM, 0)) == -1 ) 
+			{
+				perror("socket");
+				return(0);
+			}
+		
+			DIM_sockname.sin_family = PF_INET;
+			addr = 0;
+			DIM_sockname.sin_addr = *((struct in_addr *) &addr);
+			DIM_sockname.sin_port = htons((ushort) 2000); 
+			ioctl(DIM_IO_path[0], FIONBIO, &flags);
 		}
-		DIM_sockname.sin_family = PF_INET;
-		addr = 0;
-		DIM_sockname.sin_addr = *((struct in_addr *) &addr);
-		DIM_sockname.sin_port = htons((ushort) 2000); 
-		ioctl(DIM_IO_path[0], FIONBIO, &flags);
 #else
-		pipe(DIM_IO_path);
+		if(!DIM_IO_path[0])
+		{
+			pipe(DIM_IO_path);
+		}
 #endif
 	}
-	queue_id = dtq_create();
+	if(!queue_id)
+		queue_id = dtq_create();
 
 #ifdef WIN32
 /*
@@ -226,6 +234,11 @@ int thr_flag;
 #endif
 	init_done = 1;
 	return(1);
+}
+
+void dim_tcpip_stop()
+{
+	init_done = 0;
 }
 
 static int enable_sig(conn_id)
@@ -252,9 +265,10 @@ int conn_id;
 	{
 #ifdef WIN32
 		DIM_IO_valid = 0;
-		ret = connect(DIM_IO_path[0], (struct sockaddr*)&DIM_sockname, sizeof(DIM_sockname));
+//		ret = connect(DIM_IO_path[0], (struct sockaddr*)&DIM_sockname, sizeof(DIM_sockname));
 
-		closesock(DIM_IO_path[0]);	  
+		closesock(DIM_IO_path[0]);
+		DIM_IO_path[0] = 0;
 		if( (DIM_IO_path[0] = socket(AF_INET, SOCK_STREAM, 0)) == -1 ) 
 		{
 			perror("socket");

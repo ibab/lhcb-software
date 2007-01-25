@@ -4,6 +4,10 @@
 ! Purpose     : CMT Interface to DIM 
 !-----------------------------------------------------------------------------
 
+!=========================== DIM v16r6 2007-01-25 ============================
+! 2007-01-25 Markus Frank
+ - import latest sources from Clara
+
 !=========================== DIM v16r5 2006-09-11 ============================
 ! 2006-09-11 - Florence Ranjard
  - remove setting of DIM_release_area, 

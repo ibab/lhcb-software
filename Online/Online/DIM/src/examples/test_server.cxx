@@ -91,6 +91,19 @@ void add_serv_bool(const bool & boolval)
 	serv = new DimService("TEST/BOOLVAL_CONST","C:1", (void *)&boolval, 1);
 }
 
+class ServWithHandler : public DimService
+{
+	int value;
+
+	void serviceHandler()
+	{
+		value++;
+//		setData(value);
+	}
+public :
+	ServWithHandler(char *name) : DimService(name, value) { value = 0;};
+};
+
 int main()
 {
 	int ival = 0;
@@ -99,6 +112,8 @@ int main()
 //	DimServer::setDnsNode("axdes2.cern.ch");
 	string s1;
 	bool boolval;
+	ServWithHandler *testServ;
+
 /*
 	int i, arr[15000];
 	DimService *servp;
@@ -113,6 +128,8 @@ int main()
 	boolval = 0;
 	add_serv_bool(boolval);
 	CmndServ cmdsvr;
+
+	testServ = new ServWithHandler("MY_NEW_TEST_SERVICE_WITH_HANDLER");
 	DimServer::start("TEST");
 
 /*

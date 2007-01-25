@@ -536,8 +536,8 @@ DNS_DIS_PACKET *packet;
 			/*
 			exit(2);
 			*/
-			dis_stop_serving();
 			error_handler(0, DIM_FATAL, DIMDNSDUPLC, str);
+			dis_stop_serving();
 /*
 			exit_tag = 0;
 			exit_code = 2;
@@ -551,8 +551,8 @@ DNS_DIS_PACKET *packet;
 /*
 			exit(2);
 */
-			dis_stop_serving();
 			error_handler(0, DIM_FATAL, DIMDNSREFUS, str);
+			dis_stop_serving();
 /*
 			exit_tag = 0;
 			exit_code = 2;
@@ -597,12 +597,15 @@ register int flag;
 			MAX_TASK_NAME-4 );
 		dis_dns_p->task_name[MAX_TASK_NAME-4-1] = '\0';
 		get_node_addr( dis_dns_p->node_addr );
+/*
 		dis_dns_p->port = htovl(Port_number);
+*/
 		dis_dns_p->pid = htovl(getpid());
 		dis_dns_p->protocol = htovl(Protocol);
 		dis_dns_p->src_type = htovl(SRC_DIS);
 		dis_dns_p->format = htovl(MY_FORMAT);
 	}
+	dis_dns_p->port = htovl(Port_number);
 	serv_regp = dis_dns_p->services;
 	n_services = 0;
 	if( flag == NONE ) {
@@ -721,13 +724,16 @@ register int flag;
 			MAX_TASK_NAME-4 );
 		dis_dns_p->task_name[MAX_TASK_NAME-4-1] = '\0';
 		get_node_addr( dis_dns_p->node_addr );
+/*
 		dis_dns_p->port = htovl(Port_number);
+*/
 		dis_dns_p->pid = htovl(getpid());
 		dis_dns_p->protocol = htovl(Protocol);
 		dis_dns_p->src_type = htovl(SRC_DIS);
 		dis_dns_p->format = htovl(MY_FORMAT);
 	}
 
+	dis_dns_p->port = htovl(Port_number);
 	serv_regp = dis_dns_p->services;
 	n_services = 0;
 	tot_n_services = 0;
@@ -1690,6 +1696,7 @@ void dis_stop_serving()
 register SERVICE *servp, *prevp;
 SERVICE *dis_hash_service_get_next_remove();
 int dis_hash_service_init();
+void dim_stop_threads(void);
 
 	Serving = 0;
 	dis_hash_service_init();
@@ -1722,6 +1729,9 @@ int dis_hash_service_init();
 		dtq_rem_entry(Dis_timer_q, Dns_timr_ent);
 		Dns_timr_ent = NULL;
 	}
+	dtq_delete(Dis_timer_q);
+	Dis_timer_q = 0;
+	dim_stop_threads();
 }
 
 /* find service by name */
@@ -1924,6 +1934,7 @@ REQUEST_PTR *reqpp;
 int remove;
 {
 	int conn_id;
+	CLIENT *clip;
 
 	DISABLE_AST
 	conn_id = reqp->conn_id;
@@ -1936,7 +1947,8 @@ int remove;
 	free(reqp);
 	free(reqpp);
 /* Would do it too early, the client will disconnect anyway
-	if(remove)
+*/
+	if((remove) && (!Serving))
 	{
 		clip = find_client(conn_id);
 		if(clip)
@@ -1947,7 +1959,7 @@ int remove;
 			}
 		}
 	}
-*/
+
 	ENABLE_AST
 	return(1);
 }
