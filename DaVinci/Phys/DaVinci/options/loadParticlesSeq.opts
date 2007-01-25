@@ -8,7 +8,7 @@ SeqLoadStdParticles.Members += {"PreLoadParticles/LoadStdLooseMuons",
                                 "PreLoadParticles/LoadStdLooseDownstreamProtons",
                                 "PreLoadParticles/LoadStdLoosePhotons",
                                 "PreLoadParticles/LoadStdLooseCnvPhotons",
-                                "PreLoadParticles/LoadStdLooseAllPhotons"
+                                "PreLoadParticles/LoadStdLooseAllPhotons",
                                 "PreLoadParticles/LoadStdUnbiasedHeavyDimuon",
                                 "PreLoadParticles/LoadStdLooseJpsi2ee",
                                 "PreLoadParticles/LoadStdLooseD02KK",
