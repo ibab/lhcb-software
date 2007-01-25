@@ -26,3 +26,4 @@ use PyDIM         v1r1     Online
 use Saver         v1r0     Online
 use UPI           v1r1     Online
 use Viewer        v1r1     Online
+use OnlineHistDB  v1r0     Online

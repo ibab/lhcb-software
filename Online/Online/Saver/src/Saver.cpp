@@ -56,8 +56,7 @@
 
 
 // Static Factory declaration
-static const AlgFactory<Saver>  Factory;
-const IAlgFactory& SaverFactory = Factory;
+DECLARE_ALGORITHM_FACTORY(Saver)
 
 // Constructor
 //------------------------------------------------------------------------------
