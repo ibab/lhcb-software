@@ -1,4 +1,4 @@
-// $Id: GaudiExample.cpp,v 1.3 2007-01-24 20:42:24 frankb Exp $
+// $Id: GaudiExample.cpp,v 1.4 2007-01-25 18:35:51 frankb Exp $
 
 // Include files
 #include "GaudiKernel/MsgStream.h"
@@ -9,6 +9,7 @@
 #include "AIDA/IAxis.h"
 
 #include <cstring>
+#include <cmath>
 
 #ifdef WIN32
 namespace win {
