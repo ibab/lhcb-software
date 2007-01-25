@@ -4,6 +4,8 @@
 ! Package manager: Stefan Roiser
 !-----------------------------------------------------------------------------
 
+
+!============================ GaudiObjDesc v9r8p1 =======================
 ! 2007-01-25 Stefan
  - Add the -m32 option to the gccxml flags for its invocation. This is needed
    when producing 32 bit code on a 64 bit machine. The option is triggered 
