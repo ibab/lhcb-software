@@ -4,6 +4,10 @@
 ! Purpose     : Common particles
 !-----------------------------------------------------------------------------
 
+! 2007-01-25 - Juan PALACIOS for Cristina Lazzeroni
+  - options/StandardD0.opts
+    . Some cut tightening.
+
 ! 2007-01-23 - Juan PALACIOS
   - options/StandardOptions.opts
     . Add StandardMergedPi0s.opts and StandardResolvedPi0s.opts

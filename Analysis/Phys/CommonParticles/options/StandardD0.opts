@@ -1,6 +1,6 @@
-// $Id: StandardD0.opts,v 1.9 2007-01-16 17:35:13 pkoppenb Exp $
+// $Id: StandardD0.opts,v 1.10 2007-01-25 12:17:39 jpalac Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.9 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.10 $
 // ============================================================================
 
 /** @file 
@@ -103,15 +103,16 @@ StdLooseD02KsPiPi.DaughterFilter.Selections = {"pi+ :     KinFilterCriterion/PiK
 StdLooseD02KsPiPi.DaughterFilter.PiKin.MinPt = 0.4*GeV;
 StdLooseD02KsPiPi.DaughterFilter.KS0Kin.MinPt = 1.0*GeV;
 StdLooseD02KsPiPi.KillOverlap = true;
-StdLooseD02KsPiPi.Window = 120.*MeV ; // 
-StdLooseD02KsPiPi.MinPt = 1.8*GeV; 
+//StdLooseD02KsPiPi.Window = 120.*MeV ; // 
+StdLooseD02KsPiPi.Window = 80.*MeV ; //
+StdLooseD02KsPiPi.MinPt = 1.8*GeV; // MeV
 StdLooseD02KsPiPi.MotherFilter.Selections = { "D0 :    VtxFilterCriterion,
                                              PVIPFilterCriterion,
-                                             KinFilterCriterion " };
+                                             DaughterVertexFilterCriterion" };
 StdLooseD02KsPiPi.MotherFilter.VtxFilterCriterion.MaxChi2 = 30.0;  
 StdLooseD02KsPiPi.MotherFilter.PVIPFilterCriterion.MinIPsignif = 1.0;
-
-
+StdLooseD02KsPiPi.MotherFilter.DaughterVertexFilterCriterion.DaughterName = "KS0";
+StdLooseD02KsPiPi.MotherFilter.DaughterVertexFilterCriterion.MinDistance = 8*mm; //NEW
 /*************************************************************************
 *  Standard Loose D0->KsKK
 *  @author C. Lazzeroni
@@ -125,15 +126,16 @@ StdLooseD02KsKK.DaughterFilter.Selections = {"K+ :     KinFilterCriterion/KKin",
 StdLooseD02KsKK.DaughterFilter.KKin.MinPt = 0.3*GeV;
 StdLooseD02KsKK.DaughterFilter.KS0Kin.MinPt = 0.8*GeV;
 StdLooseD02KsKK.KillOverlap = true;
-StdLooseD02KsKK.Window = 120.*MeV ; // 
-StdLooseD02KsKK.MinPt = 1.5*GeV; 
+//StdLooseD02KsKK.Window = 120.*MeV ; //
+StdLooseD02KsKK.Window = 80.*MeV ; // 
+StdLooseD02KsKK.MinPt = 1.5*GeV; // MeV
 StdLooseD02KsKK.MotherFilter.Selections = { "D0 :    VtxFilterCriterion,
                                              PVIPFilterCriterion,
-                                             KinFilterCriterion " };
+                                             DaughterVertexFilterCriterion" };
 StdLooseD02KsKK.MotherFilter.VtxFilterCriterion.MaxChi2 = 40.0;  
 StdLooseD02KsKK.MotherFilter.PVIPFilterCriterion.MinIPsignif = 0.7;
-
-
+StdLooseD02KsPiPi.MotherFilter.DaughterVertexFilterCriterion.DaughterName = "KS0";
+StdLooseD02KsPiPi.MotherFilter.DaughterVertexFilterCriterion.MinDistance = 8*mm; //NEW
 /*************************************************************************
 *  Standard Loose D0->KKPiPi No CC 
 *  @author A.Powell
@@ -143,8 +145,7 @@ StdLooseD02KsKK.MotherFilter.PVIPFilterCriterion.MinIPsignif = 0.7;
 StdLooseD02KKPiPiNoCC.PhysDesktop.InputLocations = {"Phys/StdLoosePions", "Phys/StdLooseKaons"};
 // Cuts for Daughters
 StdLooseD02KKPiPiNoCC.DecayDescriptor = "D0 -> K+ K- pi+ pi-";
-StdLooseD02KKPiPiNoCC.DaughterFilter.Selections = { "K+ : KinFilterCriterion/KinFilterKaons, 
-                                                          PVIPFilterCriterion/PVIPFilterKaons",
+StdLooseD02KKPiPiNoCC.DaughterFilter.Selections = { "K+ : KinFilterCriterion/KinFilterKaons, PVIPFilterCriterion/PVIPFilterKaons",
 						    "pi+ : KinFilterCriterion/KinFilterPions, PVIPFilterCriterion/PVIPFilterPions"};	
 StdLooseD02KKPiPiNoCC.DaughterFilter.KinFilterKaons.MinMomentum = 3.75 * GeV;
 StdLooseD02KKPiPiNoCC.DaughterFilter.KinFilterKaons.MinPt = 275.0 * MeV;
@@ -174,8 +175,7 @@ StdLooseD02KKPiPiNoCC.MotherFilter.FlightDistanceFilterCriterion.MinFSPV = 4.0;
 StdLooseD02KPiPiPiCA.PhysDesktop.InputLocations = {"Phys/StdLoosePions", "Phys/StdLooseKaons"};
 // Cuts for Daughters
 StdLooseD02KPiPiPiCA.DecayDescriptor = "[D0 -> K- pi+ pi- pi+]cc";
-StdLooseD02KPiPiPiCA.DaughterFilter.Selections = { "K+ : KinFilterCriterion/KinFilterKaons, 
-                                                         PVIPFilterCriterion/PVIPFilterKaons",
+StdLooseD02KPiPiPiCA.DaughterFilter.Selections = { "K+ : KinFilterCriterion/KinFilterKaons, PVIPFilterCriterion/PVIPFilterKaons",
 						    "pi+ : KinFilterCriterion/KinFilterPions, PVIPFilterCriterion/PVIPFilterPions"};	
 StdLooseD02KPiPiPiCA.DaughterFilter.KinFilterKaons.MinMomentum = 3.75 * GeV;
 StdLooseD02KPiPiPiCA.DaughterFilter.KinFilterKaons.MinPt = 275.0 * MeV;
