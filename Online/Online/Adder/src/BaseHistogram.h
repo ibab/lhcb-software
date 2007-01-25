@@ -7,7 +7,7 @@
 //  GNU Library General Public License described in the LGPL.txt 
 
 #include "TH1D.h" 
-#include "GaudiPI/AIDA_Annotation/AIDA_Annotation.h"
+#include "AIDA/IAnnotation.h"
 #include "AIDA/IAxis.h"
 
 

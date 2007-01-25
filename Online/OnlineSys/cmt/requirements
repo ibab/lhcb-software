@@ -8,7 +8,7 @@ branches cmt doc
 #=======================================================
 use MDF           v2r3     DAQ
 
-#use Adder         v1r0     Online
+use Adder         v1r0     Online
 use CCPCHist      v1r0     Online
 use DIM		  v16r5p2  Online
 #use DimCond       v1r0     Online
@@ -23,6 +23,6 @@ use OnlineKernel  v1r4     Online
 use OnlineTasks   v1r0     Online
 use PyDIM         v1r1     Online
 #use RunDatabase   v1r1     Online
-#use Saver         v1r0     Online
+use Saver         v1r0     Online
 use UPI           v1r1     Online
 use Viewer        v1r1     Online

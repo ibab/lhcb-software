@@ -24,7 +24,7 @@
 #include "Adder.h"
 
 #include <cstring>
-#include <stdlib.h>
+#include <cstdlib>
 #include <iostream>
 #include <string>
 #include <vector>
@@ -41,10 +41,9 @@
 // for adder 
 #include "DimInfoHistos.h"
 #include "DimInfoTitle.h"
-#include "BaseHistogram.h"
-#include "GaudiPI/AIDA_ROOT/Histogram1D.h"
-#include "GaudiPI/AIDA_ROOT/Histogram2D.h"
-#include "GaudiPI/AIDA_ROOT/Profile1D.h"
+#include "AIDA/IHistogram1D.h"
+#include "AIDA/IHistogram2D.h"
+#include "AIDA/IProfile1D.h"
 
 // for online monitoring
 #include "GaudiKernel/IMonitorSvc.h" 
@@ -53,10 +52,21 @@
 #include "GaudiKernel/Bootstrap.h"
 #include "RTL/rtl.h"
 
-// Static Factory declaration
-static const AlgFactory<Adder>  Factory;
-const IAlgFactory& AdderFactory = Factory;
+#include "GaudiKernel/HistogramBase.h"
 
+namespace {
+  template <typename T, typename S> T* getRootHisto(S* h)  {
+    T* p = 0;
+    Gaudi::HistogramBase* b = dynamic_cast<Gaudi::HistogramBase*>(h);
+    if ( b ) {
+      p = dynamic_cast<T*>(b->representation());
+    }
+    return p;
+  }
+}
+
+// Static Factory declaration
+DECLARE_ALGORITHM_FACTORY(Adder);
 
 // Constructor
 //------------------------------------------------------------------------------
@@ -91,7 +101,6 @@ StatusCode Adder::initialize() {
   return StatusCode::SUCCESS;
 }
 
-
 //------------------------------------------------------------------------------
 StatusCode Adder::execute() {
   //------------------------------------------------------------------------------
@@ -116,12 +125,9 @@ StatusCode Adder::execute() {
   std::vector<AIDA::IHistogram1D*> h;
   std::vector<AIDA::IHistogram2D*> h2d;
   std::vector<AIDA::IProfile1D*> p;
-  typedef AIDA_ROOT::BaseHistogram<TH1D,AIDA::IHistogram> rootpart;
-  typedef AIDA_ROOT::BaseHistogram<TH2D,AIDA::IHistogram> rootpart2d;
-  typedef AIDA_ROOT::BaseHistogram<TProfile,AIDA::IProfile> rootpartp;
-  std::vector<rootpart*> base;
-  std::vector<rootpart2d*> base2d;
-  std::vector<rootpartp*> basep;
+  std::vector<TH1*> base;
+  std::vector<TH2*> base2d;
+  std::vector<TProfile*> basep;
   counter++;
 
   
@@ -403,13 +409,14 @@ StatusCode Adder::execute() {
 	   } 
 	   h.push_back(histoSvc->book("/stat/adder"+m_algorithmname[j]+m_histogramname[j],j, m_histogramname[j], numberOfBinsX,lowerEdge, upperEdge));
            declareInfo(m_algorithmname[j]+"/"+m_histogramname[j],h[hsize],title);
-           base.push_back(dynamic_cast<rootpart*>(h[hsize]));    
+           TH1* h1 = getRootHisto<TH1,AIDA::IHistogram1D>(h[hsize]);
+           base.push_back(h1);
            if ( ! base[hsize] ) { 
               msg << MSG::ERROR << "Dynamic cast failed to get root part of aida h"  << endreq;       
 	   }
            // representation gives us now the ROOT part of h[hsize]
            // sum is a ROOT object   
-	   sum.push_back(dynamic_cast<TH1*>(&base[hsize]->representation()));
+	   sum.push_back(h1);
 	   if ( ! sum[hsize] ) { 
 	      msg << MSG::ERROR <<  "Dynamic cast failed from rootpart base into th1 sum" << endreq;       
 	   }
@@ -427,13 +434,14 @@ StatusCode Adder::execute() {
 	   } 
 	   h2d.push_back(histoSvc->book("/stat/adder"+m_algorithmname[j]+m_histogramname[j],j,m_histogramname[j], numberOfBinsX,lowerEdge, upperEdge, numberOfBinsY,ylowerEdge, yupperEdge));
 	   declareInfo(m_algorithmname[j]+"/"+m_histogramname[j],h2d[h2dsize],title2d);
-           base2d.push_back(dynamic_cast<rootpart2d*>(h2d[h2dsize]));    
+           TH2* h2 = getRootHisto<TH2,AIDA::IHistogram2D>(h2d[h2dsize]);
+           base2d.push_back(h2);    
            if ( ! base2d[h2dsize] ) { 
               msg << MSG::ERROR << "Dynamic cast failed to get root part of aida h2d"  << endreq;       
 	   }
            // representation gives us now the ROOT part of h2d[h2dsize]
            // sum is a ROOT object   
-	   sum2d.push_back(dynamic_cast<TH2*>(&base2d[h2dsize]->representation()));
+	   sum2d.push_back(h2);
 	   if ( ! sum2d[h2dsize] ) { 
 	      msg << MSG::ERROR <<  "Dynamic cast failed from rootpart base into th2 sum" << endreq;       
 	   }
@@ -451,13 +459,14 @@ StatusCode Adder::execute() {
 
 	   p.push_back(histoSvc->bookProf("/stat/adder"+m_algorithmname[j]+m_histogramname[j],j, m_histogramname[j], numberOfBinsX,lowerEdge, upperEdge));
 	   declareInfo(m_algorithmname[j]+"/"+m_histogramname[j],p[psize],titlep);
-           basep.push_back(dynamic_cast<rootpartp*>(p[psize]));    
+           TProfile* hp = getRootHisto<TProfile,AIDA::IProfile1D>(p[psize]);
+           basep.push_back(hp);    
            if ( ! basep[psize] ) { 
               msg << MSG::ERROR << "Dynamic cast failed to get root part of aida p"  << endreq;       
 	   }
            // representation gives us now the ROOT part of p[psize]
            // sum is a ROOT object   
-	   sump.push_back(dynamic_cast<TProfile*>(&basep[psize]->representation()));
+	   sump.push_back(hp);
 	   if ( ! sump[psize] ) { 
 	      msg << MSG::ERROR <<  "Dynamic cast failed from rootpart base into tprofile sum" << endreq;       
 	   }

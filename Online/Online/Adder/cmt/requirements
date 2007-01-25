@@ -5,21 +5,18 @@ branches cmt doc src
 
 include_dirs $(ADDERROOT)
 
-use GaudiKernel v* 
-use GaudiAlg v*
-use AIDA v* LCG_Interfaces
-use ROOT v* LCG_Interfaces
-use GaudiPI v* 
-use DIM v* Online
-use OnlineKernel v* Online
-use Gaucho v* Online
-use GaudiAud v*
+use GaudiKernel  v* 
+use GaudiAlg     v*
+use AIDA         v*  LCG_Interfaces
+use ROOT         v*  LCG_Interfaces
+use DIM          v*  Online
+use OnlineKernel v*  Online
+use Gaucho       v*  Online
+use GaudiAud     v*
 
 library Adder ../src/Adder_dll.cpp ../src/Adder_load.cpp ../src/Adder.cpp ../src/Adder.h  ../src/DimInfoHistos.cpp ../src/DimInfoTitle.cpp 
 
 apply_pattern component_library library=Adder
 
 private
-macro_append ROOT_linkopts " -lHist -lGraf -lGraf3d -lGpad -lRint -lPostscript -lMatrix -lPhysics -lm -ldl -rdynamic " WIN32 ""
-
-
+macro_append Adder_shlibflags " -lHist -lGraf -lGraf3d -lGpad -lRint -lPostscript -lMatrix -lPhysics -lm -ldl -rdynamic " WIN32 ""
