@@ -4,6 +4,12 @@
 ! Package manager: Stefan Roiser
 !-----------------------------------------------------------------------------
 
+! 2007-01-25 Stefan
+ - Add the -m32 option to the gccxml flags for its invocation. This is needed
+   when producing 32 bit code on a 64 bit machine. The option is triggered 
+   through a macro "gccxmlopts" defined in the requirements file and used in
+   the linux fragment of obj2dict
+
 !============================ GaudiObjDesc v9r8 =========================
 ! 2006-12-21 - Marco Cattaneo
  - Added support for exclusion block in selection file

@@ -7,7 +7,7 @@ endif
 
 $(dest)${package}.lcgdict : ${OBJS} 
 	@echo Producing dictionaries using genreflex command
-	export LD_LIBRARY_PATH=$(Python_home)/lib; cd $(dest); $(genreflex_cmd) ${package}_dictionary.h --no_membertypedefs --selection_file ${package}_selection.xml --rootmap=$(rootmap) --rootmap-lib=$(libprefix)${package}Dict.$(shlibsuffix) --gccxmlpath=$(GCCXML_home)/bin $(pp_cppflags) $(includes) $(use_pp_cppflags) $(use_obj2dict_gccxmlflags)
+	export LD_LIBRARY_PATH=$(Python_home)/lib; cd $(dest); $(genreflex_cmd) ${package}_dictionary.h --no_membertypedefs --selection_file ${package}_selection.xml --rootmap=$(rootmap) --rootmap-lib=$(libprefix)${package}Dict.$(shlibsuffix) --gccxmlpath=$(GCCXML_home)/bin $(pp_cppflags) $(includes) $(use_pp_cppflags) $(gccxmlopts) $(use_obj2dict_gccxmlflags)
 	@( if [ -e $(dest)${package}.lcgdict ]; then touch $(dest)${package}.lcgdict; \
 	else echo /dev/null > $(dest)${package}.lcgdict; fi ) 
 

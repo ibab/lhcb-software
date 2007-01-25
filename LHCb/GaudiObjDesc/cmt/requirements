@@ -5,6 +5,10 @@ version v9r8
 include_path none
 macro xmlsrc "xml"
 
+macro gccxmlopts "" \
+     slc3-ia32 "--gccxmlopt=\'--gccxml-cxxflags -m32\'" \
+     slc4-ia32 "--gccxmlopt=\'--gccxml-cxxflags -m32\'"
+
 # GOD fragments header file and dictionary production
 make_fragment obj2doth -header=obj2doth_header -trailer=obj2doth_trailer
 make_fragment obj2dict -header=obj2dict_header -trailer=obj2dict_trailer
