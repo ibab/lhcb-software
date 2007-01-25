@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.115 2007-01-25 09:34:32 cattanem Exp $
+# $Id: requirements,v 1.116 2007-01-25 12:45:56 cattanem Exp $
 # =============================================================================
 package LHCbKernel
 author  M.Frank    CERN/LHCb
@@ -47,8 +47,8 @@ macro_append LHCbKernel_cppflags "" \
 apply_pattern component_library library=LHCbKernelDict
 apply_pattern linker_library    library=LHCbKernel
 
-macro_append LHCbKernel_linkopts  "-L$(ROOT_home)/lib  -lReflex -lMathCore -lSmatrix " \
-             WIN32  "/LIBPATH:$(ROOT_home)/lib libReflex.lib libMathCore.lib libSmatrix.lib "
+macro_append ROOT_linkopts " -L$(ROOT_home)/lib -lReflex -lMathCore -lSmatrix " \
+             WIN32 " /LIBPATH:$(ROOT_home)/lib libReflex.lib libMathCore.lib libSmatrix.lib "
 
 private
 #============================================================================
