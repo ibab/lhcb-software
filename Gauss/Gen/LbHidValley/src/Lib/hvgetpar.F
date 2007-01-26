@@ -1,8 +1,11 @@
-C $Id: hvgetpar.F,v 1.2 2006-11-30 12:37:01 ibelyaev Exp $
+C $Id: hvgetpar.F,v 1.3 2007-01-26 14:54:11 ibelyaev Exp $
 C ======================================================================
-C CVS tag $Name: not supported by cvs2svn $ , version  $Revision: 1.2 $
+C CVS tag $Name: not supported by cvs2svn $ , version  $Revision: 1.3 $
 C ======================================================================
 C $Log: not supported by cvs2svn $
+C Revision 1.2  2006/11/30 12:37:01  ibelyaev
+C  v1r1: veryfy all opts-files and selection
+C
 C Revision 1.1.1.1  2006/10/28 14:06:41  ibelyaev
 C New package: "Hidden Valley" production 
 C
@@ -41,22 +44,22 @@ C ======================================================================
 C- Local Variables
 C ======================================================================
       CHARACTER*(*)    TITLE 
-      INTEGER          LENOCC 
-      EXTERNAL         LENOCC 
+      INTEGER          LENOCCHV 
+      EXTERNAL         LENOCCHV 
 C ======================================================================
       
       HVGETPAR = -100000 
       
-      IF     ( 'ZPMASS' .EQ. TITLE(1:LENOCC(TITLE)) ) THEN 
+      IF     ( 'ZPMASS' .EQ. TITLE(1:LENOCCHV(TITLE)) ) THEN 
         HVGETPAR = ZPMASS 
-      ELSEIF ( 'PIMASS' .EQ. TITLE(1:LENOCC(TITLE)) ) THEN 
+      ELSEIF ( 'PIMASS' .EQ. TITLE(1:LENOCCHV(TITLE)) ) THEN 
         HVGETPAR = PIMASS 
-      ELSEIF ( 'PIZLIF' .EQ. TITLE(1:LENOCC(TITLE)) ) THEN 
+      ELSEIF ( 'PIZLIF' .EQ. TITLE(1:LENOCCHV(TITLE)) ) THEN 
         HVGETPAR = PIZLIF 
-      ELSEIF ( 'PIPLIF' .EQ. TITLE(1:LENOCC(TITLE)) ) THEN 
+      ELSEIF ( 'PIPLIF' .EQ. TITLE(1:LENOCCHV(TITLE)) ) THEN 
         HVGETPAR = PIPLIF 
       ELSE 
-        WRITE(*,*) 'INVALID NAME:"' , TITLE(1:LENOCC(TITLE)), '"'
+        WRITE(*,*) 'INVALID NAME:"' , TITLE(1:LENOCCHV(TITLE)), '"'
       ENDIF 
       
   999 RETURN
