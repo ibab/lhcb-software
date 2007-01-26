@@ -17,6 +17,7 @@ document install_includes install_includes
 library MDF *.cpp -import=DAQEvent -import=ROOT
 macro_append MDF_shlibflags ' ' WIN32 ' $(DAQEvent_linkopts) '
 apply_pattern linker_library library=MDF
+apply_pattern generate_rootmap library=MDF
 apply_pattern ld_library_path
 
 library MDF_RFIO ../rfio/*.cpp  -import=CASTOR
