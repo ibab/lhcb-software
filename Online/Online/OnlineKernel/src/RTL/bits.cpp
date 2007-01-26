@@ -146,19 +146,13 @@ int BF_alloc(char *base, int bf_size, int size_wanted, int* pos_found)   {
 int BF_count(const char* base,int bf_size,int* pos,int* size) {
   bool set = false;  
   const unsigned char* msk = bit_mask;
-  int need = *size, max_pos = bf_size, max_len = 0, len = 0, start_pos = 0;
+  int max_pos = bf_size, max_len = 0, len = 0, start_pos = 0;
   for(int i=0, j=0, c=*base; i < bf_size/BITS_PER_BYTE; ++i, j=0, c=*(base+i))  {
     if ( !set && (c == 0xFF || (c != 0 && max_len > BITS_PER_BYTE)) ) {
       continue;
     }
-    else if ( c == 0 )  {
-      if ( !set )  {
-        set = true;
-        start_pos = (i*BITS_PER_BYTE);
-        len = 0;
-      }
+    else if ( set && c == 0 )  {
       len += BITS_PER_BYTE;
-      if ( len >= need ) goto Done;
       continue;
     }
     for( msk=bit_mask+j; j<BITS_PER_BYTE; ++j, ++msk)  {
@@ -169,7 +163,6 @@ int BF_count(const char* base,int bf_size,int* pos,int* size) {
           len = 0;
         }
         ++len;
-        if ( len >= need ) goto Done;
         continue;
       }
       if ( len > max_len )  {
@@ -180,20 +173,17 @@ int BF_count(const char* base,int bf_size,int* pos,int* size) {
       start_pos = (i*BITS_PER_BYTE) + j;
       set = false;
     }
-    if ( !set )  {
-      start_pos = BITS_PER_BYTE*i;
-      len = BITS_PER_BYTE;
-      set = true;
-    }
+    start_pos = BITS_PER_BYTE*i;
+    len = BITS_PER_BYTE;
+    set = true;
   }
-Done:
   if ( len > max_len )  {
     max_pos = start_pos;
     max_len = len;
   }
   *pos    = max_pos;
   *size   = max_len;
-  return *size >= need ? 1 : 0;
+  return 1;
 }
 
 int BF_set(char* base, int pos, int len)   {
@@ -250,14 +240,14 @@ void BF_print(const void* field, int len, size_t ncols, bool prt_hdr)  {
     printf("\n");
     for(j=0, n=0; j < ncols; ++j )  {
       for(k=0; k<32; ++k, ++n)  {
-        printf("%c",char(((n+1))%10 == 0 ? (n+1)/10+'0' : ' '));
+        printf("%c",((n+1))%10 == 0 ? (n+1)/10+'0' : ' ');
       }
       if ( j < (ncols-1) ) printf (" ");
     }
     printf("\n");
     for(j=0, n=0; j < 4; ++j )  {
       for(k=0; k<32; ++k, ++n)  {
-        printf("%d",char((n+1)%10));
+        printf("%d",(n+1)%10);
       }
       if ( j < (ncols-1) ) printf (" ");
     }
