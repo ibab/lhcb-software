@@ -19,8 +19,7 @@ use GaudiKernel   v*
 document install_includes install_includes
 library  GaudiOnline  *.cpp -import=DIM -import=DAQEvent -import=MDF -import=AIDA
 apply_pattern linker_library   library=GaudiOnline
-apply_pattern ld_library_path
-apply_pattern libraryShr       library=GaudiOnline
+apply_pattern generate_rootmap library=GaudiOnline
 macro_append GaudiOnline_shlibflags ' $(MDFlib_linkopts) '
 # ==================== private test application =============================
 application Gaudi "../main/*.cpp"

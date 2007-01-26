@@ -1,4 +1,4 @@
-// $Id: OnlineEvtSelector.h,v 1.14 2006-12-07 09:36:07 frankb Exp $
+// $Id: OnlineEvtSelector.h,v 1.15 2007-01-26 20:23:36 frankb Exp $
 //====================================================================
 //  OnlineEvtSelector.h
 //--------------------------------------------------------------------
@@ -13,7 +13,7 @@
 //  Created    : 4/01/99
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/OnlineEvtSelector.h,v 1.14 2006-12-07 09:36:07 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/OnlineEvtSelector.h,v 1.15 2007-01-26 20:23:36 frankb Exp $
 
 #ifndef GAUDIONLINE_ONLINEEVTSELECTOR_H
 #define GAUDIONLINE_ONLINEEVTSELECTOR_H 1
@@ -156,6 +156,8 @@ namespace LHCb  {
     int                           m_partID;
     /// Decode data buffer
     bool                          m_decode;
+    /// Allow suspending event access
+    bool                          m_allowSuspend;
     /// Input buffer name (default="EVENT")
     std::string                   m_input;
     /// Requirement properties

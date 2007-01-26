@@ -46,7 +46,7 @@ namespace LHCb  {
 }
 #endif // GAUDIONLINE_ONLINECONTEXT_H
 
-// $Id: OnlineEvtSelector.cpp,v 1.25 2006-12-14 21:27:47 frankb Exp $
+// $Id: OnlineEvtSelector.cpp,v 1.26 2007-01-26 20:23:36 frankb Exp $
 //====================================================================
 //  OnlineEvtSelector.cpp
 //--------------------------------------------------------------------
@@ -229,6 +229,7 @@ OnlineEvtSelector::OnlineEvtSelector(const std::string& nam, ISvcLocator* svc)
   //  Frequency=MANY/PERC;Perc=20.5"
   declareProperty("Input",m_input  = "EVENT");
   declareProperty("Decode",m_decode = true);
+  declareProperty("AllowSuspend",m_allowSuspend = false);
   declareProperty("PartitionID",m_partID = 0x103);
   declareProperty("PartitionBuffer",m_partitionBuffer=false);
   declareProperty("REQ1", m_Rqs[0] = "");
@@ -309,33 +310,37 @@ StatusCode OnlineEvtSelector::finalize()    {
 void OnlineEvtSelector::handle(const Incident& inc)    {
   info("Got incident:"+inc.source()+" of type "+inc.type());
   if ( inc.type() == "DAQ_CANCEL" )  {
-    lib_rtl_unlock(m_suspendLock);
+    if ( m_allowSuspend ) lib_rtl_unlock(m_suspendLock);
   }
 }
 
 // ISuspendable implementation: suspend operation
 StatusCode OnlineEvtSelector::suspend()  {
-  if ( !lib_rtl_is_success(lib_rtl_clear_event(m_suspendLock)) )  {
-    return error("Cannot lock to suspend operations.");
+  if ( m_allowSuspend ) {
+    if ( !lib_rtl_is_success(lib_rtl_clear_event(m_suspendLock)) )  {
+      return error("Cannot lock to suspend operations.");
+    }
   }
   return StatusCode::SUCCESS;
 }
 
 // ISuspendable implementation: resume operation
 StatusCode OnlineEvtSelector::resume()   {
-  if ( !lib_rtl_is_success(lib_rtl_set_event(m_suspendLock)) )  {
-    // What to do ?? 
-    // This is called too often and thread safe access to the state
-    // is not simple....it would require a second lock to embrace:
-    //
-    // obj->lock();
-    // if ( obj->isSuspended() )  {
-    //   obj->resume()
-    // }
-    // obj->unlock();
-    //
-    // return error("Cannot unlock to resume operations.");
-    error("Cannot unlock to resume operations.");
+  if ( m_allowSuspend ) {
+    if ( !lib_rtl_is_success(lib_rtl_set_event(m_suspendLock)) )  {
+      // What to do ?? 
+      // This is called too often and thread safe access to the state
+      // is not simple....it would require a second lock to embrace:
+      //
+      // obj->lock();
+      // if ( obj->isSuspended() )  {
+      //   obj->resume()
+      // }
+      // obj->unlock();
+      //
+      // return error("Cannot unlock to resume operations.");
+      error("Cannot unlock to resume operations.");
+    }
   }
   return StatusCode::SUCCESS;
 }
@@ -354,8 +359,10 @@ StatusCode OnlineEvtSelector::next(Context& ctxt) const {
     if ( pCtxt != 0 )   {
       pCtxt->freeEvent();
       // Need to aquire the mutex if suspended
-      if ( !lib_rtl_is_success(lib_rtl_wait_for_event(m_suspendLock)) )  {
-        error("Cannot lock to suspend operations.");
+      if ( m_allowSuspend ) {
+        if ( !lib_rtl_is_success(lib_rtl_wait_for_event(m_suspendLock)) )  {
+          error("Cannot lock to suspend operations.");
+        }
       }
       StatusCode sc = pCtxt->receiveEvent();
       return sc;

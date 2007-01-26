@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MDFReceiver.cpp,v 1.5 2006-12-14 18:59:19 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MDFReceiver.cpp,v 1.6 2007-01-26 20:23:36 frankb Exp $
 //  ====================================================================
 //  MDFReceiver.cpp
 //  --------------------------------------------------------------------
@@ -64,10 +64,10 @@ StatusCode MDFReceiver::execute()    {
 }
 
 int MDFReceiver::receiveEvent(const amsuc_info* info)    {
-  MsgStream log(msgSvc(),name());
   char     source[64];
   unsigned int facility;
   if ( info->status != AMS_SUCCESS )  {
+    MsgStream log(msgSvc(),name());
     log << MSG::ERROR << "Failed to spy on message. status:" << info->status << ". " << endmsg;
     return AMS_SUCCESS;
   }
@@ -77,6 +77,7 @@ int MDFReceiver::receiveEvent(const amsuc_info* info)    {
     size_t size = e.len;
     sc = ::amsc_read_message(e.data,&size,source,&facility,0);
     if ( AMS_SUCCESS != sc )   {
+      MsgStream log(msgSvc(),name());
       log << MSG::ERROR << "Failed to read message. status:" << sc << ". " << endmsg;
       return AMS_SUCCESS;
     }
@@ -88,7 +89,8 @@ int MDFReceiver::receiveEvent(const amsuc_info* info)    {
     e.len     = size;
     return m_prod->sendEvent() == MBM_NORMAL ? AMS_SUCCESS : AMS_ERROR;
   }
-  log << MSG::ERROR << "Failed to retrieve " << info->length 
+  MsgStream err(msgSvc(),name());
+  err << MSG::ERROR << "Failed to retrieve " << info->length 
       << " bytes of space. status:" << sc << ". " << endmsg;
   return AMS_SUCCESS;
 }

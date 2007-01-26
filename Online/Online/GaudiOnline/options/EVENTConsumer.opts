@@ -2,9 +2,11 @@
 ApplicationMgr.HistogramPersistency  = "NONE";
 ApplicationMgr.ExtSvc               += { "LHCb::MEPManager/MEPManager", "LHCb::OnlineEvtSelector/EventSelector" };
 ApplicationMgr.Runable               = "LHCb::EventRunable/Runable";
+ApplicationMgr.SvcOptMapping        += { "LHCb::EventRunable/Runable"};
 EventDataSvc.RootCLID                = 1;
 EventDataSvc.EnableFaultHandler      = true;
 EventPersistencySvc.CnvServices      = { "LHCb::RawDataCnvSvc/RawDataCnvSvc" };
+ApplicationMgr.SvcOptMapping        += { "LHCb::RawDataCnvSvc/RawDataCnvSvc" };
 MEPManager.PartitionID               = @OnlineEnv.PartititonID;
 MEPManager.Buffers                   = { "EVENT" };
 EventSelector.Input                  = "EVENT";

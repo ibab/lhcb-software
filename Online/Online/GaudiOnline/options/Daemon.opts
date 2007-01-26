@@ -1,8 +1,5 @@
 #pragma print off
-ApplicationMgr.HistogramPersistency  = "NONE";
-ApplicationMgr.EvtSel                = "NONE";
-ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EmptyEventLoop";
-ApplicationMgr.Runable               = "LHCb::OnlineRunable/Runable";
+#include "$GAUDIONLINEROOT/options/Main.opts"
 Runable.Wait                         = 3;
 ApplicationMgr.ExtSvc                = {"IncidentSvc"};
-MessageSvc.OutputLevel               = 4;  // Minimum is Warning
+MessageSvc.OutputLevel               = 1;  // Minimum is Warning

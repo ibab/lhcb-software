@@ -1,12 +1,8 @@
-ApplicationMgr.HistogramPersistency  = "NONE";
-ApplicationMgr.EvtSel                = "NONE";
-ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EmptyEventLoop";
-ApplicationMgr.Runable               = "LHCb::OnlineRunable/Runable";
+#include "$GAUDIONLINEROOT/options/Main.opts"
 ApplicationMgr.ExtSvc                = { "LHCb::DimErrorLogger/Display"};
-MessageSvc.OutputLevel  = 1;  // Minimum is Error
 MessageSvc.Format = "% F%42W%S%7W%R%T %0W%M";
-MessageSvc.LoggerOnly                = true;
-Display.OutputLevel                  = 1;
+//MessageSvc.LoggerOnly                = true;
+Display.OutputLevel                  = 2;
 Display.OutputMessage                = true;
 Display.PrintService                 = false;
 Display.AcceptVerboseMessages        = true;

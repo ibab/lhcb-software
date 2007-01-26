@@ -1,6 +1,5 @@
+#include "$GAUDIONLINEROOT/options/Remap.opts"
 ApplicationMgr.HistogramPersistency  = "NONE";
 ApplicationMgr.EvtSel                = "NONE";
-ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EmptyEventLoop";
-ApplicationMgr.Runable               = "LHCb::OnlineRunable/Runable";
-Runable.Wait                         = true;
-MessageSvc.OutputLevel               = 4;
+Runable.Wait                         = 1;
+MessageSvc.OutputLevel               = 3;

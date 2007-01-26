@@ -1,4 +1,4 @@
-// $Id: DimErrorLogger.cpp,v 1.10 2007-01-24 20:42:24 frankb Exp $
+// $Id: DimErrorLogger.cpp,v 1.11 2007-01-26 20:23:36 frankb Exp $
 
 #if !(defined(i386) || defined(_WIN32))
 #define GAUDIKERNEL_KERNEL_H    // disable include
@@ -200,7 +200,7 @@ void LHCb::DimErrorLogger::reportMessage(int typ, const std::string& src, const 
   if ( m_outputMsg ) {
     Message m(src,typ,msg);
     m.setFormat(m_outputFmt);
-    std::cout << m << std::endl;
+    std::cout << "Log:" << m << std::endl;
   }
 }
 

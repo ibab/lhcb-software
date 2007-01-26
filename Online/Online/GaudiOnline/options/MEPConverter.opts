@@ -2,6 +2,9 @@
 ApplicationMgr.HistogramPersistency  = "NONE";
 ApplicationMgr.EvtSel                = "NONE";
 ApplicationMgr.Dlls                  = { "MDF","GaudiOnline"};
+ApplicationMgr.SvcOptMapping         = {"LHCb::OnlineRunable/EmptyEventLoop",
+                                        "LHCb::MEPConverterSvc/Runable"
+};
 ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EmptyEventLoop";
 ApplicationMgr.Runable               = "LHCb::MEPConverterSvc/Runable";
 ApplicationMgr.ExtSvc               += { "IncidentSvc", "LHCb::MEPManager/MEPManager" };

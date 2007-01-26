@@ -47,8 +47,8 @@ StatusCode LHCb::GaudiTask::run()  {
       ip->setProperty(StringProperty("AppName",""));
       ip->setProperty(StringProperty("EvtSel","NONE"));
       ip->setProperty(StringProperty("HistogramPersistency","NONE"));
-      ip->setProperty(StringProperty("Runable",        m_runable));
-      ip->setProperty(StringProperty("EventLoop",      m_evtloop));
+      //ip->setProperty(StringProperty("Runable",        m_runable));
+      //ip->setProperty(StringProperty("EventLoop",      m_evtloop));
       ip->setProperty(StringProperty("MessageSvcType", "LHCb::OnlineMessageSvc"));
       if ( m_mainOptions.empty() )  {
         ip->setProperty(StringProperty("JobOptionsType", "NONE"));
