@@ -48,24 +48,27 @@ use Radiative           v2r0p1  PhysSel
 ####################################################################
 use               LoKiSys          v5r0
 #===================================================================
-use               LoKiMC           v2r0 Phys
-use               LoKiGenMC        v2r0 Phys
-use               LoKiPhys         v3r0 Phys
-use               LoKiPhysMC       v3r0 Phys
-use               LoKiAlgo         v3r0 Phys
-use               LoKiAlgoMC       v3r0 Phys
-use               LoKiJets         v2r1 Phys
-use               LoKiDict         v4r5 Phys 
-use               LoKi             v5r0 Phys
-use               LoKiAll          v4r4 Phys
+use               LoKiMC           v2r0   Phys
+use               LoKiGenMC        v2r0   Phys
+use               LoKiPhys         v3r0   Phys
+use               LoKiPhysMC       v3r0   Phys
+use               LoKiAlgo         v3r1   Phys
+use               LoKiAlgoMC       v3r0   Phys
+use               LoKiJets         v2r1   Phys
+use               LoKiHybrid       v1r0   Phys 
+use               LoKiDict         v5r0   Phys 
+use               LoKi             v5r0   Phys
+use               LoKiAll          v5r0   Phys
 
-use               LoKiCoreTest     v1r2 Tests 
-use               LoKiMCTest       v1r0 Tests 
-use               LoKiGenTest      v1r2 Tests 
-use               LoKiPhysTest     v1r0 Tests 
-use               LoKiAlgoTest     v1r1 Tests 
-use               LoKiAlgoMCTest   v1r0 Tests 
-use               LoKiTests        v1r2 Tests
+#use               LoKiExample      v*   Ex 
+
+use               LoKiCoreTest     v1r2   Tests 
+use               LoKiMCTest       v1r0   Tests 
+use               LoKiGenTest      v1r2   Tests 
+use               LoKiPhysTest     v1r0   Tests 
+use               LoKiAlgoTest     v1r1   Tests 
+use               LoKiAlgoMCTest   v1r0   Tests 
+use               LoKiTests        v1r2   Tests
 
 ####################################################################
 use  Stripping          v6r0    Tools
