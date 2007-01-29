@@ -780,7 +780,7 @@ procedure DeclarePage(theName IN varchar2,theFolder IN varchar2,theDoc IN varcha
 begin
  savepoint beforeDPwrite;
  Nin := hlist.COUNT;
- if (Nin<1 or Cx.COUNT != Nin or Cy.COUNT != Nin or Sx.COUNT != Nin or Sy.COUNT != Nin) then
+ if (Cx.COUNT != Nin or Cy.COUNT != Nin or Sx.COUNT != Nin or Sy.COUNT != Nin) then
    raise_application_error(-20003,'incomplete input variables');
  end if;
  DeclarePageFolder(theFolder);

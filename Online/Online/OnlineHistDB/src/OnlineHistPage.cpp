@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistPage.cpp,v 1.2 2007-01-22 17:08:02 ggiacomo Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistPage.cpp,v 1.3 2007-01-29 17:25:55 ggiacomo Exp $
 
 #include "OnlineHistDB/OnlineHistPage.h"
 
@@ -68,7 +68,7 @@ OnlineHistPage::~OnlineHistPage(){
   std::vector<OnlineHistogram*>::iterator ih;
   for (ih = m_privh.begin();ih != m_privh.end(); ++ih) 
     delete *ih; 
-};
+}
 
 
 void OnlineHistPage::declareHistogram(OnlineHistogram* h,
@@ -131,8 +131,9 @@ bool OnlineHistPage::getHistLayout(OnlineHistogram* h,
   return found;
 }
 
-void OnlineHistPage::removeHistogram(OnlineHistogram* h,
+bool OnlineHistPage::removeHistogram(OnlineHistogram* h,
 				     unsigned int instance) {
+  bool out=false;
   int jh=findHistogram(h,instance);
   if (-1 != jh) {
     m_h.erase(m_h.begin()+jh);
@@ -140,35 +141,37 @@ void OnlineHistPage::removeHistogram(OnlineHistogram* h,
     m_cy.erase(m_cy.begin()+jh);
     m_sx.erase(m_sx.begin()+jh);
     m_sy.erase(m_sy.begin()+jh);
-    save();
+    out = save();
   }
+  return out;
 }
 
 
 
 
-void OnlineHistPage::save() {
+bool OnlineHistPage::save() {
+  bool out=true;
   stringstream hlist,cx,cy,sx,sy;
-  hlist << "OnlineHistDB.histotlist('";
+  hlist << "OnlineHistDB.histotlist(";
   cx << "OnlineHistDB.floattlist(";
   cy << "OnlineHistDB.floattlist(";
   sx << "OnlineHistDB.floattlist(";
   sy << "OnlineHistDB.floattlist(";
   for (unsigned int jh=0; jh<m_h.size() ; jh++) {
-    hlist << m_h[jh]->hid(); 
+    hlist << "'" << m_h[jh]->hid() << "'"; 
     cx << m_cx[jh] ;
     cy << m_cy[jh] ;
     sx << m_sx[jh] ;
     sy << m_sy[jh] ;
     if (jh < m_h.size()-1) {
-      hlist << "','";
+      hlist << ",";
       cx <<  ",";
       cy <<  ",";
       sx <<  ",";
       sy <<  ",";
     }
   }
-  hlist << "')";
+  hlist << ")";
   cx <<  ")";
   cy <<  ")";
   sx <<  ")";
@@ -182,12 +185,15 @@ void OnlineHistPage::save() {
     ",Cy => " << cy.str() <<
     ",Sx => " << sx.str() <<
     ",Sy => " << sy.str() << "); end;";
-  
+  cout << "command is " << command.str() <<endl;
+
   Statement *astmt=m_conn->createStatement(command.str()); 
   try{
     astmt->execute();
   }catch(SQLException ex)
     {
       dumpError(ex,"OnlineHistPage::save");
+      out=false;
     }
-};
+  return out;
+}

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistPage.h,v 1.2 2007-01-22 17:07:31 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistPage.h,v 1.3 2007-01-29 17:25:55 ggiacomo Exp $
 #ifndef ONLINEHISTPAGE_H
 #define ONLINEHISTPAGE_H 1
 /** @class  OnlineHistPage OnlineHistPage.h OnlineHistDB/OnlineHistPage.h
@@ -27,7 +27,7 @@ class OnlineHistPage : public OnlineHistDBEnv
 		    float Sx,
 		    float Sy,
 		    unsigned int instance=1);
-  void removeHistogram(OnlineHistogram* h,
+  bool removeHistogram(OnlineHistogram* h,
 		       unsigned int instance=1);
   const std::vector<OnlineHistogram*>& hlist() {return m_h;}
   bool getHistLayout(OnlineHistogram* h,
@@ -53,7 +53,7 @@ class OnlineHistPage : public OnlineHistDBEnv
   std::vector<float> m_sy;
   int findHistogram(OnlineHistogram* h,
 		    unsigned int instance=1) const;
-  void save();
+  bool save();
 };
 
 #endif // ONLINEHISTPAGE_H
