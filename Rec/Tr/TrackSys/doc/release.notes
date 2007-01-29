@@ -4,6 +4,10 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2007-01-29 - David Hutchcroft
+ - Added VeloOpenTracking.opts which retunes the VELO pattern recognition for 
+   the open VELO case
+
 !============================ TrackSys v4r0 2007-01-18 ======================
 ! 2007-01-18 - Marco Cattaneo
  - In RecoTracking.opts, introduce a "Track" process phase with Pat, PreFit and

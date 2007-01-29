@@ -1,0 +1,7 @@
+PatVeloRTracking.AdjacentSectors = true;
+PatVeloRTracking.rExtraTol = 28.;
+PatVeloRTracking.rMatchTol = 7.2;
+
+ToolSvc.PatVeloSpaceTool.PhiMatchTol = 0.90;
+ToolSvc.PatVeloSpaceTool.PhiFirstTol = 0.30;
+ToolSvc.PatVeloSpaceTool.AdjacentSectors = true;
