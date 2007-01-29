@@ -19,4 +19,4 @@ library Adder ../src/Adder_dll.cpp ../src/Adder_load.cpp ../src/Adder.cpp ../src
 apply_pattern component_library library=Adder
 
 private
-macro_append Adder_shlibflags " -lHist -lGraf -lGraf3d -lGpad -lRint -lPostscript -lMatrix -lPhysics -lm -ldl -rdynamic " WIN32 ""
+macro_append Adder_shlibflags " -lHist -lGraf -lGraf3d -lGpad -lRint -lPostscript -lMatrix -lPhysics -lm -ldl -rdynamic " WIN32 " libHist.lib libGraf.lib libGraf3d.lib libGpad.lib libRint.lib libPostscript.lib libMatrix.lib libPhysics.lib "

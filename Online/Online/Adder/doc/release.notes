@@ -1,6 +1,10 @@
 ! Package     : Adder
 ! Responsible : Eric van Herwijnen/Monica Pepe-Altarelli
 
+
+! 20070129 - Markus Frank
+        - Modify requirements to link library on WIN32 platforms
+
 ! 20070117 - Adder v1r1 Added support for 1D profile histograms
 
 ! 20061106 - Adder v1r0

@@ -1,6 +1,9 @@
 ! Package     : Saver
 ! Responsible : Eric van Herwijnen/Monica Pepe-Altarelli
 
+! 20070129 - Markus Frank
+        - Modify requirements to link library on WIN32 platforms
+
 ! 20070117 - Saver v1r1 supports 1D profile histograms
 
 ! 20061127 - Saver v1r0

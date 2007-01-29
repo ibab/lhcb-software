@@ -10,5 +10,8 @@ include_dirs        $(ONLINEHISTDBROOT) $(oracle_home)/include
 use GaudiKernel    v*
 use oracle         v*  LCG_Interfaces
 library             OnlineHistDB    *.cpp
+
 apply_pattern  linker_library library=OnlineHistDB 
-macro_append oracle_linkopts " -locci"
+macro_append OnlineHistDB_shlibflags " -locci " \
+  WIN32                              " oci.lib ociw32.lib oraocci10.lib "
+macro_remove oracle_linkopts "clntsh.lib"
