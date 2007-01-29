@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MDFIO.cpp,v 1.13 2007-01-24 19:21:50 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MDFIO.cpp,v 1.14 2007-01-29 14:59:45 frankb Exp $
 //	====================================================================
 //  MDFIO.cpp
 //	--------------------------------------------------------------------
@@ -128,7 +128,7 @@ StatusCode LHCb::MDFIO::commitRawBanks(int compTyp, int chksumTyp, void* const i
     h.H1->setOrbitNumber(~0x0);
     h.H1->setBunchID(~0x0);
     raw->adoptBank(hdrBank, true);
-    log1 << MSG::WARNING << "Adding dummy MDF/DAQ[DAQ_STATUS_BANK] information." << endmsg;
+    log1 << MSG::INFO << "Adding dummy MDF/DAQ[DAQ_STATUS_BANK] information." << endmsg;
     return commitRawBanks(raw,hdrBank,compTyp,chksumTyp,ioDesc);
     // log1 << MSG::ERROR << "Failed to access MDF header information." << endmsg;
     // return StatusCode::FAILURE;
