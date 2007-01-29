@@ -75,7 +75,8 @@ int amsuc_init( )   {
   return status != WT_SUCCESS ? status : AMS_SUCCESS;    
 }
 
-int amsuc_subscribe(unsigned int facility, amsuc_callback_t action, amsuc_callback_t broadcast, void* param)  {  if ( !inited ) return AMS_NOTINITED;
+int amsuc_subscribe(unsigned int facility, amsuc_callback_t action, amsuc_callback_t broadcast, void* param)  {
+  if ( !inited ) return AMS_NOTINITED;
   amsu_fac_entry *fac = find_facility(facility);
   if ( fac == (void*)fac_list )   {
     fac = new amsu_fac_entry;
@@ -149,7 +150,7 @@ int amsuc_dispatch( unsigned int, void* )  {
     deadentry = find_deadfacility(info.source);
     if (deadentry == (amsu_deadfac_entry*)deadfac_list)  {
       start_fac_scan();
-      amsu_fac_entry* entry   = next_fac();
+      amsu_fac_entry* entry = next_fac();
       while (entry != fac_list)  {
         if (entry->broadcast)   {
           info.status  = (*entry->broadcast)(&info, entry->param);

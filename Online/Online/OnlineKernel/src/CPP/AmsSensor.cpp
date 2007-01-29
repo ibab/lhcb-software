@@ -189,7 +189,7 @@ int AmsSensor::send( const Message* msg, const Address& dest)   {
 
 //----------------------------------------------------------------------------
 int AmsSensor::receive( Message** msg, Address* src, int timeout )  {
-  char source[64];
+  char source[128];
   unsigned int  facility;
   Message* message = (Message*)(new char[ MAXMSGSIZE + 4 ]);
   size_t size = MAXMSGSIZE;
@@ -206,7 +206,7 @@ int AmsSensor::receive( Message** msg, Address* src, int timeout )  {
 
 //----------------------------------------------------------------------------
 void AmsSensor::dispatch( void* /* id */ )  {
-  char     source[64], spym[80], *ptr;
+  char     source[128], spym[80], *ptr;
   size_t   size, len = sizeof(spym);
   Address  src;
 
@@ -239,7 +239,7 @@ void AmsSensor::dispatch( void* /* id */ )  {
 //-----------------------------------------------------------------------------
 int AmsSensor::dispatchBroadCast()   {
   size_t      size = 80, len = 0;
-  char        msg[84], source[64];
+  char        msg[84], source[128];
   Address     src;
 
   Message* message = (Message*)msg;

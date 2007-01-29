@@ -616,8 +616,8 @@ int _amsc_move_msgptr_to_user (amsqueue_t *m, void **buff, size_t *size,
     break;
   }
   if ( facility ) *facility = h->facility;
-  if ( from ) ::memcpy (from, h->source, sizeof (h->source));
-  if ( dest ) ::memcpy (dest, h->dest,   sizeof (h->dest));
+  if ( from ) ::strncpy(from, h->source, sizeof (h->source));
+  if ( dest ) ::strncpy(dest, h->dest,   sizeof (h->dest));
   return status;
 }
 

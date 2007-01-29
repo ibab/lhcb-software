@@ -35,13 +35,15 @@ sleep 2
 #  Monitors:
 #
 $BIGTERM MBMMon@${HOST} -e "setenv UTGID MBMMon; $gaudi_run libOnlineKernel.so mbm_mon" &
-$BIGTERM TANMon@${HOST} -e "setenv UTGID TANMon; $gaudi_run libOnlineKernel.so tanmon -c" &
+# $BIGTERM TANMon@${HOST} -e "setenv UTGID TANMon; $gaudi_run libOnlineKernel.so tanmon -c" &
 #
 sleep 2
 $MINITERM EvtProd@${HOST}   -e "setenv UTGID EvtProd  ; $gaudi_exe -opt=$GAUDIONLINEROOT/options/MEPConverter.opts -main=$GAUDIONLINEROOT/options/Main.opts "&
 $MINITERM EvtHolder@${HOST} -e "setenv UTGID EvtHolder; $gaudi_exe -opt=$GAUDIONLINEROOT/options/MEPHolder.opts -main=$GAUDIONLINEROOT/options/Main.opts "&
 $MINITERM Moore_0@${HOST}   -e "setenv UTGID Moore_0  ; $gaudi_exe -opt=$GAUDIONLINEROOT/options/ReadMBM.opts -main=$GAUDIONLINEROOT/options/Main.opts "&
 $MINITERM Moore_1@${HOST}   -e "setenv UTGID Moore_1  ; $gaudi_exe -opt=$GAUDIONLINEROOT/options/ReadMBM.opts -main=$GAUDIONLINEROOT/options/Main.opts "&
+$MINITERM Moore_2@${HOST}   -e "setenv UTGID Moore_2  ; $gaudi_exe -opt=$GAUDIONLINEROOT/options/ReadMBM.opts -main=$GAUDIONLINEROOT/options/Main.opts "&
+# $MINITERM Moore_3@${HOST}   -e "setenv UTGID Moore_3  ; $gaudi_exe -opt=$GAUDIONLINEROOT/options/ReadMBM.opts -main=$GAUDIONLINEROOT/options/Main.opts "&
 $MINITERM Sender@${HOST}    -e "setenv UTGID Sender   ; $gaudi_exe -opt=$GAUDIONLINEROOT/options/MDFSender.opts -main=$GAUDIONLINEROOT/options/Main.opts "&
 #
 $MINITERM Receiver@${HOST}  -e "setenv UTGID Receiver ; $gaudi_exe -opt=$GAUDIONLINEROOT/options/MDFReceiver.opts -main=$GAUDIONLINEROOT/options/Main.opts "&

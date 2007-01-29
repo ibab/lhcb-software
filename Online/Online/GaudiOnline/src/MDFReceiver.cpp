@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MDFReceiver.cpp,v 1.6 2007-01-26 20:23:36 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MDFReceiver.cpp,v 1.7 2007-01-29 14:54:40 frankb Exp $
 //  ====================================================================
 //  MDFReceiver.cpp
 //  --------------------------------------------------------------------
@@ -64,11 +64,14 @@ StatusCode MDFReceiver::execute()    {
 }
 
 int MDFReceiver::receiveEvent(const amsuc_info* info)    {
-  char     source[64];
+  char     source[128];
   unsigned int facility;
+  static int calls = 0;
+  calls++;
   if ( info->status != AMS_SUCCESS )  {
     MsgStream log(msgSvc(),name());
     log << MSG::ERROR << "Failed to spy on message. status:" << info->status << ". " << endmsg;
+    calls--;
     return AMS_SUCCESS;
   }
   int sc = m_prod->getSpace(info->length);
@@ -79,6 +82,7 @@ int MDFReceiver::receiveEvent(const amsuc_info* info)    {
     if ( AMS_SUCCESS != sc )   {
       MsgStream log(msgSvc(),name());
       log << MSG::ERROR << "Failed to read message. status:" << sc << ". " << endmsg;
+      calls--;
       return AMS_SUCCESS;
     }
     RawBank*   b = (RawBank*)e.data;
@@ -87,11 +91,14 @@ int MDFReceiver::receiveEvent(const amsuc_info* info)    {
     e.type    = EVENT_TYPE_EVENT;
     ::memcpy(e.mask,sh.H1->triggerMask(),sizeof(e.mask));
     e.len     = size;
-    return m_prod->sendEvent() == MBM_NORMAL ? AMS_SUCCESS : AMS_ERROR;
+    int rc = m_prod->sendEvent() == MBM_NORMAL ? AMS_SUCCESS : AMS_ERROR;
+    calls--;
+    return rc;
   }
   MsgStream err(msgSvc(),name());
   err << MSG::ERROR << "Failed to retrieve " << info->length 
       << " bytes of space. status:" << sc << ". " << endmsg;
+  calls--;
   return AMS_SUCCESS;
 }
 
