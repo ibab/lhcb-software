@@ -4,6 +4,12 @@
 ! Purpose     : REFLEX dictionaries for Phys classes
 !-----------------------------------------------------------------------------
 
+!========================== PhysDict v2r2 2007-01-29 =======================
+
+! 2007-01-29 - Juan PALACIOS
+  - cmt/requirements
+    . Increase version to v2r2
+
 ! 2007-01-19 - Juan PALACIOS
   - Remove std::ostream& operator<< for StatusCode as this is now 
     available in Gaudi.
