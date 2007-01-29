@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistPage.cpp,v 1.3 2007-01-29 17:25:55 ggiacomo Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistPage.cpp,v 1.4 2007-01-29 17:52:23 ggiacomo Exp $
 
 #include "OnlineHistDB/OnlineHistPage.h"
 
@@ -185,7 +185,6 @@ bool OnlineHistPage::save() {
     ",Cy => " << cy.str() <<
     ",Sx => " << sx.str() <<
     ",Sy => " << sy.str() << "); end;";
-  cout << "command is " << command.str() <<endl;
 
   Statement *astmt=m_conn->createStatement(command.str()); 
   try{
