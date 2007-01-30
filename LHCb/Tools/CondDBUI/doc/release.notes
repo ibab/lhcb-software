@@ -1,11 +1,15 @@
 ! =============================================================================
-! $Id: release.notes,v 1.30 2007-01-24 16:23:57 marcocle Exp $
+! $Id: release.notes,v 1.31 2007-01-30 20:06:37 marcocle Exp $
 ! =============================================================================
 ! package Tools/CondDBUI
 ! package manager : Marco Clemencic / Nicolas Gilardi
 ! =============================================================================
 
-!=========== Tools/CondDBUI v1r1 2007-01-24 ===================================
+!=========== Tools/CondDBUI v1r1 2007-01-30 ===================================
+! 2007-01-30 - Marco Clemencic
+ - SQLite connection string changed back to the old one because the new one is
+   supported only by COOL 2.x
+
 ! 2007-01-24 - Marco Clemencic
  - Changed the SQLite connection string.
 
