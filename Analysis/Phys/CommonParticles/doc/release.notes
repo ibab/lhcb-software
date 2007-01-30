@@ -4,6 +4,8 @@
 ! Purpose     : Common particles
 !-----------------------------------------------------------------------------
 
+!========================== CommonParticles v3r7 2007-01-30 ===================
+
 ! 2007-01-25 - Cristina Lazzeroni
  - options/StandardKs.opts
     . Position cuts removed, Chi2 and IPS and Pt cuts changed.
