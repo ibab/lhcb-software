@@ -18,12 +18,14 @@ use	GaudiKernel     v*
 
 apply_pattern install_more_includes more=Event
 
-#============================================================================ # Produce lcg dictionary
+#============================================================================ 
+# Produce lcg dictionary
 # for stl containers used in PackedEvent
-#============================================================================ apply_pattern
-reflex_dictionary \
+#============================================================================ 
+apply_pattern reflex_dictionary \
                   dictionary=PackedEvent \
                   headerfiles=$(PACKEDEVENTROOT)/Event/*.h               \
-                  selectionfile=$(PACKEDEVENTROOT)/xml/lcg_selection.xml
+                  selectionfile=$(PACKEDEVENTROOT)/xml/lcg_selection.xml \
+                  imports=ROOT
 
 
