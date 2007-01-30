@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.86 2007-01-23 10:49:23 gcorti Exp $
+! $Id: release.notes,v 1.87 2007-01-30 21:44:28 robbep Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Gen/Generators
 ! Responsible : Patrick ROBBE
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
+
+! 2007-01-30 - Patrick Robbe
+ - Fix problem with flip by EvtGen in Cut tools (DaughtersInLHCb, 
+   SelectedDaughtersInLHCb and ListOfDaughtersInLHCb)
 
 ! 2007-01-23 - Gloria Corti
  - Modify requirements to have a version with all changes in code but 

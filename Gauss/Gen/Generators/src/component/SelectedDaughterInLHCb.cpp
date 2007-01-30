@@ -1,4 +1,4 @@
-// $Id: SelectedDaughterInLHCb.cpp,v 1.3 2007-01-12 15:17:39 ranjard Exp $
+// $Id: SelectedDaughterInLHCb.cpp,v 1.4 2007-01-30 21:44:29 robbep Exp $
 // Include files 
 
 // local
@@ -114,6 +114,7 @@ bool SelectedDaughterInLHCb::applyCut( ParticleVector & theParticleVector ,
     
     if ( ( flip ) || ( ! passCuts( *it ) ) ) {
       HepMCUtils::RemoveDaughters( *it ) ;
+      if ( flip ) (*it) -> set_pdg_id( - (*it) -> pdg_id() ) ;
       it = theParticleVector.erase( it ) ;
     } else ++it ;
   }
