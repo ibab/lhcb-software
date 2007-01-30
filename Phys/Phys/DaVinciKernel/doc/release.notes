@@ -4,6 +4,10 @@
 !============================================================================
 
 !========================= DaVinciKernel v6r0 2007-01-09 ===================
+
+! 2007-01-30 - Juan PALACIOS
+  - remove ICaloElectron interface (new release moved into CaloInterfaces)
+
 ! 2007-01-09 - Florence RANJARD
  - install include files
  - fix some *.cpp files to use new FACTORY
