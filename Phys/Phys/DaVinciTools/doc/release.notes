@@ -1,8 +1,16 @@
-! $Id: release.notes,v 1.249 2007-01-15 11:04:14 jpalac Exp $
+! $Id: release.notes,v 1.250 2007-01-30 11:04:13 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+!========================== DaVinciTools v15r1 2007-01-30 ==================
+
+
+! 2007-01-30 - Juan PALACIOS
+  - Remove CaloElectron tool (now in CaloUtils)
+  - cmt/requirements
+    . increase version to v15r1
 
 !========================== DaVinciTools v15r0p1 2007-01-15 ================
 
