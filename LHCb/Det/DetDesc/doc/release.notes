@@ -1,11 +1,14 @@
 ! =============================================================================
-! $Id: release.notes,v 1.288 2007-01-17 12:10:28 cattanem Exp $ 
+! $Id: release.notes,v 1.289 2007-01-31 07:15:40 cattanem Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
 
-!====================== DetDesc v17r0 2007-01-16 ============================
+!====================== DetDesc v17r0 2007-01-31 ============================
+! 2007-01-31 - Marco Cattaneo
+ - Fix link options for Windows and retag requirements
+ 
 ! 2007-01-16 - Marco Cattaneo
  - Remove LHCbDefinitions dependency
 
