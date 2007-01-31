@@ -5,7 +5,7 @@
  * Implemenrtation file for algorithm ProtoParticleTupleAlg
  *
  * CVS Log :-
- * $Id: ProtoParticleTupleAlg.cpp,v 1.1 2006-12-11 20:48:21 jonrob Exp $
+ * $Id: ProtoParticleTupleAlg.cpp,v 1.2 2007-01-31 18:25:12 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-11-15
@@ -138,6 +138,9 @@ StatusCode ProtoParticleTupleAlg::execute()
     tuple->column( "CombDLLpi",  proto->info ( LHCb::ProtoParticle::CombDLLpi, 99999 ) );
     tuple->column( "CombDLLk",   proto->info ( LHCb::ProtoParticle::CombDLLk,  99999 ) );
     tuple->column( "CombDLLp",   proto->info ( LHCb::ProtoParticle::CombDLLp,  99999 ) );
+
+    // VeloCharge
+    tuple->column( "VeloCharge", proto->info ( LHCb::ProtoParticle::VeloCharge,  99999 ) );
 
     // MCParticle information
     const LHCb::MCParticle * mcPart = m_truth->mcParticle( track );
