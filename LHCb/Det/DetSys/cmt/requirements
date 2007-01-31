@@ -23,3 +23,5 @@ apply_pattern     reflex_dictionary                            \
                   selectionfile=$(DETSYSROOT)/dict/DetDict.xml \
                   options="-U__MINGW32__"
 
+# Hack for cmt v1r19 bug to link dictionary on windows
+macro DetDict_use_linkopts $(use_linkopts)
