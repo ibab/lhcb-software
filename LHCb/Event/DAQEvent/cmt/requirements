@@ -17,7 +17,8 @@ document obj2dict DAQEventObj2Dict ../xml/*.xml
 apply_pattern     reflex_dictionary                            \
                   dictionary=DAQEvent                               \
                   headerfiles=$(DAQEVENTROOT)/Event/RawEvent.h     \
-                  selectionfile=$(DAQEVENTROOT)/xml/lcgdict/lcg_selection.xml
+                  selectionfile=$(DAQEVENTROOT)/xml/lcgdict/lcg_selection.xml \
+                  imports=ROOT
 macro_append DAQEvent_reflex_options ' --comments '
 
 # ==================== linker library =======================================
