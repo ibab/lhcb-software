@@ -1,4 +1,8 @@
+// Comment out the following line to use Det/SQLDDDB
 #include "$STDOPTS/DetDesc.opts"
+
+// Uncomment the following line to use Det/SQLDDDB
+// #include "$SQLDDDBROOT/options/SQLDDDB.opts"
 
 ApplicationMgr.DLLs   += { "DetDescChecks" };
 ApplicationMgr.DLLs   += { "RootHistCnv"};
@@ -10,6 +14,7 @@ HistogramPersistencySvc.OutputFile = "histo.root";
 ApplicationMgr.EvtSel     = "NONE" ;
 ApplicationMgr.EvtMax     = 1 ;
 
+// Comment out the following line to use Det/SQLDDDB
 DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200601.xml";
 
 MessageSvc.OutputLevel = 3;

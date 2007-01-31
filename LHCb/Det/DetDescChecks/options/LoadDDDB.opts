@@ -1,0 +1,11 @@
+#include "$DETDESCCHECKSROOT/options/DetDesckChecks.opts"
+
+//----------------------------------------------------------------------------
+// Load det desc and dump the content
+//----------------------------------------------------------------------------
+ApplicationMgr.TopAlg  = { "GaudiSequencer" };
+GaudiSequencer.Members   = { };
+//GaudiSequencer.Members  += { "DumpEnvironment" };
+GaudiSequencer.Members  += { "LoadDDDB" };
+//GaudiSequencer.Members  += { "DumpDetectorStore" };
+GaudiSequencer.MeasureTime = true;
