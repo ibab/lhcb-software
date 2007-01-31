@@ -4,20 +4,21 @@ version v5r0
 branches doc cmt
 
 ####################################################################
+
 use  PhysCoreSys      	v4r0   Phys
 #===================================================================
 use  DaVinciKernel      	v6r0     Phys
-use  DaVinciFilter      	v6r0     Phys
+use  DaVinciFilter      	v6r1     Phys
 use  ProtoParticleFilter        v1r2     Phys
-use  DaVinciTools       	v15r0    Phys
+use  DaVinciTools       	v15r1    Phys
 use  DaVinciTransporter 	v3r5     Phys
 use  ParticleMaker      	v3r0     Phys
 use  VertexFit			v4r0     Phys
-use  CommonParticles            v3r6     Phys
-use  PhysDict                   v2r1     Phys
+use  CommonParticles            v3r7     Phys
+use  PhysDict                   v2r2     Phys
 use  FlavourTagging             v7r1p1   Phys
 # Generic tools 
-use  Utilities          	v3r2   Tools
+use  Utilities          	v4r0   Tools
 
 
 ####################################################################
@@ -33,17 +34,17 @@ use  DaVinciUser      	        v8r0     Phys
 ####################################################################
 use  PhysSelSys      	v10r0   PhysSel
 #===================================================================
-use Ccbar	        v1r2    PhysSel
-use B2Dilepton		v1r1	PhysSel
-use B2D0X		v1r6	PhysSel
+use Ccbar	        v1r3    PhysSel
+use B2Dilepton		v1r2	PhysSel
+use B2D0X		v1r7	PhysSel
 use B2DplusX		v1r0	PhysSel
-use B2DsX		v1r2	PhysSel
+use B2DsX		v1r3	PhysSel
 use B2DstarX		v1r3	PhysSel
-use B2uds	        v2r1    PhysSel
+use B2uds	        v2r2    PhysSel
 use Bs2JpsiPhi          v3r3    PhysSel
-use Bd2PiPiPi0          v4r0    PhysSel
-use JetsSel	        v1r1    PhysSel
-use Radiative           v2r0p1  PhysSel
+use Bd2PiPiPi0          v4r1    PhysSel
+use JetsSel	        v1r2    PhysSel
+use Radiative           v2r1    PhysSel
 
 ####################################################################
 use               LoKiSys          v5r0

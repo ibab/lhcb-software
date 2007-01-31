@@ -3,6 +3,155 @@ Package     : PhysSys
 Package Coordinator : Juan Palacios
 Purpose     : LHCb physics packages
 
+</PRE><H1><A NAME=v5r0>2007-01-31 Phys v5r0 </A></H1><PRE>
+
+##################################### PHYS ####################################
+
+!========================= DaVinciKernel v6r0 2007-01-09 ===================
+
+! 2007-01-30 - Juan PALACIOS
+  - remove ICaloElectron interface (new release moved into CaloInterfaces)
+
+! 2007-01-09 - Florence RANJARD
+ - install include files
+ - fix some *.cpp files to use new FACTORY
+
+!========================= DaVinciFilter v6r1 2007-01-30 ===================
+
+! 2007-01-17 - Juan PALACIOS
+
+  - Add tool VeloChargeFilterCriterion
+    . Filters based on the value of the LHCb::ProtoParticle::VeloCharge,
+      as obtained from its LHCb::ProtoParticle::info.
+      Controlled by properties MinVeloCharge and MaxVeloCharge (doubles)
+
+  - cmt/requirements
+    . Increase version to v6r1.
+
+!========================= DaVinciFilter v6r0 2007-01-11 ===================
+! 2007-01-11 - Florence RANJARD
+ - modify several *.cpp to use new FACTORY
+
+
+!========================== DaVinciTools v15r1 2007-01-30 ==================
+
+
+! 2007-01-30 - Juan PALACIOS
+  - Remove CaloElectron tool (now in CaloUtils)
+  - cmt/requirements
+    . increase version to v15r1
+
+!========================== DaVinciTools v15r0p1 2007-01-15 ================
+
+! 2007-01-15 - Juan PALACIOS
+
+  - Fix use DECLARE_TOOL_FACTORY and DACLARE_ALGORITHM_FACTORY macros 
+    in remaining src/*.cpp files. Files modified.
+
+    Modified files:
+
+    src/Algorithm2ID.cpp
+    src/CheckVeloOverlap.cpp
+    src/CheckOverlap.cpp
+    src/CheckPV.cpp
+    src/ContextTool.cpp
+    src/DecayFinder.cpp
+    src/DecodeSimpleDecayString.cpp
+    src/GeomDispCalculator.cpp
+    src/MakeResonances.cpp
+    src/OnOfflineTool.cpp
+    src/ParticleDescendants.cpp
+    src/RecursivePlotTool.cpp
+    src/SimplePlotTool.cpp
+    src/SimplePlots.cpp
+    src/TrgDispCalculator.cpp
+
+    - cmt/requirements
+      . Increase version to v15r0p1
+
+! 2007-01-12 - P. Koppenburg
+  - RelatedPVFinder.cpp
+    . Bug fix. Kindly reported by Ulrich Kerzel.
+  - NeutralChangePIDTool
+    . Fix compiler warning
+!========================== DaVinciTools v15r0 2007-01-11 ==================
+! 2007-01-11 - Florence RANJARD
+ - update some *.cpp to use new FACTORY
+
+
+!========================= ParticleMaker v3r0 2007-01-12 ====================
+! 2007-01-12 - Florence Ranjard
+ - use new FACTORY
+
+!========================== VertexFit v4r0 2007-01-12 ==================
+! 2007-01-12 - Florence Ranjard
+ - use new FACTORY
+
+!========================== CommonParticles v3r7 2007-01-30 ===================
+
+! 2007-01-25 - Cristina Lazzeroni
+ - options/StandardKs.opts
+    . Position cuts removed, Chi2 and IPS and Pt cuts changed.
+
+! 2007-01-25 - Juan PALACIOS for Cristina Lazzeroni
+  - options/StandardD0.opts
+    . Some cut tightening.
+
+! 2007-01-23 - Juan PALACIOS
+  - options/StandardOptions.opts
+    . Add StandardMergedPi0s.opts and StandardResolvedPi0s.opts
+
+! 2007-01-16 - Juan PALACIOS
+  - Remove src/CommonParticles_load.cpp and _dll.cpp
+ 
+! 2007-01-16 - P. Koppenburg
+  - options/StandardD0.opts
+    . Apply Pt cut before vertex fit not after.
+  . increment to v3r7
+
+!========================== PhysDict v2r2 2007-01-29 =======================
+
+! 2007-01-29 - Juan PALACIOS
+  - cmt/requirements
+    . Increase version to v2r2
+
+! 2007-01-19 - Juan PALACIOS
+  - Remove std::ostream& operator<< for StatusCode as this is now 
+    available in Gaudi.
+
+!====================== DaVinciMCKernel v2r0 2007-01-09 =====================
+! 2007-01-09 - Florence RANJARD
+ - install include files
+ - remove IVisPrimVertTool.h moved to LHCb/Event/MCEvent/Kernel
+ - remove IMCReconstructible.h moved to LHCb/Event/MCEvent/Kernel
+
+!========================== DaVinciMCTools v9r0 2007-01-12 =================
+
+! 2007-01-12 - Florence Ranjard
+ - remove VisPrimVertTool.* , MCReconstructible.* moved to LHCb/SimComponents
+
+!======================== DaVinciAssociators v8r0 2007-01-09 ================
+! 2007-01-09 - Florence RANJARD
+ - install include files
+ - fix some *.cpp files to use new FACTORY
+
+!========================= DaVinciUser v8r0 2007-01-11 =====================
+! 2007-01-11 - Florence RANJARD
+ - fix *.cpp to use new FACTORY
+
+
+##################################### PHYSSEL #################################
+##################################### TOOLS ###################################
+!========================== Utilities v4r0 2007-01-09 =====================
+! 2007-01-09 - Florence RANJARD
+ - move Utilitities/*.h to src/.
+ - update *.h and *.cpp accordingly
+ - remove include_dirs from requirements 
+ - update *.cpp to use new FACTORY
+
+##################################### TESTS ###################################
+###############################################################################
+###############################################################################
 </PRE><H1><A NAME=v4r6>2007-01-08 Phys v4r6 </A></H1><PRE>
 
 Tenth release of PHYS with DC06 event model.
@@ -17,6 +166,7 @@ Tenth release of PHYS with DC06 event model.
  - Built with LHCb v20r12, Gaudi v18r11, LCGCMT 48a.
 
 ##################################### PHYS ####################################
+
 !========================== DaVinciKernel v5r6 2007-01-08 ===================
 
 ! 2007-01-08 - Juan PALACIOS
