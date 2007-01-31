@@ -1,6 +1,7 @@
 ! Package     : Adder
 ! Responsible : Eric van Herwijnen/Monica Pepe-Altarelli
 
+! 20070201 - Markus Frank  ==================== Adder v3r0 ==========================
 
 ! 20070129 - Markus Frank
         - Modify requirements to link library on WIN32 platforms
