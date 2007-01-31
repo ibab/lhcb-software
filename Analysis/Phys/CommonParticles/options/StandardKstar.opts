@@ -1,6 +1,6 @@
-// $Id: StandardKstar.opts,v 1.5 2006-05-19 11:29:11 pkoppenb Exp $
+// $Id: StandardKstar.opts,v 1.6 2007-01-31 08:17:20 jpalac Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.5 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.6 $
 // ============================================================================
 
 /** @file 
@@ -11,13 +11,41 @@
  *  @see StandardOptions.opts for other intermediate states
  *  
  *  @author P. Koppenburg Patrick.Koppenburg@cern.ch
- *  @date 2006-01-30
+ *  @author += Kazu Akiba, for the Standard Tight Kstar. kazu.akiba@gmail.com
+ *  @date 2007-01-30 - last modified - tight Kstar inclusion
  */
+DataOnDemandSvc.Algorithms += {
+  // Loose Kstar->KPi
+  "DATA='/Event/Phys/StdTightKstar2KPi/Particles'     TYPE='MakeResonances/StdTightKstar2KPi'",
+  "DATA='/Event/Phys/StdTightKstar2KPi/Vertices'      TYPE='MakeResonances/StdTightKstar2KPi'"
+};
+/*************************************************************************
 DataOnDemandSvc.Algorithms += {
   // Loose Kstar->KPi
   "DATA='/Event/Phys/StdLooseKstar2KPi/Particles'     TYPE='MakeResonances/StdLooseKstar2KPi'",
   "DATA='/Event/Phys/StdLooseKstar2KPi/Vertices'      TYPE='MakeResonances/StdLooseKstar2KPi'"
 };
+
+/*************************************************************************
+*  Standard Tight Kstar->KPi
+*/
+StdTightKstar2KPi.PhysDesktop.InputLocations = 
+  { "Phys/StdLooseKaons", "Phys/StdLoosePions" };
+StdTightKstar2KPi.DecayDescriptor = "[K*(892)0 -> K+ pi-]cc";
+// Cuts for daughters
+StdTightKstar2KPi.DaughterFilter.Selections = 
+  {"K+  : PVIPFilterCriterion, KinFilterCriterion", 
+   "pi+ : PVIPFilterCriterion, KinFilterCriterion"};
+StdTightKstar2KPi.DaughterFilter.KinFilterCriterion.MinPt        = 350 * MeV; // hlt tuned: 300 MeV, hlt presel: 200 MeV
+StdTightKstar2KPi.DaughterFilter.KinFilterCriterion.MinMomentum  = 1000 * MeV; // hlt tuned: 2 GeV, hlt presel: 1 GeV
+StdTightKstar2KPi.DaughterFilter.PVIPFilterCriterion.MinIPsignif = 2.0 ; // hlt tuned: 2, hlt presel: 1
+// Cuts for combination
+StdTightKstar2KPi.Window = 150.0 * MeV; // hlt presel: 160.0 * MeV;
+StdTightKstar2KPi.MinPt  =  750 * MeV; // hlt presel: 500 MeV
+// Cuts for mother
+StdTightKstar2KPi.MotherFilter.Selections = { "K*(892)0 : VtxFilterCriterion" } ; 
+StdTightKstar2KPi.MotherFilter.VtxFilterCriterion.MaxChi2 = 25.0; // hlt presel: 100
+
 
 /*************************************************************************
 *  Standard Loose Kstar->KPi

@@ -6,6 +6,10 @@
 
 !========================== CommonParticles v3r7 2007-01-30 ===================
 
+! 2007-01-31 - Juan PALACIOS for Kazu Akiba
+  - options/StandardKstar.opts
+    . Add StdTightKstar standard particle
+
 ! 2007-01-30 - Juan PALACIOS
   - options/StandardMuons.opts
     . Fix bug in StdTightMuons TrackSelector
