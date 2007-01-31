@@ -20,4 +20,5 @@ library Saver ../src/Saver_dll.cpp ../src/Saver_load.cpp ../src/Saver.cpp ../src
 apply_pattern component_library library=Saver
 
 private
-macro_append Saver_shlibflags " -lHist -lGraf -lGraf3d -lGpad -lRint -lPostscript -lMatrix -lPhysics -lm -ldl -rdynamic "\ WIN32 " libHist.lib libGraf.lib libGraf3d.lib libGpad.lib libRint.lib libPostscript.lib libMatrix.lib libPhysics.lib "
+macro_append Saver_shlibflags "-lHist -lGraf -lGraf3d -lGpad  -lRint -lPostscript -lMatrix -lPhysics -lpthread -lm -ldl -rdynamic" \
+  WIN32 " libHist.lib libGraf.lib libGraf3d.lib libGpad.lib libRint.lib libPostscript.lib libMatrix.lib libPhysics.lib "
