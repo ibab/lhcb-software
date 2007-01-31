@@ -1,8 +1,7 @@
-
 !if defined (CMTINSTALLAREA)
-  set rootmap $(CMTINSTALLAREA)/$(tag)/lib/rootmap
+  set rootmap="$(CMTINSTALLAREA)/$(tag)/lib/rootmap"
 !else
-  set rootmap $(PACKAGE_ROOT)/$(tag)/rootmap
+  set rootmap="$(PACKAGE_ROOT)/$(tag)/rootmap"
 !endif
 
 $(dest)$(package).lcgdict : ${OBJS} 
