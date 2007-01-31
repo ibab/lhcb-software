@@ -1,0 +1,5 @@
+ApplicationMgr.SvcOptMapping         = {"LHCb::OnlineRunable/EmptyEventLoop",
+                                        "LHCb::OnlineRunable/Runable"
+};
+ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EmptyEventLoop";
+ApplicationMgr.Runable               = "LHCb::OnlineRunable/Runable";

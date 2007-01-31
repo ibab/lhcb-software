@@ -6,7 +6,7 @@
 echo Running as $(/usr/bin/whoami)
 export HOME=/home/$(/usr/bin/whoami)
 export CMTHOME=/lhcb/sw/slc4
-export CMTCONFIG=slc4_ia32_gcc345
+export CMTCONFIG=slc4_ia32_gcc34
 export CMTDEB=${CMTCONFIG}_dbg
 export SHLVL=1
 . /etc/profile.d/zzz_hepix.sh
@@ -15,7 +15,7 @@ export CMTPATH=$HOME/cmtuser:$CMTPATH
 #GaudiEnv v18r4
 oldpwd=$PWD; cd $HOME
 [ -z $LHCBSCRIPTS ] && export LHCBSCRIPTS=/afs/cern.ch/lhcb/scripts
-. ${LHCBSCRIPTS}/ProjectEnv.sh Gaudi v18r7
+. ${LHCBSCRIPTS}/ProjectEnv.sh Gaudi v19r1
 . $HOME/cmtuser/Online/OnlineTasks/cmt/setup.sh
 cd $oldpwd
 . /etc/dim.conf
