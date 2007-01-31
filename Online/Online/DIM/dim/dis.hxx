@@ -92,8 +92,8 @@ public:
 	void addExitHandler();
 	void addErrorHandler();
 	virtual void clientExitHandler() {};
-	virtual void exitHandler(int code) {};
-	virtual void errorHandler(int severity, int code, char *msg) {};
+	virtual void exitHandler(int /* code */) {};
+	virtual void errorHandler(int /* severity */, int /* code */, char* /* msg */) {};
 //	static char *getClientServices();
 //	static char *getClientServices(int clientId);
 	static char **getClientServices();
