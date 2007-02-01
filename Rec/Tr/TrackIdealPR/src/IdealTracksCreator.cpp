@@ -1,4 +1,4 @@
-// $Id: IdealTracksCreator.cpp,v 1.32 2006-11-30 14:47:52 ebos Exp $
+// $Id: IdealTracksCreator.cpp,v 1.33 2007-02-01 10:15:10 wouter Exp $
 // Include files
 // -------------
 // from Gaudi
@@ -271,7 +271,7 @@ StatusCode IdealTracksCreator::execute()
       // Initialize a seed state
       // -----------------------
       if ( m_initState && !m_trueStatesAtMeas ) {
-        sc = this -> initializeState( m_seedZ, track, mcParticle );
+        sc = this -> initializeState( mcParticle, track );
         if ( !sc.isSuccess() ) {
           debug() << " -> track deleted as unable to initialize state"
                   << endreq;
@@ -383,7 +383,8 @@ StatusCode IdealTracksCreator::finalize()
 //=============================================================================
 // Add outer tracker clusters
 //=============================================================================
-StatusCode IdealTracksCreator::addOTTimes( MCParticle* mcPart, Track* track )
+StatusCode IdealTracksCreator::addOTTimes( const MCParticle* mcPart,
+					   Track* track ) const
 {
   unsigned int nOTMeas = 0;
 
@@ -441,9 +442,6 @@ StatusCode IdealTracksCreator::addOTTimes( MCParticle* mcPart, Track* track )
         delete tempState;
       } // if ( m_addMeasurements ) 
       
-      if (  m_initStateUpstreamFit && meas.z() > m_seedZ ) m_seedZ = meas.z();
-      if ( !m_initStateUpstreamFit && meas.z() < m_seedZ ) m_seedZ = meas.z();
-      
       ++nOTMeas;      
       aTime = otLink.next();
     } // loop over OTTimes
@@ -457,8 +455,8 @@ StatusCode IdealTracksCreator::addOTTimes( MCParticle* mcPart, Track* track )
 //=============================================================================
 //  
 //=============================================================================
-StatusCode IdealTracksCreator::addTTClusters( MCParticle* mcPart,
-                                              Track* track )
+StatusCode IdealTracksCreator::addTTClusters( const MCParticle* mcPart,
+                                              Track* track ) const
 {
   unsigned int nTTMeas = 0;
 
@@ -472,8 +470,6 @@ StatusCode IdealTracksCreator::addTTClusters( MCParticle* mcPart,
     while ( NULL != aCluster ) {
       STMeasurement meas =
         STMeasurement( *aCluster, *m_ttTracker, *m_ttPositionTool );
-      if (  m_initStateUpstreamFit && meas.z() > m_seedZ ) m_seedZ = meas.z();
-      if ( !m_initStateUpstreamFit && meas.z() < m_seedZ ) m_seedZ = meas.z();
       track -> addToLhcbIDs( meas.lhcbID() );
       if ( m_addMeasurements ) { // Add the measurement to the track
         // Set the reference vector
@@ -501,8 +497,8 @@ StatusCode IdealTracksCreator::addTTClusters( MCParticle* mcPart,
 //=============================================================================
 //  
 //=============================================================================
-StatusCode IdealTracksCreator::addITClusters( MCParticle* mcPart,
-                                              Track* track )
+StatusCode IdealTracksCreator::addITClusters( const MCParticle* mcPart,
+                                              Track* track ) const
 {
   unsigned int nITMeas = 0;
 
@@ -556,9 +552,6 @@ StatusCode IdealTracksCreator::addITClusters( MCParticle* mcPart,
         delete tempState;
       } // if ( m_addMeasurements ) 
       
-      if (  m_initStateUpstreamFit && meas.z() > m_seedZ ) m_seedZ = meas.z();
-      if ( !m_initStateUpstreamFit && meas.z() < m_seedZ ) m_seedZ = meas.z();
-      
       ++nITMeas;      
       aCluster = itLink.next();
     }
@@ -572,8 +565,8 @@ StatusCode IdealTracksCreator::addITClusters( MCParticle* mcPart,
 //=============================================================================
 //  
 //=============================================================================
-StatusCode IdealTracksCreator::addVeloClusters( MCParticle* mcPart, 
-                                                Track* track )
+StatusCode IdealTracksCreator::addVeloClusters( const MCParticle* mcPart, 
+                                                Track* track ) const
 {
   unsigned int nVeloRMeas   = 0;
   unsigned int nVeloPhiMeas = 0;
@@ -594,8 +587,6 @@ StatusCode IdealTracksCreator::addVeloClusters( MCParticle* mcPart,
       if ( sensor -> isR() || sensor -> isPileUp() ) {
         VeloRMeasurement meas = VeloRMeasurement( *aCluster, *m_velo, 
                                                   *m_veloPositionTool );
-        if ( m_initStateUpstreamFit && meas.z() > m_seedZ ) m_seedZ = meas.z();
-        if (!m_initStateUpstreamFit && meas.z() < m_seedZ ) m_seedZ = meas.z();
         track -> addToLhcbIDs( meas.lhcbID() );
         if ( m_addMeasurements ) { // Add the measurement to the track
           State* tempState;
@@ -609,8 +600,6 @@ StatusCode IdealTracksCreator::addVeloClusters( MCParticle* mcPart,
       } else {
         VeloPhiMeasurement meas = VeloPhiMeasurement( *aCluster, *m_velo ,
                                                       *m_veloPositionTool );
-        if ( m_initStateUpstreamFit && meas.z() > m_seedZ ) m_seedZ = meas.z();
-        if (!m_initStateUpstreamFit && meas.z() < m_seedZ ) m_seedZ = meas.z();
         track -> addToLhcbIDs( meas.lhcbID() );
         if ( m_addMeasurements ) { // Add the measurement to the track
           State* tempState;
@@ -636,12 +625,22 @@ StatusCode IdealTracksCreator::addVeloClusters( MCParticle* mcPart,
 //=============================================================================
 // Initialize seed state
 //=============================================================================
-StatusCode IdealTracksCreator::initializeState( double z,
-                                                Track* track,
-                                                MCParticle* mcPart )
+StatusCode IdealTracksCreator::initializeState( const MCParticle* mcPart,
+						Track* track) const
 {
-  State* state;
-  StatusCode sc = m_stateCreator -> createState( mcPart, z, state );
+  double zseed(0) ;
+  if( !track->measurements().empty()) {
+    std::vector<LHCb::Measurement*>::const_iterator imeas = track->measurements().begin() ;
+    zseed = (*imeas)->z() ;
+    for(++imeas; imeas != track->measurements().end(); ++imeas) {
+      double thisz = (*imeas)->z() ;
+      if ( m_initStateUpstreamFit && thisz > zseed ) zseed = thisz;
+      if (!m_initStateUpstreamFit && thisz < zseed ) zseed = thisz;
+    }
+  }
+  
+  State* state(0);
+  StatusCode sc = m_stateCreator -> createState( mcPart, zseed, state );
   if ( sc.isSuccess() ) {
     track -> addToStates( *state );
     double qP = state -> qOverP();

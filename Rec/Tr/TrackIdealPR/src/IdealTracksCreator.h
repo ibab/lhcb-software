@@ -75,20 +75,19 @@ public:
 
 private:
   /// Add outer tracker clusters
-  StatusCode addOTTimes( LHCb::MCParticle* mcPart, LHCb::Track* track );
+  StatusCode addOTTimes( const LHCb::MCParticle* mcPart, LHCb::Track* track ) const ;
 
   /// Add silicon tracker clusters in TT
-  StatusCode addTTClusters( LHCb::MCParticle* mcPart, LHCb::Track* track );
+  StatusCode addTTClusters( const LHCb::MCParticle* mcPart, LHCb::Track* track ) const ;
 
   /// Add silicon tracker clusters in IT
-  StatusCode addITClusters( LHCb::MCParticle* mcPart, LHCb::Track* track );
+  StatusCode addITClusters( const LHCb::MCParticle* mcPart, LHCb::Track* track ) const ;
 
   /// Add velo r and phi clusters
-  StatusCode addVeloClusters( LHCb::MCParticle* mcPart, LHCb::Track* track );
+  StatusCode addVeloClusters( const LHCb::MCParticle* mcPart, LHCb::Track* track ) const ;
 
   /// Initialize seed state
-  StatusCode initializeState( double z,
-                              LHCb::Track* track, LHCb::MCParticle* mcPart );
+  StatusCode initializeState( const LHCb::MCParticle* mcPart, LHCb::Track* track ) const ;
 
 private:
   // Geometry information
@@ -100,8 +99,6 @@ private:
   std::string   m_ttTrackerPath;   ///< Name of the TT XML geom path
   std::string   m_itTrackerPath;   ///< Name of the IT XML geom path
   std::string   m_otTrackerPath;   ///< Name of the OT XML geom path
-  double m_seedZ;                  ///< z position of the initial state
-
 
   // Interfaces
   ISTClusterPosition*     m_ttPositionTool;///< ST cluster position tool for TT
