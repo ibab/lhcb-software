@@ -1,4 +1,4 @@
- // $Id: SignalRepeatedHadronization.cpp,v 1.11 2007-01-12 15:17:41 ranjard Exp $
+ // $Id: SignalRepeatedHadronization.cpp,v 1.12 2007-02-01 22:16:03 robbep Exp $
 // Include files 
 
 // local
@@ -110,35 +110,37 @@ bool SignalRepeatedHadronization::generate( const unsigned int nPileUp ,
       while ( nRepetitions < m_maxNumberOfRepetitions ) {
         // Decay heavy particles
         decayHeavyParticles( theGenEvent , m_signalQuark , m_signalPID ) ;
-
+        
         // Check if one particle of the requested list is present in event
         ParticleVector theParticleList ;
         if ( checkPresence( m_pids , theGenEvent , theParticleList ) ) {
           
-          // establish correct multiplicity of signal
-          if ( ensureMultiplicity( theParticleList.size() ) ) {
-
-            m_nEventsBeforeCut++ ;
-
-            // Count particles and anti-particles of Signal type before 
-            // the cut in all directions
-            updateCounters( theParticleList , m_nParticlesBeforeCut , 
-                            m_nAntiParticlesBeforeCut , false ) ;
-
-            bool passCut = true ;
-            if ( 0 != m_cutTool ) 
-              passCut = m_cutTool -> applyCut( theParticleList , theGenEvent ,
-                                               theGenCollision , m_decayTool , 
-                                               m_cpMixture , 0 ) ;
+          unsigned int nSignal = theParticleList.size() ;
+          
+          m_nEventsBeforeCut++ ;
+          
+          // Count particles and anti-particles of Signal type before 
+          // the cut in all directions
+          updateCounters( theParticleList , m_nParticlesBeforeCut , 
+                          m_nAntiParticlesBeforeCut , false ) ;
+          
+          bool passCut = true ;
+          if ( 0 != m_cutTool ) 
+            passCut = m_cutTool -> applyCut( theParticleList , theGenEvent ,
+                                             theGenCollision , m_decayTool , 
+                                             m_cpMixture , 0 ) ;
+          
+          if ( passCut && ( ! theParticleList.empty() ) ) {
+            m_nEventsAfterCut++ ;
             
-            if ( passCut && ( ! theParticleList.empty() ) ) {
-              m_nEventsAfterCut++ ;
-
-              // Count particles and anti-particles of Signal type with
-              // pz>0, after generator level cut
-              updateCounters( theParticleList , m_nParticlesAfterCut , 
-                              m_nAntiParticlesAfterCut , true ) ;
-
+            // Count particles and anti-particles of Signal type with
+            // pz>0, after generator level cut
+            updateCounters( theParticleList , m_nParticlesAfterCut , 
+                            m_nAntiParticlesAfterCut , true ) ;
+            
+            // establish correct multiplicity of signal
+            if ( ensureMultiplicity( nSignal ) ) {
+              
               // If there are several particles passing the cuts, choose one  
               // and revert event if it has pz < 0 
               theSignal = chooseAndRevert( theParticleList ) ;
@@ -146,9 +148,9 @@ bool SignalRepeatedHadronization::generate( const unsigned int nPileUp ,
               flip = false ;
               if ( m_cpMixture ) m_decayTool -> enableFlip( ) ;
               m_decayTool -> generateSignalDecay( theSignal , flip ) ;
-
+              
               if ( ! flip ) {                  
-
+                
                 gotSignalInteraction = true ;
                 if ( m_cleanEvents ) {
                   sc = isolateSignal( theSignal ) ;
@@ -174,24 +176,25 @@ bool SignalRepeatedHadronization::generate( const unsigned int nPileUp ,
                                                           m_cExcitedC ) ;
               }
             }
-            // if the interaction is not kept, we must re-hadronize it
-            // once to have a fresh unbiased event
-            if ( ! gotSignalInteraction ) {
-              nRepetitions++ ;
-              m_productionTool -> retrievePartonEvent( theGenEvent ) ;
-              m_productionTool -> turnOnFragmentation( ) ;
-              m_productionTool -> savePartonEvent( theGenEvent ) ;
-              Clear( theGenEvent ) ;
-              m_productionTool -> hadronize( theGenEvent , theGenCollision ) ;
-            }
-            // Then we exit and do not re-hadronize this event
-            // not to bias things
-            break ;
           }
+          
+          // if the interaction is not kept, we must re-hadronize it
+          // once to have a fresh unbiased event
+          if ( ! gotSignalInteraction ) {
+            nRepetitions++ ;
+            m_productionTool -> retrievePartonEvent( theGenEvent ) ;
+            m_productionTool -> turnOnFragmentation( ) ;
+            m_productionTool -> savePartonEvent( theGenEvent ) ;
+            Clear( theGenEvent ) ;
+            m_productionTool -> hadronize( theGenEvent , theGenCollision ) ;
+          }
+          // Then we exit and do not re-hadronize this event
+          // not to bias things
+          break ;
         }
         
         if ( ! partonEventWithSignalQuarks ) break ;
-
+        
         nRepetitions++ ;
         m_productionTool -> retrievePartonEvent( theGenEvent ) ;
         m_productionTool -> turnOnFragmentation( ) ;
@@ -200,13 +203,13 @@ bool SignalRepeatedHadronization::generate( const unsigned int nPileUp ,
         Clear( theGenEvent ) ;
         m_productionTool -> hadronize( theGenEvent , theGenCollision ) ;
       }
-
+      
       if ( nRepetitions == m_maxNumberOfRepetitions ) 
         info() << "Number of repetitions of hadronization exceeds the limit" 
                << endmsg ;
     }
   }
-
+  
   return gotSignalInteraction ;
 }
 
