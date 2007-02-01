@@ -2,10 +2,10 @@
 //-----------------------------------------------------------------------------
 /** @file RichSide.h
  *
- *  Header file for RICH particle ID enumeration : RichSide
+ *  Header file for RICH particle ID enumeration : Rich::Side
  *
  *  CVS Log :-
- *  $Id: RichSide.h,v 1.8 2005-10-17 08:57:18 jonrob Exp $
+ *  $Id: RichSide.h,v 1.9 2007-02-01 16:45:31 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -20,9 +20,6 @@
 #include <vector>
 #include <iostream>
 
-// from gaudi
-#include "GaudiKernel/MsgStream.h"
-
 /** @namespace Rich
  *
  *  General namespace for RICH specific definitions
@@ -30,7 +27,8 @@
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
  */
-namespace Rich {
+namespace Rich 
+{
 
   /// Total number of HPD panels
   static const unsigned int NTotalHPDPanels = 4;
@@ -65,22 +63,19 @@ namespace Rich {
   /// Std Vector typedef
   typedef std::vector<Side> RichSideVector;
 
+  /// Shortcut to a list of Side Types
+  typedef RichSideVector Sides;
+
+  /// Access a vector of valid particle ID types
+  const Sides & sides();
+
 }
 
 /// Implement textual ostream << method for Rich::Side enumeration
 inline std::ostream& operator << ( std::ostream & s,
                                    const Rich::Side & side ) 
 {
-  s << Rich::text( side );
-  return s;
-}
-
-/// Implement textual MsgStream << method for Rich::Side enumeration
-inline MsgStream& operator << ( MsgStream & s,
-                                const Rich::Side & side ) 
-{
-  s << Rich::text( side );
-  return s;
+  return s << Rich::text( side );
 }
 
 #endif // LHCBKERNEL_RICHSIDE_H

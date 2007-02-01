@@ -5,7 +5,7 @@
  *  Implementation file for enumeration : Rich::RadiatorType
  *
  *  CVS Log :-
- *  $Id: RichRadiatorType.cpp,v 1.8 2006-05-05 10:11:21 jonrob Exp $
+ *  $Id: RichRadiatorType.cpp,v 1.9 2007-02-01 16:45:22 jonrob Exp $
  *
  *  @author  Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date    2002-06-10
@@ -16,7 +16,7 @@
 #include "Kernel/RichRadiatorType.h"
 
 // boost
-//#include "boost/assign/list_of.hpp"
+#include "boost/assign/list_of.hpp"
 
 // Text conversion for RadiatorType enumeration
 std::string Rich::text( const Rich::RadiatorType radiator )
@@ -35,11 +35,10 @@ std::string Rich::text( const Rich::RadiatorType radiator )
   }
 }
 
-/*
 const Rich::Radiators & Rich::radiators()
 {
-  static const Rich::Radiators rads =
+  static Rich::Radiators rads =
     boost::assign::list_of(Rich::Aerogel)(Rich::Rich1Gas)(Rich::Rich2Gas);
   return rads;
 }
-*/
+

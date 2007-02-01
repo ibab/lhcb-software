@@ -5,7 +5,7 @@
  *  Header file for RICH particle ID enumeration : RichParticleIDType
  *
  *  CVS Log :-
- *  $Id: RichParticleIDType.h,v 1.1 2006-01-17 13:58:09 jonrob Exp $
+ *  $Id: RichParticleIDType.h,v 1.2 2007-02-01 16:45:31 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -19,10 +19,6 @@
 #include <string>
 #include <vector>
 #include <iostream>
-
-// from gaudi
-#include "GaudiKernel/StreamBuffer.h"
-#include "GaudiKernel/MsgStream.h"
 
 // General namespace for RICH specific definitions documented in RichSide.h
 namespace Rich 
@@ -56,40 +52,19 @@ namespace Rich
   /// Std Vector typedef
   typedef std::vector<ParticleIDType> ParticleIDTypeVector;
 
-}
+  /// Shortcut to a list of ParticleTypes
+  typedef ParticleIDTypeVector Particles;
 
-/// Implement StreamBuffer >> method for Rich::ParticleIDType enumeration
-inline StreamBuffer& operator >> ( StreamBuffer& s,
-                                   Rich::ParticleIDType& particle ) 
-{
-  int intType;
-  s >> intType;
-  particle = static_cast<Rich::ParticleIDType>(intType);
-  return s;
-}
+  /// Access a vector of valid particle ID types
+  const Particles & particles();
 
-/// Implement StreamBuffer << method for Rich::ParticleIDType enumeration
-inline StreamBuffer& operator << ( StreamBuffer& s,
-                                   const Rich::ParticleIDType& particle ) 
-{
-  s << static_cast<int>(particle);
-  return s;
 }
 
 /// Implement textual ostream << method for Rich::ParticleIDType enumeration
 inline std::ostream& operator << ( std::ostream& s,
                                    const Rich::ParticleIDType& particle ) 
 {
-  s << Rich::text( particle );
-  return s;
-}
-
-/// Implement textual MsgStream << method for Rich::ParticleIDType enumeration
-inline MsgStream& operator << ( MsgStream& s,
-                                const Rich::ParticleIDType& particle ) 
-{
-  s << Rich::text( particle );
-  return s;
+  return s << Rich::text(particle) ;
 }
 
 #endif // RICHKERNEL_PARTICLEIDTYPE_H

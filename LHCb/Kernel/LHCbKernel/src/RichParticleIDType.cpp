@@ -5,7 +5,7 @@
  *  Implementation file for enumeration : Rich::ParticleIDType
  *
  *  CVS Log :-
- *  $Id: RichParticleIDType.cpp,v 1.1 2006-01-17 13:58:09 jonrob Exp $
+ *  $Id: RichParticleIDType.cpp,v 1.2 2007-02-01 16:45:22 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2002-06-19
@@ -14,6 +14,9 @@
 
 // local
 #include "Kernel/RichParticleIDType.h"
+
+// boost
+#include "boost/assign/list_of.hpp"
 
 // Text conversion for ParticleIDType enumeration
 std::string Rich::text( const Rich::ParticleIDType particle )
@@ -29,4 +32,11 @@ std::string Rich::text( const Rich::ParticleIDType particle )
   case Rich::Unknown:        return "unknown";
   default:                   return "?"; // should never happen
   }
+}
+
+const Rich::Particles & Rich::particles()
+{
+  static Rich::Particles pids = 
+    boost::assign::list_of(Rich::Electron)(Rich::Muon)(Rich::Pion)(Rich::Kaon)(Rich::Proton);
+  return pids;
 }

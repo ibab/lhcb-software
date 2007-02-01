@@ -5,7 +5,7 @@
  *  Header file for RICH particle ID enumeration : RichDetectorType
  *
  *  CVS Log :-
- *  $Id: RichDetectorType.h,v 1.8 2005-10-17 08:57:18 jonrob Exp $
+ *  $Id: RichDetectorType.h,v 1.9 2007-02-01 16:45:31 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -20,12 +20,9 @@
 #include <vector>
 #include <iostream>
 
-// from gaudi
-#include "GaudiKernel/StreamBuffer.h"
-#include "GaudiKernel/MsgStream.h"
-
 //  General namespace for RICH specific definitions documented in RichSide.h
-namespace Rich {
+namespace Rich 
+{
 
   /// Number of RICH detectors
   static const int NRiches = 2;
@@ -54,37 +51,17 @@ namespace Rich {
   /// Std Vector typedef
   typedef std::vector<Rich::DetectorType> DetectorVector;
 
-}
+  /// Shortcut to a list of Detectors
+  typedef DetectorVector Detectors;
 
-/// Implement StreamBuffer >> method for Rich::DetectorType enumeration
-inline StreamBuffer& operator >> ( StreamBuffer & s,
-                                   Rich::DetectorType & detector ) 
-{
-  int intType;
-  s >> intType;
-  detector = static_cast<Rich::DetectorType>(intType);
-  return s;
-}
+  /// Access a vector of valid detector types
+  const Detectors & detectors();
 
-/// Implement StreamBuffer << method for Rich::DetectorType enumeration
-inline StreamBuffer& operator << ( StreamBuffer & s,
-                                   const Rich::DetectorType & detector ) 
-{
-  s << static_cast<int>(detector);
-  return s;
 }
 
 /// Implement textual ostream << method for Rich::DetectorType enumeration
 inline std::ostream& operator << ( std::ostream & s,
                                    const Rich::DetectorType & detector ) 
-{
-  s << Rich::text( detector );
-  return s;
-}
-
-/// Implement textual MsgStream << method for Rich::DetectorType enumeration
-inline MsgStream& operator << ( MsgStream& s,
-                                const Rich::DetectorType detector ) 
 {
   s << Rich::text( detector );
   return s;
