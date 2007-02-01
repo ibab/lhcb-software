@@ -5,7 +5,7 @@
  *  Implementation of templated constructors for RiochCommonBase
  *
  *  CVS Log :-
- *  $Id: RichCommonConstructors.cpp,v 1.3 2005-10-31 13:26:11 jonrob Exp $
+ *  $Id: RichCommonConstructors.cpp,v 1.4 2007-02-01 17:24:55 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-09-18
@@ -25,24 +25,24 @@
 // Implementation of RichCommonBase for GaudiAlgorithm
 //=============================================================================
 template <>
-RichCommonBase<GaudiAlgorithm>::RichCommonBase( const std::string& name,
-                                                ISvcLocator* pSvcLocator )
+Rich::CommonBase<GaudiAlgorithm>::CommonBase( const std::string& name,
+                                              ISvcLocator* pSvcLocator )
   : GaudiAlgorithm ( name, pSvcLocator             ),
-    m_toolReg      ( 0                             ),
-    m_jos          ( 0                             ),
+    m_toolReg      ( NULL                          ),
+    m_jos          ( NULL                          ),
     m_regName      ( context().empty() ?
                      "RichToolRegistry" : context()+".RichToolRegistry" )
 {
   declareProperty( "ToolRegistryName", m_regName );
 }
 template <>
-RichCommonBase<GaudiAlgorithm>::RichCommonBase( const std::string& /* type */,
-                                                const std::string& /* name */,
-                                                const IInterface* /* parent */ )
-  : GaudiAlgorithm ( "ERROR", 0 )
+Rich::CommonBase<GaudiAlgorithm>::CommonBase( const std::string& /* type */,
+                                              const std::string& /* name */,
+                                              const IInterface* /* parent */ )
+  : GaudiAlgorithm ( "ERROR", NULL )
 {
-  throw GaudiException( "Invalid RichCommonBase<GaudiAlgorithm> constructor",
-                        "RichCommonBase", StatusCode::FAILURE );
+  throw GaudiException( "Invalid Rich::CommonBase<GaudiAlgorithm> constructor",
+                        "Rich::CommonBase", StatusCode::FAILURE );
 }
 //=============================================================================
 
@@ -50,99 +50,99 @@ RichCommonBase<GaudiAlgorithm>::RichCommonBase( const std::string& /* type */,
 // Implementation of RichCommonBase for GaudiHistoAlg
 //=============================================================================
 template <>
-RichCommonBase<GaudiHistoAlg>::RichCommonBase( const std::string& name,
-                                               ISvcLocator* pSvcLocator )
+Rich::CommonBase<GaudiHistoAlg>::CommonBase( const std::string& name,
+                                             ISvcLocator* pSvcLocator )
   : GaudiHistoAlg  ( name, pSvcLocator             ),
-    m_toolReg      ( 0                             ),
-    m_jos          ( 0                             ),
+    m_toolReg      ( NULL                          ),
+    m_jos          ( NULL                          ),
     m_regName      ( context().empty() ?
                      "RichToolRegistry" : context()+".RichToolRegistry" )
 {
   declareProperty( "ToolRegistryName", m_regName );
 }
 template <>
-RichCommonBase<GaudiHistoAlg>::RichCommonBase( const std::string& /* type */,
-                                               const std::string& /* name */,
-                                               const IInterface* /* parent */ )
-  : GaudiHistoAlg ( "ERROR", 0 )
+Rich::CommonBase<GaudiHistoAlg>::CommonBase( const std::string& /* type */,
+                                             const std::string& /* name */,
+                                             const IInterface* /* parent */ )
+  : GaudiHistoAlg ( "ERROR", NULL )
 {
-  throw GaudiException( "Invalid RichCommonBase<GaudiHistoAlg> constructor",
-                        "RichCommonBase", StatusCode::FAILURE );
+  throw GaudiException( "Invalid Rich::CommonBase<GaudiHistoAlg> constructor",
+                        "Rich::CommonBase", StatusCode::FAILURE );
 }
 //=============================================================================
 
 //=============================================================================
-// Implementation of RichCommonBase for GaudiTupleAlg
+// Implementation of CommonBase for GaudiTupleAlg
 //=============================================================================
 template <>
-RichCommonBase<GaudiTupleAlg>::RichCommonBase( const std::string& name,
-                                               ISvcLocator* pSvcLocator )
+Rich::CommonBase<GaudiTupleAlg>::CommonBase( const std::string& name,
+                                             ISvcLocator* pSvcLocator )
   : GaudiTupleAlg  ( name, pSvcLocator             ),
-    m_toolReg      ( 0                             ),
-    m_jos          ( 0                             ),
+    m_toolReg      ( NULL                          ),
+    m_jos          ( NULL                          ),
     m_regName      ( context().empty() ?
                      "RichToolRegistry" : context()+".RichToolRegistry" )
 {
   declareProperty( "ToolRegistryName", m_regName );
 }
 template <>
-RichCommonBase<GaudiTupleAlg>::RichCommonBase( const std::string& /* type */,
-                                               const std::string& /* name */,
-                                               const IInterface* /* parent */ )
-  : GaudiTupleAlg ( "ERROR", 0 )
+Rich::CommonBase<GaudiTupleAlg>::CommonBase( const std::string& /* type */,
+                                             const std::string& /* name */,
+                                             const IInterface* /* parent */ )
+  : GaudiTupleAlg ( "ERROR", NULL )
 {
-  throw GaudiException( "Invalid RichCommonBase<GaudiTupleAlg> constructor",
-                        "RichCommonBase", StatusCode::FAILURE );
+  throw GaudiException( "Invalid Rich::CommonBase<GaudiTupleAlg> constructor",
+                        "Rich::CommonBase", StatusCode::FAILURE );
 }
 //=============================================================================
 
 //=============================================================================
-// Implementation of RichCommonBase for GaudiTool
+// Implementation of CommonBase for GaudiTool
 //=============================================================================
 template <>
-RichCommonBase<GaudiTool>::RichCommonBase( const std::string& type,
-                                           const std::string& name,
-                                           const IInterface* parent )
+Rich::CommonBase<GaudiTool>::CommonBase( const std::string& type,
+                                         const std::string& name,
+                                         const IInterface* parent )
   : GaudiTool   ( type, name, parent            ),
-    m_toolReg   ( 0                             ),
-    m_jos       ( 0                             ),
+    m_toolReg   ( NULL                          ),
+    m_jos       ( NULL                          ),
     m_regName      ( context().empty() ?
                      "RichToolRegistry" : context()+".RichToolRegistry" )
 {
   declareProperty( "ToolRegistryName", m_regName );
 }
 template <>
-RichCommonBase<GaudiTool>::RichCommonBase( const std::string& /* name */,
-                                           ISvcLocator* /* pSvcLocator */ )
-  : GaudiTool ( "ERROR", "ERROR", 0 )
+Rich::CommonBase<GaudiTool>::CommonBase( const std::string& /* name */,
+                                         ISvcLocator* /* pSvcLocator */ )
+  : GaudiTool ( "ERROR", "ERROR", NULL )
 {
-  throw GaudiException( "Invalid RichCommonBase<GaudiTool> constructor",
-                        "RichCommonBase", StatusCode::FAILURE );
+  throw GaudiException( "Invalid Rich::CommonBase<GaudiTool> constructor",
+                        "Rich::CommonBase", StatusCode::FAILURE );
 }
 //=============================================================================
 
 //=============================================================================
-// Implementation of RichCommonBase for GaudiHistoTool
+// Implementation of CommonBase for GaudiHistoTool
 //=============================================================================
 template <>
-RichCommonBase<GaudiHistoTool>::RichCommonBase( const std::string& type,
-                                                const std::string& name,
-                                                const IInterface* parent )
+Rich::CommonBase<GaudiHistoTool>::CommonBase( const std::string& type,
+                                              const std::string& name,
+                                              const IInterface* parent )
   : GaudiHistoTool ( type, name, parent            ),
-    m_toolReg      ( 0                             ),
-    m_jos          ( 0                             ),
+    m_toolReg      ( NULL                          ),
+    m_jos          ( NULL                          ),
     m_regName      ( context().empty() ?
                      "RichToolRegistry" : context()+".RichToolRegistry" )
 {
   declareProperty( "ToolRegistryName", m_regName );
 }
 template <>
-RichCommonBase<GaudiHistoTool>::RichCommonBase( const std::string& /* name */,
-                                                ISvcLocator* /* pSvcLocator */ )
-  : GaudiHistoTool ( "ERROR", "ERROR", 0 )
+Rich::CommonBase<GaudiHistoTool>::CommonBase( const std::string& /* name */,
+                                              ISvcLocator* /* pSvcLocator */ )
+  : GaudiHistoTool ( "ERROR", "ERROR", NULL )
 {
-  throw GaudiException( "Invalid RichCommonBase<GaudiHistoTool> constructor",
-                        "RichCommonBase", StatusCode::FAILURE );
+  throw GaudiException( "Invalid Rich::CommonBase<GaudiHistoTool> constructor",
+                        "Rich::CommonBase", StatusCode::FAILURE );
 }
 //=============================================================================
 
@@ -150,23 +150,23 @@ RichCommonBase<GaudiHistoTool>::RichCommonBase( const std::string& /* name */,
 // Implementation of RichCommonBase for GaudiTupleTool
 //=============================================================================
 template <>
-RichCommonBase<GaudiTupleTool>::RichCommonBase( const std::string& type,
-                                                const std::string& name,
-                                                const IInterface* parent )
+Rich::CommonBase<GaudiTupleTool>::CommonBase( const std::string& type,
+                                              const std::string& name,
+                                              const IInterface* parent )
   : GaudiTupleTool ( type, name, parent            ),
-    m_toolReg      ( 0                             ),
-    m_jos          ( 0                             ),
+    m_toolReg      ( NULL                          ),
+    m_jos          ( NULL                          ),
     m_regName      ( context().empty() ?
                      "RichToolRegistry" : context()+".RichToolRegistry" )
 {
   declareProperty( "ToolRegistryName", m_regName );
 }
 template <>
-RichCommonBase<GaudiTupleTool>::RichCommonBase( const std::string& /* name */,
-                                                ISvcLocator* /* pSvcLocator */ )
-  : GaudiTupleTool ( "ERROR", "ERROR", 0 )
+Rich::CommonBase<GaudiTupleTool>::CommonBase( const std::string& /* name */,
+                                              ISvcLocator* /* pSvcLocator */ )
+  : GaudiTupleTool ( "ERROR", "ERROR", NULL )
 {
-  throw GaudiException( "Invalid RichCommonBase<GaudiTupleTool> constructor",
-                        "RichCommonBase", StatusCode::FAILURE );
+  throw GaudiException( "Invalid Rich::CommonBase<GaudiTupleTool> constructor",
+                        "Rich::CommonBase", StatusCode::FAILURE );
 }
 //=============================================================================

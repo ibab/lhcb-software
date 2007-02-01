@@ -2,10 +2,10 @@
 //-----------------------------------------------------------------------------
 /** @file RichAlgBase.h
  *
- *  Header file for algorithm base class : RichAlgBase
+ *  Header file for algorithm base class : Rich::AlgBase
  *
  *  CVS Log :-
- *  $Id: RichAlgBase.h,v 1.10 2005-10-13 15:03:41 jonrob Exp $
+ *  $Id: RichAlgBase.h,v 1.11 2007-02-01 17:24:54 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -22,26 +22,45 @@
 #include "RichKernel/RichCommonBase.h"
 
 //-----------------------------------------------------------------------------
-/** @class RichAlgBase RichAlgBase.h RichKernel/RichAlgBase.h
+/** @namespace Rich
  *
- *  Abstract base class for RICH algorithms providing
- *  some basic functionality.
+ *  General namespace for RICH software
  *
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   05/04/2002
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
  */
 //-----------------------------------------------------------------------------
-
-class RichAlgBase : public RichCommonBase<GaudiAlgorithm>
+namespace Rich
 {
 
-public:
+  //-----------------------------------------------------------------------------
+  /** @class AlgBase RichAlgBase.h RichKernel/RichAlgBase.h
+   *
+   *  Abstract base class for RICH algorithms providing
+   *  some basic functionality.
+   *
+   *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+   *  @date   05/04/2002
+   */
+  //-----------------------------------------------------------------------------
 
-  /// Standard constructor
-  RichAlgBase( const std::string& name,
-               ISvcLocator* pSvcLocator )
-  : RichCommonBase<GaudiAlgorithm> ( name, pSvcLocator ) { }
+  class AlgBase : public Rich::CommonBase<GaudiAlgorithm>
+  {
 
-};
+  public:
+
+    /// Standard constructor
+    AlgBase( const std::string& name,
+             ISvcLocator* pSvcLocator )
+      : Rich::CommonBase<GaudiAlgorithm> ( name, pSvcLocator ) { }
+
+  };
+
+}
+
+/** For backwards compatibility
+ *  @todo Remove this typedef
+ */
+typedef Rich::AlgBase RichAlgBase;
 
 #endif // RICHKERNEL_RICHALGBASE_H

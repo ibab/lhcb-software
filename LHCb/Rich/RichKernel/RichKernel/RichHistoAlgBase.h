@@ -5,7 +5,7 @@
  *  Header file for algorithm base class : RichHistoAlgBase
  *
  *  CVS Log :-
- *  $Id: RichHistoAlgBase.h,v 1.1 2005-10-31 13:26:10 jonrob Exp $
+ *  $Id: RichHistoAlgBase.h,v 1.2 2007-02-01 17:24:54 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -25,31 +25,50 @@
 #include "RichKernel/RichHistoID.h"
 
 //-----------------------------------------------------------------------------
-/** @class RichHistoAlgBase RichHistoAlgBase.h RichKernel/RichHistoAlgBase.h
+/** @namespace Rich
  *
- *  Abstract base class for RICH algorithms providing some basic functionality. 
- * 
- *  In addition, uses the histogramming
- *  functionality from the base class GaudiHistoAlg.
+ *  General namespace for RICH software
  *
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   05/04/2002
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
  */
 //-----------------------------------------------------------------------------
-
-class RichHistoAlgBase : public RichCommonBase<GaudiHistoAlg>
+namespace Rich
 {
 
-public:
+  //-----------------------------------------------------------------------------
+  /** @class HistoAlgBase RichHistoAlgBase.h RichKernel/RichHistoAlgBase.h
+   *
+   *  Abstract base class for RICH algorithms providing some basic functionality.
+   *
+   *  In addition, uses the histogramming
+   *  functionality from the base class GaudiHistoAlg.
+   *
+   *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+   *  @date   05/04/2002
+   */
+  //-----------------------------------------------------------------------------
 
-  /// Standard constructor
-  RichHistoAlgBase( const std::string& name,
-                    ISvcLocator* pSvcLocator )
-    : RichCommonBase<GaudiHistoAlg> ( name, pSvcLocator )
+  class HistoAlgBase : public Rich::CommonBase<GaudiHistoAlg>
   {
-    setHistoTopDir( "RICH/" );
-  }
 
-};
+  public:
+
+    /// Standard constructor
+    HistoAlgBase( const std::string& name,
+                  ISvcLocator* pSvcLocator )
+      : Rich::CommonBase<GaudiHistoAlg> ( name, pSvcLocator )
+    {
+      setHistoTopDir( "RICH/" );
+    }
+
+  };
+
+}
+
+/** For backwards compatibility
+ *  @todo Remove this typedef
+ */
+typedef Rich::HistoAlgBase RichHistoAlgBase;
 
 #endif // RICHKERNEL_RICHHISTOALGBASE_H

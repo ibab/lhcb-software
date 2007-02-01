@@ -2,11 +2,11 @@
 //-----------------------------------------------------------------------------
 /** @file RichRecTupleAlgBase.h
  *
- *  Header file for RICH reconstruction monitor algorithm base class : 
+ *  Header file for RICH reconstruction monitor algorithm base class :
  *  RichRecTupleAlgBase
  *
  *  CVS Log :-
- *  $Id: RichRecTupleAlgBase.h,v 1.1 2005-10-31 13:30:16 jonrob Exp $
+ *  $Id: RichRecTupleAlgBase.h,v 1.2 2007-02-01 17:26:22 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005/01/13
@@ -21,54 +21,84 @@
 #include "RichRecBase/RichRecBase.h"
 
 //-----------------------------------------------------------------------------
-/** @class RichRecTupleAlgBase RichRecTupleAlgBase.h RichRecBase/RichRecTupleAlgBase.h
+/** @namespace Rich
  *
- *  Abstract base class for RICH reconstruction algorithms providing
- *  some basic functionality (identical to RichRecAlgBase) but with additional
- *  histogram and ntuple functionality provided by GaudiTupleAlg base class.
+ *  General namespace for RICH software
  *
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   2005/01/13
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
  */
 //-----------------------------------------------------------------------------
-
-class RichRecTupleAlgBase : public RichTupleAlgBase,
-                            public RichRecBase<RichTupleAlgBase>
+namespace Rich
 {
 
-public:
-
-  /// Standard constructor
-  RichRecTupleAlgBase( const std::string& name,
-                       ISvcLocator* pSvcLocator );
-
-  /// Destructor
-  virtual ~RichRecTupleAlgBase() {};
-
-  /** Initialization of the algorithm after creation
+  /** @namespace Rich::Rec
    *
-   * @return The status of the initialization
-   * @retval StatusCode::SUCCESS Initialization was successful
-   * @retval StatusCode::FAILURE Initialization failed
-   */
-  virtual StatusCode initialize();
-
-  /** The main event processing method. Called once for each event
+   *  General namespace for RICH reconstruction software
    *
-   * @return The status of the event processing
-   * @retval StatusCode::SUCCESS Event processing was successful
-   * @retval StatusCode::FAILURE Event processing failed
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   08/07/2004
    */
-  virtual StatusCode execute();
+  namespace Rec
+  {
 
-  /** Finalization of the algorithm before deletion
-   *
-   * @return The status of the finalization
-   * @retval StatusCode::SUCCESS Finalization was successful
-   * @retval StatusCode::FAILURE Finalization failed
-   */
-  virtual StatusCode finalize();
+    //-----------------------------------------------------------------------------
+    /** @class TupleAlgBase RichRecTupleAlgBase.h RichRecBase/RichRecTupleAlgBase.h
+     *
+     *  Abstract base class for RICH reconstruction algorithms providing
+     *  some basic functionality (identical to RichRecAlgBase) but with additional
+     *  histogram and ntuple functionality provided by GaudiTupleAlg base class.
+     *
+     *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+     *  @date   2005/01/13
+     */
+    //-----------------------------------------------------------------------------
 
-};
+    class TupleAlgBase : public Rich::TupleAlgBase,
+                         public Rich::Rec::CommonBase<Rich::TupleAlgBase>
+    {
+
+    public:
+
+      /// Standard constructor
+      TupleAlgBase( const std::string& name,
+                    ISvcLocator* pSvcLocator );
+
+      /// Destructor
+      virtual ~TupleAlgBase() {};
+
+      /** Initialization of the algorithm after creation
+       *
+       * @return The status of the initialization
+       * @retval StatusCode::SUCCESS Initialization was successful
+       * @retval StatusCode::FAILURE Initialization failed
+       */
+      virtual StatusCode initialize();
+
+      /** The main event processing method. Called once for each event
+       *
+       * @return The status of the event processing
+       * @retval StatusCode::SUCCESS Event processing was successful
+       * @retval StatusCode::FAILURE Event processing failed
+       */
+      virtual StatusCode execute();
+
+      /** Finalization of the algorithm before deletion
+       *
+       * @return The status of the finalization
+       * @retval StatusCode::SUCCESS Finalization was successful
+       * @retval StatusCode::FAILURE Finalization failed
+       */
+      virtual StatusCode finalize();
+
+    };
+
+  }
+} // RICH
+
+/** Backwards compatibility typedef
+ * @todo Remove eventually
+ */
+typedef Rich::Rec::TupleAlgBase RichRecTupleAlgBase;
 
 #endif // RICHRECBASE_RICHRECTUPLEALGBASE_H

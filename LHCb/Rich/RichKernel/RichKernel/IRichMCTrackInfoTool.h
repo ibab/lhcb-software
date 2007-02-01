@@ -1,10 +1,10 @@
 
 /** @file IRichMCTrackInfoTool.h
  *
- *  Header file for tool interface : IRichMCTrackInfoTool
+ *  Header file for tool interface : Rich::IMCTrackInfoTool
  *
  *  CVS Log :-
- *  $Id: IRichMCTrackInfoTool.h,v 1.7 2006-03-12 16:12:37 jonrob Exp $
+ *  $Id: IRichMCTrackInfoTool.h,v 1.8 2007-02-01 17:24:54 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -23,56 +23,84 @@ namespace LHCb
 }
 
 /// Static Interface Identification
-static const InterfaceID IID_IRichMCTrackInfoTool( "IRichMCTrackInfoTool", 1, 0 );
+static const InterfaceID IID_IRichMCTrackInfoTool( "Rich::IMCTrackInfoTool", 1, 0 );
 
-/** @class IRichMCTrackInfoTool IRichMCTrackInfoTool.h
+//-----------------------------------------------------------------------------
+/** @namespace Rich
  *
- *  Interface to tool providing tracking extrapolation information from
- *  RICH Monte Carlo data objects
+ *  General namespace for RICH software
  *
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   15/03/2002
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
  */
+//-----------------------------------------------------------------------------
+namespace Rich
+{
 
-class IRichMCTrackInfoTool : public virtual IAlgTool {
-
-public:
-
-  /** static interface identification
-   *  @return unique interface identifier
+  //-----------------------------------------------------------------------------
+  /** @namespace MC
+   *
+   *  General namespace for RICH MC related software
+   *
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   05/12/2006
    */
-  static const InterfaceID& interfaceID() { return IID_IRichMCTrackInfoTool; }
+  //-----------------------------------------------------------------------------
+  namespace MC
+  {
 
-  /** Takes the direction information from a MCRichSegment and ray traces it through the
-   *  appropriate RICH optical system and computes the intersect points with the HPD
-   *  panel in LHCb global coordinates.
-   *
-   *  @param segment  Pointer to an MCRichSegment
-   *  @param hitPoint Ray traced hit position on HPD panel in global LHCb coordinates
-   *
-   *  @return boolean indicating if the intersection was successful
-   *  @retval true   intersection was successful, returned hitPoint is valid
-   *  @retval false  intersection was unsuccessful, returned hitPoint is not valid
-   */
-  virtual const bool
-  panelIntersectGlobal ( const LHCb::MCRichSegment * segment,
-                         Gaudi::XYZPoint & hitPoint ) const = 0;
+    /** @class IMCTrackInfoTool IRichMCTrackInfoTool.h
+     *
+     *  Interface to tool providing tracking extrapolation information from
+     *  RICH Monte Carlo data objects
+     *
+     *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+     *  @date   15/03/2002
+     */
 
-  /** Takes the direction information from a MCRichSegment and ray traces it through the
-   *  appropriate RICH optical system and computes the intersect points with the HPD
-   *  panel in local HPD panel coordinates.
-   *
-   *  @param segment  Pointer to an MCRichSegment
-   *  @param hitPoint Ray traced hit position on HPD panel in local HPD panel coordinates
-   *
-   *  @return boolean indicating if the intersection was successful
-   *  @retval true   intersection was successful, returned hitPoint is valid
-   *  @retval false  intersection was unsuccessful, returned hitPoint is not valid
-   */
-  virtual const bool
-  panelIntersectLocal ( const LHCb::MCRichSegment * segment,
-                        Gaudi::XYZPoint & hitPoint ) const = 0;
+    class IMCTrackInfoTool : public virtual IAlgTool
+    {
 
-};
+    public:
+
+      /** static interface identification
+       *  @return unique interface identifier
+       */
+      static const InterfaceID& interfaceID() { return IID_IRichMCTrackInfoTool; }
+
+      /** Takes the direction information from a MCRichSegment and ray traces it through the
+       *  appropriate RICH optical system and computes the intersect points with the HPD
+       *  panel in LHCb global coordinates.
+       *
+       *  @param segment  Pointer to an MCRichSegment
+       *  @param hitPoint Ray traced hit position on HPD panel in global LHCb coordinates
+       *
+       *  @return boolean indicating if the intersection was successful
+       *  @retval true   intersection was successful, returned hitPoint is valid
+       *  @retval false  intersection was unsuccessful, returned hitPoint is not valid
+       */
+      virtual const bool
+      panelIntersectGlobal ( const LHCb::MCRichSegment * segment,
+                             Gaudi::XYZPoint & hitPoint ) const = 0;
+
+      /** Takes the direction information from a MCRichSegment and ray traces it through the
+       *  appropriate RICH optical system and computes the intersect points with the HPD
+       *  panel in local HPD panel coordinates.
+       *
+       *  @param segment  Pointer to an MCRichSegment
+       *  @param hitPoint Ray traced hit position on HPD panel in local HPD panel coordinates
+       *
+       *  @return boolean indicating if the intersection was successful
+       *  @retval true   intersection was successful, returned hitPoint is valid
+       *  @retval false  intersection was unsuccessful, returned hitPoint is not valid
+       */
+      virtual const bool
+      panelIntersectLocal ( const LHCb::MCRichSegment * segment,
+                            Gaudi::XYZPoint & hitPoint ) const = 0;
+
+    };
+
+  }
+}
 
 #endif // RICHKERNEL_IRICHMCTRACKINFOTOOL_H

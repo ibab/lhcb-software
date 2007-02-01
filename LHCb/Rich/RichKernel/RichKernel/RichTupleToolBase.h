@@ -5,7 +5,7 @@
  *  Header file for tool base class : RichTupleToolBase
  *
  *  CVS Log :-
- *  $Id: RichTupleToolBase.h,v 1.2 2006-08-28 10:59:31 jonrob Exp $
+ *  $Id: RichTupleToolBase.h,v 1.3 2007-02-01 17:24:55 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -25,33 +25,52 @@
 #include "RichKernel/RichHistoID.h"
 
 //-----------------------------------------------------------------------------
-/** @class RichTupleToolBase RichTupleToolBase.h RichKernel/RichTupleToolBase.h
+/** @namespace Rich
  *
- *  Abstract base class for RICH tools providing some basic functionality. 
+ *  General namespace for RICH software
  *
- *  In addition, uses the histogramming and ntupling
- *  functionality from the base class GaudiTupleTool.
- *
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   05/04/2002
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
  */
 //-----------------------------------------------------------------------------
-
-class RichTupleToolBase : public RichCommonBase<GaudiTupleTool>
+namespace Rich
 {
 
-public:
+  //-----------------------------------------------------------------------------
+  /** @class TupleToolBase RichTupleToolBase.h RichKernel/RichTupleToolBase.h
+   *
+   *  Abstract base class for RICH tools providing some basic functionality.
+   *
+   *  In addition, uses the histogramming and ntupling
+   *  functionality from the base class GaudiTupleTool.
+   *
+   *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+   *  @date   05/04/2002
+   */
+  //-----------------------------------------------------------------------------
 
-  /// Standard constructor
-  RichTupleToolBase( const std::string& type,
-                     const std::string& name,
-                     const IInterface* parent )
-    : RichCommonBase<GaudiTupleTool> ( type, name, parent )
+  class TupleToolBase : public Rich::CommonBase<GaudiTupleTool>
   {
-    setHistoTopDir  ( "RICH/" );
-    //setNTupleTopDir ( "RICH/" );
-  }
 
-};
+  public:
+
+    /// Standard constructor
+    TupleToolBase( const std::string& type,
+                   const std::string& name,
+                   const IInterface* parent )
+      : Rich::CommonBase<GaudiTupleTool> ( type, name, parent )
+    {
+      setHistoTopDir  ( "RICH/" );
+      //setNTupleTopDir ( "RICH/" );
+    }
+
+  };
+
+}
+
+/** For backwards compatibility
+ *  @todo Remove this typedef
+ */
+typedef Rich::TupleToolBase RichTupleToolBase;
 
 #endif // RICHKERNEL_RICHTUPLETOOLBASE_H

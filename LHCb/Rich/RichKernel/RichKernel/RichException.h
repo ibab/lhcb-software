@@ -2,7 +2,7 @@
 //-----------------------------------------------------------------------------
 /** @file RichException.h
  *
- *  Header file for utility class : RichException
+ *  Header file for utility class : Rich::Exception
  *
  *
  *  @author  Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -19,49 +19,68 @@
 #include "GaudiKernel/GaudiException.h"
 
 //-----------------------------------------------------------------------------
-/** @class RichException RichException.h RichKernel/RichException.h
+/** @namespace Rich
  *
- *  Base class for all exceptions in the RICH system
+ *  General namespace for RICH software
  *
- *  @author  Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date    09/05/2004
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
  */
 //-----------------------------------------------------------------------------
-
-class RichException : public GaudiException 
+namespace Rich
 {
 
-public:
-
-  /** Default Constructor
+  //-----------------------------------------------------------------------------
+  /** @class Exception RichException.h RichKernel/RichException.h
    *
-   *  @param ex  exception message
-   *  @param sc  status code associated with the exception
-   */
-  RichException( const std::string& ex   = "unspecified exception",
-                 const StatusCode&  sc   =  StatusCode::FAILURE )
-    : GaudiException( ex , "*RichException*" , sc )  {};
-
-  /** Constructor from another GaudiException
+   *  Base class for all exceptions in the RICH system
    *
-   *  @param ex          exception message
-   *  @param Ex          previous exception
-   *  @param sc          status code associated with the exception
+   *  @author  Chris Jones   Christopher.Rob.Jones@cern.ch
+   *  @date    09/05/2004
    */
-  RichException( const std::string    & ex                        ,
-                 const GaudiException & Ex                        ,
-                 const StatusCode&      sc =  StatusCode::FAILURE )
-    : GaudiException( ex, "*RichException*" , sc , Ex ) {};
+  //-----------------------------------------------------------------------------
 
-  /** destructor
-   */
-  virtual ~RichException() throw() {};
+  class Exception : public GaudiException
+  {
 
-  /** clone (virtual constructor)
-   */
-  virtual GaudiException* clone() const { return new RichException(*this); }
+  public:
 
-};
+    /** Default Constructor
+     *
+     *  @param ex  exception message
+     *  @param sc  status code associated with the exception
+     */
+    Exception( const std::string& ex   = "unspecified exception",
+               const StatusCode&  sc   =  StatusCode::FAILURE )
+      : GaudiException( ex , "*RichException*" , sc )  {};
+
+    /** Constructor from another GaudiException
+     *
+     *  @param ex          exception message
+     *  @param Ex          previous exception
+     *  @param sc          status code associated with the exception
+     */
+    Exception( const std::string    & ex                        ,
+               const GaudiException & Ex                        ,
+               const StatusCode&      sc =  StatusCode::FAILURE )
+      : GaudiException( ex, "*RichException*" , sc , Ex ) {};
+
+    /** destructor
+     */
+    virtual ~Exception() throw() {};
+
+    /** clone (virtual constructor)
+     */
+    virtual GaudiException* clone() const { return new Exception(*this); }
+
+  };
+
+}
+
+/** For backwards compatibility
+ *  @todo Remove this typedef
+ */
+typedef Rich::Exception RichException;
 
 #endif  ///<   RICHKERNEL_RICHEXCEPTION_H
 

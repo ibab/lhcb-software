@@ -6,7 +6,7 @@
  *  algorithm base class : RichRecTupleAlgBase
  *
  *  CVS Log :-
- *  $Id: RichRecTupleAlgBase.cpp,v 1.1 2005-10-31 13:30:16 jonrob Exp $
+ *  $Id: RichRecTupleAlgBase.cpp,v 1.2 2007-02-01 17:26:23 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2005/01/13
@@ -29,16 +29,16 @@
 // ============================================================================
 // Force creation of templated class
 #include "RichRecBase.icpp"
-template class RichRecBase<RichTupleAlgBase> ;
+template class Rich::Rec::CommonBase<Rich::TupleAlgBase> ;
 // ============================================================================
 
 // ============================================================================
 // Standard constructor
 // ============================================================================
-RichRecTupleAlgBase::RichRecTupleAlgBase( const std::string& name,
-                                          ISvcLocator* pSvcLocator )
-  : RichTupleAlgBase  ( name, pSvcLocator ),
-    RichRecBase<RichTupleAlgBase> ( this )
+Rich::Rec::TupleAlgBase::TupleAlgBase( const std::string& name,
+                                       ISvcLocator* pSvcLocator )
+  : Rich::TupleAlgBase           ( name, pSvcLocator ),
+    Rich::Rec::CommonBase<Rich::TupleAlgBase> ( this )
 {
 }
 // ============================================================================
@@ -46,42 +46,38 @@ RichRecTupleAlgBase::RichRecTupleAlgBase( const std::string& name,
 // ============================================================================
 // Initialise
 // ============================================================================
-StatusCode RichRecTupleAlgBase::initialize()
+StatusCode Rich::Rec::TupleAlgBase::initialize()
 {
   // Initialise base class
-  StatusCode sc = RichTupleAlgBase::initialize();
+  const StatusCode sc = Rich::TupleAlgBase::initialize();
   if ( sc.isFailure() )
-    return Error( "Failed to initialise RichTupleAlgBase", sc );
+    return Error( "Failed to initialise Rich::TupleAlgBase", sc );
 
   // Common initialisation
-  sc = initialiseRichReco();
-  if ( sc.isFailure() )
-    return Error( "Failed to initialise RichRecBase", sc );
-
-  return sc;
+  return initialiseRichReco();
 }
 // ============================================================================
 
 // ============================================================================
 // Main execute method
 // ============================================================================
-StatusCode RichRecTupleAlgBase::execute()
+StatusCode Rich::Rec::TupleAlgBase::execute()
 {
   // All algorithms should re-implement this method
-  return Error ( "Default RichRecTupleAlgBase::execute() called !!" );
+  return Error ( "Default Rich::RecTupleAlgBase::execute() called !!" );
 }
 // ============================================================================
 
 // ============================================================================
 // Finalize
 // ============================================================================
-StatusCode RichRecTupleAlgBase::finalize()
+StatusCode Rich::Rec::TupleAlgBase::finalize()
 {
   // Common finalisation
   const StatusCode sc = finaliseRichReco();
-  if ( sc.isFailure() ) return Error( "Failed to finalise RichRecBase", sc );
+  if ( sc.isFailure() ) return Error( "Failed to finalise Rich::RecBase", sc );
 
   // Finalize base class
-  return RichTupleAlgBase::finalize();
+  return Rich::TupleAlgBase::finalize();
 }
 // ============================================================================

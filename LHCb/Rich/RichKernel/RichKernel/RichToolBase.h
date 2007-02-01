@@ -2,10 +2,10 @@
 //-----------------------------------------------------------------------------
 /** @file RichToolBase.h
  *
- *  Header file for tool base class : RichToolBase
+ *  Header file for tool base class : Rich::ToolBase
  *
  *  CVS Log :-
- *  $Id: RichToolBase.h,v 1.11 2005-10-13 15:03:42 jonrob Exp $
+ *  $Id: RichToolBase.h,v 1.12 2007-02-01 17:24:55 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -22,27 +22,46 @@
 #include "RichKernel/RichCommonBase.h"
 
 //-----------------------------------------------------------------------------
-/** @class RichToolBase RichToolBase.h RichKernel/RichToolBase.h
+/** @namespace Rich
  *
- *  Abstract base class for RICH tools providing
- *  some basic functionality.
+ *  General namespace for RICH software
  *
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   05/04/2002
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
  */
 //-----------------------------------------------------------------------------
-
-class RichToolBase : public RichCommonBase<GaudiTool>
+namespace Rich
 {
 
-public:
+  //-----------------------------------------------------------------------------
+  /** @class ToolBase RichToolBase.h RichKernel/RichToolBase.h
+   *
+   *  Abstract base class for RICH tools providing
+   *  some basic functionality.
+   *
+   *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+   *  @date   05/04/2002
+   */
+  //-----------------------------------------------------------------------------
 
-  /// Standard constructor
-  RichToolBase( const std::string& type,
-                const std::string& name,
-                const IInterface* parent )
-    : RichCommonBase<GaudiTool> ( type, name, parent ) { }
+  class ToolBase : public Rich::CommonBase<GaudiTool>
+  {
 
-};
+  public:
+
+    /// Standard constructor
+    ToolBase( const std::string& type,
+              const std::string& name,
+              const IInterface* parent )
+      : Rich::CommonBase<GaudiTool> ( type, name, parent ) { }
+
+  };
+
+}
+
+/** For backwards compatibility
+ *  @todo Remove this typedef
+ */
+typedef Rich::ToolBase RichToolBase;
 
 #endif // RICHKERNEL_RICHTOOLBASE_H

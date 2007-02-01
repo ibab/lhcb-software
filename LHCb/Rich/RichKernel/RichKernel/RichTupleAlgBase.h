@@ -5,7 +5,7 @@
  *  Header file for algorithm base class : RichTupleAlgBase
  *
  *  CVS Log :-
- *  $Id: RichTupleAlgBase.h,v 1.2 2006-08-28 10:59:31 jonrob Exp $
+ *  $Id: RichTupleAlgBase.h,v 1.3 2007-02-01 17:24:55 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -25,32 +25,51 @@
 #include "RichKernel/RichHistoID.h"
 
 //-----------------------------------------------------------------------------
-/** @class RichTupleAlgBase RichTupleAlgBase.h RichKernel/RichTupleAlgBase.h
+/** @namespace Rich
  *
- *  Abstract base class for RICH algorithms providing some basic functionality. 
+ *  General namespace for RICH software
  *
- *  In addition, uses the histogramming and ntupling
- *  functionality from the base class GaudiTupleAlg.
- *
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   05/04/2002
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
  */
 //-----------------------------------------------------------------------------
-
-class RichTupleAlgBase : public RichCommonBase<GaudiTupleAlg>
+namespace Rich
 {
 
-public:
+  //-----------------------------------------------------------------------------
+  /** @class TupleAlgBase RichTupleAlgBase.h RichKernel/RichTupleAlgBase.h
+   *
+   *  Abstract base class for RICH algorithms providing some basic functionality.
+   *
+   *  In addition, uses the histogramming and ntupling
+   *  functionality from the base class GaudiTupleAlg.
+   *
+   *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+   *  @date   05/04/2002
+   */
+  //-----------------------------------------------------------------------------
 
-  /// Standard constructor
-  RichTupleAlgBase( const std::string& name,
-                    ISvcLocator* pSvcLocator )
-    : RichCommonBase<GaudiTupleAlg> ( name, pSvcLocator )
+  class TupleAlgBase : public Rich::CommonBase<GaudiTupleAlg>
   {
-    setHistoTopDir  ( "RICH/" );
-    //setNTupleTopDir ( "RICH/" );
-  }
 
-};
+  public:
+
+    /// Standard constructor
+    TupleAlgBase( const std::string& name,
+                  ISvcLocator* pSvcLocator )
+      : Rich::CommonBase<GaudiTupleAlg> ( name, pSvcLocator )
+    {
+      setHistoTopDir  ( "RICH/" );
+      //setNTupleTopDir ( "RICH/" );
+    }
+
+  };
+
+}
+
+/** For backwards compatibility
+ *  @todo Remove this typedef
+ */
+typedef Rich::TupleAlgBase RichTupleAlgBase;
 
 #endif // RICHKERNEL_RICHTUPLEALGBASE_H

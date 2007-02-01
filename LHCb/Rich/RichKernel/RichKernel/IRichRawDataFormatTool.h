@@ -2,10 +2,10 @@
 //-----------------------------------------------------------------------------
 /** @file IRichRawDataFormatTool.h
  *
- *  Header file for tool interface : IRichRawDataFormatTool
+ *  Header file for tool interface : Rich::DAQ::IRawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: IRichRawDataFormatTool.h,v 1.8 2006-09-07 17:17:52 jonrob Exp $
+ *  $Id: IRichRawDataFormatTool.h,v 1.9 2007-02-01 17:24:54 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-18
@@ -31,48 +31,75 @@ namespace LHCb
 }
 
 /// Static Interface Identification
-static const InterfaceID IID_IRichRawDataFormatTool ( "IRichRawDataFormatTool", 1, 0 );
+static const InterfaceID IID_IRichRawDataFormatTool ( "Rich::DAQ::IRawDataFormatTool", 1, 0 );
 
-/** @class IRichRawDataFormatTool IRichRawDataFormatTool.h RichKernel/IRichRawDataFormatTool.h
+//-----------------------------------------------------------------------------
+/** @namespace Rich
  *
- *  Interface to tool to encode and decode the Raw Buffer for the RICH
+ *  General namespace for RICH software
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
- *  @date   2004-12-18
+ *  @date   08/07/2004
  */
-
-class IRichRawDataFormatTool : virtual public IAlgTool 
+//-----------------------------------------------------------------------------
+namespace Rich
 {
 
-public:
-
-  /** static interface identification
-   *  @return unique interface identifier
-   */
-  static const InterfaceID& interfaceID() { return IID_IRichRawDataFormatTool; }
-
-  /** Fills the RICH RawEvent from a vector of RichSmartIDs
+  //-----------------------------------------------------------------------------
+  /** @namespace DAQ
    *
-   *  @param smartIDs  Vector of RichSmartIDs
-   *  @param version The RICH DAQ data bank version
-   */
-  virtual void fillRawEvent( const LHCb::RichSmartID::Vector & smartIDs,
-                             const RichDAQ::BankVersion version = RichDAQ::LHCb2 ) const = 0;
-
-  /** Decode a single RawBank into RichSmartID identifiers
+   *  namespace for RICH DAQ software
    *
-   *  @param bank     Pointer to RawBank to decode
-   *  @param smartIDs Vector of RichSmartIDs to fill
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   08/07/2004
    */
-  virtual void decodeToSmartIDs( const LHCb::RawBank & bank,
-                                 RichDAQ::PDMap & smartIDs ) const = 0;
+  //-----------------------------------------------------------------------------
+  namespace DAQ
+  {
 
-  /** Decode all RICH RawBanks into RichSmartID identifiers
-   *
-   *  @param smartIDs Vector of RichSmartIDs to fill
-   */
-  virtual void decodeToSmartIDs( RichDAQ::PDMap & smartIDs ) const = 0;
+    /** @class IRawDataFormatTool IRichRawDataFormatTool.h RichKernel/IRichRawDataFormatTool.h
+     *
+     *  Interface to tool to encode and decode the Raw Buffer for the RICH
+     *
+     *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+     *  @date   2004-12-18
+     */
 
-};
+    class IRawDataFormatTool : virtual public IAlgTool
+    {
+
+    public:
+
+      /** static interface identification
+       *  @return unique interface identifier
+       */
+      static const InterfaceID& interfaceID() { return IID_IRichRawDataFormatTool; }
+
+      /** Fills the RICH RawEvent from a vector of RichSmartIDs
+       *
+       *  @param smartIDs  Vector of RichSmartIDs
+       *  @param version The RICH DAQ data bank version
+       */
+      virtual void fillRawEvent( const LHCb::RichSmartID::Vector & smartIDs,
+                                 const Rich::DAQ::BankVersion version = Rich::DAQ::LHCb2 ) const = 0;
+
+      /** Decode a single RawBank into RichSmartID identifiers
+       *
+       *  @param bank     Pointer to RawBank to decode
+       *  @param smartIDs Vector of RichSmartIDs to fill
+       */
+      virtual void decodeToSmartIDs( const LHCb::RawBank & bank,
+                                     Rich::DAQ::PDMap & smartIDs ) const = 0;
+
+      /** Decode all RICH RawBanks into RichSmartID identifiers
+       *
+       *  @param smartIDs Vector of RichSmartIDs to fill
+       */
+      virtual void decodeToSmartIDs( Rich::DAQ::PDMap & smartIDs ) const = 0;
+
+    };
+
+  }
+}
 
 #endif // RICHKERNEL_IRICHHPDDATABANKTOOL_H

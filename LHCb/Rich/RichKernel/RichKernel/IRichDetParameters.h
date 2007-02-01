@@ -2,10 +2,10 @@
 //-----------------------------------------------------------------------------
 /** @file IRichDetParameters.h
  *
- *  Header file for tool interface : IRichDetParameters
+ *  Header file for tool interface : Rich::IDetParameters
  *
  *  CVS Log :-
- *  $Id: IRichDetParameters.h,v 1.6 2005-02-02 09:59:25 jonrob Exp $
+ *  $Id: IRichDetParameters.h,v 1.7 2007-02-01 17:24:54 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-03-29
@@ -22,107 +22,122 @@
 #include "Kernel/RichRadiatorType.h"
 
 /// Static Interface Identification
-static const InterfaceID IID_IRichDetParameters( "IRichDetParameters", 1, 0 );
+static const InterfaceID IID_IRichDetParameters( "Rich::IDetParameters", 1, 0 );
 
 //-----------------------------------------------------------------------------
-/** @class IRichDetParameters IRichDetParameters.h RichKernel/IRichDetParameters.h
+/** @namespace Rich
  *
- *  Interface for tools providing access to useful detector parameters
+ *  General namespace for RICH software
  *
- *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
- *  @date   2004-03-29
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
  */
 //-----------------------------------------------------------------------------
+namespace Rich
+{
 
-class IRichDetParameters : public virtual IAlgTool {
-
-public:
-
-  /** @class RadLimits IRichDetParameters.h RichKernel/IRichDetParameters.h
+  //-----------------------------------------------------------------------------
+  /** @class IDetParameters IRichDetParameters.h RichKernel/IRichDetParameters.h
    *
-   *  Helper class for IRichDetParameters to contain HPD acceptance data
-   * 
+   *  Interface for tools providing access to useful detector parameters
+   *
    *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
-   *  @date   2005-01-29
+   *  @date   2004-03-29
    */
-  class RadLimits {
+  //-----------------------------------------------------------------------------
+
+  class IDetParameters : public virtual IAlgTool
+  {
 
   public:
 
-    /** Constructor from limit data
+    /** @class RadLimits IRichDetParameters.h RichKernel/IRichDetParameters.h
      *
-     *  Limits are unsigned, and correspond to a single HPD panel.
+     *  Helper class for IRichDetParameters to contain HPD acceptance data
      *
-     *  @param minX The minimum x edge of acceptance
-     *  @param maxX The maximum x edge of acceptance
-     *  @param minY The minimum y edge of acceptance
-     *  @param maxY The maximum y edge of acceptance
+     *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
+     *  @date   2005-01-29
      */
-    RadLimits( const double minX = 0, const double maxX = 0,
-               const double minY = 0, const double maxY = 0 )
-      : m_maxX(maxX), m_minX(minX), m_maxY(maxY), m_minY(minY) { }
+    class RadLimits {
 
-    /// Access the minimum x limit
-    inline double minX() const { return m_minX; }
-    /// Access the maximum x limit
-    inline double maxX() const { return m_maxX; }
-    /// Access the minimum y limit
-    inline double minY() const { return m_minY; }
-    /// Access the maximum y limit
-    inline double maxY() const { return m_maxY; }
+    public:
 
-  private:
+      /** Constructor from limit data
+       *
+       *  Limits are unsigned, and correspond to a single HPD panel.
+       *
+       *  @param minX The minimum x edge of acceptance
+       *  @param maxX The maximum x edge of acceptance
+       *  @param minY The minimum y edge of acceptance
+       *  @param maxY The maximum y edge of acceptance
+       */
+      RadLimits( const double minX = 0, const double maxX = 0,
+                 const double minY = 0, const double maxY = 0 )
+        : m_maxX(maxX), m_minX(minX), m_maxY(maxY), m_minY(minY) { }
 
-    double m_maxX; ///< Maximum X limit
-    double m_minX; ///< Minimum X limit
-    double m_maxY; ///< Maximum Y limit
-    double m_minY; ///< Minimum Y limit
+      /// Access the minimum x limit
+      inline double minX() const { return m_minX; }
+      /// Access the maximum x limit
+      inline double maxX() const { return m_maxX; }
+      /// Access the minimum y limit
+      inline double minY() const { return m_minY; }
+      /// Access the maximum y limit
+      inline double maxY() const { return m_maxY; }
+
+    private:
+
+      double m_maxX; ///< Maximum X limit
+      double m_minX; ///< Minimum X limit
+      double m_maxY; ///< Maximum Y limit
+      double m_minY; ///< Minimum Y limit
+
+    };
+
+  public:
+
+    /** static interface identification
+     *  @return unique interface identifier
+     */
+    static const InterfaceID& interfaceID() { return IID_IRichDetParameters; }
+
+    /** Calculates the maximum observable photon energy for a given radiator medium
+     *
+     *  @param rad  The radiator type
+     *
+     *  @return The value of the maximum photon energy for the given radiator
+     */
+    virtual double maxPhotonEnergy ( const Rich::RadiatorType rad ) const = 0;
+
+    /** Calculates the minimum observable photon energy for a given radiator medium
+     *
+     *  @param rad  The radiator type
+     *
+     *  @return The value of the minimum photon energy for the given radiator
+     */
+    virtual double minPhotonEnergy ( const Rich::RadiatorType rad ) const = 0;
+
+    /** Calculate the mean observable photon energy for a given radiator medium
+     *
+     *  @param rad  The radiator type
+     *
+     * @return The value of the mean photon energy for the given radiator
+     */
+    virtual double meanPhotonEnergy ( const Rich::RadiatorType rad ) const = 0;
+
+    /** Returns the average acceptance outer limits in local HPD coordinates
+     *  for the given radiator type
+     *
+     *  @param rad The radiator type
+     *
+     *  @return The average (x,y) outer acceptance limits
+     *          .first  Gives the x limit
+     *          .second Gives the y limit
+     */
+    virtual const IDetParameters::RadLimits &
+    AvAcceptOuterLimitsLocal( const Rich::RadiatorType rad ) const = 0;
 
   };
 
-public:
-
-  /** static interface identification
-   *  @return unique interface identifier
-   */
-  static const InterfaceID& interfaceID() { return IID_IRichDetParameters; }
-
-  /** Calculates the maximum observable photon energy for a given radiator medium
-   *
-   *  @param rad  The radiator type
-   *
-   *  @return The value of the maximum photon energy for the given radiator
-   */
-  virtual double maxPhotonEnergy ( const Rich::RadiatorType rad ) const = 0;
-
-  /** Calculates the minimum observable photon energy for a given radiator medium
-   *
-   *  @param rad  The radiator type
-   *
-   *  @return The value of the minimum photon energy for the given radiator
-   */
-  virtual double minPhotonEnergy ( const Rich::RadiatorType rad ) const = 0;
-  
-  /** Calculate the mean observable photon energy for a given radiator medium
-   *
-   *  @param rad  The radiator type
-   *
-   * @return The value of the mean photon energy for the given radiator
-   */
-  virtual double meanPhotonEnergy ( const Rich::RadiatorType rad ) const = 0;
-
-  /** Returns the average acceptance outer limits in local HPD coordinates 
-   *  for the given radiator type
-   *
-   *  @param rad The radiator type
-   * 
-   *  @return The average (x,y) outer acceptance limits
-   *          .first  Gives the x limit
-   *          .second Gives the y limit
-   */
-  virtual const IRichDetParameters::RadLimits & 
-  AvAcceptOuterLimitsLocal( const Rich::RadiatorType rad ) const = 0;
-  
-};
+}
 
 #endif // RICHKERNEL_IRICHDETPARAMETERS_H

@@ -2,10 +2,10 @@
 //--------------------------------------------------------------------------------
 /** @file RichObjPtn.h
  *
- *  Header file for RICH utility class : RichObjPtn
+ *  Header file for RICH utility class : Rich::ObjPtn
  *
  *  CVS Log :-
- *  $Id: RichObjPtn.h,v 1.3 2006-01-23 13:48:35 jonrob Exp $
+ *  $Id: RichObjPtn.h,v 1.4 2007-02-01 17:24:55 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   13/11/2005
@@ -15,81 +15,93 @@
 #ifndef RICHKERNEL_RICHOBJPTN_H
 #define RICHKERNEL_RICHOBJPTN_H 1
 
-//--------------------------------------------------------------------------------
-/** @class RichObjPtn RichObjPtn.h RichKernel/RichObjPtn.h
+//-----------------------------------------------------------------------------
+/** @namespace Rich
  *
- *  A utility class providing on demand object creation and some auto pointer
- *  behaviour
+ *  General namespace for RICH software
  *
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   13/11/2005
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
  */
-//--------------------------------------------------------------------------------
-
-template < class TYPE >
-class RichObjPtn
+//-----------------------------------------------------------------------------
+namespace Rich
 {
 
-public:
-
-  /// Default Constructor
-  RichObjPtn()                      : m_obj(0)   {}
-
-  /** Constructor from pointer to the underlying object
+  //--------------------------------------------------------------------------------
+  /** @class ObjPtn RichObjPtn.h RichKernel/RichObjPtn.h
    *
-   *  @param obj Pointer to object to use as underlying data object
+   *  A utility class providing on demand object creation and some auto pointer
+   *  like behaviour
    *
-   *  @attention Using this method, RichObjPtn takes ownership of
-   *  the object pointed at by obj. In particular, it is deleted
-   *  when this RichObjPtn goes out of scope or is deleted itself.
-   *  Consequently users should NOT manually delete objects they
-   *  pass to a RichObjPtn
+   *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+   *  @date   13/11/2005
    */
-  explicit RichObjPtn( TYPE * obj ) : m_obj(obj) {}
+  //--------------------------------------------------------------------------------
 
-  /// Destructor
-  ~RichObjPtn() { delete m_obj; }
-
-private:
-
-  /// Check if new object is needed
-  inline TYPE* checkObj() const
+  template < class TYPE >
+  class ObjPtn
   {
-    if ( 0 == m_obj ) { m_obj = new TYPE(); }
-    return m_obj;
-  }
 
-public:
+  public:
 
-  /// Check if an object is defined
-  inline bool objectExists()      const { return 0 != m_obj; }
+    /// Default Constructor
+    ObjPtn() : m_obj(NULL) {}
 
-  /// Dereference operator to const object
-  inline const TYPE* operator->() const { return checkObj(); }
+    /** Constructor from pointer to the underlying object
+     *
+     *  @param obj Pointer to object to use as underlying data object
+     *
+     *  @attention Using this method, RichObjPtn takes ownership of
+     *  the object pointed at by obj. In particular, it is deleted
+     *  when this RichObjPtn goes out of scope or is deleted itself.
+     *  Consequently users should NOT manually delete objects they
+     *  pass to a RichObjPtn.
+     */
+    explicit ObjPtn( TYPE * obj ) : m_obj(obj) {}
 
-  /// Dereference operator
-  inline TYPE* operator->()             { return checkObj(); }
+    /// Destructor
+    ~ObjPtn() { delete m_obj; }
 
-  /// Simple const access method
-  inline const TYPE* object()     const { return checkObj(); }
+  private:
 
-  /// Simple access method
-  inline TYPE* object()                 { return checkObj(); }
-  
-private:
+    /// Check if new object is needed
+    inline TYPE* checkObj() const
+    {
+      if ( NULL == m_obj ) { m_obj = new TYPE(); }
+      return m_obj;
+    }
 
-  /// Pointer to the data object
-  mutable TYPE * m_obj;
+  public:
 
-};
+    /// Check if an object is defined
+    inline bool objectExists()      const { return NULL != m_obj; }
 
-/// Implement ostream << method
-template <class TYPE>
-inline std::ostream& operator << ( std::ostream& s, 
-                                   const RichObjPtn<TYPE>& ptn )
-{
-  s << *(ptn.object());
-  return s;
+    /// Dereference operator to const object
+    inline const TYPE* operator->() const { return checkObj(); }
+
+    /// Dereference operator
+    inline TYPE* operator->()             { return checkObj(); }
+
+    /// Simple const access method
+    inline const TYPE* object()     const { return checkObj(); }
+
+    /// Simple access method
+    inline TYPE* object()                 { return checkObj(); }
+
+    /// Overload output to ostream
+    friend inline std::ostream& operator << ( std::ostream& s,
+                                              const Rich::ObjPtn<TYPE>& ptn )
+    {
+      return s << *(ptn.object());
+    }
+
+  private:
+
+    /// Pointer to the data object
+    mutable TYPE * m_obj;
+
+  };
+
 }
 
 #endif // RICHKERNEL_RICHOBJPTN_H

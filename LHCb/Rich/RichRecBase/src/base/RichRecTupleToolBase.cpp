@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool base class : RichRecTupleToolBase
  *
  *  CVS Log :-
- *  $Id: RichRecTupleToolBase.cpp,v 1.1 2005-10-31 13:30:16 jonrob Exp $
+ *  $Id: RichRecTupleToolBase.cpp,v 1.2 2007-02-01 17:26:23 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2005/01/13
@@ -25,17 +25,17 @@
 // ============================================================================
 // Force creation of templated class
 #include "RichRecBase.icpp"
-template class RichRecBase<RichTupleToolBase> ;
+template class Rich::Rec::CommonBase<Rich::TupleToolBase> ;
 // ============================================================================
 
 // ============================================================================
 // Standard constructor
 // ============================================================================
-RichRecTupleToolBase::RichRecTupleToolBase( const std::string& type,
-                                            const std::string& name,
-                                            const IInterface* parent )
-  : RichTupleToolBase ( type, name, parent ),
-    RichRecBase<RichTupleToolBase> ( this )
+Rich::Rec::TupleToolBase::TupleToolBase( const std::string& type,
+                                         const std::string& name,
+                                         const IInterface* parent )
+  : Rich::TupleToolBase  ( type, name, parent ),
+    Rich::Rec::CommonBase<Rich::TupleToolBase> ( this )
 {
 }
 // ============================================================================
@@ -43,32 +43,28 @@ RichRecTupleToolBase::RichRecTupleToolBase( const std::string& type,
 // ============================================================================
 // Initialise
 // ============================================================================
-StatusCode RichRecTupleToolBase::initialize()
+StatusCode Rich::Rec::TupleToolBase::initialize()
 {
   // Initialise base class
-  StatusCode sc = RichTupleToolBase::initialize();
+  const StatusCode sc = Rich::TupleToolBase::initialize();
   if ( sc.isFailure() )
-    return Error( "Failed to initialise RichTupleToolBase", sc );
+    return Error( "Failed to initialise Rich::TupleToolBase", sc );
 
   // Common initialisation
-  sc = initialiseRichReco();
-  if ( sc.isFailure() )
-    return Error( "Failed to initialise RichRecBase", sc );
-
-  return sc;
+  return initialiseRichReco();
 }
 // ============================================================================
 
 // ============================================================================
 // Finalise
 // ============================================================================
-StatusCode RichRecTupleToolBase::finalize()
+StatusCode Rich::Rec::TupleToolBase::finalize()
 {
   // Common finalisation
   const StatusCode sc = finaliseRichReco();
-  if ( sc.isFailure() ) return Error( "Failed to finalise RichRecBase", sc );
+  if ( sc.isFailure() ) return Error( "Failed to finalise Rich::RecBase", sc );
 
   // base class finalize
-  return RichTupleToolBase::finalize();
+  return Rich::TupleToolBase::finalize();
 }
 // ============================================================================

@@ -5,7 +5,7 @@
  *  Header file for tool interface : RichTrackSegment
  *
  *  CVS Log :-
- *  $Id: RichTrackSegment.h,v 1.7 2006-10-20 13:00:58 jonrob Exp $
+ *  $Id: RichTrackSegment.h,v 1.8 2007-02-01 17:24:54 jonrob Exp $
  *
  *  @author Antonis Papanestis   Antonis.Papanestis@cern.ch
  *  @author Chris Jones          Christopher.Rob.Jones@cern.ch
@@ -462,6 +462,18 @@ namespace LHCb
     /// Reset segment after information update
     void reset() const;
 
+  public:
+
+    /// Printout method
+    std::ostream & fillStream ( std::ostream& s ) const;
+
+    /// Implement ostream << method for RichTrackSegment
+    friend inline std::ostream& operator << ( std::ostream& s,
+                                              const LHCb::RichTrackSegment& segment )
+    {
+      return segment.fillStream(s);
+    }
+
   private:  // methods
 
     /// Provides write access to the radiator intersections
@@ -567,26 +579,6 @@ LHCb::RichTrackSegment::vectorAtThetaPhi( const double theta,
 inline void LHCb::RichTrackSegment::reset() const
 {
   cleanUpRotations();
-}
-
-/// Implement ostream << method for RichTrackSegment
-inline std::ostream& operator << ( std::ostream& s,
-                                   const LHCb::RichTrackSegment& segment )
-{
-  s << "{ " << std::endl
-    << " entryPoint:\t" << segment.entryPoint() << std::endl
-    << " middlePoint:\t" << segment.middlePoint() << std::endl
-    << " exitPoint:\t" << segment.exitPoint() << std::endl
-    << " entryMomentum:\t" << segment.entryMomentum() << std::endl
-    << " middleMomentum:\t" << segment.middleMomentum() << std::endl
-    << " exitMomentum:\t" << segment.exitMomentum() << std::endl
-    << " radiator:\t" << Rich::text( segment.radiator() ) << std::endl
-    << " rich:\t" << Rich::text( segment.rich() ) << std::endl
-    << " entryErrors:\t" << segment.entryErrors() << std::endl
-    << " middleErrors:\t" << segment.middleErrors() << std::endl
-    << " exitErrors:\t" << segment.exitErrors() << std::endl
-    << " } ";
-  return s;
 }
 
 #endif // RICHEVENT_RICHTRACKSEGMENT_H

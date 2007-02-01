@@ -2,10 +2,10 @@
 //-----------------------------------------------------------------------------
 /** @file IRichStatusCreator.h
  *
- *  Header file for RICH reconstruction tool interface : IRichStatusCreator
+ *  Header file for RICH reconstruction tool interface : Rich::Rec::IStatusCreator
  *
  *  CVS Log :-
- *  $Id: IRichStatusCreator.h,v 1.5 2006-03-12 16:13:47 jonrob Exp $
+ *  $Id: IRichStatusCreator.h,v 1.6 2007-02-01 17:26:22 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -23,34 +23,59 @@
 #include "Event/RichRecPixel.h"
 
 /// Static Interface Identification
-static const InterfaceID IID_IRichStatusCreator( "IRichStatusCreator" , 1 , 0 );
+static const InterfaceID IID_IRichStatusCreator( "Rich::Rec::IStatusCreator" , 1 , 0 );
 
 //-----------------------------------------------------------------------------
-/** @class IRichStatusCreator IRichStatusCreator.h
+/** @namespace Rich
  *
- *  Interface for tool for the creation and book-keeping of the RichRecStatus object
+ *  General namespace for RICH software
  *
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   15/03/2002
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
  */
 //-----------------------------------------------------------------------------
-
-class IRichStatusCreator : public virtual IAlgTool 
+namespace Rich
 {
 
-public:
-
-  /** static interface identification
-   *  @return unique interface identifier
-   */
-  static const InterfaceID& interfaceID() { return IID_IRichStatusCreator; }
-
-  /** Access to the RichRecStatus object
+  /** @namespace Rich::Rec
    *
-   *  @return Pointer to the RichRecStatus object
+   *  General namespace for RICH reconstruction software
+   *
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   08/07/2004
    */
-  virtual LHCb::RichRecStatus * richStatus() const = 0;
+  namespace Rec
+  {
 
-};
+    //-----------------------------------------------------------------------------
+    /** @class IStatusCreator IRichStatusCreator.h
+     *
+     *  Interface for tool for the creation and book-keeping of the RichRecStatus object
+     *
+     *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+     *  @date   15/03/2002
+     */
+    //-----------------------------------------------------------------------------
+
+    class IStatusCreator : public virtual IAlgTool
+    {
+
+    public:
+
+      /** static interface identification
+       *  @return unique interface identifier
+       */
+      static const InterfaceID& interfaceID() { return IID_IRichStatusCreator; }
+
+      /** Access to the RichRecStatus object
+       *
+       *  @return Pointer to the RichRecStatus object
+       */
+      virtual LHCb::RichRecStatus * richStatus() const = 0;
+
+    };
+
+  }
+}
 
 #endif // RICHRECTOOLS_IRICHSTATUSCREATOR_H

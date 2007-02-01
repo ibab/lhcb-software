@@ -5,7 +5,7 @@
  * Header file for reconstruction tool base class : RichRecToolBase
  *
  * CVS Log :-
- * $Id: RichRecToolBase.h,v 1.18 2005-10-13 15:38:41 jonrob Exp $
+ * $Id: RichRecToolBase.h,v 1.19 2007-02-01 17:26:22 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date   2002-07-26
@@ -20,36 +20,66 @@
 #include "RichRecBase/RichRecBase.h"
 
 //-----------------------------------------------------------------------------
-/** @class RichRecToolBase RichRecToolBase.h RichRecBase/RichRecToolBase.h
+/** @namespace Rich
  *
- *  Abstract base class for RICH reconstruction tools providing
- *  some basic functionality.
+ *  General namespace for RICH software
  *
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   2002-07-26
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
  */
 //-----------------------------------------------------------------------------
-
-class RichRecToolBase : public RichToolBase,
-                        public RichRecBase<RichToolBase>
+namespace Rich
 {
 
-public:
+  /** @namespace Rich::Rec
+   *
+   *  General namespace for RICH reconstruction software
+   *
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   08/07/2004
+   */
+  namespace Rec
+  {
 
-  /// Standard constructor
-  RichRecToolBase( const std::string& type,
-                   const std::string& name,
-                   const IInterface* parent );
+    //-----------------------------------------------------------------------------
+    /** @class ToolBase RichRecToolBase.h RichRecBase/RichRecToolBase.h
+     *
+     *  Abstract base class for RICH reconstruction tools providing
+     *  some basic functionality.
+     *
+     *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+     *  @date   2002-07-26
+     */
+    //-----------------------------------------------------------------------------
 
-  /// Destructor
-  virtual ~RichRecToolBase() {};
+    class ToolBase : public Rich::ToolBase,
+                     public Rich::Rec::CommonBase<Rich::ToolBase>
+    {
 
-  // Initialize method
-  virtual StatusCode initialize();
+    public:
 
-  // Finalize method
-  virtual StatusCode finalize();
+      /// Standard constructor
+      ToolBase( const std::string& type,
+                const std::string& name,
+                const IInterface* parent );
 
-};
+      /// Destructor
+      virtual ~ToolBase() {};
+
+      // Initialize method
+      virtual StatusCode initialize();
+
+      // Finalize method
+      virtual StatusCode finalize();
+
+    };
+
+  }
+} // RICH
+
+/** Backwards compatibility typedef
+ * @todo Remove eventually
+ */
+typedef Rich::Rec::ToolBase RichRecToolBase;
 
 #endif // RICHRECBASE_RICHRECTOOLBASE_H

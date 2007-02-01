@@ -2,10 +2,10 @@
 //--------------------------------------------------------------------------------
 /** @file RichHashMap.h
  *
- *  Header file for utility hash map for the RICH : RichHashMap
+ *  Header file for utility hash map for the RICH : Rich::HashMap
  *
  *  CVS Log :-
- *  $Id: RichHashMap.h,v 1.7 2006-06-14 18:57:02 jonrob Exp $
+ *  $Id: RichHashMap.h,v 1.8 2007-02-01 17:24:54 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2005-01-11
@@ -17,6 +17,7 @@
 
 // GaudiKernel
 #include "GaudiKernel/HashMap.h"
+#include <ostream>
 
 // Include here to make sure always use defined hash functions for RichSmartIDs
 // should be included from RichSmartID.h head file, but not possible with G.O.D.
@@ -39,7 +40,21 @@ namespace Rich
   //--------------------------------------------------------------------------------
 
   template < class KEY, class VALUE >
-  class HashMap : public GaudiUtils::HashMap < KEY, VALUE > { };
+  class HashMap : public GaudiUtils::HashMap < KEY, VALUE >
+  {
+  public:
+    /// Operator overloading for ostream
+    friend inline std::ostream& operator << ( std::ostream& str ,
+                                              const HashMap<KEY,VALUE> & map )
+    {
+      str << "[";
+      for ( typename HashMap<KEY,VALUE>::const_iterator iM = map.begin(); iM != map.end(); ++iM )
+      {
+        str << " (" << iM->first << "," << iM->second << ")";
+      }
+      return str << " ]";
+    }
+  };
 
 }
 

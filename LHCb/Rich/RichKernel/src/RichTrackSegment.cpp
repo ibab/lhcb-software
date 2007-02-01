@@ -5,7 +5,7 @@
  *  Implementation file for class : RichTrackSegment
  *
  *  CVS Log :-
- *  $Id: RichTrackSegment.cpp,v 1.3 2006-10-20 13:01:01 jonrob Exp $
+ *  $Id: RichTrackSegment.cpp,v 1.4 2007-02-01 17:24:55 jonrob Exp $
  *
  *  @author  Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @author  Antonis Papanestis
@@ -97,7 +97,7 @@ void LHCb::RichTrackSegment::chordConstructorInit2()
 }
 
 void LHCb::RichTrackSegment::chordConstructorInit3()
-{  
+{
   // the direction to use
   Gaudi::XYZVector v = exitPoint()-entryPoint();
   if ( v.Mag2() > 0 )
@@ -112,4 +112,22 @@ void LHCb::RichTrackSegment::chordConstructorInit3()
     v *= sqrt( exitMomentum().Mag2() / v.Mag2() );
     setExitState( exitPoint(), v );
   }
+}
+
+std::ostream & LHCb::RichTrackSegment::fillStream ( std::ostream& s ) const
+{
+  s << "{ " << std::endl
+    << " entryPoint:\t" << entryPoint() << std::endl
+    << " middlePoint:\t" << middlePoint() << std::endl
+    << " exitPoint:\t" << exitPoint() << std::endl
+    << " entryMomentum:\t" << entryMomentum() << std::endl
+    << " middleMomentum:\t" << middleMomentum() << std::endl
+    << " exitMomentum:\t" << exitMomentum() << std::endl
+    << " radiator:\t" << Rich::text( radiator() ) << std::endl
+    << " rich:\t" << Rich::text( rich() ) << std::endl
+    << " entryErrors:\t" << entryErrors() << std::endl
+    << " middleErrors:\t" << middleErrors() << std::endl
+    << " exitErrors:\t" << exitErrors() << std::endl
+    << " } ";
+  return s;
 }

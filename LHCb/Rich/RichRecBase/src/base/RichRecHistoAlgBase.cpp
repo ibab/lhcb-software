@@ -6,7 +6,7 @@
  *  algorithm base class : RichRecHistoAlgBase
  *
  *  CVS Log :-
- *  $Id: RichRecHistoAlgBase.cpp,v 1.1 2005-10-31 13:30:16 jonrob Exp $
+ *  $Id: RichRecHistoAlgBase.cpp,v 1.2 2007-02-01 17:26:23 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2005/01/13
@@ -29,16 +29,16 @@
 // ============================================================================
 // Force creation of templated class
 #include "RichRecBase.icpp"
-template class RichRecBase<RichHistoAlgBase> ;
+template class Rich::Rec::CommonBase<Rich::HistoAlgBase> ;
 // ============================================================================
 
 // ============================================================================
 // Standard constructor
 // ============================================================================
-RichRecHistoAlgBase::RichRecHistoAlgBase( const std::string& name,
-                                          ISvcLocator* pSvcLocator )
-  : RichHistoAlgBase  ( name, pSvcLocator ),
-    RichRecBase<RichHistoAlgBase> ( this )
+Rich::Rec::HistoAlgBase::HistoAlgBase( const std::string& name,
+                                        ISvcLocator* pSvcLocator )
+  : Rich::HistoAlgBase   ( name, pSvcLocator ),
+    Rich::Rec::CommonBase<Rich::HistoAlgBase> ( this )
 {
 }
 // ============================================================================
@@ -46,17 +46,17 @@ RichRecHistoAlgBase::RichRecHistoAlgBase( const std::string& name,
 // ============================================================================
 // Initialise
 // ============================================================================
-StatusCode RichRecHistoAlgBase::initialize()
+StatusCode Rich::Rec::HistoAlgBase::initialize()
 {
   // Initialise base class
-  StatusCode sc = RichHistoAlgBase::initialize();
+  StatusCode sc = Rich::HistoAlgBase::initialize();
   if ( sc.isFailure() )
-    return Error( "Failed to initialise RichHistoAlgBase", sc );
+    return Error( "Failed to initialise Rich::HistoAlgBase", sc );
 
   // Common initialisation
   sc = initialiseRichReco();
   if ( sc.isFailure() )
-    return Error( "Failed to initialise RichRecBase", sc );
+    return Error( "Failed to initialise Rich::RecBase", sc );
 
   return sc;
 }
@@ -65,23 +65,23 @@ StatusCode RichRecHistoAlgBase::initialize()
 // ============================================================================
 // Main execute method
 // ============================================================================
-StatusCode RichRecHistoAlgBase::execute()
+StatusCode Rich::Rec::HistoAlgBase::execute()
 {
   // All algorithms should re-implement this method
-  return Error ( "Default RichRecHistoAlgBase::execute() called !!" );
+  return Error ( "Default Rich::RecHistoAlgBase::execute() called !!" );
 }
 // ============================================================================
 
 // ============================================================================
 // Finalize
 // ============================================================================
-StatusCode RichRecHistoAlgBase::finalize()
+StatusCode Rich::Rec::HistoAlgBase::finalize()
 {
   // Common finalisation
   const StatusCode sc = finaliseRichReco();
-  if ( sc.isFailure() ) return Error( "Failed to finalise RichRecBase", sc );
+  if ( sc.isFailure() ) return Error( "Failed to finalise Rich::RecBase", sc );
 
   // Finalize base class
-  return RichHistoAlgBase::finalize();
+  return Rich::HistoAlgBase::finalize();
 }
 // ============================================================================

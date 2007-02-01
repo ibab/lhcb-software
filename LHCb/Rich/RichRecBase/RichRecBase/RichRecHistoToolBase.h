@@ -5,7 +5,7 @@
  * Header file for reconstruction tool base class : RichRecHistoToolBase
  *
  * CVS Log :-
- * $Id: RichRecHistoToolBase.h,v 1.1 2005-10-31 13:30:16 jonrob Exp $
+ * $Id: RichRecHistoToolBase.h,v 1.2 2007-02-01 17:26:22 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date   2005/01/13
@@ -20,47 +20,77 @@
 #include "RichRecBase/RichRecBase.h"
 
 //-----------------------------------------------------------------------------
-/** @class RichRecHistoToolBase RichRecHistoToolBase.h RichRecBase/RichRecHistoToolBase.h
+/** @namespace Rich
  *
- *  Abstract base class for RICH reconstruction tools providing
- *  some basic functionality (identical to RichRecToolBase) but with additional
- *  histogram functionality provided by GaudiHistoTool base class.
+ *  General namespace for RICH software
  *
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   2005/01/13
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
  */
 //-----------------------------------------------------------------------------
-
-class RichRecHistoToolBase : public RichHistoToolBase,
-                             public RichRecBase<RichHistoToolBase>
+namespace Rich
 {
 
-public:
-
-  /// Standard constructor
-  RichRecHistoToolBase( const std::string& type,
-                        const std::string& name,
-                        const IInterface* parent );
-
-  /// Destructor
-  virtual ~RichRecHistoToolBase() {};
-
-  /** Initialization of the tool after creation
+  /** @namespace Rich::Rec
    *
-   * @return The status of the initialization
-   * @retval StatusCode::SUCCESS Initialization was successful
-   * @retval StatusCode::FAILURE Initialization failed
-   */
-  virtual StatusCode initialize();
-
-  /** Finalization of the tool before deletion
+   *  General namespace for RICH reconstruction software
    *
-   * @return The status of the finalization
-   * @retval StatusCode::SUCCESS Finalization was successful
-   * @retval StatusCode::FAILURE Finalization failed
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   08/07/2004
    */
-  virtual StatusCode finalize();
+  namespace Rec
+  {
 
-};
+    //-----------------------------------------------------------------------------
+    /** @class HistoToolBase RichRecHistoToolBase.h RichRecBase/RichRecHistoToolBase.h
+     *
+     *  Abstract base class for RICH reconstruction tools providing
+     *  some basic functionality (identical to RichRecToolBase) but with additional
+     *  histogram functionality provided by GaudiHistoTool base class.
+     *
+     *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+     *  @date   2005/01/13
+     */
+    //-----------------------------------------------------------------------------
+
+    class HistoToolBase : public Rich::HistoToolBase,
+                          public Rich::Rec::CommonBase<Rich::HistoToolBase>
+    {
+
+    public:
+
+      /// Standard constructor
+      HistoToolBase( const std::string& type,
+                     const std::string& name,
+                     const IInterface* parent );
+
+      /// Destructor
+      virtual ~HistoToolBase() {};
+
+      /** Initialization of the tool after creation
+       *
+       * @return The status of the initialization
+       * @retval StatusCode::SUCCESS Initialization was successful
+       * @retval StatusCode::FAILURE Initialization failed
+       */
+      virtual StatusCode initialize();
+
+      /** Finalization of the tool before deletion
+       *
+       * @return The status of the finalization
+       * @retval StatusCode::SUCCESS Finalization was successful
+       * @retval StatusCode::FAILURE Finalization failed
+       */
+      virtual StatusCode finalize();
+
+    };
+
+  }
+} // RICH
+
+/** Backwards compatibility typedef
+ * @todo Remove eventually
+ */
+typedef Rich::Rec::HistoToolBase RichRecHistoToolBase;
 
 #endif // RICHRECBASE_RICHRECHISTOTOOLBASE_H

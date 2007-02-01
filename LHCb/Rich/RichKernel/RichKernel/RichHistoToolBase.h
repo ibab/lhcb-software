@@ -5,7 +5,7 @@
  *  Header file for tool base class : RichHistoToolBase
  *
  *  CVS Log :-
- *  $Id: RichHistoToolBase.h,v 1.1 2005-10-31 13:26:10 jonrob Exp $
+ *  $Id: RichHistoToolBase.h,v 1.2 2007-02-01 17:24:54 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -25,32 +25,51 @@
 #include "RichKernel/RichHistoID.h"
 
 //-----------------------------------------------------------------------------
-/** @class RichHistoToolBase RichHistoToolBase.h RichKernel/RichHistoToolBase.h
+/** @namespace Rich
  *
- *  Abstract base class for RICH tools providing some basic functionality.
+ *  General namespace for RICH software
  *
- *  In addition, uses the histogramming
- *  functionality from the base class GaudiTupleAlg.
- *
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   05/04/2002
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
  */
 //-----------------------------------------------------------------------------
-
-class RichHistoToolBase : public RichCommonBase<GaudiHistoTool>
+namespace Rich
 {
 
-public:
+  //-----------------------------------------------------------------------------
+  /** @class HistoToolBase RichHistoToolBase.h RichKernel/RichHistoToolBase.h
+   *
+   *  Abstract base class for RICH tools providing some basic functionality.
+   *
+   *  In addition, uses the histogramming
+   *  functionality from the base class GaudiTupleAlg.
+   *
+   *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+   *  @date   05/04/2002
+   */
+  //-----------------------------------------------------------------------------
 
-  /// Standard constructor
-  RichHistoToolBase( const std::string& type,
-                     const std::string& name,
-                     const IInterface* parent )
-    : RichCommonBase<GaudiHistoTool> ( type, name, parent )
+  class HistoToolBase : public Rich::CommonBase<GaudiHistoTool>
   {
-    setHistoTopDir( "RICH/" );
-  }
 
-};
+  public:
+
+    /// Standard constructor
+    HistoToolBase( const std::string& type,
+                   const std::string& name,
+                   const IInterface* parent )
+      : Rich::CommonBase<GaudiHistoTool> ( type, name, parent )
+    {
+      setHistoTopDir( "RICH/" );
+    }
+
+  };
+
+}
+
+/** For backwards compatibility
+ *  @todo Remove this typedef
+ */
+typedef Rich::HistoToolBase RichHistoToolBase;
 
 #endif // RICHKERNEL_RICHHISTOTOOLBASE_H

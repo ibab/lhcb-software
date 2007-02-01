@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction base class : RichRecBase
  *
  *  CVS Log :-
- *  $Id: RichRecBase.icpp,v 1.1 2005-10-13 15:38:41 jonrob Exp $
+ *  $Id: RichRecBase.icpp,v 1.2 2007-02-01 17:26:23 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-26
@@ -19,7 +19,7 @@
 // Standard constructor
 //=============================================================================
 template <class PBASE>
-RichRecBase<PBASE>::RichRecBase( PBASE * base )
+Rich::Rec::CommonBase<PBASE>::CommonBase( PBASE * base )
   : m_base          ( base ),
     m_pixTool       ( 0    ),
     m_tkTool        ( 0    ),
@@ -39,7 +39,7 @@ RichRecBase<PBASE>::RichRecBase( PBASE * base )
 // Initialisation
 //=============================================================================
 template <class PBASE>
-StatusCode RichRecBase<PBASE>::initialiseRichReco()
+StatusCode Rich::Rec::CommonBase<PBASE>::initialiseRichReco()
 {
   return StatusCode::SUCCESS;
 }
@@ -49,7 +49,7 @@ StatusCode RichRecBase<PBASE>::initialiseRichReco()
 // Finalisation
 //=============================================================================
 template <class PBASE>
-StatusCode RichRecBase<PBASE>::finaliseRichReco()
+StatusCode Rich::Rec::CommonBase<PBASE>::finaliseRichReco()
 {
   return StatusCode::SUCCESS;
 }

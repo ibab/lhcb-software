@@ -2,10 +2,10 @@
 //---------------------------------------------------------------------------------
 /** @file RichPixelCreatorBase.h
  *
- *  Header file for tool base class : RichPixelCreatorBase
+ *  Header file for tool base class : Rich::Rec::PixelCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorBase.h,v 1.13 2006-11-30 15:26:44 jonrob Exp $
+ *  $Id: RichPixelCreatorBase.h,v 1.14 2007-02-01 17:26:22 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/04/2005
@@ -44,359 +44,389 @@
 // Boost
 #include "boost/multi_array.hpp"
 
-//---------------------------------------------------------------------------------------
-/** @class RichPixelCreatorBase RichPixelCreatorBase.h RichRecBase/RichPixelCreatorBase.h
+//-----------------------------------------------------------------------------
+/** @namespace Rich
  *
- *  Base class for all RichRecPixel creator tools.
+ *  General namespace for RICH software
  *
- *  Implements common functionaility needed by all concrete implementations.
- *  Derived classes must implement the methods newPixels and buildPixel using
- *  whatever means appropriate for that implementation.
- *
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   20/04/2005
- *
- *  @todo Find a better way to handle the filling of the pixel iterators, that avoids a
- *        seperate loop and if possible maps
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
  */
-//---------------------------------------------------------------------------------------
-
-class RichPixelCreatorBase : public RichRecToolBase,
-                             virtual public IRichPixelCreator,
-                             virtual public IIncidentListener
+//-----------------------------------------------------------------------------
+namespace Rich
 {
 
-public:
+  /** @namespace Rec
+   *
+   *  General namespace for RICH reconstruction software
+   *
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   08/07/2004
+   */
+  namespace Rec
+  {
 
-  /// Standard constructor
-  RichPixelCreatorBase( const std::string& type,
+    //---------------------------------------------------------------------------------------
+    /** @class PixelCreatorBase RichPixelCreatorBase.h RichRecBase/RichPixelCreatorBase.h
+     *
+     *  Base class for all RichRecPixel creator tools.
+     *
+     *  Implements common functionaility needed by all concrete implementations.
+     *  Derived classes must implement the methods newPixels and buildPixel using
+     *  whatever means appropriate for that implementation.
+     *
+     *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+     *  @date   20/04/2005
+     *
+     *  @todo Find a better way to handle the filling of the pixel iterators, that avoids a
+     *        seperate loop and if possible maps
+     */
+    //---------------------------------------------------------------------------------------
+
+    class PixelCreatorBase : public Rich::Rec::ToolBase,
+                             virtual public IPixelCreator,
+                             virtual public IIncidentListener
+    {
+
+    public:
+
+      /// Standard constructor
+      PixelCreatorBase( const std::string& type,
                         const std::string& name,
                         const IInterface* parent );
 
-  /// Destructor
-  virtual ~RichPixelCreatorBase( ) {};
+      /// Destructor
+      virtual ~PixelCreatorBase( ) {};
 
-  // Initialize method
-  virtual StatusCode initialize();
+      // Initialize method
+      virtual StatusCode initialize();
 
-  // Finalize method
-  virtual StatusCode finalize();
+      // Finalize method
+      virtual StatusCode finalize();
 
-  // Implement the handle method for the Incident service.
-  // This is used to inform the tool of software incidents.
-  virtual void handle( const Incident& incident );
+      // Implement the handle method for the Incident service.
+      // This is used to inform the tool of software incidents.
+      virtual void handle( const Incident& incident );
 
-public: // methods from interface
+    public: // methods from interface
 
-  // Returns a pointer to the RichRecPixels
-  LHCb::RichRecPixels * richPixels() const;
+      // Returns a pointer to the RichRecPixels
+      LHCb::RichRecPixels * richPixels() const;
 
-  // Access the begin iterator for the pixels in the given RICH detector
-  LHCb::RichRecPixels::iterator begin( const Rich::DetectorType rich ) const;
+      // Access the begin iterator for the pixels in the given RICH detector
+      LHCb::RichRecPixels::iterator begin( const Rich::DetectorType rich ) const;
 
-  // Access the end iterator for the pixels in the given RICH detector
-  LHCb::RichRecPixels::iterator end( const Rich::DetectorType rich ) const;
+      // Access the end iterator for the pixels in the given RICH detector
+      LHCb::RichRecPixels::iterator end( const Rich::DetectorType rich ) const;
 
-  // Access the begin iterator for the pixels in the given RICH detector
-  LHCb::RichRecPixels::iterator begin( const Rich::DetectorType rich,
-                                       const Rich::Side         panel ) const;
+      // Access the begin iterator for the pixels in the given RICH detector
+      LHCb::RichRecPixels::iterator begin( const Rich::DetectorType rich,
+                                           const Rich::Side         panel ) const;
 
-  // Access the end iterator for the pixels in the given RICH detector
-  LHCb::RichRecPixels::iterator end( const Rich::DetectorType rich,
-                                     const Rich::Side         panel ) const;
+      // Access the end iterator for the pixels in the given RICH detector
+      LHCb::RichRecPixels::iterator end( const Rich::DetectorType rich,
+                                         const Rich::Side         panel ) const;
 
-  // Access the begin iterator for the pixels in the given RICH HPD
-  LHCb::RichRecPixels::iterator begin( const LHCb::RichSmartID hpdID ) const;
+      // Access the begin iterator for the pixels in the given RICH HPD
+      LHCb::RichRecPixels::iterator begin( const LHCb::RichSmartID hpdID ) const;
 
-  // Access end begin iterator for the pixels in the given RICH HPD
-  LHCb::RichRecPixels::iterator end( const LHCb::RichSmartID hpdID ) const;
+      // Access end begin iterator for the pixels in the given RICH HPD
+      LHCb::RichRecPixels::iterator end( const LHCb::RichSmartID hpdID ) const;
 
-  // Form all possible RichRecPixels from RawBuffer
-  // The most efficient way to make all RichRecPixel objects in the event.
-  StatusCode newPixels() const;
+      // Form all possible RichRecPixels from RawBuffer
+      // The most efficient way to make all RichRecPixel objects in the event.
+      StatusCode newPixels() const;
 
-protected: // methods
+    protected: // methods
 
-  /// Initialise for a new event
-  virtual void InitNewEvent();
+      /// Initialise for a new event
+      virtual void InitNewEvent();
 
-  /// Finalise current event
-  virtual void FinishEvent();
+      /// Finalise current event
+      virtual void FinishEvent();
 
-  /// Read the pixels and fill the RICH and panel begin and end iterators
-  void fillIterators() const;
+      /// Read the pixels and fill the RICH and panel begin and end iterators
+      void fillIterators() const;
 
-  /// Reset all iterators to default values
-  void resetIterators() const;
+      /// Reset all iterators to default values
+      void resetIterators() const;
 
-  /// Sort the RichRecPixel container into detector regions
-  void sortPixels() const;
+      /// Sort the RichRecPixel container into detector regions
+      void sortPixels() const;
 
-  /// Access the final RichRecPixel location in the TES
-  const std::string & pixelLocation() const;
+      /// Access the final RichRecPixel location in the TES
+      const std::string & pixelLocation() const;
 
-  /// Is book keeping to be performed
-  bool bookKeep() const;
+      /// Is book keeping to be performed
+      bool bookKeep() const;
 
-  /** Check if a given RICH detector is to be used
-   *
-   *  @param rich The RICH detector type
-   *
-   *  @return boolean indicating if the given RICH detector is active
-   *  @retval true  RICH detector is active
-   *  @retval false RICH detector is not in use
-   */
-  bool useDetector( const Rich::DetectorType rich ) const;
+      /** Check if a given RICH detector is to be used
+       *
+       *  @param rich The RICH detector type
+       *
+       *  @return boolean indicating if the given RICH detector is active
+       *  @retval true  RICH detector is active
+       *  @retval false RICH detector is not in use
+       */
+      bool useDetector( const Rich::DetectorType rich ) const;
 
-  /** Check the status of the given RICH channel (RichSmartID)
-   *
-   *  @param id The RichSmartID to check
-   *
-   *  @return boolean indicating if the given channel is active
-   *  @retval true  channel is active
-   *  @retval false channel is not in use
-   */
-  bool pixelIsOK( const LHCb::RichSmartID id ) const;
+      /** Check the status of the given RICH channel (RichSmartID)
+       *
+       *  @param id The RichSmartID to check
+       *
+       *  @return boolean indicating if the given channel is active
+       *  @retval true  channel is active
+       *  @retval false channel is not in use
+       */
+      bool pixelIsOK( const LHCb::RichSmartID id ) const;
 
-  /** Save a given pixel to the TES container
-   *
-   *  @param pix Pointer to the RichRecPixel to save
-   */
-  void savePixel( LHCb::RichRecPixel * pix ) const;
+      /** Save a given pixel to the TES container
+       *
+       *  @param pix Pointer to the RichRecPixel to save
+       */
+      void savePixel( LHCb::RichRecPixel * pix ) const;
 
-  /** Compute the average radiator distortion corrected positions
-   *  in local HPD panel coordinate system,
-   *  for each valid radiator for the given pixel
-   */
-  void computeRadCorrLocalPositions( LHCb::RichRecPixel * pixel ) const;
+      /** Compute the average radiator distortion corrected positions
+       *  in local HPD panel coordinate system,
+       *  for each valid radiator for the given pixel
+       */
+      void computeRadCorrLocalPositions( LHCb::RichRecPixel * pixel ) const;
 
-  /** Apply HPD pixel suppression, if configured to do so
-   *
-   *  @param hpdID    RichSmartID for HPD
-   *  @param smartIDs Vector of pixel smartIDs for this HPD
-   *
-   *  @return boolean indicating if any suppression occured
-   *  @retval true Some (or all) pixels have been suppressed. In the case the vector of
-   *               pixel RichSmartIDs is changed
-   *  @retval false No pixels are suppressed
-   */
-  bool applyPixelSuppression( const LHCb::RichSmartID hpdID,
-                              LHCb::RichSmartID::Vector & smartIDs ) const;
+      /** Apply HPD pixel suppression, if configured to do so
+       *
+       *  @param hpdID    RichSmartID for HPD
+       *  @param smartIDs Vector of pixel smartIDs for this HPD
+       *
+       *  @return boolean indicating if any suppression occured
+       *  @retval true Some (or all) pixels have been suppressed. In the case the vector of
+       *               pixel RichSmartIDs is changed
+       *  @retval false No pixels are suppressed
+       */
+      bool applyPixelSuppression( const LHCb::RichSmartID hpdID,
+                                  LHCb::RichSmartID::Vector & smartIDs ) const;
 
-  /// Build a new RichRecPixel
-  virtual LHCb::RichRecPixel * buildPixel ( const LHCb::RichSmartID id ) const;
+      /// Build a new RichRecPixel
+      virtual LHCb::RichRecPixel * buildPixel ( const LHCb::RichSmartID id ) const;
 
-  /// Access the RichSmartIDTool
-  inline const IRichSmartIDTool * smartIDTool() const
-  {
-    if (!m_idTool) { acquireTool( "RichSmartIDTool",    m_idTool,  0, true ); }
-    return m_idTool;
-  }
+      /// Access the RichSmartIDTool
+      inline const ISmartIDTool * smartIDTool() const
+      {
+        if (!m_idTool) { acquireTool( "RichSmartIDTool",    m_idTool,  0, true ); }
+        return m_idTool;
+      }
 
-  /// Access the RichSmartIDDecoder
-  inline const IRichRawBufferToSmartIDsTool * smartIDdecoder() const
-  {
-    if (!m_decoder) { acquireTool( "RichSmartIDDecoder", m_decoder, 0, true ); }
-    return m_decoder;
-  }
+      /// Access the RichSmartIDDecoder
+      inline const Rich::DAQ::IRawBufferToSmartIDsTool * smartIDdecoder() const
+      {
+        if (!m_decoder) { acquireTool( "RichSmartIDDecoder", m_decoder, 0, true ); }
+        return m_decoder;
+      }
 
-protected: // data
+    protected: // data
 
-  /// Flag to signify all pixels have been formed
-  mutable bool m_allDone;
+      /// Flag to signify all pixels have been formed
+      mutable bool m_allDone;
 
-  /// Map between RichSmartID and the associated RichRecPixel
-  mutable Rich::HashMap< LHCb::RichSmartID::KeyType, LHCb::RichRecPixel* > m_pixelExists;
+      /// Map between RichSmartID and the associated RichRecPixel
+      mutable Rich::HashMap< LHCb::RichSmartID::KeyType, LHCb::RichRecPixel* > m_pixelExists;
 
-  /// Map indicating if a given RichSmartID has been considered already
-  mutable Rich::HashMap< LHCb::RichSmartID::KeyType, bool > m_pixelDone;
+      /// Map indicating if a given RichSmartID has been considered already
+      mutable Rich::HashMap< LHCb::RichSmartID::KeyType, bool > m_pixelDone;
 
-private: // data
+    private: // data
 
-  /// Pointer to RICH system detector element
-  const DeRichSystem * m_richSys;
+      /// Pointer to RICH system detector element
+      const DeRichSystem * m_richSys;
 
-  /// Reconstruction geometry tool
-  const IRichRecGeomTool * m_recGeom;
+      /// Reconstruction geometry tool
+      const IGeomTool * m_recGeom;
 
-  /// HPD occupancy tool
-  mutable std::vector<const IRichPixelSuppressionTool *> m_hpdOcc;
+      /// HPD occupancy tool
+      mutable std::vector<const Rich::DAQ::IPixelSuppressionTool *> m_hpdOcc;
 
-  /// Pointer to RichSmartID tool
-  mutable const IRichSmartIDTool * m_idTool;
+      /// Pointer to RichSmartID tool
+      mutable const ISmartIDTool * m_idTool;
 
-  /// Raw Buffer Decoding tool
-  mutable const IRichRawBufferToSmartIDsTool * m_decoder;
+      /// Raw Buffer Decoding tool
+      mutable const Rich::DAQ::IRawBufferToSmartIDsTool * m_decoder;
 
-  /// Pointer to RichRecPixels
-  mutable LHCb::RichRecPixels * m_pixels;
+      /// Pointer to RichRecPixels
+      mutable LHCb::RichRecPixels * m_pixels;
 
-  /// Flag to turn on or off the book keeping features to save cpu time.
-  bool m_bookKeep;
+      /// Flag to turn on or off the book keeping features to save cpu time.
+      bool m_bookKeep;
 
-  /// Flag to turn on or off the explicit checking of the HPD status
-  bool m_hpdCheck;
+      /// Flag to turn on or off the explicit checking of the HPD status
+      bool m_hpdCheck;
 
-  /// Flags for which RICH detectors to create pixels for
-  std::vector<bool> m_usedDets;
+      /// Flags for which RICH detectors to create pixels for
+      std::vector<bool> m_usedDets;
 
-  /// Location of RichRecPixels in TES
-  std::string m_richRecPixelLocation;
+      /// Location of RichRecPixels in TES
+      std::string m_richRecPixelLocation;
 
-  /// Begin iterators for various Rich and panel combinations
-  mutable boost::multi_array<LHCb::RichRecPixels::iterator,2> m_begins;
+      /// Begin iterators for various Rich and panel combinations
+      mutable boost::multi_array<LHCb::RichRecPixels::iterator,2> m_begins;
 
-  /// End iterators for various Rich and panel combinations
-  mutable boost::multi_array<LHCb::RichRecPixels::iterator,2> m_ends;
+      /// End iterators for various Rich and panel combinations
+      mutable boost::multi_array<LHCb::RichRecPixels::iterator,2> m_ends;
 
-  /// Begin iterators for each RICH
-  mutable boost::array<LHCb::RichRecPixels::iterator,Rich::NRiches> m_richBegin;
+      /// Begin iterators for each RICH
+      mutable boost::array<LHCb::RichRecPixels::iterator,Rich::NRiches> m_richBegin;
 
-  /// End iterators for each RICH
-  mutable boost::array<LHCb::RichRecPixels::iterator,Rich::NRiches> m_richEnd;
+      /// End iterators for each RICH
+      mutable boost::array<LHCb::RichRecPixels::iterator,Rich::NRiches> m_richEnd;
 
-  typedef Rich::Map<const LHCb::RichSmartID,LHCb::RichRecPixels::iterator> HPDItMap;
+      typedef Rich::Map<const LHCb::RichSmartID,LHCb::RichRecPixels::iterator> HPDItMap;
 
-  /// Begin iterators for each HPD
-  mutable HPDItMap m_hpdBegin;
+      /// Begin iterators for each HPD
+      mutable HPDItMap m_hpdBegin;
 
-  /// End iterators for each HPD
-  mutable HPDItMap m_hpdEnd;
+      /// End iterators for each HPD
+      mutable HPDItMap m_hpdEnd;
 
-  /// Hit count tally
-  mutable boost::array<unsigned int, Rich::NRiches> m_hitCount;
+      /// Hit count tally
+      mutable boost::array<unsigned int, Rich::NRiches> m_hitCount;
 
-  /// Suppressed hit count tally
-  mutable boost::array<unsigned int, Rich::NRiches> m_suppressedHitCount;
+      /// Suppressed hit count tally
+      mutable boost::array<unsigned int, Rich::NRiches> m_suppressedHitCount;
 
-  /// Event count
-  unsigned int m_Nevts;
+      /// Event count
+      unsigned int m_Nevts;
 
-  /// Flag to indicate if the tool has been used in a given event
-  mutable bool m_hasBeenCalled;
+      /// Flag to indicate if the tool has been used in a given event
+      mutable bool m_hasBeenCalled;
 
-  /// Should HPD occupancy be monitored
-  bool m_applyPixelSuppression;
+      /// Should HPD occupancy be monitored
+      bool m_applyPixelSuppression;
 
-private: // methods
+    private: // methods
 
-  /// Printout the pixel creation statistics
-  void printStats() const;
+      /// Printout the pixel creation statistics
+      void printStats() const;
 
-  /// returns a pointer to the HPD suppression tool for the given RICH
-  const IRichPixelSuppressionTool * hpdSuppTool( const Rich::DetectorType rich ) const;
+      /// returns a pointer to the HPD suppression tool for the given RICH
+      const Rich::DAQ::IPixelSuppressionTool * hpdSuppTool( const Rich::DetectorType rich ) const;
 
-private: // helper classes
+    private: // helper classes
 
-  /// Class to sort the RichRecPixels according to detector regions
-  class SortByRegion
-    : std::binary_function<const LHCb::RichRecPixel*,const LHCb::RichRecPixel*,bool>
-  {
-  public:
-    /// Method to return true if RichRecPixel p1 should be listed before p2
-    inline bool operator() ( const LHCb::RichRecPixel * p1,
-                             const LHCb::RichRecPixel * p2 ) const
+      /// Class to sort the RichRecPixels according to detector regions
+      class SortByRegion
+        : std::binary_function<const LHCb::RichRecPixel*,const LHCb::RichRecPixel*,bool>
+      {
+      public:
+        /// Method to return true if RichRecPixel p1 should be listed before p2
+        inline bool operator() ( const LHCb::RichRecPixel * p1,
+                                 const LHCb::RichRecPixel * p2 ) const
+        {
+          return ( p1->smartID().dataBitsOnly().key() < p2->smartID().dataBitsOnly().key() );
+        }
+      };
+
+    };
+
+    inline void PixelCreatorBase::sortPixels() const
     {
-      return ( p1->smartID().dataBitsOnly().key() < p2->smartID().dataBitsOnly().key() );
+      std::sort( richPixels()->begin(), richPixels()->end(), SortByRegion() );
     }
-  };
 
-};
+    inline const std::string & PixelCreatorBase::pixelLocation() const
+    {
+      return m_richRecPixelLocation;
+    }
 
-inline void RichPixelCreatorBase::sortPixels() const
-{
-  std::sort( richPixels()->begin(), richPixels()->end(), SortByRegion() );
-}
+    inline bool PixelCreatorBase::bookKeep() const
+    {
+      return m_bookKeep;
+    }
 
-inline const std::string & RichPixelCreatorBase::pixelLocation() const
-{
-  return m_richRecPixelLocation;
-}
+    inline bool PixelCreatorBase::useDetector( const Rich::DetectorType rich ) const
+    {
+      return m_usedDets[rich];
+    }
 
-inline bool RichPixelCreatorBase::bookKeep() const
-{
-  return m_bookKeep;
-}
+    inline bool PixelCreatorBase::pixelIsOK( const LHCb::RichSmartID id ) const
+    {
+      return (
+              //validID &&                 // RichSmartID is valid
+              useDetector(id.rich()) &&  // This RICH is in use
+              ( !m_hpdCheck || m_richSys->hpdIsActive(id) ) // If required, check HPD is alive
+              );
+    }
 
-inline bool RichPixelCreatorBase::useDetector( const Rich::DetectorType rich ) const
-{
-  return m_usedDets[rich];
-}
+    inline void PixelCreatorBase::savePixel( LHCb::RichRecPixel * pix ) const
+    {
+      richPixels()->insert( pix );
+      ++m_hitCount[pix->smartID().rich()];
+      m_hasBeenCalled = true;
+    }
 
-inline bool RichPixelCreatorBase::pixelIsOK( const LHCb::RichSmartID id ) const
-{
-  return (
-          //validID &&                 // RichSmartID is valid
-          useDetector(id.rich()) &&  // This RICH is in use
-          ( !m_hpdCheck || m_richSys->hpdIsActive(id) ) // If required, check HPD is alive
-          );
-}
+    inline void PixelCreatorBase::resetIterators() const
+    {
 
-inline void RichPixelCreatorBase::savePixel( LHCb::RichRecPixel * pix ) const
-{
-  richPixels()->insert( pix );
-  ++m_hitCount[pix->smartID().rich()];
-  m_hasBeenCalled = true;
-}
+      // RICH and panels
+      m_begins[Rich::Rich1][Rich::top]    = richPixels()->begin();
+      m_begins[Rich::Rich1][Rich::bottom] = richPixels()->begin();
+      m_begins[Rich::Rich2][Rich::left]   = richPixels()->begin();
+      m_begins[Rich::Rich2][Rich::right]  = richPixels()->begin();
+      m_ends[Rich::Rich1][Rich::top]      = richPixels()->begin();
+      m_ends[Rich::Rich1][Rich::bottom]   = richPixels()->begin();
+      m_ends[Rich::Rich2][Rich::left]     = richPixels()->begin();
+      m_ends[Rich::Rich2][Rich::right]    = richPixels()->begin();
 
-inline void RichPixelCreatorBase::resetIterators() const
-{
+      // RICH only
+      m_richBegin[Rich::Rich1] = richPixels()->begin();
+      m_richBegin[Rich::Rich2] = richPixels()->begin();
+      m_richEnd[Rich::Rich1]   = richPixels()->begin();
+      m_richEnd[Rich::Rich2]   = richPixels()->begin();
 
-  // RICH and panels
-  m_begins[Rich::Rich1][Rich::top]    = richPixels()->begin();
-  m_begins[Rich::Rich1][Rich::bottom] = richPixels()->begin();
-  m_begins[Rich::Rich2][Rich::left]   = richPixels()->begin();
-  m_begins[Rich::Rich2][Rich::right]  = richPixels()->begin();
-  m_ends[Rich::Rich1][Rich::top]      = richPixels()->begin();
-  m_ends[Rich::Rich1][Rich::bottom]   = richPixels()->begin();
-  m_ends[Rich::Rich2][Rich::left]     = richPixels()->begin();
-  m_ends[Rich::Rich2][Rich::right]    = richPixels()->begin();
+      // HPD
+      m_hpdBegin.clear();
+      m_hpdEnd.clear();
 
-  // RICH only
-  m_richBegin[Rich::Rich1] = richPixels()->begin();
-  m_richBegin[Rich::Rich2] = richPixels()->begin();
-  m_richEnd[Rich::Rich1]   = richPixels()->begin();
-  m_richEnd[Rich::Rich2]   = richPixels()->begin();
+    }
 
-  // HPD
-  m_hpdBegin.clear();
-  m_hpdEnd.clear();
+    inline void
+    PixelCreatorBase::computeRadCorrLocalPositions( LHCb::RichRecPixel * pixel ) const
+    {
+      if ( Rich::Rich1 == pixel->detector() )
+      {
+        pixel->setRadCorrLocalPosition(m_recGeom->correctAvRadiatorDistortion(pixel->localPosition(),Rich::Aerogel),Rich::Aerogel);
+        pixel->setRadCorrLocalPosition(m_recGeom->correctAvRadiatorDistortion(pixel->localPosition(),Rich::Rich1Gas),Rich::Rich1Gas);
+      }
+      else
+      {
+        pixel->setRadCorrLocalPosition(m_recGeom->correctAvRadiatorDistortion(pixel->localPosition(),Rich::Rich2Gas),Rich::Rich2Gas);
+      }
+    }
 
-}
+    inline const Rich::DAQ::IPixelSuppressionTool *
+    PixelCreatorBase::hpdSuppTool( const Rich::DetectorType rich ) const
+    {
+      if ( !m_hpdOcc[rich] )
+      {
+        acquireTool( "PixelSuppress"+Rich::text(rich), m_hpdOcc[rich], this );
+      }
+      return m_hpdOcc[rich];
+    }
 
-inline void
-RichPixelCreatorBase::computeRadCorrLocalPositions( LHCb::RichRecPixel * pixel ) const
-{
-  if ( Rich::Rich1 == pixel->detector() )
-  {
-    pixel->setRadCorrLocalPosition(m_recGeom->correctAvRadiatorDistortion(pixel->localPosition(),Rich::Aerogel),Rich::Aerogel);
-    pixel->setRadCorrLocalPosition(m_recGeom->correctAvRadiatorDistortion(pixel->localPosition(),Rich::Rich1Gas),Rich::Rich1Gas);
-  }
-  else
-  {
-    pixel->setRadCorrLocalPosition(m_recGeom->correctAvRadiatorDistortion(pixel->localPosition(),Rich::Rich2Gas),Rich::Rich2Gas);
-  }
-}
-
-inline const IRichPixelSuppressionTool * 
-RichPixelCreatorBase::hpdSuppTool( const Rich::DetectorType rich ) const
-{
-  if ( !m_hpdOcc[rich] )
-  {
-    acquireTool( "PixelSuppress"+Rich::text(rich), m_hpdOcc[rich], this );
-  }
-  return m_hpdOcc[rich];
-}
-
-inline bool
-RichPixelCreatorBase::applyPixelSuppression( const LHCb::RichSmartID hpdID,
+    inline bool
+    PixelCreatorBase::applyPixelSuppression( const LHCb::RichSmartID hpdID,
                                              LHCb::RichSmartID::Vector & smartIDs ) const
-{
-  const unsigned int startSize = smartIDs.size();
-  const bool suppressed =
-    ( !m_applyPixelSuppression ? false : hpdSuppTool(hpdID.rich())->applyPixelSuppression(hpdID,smartIDs) );
-  m_suppressedHitCount[hpdID.rich()] += (startSize-smartIDs.size());
-  return suppressed;
-}
+    {
+      const unsigned int startSize = smartIDs.size();
+      const bool suppressed =
+        ( !m_applyPixelSuppression ? false : hpdSuppTool(hpdID.rich())->applyPixelSuppression(hpdID,smartIDs) );
+      m_suppressedHitCount[hpdID.rich()] += (startSize-smartIDs.size());
+      return suppressed;
+    }
+
+  }
+} // RICH
+
+  /** Backwards compatibility typedef
+   * @todo Remove eventually
+   */
+typedef Rich::Rec::PixelCreatorBase RichPixelCreatorBase;
 
 #endif // RICHRECBASE_RICHPIXELCREATORBASE_H

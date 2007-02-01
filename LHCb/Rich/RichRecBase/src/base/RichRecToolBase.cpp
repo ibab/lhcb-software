@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool base class : RichRecToolBase
  *
  *  CVS Log :-
- *  $Id: RichRecToolBase.cpp,v 1.13 2005-10-13 15:38:41 jonrob Exp $
+ *  $Id: RichRecToolBase.cpp,v 1.14 2007-02-01 17:26:23 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-26
@@ -19,23 +19,23 @@
 // Disable warning on windows about using 'this' in constructors
 #ifdef _WIN32
 #pragma warning ( disable:4355 )
-#endif 
+#endif
 // ============================================================================
 
 // ============================================================================
 // Force creation of templated class
 #include "RichRecBase.icpp"
-template class RichRecBase<RichToolBase> ;
+template class Rich::Rec::CommonBase<Rich::ToolBase> ;
 // ============================================================================
 
 // ============================================================================
 // Standard constructor, initializes variables
 // ============================================================================
-RichRecToolBase::RichRecToolBase( const std::string& type,
-                                  const std::string& name,
-                                  const IInterface* parent )
-  : RichToolBase ( type, name, parent ),
-    RichRecBase<RichToolBase> ( this )
+Rich::Rec::ToolBase::ToolBase( const std::string& type,
+                               const std::string& name,
+                               const IInterface* parent )
+  : Rich::ToolBase          ( type, name, parent ),
+    Rich::Rec::CommonBase<Rich::ToolBase> ( this )
 {
 }
 // ============================================================================
@@ -43,30 +43,27 @@ RichRecToolBase::RichRecToolBase( const std::string& type,
 // ============================================================================
 // Initialise
 // ============================================================================
-StatusCode RichRecToolBase::initialize()
+StatusCode Rich::Rec::ToolBase::initialize()
 {
   // Initialise base class
-  StatusCode sc = RichToolBase::initialize();
-  if ( sc.isFailure() ) return Error( "Failed to initialise RichToolBase", sc );
+  StatusCode sc = Rich::ToolBase::initialize();
+  if ( sc.isFailure() ) return Error( "Failed to initialise Rich::ToolBase", sc );
 
   // Common initialisation
-  sc = initialiseRichReco();
-  if ( sc.isFailure() ) return Error( "Failed to initialise RichRecBase", sc );
-
-  return sc;
+  return initialiseRichReco();
 }
 // ============================================================================
 
 // ============================================================================
 // Finalise
 // ============================================================================
-StatusCode RichRecToolBase::finalize()
+StatusCode Rich::Rec::ToolBase::finalize()
 {
   // Common finalisation
   const StatusCode sc = finaliseRichReco();
-  if ( sc.isFailure() ) return Error( "Failed to finalise RichRecBase", sc );
+  if ( sc.isFailure() ) return Error( "Failed to finalise Rich::RecBase", sc );
 
   // base class finalize
-  return RichToolBase::finalize();
+  return Rich::ToolBase::finalize();
 }
 // ============================================================================

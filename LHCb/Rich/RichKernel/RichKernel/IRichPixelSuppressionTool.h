@@ -2,10 +2,10 @@
 //-----------------------------------------------------------------------------
 /** @file IRichPixelSuppressionTool.h
  *
- *  Header file for tool interface : IRichPixelSuppressionTool
+ *  Header file for tool interface : Rich::DAQ::IPixelSuppressionTool
  *
  *  CVS Log :-
- *  $Id: IRichPixelSuppressionTool.h,v 1.2 2006-03-12 16:12:37 jonrob Exp $
+ *  $Id: IRichPixelSuppressionTool.h,v 1.3 2007-02-01 17:24:54 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-07-31
@@ -22,41 +22,76 @@
 #include "Kernel/RichSmartID.h"
 
 /// Static Interface Identification
-static const InterfaceID IID_IRichPixelSuppressionTool( "IRichPixelSuppressionTool", 1, 0 );
+static const InterfaceID IID_IRichPixelSuppressionTool( "Rich::DAQ::IPixelSuppressionTool", 1, 0 );
 
 //-----------------------------------------------------------------------------
-/** @class IRichPixelSuppressionTool IRichPixelSuppressionTool.h RichKernel/IRichPixelSuppressionTool.h
+/** @namespace Rich
  *
- *  Interface for tool for apply suppression to HPD pixels
+ *  General namespace for RICH software
  *
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   15/03/2002
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
  */
 //-----------------------------------------------------------------------------
-
-class IRichPixelSuppressionTool : public virtual IAlgTool
+namespace Rich
 {
 
-public:
-
-  /** static interface identification
-   *  @return unique interface identifier
-   */
-  static const InterfaceID& interfaceID() { return IID_IRichPixelSuppressionTool; }
-
-  /** Applies pixel suppression to the given HPD
+  //-----------------------------------------------------------------------------
+  /** @namespace DAQ
    *
-   *  @param hpd HPD identifier
-   *  @param smartIDs reference to vector of pixel RichSmartIDs for the given HPD
+   *  namespace for RICH DAQ software
    *
-   *  @return Boolean indicating if pixels have been suppressed or not
-   *  @retval true Some (or all) pixels have been suppressed. In the case the vector of
-   *               pixel RichSmartIDs is changed
-   *  @retval false No pixels are suppressed
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   08/07/2004
    */
-  virtual bool applyPixelSuppression( const LHCb::RichSmartID hpdID,
-                                      LHCb::RichSmartID::Vector & smartIDs ) const = 0;
+  //-----------------------------------------------------------------------------
+  namespace DAQ
+  {
 
-};
+    //-----------------------------------------------------------------------------
+    /** @class IPixelSuppressionTool IRichPixelSuppressionTool.h RichKernel/IRichPixelSuppressionTool.h
+     *
+     *  Interface for tool for apply suppression to HPD pixels
+     *
+     *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+     *  @date   15/03/2002
+     */
+    //-----------------------------------------------------------------------------
+
+    class IPixelSuppressionTool : public virtual IAlgTool
+    {
+
+    public:
+
+      /** static interface identification
+       *  @return unique interface identifier
+       */
+      static const InterfaceID& interfaceID() { return IID_IRichPixelSuppressionTool; }
+
+      /** Applies pixel suppression to the given HPD
+       *
+       *  @param hpdID    HPD identifier
+       *  @param smartIDs Reference to vector of pixel RichSmartIDs for the given HPD
+       *
+       *  @return Boolean indicating if pixels have been suppressed or not
+       *  @retval true Some (or all) pixels have been suppressed. In the case the vector of
+       *               pixel RichSmartIDs is changed
+       *  @retval false No pixels are suppressed
+       */
+      virtual bool applyPixelSuppression( const LHCb::RichSmartID hpdID,
+                                          LHCb::RichSmartID::Vector & smartIDs ) const = 0;
+
+      /** Returns the average occupancy for the given HPD
+       *
+       *  @param hpdID HPD identifier
+       *
+       *  @return The average HPD occupancy
+       */
+      virtual double averageOccupancy( const LHCb::RichSmartID hpdID ) const = 0;
+
+    };
+
+  }
+}
 
 #endif // RICHKERNEL_IRichHighOccHPDSuppressionTool_H

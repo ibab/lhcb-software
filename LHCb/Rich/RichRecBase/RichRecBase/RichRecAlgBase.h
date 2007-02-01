@@ -2,10 +2,10 @@
 //-----------------------------------------------------------------------------
 /** @file RichRecAlgBase.h
  *
- *  Header file for reconstruction algorithm base class : RichRecAlgBase
+ *  Header file for reconstruction algorithm base class : Rich::Rec::AlgBase
  *
  *  CVS Log :-
- *  $Id: RichRecAlgBase.h,v 1.21 2005-10-13 15:38:41 jonrob Exp $
+ *  $Id: RichRecAlgBase.h,v 1.22 2007-02-01 17:26:22 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -20,53 +20,83 @@
 #include "RichRecBase/RichRecBase.h"
 
 //-----------------------------------------------------------------------------
-/** @class RichRecAlgBase RichRecAlgBase.h RichRecBase/RichRecAlgBase.h
+/** @namespace Rich
  *
- *  Abstract base class for RICH reconstruction algorithms providing
- *  some basic functionality.
+ *  General namespace for RICH software
  *
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   05/04/2002
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
  */
 //-----------------------------------------------------------------------------
-
-class RichRecAlgBase : public RichAlgBase,
-                       public RichRecBase<RichAlgBase>
+namespace Rich
 {
 
-public:
-
-  /// Standard constructor
-  RichRecAlgBase( const std::string& name,
-                  ISvcLocator* pSvcLocator );
-
-  /// Destructor
-  virtual ~RichRecAlgBase() {};
-
-  /** Initialization of the algorithm after creation
+  /** @namespace Rich::Rec
    *
-   * @return The status of the initialization
-   * @retval StatusCode::SUCCESS Initialization was successful
-   * @retval StatusCode::FAILURE Initialization failed
-   */
-  virtual StatusCode initialize();
-
-  /** The main event processing method. Called once for each event
+   *  General namespace for RICH reconstruction software
    *
-   * @return The status of the event processing
-   * @retval StatusCode::SUCCESS Event processing was successful
-   * @retval StatusCode::FAILURE Event processing failed
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   08/07/2004
    */
-  virtual StatusCode execute();
+  namespace Rec
+  {
 
-  /** Finalization of the algorithm before deletion
-   *
-   * @return The status of the finalization
-   * @retval StatusCode::SUCCESS Finalization was successful
-   * @retval StatusCode::FAILURE Finalization failed
-   */
-  virtual StatusCode finalize();
+    //-----------------------------------------------------------------------------
+    /** @class AlgBase RichRecAlgBase.h RichRecBase/RichRecAlgBase.h
+     *
+     *  Abstract base class for RICH reconstruction algorithms providing
+     *  some basic functionality.
+     *
+     *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+     *  @date   05/04/2002
+     */
+    //-----------------------------------------------------------------------------
 
-};
+    class AlgBase : public Rich::AlgBase,
+                    public Rich::Rec::CommonBase<Rich::AlgBase>
+    {
+
+    public:
+
+      /// Standard constructor
+      AlgBase( const std::string& name,
+               ISvcLocator* pSvcLocator );
+
+      /// Destructor
+      virtual ~AlgBase() {};
+
+      /** Initialization of the algorithm after creation
+       *
+       * @return The status of the initialization
+       * @retval StatusCode::SUCCESS Initialization was successful
+       * @retval StatusCode::FAILURE Initialization failed
+       */
+      virtual StatusCode initialize();
+
+      /** The main event processing method. Called once for each event
+       *
+       * @return The status of the event processing
+       * @retval StatusCode::SUCCESS Event processing was successful
+       * @retval StatusCode::FAILURE Event processing failed
+       */
+      virtual StatusCode execute();
+
+      /** Finalization of the algorithm before deletion
+       *
+       * @return The status of the finalization
+       * @retval StatusCode::SUCCESS Finalization was successful
+       * @retval StatusCode::FAILURE Finalization failed
+       */
+      virtual StatusCode finalize();
+
+    };
+
+  }
+} // RICH
+
+/** Backwards compatibility typedef
+ * @todo Remove eventually
+ */
+typedef Rich::Rec::AlgBase RichRecAlgBase;
 
 #endif // RICHRECBASE_RICHRECALGBASE_H

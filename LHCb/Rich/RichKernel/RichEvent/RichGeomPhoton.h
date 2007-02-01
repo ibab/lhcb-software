@@ -3,7 +3,7 @@
  *
  *  Header file for RICH utility class : RichGeomPhoton
  *
- *  $Id: RichGeomPhoton.h,v 1.2 2006-03-01 09:57:25 jonrob Exp $
+ *  $Id: RichGeomPhoton.h,v 1.3 2007-02-01 17:24:53 jonrob Exp $
  *
  *  @author Antonis Papanestis
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
@@ -81,7 +81,7 @@ namespace LHCb
    */
 
   class RichGeomPhoton : public Rich::BoostMemPoolAlloc<RichGeomPhoton>
-{
+  {
 
   public:
 
@@ -420,6 +420,18 @@ namespace LHCb
       return m_dataWord;
     }
 
+  public:
+
+    /// Printout method
+    std::ostream & fillStream ( std::ostream& s ) const;
+
+    /// Implement ostream << method for RichGeomPhoton
+    friend inline std::ostream& operator << ( std::ostream& s,
+                                              const LHCb::RichGeomPhoton& photon )
+    {
+      return photon.fillStream(s);
+    }
+
   private: // methods
 
     /// Set the data
@@ -460,24 +472,5 @@ namespace LHCb
   };
 
 } // end LHCb namespace
-
-/// Implement ostream << method for RichGeomPhoton
-inline std::ostream& operator << ( std::ostream& s,
-                                   const LHCb::RichGeomPhoton& photon )
-{
-  s << "{ "
-    << " cherenkovTheta:\t" << photon.CherenkovTheta() << std::endl
-    << " cherenkovPhi:\t" << photon.CherenkovPhi() << std::endl
-    << " emissionPoint:\t" << photon.emissionPoint() << std::endl
-    << " detectionPoint:\t" << photon.detectionPoint() << std::endl
-    << " sphMirReflectionPoint:\t"<<photon.sphMirReflectionPoint()<<std::endl
-    << " flatMirReflectionPoint:\t"<<photon.flatMirReflectionPoint()<<std::endl
-    << " sphMirNumber:\t" << photon.sphMirrorNum()<<std::endl
-    << " flatMirNumber:\t" << photon.flatMirrorNum()<<std::endl
-    << " smartID:\t" << photon.smartID() << std::endl
-    << " activeSegmentFraction:\t" << photon.activeSegmentFraction() << " } ";
-  return s;
-}
-
 
 #endif // RICHEVENT_RICHGEOMPHOTON_H

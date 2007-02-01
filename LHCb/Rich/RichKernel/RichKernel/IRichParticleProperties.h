@@ -2,9 +2,9 @@
 //-----------------------------------------------------------------------------
 /** @file IRichParticleProperties.h
  *
- *  Header file for RICH reconstruction tool interface : IRichParticleProperties
+ *  Header file for RICH reconstruction tool interface : Rich::IParticleProperties
  *
- *  $Id: IRichParticleProperties.h,v 1.3 2006-01-23 13:48:35 jonrob Exp $
+ *  $Id: IRichParticleProperties.h,v 1.4 2007-02-01 17:24:54 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -19,77 +19,91 @@
 #include "Kernel/RichRadiatorType.h"
 
 /// Static Interface Identification
-static const InterfaceID IID_IRichParticleProperties( "IRichParticleProperties", 1, 0 );
+static const InterfaceID IID_IRichParticleProperties( "Rich::IParticleProperties", 1, 0 );
 
-/** @class IRichParticleProperties IRichParticleProperties.h
+//-----------------------------------------------------------------------------
+/** @namespace Rich
  *
- *  Interface for tool to calculate various physical properties
- *  for the different mass hypotheses.
+ *  General namespace for RICH software
  *
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   15/03/2002
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
  */
-
-class IRichParticleProperties : public virtual IAlgTool
+//-----------------------------------------------------------------------------
+namespace Rich
 {
 
-public:
-
-  /** static interface identification
-   *  @return unique interface identifier
+  /** @class IParticleProperties IRichParticleProperties.h
+   *
+   *  Interface for tool to calculate various physical properties
+   *  for the different mass hypotheses.
+   *
+   *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+   *  @date   15/03/2002
    */
-  static const InterfaceID& interfaceID() {return IID_IRichParticleProperties;}
 
-  /** Calculates 'beta' for given particle hypothesis and track momentum
-   *
-   *  @param ptot    Track segment momentum
-   *  @param id      The mass hypothesis to assume whilst calculating beta
-   *
-   *  @return The value of beta
-   */
-  virtual double beta( const double ptot,
-                       const Rich::ParticleIDType id ) const = 0;
+  class IParticleProperties : public virtual IAlgTool
+  {
 
-  /** Calculates the nominal mass for a given particle type
-   *
-   *  @param id  The mass hypothesis to assume whilst calculating beta
-   *
-   *  @return the nominal mass for the given particle hypothesis
-   */
-  virtual double mass( const Rich::ParticleIDType id ) const = 0;
+  public:
 
-  /** calculates the nominal mass squared for a given particle hypothesis
-   *
-   *  @param id  The mass hypothesis to assume whilst calculating beta
-   *
-   *  @return the nominal mass squared for the given particle hypothesis
-   */
-  virtual double massSq( const Rich::ParticleIDType id ) const = 0;
+    /** static interface identification
+     *  @return unique interface identifier
+     */
+    static const InterfaceID& interfaceID() {return IID_IRichParticleProperties;}
 
-  /** Calculates the threshold momentum for a given mass hypothesis
-   *  in a given radiator
-   *
-   *  @param id The mass hypothesis
-   *  @param rad The radiator medium
-   *
-   *  @return The momentum threshold value, below which no Cherenkov radiation
-   *          can be emitted
-   */
-  virtual double thresholdMomentum( const Rich::ParticleIDType id,
-                                    const Rich::RadiatorType rad ) const = 0;
+    /** Calculates 'beta' for given particle hypothesis and track momentum
+     *
+     *  @param ptot    Track segment momentum
+     *  @param id      The mass hypothesis to assume whilst calculating beta
+     *
+     *  @return The value of beta
+     */
+    virtual double beta( const double ptot,
+                         const Rich::ParticleIDType id ) const = 0;
 
-  /** Calculates the square of the threshold momentum for a given mass hypothesis
-   *  in a given radiator
-   *
-   *  @param id The mass hypothesis
-   *  @param rad The radiator medium
-   *
-   *  @return The momentum threshold squared, below which no Cherenkov radiation
-   *          can be emitted
-   */
-  virtual double thresholdMomentumSq( const Rich::ParticleIDType id,
+    /** Calculates the nominal mass for a given particle type
+     *
+     *  @param id  The mass hypothesis to assume whilst calculating beta
+     *
+     *  @return the nominal mass for the given particle hypothesis
+     */
+    virtual double mass( const Rich::ParticleIDType id ) const = 0;
+
+    /** calculates the nominal mass squared for a given particle hypothesis
+     *
+     *  @param id  The mass hypothesis to assume whilst calculating beta
+     *
+     *  @return the nominal mass squared for the given particle hypothesis
+     */
+    virtual double massSq( const Rich::ParticleIDType id ) const = 0;
+
+    /** Calculates the threshold momentum for a given mass hypothesis
+     *  in a given radiator
+     *
+     *  @param id The mass hypothesis
+     *  @param rad The radiator medium
+     *
+     *  @return The momentum threshold value, below which no Cherenkov radiation
+     *          can be emitted
+     */
+    virtual double thresholdMomentum( const Rich::ParticleIDType id,
                                       const Rich::RadiatorType rad ) const = 0;
 
-};
+    /** Calculates the square of the threshold momentum for a given mass hypothesis
+     *  in a given radiator
+     *
+     *  @param id The mass hypothesis
+     *  @param rad The radiator medium
+     *
+     *  @return The momentum threshold squared, below which no Cherenkov radiation
+     *          can be emitted
+     */
+    virtual double thresholdMomentumSq( const Rich::ParticleIDType id,
+                                        const Rich::RadiatorType rad ) const = 0;
+
+  };
+
+}
 
 #endif // RICHKERNEL_IRICHPARTICLEPROPERTIES_H

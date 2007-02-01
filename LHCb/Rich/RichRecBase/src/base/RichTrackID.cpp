@@ -5,7 +5,7 @@
  *  Implementation file for class : RichTrackID
  *
  *  CVS Log :-
- *  $Id: RichTrackID.cpp,v 1.19 2006-08-28 11:11:57 jonrob Exp $
+ *  $Id: RichTrackID.cpp,v 1.20 2007-02-01 17:26:23 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2003-09-23
@@ -19,103 +19,102 @@
 #include <sstream>
 
 // from Gaudi
-#include "GaudiKernel/StreamBuffer.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/GaudiException.h"
 
 // Text conversion for Rich::RecTrack::ParentType enumeration
-std::string Rich::text( const Rich::TrackParent::Type parent )
+std::string Rich::Rec::text( const Rich::Rec::TrackParent::Type parent )
 {
-  switch( parent ) 
+  switch( parent )
   {
-  case Rich::TrackParent::Track:          return "Track";
-  case Rich::TrackParent::MCParticle:     return "MCParticle";
-  case Rich::TrackParent::MCRichTrack:    return "MCRichTrack";
-  default:                                return "SHOULD NEVER SEE THIS";
+  case Rich::Rec::TrackParent::Track:          return "Track";
+  case Rich::Rec::TrackParent::MCParticle:     return "MCParticle";
+  case Rich::Rec::TrackParent::MCRichTrack:    return "MCRichTrack";
+  default:                                     return "SHOULD NEVER SEE THIS";
   }
 }
 
 // Text conversion for Rich::RecTrack::ParentType enumeration
-std::string Rich::text( const Rich::Track::Type track )
+std::string Rich::Rec::text( const Rich::Rec::Track::Type track )
 {
-  switch( track ) 
+  switch( track )
   {
-  case Rich::Track::Trigger:      return "Trigger"; // Place first for speed
-  case Rich::Track::Forward:      return "Forward";
-  case Rich::Track::Match:        return "Match";
-  case Rich::Track::KsTrack:      return "KsTrack";
-  case Rich::Track::VeloTT:       return "VeloTT";
-  case Rich::Track::Seed:         return "Seed";
-  case Rich::Track::Follow:       return "Follow";
-  case Rich::Track::Velo:         return "Velo";
-  case Rich::Track::Unknown:      return "Unknown";
-  case Rich::Track::Unusable:     return "Unusable";
-  case Rich::Track::MCRichTrack:  return "MCRichTrack";
-  default:                        return "SHOULD NEVER SEE THIS";
+  case Rich::Rec::Track::Trigger:      return "Trigger"; // Place first for speed
+  case Rich::Rec::Track::Forward:      return "Forward";
+  case Rich::Rec::Track::Match:        return "Match";
+  case Rich::Rec::Track::KsTrack:      return "KsTrack";
+  case Rich::Rec::Track::VeloTT:       return "VeloTT";
+  case Rich::Rec::Track::Seed:         return "Seed";
+  case Rich::Rec::Track::Follow:       return "Follow";
+  case Rich::Rec::Track::Velo:         return "Velo";
+  case Rich::Rec::Track::Unknown:      return "Unknown";
+  case Rich::Rec::Track::Unusable:     return "Unusable";
+  case Rich::Rec::Track::MCRichTrack:  return "MCRichTrack";
+  default:                             return "SHOULD NEVER SEE THIS";
   }
 }
 
-Rich::Track::Type Rich::Track::type( const std::string & name )
+Rich::Rec::Track::Type Rich::Rec::Track::type( const std::string & name )
 {
-  if      ( "Trigger"  == name )    { return Rich::Track::Trigger;  }
-  else if ( "Forward"  == name )    { return Rich::Track::Forward;  }
-  else if ( "Match"    == name )    { return Rich::Track::Match;    } 
-  else if ( "KsTrack"  == name )    { return Rich::Track::KsTrack;  }
-  else if ( "VeloTT"   == name )    { return Rich::Track::VeloTT;   }
-  else if ( "Seed"     == name )    { return Rich::Track::Seed;     }
-  else if ( "Follow"   == name )    { return Rich::Track::Follow;   }
-  else if ( "Velo"     == name )    { return Rich::Track::Velo;     }
-  else if ( "Unknown"  == name )    { return Rich::Track::Unknown;  }
-  else if ( "Unusable" == name )    { return Rich::Track::Unusable; }
-  else if ( "MCRichTrack" == name ) { return Rich::Track::MCRichTrack;}
-  else 
+  if      ( "Trigger"  == name )    { return Rich::Rec::Track::Trigger;  }
+  else if ( "Forward"  == name )    { return Rich::Rec::Track::Forward;  }
+  else if ( "Match"    == name )    { return Rich::Rec::Track::Match;    }
+  else if ( "KsTrack"  == name )    { return Rich::Rec::Track::KsTrack;  }
+  else if ( "VeloTT"   == name )    { return Rich::Rec::Track::VeloTT;   }
+  else if ( "Seed"     == name )    { return Rich::Rec::Track::Seed;     }
+  else if ( "Follow"   == name )    { return Rich::Rec::Track::Follow;   }
+  else if ( "Velo"     == name )    { return Rich::Rec::Track::Velo;     }
+  else if ( "Unknown"  == name )    { return Rich::Rec::Track::Unknown;  }
+  else if ( "Unusable" == name )    { return Rich::Rec::Track::Unusable; }
+  else if ( "MCRichTrack" == name ) { return Rich::Rec::Track::MCRichTrack;}
+  else
   { // Should not get here ...
     throw GaudiException( "Unknown track string name '"+name+"'",
-                          "*Rich::Track::type*", StatusCode::FAILURE );
-    return Rich::Track::Unknown; 
+                          "*Rich::Rec::Track::type*", StatusCode::FAILURE );
+    return Rich::Rec::Track::Unknown;
   }
 }
 
 // Returns the enumerated type for a given Track
-Rich::Track::Type Rich::Track::type( const LHCb::Track * track )
+Rich::Rec::Track::Type Rich::Rec::Track::type( const LHCb::Track * track )
 {
-  if ( track ) 
+  if ( track )
   {
     // track algorithm type
     const LHCb::Track::History hist = (LHCb::Track::History)track->history();
     // check all known track types (order according to abundance)
     // Forward types
-    if      ( LHCb::Track::PatForward    == hist )  { return Rich::Track::Forward;  }
+    if      ( LHCb::Track::PatForward    == hist )  { return Rich::Rec::Track::Forward;  }
     // match track types
-    else if ( LHCb::Track::TrackMatching == hist )  { return Rich::Track::Match;    }
+    else if ( LHCb::Track::TrackMatching == hist )  { return Rich::Rec::Track::Match;    }
     // seed types
-    else if ( LHCb::Track::TsaTrack      == hist )  { return Rich::Track::Seed;     }
-    //else if ( LHCb::Track::TrackSeeding  == hist )  { return Rich::Track::Seed;     }
+    else if ( LHCb::Track::TsaTrack      == hist )  { return Rich::Rec::Track::Seed;     }
+    //else if ( LHCb::Track::TrackSeeding  == hist )  { return Rich::Rec::Track::Seed;     }
     // veloTT types
-    else if ( LHCb::Track::PatVeloTT     == hist )  { return Rich::Track::VeloTT;   }
-    //else if ( LHCb::Track::TrackVeloTT   == hist )  { return Rich::Track::VeloTT;   }
+    else if ( LHCb::Track::PatVeloTT     == hist )  { return Rich::Rec::Track::VeloTT;   }
+    //else if ( LHCb::Track::TrackVeloTT   == hist )  { return Rich::Rec::Track::VeloTT;   }
     // Ks Tracks
-    else if ( LHCb::Track::PatKShort     == hist )  { return Rich::Track::KsTrack;  }
+    else if ( LHCb::Track::PatKShort     == hist )  { return Rich::Rec::Track::KsTrack;  }
     // velo tracks
-    else if ( LHCb::Track::PatVelo       == hist )  { return Rich::Track::Velo;     }
-    else 
+    else if ( LHCb::Track::PatVelo       == hist )  { return Rich::Rec::Track::Velo;     }
+    else
     { // Should not get here ...
       std::ostringstream mess;
       mess << "Unknown Track type : Track::History = " << track->history();
-      throw GaudiException( mess.str(), "*Rich::Track::type*", StatusCode::FAILURE );
+      throw GaudiException( mess.str(), "*Rich::Rec::Track::type*", StatusCode::FAILURE );
     }
   }
 
   // Should not get here either ...
-  throw GaudiException( "Null Track pointer", "*Rich::Track::type*", StatusCode::FAILURE );
+  throw GaudiException( "Null Track pointer", "*Rich::Rec::Track::type*", StatusCode::FAILURE );
 }
 
-Rich::Track::Type Rich::Track::type( const LHCb::MCRichTrack * track )
+Rich::Rec::Track::Type Rich::Rec::Track::type( const LHCb::MCRichTrack * track )
 {
-  if ( track ) 
+  if ( track )
   {
-    return Rich::Track::MCRichTrack;
+    return Rich::Rec::Track::MCRichTrack;
   }
   // Should not get here either ...
-  throw GaudiException( "Null Track pointer", "*Rich::Track::type*", StatusCode::FAILURE );
+  throw GaudiException( "Null Track pointer", "*Rich::Rec::Track::type*", StatusCode::FAILURE );
 }

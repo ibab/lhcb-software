@@ -2,10 +2,10 @@
 //-----------------------------------------------------------------------------
 /** @file IRichRayleighScatter.h
  *
- *  Header file for RICH reconstruction tool interface : IRichRayleighScatter
+ *  Header file for RICH reconstruction tool interface : Rich::Rec::IRayleighScatter
  *
  *  CVS Log :-
- *  $Id: IRichRayleighScatter.h,v 1.5 2006-01-23 14:08:55 jonrob Exp $
+ *  $Id: IRichRayleighScatter.h,v 1.6 2007-02-01 17:26:21 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -22,39 +22,64 @@ namespace LHCb
 }
 
 /// Static Interface Identification
-static const InterfaceID IID_IRichRayleighScatter( "IRichRayleighScatter", 1, 0 );
+static const InterfaceID IID_IRichRayleighScatter( "Rich::Rec::IRayleighScatter", 1, 0 );
 
 //-----------------------------------------------------------------------------
-/** @class IRichRayleighScatter IRichRayleighScatter.h
+/** @namespace Rich
  *
- *  Interface for tool to calculate quantities related to Rayleigh scattering
+ *  General namespace for RICH software
  *
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   15/03/2002
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
  */
 //-----------------------------------------------------------------------------
-
-class IRichRayleighScatter : public virtual IAlgTool
+namespace Rich
 {
 
-public:
-
-  /** static interface identification
-   *  @return unique interface identifier
-   */
-  static const InterfaceID& interfaceID() { return IID_IRichRayleighScatter; }
-
-  /** Computes the Rayleigh scattering probability for given RichRecSegment
-   *  and photon energy
+  /** @namespace Rich::Rec
    *
-   *  @param segment Pointer to the RichRecSegment
-   *  @param energy  The photon energy
+   *  General namespace for RICH reconstruction software
    *
-   *  @return The Rayleigh scattering probability
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   08/07/2004
    */
-  virtual double photonScatteredProb( const LHCb::RichRecSegment * segment,
-                                      const double energy ) const = 0;
+  namespace Rec
+  {
 
-};
+    //-----------------------------------------------------------------------------
+    /** @class IRayleighScatter IRichRayleighScatter.h
+     *
+     *  Interface for tool to calculate quantities related to Rayleigh scattering
+     *
+     *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+     *  @date   15/03/2002
+     */
+    //-----------------------------------------------------------------------------
+
+    class IRayleighScatter : public virtual IAlgTool
+    {
+
+    public:
+
+      /** static interface identification
+       *  @return unique interface identifier
+       */
+      static const InterfaceID& interfaceID() { return IID_IRichRayleighScatter; }
+
+      /** Computes the Rayleigh scattering probability for given RichRecSegment
+       *  and photon energy
+       *
+       *  @param segment Pointer to the RichRecSegment
+       *  @param energy  The photon energy
+       *
+       *  @return The Rayleigh scattering probability
+       */
+      virtual double photonScatteredProb( const LHCb::RichRecSegment * segment,
+                                          const double energy ) const = 0;
+
+    };
+
+  }
+}
 
 #endif // RICHRECTOOLS_IRICHRAYLEIGHSCATTER_H

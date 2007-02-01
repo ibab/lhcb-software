@@ -5,7 +5,7 @@
  *  Implementation file for RICH base class : RichCommonBase
  *
  *  CVS Log :-
- *  $Id: RichCommonBase.icpp,v 1.8 2006-09-04 15:33:05 cattanem Exp $
+ *  $Id: RichCommonBase.icpp,v 1.9 2007-02-01 17:24:55 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-27
@@ -22,13 +22,13 @@
 // Destructor
 //=============================================================================
 template <class PBASE>
-RichCommonBase<PBASE>::~RichCommonBase() {}
+Rich::CommonBase<PBASE>::~CommonBase() {}
 
 //=============================================================================
 // Initialisation
 //=============================================================================
 template <class PBASE>
-StatusCode RichCommonBase<PBASE>::initialize()
+StatusCode Rich::CommonBase<PBASE>::initialize()
 {
   // Execute the base class initialize
   const StatusCode sc = PBASE::initialize();
@@ -43,7 +43,7 @@ StatusCode RichCommonBase<PBASE>::initialize()
 // Finalisation
 //=============================================================================
 template <class PBASE>
-StatusCode RichCommonBase<PBASE>::finalize()
+StatusCode Rich::CommonBase<PBASE>::finalize()
 {
   // Printout from finalization
   if ( this -> msgLevel(MSG::DEBUG) )
@@ -58,7 +58,7 @@ StatusCode RichCommonBase<PBASE>::finalize()
 // Access job options service
 //=============================================================================
 template <class PBASE>
-IJobOptionsSvc* RichCommonBase<PBASE>::joSvc() const
+IJobOptionsSvc* Rich::CommonBase<PBASE>::joSvc() const
 {
   if (!m_jos)
   { m_jos = this -> template svc<IJobOptionsSvc>( "JobOptionsSvc" ); }
@@ -70,7 +70,7 @@ IJobOptionsSvc* RichCommonBase<PBASE>::joSvc() const
 // Sets context
 //=============================================================================
 template <class PBASE>
-StatusCode RichCommonBase<PBASE>::setContext( const std::string & name ) const
+StatusCode Rich::CommonBase<PBASE>::setContext( const std::string & name ) const
 {
 
   // Tool registry context

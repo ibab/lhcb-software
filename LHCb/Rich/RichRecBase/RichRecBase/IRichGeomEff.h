@@ -2,10 +2,10 @@
 //-----------------------------------------------------------------------------
 /** @file IRichGeomEff.h
  *
- *  Header file for RICH reconstruction tool interface : IRichGeomEff
+ *  Header file for RICH reconstruction tool interface : Rich::Rec::IGeomEff
  *
  *  CVS Log :-
- *  $Id: IRichGeomEff.h,v 1.5 2006-03-12 16:13:47 jonrob Exp $
+ *  $Id: IRichGeomEff.h,v 1.6 2007-02-01 17:26:21 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -25,53 +25,78 @@ namespace LHCb
 }
 
 /// Static Interface Identification
-static const InterfaceID IID_IRichGeomEff( "IRichGeomEff", 1, 0 );
+static const InterfaceID IID_IRichGeomEff( "Rich::Rec::IGeomEff", 1, 0 );
 
 //-----------------------------------------------------------------------------
-/** @class IRichGeomEff IRichGeomEff.h
+/** @namespace Rich
  *
- *  Interface for tool to calculate the geometrical efficiencies for a given
- *  RichRecSegment and mass hypotheses. The geometrical efficiencies are
- *  defined as the fraction of the Cherenkov ring that falls on the active HPD
- *  area, and thus is detectable.
+ *  General namespace for RICH software
  *
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   15/03/2002
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
  */
 //-----------------------------------------------------------------------------
-
-class IRichGeomEff : public virtual IAlgTool
+namespace Rich
 {
 
-public:
-
-  /** static interface identification
-   *  @return unique interface identifier
+  /** @namespace Rich::Rec
+   *
+   *  General namespace for RICH reconstruction software
+   *
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   08/07/2004
    */
-  static const InterfaceID& interfaceID() { return IID_IRichGeomEff; }
+  namespace Rec
+  {
 
-  /** Calculate the signal geometrical efficiency for the given
-   *  RichRecSegment and mass hypothesis
-   *
-   *  @param segment Pointer to the RichRecSegment
-   *  @param id      The mass hypothesis
-   *
-   *  @return the geometrical efficiency
-   */
-  virtual double geomEfficiency ( LHCb::RichRecSegment * segment,
-                                  const Rich::ParticleIDType id ) const = 0;
+    //-----------------------------------------------------------------------------
+    /** @class IGeomEff IRichGeomEff.h
+     *
+     *  Interface for tool to calculate the geometrical efficiencies for a given
+     *  RichRecSegment and mass hypotheses. The geometrical efficiencies are
+     *  defined as the fraction of the Cherenkov ring that falls on the active HPD
+     *  area, and thus is detectable.
+     *
+     *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+     *  @date   15/03/2002
+     */
+    //-----------------------------------------------------------------------------
 
-  /** Calculate the scattered geometrical efficiency for the given
-   *  RichRecSegment and mass hypothesis
-   *
-   *  @param segment Pointer to the RichRecSegment
-   *  @param id      The mass hypothesis
-   *
-   *  @return the geometrical efficiency
-   */
-  virtual double geomEfficiencyScat ( LHCb::RichRecSegment * segment,
+    class IGeomEff : public virtual IAlgTool
+    {
+
+    public:
+
+      /** static interface identification
+       *  @return unique interface identifier
+       */
+      static const InterfaceID& interfaceID() { return IID_IRichGeomEff; }
+
+      /** Calculate the signal geometrical efficiency for the given
+       *  RichRecSegment and mass hypothesis
+       *
+       *  @param segment Pointer to the RichRecSegment
+       *  @param id      The mass hypothesis
+       *
+       *  @return the geometrical efficiency
+       */
+      virtual double geomEfficiency ( LHCb::RichRecSegment * segment,
                                       const Rich::ParticleIDType id ) const = 0;
 
-};
+      /** Calculate the scattered geometrical efficiency for the given
+       *  RichRecSegment and mass hypothesis
+       *
+       *  @param segment Pointer to the RichRecSegment
+       *  @param id      The mass hypothesis
+       *
+       *  @return the geometrical efficiency
+       */
+      virtual double geomEfficiencyScat ( LHCb::RichRecSegment * segment,
+                                          const Rich::ParticleIDType id ) const = 0;
+
+    };
+
+  }
+}
 
 #endif // RICHRECTOOLS_IRICHGEOMEFF_H

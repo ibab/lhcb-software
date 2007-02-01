@@ -5,7 +5,7 @@
  * Header file for reconstruction tool base class : RichRecTupleToolBase
  *
  * CVS Log :-
- * $Id: RichRecTupleToolBase.h,v 1.1 2005-10-31 13:30:16 jonrob Exp $
+ * $Id: RichRecTupleToolBase.h,v 1.2 2007-02-01 17:26:22 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date   2005/01/13
@@ -20,47 +20,77 @@
 #include "RichRecBase/RichRecBase.h"
 
 //-----------------------------------------------------------------------------
-/** @class RichRecTupleToolBase RichRecTupleToolBase.h RichRecBase/RichRecTupleToolBase.h
+/** @namespace Rich
  *
- *  Abstract base class for RICH reconstruction tools providing
- *  some basic functionality (identical to RichRecToolBase) but with additional
- *  histogram and ntuple functionality provided by GaudiTupleTool base class.
+ *  General namespace for RICH specific definitions
  *
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   2005/01/13
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
  */
 //-----------------------------------------------------------------------------
-
-class RichRecTupleToolBase : public RichTupleToolBase,
-                             public RichRecBase<RichTupleToolBase>
+namespace Rich
 {
 
-public:
-
-  /// Standard constructor
-  RichRecTupleToolBase( const std::string& type,
-                        const std::string& name,
-                        const IInterface* parent );
-
-  /// Destructor
-  virtual ~RichRecTupleToolBase() {};
-
-  /** Initialization of the tool after creation
+  /** @namespace Rich::Rec
    *
-   * @return The status of the initialization
-   * @retval StatusCode::SUCCESS Initialization was successful
-   * @retval StatusCode::FAILURE Initialization failed
-   */
-  virtual StatusCode initialize();
-
-  /** Finalization of the tool before deletion
+   *  General namespace for RICH reconstruction software
    *
-   * @return The status of the finalization
-   * @retval StatusCode::SUCCESS Finalization was successful
-   * @retval StatusCode::FAILURE Finalization failed
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   08/07/2004
    */
-  virtual StatusCode finalize();
+  namespace Rec
+  {
 
-};
+    //-----------------------------------------------------------------------------
+    /** @class TupleToolBase RichRecTupleToolBase.h RichRecBase/RichRecTupleToolBase.h
+     *
+     *  Abstract base class for RICH reconstruction tools providing
+     *  some basic functionality (identical to RichRecToolBase) but with additional
+     *  histogram and ntuple functionality provided by GaudiTupleTool base class.
+     *
+     *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+     *  @date   2005/01/13
+     */
+    //-----------------------------------------------------------------------------
+
+    class TupleToolBase : public Rich::TupleToolBase,
+                          public Rich::Rec::CommonBase<Rich::TupleToolBase>
+    {
+
+    public:
+
+      /// Standard constructor
+      TupleToolBase( const std::string& type,
+                     const std::string& name,
+                     const IInterface* parent );
+
+      /// Destructor
+      virtual ~TupleToolBase() {};
+
+      /** Initialization of the tool after creation
+       *
+       * @return The status of the initialization
+       * @retval StatusCode::SUCCESS Initialization was successful
+       * @retval StatusCode::FAILURE Initialization failed
+       */
+      virtual StatusCode initialize();
+
+      /** Finalization of the tool before deletion
+       *
+       * @return The status of the finalization
+       * @retval StatusCode::SUCCESS Finalization was successful
+       * @retval StatusCode::FAILURE Finalization failed
+       */
+      virtual StatusCode finalize();
+
+    };
+
+  } // Rec
+} // RICH
+
+
+/** Backwards compatibility typedef
+ * @todo Remove eventually */
+typedef Rich::Rec::TupleToolBase RichRecTupleToolBase;
 
 #endif // RICHRECBASE_RICHRECTUPLETOOLBASE_H

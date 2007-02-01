@@ -2,10 +2,10 @@
 //-----------------------------------------------------------------------------
 /** @file RichGeomFunctions.h
  *
- *  Header file for RICH geometrical utility functions : RichSide
+ *  Header file for RICH geometrical utility functions
  *
  *  CVS Log :-
- *  $Id: RichGeomFunctions.h,v 1.3 2006-10-20 13:01:00 jonrob Exp $
+ *  $Id: RichGeomFunctions.h,v 1.4 2007-02-01 17:24:54 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/01/2006
@@ -21,11 +21,19 @@
 #include "Kernel/Point3DTypes.h"
 #include "Kernel/Vector3DTypes.h"
 
-// General namespace for RICH specific definitions documented in RichSide.h
+//-----------------------------------------------------------------------------
+/** @namespace Rich
+ *
+ *  General namespace for RICH software
+ *
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
+ */
+//-----------------------------------------------------------------------------
 namespace Rich
 {
 
-  /** @enum Rich::Geom
+  /** @namespace Geom
    *
    *  Namespace for a collection of geomtrical utilities, such as useful functions 
    *  not available in MathMore

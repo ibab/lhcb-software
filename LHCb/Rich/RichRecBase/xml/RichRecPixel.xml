@@ -4,7 +4,7 @@
 <package name="RichRecBase">
 
 <!-- **************************************************************************
-  * $Id: RichRecPixel.xml,v 1.15 2006-08-04 21:32:26 jonrob Exp $
+  * $Id: RichRecPixel.xml,v 1.16 2007-02-01 17:26:23 jonrob Exp $
   *****************************************************************************
   * XML-description of RichRecPixel class                                     *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -50,7 +50,7 @@
                 <arg inout="BYVALUE"  const="TRUE" name="smartID"    type="LHCb::RichSmartID"         />
                 <arg                  const="TRUE" name="gPos"       type="Gaudi::XYZPoint"           />
                 <arg                  const="TRUE" name="lPos"       type="Gaudi::XYZPoint"           />
-                <arg inout="BYVALUE"  const="TRUE" name="parentType" type="Rich::PixelParent::Type"   />
+                <arg inout="BYVALUE"  const="TRUE" name="parentType" type="Rich::Rec::PixelParent::Type"   />
                 <arg                  const="TRUE" name="parent"     type="ContainedObject*"    />
                 <code/>
         </constructor>
@@ -175,8 +175,8 @@
         <attribute 
                 desc = "Enumeration to Parent type" 
                 name = "parentType" 
-                type = "Rich::PixelParent::Type"
-                init = "Rich::PixelParent::Unknown" 
+                type = "Rich::Rec::PixelParent::Type"
+                init = "Rich::Rec::PixelParent::Unknown" 
         />
             
         <relation 

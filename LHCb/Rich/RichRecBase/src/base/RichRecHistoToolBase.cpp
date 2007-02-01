@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool base class : RichRecHistoToolBase
  *
  *  CVS Log :-
- *  $Id: RichRecHistoToolBase.cpp,v 1.1 2005-10-31 13:30:16 jonrob Exp $
+ *  $Id: RichRecHistoToolBase.cpp,v 1.2 2007-02-01 17:26:23 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2005/01/13
@@ -25,17 +25,17 @@
 // ============================================================================
 // Force creation of templated class
 #include "RichRecBase.icpp"
-template class RichRecBase<RichHistoToolBase> ;
+template class Rich::Rec::CommonBase<Rich::HistoToolBase> ;
 // ============================================================================
 
 // ============================================================================
 // Standard constructor
 // ============================================================================
-RichRecHistoToolBase::RichRecHistoToolBase( const std::string& type,
-                                            const std::string& name,
-                                            const IInterface* parent )
-  : RichHistoToolBase ( type, name, parent ),
-    RichRecBase<RichHistoToolBase> ( this )
+Rich::Rec::HistoToolBase::HistoToolBase( const std::string& type,
+                                          const std::string& name,
+                                          const IInterface* parent )
+  : Rich::HistoToolBase ( type, name, parent ),
+    Rich::Rec::CommonBase<Rich::HistoToolBase> ( this )
 {
 }
 // ============================================================================
@@ -43,17 +43,17 @@ RichRecHistoToolBase::RichRecHistoToolBase( const std::string& type,
 // ============================================================================
 // Initialise
 // ============================================================================
-StatusCode RichRecHistoToolBase::initialize()
+StatusCode Rich::Rec::HistoToolBase::initialize()
 {
   // Initialise base class
-  StatusCode sc = RichHistoToolBase::initialize();
+  StatusCode sc = Rich::HistoToolBase::initialize();
   if ( sc.isFailure() )
     return Error( "Failed to initialise RichHistoToolBase", sc );
 
   // Common initialisation
   sc = initialiseRichReco();
   if ( sc.isFailure() )
-    return Error( "Failed to initialise RichRecBase", sc );
+    return Error( "Failed to initialise Rich::RecBase", sc );
 
   return sc;
 }
@@ -62,13 +62,13 @@ StatusCode RichRecHistoToolBase::initialize()
 // ============================================================================
 // Finalise
 // ============================================================================
-StatusCode RichRecHistoToolBase::finalize()
+StatusCode Rich::Rec::HistoToolBase::finalize()
 {
   // Common finalisation
   const StatusCode sc = finaliseRichReco();
-  if ( sc.isFailure() ) return Error( "Failed to finalise RichRecBase", sc );
+  if ( sc.isFailure() ) return Error( "Failed to finalise Rich::RecBase", sc );
 
   // base class finalize
-  return RichHistoToolBase::finalize();
+  return Rich::HistoToolBase::finalize();
 }
 // ============================================================================

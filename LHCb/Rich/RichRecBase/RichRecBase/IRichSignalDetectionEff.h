@@ -2,10 +2,10 @@
 //-----------------------------------------------------------------------------
 /** @file IRichSignalDetectionEff.h
  *
- *  Header file for RICH reconstruction tool interface : IRichSignalDetectionEff
+ *  Header file for RICH reconstruction tool interface : Rich::Rec::ISignalDetectionEff
  *
  *  CVS Log :-
- *  $Id: IRichSignalDetectionEff.h,v 1.6 2006-03-12 16:13:47 jonrob Exp $
+ *  $Id: IRichSignalDetectionEff.h,v 1.7 2007-02-01 17:26:22 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -25,40 +25,65 @@ namespace LHCb
 }
 
 /// Static Interface Identification
-static const InterfaceID IID_IRichSignalDetectionEff( "IRichSignalDetectionEff", 1, 0 );
+static const InterfaceID IID_IRichSignalDetectionEff( "Rich::Rec::ISignalDetectionEff", 1, 0 );
 
 //-----------------------------------------------------------------------------
-/** @class IRichSignalDetectionEff IRichSignalDetectionEff.h
+/** @namespace Rich
  *
- *  Interface for tools providing calculations for the photon
- *  detection efficiencies.
+ *  General namespace for RICH software
  *
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   15/03/2002
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
  */
 //-----------------------------------------------------------------------------
-
-class IRichSignalDetectionEff : public virtual IAlgTool
+namespace Rich
 {
 
-public:
-
-  /** static interface identification
-   *  @return unique interface identifier
-   */
-  static const InterfaceID& interfaceID() { return IID_IRichSignalDetectionEff; }
-
-  /** Computes the detection efficiency for average cherenkov photon of a given energy,
-   *  that are emitted from a given RichRecSegment.
+  /** @namespace Rich::Rec
    *
-   *  @param segment  The RichRecSegment for which the efficiency should be computed
-   *  @param  energy  The photon energy
+   *  General namespace for RICH reconstruction software
    *
-   *  @return The average detection efficiency for photons of the given energy
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   08/07/2004
    */
-  virtual double photonDetEfficiency( LHCb::RichRecSegment * segment,
-                                      const double energy ) const = 0;
+  namespace Rec
+  {
 
-};
+    //-----------------------------------------------------------------------------
+    /** @class ISignalDetectionEff IRichSignalDetectionEff.h
+     *
+     *  Interface for tools providing calculations for the photon
+     *  detection efficiencies.
+     *
+     *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+     *  @date   15/03/2002
+     */
+    //-----------------------------------------------------------------------------
+
+    class ISignalDetectionEff : public virtual IAlgTool
+    {
+
+    public:
+
+      /** static interface identification
+       *  @return unique interface identifier
+       */
+      static const InterfaceID& interfaceID() { return IID_IRichSignalDetectionEff; }
+
+      /** Computes the detection efficiency for average cherenkov photon of a given energy,
+       *  that are emitted from a given RichRecSegment.
+       *
+       *  @param segment  The RichRecSegment for which the efficiency should be computed
+       *  @param  energy  The photon energy
+       *
+       *  @return The average detection efficiency for photons of the given energy
+       */
+      virtual double photonDetEfficiency( LHCb::RichRecSegment * segment,
+                                          const double energy ) const = 0;
+
+    };
+
+  }
+}
 
 #endif // RICHRECBASE_IRICHSIGNALDETECTIONEFF_H
