@@ -5,6 +5,11 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
 
+</PRE><H1><A NAME=v1r2>2007-02-01 HltSys v1r2</A></H1><PRE>
+This version uses Gaudi v19r1 and LHCb v22r0.
+
+Identical to v1r1 but introducing CMTPROJECTPATH
+
 </PRE><H1><A NAME=v1r1>2007-01-11 HltSys v1r1</A></H1><PRE>
 This version uses Gaudi v18r10 and LHCb v21r12.
 
