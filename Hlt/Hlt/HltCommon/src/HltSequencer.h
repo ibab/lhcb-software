@@ -1,4 +1,4 @@
-// $Id: HltSequencer.h,v 1.4 2007-01-11 14:07:14 hernando Exp $
+// $Id: HltSequencer.h,v 1.5 2007-02-01 18:35:54 hernando Exp $
 #ifndef GAUDISEQUENCER_H 
 #define GAUDISEQUENCER_H 1
 
@@ -78,8 +78,10 @@ private:
   AIDA::IHistogram1D* m_histoTime;
   AIDA::IHistogram1D* m_histoTime0;
   AIDA::IHistogram1D* m_histoRate;
+  std::vector<AIDA::IHistogram1D*> m_histoTimeAlgs;
   
   std::vector<AlgorithmEntry> m_entries; ///< List of algorithms to process.
+
   bool m_modeOR;                         ///< Indicates that the OR is wanted
   bool m_ignoreFilter;                   ///< True if one continues always.
   bool m_isInitialized;                  ///< Indicate that we are ready

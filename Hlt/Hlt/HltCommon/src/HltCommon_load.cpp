@@ -8,6 +8,7 @@ DECLARE_FACTORY_ENTRIES( HltCommon ) {
   DECLARE_ALGORITHM( HltSequencer );
 
   DECLARE_ALGORITHM( L0Entry );
+  DECLARE_ALGORITHM( PhysSelEntry );
   //  DECLARE_ALGORITHM( HltFilterAlgorithm );
   DECLARE_ALGORITHM( HltTrackIPSelection );
   DECLARE_ALGORITHM( HltMonitor );

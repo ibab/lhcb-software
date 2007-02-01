@@ -1,4 +1,4 @@
-// $Id: HltSequencer.cpp,v 1.6 2007-01-11 14:07:14 hernando Exp $
+// $Id: HltSequencer.cpp,v 1.7 2007-02-01 18:35:54 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -57,8 +57,14 @@ StatusCode HltSequencer::initialize() {
     m_timerTool->increaseIndent();
   }
 
-  m_histoTime = NULL;
-  m_histoRate = NULL;
+  // generic histograms
+  m_histoTime  = book1D("time",0.,50.,500);
+  m_histoTime0 = book1D("time0",0.,50.,500);
+
+  int nalgs = m_entries.size();
+  m_histoRate = book1D("rate",0.,1.*(nalgs+1),nalgs+1);
+
+  // external booking algorithms
   const std::vector<std::string>& hdes = m_hisDescriptor.value();
   for (std::vector<std::string>::const_iterator it = hdes.begin();
        it != hdes.end(); it++){
@@ -77,6 +83,10 @@ StatusCode HltSequencer::initialize() {
     if ( m_measureTime ) {
       const std::string algname = (*itE).algorithm()->name();
       (*itE).setTimer( m_timerTool->addTimer( algname ));
+      AIDA::IHistogram1D* h = histo1D(algname);
+      info() << " found histogram of " << algname << " ? " 
+             << h << endreq;
+      m_histoTimeAlgs.push_back(h);
     }
     // if (!m_propHisto.hasHisto(algname))
     status = (*itE).algorithm()->sysInitialize();
@@ -85,16 +95,6 @@ StatusCode HltSequencer::initialize() {
                     status );
     }
   }
-
-  // generic histograms
-  m_histoTime = book1D("time",0.,50.,500);
-  m_histoTime0 = book1D("time0",0.,50.,500);
-  
-  int nalgs = m_entries.size();
-  m_histoRate = book1D("rate",0.,1.*(nalgs+1),nalgs+1);
-
-  if (!m_histoTime || !m_histoRate) 
-    error() << " NO HISTOS!" << endreq;
   
   if ( m_measureTime ) m_timerTool->decreaseIndent();
 
@@ -115,9 +115,11 @@ StatusCode HltSequencer::execute() {
   StatusCode result = StatusCode::SUCCESS;
   
   std::vector<AlgorithmEntry>::const_iterator itE;
+  std::vector<AIDA::IHistogram1D*>::iterator itHis;
   bool passed = m_modeOR? false:true;
   int ialg = 0;
-  for ( itE = m_entries.begin(); m_entries.end() != itE; itE++, ialg++ ) {
+  for ( itE = m_entries.begin(), itHis = m_histoTimeAlgs.begin(); 
+        m_entries.end() != itE; itE++, ialg++, itHis++ ) {
     Algorithm* myAlg = (*itE).algorithm();
     if ( myAlg->isEnabled() ) {
       if ( ! myAlg->isExecuted() ) {
@@ -126,7 +128,7 @@ StatusCode HltSequencer::execute() {
         if ( m_measureTime) {
           double t0 = m_timerTool->stop( (*itE).timer() );
           ttot += t0;
-          fill( histo1D(myAlg->name()),t0,1.);
+          if (*itHis) fill( *itHis,t0,1.);
         }
         myAlg->setExecuted( true );
         if ( ! result.isSuccess() ) break;  //== Abort and return bad status
