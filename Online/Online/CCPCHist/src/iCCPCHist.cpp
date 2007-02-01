@@ -10,7 +10,7 @@
 #define MAX( x , y)  =   (( (x) > (y) ) ? (x) : (y) )
 
 static DimHistbuff1 dumbuf1;
-static DimHistbuff2 dumbuf2;
+//static DimHistbuff2 dumbuf2;
 static int mpty;
 
 CCPCHSys::CCPCHSys()
