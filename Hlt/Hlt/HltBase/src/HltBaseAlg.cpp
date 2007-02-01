@@ -1,4 +1,4 @@
-// $Id: HltBaseAlg.cpp,v 1.2 2007-01-11 10:32:49 hernando Exp $
+// $Id: HltBaseAlg.cpp,v 1.3 2007-02-01 16:05:31 villas Exp $
 // Include files 
 
 // from Gaudi
@@ -281,7 +281,7 @@ void HltBaseAlg::initializeCounter ( HltCounter& counter,
 
 void HltBaseAlg::increaseCounter( HltCounter& count, int increase) {
   count.m_counter += increase;
-  this->fill( count.m_histo, 1., 1.*increase);  
+  this->fill( count.m_histo, 0.5, 1.*increase);  
   return;
 }
 
