@@ -1,11 +1,14 @@
 ! =============================================================================
-! $Id: release.notes,v 1.31 2007-01-30 20:06:37 marcocle Exp $
+! $Id: release.notes,v 1.32 2007-02-01 19:15:29 marcocle Exp $
 ! =============================================================================
 ! package Tools/CondDBUI
 ! package manager : Marco Clemencic / Nicolas Gilardi
 ! =============================================================================
 
-!=========== Tools/CondDBUI v1r1 2007-01-30 ===================================
+!=========== Tools/CondDBUI v1r1 2007-02-01 ===================================
+! 2007-02-01 - Marco Clemencic
+ - Added use of CLHEP because of a bug in PyCintex.
+
 ! 2007-01-30 - Marco Clemencic
  - SQLite connection string changed back to the old one because the new one is
    supported only by COOL 2.x

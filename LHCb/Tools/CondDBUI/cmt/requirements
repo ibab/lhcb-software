@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.10 2007-01-24 14:59:28 marcocle Exp $
+# $Id: requirements,v 1.11 2007-02-01 19:15:23 marcocle Exp $
 package CondDBUI
 
 version v1r1
@@ -31,6 +31,9 @@ use Python v* LCG_Interfaces
 
 # This one is needed by CORAL
 use XercesC v* LCG_Interfaces
+
+# Needed because of a bug in PyCintex
+use CLHEP v* LCG_Interfaces
 
 # ============== Environment =========================================
 
