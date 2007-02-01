@@ -4,7 +4,7 @@
  *  Header file for detector description class : DeRichBeamPipe
  *
  *  CVS Log :-
- *  $Id: DeRichBeamPipe.h,v 1.4 2006-12-03 01:59:47 jonrob Exp $
+ *  $Id: DeRichBeamPipe.h,v 1.5 2007-02-01 16:41:12 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2006-11-27
@@ -25,17 +25,18 @@
 extern const CLID& CLID_DERichBeamPipe;
 
 
-/** @namespace DeRichLocation
+/** @namespace DeRichBeamPipeLocation
  *
- *  Namespace for the xml location of the detector elements RichSystem
+ *  Namespace for the xml location of the detector elements DeRichBeamPipe
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
  */
-namespace DeRichBeamPipeLocation {
-
-  /// RichSystem location in transient detector store
+namespace DeRichBeamPipeLocation 
+{
+  /// Rich1 Beampipe location in TDS
   static const std::string& Rich1BeamPipe = "/dd/Structure/LHCb/BeforeMagnetRegion/Rich1/Rich1BeamPipe";
+  /// Rich2 Beampipe location in TDS
   static const std::string& Rich2BeamPipe = "/dd/Structure/LHCb/AfterMagnetRegion/Rich2/Rich2BeamPipe";
 }
 
@@ -46,7 +47,8 @@ namespace DeRichBeamPipeLocation {
  * @author Antonis Papanestis a.papanestis@rl.ac.uk
  * @date   2006-11-27
  */
-class DeRichBeamPipe: public DetectorElement {
+class DeRichBeamPipe : public DetectorElement 
+{
 
 public:
 

@@ -4,7 +4,7 @@
  *  Header file for detector description class : DeRich
  *
  *  CVS Log :-
- *  $Id: DeRich.h,v 1.20 2006-03-02 09:35:23 papanest Exp $
+ *  $Id: DeRich.h,v 1.21 2007-02-01 16:41:12 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -39,16 +39,13 @@ class DeRichHPDPanel;
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
  */
-namespace DeRichLocation {
-
+namespace DeRichLocation 
+{
   /// Rich1 location in transient detector store
-  static const std::string& Rich1_old = "/dd/Structure/LHCb/Rich1";
   static const std::string& Rich1 = "/dd/Structure/LHCb/BeforeMagnetRegion/Rich1";
 
   /// Rich2 location in transient detector store
-  static const std::string& Rich2_old = "/dd/Structure/LHCb/Rich2";
   static const std::string& Rich2 = "/dd/Structure/LHCb/AfterMagnetRegion/Rich2";
-
 }
 
 /** @class DeRich DeRich.h
@@ -130,7 +127,7 @@ public:
    *
    * @return Pointer to gas window refIndex
    */
-  inline const Rich1DTabProperty* gasWinRefIndex() const
+  inline const RichTabulatedProperty1D* gasWinRefIndex() const
   {
     return m_gasWinRefIndex;
   }
@@ -141,7 +138,7 @@ public:
    *
    * @return Pointer gas window absorption length
    */
-  inline const Rich1DTabProperty* gasWinAbsLength() const
+  inline const RichTabulatedProperty1D* gasWinAbsLength() const
   {
     return m_gasWinAbsLength;
   }
@@ -152,7 +149,7 @@ public:
    *
    * @return Pointer to quantum efficiency (can be null)
    */
-  inline const Rich1DTabProperty* nominalHPDQuantumEff() const
+  inline const RichTabulatedProperty1D* nominalHPDQuantumEff() const
   {
     return m_HPDQuantumEff;
   }
@@ -163,7 +160,7 @@ public:
    *
    * @return Pointer to nominal spherical mirror reflectivity
    */
-  inline const Rich1DTabProperty* nominalSphMirrorRefl() const
+  inline const RichTabulatedProperty1D* nominalSphMirrorRefl() const
   {
     return m_nominalSphMirrorRefl;
   }
@@ -174,7 +171,7 @@ public:
    *
    * @return Pointer to nominal flat mirror reflectivity
    */
-  inline const Rich1DTabProperty* nominalSecMirrorRefl() const
+  inline const RichTabulatedProperty1D* nominalSecMirrorRefl() const
   {
     return m_nominalSecMirrorRefl;
   }
@@ -229,15 +226,15 @@ protected:
   bool m_positionInfo;
 
   /// refractive index of the quartz gas window
-  const Rich1DTabProperty* m_gasWinRefIndex;
+  const RichTabulatedProperty1D* m_gasWinRefIndex;
   /// absorption length of the quartz gas window
-  const Rich1DTabProperty* m_gasWinAbsLength;
+  const RichTabulatedProperty1D* m_gasWinAbsLength;
   /// HPD quantum efficiency
-  const Rich1DTabProperty* m_HPDQuantumEff;
+  const RichTabulatedProperty1D* m_HPDQuantumEff;
   /// spherical mirror reflectivity
-  const Rich1DTabProperty* m_nominalSphMirrorRefl;
+  const RichTabulatedProperty1D* m_nominalSphMirrorRefl;
   /// flat mirror reflectivity
-  const Rich1DTabProperty* m_nominalSecMirrorRefl;
+  const RichTabulatedProperty1D* m_nominalSecMirrorRefl;
 
   /// Condition for the alignment of the spherical mirrors
   SmartRef<Condition> m_sphMirAlignCond;

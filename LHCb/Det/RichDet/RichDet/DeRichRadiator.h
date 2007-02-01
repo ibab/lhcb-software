@@ -5,7 +5,7 @@
  *  Header file for detector description class : DeRichRadiator
  *
  *  CVS Log :-
- *  $Id: DeRichRadiator.h,v 1.20 2006-10-20 12:37:29 jonrob Exp $
+ *  $Id: DeRichRadiator.h,v 1.21 2007-02-01 16:41:12 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -40,20 +40,18 @@
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
  */
-namespace DeRichRadiatorLocation {
+namespace DeRichRadiatorLocation 
+{
   /// Multi solid aerogel location
-  static const std::string& Aerogel_old   = "/dd/Structure/LHCb/Rich1/Aerogel";
   static const std::string& Aerogel = "/dd/Structure/LHCb/BeforeMagnetRegion/Rich1/Aerogel";
 
   /// Rich1 gas (C4F10) location
-  static const std::string& C4F10_old     = "/dd/Structure/LHCb/Rich1/C4F10";
-  static const std::string& C4F10 = "/dd/Structure/LHCb/BeforeMagnetRegion/Rich1/Rich1Gas";
   static const std::string& Rich1Gas = "/dd/Structure/LHCb/BeforeMagnetRegion/Rich1/Rich1Gas";
+  static const std::string& C4F10    = Rich1Gas;
 
   /// Rich2 gas (CF4) location
-  static const std::string& CF4_old       = "/dd/Structure/LHCb/Rich2/CF4";
-  static const std::string& CF4  = "/dd/Structure/LHCb/AfterMagnetRegion/Rich2/Rich2Gas";
   static const std::string& Rich2Gas  = "/dd/Structure/LHCb/AfterMagnetRegion/Rich2/Rich2Gas";
+  static const std::string& CF4       = Rich2Gas;
 }
 
 //----------------------------------------------------------------------------
@@ -67,7 +65,8 @@ namespace DeRichRadiatorLocation {
  */
 //----------------------------------------------------------------------------
 
-class DeRichRadiator: public DetectorElement {
+class DeRichRadiator: public DetectorElement 
+{
 
 public:
 
@@ -107,7 +106,7 @@ public:
    * Retrieves the refractive index of the radiator
    * @return A pointer to the refractive index of the radiator
    */
-  inline const Rich1DTabProperty* refIndex() const
+  inline const RichTabulatedProperty1D* refIndex() const
   {
     return m_refIndex;
   }
@@ -126,7 +125,7 @@ public:
    * @return A pointer to the Rayleigh tab property
    * @retval NULL No Rayleigh tab property
    */
-  inline const Rich1DTabProperty* rayleigh() const
+  inline const RichTabulatedProperty1D* rayleigh() const
   {
     return m_rayleigh;
   }
@@ -196,7 +195,7 @@ protected:
   Rich::DetectorType m_rich;        ///< The Rich detector of this radiator
 
   /// pointer to the refractive index of the material
-  const Rich1DTabProperty* m_refIndex;
+  const RichTabulatedProperty1D* m_refIndex;
 
   /// pointer to the Tabulated property refractive index
   const TabulatedProperty* m_refIndexTabProp;
@@ -205,7 +204,7 @@ protected:
   const TabulatedProperty* m_chkvRefIndexTabProp;
 
   /// pointer to the Rayleigh scattering properties
-  const Rich1DTabProperty* m_rayleigh;
+  const RichTabulatedProperty1D* m_rayleigh;
 
   /// pointer to the Tabulated property Rayleigh
   const TabulatedProperty* m_rayleighTabProp;

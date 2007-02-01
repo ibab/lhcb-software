@@ -2,10 +2,10 @@
 //============================================================================
 /** @file Rich1DTabFunc.cpp
  *
- *  Implementation file for class : Rich1DTabFunc
+ *  Implementation file for class : Rich::TabulatedFunction1D
  *
  *  CVS Log :-
- *  $Id: Rich1DTabFunc.cpp,v 1.4 2006-08-28 10:54:21 jonrob Exp $
+ *  $Id: Rich1DTabFunc.cpp,v 1.5 2007-02-01 16:41:13 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2003-08-13
@@ -20,10 +20,12 @@
 // local
 #include "RichDet/Rich1DTabFunc.h"
 
+using namespace Rich;
+
 //============================================================================
 
 // Default Constructor
-Rich1DTabFunc::Rich1DTabFunc( const gsl_interp_type * interType ) :
+TabulatedFunction1D::TabulatedFunction1D( const gsl_interp_type * interType ) :
   m_OK                 ( false ),
   m_mainDistAcc        ( NULL ),
   m_mainDistSpline     ( NULL ),
@@ -33,10 +35,10 @@ Rich1DTabFunc::Rich1DTabFunc( const gsl_interp_type * interType ) :
 
 
 // Constructor from arrays
-Rich1DTabFunc::Rich1DTabFunc( const double x[],
-                              const double y[],
-                              const int size,
-                              const gsl_interp_type * interType ) :
+TabulatedFunction1D::TabulatedFunction1D( const double x[],
+                                          const double y[],
+                                          const int size,
+                                          const gsl_interp_type * interType ) :
   m_OK                 ( false ),
   m_mainDistAcc        ( NULL ),
   m_mainDistSpline     ( NULL ),
@@ -53,9 +55,9 @@ Rich1DTabFunc::Rich1DTabFunc( const double x[],
 }
 
 // Constructor from std::vector
-Rich1DTabFunc::Rich1DTabFunc( const std::vector<double> & x,
-                              const std::vector<double> & y,
-                              const gsl_interp_type * interType ) :
+TabulatedFunction1D::TabulatedFunction1D( const std::vector<double> & x,
+                                          const std::vector<double> & y,
+                                          const gsl_interp_type * interType ) :
   m_OK                 ( false ),
   m_mainDistAcc        ( NULL ),
   m_mainDistSpline     ( NULL ),
@@ -65,11 +67,11 @@ Rich1DTabFunc::Rich1DTabFunc( const std::vector<double> & x,
 {
 
   // Check on size of containers
-  if ( x.size() != y.size() ) 
+  if ( x.size() != y.size() )
   {
     m_OK = false;
-  } 
-  else 
+  }
+  else
   {
 
     // copy data to internal container
@@ -87,8 +89,8 @@ Rich1DTabFunc::Rich1DTabFunc( const std::vector<double> & x,
 //============================================================================
 
 // Constructor from map
-Rich1DTabFunc::Rich1DTabFunc( const std::map<double,double> & data,
-                              const gsl_interp_type * interType ) :
+TabulatedFunction1D::TabulatedFunction1D( const std::map<double,double> & data,
+                                          const gsl_interp_type * interType ) :
   m_data               ( data  ),
   m_OK                 ( false ),
   m_mainDistAcc        ( NULL ),
@@ -104,30 +106,30 @@ Rich1DTabFunc::Rich1DTabFunc( const std::map<double,double> & data,
 //============================================================================
 
 // Constructor from vector of pairs
-Rich1DTabFunc::Rich1DTabFunc( const std::vector< std::pair<double,double> > & data, 
-                              const gsl_interp_type * interType ) :
+TabulatedFunction1D::TabulatedFunction1D( const std::vector< std::pair<double,double> > & data,
+                                          const gsl_interp_type * interType ) :
   m_OK                 ( false ),
   m_mainDistAcc        ( NULL ),
   m_mainDistSpline     ( NULL ),
   m_weightedDistAcc    ( NULL ),
   m_weightedDistSpline ( NULL ),
   m_interType          ( interType )
-{   
+{
   // copy data to internal container
   std::vector< std::pair<double,double> >::const_iterator i;
   for ( i = data.begin(); i != data.end(); ++i ) { m_data[i->first] = i->second; }
-  
+
   // initialise interpolation
   m_OK = initInterpolator( interType );
 }
 
 //============================================================================
 // Destructor
-Rich1DTabFunc::~Rich1DTabFunc( ) { clearInterpolator(); }
+TabulatedFunction1D::~TabulatedFunction1D( ) { clearInterpolator(); }
 //============================================================================
 
 // initialise the interpolator
-bool Rich1DTabFunc::initInterpolator( const gsl_interp_type * interType ) 
+bool TabulatedFunction1D::initInterpolator( const gsl_interp_type * interType )
 {
 
   // clean up first
@@ -143,7 +145,7 @@ bool Rich1DTabFunc::initInterpolator( const gsl_interp_type * interType )
   double * xy = new double[size];
   unsigned int i = 0;
   for ( Data::const_iterator iD = m_data.begin();
-        iD != m_data.end(); ++iD, ++i ) 
+        iD != m_data.end(); ++iD, ++i )
   {
     x[i]  = (*iD).first;
     y[i]  = (*iD).second;
@@ -163,10 +165,10 @@ bool Rich1DTabFunc::initInterpolator( const gsl_interp_type * interType )
   delete[] y;
   delete[] xy;
 
-  if ( err1 || err2 ) 
+  if ( err1 || err2 )
   {
     throw GaudiException( "Error whilst initialising GSL interpolators",
-                          "*Rich1DTabFunc*", StatusCode::FAILURE );
+                          "*TabulatedFunction1D*", StatusCode::FAILURE );
     return false;
   }
 
@@ -175,26 +177,26 @@ bool Rich1DTabFunc::initInterpolator( const gsl_interp_type * interType )
 
 //============================================================================
 
-void Rich1DTabFunc::clearInterpolator()
+void TabulatedFunction1D::clearInterpolator()
 {
 
   // Free GSL components
-  if ( m_mainDistSpline ) 
+  if ( m_mainDistSpline )
   {
     gsl_spline_free( m_mainDistSpline );
     m_mainDistSpline = NULL;
   }
-  if ( m_mainDistAcc ) 
+  if ( m_mainDistAcc )
   {
     gsl_interp_accel_free( m_mainDistAcc );
     m_mainDistAcc = NULL;
   }
-  if ( m_weightedDistSpline ) 
+  if ( m_weightedDistSpline )
   {
     gsl_spline_free( m_weightedDistSpline );
     m_weightedDistSpline = NULL;
   }
-  if ( m_weightedDistAcc ) 
+  if ( m_weightedDistAcc )
   {
     gsl_interp_accel_free( m_weightedDistAcc );
     m_weightedDistAcc = NULL;
@@ -202,14 +204,14 @@ void Rich1DTabFunc::clearInterpolator()
 
 }
 
-double Rich1DTabFunc::rms( const double from, 
-                           const double to,
-                           const unsigned int samples ) const
+double TabulatedFunction1D::rms( const double from,
+                                 const double to,
+                                 const unsigned int samples ) const
 {
-  if ( samples < 2 ) 
+  if ( samples < 2 )
   {
     throw GaudiException( "rms() : samples must be > 1",
-                          "*Rich1DTabFunc*", StatusCode::FAILURE );
+                          "*TabulatedFunction1D*", StatusCode::FAILURE );
   }
 
   // mean value

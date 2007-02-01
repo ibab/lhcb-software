@@ -4,7 +4,7 @@
  *
  *  Header file for detector description class : DeRichHPDPanel
  *
- *  $Id: DeRichHPDPanel.h,v 1.39 2006-11-29 16:28:58 papanest Exp $
+ *  $Id: DeRichHPDPanel.h,v 1.40 2007-02-01 16:41:12 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -44,24 +44,21 @@
  *  @todo Find a proper way to deal with RichSmartIDs that cannot be mapped to the
  *        entrance window in the method DeRichHPDPanel::detectionPoint
  */
-namespace DeRichHPDPanelLocation {
+namespace DeRichHPDPanelLocation 
+{
   /// Location of Rich1 top panel
-  static const std::string& Rich1Panel0_old = "/dd/Structure/LHCb/Rich1/PDPanel0";
   static const std::string& Rich1Panel0 =
   "/dd/Structure/LHCb/BeforeMagnetRegion/Rich1/PDPanel0";
 
   /// Location of Rich1 bottom panel
-  static const std::string& Rich1Panel1_old = "/dd/Structure/LHCb/Rich1/PDPanel1";
   static const std::string& Rich1Panel1 =
   "/dd/Structure/LHCb/BeforeMagnetRegion/Rich1/PDPanel1";
 
   /// Location of Rich2 left panel
-  static const std::string& Rich2Panel0_old = "/dd/Structure/LHCb/Rich2/PDPanel0";
   static const std::string& Rich2Panel0 =
   "/dd/Structure/LHCb/AfterMagnetRegion/Rich2/RichSystem/HPDPanel0";
 
   /// Location of Rich2 right panel
-  static const std::string& Rich2Panel1_old = "/dd/Structure/LHCb/Rich2/PDPanel1";
   static const std::string& Rich2Panel1 =
   "/dd/Structure/LHCb/AfterMagnetRegion/Rich2/RichSystem/HPDPanel1";
 }

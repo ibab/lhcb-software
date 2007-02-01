@@ -4,19 +4,7 @@
  *  Header file for detector description class : DeRich2
  *
  *  CVS Log :-
- *  $Id: DeRich2.h,v 1.14 2006-01-26 12:03:48 papanest Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.13  2005/12/14 09:34:52  papanest
- *  Move from CLHEP to MathCore
- *
- *  Revision 1.12  2004/10/20 22:41:54  jonrob
- *  Tidy up inline and virtual functions (whilst solving a windows problem)
- *
- *  Revision 1.11  2004/10/18 09:21:49  jonrob
- *  Minor updates to functions (adding const etc.)
- *
- *  Revision 1.10  2004/07/27 08:55:22  jonrob
- *  Add doxygen file documentation and CVS information
+ *  $Id: DeRich2.h,v 1.15 2007-02-01 16:41:12 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -39,8 +27,8 @@ extern const CLID& CLID_DERich2;
  * @author Antonis Papanestis a.papanestis@rl.ac.uk
  */
 
-
-class DeRich2: public DeRich {
+class DeRich2: public DeRich 
+{
 
 public:
   /**

@@ -3,7 +3,7 @@
  *  Header file for detector description class : DeRich1
  *
  *  CVS Log :-
- *  $Id: DeRich1.h,v 1.14 2006-01-26 12:03:48 papanest Exp $
+ *  $Id: DeRich1.h,v 1.15 2007-02-01 16:41:12 jonrob Exp $
  *
  *  @author Antonis Papanestis   a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -27,7 +27,8 @@ extern const CLID& CLID_DERich1;
  *  @date   2004-06-18
  */
 
-class DeRich1 : public DeRich {
+class DeRich1 : public DeRich 
+{
 
 public:
 

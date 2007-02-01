@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRich
  *
- *  $Id: DeRich.cpp,v 1.20 2006-03-16 15:07:44 jonrob Exp $
+ *  $Id: DeRich.cpp,v 1.21 2007-02-01 16:41:13 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -91,11 +91,11 @@ StatusCode DeRich::initialize ( )
     msg << MSG::ERROR << "No info on HPD Quantum Efficiency" << endmsg;
   else {
     msg << MSG::DEBUG << "Loaded HPD QE from: " << HPD_QETabPropLoc << endmsg;
-    m_HPDQuantumEff = new Rich1DTabProperty( tabQE );
+    m_HPDQuantumEff = new RichTabulatedProperty1D( tabQE );
     if ( !m_HPDQuantumEff->valid() )
     {
       msg << MSG::ERROR
-          << "Invalid HPD QE Rich1DTabProperty for " << tabQE->name() << endreq;
+          << "Invalid HPD QE RichTabulatedProperty1D for " << tabQE->name() << endreq;
       return StatusCode::FAILURE;
     }
   }

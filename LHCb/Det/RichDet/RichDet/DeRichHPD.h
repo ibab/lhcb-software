@@ -4,7 +4,7 @@
  *  Header file for detector description class : DeRichHPD
  *
  *  CVS Log :-
- *  $Id: DeRichHPD.h,v 1.2 2006-11-23 17:31:26 jonrob Exp $
+ *  $Id: DeRichHPD.h,v 1.3 2007-02-01 16:41:12 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2006-09-19
@@ -29,13 +29,13 @@ extern const CLID& CLID_DERichHPD;
 
 /** @namespace DeRichLocation
  *
- *  Namespace for the xml location of the detector elements RichHPD
+ *  Namespace for the xml location of the detector elements
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2006-09-19
  */
-namespace DeRichLocation {
-
+namespace DeRichLocation 
+{
   /// RichHPD location in transient detector store
   static const std::string& RichHPD = "HPD:";
 }

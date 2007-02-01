@@ -4,7 +4,7 @@
  *
  *  Implementation file for detector description class : DeRichHPDPanel
  *
- *  $Id: DeRichHPDPanel.cpp,v 1.50 2006-11-29 16:28:58 papanest Exp $
+ *  $Id: DeRichHPDPanel.cpp,v 1.51 2007-02-01 16:41:13 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -138,13 +138,13 @@ StatusCode DeRichHPDPanel::initialize()
   }
   m_deRichS = deRichS;
 
-  m_pixelSize = deRich1->param<double>("RichHpdPixelXsize");
-  m_subPixelSize = m_pixelSize/8;
-  m_activeRadius = deRich1->param<double>("RichHpdActiveInpRad");
+  m_pixelSize      = deRich1->param<double>("RichHpdPixelXsize");
+  m_subPixelSize   = m_pixelSize/8;
+  m_activeRadius   = deRich1->param<double>("RichHpdActiveInpRad");
   m_activeRadiusSq = m_activeRadius*m_activeRadius;
 
   m_pixelColumns = deRich1->param<int>("RichHpdNumPixelCol");
-  m_pixelRows = deRich1->param<int>("RichHpdNumPixelRow");
+  m_pixelRows    = deRich1->param<int>("RichHpdNumPixelRow");
 
   msg << MSG::DEBUG << "RichHpdPixelsize:" << m_pixelSize << " ActiveRadius:"
       << m_activeRadius << " pixelRows:" << m_pixelRows << " pixelColumns:"

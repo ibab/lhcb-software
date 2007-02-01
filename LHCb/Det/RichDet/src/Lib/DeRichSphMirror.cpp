@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRichSphMirror
  *
- *  $Id: DeRichSphMirror.cpp,v 1.24 2006-11-03 14:02:51 cattanem Exp $
+ *  $Id: DeRichSphMirror.cpp,v 1.25 2007-02-01 16:41:13 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -95,20 +95,10 @@ StatusCode DeRichSphMirror::initialize()
   m_mirrorNumber = atoi( name().substr(pos2+1).c_str() );
   const std::string mirNumString = name().substr(pos2+1);
 
-  std::string rich1GeomLoc( "Rich1" );
-  std::string rich2GeomLoc( "Rich2" );
-  std::string rich2Location;
-  std::string rich1Location;
-  if ( name().find("Magnet") == std::string::npos ){
-    rich2Location = DeRichLocation::Rich2_old;
-    rich1Location = DeRichLocation::Rich1_old;
-  }
-  else {
-    rich2Location = DeRichLocation::Rich2;
-    rich1Location = DeRichLocation::Rich1;
-    rich1GeomLoc = "BeforeMagnetRegion/"+rich1GeomLoc;
-    rich2GeomLoc = "AfterMagnetRegion/"+rich2GeomLoc;
-  }
+  const std::string & rich1GeomLoc = "BeforeMagnetRegion/Rich1";
+  const std::string & rich2GeomLoc = "AfterMagnetRegion/Rich2";
+  const std::string & rich2Location = DeRichLocation::Rich2;
+  const std::string & rich1Location = DeRichLocation::Rich1;
 
   // get DeRich1 and 2
   SmartDataPtr<DeRich> deRich1(dataSvc(), rich1Location);

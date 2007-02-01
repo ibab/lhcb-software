@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRich2
  *
- *  $Id: DeRich2.cpp,v 1.29 2006-11-29 10:36:20 papanest Exp $
+ *  $Id: DeRich2.cpp,v 1.30 2007-02-01 16:41:13 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -88,21 +88,21 @@ StatusCode DeRich2::initialize()
       if( (*matIter) ){
         if ( (*matIter)->type() == "RINDEX" )
         {
-          m_gasWinRefIndex = new Rich1DTabProperty( *matIter );
+          m_gasWinRefIndex = new RichTabulatedProperty1D( *matIter );
           if ( !m_gasWinRefIndex->valid() )
           {
             msg << MSG::ERROR
-                << "Invalid RINDEX Rich1DTabProperty for " << (*matIter)->name() << endreq;
+                << "Invalid RINDEX RichTabulatedProperty1D for " << (*matIter)->name() << endreq;
             return StatusCode::FAILURE;
           }
         }
         if ( (*matIter)->type() == "ABSLENGTH" )
         {
-          m_gasWinAbsLength = new Rich1DTabProperty( *matIter );
+          m_gasWinAbsLength = new RichTabulatedProperty1D( *matIter );
           if ( !m_gasWinAbsLength->valid() )
           {
             msg << MSG::ERROR
-                << "Invalid ABSLENGTH Rich1DTabProperty for " << (*matIter)->name() << endreq;
+                << "Invalid ABSLENGTH RichTabulatedProperty1D for " << (*matIter)->name() << endreq;
             return StatusCode::FAILURE;
           }
         }
@@ -128,11 +128,11 @@ StatusCode DeRich2::initialize()
   else {
     msg << MSG::DEBUG << "Loaded spherical mirror reflectivity from: "
         << sphMirrorReflLoc << endmsg;
-    m_nominalSphMirrorRefl = new Rich1DTabProperty( sphMirrorRefl );
+    m_nominalSphMirrorRefl = new RichTabulatedProperty1D( sphMirrorRefl );
     if ( !m_nominalSphMirrorRefl->valid() )
     {
       msg << MSG::ERROR
-          << "Invalid Rich1DTabProperty for " << sphMirrorRefl->name() << endreq;
+          << "Invalid RichTabulatedProperty1D for " << sphMirrorRefl->name() << endreq;
       return StatusCode::FAILURE;
     }
   }
@@ -146,11 +146,11 @@ StatusCode DeRich2::initialize()
   else {
     msg << MSG::DEBUG << "Loaded secondary mirror reflectivity from: "
         << secMirrorReflLoc << endmsg;
-    m_nominalSecMirrorRefl = new Rich1DTabProperty( secMirrorRefl );
+    m_nominalSecMirrorRefl = new RichTabulatedProperty1D( secMirrorRefl );
     if ( !m_nominalSecMirrorRefl->valid() )
     {
       msg << MSG::ERROR
-          << "Invalid Rich1DTabProperty for " << secMirrorRefl->name() << endreq;
+          << "Invalid RichTabulatedProperty1D for " << secMirrorRefl->name() << endreq;
       return StatusCode::FAILURE;
     }
   }

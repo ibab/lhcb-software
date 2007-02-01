@@ -1,10 +1,10 @@
 
 /** @file Rich1DTabProperty.h
  *
- *  Header file for utility class : Rich1DTabProperty
+ *  Header file for utility class : Rich::TabulatedProperty1D
  *
  *  CVS Log :-
- *  $Id: Rich1DTabProperty.h,v 1.4 2006-03-14 14:42:19 jonrob Exp $
+ *  $Id: Rich1DTabProperty.h,v 1.5 2007-02-01 16:41:12 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-08-13
@@ -22,83 +22,101 @@
 class ISvcLocator;
 class IUpdateManagerSvc;
 
-/** @class Rich1DTabProperty Rich1DTabProperty.h RichKernel/Rich1DTabProperty.h
+//-----------------------------------------------------------------------------
+/** @namespace Rich
  *
- *  A derived class from Rich1DTabFunc for tabulated properties
+ *  General namespace for RICH software
  *
- *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
- *  @date   2003-08-13
- *
- *  @todo Figure out why releasing the services during destruction causes a crash
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
  */
-
-class Rich1DTabProperty : public Rich1DTabFunc
+//-----------------------------------------------------------------------------
+namespace Rich
 {
 
-public:
-
-  /** Constructor from tabulated property and gsl interpolator type
+  /** @class TabulatedProperty1D RichTabulatedProperty1D.h RichKernel/RichTabulatedProperty1D.h
    *
-   *  @param tab         Pointer to a tabulated proper
-   *  @param registerUMS Flag to indicate if this interpolator should register
-   *                     itself to the UMS, so that it is automatically updated
-   *                     when the underlying TabulatedProperty is updated
-   *  @param interType   GSL Interpolator type. See
-   *                     http://www.gnu.org/software/gsl/manual/gsl-ref_26.html#SEC389
-   */
-  explicit Rich1DTabProperty( const TabulatedProperty * tab,
-                              const bool registerUMS = false,
-                              const gsl_interp_type * interType = gsl_interp_linear );
-
-  /// Destructor
-  virtual ~Rich1DTabProperty( );
-
-  /** The underlying tabulated property used to initialise the interpolator
+   *  A derived class from RichTabulatedFunction1D for tabulated properties
    *
-   *  @return Pointer to the tabulated property
+   *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
+   *  @date   2003-08-13
+   *
+   *  @todo Figure out why releasing the services during destruction causes a crash
    */
-  inline const TabulatedProperty * tabProperty() const
+
+  class TabulatedProperty1D : public Rich::TabulatedFunction1D
   {
-    return m_tabProp;
-  }
 
-  /** @brief The UMS update method
-   *
-   *  Running tis triggers a re-initialisation of the interpolator from
-   *  the underlying tabulated property.
-   *
-   *  Can either be called automatically, if configured to do so at 
-   *  construction, or can be called "by hand" by the user
-   *
-   *  @return StatusCode indicating if the update was successfully or not
-   */
-  StatusCode updateTabProp();
+  public:
 
-private: // methods
+    /** Constructor from tabulated property and gsl interpolator type
+     *
+     *  @param tab         Pointer to a tabulated proper
+     *  @param registerUMS Flag to indicate if this interpolator should register
+     *                     itself to the UMS, so that it is automatically updated
+     *                     when the underlying TabulatedProperty is updated
+     *  @param interType   GSL Interpolator type. See
+     *                     http://www.gnu.org/software/gsl/manual/gsl-ref_26.html#SEC389
+     */
+    explicit TabulatedProperty1D( const TabulatedProperty * tab,
+                                  const bool registerUMS = false,
+                                  const gsl_interp_type * interType = gsl_interp_linear );
 
-  /// Service locator
-  ISvcLocator* svcLocator();
+    /// Destructor
+    virtual ~TabulatedProperty1D( );
 
-  /// Access the UpdateManagerSvc
-  IUpdateManagerSvc* updMgrSvc();
+    /** The underlying tabulated property used to initialise the interpolator
+     *
+     *  @return Pointer to the tabulated property
+     */
+    inline const TabulatedProperty * tabProperty() const
+    {
+      return m_tabProp;
+    }
 
-  /// Access the message service
-  IMessageSvc* msgSvc();
+    /** @brief The UMS update method
+     *
+     *  Running this triggers a re-initialisation of the interpolator from
+     *  the underlying tabulated property.
+     *
+     *  Can either be called automatically, if configured to do so at
+     *  construction, or can be called "by hand" by the user
+     *
+     *  @return StatusCode indicating if the update was successfully or not
+     */
+    StatusCode updateTabProp();
 
-private: // data
+  private: // methods
 
-  /// Pointer to the underlying TabulatedProperty
-  const TabulatedProperty * m_tabProp;
+    /// Service locator
+    ISvcLocator* svcLocator();
 
-  /// The service locator
-  ISvcLocator* m_svcLocator;
+    /// Access the UpdateManagerSvc
+    IUpdateManagerSvc* updMgrSvc();
 
-  /// The Message service
-  IMessageSvc* m_msgSvc;
+    /// Access the message service
+    IMessageSvc* msgSvc();
 
-  /// The Update Manager Service
-  IUpdateManagerSvc* m_updMgrSvc;
+  private: // data
 
-};
+    /// Pointer to the underlying TabulatedProperty
+    const TabulatedProperty * m_tabProp;
+
+    /// The service locator
+    ISvcLocator* m_svcLocator;
+
+    /// The Message service
+    IMessageSvc* m_msgSvc;
+
+    /// The Update Manager Service
+    IUpdateManagerSvc* m_updMgrSvc;
+
+  };
+
+}
+
+/** backwards compatibility
+ *  @todo remove this typedef */
+typedef Rich::TabulatedProperty1D RichTabulatedProperty1D;
 
 #endif // RICHKERNEL_RICH1DTABPROPERTY_H
