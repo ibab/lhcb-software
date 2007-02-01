@@ -1,12 +1,13 @@
 !if defined (CMTINSTALLAREA)
-  set rootmap="$(CMTINSTALLAREA)/$(tag)/lib/rootmap"
+rootmap = $(CMTINSTALLAREA)\$(tag)\lib\rootmap
 !else
-  set rootmap="$(PACKAGE_ROOT)/$(tag)/rootmap"
+rootmap = $(PACKAGE_ROOT)\$(tag)\rootmap
 !endif
 
 $(dest)$(package).lcgdict : ${OBJS} 
 	@echo Producing dictionaries using genreflex command
 	@cd $(dest)
+	@echo "$(genreflex_cmd)" $(package)_dictionary.h --no_membertypedefs --selection_file $(package)_selection.xml  --rootmap=$(rootmap) --rootmap-lib=$(libprefix)$(package)Dict.$(shlibsuffix) --gccxmlpath=$(GCCXML_home)/bin $(pp_cppflags) $(includes) $(use_pp_cppflags) $(gccxmlopts) -U__MINGW32__ $(use_obj2dict_gccxmlflags)
 	@"$(genreflex_cmd)" $(package)_dictionary.h --no_membertypedefs --selection_file $(package)_selection.xml  --rootmap=$(rootmap) --rootmap-lib=$(libprefix)$(package)Dict.$(shlibsuffix) --gccxmlpath=$(GCCXML_home)/bin $(pp_cppflags) $(includes) $(use_pp_cppflags) $(gccxmlopts) -U__MINGW32__ $(use_obj2dict_gccxmlflags)
 	@echo "" > $(package).lcgdict 
 
