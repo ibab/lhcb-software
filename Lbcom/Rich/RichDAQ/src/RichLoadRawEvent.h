@@ -2,10 +2,10 @@
 //-----------------------------------------------------------------------------
 /** @file RichLoadRawEvent.h
  *
- *  Header file for RICH DAQ algorithm : RichLoadRawEvent
+ *  Header file for RICH DAQ algorithm : Rich::DAQ::LoadRawEvent
  *
  *  CVS Log :-
- *  $Id: RichLoadRawEvent.h,v 1.2 2006-12-02 15:28:00 jonrob Exp $
+ *  $Id: RichLoadRawEvent.h,v 1.3 2007-02-01 17:42:29 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
@@ -22,28 +22,55 @@
 #include "Event/RawEvent.h"
 
 //-----------------------------------------------------------------------------
-/** @class RichLoadRawEvent RichLoadRawEvent.h
+/** @namespace Rich
  *
- *  Trivial algorithm to load the RawEvent data object. Useful for timing studies
- *  to ensure the RawEvent object is in memory before decoding.
+ *  General namespace for RICH software
  *
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   2003-11-06
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
  */
 //-----------------------------------------------------------------------------
-
-class RichLoadRawEvent : public RichAlgBase
+namespace Rich
 {
 
-public:
+  //-----------------------------------------------------------------------------
+  /** @namespace DAQ
+   *
+   *  namespace for RICH DAQ software
+   *
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   08/07/2004
+   */
+  //-----------------------------------------------------------------------------
+  namespace DAQ
+  {
 
-  /// Standard constructor
-  RichLoadRawEvent( const std::string& name, ISvcLocator* pSvcLocator );
+    //-----------------------------------------------------------------------------
+    /** @class LoadRawEvent RichLoadRawEvent.h
+     *
+     *  Trivial algorithm to load the RawEvent data object. Useful for timing studies
+     *  to ensure the RawEvent object is in memory before decoding.
+     *
+     *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+     *  @date   2003-11-06
+     */
+    //-----------------------------------------------------------------------------
 
-  virtual ~RichLoadRawEvent( ); ///< Destructor
+    class LoadRawEvent : public RichAlgBase
+    {
 
-  virtual StatusCode execute   (); ///< Algorithm execution
+    public:
 
-};
+      /// Standard constructor
+      LoadRawEvent( const std::string& name, ISvcLocator* pSvcLocator );
+
+      virtual ~LoadRawEvent( ); ///< Destructor
+
+      virtual StatusCode execute   (); ///< Algorithm execution
+
+    };
+
+  }
+}
 
 #endif // RICHDAQ_RichLoadRawEvent_H

@@ -1,19 +1,19 @@
 
 //-----------------------------------------------------------------------------
-/** @file RichHPDPixelClusterSuppressionTool.h
+/** @file RichHPDPixelClusteringTool.h
  *
- *  Header file for tool : Rich::DAQ::HPDPixelClusterSuppressionTool
+ *  Header file for tool : Rich::DAQ::HPDPixelClusteringTool
  *
  *  CVS Log :-
- *  $Id: RichHPDPixelClusterSuppressionTool.h,v 1.11 2007-02-01 17:42:29 jonrob Exp $
+ *  $Id: RichHPDPixelClusteringTool.h,v 1.1 2007-02-01 17:42:29 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   21/03/2006
  */
 //-----------------------------------------------------------------------------
 
-#ifndef RICHDAQ_RichHPDPixelClusterSuppressionTool_H
-#define RICHDAQ_RichHPDPixelClusterSuppressionTool_H 1
+#ifndef RICHDAQ_RichHPDPixelClusteringTool_H
+#define RICHDAQ_RichHPDPixelClusteringTool_H 1
 
 // base class
 #include "RichHighOccHPDSuppressionTool.h"
@@ -52,7 +52,7 @@ namespace Rich
     }
 
     //-----------------------------------------------------------------------------
-    /** @class HPDPixelClusterSuppressionTool RichHPDPixelClusterSuppressionTool.h
+    /** @class HPDPixelClusteringTool RichHPDPixelClusteringTool.h
      *
      *  Tool for monitoring high occupancy HPDs
      *
@@ -61,15 +61,15 @@ namespace Rich
      */
     //-----------------------------------------------------------------------------
 
-    class HPDPixelClusterSuppressionTool : public HighOccHPDSuppressionTool
+    class HPDPixelClusteringTool : public HighOccHPDSuppressionTool
     {
 
     public: // Methods for Gaudi Framework
 
       /// Standard constructor
-      HPDPixelClusterSuppressionTool( const std::string& type,
-                                      const std::string& name,
-                                      const IInterface* parent );
+      HPDPixelClusteringTool( const std::string& type,
+                              const std::string& name,
+                              const IInterface* parent );
 
       // Initialization of the tool after creation
       StatusCode initialize();
@@ -91,7 +91,7 @@ namespace Rich
     private: // utility classes
 
       //-----------------------------------------------------------------------------
-      /** @class PixelData RichHPDPixelClusterSuppressionTool.h
+      /** @class PixelData RichHPDPixelClusteringTool.h
        *
        *  Utility class representing a single HPD pixel data in a form useful
        *  for clustering
@@ -106,7 +106,7 @@ namespace Rich
       public:
 
         //-----------------------------------------------------------------------------
-        /** @class Cluster RichHPDPixelClusterSuppressionTool.h
+        /** @class Cluster RichHPDPixelClusteringTool.h
          *
          *  Utility class representing a cluster of HPD pixels
          *
@@ -115,7 +115,7 @@ namespace Rich
          */
         //-----------------------------------------------------------------------------
         class Cluster :
-          public Rich::BoostMemPoolAlloc<HPDPixelClusterSuppressionTool::PixelData::Cluster>
+          public Rich::BoostMemPoolAlloc<HPDPixelClusteringTool::PixelData::Cluster>
         {
 
         public: // definitions
@@ -192,8 +192,7 @@ namespace Rich
 
         /// Print in a human readable way
         MsgStream& fillStream( MsgStream& os ) const;
-      // Finalization of the tool before deletion
-      StatusCode finalize();
+
         /// Overload output to ostream
         friend inline MsgStream& operator << ( MsgStream& os,
                                                const PixelData & data )
@@ -214,34 +213,34 @@ namespace Rich
 
     };
 
-    inline void HPDPixelClusterSuppressionTool::
+    inline void HPDPixelClusteringTool::
     PixelData::setOn( const int row, const int col )
     {
       (m_data[row])[col] = true;
     }
 
-    inline bool HPDPixelClusterSuppressionTool::
+    inline bool HPDPixelClusteringTool::
     PixelData::isOn( const int row, const int col ) const
     {
       return ( row>=0 && row<PixClusInfo::nPixelRowsOrCols &&
                col>=0 && col<PixClusInfo::nPixelRowsOrCols && (m_data[row])[col] );
     }
 
-    inline HPDPixelClusterSuppressionTool::PixelData::Cluster *
-    HPDPixelClusterSuppressionTool::
+    inline HPDPixelClusteringTool::PixelData::Cluster *
+    HPDPixelClusteringTool::
     PixelData::getCluster( const int row, const int col ) const
     {
       return ( isOn(row,col) ? (m_clusters[row])[col] : NULL );
     }
 
-    inline void HPDPixelClusterSuppressionTool::
+    inline void HPDPixelClusteringTool::
     PixelData::setCluster( const int row, const int col, Cluster * clus )
     {
       (m_clusters[row])[col] = clus;
       clus->addPixel(row,col);
     }
 
-    inline HPDPixelClusterSuppressionTool::
+    inline HPDPixelClusteringTool::
     PixelData::PixelData( const LHCb::RichSmartID::Vector & smartIDs )
     {
       // initialise the c arrays
@@ -256,15 +255,15 @@ namespace Rich
       }
     }
 
-    inline HPDPixelClusterSuppressionTool::
+    inline HPDPixelClusteringTool::
     PixelData::~PixelData()
     {
       for ( std::vector<Cluster*>::iterator i = m_allclus.begin();
             i != m_allclus.end(); ++i ) { delete *i; }
     }
 
-    inline HPDPixelClusterSuppressionTool::PixelData::Cluster *
-    HPDPixelClusterSuppressionTool::
+    inline HPDPixelClusteringTool::PixelData::Cluster *
+    HPDPixelClusteringTool::
     PixelData::mergeClusters( Cluster * clus1, Cluster * clus2 )
     {
       // add pixels to clus1
@@ -278,8 +277,8 @@ namespace Rich
       return clus1;
     }
 
-    inline HPDPixelClusterSuppressionTool::PixelData::Cluster *
-    HPDPixelClusterSuppressionTool::
+    inline HPDPixelClusteringTool::PixelData::Cluster *
+    HPDPixelClusteringTool::
     PixelData::createNewCluster( const int id )
     {
       Cluster * clus = new Cluster(id);
@@ -290,4 +289,4 @@ namespace Rich
   }
 }
 
-#endif // RICHDAQ_RichHPDPixelClusterSuppressionTool_H
+#endif // RICHDAQ_RichHPDPixelClusteringTool_H

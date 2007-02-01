@@ -1,19 +1,19 @@
 
 //-----------------------------------------------------------------------------
-/** @file RichNonZeroSuppALICEData_V1.h
+/** @file RichNonZeroSuppData_V3.h
  *
- *  Header file for RICH DAQ utility class : RichNonZeroSuppALICEData
+ *  Header file for RICH DAQ utility class : RichNonZeroSuppData
  *
  *  CVS Log :-
- *  $Id: RichNonZeroSuppALICEData_V1.h,v 1.6 2007-02-01 17:42:29 jonrob Exp $
+ *  $Id: RichNonZeroSuppData_V3.h,v 1.1 2007-02-01 17:42:29 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-07
  */
 //-----------------------------------------------------------------------------
 
-#ifndef RICHDAQ_RichNonZeroSuppALICEDataV1_H
-#define RICHDAQ_RichNonZeroSuppALICEDataV1_H 1
+#ifndef RICHDAQ_RICHNONZEROSUPPDATA_V3_H
+#define RICHDAQ_RICHNONZEROSUPPDATA_V3_H 1
 
 // local
 #include "RichHPDDataBank.h"
@@ -21,6 +21,9 @@
 
 // RichKernel
 #include "RichKernel/BoostMemPoolAlloc.h"
+
+// Event Model
+#include "Event/ODIN.h"
 
 //===================================================================================
 
@@ -48,37 +51,41 @@ namespace Rich
   namespace DAQ
   {
 
-    /** @namespace RichNonZeroSuppALICEDataV1
+    /** @namespace RichNonZeroSuppDataV3
      *
-     *  Namespace for version 1 of the RichNonZeroSuppALICEData object.
+     *  Namespace for version 2 of the RichNonZeroSuppData object.
      *
      *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
      *  @date   2004-12-17
      */
-    namespace RichNonZeroSuppALICEDataV1
+    namespace RichNonZeroSuppDataV3
     {
 
-      /** @class RichNonZeroSuppALICEData RichNonZeroSuppALICEData_V1.h
+      /** @class RichNonZeroSuppData RichNonZeroSuppData_V3.h
        *
-       *  The RICH HPD non zero suppressed data format for ALICE mode.
+       *  The RICH HPD non zero suppressed data format.
+       *  Second iteration of the format. Identical to version 1
+       *  apart from reversing the order the rows are encoded/decoded.
        *
        *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
        *  @date   2003-11-07
+       *
+       *  @todo Update 8 bit words + 1 value
        */
       template< class Version, class Header, class Footer >
-      class RichNonZeroSuppALICEData : public HPDDataBankImp<Version,Header,Footer>,
-                                       public Rich::BoostMemPoolAlloc< RichNonZeroSuppALICEDataV1::RichNonZeroSuppALICEData<Version,Header,Footer> >
+      class RichNonZeroSuppData : public HPDDataBankImp<Version,Header,Footer>,
+                                  public Rich::BoostMemPoolAlloc<RichNonZeroSuppDataV3::RichNonZeroSuppData<Version,Header,Footer> >
       {
 
       public:
 
         /// Default constructor
-        RichNonZeroSuppALICEData() :
-          HPDDataBankImp<Version,Header,Footer> ( 0,
-                                                  Header(),
-                                                  Footer(),
-                                                  MaxDataSizeALICE ),
-          m_nHits(-1)
+        RichNonZeroSuppData()
+          : HPDDataBankImp<Version,Header,Footer>( 0,
+                                                   Header(),
+                                                   Footer(),
+                                                   MaxDataSize ),
+            m_nHits ( -1 )
         { }
 
         /** Constructor from a RichSmartID HPD identifier and a vector of RichSmartIDs
@@ -86,15 +93,20 @@ namespace Rich
          *  @param l0ID   L0 board hardware identifier
          *  @param digits Vector of RichSmartIDs listing the active channels in this HPD
          */
-        explicit RichNonZeroSuppALICEData( const Level0ID l0ID,
-                                           const LHCb::RichSmartID::Vector & digits )
-          : HPDDataBankImp<Version,Header,Footer> ( Header ( false, // Non-ZS
-                                                             true,  // Is ALICE mode
-                                                             l0ID,
-                                                             0 // filled by buildData call
-                                                             ),
+        explicit RichNonZeroSuppData( const Level0ID l0ID,
+                                      const LHCb::RichSmartID::Vector & digits,
+                                      const bool extendedFormat,
+                                      const LHCb::ODIN * odin )
+          : HPDDataBankImp<Version,Header,Footer> ( Header( false, // Not ZS
+                                                            false, // Not ALICE mode
+                                                            extendedFormat, // data format
+                                                            false, // No GT inhibit
+                                                            l0ID,  // The L0 ID 
+                                                            EventID( odin ? odin->eventNumber() : 0 ), // Event ID
+                                                            0 // filled by buildData call below in main body
+                                                            ),
                                                     Footer(),
-                                                    0, MaxDataSizeALICE ),
+                                                    0, MaxDataSize, MaxDataSize ),
             m_nHits ( -1 )
         {
           buildData( digits );
@@ -104,17 +116,17 @@ namespace Rich
          *
          *  @param data Pointer to the start of the data block
          */
-        explicit RichNonZeroSuppALICEData( const LongType * data )
+        explicit RichNonZeroSuppData( const LongType * data )
           : HPDDataBankImp<Version,Header,Footer> ( data, // start of data
                                                     Header(),
                                                     Footer(),
-                                                    MaxDataSizeALICE,
-                                                    MaxDataSizeALICE ),
-            m_nHits( -1 )
+                                                    MaxDataSize // max data bloxk size
+                                                    ),
+            m_nHits ( -1 )
         { }
 
         /// Destructor
-        ~RichNonZeroSuppALICEData() { }
+        ~RichNonZeroSuppData() { }
 
         // Returns the hit count for this HPD
         virtual ShortType hitCount() const;
@@ -152,9 +164,9 @@ namespace Rich
 
       };
 
-    } // RichNonZeroSuppALICEDataV1 namespace
+    } // RichNonZeroSuppDataV3 namespace
 
   }
 }
 
-#endif // RICHDAQ_RichNonZeroSuppALICEDataV1_H
+#endif // RICHDAQ_RICHNONZEROSUPPDATA_V3_H

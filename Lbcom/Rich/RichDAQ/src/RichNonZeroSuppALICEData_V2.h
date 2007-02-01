@@ -1,19 +1,19 @@
 
 //-----------------------------------------------------------------------------
-/** @file RichNonZeroSuppALICEData_V1.h
+/** @file RichNonZeroSuppALICEData_V2.h
  *
  *  Header file for RICH DAQ utility class : RichNonZeroSuppALICEData
  *
  *  CVS Log :-
- *  $Id: RichNonZeroSuppALICEData_V1.h,v 1.6 2007-02-01 17:42:29 jonrob Exp $
+ *  $Id: RichNonZeroSuppALICEData_V2.h,v 1.1 2007-02-01 17:42:29 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-07
  */
 //-----------------------------------------------------------------------------
 
-#ifndef RICHDAQ_RichNonZeroSuppALICEDataV1_H
-#define RICHDAQ_RichNonZeroSuppALICEDataV1_H 1
+#ifndef RICHDAQ_RichNonZeroSuppALICEDataV2_H
+#define RICHDAQ_RichNonZeroSuppALICEDataV2_H 1
 
 // local
 #include "RichHPDDataBank.h"
@@ -48,17 +48,17 @@ namespace Rich
   namespace DAQ
   {
 
-    /** @namespace RichNonZeroSuppALICEDataV1
+    /** @namespace RichNonZeroSuppALICEDataV2
      *
      *  Namespace for version 1 of the RichNonZeroSuppALICEData object.
      *
      *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
      *  @date   2004-12-17
      */
-    namespace RichNonZeroSuppALICEDataV1
+    namespace RichNonZeroSuppALICEDataV2
     {
 
-      /** @class RichNonZeroSuppALICEData RichNonZeroSuppALICEData_V1.h
+      /** @class RichNonZeroSuppALICEData RichNonZeroSuppALICEData_V2.h
        *
        *  The RICH HPD non zero suppressed data format for ALICE mode.
        *
@@ -67,7 +67,7 @@ namespace Rich
        */
       template< class Version, class Header, class Footer >
       class RichNonZeroSuppALICEData : public HPDDataBankImp<Version,Header,Footer>,
-                                       public Rich::BoostMemPoolAlloc< RichNonZeroSuppALICEDataV1::RichNonZeroSuppALICEData<Version,Header,Footer> >
+                                       public Rich::BoostMemPoolAlloc< RichNonZeroSuppALICEDataV2::RichNonZeroSuppALICEData<Version,Header,Footer> >
       {
 
       public:
@@ -90,7 +90,10 @@ namespace Rich
                                            const LHCb::RichSmartID::Vector & digits )
           : HPDDataBankImp<Version,Header,Footer> ( Header ( false, // Non-ZS
                                                              true,  // Is ALICE mode
-                                                             l0ID,
+                                                             false, // normal data format
+                                                             false, // No GT inhibit
+                                                             l0ID,  // The L0 ID
+                                                             EventID(0), // Event ID (TO BE DONE?)
                                                              0 // filled by buildData call
                                                              ),
                                                     Footer(),
@@ -152,9 +155,9 @@ namespace Rich
 
       };
 
-    } // RichNonZeroSuppALICEDataV1 namespace
+    } // RichNonZeroSuppALICEDataV2 namespace
 
   }
 }
 
-#endif // RICHDAQ_RichNonZeroSuppALICEDataV1_H
+#endif // RICHDAQ_RichNonZeroSuppALICEDataV2_H

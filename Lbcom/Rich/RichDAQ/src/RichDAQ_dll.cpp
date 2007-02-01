@@ -2,10 +2,10 @@
 //-----------------------------------------------------------------------------
 /** @file RichDAQ_dll.cpp
  *
- *  Dll file for component library RichDAQ
+ *  Dll file for component library Rich::DAQ
  *
  *  CVS Log :-
- *  $Id: RichDAQ_dll.cpp,v 1.3 2006-04-18 11:07:28 jonrob Exp $
+ *  $Id: RichDAQ_dll.cpp,v 1.4 2007-02-01 17:42:29 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-09

@@ -5,7 +5,7 @@
  *  Implementation file for RICH DAQ helper class : RichHPDDataBank
  *
  *  CVS Log :-
- *  $Id: RichHPDDataBank.icpp,v 1.6 2006-09-24 13:32:37 jonrob Exp $
+ *  $Id: RichHPDDataBank.icpp,v 1.7 2007-02-01 17:42:29 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-17
@@ -15,220 +15,235 @@
 // local
 #include "RichHPDDataBank.h"
 
-// namespaces
-using namespace LHCb; ///< LHCb general namespace
-
 //-----------------------------------------------------------------------------
 
-template< class Version, class Header, class Footer >
-RichHPDDataBankImp<Version,Header,Footer>::
-RichHPDDataBankImp<Version,Header,Footer>( const RichDAQ::LongType * data,
-                                           const Header &            header,
-                                           const Footer &            footer,
-                                           const RichDAQ::ShortType  maxDataSize,
-                                           const RichDAQ::ShortType  dataSize )
-  : m_header       ( header         ),
-    m_footer       ( footer         ),
-    m_maxDataSize  ( maxDataSize    ),
-    m_internalData ( false          )
+namespace Rich
 {
-  // initialise header words
-  // note, this call increments data to the correct place
-  m_header.readFromDataStream(data);
-  // set pointer to first data word
-  m_data = const_cast< RichDAQ::LongType * >(data);
-  // set data size
-  // Use trick here with dataSize to allow compatibility with DC06/DC04 data
-  // can be removed when no longer needed (together with dataSize variable)
-  m_dataSize = ( 0 == dataSize ? m_header.nDataWords() : dataSize );
-  // skip to start of footer
-  data += m_dataSize;
-  // initialise footer
-  m_footer.readFromDataStream(data);
-}
-
-template< class Version, class Header, class Footer >
-RichDAQ::LongType
-RichHPDDataBankImp<Version,Header,Footer>::createParityWord( const LHCb::RichSmartID::Vector & ids ) const
-{
-  RichDAQ::LongType parity(0);
-  std::vector<unsigned int> hC(RichDAQ::BitsPerDataWord,0);
-  for ( LHCb::RichSmartID::Vector::const_iterator iS = ids.begin();
-        iS != ids.end(); ++iS )
+  namespace DAQ
   {
-    ++hC[(*iS).pixelCol()];
-  }
-  for ( unsigned int i = 0; i<RichDAQ::BitsPerDataWord; ++i )
-  {
-    if ( hC[i]%2 == 1 ) setBit(parity,i);
-  }
-  return parity;
-}
 
-template< class Version, class Header, class Footer >
-bool RichHPDDataBankImp<Version,Header,Footer>::checkDataIntegrity( const LHCb::RichSmartID::Vector & ids,
+    template< class Version, class Header, class Footer >
+    HPDDataBankImp<Version,Header,Footer>::
+    HPDDataBankImp<Version,Header,Footer>( const LongType * data,
+                                           const Header &   header,
+                                           const Footer &   footer,
+                                           const ShortType  maxDataSize,
+                                           const ShortType  dataSize )
+      : m_header       ( header         ),
+        m_footer       ( footer         ),
+        m_maxDataSize  ( maxDataSize    ),
+        m_internalData ( false          )
+    {
+      // initialise header words
+      // note, this call increments data to the correct place
+      m_header.readFromDataStream(data);
+      // set pointer to first data word
+      m_data = const_cast< LongType * >(data);
+      // set data size
+      // Use trick here with dataSize to allow compatibility with DC06/DC04 data
+      // can be removed when no longer needed (together with dataSize variable)
+      m_dataSize = ( 0 == dataSize ? m_header.nDataWords() : dataSize );
+      // skip to start of footer
+      data += m_dataSize;
+      // initialise footer
+      if ( m_header.extendedFormat() )
+      {
+        // make sure the foot expects words
+        m_footer.setParityWord(0);
+        // then read the word(s) from the stream
+        m_footer.readFromDataStream(data);
+      }
+    }
+
+    template< class Version, class Header, class Footer >
+    LongType
+    HPDDataBankImp<Version,Header,Footer>::createParityWord( const LHCb::RichSmartID::Vector & ids ) const
+    {
+      LongType parity(0);
+      std::vector<unsigned int> hC(BitsPerDataWord,0);
+      for ( LHCb::RichSmartID::Vector::const_iterator iS = ids.begin();
+            iS != ids.end(); ++iS )
+      {
+        ++hC[(*iS).pixelCol()];
+      }
+      for ( unsigned int i = 0; i<BitsPerDataWord; ++i )
+      {
+        if ( hC[i]%2 == 1 ) setBit(parity,i);
+      }
+      return parity;
+    }
+
+    template< class Version, class Header, class Footer >
+    bool HPDDataBankImp<Version,Header,Footer>::checkDataIntegrity( const LHCb::RichSmartID::Vector & ids,
                                                                     MsgStream & os ) const
-{
-  bool OK(true);
-  // does this footer have a parity word ?
-  if ( this->footer().hasParityWord() )
-  {
-    // yes, so compare to that "decoded" from the data
-
-    // decoded parity word
-    const RichDAQ::LongType decodedfoot = this->createParityWord(ids);
-
-    // compare to expected
-    if ( decodedfoot != this->footer().parityWord() )
     {
-      os << MSG::ERROR << "Parity word is wrong :-" << endreq;
-      os <<   " -> decoded from data | " << asHex(decodedfoot) << " |";
-      {for ( int iCol = 31; iCol >= 0; --iCol )
+      bool OK(true);
+      // does this footer have a parity word ?
+      if ( this->footer().hasParityWord() )
+      {
+        // yes, so compare to that "decoded" from the data
+
+        // decoded parity word
+        const LongType decodedfoot = this->createParityWord(ids);
+
+        // compare to expected
+        if ( !this->footer().testParityWord(decodedfoot) )
         {
-          os << " " << isBitOn( decodedfoot, iCol );
-        }}
-      os << endreq;
-      os <<   " -> from footer word  | " << asHex(this->footer().parityWord()) << " |";
-      {for ( int iCol = 31; iCol >= 0; --iCol )
-        {
-          os << " " << isBitOn( this->footer().parityWord(), iCol );
-        }}
-      os << endreq;
+          os << MSG::ERROR << "Parity word is wrong :-" << endreq;
+          os <<   " -> decoded from data | " << asHex(decodedfoot) << " |";
+          {for ( int iCol = 31; iCol >= 0; --iCol )
+          {
+            os << " " << isBitOn( decodedfoot, iCol );
+          }}
+          os << endreq;
+          os <<   " -> from footer word  | " << asHex(this->footer().parityWord()) << " |";
+          {for ( int iCol = 31; iCol >= 0; --iCol )
+          {
+            os << " " << isBitOn( this->footer().parityWord(), iCol );
+          }}
+          os << endreq;
 
-      // set flag to bad
-      OK = false;
+          // set flag to bad
+          OK = false;
+        }
+      }
+      return OK;
     }
-  }
-  return OK;
-}
 
-template< class Version, class Header, class Footer >
-void RichHPDDataBankImp<Version,Header,Footer>::dumpAllBits( MsgStream & os ) const
-{
-
-  const std::string & lines = "--------------------------------------------------------------------------------------------------------------------";
-
-  os << lines << endreq;
-
-  // Bit numbers
-  os << "        column    |";
-  for ( int iCol = 31; iCol >= 0; --iCol )
-  {
-    os << format("%3i",iCol);
-  }
-  os << endreq << lines << endreq;
-
-  // Header
-  for ( RichDAQHeaderPDBase::HeaderWords::const_iterator iH = header().headerWords().begin();
-        iH != header().headerWords().end(); ++iH )
-  {
-    os << " h   | " << asHex(*iH) << " |";
-    for ( int iCol = 31; iCol >= 0; --iCol )
+    template< class Version, class Header, class Footer >
+    void HPDDataBankImp<Version,Header,Footer>::dumpAllBits( MsgStream & os ) const
     {
-      os << "  " << isBitOn( *iH, iCol );
-    }
-    os << endreq;
-  }
-  os << lines << endreq;
 
-  // Data bits
-  for ( RichDAQ::ShortType iRow = 0; iRow < dataSize(); ++iRow )
-  {
-    os << format( " d%2i |", iRow );
-    os << " " << asHex(data()[iRow]) << " |";
-    for ( int iCol = 31; iCol >= 0; --iCol )
-    {
-      os << "  " << isBitOn( data()[iRow], iCol );
-    }
-    os << endreq;
-  }
-  os << lines << endreq;
+      const std::string & lines = "--------------------------------------------------------------------------------------------------------------------";
 
-  // Footer
-  if ( !footer().footerWords().empty() )
-  {
-    for ( RichDAQFooterPDBase::FooterWords::const_iterator iF = footer().footerWords().begin();
-          iF != footer().footerWords().end(); ++iF )
-    {
-      os << " f   | " << asHex(*iF) << " |";
+      os << lines << endreq;
+
+      // Bit numbers
+      os << "        column    |";
       for ( int iCol = 31; iCol >= 0; --iCol )
       {
-        os << "  " << isBitOn( *iF, iCol );
+        os << format("%3i",iCol);
       }
-      os << endreq;
+      os << endreq << lines << endreq;
+
+      // Header
+      for ( HeaderPDBase::HeaderWords::const_iterator iH = header().headerWords().begin();
+            iH != header().headerWords().end(); ++iH )
+      {
+        os << " h   | " << asHex(*iH) << " |";
+        for ( int iCol = 31; iCol >= 0; --iCol )
+        {
+          os << "  " << isBitOn( *iH, iCol );
+        }
+        os << endreq;
+      }
+      os << lines << endreq;
+
+      // Data bits
+      for ( ShortType iRow = 0; iRow < dataSize(); ++iRow )
+      {
+        os << format( " d%2i |", iRow );
+        os << " " << asHex(data()[iRow]) << " |";
+        for ( int iCol = 31; iCol >= 0; --iCol )
+        {
+          os << "  " << isBitOn( data()[iRow], iCol );
+        }
+        os << endreq;
+      }
+      os << lines << endreq;
+
+      // Footer
+      if ( !footer().footerWords().empty() )
+      {
+        for ( FooterPDBase::FooterWords::const_iterator iF = footer().footerWords().begin();
+              iF != footer().footerWords().end(); ++iF )
+        {
+          os << " f   | " << asHex(*iF) << " |";
+          for ( int iCol = 31; iCol >= 0; --iCol )
+          {
+            os << "  " << isBitOn( *iF, iCol );
+          }
+          os << endreq;
+        }
+      }
+      else
+      {
+        os << " f   | NO FOOTER WORD" << endreq;
+      }
+      os << lines << endreq;
+
     }
+
+    template< class Version, class Header, class Footer >
+    void HPDDataBankImp<Version,Header,Footer>::fillMsgStream( MsgStream & os ) const
+    {
+
+      const std::string & lines = "====================================================================================================================";
+
+      os << lines << endreq;
+
+      // HPD header in human readable format
+      os << header() << endreq;
+
+      // Raw print out of data block (header, data and footer
+      os << endreq;
+      dumpAllBits( os );
+      os << endreq;
+
+      os << lines;
+
+    }
+
+    template< class Version, class Header, class Footer >
+    Level0ID HPDDataBankImp<Version,Header,Footer>::level0ID() const
+    {
+      return this->header().l0ID();
+    }
+
+    template< class Version, class Header, class Footer >
+    void HPDDataBankImp<Version,Header,Footer>::fillRAWBank( RAWBank & rawData ) const
+    {
+
+      // fill with header word(s)
+      header().fillRAWBank(rawData);
+      // ... then data words
+      for ( ShortType iData = 0; iData < dataSize(); ++iData )
+      {
+        rawData.push_back( m_data[iData] );
+      }
+      // finally the footer word(s)
+      footer().fillRAWBank(rawData);
+    }
+
+    template< class Version, class Header, class Footer >
+    ShortType HPDDataBankImp<Version,Header,Footer>::nHeaderWords() const
+    {
+      return this->header().headerWords().size();
+    }
+
+    template< class Version, class Header, class Footer >
+    ShortType HPDDataBankImp<Version,Header,Footer>::nFooterWords() const
+    {
+      return this->footer().footerWords().size();
+    }
+
+    template< class Version, class Header, class Footer >
+    ShortType HPDDataBankImp<Version,Header,Footer>::nDataWords() const
+    {
+      return this->dataSize();
+    }
+
+    template< class Version, class Header, class Footer >
+    EventID HPDDataBankImp<Version,Header,Footer>::eventID() const
+    {
+      return this->header().eventID();
+    }
+
+    template< class Version, class Header, class Footer >
+    bool HPDDataBankImp<Version,Header,Footer>::suppressed() const
+    {
+      return this->header().l1Suppressed();
+    }
+
   }
-  else
-  {
-    os << " f   | NO FOOTER WORD" << endreq;
-  }
-  os << lines << endreq;
-
-}
-
-template< class Version, class Header, class Footer >
-void RichHPDDataBankImp<Version,Header,Footer>::fillMsgStream( MsgStream & os ) const
-{
-
-  const std::string & lines = "====================================================================================================================";
-
-  os << lines << endreq;
-
-  // HPD header in human readable format
-  os << header() << endreq;
-
-  // Raw print out of data block (header, data and footer
-  os << endreq;
-  dumpAllBits( os );
-  os << endreq;
-
-  os << lines;
-
-}
-
-template< class Version, class Header, class Footer >
-RichDAQ::Level0ID RichHPDDataBankImp<Version,Header,Footer>::level0ID() const
-{
-  return this->header().l0ID();
-}
-
-template< class Version, class Header, class Footer >
-void RichHPDDataBankImp<Version,Header,Footer>::fillRAWBank( RichDAQ::RAWBank & rawData ) const
-{
-
-  // fill with header word(s)
-  for ( RichDAQHeaderPDBase::HeaderWords::const_iterator iH = header().headerWords().begin();
-        iH != header().headerWords().end(); ++iH )
-  {
-    rawData.push_back( *iH );
-  }
-  // ... then data words
-  for ( RichDAQ::ShortType iData = 0; iData < dataSize(); ++iData )
-  {
-    rawData.push_back( m_data[iData] );
-  }
-  // finally the footer word(s)
-  for ( RichDAQFooterPDBase::FooterWords::const_iterator iF = footer().footerWords().begin();
-        iF != footer().footerWords().end(); ++iF )
-  {
-    rawData.push_back( *iF );
-  }
-}
-
-template< class Version, class Header, class Footer >
-RichDAQ::ShortType RichHPDDataBankImp<Version,Header,Footer>::nHeaderWords() const
-{
-  return this->header().headerWords().size();
-}
-
-template< class Version, class Header, class Footer >
-RichDAQ::ShortType RichHPDDataBankImp<Version,Header,Footer>::nFooterWords() const
-{
-  return this->footer().footerWords().size();
-}
-
-template< class Version, class Header, class Footer >
-RichDAQ::ShortType RichHPDDataBankImp<Version,Header,Footer>::nDataWords() const
-{
-  return this->dataSize();
 }

@@ -1,10 +1,16 @@
 
 // Fill RawBuffer with RICH info
-DigiRICHSeq.Members += { "MCRichDigitsToRawBufferAlg/RichFillRawBuffer" };
+DigiRICHSeq.Members += { "Rich::MC::Digi::MCRichDigitsToRawBufferAlg/RichFillRawBuffer" };
 
 // Bank version to write
-RichFillRawBuffer.DataVersion = 2;
+//RichFillRawBuffer.DataVersion = 2;   // DC06 version
+RichFillRawBuffer.DataVersion = 129; // 2007 final L1 firmware version
 
 // utility tools
-ToolSvc.RichToolRegistry.Tools += { "RichRawDataFormatTool/RichRawDataFormatTool" };
-ToolSvc.RichToolRegistry.Tools += { "RichDetNumberingTool/RichDetNumberingTool" };
+ToolSvc.RichToolRegistry.Tools += { "Rich::DAQ::RawDataFormatTool/RichRawDataFormatTool" };
+ToolSvc.RichToolRegistry.Tools += { "Rich::DAQ::RawBufferToSmartIDsTool/RichSmartIDDecoder" };
+ToolSvc.RichToolRegistry.Tools += { "OdinTimeDecoder/OdinTimeDecoder" };
+
+// Uncomment to perform test decoding straight after encoding. Useful for debugging.
+DigiRICHSeq.Members += { "Rich::DAQ::RawBufferToRichDigitsAlg/TestDecodeRawRich" };
+TestDecodeRawRich.DecodeBufferOnly = true;

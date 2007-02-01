@@ -3,14 +3,15 @@
 // Use data-on-demand service
 DataOnDemandSvc.Algorithms += 
 { 
-  "DATA='/Event/Raw/Rich/Digits' TYPE='RawBufferToRichDigitsAlg/RichRawEventToDigits'" 
+  "DATA='/Event/Raw/Rich/Digits' TYPE='Rich::DAQ::RawBufferToRichDigitsAlg/RichRawEventToDigits'" 
 };
 
 // utility tools
-ToolSvc.RichToolRegistry.Tools += { "RichSmartIDTool/RichSmartIDTool" };
-ToolSvc.RichToolRegistry.Tools += { "RichRawBufferToSmartIDsTool/RichSmartIDDecoder" };
-ToolSvc.RichToolRegistry.Tools += { "RichDetNumberingTool/RichDetNumberingTool" };
-ToolSvc.RichToolRegistry.Tools += { "RichRawDataFormatTool/RichRawDataFormatTool" };
+ToolSvc.RichToolRegistry.Tools += { "Rich::SmartIDTool/RichSmartIDTool" };
+ToolSvc.RichToolRegistry.Tools += { "Rich::DAQ::RawBufferToSmartIDsTool/RichSmartIDDecoder" };
+//ToolSvc.RichToolRegistry.Tools += { "RichDetNumberingTool/RichDetNumberingTool" };
+ToolSvc.RichToolRegistry.Tools += { "Rich::DAQ::RawDataFormatTool/RichRawDataFormatTool" };
+ToolSvc.RichToolRegistry.Tools += { "OdinTimeDecoder/OdinTimeDecoder" };
 
 // Suppress HPDs with high occupancy
 // CRJ : For the moment, set high to disable whilst testing

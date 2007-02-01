@@ -1,58 +1,110 @@
 
 //=============================================================================================
-/** @file RichDAQFooterPDBase.h
+/** @file RichDAQParityFooter.h
  *
- *  Header file for RICH DAQ utility class : RichDAQFooterPDBase
+ *  Header file for RICH DAQ utility class : Rich::DAQ::ParityFooter
  *
  *  CVS Log :-
- *  $Id: RichDAQParityFooter.h,v 1.2 2006-09-20 13:07:12 jonrob Exp $
+ *  $Id: RichDAQParityFooter.h,v 1.3 2007-02-01 17:42:29 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   05/09/2006
  */
 //=============================================================================================
 
-#ifndef RICHDAQ_RICHDAQPARITYFOOTER_H 
+#ifndef RICHDAQ_RICHDAQPARITYFOOTER_H
 #define RICHDAQ_RICHDAQPARITYFOOTER_H 1
 
 #include "RichDAQFooterPDBase.h"
 
-//=============================================================================================
-/** @class RichDAQParityFooter RichDAQParityFooter.h
+//-----------------------------------------------------------------------------
+/** @namespace Rich
  *
- *  Implements a single word parity footer
+ *  General namespace for RICH software
  *
- *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
- *  @date   05/09/2006
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
  */
-//=============================================================================================
-
-class RichDAQParityFooter : public RichDAQFooterPDBase
+//-----------------------------------------------------------------------------
+namespace Rich
 {
-  
-public: 
 
-  /// Standard constructor
-  RichDAQParityFooter( ) : RichDAQFooterPDBase(1) {} 
-
-  /// Destructor
-  ~RichDAQParityFooter( ) { }
-
-  /// Does this foot have a parity word ?
-  inline bool hasParityWord() const { return true; }
-
-  /// Access the parity word
-  inline RichDAQ::LongType parityWord() const 
+  //-----------------------------------------------------------------------------
+  /** @namespace DAQ
+   *
+   *  namespace for RICH DAQ software
+   *
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   08/07/2004
+   */
+  //-----------------------------------------------------------------------------
+  namespace DAQ
   {
-    return footerWords()[0];
-  }
 
-  /// Set the parity word
-  inline void setParityWord( const RichDAQ::LongType word )
-  {
-    this->setWord( 0, word );
-  }
+    //=============================================================================================
+    /** @class ParityFooter RichDAQParityFooter.h
+     *
+     *  Implements a single word parity footer.
+     *  By default the word has zero size to represent the fact that under normal conditions
+     *  the foot is missing. It is create on-demand when set.
+     *
+     *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
+     *  @date   05/09/2006
+     */
+    //=============================================================================================
 
-};
+    class ParityFooter : public FooterPDBase
+    {
+
+    public:
+
+      /// Standard Constructor
+      ParityFooter( const ShortType nWords   = 0,
+                    const LongType  wordInit = 0 ) 
+        : FooterPDBase(nWords,wordInit) { }
+
+      /// Destructor
+      ~ParityFooter( ) { }
+
+      /// Does this foot have a parity word ?
+      inline bool hasParityWord() const 
+      { 
+        return ( nFooterWords() != 0 );
+      }
+
+      /// Access the parity word
+      inline Rich::DAQ::LongType parityWord() const
+      {
+        return ( hasParityWord() ? footerWords()[0] : 0 );
+      }
+
+      /// Set the parity word
+      inline void setParityWord( const Rich::DAQ::LongType word )
+      {
+        makeParityAvailable();
+        this->setWord( 0, word );
+      }
+
+      /// Test the parity word
+      inline bool testParityWord( const LongType /* refWord */ ) const 
+      { 
+        return ( 0 == this->parityWord() );
+      }
+
+    private:
+
+      /// Make sure this footer has the parity word available
+      inline void makeParityAvailable()
+      {
+        if ( !hasParityWord() )
+        {
+          footerWords() = FooterPDBase::FooterWords(1,0);
+        } 
+      }
+
+    };
+
+  }
+}
 
 #endif // RICHDAQ_RICHDAQPARITYFOOTER_H

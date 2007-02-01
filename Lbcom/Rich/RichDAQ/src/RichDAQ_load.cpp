@@ -5,7 +5,7 @@
  *  Declaration file for objects in component library RichDAQ
  *
  *  CVS Log :-
- *  $Id: RichDAQ_load.cpp,v 1.12 2006-10-04 10:46:47 jonrob Exp $
+ *  $Id: RichDAQ_load.cpp,v 1.13 2007-02-01 17:42:29 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-09
@@ -14,6 +14,7 @@
 
 #include "GaudiKernel/DeclareFactoryEntries.h"
 
+
 DECLARE_FACTORY_ENTRIES ( RichDAQ )
 {
 
@@ -21,16 +22,17 @@ DECLARE_FACTORY_ENTRIES ( RichDAQ )
   DECLARE_ALGORITHM( RawBufferToRichDigitsAlg );
 
   // Algorithm to simply load the RawEvent into memory
-  DECLARE_ALGORITHM( RichLoadRawEvent );
+  DECLARE_ALGORITHM( LoadRawEvent );
 
   // Tool to decode the Raw buffer into RichSmartIDs
-  DECLARE_TOOL( RichRawBufferToSmartIDsTool );
+  DECLARE_TOOL( RawBufferToSmartIDsTool );
 
   // Tool to create HPD bank bank objects from Raw Buffer
-  DECLARE_TOOL( RichRawDataFormatTool );
+  DECLARE_TOOL( RawDataFormatTool );
 
   // Pixel suppression tools
-  DECLARE_TOOL( RichHighOccHPDSuppressionTool );
-  DECLARE_TOOL( RichHPDPixelClusterSuppressionTool );
+  DECLARE_TOOL( HighOccHPDSuppressionTool );
+  DECLARE_TOOL( HPDPixelClusterSuppressionTool );
 
 }
+

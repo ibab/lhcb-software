@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ utility class : RichNonZeroSuppData
  *
  *  CVS Log :-
- *  $Id: RichNonZeroSuppData_V1.h,v 1.2 2006-09-16 20:00:22 jonrob Exp $
+ *  $Id: RichNonZeroSuppData_V1.h,v 1.3 2007-02-01 17:42:29 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-07
@@ -23,97 +23,124 @@
 
 //===================================================================================
 
-/** @namespace RichNonZeroSuppDataV1
+//-----------------------------------------------------------------------------
+/** @namespace Rich
  *
- *  Namespace for version 1 of the RichNonZeroSuppData object.
+ *  General namespace for RICH software
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
- *  @date   2004-12-17
+ *  @date   08/07/2004
  */
-namespace RichNonZeroSuppDataV1
+//-----------------------------------------------------------------------------
+namespace Rich
 {
 
-  /** @class RichNonZeroSuppData RichNonZeroSuppData_V1.h
+  //-----------------------------------------------------------------------------
+  /** @namespace DAQ
    *
-   *  The RICH HPD non zero suppressed data format.Z
-   *  Second iteration of the format. Identical to version 0
-   *  apart from a new header word format.
+   *  namespace for RICH DAQ software
    *
-   *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
-   *  @date   2003-11-07
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   08/07/2004
    */
-  template< class Version, class Header, class Footer >
-  class RichNonZeroSuppData : public RichHPDDataBankImp<Version,Header,Footer>,
-                              public Rich::BoostMemPoolAlloc<RichNonZeroSuppDataV1::RichNonZeroSuppData<Version,Header,Footer> >
+  //-----------------------------------------------------------------------------
+  namespace DAQ
   {
 
-  public:
+    /** @namespace RichNonZeroSuppDataV1
+     *
+     *  Namespace for version 1 of the RichNonZeroSuppData object.
+     *
+     *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+     *  @date   2004-12-17
+     */
+    namespace RichNonZeroSuppDataV1
+    {
 
-    /// Default constructor
-    RichNonZeroSuppData()
-      : RichHPDDataBankImp<Version,Header,Footer> ( 0,
+      /** @class RichNonZeroSuppData RichNonZeroSuppData_V1.h
+       *
+       *  The RICH HPD non zero suppressed data format.Z
+       *  Second iteration of the format. Identical to version 0
+       *  apart from a new header word format.
+       *
+       *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
+       *  @date   2003-11-07
+       */
+      template< class Version, class Header, class Footer >
+      class RichNonZeroSuppData : public HPDDataBankImp<Version,Header,Footer>,
+                                  public Rich::BoostMemPoolAlloc<RichNonZeroSuppDataV1::RichNonZeroSuppData<Version,Header,Footer> >
+      {
+
+      public:
+
+        /// Default constructor
+        RichNonZeroSuppData()
+          : HPDDataBankImp<Version,Header,Footer> ( 0,
                                                     Header(),
                                                     Footer(),
-                                                    RichDAQ::MaxDataSize ) { }
+                                                    MaxDataSize ) { }
 
-    /** Constructor from a RichSmartID HPD identifier and a vector of RichSmartIDs
-     *
-     *  @param l0ID   L0 board hardware identifier
-     *  @param digits Vector of RichSmartIDs listing the active channels in this HPD
-     */
-    explicit RichNonZeroSuppData( const RichDAQ::Level0ID l0ID,
-                                  const LHCb::RichSmartID::Vector & digits )
-      : RichHPDDataBankImp<Version,Header,Footer> ( Header( false, l0ID, digits.size() ),
+        /** Constructor from a RichSmartID HPD identifier and a vector of RichSmartIDs
+         *
+         *  @param l0ID   L0 board hardware identifier
+         *  @param digits Vector of RichSmartIDs listing the active channels in this HPD
+         */
+        explicit RichNonZeroSuppData( const Level0ID l0ID,
+                                      const LHCb::RichSmartID::Vector & digits )
+          : HPDDataBankImp<Version,Header,Footer> ( Header( false, l0ID, digits.size() ),
                                                     Footer(),
-                                                    0, RichDAQ::MaxDataSize, RichDAQ::MaxDataSize )
-    {
-      for ( LHCb::RichSmartID::Vector::const_iterator iDig = digits.begin();
-            iDig != digits.end(); ++ iDig )
-      {
-        setPixelActive( (*iDig).pixelRow(), (*iDig).pixelCol() );
-      }
-    }
+                                                    0, MaxDataSize, MaxDataSize )
+        {
+          for ( LHCb::RichSmartID::Vector::const_iterator iDig = digits.begin();
+                iDig != digits.end(); ++ iDig )
+          {
+            setPixelActive( (*iDig).pixelRow(), (*iDig).pixelCol() );
+          }
+        }
 
-    /** Constructor from a block of raw data
-     *
-     *  @param data Pointer to the start of the data block
-     */
-    explicit RichNonZeroSuppData( const RichDAQ::LongType * data )
-      : RichHPDDataBankImp<Version,Header,Footer> ( data, // start of data
-                                                    Header(), 
+        /** Constructor from a block of raw data
+         *
+         *  @param data Pointer to the start of the data block
+         */
+        explicit RichNonZeroSuppData( const LongType * data )
+          : HPDDataBankImp<Version,Header,Footer> ( data, // start of data
+                                                    Header(),
                                                     Footer(),
-                                                    RichDAQ::MaxDataSize, // max data block size
-                                                    RichDAQ::MaxDataSize )
-    { }
+                                                    MaxDataSize, // max data block size
+                                                    MaxDataSize )
+        { }
 
-    /// Destructor
-    ~RichNonZeroSuppData() { }
+        /// Destructor
+        ~RichNonZeroSuppData() { }
 
-    // Returns the hit count for this HPD
-    virtual RichDAQ::ShortType hitCount() const;
+        // Returns the hit count for this HPD
+        virtual ShortType hitCount() const;
 
-    // Fill a vector with RichSmartIDs for hit pixels
-    virtual RichDAQ::ShortType fillRichSmartIDs( LHCb::RichSmartID::Vector & ids,
-                                                 const LHCb::RichSmartID hpdID ) const;
+        // Fill a vector with RichSmartIDs for hit pixels
+        virtual ShortType fillRichSmartIDs( LHCb::RichSmartID::Vector & ids,
+                                            const LHCb::RichSmartID hpdID ) const;
 
-  private: // methods
+      private: // methods
 
-    /// Set a pixel as active
-    inline void setPixelActive( const RichDAQ::ShortType row,
-                                const RichDAQ::ShortType col )
-    {
-      RichHPDDataBankImp<Version,Header,Footer>::setBit( this->data()[row], col );
-    }
+        /// Set a pixel as active
+        inline void setPixelActive( const ShortType row,
+                                    const ShortType col )
+        {
+          HPDDataBankImp<Version,Header,Footer>::setBit( this->data()[row], col );
+        }
 
-    /// Is a given pixel active ?
-    inline bool isPixelActive( const RichDAQ::ShortType row,
-                               const RichDAQ::ShortType col ) const
-    {
-      return this->isBitOn( this->data()[row], col );
-    }
+        /// Is a given pixel active ?
+        inline bool isPixelActive( const ShortType row,
+                                   const ShortType col ) const
+        {
+          return this->isBitOn( this->data()[row], col );
+        }
 
-  };
+      };
 
-} // RichNonZeroSuppDataV1 namespace
+    } // RichNonZeroSuppDataV1 namespace
+
+  }
+}
 
 #endif // RICHDAQ_RICHNONZEROSUPPDATA_V1_H

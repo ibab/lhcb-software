@@ -5,7 +5,7 @@
  * Implementation file for class : RichHighOccHPDSuppressionTool
  *
  * CVS Log :-
- * $Id: RichHighOccHPDSuppressionTool.cpp,v 1.14 2006-12-01 13:03:31 cattanem Exp $
+ * $Id: RichHighOccHPDSuppressionTool.cpp,v 1.15 2007-02-01 17:42:29 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 21/03/2006
@@ -17,20 +17,23 @@
 // local
 #include "RichHighOccHPDSuppressionTool.h"
 
-DECLARE_TOOL_FACTORY( RichHighOccHPDSuppressionTool );
+// RICH DAQ
+using namespace Rich::DAQ;
+
+DECLARE_TOOL_FACTORY( HighOccHPDSuppressionTool );
 
 // Standard constructor
-RichHighOccHPDSuppressionTool::
-RichHighOccHPDSuppressionTool( const std::string& type,
-                               const std::string& name,
-                               const IInterface* parent )
-  : RichToolBase ( type, name, parent ),
-    m_richSys    ( NULL               ),
-    m_condBDLocs ( Rich::NRiches      )
+HighOccHPDSuppressionTool::
+HighOccHPDSuppressionTool( const std::string& type,
+                           const std::string& name,
+                           const IInterface* parent )
+  : ToolBase       ( type, name, parent ),
+    m_richSys      ( NULL               ),
+    m_condBDLocs   ( Rich::NRiches      )
 {
 
   // Define interface
-  declareInterface<IRichPixelSuppressionTool>(this);
+  declareInterface<IPixelSuppressionTool>(this);
 
   // job ops
   m_condBDLocs[Rich::Rich1] = "/dd/Conditions/Environment/Rich1/AverageHPDOccupancies";
@@ -48,10 +51,10 @@ RichHighOccHPDSuppressionTool( const std::string& type,
 
 }
 
-StatusCode RichHighOccHPDSuppressionTool::initialize()
+StatusCode HighOccHPDSuppressionTool::initialize()
 {
   // Sets up various tools and services
-  StatusCode sc = RichToolBase::initialize();
+  StatusCode sc = ToolBase::initialize();
   if ( sc.isFailure() ) return sc;
 
   // Make sure RICH type is correctly setup
@@ -85,7 +88,7 @@ StatusCode RichHighOccHPDSuppressionTool::initialize()
   return sc;
 }
 
-StatusCode RichHighOccHPDSuppressionTool::initOccMap()
+StatusCode HighOccHPDSuppressionTool::initOccMap()
 {
   StatusCode sc = StatusCode::SUCCESS;
 
@@ -103,13 +106,13 @@ StatusCode RichHighOccHPDSuppressionTool::initOccMap()
     if ( rich() == Rich::Rich1 )
     {
       updMgrSvc()->registerCondition( this, m_condBDLocs[Rich::Rich1],
-                                      &RichHighOccHPDSuppressionTool::umsUpdateRICH1 );
+                                      &HighOccHPDSuppressionTool::umsUpdateRICH1 );
     }
     else
     {
       // Register RICH2
       updMgrSvc()->registerCondition( this, m_condBDLocs[Rich::Rich2],
-                                      &RichHighOccHPDSuppressionTool::umsUpdateRICH2 );
+                                      &HighOccHPDSuppressionTool::umsUpdateRICH2 );
     }
     // force first updates
     sc = updMgrSvc()->update(this);
@@ -124,17 +127,17 @@ StatusCode RichHighOccHPDSuppressionTool::initOccMap()
   return sc;
 }
 
-StatusCode RichHighOccHPDSuppressionTool::umsUpdateRICH1()
+StatusCode HighOccHPDSuppressionTool::umsUpdateRICH1()
 {
   return initOccMap( Rich::Rich1 );
 }
 
-StatusCode RichHighOccHPDSuppressionTool::umsUpdateRICH2()
+StatusCode HighOccHPDSuppressionTool::umsUpdateRICH2()
 {
   return initOccMap( Rich::Rich2 );
 }
 
-StatusCode RichHighOccHPDSuppressionTool::initOccMap( const Rich::DetectorType rich )
+StatusCode HighOccHPDSuppressionTool::initOccMap( const Rich::DetectorType rich )
 {
   info() << "Update triggered for " << rich << " HPD average occupancies" << endreq;
 
@@ -163,8 +166,17 @@ StatusCode RichHighOccHPDSuppressionTool::initOccMap( const Rich::DetectorType r
   return StatusCode::SUCCESS;
 }
 
+double 
+HighOccHPDSuppressionTool::averageOccupancy( const LHCb::RichSmartID hpdID ) const
+{
+  // Get occupancy HPD data
+  const HPDData & data = hpdData(hpdID);
+  // return the average occupancy
+  return data.avOcc();
+}
+
 bool
-RichHighOccHPDSuppressionTool::
+HighOccHPDSuppressionTool::
 applyPixelSuppression( const LHCb::RichSmartID hpdID,
                        LHCb::RichSmartID::Vector & smartIDs ) const
 {
@@ -226,7 +238,7 @@ applyPixelSuppression( const LHCb::RichSmartID hpdID,
 }
 
 void
-RichHighOccHPDSuppressionTool::findHpdData( const LHCb::RichSmartID hpdID ) const
+HighOccHPDSuppressionTool::findHpdData( const LHCb::RichSmartID hpdID ) const
 {
   // get data for this HPD
   OccMap::iterator iD = m_occMap.find(hpdID);
@@ -235,22 +247,22 @@ RichHighOccHPDSuppressionTool::findHpdData( const LHCb::RichSmartID hpdID ) cons
     std::ostringstream mess;
     mess << "Unknown HPD RichSmartID " << hpdID;
     throw GaudiException( mess.str(),
-                          "RichHighOccHPDSuppressionTool",
+                          "Rich::DAQ::HighOccHPDSuppressionTool",
                           StatusCode::FAILURE );
   }
   m_currentData = &(*iD).second;
   m_lastHPD = hpdID;
 }
 
-StatusCode RichHighOccHPDSuppressionTool::finalize()
+StatusCode HighOccHPDSuppressionTool::finalize()
 {
   // Print XML ?
   if ( m_printXML ) createHPDBackXML();
   // Execute base class method
-  return RichToolBase::finalize();
+  return ToolBase::finalize();
 }
 
-void RichHighOccHPDSuppressionTool::createHPDBackXML() const
+void HighOccHPDSuppressionTool::createHPDBackXML() const
 {
 
   // Vectors for conditions entries
@@ -260,7 +272,7 @@ void RichHighOccHPDSuppressionTool::createHPDBackXML() const
   for ( OccMap::const_iterator iS = m_occMap.begin(); iS != m_occMap.end(); ++iS )
   {
     const HPDData & d = (*iS).second;
-    const RichDAQ::HPDHardwareID hID = m_richSys->hardwareID( (*iS).first );
+    const Rich::DAQ::HPDHardwareID hID = m_richSys->hardwareID( (*iS).first );
     const double occ =
       ( d.fillCount() < m_minFills ?
         ( d.fillCount()>0 ? d.avOcc()/d.fillCount() : 0 ) : d.avOcc() );

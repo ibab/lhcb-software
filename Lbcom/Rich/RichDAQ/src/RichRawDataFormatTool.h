@@ -2,10 +2,10 @@
 //-----------------------------------------------------------------------------
 /** @file RichRawDataFormatTool.h
  *
- *  Header file for tool : RichRawDataFormatTool
+ *  Header file for tool : Rich::DAQ::RawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.h,v 1.19 2006-12-01 13:03:31 cattanem Exp $
+ *  $Id: RichRawDataFormatTool.h,v 1.20 2007-02-01 17:42:30 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-18
@@ -17,6 +17,7 @@
 
 // STD
 #include <sstream>
+#include <memory>
 
 // Boost
 #include "boost/lexical_cast.hpp"
@@ -34,6 +35,7 @@
 
 // Interfaces
 #include "RichKernel/IRichRawDataFormatTool.h"
+#include "Kernel/IEventTimeDecoder.h"
 
 // local
 #include "RichDAQVersions.h"
@@ -46,201 +48,289 @@
 
 // Event model
 #include "Event/RawEvent.h"
-
-// namespaces
-using namespace LHCb; ///< LHCb general namespace
+#include "Event/ODIN.h"
 
 //-----------------------------------------------------------------------------
-/** @class RichRawDataFormatTool RichRawDataFormatTool.h
+/** @namespace Rich
  *
- *  Tool to encode and decode the Raw Event information for the RICH.
+ *  General namespace for RICH software
  *
- *  The following versions are included :-
- *
- *   Version 0 : DC04 compatibile. Can only decode this version, not encode
- *
- *   Version 1 : Same HPD bank format as version 0, but corrected header word bug
- *               plus incorporate Level 1 board groupings
- *
- *   Version 2 : Same as 1 but using a new zero suppressed HPD bank format
- *
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   2004-12-18
- *
- *  @todo Remove DC04 hacks when no longer needed
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
  */
 //-----------------------------------------------------------------------------
+namespace Rich
+{
 
-class RichRawDataFormatTool : public RichToolBase,
-                              virtual public IRichRawDataFormatTool,
-                              virtual public IIncidentListener {
+  //-----------------------------------------------------------------------------
+  /** @namespace DAQ
+   *
+   *  namespace for RICH DAQ software
+   *
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   08/07/2004
+   */
+  //-----------------------------------------------------------------------------
+  namespace DAQ
+  {
 
-public: // Methods for Gaudi Framework
+    //-----------------------------------------------------------------------------
+    /** @class RawDataFormatTool RichRawDataFormatTool.h
+     *
+     *  Tool to encode and decode the Raw Event information for the RICH.
+     *
+     *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+     *  @date   2004-12-18
+     *
+     *  @todo Remove backwards compatibility hacks when no longer needed
+     *  @todo Pass Event ID number into data format when filling RAWBank from RichSmartIDs
+     *  @todo Add ability to create ALICE mode data during filling RAWBank from RichSmartIDs
+     *  @todo Make sure each L1 bank always has four ingress headers during encoding
+     */
+    //-----------------------------------------------------------------------------
 
-  /// Standard constructor
-  RichRawDataFormatTool( const std::string& type,
+    class RawDataFormatTool : public Rich::ToolBase,
+                              virtual public IRawDataFormatTool,
+                              virtual public IIncidentListener
+    {
+
+    public: // Methods for Gaudi Framework
+
+      /// Standard constructor
+      RawDataFormatTool( const std::string& type,
                          const std::string& name,
                          const IInterface* parent );
 
-  /// Destructor
-  virtual ~RichRawDataFormatTool( );
+      /// Destructor
+      virtual ~RawDataFormatTool( );
 
-  // Initialization of the tool after creation
-  StatusCode initialize();
+      // Initialization of the tool after creation
+      StatusCode initialize();
 
-  // Finalization of the tool before deletion
-  StatusCode finalize();
+      // Finalization of the tool before deletion
+      StatusCode finalize();
 
-  /** Implement the handle method for the Incident service.
-   *  This is used to inform the tool of software incidents.
-   *
-   *  @param incident The incident identifier
-   */
-  void handle( const Incident& incident );
+      /** Implement the handle method for the Incident service.
+       *  This is used to inform the tool of software incidents.
+       *
+       *  @param incident The incident identifier
+       */
+      void handle( const Incident& incident );
 
-public: // methods (and doxygen comments) inherited from interface
+    public: // methods (and doxygen comments) inherited from interface
 
-  // Creates a bank data from a vector of RichSmartIDs
-  void fillRawEvent( const LHCb::RichSmartID::Vector & smartIDs,
-                     const RichDAQ::BankVersion version = RichDAQ::LHCb2 ) const;
+      /// Creates a bank data from a vector of RichSmartIDs
+      void fillRawEvent( const LHCb::RichSmartID::Vector & smartIDs,
+                         const Rich::DAQ::BankVersion version = Rich::DAQ::LHCb2 ) const;
 
-  // Decode a RawBank into RichSmartID identifiers
-  void decodeToSmartIDs( const RawBank & bank,
-                         RichDAQ::PDMap & smartIDs ) const;
+      /// Decode a RawBank into RichSmartID identifiers
+      void decodeToSmartIDs( const LHCb::RawBank & bank,
+                             Rich::DAQ::PDMap & smartIDs ) const;
 
-  // Decode all RICH RawBanks into RichSmartID identifiers
-  void decodeToSmartIDs( RichDAQ::PDMap & smartIDs ) const;
+      /// Decode all RICH RawBanks into RichSmartID identifiers
+      void decodeToSmartIDs( Rich::DAQ::PDMap & smartIDs ) const;
 
-private: // definitions
+    private: // definitions
 
-  // Summary data
-  typedef std::pair< const RichDAQ::BankVersion, RichDAQ::Level1ID >            L1IDandV;
-  typedef std::pair< unsigned long, std::pair< unsigned long, unsigned long > > L1CountAndSize;
-  typedef Rich::Map< const L1IDandV, L1CountAndSize > L1TypeCount;
+      // Summary data
+      typedef std::pair< const Rich::DAQ::BankVersion, Rich::DAQ::Level1ID >            L1IDandV;
+      typedef std::pair< unsigned long, std::pair< unsigned long, unsigned long > > L1CountAndSize;
+      typedef Rich::Map< const L1IDandV, L1CountAndSize > L1TypeCount;
 
-private: // methods
+    private: // methods
 
-  /** Creates a bank data of a given version from the given RichSmartID vector
-   *
-   *  NOTE : Ownership of the data object passes to the caller.
-   *         It is their responsibility to delete when no longer needed.
-   *
-   *  @param smartIDs Vector of RichSmartIDs to use to create the data bank
-   *  @param version   The RICH DAQ data bank version
-   */
-  const RichHPDDataBank * createDataBank( const RichSmartID::Vector & smartIDs,
-                                          const RichDAQ::BankVersion version = RichDAQ::LHCb0 ) const;
+      /** Creates a bank data of a given version from the given RichSmartID vector
+       *
+       *  NOTE : Ownership of the data object passes to the caller.
+       *         It is their responsibility to delete when no longer needed.
+       *
+       *  @param smartIDs Vector of RichSmartIDs to use to create the data bank
+       *  @param version  The RICH DAQ data bank version
+       *  @param odin     Pointer to the ODIN data object
+       */
+      const HPDDataBank * createDataBank( const LHCb::RichSmartID::Vector & smartIDs,
+                                          const Rich::DAQ::BankVersion version,
+                                          const LHCb::ODIN * odin = NULL ) const;
 
-  /** Creates a bank data from the given raw block of data
-   *
-   *  NOTE : Ownership of the data object passes to the caller.
-   *         It is their responsibility to delete when no longer needed.
-   *
-   *  @param dataStart Pointer to the start of the raw data
-   *  @param dataSize  The length of the data block (excluding header HPD word)
-   *  @param version   The RICH DAQ data bank version
-   */
-  const RichHPDDataBank * createDataBank( const RichDAQ::LongType * dataStart,
+      /** Creates a bank data from the given raw block of data
+       *
+       *  NOTE : Ownership of the data object passes to the caller.
+       *         It is their responsibility to delete when no longer needed.
+       *
+       *  @param dataStart Pointer to the start of the raw data
+       *  @param dataSize  The length of the data block (excluding header HPD word)
+       *  @param version   The RICH DAQ data bank version
+       *  @param l1IngressHeader The L1 ingress header word
+       */
+      const HPDDataBank * createDataBank( const Rich::DAQ::LongType * dataStart,
                                           const unsigned int dataSize,
-                                          const RichDAQ::BankVersion version = RichDAQ::LHCb0 ) const;
+                                          const Rich::DAQ::BankVersion version ) const;
 
-  /// Initialise for each event
-  void InitEvent();
+      /// Initialise for each event
+      void InitEvent();
 
-  /// Finalise for each event
-  void FinishEvent();
+      /// Finalise for each event
+      void FinishEvent();
 
-  /// Retrieves the raw event.
-  RawEvent * rawEvent() const;
+      /// Retrieves the raw event.
+      LHCb::RawEvent * rawEvent() const;
 
-  /** Final printout of Level 1 stats
-   *
-   *  @param count The Summary object to printout
-   *  @param title The title to use
-   */
-  void printL1Stats( const L1TypeCount & count, const std::string & title ) const;
+      /// Retrieves the ODIN data object
+      const LHCb::ODIN * odin() const;
 
-  /// Returns the RawBank version emun for the given bank
-  RichDAQ::BankVersion bankVersion( const LHCb::RawBank & bank ) const;
+      /// Get the ODIN time tool
+      const IEventTimeDecoder * timeTool() const;
+    
+      /** Final printout of Level 1 stats
+       *
+       *  @param count The Summary object to printout
+       *  @param title The title to use
+       */
+      void printL1Stats( const L1TypeCount & count, const std::string & title ) const;
 
-  /** Print the given RawBank as a simple hex dump
-   *  @param bank The RawBank to dump out
-   *  @param os   The Message Stream to print to
-   */
-  void dumpRawBank( const LHCb::RawBank & bank,
-                    MsgStream & os ) const;
+      /// Returns the RawBank version emun for the given bank
+      Rich::DAQ::BankVersion bankVersion( const LHCb::RawBank & bank ) const;
 
-  /// Test if a given bit in a word is set on
-  bool isBitOn( const RichDAQ::LongType data, const RichDAQ::ShortType pos ) const;
+      /** Print the given RawBank as a simple hex dump
+       *  @param bank The RawBank to dump out
+       *  @param os   The Message Stream to print to
+       */
+      void dumpRawBank( const LHCb::RawBank & bank,
+                        MsgStream & os ) const;
 
-  /// Decode a RawBank into RichSmartID identifiers
-  /// OLD version for DC06 and DC04 compatibility
-  /// To be removed when no longer needed
-  void decodeToSmartIDs_OLD( const RawBank & bank,
-                             RichDAQ::PDMap & smartIDs ) const;
+      /// Test if a given bit in a word is set on
+      bool isBitOn( const Rich::DAQ::LongType data, const Rich::DAQ::ShortType pos ) const;
 
-private: // data
+      /// Decode a RawBank into RichSmartID identifiers
+      /// Version with DC06 and DC04 compatibility
+      void decodeToSmartIDs_DC0406( const LHCb::RawBank & bank,
+                                    Rich::DAQ::PDMap & smartIDs ) const;
 
-  /// Rich System detector element
-  const DeRichSystem * m_richSys;
+      /// Decode a RawBank into RichSmartID identifiers
+      /// Version compatible with 2006 testbeam
+      void decodeToSmartIDs_2006TB( const LHCb::RawBank & bank,
+                                    Rich::DAQ::PDMap & smartIDs ) const;
 
-  /// Pointer to Raw Event
-  mutable RawEvent * m_rawEvent;
+      /// Decode a RawBank into RichSmartID identifiers
+      /// Version compatible with first 2007 "final" L1 firmware
+      void decodeToSmartIDs_2007( const LHCb::RawBank & bank,
+                                  Rich::DAQ::PDMap & smartIDs ) const;
 
-  /// Input location for RawEvent in TES
-  std::string m_rawEventLoc;
+      /// Compare Event/BX IDs, to within a given number of bits
+      template<class ID>
+      inline bool compareIDs( const ID& id1, const ID& id2 ) const
+      {
+        // Compute which how many bits the words should in common, so we only compare these
+        const ShortType lowBits = ( id1.activeBits() < id2.activeBits() ?
+                                    id1.activeBits() : id2.activeBits() );
+        const LongType Mask = ((1 << lowBits)-1);
+        // compare the bits and return
+        return ( (id1.data() & Mask) == (id2.data() & Mask) );
+      }
 
-  /// The number of hits marking the transistion between zero and non-zero suppressed data
-  /// Used by version 0 of the data banks
-  unsigned int m_zeroSuppresCut;
+    private: // data
 
-  /// Flag to turn on and off the summary information
-  bool m_summary;
+      /// Rich System detector element
+      const DeRichSystem * m_richSys;
 
-  mutable L1TypeCount m_l1decodeSummary; ///< Summary object for decoding
-  mutable L1TypeCount m_l1encodeSummary; ///< Summary object for encoding
+      /// Pointer to Raw Event
+      mutable LHCb::RawEvent * m_rawEvent;
 
-  /// Number of events processed
-  mutable unsigned int m_evtCount;
+      /// Pointer to ODIN
+      mutable LHCb::ODIN * m_odin;
 
-  /// Flag to indicate if the tool has been used in a given event
-  mutable bool m_hasBeenCalled;
+      /// Pointer to ODIN (Event time) tool
+      mutable const IEventTimeDecoder * m_timeTool;
 
-  /// starting map
-  RichDAQ::L1Map m_dummyMap;
+      /// Input location for RawEvent in TES
+      std::string m_rawEventLoc;
 
-  /// Max HPD Occupancy Cut
-  unsigned int m_maxHPDOc;
+      /// The number of hits marking the transistion between zero and non-zero suppressed data
+      /// Used by version 0 of the data banks
+      unsigned int m_zeroSuppresCut;
 
-  /// Flag to activate the raw printout of each Rawbank
-  bool m_dumpBanks;
+      /// Flag to turn on and off the summary information
+      bool m_summary;
 
-  /// Flag to turn on the use of zero suppression during encoding simulation (default)
-  bool m_zeroSupp;
+      mutable L1TypeCount m_l1decodeSummary; ///< Summary object for decoding
+      mutable L1TypeCount m_l1encodeSummary; ///< Summary object for encoding
 
-};
+      /// Number of events processed
+      mutable unsigned int m_evtCount;
 
-inline void RichRawDataFormatTool::InitEvent()
-{
-  m_rawEvent = 0;
-  m_hasBeenCalled = false;
-}
+      /// Flag to indicate if the tool has been used in a given event
+      mutable bool m_hasBeenCalled;
 
-inline void RichRawDataFormatTool::FinishEvent()
-{
-  if ( m_hasBeenCalled ) ++m_evtCount;
-}
+      /// starting map
+      Rich::DAQ::L1Map m_dummyMap;
 
-inline RichDAQ::BankVersion
-RichRawDataFormatTool::bankVersion( const LHCb::RawBank & bank ) const
-{
-  return static_cast< RichDAQ::BankVersion > ( bank.version() );
-}
+      /// Max HPD Occupancy Cut
+      unsigned int m_maxHPDOc;
 
-inline bool
-RichRawDataFormatTool::isBitOn( const RichDAQ::LongType data, const RichDAQ::ShortType pos ) const
-{
-  return ( 0 != (data & (1<<pos)) );
+      /// Flag to activate the raw printout of each Rawbank
+      bool m_dumpBanks;
+
+      /// Flag to turn on the use of zero suppression during encoding simulation (default)
+      bool m_zeroSupp;
+
+      /// Flag to turn the use of the extended HPD data format during encoding
+      bool m_extendedFormat;
+
+      /// Flag to turn on/off the use of the ODIN data bank during decoding for integrity checks
+      bool m_decodeUseOdin;
+
+    };
+
+    inline void RawDataFormatTool::InitEvent()
+    {
+      m_rawEvent = NULL;
+      m_odin     = NULL;
+      m_hasBeenCalled = false;
+    }
+
+    inline void RawDataFormatTool::FinishEvent()
+    {
+      if ( m_hasBeenCalled ) ++m_evtCount;
+    }
+
+    inline Rich::DAQ::BankVersion
+    RawDataFormatTool::bankVersion( const LHCb::RawBank & bank ) const
+    {
+      return static_cast< Rich::DAQ::BankVersion > ( bank.version() );
+    }
+
+    inline bool
+    RawDataFormatTool::isBitOn( const Rich::DAQ::LongType data, const Rich::DAQ::ShortType pos ) const
+    {
+      return ( 0 != (data & (1<<pos)) );
+    }
+
+    inline LHCb::RawEvent * RawDataFormatTool::rawEvent() const
+    {
+      if ( !m_rawEvent )
+      {
+        m_rawEvent = get<LHCb::RawEvent>( m_rawEventLoc );
+      }
+      return m_rawEvent;
+    }
+
+    inline const LHCb::ODIN * RawDataFormatTool::odin() const
+    {
+      if ( !m_odin )
+      {
+        timeTool()->getTime();
+        m_odin = get<LHCb::ODIN>( LHCb::ODINLocation::Default );
+      }
+      return m_odin;
+    }
+
+    inline const IEventTimeDecoder * RawDataFormatTool::timeTool() const
+    {
+      if (!m_timeTool) acquireTool( "OdinTimeDecoder", m_timeTool );
+      return m_timeTool;
+    }
+
+  }
 }
 
 #endif // RICHDAQ_RICHRAWDATAFORMATTOOL_H

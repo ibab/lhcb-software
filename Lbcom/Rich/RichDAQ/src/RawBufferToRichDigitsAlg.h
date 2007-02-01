@@ -2,10 +2,10 @@
 //-----------------------------------------------------------------------------
 /** @file RawBufferToRichDigitsAlg.h
  *
- *  Header file for RICH DAQ algorithm : RawBufferToRichDigitsAlg
+ *  Header file for RICH DAQ algorithm : Rich::DAQ::RawBufferToRichDigitsAlg
  *
  *  CVS Log :-
- *  $Id: RawBufferToRichDigitsAlg.h,v 1.9 2005-11-15 12:57:47 jonrob Exp $
+ *  $Id: RawBufferToRichDigitsAlg.h,v 1.10 2007-02-01 17:42:28 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
@@ -28,39 +28,67 @@
 #include "RichKernel/IRichRawBufferToSmartIDsTool.h"
 
 //-----------------------------------------------------------------------------
-/** @class RawBufferToRichDigitsAlg RawBufferToRichDigitsAlg.h
+/** @namespace Rich
  *
- *  Algorithm to create RichDigits from RawEvent object
+ *  General namespace for RICH software
  *
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   2003-11-06
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
  */
 //-----------------------------------------------------------------------------
+namespace Rich
+{
 
-class RawBufferToRichDigitsAlg : public RichAlgBase {
+  //-----------------------------------------------------------------------------
+  /** @namespace DAQ
+   *
+   *  namespace for RICH DAQ software
+   *
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   08/07/2004
+   */
+  //-----------------------------------------------------------------------------
+  namespace DAQ
+  {
 
-public:
+    //-----------------------------------------------------------------------------
+    /** @class RawBufferToRichDigitsAlg RawBufferToRichDigitsAlg.h
+     *
+     *  Algorithm to create RichDigits from RawEvent object
+     *
+     *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+     *  @date   2003-11-06
+     */
+    //-----------------------------------------------------------------------------
 
-  /// Standard constructor
-  RawBufferToRichDigitsAlg( const std::string& name, ISvcLocator* pSvcLocator );
+    class RawBufferToRichDigitsAlg : public AlgBase
+    {
 
-  virtual ~RawBufferToRichDigitsAlg( ); ///< Destructor
+    public:
 
-  virtual StatusCode initialize();    // Algorithm initialization
-  virtual StatusCode execute   ();    // Algorithm execution
-  virtual StatusCode finalize  ();    // Algorithm finalization
+      /// Standard constructor
+      RawBufferToRichDigitsAlg( const std::string& name, ISvcLocator* pSvcLocator );
 
-private: // data
+      virtual ~RawBufferToRichDigitsAlg( ); ///< Destructor
 
-  /// Output location for RichDigits
-  std::string m_richDigitsLoc;
+      virtual StatusCode initialize();    // Algorithm initialization
+      virtual StatusCode execute   ();    // Algorithm execution
+      virtual StatusCode finalize  ();    // Algorithm finalization
 
-  /// Raw Buffer Decoding tool 
-  const IRichRawBufferToSmartIDsTool * m_decoder;
+    private: // data
 
-  /// Flag to turn off RichDigit creation
-  bool m_decodeOnly;
+      /// Output location for RichDigits
+      std::string m_richDigitsLoc;
 
-};
+      /// Raw Buffer Decoding tool
+      const IRawBufferToSmartIDsTool * m_decoder;
+
+      /// Flag to turn off RichDigit creation
+      bool m_decodeOnly;
+
+    };
+
+  }
+}
 
 #endif // RICHDAQ_RAWBUFFERTORICHDIGITSALG_H

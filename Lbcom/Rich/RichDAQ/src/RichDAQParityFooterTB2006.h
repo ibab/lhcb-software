@@ -1,19 +1,19 @@
 
 //=============================================================================================
-/** @file RichDAQNullFooter.h
+/** @file RichDAQParityFooter.h
  *
- *  Header file for RICH DAQ utility class : Rich::DAQ::NullFooter
+ *  Header file for RICH DAQ utility class : Rich::DAQ::ParityFooter
  *
  *  CVS Log :-
- *  $Id: RichDAQNullFooter.h,v 1.3 2007-02-01 17:42:29 jonrob Exp $
+ *  $Id: RichDAQParityFooterTB2006.h,v 1.1 2007-02-01 17:42:29 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   05/09/2006
  */
 //=============================================================================================
 
-#ifndef RICHDAQ_RICHDAQNULLFOOTER_H
-#define RICHDAQ_RICHDAQNULLFOOTER_H 1
+#ifndef RICHDAQ_RICHDAQPARITYFOOTERTB2006_H
+#define RICHDAQ_RICHDAQPARITYFOOTERTB2006_H 1
 
 #include "RichDAQFooterPDBase.h"
 
@@ -42,41 +42,50 @@ namespace Rich
   {
 
     //=============================================================================================
-    /** @class NullFooter RichDAQNullFooter.h
+    /** @class ParityFooterTB2006 RichDAQParityFooterTB2006.h
      *
-     *  Implements a null footer for the LHCB HPD data blocks
+     *  Implements a single word parity footer, as used in the 2006 RICH testbeam
      *
      *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
      *  @date   05/09/2006
      */
     //=============================================================================================
 
-    class NullFooter : public FooterPDBase
+    class ParityFooterTB2006 : public FooterPDBase
     {
 
     public:
 
       /// Standard constructor
-      NullFooter( ) : FooterPDBase(0) {}
+      ParityFooterTB2006( ) : FooterPDBase(1) {}
 
       /// Destructor
-      ~NullFooter( ) { }
+      ~ParityFooterTB2006( ) { }
 
       /// Does this foot have a parity word ?
-      inline bool hasParityWord() const { return false; }
+      inline bool hasParityWord() const { return true; }
 
       /// Access the parity word
-      inline Rich::DAQ::LongType parityWord() const { return 0; }
+      inline Rich::DAQ::LongType parityWord() const
+      {
+        return footerWords()[0];
+      }
 
       /// Set the parity word
-      inline void setParityWord( const Rich::DAQ::LongType /* word */ ) {;}
+      inline void setParityWord( const Rich::DAQ::LongType word )
+      {
+        this->setWord( 0, word );
+      }
 
       /// Test the parity word
-      inline bool testParityWord( const ShortType ) const { return true; }
+      inline bool testParityWord( const LongType refWord ) const 
+      { 
+        return ( refWord == this->parityWord() );
+      }
 
     };
 
   }
 }
 
-#endif // RICHDAQ_RICHDAQNULLFOOTER_H
+#endif // RICHDAQ_RICHDAQPARITYFOOTERTB2006_H

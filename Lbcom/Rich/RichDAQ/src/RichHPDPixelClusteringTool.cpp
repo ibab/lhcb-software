@@ -1,11 +1,11 @@
 
 //-----------------------------------------------------------------------------
-/** @file RichHPDPixelClusterSuppressionTool.cpp
+/** @file RichHPDPixelClusteringTool.cpp
  *
- * Implementation file for class : RichHPDPixelClusterSuppressionTool
+ * Implementation file for class : RichHPDPixelClusteringTool
  *
  * CVS Log :-
- * $Id: RichHPDPixelClusterSuppressionTool.cpp,v 1.16 2007-02-01 17:42:29 jonrob Exp $
+ * $Id: RichHPDPixelClusteringTool.cpp,v 1.1 2007-02-01 17:42:29 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date   21/03/2006
@@ -15,18 +15,18 @@
 #include "GaudiKernel/ToolFactory.h"
 
 // local
-#include "RichHPDPixelClusterSuppressionTool.h"
+#include "RichHPDPixelClusteringTool.h"
 
 // RICH DAQ
 using namespace Rich::DAQ;
 
-DECLARE_TOOL_FACTORY( HPDPixelClusterSuppressionTool );
+DECLARE_TOOL_FACTORY( HPDPixelClusteringTool );
 
 // Standard constructor
-HPDPixelClusterSuppressionTool::
-HPDPixelClusterSuppressionTool( const std::string& type,
-                                const std::string& name,
-                                const IInterface* parent )
+HPDPixelClusteringTool::
+HPDPixelClusteringTool( const std::string& type,
+                        const std::string& name,
+                        const IInterface* parent )
   : HighOccHPDSuppressionTool ( type, name, parent )
 {
   // Define interface
@@ -36,7 +36,7 @@ HPDPixelClusterSuppressionTool( const std::string& type,
   declareProperty( "MinHPDOccForClustering", m_minHPDocc          = 10 );
 }
 
-StatusCode HPDPixelClusterSuppressionTool::initialize()
+StatusCode HPDPixelClusteringTool::initialize()
 {
   // Sets up various tools and services
   const StatusCode sc = HighOccHPDSuppressionTool::initialize();
@@ -52,7 +52,7 @@ StatusCode HPDPixelClusterSuppressionTool::initialize()
 }
 
 bool
-HPDPixelClusterSuppressionTool::
+HPDPixelClusteringTool::
 applyPixelSuppression( const LHCb::RichSmartID hpdID,
                        LHCb::RichSmartID::Vector & smartIDs ) const
 {
@@ -157,7 +157,7 @@ applyPixelSuppression( const LHCb::RichSmartID hpdID,
 
 // ======================= Methods for PixelData ================================
 
-MsgStream& HPDPixelClusterSuppressionTool::
+MsgStream& HPDPixelClusteringTool::
 PixelData::fillStream ( MsgStream & os ) const
 {
   // column numbers
@@ -184,7 +184,7 @@ PixelData::fillStream ( MsgStream & os ) const
   return os;
 }
 
-void HPDPixelClusterSuppressionTool::
+void HPDPixelClusteringTool::
 PixelData::suppressIDs( LHCb::RichSmartID::Vector & smartIDs,
                         const unsigned int maxSize )
 {

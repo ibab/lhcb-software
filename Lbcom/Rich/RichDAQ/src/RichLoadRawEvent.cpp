@@ -5,7 +5,7 @@
  *  Implementation file for RICH DAQ algorithm : RichLoadRawEvent
  *
  *  CVS Log :-
- *  $Id: RichLoadRawEvent.cpp,v 1.2 2006-12-01 13:03:31 cattanem Exp $
+ *  $Id: RichLoadRawEvent.cpp,v 1.3 2007-02-01 17:42:29 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-09
@@ -18,26 +18,27 @@
 // local
 #include "RichLoadRawEvent.h"
 
-// namespaces
-using namespace LHCb; ///< General LHCb namespace
+// RICH DAQ
+using namespace Rich::DAQ;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( RichLoadRawEvent );
+DECLARE_ALGORITHM_FACTORY( LoadRawEvent );
+
 
 // Standard constructor, initializes variables
-RichLoadRawEvent::RichLoadRawEvent( const std::string& name,
-                                    ISvcLocator* pSvcLocator )
-  : RichAlgBase ( name , pSvcLocator ) { }
+LoadRawEvent::LoadRawEvent( const std::string& name,
+                            ISvcLocator* pSvcLocator )
+  : Rich::AlgBase ( name , pSvcLocator ) { }
 
 // Destructor
-RichLoadRawEvent::~RichLoadRawEvent() {};
+LoadRawEvent::~LoadRawEvent() {};
 
 // Main execution
-StatusCode RichLoadRawEvent::execute()
+StatusCode LoadRawEvent::execute()
 {
   // load raw event data object
-  get<RawEvent>( RawEventLocation::Default );
+  get<LHCb::RawEvent>( LHCb::RawEventLocation::Default );
 
   // return OK
   return StatusCode::SUCCESS;

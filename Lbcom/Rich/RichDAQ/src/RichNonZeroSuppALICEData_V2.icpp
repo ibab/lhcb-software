@@ -1,10 +1,10 @@
 
 //-----------------------------------------------------------------------------
-/** @file RichNonZeroSuppALICEData_V1.icpp
+/** @file RichNonZeroSuppALICEData_V2.icpp
  *
  *  Implementation file for RICH DAQ helper class : RichNonZeroSuppALICEData
  *
- *  $Id: RichNonZeroSuppALICEData_V1.icpp,v 1.4 2007-02-01 17:42:29 jonrob Exp $
+ *  $Id: RichNonZeroSuppALICEData_V2.icpp,v 1.1 2007-02-01 17:42:29 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-17
@@ -15,19 +15,22 @@
 #include "GaudiKernel/MsgStream.h"
 
 // local
-#include "RichNonZeroSuppALICEData_V1.h"
+#include "RichNonZeroSuppALICEData_V2.h"
 
 // RichKernel
 #include "RichKernel/RichMap.h"
 
 // =================================================================================================
 
-namespace Rich {
-  namespace DAQ {
+namespace Rich
+{
+  namespace DAQ
+  {
 
-    namespace RichNonZeroSuppALICEDataV1
+    namespace RichNonZeroSuppALICEDataV2
     {
 
+      // ------------------------------------------------------------------------------------------------
       template< class Version, class Header, class Footer >
       void
       RichNonZeroSuppALICEData<Version,Header,Footer>::buildData( const LHCb::RichSmartID::Vector & digits )
@@ -39,19 +42,22 @@ namespace Rich {
           const Rich::DAQ::ShortType row = 8*(*iDig).pixelRow() + (*iDig).pixelSubRow();
           setPixelActive( row, (*iDig).pixelCol() );
         }
+
         // set footer parity
-        if ( this->footer().hasParityWord() )
+        // basically, we don't simulate bit errors, so parity word here is just zero
+        if ( this->header().extendedFormat() )
         {
-          Footer foot = this->footer();
-          foot.setParityWord( this->createParityWord(digits) );
-          this->setFooter(foot);
+          this->setFooter ( Footer(1,0) );
         }
+
         // Fill the number of 8 bit words + 1 field in header
         Header head ( this->header() );
-        head.setNEightBitBlocksPlusOne ( calcEightBitword(digits) + 1 );
+        head.setNEightBitBlocks ( calcEightBitword(digits) );
         this->setHeader( head );
       }
+      // ------------------------------------------------------------------------------------------------
 
+      // ------------------------------------------------------------------------------------------------
       template< class Version, class Header, class Footer >
       Rich::DAQ::ShortType
       RichNonZeroSuppALICEData<Version,Header,Footer>::calcEightBitword( const LHCb::RichSmartID::Vector & digits ) const
@@ -80,13 +86,18 @@ namespace Rich {
         const Rich::DAQ::ShortType nWords = dataM.size()/2 + dataM.size()%2;
         return nWords;
       }
+      // ------------------------------------------------------------------------------------------------
 
+      // ------------------------------------------------------------------------------------------------
       template< class Version, class Header, class Footer >
       Rich::DAQ::ShortType
       RichNonZeroSuppALICEData<Version,Header,Footer>::fillRichSmartIDs( LHCb::RichSmartID::Vector & ids,
                                                                          const LHCb::RichSmartID hpdID ) const
       {
         m_nHits = 0; // reset number of hits to zero
+
+        // reserve size in hit vector
+        ids.reserve( 96 );
 
         // Fill with active channels
         for ( Rich::DAQ::ShortType iRow = 0; iRow < Rich::DAQ::MaxDataSizeALICE; ++iRow )
@@ -110,7 +121,9 @@ namespace Rich {
 
         return m_nHits;
       }
+      // ------------------------------------------------------------------------------------------------
 
+      // ------------------------------------------------------------------------------------------------
       template< class Version, class Header, class Footer >
       Rich::DAQ::ShortType RichNonZeroSuppALICEData<Version,Header,Footer>::hitCount() const
       {
@@ -131,8 +144,9 @@ namespace Rich {
         }
         return static_cast<Rich::DAQ::ShortType>(m_nHits);
       }
+      // ------------------------------------------------------------------------------------------------
 
-    } // end V1 namespace
+    } // end V2 namespace
 
   }
 }

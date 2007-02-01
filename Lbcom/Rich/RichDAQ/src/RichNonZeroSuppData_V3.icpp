@@ -1,10 +1,10 @@
 
 //-----------------------------------------------------------------------------
-/** @file RichNonZeroSuppData_V2.icpp
+/** @file RichNonZeroSuppData_V3.icpp
  *
  *  Implementation file for RICH DAQ helper class : RichNonZeroSuppData
  *
- *  $Id: RichNonZeroSuppData_V2.icpp,v 1.4 2007-02-01 17:42:29 jonrob Exp $
+ *  $Id: RichNonZeroSuppData_V3.icpp,v 1.1 2007-02-01 17:42:29 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-17
@@ -15,7 +15,7 @@
 #include "GaudiKernel/MsgStream.h"
 
 // local
-#include "RichNonZeroSuppData_V2.h"
+#include "RichNonZeroSuppData_V3.h"
 
 // RichKernel
 #include "RichKernel/RichMap.h"
@@ -27,32 +27,37 @@ namespace Rich
   namespace DAQ
   {
 
-    namespace RichNonZeroSuppDataV2
+    namespace RichNonZeroSuppDataV3
     {
 
+      // ------------------------------------------------------------------------------------------------
       template< class Version, class Header, class Footer >
       void
       RichNonZeroSuppData<Version,Header,Footer>::buildData( const LHCb::RichSmartID::Vector & digits )
       {
+
         // Set data words
         for ( LHCb::RichSmartID::Vector::const_iterator iDig = digits.begin();
               iDig != digits.end(); ++ iDig )
         {
           setPixelActive( (*iDig).pixelRow(), (*iDig).pixelCol() );
         }
-        // set footer parity
-        if ( this->footer().hasParityWord() )
+
+        // In extended format mode set footer parity
+        // basically, we don't simulate bit errors, so parity word here is just zero
+        if ( this->header().extendedFormat() )
         {
-          Footer foot = this->footer();
-          foot.setParityWord( this->createParityWord(digits) );
-          this->setFooter(foot);
+          this->setFooter ( Footer(1,0) );
         }
+
         // Fill the number of 8 bit words + 1 field in header
         Header head ( this->header() );
-        head.setNEightBitBlocksPlusOne ( calcEightBitword(digits) + 1 );
+        head.setNEightBitBlocks ( calcEightBitword(digits) );
         this->setHeader( head );
       }
+      // ------------------------------------------------------------------------------------------------
 
+      // ------------------------------------------------------------------------------------------------
       template< class Version, class Header, class Footer >
       ShortType
       RichNonZeroSuppData<Version,Header,Footer>::calcEightBitword( const LHCb::RichSmartID::Vector & digits ) const
@@ -81,13 +86,18 @@ namespace Rich
         const ShortType nWords = dataM.size()/2 + dataM.size()%2;
         return nWords;
       }
+      // ------------------------------------------------------------------------------------------------
 
+      // ------------------------------------------------------------------------------------------------
       template< class Version, class Header, class Footer >
       ShortType
       RichNonZeroSuppData<Version,Header,Footer>::fillRichSmartIDs( LHCb::RichSmartID::Vector & ids,
                                                                     const LHCb::RichSmartID hpdID ) const
       {
         m_nHits = 0; // reset number of hits to zero
+
+        // reserve size in hit vector
+        ids.reserve( 96 );
 
         // Fill with active channels
         for ( ShortType iRow = 0; iRow < MaxDataSize; ++iRow )
@@ -108,7 +118,9 @@ namespace Rich
 
         return m_nHits;
       }
+      // ------------------------------------------------------------------------------------------------
 
+      // ------------------------------------------------------------------------------------------------
       template< class Version, class Header, class Footer >
       ShortType RichNonZeroSuppData<Version,Header,Footer>::hitCount() const
       {
@@ -129,8 +141,9 @@ namespace Rich
         }
         return static_cast<ShortType>(m_nHits);
       }
+      // ------------------------------------------------------------------------------------------------
 
-    } // end V2 namespace
+    } // end V3 namespace
 
   }
 }

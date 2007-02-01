@@ -2,10 +2,10 @@
 //-----------------------------------------------------------------------------
 /** @file RichHighOccHPDSuppressionTool.h
  *
- *  Header file for tool : RichHighOccHPDSuppressionTool
+ *  Header file for tool : Rich::DAQ::HighOccHPDSuppressionTool
  *
  *  CVS Log :-
- *  $Id: RichHighOccHPDSuppressionTool.h,v 1.9 2006-12-01 13:03:31 cattanem Exp $
+ *  $Id: RichHighOccHPDSuppressionTool.h,v 1.10 2007-02-01 17:42:29 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -44,150 +44,180 @@
 #include "DetDesc/Condition.h"
 
 //-----------------------------------------------------------------------------
-/** @class RichHighOccHPDSuppressionTool RichHighOccHPDSuppressionTool.h
+/** @namespace Rich
  *
- *  Tool for monitoring high occupancy HPDs
+ *  General namespace for RICH software
  *
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   21/03/2006
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
  */
 //-----------------------------------------------------------------------------
-
-class RichHighOccHPDSuppressionTool : public RichToolBase,
-                                      virtual public IRichPixelSuppressionTool
+namespace Rich
 {
 
-public: // Methods for Gaudi Framework
+  //-----------------------------------------------------------------------------
+  /** @namespace DAQ
+   *
+   *  namespace for RICH DAQ software
+   *
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   08/07/2004
+   */
+  //-----------------------------------------------------------------------------
+  namespace DAQ
+  {
 
-  /// Standard constructor
-  RichHighOccHPDSuppressionTool( const std::string& type,
+    //-----------------------------------------------------------------------------
+    /** @class HighOccHPDSuppressionTool RichHighOccHPDSuppressionTool.h
+     *
+     *  Tool for monitoring high occupancy HPDs
+     *
+     *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+     *  @date   21/03/2006
+     */
+    //-----------------------------------------------------------------------------
+
+    class HighOccHPDSuppressionTool : public RichToolBase,
+                                      virtual public IPixelSuppressionTool
+    {
+
+    public: // Methods for Gaudi Framework
+
+      /// Standard constructor
+      HighOccHPDSuppressionTool( const std::string& type,
                                  const std::string& name,
                                  const IInterface* parent );
 
-  // Initialization of the tool after creation
-  StatusCode initialize();
+      // Initialization of the tool after creation
+      StatusCode initialize();
 
-  // Finalization of the tool before deletion
-  StatusCode finalize();
+      // Finalization of the tool before deletion
+      StatusCode finalize();
 
-public: // methods (and doxygen comments) inherited from interface
+    public: // methods (and doxygen comments) inherited from interface
 
-  // Monitor the occupancy of the given HPD
-  bool applyPixelSuppression( const LHCb::RichSmartID hpdID,
-                              LHCb::RichSmartID::Vector & smartIDs ) const;
+      // Monitor the occupancy of the given HPD
+      bool applyPixelSuppression( const LHCb::RichSmartID hpdID,
+                                  LHCb::RichSmartID::Vector & smartIDs ) const;
 
-private: // private methods
+      // Returns the average occupancy for the given HPD
+      double averageOccupancy( const LHCb::RichSmartID hpdID ) const;
 
-  /// Print out the XML entries for the background conditions
-  void createHPDBackXML() const;
+    private: // private methods
 
-  /// Initialise occupancy map
-  StatusCode initOccMap( );
+      /// Print out the XML entries for the background conditions
+      void createHPDBackXML() const;
 
-  /// Initialise occupancy map for given RICH
-  StatusCode initOccMap( const Rich::DetectorType rich );
+      /// Initialise occupancy map
+      StatusCode initOccMap( );
 
-  /// UMS method for RICH1
-  StatusCode umsUpdateRICH1();
+      /// Initialise occupancy map for given RICH
+      StatusCode initOccMap( const Rich::DetectorType rich );
 
-  /// UMS method for RICH2
-  StatusCode umsUpdateRICH2();
+      /// UMS method for RICH1
+      StatusCode umsUpdateRICH1();
 
-  /// Find HPD data for given HPD RichSmartID
-  void findHpdData( const LHCb::RichSmartID hpdID ) const;
+      /// UMS method for RICH2
+      StatusCode umsUpdateRICH2();
 
-protected: // methods
+      /// Find HPD data for given HPD RichSmartID
+      void findHpdData( const LHCb::RichSmartID hpdID ) const;
 
-  /// Which Rich ?
-  inline Rich::DetectorType rich() const { return m_rich; }
+    protected: // methods
 
-protected: // protected data
+      /// Which Rich ?
+      inline Rich::DetectorType rich() const { return m_rich; }
 
-  /// Rich System detector element
-  const DeRichSystem * m_richSys;
+    protected: // protected data
 
-protected: // utility classes
+      /// Rich System detector element
+      const DeRichSystem * m_richSys;
 
-  //-----------------------------------------------------------------------------
-  /** @class HPDData RichHighOccHPDSuppressionTool.h
-   *
-   *  Utility class hold data for a single HPD
-   *
-   *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
-   *  @date   21/03/2006
-   */
-  //-----------------------------------------------------------------------------
-  class HPDData : private std::pair<long unsigned,double>
-  {
-  public:
-    /// Constructor
-    HPDData( const long unsigned tally = 0, const double occ = 0 )
-      : std::pair<long unsigned,double>(tally,occ) { }
-    /// Access the number of data entries for the HPD
-    inline long unsigned & fillCount()      { return this->first;  }
-    /// Access the occupancy for the HPD
-    inline double & avOcc()                 { return this->second; }
-    /// Const Access the number of data entries for the HPD
-    inline long unsigned fillCount() const  { return this->first;  }
-    /// Const Access the occupancy for the HPD
-    inline double avOcc() const             { return this->second; }
-  };
+    protected: // utility classes
 
-  /// Returns occupancy data object for given HPD identifier
-  HPDData & hpdData( const LHCb::RichSmartID hpdID ) const;
+      //-----------------------------------------------------------------------------
+      /** @class HPDData RichHighOccHPDSuppressionTool.h
+       *
+       *  Utility class to hold occupancy data for a single HPD
+       *
+       *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+       *  @date   21/03/2006
+       */
+      //-----------------------------------------------------------------------------
+      class HPDData : private std::pair<long unsigned,double>
+      {
+      public:
+        /// Constructor
+        HPDData( const long unsigned tally = 0, const double occ = 0 )
+          : std::pair<long unsigned,double>(tally,occ) { }
+        /// Access the number of data entries for the HPD
+        inline long unsigned & fillCount()      { return this->first;  }
+        /// Access the occupancy for the HPD
+        inline double & avOcc()                 { return this->second; }
+        /// Const Access the number of data entries for the HPD
+        inline long unsigned fillCount() const  { return this->first;  }
+        /// Const Access the occupancy for the HPD
+        inline double avOcc() const             { return this->second; }
+      };
 
-private: // private data
+      /// Returns occupancy data object for given HPD identifier
+      HPDData & hpdData( const LHCb::RichSmartID hpdID ) const;
 
-  /// Occupancy map
-  typedef Rich::HashMap< const LHCb::RichSmartID, HPDData > OccMap;
-  mutable OccMap m_occMap;
+    private: // private data
 
-  // Min number fills before applying occupancy cut
-  unsigned int m_minFills;
+      /// Occupancy map
+      typedef Rich::HashMap< const LHCb::RichSmartID, HPDData > OccMap;
+      mutable OccMap m_occMap;
 
-  // absolute max HPD occupancy
-  unsigned int m_overallMax;
+      // Min number fills before applying occupancy cut
+      unsigned int m_minFills;
 
-  /// Occupancy scale cut
-  double m_scale;
+      // absolute max HPD occupancy
+      unsigned int m_overallMax;
 
-  /// Memory fraction
-  double m_memory;
+      /// Occupancy scale cut
+      double m_scale;
 
-  /// Flag to turn on/off the printing of the XML conditions
-  bool m_printXML;
+      /// Memory fraction
+      double m_memory;
 
-  /// Flag to turn on/off reading of data from Conditions
-  bool m_readFromCondDB;
+      /// Flag to turn on/off the printing of the XML conditions
+      bool m_printXML;
 
-  /// Location of occupancies in DB
-  std::vector<std::string> m_condBDLocs;
+      /// Flag to turn on/off reading of data from Conditions
+      bool m_readFromCondDB;
 
-  /// The RICH detector to work on (job option)
-  std::string m_whichRICH;
-  /// The RICH detector to work on
-  Rich::DetectorType m_rich;
+      /// Location of occupancies in DB
+      std::vector<std::string> m_condBDLocs;
 
-  mutable HPDData * m_currentData;     ///< Pointer to the Data for the current HPD
-  mutable LHCb::RichSmartID m_lastHPD; ///< The last HPD to to analysed
+      /// The RICH detector to work on (job option)
+      std::string m_whichRICH;
+      /// The RICH detector to work on
+      Rich::DetectorType m_rich;
 
-  /** @brief Flag to turn on the use of a running average
-   *  If set true then a running average of each HPD's occupancy will be kep
-   *  If false, then the average occupancies read from file will be used throughout
-   */
-  bool m_useRunAv;
+      mutable HPDData * m_currentData;     ///< Pointer to the Data for the current HPD
+      mutable LHCb::RichSmartID m_lastHPD; ///< The last HPD to to analysed
 
-protected:
+      /** @brief Flag to turn on the use of a running average
+       *  If set true then a running average of each HPD's occupancy will be kep
+       *  If false, then the average occupancies read from file will be used throughout
+       */
+      bool m_useRunAv;
 
-  bool m_sumPrint; ///< Print summary of suppressions each event ?
+    protected:
 
-};
+      bool m_sumPrint; ///< Print summary of suppressions each event ?
 
-inline RichHighOccHPDSuppressionTool::HPDData & 
-RichHighOccHPDSuppressionTool::hpdData( const LHCb::RichSmartID hpdID ) const
-{
-  if ( m_lastHPD != hpdID ) { findHpdData(hpdID); }
-  return *m_currentData;
+    };
+
+    inline HighOccHPDSuppressionTool::HPDData &
+    HighOccHPDSuppressionTool::hpdData( const LHCb::RichSmartID hpdID ) const
+    {
+      if ( m_lastHPD != hpdID ) { findHpdData(hpdID); }
+      return *m_currentData;
+    }
+
+  }
 }
 
 #endif // RICHDAQ_RichHighOccHPDSuppressionTool_H
