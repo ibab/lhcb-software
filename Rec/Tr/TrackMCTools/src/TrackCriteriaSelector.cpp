@@ -1,4 +1,4 @@
-// $Id: TrackCriteriaSelector.cpp,v 1.9 2006-10-07 13:31:09 erodrigu Exp $
+// $Id: TrackCriteriaSelector.cpp,v 1.10 2007-02-01 10:11:28 wouter Exp $
 // Include files
 
 // from Gaudi
@@ -22,8 +22,6 @@ TrackCriteriaSelector::TrackCriteriaSelector( const std::string& type,
                                               const IInterface* parent )
   : GaudiTool ( type, name , parent )
   , m_mcParticleJudge( 0 )
-  , m_previousTrackType( Track::TypeUnknown )
-  , m_previousMCParticle( 0 )
   ,m_endTracker(950.0*Gaudi::Units::cm)
 {
   // interfaces
@@ -59,25 +57,27 @@ StatusCode TrackCriteriaSelector::initialize()
 }
 
 /// Select the track
-bool TrackCriteriaSelector::select( Track* track ) const
+bool TrackCriteriaSelector::select( const Track* track ) const
 {
   bool selected = true;
 
-  // Check the momentum of track (at first state)  
-  State* firstState = track->states().front();
-  if ( firstState ) {
-    double momentum = firstState -> p();
-    if ( momentum < m_minP || momentum > m_maxP ) selected = false;
+  // Check the momentum of track (at first state)
+  if( !track->states().empty() ) {
+    State* firstState = track->states().front() ;
+    if( firstState ) {
+      double momentum = firstState -> p();
+      selected = selected && momentum > m_minP && momentum < m_maxP ;
+    }
   }
 
   // Check if the track is of the requested type
-  if ( !selectByTrackType( track ) ) selected = false;
-
+  selected = selected && selectByTrackType( track ) ;
+  
   return selected;
 }
 
 /// Select the MCParticle
-bool TrackCriteriaSelector::select( MCParticle* mcParticle )
+bool TrackCriteriaSelector::select( const MCParticle* mcParticle ) const
 {
   bool selected = true;
 
@@ -99,7 +99,7 @@ bool TrackCriteriaSelector::select( MCParticle* mcParticle )
 }
 
 /// Select the Track only by track type, unique- and valid-flag
-bool TrackCriteriaSelector::selectByTrackType( Track* track ) const
+bool TrackCriteriaSelector::selectByTrackType( const Track* track ) const
 {
   bool selected = true;
 
@@ -122,7 +122,7 @@ bool TrackCriteriaSelector::selectByTrackType( Track* track ) const
 }
 
 /// Select the MCParticle only by track type
-bool TrackCriteriaSelector::selectByTrackType( MCParticle* mcParticle )
+bool TrackCriteriaSelector::selectByTrackType( const MCParticle* mcParticle ) const
 {
   bool selected = true;
 
@@ -137,7 +137,7 @@ bool TrackCriteriaSelector::selectByTrackType( MCParticle* mcParticle )
 }
 
 /// Get the track type identifyer of the MCParticle
-unsigned int TrackCriteriaSelector::trackType( MCParticle* mcPart )
+unsigned int TrackCriteriaSelector::trackType( const MCParticle* mcPart ) const
 {
   bool hasVelo = m_mcParticleJudge -> hasVelo( mcPart );
   bool hasSeed = m_mcParticleJudge -> hasSeed( mcPart );
@@ -157,25 +157,14 @@ unsigned int TrackCriteriaSelector::trackType( MCParticle* mcPart )
     tracktype = Track::Ttrack;
   }
 
-  m_previousTrackType  = tracktype;
-  m_previousMCParticle = mcPart;
-
   return tracktype;
 }
 
 /// Set the track type of a Track with an MCParticle's type
-StatusCode TrackCriteriaSelector::setTrackType( MCParticle* mcPart,
-                                                Track*& track )
+StatusCode TrackCriteriaSelector::setTrackType( const MCParticle* mcPart,
+                                                Track*& track ) const
 {
-  int tracktype = Track::TypeUnknown;
-
-  if ( mcPart == m_previousMCParticle ) {
-    tracktype = m_previousTrackType;
-  }
-  else {
-    tracktype = trackType( mcPart );
-  }
-
+  int tracktype = tracktype = trackType( mcPart );
   track -> setType ( (Track::Types&) tracktype );
   if ( Track::TypeUnknown == tracktype ) return StatusCode::FAILURE;
   else                                   return StatusCode::SUCCESS;

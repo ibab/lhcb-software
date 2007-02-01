@@ -1,4 +1,4 @@
-// $Id: TrackAcceptance.h,v 1.6 2006-05-19 12:58:10 erodrigu Exp $
+// $Id: TrackAcceptance.h,v 1.7 2007-02-01 10:11:28 wouter Exp $
 #ifndef TRACKMCTOOLS_TRACKACCEPTANCE_H
 #define TRACKMCTOOLS_TRACKACCEPTANCE_H 1
 
@@ -65,25 +65,25 @@ public:
    *  @return bool is true if MCParticle is in acceptance
    *  @param  mcPart pointer to the MCParticle
    */
-  virtual bool hasVelo        ( LHCb::MCParticle* mcPart );
+  virtual bool hasVelo        ( const LHCb::MCParticle* mcPart ) const ;
 
   /** This method checks if the MCParticle is in the TT acceptance.
    *  @return bool is true if MCParticle is in acceptance
    *  @param  mcPart pointer to the MCParticle
    */
-  virtual bool hasTT          ( LHCb::MCParticle* mcPart );
+  virtual bool hasTT          ( const LHCb::MCParticle* mcPart ) const ;
 
   /** This method checks if the MCParticle is in the T-station acceptance.
    *  @return bool is true if MCParticle is in acceptance
    *  @param  mcPart pointer to the MCParticle
    */
-  virtual bool hasSeed        ( LHCb::MCParticle* mcPart );
+  virtual bool hasSeed        ( const LHCb::MCParticle* mcPart ) const ;
 
   /** This method checks if the MCParticle is in the long track acceptance.
    *  @return bool is true if MCParticle is in acceptance
    *  @param  mcPart pointer to the MCParticle
    */
-  virtual bool hasVeloAndSeed ( LHCb::MCParticle* mcPart );
+  virtual bool hasVeloAndSeed ( const LHCb::MCParticle* mcPart ) const ;
 
 private:
   /// Velo Detector information

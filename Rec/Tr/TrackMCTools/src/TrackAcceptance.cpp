@@ -1,4 +1,4 @@
-// $Id: TrackAcceptance.cpp,v 1.11 2006-08-01 08:48:10 cattanem Exp $
+// $Id: TrackAcceptance.cpp,v 1.12 2007-02-01 10:11:28 wouter Exp $
 // Include files
 
 // from Gaudi
@@ -82,7 +82,7 @@ StatusCode TrackAcceptance::initialize()
 //-------------------------------------------------------------------------
 /// Checks if the MCParticle is in the Velo acceptance
 //-------------------------------------------------------------------------
-bool TrackAcceptance::hasVelo( MCParticle* mcPart )
+bool TrackAcceptance::hasVelo( const MCParticle* mcPart ) const
 {
   int nVeloRHits   = 0;
   int nVeloPhiHits = 0;
@@ -130,7 +130,7 @@ bool TrackAcceptance::hasVelo( MCParticle* mcPart )
 //-------------------------------------------------------------------------
 /// Checks if the MCParticle is in the TT acceptance
 //-------------------------------------------------------------------------
-bool TrackAcceptance::hasTT( MCParticle* mcPart ) 
+bool TrackAcceptance::hasTT( const MCParticle* mcPart ) const
 {  
   int nTTHits = 0;
 
@@ -169,7 +169,7 @@ bool TrackAcceptance::hasTT( MCParticle* mcPart )
 //-------------------------------------------------------------------------
 /// Checks if the MCParticle is in the T-station acceptance
 //-------------------------------------------------------------------------
-bool TrackAcceptance::hasSeed( MCParticle* mcPart ) 
+bool TrackAcceptance::hasSeed( const MCParticle* mcPart ) const
 {  
   int nOT1Hits = 0;
   int nOT2Hits = 0;
@@ -256,7 +256,7 @@ bool TrackAcceptance::hasSeed( MCParticle* mcPart )
 //-------------------------------------------------------------------------
 /// Checks if the MCParticle is in the long-track acceptance
 //-------------------------------------------------------------------------
-bool TrackAcceptance::hasVeloAndSeed( MCParticle* mcPart ) 
+bool TrackAcceptance::hasVeloAndSeed( const MCParticle* mcPart ) const
 {
   return ( this->hasVelo(mcPart) && this->hasSeed(mcPart) );
 }

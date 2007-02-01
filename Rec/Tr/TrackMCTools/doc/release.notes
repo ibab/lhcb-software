@@ -4,6 +4,12 @@
 ! Purpose     : package for tracking tools accessing MC information
 !-----------------------------------------------------------------------------
 
+!======================= TrackMCInterfaces v3r0 2007-02-01 ====================
+! 2007-02-01 - Wouter Hulsbergen
+ - added consts to interface
+ - added test on non-empty vector of states in TrackCriteriaSelector
+ - removed buggy caching in TrackCriteriaSelector
+
 !======================= TrackMCTools v2r8 2006-11-07 ========================
 ! 2006-10-31 - Jeroen VAN TILBURG
  - Added job-option flag "CorrectSlopes" in IdealStateCreator. This flag
