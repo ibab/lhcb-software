@@ -2,10 +2,10 @@
 //-----------------------------------------------------------------------------
 /** @file RichParticleProperties.cpp
  *
- *  Implementation file for tool : RichParticleProperties
+ *  Implementation file for tool : Rich::ParticleProperties
  *
  *  CVS Log :-
- *  $Id: RichParticleProperties.cpp,v 1.3 2006-11-01 18:05:09 jonrob Exp $
+ *  $Id: RichParticleProperties.cpp,v 1.4 2007-02-01 17:51:10 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -21,21 +21,21 @@
 
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( RichParticleProperties );
+DECLARE_NAMESPACE_TOOL_FACTORY( Rich, ParticleProperties );
 
 // Standard constructor
-RichParticleProperties::RichParticleProperties ( const std::string& type,
-                                                 const std::string& name,
-                                                 const IInterface* parent )
-  : RichToolBase( type, name, parent ) 
+Rich::ParticleProperties::ParticleProperties ( const std::string& type,
+                                               const std::string& name,
+                                               const IInterface* parent )
+  : RichToolBase( type, name, parent )
 {
 
   // declare interface
-  declareInterface<IRichParticleProperties>(this);
+  declareInterface<IParticleProperties>(this);
 
 }
 
-StatusCode RichParticleProperties::initialize() 
+StatusCode Rich::ParticleProperties::initialize()
 {
 
   // Sets up various tools and services
@@ -43,7 +43,7 @@ StatusCode RichParticleProperties::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
-  const IRichRefractiveIndex * refIndex;
+  const IRefractiveIndex * refIndex;
   acquireTool( "RichRefractiveIndex", refIndex );
 
   // Retrieve particle property service
@@ -70,11 +70,11 @@ StatusCode RichParticleProperties::initialize()
   debug() << " Particle masses (MeV/c^2)     = " << m_particleMass << endreq;
 
   // Setup momentum thresholds
-  for ( int iRad = 0; iRad < Rich::NRadiatorTypes; ++iRad ) 
+  for ( int iRad = 0; iRad < Rich::NRadiatorTypes; ++iRad )
   {
     const Rich::RadiatorType rad = static_cast<Rich::RadiatorType>(iRad);
     debug() << " Particle thresholds (MeV/c^2) : " << rad << " : ";
-    for ( int iHypo = 0; iHypo < Rich::NParticleTypes; ++iHypo ) 
+    for ( int iHypo = 0; iHypo < Rich::NParticleTypes; ++iHypo )
     {
       const double index = refIndex->refractiveIndex(rad);
       m_momThres[iRad][iHypo]  = m_particleMass[iHypo]/sqrt(index*index - 1.0);
@@ -83,44 +83,44 @@ StatusCode RichParticleProperties::initialize()
     }
     debug () << endreq;
   }
-  
+
   // release tool
   releaseTool(refIndex);
 
   return sc;
 }
 
-StatusCode RichParticleProperties::finalize()
+StatusCode Rich::ParticleProperties::finalize()
 {
   // Execute base class method
   return RichToolBase::finalize();
 }
 
-double RichParticleProperties::beta( const double ptot,
-                                     const Rich::ParticleIDType id ) const
+double Rich::ParticleProperties::beta( const double ptot,
+                                       const Rich::ParticleIDType id ) const
 {
   const double Esquare  = ptot*ptot + m_particleMassSq[id];
   return ( Esquare > 0 ? ptot/sqrt(Esquare) : 0 );
 }
 
-double RichParticleProperties::mass( const Rich::ParticleIDType id ) const
+double Rich::ParticleProperties::mass( const Rich::ParticleIDType id ) const
 {
   return m_particleMass[id];
 }
 
-double RichParticleProperties::massSq( const Rich::ParticleIDType id ) const
+double Rich::ParticleProperties::massSq( const Rich::ParticleIDType id ) const
 {
   return m_particleMassSq[id];
 }
 
-double RichParticleProperties::thresholdMomentum( const Rich::ParticleIDType id,
-                                                  const Rich::RadiatorType rad ) const
+double Rich::ParticleProperties::thresholdMomentum( const Rich::ParticleIDType id,
+                                                    const Rich::RadiatorType rad ) const
 {
   return m_momThres[rad][id];
 }
 
-double RichParticleProperties::thresholdMomentumSq( const Rich::ParticleIDType id,
-                                                    const Rich::RadiatorType rad ) const
+double Rich::ParticleProperties::thresholdMomentumSq( const Rich::ParticleIDType id,
+                                                      const Rich::RadiatorType rad ) const
 {
   return m_momThres2[rad][id];
 }

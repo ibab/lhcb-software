@@ -5,7 +5,7 @@
  * Implementation file for class : RichSmartIDTool
  *
  * CVS Log :-
- * $Id: RichSmartIDTool.cpp,v 1.26 2006-12-01 13:13:13 cattanem Exp $
+ * $Id: RichSmartIDTool.cpp,v 1.27 2007-02-01 17:51:10 jonrob Exp $
  *
  * @author Antonis Papanestis
  * @date 2003-10-28
@@ -17,26 +17,26 @@
 // local
 #include "RichSmartIDTool.h"
 
-DECLARE_TOOL_FACTORY( RichSmartIDTool );
+DECLARE_NAMESPACE_TOOL_FACTORY( Rich, SmartIDTool );
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-RichSmartIDTool::RichSmartIDTool( const std::string& type,
-                                  const std::string& name,
-                                  const IInterface* parent )
+Rich::SmartIDTool::SmartIDTool( const std::string& type,
+                                const std::string& name,
+                                const IInterface* parent )
   : RichToolBase( type, name, parent )
 {
-  declareInterface<IRichSmartIDTool>(this);
+  declareInterface<ISmartIDTool>(this);
 }
 
 //=============================================================================
 // Destructor
-RichSmartIDTool::~RichSmartIDTool() {}
+Rich::SmartIDTool::~SmartIDTool() {}
 //=============================================================================
 
 //=============================================================================
-StatusCode RichSmartIDTool::initialize()
+StatusCode Rich::SmartIDTool::initialize()
 {
 
   // Initialise base class
@@ -71,7 +71,7 @@ StatusCode RichSmartIDTool::initialize()
 }
 
 //=============================================================================
-StatusCode RichSmartIDTool::finalize()
+StatusCode Rich::SmartIDTool::finalize()
 {
   return RichToolBase::finalize();
 }
@@ -79,7 +79,8 @@ StatusCode RichSmartIDTool::finalize()
 //=============================================================================
 // Returns the position of a RichSmartID in global coordinates
 //=============================================================================
-Gaudi::XYZPoint RichSmartIDTool::globalPosition ( const LHCb::RichSmartID smartID ) const
+Gaudi::XYZPoint
+Rich::SmartIDTool::globalPosition ( const LHCb::RichSmartID smartID ) const
 {
   return m_photoDetPanels[smartID.rich()][smartID.panel()]->detectionPoint(smartID);
 }
@@ -87,9 +88,10 @@ Gaudi::XYZPoint RichSmartIDTool::globalPosition ( const LHCb::RichSmartID smartI
 //=============================================================================
 // Returns the global position of a local coordinate, in the given RICH panel
 //=============================================================================
-Gaudi::XYZPoint RichSmartIDTool::globalPosition ( const Gaudi::XYZPoint& localPoint,
-                                                  const Rich::DetectorType rich,
-                                                  const Rich::Side side ) const
+Gaudi::XYZPoint
+Rich::SmartIDTool::globalPosition ( const Gaudi::XYZPoint& localPoint,
+                                    const Rich::DetectorType rich,
+                                    const Rich::Side side ) const
 {
   return m_photoDetPanels[rich][side]->globalPosition(localPoint,side) ;
 }
@@ -97,7 +99,8 @@ Gaudi::XYZPoint RichSmartIDTool::globalPosition ( const Gaudi::XYZPoint& localPo
 //=============================================================================
 // Returns the HPD position (center of the silicon wafer)
 //=============================================================================
-Gaudi::XYZPoint RichSmartIDTool::hpdPosition ( const LHCb::RichSmartID hpdid ) const
+Gaudi::XYZPoint
+Rich::SmartIDTool::hpdPosition ( const LHCb::RichSmartID hpdid ) const
 {
   // Create temporary RichSmartIDs for two corners of the HPD wafer
   LHCb::RichSmartID id1(hpdid), id0(hpdid);
@@ -119,8 +122,9 @@ Gaudi::XYZPoint RichSmartIDTool::hpdPosition ( const LHCb::RichSmartID hpdid ) c
 //=============================================================================
 // Returns the SmartID for a given global position
 //=============================================================================
-StatusCode RichSmartIDTool::smartID ( const Gaudi::XYZPoint& globalPoint,
-                                      LHCb::RichSmartID& smartid ) const
+StatusCode
+Rich::SmartIDTool::smartID ( const Gaudi::XYZPoint& globalPoint,
+                             LHCb::RichSmartID& smartid ) const
 {
 
   // check to see if the smartID is set, and if HPD is active
@@ -187,7 +191,8 @@ StatusCode RichSmartIDTool::smartID ( const Gaudi::XYZPoint& globalPoint,
 // Returns the SmartID for a given global position
 // z coord is not valid
 //=============================================================================
-Gaudi::XYZPoint RichSmartIDTool::globalToPDPanel ( const Gaudi::XYZPoint& globalPoint ) const
+Gaudi::XYZPoint
+Rich::SmartIDTool::globalToPDPanel ( const Gaudi::XYZPoint& globalPoint ) const
 {
   if (globalPoint.z() < 8000.0)
   {
@@ -234,11 +239,11 @@ Gaudi::XYZPoint RichSmartIDTool::globalToPDPanel ( const Gaudi::XYZPoint& global
 //=============================================================================
 // Returns a list with all valid smartIDs
 //=============================================================================
-const LHCb::RichSmartID::Vector& RichSmartIDTool::readoutChannelList( ) const
+const LHCb::RichSmartID::Vector& Rich::SmartIDTool::readoutChannelList( ) const
 {
 
   // Only do if list is empty
-  if ( m_readoutChannels.empty() ) 
+  if ( m_readoutChannels.empty() )
   {
 
     // Reserve size ( RICH1 + RICH2 );
@@ -255,7 +260,7 @@ const LHCb::RichSmartID::Vector& RichSmartIDTool::readoutChannelList( ) const
     const unsigned int nRich2 = m_readoutChannels.size() - nRich1;
 
     // Sort the list
-    RichSmartIDSorter::sortByRegion(m_readoutChannels);
+    SmartIDSorter::sortByRegion(m_readoutChannels);
 
     info() << "Created active HPD channel list : # channels RICH(1/2) = "
            << nRich1 << " / " << nRich2 << endreq;

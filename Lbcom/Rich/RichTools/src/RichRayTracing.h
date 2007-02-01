@@ -2,10 +2,10 @@
 //-----------------------------------------------------------------------------
 /** @file RichRayTracing.h
  *
- *  Header file for tool : RichDetParameters
+ *  Header file for tool : Rich::RayTracing
  *
  *  CVS History :
- *  $Id: RichRayTracing.h,v 1.28 2006-12-03 10:03:45 jonrob Exp $
+ *  $Id: RichRayTracing.h,v 1.29 2007-02-01 17:51:10 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-03-29
@@ -47,119 +47,145 @@
 #include "GaudiKernel/SystemOfUnits.h"
 
 //-----------------------------------------------------------------------------
-/** @class RichRayTracing RichRayTracing.h
+/** @namespace Rich
  *
- *  Rich detector tool which traces photons to the photodetectors.
+ *  General namespace for RICH software
  *
- *  Mirror segmentation is takaen into account.
- *
- *  @author Antonis Papanestis
- *  @author Chris Jones
- *  @date   2003-11-04
- *
- *  @todo Check if it is neccessary to check for intersections other than those
- *  from emission point to spherical mirror reflection point ?
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
  */
 //-----------------------------------------------------------------------------
-
-class RichRayTracing : public RichHistoToolBase,
-                       virtual public IRichRayTracing
+namespace Rich
 {
 
-public: // Methods for Gaudi Framework
+  //-----------------------------------------------------------------------------
+  /** @class RayTracing RichRayTracing.h
+   *
+   *  Rich detector tool which traces photons to the photodetectors.
+   *
+   *  Mirror segmentation is takaen into account.
+   *
+   *  @author Antonis Papanestis
+   *  @author Chris Jones
+   *  @date   2003-11-04
+   *
+   *  @todo Check if it is neccessary to check for intersections other than those
+   *  from emission point to spherical mirror reflection point ?
+   */
+  //-----------------------------------------------------------------------------
 
-  /// Standard constructor
-  RichRayTracing( const std::string& type,
-                  const std::string& name,
-                  const IInterface* parent);
+  class RayTracing : public Rich::HistoToolBase,
+                     virtual public IRayTracing
+  {
 
-  virtual ~RichRayTracing( ); ///< Destructor
+  public: // Methods for Gaudi Framework
 
-  // Initialization of the tool after creation
-  virtual StatusCode initialize();
+    /// Standard constructor
+    RayTracing( const std::string& type,
+                const std::string& name,
+                const IInterface* parent);
 
-  // Finalization of the tool before deletion
-  virtual StatusCode finalize  ();
+    virtual ~RayTracing( ); ///< Destructor
 
-public: // methods (and doxygen comments) inherited from interface
+    // Initialization of the tool after creation
+    virtual StatusCode initialize();
 
-  /// For a given detector, raytraces a given direction from a given point to
-  /// the photo detectors. Returns the result in the form of a RichGeomPhoton
-  StatusCode traceToDetector( const Rich::DetectorType rich,
-                              const Gaudi::XYZPoint& startPoint,
-                              const Gaudi::XYZVector& startDir,
-                              LHCb::RichGeomPhoton& photon,
-                              const LHCb::RichTraceMode mode = LHCb::RichTraceMode(),
-                              const Rich::Side forcedSide = Rich::top ) const;
+    // Finalization of the tool before deletion
+    virtual StatusCode finalize  ();
 
-  /// For a given detector, raytraces a given direction from a given point to
-  /// the photo detectors.
-  StatusCode traceToDetector( const Rich::DetectorType rich,
-                              const Gaudi::XYZPoint& startPoint,
-                              const Gaudi::XYZVector& startDir,
-                              Gaudi::XYZPoint& hitPosition,
-                              const LHCb::RichTraceMode mode = LHCb::RichTraceMode(),
-                              const Rich::Side forcedSide = Rich::top ) const;
+  public: // methods (and doxygen comments) inherited from interface
 
-  /// Raytraces from a point in the detector panel back to the spherical mirror
-  /// returning the mirror intersection point and the direction a track would
-  /// have in order to hit that point in the detector panel.
-  StatusCode traceBackFromDetector ( const Gaudi::XYZPoint& startPoint,
-                                     const Gaudi::XYZVector& startDir,
-                                     Gaudi::XYZPoint& endPoint,
-                                     Gaudi::XYZVector& endDir ) const;
+    /// For a given detector, raytraces a given direction from a given point to
+    /// the photo detectors. Returns the result in the form of a RichGeomPhoton
+    StatusCode traceToDetector( const Rich::DetectorType rich,
+                                const Gaudi::XYZPoint& startPoint,
+                                const Gaudi::XYZVector& startDir,
+                                LHCb::RichGeomPhoton& photon,
+                                const LHCb::RichTraceMode mode = LHCb::RichTraceMode(),
+                                const Rich::Side forcedSide = Rich::top ) const;
 
-  /// Intersection a given direction, from a given point with a given plane.
-  StatusCode intersectPlane( const Gaudi::XYZPoint& position,
-                             const Gaudi::XYZVector& direction,
-                             const Gaudi::Plane3D& plane,
-                             Gaudi::XYZPoint& intersection ) const;
+    /// For a given detector, raytraces a given direction from a given point to
+    /// the photo detectors.
+    StatusCode traceToDetector( const Rich::DetectorType rich,
+                                const Gaudi::XYZPoint& startPoint,
+                                const Gaudi::XYZVector& startDir,
+                                Gaudi::XYZPoint& hitPosition,
+                                const LHCb::RichTraceMode mode = LHCb::RichTraceMode(),
+                                const Rich::Side forcedSide = Rich::top ) const;
 
-  /// Reflect a given direction off a spherical mirror. Can be used for intersection.
-  StatusCode reflectSpherical ( Gaudi::XYZPoint& position,
-                                Gaudi::XYZVector& direction,
-                                const Gaudi::XYZPoint& CoC,
-                                const double radius ) const;
+    /// Raytraces from a point in the detector panel back to the spherical mirror
+    /// returning the mirror intersection point and the direction a track would
+    /// have in order to hit that point in the detector panel.
+    StatusCode traceBackFromDetector ( const Gaudi::XYZPoint& startPoint,
+                                       const Gaudi::XYZVector& startDir,
+                                       Gaudi::XYZPoint& endPoint,
+                                       Gaudi::XYZVector& endDir ) const;
 
-  /// Ray trace from given position in given direction off flat mirrors
-  StatusCode reflectFlatPlane ( Gaudi::XYZPoint& position,
-                                Gaudi::XYZVector& direction,
-                                const Gaudi::Plane3D& plane ) const;
+    /// Intersection a given direction, from a given point with a given plane.
+    StatusCode intersectPlane( const Gaudi::XYZPoint& position,
+                               const Gaudi::XYZVector& direction,
+                               const Gaudi::Plane3D& plane,
+                               Gaudi::XYZPoint& intersection ) const;
 
-private: // methods
-
-  /// Ray trace from given position in given direction off both mirrors
-  StatusCode reflectBothMirrors ( const Rich::DetectorType rich,
-                                  Gaudi::XYZPoint& position,
+    /// Reflect a given direction off a spherical mirror. Can be used for intersection.
+    StatusCode reflectSpherical ( Gaudi::XYZPoint& position,
                                   Gaudi::XYZVector& direction,
-                                  LHCb::RichGeomPhoton& photon,
-                                  const LHCb::RichTraceMode mode,
-                                  const Rich::Side fSide ) const;
+                                  const Gaudi::XYZPoint& CoC,
+                                  const double radius ) const;
 
-private: // data
+    /// Ray trace from given position in given direction off flat mirrors
+    StatusCode reflectFlatPlane ( Gaudi::XYZPoint& position,
+                                  Gaudi::XYZVector& direction,
+                                  const Gaudi::Plane3D& plane ) const;
 
-  /// Rich1 and Rich2 pointers
-  std::vector< const DeRich* > m_rich;
+  private: // methods
 
-  /// photodetector panels per rich
-  typedef boost::array<DeRichHPDPanel*, 2> HPDPanelsPerRich;
-  /// photodetector for each rich
-  boost::array<HPDPanelsPerRich, Rich::NRiches> m_photoDetPanels;
+    /// Ray trace from given position in given direction off both mirrors
+    StatusCode reflectBothMirrors ( const Rich::DetectorType rich,
+                                    Gaudi::XYZPoint& position,
+                                    Gaudi::XYZVector& direction,
+                                    LHCb::RichGeomPhoton& photon,
+                                    const LHCb::RichTraceMode mode,
+                                    const Rich::Side fSide ) const;
 
-  std::vector<int> m_sphMirrorSegRows;
-  std::vector<int> m_sphMirrorSegCols;
-  std::vector<int> m_secMirrorSegRows;
-  std::vector<int> m_secMirrorSegCols;
+    /// Access the DeRich beam pipe objects, creating as needed on demand
+    inline const DeRichBeamPipe* deBeam( const Rich::DetectorType rich ) const
+    {
+      if ( !m_deBeam[rich] )
+      {
+        m_deBeam[rich] = getDet<DeRichBeamPipe>( Rich::Rich1 == rich ?
+                                                 DeRichBeamPipeLocation::Rich1BeamPipe :
+                                                 DeRichBeamPipeLocation::Rich2BeamPipe );
+      }
+      return m_deBeam[rich];
+    }
 
-  /// Mirror segment finder tool
-  const IRichMirrorSegFinder* m_mirrorSegFinder;
+  private: // data
 
-  /// Flag to to ignore secondary mirrors (useful for test beam work)
-  bool m_ignoreSecMirrs;
+    /// Rich1 and Rich2 pointers
+    std::vector< const DeRich* > m_rich;
 
-  /// RICH beampipe object for each RICH detector
-  std::vector<const DeRichBeamPipe*> m_deBeam;
+    /// photodetector panels per rich
+    typedef boost::array<DeRichHPDPanel*, 2> HPDPanelsPerRich;
+    /// photodetector for each rich
+    boost::array<HPDPanelsPerRich, Rich::NRiches> m_photoDetPanels;
 
-};
+    std::vector<int> m_sphMirrorSegRows;
+    std::vector<int> m_sphMirrorSegCols;
+    std::vector<int> m_secMirrorSegRows;
+    std::vector<int> m_secMirrorSegCols;
+
+    /// Mirror segment finder tool
+    const IMirrorSegFinder* m_mirrorSegFinder;
+
+    /// Flag to to ignore secondary mirrors (useful for test beam work)
+    bool m_ignoreSecMirrs;
+
+    /// RICH beampipe object for each RICH detector
+    mutable std::vector<const DeRichBeamPipe*> m_deBeam;
+
+  };
+
+}
 
 #endif // RICHTOOLS_RICHRAYTRACING_H

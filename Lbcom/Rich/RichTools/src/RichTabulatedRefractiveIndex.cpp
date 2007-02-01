@@ -5,7 +5,7 @@
  * Implementation file for class : RichTabulatedRefractiveIndex
  *
  * CVS Log :-
- * $Id: RichTabulatedRefractiveIndex.cpp,v 1.13 2006-08-31 11:46:05 cattanem Exp $
+ * $Id: RichTabulatedRefractiveIndex.cpp,v 1.14 2007-02-01 17:51:10 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 15/03/2002
@@ -19,12 +19,13 @@
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/SystemOfUnits.h"
 
-DECLARE_TOOL_FACTORY( RichTabulatedRefractiveIndex );
+DECLARE_NAMESPACE_TOOL_FACTORY( Rich, TabulatedRefractiveIndex );
 
 // Standard constructor
-RichTabulatedRefractiveIndex::RichTabulatedRefractiveIndex ( const std::string& type,
-                                                             const std::string& name,
-                                                             const IInterface* parent )
+Rich::TabulatedRefractiveIndex::
+TabulatedRefractiveIndex ( const std::string& type,
+                           const std::string& name,
+                           const IInterface* parent )
   : RichToolBase ( type, name, parent ),
     m_riches     ( Rich::NRiches ),
     m_deRads     ( Rich::NRadiatorTypes    ),
@@ -32,10 +33,10 @@ RichTabulatedRefractiveIndex::RichTabulatedRefractiveIndex ( const std::string& 
     m_refRMS     ( Rich::NRadiatorTypes, 0 )
 {
   // interface
-  declareInterface<IRichRefractiveIndex>(this);
+  declareInterface<IRefractiveIndex>(this);
 }
 
-StatusCode RichTabulatedRefractiveIndex::initialize()
+StatusCode Rich::TabulatedRefractiveIndex::initialize()
 {
   // Initialise base class
   StatusCode sc = RichToolBase::initialize();
@@ -60,15 +61,15 @@ StatusCode RichTabulatedRefractiveIndex::initialize()
   // Rich1Gas
   updMgrSvc()->registerCondition( this,
                                   DeRichRadiatorLocation::Rich1Gas,
-                                  &RichTabulatedRefractiveIndex::updateRich1GasRefIndex );
+                                  &TabulatedRefractiveIndex::updateRich1GasRefIndex );
   // Rich2Gas
   updMgrSvc()->registerCondition( this,
                                   DeRichRadiatorLocation::Rich2Gas,
-                                  &RichTabulatedRefractiveIndex::updateRich2GasRefIndex );
+                                  &TabulatedRefractiveIndex::updateRich2GasRefIndex );
   // aerogel
   updMgrSvc()->registerCondition( this,
                                   DeRichRadiatorLocation::Aerogel,
-                                  &RichTabulatedRefractiveIndex::updateAerogelRefIndex );
+                                  &TabulatedRefractiveIndex::updateAerogelRefIndex );
 
   // force first updates
   sc = updMgrSvc()->update(this);
@@ -77,21 +78,21 @@ StatusCode RichTabulatedRefractiveIndex::initialize()
   return sc;
 }
 
-StatusCode RichTabulatedRefractiveIndex::updateAerogelRefIndex()
+StatusCode Rich::TabulatedRefractiveIndex::updateAerogelRefIndex()
 {
   const StatusCode sc = updateRefIndex(Rich::Aerogel);
   m_refRMS[Rich::Aerogel] = 0.488e-3; // temp fixup
   return sc;
 }
 
-StatusCode RichTabulatedRefractiveIndex::updateRich1GasRefIndex()
+StatusCode Rich::TabulatedRefractiveIndex::updateRich1GasRefIndex()
 {
   const StatusCode sc = updateRefIndex(Rich::Rich1Gas);
   m_refRMS[Rich::Rich1Gas] = 0.393e-4; // temp fixup
   return sc;
 }
 
-StatusCode RichTabulatedRefractiveIndex::updateRich2GasRefIndex()
+StatusCode Rich::TabulatedRefractiveIndex::updateRich2GasRefIndex()
 {
   const StatusCode sc = updateRefIndex(Rich::Rich2Gas);
   m_refRMS[Rich::Rich2Gas] = 0.123e-4; // temp fixup
@@ -99,7 +100,7 @@ StatusCode RichTabulatedRefractiveIndex::updateRich2GasRefIndex()
 }
 
 StatusCode
-RichTabulatedRefractiveIndex::updateRefIndex( const Rich::RadiatorType rad )
+Rich::TabulatedRefractiveIndex::updateRefIndex( const Rich::RadiatorType rad )
 {
 
   if ( !m_deRads[rad]->refIndex() )
@@ -124,34 +125,34 @@ RichTabulatedRefractiveIndex::updateRefIndex( const Rich::RadiatorType rad )
   return StatusCode::SUCCESS;
 }
 
-StatusCode RichTabulatedRefractiveIndex::finalize()
+StatusCode Rich::TabulatedRefractiveIndex::finalize()
 {
   // base class finalize
   return RichToolBase::finalize();
 }
 
-double RichTabulatedRefractiveIndex::refractiveIndex( const Rich::RadiatorType rad,
-                                                      const double energy ) const
+double Rich::TabulatedRefractiveIndex::refractiveIndex( const Rich::RadiatorType rad,
+                                                        const double energy ) const
 {
   return (*(m_deRads[rad]->refIndex()))[energy*Gaudi::Units::eV];
 }
 
-double RichTabulatedRefractiveIndex::refractiveIndex( const Rich::RadiatorType rad,
-                                                      const double energyBot,
-                                                      const double energyTop ) const
+double Rich::TabulatedRefractiveIndex::refractiveIndex( const Rich::RadiatorType rad,
+                                                        const double energyBot,
+                                                        const double energyTop ) const
 {
   const Rich::DetectorType rich = ( rad == Rich::Rich2Gas ? Rich::Rich2 : Rich::Rich1 );
-  return refractiveIndex( rad, 
-                          m_riches[rich]->nominalHPDQuantumEff()->meanX(energyBot,energyTop) / 
+  return refractiveIndex( rad,
+                          m_riches[rich]->nominalHPDQuantumEff()->meanX(energyBot,energyTop) /
                           Gaudi::Units::eV );
 }
 
-double RichTabulatedRefractiveIndex::refractiveIndex( const Rich::RadiatorType rad ) const
+double Rich::TabulatedRefractiveIndex::refractiveIndex( const Rich::RadiatorType rad ) const
 {
   return m_refI[rad];
 }
 
-double RichTabulatedRefractiveIndex::refractiveIndexRMS ( const Rich::RadiatorType rad ) const
+double Rich::TabulatedRefractiveIndex::refractiveIndexRMS ( const Rich::RadiatorType rad ) const
 {
   return m_refRMS[rad];
 }

@@ -2,10 +2,10 @@
 //-----------------------------------------------------------------------------
 /** @file RichMirrorSegFinder.cpp
  *
- * Implementation file for class : RichMirrorSegFinder
+ * Implementation file for class : Rich::MirrorSegFinder
  *
  * CVS Log :-
- * $Id: RichMirrorSegFinder.cpp,v 1.20 2006-12-01 13:13:13 cattanem Exp $
+ * $Id: RichMirrorSegFinder.cpp,v 1.21 2007-02-01 17:51:10 jonrob Exp $
  *
  * @date   2003-11-05
  * @author Antonis Papanestis
@@ -17,18 +17,18 @@
 // local
 #include "RichMirrorSegFinder.h"
 
-DECLARE_TOOL_FACTORY( RichMirrorSegFinder );
+DECLARE_NAMESPACE_TOOL_FACTORY( Rich, MirrorSegFinder );
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-RichMirrorSegFinder::RichMirrorSegFinder( const std::string& type,
-                                          const std::string& name,
-                                          const IInterface* parent )
+Rich::MirrorSegFinder::MirrorSegFinder( const std::string& type,
+                                        const std::string& name,
+                                        const IInterface* parent )
   : RichToolBase ( type, name, parent )
 {
   // define interface
-  declareInterface<IRichMirrorSegFinder>(this);
+  declareInterface<IMirrorSegFinder>(this);
 
   // job options
 
@@ -50,12 +50,12 @@ RichMirrorSegFinder::RichMirrorSegFinder( const std::string& type,
 //=============================================================================
 // Destructor
 //=============================================================================
-RichMirrorSegFinder::~RichMirrorSegFinder() { }
+Rich::MirrorSegFinder::~MirrorSegFinder() { }
 
 //=========================================================================
 //  initialization
 //=========================================================================
-StatusCode RichMirrorSegFinder::initialize( )
+StatusCode Rich::MirrorSegFinder::initialize( )
 {
   // intialise base class
   const StatusCode sc = RichToolBase::initialize();
@@ -84,45 +84,45 @@ StatusCode RichMirrorSegFinder::initialize( )
   {for ( IDetectorElement::IDEContainer::const_iterator det_it =  detelemsR1.begin();
          det_it != detelemsR1.end();
          ++det_it )
-  {
-    const std::string & detName = (*det_it)->name();
-
-    if ( detName.find("Mirror1") != std::string::npos )
     {
-      const DeRichSphMirror* sm = getDet<DeRichSphMirror>( detName );
-      if ( sm->mirrorCentre().y() > 0.0 )
-      {
-        mirrorNum = m_maxMirror[Rich::Rich1][Rich::top][sph];
-        m_sphMirrors[Rich::Rich1][Rich::top][mirrorNum] = sm;
-        ++m_maxMirror[Rich::Rich1][Rich::top][sph];
-      }
-      else
-      {
-        mirrorNum = m_maxMirror[Rich::Rich1][Rich::bottom][sph];
-        m_sphMirrors[Rich::Rich1][Rich::bottom][mirrorNum] = sm;
-        ++m_maxMirror[Rich::Rich1][Rich::bottom][sph];
-      }
-    }
+      const std::string & detName = (*det_it)->name();
 
-    if ( detName.find("Mirror2") != std::string::npos )
-    {
-      const DeRichSphMirror* secm = getDet<DeRichSphMirror>( detName );
-      if ( secm->mirrorCentre().y() > 0.0 )
+      if ( detName.find("Mirror1") != std::string::npos )
       {
-        mirrorNum = m_maxMirror[Rich::Rich1][Rich::top][sec];
-        m_secMirrors[Rich::Rich1][Rich::top][mirrorNum] = secm;
-        ++m_maxMirror[Rich::Rich1][Rich::top][sec];
-      }
-      else
-      {
-        mirrorNum = m_maxMirror[Rich::Rich1][Rich::bottom][sec];
-        m_secMirrors[Rich::Rich1][Rich::bottom][mirrorNum] = secm;
-        ++m_maxMirror[Rich::Rich1][Rich::bottom][sec];
+        const DeRichSphMirror* sm = getDet<DeRichSphMirror>( detName );
+        if ( sm->mirrorCentre().y() > 0.0 )
+        {
+          mirrorNum = m_maxMirror[Rich::Rich1][Rich::top][sph];
+          m_sphMirrors[Rich::Rich1][Rich::top][mirrorNum] = sm;
+          ++m_maxMirror[Rich::Rich1][Rich::top][sph];
+        }
+        else
+        {
+          mirrorNum = m_maxMirror[Rich::Rich1][Rich::bottom][sph];
+          m_sphMirrors[Rich::Rich1][Rich::bottom][mirrorNum] = sm;
+          ++m_maxMirror[Rich::Rich1][Rich::bottom][sph];
+        }
       }
 
-    }
+      if ( detName.find("Mirror2") != std::string::npos )
+      {
+        const DeRichSphMirror* secm = getDet<DeRichSphMirror>( detName );
+        if ( secm->mirrorCentre().y() > 0.0 )
+        {
+          mirrorNum = m_maxMirror[Rich::Rich1][Rich::top][sec];
+          m_secMirrors[Rich::Rich1][Rich::top][mirrorNum] = secm;
+          ++m_maxMirror[Rich::Rich1][Rich::top][sec];
+        }
+        else
+        {
+          mirrorNum = m_maxMirror[Rich::Rich1][Rich::bottom][sec];
+          m_secMirrors[Rich::Rich1][Rich::bottom][mirrorNum] = secm;
+          ++m_maxMirror[Rich::Rich1][Rich::bottom][sec];
+        }
 
-  }}
+      }
+
+    }}
 
   debug() << "Found " << m_maxMirror[Rich::Rich1][Rich::top][sph] +
     m_maxMirror[Rich::Rich1][Rich::bottom][sph] << " spherical and "
@@ -135,44 +135,44 @@ StatusCode RichMirrorSegFinder::initialize( )
   {for ( IDetectorElement::IDEContainer::const_iterator det_it = detelemsR2.begin();
          det_it != detelemsR2.end();
          ++det_it )
-  {
-    const std::string & detName = (*det_it)->name();
-
-    if ( detName.find("SphMirror") != std::string::npos )
     {
-      const DeRichSphMirror* sm = getDet<DeRichSphMirror>( detName );
-      if ( sm->centreOfCurvature().x() > 0.0 )
-      {
-        mirrorNum = m_maxMirror[Rich::Rich2][Rich::left][sph];
-        m_sphMirrors[Rich::Rich2][Rich::left][mirrorNum] = sm;
-        ++m_maxMirror[Rich::Rich2][Rich::left][sph];
-      }
-      else
-      {
-        mirrorNum = m_maxMirror[Rich::Rich2][Rich::right][sph];
-        m_sphMirrors[Rich::Rich2][Rich::right][mirrorNum] = sm;
-        ++m_maxMirror[Rich::Rich2][Rich::right][sph];
-      }
-    }
+      const std::string & detName = (*det_it)->name();
 
-    if ( detName.find("SecMirror") != std::string::npos )
-    {
-      const DeRichSphMirror* secm = getDet<DeRichSphMirror>( detName );
-      if ( secm->mirrorCentre().x() > 0.0 )
+      if ( detName.find("SphMirror") != std::string::npos )
       {
-        mirrorNum = m_maxMirror[Rich::Rich2][Rich::left][sec];
-        m_secMirrors[Rich::Rich2][Rich::left][mirrorNum] = secm;
-        ++m_maxMirror[Rich::Rich2][Rich::left][sec];
+        const DeRichSphMirror* sm = getDet<DeRichSphMirror>( detName );
+        if ( sm->centreOfCurvature().x() > 0.0 )
+        {
+          mirrorNum = m_maxMirror[Rich::Rich2][Rich::left][sph];
+          m_sphMirrors[Rich::Rich2][Rich::left][mirrorNum] = sm;
+          ++m_maxMirror[Rich::Rich2][Rich::left][sph];
+        }
+        else
+        {
+          mirrorNum = m_maxMirror[Rich::Rich2][Rich::right][sph];
+          m_sphMirrors[Rich::Rich2][Rich::right][mirrorNum] = sm;
+          ++m_maxMirror[Rich::Rich2][Rich::right][sph];
+        }
       }
-      else
-      {
-        mirrorNum = m_maxMirror[Rich::Rich2][Rich::right][sec];
-        m_secMirrors[Rich::Rich2][Rich::right][mirrorNum] = secm;
-        ++m_maxMirror[Rich::Rich2][Rich::right][sec];
-      }
-    }
 
-  }}
+      if ( detName.find("SecMirror") != std::string::npos )
+      {
+        const DeRichSphMirror* secm = getDet<DeRichSphMirror>( detName );
+        if ( secm->mirrorCentre().x() > 0.0 )
+        {
+          mirrorNum = m_maxMirror[Rich::Rich2][Rich::left][sec];
+          m_secMirrors[Rich::Rich2][Rich::left][mirrorNum] = secm;
+          ++m_maxMirror[Rich::Rich2][Rich::left][sec];
+        }
+        else
+        {
+          mirrorNum = m_maxMirror[Rich::Rich2][Rich::right][sec];
+          m_secMirrors[Rich::Rich2][Rich::right][mirrorNum] = secm;
+          ++m_maxMirror[Rich::Rich2][Rich::right][sec];
+        }
+      }
+
+    }}
 
   if ( 0 == m_maxMirror[Rich::Rich1][Rich::left][sph] &&
        0 == m_maxMirror[Rich::Rich1][Rich::right][sph] )
@@ -226,16 +226,16 @@ StatusCode RichMirrorSegFinder::initialize( )
               << endreq;
 
     {for ( unsigned int r=0; r<2; ++r )
-      for ( unsigned int s=0; s<2; ++s )
-        for ( unsigned int num=0; num<m_maxMirror[r][s][sph]; ++num )
-          verbose() << "Stored spherical mirror "
-                    << m_sphMirrors[r][s][num]->name() << endreq;
+        for ( unsigned int s=0; s<2; ++s )
+          for ( unsigned int num=0; num<m_maxMirror[r][s][sph]; ++num )
+            verbose() << "Stored spherical mirror "
+                      << m_sphMirrors[r][s][num]->name() << endreq;
     }
     {for ( unsigned int r=0; r<2; ++r )
-      for ( unsigned int s=0; s<2; ++s )
-        for ( unsigned int num=0; num<m_maxMirror[r][s][sec]; ++num )
-          verbose() << "Stored secondary mirror "
-                    << m_secMirrors[r][s][num]->name() << endreq;
+        for ( unsigned int s=0; s<2; ++s )
+          for ( unsigned int num=0; num<m_maxMirror[r][s][sec]; ++num )
+            verbose() << "Stored secondary mirror "
+                      << m_secMirrors[r][s][num]->name() << endreq;
     }
 
   }
@@ -246,7 +246,7 @@ StatusCode RichMirrorSegFinder::initialize( )
 //=========================================================================
 //  finalize
 //=========================================================================
-StatusCode RichMirrorSegFinder::finalize( )
+StatusCode Rich::MirrorSegFinder::finalize( )
 {
 
   // if test was performed, printout final max distances
@@ -265,9 +265,9 @@ StatusCode RichMirrorSegFinder::finalize( )
 //  find spherical mirror segment and return pointer
 //=========================================================================
 const DeRichSphMirror*
-RichMirrorSegFinder::findSphMirror( const Rich::DetectorType rich,
-                                    const Rich::Side side,
-                                    const Gaudi::XYZPoint& reflPoint ) const
+Rich::MirrorSegFinder::findSphMirror( const Rich::DetectorType rich,
+                                      const Rich::Side side,
+                                      const Gaudi::XYZPoint& reflPoint ) const
 {
 
   // Most likely mirror is the last one found... So test this one first
@@ -296,9 +296,9 @@ RichMirrorSegFinder::findSphMirror( const Rich::DetectorType rich,
 }
 
 unsigned int
-RichMirrorSegFinder::fullSphSearch( const Rich::DetectorType rich,
-                                    const Rich::Side side,
-                                    const Gaudi::XYZPoint& reflPoint ) const
+Rich::MirrorSegFinder::fullSphSearch( const Rich::DetectorType rich,
+                                      const Rich::Side side,
+                                      const Gaudi::XYZPoint& reflPoint ) const
 {
   unsigned int mirrorNum = 0;
   double distance2 ( 1e99 ); // units are mm^2
@@ -325,9 +325,9 @@ RichMirrorSegFinder::fullSphSearch( const Rich::DetectorType rich,
 //  find secondary mirror segment and return pointer
 //=========================================================================
 const DeRichSphMirror*
-RichMirrorSegFinder::findSecMirror( const Rich::DetectorType rich,
-                                    const Rich::Side side,
-                                    const Gaudi::XYZPoint& reflPoint ) const
+Rich::MirrorSegFinder::findSecMirror( const Rich::DetectorType rich,
+                                      const Rich::Side side,
+                                      const Gaudi::XYZPoint& reflPoint ) const
 {
 
   // Most likely mirror is the last one found... So test this one first
@@ -357,9 +357,9 @@ RichMirrorSegFinder::findSecMirror( const Rich::DetectorType rich,
 }
 
 unsigned int
-RichMirrorSegFinder::fullSecSearch( const Rich::DetectorType rich,
-                                    const Rich::Side side,
-                                    const Gaudi::XYZPoint& reflPoint ) const
+Rich::MirrorSegFinder::fullSecSearch( const Rich::DetectorType rich,
+                                      const Rich::Side side,
+                                      const Gaudi::XYZPoint& reflPoint ) const
 {
   unsigned int mirrorNum = 0;
   double distance2 ( 1e99 ); // units are mm^2

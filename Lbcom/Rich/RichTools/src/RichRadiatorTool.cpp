@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichRadiatorTool
  *
  *  CVS Log :-
- *  $Id: RichRadiatorTool.cpp,v 1.7 2006-12-01 13:13:13 cattanem Exp $
+ *  $Id: RichRadiatorTool.cpp,v 1.8 2007-02-01 17:51:10 jonrob Exp $
  *
  *  @author Antonis Papanestis
  *  @date   2006-03-01
@@ -24,34 +24,30 @@
 #include "RichDet/DeRich.h"
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : RichRadiatorTool
-//
-// 2006-03-01 : Antonis Papanestis
-//-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( RichRadiatorTool );
+DECLARE_NAMESPACE_TOOL_FACTORY( Rich, RadiatorTool );
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-RichRadiatorTool::RichRadiatorTool( const std::string& type,
-                                    const std::string& name,
-                                    const IInterface* parent )
+Rich::RadiatorTool::RadiatorTool( const std::string& type,
+                                  const std::string& name,
+                                  const IInterface* parent )
   : RichToolBase ( type, name, parent )
 {
-  declareInterface<IRichRadiatorTool>(this);
+  declareInterface<IRadiatorTool>(this);
 }
 
 //=============================================================================
 // Destructor
 //=============================================================================
-RichRadiatorTool::~RichRadiatorTool() {}
+Rich::RadiatorTool::~RadiatorTool() {}
 //=============================================================================
 
 //=========================================================================
 // initialize
 //=========================================================================
-StatusCode RichRadiatorTool::initialize ( )
+StatusCode Rich::RadiatorTool::initialize ( )
 {
 
   // intialise base class
@@ -95,10 +91,10 @@ StatusCode RichRadiatorTool::initialize ( )
 //  intersections
 //=========================================================================
 unsigned int
-RichRadiatorTool::intersections( const Gaudi::XYZPoint& globalPoint,
-                                 const Gaudi::XYZVector& globalVector,
-                                 const Rich::RadiatorType radiator,
-                                 RichRadIntersection::Vector & intersections ) const
+Rich::RadiatorTool::intersections( const Gaudi::XYZPoint& globalPoint,
+                                   const Gaudi::XYZVector& globalVector,
+                                   const Rich::RadiatorType radiator,
+                                   RichRadIntersection::Vector & intersections ) const
 {
 
   // tally for the number of intersections
@@ -117,8 +113,8 @@ RichRadiatorTool::intersections( const Gaudi::XYZPoint& globalPoint,
                                     exit ) )
     {
       // save this intersection
-      intersections.push_back( RichRadIntersection( entry, globalVector, 
-                                                    exit,  globalVector, 
+      intersections.push_back( RichRadIntersection( entry, globalVector,
+                                                    exit,  globalVector,
                                                     *iR ) );
       ++totalIntersections;
     }

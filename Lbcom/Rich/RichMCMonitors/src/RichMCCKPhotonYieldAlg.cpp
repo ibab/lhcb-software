@@ -1,11 +1,11 @@
 
 //-----------------------------------------------------------------------------
-/** @file RichMCCKPhotonYieldAlg.h
+/** @file RichMCCKPhotonYieldAlg.cpp
  *
  * Header file for monitor algorithm RichMCCKPhotonYieldAlg
  *
  * CVS Log :-
- * $Id: RichMCCKPhotonYieldAlg.cpp,v 1.7 2006-12-01 13:26:39 cattanem Exp $
+ * $Id: RichMCCKPhotonYieldAlg.cpp,v 1.8 2007-02-01 17:49:09 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-11-03
@@ -19,42 +19,43 @@
 #include "RichMCCKPhotonYieldAlg.h"
 
 // units namespace
-using namespace Gaudi::Units;
+//using namespace Gaudi::Units;
+using namespace Rich::MC;
 
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_NAMESPACE_ALGORITHM_FACTORY( Rich, RichMCCKPhotonYieldAlg );
+DECLARE_ALGORITHM_FACTORY( MCCKPhotonYieldAlg );
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-Rich::RichMCCKPhotonYieldAlg::RichMCCKPhotonYieldAlg( const std::string& name,
-                                                      ISvcLocator* pSvcLocator )
-  : RichHistoAlgBase ( name , pSvcLocator      ),
+MCCKPhotonYieldAlg::MCCKPhotonYieldAlg( const std::string& name,
+                                        ISvcLocator* pSvcLocator )
+  : Rich::HistoAlgBase ( name , pSvcLocator      ),
     m_mcTruth        ( NULL                    ),
-    m_maxP           ( Rich::NRadiatorTypes, 9999*GeV ),
+    m_maxP           ( Rich::NRadiatorTypes, 9999*Gaudi::Units::GeV ),
     m_minEntryR      ( Rich::NRadiatorTypes, 0 ),
     m_minExitR       ( Rich::NRadiatorTypes, 0 ),
     m_minEntryX      ( Rich::NRadiatorTypes, 0 ),
     m_minExitX       ( Rich::NRadiatorTypes, 0 ),
     m_minEntryY      ( Rich::NRadiatorTypes, 0 ),
     m_minExitY       ( Rich::NRadiatorTypes, 0 ),
-    m_maxEntryR      ( Rich::NRadiatorTypes, 999999*cm ),
-    m_maxExitR       ( Rich::NRadiatorTypes, 999999*cm ),
-    m_maxEntryX      ( Rich::NRadiatorTypes, 999999*cm ),
-    m_maxExitX       ( Rich::NRadiatorTypes, 999999*cm ),
-    m_maxEntryY      ( Rich::NRadiatorTypes, 999999*cm ),
-    m_maxExitY       ( Rich::NRadiatorTypes, 999999*cm ),
+    m_maxEntryR      ( Rich::NRadiatorTypes, 999999*Gaudi::Units::cm ),
+    m_maxExitR       ( Rich::NRadiatorTypes, 999999*Gaudi::Units::cm ),
+    m_maxEntryX      ( Rich::NRadiatorTypes, 999999*Gaudi::Units::cm ),
+    m_maxExitX       ( Rich::NRadiatorTypes, 999999*Gaudi::Units::cm ),
+    m_maxEntryY      ( Rich::NRadiatorTypes, 999999*Gaudi::Units::cm ),
+    m_maxExitY       ( Rich::NRadiatorTypes, 999999*Gaudi::Units::cm ),
     m_minPathLength  ( Rich::NRadiatorTypes, 0 ),
-    m_maxPathLength  ( Rich::NRadiatorTypes, 999999*cm )
+    m_maxPathLength  ( Rich::NRadiatorTypes, 999999*Gaudi::Units::cm )
 {
   // job options
   declareProperty( "MCRichHitsLocation",
                    m_mcRichHitsLoc = LHCb::MCRichHitLocation::Default );
 
   // Min MCParticle momentum
-  m_minP = boost::assign::list_of(80*GeV)(80*GeV)(80*GeV);
+  m_minP = boost::assign::list_of(80*Gaudi::Units::GeV)(80*Gaudi::Units::GeV)(80*Gaudi::Units::GeV);
   declareProperty( "MinParticleMomentum", m_minP );
 
   // Max MCParticle momentum
@@ -85,12 +86,12 @@ Rich::RichMCCKPhotonYieldAlg::RichMCCKPhotonYieldAlg( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-Rich::RichMCCKPhotonYieldAlg::~RichMCCKPhotonYieldAlg() {}
+MCCKPhotonYieldAlg::~MCCKPhotonYieldAlg() {}
 
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode Rich::RichMCCKPhotonYieldAlg::initialize()
+StatusCode MCCKPhotonYieldAlg::initialize()
 {
   // must be done first
   const StatusCode sc = RichHistoAlgBase::initialize();
@@ -104,7 +105,7 @@ StatusCode Rich::RichMCCKPhotonYieldAlg::initialize()
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode Rich::RichMCCKPhotonYieldAlg::execute()
+StatusCode MCCKPhotonYieldAlg::execute()
 {
 
   // Load the MCRichHits that are to be analysed
@@ -124,7 +125,7 @@ StatusCode Rich::RichMCCKPhotonYieldAlg::execute()
   const RichHistoID hid;
 
   // ranges for histograms
-  const double maxPlength[]  = { 60*mm, 1200*mm, 2500*mm };
+  const double maxPlength[]  = { 60*Gaudi::Units::mm, 1200*Gaudi::Units::mm, 2500*Gaudi::Units::mm };
   const double maxSlope[]    = { 0.1, 0.1, 0.1 };
 
   // Is extended RICH info available ?
@@ -260,11 +261,11 @@ StatusCode Rich::RichMCCKPhotonYieldAlg::execute()
 //=============================================================================
 //  Finalize
 //=============================================================================
-StatusCode Rich::RichMCCKPhotonYieldAlg::finalize()
+StatusCode MCCKPhotonYieldAlg::finalize()
 {
 
   // Statistical tools
-  const RichStatDivFunctor eff("%8.2f +-%5.2f");
+  const StatDivFunctor eff("%8.2f +-%5.2f");
 
   info() << "=============================================================================="
          << endreq;

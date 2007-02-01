@@ -5,7 +5,7 @@
  * Implementation file for class : RichToolRegistry
  *
  * CVS Log :-
- * $Id: RichToolRegistry.cpp,v 1.12 2006-12-01 13:13:13 cattanem Exp $
+ * $Id: RichToolRegistry.cpp,v 1.13 2007-02-01 17:51:11 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -19,22 +19,31 @@
 // local
 #include "RichToolRegistry.h"
 
-DECLARE_TOOL_FACTORY( RichToolRegistry );
+DECLARE_NAMESPACE_TOOL_FACTORY( Rich, ToolRegistry );
 
 // Standard constructor
-RichToolRegistry::RichToolRegistry( const std::string& type,
-                                    const std::string& name,
-                                    const IInterface* parent )
+Rich::ToolRegistry::ToolRegistry( const std::string& type,
+                                  const std::string& name,
+                                  const IInterface* parent )
   : GaudiTool( type, name, parent )
 {
   // declare interface
-  declareInterface<IRichToolRegistry>(this);
+  declareInterface<IToolRegistry>(this);
+
+  // initialise
+  m_names.clear();
+
+  // define some default tool mappings
+
+  // MC truth tools
+  m_names.push_back ( "Rich::MC::MCTruthTool/RichMCTruthTool"         );
+  m_names.push_back ( "Rich::Rec::MC::MCTruthTool/RichRecMCTruthTool" );
 
   // job option for mapping between nickname and class name
   declareProperty( "Tools", m_names );
 }
 
-StatusCode RichToolRegistry::initialize()
+StatusCode Rich::ToolRegistry::initialize()
 {
   // Execute the base class initialize
   const StatusCode sc = GaudiTool::initialize();
@@ -53,7 +62,7 @@ StatusCode RichToolRegistry::initialize()
 }
 
 const std::string &
-RichToolRegistry::toolType( const std::string & nickname ) const
+Rich::ToolRegistry::toolType( const std::string & nickname ) const
 {
   // Test nickname is valid
   if ( nickname.empty() )
@@ -77,18 +86,18 @@ RichToolRegistry::toolType( const std::string & nickname ) const
   return m_myTools[nickname];
 }
 
-const std::string 
-RichToolRegistry::toolName( const std::string & nickname ) const
+const std::string
+Rich::ToolRegistry::toolName( const std::string & nickname ) const
 {
   return ( context().empty() ? nickname : context()+"."+nickname );
 }
 
-void RichToolRegistry::addEntry( const std::string & nickname,
-                                 const std::string & type ) const
+void Rich::ToolRegistry::addEntry( const std::string & nickname,
+                                   const std::string & type ) const
 {
   if ( !m_myTools[nickname].empty() && type != m_myTools[nickname] )
   {
-    Warning( "Nickname '" + nickname + "' mapping changed : '" 
+    Warning( "Nickname '" + nickname + "' mapping changed : '"
              + m_myTools[nickname] + "' to '" + type + "'", StatusCode::SUCCESS );
   }
   if ( msgLevel(MSG::DEBUG) )
@@ -99,7 +108,7 @@ void RichToolRegistry::addEntry( const std::string & nickname,
   m_myTools[nickname] = type;
 }
 
-const std::string RichToolRegistry::getContext() const
+const std::string Rich::ToolRegistry::getContext() const
 {
   return context();
 }

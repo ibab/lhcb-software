@@ -2,10 +2,10 @@
 //-----------------------------------------------------------------------------
 /** @file RichRadiatorTool.h
  *
- *  Header file for tool : RichRadiatorTool
+ *  Header file for tool : Rich::RadiatorTool
  *
  *  CVS Log :-
- *  $Id: RichRadiatorTool.h,v 1.4 2006-10-20 13:20:29 jonrob Exp $
+ *  $Id: RichRadiatorTool.h,v 1.5 2007-02-01 17:51:10 jonrob Exp $
  *
  *  @author Antonis Papanestis
  *  @date   2006-03-01
@@ -30,56 +30,71 @@
 // from RichDet
 #include "RichDet/DeRichRadiator.h"
 
-
-/** @class RichRadiatorTool RichRadiatorTool.h
+//-----------------------------------------------------------------------------
+/** @namespace Rich
  *
- *  Tool to find the intersections with a given radiator volume
+ *  General namespace for RICH software
  *
- *  @author Antonis Papanestis
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   2006-03-01
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
  */
-
-class RichRadiatorTool : public RichToolBase, 
-                         virtual public IRichRadiatorTool 
+//-----------------------------------------------------------------------------
+namespace Rich
 {
 
-public:
-
-  /// Standard constructor
-  RichRadiatorTool( const std::string& type,
-                    const std::string& name,
-                    const IInterface* parent);
-
-  virtual ~RichRadiatorTool( ); ///< Destructor
-
-  // Initialization of the tool after creation
-  virtual StatusCode initialize();
-
-  /** @brief Finds the intersections of a given vector from a given point (entry/exit) with radiator. 
+  //-----------------------------------------------------------------------------
+  /** @class RadiatorTool RichRadiatorTool.h
    *
-   * For multiple radiators (e.g. the aerogel tiles) there can be more than one intersections
+   *  Tool to find the intersections with a given radiator volume
    *
-   * @param globalPoint   The start point for the intersection extraplotion
-   * @param globalVector  The direction vector for the intersection extraplotion
-   * @param radiator      The radiator to find the intersections in
-   * @param intersections The found intersections
-   *
-   * @return The number of intersections
+   *  @author Antonis Papanestis
+   *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+   *  @date   2006-03-01
    */
-  unsigned int intersections( const Gaudi::XYZPoint& globalPoint,
-                              const Gaudi::XYZVector& globalVector,
-                              const Rich::RadiatorType radiator,
-                              RichRadIntersection::Vector& intersections ) const;
+  //-----------------------------------------------------------------------------
 
-private:
+  class RadiatorTool : public Rich::ToolBase,
+                       virtual public IRadiatorTool
+  {
 
-  typedef std::vector<const DeRichRadiator*> RichRadiators;
-  boost::array<RichRadiators, Rich::NRadiatorTypes> m_radiators;
+  public:
 
-  typedef std::vector<Gaudi::Transform3D> Transforms;
-  boost::array<Transforms, Rich::NRadiatorTypes> m_transforms;
+    /// Standard constructor
+    RadiatorTool( const std::string& type,
+                  const std::string& name,
+                  const IInterface* parent);
 
-};
+    virtual ~RadiatorTool( ); ///< Destructor
+
+    // Initialization of the tool after creation
+    virtual StatusCode initialize();
+
+    /** @brief Finds the intersections of a given vector from a given point (entry/exit) with radiator.
+     *
+     * For multiple radiators (e.g. the aerogel tiles) there can be more than one intersections
+     *
+     * @param globalPoint   The start point for the intersection extraplotion
+     * @param globalVector  The direction vector for the intersection extraplotion
+     * @param radiator      The radiator to find the intersections in
+     * @param intersections The found intersections
+     *
+     * @return The number of intersections
+     */
+    unsigned int intersections( const Gaudi::XYZPoint& globalPoint,
+                                const Gaudi::XYZVector& globalVector,
+                                const Rich::RadiatorType radiator,
+                                RichRadIntersection::Vector& intersections ) const;
+
+  private:
+
+    typedef std::vector<const DeRichRadiator*> RichRadiators;
+    boost::array<RichRadiators, Rich::NRadiatorTypes> m_radiators;
+
+    typedef std::vector<Gaudi::Transform3D> Transforms;
+    boost::array<Transforms, Rich::NRadiatorTypes> m_transforms;
+
+  };
+
+}
 
 #endif // RICHTOOLS_RICHRADIATORTOOL_H

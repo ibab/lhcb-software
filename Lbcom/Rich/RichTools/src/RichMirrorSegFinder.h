@@ -2,10 +2,10 @@
 //-----------------------------------------------------------------------------
 /** @file RichMirrorSegFinder.h
  *
- *  Header file for tool : RichMirrorSegFinder
+ *  Header file for tool : Rich::MirrorSegFinder
  *
  *  CVS Log :-
- *  $Id: RichMirrorSegFinder.h,v 1.13 2006-12-01 13:13:13 cattanem Exp $
+ *  $Id: RichMirrorSegFinder.h,v 1.14 2007-02-01 17:51:10 jonrob Exp $
  *
  *  @author Antonis Papanestis
  *  @date   2003-11-04
@@ -32,86 +32,100 @@
 #include "RichDet/DeRichSphMirror.h"
 
 //-----------------------------------------------------------------------------
-/** @class RichMirrorSegFinder RichMirrorSegFinder.h
+/** @namespace Rich
  *
- *  Tool to find the appropriate mirror segment for a given reflection point
+ *  General namespace for RICH software
  *
- *  @author Antonis Papanestis
- *  @date   2003-11-04
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
  */
 //-----------------------------------------------------------------------------
-
-class RichMirrorSegFinder : public RichToolBase,
-                            virtual public IRichMirrorSegFinder
+namespace Rich
 {
 
-public: // Methods for Gaudi Framework
+  //-----------------------------------------------------------------------------
+  /** @class MirrorSegFinder RichMirrorSegFinder.h
+   *
+   *  Tool to find the appropriate mirror segment for a given reflection point
+   *
+   *  @author Antonis Papanestis
+   *  @date   2003-11-04
+   */
+  //-----------------------------------------------------------------------------
 
-  /// Standard constructor
-  RichMirrorSegFinder( const std::string& type,
-                       const std::string& name,
-                       const IInterface* parent);
+  class MirrorSegFinder : public Rich::ToolBase,
+                          virtual public IMirrorSegFinder
+  {
 
-  virtual ~RichMirrorSegFinder( ); ///< Destructor
+  public: // Methods for Gaudi Framework
 
-  // Initialization of the tool after creation
-  virtual StatusCode initialize();
+    /// Standard constructor
+    MirrorSegFinder( const std::string& type,
+                     const std::string& name,
+                     const IInterface* parent);
 
-  // Finalization of the tool before deletion
-  virtual StatusCode finalize  ();
+    virtual ~MirrorSegFinder( ); ///< Destructor
 
-public: // methods (and doxygen comments) inherited from public interface
+    // Initialization of the tool after creation
+    virtual StatusCode initialize();
 
-  /// Locates the spherical mirror Segment given a reflection point,
-  /// RICH identifier and panel
-  const DeRichSphMirror* findSphMirror( const Rich::DetectorType rich,
-                                        const Rich::Side side,
-                                        const Gaudi::XYZPoint& reflPoint ) const;
+    // Finalization of the tool before deletion
+    virtual StatusCode finalize  ();
 
-  /// Locates the secondary mirror Segment given a reflection point,
-  /// RICH identifier and panel
-  const DeRichSphMirror* findSecMirror( const Rich::DetectorType rich,
-                                        const Rich::Side side,
-                                        const Gaudi::XYZPoint& reflPoint ) const;
+  public: // methods (and doxygen comments) inherited from public interface
 
-private: // methods
+    /// Locates the spherical mirror Segment given a reflection point,
+    /// RICH identifier and panel
+    const DeRichSphMirror* findSphMirror( const Rich::DetectorType rich,
+                                          const Rich::Side side,
+                                          const Gaudi::XYZPoint& reflPoint ) const;
 
-  /// performs a full search for the spherical mirror
-  unsigned int fullSphSearch( const Rich::DetectorType rich,
-                              const Rich::Side side,
-                              const Gaudi::XYZPoint& reflPoint ) const;
+    /// Locates the secondary mirror Segment given a reflection point,
+    /// RICH identifier and panel
+    const DeRichSphMirror* findSecMirror( const Rich::DetectorType rich,
+                                          const Rich::Side side,
+                                          const Gaudi::XYZPoint& reflPoint ) const;
 
-  /// performs a full search for the secondary mirror
-  unsigned int fullSecSearch( const Rich::DetectorType rich,
-                              const Rich::Side side,
-                              const Gaudi::XYZPoint& reflPoint ) const;
+  private: // methods
 
-private: // data
+    /// performs a full search for the spherical mirror
+    unsigned int fullSphSearch( const Rich::DetectorType rich,
+                                const Rich::Side side,
+                                const Gaudi::XYZPoint& reflPoint ) const;
 
-  /// Enumeration for falt and spherical mirror types
-  enum mirrorType { sph = 0, sec = 1 };
+    /// performs a full search for the secondary mirror
+    unsigned int fullSecSearch( const Rich::DetectorType rich,
+                                const Rich::Side side,
+                                const Gaudi::XYZPoint& reflPoint ) const;
 
-  /// Pointers to the spherical mirror detector elements
-  const DeRichSphMirror* m_sphMirrors[Rich::NRiches][Rich::NHPDPanelsPerRICH][30];
+  private: // data
 
-  /// Pointers to the secondary (spherical) mirror detector elements
-  const DeRichSphMirror* m_secMirrors[Rich::NRiches][Rich::NHPDPanelsPerRICH][30];
+    /// Enumeration for falt and spherical mirror types
+    enum mirrorType { sph = 0, sec = 1 };
 
-  /// The max mirror number for each RICH and HPD panel
-  unsigned int m_maxMirror[Rich::NRiches][Rich::NHPDPanelsPerRICH][2];
+    /// Pointers to the spherical mirror detector elements
+    const DeRichSphMirror* m_sphMirrors[Rich::NRiches][Rich::NHPDPanelsPerRICH][30];
 
-  /// The last found mirror number for each RICH and HPD panel
-  mutable unsigned int m_lastFoundMirror[Rich::NRiches][Rich::NHPDPanelsPerRICH][2];
+    /// Pointers to the secondary (spherical) mirror detector elements
+    const DeRichSphMirror* m_secMirrors[Rich::NRiches][Rich::NHPDPanelsPerRICH][30];
 
-  /// Max distance to accept mirror
-  mutable double m_maxDist[Rich::NRiches][2];
+    /// The max mirror number for each RICH and HPD panel
+    unsigned int m_maxMirror[Rich::NRiches][Rich::NHPDPanelsPerRICH][2];
 
-  /// job option to turn on testing of the mirror finding. Use to tune the performance parameters.
-  bool m_testFinding;
+    /// The last found mirror number for each RICH and HPD panel
+    mutable unsigned int m_lastFoundMirror[Rich::NRiches][Rich::NHPDPanelsPerRICH][2];
 
-  /// Tuning scale factor
-  double m_tuneScale;
+    /// Max distance to accept mirror
+    mutable double m_maxDist[Rich::NRiches][2];
 
-};
+    /// job option to turn on testing of the mirror finding. Use to tune the performance parameters.
+    bool m_testFinding;
+
+    /// Tuning scale factor
+    double m_tuneScale;
+
+  };
+
+}
 
 #endif // RICHTOOLS_RICHMIRRORSEGFINDER_H

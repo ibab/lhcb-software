@@ -2,10 +2,10 @@
 //-----------------------------------------------------------------------------
 /** @file RichToolRegistry.h
  *
- *  Header file for tool : RichToolRegistry
+ *  Header file for tool : Rich::ToolRegistry
  *
  *  CVS Log :-
- *  $Id: RichToolRegistry.h,v 1.12 2006-12-01 13:13:13 cattanem Exp $
+ *  $Id: RichToolRegistry.h,v 1.13 2007-02-01 17:51:11 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -27,65 +27,79 @@
 #include "RichKernel/RichHashMap.h"
 
 //-----------------------------------------------------------------------------
-/** @class RichToolRegistry RichToolRegistry.h
+/** @namespace Rich
  *
- *  Tool providing a mapping between tool "nicknames" and types
+ *  General namespace for RICH software
  *
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   15/03/2002
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
  */
 //-----------------------------------------------------------------------------
-
-class RichToolRegistry : public GaudiTool,
-                         virtual public IRichToolRegistry
+namespace Rich
 {
 
-public: // for Gaudi framework
+  //-----------------------------------------------------------------------------
+  /** @class ToolRegistry RichToolRegistry.h
+   *
+   *  Tool providing a mapping between tool "nicknames" and types
+   *
+   *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+   *  @date   15/03/2002
+   */
+  //-----------------------------------------------------------------------------
 
-  /// Standard constructor
-  RichToolRegistry( const std::string& type,
-                    const std::string& name,
-                    const IInterface* parent );
+  class ToolRegistry : public GaudiTool,
+                       virtual public IToolRegistry
+  {
 
-  /// Destructor
-  virtual ~RichToolRegistry() {}
+  public: // for Gaudi framework
 
-  // Initialization of the tool after creation
-  StatusCode initialize();
+    /// Standard constructor
+    ToolRegistry( const std::string& type,
+                  const std::string& name,
+                  const IInterface* parent );
 
-  // Finalization of the tool before deletion
-  //StatusCode finalize();
+    /// Destructor
+    virtual ~ToolRegistry() {}
 
-public: // methods (and doxygen comments) inherited from interface
+    // Initialization of the tool after creation
+    StatusCode initialize();
 
-  // Converts a tool nickname into a particular class name
-  const std::string & toolType( const std::string & nickname ) const;
+    // Finalization of the tool before deletion
+    //StatusCode finalize();
 
-  // Converts a tool "nickname" into a particular instance name
-  const std::string toolName( const std::string & nickname ) const;
+  public: // methods (and doxygen comments) inherited from interface
 
-  // Returns the context for the tool registry
-  const std::string getContext() const;
+    // Converts a tool nickname into a particular class name
+    const std::string & toolType( const std::string & nickname ) const;
 
-private: // methods
+    // Converts a tool "nickname" into a particular instance name
+    const std::string toolName( const std::string & nickname ) const;
 
-  /// Adds a entry to the map between nicknames and class names
-  void addEntry( const std::string & nickname, ///< tool nickname
-                 const std::string & type      ///< tool class name
-                 ) const;
+    // Returns the context for the tool registry
+    const std::string getContext() const;
 
-private: // data
+  private: // methods
 
-  /// typedef of container of strings for job options
-  typedef std::vector<std::string> ToolList;
-  /// Tool data from job options
-  ToolList m_names;
+    /// Adds a entry to the map between nicknames and class names
+    void addEntry( const std::string & nickname, ///< tool nickname
+                   const std::string & type      ///< tool class name
+                   ) const;
 
-  /// typedef for the mapping between nicknames and class names
-  typedef Rich::HashMap< std::string, std::string > RichToolMap;
-  /// The mapping between the tool name and type
-  mutable RichToolMap m_myTools;
+  private: // data
 
-};
+    /// typedef of container of strings for job options
+    typedef std::vector<std::string> ToolList;
+    /// Tool data from job options
+    ToolList m_names;
+
+    /// typedef for the mapping between nicknames and class names
+    typedef Rich::HashMap< std::string, std::string > RichToolMap;
+    /// The mapping between the tool name and type
+    mutable RichToolMap m_myTools;
+
+  };
+
+}
 
 #endif // RICHTOOLS_RICHTOOLREGISTRY_H

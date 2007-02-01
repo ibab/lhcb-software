@@ -2,10 +2,10 @@
 //-----------------------------------------------------------------------------
 /** @file RichParticleProperties.h
  *
- *  Header file for tool : RichParticleProperties
+ *  Header file for tool : Rich::ParticleProperties
  *
  *  CVS Log :-
- *  $Id: RichParticleProperties.h,v 1.3 2006-08-31 11:46:05 cattanem Exp $
+ *  $Id: RichParticleProperties.h,v 1.4 2007-02-01 17:51:10 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -33,68 +33,83 @@
 #include "RichKernel/IRichRefractiveIndex.h"
 
 //-----------------------------------------------------------------------------
-/** @class RichParticleProperties RichParticleProperties.h
+/** @namespace Rich
  *
- *  Tool to calculate various physical properties 
- *  for the different mass hypotheses.
+ *  General namespace for RICH software
  *
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   15/03/2002
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
  */
 //-----------------------------------------------------------------------------
+namespace Rich
+{
 
-class RichParticleProperties : public RichToolBase,
-                               virtual public IRichParticleProperties {
+  //-----------------------------------------------------------------------------
+  /** @class ParticleProperties RichParticleProperties.h
+   *
+   *  Tool to calculate various physical properties
+   *  for the different mass hypotheses.
+   *
+   *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+   *  @date   15/03/2002
+   */
+  //-----------------------------------------------------------------------------
 
-public: // Methods for Gaudi Framework
+  class ParticleProperties : public Rich::ToolBase,
+                             virtual public IParticleProperties 
+  {
 
-  /// Standard constructor
-  RichParticleProperties( const std::string& type,
-                          const std::string& name,
-                          const IInterface* parent );
+  public: // Methods for Gaudi Framework
 
-  /// Destructor
-  virtual ~RichParticleProperties() {};
+    /// Standard constructor
+    ParticleProperties( const std::string& type,
+                        const std::string& name,
+                        const IInterface* parent );
 
-  // Initialize method
-  StatusCode initialize();
+    /// Destructor
+    virtual ~ParticleProperties() {};
 
-  // Finalize method
-  StatusCode finalize();
+    // Initialize method
+    StatusCode initialize();
 
-public: // methods (and doxygen comments) inherited from public interface
+    // Finalize method
+    StatusCode finalize();
 
-  // Returns 'beta' for given particle hypothesis
-  double beta( const double ptot, const Rich::ParticleIDType id ) const;
+  public: // methods (and doxygen comments) inherited from public interface
 
-  // Returns the nominal mass for a given particle type
-  double mass( const Rich::ParticleIDType id ) const;
+    // Returns 'beta' for given particle hypothesis
+    double beta( const double ptot, const Rich::ParticleIDType id ) const;
 
-  // Returns the nominal mass squared for a given particle type
-  double massSq( const Rich::ParticleIDType id ) const;
+    // Returns the nominal mass for a given particle type
+    double mass( const Rich::ParticleIDType id ) const;
 
-  // Returns the threshold momentum for a given hypothesis in a given radiator
-  double thresholdMomentum( const Rich::ParticleIDType id,
-                            const Rich::RadiatorType rad ) const;
+    // Returns the nominal mass squared for a given particle type
+    double massSq( const Rich::ParticleIDType id ) const;
 
-  // Returns the threshold momentum squared for a given hypothesis in a given radiator
-  double thresholdMomentumSq( const Rich::ParticleIDType id,
+    // Returns the threshold momentum for a given hypothesis in a given radiator
+    double thresholdMomentum( const Rich::ParticleIDType id,
                               const Rich::RadiatorType rad ) const;
-  
-private:  // Private data
 
-  /// Array containing particle masses
-  boost::array<double,Rich::NParticleTypes> m_particleMass;
+    // Returns the threshold momentum squared for a given hypothesis in a given radiator
+    double thresholdMomentumSq( const Rich::ParticleIDType id,
+                                const Rich::RadiatorType rad ) const;
 
-  /// Array containing square of particle masses
-  boost::array<double,Rich::NParticleTypes> m_particleMassSq;
+  private:  // Private data
 
-  /// Momentum thresholds
-  double m_momThres[Rich::NRadiatorTypes][Rich::NParticleTypes];
+    /// Array containing particle masses
+    boost::array<double,Rich::NParticleTypes> m_particleMass;
 
-  /// Momentum thresholds squared (cached for speed)
-  double m_momThres2[Rich::NRadiatorTypes][Rich::NParticleTypes];
+    /// Array containing square of particle masses
+    boost::array<double,Rich::NParticleTypes> m_particleMassSq;
 
-};
+    /// Momentum thresholds
+    double m_momThres[Rich::NRadiatorTypes][Rich::NParticleTypes];
+
+    /// Momentum thresholds squared (cached for speed)
+    double m_momThres2[Rich::NRadiatorTypes][Rich::NParticleTypes];
+
+  };
+
+}
 
 #endif // RICHTOOLS_RICHPARTICLEPROPERTIES_H

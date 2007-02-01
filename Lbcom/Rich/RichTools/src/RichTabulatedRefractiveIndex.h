@@ -2,10 +2,10 @@
 //-----------------------------------------------------------------------------
 /** @file RichTabulatedRefractiveIndex.h
  *
- *  Header file for tool : RichTabulatedRefractiveIndex
+ *  Header file for tool : Rich::TabulatedRefractiveIndex
  *
  *  CVS Log :-
- *  $Id: RichTabulatedRefractiveIndex.h,v 1.14 2006-08-31 11:46:05 cattanem Exp $
+ *  $Id: RichTabulatedRefractiveIndex.h,v 1.15 2007-02-01 17:51:11 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -35,96 +35,110 @@
 #include "RichDet/Rich1DTabProperty.h"
 
 //-----------------------------------------------------------------------------
-/** @class RichTabulatedRefractiveIndex RichTabulatedRefractiveIndex.h
+/** @namespace Rich
  *
- *  Tool to calculate the effective refractive index for
- *  a given radiator. An implementation that uses the tabulated
- *  information from the XML
+ *  General namespace for RICH software
  *
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   15/03/2002
- *
- *  @todo Fix RMS calculations
- *  @todo Update UMS dependencies to be more 'fine grained'
- *  @todo Figure out how to properly deal with multiple aerogel volumes
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
  */
 //-----------------------------------------------------------------------------
-
-class RichTabulatedRefractiveIndex : public RichToolBase,
-                                     virtual public IRichRefractiveIndex
+namespace Rich
 {
 
-public: // Methods for Gaudi Framework
+  //-----------------------------------------------------------------------------
+  /** @class TabulatedRefractiveIndex RichTabulatedRefractiveIndex.h
+   *
+   *  Tool to calculate the effective refractive index for
+   *  a given radiator. An implementation that uses the tabulated
+   *  information from the XML
+   *
+   *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+   *  @date   15/03/2002
+   *
+   *  @todo Fix RMS calculations
+   *  @todo Update UMS dependencies to be more 'fine grained'
+   *  @todo Figure out how to properly deal with multiple aerogel volumes
+   */
+  //-----------------------------------------------------------------------------
 
-  /// Standard constructor
-  RichTabulatedRefractiveIndex( const std::string& type,
-                                const std::string& name,
-                                const IInterface* parent );
+  class TabulatedRefractiveIndex : public Rich::ToolBase,
+                                   virtual public IRefractiveIndex
+  {
 
-  /// Destructor
-  virtual ~RichTabulatedRefractiveIndex() {};
+  public: // Methods for Gaudi Framework
 
-  // Initialization of the tool after creation
-  StatusCode initialize();
+    /// Standard constructor
+    TabulatedRefractiveIndex( const std::string& type,
+                              const std::string& name,
+                              const IInterface* parent );
 
-  // Finalization of the tool before deletion
-  StatusCode finalize();
+    /// Destructor
+    virtual ~TabulatedRefractiveIndex() {};
 
-public: // methods (and doxygen comments) inherited from interface
+    // Initialization of the tool after creation
+    StatusCode initialize();
 
-  // Calculates the refractive index for a given radiator type at a
-  // given energy
-  double refractiveIndex ( const Rich::RadiatorType rad,
-                           const double energy ) const;
+    // Finalization of the tool before deletion
+    StatusCode finalize();
 
-  // Calculates the average refractive index for a given radiator type
-  // for a given range of photon energies.
-  double refractiveIndex ( const Rich::RadiatorType rad,
-                           const double energyBot,
-                           const double energyTop ) const;
+  public: // methods (and doxygen comments) inherited from interface
 
-  // Calculates the average refractive index for a given radiator type
-  // for a all visable photon energies.
-  double refractiveIndex ( const Rich::RadiatorType rad ) const;
+    // Calculates the refractive index for a given radiator type at a
+    // given energy
+    double refractiveIndex ( const Rich::RadiatorType rad,
+                             const double energy ) const;
 
-  // Calculates the refractive index R.M.S. for a given radiator type
-  // for all visable photon energies.
-  double refractiveIndexRMS ( const Rich::RadiatorType rad ) const;
+    // Calculates the average refractive index for a given radiator type
+    // for a given range of photon energies.
+    double refractiveIndex ( const Rich::RadiatorType rad,
+                             const double energyBot,
+                             const double energyTop ) const;
 
-private: // methods
+    // Calculates the average refractive index for a given radiator type
+    // for a all visable photon energies.
+    double refractiveIndex ( const Rich::RadiatorType rad ) const;
 
-  /// UMS update method for Aerogel refractive index
-  StatusCode updateAerogelRefIndex();
+    // Calculates the refractive index R.M.S. for a given radiator type
+    // for all visable photon energies.
+    double refractiveIndexRMS ( const Rich::RadiatorType rad ) const;
 
-  /// UMS update method for Rich1Gas refractive index
-  StatusCode updateRich1GasRefIndex();
+  private: // methods
 
-  /// UMS update method for Rich2Gas refractive index
-  StatusCode updateRich2GasRefIndex();
+    /// UMS update method for Aerogel refractive index
+    StatusCode updateAerogelRefIndex();
 
-  /// Update refractive index for given radiator
-  StatusCode updateRefIndex( const Rich::RadiatorType rad );
+    /// UMS update method for Rich1Gas refractive index
+    StatusCode updateRich1GasRefIndex();
 
-private: // Private data
+    /// UMS update method for Rich2Gas refractive index
+    StatusCode updateRich2GasRefIndex();
 
-  /// Quantum Efficiency function.
-  //Rich1DTabProperty * m_QE;
+    /// Update refractive index for given radiator
+    StatusCode updateRefIndex( const Rich::RadiatorType rad );
 
-  /// Pointers to RICHes
-  std::vector<const DeRich*> m_riches;
+  private: // Private data
 
-  /// Detector parameters tool
-  const IRichDetParameters * m_detParams;
+    /// Quantum Efficiency function.
+    //Rich1DTabProperty * m_QE;
 
-  /// Pointers to RICH radiator detector elements
-  std::vector<DeRichRadiator *> m_deRads;
+    /// Pointers to RICHes
+    std::vector<const DeRich*> m_riches;
 
-  /// refractive index RMS values
-  std::vector<double> m_refI;
+    /// Detector parameters tool
+    const IDetParameters * m_detParams;
 
-  /// refractive index RMS values
-  std::vector<double> m_refRMS;
+    /// Pointers to RICH radiator detector elements
+    std::vector<DeRichRadiator *> m_deRads;
 
-};
+    /// refractive index RMS values
+    std::vector<double> m_refI;
+
+    /// refractive index RMS values
+    std::vector<double> m_refRMS;
+
+  };
+
+}
 
 #endif // RICHTOOLS_RICHTABULATEDREFRACTIVEINDEX_H

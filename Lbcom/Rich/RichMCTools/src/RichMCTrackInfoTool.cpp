@@ -5,7 +5,7 @@
  * Implementation file for class : RichMCTrackInfoTool
  *
  * CVS Log :-
- * $Id: RichMCTrackInfoTool.cpp,v 1.11 2006-12-01 13:19:51 cattanem Exp $
+ * $Id: RichMCTrackInfoTool.cpp,v 1.12 2007-02-01 17:50:13 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 15/03/2002
@@ -17,24 +17,24 @@
 // local
 #include "RichMCTrackInfoTool.h"
 
-// namespaces
-using namespace LHCb;
+// namespace
+using namespace Rich::MC;
 
-DECLARE_TOOL_FACTORY( RichMCTrackInfoTool );
+DECLARE_TOOL_FACTORY( MCTrackInfoTool );
 
 // Standard constructor
-RichMCTrackInfoTool::RichMCTrackInfoTool( const std::string& type,
-                                          const std::string& name,
-                                          const IInterface* parent )
+MCTrackInfoTool::MCTrackInfoTool( const std::string& type,
+                                  const std::string& name,
+                                  const IInterface* parent )
   : RichToolBase  ( type, name, parent ),
-    m_rayTrace    ( 0 ),
-    m_smartIDTool ( 0 ),
-    m_traceMode   ( RichTraceMode::IgnoreHPDAcceptance )
+    m_rayTrace    ( NULL ),
+    m_smartIDTool ( NULL ),
+    m_traceMode   ( LHCb::RichTraceMode::IgnoreHPDAcceptance )
 {
-  declareInterface<IRichMCTrackInfoTool>(this);
+  declareInterface<IMCTrackInfoTool>(this);
 }
 
-StatusCode RichMCTrackInfoTool::initialize()
+StatusCode MCTrackInfoTool::initialize()
 {
   // Sets up various tools and services
   const StatusCode sc = RichToolBase::initialize();
@@ -50,15 +50,15 @@ StatusCode RichMCTrackInfoTool::initialize()
   return sc;
 }
 
-StatusCode RichMCTrackInfoTool::finalize()
+StatusCode MCTrackInfoTool::finalize()
 {
   // Execute base class method
   return RichToolBase::finalize();
 }
 
 const bool
-RichMCTrackInfoTool::panelIntersectGlobal( const LHCb::MCRichSegment * segment,
-                                           Gaudi::XYZPoint & hitPoint ) const
+MCTrackInfoTool::panelIntersectGlobal( const LHCb::MCRichSegment * segment,
+                                       Gaudi::XYZPoint & hitPoint ) const
 {
   return ( 0 != segment &&
            m_rayTrace->traceToDetector( segment->rich(),
@@ -69,8 +69,8 @@ RichMCTrackInfoTool::panelIntersectGlobal( const LHCb::MCRichSegment * segment,
 }
 
 const bool
-RichMCTrackInfoTool::panelIntersectLocal( const LHCb::MCRichSegment * segment,
-                                          Gaudi::XYZPoint & hitPoint ) const
+MCTrackInfoTool::panelIntersectLocal( const LHCb::MCRichSegment * segment,
+                                      Gaudi::XYZPoint & hitPoint ) const
 {
 
   // find global point
