@@ -5,7 +5,7 @@
  * Implementation file for algorithm ChargedProtoPAlg
  *
  * CVS Log :-
- * $Id: ChargedProtoPAlg.cpp,v 1.49 2006-12-22 10:50:45 odescham Exp $
+ * $Id: ChargedProtoPAlg.cpp,v 1.50 2007-02-01 17:10:59 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 29/03/2006
@@ -110,15 +110,15 @@ StatusCode ChargedProtoPAlg::execute()
 
   // Load the RichPIDs
   const StatusCode richSc = getRichData();
-  if ( richSc.isFailure() ) return richSc;
+  //if ( richSc.isFailure() ) return richSc;
 
   // Load the MuonPIDs
   const StatusCode muonSc = getMuonData();
-  if ( muonSc.isFailure() ) return muonSc;
+  //if ( muonSc.isFailure() ) return muonSc;
 
   // Load the CaloPIDs
   const StatusCode caloSc = getCaloData();
-  if ( caloSc.isFailure() ) return caloSc;
+  //if ( caloSc.isFailure() ) return caloSc;
 
   // Create the ProtoParticle container
   m_protos = new ProtoParticles();
@@ -162,21 +162,21 @@ StatusCode ChargedProtoPAlg::execute()
     bool hasRICHInfo(false), hasMUONInfo(false), hasCALOInfo(false) ;
 
     // Add RICH info
-    if ( addRich(proto) )
+    if ( richSc.isSuccess() && addRich(proto) )
     {
       hasRICHInfo = true;
       ++tally.richTracks;
     }
 
     // Add MUON info
-    if ( addMuon(proto) )
+    if ( muonSc.isSuccess() && addMuon(proto) )
     {
       hasMUONInfo = true;
       ++tally.muonTracks;
     }
 
     // Add CALO info
-    if ( addCalo(proto) )
+    if ( caloSc.isSuccess() && addCalo(proto) )
     {
       hasCALOInfo = true;
       ++tally.caloTracks;
@@ -328,8 +328,8 @@ bool ChargedProtoPAlg::addCalo( LHCb::ProtoParticle * proto ) const
           if( m_electron->set(proto) )
             proto->addInfo(ProtoParticle::CaloTrajectoryL, m_electron->caloTrajectoryL(CaloPlane::ShowerMax,"hypo") );
           proto->addInfo(ProtoParticle::CaloChargedSpd, CaloSpd( hRange.front().to() ));
-          proto->addInfo(ProtoParticle::CaloChargedPrs, CaloPrs( hRange.front().to() ));          
-          proto->addInfo(ProtoParticle::CaloChargedEcal, CaloEcal( hRange.front().to() ));          
+          proto->addInfo(ProtoParticle::CaloChargedPrs, CaloPrs( hRange.front().to() ));
+          proto->addInfo(ProtoParticle::CaloChargedEcal, CaloEcal( hRange.front().to() ));
           proto->addInfo(ProtoParticle::CaloElectronMatch , hRange.front().weight() );
         }
 
@@ -407,7 +407,7 @@ bool ChargedProtoPAlg::addCalo( LHCb::ProtoParticle * proto ) const
           proto->addToCalo ( hRange.front().to() );
           proto->addInfo(ProtoParticle::CaloNeutralSpd, CaloSpd( hRange.front().to() ));
           proto->addInfo(ProtoParticle::CaloNeutralPrs, CaloPrs( hRange.front().to() ));
-          proto->addInfo(ProtoParticle::CaloNeutralEcal, CaloEcal( hRange.front().to() ));          
+          proto->addInfo(ProtoParticle::CaloNeutralEcal, CaloEcal( hRange.front().to() ));
           proto->addInfo(ProtoParticle::CaloBremMatch , hRange.front().weight() );
         }
 
@@ -809,7 +809,7 @@ StatusCode ChargedProtoPAlg::getCaloData()
 double ChargedProtoPAlg::CaloSpd  ( const LHCb::CaloHypo*  hypo  )  const
 {
   //
-  if( 0 == hypo) return 0;  
+  if( 0 == hypo) return 0;
   LHCb::CaloHypo::Digits digits = hypo->digits();
   LHCb::CaloDataFunctor::IsFromCalo< LHCb::CaloDigit* > isSpd( DeCalorimeterLocation::Spd );
   LHCb::CaloHypo::Digits::iterator it = std::stable_partition ( digits.begin(),digits.end(),isSpd );
@@ -819,26 +819,26 @@ double ChargedProtoPAlg::CaloSpd  ( const LHCb::CaloHypo*  hypo  )  const
 double ChargedProtoPAlg::CaloPrs  ( const LHCb::CaloHypo*  hypo  )  const
 {
   //
-  if( 0 == hypo) return 0;  
+  if( 0 == hypo) return 0;
   LHCb::CaloHypo::Digits digits = hypo->digits();
   LHCb::CaloDataFunctor::IsFromCalo< LHCb::CaloDigit* > isPrs( DeCalorimeterLocation::Prs );
   LHCb::CaloHypo::Digits::iterator it = std::stable_partition ( digits.begin(),digits.end(),isPrs );
   double CaloPrs = 0. ;
   for(LHCb::CaloHypo::Digits::iterator id = digits.begin(); id != it ; ++id){
     if(0 != *id)CaloPrs += (*id)->e();
-  }  
+  }
   return CaloPrs  ;
 };
 double ChargedProtoPAlg::CaloEcal  ( const LHCb::CaloHypo*  hypo  )  const
 {
   //
-  if( 0 == hypo) return 0;  
+  if( 0 == hypo) return 0;
   SmartRefVector<LHCb::CaloCluster> clusters = hypo->clusters();
   if( 0 == clusters.size())return 0.;
   SmartRefVector<LHCb::CaloCluster>::iterator icluster = clusters.begin();
   LHCb::CaloCluster* cluster = *icluster;
   if(NULL == cluster) return 0;
-  return cluster->e();  
+  return cluster->e();
 };
 
 
