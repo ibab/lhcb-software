@@ -1,11 +1,11 @@
-# $Id: requirements,v 1.338 2007-01-12 07:38:37 jpalac Exp $
+# $Id: requirements,v 1.339 2007-02-01 18:35:52 jpalac Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg, J. Palacios
 #
 
 #============================================================================
 package           DaVinci
-version           v17r8
+version           v18r0
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -38,19 +38,19 @@ use FieldMap            v4r7
 use ParamFiles          v5r0         
 
 #-- LHCb libraries
-use LHCb	v21r12
+use LHCb	v22r0
 
 #-- Lbcom
-use LbcomSys    v5r9
+use LbcomSys    v6r0
 
 #-- Rec
-use RecSys      v3r14p1
+use RecSys      v4r0
 
 #-- Hlt
-use HltSys      v1r1
+#use HltSys      v1r1
 
 #--Phys
-use PhysSys     v4r6
+use PhysSys     v5r0
 
 # Build DaVinci Application with standard executable
 # Note that user code is located in a component library (see details
