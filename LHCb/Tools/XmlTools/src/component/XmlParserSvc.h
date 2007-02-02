@@ -1,4 +1,4 @@
-// $Id: XmlParserSvc.h,v 1.7 2005-10-13 16:52:01 marcocle Exp $
+// $Id: XmlParserSvc.h,v 1.8 2007-02-02 08:10:50 marcocle Exp $
 #ifndef DETDESCCNV_XMLPARSERSVC_H
 #define DETDESCCNV_XMLPARSERSVC_H
 
@@ -14,6 +14,8 @@
 
 // Forward and external declarations
 class IXmlEntityResolverSvc;
+class IDetDataSvc;
+class IOVDOMDocument;
 
 template <class TYPE> class SvcFactory;
 
@@ -147,7 +149,7 @@ private:
    * @param fileName the name of the file that was just parsed
    * @param document the document that is the result of the parsing
    */
-  void cacheItem (std::string fileName, xercesc::DOMDocument* document);
+  void cacheItem (std::string fileName, IOVDOMDocument* document);
 
   /**
    * this only increases the age of the cache.
@@ -180,7 +182,7 @@ private:
    * if it has the smallest birthDate+cacheBehavior*utility score and is not locked.
    */
   struct cachedItem {
-    xercesc::DOMDocument* document;
+    IOVDOMDocument* document;
     unsigned int birthDate, utility;
     int lock;
   };
@@ -211,6 +213,12 @@ private:
   /// Pointer to the IXmlEntityResolverSvc.
   IXmlEntityResolverSvc *m_resolverSvc;
 
+  /// Name of the service which will provide the event time (option "DetectorDataSvc", default = "DetectorDataSvc").
+  std::string m_detDataSvcName;
+  
+  /// Pointer to the detector data service
+  IDetDataSvc *m_detDataSvc;
+  
 };
 
 #endif    // DETDESCCNV_XMLPARSERSVC_H
