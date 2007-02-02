@@ -6,7 +6,8 @@
 
 ! 2007-02-01 - Chris Jones
  - Allow sub-det information to be absent when creating ProtoParticles with
-   ChargedProtoPAlg
+   ChargedProtoPAlg.
+ - Suppress FAILURE from warning messages when PID information is missing
 
 ! 2007-01-08 - Olivier Deschamps
  - add protections in ChargedProtoCombineDLLsAlg

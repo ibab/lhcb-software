@@ -5,7 +5,7 @@
  * Implementation file for algorithm ChargedProtoPAlg
  *
  * CVS Log :-
- * $Id: ChargedProtoPAlg.cpp,v 1.50 2007-02-01 17:10:59 jonrob Exp $
+ * $Id: ChargedProtoPAlg.cpp,v 1.51 2007-02-02 13:15:21 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 29/03/2006
@@ -603,7 +603,7 @@ StatusCode ChargedProtoPAlg::getRichData()
 
   // Do we have any RichPID results
   if ( !exist<RichPIDs>(m_richPath) )
-    return Warning( "No RichPIDs at '"+m_richPath+"'" );
+    return Warning( "No RichPIDs at '"+m_richPath+"'", StatusCode::SUCCESS );
 
   // yes, so load them
   const RichPIDs * richpids = get<RichPIDs>( m_richPath );
@@ -633,7 +633,7 @@ StatusCode ChargedProtoPAlg::getMuonData()
 
   // Do we have any MuonPID results
   if ( !exist<MuonPIDs>(m_muonPath) )
-    return Warning( "No MuonPIDs at '"+m_muonPath+"'" );
+    return Warning( "No MuonPIDs at '"+m_muonPath+"'", StatusCode::SUCCESS );
 
   // yes, so load them
   const MuonPIDs * muonpids = get<MuonPIDs>( m_muonPath );
@@ -669,36 +669,35 @@ StatusCode ChargedProtoPAlg::getCaloData()
   if( m_EcalPID ){
 
     if ( !exist<ITrAccTable>(CaloIdLocation::InEcal ) )
-      return Warning("No InEcal Acceptance table at     '"+CaloIdLocation::InEcal+"'" );
+      return Warning("No InEcal Acceptance table at     '"+CaloIdLocation::InEcal+"'", StatusCode::SUCCESS );
     m_InEcalTable = get<ITrAccTable>( CaloIdLocation::InEcal );
 
     if ( !exist<ITrHypoTable2D>( CaloIdLocation::ElectronMatch )  )
-      return Warning( "No Electron-Track relation table at '"+ CaloIdLocation::ElectronMatch+"'" );
+      return Warning( "No Electron-Track relation table at '"+ CaloIdLocation::ElectronMatch+"'", StatusCode::SUCCESS );
     m_elecTrTable = get<ITrHypoTable2D>(  CaloIdLocation::ElectronMatch );
 
     if ( !exist<IClusTrTable2D>( CaloIdLocation::ClusterMatch )  )
-      return Warning("No Cluster-Track relation table at  '"+CaloIdLocation::ClusterMatch+"'" );
+      return Warning("No Cluster-Track relation table at  '"+CaloIdLocation::ClusterMatch+"'", StatusCode::SUCCESS );
     m_clusTrTable = get<IClusTrTable2D>( CaloIdLocation::ClusterMatch );
 
     if ( !exist<ITrEvalTable>( CaloIdLocation::EcalChi2 ) )
-      return Warning("No EcalChi2 relation table at     '"+CaloIdLocation::EcalChi2+"'" );
+      return Warning("No EcalChi2 relation table at     '"+CaloIdLocation::EcalChi2+"'", StatusCode::SUCCESS );
     m_EcalChi2Table = get<ITrEvalTable>(  CaloIdLocation::EcalChi2 );
 
     if ( !exist<ITrEvalTable>( CaloIdLocation::EcalE ) )
-      return Warning("No EcalE relation table at     '"+ CaloIdLocation::EcalE+"'" );
+      return Warning("No EcalE relation table at     '"+ CaloIdLocation::EcalE+"'", StatusCode::SUCCESS );
     m_EcalETable = get<ITrEvalTable>(  CaloIdLocation::EcalE );
 
     if ( !exist<ITrEvalTable>( CaloIdLocation::ClusChi2 ) )
-      return Warning("No ClusChi2 relation table at     '"+CaloIdLocation::ClusChi2+"'" );
+      return Warning("No ClusChi2 relation table at     '"+CaloIdLocation::ClusChi2+"'", StatusCode::SUCCESS );
     m_ClusChi2Table = get<ITrEvalTable>( CaloIdLocation::ClusChi2 );
 
-
     if ( !exist<ITrEvalTable>( CaloIdLocation::EcalPIDe )  )
-      return Warning("No DlleEcal  relation table at     '"+ CaloIdLocation::EcalPIDe+"'" );
+      return Warning("No DlleEcal  relation table at     '"+ CaloIdLocation::EcalPIDe+"'", StatusCode::SUCCESS );
     m_dlleEcalTable  = get<ITrEvalTable>(  CaloIdLocation::EcalPIDe );
 
     if ( !exist<ITrEvalTable>( CaloIdLocation::EcalPIDmu ) )
-      return Warning("No DLLmuEcal relation table at     '"+ CaloIdLocation::EcalPIDmu+"'" );
+      return Warning("No DLLmuEcal relation table at     '"+ CaloIdLocation::EcalPIDmu+"'", StatusCode::SUCCESS );
     m_dllmuEcalTable = get<ITrEvalTable>(  CaloIdLocation::EcalPIDmu );
 
     debug() << "Ecal PID SUCCESFULLY LOADED" << endreq;
@@ -712,19 +711,19 @@ StatusCode ChargedProtoPAlg::getCaloData()
   if( m_BremPID ){
 
     if ( !exist<ITrAccTable>( CaloIdLocation::InBrem )  )
-      return Warning("No InBrem Acceptance table at '"+ CaloIdLocation::InBrem+"'" );
+      return Warning("No InBrem Acceptance table at '"+ CaloIdLocation::InBrem+"'", StatusCode::SUCCESS );
     m_InBremTable = get<ITrAccTable>(  CaloIdLocation::InBrem  );
 
     if ( !exist<ITrHypoTable2D>( CaloIdLocation::BremMatch ) )
-      return Warning(" No Brem-Track relation table at '"+ CaloIdLocation::BremMatch +"'" );
+      return Warning(" No Brem-Track relation table at '"+ CaloIdLocation::BremMatch +"'", StatusCode::SUCCESS );
     m_bremTrTable = get<ITrHypoTable2D>(  CaloIdLocation::BremMatch );
 
     if ( !exist<ITrEvalTable>( CaloIdLocation::BremChi2 ) )
-      return Warning("No BremlChi2 relation table at     '"+ CaloIdLocation::BremChi2+"'" );
+      return Warning("No BremlChi2 relation table at     '"+ CaloIdLocation::BremChi2+"'", StatusCode::SUCCESS );
     m_BremChi2Table = get<ITrEvalTable>( CaloIdLocation::BremChi2  );
 
     if ( !exist<ITrEvalTable>( CaloIdLocation::BremPIDe ) )
-      return Warning("No DLLeBrem relation table at     '"+ CaloIdLocation::BremPIDe+"'" );
+      return Warning("No DLLeBrem relation table at     '"+ CaloIdLocation::BremPIDe+"'", StatusCode::SUCCESS );
     m_dlleBremTable = get<ITrEvalTable>( CaloIdLocation::BremPIDe  );
 
     debug() << "BREM PID SUCCESFULLY LOADED" << endreq;
@@ -738,11 +737,11 @@ StatusCode ChargedProtoPAlg::getCaloData()
   if( m_SpdPID ){
 
     if ( !exist<ITrAccTable>( CaloIdLocation::InSpd ) )
-      return Warning("No InSpd Acceptance table at     '"+CaloIdLocation::InSpd+"'" );
+      return Warning("No InSpd Acceptance table at     '"+CaloIdLocation::InSpd+"'", StatusCode::SUCCESS );
     m_InSpdTable = get<ITrAccTable>( CaloIdLocation::InSpd );
 
     if ( !exist<ITrEvalTable>( CaloIdLocation::SpdE ) )
-      return Warning("No SpdE relation table at     '"+ CaloIdLocation::SpdE+"'" );
+      return Warning("No SpdE relation table at     '"+ CaloIdLocation::SpdE+"'", StatusCode::SUCCESS );
     m_SpdETable = get<ITrEvalTable>(  CaloIdLocation::SpdE );
 
     debug() << "SPD PID SUCCESFULLY LOADED" << endreq;
@@ -755,15 +754,15 @@ StatusCode ChargedProtoPAlg::getCaloData()
   if( m_SpdPID ){
 
     if ( !exist<ITrAccTable>( CaloIdLocation::InPrs ) )
-      return Warning("No InPrs Acceptance table at     '"+ CaloIdLocation::InPrs+"'" );
+      return Warning("No InPrs Acceptance table at     '"+ CaloIdLocation::InPrs+"'", StatusCode::SUCCESS );
     m_InPrsTable = get<ITrAccTable>(  CaloIdLocation::InPrs );
 
     if ( !exist<ITrEvalTable>( CaloIdLocation::PrsE ) )
-      return Warning("No PrsE relation table at     '"+ CaloIdLocation::PrsE+"'" );
+      return Warning("No PrsE relation table at     '"+ CaloIdLocation::PrsE+"'", StatusCode::SUCCESS );
     m_PrsETable = get<ITrEvalTable>(  CaloIdLocation::PrsE  );
 
     if ( !exist<ITrEvalTable>( CaloIdLocation::PrsPIDe )   )
-      return Warning("No DLLePrs   relation table at     '"+ CaloIdLocation::PrsPIDe+"'" );
+      return Warning("No DLLePrs   relation table at     '"+ CaloIdLocation::PrsPIDe+"'", StatusCode::SUCCESS );
     m_dllePrsTable   = get<ITrEvalTable>( CaloIdLocation::PrsPIDe );
 
     debug() << "PRS PID SUCCESFULLY LOADED" << endreq;
@@ -778,19 +777,19 @@ StatusCode ChargedProtoPAlg::getCaloData()
   if( m_HcalPID ){
 
     if ( !exist<ITrAccTable>( CaloIdLocation::InHcal ) )
-      return Warning("No InHcal Acceptance table at     '"+ CaloIdLocation::InHcal+"'" );
+      return Warning("No InHcal Acceptance table at     '"+ CaloIdLocation::InHcal+"'", StatusCode::SUCCESS );
     m_InHcalTable = get<ITrAccTable>(  CaloIdLocation::InHcal );
 
     if ( !exist<ITrEvalTable>( CaloIdLocation::HcalE ) )
-      return Warning("No HcalE relation table at     '"+ CaloIdLocation::HcalE+"'" );
+      return Warning("No HcalE relation table at     '"+ CaloIdLocation::HcalE+"'", StatusCode::SUCCESS );
     m_HcalETable = get<ITrEvalTable>(  CaloIdLocation::HcalE  );
 
     if ( !exist<ITrEvalTable>( CaloIdLocation::HcalPIDe ) )
-      return Warning("No DLLeHcal  relation table at     '"+ CaloIdLocation::HcalPIDe +"'" );
+      return Warning("No DLLeHcal  relation table at     '"+ CaloIdLocation::HcalPIDe +"'", StatusCode::SUCCESS );
     m_dlleHcalTable  = get<ITrEvalTable>(  CaloIdLocation::HcalPIDe  );
 
     if ( !exist<ITrEvalTable>( CaloIdLocation::HcalPIDmu ) )
-      return Warning("No DLLmuEcal relation table at     '"+ CaloIdLocation::HcalPIDe+"'" );
+      return Warning("No DLLmuEcal relation table at     '"+ CaloIdLocation::HcalPIDe+"'", StatusCode::SUCCESS );
     m_dllmuHcalTable = get<ITrEvalTable>( CaloIdLocation::HcalPIDmu );
 
     debug() << "HCAL PID SUCCESFULLY LOADED" << endreq;
@@ -804,7 +803,6 @@ StatusCode ChargedProtoPAlg::getCaloData()
 
   return StatusCode::SUCCESS;
 }
-
 
 double ChargedProtoPAlg::CaloSpd  ( const LHCb::CaloHypo*  hypo  )  const
 {
@@ -829,6 +827,7 @@ double ChargedProtoPAlg::CaloPrs  ( const LHCb::CaloHypo*  hypo  )  const
   }
   return CaloPrs  ;
 };
+
 double ChargedProtoPAlg::CaloEcal  ( const LHCb::CaloHypo*  hypo  )  const
 {
   //
@@ -840,7 +839,6 @@ double ChargedProtoPAlg::CaloEcal  ( const LHCb::CaloHypo*  hypo  )  const
   if(NULL == cluster) return 0;
   return cluster->e();
 };
-
 
 //=============================================================================
 //  Finalize
