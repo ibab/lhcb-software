@@ -1,4 +1,4 @@
-// $Id: TrgVertexFitter.cpp,v 1.13 2007-01-12 14:17:57 ranjard Exp $
+// $Id: TrgVertexFitter.cpp,v 1.14 2007-02-02 17:51:52 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -20,12 +20,12 @@ using namespace LHCb ;
 //
 //  THIS TOOL IS MEANT FOR HLT, WHERE TRACKS ARE ASSUMED TO HAVE A
 //  'CYLINDRICAL' ERROR, THAT IS, THE COVARIANCE MATRIX HAS
-//  COV(1,1)=COV(2,2)!=0 AND ZERO IN ANY OTHER ELEMENT
+//  COV(0,0)=COV(1,1)!=0 AND ZERO IN ANY OTHER ELEMENT
 //
 //  The tool should work for other tracks, but correlations 
 //  will be neglected
 //  
-//  The fact that COV(1,1)=COV(2,2) is not assumed anywhere, allowing the
+//  The fact that COV(0,0)=COV(1,1) is not assumed anywhere, allowing the
 //  two elements to be different, useful for instance for composites
 //
 //  Some documentation available in a talk at
@@ -234,8 +234,8 @@ StatusCode TrgVertexFitter::doFit(const LHCb::Particle::ConstVector& partsToFit,
     iMY = slopes.Y();
     iX0 = point.x() - slopes.X() * point.z();
     iY0 = point.y() - slopes.Y() * point.z();
-    iInvSig2X = 1/cov(1,1);
-    iInvSig2Y = 1/cov(2,2);
+    iInvSig2X = 1/cov(0,0);
+    iInvSig2Y = 1/cov(1,1);
 
     AX += iX0 * iInvSig2X;
     BX += iInvSig2X;
@@ -298,12 +298,12 @@ StatusCode TrgVertexFitter::vertexPositionAndError(const double& AX, const doubl
   Gaudi::SymMatrix3x3 fastCov;
 
   double invDet = 1./( BX*BY*( DX + DY ) - CX*CX*BY - CY*CY*BX );
-  fastCov(1,1) = invDet * ( -CY*CY + ( BY * ( DX + DY )));
-  fastCov(2,1) = invDet * (  CX*CY );
-  fastCov(3,1) = invDet * (  CX*BY );
-  fastCov(2,2) = invDet * ( -CX*CX + ( BX * ( DX + DY )));
-  fastCov(2,3) = invDet * (  BX*CY );
-  fastCov(3,3) = invDet * (  BX*BY );
+  fastCov(0,0) = invDet * ( -CY*CY + ( BY * ( DX + DY )));
+  fastCov(1,0) = invDet * (  CX*CY );
+  fastCov(2,0) = invDet * (  CX*BY );
+  fastCov(1,1) = invDet * ( -CX*CX + ( BX * ( DX + DY )));
+  fastCov(1,2) = invDet * (  BX*CY );
+  fastCov(2,2) = invDet * (  BX*BY );
   V.setCovMatrix(fastCov);
 
   return StatusCode::SUCCESS;
