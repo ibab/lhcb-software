@@ -5,7 +5,7 @@
  *  Declaration file for objects in component library RichDAQ
  *
  *  CVS Log :-
- *  $Id: RichDAQ_load.cpp,v 1.13 2007-02-01 17:42:29 jonrob Exp $
+ *  $Id: RichDAQ_load.cpp,v 1.14 2007-02-02 17:38:24 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-09
@@ -13,7 +13,6 @@
 //-----------------------------------------------------------------------------
 
 #include "GaudiKernel/DeclareFactoryEntries.h"
-
 
 DECLARE_FACTORY_ENTRIES ( RichDAQ )
 {
@@ -31,8 +30,11 @@ DECLARE_FACTORY_ENTRIES ( RichDAQ )
   DECLARE_TOOL( RawDataFormatTool );
 
   // Pixel suppression tools
-  DECLARE_TOOL( HighOccHPDSuppressionTool );
+  DECLARE_TOOL( HighOccHPDSuppressionTool      );
   DECLARE_TOOL( HPDPixelClusterSuppressionTool );
+
+  // pixel clustering tools
+  DECLARE_TOOL( HPDPixelClusteringTool );
 
 }
 

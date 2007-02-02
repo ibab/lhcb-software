@@ -10,6 +10,9 @@
    I am promised almost final this time) L1 firmware
    + Encoding and decoding now requires the ODIN data object, due to new
      data integrity checks in the RICH data format.
+ - Split pixel clustering code out of the suppression tool into a standalone
+   clustering tool, that can then be used in other applications.
+   + New pixel cluster object added to RichKernel
 
 !========================== RichDAQ v3r7 2006-12-01 =========================
 ! 2006-12-01 - Marco Cattaneo
