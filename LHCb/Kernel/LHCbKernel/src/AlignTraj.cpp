@@ -1,7 +1,7 @@
-// $Id: AlignTraj.cpp,v 1.1 2007-01-15 10:58:26 graven Exp $
+// $Id: AlignTraj.cpp,v 1.2 2007-02-02 07:58:07 cattanem Exp $
 
 #include "Kernel/AlignTraj.h"
-#include "Kernel/GenericMatrixTypes.h"
+#include "GaudiKernel/GenericMatrixTypes.h"
 
 #include "Math/Rotation3D.h"
 
@@ -15,7 +15,7 @@ namespace {
     class Column {
     public:
        Column(T& t, unsigned c) : m_t(t),m_c(c) {}
-       template <typename V> Column<T>& operator=(const V& v) { m_t(0,m_c)=v.X();m_t(1,m_c)=v.Y(),m_t(2,m_c)=v.Z(); return *this; }
+       template <typename V> Column<T>& operator=(const V& v) { m_t(0,m_c)=v.X();m_t(1,m_c)=v.Y(),m_t(2,m_c)=v.Z(); return *this;}
     private:
        T&  m_t;
        unsigned m_c;

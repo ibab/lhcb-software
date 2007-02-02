@@ -1,10 +1,10 @@
-# $Id: requirements,v 1.117 2007-01-31 12:34:47 cattanem Exp $
+# $Id: requirements,v 1.118 2007-02-02 07:58:07 cattanem Exp $
 # =============================================================================
 package LHCbKernel
 author  M.Frank    CERN/LHCb
 manager M.Cattaneo CERN/LHCb
 
-version v7r0
+version v7r1
 
 branches cmt doc Event Kernel src xml
 
@@ -45,7 +45,6 @@ macro_append LHCbKernel_cppflags "" \
 
 # Standard patterns (order is essential)
 #============================================================================
-apply_pattern component_library library=LHCbKernelDict
 apply_pattern linker_library    library=LHCbKernel
 
 macro_append ROOT_linkopts " -L$(ROOT_home)/lib -lReflex -lMathCore -lSmatrix " \
