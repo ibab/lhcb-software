@@ -4,7 +4,11 @@
 ! Purpose     : Common particles
 !-----------------------------------------------------------------------------
 
-!========================== CommonParticles v3r7 2007-01-30 ===================
+!========================== CommonParticles v3r7 2007-02-02 ===================
+
+! 2007-02-02 - Juan PALACIOS
+  - opitons/StandardKstar.opts
+    . Fix bug. Kazu's changes had managed to comment out StdLooseKstar.
 
 ! 2007-01-31 - Juan PALACIOS for Kazu Akiba
   - options/StandardKstar.opts

@@ -1,6 +1,6 @@
-// $Id: StandardKstar.opts,v 1.6 2007-01-31 08:17:20 jpalac Exp $
+// $Id: StandardKstar.opts,v 1.7 2007-02-02 11:53:45 jpalac Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.6 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.7 $
 // ============================================================================
 
 /** @file 
@@ -14,18 +14,16 @@
  *  @author += Kazu Akiba, for the Standard Tight Kstar. kazu.akiba@gmail.com
  *  @date 2007-01-30 - last modified - tight Kstar inclusion
  */
+// Loose Kstar->KPi
 DataOnDemandSvc.Algorithms += {
-  // Loose Kstar->KPi
   "DATA='/Event/Phys/StdTightKstar2KPi/Particles'     TYPE='MakeResonances/StdTightKstar2KPi'",
   "DATA='/Event/Phys/StdTightKstar2KPi/Vertices'      TYPE='MakeResonances/StdTightKstar2KPi'"
 };
-/*************************************************************************
+// Loose Kstar->KPi
 DataOnDemandSvc.Algorithms += {
-  // Loose Kstar->KPi
   "DATA='/Event/Phys/StdLooseKstar2KPi/Particles'     TYPE='MakeResonances/StdLooseKstar2KPi'",
   "DATA='/Event/Phys/StdLooseKstar2KPi/Vertices'      TYPE='MakeResonances/StdLooseKstar2KPi'"
 };
-
 /*************************************************************************
 *  Standard Tight Kstar->KPi
 */
