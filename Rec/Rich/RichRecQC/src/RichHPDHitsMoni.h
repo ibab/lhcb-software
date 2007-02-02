@@ -2,10 +2,10 @@
 //-----------------------------------------------------------------------------
 /** @file RichHPDHitsMoni.h
  *
- *  Header file for algorithm class : RichHPDHitsMoni
+ *  Header file for algorithm class : Rich::Rec::MC::HPDHitsMoni
  *
  *  CVS Log :-
- *  $Id: RichHPDHitsMoni.h,v 1.2 2006-12-01 16:02:32 cattanem Exp $
+ *  $Id: RichHPDHitsMoni.h,v 1.3 2007-02-02 10:08:36 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -35,38 +35,76 @@
 #include "RichKernel/IRichRawBufferToSmartIDsTool.h"
 
 //-----------------------------------------------------------------------------
-/** @class RichHPDHitsMoni RichHPDHitsMoni.h
+/** @namespace Rich
  *
- *  Simple monitor for the hits in each HPD
+ *  General namespace for RICH software
  *
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   05/04/2002
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
  */
 //-----------------------------------------------------------------------------
-
-class RichHPDHitsMoni : public RichRecHistoAlgBase
+namespace Rich
 {
 
-public:
+  /** @namespace Rec
+   *
+   *  General namespace for RICH reconstruction software
+   *
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   08/07/2004
+   */
+  namespace Rec
+  {
 
-  /// Standard constructor
-  RichHPDHitsMoni( const std::string& name,
-                   ISvcLocator* pSvcLocator );
+    //-----------------------------------------------------------------------------
+    /** @namespace MC
+     *
+     *  General namespace for RICH MC related software
+     *
+     *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+     *  @date   05/12/2006
+     */
+    //-----------------------------------------------------------------------------
+    namespace MC
+    {
 
-  virtual ~RichHPDHitsMoni( ); ///< Destructor
+      //-----------------------------------------------------------------------------
+      /** @class HPDHitsMoni RichHPDHitsMoni.h
+       *
+       *  Simple monitor for the hits in each HPD
+       *
+       *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+       *  @date   05/04/2002
+       */
+      //-----------------------------------------------------------------------------
 
-  virtual StatusCode initialize();    // Algorithm initialization
-  virtual StatusCode execute   ();    // Algorithm execution
-  virtual StatusCode finalize  ();    // Algorithm finalization
+      class HPDHitsMoni : public Rich::Rec::HistoAlgBase
+      {
 
-private: // data
+      public:
 
-  /// Raw Buffer Decoding tool
-  const IRichRawBufferToSmartIDsTool * m_decoder;
+        /// Standard constructor
+        HPDHitsMoni( const std::string& name,
+                     ISvcLocator* pSvcLocator );
 
-  /// Pointer to RICH system detector element
-  const DeRichSystem * m_richSys;
+        virtual ~HPDHitsMoni( ); ///< Destructor
 
-};
+        virtual StatusCode initialize();    // Algorithm initialization
+        virtual StatusCode execute   ();    // Algorithm execution
+        virtual StatusCode finalize  ();    // Algorithm finalization
+
+      private: // data
+
+        /// Raw Buffer Decoding tool
+        const Rich::DAQ::IRawBufferToSmartIDsTool * m_decoder;
+
+        /// Pointer to RICH system detector element
+        const DeRichSystem * m_richSys;
+
+      };
+
+    }
+  }
+}
 
 #endif // RICHRECMONITOR_RichHPDHitsMoni_H

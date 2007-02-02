@@ -1,10 +1,10 @@
 //-------------------------------------------------------------------------------
 /** @file RichRecoQC.cpp
  *
- *  Implementation file for RICH reconstruction monitoring algorithm : RichRecoQC
+ *  Implementation file for RICH reconstruction monitoring algorithm : Rich::Rec::MC::RecoQC
  *
  *  CVS Log :-
- *  $Id: RichRecoQC.cpp,v 1.31 2006-12-01 16:02:32 cattanem Exp $
+ *  $Id: RichRecoQC.cpp,v 1.32 2007-02-02 10:08:36 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-02
@@ -18,15 +18,15 @@
 #include "RichRecoQC.h"
 
 // namespaces
-using namespace LHCb;
+using namespace Rich::Rec::MC;
 
 //-------------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( RichRecoQC );
+DECLARE_ALGORITHM_FACTORY( RecoQC );
 
 // Standard constructor, initializes variables
-RichRecoQC::RichRecoQC( const std::string& name,
-                        ISvcLocator* pSvcLocator )
+RecoQC::RecoQC( const std::string& name,
+                ISvcLocator* pSvcLocator )
   : RichRecHistoAlgBase ( name, pSvcLocator ),
     m_richPartProp      ( NULL ),
     m_ckAngle           ( NULL ),
@@ -71,10 +71,10 @@ RichRecoQC::RichRecoQC( const std::string& name,
 }
 
 // Destructor
-RichRecoQC::~RichRecoQC() {};
+RecoQC::~RecoQC() {};
 
 // Initialisation
-StatusCode RichRecoQC::initialize()
+StatusCode RecoQC::initialize()
 {
   // Sets up various tools and services
   const StatusCode sc = RichRecHistoAlgBase::initialize();
@@ -87,7 +87,7 @@ StatusCode RichRecoQC::initialize()
 }
 
 // Main execution
-StatusCode RichRecoQC::execute()
+StatusCode RecoQC::execute()
 {
   debug() << "Execute" << endreq;
 
@@ -117,10 +117,10 @@ StatusCode RichRecoQC::execute()
   const bool mcRICHOK  = richRecMCTool()->pixelMCHistoryAvailable();
 
   // Iterate over segments
-  for ( RichRecSegments::const_iterator iSeg = richSegments()->begin();
+  for ( LHCb::RichRecSegments::const_iterator iSeg = richSegments()->begin();
         iSeg != richSegments()->end(); ++iSeg )
   {
-    RichRecSegment * segment = *iSeg;
+    LHCb::RichRecSegment * segment = *iSeg;
 
     // track selection
     if ( !m_trSelector->trackSelected(segment->richRecTrack()) ) continue;
@@ -158,22 +158,22 @@ StatusCode RichRecoQC::execute()
     // loop over photons for this segment
     unsigned int truePhotons(0);
     double avRecTrueTheta(0);
-    for ( RichRecSegment::Photons::const_iterator iPhot = segment->richRecPhotons().begin();
+    for ( LHCb::RichRecSegment::Photons::const_iterator iPhot = segment->richRecPhotons().begin();
           iPhot != segment->richRecPhotons().end(); ++iPhot )
     {
-      RichRecPhoton * photon = *iPhot;
+      LHCb::RichRecPhoton * photon = *iPhot;
 
       // reconstructed theta
       const double thetaRec = photon->geomPhoton().CherenkovTheta();
       const double phiRec = photon->geomPhoton().CherenkovPhi();
-      plot1D( thetaRec, hid(rad,"thetaRec"), "Reconstructed Ch Theta", 
+      plot1D( thetaRec, hid(rad,"thetaRec"), "Reconstructed Ch Theta",
               m_chThetaRecHistoLimitMin[rad], m_chThetaRecHistoLimitMax[rad], 50 );
       plot1D( phiRec, hid(rad,"phiRec"), "Reconstructed Ch Phi", 0.0, 2*Gaudi::Units::pi, 50 );
 
       if ( mcTrackOK && mcRICHOK )
       {
         // Is this a true photon ?
-        const MCParticle * photonParent = richRecMCTool()->trueCherenkovPhoton( photon );
+        const LHCb::MCParticle * photonParent = richRecMCTool()->trueCherenkovPhoton( photon );
         if ( photonParent )
         {
           ++truePhotons;
@@ -192,7 +192,7 @@ StatusCode RichRecoQC::execute()
 
     } // photon loop
 
-    // number of true photons
+      // number of true photons
     if ( truePhotons > 0 )
     {
       plot1D( truePhotons, hid(rad,"nCKphots"), "True # p.e.s : beta=1", -0.5, 50, 51 );
@@ -209,7 +209,7 @@ StatusCode RichRecoQC::execute()
 }
 
 //  Finalize
-StatusCode RichRecoQC::finalize()
+StatusCode RecoQC::finalize()
 {
 
   // test fitting
@@ -243,7 +243,7 @@ StatusCode RichRecoQC::finalize()
   //const int minEnts = 10;
 
   // statistical tool
-  const RichStatDivFunctor occ("%8.2f +-%5.2f");
+  const StatDivFunctor occ("%8.2f +-%5.2f");
 
   info() << "=============================================================================="
          << endreq;
@@ -251,9 +251,9 @@ StatusCode RichRecoQC::finalize()
   // track selection
   info() << " Track Selection : " << m_trSelector->selectedTracks() << endreq;
   info() << "                 : beta > " << m_minBeta << endreq;
-  info() << "                 : Min. Ptot (aero/R1Gas/R2Gas) = " 
+  info() << "                 : Min. Ptot (aero/R1Gas/R2Gas) = "
          << m_minP << " MeV/c" << endreq;
-  info() << "                 : Max. Ptot (aero/R1Gas/R2Gas) = " 
+  info() << "                 : Max. Ptot (aero/R1Gas/R2Gas) = "
          << m_maxP << " MeV/c" << endreq;
 
   // loop over radiators
@@ -325,7 +325,7 @@ StatusCode RichRecoQC::finalize()
 }
 
 /*
-  AIDA::IFitResult * RichRecoQC::fitHisto( AIDA::IHistogram1D * histo,
+  AIDA::IFitResult * RecoQC::fitHisto( AIDA::IHistogram1D * histo,
   const std::pair<double,double> & range,
   const std::vector<double> & params )
   {

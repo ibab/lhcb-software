@@ -2,10 +2,10 @@
 //---------------------------------------------------------------------------------
 /** @file RichRecSummaryQC.h
  *
- *  Header file for RICH reconstruction monitoring algorithm : RichRecSummaryQC
+ *  Header file for RICH reconstruction monitoring algorithm : Rich::Rec::MC::SummaryQC
  *
  *  CVS Log :-
- *  $Id: RichRecSummaryQC.h,v 1.3 2006-12-01 16:02:32 cattanem Exp $
+ *  $Id: RichRecSummaryQC.h,v 1.4 2007-02-02 10:08:36 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-02
@@ -34,53 +34,91 @@
 #include "Event/RichSummaryTrack.h"
 #include "Event/MCParticle.h"
 
-//---------------------------------------------------------------------------------
-/** @class RichRecSummaryQC RichRecSummaryQC.h
+//-----------------------------------------------------------------------------
+/** @namespace Rich
  *
- *  Quality control monitor for Rich Reconstruction Summary data objects
+ *  General namespace for RICH software
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
- *  @date   2002-07-02
+ *  @date   08/07/2004
  */
-//---------------------------------------------------------------------------------
-
-class RichRecSummaryQC : public RichRecHistoAlgBase
+//-----------------------------------------------------------------------------
+namespace Rich
 {
 
-public:
+  /** @namespace Rec
+   *
+   *  General namespace for RICH reconstruction software
+   *
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   08/07/2004
+   */
+  namespace Rec
+  {
 
-  /// Standard constructor
-  RichRecSummaryQC( const std::string& name, ISvcLocator* pSvcLocator );
+    //-----------------------------------------------------------------------------
+    /** @namespace MC
+     *
+     *  General namespace for RICH MC related software
+     *
+     *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+     *  @date   05/12/2006
+     */
+    //-----------------------------------------------------------------------------
+    namespace MC
+    {
 
-  virtual ~RichRecSummaryQC( ); ///< Destructor
+      //---------------------------------------------------------------------------------
+      /** @class SummaryQC RichRecSummaryQC.h
+       *
+       *  Quality control monitor for Rich Reconstruction Summary data objects
+       *
+       *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+       *  @date   2002-07-02
+       */
+      //---------------------------------------------------------------------------------
 
-  virtual StatusCode initialize();    // Algorithm initialization
-  virtual StatusCode execute   ();    // Algorithm execution
-  virtual StatusCode finalize  ();    // Algorithm finalization
+      class SummaryQC : public Rich::Rec::HistoAlgBase
+      {
 
-private: // data
+      public:
 
-  const IRichParticleProperties * m_richPartProp; ///< Rich Particle properties
+        /// Standard constructor
+        SummaryQC( const std::string& name, ISvcLocator* pSvcLocator );
 
-  /// Pointer to RichRecMCTruthTool interface
-  const IRichRecMCTruthTool* m_richRecMCTruth;
+        virtual ~SummaryQC( ); ///< Destructor
 
-  /// Track selector
-  const Rich::IRichTrackSelector * m_trSelector;
+        virtual StatusCode initialize();    // Algorithm initialization
+        virtual StatusCode execute   ();    // Algorithm execution
+        virtual StatusCode finalize  ();    // Algorithm finalization
 
-  /// Location of the summary tracks
-  std::string m_summaryLoc;
+      private: // data
 
-  // job options
-  double m_minBeta;        ///< minimum beta value for 'saturated' tracks
+        const IParticleProperties * m_richPartProp; ///< Rich Particle properties
 
-  unsigned long m_nEvts;                   ///< Number of processed events
-  unsigned long m_nTracks;                 ///< Number of summary tracks produced
-  std::vector<unsigned long> m_nSegments;  ///< Number of summary segments produced per radiator
-  std::vector<unsigned long> m_nSegmentsMC;  ///< Number of summary segments produced per radiator, with at least one true CK hit
-  std::vector<unsigned long> m_nPhotons;   ///< Number of summary photons produced per radiator
-  std::vector<unsigned long> m_nTruePhotons; ///< Number of true summary photons produced per radiator
+        /// Pointer to RichRecMCTruthTool interface
+        const Rich::Rec::MC::IMCTruthTool* m_richRecMCTruth;
 
-};
+        /// Track selector
+        const ITrackSelector * m_trSelector;
+
+        /// Location of the summary tracks
+        std::string m_summaryLoc;
+
+        // job options
+        double m_minBeta;        ///< minimum beta value for 'saturated' tracks
+
+        unsigned long m_nEvts;                   ///< Number of processed events
+        unsigned long m_nTracks;                 ///< Number of summary tracks produced
+        std::vector<unsigned long> m_nSegments;  ///< Number of summary segments produced per radiator
+        std::vector<unsigned long> m_nSegmentsMC;  ///< Number of summary segments produced per radiator, with at least one true CK hit
+        std::vector<unsigned long> m_nPhotons;   ///< Number of summary photons produced per radiator
+        std::vector<unsigned long> m_nTruePhotons; ///< Number of true summary photons produced per radiator
+
+      };
+
+    }
+  }
+}
 
 #endif // RICHRECQC_RICHRECOQC_H

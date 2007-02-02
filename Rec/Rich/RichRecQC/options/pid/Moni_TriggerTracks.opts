@@ -1,18 +1,18 @@
 
 // Default PID monitor : 2-100 GeV/c
-CheckRICHSeq.Members += { "RichPIDQC/RiPIDMonTrig2To100" };
+CheckRICHSeq.Members += { "Rich::Rec::MC::PIDQC/RiPIDMonTrig2To100" };
 
 // Very Low Momentum PID monitor : 0-2 GeV/c
-//CheckRICHSeq.Members += { "RichPIDQC/RiPIDMonTrig0To2" };
+//CheckRICHSeq.Members += { "Rich::Rec::MC::PIDQC/RiPIDMonTrig0To2" };
 
 // Low Momentum PID monitor : 2-10 GeV/c
-CheckRICHSeq.Members += { "RichPIDQC/RiPIDMonTrig2To10" };
+CheckRICHSeq.Members += { "Rich::Rec::MC::PIDQC/RiPIDMonTrig2To10" };
 
 // Mid Momentum PID monitor : 10-70 GeV/c
-CheckRICHSeq.Members += { "RichPIDQC/RiPIDMonTrig10To70" };
+CheckRICHSeq.Members += { "Rich::Rec::MC::PIDQC/RiPIDMonTrig10To70" };
 
 // High Momentum PID monitor : 70-100 GeV/c
-CheckRICHSeq.Members += { "RichPIDQC/RiPIDMonTrig70To100" };
+CheckRICHSeq.Members += { "Rich::Rec::MC::PIDQC/RiPIDMonTrig70To100" };
 
 // Very High Momentum PID monitor : 100+ GeV/c
-//CheckRICHSeq.Members += { "RichPIDQC/RiPIDMonTrig100Plus" };
+//CheckRICHSeq.Members += { "Rich::Rec::MC::PIDQC/RiPIDMonTrig100Plus" };

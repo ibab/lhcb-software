@@ -2,10 +2,10 @@
 //-----------------------------------------------------------------------------
 /** @file RichPIDQC.cpp
  *
- *  Implementation file for RICH reconstruction monitoring algorithm : RichPIDQC
+ *  Implementation file for RICH reconstruction monitoring algorithm : Rich::Rec::MC::PIDQC
  *
  *  CVS Log :-
- *  $Id: RichPIDQC.cpp,v 1.57 2006-12-04 09:40:49 jonrob Exp $
+ *  $Id: RichPIDQC.cpp,v 1.58 2007-02-02 10:08:36 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-06-13
@@ -18,21 +18,21 @@
 #include "RichPIDQC.h"
 
 // namespaces
-using namespace LHCb;
+using namespace Rich::Rec::MC;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( RichPIDQC );
+DECLARE_ALGORITHM_FACTORY( PIDQC );
 
 // Standard constructor, initializes variables
-RichPIDQC::RichPIDQC( const std::string& name,
-                      ISvcLocator* pSvcLocator )
-  : RichAlgBase ( name, pSvcLocator ),
+PIDQC::PIDQC( const std::string& name,
+              ISvcLocator* pSvcLocator )
+  : Rich::Rec::AlgBase    ( name, pSvcLocator ),
     m_requiredRads ( Rich::NRadiatorTypes )
 {
 
   // Declare job options
-  declareProperty( "InputPIDs",   m_pidTDS   = RichPIDLocation::Default );
+  declareProperty( "InputPIDs",   m_pidTDS   = LHCb::RichPIDLocation::Default );
   declareProperty( "MCHistoPath", m_mcHstPth = "RICH/PIDQC/MC/" );
   declareProperty( "HistoPath",   m_hstPth   = "RICH/PIDQC/" );
   declareProperty( "MCTruth",     m_truth    = true );
@@ -53,13 +53,13 @@ RichPIDQC::RichPIDQC( const std::string& name,
 }
 
 // Destructor
-RichPIDQC::~RichPIDQC() {};
+PIDQC::~PIDQC() {};
 
 // Initialisation
-StatusCode RichPIDQC::initialize()
+StatusCode PIDQC::initialize()
 {
   // Initialize base class
-  const StatusCode sc = RichAlgBase::initialize();
+  const StatusCode sc = Rich::Rec::AlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   acquireTool( "TrackSelector", m_trSelector, this );
@@ -98,7 +98,7 @@ StatusCode RichPIDQC::initialize()
   return sc;
 }
 
-StatusCode RichPIDQC::bookHistograms()
+StatusCode PIDQC::bookHistograms()
 {
   std::string title;
   HYPOTHESIS_NAMES;
@@ -128,7 +128,7 @@ StatusCode RichPIDQC::bookHistograms()
   return StatusCode::SUCCESS;
 }
 
-StatusCode RichPIDQC::bookMCHistograms()
+StatusCode PIDQC::bookMCHistograms()
 {
   std::string title;
   int id;
@@ -192,7 +192,7 @@ StatusCode RichPIDQC::bookMCHistograms()
 }
 
 // Main execution
-StatusCode RichPIDQC::execute()
+StatusCode PIDQC::execute()
 {
   debug() << "Execute" << endreq;
 
@@ -207,7 +207,7 @@ StatusCode RichPIDQC::execute()
         iC != m_richPIDs.end(); ++iC )
   {
     // create pointer to pid object
-    RichPID * fPID = dynamic_cast<RichPID*>(*iC);
+    LHCb::RichPID * fPID = dynamic_cast<LHCb::RichPID*>(*iC);
 
     // check track is OK
     if ( fPID->track() )
@@ -251,10 +251,10 @@ StatusCode RichPIDQC::execute()
   if ( !m_richPIDs.empty() ) {
     for ( std::vector<ContainedObject*>::const_iterator iC = m_richPIDs.begin();
           iC != m_richPIDs.end(); ++iC ) {
-      RichPID * iPID = dynamic_cast<RichPID*>(*iC);
+      LHCb::RichPID * iPID = dynamic_cast<LHCb::RichPID*>(*iC);
 
       // Track for this PID
-      const Track * track = iPID->track();
+      const LHCb::Track * track = iPID->track();
 
       // check rads that must have been used
       if ( (m_requiredRads[Rich::Aerogel]  && !iPID->usedAerogel())  ||
@@ -268,11 +268,11 @@ StatusCode RichPIDQC::execute()
       if ( !m_trSelector->trackSelected( track ) ) continue;
 
       // Track momentum in GeV/C
-      const State* state = &(track)->firstState();
+      const LHCb::State* state = &(track)->firstState();
       const double tkPtot = ( state ? state->p()/Gaudi::Units::GeV : 0 );
 
       // Track type
-      const Rich::Track::Type tkType = Rich::Track::type(track);
+      const Rich::Rec::Track::Type tkType = Rich::Rec::Track::type(track);
 
       // Count PIDs and tracks
       ++m_trackCount[tkType].first;
@@ -286,34 +286,34 @@ StatusCode RichPIDQC::execute()
       // Apply DLL based selection for kaons
       if ( m_dllKaonCut < 999999 )
       {
-        if      ( iPID->particleDeltaLL(Rich::Kaon)-iPID->particleDeltaLL(Rich::Pion) > m_dllKaonCut ) 
-        { 
+        if      ( iPID->particleDeltaLL(Rich::Kaon)-iPID->particleDeltaLL(Rich::Pion) > m_dllKaonCut )
+        {
           //Warning( "DLL cut reassigned "+Rich::text(pid)+" to "+Rich::text(Rich::Kaon), StatusCode::SUCCESS, 1 );
-          pid = Rich::Kaon; 
+          pid = Rich::Kaon;
         }
         else
         {
-          pid = Rich::Pion; 
+          pid = Rich::Pion;
         }
       }
       if ( m_dllPionCut < 999999 )
       {
-        if ( iPID->particleDeltaLL(Rich::Pion)-iPID->particleDeltaLL(Rich::Kaon) > m_dllPionCut ) 
+        if ( iPID->particleDeltaLL(Rich::Pion)-iPID->particleDeltaLL(Rich::Kaon) > m_dllPionCut )
         {
           //Warning( "DLL cut reassigned "+Rich::text(pid)+" to "+Rich::text(Rich::Pion), StatusCode::SUCCESS, 1 );
-          pid = Rich::Pion; 
+          pid = Rich::Pion;
         }
       }
 
       // MC Truth
       Rich::ParticleIDType mcpid = Rich::Unknown;
-      if ( m_truth ) 
+      if ( m_truth )
       {
         // Get true track type from MC
         mcpid = m_mcTruth->mcParticleType(track);
         if ( mcpid != Rich::Unknown &&
              !m_ignoreMCThres &&
-             !iPID->isAboveThreshold(mcpid) ) 
+             !iPID->isAboveThreshold(mcpid) )
         {
           //Warning( "MC-PID "+Rich::text(mcpid)+" reassigned to BelowThreshold", StatusCode::SUCCESS, 0 );
           mcpid = Rich::BelowThreshold;
@@ -321,15 +321,15 @@ StatusCode RichPIDQC::execute()
       }
 
       // Check for threshold
-      if ( !m_ignoreRecoThres && !iPID->isAboveThreshold(pid) ) 
+      if ( !m_ignoreRecoThres && !iPID->isAboveThreshold(pid) )
       {
-        //Warning( "Rec-PID "+Rich::text(pid)+" reassigned to BelowThreshold (MC-PID="+Rich::text(mcpid)+")", 
+        //Warning( "Rec-PID "+Rich::text(pid)+" reassigned to BelowThreshold (MC-PID="+Rich::text(mcpid)+")",
         //        StatusCode::SUCCESS, 0 );
-        pid = Rich::BelowThreshold; 
+        pid = Rich::BelowThreshold;
       }
 
       // some verbose printout
-      if ( msgLevel(MSG::VERBOSE) ) 
+      if ( msgLevel(MSG::VERBOSE) )
       {
         verbose() << "RichPID " << iPID->key() << " ("
                   << iPID->pidType() << "), '"
@@ -359,9 +359,9 @@ StatusCode RichPIDQC::execute()
       m_ids->fill( pid+1 );
 
       // Extra histograms
-      if ( m_extraHistos ) 
+      if ( m_extraHistos )
       {
-        for ( int iHypo = 0; iHypo < Rich::NParticleTypes; ++iHypo ) 
+        for ( int iHypo = 0; iHypo < Rich::NParticleTypes; ++iHypo )
         {
           m_pRaw[iHypo]->fill    ( iPID->particleRawProb((Rich::ParticleIDType)iHypo) );
           m_pNorm[iHypo]->fill   ( iPID->particleNormProb((Rich::ParticleIDType)iHypo) );
@@ -370,7 +370,7 @@ StatusCode RichPIDQC::execute()
       }
 
       // MC Truth
-      if ( m_truth ) 
+      if ( m_truth )
       {
         if ( msgLevel(MSG::VERBOSE) ) verbose() << "  MCID        = " << mcpid << endreq;
 
@@ -382,7 +382,7 @@ StatusCode RichPIDQC::execute()
 
         // Fill performance tables
         if ( mcpid != Rich::Unknown &&
-             pid   != Rich::Unknown ) 
+             pid   != Rich::Unknown )
         { m_perfTable->fill( mcpid+1, pid+1 ); ++m_sumTab[mcpid][pid]; }
 
         // Momentum spectra histograms...
@@ -390,7 +390,7 @@ StatusCode RichPIDQC::execute()
              pid   != Rich::Unknown ) { (m_ptotSpec[mcpid][pid])->fill(tkPtot); }
 
         // Extra histograms
-        if ( m_extraHistos ) 
+        if ( m_extraHistos )
         {
 
           // Delta LL values with respect to the best ID
@@ -428,19 +428,19 @@ StatusCode RichPIDQC::execute()
     } // end PID loop
   } // end empty if
 
-  // count events and tracks
+    // count events and tracks
   ++m_nEvents[0];
   if ( !m_richPIDs.empty() ) ++m_nEvents[1];
   m_nTracks[0] += m_totalSelTracks;
   m_nTracks[1] += pidCount;
   m_Nids->fill( pidCount );
   m_eventRate->fill( (m_richPIDs.empty() ? 0 : 1) );
-  if ( m_totalSelTracks>0 ) 
+  if ( m_totalSelTracks>0 )
   {
     m_pidRate->fill( static_cast<double>(pidCount) / static_cast<double>(m_totalSelTracks) );
   }
 
-  if ( msgLevel(MSG::DEBUG) ) 
+  if ( msgLevel(MSG::DEBUG) )
   {
     debug() << "Total Tracks = " << m_totalSelTracks << " : tracks PIDed = " << pidCount << endreq;
   }
@@ -449,9 +449,9 @@ StatusCode RichPIDQC::execute()
 };
 
 //  Finalize
-StatusCode RichPIDQC::finalize()
+StatusCode PIDQC::finalize()
 {
-  if ( m_truth && m_finalPrintOut ) 
+  if ( m_truth && m_finalPrintOut )
   {
 
     // index variables
@@ -515,9 +515,9 @@ StatusCode RichPIDQC::finalize()
                             trueTotExcludeX[Rich::Pion] ) : 0 );
 
     // Scale entries to percent of total number of entries
-    for ( iTrue = 0; iTrue<6; ++iTrue ) 
+    for ( iTrue = 0; iTrue<6; ++iTrue )
     {
-      for ( iRec = 0; iRec<6; ++iRec ) 
+      for ( iRec = 0; iRec<6; ++iRec )
       {
         m_sumTab[iTrue][iRec] = 100.0*m_sumTab[iTrue][iRec]/sumTot;
       }
@@ -555,10 +555,10 @@ StatusCode RichPIDQC::finalize()
     }
     info() << endreq;
     if ( m_dllKaonCut < 9999991 ) {
-      info() << " Tagging tracks as kaons if kaon DLL < " << m_dllKaonCut << endreq;
+      info() << " Tagging tracks as kaons if kaon DLL > " << m_dllKaonCut << endreq;
     }
     if ( m_dllPionCut < 9999991 ) {
-      info() << " Tagging tracks as pions if pion DLL < " << m_dllPionCut << endreq;
+      info() << " Tagging tracks as pions if pion DLL > " << m_dllPionCut << endreq;
     }
     info() << "-------------+-------------------------------------------------+------------"
            << endreq
@@ -569,7 +569,7 @@ StatusCode RichPIDQC::finalize()
            << "             |                                                 |" << endreq;
     const std::string type[6] = { " Electron    |", " Muon        |", " Pion        |",
                                   " Kaon        |", " Proton      |", " X           |" };
-    for ( iRec = 0; iRec < 6; ++iRec ) 
+    for ( iRec = 0; iRec < 6; ++iRec )
     {
       info() << type[iRec] << format( " %7.2f%7.2f%7.2f%7.2f%7.2f%7.2f      | %7.2f",
                                       m_sumTab[0][iRec], m_sumTab[1][iRec],
@@ -606,17 +606,17 @@ StatusCode RichPIDQC::finalize()
 
   } // final printout
 
-  // finalize base class
-  return RichAlgBase::finalize();
+    // finalize base class
+  return Rich::Rec::AlgBase::finalize();
 }
 
-StatusCode RichPIDQC::loadPIDData()
+StatusCode PIDQC::loadPIDData()
 {
   // Load PIDs
   DataObject *pObject;
   if ( eventSvc()->retrieveObject( m_pidTDS, pObject ) ) {
-    if ( KeyedContainer<RichPID, Containers::HashMap> * pids =
-         static_cast<KeyedContainer<RichPID, Containers::HashMap>*>(pObject) )
+    if ( KeyedContainer<LHCb::RichPID, Containers::HashMap> * pids =
+         static_cast<KeyedContainer<LHCb::RichPID, Containers::HashMap>*>(pObject) )
     {
       m_richPIDs.erase( m_richPIDs.begin(), m_richPIDs.end() );
       pids->containedObjects( m_richPIDs );
@@ -629,15 +629,14 @@ StatusCode RichPIDQC::loadPIDData()
   return Warning( "Failed to locate RichPIDs at " + m_pidTDS );
 }
 
-void RichPIDQC::countTracks( const std::string & location )
+void PIDQC::countTracks( const std::string & location )
 {
-  Tracks * tracks = get<Tracks>( location );
+  LHCb::Tracks * tracks = get<LHCb::Tracks>( location );
   debug() << "Found " << tracks->size() << " Tracks at " << location << endreq;
-  for ( Tracks::const_iterator iTrk = tracks->begin();
+  for ( LHCb::Tracks::const_iterator iTrk = tracks->begin();
         iTrk != tracks->end(); ++iTrk )
   {
-    if ( !(*iTrk)->checkFlag(::Track::Clone ) ) { ++m_multiplicity;   }
+    if ( !(*iTrk)->checkFlag(LHCb::Track::Clone ) ) { ++m_multiplicity;   }
     if ( m_trSelector->trackSelected( *iTrk ) ) { ++m_totalSelTracks; }
   }
 }
-

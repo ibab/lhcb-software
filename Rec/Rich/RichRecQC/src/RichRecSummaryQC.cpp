@@ -1,10 +1,11 @@
+
 //-------------------------------------------------------------------------------
 /** @file RichRecSummaryQC.cpp
  *
- *  Implementation file for RICH reconstruction monitoring algorithm : RichRecSummaryQC
+ *  Implementation file for RICH reconstruction monitoring algorithm : Rich::Rec::MC::SummaryQC
  *
  *  CVS Log :-
- *  $Id: RichRecSummaryQC.cpp,v 1.5 2006-12-01 16:02:32 cattanem Exp $
+ *  $Id: RichRecSummaryQC.cpp,v 1.6 2007-02-02 10:08:36 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-02
@@ -18,19 +19,19 @@
 #include "RichRecSummaryQC.h"
 
 // namespaces
-using namespace LHCb;
+using namespace Rich::Rec::MC;
 
 //-------------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( RichRecSummaryQC );
+DECLARE_ALGORITHM_FACTORY( SummaryQC );
 
 // Standard constructor, initializes variables
-RichRecSummaryQC::RichRecSummaryQC( const std::string& name,
-                                    ISvcLocator* pSvcLocator )
+SummaryQC::SummaryQC( const std::string& name,
+                      ISvcLocator* pSvcLocator )
   : RichRecHistoAlgBase ( name, pSvcLocator ),
     m_richPartProp      ( 0 ),
     m_richRecMCTruth    ( 0 ),
-    m_summaryLoc        ( RichSummaryTrackLocation::Default ),
+    m_summaryLoc        ( LHCb::RichSummaryTrackLocation::Default ),
     m_nEvts             ( 0 ),
     m_nTracks           ( 0 ),
     m_nSegments         ( Rich::NRadiatorTypes, 0 ),
@@ -40,11 +41,11 @@ RichRecSummaryQC::RichRecSummaryQC( const std::string& name,
 {
   if      ( context() == "Offline" )
   {
-    m_summaryLoc = RichSummaryTrackLocation::Offline;
+    m_summaryLoc = LHCb::RichSummaryTrackLocation::Offline;
   }
   else if ( context() == "HLT" )
   {
-    m_summaryLoc = RichSummaryTrackLocation::HLT;
+    m_summaryLoc = LHCb::RichSummaryTrackLocation::HLT;
   }
   // Declare job options
   declareProperty( "SummaryLocation",   m_summaryLoc );
@@ -52,10 +53,10 @@ RichRecSummaryQC::RichRecSummaryQC( const std::string& name,
 }
 
 // Destructor
-RichRecSummaryQC::~RichRecSummaryQC() {};
+SummaryQC::~SummaryQC() {};
 
 // Initialisation
-StatusCode RichRecSummaryQC::initialize()
+StatusCode SummaryQC::initialize()
 {
   // Sets up various tools and services
   const StatusCode sc = RichRecHistoAlgBase::initialize();
@@ -70,15 +71,12 @@ StatusCode RichRecSummaryQC::initialize()
 }
 
 // Main execution
-StatusCode RichRecSummaryQC::execute()
+StatusCode SummaryQC::execute()
 {
   debug() << "Execute" << endreq;
 
   // Try and load the Summary data
-  const RichSummaryTracks * sumTracks = get<RichSummaryTracks>(m_summaryLoc);
-
-  // Rich Histo ID
-  //const RichHistoID hid;
+  const LHCb::RichSummaryTracks * sumTracks = get<LHCb::RichSummaryTracks>(m_summaryLoc);
 
   // temporary tallies
   unsigned int nTracks(0);
@@ -86,14 +84,14 @@ StatusCode RichRecSummaryQC::execute()
   std::vector<unsigned> nTruePhotons(Rich::NRadiatorTypes,0), nSegmentsMC(Rich::NRadiatorTypes,0);
 
   // loop over the summary tracks
-  for ( RichSummaryTracks::const_iterator iTrack = sumTracks->begin();
+  for ( LHCb::RichSummaryTracks::const_iterator iTrack = sumTracks->begin();
         iTrack != sumTracks->end(); ++iTrack )
   {
     // apply track selection
     if ( !m_trSelector->trackSelected((*iTrack)->track()) ) continue;
 
     // get MCParticle for this track
-    const MCParticle * mcP = m_richRecMCTruth->mcParticle( (*iTrack)->track() );
+    const LHCb::MCParticle * mcP = m_richRecMCTruth->mcParticle( (*iTrack)->track() );
 
     // True particle type
     const Rich::ParticleIDType mcType = m_richRecMCTruth->mcParticleType( (*iTrack)->track() );
@@ -110,8 +108,8 @@ StatusCode RichRecSummaryQC::execute()
     ++nTracks;
 
     // loop over segments
-    const RichSummaryRadSegment::Vector & segs = (*iTrack)->radSegments();
-    for ( RichSummaryRadSegment::Vector::const_iterator iSeg = segs.begin();
+    const LHCb::RichSummaryRadSegment::Vector & segs = (*iTrack)->radSegments();
+    for ( LHCb::RichSummaryRadSegment::Vector::const_iterator iSeg = segs.begin();
           iSeg != segs.end(); ++iSeg )
     {
 
@@ -120,8 +118,8 @@ StatusCode RichRecSummaryQC::execute()
 
       // photons for this segment
       unsigned int truePhotons = 0;
-      const RichSummaryPhoton::Vector & photons = (*iSeg).photons();
-      for ( RichSummaryPhoton::Vector::const_iterator iPhot = photons.begin();
+      const LHCb::RichSummaryPhoton::Vector & photons = (*iSeg).photons();
+      for ( LHCb::RichSummaryPhoton::Vector::const_iterator iPhot = photons.begin();
             iPhot != photons.end(); ++iPhot )
       {
 
@@ -132,7 +130,7 @@ StatusCode RichRecSummaryQC::execute()
         if ( beta > m_minBeta )
         {
           // is this a true Cherekov photon ?
-          const MCParticle * photonParent
+          const LHCb::MCParticle * photonParent
             = m_richRecMCTruth->trueCherenkovPhoton( mcP, (*iPhot).smartID(), rad );
           if ( photonParent )
           {
@@ -143,7 +141,7 @@ StatusCode RichRecSummaryQC::execute()
 
       } // loop over photons
 
-      // tallies
+        // tallies
       ++nSegments[rad];
       if ( truePhotons>0 )
       {
@@ -155,7 +153,7 @@ StatusCode RichRecSummaryQC::execute()
 
   } // loop over summary tracks
 
-  // update running tallies
+    // update running tallies
   ++m_nEvts;
   m_nTracks += nTracks;
   for ( int irad = 0; irad < Rich::NRadiatorTypes; ++irad )
@@ -171,13 +169,13 @@ StatusCode RichRecSummaryQC::execute()
 }
 
 //  Finalize
-StatusCode RichRecSummaryQC::finalize()
+StatusCode SummaryQC::finalize()
 {
   if ( m_nTracks > 0 )
   {
 
     // Statistical tools
-    const RichStatDivFunctor eff("%6.2f +-%5.2f");
+    const StatDivFunctor eff("%6.2f +-%5.2f");
 
     const unsigned long totSegs =
       m_nSegments[Rich::Aerogel]+m_nSegments[Rich::Rich1Gas]+m_nSegments[Rich::Rich2Gas];

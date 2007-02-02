@@ -2,9 +2,9 @@
 //-----------------------------------------------------------------------------
 /** @file RichRecPixelQC.cpp
  *
- *  Implementation file for algorithm class : RichRecPixelQC
+ *  Implementation file for algorithm class : Rich::Rec::MC::PixelQC
  *
- *  $Id: RichRecPixelQC.cpp,v 1.11 2006-12-01 16:02:32 cattanem Exp $
+ *  $Id: RichRecPixelQC.cpp,v 1.12 2007-02-02 10:08:36 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -19,31 +19,34 @@
 // local
 #include "RichRecPixelQC.h"
 
+// working namespace
+using namespace Rich::Rec::MC;
+
 //-----------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( RichRecPixelQC );
+DECLARE_ALGORITHM_FACTORY( PixelQC );
 
 // Standard constructor, initializes variables
-RichRecPixelQC::RichRecPixelQC( const std::string& name,
-                                ISvcLocator* pSvcLocator)
-  : RichRecHistoAlgBase ( name, pSvcLocator ),
-    m_richRecMCTruth    ( 0 ),
-    m_truth             ( 0 ),
-    m_richSys           ( 0 ),
-    m_nEvts             ( 0 ) { }
+PixelQC::PixelQC( const std::string& name,
+                  ISvcLocator* pSvcLocator)
+  : Rich::Rec::HistoAlgBase ( name, pSvcLocator ),
+    m_richRecMCTruth    ( NULL ),
+    m_truth             ( NULL ),
+    m_richSys           ( NULL ),
+    m_nEvts             ( 0    ) { }
 
 // Destructor
-RichRecPixelQC::~RichRecPixelQC() {};
+PixelQC::~PixelQC() {};
 
 //  Initialize
-StatusCode RichRecPixelQC::initialize()
+StatusCode PixelQC::initialize()
 {
   // Sets up various tools and services
   const StatusCode sc = RichRecHistoAlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
-  acquireTool( "RichRecMCTruthTool", m_richRecMCTruth );
+  acquireTool( "RichRecMCTruthTool", m_richRecMCTruth   );
   acquireTool( "RichMCTruthTool",    m_truth );
   acquireTool( "RichSmartIDDecoder", m_decoder, 0, true );
 
@@ -54,7 +57,7 @@ StatusCode RichRecPixelQC::initialize()
 }
 
 // Main execution
-StatusCode RichRecPixelQC::execute()
+StatusCode PixelQC::execute()
 {
   debug() << "Execute" << endreq;
 
@@ -81,10 +84,10 @@ StatusCode RichRecPixelQC::execute()
   std::vector<unsigned int> signal ( Rich::NRiches, 0 );
 
   // Obtain RichSmartIDs from raw decoding
-  const RichDAQ::PDMap & smartIDs = m_decoder->allRichSmartIDs();
+  const DAQ::PDMap & smartIDs = m_decoder->allRichSmartIDs();
 
   // Loop over HPDs and RichSmartIDs
-  for ( RichDAQ::PDMap::const_iterator iHPD = smartIDs.begin();
+  for ( DAQ::PDMap::const_iterator iHPD = smartIDs.begin();
         iHPD != smartIDs.end(); ++iHPD )
   {
     // HPD ID
@@ -115,7 +118,7 @@ StatusCode RichRecPixelQC::execute()
       if ( flags.isRich2GasCK ) { ++m_rawTally.radHits[Rich::Rich2Gas]; }
     } // raw channel ids
 
-    // Get the reconstructed pixels for this HPD
+      // Get the reconstructed pixels for this HPD
     LHCb::RichRecPixels::const_iterator iPixel = pixelCreator()->begin ( hpd );
     LHCb::RichRecPixels::const_iterator endPix = pixelCreator()->end   ( hpd );
     unsigned int nHPDHits(0), nHPDSignalHits(0);
@@ -154,7 +157,7 @@ StatusCode RichRecPixelQC::execute()
   return StatusCode::SUCCESS;
 }
 
-RichRecPixelQC::MCFlags RichRecPixelQC::getHistories( const LHCb::RichSmartID id ) const
+PixelQC::MCFlags PixelQC::getHistories( const LHCb::RichSmartID id ) const
 {
   // make a new flag object
   MCFlags flags;
@@ -194,7 +197,7 @@ RichRecPixelQC::MCFlags RichRecPixelQC::getHistories( const LHCb::RichSmartID id
 }
 
 //  Finalize
-StatusCode RichRecPixelQC::finalize()
+StatusCode PixelQC::finalize()
 {
 
   if ( m_nEvts > 0 )
@@ -212,10 +215,10 @@ StatusCode RichRecPixelQC::finalize()
   return RichRecHistoAlgBase::finalize();
 }
 
-void RichRecPixelQC::printRICH( const Rich::DetectorType rich ) const
+void PixelQC::printRICH( const Rich::DetectorType rich ) const
 {
-  const RichStatDivFunctor     occ  ("%8.2f +-%7.2f");
-  const RichPoissonEffFunctor  pois ("%7.2f +-%6.2f");
+  const StatDivFunctor     occ  ("%8.2f +-%7.2f");
+  const PoissonEffFunctor  pois ("%7.2f +-%6.2f");
 
   info() << "  " << rich << " : All pixels          : " << occ(m_recoTally.pixels[rich],m_nEvts)
          << "   Eff. = " << pois(m_recoTally.pixels[rich],m_rawTally.pixels[rich]) << " %" << endreq;

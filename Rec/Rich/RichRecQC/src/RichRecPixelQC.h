@@ -2,10 +2,10 @@
 //-----------------------------------------------------------------------------
 /** @file RichRecPixelQC.h
  *
- *  Header file for algorithm class : RichRecPixelQC
+ *  Header file for algorithm class : Rich::Rec::MC::PixelQC
  *
  *  CVS Log :-
- *  $Id: RichRecPixelQC.h,v 1.6 2006-12-01 16:02:32 cattanem Exp $
+ *  $Id: RichRecPixelQC.h,v 1.7 2007-02-02 10:08:36 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -40,113 +40,151 @@
 #include "RichKernel/IRichRawBufferToSmartIDsTool.h"
 
 //-----------------------------------------------------------------------------
-/** @class RichRecPixelQC RichRecPixelQC.h
+/** @namespace Rich
  *
- *  Monitor class for the pixel reconstruction
+ *  General namespace for RICH software
  *
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   05/04/2002
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
  */
 //-----------------------------------------------------------------------------
-
-class RichRecPixelQC : public RichRecHistoAlgBase
+namespace Rich
 {
 
-public:
-
-  /// Standard constructor
-  RichRecPixelQC( const std::string& name,
-                  ISvcLocator* pSvcLocator );
-
-  virtual ~RichRecPixelQC( ); ///< Destructor
-
-  virtual StatusCode initialize();    // Algorithm initialization
-  virtual StatusCode execute   ();    // Algorithm execution
-  virtual StatusCode finalize  ();    // Algorithm finalization
-
-private: // helper classes
-
-  /// Simple class containing MC flags for a given pixel (reconstructed hit)
-  class MCFlags
+  /** @namespace Rec
+   *
+   *  General namespace for RICH reconstruction software
+   *
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   08/07/2004
+   */
+  namespace Rec
   {
-  public:
-    /// Default constructor
-    MCFlags() :
-      isBkg(false),isHPDQCK(false),isGasCK(false),isN2CK(false),
-      isChargedTk(false),isChargeShare(false),isAeroFiltCK(false),isSignal(false),
-      isAerogelCK(false),isRich1GasCK(false),isRich2GasCK(false) { }
-    // data members
-    bool isBkg;         ///< Hit is background, of any sort
-    bool isHPDQCK;      ///< Hit is from CK radiation from the HPD quartz windows
-    bool isGasCK;       ///< Hit is from CK radiation from the gas volume quartz windows
-    bool isN2CK;        ///< Hit is from CK radiation from N2
-    bool isChargedTk;   ///< Hit is from a charged track hitting the HPD
-    bool isChargeShare; ///< Hit is from charge sharing in the HPD silicon detector
-    bool isAeroFiltCK;  ///< Hit is from CK radiator in the aerogel Filter
-    bool isSignal;      ///< Hit is from (unscatted) CK radiation from one of the main radiators
-    bool isAerogelCK;   ///< Hit is from (unscatted) CK radiation from the aerogel radiator
-    bool isRich1GasCK;  ///< Hit is from (unscatted) CK radiation from the Rich1 gas radiator
-    bool isRich2GasCK;  ///< Hit is from (unscatted) CK radiation from the Rich2 gas radiator
-  };
 
-  /// Stores tallys opf various types
-  class Tallys
-  {
-  public:
-    /// Constructor
-    Tallys()
-      : pixels            ( Rich::NRiches,        0 ),
-        bkgs              ( Rich::NRiches,        0 ),
-        npdqcks           ( Rich::NRiches,        0 ),
-        ngasck            ( Rich::NRiches,        0 ),
-        n2ck              ( Rich::NRiches,        0 ),
-        ntrack            ( Rich::NRiches,        0 ),
-        nchargeshare      ( Rich::NRiches,        0 ),
-        naerofilter       ( Rich::NRiches,        0 ),
-        signal            ( Rich::NRiches,        0 ),
-        radHits           ( Rich::NRadiatorTypes, 0 ) {}
-    // data members
-    std::vector<unsigned int> pixels;   ///< Total number of pixels hit
-    std::vector<unsigned int> bkgs;     ///< Total number of background hits
-    std::vector<unsigned int> npdqcks;  ///< Total number of HPD quartz window CK hits
-    std::vector<unsigned int> ngasck;   ///< Total number of gas volume quartz window CK hits
-    std::vector<unsigned int> n2ck;     ///< Total number of N2 CK hits
-    std::vector<unsigned int> ntrack;   ///< Total number of charged track on HPD hits
-    std::vector<unsigned int> nchargeshare; ///< Total number of silicon charge share hits
-    std::vector<unsigned int> naerofilter; ///< Total number of aerogel filter C hits
-    std::vector<unsigned int> signal;   ///< Total number of signal hits
-    std::vector<unsigned int> radHits;  ///< Total number of signal hits for each radiator
-  };
+    //-----------------------------------------------------------------------------
+    /** @namespace MC
+     *
+     *  General namespace for RICH MC related software
+     *
+     *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+     *  @date   05/12/2006
+     */
+    //-----------------------------------------------------------------------------
+    namespace MC
+    {
 
-private: // methods
+      //-----------------------------------------------------------------------------
+      /** @class PixelQC RichRecPixelQC.h
+       *
+       *  Monitor class for the pixel reconstruction
+       *
+       *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+       *  @date   05/04/2002
+       */
+      //-----------------------------------------------------------------------------
 
-  /// Get various MC history flags for given RichSmartID
-  MCFlags getHistories( const LHCb::RichSmartID id ) const;
+      class PixelQC : public Rich::Rec::HistoAlgBase
+      {
 
-  /// Print summary for given RICH
-  void printRICH( const Rich::DetectorType rich ) const;
+      public:
 
-private: // data
+        /// Standard constructor
+        PixelQC( const std::string& name,
+                 ISvcLocator* pSvcLocator );
 
-  /// Pointer to RichRecMCTruthTool interface
-  const IRichRecMCTruthTool* m_richRecMCTruth;
+        virtual ~PixelQC( ); ///< Destructor
 
-  /// Pointer to RichMCTruthTool
-  const IRichMCTruthTool * m_truth;
+        virtual StatusCode initialize();    // Algorithm initialization
+        virtual StatusCode execute   ();    // Algorithm execution
+        virtual StatusCode finalize  ();    // Algorithm finalization
 
-  /// Raw Buffer Decoding tool
-  const IRichRawBufferToSmartIDsTool * m_decoder;
+      private: // helper classes
 
-  /// Pointer to RICH system detector element
-  const DeRichSystem * m_richSys;
+        /// Simple class containing MC flags for a given pixel (reconstructed hit)
+        class MCFlags
+        {
+        public:
+          /// Default constructor
+          MCFlags() :
+            isBkg(false),isHPDQCK(false),isGasCK(false),isN2CK(false),
+            isChargedTk(false),isChargeShare(false),isAeroFiltCK(false),isSignal(false),
+            isAerogelCK(false),isRich1GasCK(false),isRich2GasCK(false) { }
+          // data members
+          bool isBkg;         ///< Hit is background, of any sort
+          bool isHPDQCK;      ///< Hit is from CK radiation from the HPD quartz windows
+          bool isGasCK;       ///< Hit is from CK radiation from the gas volume quartz windows
+          bool isN2CK;        ///< Hit is from CK radiation from N2
+          bool isChargedTk;   ///< Hit is from a charged track hitting the HPD
+          bool isChargeShare; ///< Hit is from charge sharing in the HPD silicon detector
+          bool isAeroFiltCK;  ///< Hit is from CK radiator in the aerogel Filter
+          bool isSignal;      ///< Hit is from (unscatted) CK radiation from one of the main radiators
+          bool isAerogelCK;   ///< Hit is from (unscatted) CK radiation from the aerogel radiator
+          bool isRich1GasCK;  ///< Hit is from (unscatted) CK radiation from the Rich1 gas radiator
+          bool isRich2GasCK;  ///< Hit is from (unscatted) CK radiation from the Rich2 gas radiator
+        };
 
-  // tallies
+        /// Stores tallys opf various types
+        class Tallys
+        {
+        public:
+          /// Constructor
+          Tallys()
+            : pixels            ( Rich::NRiches,        0 ),
+              bkgs              ( Rich::NRiches,        0 ),
+              npdqcks           ( Rich::NRiches,        0 ),
+              ngasck            ( Rich::NRiches,        0 ),
+              n2ck              ( Rich::NRiches,        0 ),
+              ntrack            ( Rich::NRiches,        0 ),
+              nchargeshare      ( Rich::NRiches,        0 ),
+              naerofilter       ( Rich::NRiches,        0 ),
+              signal            ( Rich::NRiches,        0 ),
+              radHits           ( Rich::NRadiatorTypes, 0 ) {}
+          // data members
+          std::vector<unsigned int> pixels;   ///< Total number of pixels hit
+          std::vector<unsigned int> bkgs;     ///< Total number of background hits
+          std::vector<unsigned int> npdqcks;  ///< Total number of HPD quartz window CK hits
+          std::vector<unsigned int> ngasck;   ///< Total number of gas volume quartz window CK hits
+          std::vector<unsigned int> n2ck;     ///< Total number of N2 CK hits
+          std::vector<unsigned int> ntrack;   ///< Total number of charged track on HPD hits
+          std::vector<unsigned int> nchargeshare; ///< Total number of silicon charge share hits
+          std::vector<unsigned int> naerofilter; ///< Total number of aerogel filter C hits
+          std::vector<unsigned int> signal;   ///< Total number of signal hits
+          std::vector<unsigned int> radHits;  ///< Total number of signal hits for each radiator
+        };
 
-  Tallys m_recoTally; ///< tally for reconstructed pixels
-  Tallys m_rawTally;  ///< tally for all raw pixels
+      private: // methods
 
-  unsigned int m_nEvts; ///< Total number of events processed
+        /// Get various MC history flags for given RichSmartID
+        MCFlags getHistories( const LHCb::RichSmartID id ) const;
 
-};
+        /// Print summary for given RICH
+        void printRICH( const Rich::DetectorType rich ) const;
+
+      private: // data
+
+        /// Pointer to RichRecMCTruthTool interface
+        const Rich::Rec::MC::IMCTruthTool* m_richRecMCTruth;
+
+        /// Pointer to RichMCTruthTool
+        const Rich::MC::IMCTruthTool * m_truth;
+
+        /// Raw Buffer Decoding tool
+        const Rich::DAQ::IRawBufferToSmartIDsTool * m_decoder;
+
+        /// Pointer to RICH system detector element
+        const DeRichSystem * m_richSys;
+
+        // tallies
+
+        Tallys m_recoTally; ///< tally for reconstructed pixels
+        Tallys m_rawTally;  ///< tally for all raw pixels
+
+        unsigned int m_nEvts; ///< Total number of events processed
+
+      };
+
+    }
+  }
+}
 
 #endif // RICHRECMONITOR_RichRecPixelQC_H

@@ -1,38 +1,38 @@
 
 // Default PID monitor : 2-100 GeV/c
-CheckRICHSeq.Members += { "RichPIDQC/RiPIDMonAll2To100_dll5" };
+CheckRICHSeq.Members += { "Rich::Rec::MC::PIDQC/RiPIDMonAll2To100_dll5" };
 
 // Very Low Momentum PID monitor : 0-2 GeV/c
-//CheckRICHSeq.Members += { "RichPIDQC/RiPIDMonAll0To2_dll5" };
+//CheckRICHSeq.Members += { "Rich::Rec::MC::PIDQC/RiPIDMonAll0To2_dll5" };
 
 // Low Momentum PID monitor : 2-10 GeV/c
-CheckRICHSeq.Members += { "RichPIDQC/RiPIDMonAll2To10_dll5" };
+CheckRICHSeq.Members += { "Rich::Rec::MC::PIDQC/RiPIDMonAll2To10_dll5" };
 
 // Mid Momentum PID monitor : 10-70 GeV/c
-CheckRICHSeq.Members += { "RichPIDQC/RiPIDMonAll10To70_dll5" };
+CheckRICHSeq.Members += { "Rich::Rec::MC::PIDQC/RiPIDMonAll10To70_dll5" };
 
 // High Momentum PID monitor : 70-100 GeV/c
-CheckRICHSeq.Members += { "RichPIDQC/RiPIDMonAll70To100_dll5" };
+CheckRICHSeq.Members += { "Rich::Rec::MC::PIDQC/RiPIDMonAll70To100_dll5" };
 
 // Very High Momentum PID monitor : 100+ GeV/c
-//CheckRICHSeq.Members += { "RichPIDQC/RiPIDMonAll100Plus_dll5" };
+//CheckRICHSeq.Members += { "Rich::Rec::MC::PIDQC/RiPIDMonAll100Plus_dll5" };
 
 //=================================================================
 
 // Default PID monitor : 2-100 GeV/c
-CheckRICHSeq.Members += { "RichPIDQC/RiPIDMonAll2To100_dll2" };
+CheckRICHSeq.Members += { "Rich::Rec::MC::PIDQC/RiPIDMonAll2To100_dll2" };
 
 // Very Low Momentum PID monitor : 0-2 GeV/c
-//CheckRICHSeq.Members += { "RichPIDQC/RiPIDMonAll0To2_dll2" };
+//CheckRICHSeq.Members += { "Rich::Rec::MC::PIDQC/RiPIDMonAll0To2_dll2" };
 
 // Low Momentum PID monitor : 2-10 GeV/c
-CheckRICHSeq.Members += { "RichPIDQC/RiPIDMonAll2To10_dll2" };
+CheckRICHSeq.Members += { "Rich::Rec::MC::PIDQC/RiPIDMonAll2To10_dll2" };
 
 // Mid Momentum PID monitor : 10-70 GeV/c
-CheckRICHSeq.Members += { "RichPIDQC/RiPIDMonAll10To70_dll2" };
+CheckRICHSeq.Members += { "Rich::Rec::MC::PIDQC/RiPIDMonAll10To70_dll2" };
 
 // High Momentum PID monitor : 70-100 GeV/c
-CheckRICHSeq.Members += { "RichPIDQC/RiPIDMonAll70To100_dll2" };
+CheckRICHSeq.Members += { "Rich::Rec::MC::PIDQC/RiPIDMonAll70To100_dll2" };
 
 // Very High Momentum PID monitor : 100+ GeV/c
-//CheckRICHSeq.Members += { "RichPIDQC/RiPIDMonAll100Plus_dll2" };
+//CheckRICHSeq.Members += { "Rich::Rec::MC::PIDQC/RiPIDMonAll100Plus_dll2" };

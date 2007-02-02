@@ -3,8 +3,8 @@
 CheckRICHSeq.Context = "Offline";
 
 // MC tools
-ToolSvc.Offline.RichToolRegistry.Tools += { "RichMCTruthTool/RichMCTruthTool" };
-ToolSvc.Offline.RichToolRegistry.Tools += { "RichRecMCTruthTool/RichRecMCTruthTool" };
+ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::MC::MCTruthTool/RichMCTruthTool" };
+ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::MC::MCTruthTool/RichRecMCTruthTool" };
 
 // PID Monitors for all tracks combined
 #include "$RICHRECQCOPTS/pid/BrunelMoni_AllTracks.opts"
@@ -15,42 +15,42 @@ MessageSvc.setFatal += { "LinkedTo::MC/Particles2MCRichTracks",
                          "LinkedTo::MC/Rich/Hits2MCRichOpticalPhotons" };
 
 // pixel monitor
-CheckRICHSeq.Members += { "RichRecPixelQC" };
+CheckRICHSeq.Members += { "Rich::Rec::MC::PixelQC/RichRecPixelQC" };
 
 // Reco QC
 // All tracks
-CheckRICHSeq.Members += { "RichRecoQC/RiCKResAll" };
+CheckRICHSeq.Members += { "Rich::Rec::MC::RecoQC/RiCKResAll" };
 RiCKResAll.HistoPrint       = false;
 //RiCKResAll.HistoProduce     = false;
 // forward tracks
-CheckRICHSeq.Members += { "RichRecoQC/RiCKResFrwd" };
+CheckRICHSeq.Members += { "Rich::Rec::MC::RecoQC/RiCKResFrwd" };
 RiCKResFrwd.TrackSelector.TrackAlgs  = { "Forward" };
 RiCKResFrwd.HistoPrint      = false;
 //RiCKResFrwd.HistoProduce    = false;
 // match tracks
-CheckRICHSeq.Members += { "RichRecoQC/RiCKResMatch" };
+CheckRICHSeq.Members += { "Rich::Rec::MC::RecoQC/RiCKResMatch" };
 RiCKResMatch.TrackSelector.TrackAlgs = { "Match" };
 RiCKResMatch.HistoPrint     = false;
 //RiCKResMatch.HistoProduce   = false;
 // KsTracks tracks
-CheckRICHSeq.Members += { "RichRecoQC/RiCKResKsTk" };
+CheckRICHSeq.Members += { "Rich::Rec::MC::RecoQC/RiCKResKsTk" };
 RiCKResKsTk.TrackSelector.TrackAlgs  = { "KsTrack" };
 RiCKResKsTk.HistoPrint      = false;
 //RiCKResKsTk.HistoProduce    = false;
 // VeloTT tracks
-CheckRICHSeq.Members += { "RichRecoQC/RiCKResVeloTT" };
+CheckRICHSeq.Members += { "Rich::Rec::MC::RecoQC/RiCKResVeloTT" };
 RiCKResVeloTT.TrackSelector.TrackAlgs = { "VeloTT" };
 RiCKResVeloTT.HistoPrint    = false;
 //RiCKResVeloTT.HistoProduce  = false;
 // Seed tracks
-CheckRICHSeq.Members += { "RichRecoQC/RiCKResSeed" };
+CheckRICHSeq.Members += { "Rich::Rec::MC::RecoQC/RiCKResSeed" };
 RiCKResSeed.TrackSelector.TrackAlgs  = { "Seed" };
 RiCKResSeed.HistoPrint      = false;
 //RiCKResSeed.HistoProduce    = false;
 // MCRichTracks
-//CheckRICHSeq.Members += { "RichRecoQC/RiCKResMCRichTrack" };
+//CheckRICHSeq.Members += { "Rich::Rec::MC::RecoQC/RiCKResMCRichTrack" };
 //RiCKResMCRichTrack.TrackSelector.TrackAlgs  = { "MCRichTrack" };
 //RiCKResMCRichTrack.HistoPrint      = true;
 
 // Reco summary monitor
-CheckRICHSeq.Members += { "RichRecSummaryQC" };
+CheckRICHSeq.Members += { "Rich::Rec::MC::SummaryQC" };

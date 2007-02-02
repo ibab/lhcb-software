@@ -2,9 +2,9 @@
 //-----------------------------------------------------------------------------
 /** @file RichHPDHitsMoni.cpp
  *
- *  Implementation file for algorithm class : RichHPDHitsMoni
+ *  Implementation file for algorithm class : Rich::Rec::MC::HPDHitsMoni
  *
- *  $Id: RichHPDHitsMoni.cpp,v 1.2 2006-12-01 16:02:32 cattanem Exp $
+ *  $Id: RichHPDHitsMoni.cpp,v 1.3 2007-02-02 10:08:36 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -21,16 +21,15 @@
 #include "RichHPDHitsMoni.h"
 
 // namespace
-using namespace LHCb;
+using namespace Rich::Rec::MC;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( RichHPDHitsMoni );
-
+DECLARE_ALGORITHM_FACTORY( HPDHitsMoni );
 
 // Standard constructor, initializes variables
-RichHPDHitsMoni::RichHPDHitsMoni( const std::string& name,
-                                  ISvcLocator* pSvcLocator)
+HPDHitsMoni::HPDHitsMoni( const std::string& name,
+                          ISvcLocator* pSvcLocator)
   : RichRecHistoAlgBase ( name, pSvcLocator ),
     m_decoder           ( NULL ),
     m_richSys           ( NULL )
@@ -38,10 +37,10 @@ RichHPDHitsMoni::RichHPDHitsMoni( const std::string& name,
 }
 
 // Destructor
-RichHPDHitsMoni::~RichHPDHitsMoni() {};
+HPDHitsMoni::~HPDHitsMoni() {};
 
 //  Initialize
-StatusCode RichHPDHitsMoni::initialize()
+StatusCode HPDHitsMoni::initialize()
 {
   // Sets up various tools and services
   const StatusCode sc = RichRecHistoAlgBase::initialize();
@@ -57,29 +56,29 @@ StatusCode RichHPDHitsMoni::initialize()
 }
 
 // Main execution
-StatusCode RichHPDHitsMoni::execute()
+StatusCode HPDHitsMoni::execute()
 {
 
   // Histogramming
-  const RichHistoID hid;
+  const Rich::HistoID hid;
 
   // Obtain RichSmartIDs from raw decoding
-  const RichDAQ::PDMap & smartIDs = m_decoder->allRichSmartIDs();
+  const DAQ::PDMap & smartIDs = m_decoder->allRichSmartIDs();
 
   debug() << "Found data for " << smartIDs.size() << " HPDs" << endreq;
 
   // Loop over HPDs and RichSmartIDs
-  for ( RichDAQ::PDMap::const_iterator iHPD = smartIDs.begin();
+  for ( DAQ::PDMap::const_iterator iHPD = smartIDs.begin();
         iHPD != smartIDs.end(); ++iHPD )
   {
     // HPD info
-    const RichSmartID hpd               = (*iHPD).first;
-    const RichDAQ::HPDHardwareID hardID = m_richSys->hardwareID(hpd);
-    const RichDAQ::Level0ID l0ID        = m_richSys->level0ID(hpd);
-    const Rich::DetectorType rich       = hpd.rich();
+    const LHCb::RichSmartID hpd     = (*iHPD).first;
+    const DAQ::HPDHardwareID hardID = m_richSys->hardwareID(hpd);
+    const DAQ::Level0ID l0ID        = m_richSys->level0ID(hpd);
+    const Rich::DetectorType rich   = hpd.rich();
 
     // Vector of SmartIDs
-    const RichSmartID::Vector & rawIDs = (*iHPD).second;
+    const LHCb::RichSmartID::Vector & rawIDs = (*iHPD).second;
 
     // create histo title
     std::ostringstream HPD1,HPD2;
@@ -87,18 +86,18 @@ StatusCode RichHPDHitsMoni::execute()
     HPD2 << "Hit Map for HPD " << hpd << " L0ID=" << l0ID << " hardID=" << hardID;
 
     plot1D( rawIDs.size(),
-            hid(rich,"NumHits/"+(std::string)l0ID), HPD1.str(), 
+            hid(rich,"NumHits/"+(std::string)l0ID), HPD1.str(),
             -0.5,100.5,101 );
 
     // Loop over raw RichSmartIDs
-    for ( RichSmartID::Vector::const_iterator iR = rawIDs.begin();
+    for ( LHCb::RichSmartID::Vector::const_iterator iR = rawIDs.begin();
           iR != rawIDs.end(); ++iR )
     {
 
-    // fill plot
-    plot2D( (*iR).pixelCol(), (*iR).pixelRow(), 
-            hid(rich,"HitMaps/"+(std::string)l0ID), HPD2.str(), 
-            -0.5,31.5,-0.5,31.5,32,32 );
+      // fill plot
+      plot2D( (*iR).pixelCol(), (*iR).pixelRow(),
+              hid(rich,"HitMaps/"+(std::string)l0ID), HPD2.str(),
+              -0.5,31.5,-0.5,31.5,32,32 );
 
     } // raw channel ids
 
@@ -108,9 +107,8 @@ StatusCode RichHPDHitsMoni::execute()
 }
 
 //  Finalize
-StatusCode RichHPDHitsMoni::finalize()
+StatusCode HPDHitsMoni::finalize()
 {
   // Execute base class method
   return RichRecHistoAlgBase::finalize();
 }
-
