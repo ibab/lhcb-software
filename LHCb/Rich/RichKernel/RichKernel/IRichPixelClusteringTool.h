@@ -5,7 +5,7 @@
  *  Header file for tool interface : Rich::DAQ::IPixelClusteringTool
  *
  *  CVS Log :-
- *  $Id: IRichPixelClusteringTool.h,v 1.1 2007-02-01 17:41:46 jonrob Exp $
+ *  $Id: IRichPixelClusteringTool.h,v 1.2 2007-02-02 17:40:14 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-07-31
@@ -20,38 +20,20 @@
 
 // Kernel
 #include "Kernel/RichSmartID.h"
+#include "RichKernel/RichPixelCluster.h"
 
 /// Static Interface Identification
 static const InterfaceID IID_IRichPixelClusteringTool( "Rich::DAQ::IPixelClusteringTool", 1, 0 );
 
-//-----------------------------------------------------------------------------
-/** @namespace Rich
- *
- *  General namespace for RICH software
- *
- *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
- *  @date   08/07/2004
- */
-//-----------------------------------------------------------------------------
 namespace Rich
 {
-
-  //-----------------------------------------------------------------------------
-  /** @namespace DAQ
-   *
-   *  namespace for RICH DAQ software
-   *
-   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
-   *  @date   08/07/2004
-   */
-  //-----------------------------------------------------------------------------
   namespace DAQ
   {
 
     //-----------------------------------------------------------------------------
     /** @class IPixelClusteringTool IRichPixelClusteringTool.h RichKernel/IRichPixelClusteringTool.h
      *
-     *  Interface for tool for apply suppression to HPD pixels
+     *  Interface to tools that perform RICH HPD pixel clustering
      *
      *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
      *  @date   15/03/2002
@@ -68,15 +50,14 @@ namespace Rich
        */
       static const InterfaceID& interfaceID() { return IID_IRichPixelClusteringTool; }
 
-      /** Applies a pixel clusering algorithm to the given HPD data
+      /** Applies pixel clustering to the given HPD RichSmartIDs
        *
-       *  @param hpdID    HPD identifier
-       *  @param smartIDs Reference to vector of pixel RichSmartIDs for the given HPD
+       *  @param smartIDs Reference to vector of pixel RichSmartIDs to cluster
        *
-       *  @return 
+       *  @return A shared auto pointer to the set of clusters for this HPD
        */
-      virtual bool applyPixelSuppression( const LHCb::RichSmartID hpdID,
-                                          LHCb::RichSmartID::Vector & smartIDs ) const = 0;
+      virtual const Rich::HPDPixelClusters::ConstSharedPtn
+      findClusters( LHCb::RichSmartID::Vector & smartIDs ) const = 0;
 
     };
 
