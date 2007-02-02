@@ -5,7 +5,7 @@
  *  Declaration file for objects in component library RichReadout
  *
  *  CVS Log :-
- *  $Id: RichReadout_load.cpp,v 1.2 2006-01-23 14:05:15 jonrob Exp $
+ *  $Id: RichReadout_load.cpp,v 1.3 2007-02-02 10:13:42 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-09
@@ -18,23 +18,23 @@ DECLARE_FACTORY_ENTRIES( RichReadout )
 {
 
   // Process the MCHit signals
-  DECLARE_ALGORITHM( RichSignal );
+  DECLARE_ALGORITHM( Signal );
 
   // Simulate the frontend response
-  DECLARE_ALGORITHM( RichSimpleFrontEndResponse );
-  DECLARE_ALGORITHM( RichDetailedFrontEndResponse );
+  DECLARE_ALGORITHM( SimpleFrontEndResponse );
+  DECLARE_ALGORITHM( DetailedFrontEndResponse );
 
   // Algorithm to convert MCRichDigits to Raw Buffer
   DECLARE_ALGORITHM( MCRichDigitsToRawBufferAlg );
 
   // Simple probabilistic charge sharing
-  DECLARE_ALGORITHM( RichSimpleChargeSharing );
+  DECLARE_ALGORITHM( SimpleChargeSharing );
 
   // Creates summed deposits from deposits
-  DECLARE_ALGORITHM( RichSummedDeposits );
+  DECLARE_ALGORITHM( SummedDeposits );
 
   // Monitors
-  DECLARE_ALGORITHM( RichDigiAlgMoni );
+  DECLARE_ALGORITHM( AlgMoni );
 
 }
 

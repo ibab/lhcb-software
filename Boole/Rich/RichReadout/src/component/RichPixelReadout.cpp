@@ -3,6 +3,8 @@
 #include "RichShape.h"
 #include "RichFrontEndDigitiser.h"
 
+using namespace Rich::MC::Digi;
+
 RichPixelReadout::RichPixelReadout()
   :  m_shape          ( new RichShape( 25, 2.7 )       ),
      m_frontEnd       ( new RichFrontEndDigitiser()    ),

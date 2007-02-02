@@ -2,10 +2,10 @@
 //===============================================================================
 /** @file RichDetailedFrontEndResponse.h
  *
- *  Header file for RICH digitisation algorithm : RichDetailedFrontEndResponse
+ *  Header file for RICH digitisation algorithm : Rich::MC::Digi::DetailedFrontEndResponse
  *
  *  CVS Log :-
- *  $Id: RichDetailedFrontEndResponse.h,v 1.6 2006-11-06 09:41:56 cattanem Exp $
+ *  $Id: RichDetailedFrontEndResponse.h,v 1.7 2007-02-02 10:13:42 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @author Alex Howard   a.s.howard@ic.ac.uk
@@ -52,65 +52,103 @@
 #include "Event/MCRichSummedDeposit.h"
 #include "Event/MCRichDigit.h"
 
-// namespaces
-using namespace LHCb; ///< General LHCb namespace
-
-/** @class RichDetailedFrontEndResponse RichDetailedFrontEndResponse.h
- *  
- *  Performs a detailed simulation of the RICH HPD pixel response
- * 
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @author Alex Howard   a.s.howard@ic.ac.uk
- *  @date   2003-11-06
+//-----------------------------------------------------------------------------
+/** @namespace Rich
+ *
+ *  General namespace for RICH software
+ *
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
  */
+//-----------------------------------------------------------------------------
+namespace Rich
+{
 
-class RichDetailedFrontEndResponse : public RichAlgBase {
+  //-----------------------------------------------------------------------------
+  /** @namespace MC
+   *
+   *  General namespace for RICH MC related software
+   *
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   05/12/2006
+   */
+  //-----------------------------------------------------------------------------
+  namespace MC
+  {
 
-public:
+    //-----------------------------------------------------------------------------
+    /** @namespace Digi
+     *
+     *  General namespace for RICH Digitisation simuation related software
+     *
+     *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+     *  @date   17/01/2007
+     */
+    //-----------------------------------------------------------------------------
+    namespace Digi
+    {
 
-  /// Constructor
-  RichDetailedFrontEndResponse( const std::string& name, 
-                                ISvcLocator* pSvcLocator );
+      /** @class DetailedFrontEndResponse RichDetailedFrontEndResponse.h
+       *
+       *  Performs a detailed simulation of the RICH HPD pixel response
+       *
+       *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+       *  @author Alex Howard   a.s.howard@ic.ac.uk
+       *  @date   2003-11-06
+       */
 
-  /// Destructor
-  virtual ~RichDetailedFrontEndResponse();
+      class DetailedFrontEndResponse : public RichAlgBase
+      {
 
-  virtual StatusCode initialize();
-  virtual StatusCode finalize();
-  virtual StatusCode execute();
+      public:
 
-  typedef std::pair< MCRichSummedDeposit*, RichTimeSample > TimeData;
-  typedef std::vector< TimeData > samplecache_t;
+        /// Constructor
+        DetailedFrontEndResponse( const std::string& name,
+                                  ISvcLocator* pSvcLocator );
 
-private: // methods
+        /// Destructor
+        virtual ~DetailedFrontEndResponse();
 
-  StatusCode Analog();  ///< Run the analogue simulation
-  StatusCode Digital(); ///< Run the digital simulation
+        virtual StatusCode initialize();
+        virtual StatusCode execute();
+        virtual StatusCode finalize();
 
-private: // data
+        typedef std::pair< LHCb::MCRichSummedDeposit*, RichTimeSample > TimeData;
+        typedef std::vector< TimeData > samplecache_t;
 
-  const RichBase * actual_base;
-  RichRegistry theRegistry;
+      private: // methods
 
-  samplecache_t tscache;
+        StatusCode Analog();  ///< Run the analogue simulation
+        StatusCode Digital(); ///< Run the digital simulation
 
-  MCRichSummedDeposits* m_summedDeposits;
+      private: // data
 
-  std::string m_mcRichSummedDepositsLocation;
-  std::string m_mcRichDigitsLocation;
+        const RichBase * actual_base;
+        RichRegistry theRegistry;
 
-  int m_Pedestal;
-  double m_Calibration;
+        samplecache_t tscache;
 
-  double m_Noise;
-  double m_Threshold;
-  double m_ThresholdSigma;
+        LHCb::MCRichSummedDeposits* m_summedDeposits;
 
-  double el_per_adc;
+        std::string m_mcRichSummedDepositsLocation;
+        std::string m_mcRichDigitsLocation;
 
-  Rndm::Numbers m_gaussThreshold;
-  Rndm::Numbers m_gaussNoise;
+        int m_Pedestal;
+        double m_Calibration;
 
-};
+        double m_Noise;
+        double m_Threshold;
+        double m_ThresholdSigma;
+
+        double el_per_adc;
+
+        Rndm::Numbers m_gaussThreshold;
+        Rndm::Numbers m_gaussNoise;
+
+      };
+
+    }
+  }
+}
 
 #endif // RICHREADOUT_RICHDETAILEDFRONTENDRESPONSE_H

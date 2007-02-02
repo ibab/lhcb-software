@@ -1,20 +1,20 @@
 
 // Main RichDigit Monitor
-MoniRICHSeq.Members += { "RichDigitQC/RiDigitQC" };
+MoniRICHSeq.Members += { "Rich::MC::Digi::DigitQC/RiDigitQC" };
 //RiDigitQC.HistoProduce   = false; // turn off histograms
 RiDigitQC.HistoDir = "DIGI/DIGITQC"; // set histo directory
 RiDigitQC.HistoOffSet = 10000;
 
 // MC tools
-ToolSvc.RichToolRegistry.Tools += { "RichMCTruthTool/RichMCTruthTool" };
+ToolSvc.RichToolRegistry.Tools += { "Rich::MC::MCTruthTool/RichMCTruthTool" };
 
 // Low level data object debugger
-//MoniRICHSeq.Members += { "RichDigiDataObjVerifier/RichDigiEventCheck" };
+//MoniRICHSeq.Members += { "Rich::Digi::DataObjVerifier/RichDigiEventCheck" };
 //RichDigiEventCheck.CheckMCRichDigits         = false;
 //RichDigiEventCheck.CheckMCRichHits           = true;
 //RichDigiEventCheck.CheckMCRichOpticalPhotons = true;
 
 // decoding tests (requires RichDAQ package to be loaded)
-//ToolSvc.RichToolRegistry.Tools += { "RichRawBufferToSmartIDsTool/RichSmartIDDecoder" };
-//MoniRICHSeq.Members += { "RawBufferToRichDigitsAlg/RichRawEventToDigits" };
+//ToolSvc.RichToolRegistry.Tools += { "Rich::DAQ::RawBufferToSmartIDsTool/RichSmartIDDecoder" };
+//MoniRICHSeq.Members += { "Rich::DAQ::RawBufferToRichDigitsAlg/RichRawEventToDigits" };
 //RichRawEventToDigits.DecodeBufferOnly = true;

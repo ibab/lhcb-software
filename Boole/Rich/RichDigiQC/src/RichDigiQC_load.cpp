@@ -5,7 +5,7 @@
  *  Implementation file for classes in the RichDigiQC Component Library
  *
  *  CVS Log :-
- *  $Id: RichDigiQC_load.cpp,v 1.3 2005-02-20 18:36:41 jonrob Exp $
+ *  $Id: RichDigiQC_load.cpp,v 1.4 2007-02-02 10:12:44 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2003-09-08
@@ -16,6 +16,6 @@
 
 DECLARE_FACTORY_ENTRIES( RichDigiQC )
 {
-  DECLARE_ALGORITHM( RichDigitQC );
-  DECLARE_ALGORITHM( RichDigiDataObjVerifier );
+  DECLARE_ALGORITHM( DigitQC );
+  DECLARE_ALGORITHM( DataObjVerifier );
 }

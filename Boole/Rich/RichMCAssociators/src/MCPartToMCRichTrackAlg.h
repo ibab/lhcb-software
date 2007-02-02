@@ -5,7 +5,7 @@
  *  Header file for algorithm : MCPartToMCRichTrackAlg
  *
  *  CVS Log :-
- *  $Id: MCPartToMCRichTrackAlg.h,v 1.5 2006-12-18 15:44:47 cattanem Exp $
+ *  $Id: MCPartToMCRichTrackAlg.h,v 1.6 2007-02-02 10:13:13 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2004-02-11
@@ -28,62 +28,87 @@
 #include "RichKernel/RichAlgBase.h"
 
 //-----------------------------------------------------------------------------
-/** @class MCPartToMCRichTrackAlg MCPartToMCRichTrackAlg.h
+/** @namespace Rich
  *
- *  Builds the association tables between MCParticles and MCRichTracks
+ *  General namespace for RICH software
  *
- *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
- *  @date   2004-02-11
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
  */
 //-----------------------------------------------------------------------------
-
-class MCPartToMCRichTrackAlg : public RichAlgBase 
+namespace Rich
 {
 
-public:
+  //-----------------------------------------------------------------------------
+  /** @namespace MC
+   *
+   *  General namespace for RICH MC related software
+   *
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   05/12/2006
+   */
+  //-----------------------------------------------------------------------------
+  namespace MC
+  {
 
-  /// Standard constructor
-  MCPartToMCRichTrackAlg( const std::string& name, ISvcLocator* pSvcLocator );
+    //-----------------------------------------------------------------------------
+    /** @class MCPartToMCRichTrackAlg MCPartToMCRichTrackAlg.h
+     *
+     *  Builds the association tables between MCParticles and MCRichTracks
+     *
+     *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
+     *  @date   2004-02-11
+     */
+    //-----------------------------------------------------------------------------
 
-  /// Destructor
-  virtual ~MCPartToMCRichTrackAlg( );
+    class MCPartToMCRichTrackAlg : public RichAlgBase
+    {
 
-  virtual StatusCode initialize();    // Algorithm initialization
-  virtual StatusCode execute   ();    // Algorithm execution
-  virtual StatusCode finalize  ();    // Algorithm finalization
+    public:
 
-private: // definitions
+      /// Standard constructor
+      MCPartToMCRichTrackAlg( const std::string& name, ISvcLocator* pSvcLocator );
 
-  /// typedef for building linker
-  typedef LinkerWithKey<LHCb::MCRichTrack,LHCb::MCParticle> MCPartToRichTracks;
+      /// Destructor
+      virtual ~MCPartToMCRichTrackAlg( );
 
-private: // methods
+      virtual StatusCode execute   ();    ///< Algorithm execution
 
-  /// Add a given event to the linker object
-  StatusCode addEvent( const std::string & evtLoc );
+    private: // definitions
 
-  /// Return a pointer to the linker for this event
-  MCPartToRichTracks * linker();
+      /// typedef for building linker
+      typedef LinkerWithKey<LHCb::MCRichTrack,LHCb::MCParticle> MCPartToRichTracks;
 
-  /// Reset linker object for new event
-  void resetLinker();
+    private: // methods
 
-private: // data
+      /// Add a given event to the linker object
+      StatusCode addEvent( const std::string & evtLoc );
 
-  /// typedef for List of event locations to process
-  typedef std::vector<std::string> EventList;
+      /// Return a pointer to the linker for this event
+      MCPartToRichTracks * linker();
 
-  /// List of event locations to process
-  EventList m_evtLocs;
+      /// Reset linker object for new event
+      void resetLinker();
 
-  /// Pointer to linker object
-  MCPartToRichTracks * m_linker;
+    private: // data
 
-};
+      /// typedef for List of event locations to process
+      typedef std::vector<std::string> EventList;
 
-inline void MCPartToMCRichTrackAlg::resetLinker()
-{
-  if ( m_linker ) { delete m_linker; m_linker = NULL; }
+      /// List of event locations to process
+      EventList m_evtLocs;
+
+      /// Pointer to linker object
+      MCPartToRichTracks * m_linker;
+
+    };
+
+    inline void MCPartToMCRichTrackAlg::resetLinker()
+    {
+      if ( m_linker ) { delete m_linker; m_linker = NULL; }
+    }
+
+  }
 }
 
 #endif // RICHMCASSOCIATORS_MCPARTTOMCRICHTRACKALG_H

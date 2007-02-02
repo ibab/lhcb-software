@@ -4,7 +4,7 @@
  *  Header file for algorithm : MCRichHitToMCRichOpPhotAlg
  *
  *  CVS Log :-
- *  $Id: MCRichHitToMCRichOpPhotAlg.h,v 1.4 2006-12-18 15:44:49 cattanem Exp $
+ *  $Id: MCRichHitToMCRichOpPhotAlg.h,v 1.5 2007-02-02 10:13:13 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2004-02-11
@@ -26,65 +26,89 @@
 // base class
 #include "RichKernel/RichAlgBase.h"
 
-/** @class MCRichHitToMCRichOpPhotAlg MCRichHitToMCRichOpPhotAlg.h
+//-----------------------------------------------------------------------------
+/** @namespace Rich
  *
- *  Builds the association tables between MCRichHits and MCRichOpticalPhotons
+ *  General namespace for RICH software
  *
- *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
- *  @date   2004-02-11
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
  */
-
-class MCRichHitToMCRichOpPhotAlg : public RichAlgBase 
+//-----------------------------------------------------------------------------
+namespace Rich
 {
 
-public:
+  //-----------------------------------------------------------------------------
+  /** @namespace MC
+   *
+   *  General namespace for RICH MC related software
+   *
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   05/12/2006
+   */
+  //-----------------------------------------------------------------------------
+  namespace MC
+  {
 
-  /// Standard constructor
-  MCRichHitToMCRichOpPhotAlg( const std::string& name, ISvcLocator* pSvcLocator );
+    /** @class MCRichHitToMCRichOpPhotAlg MCRichHitToMCRichOpPhotAlg.h
+     *
+     *  Builds the association tables between MCRichHits and MCRichOpticalPhotons
+     *
+     *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
+     *  @date   2004-02-11
+     */
 
-  virtual ~MCRichHitToMCRichOpPhotAlg( ); ///< Destructor
+    class MCRichHitToMCRichOpPhotAlg : public RichAlgBase
+    {
 
-  // Algorithm initialization
-  virtual StatusCode initialize();
+    public:
 
-  // Algorithm execution
-  virtual StatusCode execute   ();
+      /// Standard constructor
+      MCRichHitToMCRichOpPhotAlg( const std::string& name, ISvcLocator* pSvcLocator );
 
-  // Algorithm finalization
-  virtual StatusCode finalize  ();
+      virtual ~MCRichHitToMCRichOpPhotAlg( ); ///< Destructor
 
-private: // definitions
+      // Algorithm initialization
+      virtual StatusCode initialize();
 
-  /// Shortcut to linker name
-  typedef LinkerWithKey<LHCb::MCRichOpticalPhoton,LHCb::MCRichHit> MCRichHitsToPhotons;
+      // Algorithm execution
+      virtual StatusCode execute   ();
 
-private: // methods
+    private: // definitions
 
-  /// Add a given event to the linker object
-  StatusCode addEvent( const std::string & evtLoc );
+      /// Shortcut to linker name
+      typedef LinkerWithKey<LHCb::MCRichOpticalPhoton,LHCb::MCRichHit> MCRichHitsToPhotons;
 
-  /// Return a pointer to the linker for this event
-  MCRichHitsToPhotons * linker();
+    private: // methods
 
-  /// Reset linker object for new event
-  void resetLinker();
+      /// Add a given event to the linker object
+      StatusCode addEvent( const std::string & evtLoc );
 
-private: // data
+      /// Return a pointer to the linker for this event
+      MCRichHitsToPhotons * linker();
 
-  /// typedef of event locations to process
-  typedef std::vector<std::string> EventList;
+      /// Reset linker object for new event
+      void resetLinker();
 
-  /// event locations to process
-  EventList m_evtLocs;
+    private: // data
 
-  /// Pointer to linker object
-  MCRichHitsToPhotons * m_linker;
+      /// typedef of event locations to process
+      typedef std::vector<std::string> EventList;
 
-};
+      /// event locations to process
+      EventList m_evtLocs;
 
-inline void MCRichHitToMCRichOpPhotAlg::resetLinker()
-{
-  if ( m_linker ) { delete m_linker; m_linker = NULL; }
+      /// Pointer to linker object
+      MCRichHitsToPhotons * m_linker;
+
+    };
+
+    inline void MCRichHitToMCRichOpPhotAlg::resetLinker()
+    {
+      if ( m_linker ) { delete m_linker; m_linker = NULL; }
+    }
+
+  }
 }
 
 #endif // RICHMCASSOCIATORS_MCRICHHITTOMCRICHOPPHOTALG_H

@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ algorithm : MCRichDigitsToRawBufferAlg
  *
  *  CVS Log :-
- *  $Id: MCRichDigitsToRawBufferAlg.h,v 1.7 2006-11-06 09:41:56 cattanem Exp $
+ *  $Id: MCRichDigitsToRawBufferAlg.h,v 1.8 2007-02-02 10:13:41 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
@@ -24,43 +24,82 @@
 // Interfaces
 #include "RichKernel/IRichRawDataFormatTool.h"
 
-//===============================================================================
-/** @class MCRichDigitsToRawBufferAlg MCRichDigitsToRawBufferAlg.h
+//-----------------------------------------------------------------------------
+/** @namespace Rich
  *
- *  Algorithm to fill the Raw buffer with RICH information from MCRichDigits.
+ *  General namespace for RICH software
  *
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   2003-11-06
- *
- *  @todo Remove DC04 hacks when no longer needed
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
  */
-//===============================================================================
-
-class MCRichDigitsToRawBufferAlg : public RichAlgBase
+//-----------------------------------------------------------------------------
+namespace Rich
 {
 
-public:
+  //-----------------------------------------------------------------------------
+  /** @namespace MC
+   *
+   *  General namespace for RICH MC related software
+   *
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   05/12/2006
+   */
+  //-----------------------------------------------------------------------------
+  namespace MC
+  {
 
-  /// Standard constructor
-  MCRichDigitsToRawBufferAlg(const std::string& name, ISvcLocator* pSvcLocator);
+    //-----------------------------------------------------------------------------
+    /** @namespace Digi
+     *
+     *  General namespace for RICH Digitisation simuation related software
+     *
+     *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+     *  @date   17/01/2007
+     */
+    //-----------------------------------------------------------------------------
+    namespace Digi
+    {
 
-  virtual ~MCRichDigitsToRawBufferAlg( ); ///< Destructor
+      //===============================================================================
+      /** @class MCRichDigitsToRawBufferAlg MCRichDigitsToRawBufferAlg.h
+       *
+       *  Algorithm to fill the Raw buffer with RICH information from MCRichDigits.
+       *
+       *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+       *  @date   2003-11-06
+       *
+       *  @todo Remove DC04 hacks when no longer needed
+       */
+      //===============================================================================
 
-  virtual StatusCode initialize();    // Algorithm initialization
-  virtual StatusCode execute   ();    // Algorithm execution
-  virtual StatusCode finalize  ();    // Algorithm finalization
+      class MCRichDigitsToRawBufferAlg : public RichAlgBase
+      {
 
-private: // data
+      public:
 
-  /// Pointer to RICH raw data format tool
-  const IRichRawDataFormatTool * m_rawFormatT;
+        /// Standard constructor
+        MCRichDigitsToRawBufferAlg( const std::string& name, ISvcLocator* pSvcLocator );
 
-  /// Location of input MCRichDigits in TES
-  std::string m_digitsLoc;
+        virtual ~MCRichDigitsToRawBufferAlg( ); ///< Destructor
 
-  /// Data Format version
-  unsigned int m_version;
+        virtual StatusCode initialize();    // Algorithm initialization
+        virtual StatusCode execute   ();    // Algorithm execution
 
-};
+      private: // data
+
+        /// Pointer to RICH raw data format tool
+        const Rich::DAQ::IRawDataFormatTool * m_rawFormatT;
+
+        /// Location of input MCRichDigits in TES
+        std::string m_digitsLoc;
+
+        /// Data Format version
+        unsigned int m_version;
+
+      };
+
+    }
+  }
+}
 
 #endif // RICHDAQ_RICHDIGITSTORAWBUFFERALG_H

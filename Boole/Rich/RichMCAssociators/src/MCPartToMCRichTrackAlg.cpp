@@ -5,7 +5,7 @@
  * Implementation file for class : MCPartToMCRichTrackAlg
  *
  * CVS Log :-
- * $Id: MCPartToMCRichTrackAlg.cpp,v 1.9 2006-12-18 15:44:46 cattanem Exp $
+ * $Id: MCPartToMCRichTrackAlg.cpp,v 1.10 2007-02-02 10:13:13 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -19,7 +19,7 @@
 #include "GaudiKernel/AlgFactory.h"
 
 // namespace
-using namespace LHCb;
+using namespace Rich::MC;
 
 DECLARE_ALGORITHM_FACTORY( MCPartToMCRichTrackAlg );
 
@@ -33,12 +33,12 @@ MCPartToMCRichTrackAlg::MCPartToMCRichTrackAlg( const std::string& name,
 {
 
   m_evtLocs.clear();
-  m_evtLocs.push_back(                    MCRichTrackLocation::Default );
-  m_evtLocs.push_back( "Prev/"          + MCRichTrackLocation::Default );
-  m_evtLocs.push_back( "PrevPrev/"      + MCRichTrackLocation::Default );
-  m_evtLocs.push_back( "Next/"          + MCRichTrackLocation::Default );
-  m_evtLocs.push_back( "NextNext/"      + MCRichTrackLocation::Default );
-  m_evtLocs.push_back( "LHCBackground/" + MCRichTrackLocation::Default );
+  m_evtLocs.push_back(                    LHCb::MCRichTrackLocation::Default );
+  m_evtLocs.push_back( "Prev/"          + LHCb::MCRichTrackLocation::Default );
+  m_evtLocs.push_back( "PrevPrev/"      + LHCb::MCRichTrackLocation::Default );
+  m_evtLocs.push_back( "Next/"          + LHCb::MCRichTrackLocation::Default );
+  m_evtLocs.push_back( "NextNext/"      + LHCb::MCRichTrackLocation::Default );
+  m_evtLocs.push_back( "LHCBackground/" + LHCb::MCRichTrackLocation::Default );
   declareProperty( "EventLocations", m_evtLocs );
 
 }
@@ -47,20 +47,6 @@ MCPartToMCRichTrackAlg::MCPartToMCRichTrackAlg( const std::string& name,
 // Destructor
 //=============================================================================
 MCPartToMCRichTrackAlg::~MCPartToMCRichTrackAlg() {};
-
-//=============================================================================
-// Initialisation
-//=============================================================================
-StatusCode MCPartToMCRichTrackAlg::initialize()
-{
-  // Sets up various tools and services
-  const StatusCode sc = RichAlgBase::initialize();
-  if ( sc.isFailure() ) return sc;
-
-  // add custom initialisations here
-
-  return sc;
-}
 
 //=============================================================================
 // Main execution
@@ -97,7 +83,7 @@ MCPartToMCRichTrackAlg::linker()
     // New linker object
     m_linker =
       new MCPartToRichTracks( evtSvc(), msgSvc(),
-                              MCParticleLocation::Default+"2MCRichTracks" );
+                              LHCb::MCParticleLocation::Default+"2MCRichTracks" );
     // set the ordering
     m_linker->setDecreasingWeight();
   }
@@ -111,7 +97,7 @@ StatusCode MCPartToMCRichTrackAlg::addEvent( const std::string & evtLoc )
 {
 
   // load MCRichTracks in this event
-  SmartDataPtr<MCRichTracks> mcTracks( evtSvc(), evtLoc );
+  SmartDataPtr<LHCb::MCRichTracks> mcTracks( evtSvc(), evtLoc );
   if ( !mcTracks )
   {
     if ( msgLevel(MSG::DEBUG) )
@@ -123,13 +109,13 @@ StatusCode MCPartToMCRichTrackAlg::addEvent( const std::string & evtLoc )
             << " MCRichTracks at " << evtLoc << endreq; }
 
   // add links to linker
-  for ( MCRichTracks::const_iterator iTk = mcTracks->begin();
+  for ( LHCb::MCRichTracks::const_iterator iTk = mcTracks->begin();
         iTk != mcTracks->end(); ++iTk )
   {
-    const MCRichTrack * mcT = *iTk;
+    const LHCb::MCRichTrack * mcT = *iTk;
     if ( mcT )
     {
-      const MCParticle * mcP = mcT->mcParticle();
+      const LHCb::MCParticle * mcP = mcT->mcParticle();
       if ( mcP )
       {
         if ( msgLevel(MSG::VERBOSE) )
@@ -139,7 +125,7 @@ StatusCode MCPartToMCRichTrackAlg::addEvent( const std::string & evtLoc )
       }
       else
       {
-        //Warning( "MCRichTrack has null MCParticle reference" );
+        Warning( "MCRichTrack has null MCParticle reference" );
       }
     }
     else
@@ -152,14 +138,6 @@ StatusCode MCPartToMCRichTrackAlg::addEvent( const std::string & evtLoc )
   { debug() << "Finished processing MCRichTracks at " << evtLoc << endreq; }
 
   return StatusCode::SUCCESS;
-}
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode MCPartToMCRichTrackAlg::finalize()
-{
-  return RichAlgBase::finalize();
 }
 
 //=============================================================================

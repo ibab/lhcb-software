@@ -2,10 +2,10 @@
 //===============================================================================
 /** @file RichSimpleChargeSharing.h
  *
- *  Header file for RICH digitisation algorithm : RichSimpleChargeSharing
+ *  Header file for RICH digitisation algorithm : Rich::MC::Digi::SimpleChargeSharing
  *
  *  CVS Log :-
- *  $Id: RichSimpleChargeSharing.h,v 1.2 2006-11-06 09:41:56 cattanem Exp $
+ *  $Id: RichSimpleChargeSharing.h,v 1.3 2007-02-02 10:13:42 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   23/01/2006
@@ -37,53 +37,90 @@
 // kernel
 #include "Kernel/ParticleID.h"
 
-// LHCb namespace
-using namespace LHCb;
-
-//===============================================================================
-/** @class RichSimpleChargeSharing RichSimpleChargeSharing.h
+//-----------------------------------------------------------------------------
+/** @namespace Rich
  *
- *  Performs a simplistic probabilistic simulation of charge sharing
- *  in the RICH HPDs.
+ *  General namespace for RICH software
  *
- *  Simply adds to a fraction of pixels one neighbouring pixel with the same
- *  TOF and energy deposit. This algorithm is not a proper simulation
- *  but a simple method to replicate the observed affect in the 2005/2006 
- *  testbeams.
- *
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   23/01/2006
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
  */
-//===============================================================================
-
-class RichSimpleChargeSharing : public RichAlgBase
+//-----------------------------------------------------------------------------
+namespace Rich
 {
 
-public:
+  //-----------------------------------------------------------------------------
+  /** @namespace MC
+   *
+   *  General namespace for RICH MC related software
+   *
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   05/12/2006
+   */
+  //-----------------------------------------------------------------------------
+  namespace MC
+  {
 
-  /// Constructor
-  RichSimpleChargeSharing ( const std::string& name, ISvcLocator* pSvcLocator );
+    //-----------------------------------------------------------------------------
+    /** @namespace Digi
+     *
+     *  General namespace for RICH Digitisation simuation related software
+     *
+     *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+     *  @date   17/01/2007
+     */
+    //-----------------------------------------------------------------------------
+    namespace Digi
+    {
 
-  /// Desctructor
-  virtual ~RichSimpleChargeSharing();
+      //===============================================================================
+      /** @class SimpleChargeSharing RichSimpleChargeSharing.h
+       *
+       *  Performs a simplistic probabilistic simulation of charge sharing
+       *  in the RICH HPDs.
+       *
+       *  Simply adds to a fraction of pixels one neighbouring pixel with the same
+       *  TOF and energy deposit. This algorithm is not a proper simulation
+       *  but a simple method to replicate the observed affect in the 2005/2006
+       *  testbeams.
+       *
+       *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+       *  @date   23/01/2006
+       */
+      //===============================================================================
 
-  virtual StatusCode initialize();
-  virtual StatusCode execute();
-  virtual StatusCode finalize();
+      class SimpleChargeSharing : public RichAlgBase
+      {
 
-private: // data
+      public:
 
-  std::string m_RichDepositLocation;
+        /// Constructor
+        SimpleChargeSharing ( const std::string& name, ISvcLocator* pSvcLocator );
 
-  /// Fraction of pixels to charge share
-  double m_shareFrac;
+        /// Desctructor
+        virtual ~SimpleChargeSharing();
 
-  /// Pointer to RichSmartID tool
-  const IRichSmartIDTool * m_smartIDTool;
+        virtual StatusCode initialize();
+        virtual StatusCode execute();
+        virtual StatusCode finalize();
 
-  /// random number generator
-  mutable Rndm::Numbers m_rndm;
+      private: // data
 
-};
+        std::string m_RichDepositLocation;
+
+        /// Fraction of pixels to charge share
+        double m_shareFrac;
+
+        /// Pointer to RichSmartID tool
+        const Rich::ISmartIDTool * m_smartIDTool;
+
+        /// random number generator
+        mutable Rndm::Numbers m_rndm;
+
+      };
+
+    }
+  }
+}
 
 #endif // RICHREADOUT_RICHSIGNAL_H

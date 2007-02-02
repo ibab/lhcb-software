@@ -1,23 +1,25 @@
 // Rich digitisation for Gauss data
 
 // Process the raw hit signals.
-DigiRICHSeq.Members += { "RichSignal/RichPDSignal" };
+DigiRICHSeq.Members += { "Rich::MC::Digi::Signal/RichPDSignal" };
 RichPDSignal.UseSpillover     = true;
 RichPDSignal.UseLHCBackground = false; // requires "Gauss" LHC events
 
 // charge sharing
-DigiRICHSeq.Members += { "RichSimpleChargeSharing/RichChargeShare" };
+DigiRICHSeq.Members += { "Rich::MC::Digi::SimpleChargeSharing/RichChargeShare" };
 // "tuned" to give 2.5 % on the final digits
 RichChargeShare.ChargeShareFraction = 0.015;
 
 // deposit summation
-DigiRICHSeq.Members += { "RichSummedDeposits" };
+DigiRICHSeq.Members += { "Rich::MC::Digi::SummedDeposits/RichSummedDeposits" };
 
 // Detailed treatment of HPD response
-DigiRICHSeq.Members += { "RichDetailedFrontEndResponse/RichPDResponse" };
+DigiRICHSeq.Members += { "Rich::MC::Digi::DetailedFrontEndResponse/RichPDResponse" };
 
 // Refractive index using XML tabulation
-ToolSvc.RichToolRegistry.Tools += { "RichTabulatedRefractiveIndex/RichRefractiveIndex" };
+// CRJ : Probably no longer needed ?
+/*
+ToolSvc.RichToolRegistry.Tools += { "Rich::TabulatedRefractiveIndex/RichRefractiveIndex" };
 ToolSvc.RichRefractiveIndex.RefIndexLocations = {
   "/dd/Materials/RichMaterialTabProperties/AerogelIdealRIndexPT",
   "/dd/Materials/RichMaterialTabProperties/C4F10SellParamRIndexPT",
@@ -25,8 +27,9 @@ ToolSvc.RichRefractiveIndex.RefIndexLocations = {
 };
 ToolSvc.RichRefractiveIndex.QETableLocation =
   "/dd/Materials/RichMaterialTabProperties/HpdQuantumEff";
+*/
 
 // SmartID manipulation
-ToolSvc.RichToolRegistry.Tools += { "RichSmartIDTool/RichSmartIDTool" };
+ToolSvc.RichToolRegistry.Tools += { "Rich::SmartIDTool/RichSmartIDTool" };
 
 

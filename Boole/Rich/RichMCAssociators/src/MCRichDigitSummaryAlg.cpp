@@ -5,7 +5,7 @@
  * Implementation file for class : MCRichDigitSummaryAlg
  *
  * CVS Log :-
- * $Id: MCRichDigitSummaryAlg.cpp,v 1.6 2006-12-18 15:44:48 cattanem Exp $
+ * $Id: MCRichDigitSummaryAlg.cpp,v 1.7 2007-02-02 10:13:13 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2004-02-11
@@ -19,7 +19,7 @@
 #include "GaudiKernel/AlgFactory.h"
 
 // namespace
-using namespace LHCb;
+using namespace Rich::MC;
 
 DECLARE_ALGORITHM_FACTORY( MCRichDigitSummaryAlg );
 
@@ -69,14 +69,14 @@ StatusCode MCRichDigitSummaryAlg::execute()
 {
 
   // Locate MCRichDigits
-  MCRichDigits * mcDigits = get<MCRichDigits>( MCRichDigitLocation::Default );
+  LHCb::MCRichDigits * mcDigits = get<LHCb::MCRichDigits>( LHCb::MCRichDigitLocation::Default );
 
   // Make new container of MCRichDigitSummaries
-  MCRichDigitSummarys * summaries = new MCRichDigitSummarys();
-  put ( summaries, MCRichDigitSummaryLocation::Default );
+  LHCb::MCRichDigitSummarys * summaries = new LHCb::MCRichDigitSummarys();
+  put ( summaries, LHCb::MCRichDigitSummaryLocation::Default );
 
   // loop over mc digits
-  for ( MCRichDigits::const_iterator iDig = mcDigits->begin();
+  for ( LHCb::MCRichDigits::const_iterator iDig = mcDigits->begin();
         iDig != mcDigits->end(); ++iDig )
   {
 
@@ -93,7 +93,7 @@ StatusCode MCRichDigitSummaryAlg::execute()
         {
 
           // Make and insert new summary object
-          MCRichDigitSummary * summary = new MCRichDigitSummary();
+          LHCb::MCRichDigitSummary * summary = new LHCb::MCRichDigitSummary();
           summaries->add( summary );
 
           // Set RichSmartID
@@ -120,19 +120,10 @@ StatusCode MCRichDigitSummaryAlg::execute()
   if ( msgLevel(MSG::DEBUG) )
   {
     debug() << "Created " << summaries->size() << " MCRichDigitSummary objects at "
-            << MCRichDigitSummaryLocation::Default << endreq;
+            << LHCb::MCRichDigitSummaryLocation::Default << endreq;
   }
 
   return StatusCode::SUCCESS;
 }
-//=============================================================================
 
-//=============================================================================
-// initialisation
-//=============================================================================
-StatusCode MCRichDigitSummaryAlg::finalize()
-{
-  // finalize base class
-  return RichAlgBase::finalize();
-}
 //=============================================================================

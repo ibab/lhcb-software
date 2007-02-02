@@ -5,7 +5,7 @@
  *  Implementation file for RICH Digitisation Quality Control algorithm : RichDigitQC
  *
  *  CVS Log :-
- *  $Id: RichDigitQC.cpp,v 1.31 2006-12-18 15:38:56 cattanem Exp $
+ *  $Id: RichDigitQC.cpp,v 1.32 2007-02-02 10:12:44 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2003-09-08
@@ -20,12 +20,14 @@
 
 //-------------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( RichDigitQC );
+using namespace Rich::MC::Digi;
+
+DECLARE_ALGORITHM_FACTORY( DigitQC );
 
 // Standard constructor, initializes variables
-RichDigitQC::RichDigitQC( const std::string& name,
-                          ISvcLocator* pSvcLocator)
-  : RichHistoAlgBase ( name, pSvcLocator ),
+DigitQC::DigitQC( const std::string& name,
+                  ISvcLocator* pSvcLocator)
+  : Rich::HistoAlgBase ( name, pSvcLocator ),
     m_richSys        ( 0                 ),
     m_smartIDs       ( 0                 ),
     m_mcTool         ( 0                 ),
@@ -44,19 +46,19 @@ RichDigitQC::RichDigitQC( const std::string& name,
 {
 
   // Declare job options
-  declareProperty( "InputDigits", m_digitTDS = MCRichDigitLocation::Default );
+  declareProperty( "InputDigits", m_digitTDS = LHCb::MCRichDigitLocation::Default );
   declareProperty( "ExtraHistos", m_extraHists = false );
 
 }
 
 // Destructor
-RichDigitQC::~RichDigitQC() {}
+DigitQC::~DigitQC() {}
 
 // Initialisation
-StatusCode RichDigitQC::initialize()
+StatusCode DigitQC::initialize()
 {
   // Initialize base class
-  const StatusCode sc = RichHistoAlgBase::initialize();
+  const StatusCode sc = Rich::HistoAlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // acquire tools
@@ -76,12 +78,12 @@ StatusCode RichDigitQC::initialize()
 }
 
 // Main execution
-StatusCode RichDigitQC::execute()
+StatusCode DigitQC::execute()
 {
   if ( msgLevel(MSG::DEBUG) ) debug() << "Execute" << endreq;
 
   // Locate MCRichDigits
-  MCRichDigits * richDigits = get<MCRichDigits>( m_digitTDS );
+  LHCb::MCRichDigits * richDigits = get<LHCb::MCRichDigits>( m_digitTDS );
 
   // temporary tally
   HPDCounter nHPD[Rich::NRiches];
@@ -89,10 +91,10 @@ StatusCode RichDigitQC::execute()
   // Loop over all digits
   std::vector<unsigned int> backs(Rich::NRiches);
   SpillDetCount spills(Rich::NRiches);
-  for ( MCRichDigits::const_iterator iDigit = richDigits->begin();
+  for ( LHCb::MCRichDigits::const_iterator iDigit = richDigits->begin();
         iDigit != richDigits->end(); ++iDigit )
   {
-    const MCRichDigit * mcDig = *iDigit;
+    const LHCb::MCRichDigit * mcDig = *iDigit;
 
     // Get Rich ID
     const Rich::DetectorType rich = mcDig->key().rich();
@@ -131,10 +133,10 @@ StatusCode RichDigitQC::execute()
   for ( EventLocations::const_iterator iC = m_evtLocs.begin();
         iC != m_evtLocs.end(); ++iC )
   {
-    if ( exist<MCRichHits>(iC->first) )
+    if ( exist<LHCb::MCRichHits>(iC->first) )
     {
-      MCRichHits * hits = get<MCRichHits>( iC->first );
-      for ( MCRichHits::const_iterator iH = hits->begin(); iH != hits->end(); ++iH )
+      LHCb::MCRichHits * hits = get<LHCb::MCRichHits>( iC->first );
+      for ( LHCb::MCRichHits::const_iterator iH = hits->begin(); iH != hits->end(); ++iH )
       {
         if ( !(*iH)->isBackground()  )
         {
@@ -166,13 +168,13 @@ StatusCode RichDigitQC::execute()
       plot1D( (*iHPD).second, RICH+" : Average HPD occupancy (nHits>0)", 0, 150, 75 );
       if ( m_extraHists )
       {
-        const RichDAQ::HPDHardwareID hID ( m_richSys->hardwareID( (*iHPD).first ) );
+        const Rich::DAQ::HPDHardwareID hID ( m_richSys->hardwareID( (*iHPD).first ) );
         std::ostringstream title;
         title << RICH << " : HPD " << (*iHPD).first << " " << hID << " occupancy (nHits>0)";
         plot1D( (*iHPD).second, hID.data(), title.str(), 0, 150, 75 );
       }
       (m_nHPD[rich])[(*iHPD).first] += (*iHPD).second;
-      const RichDAQ::Level1ID l1ID = m_richSys->level1ID( (*iHPD).first );
+      const Rich::DAQ::Level1ID l1ID = m_richSys->level1ID( (*iHPD).first );
       totL1[l1ID] += (*iHPD).second;
       totDet      += (*iHPD).second;
     }
@@ -214,12 +216,12 @@ StatusCode RichDigitQC::execute()
 }
 
 //  Finalize
-StatusCode RichDigitQC::finalize()
+StatusCode DigitQC::finalize()
 {
 
   // Statistical calculators
-  const RichStatDivFunctor    occ("%8.2f +-%5.2f");
-  const RichPoissonEffFunctor eff("%6.2f +-%5.2f");
+  const Rich::StatDivFunctor    occ("%8.2f +-%5.2f");
+  const Rich::PoissonEffFunctor eff("%6.2f +-%5.2f");
 
   info() << "===============================================================================================" << endreq
          << "                            RICH Digitisation Simulation Summary" << endreq;
@@ -236,14 +238,14 @@ StatusCode RichDigitQC::finalize()
 
     debug() << " " << RICH << " : Individual HPD info :-" << endreq;
     unsigned int maxOcc(0), minOcc(999999);
-    RichDAQ::HPDHardwareID maxHPD(0), minHPD(0);
+    Rich::DAQ::HPDHardwareID maxHPD(0), minHPD(0);
     for ( HPDCounter::const_iterator iHPD = m_nHPD[rich].begin();
           iHPD != m_nHPD[rich].end(); ++iHPD )
     {
-      const RichDAQ::HPDHardwareID hID ( m_richSys->hardwareID( (*iHPD).first ) );
-      const RichDAQ::Level1ID l1ID     ( m_richSys->level1ID( (*iHPD).first ) );
-      const Gaudi::XYZPoint hpdGlo     ( m_smartIDs->hpdPosition( (*iHPD).first ) );
-      const Gaudi::XYZPoint hpdLoc     ( m_smartIDs->globalToPDPanel( hpdGlo ) );
+      const Rich::DAQ::HPDHardwareID hID ( m_richSys->hardwareID( (*iHPD).first ) );
+      const Rich::DAQ::Level1ID l1ID     ( m_richSys->level1ID( (*iHPD).first ) );
+      const Gaudi::XYZPoint hpdGlo       ( m_smartIDs->hpdPosition( (*iHPD).first ) );
+      const Gaudi::XYZPoint hpdLoc       ( m_smartIDs->globalToPDPanel( hpdGlo ) );
       totL1[l1ID] += (*iHPD).second;
       totDet      += (*iHPD).second;
       if ( (*iHPD).second > maxOcc ) { maxOcc = (*iHPD).second; maxHPD = hID; }
@@ -307,6 +309,6 @@ StatusCode RichDigitQC::finalize()
   info() << "===============================================================================================" << endreq;
 
   // finalize base class
-  return RichHistoAlgBase::finalize();
+  return Rich::HistoAlgBase::finalize();
 }
 

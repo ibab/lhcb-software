@@ -5,7 +5,7 @@
  * Implementation file for class : MCRichHitToMCRichOpPhotAlg
  *
  * CVS Log :-
- * $Id: MCRichHitToMCRichOpPhotAlg.cpp,v 1.6 2006-12-18 15:44:49 cattanem Exp $
+ * $Id: MCRichHitToMCRichOpPhotAlg.cpp,v 1.7 2007-02-02 10:13:13 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2004-02-11
@@ -19,7 +19,7 @@
 #include "GaudiKernel/AlgFactory.h"
 
 // namespace
-using namespace LHCb;
+using namespace Rich::MC;
 
 DECLARE_ALGORITHM_FACTORY( MCRichHitToMCRichOpPhotAlg );
 
@@ -34,12 +34,12 @@ MCRichHitToMCRichOpPhotAlg::MCRichHitToMCRichOpPhotAlg( const std::string& name,
 
   // Event locations to process
   m_evtLocs.clear();
-  m_evtLocs.push_back(                    MCRichOpticalPhotonLocation::Default );
-  m_evtLocs.push_back( "Prev/"          + MCRichOpticalPhotonLocation::Default );
-  m_evtLocs.push_back( "PrevPrev/"      + MCRichOpticalPhotonLocation::Default );
-  m_evtLocs.push_back( "Next/"          + MCRichOpticalPhotonLocation::Default );
-  m_evtLocs.push_back( "NextNext/"      + MCRichOpticalPhotonLocation::Default );
-  m_evtLocs.push_back( "LHCBackground/" + MCRichOpticalPhotonLocation::Default );
+  m_evtLocs.push_back(                    LHCb::MCRichOpticalPhotonLocation::Default );
+  m_evtLocs.push_back( "Prev/"          + LHCb::MCRichOpticalPhotonLocation::Default );
+  m_evtLocs.push_back( "PrevPrev/"      + LHCb::MCRichOpticalPhotonLocation::Default );
+  m_evtLocs.push_back( "Next/"          + LHCb::MCRichOpticalPhotonLocation::Default );
+  m_evtLocs.push_back( "NextNext/"      + LHCb::MCRichOpticalPhotonLocation::Default );
+  m_evtLocs.push_back( "LHCBackground/" + LHCb::MCRichOpticalPhotonLocation::Default );
   declareProperty( "EventLocations", m_evtLocs );
 
 }
@@ -98,7 +98,7 @@ MCRichHitToMCRichOpPhotAlg::linker()
     // New linker object
     m_linker =
       new MCRichHitsToPhotons( evtSvc(), msgSvc(),
-                               MCRichHitLocation::Default+"2MCRichOpticalPhotons" );
+                               LHCb::MCRichHitLocation::Default+"2MCRichOpticalPhotons" );
     // set the ordering
     m_linker->setDecreasingWeight();
   }
@@ -112,7 +112,7 @@ StatusCode MCRichHitToMCRichOpPhotAlg::addEvent( const std::string & evtLoc )
 {
 
   // load MCRichTracks in this event
-  SmartDataPtr<MCRichOpticalPhotons> mcPhotons( eventSvc(), evtLoc );
+  SmartDataPtr<LHCb::MCRichOpticalPhotons> mcPhotons( eventSvc(), evtLoc );
   if ( !mcPhotons )
   {
     if ( msgLevel(MSG::DEBUG) )
@@ -124,13 +124,13 @@ StatusCode MCRichHitToMCRichOpPhotAlg::addEvent( const std::string & evtLoc )
             << " MCRichOpticalPhotons at " << evtLoc << endreq; }
 
   // add links to linker
-  for ( MCRichOpticalPhotons::const_iterator iPhot = mcPhotons->begin();
+  for ( LHCb::MCRichOpticalPhotons::const_iterator iPhot = mcPhotons->begin();
         iPhot != mcPhotons->end(); ++iPhot )
   {
-    const MCRichOpticalPhoton * mcPhot = *iPhot;
+    const LHCb::MCRichOpticalPhoton * mcPhot = *iPhot;
     if ( mcPhot )
     {
-      const MCRichHit * mchit = mcPhot->mcRichHit();
+      const LHCb::MCRichHit * mchit = mcPhot->mcRichHit();
       if ( mchit )
       {
         if ( msgLevel(MSG::VERBOSE) )
@@ -153,14 +153,6 @@ StatusCode MCRichHitToMCRichOpPhotAlg::addEvent( const std::string & evtLoc )
   { debug() << "Finished processing MCRichOpticalPhotons at " << evtLoc << endreq; }
 
   return StatusCode::SUCCESS;
-}
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode MCRichHitToMCRichOpPhotAlg::finalize()
-{
-  return RichAlgBase::finalize();
 }
 
 //=============================================================================

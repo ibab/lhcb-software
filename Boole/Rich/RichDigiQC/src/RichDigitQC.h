@@ -2,10 +2,10 @@
 //------------------------------------------------------------------------------------
 /** @file RichDigitQC.h
  *
- *  Header file for RICH Digitisation Quality Control algorithm : RichDigitQC
+ *  Header file for RICH Digitisation Quality Control algorithm : Rich::MC::Digi::DigitQC
  *
  *  CVS Log :-
- *  $Id: RichDigitQC.h,v 1.22 2006-12-18 15:38:56 cattanem Exp $
+ *  $Id: RichDigitQC.h,v 1.23 2007-02-02 10:12:44 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-09-08
@@ -42,108 +42,145 @@
 #include "RichKernel/IRichSmartIDTool.h"
 #include "RichKernel/IRichMCTruthTool.h"
 
-// LHCb namespace
-using namespace LHCb;
-
-/** @class RichDigitQC RichDigitQC.h RichDigiQC/RichDigitQC.h
+//-----------------------------------------------------------------------------
+/** @namespace Rich
  *
- *  Monitor for Rich digitisation and DAQ simulation
+ *  General namespace for RICH software
  *
- *  @author Chris Jones   (Christopher.Rob.Jones@cern.ch)
- *  @date   2003-09-08
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
  */
-
-class RichDigitQC : public RichHistoAlgBase 
+//-----------------------------------------------------------------------------
+namespace Rich
 {
 
-public:
+  //-----------------------------------------------------------------------------
+  /** @namespace MC
+   *
+   *  General namespace for RICH MC related software
+   *
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   05/12/2006
+   */
+  //-----------------------------------------------------------------------------
+  namespace MC
+  {
 
-  /// Standard constructor
-  RichDigitQC( const std::string& name, ISvcLocator* pSvcLocator );
+    //-----------------------------------------------------------------------------
+    /** @namespace Digi
+     *
+     *  General namespace for RICH Digitisation simuation related software
+     *
+     *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+     *  @date   17/01/2007
+     */
+    //-----------------------------------------------------------------------------
+    namespace Digi
+    {
 
-  virtual ~RichDigitQC( ); ///< Destructor
+      /** @class DigitQC RichDigitQC.h
+       *
+       *  Monitor for Rich digitisation and DAQ simulation
+       *
+       *  @author Chris Jones   (Christopher.Rob.Jones@cern.ch)
+       *  @date   2003-09-08
+       */
 
-  virtual StatusCode initialize();    // Algorithm initialization
-  virtual StatusCode execute   ();    // Algorithm execution
-  virtual StatusCode finalize  ();    // Algorithm finalization
+      class DigitQC : public Rich::HistoAlgBase
+      {
 
-private: // methods
+      public:
 
-  /// Returns the location of container for the MCRichHit associated to the given digit
-  std::string mchitLocation( const MCRichDigit * digit ) const;
+        /// Standard constructor
+        DigitQC( const std::string& name, ISvcLocator* pSvcLocator );
 
-private: // data
+        virtual ~DigitQC( ); ///< Destructor
 
-  /// Pointer to RICH system detector element
-  const DeRichSystem * m_richSys;
+        virtual StatusCode initialize();    // Algorithm initialization
+        virtual StatusCode execute   ();    // Algorithm execution
+        virtual StatusCode finalize  ();    // Algorithm finalization
 
-  /// Pointer to RichSmartID tool
-  const IRichSmartIDTool * m_smartIDs;
+      private: // methods
 
-  /// Pointer to MC truth tool
-  const IRichMCTruthTool * m_mcTool;
+        /// Returns the location of container for the MCRichHit associated to the given digit
+        std::string mchitLocation( const LHCb::MCRichDigit * digit ) const;
 
-  // job options
-  std::string m_digitTDS;  ///< Location of MCRichDigits in TES
-  bool m_extraHists;       ///< Flag to turn on the production of additional histograms
+      private: // data
 
-  /// Number of events processed
-  unsigned int m_evtC; 
+        /// Pointer to RICH system detector element
+        const DeRichSystem * m_richSys;
 
-  /// L1 occupancy counter
-  typedef Rich::HashMap< const RichDAQ::Level1ID, unsigned int > L1Counter;
+        /// Pointer to RichSmartID tool
+        const Rich::ISmartIDTool * m_smartIDs;
 
-  /// Counter for hits in each HPD
-  typedef Rich::HashMap< const RichSmartID, unsigned int > HPDCounter;
-  HPDCounter m_nHPD[Rich::NRiches]; ///< Tally for HPD occupancy, in each RICH
+        /// Pointer to MC truth tool
+        const Rich::MC::IMCTruthTool * m_mcTool;
 
-  typedef Rich::HashMap< std::string, unsigned int > SpillCount;
-  typedef std::vector< SpillCount > SpillDetCount;
+        // job options
+        std::string m_digitTDS;  ///< Location of MCRichDigits in TES
+        bool m_extraHists;       ///< Flag to turn on the production of additional histograms
 
-  /// Number of digitised hits per RICH detector and event location
-  SpillDetCount m_spillDigits;
+        /// Number of events processed
+        unsigned int m_evtC;
 
-  /// Number of digitised hits per RICH detector and event location
-  SpillDetCount m_totalSpills;
+        /// L1 occupancy counter
+        typedef Rich::HashMap< const Rich::DAQ::Level1ID, unsigned int > L1Counter;
 
-  /// Number of hits in each RICH
-  std::vector< unsigned int > m_allHits;
+        /// Counter for hits in each HPD
+        typedef Rich::HashMap< const LHCb::RichSmartID, unsigned int > HPDCounter;
+        HPDCounter m_nHPD[Rich::NRiches]; ///< Tally for HPD occupancy, in each RICH
 
-  /// Number of rayleigh scattered hits in each RICH
-  std::vector< unsigned int > m_scattHits;
+        typedef Rich::HashMap< std::string, unsigned int > SpillCount;
+        typedef std::vector< SpillCount > SpillDetCount;
 
-  /// Number of charged track hits in each RICH
-  std::vector< unsigned int > m_chrgTkHits;
+        /// Number of digitised hits per RICH detector and event location
+        SpillDetCount m_spillDigits;
 
-  /// Number of gas quartz window CK hits in each RICH
-  std::vector< unsigned int > m_gasQCK;
+        /// Number of digitised hits per RICH detector and event location
+        SpillDetCount m_totalSpills;
 
-  /// Number of HPD quartz window CK hits in each RICH
-  std::vector< unsigned int > m_hpdQCK;
+        /// Number of hits in each RICH
+        std::vector< unsigned int > m_allHits;
 
-  /// Number of nitrogen CK hits in each RICH
-  std::vector< unsigned int > m_nitroQCK;
+        /// Number of rayleigh scattered hits in each RICH
+        std::vector< unsigned int > m_scattHits;
 
-  /// Number of nitrogen CK hits in each RICH
-  std::vector< unsigned int > m_aeroFiltQCK;
+        /// Number of charged track hits in each RICH
+        std::vector< unsigned int > m_chrgTkHits;
 
-  /// Number of background hits in each RICH
-  std::vector< unsigned int > m_bkgHits;
+        /// Number of gas quartz window CK hits in each RICH
+        std::vector< unsigned int > m_gasQCK;
 
-  /// Number of charge shared hits in each RICH
-  std::vector< unsigned int > m_chrgShrHits;
+        /// Number of HPD quartz window CK hits in each RICH
+        std::vector< unsigned int > m_hpdQCK;
 
-  /// List of event locations to look for MCRichHits in
-  typedef Rich::HashMap< std::string, bool > EventLocations;
-  EventLocations m_evtLocs;
+        /// Number of nitrogen CK hits in each RICH
+        std::vector< unsigned int > m_nitroQCK;
 
-};
+        /// Number of nitrogen CK hits in each RICH
+        std::vector< unsigned int > m_aeroFiltQCK;
 
-inline std::string RichDigitQC::mchitLocation( const MCRichDigit * digit ) const
-{
-  // Always just use the first hit, since this will always be signal if the digit has a signal contribution
-  return ( digit->hits().empty() ? 
-           "UNKNOWN" : objectLocation( digit->hits().front().mcRichHit()->parent() ) );
+        /// Number of background hits in each RICH
+        std::vector< unsigned int > m_bkgHits;
+
+        /// Number of charge shared hits in each RICH
+        std::vector< unsigned int > m_chrgShrHits;
+
+        /// List of event locations to look for MCRichHits in
+        typedef Rich::HashMap< std::string, bool > EventLocations;
+        EventLocations m_evtLocs;
+
+      };
+
+      inline std::string DigitQC::mchitLocation( const LHCb::MCRichDigit * digit ) const
+      {
+        // Always just use the first hit, since this will always be signal if the digit has a signal contribution
+        return ( digit->hits().empty() ?
+                 "UNKNOWN" : objectLocation( digit->hits().front().mcRichHit()->parent() ) );
+      }
+
+    }
+  }
 }
 
 #endif // RICHDIGIQC_RICHDIGITQC_H

@@ -2,10 +2,10 @@
 //===============================================================================
 /** @file RichSummedDeposits.cpp
  *
- *  Implementation file for RICH digitisation algorithm : RichSummedDeposits
+ *  Implementation file for RICH digitisation algorithm : SummedDeposits
  *
  *  CVS Log :-
- *  $Id: RichSummedDeposits.cpp,v 1.4 2006-11-06 09:41:56 cattanem Exp $
+ *  $Id: RichSummedDeposits.cpp,v 1.5 2007-02-02 10:13:42 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @author Alex Howard   a.s.howard@ic.ac.uk
@@ -18,22 +18,24 @@
 // From Gaudi
 #include "GaudiKernel/AlgFactory.h"
 
-DECLARE_ALGORITHM_FACTORY( RichSummedDeposits );
+using namespace Rich::MC::Digi;
+
+DECLARE_ALGORITHM_FACTORY( SummedDeposits );
 
 // Standard constructor, initializes variables
-RichSummedDeposits::RichSummedDeposits( const std::string& name,
-                                        ISvcLocator* pSvcLocator )
+SummedDeposits::SummedDeposits( const std::string& name,
+                                ISvcLocator* pSvcLocator )
   : RichAlgBase        ( name, pSvcLocator )
 {
   declareProperty( "SummedDepositLocation",
-                   m_RichSummedDepositLocation = MCRichSummedDepositLocation::Default );
+                   m_RichSummedDepositLocation = LHCb::MCRichSummedDepositLocation::Default );
   declareProperty( "DepositLocation",
-                   m_RichDepositLocation = MCRichDepositLocation::Default );
+                   m_RichDepositLocation = LHCb::MCRichDepositLocation::Default );
 }
 
-RichSummedDeposits::~RichSummedDeposits() {};
+SummedDeposits::~SummedDeposits() {}
 
-StatusCode RichSummedDeposits::initialize()
+StatusCode SummedDeposits::initialize()
 {
   // Initialize base class
   const StatusCode sc = RichAlgBase::initialize();
@@ -48,36 +50,36 @@ StatusCode RichSummedDeposits::initialize()
   return sc;
 }
 
-StatusCode RichSummedDeposits::execute()
+StatusCode SummedDeposits::execute()
 {
   debug() << "Execute" << endreq;
 
   // Get containers of MCRichDeposits
-  MCRichDeposits * deps = get<MCRichDeposits>( m_RichDepositLocation );
+  LHCb::MCRichDeposits * deps = get<LHCb::MCRichDeposits>( m_RichDepositLocation );
   if ( msgLevel(MSG::DEBUG) )
   {
     debug() << "Located " << deps->size() << " MCRichDeposts at " << m_RichDepositLocation
             << endreq;
   }
 
-  // Form new containers of MCRichSummedDeposits
-  MCRichSummedDeposits * sumDeps = new MCRichSummedDeposits();
+  // Form new containers of MCSummedDeposits
+  LHCb::MCRichSummedDeposits * sumDeps = new LHCb::MCRichSummedDeposits();
   put( sumDeps, m_RichSummedDepositLocation );
 
   unsigned int nDuplicateDeps(0);
 
   // loop over deposits
-  for ( MCRichDeposits::const_iterator iDep = deps->begin();
+  for ( LHCb::MCRichDeposits::const_iterator iDep = deps->begin();
         iDep != deps->end(); ++iDep )
   {
 
     // RichSmartID for this deposit
-    const RichSmartID id = (*iDep)->smartID();
+    const LHCb::RichSmartID id = (*iDep)->smartID();
     if ( msgLevel(MSG::VERBOSE) )
       verbose() << "Deposit ID " << id << endreq;
 
     // Find out if we already have a hit for this super-pixel
-    MCRichSummedDeposit * sumDep = sumDeps->object(id);
+    LHCb::MCRichSummedDeposit * sumDep = sumDeps->object(id);
     if ( (*iDep)->history().prevPrevEvent() && sumDep )
     {
       if ( msgLevel(MSG::VERBOSE) )
@@ -85,7 +87,7 @@ StatusCode RichSummedDeposits::execute()
       // Toss a coin to see if we add this hit to the existing deposits
       // Simulate a 1/8 chance of additional hit falling in same sub-pixel as
       // already existing hit
-      if ( 0 != static_cast<int>(m_rndm()*8.) ) 
+      if ( 0 != static_cast<int>(m_rndm()*8.) )
       {
         if ( msgLevel(MSG::VERBOSE) )
           verbose() << "   --> Dumping deposit" << endreq;
@@ -98,7 +100,7 @@ StatusCode RichSummedDeposits::execute()
     {
       if ( msgLevel(MSG::VERBOSE) )
         verbose() << " --> No Summed deposit. Creating one" << endreq;
-      sumDep = new MCRichSummedDeposit();
+      sumDep = new LHCb::MCRichSummedDeposit();
       sumDeps->insert( sumDep, id );
     }
     else
@@ -114,7 +116,7 @@ StatusCode RichSummedDeposits::execute()
     sumDep->setSummedEnergy( sumDep->summedEnergy() + (*iDep)->energy() );
 
     // copy current history to local object to update
-    MCRichDigitHistoryCode hist = sumDep->history();
+    LHCb::MCRichDigitHistoryCode hist = sumDep->history();
 
     // add deposit history to summed deposit
     hist.setFlags( (*iDep)->history() );
@@ -126,7 +128,7 @@ StatusCode RichSummedDeposits::execute()
 
   if ( msgLevel(MSG::DEBUG) )
   {
-    debug() << "Created " << sumDeps->size() << " MCRichSummedDeposits from " 
+    debug() << "Created " << sumDeps->size() << " MCRichSummedDeposits from "
             << deps->size() << " MCRichDeposts" << endreq
             << "Found " << nDuplicateDeps << " deposits in the same pixel" << endreq;
   }
@@ -134,7 +136,7 @@ StatusCode RichSummedDeposits::execute()
   return StatusCode::SUCCESS;
 }
 
-StatusCode RichSummedDeposits::finalize()
+StatusCode SummedDeposits::finalize()
 {
   // finalize random number generator
   m_rndm.finalize();

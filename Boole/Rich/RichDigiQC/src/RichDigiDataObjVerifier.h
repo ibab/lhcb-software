@@ -1,4 +1,17 @@
-// $Id: RichDigiDataObjVerifier.h,v 1.11 2006-12-18 15:38:55 cattanem Exp $
+
+//------------------------------------------------------------------------------------
+/** @file RichDigiDataObjVerifier.h
+ *
+ *  Header file for RICH Digitisation Quality Control algorithm : Rich::MC::Digi::DataObjVerifier
+ *
+ *  CVS Log :-
+ *  $Id: RichDigiDataObjVerifier.h,v 1.12 2007-02-02 10:12:44 jonrob Exp $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   2003-09-08
+ */
+//------------------------------------------------------------------------------------
+
 #ifndef RICHDIGIQC_RICHDIGIDATOBJVERIFIER_H
 #define RICHDIGIQC_RICHDIGIDATOBJVERIFIER_H 1
 
@@ -14,43 +27,81 @@
 #include "Kernel/RichSmartID.h"
 #include "Kernel/RichDetectorType.h"
 
-/** @class RichDigiDataObjVerifier RichDigiDataObjVerifier.h RichDigiQC/RichDigiDataObjVerifier.h
+//-----------------------------------------------------------------------------
+/** @namespace Rich
  *
- *  Low level printout of Rich Digitisation objects
+ *  General namespace for RICH software
  *
- *  @author Chris Jones   (Christopher.Rob.Jones@cern.ch)
- *  @date   2003-09-08
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
  */
-
-class RichDigiDataObjVerifier : public RichAlgBase 
+//-----------------------------------------------------------------------------
+namespace Rich
 {
 
-public:
+  //-----------------------------------------------------------------------------
+  /** @namespace MC
+   *
+   *  General namespace for RICH MC related software
+   *
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   05/12/2006
+   */
+  //-----------------------------------------------------------------------------
+  namespace MC
+  {
 
-  /// Standard constructor
-  RichDigiDataObjVerifier( const std::string& name, ISvcLocator* pSvcLocator );
+    //-----------------------------------------------------------------------------
+    /** @namespace Digi
+     *
+     *  General namespace for RICH Digitisation simuation related software
+     *
+     *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+     *  @date   17/01/2007
+     */
+    //-----------------------------------------------------------------------------
+    namespace Digi
+    {
 
-  virtual ~RichDigiDataObjVerifier( ); ///< Destructor
+      /** @class DataObjVerifier RichDigiDataObjVerifier.h
+       *
+       *  Low level printout of Rich Digitisation objects
+       *
+       *  @author Chris Jones   (Christopher.Rob.Jones@cern.ch)
+       *  @date   2003-09-08
+       */
 
-  virtual StatusCode initialize();    ///< Algorithm initialization
-  virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
+      class DataObjVerifier : public Rich::AlgBase
+      {
 
-private: // methods
+      public:
 
-  /// Check the MCRichHits at the given location
-  void checkHitsAt( const std::string & location ) const;
+        /// Standard constructor
+        DataObjVerifier( const std::string& name, ISvcLocator* pSvcLocator );
 
-  /// Check the MCRichOpticalPhotons at the given location
-  void checkPhotsAt( const std::string & location ) const;
+        virtual ~DataObjVerifier( ); ///< Destructor
 
-private: // data
+        virtual StatusCode execute   ();    ///< Algorithm execution
 
-  // job options
-  bool m_bdMcDigits;      ///< Flag to turn on/off the checking and printing of MCRichDigits
-  bool m_bdMCHits;        ///< Flag to turn on/off the checking and printing of MCRichHits
-  bool m_bdMCPhots;       ///< Flag to turn on/off the checking and printing of MCRichOpticalPhotons
+      private: // methods
 
-};
+        /// Check the MCRichHits at the given location
+        void checkHitsAt( const std::string & location ) const;
+
+        /// Check the MCRichOpticalPhotons at the given location
+        void checkPhotsAt( const std::string & location ) const;
+
+      private: // data
+
+        // job options
+        bool m_bdMcDigits;      ///< Flag to turn on/off the checking and printing of MCRichDigits
+        bool m_bdMCHits;        ///< Flag to turn on/off the checking and printing of MCRichHits
+        bool m_bdMCPhots;       ///< Flag to turn on/off the checking and printing of MCRichOpticalPhotons
+
+      };
+
+    }
+  }
+}
 
 #endif // RICHDIGIQC_RICHDIGIDATOBJVERIFIER_H

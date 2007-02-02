@@ -5,7 +5,7 @@
  *  Implementation file for RICH digitisation algorithm : RichSignal
  *
  *  CVS Log :-
- *  $Id: RichSignal.cpp,v 1.14 2006-11-06 09:41:56 cattanem Exp $
+ *  $Id: RichSignal.cpp,v 1.15 2007-02-02 10:13:42 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @author Alex Howard   a.s.howard@ic.ac.uk
@@ -18,11 +18,13 @@
 // From Gaudi
 #include "GaudiKernel/AlgFactory.h"
 
-DECLARE_ALGORITHM_FACTORY( RichSignal );
+using namespace Rich::MC::Digi;
+
+DECLARE_ALGORITHM_FACTORY( Signal );
 
 // Standard constructor, initializes variables
-RichSignal::RichSignal( const std::string& name,
-                        ISvcLocator* pSvcLocator )
+Signal::Signal( const std::string& name,
+                ISvcLocator* pSvcLocator )
   : RichAlgBase        ( name, pSvcLocator ),
     m_mcDeposits       ( 0 ),
     m_testSmartIDs     ( false ),
@@ -31,19 +33,19 @@ RichSignal::RichSignal( const std::string& name,
 {
 
   declareProperty( "HitLocation",
-                   m_RichHitLocation = MCRichHitLocation::Default );
+                   m_RichHitLocation = LHCb::MCRichHitLocation::Default );
   declareProperty( "PrevLocation",
-                   m_RichPrevLocation = "Prev/" + MCRichHitLocation::Default );
+                   m_RichPrevLocation = "Prev/" + LHCb::MCRichHitLocation::Default );
   declareProperty( "PrevPrevLocation",
-                   m_RichPrevPrevLocation = "PrevPrev/" + MCRichHitLocation::Default );
+                   m_RichPrevPrevLocation = "PrevPrev/" + LHCb::MCRichHitLocation::Default );
   declareProperty( "NextLocation",
-                   m_RichNextLocation = "Next/" + MCRichHitLocation::Default );
+                   m_RichNextLocation = "Next/" + LHCb::MCRichHitLocation::Default );
   declareProperty( "NextNextLocation",
-                   m_RichNextNextLocation = "NextNext/" + MCRichHitLocation::Default );
+                   m_RichNextNextLocation = "NextNext/" + LHCb::MCRichHitLocation::Default );
   declareProperty( "LHCBackgroundLocation",
-                   m_lhcBkgLocation = "LHCBackground/" + MCRichHitLocation::Default );
+                   m_lhcBkgLocation = "LHCBackground/" + LHCb::MCRichHitLocation::Default );
   declareProperty( "DepositLocation",
-                   m_RichDepositLocation = MCRichDepositLocation::Default );
+                   m_RichDepositLocation = LHCb::MCRichDepositLocation::Default );
 
   declareProperty( "UseSpillover",     m_doSpillover = true );
   declareProperty( "UseLHCBackground", m_doLHCBkg = true );
@@ -51,9 +53,9 @@ RichSignal::RichSignal( const std::string& name,
 
 }
 
-RichSignal::~RichSignal() {};
+Signal::~Signal() {};
 
-StatusCode RichSignal::initialize()
+StatusCode Signal::initialize()
 {
   // Initialize base class
   const StatusCode sc = RichAlgBase::initialize();
@@ -72,12 +74,12 @@ StatusCode RichSignal::initialize()
   return sc;
 }
 
-StatusCode RichSignal::execute()
+StatusCode Signal::execute()
 {
   debug() << "Execute" << endreq;
 
   // Form new container of MCRichDeposits
-  m_mcDeposits = new MCRichDeposits();
+  m_mcDeposits = new LHCb::MCRichDeposits();
   put( m_mcDeposits, m_RichDepositLocation );
 
   // Process main event
@@ -106,18 +108,18 @@ StatusCode RichSignal::execute()
   return StatusCode::SUCCESS;
 }
 
-StatusCode RichSignal::ProcessEvent( const std::string & hitLoc,
-                                     const double tofOffset,
-                                     const int eventType ) const
+StatusCode Signal::ProcessEvent( const std::string & hitLoc,
+                                 const double tofOffset,
+                                 const int eventType ) const
 {
 
   // Load hits
-  if ( exist<MCRichHits>(hitLoc) )
+  if ( exist<LHCb::MCRichHits>(hitLoc) )
   {
     ++counter( "Found MCRichHits at " + hitLoc );
   }
   else { return StatusCode::SUCCESS; }
-  MCRichHits * hits = get<MCRichHits>( hitLoc );
+  LHCb::MCRichHits * hits = get<LHCb::MCRichHits>( hitLoc );
   if ( msgLevel(MSG::DEBUG) )
   {
     debug() << "Successfully located " << hits->size()
@@ -125,25 +127,25 @@ StatusCode RichSignal::ProcessEvent( const std::string & hitLoc,
   }
 
   unsigned int nDeps(0);
-  for ( MCRichHits::const_iterator iHit = hits->begin();
+  for ( LHCb::MCRichHits::const_iterator iHit = hits->begin();
         iHit != hits->end(); ++iHit )
   {
 
     // Get RichSmartID from MCRichHit (stripping sub-pixel info for the moment)
-    const RichSmartID id = (*iHit)->sensDetID().pixelID();
+    const LHCb::RichSmartID id = (*iHit)->sensDetID().pixelID();
 
     if ( m_testSmartIDs )
     {
-      RichSmartID tempID;
+      LHCb::RichSmartID tempID;
       const bool ok = (m_smartIDTool->smartID((*iHit)->entry(),tempID)).isSuccess();
-      if      (!ok)          
+      if      (!ok)
       { Warning( "Failed to compute RichSmartID from MCRichHit entry point" ); }
-      else if (id != tempID.pixelID()) 
-      { Warning( "RichSmartID mis-match" ); } 
+      else if (id != tempID.pixelID())
+      { Warning( "RichSmartID mis-match" ); }
     }
 
     // Create a new deposit
-    MCRichDeposit* dep = new MCRichDeposit();
+    LHCb::MCRichDeposit* dep = new LHCb::MCRichDeposit();
     m_mcDeposits->insert( dep );
     ++nDeps;
 
@@ -163,7 +165,7 @@ StatusCode RichSignal::ProcessEvent( const std::string & hitLoc,
     dep->setTime( tof );
 
     // get history from hit
-    MCRichDigitHistoryCode hist = (*iHit)->mcRichDigitHistoryCode();
+    LHCb::MCRichDigitHistoryCode hist = (*iHit)->mcRichDigitHistoryCode();
 
     // add event type to history
     if      (  0 == eventType ) { hist.setSignalEvent(true);   }
@@ -185,7 +187,7 @@ StatusCode RichSignal::ProcessEvent( const std::string & hitLoc,
   return StatusCode::SUCCESS;
 }
 
-StatusCode RichSignal::finalize()
+StatusCode Signal::finalize()
 {
   // finalize random number generator
   m_rndm.finalize();

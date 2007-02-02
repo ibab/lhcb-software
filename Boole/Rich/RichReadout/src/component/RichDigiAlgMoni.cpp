@@ -1,4 +1,4 @@
-// $Id: RichDigiAlgMoni.cpp,v 1.12 2006-09-01 10:33:59 jonrob Exp $
+// $Id: RichDigiAlgMoni.cpp,v 1.13 2007-02-02 10:13:42 jonrob Exp $
 
 // Units
 #include "GaudiKernel/SystemOfUnits.h"
@@ -12,11 +12,13 @@
 // 2003-09-08 : Chris Jones   (Christopher.Rob.Jones@cern.ch)
 //-----------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( RichDigiAlgMoni );
+using namespace Rich::MC::Digi;
+
+DECLARE_ALGORITHM_FACTORY( AlgMoni );
 
 // Standard constructor, initializes variables
-RichDigiAlgMoni::RichDigiAlgMoni( const std::string& name,
-                                  ISvcLocator* pSvcLocator )
+AlgMoni::AlgMoni( const std::string& name,
+                  ISvcLocator* pSvcLocator )
   : RichHistoAlgBase ( name, pSvcLocator ),
     m_smartIDTool    ( NULL ),
     m_mcTool         ( NULL ),
@@ -25,17 +27,17 @@ RichDigiAlgMoni::RichDigiAlgMoni( const std::string& name,
     m_maxID          ( 300 )
 {
   // Declare job options
-  declareProperty( "InputMCRichDigits", m_mcdigitTES = MCRichDigitLocation::Default   );
-  declareProperty( "InputMCRichDeposits", m_mcdepTES = MCRichDepositLocation::Default );
-  declareProperty( "InputMCRichHits", m_mchitTES     = MCRichHitLocation::Default     );
+  declareProperty( "InputMCRichDigits", m_mcdigitTES = LHCb::MCRichDigitLocation::Default   );
+  declareProperty( "InputMCRichDeposits", m_mcdepTES = LHCb::MCRichDepositLocation::Default );
+  declareProperty( "InputMCRichHits", m_mchitTES     = LHCb::MCRichHitLocation::Default     );
   declareProperty( "MaxHPDQuartzHistos", m_maxID );
 }
 
 // Destructor
-RichDigiAlgMoni::~RichDigiAlgMoni() {}
+AlgMoni::~AlgMoni() {}
 
 // Initialisation
-StatusCode RichDigiAlgMoni::initialize()
+StatusCode AlgMoni::initialize()
 {
   // Initialize base class
   const StatusCode sc = RichHistoAlgBase::initialize();
@@ -66,7 +68,7 @@ StatusCode RichDigiAlgMoni::initialize()
 }
 
 // Main execution
-StatusCode RichDigiAlgMoni::execute()
+StatusCode AlgMoni::execute()
 {
   debug() << "Execute" << endreq;
 
@@ -77,7 +79,7 @@ StatusCode RichDigiAlgMoni::execute()
 
   // Locate MCRichDigits
   // ================================================================================
-  MCRichDigits * mcRichDigits = get<MCRichDigits>( m_mcdigitTES );
+  LHCb::MCRichDigits * mcRichDigits = get<LHCb::MCRichDigits>( m_mcdigitTES );
   debug() << "Successfully located " << mcRichDigits->size()
           << " MCRichDigits at " << m_mcdigitTES << endreq;
 
@@ -89,7 +91,7 @@ StatusCode RichDigiAlgMoni::execute()
   std::vector<unsigned int> hpdCKMult(Rich::NRiches,0);
   std::vector<unsigned int> nChargedTracks(Rich::NRiches,0);
 
-  Rich::Map<const RichSmartID,bool> hasHPDQuartzCKBkg;
+  Rich::Map<const LHCb::RichSmartID,bool> hasHPDQuartzCKBkg;
 
   // Histogramming
   PD_GLOBAL_POSITIONS;
@@ -97,12 +99,12 @@ StatusCode RichDigiAlgMoni::execute()
   const RichHistoID hid;
 
   // Loop over all MCRichDigits
-  for ( MCRichDigits::const_iterator iMcDigit = mcRichDigits->begin();
+  for ( LHCb::MCRichDigits::const_iterator iMcDigit = mcRichDigits->begin();
         iMcDigit != mcRichDigits->end(); ++iMcDigit )
   {
 
     // Smart ID
-    const RichSmartID id          = (*iMcDigit)->key();
+    const LHCb::RichSmartID id    = (*iMcDigit)->key();
     // position for this ID
     const Gaudi::XYZPoint point   = m_smartIDTool->globalPosition( id );
     // RICH
@@ -157,7 +159,7 @@ StatusCode RichDigiAlgMoni::execute()
         plot1D( sqrt((point-hit->entry()).Mag2()), hid(rich,"digErrR"), "digit-hit diff R", -10, 10 );
 
         // Get MCRichOptical Photon
-        const MCRichOpticalPhoton * mcPhot = m_mcTool->mcOpticalPhoton(hit);
+        const LHCb::MCRichOpticalPhoton * mcPhot = m_mcTool->mcOpticalPhoton(hit);
         if ( mcPhot )
         {
           // Compare position on HPD entrance window
@@ -223,7 +225,7 @@ StatusCode RichDigiAlgMoni::execute()
 
   // Locate MCRichDeposits
   // ================================================================================
-  SmartDataPtr<MCRichDeposits> deps( eventSvc(), m_mcdepTES );
+  SmartDataPtr<LHCb::MCRichDeposits> deps( eventSvc(), m_mcdepTES );
   if ( !deps )
   {
     debug() << "Cannot locate MCRichDeposits at " << m_mcdepTES << endreq;
@@ -239,7 +241,7 @@ StatusCode RichDigiAlgMoni::execute()
     PartMap pmap1, pmap2;
 
     // Loop over deposits
-    for ( MCRichDeposits::const_iterator iDep = deps->begin();
+    for ( LHCb::MCRichDeposits::const_iterator iDep = deps->begin();
           iDep != deps->end(); ++iDep )
     {
 
@@ -292,7 +294,7 @@ StatusCode RichDigiAlgMoni::execute()
 
   // Locate MCRichHits
   // ================================================================================
-  SmartDataPtr<MCRichHits> hits( eventSvc(), m_mchitTES );
+  SmartDataPtr<LHCb::MCRichHits> hits( eventSvc(), m_mchitTES );
   if ( !hits ) {
     debug() << "Cannot locate MCRichHits at " << m_mchitTES << endreq;
   } else {
@@ -302,7 +304,7 @@ StatusCode RichDigiAlgMoni::execute()
     std::vector<unsigned int> hpdQCKMult(Rich::NRiches,0);
 
     // Loop over hits
-    for ( MCRichHits::const_iterator iHit = hits->begin();
+    for ( LHCb::MCRichHits::const_iterator iHit = hits->begin();
           iHit != hits->end(); ++iHit )
     {
 
@@ -391,9 +393,9 @@ StatusCode RichDigiAlgMoni::execute()
   return StatusCode::SUCCESS;
 }
 
-void RichDigiAlgMoni::fillHPDPlots( const PartMap & pmap,
-                                    const std::string & plotsDir,
-                                    const std::string & plotsName )
+void AlgMoni::fillHPDPlots( const PartMap & pmap,
+                            const std::string & plotsDir,
+                            const std::string & plotsName )
 {
   // histogramming
   PD_LOCAL_POSITIONS_X;
@@ -407,7 +409,7 @@ void RichDigiAlgMoni::fillHPDPlots( const PartMap & pmap,
   for ( PartMap::const_iterator iP = pmap.begin(); iP != pmap.end(); ++iP )
   {
     // SmartID for this HPD
-    const RichSmartID hpdID = (*iP).first.first;
+    const LHCb::RichSmartID hpdID = (*iP).first.first;
     // increment count for RICH
     ++nHPDs[hpdID.rich()];
     // Centre point of HPD in local coords
@@ -419,7 +421,7 @@ void RichDigiAlgMoni::fillHPDPlots( const PartMap & pmap,
     // histo ID
     std::string Hid = plotsDir+"/"+boost::lexical_cast<std::string>( m_ID++ );
     // loop over deposits
-    Rich::Map<RichSmartID,bool> uniqueIDs;
+    Rich::Map<LHCb::RichSmartID,bool> uniqueIDs;
     for ( std::vector<const LHCb::MCRichDeposit*>::const_iterator iD = (*iP).second.begin();
           iD != (*iP).second.end(); ++iD )
     {
@@ -430,7 +432,7 @@ void RichDigiAlgMoni::fillHPDPlots( const PartMap & pmap,
         // hit point on silicon in local coords
         const Gaudi::XYZVector hitP
           = m_smartIDTool->globalToPDPanel((*iD)->parentHit()->entry()) - hpdLoc;
-        plot2D( hitP.X(), hitP.Y(), Hid, HPD.str(), -8*Gaudi::Units::mm, 
+        plot2D( hitP.X(), hitP.Y(), Hid, HPD.str(), -8*Gaudi::Units::mm,
                 8*Gaudi::Units::mm, -8*Gaudi::Units::mm, 8*Gaudi::Units::mm, 32, 32 );
       }
     }
@@ -454,8 +456,8 @@ void RichDigiAlgMoni::fillHPDPlots( const PartMap & pmap,
           "# RICH2 HPDs per event with "+plotsName, -0.5, 20.5, 21 );
 }
 
-void RichDigiAlgMoni::countNPE( PhotMap & photMap,
-                                const MCRichHit * hit )
+void AlgMoni::countNPE( PhotMap & photMap,
+                        const LHCb::MCRichHit * hit )
 {
 
   // MCParticle momentum
@@ -482,11 +484,3 @@ void RichDigiAlgMoni::countNPE( PhotMap & photMap,
   }
 
 }
-
-//  Finalize
-StatusCode RichDigiAlgMoni::finalize()
-{
-  // finalize base class
-  return RichHistoAlgBase::finalize();
-}
-

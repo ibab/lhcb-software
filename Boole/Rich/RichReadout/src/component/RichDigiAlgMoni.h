@@ -1,4 +1,4 @@
-// $Id: RichDigiAlgMoni.h,v 1.10 2006-04-12 13:46:09 jonrob Exp $
+// $Id: RichDigiAlgMoni.h,v 1.11 2007-02-02 10:13:42 jonrob Exp $
 #ifndef RICHMONITOR_RICHDIGIALGMONI_H
 #define RICHMONITOR_RICHDIGIALGMONI_H 1
 
@@ -45,125 +45,161 @@
 // temporary histogramming numbers
 #include "RichDetParams.h"
 
-// namespaces
-using namespace LHCb; ///< General LHCb namespace
-
-/** @class RichDigiAlgMoni RichDigiAlgMoni.h RichDigiQC/RichDigiAlgMoni.h
+//-----------------------------------------------------------------------------
+/** @namespace Rich
  *
- *  Monitor for Rich Digitisation algorithm performance
+ *  General namespace for RICH software
  *
- *  @author Chris Jones   (Christopher.Rob.Jones@cern.ch)
- *  @date   2003-09-08
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
  */
-
-class RichDigiAlgMoni : public RichHistoAlgBase 
+//-----------------------------------------------------------------------------
+namespace Rich
 {
 
-public:
+  //-----------------------------------------------------------------------------
+  /** @namespace MC
+   *
+   *  General namespace for RICH MC related software
+   *
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   05/12/2006
+   */
+  //-----------------------------------------------------------------------------
+  namespace MC
+  {
 
-  /// Standard constructor
-  RichDigiAlgMoni( const std::string& name, ISvcLocator* pSvcLocator );
+    //-----------------------------------------------------------------------------
+    /** @namespace Digi
+     *
+     *  General namespace for RICH Digitisation simuation related software
+     *
+     *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+     *  @date   17/01/2007
+     */
+    //-----------------------------------------------------------------------------
+    namespace Digi
+    {
 
-  virtual ~RichDigiAlgMoni( ); ///< Destructor
+      /** @class AlgMoni RichDigiAlgMoni.h
+       *
+       *  Monitor for Rich Digitisation algorithm performance
+       *
+       *  @author Chris Jones   (Christopher.Rob.Jones@cern.ch)
+       *  @date   2003-09-08
+       */
 
-  virtual StatusCode initialize();    ///< Algorithm initialization
-  virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
+      class AlgMoni : public RichHistoAlgBase
+      {
 
-private: // definitions
+      public:
 
-  /// key for HPD+MCParticle hits
-  typedef std::pair<const LHCb::RichSmartID,const LHCb::MCParticle*>   PartKey;
-  /// mapping given hits for each HPD+MCParticle Pair
-  typedef std::map< PartKey, std::vector<const LHCb::MCRichDeposit*> > PartMap;
+        /// Standard constructor
+        AlgMoni( const std::string& name, ISvcLocator* pSvcLocator );
 
-private: // methods
+        virtual ~AlgMoni( ); ///< Destructor
 
-  // Map to count cherenkov photons for each radiator
-  typedef std::pair<const MCParticle*,Rich::RadiatorType> PhotPair;
-  typedef Rich::Map< PhotPair, int >                      PhotMap;
+        virtual StatusCode initialize();    ///< Algorithm initialization
+        virtual StatusCode execute   ();    ///< Algorithm execution
 
-  // PD occupancies
-  typedef Rich::Map<const RichSmartID,unsigned int> PDMulti;
+      private: // definitions
 
-  /// Particle mass
-  double mass( const MCParticle * mcPart );
+        /// key for HPD+MCParticle hits
+        typedef std::pair<const LHCb::RichSmartID,const LHCb::MCParticle*>   PartKey;
+        /// mapping given hits for each HPD+MCParticle Pair
+        typedef std::map< PartKey, std::vector<const LHCb::MCRichDeposit*> > PartMap;
 
-  /// Returns beta for a given MCParticle
-  double mcBeta( const MCParticle * mcPart );
+      private: // methods
 
-  /// Returns the momentum for a given MCParticle
-  double momentum( const MCParticle * mcPart );
+        // Map to count cherenkov photons for each radiator
+        typedef std::pair<const LHCb::MCParticle*,Rich::RadiatorType> PhotPair;
+        typedef Rich::Map< PhotPair, int >                            PhotMap;
 
-  /// Count the number of photo electrons
-  void countNPE( PhotMap & photMap,
-                 const MCRichHit * hit );
+        // PD occupancies
+        typedef Rich::Map<const LHCb::RichSmartID,unsigned int> PDMulti;
 
-  /// IS this a true cherenkov signal hit ?
-  bool trueCKHit(  const MCRichHit * hit );
+        /// Particle mass
+        double mass( const LHCb::MCParticle * mcPart );
 
-  /// Fill histograms for each HPD silicon wafer background plots
-  void fillHPDPlots( const PartMap & pmap, 
-                     const std::string & plotsDir,
-                     const std::string & plotsName );
+        /// Returns beta for a given MCParticle
+        double mcBeta( const LHCb::MCParticle * mcPart );
 
-private: // data
+        /// Returns the momentum for a given MCParticle
+        double momentum( const LHCb::MCParticle * mcPart );
 
-  /// Pointer to RichSmartID tool
-  const IRichSmartIDTool * m_smartIDTool;
+        /// Count the number of photo electrons
+        void countNPE( PhotMap & photMap,
+                       const LHCb::MCRichHit * hit );
 
-  /// Pointer to MC truth tool
-  const IRichMCTruthTool * m_mcTool;
+        /// IS this a true cherenkov signal hit ?
+        bool trueCKHit(  const LHCb::MCRichHit * hit );
 
-  /// Pointer to RICH system detector element
-  const DeRichSystem * m_richSys;
+        /// Fill histograms for each HPD silicon wafer background plots
+        void fillHPDPlots( const PartMap & pmap,
+                           const std::string & plotsDir,
+                           const std::string & plotsName );
 
-  // job options
-  std::string m_mcdigitTES;     ///< Location of MCRichDigits in TES
-  std::string m_mcdepTES;       ///< Location of MCRichDeposits in TES
-  std::string m_mchitTES;       ///< Location of MCRichHits in TES
+      private: // data
 
-  /// Particle masses
-  Rich::Map<Rich::ParticleIDType,double> m_particleMass;
+        /// Pointer to RichSmartID tool
+        const Rich::ISmartIDTool * m_smartIDTool;
 
-  // histo ID
-  unsigned int m_ID;
+        /// Pointer to MC truth tool
+        const Rich::MC::IMCTruthTool * m_mcTool;
 
-  // max number of Quartz CK HPD event histos to make
-  unsigned int m_maxID;
+        /// Pointer to RICH system detector element
+        const DeRichSystem * m_richSys;
 
-};
+        // job options
+        std::string m_mcdigitTES;     ///< Location of MCRichDigits in TES
+        std::string m_mcdepTES;       ///< Location of MCRichDeposits in TES
+        std::string m_mchitTES;       ///< Location of MCRichHits in TES
 
-inline double RichDigiAlgMoni::mass( const MCParticle * mcPart )
-{
-  return m_particleMass[ m_mcTool->mcParticleType(mcPart) ];
-}
+        /// Particle masses
+        Rich::Map<Rich::ParticleIDType,double> m_particleMass;
 
-inline double RichDigiAlgMoni::momentum( const MCParticle * mcPart )
-{
-  return ( mcPart ? mcPart->momentum().P() : 0 );
-}
+        // histo ID
+        unsigned int m_ID;
 
-inline double RichDigiAlgMoni::mcBeta( const MCParticle * mcPart )
-{
-  if ( !mcPart ) return 0;
-  const double pTot = momentum( mcPart );
-  const double Esquare = pTot*pTot + gsl_pow_2(mass(mcPart));
-  return ( Esquare > 0 ? pTot/sqrt(Esquare) : 0 );
-}
+        // max number of Quartz CK HPD event histos to make
+        unsigned int m_maxID;
 
-inline bool RichDigiAlgMoni::trueCKHit(  const MCRichHit * hit ) 
-{
+      };
 
-  // Which radiator
-  const Rich::RadiatorType rad = (Rich::RadiatorType)( hit->radiator() );
+      inline double AlgMoni::mass( const LHCb::MCParticle * mcPart )
+      {
+        return m_particleMass[ m_mcTool->mcParticleType(mcPart) ];
+      }
 
-  // Is this a true hit
-  return ( !hit->scatteredPhoton() &&
-           !hit->chargedTrack()
-           && ( rad == Rich::Aerogel ||
-                rad == Rich::Rich1Gas ||
-                rad == Rich::Rich2Gas ) );
+      inline double AlgMoni::momentum( const LHCb::MCParticle * mcPart )
+      {
+        return ( mcPart ? mcPart->momentum().P() : 0 );
+      }
+
+      inline double AlgMoni::mcBeta( const LHCb::MCParticle * mcPart )
+      {
+        if ( !mcPart ) return 0;
+        const double pTot = momentum( mcPart );
+        const double Esquare = pTot*pTot + gsl_pow_2(mass(mcPart));
+        return ( Esquare > 0 ? pTot/sqrt(Esquare) : 0 );
+      }
+
+      inline bool AlgMoni::trueCKHit(  const LHCb::MCRichHit * hit )
+      {
+
+        // Which radiator
+        const Rich::RadiatorType rad = (Rich::RadiatorType)( hit->radiator() );
+
+        // Is this a true hit
+        return ( !hit->scatteredPhoton() &&
+                 !hit->chargedTrack()
+                 && ( rad == Rich::Aerogel ||
+                      rad == Rich::Rich1Gas ||
+                      rad == Rich::Rich2Gas ) );
+      }
+
+    }
+  }
 }
 
 #endif // RICHMONITOR_RICHDIGIALGMONI_H

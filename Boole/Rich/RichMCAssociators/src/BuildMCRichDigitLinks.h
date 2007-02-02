@@ -4,7 +4,7 @@
  *  Header file for RICH DAQ algorithm : BuildMCRichDigitLinks
  *
  *  CVS Log :-
- *  $Id: BuildMCRichDigitLinks.h,v 1.2 2006-01-23 13:52:07 jonrob Exp $
+ *  $Id: BuildMCRichDigitLinks.h,v 1.3 2007-02-02 10:13:13 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-09
@@ -21,36 +21,61 @@
 #include "Event/MCRichDigit.h"
 #include "Event/MCTruth.h"
 
-/** @class BuildMCRichDigitLinks BuildMCRichDigitLinks.h
+//-----------------------------------------------------------------------------
+/** @namespace Rich
  *
- *  Builds the links between MCRichDigits and RichDigits
+ *  General namespace for RICH software
  *
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   2003-11-09
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
  */
-
-class BuildMCRichDigitLinks : public RichAlgBase 
+//-----------------------------------------------------------------------------
+namespace Rich
 {
 
-public:
+  //-----------------------------------------------------------------------------
+  /** @namespace MC
+   *
+   *  General namespace for RICH MC related software
+   *
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   05/12/2006
+   */
+  //-----------------------------------------------------------------------------
+  namespace MC
+  {
 
-  /// Standard constructor
-  BuildMCRichDigitLinks( const std::string& name, ISvcLocator* pSvcLocator );
+    /** @class BuildMCRichDigitLinks BuildMCRichDigitLinks.h
+     *
+     *  Builds the links between MCRichDigits and RichDigits
+     *
+     *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+     *  @date   2003-11-09
+     */
 
-  virtual ~BuildMCRichDigitLinks( ); ///< Destructor
+    class BuildMCRichDigitLinks : public RichAlgBase
+    {
 
-  virtual StatusCode initialize();    // Algorithm initialization
-  virtual StatusCode execute   ();    // Algorithm execution
-  virtual StatusCode finalize  ();    // Algorithm finalization
+    public:
 
-private:
+      /// Standard constructor
+      BuildMCRichDigitLinks( const std::string& name, ISvcLocator* pSvcLocator );
 
-  /// String containing input MCRichDigits location in TDS
-  std::string m_mcRichDigitsLocation;
+      virtual ~BuildMCRichDigitLinks( ); ///< Destructor
 
-  /// String containing input RichDigits location in TDS
-  std::string m_richDigitsLocation;
+      virtual StatusCode execute   ();   ///< Algorithm execution
 
-};
+    private:
+
+      /// String containing input MCRichDigits location in TDS
+      std::string m_mcRichDigitsLocation;
+
+      /// String containing input RichDigits location in TDS
+      std::string m_richDigitsLocation;
+
+    };
+
+  }
+}
 
 #endif // RICHDAQ_BUILDMCRICHDIGITLINKS_H

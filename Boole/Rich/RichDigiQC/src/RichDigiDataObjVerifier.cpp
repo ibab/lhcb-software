@@ -1,4 +1,4 @@
-// $Id: RichDigiDataObjVerifier.cpp,v 1.15 2006-12-18 15:38:55 cattanem Exp $
+// $Id: RichDigiDataObjVerifier.cpp,v 1.16 2007-02-02 10:12:44 jonrob Exp $
 
 // local
 #include "RichDigiDataObjVerifier.h"
@@ -7,7 +7,7 @@
 #include "GaudiKernel/AlgFactory.h"
 
 // LHCb namespace
-using namespace LHCb;
+using namespace Rich::MC::Digi;
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : RichDigiDataObjVerifier
@@ -15,12 +15,12 @@ using namespace LHCb;
 // 2002-11-20 : Andy Presland   (Andrew.Presland@cern.ch)
 //-----------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( RichDigiDataObjVerifier );
+DECLARE_ALGORITHM_FACTORY( DataObjVerifier );
 
 // Standard constructor, initializes variables
-RichDigiDataObjVerifier::RichDigiDataObjVerifier( const std::string& name,
-                                                  ISvcLocator* pSvcLocator)
-  : RichAlgBase ( name, pSvcLocator )
+DataObjVerifier::DataObjVerifier( const std::string& name,
+                                  ISvcLocator* pSvcLocator)
+  : Rich::AlgBase ( name, pSvcLocator )
 {
 
   // Declare job options
@@ -31,35 +31,22 @@ RichDigiDataObjVerifier::RichDigiDataObjVerifier( const std::string& name,
 }
 
 // Destructor
-RichDigiDataObjVerifier::~RichDigiDataObjVerifier() {};
+DataObjVerifier::~DataObjVerifier() { }
 
-// Initialisation
-StatusCode RichDigiDataObjVerifier::initialize()
-{
-
-  // Initialize base class
-  const StatusCode sc = RichAlgBase::initialize();
-  if ( sc.isFailure() ) return sc;
-
-  // add custom initialisations here
-
-  return sc;
-}
-
-void RichDigiDataObjVerifier::checkHitsAt( const std::string & location ) const
+void DataObjVerifier::checkHitsAt( const std::string & location ) const
 {
   // MCRichHits
-  if ( !exist<MCRichHits>(location) )
+  if ( !exist<LHCb::MCRichHits>(location) )
   {
     debug() << "Cannot locate MCRichHits at " << location << endreq;
   }
   else
   {
-    const MCRichHits * mcHits = get<MCRichHits>(location);
+    const LHCb::MCRichHits * mcHits = get<LHCb::MCRichHits>(location);
     debug() << "Successfully located " << mcHits->size()
             << " MCRichHits at " << location << endreq;
     unsigned int nHit(0);
-    for ( MCRichHits::const_iterator iHit = mcHits->begin();
+    for ( LHCb::MCRichHits::const_iterator iHit = mcHits->begin();
           iHit != mcHits->end(); ++iHit, ++nHit )
     {
       if ( msgLevel(MSG::DEBUG) )
@@ -68,7 +55,7 @@ void RichDigiDataObjVerifier::checkHitsAt( const std::string & location ) const
                 << " container = " << location << endreq;
         std::cout << "   Data members " << **iHit << std::endl;
       }
-      const MCParticle * mcPart = (*iHit)->mcParticle();
+      const LHCb::MCParticle * mcPart = (*iHit)->mcParticle();
       if ( mcPart )
       {
         const std::string mcploc = objectLocation(mcPart->parent());
@@ -84,19 +71,19 @@ void RichDigiDataObjVerifier::checkHitsAt( const std::string & location ) const
 
 }
 
-void RichDigiDataObjVerifier::checkPhotsAt( const std::string & location ) const
+void DataObjVerifier::checkPhotsAt( const std::string & location ) const
 {
   // MCRichHits
-  if ( !exist<MCRichOpticalPhotons>(location) )
+  if ( !exist<LHCb::MCRichOpticalPhotons>(location) )
   {
     debug() << "Cannot locate MCRichOpticalPhotons at " << location << endreq;
   }
   else
   {
-    const MCRichOpticalPhotons * mcPhots = get<MCRichOpticalPhotons>(location);
+    const LHCb::MCRichOpticalPhotons * mcPhots = get<LHCb::MCRichOpticalPhotons>(location);
     debug() << "Successfully located " << mcPhots->size()
             << " MCRichOpticalPhotons at " << location << endreq;
-    for ( MCRichOpticalPhotons::const_iterator iP = mcPhots->begin();
+    for ( LHCb::MCRichOpticalPhotons::const_iterator iP = mcPhots->begin();
           iP != mcPhots->end(); ++iP )
     {
       if ( msgLevel(MSG::DEBUG) )
@@ -107,7 +94,7 @@ void RichDigiDataObjVerifier::checkPhotsAt( const std::string & location ) const
         std::cout << "   Data members " << **iP << std::endl;
       }
       // get associated MCRichHit
-      const MCRichHit * mchit = (*iP)->mcRichHit();
+      const LHCb::MCRichHit * mchit = (*iP)->mcRichHit();
       if ( mchit )
       {
         const std::string mchloc = objectLocation(mchit->parent());
@@ -125,49 +112,49 @@ void RichDigiDataObjVerifier::checkPhotsAt( const std::string & location ) const
 }
 
 // Main execution
-StatusCode RichDigiDataObjVerifier::execute()
+StatusCode DataObjVerifier::execute()
 {
   debug() << "Execute" << endreq;
 
   // MCRichHits
   if ( m_bdMCHits )
   {
-    checkHitsAt (               MCRichHitLocation::Default );
-    checkHitsAt ( "Prev/"     + MCRichHitLocation::Default );
-    checkHitsAt ( "PrevPrev/" + MCRichHitLocation::Default );
-    checkHitsAt ( "Next/"     + MCRichHitLocation::Default );
-    checkHitsAt ( "NexNext/"  + MCRichHitLocation::Default );
+    checkHitsAt (               LHCb::MCRichHitLocation::Default );
+    checkHitsAt ( "Prev/"     + LHCb::MCRichHitLocation::Default );
+    checkHitsAt ( "PrevPrev/" + LHCb::MCRichHitLocation::Default );
+    checkHitsAt ( "Next/"     + LHCb::MCRichHitLocation::Default );
+    checkHitsAt ( "NexNext/"  + LHCb::MCRichHitLocation::Default );
   }
 
   // MCRichOpticalPhotons
   if ( m_bdMCPhots )
   {
-    checkPhotsAt (               MCRichOpticalPhotonLocation::Default );
-    checkPhotsAt ( "Prev/"     + MCRichOpticalPhotonLocation::Default );
-    checkPhotsAt ( "PrevPrev/" + MCRichOpticalPhotonLocation::Default );
-    checkPhotsAt ( "Next/"     + MCRichOpticalPhotonLocation::Default );
-    checkPhotsAt ( "NexNext/"  + MCRichOpticalPhotonLocation::Default );
+    checkPhotsAt (               LHCb::MCRichOpticalPhotonLocation::Default );
+    checkPhotsAt ( "Prev/"     + LHCb::MCRichOpticalPhotonLocation::Default );
+    checkPhotsAt ( "PrevPrev/" + LHCb::MCRichOpticalPhotonLocation::Default );
+    checkPhotsAt ( "Next/"     + LHCb::MCRichOpticalPhotonLocation::Default );
+    checkPhotsAt ( "NexNext/"  + LHCb::MCRichOpticalPhotonLocation::Default );
   }
 
   // MCRichDigits
   if ( m_bdMcDigits )
   {
-    if ( !exist<MCRichDigits>(MCRichDigitLocation::Default) )
+    if ( !exist<LHCb::MCRichDigits>(LHCb::MCRichDigitLocation::Default) )
     {
-      Warning("Cannot locate MCRichDigits at "+MCRichDigitLocation::Default);
+      Warning("Cannot locate MCRichDigits at "+LHCb::MCRichDigitLocation::Default);
     }
     else
     {
-      const MCRichDigits * richMcDigits = get<MCRichDigits>(MCRichDigitLocation::Default);
+      const LHCb::MCRichDigits * richMcDigits = get<LHCb::MCRichDigits>(LHCb::MCRichDigitLocation::Default);
       debug() << "Successfully located " << richMcDigits->size()
-              << " MCRichDigits at " << MCRichDigitLocation::Default << endreq;
-      for ( MCRichDigits::const_iterator imcDigit = richMcDigits->begin();
+              << " MCRichDigits at " << LHCb::MCRichDigitLocation::Default << endreq;
+      for ( LHCb::MCRichDigits::const_iterator imcDigit = richMcDigits->begin();
             imcDigit != richMcDigits->end(); ++imcDigit )
       {
         debug() << "MCRichDigit " << (*imcDigit)->key() << endreq;
         debug() << " MCRichDigitHits(" << (*imcDigit)->hits().size() << ") =";
         for ( LHCb::MCRichDigitHit::Vector::const_iterator iHit = (*imcDigit)->hits().begin();
-              iHit != (*imcDigit)->hits().end(); ++iHit ) 
+              iHit != (*imcDigit)->hits().end(); ++iHit )
         {
           debug() << " " << *iHit;
         }
@@ -177,13 +164,4 @@ StatusCode RichDigiDataObjVerifier::execute()
   } // end MCRichDigit print
 
   return StatusCode::SUCCESS;
-}
-
-//  Finalize
-StatusCode RichDigiDataObjVerifier::finalize()
-{
-  debug() << "Finalize" << endreq;
-
-  // finalize base class
-  return RichAlgBase::finalize();
 }

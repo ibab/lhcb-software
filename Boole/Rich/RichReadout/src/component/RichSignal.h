@@ -2,10 +2,10 @@
 //===============================================================================
 /** @file RichSignal.h
  *
- *  Header file for RICH digitisation algorithm : RichSignal
+ *  Header file for RICH digitisation algorithm : Rich::MC::Digi::Signal
  *
  *  CVS Log :-
- *  $Id: RichSignal.h,v 1.11 2006-11-06 09:41:56 cattanem Exp $
+ *  $Id: RichSignal.h,v 1.12 2007-02-02 10:13:42 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @author Alex Howard   a.s.howard@ic.ac.uk
@@ -38,72 +38,109 @@
 // kernel
 #include "Kernel/ParticleID.h"
 
-// LHCb namespace
-using namespace LHCb;
-
-/** @class RichSignal RichSignal.h
- *  
- *  Performs a simulation of the photon energy desposition
- * 
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @author Alex Howard   a.s.howard@ic.ac.uk
- *  @date   2003-11-06
+//-----------------------------------------------------------------------------
+/** @namespace Rich
+ *
+ *  General namespace for RICH software
+ *
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
  */
-
-class RichSignal : public RichAlgBase 
+//-----------------------------------------------------------------------------
+namespace Rich
 {
 
-public:
+  //-----------------------------------------------------------------------------
+  /** @namespace MC
+   *
+   *  General namespace for RICH MC related software
+   *
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   05/12/2006
+   */
+  //-----------------------------------------------------------------------------
+  namespace MC
+  {
 
-  /// Constructor
-  RichSignal ( const std::string& name, ISvcLocator* pSvcLocator );
+    //-----------------------------------------------------------------------------
+    /** @namespace Digi
+     *
+     *  General namespace for RICH Digitisation simuation related software
+     *
+     *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+     *  @date   17/01/2007
+     */
+    //-----------------------------------------------------------------------------
+    namespace Digi
+    {
 
-  /// Desctructor
-  virtual ~RichSignal();
+      /** @class Signal RichSignal.h
+       *
+       *  Performs a simulation of the photon energy desposition
+       *
+       *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+       *  @author Alex Howard   a.s.howard@ic.ac.uk
+       *  @date   2003-11-06
+       */
 
-  virtual StatusCode initialize();
-  virtual StatusCode execute();
-  virtual StatusCode finalize();
+      class Signal : public RichAlgBase
+      {
 
-private: // methods
+      public:
 
-  /// Process the event at the given location, with the corresponding TOF offset
-  StatusCode ProcessEvent( const std::string & hitLoc, 
-                           const double tofOffset,
-                           const int eventType ) const;
+        /// Constructor
+        Signal ( const std::string& name, ISvcLocator* pSvcLocator );
 
-private: // data
+        /// Desctructor
+        virtual ~Signal();
 
-  MCRichDeposits* m_mcDeposits;
+        virtual StatusCode initialize();
+        virtual StatusCode execute();
+        virtual StatusCode finalize();
 
-  // locations of MCRichHits in TES
-  std::string m_RichHitLocation;
-  std::string m_RichPrevLocation;
-  std::string m_RichPrevPrevLocation;
-  std::string m_RichNextLocation;
-  std::string m_RichNextNextLocation;
+      private: // methods
 
-  std::string m_RichDepositLocation;
-  std::string m_lhcBkgLocation;
+        /// Process the event at the given location, with the corresponding TOF offset
+        StatusCode ProcessEvent( const std::string & hitLoc,
+                                 const double tofOffset,
+                                 const int eventType ) const;
 
-  /// Flag to turn on the use of the spillover events
-  bool m_doSpillover;
+      private: // data
 
-  /// Flag to turn on the use of the LHC backgrounde events
-  bool m_doLHCBkg;
+        LHCb::MCRichDeposits* m_mcDeposits;
 
-  /// Flag to turn on testing on smartIDs from Gauss
-  bool m_testSmartIDs;
+        // locations of MCRichHits in TES
+        std::string m_RichHitLocation;
+        std::string m_RichPrevLocation;
+        std::string m_RichPrevPrevLocation;
+        std::string m_RichNextLocation;
+        std::string m_RichNextNextLocation;
 
-  /// Pointer to RichSmartID tool
-  const IRichSmartIDTool * m_smartIDTool;
+        std::string m_RichDepositLocation;
+        std::string m_lhcBkgLocation;
 
-  /// Pointer to RichMCTruth tool
-  const IRichMCTruthTool * m_truth;
+        /// Flag to turn on the use of the spillover events
+        bool m_doSpillover;
 
-  /// random number generator
-  mutable Rndm::Numbers m_rndm;
+        /// Flag to turn on the use of the LHC backgrounde events
+        bool m_doLHCBkg;
 
-};
+        /// Flag to turn on testing on smartIDs from Gauss
+        bool m_testSmartIDs;
+
+        /// Pointer to RichSmartID tool
+        const Rich::ISmartIDTool * m_smartIDTool;
+
+        /// Pointer to RichMCTruth tool
+        const Rich::MC::IMCTruthTool * m_truth;
+
+        /// random number generator
+        mutable Rndm::Numbers m_rndm;
+
+      };
+
+    }
+  }
+}
 
 #endif // RICHREADOUT_RICHSIGNAL_H

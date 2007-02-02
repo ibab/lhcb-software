@@ -5,7 +5,7 @@
  *  Implementation file for RICH digitisation algorithm : RichDetailedFrontEndResponse
  *
  *  CVS Log :-
- *  $Id: RichDetailedFrontEndResponse.cpp,v 1.10 2006-11-06 09:41:56 cattanem Exp $
+ *  $Id: RichDetailedFrontEndResponse.cpp,v 1.11 2007-02-02 10:13:42 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @author Alex Howard   a.s.howard@ic.ac.uk
@@ -18,20 +18,22 @@
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 
-DECLARE_ALGORITHM_FACTORY( RichDetailedFrontEndResponse );
+using namespace Rich::MC::Digi;
+
+DECLARE_ALGORITHM_FACTORY( DetailedFrontEndResponse );
 
 // Standard constructor, initializes variables
-RichDetailedFrontEndResponse::RichDetailedFrontEndResponse( const std::string& name,
-                                                            ISvcLocator* pSvcLocator)
+DetailedFrontEndResponse::DetailedFrontEndResponse( const std::string& name,
+                                                    ISvcLocator* pSvcLocator)
   : RichAlgBase ( name, pSvcLocator ),
     actual_base ( NULL )
 {
 
   // job options
   declareProperty( "MCRichSummedDepositsLocation",
-                   m_mcRichSummedDepositsLocation = MCRichSummedDepositLocation::Default );
+                   m_mcRichSummedDepositsLocation = LHCb::MCRichSummedDepositLocation::Default );
   declareProperty( "MCRichDigitsLocation",
-                   m_mcRichDigitsLocation = MCRichDigitLocation::Default );
+                   m_mcRichDigitsLocation = LHCb::MCRichDigitLocation::Default );
   //  declareProperty( "SimpleCalibration", m_Calibration = 12500. );
   declareProperty( "SimpleCalibration", m_Calibration = 8330. );
   declareProperty( "SimpleBaseline",    m_Pedestal = 50 );
@@ -46,18 +48,18 @@ RichDetailedFrontEndResponse::RichDetailedFrontEndResponse( const std::string& n
 
 }
 
-RichDetailedFrontEndResponse::~RichDetailedFrontEndResponse() {}
+DetailedFrontEndResponse::~DetailedFrontEndResponse() {}
 
-StatusCode RichDetailedFrontEndResponse::initialize()
+StatusCode DetailedFrontEndResponse::initialize()
 {
   // Initialize base class
   const StatusCode sc = RichAlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // create a collection of all pixels
-  const IRichSmartIDTool * smartIDs;
+  const Rich::ISmartIDTool * smartIDs;
   acquireTool( "RichSmartIDTool" , smartIDs, 0, true );
-  const RichSmartID::Vector & pixels = smartIDs->readoutChannelList();
+  const LHCb::RichSmartID::Vector & pixels = smartIDs->readoutChannelList();
   debug() << "Retrieved " << pixels.size() << " pixels in active list" << endreq;
   actual_base = theRegistry.GetNewBase( pixels );
   if ( !actual_base )
@@ -74,7 +76,7 @@ StatusCode RichDetailedFrontEndResponse::initialize()
   return sc;
 }
 
-StatusCode RichDetailedFrontEndResponse::finalize()
+StatusCode DetailedFrontEndResponse::finalize()
 {
   // finalise random number generators
   m_gaussNoise.finalize();
@@ -87,11 +89,11 @@ StatusCode RichDetailedFrontEndResponse::finalize()
   return RichAlgBase::finalize();
 }
 
-StatusCode RichDetailedFrontEndResponse::execute()
+StatusCode DetailedFrontEndResponse::execute()
 {
   debug() << "Execute" << endreq;
 
-  m_summedDeposits = get<MCRichSummedDeposits>( m_mcRichSummedDepositsLocation );
+  m_summedDeposits = get<LHCb::MCRichSummedDeposits>( m_mcRichSummedDepositsLocation );
   if ( msgLevel(MSG::DEBUG) )
   {
     debug() << "Successfully located " << m_summedDeposits->size()
@@ -110,12 +112,12 @@ StatusCode RichDetailedFrontEndResponse::execute()
   return Digital();
 }
 
-StatusCode RichDetailedFrontEndResponse::Analog()
+StatusCode DetailedFrontEndResponse::Analog()
 {
   debug() << "Analogue Simulation" << endreq;
 
-  for ( MCRichSummedDeposits::const_iterator iSumDep = m_summedDeposits->begin();
-        iSumDep != m_summedDeposits->end(); ++iSumDep ) 
+  for ( LHCb::MCRichSummedDeposits::const_iterator iSumDep = m_summedDeposits->begin();
+        iSumDep != m_summedDeposits->end(); ++iSumDep )
   {
 
     if ( msgLevel(MSG::VERBOSE) )
@@ -133,7 +135,7 @@ StatusCode RichDetailedFrontEndResponse::Analog()
     }
 
     const RichPixelReadout * readOut = props->Readout();
-    if ( !readOut ) 
+    if ( !readOut )
     {
       std::ostringstream mess;
       mess << "ID " << (*iSumDep)->key() << " has no RichPixelReadout";
@@ -146,16 +148,16 @@ StatusCode RichDetailedFrontEndResponse::Analog()
     {
 
       // Create time sample for this summed deposit
-      tscache.push_back( TimeData( *iSumDep, 
+      tscache.push_back( TimeData( *iSumDep,
                                    RichTimeSample( readOut->FrameSize(),
                                                    readOut->BaseLine() ) ) );
       RichTimeSample & ts = tscache.back().second;
 
       // Retrieve vector of SmartRefs to contributing deposits (non-const)
-      const SmartRefVector<MCRichDeposit> & deposits = (*iSumDep)->deposits();
+      const SmartRefVector<LHCb::MCRichDeposit> & deposits = (*iSumDep)->deposits();
 
-      for ( SmartRefVector<MCRichDeposit>::const_iterator iDep
-             = deposits.begin(); iDep != deposits.end(); ++iDep ) 
+      for ( SmartRefVector<LHCb::MCRichDeposit>::const_iterator iDep
+              = deposits.begin(); iDep != deposits.end(); ++iDep )
       {
 
         if ( msgLevel(MSG::VERBOSE) )
@@ -167,7 +169,7 @@ StatusCode RichDetailedFrontEndResponse::Analog()
         }
 
         // Course cut on deposit TOF ( -50ns to 50ns )
-        if ( fabs((*iDep)->time()) < 50 ) 
+        if ( fabs((*iDep)->time()) < 50 )
         {
 
           // Bin zero
@@ -177,13 +179,13 @@ StatusCode RichDetailedFrontEndResponse::Analog()
           const double shiftTime = ( Rich::Rich1 == (*iDep)->parentHit()->rich() ? 18 : 7 );
 
           // origin time
-          double binTime = shiftTime - binZero; 
+          double binTime = shiftTime - binZero;
 
           // dead region
           const bool dead = ( binZero < 0 && binZero > -50 );
 
           // electrons
-          const double e  = 
+          const double e  =
             ( dead ? 0 : ((*iDep)->energy()*m_Calibration) + m_gaussNoise()/el_per_adc );
 
           // Loop over time sample and fill for this deposit
@@ -208,16 +210,16 @@ StatusCode RichDetailedFrontEndResponse::Analog()
   return StatusCode::SUCCESS;
 }
 
-StatusCode RichDetailedFrontEndResponse::Digital()
+StatusCode DetailedFrontEndResponse::Digital()
 {
   debug() << "Digital Simulation" << endreq;
 
   // new RichDigit container to Gaudi data store
-  MCRichDigits * mcRichDigits = new MCRichDigits();
+  LHCb::MCRichDigits * mcRichDigits = new LHCb::MCRichDigits();
   put( mcRichDigits, m_mcRichDigitsLocation );
 
   for ( samplecache_t::iterator tsc_it = tscache.begin();
-        tsc_it != tscache.end(); ++tsc_it ) 
+        tsc_it != tscache.end(); ++tsc_it )
   {
 
     RichPixelProperties* props = actual_base->DecodeUniqueID( ((*tsc_it).first)->key() );
@@ -226,16 +228,16 @@ StatusCode RichDetailedFrontEndResponse::Digital()
     {
 
       const double temp_threshold = m_gaussThreshold()/el_per_adc + readOut->BaseLine();
-      if ( readOut->ADC()->process((*tsc_it).second,temp_threshold) ) 
-      {      
-        
-        MCRichDigit* newDigit = new MCRichDigit();
+      if ( readOut->ADC()->process((*tsc_it).second,temp_threshold) )
+      {
+
+        LHCb::MCRichDigit* newDigit = new LHCb::MCRichDigit();
         mcRichDigits->insert( newDigit, ((*tsc_it).first)->key().pixelID() );
 
         // Create MCRichHit links
         LHCb::MCRichDigitHit::Vector hitVect;
-        const SmartRefVector<MCRichDeposit> & deps = ((*tsc_it).first)->deposits();
-        for ( SmartRefVector<MCRichDeposit>::const_iterator iDep = deps.begin();
+        const SmartRefVector<LHCb::MCRichDeposit> & deps = ((*tsc_it).first)->deposits();
+        for ( SmartRefVector<LHCb::MCRichDeposit>::const_iterator iDep = deps.begin();
               iDep != deps.end(); ++iDep )
         {
           hitVect.push_back( LHCb::MCRichDigitHit( *((*iDep)->parentHit()), (*iDep)->history() ) );

@@ -11,74 +11,116 @@
 // richdet
 #include "RichDet/Rich1DTabFunc.h"
 
-class RichShape {
+//-----------------------------------------------------------------------------
+/** @namespace Rich
+ *
+ *  General namespace for RICH software
+ *
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
+ */
+//-----------------------------------------------------------------------------
+namespace Rich
+{
 
-public:
-
-  RichShape::RichShape ( const double tpeak,
-                         const double alpha )
-    : m_alpha   ( alpha ),
-      m_tpeak   ( tpeak ),
-      m_maxTime ( 200   ),
-      m_minTime ( 0     ),
-      m_tabFunc ( 0     )
+  //-----------------------------------------------------------------------------
+  /** @namespace MC
+   *
+   *  General namespace for RICH MC related software
+   *
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   05/12/2006
+   */
+  //-----------------------------------------------------------------------------
+  namespace MC
   {
 
-    // Initialise interpolator
-    Rich::Map<double,double> data;
-    for ( int i = 1; i < 101; ++i )
+    //-----------------------------------------------------------------------------
+    /** @namespace Digi
+     *
+     *  General namespace for RICH Digitisation simuation related software
+     *
+     *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+     *  @date   17/01/2007
+     */
+    //-----------------------------------------------------------------------------
+    namespace Digi
     {
-      const double time = m_minTime + (m_maxTime-m_minTime)*i/100;
-      data[time] = responseFunction(time);
+
+      /// Rich Shape Utility class
+      class RichShape
+      {
+
+      public:
+
+        RichShape::RichShape ( const double tpeak,
+                               const double alpha )
+          : m_alpha   ( alpha ),
+            m_tpeak   ( tpeak ),
+            m_maxTime ( 200   ),
+            m_minTime ( 0     ),
+            m_tabFunc ( 0     )
+        {
+
+          // Initialise interpolator
+          Rich::Map<double,double> data;
+          for ( int i = 1; i < 101; ++i )
+          {
+            const double time = m_minTime + (m_maxTime-m_minTime)*i/100;
+            data[time] = responseFunction(time);
+          }
+          m_tabFunc = new Rich1DTabFunc(data);
+
+        }
+
+        RichShape::~RichShape()
+        {
+          if ( m_tabFunc ) { delete m_tabFunc; m_tabFunc = 0; }
+        }
+
+        inline double getTpeak () const
+        {
+          return m_tpeak;
+        }
+
+        inline double getPower () const
+        {
+          return m_alpha;
+        }
+
+        inline double operator[] ( const double time ) const
+        {
+          // return interpolator (faster than function)
+          return ( time < m_minTime || time > m_maxTime ? 0 : m_tabFunc->value(time) );
+          //return ( time < m_minTime || time > m_maxTime ? 0 : responseFunction(time) );
+        }
+
+      private: // methods
+
+        inline double responseFunction( const double time ) const
+        {
+          return ( pow ( time/getTpeak(), getPower() ) *
+                   exp ( -(time-getTpeak()) / (getTpeak()*getPower()) ) );
+        }
+
+      private: // data
+
+        // Response function parameters
+        double m_alpha;
+        double m_tpeak;
+
+        /// Max time
+        double m_maxTime;
+
+        /// Min time
+        double m_minTime;
+
+        Rich1DTabFunc * m_tabFunc;
+
+      };
+
     }
-    m_tabFunc = new Rich1DTabFunc(data);
-
   }
-
-  RichShape::~RichShape() 
-  {
-    if ( m_tabFunc ) { delete m_tabFunc; m_tabFunc = 0; }
-  }
-
-  inline double getTpeak () const
-  {
-    return m_tpeak;
-  }
-
-  inline double getPower () const
-  {
-    return m_alpha;
-  }
-
-  inline double operator[] ( const double time ) const
-  {
-    // return interpolator (faster than function)
-    return ( time < m_minTime || time > m_maxTime ? 0 : m_tabFunc->value(time) );
-    //return ( time < m_minTime || time > m_maxTime ? 0 : responseFunction(time) );
-  }
-
-private: // methods
-
-  inline double responseFunction( const double time ) const
-  {
-    return ( pow ( time/getTpeak(), getPower() ) * 
-             exp ( -(time-getTpeak()) / (getTpeak()*getPower()) ) );
-  }
-
-private: // data
-
-  // Response function parameters
-  double m_alpha;
-  double m_tpeak;
-
-  /// Max time
-  double m_maxTime;
-
-  /// Min time
-  double m_minTime;
-
-  Rich1DTabFunc * m_tabFunc;
-
-};
+}
 
 #endif // RICHREADOUT_RICHSHAPE_H

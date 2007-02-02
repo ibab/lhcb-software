@@ -4,7 +4,9 @@
 #include "RichPixelReadout.h"
 #include "RichRegistry.h"
 
-void RichBase::cleanUp() 
+using namespace Rich::MC::Digi;
+
+void RichBase::cleanUp()
 {
   // Delete the pixel map
   // CRJ : Not needed whilst using single properties
@@ -16,11 +18,12 @@ void RichBase::cleanUp()
   m_activePixels.clear();
 }
 
-void RichBase::upDate( const std::vector<LHCb::RichSmartID> & pixelList ) {
+void RichBase::upDate( const std::vector<LHCb::RichSmartID> & pixelList ) 
+{
 
   // CleanUp current map
   cleanUp();
-  
+
   // Initialise new pixel map
   for ( std::vector<LHCb::RichSmartID>::const_iterator intIndex = pixelList.begin();
         intIndex != pixelList.end();

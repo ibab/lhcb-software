@@ -4,6 +4,9 @@
 ! Purpose     : Rich Digitisation
 !-----------------------------------------------------------------------------
 
+! 2007-02-02 - Chris Jones
+ - Adapt to new RICH namespaces
+
 !======================== RichReadout v2r3 2006-11-06 ========================
 ! 2006-11-06 - Marco Cattaneo
  - Use DECLARE_ALGORITHM_FACTORY macros

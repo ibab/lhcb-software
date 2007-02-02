@@ -5,7 +5,7 @@
  *  Implementation file for RICH digitisation algorithm : RichSimpleFrontEndResponse
  *
  *  CVS Log :-
- *  $Id: RichSimpleFrontEndResponse.cpp,v 1.6 2006-11-06 09:41:56 cattanem Exp $
+ *  $Id: RichSimpleFrontEndResponse.cpp,v 1.7 2007-02-02 10:13:42 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @author Alex Howard   a.s.howard@ic.ac.uk
@@ -18,19 +18,21 @@
 // From Gaudi
 #include "GaudiKernel/AlgFactory.h"
 
-DECLARE_ALGORITHM_FACTORY( RichSimpleFrontEndResponse );
+using namespace Rich::MC::Digi;
+
+DECLARE_ALGORITHM_FACTORY( SimpleFrontEndResponse );
 
 // Standard constructor, initializes variables
-RichSimpleFrontEndResponse::RichSimpleFrontEndResponse( const std::string& name,
+SimpleFrontEndResponse::SimpleFrontEndResponse( const std::string& name,
                                                         ISvcLocator* pSvcLocator )
   : RichAlgBase ( name, pSvcLocator ) 
 {
 
   // job opts
   declareProperty( "MCRichSummedDepositsLocation",
-                   m_mcRichSummedDepositsLocation = MCRichSummedDepositLocation::Default );
+                   m_mcRichSummedDepositsLocation = LHCb::MCRichSummedDepositLocation::Default );
   declareProperty( "MCRichDigitsLocation",
-                   m_mcRichDigitsLocation = MCRichDigitLocation::Default );
+                   m_mcRichDigitsLocation = LHCb::MCRichDigitLocation::Default );
   declareProperty( "SimpleCalibration", m_Calibration = 4420 );
   declareProperty( "SimpleBaseline", m_Baseline = 50 );
   declareProperty( "SimpleSigma", m_Sigma = 1.0 );
@@ -38,18 +40,18 @@ RichSimpleFrontEndResponse::RichSimpleFrontEndResponse( const std::string& name,
   Rndm::Numbers m_gaussRndm;
 }
 
-RichSimpleFrontEndResponse::~RichSimpleFrontEndResponse () { };
+SimpleFrontEndResponse::~SimpleFrontEndResponse () { }
 
-StatusCode RichSimpleFrontEndResponse::initialize() 
+StatusCode SimpleFrontEndResponse::initialize() 
 {
   // Initialize base class
   const StatusCode sc = RichAlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // create a collection of all pixels
-  const IRichSmartIDTool * smartIDs;
+  const Rich::ISmartIDTool * smartIDs;
   acquireTool( "RichSmartIDTool" , smartIDs, 0, true );
-  const RichSmartID::Vector & pixels = smartIDs->readoutChannelList();
+  const LHCb::RichSmartID::Vector & pixels = smartIDs->readoutChannelList();
   actual_base = theRegistry.GetNewBase( pixels );
   releaseTool( smartIDs );
 
@@ -61,7 +63,7 @@ StatusCode RichSimpleFrontEndResponse::initialize()
   return sc;
 }
 
-StatusCode RichSimpleFrontEndResponse::finalize() 
+StatusCode SimpleFrontEndResponse::finalize() 
 {
   // finalize randomn number generator
   m_gaussRndm.finalize();
@@ -70,11 +72,11 @@ StatusCode RichSimpleFrontEndResponse::finalize()
   return RichAlgBase::finalize();
 }
 
-StatusCode RichSimpleFrontEndResponse::execute() {
-
+StatusCode SimpleFrontEndResponse::execute() 
+{
   debug() << "Execute" << endreq;
 
-  SummedDeposits = get<MCRichSummedDeposits>( m_mcRichSummedDepositsLocation );
+  SummedDeposits = get<LHCb::MCRichSummedDeposits>( m_mcRichSummedDepositsLocation );
   debug() << "Successfully located " << SummedDeposits->size()
           << " MCRichSummedDeposits at " << m_mcRichSummedDepositsLocation << endreq;
 
@@ -84,13 +86,14 @@ StatusCode RichSimpleFrontEndResponse::execute() {
   return StatusCode::SUCCESS;
 }
 
-StatusCode RichSimpleFrontEndResponse::Simple() {
+StatusCode SimpleFrontEndResponse::Simple() 
+{
 
   // make new mcrichdigits
-  MCRichDigits* mcRichDigits = new MCRichDigits();
+  LHCb::MCRichDigits* mcRichDigits = new LHCb::MCRichDigits();
   put ( mcRichDigits, m_mcRichDigitsLocation );
 
-  for ( MCRichSummedDeposits::const_iterator iSumDep = SummedDeposits->begin();
+  for ( LHCb::MCRichSummedDeposits::const_iterator iSumDep = SummedDeposits->begin();
         iSumDep != SummedDeposits->end(); ++iSumDep ) {
 
     RichPixelProperties* props = 
@@ -98,13 +101,14 @@ StatusCode RichSimpleFrontEndResponse::Simple() {
     if ( props ) {
 
       // Make new MCRichDigit
-      MCRichDigit * newDigit = new MCRichDigit();
+      LHCb::MCRichDigit * newDigit = new LHCb::MCRichDigit();
 
       double summedEnergy = 0.0;
       LHCb::MCRichDigitHit::Vector hitVect;
-      for ( SmartRefVector<MCRichDeposit>::const_iterator deposit =
+      for ( SmartRefVector<LHCb::MCRichDeposit>::const_iterator deposit =
               (*iSumDep)->deposits().begin();
-            deposit != (*iSumDep)->deposits().end(); ++deposit ) {
+            deposit != (*iSumDep)->deposits().end(); ++deposit ) 
+      {
         if ( (*deposit)->time() > 0.0 &&
              (*deposit)->time() < 25.0 ) {
           summedEnergy += (*deposit)->energy();
@@ -120,9 +124,12 @@ StatusCode RichSimpleFrontEndResponse::Simple() {
       newDigit->setHistory( (*iSumDep)->history() );
 
       int value = int((summedEnergy+m_Sigma*m_gaussRndm()/1000)*m_Calibration) + m_Baseline;
-      if ( !newDigit->hits().empty() && value >= m_AdcCut ) {
+      if ( !newDigit->hits().empty() && value >= m_AdcCut ) 
+      {
         mcRichDigits->insert( newDigit, (*iSumDep)->key() );
-      } else {
+      } 
+      else 
+      {
         delete newDigit;
       }
 

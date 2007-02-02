@@ -5,7 +5,7 @@
  *  Implementation file for RICH DAQ algorithm : MCRichDigitsToRawBufferAlg
  *
  *  CVS Log :-
- *  $Id: MCRichDigitsToRawBufferAlg.cpp,v 1.8 2006-11-06 09:41:56 cattanem Exp $
+ *  $Id: MCRichDigitsToRawBufferAlg.cpp,v 1.9 2007-02-02 10:13:41 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-09
@@ -19,7 +19,7 @@
 #include "GaudiKernel/AlgFactory.h"
 
 // namespaces
-using namespace LHCb; ///< General LHCb namespace
+using namespace Rich::MC::Digi;
 
 //-----------------------------------------------------------------------------
 
@@ -34,8 +34,8 @@ MCRichDigitsToRawBufferAlg::MCRichDigitsToRawBufferAlg( const std::string& name,
 {
 
   declareProperty( "MCRichDigitsLocation",
-                   m_digitsLoc = MCRichDigitLocation::Default );
-  declareProperty( "DataVersion", m_version = RichDAQ::LHCb2 );
+                   m_digitsLoc = LHCb::MCRichDigitLocation::Default );
+  declareProperty( "DataVersion", m_version = Rich::DAQ::LHCb2 );
 
 }
 
@@ -63,27 +63,20 @@ StatusCode MCRichDigitsToRawBufferAlg::execute()
 {
 
   // Retrieve MCRichDigits
-  const MCRichDigits * digits = get<MCRichDigits>( m_digitsLoc );
+  const LHCb::MCRichDigits * digits = get<LHCb::MCRichDigits>( m_digitsLoc );
 
   // new vector of smart IDs
   LHCb::RichSmartID::Vector smartIDs;
 
   // Loop over digits and fill smartIDs into vector
-  for ( MCRichDigits::const_iterator iDigit = digits->begin();
+  for ( LHCb::MCRichDigits::const_iterator iDigit = digits->begin();
         iDigit != digits->end(); ++iDigit )
   {
     smartIDs.push_back( (*iDigit)->key() );
   }
 
   // Fill raw buffer
-  m_rawFormatT->fillRawEvent( smartIDs, (RichDAQ::BankVersion)m_version );
+  m_rawFormatT->fillRawEvent( smartIDs, (Rich::DAQ::BankVersion)m_version );
 
   return StatusCode::SUCCESS;
-}
-
-//  Finalize
-StatusCode MCRichDigitsToRawBufferAlg::finalize()
-{
-  // finalise base
-  return RichAlgBase::finalize();
 }

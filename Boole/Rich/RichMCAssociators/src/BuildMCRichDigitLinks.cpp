@@ -4,7 +4,7 @@
  *  Implementation file for RICH DAQ algorithm : BuildMCRichDigitLinks
  *
  *  CVS Log :-
- *  $Id: BuildMCRichDigitLinks.cpp,v 1.3 2006-12-18 15:44:46 cattanem Exp $
+ *  $Id: BuildMCRichDigitLinks.cpp,v 1.4 2007-02-02 10:13:13 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-09
@@ -17,7 +17,7 @@
 #include "BuildMCRichDigitLinks.h"
 
 // namespace
-using namespace LHCb;
+using namespace Rich::MC;
 
 //-----------------------------------------------------------------------------
 
@@ -28,13 +28,13 @@ DECLARE_ALGORITHM_FACTORY( BuildMCRichDigitLinks );
 //=============================================================================
 BuildMCRichDigitLinks::BuildMCRichDigitLinks( const std::string& name,
                                               ISvcLocator* pSvcLocator)
-  : RichAlgBase ( name, pSvcLocator ) 
+  : RichAlgBase ( name, pSvcLocator )
 {
   // Define Job options for this algorithm
   declareProperty( "MCRichDigitsLocation",
-                   m_mcRichDigitsLocation = MCRichDigitLocation::Default );
+                   m_mcRichDigitsLocation = LHCb::MCRichDigitLocation::Default );
   declareProperty( "RichDigitsLocation",
-                   m_richDigitsLocation = RichDigitLocation::Default );
+                   m_richDigitsLocation   = LHCb::RichDigitLocation::Default );
 }
 
 //=============================================================================
@@ -43,49 +43,30 @@ BuildMCRichDigitLinks::BuildMCRichDigitLinks( const std::string& name,
 BuildMCRichDigitLinks::~BuildMCRichDigitLinks() {};
 
 //=============================================================================
-// Initialisation.
-//=============================================================================
-StatusCode BuildMCRichDigitLinks::initialize() 
-{
-  // intialise base
-  const StatusCode sc = RichAlgBase::initialize();
-  if ( sc.isFailure() ) { return sc; }
-
-  return sc;
-}
-
-//=============================================================================
 // Main execution
 //=============================================================================
-StatusCode BuildMCRichDigitLinks::execute() {
-
+StatusCode BuildMCRichDigitLinks::execute() 
+{
   debug() << "Execute" << endreq;
 
   // locate MCRichDigits
-  MCRichDigits * mcDigits = get<MCRichDigits>( m_mcRichDigitsLocation );
+  LHCb::MCRichDigits * mcDigits = get<LHCb::MCRichDigits>( m_mcRichDigitsLocation );
   debug() << "Successfully located " << mcDigits->size()
           << " MCRichDigits at " << m_mcRichDigitsLocation << endreq;
 
   // locate RichDigits
-  RichDigits * digits = get<RichDigits>( m_richDigitsLocation );
+  LHCb::RichDigits * digits = get<LHCb::RichDigits>( m_richDigitsLocation );
   debug() << "Successfully located " << digits->size()
           << " RichDigits at " << m_richDigitsLocation << endreq;
 
   // build the MC links
-  if ( setMCTruth(digits,mcDigits).isFailure() ) {
-    return Warning("Failed to build MC links for RichDigits");
+  const StatusCode sc = setMCTruth(digits,mcDigits);
+  if ( sc.isFailure() ) 
+  {
+    return Warning("Failed to build MC links for RichDigits",sc);
   }
 
-  return StatusCode::SUCCESS;
-};
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode BuildMCRichDigitLinks::finalize()
-{
-  // finalise base
-  return RichAlgBase::finalize();
+  return sc;
 }
 
 //=============================================================================
