@@ -1,9 +1,12 @@
 ! =============================================================================
-! $Id: release.notes,v 1.289 2007-01-31 07:15:40 cattanem Exp $ 
+! $Id: release.notes,v 1.290 2007-02-02 11:27:40 marcocle Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
+
+! 2007-02-02 - Marco CLEMENCIC
+ - Fixed a minor bug in a debug function of ParamValidDataObject.
 
 !====================== DetDesc v17r0 2007-01-31 ============================
 ! 2007-01-31 - Marco Cattaneo
