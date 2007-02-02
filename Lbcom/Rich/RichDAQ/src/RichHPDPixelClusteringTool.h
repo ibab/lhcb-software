@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::DAQ::HPDPixelClusteringTool
  *
  *  CVS Log :-
- *  $Id: RichHPDPixelClusteringTool.h,v 1.2 2007-02-02 17:38:24 jonrob Exp $
+ *  $Id: RichHPDPixelClusteringTool.h,v 1.3 2007-02-02 21:38:39 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   21/03/2006
@@ -57,6 +57,9 @@ namespace Rich
       HPDPixelClusteringTool( const std::string& type,
                               const std::string& name,
                               const IInterface* parent );
+
+      /// Initalisation
+      virtual StatusCode initialize();
 
     public: // methods (and doxygen comments) inherited from interface
 

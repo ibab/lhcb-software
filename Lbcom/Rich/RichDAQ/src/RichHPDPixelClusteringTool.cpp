@@ -5,7 +5,7 @@
  * Implementation file for class : RichHPDPixelClusteringTool
  *
  * CVS Log :-
- * $Id: RichHPDPixelClusteringTool.cpp,v 1.2 2007-02-02 17:38:24 jonrob Exp $
+ * $Id: RichHPDPixelClusteringTool.cpp,v 1.3 2007-02-02 21:38:39 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date   21/03/2006
@@ -27,10 +27,21 @@ HPDPixelClusteringTool::
 HPDPixelClusteringTool( const std::string& type,
                         const std::string& name,
                         const IInterface* parent )
-  : RichToolBase ( type, name, parent )
+  : ToolBase ( type, name, parent )
 {
   // Define interface
   declareInterface<IPixelClusteringTool>(this);
+}
+
+StatusCode HPDPixelClusteringTool::initialize()
+{
+  // Sets up various tools and services
+  const StatusCode sc = ToolBase::initialize();
+  if ( sc.isFailure() ) return sc;
+
+  info() << "  Using nearest neighbour pixel clustering tool" << endreq;
+
+  return sc;
 }
 
 const Rich::HPDPixelClusters::ConstSharedPtn
