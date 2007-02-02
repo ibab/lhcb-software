@@ -1,4 +1,4 @@
-// $Id: OTExpectedHits.cpp,v 1.7 2006-12-06 14:35:00 mneedham Exp $
+// $Id: OTExpectedHits.cpp,v 1.8 2007-02-02 13:12:31 janos Exp $
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
 
@@ -80,13 +80,7 @@ StatusCode OTExpectedHits::collect(const Tsa::Parabola& parab,
     Tsa::Line3D aLine3D = Tsa::createLine3D(tanLine,line,aModule->z());
     Gaudi::XYZPoint globalEntry = intersection(aLine3D,aModule->entryPlane());
     Gaudi::XYZPoint globalExit = intersection(aLine3D,aModule->exitPlane());
-    aModule->calculateHits(globalEntry,globalExit,channels,distances);
-  }
-              
-  // copy to output vector
-  hits.reserve(channels.size());
-  for (unsigned int i = 0; i < channels.size(); ++i){
-    hits.push_back(std::make_pair(channels[i],distances[i]));
+    aModule->calculateHits(globalEntry,globalExit,hits);
   }
 
   return StatusCode::SUCCESS;
