@@ -1,4 +1,4 @@
-// $Id: XmlGenericCnv.h,v 1.7 2005-11-22 10:40:05 cattanem Exp $
+// $Id: XmlGenericCnv.h,v 1.8 2007-02-02 08:17:08 marcocle Exp $
 
 #ifndef DETDESCCNV_XMLGENERICCNV_H
 #define DETDESCCNV_XMLGENERICCNV_H
@@ -245,6 +245,9 @@ private:
   const XMLCh* conditionString;
   const XMLCh* classIDString;
   
+  /// Flag that says if the storage type CONDDB_StorageType is accessible.
+  bool m_have_CONDDB_StorageType;
+
 };
 
 #endif // DETDESCCNV_XMLGENERICCNV_H

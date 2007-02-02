@@ -1,4 +1,4 @@
-// $Id: XmlGenericCnv.cpp,v 1.17 2006-06-27 12:25:44 marcocle Exp $
+// $Id: XmlGenericCnv.cpp,v 1.18 2007-02-02 08:17:08 marcocle Exp $
 
 // Include files
 #include "DetDescCnv/XmlGenericCnv.h"
@@ -25,7 +25,9 @@
 // ------------------------------------------------------------------------
 XmlGenericCnv::XmlGenericCnv( ISvcLocator* svc, const CLID& clid) :
   Converter (XML_StorageType, clid, svc),
-  m_xmlSvc (0) {
+  m_xmlSvc (0),
+  m_have_CONDDB_StorageType(false)
+{
   DDDBString = xercesc::XMLString::transcode("DDDB");
   materialsString = xercesc::XMLString::transcode("materials");
   versionString = xercesc::XMLString::transcode("version");
@@ -71,6 +73,21 @@ StatusCode XmlGenericCnv::initialize() {
   IID_IXmlSvc,
   (IInterface*&)m_xmlSvc);
   */
+
+  // I need to check if I can create conddb addresses.
+  // (sorry, I did not find a better way)
+  IOpaqueAddress* result;
+  const std::string par[2] = { "", "" };
+  unsigned long channelId = 0;
+  StatusCode sc = addressCreator()->createAddress (CONDDB_StorageType,
+                                                   5,
+                                                   par,
+                                                   &channelId,
+                                                   result);
+  m_have_CONDDB_StorageType = sc.isSuccess(); // if we managed to create an address, it means we can
+  if ( m_have_CONDDB_StorageType ) {
+    delete result; // avoid memory leaks
+  }
 
   // returns
   return status;
@@ -437,7 +454,7 @@ XmlGenericCnv::createAddressForHref (std::string href,
   }
   
   // Is it a CondDB address ?
-  bool condDB = (0==href.find("conddb:/"));
+  bool condDB = m_have_CONDDB_StorageType && (0==href.find("conddb:/"));
   if (condDB) {
     log << MSG::VERBOSE 
         << "Href points to a conddb URL: " << href << endreq;
@@ -525,6 +542,8 @@ XmlGenericCnv::createAddressForHref (std::string href,
                                || ( location[0] >= 'A' && location[0] <= 'Z' )
                                ) && location[1] == ':'
                               )
+                          // consider URLs as absolute paths
+                          || ( location.find(":") != href.npos )
                           );
       if ( !is_abs_path ) {
         if ( parent->ipar()[0] == 0) {
