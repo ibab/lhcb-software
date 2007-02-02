@@ -1,4 +1,4 @@
-// $Id: TsaStereoBase.cpp,v 1.2 2007-01-16 08:06:40 mneedham Exp $
+// $Id: TsaStereoBase.cpp,v 1.3 2007-02-02 16:31:12 cattanem Exp $
 
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -15,8 +15,8 @@
 #include "TsaKernel/ClusFun.h"
 #include "TsaKernel/TsaConstants.h"
 
-#include "Kernel/Point3DTypes.h"
-#include "Kernel/Plane3DTypes.h"
+#include "GaudiKernel/Point3DTypes.h"
+#include "GaudiKernel/Plane3DTypes.h"
 
 TsaStereoBase::TsaStereoBase(const std::string& type,
                                const std::string& name,

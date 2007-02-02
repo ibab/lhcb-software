@@ -4,9 +4,12 @@
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
 
+!======================= TsaAlgorithms v2r1 2007-02-02 ======================
+! 2007-02-02 - Marco Cattaneo
+ - Remove references to LHCbDefinitions includes
+
 ! 2007-02-02 - Jan Amoraal
  - Minor update due to changes in OTDet
-
 
 !======================= TsaAlgorithms v2r0 2006-01-17 ======================
 ! 2007-01-17 - Marco Cattaneo

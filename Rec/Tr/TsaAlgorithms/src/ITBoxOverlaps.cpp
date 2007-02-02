@@ -1,9 +1,9 @@
-// $Id: ITBoxOverlaps.cpp,v 1.1.1.1 2006-07-24 14:56:45 mneedham Exp $
+// $Id: ITBoxOverlaps.cpp,v 1.2 2007-02-02 16:31:12 cattanem Exp $
 
 #include "STDet/DeSTDetector.h"
 #include "STDet/DeSTSector.h"
 #include "ITBoxOverlaps.h"
-#include "Kernel/Point3DTypes.h"
+#include "GaudiKernel/Point3DTypes.h"
 #include "Kernel/Trajectory.h"
 
 

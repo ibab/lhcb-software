@@ -1,4 +1,4 @@
-// $Id: TsaStubLinker.cpp,v 1.2 2007-01-16 08:06:41 mneedham Exp $
+// $Id: TsaStubLinker.cpp,v 1.3 2007-02-02 16:31:12 cattanem Exp $
 
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -14,8 +14,8 @@
 #include "SeedParabolaFit.h"
 #include "SeedLineFit.h"
 
-#include "Kernel/Point3DTypes.h"
-#include "Kernel/Plane3DTypes.h"
+#include "GaudiKernel/Point3DTypes.h"
+#include "GaudiKernel/Plane3DTypes.h"
 #include "LHCbMath/GeomFun.h"
 #include "TsaKernel/TsaConstants.h"
 

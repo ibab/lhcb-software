@@ -1,4 +1,4 @@
-// $Id: ITBoxProcessor.cpp,v 1.4 2006-12-06 14:35:00 mneedham Exp $ 
+// $Id: ITBoxProcessor.cpp,v 1.5 2007-02-02 16:31:12 cattanem Exp $ 
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
 
@@ -10,7 +10,7 @@
 
 // CLHEP
 #include "GaudiKernel/SystemOfUnits.h"
-#include "Kernel/Plane3DTypes.h"
+#include "GaudiKernel/Plane3DTypes.h"
 #include "Kernel/STChannelID.h"
 
 // Geometry

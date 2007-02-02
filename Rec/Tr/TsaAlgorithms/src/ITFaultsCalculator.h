@@ -1,4 +1,4 @@
-// $Id: ITFaultsCalculator.h,v 1.1.1.1 2006-07-24 14:56:45 mneedham Exp $
+// $Id: ITFaultsCalculator.h,v 1.2 2007-02-02 16:31:12 cattanem Exp $
 #ifndef _ITFaultsCalculator_H
 #define _ITFaultsCalculator_H
 
@@ -10,7 +10,7 @@
 
 #include "GaudiAlg/GaudiTool.h"
 #include "ITsaFaultsCalculator.h"
-#include "Kernel/Point3DTypes.h"
+#include "GaudiKernel/Point3DTypes.h"
 #include "TsaKernel/Line3D.h"
 class DeSTDetector;
 class DeSTLayer;

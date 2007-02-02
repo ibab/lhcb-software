@@ -1,5 +1,5 @@
 package TsaAlgorithms
-version v2r0
+version v2r1
 
 branches cmt doc src options
 
@@ -10,7 +10,7 @@ use TrackEvent   v*  Event
 use GaudiAlg     v*
 use GSL          v*  LCG_Interfaces
 use TrackFitEvent v* Tr
-use L0Event v* Event 
+use L0Event      v*  Event 
 
 use TsaKernel       v* Tr
 use TrackInterfaces v* Tr

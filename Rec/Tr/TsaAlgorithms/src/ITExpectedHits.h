@@ -1,4 +1,4 @@
-// $Id: ITExpectedHits.h,v 1.5 2006-12-06 14:35:00 mneedham Exp $
+// $Id: ITExpectedHits.h,v 1.6 2007-02-02 16:31:12 cattanem Exp $
 #ifndef _ITExpectedHits_H
 #define _ITExpectedHits_H
 
@@ -10,8 +10,8 @@
 
 #include "GaudiAlg/GaudiTool.h"
 
-#include "Kernel/Plane3DTypes.h"
-#include "Kernel/Point3DTypes.h"
+#include "GaudiKernel/Plane3DTypes.h"
+#include "GaudiKernel/Point3DTypes.h"
 
 #include "TsaKernel/Line3D.h"
 #include "TsaKernel/IITExpectedHits.h"
