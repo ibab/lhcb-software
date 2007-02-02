@@ -1,4 +1,4 @@
-// $Id: DeOTStation.cpp,v 1.6 2006-04-18 18:57:38 janos Exp $
+// $Id: DeOTStation.cpp,v 1.7 2007-02-02 09:25:04 janos Exp $
 
 /// DetDesc
 #include "DetDesc/IGeometryInfo.h"
@@ -43,7 +43,10 @@ StatusCode DeOTStation::initialize() {
   IDetectorElement::IDEContainer::const_iterator iL;
   for (iL = this->childBegin(); iL != this->childEnd(); ++iL) {  
     DeOTLayer* layer = dynamic_cast<DeOTLayer*>(*iL);
-    if (layer) m_layers.push_back(layer);
+    if (layer) {
+      m_layers.push_back(layer);
+      m_mapIDLayer.insert((layer->elementID()).uniqueLayer(), layer);
+    }
   }/// iLayer
   
   m_stationID = (unsigned int) param<int>("stationID");
@@ -56,9 +59,8 @@ StatusCode DeOTStation::initialize() {
 /// Find the layer for a given channel
 DeOTLayer* DeOTStation::findLayer(const OTChannelID aChannel) {  
   /// Find the layer and return a pointer to the layer from channel
-  Layers::const_iterator iter = std::find_if(m_layers.begin(), m_layers.end(),
-					     bind(&DeOTLayer::contains, _1, aChannel));
-  return (iter != m_layers.end() ? (*iter) : 0);
+  MapIDLayer::iterator iL = m_mapIDLayer.find(aChannel.uniqueLayer());
+  return (iL != m_mapIDLayer.end() ? iL->second: 0);
 }
 
 /// Find the layer for a given XYZ point

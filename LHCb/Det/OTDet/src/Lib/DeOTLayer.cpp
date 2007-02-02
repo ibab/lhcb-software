@@ -1,4 +1,4 @@
-// $Id: DeOTLayer.cpp,v 1.10 2006-06-08 12:24:03 janos Exp $
+// $Id: DeOTLayer.cpp,v 1.11 2007-02-02 09:25:04 janos Exp $
 
 /// GaudiKernel
 #include "GaudiKernel/SystemOfUnits.h"
@@ -47,7 +47,10 @@ StatusCode DeOTLayer::initialize() {
   IDetectorElement::IDEContainer::const_iterator iQ;
   for (iQ = this->childBegin(); iQ != this->childEnd(); ++iQ) {  
     DeOTQuarter* quarter = dynamic_cast<DeOTQuarter*>(*iQ);
-    if (quarter) m_quarters.push_back(quarter);
+    if (quarter) {
+      m_quarters.push_back(quarter);
+      m_mapIDQuarter.insert((quarter->elementID()).uniqueQuarter(), quarter);
+    }
   } /// iQ
   
   IDetectorElement* station = this->parentIDetectorElement();
@@ -67,21 +70,15 @@ StatusCode DeOTLayer::initialize() {
 /// Find the quarter for a given channel
 DeOTQuarter* DeOTLayer::findQuarter(const OTChannelID aChannel)  const {  
   /// Find the quarter and return a pointer to the layer from channel
-  Quarters::const_iterator iter = std::find_if(m_quarters.begin(), m_quarters.end(),
-					       bind(&DeOTQuarter::contains, _1, aChannel));
-  return (iter != m_quarters.end() ? (*iter) : 0);
+  MapIDQuarter::iterator iQ = m_mapIDQuarter.find(aChannel.uniqueQuarter());
+  return (iQ != m_mapIDQuarter.end() ? iQ->second: 0);
 }
 
 /// Find the quarter for a given XYZ point
 DeOTQuarter* DeOTLayer::findQuarter(const Gaudi::XYZPoint& aPoint) const {  
-  /// Find the quarter and return a pointer to the quarter from channel
-  // FIXME: isInsideEfficient is really efficient. So efficient that it's throwing
-  //        away good hits in the stereo layers :-(
-  // Quarters::const_iterator iter = std::find_if(m_quarters.begin(), m_quarters.end(),
-  // 					       bind(&DeOTQuarter::isInsideEfficient, _1, aPoint));
-  Quarters::const_iterator iter = std::find_if(m_quarters.begin(), m_quarters.end(),
-   					       bind(&DetectorElement::isInside, _1, aPoint));
-  return (iter != m_quarters.end() ? (*iter) : 0);
+  Quarters::const_iterator iQ = std::find_if(m_quarters.begin(), m_quarters.end(),
+                                             bind(&DetectorElement::isInside, _1, aPoint));
+  return (iQ != m_quarters.end() ? (*iQ) : 0);
 }
 
 void DeOTLayer::cachePlane() {
@@ -91,19 +88,3 @@ void DeOTLayer::cachePlane() {
   
   m_plane = Gaudi::Plane3D(g1, g2, g3);
 }
-
-/// Find the module for a given XYZ point
-/// Slightly faster way to check if a point is inside a quarter
-// DeOTModule* DeOTLayer::findModule(const Gaudi::XYZPoint& aPoint) const {
-//   DeOTModule* module = 0;
-//   bool found = false;
-//   std::vector<DeOTQuarter*>::const_iterator iQuarter = m_quarters.begin();
-//   while (iQuarter != m_quarters.end() && !found) {
-//     if ((*iQuarter)->isInside(aPoint)) {
-//       module = (*iQuarter)->findModule(aPoint );
-//       if (!module) found = true;
-//     }
-//     ++iQuarter;
-//   }
-//   return module;
-// }

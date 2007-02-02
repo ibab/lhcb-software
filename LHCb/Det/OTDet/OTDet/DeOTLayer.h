@@ -1,4 +1,4 @@
-// $Id: DeOTLayer.h,v 1.10 2006-12-04 18:08:12 janos Exp $
+// $Id: DeOTLayer.h,v 1.11 2007-02-02 09:25:04 janos Exp $
 #ifndef OTDET_DEOTLAYER_H
 #define OTDET_DEOTLAYER_H 1
 
@@ -7,7 +7,8 @@
 
 /// Kernel
 #include "Kernel/OTChannelID.h"
-#include "Kernel/Plane3DTypes.h"
+#include "GaudiKernel/Plane3DTypes.h"
+#include "GaudiKernel/VectorMap.h"
 
 /// OTDet
 #include "OTDet/DeOTDetector.h"
@@ -36,7 +37,9 @@ class DeOTLayer : public DetectorElement {
  public:
 
   /** Some typedefs */
+  typedef std::vector<DeOTLayer*> Container;
   typedef std::vector<DeOTQuarter*> Quarters;
+  typedef GaudiUtils::VectorMap<unsigned int, DeOTQuarter*> MapIDQuarter;
 
   /** Constructor */
   DeOTLayer(const std::string& name = "") ;
@@ -92,9 +95,6 @@ class DeOTLayer : public DetectorElement {
   Gaudi::Plane3D plane() const;
 
   void cachePlane();
-  
-  /** @return the module for a given XYZ point */
-  /*  DeOTModule* findModule(const Gaudi::XYZPoint& aPoint) const; */
 
   /** flat vector of quarters
    * @return vector of quarters
@@ -108,7 +108,7 @@ class DeOTLayer : public DetectorElement {
   double m_stereoAngle;          ///< layer stereo angle 
   Gaudi::Plane3D m_plane;        ///< plane corresponding to the layer
   Quarters m_quarters;           ///< vector of quarters
-
+  MapIDQuarter m_mapIDQuarter;     ///< map quarter id to quarter
 };
 
 // -----------------------------------------------------------------------------
@@ -128,7 +128,6 @@ inline void DeOTLayer::setElementID(const LHCb::OTChannelID& chanID) {
 }
 
 inline bool DeOTLayer::contains(const LHCb::OTChannelID aChannel) const {
-  //return (layerID() == aChannel.layer());
   return (m_elementID.uniqueLayer() == aChannel.uniqueLayer());
 }
 

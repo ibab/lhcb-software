@@ -1,6 +1,9 @@
-// $Id: DeOTQuarter.h,v 1.9 2006-12-04 18:08:12 janos Exp $
+// $Id: DeOTQuarter.h,v 1.10 2007-02-02 09:25:04 janos Exp $
 #ifndef OTDET_DEOTQUARTER_H
 #define OTDET_DEOTQUARTER_H 1
+
+/// GaudiKernel
+#include "GaudiKernel/VectorMap.h"
 
 /// DetDesc
 #include "DetDesc/DetectorElement.h"
@@ -31,7 +34,8 @@ class DeOTQuarter : public DetectorElement {
  public:
   /** Some typedefs */
   typedef std::vector<DeOTModule*> Modules;
-  
+  typedef GaudiUtils::VectorMap<unsigned int, DeOTModule*> MapIDModule;
+
   /** Constructor */
   DeOTQuarter( const std::string& name = "");
   
@@ -67,15 +71,7 @@ class DeOTQuarter : public DetectorElement {
    *  @return bool
    */
   bool DeOTQuarter::contains(const LHCb::OTChannelID aChannel) const;
-  
-  // FIXME: isInsideEfficient is really efficient. So efficient that it's throwing
-  //        away hits :-(
-  /** Check if a point is inside the quarter 
-   * @parma a point
-   * @return bool
-   */
-  /*  bool DeOTQuarter::isInsideEfficient(const Gaudi::XYZPoint& aPoint) const; */
-
+ 
   /** @return stereo angle of the layer */
   double angle() const;
 
@@ -96,14 +92,8 @@ class DeOTQuarter : public DetectorElement {
   unsigned int m_quarterID;      ///< quarter ID number
   LHCb::OTChannelID m_elementID; ///< element id
   double m_stereoAngle;          ///< layer stereo angle 
-  /*   double m_xMin;                 ///< Minimum x of the cover */
-  /*   double m_yMin;                 ///< Minimum y of the cover */
-  /*   double m_zMin;                 ///< Minimum z of the cover */
-  /*   double m_xMax;                 ///< Maximum x of the cover */
-  /*   double m_yMax;                 ///< Maximum y of the cover */
-  /*   double m_zMax;                 ///< Maximum z of the cover */
   Modules m_modules;             ///< vector of modules
-
+  MapIDModule m_mapIDModule;       ///< map module id to module
 };
 
 // -----------------------------------------------------------------------------
@@ -123,21 +113,8 @@ inline void DeOTQuarter::setElementID(const LHCb::OTChannelID& chanID) {
 }
 
 inline bool DeOTQuarter::contains(const LHCb::OTChannelID aChannel) const {
-  //return (quarterID() == aChannel.quarter());
   return (m_elementID.uniqueQuarter() == aChannel.uniqueQuarter());
 }
-
-/// I'll keep this untill it's in DetDesc
-// FIXME: isInsideEfficient is really efficient. So efficient that it's throwing
-//        away hits :-(
-/* inline bool DeOTQuarter::isInsideEfficient(const Gaudi::XYZPoint& aPoint) const { */
-/*   double aPointX = aPoint.x(); */
-/*   double aPointY = aPoint.y(); */
-/*   double aPointZ = aPoint.z(); */
-/*   return (aPointX > m_xMin && aPointX < m_xMax && */
-/* 	  aPointY > m_yMin && aPointY < m_yMax && */
-/* 	  aPointZ > m_zMin && aPointZ < m_zMax); */
-/* } */
 
 inline double DeOTQuarter::angle() const {
   return m_stereoAngle;

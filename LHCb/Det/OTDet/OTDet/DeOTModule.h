@@ -1,4 +1,4 @@
-// $Id: DeOTModule.h,v 1.20 2006-12-04 18:08:12 janos Exp $
+// $Id: DeOTModule.h,v 1.21 2007-02-02 09:25:04 janos Exp $
 #ifndef OTDET_DEOTMODULE_H
 #define OTDET_DEOTMODULE_H 1
 
@@ -8,7 +8,7 @@
 
 /// Kernel
 #include "Kernel/OTChannelID.h"
-#include "Kernel/Plane3DTypes.h"
+#include "GaudiKernel/Plane3DTypes.h"
 
 namespace LHCb
 {
@@ -64,6 +64,10 @@ static const CLID& CLID_DeOTModule = 8105;
 class DeOTModule : public DetectorElement {
 
 public:
+  
+  /// some handy typedefs
+  typedef std::vector<DeOTModule*> Container;
+  typedef std::vector<unsigned int> Straws;
   
   /** Constructor */
   DeOTModule(const std::string& name = "");
@@ -153,13 +157,13 @@ public:
    * @param straw
    * @return bool
    */
-  bool monoLayerA(const int aStraw) const;
+  bool monoLayerA(const unsigned int aStraw) const;
   
   /** Check if straw is in monolayer B
    * @param straw
    * @return bool
    */
-  bool monoLayerB(const int aStraw) const;
+  bool monoLayerB(const unsigned int aStraw) const;
 
   /** @return the straw to the left of a given straw */
   unsigned int nextLeftStraw(const unsigned int aStraw) const;
@@ -171,7 +175,7 @@ public:
   double sensThickness() const;
   
   /** @return wire length */
-  double wireLength() const;
+  double wireLength(const LHCb::OTChannelID aChan) const;
 
   /** @return cell radius */
   double cellRadius() const;
@@ -198,13 +202,15 @@ public:
   Gaudi::XYZPoint globalPoint(const double x, const double y, const double z) const;
 
   /** Calculate straws which are hit 
-   * @retrun status code
+   * @param entry point
+   * @param exit point
+   * @param vector of pairs of channel and drift distance
+   * @retrun void
    */
-  StatusCode calculateHits(const Gaudi::XYZPoint& entryPoint, 
-                           const Gaudi::XYZPoint& exitPoint,
-                           std::vector<LHCb::OTChannelID>& channels, 
-                           std::vector<double>& driftDistances) const;
-
+  void DeOTModule::calculateHits(const Gaudi::XYZPoint& entryPoint,
+                                 const Gaudi::XYZPoint& exitPoint,
+                                 std::vector<std::pair<LHCb::OTChannelID, double> >& chanAndDist) const;
+  
   /** Calculate the distance from a given vector in space to the straw 
    * @param straw
    * @param point
@@ -272,35 +278,26 @@ private:
 
   void cacheInfo();
 
-  /** Find range of straws that might contain hits */
-  void findStraws(const Gaudi::XYZPoint& entryPoint, 
-                  const Gaudi::XYZPoint& exitPoint, 
-                  std::vector<unsigned int>& straws) const;
-    
-  /** Find the DOCA paramters mu of a wire and lambda of a track,
-   * and the distance of closest approach
-   * Where w = w_bottom + mu*e_w 
-   * and p = p_entry + lambda*e_p.
+  /** Return range of hit straws for a given local entry and exit point.
+   * @param local entryPoint
+   * @param local exitPoint
+   * @return hit straws
    */
-  StatusCode findDoca(const Gaudi::XYZPoint& entryPoint,
-		      const Gaudi::XYZVector& pUnit,
-		      const Gaudi::XYZPoint& wireBottom,
-		      const Gaudi::XYZVector& wUnit,
-		      double& mu,
-		      Gaudi::XYZVector& doca) const;
-
-  /** Return distance of closest approach to wire
-   * i.e. drift distance*/
+  void findStraws(const Gaudi::XYZPoint& entryPoint, 
+                  const Gaudi::XYZPoint& exitPoint,
+                  Straws& straws) const;
+    
+  /** Return distance of closest approach to wire i.e. drift distance
+   * @param doca
+   * @return ambiguity*doca
+   */
   double driftDistance(const Gaudi::XYZVector& doca) const;
 
-  /** Find the straws that are hit */
-  /* void findHitStraws(...) const; */
-    
   /** @return local Z of a given straw */
-  double localZOfStraw(const int aStraw) const;
+  double localZOfStraw(const unsigned int aStraw) const;
   
   /** @return local U (=X) of a given straw */
-  double localUOfStraw(const int aStraw) const;
+  double localUOfStraw(const unsigned int aStraw) const;
   
   /** @return the straw in monolayer A closest to the hit */ 
   unsigned int hitStrawA(const double u) const;
@@ -343,7 +340,6 @@ private:
   double m_sensThickness;        ///< Thickness of sensitive volume
   unsigned int m_nModules;       ///< half the number of read-out modules in layer
   double m_ySizeModule;          ///< size of the module in y
-  double m_yHalfModule;          ///< size of the module in y
   double m_xMinLocal;                           ///< local x min of module
   double m_xMaxLocal;                           ///< local x max of module
   double m_yMinLocal;                           ///< local y min of module
@@ -354,9 +350,9 @@ private:
   std::auto_ptr<LHCb::Trajectory> m_midTraj[2]; ///< traj of middle of module
   Gaudi::XYZVector m_dir;                       ///< points to readout
   Gaudi::Plane3D m_plane;                       ///< plane through center of module
-  Gaudi::Plane3D m_entryPlane;               ///< entrance plane
-  Gaudi::Plane3D m_exitPlane;                   ///< entry plane
-  Gaudi::XYZPoint m_centerModule;
+  Gaudi::Plane3D m_entryPlane;                  ///< entry plane
+  Gaudi::Plane3D m_exitPlane;                   ///< exit plane
+  Gaudi::XYZPoint m_centerModule;               ///< center of module 
 
 };
 
@@ -395,10 +391,6 @@ inline unsigned int DeOTModule::uniqueModule() const {
 }
 
 inline bool DeOTModule::contains(LHCb::OTChannelID aChannel) const {
- /*  return (aChannel.station() == m_stationID &&  */
- /*           aChannel.layer() == m_layerID &&  */
- /*           aChannel.quarter() == m_quarterID &&  */
- /*           aChannel.module() == m_moduleID); */
   return (m_elementID.uniqueModule() == aChannel.uniqueModule());
 }
 
@@ -435,12 +427,12 @@ inline unsigned int DeOTModule::nChannels() const {
   return 2*m_nStraws;
 }
 
-inline bool DeOTModule::monoLayerA(const int aStraw) const {
-  return (aStraw <= int(m_nStraws));
+inline bool DeOTModule::monoLayerA(const unsigned int aStraw) const {
+  return (aStraw <= m_nStraws);
 }
 
-inline bool DeOTModule::monoLayerB(const int aStraw) const {
-  return (aStraw > int(m_nStraws));
+inline bool DeOTModule::monoLayerB(const unsigned int aStraw) const {
+  return (aStraw > m_nStraws);
 }
 
 inline unsigned int DeOTModule::nextLeftStraw(const unsigned int aStraw) const {
@@ -455,10 +447,20 @@ inline double DeOTModule::sensThickness() const {
   return m_sensThickness;
 }
 
-inline double DeOTModule::wireLength() const {
-  //return m_ySizeModule;
-  /// If long module wireLength=ySizeModule-inefficient region
-  return (longModule()?(m_ySizeModule-m_inefficientRegion):m_ySizeModule);
+inline double DeOTModule::wireLength(const LHCb::OTChannelID aChan) const {
+  /// check if it is a long module goes from 1 to 7 
+  if ( aChan.module() < 8u) {
+    /// check if it is top module
+    if (aChan.quarter() > 1u) {
+      /// check if it is the first or second monolayer
+      return ((aChan.straw() <= m_nStraws)?m_ySizeModule-m_inefficientRegion:m_ySizeModule);
+      /// check if it is bottom module
+    } else if (aChan.quarter() < 2u) {
+      return ((aChan.straw() <= m_nStraws)?m_ySizeModule:m_ySizeModule-m_inefficientRegion);
+    }
+  } else {
+    return m_ySizeModule;
+  }
 }
 
 inline double DeOTModule::cellRadius() const {
@@ -503,27 +505,26 @@ inline Gaudi::XYZPoint DeOTModule::globalPoint(const double x,
 }
 
 /// This gives you the x position of the wire
-inline double DeOTModule::localUOfStraw(const int aStraw) const {
-  int tmpStraw = (!monoLayerB(aStraw)?aStraw-1:aStraw-m_nStraws-1);
+inline double DeOTModule::localUOfStraw(const unsigned int aStraw) const {
+  int tmpStraw = (!monoLayerB(aStraw)?aStraw-1u:aStraw-m_nStraws-1u);
   double uLeftStraw = (!monoLayerB(aStraw)?-(0.5*m_nStraws-0.25)
 		       :(-(0.5*m_nStraws-0.25)+0.5))*m_xPitch;
   return uLeftStraw + tmpStraw * m_xPitch;
 }
 
-inline double DeOTModule::localZOfStraw(const int aStraw) const {
-  return (monoLayerA(aStraw)) ? -0.5*m_zPitch : 0.5*m_zPitch;
+inline double DeOTModule::localZOfStraw(const unsigned int aStraw) const {
+  return (monoLayerA(aStraw) ? -0.5: 0.5)*m_zPitch;
 }
 
 inline double DeOTModule::distanceAlongWire(const double xHit, 
 					    const double yHit) const {
   // For the upper modules of the station the readout is above.
-  return (topModule()?m_yHalfModule-localPoint(xHit, yHit, 0).y() 
-	  :m_yHalfModule+localPoint(xHit, yHit, 0).y());
+  return ((m_quarterID > 1u)?m_yMaxLocal-localPoint(xHit, yHit, 0).y() 
+	  :m_yMaxLocal+localPoint(xHit, yHit, 0).y());
 }
 
 inline Gaudi::XYZPoint DeOTModule::centerOfStraw(const unsigned int aStraw) const {
   /// get the global coordinate of the middle of the channel
-  // return globalPoint(localUOfStraw(aStraw), 0.0, localZOfStraw(aStraw));
   unsigned int mono = (monoLayerA(aStraw)?0u:1u);
   return m_midTraj[mono]->position(localUOfStraw(aStraw));
 }
@@ -552,27 +553,27 @@ inline Gaudi::Plane3D DeOTModule::exitPlane() const {
 
 inline unsigned int DeOTModule::hitStrawA(const double u) const {
   double dU = u - localUOfStraw(1);
-  int strawA = int((dU/m_xPitch + 1.5));
-  return std::min(std::max(1,strawA),int(m_nStraws));
+  unsigned int strawA = (unsigned int)(dU/m_xPitch + 1.5);
+  return std::min(std::max(1u ,strawA), m_nStraws);
 }
 
 inline unsigned int DeOTModule::hitStrawB(const double u) const {
   double dU = u - localUOfStraw(m_nStraws+1);
-  int strawB = m_nStraws + int(( dU/m_xPitch + 1.5));
-  return std::min(std::max(int(m_nStraws) + 1,strawB),2*int(m_nStraws));
+  unsigned int strawB = m_nStraws + (unsigned int)(dU/m_xPitch + 1.5);
+  return std::min(std::max(m_nStraws + 1u,strawB),2*m_nStraws);
 }
 
 /// See LHCb note: 2003-019
 inline bool DeOTModule::isEfficientA(const double y) const {
   // check if hit is not inside the inefficient region
-  return !(longModule() && topModule() && 
-	   ((m_yHalfModule + y) < m_inefficientRegion));
+  return !((m_moduleID < 8u) && (m_quarterID > 1u) && 
+           ((m_yMaxLocal + y) < m_inefficientRegion));
 }
 
 inline bool DeOTModule::isEfficientB(const double y) const {
   // check if hit is not inside the inefficient region
-  return !(longModule() && bottomModule() && 
-	   ((m_yHalfModule - y) < m_inefficientRegion));
+  return !((m_moduleID < 8u) && (m_quarterID < 2u) && 
+	   ((m_yMaxLocal - y) < m_inefficientRegion));
 }
 
 #endif  // OTDET_DEOTMODULE_H

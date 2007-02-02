@@ -1,4 +1,4 @@
-// $Id: DeOTDetector.h,v 1.32 2006-12-04 18:08:12 janos Exp $
+// $Id: DeOTDetector.h,v 1.33 2007-02-02 09:25:04 janos Exp $
 #ifndef OTDET_DEOTDETECTOR_H
 #define OTDET_DEOTDETECTOR_H 1
 
@@ -77,12 +77,6 @@ public:
    * @return Status of initialisation
    */
   virtual StatusCode initialize();
-
-  /** Find the channels and the distances from the MCHits */
-  StatusCode calculateHits(const Gaudi::XYZPoint& entryPoint, 
-                           const Gaudi::XYZPoint& exitPoint,
-                           std::vector<LHCb::OTChannelID>& channels,
-                           std::vector<double>& driftDistances);
   
   /** @return number of first station */
   unsigned int firstStation() const; 
@@ -254,9 +248,9 @@ private:
   Layers m_layers;                 ///< flat vector of layers
   Quarters m_quarters;             ///< flat vector of quarters
   Modules m_modules;               ///< flat vector of modules 
-  MapIDStation m_mapIDStation;     ///< map module id to module
-  MapIDLayer m_mapIDLayer;         ///< map module id to module
-  MapIDQuarter m_mapIDQuarter;     ///< map module id to module
+  MapIDStation m_mapIDStation;     ///< map station id to station
+  MapIDLayer m_mapIDLayer;         ///< map layer id to layer
+  MapIDQuarter m_mapIDQuarter;     ///< map quarter id to quarter
   MapIDModule m_mapIDModule;       ///< map module id to module
   unsigned int m_firstStation;     ///< number of first station
   unsigned int m_nChannels;        ///< total number of channels in OT

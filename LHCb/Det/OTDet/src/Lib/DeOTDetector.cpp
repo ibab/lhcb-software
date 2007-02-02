@@ -1,4 +1,4 @@
-// $Id: DeOTDetector.cpp,v 1.26 2006-12-04 18:08:12 janos Exp $
+// $Id: DeOTDetector.cpp,v 1.27 2007-02-02 09:25:04 janos Exp $
 /// Kernel
 #include "Kernel/LHCbID.h"
 #include "Kernel/OTChannelID.h"
@@ -146,10 +146,6 @@ void DeOTDetector::setFirstStation(const unsigned int iStation) {
 /// Find the station for a given channelID
 DeOTStation* DeOTDetector::findStation(const OTChannelID aChannel) const {
   /// Find the station and return a pointer to the station from channel
-  //Stations::const_iterator iter = std::find_if(m_stations.begin(), m_stations.end(),
-  //                                             bind(&DeOTStation::contains, _1, aChannel));
-  //return (iter != m_stations.end() ? (*iter) : 0);
-  // fast
   MapIDStation::iterator iS = m_mapIDStation.find(aChannel.station());
   return (iS != m_mapIDStation.end() ? iS->second: 0);
 }
@@ -157,16 +153,13 @@ DeOTStation* DeOTDetector::findStation(const OTChannelID aChannel) const {
 /// Find the station for a given XYZ point
 DeOTStation* DeOTDetector::findStation(const Gaudi::XYZPoint& aPoint) const {
   /// Find the station and return a pointer to the station from XYZ point
-  Stations::const_iterator iter = std::find_if(m_stations.begin(), m_stations.end(),
-                                               bind(&DetectorElement::isInside, _1, aPoint));
-  return (iter != m_stations.end() ? (*iter) : 0);
+  Stations::const_iterator iS = std::find_if(m_stations.begin(), m_stations.end(),
+                                             bind(&DetectorElement::isInside, _1, aPoint));
+  return (iS != m_stations.end() ? (*iS) : 0);
 }
 
 /// Find the layer for a given channelID
 DeOTLayer* DeOTDetector::findLayer(const OTChannelID aChannel)  const {
-//   DeOTStation* s = findStation(aChannel);
-//   return (s == 0 ? 0 : s->findLayer(aChannel));
-  // fast
   MapIDLayer::iterator iL = m_mapIDLayer.find(aChannel.uniqueLayer());
   return (iL != m_mapIDLayer.end() ? iL->second: 0);
 }
@@ -179,9 +172,6 @@ DeOTLayer* DeOTDetector::findLayer(const Gaudi::XYZPoint& aPoint) const {
 
 /// Find the quarter for a given channelID
 DeOTQuarter* DeOTDetector::findQuarter(const OTChannelID aChannel) const {
-  //DeOTLayer* l = findLayer(aChannel);
-  //return (l == 0 ? 0 : l->findQuarter(aChannel));
-  // fast
   MapIDQuarter::iterator iQ = m_mapIDQuarter.find(aChannel.uniqueQuarter());
   return (iQ != m_mapIDQuarter.end() ? iQ->second: 0);
 }
@@ -194,10 +184,6 @@ DeOTQuarter* DeOTDetector::findQuarter(const Gaudi::XYZPoint& aPoint) const {
 
 /// Find the module for a given channelID
 DeOTModule* DeOTDetector::findModule(const OTChannelID aChannel) const {
-  // slow
-  //DeOTQuarter* q = findQuarter(aChannel);
-  //return(q == 0 ? 0 : q->findModule(aChannel));
-  // fast
   MapIDModule::iterator iM = m_mapIDModule.find(aChannel.uniqueModule());
   return (iM != m_mapIDModule.end() ? iM->second: 0);
 }
@@ -215,24 +201,6 @@ const int DeOTDetector::sensitiveVolumeID( const Gaudi::XYZPoint& aPoint ) const
   if (m==0) return -1;
   
   return m->elementID();
-}
-
-StatusCode DeOTDetector::calculateHits(const Gaudi::XYZPoint& entryPoint,
-                                       const Gaudi::XYZPoint& exitPoint,
-                                       std::vector<OTChannelID>& channels,
-                                       std::vector<double>& driftDistances) {
-
-  Gaudi::XYZPoint point = entryPoint + 0.5*(exitPoint - entryPoint);
-
-  DeOTModule* aModule = findModule(point);
-  if (!aModule) {
-    MsgStream msg(msgSvc(), name());
-    msg << "Module doesn't contain hit" << endmsg;
-    return StatusCode::FAILURE;
-  }
-  
-  StatusCode sc = aModule->calculateHits(entryPoint, exitPoint, channels, driftDistances);
-  return sc;
 }
 
 double DeOTDetector::distanceAlongWire(const OTChannelID aChannel,

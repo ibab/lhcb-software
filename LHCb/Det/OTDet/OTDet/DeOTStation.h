@@ -1,16 +1,18 @@
-// $Id: DeOTStation.h,v 1.6 2006-12-04 18:08:12 janos Exp $
+// $Id: DeOTStation.h,v 1.7 2007-02-02 09:25:04 janos Exp $
 #ifndef OTDET_DEOTSTATION_H
 #define OTDET_DEOTSTATION_H 1
 
 // DetDesc
 #include "DetDesc/DetectorElement.h"
 
+// GaudiKernel
+#include "GaudiKernel/VectorMap.h"
+
 // Kernel
 #include "Kernel/OTChannelID.h"
 
 // OTDet
 #include "OTDet/DeOTDetector.h"
-//#include "OTDet/DeOTBaseElement.h"
 
 /** @class DeOTStation DeOTStation.h "OTDet/DeOTStation.h"
  *
@@ -35,8 +37,10 @@ class DeOTStation : public DetectorElement {
  public:
   
   /** Some typedefs */
+  typedef std::vector<DeOTStation*> Container;
   typedef std::vector<DeOTLayer*> Layers;
-  
+  typedef GaudiUtils::VectorMap<unsigned int, DeOTLayer*> MapIDLayer;
+
   /** Constructor */
   DeOTStation(const std::string& name = "") ;
   
@@ -88,7 +92,7 @@ class DeOTStation : public DetectorElement {
   unsigned int m_stationID;      ///< station ID number
   LHCb::OTChannelID m_elementID; ///< Element ID
   Layers m_layers;               ///< vector of layers
-
+  MapIDLayer m_mapIDLayer;       ///< map layer id to layer
 };
 
 // -----------------------------------------------------------------------------

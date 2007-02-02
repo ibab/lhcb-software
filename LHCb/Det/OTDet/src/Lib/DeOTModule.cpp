@@ -1,7 +1,12 @@
-// $Id: DeOTModule.cpp,v 1.24 2006-12-04 18:08:12 janos Exp $
+// $Id: DeOTModule.cpp,v 1.25 2007-02-02 09:25:04 janos Exp $
 /// Kernel
-#include "Kernel/Point3DTypes.h"
+#include "GaudiKernel/Point3DTypes.h"
 #include "Kernel/LineTraj.h"
+
+/// LHCbMath
+#include "LHCbMath/Line.h"
+#include "LHCbMath/LineTypes.h"
+#include "LHCbMath/GeomFun.h"
 
 /// DetDesc
 #include "DetDesc/IGeometryInfo.h"
@@ -41,7 +46,6 @@ DeOTModule::DeOTModule(const std::string& name) :
   m_sensThickness(0.0),
   m_nModules(0),
   m_ySizeModule(0.0),
-  m_yHalfModule(0.0), 
   m_xMinLocal(0.0),
   m_xMaxLocal(0.0),
   m_yMinLocal(0.0),
@@ -75,8 +79,7 @@ StatusCode DeOTModule::initialize() {
   m_stereoAngle = layer->params()->param<double>("stereoAngle");
   m_sinAngle = sin(m_stereoAngle);
   m_cosAngle = cos(m_stereoAngle);  
-  OTChannelID aChan = OTChannelID(m_stationID, m_layerID, 
-                                  m_quarterID, m_moduleID, 0u);
+  OTChannelID aChan = OTChannelID(m_stationID, m_layerID, m_quarterID, m_moduleID, 0u);
   setElementID(aChan);
   m_uniqueModuleID = aChan.uniqueModule();
 
@@ -93,11 +96,9 @@ StatusCode DeOTModule::initialize() {
   const ISolid* solid = this->geometry()->lvolume()->solid();
   const SolidBox* mainBox = dynamic_cast<const SolidBox*>(solid);
   m_ySizeModule = mainBox->ysize();
-  m_yHalfModule = mainBox->yHalfLength();
-
   m_xMaxLocal = (0.5*m_nStraws+0.25)*m_xPitch;
   m_xMinLocal = -m_xMaxLocal;
-  m_yMaxLocal = m_yHalfModule;
+  m_yMaxLocal = mainBox->yHalfLength();
   m_yMinLocal = -m_yMaxLocal;
   
   /// cache trajectories/planes
@@ -107,222 +108,169 @@ StatusCode DeOTModule::initialize() {
 }
 
 void DeOTModule::findStraws(const Gaudi::XYZPoint& entryPoint, 
-                            const Gaudi::XYZPoint& exitPoint, 
-                            std::vector<unsigned int>& straws) const {
+                            const Gaudi::XYZPoint& exitPoint,
+                            Straws& straws) const {
   /// This is in local cooridinates of a module
   const double xOffset = m_xMinLocal; //-(0.5*m_nStraws + 0.25)*m_xPitch;
   double lo = (entryPoint.x()-xOffset)/m_xPitch; 
   double hi = (exitPoint.x()-xOffset)/m_xPitch;
   
   if (lo > hi) std::swap(lo , hi);
-
+  
   const int exStraw = 1; ///< Add extra straws to the the left and right
   unsigned int strawLo = GSL_MAX_INT(0, int(std::floor(lo)) - exStraw);
   unsigned int strawHi = GSL_MIN_INT(int(m_nStraws)-1, int(std::ceil(hi)) + exStraw);
 
-  /// Make sure straws vector is empty 
-  straws.clear(); ///< This should erase all elements, if any.
-  straws.reserve(strawHi-strawLo + 1u);
-  
   /// Now let's fill the vector. Remember straw numbering starts at 1, i.e. i+1
+  straws.clear();
+  straws.reserve(strawHi-strawLo + 1u);
   for (unsigned int i = strawLo; i <= strawHi; ++i) straws.push_back(i+1);
 }
 
-StatusCode DeOTModule::findDoca(const Gaudi::XYZPoint& entryPoint,
-				const Gaudi::XYZVector& pUnit,
-				const Gaudi::XYZPoint& wireBottom,
-				const Gaudi::XYZVector& wUnit,
-				double& mu,
-				Gaudi::XYZVector& doca) const { 
-  Gaudi::XYZVector PenMinWb = (entryPoint - wireBottom);
-  double e_pDote_w = pUnit.Dot(wUnit);
-  
-  double dnom = 1.0 - gsl_pow_2(e_pDote_w);
-  static const double eps = 0.0001;
-  
-  if ( dnom < eps ) {
-    /// You never know :-)
-    MsgStream msg( msgSvc(), name() );
-    msg << MSG::WARNING << "Track is parallel to wire" << endreq;
-    return StatusCode::FAILURE;
-  }
-  
-  double lambda = (-1/dnom)*(PenMinWb.Dot(pUnit) - PenMinWb.Dot(wUnit)*e_pDote_w);
-  mu = (1/dnom)*(PenMinWb.Dot(wUnit) - PenMinWb.Dot(pUnit)*e_pDote_w);
-  doca = PenMinWb + lambda*pUnit - mu*wUnit;
-
-  return StatusCode::SUCCESS;
-}
-
-StatusCode DeOTModule::calculateHits(const Gaudi::XYZPoint& entryPoint,
-                                     const Gaudi::XYZPoint& exitPoint,
-                                     std::vector<OTChannelID>& channels,
-                                     std::vector<double>& driftDistances) const {
-
-  /// Before we do anything crazy let's first check if the 
-  /// entry and exit points are inside the module.
-  /// User should check if a point is inside a module
-  // if ( !isInside(entryPoint) || !isInside(exitPoint) ) return StatusCode::FAILURE;
-  
+void DeOTModule::calculateHits(const Gaudi::XYZPoint& entryPoint,
+                               const Gaudi::XYZPoint& exitPoint,
+                               std::vector<std::pair<OTChannelID, double> >& chanAndDist) const {
   /// Make sure channels and driftdistances vectors are empty 
-  channels.clear(); ///< This should erase all elements, if any.
-  driftDistances.clear(); ///< This should erase all elements, if any.
+  chanAndDist.clear(); ///< This should erase all elements, if any.
   
-  /// OK, so apparently the points are inside, so let's get the
-  /// the range of straws that might contain hits. First we need to
-  /// convert the points to the local coordinate system of the module.
+  /// Go from global to local.
   Gaudi::XYZPoint enP = toLocal(entryPoint);
   Gaudi::XYZPoint exP = toLocal(exitPoint);
-
-  /// Now let's get the range of straws
-  std::vector<unsigned int> rStraws;
-  findStraws(enP, exP, rStraws);
-
-  /// Unit vector parallel to entry and exit points
-  Gaudi::XYZVector e_p = (exP - enP).unit();
-  
-  /// Now, let's loop over the straws and check if they do contain hits
-  /// and asign OTChannelID's to those that do.
-  /// This going to be the same for monolayer A as well as monolayer B, except
-  /// for the channel numbering. So it makes sense to define a method
-  /// findHitStraws(...)
-    
-  Gaudi::XYZPoint wB = Gaudi::XYZPoint(0.0, -m_yHalfModule, 0.0);
-  Gaudi::XYZPoint wT = Gaudi::XYZPoint(0.0, m_yHalfModule, 0.0);
      
-  double mu;
-  Gaudi::XYZVector doca;
-  /// Need this to check if hits are in efficient regions
-  bool efficientY;
-
   /// Need this to check that enZ and exZ aren't sort of in the same plane,
   /// i.e. not a curly track. These are typically low momentum (50 MeV) 
   /// electrons.  
   bool samePlane = std::abs(enP.z()-exP.z()) < m_cellRadius;
   if (!samePlane) { // Track in cell
-    /// first layer
-    wB.SetZ(-0.5*m_zPitch);
-    wT.SetZ(-0.5*m_zPitch);
-    std::vector<unsigned int>::iterator iStraw;
-    for (iStraw = rStraws.begin(); iStraw != rStraws.end(); ++iStraw) {
-      /// Wire bottom
-      wB.SetX(localUOfStraw((*iStraw)));
-      /// Wire top
-      wT.SetX(localUOfStraw((*iStraw))); 
-      StatusCode sc = findDoca(enP, e_p, wB, (wT - wB).unit(), mu, doca); 
-      if (sc == StatusCode::SUCCESS) {
-	double dist = driftDistance(doca);
-	efficientY = isEfficientA(-m_yHalfModule+mu); 
-    	/// Do we have a hit?
-    	if (efficientY && fabs(dist) < m_cellRadius) {
-	  channels.push_back(OTChannelID(m_stationID, m_layerID,
-    					 m_quarterID, m_moduleID, 
-					 (*iStraw)));
-    	  driftDistances.push_back(dist);
-    	}
+    /// Track
+    Gaudi::XYZLine track(enP, (exP-enP).unit());
+    /// Now let's get a list of possible hit straws
+    Straws straws; 
+    findStraws(enP, exP, straws);
+    /// Wire
+    const double z = 0.5*m_zPitch;
+    Gaudi::XYZPoint wB(0.0, m_yMinLocal, -z);
+    Gaudi::XYZPoint wT(0.0, m_yMaxLocal, -z);
+    Gaudi::XYZLine wire;
+    /// Are the wire and track parallel
+    bool notParallel = true;
+    Gaudi::XYZPoint mu;
+    Gaudi::XYZPoint lambda;
+    /// is in efficient region of (F-modules)
+    bool efficientY = true;
+    unsigned int straw = 0u;
+    double x = 0.0;
+    double dist = 0.0; /// lambda - mu
+    OTChannelID aChannel; /// channelID
+    /// loop over straws
+    /// First monolayer
+    Straws::const_iterator iS; 
+    for (iS= straws.begin(); iS != straws.end(); ++iS) {
+      straw = (*iS);
+      x = localUOfStraw(straw);
+      wB.SetX(x);
+      wT.SetX(x); 
+      wire = Gaudi::XYZLine(wB, (wT-wB).unit());
+      notParallel = Gaudi::Math::closestPoints(wire, track, mu, lambda);
+      if (notParallel) {
+        dist = driftDistance(lambda-mu);
+        efficientY = isEfficientA(mu.y());
+        if (efficientY && std::abs(dist) < m_cellRadius) {
+          aChannel = OTChannelID(m_stationID, m_layerID, m_quarterID, m_moduleID, straw);
+          chanAndDist.push_back(std::make_pair(aChannel, dist));
+        }
       }
     }
-    
-    /// second layer
-    wB.SetZ(0.5*m_zPitch);
-    wT.SetZ(0.5*m_zPitch);
-    for (iStraw = rStraws.begin(); iStraw != rStraws.end(); ++iStraw) {
-      /// Wire bottom
-      wB.SetX(localUOfStraw((*iStraw)+m_nStraws));
-      /// Wire top
-      wT.SetX(localUOfStraw((*iStraw)+m_nStraws));
-      StatusCode sc = findDoca(enP, e_p, wB, (wT - wB).unit(), mu, doca); 
-      /// Do we have a hit?
-      if (sc == StatusCode::SUCCESS) {
-	double dist = driftDistance(doca);
-	efficientY = isEfficientB(-m_yHalfModule+mu);
-	if (fabs(dist) < m_cellRadius && efficientY) {
-	  channels.push_back(OTChannelID(m_stationID, m_layerID,
-					 m_quarterID, m_moduleID, 
-					 m_nStraws+(*iStraw)));
-	  driftDistances.push_back(dist);
-	}
+    /// Second monolayer
+    wB.SetZ(z);
+    wT.SetZ(z);
+    for (iS= straws.begin(); iS != straws.end(); ++iS) {
+      straw = (*iS) + m_nStraws;
+      x = localUOfStraw(straw);
+      wB.SetX(x);
+      wT.SetX(x);
+      wire = Gaudi::XYZLine(wB, (wT-wB).Unit());
+      notParallel = Gaudi::Math::closestPoints(wire, track, mu, lambda);
+      if (notParallel) {
+        dist = driftDistance(lambda-mu);
+        efficientY = isEfficientB(mu.y());
+        if (efficientY && std::abs(dist) < m_cellRadius) {
+          aChannel = OTChannelID(m_stationID, m_layerID, m_quarterID, m_moduleID, straw);
+          chanAndDist.push_back(std::make_pair(aChannel, dist));
+        }
       }
-    } 
-  } else { // curly track
-    /// This is the old curly track code. I still need to figure out
-    /// how to treat this better and make it more readable.
-    double x1 = enP.x();
-    double z1 = enP.z();
-    double x2 = exP.x();
-    double z2 = exP.z();
+    }
+  } else {/// Need this to estimate occupancies
+    const double x1 = enP.x();
+    const double z1 = enP.z();
+    const double x2 = exP.x();
+    const double z2 = exP.z();
 
     double uLow = x1;
     double uHigh = x2;      
     if ( uLow > uHigh ) std::swap(uLow, uHigh);
         
-    double distXY = ( exP - enP ).Rho();
-    double z3Circ,zCirc,uCirc,rCirc;
-    double zfrac,zint;
-
     // zfrac is between 0 and 1. 2.7839542167 means nothing.
     // This seems to acts as a random number generator.
     // if distance xy entry-exit is small generate z3 close
     // to the z1 and z2 ( z1 is close to z2)
-    double u1 = (entryPoint.z() > exitPoint.z()) ? exitPoint.x() : entryPoint.x();
-    double v1 = (entryPoint.z() > exitPoint.z()) ? exitPoint.y() : entryPoint.y();
-    zfrac = modf( (std::abs(u1)+std::abs(v1))/2.7839542167, &zint);
-    if (distXY > 2.0 * m_xPitch ) {
-      z3Circ = 2.0 * (zfrac-0.5)*m_zPitch;
-    } else {
-      z3Circ = (z1<0?-zfrac:zfrac)*m_zPitch;
-    }
-
+    /// Circle in global
+    const double u1 = (entryPoint.z() > exitPoint.z()) ? exitPoint.x() : entryPoint.x();
+    const double v1 = (entryPoint.z() > exitPoint.z()) ? exitPoint.y() : entryPoint.y();
+    double zint;
+    const double zfrac = std::modf((std::abs(u1)+std::abs(v1))/2.7839542167, &zint);
+    const double distXY = std::sqrt(( exP - enP ).perp2());
+    double z3Circ = ((distXY > 2.0*m_xPitch) ? 2.0 * (zfrac-0.5) :(z1<0?-zfrac:zfrac))*m_zPitch;
+    double zCirc, uCirc, rCirc;
     sCircle(z1, x1, z2, x2, z3Circ, zCirc, uCirc, rCirc);
     
-    // monolayer A
-    int strawA = hitStrawA(uLow);
-    double zStrawA = localZOfStraw(strawA);
+    
     double uStep = uLow;
+    double distCirc = 0.0;
+    int amb = 0;
+    double dist = 0.0;
+    OTChannelID aChannel;
+    
+    // monolayer A
+    unsigned int strawA = hitStrawA(uLow);
+    const double zStrawA = -0.5*m_zPitch;//localZOfStraw(strawA);
     while ( (uStep < uHigh) && strawA != 0 ) {
       uStep = localUOfStraw(strawA);
-      double distCirc = gsl_hypot((zCirc-zStrawA), (uCirc-uStep));
-      double distTmp = std::abs(distCirc-rCirc);
-      int straw = strawA;
-      double ambTmp = - (uStep-(x1+x2)/2.) * (distCirc-rCirc);
-      if ( distTmp < m_cellRadius ) {
-        if (ambTmp < 0.0 ) distTmp *= -1.0;
-	channels.push_back(OTChannelID(m_stationID, m_layerID, 
-				       m_quarterID, m_moduleID, straw));
-        driftDistances.push_back(distTmp);
+      distCirc = gsl_hypot((zCirc-zStrawA), (uCirc-uStep));
+      amb = ((-(uStep-(x1+x2)/2.0)*(distCirc-rCirc)) < 0.0) ? -1 : 1;
+      dist = amb*std::abs(distCirc-rCirc);
+      const unsigned int straw = strawA;
+      if ( std::abs(dist) < m_cellRadius ) {
+        aChannel = OTChannelID(m_stationID, m_layerID, m_quarterID, m_moduleID, straw);
+        chanAndDist.push_back(std::make_pair(aChannel, dist));
       }
       strawA = nextRightStraw(straw);
     }
-
+    
     // monolayer B
-    int strawB = hitStrawB(uLow);
-    double zStrawB = localZOfStraw(strawB);
+    unsigned int strawB = hitStrawB(uLow);
+    const double zStrawB = 0.5*m_zPitch;//localZOfStraw(strawB);
     uStep = uLow;
     while ( (uStep < uHigh) && strawB != 0 ) {
       uStep = localUOfStraw(strawB);
-      double distCirc = gsl_hypot((zCirc-zStrawB), (uCirc-uStep));
-      double distTmp = std::abs(distCirc-rCirc);
-      int straw = strawB;
-      double ambTmp = - (uStep-(x1+x2)/2.) * (distCirc-rCirc);
-      if ( distTmp < m_cellRadius ) {
-        if (ambTmp < 0.0) distTmp *= -1.0;
-        channels.push_back(OTChannelID( m_stationID, m_layerID, 
-					m_quarterID, m_moduleID, straw));
-        driftDistances.push_back(distTmp);
+      distCirc = gsl_hypot((zCirc-zStrawB), (uCirc-uStep));
+      amb = ((-(uStep-(x1+x2)/2.0)*(distCirc-rCirc))< 0.0) ?  -1 : 1;
+      dist = amb*std::abs(distCirc-rCirc);
+      const unsigned int straw = strawB;
+      if ( std::abs(dist) < m_cellRadius ) {
+        aChannel = OTChannelID(m_stationID, m_layerID, m_quarterID, m_moduleID, straw);
+        chanAndDist.push_back(std::make_pair(aChannel, dist));
       }
       strawB = nextRightStraw(straw);
     }
-  } // curling tracks
-  
-  return StatusCode::SUCCESS;
+  } //curling tracks
 }
 
 void DeOTModule::sCircle(const double z1, const double u1, const double z2, 
                          const double u2, const double z3c,
                          double& zc, double& uc, double& rc) const {
-  
-  double zw=(z1+z2)/2.;
-  double uw=(u2+u1)/2.;
+  const double zw=(z1+z2)/2.0;
+  double uw=(u2+u1)/2.0;
   
   zc=0.5*(z3c*z3c-zw*zw-(u1-uw)*(u1-uw))/(z3c-zw);
   uc=uw;
@@ -384,12 +332,12 @@ void DeOTModule::cacheInfo() {
   /// range -> wire length
   /// wire lenght = module length
   /// first mono layer
-  m_range[0] = std::make_pair(-m_yHalfModule, m_yHalfModule);
+  m_range[0] = std::make_pair(m_yMinLocal, m_yMaxLocal);
   /// second mono layer
-  m_range[1] = std::make_pair(-m_yHalfModule, m_yHalfModule);
+  m_range[1] = std::make_pair(m_yMinLocal, m_yMaxLocal);
   // correct for inefficient regions in long modules
-  if (longModule() && topModule()) m_range[0].first=-m_yHalfModule+m_inefficientRegion;
-  if (longModule() && bottomModule()) m_range[1].first=-m_yHalfModule+m_inefficientRegion;
+  if (longModule() && topModule()) m_range[0].first=m_yMinLocal+m_inefficientRegion;
+  if (longModule() && bottomModule()) m_range[1].first=m_yMinLocal+m_inefficientRegion;
   
   /// plane
   m_plane = Gaudi::Plane3D(g1, g2, g4[0] + 0.5*(g4[1]-g4[0]));
@@ -428,6 +376,6 @@ std::auto_ptr<LHCb::Trajectory> DeOTModule::trajectory(const OTChannelID& aChan,
   unsigned int mono = (monoLayerA(aStraw)?0u:1u);
 
   Gaudi::XYZPoint posWire = m_midTraj[mono]->position(localUOfStraw(aStraw));
-    
+  
   return std::auto_ptr<Trajectory>(new LineTraj(posWire, m_dir, m_range[mono],true));
 }
