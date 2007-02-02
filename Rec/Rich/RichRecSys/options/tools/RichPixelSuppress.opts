@@ -49,3 +49,6 @@ ToolSvc.Offline.RichPixelCreator.PixelSuppressRich2.OccCutScaleFactor      = 14;
 // Options for pixel cluster suppression
 ToolSvc.Offline.RichPixelCreator.PixelSuppressRich2.MaxPixelClusterSize    = 8;
 ToolSvc.Offline.RichPixelCreator.PixelSuppressRich2.MinHPDOccForClustering = 8;
+
+// Clustering tool
+ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::DAQ::HPDPixelClusteringTool/ClusteringTool" };
