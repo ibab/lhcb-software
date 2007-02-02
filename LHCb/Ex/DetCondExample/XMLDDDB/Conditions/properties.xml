@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE DDDB SYSTEM "../DTD/geometry.dtd">
+<!-- $Id: properties.xml,v 1.1 2007-02-02 18:19:27 marcocle Exp $ -->
+<DDDB> 
+  <catalog name="Properties">
+    <tabpropertyref href="Tests/Properties/TestFunction.xml#TestFunction"/>
+  </catalog>
+</DDDB>

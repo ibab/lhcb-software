@@ -1,4 +1,4 @@
-//$Id: TestConditionsOverride.opts,v 1.1 2006-10-25 13:48:12 marcocle Exp $
+//$Id: TestConditionsOverride.opts,v 1.2 2007-02-02 18:17:21 marcocle Exp $
 //==============================================================
 // Job options to test double CondDB usage in DetCondExample
 //==============================================================
@@ -41,7 +41,7 @@ MessageSvc.OutputLevel = 1;
 //--------------------------------------------------------------
 ApplicationMgr.DLLs += { "DetCond" };
 
-DetectorPersistencySvc.CnvServices += { "CondDBCnvSvc" };
+//DetectorPersistencySvc.CnvServices += { "CondDBCnvSvc" };
 CondDBCnvSvc.CondDBReader = "CondDBAccessSvc/DB2"  ;
 
 DB2.ConnectionString     = "$CONDDBCONNECTIONSTRING2";

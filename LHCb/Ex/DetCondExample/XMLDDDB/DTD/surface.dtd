@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: surface.dtd,v 1.1 2001-12-17 15:46:14 andreav Exp $ -->
 
 <!-- Surface                    (V.B., March'2k+1 3) -->
 <!ELEMENT surface       (tabprops*)>

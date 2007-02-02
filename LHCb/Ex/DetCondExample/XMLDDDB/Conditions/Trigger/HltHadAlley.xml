@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE DDDB SYSTEM "../../DTD/structure.dtd">
+<DDDB>
+
+ <!-- author: Jose Angel Hernando Morata -->
+
+ <catalog name = "HltHadAlley">
+
+    <condition name = "HltHadIPSelSoft">
+      <param name = "MinIP" type = "double">  0.1</param>
+      <param name = "MaxIP" type = "double">  3.0</param>
+    </condition>
+
+    <condition name = "HltHadIPSelHard">
+      <param name = "MinIP" type = "double">  0.15</param>
+      <param name = "MaxIP" type = "double">  3.0</param>
+    </condition>
+
+    <condition name = "HltHadPreTriggerSingle">
+      <param name = "MinPt" type = "double">  2550.</param>
+    </condition>
+
+    <condition name = "HltHadPreTriggerDiHadron">
+      <param name = "MaxPt" type = "double">  2550.</param>
+      <param name = "MinPt1" type = "double"> 1150.</param>
+      <param name = "MinPt2" type = "double">  850.</param>
+    </condition>
+
+    <condition name = "HltHadTrigger">
+      <param name = "MinPt" type = "double">   1000.</param>
+      <param name = "MaxDOCA" type = "double"> 0.20 </param>
+      <param name = "MinDZ" type = "double">   0.00 </param>
+      <param name = "MaxFC" type = "double">   0.45 </param>
+    </condition>
+
+ </catalog>
+</DDDB>

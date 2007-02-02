@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE DDDB SYSTEM "../../DTD/geometry.dtd">
+<DDDB>
+<!-- """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""" --> 
+<!--   
+  CVS tag: $Name: not supported by cvs2svn $
+  $Log: not supported by cvs2svn $
+  Revision 1.1.1.1  2007/01/30 13:34:59  marcocle
+  CVS based back up for the SQLite conditions database
+
+  Revision 1.7  2006/03/09 16:33:30  cattanem
+  Calo tilt
+
+  Revision 1.6  2006/02/06 15:54:00  cattanem
+  DC06 geometry and cleanup of older stuff
+
+  Revision 1.5  2005/06/06 15:59:43  gcorti
+  Calo tilt
+
+  Revision 1.4  2003/12/05 13:59:42  cattanem
+  add Calo changes
+
+  Revision 1.3  2003/06/19 06:18:22  cattanem
+  v16r0
+
+  Revision 1.2  2002/09/12 09:32:57  cattanem
+  Add vertical Rich, Velo optimisation
+
+  Revision 1.1  2001/12/15 16:05:36  ibelyaev
+  The first version of  detailed Ecal description by Galina Pakhlova
+--> 
+<!-- """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""" --> 
+<!-- ****************************************************************** --> 
+<!--               Electromagnetic Calorimeter Geometry                 -->
+<!-- ****************************************************************** --> 
+<!-- ### XY Geometry ### 
+     Ecal Inner Support Frame: 4 * 4 Module Sizes - Hole for Beam Pipe; 
+     Ecal Inner  Section: 16 * 12 Module Sizes -  4 *  4 Modules Sizes;
+     Ecal Middle Section: 32 * 20 Module Sizes - 16 * 12 Modules Sizes;
+     Ecal Outer  Section: 64 * 52 Module Sizes - 32 * 20 Modules Sizes. 
+     ### Z Geometry ###  
+     Ecal starts at Z=12520*mm from the interaction point with a total
+     space along Z of 825*mm; Ecal Modules geometry centers are offset
+     to the center of the total ECAL space.                             -->
+<!-- ****************************************************************** --> 
+<!--                  Logical Volumes Definition                        --> 
+<!-- ****************************************************************** --> 
+
+  <logvol  name = "Ecal" material = "Vacuum" magfield="ZeroFieldMgr/ZeroField">
+       <subtraction name = "Ecal_Total">
+    	    <box  name  = "Ecal_Box"
+        	sizeX = "EcalXSize"
+                sizeY = "EcalYSize"
+                sizeZ = "EcalZSize"/>
+   	    <polycone name="EcalPipeHole"
+                startPhiAngle="0*degree"
+                deltaPhiAngle="360*degree">
+                <zplane innerRadius="0.0*mm" outerRadius="EcalBeamPlugPipeHoleR1" z="EcalBeamPlugPipeHoleZ1"/>
+                <zplane innerRadius="0.0*mm" outerRadius="EcalBeamPlugPipeHoleR2" z="EcalBeamPlugPipeHoleZ2"/>
+                <zplane innerRadius="0.0*mm" outerRadius="EcalBeamPlugPipeHoleR3" z="EcalBeamPlugPipeHoleZ3"/>
+                <zplane innerRadius="0.0*mm" outerRadius="EcalBeamPlugPipeHoleR4" z="EcalBeamPlugPipeHoleZ4"/>
+                <zplane innerRadius="0.0*mm" outerRadius="EcalBeamPlugPipeHoleR5" z="EcalBeamPlugPipeHoleZ5"/>
+                <zplane innerRadius="0.0*mm" outerRadius="EcalBeamPlugPipeHoleR6" z="EcalBeamPlugPipeHoleZ6"/>
+
+   	    </polycone>
+            <posXYZ x = "0.0*mm"
+                    y = "-EcalYShift"
+                    z = "0.0*mm"/>
+            <rotXYZ rotX="-EcalTiltAngle"/>
+       </subtraction>
+
+       <physvol name = "FiberShield"
+	        logvol = "/dd/Geometry/DownstreamRegion/Ecal/Installation/Shield"> 
+                   <posXYZ   z = "EcalShieldOffset"/>
+       </physvol>
+
+
+       <physvol name = "InnSupportFrame"
+	        logvol = "/dd/Geometry/DownstreamRegion/Ecal/Installation/PlugSupport"> 
+                   <posXYZ   z = "EcalSupportOffset"/>
+       </physvol>
+
+       <physvol name = "InnerSection"
+                logvol = "/dd/Geometry/DownstreamRegion/Ecal/Installation/InnSection"> 
+                   <posXYZ   z = "EcalInnOffset"/>
+       </physvol>
+
+       <physvol name   = "MiddleSection"
+                logvol = "/dd/Geometry/DownstreamRegion/Ecal/Installation/MidSection"> 
+                   <posXYZ   z = "EcalMidOffset"/>
+       </physvol>
+
+       <physvol name = "OuterSection"
+                logvol = "/dd/Geometry/DownstreamRegion/Ecal/Installation/OutSection"> 
+                   <posXYZ   z = "EcalOutOffset"/>
+       </physvol>
+
+ </logvol>
+<!-- ****************************************************************** --> 
+</DDDB> 

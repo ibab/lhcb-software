@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE DDDB SYSTEM "../../DTD/geometry.dtd">
+<DDDB>
+  <!-- """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""" --> 
+  <!--   
+  CVS tag: $Name: not supported by cvs2svn $
+  $Log: not supported by cvs2svn $
+  Revision 1.1.1.1  2007/01/30 13:34:59  marcocle
+  CVS based back up for the SQLite conditions database
+
+  Revision 1.8  2006/02/06 15:54:00  cattanem
+  DC06 geometry and cleanup of older stuff
+
+  Revision 1.7  2005/06/06 15:59:43  gcorti
+  Calo tilt
+
+  Revision 1.6  2003/06/19 06:18:23  cattanem
+  v16r0
+
+  Revision 1.5  2003/02/11 13:29:20  ranjard
+  v15r3 - Add some missing sensitive detector declarations for Ecal
+
+  Revision 1.4  2002/09/12 09:32:59  cattanem
+  Add vertical Rich, Velo optimisation
+  
+  Revision 1.3  2002/02/20 21:18:11  pakhlova
+  G.P.: avoid overlapping volumes
+  
+  Revision 1.2  2002/01/19 13:58:43  ibelyaev
+  fix the bug with material names/paths
+  
+  Revision 1.1  2001/12/15 16:05:38  ibelyaev
+  The first version of  detailed Ecal description by Galina Pakhlova
+  
+  --> 
+<!-- """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""" --> 
+<!-- For Outer Cell:
+  Plastic Plate, Steel Plate, Pb Plate
+  Geometry Logical Volumes are defined                           --> 
+<!-- ******************************************************************* --> 
+<!--                   Outer Cell: Plastic Plate Geometry                -->
+<!-- ******************************************************************* --> 
+
+  <logvol name = "OutCellPlastic" material = "Ecal/EcalPlastic">
+      <box   name  = "Plastic_Cell_Box"
+             sizeX = "EcalOutCellXYSize"
+             sizeY = "EcalOutCellXYSize"
+             sizeZ = "EcalPlasticThick"/>
+  </logvol>
+
+<!-- ******************************************************************* --> 
+<!--                   Outer Cell: Steel Plate Geometry                  -->
+<!-- ******************************************************************* --> 
+  
+  <logvol name = "OutCellSteel" material ="Ecal/EcalSteel">
+      <box   name  = "Steel_Cell_Box"
+             sizeX = "EcalOutCellXYSize"
+             sizeY = "EcalOutCellXYSize"
+             sizeZ = "EcalSteelThick"/>
+  </logvol>
+
+<!-- ******************************************************************* --> 
+<!--                   Outer Cell: Pb Plate Geometry                     -->
+<!-- ******************************************************************* --> 
+  
+  <logvol name = "OutCellPb" material = "Ecal/EcalPb">
+      <box   name  = "Pb_Cell_Box"
+             sizeX = "EcalOutCellXYSize"
+             sizeY = "EcalOutCellXYSize"
+             sizeZ = "EcalPbThick"/>
+
+<!-- %%%   Fiber Installation into Pb Cell   %%% -->
+    
+    <paramphysvol2D number1 = "8" number2 = "8">
+      <physvol name = "OuterPbFiber"
+        logvol = "/dd/Geometry/DownstreamRegion/Ecal/Modules/FiberPb">
+        <posXYZ x = "-3.5*EcalOutSubCellXYSize"
+          y = " 3.5*EcalOutSubCellXYSize"/>
+      </physvol>
+      <posXYZ x = "EcalOutSubCellXYSize"/>
+      <posXYZ y = "-1*EcalOutSubCellXYSize"/>
+    </paramphysvol2D>
+
+<!-- %%%%%% --> 
+
+  </logvol>
+
+<!-- ******************************************************************* --> 
+</DDDB> 

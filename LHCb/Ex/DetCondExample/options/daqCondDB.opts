@@ -1,16 +1,10 @@
-//$Id: daqCondDB.opts,v 1.6 2005-09-18 16:15:16 marcocle Exp $
+//$Id: daqCondDB.opts,v 1.7 2007-02-02 18:17:21 marcocle Exp $
 //==============================================================
 // Job options for DetCondExample DAQ test of CondDB
 //==============================================================
 
 #include "$DETCONDEXAMPLEROOT/options/common.opts"
 #include "$DETCONDEXAMPLEROOT/options/cool.opts"
-
-// Add other external services to the list of known services
-ApplicationMgr.ExtSvc += { "CondDBCnvSvc" };
-
-// Detector Persistency service setup: 
-DetectorPersistencySvc.CnvServices += { "CondDBCnvSvc" };
 
 //--------------------------------------------------------------
 // Sequence of algorithms to be applied

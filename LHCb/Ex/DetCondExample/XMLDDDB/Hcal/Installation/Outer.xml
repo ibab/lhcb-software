@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE DDDB SYSTEM "../../DTD/geometry.dtd">
+<DDDB>
+
+<!--
+
+   $Id: Outer.xml,v 1.1 2007-02-02 18:19:30 marcocle Exp $ 
+   CVS tag $Name: not supported by cvs2svn $
+   $Log: not supported by cvs2svn $
+   Revision 1.1.1.1  2007/01/30 13:34:59  marcocle
+   CVS based back up for the SQLite conditions database
+
+   Revision 1.5  2006/02/06 15:54:01  cattanem
+   DC06 geometry and cleanup of older stuff
+
+   Revision 1.4  2005/06/06 16:03:09  gcorti
+   Calo tilt
+
+   Revision 1.3  2002/09/12 09:33:01  cattanem
+   Add vertical Rich, Velo optimisation
+
+   Revision 1.2  2002/01/19 16:20:32  aberdiou
+    new description of Hcal
+
+
+-->
+
+  <!-- **************************************************************** --> 
+  <!--    Geometry of the Outer Section of the Hadronic Calorimeter     -->
+  <!--                   Logical Volumes Definition                     --> 
+  <!-- **************************************************************** --> 
+  <!--      Hcal Outer Section: 32 * 26 cells - 16 * 14 Cells           -->
+  <!-- **************************************************************** --> 
+  <logvol name = "lvHcalOuterSection" material = "Vacuum">
+    <subtraction name = "HcalOuterSection">
+      <box name = "HcalOuterSectionBox"
+	sizeX = "2.0*HcalModXSize+HcalXGap"
+	sizeY = "26.0*HcalModYSize+26*HcalYGap"
+	sizeZ = "HcalTotLength"/>
+  <!-- %%%%%%%%%%      Substracted Box for Inner Section     %%%%%%%%%% -->
+      <box name = "HcalOuterSectionSubtractedBox"
+	sizeX = "HcalModXSize+HcalXGap"
+	sizeY = "14.0*HcalModYSize+14*HcalYGap"
+	sizeZ = "HcalTotLength+HcalTolerance"/>
+    </subtraction>
+    
+  <!--				Left Side  				-->
+    
+  <!-- %%%%%%%%%%            2x6 Upper Half-Modules          %%%%%%%%%% -->
+
+    <paramphysvol2D number1 = "2" number2 = "6">
+      <physvol name = "pvHcalOutUpHalfModuleLeft"
+        logvol = "/dd/Geometry/DownstreamRegion/Hcal/Installation/lvHcalOutHalfModule">
+        <posXYZ x = "-0.75*HcalModXSize-0.5*HcalXGap"
+                y = "7.5*HcalModYSize+7.5*HcalYGap"/>
+      </physvol>
+      <posXYZ x = "0.5*HcalModXSize"/>
+      <posXYZ y = "1.0*HcalModYSize+HcalYGap"/>
+    </paramphysvol2D>
+
+  <!-- %%%%%%%%%%          14 Middle Half-Modules          %%%%%%%%%% -->
+
+    <paramphysvol number = "14">
+      <physvol name = "pvHcalOutMidlHalfModuleLeft"
+        logvol = "/dd/Geometry/DownstreamRegion/Hcal/Installation/lvHcalOutHalfModule">
+        <posXYZ x = "-0.75*HcalModXSize-0.5*HcalXGap"
+                y = "-6.5*HcalModYSize-6.5*HcalYGap"/>
+      </physvol>
+      <posXYZ y = "1.0*HcalModYSize+HcalYGap"/>
+    </paramphysvol>
+
+  <!-- %%%%%%%%%%            2x6 Lower Half-Modules          %%%%%%%%%% -->
+
+    <paramphysvol2D number1 = "2" number2 = "6">
+      <physvol name = "pvHcalOutLowHalfModuleLeft"
+        logvol = "/dd/Geometry/DownstreamRegion/Hcal/Installation/lvHcalOutHalfModule">
+        <posXYZ x = "-0.75*HcalModXSize-0.5*HcalXGap"
+                y = "-12.5*HcalModYSize-12.5*HcalYGap"/>
+      </physvol>
+      <posXYZ x = "0.5*HcalModXSize"/>
+      <posXYZ y = "1.0*HcalModYSize+HcalYGap"/>
+    </paramphysvol2D>
+    
+  <!--				Right Side  				-->
+    
+  <!-- %%%%%%%%%%            2x6 Upper Half-Modules          %%%%%%%%%% -->
+
+    <paramphysvol2D number1 = "2" number2 = "6">
+      <physvol name = "pvHcalOutUpHalfModuleRight"
+        logvol = "/dd/Geometry/DownstreamRegion/Hcal/Installation/lvHcalOutHalfModule">
+        <posXYZ x = "0.75*HcalModXSize+0.5*HcalXGap"
+                y = "7.5*HcalModYSize+7.5*HcalYGap"/>
+	<rotXYZ rotZ = "180*degree"/>
+      </physvol>
+      <posXYZ x = "-0.5*HcalModXSize"/>
+      <posXYZ y = "1.0*HcalModYSize+HcalYGap"/>
+    </paramphysvol2D>
+
+  <!-- %%%%%%%%%%          14 Middle Half-Modules          %%%%%%%%%% -->
+
+    <paramphysvol number = "14">
+      <physvol name = "pvHcalOutMidlHalfModuleRight"
+        logvol = "/dd/Geometry/DownstreamRegion/Hcal/Installation/lvHcalOutHalfModule">
+        <posXYZ x = "0.75*HcalModXSize+0.5*HcalXGap"
+                y = "-6.5*HcalModYSize-6.5*HcalYGap"/>
+	<rotXYZ rotZ = "180*degree"/>
+      </physvol>
+      <posXYZ y = "1.0*HcalModYSize+HcalYGap"/>
+    </paramphysvol>
+
+  <!-- %%%%%%%%%%            2x6 Lower Half-Modules          %%%%%%%%%% -->
+
+    <paramphysvol2D number1 = "2" number2 = "6">
+      <physvol name = "pvHcalOutLowHalfModuleRight"
+        logvol = "/dd/Geometry/DownstreamRegion/Hcal/Installation/lvHcalOutHalfModule">
+        <posXYZ x = "0.75*HcalModXSize+0.5*HcalXGap"
+                y = "-12.5*HcalModYSize-12.5*HcalYGap"/>
+	<rotXYZ rotZ = "180*degree"/>
+      </physvol>
+      <posXYZ x = "-0.5*HcalModXSize"/>
+      <posXYZ y = "1.0*HcalModYSize+HcalYGap"/>
+    </paramphysvol2D>
+
+  </logvol>
+  <!-- **************************************************************** --> 
+  <!-- %%%%%%%%%%           Outer Half-Module                %%%%%%%%%% -->
+  <!-- **************************************************************** --> 
+  <logvol name = "lvHcalOutHalfModule" material = "Vacuum">
+    <box name  = "HcalOutHalfModuleBox"
+      sizeX = "0.5*HcalModXSize"
+      sizeY = "HcalModYSize"
+      sizeZ = "HcalTotLength"/>
+
+  <!-- %%%%%%%%%%          Work Part of 8 Cells             %%%%%%%%%% -->
+    <paramphysvol number="8">
+      <physvol name="pvHcalOutHalfSubModuleWorkPart"
+        logvol="/dd/Geometry/DownstreamRegion/Hcal/Installation/lvHcalOutHalfSubModuleWorkPart">
+        <posXYZ x = "-3.5*HcalOutCellXSize"
+                y = "0.0*mm"
+                z = "-0.5*HcalTotLength+0.5*HcalFwFaceLength+3.0*HcalMsPlStepLength+0.5*HcalBkFaceTotLength"/>
+      </physvol>
+      <posXYZ x="HcalOutCellXSize"/>
+    </paramphysvol>
+  <!-- %%%%%%%%%%        Reinforce Face for 8 Cells         %%%%%%%%%% -->
+    <paramphysvol number="8">
+      <physvol name="pvHcalOutHalfSubModuleReinforce"
+        logvol="/dd/Geometry/DownstreamRegion/Hcal/Cells/lvHcalHalfSubModuleReinforce">
+        <posXYZ x = "-3.5*HcalOutCellXSize"
+                y = "0.0*mm"
+                z = "0.5*HcalFwFaceLength+3.0*HcalMsPlStepLength+0.5*HcalBkFaceTotLength"/>
+      </physvol>
+      <posXYZ x="HcalOutCellXSize"/>
+    </paramphysvol>
+  </logvol> 
+  <!-- **************************************************************** --> 
+  <!-- %%%%%%%%%%       Work Part of the Half-SubModule      %%%%%%%%%% -->
+  <!-- **************************************************************** --> 
+  <logvol name = "lvHcalOutHalfSubModuleWorkPart" material = "Air">
+    <box name = "HcalOutHalfSubModuleWorkPartBox"
+      sizeX = "HcalOutCellXSize"
+      sizeY = "HcalOutCellYSize"
+      sizeZ = "HcalFwFaceLength+6.0*HcalMsPlStepLength+HcalBkFaceTotLength"/>
+  <!-- %%%%%%%%%%             Foward Face for Cell          %%%%%%%%%% -->
+    <physvol name="pvHcalOutCellFwFaceSubModule"
+      logvol="/dd/Geometry/DownstreamRegion/Hcal/Cells/lvHcalFwFaceSubModule">
+      <posXYZ x = "0.0*mm"
+              y = "0.0*mm"
+              z = "-3.0*HcalMsPlStepLength-0.5*HcalBkFaceTotLength"/>
+    </physvol>
+  <!-- %%%%%%%%%%               Working Stuff                %%%%%%%%%% -->
+    <physvol name = "lvHcalOutCellWorkStuff"
+      logvol = "/dd/Geometry/DownstreamRegion/Hcal/Cells/lvHcalOutCellWorkStuff"> 
+      <posXYZ x = "0.0*mm"
+              y = "0.0*mm"
+              z = "0.5*HcalFwFaceLength-0.5*HcalBkFaceTotLength"/>
+    </physvol>
+  <!-- %%%%%%%%%%           Backward Face for Cell          %%%%%%%%%% -->
+    <physvol name="pvHcalOutCellBkFaceSubModule"
+      logvol="/dd/Geometry/DownstreamRegion/Hcal/Cells/lvHcalBkFaceSubModule">
+      <posXYZ x = "0.0*mm"
+              y = "0.0*mm"
+              z = "0.5*HcalFwFaceLength+3.0*HcalMsPlStepLength"/>
+    </physvol>
+  </logvol>
+  <!-- **************************************************************** --> 
+</DDDB> 

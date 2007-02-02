@@ -1,4 +1,4 @@
-//$Id: common.opts,v 1.5 2005-12-08 11:41:08 marcocle Exp $
+//$Id: common.opts,v 1.6 2007-02-02 18:17:21 marcocle Exp $
 //==============================================================
 // Common job options for all DetCondExample tests
 //==============================================================
@@ -6,9 +6,6 @@
 //--------------------------------------------------------------
 // Services needed in the application
 //--------------------------------------------------------------
-
-// Dynamically load component library for DetCond services and converters
-ApplicationMgr.DLLs    = { "DetDescSvc", "GaudiAlg", "XmlTools", "DetDescCnv" };
 
 // No histograms are needed in this example
 ApplicationMgr.HistogramPersistency = "NONE";
@@ -24,11 +21,10 @@ MessageSvc.Format = "% F%25W%S%7W%R%T %0W%M";
 // Detector Description Options
 //--------------------------------------------------------------
 DetectorDataSvc.UsePersistency = true;
-DetectorDataSvc.DetDbLocation  = "$DETCONDEXAMPLE_XMLDDDB/dddb.xml";
+DetectorDataSvc.DetDbLocation  = "$DETCONDEXAMPLE_XMLDDDB/lhcb.xml";
 DetectorDataSvc.DetDbRootName  = "dd";
 DetectorDataSvc.DetStorageType = 7;
 XmlCnvSvc.AllowGenericConversion = true;
-XmlCnvSvc.DtdLocation = "$DETCONDEXAMPLE_XMLDDDB/DTD";
 
 //--------------------------------------------------------------
 // Detector Persistency Service Setup

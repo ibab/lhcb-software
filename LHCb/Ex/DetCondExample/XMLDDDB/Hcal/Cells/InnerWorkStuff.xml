@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE DDDB SYSTEM "../../DTD/geometry.dtd">
+<DDDB>
+
+<!--
+
+   $Id: InnerWorkStuff.xml,v 1.1 2007-02-02 18:19:30 marcocle Exp $ 
+   CVS tag $Name: not supported by cvs2svn $
+   $Log: not supported by cvs2svn $
+   Revision 1.1.1.1  2007/01/30 13:34:59  marcocle
+   CVS based back up for the SQLite conditions database
+
+   Revision 1.5  2006/02/06 15:54:01  cattanem
+   DC06 geometry and cleanup of older stuff
+
+   Revision 1.4  2005/06/06 16:03:09  gcorti
+   Calo tilt
+
+   Revision 1.3  2002/09/12 09:33:01  cattanem
+   Add vertical Rich, Velo optimisation
+
+   Revision 1.2  2002/01/19 16:20:32  aberdiou
+    new description of Hcal
+
+
+-->
+
+  <!-- **************************************************************** --> 
+  <!--            Geometry of the Working Stuff Inner Cells             -->
+  <!--                  of the Hadronic Calorimeter                     -->
+  <!-- **************************************************************** --> 
+  <!--                   Logical Volumes Definition                     --> 
+  <!-- **************************************************************** --> 
+  <!-- %%%%%%% Upper Right Common Part Type of the Working Stuff %%%%%% -->
+  <!-- **************************************************************** --> 
+  <logvol name = "lvHcalInnCellUpRightComPartWorkStuff" material = "Air">
+    <box name  = "HcalInnCellUpRightComPartWorkStuffBox"
+      sizeX = "0.5*HcalCellPeriodWidth"
+      sizeY = "0.5*HcalMsPlHeight"
+      sizeZ = "2.0*HcalMsPlStepLength"/>
+  <!-- **************************************************************** --> 
+  <!-- %%%%%%%%%%                  1st Layer                 %%%%%%%%%% -->
+  <!-- **************************************************************** --> 
+  <!-- %%%%%%%%%%                Master Plate                %%%%%%%%%% -->
+    <physvol name = "pvHcalInnCellUpRightMsPl"
+      logvol = "/dd/Geometry/DownstreamRegion/Hcal/Cells/lvHcalInnCellUpMsPlBox"> 
+      <posXYZ x = "HcalInnCellXPos1stLayer*HcalCellPeriodWidth"
+              y = "0.0*mm"
+              z = "0.0*mm"/>
+    </physvol>
+  <!-- **************************************************************** --> 
+  <!-- %%%%%%%%%%                  2nd Layer                 %%%%%%%%%% -->
+  <!-- **************************************************************** --> 
+  <!-- %%%%%%%%%%      Foward Small Inner Spacer             %%%%%%%%%% -->
+    <physvol name = "pvHcalInnCellUpRightFwSmSpacer"
+      logvol = "/dd/Geometry/DownstreamRegion/Hcal/Cells/lvHcalInnCellUpFwSmSpacer"> 
+      <posXYZ x = "HcalInnCellXPos2ndLayer*HcalCellPeriodWidth"
+              y = "-0.25*HcalMsPlHeight+0.25*HcalSpacerHeigth"
+              z = "-1.25*HcalMsPlStepLength+0.25*HcalSpacerLength"/>
+    </physvol>
+  <!-- %%%%%%%%%%             Scintillating Tile             %%%%%%%%%% -->
+    <physvol name = "pvHcalInnCellUpRightScTile"
+      logvol = "/dd/Geometry/DownstreamRegion/Hcal/Cells/lvHcalInnCellUpScTileBox"> 
+      <posXYZ x = "HcalInnCellXPos2ndLayer*HcalCellPeriodWidth"
+              y = "-0.25*HcalMsPlHeight+0.5*HcalScTileSlitWidth+0.25*HcalScTileHeigth"
+              z = "-0.5*HcalMsPlStepLength"/>
+    </physvol>
+  <!-- %%%%%%%%%%      Backward Big Inner Spacer             %%%%%%%%%% -->
+    <physvol name = "pvHcalInnCellUpRightBkBigSpacer"
+      logvol = "/dd/Geometry/DownstreamRegion/Hcal/Cells/lvHcalInnCellUpBkBigSpacerBox"> 
+      <posXYZ x = "HcalInnCellXPos2ndLayer*HcalCellPeriodWidth"
+              y = "-0.25*HcalMsPlHeight+0.25*HcalSpacerHeigth"
+              z = "0.75*HcalMsPlStepLength-0.25*HcalSpacerLength"/>
+    </physvol>
+  </logvol>
+  <!-- **************************************************************** --> 
+  <!-- %%%%%%% Upper Left Common Part Type of the Working Stuff %%%%%%% -->
+  <!-- **************************************************************** --> 
+  <logvol name = "lvHcalInnCellUpLeftComPartWorkStuff" material = "Air">
+    <box name  = "HcalInnCellUpLeftComPartWorkStuffBox"
+      sizeX = "0.5*HcalCellPeriodWidth"
+      sizeY = "0.5*HcalMsPlHeight"
+      sizeZ = "2.0*HcalMsPlStepLength"/>
+  <!-- **************************************************************** --> 
+  <!-- %%%%%%%%%%                   3d Layer                 %%%%%%%%%% -->
+  <!-- **************************************************************** --> 
+  <!-- %%%%%%%%%%                Master Plate                %%%%%%%%%% -->
+    <physvol name = "pvHcalInnCellUpLeftMsPl"
+      logvol = "/dd/Geometry/DownstreamRegion/Hcal/Cells/lvHcalInnCellUpMsPlBox"> 
+      <posXYZ x = "HcalInnCellXPos1stLayer*HcalCellPeriodWidth"
+              y = "0.0*mm"
+              z = "0.0*mm"/>
+    </physvol>
+  <!-- **************************************************************** --> 
+  <!-- %%%%%%%%%%                  4th Layer                 %%%%%%%%%% -->
+  <!-- **************************************************************** --> 
+  <!-- %%%%%%%%%%        Foward Big Inner Spacer             %%%%%%%%%% -->
+    <physvol name = "lvHcalInnCellUpLeftFwBigSpacer"
+      logvol = "/dd/Geometry/DownstreamRegion/Hcal/Cells/lvHcalInnCellUpFwBigSpacerBox"> 
+      <posXYZ x = "HcalInnCellXPos2ndLayer*HcalCellPeriodWidth"
+              y = "-0.25*HcalMsPlHeight+0.25*HcalSpacerHeigth"
+              z = "-0.75*HcalMsPlStepLength+0.25*HcalSpacerLength"/>
+    </physvol>
+  <!-- %%%%%%%%%%             Scintillating Tile             %%%%%%%%%% -->
+    <physvol name = "pvHcalInnCellUpLeftScTile"
+      logvol = "/dd/Geometry/DownstreamRegion/Hcal/Cells/lvHcalInnCellUpScTileBox"> 
+      <posXYZ x = "HcalInnCellXPos2ndLayer*HcalCellPeriodWidth"
+              y = "-0.25*HcalMsPlHeight+0.5*HcalScTileSlitWidth+0.25*HcalScTileHeigth"
+              z = "0.5*HcalMsPlStepLength"/>
+    </physvol>
+  <!-- %%%%%%%%%%      Backward Small Inner Spacer           %%%%%%%%%% -->
+    <physvol name = "pvHcalInnCellUpLeftBkSmSpacer"
+      logvol = "/dd/Geometry/DownstreamRegion/Hcal/Cells/lvHcalInnCellUpBkSmSpacer"> 
+      <posXYZ x = "HcalInnCellXPos2ndLayer*HcalCellPeriodWidth"
+              y = "-0.25*HcalMsPlHeight+0.25*HcalSpacerHeigth"
+              z = "1.25*HcalMsPlStepLength-0.25*HcalSpacerLength"/>
+    </physvol>
+  </logvol> 
+  <!-- **************************************************************** --> 
+  <!-- %%%%%%% Lower Right Common Part Type of the Working Stuff %%%%%% -->
+  <!-- **************************************************************** --> 
+  <logvol name = "lvHcalInnCellLowRightComPartWorkStuff" material = "Air">
+    <box name  = "HcalInnCellLowRightComPartWorkStuffBox"
+      sizeX = "0.5*HcalCellPeriodWidth"
+      sizeY = "0.5*HcalMsPlHeight"
+      sizeZ = "2.0*HcalMsPlStepLength"/>
+  <!-- **************************************************************** --> 
+  <!-- %%%%%%%%%%                  1st Layer                 %%%%%%%%%% -->
+  <!-- **************************************************************** --> 
+  <!-- %%%%%%%%%%                Master Plate                %%%%%%%%%% -->
+    <physvol name = "pvHcalInnCellLowRightMsPl"
+      logvol = "/dd/Geometry/DownstreamRegion/Hcal/Cells/lvHcalInnCellLowMsPlBox"> 
+      <posXYZ x = "HcalInnCellXPos1stLayer*HcalCellPeriodWidth"
+              y = "0.0*mm"
+              z = "0.0*mm"/>
+    </physvol>
+  <!-- **************************************************************** --> 
+  <!-- %%%%%%%%%%                  2nd Layer                 %%%%%%%%%% -->
+  <!-- **************************************************************** --> 
+  <!-- %%%%%%%%%%      Foward Small Inner Spacer             %%%%%%%%%% -->
+    <physvol name = "pvHcalInnCellLowRightFwSmSpacer"
+      logvol = "/dd/Geometry/DownstreamRegion/Hcal/Cells/lvHcalInnCellLowFwSmSpacer"> 
+      <posXYZ x = "HcalInnCellXPos2ndLayer*HcalCellPeriodWidth"
+              y = "0.25*HcalMsPlHeight-0.25*HcalSpacerHeigth"
+              z = "-1.25*HcalMsPlStepLength+0.25*HcalSpacerLength"/>
+    </physvol>
+  <!-- %%%%%%%%%%             Scintillating Tile             %%%%%%%%%% -->
+    <physvol name = "pvHcalInnCellLowRightScTile"
+      logvol = "/dd/Geometry/DownstreamRegion/Hcal/Cells/lvHcalInnCellLowScTileBox"> 
+      <posXYZ x = "HcalInnCellXPos2ndLayer*HcalCellPeriodWidth"
+              y = "0.25*HcalMsPlHeight-0.5*HcalScTileSlitWidth-0.25*HcalScTileHeigth"
+              z = "-0.5*HcalMsPlStepLength"/>
+    </physvol>
+  <!-- %%%%%%%%%%      Backward Big Inner Spacer             %%%%%%%%%% -->
+    <physvol name = "pvHcalInnCellLowRightBkBigSpacer"
+      logvol = "/dd/Geometry/DownstreamRegion/Hcal/Cells/lvHcalInnCellLowBkBigSpacerBox"> 
+      <posXYZ x = "HcalInnCellXPos2ndLayer*HcalCellPeriodWidth"
+              y = "0.25*HcalMsPlHeight-0.25*HcalSpacerHeigth"
+              z = "0.75*HcalMsPlStepLength-0.25*HcalSpacerLength"/>
+    </physvol>
+  </logvol>
+  <!-- **************************************************************** --> 
+  <!-- %%%%%%% Lower Left Common Part Type of the Working Stuff %%%%%%% -->
+  <!-- **************************************************************** --> 
+  <logvol name = "lvHcalInnCellLowLeftComPartWorkStuff" material = "Air">
+    <box name  = "HcalInnCellLowLeftComPartWorkStuffBox"
+      sizeX = "0.5*HcalCellPeriodWidth"
+      sizeY = "0.5*HcalMsPlHeight"
+      sizeZ = "2.0*HcalMsPlStepLength"/>
+  <!-- **************************************************************** --> 
+  <!-- %%%%%%%%%%                   3d Layer                 %%%%%%%%%% -->
+  <!-- **************************************************************** --> 
+  <!-- %%%%%%%%%%                Master Plate                %%%%%%%%%% -->
+    <physvol name = "pvHcalInnCellLowLeftMsPl"
+      logvol = "/dd/Geometry/DownstreamRegion/Hcal/Cells/lvHcalInnCellLowMsPlBox"> 
+      <posXYZ x = "HcalInnCellXPos1stLayer*HcalCellPeriodWidth"
+              y = "0.0*mm"
+              z = "0.0*mm"/>
+    </physvol>
+  <!-- **************************************************************** --> 
+  <!-- %%%%%%%%%%                  4th Layer                 %%%%%%%%%% -->
+  <!-- **************************************************************** --> 
+  <!-- %%%%%%%%%%        Foward Big Inner Spacer             %%%%%%%%%% -->
+    <physvol name = "lvHcalInnCellLowLeftFwBigSpacer"
+      logvol = "/dd/Geometry/DownstreamRegion/Hcal/Cells/lvHcalInnCellLowFwBigSpacerBox"> 
+      <posXYZ x = "HcalInnCellXPos2ndLayer*HcalCellPeriodWidth"
+              y = "0.25*HcalMsPlHeight-0.25*HcalSpacerHeigth"
+              z = "-0.75*HcalMsPlStepLength+0.25*HcalSpacerLength"/>
+    </physvol>
+  <!-- %%%%%%%%%%             Scintillating Tile             %%%%%%%%%% -->
+    <physvol name = "pvHcalInnCellLowLeftScTile"
+      logvol = "/dd/Geometry/DownstreamRegion/Hcal/Cells/lvHcalInnCellLowScTileBox"> 
+      <posXYZ x = "HcalInnCellXPos2ndLayer*HcalCellPeriodWidth"
+              y = "0.25*HcalMsPlHeight-0.5*HcalScTileSlitWidth-0.25*HcalScTileHeigth"
+              z = "0.5*HcalMsPlStepLength"/>
+    </physvol>
+  <!-- %%%%%%%%%%      Backward Small Inner Spacer           %%%%%%%%%% -->
+    <physvol name = "pvHcalInnCellLowLeftBkSmSpacer"
+      logvol = "/dd/Geometry/DownstreamRegion/Hcal/Cells/lvHcalInnCellLowBkSmSpacer"> 
+      <posXYZ x = "HcalInnCellXPos2ndLayer*HcalCellPeriodWidth"
+              y = "0.25*HcalMsPlHeight-0.25*HcalSpacerHeigth"
+              z = "1.25*HcalMsPlStepLength-0.25*HcalSpacerLength"/>
+    </physvol>
+  </logvol> 
+  <!-- **************************************************************** --> 
+  <!-- %%%%%%%%%%         Upper Right Working Stuff          %%%%%%%%%% -->
+  <!-- **************************************************************** --> 
+  <logvol name = "lvHcalInnCellUpRightWorkStuff" material = "Vacuum">
+    <box name  = "HcalInnCellUpRightWorkStuffBox"
+      sizeX = "HcalInnCellXSize"
+      sizeY = "0.5*HcalMsPlHeight"
+      sizeZ = "6.0*HcalMsPlStepLength"/>
+    <paramphysvol2D number1 = "7" number2 = "3">
+      <physvol name = "pvHcalInnUpRightCellUpRightComPartWorkStuff"
+        logvol = "/dd/Geometry/DownstreamRegion/Hcal/Cells/lvHcalInnCellUpRightComPartWorkStuff"> 
+        <posXYZ x = "-3.0*HcalCellPeriodWidth"
+                y = "0.0*mm"
+                z = "-2.0*HcalMsPlStepLength"/>
+      </physvol>
+      <posXYZ x = "HcalCellPeriodWidth"/>
+      <posXYZ z = "2.0*HcalMsPlStepLength"/>
+    </paramphysvol2D>
+    <paramphysvol2D number1 = "6" number2 = "3">
+      <physvol name = "pvHcalInnUpRightCellUpLeftComPartWorkStuff"
+        logvol = "/dd/Geometry/DownstreamRegion/Hcal/Cells/lvHcalInnCellUpLeftComPartWorkStuff"> 
+        <posXYZ x = "-2.5*HcalCellPeriodWidth"
+                y = "0.0*mm"
+                z = "-2.0*HcalMsPlStepLength"/>
+      </physvol>
+      <posXYZ x = "HcalCellPeriodWidth"/>
+      <posXYZ z = "2.0*HcalMsPlStepLength"/>
+    </paramphysvol2D>
+  </logvol> 
+  <!-- **************************************************************** --> 
+  <!-- %%%%%%%%%%         Lower Right Working Stuff          %%%%%%%%%% -->
+  <!-- **************************************************************** --> 
+  <logvol name = "lvHcalInnCellLowRightWorkStuff" material = "Vacuum">
+    <box name  = "HcalInnCellLowRightWorkStuffBox"
+      sizeX = "HcalInnCellXSize"
+      sizeY = "0.5*HcalMsPlHeight"
+      sizeZ = "6.0*HcalMsPlStepLength"/>
+    <paramphysvol2D number1 = "7" number2 = "3">
+      <physvol name = "pvHcalInnLowRightCellLowRightComPartWorkStuff"
+        logvol = "/dd/Geometry/DownstreamRegion/Hcal/Cells/lvHcalInnCellLowRightComPartWorkStuff"> 
+        <posXYZ x = "-3.0*HcalCellPeriodWidth"
+                y = "0.0*mm"
+                z = "-2.0*HcalMsPlStepLength"/>
+      </physvol>
+      <posXYZ x = "HcalCellPeriodWidth"/>
+      <posXYZ z = "2.0*HcalMsPlStepLength"/>
+    </paramphysvol2D>
+    <paramphysvol2D number1 = "6" number2 = "3">
+      <physvol name = "pvHcalInnLowRightCellLowLeftComPartWorkStuff"
+        logvol = "/dd/Geometry/DownstreamRegion/Hcal/Cells/lvHcalInnCellLowLeftComPartWorkStuff"> 
+        <posXYZ x = "-2.5*HcalCellPeriodWidth"
+                y = "0.0*mm"
+                z = "-2.0*HcalMsPlStepLength"/>
+      </physvol>
+      <posXYZ x = "HcalCellPeriodWidth"/>
+      <posXYZ z = "2.0*HcalMsPlStepLength"/>
+    </paramphysvol2D>
+  </logvol> 
+  <!-- **************************************************************** --> 
+  <!-- %%%%%%%%%%          Upper Left Working Stuff          %%%%%%%%%% -->
+  <!-- **************************************************************** --> 
+  <logvol name = "lvHcalInnCellUpLeftWorkStuff" material = "Vacuum">
+    <box name  = "HcalInnCellUpLeftWorkStuffBox"
+      sizeX = "HcalInnCellXSize"
+      sizeY = "0.5*HcalMsPlHeight"
+      sizeZ = "6.0*HcalMsPlStepLength"/>
+    <paramphysvol2D number1 = "7" number2 = "3">
+      <physvol name = "pvHcalInnUpLeftCellUpLeftComPartWorkStuff"
+        logvol = "/dd/Geometry/DownstreamRegion/Hcal/Cells/lvHcalInnCellUpLeftComPartWorkStuff"> 
+        <posXYZ x = "-3.0*HcalCellPeriodWidth"
+                y = "0.0*mm"
+                z = "-2.0*HcalMsPlStepLength"/>
+      </physvol>
+      <posXYZ x = "HcalCellPeriodWidth"/>
+      <posXYZ z = "2.0*HcalMsPlStepLength"/>
+    </paramphysvol2D>
+    <paramphysvol2D number1 = "6" number2 = "3">
+      <physvol name = "pvHcalInnUpLeftCellUpRightComPartWorkStuff"
+        logvol = "/dd/Geometry/DownstreamRegion/Hcal/Cells/lvHcalInnCellUpRightComPartWorkStuff"> 
+        <posXYZ x = "-2.5*HcalCellPeriodWidth"
+                y = "0.0*mm"
+                z = "-2.0*HcalMsPlStepLength"/>
+      </physvol>
+      <posXYZ x = "HcalCellPeriodWidth"/>
+      <posXYZ z = "2.0*HcalMsPlStepLength"/>
+    </paramphysvol2D>
+  </logvol> 
+  <!-- **************************************************************** --> 
+  <!-- %%%%%%%%%%          Lower Left Working Stuff          %%%%%%%%%% -->
+  <!-- **************************************************************** --> 
+  <logvol name = "lvHcalInnCellLowLeftWorkStuff" material = "Vacuum">
+    <box name  = "HcalInnCellLowLeftWorkStuffBox"
+      sizeX = "HcalInnCellXSize"
+      sizeY = "0.5*HcalMsPlHeight"
+      sizeZ = "6.0*HcalMsPlStepLength"/>
+    <paramphysvol2D number1 = "7" number2 = "3">
+      <physvol name = "pvHcalInnLowLeftCellLowLeftComPartWorkStuff"
+        logvol = "/dd/Geometry/DownstreamRegion/Hcal/Cells/lvHcalInnCellLowLeftComPartWorkStuff"> 
+        <posXYZ x = "-3.0*HcalCellPeriodWidth"
+                y = "0.0*mm"
+                z = "-2.0*HcalMsPlStepLength"/>
+      </physvol>
+      <posXYZ x = "HcalCellPeriodWidth"/>
+      <posXYZ z = "2.0*HcalMsPlStepLength"/>
+    </paramphysvol2D>
+    <paramphysvol2D number1 = "6" number2 = "3">
+      <physvol name = "pvHcalInnLowLeftCellLowRightComPartWorkStuff"
+        logvol = "/dd/Geometry/DownstreamRegion/Hcal/Cells/lvHcalInnCellLowRightComPartWorkStuff"> 
+        <posXYZ x = "-2.5*HcalCellPeriodWidth"
+                y = "0.0*mm"
+                z = "-2.0*HcalMsPlStepLength"/>
+      </physvol>
+      <posXYZ x = "HcalCellPeriodWidth"/>
+      <posXYZ z = "2.0*HcalMsPlStepLength"/>
+    </paramphysvol2D>
+  </logvol> 
+  <!-- **************************************************************** --> 
+</DDDB> 

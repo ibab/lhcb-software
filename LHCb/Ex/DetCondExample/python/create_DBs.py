@@ -4,7 +4,6 @@ from PyCool import cool, coral
 import os, sys
 
 dbs = cool.DatabaseSvcFactory.databaseService()
-dbs.createDatabase(os.environ["CONDDBCONNECTIONSTRING"])
 
 spec = cool.ExtendedAttributeListSpecification()
 spec.push_back("data", "string", cool.PredefinedStorageHints.STRING_MAXSIZE_16M)

@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: geometry.dtd,v 1.1 2001-12-17 15:46:13 andreav Exp $ -->
 
 <!--XML root element, Gaudi transient root as well-->
 <!ELEMENT DDDB (parameter|catalog|catalogref|logvol|surface|tabproperty)+>

@@ -1,99 +1,152 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE DDDB SYSTEM "../DTD/geometry.dtd">
-<!-- $Id: geometry.xml,v 1.1 2001-12-17 19:47:39 andreav Exp $ -->
 <DDDB>
+<!--
 
-   <parameter name="InCell"     value="131.3*mm"  />
-   <parameter name="OutCell"    value="2.0*InCell"  />
+   $Id: geometry.xml,v 1.2 2007-02-02 18:19:30 marcocle Exp $ 
+   CVS tag $Name: not supported by cvs2svn $
+   $Log: not supported by cvs2svn $
+   Revision 1.1.1.1  2007/01/30 13:34:59  marcocle
+   CVS based back up for the SQLite conditions database
 
-<!-- 
-  * HCAL has a Z-length of 1655 mm
-  * Active area starts at front, for 1275 mm, 
-  * center shifted by -190 mm
+   Revision 1.11  2005/06/06 16:03:09  gcorti
+   Calo tilt
+
+   Revision 1.10  2003/12/05 13:59:43  cattanem
+   add Calo changes
+
+   Revision 1.9  2002/09/12 09:33:00  cattanem
+   Add vertical Rich, Velo optimisation
+
+   Revision 1.8  2002/01/19 16:20:32  aberdiou
+    new description of Hcal
 -->
-   <parameter name="WholeSize"  value="1655*mm" />
-   <parameter name="DetThick"   value="1275*mm" />
-   <parameter name="DetOffset"  value="-190*mm" />
+<!-- **************************************************************** --> 
+<!-- The first version of detailed Hcal description by Alexei Berdiouguine -->
+  <!-- **************************************************************** --> 
+  <!--                   Hcal Geometry Parameters Definition            -->
+  <!-- **************************************************************** --> 
+  <!-- %%%%%%                  Hcal Basic Parameters             %%%%%% -->
+  <parameter name = "HcalTiltAngle"          value = "0.207*degree"/>
+  <parameter name = "HcalYShift"             value = "-0.82*mm"/>
 
-    <!-- ****************************************************************** --> 
-    <!-- * definition of geometry of Hcal detector                        * --> 
-    <!-- ****************************************************************** --> 
+  <parameter name = "HcalOutCellXSize"       value = "262.6*mm"             />
+  <parameter name = "HcalOutCellYSize"       value = "262.0*mm"             />
+  <parameter name = "HcalInnCellXSize"       value = "0.5*HcalOutCellXSize" />
+  <parameter name = "HcalInnCellYSize"       value = "0.5*HcalOutCellYSize" />
+  <parameter name = "HcalSubModXSize"        value = "2.0*HcalOutCellXSize" />
+  <parameter name = "HcalSubModYSize"        value = "HcalOutCellYSize"     />
+  <parameter name = "HcalModXSize"           value = "8.0*HcalSubModXSize"  />
+  <parameter name = "HcalModYSize"           value = "HcalSubModYSize"      />
+  <parameter name = "HcalXGap"	             value = "5*mm"	            />
+  <parameter name = "HcalYGap"	             value = "0.5*mm"	            />
+  <parameter name = "HcalTotXSize"           value = "2.0*HcalModXSize+HcalXGap"        />
+  <parameter name = "HcalTotYSize"           value = "26.0*HcalModYSize+26*HcalYGap"    />
+  <parameter name = "HcalTotLength"          value = "1655*mm"              />
+  <parameter name = "HcalTotSpace"           value = "1665*mm"              />
 
+  <parameter name = "HcalSupportXSize"       value = "525.2*mm"             />
+  <parameter name = "HcalSupportYSize"       value = "524*mm"               />
+  <parameter name = "HcalSupportLength"      value = "HcalTotSpace"         />
+  <parameter name = "HcalSupportRadius1B"    value = "157*mm"               />
+  <parameter name = "HcalSupportRadius1F"    value = "174*mm"               />
 
-    <!-- ****************************************************************** --> 
-    <!-- * definition of main catalog of logical lvolumes                 * --> 
-    <!-- ****************************************************************** --> 
-    <catalog name = "Hcal" > 
-            <logvolref href="#lvHcal"            />
-            <logvolref href="#lvHcalOuter"       />
-            <logvolref href="#lvHcalInner"       />
-    </catalog>
+  <parameter name = "HcalSupportRadius2B"    value = "198.0*mm"             />
+  <parameter name = "HcalSupportRadius2F"    value = "201.5*mm"             />
+  <parameter name = "HcalPipeHoleLength2"    value = "382*mm"               />
+  <parameter name = "HcalPipeHoleZ2"         value = "71.5*mm"             />
 
+  <parameter name = "HcalSupportRadius3B"    value = "158*mm"               />
+  <parameter name = "HcalSupportRadius3F"    value = "164*mm"               />
+  <parameter name = "HcalPipeHoleLength3"    value = "570*mm"               />
+  <parameter name = "HcalPipeHoleZ3"         value = "0.5*HcalTotSpace"  />
 
-    <!-- ****************************************************************** --> 
-    <!-- * definition of logical volumes                                  * --> 
-    <!-- ****************************************************************** --> 
+  <parameter name = "HcalSupportOffset"      value = "0.0*mm"               />
+  <!-- %%%%%%    For boolean operations "HcalTolerance" is used  %%%%%% -->
+  <parameter name = "HcalTolerance"          value = "1000*mm"              />
+  <parameter name = "HcalDelta"              value = "0.1*mm"               />
+  
+  
+  <parameter name = "HcalBeamPlugXSize"		     value = "2*262.2*mm"    />
+  <parameter name = "HcalBeamPlugYSize"		     value = "524.4*mm"      />
+  <parameter name = "HcalBeamPlugZSize"		     value = "HcalTotSpace"  />
 
+  <parameter name = "HcalBeamPlugPipeHoleZ1"	     value = "-0.5*HcalTotSpace-10.0*mm"   />
+  <parameter name = "HcalBeamPlugPipeHoleZ2"	     value = "-0.5*HcalTotSpace+57.03*mm"  />
+  <parameter name = "HcalBeamPlugPipeHoleZ3"	     value = "HcalBeamPlugPipeHoleZ2+50.0*mm"  />
+  <parameter name = "HcalBeamPlugPipeHoleZ4"	     value = "HcalBeamPlugPipeHoleZ3+531.0*mm" />
+  <parameter name = "HcalBeamPlugPipeHoleZ5"	     value = "HcalBeamPlugPipeHoleZ4+35.0*mm"  />
+  <parameter name = "HcalBeamPlugPipeHoleZ6"	     value = "HcalBeamPlugPipeHoleZ5+398.9*mm" />
+  <parameter name = "HcalBeamPlugPipeHoleZ7"	     value = "HcalBeamPlugPipeHoleZ6+1.0*mm" />
+  <parameter name = "HcalBeamPlugPipeHoleZ8"	     value = "0.5*HcalTotSpace+10.0*mm"    />
 
-  <logvol material="Vacuum" name="lvHcal">
+  <parameter name = "HcalBeamPlugPipeHoleR1"	     value = "206.0*mm"   />
+  <parameter name = "HcalBeamPlugPipeHoleR2"	     value = "206.0*mm"   />
+  <parameter name = "HcalBeamPlugPipeHoleR3"	     value = "166.2*mm"   />
+  <parameter name = "HcalBeamPlugPipeHoleR4"	     value = "171.5*mm"   />
+  <parameter name = "HcalBeamPlugPipeHoleR5"	     value = "206.0*mm"   />
+  <parameter name = "HcalBeamPlugPipeHoleR6"	     value = "206.0*mm"   />
+  <parameter name = "HcalBeamPlugPipeHoleR7"	     value = "175.8*mm"   />
+  <parameter name = "HcalBeamPlugPipeHoleR8"	     value = "181.85*mm"  />
 
-     <box    name  =  "Box_For_The_Whole_Hcal"
-             sizeX =  "10000*mm" 
-             sizeY =  "10000*mm" 
-             sizeZ = "WholeSize"  />
-
-     <physvol name   = "pvHcalOuter"  
-              logvol = "/dd/Geometry/Hcal/lvHcalOuter" >
-         <posXYZ   z = "DetOffset" 
-                   x =    "0*mm" 
-                   y =    "0*mm" />
-     </physvol>
-
-     <physvol name   = "pvHcalInner"
-              logvol = "/dd/Geometry/Hcal/lvHcalInner" > 
-          <posXYZ  z = "DetOffset" 
-                   x =    "0*mm" 
-                   y =    "0*mm" />
-     </physvol>
-
-  </logvol>
-
-
-<!-- Outer: 32 * 26 cells - 16 * 14 cells  -->
-
-  <logvol name     = "lvHcalOuter"  material = "Vacuum" > 
-    <subtraction  name = "Composite_Box_for_Outer_Part_of_Hcal" > 
-         <box name  = "Main_Box_for_Outer_Part_of_Hcal"  
-              sizeX = "32*OutCell" 
-              sizeY = "26*OutCell" 
-              sizeZ = "DetThick"        />
-         <box name  = "Hole_for_Outer_Part_of_Hcal" 
-              sizeX = "16*OutCell" 
-              sizeY = "14*OutCell"
-              sizeZ = "DetThick+0.1*mm" /> 
-         <posXYZ  z = "0*mm" 
-                  x = "0*mm" 
-                  y = "0*mm" />
-    </subtraction>
-  </logvol>
-
-<!-- Inner: 32 * 28 cells - 6 * 6 cells  -->
-
-  <logvol name = "lvHcalInner" material="Vacuum" >
-    <subtraction name = "Composite_Box_for_Inner_Part_of_Hcal">
-         <box    name = "Main_Box_for_Inner_Part_of_Hcal" 
-                 sizeX = "32*InCell" 
-                 sizeY = "28*InCell" 
-                 sizeZ = "DetThick"        />
-         <box    name  = "Hole_for_Inner_Part_of_Hcal"
-                 sizeX = "6*InCell"  
-                 sizeY = "6*InCell"
-                 sizeZ = "DetThick+0.1*mm" /> 
-         <posXYZ  z = "0*mm" 
-                  x = "0*mm" 
-                  y = "0*mm" />
-    </subtraction>
-  </logvol>
-
-
+  <parameter name = "HcalSteelSheetThick"		     value = "10*mm"	 />
+  <parameter name = "HcalSteelSheetStep"		     value = "515*mm"	 />
+  <parameter name = "HcalSteelSheetRadius1"		     value = "192.5*mm"	 />
+  <parameter name = "HcalSteelSheetRadius2"		     value = "217.5*mm"	 />
+  <!-- %%%%%%                  Hcal Cells Parameters             %%%%%% -->
+<!--
+  MsPl   = MasterPlate
+  Sc = Scintillating
+  Fw = Foward
+  Bk = Backward
+  Sm = Small
+  Up = Upper
+  Low = Lower
+  Br = Bracket
+  Cnt = Central
+-->
+  <parameter name = "HcalMsPlWidth"                 value = "6*mm"       />
+  <parameter name = "HcalMsPlHeight"                value = "260*mm"     />
+  <parameter name = "HcalMsPlStepLength"            value = "200*mm"     />
+  <parameter name = "HcalScTileWidth"               value = "3*mm"       />
+  <parameter name = "HcalScTileHeigth"              value = "256*mm"     />
+  <parameter name = "HcalScTileLength"              value = "197*mm"     />
+  <parameter name = "HcalScTileSlitWidth"           value = "2*mm"       />
+  <parameter name = "HcalSpacerWidth"               value = "4*mm"       />
+  <parameter name = "HcalSpacerHeigth"              value = "255.5*mm"   />
+  <parameter name = "HcalSpacerLength"              value = "202*mm"     />
+  <parameter name = "HcalCellPeriodWidth"           value = "20.2*mm"    />
+  <parameter name = "HcalMsPlCalHoleR"              value = "5.7*mm"     />
+  <parameter name = "HcalScTileCalHoleR"            value = "4.75*mm"    />
+  <parameter name = "HcalOutCellXPos1stLayer"       value = "0.35"       />
+  <parameter name = "HcalOutCellXPos2ndLayer"       value = "0.1"        />
+  <parameter name = "HcalOutCellXPos3dLayer"        value = "-0.15"      />
+  <parameter name = "HcalOutCellXPos4thLayer"       value = "-0.4"       />
+  <parameter name = "HcalInnCellXPos1stLayer"       value = "0.1"        />
+  <parameter name = "HcalInnCellXPos2ndLayer"       value = "-0.15"      />
+  <!-- %%%%%%               Hcal Foward Face Parameters          %%%%%% -->
+  <parameter name = "HcalFaceWidth_for_CntStrip"    value = "80*mm"      />
+  <parameter name = "HcalFwFaceLength"              value = "19*mm"      />
+  <parameter name = "HcalFwFaceShelfLength"         value = "15*mm"      />
+  <parameter name = "HcalFwFaceShelfWidth"          value = "40*mm"      />
+  <!-- %%%%%%             Hcal Backward Face Parameters          %%%%%% -->
+  <parameter name = "HcalBkFaceLength"              value = "64*mm"      />
+  <parameter name = "HcalBkFaceShelfLength"         value = "40*mm"      />
+  <parameter name = "HcalBkFaceShelfWidth"          value = "40*mm"      />
+  <parameter name = "HcalBkFaceTotLength" value = "HcalBkFaceLength-HcalBkFaceShelfLength+HcalBkOutStripWidth" />
+  <!-- %%%%%%                Brackets Parameters                 %%%%%% -->
+  <parameter name = "HcalCntStripWidth"           value = "19.0*mm"      />
+  <parameter name = "HcalCntStripHeight"          value = "79.5*mm"      />
+  <parameter name = "HcalFwOutStripWidth"         value = "14.8*mm"      />
+  <parameter name = "HcalFwOutStripHeight"        value = "50.8*mm"      />
+  <parameter name = "HcalBkOutStripWidth"         value = "40.8*mm"      />
+  <parameter name = "HcalBkOutStripHeight"        value = "40.8*mm"      />
+  <!-- **************************************************************** --> 
+  <!-- *                      Hcal Catalog Definition                 * --> 
+  <!-- **************************************************************** --> 
+  <catalog name = "Hcal"> 
+    <catalogref href="Installation.xml#Installation"/>
+    <catalogref href="Cells.xml#Cells"/>
+  </catalog>
+  <!-- **************************************************************** --> 
 </DDDB> 

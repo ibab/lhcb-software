@@ -1,4 +1,4 @@
-//$Id: XmlTestAlgorithm.cpp,v 1.8 2006-02-09 08:29:12 marcocle Exp $
+//$Id: XmlTestAlgorithm.cpp,v 1.9 2007-02-02 18:17:36 marcocle Exp $
 
 #include "XmlTestAlgorithm.h"
 #include "DetDesc/Condition.h"
@@ -37,7 +37,7 @@ StatusCode XmlTestAlgorithm::execute() {
 
   // Retrieve the Ecal detector element
   info() << "Retrieve the Ecal detector" << endmsg;
-  DetectorElement *ecal = getDet<DetectorElement>( "/dd/Structure/LHCb/Ecal" );
+  DetectorElement *ecal = getDet<DetectorElement>( "/dd/Structure/LHCb/DownstreamRegion/Ecal" );
   if( 0 != ecal ) {
     info() << "Successfully retrieved the Ecal detector" << endmsg;
   } else {
@@ -46,66 +46,30 @@ StatusCode XmlTestAlgorithm::execute() {
   }
 
   // Retrieve alignment for the Ecal detector
-  info() << "Retrieve alignment for the Ecal detector" << endmsg;
-  Condition* alEcal = ecal->condition("Alignment");
-  if( 0 != alEcal ) {
-    info() << "Ecal alignment data has "
-           << alEcal->paramNames().size() << " parameters" << std::endl
-           << alEcal->printParams() << endmsg;
+  info() << "Retireve the Gain condition for Ecal" << endmsg;
+  Condition* gain = ecal->condition("Gain");
+  if( 0 != gain ) {
+    info() << "Ecal Gain data has "
+           << gain->paramNames().size() << " parameters" << std::endl
+           << gain->printParams() << endmsg;
   } else {
-    error() << "Could not retrieve Ecal alignment" << endmsg;
+    error() << "Could not retrieve Ecal Gain" << endmsg;
     return StatusCode::FAILURE;
   }
 
   // Retrieve calibration for the Ecal detector
-  info() << "Retrieve calibration for the Ecal detector" << endmsg;
-  Condition* caEcal = ecal->condition("Calibration");
-  if( 0 != caEcal ) {
-    info() << "Ecal calibration data has "
-           << caEcal->paramNames().size() << " parameters" << std::endl
-           << caEcal->printParams() << endmsg;
+  info() << "Retrieve Hardware configuration for the Ecal detector" << endmsg;
+  Condition* hw = ecal->condition("Hardware");
+  if( 0 != hw ) {
+    info() << "Ecal Hardware data has "
+           << hw->paramNames().size() << " parameters" << std::endl
+           << hw->printParams() << endmsg;
   } else {
-    error() << "Could not retrieve Ecal calibration" << endmsg;
+    error() << "Could not retrieve Ecal Hardware configuration" << endmsg;
     return StatusCode::FAILURE;
   }
 
-  // Retrieve readout for the Ecal detector
-  info() << "Retrieve readout for the Ecal detector" << endmsg;
-  Condition* roEcal = ecal->condition("Readout");
-  if( 0 != roEcal ) {
-    info() << "Ecal readout data has "
-           << roEcal->paramNames().size() << " parameters" << std::endl
-           << roEcal->printParams() << endmsg;
-  } else {
-    error() << "Could not retrieve Ecal readout" << endmsg;
-    return StatusCode::FAILURE;
-  }
-
-  // Retrieve slow control for the Ecal detector
-  info() << "Retrieve slow control for the Ecal detector" << endmsg;
-  Condition* scEcal = ecal->condition("SlowControl");
-  if( 0 != scEcal ) {
-    info() << "Ecal slow control data has "
-           << scEcal->paramNames().size() << " parameters" << std::endl
-           << scEcal->printParams() << endmsg;
-  } else {
-    error() << "Could not retrieve Ecal slow control" << endmsg;
-    return StatusCode::FAILURE;
-  }
-
-  // Retrieve fast control for the Ecal detector
-  info() << "Retrieve fast control for the Ecal detector" << endmsg;
-  Condition* fcEcal = ecal->condition("FastControl");
-  if( 0 != fcEcal ) {
-    info() << "Ecal fast control data has "
-           << fcEcal->paramNames().size() << " parameters" << std::endl
-           << fcEcal->printParams() << endmsg;
-  } else {
-    error() << "Could not retrieve Ecal fast control" << endmsg;
-    return StatusCode::FAILURE;
-  }
-
-  Condition* testCond = getDet<Condition>("/dd/Conditions/TestCondition");
+  Condition* testCond = getDet<Condition>("/dd/Conditions/Sim/TestCondition");
   if( 0 != testCond ) {
     info() << "TestCondition has "
            << testCond->paramNames().size() << " parameters" << std::endl

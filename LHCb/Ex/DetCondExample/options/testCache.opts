@@ -1,4 +1,4 @@
-//$Id: testCache.opts,v 1.5 2006-09-26 10:51:09 marcocle Exp $
+//$Id: testCache.opts,v 1.6 2007-02-02 18:17:21 marcocle Exp $
 //==============================================================
 // Job options to test double CondDB usage in DetCondExample
 //==============================================================
@@ -46,5 +46,4 @@ MessageSvc.OutputLevel = 1;
 //--------------------------------------------------------------
 ApplicationMgr.DLLs += { "DetCond" };
 
-DetectorPersistencySvc.CnvServices += { "CondDBCnvSvc" };
 

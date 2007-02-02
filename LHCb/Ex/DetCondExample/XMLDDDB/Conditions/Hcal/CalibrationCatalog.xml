@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE DDDB SYSTEM "../../DTD/structure.dtd">
+<DDDB>
+
+  <catalog name ="Hcal">
+
+    <conditionref href="Calibration/Main.xml#Gain"/>
+    <conditionref href="Calibration/Main.xml#Reco"/>
+
+  </catalog>
+
+</DDDB>

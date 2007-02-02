@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE DDDB SYSTEM "../../DTD/geometry.dtd">
+<DDDB>
+
+
+  <logvol name = "PlugSupport" material = "Ecal/EcalPb">
+    <subtraction name = "PlugWithHole">
+      <box name  = "Plugbox"
+        sizeX       = "EcalBeamPlugXSize"
+        sizeY       = "EcalBeamPlugYSize"
+        sizeZ       = "EcalBeamPlugZSize"/>
+      <polycone name="PipeHole"
+                startPhiAngle="0*degree"
+                deltaPhiAngle="360*degree">
+		<zplane innerRadius="0.0*mm" outerRadius="EcalBeamPlugPipeHoleR1" z="EcalBeamPlugPipeHoleZ1"/>
+		<zplane innerRadius="0.0*mm" outerRadius="EcalBeamPlugPipeHoleR2" z="EcalBeamPlugPipeHoleZ2"/>
+		<zplane innerRadius="0.0*mm" outerRadius="EcalBeamPlugPipeHoleR3" z="EcalBeamPlugPipeHoleZ3"/>
+		<zplane innerRadius="0.0*mm" outerRadius="EcalBeamPlugPipeHoleR4" z="EcalBeamPlugPipeHoleZ4"/>
+		<zplane innerRadius="0.0*mm" outerRadius="EcalBeamPlugPipeHoleR5" z="EcalBeamPlugPipeHoleZ5"/>
+		<zplane innerRadius="0.0*mm" outerRadius="EcalBeamPlugPipeHoleR6" z="EcalBeamPlugPipeHoleZ6"/>
+      </polycone>
+      <posXYZ x = "0.0*mm"
+              y = "-EcalYShift"
+              z = "0.0*mm"/>
+      <rotXYZ rotX="-EcalTiltAngle"/>
+    </subtraction>
+
+    <paramphysvol number = "2">
+      <physvol name = "HAirSlots"  
+               logvol = "/dd/Geometry/DownstreamRegion/Ecal/Installation/HorizontalAirSlot">
+        <posXYZ y = "-0.5*(EcalBeamPlugYSize-EcalSteelSheetThick1)"
+                z = " 0.5*EcalSteelSheetLength1"/>
+      </physvol>
+      <posXYZ y = "EcalBeamPlugYSize-EcalSteelSheetThick1"/>
+    </paramphysvol>
+
+    <paramphysvol number = "2">
+    <physvol name = "VAirSlots"  
+             logvol = "/dd/Geometry/DownstreamRegion/Ecal/Installation/VerticalAirSlot">
+      <posXYZ x = "-0.5*(EcalBeamPlugXSize-EcalSteelSheetThick1)"
+              z = " 0.5*EcalSteelSheetLength1"/>
+    </physvol>
+      <posXYZ x = "EcalBeamPlugYSize-EcalSteelSheetThick1"/>
+    </paramphysvol>
+
+    <paramphysvol number = "2">
+      <physvol name = "VSteelSheets1"  
+               logvol = "/dd/Geometry/DownstreamRegion/Ecal/Installation/VericalSteelSheet1">
+        <posXYZ x = "-0.5*(EcalBeamPlugXSize-EcalSteelSheetThick1)"
+                z = "-0.5*(EcalBeamPlugZSize-EcalSteelSheetLength1)"/>
+      </physvol>
+      <posXYZ x = "EcalBeamPlugXSize-EcalSteelSheetThick1"/>
+    </paramphysvol>
+      
+    <paramphysvol number = "2">
+      <physvol name = "HSteelSheets1"  
+               logvol = "/dd/Geometry/DownstreamRegion/Ecal/Installation/HorizontalSteelSheet1">
+        <posXYZ y = "-0.5*(EcalBeamPlugYSize-EcalSteelSheetThick1)"
+                z = "-0.5*(EcalBeamPlugZSize-EcalSteelSheetLength1)"/>
+      </physvol>
+      <posXYZ y = "EcalBeamPlugYSize-EcalSteelSheetThick1"/>
+    </paramphysvol>
+    
+    <paramphysvol number = "2">
+      <physvol name = "VSteelSheets2"  
+               logvol = "/dd/Geometry/DownstreamRegion/Ecal/Installation/VericalSteelSheet2">
+        <posXYZ x = "-0.5*EcalBeamPlugXSize+0.5*EcalSteelSheetThick2+EcalSteelSheetThick1"
+                z = " 0.5*(EcalBeamPlugZSize-EcalSteelSheetLength2)"/>
+      </physvol>
+      <posXYZ x = "EcalBeamPlugXSize-EcalSteelSheetThick2-2*EcalSteelSheetThick1"/>
+    </paramphysvol>
+      
+    <paramphysvol number = "2">
+      <physvol name = "HSteelSheets2"  
+               logvol = "/dd/Geometry/DownstreamRegion/Ecal/Installation/HorizontalSteelSheet2">
+        <posXYZ y = "-0.5*EcalBeamPlugYSize+0.5*EcalSteelSheetThick2+EcalSteelSheetThick1"
+                z = " 0.5*(EcalBeamPlugZSize-EcalSteelSheetLength2)"/>
+      </physvol>
+      <posXYZ y = "EcalBeamPlugYSize-EcalSteelSheetThick2-2*EcalSteelSheetThick1"/>
+    </paramphysvol>
+
+    <paramphysvol number = "2">
+      <physvol name = "SteelSheets1"  
+               logvol = "/dd/Geometry/DownstreamRegion/Ecal/Installation/SteelSheetWithHole1">
+        <posXYZ z = " 0.5*(EcalBeamPlugZSize-EcalSteelSheetWithHoleThick1)"/>
+      </physvol>
+      <posXYZ z = "-EcalSteelSheetWithHoleStep1"/>
+    </paramphysvol>
+    <paramphysvol number = "3">
+      <physvol name = "SteelSheets2"  
+               logvol = "/dd/Geometry/DownstreamRegion/Ecal/Installation/SteelSheetWithHole2">
+        <posXYZ z = " 0.5*EcalBeamPlugZSize-EcalSteelSheetLength2-0.5*EcalSteelSheetWithHoleThick2"/>
+      </physvol>
+      <posXYZ z = "-EcalSteelSheetWithHoleStep2"/>
+    </paramphysvol>
+
+  </logvol> 
+ 
+  <logvol name = "HorizontalAirSlot " material = "Air">
+    <box name  = "HAirSlot"
+      sizeX       = "EcalBeamPlugXSize"
+      sizeY       = "EcalSteelSheetThick1"
+      sizeZ       = "EcalBeamPlugZSize-EcalSteelSheetLength1"/>
+  </logvol>
+  
+  <logvol name = "VerticalAirSlot " material = "Air">
+    <box name  = "VAirSlot"
+      sizeX       = "EcalSteelSheetThick1"
+      sizeY       = "EcalBeamPlugYSize-2*EcalSteelSheetThick1"
+      sizeZ       = "EcalBeamPlugZSize-EcalSteelSheetLength1"/>
+  </logvol>
+  
+  <logvol name = "VericalSteelSheet1 " material = "Ecal/EcalSteel">
+    <box name  = "VSteelSheet1"
+      sizeX       = "EcalSteelSheetThick1-EcalDelta"
+      sizeY       = "EcalBeamPlugYSize-EcalDelta"
+      sizeZ       = "EcalSteelSheetLength1-EcalDelta"/>
+  </logvol> 
+  <logvol name = "HorizontalSteelSheet1 " material = "Ecal/EcalSteel">
+    <box name  = "HSteelSheet1"
+      sizeX       = "EcalBeamPlugXSize - 2*EcalSteelSheetThick1-EcalDelta"
+      sizeY       = "EcalSteelSheetThick1-EcalDelta"
+      sizeZ       = "EcalSteelSheetLength1-EcalDelta"/>
+  </logvol> 
+  <logvol name = "VericalSteelSheet2 " material = "Ecal/EcalSteel">
+    <box name  = "VSteelSheet2"
+      sizeX       = "EcalSteelSheetThick2"
+      sizeY       = "EcalBeamPlugYSize-2*EcalSteelSheetThick1"
+      sizeZ       = "EcalSteelSheetLength2"/>
+  </logvol> 
+  <logvol name = "HorizontalSteelSheet2 " material = "Ecal/EcalSteel">
+    <box name  = "HSteelSheet2"
+      sizeX       = "EcalBeamPlugXSize-2*EcalSteelSheetThick1-2*EcalSteelSheetThick2-EcalDelta"
+      sizeY       = "EcalSteelSheetThick2-EcalDelta"
+      sizeZ       = "EcalSteelSheetLength2-EcalDelta"/>
+  </logvol> 
+  <logvol name = "SteelSheetWithHole1 " material = "Ecal/EcalSteel">
+    <subtraction name = "StSheetWithHole1">
+      <box name  = "StSheet1"
+        sizeX       = "EcalBeamPlugXSize-2*EcalSteelSheetThick1-2*EcalSteelSheetThick2-EcalDelta"
+        sizeY       = "EcalBeamPlugYSize-2*EcalSteelSheetThick1-2*EcalSteelSheetThick2-EcalDelta"
+        sizeZ       = "EcalSteelSheetWithHoleThick1-EcalDelta"/>
+      <tubs name  = "CylinderHole1"
+        sizeZ       = "EcalSteelSheetWithHoleThick1+10*mm"
+        outerRadius = "EcalSteelSheetWithHoleRadius1"/>
+    </subtraction>
+  </logvol> 
+  <logvol name = "SteelSheetWithHole2 " material = "Ecal/EcalSteel">
+    <subtraction name = "StSheetWithHole2">
+      <box name  = "StSheet2"
+        sizeX       = "EcalBeamPlugXSize-2*EcalSteelSheetThick1-EcalDelta"
+        sizeY       = "EcalBeamPlugYSize-2*EcalSteelSheetThick1-EcalDelta"
+        sizeZ       = "EcalSteelSheetWithHoleThick1-EcalDelta"/>
+      <tubs name  = "CylinderHole2"
+        sizeZ       = "EcalSteelSheetWithHoleThick2+10*mm"
+        outerRadius = "EcalSteelSheetWithHoleRadius2"/>
+    </subtraction>
+  </logvol> 
+
+  
+  
+  
+  
+  <!-- **************************************************************** --> 
+</DDDB> 

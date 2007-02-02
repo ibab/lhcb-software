@@ -1,66 +1,214 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE DDDB SYSTEM "../DTD/geometry.dtd">
-<!-- $Id: geometry.xml,v 1.1 2001-12-17 15:46:31 andreav Exp $ -->
 <DDDB>
-  <parameter name="InCell" value="40.6667*mm"/>
-  <parameter name="MidCell" value="1.5*InCell"/>
-  <parameter name="OutCell" value="3.0*InCell"/>
-  <!--    ECAL has a Z-length of 835 mm (+10 mm gap, ignored here)   -->
-  <!-- Shashlik start at 86 mm from the front, for 435 mm => center off by -114 mm -->
-  <parameter name="WholeSize" value="835.0*mm"/>
-  <parameter name="DetThick" value="435.0*mm"/>
-  <parameter name="DetOffset" value="-114.0*mm"/>
-  <!-- ************************************************************************ -->
-  <!-- * definition of geometry of Ecal detector                              * -->
-  <!-- ************************************************************************ -->
-  <catalog name="Ecal">
-    <logvolref href="#lvEcal"/>
-    <logvolref href="#lvEcalOuter"/>
-    <logvolref href="#lvEcalMiddle"/>
-    <logvolref href="#lvEcalInner"/>
-  </catalog>
-  <!-- ************************************************************************ -->
-  <!-- * definition of logical volumes                                        * -->
-  <!-- ************************************************************************ -->
-  <logvol material="Vacuum" name="lvEcal">
-    <box name="Box_For_The_Whole_Electromagnetic_Calorimeter" sizeX="10000*mm" sizeY="10000*mm" sizeZ="WholeSize"/>
-    <physvol logvol="/dd/Geometry/Ecal/lvEcalOuter" name="pvEcalOuter">
-      <posXYZ z="DetOffset"/>
-    </physvol>
-    <physvol logvol="/dd/Geometry/Ecal/lvEcalMiddle" name="pvEcalMiddle">
-      <posXYZ z="DetOffset"/>
-    </physvol>
-    <physvol logvol="/dd/Geometry/Ecal/lvEcalInner" name="pvEcalInner">
-      <posXYZ z="DetOffset"/>
-    </physvol>
-  </logvol>
-  <!-- Outer: 64 * 52 cells - 32 * 20 cells  -->
-  <logvol material="Vacuum" name="lvEcalOuter">
-    <subtraction  name = "Composite_Box_for_Outer_Part_of_Electromagnetic_Calorimeter" > 
-      <box name  = "Main_Box_for_Outer_Part_of_Electromagnetic_Calorimeter"  
-           sizeZ = "DetThick" 
-           sizeX = "64*OutCell" 
-           sizeY = "52*OutCell"/>
-      <box name  = "Hole_for_Outer_Part_of_Electromagnetic_Calorimeter" 
-           sizeZ = "DetThick" 
-           sizeX = "32*OutCell" 
-           sizeY = "20*OutCell"/>
-    </subtraction>
-  </logvol>
-  <!-- Middle : 64 * 40 cells - 32 * 24 cells  -->
-  <logvol material="Vacuum" name="lvEcalMiddle">
-    <subtraction name="Composite_Box_for_Middle_Part_of_Electromagnetic_Calorimeter">
-      <box name="Main_Box_for_Middle_Part_of_Electromagnetic_Calorimeter" sizeX="64*MidCell" sizeY="40*MidCell" sizeZ="DetThick"/>
-      <box name="Hole_for_Middle_Part_of_Electromagnetic_Calorimeter" sizeX="32*MidCell" sizeY="24*MidCell" sizeZ="DetThick"/>
-    </subtraction>
-  </logvol>
-  <!-- Inner: 48 * 36 cells - 16 * 16 cells  -->
-  <logvol material="Vacuum" name="lvEcalInner">
-    <subtraction name="Composite_Box_for_Inner_Part_of_Electromagnetic_Calorimeter">
-      <box name="Main_Box_for_Inner_Part_of_Electromagnetic_Calorimeter" sizeX="48*InCell" sizeY="36*InCell" sizeZ="DetThick"/>
-      <box name="Hole_for_Inner_Part_of_Electromagnetic_Calorimeter" sizeX="16*InCell" sizeY="16*InCell" sizeZ="DetThick"/>
-    </subtraction>
-  </logvol>
-</DDDB>
+<!-- """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""" --> 
+<!--   
+  CVS tag: $Name: not supported by cvs2svn $
+  $Log: not supported by cvs2svn $
+  Revision 1.1.1.1  2007/01/30 13:34:59  marcocle
+  CVS based back up for the SQLite conditions database
 
+  Revision 1.17  2006/02/06 15:54:00  cattanem
+  DC06 geometry and cleanup of older stuff
 
+  Revision 1.16  2005/06/06 15:59:43  gcorti
+  Calo tilt
+
+  Revision 1.15  2003/12/05 13:59:42  cattanem
+  add Calo changes
+
+  Revision 1.14  2002/09/12 09:32:56  cattanem
+  Add vertical Rich, Velo optimisation
+
+  Revision 1.13  2002/02/20 21:18:11  pakhlova
+   G.P.: avoid overlapping volumes
+
+  Revision 1.12  2001/12/15 16:05:27  ibelyaev
+  The first version of  detailed Ecal description by Galina Pakhlova
+--> 
+<!-- """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""" --> 
+<!-- ************************************************************************ --> 
+<!-- ************************************************************************ --> 
+<!--                                                                          -->
+<!--                      Ecal Geometry Parameters Definition                 -->
+<!--                                                                          --> 
+<!-- ************************************************************************ --> 
+<!-- ************************************************************************ --> 
+<!-- %%%%%%                      Ecal Basic Parameters                 %%%%%% -->
+
+  <parameter name = "EcalTiltAngle"          value = "0.207*degree"/>
+  <parameter name = "EcalYShift"             value = "-0.19*mm"/>
+
+<!-- ##        The Basic Sizes: "EcalModXYSize", "Ecal*ModLength"          ## -->
+     <parameter name = "EcalModXYSize"             value = "121.7*mm"/>
+     <parameter name = "EcalInnModLength"          value = "690.0*mm"/>
+     <parameter name = "EcalMidModLength"          value = "705.0*mm"/>
+     <parameter name = "EcalOutModLength"          value = "705.0*mm"/>
+
+     <parameter name  = "EcalTapeThick"       value = "0.1*mm"/>
+     <parameter name  = "EcalModXSize"        
+     		value = "EcalModXYSize+ 2*EcalTapeThick"/>
+     <parameter name  = "EcalModYSize"            
+                value = "EcalModXYSize + 2*EcalTapeThick"/>
+
+<!--##         For boolean operations "EcalTolerance" is used              ## -->
+     <parameter name = "EcalTolerance"             value = "10*mm"/>
+<!-- %%%%%%                  Ecal Installation Parameters              %%%%%% -->
+<!-- ##     Inner Support Frame: 4 * 4 Module Sizes -  Beam Pipe Hole      ## --> 
+     <parameter name = "EcalSupportXSize"      value = "4*EcalModXSize"/>
+     <parameter name = "EcalSupportYSize"      value = "4*EcalModYSize"/>
+     <parameter name = "EcalSupportLength"     value = "825.0*mm"/>
+    
+<!-- ##     Inner Section:  16 * 12 Module Sizes -  4 * 4 Module Sizes     ## --> 
+     <parameter name = "EcalInnXSize"        value = "16*EcalModXSize"/>
+     <parameter name = "EcalInnYSize"        value = "12*EcalModYSize"/>
+
+<!-- ##    Middle Section:  32 * 20 Module Sizes - 16 * 12 Modules Sizes   ## --> 
+     <parameter name = "EcalMidXSize"        value = "32*EcalModXSize"/>
+     <parameter name = "EcalMidYSize"        value = "20*EcalModYSize"/>
+
+<!-- ##     Outer Section:  64 * 52 Module Sizes - 32 * 20 Module Sizes    ## --> 
+     <parameter name = "EcalOutXSize"        value = "64*EcalModXSize"/>
+     <parameter name = "EcalOutYSize"        value = "52*EcalModYSize"/>
+
+<!-- ##     Dimensions of Ecal     ## -->
+     <parameter name = "EcalXSize"           value = "EcalOutXSize"/>
+     <parameter name = "EcalYSize"           value = "EcalOutYSize"/>
+     <parameter name = "EcalZSize"           value = "825*mm"/>
+
+<!-- ##     Ecal Modules Geometry Center Offset to the Center of ECAL      ## -->
+     <parameter name = "EcalSupportOffset"   value = "0*mm"/>
+     <parameter name = "EcalInnOffset"       value = "7.5*mm"/>
+     <parameter name = "EcalMidOffset"       value = "0*mm"/>
+     <parameter name = "EcalOutOffset"       value = "0*mm"/>
+     <parameter name = "EcalShieldOffset"    value = "-0.5*EcalMidModLength-55.0*mm"/>
+
+<!-- %%%%%%                Ecal Modules Basic Parameters               %%%%%% -->
+
+<!--  Ecal Modules consist of Stack, Front and Back Covers, ReadOut           -->
+<!--  Ecal Stack, Front and Back Covers, Read Out Geometry Centers 
+                                          are offset to the Center of Modules -->
+     <parameter name = "EcalStackLength"          value = "432.0*mm"/>
+     <parameter name = "EcalTubeInnRadius"        value = " 15.0*mm"/>
+     <parameter name = "EcalTubeOutRadius"        value = " 17.0*mm"/>
+
+<!-- ##                         Inner Module Parameters                    ## -->
+     <parameter name = "EcalInnFrontCoverLength"  value = "23.0*mm"/>
+     <parameter name = "EcalInnBackCoverLength"   value = "69.0*mm"/>
+     <parameter name = "EcalInnReadOutLength"     value = "166.0*mm"/>
+     <parameter name = "EcalInnReadOutX"          value = "110.7*mm"/>
+     <parameter name = "EcalInnReadOutY"          value = "110.7*mm"/>
+
+<parameter name  = "EcalInnFrontCoverOffset"  
+           value = "-0.5*EcalInnModLength+0.5*EcalInnFrontCoverLength"/>
+<parameter name = "EcalInnStackOffset"  
+value = "-0.5*EcalInnModLength+EcalInnFrontCoverLength+0.5*EcalStackLength"/>
+<parameter name = "EcalInnBackCoverOffset"
+value = "0.5*EcalInnModLength-1*EcalInnReadOutLength-0.5*EcalInnBackCoverLength"/>
+<parameter name  = "EcalInnReadOutOffset"
+           value = "0.5*EcalInnModLength-0.5*EcalInnReadOutLength"/>
+
+<!-- ##                        Middle Module Parameters                    ## -->
+     <parameter name = "EcalMidFrontCoverLength"  value = "23.0*mm"/>
+     <parameter name = "EcalMidBackCoverLength"   value = "74.0*mm"/>
+     <parameter name = "EcalMidReadOutLength"     value = "176.0*mm"/>
+
+<parameter name  = "EcalMidFrontCoverOffset"  
+           value = "-0.5*EcalMidModLength+0.5*EcalMidFrontCoverLength"/>
+<parameter name = "EcalMidStackOffset"  
+value = "-0.5*EcalMidModLength+EcalMidFrontCoverLength+0.5*EcalStackLength"/>
+<parameter name = "EcalMidBackCoverOffset"
+value = "0.5*EcalMidModLength-1*EcalMidReadOutLength-0.5*EcalMidBackCoverLength"/>
+<parameter name  = "EcalMidReadOutOffset"
+           value = "0.5*EcalMidModLength-0.5*EcalMidReadOutLength"/>
+<!-- ##                       Outer Module Parameters                      ## -->
+     <parameter name = "EcalOutFrontCoverLength"  value = "23.0*mm"/>
+     <parameter name = "EcalOutBackCoverLength"   value = "74.0*mm"/>
+     <parameter name = "EcalOutReadOutLength"     value = "176.0*mm"/>
+
+<parameter name  = "EcalOutFrontCoverOffset"  
+           value = "-0.5*EcalOutModLength+0.5*EcalOutFrontCoverLength"/>
+<parameter name = "EcalOutStackOffset"  
+value = "-0.5*EcalOutModLength+EcalOutFrontCoverLength+0.5*EcalStackLength"/>
+<parameter name = "EcalOutBackCoverOffset"
+value = "0.5*EcalOutModLength-1*EcalOutReadOutLength-0.5*EcalOutBackCoverLength"/>
+<parameter name  = "EcalOutReadOutOffset"
+           value = "0.5*EcalOutModLength-0.5*EcalOutReadOutLength"/>
+
+<!-- %%%%%%                    Stack Basic Parameters                  %%%%%% -->
+
+<!-- ### Z Geometry ### -->
+<!-- ## Ecal Stack consist of Front and Back Steel Matrix Plates,
+     Front and Back Plastic Plates, Paper+Sc+Paper+Pb Sandwiches           ## -->
+     <parameter name = "EcalSteelThick"       value = "1.0*mm"/>
+     <parameter name = "EcalPlasticThick"     value = "7.0*mm"/>
+     <parameter name = "EcalPbThick"          value = "2.0*mm"/> 
+     <parameter name = "EcalScThick"          value = "4.0*mm"/>
+     <parameter name = "EcalPaperThick"       value = "0.12*mm"/>
+<!-- ## Geometry Centers of Front and Back Steel Plates,
+     Front and Back Plastic Plates, Pb and Sc Plates are offset
+                           to the Geometry Center of Ecal Stack            ## -->
+     <parameter name = "EcalSteelOffset"     value = "-215.50*mm"/>
+     <parameter name = "EcalPlasticOffset"   value = "-211.50*mm"/>
+     <parameter name = "EcalScOffset"        value = "-205.88*mm"/>
+     <parameter name = "EcalPbOffset"        value = "-202.76*mm"/>
+<!-- ### XY Geometry ### -->
+<!-- ##   Outer Module Stack is divided into  1 Outer  Cells               ## -->
+     <parameter name = "EcalOutCellXYSize"  value = "121.2*mm"/>
+<!-- ## Middle Module Stack is divided into  4 Middle Cells                ## -->
+     <parameter name = "EcalMidCellXYSize"  value = "EcalOutCellXYSize/2"/>
+<!-- ## Inner  Module Stack is divided into  9 Inner  Cells                ## -->
+     <parameter name = "EcalInnCellXYSize"  value = "EcalOutCellXYSize/3"/>
+<!-- ## Inner  Cell is divided into 16 SubCells   ## -->
+     <parameter name = "EcalInnSubCellXYSize"  value = "EcalInnCellXYSize/4"/>
+<!-- ## Middle Cell is divided into 36 SubCells   ## -->
+     <parameter name = "EcalMidSubCellXYSize"  value = "EcalMidCellXYSize/6"/>
+<!-- ## Outer  Cell is divided into 64 SubCells   ## -->
+     <parameter name = "EcalOutSubCellXYSize"  value = "EcalOutCellXYSize/8"/>
+<!-- ## One SubFiber goes through each SubCell    ##-->
+     <parameter name = "EcalFiberRadius"       value = "0.6*mm"/>
+     <parameter name = "EcalFiberHoleRadius"   value = "0.75*mm"/>
+     
+  <!-- %%%%%%                BeamPlug Parameters                 %%%%%% -->
+  <parameter name = "EcalBeamPlugXSize"		 value = "EcalSupportXSize"   />
+  <parameter name = "EcalBeamPlugYSize"		 value = "EcalSupportYSize"   />
+  <parameter name = "EcalBeamPlugZSize"		 value = "EcalSupportLength"  />
+  <parameter name = "EcalDelta"		         value = "0.1*mm"             />
+
+  <parameter name = "EcalBeamPlugPipeHoleZ1"	 value = "-0.5*EcalBeamPlugZSize-10.0*mm"   />
+  <parameter name = "EcalBeamPlugPipeHoleZ2"	 value = "-0.5*EcalBeamPlugZSize+480.11*mm" />
+  <parameter name = "EcalBeamPlugPipeHoleZ3"	 value = "EcalBeamPlugPipeHoleZ2+23.*mm"   />
+  <parameter name = "EcalBeamPlugPipeHoleZ4"	 value = "EcalBeamPlugPipeHoleZ3+0.5*mm"   />
+  <parameter name = "EcalBeamPlugPipeHoleZ5"	 value = "EcalBeamPlugPipeHoleZ4+216.5*mm"  />
+  <parameter name = "EcalBeamPlugPipeHoleZ6"	 value = " 0.5*EcalBeamPlugZSize+10.0*mm"   />
+
+  <parameter name = "EcalBeamPlugPipeHoleR1"	 value = "156.025*mm"	/>
+  <parameter name = "EcalBeamPlugPipeHoleR2"	 value = "160.925*mm"	/>
+  <parameter name = "EcalBeamPlugPipeHoleR3"	 value = "162.0*mm"   />
+  <parameter name = "EcalBeamPlugPipeHoleR4"	 value = "191.0*mm"   />
+  <parameter name = "EcalBeamPlugPipeHoleR5"	 value = "206.0*mm"   />
+  <parameter name = "EcalBeamPlugPipeHoleR6"	 value = "206.0*mm"   />
+
+  <parameter name = "EcalSteelSheetThick1"		     value = "22*mm"	 />
+  <parameter name = "EcalSteelSheetThick2"		     value = "8*mm"	 />
+  <parameter name = "EcalSteelSheetLength1"		     value = "590*mm"	 />
+  <parameter name = "EcalSteelSheetLength2"		     value = "340*mm"	 />
+
+  <parameter name = "EcalSteelSheetWithHoleThick1"       value = "10*mm"	 />
+  <parameter name = "EcalSteelSheetWithHoleThick2"	     value = "20*mm"	 />
+  <parameter name = "EcalSteelSheetWithHoleRadius1"      value = "210*mm"	 />
+  <parameter name = "EcalSteelSheetWithHoleRadius2"	     value = "165*mm"	 />
+  <parameter name = "EcalSteelSheetWithHoleStep1"        value = "200*mm"	 />
+  <parameter name = "EcalSteelSheetWithHoleStep2"	     value = "210*mm"	 />
+     
+  <parameter name = "EcalShieldZSize"	     value = "1*mm"	 /> 
+<!-- ************************************************************************ --> 
+<!-- ************************************************************************ --> 
+<!--                             Ecal Catalog Definition                      -->
+<!-- ************************************************************************ --> 
+    <catalog name = "Ecal"> 
+            <catalogref href="Installation.xml#Installation"/> 
+            <catalogref href="Modules.xml#Modules"/>
+    </catalog>
+<!-- ************************************************************************ --> 
+</DDDB> 

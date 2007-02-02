@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE DDDB SYSTEM "../../DTD/geometry.dtd">
+<DDDB>
+
+<!--
+
+   $Id: InnerFilling.xml,v 1.1 2007-02-02 18:19:30 marcocle Exp $ 
+   CVS tag $Name: not supported by cvs2svn $
+   $Log: not supported by cvs2svn $
+   Revision 1.1.1.1  2007/01/30 13:34:59  marcocle
+   CVS based back up for the SQLite conditions database
+
+   Revision 1.7  2006/02/06 15:54:01  cattanem
+   DC06 geometry and cleanup of older stuff
+
+   Revision 1.6  2005/06/06 16:03:09  gcorti
+   Calo tilt
+
+   Revision 1.5  2003/07/10 14:56:28  cattanem
+   changes for v17r0 - see release notes
+
+   Revision 1.4  2003/05/28 13:48:17  cattanem
+   changes from Sajan, Witek, Patrick
+
+   Revision 1.3  2002/09/12 09:33:00  cattanem
+   Add vertical Rich, Velo optimisation
+
+   Revision 1.2  2002/01/19 16:20:32  aberdiou
+    new description of Hcal
+
+
+-->
+
+  <!-- **************************************************************** --> 
+  <!--    Geometry of the Filling (Tile, Spacers, Master Plate etc.)    -->
+  <!--         in the Inner Cells of the Hadronic Calorimeter           -->
+  <!-- **************************************************************** --> 
+  <!--                   Logical Volumes Definition                     --> 
+  <!-- **************************************************************** --> 
+  <!-- %%%%%%%%%%          Upper Master Plate                %%%%%%%%%% -->
+  <!-- **************************************************************** --> 
+  <logvol name = "lvHcalInnCellUpMsPlBox" material = "Air">
+    <box name  = "HcalInnCellUpMsPlRootBox"
+      sizeX = "HcalMsPlWidth"
+      sizeY = "0.5*HcalMsPlHeight"
+      sizeZ = "2.0*HcalMsPlStepLength"/>
+    <physvol name = "pvHcalInnCellUpMsPl"
+      logvol = "/dd/Geometry/DownstreamRegion/Hcal/Cells/lvHcalInnCellUpMsPl"> 
+    </physvol>
+  </logvol> 
+  <!-- **************************************************************** --> 
+  <logvol name = "lvHcalInnCellUpMsPl" material = "Hcal/HcalMsPlSteel">
+    <subtraction name = "HcalInnCellUpMsPl">
+      <box name  = "HcalInnCellUpMsPlBox"
+	sizeX = "HcalMsPlWidth"
+	sizeY = "0.5*HcalMsPlHeight"
+	sizeZ = "2.0*HcalMsPlStepLength"/>
+      <tubs name = "HcalInnCellUpMsPl1stCalHole"
+        sizeZ = "HcalMsPlWidth+HcalTolerance"
+        outerRadius = "HcalMsPlCalHoleR"/>
+      <posXYZ x = "0.0*mm"
+              y = "-0.25*HcalMsPlHeight"
+              z = "-0.5*HcalMsPlStepLength"/>
+      <rotXYZ rotY="90*degree"/>
+      <tubs name = "HcalInnCellUpMsPl2ndCalHole"
+        sizeZ = "HcalMsPlWidth+HcalTolerance"
+        outerRadius = "HcalMsPlCalHoleR"/>
+      <posXYZ x = "0.0*mm"
+              y = "-0.25*HcalMsPlHeight"
+              z = "0.5*HcalMsPlStepLength"/>
+      <rotXYZ rotY="90*degree"/>
+    </subtraction>
+  </logvol> 
+  <!-- **************************************************************** --> 
+  <!-- %%%%%%%%%%          Lower Master Plate                %%%%%%%%%% -->
+  <!-- **************************************************************** --> 
+  <logvol name = "lvHcalInnCellLowMsPlBox" material = "Air">
+    <box name  = "HcalInnCellLowMsPlRootBox"
+      sizeX = "HcalMsPlWidth"
+      sizeY = "0.5*HcalMsPlHeight"
+      sizeZ = "2.0*HcalMsPlStepLength"/>
+    <physvol name = "pvHcalInnCellLowMsPl"
+      logvol = "/dd/Geometry/DownstreamRegion/Hcal/Cells/lvHcalInnCellLowMsPl"> 
+    </physvol>
+  </logvol> 
+  <!-- **************************************************************** --> 
+  <logvol name = "lvHcalInnCellLowMsPl" material = "Hcal/HcalMsPlSteel">
+    <subtraction name = "HcalInnCellLowMsPl">
+      <box name  = "HcalInnCellLowMsPlBox"
+	sizeX = "HcalMsPlWidth"
+	sizeY = "0.5*HcalMsPlHeight"
+	sizeZ = "2.0*HcalMsPlStepLength"/>
+      <tubs name = "HcalInnCellLowMsPl1stCalHole"
+        sizeZ = "HcalMsPlWidth+HcalTolerance"
+        outerRadius = "HcalMsPlCalHoleR"/>
+      <posXYZ x = "0.0*mm"
+              y = "0.25*HcalMsPlHeight"
+              z = "-0.5*HcalMsPlStepLength"/>
+      <rotXYZ rotY="90*degree"/>
+      <tubs name = "HcalInnCellLowMsPl2ndCalHole"
+        sizeZ = "HcalMsPlWidth+HcalTolerance"
+        outerRadius = "HcalMsPlCalHoleR"/>
+      <posXYZ x = "0.0*mm"
+              y = "0.25*HcalMsPlHeight"
+              z = "0.5*HcalMsPlStepLength"/>
+      <rotXYZ rotY="90*degree"/>
+    </subtraction>
+  </logvol> 
+  <!-- **************************************************************** --> 
+  <!-- %%%%%%%%%%        Upper Half Scintillating Tile       %%%%%%%%%% -->
+  <!-- **************************************************************** --> 
+  <logvol name = "lvHcalInnCellUpScTileBox" material = "Air">
+    <box name  = "HcalInnCellUpScTileRootBox"
+      sizeX = "HcalScTileWidth"
+      sizeY = "0.5*HcalScTileHeigth-0.5*HcalScTileSlitWidth"
+      sizeZ = "HcalScTileLength"/>
+    <physvol name = "pvHcalInnCellUpScTile"
+      logvol = "/dd/Geometry/DownstreamRegion/Hcal/Cells/lvHcalInnCellUpScTile"> 
+    </physvol>
+  </logvol> 
+  <!-- **************************************************************** --> 
+  <logvol 
+    name = "lvHcalInnCellUpScTile" 
+    material = "Hcal/HcalSc"
+    sensdet  = "HcalSensDet/Hcal">
+    <subtraction name = "HcalInnCellUpScTile">
+      <box name  = "HcalInnCellUpScTileBox"
+	sizeX = "HcalScTileWidth"
+	sizeY = "0.5*HcalScTileHeigth-0.5*HcalScTileSlitWidth"
+	sizeZ = "HcalScTileLength"/>
+      <tubs name = "HcalInnCellUpScTileCalHole"
+        sizeZ = "HcalScTileWidth+HcalTolerance"
+        outerRadius = "HcalScTileCalHoleR"/>
+      <posXYZ x = "0.0*mm"
+              y = "-0.25*HcalScTileHeigth-0.25*HcalScTileSlitWidth"
+              z = "0.0*mm"/>
+      <rotXYZ rotY="90*degree"/>
+    </subtraction>
+  </logvol> 
+  <!-- **************************************************************** --> 
+  <!-- %%%%%%%%%%        Lower Half Scintillating Tile       %%%%%%%%%% -->
+  <!-- **************************************************************** --> 
+  <logvol name = "lvHcalInnCellLowScTileBox" material = "Air">
+    <box name  = "HcalInnCellLowScTileRootBox"
+      sizeX = "HcalScTileWidth"
+      sizeY = "0.5*HcalScTileHeigth-0.5*HcalScTileSlitWidth"
+      sizeZ = "HcalScTileLength"/>
+    <physvol name = "pvHcalInnCellLowScTile"
+      logvol = "/dd/Geometry/DownstreamRegion/Hcal/Cells/lvHcalInnCellLowScTile"> 
+    </physvol>
+  </logvol> 
+  <!-- **************************************************************** --> 
+  <logvol name = "lvHcalInnCellLowScTile" 
+    material = "Hcal/HcalSc"
+    sensdet  = "HcalSensDet/Hcal">
+    <subtraction name = "HcalInnCelllowScTile">
+      <box name  = "HcalInnCellLowScTileBox"
+	sizeX = "HcalScTileWidth"
+	sizeY = "0.5*HcalScTileHeigth-0.5*HcalScTileSlitWidth"
+	sizeZ = "HcalScTileLength"/>
+      <tubs name = "HcalInnCellLowScTileCalHole"
+        sizeZ = "HcalScTileWidth+HcalTolerance"
+        outerRadius = "HcalScTileCalHoleR"/>
+      <posXYZ x = "0.0*mm"
+              y = "0.25*HcalScTileHeigth+0.25*HcalScTileSlitWidth"
+              z = "0.0*mm"/>
+      <rotXYZ rotY="90*degree"/>
+    </subtraction>
+  </logvol> 
+  <!-- **************************************************************** --> 
+  <!-- %%%%%%%%%%       Upper Foward Big Inner Spacer        %%%%%%%%%% -->
+  <!-- **************************************************************** --> 
+  <logvol name = "lvHcalInnCellUpFwBigSpacerBox" material = "Air">
+    <box name  = "HcalInnCellUpFwBigSpacerRootBox"
+      sizeX = "HcalSpacerWidth"
+      sizeY = "0.5*HcalSpacerHeigth"
+      sizeZ = "0.5*HcalSpacerLength+0.5*HcalMsPlStepLength"/>
+    <physvol name = "pvHcalInnCellUpFwBigSpacer"
+      logvol = "/dd/Geometry/DownstreamRegion/Hcal/Cells/lvHcalInnCellUpFwBigSpacer"> 
+    </physvol>
+  </logvol> 
+  <!-- **************************************************************** --> 
+  <logvol name = "lvHcalInnCellUpFwBigSpacer" material = "Hcal/HcalMsPlSteel">
+    <subtraction name = "HcalInnCellUpFwBigSpacer">
+      <box name  = "HcalInnCellUpFwBigSpacerBox"
+	sizeX = "HcalSpacerWidth"
+	sizeY = "0.5*HcalSpacerHeigth"
+	sizeZ = "0.5*HcalSpacerLength+0.5*HcalMsPlStepLength"/>
+      <tubs name = "HcalInnCellUpFwBigSpacerCalHole"
+        sizeZ = "HcalSpacerWidth+HcalTolerance"
+        outerRadius = "HcalMsPlCalHoleR"/>
+      <posXYZ x = "0.0*mm"
+              y = "-0.25*HcalSpacerHeigth"
+              z = "-0.25*HcalSpacerLength+0.25*HcalMsPlStepLength"/>
+      <rotXYZ rotY="90*degree"/>
+    </subtraction>
+  </logvol> 
+  <!-- **************************************************************** --> 
+  <!-- %%%%%%%%%%       Lower Foward Big Inner Spacer        %%%%%%%%%% -->
+  <!-- **************************************************************** --> 
+  <logvol name = "lvHcalInnCellLowFwBigSpacerBox" material = "Air">
+    <box name  = "HcalInnCellLowFwBigSpacerRootBox"
+      sizeX = "HcalSpacerWidth"
+      sizeY = "0.5*HcalSpacerHeigth"
+      sizeZ = "0.5*HcalSpacerLength+0.5*HcalMsPlStepLength"/>
+    <physvol name = "pvHcalInnCellLowFwBigSpacer"
+      logvol = "/dd/Geometry/DownstreamRegion/Hcal/Cells/lvHcalInnCellLowFwBigSpacer"> 
+    </physvol>
+  </logvol> 
+  <!-- **************************************************************** --> 
+  <logvol name = "lvHcalInnCellLowFwBigSpacer" material = "Hcal/HcalMsPlSteel">
+    <subtraction name = "HcalInnCellLowFwBigSpacer">
+      <box name  = "HcalInnCellLowFwBigSpacerBox"
+	sizeX = "HcalSpacerWidth"
+	sizeY = "0.5*HcalSpacerHeigth"
+	sizeZ = "0.5*HcalSpacerLength+0.5*HcalMsPlStepLength"/>
+      <tubs name = "HcalInnCellLowFwBigSpacerCalHole"
+        sizeZ = "HcalSpacerWidth+HcalTolerance"
+        outerRadius = "HcalMsPlCalHoleR"/>
+      <posXYZ x = "0.0*mm"
+              y = "0.25*HcalSpacerHeigth"
+              z = "-0.25*HcalSpacerLength+0.25*HcalMsPlStepLength"/>
+      <rotXYZ rotY="90*degree"/>
+    </subtraction>
+  </logvol> 
+  <!-- **************************************************************** --> 
+  <!-- %%%%%%%%%%      Upper Foward Small Inner Spacer       %%%%%%%%%% -->
+  <!-- **************************************************************** --> 
+  <logvol name = "lvHcalInnCellUpFwSmSpacer" material = "Hcal/HcalMsPlSteel">
+      <box name  = "HcalInnCellUpFwSmSpacerBox"
+	sizeX = "HcalSpacerWidth"
+	sizeY = "0.5*HcalSpacerHeigth"
+	sizeZ = "0.5*HcalSpacerLength-0.5*HcalMsPlStepLength"/>
+  </logvol> 
+  <!-- **************************************************************** --> 
+  <!-- %%%%%%%%%%      Lower Foward Small Inner Spacer       %%%%%%%%%% -->
+  <!-- **************************************************************** --> 
+  <logvol name = "lvHcalInnCellLowFwSmSpacer" material = "Hcal/HcalMsPlSteel">
+      <box name  = "HcalInnCellLowFwSmSpacerBox"
+	sizeX = "HcalSpacerWidth"
+	sizeY = "0.5*HcalSpacerHeigth"
+	sizeZ = "0.5*HcalSpacerLength-0.5*HcalMsPlStepLength"/>
+  </logvol> 
+  <!-- **************************************************************** --> 
+  <!-- %%%%%%%%%%      Upper Backward Big Inner Spacer       %%%%%%%%%% -->
+  <!-- **************************************************************** --> 
+  <logvol name = "lvHcalInnCellUpBkBigSpacerBox" material = "Air">
+    <box name  = "HcalInnCellUpBkBigSpacerRootBox"
+      sizeX = "HcalSpacerWidth"
+      sizeY = "0.5*HcalSpacerHeigth"
+      sizeZ = "0.5*HcalSpacerLength+0.5*HcalMsPlStepLength"/>
+    <physvol name = "pvHcalInnCellUpBkBigSpacer"
+      logvol = "/dd/Geometry/DownstreamRegion/Hcal/Cells/lvHcalInnCellUpBkBigSpacer"> 
+    </physvol>
+  </logvol> 
+  <!-- **************************************************************** --> 
+  <logvol name = "lvHcalInnCellUpBkBigSpacer" material = "Hcal/HcalMsPlSteel">
+    <subtraction name = "HcalInnCellUpBkBigSpacer">
+      <box name  = "HcalInnCellUpBkBigSpacerBox"
+	sizeX = "HcalSpacerWidth"
+	sizeY = "0.5*HcalSpacerHeigth"
+	sizeZ = "0.5*HcalSpacerLength+0.5*HcalMsPlStepLength"/>
+      <tubs name = "HcalInnCellUpBkBigSpacerCalHole"
+        sizeZ = "HcalSpacerWidth+HcalTolerance"
+        outerRadius = "HcalMsPlCalHoleR"/>
+      <posXYZ x = "0.0*mm"
+              y = "-0.25*HcalSpacerHeigth"
+              z = "0.25*HcalSpacerLength-0.25*HcalMsPlStepLength"/>
+      <rotXYZ rotY="90*degree"/>
+    </subtraction>
+  </logvol> 
+  <!-- **************************************************************** --> 
+  <!-- %%%%%%%%%%      Lower Backward Big Inner Spacer       %%%%%%%%%% -->
+  <!-- **************************************************************** --> 
+  <logvol name = "lvHcalInnCellLowBkBigSpacerBox" material = "Air">
+    <box name  = "HcalInnCellLowBkBigSpacerRootBox"
+      sizeX = "HcalSpacerWidth"
+      sizeY = "0.5*HcalSpacerHeigth"
+      sizeZ = "0.5*HcalSpacerLength+0.5*HcalMsPlStepLength"/>
+    <physvol name = "pvHcalInnCellLowBkBigSpacer"
+      logvol = "/dd/Geometry/DownstreamRegion/Hcal/Cells/lvHcalInnCellLowBkBigSpacer"> 
+    </physvol>
+  </logvol> 
+  <!-- **************************************************************** --> 
+  <logvol name = "lvHcalInnCellLowBkBigSpacer" material = "Hcal/HcalMsPlSteel">
+    <subtraction name = "HcalInnCellLowBkBigSpacer">
+      <box name  = "HcalInnCellLowBkBigSpacerBox"
+	sizeX = "HcalSpacerWidth"
+	sizeY = "0.5*HcalSpacerHeigth"
+	sizeZ = "0.5*HcalSpacerLength+0.5*HcalMsPlStepLength"/>
+      <tubs name = "HcalInnCellLowBkBigSpacerCalHole"
+        sizeZ = "HcalSpacerWidth+HcalTolerance"
+        outerRadius = "HcalMsPlCalHoleR"/>
+      <posXYZ x = "0.0*mm"
+              y = "0.25*HcalSpacerHeigth"
+              z = "0.25*HcalSpacerLength-0.25*HcalMsPlStepLength"/>
+      <rotXYZ rotY="90*degree"/>
+    </subtraction>
+  </logvol> 
+  <!-- **************************************************************** --> 
+  <!-- %%%%%%%%%%     Upper Backward Small Inner Spacer      %%%%%%%%%% -->
+  <!-- **************************************************************** --> 
+  <logvol name = "lvHcalInnCellUpBkSmSpacer" material = "Hcal/HcalMsPlSteel">
+      <box name  = "HcalInnCellUpBkSmSpacerBox"
+	sizeX = "HcalSpacerWidth"
+	sizeY = "0.5*HcalSpacerHeigth"
+	sizeZ = "0.5*HcalSpacerLength-0.5*HcalMsPlStepLength"/>
+  </logvol> 
+  <!-- **************************************************************** --> 
+  <!-- %%%%%%%%%%     Lower Backward Small Inner Spacer      %%%%%%%%%% -->
+  <!-- **************************************************************** --> 
+  <logvol name = "lvHcalInnCellLowBkSmSpacer" material = "Hcal/HcalMsPlSteel">
+      <box name  = "HcalInnCellLowBkSmSpacerBox"
+	sizeX = "HcalSpacerWidth"
+	sizeY = "0.5*HcalSpacerHeigth"
+	sizeZ = "0.5*HcalSpacerLength-0.5*HcalMsPlStepLength"/>
+  </logvol> 
+  <!-- **************************************************************** --> 
+</DDDB> 

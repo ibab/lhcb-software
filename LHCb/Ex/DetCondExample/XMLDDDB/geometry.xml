@@ -1,14 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE DDDB SYSTEM "DTD/geometry.dtd">
-<!-- $Id: geometry.xml,v 1.5 2005-06-23 16:20:29 marcocle Exp $ -->
+<!DOCTYPE DDDB SYSTEM "DTD/geometry.dtd"
+[<!ENTITY RegionsParameters SYSTEM "LHCb/RegionsParameters.xml">
+ <!ENTITY PipeGeomParams    SYSTEM "Pipe/PipeGeomParams.xml">]>
+
 <DDDB>
+  <!-- ====================================================== -->
+  <!-- This is the geometry for LHCb with the new hierarchy   -->
+  <!-- ====================================================== -->
+  
+  &RegionsParameters;
+  &PipeGeomParams;
+
   <catalog name="Geometry">
-    <!-- ******************************************************* -->
-    <!-- * definition of main catalog for geometry gescription * -->
-    <!-- ******************************************************* -->
-    <!-- <catalogref href="conddb:/CONDDB/Geometry2/LHCb#LHCb"/> -->
-    <catalogref href="LHCb/geometry.xml#LHCb"/>
-    <catalogref href="Ecal/geometry.xml#Ecal"/>
-    <catalogref href="Hcal/geometry.xml#Hcal"/>
+    <catalogref href="LHCb/geometry.xml#LHCb" />
+    <!--
+    <catalogref href="Upstream/geometry.xml#UpstreamRegion" />
+    <catalogref href="BeforeMagnet/geometry.xml#BeforeMagnetRegion" />
+    <catalogref href="MagnetRegion/geometry.xml#MagnetRegion" />
+    <catalogref href="AfterMagnet/geometry.xml#AfterMagnetRegion" />
+    -->
+    <catalogref href="Downstream/geometry.xml#DownstreamRegion" />
   </catalog>
+
 </DDDB>

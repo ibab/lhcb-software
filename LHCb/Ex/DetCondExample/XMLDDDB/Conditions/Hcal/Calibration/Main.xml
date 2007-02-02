@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE DDDB SYSTEM "../../../DTD/structure.dtd">
+<DDDB>
+
+<!-- J.P. Palacios Place to put general Hcal conditions -->
+
+  <condition name = "Gain">
+    <param name = "EtInCenter"    type = "double">   15.*GeV </param>
+    <param name = "EtSlope"       type = "double">    0.*GeV </param>
+    <param name = "ActiveToTotal" type = "double">     57.54 </param>
+    <param name = "L0EtBin"       type = "double">   20.*MeV </param>
+    <param name = "PedShift"      type = "double">       0.6 </param>
+  </condition>
+  <condition name = "Reco">
+    <param name = "ZShowerMax"    type = "double">  -527.5*mm </param>
+  </condition>
+
+</DDDB>

@@ -1,11 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE DDDB SYSTEM "DTD/structure.dtd">
-<!-- $Id: structure.xml,v 1.1 2001-12-17 15:45:58 andreav Exp $ -->
+
 <DDDB>
-<catalog name="Structure">
-   <!--  This is the top level Catalog for the Detector Description  
-         For the time being the only existing detetor setup is LHCb, but
-         others like test beams can be added at the same level -->   
-   <detelemref href="LHCb/structure.xml#LHCb"/>
-</catalog>
+  <catalog name="Structure">
+
+    <!-- ========================================================== -->
+    <!-- This is the top level Catalog for the Detector Description -->
+    <!--                      new hierarchy setup                   -->
+    <!-- ========================================================== -->
+
+    <detelem name="LHCb" type="passive">
+
+      <conditioninfo name="Alignment" condition="/dd/Conditions/Alignment/LHCb/LHCbSystem"/>
+      <conditioninfo name="Temperature" condition="/dd/Conditions/Environment/LHCb/Temperature"/>
+
+      <geometryinfo lvname="/dd/Geometry/LHCb/lvLHCb" />
+      <!--
+      <detelemref href="Upstream/structure.xml#UpstreamRegion" />
+      <detelemref href="BeforeMagnet/structure.xml#BeforeMagnetRegion" />
+      <detelemref href="MagnetRegion/structure.xml#MagnetRegion" />
+      <detelemref href="AfterMagnet/structure.xml#AfterMagnetRegion" />
+      -->
+      <detelemref href="Downstream/structure.xml#DownstreamRegion" />
+
+      <detelem classID="9999" name="Dummy">
+	<param name="comment" type="string"> Dummy detector element used to test the update </param>
+	<conditioninfo name="ReadOut" condition="/dd/Conditions/ReadoutConf/DummyDE/Configuration"/>
+	<conditioninfo name="Temperature" condition="/dd/Conditions/Environment/DummyDE/Temperature"/>
+      </detelem>
+
+    </detelem>
+    
+  </catalog>
 </DDDB>

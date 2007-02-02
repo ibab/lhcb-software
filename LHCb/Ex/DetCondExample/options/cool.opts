@@ -3,11 +3,10 @@
 //==============================================================
 
 //--------------------------------------------------------------
-// Extra services needed in the application
+// Detector Persistency Service Setup
 //--------------------------------------------------------------
-
-// Dynamically load component library for DetCond services and converters
-ApplicationMgr.DLLs += { "DetCond" };
+DetectorPersistencySvc.CnvServices += { "CondDBCnvSvc" };
+XmlParserSvc.EntityResolverSvc = "CondDBEntityResolverSvc";
 
 //--------------------------------------------------------------
 // Access to the ConditionsDB

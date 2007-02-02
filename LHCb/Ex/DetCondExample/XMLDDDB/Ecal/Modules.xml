@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE DDDB SYSTEM "../DTD/geometry.dtd">
+<DDDB>
+<!-- """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""" --> 
+<!--   
+  CVS tag: $Name: not supported by cvs2svn $
+  $Log: not supported by cvs2svn $
+  Revision 1.1.1.1  2007/01/30 13:34:59  marcocle
+  CVS based back up for the SQLite conditions database
+
+  Revision 1.5  2005/06/06 15:59:43  gcorti
+  Calo tilt
+
+  Revision 1.4  2003/12/05 13:59:42  cattanem
+  add Calo changes
+
+  Revision 1.3  2003/06/19 06:18:21  cattanem
+  v16r0
+
+  Revision 1.2  2002/09/12 09:32:56  cattanem
+  Add vertical Rich, Velo optimisation
+
+  Revision 1.1  2001/12/15 16:05:27  ibelyaev
+  The first version of  detailed Ecal description by Galina Pakhlova
+ 
+--> 
+<!-- """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""" --> 
+<!-- ******************************************************************** --> 
+<!--                       Modules Catalog Definition                     -->
+<!-- ******************************************************************** --> 
+    <catalog name = "Modules"> 
+
+<!-- ### Ecal Inner Module Logical Volumes references ### -->
+
+          <logvolref href = "Modules/InnMod.xml#Inner"/>
+          <logvolref href = "Modules/InnMod.xml#InnFrontCover"/>
+          <logvolref href = "Modules/InnMod.xml#InnBackCover"/>  
+          <logvolref href = "Modules/InnMod.xml#InnReadOut"/>
+          <logvolref href = "Modules/InnMod.xml#InnReadOutBox"/> 
+          <logvolref href = "Modules/InnMod.xml#InnStack"/> 
+
+          <logvolref href = "Modules/InnCell.xml#InnCell"/> 
+
+    <logvolref href = "Modules/InnCellPlates.xml#InnCellPlastic"/> 
+    <logvolref href = "Modules/InnCellPlates.xml#InnCellSteel"/> 
+    <logvolref href = "Modules/InnCellPlates.xml#InnCellPb"/> 
+
+<!-- ### Ecal Middle Module Logical Volumes references ### -->
+
+          <logvolref href = "Modules/MidMod.xml#Middle"/>
+          <logvolref href = "Modules/MidMod.xml#MidFrontCover"/>
+          <logvolref href = "Modules/MidMod.xml#MidBackCover"/>  
+          <logvolref href = "Modules/MidMod.xml#MidReadOut"/>
+          <logvolref href = "Modules/MidMod.xml#MidReadOutTube"/>
+          <logvolref href = "Modules/MidMod.xml#MidStack"/> 
+
+          <logvolref href = "Modules/MidCell.xml#MidCell"/> 
+
+    <logvolref href = "Modules/MidCellPlates.xml#MidCellPlastic"/> 
+    <logvolref href = "Modules/MidCellPlates.xml#MidCellSteel"/> 
+    <logvolref href = "Modules/MidCellPlates.xml#MidCellPb"/> 
+
+<!-- ### Ecal Outer Module Logical Volumes references ### -->
+
+          <logvolref href = "Modules/OutMod.xml#Outer"/>
+          <logvolref href = "Modules/OutMod.xml#OutFrontCover"/>
+          <logvolref href = "Modules/OutMod.xml#OutBackCover"/>  
+          <logvolref href = "Modules/OutMod.xml#OutReadOut"/>
+          <logvolref href = "Modules/OutMod.xml#OutReadOutTube"/>
+          <logvolref href = "Modules/OutMod.xml#OutStack"/> 
+
+          <logvolref href = "Modules/OutCell.xml#OutCell"/> 
+
+    <logvolref href = "Modules/OutCellPlates.xml#OutCellPlastic"/>       
+    <logvolref href = "Modules/OutCellPlates.xml#OutCellSteel"/> 
+    <logvolref href = "Modules/OutCellPlates.xml#OutCellPb"/> 
+
+<!-- ### Ecal Fiber Logical Volumes references ### -->
+ 
+   <logvolref href = "Modules/Fiber.xml#FiberPb"/> 
+<!-- ###### -->
+    </catalog>
+<!-- ******************************************************************** --> 
+</DDDB>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE DDDB SYSTEM "../../DTD/geometry.dtd">
+<DDDB>
+
+<!-- %%% Ecal Shield %%% -->
+
+  <logvol name = "Shield" material="Ecal/EcalDrilledAluminium">
+
+   <subtraction name = "ShieldSub">
+         <box  name  = "ShildBox"
+                sizeX = "EcalOutXSize-EcalTolerance"
+                sizeY = "EcalOutYSize-EcalTolerance"
+                sizeZ = "EcalShieldZSize"/>
+         <box name  = "Subtracted_Shild_Box"
+              sizeX = "EcalSupportXSize+EcalTolerance"
+              sizeY = "EcalSupportYSize+EcalTolerance"
+              sizeZ = "EcalShieldZSize+EcalTolerance"/>
+   </subtraction>
+
+  </logvol>
+
+</DDDB>

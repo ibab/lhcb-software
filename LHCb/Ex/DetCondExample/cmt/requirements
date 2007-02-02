@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.57 2007-01-23 07:54:54 cattanem Exp $
+# $Id: requirements,v 1.58 2007-02-02 18:14:22 marcocle Exp $
 package DetCondExample
 version v9r4
 
@@ -44,6 +44,7 @@ macro oracle_linkopts
 
 # XML detector description database location
 set DETCONDEXAMPLE_XMLDDDB ${DETCONDEXAMPLEROOT}/XMLDDDB
+set CONDITIONS_PATH "conddb:/Conditions/MainCatalog.xml"
 
 # DAQ test parameters (number of events, folder name and record size in bytes)
 set DETCONDEXAMPLE_DAQEVTMAX 10
@@ -69,4 +70,3 @@ macro_append SEAL_linkopts ' -llcg_SealServices ' WIN32 ' lcg_SealServices.lib '
 
 path JOBOPTSEARCHPATH ../options
 
-# set CONDITIONS_PATH "${CONDDBCONDITIONSROOT}/xml/Conditions/MainCatalog"

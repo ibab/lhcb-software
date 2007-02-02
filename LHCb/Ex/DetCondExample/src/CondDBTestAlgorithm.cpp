@@ -1,4 +1,4 @@
-// $Id: CondDBTestAlgorithm.cpp,v 1.18 2006-08-31 13:53:44 marcocle Exp $
+// $Id: CondDBTestAlgorithm.cpp,v 1.19 2007-02-02 18:17:36 marcocle Exp $
 // Include files 
 
 // from Gaudi
@@ -58,23 +58,23 @@ StatusCode CondDBTestAlgorithm::initialize() {
   try {
 
     // tell the update manager that we need a condition object, which pointer to set and which method to call
-    registerCondition("/dd/SlowControl/LHCb/scLHCb", m_LHCb_cond, &CondDBTestAlgorithm::i_updateCacheLHCb);
-    registerCondition("/dd/SlowControl/Hcal/scHcal", m_Hcal_cond, &CondDBTestAlgorithm::i_updateCacheHcal);
+    registerCondition("Conditions/Environment/LHCb/Temperature", m_LHCb_cond, &CondDBTestAlgorithm::i_updateCacheLHCb);
+    registerCondition("Conditions/Environment/Hcal/Temperature", m_Hcal_cond, &CondDBTestAlgorithm::i_updateCacheHcal);
 
     // we already told the update mgr which pointers to set, we do not need to do it twice
-    registerCondition("/dd/SlowControl/LHCb/scLHCb", &CondDBTestAlgorithm::i_updateCache);
-    registerCondition("/dd/SlowControl/Hcal/scHcal", &CondDBTestAlgorithm::i_updateCache);
+    registerCondition("Conditions/Environment/LHCb/Temperature", &CondDBTestAlgorithm::i_updateCache);
+    registerCondition("Conditions/Environment/Hcal/Temperature", &CondDBTestAlgorithm::i_updateCache);
 
     // this line tells the update mgr that we want the following condition to be always up-to-date,
     // but we do not need to call any special method when it is updated (is it really useful?)
-    registerCondition<CondDBTestAlgorithm>("/dd/SlowControl/LHCb/scLHCb");
+    registerCondition<CondDBTestAlgorithm>("Conditions/Environment/LHCb/Temperature");
 
     // we want that the following TabulatedProperty is updated and the pointer to it is put
     // in m_TabProp
-    registerCondition<CondDBTestAlgorithm>("/dd/Properties/TestFunction", m_TabProp);
+    registerCondition<CondDBTestAlgorithm>("Conditions/Properties/TestFunction", m_TabProp);
 
-    registerCondition<CondDBTestAlgorithm>("/dd/Alignment/Velo/Module01", m_m01);
-    registerCondition<CondDBTestAlgorithm>("/dd/Alignment/Velo/Module12", m_m12);
+    registerCondition<CondDBTestAlgorithm>("Conditions/Alignment/Velo/Module01", m_m01);
+    registerCondition<CondDBTestAlgorithm>("Conditions/Alignment/Velo/Module12", m_m12);
 
     m_dds = svc<IDetDataSvc>("DetectorDataSvc",true);
 
@@ -95,7 +95,7 @@ StatusCode CondDBTestAlgorithm::execute() {
   debug() << "==> Execute" << endmsg;
 
   info() << "-------------------------------------" << endmsg;
-  info() << "Event" << m_dds->eventTime() << endmsg;
+  info() << "EventTime = " << m_dds->eventTime() << endmsg;
   info() << "Temperature check: LHCb = " << m_LHCb_temp << endmsg;
   info() << "                   Hcal = " << m_Hcal_temp << endmsg;
   info() << "                   avg  = " << m_avg_temp << endmsg;
@@ -107,8 +107,8 @@ StatusCode CondDBTestAlgorithm::execute() {
   StatusCode sc;
   
   // Retrieve the LHCb detector element
-  info() << "Retrieve the LHCb detector /dd/Structure/LHCb" << endmsg;
-  DetectorElement *lhcb = getDet<DetectorElement>( "/dd/Structure/LHCb" );
+  info() << "Retrieve the LHCb detector Structure/LHCb" << endmsg;
+  DetectorElement *lhcb = getDet<DetectorElement>( "Structure/LHCb" );
   sc = i_analyse( lhcb );
   if( !sc.isSuccess() ) return sc;
 
@@ -119,8 +119,8 @@ StatusCode CondDBTestAlgorithm::execute() {
   if( !sc.isSuccess() ) return sc;
 
   // Retrieve slowControl for the LHCb detector
-  info() << "Retrieve the slowControl Condition for the LHCb detector" << endmsg;
-  Condition* scLHCb = lhcb->condition("SlowControl");
+  info() << "Retrieve the temperature Condition for the LHCb detector" << endmsg;
+  Condition* scLHCb = lhcb->condition("Temperature");
   sc = i_analyse( scLHCb );
   if( !sc.isSuccess() ) return StatusCode::FAILURE;
   if (m_evtCount == 4){
@@ -145,25 +145,27 @@ StatusCode CondDBTestAlgorithm::execute() {
   if( !sc.isSuccess() ) return StatusCode::FAILURE;
 
   // Retrieve the Hcal detector element
-  info() << "Retrieve the Hcal detector /dd/Structure/LHCb/Hcal" << endmsg;
-  DetectorElement *hcal = getDet<DetectorElement>( "/dd/Structure/LHCb/Hcal" );
+  info() << "Retrieve the Hcal detector Structure/LHCb/DownstreamRegion/Hcal" << endmsg;
+  DetectorElement *hcal = getDet<DetectorElement>( "Structure/LHCb/DownstreamRegion/Hcal" );
   sc = i_analyse( hcal );
   if( !sc.isSuccess() ) return StatusCode::FAILURE;
 
   // Retrieve slowControl for the Hcal detector
-  info() << "Retrieve the slowControl Condition for the Hcal detector" << endmsg;
-  Condition* scHcal = hcal->condition("SlowControl");
+  info() << "Retrieve the temperature Condition for the Hcal detector" << endmsg;
+  //Condition *scHcal = hcal->condition("Temperature");
+  Condition *scHcal = getDet<Condition>( "Conditions/Environment/Hcal/Temperature" );
+  
   sc = i_analyse( scHcal );
   if( !sc.isSuccess() ) return StatusCode::FAILURE;
 
   // Retrieve the Dummy detector element
-  info() << "Test DummyDE detector /dd/Structure/LHCb/Dummy" << endmsg;
-  DetectorElement *dummy = getDet<DetectorElement>( "/dd/Structure/LHCb/Dummy" );
+  info() << "Test DummyDE detector Structure/LHCb/Dummy" << endmsg;
+  DetectorElement *dummy = getDet<DetectorElement>( "Structure/LHCb/Dummy" );
   sc = i_analyse( dummy );
   if( !sc.isSuccess() ) return StatusCode::FAILURE;
 
   // Test alignment (and cool::ChannelId)
-  info() << "Test AlignmentConditions detector /dd/Alignment/Velo/ModuleXX" << endmsg;
+  info() << "Test AlignmentConditions detector Alignment/Velo/ModuleXX" << endmsg;
 
   //  info() << m_m01->name() << " dPosXYZ = " << m_m01->param<std::vector<double> >("dPosXYZ")
   //         << " transformation = \n"
@@ -179,8 +181,8 @@ StatusCode CondDBTestAlgorithm::execute() {
          << m_m12->matrix()
          << endmsg;
 
-  info() << "Test COOL FolderSets mapping to catalogs (get /dd/CondDBRoot/OnLine/Cave)" << endmsg;
-  DataObject* dataObj = getDet<DataObject>("/dd/CondDBRoot/OnLine/Cave");
+  info() << "Test COOL FolderSets mapping to catalogs (get Conditions/Online/Cave)" << endmsg;
+  DataObject* dataObj = getDet<DataObject>("Conditions/Online/Cave");
   
   if ( dataObj ) {
     info() << "Found the DataObject " << dataObj->registry()->identifier() << endmsg;
@@ -189,8 +191,8 @@ StatusCode CondDBTestAlgorithm::execute() {
     return StatusCode::FAILURE;
   }
 
-  info() << "Test self-referencing XML string (get /dd/CondDBRoot/TestFolder/TestSubFolder/TestCondition)" << endmsg;
-  Condition* testCond = getDet<Condition>("/dd/CondDBRoot/TestFolder/TestSubFolder/TestCondition");
+  info() << "Test self-referencing XML string (get Conditions/TestFolder/TestSubFolder/TestCondition)" << endmsg;
+  Condition* testCond = getDet<Condition>("Conditions/TestFolder/TestSubFolder/TestCondition");
 
   sc = i_analyse( testCond );
   if( !sc.isSuccess() ) return StatusCode::FAILURE;
@@ -198,16 +200,12 @@ StatusCode CondDBTestAlgorithm::execute() {
   if (m_evtCount < 2) {
     info() << "ManiFolderTest:" << endmsg;
     Condition *c;
-    c = getDet<Condition>("ManiFolderTest/A/Object");
+    c = getDet<Condition>("Conditions/ManiFolderTest/A/Object");
     info() << "    A: " << c->param<std::string>("Datum") <<endmsg;
-    c = getDet<Condition>("ManiFolderTest/B/Object");
+    c = getDet<Condition>("Conditions/ManiFolderTest/B/Object");
     info() << "    B: " << c->param<std::string>("Datum") <<endmsg;
-    c = getDet<Condition>("ManiFolderTest/C/Object");
+    c = getDet<Condition>("Conditions/ManiFolderTest/C/Object");
     info() << "    C: " << c->param<std::string>("Datum") <<endmsg;
-    
-    info() << "Storage type from folder name:" << endmsg;
-    c = getDet<Condition>("TestXmlObject");
-    info() << "   Good: I could load the object" << endmsg;
     
   }
   

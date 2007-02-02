@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ***************************************************************** -->
+<!-- *  Envelopes geometry parameters.                               * -->
+<!-- *                                                               * -->
+<!-- *  Date: 12-10-2005                                             * -->
+<!-- *  Author: Jan Amoraal                                          * -->
+<!-- *                                                               * -->
+<!-- * There are 5 envelopes/regions:                                * -->
+<!-- * Upstream, BeforeMagnet, Magnet, AfterMagnet, Downstream       * -->
+<!-- ***************************************************************** -->
+
+<!-- Upstream parameters -->
+<parameter name="UpstreamXSize" value="20000*mm" />
+<parameter name="UpstreamYSize" value="20000*mm" />
+<!-- UpstreamZSize == BeforeMagnetZSize for now --> 
+<parameter name="UpstreamZSize" value="5400*mm" />
+
+<!-- BeforeMagnet parameters -->
+<parameter name="BeforeMagnetXSize" value="20000*mm" />
+<parameter name="BeforeMagnetYSize" value="20000*mm" />
+<!-- BeforeMagnetZSize = 2700 mm + 2700 mm --> 
+<parameter name="BeforeMagnetZSize" value="5400*mm" />
+
+<!-- Magnet parameters -->
+<parameter name="MagnetRegionXSize" value="20000*mm" />
+<parameter name="MagnetRegionYSize" value="20000*mm" />
+<!-- MagnetZSize = 7620 mm - 2700 mm --> 
+<parameter name="MagnetRegionZSize" value="4920*mm" />
+
+<!-- AfterMagnet parameters -->
+<parameter name="AfterMagnetXSize" value="20000*mm" />
+<parameter name="AfterMagnetYSize" value="20000*mm" />
+<!-- IT1 starts at 7620mm = 7628mm - 8mm (=3950*4mrad) -->
+<!-- AfterMagnetZSize = 11900 mm - 7620 mm --> 
+<parameter name="AfterMagnetZSize" value="4280*mm" />
+
+<!-- DownStream parameters -->
+<parameter name="DownstreamXSize" value="20000*mm" />
+<parameter name="DownstreamYSize" value="20000*mm" />
+<!-- AfterMagnetZSize = 19900 mm - 11900 mm --> 
+<parameter name="DownstreamZSize" value="8000*mm" />
+
+<!-- Z_center coordinates of the regions -->
+<parameter name="UpstreamZPos"
+	   value="-.5*(UpstreamZSize+BeforeMagnetZSize)" />
+<!-- BeforeMagnet region is centered about the LHCb origin -->
+<parameter name="BeforeMagnetZPos" value="0" /> 
+<parameter name="MagnetRegionZPos" value=".5*(BeforeMagnetZSize+MagnetRegionZSize)" />
+<parameter name="AfterMagnetZPos"
+	   value="MagnetRegionZSize+.5*(BeforeMagnetZSize+AfterMagnetZSize)" /> 
+<parameter name="DownstreamZPos"
+	   value="MagnetRegionZSize+AfterMagnetZSize+.5*(BeforeMagnetZSize+DownstreamZSize)" />
+

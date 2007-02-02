@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE DDDB SYSTEM "../DTD/geometry.dtd">
+
+<DDDB>
+  
+  <!-- ***************************************************************** -->
+  <!-- * DownStream region                                             * -->
+  <!-- * Author: Jan Amoraal                                           * -->
+  <!-- ***************************************************************** -->
+
+  <parameter name="beamAngle" value="3.601*mrad" />
+  <parameter name="EcalYShift" value="-0.19*mm"/>
+  <parameter name="HcalYShift" value ="-0.82*mm" />
+
+  <catalog name="DownstreamRegion">
+    <logvolref href="#lvDownstreamRegion"/>
+    <!--
+    <catalogref href="../Pipe/Downstream/PipeGeometry.xml#PipeDownstream" />
+    <catalogref href="../Pipe/Downstream/SupportsGeometry.xml#PipeSupportsDownstream" />
+    <catalogref href="../Pipe/Downstream/BakeoutGeometry.xml#PipeBakeoutDownstream" />
+    <catalogref href="../Spd/geometry.xml#Spd" />
+    <catalogref href="../Prs/geometry.xml#Prs" />
+    -->
+    <catalogref href="../Ecal/geometry.xml#Ecal" />
+    <catalogref href="../Hcal/geometry.xml#Hcal" />
+    <!--
+    <catalogref href="../Muon/geometry.xml#Muon" />
+    -->
+  </catalog>
+  
+  <logvol name="lvDownstreamRegion" material="Air">
+    <box name="DownstreamBox" 
+         sizeX="DownstreamXSize" 
+         sizeY="DownstreamYSize" 
+	 sizeZ="DownstreamZSize" />
+    <!--
+    <physvol name="SpdSubsystem"
+             logvol="/dd/Geometry/DownstreamRegion/Spd/Installation/Spd" >
+      <transformation>
+	<posXYZ z="12336.75*mm - DownstreamZPos" />
+	<rotXYZ rotX="beamAngle"/>
+	<posXYZ />
+      </transformation>
+    </physvol>
+
+    <physvol name="PrsSubsystem"
+             logvol="/dd/Geometry/DownstreamRegion/Prs/Installation/Prs" >
+      <transformation>
+	<posXYZ z="12443.25*mm - DownstreamZPos"/>
+	<rotXYZ rotX="beamAngle"/>
+        <posXYZ />
+      </transformation>
+    </physvol>
+
+    <physvol name = "Converter"
+             logvol = "/dd/Geometry/DownstreamRegion/Prs/Converter"> 
+      <transformation>
+        <posXYZ z="12390*mm - DownstreamZPos"/>
+	<rotXYZ rotX="beamAngle" />
+        <posXYZ />
+      </transformation>
+    </physvol>
+    -->
+    <physvol name="EcalSubsystem"
+             logvol="/dd/Geometry/DownstreamRegion/Ecal/Installation/Ecal" >
+      <transformation>
+        <posXYZ x="0.0*mm"
+                y= "EcalYShift"
+                z="(12520*mm + 0.5*825*mm) - DownstreamZPos"/>
+        <rotXYZ rotX="beamAngle"/>
+        <posXYZ />
+      </transformation>
+    </physvol>
+
+    <physvol name="HcalSubsystem"
+             logvol="/dd/Geometry/DownstreamRegion/Hcal/Installation/lvHcal" >
+      <transformation>
+        <posXYZ  x="0.0*mm"
+                 y="HcalYShift"
+                 z="(13385*mm + 0.5*1665*mm) - DownstreamZPos"/>
+        <rotXYZ rotX="beamAngle"/>
+        <posXYZ />
+      </transformation>
+
+    </physvol>
+    
+    <!--
+    <physvol name="MuonSubsystem"
+             logvol="/dd/Geometry/DownstreamRegion/Muon/lvMuon">
+      <posXYZ z="16000*mm - DownstreamZPos"/>
+    </physvol>
+ 
+    <physvol name="pvUX85Downstream"
+             logvol="/dd/Geometry/DownstreamRegion/PipeDownstream/lvUX85Downstream">
+      <posXYZ z="UX853Rich2DownSplitZposIP - DownstreamZPos"/>
+    </physvol>
+    <physvol name="pvUX85SupportsDownstream"
+             logvol="/dd/Geometry/DownstreamRegion/PipeSupportsDownstream/lvUX85SupportsDownstream">
+      <posXYZ z="UX853Rich2DownSplitZposIP - DownstreamZPos"/>
+    </physvol>
+    <physvol name="pvUX85BakeoutDownstream"
+             logvol="/dd/Geometry/DownstreamRegion/PipeBakeoutDownstream/lvUX85BakeoutDownstream">
+      <posXYZ z="UX853Rich2DownSplitZposIP - DownstreamZPos"/>
+    </physvol>
+    -->
+
+  </logvol>
+
+</DDDB>

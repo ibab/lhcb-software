@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE DDDB SYSTEM "../../DTD/geometry.dtd">
+<DDDB>
+<!-- """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""" --> 
+<!--   
+  CVS tag: $Name: not supported by cvs2svn $
+  $Log: not supported by cvs2svn $
+  Revision 1.1.1.1  2007/01/30 13:34:59  marcocle
+  CVS based back up for the SQLite conditions database
+
+  Revision 1.7  2006/02/06 15:54:00  cattanem
+  DC06 geometry and cleanup of older stuff
+
+  Revision 1.6  2005/06/06 15:59:43  gcorti
+  Calo tilt
+
+  Revision 1.5  2003/12/05 13:59:43  cattanem
+  add Calo changes
+
+  Revision 1.4  2003/06/19 06:18:23  cattanem
+  v16r0
+
+  Revision 1.3  2002/09/12 09:32:59  cattanem
+  Add vertical Rich, Velo optimisation
+
+  Revision 1.2  2002/01/19 13:58:43  ibelyaev
+   fix the bug with material names/paths
+
+  Revision 1.1  2001/12/15 16:05:38  ibelyaev
+  The first version of  detailed Ecal description by Galina Pakhlova
+ 
+--> 
+<!-- """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""" --> 
+<!-- ******************************************************************* --> 
+<!--                     Ecal Outer Module Geometry                      -->
+<!--                     Logical Volumes Definition                      --> 
+<!-- ******************************************************************* --> 
+
+ <logvol name="Outer" material = "Ecal/EcalSteel">
+
+   <box  name  = "Outer_Module_Box"
+         sizeX = "EcalModXSize"
+         sizeY = "EcalModYSize"
+         sizeZ = "EcalOutModLength"/>
+
+    <physvol name = "OuterModuleFrontCover"
+             logvol = "/dd/Geometry/DownstreamRegion/Ecal/Modules/OutFrontCover"> 
+               <posXYZ z = "EcalOutFrontCoverOffset"/>
+    </physvol>
+
+    <physvol name   = "OuterModuleBackCover"
+             logvol = "/dd/Geometry/DownstreamRegion/Ecal/Modules/OutBackCover"> 
+               <posXYZ z = "EcalOutBackCoverOffset"/>
+    </physvol>
+
+    <physvol name = "OuterModuleReadOut"
+             logvol = "/dd/Geometry/DownstreamRegion/Ecal/Modules/OutReadOut"> 
+                <posXYZ  z = "EcalOutReadOutOffset"/>
+    </physvol> 
+ 
+    <physvol name   = "OuterModuleStack"
+             logvol = "/dd/Geometry/DownstreamRegion/Ecal/Modules/OutStack"> 
+                <posXYZ  z = "EcalOutStackOffset"/>
+    </physvol>
+ 
+  </logvol>
+<!-- ***************************************************************** --> 
+<!--                Ecal Outer Module Front Cover Geometry             -->
+<!-- ***************************************************************** --> 
+  <logvol name = "OutFrontCover" material = "Ecal/EcalPlasticOutFC">
+         <box  name  = "Outer_Module_Front_Cover_Box"
+               sizeX = "EcalModXSize"
+               sizeY = "EcalModYSize"
+               sizeZ = "EcalOutFrontCoverLength"/>
+  </logvol>
+<!-- ***************************************************************** --> 
+<!--                Ecal Outer Module Back Cover Geometry              -->
+<!-- ***************************************************************** --> 
+  <logvol name = "OutBackCover" material = "Ecal/EcalPlasticBC">
+         <box  name  = "Outer_Module_Back_Cover_Box"
+               sizeX = "EcalModXSize"
+               sizeY = "EcalModYSize"
+               sizeZ = "EcalOutBackCoverLength"/>
+  </logvol>
+<!-- ****************************************************************** --> 
+<!--              Ecal Outer Module Read Out Geometry                   -->
+<!-- ****************************************************************** --> 
+  <logvol name = "OutReadOut" material = "Vacuum">
+         <box  name  = "Outer_Module_Read_Out_Box"
+               sizeX = "EcalModXSize"
+               sizeY = "EcalModYSize"
+               sizeZ = "EcalOutReadOutLength"/>
+ 
+      <physvol name   = "OuterReadOutTube"
+	       logvol = "/dd/Geometry/DownstreamRegion/Ecal/Modules/OutReadOutTube"> 
+      </physvol>       
+ </logvol>
+<!-- ****************************************************************** --> 
+<!--              Ecal Outer Module Read Out Tube                       -->
+<!-- ****************************************************************** --> 
+  <logvol name = "OutReadOutTube" material = "Ecal/EcalSteel">
+         <tubs  name  = "Outer_Read_Out_Tube"
+	        sizeZ = "EcalOutReadOutLength"
+                innerRadius = "EcalTubeInnRadius"   
+                outerRadius = "EcalTubeOutRadius"/>
+ </logvol>
+<!-- ****************************************************************** --> 
+<!--                Ecal Outer Module Stack Geometry                    -->
+<!-- ****************************************************************** --> 
+ <logvol name = "OutStack" material = "Vacuum">
+         <box  name  = "Outer_Stack_Main_Box"
+               sizeX = "EcalModXSize-2*EcalTapeThick"
+               sizeY = "EcalModYSize-2*EcalTapeThick"
+               sizeZ = "EcalStackLength"/>
+<!-- %%% Outer Cell is equivalent to the Outer Stack %%% -->
+
+      <physvol name   = "Outer_Cell"
+               logvol = "/dd/Geometry/DownstreamRegion/Ecal/Modules/OutCell"/>
+  </logvol>
+<!-- ****************************************************************** --> 
+</DDDB> 

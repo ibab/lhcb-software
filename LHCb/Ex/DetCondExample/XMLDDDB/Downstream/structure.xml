@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE DDDB SYSTEM "../DTD/structure.dtd">
+
+<DDDB>
+
+  <detelem name="DownstreamRegion" type="passive">
+    <author>Jan Amoraal</author>
+    <version>1.0</version>
+    <geometryinfo lvname="/dd/Geometry/DownstreamRegion/lvDownstreamRegion" 
+                  npath="DownstreamRegion"
+                  support="/dd/Structure/LHCb" />  
+    <!--
+    <detelemref href = "../Pipe/Downstream/structure.xml#PipeDownstream" />
+    <detelemref href = "../Pipe/Downstream/structure.xml#PipeSupportsDownstream" />
+    <detelemref href = "../Pipe/Downstream/structure.xml#PipeBakeoutDownstream" />
+    <detelemref href = "../Spd/structure.xml#Spd" />
+    <detelemref href = "../Prs/structure.xml#Prs" />
+    <detelemref href = "../Prs/structure.xml#Converter" />
+    -->
+    <detelemref href = "../Ecal/structure.xml#Ecal" />
+    <detelemref href = "../Hcal/structure.xml#Hcal" />
+    <!--
+    <detelemref href = "../Muon/structure.xml#Muon" />
+    -->
+  </detelem>
+
+</DDDB>

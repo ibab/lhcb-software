@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE DDDB SYSTEM "../../DTD/geometry.dtd">
+<DDDB>
+
+  
+  <logvol name = "PlugSupport" material = "Hcal/HcalPb">
+    <subtraction name = "PlugWithHole">
+      <box name  = "Plugbox"
+        sizeX       = "HcalBeamPlugXSize"
+        sizeY       = "HcalBeamPlugYSize"
+        sizeZ       = "HcalBeamPlugZSize"/>
+
+      <polycone name="PipeHole"
+                startPhiAngle="0*degree"
+                deltaPhiAngle="360*degree">
+             <zplane innerRadius="0.0*mm" outerRadius="HcalBeamPlugPipeHoleR1" z="HcalBeamPlugPipeHoleZ1"/>
+             <zplane innerRadius="0.0*mm" outerRadius="HcalBeamPlugPipeHoleR2" z="HcalBeamPlugPipeHoleZ2"/>
+             <zplane innerRadius="0.0*mm" outerRadius="HcalBeamPlugPipeHoleR3" z="HcalBeamPlugPipeHoleZ3"/>
+             <zplane innerRadius="0.0*mm" outerRadius="HcalBeamPlugPipeHoleR4" z="HcalBeamPlugPipeHoleZ4"/>
+             <zplane innerRadius="0.0*mm" outerRadius="HcalBeamPlugPipeHoleR5" z="HcalBeamPlugPipeHoleZ5"/>
+             <zplane innerRadius="0.0*mm" outerRadius="HcalBeamPlugPipeHoleR6" z="HcalBeamPlugPipeHoleZ6"/>
+             <zplane innerRadius="0.0*mm" outerRadius="HcalBeamPlugPipeHoleR7" z="HcalBeamPlugPipeHoleZ7"/>
+             <zplane innerRadius="0.0*mm" outerRadius="HcalBeamPlugPipeHoleR8" z="HcalBeamPlugPipeHoleZ8"/>
+       </polycone>
+
+      <posXYZ x = "0.0*mm"
+              y = "-HcalYShift"
+              z = "0.0*mm"/>
+      <rotXYZ rotX="-HcalTiltAngle"/> 
+    </subtraction>
+    <paramphysvol number = "2">
+      <physvol name = "VSteelSheets"  
+               logvol = "/dd/Geometry/DownstreamRegion/Hcal/Installation/VericalSteelSheet">
+        <posXYZ x = "-0.5*HcalBeamPlugXSize+0.5*HcalSteelSheetThick"/>
+      </physvol>
+      <posXYZ x = "HcalBeamPlugXSize-HcalSteelSheetThick"/>
+    </paramphysvol>
+      
+    <paramphysvol number = "2">
+      <physvol name = "HSteelSheets"  
+               logvol = "/dd/Geometry/DownstreamRegion/Hcal/Installation/HorizontalSteelSheet">
+        <posXYZ y = "-0.5*HcalBeamPlugYSize+0.5*HcalSteelSheetThick"/>
+      </physvol>
+      <posXYZ y = "HcalBeamPlugYSize-HcalSteelSheetThick"/>
+    </paramphysvol>
+
+    <paramphysvol number = "4">
+      <physvol name = "SteelSheets"  
+               logvol = "/dd/Geometry/DownstreamRegion/Hcal/Installation/SteelSheetWithHole1">
+        <posXYZ z = "0.5*(HcalBeamPlugZSize-HcalSteelSheetThick)"/>
+      </physvol>
+      <posXYZ z = "-HcalSteelSheetStep"/>
+    </paramphysvol>
+
+    <physvol name = "SteelSheet"  
+             logvol = "/dd/Geometry/DownstreamRegion/Hcal/Installation/SteelSheetWithHole2">
+      <posXYZ z = "-0.5*(HcalBeamPlugZSize-HcalSteelSheetThick)"/>
+    </physvol>
+
+   </logvol> 
+
+  <logvol name = "VericalSteelSheet " material = "Hcal/HcalMsPlSteel">
+    <box name  = "VSteelSheet"
+      sizeX       = "HcalSteelSheetThick-HcalDelta"
+      sizeY       = "HcalBeamPlugYSize-HcalDelta"
+      sizeZ       = "HcalBeamPlugZSize-HcalDelta"/>
+  </logvol> 
+  <logvol name = "HorizontalSteelSheet " material = "Hcal/HcalMsPlSteel">
+    <box name  = "HSteelSheet"
+      sizeX       = "HcalBeamPlugXSize-2*HcalSteelSheetThick-HcalDelta"
+      sizeY       = "HcalSteelSheetThick-HcalDelta"
+      sizeZ       = "HcalBeamPlugZSize-HcalDelta"/>
+  </logvol> 
+  <logvol name = "SteelSheetWithHole1 " material = "Hcal/HcalMsPlSteel">
+    <subtraction name = "StSheetWithHole1">
+      <box name  = "StSheet1"
+        sizeX       = "HcalBeamPlugXSize-2*HcalSteelSheetThick-HcalDelta"
+        sizeY       = "HcalBeamPlugYSize-2*HcalSteelSheetThick-HcalDelta"
+        sizeZ       = "HcalSteelSheetThick-HcalDelta"/>
+      <tubs name  = "CylinderHole1"
+        sizeZ       = "HcalSteelSheetThick"
+        outerRadius = "HcalSteelSheetRadius1"/>
+    </subtraction>	
+  </logvol> 
+  <logvol name = "SteelSheetWithHole2 " material = "Hcal/HcalMsPlSteel">
+    <subtraction name = "StSheetWithHole2">
+      <box name  = "StSheet2"
+        sizeX       = "HcalBeamPlugXSize-2*HcalSteelSheetThick-HcalDelta"
+        sizeY       = "HcalBeamPlugYSize-2*HcalSteelSheetThick-HcalDelta"
+        sizeZ       = "HcalSteelSheetThick-HcalDelta"/>
+      <tubs name  = "CylinderHole2"
+        sizeZ       = "HcalSteelSheetThick"
+        outerRadius = "HcalSteelSheetRadius2"/>
+    </subtraction>	
+  </logvol> 
+  
+  
+  
+  
+  <!-- **************************************************************** --> 
+</DDDB> 

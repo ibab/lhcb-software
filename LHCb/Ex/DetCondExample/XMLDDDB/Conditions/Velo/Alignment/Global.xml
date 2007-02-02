@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE DDDB SYSTEM "../../../DTD/structure.dtd" >
+<DDDB>
+
+  <condition classID="6" name="VeloSystem">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="VeloRight">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+  <condition classID="6" name="VeloLeft">
+    <paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+    <paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+  </condition>
+
+</DDDB>

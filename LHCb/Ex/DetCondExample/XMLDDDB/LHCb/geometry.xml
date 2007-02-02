@@ -1,28 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE DDDB SYSTEM "../DTD/geometry.dtd">
+
 <DDDB>
-<!-- $Id: geometry.xml,v 1.2 2001-12-17 19:47:40 andreav Exp $ -->
-  <catalog name="LHCb">
-  <!-- LHCb detector geometry  catalog -->
 
-    <logvol material="Vacuum" name="lvLHCb">
-    <!-- Geometry for LHCb detector -->
-
+  <catalog name="LHCb">      <!-- LHCb detector geometry  catalog -->
+    <logvol name="lvLHCb" material="Vacuum">
       <box name  = "caveBox" 
-           sizeX = "50000*mm" 
-           sizeY = "50000*mm" 
-           sizeZ = "50000*mm" />
-
-      <physvol logvol="/dd/Geometry/Ecal/lvEcal" name="EcalSubsystem">
-          <posXYZ x="0*mm" y="0*mm" z="12907.5*mm"/>        
+	   sizeX = "50000*mm" 
+	   sizeY = "50000*mm" 
+	   sizeZ = "50000*mm" />
+      
+      <physvol name="UpstreamRegion"
+	       logvol="/dd/Geometry/UpstreamRegion/lvUpstreamRegion">
+         <posXYZ z="UpstreamZPos" />
+      </physvol>
+      
+      <physvol name="BeforeMagnetRegion"
+	       logvol="/dd/Geometry/BeforeMagnetRegion/lvBeforeMagnetRegion">
+         <posXYZ z="BeforeMagnetZPos" />
       </physvol>
 
-      <physvol logvol="/dd/Geometry/Hcal/lvHcal" name="HcalSubsystem">
-          <posXYZ x="0*mm" y="0*mm" z="14162.5*mm"/>      
+      <physvol name="MagnetRegion"
+	       logvol="/dd/Geometry/MagnetRegion/lvMagnetRegion">
+         <posXYZ z="MagnetRegionZPos" />
+      </physvol>
+
+      <physvol name="AfterMagnetRegion"
+	       logvol="/dd/Geometry/AfterMagnetRegion/lvAfterMagnetRegion">
+	<posXYZ z="AfterMagnetZPos" />
+      </physvol>
+
+      <physvol name="DownstreamRegion"
+               logvol="/dd/Geometry/DownstreamRegion/lvDownstreamRegion">
+        <posXYZ z="DownstreamZPos" />
       </physvol>
 
     </logvol>  
-
   </catalog>
 
 </DDDB>

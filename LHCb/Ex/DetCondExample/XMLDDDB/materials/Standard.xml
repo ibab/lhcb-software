@@ -1,0 +1,153 @@
+
+<!-- This is the list of standard materials, to be included in the paster catalog -->
+
+<!-- Material isotopes -->
+  <isotope name="Bor_10" A="10.000*g/mole" Z="5.000" density="2.3400*g/cm3" />
+  <isotope name="Bor_11" A="11.000*g/mole" Z="5.000" density="2.3400*g/cm3" />
+  <!-- Material element built from isotopes -->
+  <element density="2.3400*g/cm3" name="Boron" symbol="B">
+    <isotoperef fractionmass="0.20" href="#Bor_10"/>
+    <isotoperef fractionmass="0.80" href="#Bor_11"/>
+  </element>
+  
+<!-- Material elements -->
+  <element density="0.14300e-02*g/cm3" name="Oxygen" symbol="O">
+    <atom A="15.999*g/mole" Zeff="8.0000" />
+  </element>
+  <element density="0.12500e-02*g/cm3" name="Nitrogen" symbol="N">
+    <atom A="14.01*g/mole" Zeff="7.0000"/>
+  </element>
+  <element density="0.70800E-01*g/cm3" name="Hydrogen" symbol="H">
+    <atom A="1.00794*g/mole" Zeff="1.0"/>
+  </element>
+  <element density="2.2650*g/cm3" name="Carbon" symbol="C"  I = "78.0*eV">
+    <atom A="12.011*g/mole" Zeff="6.0" />
+  </element>
+  <element density="1.1080*g/cm3" name="Fluorine" symbol="F">
+    <atom A="18.998*g/mole" Zeff="9.0000"/>
+  </element>
+  <element density="2.3300*g/cm3" name="Silicon" symbol="Si" I = "173.0*eV">
+    <atom A="28.090*g/mole" Zeff="14.000"  />
+  </element>
+  <element density="0.16390E-02*g/cm3" name="Argon" symbol="Ar" I = "188.0*eV">
+    <atom A="39.948*g/mole" Zeff="18.0" />
+  </element> 
+  <element density="7.8700*g/cm3" name="Iron" symbol="Fe"  I = "286.0*eV">
+    <atom A="55.850*g/mole" Zeff="26.000" />
+  </element>
+  <element density="2.7*g/cm3" name="Aluminium" symbol="Al" I = "166.0*eV">
+    <atom A="26.98*g/mole" Zeff="13.000"   />
+  </element>
+<!-- Calcium-->
+  <element density="1.55*g/cm3" name="Calcium" state="solid" symbol="Ca" I = "191.0*eV">
+   <atom A="40.078*g/mole" Zeff="20.000" />
+  </element>
+
+  <element density="8.96*g/cm3" name="Copper" state="solid" symbol="Cu" I = "322.0*eV">
+    <atom A="63.546*g/mole" Zeff="29" />
+  </element>
+  <element density="7.43*g/cm3" name="Manganese" state="solid" symbol="Mn" I = "272.0*eV">
+    <atom A="54.938*g/mole" Zeff="25" />
+  </element>
+  <element density="1.82*g/cm3" name="Phosphor" state="solid" symbol="P">
+    <atom A="30.974*g/mole" Zeff="15"/>
+  </element>
+  <element density="2.07*g/cm3" name="Sulfur" state="solid" symbol="S">
+    <atom A="32.066*g/mole" Zeff="16"/>
+  </element>
+  <element density="10.48*g/cm3" name="Silver" state="solid" symbol="Ag" I = "470.0*eV">
+    <atom A="107.87*g/mole" Zeff="47"  />
+  </element>
+  <element density="18.85*g/cm3" name="Gold" state="solid" symbol="Au" I = "790.0*eV">
+    <atom A="196.97*g/mole" Zeff="79"  />
+  </element>
+ <element density="8.902*g/cm3" name="Nickel" state="solid" symbol="Ni" I = "311.0*eV">
+    <atom A="58.6934*g/mole" Zeff="28"  />
+  </element>
+  <element density="7.180*g/cm3" name="Chromium" state="solid" symbol="Cr">
+    <atom A="51.9961*g/mole" Zeff="24" />
+  </element>
+  <element density="7.310*g/cm3" name="Tin" state="solid" symbol="Sn" I = "488*eV">
+    <atom A="118.710*g/mole" Zeff="50"/>
+  </element>
+  <element density="11.350*g/cm3" name="Lead" state="solid" symbol="Pb" I = "823*eV">
+    <atom A="207.2*g/mole" Zeff="82" />
+  </element>
+  <element density="1.740*g/cm3" name="Magnesium" state="solid" symbol="Mg" I = "156*eV">
+    <atom A="24.305*g/mole" Zeff="12"/>
+  </element>
+  <element density="1.574*g/cm3" name="Chlorine" state="solid" symbol="Cl">
+    <atom A="35.4527*g/mole" Zeff="17"/>
+  </element>
+  <element density="7.133*g/cm3" name="Zinc" symbol="Zn" I = "330.0*eV" >
+    <atom A="65.409*g/mole" Zeff="30"/>
+  </element>
+  <element density="4.54*g/cm3" name="Titanium" symbol="Ti" >
+    <atom A="47.867*g/mole" Zeff="22"/>
+  </element>
+  <element density="6.506*g/cm3" name="Zirconium" symbol="Zr">
+    <atom A="91.224*g/mole" Zeff="40"/>
+  </element>
+  <element density="6.11*g/cm3" name="Vanadium" symbol="V">
+    <atom A="50.942*g/mole" Zeff="23"/>
+  </element>
+  <element density="1.848*g/cm3" name="Beryllium" symbol="Be" I = "63.7*eV">
+    <atom A="9.012*g/mole" Zeff="4" />
+  </element>
+  <element  name='Sodium' symbol='Na' density='0.971*g/cm3' I = "149.7*eV" >
+    <atom A='22.99*g/mole' Zeff='11.000' />
+  </element>
+  <element  name='Potassium' symbol='K' density='0.862*g/cm3'  I = "190.0*eV"  >
+    <atom A='39.10*g/mole' Zeff='19.000' />
+  </element>
+    <element  name='Cesium' symbol='Cs' density='1.8730*g/cm3'  >
+  <atom A='132.91*g/mole' Zeff='55.000' />
+    </element>
+  <element  name='Antimony' symbol='Sb'  density='6.691*g/cm3' >
+    <atom A='121.76*g/mole' Zeff='51.000' />
+  </element>
+  <element name='Molybdenum' symbol='Mo' density='10.22*g/cm3' >
+   <atom A='95.94*g/mole' Zeff='42.0' /> 
+  </element>
+
+<!-- Simple material -->
+  <material density="1.e-25*g/cm3" name="Vacuum" pressure="1.0e-19*pascal" temperature="0.1*kelvin">
+    <component name="Hydrogen" natoms="1"/>
+  </material>
+  <material name="PureCarbon">
+    <component name="Carbon" natoms="1"/>
+  </material>
+
+<!-- Material composites -->
+  <material density="1.8182E-03*g/cm3" name="CO2">
+    <component name="Carbon" natoms="1"/>
+    <component name="Oxygen" natoms="2"/>
+  </material>
+  <material density="0.003884*g/cm3" name="CF4" pressure="1.0*atmosphere" temperature="273.0*kelvin">
+    <component name="Carbon" natoms="1"/>
+    <component name="Fluorine" natoms="4"/>
+  </material>
+  <material density="2.6400*g/cm3" name="SiO2">
+    <component name="Silicon" natoms="1"/>
+    <component name="Oxygen" natoms="2"/>
+  </material>
+  <material density="1.0000*g/cm3" name="Water">
+    <component name="Hydrogen" natoms="2"/>
+    <component name="Oxygen" natoms="1"/>
+  </material>
+  <material density="0.16390E-02*g/cm3" name="ArgonGas">
+    <component name="Argon" natoms="1"/>
+  </material> 
+
+<!-- Material mixtures -->
+  <material density="2.14160E-3*g/cm3" name="Argon_CF4_CO2">
+    <component fractionmass="0.2" name="CF4"/>
+    <component fractionmass="0.5" name="CO2"/>
+    <component fractionmass="0.3" name="ArgonGas"/>
+  </material>
+
+<!-- Air at 20 degree C and 1 atm. -->
+  <material name="Air" density="1.205*mg/cm3" pressure="1.*atmosphere" temperature="293.*kelvin">
+    <component fractionmass="0.7" name="Nitrogen"/>
+    <component fractionmass="0.3" name="Oxygen"/>
+  </material>

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE DDDB SYSTEM "../DTD/structure.dtd">
+<DDDB>
+
+  <catalog name="Conditions">
+    <catalogref href = "#Alignment"/>
+    <catalogref href = "#Calibration"/>
+    <catalogref href = "#ChannelInfo"/>
+    <catalogref href = "#Environment"/>
+    <catalogref href = "#HardwareProperties"/>
+    <catalogref href = "#ReadoutConf"/>
+    <catalogref href = "Trigger/Catalog.xml#Trigger"/>
+    <catalogref href = "#Sim"/>
+  </catalog>
+
+  <catalog name="Alignment">
+    <catalogref href = "LHCb/AlignmentCatalog.xml#LHCb"/>
+    <catalogref href = "Velo/AlignmentCatalog.xml#Velo"/>
+    <!--
+    <catalogref href = "TT/AlignmentCatalog.xml#TT"/>
+    <catalogref href = "Rich1/AlignmentCatalog.xml#Rich1"/>
+    <catalogref href = "IT/AlignmentCatalog.xml#IT"/>
+    <catalogref href = "OT/AlignmentCatalog.xml#OT"/>
+    <catalogref href = "Rich2/AlignmentCatalog.xml#Rich2"/>
+    <catalogref href = "Prs/AlignmentCatalog.xml#Prs"/>
+    -->
+    <catalogref href = "Ecal/AlignmentCatalog.xml#Ecal"/>
+    <catalogref href = "Hcal/AlignmentCatalog.xml#Hcal"/>
+    <!--
+    <catalogref href = "Muon/AlignmentCatalog.xml#Muon"/>
+    -->
+  </catalog>
+
+  <catalog name="Calibration">
+    <!--
+    <catalogref href = "Spd/CalibrationCatalog.xml#Spd"/>
+    <catalogref href = "Prs/CalibrationCatalog.xml#Prs"/>
+    -->
+    <catalogref href = "Ecal/CalibrationCatalog.xml#Ecal"/>
+    <catalogref href = "Hcal/CalibrationCatalog.xml#Hcal"/>
+    <!--
+    <catalogref href = "Muon/CalibrationCatalog.xml#Muon"/>
+    -->
+  </catalog>
+
+  <catalog name="ChannelInfo">
+    <!-- <catalogref href="Velo/ChannelInfoCatalog.xml#Velo"/> -->
+  </catalog>
+  
+  <catalog name="Environment">
+    <catalogref href = "LHCb/EnvironmentCatalog.xml#LHCb"/>
+    <!--
+    <catalogref href = "Rich1/EnvironmentCatalog.xml#Rich1"/>
+    <catalogref href = "Rich2/EnvironmentCatalog.xml#Rich2"/>
+    -->
+  </catalog>
+  
+  <catalog name="HardwareProperties">
+    <!-- <catalogref href="Velo/HardwarePropertiesCatalog.xml#Velo"/> -->
+  </catalog>
+  
+  <catalog name="ReadoutConf">
+    <!--
+    <catalogref href = "Velo/ReadoutConfCatalog.xml#Velo"/>
+    <catalogref href = "TT/ReadoutConfCatalog.xml#TT"/>
+    <catalogref href = "IT/ReadoutConfCatalog.xml#IT"/>
+    <catalogref href = "Spd/ReadoutConfCatalog.xml#Spd"/>
+    <catalogref href = "Prs/ReadoutConfCatalog.xml#Prs"/>
+    -->
+    <catalogref href = "Ecal/ReadoutConfCatalog.xml#Ecal"/>
+    <catalogref href = "Hcal/ReadoutConfCatalog.xml#Hcal"/>
+    <!--
+    <catalogref href = "Muon/ReadoutConfCatalog.xml#Muon"/>
+    <catalogref href = "Rich1/ReadoutConfCatalog.xml#Rich1"/>
+    <catalogref href = "Rich2/ReadoutConfCatalog.xml#Rich2"/>
+    -->
+  </catalog>
+
+  <catalog name="Sim">
+    <condition name="TestCondition">
+      <paramVector comment="List of layers" name="layers" type="string">TTaXMap TTaUMap TTbVMap TTbXMap</paramVector>
+      <paramVector name="vs" type="string">
+        str1
+        str2 str3 str4</paramVector>
+    </condition>
+  </catalog>
+
+</DDDB>

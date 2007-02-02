@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE DDDB SYSTEM "../../DTD/geometry.dtd">
+<DDDB>
+<!-- """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""" --> 
+<!--   
+  CVS tag: $Name: not supported by cvs2svn $
+  $Log: not supported by cvs2svn $
+  Revision 1.1.1.1  2007/01/30 13:34:59  marcocle
+  CVS based back up for the SQLite conditions database
+
+  Revision 1.6  2006/02/06 15:54:00  cattanem
+  DC06 geometry and cleanup of older stuff
+
+  Revision 1.5  2005/06/06 15:59:43  gcorti
+  Calo tilt
+
+  Revision 1.4  2003/06/19 06:18:22  cattanem
+  v16r0
+
+  Revision 1.3  2002/09/12 09:32:57  cattanem
+  Add vertical Rich, Velo optimisation
+
+  Revision 1.2  2002/01/19 13:58:41  ibelyaev
+   fix the bug with material names/paths
+
+  Revision 1.1  2001/12/15 16:05:36  ibelyaev
+  The first version of  detailed Ecal description by Galina Pakhlova
+ 
+--> 
+<!-- """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""" --> 
+<!-- ****************************************************************** --> 
+<!--                    Ecal Sub Fiber (Pb) Geometry                    -->
+<!-- ****************************************************************** --> 
+       <logvol name = "FiberPb" material = "Ecal/EcalFiber">
+            <tubs name =  "Fiber_Tube_Pb"
+                  sizeZ = "EcalPbThick"
+                  outerRadius = "EcalFiberRadius"/>
+       </logvol>
+<!-- ****************************************************************** --> 
+</DDDB> 

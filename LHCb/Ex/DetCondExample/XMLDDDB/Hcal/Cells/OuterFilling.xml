@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE DDDB SYSTEM "../../DTD/geometry.dtd">
+<DDDB>
+
+<!--
+
+   $Id: OuterFilling.xml,v 1.1 2007-02-02 18:19:30 marcocle Exp $ 
+   CVS tag $Name: not supported by cvs2svn $
+   $Log: not supported by cvs2svn $
+   Revision 1.1.1.1  2007/01/30 13:34:59  marcocle
+   CVS based back up for the SQLite conditions database
+
+   Revision 1.7  2006/02/06 15:54:01  cattanem
+   DC06 geometry and cleanup of older stuff
+
+   Revision 1.6  2005/06/06 16:03:09  gcorti
+   Calo tilt
+
+   Revision 1.5  2003/07/10 14:56:28  cattanem
+   changes for v17r0 - see release notes
+
+   Revision 1.4  2003/05/28 13:48:17  cattanem
+   changes from Sajan, Witek, Patrick
+
+   Revision 1.3  2002/09/12 09:33:01  cattanem
+   Add vertical Rich, Velo optimisation
+
+   Revision 1.2  2002/01/19 16:20:32  aberdiou
+    new description of Hcal
+
+
+-->
+
+  <!-- **************************************************************** --> 
+  <!--    Geometry of the Filling (Tile, Spacers, Master Plate etc.)    -->
+  <!--         in the Outer Cells of the Hadronic Calorimeter           -->
+  <!-- **************************************************************** --> 
+  <!--                   Logical Volumes Definition                     --> 
+  <!-- **************************************************************** --> 
+  <!-- %%%%%%%%%%              Master Plate                  %%%%%%%%%% -->
+  <!-- **************************************************************** --> 
+  <logvol name = "lvHcalOutCellMsPl" material = "Hcal/HcalMsPlSteel">
+    <box name  = "HcalOutCellMsPlBox"
+      sizeX = "HcalMsPlWidth"
+      sizeY = "HcalMsPlHeight"
+      sizeZ = "2.0*HcalMsPlStepLength"/>
+    <physvol name = "pvHcalOutCell1stCalHoleMsPl"
+      logvol = "/dd/Geometry/DownstreamRegion/Hcal/Cells/lvHcalOutCellCalHoleMsPl"> 
+      <posXYZ x = "0.0*mm"
+              y = "0.0*mm"
+              z = "-0.5*HcalMsPlStepLength"/>
+      <rotXYZ rotY="90*degree"/>
+    </physvol>
+    <physvol name = "pvHcalOutCell2ndCalHoleMsPl"
+      logvol = "/dd/Geometry/DownstreamRegion/Hcal/Cells/lvHcalOutCellCalHoleMsPl"> 
+      <posXYZ x = "0.0*mm"
+              y = "0.0*mm"
+              z = "0.5*HcalMsPlStepLength"/>
+      <rotXYZ rotY="90*degree"/>
+    </physvol>
+  </logvol> 
+  <!-- **************************************************************** --> 
+  <!-- %%%%%%%%%%             Scintillating Tile             %%%%%%%%%% -->
+  <!-- **************************************************************** --> 
+  <logvol 
+    name     = "lvHcalOutCellScTile" 
+    material = "Hcal/HcalSc"
+    sensdet  = "HcalSensDet/Hcal">
+    <box name  = "HcalOutCellScTileBox"
+      sizeX = "HcalScTileWidth"
+      sizeY = "HcalScTileHeigth"
+      sizeZ = "HcalScTileLength"/>
+    <physvol name = "pvHcalOutCellCalHoleScTile"
+      logvol = "/dd/Geometry/DownstreamRegion/Hcal/Cells/lvHcalOutCellCalHoleScTile"> 
+      <posXYZ x = "0.0*mm"
+              y = "0.0*mm"
+              z = "0.0*mm"/>
+      <rotXYZ rotY="90*degree"/>
+    </physvol>
+  </logvol> 
+  <!-- **************************************************************** --> 
+  <!-- %%%%%%%%%%       Foward Big Inner Spacer              %%%%%%%%%% -->
+  <!-- **************************************************************** --> 
+  <logvol name = "lvHcalOutCellFwBigSpacer" material = "Hcal/HcalMsPlSteel">
+    <box name  = "HcalOutCellFwBigSpacerBox"
+      sizeX = "HcalSpacerWidth"
+      sizeY = "HcalSpacerHeigth"
+      sizeZ = "0.5*HcalSpacerLength+0.5*HcalMsPlStepLength"/>
+    <physvol name = "pvHcalOutCellCalHoleFwBigSpacer"
+      logvol = "/dd/Geometry/DownstreamRegion/Hcal/Cells/lvHcalOutCellCalHoleSpacer"> 
+      <posXYZ x = "0.0*mm"
+              y = "0.0*mm"
+              z = "-0.25*HcalSpacerLength+0.25*HcalMsPlStepLength"/>
+      <rotXYZ rotY="90*degree"/>
+    </physvol>
+  </logvol> 
+  <!-- **************************************************************** --> 
+  <!-- %%%%%%%%%%      Foward Small Inner Spacer             %%%%%%%%%% -->
+  <!-- **************************************************************** --> 
+  <logvol name = "lvHcalOutCellFwSmSpacer" material = "Hcal/HcalMsPlSteel">
+      <box name  = "HcalOutCellFwSmSpacerBox"
+	sizeX = "HcalSpacerWidth"
+	sizeY = "HcalSpacerHeigth"
+	sizeZ = "0.5*HcalSpacerLength-0.5*HcalMsPlStepLength"/>
+  </logvol> 
+  <!-- **************************************************************** --> 
+  <!-- %%%%%%%%%%      Backward Big Inner Spacer             %%%%%%%%%% -->
+  <!-- **************************************************************** --> 
+  <logvol name = "lvHcalOutCellBkBigSpacer" material = "Hcal/HcalMsPlSteel">
+    <box name  = "HcalOutCellBkBigSpacerBox"
+      sizeX = "HcalSpacerWidth"
+      sizeY = "HcalSpacerHeigth"
+      sizeZ = "0.5*HcalSpacerLength+0.5*HcalMsPlStepLength"/>
+    <physvol name = "pvHcalOutCellCalHoleBkBigSpacer"
+      logvol = "/dd/Geometry/DownstreamRegion/Hcal/Cells/lvHcalOutCellCalHoleSpacer"> 
+      <posXYZ x = "0.0*mm"
+              y = "0.0*mm"
+              z = "0.25*HcalSpacerLength-0.25*HcalMsPlStepLength"/>
+      <rotXYZ rotY="90*degree"/>
+    </physvol>
+  </logvol> 
+  <!-- **************************************************************** --> 
+  <!-- %%%%%%%%%%     Backward Small Inner Spacer            %%%%%%%%%% -->
+  <!-- **************************************************************** --> 
+  <logvol name = "lvHcalOutCellBkSmSpacer" material = "Hcal/HcalMsPlSteel">
+      <box name  = "HcalOutCellBkSmSpacerBox"
+	sizeX = "HcalSpacerWidth"
+	sizeY = "HcalSpacerHeigth"
+	sizeZ = "0.5*HcalSpacerLength-0.5*HcalMsPlStepLength"/>
+  </logvol> 
+  <!-- **************************************************************** --> 
+  <!-- %%%%%%%% Calibration Hole in Master Plates of Outer Cell %%%%%%% -->
+  <!-- **************************************************************** --> 
+  <logvol name = "lvHcalOutCellCalHoleMsPl" material = "Air">
+    <tubs name = "HcalOutCellCalHoleMsPl"
+        sizeZ = "HcalMsPlWidth"
+        outerRadius = "HcalMsPlCalHoleR"/>
+  </logvol> 
+  <!-- **************************************************************** --> 
+  <!-- %%%%% Calibration Hole in Scintillating Tile of Outer Cell %%%%% -->
+  <!-- **************************************************************** --> 
+  <logvol name = "lvHcalOutCellCalHoleScTile" material = "Air">
+    <tubs name = "HcalOutCellCalHoleScTile"
+        sizeZ = "HcalScTileWidth"
+        outerRadius = "HcalScTileCalHoleR"/>
+  </logvol> 
+  <!-- **************************************************************** --> 
+  <!-- %%%%%%%%%%  Calibration Hole in Spacers of Outer Cell %%%%%%%%%% -->
+  <!-- **************************************************************** --> 
+  <logvol name = "lvHcalOutCellCalHoleSpacer" material = "Air">
+    <tubs name = "HcalOutCellCalHoleSpacer"
+        sizeZ = "HcalSpacerWidth"
+        outerRadius = "HcalMsPlCalHoleR"/>
+  </logvol> 
+  <!-- **************************************************************** --> 
+</DDDB> 

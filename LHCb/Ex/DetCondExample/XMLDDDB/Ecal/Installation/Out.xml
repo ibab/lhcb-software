@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE DDDB SYSTEM "../../DTD/geometry.dtd">
+<DDDB>
+<!-- """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""" --> 
+
+<!--   
+  ************************************************************************
+  * $Id: Out.xml,v 1.1 2007-02-02 18:19:29 marcocle Exp $ 
+  *
+  * CVS tag: $Name: not supported by cvs2svn $
+  *
+  * $Log: not supported by cvs2svn $
+  * Revision 1.1.1.1  2007/01/30 13:34:59  marcocle
+  * CVS based back up for the SQLite conditions database
+  *
+  * Revision 1.5  2006/02/06 15:54:00  cattanem
+  * DC06 geometry and cleanup of older stuff
+  *
+  * Revision 1.4  2005/06/06 15:59:43  gcorti
+  * Calo tilt
+  *
+  * Revision 1.3  2003/12/05 13:59:43  cattanem
+  * add Calo changes
+  *
+  * Revision 1.2  2002/09/12 09:32:57  cattanem
+  * Add vertical Rich, Velo optimisation
+  *
+  * Revision 1.1  2001/12/15 16:05:36  ibelyaev
+  * The first version of  detailed Ecal description by Galina Pakhlova
+  *
+  * 
+  ************************************************************************ 
+-->
+ 
+<!-- ***************************************************************** --> 
+<!-- Geometry of the Outer Section of the Electromagnetic Calorimeter  -->
+<!--                    Logical Volumes Definition                     --> 
+<!-- ***************************************************************** --> 
+
+<!-- %%% Ecal Outer Section %%% -->
+
+  <logvol name = "OutSection" material="Vacuum">
+
+   <subtraction name = "Ecal_Outer_Section">
+         <box  name  = "Outer_Box"
+                sizeX = "EcalOutXSize"
+                sizeY = "EcalOutYSize"
+                sizeZ = "EcalOutModLength"/>
+
+          <box  name  = "Outer_Subtracted_Box"
+                sizeX = "EcalMidXSize"
+                sizeY = "EcalMidYSize"
+                sizeZ = "EcalOutModLength+EcalTolerance"/>
+   </subtraction>
+
+<!-- % Outer Block Installation as Matrix Elements of Outer Section % --> 
+                         
+   <paramphysvol2D number1 = "4" number2 = "8">
+      <physvol name = "Outer_Up_Rows"
+               logvol = "/dd/Geometry/DownstreamRegion/Ecal/Installation/OutBlock">
+                  <posXYZ x = "-24*EcalModXSize"
+                          y = " 25*EcalModYSize"/>
+      </physvol>
+           <posXYZ x = "16*EcalModXSize"/>
+           <posXYZ y = "-2*EcalModYSize"/>
+   </paramphysvol2D>
+
+    <paramphysvol2D number1 = "2" number2 = "10">
+      <physvol name = "Outer_Left_Right_Rows"
+               logvol = "/dd/Geometry/DownstreamRegion/Ecal/Installation/OutBlock">
+                  <posXYZ x = "-24*EcalModXSize"
+                          y = "  9*EcalModYSize"/>
+      </physvol>
+           <posXYZ x = "48*EcalModXSize"/>
+           <posXYZ y = "-2*EcalModYSize"/>
+    </paramphysvol2D>
+
+   <paramphysvol2D number1 = "4" number2 = "8">
+      <physvol name = "Outer_Down_Rows"
+               logvol = "/dd/Geometry/DownstreamRegion/Ecal/Installation/OutBlock">
+                  <posXYZ x = "-24*EcalModXSize"
+                          y = "-25*EcalModYSize"/>
+      </physvol>
+           <posXYZ x = "16*EcalModXSize"/>
+           <posXYZ y = " 2*EcalModYSize"/>
+   </paramphysvol2D>
+
+   </logvol>
+<!-- ***************************************************************** --> 
+
+<!-- %%% Ecal Outer Block %%% -->
+
+<logvol name = "OutBlock" material="Vacuum">
+    <box  name  = "Outer_Block"
+                   sizeX = "16*EcalModXSize"
+                   sizeY = " 2*EcalModYSize"
+                   sizeZ = "EcalOutModLength"/>
+
+<!-- %%% Ecal Module Installation as 16 x 4 Matrix Elements l
+                                  of Outer Block Section %%% -->    
+                    
+   <paramphysvol2D number1 = "16" number2 = "2">
+      <physvol name = "Outer_Module_Rows"
+               logvol = "/dd/Geometry/DownstreamRegion/Ecal/Modules/Outer">
+                  <posXYZ x = "-7.5*EcalModXSize"
+                          y = " 0.5*EcalModYSize"/>
+      </physvol>
+           <posXYZ x = "   EcalModXSize"/>
+           <posXYZ y = "-1*EcalModYSize"/>
+   </paramphysvol2D>
+
+  </logvol>
+<!-- ***************************************************************** --> 
+</DDDB> 

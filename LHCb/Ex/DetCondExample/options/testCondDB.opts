@@ -1,13 +1,10 @@
-//$Id: testCondDB.opts,v 1.13 2006-09-26 10:51:09 marcocle Exp $
+//$Id: testCondDB.opts,v 1.14 2007-02-02 18:17:21 marcocle Exp $
 //==============================================================
 // Job options for DetCondExample test of CondDB
 //==============================================================
 
 #include "$DETCONDEXAMPLEROOT/options/common.opts"
 #include "$DETCONDEXAMPLEROOT/options/cool.opts"
-
-// Detector Persistency service setup: 
-DetectorPersistencySvc.CnvServices += { "CondDBCnvSvc" };
 
 //--------------------------------------------------------------
 // Sequence of algorithms to be applied

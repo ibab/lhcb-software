@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE DDDB SYSTEM "../../DTD/geometry.dtd">
+<DDDB>
+<!-- """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""" --> 
+<!--   
+  CVS tag: $Name: not supported by cvs2svn $
+  $Log: not supported by cvs2svn $
+  Revision 1.1.1.1  2007/01/30 13:34:59  marcocle
+  CVS based back up for the SQLite conditions database
+
+  Revision 1.7  2006/02/06 15:54:00  cattanem
+  DC06 geometry and cleanup of older stuff
+
+  Revision 1.6  2005/06/06 15:59:43  gcorti
+  Calo tilt
+
+  Revision 1.5  2003/12/05 13:59:43  cattanem
+  add Calo changes
+
+  Revision 1.4  2003/06/19 06:18:22  cattanem
+  v16r0
+
+  Revision 1.3  2002/09/12 09:32:59  cattanem
+  Add vertical Rich, Velo optimisation
+
+  Revision 1.2  2002/01/19 13:58:42  ibelyaev
+   fix the bug with material names/paths
+
+  Revision 1.1  2001/12/15 16:05:37  ibelyaev
+  The first version of  detailed Ecal description by Galina Pakhlova
+ 
+--> 
+<!-- """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""" --> 
+<!-- ******************************************************************** --> 
+<!--                      Ecal Middle Module Geometry                     -->
+<!--                       Logical Volumes Definition                     --> 
+<!-- ******************************************************************** --> 
+
+ <logvol name="Middle" material = "Ecal/EcalSteel">
+
+   <box  name  = "Middle_Module_Box"
+         sizeX = "EcalModXSize"
+         sizeY = "EcalModYSize"
+         sizeZ = "EcalMidModLength"/>
+
+    <physvol name = "MiddleModuleFrontCover"
+             logvol = "/dd/Geometry/DownstreamRegion/Ecal/Modules/MidFrontCover"> 
+               <posXYZ z = "EcalMidFrontCoverOffset"/>
+    </physvol>
+
+    <physvol name   = "MiddleModuleBackCover"
+             logvol = "/dd/Geometry/DownstreamRegion/Ecal/Modules/MidBackCover"> 
+               <posXYZ z = "EcalMidBackCoverOffset"/>
+    </physvol>
+
+    <physvol name = "MiddleModuleReadOut"
+             logvol = "/dd/Geometry/DownstreamRegion/Ecal/Modules/MidReadOut"> 
+                <posXYZ  z = "EcalMidReadOutOffset"/>
+    </physvol>
+ 
+    <physvol name   = "MiddleModuleStack"
+             logvol = "/dd/Geometry/DownstreamRegion/Ecal/Modules/MidStack"> 
+                <posXYZ  z = "EcalMidStackOffset"/>
+     </physvol>
+
+  </logvol>
+<!-- ***************************************************************** --> 
+<!--                Ecal Middle Module Front Cover Geometry            -->
+<!-- ***************************************************************** --> 
+  <logvol name = "MidFrontCover" material = "Ecal/EcalPlasticMidFC">
+         <box  name  = "Middle_Module_Front_Cover_Box"
+               sizeX = "EcalModXSize"
+               sizeY = "EcalModYSize"
+               sizeZ = "EcalMidFrontCoverLength"/>
+  </logvol>
+<!-- ***************************************************************** --> 
+<!--                Ecal Middle Module Back Cover Geometry             -->
+<!-- ***************************************************************** --> 
+  <logvol name = "MidBackCover" material = "Ecal/EcalPlasticBC">
+         <box  name  = "Middle_Module_Back_Cover_Box"
+               sizeX = "EcalModXSize"
+               sizeY = "EcalModYSize"
+               sizeZ = "EcalMidBackCoverLength"/>
+  </logvol>
+<!-- ****************************************************************** --> 
+<!--             Ecal Middle Module Read Out Geometry                   -->
+<!-- ****************************************************************** --> 
+  <logvol name = "MidReadOut" material="Vacuum">
+         <box  name  = "Middle_Module_Read_Out_Box"
+               sizeX = "EcalModXSize"
+               sizeY = "EcalModYSize"
+               sizeZ = "EcalMidReadOutLength"/>
+
+<!-- %%% Middle ReadOutTube Installation %%% -->
+
+    <paramphysvol2D number1 = "2" number2 = "2">
+      <physvol name = "Middle_ReadOutTube_Matrix"
+               logvol ="/dd/Geometry/DownstreamRegion/Ecal/Modules/MidReadOutTube">
+                   
+	       <posXYZ x = "-0.5*EcalMidCellXYSize"
+                       y = " 0.5*EcalMidCellXYSize"/>
+      </physvol>
+           <posXYZ x = "   EcalMidCellXYSize"/>
+           <posXYZ y = "-1*EcalMidCellXYSize"/>
+    </paramphysvol2D>
+
+  </logvol>
+<!-- ****************************************************************** --> 
+<!--              Ecal Middle Module Read Out Tube                       -->
+<!-- ****************************************************************** --> 
+  <logvol name = "MidReadOutTube" material = "Ecal/EcalSteel">
+         <tubs  name  = "Middle_Read_Out_Tube"
+	        sizeZ = "EcalMidReadOutLength"
+                innerRadius = "EcalTubeInnRadius"   
+                outerRadius = "EcalTubeOutRadius"/>
+ </logvol>
+<!-- ****************************************************************** --> 
+<!--                Ecal Middle Module Stack Geometry                   -->
+<!-- ****************************************************************** --> 
+
+ <logvol name = "MidStack" material="Vacuum">
+         <box  name  = "Middle_Stack_Main_Box"
+               sizeX = "EcalModXSize-2*EcalTapeThick"
+               sizeY = "EcalModYSize-2*EcalTapeThick"
+               sizeZ = "EcalStackLength"/>
+
+<!-- %%% Middle Cells Installation as 2x2 Matrix of the Middle Stack %%% -->
+
+    <paramphysvol2D number1 = "2" number2 = "2">
+      <physvol name = "Middle_Cells_Matrix"
+               logvol ="/dd/Geometry/DownstreamRegion/Ecal/Modules/MidCell">
+                    <posXYZ x = "-0.5*EcalMidCellXYSize"
+                            y = " 0.5*EcalMidCellXYSize"/>
+      </physvol>
+           <posXYZ x = "EcalMidCellXYSize"/>
+           <posXYZ y = "-1*EcalMidCellXYSize"/>
+    </paramphysvol2D>
+
+  </logvol>
+<!-- ****************************************************************** --> 
+</DDDB> 

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE DDDB SYSTEM "../DTD/geometry.dtd">
+<DDDB>
+
+<!--
+
+   $Id: Installation.xml,v 1.1 2007-02-02 18:19:30 marcocle Exp $ 
+   CVS tag $Name: not supported by cvs2svn $
+   $Log: not supported by cvs2svn $
+   Revision 1.1.1.1  2007/01/30 13:34:59  marcocle
+   CVS based back up for the SQLite conditions database
+
+   Revision 1.5  2006/03/09 16:33:30  cattanem
+   Calo tilt
+
+   Revision 1.4  2005/06/06 16:03:09  gcorti
+   Calo tilt
+
+   Revision 1.3  2002/09/12 09:33:00  cattanem
+   Add vertical Rich, Velo optimisation
+
+   Revision 1.2  2002/01/19 16:20:32  aberdiou
+    new description of Hcal
+
+
+-->
+
+  <!-- ****************************************************************** --> 
+  <!--            Hcal Installation Catalog Definition                    -->
+  <!-- ****************************************************************** --> 
+  <catalog name = "Installation"> 
+    <logvolref href = "Installation/Hcal.xml#lvHcal"/> 
+    <logvolref href = "Installation/BeamPlug.xml#PlugSupport"/>
+    <logvolref href = "Installation/BeamPlug.xml#VericalSteelSheet"/>
+    <logvolref href = "Installation/BeamPlug.xml#HorizontalSteelSheet"/>
+    <logvolref href = "Installation/BeamPlug.xml#SteelSheetWithHole1"/>
+    <logvolref href = "Installation/BeamPlug.xml#SteelSheetWithHole2"/>
+    <logvolref href = "Installation/Inner.xml#lvHcalInnerSection"/>  
+    <logvolref href = "Installation/Inner.xml#lvHcalInnHalfModule"/>  
+    <logvolref href = "Installation/Inner.xml#lvHcalInnMidlHalfModule"/>  
+    <logvolref href = "Installation/Inner.xml#lvHcalInnHalfSubModuleWorkPart"/>  
+    <logvolref href = "Installation/Outer.xml#lvHcalOuterSection"/> 
+    <logvolref href = "Installation/Outer.xml#lvHcalOutHalfModule"/> 
+    <logvolref href = "Installation/Outer.xml#lvHcalOutHalfSubModuleWorkPart"/> 
+  </catalog>
+  <!-- ****************************************************************** --> 
+</DDDB>

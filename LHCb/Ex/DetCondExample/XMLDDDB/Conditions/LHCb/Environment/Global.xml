@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE DDDB SYSTEM "../../../DTD/structure.dtd">
+<DDDB>
+
+<!-- J.P. Palacios Place to put general LHCb conditions -->
+
+  <condition name="IP8Pressure">
+    <param name="IP8Presssure" type="double">1.01325*bar </param> 
+  </condition>
+
+</DDDB>

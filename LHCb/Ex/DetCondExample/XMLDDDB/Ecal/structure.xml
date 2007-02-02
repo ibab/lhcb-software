@@ -1,93 +1,80 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE DDDB SYSTEM "../DTD/structure.dtd">
-<!-- $Id: structure.xml,v 1.2 2005-07-14 15:19:27 marcocle Exp $ -->
 <DDDB>
+<!-- 
+  *****************************************************************************
+  * $Id: structure.xml,v 1.3 2007-02-02 18:19:29 marcocle Exp $ 
+  *****************************************************************************
+-->
+<!-- ***************************************************************** -->
+<!--                  Define detector elements for Ecal                -->
+<!-- ***************************************************************** -->
 
-   <parameter name="InCell"      value="40.666667*mm" />
-   <parameter name="MidCell"     value="1.5*(InCell)" />   
-   <parameter name="OutCell"     value="3.0*(InCell)" />   
-
-  <!-- *********************************************** -->
-  <!-- *  Define detector element for Ecal detector  * -->
-  <!-- *********************************************** -->
-  <detelem name="Ecal" classID="8900">
- 
-         <author>  Olivier Callot </author>
-         <version> 1.0            </version>
-
-         <geometryinfo lvname="/dd/Geometry/Ecal/lvEcal"  
-                       support="/dd/Structure/LHCb"
-                       npath="EcalSubsystem" />
-
-         <conditioninfo name="Alignment"   condition="/dd/Alignment/Ecal/alEcal"/>
-         <conditioninfo name="Calibration" condition="/dd/Calibration/Ecal/caEcal"/>
-         <conditioninfo name="Readout"     condition="/dd/ReadOut/Ecal/roEcal"/>
-         <conditioninfo name="SlowControl" condition="/dd/SlowControl/Ecal/scEcal"/>
-         <conditioninfo name="FastControl" condition="/dd/FastControl/Ecal/fcEcal"/>
-
-         <detelemref href = "#EcalOuter"/>
-         <detelemref href = "#EcalMiddle"/>
-         <detelemref href = "#EcalInner"/>
-
-         <userParameter name="CodingBit" type="int"> 6 </userParameter>
-         <userParameter name="EtInCenter" type="double"
-                        comment="10 GeV Et Max in center">
-            10.*GeV
-         </userParameter>
-         <userParameter name="EtSlope" type="double"
-                        comment="10 + .3*7 = 12.1 at 300 mrad">
-            7.*GeV
-         </userParameter>
-         <userParameter name="AdcMax"        type="int"> 4095 </userParameter>
-         <userParameter name="ActiveToTotal" type="double"
-                        comment="calibrated 19/04/2001 by F.Machefert">
-            6.6
-         </userParameter>
-         <userParameter name="ZShowerMax" type="double"
-                        comment="110 mm from the start of the Shashlik">
-            -107.5*mm
-         </userParameter>
-
-  </detelem>
-
-
-  <detelem name="EcalOuter" classID="8901" >
-
-    <author>  Olivier Callot </author>
-    <version> 1.0            </version>
-
-    <geometryinfo lvname = "/dd/Geometry/Ecal/lvEcalOuter" 
-                  support = "/dd/Structure/LHCb/Ecal"
-                  npath = "pvEcalOuter" />
-
-    <userParameter name="CellSize" type="double"> OutCell </userParameter>
-
-  </detelem>
-
-  <detelem name="EcalMiddle" classID="8901" >
-
-     <author>  Olivier Callot </author>
-     <version> 1.0            </version>
-
-     <geometryinfo lvname = "/dd/Geometry/Ecal/lvEcalMiddle" 
-                   support = "/dd/Structure/LHCb/Ecal"
-                   npath  = "pvEcalMiddle" />
-
-     <userParameter name="CellSize" type="double"> MidCell </userParameter>
-
-  </detelem>
-
-  <detelem name="EcalInner" classID="8901" >
-
-     <author>  Olivier Callot </author>
-     <version> 1.0            </version>
-
-     <geometryinfo lvname = "/dd/Geometry/Ecal/lvEcalInner"
-                   support = "/dd/Structure/LHCb/Ecal" 
-                   npath  = "pvEcalInner" />
-
-     <userParameter name="CellSize" type="double"> InCell </userParameter>
+  <parameter name="OutCell"     value="121.7*mm"     />   
+  <parameter name="MidCell"     value="OutCell/2.0"  />   
+  <parameter name="InCell"      value="OutCell/3.0"  />
+  
+  <detelem name = "Ecal" classID = "8900">
     
-  </detelem>
+    <author>  Galina Pakhlova Galina.Pakhlova@cern.ch </author>
+    <version>             3.0                         </version>
 
+    <geometryinfo lvname  = "/dd/Geometry/DownstreamRegion/Ecal/Installation/Ecal"  
+                  support = "/dd/Structure/LHCb/DownstreamRegion"
+                  npath   = "EcalSubsystem"/>
+
+    <conditioninfo name      = "Hardware"
+                   condition = "/dd/Conditions/ReadoutConf/Ecal/Hardware" />
+
+    <conditioninfo name      = "CellsToCards"
+                   condition = "/dd/Conditions/ReadoutConf/Ecal/CellsToCards" />
+
+    <conditioninfo name      = "Gain"
+                   condition = "/dd/Conditions/Calibration/Ecal/Gain" />
+
+    <conditioninfo name      = "Reco"
+                   condition = "/dd/Conditions/Calibration/Ecal/Reco" />
+
+    <detelemref href = "#EcalOuter"   />
+    <detelemref href = "#EcalMiddle"  />
+    <detelemref href = "#EcalInner"   />
+     
+    <userParameter name = "centralHoleX" type="int">         8 </userParameter>
+    <userParameter name = "centralHoleY" type="int">         6 </userParameter>
+
+    <userParameter name = "YToXSizeRatio" 
+                   type = "double" >             121.90/121.70 </userParameter>
+
+    <userParameter name = "CodingBit" type = "int"  >        6 </userParameter>
+    <userParameter name="AdcMax"  type="int">             4095 </userParameter>
+
+<!-- definition of the active Z-acceptance in the local frame --> 
+    <userParameter name="ZOffset" type="double"> 
+      -0.5*EcalMidModLength+0.5*EcalStackLength+EcalMidFrontCoverLength 
+    </userParameter>
+    <userParameter name="ZSize"   type="double"> EcalStackLength        </userParameter>
+
+ </detelem>
+<!-- ***************************************************************** -->
+  <detelem name = "EcalInner"    classID="8901" >
+    <geometryinfo lvname  = "/dd/Geometry/DownstreamRegion/Ecal/Installation/InnSection"
+    		  npath   = "InnerSection"
+                  support = "/dd/Structure/LHCb/DownstreamRegion/Ecal"/>
+    <userParameter name="CellSize" type="double"> InCell </userParameter>
+  </detelem>
+<!-- ***************************************************************** -->
+  <detelem name = "EcalMiddle"  classID="8901" >
+    <geometryinfo lvname  = "/dd/Geometry/DownstreamRegion/Ecal/Installation/MidSection"
+      		  npath   = "MiddleSection"
+                  support = "/dd/Structure/LHCb/DownstreamRegion/Ecal"/>
+    <userParameter name="CellSize" type="double"> MidCell </userParameter>
+  </detelem>
+<!-- ***************************************************************** -->
+  <detelem name = "EcalOuter"   classID="8901" >
+    <geometryinfo lvname  = "/dd/Geometry/DownstreamRegion/Ecal/Installation/OutSection"
+                  npath   = "OuterSection"
+                  support = "/dd/Structure/LHCb/DownstreamRegion/Ecal"/>
+    <userParameter name="CellSize" type="double"> OutCell </userParameter>
+  </detelem>
+<!-- ***************************************************************** -->
 </DDDB>

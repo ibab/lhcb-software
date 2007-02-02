@@ -1,4 +1,4 @@
-//$Id: testUMSError.opts,v 1.2 2006-09-26 10:51:09 marcocle Exp $
+//$Id: testUMSError.opts,v 1.3 2007-02-02 18:17:21 marcocle Exp $
 //==============================================================
 // Job options to test double CondDB usage in DetCondExample
 //==============================================================
@@ -49,5 +49,4 @@ MessageSvc.OutputLevel = 1;
 //--------------------------------------------------------------
 ApplicationMgr.DLLs += { "DetCond" };
 
-DetectorPersistencySvc.CnvServices += { "CondDBCnvSvc" };
 

@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE DDDB SYSTEM "DTD/geometry.dtd">
-<!-- $Id: properties.xml,v 1.1 2005-08-16 09:28:52 marcocle Exp $ -->
-<DDDB> 
-  <catalog name="Properties">
-    <tabpropertyref href="conddb:/Properties/TestFunction#TestFunction"/>
-  </catalog>
-</DDDB>

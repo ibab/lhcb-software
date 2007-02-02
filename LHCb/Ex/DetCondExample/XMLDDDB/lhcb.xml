@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE DDDB SYSTEM "DTD/structure.dtd">
+<DDDB> 
+  <!--  **********************************************************  -->
+  <!--  *           LHCb Detector Description Data Base          *  --> 
+  <!--  *              new hierarchy detector setup              *  --> 
+  <!--  **********************************************************  -->
+  <catalog name="dd">
+     <catalogref href="structure.xml#Structure" />
+     <catalogref href="geometry.xml#Geometry" /> 
+     <catalogref href="materials/materials.xml#Materials" />
+     <catalogref href="$CONDITIONS_PATH#Conditions" />
+  </catalog> 
+</DDDB> 

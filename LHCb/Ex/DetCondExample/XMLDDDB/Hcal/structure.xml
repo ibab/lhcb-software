@@ -1,75 +1,68 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE DDDB SYSTEM "../DTD/structure.dtd">
-<!-- $Id: structure.xml,v 1.2 2005-07-14 15:19:27 marcocle Exp $ -->
 <DDDB>
-
-  <parameter name="InCell"   value="131.3*mm"  />
-  <parameter name="OutCell"  value="2.0*InCell"  />
-
 
   <!-- ********************************************** -->
   <!-- *  Define detector element for Hcal detector * -->
   <!-- ********************************************** -->
+
+  <parameter name="InCell"   value="131.3*mm"  />
+  <parameter name="OutCell"  value="2.0*InCell"  />
+
   <detelem   name    = "Hcal"
              classID = "8900"  >
  
-         <author>  Olivier Callot </author>
-         <version> 1.0            </version>
+    <author>  Olivier Callot </author>
+    <version> 1.0            </version>
 
-         <geometryinfo lvname  = "/dd/Geometry/Hcal/lvHcal"
-		       support = "/dd/Structure/LHCb"
-                       npath   = "HcalSubsystem" />
+    <geometryinfo lvname  = "/dd/Geometry/DownstreamRegion/Hcal/Installation/lvHcal"
+                  support = "/dd/Structure/LHCb/DownstreamRegion"
+                  npath   = "HcalSubsystem" />
 
-         <conditioninfo name="SlowControl" condition="/dd/SlowControl/Hcal/scHcal"/>
+    <conditioninfo name      = "Hardware"
+                   condition = "/dd/Conditions/ReadoutConf/Hcal/Hardware" />
 
-         <detelemref href = "#HcalOuter" />
-         <detelemref href = "#HcalInner" />
+    <conditioninfo name      = "CellsToCards"
+                   condition = "/dd/Conditions/ReadoutConf/Hcal/CellsToCards" />
 
-         <userParameter name="CodingBit" type="int"> 5 </userParameter>
-         <userParameter name="EtInCenter" type="double">
-            15.*GeV
-         </userParameter>
-         <userParameter name="EtSlope" type="double"
-                        comment="15 GeV max">
-            0.*GeV
-         </userParameter>
-         <userParameter name="AdcMax" type="int"> 4095 </userParameter>
-         <userParameter name="ActiveToTotal" type="double" 
-                        comment="calibrated by O.Iouchtchenko">
-            49.2
-         </userParameter>
-         <userParameter name="ZShowerMax" type="double"
-                        comment="300 mm from start of tile structure">
-            -337.5*mm
-         </userParameter>
+    <conditioninfo name      = "Gain"
+                   condition = "/dd/Conditions/Calibration/Hcal/Gain" />
+
+    <conditioninfo name      = "Reco"
+                   condition = "/dd/Conditions/Calibration/Hcal/Reco" />
+
+    <detelemref href = "#HcalOuter" />
+    <detelemref href = "#HcalInner" />
+
+    <userParameter name = "centralHoleX" type="int">      2  </userParameter>
+    <userParameter name = "centralHoleY" type="int">      2  </userParameter>
+
+    <userParameter name = "YToXSizeRatio" 
+                   type = "double" >                    1.0  </userParameter>
+    <userParameter name = "CodingBit" type = "int">       5  </userParameter>
+    <userParameter name = "AdcMax" type = "int">         4095 </userParameter>
+
+<!-- definition of the active Z-acceptance in the local frame --> 
+    <userParameter name="ZOffset" type="double"> 
+      -0.5*HcalTotSpace+HcalFwFaceLength+3*HcalMsPlStepLength 
+    </userParameter>
+    <userParameter name="ZSize"   type="double"> 6*HcalMsPlStepLength </userParameter>
 
   </detelem>
 
 
- <detelem classID="8901" name="HcalOuter">
-
-    <author>  Olivier Callot </author>
-    <version> 1.0            </version>
-
-    <geometryinfo lvname = "/dd/Geometry/Hcal/lvHcalOuter"
-                  support = "/dd/Structure/LHCb/Hcal"
-                  npath = "pvHcalOuter" />
-
+  <detelem classID="8901" name="HcalOuter">
+    <geometryinfo lvname = "/dd/Geometry/DownstreamRegion/Hcal/Installation/lvHcalOuterSection"
+                  support = "/dd/Structure/LHCb/DownstreamRegion/Hcal"
+                  npath = "pvHcalOuterSection" />
     <userParameter name="CellSize"> OutCell </userParameter>
-
   </detelem>
 
   <detelem classID="8901" name="HcalInner">
- 
-    <author>  Olivier Callot </author>
-    <version> 1.0            </version>
-
-    <geometryinfo  lvname = "/dd/Geometry/Hcal/lvHcalInner"
-	               support = "/dd/Structure/LHCb/Hcal"
-                   npath = "pvHcalInner" />
-
+    <geometryinfo lvname = "/dd/Geometry/DownstreamRegion/Hcal/Installation/lvHcalInnerSection"
+	          support = "/dd/Structure/LHCb/DownstreamRegion/Hcal"
+                  npath = "pvHcalInnerSection" />
     <userParameter name="CellSize"> InCell </userParameter>
-
   </detelem>
 
 </DDDB>

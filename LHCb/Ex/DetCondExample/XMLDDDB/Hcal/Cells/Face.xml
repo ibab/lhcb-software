@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE DDDB SYSTEM "../../DTD/geometry.dtd">
+<DDDB>
+
+<!--
+
+   $Id: Face.xml,v 1.1 2007-02-02 18:19:30 marcocle Exp $ 
+   CVS tag $Name: not supported by cvs2svn $
+   $Log: not supported by cvs2svn $
+   Revision 1.1.1.1  2007/01/30 13:34:59  marcocle
+   CVS based back up for the SQLite conditions database
+
+   Revision 1.5  2006/02/06 15:54:01  cattanem
+   DC06 geometry and cleanup of older stuff
+
+   Revision 1.4  2005/06/06 16:03:09  gcorti
+   Calo tilt
+
+   Revision 1.3  2002/09/12 09:33:00  cattanem
+   Add vertical Rich, Velo optimisation
+
+   Revision 1.2  2002/01/19 16:20:32  aberdiou
+    new description of Hcal
+
+
+-->
+
+  <!-- **************************************************************** --> 
+  <!--         Geometry of the Foward Face Half-SubModule               -->
+  <!--                  of the Hadronic Calorimeter                     --> 
+  <!--                   Logical Volumes Definition                     --> 
+  <!-- **************************************************************** --> 
+  <!-- %%%%%%%%%%       Central Strip for Join SubModule     %%%%%%%%%% -->
+  <!-- **************************************************************** --> 
+  <logvol name = "lvHcalCntStrip" material = "Hcal/HcalStripSteel">
+    <box name  = "HcalCntStripBox"
+      sizeX = "0.5*HcalSubModXSize"
+      sizeY = "HcalCntStripHeight"
+      sizeZ = "HcalCntStripWidth"/>
+  </logvol> 
+  <!-- **************************************************************** --> 
+  <!-- %%%%%%%%%%    Outer Foward Strip for Join SubModule   %%%%%%%%%% -->
+  <!-- **************************************************************** --> 
+  <logvol name = "lvHcalFwOutStrip" material = "Hcal/HcalStripSteel">
+    <box name  = "HcalFwOutStripBox"
+      sizeX = "0.5*HcalSubModXSize"
+      sizeY = "HcalFwOutStripHeight"
+      sizeZ = "HcalFwOutStripWidth"/>
+  </logvol> 
+  <!-- **************************************************************** --> 
+  <!-- %%%%%%%%%%  Outer Backward Strip for Join SubModule   %%%%%%%%%% -->
+  <!-- **************************************************************** --> 
+  <logvol name = "lvHcalBkOutStrip" material = "Hcal/HcalStripSteel">
+    <box name  = "HcalBkOutStripBox"
+      sizeX = "0.5*HcalSubModXSize"
+      sizeY = "HcalBkOutStripHeight"
+      sizeZ = "HcalBkOutStripWidth"/>
+  </logvol> 
+  <!-- **************************************************************** --> 
+  <!-- %%%%%%%%%%  Foward Face of SubModule from Work Stuff  %%%%%%%%%% -->
+  <!-- **************************************************************** --> 
+  <logvol name = "lvHcalFwFaceWorkStuff" material = "Hcal/HcalMsPlSteel">
+    <box name  = "HcalFwFaceWorkStuffBox"
+      sizeX = "0.5*HcalSubModXSize"
+      sizeY = "0.5*HcalMsPlHeight-0.5*HcalFaceWidth_for_CntStrip"
+      sizeZ = "HcalFwFaceLength-HcalFwFaceShelfLength"/>
+  </logvol> 
+  <!-- **************************************************************** --> 
+  <!-- %%%%%%%% Foward Face Shelf of SubModule from Work Stuff %%%%%%%% -->
+  <!-- **************************************************************** --> 
+  <logvol name = "lvHcalFwFaceShelfWorkStuff" material = "Hcal/HcalMsPlSteel">
+    <box name  = "HcalFwFaceShelfWorkStuffBox"
+      sizeX = "0.5*HcalSubModXSize"
+      sizeY = "HcalFwFaceShelfWidth"
+      sizeZ = "HcalFwFaceShelfLength"/>
+  </logvol> 
+  <!-- **************************************************************** --> 
+  <!-- %%%%%%%%%% Backward Face of SubModule from Work Stuff %%%%%%%%%% -->
+  <!-- **************************************************************** --> 
+  <logvol name = "lvHcalBkFaceWorkStuff" material = "Hcal/HcalMsPlSteel">
+    <box name  = "HcalBkFaceWorkStuffBox"
+      sizeX = "0.5*HcalSubModXSize"
+      sizeY = "HcalMsPlHeight"
+      sizeZ = "HcalBkFaceLength-HcalBkFaceShelfLength"/>
+  </logvol> 
+  <!-- **************************************************************** --> 
+  <!-- %%%%%%% Backward Face Shelf of SubModule from Work Stuff %%%%%%% -->
+  <!-- **************************************************************** --> 
+  <logvol name = "lvHcalBkFaceShelfWorkStuff" material = "Hcal/HcalMsPlSteel">
+    <box name  = "HcalBkFaceShelfWorkStuffBox"
+      sizeX = "0.5*HcalSubModXSize"
+      sizeY = "HcalBkFaceShelfWidth"
+      sizeZ = "HcalBkFaceShelfLength"/>
+  </logvol> 
+  <!-- **************************************************************** --> 
+  <!-- %%%%%%%%%%          Foward Face of SubModule          %%%%%%%%%% -->
+  <!-- **************************************************************** --> 
+  <logvol name = "lvHcalFwFaceSubModule" material = "Air">
+    <box name  = "HcalFwFaceSubModuleBox"
+      sizeX = "0.5*HcalSubModXSize"
+      sizeY = "HcalSubModYSize"
+      sizeZ = "HcalFwFaceLength"/>
+  <!-- %%%%%%%% Foward Face Shelfs of SubModule from Work Stuff %%%%%%% -->
+    <physvol name="pvHcalUpFwFaceShelfWorkStuff"
+      logvol="/dd/Geometry/DownstreamRegion/Hcal/Cells/lvHcalFwFaceShelfWorkStuff">
+      <posXYZ x = "0.0*mm"
+              y = "0.5*HcalFaceWidth_for_CntStrip+0.5*HcalFwFaceShelfWidth"
+              z = "-0.5*HcalFwFaceLength+0.5*HcalFwFaceShelfLength"/>
+    </physvol>
+    <physvol name="pvHcalLowFwFaceShelfWorkStuff"
+      logvol="/dd/Geometry/DownstreamRegion/Hcal/Cells/lvHcalFwFaceShelfWorkStuff">
+      <posXYZ x = "0.0*mm"
+              y = "-0.5*HcalFaceWidth_for_CntStrip-0.5*HcalFwFaceShelfWidth"
+              z = "-0.5*HcalFwFaceLength+0.5*HcalFwFaceShelfLength"/>
+    </physvol>
+  <!-- %%%%%%%%%%  Foward Face of SubModule from Work Stuff  %%%%%%%%%% -->
+    <physvol name="pvHcalUpFwFaceWorkStuff"
+      logvol="/dd/Geometry/DownstreamRegion/Hcal/Cells/lvHcalFwFaceWorkStuff">
+      <posXYZ x = "0.0*mm"
+              y = "0.25*HcalFaceWidth_for_CntStrip+0.25*HcalMsPlHeight"
+              z = "0.5*HcalFwFaceShelfLength"/>
+    </physvol>
+    <physvol name="pvHcalLowFwFaceWorkStuff"
+      logvol="/dd/Geometry/DownstreamRegion/Hcal/Cells/lvHcalFwFaceWorkStuff">
+      <posXYZ x = "0.0*mm"
+              y = "-0.25*HcalFaceWidth_for_CntStrip-0.25*HcalMsPlHeight"
+              z = "0.5*HcalFwFaceShelfLength"/>
+    </physvol>
+  <!-- %%%%%%%%%%       Central Strip for Join SubModule     %%%%%%%%%% -->
+    <physvol name="pvHcalFwCntStrip"
+      logvol="/dd/Geometry/DownstreamRegion/Hcal/Cells/lvHcalCntStrip">
+      <posXYZ x = "0.0*mm"
+              y = "0.0*mm"
+              z = "0.5*HcalFwFaceLength-0.5*HcalCntStripWidth"/>
+    </physvol>
+  <!-- %%%%%%%%%%    Outer Foward Strip for Join SubModule   %%%%%%%%%% -->
+    <physvol name="pvHcalUpFwOutStrip"
+      logvol="/dd/Geometry/DownstreamRegion/Hcal/Cells/lvHcalFwOutStrip">
+      <posXYZ x = "0.0*mm"
+              y = "0.5*HcalFaceWidth_for_CntStrip+HcalFwFaceShelfWidth+0.5*HcalFwOutStripHeight"
+              z = "-0.5*HcalFwFaceLength+HcalFwFaceShelfLength-0.5*HcalFwOutStripWidth"/>
+    </physvol>
+    <physvol name="pvHcalLowFwOutStrip"
+      logvol="/dd/Geometry/DownstreamRegion/Hcal/Cells/lvHcalFwOutStrip">
+      <posXYZ x = "0.0*mm"
+              y = "-0.5*HcalFaceWidth_for_CntStrip-HcalFwFaceShelfWidth-0.5*HcalFwOutStripHeight"
+              z = "-0.5*HcalFwFaceLength+HcalFwFaceShelfLength-0.5*HcalFwOutStripWidth"/>
+    </physvol>
+  </logvol> 
+  <!-- **************************************************************** --> 
+  <!-- %%%%%%%%%%          Backward Face of SubModule        %%%%%%%%%% -->
+  <!-- **************************************************************** --> 
+  <logvol name = "lvHcalBkFaceSubModule" material = "Air">
+    <box name  = "HcalBkFaceSubModuleBox"
+      sizeX = "0.5*HcalSubModXSize"
+      sizeY = "HcalSubModYSize"
+      sizeZ = "HcalBkFaceTotLength"/>
+  <!-- %%%%%%%%%% Backward Face of SubModule from Work Stuff %%%%%%%%%% -->
+    <physvol name="pvHcalBkFaceWorkStuff"
+      logvol="/dd/Geometry/DownstreamRegion/Hcal/Cells/lvHcalBkFaceWorkStuff">
+      <posXYZ x = "0.0*mm"
+              y = "0.0*mm"
+              z = "-0.5*HcalBkFaceTotLength+0.5*HcalBkFaceLength-0.5*HcalBkFaceShelfLength"/>
+    </physvol>
+  <!-- %%%%%%% Backward Face Shelf of SubModule from Work Stuff %%%%%%% -->
+    <physvol name="pvHcalUpBkFaceShelfWorkStuff"
+      logvol="/dd/Geometry/DownstreamRegion/Hcal/Cells/lvHcalBkFaceShelfWorkStuff">
+      <posXYZ x = "0.0*mm"
+              y = "0.5*HcalFaceWidth_for_CntStrip+0.5*HcalBkFaceShelfWidth"
+              z = "-0.5*HcalBkFaceTotLength+HcalBkFaceLength-0.5*HcalBkFaceShelfLength"/>
+    </physvol>
+    <physvol name="pvHcalLowBkFaceShelfWorkStuff"
+      logvol="/dd/Geometry/DownstreamRegion/Hcal/Cells/lvHcalBkFaceShelfWorkStuff">
+      <posXYZ x = "0.0*mm"
+              y = "-0.5*HcalFaceWidth_for_CntStrip-0.5*HcalBkFaceShelfWidth"
+              z = "-0.5*HcalBkFaceTotLength+HcalBkFaceLength-0.5*HcalBkFaceShelfLength"/>
+    </physvol>
+  <!-- %%%%%%%%%%       Central Strip for Join SubModule     %%%%%%%%%% -->
+    <physvol name="pvHcalBkCntStrip"
+      logvol="/dd/Geometry/DownstreamRegion/Hcal/Cells/lvHcalCntStrip">
+      <posXYZ x = "0.0*mm"
+              y = "0.0*mm"
+              z = "-0.5*HcalBkFaceTotLength+HcalBkFaceLength-HcalBkFaceShelfLength+0.5*HcalCntStripWidth"/>
+    </physvol>
+  <!-- %%%%%%%%%%  Outer Backward Strip for Join SubModule   %%%%%%%%%% -->
+    <physvol name="pvHcalUpBkOutStrip"
+      logvol="/dd/Geometry/DownstreamRegion/Hcal/Cells/lvHcalBkOutStrip">
+      <posXYZ x = "0.0*mm"
+              y = "0.5*HcalFaceWidth_for_CntStrip+HcalBkFaceShelfWidth+0.5*HcalBkOutStripHeight"
+              z = "-0.5*HcalBkFaceTotLength+HcalBkFaceLength-HcalBkFaceShelfLength+0.5*HcalBkOutStripWidth"/>
+    </physvol>
+    <physvol name="pvHcalLowBkOutStrip"
+      logvol="/dd/Geometry/DownstreamRegion/Hcal/Cells/lvHcalBkOutStrip">
+      <posXYZ x = "0.0*mm"
+              y = "-0.5*HcalFaceWidth_for_CntStrip-HcalBkFaceShelfWidth-0.5*HcalBkOutStripHeight"
+              z = "-0.5*HcalBkFaceTotLength+HcalBkFaceLength-HcalBkFaceShelfLength+0.5*HcalBkOutStripWidth"/>
+    </physvol>
+  </logvol> 
+  <!-- **************************************************************** --> 
+</DDDB> 

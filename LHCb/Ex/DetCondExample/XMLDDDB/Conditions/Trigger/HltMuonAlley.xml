@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE DDDB SYSTEM "../../DTD/structure.dtd">
+<DDDB>
+
+ <!-- author: Alessia Satta -->
+
+ <catalog name = "HltMuonAlley">
+    <condition name = "HltMuonPreTriggerIPSel">
+      <param name = "MinIP" type = "double">  0.15</param>
+      <param name = "MaxIP" type = "double">  3.0</param>
+    </condition>
+
+    <condition name = "HltMuonPreTriggerSingle">
+      <param name = "PtMin" type = "double">  2300.</param>
+    </condition>
+
+    <condition name = "HltMuonPreTriggerDiMuons">
+      <param name = "MassWithIP" type = "double">  500.</param>
+      <param name = "MassNoIP" type = "double"> 2500.</param>
+      <param name = "IP" type = "double">  0.075</param>
+    </condition>
+
+    <condition name = "HltMuonTriggerIPSel">
+      <param name = "MinIP" type = "double">  0.1</param>
+      <param name = "MaxIP" type = "double">  3.0</param>
+    </condition>
+
+     <condition name = "HltMuonTriggerSingle">
+      <param name = "PtMin" type = "double">  3000.</param>
+    </condition>
+
+    <condition name = "HltMuonTriggerDiMuons">
+      <param name = "MassWithIP" type = "double">  500.</param>
+      <param name = "MassNoIP" type = "double"> 2500.</param>
+      <param name = "IP" type = "double">  0.075</param>
+      <param name = "DOCA" type = "double">  0.5</param>
+    </condition>
+
+ </catalog>
+</DDDB>
+

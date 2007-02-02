@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: structure.dtd,v 1.2 2005-05-03 15:50:30 marcocle Exp $ -->
 
 <!-- DDDB: XML root element, Gaudi transient root as well -->
 <!ELEMENT DDDB (macro|parameter|catalog|catalogref|detelem|condition)+>
@@ -126,10 +125,11 @@
 -->
 <!ELEMENT geometryinfo EMPTY>
 <!ATTLIST geometryinfo
-  lvname  CDATA #REQUIRED
-  support CDATA #IMPLIED
-  npath   CDATA #IMPLIED
-  rpath   CDATA #IMPLIED>
+  lvname     CDATA #REQUIRED
+  condition  CDATA #IMPLIED
+  support    CDATA #IMPLIED
+  npath      CDATA #IMPLIED
+  rpath      CDATA #IMPLIED>
 
 <!-- conditioninfo: (it should have a better name) information needed to link the Detector
                     element to a condition. This information consists of:

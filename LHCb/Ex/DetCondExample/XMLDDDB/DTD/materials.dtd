@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: materials.dtd,v 1.1 2001-12-17 15:46:14 andreav Exp $ -->
 
 
 <!-- include DTD for tags "tabproperty" and "tabpropertyref" -->
@@ -51,10 +50,10 @@
   name      ID    #REQUIRED
   A         CDATA #REQUIRED
   Z         CDATA #REQUIRED
-  N         CDATA #REQUIRED
   density   CDATA #IMPLIED
   radlen    CDATA #IMPLIED
   lambda    CDATA #IMPLIED
+  I         CDATA #IMPLIED
   %conditions;
 >
 
@@ -73,6 +72,7 @@
   density   CDATA #IMPLIED
   radlen    CDATA #IMPLIED
   lambda    CDATA #IMPLIED
+  I         CDATA #IMPLIED
   %conditions;
 >
 
@@ -99,6 +99,7 @@
   density   CDATA #IMPLIED
   radlen    CDATA #IMPLIED
   lambda    CDATA #IMPLIED
+  I         CDATA #IMPLIED
   %conditions;
 >
 

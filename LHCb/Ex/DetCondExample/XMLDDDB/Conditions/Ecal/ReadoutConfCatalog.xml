@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE DDDB SYSTEM "../../DTD/structure.dtd">
+<DDDB>
+
+  <catalog name ="Ecal">
+
+    <conditionref href="ReadoutConf/Main.xml#Hardware"/>
+    <conditionref href="ReadoutConf/Main.xml#CellsToCards"/>
+
+  </catalog>
+
+</DDDB>

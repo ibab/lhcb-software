@@ -1,11 +1,12 @@
-//$Id: testXml.opts,v 1.10 2006-10-25 13:48:12 marcocle Exp $
+//$Id: testXml.opts,v 1.11 2007-02-02 18:17:21 marcocle Exp $
 //==============================================================
 // Job options for DetCondExample test of XML files
 //==============================================================
 
 #include "$DETCONDEXAMPLEROOT/options/common.opts"
 
-DetectorDataSvc.DetDbLocation  = "$DETCONDEXAMPLE_XMLDDDB/dddb-nodb.xml";
+// Override the value of CONDITIONS_PATH to point to the files.
+ApplicationMgr.Environment += { "CONDITIONS_PATH": "Conditions/MainCatalog.xml" };
 
 //--------------------------------------------------------------
 // Sequence of algorithms to be applied

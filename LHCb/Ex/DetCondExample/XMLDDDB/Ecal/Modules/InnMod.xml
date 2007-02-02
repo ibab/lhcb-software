@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE DDDB SYSTEM "../../DTD/geometry.dtd">
+<DDDB>
+<!-- """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""" --> 
+<!--   
+  CVS tag: $Name: not supported by cvs2svn $
+  $Log: not supported by cvs2svn $
+  Revision 1.1.1.1  2007/01/30 13:34:59  marcocle
+  CVS based back up for the SQLite conditions database
+
+  Revision 1.7  2006/02/06 15:54:00  cattanem
+  DC06 geometry and cleanup of older stuff
+
+  Revision 1.6  2005/06/06 15:59:43  gcorti
+  Calo tilt
+
+  Revision 1.5  2003/12/05 13:59:43  cattanem
+  add Calo changes
+
+  Revision 1.4  2003/06/19 06:18:22  cattanem
+  v16r0
+
+  Revision 1.3  2002/09/12 09:32:58  cattanem
+  Add vertical Rich, Velo optimisation
+
+  Revision 1.2  2002/01/19 13:58:42  ibelyaev
+   fix the bug with material names/paths
+
+  Revision 1.1  2001/12/15 16:05:37  ibelyaev
+  The first version of  detailed Ecal description by Galina Pakhlova
+ 
+--> 
+<!-- """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""" --> 
+<!-- ******************************************************************** --> 
+<!--                      Ecal Inner Module Geometry                      -->
+<!--                      Logical Volumes Definition                      --> 
+<!-- ******************************************************************** --> 
+
+ <logvol name = "Inner" material = "Ecal/EcalSteel">
+
+   <box  name  = "Inner_Module_Box"
+         sizeX = "EcalModXSize"
+         sizeY = "EcalModYSize"
+         sizeZ = "EcalInnModLength"/>
+
+    <physvol name = "InnerModuleFrontCover"
+             logvol = "/dd/Geometry/DownstreamRegion/Ecal/Modules/InnFrontCover"> 
+               <posXYZ z = "EcalInnFrontCoverOffset"/>
+    </physvol>
+
+    <physvol name   = "InnerModuleBackCover"
+             logvol = "/dd/Geometry/DownstreamRegion/Ecal/Modules/InnBackCover"> 
+               <posXYZ z = "EcalInnBackCoverOffset"/>
+    </physvol>
+ 
+    <physvol name = "InnerModuleReadOut"
+             logvol = "/dd/Geometry/DownstreamRegion/Ecal/Modules/InnReadOut"> 
+                <posXYZ  z = "EcalInnReadOutOffset"/>
+    </physvol> 
+
+   <physvol name   = "InnerModuleStack"
+             logvol = "/dd/Geometry/DownstreamRegion/Ecal/Modules/InnStack"> 
+                <posXYZ  z = "EcalInnStackOffset"/>
+   </physvol>
+
+  </logvol>
+<!-- ***************************************************************** --> 
+<!--                Ecal Inner Module Front Cover Geometry             -->
+<!-- ***************************************************************** --> 
+  <logvol name = "InnFrontCover" material = "Ecal/EcalPlasticInnFC">
+         <box  name  = "Inner_Module_Front_Cover_Box"
+               sizeX = "EcalModXSize" 
+               sizeY = "EcalModYSize"
+               sizeZ = "EcalInnFrontCoverLength"/>
+  </logvol>
+<!-- ***************************************************************** --> 
+<!--                Ecal Inner Module Back Cover Geometry              -->
+<!-- ***************************************************************** --> 
+  <logvol name = "InnBackCover" material = "Ecal/EcalPlasticBC">
+         <box  name  = "Inner_Module_Back_Cover_Box"
+               sizeX = "EcalModXSize"
+               sizeY = "EcalModYSize"
+               sizeZ = "EcalInnBackCoverLength"/>
+  </logvol>
+<!-- ****************************************************************** --> 
+<!--                Ecal Inner Module Read Out Geometry                 -->
+<!-- ****************************************************************** --> 
+  <logvol name = "InnReadOut" material = "Vacuum">
+         <box  name  = "Inner_Module_Read_Out_Box"
+               sizeX = "EcalModXSize"
+               sizeY = "EcalModYSize"
+               sizeZ = "EcalInnReadOutLength"/>
+ 
+      <physvol name   = "InnerReadOutBox"
+	       logvol = "/dd/Geometry/DownstreamRegion/Ecal/Modules/InnReadOutBox"> 
+      </physvol>       
+ </logvol>
+<!-- ****************************************************************** --> 
+<!--              Ecal Outer Module Read Out Tube                       -->
+<!-- ****************************************************************** --> 
+  <logvol name = "InnReadOutBox" material = "Ecal/EcalPlasticBC">
+         <box  name  = "Inner_Read_Out_Box"
+	       sizeX = "EcalInnReadOutX"
+               sizeY = "EcalInnReadOutY"
+               sizeZ = "EcalInnReadOutLength"/>
+  </logvol>
+<!-- ****************************************************************** --> 
+<!--                Ecal Inner Module Stack Geometry                    -->
+<!-- ****************************************************************** --> 
+ <logvol name = "InnStack" material = "Vacuum">
+         <box  name  = "Inner_Stack_Main_Box"
+               sizeX = "EcalModXSize-2*EcalTapeThick"
+               sizeY = "EcalModYSize-2*EcalTapeThick"
+               sizeZ = "EcalStackLength"/>
+
+<!-- %%% Inner Cells Installation as 3x3 Matrix of the Inner Module %%% -->
+
+    <paramphysvol2D number1 = "3" number2 = "3">
+      <physvol name = "Inner_Cells_Matrix"
+               logvol ="/dd/Geometry/DownstreamRegion/Ecal/Modules/InnCell">
+                    <posXYZ x = "-1*EcalInnCellXYSize"
+                            y = "   EcalInnCellXYSize"/>
+      </physvol>
+           <posXYZ x = "EcalInnCellXYSize"/>
+           <posXYZ y = "-1*EcalInnCellXYSize"/>
+    </paramphysvol2D>
+  </logvol>
+<!-- ****************************************************************** --> 
+</DDDB> 
