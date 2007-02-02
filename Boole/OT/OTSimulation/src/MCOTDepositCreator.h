@@ -1,4 +1,4 @@
-// $Id: MCOTDepositCreator.h,v 1.10 2006-07-21 08:05:07 janos Exp $
+// $Id: MCOTDepositCreator.h,v 1.11 2007-02-02 09:28:44 janos Exp $
 #ifndef OTSIMULATION_MCOTDEPOSITCREATOR_H
 #define OTSIMULATION_MCOTDEPOSITCREATOR_H 1
 
@@ -59,7 +59,7 @@ public:
 private:
 
   /// make initial list of digitizations
-  StatusCode makeDigitizations();
+  void makeDigitizations();
 
   /// apply single cell effiency
   StatusCode singleCellEff();
@@ -71,13 +71,13 @@ private:
   StatusCode applyRTrelation();
 
   /// apply cross talk
-  StatusCode addCrossTalk();
+  void addCrossTalk();
 
   /// apply random noise
-  StatusCode addNoise();
+  //void addNoise();
 
   /// apply pulse reflections
-  StatusCode addPulseReflect();
+  void addPulseReflect();
 
   /// make unique name
   std::string toolName(const std::string& aName, 
