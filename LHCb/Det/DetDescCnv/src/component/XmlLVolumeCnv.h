@@ -1,4 +1,4 @@
-// $Id: XmlLVolumeCnv.h,v 1.7 2006-09-28 11:21:01 cattanem Exp $
+// $Id: XmlLVolumeCnv.h,v 1.8 2007-02-02 12:09:22 cattanem Exp $
 
 #ifndef DETDESCCNV_XMLCNVSVC_XMLLVOLUMECNV_H
 #define DETDESCCNV_XMLCNVSVC_XMLLVOLUMECNV_H
@@ -8,7 +8,7 @@
 #include <deque>
 #include <vector>
 
-#include "Kernel/Transform3DTypes.h"
+#include "GaudiKernel/Transform3DTypes.h"
 
 #include "DetDescCnv/XmlGenericCnv.h"
 #include "DetDesc/CLIDLVolume.h"

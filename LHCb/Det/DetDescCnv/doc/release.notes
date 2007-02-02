@@ -4,6 +4,10 @@
 ! Purpose     : standard converters for the LHCb Detector Description
 !-----------------------------------------------------------------------------
 
+!================ DetDescCnv v4r1 2007-02-02 ==================================
+! 2007-02-02 - Marco Cattaneo
+ - Remove dependency on LHCbDefinitions from an include file
+
 ! 2007-02-02 - Marco CLEMENCIC
  - Added a check in XmlGenericCnv to see if the CondDBCnvSvc is available in
    the PersistencySvc. If the CondDBCnvSvc is not available, XmlGenericCnv
