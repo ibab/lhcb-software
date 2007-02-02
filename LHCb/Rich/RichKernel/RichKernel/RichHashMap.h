@@ -5,7 +5,7 @@
  *  Header file for utility hash map for the RICH : Rich::HashMap
  *
  *  CVS Log :-
- *  $Id: RichHashMap.h,v 1.8 2007-02-01 17:24:54 jonrob Exp $
+ *  $Id: RichHashMap.h,v 1.9 2007-02-02 17:39:44 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2005-01-11
@@ -17,6 +17,8 @@
 
 // GaudiKernel
 #include "GaudiKernel/HashMap.h"
+
+// STD
 #include <ostream>
 
 // Include here to make sure always use defined hash functions for RichSmartIDs
