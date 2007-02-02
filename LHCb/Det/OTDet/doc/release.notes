@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.71 2007-02-02 09:25:04 janos Exp $
+! $Id: release.notes,v 1.72 2007-02-02 12:11:46 cattanem Exp $
 ! Package     : OTDet
 ! Responsible : Jeroen van Tilburg, Jacopo Nardulli, Jan Amoraal
-!========================================================================
+!--------------------------------------------------------------------------
 
+!========================== OTDet v7r1 2007-02-02 =========================
 ! 2007-02-02 Jan Amoraal
  - Removed LHCbDefinitions includes
  - Fixed DeOTModule::wireLength method to return correct wire length.
