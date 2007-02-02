@@ -1,6 +1,6 @@
-# $Id: requirements,v 1.5 2006-12-14 13:52:15 ranjard Exp $
+# $Id: requirements,v 1.6 2007-02-02 09:29:10 cattanem Exp $
 package DigiEvent
-version v2r0
+version v2r0p1
 
 branches Event Kernel xml cmt doc
 
@@ -16,7 +16,6 @@ document obj2dict DigiEventObj2Dict ../xml/*.xml
 
 # Build dictionary library
 library DigiEventDict  ../$(tag)/dict/DigiEvent/*.cpp
-apply_pattern component_library library=DigiEventDict
 
 private
 use GaudiObjDesc v* -no_auto_imports

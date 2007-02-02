@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.73 2007-01-12 10:07:16 ranjard Exp $
+# $Id: requirements,v 1.74 2007-02-02 09:45:25 cattanem Exp $
 # Created      : 20/06/2001
 # Maintainer   : P. Koppenburg
 #
@@ -31,7 +31,6 @@ library     PhysEventDict ../$(tag)/dict/PhysEvent/*.cpp
 
 # Define link options
 #============================================================================
-apply_pattern component_library library=PhysEventDict
 apply_pattern linker_library    library=PhysEvent
 
 private

@@ -3,7 +3,7 @@
 # Maintainer : Olivier Callot
 #============================================================================
 package           L0Event
-version           v16r0
+version           v16r0p1
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -29,7 +29,6 @@ library          L0EventDict     ../$(tag)/dict/L0Event/*.cpp
 #============================================================================
 # define library link options
 #============================================================================
-apply_pattern component_library library=L0EventDict
 apply_pattern linker_library	library=L0Event
 
 private

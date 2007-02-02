@@ -3,7 +3,7 @@
 # Maintainer : Jose Hernando, Eduardo Rodrigues
 #============================================================================
 package           TrackEvent
-version           v4r0
+version           v4r0p1
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -27,7 +27,6 @@ library          TrackEventDict     ../$(tag)/dict/TrackEvent/*.cpp
 
 # define library link options
 #============================================================================
-apply_pattern component_library library=TrackEventDict
 apply_pattern linker_library	library=TrackEvent
 
 private

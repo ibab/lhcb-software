@@ -1,5 +1,10 @@
-Package Event/GenEvent
-package coordinator: W.Pokorski, G.Corti
+! Package Event/GenEvent
+! package coordinator: W.Pokorski, G.Corti
+!------------------------------------------------------------------------------
+
+!=======================GenEvent v5r0p1 2007-02-02 ============================
+! 2007-02-02 - Marco Cattaneo
+ - Remove unnecessary component library pattern for dictionary
 
 !====================== GenEvent v5r0 2007-01-19 ==============================
 ! 2007-01-19 - Marco Cattaneo

@@ -1,5 +1,5 @@
 package GenEvent
-version v5r0
+version v5r0p1
 
 branches cmt doc src xml Event
 
@@ -20,7 +20,6 @@ document obj2dict GenEventObj2Dict ../xml/*.xml
 library GenEvent      *.cpp
 library GenEventDict  ../$(tag)/dict/GenEvent/*.cpp
 
-apply_pattern component_library library=GenEventDict
 apply_pattern linker_library    library=GenEvent
 
 private

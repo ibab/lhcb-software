@@ -3,7 +3,7 @@
 # Maintainer : Olivier Callot
 #============================================================================
 package           LinkerEvent
-version           v3r0
+version           v3r0p1
 
 #============================================================================
 # Structure, i.e. directories to process. 
@@ -29,7 +29,6 @@ library          LinkerEventDict     ../$(tag)/dict/LinkerEvent/*.cpp
 #============================================================================
 # define library link options
 #============================================================================
-apply_pattern component_library library=LinkerEventDict
 apply_pattern linker_library	library=LinkerEvent
 
 private
