@@ -16,10 +16,10 @@
             <import name="Event/RichGlobalPID"/>
             <import name="RichGlobalPID/RichGlobalPIDTkQuality"/>
             <base name="KeyedObject&lt;long&gt;"/>
-            <constructor desc="Default Constructor" initList="m_trQuality(Rich::GlobalPID::Unknown)">
+            <constructor desc="Default Constructor" initList="m_trQuality(Rich::Rec::GlobalPID::Unknown)">
                 <code/>
             </constructor>
-            <attribute desc="Integer code describing the quality of this track for the Global likelihood method" name="trQuality" type="Rich::GlobalPID::TkQuality"/>
+            <attribute desc="Integer code describing the quality of this track for the Global likelihood method" name="trQuality" type="Rich::Rec::GlobalPID::TkQuality"/>
             <relation nonconstaccessor = "TRUE" desc="SmartRef to RichRecTrack" name="richRecTrack" type="LHCb::RichRecTrack"/>
             <relation nonconstaccessor = "TRUE" desc="Associated GlobalPID object" name="globalPID" type="LHCb::RichGlobalPID"/>
         </class>
