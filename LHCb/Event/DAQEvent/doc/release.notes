@@ -4,6 +4,10 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !----------------------------------------------------------------------
 
+!================ DAQEvent v7r1 2007-02-02 ============================
+! 2007-02-02 - Marco Cattaneo
+ - Add OTRaw and OTError bank types
+
 !================ DAQEvent v7r0 2007-01-31 ============================
 ! 2007-01-31 - Marco Cattaneo
  - fix reflex dict pattern for Windows and retag requirements

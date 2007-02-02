@@ -9,7 +9,7 @@
   * Raw data bank sent by the TELL1 boards of the LHCb DAQ.
   *
   * For a detailed description of the raw bank format,
-  * see EDMS note "565851 v.5  Raw-data format"
+  * see <a href="https://edms.cern.ch/document/565851/5">EDMS-565851/5</a>
   *
   * Note concerning the changes done 06/03/2006:
   * - The bank size is in BYTES
@@ -80,6 +80,8 @@ namespace LHCb
                    VeloError,
                    VeloPedestal,
                    VeloProcFull,
+                   OTRaw,
+                   OTError,
                    LastType    // LOOP Marker; add new bank types ONLY before!
     };
 
