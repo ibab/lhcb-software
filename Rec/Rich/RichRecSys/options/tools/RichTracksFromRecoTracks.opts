@@ -2,7 +2,7 @@
 // Options to create RichRecTracks from TrStoredTrack reconstructed information
 
 // Define the RichRecTrack creator
-ToolSvc.Offline.RichToolRegistry.Tools += { "RichTrackCreatorFromRecoTracks/RichTrackCreator" };
+ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::TrackCreatorFromRecoTracks/RichTrackCreator" };
 
 // Momentum cuts ( in the for tracktype/minP/maxP )
 ToolSvc.Offline.RichTrackCreator.TrackSelector.TrackAlgs = { "Seed","Match","Forward","KsTrack","VeloTT" };
@@ -15,7 +15,7 @@ ToolSvc.Offline.RichTrackCreator.TrackSelector.Match.MaxMatchChi2 = 200;
 ToolSvc.Offline.RichTrackCreator.TrackSegmentTool = "TrSegMaker";
 
 // Configure the RichTrackSegment maker
-ToolSvc.Offline.RichToolRegistry.Tools += { "RichDetailedTrSegMakerFromRecoTracks/TrSegMaker" };
+ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::DetailedTrSegMakerFromRecoTracks/TrSegMaker" };
 ToolSvc.Offline.RichTrackCreator.TrSegMaker.PrimaryTrackExtrapolator = "TrackHerabExtrapolator";
 ToolSvc.Offline.RichTrackCreator.TrSegMaker.BackupTrackExtrapolator  = "TrackParabolicExtrapolator";
 

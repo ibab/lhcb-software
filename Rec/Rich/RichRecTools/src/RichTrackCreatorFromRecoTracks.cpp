@@ -2,10 +2,10 @@
 //-------------------------------------------------------------------------------------
 /** @file RichTrackCreatorFromRecoTracks.cpp
  *
- *  Implementation file for tool : RichTrackCreatorFromRecoTracks
+ *  Implementation file for tool : Rich::Rec::TrackCreatorFromRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorFromRecoTracks.cpp,v 1.15 2006-12-01 17:05:09 cattanem Exp $
+ *  $Id: RichTrackCreatorFromRecoTracks.cpp,v 1.16 2007-02-02 10:10:42 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -15,34 +15,31 @@
 // local
 #include "RichTrackCreatorFromRecoTracks.h"
 
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h"
-
-// namespaces
-using namespace LHCb;
+// All code is in general Rich reconstruction namespace
+using namespace Rich::Rec;
 
 //-------------------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( RichTrackCreatorFromRecoTracks );
+DECLARE_TOOL_FACTORY( TrackCreatorFromRecoTracks );
 
 // Standard constructor
-RichTrackCreatorFromRecoTracks::
-RichTrackCreatorFromRecoTracks( const std::string& type,
-                                const std::string& name,
-                                const IInterface* parent )
-  : RichTrackCreatorBase   ( type, name, parent ),
+TrackCreatorFromRecoTracks::
+TrackCreatorFromRecoTracks( const std::string& type,
+                            const std::string& name,
+                            const IInterface* parent )
+  : TrackCreatorBase       ( type, name, parent ),
     m_trTracks             ( 0 ),
     m_massHypoRings        ( 0 ),
     m_segMaker             ( 0 ),
     m_signal               ( 0 ),
-    m_trTracksLocation     ( TrackLocation::Default         ),
+    m_trTracksLocation     ( LHCb::TrackLocation::Default   ),
     m_trSegToolNickName    ( "RichTrSegMakerFromRecoTracks" ),
     m_allDone              ( false ),
     m_buildHypoRings       ( false )
 {
 
   // declare interface for this tool
-  declareInterface<IRichTrackCreator>(this);
+  declareInterface<ITrackCreator>(this);
 
   // job options
   declareProperty( "TracksLocation",           m_trTracksLocation   );
@@ -51,17 +48,17 @@ RichTrackCreatorFromRecoTracks( const std::string& type,
 
 }
 
-StatusCode RichTrackCreatorFromRecoTracks::initialize()
+StatusCode TrackCreatorFromRecoTracks::initialize()
 {
   // Sets up various tools and services
-  const StatusCode sc = RichTrackCreatorBase::initialize();
+  const StatusCode sc = TrackCreatorBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
   acquireTool( "RichExpectedTrackSignal", m_signal      );
   acquireTool( m_trSegToolNickName,       m_segMaker,    this );
-  if ( m_buildHypoRings ) 
-  { 
+  if ( m_buildHypoRings )
+  {
     acquireTool( "RichMassHypoRings", m_massHypoRings );
     info() << "Will create Mass hypothesis rings for each track" << endreq;
   }
@@ -69,13 +66,13 @@ StatusCode RichTrackCreatorFromRecoTracks::initialize()
   return sc;
 }
 
-StatusCode RichTrackCreatorFromRecoTracks::finalize()
+StatusCode TrackCreatorFromRecoTracks::finalize()
 {
   // Execute base class method
-  return RichTrackCreatorBase::finalize();
+  return TrackCreatorBase::finalize();
 }
 
-const StatusCode RichTrackCreatorFromRecoTracks::newTracks() const
+const StatusCode TrackCreatorFromRecoTracks::newTracks() const
 {
 
   if ( !m_allDone )
@@ -84,8 +81,8 @@ const StatusCode RichTrackCreatorFromRecoTracks::newTracks() const
 
     // Iterate over all reco tracks, and create new RichRecTracks
     richTracks()->reserve( nInputTracks() );
-    const Tracks * tracks = trTracks();
-    for ( Tracks::const_iterator track = tracks->begin();
+    const LHCb::Tracks * tracks = trTracks();
+    for ( LHCb::Tracks::const_iterator track = tracks->begin();
           track != tracks->end(); ++track )
     {
       newTrack( *track );
@@ -96,19 +93,19 @@ const StatusCode RichTrackCreatorFromRecoTracks::newTracks() const
   return StatusCode::SUCCESS;
 }
 
-const long RichTrackCreatorFromRecoTracks::nInputTracks() const
+const long TrackCreatorFromRecoTracks::nInputTracks() const
 {
-  const Tracks * tracks = trTracks();
+  const LHCb::Tracks * tracks = trTracks();
   return ( tracks ? tracks->size() : 0 );
 }
 
-const Tracks *
-RichTrackCreatorFromRecoTracks::trTracks() const
+const LHCb::Tracks *
+TrackCreatorFromRecoTracks::trTracks() const
 {
   if ( !m_trTracks )
   {
     // Obtain smart data pointer to Tracks
-    m_trTracks = get<Tracks>( m_trTracksLocation );
+    m_trTracks = get<LHCb::Tracks>( m_trTracksLocation );
     if ( msgLevel(MSG::DEBUG) )
     {
       debug() << "located " << m_trTracks->size() << " Tracks at "
@@ -120,12 +117,12 @@ RichTrackCreatorFromRecoTracks::trTracks() const
 }
 
 // Forms a new RichRecTrack object from a Track
-RichRecTrack *
-RichTrackCreatorFromRecoTracks::newTrack ( const ContainedObject * obj ) const
+LHCb::RichRecTrack *
+TrackCreatorFromRecoTracks::newTrack ( const ContainedObject * obj ) const
 {
 
   // Is this a Track ?
-  const Track * trTrack = dynamic_cast<const Track*>(obj);
+  const LHCb::Track * trTrack = dynamic_cast<const LHCb::Track*>(obj);
   if ( !trTrack )
   {
     Warning( "Input data object is not of type 'Track'" );
@@ -136,8 +133,8 @@ RichTrackCreatorFromRecoTracks::newTrack ( const ContainedObject * obj ) const
   m_hasBeenCalled = true;
 
   // track type
-  Rich::Track::Type trType = Rich::Track::Unknown;
-  try { trType = Rich::Track::type(trTrack); }
+  Rich::Rec::Track::Type trType = Rich::Rec::Track::Unknown;
+  try { trType = Rich::Rec::Track::type(trTrack); }
   // Catch exceptions ( track type unknown )
   catch ( const GaudiException & expt )
   {
@@ -157,7 +154,7 @@ RichTrackCreatorFromRecoTracks::newTrack ( const ContainedObject * obj ) const
   }
 
   // Is track a usable type
-  if ( !Rich::Track::isUsable(trType) ) return NULL;
+  if ( !Rich::Rec::Track::isUsable(trType) ) return NULL;
 
   // Get reference to track stats object
   TrackCount & tkCount = trackStats().trackStats(trType,trUnique);
@@ -177,12 +174,12 @@ RichTrackCreatorFromRecoTracks::newTrack ( const ContainedObject * obj ) const
     if ( !trackSelector().trackSelected(trTrack) ) return NULL;
 
     // New track object pointer
-    RichRecTrack * newTrack = NULL;
+    LHCb::RichRecTrack * newTrack = NULL;
 
     // Form the RichRecSegments for this track
-    std::vector<RichTrackSegment*> segments;
+    std::vector<LHCb::RichTrackSegment*> segments;
     const int Nsegs = m_segMaker->constructSegments( trTrack, segments );
-    
+
     if ( msgLevel(MSG::VERBOSE) )
       verbose() << " Found " << Nsegs << " radiator segment(s)" << endreq;
 
@@ -190,13 +187,13 @@ RichTrackCreatorFromRecoTracks::newTrack ( const ContainedObject * obj ) const
     {
 
       // Form a new RichRecTrack
-      newTrack = new RichRecTrack();
+      newTrack = new LHCb::RichRecTrack();
 
       // Configure TrackID for this Track
       newTrack->trackID().initialiseFor( trTrack );
 
       bool keepTrack = false;
-      for ( std::vector<RichTrackSegment*>::iterator iSeg = segments.begin();
+      for ( std::vector<LHCb::RichTrackSegment*>::iterator iSeg = segments.begin();
             iSeg != segments.end(); ++iSeg )
       {
         if ( !(*iSeg) ) continue;
@@ -206,7 +203,7 @@ RichTrackCreatorFromRecoTracks::newTrack ( const ContainedObject * obj ) const
 
         // make a new RichRecSegment from this RichTrackSegment
         // takes ownership of RichTrackSegment* *iSeg - responsible for deletion
-        RichRecSegment * newSegment = segmentCreator()->newSegment( *iSeg, newTrack );
+        LHCb::RichRecSegment * newSegment = segmentCreator()->newSegment( *iSeg, newTrack );
 
         // Get PD panel impact point
         if ( rayTraceHPDPanelPoints(**iSeg,newSegment).isSuccess() )
@@ -305,9 +302,9 @@ RichTrackCreatorFromRecoTracks::newTrack ( const ContainedObject * obj ) const
 
 }
 
-void RichTrackCreatorFromRecoTracks::InitNewEvent()
+void TrackCreatorFromRecoTracks::InitNewEvent()
 {
   RichTrackCreatorBase::InitNewEvent();
   m_allDone  = false;
-  m_trTracks = 0;
+  m_trTracks = NULL;
 }

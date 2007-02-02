@@ -3,7 +3,7 @@
 ToolSvc.Offline.RichPhotonCreator.PhotonParams.FindUnambiguousPhotons     = { false, true, true };
 
 // Mirror Alignment monitor for Rich1
-CheckRICHSeq.Members += { "RichAlignmentMonitor/RichAlignCheckR1" };
+CheckRICHSeq.Members += { "Rich::Rec::MC::AlignmentMonitor/RichAlignCheckR1" };
 //RichAlignCheckR1.MaxRichRecTracks = 230;
 //RichAlignCheckR1.DeltaThetaRange = 0.005;
 RichAlignCheckR1.UseMCTruth    = true;
@@ -14,7 +14,7 @@ RichAlignCheckR1.TrackSelector.Forward.MinPCut = 10;
 
 
 // Mirror Alignment monitor for Rich2
-CheckRICHSeq.Members += { "RichAlignmentMonitor/RichAlignCheckR2" };
+CheckRICHSeq.Members += { "Rich::Rec::MC::AlignmentMonitor/RichAlignCheckR2" };
 RichAlignCheckR2.UseMCTruth    = true;
 RichAlignCheckR2.RichDetector  = 1;   // Rich1 = 0, Rich2 = 1
 RichAlignCheckR2.TrackSelector.TrackAlgs  = { "Forward" };

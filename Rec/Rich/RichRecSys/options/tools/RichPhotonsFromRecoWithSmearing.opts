@@ -1,7 +1,7 @@
 
 // RichRecPhoton predictor (quick test if a given pixel/segment combination
 // is likely to yield a good photon)
-ToolSvc.Offline.RichToolRegistry.Tools += { "RichSepVCKthetaPhotonPredictor/RichPhotonPredictor" };
+ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::SepVCKthetaPhotonPredictor/RichPhotonPredictor" };
 //                                                                 Aero     C4F10    CF4
 ToolSvc.Offline.RichPhotonCreator.Predictor.MinTrackROI       = {  110.0,   0.0,    0.0  };
 ToolSvc.Offline.RichPhotonCreator.Predictor.MaxTrackROI       = {  380.0,  85.0,  155.0  };
@@ -10,13 +10,13 @@ ToolSvc.Offline.RichPhotonCreator.Predictor.Sep2GMax          = {  360.0,  72.0,
 ToolSvc.Offline.RichPhotonCreator.Predictor.TolerenceFactor   = {  25,     10,    20     };
 
 // RichRecPhoton Creator
-ToolSvc.Offline.RichToolRegistry.Tools += { "RichPhotonCreatorWithGaussianCKSmear/RichPhotonCreator" };
+ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::MC::PhotonCreatorWithGaussianCKSmear/RichPhotonCreator" };
 //                                                     Aero   C4F10   CF4
 ToolSvc.Offline.RichPhotonCreator.RadiatorsToSmear = { true,  false,  false };
 ToolSvc.Offline.RichPhotonCreator.SmearingWidths   = { 0.1,   0.01,   0.01  };
 ToolSvc.Offline.RichPhotonCreator.ApplySmearingToAllPhotons = false;
 
-ToolSvc.Offline.RichToolRegistry.Tools += { "RichPhotonCreator/RichDelegatedPhotonCreator" };
+ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::PhotonCreator/RichDelegatedPhotonCreator" };
 ToolSvc.Offline.RichDelegatedPhotonCreator.PhotonPredictor = "RichPhotonPredictor";
 //                                                                         Aero     C4F10    CF4
 // absolute max and min allowed Cherenkov theta angles
@@ -30,4 +30,4 @@ ToolSvc.Offline.RichDelegatedPhotonCreator.CherenkovThetaTolerence    = {  0.025
 // geometrical photon reconstruction
 // use Quartic solving tool
 ToolSvc.Offline.RichDelegatedPhotonCreator.PhotonRecoTool  = "PhotonParams";
-ToolSvc.Offline.RichToolRegistry.Tools += { "RichPhotonRecoUsingQuarticSoln/PhotonParams" };
+ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::PhotonRecoUsingQuarticSoln/PhotonParams" };

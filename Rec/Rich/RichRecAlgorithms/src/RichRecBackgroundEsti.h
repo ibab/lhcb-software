@@ -2,10 +2,10 @@
 //---------------------------------------------------------------------------
 /** @file RichRecBackgroundEsti.h
  *
- *  Header file for algorithm class : RichRecBackgroundEsti
+ *  Header file for algorithm class : Rich::Rec::BackgroundEsti
  *
  *  CVS Log :-
- *  $Id: RichRecBackgroundEsti.h,v 1.5 2006-12-19 09:46:30 cattanem Exp $
+ *  $Id: RichRecBackgroundEsti.h,v 1.6 2007-02-02 10:05:51 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   10/01/2003
@@ -18,50 +18,84 @@
 // Base class
 #include "RichRecBase/RichRecAlgBase.h"
 
+// gaudi
+#include "GaudiKernel/AlgFactory.h"
+
 // Event
 #include "Event/RichRecStatus.h"
 
 // RichKernel
+//--------------------------------------------------------------------
 #include "RichKernel/RichMap.h"
 
 // Interfaces
 #include "RichRecBase/IRichExpectedTrackSignal.h"
 
-//---------------------------------------------------------------------------
-/** @class RichRecBackgroundEsti RichRecBackgroundEsti.h
+//-----------------------------------------------------------------------------
+/** @namespace Rich
  *
- *  Background estimation algorithm for RICH HPDs
+ *  General namespace for RICH software
  *
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   10/01/2003
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
  */
-//---------------------------------------------------------------------------
-
-class RichRecBackgroundEsti : public RichRecAlgBase
+//-----------------------------------------------------------------------------
+namespace Rich
 {
 
-public:
+  //-----------------------------------------------------------------------------
+  /** @namespace Rec
+   *
+   *  General namespace for RICH reconstruction software
+   *
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   08/07/2004
+   */
+  //-----------------------------------------------------------------------------
+  namespace Rec
+  {
 
-  /// Standard constructor
-  RichRecBackgroundEsti( const std::string& name, ISvcLocator* pSvcLocator );
+    //---------------------------------------------------------------------------
+    /** @class BackgroundEsti RichRecBackgroundEsti.h
+     *
+     *  Background estimation algorithm for RICH HPDs
+     *
+     *  Compares the expected signal yield in each HPD, based on the observed tracks
+     *  and current set of mass hypotheses for those tracks, to the total signal in
+     *  each HPD.
+     *
+     *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+     *  @date   10/01/2003
+     */
+    //---------------------------------------------------------------------------
 
-  virtual ~RichRecBackgroundEsti();   ///< Destructor
+    class BackgroundEsti : public RichRecAlgBase
+    {
 
-  virtual StatusCode initialize();    // Algorithm initialization
-  virtual StatusCode execute   ();    // Algorithm execution
-  virtual StatusCode finalize  ();    // Algorithm finalization
+    public:
 
-private:   // Private data members
+      /// Standard constructor
+      BackgroundEsti( const std::string& name, ISvcLocator* pSvcLocator );
 
-  /// Pointers to expected track signal tool
-  const IRichExpectedTrackSignal * m_tkSignal;
+      virtual ~BackgroundEsti();   ///< Destructor
 
-  /// Maximum number of iterations in background normalisation
-  int m_maxBkgIterations;
+      virtual StatusCode initialize();    // Algorithm initialization
+      virtual StatusCode execute   ();    // Algorithm execution
 
-  /// Number of pixels per HPD without cathode acceptance
-  double m_nPixelsPerPD;
+    private:   // Private data members
 
-};
+      /// Pointers to expected track signal tool
+      const IExpectedTrackSignal * m_tkSignal;
+
+      /// Maximum number of iterations in background normalisation
+      int m_maxBkgIterations;
+
+      /// Number of pixels per HPD without cathode acceptance
+      double m_nPixelsPerPD;
+
+    };
+
+  }
+}
 
 #endif // RICHRECALGORITHMS_RICHRECBACKGROUNDESTI_H

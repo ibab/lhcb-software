@@ -6,7 +6,7 @@
 // Define the primary track creator tool
 //----------------------------------------------------------------------------------------------
 
-ToolSvc.Offline.RichToolRegistry.Tools += { "RichDelegatedTrackCreatorFromTrStoredTracks/RichTrackCreator" };
+ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::DelegatedTrackCreatorFromTrStoredTracks/RichTrackCreator" };
 
 // Setup delegated tools for each track type
 ToolSvc.Offline.RichTrackCreator.ToolsByTrackType = { "forward/RichTrackCrLongVTT",
@@ -25,7 +25,7 @@ ToolSvc.Offline.RichTrackCreator.DoBookKeeping = false;
 // Configuration for RichTrackCrLongVTT
 //----------------------------------------------------------------------------------------------
 
-ToolSvc.Offline.RichToolRegistry.Tools += { "RichTrackCreatorFromTrStoredTracks/RichTrackCrLongVTT" };
+ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::TrackCreatorFromTrStoredTracks/RichTrackCrLongVTT" };
 
 // Selected track types
 ToolSvc.Offline.RichTrackCrLongVTT.TrackSelection =
@@ -48,7 +48,7 @@ ToolSvc.Offline.RichTrackCrLongVTT.DoBookKeeping = false;
 // Configuration for RichDetTrSegLongVTT
 //----------------------------------------------------------------------------------------------
 
-ToolSvc.Offline.RichToolRegistry.Tools += { "RichTrSegMakerFromTrStoredTracks/RichDetTrSegLongVTT" };
+ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::TrSegMakerFromTrStoredTracks/RichDetTrSegLongVTT" };
 
 // Extrapolator tools
 ToolSvc.Offline.RichDetTrSegLongVTT.PrimaryTrackExtrapolator = "TrRichExtrapolatorForLongVTT";
@@ -75,7 +75,7 @@ ToolSvc.Offline.RichDetTrSegLongVTT.ExtrapolateFromReference = true;
 // Configuration for RichTrackCrSeedKs
 //----------------------------------------------------------------------------------------------
 
-ToolSvc.Offline.RichToolRegistry.Tools += { "RichTrackCreatorFromTrStoredTracks/RichTrackCrSeedKs" };
+ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::TrackCreatorFromTrStoredTracks/RichTrackCrSeedKs" };
 
 // Selected track types
 ToolSvc.Offline.RichTrackCrSeedKs.TrackSelection =
@@ -97,7 +97,7 @@ ToolSvc.Offline.RichTrackCrSeedKs.DoBookKeeping = false;
 // Configuration for RichDetTrSegSeedKs
 //----------------------------------------------------------------------------------------------
 
-ToolSvc.Offline.RichToolRegistry.Tools += { "RichTrSegMakerFromTrStoredTracks/RichDetTrSegSeedKs" };
+ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::TrSegMakerFromTrStoredTracks/RichDetTrSegSeedKs" };
 
 // Extrapolator tools
 ToolSvc.Offline.RichDetTrSegSeedKs.PrimaryTrackExtrapolator = "TrRichExtrapolatorForSeedKs";

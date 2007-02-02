@@ -2,10 +2,10 @@
 //-----------------------------------------------------------------------------
 /** @file RichSepVCKthetaPhotonPredictor.cpp
  *
- *  Implementation file for tool : RichSepVCKthetaPhotonPredictor
+ *  Implementation file for tool : Rich::Rec::SepVCKthetaPhotonPredictor
  *
  *  CVS Log :-
- *  $Id: RichSepVCKthetaPhotonPredictor.cpp,v 1.8 2006-12-01 17:05:09 cattanem Exp $
+ *  $Id: RichSepVCKthetaPhotonPredictor.cpp,v 1.9 2007-02-02 10:10:41 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   01/06/2005
@@ -18,22 +18,22 @@
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
 
-// namespaces
-using namespace LHCb;
+// All code is in general Rich reconstruction namespace
+using namespace Rich::Rec;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( RichSepVCKthetaPhotonPredictor );
+DECLARE_TOOL_FACTORY( SepVCKthetaPhotonPredictor );
 
 // Standard constructor
-RichSepVCKthetaPhotonPredictor::
-RichSepVCKthetaPhotonPredictor( const std::string& type,
-                                const std::string& name,
-                                const IInterface* parent )
+SepVCKthetaPhotonPredictor::
+SepVCKthetaPhotonPredictor( const std::string& type,
+                            const std::string& name,
+                            const IInterface* parent )
   : RichRecToolBase ( type, name, parent ),
-    m_geomTool      ( 0 ),
-    m_ckAngle       ( 0 ),
-    m_ckRes         ( 0 ),
+    m_geomTool      ( NULL ),
+    m_ckAngle       ( NULL ),
+    m_ckRes         ( NULL ),
     m_minROI        ( Rich::NRadiatorTypes, 0 ),
     m_maxROI        ( Rich::NRadiatorTypes, 0 ),
     m_ckThetaMax    ( Rich::NRadiatorTypes, 0 ),
@@ -45,7 +45,7 @@ RichSepVCKthetaPhotonPredictor( const std::string& type,
 {
 
   // interface
-  declareInterface<IRichPhotonPredictor>(this);
+  declareInterface<IPhotonPredictor>(this);
 
   // job options
 
@@ -76,7 +76,7 @@ RichSepVCKthetaPhotonPredictor( const std::string& type,
 
 }
 
-StatusCode RichSepVCKthetaPhotonPredictor::initialize()
+StatusCode SepVCKthetaPhotonPredictor::initialize()
 {
   // Initialise base class
   const StatusCode sc = RichRecToolBase::initialize();
@@ -105,7 +105,7 @@ StatusCode RichSepVCKthetaPhotonPredictor::initialize()
   return sc;
 }
 
-StatusCode RichSepVCKthetaPhotonPredictor::finalize()
+StatusCode SepVCKthetaPhotonPredictor::finalize()
 {
 
   if ( m_Nselected[Rich::Aerogel]  > 0 ||
@@ -114,7 +114,7 @@ StatusCode RichSepVCKthetaPhotonPredictor::finalize()
   {
 
     // statistical tool
-    const RichPoissonEffFunctor occ("%10.2f +-%7.2f");
+    const PoissonEffFunctor occ("%10.2f +-%7.2f");
 
     // printout stats
     info() << "=================================================================" << endreq
@@ -136,10 +136,11 @@ StatusCode RichSepVCKthetaPhotonPredictor::finalize()
 }
 
 // fast decision on whether a photon is possible
-bool RichSepVCKthetaPhotonPredictor::photonPossible( RichRecSegment * segment,
-                                                     RichRecPixel * pixel ) const
+bool
+SepVCKthetaPhotonPredictor::photonPossible( LHCb::RichRecSegment * segment,
+                                            LHCb::RichRecPixel * pixel ) const
 {
-  
+
   // Default to not selected
   bool OK = false;
 
@@ -178,15 +179,15 @@ bool RichSepVCKthetaPhotonPredictor::photonPossible( RichRecSegment * segment,
           OK = true;
           if ( msgLevel(MSG::VERBOSE) )
           {
-            verbose() << "  -> " << id << " fabs(sep-expSep)=" 
+            verbose() << "  -> " << id << " fabs(sep-expSep)="
                       << dsep << " PASSED tol=" << m_tolF[rad] << endreq;
           }
           break;
         }
         if ( msgLevel(MSG::VERBOSE) && !OK )
         {
-           verbose() << "  -> " << id << " fabs(sep-expSep)=" 
-                     << dsep << " FAILED tol=" << m_tolF[rad] << " -> reject" << endreq;
+          verbose() << "  -> " << id << " fabs(sep-expSep)="
+                    << dsep << " FAILED tol=" << m_tolF[rad] << " -> reject" << endreq;
         }
 
       } // loop over hypos
@@ -194,7 +195,7 @@ bool RichSepVCKthetaPhotonPredictor::photonPossible( RichRecSegment * segment,
     } // overall boundary check
     else if ( msgLevel(MSG::VERBOSE) )
     {
-      verbose() << "  -> sep2=" << sep2 
+      verbose() << "  -> sep2=" << sep2
                 << " FAILED overall boundary check " << m_minROI2[rad] << "->" << m_maxROI2[rad]
                 << " -> reject" << endreq;
     }

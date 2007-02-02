@@ -2,70 +2,65 @@
 //-----------------------------------------------------------------------------
 /** @file RichBinnedCKResVthetaForRecoTracks.cpp
  *
- *  Implementation file for tool : RichBinnedCKResVthetaForRecoTracks
+ *  Implementation file for tool : Rich::Rec::BinnedCKResVthetaForRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichBinnedCKResVthetaForRecoTracks.cpp,v 1.6 2006-11-01 18:03:02 jonrob Exp $
+ *  $Id: RichBinnedCKResVthetaForRecoTracks.cpp,v 1.7 2007-02-02 10:10:40 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
 //-----------------------------------------------------------------------------
 
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h"
-#include "GaudiKernel/ParticleProperty.h"
-#include "GaudiKernel/IParticlePropertySvc.h"
-
 // local
 #include "RichBinnedCKResVthetaForRecoTracks.h"
 
-// namespaces
-using namespace LHCb;
+// All code is in general Rich reconstruction namespace
+using namespace Rich::Rec;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( RichBinnedCKResVthetaForRecoTracks );
+DECLARE_TOOL_FACTORY( BinnedCKResVthetaForRecoTracks );
 
 // Standard constructor
-RichBinnedCKResVthetaForRecoTracks::
-RichBinnedCKResVthetaForRecoTracks ( const std::string& type,
-                                     const std::string& name,
-                                     const IInterface* parent )
+BinnedCKResVthetaForRecoTracks::
+BinnedCKResVthetaForRecoTracks ( const std::string& type,
+                                 const std::string& name,
+                                 const IInterface* parent )
   : RichRecToolBase ( type, name, parent ),
     m_ckAngle       ( NULL )
 {
 
-  declareInterface<IRichCherenkovResolution>(this);
+  declareInterface<ICherenkovResolution>(this);
 
   // Define job option parameters
 
   declareProperty( "NAerogelResBins",   m_binEdges[Rich::Aerogel] );
-  declareProperty( "ForwardAerogelRes", m_theerr[Rich::Aerogel][Rich::Track::Forward] );
-  declareProperty( "MatchAerogelRes",   m_theerr[Rich::Aerogel][Rich::Track::Match] );
-  declareProperty( "KsTrackAerogelRes", m_theerr[Rich::Aerogel][Rich::Track::KsTrack] );
-  declareProperty( "VeloTTAerogelRes",  m_theerr[Rich::Aerogel][Rich::Track::VeloTT] );
+  declareProperty( "ForwardAerogelRes", m_theerr[Rich::Aerogel][Rich::Rec::Track::Forward] );
+  declareProperty( "MatchAerogelRes",   m_theerr[Rich::Aerogel][Rich::Rec::Track::Match] );
+  declareProperty( "KsTrackAerogelRes", m_theerr[Rich::Aerogel][Rich::Rec::Track::KsTrack] );
+  declareProperty( "VeloTTAerogelRes",  m_theerr[Rich::Aerogel][Rich::Rec::Track::VeloTT] );
 
   declareProperty( "NRich1GasResBins",   m_binEdges[Rich::Rich1Gas] );
-  declareProperty( "ForwardRich1GasRes", m_theerr[Rich::Rich1Gas][Rich::Track::Forward] );
-  declareProperty( "MatchRich1GasRes",   m_theerr[Rich::Rich1Gas][Rich::Track::Match] );
-  declareProperty( "KsTrackRich1GasRes", m_theerr[Rich::Rich1Gas][Rich::Track::KsTrack] );
-  declareProperty( "VeloTTRich1GasRes",  m_theerr[Rich::Rich1Gas][Rich::Track::VeloTT] );
+  declareProperty( "ForwardRich1GasRes", m_theerr[Rich::Rich1Gas][Rich::Rec::Track::Forward] );
+  declareProperty( "MatchRich1GasRes",   m_theerr[Rich::Rich1Gas][Rich::Rec::Track::Match] );
+  declareProperty( "KsTrackRich1GasRes", m_theerr[Rich::Rich1Gas][Rich::Rec::Track::KsTrack] );
+  declareProperty( "VeloTTRich1GasRes",  m_theerr[Rich::Rich1Gas][Rich::Rec::Track::VeloTT] );
 
   declareProperty( "NRich2GasResBins",   m_binEdges[Rich::Rich2Gas] );
-  declareProperty( "ForwardRich2GasRes", m_theerr[Rich::Rich2Gas][Rich::Track::Forward] );
-  declareProperty( "MatchRich2GasRes",   m_theerr[Rich::Rich2Gas][Rich::Track::Match] );
-  declareProperty( "KsTrackRich2GasRes", m_theerr[Rich::Rich2Gas][Rich::Track::KsTrack] );
-  declareProperty( "SeedRich2GasRes",    m_theerr[Rich::Rich2Gas][Rich::Track::Seed] );
+  declareProperty( "ForwardRich2GasRes", m_theerr[Rich::Rich2Gas][Rich::Rec::Track::Forward] );
+  declareProperty( "MatchRich2GasRes",   m_theerr[Rich::Rich2Gas][Rich::Rec::Track::Match] );
+  declareProperty( "KsTrackRich2GasRes", m_theerr[Rich::Rich2Gas][Rich::Rec::Track::KsTrack] );
+  declareProperty( "SeedRich2GasRes",    m_theerr[Rich::Rich2Gas][Rich::Rec::Track::Seed] );
 
   declareProperty( "NormaliseRes", m_normalise = true );
 
 }
 
-StatusCode RichBinnedCKResVthetaForRecoTracks::initialize()
+StatusCode BinnedCKResVthetaForRecoTracks::initialize()
 {
   // Sets up various tools and services
-  const StatusCode sc = RichRecToolBase::initialize();
+  const StatusCode sc = Rich::Rec::ToolBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
@@ -76,15 +71,15 @@ StatusCode RichBinnedCKResVthetaForRecoTracks::initialize()
   return sc;
 }
 
-StatusCode RichBinnedCKResVthetaForRecoTracks::finalize()
+StatusCode BinnedCKResVthetaForRecoTracks::finalize()
 {
   // Execute base class method
-  return RichRecToolBase::finalize();
+  return Rich::Rec::ToolBase::finalize();
 }
 
 double
-RichBinnedCKResVthetaForRecoTracks::ckThetaResolution( RichRecSegment * segment,
-                                                       const Rich::ParticleIDType id ) const
+BinnedCKResVthetaForRecoTracks::ckThetaResolution( LHCb::RichRecSegment * segment,
+                                                   const Rich::ParticleIDType id ) const
 {
 
   if ( !segment->ckThetaResolution().dataIsValid(id) )
@@ -105,7 +100,7 @@ RichBinnedCKResVthetaForRecoTracks::ckThetaResolution( RichRecSegment * segment,
       if ( mu_ok && tmp_res < res ) { res = tmp_res; }
       const bool pi_ok = ckThetaResolution_Imp(segment,Rich::Pion,tmp_res);
       if ( pi_ok && tmp_res < res ) { res = tmp_res; }
-      const bool ka_ok = ckThetaResolution_Imp(segment,Rich::Kaon,tmp_res); 
+      const bool ka_ok = ckThetaResolution_Imp(segment,Rich::Kaon,tmp_res);
       if ( ka_ok && tmp_res < res ) { res = tmp_res; }
       const bool pr_ok = ckThetaResolution_Imp(segment,Rich::Proton,tmp_res);
       if ( pr_ok && tmp_res < res ) { res = tmp_res; }
@@ -122,7 +117,7 @@ RichBinnedCKResVthetaForRecoTracks::ckThetaResolution( RichRecSegment * segment,
         for ( int iHypo = 0; iHypo < Rich::NParticleTypes; ++iHypo )
         {
           const Rich::ParticleIDType hypo = static_cast<Rich::ParticleIDType>(iHypo);
-          verbose() << "Segment " << segment->key() << " : " << hypo 
+          verbose() << "Segment " << segment->key() << " : " << hypo
                     << " ckRes=" << segment->ckThetaResolution( hypo ) << endreq;
         }
       }
@@ -141,7 +136,7 @@ RichBinnedCKResVthetaForRecoTracks::ckThetaResolution( RichRecSegment * segment,
 
       if ( msgLevel(MSG::VERBOSE) )
       {
-        verbose() << "Segment " << segment->key() << " : " << id 
+        verbose() << "Segment " << segment->key() << " : " << id
                   << " ckRes=" << segment->ckThetaResolution( id ) << endreq;
       }
 
@@ -154,16 +149,16 @@ RichBinnedCKResVthetaForRecoTracks::ckThetaResolution( RichRecSegment * segment,
 }
 
 bool
-RichBinnedCKResVthetaForRecoTracks::ckThetaResolution_Imp( LHCb::RichRecSegment * segment,
-                                                           const Rich::ParticleIDType id,
-                                                           double & res ) const
+BinnedCKResVthetaForRecoTracks::ckThetaResolution_Imp( LHCb::RichRecSegment * segment,
+                                                       const Rich::ParticleIDType id,
+                                                       double & res ) const
 {
 
   // Reference to track ID object
   const RichTrackID & tkID = segment->richRecTrack()->trackID();
 
   // Check track parent type is Track
-  if ( Rich::TrackParent::Track != tkID.parentType() )
+  if ( Rich::Rec::TrackParent::Track != tkID.parentType() )
   {
     Exception( "Track parent type is not 'Track'" );
   }
@@ -180,7 +175,7 @@ RichBinnedCKResVthetaForRecoTracks::ckThetaResolution_Imp( LHCb::RichRecSegment 
     const Rich::RadiatorType rad = segment->trackSegment().radiator();
 
     // track type
-    const Rich::Track::Type type = tkID.trackType();
+    const Rich::Rec::Track::Type type = tkID.trackType();
 
     // check data is OK
     if ( m_binEdges[rad].empty() ||

@@ -2,10 +2,10 @@
 //-----------------------------------------------------------------------------
 /** @file RichSeedTrackSelector.cpp
  *
- *  Implementation file for RICH reconstruction tool : RichSeedTrackSelector
+ *  Implementation file for RICH reconstruction tool : Rich::Rec::SeedTrackSelector
  *
  *  CVS Log :-
- *  $Id: RichSeedTrackSelector.cpp,v 1.5 2006-09-01 06:18:48 jonrob Exp $
+ *  $Id: RichSeedTrackSelector.cpp,v 1.6 2007-02-02 10:10:41 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/08/2006
@@ -18,21 +18,24 @@
 // local
 #include "RichSeedTrackSelector.h"
 
+// All code is in general Rich reconstruction namespace
+using namespace Rich::Rec;
+
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_NAMESPACE_TOOL_FACTORY( Rich, RichSeedTrackSelector );
+DECLARE_TOOL_FACTORY( SeedTrackSelector );
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-Rich::RichSeedTrackSelector::RichSeedTrackSelector( const std::string& type,
-                                                    const std::string& name,
-                                                    const IInterface* parent )
-  : RichBaseTrackSelector ( type, name , parent )
+SeedTrackSelector::SeedTrackSelector( const std::string& type,
+                                      const std::string& name,
+                                      const IInterface* parent )
+  : BaseTrackSelector ( type, name , parent )
 {
   // interface
-  declareInterface<Rich::IRichBaseTrackSelector>(this);
+  declareInterface<IBaseTrackSelector>(this);
   // job options
   declareProperty( "MinSeedLikelihood", m_minSeedLL = -15 );
   declareProperty( "MaxSeedLikelihood", m_maxSeedLL = boost::numeric::bounds<double>::highest() );
@@ -41,21 +44,21 @@ Rich::RichSeedTrackSelector::RichSeedTrackSelector( const std::string& type,
 //=============================================================================
 // Destructor
 //=============================================================================
-Rich::RichSeedTrackSelector::~RichSeedTrackSelector() {}
+SeedTrackSelector::~SeedTrackSelector() {}
 
-MsgStream & Rich::RichSeedTrackSelector::printSel( MsgStream & os ) const
+MsgStream & SeedTrackSelector::printSel( MsgStream & os ) const
 {
-  RichBaseTrackSelector::printSel(os);
+  BaseTrackSelector::printSel(os);
   os << boost::format( " : LL = %|-4.2e|->%|-4.2e|" ) % m_minSeedLL % m_maxSeedLL;
   return os;
 }
 
 // Test if the given Track is selected under the current criteria
 bool
-Rich::RichSeedTrackSelector::trackSelected( const LHCb::Track * track ) const
+SeedTrackSelector::trackSelected( const LHCb::Track * track ) const
 {
   // Do base check
-  const bool baseOK = RichBaseTrackSelector::trackSelected(track);
+  const bool baseOK = BaseTrackSelector::trackSelected(track);
   if (!baseOK ) return false;
 
   if ( msgLevel(MSG::DEBUG) )
@@ -76,18 +79,18 @@ Rich::RichSeedTrackSelector::trackSelected( const LHCb::Track * track ) const
       debug() << " -> Track failed seed-likelihood cut" << endreq;
     return false;
   }
-  
+
   if ( msgLevel(MSG::DEBUG) ) debug() << " -> Track selected" << endreq;
   return true;
 }
 
 bool
-Rich::RichSeedTrackSelector::trackSelected( const LHCb::RichRecTrack * track ) const
+SeedTrackSelector::trackSelected( const LHCb::RichRecTrack * track ) const
 {
   // get Track pointer.
   // RichRecTrack should always have an associated Seed Track
   const LHCb::Track * tT = dynamic_cast<const LHCb::Track *>(track->parentTrack());
-  if ( !tT ) 
+  if ( !tT )
   {
     Warning( "Cannot use RichSeedTrackSelector on non-Track RichRecTracks" );
     return false;

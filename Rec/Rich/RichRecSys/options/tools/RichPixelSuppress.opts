@@ -22,7 +22,7 @@ ToolSvc.Offline.RichPixelCreator.PixelSuppress.MemoryFactor      = 20;
 
 // RICH1
 //----------------------------------------------------------------------------------------------------
-ToolSvc.Offline.RichToolRegistry.Tools += { "RichHPDPixelClusterSuppressionTool/PixelSuppressRich1" };
+ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::DAQ::HPDPixelClusterSuppressionTool/PixelSuppressRich1" };
 // Options for bulk suppression
 ToolSvc.Offline.RichPixelCreator.PixelSuppressRich1.WhichRich = "RICH1";
 //ToolSvc.Offline.RichPixelCreator.PixelSuppressRich1.UseRunningOccupancies = true;
@@ -37,7 +37,7 @@ ToolSvc.Offline.RichPixelCreator.PixelSuppressRich1.MinHPDOccForClustering = 10;
 
 // RICH2
 //----------------------------------------------------------------------------------------------------
-ToolSvc.Offline.RichToolRegistry.Tools += { "RichHPDPixelClusterSuppressionTool/PixelSuppressRich2" };
+ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::DAQ::HPDPixelClusterSuppressionTool/PixelSuppressRich2" };
 // Options for bulk suppression
 ToolSvc.Offline.RichPixelCreator.PixelSuppressRich2.WhichRich = "RICH2";
 //ToolSvc.Offline.RichPixelCreator.PixelSuppressRich2.UseRunningOccupancies = true;

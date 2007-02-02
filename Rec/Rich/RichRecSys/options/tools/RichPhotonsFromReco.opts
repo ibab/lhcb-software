@@ -4,7 +4,7 @@
 // RichRecPhoton predictor (quick test if a given pixel/segment combination
 // is likely to yield a good photon)
 
-//ToolSvc.Offline.RichToolRegistry.Tools += { "RichSimplePhotonPredictor/RichPhotonPredictor" };
+//ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::SimplePhotonPredictor/RichPhotonPredictor" };
 //                                                                   Aero        C4F10      CF4
 // select all
 //ToolSvc.Offline.RichPhotonCreator.Predictor.MinTrackROI        = {   0.0,      0.0,      0.0  };
@@ -14,7 +14,7 @@
 //ToolSvc.Offline.RichPhotonCreator.Predictor.MaxTrackROI        = { 390.0,     86.0,     165.0  };
 
 
-ToolSvc.Offline.RichToolRegistry.Tools += { "RichSepVCKthetaPhotonPredictor/RichPhotonPredictor" };
+ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::SepVCKthetaPhotonPredictor/RichPhotonPredictor" };
 //                                                                 Aero      C4F10     CF4
 ToolSvc.Offline.RichPhotonCreator.Predictor.MinTrackROI       = {  110.0,    0.0,      0.0    };
 ToolSvc.Offline.RichPhotonCreator.Predictor.MaxTrackROI       = {  390.0,   86.0,      165.0  };
@@ -24,7 +24,7 @@ ToolSvc.Offline.RichPhotonCreator.Predictor.TolerenceFactor   = {  25,      15, 
 
 
 // RichRecPhoton Creator
-ToolSvc.Offline.RichToolRegistry.Tools += { "RichPhotonCreator/RichPhotonCreator" };
+ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::PhotonCreator/RichPhotonCreator" };
 
 
 // Default cuts
@@ -66,12 +66,12 @@ ToolSvc.Offline.RichPhotonCreator.CherenkovThetaTolerence    = {  999999,   9999
 // geometrical photon reconstruction
 // use Quartic solving tool
 ToolSvc.Offline.RichPhotonCreator.PhotonRecoTool  = "PhotonParams";
-ToolSvc.Offline.RichToolRegistry.Tools += { "RichPhotonRecoUsingQuarticSoln/PhotonParams" };
+ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::PhotonRecoUsingQuarticSoln/PhotonParams" };
 //                                                                                 Aero   C4F10  CF4
-ToolSvc.Offline.RichPhotonCreator.PhotonParams.FindUnambiguousPhotons          = { false, false, false };
+ToolSvc.Offline.RichPhotonCreator.PhotonParams.FindUnambiguousPhotons          = { true,  true,  true  };
 ToolSvc.Offline.RichPhotonCreator.PhotonParams.UseMirrorSegmentAllignment      = { true,  true,  true  };
 ToolSvc.Offline.RichPhotonCreator.PhotonParams.NQuarticIterationsForSecMirrors = { 1,     1,     1     };
 ToolSvc.Offline.RichPhotonCreator.PhotonParams.RejectAmbiguousPhotons          = { false, false, false };
-ToolSvc.Offline.RichPhotonCreator.PhotonParams.CheckBeamPipe                   = { false, false, false };
-ToolSvc.Offline.RichPhotonCreator.PhotonParams.CheckSideCrossing               = { false, false, false };
-
+ToolSvc.Offline.RichPhotonCreator.PhotonParams.CheckBeamPipe                   = { true,  true,  true  };
+ToolSvc.Offline.RichPhotonCreator.PhotonParams.CheckSideCrossing               = { false, true,  true  };
+ToolSvc.Offline.RichPhotonCreator.PhotonParams.MinActiveFraction               = { 0.2,   0.2,   0.2   };

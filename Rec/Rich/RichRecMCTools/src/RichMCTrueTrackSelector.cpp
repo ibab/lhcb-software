@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : RichMCTrueTrackSelector
  *
  *  CVS Log :-
- *  $Id: RichMCTrueTrackSelector.cpp,v 1.1 2006-08-28 11:13:28 jonrob Exp $
+ *  $Id: RichMCTrueTrackSelector.cpp,v 1.2 2007-02-02 10:06:27 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/08/2006
@@ -18,18 +18,21 @@
 // local
 #include "RichMCTrueTrackSelector.h"
 
+// All code is in general Rich reconstruction namespace
+using namespace Rich::Rec::MC;
+
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_NAMESPACE_TOOL_FACTORY( Rich, RichMCTrueTrackSelector );
+DECLARE_TOOL_FACTORY( MCTrueTrackSelector );
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-Rich::RichMCTrueTrackSelector::RichMCTrueTrackSelector( const std::string& type,
-                                                        const std::string& name,
-                                                        const IInterface* parent )
-  : RichTrackSelectorBase ( type, name, parent ) 
+MCTrueTrackSelector::MCTrueTrackSelector( const std::string& type,
+                                          const std::string& name,
+                                          const IInterface* parent )
+  : TrackSelectorBase ( type, name, parent )
 {
   declareProperty( "MinMCAssocWeight", m_weight = 0.9 );
 }
@@ -37,12 +40,12 @@ Rich::RichMCTrueTrackSelector::RichMCTrueTrackSelector( const std::string& type,
 //=============================================================================
 // Destructor
 //=============================================================================
-Rich::RichMCTrueTrackSelector::~RichMCTrueTrackSelector() { }
+MCTrueTrackSelector::~MCTrueTrackSelector() { }
 
-StatusCode Rich::RichMCTrueTrackSelector::initialize()
+StatusCode MCTrueTrackSelector::initialize()
 {
   // Sets up various tools and services
-  const StatusCode sc = RichTrackSelectorBase::initialize();
+  const StatusCode sc = TrackSelectorBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   info() << "Selecting MCParticle associated tracks with weight > " << m_weight << endreq;
@@ -54,14 +57,14 @@ StatusCode Rich::RichMCTrueTrackSelector::initialize()
 }
 
 // Test if the given Track is selected
-bool Rich::RichMCTrueTrackSelector::trackSelected( const LHCb::Track * track ) const
+bool MCTrueTrackSelector::trackSelected( const LHCb::Track * track ) const
 {
   const LHCb::MCParticle * mcp = m_richRecMCTruth->mcParticle(track,m_weight);
   return ( NULL != mcp ? RichTrackSelectorBase::trackSelected(track) : false );
 }
 
 // Test it the given RichRecTrack is selected
-bool Rich::RichMCTrueTrackSelector::trackSelected( const LHCb::RichRecTrack * track ) const
+bool MCTrueTrackSelector::trackSelected( const LHCb::RichRecTrack * track ) const
 {
   const LHCb::MCParticle * mcp = m_richRecMCTruth->mcParticle(track,m_weight);
   return ( NULL != mcp ? RichTrackSelectorBase::trackSelected(track) : false );

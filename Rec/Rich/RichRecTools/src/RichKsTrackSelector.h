@@ -2,10 +2,10 @@
 //-----------------------------------------------------------------------------
 /** @file RichKsTrackSelector.h
  *
- *  Header file for RICH reconstruction tool : RichKsTrackSelector
+ *  Header file for RICH reconstruction tool : Rich::Rec::KsTrackSelector
  *
  *  CVS Log :-
- *  $Id: RichKsTrackSelector.h,v 1.1 2006-08-28 11:34:41 jonrob Exp $
+ *  $Id: RichKsTrackSelector.h,v 1.2 2007-02-02 10:10:41 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/08/2006
@@ -29,30 +29,43 @@ namespace Rich
 {
 
   //-----------------------------------------------------------------------------
-  /** @class RichKsTrackSelector RichKsTrackSelector.h
+  /** @namespace Rec
    *
-   *  Extension to the RichBaseTrackSelector for Ks tracks
+   *  General namespace for RICH reconstruction software
    *
-   *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
-   *  @date   2006-08-12
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   08/07/2004
    */
   //-----------------------------------------------------------------------------
-
-  class RichKsTrackSelector : public RichBaseTrackSelector
+  namespace Rec
   {
 
-  public: // Gaudi methods
+    //-----------------------------------------------------------------------------
+    /** @class KsTrackSelector RichKsTrackSelector.h
+     *
+     *  Extension to the RichBaseTrackSelector for Ks tracks
+     *
+     *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+     *  @date   2006-08-12
+     */
+    //-----------------------------------------------------------------------------
 
-    /// Standard constructor
-    RichKsTrackSelector( const std::string& type,
-                         const std::string& name,
-                         const IInterface* parent );
+    class KsTrackSelector : public BaseTrackSelector
+    {
 
-    /// Destructor
-    virtual ~RichKsTrackSelector( );
+    public: // Gaudi methods
 
-  };
+      /// Standard constructor
+      KsTrackSelector( const std::string& type,
+                       const std::string& name,
+                       const IInterface* parent );
 
+      /// Destructor
+      virtual ~KsTrackSelector( );
+
+    };
+
+  }
 } // RICH namespace
 
 #endif // RICHRECTOOLS_RichKsTrackSelector_H

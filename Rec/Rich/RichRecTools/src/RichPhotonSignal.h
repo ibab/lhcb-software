@@ -2,10 +2,10 @@
 //-----------------------------------------------------------------------------
 /** @file RichPhotonSignal.h
  *
- *  Header file for tool : RichPhotonSignal
+ *  Header file for tool : Rich::Rec::PhotonSignal
  *
  *  CVS Log :-
- *  $Id: RichPhotonSignal.h,v 1.14 2006-12-01 17:05:09 cattanem Exp $
+ *  $Id: RichPhotonSignal.h,v 1.15 2007-02-02 10:10:41 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -32,68 +32,95 @@
 #include "RichRecBase/IRichCherenkovResolution.h"
 
 //-----------------------------------------------------------------------------
-/** @class RichPhotonSignal RichPhotonSignal.h
+/** @namespace Rich
  *
- *  Tool to calculate for a given photon the probabilities of it
- *  being a signal or scattered photon, and its predicted contribution
- *  to its associated RichRecPixel, under a certain mass hypothesis.
- *  This version is tuned for HPDs
+ *  General namespace for RICH software
  *
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   15/03/2002
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
  */
 //-----------------------------------------------------------------------------
-
-class RichPhotonSignal : public RichRecToolBase,
-                         virtual public IRichPhotonSignal
+namespace Rich
 {
 
-public: // Methods for Gaudi Framework
+  //-----------------------------------------------------------------------------
+  /** @namespace Rec
+   *
+   *  General namespace for RICH reconstruction software
+   *
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   08/07/2004
+   */
+  //-----------------------------------------------------------------------------
+  namespace Rec
+  {
 
-  /// Standard constructor
-  RichPhotonSignal( const std::string& type,
+    //-----------------------------------------------------------------------------
+    /** @class PhotonSignal RichPhotonSignal.h
+     *
+     *  Tool to calculate for a given photon the probabilities of it
+     *  being a signal or scattered photon, and its predicted contribution
+     *  to its associated RichRecPixel, under a certain mass hypothesis.
+     *  This version is tuned for HPDs
+     *
+     *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+     *  @date   15/03/2002
+     */
+    //-----------------------------------------------------------------------------
+
+    class PhotonSignal : public Rich::Rec::ToolBase,
+                         virtual public IPhotonSignal
+    {
+
+    public: // Methods for Gaudi Framework
+
+      /// Standard constructor
+      PhotonSignal( const std::string& type,
                     const std::string& name,
                     const IInterface* parent );
 
-  /// Destructor
-  virtual ~RichPhotonSignal(){}
+      /// Destructor
+      virtual ~PhotonSignal(){}
 
-  // Initialize method
-  StatusCode initialize();
+      // Initialize method
+      StatusCode initialize();
 
-  // Finalize method
-  StatusCode finalize();
+      // Finalize method
+      StatusCode finalize();
 
-public: // methods (and doxygen comments) inherited from public interface
+    public: // methods (and doxygen comments) inherited from public interface
 
-  // Predicted pixel signal for a given reconstructed photon under a given mass hypothesis
-  double predictedPixelSignal( LHCb::RichRecPhoton * photon,
-                               const Rich::ParticleIDType id ) const;
-  // Signal Probability for a given reconstructed photon under a given mass hypothesis
-  double signalProb( LHCb::RichRecPhoton * photon,
-                     const Rich::ParticleIDType id ) const;
+      // Predicted pixel signal for a given reconstructed photon under a given mass hypothesis
+      double predictedPixelSignal( LHCb::RichRecPhoton * photon,
+                                   const Rich::ParticleIDType id ) const;
+      // Signal Probability for a given reconstructed photon under a given mass hypothesis
+      double signalProb( LHCb::RichRecPhoton * photon,
+                         const Rich::ParticleIDType id ) const;
 
-  // Scatter Probability for a given reconstructed photon under a given mass hypothesis
-  double scatterProb( LHCb::RichRecPhoton * photon,
-                      const Rich::ParticleIDType id ) const;
+      // Scatter Probability for a given reconstructed photon under a given mass hypothesis
+      double scatterProb( LHCb::RichRecPhoton * photon,
+                          const Rich::ParticleIDType id ) const;
 
-private: // private data
+    private: // private data
 
-  /// Pointer to RichExpectedTrackSignal interface
-  const IRichExpectedTrackSignal * m_signal;
+      /// Pointer to RichExpectedTrackSignal interface
+      const IExpectedTrackSignal * m_signal;
 
-  /// Pointer to RichCherenkovAngle interface
-  const IRichCherenkovAngle * m_ckAngle;
+      /// Pointer to RichCherenkovAngle interface
+      const ICherenkovAngle * m_ckAngle;
 
-  /// Pointer to RichCherenkovResolution interface
-  const IRichCherenkovResolution * m_ckRes;
+      /// Pointer to RichCherenkovResolution interface
+      const ICherenkovResolution * m_ckRes;
 
-  /// Temporary local value for Radii of curvature
-  double m_radiusCurv[Rich::NRiches];
+      /// Temporary local value for Radii of curvature
+      double m_radiusCurv[Rich::NRiches];
 
-  /// Temporary local value pixel area
-  double m_pixelArea;
+      /// Temporary local value pixel area
+      double m_pixelArea;
 
-};
+    };
+
+  }
+}
 
 #endif // RICHRECTOOLS_RICHPHOTONSIGNAL_H

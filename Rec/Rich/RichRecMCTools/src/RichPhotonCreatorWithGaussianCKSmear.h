@@ -2,10 +2,10 @@
 //-----------------------------------------------------------------------------------------------
 /** @file RichPhotonCreatorWithGaussianCKSmear.h
  *
- *  Header file for RICH reconstruction tool : RichPhotonCreatorWithGaussianCKSmear
+ *  Header file for RICH reconstruction tool : Rich::Rec::PhotonCreatorWithGaussianCKSmear
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreatorWithGaussianCKSmear.h,v 1.7 2006-12-01 16:18:24 cattanem Exp $
+ *  $Id: RichPhotonCreatorWithGaussianCKSmear.h,v 1.8 2007-02-02 10:06:27 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/05/2005
@@ -32,84 +32,124 @@
 // Event model
 #include "Event/MCRichOpticalPhoton.h"
 
-//-----------------------------------------------------------------------------------------------
-/** @class RichPhotonCreatorWithGaussianCKSmear RichPhotonCreatorWithGaussianCKSmear.h
+//-----------------------------------------------------------------------------
+/** @namespace Rich
  *
- *  Tool which first delegates the photon creator to another tool, but then applies
- *  a Gaussian smear to the true Cherenkov photons for each Radiator.
- *  The about of smearing is seperately configurable for each radiator.
+ *  General namespace for RICH software
  *
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   20/05/2005
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
  */
-//-----------------------------------------------------------------------------------------------
-
-class RichPhotonCreatorWithGaussianCKSmear : public RichPhotonCreatorBase
+//-----------------------------------------------------------------------------
+namespace Rich
 {
 
-public: // methods for Gaudi framework
+  //-----------------------------------------------------------------------------
+  /** @namespace Rec
+   *
+   *  General namespace for RICH reconstruction software
+   *
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   08/07/2004
+   */
+  //-----------------------------------------------------------------------------
+  namespace Rec
+  {
 
-  /// Standard constructor
-  RichPhotonCreatorWithGaussianCKSmear( const std::string& type,
-                                        const std::string& name,
-                                        const IInterface* parent );
+    //-----------------------------------------------------------------------------
+    /** @namespace MC
+     *
+     *  General namespace for RICH MC related software
+     *
+     *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+     *  @date   05/12/2006
+     */
+    //-----------------------------------------------------------------------------
+    namespace MC
+    {
 
-  /// Destructor
-  virtual ~RichPhotonCreatorWithGaussianCKSmear(){}
+      //-----------------------------------------------------------------------------------------------
+      /** @class PhotonCreatorWithGaussianCKSmear RichPhotonCreatorWithGaussianCKSmear.h
+       *
+       *  Tool which first delegates the photon creator to another tool, but then applies
+       *  a Gaussian smear to the true Cherenkov photons for each Radiator.
+       *  The about of smearing is seperately configurable for each radiator.
+       *
+       *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+       *  @date   20/05/2005
+       */
+      //-----------------------------------------------------------------------------------------------
 
-  // Initialize method
-  StatusCode initialize();
+      class PhotonCreatorWithGaussianCKSmear : public RichPhotonCreatorBase
+      {
 
-  // Finalize method
-  StatusCode finalize();
+      public: // methods for Gaudi framework
 
-protected: // methods
+        /// Standard constructor
+        PhotonCreatorWithGaussianCKSmear( const std::string& type,
+                                          const std::string& name,
+                                          const IInterface* parent );
 
-  /// Initialise for a new event
-  virtual void InitNewEvent();
+        /// Destructor
+        virtual ~PhotonCreatorWithGaussianCKSmear(){}
 
-private: // private methods
+        // Initialize method
+        StatusCode initialize();
 
-  /// Form a Photon candidate from a Segment and a pixel.
-  virtual LHCb::RichRecPhoton * buildPhoton( LHCb::RichRecSegment * segment,
-                                             LHCb::RichRecPixel * pixel,
-                                             const RichRecPhotonKey key ) const;
+        // Finalize method
+        StatusCode finalize();
 
-  /// Access RICH MC reconstruction tool on demand
-  /// Means if not needed, this tool runs MC free and can be used on real data (if wanted)
-  const IRichRecMCTruthTool * richMCRecTool() const;
+      protected: // methods
 
-private: // private data
+        /// Initialise for a new event
+        virtual void InitNewEvent();
 
-  // Pointers to tool instances
-  mutable const IRichRecMCTruthTool * m_mcRecTool;  ///< Rich Reconstruction MC Truth tool
-  const IRichPhotonCreator * m_delPhotCr;   ///< Delegated photon creator
+      private: // private methods
 
-  /// Apply smearing to all photons, or only to true photons
-  bool m_applySmearingToAll;
+        /// Form a Photon candidate from a Segment and a pixel.
+        virtual LHCb::RichRecPhoton * buildPhoton( LHCb::RichRecSegment * segment,
+                                                   LHCb::RichRecPixel * pixel,
+                                                   const RichRecPhotonKey key ) const;
 
-  /// Which radiators to apply the smearing to
-  std::vector<bool> m_smearRad;
+        /// Access RICH MC reconstruction tool on demand
+        /// Means if not needed, this tool runs MC free and can be used on real data (if wanted)
+        const Rich::Rec::MC::IMCTruthTool * richMCRecTool() const;
 
-  /// Smearing value to apply to each radiators photons
-  std::vector<double> m_smearWid;
+      private: // private data
 
-  /// Gaussian random distributions
-  mutable boost::array< Rndm::Numbers, Rich::NRadiatorTypes > m_rand;
+        // Pointers to tool instances
+        mutable const Rich::Rec::MC::IMCTruthTool * m_mcRecTool;  ///< Rich Reconstruction MC Truth tool
+        const IPhotonCreator * m_delPhotCr;   ///< Delegated photon creator
 
-  /// photon smearing done map
-  mutable Rich::HashMap<long int, bool> m_photSmearDone;
+        /// Apply smearing to all photons, or only to true photons
+        bool m_applySmearingToAll;
 
-  /// count of smeared photons
-  mutable std::vector<unsigned long int> m_smearCount;
+        /// Which radiators to apply the smearing to
+        std::vector<bool> m_smearRad;
 
-};
+        /// Smearing value to apply to each radiators photons
+        std::vector<double> m_smearWid;
 
-inline const IRichRecMCTruthTool *
-RichPhotonCreatorWithGaussianCKSmear::richMCRecTool() const
-{
-  if ( !m_mcRecTool ) acquireTool( "RichRecMCTruthTool", m_mcRecTool );
-  return m_mcRecTool;
+        /// Gaussian random distributions
+        mutable boost::array< Rndm::Numbers, Rich::NRadiatorTypes > m_rand;
+
+        /// photon smearing done map
+        mutable Rich::HashMap<long int, bool> m_photSmearDone;
+
+        /// count of smeared photons
+        mutable std::vector<unsigned long int> m_smearCount;
+
+      };
+
+      inline const Rich::Rec::MC::IMCTruthTool *
+      PhotonCreatorWithGaussianCKSmear::richMCRecTool() const
+      {
+        if ( !m_mcRecTool ) acquireTool( "RichRecMCTruthTool", m_mcRecTool );
+        return m_mcRecTool;
+      }
+
+    }
+  }
 }
 
 #endif // RICHRECMCTOOLS_RICHPHOTONCREATORWITHGAUSSIANCKSMEAR_H

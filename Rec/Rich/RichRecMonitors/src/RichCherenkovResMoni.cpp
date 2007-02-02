@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichCherenkovResMoni
  *
  *  CVS Log :-
- *  $Id: RichCherenkovResMoni.cpp,v 1.12 2006-08-31 12:52:00 cattanem Exp $
+ *  $Id: RichCherenkovResMoni.cpp,v 1.13 2007-02-02 10:07:11 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -19,15 +19,15 @@
 #include "GaudiKernel/SystemOfUnits.h"
 
 // namespace
-using namespace LHCb;
+using namespace Rich::Rec::MC;
 
 //---------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( RichCherenkovResMoni );
+DECLARE_ALGORITHM_FACTORY( CherenkovResMoni );
 
 // Standard constructor, initializes variables
-RichCherenkovResMoni::RichCherenkovResMoni( const std::string& name,
-                                            ISvcLocator* pSvcLocator )
+CherenkovResMoni::CherenkovResMoni( const std::string& name,
+                                    ISvcLocator* pSvcLocator )
   : RichRecHistoAlgBase ( name, pSvcLocator ),
     m_richRecMCTruth    ( NULL ),
     m_ckAngle           ( NULL ),
@@ -38,10 +38,10 @@ RichCherenkovResMoni::RichCherenkovResMoni( const std::string& name,
 }
 
 // Destructor
-RichCherenkovResMoni::~RichCherenkovResMoni() {};
+CherenkovResMoni::~CherenkovResMoni() {};
 
 //  Initialize
-StatusCode RichCherenkovResMoni::initialize()
+StatusCode CherenkovResMoni::initialize()
 {
   // Sets up various tools and services
   const StatusCode sc = RichRecHistoAlgBase::initialize();
@@ -57,7 +57,7 @@ StatusCode RichCherenkovResMoni::initialize()
 }
 
 // Main execution
-StatusCode RichCherenkovResMoni::execute()
+StatusCode CherenkovResMoni::execute()
 {
 
   // Check event status
@@ -73,10 +73,10 @@ StatusCode RichCherenkovResMoni::execute()
   MIN_CKTHETA_RAD;
 
   // Iterate over segments
-  for ( RichRecSegments::const_iterator iSeg = richSegments()->begin();
+  for ( LHCb::RichRecSegments::const_iterator iSeg = richSegments()->begin();
         iSeg != richSegments()->end(); ++iSeg )
   {
-    RichRecSegment * segment = *iSeg;
+    LHCb::RichRecSegment * segment = *iSeg;
 
     // apply track selection
     if ( !m_trSelector->trackSelected(segment->richRecTrack()) ) continue;
@@ -86,7 +86,7 @@ StatusCode RichCherenkovResMoni::execute()
     if ( mcType == Rich::Unknown ) continue;
 
     // track segment
-    const RichTrackSegment & trackSeg = segment->trackSegment();
+    const LHCb::RichTrackSegment & trackSeg = segment->trackSegment();
 
     // radiator
     const Rich::RadiatorType rad = trackSeg.radiator();
@@ -123,16 +123,16 @@ StatusCode RichCherenkovResMoni::execute()
 
     } // particle ID codes
 
-    // loop over photons
-    const RichRecSegment::Photons & photons = photonCreator()->reconstructPhotons( segment );
-    for ( RichRecSegment::Photons::const_iterator iPhot = photons.begin();
+      // loop over photons
+    const LHCb::RichRecSegment::Photons & photons = photonCreator()->reconstructPhotons( segment );
+    for ( LHCb::RichRecSegment::Photons::const_iterator iPhot = photons.begin();
           iPhot != photons.end();
           ++iPhot )
     {
-      RichRecPhoton * photon = *iPhot;
+      LHCb::RichRecPhoton * photon = *iPhot;
 
       // MC photon
-      const MCRichOpticalPhoton * mcPhot = m_richRecMCTruth->trueOpticalPhoton(photon);
+      const LHCb::MCRichOpticalPhoton * mcPhot = m_richRecMCTruth->trueOpticalPhoton(photon);
       if ( mcPhot )
       {
         // Cherenkov angles
@@ -185,8 +185,9 @@ StatusCode RichCherenkovResMoni::execute()
 }
 
 //  Finalize
-StatusCode RichCherenkovResMoni::finalize()
+StatusCode CherenkovResMoni::finalize()
 {
   // Execute base class method
   return RichRecHistoAlgBase::finalize();
 }
+

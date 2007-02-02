@@ -2,10 +2,10 @@
 //--------------------------------------------------------------------------------------------------
 /** @file RichDelegatedTrackCreatorFromRecoTracks.h
  *
- *  Header file for tool : RichDelegatedTrackCreatorFromRecoTracks
+ *  Header file for tool : Rich::Rec::DelegatedTrackCreatorFromRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichDelegatedTrackCreatorFromRecoTracks.h,v 1.3 2006-12-01 17:05:08 cattanem Exp $
+ *  $Id: RichDelegatedTrackCreatorFromRecoTracks.h,v 1.4 2007-02-02 10:10:40 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -15,96 +15,127 @@
 #ifndef RICHRECTOOLS_RichDelegatedTrackCreatorFromRecoTracks_H
 #define RICHRECTOOLS_RichDelegatedTrackCreatorFromRecoTracks_H 1
 
+// Gaudi
+#include "GaudiKernel/ToolFactory.h"
+#include "GaudiKernel/ContainedObject.h"
+
 // base class
 #include "RichRecBase/RichTrackCreatorBase.h"
 
 // Event
 #include "Event/Track.h"
 
-//--------------------------------------------------------------------------------------------------
-/** @class RichDelegatedTrackCreatorFromRecoTracks RichDelegatedTrackCreatorFromRecoTracks.h
+//-----------------------------------------------------------------------------
+/** @namespace Rich
  *
- *  Tool for the creation and book-keeping of RichRecTrack objects.
- *  Delegates the real work to other tools based on selection criteria.
+ *  General namespace for RICH software
  *
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   15/03/2002
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
  */
-//--------------------------------------------------------------------------------------------------
-
-class RichDelegatedTrackCreatorFromRecoTracks : public RichTrackCreatorBase
+//-----------------------------------------------------------------------------
+namespace Rich
 {
 
-public: // Methods for Gaudi Framework
+  //-----------------------------------------------------------------------------
+  /** @namespace Rec
+   *
+   *  General namespace for RICH reconstruction software
+   *
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   08/07/2004
+   */
+  //-----------------------------------------------------------------------------
+  namespace Rec
+  {
 
-  /// Standard constructor
-  RichDelegatedTrackCreatorFromRecoTracks( const std::string& type,
+    //--------------------------------------------------------------------------------------------------
+    /** @class DelegatedTrackCreatorFromRecoTracks RichDelegatedTrackCreatorFromRecoTracks.h
+     *
+     *  Tool for the creation and book-keeping of RichRecTrack objects.
+     *  Delegates the real work to other tools based on selection criteria.
+     *
+     *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+     *  @date   15/03/2002
+     */
+    //--------------------------------------------------------------------------------------------------
+
+    class DelegatedTrackCreatorFromRecoTracks : public TrackCreatorBase
+    {
+
+    public: // Methods for Gaudi Framework
+
+      /// Standard constructor
+      DelegatedTrackCreatorFromRecoTracks( const std::string& type,
                                            const std::string& name,
                                            const IInterface* parent );
 
-  /// Destructor
-  virtual ~RichDelegatedTrackCreatorFromRecoTracks() { }
+      /// Destructor
+      virtual ~DelegatedTrackCreatorFromRecoTracks() { }
 
-  // Initialize method
-  StatusCode initialize();
+      // Initialize method
+      StatusCode initialize();
 
-  // Finalize method
-  StatusCode finalize();
+      // Finalize method
+      StatusCode finalize();
 
-public: // methods (and doxygen comments) inherited from public interface
+    public: // methods (and doxygen comments) inherited from public interface
 
-  // Returns a RichRecTrack object pointer for given ContainedObject.
-  // In this implementation the ContainedObject must be a Track.
-  virtual LHCb::RichRecTrack * newTrack ( const ContainedObject * obj ) const;
+      // Returns a RichRecTrack object pointer for given ContainedObject.
+      // In this implementation the ContainedObject must be a Track.
+      virtual LHCb::RichRecTrack * newTrack ( const ContainedObject * obj ) const;
 
-  // Form all possible RichRecTracks from input Tracks
-  const StatusCode newTracks() const;
+      // Form all possible RichRecTracks from input Tracks
+      const StatusCode newTracks() const;
 
-  // Returns the number of tracks in the input Track container.
-  const long nInputTracks() const;
+      // Returns the number of tracks in the input Track container.
+      const long nInputTracks() const;
 
-protected: // methods
+    protected: // methods
 
-  /// Initialise for a new event
-  virtual void InitNewEvent();
+      /// Initialise for a new event
+      virtual void InitNewEvent();
 
-private: // methods
+    private: // methods
 
-  /// Returns a pointer to the Tracks
-  const LHCb::Tracks * recoTracks() const;
+      /// Returns a pointer to the Tracks
+      const LHCb::Tracks * recoTracks() const;
 
-  /// Returns the RichTrackCreator tool appropriate for a given track type
-  const IRichTrackCreator * tkTool( const Rich::Track::Type tkType ) const;
+      /// Returns the RichTrackCreator tool appropriate for a given track type
+      const ITrackCreator * tkTool( const Rich::Rec::Track::Type tkType ) const;
 
-private: // data
+    private: // data
 
-  /// Pointer to Tracks
-  mutable LHCb::Tracks * m_trTracks;
+      /// Pointer to Tracks
+      mutable LHCb::Tracks * m_trTracks;
 
-  /// Input location of Tracks in TES
-  std::string m_trTracksLocation;
+      /// Input location of Tracks in TES
+      std::string m_trTracksLocation;
 
-  /// Flag to signify all tracks have been formed for current event
-  mutable bool m_allDone;
+      /// Flag to signify all tracks have been formed for current event
+      mutable bool m_allDone;
 
-  typedef std::vector<std::string> ToolList;
-  /// Tool data from job options
-  ToolList m_names;
+      typedef std::vector<std::string> ToolList;
+      /// Tool data from job options
+      ToolList m_names;
 
-  /// mapping type between track type and  RichTrackCreator tool pointer
-  typedef std::vector< const IRichTrackCreator* > TrackToPnt;
-  TrackToPnt m_tkToPtn;
+      /// mapping type between track type and  RichTrackCreator tool pointer
+      typedef std::vector< const ITrackCreator* > TrackToPnt;
+      TrackToPnt m_tkToPtn;
 
-};
+    };
 
-inline const IRichTrackCreator *
-RichDelegatedTrackCreatorFromRecoTracks::tkTool( const Rich::Track::Type tkType ) const
-{
-  if ( !m_tkToPtn[tkType] )
-  {
-    Exception("No creator tool configured for track type '"+Rich::text(tkType)+"'");
+    inline const Rich::Rec::ITrackCreator *
+    DelegatedTrackCreatorFromRecoTracks::tkTool( const Rich::Rec::Track::Type tkType ) const
+    {
+      if ( !m_tkToPtn[tkType] )
+      {
+        Exception("No creator tool configured for track type '"+Rich::text(tkType)+"'");
+      }
+      return m_tkToPtn[tkType];
+    }
+
   }
-  return m_tkToPtn[tkType];
 }
 
 #endif // RICHRECTOOLS_RichDelegatedTrackCreatorFromRecoTracks_H

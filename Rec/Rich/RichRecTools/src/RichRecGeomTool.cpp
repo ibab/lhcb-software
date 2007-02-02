@@ -2,10 +2,10 @@
 //-----------------------------------------------------------------------------
 /** @file RichRecGeomTool.cpp
  *
- *  Implementation file for tool : RichRecGeomTool
+ *  Implementation file for tool : Rich::Rec::GeomTool
  *
  *  CVS Log :-
- *  $Id: RichRecGeomTool.cpp,v 1.13 2006-12-01 17:05:09 cattanem Exp $
+ *  $Id: RichRecGeomTool.cpp,v 1.14 2007-02-02 10:10:41 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -18,17 +18,17 @@
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
 
-// namespaces
-using namespace LHCb;
+// All code is in general Rich reconstruction namespace
+using namespace Rich::Rec;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( RichRecGeomTool );
+DECLARE_TOOL_FACTORY( GeomTool );
 
 // Standard constructor
-RichRecGeomTool::RichRecGeomTool( const std::string& type,
-                                  const std::string& name,
-                                  const IInterface* parent )
+GeomTool::GeomTool( const std::string& type,
+                    const std::string& name,
+                    const IInterface* parent )
   : RichRecToolBase ( type, name, parent ),
     m_detParams     ( NULL ),
     m_ckAngle       ( NULL ),
@@ -36,7 +36,7 @@ RichRecGeomTool::RichRecGeomTool( const std::string& type,
 {
 
   // interface
-  declareInterface<IRichRecGeomTool>(this);
+  declareInterface<IGeomTool>(this);
 
   // job options
   m_radScale[Rich::Aerogel]  =  0.03;
@@ -46,7 +46,7 @@ RichRecGeomTool::RichRecGeomTool( const std::string& type,
 
 }
 
-StatusCode RichRecGeomTool::initialize()
+StatusCode GeomTool::initialize()
 {
   // Sets up various tools and services
   const StatusCode sc = RichRecToolBase::initialize();
@@ -67,20 +67,20 @@ StatusCode RichRecGeomTool::initialize()
   return sc;
 }
 
-StatusCode RichRecGeomTool::finalize()
+StatusCode GeomTool::finalize()
 {
   // Execute base class method
   return RichRecToolBase::finalize();
 }
 
-double RichRecGeomTool::trackPixelHitSep2( const RichRecSegment * segment,
-                                           const RichRecPixel * pixel ) const
+double GeomTool::trackPixelHitSep2( const LHCb::RichRecSegment * segment,
+                                    const LHCb::RichRecPixel * pixel ) const
 {
   double sep2 = 99999999;
 
   // Which radiator
   const Rich::RadiatorType rad = segment->trackSegment().radiator();
-  
+
   // Pixel position, in local HPD coords corrected for average radiator distortion
   const Gaudi::XYZPoint & pixP = pixel->localPosition(rad);
 
@@ -89,11 +89,11 @@ double RichRecGeomTool::trackPixelHitSep2( const RichRecSegment * segment,
 
   // segment position ray traced to HPD panel, in local HPD coords
   const Gaudi::XYZPoint & segP = segment->pdPanelHitPointLocal();
-  
+
   // segment position ray traced to same HPD panel as hit, in local HPD coords
   const Gaudi::XYZPoint & segPForce = segment->pdPanelHitPointLocal(side);
-  
-    // Same RICH ?
+
+  // Same RICH ?
   if ( segment->trackSegment().rich() == pixel->detector() )
   {
     if ( Rich::Rich1 == pixel->detector() )
@@ -124,8 +124,8 @@ double RichRecGeomTool::trackPixelHitSep2( const RichRecSegment * segment,
   return sep2;
 }
 
-double RichRecGeomTool::hpdPanelAcceptance( RichRecSegment * segment,
-                                            const Rich::ParticleIDType id ) const
+double GeomTool::hpdPanelAcceptance( LHCb::RichRecSegment * segment,
+                                     const Rich::ParticleIDType id ) const
 {
 
   // ==============================================
@@ -152,7 +152,7 @@ double RichRecGeomTool::hpdPanelAcceptance( RichRecSegment * segment,
     const Rich::RadiatorType rad = segment->trackSegment().radiator();
 
     // limits
-    const IRichDetParameters::RadLimits & lims = m_radOutLimLoc[rad];
+    const IDetParameters::RadLimits & lims = m_radOutLimLoc[rad];
 
     // Calculate acceptance
     if ( fabs(tkPoint.x()) > (lims.maxX()+ckRadius) ||
@@ -225,8 +225,9 @@ double RichRecGeomTool::hpdPanelAcceptance( RichRecSegment * segment,
   return acc;
 }
 
-Gaudi::XYZPoint RichRecGeomTool::correctAvRadiatorDistortion( const Gaudi::XYZPoint & point,
-                                                              const Rich::RadiatorType rad ) const
+Gaudi::XYZPoint
+GeomTool::correctAvRadiatorDistortion( const Gaudi::XYZPoint & point,
+                                       const Rich::RadiatorType rad ) const
 {
   return Gaudi::XYZPoint( (1-m_radScale[rad]) * point.x(),
                           (1+m_radScale[rad]) * point.y(),

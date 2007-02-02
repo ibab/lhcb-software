@@ -5,7 +5,7 @@
  *  Declaration of objects in component library RichRecMCTools
  *
  *  CVS Log :-
- *  $Id: RichRecMCTools_load.cpp,v 1.11 2006-08-28 11:13:29 jonrob Exp $
+ *  $Id: RichRecMCTools_load.cpp,v 1.12 2007-02-02 10:06:27 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -14,28 +14,28 @@
 
 #include "GaudiKernel/DeclareFactoryEntries.h"
 
-DECLARE_FACTORY_ENTRIES ( RichRecMCTools ) 
+DECLARE_FACTORY_ENTRIES ( RichRecMCTools )
 {
 
-  // Rich reconstruction working object creators that use cheated MC 
+  // Rich reconstruction working object creators that use cheated MC
   // information in one way or another
-  DECLARE_TOOL( RichTrackCreatorFromMCRichTracks             );
-  DECLARE_TOOL( RichPixelCreatorFromCheatedRawBuffer         );
-  DECLARE_TOOL( RichPixelCreatorFromSignalRawBuffer          );
-  DECLARE_TOOL( RichPixelCreatorFromRichDigitsWithBg         );
-  DECLARE_TOOL( RichPhotonCreatorFromMCRichOpticalPhotons    );
-  DECLARE_TOOL( RichPhotonPredictorUsingMCRichOpticalPhotons );
-  DECLARE_TOOL( RichPhotonCreatorWithGaussianCKSmear         );
-  DECLARE_TOOL( RichPhotonCreatorWithMCSignal                );
-  DECLARE_TOOL( RichPhotonCreatorCheatedTrackDir             );
+  DECLARE_TOOL( TrackCreatorFromMCRichTracks             );
+  DECLARE_TOOL( PixelCreatorFromCheatedRawBuffer         );
+  DECLARE_TOOL( PixelCreatorFromSignalRawBuffer          );
+  DECLARE_TOOL( PixelCreatorFromRichDigitsWithBg         );
+  DECLARE_TOOL( PhotonCreatorFromMCRichOpticalPhotons    );
+  DECLARE_TOOL( PhotonPredictorUsingMCRichOpticalPhotons );
+  DECLARE_TOOL( PhotonCreatorWithGaussianCKSmear         );
+  DECLARE_TOOL( PhotonCreatorWithMCSignal                );
+  DECLARE_TOOL( PhotonCreatorCheatedTrackDir             );
 
   // MC truth interrogation tools
-  DECLARE_TOOL( RichRecMCTruthTool );
+  DECLARE_TOOL( MCTruthTool );
 
   // Builds RichTrackSegments from MC information
-  DECLARE_TOOL( RichTrSegMakerFromMCRichTracks );
+  DECLARE_TOOL( TrSegMakerFromMCRichTracks );
 
   // track selector
-  DECLARE_NAMESPACE_TOOL( Rich, RichMCTrueTrackSelector );
+  DECLARE_TOOL( MCTrueTrackSelector );
 
 };

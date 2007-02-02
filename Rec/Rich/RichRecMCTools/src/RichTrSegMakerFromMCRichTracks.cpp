@@ -5,7 +5,7 @@
  * Implementation file for class : RichTrSegMakerFromMCRichTracks
  *
  * CVS Log :-
- * $Id: RichTrSegMakerFromMCRichTracks.cpp,v 1.8 2006-10-20 13:04:39 jonrob Exp $
+ * $Id: RichTrSegMakerFromMCRichTracks.cpp,v 1.9 2007-02-02 10:06:27 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -19,19 +19,19 @@
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/SystemOfUnits.h"
 
-// namespaces
-using namespace LHCb;
+// All code is in general Rich reconstruction namespace
+using namespace Rich::Rec::MC;
 
-DECLARE_TOOL_FACTORY( RichTrSegMakerFromMCRichTracks );
+DECLARE_TOOL_FACTORY( TrSegMakerFromMCRichTracks );
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-RichTrSegMakerFromMCRichTracks::
-RichTrSegMakerFromMCRichTracks( const std::string& type,
-                                const std::string& name,
-                                const IInterface* parent)
-  : RichToolBase ( type, name, parent ),
+TrSegMakerFromMCRichTracks::
+TrSegMakerFromMCRichTracks( const std::string& type,
+                            const std::string& name,
+                            const IInterface* parent)
+  : Rich::Rec::ToolBase ( type, name, parent ),
     m_truth      ( 0 ),
     m_rectruth   ( 0 ),
     m_usedRads   ( Rich::NRadiatorTypes, true ),
@@ -39,7 +39,7 @@ RichTrSegMakerFromMCRichTracks( const std::string& type,
     m_minPhots   ( Rich::NRadiatorTypes, 1 )
 {
   // interface
-  declareInterface<IRichTrSegMaker>(this);
+  declareInterface<ITrSegMaker>(this);
 
   // job options
 
@@ -60,15 +60,15 @@ RichTrSegMakerFromMCRichTracks( const std::string& type,
 //=============================================================================
 // Destructor
 //=============================================================================
-RichTrSegMakerFromMCRichTracks::~RichTrSegMakerFromMCRichTracks() { }
+TrSegMakerFromMCRichTracks::~TrSegMakerFromMCRichTracks() { }
 
 //=============================================================================
 // Initialisation.
 //=============================================================================
-StatusCode RichTrSegMakerFromMCRichTracks::initialize()
+StatusCode TrSegMakerFromMCRichTracks::initialize()
 {
   // Sets up various tools and services
-  const StatusCode sc = RichToolBase::initialize();
+  const StatusCode sc = Rich::Rec::ToolBase::initialize();
   if ( sc.isFailure() ) return sc;
 
   // acquire tools
@@ -87,27 +87,18 @@ StatusCode RichTrSegMakerFromMCRichTracks::initialize()
 }
 
 //=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode RichTrSegMakerFromMCRichTracks::finalize()
-{
-  // Execute base class method
-  return RichToolBase::finalize();
-}
-
-//=============================================================================
 // Constructs the track segments for a given input object
 //=============================================================================
 int
-RichTrSegMakerFromMCRichTracks::constructSegments( const ContainedObject * obj,
-                                                   std::vector<RichTrackSegment*>& segments )
+TrSegMakerFromMCRichTracks::constructSegments( const ContainedObject * obj,
+                                               std::vector<LHCb::RichTrackSegment*>& segments )
   const {
 
   // make sure vector is empty
   segments.clear();
 
   // get MCRichTrack
-  const MCRichTrack * track = mcRichTrack(obj);
+  const LHCb::MCRichTrack * track = mcRichTrack(obj);
   if ( !track )
   {
     verbose() << "MCRichTrack not available for input data object" << endreq;
@@ -130,7 +121,7 @@ RichTrSegMakerFromMCRichTracks::constructSegments( const ContainedObject * obj,
     if ( !m_usedRads[rad] ) continue;
 
     // See if there is an MCRichSegment for this radiator
-    const MCRichSegment * segment = track->segmentInRad(rad);
+    const LHCb::MCRichSegment * segment = track->segmentInRad(rad);
     if ( !segment ) continue;
 
     if ( msgLevel(MSG::VERBOSE) )
@@ -164,9 +155,9 @@ RichTrSegMakerFromMCRichTracks::constructSegments( const ContainedObject * obj,
 
       // Using this information, make radiator segment and add to vector
       // assuming straight line between entry and exit
-      segments.push_back( new RichTrackSegment( RichTrackSegment::UseAllStateVectors,
-                                                intersects,
-                                                rad, (*radiator)->rich() ) );
+      segments.push_back( new LHCb::RichTrackSegment( LHCb::RichTrackSegment::UseAllStateVectors,
+                                                      intersects,
+                                                      rad, (*radiator)->rich() ) );
 
       // printout
       if ( msgLevel(MSG::VERBOSE) )
@@ -188,10 +179,10 @@ RichTrSegMakerFromMCRichTracks::constructSegments( const ContainedObject * obj,
 
       // Using this information, make radiator segment and add to vector
       // Use a middle state as well as entry and exit ones
-      segments.push_back( new RichTrackSegment( RichTrackSegment::UseAllStateVectors,
-                                                intersects,
-                                                midPoint, midStateMomentum,
-                                                rad, (*radiator)->rich() ) );
+      segments.push_back( new LHCb::RichTrackSegment( LHCb::RichTrackSegment::UseAllStateVectors,
+                                                      intersects,
+                                                      midPoint, midStateMomentum,
+                                                      rad, (*radiator)->rich() ) );
 
       // printout
       if ( msgLevel(MSG::VERBOSE) )
@@ -215,18 +206,18 @@ RichTrSegMakerFromMCRichTracks::constructSegments( const ContainedObject * obj,
 }
 
 //============================================================================
-const MCRichTrack *
-RichTrSegMakerFromMCRichTracks::mcRichTrack( const ContainedObject * obj ) const
+const LHCb::MCRichTrack *
+TrSegMakerFromMCRichTracks::mcRichTrack( const ContainedObject * obj ) const
 {
   // Work out what we have been given
-  const MCRichTrack * track = dynamic_cast<const MCRichTrack *>(obj);
+  const LHCb::MCRichTrack * track = dynamic_cast<const LHCb::MCRichTrack *>(obj);
   if ( track )
   {
     verbose() << "Input data is of type MCRichTrack" << endreq;
   }
   else
   {
-    const Track * trTrack = dynamic_cast<const Track *>(obj);
+    const LHCb::Track * trTrack = dynamic_cast<const LHCb::Track *>(obj);
     if ( trTrack )
     {
       verbose() << "Input data is of type Track" << endreq;

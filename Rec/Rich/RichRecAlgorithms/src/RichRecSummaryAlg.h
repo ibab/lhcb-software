@@ -2,10 +2,10 @@
 //---------------------------------------------------------------------------
 /** @file RichRecSummaryAlg.h
  *
- *  Header file for algorithm class : RichRecSummaryAlg
+ *  Header file for algorithm class : Rich::Rec::SummaryAlg
  *
  *  CVS Log :-
- *  $Id: RichRecSummaryAlg.h,v 1.4 2006-12-19 09:46:30 cattanem Exp $
+ *  $Id: RichRecSummaryAlg.h,v 1.5 2007-02-02 10:05:51 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   10/01/2003
@@ -18,6 +18,9 @@
 // Base class
 #include "RichRecBase/RichRecAlgBase.h"
 
+// gaudi
+#include "GaudiKernel/AlgFactory.h"
+
 // Event
 #include "Event/RichRecStatus.h"
 #include "Event/ProcStatus.h"
@@ -29,50 +32,77 @@
 #include "RichRecBase/IRichCherenkovResolution.h"
 #include "RichRecBase/IRichExpectedTrackSignal.h"
 
-//---------------------------------------------------------------------------
-/** @class RichRecSummaryAlg RichRecSummaryAlg.h
+//-----------------------------------------------------------------------------
+/** @namespace Rich
  *
- *  Algorithm to fill the reconstruction summary data objects for the RICH
+ *  General namespace for RICH software
  *
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   07/06/2006
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
  */
-//---------------------------------------------------------------------------
-
-class RichRecSummaryAlg : public RichRecAlgBase
+//-----------------------------------------------------------------------------
+namespace Rich
 {
 
-public:
+  //-----------------------------------------------------------------------------
+  /** @namespace Rec
+   *
+   *  General namespace for RICH reconstruction software
+   *
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   08/07/2004
+   */
+  //-----------------------------------------------------------------------------
+  namespace Rec
+  {
 
-  /// Standard constructor
-  RichRecSummaryAlg( const std::string& name, ISvcLocator* pSvcLocator );
+    //---------------------------------------------------------------------------
+    /** @class SummaryAlg RichRecSummaryAlg.h
+     *
+     *  Algorithm to fill the reconstruction summary data objects for the RICH
+     *
+     *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+     *  @date   07/06/2006
+     */
+    //---------------------------------------------------------------------------
 
-  virtual ~RichRecSummaryAlg();   ///< Destructor
+    class SummaryAlg : public Rich::Rec::AlgBase
+    {
 
-  virtual StatusCode initialize();    // Algorithm initialization
-  virtual StatusCode execute   ();    // Algorithm execution
-  virtual StatusCode finalize  ();    // Algorithm finalization
+    public:
 
-private:   // Private data members
+      /// Standard constructor
+      SummaryAlg( const std::string& name, ISvcLocator* pSvcLocator );
 
-  /// Rich Cherenkov angle calculator tool
-  const IRichCherenkovAngle * m_ckAngle;
+      virtual ~SummaryAlg();   ///< Destructor
 
-  /// Cherenkov angle resolution tool
-  const IRichCherenkovResolution * m_ckAngleRes;
+      virtual StatusCode initialize();    // Algorithm initialization
+      virtual StatusCode execute   ();    // Algorithm execution
+      virtual StatusCode finalize  ();    // Algorithm finalization
 
-  /// Pointer to RichExpectedTrackSignal tool
-  const IRichExpectedTrackSignal * m_tkSignal; 
+    private:   // Private data members
 
-  /// Track selector
-  const Rich::IRichTrackSelector * m_trSelector;
+      /// Rich Cherenkov angle calculator tool
+      const ICherenkovAngle * m_ckAngle;
 
-  /// Location to store the summary tracks
-  std::string m_summaryLoc;
+      /// Cherenkov angle resolution tool
+      const ICherenkovResolution * m_ckAngleRes;
 
-  /// Number of sigmas to select photons, for each radiator
-  std::vector<double> m_nSigma;
+      /// Pointer to RichExpectedTrackSignal tool
+      const IExpectedTrackSignal * m_tkSignal;
 
-};
+      /// Track selector
+      const ITrackSelector * m_trSelector;
+
+      /// Location to store the summary tracks
+      std::string m_summaryLoc;
+
+      /// Number of sigmas to select photons, for each radiator
+      std::vector<double> m_nSigma;
+
+    };
+
+  }
+}
 
 #endif // RICHRECALGORITHMS_RICHRECBACKGROUNDESTI_H

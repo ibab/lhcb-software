@@ -2,10 +2,10 @@
 //-----------------------------------------------------------------------------
 /** @file RichBaseTrackSelector.h
  *
- *  Header file for RICH reconstruction tool : RichBaseTrackSelector
+ *  Header file for RICH reconstruction tool : Rich::Rec::BaseTrackSelector
  *
  *  CVS Log :-
- *  $Id: RichBaseTrackSelector.h,v 1.4 2006-08-28 11:34:41 jonrob Exp $
+ *  $Id: RichBaseTrackSelector.h,v 1.5 2007-02-02 10:10:40 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/08/2006
@@ -41,89 +41,102 @@ namespace Rich
 {
 
   //-----------------------------------------------------------------------------
-  /** @class RichBaseTrackSelector RichBaseTrackSelector.h
+  /** @namespace Rec
    *
-   *  Utility tool used by RichBaseTrackSelector which implements core Track
-   *  selection criteria.
-   * 
-   *  Users should not use directly but instead use a RichTrackSelector
+   *  General namespace for RICH reconstruction software
    *
-   *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
-   *  @date   2006-08-12
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   08/07/2004
    */
   //-----------------------------------------------------------------------------
-
-  class RichBaseTrackSelector : public RichRecToolBase,
-                                virtual public IRichBaseTrackSelector
+  namespace Rec
   {
 
-  public: // Gaudi methods
+    //-----------------------------------------------------------------------------
+    /** @class BaseTrackSelector RichBaseTrackSelector.h
+     *
+     *  Utility tool used by RichBaseTrackSelector which implements core Track
+     *  selection criteria.
+     *
+     *  Users should not use directly but instead use a RichTrackSelector
+     *
+     *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+     *  @date   2006-08-12
+     */
+    //-----------------------------------------------------------------------------
 
-    /// Standard constructor
-    RichBaseTrackSelector( const std::string& type,
-                           const std::string& name,
-                           const IInterface* parent );
+    class BaseTrackSelector : public Rich::Rec::ToolBase,
+                              virtual public IBaseTrackSelector
+    {
 
-    /// Destructor
-    virtual ~RichBaseTrackSelector( );
+    public: // Gaudi methods
 
-    /// Initialize method
-    StatusCode initialize();
+      /// Standard constructor
+      BaseTrackSelector( const std::string& type,
+                         const std::string& name,
+                         const IInterface* parent );
 
-    /// Finalize method
-    StatusCode finalize();
+      /// Destructor
+      virtual ~BaseTrackSelector( );
 
-  public: // interface methods
+      /// Initialize method
+      StatusCode initialize();
 
-    /// Test if the given Track is selected under the current criteria
-    virtual bool trackSelected( const LHCb::Track * track ) const;
+      /// Finalize method
+      StatusCode finalize();
 
-    /// Test it the given RichRecTrack is selected
-    virtual bool trackSelected( const LHCb::RichRecTrack * track ) const;
+    public: // interface methods
 
-    /// Returns the minimum momentum cut value
-    virtual double minPCut() const;
+      /// Test if the given Track is selected under the current criteria
+      virtual bool trackSelected( const LHCb::Track * track ) const;
 
-    /// Returns the maximum momentum cut value
-    virtual double maxPCut() const;
+      /// Test it the given RichRecTrack is selected
+      virtual bool trackSelected( const LHCb::RichRecTrack * track ) const;
 
-    /// Returns the minimum pt cut value
-    virtual double minPtCut() const;
+      /// Returns the minimum momentum cut value
+      virtual double minPCut() const;
 
-    /// Returns the maximum pt cut value
-    virtual double maxPtCut() const;
+      /// Returns the maximum momentum cut value
+      virtual double maxPCut() const;
 
-    /// Returns the minimum chi^2 cut
-    virtual double minChi2Cut() const;
+      /// Returns the minimum pt cut value
+      virtual double minPtCut() const;
 
-    /// Returns the maximum chi^2 cut
-    virtual double maxChi2Cut() const;
+      /// Returns the maximum pt cut value
+      virtual double maxPtCut() const;
 
-    /// Returns the charge selection
-    virtual int chargeSel() const;
+      /// Returns the minimum chi^2 cut
+      virtual double minChi2Cut() const;
 
-  protected: // methods
+      /// Returns the maximum chi^2 cut
+      virtual double maxChi2Cut() const;
 
-    /// Print the track selection
-    virtual MsgStream & printSel( MsgStream & os ) const;
+      /// Returns the charge selection
+      virtual int chargeSel() const;
 
-  protected: // data
+    protected: // methods
 
-    double m_minChi2Cut; ///< Min chi^2 cut
-    double m_maxChi2Cut; ///< Max chi^2 cut
+      /// Print the track selection
+      virtual MsgStream & printSel( MsgStream & os ) const;
 
-    double m_minPCut;    ///< Min p cut
-    double m_maxPCut;    ///< Max p cut
+    protected: // data
 
-    double m_minPtCut;   ///< Min pt cut
-    double m_maxPtCut;   ///< Max pt cut
+      double m_minChi2Cut; ///< Min chi^2 cut
+      double m_maxChi2Cut; ///< Max chi^2 cut
 
-    int m_chargeSel;     ///< Charge selection (-1=negative,+1=positive,0=all)
+      double m_minPCut;    ///< Min p cut
+      double m_maxPCut;    ///< Max p cut
 
-    bool m_acceptClones; ///< Accept or reject clone tracks
+      double m_minPtCut;   ///< Min pt cut
+      double m_maxPtCut;   ///< Max pt cut
 
-  };
+      int m_chargeSel;     ///< Charge selection (-1=negative,+1=positive,0=all)
 
+      bool m_acceptClones; ///< Accept or reject clone tracks
+
+    };
+
+  }
 } // RICH namespace
 
 #endif // RICHRECTOOLS_RichBaseTrackSelector_H

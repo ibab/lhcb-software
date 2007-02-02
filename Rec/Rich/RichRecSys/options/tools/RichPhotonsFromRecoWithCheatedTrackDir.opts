@@ -1,7 +1,7 @@
 
 // Perform the full reconstruction of photons
 
-ToolSvc.Offline.RichToolRegistry.Tools += { "RichSepVCKthetaPhotonPredictor/RichPhotonPredictor" };
+ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::SepVCKthetaPhotonPredictor/RichPhotonPredictor" };
 //                                                                 Aero     C4F10    CF4
 ToolSvc.Offline.RichPhotonCreator.Predictor.MinTrackROI       = {  110.0,   0.0,    0.0  };
 ToolSvc.Offline.RichPhotonCreator.Predictor.MaxTrackROI       = {  380.0,  85.0,  155.0  };
@@ -10,8 +10,8 @@ ToolSvc.Offline.RichPhotonCreator.Predictor.Sep2GMax          = {  360.0,  72.0,
 ToolSvc.Offline.RichPhotonCreator.Predictor.TolerenceFactor   = {  25,     10,    20     };
 
 // RichRecPhoton Creator
-ToolSvc.Offline.RichToolRegistry.Tools += { "RichPhotonCreatorCheatedTrackDir/RichPhotonCreator" };
-ToolSvc.Offline.RichToolRegistry.Tools += { "RichPhotonCreator/RichDelPhotonCreator" };
+ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::MC::PhotonCreatorCheatedTrackDir/RichPhotonCreator" };
+ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::PhotonCreator/RichDelPhotonCreator" };
 //                                                                Aero     C4F10    CF4
 // absolute max and min allowed Cherenkov theta angles
 ToolSvc.Offline.RichDelPhotonCreator.MinAllowedCherenkovTheta   = {  0.075,   0.005,   0.005  };
@@ -24,6 +24,6 @@ ToolSvc.Offline.RichDelPhotonCreator.CherenkovThetaTolerence    = {  0.025,   0.
 // geometrical photon reconstruction
 // use Quartic solving tool
 ToolSvc.Offline.RichDelPhotonCreator.PhotonRecoTool  = "PhotonParams";
-ToolSvc.Offline.RichToolRegistry.Tools += { "RichPhotonRecoUsingQuarticSoln/PhotonParams" };
+ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::PhotonRecoUsingQuarticSoln/PhotonParams" };
 ToolSvc.Offline.RichDelPhotonCreator.PhotonParams.NQuarticIterationsForSecMirrors = { 3,3,3 };
 //ToolSvc.Offline.RichDelPhotonCreator.PhotonParams.AssumeFlatSecondaries      = true;

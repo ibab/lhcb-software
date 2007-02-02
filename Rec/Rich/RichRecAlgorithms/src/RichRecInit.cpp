@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichRecInit
  *
  *  CVS Log :-
- *  $Id: RichRecInit.cpp,v 1.2 2006-12-19 09:46:30 cattanem Exp $
+ *  $Id: RichRecInit.cpp,v 1.3 2007-02-02 10:05:51 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -15,57 +15,38 @@
 // local
 #include "RichRecInit.h"
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
-// namespaces
-using namespace LHCb;
+// All code is in general Rich reconstruction namespace
+using namespace Rich::Rec;
 
 //--------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( RichRecInit );
+// Declaration of the Algorithm Factory
+DECLARE_ALGORITHM_FACTORY( Initialise );
 
 // Standard constructor, initializes variables
-RichRecInit::RichRecInit( const std::string& name,
-                          ISvcLocator* pSvcLocator )
+Initialise::Initialise( const std::string& name,
+                        ISvcLocator* pSvcLocator )
   : RichRecAlgBase ( name, pSvcLocator )
 {
 }
 
 // Destructor
-RichRecInit::~RichRecInit() {}
+Initialise::~Initialise() {}
 
-// Initialize
-StatusCode RichRecInit::initialize()
+StatusCode Initialise::execute()
 {
-  // Sets up various tools and services
-  const StatusCode sc = RichRecAlgBase::initialize();
-  if ( sc.isFailure() ) { return Error( "Failed to initialize base class", sc ); }
-
-  return sc;
-}
-
-StatusCode RichRecInit::execute()
-{
-
   // Event Status
   if ( !richStatus()->eventOK() ) return StatusCode::SUCCESS;
 
   // check for a ProcStat object
   // needed when running special modes where it is not available
-  if ( !exist<ProcStatus>(ProcStatusLocation::Default) )
+  if ( !exist<LHCb::ProcStatus>(LHCb::ProcStatusLocation::Default) )
   {
-    Warning( "No ProcStatus at " + ProcStatusLocation::Default + " : Creating one",
+    Warning( "No ProcStatus at " + LHCb::ProcStatusLocation::Default + " : Creating one",
              StatusCode::SUCCESS );
-    ProcStatus * procS = new ProcStatus();
-    put( procS, ProcStatusLocation::Default );
+    LHCb::ProcStatus * procS = new LHCb::ProcStatus();
+    put( procS, LHCb::ProcStatusLocation::Default );
   }
 
   return StatusCode::SUCCESS;
-}
-
-StatusCode RichRecInit::finalize()
-{
-  // Execute base class method
-  return RichRecAlgBase::finalize();
 }

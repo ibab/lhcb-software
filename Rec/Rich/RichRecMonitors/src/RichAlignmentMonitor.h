@@ -1,10 +1,10 @@
 
 /** @file RichAlignmentMonitor.h
  *
- *  Header file for algorithm class : RichAlignmentMonitor
+ *  Header file for algorithm class : Rich::Rec::MC::AlignmentMonitor
  *
  *  CVS Log :-
- *  $Id: RichAlignmentMonitor.h,v 1.8 2006-10-05 14:42:27 papanest Exp $
+ *  $Id: RichAlignmentMonitor.h,v 1.9 2007-02-02 10:07:11 jonrob Exp $
  *
  *  @author Antonis Papanestis   a.papanestis@rl.ac.uk
  *  @date   2004-02-19
@@ -41,66 +41,104 @@
 // boost
 #include "boost/lexical_cast.hpp"
 
-/** @class RichAlignmentMonitor RichAlignmentMonitor.h
+//-----------------------------------------------------------------------------
+/** @namespace Rich
  *
- *  Provides monitoring histograms for the alignment of the RICH mirrors.
+ *  General namespace for RICH software
  *
- *  @author Antonis Papanestis   a.papanestis@rl.ac.uk
- *  @date   2004-02-19
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
  */
+//-----------------------------------------------------------------------------
+namespace Rich
+{
 
-class RichAlignmentMonitor : public RichRecHistoAlgBase {
+  /** @namespace Rec
+   *
+   *  General namespace for RICH reconstruction software
+   *
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   08/07/2004
+   */
+  namespace Rec
+  {
 
-public:
+    //-----------------------------------------------------------------------------
+    /** @namespace MC
+     *
+     *  General namespace for RICH MC related software
+     *
+     *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+     *  @date   05/12/2006
+     */
+    //-----------------------------------------------------------------------------
+    namespace MC
+    {
 
-  /// type definition
-  typedef LHCb::RichGeomPhotonCode::ShortType MirrorNumber;
+      /** @class AlignmentMonitor RichAlignmentMonitor.h
+       *
+       *  Provides monitoring histograms for the alignment of the RICH mirrors.
+       *
+       *  @author Antonis Papanestis   a.papanestis@rl.ac.uk
+       *  @date   2004-02-19
+       */
 
-  /// Standard constructor
-  RichAlignmentMonitor( const std::string& name, ISvcLocator* pSvcLocator );
+      class AlignmentMonitor : public RichRecHistoAlgBase
+      {
 
-  virtual ~RichAlignmentMonitor( ); ///< Destructor
+      public:
 
-  virtual StatusCode initialize();    // Algorithm initialization
-  virtual StatusCode execute   ();    // Algorithm execution
-  virtual StatusCode finalize  ();    // Algorithm finalization
+        /// type definition
+        typedef LHCb::RichGeomPhotonCode::ShortType MirrorNumber;
 
-private: // data
+        /// Standard constructor
+        AlignmentMonitor( const std::string& name, ISvcLocator* pSvcLocator );
+
+        virtual ~AlignmentMonitor( ); ///< Destructor
+
+        virtual StatusCode initialize();    // Algorithm initialization
+        virtual StatusCode execute   ();    // Algorithm execution
+        virtual StatusCode finalize  ();    // Algorithm finalization
+
+      private: // data
 
 
-  int m_richTemp;    ///< which rich detector to monitor
-  Rich::DetectorType m_rich;
+        int m_richTemp;    ///< which rich detector to monitor
+        Rich::DetectorType m_rich;
 
-  int m_maxUsedTracks;
+        int m_maxUsedTracks;
 
-  // set to know to stop all MC Truth
-  bool m_useMCTruth;
+        // set to know to stop all MC Truth
+        bool m_useMCTruth;
 
-  // to avoid bias towards small angles use only a photons in the expected
-  double m_deltaThetaRange;
-  double m_deltaThetaHistoRange;
+        // to avoid bias towards small angles use only a photons in the expected
+        double m_deltaThetaRange;
+        double m_deltaThetaHistoRange;
 
-  // particle type when fixed
-  int m_particleType;
-  Rich::ParticleIDType m_pType;
+        // particle type when fixed
+        int m_particleType;
+        Rich::ParticleIDType m_pType;
 
-  // keep totals of particle types
-  std::vector<int> m_pTypes;
+        // keep totals of particle types
+        std::vector<int> m_pTypes;
 
-  /// Track selector
-  const Rich::IRichTrackSelector* m_trSelector;
-  // Pointer to RichRecMCTruthTool interface
-  const IRichRecMCTruthTool* m_richRecMCTruth;
-  const IRichParticleProperties* m_richPartProp; ///< Rich Particle properties
-  const IRichCherenkovAngle* m_ckAngle;  ///< Pointer to RichCherenkovAngle tool
+        const ITrackSelector* m_trSelector;        ///< Track selector
+        const Rich::Rec::MC::IMCTruthTool* m_richRecMCTruth; ///< Pointer to RichRecMCTruthTool interface
+        const IParticleProperties* m_richPartProp; ///< Rich Particle properties
+        const ICherenkovAngle* m_ckAngle;  ///< Pointer to RichCherenkovAngle tool
 
-  // Histograms
-  IHistogram1D* m_sphMirrorNumberHist[2];
-  IHistogram1D* m_flatMirrorNumberHist[2];
-  IHistogram2D* m_sphMirReflPoint[2];
-  IHistogram2D* m_flatMirReflPoint[2];
+        // Histograms
+        IHistogram1D* m_sphMirrorNumberHist[2];
+        IHistogram1D* m_flatMirrorNumberHist[2];
+        IHistogram2D* m_sphMirReflPoint[2];
+        IHistogram2D* m_flatMirReflPoint[2];
 
-  std::vector<int> m_preBookHistos;
+        std::vector<int> m_preBookHistos;
 
-};
+      };
+
+    }
+  }
+}
+
 #endif // RICHRECMONITOR_RICHALIGNMENTMONITOR_H

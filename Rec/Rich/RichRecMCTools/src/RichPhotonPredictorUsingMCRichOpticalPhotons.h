@@ -2,10 +2,10 @@
 //---------------------------------------------------------------------------------------------------
 /** @file RichPhotonPredictorUsingMCRichOpticalPhotons.h
  *
- *  Header file for RICH reconstruction tool : RichPhotonPredictorUsingMCRichOpticalPhotons
+ *  Header file for RICH reconstruction tool : Rich::Rec::PhotonPredictorUsingMCRichOpticalPhotons
  *
  *  CVS Log :-
- *  $Id: RichPhotonPredictorUsingMCRichOpticalPhotons.h,v 1.6 2006-12-01 16:18:24 cattanem Exp $
+ *  $Id: RichPhotonPredictorUsingMCRichOpticalPhotons.h,v 1.7 2007-02-02 10:06:27 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -27,49 +27,84 @@
 #include "RichRecBase/IRichPhotonPredictor.h"
 #include "RichRecBase/IRichRecMCTruthTool.h"
 
-//---------------------------------------------------------------------------------------------------
-/** @class RichPhotonPredictorUsingMCRichOpticalPhotons RichPhotonPredictorUsingMCRichOpticalPhotons.h
+//-----------------------------------------------------------------------------
+/** @namespace Rich
  *
- *  Tool which performs the association between RichRecSegments and
- *  RichRecPixels to form RichRecPhotons.  This particular instance uses
- *  MCRichOpticalPhoton objects to select only true Cherenkov photon combinations.
+ *  General namespace for RICH software
  *
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
  */
-//---------------------------------------------------------------------------------------------------
-
-class RichPhotonPredictorUsingMCRichOpticalPhotons : public RichRecToolBase,
-                                                     virtual public IRichPhotonPredictor
+//-----------------------------------------------------------------------------
+namespace Rich
 {
 
-public: // methods for Gaudi framework
+  /** @namespace Rec
+   *
+   *  General namespace for RICH reconstruction software
+   *
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   08/07/2004
+   */
+  namespace Rec
+  {
 
-  /// Standard constructor
-  RichPhotonPredictorUsingMCRichOpticalPhotons( const std::string& type,
-                                                const std::string& name,
-                                                const IInterface* parent );
+    //-----------------------------------------------------------------------------
+    /** @namespace MC
+     *
+     *  General namespace for RICH MC related software
+     *
+     *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+     *  @date   05/12/2006
+     */
+    //-----------------------------------------------------------------------------
+    namespace MC
+    {
 
-  /// Destructor
-  virtual ~RichPhotonPredictorUsingMCRichOpticalPhotons(){}
+      //---------------------------------------------------------------------------------------------------
+      /** @class PhotonPredictorUsingMCRichOpticalPhotons RichPhotonPredictorUsingMCRichOpticalPhotons.h
+       *
+       *  Tool which performs the association between RichRecSegments and
+       *  RichRecPixels to form RichRecPhotons.  This particular instance uses
+       *  MCRichOpticalPhoton objects to select only true Cherenkov photon combinations.
+       *
+       *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+       *  @date   08/07/2004
+       */
+      //---------------------------------------------------------------------------------------------------
 
-  // Initialize method
-  StatusCode initialize();
+      class PhotonPredictorUsingMCRichOpticalPhotons : public Rich::Rec::ToolBase,
+                                                       virtual public IPhotonPredictor
+      {
 
-  // Finalize method
-  StatusCode finalize();
+      public: // methods for Gaudi framework
 
-public: // Public interface methods
+        /// Standard constructor
+        PhotonPredictorUsingMCRichOpticalPhotons( const std::string& type,
+                                                  const std::string& name,
+                                                  const IInterface* parent );
 
-  // Is it possible to make a photon candidate using this segment and pixel.
-  bool photonPossible( LHCb::RichRecSegment * segment,
-                       LHCb::RichRecPixel * pixel ) const;
+        /// Destructor
+        virtual ~PhotonPredictorUsingMCRichOpticalPhotons(){}
 
-private: // private data
+        // Initialize method
+        StatusCode initialize();
 
-  // Pointers to tool instances
-  const IRichRecMCTruthTool * m_mcRecTool;  ///< MC Truth tool
+      public: // Public interface methods
 
-};
+        // Is it possible to make a photon candidate using this segment and pixel.
+        bool photonPossible( LHCb::RichRecSegment * segment,
+                             LHCb::RichRecPixel * pixel ) const;
+
+      private: // private data
+
+        // Pointers to tool instances
+        const Rich::Rec::MC::IMCTruthTool * m_mcRecTool;  ///< MC Truth tool
+
+      };
+
+    }
+  }
+}
 
 #endif // RICHRECMCTOOLS_RICHPHOTONPREDICTORUSINGMCRICHOPTICALPHOTOS_H

@@ -2,10 +2,10 @@
 //-----------------------------------------------------------------------------
 /** @file RichGeomEffPhotonTracing.h
  *
- *  Header file for tool : RichGeomEffPhotonTracing
+ *  Header file for tool : Rich::Rec::GeomEffPhotonTracing
  *
  *  CVS Log :-
- *  $Id: RichGeomEffPhotonTracing.h,v 1.19 2006-11-30 15:38:31 jonrob Exp $
+ *  $Id: RichGeomEffPhotonTracing.h,v 1.20 2007-02-02 10:10:40 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -22,6 +22,8 @@
 #include "GaudiKernel/RndmGenerators.h"
 #include "GaudiKernel/IRndmGenSvc.h"
 #include "GaudiKernel/ParticleProperty.h"
+#include "GaudiKernel/ToolFactory.h"
+#include "GaudiKernel/PhysicalConstants.h"
 
 // base class
 #include "RichRecBase/RichRecToolBase.h"
@@ -44,81 +46,108 @@
 #include "RichKernel/RichGeomFunctions.h"
 
 //-----------------------------------------------------------------------------
-/** @class RichGeomEffPhotonTracing RichGeomEffPhotonTracing.h
+/** @namespace Rich
  *
- *  Tool to perform a full detailed calculation of the geometrical
- *  efficiency for a given RichRecSegment and mass hypothesis.
+ *  General namespace for RICH specific definitions
  *
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   15/03/2002
- *
- *  @todo  Remove the use of random numbers if at all possible
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
  */
 //-----------------------------------------------------------------------------
-
-class RichGeomEffPhotonTracing : public RichRecToolBase,
-                                 virtual public IRichGeomEff
+namespace Rich
 {
 
-public: // Methods for Gaudi Framework
+  //-----------------------------------------------------------------------------
+  /** @namespace Rec
+   *
+   *  General namespace for RICH reconstruction software
+   *
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   08/07/2004
+   */
+  //-----------------------------------------------------------------------------
+  namespace Rec
+  {
 
-  /// Standard constructor
-  RichGeomEffPhotonTracing( const std::string& type,
+    //-----------------------------------------------------------------------------
+    /** @class GeomEffPhotonTracing RichGeomEffPhotonTracing.h
+     *
+     *  Tool to perform a full detailed calculation of the geometrical
+     *  efficiency for a given RichRecSegment and mass hypothesis.
+     *
+     *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+     *  @date   15/03/2002
+     *
+     *  @todo  Remove the use of random numbers if at all possible
+     */
+    //-----------------------------------------------------------------------------
+
+    class GeomEffPhotonTracing : public Rich::Rec::ToolBase,
+                                 virtual public IGeomEff
+    {
+
+    public: // Methods for Gaudi Framework
+
+      /// Standard constructor
+      GeomEffPhotonTracing( const std::string& type,
                             const std::string& name,
                             const IInterface* parent );
 
-  /// Destructor
-  virtual ~RichGeomEffPhotonTracing() {};
+      /// Destructor
+      virtual ~GeomEffPhotonTracing() {};
 
-  // Initialize method
-  StatusCode initialize();
+      // Initialize method
+      StatusCode initialize();
 
-  // Finalize method
-  StatusCode finalize();
+      // Finalize method
+      StatusCode finalize();
 
-public: // methods (and doxygen comments) inherited from public interface
+    public: // methods (and doxygen comments) inherited from public interface
 
-  // Obtain geometrical efficiency for this track and hypothesis
-  double geomEfficiency ( LHCb::RichRecSegment * segment,
-                          const Rich::ParticleIDType id ) const;
-
-  // Obtain scattered geometrical efficiency for this track and hypothesis
-  double geomEfficiencyScat ( LHCb::RichRecSegment * segment,
+      // Obtain geometrical efficiency for this track and hypothesis
+      double geomEfficiency ( LHCb::RichRecSegment * segment,
                               const Rich::ParticleIDType id ) const;
 
-private: // Private data
+      // Obtain scattered geometrical efficiency for this track and hypothesis
+      double geomEfficiencyScat ( LHCb::RichRecSegment * segment,
+                                  const Rich::ParticleIDType id ) const;
 
-  // Pointers to tool instances
-  const IRichRayTracing * m_rayTrace;    ///< Ray tracking tool
-  const IRichCherenkovAngle * m_ckAngle; ///< Cherenkov angle tool
+    private: // Private data
 
-  const DeRichSystem * m_richSys;    ///< RICH detector system object
+      // Pointers to tool instances
+      const IRayTracing * m_rayTrace;    ///< Ray tracking tool
+      const ICherenkovAngle * m_ckAngle; ///< Cherenkov angle tool
 
-  /// Number of photons to use in geometrical efficiency calculation
-  int m_nGeomEff;
+      const DeRichSystem * m_richSys;    ///< RICH detector system object
 
-  /** Number of photons to quit after in geometrical efficiency calculation
-   *  if all so far have failed */
-  int m_nGeomEffBailout;
+      /// Number of photons to use in geometrical efficiency calculation
+      int m_nGeomEff;
 
-  /// Increment parameter for PD efficiencies
-  double m_pdInc;
+      /** Number of photons to quit after in geometrical efficiency calculation
+       *  if all so far have failed */
+      int m_nGeomEffBailout;
 
-  /// Flat random distribution between 0 and 1
-  mutable Rndm::Numbers m_uniDist;
+      /// Increment parameter for PD efficiencies
+      double m_pdInc;
 
-  /// Ray-tracing configuration object
-  LHCb::RichTraceMode m_traceMode;
+      /// Flat random distribution between 0 and 1
+      mutable Rndm::Numbers m_uniDist;
 
-  /// Vector of sampling phi values around the Cherekov ring
-  std::vector<double> m_phiValues;
+      /// Ray-tracing configuration object
+      LHCb::RichTraceMode m_traceMode;
 
-  /// Flag to turn on or off the explicit checking of the HPD status
-  bool m_hpdCheck;
+      /// Vector of sampling phi values around the Cherekov ring
+      std::vector<double> m_phiValues;
 
-  /// Flag to turn on or off checking of intersections with beampipe
-  bool m_checkBeamPipe;
+      /// Flag to turn on or off the explicit checking of the HPD status
+      bool m_hpdCheck;
 
-};
+      /// Flag to turn on or off checking of intersections with beampipe
+      bool m_checkBeamPipe;
+
+    };
+
+  }
+}
 
 #endif // RICHRECTOOLS_RICHGEOMEFFPHOTONTRACING_H

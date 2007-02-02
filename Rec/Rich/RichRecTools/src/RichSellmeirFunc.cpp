@@ -2,52 +2,48 @@
 //-----------------------------------------------------------------------------
 /** @file RichSellmeirFunc.cpp
  *
- *  Implementation file for tool : RichSellmeirFunc
+ *  Implementation file for tool : Rich::Rec::SellmeirFunc
  *
  *  CVS Log :-
- *  $Id: RichSellmeirFunc.cpp,v 1.16 2006-08-31 13:38:25 cattanem Exp $
+ *  $Id: RichSellmeirFunc.cpp,v 1.17 2007-02-02 10:10:41 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
 //-----------------------------------------------------------------------------
 
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h"
-#include "GaudiKernel/ParticleProperty.h"
-#include "GaudiKernel/IParticlePropertySvc.h"
-
 // local
 #include "RichSellmeirFunc.h"
 
-// namespaces
-using namespace LHCb;
+// All code is in general Rich reconstruction namespace
+using namespace Rich::Rec;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( RichSellmeirFunc );
+DECLARE_TOOL_FACTORY( SellmeirFunc );
 
 // Standard constructor
-RichSellmeirFunc::RichSellmeirFunc ( const std::string& type,
-                                     const std::string& name,
-                                     const IInterface* parent )
-  : RichRecToolBase( type, name, parent ) {
+SellmeirFunc::SellmeirFunc ( const std::string& type,
+                             const std::string& name,
+                             const IInterface* parent )
+  : Rich::Rec::ToolBase( type, name, parent ) {
 
-  declareInterface<IRichSellmeirFunc>(this);
+  declareInterface<ISellmeirFunc>(this);
 
   // Aerogel specific parameters... Should be in XML
   declareProperty( "WaveIndpTrans", m_waveIndepTrans = 0.78 );
 
 }
 
-StatusCode RichSellmeirFunc::initialize() {
+StatusCode SellmeirFunc::initialize()
+{
 
   // Sets up various tools and services
-  const StatusCode sc = RichRecToolBase::initialize();
+  const StatusCode sc = Rich::Rec::ToolBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
-  const IRichParticleProperties * partProp;
+  const IParticleProperties * partProp;
   acquireTool( "RichParticleProperties", partProp );
 
   // Retrieve square of particle masses
@@ -122,16 +118,10 @@ StatusCode RichSellmeirFunc::initialize() {
   return sc;
 }
 
-StatusCode RichSellmeirFunc::finalize()
-{
-  // Execute base class method
-  return RichRecToolBase::finalize();
-}
-
-double RichSellmeirFunc::photonsInEnergyRange( RichRecSegment * segment,
-                                               const Rich::ParticleIDType id,
-                                               const double botEn,
-                                               const double topEn ) const
+double SellmeirFunc::photonsInEnergyRange( LHCb::RichRecSegment * segment,
+                                           const Rich::ParticleIDType id,
+                                           const double botEn,
+                                           const double topEn ) const
 {
 
   // Some parameters of the segment
@@ -153,8 +143,8 @@ double RichSellmeirFunc::photonsInEnergyRange( RichRecSegment * segment,
   return ( nPhot < 0 ? 0 : nPhot );
 }
 
-double RichSellmeirFunc::paraW ( const Rich::RadiatorType rad,
-                                 const double energy ) const
+double SellmeirFunc::paraW ( const Rich::RadiatorType rad,
+                             const double energy ) const
 {
   const double X = m_RXSPscale[rad] * log( (m_REP[rad]+energy)/(m_REP[rad]-energy) );
   const double Y = m_RXSMscale[rad] * log( (m_REM[rad]+energy)/(m_REM[rad]-energy) );

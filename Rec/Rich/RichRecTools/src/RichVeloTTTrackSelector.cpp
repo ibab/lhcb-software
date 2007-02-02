@@ -2,10 +2,10 @@
 //-----------------------------------------------------------------------------
 /** @file RichVeloTTTrackSelector.cpp
  *
- *  Implementation file for RICH reconstruction tool : RichVeloTTTrackSelector
+ *  Implementation file for RICH reconstruction tool : Rich::Rec::VeloTTTrackSelector
  *
  *  CVS Log :-
- *  $Id: RichVeloTTTrackSelector.cpp,v 1.2 2006-09-01 06:18:48 jonrob Exp $
+ *  $Id: RichVeloTTTrackSelector.cpp,v 1.3 2007-02-02 10:10:42 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/08/2006
@@ -18,21 +18,25 @@
 // local
 #include "RichVeloTTTrackSelector.h"
 
+// All code is in general Rich reconstruction namespace
+using namespace Rich::Rec;
+
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_NAMESPACE_TOOL_FACTORY( Rich, RichVeloTTTrackSelector );
+
+DECLARE_TOOL_FACTORY( VeloTTTrackSelector );
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-Rich::RichVeloTTTrackSelector::RichVeloTTTrackSelector( const std::string& type,
-                                                        const std::string& name,
-                                                        const IInterface* parent )
-  : RichBaseTrackSelector ( type, name , parent )
+VeloTTTrackSelector::VeloTTTrackSelector( const std::string& type,
+                                          const std::string& name,
+                                          const IInterface* parent )
+  : BaseTrackSelector ( type, name , parent )
 {
   // interface
-  declareInterface<Rich::IRichBaseTrackSelector>(this);
+  declareInterface<IBaseTrackSelector>(this);
   // redefine default cut values for VeloTT tracks
   m_minPCut     = 1.0;
 }
@@ -40,7 +44,7 @@ Rich::RichVeloTTTrackSelector::RichVeloTTTrackSelector( const std::string& type,
 //=============================================================================
 // Destructor
 //=============================================================================
-Rich::RichVeloTTTrackSelector::~RichVeloTTTrackSelector() {}
+VeloTTTrackSelector::~VeloTTTrackSelector() {}
 
 //=============================================================================
 

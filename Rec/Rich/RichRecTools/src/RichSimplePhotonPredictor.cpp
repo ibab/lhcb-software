@@ -2,10 +2,10 @@
 //-----------------------------------------------------------------------------
 /** @file RichSimplePhotonPredictor.cpp
  *
- *  Implementation file for tool : RichSimplePhotonPredictor
+ *  Implementation file for tool : Rich::Rec::SimplePhotonPredictor
  *
  *  CVS Log :-
- *  $Id: RichSimplePhotonPredictor.cpp,v 1.6 2006-12-01 17:05:09 cattanem Exp $
+ *  $Id: RichSimplePhotonPredictor.cpp,v 1.7 2007-02-02 10:10:41 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -18,25 +18,25 @@
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
 
-// namespaces
-using namespace LHCb;
+// All code is in general Rich reconstruction namespace
+using namespace Rich::Rec;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( RichSimplePhotonPredictor );
+DECLARE_TOOL_FACTORY( SimplePhotonPredictor );
 
 // Standard constructor
-RichSimplePhotonPredictor::
-RichSimplePhotonPredictor( const std::string& type,
-                           const std::string& name,
-                           const IInterface* parent )
+SimplePhotonPredictor::
+SimplePhotonPredictor( const std::string& type,
+                       const std::string& name,
+                       const IInterface* parent )
   : RichRecToolBase ( type, name, parent ),
     m_geomTool      ( 0 ),
     m_Nselected     ( Rich::NRadiatorTypes, 0 ),
     m_Nreject       ( Rich::NRadiatorTypes, 0 )
 {
 
-  declareInterface<IRichPhotonPredictor>(this);
+  declareInterface<IPhotonPredictor>(this);
 
   m_minROI.push_back( 130 ); // aerogel
   m_minROI.push_back( 0 );   // rich1Gas
@@ -50,7 +50,7 @@ RichSimplePhotonPredictor( const std::string& type,
 
 }
 
-StatusCode RichSimplePhotonPredictor::initialize()
+StatusCode SimplePhotonPredictor::initialize()
 {
 
   // Sets up various tools and services
@@ -77,7 +77,7 @@ StatusCode RichSimplePhotonPredictor::initialize()
   return sc;
 }
 
-StatusCode RichSimplePhotonPredictor::finalize()
+StatusCode SimplePhotonPredictor::finalize()
 {
 
   if ( m_Nselected[Rich::Aerogel] > 0 ||
@@ -86,7 +86,7 @@ StatusCode RichSimplePhotonPredictor::finalize()
   {
 
     // statistical tool
-    RichPoissonEffFunctor occ("%10.2f +-%7.2f");
+    const PoissonEffFunctor occ("%10.2f +-%7.2f");
 
     // printout stats
     info() << "======================================================================" << endreq
@@ -108,8 +108,9 @@ StatusCode RichSimplePhotonPredictor::finalize()
 }
 
 // fast decision on whether a photon is possible
-bool RichSimplePhotonPredictor::photonPossible( RichRecSegment * segment,
-                                                RichRecPixel * pixel ) const
+bool
+SimplePhotonPredictor::photonPossible( LHCb::RichRecSegment * segment,
+                                       LHCb::RichRecPixel * pixel ) const
 {
 
   // Default to not selected

@@ -3,7 +3,7 @@
 // which come from true cherenkov hits
 
 // use the tool that uses RichDigits
-ToolSvc.Offline.RichToolRegistry.Tools += { "RichPixelCreatorFromSignalRawBuffer/RichPixelCreator" };
+ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::MC::PixelCreatorFromSignalRawBuffer/RichPixelCreator" };
 
 // Which RICH detectors to use                         RICH1   RICH2
 ToolSvc.Offline.RichPixelCreatorReco.UseDetectors = {  true,   true   };

@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichCherenkovAngleMonitor
  *
  *  CVS Log :-
- *  $Id: RichCherenkovAngleMonitor.cpp,v 1.9 2006-08-31 12:52:00 cattanem Exp $
+ *  $Id: RichCherenkovAngleMonitor.cpp,v 1.10 2007-02-02 10:07:11 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -19,16 +19,16 @@
 #include "GaudiKernel/SystemOfUnits.h"
 
 // namespace
-using namespace LHCb;
+using namespace Rich::Rec::MC;
 
 //---------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( RichCherenkovAngleMonitor );
+DECLARE_ALGORITHM_FACTORY( CherenkovAngleMonitor );
 
 // Standard constructor, initializes variables
-RichCherenkovAngleMonitor::RichCherenkovAngleMonitor( const std::string& name,
-                                                      ISvcLocator* pSvcLocator )
-  : RichRecTupleAlgBase ( name, pSvcLocator ),
+CherenkovAngleMonitor::CherenkovAngleMonitor( const std::string& name,
+                                              ISvcLocator* pSvcLocator )
+  : Rich::Rec::TupleAlgBase     ( name, pSvcLocator ),
     m_richPartProp      ( NULL ),
     m_richRecMCTruth    ( NULL ),
     m_ckAngle           ( NULL ),
@@ -39,13 +39,13 @@ RichCherenkovAngleMonitor::RichCherenkovAngleMonitor( const std::string& name,
 }
 
 // Destructor
-RichCherenkovAngleMonitor::~RichCherenkovAngleMonitor() {};
+CherenkovAngleMonitor::~CherenkovAngleMonitor() {};
 
 //  Initialize
-StatusCode RichCherenkovAngleMonitor::initialize()
+StatusCode CherenkovAngleMonitor::initialize()
 {
   // Sets up various tools and services
-  const StatusCode sc = RichRecTupleAlgBase::initialize();
+  const StatusCode sc = Rich::Rec::TupleAlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
@@ -58,14 +58,14 @@ StatusCode RichCherenkovAngleMonitor::initialize()
 }
 
 // Main execution
-StatusCode RichCherenkovAngleMonitor::execute()
+StatusCode CherenkovAngleMonitor::execute()
 {
 
   // Check event status
   if ( !richStatus()->eventOK() ) return StatusCode::SUCCESS;
 
   // Histogramming
-  const RichHistoID hid;
+  const Rich::HistoID hid;
   //            Radiator          Aerogel  Rich1Gas    Rich2Gas
   const double ckRange[]      = { 0.015,   0.01,    0.005   };
   MAX_CKTHETA_RAD;
@@ -76,17 +76,17 @@ StatusCode RichCherenkovAngleMonitor::execute()
   const double minP = m_trSelector->minPCut() * Gaudi::Units::GeV;
 
   // Iterate over segments
-  for ( RichRecSegments::const_iterator iSeg = richSegments()->begin();
+  for ( LHCb::RichRecSegments::const_iterator iSeg = richSegments()->begin();
         iSeg != richSegments()->end(); ++iSeg )
   {
-    RichRecSegment * segment = *iSeg;
+    LHCb::RichRecSegment * segment = *iSeg;
 
     // apply track selection
     if ( !m_trSelector->trackSelected(segment->richRecTrack()) ) continue;
-    
+
     // segment momentum
     const double pTot = sqrt(segment->trackSegment().bestMomentum().Mag2());
-    
+
     // beta for pion
     const double pionbeta = m_richPartProp->beta( pTot, Rich::Pion );
     if ( pionbeta < m_minBeta ) continue; // skip non-saturated tracks
@@ -99,21 +99,21 @@ StatusCode RichCherenkovAngleMonitor::execute()
 
     // Expected Cherenkov theta angle for true particle type
     // if MC type is unknown, assume pion (maybe type should be job option ???)
-    const double thetaExpTrue = ( mcType == Rich::Unknown ? 
+    const double thetaExpTrue = ( mcType == Rich::Unknown ?
                                   m_ckAngle->avgCherenkovTheta( segment, Rich::Pion ) :
                                   m_ckAngle->avgCherenkovTheta( segment, mcType ) );
 
     // Get photons for this segment
-    const RichRecSegment::Photons & photons = photonCreator()->reconstructPhotons( segment );
+    const LHCb::RichRecSegment::Photons & photons = photonCreator()->reconstructPhotons( segment );
     verbose() << " Found " << photons.size() << " photon candidates" << endreq;
 
     // loop over photons
-    for ( RichRecSegment::Photons::const_iterator iPhot = photons.begin();
+    for ( LHCb::RichRecSegment::Photons::const_iterator iPhot = photons.begin();
           iPhot != photons.end();
           ++iPhot )
     {
-      RichRecPhoton * photon = *iPhot;
-      
+      LHCb::RichRecPhoton * photon = *iPhot;
+
       // Hit point associated to photon
       const Gaudi::XYZPoint & hitPnt = photon->richRecPixel()->globalPosition();
 
@@ -129,33 +129,33 @@ StatusCode RichCherenkovAngleMonitor::execute()
       plot1D( phiRec, hid(rad,"ckPhi"), "Reconstructed Cherenkov phi", 0, 2*M_PI );
       plot1D( delTheta, hid(rad,"ckDiffAll"), "Rec-Exp CK theta all",
               -ckRange[rad],ckRange[rad]);
-      
+
       // theta versus phi plots
       if ( hitPnt.y() < 0 && hitPnt.x() < 0 )
       {
-      plot2D( thetaRec, phiRec, hid(rad,"thetaVphiR1"), "CK phi V theta : y<0 x<0",
-                 minCkTheta[rad], maxCkTheta[rad], 0, 2*M_PI, 100,100 );
+        plot2D( thetaRec, phiRec, hid(rad,"thetaVphiR1"), "CK phi V theta : y<0 x<0",
+                minCkTheta[rad], maxCkTheta[rad], 0, 2*M_PI, 100,100 );
       }
       else if ( hitPnt.y() > 0 && hitPnt.x() < 0 )
       {
-      plot2D( thetaRec, phiRec, hid(rad,"thetaVphiR2"), "CK phi V theta : y>0 x<0",
-              minCkTheta[rad], maxCkTheta[rad], 0, 2*M_PI, 100,100 );
+        plot2D( thetaRec, phiRec, hid(rad,"thetaVphiR2"), "CK phi V theta : y>0 x<0",
+                minCkTheta[rad], maxCkTheta[rad], 0, 2*M_PI, 100,100 );
       }
       else if ( hitPnt.y() < 0 && hitPnt.x() > 0 )
       {
-      plot2D( thetaRec, phiRec, hid(rad,"thetaVphiR3"), "CK phi V theta : y<0 x>0",
-              minCkTheta[rad], maxCkTheta[rad], 0, 2*M_PI, 100,100 );
+        plot2D( thetaRec, phiRec, hid(rad,"thetaVphiR3"), "CK phi V theta : y<0 x>0",
+                minCkTheta[rad], maxCkTheta[rad], 0, 2*M_PI, 100,100 );
       }
       else if ( hitPnt.y() > 0 && hitPnt.x() > 0 )
       {
-      plot2D( thetaRec, phiRec, hid(rad,"thetaVphiR4"), "CK phi V theta : y>0 x>0",
-              minCkTheta[rad], maxCkTheta[rad], 0, 2*M_PI, 100,100 );
+        plot2D( thetaRec, phiRec, hid(rad,"thetaVphiR4"), "CK phi V theta : y>0 x>0",
+                minCkTheta[rad], maxCkTheta[rad], 0, 2*M_PI, 100,100 );
       }
 
       if ( mcType != Rich::Unknown )
       {
         // true CK photon ?
-        const MCParticle * photonParent = m_richRecMCTruth->trueCherenkovPhoton(photon);
+        const LHCb::MCParticle * photonParent = m_richRecMCTruth->trueCherenkovPhoton(photon);
         if ( photonParent )
         {
 
@@ -169,7 +169,7 @@ StatusCode RichCherenkovAngleMonitor::execute()
                   -ckRange[rad],ckRange[rad]);
           profile1D( delTheta, pTot, hid(rad,"ckDiffTrueVP"), "Rec-Exp CK theta Versus Ptot all : true",
                      minP, maxP, 50 );
- 
+
           // theta versus phi plots
           if ( hitPnt.y() < 0 && hitPnt.x() < 0 )
           {
@@ -193,7 +193,7 @@ StatusCode RichCherenkovAngleMonitor::execute()
           }
 
           // Associated MCRichOpticalPhoton
-          const MCRichOpticalPhoton * mcPhot = m_richRecMCTruth->trueOpticalPhoton(photon);
+          const LHCb::MCRichOpticalPhoton * mcPhot = m_richRecMCTruth->trueOpticalPhoton(photon);
           double thetaMC       = -999;
           double phiMC         = -999;
           double delThetaMC    = -999;
@@ -213,7 +213,7 @@ StatusCode RichCherenkovAngleMonitor::execute()
                     -ckRange[rad],ckRange[rad]);
           } // mc photon
 
-          // make a tuple
+            // make a tuple
 
           Tuple tuple = nTuple( hid(rad,"ckResTuple"), "CKTuple" ) ;
 
@@ -224,7 +224,7 @@ StatusCode RichCherenkovAngleMonitor::execute()
           tuple->column( "McCKphi" ,  phiMC );
           tuple->column( "ExpCKtheta", thetaExpTrue );
 
-          tuple->write(); 
+          tuple->write();
 
         } // true photon
 
@@ -238,8 +238,9 @@ StatusCode RichCherenkovAngleMonitor::execute()
 }
 
 //  Finalize
-StatusCode RichCherenkovAngleMonitor::finalize()
+StatusCode CherenkovAngleMonitor::finalize()
 {
   // Execute base class method
-  return RichRecTupleAlgBase::finalize();
+  return Rich::Rec::TupleAlgBase::finalize();
 }
+

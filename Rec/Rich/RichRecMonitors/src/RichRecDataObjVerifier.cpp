@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichRecDataObjVerifier
  *
  *  CVS Log :-
- *  $Id: RichRecDataObjVerifier.cpp,v 1.3 2006-12-01 16:34:07 cattanem Exp $
+ *  $Id: RichRecDataObjVerifier.cpp,v 1.4 2007-02-02 10:07:12 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -18,16 +18,16 @@
 #include "RichRecDataObjVerifier.h"
 
 // namespace
-using namespace LHCb;
+using namespace Rich::Rec;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( RichRecDataObjVerifier );
+DECLARE_ALGORITHM_FACTORY( DataObjVerifier );
 
 // Standard constructor, initializes variables
-RichRecDataObjVerifier::RichRecDataObjVerifier( const std::string& name,
-                                                ISvcLocator* pSvcLocator )
-  : RichRecAlgBase ( name, pSvcLocator ) 
+DataObjVerifier::DataObjVerifier( const std::string& name,
+                                  ISvcLocator* pSvcLocator )
+  : RichRecAlgBase ( name, pSvcLocator )
 {
   declareProperty( "PrintPixels",   m_bdPixels   = false );
   declareProperty( "PrintTracks",   m_bdTracks   = false );
@@ -36,10 +36,10 @@ RichRecDataObjVerifier::RichRecDataObjVerifier( const std::string& name,
 }
 
 // Destructor
-RichRecDataObjVerifier::~RichRecDataObjVerifier() {};
+DataObjVerifier::~DataObjVerifier() {};
 
 //  Initialize
-StatusCode RichRecDataObjVerifier::initialize()
+StatusCode DataObjVerifier::initialize()
 {
   // Sets up various tools and services
   const StatusCode sc = RichRecAlgBase::initialize();
@@ -50,11 +50,12 @@ StatusCode RichRecDataObjVerifier::initialize()
   return sc;
 }
 
-
 // Main execution
-StatusCode RichRecDataObjVerifier::execute()
+StatusCode DataObjVerifier::execute()
 {
   debug() << "Execute" << endreq;
+  
+  using namespace LHCb;
 
   // If not rerunning at DEBUG or VERBOSE level, return
   if ( !msgLevel(MSG::DEBUG) ) return StatusCode::SUCCESS;
@@ -192,8 +193,9 @@ StatusCode RichRecDataObjVerifier::execute()
 };
 
 //  Finalize
-StatusCode RichRecDataObjVerifier::finalize()
+StatusCode DataObjVerifier::finalize()
 {
   // Execute base class method
   return RichRecAlgBase::finalize();
 }
+

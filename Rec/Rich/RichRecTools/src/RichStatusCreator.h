@@ -2,10 +2,10 @@
 //-----------------------------------------------------------------------------
 /** @file RichStatusCreator.h
  *
- *  Header file for tool : RichStatusCreator
+ *  Header file for tool : Rich::Rec::StatusCreator
  *
  *  CVS Log :-
- *  $Id: RichStatusCreator.h,v 1.9 2006-12-01 17:05:09 cattanem Exp $
+ *  $Id: RichStatusCreator.h,v 1.10 2007-02-02 10:10:41 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -18,6 +18,7 @@
 // from Gaudi
 #include "GaudiKernel/IIncidentListener.h"
 #include "GaudiKernel/IIncidentSvc.h"
+#include "GaudiKernel/ToolFactory.h"
 
 // base class
 #include "RichRecBase/RichRecToolBase.h"
@@ -29,63 +30,88 @@
 #include "RichRecBase/IRichStatusCreator.h"
 
 //-----------------------------------------------------------------------------
-/** @class RichStatusCreator RichStatusCreator.h
+/** @namespace Rich
  *
- *  Tool for the creation and book-keeping of the RichRecStatus object.
+ *  General namespace for RICH software
  *
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   15/03/2002
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
  */
 //-----------------------------------------------------------------------------
-
-class RichStatusCreator : public RichRecToolBase,
-                          virtual public IRichStatusCreator,
-                          virtual public IIncidentListener
+namespace Rich
 {
 
-public: // Methods for Gaudi Framework
+  /** @namespace Rec
+   *
+   *  General namespace for RICH reconstruction software
+   *
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   08/07/2004
+   */
+  namespace Rec
+  {
 
-  /// Standard constructor
-  RichStatusCreator( const std::string& type,
+    //-----------------------------------------------------------------------------
+    /** @class StatusCreator RichStatusCreator.h
+     *
+     *  Tool for the creation and book-keeping of the RichRecStatus object.
+     *
+     *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+     *  @date   15/03/2002
+     */
+    //-----------------------------------------------------------------------------
+
+    class StatusCreator : public Rich::Rec::ToolBase,
+                          virtual public IStatusCreator,
+                          virtual public IIncidentListener
+    {
+
+    public: // Methods for Gaudi Framework
+
+      /// Standard constructor
+      StatusCreator( const std::string& type,
                      const std::string& name,
                      const IInterface* parent );
 
-  /// Destructor
-  virtual ~RichStatusCreator(){}
+      /// Destructor
+      virtual ~StatusCreator(){}
 
-  // Initialize method
-  StatusCode initialize();
+      // Initialize method
+      StatusCode initialize();
 
-  // Finalize method
-  StatusCode finalize();
+      // Finalize method
+      StatusCode finalize();
 
-public: // methods (and doxygen comments) inherited from public interface
+    public: // methods (and doxygen comments) inherited from public interface
 
-  // Implement the handle method for the Incident service.
-  // This is used to inform the tool of software incidents.
-  void handle( const Incident& incident );
+      // Implement the handle method for the Incident service.
+      // This is used to inform the tool of software incidents.
+      void handle( const Incident& incident );
 
-  // Returns a pointer to the RichRecStatus
-  LHCb::RichRecStatus * richStatus() const;
+      // Returns a pointer to the RichRecStatus
+      LHCb::RichRecStatus * richStatus() const;
 
-private: // methods
+    private: // methods
 
-  /// Initialise for a new event
-  void InitNewEvent();
+      /// Initialise for a new event
+      void InitNewEvent();
 
-private: // data
+    private: // data
 
-  /// Pointer to RichRecStatus
-  mutable LHCb::RichRecStatus * m_status;
+      /// Pointer to RichRecStatus
+      mutable LHCb::RichRecStatus * m_status;
 
-  /// Location of RichRecStatus in TES
-  std::string m_richStatusLocation;
+      /// Location of RichRecStatus in TES
+      std::string m_richStatusLocation;
 
-};
+    };
 
-inline void RichStatusCreator::InitNewEvent()
-{
-  m_status = 0;
+    inline void StatusCreator::InitNewEvent()
+    {
+      m_status = NULL;
+    }
+
+  }
 }
 
 #endif // RICHRECTOOLS_RICHSTATUSCREATOR_H

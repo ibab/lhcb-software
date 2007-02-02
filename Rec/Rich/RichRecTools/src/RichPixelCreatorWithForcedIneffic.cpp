@@ -2,10 +2,10 @@
 //---------------------------------------------------------------------------------
 /** @file RichPixelCreatorWithForcedIneffic.cpp
  *
- *  Implementation file for tool : RichPixelCreatorWithForcedIneffic
+ *  Implementation file for tool : Rich::Rec::PixelCreatorWithForcedIneffic
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorWithForcedIneffic.cpp,v 1.2 2006-11-30 15:38:31 jonrob Exp $
+ *  $Id: RichPixelCreatorWithForcedIneffic.cpp,v 1.3 2007-02-02 10:10:41 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   23/11/2006
@@ -15,17 +15,20 @@
 // local
 #include "RichPixelCreatorWithForcedIneffic.h"
 
+// All code is in general Rich reconstruction namespace
+using namespace Rich::Rec;
+
 //---------------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( RichPixelCreatorWithForcedIneffic );
+DECLARE_TOOL_FACTORY( PixelCreatorWithForcedIneffic );
 
 // Standard constructor
-RichPixelCreatorWithForcedIneffic::
-RichPixelCreatorWithForcedIneffic( const std::string& type,
-                                   const std::string& name,
-                                   const IInterface* parent )
-  : RichPixelCreatorFromRawBuffer ( type, name, parent )
+PixelCreatorWithForcedIneffic::
+PixelCreatorWithForcedIneffic( const std::string& type,
+                               const std::string& name,
+                               const IInterface* parent )
+  : PixelCreatorFromRawBuffer ( type, name, parent )
 {
   declareProperty( "RejectFractionRICH1Top",   m_rejFrac[Rich::Rich1][Rich::top]    = 0.1 );
   declareProperty( "RejectFractionRICH1Bot",   m_rejFrac[Rich::Rich1][Rich::bottom] = 0.1 );
@@ -33,10 +36,10 @@ RichPixelCreatorWithForcedIneffic( const std::string& type,
   declareProperty( "RejectFractionRICH2Right", m_rejFrac[Rich::Rich2][Rich::right]  = 0.1 );
 }
 
-StatusCode RichPixelCreatorWithForcedIneffic::initialize()
+StatusCode PixelCreatorWithForcedIneffic::initialize()
 {
   // base class initilize
-  const StatusCode sc = RichPixelCreatorFromRawBuffer::initialize();
+  const StatusCode sc = PixelCreatorFromRawBuffer::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // random number generator
@@ -54,18 +57,18 @@ StatusCode RichPixelCreatorWithForcedIneffic::initialize()
   return sc;
 }
 
-StatusCode RichPixelCreatorWithForcedIneffic::finalize()
+StatusCode PixelCreatorWithForcedIneffic::finalize()
 {
   // finalize random number generator
   m_rndm.finalize();
   // Execute base class method
-  return RichPixelCreatorFromRawBuffer::finalize();
+  return PixelCreatorFromRawBuffer::finalize();
 }
 
 LHCb::RichRecPixel *
-RichPixelCreatorWithForcedIneffic::buildPixel( const LHCb::RichSmartID id ) const
+PixelCreatorWithForcedIneffic::buildPixel( const LHCb::RichSmartID id ) const
 {
   const double rF = m_rejFrac[id.rich()][id.panel()];
   return ( 0 < rF && m_rndm() < rF ?
-           NULL : RichPixelCreatorFromRawBuffer::buildPixel(id) );
+           NULL : PixelCreatorFromRawBuffer::buildPixel(id) );
 }

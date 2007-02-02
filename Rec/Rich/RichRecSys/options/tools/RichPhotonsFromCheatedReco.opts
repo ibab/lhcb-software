@@ -3,10 +3,10 @@
 
 // RichRecPhoton predictor
 // Uses MC information to check if a given pixel/segment combination is a true Cherenkov hit
-ToolSvc.Offline.RichToolRegistry.Tools += { "RichPhotonPredictorUsingMCRichOpticalPhotons/RichPhotonPredictor" };
+ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::MC::PhotonPredictorUsingMCRichOpticalPhotons/RichPhotonPredictor" };
 
 // RichRecPhoton Creator
-ToolSvc.Offline.RichToolRegistry.Tools += { "RichPhotonCreator/RichPhotonCreator" };
+ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::PhotonCreator/RichPhotonCreator" };
 
 //                                                                Aero     C4F10    CF4
 // absolute max and min allowed Cherenkov theta angles
@@ -24,4 +24,4 @@ ToolSvc.Offline.RichPhotonCreator.CherenkovThetaTolerence    = {  0.025,     0.0
 // geometrical photon reconstruction
 // use Quartic solving tool
 ToolSvc.Offline.RichPhotonCreator.PhotonRecoTool  = "PhotonParams";
-ToolSvc.Offline.RichToolRegistry.Tools += { "RichPhotonRecoUsingQuarticSoln/PhotonParams" };
+ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::PhotonRecoUsingQuarticSoln/PhotonParams" };

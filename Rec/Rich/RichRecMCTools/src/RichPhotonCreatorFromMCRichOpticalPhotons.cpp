@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : RichPhotonCreatorFromMCRichOpticalPhotons
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreatorFromMCRichOpticalPhotons.cpp,v 1.13 2006-12-01 16:18:23 cattanem Exp $
+ *  $Id: RichPhotonCreatorFromMCRichOpticalPhotons.cpp,v 1.14 2007-02-02 10:06:27 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -18,25 +18,25 @@
 // local
 #include "RichPhotonCreatorFromMCRichOpticalPhotons.h"
 
-// namespaces
-using namespace LHCb;
+// All code is in general Rich reconstruction namespace
+using namespace Rich::Rec::MC;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( RichPhotonCreatorFromMCRichOpticalPhotons );
+DECLARE_TOOL_FACTORY( PhotonCreatorFromMCRichOpticalPhotons );
 
 // Standard constructor
-RichPhotonCreatorFromMCRichOpticalPhotons::
-RichPhotonCreatorFromMCRichOpticalPhotons( const std::string& type,
-                                           const std::string& name,
-                                           const IInterface* parent )
-  : RichPhotonCreatorBase ( type, name, parent ),
+PhotonCreatorFromMCRichOpticalPhotons::
+PhotonCreatorFromMCRichOpticalPhotons( const std::string& type,
+                                       const std::string& name,
+                                       const IInterface* parent )
+  : PhotonCreatorBase ( type, name, parent ),
     m_mcRecTool           ( NULL ) {  }
 
-StatusCode RichPhotonCreatorFromMCRichOpticalPhotons::initialize()
+StatusCode PhotonCreatorFromMCRichOpticalPhotons::initialize()
 {
   // Sets up various tools and services
-  const StatusCode sc = RichPhotonCreatorBase::initialize();
+  const StatusCode sc = PhotonCreatorBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
@@ -45,22 +45,22 @@ StatusCode RichPhotonCreatorFromMCRichOpticalPhotons::initialize()
   return sc;
 }
 
-StatusCode RichPhotonCreatorFromMCRichOpticalPhotons::finalize()
+StatusCode PhotonCreatorFromMCRichOpticalPhotons::finalize()
 {
   // Execute base class method
-  return RichPhotonCreatorBase::finalize();
+  return PhotonCreatorBase::finalize();
 }
 
-RichRecPhoton *
-RichPhotonCreatorFromMCRichOpticalPhotons::buildPhoton( RichRecSegment * segment,
-                                                        RichRecPixel * pixel,
-                                                        const RichRecPhotonKey key ) const
+LHCb::RichRecPhoton *
+PhotonCreatorFromMCRichOpticalPhotons::buildPhoton( LHCb::RichRecSegment * segment,
+                                                    LHCb::RichRecPixel * pixel,
+                                                    const RichRecPhotonKey key ) const
 {
 
-  RichRecPhoton * newPhoton = NULL;
+  LHCb::RichRecPhoton * newPhoton = NULL;
 
   // See if there is a true cherenkov photon for this segment/pixel pair
-  const MCRichOpticalPhoton * mcPhoton = m_mcRecTool->trueOpticalPhoton(segment,pixel);
+  const LHCb::MCRichOpticalPhoton * mcPhoton = m_mcRecTool->trueOpticalPhoton(segment,pixel);
   if ( mcPhoton )
   {
 
@@ -71,21 +71,21 @@ RichPhotonCreatorFromMCRichOpticalPhotons::buildPhoton( RichRecSegment * segment
     {
 
       // make a photon object from MC info
-      RichGeomPhoton * geomPhot =
-        new RichGeomPhoton( mcPhoton->cherenkovTheta(),
-                            mcPhoton->cherenkovPhi(),
-                            mcPhoton->emissionPoint(),
-                            mcPhoton->pdIncidencePoint(),
-                            mcPhoton->sphericalMirrorReflectPoint(),
-                            mcPhoton->flatMirrorReflectPoint(),
-                            pixel->smartID(),
-                            1 );
+      LHCb::RichGeomPhoton * geomPhot =
+        new LHCb::RichGeomPhoton( mcPhoton->cherenkovTheta(),
+                                  mcPhoton->cherenkovPhi(),
+                                  mcPhoton->emissionPoint(),
+                                  mcPhoton->pdIncidencePoint(),
+                                  mcPhoton->sphericalMirrorReflectPoint(),
+                                  mcPhoton->flatMirrorReflectPoint(),
+                                  pixel->smartID(),
+                                  1 );
 
       // make new RichRecPhoton from the MC information
-      newPhoton = new RichRecPhoton( geomPhot,
-                                     segment,
-                                     segment->richRecTrack(),
-                                     pixel );
+      newPhoton = new LHCb::RichRecPhoton( geomPhot,
+                                           segment,
+                                           segment->richRecTrack(),
+                                           pixel );
 
       // check photon signal probability
       if ( checkPhotonProb( newPhoton ) )

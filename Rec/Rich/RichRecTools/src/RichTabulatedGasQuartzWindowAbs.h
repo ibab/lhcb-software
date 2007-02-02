@@ -2,10 +2,10 @@
 //-----------------------------------------------------------------------------
 /** @file RichTabulatedGasQuartzWindowAbs.h
  *
- *  Header file for tool : RichTabulatedGasQuartzWindowAbs
+ *  Header file for tool : Rich::Rec::TabulatedGasQuartzWindowAbs
  *
  *  CVS Log :-
- *  $Id: RichTabulatedGasQuartzWindowAbs.h,v 1.8 2006-08-31 13:38:25 cattanem Exp $
+ *  $Id: RichTabulatedGasQuartzWindowAbs.h,v 1.9 2007-02-02 10:10:42 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -17,6 +17,10 @@
 
 // base class
 #include "RichRecBase/RichRecToolBase.h"
+
+// Gaudi
+#include "GaudiKernel/ToolFactory.h"
+#include "GaudiKernel/SystemOfUnits.h"
 
 // Detector Description
 #include "DetDesc/DetectorElement.h"
@@ -32,50 +36,75 @@
 #include "RichRecBase/IRichGasQuartzWindowAbs.h"
 
 //-----------------------------------------------------------------------------
-/** @class RichTabulatedGasQuartzWindowAbs RichTabulatedGasQuartzWindowAbs.h
+/** @namespace Rich
  *
- *  Tool to calculate transmission properties for the gas quartz window. Uses
- *  the tabulated information stored in the XML database.
+ *  General namespace for RICH software
  *
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   15/03/2002
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
  */
 //-----------------------------------------------------------------------------
-
-class RichTabulatedGasQuartzWindowAbs : public RichRecToolBase,
-                                        virtual public IRichGasQuartzWindowAbs
+namespace Rich
 {
 
-public: // Methods for Gaudi Framework
+  /** @namespace Rec
+   *
+   *  General namespace for RICH reconstruction software
+   *
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   08/07/2004
+   */
+  namespace Rec
+  {
 
-  /// Standard constructor
-  RichTabulatedGasQuartzWindowAbs( const std::string& type,
+    //-----------------------------------------------------------------------------
+    /** @class TabulatedGasQuartzWindowAbs RichTabulatedGasQuartzWindowAbs.h
+     *
+     *  Tool to calculate transmission properties for the gas quartz window. Uses
+     *  the tabulated information stored in the XML database.
+     *
+     *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+     *  @date   15/03/2002
+     */
+    //-----------------------------------------------------------------------------
+
+    class TabulatedGasQuartzWindowAbs : public Rich::Rec::ToolBase,
+                                        virtual public IGasQuartzWindowAbs
+    {
+
+    public: // Methods for Gaudi Framework
+
+      /// Standard constructor
+      TabulatedGasQuartzWindowAbs( const std::string& type,
                                    const std::string& name,
                                    const IInterface* parent );
 
-  /// Destructor
-  virtual ~RichTabulatedGasQuartzWindowAbs() {};
+      /// Destructor
+      virtual ~TabulatedGasQuartzWindowAbs() {};
 
-  // Initialize method
-  StatusCode initialize();
+      // Initialize method
+      StatusCode initialize();
 
-  // Finalize method
-  StatusCode finalize();
+      // Finalize method
+      StatusCode finalize();
 
-public: // methods (and doxygen comments) inherited from public interface
+    public: // methods (and doxygen comments) inherited from public interface
 
-  // Rayleigh scattering probability for given pathlength (segment) and photon energy
-  double photonTransProb( const LHCb::RichRecSegment * segment,
-                          const double energy ) const;
+      // Rayleigh scattering probability for given pathlength (segment) and photon energy
+      double photonTransProb( const LHCb::RichRecSegment * segment,
+                              const double energy ) const;
 
-private:  // Private data
+    private:  // Private data
 
-  /// Pointers to RICHes
-  std::vector<const DeRich*> m_riches;
+      /// Pointers to RICHes
+      std::vector<const DeRich*> m_riches;
 
-  /// Thickness of windows
-  double m_qWinZSize[Rich::NRiches];
+      /// Thickness of windows
+      double m_qWinZSize[Rich::NRiches];
 
-};
+    };
+
+  }
+}
 
 #endif // RICHRECTOOLS_RICHGASQUARTZWINDOWABS_H

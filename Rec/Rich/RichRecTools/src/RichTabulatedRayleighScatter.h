@@ -2,10 +2,10 @@
 //-----------------------------------------------------------------------------
 /** @file RichTabulatedRayleighScatter.h
  *
- *  Header file for tool : RichTabulatedRayleighScatter
+ *  Header file for tool : Rich::Rec::TabulatedRayleighScatter
  *
  *  CVS Log :-
- *  $Id: RichTabulatedRayleighScatter.h,v 1.11 2006-08-31 13:38:25 cattanem Exp $
+ *  $Id: RichTabulatedRayleighScatter.h,v 1.12 2007-02-02 10:10:42 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -31,49 +31,74 @@
 #include "RichRecBase/IRichRayleighScatter.h"
 
 //-----------------------------------------------------------------------------
-/** @class RichTabulatedRayleighScatter RichTabulatedRayleighScatter.h
+/** @namespace Rich
  *
- *  Tool to calculate quantities related to Rayleigh scattering using
- *  tabulated quantities in the XML database.
+ *  General namespace for RICH software
  *
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   15/03/2002
- *
- *  @todo Figure out how to properly deal with multiple aerogel volumes
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
  */
 //-----------------------------------------------------------------------------
-
-class RichTabulatedRayleighScatter : public RichRecToolBase,
-                                     virtual public IRichRayleighScatter
+namespace Rich
 {
 
-public: // Methods for Gaudi Framework
+  /** @namespace Rec
+   *
+   *  General namespace for RICH reconstruction software
+   *
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   08/07/2004
+   */
+  namespace Rec
+  {
 
-  /// Standard constructor
-  RichTabulatedRayleighScatter( const std::string& type,
+    //-----------------------------------------------------------------------------
+    /** @class TabulatedRayleighScatter RichTabulatedRayleighScatter.h
+     *
+     *  Tool to calculate quantities related to Rayleigh scattering using
+     *  tabulated quantities in the XML database.
+     *
+     *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+     *  @date   15/03/2002
+     *
+     *  @todo Figure out how to properly deal with multiple aerogel volumes
+     */
+    //-----------------------------------------------------------------------------
+
+    class TabulatedRayleighScatter : public Rich::Rec::ToolBase,
+                                     virtual public IRayleighScatter
+    {
+
+    public: // Methods for Gaudi Framework
+
+      /// Standard constructor
+      TabulatedRayleighScatter( const std::string& type,
                                 const std::string& name,
                                 const IInterface* parent );
 
-  /// Destructor
-  virtual ~RichTabulatedRayleighScatter() {};
+      /// Destructor
+      virtual ~TabulatedRayleighScatter() {};
 
-  // Initialize method
-  StatusCode initialize();
+      // Initialize method
+      StatusCode initialize();
 
-  // Finalize method
-  StatusCode finalize();
+      // Finalize method
+      StatusCode finalize();
 
-public: // methods (and doxygen comments) inherited from public interface
+    public: // methods (and doxygen comments) inherited from public interface
 
-  // Rayleigh scattering probability for given pathlength (segment) and photon energy
-  double photonScatteredProb( const LHCb::RichRecSegment * segment,
-                              const double energy ) const;
+      // Rayleigh scattering probability for given pathlength (segment) and photon energy
+      double photonScatteredProb( const LHCb::RichRecSegment * segment,
+                                  const double energy ) const;
 
-private:  // Private data
+    private:  // Private data
 
-  /// Pointer to aerogel detector element
-  const DeRichAerogelRadiator * m_aero;
+      /// Pointer to aerogel detector element
+      const DeRichAerogelRadiator * m_aero;
 
-};
+    };
+
+  }
+}
 
 #endif // RICHRECTOOLS_RICHTABULATEDRAYLEIGHSCATTER_H

@@ -2,10 +2,10 @@
 //-----------------------------------------------------------------------------
 /** @file RichCherenkovAngle.cpp
  *
- *  Implementation file for tool : RichCherenkovAngle
+ *  Implementation file for tool : Rich::Rec::CherenkovAngle
  *
  *  CVS Log :-
- *  $Id: RichCherenkovAngle.cpp,v 1.21 2006-08-31 13:38:24 cattanem Exp $
+ *  $Id: RichCherenkovAngle.cpp,v 1.22 2007-02-02 10:10:40 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -15,33 +15,29 @@
 // local
 #include "RichCherenkovAngle.h"
 
-// Gaudi
-#include "GaudiKernel/ToolFactory.h"
-#include "GaudiKernel/PhysicalConstants.h"
-
-// namespaces
-using namespace LHCb;
+// All code is in general Rich reconstruction namespace
+using namespace Rich::Rec;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( RichCherenkovAngle );
+DECLARE_TOOL_FACTORY( CherenkovAngle );
 
 // Standard constructor
-RichCherenkovAngle::RichCherenkovAngle ( const std::string& type,
-                                         const std::string& name,
-                                         const IInterface* parent )
+CherenkovAngle::CherenkovAngle ( const std::string& type,
+                                 const std::string& name,
+                                 const IInterface* parent )
   : RichRecToolBase ( type, name, parent ),
-    m_signal        ( 0 ),
-    m_richPartProp  ( 0 ),
-    m_refIndex      ( 0 ),
-    m_smartIDTool   ( 0 ),
-    m_rayTrace      ( 0 )
+    m_signal        ( NULL ),
+    m_richPartProp  ( NULL ),
+    m_refIndex      ( NULL ),
+    m_smartIDTool   ( NULL ),
+    m_rayTrace      ( NULL )
 {
   // interface
-  declareInterface<IRichCherenkovAngle>(this);
+  declareInterface<ICherenkovAngle>(this);
 }
 
-StatusCode RichCherenkovAngle::initialize()
+StatusCode CherenkovAngle::initialize()
 {
 
   // Sets up various tools and services
@@ -72,15 +68,15 @@ StatusCode RichCherenkovAngle::initialize()
   return sc;
 }
 
-StatusCode RichCherenkovAngle::finalize()
+StatusCode CherenkovAngle::finalize()
 {
   // Execute base class method
   return RichRecToolBase::finalize();
 }
 
 double
-RichCherenkovAngle::avgCherenkovTheta( RichRecSegment * segment,
-                                       const Rich::ParticleIDType id ) const
+CherenkovAngle::avgCherenkovTheta( LHCb::RichRecSegment * segment,
+                                   const Rich::ParticleIDType id ) const
 {
 
   if ( !segment->averageCKTheta().dataIsValid(id) )
@@ -92,7 +88,7 @@ RichCherenkovAngle::avgCherenkovTheta( RichRecSegment * segment,
 
     if ( msgLevel(MSG::DEBUG) )
     {
-      debug() << "RichRecSegment " << segment->key() << " " << id 
+      debug() << "RichRecSegment " << segment->key() << " " << id
               << " calculating avgCK theta : unscat = " << unscat << endreq;
     }
 
@@ -106,7 +102,7 @@ RichCherenkovAngle::avgCherenkovTheta( RichRecSegment * segment,
       const double beta = m_richPartProp->beta( sqrt(segment->trackSegment().bestMomentum().mag2()), id);
 
       // loop over energy bins
-      RichPhotonSpectra<RichRecSegment::FloatType> & sigSpectra = segment->signalPhotonSpectra();
+      Rich::PhotonSpectra<LHCb::RichRecSegment::FloatType> & sigSpectra = segment->signalPhotonSpectra();
       for ( unsigned int iEnBin = 0; iEnBin < sigSpectra.energyBins(); ++iEnBin )
       {
         const double temp = beta *
@@ -125,19 +121,21 @@ RichCherenkovAngle::avgCherenkovTheta( RichRecSegment * segment,
   return segment->averageCKTheta( id );
 }
 
-double RichCherenkovAngle::avgCherenkovTheta( RichRecSegment * segment ) const
+double
+CherenkovAngle::avgCherenkovTheta( LHCb::RichRecSegment * segment ) const
 {
   return avgCherenkovTheta( segment, segment->richRecTrack()->currentHypothesis() );
 }
 
-double RichCherenkovAngle::nominalSaturatedCherenkovTheta( const Rich::RadiatorType rad ) const
+double
+CherenkovAngle::nominalSaturatedCherenkovTheta( const Rich::RadiatorType rad ) const
 {
   return m_nomCK[rad];
 }
 
-double RichCherenkovAngle::avCKRingRadiusLocal( RichRecSegment * segment,
-                                                const Rich::ParticleIDType id,
-                                                const unsigned int nSamples ) const
+double CherenkovAngle::avCKRingRadiusLocal( LHCb::RichRecSegment * segment,
+                                            const Rich::ParticleIDType id,
+                                            const unsigned int nSamples ) const
 {
   if ( !segment->averageCKRadiusLocal().dataIsValid(id) )
   {
@@ -146,8 +144,8 @@ double RichCherenkovAngle::avCKRingRadiusLocal( RichRecSegment * segment,
   return segment->averageCKRadiusLocal( id );
 }
 
-void RichCherenkovAngle::computeRadii( RichRecSegment * segment,
-                                       const unsigned int nSamples ) const
+void CherenkovAngle::computeRadii( LHCb::RichRecSegment * segment,
+                                   const unsigned int nSamples ) const
 {
 
   // radius for saturated rings
@@ -169,9 +167,9 @@ void RichCherenkovAngle::computeRadii( RichRecSegment * segment,
 
 }
 
-double RichCherenkovAngle::avCKRingRadiusLocal( RichRecSegment * segment,
-                                                const double ckTheta,
-                                                const unsigned int nSamples ) const
+double CherenkovAngle::avCKRingRadiusLocal( LHCb::RichRecSegment * segment,
+                                            const double ckTheta,
+                                            const unsigned int nSamples ) const
 {
 
   // Calculate increment in phi
@@ -197,11 +195,11 @@ double RichCherenkovAngle::avCKRingRadiusLocal( RichRecSegment * segment,
     const Gaudi::XYZVector photDir = segment->trackSegment().vectorAtThetaPhi( ckTheta, ckPhi );
 
     Gaudi::XYZPoint hitPointGlobal;
-    const RichTraceMode mode( RichTraceMode::IgnoreHPDAcceptance );
+    const LHCb::RichTraceMode mode( LHCb::RichTraceMode::IgnoreHPDAcceptance );
     if ( m_rayTrace->traceToDetector( segment->trackSegment().rich(),
                                       emissionPt,
                                       photDir,
-                                      hitPointGlobal, 
+                                      hitPointGlobal,
                                       mode ) )
     {
 
@@ -225,8 +223,8 @@ double RichCherenkovAngle::avCKRingRadiusLocal( RichRecSegment * segment,
   return ( nUsed > 0 ? rSum / static_cast<double>(nUsed) : 0 );
 }
 
-double RichCherenkovAngle::satCKRingRadiusLocal( RichRecSegment * segment,
-                                                 const unsigned int nSamples ) const
+double CherenkovAngle::satCKRingRadiusLocal( LHCb::RichRecSegment * segment,
+                                             const unsigned int nSamples ) const
 {
   if ( segment->avSaturatedRadiusLocal() < 0 )
   {

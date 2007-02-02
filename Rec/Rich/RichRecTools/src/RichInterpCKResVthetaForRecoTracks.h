@@ -2,10 +2,10 @@
 //---------------------------------------------------------------------------------------
 /** @file RichInterpCKResVthetaForRecoTracks.h
  *
- *  Header file for tool : RichInterpCKResVthetaForRecoTracks
+ *  Header file for tool : Rich::Rec::InterpCKResVthetaForRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichInterpCKResVthetaForRecoTracks.h,v 1.5 2006-08-31 13:38:24 cattanem Exp $
+ *  $Id: RichInterpCKResVthetaForRecoTracks.h,v 1.6 2007-02-02 10:10:41 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -17,6 +17,10 @@
 
 // base class
 #include "RichRecBase/RichRecToolBase.h"
+
+// from Gaudi
+#include "GaudiKernel/ToolFactory.h"
+#include "GaudiKernel/MsgStream.h"
 
 // Event model
 #include "Event/RichRecSegment.h"
@@ -31,66 +35,93 @@
 #include "RichRecBase/IRichCherenkovResolution.h"
 #include "RichRecBase/IRichCherenkovAngle.h"
 
-//---------------------------------------------------------------------------------------
-/** @class RichInterpCKResVthetaForRecoTracks RichInterpCKResVthetaForRecoTracks.h
+//-----------------------------------------------------------------------------
+/** @namespace Rich
  *
- *  Tool to calculate the Cherenkov angle resolution. This implementation is
- *  for reconstructed Tracks and uses an interpolation of the error against the
- *  cherenkov angle theta
+ *  General namespace for RICH software
  *
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   15/03/2002
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
  */
-//---------------------------------------------------------------------------------------
-
-class RichInterpCKResVthetaForRecoTracks : public RichRecToolBase,
-                                           virtual public IRichCherenkovResolution
+//-----------------------------------------------------------------------------
+namespace Rich
 {
 
-public: // Methods for Gaudi Framework
+  //-----------------------------------------------------------------------------
+  /** @namespace Rec
+   *
+   *  General namespace for RICH reconstruction software
+   *
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   08/07/2004
+   */
+  //-----------------------------------------------------------------------------
+  namespace Rec
+  {
 
-  /// Standard constructor
-  RichInterpCKResVthetaForRecoTracks( const std::string& type,
+    //---------------------------------------------------------------------------------------
+    /** @class InterpCKResVthetaForRecoTracks RichInterpCKResVthetaForRecoTracks.h
+     *
+     *  Tool to calculate the Cherenkov angle resolution. This implementation is
+     *  for reconstructed Tracks and uses an interpolation of the error against the
+     *  cherenkov angle theta
+     *
+     *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+     *  @date   15/03/2002
+     */
+    //---------------------------------------------------------------------------------------
+
+    class InterpCKResVthetaForRecoTracks : public Rich::Rec::ToolBase,
+                                           virtual public ICherenkovResolution
+    {
+
+    public: // Methods for Gaudi Framework
+
+      /// Standard constructor
+      InterpCKResVthetaForRecoTracks( const std::string& type,
                                       const std::string& name,
                                       const IInterface* parent );
 
-  /// Destructor
-  virtual ~RichInterpCKResVthetaForRecoTracks() {};
+      /// Destructor
+      virtual ~InterpCKResVthetaForRecoTracks() {};
 
-  // Initialize method
-  StatusCode initialize();
+      // Initialize method
+      StatusCode initialize();
 
-  // Finalize method
-  StatusCode finalize();
+      // Finalize method
+      StatusCode finalize();
 
-public: // methods (and doxygen comments) inherited from public interface
+    public: // methods (and doxygen comments) inherited from public interface
 
-  // Photon resolution
-  double ckThetaResolution( LHCb::RichRecSegment * segment,
-                            const Rich::ParticleIDType id = Rich::Pion ) const;
+      // Photon resolution
+      double ckThetaResolution( LHCb::RichRecSegment * segment,
+                                const Rich::ParticleIDType id = Rich::Pion ) const;
 
-private: //methods
-  
-  /// Create and return on demand the required interpolator
-  const Rich1DTabFunc * getInterp( const Rich::RadiatorType rad,
-                                   const Rich::Track::Type track ) const;
+    private: //methods
 
-private:  // Private data
+      /// Create and return on demand the required interpolator
+      const Rich1DTabFunc * getInterp( const Rich::RadiatorType rad,
+                                       const Rich::Rec::Track::Type track ) const;
 
-  /// Pointer to RichCherenkovAngle interface
-  const IRichCherenkovAngle * m_ckAngle;
+    private:  // Private data
 
-  /// type for map of interpolators
-  typedef std::pair<const Rich::RadiatorType, const Rich::Track::Type> InterKey;
-  typedef Rich::Map< InterKey, const Rich1DTabFunc * > Interps;
-  typedef Rich::Map< InterKey, std::vector<std::pair<double,double> > > InterJoData;
+      /// Pointer to RichCherenkovAngle interface
+      const ICherenkovAngle * m_ckAngle;
 
-  /// Interpolators
-  mutable Interps m_ckRes;
+      /// type for map of interpolators
+      typedef std::pair<const Rich::RadiatorType, const Rich::Rec::Track::Type> InterKey;
+      typedef Rich::Map< InterKey, const Rich1DTabFunc * > Interps;
+      typedef Rich::Map< InterKey, std::vector<std::pair<double,double> > > InterJoData;
 
-  /// Job opts data
-  mutable InterJoData m_joData;
+      /// Interpolators
+      mutable Interps m_ckRes;
 
-};
+      /// Job opts data
+      mutable InterJoData m_joData;
+
+    };
+
+  }
+}
 
 #endif // RICHRECTOOLS_RICHINTERPCKRESVTHETAFORRECOTRACKS_H

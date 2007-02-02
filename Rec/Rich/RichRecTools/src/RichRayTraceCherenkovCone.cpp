@@ -2,10 +2,10 @@
 //-----------------------------------------------------------------------------
 /** @file RichRayTraceCherenkovCone.cpp
  *
- *  Implementation file for tool : RichRayTraceCherenkovCone
+ *  Implementation file for tool : Rich::Rec::RayTraceCherenkovCone
  *
  *  CVS Log :-
- *  $Id: RichRayTraceCherenkovCone.cpp,v 1.16 2006-08-31 13:38:25 cattanem Exp $
+ *  $Id: RichRayTraceCherenkovCone.cpp,v 1.17 2007-02-02 10:10:41 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -19,27 +19,27 @@
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/PhysicalConstants.h"
 
-// namespaces
-using namespace LHCb;
+// All code is in general Rich reconstruction namespace
+using namespace Rich::Rec;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( RichRayTraceCherenkovCone );
+DECLARE_TOOL_FACTORY( RayTraceCherenkovCone );
 
 // Standard constructor
-RichRayTraceCherenkovCone::RichRayTraceCherenkovCone( const std::string& type,
-                                                      const std::string& name,
-                                                      const IInterface* parent )
+RayTraceCherenkovCone::RayTraceCherenkovCone( const std::string& type,
+                                              const std::string& name,
+                                              const IInterface* parent )
   : RichRecToolBase ( type, name, parent ),
-    m_rayTrace      ( 0 ),
-    m_ckAngle       ( 0 ),
-    m_smartIDTool   ( 0 )
+    m_rayTrace      ( NULL ),
+    m_ckAngle       ( NULL ),
+    m_smartIDTool   ( NULL )
 {
   // Define interface for this tool
-  declareInterface<IRichRayTraceCherenkovCone>(this);
+  declareInterface<IRayTraceCherenkovCone>(this);
 }
 
-StatusCode RichRayTraceCherenkovCone::initialize()
+StatusCode RayTraceCherenkovCone::initialize()
 {
   // Sets up various tools and services
   const StatusCode sc = RichRecToolBase::initialize();
@@ -53,18 +53,12 @@ StatusCode RichRayTraceCherenkovCone::initialize()
   return sc;
 }
 
-StatusCode RichRayTraceCherenkovCone::finalize()
-{
-  // Execute base class method
-  return RichRecToolBase::finalize();
-}
-
 StatusCode
-RichRayTraceCherenkovCone::rayTrace ( RichRecSegment * segment,
-                                      const Rich::ParticleIDType id,
-                                      std::vector<Gaudi::XYZPoint> & points,
-                                      const unsigned int nPoints,
-                                      const RichTraceMode mode ) const
+RayTraceCherenkovCone::rayTrace ( LHCb::RichRecSegment * segment,
+                                  const Rich::ParticleIDType id,
+                                  std::vector<Gaudi::XYZPoint> & points,
+                                  const unsigned int nPoints,
+                                  const LHCb::RichTraceMode mode ) const
 {
   return rayTrace( segment,
                    m_ckAngle->avgCherenkovTheta(segment, id),
@@ -72,11 +66,11 @@ RichRayTraceCherenkovCone::rayTrace ( RichRecSegment * segment,
 }
 
 StatusCode
-RichRayTraceCherenkovCone::rayTrace ( RichRecSegment * segment,
-                                      const double ckTheta,
-                                      std::vector<Gaudi::XYZPoint> & points,
-                                      const unsigned int nPoints,
-                                      const RichTraceMode mode ) const
+RayTraceCherenkovCone::rayTrace ( LHCb::RichRecSegment * segment,
+                                  const double ckTheta,
+                                  std::vector<Gaudi::XYZPoint> & points,
+                                  const unsigned int nPoints,
+                                  const LHCb::RichTraceMode mode ) const
 {
   // make sure segment is valid
   if ( !segment ) Exception( "Null RichRecSegment pointer!" );
@@ -89,16 +83,16 @@ RichRayTraceCherenkovCone::rayTrace ( RichRecSegment * segment,
 }
 
 StatusCode
-RichRayTraceCherenkovCone::rayTrace ( LHCb::RichRecRing * ring,
-                                      const unsigned int nPoints,
-                                      const LHCb::RichTraceMode mode,
-                                      const bool forceTracing ) const
+RayTraceCherenkovCone::rayTrace ( LHCb::RichRecRing * ring,
+                                  const unsigned int nPoints,
+                                  const LHCb::RichTraceMode mode,
+                                  const bool forceTracing ) const
 {
-  if ( !ring ) 
+  if ( !ring )
     return Error( "Null RichRecRing pointer!" );
   debug() << "RichRecRing has " << ring->ringPoints().size() << " ring points" << endreq;
   if ( !forceTracing && !(ring->ringPoints().empty()) ) return StatusCode::SUCCESS;
-  if ( !ring->richRecSegment() ) 
+  if ( !ring->richRecSegment() )
     return Warning( "RingRecRing has no associated segment. Cannot perform ray tracing" );
   return rayTrace( ring->richRecSegment()->trackSegment().rich(),
                    ring->richRecSegment()->trackSegment().bestPoint(),
@@ -108,20 +102,20 @@ RichRayTraceCherenkovCone::rayTrace ( LHCb::RichRecRing * ring,
 }
 
 StatusCode
-RichRayTraceCherenkovCone::rayTrace ( const Rich::DetectorType rich,
-                                      const Gaudi::XYZPoint & emissionPoint,
-                                      const Gaudi::XYZVector & direction,
-                                      const double ckTheta,
-                                      RichRecRing * ring,
-                                      const unsigned int nPoints,
-                                      const RichTraceMode mode,
-                                      const bool forceTracing ) const
+RayTraceCherenkovCone::rayTrace ( const Rich::DetectorType rich,
+                                  const Gaudi::XYZPoint & emissionPoint,
+                                  const Gaudi::XYZVector & direction,
+                                  const double ckTheta,
+                                  LHCb::RichRecRing * ring,
+                                  const unsigned int nPoints,
+                                  const LHCb::RichTraceMode mode,
+                                  const bool forceTracing ) const
 {
   if ( !ring ) return Error( "Null RichRecRing pointer!" );
 
   debug() << "RichRecRing has " << ring->ringPoints().size() << " ring points" << endreq;
   if ( !forceTracing && !(ring->ringPoints().empty()) ) return StatusCode::SUCCESS;
-  
+
   ring->ringPoints().clear();
 
   if ( ckTheta > 0 )
@@ -160,19 +154,19 @@ RichRayTraceCherenkovCone::rayTrace ( const Rich::DetectorType rich,
                                      cosCkTheta );
 
       // temp photon
-      RichGeomPhoton photon;
+      LHCb::RichGeomPhoton photon;
 
       //if ( mode.detPlaneBound() == LHCb::RichTraceMode::RespectHPDTubes )
 
-      RichRecPointOnRing * point = NULL;
+      LHCb::RichRecPointOnRing * point = NULL;
 
       // first ray trace to infinite plane to get point
-      RichTraceMode tmpMode( LHCb::RichTraceMode::IgnoreHPDAcceptance );
+      LHCb::RichTraceMode tmpMode( LHCb::RichTraceMode::IgnoreHPDAcceptance );
       if ( m_rayTrace->traceToDetector( rich, emissionPoint, photDir, photon, tmpMode ) )
       {
-        ring->ringPoints().push_back( RichRecPointOnRing() );
+        ring->ringPoints().push_back( LHCb::RichRecPointOnRing() );
         point = &(ring->ringPoints().back());
-        point->setAcceptance( RichRecPointOnRing::UndefinedAcceptance );
+        point->setAcceptance( LHCb::RichRecPointOnRing::UndefinedAcceptance );
       }
 
       // next, if configured to do so test acceptance of this point
@@ -184,20 +178,20 @@ RichRayTraceCherenkovCone::rayTrace ( const Rich::DetectorType rich,
         tmpMode.setDetPrecision( mode.detPrecision() );
         if ( !m_rayTrace->traceToDetector( rich, emissionPoint, photDir, photon, tmpMode ) )
         {
-          point->setAcceptance( RichRecPointOnRing::OutsideHPDPanel );
+          point->setAcceptance( LHCb::RichRecPointOnRing::OutsideHPDPanel );
         }
         else
-        {  
-          point->setAcceptance( RichRecPointOnRing::InHPDPanel );
+        {
+          point->setAcceptance( LHCb::RichRecPointOnRing::InHPDPanel );
           if ( mode.detPlaneBound() == LHCb::RichTraceMode::RespectHPDTubes )
           {
             // try yet again to see if in an HPD tube
             if ( m_rayTrace->traceToDetector( rich, emissionPoint, photDir, photon, mode ) )
             {
-              point->setAcceptance( RichRecPointOnRing::InHPDTube );
+              point->setAcceptance( LHCb::RichRecPointOnRing::InHPDTube );
             }
           }
-        }        
+        }
       } // final tests
 
       // if point found, set final data
@@ -223,13 +217,13 @@ RichRayTraceCherenkovCone::rayTrace ( const Rich::DetectorType rich,
 }
 
 StatusCode
-RichRayTraceCherenkovCone::rayTrace ( const Rich::DetectorType rich,
-                                      const Gaudi::XYZPoint & emissionPoint,
-                                      const Gaudi::XYZVector & direction,
-                                      const double ckTheta,
-                                      std::vector<Gaudi::XYZPoint> & points,
-                                      const unsigned int nPoints,
-                                      const RichTraceMode mode ) const
+RayTraceCherenkovCone::rayTrace ( const Rich::DetectorType rich,
+                                  const Gaudi::XYZPoint & emissionPoint,
+                                  const Gaudi::XYZVector & direction,
+                                  const double ckTheta,
+                                  std::vector<Gaudi::XYZPoint> & points,
+                                  const unsigned int nPoints,
+                                  const LHCb::RichTraceMode mode ) const
 {
 
   if ( ckTheta > 0 )

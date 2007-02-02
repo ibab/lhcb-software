@@ -2,10 +2,10 @@
 //-----------------------------------------------------------------------------
 /** @file RichPhotonCreator.cpp
  *
- *  Implementation file for tool : RichPhotonCreator
+ *  Implementation file for tool : Rich::Rec::PhotonCreator
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreator.cpp,v 1.35 2006-12-01 17:05:09 cattanem Exp $
+ *  $Id: RichPhotonCreator.cpp,v 1.36 2007-02-02 10:10:41 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -18,17 +18,17 @@
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
 
-// namespaces
-using namespace LHCb;
+// All code is in general Rich reconstruction namespace
+using namespace Rich::Rec;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( RichPhotonCreator );
+DECLARE_TOOL_FACTORY( PhotonCreator );
 
 // Standard constructor
-RichPhotonCreator::RichPhotonCreator( const std::string& type,
-                                      const std::string& name,
-                                      const IInterface* parent )
+PhotonCreator::PhotonCreator( const std::string& type,
+                              const std::string& name,
+                              const IInterface* parent )
   : RichPhotonCreatorBase ( type, name, parent ),
     m_photonReco          ( NULL )
 {
@@ -36,7 +36,7 @@ RichPhotonCreator::RichPhotonCreator( const std::string& type,
   declareProperty( "PhotonRecoTool", m_photonRecoName = "RichDetPhotonReco" );
 }
 
-StatusCode RichPhotonCreator::initialize()
+StatusCode PhotonCreator::initialize()
 {
   // Sets up various tools and services
   const StatusCode sc = RichPhotonCreatorBase::initialize();
@@ -48,22 +48,22 @@ StatusCode RichPhotonCreator::initialize()
   return sc;
 }
 
-StatusCode RichPhotonCreator::finalize()
+StatusCode PhotonCreator::finalize()
 {
   // Execute base class method
   return RichPhotonCreatorBase::finalize();
 }
 
-RichRecPhoton *
-RichPhotonCreator::buildPhoton( RichRecSegment * segment,
-                                RichRecPixel * pixel,
-                                const RichRecPhotonKey key ) const
+LHCb::RichRecPhoton *
+PhotonCreator::buildPhoton( LHCb::RichRecSegment * segment,
+                            LHCb::RichRecPixel * pixel,
+                            const RichRecPhotonKey key ) const
 {
 
-  RichRecPhoton * newPhoton = NULL;
+  LHCb::RichRecPhoton * newPhoton = NULL;
 
   // Reconstruct the geometrical photon
-  RichGeomPhoton * geomPhoton = new RichGeomPhoton();
+  LHCb::RichGeomPhoton * geomPhoton = new LHCb::RichGeomPhoton();
   if ( ( m_photonReco->reconstructPhoton( segment->trackSegment(),
                                           pixel->globalPosition(),
                                           *geomPhoton,
@@ -75,8 +75,8 @@ RichPhotonCreator::buildPhoton( RichRecSegment * segment,
   {
 
     // make new RichRecPhoton ( NB will own geomPhoton )
-    newPhoton = new RichRecPhoton( geomPhoton, segment,
-                                   segment->richRecTrack(), pixel );
+    newPhoton = new LHCb::RichRecPhoton( geomPhoton, segment,
+                                         segment->richRecTrack(), pixel );
 
     // check photon signal probability
     if ( checkPhotonProb( newPhoton ) )

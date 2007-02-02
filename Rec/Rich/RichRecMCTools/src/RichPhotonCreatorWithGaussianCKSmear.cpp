@@ -4,7 +4,7 @@
  *  Implementation file for RICH reconstruction tool : RichPhotonCreatorWithGaussianCKSmear
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreatorWithGaussianCKSmear.cpp,v 1.6 2006-12-01 16:18:24 cattanem Exp $
+ *  $Id: RichPhotonCreatorWithGaussianCKSmear.cpp,v 1.7 2007-02-02 10:06:27 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -17,19 +17,19 @@
 // local
 #include "RichPhotonCreatorWithGaussianCKSmear.h"
 
-// namespaces
-using namespace LHCb;
+// All code is in general Rich reconstruction namespace
+using namespace Rich::Rec::MC;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( RichPhotonCreatorWithGaussianCKSmear );
+DECLARE_TOOL_FACTORY( PhotonCreatorWithGaussianCKSmear );
 
 // Standard constructor
-RichPhotonCreatorWithGaussianCKSmear::
-RichPhotonCreatorWithGaussianCKSmear( const std::string& type,
-                                      const std::string& name,
-                                      const IInterface* parent )
-  : RichPhotonCreatorBase ( type, name, parent ),
+PhotonCreatorWithGaussianCKSmear::
+PhotonCreatorWithGaussianCKSmear( const std::string& type,
+                                  const std::string& name,
+                                  const IInterface* parent )
+  : PhotonCreatorBase ( type, name, parent ),
     m_mcRecTool           ( 0 ),
     m_delPhotCr           ( 0 ),
     m_applySmearingToAll  ( true ),
@@ -45,10 +45,10 @@ RichPhotonCreatorWithGaussianCKSmear( const std::string& type,
 
 }
 
-StatusCode RichPhotonCreatorWithGaussianCKSmear::initialize()
+StatusCode PhotonCreatorWithGaussianCKSmear::initialize()
 {
   // Sets up various tools and services
-  const StatusCode sc = RichPhotonCreatorBase::initialize();
+  const StatusCode sc = PhotonCreatorBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
@@ -91,7 +91,7 @@ StatusCode RichPhotonCreatorWithGaussianCKSmear::initialize()
   return sc;
 }
 
-StatusCode RichPhotonCreatorWithGaussianCKSmear::finalize()
+StatusCode PhotonCreatorWithGaussianCKSmear::finalize()
 {
 
   // printout smear count
@@ -99,7 +99,7 @@ StatusCode RichPhotonCreatorWithGaussianCKSmear::finalize()
   {
 
     // statistical tool
-    const RichStatDivFunctor occ("%10.2f +-%7.2f");
+    const StatDivFunctor occ("%10.2f +-%7.2f");
 
     // Print out final stats
     info() << "=================================================================" << endreq
@@ -124,17 +124,17 @@ StatusCode RichPhotonCreatorWithGaussianCKSmear::finalize()
   }
 
   // Execute base class method
-  return RichPhotonCreatorBase::finalize();
+  return PhotonCreatorBase::finalize();
 }
 
-RichRecPhoton *
-RichPhotonCreatorWithGaussianCKSmear::buildPhoton( RichRecSegment * segment,
-                                                   RichRecPixel * pixel,
-                                                   const RichRecPhotonKey key ) const
+LHCb::RichRecPhoton *
+PhotonCreatorWithGaussianCKSmear::buildPhoton( LHCb::RichRecSegment * segment,
+                                               LHCb::RichRecPixel * pixel,
+                                               const RichRecPhotonKey key ) const
 {
 
   // First, create a photon using the delegated tool
-  RichRecPhoton * newPhoton = m_delPhotCr->reconstructPhoton(segment,pixel);
+  LHCb::RichRecPhoton * newPhoton = m_delPhotCr->reconstructPhoton(segment,pixel);
   if ( !newPhoton ) return newPhoton; // if null, return
 
   // has this photon already been smeared ?
@@ -179,7 +179,7 @@ RichPhotonCreatorWithGaussianCKSmear::buildPhoton( RichRecSegment * segment,
 
 }
 
-void RichPhotonCreatorWithGaussianCKSmear::InitNewEvent()
+void PhotonCreatorWithGaussianCKSmear::InitNewEvent()
 {
   // initialize base class
   RichPhotonCreatorBase::InitNewEvent();

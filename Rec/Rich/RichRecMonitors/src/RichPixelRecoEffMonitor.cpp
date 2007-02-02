@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : RichPixelRecoEffMonitor
  *
- *  $Id: RichPixelRecoEffMonitor.cpp,v 1.2 2006-12-01 16:34:07 cattanem Exp $
+ *  $Id: RichPixelRecoEffMonitor.cpp,v 1.3 2007-02-02 10:07:12 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -20,15 +20,15 @@
 #include "GaudiKernel/AlgFactory.h"
 
 // namespace
-using namespace LHCb;
+using namespace Rich::Rec::MC;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( RichPixelRecoEffMonitor );
+DECLARE_ALGORITHM_FACTORY( PixelRecoEffMonitor );
 
 // Standard constructor, initializes variables
-RichPixelRecoEffMonitor::RichPixelRecoEffMonitor( const std::string& name,
-                                                  ISvcLocator* pSvcLocator)
+PixelRecoEffMonitor::PixelRecoEffMonitor( const std::string& name,
+                                          ISvcLocator* pSvcLocator)
   : RichRecHistoAlgBase ( name, pSvcLocator ),
     m_richRecMCTruth    ( 0 ),
     m_truth             ( 0 ),
@@ -37,10 +37,10 @@ RichPixelRecoEffMonitor::RichPixelRecoEffMonitor( const std::string& name,
 }
 
 // Destructor
-RichPixelRecoEffMonitor::~RichPixelRecoEffMonitor() {};
+PixelRecoEffMonitor::~PixelRecoEffMonitor() {};
 
 //  Initialize
-StatusCode RichPixelRecoEffMonitor::initialize()
+StatusCode PixelRecoEffMonitor::initialize()
 {
   // Sets up various tools and services
   const StatusCode sc = RichRecHistoAlgBase::initialize();
@@ -62,7 +62,7 @@ StatusCode RichPixelRecoEffMonitor::initialize()
 }
 
 // Main execution
-StatusCode RichPixelRecoEffMonitor::execute()
+StatusCode PixelRecoEffMonitor::execute()
 {
   debug() << "Execute" << endreq;
 
@@ -86,33 +86,33 @@ StatusCode RichPixelRecoEffMonitor::execute()
   typedef std::vector<const LHCb::MCRichDigitSummary*> Summaries;
 
   // Obtain RichSmartIDs from raw decoding
-  const RichDAQ::PDMap & smartIDs = m_decoder->allRichSmartIDs();
+  const Rich::DAQ::PDMap & smartIDs = m_decoder->allRichSmartIDs();
 
   // Loop over HPDs and RichSmartIDs
-  for ( RichDAQ::PDMap::const_iterator iHPD = smartIDs.begin();
+  for ( Rich::DAQ::PDMap::const_iterator iHPD = smartIDs.begin();
         iHPD != smartIDs.end(); ++iHPD )
   {
     // HPD ID
-    const RichSmartID hpd = (*iHPD).first;
+    const LHCb::RichSmartID hpd = (*iHPD).first;
     // Vector of SmartIDs
-    const RichSmartID::Vector & rawIDs = (*iHPD).second;
+    const LHCb::RichSmartID::Vector & rawIDs = (*iHPD).second;
     // Hardware ID
-    const RichDAQ::HPDHardwareID hardID = m_richSys->hardwareID(hpd);
+    const Rich::DAQ::HPDHardwareID hardID = m_richSys->hardwareID(hpd);
     // HPD as a string
-    std::ostringstream HPD; HPD << hpd; 
+    std::ostringstream HPD; HPD << hpd;
 
     // HPD backgrounds
     bool isBkg(false), isHPDQCK(false);
 
     // Loop over raw RichSmartIDs
-    for ( RichSmartID::Vector::const_iterator iR = rawIDs.begin();
+    for ( LHCb::RichSmartID::Vector::const_iterator iR = rawIDs.begin();
           iR != rawIDs.end(); ++iR )
     {
       // get MC histories for this RichSmartID
       Summaries summaries;
       m_truth->getMcHistories( *iR, summaries );
       // loop over summaries and see if this HPD has any background
-      for ( Summaries::const_iterator iS = summaries.begin(); 
+      for ( Summaries::const_iterator iS = summaries.begin();
             iS != summaries.end(); ++iS )
       {
         if ( (*iS)->history().isBackground() ) { isBkg = true;    }
@@ -122,8 +122,8 @@ StatusCode RichPixelRecoEffMonitor::execute()
     }
 
     // Get the reconstructed pixels for this HPD
-    RichRecPixels::const_iterator iPixel = pixelCreator()->begin ( hpd );
-    RichRecPixels::const_iterator endPix = pixelCreator()->end   ( hpd );
+    LHCb::RichRecPixels::const_iterator iPixel = pixelCreator()->begin ( hpd );
+    LHCb::RichRecPixels::const_iterator endPix = pixelCreator()->end   ( hpd );
     // loop over reconstructed pixels
     unsigned int nHPDs(0);
     for ( ; iPixel != endPix; ++iPixel )
@@ -144,13 +144,13 @@ StatusCode RichPixelRecoEffMonitor::execute()
 
     // individual HPD plots
     plot1D( nHPDs, hid(hpd.rich(),"hpdOcc/"+(std::string)hardID), "HPD Occupancy (nDigits>0)", -0.5, 200.5, 201 );
-    plot1D( pixEff, hid(hpd.rich(),"hpdOverallEff/"+(std::string)hardID), 
+    plot1D( pixEff, hid(hpd.rich(),"hpdOverallEff/"+(std::string)hardID),
             "Pixel Reco Eff : "+HPD.str(), -0.5, 100.5, 101 );
     if ( isBkg )
-      plot1D( pixEff, hid(hpd.rich(),"hpdBkgEff/"+(std::string)hardID), 
+      plot1D( pixEff, hid(hpd.rich(),"hpdBkgEff/"+(std::string)hardID),
               "Pixel Reco Eff : "+HPD.str(), -0.5, 100.5, 101 );
     if ( isHPDQCK )
-      plot1D( pixEff, hid(hpd.rich(),"hpdQckEff/"+(std::string)hardID), 
+      plot1D( pixEff, hid(hpd.rich(),"hpdQckEff/"+(std::string)hardID),
               "HPD Quartz CK Eff : "+HPD.str(), -0.5, 100.5, 101 );
 
     if ( msgLevel(MSG::VERBOSE) )
@@ -160,12 +160,11 @@ StatusCode RichPixelRecoEffMonitor::execute()
 
   }
 
-
   return StatusCode::SUCCESS;
 }
 
 //  Finalize
-StatusCode RichPixelRecoEffMonitor::finalize()
+StatusCode PixelRecoEffMonitor::finalize()
 {
   // Execute base class method
   return RichRecHistoAlgBase::finalize();

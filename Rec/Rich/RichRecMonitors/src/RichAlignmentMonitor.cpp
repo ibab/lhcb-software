@@ -4,7 +4,7 @@
  *  Implementation file for algorithm class : RichAlignmentMonitor
  *
  *  CVS Log :-
- *  $Id: RichAlignmentMonitor.cpp,v 1.10 2006-10-05 14:42:26 papanest Exp $
+ *  $Id: RichAlignmentMonitor.cpp,v 1.11 2007-02-02 10:07:11 jonrob Exp $
  *
  *  @author Antonis Papanestis
  *  @date   2004-02-19
@@ -17,17 +17,17 @@
 #include "GaudiKernel/SystemOfUnits.h"
 
 // namespaces
-using namespace LHCb;
+using namespace Rich::Rec::MC;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( RichAlignmentMonitor );
+DECLARE_ALGORITHM_FACTORY( AlignmentMonitor );
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-RichAlignmentMonitor::RichAlignmentMonitor( const std::string& name,
-                                            ISvcLocator* pSvcLocator)
+AlignmentMonitor::AlignmentMonitor( const std::string& name,
+                                    ISvcLocator* pSvcLocator)
   : RichRecHistoAlgBase ( name , pSvcLocator ),
     m_pTypes            ( 7, 0),
     m_trSelector        ( 0 ),
@@ -48,12 +48,12 @@ RichAlignmentMonitor::RichAlignmentMonitor( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-RichAlignmentMonitor::~RichAlignmentMonitor() {};
+AlignmentMonitor::~AlignmentMonitor() {};
 
 //=============================================================================
 // Initialisation. Check parameters
 //=============================================================================
-StatusCode RichAlignmentMonitor::initialize()
+StatusCode AlignmentMonitor::initialize()
 {
   // Sets up various tools and services
   const StatusCode sc = RichRecHistoAlgBase::initialize();
@@ -119,7 +119,7 @@ StatusCode RichAlignmentMonitor::initialize()
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode RichAlignmentMonitor::execute() {
+StatusCode AlignmentMonitor::execute() {
 
   debug() << "Execute" << endreq;
 
@@ -158,9 +158,9 @@ StatusCode RichAlignmentMonitor::execute() {
   }
 
   // Iterate over segments
-  for ( RichRecSegments::const_iterator iSeg = richSegments()->begin();
+  for ( LHCb::RichRecSegments::const_iterator iSeg = richSegments()->begin();
         iSeg != richSegments()->end(); ++iSeg ) {
-    RichRecSegment* segment = *iSeg;
+    LHCb::RichRecSegment* segment = *iSeg;
 
     const Rich::DetectorType rich = segment->trackSegment().rich();
 
@@ -190,13 +190,13 @@ StatusCode RichAlignmentMonitor::execute() {
 
     thetaExpected =  m_ckAngle->avgCherenkovTheta( segment, m_pType);
 
-    for ( RichRecSegment::Photons::const_iterator iPhot = segment->richRecPhotons().begin();
+    for ( LHCb::RichRecSegment::Photons::const_iterator iPhot = segment->richRecPhotons().begin();
           iPhot != segment->richRecPhotons().end(); ++iPhot )
     {
-      RichRecPhoton* photon = *iPhot;
+      LHCb::RichRecPhoton* photon = *iPhot;
 
       // get the geometrical photon
-      RichGeomPhoton gPhoton = photon->geomPhoton();
+      const LHCb::RichGeomPhoton & gPhoton = photon->geomPhoton();
 
       // Cherenkov angles
       const double thetaRec = gPhoton.CherenkovTheta();
@@ -211,7 +211,7 @@ StatusCode RichAlignmentMonitor::execute() {
       bool trueParent( false );
       if ( m_useMCTruth ) {
         delThetaTrue = thetaRec - thetaExpTrue;
-        trueParent = m_richRecMCTruth->trueCherenkovPhoton( photon );
+        trueParent = ( NULL != m_richRecMCTruth->trueCherenkovPhoton( photon ) );
       }
 
       bool unAmbiguousPhoton = photon->geomPhoton().mirrorNumValid();
@@ -310,7 +310,7 @@ StatusCode RichAlignmentMonitor::execute() {
 //=============================================================================
 //  Finalize
 //=============================================================================
-StatusCode RichAlignmentMonitor::finalize()
+StatusCode AlignmentMonitor::finalize()
 {
   if ( m_useMCTruth ) {
     info() << "Number of pions:" << m_pTypes[Rich::Pion] << "; Kaons:"

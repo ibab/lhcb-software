@@ -2,10 +2,10 @@
 //---------------------------------------------------------------------------
 /** @file RichRecInit.h
  *
- *  Header file for algorithm class : RichRecInit
+ *  Header file for algorithm class : Rich::Rec::Initialise
  *
  *  CVS Log :-
- *  $Id: RichRecInit.h,v 1.2 2006-12-19 09:46:30 cattanem Exp $
+ *  $Id: RichRecInit.h,v 1.3 2007-02-02 10:05:51 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   10/01/2003
@@ -18,40 +18,64 @@
 // Base class
 #include "RichRecBase/RichRecAlgBase.h"
 
+// gaudi
+#include "GaudiKernel/AlgFactory.h"
+
 // Event
 #include "Event/RichRecStatus.h"
 
 // Event
 #include "Event/ProcStatus.h"
 
-//---------------------------------------------------------------------------
-/** @class RichRecInit RichRecInit.h
+//-----------------------------------------------------------------------------
+/** @namespace Rich
  *
- *  General initialisation algorithm for RICH reconstruction
+ *  General namespace for RICH software
  *
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   10/01/2003
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
  */
-//---------------------------------------------------------------------------
-
-class RichRecInit : public RichRecAlgBase
+//-----------------------------------------------------------------------------
+namespace Rich
 {
 
-public:
+  //-----------------------------------------------------------------------------
+  /** @namespace Rec
+   *
+   *  General namespace for RICH reconstruction software
+   *
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   08/07/2004
+   */
+  //-----------------------------------------------------------------------------
+  namespace Rec
+  {
 
-  /// Standard constructor
-  RichRecInit( const std::string& name, ISvcLocator* pSvcLocator );
+    //---------------------------------------------------------------------------
+    /** @class Initialise RichRecInit.h
+     *
+     *  General initialisation algorithm for RICH reconstruction
+     *
+     *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+     *  @date   10/01/2003
+     */
+    //---------------------------------------------------------------------------
 
-  virtual ~RichRecInit();   ///< Destructor
+    class Initialise : public RichRecAlgBase
+    {
 
-  virtual StatusCode initialize();    // Algorithm initialization
-  virtual StatusCode execute   ();    // Algorithm execution
-  virtual StatusCode finalize  ();    // Algorithm finalization
+    public:
 
-private:   // Private data members
+      /// Standard constructor
+      Initialise( const std::string& name, ISvcLocator* pSvcLocator );
 
+      virtual ~Initialise();   ///< Destructor
 
+      virtual StatusCode execute(); /// Algorithm execution
 
-};
+    };
+
+  }
+}
 
 #endif // RICHRECALGORITHMS_RICHRECBACKGROUNDESTI_H

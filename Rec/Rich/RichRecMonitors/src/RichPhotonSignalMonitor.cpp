@@ -2,10 +2,10 @@
 //---------------------------------------------------------------------------
 /** @file RichPhotonSignalMonitor.cpp
  *
- *  Implementation file for algorithm class : RichPhotonSignalMonitor
+ *  Implementation file for algorithm class : PhotonSignalMonitor
  *
  *  CVS Log :-
- *  $Id: RichPhotonSignalMonitor.cpp,v 1.6 2006-12-01 16:34:07 cattanem Exp $
+ *  $Id: RichPhotonSignalMonitor.cpp,v 1.7 2007-02-02 10:07:12 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -19,15 +19,15 @@
 #include "GaudiKernel/AlgFactory.h"
 
 // namespace
-using namespace LHCb;
+using namespace Rich::Rec::MC;
 
 //---------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( RichPhotonSignalMonitor );
+DECLARE_ALGORITHM_FACTORY( PhotonSignalMonitor );
 
 // Standard constructor, initializes variables
-RichPhotonSignalMonitor::RichPhotonSignalMonitor( const std::string& name,
-                                                  ISvcLocator* pSvcLocator )
+PhotonSignalMonitor::PhotonSignalMonitor( const std::string& name,
+                                          ISvcLocator* pSvcLocator )
   : RichRecHistoAlgBase ( name, pSvcLocator ),
     m_richRecMCTruth    ( NULL ),
     m_tkSignal          ( NULL ),
@@ -39,10 +39,10 @@ RichPhotonSignalMonitor::RichPhotonSignalMonitor( const std::string& name,
 }
 
 // Destructor
-RichPhotonSignalMonitor::~RichPhotonSignalMonitor() {};
+PhotonSignalMonitor::~PhotonSignalMonitor() {};
 
 //  Initialize
-StatusCode RichPhotonSignalMonitor::initialize()
+StatusCode PhotonSignalMonitor::initialize()
 {
   // Sets up various tools and services
   const StatusCode sc = RichRecHistoAlgBase::initialize();
@@ -59,7 +59,7 @@ StatusCode RichPhotonSignalMonitor::initialize()
 }
 
 // Main execution
-StatusCode RichPhotonSignalMonitor::execute()
+StatusCode PhotonSignalMonitor::execute()
 {
 
   // Check event status
@@ -74,10 +74,10 @@ StatusCode RichPhotonSignalMonitor::execute()
   const double maxRefInd[]    = { 0.034,   0.00155, 0.00052 };
 
   // Iterate over segments
-  for ( RichRecSegments::const_iterator iSeg = richSegments()->begin();
+  for ( LHCb::RichRecSegments::const_iterator iSeg = richSegments()->begin();
         iSeg != richSegments()->end(); ++iSeg )
   {
-    RichRecSegment * segment = *iSeg;
+    LHCb::RichRecSegment * segment = *iSeg;
 
     // apply track selection
     if ( !m_trSelector->trackSelected(segment->richRecTrack()) ) continue;
@@ -92,7 +92,7 @@ StatusCode RichPhotonSignalMonitor::execute()
     // Loop over all particle codes
     for ( int iHypo = 0; iHypo < Rich::NParticleTypes; ++iHypo )
     {
-      Rich::ParticleIDType hypo = static_cast<Rich::ParticleIDType>(iHypo);
+      const Rich::ParticleIDType hypo = static_cast<Rich::ParticleIDType>(iHypo);
 
       // Expected number of emitted photons
       const double emitPhots = m_tkSignal->nEmittedPhotons( segment, hypo );
@@ -134,7 +134,7 @@ StatusCode RichPhotonSignalMonitor::execute()
 }
 
 //  Finalize
-StatusCode RichPhotonSignalMonitor::finalize()
+StatusCode PhotonSignalMonitor::finalize()
 {
   // Execute base class method
   return RichRecHistoAlgBase::finalize();

@@ -2,10 +2,10 @@
 //-----------------------------------------------------------------------------
 /** @file RichTrackSelector.cpp
  *
- *  Implementation file for RICH reconstruction tool : RichTrackSelector
+ *  Implementation file for RICH reconstruction tool : Rich::Rec::TrackSelector
  *
  *  CVS Log :-
- *  $Id: RichTrackSelector.cpp,v 1.4 2006-08-28 11:34:42 jonrob Exp $
+ *  $Id: RichTrackSelector.cpp,v 1.5 2007-02-02 10:10:42 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/08/2006
@@ -18,20 +18,23 @@
 // local
 #include "RichTrackSelector.h"
 
+// All code is in general Rich reconstruction namespace
+using namespace Rich::Rec;
+
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_NAMESPACE_TOOL_FACTORY( Rich, RichTrackSelector );
+DECLARE_TOOL_FACTORY( TrackSelector );
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-Rich::RichTrackSelector::RichTrackSelector( const std::string& type,
-                                            const std::string& name,
-                                            const IInterface* parent )
-  : RichTrackSelectorBase ( type, name, parent ) { }
+TrackSelector::TrackSelector( const std::string& type,
+                              const std::string& name,
+                              const IInterface* parent )
+  : TrackSelectorBase ( type, name, parent ) { }
 
 //=============================================================================
 // Destructor
 //=============================================================================
-Rich::RichTrackSelector::~RichTrackSelector() { }
+TrackSelector::~TrackSelector() { }

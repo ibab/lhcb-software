@@ -2,10 +2,10 @@
 //-----------------------------------------------------------------------------
 /** @file RichGeomEffFixedValue.h
  *
- *  Header file for tool : RichGeomEffFixedValue
+ *  Header file for tool : Rich::Rec::GeomEffFixedValue
  *
  *  CVS Log :-
- *  $Id: RichGeomEffFixedValue.h,v 1.9 2006-05-05 11:01:40 jonrob Exp $
+ *  $Id: RichGeomEffFixedValue.h,v 1.10 2007-02-02 10:10:40 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -27,60 +27,88 @@
 #include "RichRecBase/IRichRecGeomTool.h"
 
 //-----------------------------------------------------------------------------
-/** @class RichGeomEffFixedValue RichGeomEffFixedValue.h
+/** @namespace Rich
  *
- *  Tool to perform a fast determination of the geometrical efficiency for
- *  a given RichRecSegment and mass hypothesis.
+ *  General namespace for RICH specific definitions
  *
- *  Uses a fixed value of the signal and scattered efficiencies on the HPD panel,
- *  and also takes into account the HPD panel boundaries.
- *
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   15/03/2002
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
  */
 //-----------------------------------------------------------------------------
+namespace Rich
+{
 
-class RichGeomEffFixedValue : public RichRecToolBase,
-                              virtual public IRichGeomEff {
+  //-----------------------------------------------------------------------------
+  /** @namespace Rec
+   *
+   *  General namespace for RICH reconstruction software
+   *
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   08/07/2004
+   */
+  //-----------------------------------------------------------------------------
+  namespace Rec
+  {
 
-public: // Methods for Gaudi Framework
+    //-----------------------------------------------------------------------------
+    /** @class GeomEffFixedValue RichGeomEffFixedValue.h
+     *
+     *  Tool to perform a fast determination of the geometrical efficiency for
+     *  a given RichRecSegment and mass hypothesis.
+     *
+     *  Uses a fixed value of the signal and scattered efficiencies on the HPD panel,
+     *  and also takes into account the HPD panel boundaries.
+     *
+     *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+     *  @date   15/03/2002
+     */
+    //-----------------------------------------------------------------------------
 
-  /// Standard constructor
-  RichGeomEffFixedValue( const std::string& type,
+    class GeomEffFixedValue : public Rich::Rec::ToolBase,
+                              virtual public IGeomEff
+    {
+
+    public: // Methods for Gaudi Framework
+
+      /// Standard constructor
+      GeomEffFixedValue( const std::string& type,
                          const std::string& name,
                          const IInterface* parent );
 
-  /// Destructor
-  virtual ~RichGeomEffFixedValue() {};
+      /// Destructor
+      virtual ~GeomEffFixedValue() {};
 
-  // Initialize method
-  StatusCode initialize();
+      // Initialize method
+      StatusCode initialize();
 
-  // Finalize method
-  StatusCode finalize();
+      // Finalize method
+      StatusCode finalize();
 
-public: // methods (and doxygen comments) inherited from public interface
+    public: // methods (and doxygen comments) inherited from public interface
 
-  // Obtain geometrical efficiency for this track and hypothesis
-  double geomEfficiency ( LHCb::RichRecSegment * segment,
-                          const Rich::ParticleIDType id ) const;
-
-  // Obtain scattered geometrical efficiency for this track and hypothesis
-  double geomEfficiencyScat ( LHCb::RichRecSegment * segment,
+      // Obtain geometrical efficiency for this track and hypothesis
+      double geomEfficiency ( LHCb::RichRecSegment * segment,
                               const Rich::ParticleIDType id ) const;
 
-private: // Private data
+      // Obtain scattered geometrical efficiency for this track and hypothesis
+      double geomEfficiencyScat ( LHCb::RichRecSegment * segment,
+                                  const Rich::ParticleIDType id ) const;
 
-  // Pointers to tool instances
-  const IRichCherenkovAngle * m_ckAngle;   ///< Cherenkov angle tool
-  const IRichRecGeomTool * m_geomTool;     ///< Pointer to the Geometry tool
+    private: // Private data
 
-  std::vector<double> m_fixedValue;  ///< vector of fixed radiator geometrical efficiencies
-  double m_fixedScatValue;           ///< vector of fixed radiator geometrical scatter efficiency
+      // Pointers to tool instances
+      const ICherenkovAngle * m_ckAngle;   ///< Cherenkov angle tool
+      const IGeomTool * m_geomTool;     ///< Pointer to the Geometry tool
 
-  /// Flag to turn on checking of HPD panel boundaries
-  bool m_checkBoundaries;
+      std::vector<double> m_fixedValue;  ///< vector of fixed radiator geometrical efficiencies
+      double m_fixedScatValue;           ///< vector of fixed radiator geometrical scatter efficiency
 
-};
+      /// Flag to turn on checking of HPD panel boundaries
+      bool m_checkBoundaries;
+
+    };
+
+  }
+}
 
 #endif // RICHRECTOOLS_RICHGEOMEFFFIXEDVALUE_H

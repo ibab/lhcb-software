@@ -2,10 +2,10 @@
 //-----------------------------------------------------------------------------
 /** @file RichCherenkovAngle.h
  *
- *  Header file for tool : RichCherenkovAngle
+ *  Header file for tool : Rich::Rec::CherenkovAngle
  *
  *  CVS Log :-
- *  $Id: RichCherenkovAngle.h,v 1.10 2006-08-31 13:38:24 cattanem Exp $
+ *  $Id: RichCherenkovAngle.h,v 1.11 2007-02-02 10:10:40 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -18,6 +18,8 @@
 // from Gaudi
 #include "GaudiKernel/ParticleProperty.h"
 #include "GaudiKernel/IParticlePropertySvc.h"
+#include "GaudiKernel/ToolFactory.h"
+#include "GaudiKernel/PhysicalConstants.h"
 
 // base class
 #include "RichRecBase/RichRecToolBase.h"
@@ -40,89 +42,117 @@
 #include "gsl/gsl_math.h"
 
 //-----------------------------------------------------------------------------
-/** @class RichCherenkovAngle RichCherenkovAngle.h
+/** @namespace Rich
  *
- *  Tool calculating the expected Cherenkov angle
+ *  General namespace for RICH software
  *
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   15/03/2002
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
  */
 //-----------------------------------------------------------------------------
+namespace Rich
+{
 
-class RichCherenkovAngle : public RichRecToolBase,
-                           virtual public IRichCherenkovAngle {
+  //-----------------------------------------------------------------------------
+  /** @namespace Rec
+   *
+   *  General namespace for RICH reconstruction software
+   *
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   08/07/2004
+   */
+  //-----------------------------------------------------------------------------
+  namespace Rec
+  {
 
-public: // Methods for Gaudi Framework
+    //-----------------------------------------------------------------------------
+    /** @class CherenkovAngle RichCherenkovAngle.h
+     *
+     *  Tool calculating the expected Cherenkov angle
+     *
+     *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+     *  @date   15/03/2002
+     */
+    //-----------------------------------------------------------------------------
 
-  /// Standard constructor
-  RichCherenkovAngle( const std::string& type,
+    class CherenkovAngle : public Rich::Rec::ToolBase,
+                           virtual public ICherenkovAngle
+    {
+
+    public: // Methods for Gaudi Framework
+
+      /// Standard constructor
+      CherenkovAngle( const std::string& type,
                       const std::string& name,
                       const IInterface* parent );
 
-  /// Destructor
-  virtual ~RichCherenkovAngle() {};
+      /// Destructor
+      virtual ~CherenkovAngle() {}
 
-  // Initialize method
-  StatusCode initialize();
+      // Initialize method
+      StatusCode initialize();
 
-  // Finalize method
-  StatusCode finalize();
+      // Finalize method
+      StatusCode finalize();
 
-public: // methods (and doxygen comments) inherited from public interface
+    public: // methods (and doxygen comments) inherited from public interface
 
-  // Returns average Cherenkov angle for given particle hypothesis
-  double avgCherenkovTheta( LHCb::RichRecSegment * segment,
-                            const Rich::ParticleIDType id ) const;
+      // Returns average Cherenkov angle for given particle hypothesis
+      double avgCherenkovTheta( LHCb::RichRecSegment * segment,
+                                const Rich::ParticleIDType id ) const;
 
-  // Returns average Cherenkov angle for the current mass hypothesis
-  // Assigned to the segment
-  double avgCherenkovTheta( LHCb::RichRecSegment * segment ) const;
+      // Returns average Cherenkov angle for the current mass hypothesis
+      // Assigned to the segment
+      double avgCherenkovTheta( LHCb::RichRecSegment * segment ) const;
 
-  // Computes the nominal saturated Cherenkov angle for a given radiator medium
-  double nominalSaturatedCherenkovTheta( const Rich::RadiatorType rad ) const;
+      // Computes the nominal saturated Cherenkov angle for a given radiator medium
+      double nominalSaturatedCherenkovTheta( const Rich::RadiatorType rad ) const;
 
-  // Computes the average ring radius on the detector plane, in local HPD coordinates,
-  // for the given mass hypothesis.
-  double avCKRingRadiusLocal( LHCb::RichRecSegment * segment,
-                              const Rich::ParticleIDType id,
-                              const unsigned int nSamples = 6 ) const;
+      // Computes the average ring radius on the detector plane, in local HPD coordinates,
+      // for the given mass hypothesis.
+      double avCKRingRadiusLocal( LHCb::RichRecSegment * segment,
+                                  const Rich::ParticleIDType id,
+                                  const unsigned int nSamples = 6 ) const;
 
-  // Computes the average ring radius on the detector plane, in local HPD coordinates,
-  // for the given cherenkov angle
-  double avCKRingRadiusLocal( LHCb::RichRecSegment * segment,
-                              const double ckTheta,
-                              const unsigned int nSamples = 6 ) const;
+      // Computes the average ring radius on the detector plane, in local HPD coordinates,
+      // for the given cherenkov angle
+      double avCKRingRadiusLocal( LHCb::RichRecSegment * segment,
+                                  const double ckTheta,
+                                  const unsigned int nSamples = 6 ) const;
 
-  // Computes the average ring radius on the detector plane, in local HPD coordinates,
-  double satCKRingRadiusLocal( LHCb::RichRecSegment * segment,
-                               const unsigned int nSamples = 6 ) const;
+      // Computes the average ring radius on the detector plane, in local HPD coordinates,
+      double satCKRingRadiusLocal( LHCb::RichRecSegment * segment,
+                                   const unsigned int nSamples = 6 ) const;
 
-private: // methods
+    private: // methods
 
-  /// Compute and store the average radii values for the mass hypotheses
-  void computeRadii( LHCb::RichRecSegment * segment,
-                     const unsigned int nSamples ) const;
+      /// Compute and store the average radii values for the mass hypotheses
+      void computeRadii( LHCb::RichRecSegment * segment,
+                         const unsigned int nSamples ) const;
 
-private: // Private data
+    private: // Private data
 
-  /// Pointer to RichExpectedTrackSignal interface
-  const IRichExpectedTrackSignal * m_signal;
+      /// Pointer to RichExpectedTrackSignal interface
+      const IExpectedTrackSignal * m_signal;
 
-  /// Pointer to RichParticleProperties interface
-  const IRichParticleProperties * m_richPartProp;
+      /// Pointer to RichParticleProperties interface
+      const IParticleProperties * m_richPartProp;
 
-  /// Pointer to refractive index tool
-  const IRichRefractiveIndex * m_refIndex;
+      /// Pointer to refractive index tool
+      const IRefractiveIndex * m_refIndex;
 
-  /// Pointer to the RichSmartID tool
-  const IRichSmartIDTool * m_smartIDTool;
+      /// Pointer to the RichSmartID tool
+      const ISmartIDTool * m_smartIDTool;
 
-  /// Pointer to the ray tracking tool
-  const IRichRayTracing * m_rayTrace;
+      /// Pointer to the ray tracking tool
+      const IRayTracing * m_rayTrace;
 
-  /// Storage for nominal saturated Cherenkov angles
-  boost::array< double, Rich::NRadiatorTypes > m_nomCK;
+      /// Storage for nominal saturated Cherenkov angles
+      boost::array< double, Rich::NRadiatorTypes > m_nomCK;
 
-};
+    };
+
+  }
+}
 
 #endif // RICHRECTOOLS_RICHCHERENKOVANGLE_H

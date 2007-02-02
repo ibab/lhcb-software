@@ -2,10 +2,10 @@
 //-----------------------------------------------------------------------------
 /** @file RichPixelCreatorFromRichDigitsWithBg.h
  *
- *  Header file for RICH reconstruction tool : RichPixelCreatorFromRichDigitsWithBg
+ *  Header file for RICH reconstruction tool : Rich::Rec::PixelCreatorFromRichDigitsWithBg
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromRichDigitsWithBg.h,v 1.12 2006-12-01 16:18:24 cattanem Exp $
+ *  $Id: RichPixelCreatorFromRichDigitsWithBg.h,v 1.13 2007-02-02 10:06:27 jonrob Exp $
  *
  *  @author Andy Buckley   buckley@hep.phy.cam.ac.uk
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
@@ -30,80 +30,115 @@
 #include "Event/RichDigit.h"
 #include "Event/MCRichDigit.h"
 
-//------------------------------------------------------------------------------------
-/** @class RichPixelCreatorFromRichDigitsWithBg RichPixelCreatorFromRichDigitsWithBg.h
+//-----------------------------------------------------------------------------
+/** @namespace Rich
  *
- *  Tool for the creation and book-keeping of RichRecPixel objects.
+ *  General namespace for RICH software
  *
- *  Uses RichDigits from the digitisation as the parent objects.
- *  Additionally maintains a cache of RichDigits to be used as trackless ring
- *  background for testing reconstruction robustness to untracked tracks.
- *  Cache is filled as required from real events and for these events no pixels are
- *  created so effectively these events are skipped.
- *
- *  @author Andy Buckley   buckley@hep.phy.cam.ac.uk
- *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
- *  @date   05/10/2004
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
  */
-//------------------------------------------------------------------------------------
-
-class RichPixelCreatorFromRichDigitsWithBg : public RichPixelCreatorBase
+//-----------------------------------------------------------------------------
+namespace Rich
 {
 
-public: // methods for Gaudi
+  /** @namespace Rec
+   *
+   *  General namespace for RICH reconstruction software
+   *
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   08/07/2004
+   */
+  namespace Rec
+  {
 
-  /// Standard constructor
-  RichPixelCreatorFromRichDigitsWithBg( const std::string& type,
-                                        const std::string& name,
-                                        const IInterface* parent );
+    //-----------------------------------------------------------------------------
+    /** @namespace MC
+     *
+     *  General namespace for RICH MC related software
+     *
+     *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+     *  @date   05/12/2006
+     */
+    //-----------------------------------------------------------------------------
+    namespace MC
+    {
 
-  /// Destructor
-  virtual ~RichPixelCreatorFromRichDigitsWithBg(){}
+      //------------------------------------------------------------------------------------
+      /** @class PixelCreatorFromRichDigitsWithBg RichPixelCreatorFromRichDigitsWithBg.h
+       *
+       *  Tool for the creation and book-keeping of RichRecPixel objects.
+       *
+       *  Uses RichDigits from the digitisation as the parent objects.
+       *  Additionally maintains a cache of RichDigits to be used as trackless ring
+       *  background for testing reconstruction robustness to untracked tracks.
+       *  Cache is filled as required from real events and for these events no pixels are
+       *  created so effectively these events are skipped.
+       *
+       *  @author Andy Buckley   buckley@hep.phy.cam.ac.uk
+       *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
+       *  @date   05/10/2004
+       */
+      //------------------------------------------------------------------------------------
 
-  // Initialize method
-  StatusCode initialize();
+      class PixelCreatorFromRichDigitsWithBg : public Rich::Rec::PixelCreatorBase
+      {
 
-  // Finalize method
-  StatusCode finalize();
+      public: // methods for Gaudi
 
-public: // methods (and doxygen comments) inherited from public interface
+        /// Standard constructor
+        PixelCreatorFromRichDigitsWithBg( const std::string& type,
+                                          const std::string& name,
+                                          const IInterface* parent );
 
-  // Returns a RichRecPixel object pointer for given object.
-  // If if it not possible NULL is return.
-  LHCb::RichRecPixel * newPixel( const ContainedObject * obj ) const;
+        /// Destructor
+        virtual ~PixelCreatorFromRichDigitsWithBg(){}
 
-  // Form all possible RichRecPixels from input RichDigits.
-  // The most efficient way to make all RichRecPixel objects in the event.
-  StatusCode newPixels() const;
+        // Initialize method
+        StatusCode initialize();
 
-private: // methods
+      public: // methods (and doxygen comments) inherited from public interface
 
-  /// Returns a RichRecPixel object for given smart ID
-  LHCb::RichRecPixel * newPixel( const LHCb::RichSmartID id ) const;
+        // Returns a RichRecPixel object pointer for given object.
+        // If if it not possible NULL is return.
+        LHCb::RichRecPixel * newPixel( const ContainedObject * obj ) const;
 
-  /// Add the current event's digits to a collection of bg track digits
-  StatusCode fillBgTrackStack() const;
+        // Form all possible RichRecPixels from input RichDigits.
+        // The most efficient way to make all RichRecPixel objects in the event.
+        StatusCode newPixels() const;
 
-private: // data
+      private: // methods
 
-  /// Pointer to RichSmartID tool
-  const IRichSmartIDTool * m_smartIDTool;
+        /// Returns a RichRecPixel object for given smart ID
+        LHCb::RichRecPixel * newPixel( const LHCb::RichSmartID id ) const;
 
-  /// Pointer to RichMCTruth tool
-  const IRichMCTruthTool * m_mcTool;
+        /// Add the current event's digits to a collection of bg track digits
+        StatusCode fillBgTrackStack() const;
 
-  /// String containing input RichDigits location in TES
-  std::string m_recoDigitsLocation;
+      private: // data
 
-  /// Typedef for mapping between MCParticles and RIchSmartIDs
-  typedef Rich::Map<const LHCb::MCParticle*, LHCb::RichSmartID::Vector > BgTrackStack;
+        /// Pointer to RichSmartID tool
+        const ISmartIDTool * m_smartIDTool;
 
-  /// Stack of RichSmartIDs for a single MCParticle for use as track background
-  mutable Rich::Map<Rich::DetectorType, BgTrackStack> m_digitsForTrackBg;
+        /// Pointer to RichMCTruth tool
+        const Rich::MC::IMCTruthTool * m_mcTool;
 
-  /// Number of background tracks to add to each event
-  std::vector<size_t> m_numBgTracksToAdd;
+        /// String containing input RichDigits location in TES
+        std::string m_recoDigitsLocation;
 
-};
+        /// Typedef for mapping between MCParticles and RIchSmartIDs
+        typedef Rich::Map<const LHCb::MCParticle*, LHCb::RichSmartID::Vector > BgTrackStack;
+
+        /// Stack of RichSmartIDs for a single MCParticle for use as track background
+        mutable Rich::Map<Rich::DetectorType, BgTrackStack> m_digitsForTrackBg;
+
+        /// Number of background tracks to add to each event
+        std::vector<size_t> m_numBgTracksToAdd;
+
+      };
+
+    }
+  }
+}
 
 #endif // RICHRECMCTOOLS_RICHPIXELCREATORFROMRICHDIGITSWITHBG_H

@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichMCMassHypoRingsAlg
  *
  *  CVS Log :-
- *  $Id: RichMCMassHypoRingsAlg.cpp,v 1.11 2006-12-01 16:34:06 cattanem Exp $
+ *  $Id: RichMCMassHypoRingsAlg.cpp,v 1.12 2007-02-02 10:07:11 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -19,22 +19,23 @@
 #include "RichMCMassHypoRingsAlg.h"
 
 // namespace
-using namespace LHCb;
+using namespace Rich::Rec::MC;
 
 //--------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( RichMCMassHypoRingsAlg );
+DECLARE_ALGORITHM_FACTORY( MCMassHypoRingsAlg );
 
 // Standard constructor, initializes variables
-RichMCMassHypoRingsAlg::RichMCMassHypoRingsAlg( const std::string& name,
-                                                ISvcLocator* pSvcLocator )
+MCMassHypoRingsAlg::MCMassHypoRingsAlg( const std::string& name,
+                                        ISvcLocator* pSvcLocator )
   : RichRecAlgBase ( name, pSvcLocator ),
     m_truth        ( 0 ),
     m_mcTkInfo     ( 0 ),
     m_rayTrace     ( 0 ),
     m_maxCKtheta   ( Rich::NRadiatorTypes, 999 ),
     m_minCKtheta   ( Rich::NRadiatorTypes, 0   ),
-    m_traceMode    ( RichTraceMode::RespectHPDTubes, RichTraceMode::SimpleHPDs )
+    m_traceMode    ( LHCb::RichTraceMode::RespectHPDTubes, 
+                     LHCb::RichTraceMode::SimpleHPDs )
 {
 
   // Event locations to process
@@ -64,10 +65,10 @@ RichMCMassHypoRingsAlg::RichMCMassHypoRingsAlg( const std::string& name,
 }
 
 // Destructor
-RichMCMassHypoRingsAlg::~RichMCMassHypoRingsAlg() {}
+MCMassHypoRingsAlg::~MCMassHypoRingsAlg() {}
 
 // Initialize
-StatusCode RichMCMassHypoRingsAlg::initialize()
+StatusCode MCMassHypoRingsAlg::initialize()
 {
   // Sets up various tools and services
   const StatusCode sc = RichRecAlgBase::initialize();
@@ -85,7 +86,7 @@ StatusCode RichMCMassHypoRingsAlg::initialize()
 }
 
 
-StatusCode RichMCMassHypoRingsAlg::execute()
+StatusCode MCMassHypoRingsAlg::execute()
 {
   debug() << "Execute" << endreq;
 
@@ -101,26 +102,23 @@ StatusCode RichMCMassHypoRingsAlg::execute()
 }
 
 StatusCode
-RichMCMassHypoRingsAlg::buildRings( const std::string & evtLoc ) const
+MCMassHypoRingsAlg::buildRings( const std::string & evtLoc ) const
 {
   // Try to locate MCRichSegments
-  SmartDataPtr<MCRichSegments> mcSegs( eventSvc(),
-                                       evtLoc+MCRichSegmentLocation::Default );
+  SmartDataPtr<LHCb::MCRichSegments> mcSegs( eventSvc(),
+                                       evtLoc+LHCb::MCRichSegmentLocation::Default );
   if ( !mcSegs ) { return StatusCode::SUCCESS; }
   debug() << "Successfully located " << mcSegs->size()
-          << " MCRichSegments at " << evtLoc << MCRichSegmentLocation::Default << endreq;
+          << " MCRichSegments at " << evtLoc << LHCb::MCRichSegmentLocation::Default << endreq;
 
   // Cache pointer to Ring tool for this event location
-  const IRichMassHypothesisRingCreator * ringCr = ringCreator(evtLoc);
-
-  // Ray tracing mode
-
+  const IMassHypothesisRingCreator * ringCr = ringCreator(evtLoc);
 
   // iterate over segments
-  for ( MCRichSegments::const_iterator iSeg = mcSegs->begin();
+  for ( LHCb::MCRichSegments::const_iterator iSeg = mcSegs->begin();
         iSeg != mcSegs->end(); ++iSeg )
   {
-    const MCRichSegment * segment = *iSeg;
+    const LHCb::MCRichSegment * segment = *iSeg;
     if ( !segment ) continue;
     verbose() << "Trying MCRichSegment " << segment->key() << " : radiator = "
               << segment->radiator() << endreq;
@@ -157,9 +155,9 @@ RichMCMassHypoRingsAlg::buildRings( const std::string & evtLoc ) const
     // ray-trace the ring points in tight mode to find out if any part of
     // the ring is in the general acceptance of the HPD panels
     std::vector<Gaudi::XYZPoint> points;
-    RichTraceMode mode;
-    mode.setDetPrecision      ( RichTraceMode::SimpleHPDs      );
-    mode.setDetPlaneBound     ( RichTraceMode::RespectHPDPanel );
+    LHCb::RichTraceMode mode;
+    mode.setDetPrecision      ( LHCb::RichTraceMode::SimpleHPDs      );
+    mode.setDetPlaneBound     ( LHCb::RichTraceMode::RespectHPDPanel );
     mode.setForcedSide        ( false                 );
     mode.setOutMirrorBoundary ( false                 );
     mode.setMirrorSegBoundary ( false                 );
@@ -173,10 +171,10 @@ RichMCMassHypoRingsAlg::buildRings( const std::string & evtLoc ) const
     }
 
     // Get a new Ring object
-    RichRecRing * ring = ringCr->newMassHypoRing();
+    LHCb::RichRecRing * ring = ringCr->newMassHypoRing();
 
     // set ring type info
-    ring->setType ( RichRecRing::RayTracedCK );
+    ring->setType ( LHCb::RichRecRing::RayTracedCK );
 
     // set angle
     ring->setRadius( theta );
@@ -212,14 +210,14 @@ RichMCMassHypoRingsAlg::buildRings( const std::string & evtLoc ) const
 
   debug() << "Created " << ringCr->massHypoRings()->size()
           << " MC mass hypothesis rings for " << evtLoc
-          << MCRichSegmentLocation::Default << endreq;
+          << LHCb::MCRichSegmentLocation::Default << endreq;
 
   return StatusCode::SUCCESS;
 }
 
-double RichMCMassHypoRingsAlg::ckTheta( const MCRichSegment * segment ) const
+double MCMassHypoRingsAlg::ckTheta( const LHCb::MCRichSegment * segment ) const
 {
-  const SmartRefVector<MCRichOpticalPhoton> & photons = segment->mcRichOpticalPhotons();
+  const SmartRefVector<LHCb::MCRichOpticalPhoton> & photons = segment->mcRichOpticalPhotons();
   if ( photons.empty() )
   {
     verbose() << "  -> Segment has no associated MCRichOpticalPhotons" << endreq;
@@ -227,7 +225,7 @@ double RichMCMassHypoRingsAlg::ckTheta( const MCRichSegment * segment ) const
   }
   double angle = 0;
   int nPhots(0);
-  for ( SmartRefVector<MCRichOpticalPhoton>::const_iterator iPhot = photons.begin();
+  for ( SmartRefVector<LHCb::MCRichOpticalPhoton>::const_iterator iPhot = photons.begin();
         iPhot != photons.end(); ++iPhot )
   {
     if ( *iPhot && (*iPhot)->mcRichHit()->isSignal() )
@@ -240,8 +238,3 @@ double RichMCMassHypoRingsAlg::ckTheta( const MCRichSegment * segment ) const
   return ( nPhots>0 ? angle / static_cast<double>(nPhots) : 0 );
 }
 
-StatusCode RichMCMassHypoRingsAlg::finalize()
-{
-  // Execute base class method
-  return RichRecAlgBase::finalize();
-}

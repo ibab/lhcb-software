@@ -2,10 +2,10 @@
 //-----------------------------------------------------------------------------
 /** @file RichRayTraceCherenkovCone.h
  *
- *  Header file for tool : RichRayTraceCherenkovCone
+ *  Header file for tool : Rich::Rec::RayTraceCherenkovCone
  *
  *  CVS Log :-
- *  $Id: RichRayTraceCherenkovCone.h,v 1.10 2006-08-31 13:38:25 cattanem Exp $
+ *  $Id: RichRayTraceCherenkovCone.h,v 1.11 2007-02-02 10:10:41 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -29,87 +29,112 @@
 #include "Event/RichRecSegment.h"
 
 //-----------------------------------------------------------------------------
-/** @class RichRayTraceCherenkovCone RichRayTraceCherenkovCone.h
+/** @namespace Rich
  *
- *  Tool to ray trace cherenkov photons in a cone around a given
- *  RichRecSegment direction, at the given angle or the angle correct
- *  for a given mass hypothesis.
+ *  General namespace for RICH software
  *
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   15/03/2002
- *
- *  @todo Find a way to merge the functionality of the similar ray tracing methods
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
  */
 //-----------------------------------------------------------------------------
-
-class RichRayTraceCherenkovCone : public RichRecToolBase,
-                                  virtual public IRichRayTraceCherenkovCone
+namespace Rich
 {
 
-public: // Methods for Gaudi Framework
+  //-----------------------------------------------------------------------------
+  /** @namespace Rec
+   *
+   *  General namespace for RICH reconstruction software
+   *
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   08/07/2004
+   */
+  //-----------------------------------------------------------------------------
+  namespace Rec
+  {
 
-  /// Standard constructor
-  RichRayTraceCherenkovCone( const std::string& type,
+    //-----------------------------------------------------------------------------
+    /** @class RayTraceCherenkovCone RichRayTraceCherenkovCone.h
+     *
+     *  Tool to ray trace cherenkov photons in a cone around a given
+     *  RichRecSegment direction, at the given angle or the angle correct
+     *  for a given mass hypothesis.
+     *
+     *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+     *  @date   15/03/2002
+     *
+     *  @todo Find a way to merge the functionality of the similar ray tracing methods
+     */
+    //-----------------------------------------------------------------------------
+
+    class RayTraceCherenkovCone : public Rich::Rec::ToolBase,
+                                  virtual public IRayTraceCherenkovCone
+    {
+
+    public: // Methods for Gaudi Framework
+
+      /// Standard constructor
+      RayTraceCherenkovCone( const std::string& type,
                              const std::string& name,
                              const IInterface* parent );
 
-  /// Destructor
-  virtual ~RichRayTraceCherenkovCone(){}
+      /// Destructor
+      virtual ~RayTraceCherenkovCone(){}
 
-  // Initialize method
-  StatusCode initialize();
+      // Initialize method
+      StatusCode initialize();
 
-  // Finalize method
-  StatusCode finalize();
 
-public: // methods (and doxygen comments) inherited from public interface
+    public: // methods (and doxygen comments) inherited from public interface
 
-  // Ray trace the Cherenkov cone for the given segment and mass hypothesis to the detector plane
-  StatusCode rayTrace ( LHCb::RichRecSegment * segment,
-                        const Rich::ParticleIDType id,
-                        std::vector<Gaudi::XYZPoint> & points,
-                        const unsigned int nPoints,
-                        const LHCb::RichTraceMode mode = LHCb::RichTraceMode() ) const;
+      // Ray trace the Cherenkov cone for the given segment and mass hypothesis to the detector plane
+      StatusCode rayTrace ( LHCb::RichRecSegment * segment,
+                            const Rich::ParticleIDType id,
+                            std::vector<Gaudi::XYZPoint> & points,
+                            const unsigned int nPoints,
+                            const LHCb::RichTraceMode mode = LHCb::RichTraceMode() ) const;
 
-  // Ray trace the Cherenkov cone for the given segment and cherenkov angle to the detector plane
-  StatusCode rayTrace ( LHCb::RichRecSegment * segment,
-                        const double ckTheta,
-                        std::vector<Gaudi::XYZPoint> & points,
-                        const unsigned int nPoints,
-                        const LHCb::RichTraceMode mode = LHCb::RichTraceMode() ) const;
+      // Ray trace the Cherenkov cone for the given segment and cherenkov angle to the detector plane
+      StatusCode rayTrace ( LHCb::RichRecSegment * segment,
+                            const double ckTheta,
+                            std::vector<Gaudi::XYZPoint> & points,
+                            const unsigned int nPoints,
+                            const LHCb::RichTraceMode mode = LHCb::RichTraceMode() ) const;
 
-  // Ray trace the Cherenkov cone using the given emission point, direction and Cherenkov angle
-  StatusCode rayTrace ( const Rich::DetectorType rich,
-                        const Gaudi::XYZPoint & emissionPoint,
-                        const Gaudi::XYZVector & direction,
-                        const double ckTheta,
-                        std::vector<Gaudi::XYZPoint> & points,
-                        const unsigned int nPoints,
-                        const LHCb::RichTraceMode mode = LHCb::RichTraceMode() ) const;
+      // Ray trace the Cherenkov cone using the given emission point, direction and Cherenkov angle
+      StatusCode rayTrace ( const Rich::DetectorType rich,
+                            const Gaudi::XYZPoint & emissionPoint,
+                            const Gaudi::XYZVector & direction,
+                            const double ckTheta,
+                            std::vector<Gaudi::XYZPoint> & points,
+                            const unsigned int nPoints,
+                            const LHCb::RichTraceMode mode = LHCb::RichTraceMode() ) const;
 
-  // Ray trace the Cherenkov cone for the given ring to the detector plane
-  StatusCode rayTrace ( LHCb::RichRecRing * ring,
-                        const unsigned int nPoints,
-                        const LHCb::RichTraceMode mode = LHCb::RichTraceMode(),
-                        const bool forceTracing = false ) const;
+      // Ray trace the Cherenkov cone for the given ring to the detector plane
+      StatusCode rayTrace ( LHCb::RichRecRing * ring,
+                            const unsigned int nPoints,
+                            const LHCb::RichTraceMode mode = LHCb::RichTraceMode(),
+                            const bool forceTracing = false ) const;
 
-  // Ray trace the Cherenkov cone for the given ring to the detector plane
-  StatusCode rayTrace ( const Rich::DetectorType rich,
-                        const Gaudi::XYZPoint & emissionPoint,
-                        const Gaudi::XYZVector & direction,
-                        const double ckTheta,
-                        LHCb::RichRecRing * ring,
-                        const unsigned int nPoints,
-                        const LHCb::RichTraceMode mode = LHCb::RichTraceMode(),
-                        const bool forceTracing = false ) const;
+      // Ray trace the Cherenkov cone for the given ring to the detector plane
+      StatusCode rayTrace ( const Rich::DetectorType rich,
+                            const Gaudi::XYZPoint & emissionPoint,
+                            const Gaudi::XYZVector & direction,
+                            const double ckTheta,
+                            LHCb::RichRecRing * ring,
+                            const unsigned int nPoints,
+                            const LHCb::RichTraceMode mode = LHCb::RichTraceMode(),
+                            const bool forceTracing = false ) const;
 
-private: // data
+    private: // data
 
-  // Pointers to tool instances
-  const IRichRayTracing * m_rayTrace;     ///< Optical ray tracing tool
-  const IRichCherenkovAngle * m_ckAngle;  ///< Cherenkov angle calculator tool
-  const IRichSmartIDTool * m_smartIDTool; ///< RichSmartID manipulation tool
+      // Pointers to tool instances
+      const IRayTracing * m_rayTrace;     ///< Optical ray tracing tool
+      const ICherenkovAngle * m_ckAngle;  ///< Cherenkov angle calculator tool
+      const ISmartIDTool * m_smartIDTool; ///< RichSmartID manipulation tool
 
-};
+    };
+
+  }
+}
 
 #endif // RICHRECBASE_RICHRAYTRACECHERENKOVCONE_H

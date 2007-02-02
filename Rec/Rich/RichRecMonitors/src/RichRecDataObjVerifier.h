@@ -2,10 +2,10 @@
 //-----------------------------------------------------------------------------
 /** @file RichRecDataObjVerifier.h
  *
- *  Header file for algorithm class : RichRecDataObjVerifier
+ *  Header file for algorithm class : Rich::Rec::DataObjVerifier
  *
  *  CVS Log :-
- *  $Id: RichRecDataObjVerifier.h,v 1.2 2006-12-01 16:34:07 cattanem Exp $
+ *  $Id: RichRecDataObjVerifier.h,v 1.3 2007-02-02 10:07:13 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -22,44 +22,70 @@
 #include "RichRecBase/RichRecAlgBase.h"
 
 //-----------------------------------------------------------------------------
-/** @class RichRecDataObjVerifier RichRecDataObjVerifier.h
+/** @namespace Rich
  *
- *  Low level debugging algorithm to verify the contents of the RichRecEvent
- *  data objects.
+ *  General namespace for RICH software
  *
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   05/04/2002
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
  */
 //-----------------------------------------------------------------------------
+namespace Rich
+{
 
-class RichRecDataObjVerifier : public RichRecAlgBase {
+  /** @namespace Rec
+   *
+   *  General namespace for RICH reconstruction software
+   *
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   08/07/2004
+   */
+  namespace Rec
+  {
 
-public:
+    //-----------------------------------------------------------------------------
+    /** @class DataObjVerifier RichRecDataObjVerifier.h
+     *
+     *  Low level debugging algorithm to verify the contents of the RichRecEvent
+     *  data objects.
+     *
+     *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+     *  @date   05/04/2002
+     */
+    //-----------------------------------------------------------------------------
 
-  /// Standard constructor
-  RichRecDataObjVerifier( const std::string& name,
-                          ISvcLocator* pSvcLocator );
+    class DataObjVerifier : public Rich::Rec::AlgBase
+    {
 
-  virtual ~RichRecDataObjVerifier(); ///< Destructor
+    public:
 
-  virtual StatusCode initialize();    // Algorithm initialization
-  virtual StatusCode execute   ();    // Algorithm execution
-  virtual StatusCode finalize  ();    // Algorithm finalization
+      /// Standard constructor
+      DataObjVerifier( const std::string& name,
+                       ISvcLocator* pSvcLocator );
 
-private:
+      virtual ~DataObjVerifier(); ///< Destructor
 
-  /// Flag to debug RichRecPixels
-  bool m_bdPixels;
+      virtual StatusCode initialize();    // Algorithm initialization
+      virtual StatusCode execute   ();    // Algorithm execution
+      virtual StatusCode finalize  ();    // Algorithm finalization
 
-  /// Flag to debug RichRecTracks
-  bool m_bdTracks;
+    private:
 
-  /// Flag to debug RichRecPhotons
-  bool m_bdPhotons;
+      /// Flag to debug RichRecPixels
+      bool m_bdPixels;
 
-  /// Flag to debug RichRecSegments
-  bool m_bdSegments;
+      /// Flag to debug RichRecTracks
+      bool m_bdTracks;
 
-};
+      /// Flag to debug RichRecPhotons
+      bool m_bdPhotons;
+
+      /// Flag to debug RichRecSegments
+      bool m_bdSegments;
+
+    };
+
+  }
+}
 
 #endif // RICHRECALGS_RICHRECDATAOBJVERIFIER_H

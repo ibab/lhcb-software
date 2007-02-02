@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichTrackCreatorFromMCRichTracks
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorFromMCRichTracks.cpp,v 1.11 2006-12-01 16:18:24 cattanem Exp $
+ *  $Id: RichTrackCreatorFromMCRichTracks.cpp,v 1.12 2007-02-02 10:06:28 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -19,25 +19,25 @@
 #include "GaudiKernel/SystemOfUnits.h"
 #include "GaudiKernel/ToolFactory.h"
 
-// namespaces
-using namespace LHCb;
+// All code is in general Rich reconstruction namespace
+using namespace Rich::Rec::MC;
 
 //-------------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( RichTrackCreatorFromMCRichTracks );
+DECLARE_TOOL_FACTORY( TrackCreatorFromMCRichTracks );
 
 // Standard constructor
-RichTrackCreatorFromMCRichTracks::
-RichTrackCreatorFromMCRichTracks( const std::string& type,
-                                  const std::string& name,
-                                  const IInterface* parent )
+TrackCreatorFromMCRichTracks::
+TrackCreatorFromMCRichTracks( const std::string& type,
+                              const std::string& name,
+                              const IInterface* parent )
   : RichTrackCreatorBase   ( type, name, parent ),
     m_mcrTracks            ( 0 ),
     m_massHypoRings        ( 0 ),
     m_segMaker             ( 0 ),
     m_signal               ( 0 ),
-    m_mcrTracksLocation    ( MCRichTrackLocation::Default     ),
-    m_trSegToolNickName    ( "RichTrSegMakerFromMCRichTracks" ),
+    m_mcrTracksLocation    ( LHCb::MCRichTrackLocation::Default ),
+    m_trSegToolNickName    ( "RichTrSegMakerFromMCRichTracks"   ),
     m_allDone              ( false ),
     m_buildHypoRings       ( false ),
     m_fakeRecoTracks       ( true  ),
@@ -45,7 +45,7 @@ RichTrackCreatorFromMCRichTracks( const std::string& type,
     m_fakeTracks           ( 0 )
 {
   // declare interface for this tool
-  declareInterface<IRichTrackCreator>(this);
+  declareInterface<ITrackCreator>(this);
 
   // job options
   declareProperty( "TracksLocation",           m_mcrTracksLocation  );
@@ -55,10 +55,10 @@ RichTrackCreatorFromMCRichTracks( const std::string& type,
   declareProperty( "TrackLocation",            m_fakeTrLoc          );
 }
 
-StatusCode RichTrackCreatorFromMCRichTracks::initialize()
+StatusCode TrackCreatorFromMCRichTracks::initialize()
 {
   // Sets up various tools and services
-  const StatusCode sc = RichTrackCreatorBase::initialize();
+  const StatusCode sc = TrackCreatorBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
@@ -69,13 +69,7 @@ StatusCode RichTrackCreatorFromMCRichTracks::initialize()
   return sc;
 }
 
-StatusCode RichTrackCreatorFromMCRichTracks::finalize()
-{
-  // Execute base class method
-  return RichTrackCreatorBase::finalize();
-}
-
-const StatusCode RichTrackCreatorFromMCRichTracks::newTracks() const
+const StatusCode TrackCreatorFromMCRichTracks::newTracks() const
 {
 
   if ( !m_allDone )
@@ -84,8 +78,8 @@ const StatusCode RichTrackCreatorFromMCRichTracks::newTracks() const
 
     // Iterate over all reco tracks, and create new RichRecTracks
     richTracks()->reserve( nInputTracks() );
-    const MCRichTracks * tracks = trTracks();
-    for ( MCRichTracks::const_iterator track = tracks->begin();
+    const LHCb::MCRichTracks * tracks = trTracks();
+    for ( LHCb::MCRichTracks::const_iterator track = tracks->begin();
           track != tracks->end(); ++track )
     {
       newTrack( *track );
@@ -96,19 +90,19 @@ const StatusCode RichTrackCreatorFromMCRichTracks::newTracks() const
   return StatusCode::SUCCESS;
 }
 
-const long RichTrackCreatorFromMCRichTracks::nInputTracks() const
+const long TrackCreatorFromMCRichTracks::nInputTracks() const
 {
-  const MCRichTracks * tracks = trTracks();
+  const LHCb::MCRichTracks * tracks = trTracks();
   return ( tracks ? tracks->size() : 0 );
 }
 
-const MCRichTracks *
-RichTrackCreatorFromMCRichTracks::trTracks() const
+const LHCb::MCRichTracks *
+TrackCreatorFromMCRichTracks::trTracks() const
 {
   if ( !m_mcrTracks )
   {
     // Obtain smart data pointer to Tracks
-    m_mcrTracks = get<MCRichTracks>( m_mcrTracksLocation );
+    m_mcrTracks = get<LHCb::MCRichTracks>( m_mcrTracksLocation );
     if ( msgLevel(MSG::DEBUG) )
     {
       debug() << "located " << m_mcrTracks->size() << " MCRichTracks at "
@@ -126,12 +120,12 @@ RichTrackCreatorFromMCRichTracks::trTracks() const
       m_mcToFakeMap.clear();
 
       // loop over input tracks
-      for ( MCRichTracks::const_iterator track = m_mcrTracks->begin();
+      for ( LHCb::MCRichTracks::const_iterator track = m_mcrTracks->begin();
             track != m_mcrTracks->end(); ++track )
       {
 
         // Pointer to underlying MCParticle
-        const MCParticle * mcPart = (*track)->mcParticle();
+        const LHCb::MCParticle * mcPart = (*track)->mcParticle();
         if ( !mcPart )
         {
           Warning( "MCRichTrack has null MCParticle reference" );
@@ -139,7 +133,7 @@ RichTrackCreatorFromMCRichTracks::trTracks() const
         }
 
         // track type
-        //const Rich::Track::Type trType = getTrType( *track );
+        //const Rich::Rec::Track::Type trType = getTrType( *track );
         // momentum and charge
         const double ptot   = mcPart->p();
         const double charge = mcPart->particleID().threeCharge()/3;
@@ -148,20 +142,20 @@ RichTrackCreatorFromMCRichTracks::trTracks() const
         //if ( !trackSelector().trackSelected(trType,ptot,charge,true) ) continue;
 
         // new fake Track
-        Track * newFake = new Track();
+        LHCb::Track * newFake = new LHCb::Track();
 
         // add to container
         fakedTracks()->insert( newFake );
 
         // set momentum and charge info
-        State fakeState;
+        LHCb::State fakeState;
         fakeState.setQOverP( ptot>0 ? charge/ptot : 0 );
         newFake->addToStates( fakeState );
 
         // pretend these are forward unique tracks
-        //newFake->setFlag    ( Track::Clone, false ); // Unique by default
-        newFake->setType    ( Track::Long         );
-        newFake->setHistory ( Track::PatForward   );
+        //newFake->setFlag    ( LHCb::Track::Clone, false ); // Unique by default
+        newFake->setType    ( LHCb::Track::Long         );
+        newFake->setHistory ( LHCb::Track::PatForward   );
 
         // store MC link
         linker.link( newFake, mcPart );
@@ -184,12 +178,12 @@ RichTrackCreatorFromMCRichTracks::trTracks() const
 }
 
 // Forms a new RichRecTrack object from a Track
-RichRecTrack *
-RichTrackCreatorFromMCRichTracks::newTrack ( const ContainedObject * obj ) const
+LHCb::RichRecTrack *
+TrackCreatorFromMCRichTracks::newTrack ( const ContainedObject * obj ) const
 {
 
   // Is this a Track ?
-  const MCRichTrack * mcrTrack = dynamic_cast<const MCRichTrack*>(obj);
+  const LHCb::MCRichTrack * mcrTrack = dynamic_cast<const LHCb::MCRichTrack*>(obj);
   if ( !mcrTrack )
   {
     Warning( "Input data object is not of type 'MCRichTrack'" );
@@ -197,7 +191,7 @@ RichTrackCreatorFromMCRichTracks::newTrack ( const ContainedObject * obj ) const
   }
 
   // Pointer to underlying MCParticle
-  const MCParticle * mcPart = mcrTrack->mcParticle();
+  const LHCb::MCParticle * mcPart = mcrTrack->mcParticle();
   if ( !mcPart )
   {
     Warning( "MCRichTrack has null MCParticle reference" );
@@ -208,7 +202,7 @@ RichTrackCreatorFromMCRichTracks::newTrack ( const ContainedObject * obj ) const
   m_hasBeenCalled = true;
 
   // track type
-  const Rich::Track::Type trType = getTrType( mcrTrack );
+  const Rich::Rec::Track::Type trType = getTrType( mcrTrack );
 
   // unique ( by definition for MC ... )
   const bool trUnique = true;
@@ -225,7 +219,7 @@ RichTrackCreatorFromMCRichTracks::newTrack ( const ContainedObject * obj ) const
   }
 
   // Is track a usable type
-  if ( !Rich::Track::isUsable(trType) ) return NULL;
+  if ( !Rich::Rec::Track::isUsable(trType) ) return NULL;
 
   // Get reference to track stats object
   TrackCount & tkCount = trackStats().trackStats(trType,trUnique);
@@ -250,10 +244,10 @@ RichTrackCreatorFromMCRichTracks::newTrack ( const ContainedObject * obj ) const
     }
 
     // New track object pointer
-    RichRecTrack * newTrack = NULL;
+    LHCb::RichRecTrack * newTrack = NULL;
 
     // Form the RichRecSegments for this track
-    std::vector<RichTrackSegment*> segments;
+    std::vector<LHCb::RichTrackSegment*> segments;
     const int Nsegs = m_segMaker->constructSegments( mcrTrack, segments );
     if ( msgLevel(MSG::VERBOSE) )
     {
@@ -263,20 +257,20 @@ RichTrackCreatorFromMCRichTracks::newTrack ( const ContainedObject * obj ) const
     {
 
       // Form a new RichRecTrack
-      newTrack = new RichRecTrack();
+      newTrack = new LHCb::RichRecTrack();
 
       // Configure TrackID for this Track
       newTrack->trackID().initialiseFor( mcrTrack );
 
       bool keepTrack = false;
-      for ( std::vector<RichTrackSegment*>::iterator iSeg = segments.begin();
+      for ( std::vector<LHCb::RichTrackSegment*>::iterator iSeg = segments.begin();
             iSeg != segments.end(); ++iSeg )
       {
         if ( !(*iSeg) ) { Error( "Null RichTrackSegment pointer" ); continue; }
 
         // make a new RichRecSegment from this RichTrackSegment
         // takes ownership of RichTrackSegment* : (*iSeg) is responsible for deletion
-        RichRecSegment * newSegment = segmentCreator()->newSegment( *iSeg, newTrack );
+        LHCb::RichRecSegment * newSegment = segmentCreator()->newSegment( *iSeg, newTrack );
 
         // Get PD panel impact point
         if ( rayTraceHPDPanelPoints(**iSeg,newSegment).isSuccess() )
@@ -356,7 +350,7 @@ RichTrackCreatorFromMCRichTracks::newTrack ( const ContainedObject * obj ) const
         // Set parent information
         if ( m_fakeRecoTracks )
         {
-          const Track * faketrack = m_mcToFakeMap[mcrTrack];
+          const LHCb::Track * faketrack = m_mcToFakeMap[mcrTrack];
           if (!faketrack) Warning( "MCRichTrack has no fake Track !" );
           newTrack->setParentTrack( faketrack );
         }
@@ -386,7 +380,7 @@ RichTrackCreatorFromMCRichTracks::newTrack ( const ContainedObject * obj ) const
 
 }
 
-void RichTrackCreatorFromMCRichTracks::InitNewEvent()
+void TrackCreatorFromMCRichTracks::InitNewEvent()
 {
   RichTrackCreatorBase::InitNewEvent();
   m_allDone    = false;
@@ -394,7 +388,7 @@ void RichTrackCreatorFromMCRichTracks::InitNewEvent()
   m_fakeTracks = 0;
 }
 
-void RichTrackCreatorFromMCRichTracks::FinishEvent()
+void TrackCreatorFromMCRichTracks::FinishEvent()
 {
   RichTrackCreatorBase::FinishEvent();
   if ( m_fakeTracks )
@@ -405,7 +399,7 @@ void RichTrackCreatorFromMCRichTracks::FinishEvent()
 }
 
 LHCb::Tracks *
-RichTrackCreatorFromMCRichTracks::fakedTracks() const
+TrackCreatorFromMCRichTracks::fakedTracks() const
 {
   if ( !m_fakeTracks )
   {

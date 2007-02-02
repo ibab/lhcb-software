@@ -1,31 +1,31 @@
 
-RichTkGeom.Members += { "RichTrackGeomMoni/RiRecMCRTkGeomMoni" };
+RichTkGeom.Members += { "Rich::Rec::MC::TrackGeomMoni/RiRecMCRTkGeomMoni" };
 RiRecMCRTkGeomMoni.TrackSelector.TrackAlgs = { "MCRichTrack" };
 
-RichCKRes.Members += { "RichCherenkovResMoni/RiRecMCRTkCKResMoni" };
+RichCKRes.Members += { "Rich::Rec::MC::CherenkovResMoni/RiRecMCRTkCKResMoni" };
 RiRecMCRTkCKResMoni.TrackSelector.TrackAlgs = { "MCRichTrack" };
-RichCKRes.Members += { "RichCherenkovResMoni/RiRecMCRTkPosCKResMoni" };
+RichCKRes.Members += { "Rich::Rec::MC::CherenkovResMoni/RiRecMCRTkPosCKResMoni" };
 RiRecMCRTkPosCKResMoni.TrackSelector.TrackAlgs = { "MCRichTrack" };
 RiRecMCRTkPosCKResMoni.TrackSelector.Charge = 1;
-RichCKRes.Members += { "RichCherenkovResMoni/RiRecMCRTkNegCKResMoni" };
+RichCKRes.Members += { "Rich::Rec::MC::CherenkovResMoni/RiRecMCRTkNegCKResMoni" };
 RiRecMCRTkNegCKResMoni.TrackSelector.TrackAlgs = { "MCRichTrack" };
 RiRecMCRTkNegCKResMoni.TrackSelector.Charge = -1;
 
-RichTkRes.Members += { "RichTrackResolutionMoni/RiRecMCRTkPosResMoni" };
+RichTkRes.Members += { "Rich::Rec::MC::TrackResolutionMoni/RiRecMCRTkPosResMoni" };
 RiRecMCRTkPosResMoni.TrackSelector.TrackAlgs = { "MCRichTrack" };
 RiRecMCRTkPosResMoni.TrackSelector.Charge = 1;
-RichTkRes.Members += { "RichTrackResolutionMoni/RiRecMCRTkNegResMoni" };
+RichTkRes.Members += { "Rich::Rec::MC::TrackResolutionMoni/RiRecMCRTkNegResMoni" };
 RiRecMCRTkNegResMoni.TrackSelector.TrackAlgs = { "MCRichTrack" };
 RiRecMCRTkNegResMoni.TrackSelector.Charge = -1;
 
-RichPhotSig.Members += { "RichPhotonSignalMonitor/RiRecPhotSigMCRTkMoni" };
+RichPhotSig.Members += { "Rich::Rec::MC::PhotonSignalMonitor/RiRecPhotSigMCRTkMoni" };
 RiRecPhotSigMCRTkMoni.TrackSelector.TrackAlgs = { "MCRichTrack" };
 
-RichPhotAng.Members += { "RichCherenkovAngleMonitor/RiRecPhotAngMCRTkMoni" };
+RichPhotAng.Members += { "Rich::Rec::MC::CherenkovAngleMonitor/RiRecPhotAngMCRTkMoni" };
 RiRecPhotAngMCRTkMoni.TrackSelector.TrackAlgs = { "MCRichTrack" };
 
-RichPhotGeom.Members += { "RichPhotonGeomMonitor/RiRecPhotGeomMCRTkMoni" };
+RichPhotGeom.Members += { "Rich::Rec::MC::PhotonGeomMonitor/RiRecPhotGeomMCRTkMoni" };
 RiRecPhotGeomMCRTkMoni.TrackSelector.TrackAlgs = { "MCRichTrack" };
 
-RichPhotEff.Members += { "RichPhotonRecoEffMonitor/RiRecPhotEffMCRTkMoni" };
+RichPhotEff.Members += { "Rich::Rec::MC::PhotonRecoEffMonitor/RiRecPhotEffMCRTkMoni" };
 RiRecPhotEffMCRTkMoni.TrackSelector.TrackAlgs = { "MCRichTrack" };

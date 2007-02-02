@@ -2,10 +2,10 @@
 //-----------------------------------------------------------------------------
 /** @file RichPixelCreatorFromCheatedRawBuffer.cpp
  *
- *  Implementation file for RICH reconstruction tool : RichPixelCreatorFromCheatedRawBuffer
+ *  Implementation file for RICH reconstruction tool : Rich::Rec::PixelCreatorFromCheatedRawBuffer
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromCheatedRawBuffer.cpp,v 1.2 2006-12-01 16:18:24 cattanem Exp $
+ *  $Id: RichPixelCreatorFromCheatedRawBuffer.cpp,v 1.3 2007-02-02 10:06:27 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/09/2003
@@ -18,25 +18,25 @@
 // local
 #include "RichPixelCreatorFromCheatedRawBuffer.h"
 
-// namespaces
-using namespace LHCb;
+// All code is in general Rich reconstruction namespace
+using namespace Rich::Rec::MC;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( RichPixelCreatorFromCheatedRawBuffer );
+DECLARE_TOOL_FACTORY( PixelCreatorFromCheatedRawBuffer );
 
 // Standard constructor
-RichPixelCreatorFromCheatedRawBuffer::
-RichPixelCreatorFromCheatedRawBuffer( const std::string& type,
-                                      const std::string& name,
-                                      const IInterface* parent )
-  : RichPixelCreatorBase( type, name, parent ),
-    m_mcTool      ( 0 ) { }
+PixelCreatorFromCheatedRawBuffer::
+PixelCreatorFromCheatedRawBuffer( const std::string& type,
+                                  const std::string& name,
+                                  const IInterface* parent )
+  : Rich::Rec::PixelCreatorBase( type, name, parent ),
+    m_mcTool        ( NULL ) { }
 
-StatusCode RichPixelCreatorFromCheatedRawBuffer::initialize()
+StatusCode PixelCreatorFromCheatedRawBuffer::initialize()
 {
   // Sets up various tools and services
-  const StatusCode sc = RichPixelCreatorBase::initialize();
+  const StatusCode sc = Rich::Rec::PixelCreatorBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
@@ -45,28 +45,22 @@ StatusCode RichPixelCreatorFromCheatedRawBuffer::initialize()
   return sc;
 }
 
-StatusCode RichPixelCreatorFromCheatedRawBuffer::finalize()
-{
-  // Execute base class method
-  return RichPixelCreatorBase::finalize();
-}
-
-RichRecPixel *
-RichPixelCreatorFromCheatedRawBuffer::buildPixel( const RichSmartID id ) const
+LHCb::RichRecPixel *
+PixelCreatorFromCheatedRawBuffer::buildPixel( const LHCb::RichSmartID id ) const
 {
 
   // First run base class method to produce reconstructed pixel
-  RichRecPixel * pixel = RichPixelCreatorBase::buildPixel(id);
+  LHCb::RichRecPixel * pixel = Rich::Rec::PixelCreatorBase::buildPixel(id);
   if ( !pixel ) return NULL;
 
   // Now, update coords using MC information
 
   // Find associated MCRichOpticalPhoton
-  const SmartRefVector<MCRichHit> & mcRichHits = m_mcTool->mcRichHits(id);
+  const SmartRefVector<LHCb::MCRichHit> & mcRichHits = m_mcTool->mcRichHits(id);
   if ( !mcRichHits.empty() )
   {
     // Just use first hit for the moment (should do better)
-    const MCRichOpticalPhoton * mcPhot = m_mcTool->mcOpticalPhoton( mcRichHits.front() );
+    const LHCb::MCRichOpticalPhoton * mcPhot = m_mcTool->mcOpticalPhoton( mcRichHits.front() );
     if ( mcPhot )
     {
       // Update coordinates with cheated info

@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : RichPixelCreatorFromSignalRawBuffer
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromSignalRawBuffer.cpp,v 1.3 2006-12-01 16:18:24 cattanem Exp $
+ *  $Id: RichPixelCreatorFromSignalRawBuffer.cpp,v 1.4 2007-02-02 10:06:27 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/09/2003
@@ -18,19 +18,19 @@
 // local
 #include "RichPixelCreatorFromSignalRawBuffer.h"
 
-// namespaces
-using namespace LHCb;
+// All code is in general Rich reconstruction namespace
+using namespace Rich::Rec::MC;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( RichPixelCreatorFromSignalRawBuffer );
+DECLARE_TOOL_FACTORY( PixelCreatorFromSignalRawBuffer );
 
 // Standard constructor
-RichPixelCreatorFromSignalRawBuffer::
-RichPixelCreatorFromSignalRawBuffer( const std::string& type,
-                                     const std::string& name,
-                                     const IInterface* parent )
-  : RichPixelCreatorBase  ( type, name, parent ),
+PixelCreatorFromSignalRawBuffer::
+PixelCreatorFromSignalRawBuffer( const std::string& type,
+                                 const std::string& name,
+                                 const IInterface* parent )
+  : Rich::Rec::PixelCreatorBase ( type, name, parent ),
     m_mcTool              ( 0 ),
     m_trackFilter         ( false ),
     m_rejBackHits         ( true  ),
@@ -43,17 +43,17 @@ RichPixelCreatorFromSignalRawBuffer( const std::string& type,
 
 }
 
-StatusCode RichPixelCreatorFromSignalRawBuffer::initialize()
+StatusCode PixelCreatorFromSignalRawBuffer::initialize()
 {
   // Sets up various tools and services
-  const StatusCode sc = RichPixelCreatorBase::initialize();
+  const StatusCode sc = Rich::Rec::PixelCreatorBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
   acquireTool( "RichMCTruthTool",     m_mcTool    );
   acquireTool( "RichRecMCTruthTool",  m_mcRecTool );
 
-  if ( m_trackFilter ) 
+  if ( m_trackFilter )
     info() << "Will remove hits that do not come from tracked particles" << endreq;
 
   if ( m_rejBackHits )
@@ -62,15 +62,9 @@ StatusCode RichPixelCreatorFromSignalRawBuffer::initialize()
   return sc;
 }
 
-StatusCode RichPixelCreatorFromSignalRawBuffer::finalize()
-{
-  // Execute base class method
-  return RichPixelCreatorBase::finalize();
-}
-
 // Forms a new RichRecPixel object from a RichDigit
-RichRecPixel *
-RichPixelCreatorFromSignalRawBuffer::buildPixel( const RichSmartID id ) const
+LHCb::RichRecPixel *
+PixelCreatorFromSignalRawBuffer::buildPixel( const LHCb::RichSmartID id ) const
 {
 
   // Test if this is a background hit
@@ -82,11 +76,11 @@ RichPixelCreatorFromSignalRawBuffer::buildPixel( const RichSmartID id ) const
     std::vector<const LHCb::MCParticle*> mcParts;
     m_mcTool->mcParticles( id, mcParts );
     bool found = false;
-    for ( std::vector<const LHCb::MCParticle*>:: const_iterator iMP = mcParts.begin(); 
+    for ( std::vector<const LHCb::MCParticle*>:: const_iterator iMP = mcParts.begin();
           iMP != mcParts.end(); ++iMP )
     {
       if ( *iMP != NULL && trackedMCPs()[*iMP] ) { found = true; break; }
-    } 
+    }
     // If no associated tracked MCParticle found, return NULL
     if ( !found ) return NULL;
   }
@@ -95,8 +89,8 @@ RichPixelCreatorFromSignalRawBuffer::buildPixel( const RichSmartID id ) const
   return RichPixelCreatorBase::buildPixel(id);
 }
 
-RichPixelCreatorFromSignalRawBuffer::TrackedMCPList &
-RichPixelCreatorFromSignalRawBuffer::trackedMCPs() const
+PixelCreatorFromSignalRawBuffer::TrackedMCPList &
+PixelCreatorFromSignalRawBuffer::trackedMCPs() const
 {
   if ( !m_trackMCPsDone )
   {
@@ -108,11 +102,11 @@ RichPixelCreatorFromSignalRawBuffer::trackedMCPs() const
 
     // Loop over reconstructed tracks to form a list of tracked MCParticles
     debug() << "Found " << richTracks()->size() << " RichRecTracks" << endreq;
-    for ( RichRecTracks::const_iterator iTk = richTracks()->begin();
+    for ( LHCb::RichRecTracks::const_iterator iTk = richTracks()->begin();
           iTk != richTracks()->end(); ++iTk )
     {
       if ( !(*iTk) ) continue;
-      const MCParticle * tkMCP = m_mcRecTool->mcParticle(*iTk);
+      const LHCb::MCParticle * tkMCP = m_mcRecTool->mcParticle(*iTk);
       verbose() << "RichRecTrack " << (*iTk)->key() << " has MCParticle " << tkMCP << endreq;
       if ( tkMCP ) m_trackedMCPs[tkMCP] = true;
     }
@@ -124,7 +118,7 @@ RichPixelCreatorFromSignalRawBuffer::trackedMCPs() const
   return m_trackedMCPs;
 }
 
-void RichPixelCreatorFromSignalRawBuffer::InitNewEvent()
+void PixelCreatorFromSignalRawBuffer::InitNewEvent()
 {
   // Initialise data for new event
   RichPixelCreatorBase::InitNewEvent();

@@ -2,10 +2,10 @@
 //-----------------------------------------------------------------------------
 /** @file RichMassHypothesisRingCreator.cpp
  *
- *  Implementation file for tool : RichMassHypothesisRingCreator
+ *  Implementation file for tool : Rich::Rec::MassHypothesisRingCreator
  *
  *  CVS Log :-
- *  $Id: RichMassHypothesisRingCreator.cpp,v 1.15 2006-08-31 13:38:24 cattanem Exp $
+ *  $Id: RichMassHypothesisRingCreator.cpp,v 1.16 2007-02-02 10:10:41 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -15,38 +15,36 @@
 // local
 #include "RichMassHypothesisRingCreator.h"
 
-// Gaudi
-#include "GaudiKernel/ToolFactory.h"
-#include "GaudiKernel/SmartDataPtr.h"
-
-// namespaces
-using namespace LHCb;
+// All code is in general Rich reconstruction namespace
+using namespace Rich::Rec;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( RichMassHypothesisRingCreator );
+DECLARE_TOOL_FACTORY( MassHypothesisRingCreator );
 
 // Standard constructor
-RichMassHypothesisRingCreator::RichMassHypothesisRingCreator( const std::string& type,
-                                                              const std::string& name,
-                                                              const IInterface* parent )
+MassHypothesisRingCreator::
+MassHypothesisRingCreator( const std::string& type,
+                           const std::string& name,
+                           const IInterface* parent )
   : RichRecToolBase ( type, name, parent ),
     m_ckAngle       ( NULL ),
     m_rings         ( NULL ),
     m_coneTrace     ( NULL ),
-    m_traceMode     ( RichTraceMode::RespectHPDTubes, RichTraceMode::SimpleHPDs )
+    m_traceMode     ( LHCb::RichTraceMode::RespectHPDTubes,
+                      LHCb::RichTraceMode::SimpleHPDs )
 {
 
   // tool interface
-  declareInterface<IRichMassHypothesisRingCreator>(this);
+  declareInterface<IMassHypothesisRingCreator>(this);
 
   // Define job option parameters
   declareProperty( "RingsLocation",
-                   m_ringLocation = RichRecRingLocation::SegmentHypoRings );
+                   m_ringLocation = LHCb::RichRecRingLocation::SegmentHypoRings );
 
 }
 
-StatusCode RichMassHypothesisRingCreator::initialize()
+StatusCode MassHypothesisRingCreator::initialize()
 {
   // Sets up various tools and services
   const StatusCode sc = RichRecToolBase::initialize();
@@ -68,19 +66,19 @@ StatusCode RichMassHypothesisRingCreator::initialize()
   return sc;
 }
 
-StatusCode RichMassHypothesisRingCreator::finalize()
+StatusCode MassHypothesisRingCreator::finalize()
 {
   // Execute base class method
   return RichRecToolBase::finalize();
 }
 
 // Method that handles various Gaudi "software events"
-void RichMassHypothesisRingCreator::handle ( const Incident& incident )
+void MassHypothesisRingCreator::handle ( const Incident& incident )
 {
   if ( IncidentType::BeginEvent == incident.type() ) InitNewEvent();
 }
 
-void RichMassHypothesisRingCreator::newMassHypoRings( RichRecSegment * segment ) const
+void MassHypothesisRingCreator::newMassHypoRings( LHCb::RichRecSegment * segment ) const
 {
   for ( int iHypo = 0; iHypo < Rich::NParticleTypes; ++iHypo ) {
     newMassHypoRing( segment, static_cast<const Rich::ParticleIDType>(iHypo) );
@@ -88,28 +86,29 @@ void RichMassHypothesisRingCreator::newMassHypoRings( RichRecSegment * segment )
 }
 
 // Forms a new RichRecRing object from a RichRecSegment
-RichRecRing *
-RichMassHypothesisRingCreator::newMassHypoRing( RichRecSegment * segment,
-                                                const Rich::ParticleIDType id ) const
+LHCb::RichRecRing *
+MassHypothesisRingCreator::newMassHypoRing( LHCb::RichRecSegment * segment,
+                                            const Rich::ParticleIDType id ) const
 {
-  if ( !segment ) return 0;
+  if ( !segment ) return NULL;
 
   // does the ring already exist ?
   return ( segment->hypothesisRings().dataIsValid(id) ?
            segment->hypothesisRings()[id] : buildRing(segment, id) );
 }
 
-RichRecRing * RichMassHypothesisRingCreator::buildRing( RichRecSegment * segment,
-                                                        const Rich::ParticleIDType id ) const
+LHCb::RichRecRing *
+MassHypothesisRingCreator::buildRing( LHCb::RichRecSegment * segment,
+                                      const Rich::ParticleIDType id ) const
 {
 
-  RichRecRing * newRing = 0;
+  LHCb::RichRecRing * newRing = 0;
 
   // Cherenkov theta for this segment/hypothesis combination
   const double ckTheta = m_ckAngle->avgCherenkovTheta( segment, id );
-  if ( ckTheta > 0 ) 
+  if ( ckTheta > 0 )
   {
-    if ( msgLevel(MSG::VERBOSE) ) 
+    if ( msgLevel(MSG::VERBOSE) )
     {
       verbose() << "Creating " << id
                 << " hypothesis ring for RichRecSegment " << segment->key()
@@ -120,7 +119,7 @@ RichRecRing * RichMassHypothesisRingCreator::buildRing( RichRecSegment * segment
     newRing = newMassHypoRing();
 
     // set ring type info
-    newRing->setType ( RichRecRing::RayTracedCK );
+    newRing->setType ( LHCb::RichRecRing::RayTracedCK );
 
     // set the segment information
     newRing->setRichRecSegment( segment );
@@ -153,38 +152,41 @@ RichRecRing * RichMassHypothesisRingCreator::buildRing( RichRecSegment * segment
   return newRing;
 }
 
-RichRecRing * RichMassHypothesisRingCreator::newMassHypoRing() const
+LHCb::RichRecRing * MassHypothesisRingCreator::newMassHypoRing() const
 {
   // Make a new ring
-  RichRecRing * newRing = new RichRecRing();
+  LHCb::RichRecRing * newRing = new LHCb::RichRecRing();
   return newRing;
 }
 
-void RichMassHypothesisRingCreator::saveMassHypoRing( RichRecRing * ring ) const
+void MassHypothesisRingCreator::saveMassHypoRing( LHCb::RichRecRing * ring ) const
 {
   massHypoRings()->insert( ring );
 }
 
-RichRecRings * RichMassHypothesisRingCreator::massHypoRings() const
+LHCb::RichRecRings * MassHypothesisRingCreator::massHypoRings() const
 {
-  if ( !m_rings ) {
+  if ( !m_rings )
+  {
 
-    SmartDataPtr<RichRecRings> tdsRings( evtSvc(), m_ringLocation );
-    if ( !tdsRings ) {
+    if ( !exist<LHCb::RichRecRings>(m_ringLocation) )
+    {
 
       // Reinitialise the Ring Container
-      m_rings = new RichRecRings();
+      m_rings = new LHCb::RichRecRings();
 
       // Register new RichRecRing container to Gaudi data store
       put( m_rings, m_ringLocation );
 
-    } else {
-
-      debug() << "Found " << tdsRings->size() << " pre-existing RichRecRings in TES at "
-              << m_ringLocation << endreq;
+    }
+    else
+    {
 
       // Set smartref to TES Ring container
-      m_rings = tdsRings;
+      m_rings = get<LHCb::RichRecRings>(m_ringLocation);
+
+      debug() << "Found " << m_rings->size() << " pre-existing RichRecRings in TES at "
+              << m_ringLocation << endreq;
 
     }
   }

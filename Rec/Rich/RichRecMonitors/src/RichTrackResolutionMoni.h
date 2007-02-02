@@ -2,10 +2,10 @@
 //---------------------------------------------------------------------------
 /** @file RichTrackResolutionMoni.h
  *
- *  Header file for algorithm class : RichTrackResolutionMoni
+ *  Header file for algorithm class : Rich::Rec::MC::TrackResolutionMoni
  *
  *  CVS Log :-
- *  $Id: RichTrackResolutionMoni.h,v 1.6 2006-08-28 11:15:12 jonrob Exp $
+ *  $Id: RichTrackResolutionMoni.h,v 1.7 2007-02-02 10:07:13 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -37,38 +37,75 @@
 // Kernel
 #include "RichKernel/RichGeomFunctions.h"
 
-//---------------------------------------------------------------------------
-/** @class RichTrackResolutionMoni RichTrackResolutionMoni.h
+//-----------------------------------------------------------------------------
+/** @namespace Rich
  *
- *  Monitors the resolution of the tracking information, in terms important
- *  for the RICH reconstruction.
+ *  General namespace for RICH software
  *
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   05/04/2002
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
  */
-//---------------------------------------------------------------------------
-
-class RichTrackResolutionMoni : public RichRecTupleAlgBase
+//-----------------------------------------------------------------------------
+namespace Rich
 {
 
-public:
+  /** @namespace Rec
+   *
+   *  General namespace for RICH reconstruction software
+   *
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   08/07/2004
+   */
+  namespace Rec
+  {
 
-  /// Standard constructor
-  RichTrackResolutionMoni( const std::string& name,
-                           ISvcLocator* pSvcLocator );
+    //-----------------------------------------------------------------------------
+    /** @namespace MC
+     *
+     *  General namespace for RICH MC related software
+     *
+     *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+     *  @date   05/12/2006
+     */
+    //-----------------------------------------------------------------------------
+    namespace MC
+    {
 
-  virtual ~RichTrackResolutionMoni( ); ///< Destructor
+      //---------------------------------------------------------------------------
+      /** @class TrackResolutionMoni RichTrackResolutionMoni.h
+       *
+       *  Monitors the resolution of the tracking information, in terms important
+       *  for the RICH reconstruction.
+       *
+       *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+       *  @date   05/04/2002
+       */
+      //---------------------------------------------------------------------------
 
-  virtual StatusCode initialize();    // Algorithm initialization
-  virtual StatusCode execute   ();    // Algorithm execution
-  virtual StatusCode finalize  ();    // Algorithm finalization
+      class TrackResolutionMoni : public RichRecTupleAlgBase
+      {
 
-private: // data
+      public:
 
-  const IRichRecMCTruthTool* m_richRecMCTruth;   ///< Pointer to RichRecMCTruthTool interface
-  const IRichMCTrackInfoTool * m_mcTkInfo;       ///< MC track information
-  const Rich::IRichTrackSelector * m_trSelector; ///< Track selector
+        /// Standard constructor
+        TrackResolutionMoni( const std::string& name,
+                             ISvcLocator* pSvcLocator );
 
-};
+        virtual ~TrackResolutionMoni( ); ///< Destructor
+
+        virtual StatusCode initialize();    // Algorithm initialization
+        virtual StatusCode execute   ();    // Algorithm execution
+
+      private: // data
+
+        const Rich::Rec::MC::IMCTruthTool* m_richRecMCTruth;   ///< Pointer to RichRecMCTruthTool interface
+        const Rich::MC::IMCTrackInfoTool * m_mcTkInfo;       ///< MC track information
+        const ITrackSelector * m_trSelector; ///< Track selector
+
+      };
+
+    }
+  }
+}
 
 #endif // RICHRECMONITOR_RICHTRACKRESOLUTIONMONI_H

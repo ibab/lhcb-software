@@ -2,10 +2,10 @@
 //-----------------------------------------------------------------------------
 /** @file RichPixelCreatorFromRichDigitsWithBg.cpp
  *
- *  Implementation file for RICH reconstruction tool : RichPixelCreatorFromRichDigitsWithBg
+ *  Implementation file for RICH reconstruction tool : Rich::Rec::PixelCreatorFromRichDigitsWithBg
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromRichDigitsWithBg.cpp,v 1.17 2006-12-01 16:18:24 cattanem Exp $
+ *  $Id: RichPixelCreatorFromRichDigitsWithBg.cpp,v 1.18 2007-02-02 10:06:27 jonrob Exp $
  *
  *  @author Andy Buckley  buckley@hep.phy.cam.ac.uk
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -19,32 +19,32 @@
 // local
 #include "RichPixelCreatorFromRichDigitsWithBg.h"
 
-// namespaces
-using namespace LHCb;
+// All code is in general Rich reconstruction namespace
+using namespace Rich::Rec::MC;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( RichPixelCreatorFromRichDigitsWithBg );
+DECLARE_TOOL_FACTORY( PixelCreatorFromRichDigitsWithBg );
 
 // Standard constructor
-RichPixelCreatorFromRichDigitsWithBg::
-RichPixelCreatorFromRichDigitsWithBg( const std::string& type,
-                                      const std::string& name,
-                                      const IInterface* parent )
-  : RichPixelCreatorBase ( type, name, parent ),
-    m_smartIDTool        ( 0 ),
+PixelCreatorFromRichDigitsWithBg::
+PixelCreatorFromRichDigitsWithBg( const std::string& type,
+                                  const std::string& name,
+                                  const IInterface* parent )
+  : Rich::Rec::PixelCreatorBase ( type, name, parent ),
+    m_smartIDTool        ( NULL ),
     m_numBgTracksToAdd   ( Rich::NRiches, 0 )
 {
   // Define job option parameters
-  declareProperty( "RecoDigitsLocation", m_recoDigitsLocation = RichDigitLocation::Default );
+  declareProperty( "RecoDigitsLocation", m_recoDigitsLocation = LHCb::RichDigitLocation::Default );
   declareProperty( "NumberBackgroundTracksToAdd",  m_numBgTracksToAdd );
 }
 
 // Initializer
-StatusCode RichPixelCreatorFromRichDigitsWithBg::initialize()
+StatusCode PixelCreatorFromRichDigitsWithBg::initialize()
 {
   // Sets up various tools and services
-  const StatusCode sc = RichPixelCreatorBase::initialize();
+  const StatusCode sc = Rich::Rec::PixelCreatorBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
@@ -58,30 +58,24 @@ StatusCode RichPixelCreatorFromRichDigitsWithBg::initialize()
   return sc;
 }
 
-StatusCode RichPixelCreatorFromRichDigitsWithBg::finalize()
-{
-  // Execute base class method
-  return RichPixelCreatorBase::finalize();
-}
-
 // Fill the stack of background tracks from the current event
 // (effectively emptying this event)
 StatusCode
-RichPixelCreatorFromRichDigitsWithBg::fillBgTrackStack() const
+PixelCreatorFromRichDigitsWithBg::fillBgTrackStack() const
 {
   // Obtain smart data pointer to RichDigits
-  RichDigits * digits = get<RichDigits>( m_recoDigitsLocation );
+  LHCb::RichDigits * digits = get<LHCb::RichDigits>( m_recoDigitsLocation );
   Rich::Map<Rich::DetectorType, unsigned int> originalNumTracksInStack;
   originalNumTracksInStack[Rich::Rich1] = m_digitsForTrackBg[Rich::Rich1].size();
   originalNumTracksInStack[Rich::Rich2] = m_digitsForTrackBg[Rich::Rich2].size();
   Rich::Map<Rich::DetectorType, unsigned int> numDigitsAddedToStack;
 
   // Loop over RichDigits and create working pixels
-  for ( RichDigits::const_iterator digit = digits->begin(); digit != digits->end(); ++digit ) {
+  for ( LHCb::RichDigits::const_iterator digit = digits->begin(); digit != digits->end(); ++digit ) {
     const Rich::DetectorType whichRich( (*digit)->key().rich() );
 
     // Make association to the MCRichDigit via IRichMCTruthTool tool:
-    const MCRichDigit* mcDigit( m_mcTool->mcRichDigit( (*digit)->richSmartID() ) );
+    const LHCb::MCRichDigit* mcDigit( m_mcTool->mcRichDigit( (*digit)->richSmartID() ) );
     if (mcDigit) {
 
       // Get MC hits from the MC digit (can be >1 photon producing one digit in general)
@@ -90,7 +84,7 @@ RichPixelCreatorFromRichDigitsWithBg::fillBgTrackStack() const
         // For each hit, retrieve the MCParticle and add it to the stack if valid
         for ( LHCb::MCRichDigitHit::Vector::const_iterator mcHit = mcDigit->hits().begin();
               mcHit != mcDigit->hits().end(); ++mcHit) {
-          const MCParticle* mcParticle( (*mcHit).mcRichHit()->mcParticle() );
+          const LHCb::MCParticle* mcParticle( (*mcHit).mcRichHit()->mcParticle() );
           if (mcParticle) {
             if ( m_numBgTracksToAdd[whichRich] > 0 ) {
               m_digitsForTrackBg[whichRich][mcParticle].push_back( (*digit)->key() );
@@ -134,11 +128,11 @@ RichPixelCreatorFromRichDigitsWithBg::fillBgTrackStack() const
 }
 
 // Forms a new RichRecPixel object from a RichDigit
-RichRecPixel *
-RichPixelCreatorFromRichDigitsWithBg::newPixel( const ContainedObject * obj ) const
+LHCb::RichRecPixel *
+PixelCreatorFromRichDigitsWithBg::newPixel( const ContainedObject * obj ) const
 {
   // Try to cast to RichDigit
-  const RichDigit * digit = dynamic_cast<const RichDigit*>(obj);
+  const LHCb::RichDigit * digit = dynamic_cast<const LHCb::RichDigit*>(obj);
   if ( !digit )
   {
     Warning("Parent not of type RichDigit");
@@ -146,20 +140,20 @@ RichPixelCreatorFromRichDigitsWithBg::newPixel( const ContainedObject * obj ) co
   }
 
   // Get the pixel via the smart ID
-  RichRecPixel * newPix( newPixel( digit->key() ) );
+  LHCb::RichRecPixel * newPix( newPixel( digit->key() ) );
 
   // Set parent information
   if ( newPix )
   {
     newPix->setParentPixel( digit );
-    newPix->setParentType( Rich::PixelParent::Digit );
+    newPix->setParentType( Rich::Rec::PixelParent::Digit );
   }
 
   return newPix;
 }
 
-RichRecPixel *
-RichPixelCreatorFromRichDigitsWithBg::newPixel( const RichSmartID id ) const
+LHCb::RichRecPixel *
+PixelCreatorFromRichDigitsWithBg::newPixel( const LHCb::RichSmartID id ) const
 {
 
   // See if this RichRecPixel already exists
@@ -170,14 +164,14 @@ RichPixelCreatorFromRichDigitsWithBg::newPixel( const RichSmartID id ) const
   else
   {
 
-    RichRecPixel* newPix(0);
+    LHCb::RichRecPixel* newPix(0);
 
     // Check this hit is OK
     if ( pixelIsOK(id) )
     {
 
       // Make a new RichRecPixel
-      newPix = new RichRecPixel();
+      newPix = new LHCb::RichRecPixel();
 
       // Positions
       newPix->setGlobalPosition( m_smartIDTool->globalPosition(id) );
@@ -206,7 +200,7 @@ RichPixelCreatorFromRichDigitsWithBg::newPixel( const RichSmartID id ) const
 }
 
 
-StatusCode RichPixelCreatorFromRichDigitsWithBg::newPixels() const
+StatusCode PixelCreatorFromRichDigitsWithBg::newPixels() const
 {
   if ( !m_allDone )
   {
@@ -231,27 +225,27 @@ StatusCode RichPixelCreatorFromRichDigitsWithBg::newPixels() const
     }
 
     // Obtain smart data pointer to RichDigits
-    const RichDigits * digits = get<RichDigits>( m_recoDigitsLocation );
+    const LHCb::RichDigits * digits = get<LHCb::RichDigits>( m_recoDigitsLocation );
 
     // Loop over RichDigits and create working pixels
     richPixels()->reserve( digits->size() );
-    for ( RichDigits::const_iterator digit = digits->begin();
+    for ( LHCb::RichDigits::const_iterator digit = digits->begin();
           digit != digits->end(); ++digit ) { newPixel( *digit ); }
 
     // Do the same thing for the bg track digits
-    Rich::Map<Rich::DetectorType, size_t> numBgTracksAdded;
-    size_t numBgPixelsAdded(0);
+    Rich::Map<Rich::DetectorType, unsigned int> numBgTracksAdded;
+    unsigned int numBgPixelsAdded(0);
     // RICH1
     while ( numBgTracksAdded[Rich::Rich1] < m_numBgTracksToAdd[Rich::Rich1] )
     {
 
       // Add hits for this particle
-      std::vector<RichSmartID> & bgdigits = m_digitsForTrackBg[Rich::Rich1].begin()->second;
-      for ( std::vector<RichSmartID>::const_iterator digit = bgdigits.begin();
+      std::vector<LHCb::RichSmartID> & bgdigits = m_digitsForTrackBg[Rich::Rich1].begin()->second;
+      for ( std::vector<LHCb::RichSmartID>::const_iterator digit = bgdigits.begin();
             digit != bgdigits.end(); ++digit )
       {
-        RichRecPixel * newPix = newPixel( *digit );
-        newPix->setParentType( Rich::PixelParent::NoParent );
+        LHCb::RichRecPixel * newPix = newPixel( *digit );
+        newPix->setParentType( Rich::Rec::PixelParent::NoParent );
         ++numBgPixelsAdded;
       }
 
@@ -266,12 +260,12 @@ StatusCode RichPixelCreatorFromRichDigitsWithBg::newPixels() const
     {
 
       // Add hits for this particle
-      std::vector<RichSmartID> & bgdigits = m_digitsForTrackBg[Rich::Rich2].begin()->second;
-      for ( std::vector<RichSmartID>::const_iterator digit = bgdigits.begin();
+      std::vector<LHCb::RichSmartID> & bgdigits = m_digitsForTrackBg[Rich::Rich2].begin()->second;
+      for ( std::vector<LHCb::RichSmartID>::const_iterator digit = bgdigits.begin();
             digit != bgdigits.end(); ++digit )
       {
-        RichRecPixel * newPix = newPixel( *digit );
-        newPix->setParentType( Rich::PixelParent::NoParent );
+        LHCb::RichRecPixel * newPix = newPixel( *digit );
+        newPix->setParentType( Rich::Rec::PixelParent::NoParent );
         ++numBgPixelsAdded;
       }
 
@@ -295,7 +289,8 @@ StatusCode RichPixelCreatorFromRichDigitsWithBg::newPixels() const
     {
       debug() << "Located " << digits->size() << " RichDigits at "
               << m_recoDigitsLocation << endreq
-              << "Added " << numBgTracksAdded << " additional background tracks with "
+              << "Added " << numBgTracksAdded
+              << " additional background tracks with "
               << numBgPixelsAdded << " pixels" << endreq
               << "Created " << richPixels()->size() << " RichRecPixels at "
               << pixelLocation() << endreq;

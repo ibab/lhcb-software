@@ -2,10 +2,10 @@
 //-----------------------------------------------------------------------------
 /** @file RichRecGeomTool.h
  *
- *  Header file for tool : RichRecGeomTool
+ *  Header file for tool : Rich::Rec::GeomTool
  *
  *  CVS Log :-
- *  $Id: RichRecGeomTool.h,v 1.9 2006-12-01 17:05:09 cattanem Exp $
+ *  $Id: RichRecGeomTool.h,v 1.10 2007-02-02 10:10:41 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -31,68 +31,95 @@
 #include "RichRecBase/IRichCherenkovAngle.h"
 
 //-----------------------------------------------------------------------------
-/** @class RichRecGeomTool RichRecGeomTool.h
+/** @namespace Rich
  *
- *  Tool to answer simple geometrical questions
- *  using the reconstruction event model
+ *  General namespace for RICH software
  *
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   15/03/2002
- *
- *  @todo Find a way to calibrate the average radiator distortion parameters
- *  @todo Finish hpdPanelAcceptance method
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
  */
 //-----------------------------------------------------------------------------
-
-class RichRecGeomTool : public RichRecToolBase,
-                        virtual public IRichRecGeomTool
+namespace Rich
 {
 
-public: // Methods for Gaudi Framework
+  //-----------------------------------------------------------------------------
+  /** @namespace Rec
+   *
+   *  General namespace for RICH reconstruction software
+   *
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   08/07/2004
+   */
+  //-----------------------------------------------------------------------------
+  namespace Rec
+  {
 
-  /// Standard constructor
-  RichRecGeomTool( const std::string& type,
-                   const std::string& name,
-                   const IInterface* parent );
+    //-----------------------------------------------------------------------------
+    /** @class GeomTool RichRecGeomTool.h
+     *
+     *  Tool to answer simple geometrical questions
+     *  using the reconstruction event model
+     *
+     *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+     *  @date   15/03/2002
+     *
+     *  @todo Find a way to calibrate the average radiator distortion parameters
+     *  @todo Finish hpdPanelAcceptance method
+     */
+    //-----------------------------------------------------------------------------
 
-  /// Destructor
-  virtual ~RichRecGeomTool(){}
+    class GeomTool : public Rich::Rec::ToolBase,
+                     virtual public IGeomTool
+    {
 
-  // Initialize method
-  StatusCode initialize();
+    public: // Methods for Gaudi Framework
 
-  // Finalize method
-  StatusCode finalize();
+      /// Standard constructor
+      GeomTool( const std::string& type,
+                const std::string& name,
+                const IInterface* parent );
 
-public: // methods (and doxygen comments) inherited from public interface
+      /// Destructor
+      virtual ~GeomTool() {}
 
-  // Returns square of distance seperating the pixel hit and hit position extrapolated
-  // using the RichRecSegment direction in local corrdinates
-  double trackPixelHitSep2( const LHCb::RichRecSegment * segment,
-                            const LHCb::RichRecPixel * pixel ) const;
+      // Initialize method
+      StatusCode initialize();
 
-  // Computes the fraction of the Cherenkov cone for a given segment that
-  //  is within the average HPD panel acceptance
-  double hpdPanelAcceptance( LHCb::RichRecSegment * segment,
-                             const Rich::ParticleIDType id ) const;
+      // Finalize method
+      StatusCode finalize();
 
-  // Correct the given position (in local HPD coordinates) for the average
-  // optical distortion for given radiator
-  Gaudi::XYZPoint correctAvRadiatorDistortion( const Gaudi::XYZPoint & point,
-                                               const Rich::RadiatorType rad ) const;
+    public: // methods (and doxygen comments) inherited from public interface
 
-private: // private data
+      // Returns square of distance seperating the pixel hit and hit position extrapolated
+      // using the RichRecSegment direction in local corrdinates
+      double trackPixelHitSep2( const LHCb::RichRecSegment * segment,
+                                const LHCb::RichRecPixel * pixel ) const;
 
-  // Pointers to tool instances
-  const IRichDetParameters  * m_detParams; ///< Detector parameters tool
-  const IRichCherenkovAngle * m_ckAngle;   ///< Pointer to the Cherenkov angle tool
+      // Computes the fraction of the Cherenkov cone for a given segment that
+      //  is within the average HPD panel acceptance
+      double hpdPanelAcceptance( LHCb::RichRecSegment * segment,
+                                 const Rich::ParticleIDType id ) const;
 
-  /// Radiator correction scale parameter
-  std::vector<double> m_radScale;
+      // Correct the given position (in local HPD coordinates) for the average
+      // optical distortion for given radiator
+      Gaudi::XYZPoint correctAvRadiatorDistortion( const Gaudi::XYZPoint & point,
+                                                   const Rich::RadiatorType rad ) const;
 
-  /// The radiator outer limits in local coordinates
-  boost::array< IRichDetParameters::RadLimits, Rich::NRadiatorTypes > m_radOutLimLoc;
+    private: // private data
 
-};
+      // Pointers to tool instances
+      const IDetParameters  * m_detParams; ///< Detector parameters tool
+      const ICherenkovAngle * m_ckAngle;   ///< Pointer to the Cherenkov angle tool
+
+      /// Radiator correction scale parameter
+      std::vector<double> m_radScale;
+
+      /// The radiator outer limits in local coordinates
+      boost::array< IDetParameters::RadLimits, Rich::NRadiatorTypes > m_radOutLimLoc;
+
+    };
+
+  }
+}
 
 #endif // RICHRECTOOLS_RICHRECGEOMTOOL_H

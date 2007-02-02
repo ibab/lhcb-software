@@ -2,10 +2,10 @@
 //-----------------------------------------------------------------------------
 /** @file RichPhotonCreator.h
  *
- *  Header file for tool : RichPhotonCreator
+ *  Header file for tool : Rich::Rec::PhotonCreator
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreator.h,v 1.26 2006-12-01 17:05:09 cattanem Exp $
+ *  $Id: RichPhotonCreator.h,v 1.27 2007-02-02 10:10:41 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -22,50 +22,77 @@
 #include "RichRecBase/IRichPhotonReconstruction.h"
 
 //-----------------------------------------------------------------------------
-/** @class RichPhotonCreator RichPhotonCreator.h
+/** @namespace Rich
  *
- *  Tool which performs the association between RichRecTracks and
- *  RichRecPixels to form RichRecPhotons
+ *  General namespace for RICH software
  *
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   15/03/2002
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
  */
 //-----------------------------------------------------------------------------
-
-class RichPhotonCreator : public RichPhotonCreatorBase
+namespace Rich
 {
 
-public: // Methods for Gaudi Framework
+  //-----------------------------------------------------------------------------
+  /** @namespace Rec
+   *
+   *  General namespace for RICH reconstruction software
+   *
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   08/07/2004
+   */
+  //-----------------------------------------------------------------------------
+  namespace Rec
+  {
 
-  /// Standard constructor
-  RichPhotonCreator( const std::string& type,
+    //-----------------------------------------------------------------------------
+    /** @class PhotonCreator RichPhotonCreator.h
+     *
+     *  Tool which performs the association between RichRecTracks and
+     *  RichRecPixels to form RichRecPhotons
+     *
+     *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+     *  @date   15/03/2002
+     */
+    //-----------------------------------------------------------------------------
+
+    class PhotonCreator : public PhotonCreatorBase
+    {
+
+    public: // Methods for Gaudi Framework
+
+      /// Standard constructor
+      PhotonCreator( const std::string& type,
                      const std::string& name,
                      const IInterface* parent );
 
-  /// Destructor
-  virtual ~RichPhotonCreator(){}
+      /// Destructor
+      virtual ~PhotonCreator(){}
 
-  // Initialize method
-  StatusCode initialize();
+      // Initialize method
+      StatusCode initialize();
 
-  // Finalize method
-  StatusCode finalize();
+      // Finalize method
+      StatusCode finalize();
 
-protected: // methods
+    protected: // methods
 
-  /// Form a Photon candidate from a Segment and a pixel.
-  virtual LHCb::RichRecPhoton * buildPhoton( LHCb::RichRecSegment * segment,
-                                             LHCb::RichRecPixel * pixel,
-                                             const RichRecPhotonKey key ) const;
+      /// Form a Photon candidate from a Segment and a pixel.
+      virtual LHCb::RichRecPhoton * buildPhoton( LHCb::RichRecSegment * segment,
+                                                 LHCb::RichRecPixel * pixel,
+                                                 const RichRecPhotonKey key ) const;
 
-private: // private data
+    private: // private data
 
-  /// Pointer to photon reconstruction tool
-  const IRichPhotonReconstruction * m_photonReco;
+      /// Pointer to photon reconstruction tool
+      const IPhotonReconstruction * m_photonReco;
 
-  /// Photon reconstruction tool runtime name
-  std::string m_photonRecoName;
+      /// Photon reconstruction tool runtime name
+      std::string m_photonRecoName;
 
-};
+    };
+
+  }
+}
 
 #endif // RICHRECTOOLS_RICHPHOTONCREATOR_H

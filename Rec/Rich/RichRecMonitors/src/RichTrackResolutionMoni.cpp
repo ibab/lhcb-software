@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichTrackResolutionMoni
  *
  *  CVS Log :-
- *  $Id: RichTrackResolutionMoni.cpp,v 1.12 2006-08-31 12:52:00 cattanem Exp $
+ *  $Id: RichTrackResolutionMoni.cpp,v 1.13 2007-02-02 10:07:13 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -19,16 +19,16 @@
 #include "GaudiKernel/SystemOfUnits.h"
 
 // namespace
-using namespace LHCb;
+using namespace Rich::Rec::MC;
 
 //---------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( RichTrackResolutionMoni );
+DECLARE_ALGORITHM_FACTORY( TrackResolutionMoni );
 
 // Standard constructor, initializes variables
-RichTrackResolutionMoni::RichTrackResolutionMoni( const std::string& name,
-                                                  ISvcLocator* pSvcLocator )
-  : RichRecTupleAlgBase ( name, pSvcLocator ),
+TrackResolutionMoni::TrackResolutionMoni( const std::string& name,
+                                          ISvcLocator* pSvcLocator )
+  : Rich::Rec::TupleAlgBase ( name, pSvcLocator ),
     m_richRecMCTruth    ( NULL ),
     m_mcTkInfo          ( NULL ),
     m_trSelector        ( NULL )
@@ -37,13 +37,13 @@ RichTrackResolutionMoni::RichTrackResolutionMoni( const std::string& name,
 }
 
 // Destructor
-RichTrackResolutionMoni::~RichTrackResolutionMoni() {};
+TrackResolutionMoni::~TrackResolutionMoni() {};
 
 //  Initialize
-StatusCode RichTrackResolutionMoni::initialize()
+StatusCode TrackResolutionMoni::initialize()
 {
   // Sets up various tools and services
-  const StatusCode sc = RichRecTupleAlgBase::initialize();
+  const StatusCode sc = Rich::Rec::TupleAlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
@@ -55,7 +55,7 @@ StatusCode RichTrackResolutionMoni::initialize()
 }
 
 // Main execution
-StatusCode RichTrackResolutionMoni::execute()
+StatusCode TrackResolutionMoni::execute()
 {
   debug() << "Execute" << endreq;
 
@@ -84,10 +84,10 @@ StatusCode RichTrackResolutionMoni::execute()
   const RichHistoID hid;
 
   // Iterate over segments
-  for ( RichRecSegments::const_iterator iSeg = richSegments()->begin();
+  for ( LHCb::RichRecSegments::const_iterator iSeg = richSegments()->begin();
         iSeg != richSegments()->end(); ++iSeg )
   {
-    RichRecSegment * segment = *iSeg;
+    LHCb::RichRecSegment * segment = *iSeg;
 
     // apply track selection
     if ( !m_trSelector->trackSelected( segment->richRecTrack() ) ) continue;
@@ -98,7 +98,7 @@ StatusCode RichTrackResolutionMoni::execute()
 
     // shortcuts
     // track segment
-    const RichTrackSegment & tkSeg = segment->trackSegment();
+    const LHCb::RichTrackSegment & tkSeg = segment->trackSegment();
     // entry/exit points
     const Gaudi::XYZPoint & entP  = tkSeg.entryPoint();
     const Gaudi::XYZPoint & extP  = tkSeg.exitPoint();
@@ -121,12 +121,12 @@ StatusCode RichTrackResolutionMoni::execute()
     plot1D( recoInOutAng, hid(rad,"recoInOutAng"), "Reco. entry/exit angle",0,0.01);
 
     // Get associated RichMCSegment and MCParticle
-    const MCRichSegment * mcSeg = m_richRecMCTruth->mcRichSegment(segment);
+    const LHCb::MCRichSegment * mcSeg = m_richRecMCTruth->mcRichSegment(segment);
     if ( mcSeg )
     {
       ++nMCSegs[rad]; // count MC segments per radiator
-      
-      const MCParticle * mcPart = m_richRecMCTruth->mcParticle(segment);
+
+      const LHCb::MCParticle * mcPart = m_richRecMCTruth->mcParticle(segment);
 
       // shortcuts
       // MC entry and exit points
@@ -305,7 +305,7 @@ StatusCode RichTrackResolutionMoni::execute()
 
   } // end segment loop
 
-  // Fill final plots
+    // Fill final plots
   for ( int irad = 0; irad < Rich::NRadiatorTypes; ++irad )
   {
     const Rich::RadiatorType rad = (Rich::RadiatorType)irad;
@@ -315,11 +315,4 @@ StatusCode RichTrackResolutionMoni::execute()
   }
 
   return StatusCode::SUCCESS;
-}
-
-//  Finalize
-StatusCode RichTrackResolutionMoni::finalize()
-{
-  // Execute base class method
-  return RichRecTupleAlgBase::finalize();
 }

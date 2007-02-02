@@ -3,25 +3,27 @@
 CheckRICHSeq.Context = "Offline";
 
 // MC tools
-ToolSvc.RichToolRegistry.Tools += { "RichMCTruthTool/RichMCTruthTool" };
-ToolSvc.RichToolRegistry.Tools += { "RichRecMCTruthTool/RichRecMCTruthTool" };
-ToolSvc.RichToolRegistry.Tools += { "RichMCTrackInfoTool/RichMCTrackInfoTool" };
+ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::MC::MCTrackInfoTool/RichMCTrackInfoTool" };
+ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::MC::MCTruthTool/RichRecMCTruthTool" };
+ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::MC::MCTruthTool/RichMCTruthTool" };
 
 // Turn on HPD suppression warnings
 //ToolSvc.Offline.RichPixelCreator.PixelSuppress.PrintHPDSuppressions = true;
 
 // Ray tracing tests
-//CheckRICHSeq.Members += { "RichTrackRayTraceTest" };
+//CheckRICHSeq.Members += { "Rich::Rec::TrackRayTraceTest" };
 
 // track monitor sequences
+/*
 CheckRICHSeq.Members += {
-  "GaudiSequencer/RichTkGeom" // general track geometry plots
+    "GaudiSequencer/RichTkGeom" // general track geometry plots
+      //,"GaudiSequencer/RichGhostTks"  // Ghost track monitors
       , "GaudiSequencer/RichCKRes"  // CK angle resolutions plots
-      //, "GaudiSequencer/RichTkRes" // track resolution plots
+      , "GaudiSequencer/RichTkRes" // track resolution plots
       , "GaudiSequencer/RichPhotSig" // photon signal number plots
-  , "GaudiSequencer/RichPhotAng" // photon angle plots
-  , "GaudiSequencer/RichPhotGeom" // photon geometry plots
-    //, "GaudiSequencer/RichPhotEff"  // photon reco efficiency plots
+      , "GaudiSequencer/RichPhotAng" // photon angle plots
+      , "GaudiSequencer/RichPhotGeom" // photon geometry plots
+ //, "GaudiSequencer/RichPhotEff"  // photon reco efficiency plots
 };
 RichPhotEff.MeasureTime  = true;
 RichPhotGeom.MeasureTime = true;
@@ -30,34 +32,37 @@ RichPhotSig.MeasureTime  = true;
 RichTkGeom.MeasureTime   = true;
 RichCKRes.MeasureTime    = true;
 RichTkRes.MeasureTime    = true;
+*/
 
 // Reco track monitors
-#include "$RICHRECMONITORSOPTS/RecoMoni_Brunel_Tracks.opts"
+//#include "$RICHRECMONITORSOPTS/RecoMoni_Brunel_Tracks.opts"
 
 // MCRichTracks
-#include "$RICHRECMONITORSOPTS/RecoMoni_Brunel_MCRichTracks.opts"
+//#include "$RICHRECMONITORSOPTS/RecoMoni_Brunel_MCRichTracks.opts"
 
 // Options for photon reco eff monitors
-ToolSvc.Offline.RichToolRegistry.Tools += { "RichPhotonCreator/ForcedRichPhotonCreator" };
+/*
+ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::PhotonCreator/ForcedRichPhotonCreator" };
 ToolSvc.Offline.ForcedRichPhotonCreator.MinAllowedCherenkovTheta = {  0.0,     0.0,     0.0    };
 ToolSvc.Offline.ForcedRichPhotonCreator.MaxAllowedCherenkovTheta = {  999,     999,     999    };
 ToolSvc.Offline.ForcedRichPhotonCreator.MinPhotonProbability     = {  1e-99,   1e-99,   1e-99  };
 ToolSvc.Offline.ForcedRichPhotonCreator.CherenkovThetaTolerence  = {  999,    999,      999    };
 ToolSvc.Offline.ForcedRichPhotonCreator.PhotonPredictor = "ForcedRichPhotonPredictor";
 ToolSvc.Offline.ForcedRichPhotonCreator.PhotonRecoTool  = "ForcedPhotonReco";
-ToolSvc.Offline.RichToolRegistry.Tools += { "RichPhotonRecoUsingQuarticSoln/ForcedPhotonReco" };
-ToolSvc.Offline.RichToolRegistry.Tools += { "RichSimplePhotonPredictor/ForcedRichPhotonPredictor" };
+ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::PhotonRecoUsingQuarticSoln/ForcedPhotonReco" };
+ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::SimplePhotonPredictor/ForcedRichPhotonPredictor" };
 ToolSvc.Offline.ForcedRichPhotonPredictor.MinTrackROI        = {   0.0,   0.0,    0.0  };
 ToolSvc.Offline.ForcedRichPhotonPredictor.MaxTrackROI        = {  9999,  9999,   9999  };
+*/
 
 // Turn on histos in CK resolution tool
 //ToolSvc.Offline.RichCherenkovResolution.HistoProduce = true;
 
 // Timing monitors
-#include "$RICHRECMONITORSOPTS/RecoTiming_Brunel.opts"
+//#include "$RICHRECMONITORSOPTS/RecoTiming_Brunel.opts"
 
 // Low level object verifier
-//CheckRICHSeq.Members += { "RichRecDataObjVerifier/RichRecObjPrint" };
+//CheckRICHSeq.Members += { "Rich::Rec::DataObjVerifier/RichRecObjPrint" };
 //RichRecObjPrint.PrintPixels   = true;
 //RichRecObjPrint.PrintTracks   = true;
 //RichRecObjPrint.PrintSegments = true;
@@ -68,7 +73,7 @@ ToolSvc.Offline.ForcedRichPhotonPredictor.MaxTrackROI        = {  9999,  9999,  
 //RichXMLTest.HistoPath = "RICH/XMLTEST/";
 
 // Pixel monitors
-CheckRICHSeq.Members += { 
-  "RichPixelPositionMonitor/RiRecPixelPosMoni"
-  //,"RichPixelRecoEffMonitor/RiRecPixelRecoEffMoni" 
+CheckRICHSeq.Members += {
+  "Rich::Rec::MC::PixelPositionMonitor/RiRecPixelPosMoni"
+// ,"Rich::Rec::MC::PixelRecoEffMonitor/RiRecPixelRecoEffMoni"
 };

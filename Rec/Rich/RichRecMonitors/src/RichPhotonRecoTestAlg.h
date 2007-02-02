@@ -2,10 +2,10 @@
 //-----------------------------------------------------------------------------
 /** @file RichPhotonRecoTestAlg.h
  *
- *  Header file for algorithm class : RichPhotonRecoTestAlg
+ *  Header file for algorithm class : Rich::Rec::PhotonRecoTestAlg
  *
  *  CVS Log :-
- *  $Id: RichPhotonRecoTestAlg.h,v 1.3 2006-12-01 16:34:07 cattanem Exp $
+ *  $Id: RichPhotonRecoTestAlg.h,v 1.4 2007-02-02 10:07:12 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   21/02/2006
@@ -28,46 +28,71 @@
 #include "RichKernel/BoostArray.h"
 
 //-----------------------------------------------------------------------------
-/** @class RichPhotonRecoTestAlg RichPhotonRecoTestAlg.h
+/** @namespace Rich
  *
- *  Debug algorithm for photon reconstruction.
+ *  General namespace for RICH software
  *
- *  Performs some "fixed" reconstructions in each radiator, to allow easy 
- *  comparisions between different software versions etc.
- *
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   21/02/2006
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
  */
 //-----------------------------------------------------------------------------
-
-class RichPhotonRecoTestAlg : public RichRecHistoAlgBase
+namespace Rich
 {
 
-public:
+  /** @namespace Rec
+   *
+   *  General namespace for RICH reconstruction software
+   *
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   08/07/2004
+   */
+  namespace Rec
+  {
 
-  /// Standard constructor
-  RichPhotonRecoTestAlg( const std::string& name,
+    //-----------------------------------------------------------------------------
+    /** @class PhotonRecoTestAlg RichPhotonRecoTestAlg.h
+     *
+     *  Debug algorithm for photon reconstruction.
+     *
+     *  Performs some "fixed" reconstructions in each radiator, to allow easy
+     *  comparisions between different software versions etc.
+     *
+     *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+     *  @date   21/02/2006
+     */
+    //-----------------------------------------------------------------------------
+
+    class PhotonRecoTestAlg : public RichRecHistoAlgBase
+    {
+
+    public:
+
+      /// Standard constructor
+      PhotonRecoTestAlg( const std::string& name,
                          ISvcLocator* pSvcLocator );
 
-  virtual ~RichPhotonRecoTestAlg( ); ///< Destructor
+      virtual ~PhotonRecoTestAlg( ); ///< Destructor
 
-  virtual StatusCode initialize();    // Algorithm initialization
-  virtual StatusCode execute   ();    // Algorithm execution
-  virtual StatusCode finalize  ();    // Algorithm finalization
+      virtual StatusCode initialize();    // Algorithm initialization
+      virtual StatusCode execute   ();    // Algorithm execution
+      virtual StatusCode finalize  ();    // Algorithm finalization
 
-private: // data
+    private: // data
 
-  /// Pointer to photon reconstruction tool
-  const IRichPhotonReconstruction * m_photonReco; 
+      /// Pointer to photon reconstruction tool
+      const IPhotonReconstruction * m_photonReco;
 
-  /// Photon reconstruction tool runtime name
-  std::string m_photonRecoName;
+      /// Photon reconstruction tool runtime name
+      std::string m_photonRecoName;
 
-  /// typedef of array of DeRichRadiators
-  typedef boost::array<const DeRichRadiator *, Rich::NRadiatorTypes> Radiators;
-  /// Array of radiators
-  Radiators m_radiators;
+      /// typedef of array of DeRichRadiators
+      typedef boost::array<const DeRichRadiator *, Rich::NRadiatorTypes> Radiators;
+      /// Array of radiators
+      Radiators m_radiators;
 
-};
+    };
+
+  }
+}
 
 #endif // RICHRECMONITOR_RICHPIXELMONITOR_H

@@ -2,10 +2,10 @@
 //---------------------------------------------------------------------------
 /** @file RichPhotonRecoEffMonitor.h
  *
- *  Header file for algorithm class : RichPhotonRecoEffMonitor
+ *  Header file for algorithm class : Rich::Rec::MC::PhotonRecoEffMonitor
  *
  *  CVS Log :-
- *  $Id: RichPhotonRecoEffMonitor.h,v 1.2 2006-08-13 17:13:15 jonrob Exp $
+ *  $Id: RichPhotonRecoEffMonitor.h,v 1.3 2007-02-02 10:07:12 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -33,39 +33,77 @@
 // temporary histogramming numbers
 #include "RichRecBase/RichDetParams.h"
 
-//---------------------------------------------------------------------------
-/** @class RichPhotonRecoEffMonitor RichPhotonRecoEffMonitor.h
+//-----------------------------------------------------------------------------
+/** @namespace Rich
  *
- *  Template for monitor algorithms. For cut 'n' paste ...
+ *  General namespace for RICH software
  *
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   05/04/2002
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
  */
-//---------------------------------------------------------------------------
-
-class RichPhotonRecoEffMonitor : public RichRecHistoAlgBase
+//-----------------------------------------------------------------------------
+namespace Rich
 {
 
-public:
+  /** @namespace Rec
+   *
+   *  General namespace for RICH reconstruction software
+   *
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   08/07/2004
+   */
+  namespace Rec
+  {
 
-  /// Standard constructor
-  RichPhotonRecoEffMonitor( const std::string& name,
-                            ISvcLocator* pSvcLocator );
+    //-----------------------------------------------------------------------------
+    /** @namespace MC
+     *
+     *  General namespace for RICH MC related software
+     *
+     *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+     *  @date   05/12/2006
+     */
+    //-----------------------------------------------------------------------------
+    namespace MC
+    {
 
-  virtual ~RichPhotonRecoEffMonitor( ); ///< Destructor
+      //---------------------------------------------------------------------------
+      /** @class PhotonRecoEffMonitor RichPhotonRecoEffMonitor.h
+       *
+       *  Template for monitor algorithms. For cut 'n' paste ...
+       *
+       *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+       *  @date   05/04/2002
+       */
+      //---------------------------------------------------------------------------
 
-  virtual StatusCode initialize();    // Algorithm initialization
-  virtual StatusCode execute   ();    // Algorithm execution
-  virtual StatusCode finalize  ();    // Algorithm finalization
+      class PhotonRecoEffMonitor : public RichRecHistoAlgBase
+      {
 
-private: // data
+      public:
 
-  const IRichRecMCTruthTool* m_richRecMCTruth;    ///< Pointer to RichRecMCTruthTool interface
-  const IRichCherenkovAngle * m_ckAngle;          ///< Rich Cherenkov angle calculator tool
-  const IRichRecGeomTool * m_geomTool;            ///< Simple geometrical questions
-  const IRichPhotonCreator * m_forcedPhotCreator; ///< Forced photon creator
-  const Rich::IRichTrackSelector * m_trSelector;  ///< Track selector                
+        /// Standard constructor
+        PhotonRecoEffMonitor( const std::string& name,
+                              ISvcLocator* pSvcLocator );
 
-};
+        virtual ~PhotonRecoEffMonitor( ); ///< Destructor
+
+        virtual StatusCode initialize();    // Algorithm initialization
+        virtual StatusCode execute   ();    // Algorithm execution
+        virtual StatusCode finalize  ();    // Algorithm finalization
+
+      private: // data
+
+        const Rich::Rec::MC::IMCTruthTool* m_richRecMCTruth;    ///< Pointer to RichRecMCTruthTool interface
+        const ICherenkovAngle * m_ckAngle;          ///< Rich Cherenkov angle calculator tool
+        const IGeomTool * m_geomTool;            ///< Simple geometrical questions
+        const IPhotonCreator * m_forcedPhotCreator; ///< Forced photon creator
+        const ITrackSelector * m_trSelector;  ///< Track selector
+
+      };
+
+    }
+  }
+}
 
 #endif // RICHRECMONITOR_RICHTRACKRESOLUTIONMONI_H

@@ -2,52 +2,50 @@
 //-----------------------------------------------------------------------------
 /** @file RichStatusCreator.cpp
  *
- *  Implementation file for tool : RichStatusCreator
+ *  Implementation file for tool : Rich::Rec::StatusCreator
  *
  *  CVS Log :-
- *  $Id: RichStatusCreator.cpp,v 1.13 2006-12-01 17:05:09 cattanem Exp $
+ *  $Id: RichStatusCreator.cpp,v 1.14 2007-02-02 10:10:41 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
 //-----------------------------------------------------------------------------
 
-#include "GaudiKernel/ToolFactory.h"
-
 // local
 #include "RichStatusCreator.h"
 
-// namespaces
-using namespace LHCb;
+// All code is in general Rich reconstruction namespace
+using namespace Rich::Rec;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( RichStatusCreator );
+DECLARE_TOOL_FACTORY( StatusCreator );
 
 // Standard constructor
-RichStatusCreator::RichStatusCreator( const std::string& type,
-                                      const std::string& name,
-                                      const IInterface* parent )
+StatusCreator::StatusCreator( const std::string& type,
+                              const std::string& name,
+                              const IInterface* parent )
   : RichRecToolBase      ( type, name, parent ),
-    m_status             ( 0 ),
-    m_richStatusLocation ( RichRecStatusLocation::Default )
+    m_status             ( NULL ),
+    m_richStatusLocation ( LHCb::RichRecStatusLocation::Default )
 {
 
-  declareInterface<IRichStatusCreator>(this);
+  declareInterface<IStatusCreator>(this);
 
   if ( context() == "Offline" )
   {
-    m_richStatusLocation = RichRecStatusLocation::Offline;
+    m_richStatusLocation = LHCb::RichRecStatusLocation::Offline;
   }
   else if ( context() == "HLT" )
   {
-    m_richStatusLocation = RichRecStatusLocation::HLT;
+    m_richStatusLocation = LHCb::RichRecStatusLocation::HLT;
   }
   declareProperty( "RichRecStatusLocation", m_richStatusLocation );
 
 }
 
-StatusCode RichStatusCreator::initialize()
+StatusCode StatusCreator::initialize()
 {
   // Sets up various tools and services
   const StatusCode sc = RichRecToolBase::initialize();
@@ -64,30 +62,30 @@ StatusCode RichStatusCreator::initialize()
   return sc;
 }
 
-StatusCode RichStatusCreator::finalize()
+StatusCode StatusCreator::finalize()
 {
   // Execute base class method
   return RichRecToolBase::finalize();
 }
 
 // Method that handles various Gaudi "software events"
-void RichStatusCreator::handle ( const Incident& incident )
+void StatusCreator::handle ( const Incident& incident )
 {
   if ( IncidentType::BeginEvent == incident.type() ) InitNewEvent();
 }
 
-RichRecStatus * RichStatusCreator::richStatus() const
+LHCb::RichRecStatus * StatusCreator::richStatus() const
 {
   if ( !m_status )
   {
-    if ( !exist<RichRecStatus>(m_richStatusLocation) )
+    if ( !exist<LHCb::RichRecStatus>(m_richStatusLocation) )
     {
-      m_status = new RichRecStatus();
+      m_status = new LHCb::RichRecStatus();
       put( m_status, m_richStatusLocation );
     }
     else
     {
-      m_status = get<RichRecStatus>(m_richStatusLocation);
+      m_status = get<LHCb::RichRecStatus>(m_richStatusLocation);
     }
   }
   return m_status;

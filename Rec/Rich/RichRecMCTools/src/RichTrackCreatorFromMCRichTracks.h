@@ -2,10 +2,10 @@
 //-------------------------------------------------------------------------------------
 /** @file RichTrackCreatorFromMCRichTracks.h
  *
- *  Header file for tool : RichTrackCreatorFromMCRichTracks
+ *  Header file for tool : Rich::Rec::TrackCreatorFromMCRichTracks
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorFromMCRichTracks.h,v 1.6 2006-12-01 16:18:24 cattanem Exp $
+ *  $Id: RichTrackCreatorFromMCRichTracks.h,v 1.7 2007-02-02 10:06:28 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -33,126 +33,160 @@
 // Linker
 #include "Linker/LinkerWithKey.h"
 
-//-------------------------------------------------------------------------------------
-/** @class RichTrackCreatorFromMCRichTracks RichTrackCreatorFromMCRichTracks.h
+//-----------------------------------------------------------------------------
+/** @namespace Rich
  *
- *  Tool for the creation and book-keeping of RichRecTrack objects.
- *  Uses MCRichTracks as the parent objects.
+ *  General namespace for RICH software
  *
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   15/03/2002
- *
- *  @todo Fix track selector
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
  */
-//-------------------------------------------------------------------------------------
-
-class RichTrackCreatorFromMCRichTracks : public RichTrackCreatorBase
+//-----------------------------------------------------------------------------
+namespace Rich
 {
 
-public: // Methods for Gaudi Framework
-
-  /// Standard constructor
-  RichTrackCreatorFromMCRichTracks( const std::string& type,
-                                    const std::string& name,
-                                    const IInterface* parent );
-
-  /// Destructor
-  virtual ~RichTrackCreatorFromMCRichTracks() { }
-
-  // Initialize method
-  StatusCode initialize();
-
-  // Finalize method
-  StatusCode finalize();
-
-public: // methods (and doxygen comments) inherited from public interface
-
-  // Returns a RichRecTrack object pointer for given ContainedObject.
-  // In this implementation the ContainedObject must be a reconstruction 'Track'.
-  virtual LHCb::RichRecTrack * newTrack ( const ContainedObject * obj ) const;
-
-  // Form all possible RichRecTracks from input Tracks
-  virtual const StatusCode newTracks() const;
-
-  /// Returns the number of tracks in the input Track container.
-  virtual const long nInputTracks() const;
-
-protected: // methods
-
-  /// Initialise for a new event
-  virtual void InitNewEvent();
-
-  /// Finalise current event
-  virtual void FinishEvent();
-
-private: // defintions
-
-  /// typedef of the Linker object for Tracks to MCParticle
-  typedef LinkerWithKey<LHCb::MCParticle,LHCb::Track> TrackToMCP;
-
-private: // methods
-
-  /// Returns a pointer to the MCRichTracks
-  const LHCb::MCRichTracks * trTracks() const;
-
-  /// Returns a pointer to the faked Tracks
-  LHCb::Tracks * fakedTracks() const;
-
-  /// Returns track type for given MCRichTrack
-  Rich::Track::Type getTrType( const LHCb::MCRichTrack * track ) const;
-
-private: // data
-
-  /// Pointer to MCRichTracks
-  mutable LHCb::MCRichTracks * m_mcrTracks;
-
-  /// Pointer to ring creator
-  const IRichMassHypothesisRingCreator * m_massHypoRings;
-
-  /// Pointer to track segment maker
-  const IRichTrSegMaker * m_segMaker;
-
-  /// Pointer to RichExpectedTrackSignal interface
-  const IRichExpectedTrackSignal * m_signal;
-
-  /// Input location of MCRichTracks in TES
-  std::string m_mcrTracksLocation;
-
-  /// Job Option "nickname" of the TrackSegment tool to use
-  std::string m_trSegToolNickName;
-
-  // Flag to signify all tracks have been formed for current event
-  mutable bool m_allDone;
-
-  /// Flag to turn on the creation of the RichRecRings for the segment mass hypotheses
-  bool m_buildHypoRings;
-
-  /// Create fake reconstructed tracks
-  bool m_fakeRecoTracks;
-
-  /// Fake Reco track location
-  std::string m_fakeTrLoc;
-
-  /// Pointer to faked Tracks
-  mutable LHCb::Tracks * m_fakeTracks;
-
-  /// Map linking MCRichTracks to fake reconstructed tracks
-  mutable Rich::Map<const LHCb::MCRichTrack*,const LHCb::Track*> m_mcToFakeMap;
-
-};
-
-inline Rich::Track::Type 
-RichTrackCreatorFromMCRichTracks::getTrType( const LHCb::MCRichTrack * track ) const
-{
-  Rich::Track::Type trType = Rich::Track::Unknown;
-  try { trType = Rich::Track::type(track); }
-  // Catch exceptions ( track type unknown )
-  catch ( const GaudiException & expt )
+  /** @namespace Rec
+   *
+   *  General namespace for RICH reconstruction software
+   *
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   08/07/2004
+   */
+  namespace Rec
   {
-    Error( expt.message() );
-  }
-  return trType;
-}
 
+    //-----------------------------------------------------------------------------
+    /** @namespace MC
+     *
+     *  General namespace for RICH MC related software
+     *
+     *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+     *  @date   05/12/2006
+     */
+    //-----------------------------------------------------------------------------
+    namespace MC
+    {
+
+      //-------------------------------------------------------------------------------------
+      /** @class TrackCreatorFromMCRichTracks RichTrackCreatorFromMCRichTracks.h
+       *
+       *  Tool for the creation and book-keeping of RichRecTrack objects.
+       *  Uses MCRichTracks as the parent objects.
+       *
+       *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+       *  @date   15/03/2002
+       *
+       *  @todo Fix track selector
+       */
+      //-------------------------------------------------------------------------------------
+
+      class TrackCreatorFromMCRichTracks : public TrackCreatorBase
+      {
+
+      public: // Methods for Gaudi Framework
+
+        /// Standard constructor
+        TrackCreatorFromMCRichTracks( const std::string& type,
+                                      const std::string& name,
+                                      const IInterface* parent );
+
+        /// Destructor
+        virtual ~TrackCreatorFromMCRichTracks() { }
+
+        // Initialize method
+        StatusCode initialize();
+
+      public: // methods (and doxygen comments) inherited from public interface
+
+        // Returns a RichRecTrack object pointer for given ContainedObject.
+        // In this implementation the ContainedObject must be a reconstruction 'Track'.
+        virtual LHCb::RichRecTrack * newTrack ( const ContainedObject * obj ) const;
+
+        // Form all possible RichRecTracks from input Tracks
+        virtual const StatusCode newTracks() const;
+
+        /// Returns the number of tracks in the input Track container.
+        virtual const long nInputTracks() const;
+
+      protected: // methods
+
+        /// Initialise for a new event
+        virtual void InitNewEvent();
+
+        /// Finalise current event
+        virtual void FinishEvent();
+
+      private: // defintions
+
+        /// typedef of the Linker object for Tracks to MCParticle
+        typedef LinkerWithKey<LHCb::MCParticle,LHCb::Track> TrackToMCP;
+
+      private: // methods
+
+        /// Returns a pointer to the MCRichTracks
+        const LHCb::MCRichTracks * trTracks() const;
+
+        /// Returns a pointer to the faked Tracks
+        LHCb::Tracks * fakedTracks() const;
+
+        /// Returns track type for given MCRichTrack
+        Rich::Rec::Track::Type getTrType( const LHCb::MCRichTrack * track ) const;
+
+      private: // data
+
+        /// Pointer to MCRichTracks
+        mutable LHCb::MCRichTracks * m_mcrTracks;
+
+        /// Pointer to ring creator
+        const IMassHypothesisRingCreator * m_massHypoRings;
+
+        /// Pointer to track segment maker
+        const ITrSegMaker * m_segMaker;
+
+        /// Pointer to RichExpectedTrackSignal interface
+        const IExpectedTrackSignal * m_signal;
+
+        /// Input location of MCRichTracks in TES
+        std::string m_mcrTracksLocation;
+
+        /// Job Option "nickname" of the TrackSegment tool to use
+        std::string m_trSegToolNickName;
+
+        // Flag to signify all tracks have been formed for current event
+        mutable bool m_allDone;
+
+        /// Flag to turn on the creation of the RichRecRings for the segment mass hypotheses
+        bool m_buildHypoRings;
+
+        /// Create fake reconstructed tracks
+        bool m_fakeRecoTracks;
+
+        /// Fake Reco track location
+        std::string m_fakeTrLoc;
+
+        /// Pointer to faked Tracks
+        mutable LHCb::Tracks * m_fakeTracks;
+
+        /// Map linking MCRichTracks to fake reconstructed tracks
+        mutable Rich::Map<const LHCb::MCRichTrack*,const LHCb::Track*> m_mcToFakeMap;
+
+      };
+
+      inline Rich::Rec::Track::Type
+      TrackCreatorFromMCRichTracks::getTrType( const LHCb::MCRichTrack * track ) const
+      {
+        Rich::Rec::Track::Type trType = Rich::Rec::Track::Unknown;
+        try { trType = Rich::Rec::Track::type(track); }
+        // Catch exceptions ( track type unknown )
+        catch ( const GaudiException & expt )
+        {
+          Error( expt.message() );
+        }
+        return trType;
+      }
+
+    }
+  }
+}
 
 #endif // RICHRECMCTOOLS_RichTrackCreatorFromMCRichTracks_H

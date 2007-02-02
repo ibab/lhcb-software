@@ -10,46 +10,46 @@ RecoRICHSeq.Context = "Offline";
 // Decode RICH data
 // Technically not needed, since done "on-demand" but useful for timing studies
 //RecoRICHSeq.Members += { "RichLoadRawEvent" };
-RecoRICHSeq.Members += { "RawBufferToRichDigitsAlg/DecodeRawRich" };
+RecoRICHSeq.Members += { "Rich::DAQ::RawBufferToRichDigitsAlg/DecodeRawRich" };
 DecodeRawRich.DecodeBufferOnly = true;
 
 // Initialisation
-RecoRICHSeq.Members += { "RichRecInit" };
+RecoRICHSeq.Members += { "Rich::Rec::Initialise/RichRecInit" };
 
 // Run the Local PID algorithm first
-RecoRICHSeq.Members += { "RichLocalPIDAlg/RichLocPID" };
+RecoRICHSeq.Members += { "Rich::Rec::LocalPID::PIDAlg/RichLocPID" };
 
 // Initialise Global PID algorithm for each event
-RecoRICHSeq.Members += { "RichGlobalPIDInitialize/RichGloPIDInit",
-                         "RichGlobalPIDDigitSel/RichGloPIDDigSel",
-                         "RichGlobalPIDTrTrackSel/RichGloPIDTrSel" };
+RecoRICHSeq.Members += { "Rich::Rec::GlobalPID::Initialize/RichGloPIDInit",
+                         "Rich::Rec::GlobalPID::DigitSel/RichGloPIDDigSel",
+                         "Rich::Rec::GlobalPID::TrackSel/RichGloPIDTrSel" };
 
 // First iteration of background estimation then Global PID iteration
-RecoRICHSeq.Members += { "RichRecBackgroundEsti/RichBckEst1" };
-RecoRICHSeq.Members += { "RichGlobalPIDAlg/RichGloPIDIt1" };
+RecoRICHSeq.Members += { "Rich::Rec::BackgroundEsti/RichBckEst1" };
+RecoRICHSeq.Members += { "Rich::Rec::GlobalPID::Likelihood/RichGloPIDIt1" };
 
 // Second iteration of background estimation then Global PID iteration
-RecoRICHSeq.Members += { "RichRecBackgroundEsti/RichBckEst2" };
-RecoRICHSeq.Members += { "RichGlobalPIDAlg/RichGloPIDIt2" };
+RecoRICHSeq.Members += { "Rich::Rec::BackgroundEsti/RichBckEst2" };
+RecoRICHSeq.Members += { "Rich::Rec::GlobalPID::Likelihood/RichGloPIDIt2" };
 
 // Third iteration of background estimation then Global PID iteration
-//RecoRICHSeq.Members += { "RichRecBackgroundEsti/RichBckEst3",
-//                         "RichGlobalPIDAlg/RichGloPIDIt3" };
+//RecoRICHSeq.Members += { "Rich::Rec::BackgroundEsti/RichBckEst3",
+//                         "Rich::Rec::GlobalPID::Likelihood/RichGloPIDIt3" };
 
 // Ring refit - uses working PIDs to identify good photons and refit angles
 // Results as yet not used in formation of final PID
 //RecoRICHSeq.Members += { "RichRingRefitAlg/RichRingRefit" };
 
 // Finalise Global PID algorithm each event
-RecoRICHSeq.Members += { "RichGlobalPIDFinalize/RichGloPIDFin" };
+RecoRICHSeq.Members += { "Rich::Rec::GlobalPID::Finalize/RichGloPIDFin" };
 
 // Make final output PID results
 // Current uses for each track Global PID if it exists, 
 // otherwise local if that exists
-RecoRICHSeq.Members += { "RichHierarchicalPIDMerge/MergeRichPIDs" };
+RecoRICHSeq.Members += { "Rich::Rec::HierarchicalPIDMerge/MergeRichPIDs" };
 
 // Reconstruction summary
-RecoRICHSeq.Members += { "RichRecSummaryAlg" };
+RecoRICHSeq.Members += { "Rich::Rec::SummaryAlg/RichRecSummary" };
 
 // Reconstruction algorithm parameters
 // ========================================================================================
@@ -65,7 +65,7 @@ ToolSvc.RichLocPIDTool.MinProbThresholdHighP = { 0.03,  0.01, 0.02, 0.02 };
 ToolSvc.RichLocPIDTool.MinProbThresholdLowP  = { 0.1,   0.1,  0.1,  0.09 };
 ToolSvc.RichLocPIDTool.CherenkovThetaRes     = { 0.002, 0.0014, 0.0007   };
 // Cherenkov angle space tool
-ToolSvc.Offline.RichToolRegistry.Tools += { "RichLocalPIDToolAngleSpace/RichLocPIDTool" };
+ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::LocalPID::PIDToolAngleSpace/RichLocPIDTool" };
 
 // Global PID digit selection
 RichGloPIDDigSel.MaxUsedPixels            = 8000;
@@ -125,7 +125,7 @@ MergeRichPIDs.UseGlobalPIDs    = true;
 //MergeRichPIDs.OutputPIDLocation = "Rec/Rich/NewPIDs";
 
 // summary maker parameters
-RichRecSummaryAlg.PhotonNSigma = { 1.0, 1.5, 1.5 };
+RichRecSummary.PhotonNSigma = { 1.0, 1.5, 1.5 };
 
 // Test stuff
 // ---------------------------------------------------------------------------------

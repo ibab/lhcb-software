@@ -2,10 +2,10 @@
 //-----------------------------------------------------------------------------
 /** @file RichExpectedTrackSignal.cpp
  *
- *  Implementation file for tool : RichExpectedTrackSignal
+ *  Implementation file for tool : Rich::Rec::ExpectedTrackSignal
  *
  *  CVS Log :-
- *  $Id: RichExpectedTrackSignal.cpp,v 1.21 2006-12-01 17:05:08 cattanem Exp $
+ *  $Id: RichExpectedTrackSignal.cpp,v 1.22 2007-02-02 10:10:40 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -18,17 +18,17 @@
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
 
-// namespaces
-using namespace LHCb;
+// All code is in general Rich reconstruction namespace
+using namespace Rich::Rec;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( RichExpectedTrackSignal );
+DECLARE_TOOL_FACTORY( ExpectedTrackSignal );
 
 // Standard constructor
-RichExpectedTrackSignal::RichExpectedTrackSignal ( const std::string& type,
-                                                   const std::string& name,
-                                                   const IInterface* parent )
+ExpectedTrackSignal::ExpectedTrackSignal ( const std::string& type,
+                                           const std::string& name,
+                                           const IInterface* parent )
   : RichRecToolBase( type, name, parent ),
     m_geomEff      ( 0 ),
     m_sellmeir     ( 0 ),
@@ -36,10 +36,10 @@ RichExpectedTrackSignal::RichExpectedTrackSignal ( const std::string& type,
     m_richPartProp ( 0 ),
     m_rayScat      ( 0 )
 {
-  declareInterface<IRichExpectedTrackSignal>(this);
+  declareInterface<IExpectedTrackSignal>(this);
 }
 
-StatusCode RichExpectedTrackSignal::initialize()
+StatusCode ExpectedTrackSignal::initialize()
 {
 
   // Sets up various tools and services
@@ -57,14 +57,14 @@ StatusCode RichExpectedTrackSignal::initialize()
   return sc;
 }
 
-StatusCode RichExpectedTrackSignal::finalize()
+StatusCode ExpectedTrackSignal::finalize()
 {
   // Execute base class method
   return RichRecToolBase::finalize();
 }
 
-double RichExpectedTrackSignal::nEmittedPhotons ( RichRecSegment * segment,
-                                                  const Rich::ParticleIDType id ) const
+double ExpectedTrackSignal::nEmittedPhotons ( LHCb::RichRecSegment * segment,
+                                              const Rich::ParticleIDType id ) const
 {
 
   if ( !segment->nEmittedPhotons().dataIsValid(id) )
@@ -72,7 +72,7 @@ double RichExpectedTrackSignal::nEmittedPhotons ( RichRecSegment * segment,
 
     // loop over energy bins
     double signal = 0;
-    RichPhotonSpectra<RichRecSegment::FloatType> & spectra = segment->emittedPhotonSpectra();
+    Rich::PhotonSpectra<LHCb::RichRecSegment::FloatType> & spectra = segment->emittedPhotonSpectra();
     for ( unsigned int iEnBin = 0; iEnBin < spectra.energyBins(); ++iEnBin )
     {
 
@@ -99,8 +99,8 @@ double RichExpectedTrackSignal::nEmittedPhotons ( RichRecSegment * segment,
   return segment->nEmittedPhotons( id );
 }
 
-double RichExpectedTrackSignal::nDetectablePhotons ( RichRecSegment * segment,
-                                                     const Rich::ParticleIDType id ) const
+double ExpectedTrackSignal::nDetectablePhotons (  LHCb::RichRecSegment * segment,
+                                                  const Rich::ParticleIDType id ) const
 {
 
   if ( !segment->nDetectablePhotons().dataIsValid(id) )
@@ -111,8 +111,8 @@ double RichExpectedTrackSignal::nDetectablePhotons ( RichRecSegment * segment,
 
     // loop over energy bins
     double signal = 0;
-    RichPhotonSpectra<RichRecSegment::FloatType> & emitSpectra = segment->emittedPhotonSpectra();
-    RichPhotonSpectra<RichRecSegment::FloatType> & detSpectra  = segment->detectablePhotonSpectra();
+    Rich::PhotonSpectra<LHCb::RichRecSegment::FloatType> & emitSpectra = segment->emittedPhotonSpectra();
+    Rich::PhotonSpectra<LHCb::RichRecSegment::FloatType> & detSpectra  = segment->detectablePhotonSpectra();
     for ( unsigned int iEnBin = 0; iEnBin < emitSpectra.energyBins(); ++iEnBin )
     {
       const double sig = (emitSpectra.energyDist(id))[iEnBin] *
@@ -135,8 +135,8 @@ double RichExpectedTrackSignal::nDetectablePhotons ( RichRecSegment * segment,
 }
 
 double
-RichExpectedTrackSignal::nSignalPhotons ( RichRecSegment * segment,
-                                          const Rich::ParticleIDType id ) const {
+ExpectedTrackSignal::nSignalPhotons (  LHCb::RichRecSegment * segment,
+                                       const Rich::ParticleIDType id ) const {
 
   if ( !segment->nSignalPhotons().dataIsValid( id ) )
   {
@@ -152,8 +152,8 @@ RichExpectedTrackSignal::nSignalPhotons ( RichRecSegment * segment,
       const Rich::RadiatorType rad = segment->trackSegment().radiator();
 
       // loop over energy bins
-      RichPhotonSpectra<RichRecSegment::FloatType> & sigSpectra = segment->signalPhotonSpectra();
-      const RichPhotonSpectra<RichRecSegment::FloatType> & detSpectra = segment->detectablePhotonSpectra();
+      Rich::PhotonSpectra<LHCb::RichRecSegment::FloatType> & sigSpectra = segment->signalPhotonSpectra();
+      const Rich::PhotonSpectra<LHCb::RichRecSegment::FloatType> & detSpectra = segment->detectablePhotonSpectra();
       for ( unsigned int iEnBin = 0; iEnBin < detSpectra.energyBins(); ++iEnBin )
       {
 
@@ -187,8 +187,8 @@ RichExpectedTrackSignal::nSignalPhotons ( RichRecSegment * segment,
 }
 
 double
-RichExpectedTrackSignal::avgSignalPhotEnergy( RichRecSegment * segment,
-                                              const Rich::ParticleIDType id ) const
+ExpectedTrackSignal::avgSignalPhotEnergy(  LHCb::RichRecSegment * segment,
+                                           const Rich::ParticleIDType id ) const
 {
 
   // NB : If used often this method should cache information in segment
@@ -201,7 +201,7 @@ RichExpectedTrackSignal::avgSignalPhotEnergy( RichRecSegment * segment,
   {
 
     // loop over energy bins
-    const RichPhotonSpectra<RichRecSegment::FloatType> & spectra = segment->signalPhotonSpectra();
+    const Rich::PhotonSpectra<LHCb::RichRecSegment::FloatType> & spectra = segment->signalPhotonSpectra();
     double totalEnergy = 0;
     for ( unsigned int iEnBin = 0; iEnBin < spectra.energyBins(); ++iEnBin ) {
       avgEnergy   += (spectra.energyDist(id))[iEnBin] * spectra.binEnergy(iEnBin);
@@ -221,8 +221,8 @@ RichExpectedTrackSignal::avgSignalPhotEnergy( RichRecSegment * segment,
 }
 
 double
-RichExpectedTrackSignal::avgEmitPhotEnergy( RichRecSegment * segment,
-                                            const Rich::ParticleIDType id ) const
+ExpectedTrackSignal::avgEmitPhotEnergy( LHCb::RichRecSegment * segment,
+                                        const Rich::ParticleIDType id ) const
 {
   // NB : If used often this method should cache information in segment
 
@@ -234,7 +234,7 @@ RichExpectedTrackSignal::avgEmitPhotEnergy( RichRecSegment * segment,
   {
 
     // loop over energy bins
-    RichPhotonSpectra<RichRecSegment::FloatType> & spectra = segment->emittedPhotonSpectra();
+    Rich::PhotonSpectra<LHCb::RichRecSegment::FloatType> & spectra = segment->emittedPhotonSpectra();
     double totalEnergy = 0;
     for ( unsigned int iEnBin = 0; iEnBin < spectra.energyBins(); ++iEnBin ) {
       avgEnergy   += (spectra.energyDist(id))[iEnBin] * spectra.binEnergy(iEnBin);
@@ -254,8 +254,8 @@ RichExpectedTrackSignal::avgEmitPhotEnergy( RichRecSegment * segment,
 }
 
 double
-RichExpectedTrackSignal::nScatteredPhotons ( RichRecSegment * segment,
-                                             const Rich::ParticleIDType id ) const
+ExpectedTrackSignal::nScatteredPhotons ( LHCb::RichRecSegment * segment,
+                                         const Rich::ParticleIDType id ) const
 {
   if ( !segment->nScatteredPhotons().dataIsValid(id) ) {
     // Scattered componented is calculated with the signal
@@ -266,35 +266,35 @@ RichExpectedTrackSignal::nScatteredPhotons ( RichRecSegment * segment,
 }
 
 double
-RichExpectedTrackSignal::nTotalObservablePhotons ( RichRecSegment * segment,
-                                                   const Rich::ParticleIDType id ) const
+ExpectedTrackSignal::nTotalObservablePhotons ( LHCb::RichRecSegment * segment,
+                                               const Rich::ParticleIDType id ) const
 {
   return ( m_geomEff->geomEfficiency(segment,id) * nSignalPhotons(segment,id) ) +
     ( m_geomEff->geomEfficiencyScat(segment,id) * nScatteredPhotons(segment,id) );
 }
 
 double
-RichExpectedTrackSignal::nObservableSignalPhotons ( RichRecSegment * segment,
-                                                    const Rich::ParticleIDType id ) const
+ExpectedTrackSignal::nObservableSignalPhotons ( LHCb::RichRecSegment * segment,
+                                                const Rich::ParticleIDType id ) const
 {
   return m_geomEff->geomEfficiency(segment,id) * nSignalPhotons(segment,id);
 }
 
 double
-RichExpectedTrackSignal::nObservableScatteredPhotons ( RichRecSegment * segment,
-                                                       const Rich::ParticleIDType id ) const
+ExpectedTrackSignal::nObservableScatteredPhotons ( LHCb::RichRecSegment * segment,
+                                                   const Rich::ParticleIDType id ) const
 {
   return m_geomEff->geomEfficiencyScat(segment,id) * nScatteredPhotons(segment,id);
 }
 
 double
-RichExpectedTrackSignal::nSignalPhotons ( RichRecTrack * track,
-                                          const Rich::ParticleIDType id ) const
+ExpectedTrackSignal::nSignalPhotons ( LHCb::RichRecTrack * track,
+                                      const Rich::ParticleIDType id ) const
 {
 
   if ( !track->nSignalPhotons().dataIsValid(id) ) {
     double signal = 0;
-    for ( RichRecTrack::Segments::iterator segment =
+    for ( LHCb::RichRecTrack::Segments::iterator segment =
             track->richRecSegments().begin();
           segment != track->richRecSegments().end();
           ++segment ) {
@@ -307,12 +307,12 @@ RichExpectedTrackSignal::nSignalPhotons ( RichRecTrack * track,
 }
 
 double
-RichExpectedTrackSignal::nObservableSignalPhotons ( RichRecTrack * track,
-                                                    const Rich::ParticleIDType id ) const
+ExpectedTrackSignal::nObservableSignalPhotons ( LHCb::RichRecTrack * track,
+                                                const Rich::ParticleIDType id ) const
 {
   if ( !track->nObservableSignalPhotons().dataIsValid(id) ) {
     double signal = 0;
-    for ( RichRecTrack::Segments::iterator segment =
+    for ( LHCb::RichRecTrack::Segments::iterator segment =
             track->richRecSegments().begin();
           segment != track->richRecSegments().end();
           ++segment ) {
@@ -325,12 +325,12 @@ RichExpectedTrackSignal::nObservableSignalPhotons ( RichRecTrack * track,
 }
 
 double
-RichExpectedTrackSignal::nScatteredPhotons ( RichRecTrack * track,
-                                             const Rich::ParticleIDType id ) const
+ExpectedTrackSignal::nScatteredPhotons ( LHCb::RichRecTrack * track,
+                                         const Rich::ParticleIDType id ) const
 {
   if ( !track->nScatteredPhotons().dataIsValid(id) ) {
     double signal = 0;
-    for ( RichRecTrack::Segments::iterator segment =
+    for ( LHCb::RichRecTrack::Segments::iterator segment =
             track->richRecSegments().begin();
           segment != track->richRecSegments().end();
           ++segment ) {
@@ -343,12 +343,12 @@ RichExpectedTrackSignal::nScatteredPhotons ( RichRecTrack * track,
 }
 
 double
-RichExpectedTrackSignal::nObservableScatteredPhotons ( RichRecTrack * track,
-                                                       const Rich::ParticleIDType id ) const
+ExpectedTrackSignal::nObservableScatteredPhotons ( LHCb::RichRecTrack * track,
+                                                   const Rich::ParticleIDType id ) const
 {
   if ( !track->nObservableScatteredPhotons().dataIsValid(id) ) {
     double signal = 0;
-    for ( RichRecTrack::Segments::iterator segment =
+    for ( LHCb::RichRecTrack::Segments::iterator segment =
             track->richRecSegments().begin();
           segment != track->richRecSegments().end();
           ++segment ) {
@@ -361,19 +361,19 @@ RichExpectedTrackSignal::nObservableScatteredPhotons ( RichRecTrack * track,
 }
 
 double
-RichExpectedTrackSignal::nTotalObservablePhotons ( RichRecTrack * track,
-                                                   const Rich::ParticleIDType id ) const
+ExpectedTrackSignal::nTotalObservablePhotons ( LHCb::RichRecTrack * track,
+                                               const Rich::ParticleIDType id ) const
 {
   return nObservableSignalPhotons( track, id ) + nObservableScatteredPhotons( track, id );
 }
 
 double
-RichExpectedTrackSignal::nEmittedPhotons ( RichRecTrack * track,
-                                           const Rich::ParticleIDType id ) const
+ExpectedTrackSignal::nEmittedPhotons ( LHCb::RichRecTrack * track,
+                                       const Rich::ParticleIDType id ) const
 {
   if ( !track->nEmittedPhotons().dataIsValid(id) ) {
     double signal = 0.0;
-    for ( RichRecTrack::Segments::iterator segment =
+    for ( LHCb::RichRecTrack::Segments::iterator segment =
             track->richRecSegments().begin();
           segment != track->richRecSegments().end();
           ++segment ) {
@@ -386,12 +386,12 @@ RichExpectedTrackSignal::nEmittedPhotons ( RichRecTrack * track,
 }
 
 double
-RichExpectedTrackSignal::nDetectablePhotons ( RichRecTrack * track,
-                                              const Rich::ParticleIDType id ) const
+ExpectedTrackSignal::nDetectablePhotons ( LHCb::RichRecTrack * track,
+                                          const Rich::ParticleIDType id ) const
 {
   if ( !track->nDetectablePhotons().dataIsValid(id) ) {
     double signal = 0;
-    for ( RichRecTrack::Segments::iterator segment =
+    for ( LHCb::RichRecTrack::Segments::iterator segment =
             track->richRecSegments().begin();
           segment != track->richRecSegments().end();
           ++segment ) {
@@ -404,11 +404,11 @@ RichExpectedTrackSignal::nDetectablePhotons ( RichRecTrack * track,
 }
 
 bool
-RichExpectedTrackSignal::activeInRadiator( RichRecTrack * track,
-                                           const Rich::RadiatorType rad,
-                                           const Rich::ParticleIDType id ) const
+ExpectedTrackSignal::activeInRadiator( LHCb::RichRecTrack * track,
+                                       const Rich::RadiatorType rad,
+                                       const Rich::ParticleIDType id ) const
 {
-  for ( RichRecTrack::Segments::iterator segment =
+  for ( LHCb::RichRecTrack::Segments::iterator segment =
           track->richRecSegments().begin();
         segment != track->richRecSegments().end();
         ++segment )
@@ -422,7 +422,8 @@ RichExpectedTrackSignal::activeInRadiator( RichRecTrack * track,
   return false;
 }
 
-bool RichExpectedTrackSignal::hasRichInfo( RichRecSegment * segment ) const
+bool
+ExpectedTrackSignal::hasRichInfo( LHCb::RichRecSegment * segment ) const
 {
   // default to no info
   bool hasInfo = false;
@@ -430,7 +431,7 @@ bool RichExpectedTrackSignal::hasRichInfo( RichRecSegment * segment ) const
   if ( aboveThreshold( segment, Rich::Electron ) )
   {
     if ( msgLevel(MSG::DEBUG) )
-    { 
+    {
       debug() << "RichRecSegment is above electron threshold -> hasRichInfo" << endreq;
     }
 
@@ -456,9 +457,10 @@ bool RichExpectedTrackSignal::hasRichInfo( RichRecSegment * segment ) const
   return hasInfo;
 }
 
-bool RichExpectedTrackSignal::hasRichInfo( RichRecTrack * track ) const
+bool
+ExpectedTrackSignal::hasRichInfo( LHCb::RichRecTrack * track ) const
 {
-  for ( RichRecTrack::Segments::iterator segment =
+  for ( LHCb::RichRecTrack::Segments::iterator segment =
           track->richRecSegments().begin();
         segment != track->richRecSegments().end();
         ++segment )
@@ -469,11 +471,11 @@ bool RichExpectedTrackSignal::hasRichInfo( RichRecTrack * track ) const
 }
 
 bool
-RichExpectedTrackSignal::aboveThreshold( RichRecSegment * segment,
-                                         const Rich::ParticleIDType type ) const
+ExpectedTrackSignal::aboveThreshold( LHCb::RichRecSegment * segment,
+                                     const Rich::ParticleIDType type ) const
 {
   // Geometrical track segment
-  const RichTrackSegment & tkSeg = segment->trackSegment();
+  const LHCb::RichTrackSegment & tkSeg = segment->trackSegment();
 
   // momentum for this track segment
   const double P = sqrt(tkSeg.bestMomentum().mag2());
@@ -488,8 +490,8 @@ RichExpectedTrackSignal::aboveThreshold( RichRecSegment * segment,
 
   if ( msgLevel(MSG::DEBUG) )
   {
-    debug() << "Threshold check : " << tkSeg.radiator() << " " << type 
-            << " : P=" << P << " Perr=" << Perr << " Pthres=" << pthres 
+    debug() << "Threshold check : " << tkSeg.radiator() << " " << type
+            << " : P=" << P << " Perr=" << Perr << " Pthres=" << pthres
             << " : above=" << above << endreq;
   }
 
@@ -498,11 +500,11 @@ RichExpectedTrackSignal::aboveThreshold( RichRecSegment * segment,
 }
 
 bool
-RichExpectedTrackSignal::aboveThreshold( RichRecTrack * track,
-                                         const Rich::ParticleIDType type ) const
+ExpectedTrackSignal::aboveThreshold( LHCb::RichRecTrack * track,
+                                     const Rich::ParticleIDType type ) const
 {
   // loop over segments
-  for ( RichRecTrack::Segments::iterator segment = track->richRecSegments().begin();
+  for ( LHCb::RichRecTrack::Segments::iterator segment = track->richRecSegments().begin();
         segment != track->richRecSegments().end();
         ++segment )
   {
@@ -512,12 +514,12 @@ RichExpectedTrackSignal::aboveThreshold( RichRecTrack * track,
 }
 
 bool
-RichExpectedTrackSignal::aboveThreshold( RichRecTrack * track,
-                                         const Rich::ParticleIDType type,
-                                         const Rich::RadiatorType radiator ) const
+ExpectedTrackSignal::aboveThreshold( LHCb::RichRecTrack * track,
+                                     const Rich::ParticleIDType type,
+                                     const Rich::RadiatorType radiator ) const
 {
   // loop over segments
-  for ( RichRecTrack::Segments::iterator segment = track->richRecSegments().begin();
+  for ( LHCb::RichRecTrack::Segments::iterator segment = track->richRecSegments().begin();
         segment != track->richRecSegments().end();
         ++segment ) {
     if ( radiator == (*segment)->trackSegment().radiator() )
@@ -529,8 +531,9 @@ RichExpectedTrackSignal::aboveThreshold( RichRecTrack * track,
 }
 
 // Set the threshold information in a RichPID object for given track
-void RichExpectedTrackSignal::setThresholdInfo( RichRecTrack * track,
-                                                RichPID * pid ) const
+void
+ExpectedTrackSignal::setThresholdInfo( LHCb::RichRecTrack * track,
+                                       LHCb::RichPID * pid ) const
 {
 
   // Assume all hypos are above threshold
@@ -565,8 +568,9 @@ void RichExpectedTrackSignal::setThresholdInfo( RichRecTrack * track,
 }
 
 // Set the threshold information in a RichPID object for given segment
-void RichExpectedTrackSignal::setThresholdInfo( RichRecSegment * segment,
-                                                RichPID * pid ) const
+void
+ExpectedTrackSignal::setThresholdInfo( LHCb::RichRecSegment * segment,
+                                       LHCb::RichPID * pid ) const
 {
 
   // Assume all hypos are above threshold

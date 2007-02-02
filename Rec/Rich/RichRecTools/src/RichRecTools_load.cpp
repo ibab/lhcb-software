@@ -5,7 +5,7 @@
  *  Declaration of objects in the component library RichRecTools
  *
  *  CVS Log :-
- *  $Id: RichRecTools_load.cpp,v 1.30 2006-11-23 18:08:29 jonrob Exp $
+ *  $Id: RichRecTools_load.cpp,v 1.31 2007-02-02 10:10:41 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -14,63 +14,64 @@
 
 #include "GaudiKernel/DeclareFactoryEntries.h"
 
-DECLARE_FACTORY_ENTRIES( RichRecTools ) 
+
+DECLARE_FACTORY_ENTRIES( RichRecTools )
 {
 
   // Rich reconstruction working object creators
-  DECLARE_TOOL( RichDelegatedTrackCreatorFromRecoTracks );
-  DECLARE_TOOL( RichTrackCreatorFromRecoTracks );
-  DECLARE_TOOL( RichSegmentCreator );
-  DECLARE_TOOL( RichPixelCreatorFromRawBuffer );
-  DECLARE_TOOL( RichPixelCreatorWithForcedIneffic );
-  DECLARE_TOOL( RichPhotonCreator );
-  DECLARE_TOOL( RichSimplePhotonPredictor );
-  DECLARE_TOOL( RichSepVCKthetaPhotonPredictor );
-  DECLARE_TOOL( RichPhotonPredictorUsingRings );
-  DECLARE_TOOL( RichStatusCreator ); 
-  DECLARE_TOOL( RichMassHypothesisRingCreator );
+  DECLARE_TOOL( DelegatedTrackCreatorFromRecoTracks );
+  DECLARE_TOOL( TrackCreatorFromRecoTracks );
+  DECLARE_TOOL( SegmentCreator );
+  DECLARE_TOOL( PixelCreatorFromRawBuffer );
+  DECLARE_TOOL( PixelCreatorWithForcedIneffic );
+  DECLARE_TOOL( PhotonCreator );
+  DECLARE_TOOL( SimplePhotonPredictor );
+  DECLARE_TOOL( SepVCKthetaPhotonPredictor );
+  DECLARE_TOOL( PhotonPredictorUsingRings );
+  DECLARE_TOOL( StatusCreator );
+  DECLARE_TOOL( MassHypothesisRingCreator );
 
   // Detector geometry
-  DECLARE_TOOL( RichRecGeomTool );
+  DECLARE_TOOL( GeomTool );
 
   // Geometrical efficiency calculators
-  DECLARE_TOOL( RichGeomEffPhotonTracing );
-  DECLARE_TOOL( RichGeomEffFixedValue );
+  DECLARE_TOOL( GeomEffPhotonTracing );
+  DECLARE_TOOL( GeomEffFixedValue    );
 
   // Signal calculators
-  DECLARE_TOOL( RichExpectedTrackSignal );
-  DECLARE_TOOL( RichPhotonSignal );
-  DECLARE_TOOL( RichTabulatedSignalDetectionEff );
+  DECLARE_TOOL( ExpectedTrackSignal );
+  DECLARE_TOOL( PhotonSignal );
+  DECLARE_TOOL( TabulatedSignalDetectionEff );
 
   // Physical properties
-  DECLARE_TOOL( RichSellmeirFunc );
-  DECLARE_TOOL( RichFunctionalRayleighScatter );
-  DECLARE_TOOL( RichTabulatedRayleighScatter );
-  DECLARE_TOOL( RichTabulatedGasQuartzWindowAbs );
+  DECLARE_TOOL( SellmeirFunc );
+  DECLARE_TOOL( FunctionalRayleighScatter );
+  DECLARE_TOOL( TabulatedRayleighScatter );
+  DECLARE_TOOL( TabulatedGasQuartzWindowAbs );
 
   // Cherenkov angle tools
-  DECLARE_TOOL( RichCherenkovAngle );
-  DECLARE_TOOL( RichBinnedCKResVthetaForRecoTracks );
-  DECLARE_TOOL( RichFunctionalCKResForRecoTracks );
-  DECLARE_TOOL( RichInterpCKResVthetaForRecoTracks );
+  DECLARE_TOOL( CherenkovAngle );
+  DECLARE_TOOL( BinnedCKResVthetaForRecoTracks );
+  DECLARE_TOOL( FunctionalCKResForRecoTracks );
+  DECLARE_TOOL( InterpCKResVthetaForRecoTracks );
 
   // ray tracing
-  DECLARE_TOOL( RichRayTraceCherenkovCone );
+  DECLARE_TOOL( RayTraceCherenkovCone );
 
   // track segment makers
-  DECLARE_TOOL( RichDetailedTrSegMakerFromRecoTracks ); 
-  DECLARE_TOOL( RichFastTrSegMakerFromRecoTracks ); 
+  DECLARE_TOOL( DetailedTrSegMakerFromRecoTracks );
+  DECLARE_TOOL( FastTrSegMakerFromRecoTracks );
 
   // photon reconstruction using Quartic solution
-  DECLARE_TOOL( RichPhotonRecoUsingQuarticSoln ); 
+  DECLARE_TOOL( PhotonRecoUsingQuarticSoln );
 
   // Track selectors
-  DECLARE_NAMESPACE_TOOL( Rich, RichTrackSelector        );
-  DECLARE_NAMESPACE_TOOL( Rich, RichBaseTrackSelector    );
-  DECLARE_NAMESPACE_TOOL( Rich, RichSeedTrackSelector    );
-  DECLARE_NAMESPACE_TOOL( Rich, RichMatchTrackSelector   );
-  DECLARE_NAMESPACE_TOOL( Rich, RichForwardTrackSelector );
-  DECLARE_NAMESPACE_TOOL( Rich, RichVeloTTTrackSelector  );
-  DECLARE_NAMESPACE_TOOL( Rich, RichKsTrackSelector      );
+  DECLARE_TOOL( TrackSelector        );
+  DECLARE_TOOL( BaseTrackSelector    );
+  DECLARE_TOOL( SeedTrackSelector    );
+  DECLARE_TOOL( MatchTrackSelector   );
+  DECLARE_TOOL( ForwardTrackSelector );
+  DECLARE_TOOL( VeloTTTrackSelector  );
+  DECLARE_TOOL( KsTrackSelector      );
 
 };

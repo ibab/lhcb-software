@@ -2,10 +2,10 @@
 //---------------------------------------------------------------------------
 /** @file RichCherenkovResMoni.h
  *
- *  Header file for algorithm class : RichCherenkovResMoni
+ *  Header file for algorithm class : Rich::Rec::MC::CherenkovResMoni
  *
  *  CVS Log :-
- *  $Id: RichCherenkovResMoni.h,v 1.5 2006-08-13 17:13:15 jonrob Exp $
+ *  $Id: RichCherenkovResMoni.h,v 1.6 2007-02-02 10:07:11 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -21,7 +21,7 @@
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 
-// Event
+// Event-
 #include "Event/MCRichOpticalPhoton.h"
 
 // Interfaces
@@ -33,39 +33,77 @@
 // temporary histogramming numbers
 #include "RichRecBase/RichDetParams.h"
 
-//---------------------------------------------------------------------------
-/** @class RichCherenkovResMoni RichCherenkovResMoni.h
+//-----------------------------------------------------------------------------
+/** @namespace Rich
  *
- *  Monitors the resolution of the tracking information, in terms important
- *  for the RICH reconstruction.
+ *  General namespace for RICH software
  *
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   05/04/2002
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
  */
-//---------------------------------------------------------------------------
-
-class RichCherenkovResMoni : public RichRecHistoAlgBase
+//-----------------------------------------------------------------------------
+namespace Rich
 {
 
-public:
+  /** @namespace Rec
+   *
+   *  General namespace for RICH reconstruction software
+   *
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   08/07/2004
+   */
+  namespace Rec
+  {
 
-  /// Standard constructor
-  RichCherenkovResMoni( const std::string& name,
-                        ISvcLocator* pSvcLocator );
+    //-----------------------------------------------------------------------------
+    /** @namespace MC
+     *
+     *  General namespace for RICH MC related software
+     *
+     *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+     *  @date   05/12/2006
+     */
+    //-----------------------------------------------------------------------------
+    namespace MC
+    {
 
-  virtual ~RichCherenkovResMoni( ); ///< Destructor
+      //---------------------------------------------------------------------------
+      /** @class CherenkovResMoni RichCherenkovResMoni.h
+       *
+       *  Monitors the resolution of the tracking information, in terms important
+       *  for the RICH reconstruction.
+       *
+       *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+       *  @date   05/04/2002
+       */
+      //---------------------------------------------------------------------------
 
-  virtual StatusCode initialize();    // Algorithm initialization
-  virtual StatusCode execute   ();    // Algorithm execution
-  virtual StatusCode finalize  ();    // Algorithm finalization
+      class CherenkovResMoni : public RichRecHistoAlgBase
+      {
 
-private: // data
+      public:
 
-  const IRichRecMCTruthTool* m_richRecMCTruth;   ///< Pointer to RichRecMCTruthTool interface
-  const IRichCherenkovAngle * m_ckAngle;         ///< Rich Cherenkov angle calculator tool
-  const IRichCherenkovResolution * m_ckAngleRes; ///< Cherenkov angle resolution tool
-  const Rich::IRichTrackSelector * m_trSelector; ///< Track selector
+        /// Standard constructor
+        CherenkovResMoni( const std::string& name,
+                          ISvcLocator* pSvcLocator );
 
-};
+        virtual ~CherenkovResMoni( ); ///< Destructor
+
+        virtual StatusCode initialize();    // Algorithm initialization
+        virtual StatusCode execute   ();    // Algorithm execution
+        virtual StatusCode finalize  ();    // Algorithm finalization
+
+      private: // data
+
+        const Rich::Rec::MC::IMCTruthTool* m_richRecMCTruth;   ///< Pointer to RichRecMCTruthTool interface
+        const ICherenkovAngle * m_ckAngle;         ///< Rich Cherenkov angle calculator tool
+        const ICherenkovResolution * m_ckAngleRes; ///< Cherenkov angle resolution tool
+        const ITrackSelector * m_trSelector; ///< Track selector
+
+      };
+
+    }
+  }
+}
 
 #endif // RICHRECMONITOR_RICHTRACKRESOLUTIONMONI_H

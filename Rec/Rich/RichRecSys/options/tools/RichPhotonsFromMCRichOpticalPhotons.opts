@@ -1,7 +1,7 @@
 
 // RichRecPhoton Creator - Uses the MC information from MCRichOptical photons
 // to only reconstruct true photons with the MC geometry
-ToolSvc.Offline.RichToolRegistry.Tools += { "RichPhotonCreatorFromMCRichOpticalPhotons/RichPhotonCreator" };
+ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::MC::PhotonCreatorFromMCRichOpticalPhotons/RichPhotonCreator" };
 
 //                                                                Aero     C4F10    CF4
 // absolute max and min allowed Cherenkov theta angles
@@ -12,7 +12,7 @@ ToolSvc.Offline.RichPhotonCreator.MinPhotonProbability       = {  1e-15,   1e-15
 // Fixed range around expected Cherenkov theta
 ToolSvc.Offline.RichPhotonCreator.CherenkovThetaTolerence    = {  0.025,   0.007,   0.003  };
 
-ToolSvc.Offline.RichToolRegistry.Tools += { "RichSepVCKthetaPhotonPredictor/RichPhotonPredictor" };
+ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::SepVCKthetaPhotonPredictor/RichPhotonPredictor" };
 //                                                         Aero     C4F10    CF4
 ToolSvc.Offline.RichPhotonCreator.Predictor.MinTrackROI       = {  110.0,   0.0,    0.0  };
 ToolSvc.Offline.RichPhotonCreator.Predictor.MaxTrackROI       = {  380.0,  85.0,  155.0  };

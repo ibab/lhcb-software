@@ -2,10 +2,10 @@
 //-----------------------------------------------------------------------------
 /** @file RichGeomEffFixedValue.cpp
  *
- *  Implementation file for tool : RichGeomEffFixedValue
+ *  Implementation file for tool : Rich::Rec::GeomEffFixedValue
  *
  *  CVS Log :-
- *  $Id: RichGeomEffFixedValue.cpp,v 1.15 2006-12-01 17:05:09 cattanem Exp $
+ *  $Id: RichGeomEffFixedValue.cpp,v 1.16 2007-02-02 10:10:40 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -18,27 +18,27 @@
 // local
 #include "RichGeomEffFixedValue.h"
 
-// namespaces
-using namespace LHCb;
+// All code is in general Rich reconstruction namespace
+using namespace Rich::Rec;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( RichGeomEffFixedValue );
+DECLARE_TOOL_FACTORY( GeomEffFixedValue );
 
 // Standard constructor
-RichGeomEffFixedValue::RichGeomEffFixedValue ( const std::string& type,
-                                               const std::string& name,
-                                               const IInterface* parent )
+GeomEffFixedValue::GeomEffFixedValue ( const std::string& type,
+                                       const std::string& name,
+                                       const IInterface* parent )
   : RichRecToolBase   ( type, name, parent ),
-    m_ckAngle         ( 0 ),
-    m_geomTool        ( 0 ),
+    m_ckAngle         ( NULL ),
+    m_geomTool        ( NULL ),
     m_fixedValue      ( Rich::NRadiatorTypes, 0.7 ),
     m_fixedScatValue  ( 0.7 ),
     m_checkBoundaries ( false )
 {
 
   // interface
-  declareInterface<IRichGeomEff>(this);
+  declareInterface<IGeomEff>(this);
 
   // job options
   declareProperty( "FixedSignalEfficiency",  m_fixedValue       );
@@ -47,7 +47,7 @@ RichGeomEffFixedValue::RichGeomEffFixedValue ( const std::string& type,
 
 }
 
-StatusCode RichGeomEffFixedValue::initialize()
+StatusCode GeomEffFixedValue::initialize()
 {
   // Sets up various tools and services
   const StatusCode sc = RichRecToolBase::initialize();
@@ -71,27 +71,28 @@ StatusCode RichGeomEffFixedValue::initialize()
   return sc;
 }
 
-StatusCode RichGeomEffFixedValue::finalize()
+StatusCode GeomEffFixedValue::finalize()
 {
   // Execute base class method
   return RichRecToolBase::finalize();
 }
 
-double RichGeomEffFixedValue::geomEfficiency ( RichRecSegment * segment,
-                                               const Rich::ParticleIDType id ) const 
+double
+GeomEffFixedValue::geomEfficiency ( LHCb::RichRecSegment * segment,
+                                    const Rich::ParticleIDType id ) const
 {
-  
+
   if ( !segment->geomEfficiency().dataIsValid(id) )
   {
     double eff = 0;
-   
+
     // Cherenkov theta
     const double ckTh = m_ckAngle->avgCherenkovTheta( segment, id );
 
     if ( ckTh > 0 )
     {
       // First get the HPD panel acceptance (edges)
-      eff = ( m_checkBoundaries ? 
+      eff = ( m_checkBoundaries ?
               m_geomTool->hpdPanelAcceptance(segment,id) : 1 );
       // .. next, scale by the average panel acceptance (circular HPDs)
       eff *= m_fixedValue[segment->trackSegment().radiator()];
@@ -121,12 +122,13 @@ double RichGeomEffFixedValue::geomEfficiency ( RichRecSegment * segment,
   return segment->geomEfficiency( id );
 }
 
-double RichGeomEffFixedValue::geomEfficiencyScat ( RichRecSegment * segment,
-                                                   const Rich::ParticleIDType id ) const 
+double
+GeomEffFixedValue::geomEfficiencyScat ( LHCb::RichRecSegment * segment,
+                                        const Rich::ParticleIDType id ) const
 {
 
-  if ( !segment->geomEfficiencyScat().dataIsValid(id) ) 
-{
+  if ( !segment->geomEfficiencyScat().dataIsValid(id) )
+  {
 
     double eff = 0;
     if ( segment->trackSegment().radiator() == Rich::Aerogel ) {

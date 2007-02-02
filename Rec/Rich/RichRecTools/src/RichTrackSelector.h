@@ -2,10 +2,10 @@
 //-----------------------------------------------------------------------------
 /** @file RichTrackSelector.h
  *
- *  Header file for RICH reconstruction tool : RichTrackSelector
+ *  Header file for RICH reconstruction tool : Rich::Rec::TrackSelector
  *
  *  CVS Log :-
- *  $Id: RichTrackSelector.h,v 1.4 2006-08-28 11:34:42 jonrob Exp $
+ *  $Id: RichTrackSelector.h,v 1.5 2007-02-02 10:10:42 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/08/2006
@@ -28,34 +28,45 @@
 namespace Rich
 {
 
-  //-----------------------------------------------------------------------------
-  /** @class RichTrackSelector RichTrackSelector.h
+  /** @namespace Rec
    *
-   *  A utility tool for the RICH reconstruction providing generic
-   *  track selection methods. 
+   *  General namespace for RICH reconstruction software
    *
-   *  Simply implements a RichTrackSelectorBase as a component tool
-   *
-   *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
-   *  @date   2006-08-12
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   08/07/2004
    */
-  //-----------------------------------------------------------------------------
-
-  class RichTrackSelector : public RichTrackSelectorBase
+  namespace Rec
   {
-    
-  public: // Gaudi methods
-    
-    /// Standard constructor
-    RichTrackSelector( const std::string& type,
-                       const std::string& name,
-                       const IInterface* parent );
-    
-    /// Destructor
-    virtual ~RichTrackSelector( );
-    
-  };
-  
+
+    //-----------------------------------------------------------------------------
+    /** @class TrackSelector RichTrackSelector.h
+     *
+     *  A utility tool for the RICH reconstruction providing generic
+     *  track selection methods.
+     *
+     *  Simply implements a RichTrackSelectorBase as a component tool
+     *
+     *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+     *  @date   2006-08-12
+     */
+    //-----------------------------------------------------------------------------
+
+    class TrackSelector : public RichTrackSelectorBase
+    {
+
+    public: // Gaudi methods
+
+      /// Standard constructor
+      TrackSelector( const std::string& type,
+                     const std::string& name,
+                     const IInterface* parent );
+
+      /// Destructor
+      virtual ~TrackSelector( );
+
+    };
+
+  }
 } // RICH namespace
 
 #endif // RICHRECTOOLS_RichTrackSelector_H

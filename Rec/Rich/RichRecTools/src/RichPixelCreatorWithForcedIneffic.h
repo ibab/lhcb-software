@@ -2,10 +2,10 @@
 //---------------------------------------------------------------------------------
 /** @file RichPixelCreatorWithForcedIneffic.h
  *
- *  Header file for tool : RichPixelCreatorWithForcedIneffic
+ *  Header file for tool : Rich::Rec::PixelCreatorWithForcedIneffic
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorWithForcedIneffic.h,v 1.2 2006-11-30 15:38:31 jonrob Exp $
+ *  $Id: RichPixelCreatorWithForcedIneffic.h,v 1.3 2007-02-02 10:10:41 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   23/11/2006
@@ -23,51 +23,78 @@
 // base class
 #include "RichPixelCreatorFromRawBuffer.h"
 
-//---------------------------------------------------------------------------------
-/** @class RichPixelCreatorWithForcedIneffic RichPixelCreatorWithForcedIneffic.h
+//-----------------------------------------------------------------------------
+/** @namespace Rich
  *
- *  Tool for the creation and book-keeping of RichRecPixel objects.
+ *  General namespace for RICH software
  *
- *  Inherits from RichPixelCreatorFromRawBuffer, but in additional simulates 
- *  additional inefficiencies by randomly removing a certain percentage of hits.
- *
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   23/11/2006
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
  */
-//---------------------------------------------------------------------------------
-
-class RichPixelCreatorWithForcedIneffic : public RichPixelCreatorFromRawBuffer
+//-----------------------------------------------------------------------------
+namespace Rich
 {
 
-public: // Methods for Gaudi Framework
+  //-----------------------------------------------------------------------------
+  /** @namespace Rec
+   *
+   *  General namespace for RICH reconstruction software
+   *
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   08/07/2004
+   */
+  //-----------------------------------------------------------------------------
+  namespace Rec
+  {
 
-  /// Standard constructor
-  RichPixelCreatorWithForcedIneffic( const std::string& type,
+    //---------------------------------------------------------------------------------
+    /** @class PixelCreatorWithForcedIneffic RichPixelCreatorWithForcedIneffic.h
+     *
+     *  Tool for the creation and book-keeping of RichRecPixel objects.
+     *
+     *  Inherits from RichPixelCreatorFromRawBuffer, but in additional simulates
+     *  additional inefficiencies by randomly removing a certain percentage of hits.
+     *
+     *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+     *  @date   23/11/2006
+     */
+    //---------------------------------------------------------------------------------
+
+    class PixelCreatorWithForcedIneffic : public PixelCreatorFromRawBuffer
+    {
+
+    public: // Methods for Gaudi Framework
+
+      /// Standard constructor
+      PixelCreatorWithForcedIneffic( const std::string& type,
                                      const std::string& name,
                                      const IInterface* parent );
 
-  /// Destructor
-  virtual ~RichPixelCreatorWithForcedIneffic() {}
+      /// Destructor
+      virtual ~PixelCreatorWithForcedIneffic() {}
 
-  // Initialize method
-  virtual StatusCode initialize();
+      // Initialize method
+      virtual StatusCode initialize();
 
-  // Finalize method
-  virtual StatusCode finalize();
+      // Finalize method
+      virtual StatusCode finalize();
 
-protected: // methods
+    protected: // methods
 
-  /// Build a new RichRecPixel
-  virtual LHCb::RichRecPixel * buildPixel ( const LHCb::RichSmartID id ) const;
+      /// Build a new RichRecPixel
+      virtual LHCb::RichRecPixel * buildPixel ( const LHCb::RichSmartID id ) const;
 
-private:
+    private:
 
-  /// random number generator
-  mutable Rndm::Numbers m_rndm;
+      /// random number generator
+      mutable Rndm::Numbers m_rndm;
 
-  /// The fraction of pixels to reject
-  double m_rejFrac[Rich::NRiches][Rich::NHPDPanelsPerRICH];
+      /// The fraction of pixels to reject
+      double m_rejFrac[Rich::NRiches][Rich::NHPDPanelsPerRICH];
 
-};
+    };
+
+  }
+}
 
 #endif // RICHRECTOOLS_RichPixelCreatorWithForcedIneffic_H

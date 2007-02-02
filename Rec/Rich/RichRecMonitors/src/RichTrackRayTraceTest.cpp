@@ -2,9 +2,9 @@
 //---------------------------------------------------------------------------
 /** @file RichTrackRayTraceTest.cpp
  *
- *  Implementation file for algorithm class : RichTrackRayTraceTest
+ *  Implementation file for algorithm class : TrackRayTraceTest
  *
- *  $Id: RichTrackRayTraceTest.cpp,v 1.3 2006-12-01 16:34:07 cattanem Exp $
+ *  $Id: RichTrackRayTraceTest.cpp,v 1.4 2007-02-02 10:07:13 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -18,15 +18,15 @@
 #include "GaudiKernel/AlgFactory.h"
 
 // namespace
-using namespace LHCb;
+using namespace Rich::Rec;
 
 //---------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( RichTrackRayTraceTest );
+DECLARE_ALGORITHM_FACTORY( TrackRayTraceTest );
 
 // Standard constructor, initializes variables
-RichTrackRayTraceTest::RichTrackRayTraceTest( const std::string& name,
-                                              ISvcLocator* pSvcLocator )
+TrackRayTraceTest::TrackRayTraceTest( const std::string& name,
+                                      ISvcLocator* pSvcLocator )
   : RichRecHistoAlgBase ( name, pSvcLocator ),
     m_rayTrace          ( NULL ),
     m_idTool            ( NULL )
@@ -35,10 +35,10 @@ RichTrackRayTraceTest::RichTrackRayTraceTest( const std::string& name,
 }
 
 // Destructor
-RichTrackRayTraceTest::~RichTrackRayTraceTest() {};
+TrackRayTraceTest::~TrackRayTraceTest() {};
 
 //  Initialize
-StatusCode RichTrackRayTraceTest::initialize()
+StatusCode TrackRayTraceTest::initialize()
 {
   // Sets up various tools and services
   const StatusCode sc = RichRecHistoAlgBase::initialize();
@@ -48,14 +48,14 @@ StatusCode RichTrackRayTraceTest::initialize()
   acquireTool( "RichRayTracing",    m_rayTrace       );
   acquireTool( "RichSmartIDTool",   m_idTool,   0, true );
   acquireTool( "TrackSelector",     m_trSelector, this );
- 
+
   // initialise variables
 
   return sc;
 }
 
 // Main execution
-StatusCode RichTrackRayTraceTest::execute()
+StatusCode TrackRayTraceTest::execute()
 {
   debug() << "Execute" << endreq;
 
@@ -72,10 +72,10 @@ StatusCode RichTrackRayTraceTest::execute()
   }
 
   // Iterate over segments
-  for ( RichRecSegments::const_iterator iSeg = richSegments()->begin();
+  for ( LHCb::RichRecSegments::const_iterator iSeg = richSegments()->begin();
         iSeg != richSegments()->end(); ++iSeg )
   {
-    RichRecSegment * segment = *iSeg;
+    LHCb::RichRecSegment * segment = *iSeg;
 
     debug() << "Looking at RichRecSegment " << segment->key() << endreq;
 
@@ -83,30 +83,29 @@ StatusCode RichTrackRayTraceTest::execute()
     if ( !m_trSelector->trackSelected( segment->richRecTrack() ) ) continue;
 
     // Test ray tracing
-    RichTraceMode traceMode;
+    LHCb::RichTraceMode traceMode;
 
-    traceMode.setDetPlaneBound ( RichTraceMode::IgnoreHPDAcceptance );
+    traceMode.setDetPlaneBound ( LHCb::RichTraceMode::IgnoreHPDAcceptance );
     testRayTrace( traceMode, segment );
 
-    traceMode.setDetPlaneBound ( RichTraceMode::RespectHPDPanel  );
+    traceMode.setDetPlaneBound ( LHCb::RichTraceMode::RespectHPDPanel  );
     testRayTrace( traceMode, segment );
 
-    traceMode.setDetPrecision  ( RichTraceMode::SimpleHPDs );
-    traceMode.setDetPlaneBound ( RichTraceMode::RespectHPDTubes );
+    traceMode.setDetPrecision  ( LHCb::RichTraceMode::SimpleHPDs );
+    traceMode.setDetPlaneBound ( LHCb::RichTraceMode::RespectHPDTubes );
     testRayTrace( traceMode, segment );
 
-    traceMode.setDetPrecision  ( RichTraceMode::FullHPDs        );
-    traceMode.setDetPlaneBound ( RichTraceMode::RespectHPDTubes );
+    traceMode.setDetPrecision  ( LHCb::RichTraceMode::FullHPDs        );
+    traceMode.setDetPlaneBound ( LHCb::RichTraceMode::RespectHPDTubes );
     testRayTrace( traceMode, segment );
-
 
   } // end segment loop
 
   return StatusCode::SUCCESS;
 }
 
-void RichTrackRayTraceTest::testRayTrace( const RichTraceMode traceMode,
-                                          RichRecSegment * segment ) const
+void TrackRayTraceTest::testRayTrace( const LHCb::RichTraceMode traceMode,
+                                      LHCb::RichRecSegment * segment ) const
 {
   // Histogramming
   PD_LOCAL_POSITIONS_X;
@@ -116,7 +115,7 @@ void RichTrackRayTraceTest::testRayTrace( const RichTraceMode traceMode,
   const Rich::DetectorType rich = segment->trackSegment().rich();
 
   // test ray tracing
-  RichGeomPhoton photon;
+  LHCb::RichGeomPhoton photon;
   if ( m_rayTrace->traceToDetector( rich,
                                     segment->trackSegment().bestPoint(),
                                     segment->trackSegment().bestMomentum(),
@@ -139,7 +138,7 @@ void RichTrackRayTraceTest::testRayTrace( const RichTraceMode traceMode,
 }
 
 //  Finalize
-StatusCode RichTrackRayTraceTest::finalize()
+StatusCode TrackRayTraceTest::finalize()
 {
   // Execute base class method
   return RichRecHistoAlgBase::finalize();

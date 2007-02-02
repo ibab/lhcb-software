@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichRecTimeMonitor
  *
  *  CVS Log :-
- *  $Id: RichRecTimeMonitor.cpp,v 1.7 2006-12-01 16:34:07 cattanem Exp $
+ *  $Id: RichRecTimeMonitor.cpp,v 1.8 2007-02-02 10:07:13 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -19,15 +19,15 @@
 #include "GaudiKernel/AlgFactory.h"
 
 // namespace
-using namespace LHCb;
+using namespace Rich::Rec;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( RichRecTimeMonitor );
+DECLARE_ALGORITHM_FACTORY( TimeMonitor );
 
 // Standard constructor, initializes variables
-RichRecTimeMonitor::RichRecTimeMonitor( const std::string& name,
-                                        ISvcLocator* pSvcLocator)
+TimeMonitor::TimeMonitor( const std::string& name,
+                          ISvcLocator* pSvcLocator)
   : RichRecHistoAlgBase ( name, pSvcLocator ),
     m_nEvents           ( 0 ),
     m_nPIDs             ( 0 ),
@@ -35,7 +35,7 @@ RichRecTimeMonitor::RichRecTimeMonitor( const std::string& name,
 {
 
   // Location of RichPIDs in TES
-  declareProperty( "RichPIDLocation", m_PIDLocation = RichPIDLocation::Default );
+  declareProperty( "RichPIDLocation", m_PIDLocation = LHCb::RichPIDLocation::Default );
 
   // Name associated to algorithm(s)
   declareProperty( "TimingName", m_name );
@@ -50,10 +50,10 @@ RichRecTimeMonitor::RichRecTimeMonitor( const std::string& name,
 }
 
 // Destructor
-RichRecTimeMonitor::~RichRecTimeMonitor() {};
+TimeMonitor::~TimeMonitor() {};
 
 //  Initialize
-StatusCode RichRecTimeMonitor::initialize()
+StatusCode TimeMonitor::initialize()
 {
   // Sets up various tools and services
   const StatusCode sc = RichRecHistoAlgBase::initialize();
@@ -65,7 +65,7 @@ StatusCode RichRecTimeMonitor::initialize()
 }
 
 // Main execution
-StatusCode RichRecTimeMonitor::execute()
+StatusCode TimeMonitor::execute()
 {
   // Check event status
   if ( !richStatus()->eventOK() ) return StatusCode::SUCCESS;
@@ -115,7 +115,7 @@ StatusCode RichRecTimeMonitor::execute()
 }
 
 //  Finalize
-StatusCode RichRecTimeMonitor::finalize()
+StatusCode TimeMonitor::finalize()
 {
   // Printout timing info
   const double evtTime = ( m_nEvents>0 ? m_totTime/static_cast<double>(m_nEvents) : 0 );
@@ -127,14 +127,14 @@ StatusCode RichRecTimeMonitor::finalize()
   return RichRecHistoAlgBase::finalize();
 }
 
-StatusCode RichRecTimeMonitor::loadPIDData()
+StatusCode TimeMonitor::loadPIDData()
 {
   // Load PIDs
   DataObject *pObject;
   if ( eventSvc()->retrieveObject( m_PIDLocation, pObject ) )
   {
-    if ( KeyedContainer<RichPID, Containers::HashMap> * pids =
-         static_cast<KeyedContainer<RichPID, Containers::HashMap>*> (pObject) )
+    if ( KeyedContainer<LHCb::RichPID, Containers::HashMap> * pids =
+         static_cast<KeyedContainer<LHCb::RichPID, Containers::HashMap>*> (pObject) )
     {
       m_richPIDs.erase( m_richPIDs.begin(), m_richPIDs.end() );
       pids->containedObjects( m_richPIDs );

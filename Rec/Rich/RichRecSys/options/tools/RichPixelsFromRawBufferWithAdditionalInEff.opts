@@ -1,6 +1,6 @@
 
 // use the tool that decodes directly from RawBuffer
-ToolSvc.Offline.RichToolRegistry.Tools += { "RichPixelCreatorWithForcedIneffic/RichPixelCreator" };
+ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::PixelCreatorWithForcedIneffic/RichPixelCreator" };
 
 // Which RICH detectors to use                      RICH1   RICH2
 ToolSvc.Offline.RichPixelCreator.UseDetectors  = {  true,   true   };

@@ -2,10 +2,10 @@
 //---------------------------------------------------------------------------
 /** @file RichTrackRayTraceTest.h
  *
- *  Header file for algorithm class : RichTrackRayTraceTest
+ *  Header file for algorithm class : Rich::Rec::TrackRayTraceTest
  *
  *  CVS Log :-
- *  $Id: RichTrackRayTraceTest.h,v 1.3 2006-12-01 16:34:07 cattanem Exp $
+ *  $Id: RichTrackRayTraceTest.h,v 1.4 2007-02-02 10:07:13 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -33,49 +33,74 @@
 #include "RichKernel/IRichRayTracing.h"
 #include "RichKernel/IRichSmartIDTool.h"
 
-//---------------------------------------------------------------------------
-/** @class RichTrackRayTraceTest RichTrackRayTraceTest.h
+//-----------------------------------------------------------------------------
+/** @namespace Rich
  *
- *  Monitors the general geometrical details of the RichRecTrack
- *  and RichRecSegment objects.
+ *  General namespace for RICH software
  *
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   05/04/2002
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
  */
-//---------------------------------------------------------------------------
-
-class RichTrackRayTraceTest : public RichRecHistoAlgBase
+//-----------------------------------------------------------------------------
+namespace Rich
 {
 
-public:
+  /** @namespace Rec
+   *
+   *  General namespace for RICH reconstruction software
+   *
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   08/07/2004
+   */
+  namespace Rec
+  {
 
-  /// Standard constructor
-  RichTrackRayTraceTest( const std::string& name,
+    //---------------------------------------------------------------------------
+    /** @class TrackRayTraceTest RichTrackRayTraceTest.h
+     *
+     *  Monitors the general geometrical details of the RichRecTrack
+     *  and RichRecSegment objects.
+     *
+     *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+     *  @date   05/04/2002
+     */
+    //---------------------------------------------------------------------------
+
+    class TrackRayTraceTest : public Rich::Rec::HistoAlgBase
+    {
+
+    public:
+
+      /// Standard constructor
+      TrackRayTraceTest( const std::string& name,
                          ISvcLocator* pSvcLocator );
 
-  virtual ~RichTrackRayTraceTest( ); ///< Destructor
+      virtual ~TrackRayTraceTest( ); ///< Destructor
 
-  virtual StatusCode initialize();    // Algorithm initialization
-  virtual StatusCode execute   ();    // Algorithm execution
-  virtual StatusCode finalize  ();    // Algorithm finalization
+      virtual StatusCode initialize();    // Algorithm initialization
+      virtual StatusCode execute   ();    // Algorithm execution
+      virtual StatusCode finalize  ();    // Algorithm finalization
 
-private: // methods
+    private: // methods
 
-  // test ray tracing
-  void testRayTrace( const LHCb::RichTraceMode traceMode,
-                     LHCb::RichRecSegment * segment ) const;
+      // test ray tracing
+      void testRayTrace( const LHCb::RichTraceMode traceMode,
+                         LHCb::RichRecSegment * segment ) const;
 
-private: // data
+    private: // data
 
-  /// Pointer RichDetector ray tracing tool
-  const IRichRayTracing * m_rayTrace;    
+      /// Pointer RichDetector ray tracing tool
+      const IRayTracing * m_rayTrace;
 
-  /// Pointer to RichSmartID tool
-  const IRichSmartIDTool * m_idTool;
+      /// Pointer to RichSmartID tool
+      const ISmartIDTool * m_idTool;
 
-  /// Track selector
-  const Rich::IRichTrackSelector * m_trSelector;
+      /// Track selector
+      const ITrackSelector * m_trSelector;
 
-};
+    };
+
+  }
+}
 
 #endif // RICHRECMONITOR_RICHTRACKGEOMMONI_H

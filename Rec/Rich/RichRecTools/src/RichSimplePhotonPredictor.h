@@ -2,10 +2,10 @@
 //-----------------------------------------------------------------------------
 /** @file RichSimplePhotonPredictor.h
  *
- *  Header file for tool : RichSimplePhotonPredictor
+ *  Header file for tool : Rich::Rec::SimplePhotonPredictor
  *
  *  CVS Log :-
- *  $Id: RichSimplePhotonPredictor.h,v 1.4 2006-12-01 17:05:09 cattanem Exp $
+ *  $Id: RichSimplePhotonPredictor.h,v 1.5 2007-02-02 10:10:41 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -30,58 +30,83 @@
 #include "RichKernel/RichPoissonEffFunctor.h"
 
 //-----------------------------------------------------------------------------
-/** @class RichSimplePhotonPredictor RichSimplePhotonPredictor.h
+/** @namespace Rich
  *
- *  Tool which performs the association between RichRecTracks and
- *  RichRecPixels to form RichRecPhotons.
+ *  General namespace for RICH software
  *
- *  This particular implementation uses a simple fixed cut range per radiator,
- *  on the seperation between the pixel and ray-traced track impact point.
- *
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   15/03/2002
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
  */
 //-----------------------------------------------------------------------------
-
-class RichSimplePhotonPredictor : public RichRecToolBase,
-                                  virtual public IRichPhotonPredictor
+namespace Rich
 {
 
-public: // Methods for Gaudi Framework
+  /** @namespace Rec
+   *
+   *  General namespace for RICH reconstruction software
+   *
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   08/07/2004
+   */
+  namespace Rec
+  {
 
-  /// Standard constructor
-  RichSimplePhotonPredictor( const std::string& type,
+    //-----------------------------------------------------------------------------
+    /** @class SimplePhotonPredictor RichSimplePhotonPredictor.h
+     *
+     *  Tool which performs the association between RichRecTracks and
+     *  RichRecPixels to form RichRecPhotons.
+     *
+     *  This particular implementation uses a simple fixed cut range per radiator,
+     *  on the seperation between the pixel and ray-traced track impact point.
+     *
+     *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+     *  @date   15/03/2002
+     */
+    //-----------------------------------------------------------------------------
+
+    class SimplePhotonPredictor : public Rich::Rec::ToolBase,
+                                  virtual public IPhotonPredictor
+    {
+
+    public: // Methods for Gaudi Framework
+
+      /// Standard constructor
+      SimplePhotonPredictor( const std::string& type,
                              const std::string& name,
                              const IInterface* parent );
 
-  /// Destructor
-  virtual ~RichSimplePhotonPredictor(){}
+      /// Destructor
+      virtual ~SimplePhotonPredictor(){}
 
-  // Initialize method
-  StatusCode initialize();
+      // Initialize method
+      StatusCode initialize();
 
-  // Finalize method
-  StatusCode finalize();
+      // Finalize method
+      StatusCode finalize();
 
-public: // methods (and doxygen comments) inherited from public interface
+    public: // methods (and doxygen comments) inherited from public interface
 
-  // Is it possible to make a photon candidate using this segment and pixel.
-  bool photonPossible( LHCb::RichRecSegment * segment,
-                       LHCb::RichRecPixel * pixel ) const;
+      // Is it possible to make a photon candidate using this segment and pixel.
+      bool photonPossible( LHCb::RichRecSegment * segment,
+                           LHCb::RichRecPixel * pixel ) const;
 
-private: // private data
+    private: // private data
 
-  /// Geometry tool
-  const IRichRecGeomTool * m_geomTool;
+      /// Geometry tool
+      const IGeomTool * m_geomTool;
 
-  std::vector<double> m_minROI;  ///< Min hit radius of interest around track centres
-  std::vector<double> m_maxROI;  ///< Max hit radius of interest around track centres
-  std::vector<double> m_maxROI2; ///< Square of m_maxROI
-  std::vector<double> m_minROI2; ///< Square of m_minROI
+      std::vector<double> m_minROI;  ///< Min hit radius of interest around track centres
+      std::vector<double> m_maxROI;  ///< Max hit radius of interest around track centres
+      std::vector<double> m_maxROI2; ///< Square of m_maxROI
+      std::vector<double> m_minROI2; ///< Square of m_minROI
 
-  mutable std::vector<unsigned int> m_Nselected; ///< Number of selected combinations for each radiator
-  mutable std::vector<unsigned int> m_Nreject;   ///< Number of rejected combinations for each radiator
+      mutable std::vector<unsigned int> m_Nselected; ///< Number of selected combinations for each radiator
+      mutable std::vector<unsigned int> m_Nreject;   ///< Number of rejected combinations for each radiator
 
-};
+    };
+
+  }
+}
 
 #endif // RICHRECTOOLS_RICHPHOTONPREDICTOR_H

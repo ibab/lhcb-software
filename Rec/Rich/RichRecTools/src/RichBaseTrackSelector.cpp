@@ -2,10 +2,10 @@
 //-----------------------------------------------------------------------------
 /** @file RichBaseTrackSelector.cpp
  *
- *  Implementation file for RICH reconstruction tool : RichBaseTrackSelector
+ *  Implementation file for RICH reconstruction tool : Rich::Rec::BaseTrackSelector
  *
  *  CVS Log :-
- *  $Id: RichBaseTrackSelector.cpp,v 1.6 2006-11-30 15:38:31 jonrob Exp $
+ *  $Id: RichBaseTrackSelector.cpp,v 1.7 2007-02-02 10:10:40 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/08/2006
@@ -18,21 +18,24 @@
 // local
 #include "RichBaseTrackSelector.h"
 
+// All code is in general Rich reconstruction namespace
+using namespace Rich::Rec;
+
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_NAMESPACE_TOOL_FACTORY( Rich, RichBaseTrackSelector );
+DECLARE_TOOL_FACTORY( BaseTrackSelector );
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-Rich::RichBaseTrackSelector::RichBaseTrackSelector( const std::string& type,
-                                                    const std::string& name,
-                                                    const IInterface* parent )
+BaseTrackSelector::BaseTrackSelector( const std::string& type,
+                                      const std::string& name,
+                                      const IInterface* parent )
   : RichRecToolBase ( type, name , parent )
 {
   // interface
-  declareInterface<Rich::IRichBaseTrackSelector>(this);
+  declareInterface<IBaseTrackSelector>(this);
 
   declareProperty( "MinPCut",    m_minPCut     = 0.0 ); // in GeV
   declareProperty( "MinPtCut",   m_minPtCut    = 0.0 ); // in GeV
@@ -49,12 +52,12 @@ Rich::RichBaseTrackSelector::RichBaseTrackSelector( const std::string& type,
 //=============================================================================
 // Destructor
 //=============================================================================
-Rich::RichBaseTrackSelector::~RichBaseTrackSelector() {}
+BaseTrackSelector::~BaseTrackSelector() {}
 
 //=============================================================================
 // initialisation
 //=============================================================================
-StatusCode Rich::RichBaseTrackSelector::initialize()
+StatusCode BaseTrackSelector::initialize()
 {
   // Sets up various tools and services
   const StatusCode sc = RichRecToolBase::initialize();
@@ -66,7 +69,7 @@ StatusCode Rich::RichBaseTrackSelector::initialize()
   return sc;
 }
 
-MsgStream & Rich::RichBaseTrackSelector::printSel( MsgStream & os ) const
+MsgStream & BaseTrackSelector::printSel( MsgStream & os ) const
 {
   // get track type from name
   const int slash = name().find_last_of(".");
@@ -82,7 +85,7 @@ MsgStream & Rich::RichBaseTrackSelector::printSel( MsgStream & os ) const
 //=============================================================================
 // finalisation
 //=============================================================================
-StatusCode Rich::RichBaseTrackSelector::finalize()
+StatusCode BaseTrackSelector::finalize()
 {
   // Execute base class method
   return RichRecToolBase::finalize();
@@ -90,7 +93,7 @@ StatusCode Rich::RichBaseTrackSelector::finalize()
 
 // Test if the given Track is selected under the current criteria
 bool
-Rich::RichBaseTrackSelector::trackSelected( const LHCb::Track * track ) const
+BaseTrackSelector::trackSelected( const LHCb::Track * track ) const
 {
   if (!track) { Warning("Null Track pointer"); return false; }
 
@@ -148,7 +151,7 @@ Rich::RichBaseTrackSelector::trackSelected( const LHCb::Track * track ) const
 }
 
 bool
-Rich::RichBaseTrackSelector::trackSelected( const LHCb::RichRecTrack * track ) const
+BaseTrackSelector::trackSelected( const LHCb::RichRecTrack * track ) const
 {
 
   if (!track) { Warning("Null RichRecTrack pointer"); return false; }
@@ -209,10 +212,10 @@ Rich::RichBaseTrackSelector::trackSelected( const LHCb::RichRecTrack * track ) c
 
 //=============================================================================
 
-double Rich::RichBaseTrackSelector::minPCut()    const { return m_minPCut; }
-double Rich::RichBaseTrackSelector::maxPCut()    const { return m_maxPCut; }
-double Rich::RichBaseTrackSelector::minPtCut()   const { return m_minPtCut; }
-double Rich::RichBaseTrackSelector::maxPtCut()   const { return m_maxPtCut; }
-double Rich::RichBaseTrackSelector::minChi2Cut() const { return m_minChi2Cut; }
-double Rich::RichBaseTrackSelector::maxChi2Cut() const { return m_maxChi2Cut; }
-int    Rich::RichBaseTrackSelector::chargeSel()  const { return m_chargeSel; }
+double BaseTrackSelector::minPCut()    const { return m_minPCut; }
+double BaseTrackSelector::maxPCut()    const { return m_maxPCut; }
+double BaseTrackSelector::minPtCut()   const { return m_minPtCut; }
+double BaseTrackSelector::maxPtCut()   const { return m_maxPtCut; }
+double BaseTrackSelector::minChi2Cut() const { return m_minChi2Cut; }
+double BaseTrackSelector::maxChi2Cut() const { return m_maxChi2Cut; }
+int    BaseTrackSelector::chargeSel()  const { return m_chargeSel; }

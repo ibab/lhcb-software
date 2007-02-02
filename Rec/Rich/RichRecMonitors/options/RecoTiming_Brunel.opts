@@ -9,12 +9,12 @@ AuditorSvc.Auditors  = { "ChronoAuditor" };
 ChronoAuditor.Enable = true;
 
 // overall rich reconstruction
-RichTiming.Members += { "RichRecTimeMonitor/RichRecTime" };
+RichTiming.Members += { "Rich::Rec::TimeMonitor/RichRecTime" };
 RichRecTime.TimingName = "RecoRICHSeq";
 RichRecTime.Algorithms = { "RecoRICHSeq" };
 
 // overall tracking
-RichTiming.Members += { "RichRecTimeMonitor/TrTime" };
+RichTiming.Members += { "Rich::Rec::TimeMonitor/TrTime" };
 TrTime.HistoProduce = false;
 TrTime.TimingName = "RecoTrSeq";
 TrTime.Algorithms = { "RecoTrSeq" };

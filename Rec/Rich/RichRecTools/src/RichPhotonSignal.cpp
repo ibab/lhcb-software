@@ -2,10 +2,10 @@
 //-----------------------------------------------------------------------------
 /** @file RichPhotonSignal.cpp
  *
- *  Implementation file for tool : RichPhotonSignal
+ *  Implementation file for tool : Rich::Rec::PhotonSignal
  *
  *  CVS Log :-
- *  $Id: RichPhotonSignal.cpp,v 1.21 2006-12-01 17:05:09 cattanem Exp $
+ *  $Id: RichPhotonSignal.cpp,v 1.22 2007-02-02 10:10:41 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -18,24 +18,24 @@
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
 
-// namespaces
-using namespace LHCb;
+// All code is in general Rich reconstruction namespace
+using namespace Rich::Rec;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( RichPhotonSignal );
+DECLARE_TOOL_FACTORY( PhotonSignal );
 
 // Standard constructor
-RichPhotonSignal::RichPhotonSignal( const std::string& type,
-                                    const std::string& name,
-                                    const IInterface* parent )
+PhotonSignal::PhotonSignal( const std::string& type,
+                            const std::string& name,
+                            const IInterface* parent )
   : RichRecToolBase( type, name, parent )
 {
   // interface
-  declareInterface<IRichPhotonSignal>(this);
+  declareInterface<IPhotonSignal>(this);
 }
 
-StatusCode RichPhotonSignal::initialize()
+StatusCode PhotonSignal::initialize()
 {
 
   // Sets up various tools and services
@@ -43,9 +43,9 @@ StatusCode RichPhotonSignal::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
-  acquireTool( "RichCherenkovAngle", m_ckAngle );
-  acquireTool( "RichExpectedTrackSignal", m_signal );
-  acquireTool( "RichCherenkovResolution", m_ckRes  );
+  acquireTool( "RichCherenkovAngle",      m_ckAngle );
+  acquireTool( "RichExpectedTrackSignal", m_signal  );
+  acquireTool( "RichCherenkovResolution", m_ckRes   );
 
   // Get Rich Detector elements
   const DeRich1 * Rich1DE = getDet<DeRich1>( DeRichLocation::Rich1 );
@@ -70,15 +70,15 @@ StatusCode RichPhotonSignal::initialize()
   return sc;
 }
 
-StatusCode RichPhotonSignal::finalize()
+StatusCode PhotonSignal::finalize()
 {
   // Execute base class method
   return RichRecToolBase::finalize();
 }
 
 double
-RichPhotonSignal::predictedPixelSignal( RichRecPhoton * photon,
-                                        const Rich::ParticleIDType id ) const
+PhotonSignal::predictedPixelSignal( LHCb::RichRecPhoton * photon,
+                                    const Rich::ParticleIDType id ) const
 {
   if ( !photon->expPixelSignalPhots().dataIsValid(id) )
   {
@@ -106,8 +106,8 @@ RichPhotonSignal::predictedPixelSignal( RichRecPhoton * photon,
 }
 
 double
-RichPhotonSignal::signalProb( RichRecPhoton * photon,
-                              const Rich::ParticleIDType id ) const
+PhotonSignal::signalProb( LHCb::RichRecPhoton * photon,
+                          const Rich::ParticleIDType id ) const
 {
   // Expected Cherenkov theta angle
   const double thetaExp = m_ckAngle->avgCherenkovTheta(photon->richRecSegment(),id);
@@ -127,8 +127,8 @@ RichPhotonSignal::signalProb( RichRecPhoton * photon,
 }
 
 double
-RichPhotonSignal::scatterProb( RichRecPhoton * photon,
-                               const Rich::ParticleIDType id ) const
+PhotonSignal::scatterProb( LHCb::RichRecPhoton * photon,
+                           const Rich::ParticleIDType id ) const
 {
   if ( Rich::Aerogel == photon->richRecSegment()->trackSegment().radiator() )
   {

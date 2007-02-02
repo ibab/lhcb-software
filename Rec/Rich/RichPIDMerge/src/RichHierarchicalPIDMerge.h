@@ -1,10 +1,10 @@
 
 /** @file RichHierarchicalPIDMerge.h
  *
- *  Header file for RICH algorithm : RichHierarchicalPIDMerge
+ *  Header file for RICH algorithm : Rich::Rec::HierarchicalPIDMerge
  *
  *  CVS Log :-
- *  $Id: RichHierarchicalPIDMerge.h,v 1.2 2006-01-23 13:59:05 jonrob Exp $
+ *  $Id: RichHierarchicalPIDMerge.h,v 1.3 2007-02-02 10:05:17 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-07-31
@@ -25,56 +25,82 @@
 #include "Event/RichGlobalPID.h"
 #include "Event/RichLocalPID.h"
 
-/** @class RichHierarchicalPIDMerge RichHierarchicalPIDMerge.h
+//-----------------------------------------------------------------------------
+/** @namespace Rich
  *
- *  Prepares RichPIDs using results from all individual PID algorithms.
+ *  General namespace for RICH software
  *
- *  The PID results are used with the follow order of precedence :-
- *
- *    1. The global PID result for each track is used if available and if a Ring
- *       Refit result has not been used.
- *
- *    2. Finally, if no PID result is used and if a local PID result exists, it is used.
- *
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   2002-07-10
- *
- *  @todo Rewrite this algorithm in a more generic way
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
  */
+//-----------------------------------------------------------------------------
+namespace Rich
+{
 
-class RichHierarchicalPIDMerge : public RichAlgBase {
+  /** @namespace Rich::Rec
+   *
+   *  General namespace for RICH reconstruction software
+   *
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   08/07/2004
+   */
+  namespace Rec
+  {
 
-public:
+    /** @class HierarchicalPIDMerge RichHierarchicalPIDMerge.h
+     *
+     *  Prepares RichPIDs using results from all individual PID algorithms.
+     *
+     *  The PID results are used with the follow order of precedence :-
+     *
+     *    1. The global PID result for each track is used if available and if a Ring
+     *       Refit result has not been used.
+     *
+     *    2. Finally, if no PID result is used and if a local PID result exists, it is used.
+     *
+     *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+     *  @date   2002-07-10
+     *
+     *  @todo Rewrite this algorithm in a more generic way
+     */
 
-  /// Standard constructor
-  RichHierarchicalPIDMerge( const std::string& name, ISvcLocator* pSvcLocator );
+    class HierarchicalPIDMerge : public Rich::AlgBase
+    {
 
-  virtual ~RichHierarchicalPIDMerge( ); ///< Destructor
+    public:
 
-  virtual StatusCode initialize();    // Algorithm initialization
-  virtual StatusCode execute   ();    // Algorithm execution
-  virtual StatusCode finalize  ();    // Algorithm finalization
+      /// Standard constructor
+      HierarchicalPIDMerge( const std::string& name, ISvcLocator* pSvcLocator );
 
-private:
+      virtual ~HierarchicalPIDMerge( ); ///< Destructor
 
-  /// Location of processing status object in TES
-  std::string m_procStatLocation;
+      virtual StatusCode initialize();    // Algorithm initialization
+      virtual StatusCode execute   ();    // Algorithm execution
+      virtual StatusCode finalize  ();    // Algorithm finalization
 
-  /// Output location in TES for RichPIDs
-  std::string m_richPIDLocation;
+    private:
 
-  /// Input location in TES for RichGlobalPIDs
-  std::string m_richGlobalPIDLocation;
+      /// Location of processing status object in TES
+      std::string m_procStatLocation;
 
-  /// Input location in TES for RichLocalPIDs
-  std::string m_richLocalPIDLocation;
+      /// Output location in TES for RichPIDs
+      std::string m_richPIDLocation;
 
-  /// Flag to turn on/off use of Local PID results
-  bool m_useLocalPIDs;
+      /// Input location in TES for RichGlobalPIDs
+      std::string m_richGlobalPIDLocation;
 
-  /// Flag to turn on/off use of Global PID results
-  bool m_useGlobalPIDs;
+      /// Input location in TES for RichLocalPIDs
+      std::string m_richLocalPIDLocation;
 
-};
+      /// Flag to turn on/off use of Local PID results
+      bool m_useLocalPIDs;
+
+      /// Flag to turn on/off use of Global PID results
+      bool m_useGlobalPIDs;
+
+    };
+
+  }
+}
 
 #endif // RICHPIDMERGE_RICHPIDSIMPLEMERGE_H

@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichPhotonCreatorCheatedTrackDir
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreatorCheatedTrackDir.cpp,v 1.3 2006-12-01 16:18:23 cattanem Exp $
+ *  $Id: RichPhotonCreatorCheatedTrackDir.cpp,v 1.4 2007-02-02 10:06:27 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -18,25 +18,25 @@
 // local
 #include "RichPhotonCreatorCheatedTrackDir.h"
 
-// namespaces
-using namespace LHCb;
+// All code is in general Rich reconstruction namespace
+using namespace Rich::Rec::MC;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( RichPhotonCreatorCheatedTrackDir );
+DECLARE_TOOL_FACTORY( PhotonCreatorCheatedTrackDir );
 
 // Standard constructor
-RichPhotonCreatorCheatedTrackDir::RichPhotonCreatorCheatedTrackDir( const std::string& type,
-                                                                    const std::string& name,
-                                                                    const IInterface* parent )
-  : RichPhotonCreatorBase ( type, name, parent ),
+PhotonCreatorCheatedTrackDir::PhotonCreatorCheatedTrackDir( const std::string& type,
+                                                            const std::string& name,
+                                                            const IInterface* parent )
+  : PhotonCreatorBase ( type, name, parent ),
     m_mcRecTool           ( NULL ),
     m_recoPhotCr          ( NULL ) { }
 
-StatusCode RichPhotonCreatorCheatedTrackDir::initialize()
+StatusCode PhotonCreatorCheatedTrackDir::initialize()
 {
   // Sets up various tools and services
-  const StatusCode sc = RichPhotonCreatorBase::initialize();
+  const StatusCode sc = PhotonCreatorBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
@@ -46,16 +46,16 @@ StatusCode RichPhotonCreatorCheatedTrackDir::initialize()
   return sc;
 }
 
-StatusCode RichPhotonCreatorCheatedTrackDir::finalize()
+StatusCode PhotonCreatorCheatedTrackDir::finalize()
 {
   // Execute base class method
-  return RichPhotonCreatorBase::finalize();
+  return PhotonCreatorBase::finalize();
 }
 
-RichRecPhoton *
-RichPhotonCreatorCheatedTrackDir::buildPhoton( RichRecSegment * segment,
-                                               RichRecPixel * pixel,
-                                               const RichRecPhotonKey key ) const
+LHCb::RichRecPhoton *
+PhotonCreatorCheatedTrackDir::buildPhoton( LHCb::RichRecSegment * segment,
+                                           LHCb::RichRecPixel * pixel,
+                                           const RichRecPhotonKey key ) const
 {
   // Store state information
   const Gaudi::XYZPoint storedMidPoint = segment->trackSegment().middlePoint();
@@ -64,9 +64,9 @@ RichPhotonCreatorCheatedTrackDir::buildPhoton( RichRecSegment * segment,
   const Gaudi::XYZVector storedEntryMom  = segment->trackSegment().entryMomentum();
   const Gaudi::XYZPoint storedExitPoint = segment->trackSegment().exitPoint();
   const Gaudi::XYZVector storedExitMom  = segment->trackSegment().exitMomentum();
-  
+
   // See if there is a true cherenkov photon for this segment/pixel pair
-  const MCRichOpticalPhoton * mcPhoton = m_mcRecTool->trueOpticalPhoton(segment,pixel);
+  const LHCb::MCRichOpticalPhoton * mcPhoton = m_mcRecTool->trueOpticalPhoton(segment,pixel);
   bool updatedTk ( false );
   if ( mcPhoton )
   {
@@ -82,7 +82,7 @@ RichPhotonCreatorCheatedTrackDir::buildPhoton( RichRecSegment * segment,
 
   // Reconstruct the photon (uses the cheated middle point)
   //RichRecPhoton * newPhoton = ( mcPhoton ? m_recoPhotCr->reconstructPhoton(segment,pixel) : NULL );
-  RichRecPhoton * newPhoton = m_recoPhotCr->reconstructPhoton(segment,pixel);
+  LHCb::RichRecPhoton * newPhoton = m_recoPhotCr->reconstructPhoton(segment,pixel);
 
   // Add to reference map
   if ( bookKeep() ) m_photonDone[key] = true;

@@ -2,10 +2,10 @@
 //---------------------------------------------------------------------------
 /** @file RichTrackGeomMoni.h
  *
- *  Header file for algorithm class : RichTrackGeomMoni
+ *  Header file for algorithm class : Rich::Rec::MC::TrackGeomMoni
  *
  *  CVS Log :-
- *  $Id: RichTrackGeomMoni.h,v 1.9 2006-12-01 14:01:40 jonrob Exp $
+ *  $Id: RichTrackGeomMoni.h,v 1.10 2007-02-02 10:07:13 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -45,51 +45,89 @@
 // GSL
 #include "gsl/gsl_math.h"
 
-//---------------------------------------------------------------------------
-/** @class RichTrackGeomMoni RichTrackGeomMoni.h
+//-----------------------------------------------------------------------------
+/** @namespace Rich
  *
- *  Monitors the general geometrical details of the RichRecTrack
- *  and RichRecSegment objects.
+ *  General namespace for RICH software
  *
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   05/04/2002
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
  */
-//---------------------------------------------------------------------------
-
-class RichTrackGeomMoni : public RichRecHistoAlgBase
+//-----------------------------------------------------------------------------
+namespace Rich
 {
 
-public:
+  /** @namespace Rec
+   *
+   *  General namespace for RICH reconstruction software
+   *
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   08/07/2004
+   */
+  namespace Rec
+  {
 
-  /// Standard constructor
-  RichTrackGeomMoni( const std::string& name,
-                     ISvcLocator* pSvcLocator );
+    //-----------------------------------------------------------------------------
+    /** @namespace MC
+     *
+     *  General namespace for RICH MC related software
+     *
+     *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+     *  @date   05/12/2006
+     */
+    //-----------------------------------------------------------------------------
+    namespace MC
+    {
 
-  virtual ~RichTrackGeomMoni( ); ///< Destructor
+      //---------------------------------------------------------------------------
+      /** @class TrackGeomMoni RichTrackGeomMoni.h
+       *
+       *  Monitors the general geometrical details of the RichRecTrack
+       *  and RichRecSegment objects.
+       *
+       *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+       *  @date   05/04/2002
+       */
+      //---------------------------------------------------------------------------
 
-  virtual StatusCode initialize();    // Algorithm initialization
-  virtual StatusCode execute   ();    // Algorithm execution
-  virtual StatusCode finalize  ();    // Algorithm finalization
+      class TrackGeomMoni : public RichRecHistoAlgBase
+      {
 
-private: // data
+      public:
 
-  const IRichRayTracing * m_rayTrace;        ///< Pointer RichDetector ray tracing tool
-  const IRichRecMCTruthTool* m_richRecMCTruth; ///< Pointer to RichRecMCTruthTool interface
-  const IRichRecGeomTool * m_geomTool;     ///< Pointer to the Geometry tool
-  const IRichGeomEff * m_geomEffic; ///< Pointer to RichGeomEff tool
-  const IRichMCTrackInfoTool * m_mcTkInfo; ///< MC track information
-  /// Pointer to RichSmartID tool
-  const IRichSmartIDTool * m_idTool;
+        /// Standard constructor
+        TrackGeomMoni( const std::string& name,
+                       ISvcLocator* pSvcLocator );
 
-  /// Track selector
-  const Rich::IRichTrackSelector * m_trSelector;
+        virtual ~TrackGeomMoni( ); ///< Destructor
 
-  // working variables for average PD positions
-  Rich::Map<LHCb::RichSmartID, double> m_xHits;
-  Rich::Map<LHCb::RichSmartID, double> m_yHits;
-  Rich::Map<LHCb::RichSmartID, double> m_zHits;
-  Rich::Map<LHCb::RichSmartID, int> m_hitCount;
+        virtual StatusCode initialize();    // Algorithm initialization
+        virtual StatusCode execute   ();    // Algorithm execution
+        virtual StatusCode finalize  ();    // Algorithm finalization
 
-};
+      private: // data
+
+        const IRayTracing * m_rayTrace;        ///< Pointer RichDetector ray tracing tool
+        const Rich::Rec::MC::IMCTruthTool* m_richRecMCTruth; ///< Pointer to RichRecMCTruthTool interface
+        const IGeomTool * m_geomTool;     ///< Pointer to the Geometry tool
+        const IGeomEff * m_geomEffic; ///< Pointer to RichGeomEff tool
+        const Rich::MC::IMCTrackInfoTool * m_mcTkInfo; ///< MC track information
+        /// Pointer to RichSmartID tool
+        const ISmartIDTool * m_idTool;
+
+        /// Track selector
+        const ITrackSelector * m_trSelector;
+
+        // working variables for average PD positions
+        Rich::Map<LHCb::RichSmartID, double> m_xHits;
+        Rich::Map<LHCb::RichSmartID, double> m_yHits;
+        Rich::Map<LHCb::RichSmartID, double> m_zHits;
+        Rich::Map<LHCb::RichSmartID, int> m_hitCount;
+
+      };
+
+    }
+  }
+}
 
 #endif // RICHRECMONITOR_RICHTRACKGEOMMONI_H

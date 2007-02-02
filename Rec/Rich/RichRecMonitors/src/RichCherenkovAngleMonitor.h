@@ -2,10 +2,10 @@
 //---------------------------------------------------------------------------
 /** @file RichCherenkovAngleMonitor.h
  *
- *  Header file for algorithm class : RichCherenkovAngleMonitor
+ *  Header file for algorithm class : Rich::Rec::MC::CherenkovAngleMonitor
  *
  *  CVS Log :-
- *  $Id: RichCherenkovAngleMonitor.h,v 1.4 2006-08-28 11:15:11 jonrob Exp $
+ *  $Id: RichCherenkovAngleMonitor.h,v 1.5 2007-02-02 10:07:11 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -33,42 +33,80 @@
 // temporary histogramming numbers
 #include "RichRecBase/RichDetParams.h"
 
-//---------------------------------------------------------------------------
-/** @class RichCherenkovAngleMonitor RichCherenkovAngleMonitor.h
+//-----------------------------------------------------------------------------
+/** @namespace Rich
  *
- *  Template for monitor algorithms. For cut 'n' paste ...
+ *  General namespace for RICH software
  *
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   05/04/2002
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
  */
-//---------------------------------------------------------------------------
-
-class RichCherenkovAngleMonitor : public RichRecTupleAlgBase
+//-----------------------------------------------------------------------------
+namespace Rich
 {
 
-public:
+  /** @namespace Rec
+   *
+   *  General namespace for RICH reconstruction software
+   *
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   08/07/2004
+   */
+  namespace Rec
+  {
 
-  /// Standard constructor
-  RichCherenkovAngleMonitor( const std::string& name,
-                             ISvcLocator* pSvcLocator );
+    //-----------------------------------------------------------------------------
+    /** @namespace MC
+     *
+     *  General namespace for RICH MC related software
+     *
+     *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+     *  @date   05/12/2006
+     */
+    //-----------------------------------------------------------------------------
+    namespace MC
+    {
 
-  virtual ~RichCherenkovAngleMonitor( ); ///< Destructor
+      //---------------------------------------------------------------------------
+      /** @class CherenkovAngleMonitor RichCherenkovAngleMonitor.h
+       *
+       *  Template for monitor algorithms. For cut 'n' paste ...
+       *
+       *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+       *  @date   05/04/2002
+       */
+      //---------------------------------------------------------------------------
 
-  virtual StatusCode initialize();    // Algorithm initialization
-  virtual StatusCode execute   ();    // Algorithm execution
-  virtual StatusCode finalize  ();    // Algorithm finalization
+      class CherenkovAngleMonitor : public RichRecTupleAlgBase
+      {
 
-private: // data
-  
-  const IRichParticleProperties * m_richPartProp; ///< Rich Particle properties
-  const IRichRecMCTruthTool* m_richRecMCTruth;   ///< Pointer to RichRecMCTruthTool interface
-  const IRichCherenkovAngle * m_ckAngle;         ///< Rich Cherenkov angle calculator tool
+      public:
 
-  double m_minBeta;        ///< minimum beta value for 'saturated' tracks
+        /// Standard constructor
+        CherenkovAngleMonitor( const std::string& name,
+                               ISvcLocator* pSvcLocator );
 
-  /// Track selector
-  const Rich::IRichTrackSelector * m_trSelector;
+        virtual ~CherenkovAngleMonitor( ); ///< Destructor
 
-};
+        virtual StatusCode initialize();    // Algorithm initialization
+        virtual StatusCode execute   ();    // Algorithm execution
+        virtual StatusCode finalize  ();    // Algorithm finalization
+
+      private: // data
+
+        const IParticleProperties * m_richPartProp;   ///< Rich Particle properties
+        const Rich::Rec::MC::IMCTruthTool * m_richRecMCTruth; ///< Pointer to RichRecMCTruthTool interface
+        const ICherenkovAngle     * m_ckAngle;        ///< Rich Cherenkov angle calculator tool
+
+        double m_minBeta;        ///< minimum beta value for 'saturated' tracks
+
+        /// Track selector
+        const ITrackSelector * m_trSelector;
+
+      };
+
+    }
+  }
+}
 
 #endif // RICHRECMONITOR_RICHTRACKRESOLUTIONMONI_H

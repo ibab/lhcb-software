@@ -2,10 +2,10 @@
 //---------------------------------------------------------------------------
 /** @file RichPhotonGeomMonitor.h
  *
- *  Header file for algorithm class : RichPhotonGeomMonitor
+ *  Header file for algorithm class : Rich::rec::MC::PhotonGeomMonitor
  *
  *  CVS Log :-
- *  $Id: RichPhotonGeomMonitor.h,v 1.3 2006-12-01 16:34:07 cattanem Exp $
+ *  $Id: RichPhotonGeomMonitor.h,v 1.4 2007-02-02 10:07:12 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -30,38 +30,76 @@
 // temporary histogramming numbers
 #include "RichRecBase/RichDetParams.h"
 
-//---------------------------------------------------------------------------
-/** @class RichPhotonGeomMonitor RichPhotonGeomMonitor.h
+//-----------------------------------------------------------------------------
+/** @namespace Rich
  *
- *  Template for monitor algorithms. For cut 'n' paste ...
+ *  General namespace for RICH software
  *
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   05/04/2002
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
  */
-//---------------------------------------------------------------------------
-
-class RichPhotonGeomMonitor : public RichRecHistoAlgBase
+//-----------------------------------------------------------------------------
+namespace Rich
 {
 
-public:
+  /** @namespace Rec
+   *
+   *  General namespace for RICH reconstruction software
+   *
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   08/07/2004
+   */
+  namespace Rec
+  {
 
-  /// Standard constructor
-  RichPhotonGeomMonitor( const std::string& name,
-                         ISvcLocator* pSvcLocator );
+    //-----------------------------------------------------------------------------
+    /** @namespace MC
+     *
+     *  General namespace for RICH MC related software
+     *
+     *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+     *  @date   05/12/2006
+     */
+    //-----------------------------------------------------------------------------
+    namespace MC
+    {
 
-  virtual ~RichPhotonGeomMonitor( ); ///< Destructor
+      //---------------------------------------------------------------------------
+      /** @class PhotonGeomMonitor RichPhotonGeomMonitor.h
+       *
+       *  Monitor the general reconstructed photons properties
+       *
+       *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+       *  @date   05/04/2002
+       */
+      //---------------------------------------------------------------------------
 
-  virtual StatusCode initialize();    // Algorithm initialization
-  virtual StatusCode execute   ();    // Algorithm execution
-  virtual StatusCode finalize  ();    // Algorithm finalization
+      class PhotonGeomMonitor : public RichRecHistoAlgBase
+      {
 
-private: // data
+      public:
 
-  const IRichRecMCTruthTool* m_richRecMCTruth;    ///< Pointer to RichRecMCTruthTool interface
-  const IRichCherenkovAngle * m_ckAngle;          ///< Rich Cherenkov angle calculator tool
-  const IRichRecGeomTool * m_geomTool;            ///< Simple geometrical questions
-  const Rich::IRichTrackSelector * m_trSelector;  ///< Track selector
+        /// Standard constructor
+        PhotonGeomMonitor( const std::string& name,
+                           ISvcLocator* pSvcLocator );
 
-};
+        virtual ~PhotonGeomMonitor( ); ///< Destructor
+
+        virtual StatusCode initialize();    // Algorithm initialization
+        virtual StatusCode execute   ();    // Algorithm execution
+        virtual StatusCode finalize  ();    // Algorithm finalization
+
+      private: // data
+
+        const Rich::Rec::MC::IMCTruthTool* m_richRecMCTruth;    ///< Pointer to RichRecMCTruthTool interface
+        const ICherenkovAngle * m_ckAngle;          ///< Rich Cherenkov angle calculator tool
+        const IGeomTool * m_geomTool;            ///< Simple geometrical questions
+        const ITrackSelector * m_trSelector;  ///< Track selector
+
+      };
+
+    }
+  }
+}
 
 #endif // RICHRECMONITOR_RICHTRACKRESOLUTIONMONI_H

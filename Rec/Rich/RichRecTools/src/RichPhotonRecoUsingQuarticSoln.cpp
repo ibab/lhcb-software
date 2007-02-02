@@ -2,10 +2,10 @@
 //-----------------------------------------------------------------------------
 /** @file RichPhotonRecoUsingQuarticSoln.cpp
  *
- * Implementation file for class : RichPhotonRecoUsingQuarticSoln
+ * Implementation file for class : Rich::Rec::PhotonRecoUsingQuarticSoln
  *
  * CVS Log :-
- * $Id: RichPhotonRecoUsingQuarticSoln.cpp,v 1.14 2006-12-03 01:26:33 jonrob Exp $
+ * $Id: RichPhotonRecoUsingQuarticSoln.cpp,v 1.15 2007-02-02 10:10:41 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @author Antonis Papanestis
@@ -16,20 +16,20 @@
 // local
 #include "RichPhotonRecoUsingQuarticSoln.h"
 
-// namespaces
-using namespace LHCb;
+// All code is in general Rich reconstruction namespace
+using namespace Rich::Rec;
 
 // Declaration of the Algorithm Factory
-DECLARE_TOOL_FACTORY(RichPhotonRecoUsingQuarticSoln);
+DECLARE_TOOL_FACTORY ( PhotonRecoUsingQuarticSoln );
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-RichPhotonRecoUsingQuarticSoln::
-RichPhotonRecoUsingQuarticSoln( const std::string& type,
-                                const std::string& name,
-                                const IInterface* parent )
-  : RichToolBase          ( type, name, parent ),
+PhotonRecoUsingQuarticSoln::
+PhotonRecoUsingQuarticSoln( const std::string& type,
+                            const std::string& name,
+                            const IInterface* parent )
+  : Rich::Rec::ToolBase   ( type, name, parent ),
     m_mirrorSegFinder     ( NULL ),
     m_rayTracing          ( NULL ),
     m_idTool              ( NULL ),
@@ -41,11 +41,16 @@ RichPhotonRecoUsingQuarticSoln( const std::string& type,
     m_ckFudge             ( Rich::NRadiatorTypes, 0     ),
     m_deBeam              ( Rich::NRiches               ),
     m_checkBeamPipe       ( Rich::NRadiatorTypes        ),
-    m_checkPhotCrossSides ( Rich::NRadiatorTypes        )
+    m_checkPhotCrossSides ( Rich::NRadiatorTypes        ),
+    m_minActiveFrac       ( Rich::NRadiatorTypes, 0     )
 {
 
   // declare interface
-  declareInterface<IRichPhotonReconstruction>(this);
+  declareInterface<IPhotonReconstruction>(this);
+
+  // initialise
+  m_deBeam[Rich::Rich1] = NULL;
+  m_deBeam[Rich::Rich2] = NULL;
 
   // job options
   declareProperty( "FindUnambiguousPhotons",    m_testForUnambigPhots         );
@@ -59,7 +64,7 @@ RichPhotonRecoUsingQuarticSoln( const std::string& type,
   m_ckFudge[Rich::Aerogel] = -0.000358914;
   m_ckFudge[Rich::C4F10]   = -0.000192933;
   m_ckFudge[Rich::CF4]     = -3.49182e-05;
-  declareProperty( "CKThetaQuartzRefractCorrections", m_ckFudge               );
+  declareProperty( "CKThetaQuartzRefractCorrections", m_ckFudge );
 
   m_checkBeamPipe[Rich::Aerogel]  = true;
   m_checkBeamPipe[Rich::Rich1Gas] = true;
@@ -71,20 +76,22 @@ RichPhotonRecoUsingQuarticSoln( const std::string& type,
   m_checkPhotCrossSides[Rich::Rich2Gas] = true;
   declareProperty( "CheckSideCrossing", m_checkPhotCrossSides );
 
+  declareProperty( "MinActiveFraction", m_minActiveFrac );
+
 }
 
 //=============================================================================
 // Destructor
 //=============================================================================
-RichPhotonRecoUsingQuarticSoln::~RichPhotonRecoUsingQuarticSoln() { }
+PhotonRecoUsingQuarticSoln::~PhotonRecoUsingQuarticSoln() { }
 
 //=============================================================================
 // Initialisation.
 //=============================================================================
-StatusCode RichPhotonRecoUsingQuarticSoln::initialize()
+StatusCode PhotonRecoUsingQuarticSoln::initialize()
 {
   // initialise base class
-  const StatusCode sc = RichToolBase::initialize();
+  const StatusCode sc = Rich::Rec::ToolBase::initialize();
   if ( sc.isFailure() ) return sc;
 
   // get the detector elements
@@ -97,10 +104,6 @@ StatusCode RichPhotonRecoUsingQuarticSoln::initialize()
   acquireTool( "RichSmartIDTool",     m_idTool, 0, true );
   acquireTool( "RichRefractiveIndex", m_refIndex        );
 
-  // beam pipe objects
-  m_deBeam[Rich::Rich1] = getDet<DeRichBeamPipe>( DeRichBeamPipeLocation::Rich1BeamPipe );
-  m_deBeam[Rich::Rich2] = getDet<DeRichBeamPipe>( DeRichBeamPipeLocation::Rich2BeamPipe );
-
   // loop over radiators
   for ( int iRad = Rich::Aerogel; iRad<=Rich::Rich2Gas; ++iRad )
   {
@@ -109,6 +112,9 @@ StatusCode RichPhotonRecoUsingQuarticSoln::initialize()
     // If rejection of ambiguous photons is turned on
     // make sure test is turned on
     if ( m_rejectAmbigPhots[rad] ) m_testForUnambigPhots[rad]  = true;
+
+    // If we are testing for photons that hit the beam pipe, turn on ambig photon test
+    if ( m_checkBeamPipe[rad] )    m_testForUnambigPhots[rad]  = true;
 
     // information printout about configuration
     if ( m_testForUnambigPhots[rad] )
@@ -123,9 +129,7 @@ StatusCode RichPhotonRecoUsingQuarticSoln::initialize()
     if ( m_checkPhotCrossSides[rad] )
     {      info() << "Will reject photons that cross sides in " << rad << endreq; }
     if ( m_checkBeamPipe[rad] )
-    {
-      info() << "Will check for " << rad << " photons that hit the beam pipe" << endreq;
-    }
+    {      info() << "Will check for " << rad << " photons that hit the beam pipe" << endreq; }
 
     // fudge factor warning
     if ( fabs(m_ckFudge[rad]) > 1e-7 )
@@ -134,6 +138,8 @@ StatusCode RichPhotonRecoUsingQuarticSoln::initialize()
       mess << "Applying " << rad << " CK theta correction factor : " << m_ckFudge[rad];
       Warning( mess.str(), StatusCode::SUCCESS );
     }
+
+    info() << "Minimum active " << rad << " segment fraction = " << m_minActiveFrac[rad] << endreq;
 
   }
 
@@ -163,32 +169,29 @@ StatusCode RichPhotonRecoUsingQuarticSoln::initialize()
   return sc;
 }
 
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode RichPhotonRecoUsingQuarticSoln::finalize()
-{
-  return RichToolBase::finalize();
-}
-
 //=========================================================================
 //  reconstruct a photon from track segment and smartID
 //=========================================================================
-StatusCode RichPhotonRecoUsingQuarticSoln::
-reconstructPhoton ( const RichTrackSegment& trSeg,
-                    const RichSmartID smartID,
-                    RichGeomPhoton& gPhoton ) const
+StatusCode
+PhotonRecoUsingQuarticSoln::
+reconstructPhoton ( const LHCb::RichTrackSegment& trSeg,
+                    const LHCb::RichSmartID smartID,
+                    LHCb::RichGeomPhoton& gPhoton ) const
 {
-  return reconstructPhoton( trSeg, m_idTool->globalPosition(smartID), gPhoton, smartID );
+  return reconstructPhoton( trSeg,
+                            m_idTool->globalPosition(smartID),
+                            gPhoton,
+                            smartID );
 }
 
 //-------------------------------------------------------------------------
 //  reconstruct a photon from track segment and detection point
 //-------------------------------------------------------------------------
-StatusCode RichPhotonRecoUsingQuarticSoln::
-reconstructPhoton ( const RichTrackSegment& trSeg,
+StatusCode
+PhotonRecoUsingQuarticSoln::
+reconstructPhoton ( const LHCb::RichTrackSegment& trSeg,
                     const Gaudi::XYZPoint& detectionPoint,
-                    RichGeomPhoton& gPhoton,
+                    LHCb::RichGeomPhoton& gPhoton,
                     const LHCb::RichSmartID smartID ) const
 {
 
@@ -212,8 +215,8 @@ reconstructPhoton ( const RichTrackSegment& trSeg,
   double fraction(1);
 
   // Pointers to best sec and spherical mirror segments
-  const DeRichSphMirror* sphSegment = 0;
-  const DeRichSphMirror* secSegment = 0;
+  const DeRichSphMirror * sphSegment = NULL;
+  const DeRichSphMirror * secSegment = NULL;
 
   // flag to say if this photon candidate is un-ambiguous - default to false
   bool unambigPhoton( false );
@@ -244,12 +247,15 @@ reconstructPhoton ( const RichTrackSegment& trSeg,
     else  // gas radiators
     {
 
+      // flag for beam pipe check. Default is OK
+      bool beamTestOK(true);
+
+      // -------------------------------------------------------------------------------
       // First emission point, at start of track segment
       const Gaudi::XYZPoint emissionPoint1 = trSeg.bestPoint( 0.01 );
-
       // Find mirror segments for this emission point
-      const DeRichSphMirror* sphSegment1 = 0;
-      const DeRichSphMirror* secSegment1 = 0;
+      const DeRichSphMirror* sphSegment1 = NULL;
+      const DeRichSphMirror* secSegment1 = NULL;
       Gaudi::XYZPoint sphReflPoint1, secReflPoint1;
       if ( !findMirrorData( rich, side, virtDetPoint, emissionPoint1,
                             sphSegment1, secSegment1, sphReflPoint1, secReflPoint1 ) )
@@ -257,13 +263,19 @@ reconstructPhoton ( const RichTrackSegment& trSeg,
         return Warning( "Failed to reconstruct photon for start of segment" );
         //return StatusCode::FAILURE;
       }
+      if ( m_checkBeamPipe[radiator] )
+      {
+        beamTestOK = !deBeam(rich)->testForIntersection( emissionPoint1,
+                                                         sphReflPoint1-emissionPoint1 );
+      }
+      // -------------------------------------------------------------------------------
 
+      // -------------------------------------------------------------------------------
       // now do it again for emission point #2, at end of segment
       const Gaudi::XYZPoint emissionPoint2 = trSeg.bestPoint( 0.99 );
-
       // Find mirror segments for this emission point
-      const DeRichSphMirror* sphSegment2 = 0;
-      const DeRichSphMirror* secSegment2 = 0;
+      const DeRichSphMirror* sphSegment2 = NULL;
+      const DeRichSphMirror* secSegment2 = NULL;
       Gaudi::XYZPoint sphReflPoint2, secReflPoint2;
       if ( !findMirrorData( rich, side, virtDetPoint, emissionPoint2,
                             sphSegment2, secSegment2, sphReflPoint2, secReflPoint2 ) )
@@ -271,16 +283,38 @@ reconstructPhoton ( const RichTrackSegment& trSeg,
         return Warning( "Failed to reconstruct photon for end of segment" );
         //return StatusCode::FAILURE;
       }
+      if ( !beamTestOK && m_checkBeamPipe[radiator] )
+      {
+        beamTestOK = !deBeam(rich)->testForIntersection( emissionPoint2,
+                                                         sphReflPoint2-emissionPoint2 );
+      }
+      // -------------------------------------------------------------------------------
 
-      // Get gas emission point
-      if ( !getBestGasEmissionPoint( radiator, sphReflPoint1, sphReflPoint2,
-                                     detectionPoint, trSeg,
-                                     emissionPoint, fraction ) )
+      // -------------------------------------------------------------------------------
+      if ( !beamTestOK )
+      {
+        // both start and end points failed beam pipe test -> reject
+        //return Warning( "Failed beam pipe intersection checks" );
+        return StatusCode::FAILURE;
+      }
+      // -------------------------------------------------------------------------------
+
+      // -------------------------------------------------------------------------------
+      // Get the best gas emission point
+      if ( !getBestGasEmissionPoint( radiator,
+                                     sphReflPoint1,
+                                     sphReflPoint2,
+                                     detectionPoint,
+                                     trSeg,
+                                     emissionPoint,
+                                     fraction ) )
       {
         //return Warning( "Failed to compute best gas emission point" );
         return StatusCode::FAILURE;
       }
+      // -------------------------------------------------------------------------------
 
+      // -------------------------------------------------------------------------------
       // Is this an unambiguous photon - I.e. only one possible mirror combination
       if ( (sphSegment1 == sphSegment2) && (secSegment1 == secSegment2) )
       {
@@ -288,21 +322,33 @@ reconstructPhoton ( const RichTrackSegment& trSeg,
         sphSegment = sphSegment1;
         secSegment = secSegment1;
         // rough guesses at reflection points (improved later on)
-        sphReflPoint = sphReflPoint1 + (sphReflPoint2-sphReflPoint1)/2;
-        secReflPoint = secReflPoint1 + (secReflPoint2-secReflPoint1)/2;
+        sphReflPoint = sphReflPoint1 + (sphReflPoint2-sphReflPoint1)/2.0;
+        secReflPoint = secReflPoint1 + (secReflPoint2-secReflPoint1)/2.0;
         // photon is not unambiguous
         unambigPhoton = true;
       }
+      // -------------------------------------------------------------------------------
 
     } // end radiator type if
 
     // if configured to do so reject ambiguous photons
     if ( m_rejectAmbigPhots[radiator] && !unambigPhoton )
     {
+      //return Warning( "Failed ambiguous photon test" );
       return StatusCode::FAILURE;
     }
 
   } // end do test if
+  // --------------------------------------------------------------------------------------
+
+  // --------------------------------------------------------------------------------------
+  // Active segment fraction cut
+  // --------------------------------------------------------------------------------------
+  if ( fraction < m_minActiveFrac[radiator] )
+  {
+    //return Warning( "Failed active segment fraction cut" );
+    return StatusCode::FAILURE;
+  }
   // --------------------------------------------------------------------------------------
 
   // --------------------------------------------------------------------------------------
@@ -448,19 +494,6 @@ reconstructPhoton ( const RichTrackSegment& trSeg,
   // --------------------------------------------------------------------------------------
 
   // --------------------------------------------------------------------------------------
-  // Check if the photon path from the emmission point to the spherical mirror
-  // crossed through the beamline
-  // --------------------------------------------------------------------------------------
-  if ( m_checkBeamPipe[radiator] )
-  {
-    if ( m_deBeam[rich]->testForIntersection( emissionPoint, sphReflPoint-emissionPoint ) )
-    {
-      return StatusCode::FAILURE;
-    }
-  }
-  // --------------------------------------------------------------------------------------
-
-  // --------------------------------------------------------------------------------------
   // If using aligned mirror segments, get the final sec mirror reflection
   // point using the best mirror segments available at this point
   // --------------------------------------------------------------------------------------
@@ -520,7 +553,8 @@ reconstructPhoton ( const RichTrackSegment& trSeg,
 //=========================================================================
 // Find mirror segments and reflection points for given data
 //=========================================================================
-bool RichPhotonRecoUsingQuarticSoln::
+bool
+PhotonRecoUsingQuarticSoln::
 findMirrorData( const Rich::DetectorType rich,
                 const Rich::Side side,
                 const Gaudi::XYZPoint& virtDetPoint,
@@ -557,15 +591,18 @@ findMirrorData( const Rich::DetectorType rich,
 // Compute the best emission point for the gas radiators using
 // the given spherical mirror reflection points
 //=========================================================================
-bool RichPhotonRecoUsingQuarticSoln::
+bool
+PhotonRecoUsingQuarticSoln::
 getBestGasEmissionPoint( const Rich::RadiatorType radiator,
                          const Gaudi::XYZPoint& sphReflPoint1,
                          const Gaudi::XYZPoint& sphReflPoint2,
                          const Gaudi::XYZPoint& detectionPoint,
-                         const RichTrackSegment& trSeg,
+                         const LHCb::RichTrackSegment& trSeg,
                          Gaudi::XYZPoint & emissionPoint,
                          double & fraction ) const
 {
+
+  double alongTkFrac = 0.5;
 
   if ( radiator == Rich::Rich1Gas )
   {
@@ -579,16 +616,18 @@ getBestGasEmissionPoint( const Rich::RadiatorType radiator,
     else if ( sameSide1 )
     {
       fraction = fabs( sphReflPoint1.y() / (sphReflPoint1.y() - sphReflPoint2.y()) );
-      emissionPoint = trSeg.bestPoint( fraction/2 );
+      alongTkFrac = fraction/2.0;
+      emissionPoint = trSeg.bestPoint( alongTkFrac );
     }
     else if ( sameSide2 )
     {
       fraction = fabs( sphReflPoint2.y() / (sphReflPoint1.y() - sphReflPoint2.y()) );
-      emissionPoint = trSeg.bestPoint( 1-fraction/2 );
+      alongTkFrac = 1.0-fraction/2.0;
+      emissionPoint = trSeg.bestPoint( alongTkFrac );
     }
     else
     {
-      //Warning( "Rich1Gas : Both RICH hits opposite side to track hit" );
+      //Warning( "Rich1Gas : Both RICH spherical mirror hits opposite side to detection point" );
       return false;
     }
 
@@ -605,20 +644,33 @@ getBestGasEmissionPoint( const Rich::RadiatorType radiator,
     else if ( sameSide1 )
     {
       fraction = fabs( sphReflPoint1.x()/(sphReflPoint1.x()-sphReflPoint2.x()) );
-      emissionPoint = trSeg.bestPoint( fraction/2 );
+      alongTkFrac = fraction/2.0;
+      emissionPoint = trSeg.bestPoint( alongTkFrac );
     }
     else if ( sameSide2 )
     {
       fraction = fabs( sphReflPoint2.x()/(sphReflPoint1.x()-sphReflPoint2.x()) );
-      emissionPoint = trSeg.bestPoint( 1-fraction/2 );
+      alongTkFrac = 1.0-fraction/2.0;
+      emissionPoint = trSeg.bestPoint( alongTkFrac );
     }
     else
     {
-      //Warning( "Rich2Gas : Both RICH hits opposite side to track hit" );
+      //Warning( "Rich2Gas : Both RICH spherical mirror hits opposite side to detection point" );
       return false;
     }
   }
   else { Error( "::getBestGasEmissionPoint() called for Aerogel segment !!" ); }
+
+  if ( msgLevel(MSG::VERBOSE) )
+  {
+    verbose() << radiator << " best emission point correction :- " << endreq
+              << " -> Photon detection point = " << detectionPoint << endreq
+              << " -> Sph. Mirror ptns       = " << sphReflPoint1 << " " << sphReflPoint2 << endreq
+              << " -> Segment entry/exit     = " << trSeg.entryPoint() << " " << trSeg.exitPoint() << endreq
+              << " -> Segment fraction       = " << fraction << endreq
+              << " -> Emm. Ptn. Along traj   = " << alongTkFrac << endreq
+              << " -> Best Emission point    = " << emissionPoint << endreq;
+  }
 
   return true;
 }
@@ -626,8 +678,9 @@ getBestGasEmissionPoint( const Rich::RadiatorType radiator,
 //=========================================================================
 // Correct Aerogel Cherenkov angle theta for refraction at exit of aerogel
 //=========================================================================
-void RichPhotonRecoUsingQuarticSoln::
-correctAeroRefraction( const RichTrackSegment& trSeg,
+void
+PhotonRecoUsingQuarticSoln::
+correctAeroRefraction( const LHCb::RichTrackSegment& trSeg,
                        Gaudi::XYZVector& photonDirection,
                        double & thetaCerenkov ) const
 {
@@ -656,7 +709,8 @@ correctAeroRefraction( const RichTrackSegment& trSeg,
 // Setup and solve quartic equation in the form
 // x^4 + a x^3 + b x^2 + c x + d = 0
 //=========================================================================
-bool RichPhotonRecoUsingQuarticSoln::
+bool
+PhotonRecoUsingQuarticSoln::
 solveQuarticEq ( const Gaudi::XYZPoint& emissionPoint,
                  const Gaudi::XYZPoint& CoC,
                  const Gaudi::XYZPoint& virtDetPoint,

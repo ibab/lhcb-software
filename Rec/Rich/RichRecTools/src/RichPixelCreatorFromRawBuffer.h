@@ -2,10 +2,10 @@
 //---------------------------------------------------------------------------------
 /** @file RichPixelCreatorFromRawBuffer.h
  *
- *  Header file for tool : RichPixelCreatorFromRawBuffer
+ *  Header file for tool : Rich::Rec::PixelCreatorFromRawBuffer
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromRawBuffer.h,v 1.10 2006-12-01 17:05:09 cattanem Exp $
+ *  $Id: RichPixelCreatorFromRawBuffer.h,v 1.11 2007-02-02 10:10:41 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   30/10/2004
@@ -18,30 +18,57 @@
 // base class
 #include "RichRecBase/RichPixelCreatorBase.h"
 
-//---------------------------------------------------------------------------------
-/** @class RichPixelCreatorFromRawBuffer RichPixelCreatorFromRawBuffer.h
+//-----------------------------------------------------------------------------
+/** @namespace Rich
  *
- *  Tool for the creation and book-keeping of RichRecPixel objects.
- *  Works directly from RichSmartIDs decoded from the RawEvent
+ *  General namespace for RICH specific definitions
  *
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   30/10/2004
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
  */
-//---------------------------------------------------------------------------------
-
-class RichPixelCreatorFromRawBuffer : public RichPixelCreatorBase
+//-----------------------------------------------------------------------------
+namespace Rich
 {
 
-public: // Methods for Gaudi Framework
+  //-----------------------------------------------------------------------------
+  /** @namespace Rec
+   *
+   *  General namespace for RICH reconstruction software
+   *
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   08/07/2004
+   */
+  //-----------------------------------------------------------------------------
+  namespace Rec
+  {
 
-  /// Standard constructor
-  RichPixelCreatorFromRawBuffer( const std::string& type,
+    //---------------------------------------------------------------------------------
+    /** @class PixelCreatorFromRawBuffer RichPixelCreatorFromRawBuffer.h
+     *
+     *  Tool for the creation and book-keeping of RichRecPixel objects.
+     *  Works directly from RichSmartIDs decoded from the RawEvent
+     *
+     *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+     *  @date   30/10/2004
+     */
+    //---------------------------------------------------------------------------------
+
+    class PixelCreatorFromRawBuffer : public PixelCreatorBase
+    {
+
+    public: // Methods for Gaudi Framework
+
+      /// Standard constructor
+      PixelCreatorFromRawBuffer( const std::string& type,
                                  const std::string& name,
                                  const IInterface* parent );
 
-  /// Destructor
-  virtual ~RichPixelCreatorFromRawBuffer() {}
+      /// Destructor
+      virtual ~PixelCreatorFromRawBuffer() {}
 
-};
+    };
+
+  }
+}
 
 #endif // RICHRECTOOLS_RichPixelCreatorFromRawBuffer_H

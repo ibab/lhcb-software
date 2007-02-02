@@ -1,10 +1,10 @@
 
 /** @file RichMCMassHypoRingsAlg.h
  *
- *  Header file for algorithm class : RichMCMassHypoRingsAlg
+ *  Header file for algorithm class : Rich::Rec::MC::MCMassHypoRingsAlg
  *
  *  CVS Log :-
- *  $Id: RichMCMassHypoRingsAlg.h,v 1.6 2006-12-01 16:34:07 cattanem Exp $
+ *  $Id: RichMCMassHypoRingsAlg.h,v 1.7 2007-02-02 10:07:11 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   10/01/2003
@@ -29,84 +29,122 @@
 #include "RichRecBase/IRichMassHypothesisRingCreator.h"
 #include "RichRecBase/IRichRayTraceCherenkovCone.h"
 
-/** @class RichMCMassHypoRingsAlg RichMCMassHypoRingsAlg.h
+//-----------------------------------------------------------------------------
+/** @namespace Rich
  *
- *  Builds RichRecRing objects representing the true Cherenkov rings, as
- *  determined from the Monte Carlo MCRichSegment objects.
+ *  General namespace for RICH software
  *
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   10/01/2003
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
  */
-
-class RichMCMassHypoRingsAlg : public RichRecAlgBase {
-
-public:
-
-  /// Standard constructor
-  RichMCMassHypoRingsAlg( const std::string& name, ISvcLocator* pSvcLocator );
-
-  virtual ~RichMCMassHypoRingsAlg();   ///< Destructor
-
-  virtual StatusCode initialize();    // Algorithm initialization
-  virtual StatusCode execute   ();    // Algorithm execution
-  virtual StatusCode finalize  ();    // Algorithm finalization
-
-private: // methods
-
-  /// Build the MC rings for a given event location
-  StatusCode buildRings( const std::string & evtLoc ) const;
-
-  /// Returns the Ring creator for a given location
-  const IRichMassHypothesisRingCreator * ringCreator( const std::string & loc ) const;
-
-  /// Returns the cherenkov angle for a given MCRichSegment
-  double ckTheta( const LHCb::MCRichSegment * segment ) const;
-
-private: // Private data members
-
-  /// typedef to a list of event locations to process
-  typedef std::vector<std::string> EventList;
-
-  /// List of event locations to process
-  EventList m_evtLocs;
-
-  /** typedef to a map translating an event location into a particular
-   *  Mass Hypothesis ring creator */
-  typedef Rich::HashMap<std::string,const IRichMassHypothesisRingCreator*> RingCreators;
-
-  /// The Mass hypothesis ring creators
-  mutable RingCreators m_ringCrs;
-
-  const IRichMCTruthTool * m_truth;              ///< MC truth tool
-  const IRichMCTrackInfoTool * m_mcTkInfo;       ///< MC Track information
-  const IRichRayTraceCherenkovCone * m_rayTrace; ///< Ray tracing
-
-  /// Max Cherenkov theta angle
-  std::vector<double> m_maxCKtheta;
-
-  /// Min Cherenkov theta angle
-  std::vector<double> m_minCKtheta;
-
-  /// used radiators
-  Rich::HashMap<Rich::RadiatorType,bool> m_usedRads;
-
-  /// Ray-tracing configuration object
-  LHCb::RichTraceMode m_traceMode;
-
-};
-
-inline const IRichMassHypothesisRingCreator *
-RichMCMassHypoRingsAlg::ringCreator( const std::string & loc ) const
+//-----------------------------------------------------------------------------
+namespace Rich
 {
-  const IRichMassHypothesisRingCreator *& tool = m_ringCrs[loc];
-  if (!tool)
+
+  /** @namespace Rec
+   *
+   *  General namespace for RICH reconstruction software
+   *
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   08/07/2004
+   */
+  namespace Rec
   {
-    const int slash = loc.find_first_of( "/" );
-    const std::string toolName =
-      "MCCherenkovRings" + ( slash > 0 ? loc.substr(0,slash) : loc );
-    acquireTool( toolName, tool );
+
+    //-----------------------------------------------------------------------------
+    /** @namespace MC
+     *
+     *  General namespace for RICH MC related software
+     *
+     *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+     *  @date   05/12/2006
+     */
+    //-----------------------------------------------------------------------------
+    namespace MC
+    {
+
+      /** @class MCMassHypoRingsAlg RichMCMassHypoRingsAlg.h
+       *
+       *  Builds RichRecRing objects representing the true Cherenkov rings, as
+       *  determined from the Monte Carlo MCRichSegment objects.
+       *
+       *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+       *  @date   10/01/2003
+       */
+
+      class MCMassHypoRingsAlg : public RichRecAlgBase 
+      {
+
+      public:
+
+        /// Standard constructor
+        MCMassHypoRingsAlg( const std::string& name, ISvcLocator* pSvcLocator );
+
+        virtual ~MCMassHypoRingsAlg();   ///< Destructor
+
+        virtual StatusCode initialize();    // Algorithm initialization
+        virtual StatusCode execute   ();    // Algorithm execution
+
+      private: // methods
+
+        /// Build the MC rings for a given event location
+        StatusCode buildRings( const std::string & evtLoc ) const;
+
+        /// Returns the Ring creator for a given location
+        const IMassHypothesisRingCreator * ringCreator( const std::string & loc ) const;
+
+        /// Returns the cherenkov angle for a given MCRichSegment
+        double ckTheta( const LHCb::MCRichSegment * segment ) const;
+
+      private: // Private data members
+
+        /// typedef to a list of event locations to process
+        typedef std::vector<std::string> EventList;
+
+        /// List of event locations to process
+        EventList m_evtLocs;
+
+        /** typedef to a map translating an event location into a particular
+         *  Mass Hypothesis ring creator */
+        typedef Rich::HashMap<std::string,const IMassHypothesisRingCreator*> RingCreators;
+
+        /// The Mass hypothesis ring creators
+        mutable RingCreators m_ringCrs;
+
+        const Rich::MC::IMCTruthTool * m_truth;              ///< MC truth tool
+        const Rich::MC::IMCTrackInfoTool * m_mcTkInfo;       ///< MC Track information
+        const IRayTraceCherenkovCone * m_rayTrace; ///< Ray tracing
+
+        /// Max Cherenkov theta angle
+        std::vector<double> m_maxCKtheta;
+
+        /// Min Cherenkov theta angle
+        std::vector<double> m_minCKtheta;
+
+        /// used radiators
+        Rich::HashMap<Rich::RadiatorType,bool> m_usedRads;
+
+        /// Ray-tracing configuration object
+        LHCb::RichTraceMode m_traceMode;
+
+      };
+
+      inline const IMassHypothesisRingCreator *
+      MCMassHypoRingsAlg::ringCreator( const std::string & loc ) const
+      {
+        const IMassHypothesisRingCreator *& tool = m_ringCrs[loc];
+        if (!tool)
+        {
+          const int slash = loc.find_first_of( "/" );
+          const std::string toolName =
+            "MCCherenkovRings" + ( slash > 0 ? loc.substr(0,slash) : loc );
+          acquireTool( toolName, tool );
+        }
+        return tool;
+      }
+
+    }
   }
-  return tool;
 }
 
 #endif // RICHRECMONITOR_RICHMCMASSHYPORINGSALG_H

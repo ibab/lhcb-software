@@ -2,10 +2,10 @@
 //-----------------------------------------------------------------------------
 /** @file RichGeomEffPhotonTracing.cpp
  *
- *  Implementation file for tool : RichGeomEffPhotonTracing
+ *  Implementation file for tool : Rich::Rec::GeomEffPhotonTracing
  *
  *  CVS Log :-
- *  $Id: RichGeomEffPhotonTracing.cpp,v 1.24 2006-11-30 15:38:31 jonrob Exp $
+ *  $Id: RichGeomEffPhotonTracing.cpp,v 1.25 2007-02-02 10:10:40 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -15,33 +15,30 @@
 // local
 #include "RichGeomEffPhotonTracing.h"
 
-// Gaudi
-#include "GaudiKernel/ToolFactory.h"
-#include "GaudiKernel/PhysicalConstants.h"
-
-// namespaces
-using namespace LHCb;
+// All code is in general Rich reconstruction namespace
+using namespace Rich::Rec;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( RichGeomEffPhotonTracing );
+DECLARE_TOOL_FACTORY( GeomEffPhotonTracing );
 
 // Standard constructor
-RichGeomEffPhotonTracing::RichGeomEffPhotonTracing ( const std::string& type,
-                                                     const std::string& name,
-                                                     const IInterface* parent )
+GeomEffPhotonTracing::GeomEffPhotonTracing ( const std::string& type,
+                                             const std::string& name,
+                                             const IInterface* parent )
   : RichRecToolBase   ( type, name, parent ),
-    m_rayTrace        ( 0 ),
-    m_ckAngle         ( 0 ),
-    m_richSys         ( 0 ),
-    m_nGeomEff        ( 0 ),
-    m_nGeomEffBailout ( 0 ),
-    m_pdInc           ( 0 ),
-    m_traceMode       ( RichTraceMode::RespectHPDTubes, RichTraceMode::SimpleHPDs )
+    m_rayTrace        ( NULL ),
+    m_ckAngle         ( NULL ),
+    m_richSys         ( NULL ),
+    m_nGeomEff        ( 0    ),
+    m_nGeomEffBailout ( 0    ),
+    m_pdInc           ( 0    ),
+    m_traceMode       ( LHCb::RichTraceMode::RespectHPDTubes,
+                        LHCb::RichTraceMode::SimpleHPDs )
 {
 
   // define interface
-  declareInterface<IRichGeomEff>(this);
+  declareInterface<IGeomEff>(this);
 
   // Define job option parameters
   declareProperty( "NPhotonsGeomEffCalc",    m_nGeomEff        = 100 );
@@ -51,7 +48,7 @@ RichGeomEffPhotonTracing::RichGeomEffPhotonTracing ( const std::string& type,
 
 }
 
-StatusCode RichGeomEffPhotonTracing::initialize()
+StatusCode GeomEffPhotonTracing::initialize()
 {
 
   // Sets up various tools and services
@@ -98,7 +95,7 @@ StatusCode RichGeomEffPhotonTracing::initialize()
   return sc;
 }
 
-StatusCode RichGeomEffPhotonTracing::finalize()
+StatusCode GeomEffPhotonTracing::finalize()
 {
   // Release things
   m_uniDist.finalize();
@@ -108,8 +105,8 @@ StatusCode RichGeomEffPhotonTracing::finalize()
 }
 
 double
-RichGeomEffPhotonTracing::geomEfficiency ( RichRecSegment * segment,
-                                           const Rich::ParticleIDType id ) const
+GeomEffPhotonTracing::geomEfficiency ( LHCb::RichRecSegment * segment,
+                                       const Rich::ParticleIDType id ) const
 {
 
   if ( !segment->geomEfficiency().dataIsValid(id) )
@@ -151,7 +148,7 @@ RichGeomEffPhotonTracing::geomEfficiency ( RichRecSegment * segment,
         }
 
         // Ray trace through detector, using fast circle modelling of HPDs
-        RichGeomPhoton photon;
+        LHCb::RichGeomPhoton photon;
         if ( 0 != m_rayTrace->traceToDetector( segment->trackSegment().rich(),
                                                emissionPt,
                                                photDir,
@@ -218,8 +215,8 @@ RichGeomEffPhotonTracing::geomEfficiency ( RichRecSegment * segment,
 }
 
 double
-RichGeomEffPhotonTracing::geomEfficiencyScat ( RichRecSegment * segment,
-                                               const Rich::ParticleIDType id ) const
+GeomEffPhotonTracing::geomEfficiencyScat ( LHCb::RichRecSegment * segment,
+                                           const Rich::ParticleIDType id ) const
 {
 
   if ( !segment->geomEfficiencyScat().dataIsValid(id) )
@@ -238,7 +235,7 @@ RichGeomEffPhotonTracing::geomEfficiencyScat ( RichRecSegment * segment,
       const double cosCkTheta = cos(ckTheta);
 
       int nDetect = 0;
-      RichGeomPhoton photon;
+      LHCb::RichGeomPhoton photon;
       int iPhot = 0;
       for ( std::vector<double>::const_iterator ckPhi = m_phiValues.begin();
             ckPhi != m_phiValues.end(); ++iPhot, ++ckPhi )

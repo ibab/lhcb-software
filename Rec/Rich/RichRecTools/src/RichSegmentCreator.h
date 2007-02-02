@@ -2,10 +2,10 @@
 //-----------------------------------------------------------------------------
 /** @file RichSegmentCreator.h
  *
- *  Header file for tool : RichSegmentCreator
+ *  Header file for tool : Rich::Rec::SegmentCreator
  *
  *  CVS Log :-
- *  $Id: RichSegmentCreator.h,v 1.20 2006-12-01 17:05:09 cattanem Exp $
+ *  $Id: RichSegmentCreator.h,v 1.21 2007-02-02 10:10:41 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -33,108 +33,133 @@
 #include "RichKernel/IRichDetParameters.h"
 
 //-----------------------------------------------------------------------------
-/** @class RichSegmentCreator RichSegmentCreator.h
+/** @namespace Rich
  *
- *  Tool for the creation and manipulation of RichRecSegment objects
+ *  General namespace for RICH software
  *
- *  @attention
- *  This is a utility tool and should only used by the RichTrackCreator tools.
- *
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   15/03/2002
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
  */
 //-----------------------------------------------------------------------------
-
-class RichSegmentCreator : public RichRecToolBase,
-                           virtual public IRichSegmentCreator,
-                           virtual public IIncidentListener
+namespace Rich
 {
 
-public: // Methods for Gaudi Framework
+  /** @namespace Rec
+   *
+   *  General namespace for RICH reconstruction software
+   *
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   08/07/2004
+   */
+  namespace Rec
+  {
 
-  /// Standard constructor
-  RichSegmentCreator( const std::string& type,
+    //-----------------------------------------------------------------------------
+    /** @class SegmentCreator RichSegmentCreator.h
+     *
+     *  Tool for the creation and manipulation of RichRecSegment objects
+     *
+     *  @attention
+     *  This is a utility tool and should only used by the RichTrackCreator tools.
+     *
+     *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+     *  @date   15/03/2002
+     */
+    //-----------------------------------------------------------------------------
+
+    class SegmentCreator : public Rich::Rec::ToolBase,
+                           virtual public ISegmentCreator,
+                           virtual public IIncidentListener
+    {
+
+    public: // Methods for Gaudi Framework
+
+      /// Standard constructor
+      SegmentCreator( const std::string& type,
                       const std::string& name,
                       const IInterface* parent );
 
-  /// Destructor
-  virtual ~RichSegmentCreator() {};
+      /// Destructor
+      virtual ~SegmentCreator() {};
 
-  /// Initialize method
-  StatusCode initialize();
+      /// Initialize method
+      StatusCode initialize();
 
-  /// Finalize method
-  StatusCode finalize();
+      /// Finalize method
+      StatusCode finalize();
 
-  /// Implement the handle method for the Incident service.
-  /// This is used by the tool at the beginning of events to initialise
-  /// a new container for the RichRecTracks
-  void handle( const Incident& incident );
+      /// Implement the handle method for the Incident service.
+      /// This is used by the tool at the beginning of events to initialise
+      /// a new container for the RichRecTracks
+      void handle( const Incident& incident );
 
-public: // methods (and doxygen comments) inherited from public interface
+    public: // methods (and doxygen comments) inherited from public interface
 
-  // Save a new RichRecSegment in the container
-  void saveSegment( LHCb::RichRecSegment * segment ) const;
+      // Save a new RichRecSegment in the container
+      void saveSegment( LHCb::RichRecSegment * segment ) const;
 
-  // Create a new RichRecSegment
-  LHCb:: RichRecSegment * newSegment( LHCb::RichTrackSegment* segment,
-                                      LHCb::RichRecTrack* pTrk ) const;
+      // Create a new RichRecSegment
+      LHCb:: RichRecSegment * newSegment( LHCb::RichTrackSegment* segment,
+                                          LHCb::RichRecTrack* pTrk ) const;
 
-  // Return a pointer to RichRecSegments
-  LHCb::RichRecSegments * richSegments() const;
+      // Return a pointer to RichRecSegments
+      LHCb::RichRecSegments * richSegments() const;
 
-private: // methods
+    private: // methods
 
-  /// Initialise for each event
-  void InitEvent();
+      /// Initialise for each event
+      void InitEvent();
 
-  /// Finalise for each event
-  void FinishEvent();
+      /// Finalise for each event
+      void FinishEvent();
 
-private:  // Private data
+    private:  // Private data
 
-  /// Pointer to RichRecTracks
-  mutable LHCb::RichRecSegments * m_segments;
+      /// Pointer to RichRecTracks
+      mutable LHCb::RichRecSegments * m_segments;
 
-  /// Location of RichRecSegments in TES
-  std::string m_richRecSegmentLocation;
+      /// Location of RichRecSegments in TES
+      std::string m_richRecSegmentLocation;
 
-  /// Number of energy bins for each radiator
-  std::vector<unsigned int> m_binsEn;
+      /// Number of energy bins for each radiator
+      std::vector<unsigned int> m_binsEn;
 
-  /// Maximum photon energy for each radiator medium
-  double m_maxPhotEn[Rich::NRadiatorTypes];
+      /// Maximum photon energy for each radiator medium
+      double m_maxPhotEn[Rich::NRadiatorTypes];
 
-  /// Minimum photon energy for each radiator medium
-  double m_minPhotEn[Rich::NRadiatorTypes];
+      /// Minimum photon energy for each radiator medium
+      double m_minPhotEn[Rich::NRadiatorTypes];
 
-  // debug segment counting
-  mutable std::vector<unsigned long int> m_segCount;
-  mutable std::vector<unsigned long int> m_segCountLast;
+      // debug segment counting
+      mutable std::vector<unsigned long int> m_segCount;
+      mutable std::vector<unsigned long int> m_segCountLast;
 
-  /// Number of events processed tally
-  unsigned int m_Nevts;
+      /// Number of events processed tally
+      unsigned int m_Nevts;
 
-  /// Flag to indicate if the tool has been used in a given event
-  mutable bool m_hasBeenCalled;
+      /// Flag to indicate if the tool has been used in a given event
+      mutable bool m_hasBeenCalled;
 
-};
+    };
 
-inline void RichSegmentCreator::InitEvent()
-{
-  m_segments = 0;
-  if (msgLevel(MSG::DEBUG))
-  {
-    m_segCountLast = m_segCount;
-    m_hasBeenCalled = false;
-  }
-}
+    inline void SegmentCreator::InitEvent()
+    {
+      m_segments = 0;
+      if (msgLevel(MSG::DEBUG))
+      {
+        m_segCountLast = m_segCount;
+        m_hasBeenCalled = false;
+      }
+    }
 
-inline void RichSegmentCreator::FinishEvent()
-{
-  if (msgLevel(MSG::DEBUG))
-  {
-    if ( m_hasBeenCalled ) ++m_Nevts;
+    inline void SegmentCreator::FinishEvent()
+    {
+      if (msgLevel(MSG::DEBUG))
+      {
+        if ( m_hasBeenCalled ) ++m_Nevts;
+      }
+    }
+
   }
 }
 

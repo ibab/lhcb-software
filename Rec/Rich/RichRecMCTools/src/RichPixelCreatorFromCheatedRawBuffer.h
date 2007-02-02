@@ -2,10 +2,10 @@
 //--------------------------------------------------------------------------------------
 /** @file RichPixelCreatorFromCheatedRawBuffer.h
  *
- *  Header file for RICH reconstruction tool : RichPixelCreatorFromCheatedRawBuffer
+ *  Header file for RICH reconstruction tool : Rich::Rec::PixelCreatorFromCheatedRawBuffer
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromCheatedRawBuffer.h,v 1.2 2006-12-01 16:18:24 cattanem Exp $
+ *  $Id: RichPixelCreatorFromCheatedRawBuffer.h,v 1.3 2007-02-02 10:06:27 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -24,51 +24,85 @@
 // Event
 #include "Event/MCRichOpticalPhoton.h"
 
-//--------------------------------------------------------------------------------------
-/** @class RichPixelCreatorFromCheatedRawBuffer RichPixelCreatorFromCheatedRawBuffer.h
+//-----------------------------------------------------------------------------
+/** @namespace Rich
  *
- *  Tool for the creation and book-keeping of RichRecPixel objects.
+ *  General namespace for RICH software
  *
- *  Uses RichSmartIDs from RawBuffer but then refers to the
- *  MCRichOpticalPhoton objects to use the true MC hit positions.
- *
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   15/09/2003
- *
- *  @todo Find a way to deal properly with more than one MCRichHit per RichSmartID
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
  */
-//--------------------------------------------------------------------------------------
-
-class RichPixelCreatorFromCheatedRawBuffer : public RichPixelCreatorBase
+//-----------------------------------------------------------------------------
+namespace Rich
 {
 
-public: // methods for Gaudi framework
+  /** @namespace Rec
+   *
+   *  General namespace for RICH reconstruction software
+   *
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   08/07/2004
+   */
+  namespace Rec
+  {
 
-  /// Standard constructor
-  RichPixelCreatorFromCheatedRawBuffer( const std::string& type,
-                                        const std::string& name,
-                                        const IInterface* parent );
+    //-----------------------------------------------------------------------------
+    /** @namespace MC
+     *
+     *  General namespace for RICH MC related software
+     *
+     *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+     *  @date   05/12/2006
+     */
+    //-----------------------------------------------------------------------------
+    namespace MC
+    {
 
-  /// Destructor
-  virtual ~RichPixelCreatorFromCheatedRawBuffer(){}
+      //--------------------------------------------------------------------------------------
+      /** @class PixelCreatorFromCheatedRawBuffer RichPixelCreatorFromCheatedRawBuffer.h
+       *
+       *  Tool for the creation and book-keeping of RichRecPixel objects.
+       *
+       *  Uses RichSmartIDs from RawBuffer but then refers to the
+       *  MCRichOpticalPhoton objects to use the true MC hit positions.
+       *
+       *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+       *  @date   15/09/2003
+       *
+       *  @todo Find a way to deal properly with more than one MCRichHit per RichSmartID
+       */
+      //--------------------------------------------------------------------------------------
 
-  // Initialize method
-  StatusCode initialize();
+      class PixelCreatorFromCheatedRawBuffer : public Rich::Rec::PixelCreatorBase
+      {
 
-  // Finalize method
-  StatusCode finalize();
+      public: // methods for Gaudi framework
 
-protected: // methods
+        /// Standard constructor
+        PixelCreatorFromCheatedRawBuffer( const std::string& type,
+                                          const std::string& name,
+                                          const IInterface* parent );
 
-  /// Build a new RichRecPixel
-  virtual LHCb::RichRecPixel * buildPixel ( const LHCb::RichSmartID id ) const;
+        /// Destructor
+        virtual ~PixelCreatorFromCheatedRawBuffer(){}
 
-private: // data
+        // Initialize method
+        StatusCode initialize();
 
-  /// MC Truth tool
-  const IRichMCTruthTool * m_mcTool;
+      protected: // methods
 
-};
+        /// Build a new RichRecPixel
+        virtual LHCb::RichRecPixel * buildPixel ( const LHCb::RichSmartID id ) const;
 
+      private: // data
+
+        /// MC Truth tool
+        const Rich::MC::IMCTruthTool * m_mcTool;
+
+      };
+
+    }
+  }
+}
 
 #endif // RICHRECMCTOOLS_RichPixelCreatorFromCheatedRawBuffer_H

@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : RichTrackGeomMoni
  *
- *  $Id: RichTrackGeomMoni.cpp,v 1.15 2006-12-01 14:01:40 jonrob Exp $
+ *  $Id: RichTrackGeomMoni.cpp,v 1.16 2007-02-02 10:07:13 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -14,14 +14,16 @@
 // local
 #include "RichTrackGeomMoni.h"
 
+using namespace Rich::Rec::MC;
+
 //---------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY ( RichTrackGeomMoni );
+DECLARE_ALGORITHM_FACTORY ( TrackGeomMoni );
 
 // Standard constructor, initializes variables
-RichTrackGeomMoni::RichTrackGeomMoni( const std::string& name,
-                                      ISvcLocator* pSvcLocator )
+TrackGeomMoni::TrackGeomMoni( const std::string& name,
+                              ISvcLocator* pSvcLocator )
   : RichRecHistoAlgBase ( name, pSvcLocator ),
     m_rayTrace          ( 0 ),
     m_richRecMCTruth    ( 0 ),
@@ -35,10 +37,10 @@ RichTrackGeomMoni::RichTrackGeomMoni( const std::string& name,
 }
 
 // Destructor
-RichTrackGeomMoni::~RichTrackGeomMoni() {}
+TrackGeomMoni::~TrackGeomMoni() {}
 
 //  Initialize
-StatusCode RichTrackGeomMoni::initialize()
+StatusCode TrackGeomMoni::initialize()
 {
   // Sets up various tools and services
   const StatusCode sc = RichRecHistoAlgBase::initialize();
@@ -63,7 +65,7 @@ StatusCode RichTrackGeomMoni::initialize()
 }
 
 // Main execution
-StatusCode RichTrackGeomMoni::execute()
+StatusCode TrackGeomMoni::execute()
 {
   debug() << "Execute" << endreq;
 
@@ -108,7 +110,7 @@ StatusCode RichTrackGeomMoni::execute()
     if ( !m_trSelector->trackSelected( segment->richRecTrack() ) ) continue;
 
     // Track type
-    const Rich::Track::Type trType = segment->richRecTrack()->trackID().trackType();
+    const Rich::Rec::Track::Type trType = segment->richRecTrack()->trackID().trackType();
 
     // track segment
     const LHCb::RichTrackSegment & trackSeg = segment->trackSegment();
@@ -226,7 +228,7 @@ StatusCode RichTrackGeomMoni::execute()
               -xRadExitGlo[rad],xRadExitGlo[rad],-yRadExitGlo[rad],yRadExitGlo[rad] );
       const double entMCR = sqrt( gsl_pow_2(mcEntP.x()) + gsl_pow_2(mcEntP.y()) );
       const double extMCR = sqrt( gsl_pow_2(mcExtP.x()) + gsl_pow_2(mcExtP.y()) );
-      const double maxRrange[] = { 0.5*Gaudi::Units::m, 
+      const double maxRrange[] = { 0.5*Gaudi::Units::m,
                                    0.5*Gaudi::Units::m,
                                    1.5*Gaudi::Units::m   };
       profile1D( mcSegment->pathLength(), entMCR, hid(rad,"pathLvEntR"),
@@ -357,7 +359,7 @@ StatusCode RichTrackGeomMoni::execute()
 }
 
 //  Finalize
-StatusCode RichTrackGeomMoni::finalize()
+StatusCode TrackGeomMoni::finalize()
 {
   // Execute base class method
   return RichRecHistoAlgBase::finalize();

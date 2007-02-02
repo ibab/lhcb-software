@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : RichPhotonCreatorWithMCSignal
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreatorWithMCSignal.cpp,v 1.6 2006-12-01 16:18:24 cattanem Exp $
+ *  $Id: RichPhotonCreatorWithMCSignal.cpp,v 1.7 2007-02-02 10:06:27 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -18,27 +18,27 @@
 // local
 #include "RichPhotonCreatorWithMCSignal.h"
 
-// namespaces
-using namespace LHCb;
+// All code is in general Rich reconstruction namespace
+using namespace Rich::Rec::MC;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( RichPhotonCreatorWithMCSignal );
+DECLARE_TOOL_FACTORY( PhotonCreatorWithMCSignal );
 
 // Standard constructor
-RichPhotonCreatorWithMCSignal::
-RichPhotonCreatorWithMCSignal( const std::string& type,
-                               const std::string& name,
-                               const IInterface* parent )
-  : RichPhotonCreatorBase ( type, name, parent ),
+PhotonCreatorWithMCSignal::
+PhotonCreatorWithMCSignal( const std::string& type,
+                           const std::string& name,
+                           const IInterface* parent )
+  : PhotonCreatorBase     ( type, name, parent ),
     m_mcRecTool           ( NULL ),
     m_mcPhotCr            ( NULL ),
     m_recoPhotCr          ( NULL ) { }
 
-StatusCode RichPhotonCreatorWithMCSignal::initialize()
+StatusCode PhotonCreatorWithMCSignal::initialize()
 {
   // Sets up various tools and services
-  const StatusCode sc = RichPhotonCreatorBase::initialize();
+  const StatusCode sc = PhotonCreatorBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
@@ -49,22 +49,22 @@ StatusCode RichPhotonCreatorWithMCSignal::initialize()
   return sc;
 }
 
-StatusCode RichPhotonCreatorWithMCSignal::finalize()
+StatusCode PhotonCreatorWithMCSignal::finalize()
 {
   // Execute base class method
-  return RichPhotonCreatorBase::finalize();
+  return PhotonCreatorBase::finalize();
 }
 
-RichRecPhoton *
-RichPhotonCreatorWithMCSignal::buildPhoton( RichRecSegment * segment,
-                                            RichRecPixel * pixel,
-                                            const RichRecPhotonKey key ) const
+LHCb::RichRecPhoton *
+PhotonCreatorWithMCSignal::buildPhoton( LHCb::RichRecSegment * segment,
+                                        LHCb::RichRecPixel * pixel,
+                                        const RichRecPhotonKey key ) const
 {
 
-  RichRecPhoton * newPhoton = NULL;
+  LHCb::RichRecPhoton * newPhoton = NULL;
 
   // See if there is a true cherenkov photon for this segment/pixel pair
-  const MCRichOpticalPhoton * mcPhoton = m_mcRecTool->trueOpticalPhoton(segment,pixel);
+  const LHCb::MCRichOpticalPhoton * mcPhoton = m_mcRecTool->trueOpticalPhoton(segment,pixel);
 
   if ( mcPhoton )
   {

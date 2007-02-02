@@ -2,10 +2,10 @@
 //-----------------------------------------------------------------------------
 /** @file RichMatchTrackSelector.h
  *
- *  Header file for RICH reconstruction tool : RichMatchTrackSelector
+ *  Header file for RICH reconstruction tool : Rich::Rec::MatchTrackSelector
  *
  *  CVS Log :-
- *  $Id: RichMatchTrackSelector.h,v 1.1 2006-08-14 10:05:41 jonrob Exp $
+ *  $Id: RichMatchTrackSelector.h,v 1.2 2007-02-02 10:10:41 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/08/2006
@@ -29,48 +29,61 @@ namespace Rich
 {
 
   //-----------------------------------------------------------------------------
-  /** @class RichMatchTrackSelector RichMatchTrackSelector.h
+  /** @namespace Rec
    *
-   *  Extension to the RichBaseTrackSelector for Seed tracks
+   *  General namespace for RICH reconstruction software
    *
-   *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
-   *  @date   2006-08-12
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   08/07/2004
    */
   //-----------------------------------------------------------------------------
-
-  class RichMatchTrackSelector : public RichBaseTrackSelector
+  namespace Rec
   {
 
-  public: // Gaudi methods
+    //-----------------------------------------------------------------------------
+    /** @class MatchTrackSelector RichMatchTrackSelector.h
+     *
+     *  Extension to the RichBaseTrackSelector for Seed tracks
+     *
+     *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+     *  @date   2006-08-12
+     */
+    //-----------------------------------------------------------------------------
 
-    /// Standard constructor
-    RichMatchTrackSelector( const std::string& type,
-                            const std::string& name,
-                            const IInterface* parent );
+    class MatchTrackSelector : public BaseTrackSelector
+    {
 
-    /// Destructor
-    virtual ~RichMatchTrackSelector( );
+    public: // Gaudi methods
 
-  public: // interface methods
+      /// Standard constructor
+      MatchTrackSelector( const std::string& type,
+                          const std::string& name,
+                          const IInterface* parent );
 
-    /// Test if the given Track is selected under the current criteria
-    virtual bool trackSelected( const LHCb::Track * track ) const;
+      /// Destructor
+      virtual ~MatchTrackSelector( );
 
-    /// Test it the given RichRecTrack is selected
-    virtual bool trackSelected( const LHCb::RichRecTrack * track ) const;
+    public: // interface methods
 
-  protected: // methods
+      /// Test if the given Track is selected under the current criteria
+      virtual bool trackSelected( const LHCb::Track * track ) const;
 
-    /// Print the track selection
-    virtual MsgStream & printSel( MsgStream & os ) const;
+      /// Test it the given RichRecTrack is selected
+      virtual bool trackSelected( const LHCb::RichRecTrack * track ) const;
 
-  private: // data
+    protected: // methods
 
-    double m_minMatchChi2; ///< minimum match track matching chi^2
-    double m_maxMatchChi2; ///< maximum match track matching chi^2
+      /// Print the track selection
+      virtual MsgStream & printSel( MsgStream & os ) const;
 
-  };
+    private: // data
 
+      double m_minMatchChi2; ///< minimum match track matching chi^2
+      double m_maxMatchChi2; ///< maximum match track matching chi^2
+
+    };
+
+  }
 } // RICH namespace
 
 #endif // RICHRECTOOLS_RichMatchTrackSelector_H

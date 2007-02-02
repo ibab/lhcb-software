@@ -2,10 +2,10 @@
 //--------------------------------------------------------------------------------------
 /** @file RichPixelCreatorFromSignalRawBuffer.h
  *
- *  Header file for RICH reconstruction tool : RichPixelCreatorFromSignalRawBuffer
+ *  Header file for RICH reconstruction tool : Rich::Rec::PixelCreatorFromSignalRawBuffer
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromSignalRawBuffer.h,v 1.3 2006-12-01 16:18:24 cattanem Exp $
+ *  $Id: RichPixelCreatorFromSignalRawBuffer.h,v 1.4 2007-02-02 10:06:27 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -30,75 +30,110 @@
 #include "Event/MCRichDigit.h"
 #include "Event/MCRichOpticalPhoton.h"
 
-//--------------------------------------------------------------------------------------
-/** @class RichPixelCreatorFromSignalRawBuffer RichPixelCreatorFromSignalRawBuffer.h
+//-----------------------------------------------------------------------------
+/** @namespace Rich
  *
- *  Tool for the creation and book-keeping of RichRecPixel objects.
- *  Uses RichDigits from the digitisation but then refers to the
- *  MCRichOpticalPhoton objects select on the true Cherenkov hits.
- *  Optionally, can also select only those pixels that are associated to
- *  a RichRecxTrack, so that trackless hits can be filtered out.
+ *  General namespace for RICH software
  *
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   15/09/2003
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
  */
-//--------------------------------------------------------------------------------------
-
-class RichPixelCreatorFromSignalRawBuffer : public RichPixelCreatorBase
+//-----------------------------------------------------------------------------
+namespace Rich
 {
 
-public: // methods for Gaudi framework
+  /** @namespace Rec
+   *
+   *  General namespace for RICH reconstruction software
+   *
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   08/07/2004
+   */
+  namespace Rec
+  {
 
-  /// Standard constructor
-  RichPixelCreatorFromSignalRawBuffer( const std::string& type,
-                                       const std::string& name,
-                                       const IInterface* parent );
+    //-----------------------------------------------------------------------------
+    /** @namespace MC
+     *
+     *  General namespace for RICH MC related software
+     *
+     *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+     *  @date   05/12/2006
+     */
+    //-----------------------------------------------------------------------------
+    namespace MC
+    {
 
-  /// Destructor
-  virtual ~RichPixelCreatorFromSignalRawBuffer(){}
+      //--------------------------------------------------------------------------------------
+      /** @class PixelCreatorFromSignalRawBuffer RichPixelCreatorFromSignalRawBuffer.h
+       *
+       *  Tool for the creation and book-keeping of RichRecPixel objects.
+       *  Uses RichDigits from the digitisation but then refers to the
+       *  MCRichOpticalPhoton objects select on the true Cherenkov hits.
+       *  Optionally, can also select only those pixels that are associated to
+       *  a RichRecxTrack, so that trackless hits can be filtered out.
+       *
+       *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+       *  @date   15/09/2003
+       */
+      //--------------------------------------------------------------------------------------
 
-  // Initialize method
-  StatusCode initialize();
+      class PixelCreatorFromSignalRawBuffer : public Rich::Rec::PixelCreatorBase
+      {
 
-  // Finalize method
-  StatusCode finalize();
+      public: // methods for Gaudi framework
 
-protected: // methods
+        /// Standard constructor
+        PixelCreatorFromSignalRawBuffer( const std::string& type,
+                                         const std::string& name,
+                                         const IInterface* parent );
 
-  /// Build a new RichRecPixel
-  virtual LHCb::RichRecPixel * buildPixel ( const LHCb::RichSmartID id ) const;
+        /// Destructor
+        virtual ~PixelCreatorFromSignalRawBuffer(){}
 
-  /// Initialise for a new event. Re-implmented from base class version.
-  virtual void InitNewEvent();
+        // Initialize method
+        StatusCode initialize();
 
-private: // methods
+      protected: // methods
 
-  /// List of tracked MCParticles
-  typedef Rich::Map < const LHCb::MCParticle*, bool > TrackedMCPList;
-  /// Get the map for tracked MCParticles for this event
-  TrackedMCPList & trackedMCPs() const;
+        /// Build a new RichRecPixel
+        virtual LHCb::RichRecPixel * buildPixel ( const LHCb::RichSmartID id ) const;
 
-private: // data
+        /// Initialise for a new event. Re-implmented from base class version.
+        virtual void InitNewEvent();
 
-  /// General MC truth tool
-  const IRichMCTruthTool * m_mcTool;
+      private: // methods
 
-  /// Reconstruction MC truth tool
-  const IRichRecMCTruthTool * m_mcRecTool;
+        /// List of tracked MCParticles
+        typedef Rich::Map < const LHCb::MCParticle*, bool > TrackedMCPList;
+        /// Get the map for tracked MCParticles for this event
+        TrackedMCPList & trackedMCPs() const;
 
-  /** Flag to turn on/off the filtering of pixels that do not
-      associated to any reconstructed RichRecTrack */
-  bool m_trackFilter;
+      private: // data
 
-  /// Reject background hits
-  bool m_rejBackHits;
+        /// General MC truth tool
+        const Rich::MC::IMCTruthTool * m_mcTool;
 
-  /// List of tracked MCParticles
-  mutable TrackedMCPList m_trackedMCPs;
+        /// Reconstruction MC truth tool
+        const Rich::Rec::MC::IMCTruthTool * m_mcRecTool;
 
-  // flag to indicated tracked MCParticle list has been made for current event
-  mutable bool m_trackMCPsDone;
+        /** Flag to turn on/off the filtering of pixels that do not
+            associated to any reconstructed RichRecTrack */
+        bool m_trackFilter;
 
-};
+        /// Reject background hits
+        bool m_rejBackHits;
+
+        /// List of tracked MCParticles
+        mutable TrackedMCPList m_trackedMCPs;
+
+        // flag to indicated tracked MCParticle list has been made for current event
+        mutable bool m_trackMCPsDone;
+
+      };
+
+    }
+  }
+}
 
 #endif // RICHRECMCTOOLS_RichPixelCreatorFromSignalRawBuffer_H

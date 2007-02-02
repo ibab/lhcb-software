@@ -2,10 +2,10 @@
 //-----------------------------------------------------------------------------
 /** @file RichPixelPositionMonitor.h
  *
- *  Header file for algorithm class : RichPixelPositionMonitor
+ *  Header file for algorithm class : Rich::Rec::MC::PixelPositionMonitor
  *
  *  CVS Log :-
- *  $Id: RichPixelPositionMonitor.h,v 1.4 2006-06-14 22:12:24 jonrob Exp $
+ *  $Id: RichPixelPositionMonitor.h,v 1.5 2007-02-02 10:07:12 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -52,44 +52,81 @@
 #include "gsl/gsl_math.h"
 
 //-----------------------------------------------------------------------------
-/** @class RichPixelPositionMonitor RichPixelPositionMonitor.h
+/** @namespace Rich
  *
- *  Monitor class for general position and geometry of RichRecPixels
+ *  General namespace for RICH software
  *
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   05/04/2002
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
  */
 //-----------------------------------------------------------------------------
-
-class RichPixelPositionMonitor : public RichRecHistoAlgBase
+namespace Rich
 {
 
-public:
+  /** @namespace Rec
+   *
+   *  General namespace for RICH reconstruction software
+   *
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   08/07/2004
+   */
+  namespace Rec
+  {
 
-  /// Standard constructor
-  RichPixelPositionMonitor( const std::string& name,
-                            ISvcLocator* pSvcLocator );
+    //-----------------------------------------------------------------------------
+    /** @namespace MC
+     *
+     *  General namespace for RICH MC related software
+     *
+     *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+     *  @date   05/12/2006
+     */
+    //-----------------------------------------------------------------------------
+    namespace MC
+    {
 
-  virtual ~RichPixelPositionMonitor( ); ///< Destructor
+      //-----------------------------------------------------------------------------
+      /** @class PixelPositionMonitor RichPixelPositionMonitor.h
+       *
+       *  Monitor class for general position and geometry of RichRecPixels
+       *
+       *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+       *  @date   05/04/2002
+       */
+      //-----------------------------------------------------------------------------
 
-  virtual StatusCode initialize();    // Algorithm initialization
-  virtual StatusCode execute   ();    // Algorithm execution
-  virtual StatusCode finalize  ();    // Algorithm finalization
+      class PixelPositionMonitor : public RichRecHistoAlgBase
+      {
 
-private: // data
+      public:
 
-  /// Pointer to RichRecMCTruthTool interface
-  const IRichRecMCTruthTool* m_richRecMCTruth;
+        /// Standard constructor
+        PixelPositionMonitor( const std::string& name,
+                              ISvcLocator* pSvcLocator );
 
-  /// Pointer to MC truth tool
-  const IRichMCTruthTool * m_mcTool;
-  
-  /// Pointer to RichSmartID tool
-  const IRichSmartIDTool * m_idTool;
+        virtual ~PixelPositionMonitor( ); ///< Destructor
 
-  /// Pointer to RICH system detector element
-  const DeRichSystem * m_richSys;
+        virtual StatusCode initialize();    // Algorithm initialization
+        virtual StatusCode execute   ();    // Algorithm execution
 
-};
+      private: // data
+
+        /// Pointer to RichRecMCTruthTool interface
+        const Rich::Rec::MC::IMCTruthTool * m_richRecMCTruth;
+
+        /// Pointer to MC truth tool
+        const Rich::MC::IMCTruthTool * m_mcTool;
+
+        /// Pointer to RichSmartID tool
+        const ISmartIDTool * m_idTool;
+
+        /// Pointer to RICH system detector element
+        const DeRichSystem * m_richSys;
+
+      };
+
+    }
+  }
+}
 
 #endif // RICHRECMONITOR_RichPixelPositionMonitor_H

@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : RichPixelPositionMonitor
  *
- *  $Id: RichPixelPositionMonitor.cpp,v 1.8 2006-11-30 15:31:11 jonrob Exp $
+ *  $Id: RichPixelPositionMonitor.cpp,v 1.9 2007-02-02 10:07:12 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -20,15 +20,15 @@
 #include "GaudiKernel/SystemOfUnits.h"
 
 // namespace
-using namespace LHCb;
+using namespace Rich::Rec::MC;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( RichPixelPositionMonitor );
+DECLARE_ALGORITHM_FACTORY( PixelPositionMonitor );
 
 // Standard constructor, initializes variables
-RichPixelPositionMonitor::RichPixelPositionMonitor( const std::string& name,
-                                                    ISvcLocator* pSvcLocator)
+PixelPositionMonitor::PixelPositionMonitor( const std::string& name,
+                                            ISvcLocator* pSvcLocator)
   : RichRecHistoAlgBase ( name, pSvcLocator ),
     m_richRecMCTruth ( NULL ),
     m_mcTool         ( NULL ),
@@ -36,10 +36,10 @@ RichPixelPositionMonitor::RichPixelPositionMonitor( const std::string& name,
     m_richSys        ( NULL ) { }
 
 // Destructor
-RichPixelPositionMonitor::~RichPixelPositionMonitor() { }
+PixelPositionMonitor::~PixelPositionMonitor() { }
 
 //  Initialize
-StatusCode RichPixelPositionMonitor::initialize()
+StatusCode PixelPositionMonitor::initialize()
 {
   // Sets up various tools and services
   const StatusCode sc = RichRecHistoAlgBase::initialize();
@@ -57,7 +57,7 @@ StatusCode RichPixelPositionMonitor::initialize()
 }
 
 // Main execution
-StatusCode RichPixelPositionMonitor::execute()
+StatusCode PixelPositionMonitor::execute()
 {
   debug() << "Execute" << endreq;
 
@@ -78,16 +78,16 @@ StatusCode RichPixelPositionMonitor::execute()
   PD_GLOBAL_POSITIONS;
   PD_LOCAL_POSITIONS;
 
-  RichDAQ::PDMap pdMap;
+  DAQ::PDMap pdMap;
 
   // Iterate over pixels
   debug() << "All Pixels " << richPixels()->size() << " :-" << endreq;
   std::vector<unsigned int> nPixs( Rich::NRiches, 0 );
-  for ( RichRecPixels::const_iterator iPix = richPixels()->begin();
+  for ( LHCb::RichRecPixels::const_iterator iPix = richPixels()->begin();
         iPix != richPixels()->end();
         ++iPix )
   {
-    const RichRecPixel * pixel = *iPix;
+    const LHCb::RichRecPixel * pixel = *iPix;
 
     // global position
     const Gaudi::XYZPoint & gPos = pixel->globalPosition();
@@ -99,7 +99,7 @@ StatusCode RichPixelPositionMonitor::execute()
     ++nPixs[rich];
 
     // HPD ID
-    const RichSmartID pdID = pixel->smartID().hpdID();
+    const LHCb::RichSmartID pdID = pixel->smartID().hpdID();
 
     // Centre point of HPD
     const Gaudi::XYZPoint hpdGlo = m_idTool->hpdPosition(pdID);
@@ -110,7 +110,7 @@ StatusCode RichPixelPositionMonitor::execute()
       verbose() << "  -> Pixel            " << pixel->smartID() << endreq
                 << "     global           " << gPos << endreq
                 << "     local            " << lPos << endreq;
-      if ( rich == Rich::Rich1)  
+      if ( rich == Rich::Rich1)
       {
         verbose() << "     local Aerogel    " << pixel->localPosition(Rich::Aerogel) << endreq
                   << "     local Rich1Gas   " << pixel->localPosition(Rich::Rich1Gas) << endreq;
@@ -190,7 +190,7 @@ StatusCode RichPixelPositionMonitor::execute()
     for ( int iRad = 0; iRad < Rich::NRadiatorTypes; ++iRad )
     {
       const Rich::RadiatorType rad = (Rich::RadiatorType)iRad;
-      const MCParticle * mcP = m_richRecMCTruth->trueCherenkovRadiation(pixel,rad);
+      const LHCb::MCParticle * mcP = m_richRecMCTruth->trueCherenkovRadiation(pixel,rad);
       if ( mcP )
       {
         plot2D( lPos.x(), lPos.y(), hid(rad,"signalHits"), "True Cherenkov signal hits",
@@ -200,13 +200,13 @@ StatusCode RichPixelPositionMonitor::execute()
 
     // MCHits
     const SmartRefVector<LHCb::MCRichHit> & mcHits = m_richRecMCTruth->mcRichHits( pixel );
-    for ( SmartRefVector<MCRichHit>::const_iterator iHit = mcHits.begin();
+    for ( SmartRefVector<LHCb::MCRichHit>::const_iterator iHit = mcHits.begin();
           iHit != mcHits.end(); ++iHit )
     {
       if ( !(*iHit)->isBackground() )
       {
         // Get MCRichOptical Photon
-        const MCRichOpticalPhoton * mcPhot = m_mcTool->mcOpticalPhoton(*iHit);
+        const LHCb::MCRichOpticalPhoton * mcPhot = m_mcTool->mcOpticalPhoton(*iHit);
         if ( mcPhot )
         {
           // Compare position on HPD entrance window
@@ -234,7 +234,7 @@ StatusCode RichPixelPositionMonitor::execute()
                   "dX V X local on HPD entry window : CK signal only", -35, 35, -8, 8 );
           plot2D( lPos.Y()-hpdLoc.Y(), lPos.Y()-mcPointLoc.Y(), hid(rich,"pdImpYlocVY"),
                   "dY V Y local on HPD entry window : CK signal only", -35, 35, -8, 8 );
-          const double R   = sqrt( gsl_pow_2(lPos.X()-hpdLoc.X()) + 
+          const double R   = sqrt( gsl_pow_2(lPos.X()-hpdLoc.X()) +
                                    gsl_pow_2(lPos.Y()-hpdLoc.Y()) );
           const double McR = sqrt( gsl_pow_2(mcPointLoc.X()-hpdLoc.X()) +
                                    gsl_pow_2(mcPointLoc.Y()-hpdLoc.Y()) );
@@ -255,7 +255,7 @@ StatusCode RichPixelPositionMonitor::execute()
 
   debug() << "RICH1 Pixels :-" << endreq;
   unsigned int nR1(0);
-  for ( RichRecPixels::const_iterator iPix = pixelCreator()->begin(Rich::Rich1);
+  for ( LHCb::RichRecPixels::const_iterator iPix = pixelCreator()->begin(Rich::Rich1);
         iPix != pixelCreator()->end(Rich::Rich1); ++iPix )
   {
     ++nR1;
@@ -269,7 +269,7 @@ StatusCode RichPixelPositionMonitor::execute()
 
   debug() << "RICH2 Pixels :-" << endreq;
   unsigned int nR2(0);
-  for ( RichRecPixels::const_iterator iPix = pixelCreator()->begin(Rich::Rich2);
+  for ( LHCb::RichRecPixels::const_iterator iPix = pixelCreator()->begin(Rich::Rich2);
         iPix != pixelCreator()->end(Rich::Rich2); ++iPix )
   {
     ++nR2;
@@ -281,14 +281,16 @@ StatusCode RichPixelPositionMonitor::execute()
   if ( nR2 != nPixs[Rich::Rich2] )
     Error("Mis-match in RICH2 pixels between full container and RICH2 iterators");
 
+  const double maxAvO[] = { 1500*Gaudi::Units::mm, 2000*Gaudi::Units::mm};
+
   // HPD plots
-  for ( RichDAQ::PDMap::const_iterator iPD = pdMap.begin();
+  for ( DAQ::PDMap::const_iterator iPD = pdMap.begin();
         iPD != pdMap.end(); ++iPD )
   {
     // HPD
-    const RichSmartID hpdID = (*iPD).first;
-    const RichDAQ::HPDHardwareID hardID = m_richSys->hardwareID(hpdID);
-    const RichDAQ::Level0ID l0ID        = m_richSys->level0ID(hpdID);
+    const LHCb::RichSmartID hpdID = (*iPD).first;
+    const DAQ::HPDHardwareID hardID = m_richSys->hardwareID(hpdID);
+    const DAQ::Level0ID l0ID        = m_richSys->level0ID(hpdID);
     // Centre point of HPD in local coords
     const Gaudi::XYZPoint hpdGlo = m_idTool->hpdPosition(hpdID);
     const Gaudi::XYZPoint hpdLoc = m_idTool->globalToPDPanel(hpdGlo);
@@ -307,15 +309,16 @@ StatusCode RichPixelPositionMonitor::execute()
       plot2D( hitP.X(), hitP.Y(), Hid, HPD.str(), -40*Gaudi::Units::mm,
               40*Gaudi::Units::mm, -40*Gaudi::Units::mm, 40*Gaudi::Units::mm, 32, 32 );
     }
+    // Profile plot of average HPD occupancy versus radial (local) distance
+    const double localRadial = sqrt( hpdLoc.x()*hpdLoc.x() + hpdLoc.y()*hpdLoc.y() );
+    const Rich::DetectorType rich = hpdID.rich();
+    profile1D( localRadial, (*iPD).second.size(), hid(rich,"AvHPDOccVD"),
+               "Average HPD occupancy versus radial distance", 0,maxAvO[rich] , 50 );
+    profile2D( hpdLoc.x(), hpdLoc.y(), (*iPD).second.size(), hid(rich,"AvHPDOccVXY"),
+               "Average HPD occupancy versus X,Y", 
+               xMinPDLoc[rich],xMaxPDLoc[rich],yMinPDLoc[rich],yMaxPDLoc[rich], 100, 100 );
   }
-
 
   return StatusCode::SUCCESS;
 }
 
-//  Finalize
-StatusCode RichPixelPositionMonitor::finalize()
-{
-  // Execute base class method
-  return RichRecHistoAlgBase::finalize();
-}

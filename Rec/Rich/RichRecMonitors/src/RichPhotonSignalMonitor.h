@@ -2,10 +2,10 @@
 //---------------------------------------------------------------------------
 /** @file RichPhotonSignalMonitor.h
  *
- *  Header file for algorithm class : RichPhotonSignalMonitor
+ *  Header file for algorithm class : Rich::Rec::MC::PhotonSignalMonitor
  *
  *  CVS Log :-
- *  $Id: RichPhotonSignalMonitor.h,v 1.4 2006-12-01 16:34:07 cattanem Exp $
+ *  $Id: RichPhotonSignalMonitor.h,v 1.5 2007-02-02 10:07:12 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -31,39 +31,77 @@
 // temporary histogramming numbers
 #include "RichRecBase/RichDetParams.h"
 
-//---------------------------------------------------------------------------
-/** @class RichPhotonSignalMonitor RichPhotonSignalMonitor.h
+//-----------------------------------------------------------------------------
+/** @namespace Rich
  *
- *  Monitors the photon signals.
+ *  General namespace for RICH software
  *
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   05/04/2002
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
  */
-//---------------------------------------------------------------------------
-
-class RichPhotonSignalMonitor : public RichRecHistoAlgBase
+//-----------------------------------------------------------------------------
+namespace Rich
 {
 
-public:
+  /** @namespace Rec
+   *
+   *  General namespace for RICH reconstruction software
+   *
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   08/07/2004
+   */
+  namespace Rec
+  {
 
-  /// Standard constructor
-  RichPhotonSignalMonitor( const std::string& name,
-                           ISvcLocator* pSvcLocator );
+    //-----------------------------------------------------------------------------
+    /** @namespace MC
+     *
+     *  General namespace for RICH MC related software
+     *
+     *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+     *  @date   05/12/2006
+     */
+    //-----------------------------------------------------------------------------
+    namespace MC
+    {
 
-  virtual ~RichPhotonSignalMonitor( ); ///< Destructor
+      //---------------------------------------------------------------------------
+      /** @class PhotonSignalMonitor RichPhotonSignalMonitor.h
+       *
+       *  Monitors the photon signals.
+       *
+       *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+       *  @date   05/04/2002
+       */
+      //---------------------------------------------------------------------------
 
-  virtual StatusCode initialize();    // Algorithm initialization
-  virtual StatusCode execute   ();    // Algorithm execution
-  virtual StatusCode finalize  ();    // Algorithm finalization
+      class PhotonSignalMonitor : public RichRecHistoAlgBase
+      {
 
-private: // data
+      public:
 
-  const IRichRecMCTruthTool* m_richRecMCTruth;   ///< Pointer to RichRecMCTruthTool interface
-  const IRichExpectedTrackSignal * m_tkSignal;   ///< Pointer to RichExpectedTrackSignal tool
-  const IRichGeomEff * m_geomEffic; ///< Pointer to ray-tracing RichGeomEff tool
-  const IRichRefractiveIndex * m_refIndex; ///< Refractive index tool
-  const Rich::IRichTrackSelector * m_trSelector;  ///< Track selector
+        /// Standard constructor
+        PhotonSignalMonitor( const std::string& name,
+                             ISvcLocator* pSvcLocator );
 
-};
+        virtual ~PhotonSignalMonitor( ); ///< Destructor
+
+        virtual StatusCode initialize();    // Algorithm initialization
+        virtual StatusCode execute   ();    // Algorithm execution
+        virtual StatusCode finalize  ();    // Algorithm finalization
+
+      private: // data
+
+        const Rich::Rec::MC::IMCTruthTool* m_richRecMCTruth;   ///< Pointer to RichRecMCTruthTool interface
+        const IExpectedTrackSignal * m_tkSignal;   ///< Pointer to RichExpectedTrackSignal tool
+        const IGeomEff * m_geomEffic; ///< Pointer to ray-tracing RichGeomEff tool
+        const IRefractiveIndex * m_refIndex; ///< Refractive index tool
+        const ITrackSelector * m_trSelector;  ///< Track selector
+
+      };
+
+    }
+  }
+}
 
 #endif // RICHRECMONITOR_RICHTRACKRESOLUTIONMONI_H

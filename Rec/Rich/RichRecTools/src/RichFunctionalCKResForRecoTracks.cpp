@@ -2,9 +2,9 @@
 //----------------------------------------------------------------------------------------
 /** @file RichFunctionalCKResForRecoTracks.cpp
  *
- *  Implementation file for tool : RichFunctionalCKResForRecoTracks
+ *  Implementation file for tool : Rich::Rec::FunctionalCKResForRecoTracks
  *
- *  $Id: RichFunctionalCKResForRecoTracks.cpp,v 1.4 2006-11-01 18:03:02 jonrob Exp $
+ *  $Id: RichFunctionalCKResForRecoTracks.cpp,v 1.5 2007-02-02 10:10:40 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/10/2004
@@ -18,18 +18,18 @@
 // local
 #include "RichFunctionalCKResForRecoTracks.h"
 
-// namespaces
-using namespace LHCb;
+// All code is in general Rich reconstruction namespace
+using namespace Rich::Rec;
 
 //----------------------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( RichFunctionalCKResForRecoTracks );
+DECLARE_TOOL_FACTORY( FunctionalCKResForRecoTracks );
 
 // Standard constructor
-RichFunctionalCKResForRecoTracks::
-RichFunctionalCKResForRecoTracks ( const std::string& type,
-                                   const std::string& name,
-                                   const IInterface* parent )
+FunctionalCKResForRecoTracks::
+FunctionalCKResForRecoTracks ( const std::string& type,
+                               const std::string& name,
+                               const IInterface* parent )
   : RichRecHistoToolBase ( type, name, parent  ),
     m_ckAngle       ( 0                        ),
     m_refIndex      ( 0                        ),
@@ -42,38 +42,38 @@ RichFunctionalCKResForRecoTracks ( const std::string& type,
 {
 
   // define interface
-  declareInterface<IRichCherenkovResolution>(this);
+  declareInterface<ICherenkovResolution>(this);
 
   // job options
 
   declareProperty( "TrackExtrapolator", m_Ext );
 
-  m_asmpt[Rich::Aerogel] = std::vector<double>( Rich::Track::NTrTypes, 0.00249 );
-  (m_asmpt[Rich::Aerogel])[Rich::Track::Forward] = 0.00177;
-  (m_asmpt[Rich::Aerogel])[Rich::Track::Match]   = 0.00174;
-  (m_asmpt[Rich::Aerogel])[Rich::Track::VeloTT]  = 0.00218;
-  (m_asmpt[Rich::Aerogel])[Rich::Track::KsTrack] = 0.00189;
+  m_asmpt[Rich::Aerogel] = std::vector<double>( Rich::Rec::Track::NTrTypes, 0.00249 );
+  (m_asmpt[Rich::Aerogel])[Rich::Rec::Track::Forward] = 0.00177;
+  (m_asmpt[Rich::Aerogel])[Rich::Rec::Track::Match]   = 0.00174;
+  (m_asmpt[Rich::Aerogel])[Rich::Rec::Track::VeloTT]  = 0.00218;
+  (m_asmpt[Rich::Aerogel])[Rich::Rec::Track::KsTrack] = 0.00189;
   declareProperty( "AerogelAsymptopicErr", m_asmpt[Rich::Aerogel] );
 
-  m_asmpt[Rich::Rich1Gas]   = std::vector<double>( Rich::Track::NTrTypes, 0.00150 );
-  (m_asmpt[Rich::Rich1Gas])[Rich::Track::Forward] = 0.00118;
-  (m_asmpt[Rich::Rich1Gas])[Rich::Track::Match]   = 0.00130;
-  (m_asmpt[Rich::Rich1Gas])[Rich::Track::VeloTT]  = 0.00178;
-  (m_asmpt[Rich::Rich1Gas])[Rich::Track::KsTrack] = 0.00132;
+  m_asmpt[Rich::Rich1Gas]   = std::vector<double>( Rich::Rec::Track::NTrTypes, 0.00150 );
+  (m_asmpt[Rich::Rich1Gas])[Rich::Rec::Track::Forward] = 0.00118;
+  (m_asmpt[Rich::Rich1Gas])[Rich::Rec::Track::Match]   = 0.00130;
+  (m_asmpt[Rich::Rich1Gas])[Rich::Rec::Track::VeloTT]  = 0.00178;
+  (m_asmpt[Rich::Rich1Gas])[Rich::Rec::Track::KsTrack] = 0.00132;
   declareProperty( "Rich1GasAsymptopicErr", m_asmpt[Rich::Rich1Gas] );
 
-  m_asmpt[Rich::Rich2Gas]     = std::vector<double>( Rich::Track::NTrTypes, 0.000329 );
-  (m_asmpt[Rich::Rich2Gas])[Rich::Track::Forward] = 0.000319;
-  (m_asmpt[Rich::Rich2Gas])[Rich::Track::Match]   = 0.000457;
-  (m_asmpt[Rich::Rich2Gas])[Rich::Track::Seed]    = 0.000636;
-  (m_asmpt[Rich::Rich2Gas])[Rich::Track::KsTrack] = 0.000400;
+  m_asmpt[Rich::Rich2Gas]     = std::vector<double>( Rich::Rec::Track::NTrTypes, 0.000329 );
+  (m_asmpt[Rich::Rich2Gas])[Rich::Rec::Track::Forward] = 0.000319;
+  (m_asmpt[Rich::Rich2Gas])[Rich::Rec::Track::Match]   = 0.000457;
+  (m_asmpt[Rich::Rich2Gas])[Rich::Rec::Track::Seed]    = 0.000636;
+  (m_asmpt[Rich::Rich2Gas])[Rich::Rec::Track::KsTrack] = 0.000400;
   declareProperty( "Rich2GasAsymptopicErr", m_asmpt[Rich::Rich2Gas] );
 
   declareProperty( "UseTransportService", m_useTS = false );
 
 }
 
-StatusCode RichFunctionalCKResForRecoTracks::initialize()
+StatusCode FunctionalCKResForRecoTracks::initialize()
 {
   // Sets up various tools and services
   const StatusCode sc = RichRecHistoToolBase::initialize();
@@ -123,16 +123,15 @@ StatusCode RichFunctionalCKResForRecoTracks::initialize()
   return sc;
 }
 
-StatusCode RichFunctionalCKResForRecoTracks::finalize()
+StatusCode FunctionalCKResForRecoTracks::finalize()
 {
   // Execute base class method
   return RichRecHistoToolBase::finalize();
 }
 
 double
-RichFunctionalCKResForRecoTracks::
-ckThetaResolution( RichRecSegment * segment,
-                   const Rich::ParticleIDType id ) const
+FunctionalCKResForRecoTracks::ckThetaResolution( LHCb::RichRecSegment * segment,
+                                                 const Rich::ParticleIDType id ) const
 {
 
   if ( !segment->ckThetaResolution().dataIsValid(id) )
@@ -143,10 +142,10 @@ ckThetaResolution( RichRecSegment * segment,
     const RichTrackID & tkID = segment->richRecTrack()->trackID();
 
     // track type
-    const Rich::Track::Type tkType = tkID.trackType();
+    const Rich::Rec::Track::Type tkType = tkID.trackType();
 
     // track segment shortcut
-    const RichTrackSegment & tkSeg = segment->trackSegment();
+    const LHCb::RichTrackSegment & tkSeg = segment->trackSegment();
 
     // radiator
     const Rich::RadiatorType rad = tkSeg.radiator();
@@ -307,21 +306,21 @@ ckThetaResolution( RichRecSegment * segment,
 }
 
 bool
-RichFunctionalCKResForRecoTracks::findLastMeasuredPoint( RichRecSegment * segment,
-                                                         Gaudi::XYZPoint & point ) const
+FunctionalCKResForRecoTracks::findLastMeasuredPoint( LHCb::RichRecSegment * segment,
+                                                     Gaudi::XYZPoint & point ) const
 {
   // pointer to underlying track
-  const Track * tr =
-    dynamic_cast<const Track*>(segment->richRecTrack()->parentTrack());
+  const LHCb::Track * tr =
+    dynamic_cast<const LHCb::Track*>(segment->richRecTrack()->parentTrack());
   if ( !tr ) Exception( "Null Track pointer" );
 
   // track segment shortcut
-  const RichTrackSegment & tkSeg = segment->trackSegment();
+  const LHCb::RichTrackSegment & tkSeg = segment->trackSegment();
 
   // get z position of last measurement before start of track segment
   // a better search could perhaps be used here ?
-  const Measurement * lastMeas = NULL;
-  for ( std::vector<Measurement *>::const_iterator iM = tr->measurements().begin();
+  const LHCb::Measurement * lastMeas = NULL;
+  for ( std::vector<LHCb::Measurement *>::const_iterator iM = tr->measurements().begin();
         iM != tr->measurements().end(); ++iM )
   {
     if      ( (*iM)->z() < tkSeg.entryPoint().z() ) { lastMeas = *iM; }

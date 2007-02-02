@@ -2,10 +2,10 @@
 //-----------------------------------------------------------------------------
 /** @file RichPhotonPredictorUsingRings.cpp
  *
- *  Implementation file for tool : RichPhotonPredictorUsingRings
+ *  Implementation file for tool : Rich::Rec::PhotonPredictorUsingRings
  *
  *  CVS Log :-
- *  $Id: RichPhotonPredictorUsingRings.cpp,v 1.11 2006-12-01 17:05:09 cattanem Exp $
+ *  $Id: RichPhotonPredictorUsingRings.cpp,v 1.12 2007-02-02 10:10:41 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -17,24 +17,25 @@
 // local
 #include "RichPhotonPredictorUsingRings.h"
 
-// namespaces
-using namespace LHCb;
+// All code is in general Rich reconstruction namespace
+using namespace Rich::Rec;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( RichPhotonPredictorUsingRings );
+DECLARE_TOOL_FACTORY( PhotonPredictorUsingRings );
 
 // Standard constructor
-RichPhotonPredictorUsingRings::RichPhotonPredictorUsingRings( const std::string& type,
-                                                              const std::string& name,
-                                                              const IInterface* parent )
+PhotonPredictorUsingRings::
+PhotonPredictorUsingRings( const std::string& type,
+                           const std::string& name,
+                           const IInterface* parent )
   : RichRecToolBase ( type, name, parent ),
-    m_geomTool      ( 0 ),
-    m_recRings      ( 0 ),
-    m_ringLoc       ( RichRecRingLocation::MarkovRings )
+    m_geomTool      ( NULL ),
+    m_recRings      ( NULL ),
+    m_ringLoc       ( LHCb::RichRecRingLocation::MarkovRings )
 {
 
-  declareInterface<IRichPhotonPredictor>(this);
+  declareInterface<IPhotonPredictor>(this);
 
   m_minROI.push_back( 130 ); // aerogel
   m_minROI.push_back( 0 );   // rich1Gas
@@ -51,7 +52,7 @@ RichPhotonPredictorUsingRings::RichPhotonPredictorUsingRings( const std::string&
 
 }
 
-StatusCode RichPhotonPredictorUsingRings::initialize()
+StatusCode PhotonPredictorUsingRings::initialize()
 {
   // Sets up various tools and services
   const StatusCode sc = RichRecToolBase::initialize();
@@ -77,15 +78,16 @@ StatusCode RichPhotonPredictorUsingRings::initialize()
   return sc;
 }
 
-StatusCode RichPhotonPredictorUsingRings::finalize()
+StatusCode PhotonPredictorUsingRings::finalize()
 {
   // Execute base class method
   return RichRecToolBase::finalize();
 }
 
 // fast decision on whether a photon is possible
-bool RichPhotonPredictorUsingRings::photonPossible( RichRecSegment * segment,
-                                                    RichRecPixel * pixel ) const {
+bool
+PhotonPredictorUsingRings::photonPossible( LHCb::RichRecSegment * segment,
+                                           LHCb::RichRecPixel * pixel ) const {
 
   // Are they in the same Rich detector ?
   if ( segment->trackSegment().rich() != pixel->detector() ) return false;
@@ -101,7 +103,7 @@ bool RichPhotonPredictorUsingRings::photonPossible( RichRecSegment * segment,
   // Run over RichRecRings and check if the current pixel "belongs"
   // to a ring associated to the current segment
   // Search could probably be made faster using stl etc...
-  for ( RichRecRings::iterator iRing = richRings()->begin();
+  for ( LHCb::RichRecRings::iterator iRing = richRings()->begin();
         iRing != richRings()->end(); ++iRing ) {
 
     if ( *iRing &&
@@ -111,7 +113,7 @@ bool RichPhotonPredictorUsingRings::photonPossible( RichRecSegment * segment,
       for ( LHCb::RichRecPixelOnRing::Vector::const_iterator iPix = (*iRing)->richRecPixels().begin();
             iPix != (*iRing)->richRecPixels().end(); ++iPix)
       {
-        const RichRecPixel * thisPix = (*iPix).pixel();
+        const LHCb::RichRecPixel * thisPix = (*iPix).pixel();
         if ( thisPix && thisPix->key() == pixel->key() ) { return true; }
       }
 
@@ -124,7 +126,7 @@ bool RichPhotonPredictorUsingRings::photonPossible( RichRecSegment * segment,
 
 
 // Method that handles various Gaudi "software events"
-void RichPhotonPredictorUsingRings::handle ( const Incident& incident )
+void PhotonPredictorUsingRings::handle ( const Incident& incident )
 {
   if ( IncidentType::BeginEvent == incident.type() ) InitNewEvent();
 }

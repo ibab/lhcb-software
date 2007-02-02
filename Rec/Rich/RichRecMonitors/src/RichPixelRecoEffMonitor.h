@@ -2,10 +2,10 @@
 //-----------------------------------------------------------------------------
 /** @file RichPixelRecoEffMonitor.h
  *
- *  Header file for algorithm class : RichPixelRecoEffMonitor
+ *  Header file for algorithm class : Rich::Rec::MC::PixelRecoEffMonitor
  *
  *  CVS Log :-
- *  $Id: RichPixelRecoEffMonitor.h,v 1.2 2006-12-01 16:34:07 cattanem Exp $
+ *  $Id: RichPixelRecoEffMonitor.h,v 1.3 2007-02-02 10:07:12 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -39,44 +39,82 @@
 #include "RichKernel/IRichRawBufferToSmartIDsTool.h"
 
 //-----------------------------------------------------------------------------
-/** @class RichPixelRecoEffMonitor RichPixelRecoEffMonitor.h
+/** @namespace Rich
  *
- *  Monitor class for the reconstruction efficiency for RichRecPixels
+ *  General namespace for RICH software
  *
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   05/04/2002
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
  */
 //-----------------------------------------------------------------------------
-
-class RichPixelRecoEffMonitor : public RichRecHistoAlgBase
+namespace Rich
 {
 
-public:
+  /** @namespace Rec
+   *
+   *  General namespace for RICH reconstruction software
+   *
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   08/07/2004
+   */
+  namespace Rec
+  {
 
-  /// Standard constructor
-  RichPixelRecoEffMonitor( const std::string& name,
-                           ISvcLocator* pSvcLocator );
+    //-----------------------------------------------------------------------------
+    /** @namespace MC
+     *
+     *  General namespace for RICH MC related software
+     *
+     *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+     *  @date   05/12/2006
+     */
+    //-----------------------------------------------------------------------------
+    namespace MC
+    {
 
-  virtual ~RichPixelRecoEffMonitor( ); ///< Destructor
+      //-----------------------------------------------------------------------------
+      /** @class PixelRecoEffMonitor RichPixelRecoEffMonitor.h
+       *
+       *  Monitor class for the reconstruction efficiency for RichRecPixels
+       *
+       *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+       *  @date   05/04/2002
+       */
+      //-----------------------------------------------------------------------------
 
-  virtual StatusCode initialize();    // Algorithm initialization
-  virtual StatusCode execute   ();    // Algorithm execution
-  virtual StatusCode finalize  ();    // Algorithm finalization
+      class PixelRecoEffMonitor : public Rich::Rec::HistoAlgBase
+      {
 
-private: // data
+      public:
 
-  /// Pointer to RichRecMCTruthTool interface
-  const IRichRecMCTruthTool* m_richRecMCTruth; 
+        /// Standard constructor
+        PixelRecoEffMonitor( const std::string& name,
+                             ISvcLocator* pSvcLocator );
 
-  /// Pointer to RichMCTruthTool
-  const IRichMCTruthTool * m_truth;
+        virtual ~PixelRecoEffMonitor( ); ///< Destructor
 
-  /// Raw Buffer Decoding tool
-  const IRichRawBufferToSmartIDsTool * m_decoder;
+        virtual StatusCode initialize();    // Algorithm initialization
+        virtual StatusCode execute   ();    // Algorithm execution
+        virtual StatusCode finalize  ();    // Algorithm finalization
 
-  /// Pointer to RICH system detector element
-  const DeRichSystem * m_richSys;
+      private: // data
 
-};
+        /// Pointer to RichRecMCTruthTool interface
+        const Rich::Rec::MC::IMCTruthTool* m_richRecMCTruth;
+
+        /// Pointer to RichMCTruthTool
+        const Rich::MC::IMCTruthTool * m_truth;
+
+        /// Raw Buffer Decoding tool
+        const Rich::DAQ::IRawBufferToSmartIDsTool * m_decoder;
+
+        /// Pointer to RICH system detector element
+        const DeRichSystem * m_richSys;
+
+      };
+
+    }
+  }
+}
 
 #endif // RICHRECMONITOR_RichPixelRecoEffMonitor_H

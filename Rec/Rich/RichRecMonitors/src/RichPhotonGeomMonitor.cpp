@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichPhotonGeomMonitor
  *
  *  CVS Log :-
- *  $Id: RichPhotonGeomMonitor.cpp,v 1.10 2006-12-01 16:34:07 cattanem Exp $
+ *  $Id: RichPhotonGeomMonitor.cpp,v 1.11 2007-02-02 10:07:12 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -19,15 +19,15 @@
 #include "RichPhotonGeomMonitor.h"
 
 // namespace
-using namespace LHCb;
+using namespace Rich::Rec::MC;
 
 //---------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( RichPhotonGeomMonitor );
+DECLARE_ALGORITHM_FACTORY( PhotonGeomMonitor );
 
 // Standard constructor, initializes variables
-RichPhotonGeomMonitor::RichPhotonGeomMonitor( const std::string& name,
-                                              ISvcLocator* pSvcLocator )
+PhotonGeomMonitor::PhotonGeomMonitor( const std::string& name,
+                                      ISvcLocator* pSvcLocator )
   : RichRecHistoAlgBase ( name, pSvcLocator ),
     m_richRecMCTruth    ( NULL ),
     m_ckAngle           ( NULL ),
@@ -38,10 +38,10 @@ RichPhotonGeomMonitor::RichPhotonGeomMonitor( const std::string& name,
 }
 
 // Destructor
-RichPhotonGeomMonitor::~RichPhotonGeomMonitor() {};
+PhotonGeomMonitor::~PhotonGeomMonitor() {};
 
 //  Initialize
-StatusCode RichPhotonGeomMonitor::initialize()
+StatusCode PhotonGeomMonitor::initialize()
 {
   // Sets up various tools and services
   const StatusCode sc = RichRecHistoAlgBase::initialize();
@@ -57,7 +57,7 @@ StatusCode RichPhotonGeomMonitor::initialize()
 }
 
 // Main execution
-StatusCode RichPhotonGeomMonitor::execute()
+StatusCode PhotonGeomMonitor::execute()
 {
 
   // Check event status
@@ -84,10 +84,10 @@ StatusCode RichPhotonGeomMonitor::execute()
   const double tkHitSepMax[]  = { 500.0,   120.0,   200.0   };
 
   // Iterate over segments
-  for ( RichRecSegments::const_iterator iSeg = richSegments()->begin();
+  for ( LHCb::RichRecSegments::const_iterator iSeg = richSegments()->begin();
         iSeg != richSegments()->end(); ++iSeg )
   {
-    RichRecSegment * segment = *iSeg;
+    LHCb::RichRecSegment * segment = *iSeg;
 
     // apply track selection
     if ( !m_trSelector->trackSelected(segment->richRecTrack()) ) continue;
@@ -100,19 +100,19 @@ StatusCode RichPhotonGeomMonitor::execute()
 
     // Expected Cherenkov theta angle for true particle type
     // if MC type is not known, assume pion (maybe type should be a job option ??)
-    const double thetaExpTrue = ( mcType == Rich::Unknown ? 
+    const double thetaExpTrue = ( mcType == Rich::Unknown ?
                                   m_ckAngle->avgCherenkovTheta( segment, Rich::Pion ) :
                                   m_ckAngle->avgCherenkovTheta( segment, mcType ) );
-    
+
 
     // Get photons for this segment
-    const RichRecSegment::Photons & photons = photonCreator()->reconstructPhotons( segment );
-    for ( RichRecSegment::Photons::const_iterator iPhot = photons.begin();
+    const LHCb::RichRecSegment::Photons & photons = photonCreator()->reconstructPhotons( segment );
+    for ( LHCb::RichRecSegment::Photons::const_iterator iPhot = photons.begin();
           iPhot != photons.end();
           ++iPhot )
     {
-      RichRecPhoton * photon = *iPhot;
-      RichRecPixel  * pixel  = photon->richRecPixel();
+      LHCb::RichRecPhoton * photon = *iPhot;
+      LHCb::RichRecPixel  * pixel  = photon->richRecPixel();
 
       // Cherenkov angles
       const double thetaRec = photon->geomPhoton().CherenkovTheta();
@@ -133,7 +133,7 @@ StatusCode RichPhotonGeomMonitor::execute()
 
       profile1D( sepAngle, sepL, hid(rad,"allSepVphi"), "Local Sep. V Phi All", -M_PI, M_PI );
 
-      const MCParticle * photonParent = m_richRecMCTruth->trueCherenkovPhoton(photon);
+      const LHCb::MCParticle * photonParent = m_richRecMCTruth->trueCherenkovPhoton(photon);
       if ( photonParent )
       {
         plot1D( sepL, hid(rad,"trueSep"), "Local Sep. True", tkHitSepMin[rad],tkHitSepMax[rad] );
@@ -159,7 +159,7 @@ StatusCode RichPhotonGeomMonitor::execute()
 }
 
 //  Finalize
-StatusCode RichPhotonGeomMonitor::finalize()
+StatusCode PhotonGeomMonitor::finalize()
 {
   // Execute base class method
   return RichRecHistoAlgBase::finalize();

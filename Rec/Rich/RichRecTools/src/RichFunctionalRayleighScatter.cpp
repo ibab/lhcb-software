@@ -2,10 +2,10 @@
 //-----------------------------------------------------------------------------
 /** @file RichFunctionalRayleighScatter.cpp
  *
- *  Implementation file for tool : RichFunctionalRayleighScatter
+ *  Implementation file for tool : Rich::Rec::FunctionalRayleighScatter
  *
  *  CVS Log :-
- *  $Id: RichFunctionalRayleighScatter.cpp,v 1.13 2006-08-31 13:38:24 cattanem Exp $
+ *  $Id: RichFunctionalRayleighScatter.cpp,v 1.14 2007-02-02 10:10:40 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -19,27 +19,27 @@
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/PhysicalConstants.h"
 
-// namespaces
-using namespace LHCb;
+// All code is in general Rich reconstruction namespace
+using namespace Rich::Rec;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( RichFunctionalRayleighScatter );
+DECLARE_TOOL_FACTORY( FunctionalRayleighScatter );
 
 // Standard constructor
-RichFunctionalRayleighScatter::
-RichFunctionalRayleighScatter ( const std::string& type,
-                                const std::string& name,
-                                const IInterface* parent )
+FunctionalRayleighScatter::
+FunctionalRayleighScatter ( const std::string& type,
+                            const std::string& name,
+                            const IInterface* parent )
   : RichRecToolBase( type, name, parent ),
     m_eVToMicron   ( 0 ),
     m_AeroClarity  ( 0 )
 {
   // interface
-  declareInterface<IRichRayleighScatter>(this);
+  declareInterface<IRayleighScatter>(this);
 }
 
-StatusCode RichFunctionalRayleighScatter::initialize()
+StatusCode FunctionalRayleighScatter::initialize()
 {
 
   // Sets up various tools and services
@@ -50,7 +50,7 @@ StatusCode RichFunctionalRayleighScatter::initialize()
   const DeRich1 * Rich1DE = getDet<DeRich1>( DeRichLocation::Rich1 );
 
   // Rayleigh scattering parameters
-  m_eVToMicron  = ( Gaudi::Units::h_Planck/(Gaudi::Units::joule*Gaudi::Units::s) * 
+  m_eVToMicron  = ( Gaudi::Units::h_Planck/(Gaudi::Units::joule*Gaudi::Units::s) *
                     Gaudi::Units::c_light /(Gaudi::Units::m/Gaudi::Units::s)     /
                     Gaudi::Units::e_SI ) / Gaudi::Units::nanometer ;
   m_AeroClarity = Rich1DE->param<double>( "AerogelClarity" )/Gaudi::Units::cm;
@@ -63,15 +63,15 @@ StatusCode RichFunctionalRayleighScatter::initialize()
   return sc;
 }
 
-StatusCode RichFunctionalRayleighScatter::finalize()
+StatusCode FunctionalRayleighScatter::finalize()
 {
   // Execute base class method
   return RichRecToolBase::finalize();
 }
 
 double
-RichFunctionalRayleighScatter::photonScatteredProb( const RichRecSegment * segment,
-                                                    const double energy ) const
+FunctionalRayleighScatter::photonScatteredProb( const LHCb::RichRecSegment * segment,
+                                                const double energy ) const
 {
 
   // check this is aerogel

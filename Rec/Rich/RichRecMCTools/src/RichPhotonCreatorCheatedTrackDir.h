@@ -2,10 +2,10 @@
 //-----------------------------------------------------------------------------
 /** @file RichPhotonCreatorCheatedTrackDir.h
  *
- *  Header file for tool : RichPhotonCreatorCheatedTrackDir
+ *  Header file for tool : Rich::Rec::PhotonCreatorCheatedTrackDir
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreatorCheatedTrackDir.h,v 1.2 2006-12-01 16:18:23 cattanem Exp $
+ *  $Id: RichPhotonCreatorCheatedTrackDir.h,v 1.3 2007-02-02 10:06:27 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -25,51 +25,91 @@
 #include "Event/MCRichOpticalPhoton.h"
 
 //-----------------------------------------------------------------------------
-/** @class RichPhotonCreatorCheatedTrackDir RichPhotonCreatorCheatedTrackDir.h
+/** @namespace Rich
  *
- *  Tool which performs the association between RichRecTracks and
- *  RichRecPixels to form RichRecPhotons. For signal photos, cheats by using the
- *  MC track direction at emission point.
+ *  General namespace for RICH software
  *
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   15/03/2002
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
  */
 //-----------------------------------------------------------------------------
-
-class RichPhotonCreatorCheatedTrackDir : public RichPhotonCreatorBase
+namespace Rich
 {
 
-public: // Methods for Gaudi Framework
+  //-----------------------------------------------------------------------------
+  /** @namespace Rec
+   *
+   *  General namespace for RICH reconstruction software
+   *
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   08/07/2004
+   */
+  //-----------------------------------------------------------------------------
+  namespace Rec
+  {
 
-  /// Standard constructor
-  RichPhotonCreatorCheatedTrackDir( const std::string& type,
-                                    const std::string& name,
-                                    const IInterface* parent );
+    //-----------------------------------------------------------------------------
+    /** @namespace MC
+     *
+     *  General namespace for RICH MC related software
+     *
+     *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+     *  @date   05/12/2006
+     */
+    //-----------------------------------------------------------------------------
+    namespace MC
+    {
 
-  /// Destructor
-  virtual ~RichPhotonCreatorCheatedTrackDir(){}
+      //-----------------------------------------------------------------------------
+      /** @class PhotonCreatorCheatedTrackDir RichPhotonCreatorCheatedTrackDir.h
+       *
+       *  Tool which performs the association between RichRecTracks and
+       *  RichRecPixels to form RichRecPhotons. For signal photos, cheats by using the
+       *  MC track direction at emission point.
+       *
+       *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+       *  @date   15/03/2002
+       */
+      //-----------------------------------------------------------------------------
 
-  // Initialize method
-  StatusCode initialize();
+      class PhotonCreatorCheatedTrackDir : public PhotonCreatorBase
+      {
 
-  // Finalize method
-  StatusCode finalize();
+      public: // Methods for Gaudi Framework
 
-protected: // methods
+        /// Standard constructor
+        PhotonCreatorCheatedTrackDir( const std::string& type,
+                                      const std::string& name,
+                                      const IInterface* parent );
 
-  /// Form a Photon candidate from a Segment and a pixel.
-  virtual LHCb::RichRecPhoton * buildPhoton( LHCb::RichRecSegment * segment,
-                                             LHCb::RichRecPixel * pixel,
-                                             const RichRecPhotonKey key ) const;
+        /// Destructor
+        virtual ~PhotonCreatorCheatedTrackDir(){}
 
-private: // private data
+        // Initialize method
+        StatusCode initialize();
 
-  /// Rich Reconstruction MC Truth tool
-  const IRichRecMCTruthTool * m_mcRecTool; 
+        // Finalize method
+        StatusCode finalize();
 
-  /// Delegated photon creator for reco photons
-  const IRichPhotonCreator * m_recoPhotCr; 
+      protected: // methods
 
-};
+        /// Form a Photon candidate from a Segment and a pixel.
+        virtual LHCb::RichRecPhoton * buildPhoton( LHCb::RichRecSegment * segment,
+                                                   LHCb::RichRecPixel * pixel,
+                                                   const RichRecPhotonKey key ) const;
+
+      private: // private data
+
+        /// Rich Reconstruction MC Truth tool
+        const Rich::Rec::MC::IMCTruthTool * m_mcRecTool;
+
+        /// Delegated photon creator for reco photons
+        const IPhotonCreator * m_recoPhotCr;
+
+      };
+
+    }
+  }
+}
 
 #endif // RICHRECTOOLS_RICHPHOTONCREATOR_H

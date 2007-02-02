@@ -2,10 +2,10 @@
 //-----------------------------------------------------------------------------
 /** @file RichMCTrueTrackSelector.h
  *
- *  Header file for RICH reconstruction tool : RichMCTrueTrackSelector
+ *  Header file for RICH reconstruction tool : Rich::Rec::MCTrueTrackSelector
  *
  *  CVS Log :-
- *  $Id: RichMCTrueTrackSelector.h,v 1.1 2006-08-28 11:13:29 jonrob Exp $
+ *  $Id: RichMCTrueTrackSelector.h,v 1.2 2007-02-02 10:06:27 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/08/2006
@@ -35,50 +35,76 @@ namespace Rich
 {
 
   //-----------------------------------------------------------------------------
-  /** @class RichMCTrueTrackSelector RichMCTrueTrackSelector.h
+  /** @namespace Rec
    *
-   *  Extends the core track selection in RichTrackSelectorBase to add a check
-   *  to see if the track has an MC association
+   *  General namespace for RICH reconstruction software
    *
-   *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
-   *  @date   2006-08-12
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   08/07/2004
    */
   //-----------------------------------------------------------------------------
-
-  class RichMCTrueTrackSelector : public RichTrackSelectorBase
+  namespace Rec
   {
 
-  public: // Gaudi methods
+    //-----------------------------------------------------------------------------
+    /** @namespace MC
+     *
+     *  General namespace for RICH MC related software
+     *
+     *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+     *  @date   05/12/2006
+     */
+    //-----------------------------------------------------------------------------
+    namespace MC
+    {
 
-    /// Standard constructor
-    RichMCTrueTrackSelector( const std::string& type,
+      //-----------------------------------------------------------------------------
+      /** @class MCTrueTrackSelector RichMCTrueTrackSelector.h
+       *
+       *  Extends the core track selection in RichTrackSelectorBase to add a check
+       *  to see if the track has an MC association
+       *
+       *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+       *  @date   2006-08-12
+       */
+      //-----------------------------------------------------------------------------
+
+      class MCTrueTrackSelector : public TrackSelectorBase
+      {
+
+      public: // Gaudi methods
+
+        /// Standard constructor
+        MCTrueTrackSelector( const std::string& type,
                              const std::string& name,
                              const IInterface* parent );
 
-    /// Destructor
-    virtual ~RichMCTrueTrackSelector( );
+        /// Destructor
+        virtual ~MCTrueTrackSelector( );
 
-    /// Tool initialization
-    virtual StatusCode initialize();
+        /// Tool initialization
+        virtual StatusCode initialize();
 
-  public: // interface methods
+      public: // interface methods
 
-    /// Test if the given Track is selected
-    virtual bool trackSelected( const LHCb::Track * track ) const;
+        /// Test if the given Track is selected
+        virtual bool trackSelected( const LHCb::Track * track ) const;
 
-    /// Test it the given RichRecTrack is selected
-    virtual bool trackSelected( const LHCb::RichRecTrack * track ) const;
+        /// Test it the given RichRecTrack is selected
+        virtual bool trackSelected( const LHCb::RichRecTrack * track ) const;
 
-  private: // data
+      private: // data
 
-    /// Pointer to RichRecMCTruthTool interface
-    const IRichRecMCTruthTool* m_richRecMCTruth;  
+        /// Pointer to RichRecMCTruthTool interface
+        const Rich::Rec::MC::IMCTruthTool* m_richRecMCTruth;
 
-    /// MCParticle association weight
-    double m_weight;
+        /// MCParticle association weight
+        double m_weight;
 
-  };
+      };
 
-} // RICH namespace
+    }
+  }
+}
 
 #endif // RICHRECTOOLS_RichMCTrueTrackSelector_H

@@ -2,10 +2,10 @@
 //-----------------------------------------------------------------------------
 /** @file RichTabulatedGasQuartzWindowAbs.cpp
  *
- *  Implementation file for tool : RichTabulatedGasQuartzWindowAbs
+ *  Implementation file for tool : Rich::Rec::TabulatedGasQuartzWindowAbs
  *
  *  CVS Log :-
- *  $Id: RichTabulatedGasQuartzWindowAbs.cpp,v 1.9 2006-08-31 13:38:25 cattanem Exp $
+ *  $Id: RichTabulatedGasQuartzWindowAbs.cpp,v 1.10 2007-02-02 10:10:42 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -15,29 +15,26 @@
 // local
 #include "RichTabulatedGasQuartzWindowAbs.h"
 
-// Gaudi
-#include "GaudiKernel/ToolFactory.h"
-#include "GaudiKernel/SystemOfUnits.h"
-
-// namespaces
-using namespace LHCb;
+// All code is in general Rich reconstruction namespace
+using namespace Rich::Rec;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( RichTabulatedGasQuartzWindowAbs );
+DECLARE_TOOL_FACTORY( TabulatedGasQuartzWindowAbs );
 
 // Standard constructor
-RichTabulatedGasQuartzWindowAbs::RichTabulatedGasQuartzWindowAbs ( const std::string& type,
-                                                                   const std::string& name,
-                                                                   const IInterface* parent )
+TabulatedGasQuartzWindowAbs::
+TabulatedGasQuartzWindowAbs ( const std::string& type,
+                              const std::string& name,
+                              const IInterface* parent )
   : RichRecToolBase ( type, name, parent ),
     m_riches        ( Rich::NRiches )
 {
   // interface
-  declareInterface<IRichGasQuartzWindowAbs>(this);
+  declareInterface<IGasQuartzWindowAbs>(this);
 }
 
-StatusCode RichTabulatedGasQuartzWindowAbs::initialize()
+StatusCode TabulatedGasQuartzWindowAbs::initialize()
 {
 
   // Sets up various tools and services
@@ -55,15 +52,15 @@ StatusCode RichTabulatedGasQuartzWindowAbs::initialize()
   return sc;
 }
 
-StatusCode RichTabulatedGasQuartzWindowAbs::finalize()
+StatusCode TabulatedGasQuartzWindowAbs::finalize()
 {
   // Execute base class method
   return RichRecToolBase::finalize();
 }
 
 double
-RichTabulatedGasQuartzWindowAbs::photonTransProb( const RichRecSegment * segment,
-                                                  const double energy ) const
+TabulatedGasQuartzWindowAbs::photonTransProb( const LHCb::RichRecSegment * segment,
+                                              const double energy ) const
 {
   // check energy is valid
   if ( energy <= 0 ) return 0;

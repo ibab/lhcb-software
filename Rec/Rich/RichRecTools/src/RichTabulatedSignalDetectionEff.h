@@ -2,10 +2,10 @@
 //-----------------------------------------------------------------------------
 /** @file RichTabulatedSignalDetectionEff.h
  *
- *  Header file for tool : RichTabulatedSignalDetectionEff
+ *  Header file for tool : Rich::Rec::TabulatedSignalDetectionEff
  *
  *  CVS Log :-
- *  $Id: RichTabulatedSignalDetectionEff.h,v 1.11 2006-08-31 13:38:25 cattanem Exp $
+ *  $Id: RichTabulatedSignalDetectionEff.h,v 1.12 2007-02-02 10:10:42 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -32,55 +32,80 @@
 #include "RichDet/DeRich2.h"
 
 //-----------------------------------------------------------------------------
-/** @class RichTabulatedSignalDetectionEff RichTabulatedSignalDetectionEff.h
+/** @namespace Rich
  *
- *  Tool providing calculations for the photon detection efficiencies
+ *  General namespace for RICH software
  *
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   15/03/2002
- *
- *  @todo Add support for different QE curves for each HPD
- *  @todo Use RICH2 nominal HPD when available
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
  */
 //-----------------------------------------------------------------------------
-
-class RichTabulatedSignalDetectionEff : public RichRecToolBase,
-                                        virtual public IRichSignalDetectionEff
+namespace Rich
 {
 
-public: // Methods for Gaudi Framework
+  /** @namespace Rec
+   *
+   *  General namespace for RICH reconstruction software
+   *
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   08/07/2004
+   */
+  namespace Rec
+  {
 
-  /// Standard constructor
-  RichTabulatedSignalDetectionEff( const std::string& type,
+    //-----------------------------------------------------------------------------
+    /** @class TabulatedSignalDetectionEff RichTabulatedSignalDetectionEff.h
+     *
+     *  Tool providing calculations for the photon detection efficiencies
+     *
+     *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+     *  @date   15/03/2002
+     *
+     *  @todo Add support for different QE curves for each HPD
+     *  @todo Use RICH2 nominal HPD when available
+     */
+    //-----------------------------------------------------------------------------
+
+    class TabulatedSignalDetectionEff : public Rich::Rec::ToolBase,
+                                        virtual public ISignalDetectionEff
+    {
+
+    public: // Methods for Gaudi Framework
+
+      /// Standard constructor
+      TabulatedSignalDetectionEff( const std::string& type,
                                    const std::string& name,
                                    const IInterface* parent );
 
-  /// Destructor
-  virtual ~RichTabulatedSignalDetectionEff() {};
+      /// Destructor
+      virtual ~TabulatedSignalDetectionEff() {};
 
-  // Initialize method
-  StatusCode initialize();
+      // Initialize method
+      StatusCode initialize();
 
-  // Finalize method
-  StatusCode finalize();
+      // Finalize method
+      StatusCode finalize();
 
-public: // methods (and doxygen comments) inherited from public interface
+    public: // methods (and doxygen comments) inherited from public interface
 
-  // Returns the detection efficiency for a cherenkov photon of a given energy
-  double photonDetEfficiency( LHCb::RichRecSegment * segment,
-                              const double energy ) const;
+      // Returns the detection efficiency for a cherenkov photon of a given energy
+      double photonDetEfficiency( LHCb::RichRecSegment * segment,
+                                  const double energy ) const;
 
-private:  // Private data
+    private:  // Private data
 
-  /// Pointers to RICHes
-  std::vector<const DeRich*> m_riches;
+      /// Pointers to RICHes
+      std::vector<const DeRich*> m_riches;
 
-  /// quartz window losses efficiency
-  double m_quartzWinEff;
+      /// quartz window losses efficiency
+      double m_quartzWinEff;
 
-  /// Digitisation pedestal loss
-  double m_pedLoss;
+      /// Digitisation pedestal loss
+      double m_pedLoss;
 
-};
+    };
+
+  }
+}
 
 #endif // RICHRECTOOLS_RICHTABULATEDSIGNALDETECTIONEFF_H

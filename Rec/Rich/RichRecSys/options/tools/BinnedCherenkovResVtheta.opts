@@ -2,7 +2,7 @@
 // Cherenkov resolution - fixed binned implementation
 ToolSvc.Offline.RichToolRegistry.Tools += 
 { 
- "RichBinnedCKResVthetaForRecoTracks/RichCherenkovResolution" 
+ "Rich::Rec::BinnedCKResVthetaForRecoTracks/RichCherenkovResolution" 
 };
 
 ToolSvc.Offline.RichCherenkovResolution.NormaliseRes = true;

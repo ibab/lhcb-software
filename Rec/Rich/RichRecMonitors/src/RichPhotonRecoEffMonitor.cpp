@@ -2,10 +2,10 @@
 //---------------------------------------------------------------------------
 /** @file RichPhotonRecoEffMonitor.cpp
  *
- *  Implementation file for algorithm class : RichPhotonRecoEffMonitor
+ *  Implementation file for algorithm class : PhotonRecoEffMonitor
  *
  *  CVS Log :-
- *  $Id: RichPhotonRecoEffMonitor.cpp,v 1.9 2006-08-31 12:52:00 cattanem Exp $
+ *  $Id: RichPhotonRecoEffMonitor.cpp,v 1.10 2007-02-02 10:07:12 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -19,15 +19,15 @@
 #include "GaudiKernel/SystemOfUnits.h"
 
 // namespace
-using namespace LHCb;
+using namespace Rich::Rec::MC;
 
 //---------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( RichPhotonRecoEffMonitor );
+DECLARE_ALGORITHM_FACTORY( PhotonRecoEffMonitor );
 
 // Standard constructor, initializes variables
-RichPhotonRecoEffMonitor::RichPhotonRecoEffMonitor( const std::string& name,
-                                                    ISvcLocator* pSvcLocator )
+PhotonRecoEffMonitor::PhotonRecoEffMonitor( const std::string& name,
+                                            ISvcLocator* pSvcLocator )
   : RichRecHistoAlgBase ( name, pSvcLocator ),
     m_richRecMCTruth    ( NULL ),
     m_ckAngle           ( NULL ),
@@ -39,10 +39,10 @@ RichPhotonRecoEffMonitor::RichPhotonRecoEffMonitor( const std::string& name,
 }
 
 // Destructor
-RichPhotonRecoEffMonitor::~RichPhotonRecoEffMonitor() {};
+PhotonRecoEffMonitor::~PhotonRecoEffMonitor() {};
 
 //  Initialize
-StatusCode RichPhotonRecoEffMonitor::initialize()
+StatusCode PhotonRecoEffMonitor::initialize()
 {
   // Sets up various tools and services
   const StatusCode sc = RichRecHistoAlgBase::initialize();
@@ -59,7 +59,7 @@ StatusCode RichPhotonRecoEffMonitor::initialize()
 }
 
 // Main execution
-StatusCode RichPhotonRecoEffMonitor::execute()
+StatusCode PhotonRecoEffMonitor::execute()
 {
 
   // Check event status
@@ -89,10 +89,10 @@ StatusCode RichPhotonRecoEffMonitor::execute()
   const double tkHitSepMax[]  = { 500.0,   120.0,   200.0   };
 
   // Iterate over segments
-  for ( RichRecSegments::const_iterator iSeg = richSegments()->begin();
+  for ( LHCb::RichRecSegments::const_iterator iSeg = richSegments()->begin();
         iSeg != richSegments()->end(); ++iSeg )
   {
-    RichRecSegment * segment = *iSeg;
+    LHCb::RichRecSegment * segment = *iSeg;
 
     // apply track selection
     if ( !m_trSelector->trackSelected(segment->richRecTrack()) ) continue;
@@ -112,17 +112,17 @@ StatusCode RichPhotonRecoEffMonitor::execute()
     unsigned int nRecoPhotsTrue(0), notRecoPhotsTrue(0);
 
     // loop over pixels in same RICH as segment
-    for ( RichRecPixels::const_iterator iPix = pixelCreator()->begin(rich);
+    for ( LHCb::RichRecPixels::const_iterator iPix = pixelCreator()->begin(rich);
           iPix != pixelCreator()->end(rich); ++iPix )
     {
-      RichRecPixel * pixel = *iPix;
+      LHCb::RichRecPixel * pixel = *iPix;
 
       // Is this a true Cherenkov Photon
-      const MCParticle * trueCKPhotonMCP = m_richRecMCTruth->trueCherenkovPhoton(segment,pixel);
+      const LHCb::MCParticle * trueCKPhotonMCP = m_richRecMCTruth->trueCherenkovPhoton(segment,pixel);
       if ( trueCKPhotonMCP )
       {
         // Find the reco-photon for this combination
-        RichRecPhoton * recPhot = photonCreator()->checkForExistingPhoton(segment,pixel);
+        LHCb::RichRecPhoton * recPhot = photonCreator()->checkForExistingPhoton(segment,pixel);
         if ( recPhot )
         {
           ++nRecoPhotsTrue;
@@ -157,7 +157,7 @@ StatusCode RichPhotonRecoEffMonitor::execute()
             profile1D( sepAngle, sep, hid(rad,"CannotReco/nonRecPhiVsep"), "Non reco. sep V CK phi", -M_PI,M_PI );
 
             // get MC photon
-            const MCRichOpticalPhoton * mcPhot = m_richRecMCTruth->trueOpticalPhoton(segment,pixel);
+            const LHCb::MCRichOpticalPhoton * mcPhot = m_richRecMCTruth->trueOpticalPhoton(segment,pixel);
             if ( mcPhot )
             {
               plot1D( mcPhot->cherenkovTheta(), hid(rad,"CannotReco/nonRecoCKthetaMC"),
@@ -191,7 +191,7 @@ StatusCode RichPhotonRecoEffMonitor::execute()
             profile1D( sepAngle, sep, hid(rad,"CanReco/nonRecPhiVsep"), "Non reco. sep V CK phi", -M_PI,M_PI );
 
             // get MC photon
-            const MCRichOpticalPhoton * mcPhot = m_richRecMCTruth->trueOpticalPhoton(segment,pixel);
+            const LHCb::MCRichOpticalPhoton * mcPhot = m_richRecMCTruth->trueOpticalPhoton(segment,pixel);
             if ( mcPhot )
             {
               plot1D( mcPhot->cherenkovTheta(), hid(rad,"CanReco/nonRecoCKthetaMC"),
@@ -203,7 +203,7 @@ StatusCode RichPhotonRecoEffMonitor::execute()
                       "Non Reco. MC CK res", -ckRange[rad], ckRange[rad]);
             } // mc photon
 
-            // Plot res for these photons
+              // Plot res for these photons
             plot1D( recPhot->geomPhoton().CherenkovTheta(), hid(rad,"CanReco/nonRecoCKtheta"),
                     "Non reco. CK theta", minCkTheta[rad],maxCkTheta[rad] );
             plot2D( recPhot->geomPhoton().CherenkovTheta(), sep, hid(rad,"CanReco/nonRecoSepVCKt"),
@@ -237,7 +237,7 @@ StatusCode RichPhotonRecoEffMonitor::execute()
 }
 
 //  Finalize
-StatusCode RichPhotonRecoEffMonitor::finalize()
+StatusCode PhotonRecoEffMonitor::finalize()
 {
   // Execute base class method
   return RichRecHistoAlgBase::finalize();

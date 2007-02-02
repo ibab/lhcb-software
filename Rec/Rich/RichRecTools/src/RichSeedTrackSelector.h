@@ -2,10 +2,10 @@
 //-----------------------------------------------------------------------------
 /** @file RichSeedTrackSelector.h
  *
- *  Header file for RICH reconstruction tool : RichSeedTrackSelector
+ *  Header file for RICH reconstruction tool : Rich::Rec::SeedTrackSelector
  *
  *  CVS Log :-
- *  $Id: RichSeedTrackSelector.h,v 1.2 2006-08-14 10:05:55 jonrob Exp $
+ *  $Id: RichSeedTrackSelector.h,v 1.3 2007-02-02 10:10:41 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/08/2006
@@ -29,48 +29,61 @@ namespace Rich
 {
 
   //-----------------------------------------------------------------------------
-  /** @class RichSeedTrackSelector RichSeedTrackSelector.h
+  /** @namespace Rec
    *
-   *  Extension to the RichBaseTrackSelector for Seed tracks
+   *  General namespace for RICH reconstruction software
    *
-   *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
-   *  @date   2006-08-12
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   08/07/2004
    */
   //-----------------------------------------------------------------------------
-
-  class RichSeedTrackSelector : public RichBaseTrackSelector
+  namespace Rec
   {
 
-  public: // Gaudi methods
+    //-----------------------------------------------------------------------------
+    /** @class SeedTrackSelector RichSeedTrackSelector.h
+     *
+     *  Extension to the RichBaseTrackSelector for Seed tracks
+     *
+     *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+     *  @date   2006-08-12
+     */
+    //-----------------------------------------------------------------------------
 
-    /// Standard constructor
-    RichSeedTrackSelector( const std::string& type,
-                           const std::string& name,
-                           const IInterface* parent );
+    class SeedTrackSelector : public BaseTrackSelector
+    {
 
-    /// Destructor
-    virtual ~RichSeedTrackSelector( );
+    public: // Gaudi methods
 
-  public: // interface methods
+      /// Standard constructor
+      SeedTrackSelector( const std::string& type,
+                         const std::string& name,
+                         const IInterface* parent );
 
-    /// Test if the given Track is selected under the current criteria
-    virtual bool trackSelected( const LHCb::Track * track ) const;
+      /// Destructor
+      virtual ~SeedTrackSelector( );
 
-    /// Test it the given RichRecTrack is selected
-    virtual bool trackSelected( const LHCb::RichRecTrack * track ) const;
+    public: // interface methods
 
-  protected: // methods
+      /// Test if the given Track is selected under the current criteria
+      virtual bool trackSelected( const LHCb::Track * track ) const;
 
-    /// Print the track selection
-    virtual MsgStream & printSel( MsgStream & os ) const;
+      /// Test it the given RichRecTrack is selected
+      virtual bool trackSelected( const LHCb::RichRecTrack * track ) const;
 
-  private: // data
+    protected: // methods
 
-    double m_minSeedLL; ///< minimum seed track likelihood cut
-    double m_maxSeedLL; ///< maximum seed track likelihood cut
+      /// Print the track selection
+      virtual MsgStream & printSel( MsgStream & os ) const;
 
-  };
+    private: // data
 
+      double m_minSeedLL; ///< minimum seed track likelihood cut
+      double m_maxSeedLL; ///< maximum seed track likelihood cut
+
+    };
+
+  }
 } // RICH namespace
 
 #endif // RICHRECTOOLS_RichSeedTrackSelector_H

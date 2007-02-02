@@ -2,10 +2,10 @@
 //-----------------------------------------------------------------------------
 /** @file RichTabulatedRayleighScatter.cpp
  *
- *  Implementation file for tool : RichTabulatedRayleighScatter
+ *  Implementation file for tool : Rich::Rec::TabulatedRayleighScatter
  *
  *  CVS Log :-
- *  $Id: RichTabulatedRayleighScatter.cpp,v 1.11 2006-08-31 13:38:25 cattanem Exp $
+ *  $Id: RichTabulatedRayleighScatter.cpp,v 1.12 2007-02-02 10:10:42 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -19,24 +19,24 @@
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/SystemOfUnits.h"
 
-// namespaces
-using namespace LHCb;
+// All code is in general Rich reconstruction namespace
+using namespace Rich::Rec;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( RichTabulatedRayleighScatter );
+DECLARE_TOOL_FACTORY( TabulatedRayleighScatter );
 
 // Standard constructor
-RichTabulatedRayleighScatter::RichTabulatedRayleighScatter ( const std::string& type,
-                                                             const std::string& name,
-                                                             const IInterface* parent )
-  : RichRecToolBase( type, name, parent )
+TabulatedRayleighScatter::TabulatedRayleighScatter ( const std::string& type,
+                                                     const std::string& name,
+                                                     const IInterface* parent )
+  : Rich::Rec::ToolBase( type, name, parent )
 {
   // interface
-  declareInterface<IRichRayleighScatter>(this);
+  declareInterface<IRayleighScatter>(this);
 }
 
-StatusCode RichTabulatedRayleighScatter::initialize()
+StatusCode TabulatedRayleighScatter::initialize()
 {
 
   // Sets up various tools and services
@@ -51,15 +51,15 @@ StatusCode RichTabulatedRayleighScatter::initialize()
   return sc;
 }
 
-StatusCode RichTabulatedRayleighScatter::finalize()
+StatusCode TabulatedRayleighScatter::finalize()
 {
   // Execute base class method
-  return RichRecToolBase::finalize();
+  return Rich::Rec::ToolBase::finalize();
 }
 
 double
-RichTabulatedRayleighScatter::photonScatteredProb( const RichRecSegment * segment,
-                                                   const double energy ) const
+TabulatedRayleighScatter::photonScatteredProb( const LHCb::RichRecSegment * segment,
+                                               const double energy ) const
 {
   // check this is aerogel
   if ( Rich::Aerogel != segment->trackSegment().radiator() ) return 0;

@@ -2,10 +2,10 @@
 //-----------------------------------------------------------------------------
 /** @file RichFastTrSegMakerFromRecoTracks.cpp
  *
- * Implementation file for class : RichFastTrSegMakerFromRecoTracks
+ * Implementation file for class : Rich::Rec::FastTrSegMakerFromRecoTracks
  *
  * CVS Log :-
- * $Id: RichFastTrSegMakerFromRecoTracks.cpp,v 1.7 2006-10-20 13:17:00 jonrob Exp $
+ * $Id: RichFastTrSegMakerFromRecoTracks.cpp,v 1.8 2007-02-02 10:10:40 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 23/08/2004
@@ -19,19 +19,19 @@
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/SystemOfUnits.h"
 
-// namespaces
-using namespace LHCb;
+// All code is in general Rich reconstruction namespace
+using namespace Rich::Rec;
 
-DECLARE_TOOL_FACTORY( RichFastTrSegMakerFromRecoTracks );
+DECLARE_TOOL_FACTORY( FastTrSegMakerFromRecoTracks );
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-RichFastTrSegMakerFromRecoTracks::
-RichFastTrSegMakerFromRecoTracks( const std::string& type,
-                                  const std::string& name,
-                                  const IInterface* parent)
-  : RichToolBase   ( type, name, parent         ),
+FastTrSegMakerFromRecoTracks::
+FastTrSegMakerFromRecoTracks( const std::string& type,
+                              const std::string& name,
+                              const IInterface* parent)
+  : Rich::Rec::ToolBase ( type, name, parent         ),
     m_rayTracing   ( 0                          ),
     m_nomZstates   ( Rich::NRadiatorTypes, 0    ),
     m_zTolerance   ( Rich::NRadiatorTypes, 0    ),
@@ -48,7 +48,7 @@ RichFastTrSegMakerFromRecoTracks( const std::string& type,
 {
 
   // Interface
-  declareInterface<IRichTrSegMaker>(this);
+  declareInterface<ITrSegMaker>(this);
 
   // job options
 
@@ -107,15 +107,15 @@ RichFastTrSegMakerFromRecoTracks( const std::string& type,
 //=============================================================================
 // Destructor
 //=============================================================================
-RichFastTrSegMakerFromRecoTracks::~RichFastTrSegMakerFromRecoTracks() { }
+FastTrSegMakerFromRecoTracks::~FastTrSegMakerFromRecoTracks() { }
 
 //=============================================================================
 // Initialisation.
 //=============================================================================
-StatusCode RichFastTrSegMakerFromRecoTracks::initialize()
+StatusCode FastTrSegMakerFromRecoTracks::initialize()
 {
   // Sets up various tools and services
-  const StatusCode sc = RichToolBase::initialize();
+  const StatusCode sc = Rich::Rec::ToolBase::initialize();
   if ( sc.isFailure() ) return sc;
 
   // Get the ray tracing tool
@@ -174,12 +174,12 @@ StatusCode RichFastTrSegMakerFromRecoTracks::initialize()
   if      ( "AllStateVectors" == m_trSegTypeJO )
   {
     info() << "Will create track segments using all State information" << endreq;
-    m_trSegType = RichTrackSegment::UseAllStateVectors;
+    m_trSegType = LHCb::RichTrackSegment::UseAllStateVectors;
   }
   else if ( "Choord" == m_trSegTypeJO )
   {
     info() << "Will create track segments using the 'choord' direction definition" << endreq;
-    m_trSegType = RichTrackSegment::UseChordBetweenStates;
+    m_trSegType = LHCb::RichTrackSegment::UseChordBetweenStates;
   }
   else
   {
@@ -192,22 +192,22 @@ StatusCode RichFastTrSegMakerFromRecoTracks::initialize()
 //=============================================================================
 //  Finalize
 //=============================================================================
-StatusCode RichFastTrSegMakerFromRecoTracks::finalize()
+StatusCode FastTrSegMakerFromRecoTracks::finalize()
 {
   // Execute base class method
-  return RichToolBase::finalize();
+  return Rich::Rec::ToolBase::finalize();
 }
 
 //=============================================================================
 // Constructs the track segments for a given TrStoredTrack
 //=============================================================================
 int
-RichFastTrSegMakerFromRecoTracks::constructSegments( const ContainedObject * obj,
-                                                     std::vector<RichTrackSegment*>& segments )
+FastTrSegMakerFromRecoTracks::constructSegments( const ContainedObject * obj,
+                                                 std::vector<LHCb::RichTrackSegment*>& segments )
   const {
 
   // Try to cast input data to required type for this implementation
-  const Track * track = dynamic_cast<const Track *>(obj);
+  const LHCb::Track * track = dynamic_cast<const LHCb::Track *>(obj);
   if ( !track )
   {
     Warning("Input data object is not of type Track");
@@ -216,9 +216,9 @@ RichFastTrSegMakerFromRecoTracks::constructSegments( const ContainedObject * obj
   if ( msgLevel(MSG::VERBOSE) )
   {
     verbose() << "Analysing Track key=" << track->key()
-              << " history=" << track->history() 
+              << " history=" << track->history()
               << " : " << track->states().size() << " States at z =";
-    for ( std::vector<State*>::const_iterator iS = track->states().begin();
+    for ( std::vector<LHCb::State*>::const_iterator iS = track->states().begin();
           iS != track->states().end(); ++iS )
     {
       if (*iS) verbose() << " " << (*iS)->z();
@@ -325,30 +325,30 @@ RichFastTrSegMakerFromRecoTracks::constructSegments( const ContainedObject * obj
       const Rich::DetectorType rich = ( Rich::Rich2Gas == *rad ? Rich::Rich2 : Rich::Rich1 );
 
       // input state errors
-      const RichTrackSegment::StateErrors inErrs( states[0]->errX2(),
-                                                  states[0]->errY2(),
-                                                  states[0]->errTx2(),
-                                                  states[0]->errTy2(),
-                                                  states[0]->errP2() );
+      const LHCb::RichTrackSegment::StateErrors inErrs( states[0]->errX2(),
+                                                        states[0]->errY2(),
+                                                        states[0]->errTx2(),
+                                                        states[0]->errTy2(),
+                                                        states[0]->errP2() );
       // output state errors
-      const RichTrackSegment::StateErrors outErrs( states[1]->errX2(),
-                                                   states[1]->errY2(),
-                                                   states[1]->errTx2(),
-                                                   states[1]->errTy2(),
-                                                   states[1]->errP2() );
+      const LHCb::RichTrackSegment::StateErrors outErrs( states[1]->errX2(),
+                                                         states[1]->errY2(),
+                                                         states[1]->errTx2(),
+                                                         states[1]->errTy2(),
+                                                         states[1]->errP2() );
 
       // Create intersection info
       RichRadIntersection::Vector intersects;
-      intersects.push_back( RichRadIntersection( entryPoint, entryVect, 
+      intersects.push_back( RichRadIntersection( entryPoint, entryVect,
                                                  exitPoint, entryVect, // seems best to always use entry momentum !!
                                                  m_deRads[*rad] ) );
 
       // Using this information, make radiator segment
       // this version uses 2 states and thus forces a straight line approximation
-      segments.push_back( new RichTrackSegment( m_trSegType,
-                                                intersects,
-                                                *rad, rich,
-                                                inErrs, outErrs ) );
+      segments.push_back( new LHCb::RichTrackSegment( m_trSegType,
+                                                      intersects,
+                                                      *rad, rich,
+                                                      inErrs, outErrs ) );
 
     }
     catch ( const std::exception & excpt )
@@ -366,15 +366,15 @@ RichFastTrSegMakerFromRecoTracks::constructSegments( const ContainedObject * obj
 // Get the state information for a given radiator
 //=======================================================================================
 bool
-RichFastTrSegMakerFromRecoTracks::stateInfo( const Track * track,
-                                             const Rich::RadiatorType rad,
-                                             std::vector<const LHCb::State*> & states ) const
+FastTrSegMakerFromRecoTracks::stateInfo( const LHCb::Track * track,
+                                         const Rich::RadiatorType rad,
+                                         std::vector<const LHCb::State*> & states ) const
 {
   if ( Rich::Aerogel == rad )
   {
 
     // Best entry and exit state is the vertex state
-    const State * state = &track->firstState();
+    const LHCb::State * state = &track->firstState();
     if ( !state ) return false;
 
     // Set the best states
@@ -386,9 +386,9 @@ RichFastTrSegMakerFromRecoTracks::stateInfo( const Track * track,
   {
 
     // Entry state is vertex
-    const State * entryState = &track->firstState();
+    const LHCb::State * entryState = &track->firstState();
     // Exit state is at TT
-    const State * exitState  = stateAt( track, rad );
+    const LHCb::State * exitState  = stateAt( track, rad );
 
     // Check states
     if ( !entryState || !exitState ) return false;
@@ -402,7 +402,7 @@ RichFastTrSegMakerFromRecoTracks::stateInfo( const Track * track,
   {
 
     // Both entry and exit states are at T stations
-    const State * state = stateAt( track, rad );
+    const LHCb::State * state = stateAt( track, rad );
 
     // check state
     if ( !state ) return false;

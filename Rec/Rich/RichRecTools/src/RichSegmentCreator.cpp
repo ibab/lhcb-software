@@ -2,10 +2,10 @@
 //-----------------------------------------------------------------------------
 /** @file RichSegmentCreator.cpp
  *
- *  Implementation file for tool : RichSegmentCreator
+ *  Implementation file for tool : Rich::Rec::SegmentCreator
  *
  *  CVS Log :-
- *  $Id: RichSegmentCreator.cpp,v 1.24 2006-12-01 17:05:09 cattanem Exp $
+ *  $Id: RichSegmentCreator.cpp,v 1.25 2007-02-02 10:10:41 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -17,20 +17,20 @@
 // local
 #include "RichSegmentCreator.h"
 
-// namespaces
-using namespace LHCb;
+// All code is in general Rich reconstruction namespace
+using namespace Rich::Rec;
 
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( RichSegmentCreator );
+DECLARE_TOOL_FACTORY( SegmentCreator );
 
 // Standard constructor
-RichSegmentCreator::RichSegmentCreator ( const std::string& type,
-                                         const std::string& name,
-                                         const IInterface* parent )
+SegmentCreator::SegmentCreator ( const std::string& type,
+                                 const std::string& name,
+                                 const IInterface* parent )
   : RichRecToolBase ( type, name, parent      ),
     m_segments      ( 0                       ),
-    m_richRecSegmentLocation ( RichRecSegmentLocation::Default ),
+    m_richRecSegmentLocation ( LHCb::RichRecSegmentLocation::Default ),
     m_binsEn        ( Rich::NRadiatorTypes, 5 ),
     m_segCount      ( Rich::NRadiatorTypes, 0 ),
     m_segCountLast  ( Rich::NRadiatorTypes, 0 ),
@@ -39,7 +39,7 @@ RichSegmentCreator::RichSegmentCreator ( const std::string& type,
 {
 
   // tool interface
-  declareInterface<IRichSegmentCreator>(this);
+  declareInterface<ISegmentCreator>(this);
 
   // Define job option parameters
 
@@ -47,17 +47,17 @@ RichSegmentCreator::RichSegmentCreator ( const std::string& type,
 
   if      ( context() == "Offline" )
   {
-    m_richRecSegmentLocation = RichRecSegmentLocation::Offline;
+    m_richRecSegmentLocation = LHCb::RichRecSegmentLocation::Offline;
   }
   else if ( context() == "HLT" )
   {
-    m_richRecSegmentLocation = RichRecSegmentLocation::HLT;
+    m_richRecSegmentLocation = LHCb::RichRecSegmentLocation::HLT;
   }
   declareProperty( "RichRecSegmentLocation", m_richRecSegmentLocation );
 
 }
 
-StatusCode RichSegmentCreator::initialize()
+StatusCode SegmentCreator::initialize()
 {
   // Sets up various tools and services
   const StatusCode sc = RichRecToolBase::initialize();
@@ -73,32 +73,32 @@ StatusCode RichSegmentCreator::initialize()
   if (msgLevel(MSG::DEBUG)) incSvc()->addListener( this, IncidentType::EndEvent );
 
   // Get the max/min photon energies
-  const IRichDetParameters * detParams;
+  const IDetParameters * detParams;
   acquireTool( "RichDetParameters", detParams );
-  m_maxPhotEn[Rich::Aerogel] = detParams->maxPhotonEnergy( Rich::Aerogel );
-  m_maxPhotEn[Rich::Rich1Gas]   = detParams->maxPhotonEnergy( Rich::Rich1Gas   );
-  m_maxPhotEn[Rich::Rich2Gas]     = detParams->maxPhotonEnergy( Rich::Rich2Gas     );
-  m_minPhotEn[Rich::Aerogel] = detParams->minPhotonEnergy( Rich::Aerogel );
-  m_minPhotEn[Rich::Rich1Gas]   = detParams->minPhotonEnergy( Rich::Rich1Gas   );
-  m_minPhotEn[Rich::Rich2Gas]     = detParams->minPhotonEnergy( Rich::Rich2Gas     );
+  m_maxPhotEn[Rich::Aerogel]  = detParams->maxPhotonEnergy( Rich::Aerogel  );
+  m_maxPhotEn[Rich::Rich1Gas] = detParams->maxPhotonEnergy( Rich::Rich1Gas );
+  m_maxPhotEn[Rich::Rich2Gas] = detParams->maxPhotonEnergy( Rich::Rich2Gas );
+  m_minPhotEn[Rich::Aerogel]  = detParams->minPhotonEnergy( Rich::Aerogel  );
+  m_minPhotEn[Rich::Rich1Gas] = detParams->minPhotonEnergy( Rich::Rich1Gas );
+  m_minPhotEn[Rich::Rich2Gas] = detParams->minPhotonEnergy( Rich::Rich2Gas );
   releaseTool(detParams);
 
   return sc;
 }
 
-StatusCode RichSegmentCreator::finalize()
+StatusCode SegmentCreator::finalize()
 {
 
   if ( msgLevel(MSG::DEBUG) )
   {
     // statistical tool
-    RichStatDivFunctor occ("%7.2f +-%6.2f");
+    const StatDivFunctor occ("%7.2f +-%6.2f");
 
     // Print out final stats
     debug() << "-------------------------------------------------------------------------------" << endreq
-            << " Created on average " << occ(m_segCount[Rich::Aerogel],m_Nevts) << "  Aerogel segments/event" << endreq
-            << " Created on average " << occ(m_segCount[Rich::Rich1Gas],m_Nevts)   << "  Rich1Gas   segments/event" << endreq
-            << " Created on average " << occ(m_segCount[Rich::Rich2Gas],m_Nevts)     << "  Rich2Gas     segments/event" << endreq
+            << " Created on average " << occ(m_segCount[Rich::Aerogel],m_Nevts)  << "  Aerogel  segments/event" << endreq
+            << " Created on average " << occ(m_segCount[Rich::Rich1Gas],m_Nevts) << "  Rich1Gas segments/event" << endreq
+            << " Created on average " << occ(m_segCount[Rich::Rich2Gas],m_Nevts) << "  Rich2Gas segments/event" << endreq
             << "-------------------------------------------------------------------------------" << endreq;
   }
 
@@ -107,7 +107,7 @@ StatusCode RichSegmentCreator::finalize()
 }
 
 // Method that handles various Gaudi "software events"
-void RichSegmentCreator::handle ( const Incident& incident )
+void SegmentCreator::handle ( const Incident& incident )
 {
   // Update prior to start of event. Used to re-initialise data containers
   if ( IncidentType::BeginEvent == incident.type() )
@@ -130,19 +130,20 @@ void RichSegmentCreator::handle ( const Incident& incident )
 }
 
 // Create a new RichRecSegment
-RichRecSegment * RichSegmentCreator::newSegment( RichTrackSegment* segment,
-                                                 RichRecTrack* pTrk ) const
+LHCb::RichRecSegment *
+SegmentCreator::newSegment( LHCb::RichTrackSegment* segment,
+                            LHCb::RichRecTrack* pTrk ) const
 {
   return ( !segment ? 0 :
-           new RichRecSegment ( segment,
-                                pTrk,
-                                m_binsEn[segment->radiator()],
-                                m_minPhotEn[segment->radiator()],
-                                m_maxPhotEn[segment->radiator()] ) );
+           new LHCb::RichRecSegment ( segment,
+                                      pTrk,
+                                      m_binsEn[segment->radiator()],
+                                      m_minPhotEn[segment->radiator()],
+                                      m_maxPhotEn[segment->radiator()] ) );
 }
 
 // Forms a new RichRecSegment object
-void RichSegmentCreator::saveSegment ( RichRecSegment * segment ) const
+void SegmentCreator::saveSegment ( LHCb::RichRecSegment * segment ) const
 {
 
   // debug counting
@@ -158,16 +159,16 @@ void RichSegmentCreator::saveSegment ( RichRecSegment * segment ) const
   richSegments()->insert( segment );
 }
 
-RichRecSegments * RichSegmentCreator::richSegments() const
+LHCb::RichRecSegments * SegmentCreator::richSegments() const
 {
   if ( !m_segments )
   {
 
-    if ( !exist<RichRecSegments>(m_richRecSegmentLocation) )
+    if ( !exist<LHCb::RichRecSegments>(m_richRecSegmentLocation) )
     {
 
       // Reinitialise the Photon Container
-      m_segments = new RichRecSegments();
+      m_segments = new LHCb::RichRecSegments();
 
       // Register new RichRecPhoton container to Gaudi data store
       put( m_segments, m_richRecSegmentLocation );
@@ -177,7 +178,7 @@ RichRecSegments * RichSegmentCreator::richSegments() const
     {
 
       // get segments from TES
-      m_segments = get<RichRecSegments>(m_richRecSegmentLocation);
+      m_segments = get<LHCb::RichRecSegments>(m_richRecSegmentLocation);
       if ( msgLevel(MSG::DEBUG) )
       {
         debug() << "Found " << m_segments->size() << " pre-existing RichRecSegments in TES at "
