@@ -2,10 +2,10 @@
 //--------------------------------------------------------------------------
 /** @file RichGlobalPIDFinalize.cpp
  *
- *  Implementation file for RICH Global PID algorithm class : RichGlobalPIDFinalize
+ *  Implementation file for RICH Global PID algorithm class : Rich::Rec::GlobalPID::Finalize
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDFinalize.cpp,v 1.17 2006-12-19 09:06:20 cattanem Exp $
+ *  $Id: RichGlobalPIDFinalize.cpp,v 1.18 2007-02-02 10:03:58 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -15,44 +15,24 @@
 // local
 #include "RichGlobalPIDFinalize.h"
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 // namespaces
-using namespace LHCb;
+using namespace Rich::Rec::GlobalPID;
 
 //--------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( RichGlobalPIDFinalize );
+// Declaration of the Algorithm Factory
+DECLARE_ALGORITHM_FACTORY( Finalize );
 
 // Standard constructor, initializes variables
-RichGlobalPIDFinalize::RichGlobalPIDFinalize( const std::string& name,
-                                              ISvcLocator* pSvcLocator )
-  : RichGlobalPIDAlgBase ( name, pSvcLocator )
-{
-  declareProperty( "ProcStatusLocation",
-                   m_procStatLocation = ProcStatusLocation::Default );
-}
+Finalize::Finalize( const std::string& name,
+                    ISvcLocator* pSvcLocator )
+  : AlgBase ( name, pSvcLocator ) { }
 
 // Destructor
-RichGlobalPIDFinalize::~RichGlobalPIDFinalize() {}
+Finalize::~Finalize() {}
 
-// Initialize
-StatusCode RichGlobalPIDFinalize::initialize()
+StatusCode Finalize::execute()
 {
-  // Sets up various tools and services
-  const StatusCode sc = RichGlobalPIDAlgBase::initialize();
-  if ( sc.isFailure() ) { return sc; }
-
-  // custom initialisations here
-
-  return sc;
-}
-
-StatusCode RichGlobalPIDFinalize::execute()
-{
-  debug() << "Execute" << endreq;
-
   // Event Status
   if ( !richStatus()->eventOK() ) return StatusCode::SUCCESS;
 
@@ -60,23 +40,23 @@ StatusCode RichGlobalPIDFinalize::execute()
   if ( !gpidPIDs() || !gpidTracks() ) return StatusCode::FAILURE;
 
   // Iterate over working tracks and keep/delete PID results
-  for ( RichGlobalPIDTracks::iterator track = m_GPIDtracks->begin();
+  for ( LHCb::RichGlobalPIDTracks::iterator track = m_GPIDtracks->begin();
         track != m_GPIDtracks->end();
-        ++track ) 
+        ++track )
   {
-    RichRecTrack * rRTrack = (*track)->richRecTrack();
+    LHCb::RichRecTrack * rRTrack = (*track)->richRecTrack();
 
-    if ( msgLevel(MSG::VERBOSE) ) 
+    if ( msgLevel(MSG::VERBOSE) )
     {
       verbose() << "PID'ed Track "
                 << (*track)->key() << " (" << (*track)->trQuality()
                 << "), as " << rRTrack->currentHypothesis() << endreq;
     }
 
-    RichGlobalPID * pid = (*track)->globalPID();
+    LHCb::RichGlobalPID * pid = (*track)->globalPID();
 
     // Only store results for physics quality tracks
-    if ( (*track)->trQuality() != Rich::GlobalPID::Physics ) 
+    if ( (*track)->trQuality() != Rich::Rec::GlobalPID::Physics )
     {
       m_GPIDs->erase( pid );
       continue;
@@ -98,21 +78,21 @@ StatusCode RichGlobalPIDFinalize::execute()
     double pionDLL = pid->particleDeltaLL(Rich::Pion);
     if ( pionDLL < 0 ) { pionDLL = 0; }
     // sanity check on best ID
-    if ( deltaLLs[pid->bestParticleID()] > 1e-10 ) 
+    if ( deltaLLs[pid->bestParticleID()] > 1e-10 )
     {
       warning() << "PID " << pid->key() << " best ID " << pid->bestParticleID()
                 << " has non-zero deltaLL value! " << deltaLLs[pid->bestParticleID()] << endreq;
     }
 
     // Internally, the Global PID normalises the DLL values to the best hypothesis
-    // and also works in "-loglikelihood" space. 
-    // For final storage, renormalise the DLLS w.r.t. the pion hypothesis and 
+    // and also works in "-loglikelihood" space.
+    // For final storage, renormalise the DLLS w.r.t. the pion hypothesis and
     // invert the values
-    for ( int iHypo = 0; iHypo < Rich::NParticleTypes; ++iHypo ) 
+    for ( int iHypo = 0; iHypo < Rich::NParticleTypes; ++iHypo )
     {
-      if ( deltaLLs[iHypo] < 0 ) 
+      if ( deltaLLs[iHypo] < 0 )
       {
-        deltaLLs[iHypo] = 0; 
+        deltaLLs[iHypo] = 0;
       }
       deltaLLs[iHypo] = pionDLL - deltaLLs[iHypo];
     }
@@ -123,15 +103,9 @@ StatusCode RichGlobalPIDFinalize::execute()
   }
 
   // All OK - Update ProcStatus with number of PIDs
-  ProcStatus * procStat = get<ProcStatus>( m_procStatLocation );
+  LHCb::ProcStatus * procStat = get<LHCb::ProcStatus>( m_procStatLocation );
   procStat->addAlgorithmStatus( m_richGPIDName, m_GPIDs->size() );
 
   return StatusCode::SUCCESS;
 }
 
-//  Finalize
-StatusCode RichGlobalPIDFinalize::finalize()
-{
-  // Execute base class method
-  return RichGlobalPIDAlgBase::finalize();
-}

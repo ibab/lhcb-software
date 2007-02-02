@@ -1,11 +1,11 @@
 
 //--------------------------------------------------------------------------
-/** @file RichGlobalPIDAlg.cpp
+/** @file RichGlobalPIDLikelihood.cpp
  *
- *  Implementation file for RICH Global PID algorithm class : RichGlobalPIDAlg
+ *  Implementation file for RICH Global PID algorithm class : Rich::Rec::GlobalPID::Likelihood
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDAlg.cpp,v 1.30 2006-12-19 09:06:20 cattanem Exp $
+ *  $Id: RichGlobalPIDLikelihood.cpp,v 1.1 2007-02-02 10:03:58 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -13,22 +13,21 @@
 //--------------------------------------------------------------------------
 
 // local
-#include "RichGlobalPIDAlg.h"
-
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
+#include "RichGlobalPIDLikelihood.h"
 
 // namespaces
 using namespace LHCb;
+using namespace Rich::Rec::GlobalPID;
 
 //--------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( RichGlobalPIDAlg );
+// Declaration of the Algorithm Factory
+DECLARE_ALGORITHM_FACTORY( Likelihood );
 
 // Standard constructor, initializes variables
-RichGlobalPIDAlg::RichGlobalPIDAlg( const std::string& name,
-                                    ISvcLocator* pSvcLocator )
-  : RichGlobalPIDAlgBase ( name, pSvcLocator ),
+Likelihood::Likelihood( const std::string& name,
+                        ISvcLocator* pSvcLocator )
+  : AlgBase     ( name, pSvcLocator ),
     m_tkSignal  ( NULL ),
     m_photonSig ( NULL ),
     m_inR1      ( true ),
@@ -41,10 +40,10 @@ RichGlobalPIDAlg::RichGlobalPIDAlg( const std::string& name,
   // Maximum number of track iterations
   declareProperty( "MaxEventIterations", m_maxEventIterations = 500 );
 
-  // Minimum signal value for full calculation of log(exp(signal)-1)
+  // Minimum signal value for full calculation of log(1-exp(-signal))
   declareProperty( "MinSignalForNoLLCalc", m_minSig = 1e-25 );
 
-  // Signal value below which to approximate log(exp(signal)-1) with log(signal)
+  // Signal value below which to approximate log(1-exp(-signal)) with log(signal)
   // set to 1e-99 for max precision
   declareProperty( "MinSignalForAproxLLCalc", m_apxSig = 1e-5 );
 
@@ -66,13 +65,13 @@ RichGlobalPIDAlg::RichGlobalPIDAlg( const std::string& name,
 }
 
 // Destructor
-RichGlobalPIDAlg::~RichGlobalPIDAlg() {}
+Likelihood::~Likelihood() {}
 
 //  Initialize
-StatusCode RichGlobalPIDAlg::initialize()
+StatusCode Likelihood::initialize()
 {
   // Sets up various tools and services
-  const StatusCode sc = RichGlobalPIDAlgBase::initialize();
+  const StatusCode sc = AlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire tools
@@ -97,15 +96,8 @@ StatusCode RichGlobalPIDAlg::initialize()
   return sc;
 }
 
-//  Finalize
-StatusCode RichGlobalPIDAlg::finalize()
-{
-  // Execute base class method
-  return RichGlobalPIDAlgBase::finalize();
-}
-
 // Main execution
-StatusCode RichGlobalPIDAlg::execute()
+StatusCode Likelihood::execute()
 {
 
   // ------------------------- General  RICH reco stuff --------------------------------
@@ -132,7 +124,7 @@ StatusCode RichGlobalPIDAlg::execute()
 
   // ------------------------- General  RICH reco stuff --------------------------------
 
-  // Now start Global PID 
+  // Now start Global PID
 
   // Compute complete likelihood for event with starting hypotheses
   m_currentBestLL = logLikelihood();
@@ -192,7 +184,7 @@ StatusCode RichGlobalPIDAlg::execute()
   return StatusCode::SUCCESS;
 }
 
-unsigned int RichGlobalPIDAlg::doIterations()
+unsigned int Likelihood::doIterations()
 {
   // iterate to minimum solution
   unsigned int eventIteration = 0;
@@ -236,7 +228,7 @@ unsigned int RichGlobalPIDAlg::doIterations()
     }
     // only quit if last iteration was with both riches
     else if ( m_inR1 && m_inR2 )
-    {      
+    {
       if ( msgLevel(MSG::DEBUG) )
       { debug() << " -> ALL DONE. Quitting event iterations" << endreq; }
       tryAgain = false;
@@ -262,7 +254,7 @@ unsigned int RichGlobalPIDAlg::doIterations()
   return eventIteration;
 }
 
-unsigned int RichGlobalPIDAlg::initBestLogLikelihood()
+unsigned int Likelihood::initBestLogLikelihood()
 {
   if ( msgLevel(MSG::DEBUG) )
     debug() << "Running Initial log likelihood maximisation" << endreq;
@@ -357,7 +349,7 @@ unsigned int RichGlobalPIDAlg::initBestLogLikelihood()
   return minTrackData.size();
 }
 
-void RichGlobalPIDAlg::findBestLogLikelihood( MinTrList & minTracks )
+void Likelihood::findBestLogLikelihood( MinTrList & minTracks )
 {
 
   // update RICH flags
@@ -395,13 +387,13 @@ void RichGlobalPIDAlg::findBestLogLikelihood( MinTrList & minTracks )
     // skip tracks that do not share a RICH with the last changed tracks
     // for these tracks it is not possible that the hypos could change
     if ( m_richCheck && !( (m_inR1 && rRTrack->inRICH1()) ||
-                           (m_inR2 && rRTrack->inRICH2()) ) ) 
+                           (m_inR2 && rRTrack->inRICH2()) ) )
     {
       if ( msgLevel(MSG::DEBUG) )
       { debug() << "  -> Skipping track in unaltered RICH" << endreq; }
       continue;
     }
- 
+
     bool addto(false), minFound(false);
     double minTrackDll = 99999999;
     Rich::ParticleIDType minHypo = Rich::Unknown;
@@ -510,7 +502,7 @@ void RichGlobalPIDAlg::findBestLogLikelihood( MinTrList & minTracks )
     {
       if ( msgLevel(MSG::DEBUG) )
       {
-        debug() << "    -> Found " << minTracks.size() 
+        debug() << "    -> Found " << minTracks.size()
                 << " tracks to change. Aborting track loop" << endreq;
       }
       break;
@@ -534,7 +526,7 @@ void RichGlobalPIDAlg::findBestLogLikelihood( MinTrList & minTracks )
 
 }
 
-void RichGlobalPIDAlg::updateRichFlags( const MinTrList & minTracks )
+void Likelihood::updateRichFlags( const MinTrList & minTracks )
 {
   if ( !minTracks.empty() )
   {
@@ -550,14 +542,14 @@ void RichGlobalPIDAlg::updateRichFlags( const MinTrList & minTracks )
   else
   {
     // default to both being true
-    m_inR1 = true; 
+    m_inR1 = true;
     m_inR2 = true;
   }
 }
 
 double
-RichGlobalPIDAlg::deltaLogLikelihood( RichRecTrack * track,
-                                      const Rich::ParticleIDType newHypo )
+Likelihood::deltaLogLikelihood( RichRecTrack * track,
+                                const Rich::ParticleIDType newHypo )
 {
 
   // Change due to track expectation
@@ -606,7 +598,7 @@ RichGlobalPIDAlg::deltaLogLikelihood( RichRecTrack * track,
   return deltaLL;
 }
 
-double RichGlobalPIDAlg::logLikelihood()
+double Likelihood::logLikelihood()
 {
 
   // Loop over tracks to form total expected hits part of LL

@@ -4,7 +4,7 @@
  *  Declaration of objects in the component library RichGlobalPID
  *
  *  CVS Log :-
- *  $Id: RichGlobalPID_load.cpp,v 1.4 2006-01-23 13:42:16 jonrob Exp $
+ *  $Id: RichGlobalPID_load.cpp,v 1.5 2007-02-02 10:03:58 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -12,17 +12,17 @@
 
 #include "GaudiKernel/DeclareFactoryEntries.h"
 
-DECLARE_FACTORY_ENTRIES( RichGlobalPID ) 
+DECLARE_FACTORY_ENTRIES( RichGlobalPID )
 {
 
-   // Reco algs
-  DECLARE_ALGORITHM( RichGlobalPIDAlg );
-  DECLARE_ALGORITHM( RichGlobalPIDInitialize );
-  DECLARE_ALGORITHM( RichGlobalPIDFinalize );
-  DECLARE_ALGORITHM( RichGlobalPIDTrTrackSel );
-  DECLARE_ALGORITHM( RichGlobalPIDDigitSel );
+  // Reco algs
+  DECLARE_ALGORITHM( Likelihood );
+  DECLARE_ALGORITHM( Initialize );
+  DECLARE_ALGORITHM( Finalize );
+  DECLARE_ALGORITHM( TrackSel );
+  DECLARE_ALGORITHM( DigitSel );
 
   // monitors
-  DECLARE_ALGORITHM( RichGlobalPIDMonitor );
+  DECLARE_ALGORITHM( Monitor );
 
 }

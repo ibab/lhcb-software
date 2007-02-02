@@ -1,10 +1,10 @@
 //------------------------------------------------------------------------------------
 /** @file RichGlobalPIDInitialize.cpp
  *
- *  Implementation file for RICH Global PID algorithm class : RichGlobalPIDInitialize
+ *  Implementation file for RICH Global PID algorithm class : Rich::Rec::GlobalPID::Initialize
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDInitialize.cpp,v 1.12 2006-12-19 09:06:20 cattanem Exp $
+ *  $Id: RichGlobalPIDInitialize.cpp,v 1.13 2007-02-02 10:03:58 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -14,29 +14,27 @@
 // local
 #include "RichGlobalPIDInitialize.h"
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 // namespaces
-using namespace LHCb;
+using namespace Rich::Rec::GlobalPID;
 
 //--------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( RichGlobalPIDInitialize );
+// Declaration of the Algorithm Factory
+DECLARE_ALGORITHM_FACTORY( Initialize );
 
 // Standard constructor, initializes variables
-RichGlobalPIDInitialize::RichGlobalPIDInitialize( const std::string& name,
-                                                  ISvcLocator* pSvcLocator )
-  : RichGlobalPIDAlgBase ( name, pSvcLocator ) {}
+Initialize::Initialize( const std::string& name,
+                        ISvcLocator* pSvcLocator )
+  : AlgBase ( name, pSvcLocator ) {}
 
 // Destructor
-RichGlobalPIDInitialize::~RichGlobalPIDInitialize() {}
+Initialize::~Initialize() {}
 
 //  Initialize
-StatusCode RichGlobalPIDInitialize::initialize()
+StatusCode Initialize::initialize()
 {
   // Sets up various tools and services
-  const StatusCode sc = RichGlobalPIDAlgBase::initialize();
+  const StatusCode sc = AlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // trick to force pre-loading of various tools. Avoids loading
@@ -47,26 +45,19 @@ StatusCode RichGlobalPIDInitialize::initialize()
 }
 
 // Main execution
-StatusCode RichGlobalPIDInitialize::execute()
+StatusCode Initialize::execute()
 {
   // Set event status to OK for start of GlobalPID processing
   richStatus()->setEventOK( true );
 
   // Summary object
-  put( new RichGlobalPIDSummary(), m_richGPIDSummaryLocation );
+  put( new LHCb::RichGlobalPIDSummary(), m_richGPIDSummaryLocation );
 
   // RichGlobalPIDTrack container
-  put( new RichGlobalPIDTracks(),  m_richGPIDTrackLocation   );
+  put( new LHCb::RichGlobalPIDTracks(),  m_richGPIDTrackLocation   );
 
   // RichGlobalPID container
-  put( new RichGlobalPIDs(),       m_richGPIDLocation        );
+  put( new LHCb::RichGlobalPIDs(),       m_richGPIDLocation        );
 
   return StatusCode::SUCCESS;
-}
-
-//  Finalize
-StatusCode RichGlobalPIDInitialize::finalize()
-{
-  // Execute base class method
-  return RichGlobalPIDAlgBase::finalize();
 }

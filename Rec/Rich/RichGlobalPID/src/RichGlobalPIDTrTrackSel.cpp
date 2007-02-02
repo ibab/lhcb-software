@@ -2,10 +2,10 @@
 //--------------------------------------------------------------------------
 /** @file RichGlobalPIDTrTrackSel.cpp
  *
- *  Implementation file for RICH Global PID algorithm class : RichGlobalPIDTrTrackSel
+ *  Implementation file for RICH Global PID algorithm class : Rich::Rec::GlobalPID::TrackSel
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDTrTrackSel.cpp,v 1.29 2006-08-31 12:11:38 cattanem Exp $
+ *  $Id: RichGlobalPIDTrTrackSel.cpp,v 1.30 2007-02-02 10:03:58 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -21,15 +21,16 @@
 
 // namespaces
 using namespace LHCb;
+using namespace Rich::Rec::GlobalPID;
 
 //--------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( RichGlobalPIDTrTrackSel );
+DECLARE_ALGORITHM_FACTORY( TrackSel );
 
 // Standard constructor, initializes variables
-RichGlobalPIDTrTrackSel::RichGlobalPIDTrTrackSel( const std::string& name,
-                                                  ISvcLocator* pSvcLocator )
-  : RichGlobalPIDAlgBase ( name, pSvcLocator ),
+TrackSel::TrackSel( const std::string& name,
+                    ISvcLocator* pSvcLocator )
+  : AlgBase ( name, pSvcLocator ),
     m_tkSignal       ( 0 ),
     m_minPhysPtot    ( 0 ),
     m_minLLPtot      ( 0 ),
@@ -44,19 +45,17 @@ RichGlobalPIDTrTrackSel::RichGlobalPIDTrTrackSel( const std::string& name,
   declareProperty( "ResetTracksToPion", m_resetToPion = false );
   declareProperty( "MaxUsedTracks", m_maxUsedTracks = 250 );
   declareProperty( "MaxInputTracks", m_maxInputTracks = 350 );
-  declareProperty( "ProcStatusLocation",
-                   m_procStatLocation = ProcStatusLocation::Default );
 
 }
 
 // Destructor
-RichGlobalPIDTrTrackSel::~RichGlobalPIDTrTrackSel() {}
+TrackSel::~TrackSel() {}
 
 //  Initialize
-StatusCode RichGlobalPIDTrTrackSel::initialize()
+StatusCode TrackSel::initialize()
 {
   // Sets up various tools and services
-  const StatusCode sc = RichGlobalPIDAlgBase::initialize();
+  const StatusCode sc = AlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire tools
@@ -72,7 +71,7 @@ StatusCode RichGlobalPIDTrTrackSel::initialize()
 }
 
 // Select tracks for analysis
-StatusCode RichGlobalPIDTrTrackSel::execute()
+StatusCode TrackSel::execute()
 {
 
   // Event Status
@@ -114,8 +113,8 @@ StatusCode RichGlobalPIDTrTrackSel::execute()
         track != richTracks()->end(); ++track ) {
 
     // select tracks for use
-    Rich::GlobalPID::TkQuality quality = trackStatus( *track );
-    if ( Rich::GlobalPID::Unusable == quality ) {
+    Rich::Rec::GlobalPID::TkQuality quality = trackStatus( *track );
+    if ( Rich::Rec::GlobalPID::Unusable == quality ) {
       (*track)->setInUse( false );
       continue;
     } else {
@@ -139,7 +138,7 @@ StatusCode RichGlobalPIDTrTrackSel::execute()
     pidTrack->setGlobalPID( newPID );
 
     // Set Track reference
-    const Track * trtrack = dynamic_cast<const Track *>((*track)->parentTrack());
+    const LHCb::Track * trtrack = dynamic_cast<const LHCb::Track *>((*track)->parentTrack());
     if ( !trtrack ) Warning( "Input track type is not Track -> RichPID has null track reference" );
     newPID->setTrack( trtrack );
 
@@ -163,32 +162,29 @@ StatusCode RichGlobalPIDTrTrackSel::execute()
   return StatusCode::SUCCESS;
 }
 
-Rich::GlobalPID::TkQuality
-RichGlobalPIDTrTrackSel::trackStatus( RichRecTrack * track ) {
+Rich::Rec::GlobalPID::TkQuality
+TrackSel::trackStatus( RichRecTrack * track ) 
+{
 
   // Set default quality to be good
-  Rich::GlobalPID::TkQuality quality = Rich::GlobalPID::Physics;
+  Rich::Rec::GlobalPID::TkQuality quality = Rich::Rec::GlobalPID::Physics;
 
   // Only use requested track types
-  if ( !m_trSelector->trackSelected(track) ) quality = Rich::GlobalPID::Unusable;
+  if ( !m_trSelector->trackSelected(track) ) quality = Rich::Rec::GlobalPID::Unusable;
 
   // Momentum
   const double pTot = track->vertexMomentum();
 
   // If below minimum momentum for use in LL, return false
-  if ( pTot < m_minLLPtot ) return Rich::GlobalPID::Unusable;
-
+  if ( pTot < m_minLLPtot ) 
+  {
+    quality = Rich::Rec::GlobalPID::Unusable;
+  }
   // Likelihood use only ?
-  if ( pTot >= m_minLLPtot && pTot < m_minPhysPtot ) {
-    quality = Rich::GlobalPID::LikelihoodOnly;
+  else if ( pTot >= m_minLLPtot && pTot < m_minPhysPtot ) 
+  {
+    quality = Rich::Rec::GlobalPID::LikelihoodOnly;
   }
 
   return quality;
-}
-
-//  Finalize
-StatusCode RichGlobalPIDTrTrackSel::finalize()
-{
-  // Execute base class method
-  return RichGlobalPIDAlgBase::finalize();
 }

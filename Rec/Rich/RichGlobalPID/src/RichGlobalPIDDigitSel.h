@@ -2,10 +2,10 @@
 //--------------------------------------------------------------------------
 /** @file RichGlobalPIDDigitSel.h
  *
- *  Header file for RICH Global PID algorithm class : RichGlobalPIDDigitSel
+ *  Header file for RICH Global PID algorithm class : Rich::Rec::GlobalPID::DigitSel
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDDigitSel.h,v 1.7 2006-12-19 09:06:20 cattanem Exp $
+ *  $Id: RichGlobalPIDDigitSel.h,v 1.8 2007-02-02 10:03:58 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/12/2002
@@ -19,43 +19,76 @@
 #include "RichGlobalPIDAlgBase.h"
 #include "RichRecBase/RichRecProcCode.h"
 
-// Event
-#include "Event/ProcStatus.h"
-#include "Event/RichRecStatus.h"
+// from Gaudi
+#include "GaudiKernel/AlgFactory.h"
 
-//--------------------------------------------------------------------------
-/** @class RichGlobalPIDDigitSel RichGlobalPIDDigitSel.h
+//-----------------------------------------------------------------------------
+/** @namespace Rich
  *
- *  RichDigit selection algorithm for Rich Global PID
+ *  General namespace for RICH software
  *
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   12/12/2002
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
  */
-//--------------------------------------------------------------------------
-
-class RichGlobalPIDDigitSel : public RichGlobalPIDAlgBase
+//-----------------------------------------------------------------------------
+namespace Rich
 {
 
-public:
+  /** @namespace Rich::Rec
+   *
+   *  General namespace for RICH reconstruction software
+   *
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   08/07/2004
+   */
+  namespace Rec
+  {
 
-  /// Standard constructor
-  RichGlobalPIDDigitSel( const std::string& name,
-                         ISvcLocator* pSvcLocator );
+    //-----------------------------------------------------------------------------
+    /** @namespace GlobalPID
+     *
+     *  General namespace for Global PID software
+     *
+     *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+     *  @date   04/12/2006
+     */
+    //-----------------------------------------------------------------------------
+    namespace GlobalPID
+    {
 
-  virtual ~RichGlobalPIDDigitSel();   ///< Destructor
+      //--------------------------------------------------------------------------
+      /** @class DigitSel RichGlobalPIDDigitSel.h
+       *
+       *  RichDigit selection algorithm for Rich Global PID
+       *
+       *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+       *  @date   12/12/2002
+       */
+      //--------------------------------------------------------------------------
 
-  virtual StatusCode initialize();    // Algorithm initialization
-  virtual StatusCode execute   ();    // Algorithm execution
-  virtual StatusCode finalize  ();    // Algorithm finalization
+      class DigitSel : public AlgBase
+      {
 
-private: // private data
+      public:
 
-  /// Maximum number of usable pixels
-  int m_maxUsedPixels;
+        /// Standard constructor
+        DigitSel( const std::string& name,
+                  ISvcLocator* pSvcLocator );
 
-  /// Location of processing status object in TES
-  std::string m_procStatLocation;
+        virtual ~DigitSel();   ///< Destructor
 
-};
+        virtual StatusCode initialize();    // Algorithm initialization
+        virtual StatusCode execute   ();    // Algorithm execution
+
+      private: // private data
+
+        /// Maximum number of usable pixels
+        int m_maxUsedPixels;
+
+      };
+
+    }
+  }
+}
 
 #endif // RICHGLOBALPID_RICHGLOBALPIDDIGITSEL_H

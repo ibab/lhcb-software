@@ -2,10 +2,10 @@
 //--------------------------------------------------------------------------
 /** @file RichGlobalPIDTrTrackSel.h
  *
- *  Header file for RICH Global PID algorithm class : RichGlobalPIDTrTrackSel
+ *  Header file for RICH Global PID algorithm class : Rich::Rec::GlobalPID::TrackSel
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDTrTrackSel.h,v 1.16 2006-08-31 12:11:38 cattanem Exp $
+ *  $Id: RichGlobalPIDTrTrackSel.h,v 1.17 2007-02-02 10:03:58 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/12/2002
@@ -21,80 +21,110 @@
 // base definitions
 #include "RichRecBase/RichRecProcCode.h"
 
-// Event
-#include "Event/ProcStatus.h"
-#include "Event/RichRecStatus.h"
-
 // interfaces
 #include "RichRecBase/IRichExpectedTrackSignal.h"
 #include "RichRecBase/IRichTrackSelector.h"
 
-//--------------------------------------------------------------------------
-/** @class RichGlobalPIDTrTrackSel RichGlobalPIDTrTrackSel.h
+//-----------------------------------------------------------------------------
+/** @namespace Rich
  *
- *  Track selection algorithm for Rich Global PID
+ *  General namespace for RICH software
  *
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   12/12/2002
- *
- *  @todo Find a way to avoid the dynamic_casts when setting Track in RichPID
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
  */
-//--------------------------------------------------------------------------
-
-class RichGlobalPIDTrTrackSel : public RichGlobalPIDAlgBase 
+//-----------------------------------------------------------------------------
+namespace Rich
 {
 
-public:
+  /** @namespace Rich::Rec
+   *
+   *  General namespace for RICH reconstruction software
+   *
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   08/07/2004
+   */
+  namespace Rec
+  {
 
-  /// Standard constructor
-  RichGlobalPIDTrTrackSel( const std::string& name,
-                           ISvcLocator* pSvcLocator );
+    //-----------------------------------------------------------------------------
+    /** @namespace GlobalPID
+     *
+     *  General namespace for Global PID software
+     *
+     *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+     *  @date   04/12/2006
+     */
+    //-----------------------------------------------------------------------------
+    namespace GlobalPID
+    {
 
-  virtual ~RichGlobalPIDTrTrackSel(); ///< Destructor
+      //--------------------------------------------------------------------------
+      /** @class TrackSel RichGlobalPIDTrTrackSel.h
+       *
+       *  Track selection algorithm for Rich Global PID
+       *
+       *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+       *  @date   12/12/2002
+       *
+       *  @todo Find a way to avoid the dynamic_casts when setting Track in RichPID
+       */
+      //--------------------------------------------------------------------------
 
-  virtual StatusCode initialize();    // Algorithm initialization
-  virtual StatusCode execute   ();    // Algorithm execution
-  virtual StatusCode finalize  ();    // Algorithm finalization
+      class TrackSel : public AlgBase
+      {
 
-  // Private methods
-private:
+      public:
 
-  /// Clean up after event abortion
-  void deleteEvent();
+        /// Standard constructor
+        TrackSel( const std::string& name,
+                  ISvcLocator* pSvcLocator );
 
-  /// Determine the global PID Status of a track.
-  /// Determines how the track will be used in the global likelihood
-  Rich::GlobalPID::TkQuality trackStatus( LHCb::RichRecTrack * track );
+        virtual ~TrackSel(); ///< Destructor
 
-  // Private data members
-private:
+        virtual StatusCode initialize();    // Algorithm initialization
+        virtual StatusCode execute   ();    // Algorithm execution
 
-  /// Location of processing status object in TES
-  std::string m_procStatLocation;
+        // Private methods
+      private:
 
-  const IRichExpectedTrackSignal * m_tkSignal; ///< Pointer to RichExpectedTrackSignal
+        /// Clean up after event abortion
+        void deleteEvent();
 
-  /// Track selector
-  const Rich::IRichTrackSelector * m_trSelector;
+        /// Determine the global PID Status of a track.
+        /// Determines how the track will be used in the global likelihood
+        Rich::Rec::GlobalPID::TkQuality trackStatus( LHCb::RichRecTrack * track );
 
-  // Selection cuts
-  double m_minPhysPtot; ///< Minimum momentum for physics quality tracks
-  double m_minLLPtot;   ///< Minimum momentum for use in LL calculation
-  bool m_resetToPion;   ///< Reset all track hypotheses to pion, ignoring initial types
+        // Private data members
+      private:
 
-  /// Maximum number of Tracks with RICH information
-  int m_maxUsedTracks;
+        const IExpectedTrackSignal * m_tkSignal; ///< Pointer to RichExpectedTrackSignal
 
-  /// Maximum total number of input TrStoredTracks
-  int m_maxInputTracks;
+        /// Track selector
+        const ITrackSelector * m_trSelector;
 
-};
+        // Selection cuts
+        double m_minPhysPtot; ///< Minimum momentum for physics quality tracks
+        double m_minLLPtot;   ///< Minimum momentum for use in LL calculation
+        bool m_resetToPion;   ///< Reset all track hypotheses to pion, ignoring initial types
 
-inline void RichGlobalPIDTrTrackSel::deleteEvent()
-{
-  // Tidy up incase of event abort
-  if ( m_GPIDtracks && !m_GPIDtracks->empty() ) m_GPIDtracks->clear();
-  if ( m_GPIDs      && !m_GPIDs->empty()      ) m_GPIDs->clear();
+        /// Maximum number of Tracks with RICH information
+        int m_maxUsedTracks;
+
+        /// Maximum total number of input TrStoredTracks
+        int m_maxInputTracks;
+
+      };
+
+      inline void TrackSel::deleteEvent()
+      {
+        // Tidy up incase of event abort
+        if ( m_GPIDtracks && !m_GPIDtracks->empty() ) m_GPIDtracks->clear();
+        if ( m_GPIDs      && !m_GPIDs->empty()      ) m_GPIDs->clear();
+      }
+
+    }
+  }
 }
 
 #endif // RICHGLOBALPID_RICHGLOBALPIDTRTRACKSEL_H

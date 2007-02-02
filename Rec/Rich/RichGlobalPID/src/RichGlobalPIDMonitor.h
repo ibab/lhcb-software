@@ -1,10 +1,10 @@
 
 /** @file RichGlobalPIDMonitor.h
  *
- *  Header file for RICH Global PID algorithm class : RichGlobalPIDMonitor
+ *  Header file for RICH Global PID algorithm class : Rich::Rec::GlobalPID::MC::Monitor
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDMonitor.h,v 1.3 2005-06-23 14:54:25 jonrob Exp $
+ *  $Id: RichGlobalPIDMonitor.h,v 1.4 2007-02-02 10:03:58 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/12/2002
@@ -14,29 +14,81 @@
 #define RICHGLOBALPID_RICHGLOBALPIDMONITOR_H 1
 
 // base class
-#include "RichGlobalPIDAlgBase.h"
+#include "RichRecBase/RichRecHistoAlgBase.h"
 
-/** @class RichGlobalPIDMonitor RichGlobalPIDMonitor.h
+//-----------------------------------------------------------------------------
+/** @namespace Rich
  *
- *  Monitor class for Rich Global PID algorithm
+ *  General namespace for RICH software
  *
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   12/12/2002
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
  */
+//-----------------------------------------------------------------------------
+namespace Rich
+{
 
-class RichGlobalPIDMonitor : public RichGlobalPIDAlgBase {
+  /** @namespace Rich::Rec
+   *
+   *  General namespace for RICH reconstruction software
+   *
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   08/07/2004
+   */
+  namespace Rec
+  {
 
-public:
+    //-----------------------------------------------------------------------------
+    /** @namespace GlobalPID
+     *
+     *  General namespace for Global PID software
+     *
+     *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+     *  @date   04/12/2006
+     */
+    //-----------------------------------------------------------------------------
+    namespace GlobalPID
+    {
 
-  /// Standard constructor
-  RichGlobalPIDMonitor( const std::string& name, ISvcLocator* pSvcLocator );
+      //-----------------------------------------------------------------------------
+      /** @namespace MC
+       *
+       *  General namespace for RICH MC related software
+       *
+       *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+       *  @date   05/12/2006
+       */
+      //-----------------------------------------------------------------------------
+      namespace MC
+      {
 
-  virtual ~RichGlobalPIDMonitor();   ///< Destructor
+        /** @class Monitor RichGlobalPIDMonitor.h
+         *
+         *  Monitor class for Rich Global PID algorithm
+         *
+         *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+         *  @date   12/12/2002
+         */
 
-  virtual StatusCode initialize();    // Algorithm initialization
-  virtual StatusCode execute   ();    // Algorithm execution
-  virtual StatusCode finalize  ();    // Algorithm finalization
+        class Monitor : public Rich::Rec::HistoAlgBase
+        {
 
-};
+        public:
+
+          /// Standard constructor
+          Monitor( const std::string& name, ISvcLocator* pSvcLocator );
+
+          virtual ~Monitor();   ///< Destructor
+
+          virtual StatusCode initialize();    // Algorithm initialization
+          virtual StatusCode execute   ();    // Algorithm execution
+          virtual StatusCode finalize  ();    // Algorithm finalization
+
+        };
+
+      }
+    }
+  }
+}
 
 #endif // RICHGLOBALPID_RICHGLOBALPIDMONITOR_H

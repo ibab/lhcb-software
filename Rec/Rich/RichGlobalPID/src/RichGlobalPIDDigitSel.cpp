@@ -2,10 +2,10 @@
 //--------------------------------------------------------------------------
 /** @file RichGlobalPIDDigitSel.cpp
  *
- *  Implementation file for RICH Global PID algorithm class : RichGlobalPIDDigitSel
+ *  Implementation file for RICH Global PID algorithm class : Rich::Rec::GlobalPID::DigitSel
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDDigitSel.cpp,v 1.19 2006-12-19 09:06:20 cattanem Exp $
+ *  $Id: RichGlobalPIDDigitSel.cpp,v 1.20 2007-02-02 10:03:58 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -15,36 +15,33 @@
 // local
 #include "RichGlobalPIDDigitSel.h"
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
 // namespaces
-using namespace LHCb;
+using namespace Rich::Rec::GlobalPID;
 
 //--------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( RichGlobalPIDDigitSel );
+// Declaration of the Algorithm Factory
+DECLARE_ALGORITHM_FACTORY( DigitSel );
 
 // Standard constructor, initializes variables
-RichGlobalPIDDigitSel::RichGlobalPIDDigitSel( const std::string& name,
-                                              ISvcLocator* pSvcLocator )
-  : RichGlobalPIDAlgBase ( name, pSvcLocator ) {
+DigitSel::DigitSel( const std::string& name,
+                    ISvcLocator* pSvcLocator )
+  : AlgBase ( name, pSvcLocator )
+{
 
   // Job options
   declareProperty( "MaxUsedPixels", m_maxUsedPixels = 8000 );
-  declareProperty( "ProcStatusLocation",
-                   m_procStatLocation = ProcStatusLocation::Default );
 
 }
 
 // Destructor
-RichGlobalPIDDigitSel::~RichGlobalPIDDigitSel() {}
+DigitSel::~DigitSel() {}
 
 //  Initialize
-StatusCode RichGlobalPIDDigitSel::initialize()
+StatusCode DigitSel::initialize()
 {
   // Sets up various tools and services
-  const StatusCode sc = RichGlobalPIDAlgBase::initialize();
+  const StatusCode sc = AlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // trick to force pre-loading of various tools. Avoids loading
@@ -55,16 +52,15 @@ StatusCode RichGlobalPIDDigitSel::initialize()
 }
 
 // Initialise pixels
-StatusCode RichGlobalPIDDigitSel::execute() {
-
-  debug() << "Execute" << endreq;
-
+StatusCode DigitSel::execute()
+{
   // Event Status
   if ( !richStatus()->eventOK() ) return StatusCode::SUCCESS;
 
   // Check if track processing was aborted.
-  ProcStatus * procStat = get<ProcStatus>( m_procStatLocation );
-  if ( procStat->aborted() ) {
+  LHCb::ProcStatus * procStat = get<LHCb::ProcStatus>( m_procStatLocation );
+  if ( procStat->aborted() ) 
+  {
     procStat->addAlgorithmStatus( m_richGPIDName, Rich::Rec::ProcStatAbort );
     richStatus()->setEventOK( false );
     return Warning( "Processing aborted -> Abort", StatusCode::SUCCESS );
@@ -74,13 +70,16 @@ StatusCode RichGlobalPIDDigitSel::execute() {
   if ( !pixelCreator()->newPixels() ) return StatusCode::FAILURE;
 
   // check the number of pixels
-  if ( richPixels()->empty() ) { // empty event ?
+  if ( richPixels()->empty() ) 
+  { // empty event ?
 
     procStat->addAlgorithmStatus( m_richGPIDName, Rich::Rec::NoRichPixels );
     richStatus()->setEventOK( false );
     return Warning( "Event contains no pixels -> Abort", StatusCode::SUCCESS );
 
-  } else if ( m_maxUsedPixels < richPixels()->size() ) { // too many pixels
+  } 
+  else if ( m_maxUsedPixels < richPixels()->size() ) 
+  { // too many pixels
 
     procStat->addAlgorithmStatus( m_richGPIDName, Rich::Rec::ReachedPixelLimit );
     richStatus()->setEventOK( false );
@@ -89,14 +88,8 @@ StatusCode RichGlobalPIDDigitSel::execute() {
   }
 
   // final printout of selected number of pixels
-  debug() << "Selected " << richPixels()->size() << " RichRecPixels" << endreq;
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << "Selected " << richPixels()->size() << " RichRecPixels" << endreq;
 
   return StatusCode::SUCCESS;
-}
-
-//  Finalize
-StatusCode RichGlobalPIDDigitSel::finalize()
-{
-  // Execute base class method
-  return RichGlobalPIDAlgBase::finalize();
 }
