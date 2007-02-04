@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.72 2007-02-02 12:11:46 cattanem Exp $
+! $Id: release.notes,v 1.73 2007-02-04 11:34:36 janos Exp $
 ! Package     : OTDet
 ! Responsible : Jeroen van Tilburg, Jacopo Nardulli, Jan Amoraal
 !--------------------------------------------------------------------------
+
+! 2007-02-04 Jan Amoraal
+ - Fix findStraws. Check that right most straw is not negative.
+ - Add check for entry and exit points. Make sure their inside.
 
 !========================== OTDet v7r1 2007-02-02 =========================
 ! 2007-02-02 Jan Amoraal

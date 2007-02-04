@@ -1,4 +1,4 @@
-// $Id: DeOTModule.cpp,v 1.25 2007-02-02 09:25:04 janos Exp $
+// $Id: DeOTModule.cpp,v 1.26 2007-02-04 11:34:36 janos Exp $
 /// Kernel
 #include "GaudiKernel/Point3DTypes.h"
 #include "Kernel/LineTraj.h"
@@ -119,7 +119,7 @@ void DeOTModule::findStraws(const Gaudi::XYZPoint& entryPoint,
   
   const int exStraw = 1; ///< Add extra straws to the the left and right
   unsigned int strawLo = GSL_MAX_INT(0, int(std::floor(lo)) - exStraw);
-  unsigned int strawHi = GSL_MIN_INT(int(m_nStraws)-1, int(std::ceil(hi)) + exStraw);
+  unsigned int strawHi = GSL_MIN_INT(int(m_nStraws)-1, GSL_MAX_INT(0, int(std::ceil(hi)) + exStraw));
 
   /// Now let's fill the vector. Remember straw numbering starts at 1, i.e. i+1
   straws.clear();
@@ -130,140 +130,146 @@ void DeOTModule::findStraws(const Gaudi::XYZPoint& entryPoint,
 void DeOTModule::calculateHits(const Gaudi::XYZPoint& entryPoint,
                                const Gaudi::XYZPoint& exitPoint,
                                std::vector<std::pair<OTChannelID, double> >& chanAndDist) const {
-  /// Make sure channels and driftdistances vectors are empty 
-  chanAndDist.clear(); ///< This should erase all elements, if any.
+  /// check that entry and exit points are inside module
+  if (isInside(entryPoint) && isInside(exitPoint)) {
+    /// Make sure channels and driftdistances vectors are empty 
+    chanAndDist.clear(); ///< This should erase all elements, if any.
   
-  /// Go from global to local.
-  Gaudi::XYZPoint enP = toLocal(entryPoint);
-  Gaudi::XYZPoint exP = toLocal(exitPoint);
-     
-  /// Need this to check that enZ and exZ aren't sort of in the same plane,
-  /// i.e. not a curly track. These are typically low momentum (50 MeV) 
-  /// electrons.  
-  bool samePlane = std::abs(enP.z()-exP.z()) < m_cellRadius;
-  if (!samePlane) { // Track in cell
-    /// Track
-    Gaudi::XYZLine track(enP, (exP-enP).unit());
-    /// Now let's get a list of possible hit straws
-    Straws straws; 
-    findStraws(enP, exP, straws);
-    /// Wire
-    const double z = 0.5*m_zPitch;
-    Gaudi::XYZPoint wB(0.0, m_yMinLocal, -z);
-    Gaudi::XYZPoint wT(0.0, m_yMaxLocal, -z);
-    Gaudi::XYZLine wire;
-    /// Are the wire and track parallel
-    bool notParallel = true;
-    Gaudi::XYZPoint mu;
-    Gaudi::XYZPoint lambda;
-    /// is in efficient region of (F-modules)
-    bool efficientY = true;
-    unsigned int straw = 0u;
-    double x = 0.0;
-    double dist = 0.0; /// lambda - mu
-    OTChannelID aChannel; /// channelID
-    /// loop over straws
-    /// First monolayer
-    Straws::const_iterator iS; 
-    for (iS= straws.begin(); iS != straws.end(); ++iS) {
-      straw = (*iS);
-      x = localUOfStraw(straw);
-      wB.SetX(x);
-      wT.SetX(x); 
-      wire = Gaudi::XYZLine(wB, (wT-wB).unit());
-      notParallel = Gaudi::Math::closestPoints(wire, track, mu, lambda);
-      if (notParallel) {
-        dist = driftDistance(lambda-mu);
-        efficientY = isEfficientA(mu.y());
-        if (efficientY && std::abs(dist) < m_cellRadius) {
-          aChannel = OTChannelID(m_stationID, m_layerID, m_quarterID, m_moduleID, straw);
-          chanAndDist.push_back(std::make_pair(aChannel, dist));
+    /// Go from global to local.
+    Gaudi::XYZPoint enP = toLocal(entryPoint);
+    Gaudi::XYZPoint exP = toLocal(exitPoint);
+    
+    /// Need this to check that enZ and exZ aren't sort of in the same plane,
+    /// i.e. not a curly track. These are typically low momentum (50 MeV) 
+    /// electrons.  
+    bool samePlane = std::abs(enP.z()-exP.z()) < m_cellRadius;
+    if (!samePlane) { // Track in cell
+      /// Track
+      Gaudi::XYZLine track(enP, (exP-enP).Unit());
+      /// Now let's get a list of possible hit straws
+      Straws straws; 
+      findStraws(enP, exP, straws);
+      /// Wire
+      const double z = 0.5*m_zPitch;
+      Gaudi::XYZPoint wB(0.0, m_yMinLocal, -z);
+      Gaudi::XYZPoint wT(0.0, m_yMaxLocal, -z);
+      Gaudi::XYZLine wire;
+      /// Are the wire and track parallel
+      bool notParallel = true;
+      Gaudi::XYZPoint mu;
+      Gaudi::XYZPoint lambda;
+      /// is in efficient region of (F-modules)
+      bool efficientY = true;
+      unsigned int straw = 0u;
+      double x = 0.0;
+      double dist = 0.0; /// lambda - mu
+      OTChannelID aChannel; /// channelID
+      /// loop over straws
+      /// First monolayer
+      Straws::const_iterator iS; 
+      for (iS= straws.begin(); iS != straws.end(); ++iS) {
+        straw = (*iS);
+        x = localUOfStraw(straw);
+        wB.SetX(x);
+        wT.SetX(x); 
+        wire = Gaudi::XYZLine(wB, (wT-wB).Unit());
+        notParallel = Gaudi::Math::closestPoints(wire, track, mu, lambda);
+        if (notParallel) {
+          dist = driftDistance(lambda-mu);
+          efficientY = isEfficientA(mu.y());
+          if (efficientY && std::abs(dist) < m_cellRadius) {
+            aChannel = OTChannelID(m_stationID, m_layerID, m_quarterID, m_moduleID, straw);
+            chanAndDist.push_back(std::make_pair(aChannel, dist));
+          }
         }
       }
-    }
-    /// Second monolayer
-    wB.SetZ(z);
-    wT.SetZ(z);
-    for (iS= straws.begin(); iS != straws.end(); ++iS) {
-      straw = (*iS) + m_nStraws;
-      x = localUOfStraw(straw);
-      wB.SetX(x);
-      wT.SetX(x);
-      wire = Gaudi::XYZLine(wB, (wT-wB).Unit());
-      notParallel = Gaudi::Math::closestPoints(wire, track, mu, lambda);
-      if (notParallel) {
-        dist = driftDistance(lambda-mu);
-        efficientY = isEfficientB(mu.y());
-        if (efficientY && std::abs(dist) < m_cellRadius) {
-          aChannel = OTChannelID(m_stationID, m_layerID, m_quarterID, m_moduleID, straw);
-          chanAndDist.push_back(std::make_pair(aChannel, dist));
+      /// Second monolayer
+      wB.SetZ(z);
+      wT.SetZ(z);
+      for (iS= straws.begin(); iS != straws.end(); ++iS) {
+        straw = (*iS) + m_nStraws;
+        x = localUOfStraw(straw);
+        wB.SetX(x);
+        wT.SetX(x);
+        wire = Gaudi::XYZLine(wB, (wT-wB).Unit());
+        notParallel = Gaudi::Math::closestPoints(wire, track, mu, lambda);
+        if (notParallel) {
+          dist = driftDistance(lambda-mu);
+          efficientY = isEfficientB(mu.y());
+          if (efficientY && std::abs(dist) < m_cellRadius) {
+            aChannel = OTChannelID(m_stationID, m_layerID, m_quarterID, m_moduleID, straw);
+            chanAndDist.push_back(std::make_pair(aChannel, dist));
+          }
         }
       }
-    }
-  } else {/// Need this to estimate occupancies
-    const double x1 = enP.x();
-    const double z1 = enP.z();
-    const double x2 = exP.x();
-    const double z2 = exP.z();
+    } else {/// Need this to estimate occupancies
+      const double x1 = enP.x();
+      const double z1 = enP.z();
+      const double x2 = exP.x();
+      const double z2 = exP.z();
 
-    double uLow = x1;
-    double uHigh = x2;      
-    if ( uLow > uHigh ) std::swap(uLow, uHigh);
+      double uLow = x1;
+      double uHigh = x2;      
+      if ( uLow > uHigh ) std::swap(uLow, uHigh);
         
-    // zfrac is between 0 and 1. 2.7839542167 means nothing.
-    // This seems to acts as a random number generator.
-    // if distance xy entry-exit is small generate z3 close
-    // to the z1 and z2 ( z1 is close to z2)
-    /// Circle in global
-    const double u1 = (entryPoint.z() > exitPoint.z()) ? exitPoint.x() : entryPoint.x();
-    const double v1 = (entryPoint.z() > exitPoint.z()) ? exitPoint.y() : entryPoint.y();
-    double zint;
-    const double zfrac = std::modf((std::abs(u1)+std::abs(v1))/2.7839542167, &zint);
-    const double distXY = std::sqrt(( exP - enP ).perp2());
-    double z3Circ = ((distXY > 2.0*m_xPitch) ? 2.0 * (zfrac-0.5) :(z1<0?-zfrac:zfrac))*m_zPitch;
-    double zCirc, uCirc, rCirc;
-    sCircle(z1, x1, z2, x2, z3Circ, zCirc, uCirc, rCirc);
+      // zfrac is between 0 and 1. 2.7839542167 means nothing.
+      // This seems to acts as a random number generator.
+      // if distance xy entry-exit is small generate z3 close
+      // to the z1 and z2 ( z1 is close to z2)
+      /// Circle in global
+      const double u1 = (entryPoint.z() > exitPoint.z()) ? exitPoint.x() : entryPoint.x();
+      const double v1 = (entryPoint.z() > exitPoint.z()) ? exitPoint.y() : entryPoint.y();
+      double zint;
+      const double zfrac = std::modf((std::abs(u1)+std::abs(v1))/2.7839542167, &zint);
+      const double distXY = std::sqrt(( exP - enP ).perp2());
+      double z3Circ = ((distXY > 2.0*m_xPitch) ? 2.0 * (zfrac-0.5) :(z1<0?-zfrac:zfrac))*m_zPitch;
+      double zCirc, uCirc, rCirc;
+      sCircle(z1, x1, z2, x2, z3Circ, zCirc, uCirc, rCirc);
     
     
-    double uStep = uLow;
-    double distCirc = 0.0;
-    int amb = 0;
-    double dist = 0.0;
-    OTChannelID aChannel;
+      double uStep = uLow;
+      double distCirc = 0.0;
+      int amb = 0;
+      double dist = 0.0;
+      OTChannelID aChannel;
     
-    // monolayer A
-    unsigned int strawA = hitStrawA(uLow);
-    const double zStrawA = -0.5*m_zPitch;//localZOfStraw(strawA);
-    while ( (uStep < uHigh) && strawA != 0 ) {
-      uStep = localUOfStraw(strawA);
-      distCirc = gsl_hypot((zCirc-zStrawA), (uCirc-uStep));
-      amb = ((-(uStep-(x1+x2)/2.0)*(distCirc-rCirc)) < 0.0) ? -1 : 1;
-      dist = amb*std::abs(distCirc-rCirc);
-      const unsigned int straw = strawA;
-      if ( std::abs(dist) < m_cellRadius ) {
-        aChannel = OTChannelID(m_stationID, m_layerID, m_quarterID, m_moduleID, straw);
-        chanAndDist.push_back(std::make_pair(aChannel, dist));
+      // monolayer A
+      unsigned int strawA = hitStrawA(uLow);
+      const double zStrawA = -0.5*m_zPitch;//localZOfStraw(strawA);
+      while ( (uStep < uHigh) && strawA != 0 ) {
+        uStep = localUOfStraw(strawA);
+        distCirc = gsl_hypot((zCirc-zStrawA), (uCirc-uStep));
+        amb = ((-(uStep-(x1+x2)/2.0)*(distCirc-rCirc)) < 0.0) ? -1 : 1;
+        dist = amb*std::abs(distCirc-rCirc);
+        const unsigned int straw = strawA;
+        if ( std::abs(dist) < m_cellRadius ) {
+          aChannel = OTChannelID(m_stationID, m_layerID, m_quarterID, m_moduleID, straw);
+          chanAndDist.push_back(std::make_pair(aChannel, dist));
+        }
+        strawA = nextRightStraw(straw);
       }
-      strawA = nextRightStraw(straw);
-    }
     
-    // monolayer B
-    unsigned int strawB = hitStrawB(uLow);
-    const double zStrawB = 0.5*m_zPitch;//localZOfStraw(strawB);
-    uStep = uLow;
-    while ( (uStep < uHigh) && strawB != 0 ) {
-      uStep = localUOfStraw(strawB);
-      distCirc = gsl_hypot((zCirc-zStrawB), (uCirc-uStep));
-      amb = ((-(uStep-(x1+x2)/2.0)*(distCirc-rCirc))< 0.0) ?  -1 : 1;
-      dist = amb*std::abs(distCirc-rCirc);
-      const unsigned int straw = strawB;
-      if ( std::abs(dist) < m_cellRadius ) {
-        aChannel = OTChannelID(m_stationID, m_layerID, m_quarterID, m_moduleID, straw);
-        chanAndDist.push_back(std::make_pair(aChannel, dist));
+      // monolayer B
+      unsigned int strawB = hitStrawB(uLow);
+      const double zStrawB = 0.5*m_zPitch;//localZOfStraw(strawB);
+      uStep = uLow;
+      while ( (uStep < uHigh) && strawB != 0 ) {
+        uStep = localUOfStraw(strawB);
+        distCirc = gsl_hypot((zCirc-zStrawB), (uCirc-uStep));
+        amb = ((-(uStep-(x1+x2)/2.0)*(distCirc-rCirc))< 0.0) ?  -1 : 1;
+        dist = amb*std::abs(distCirc-rCirc);
+        const unsigned int straw = strawB;
+        if ( std::abs(dist) < m_cellRadius ) {
+          aChannel = OTChannelID(m_stationID, m_layerID, m_quarterID, m_moduleID, straw);
+          chanAndDist.push_back(std::make_pair(aChannel, dist));
+        }
+        strawB = nextRightStraw(straw);
       }
-      strawB = nextRightStraw(straw);
-    }
-  } //curling tracks
+    } //curling tracks
+  } else {
+    MsgStream msg(msgSvc(), name());
+    msg << MSG::DEBUG << "Entry and exit points are not inside module. Failed to generate hits!" << endreq;
+  }
 }
 
 void DeOTModule::sCircle(const double z1, const double u1, const double z2, 

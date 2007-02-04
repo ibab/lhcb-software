@@ -1,4 +1,4 @@
-// $Id: DeOTDetector.cpp,v 1.27 2007-02-02 09:25:04 janos Exp $
+// $Id: DeOTDetector.cpp,v 1.28 2007-02-04 11:34:36 janos Exp $
 /// Kernel
 #include "Kernel/LHCbID.h"
 #include "Kernel/OTChannelID.h"
@@ -224,21 +224,21 @@ double DeOTDetector::propagationTime(const OTChannelID aChannel,
 OTChannelID DeOTDetector::nextChannelLeft(const OTChannelID aChannel) const {
   DeOTModule* aModule = findModule(aChannel);
   int nextLeft = aModule->nextLeftStraw(aChannel.straw());
-  return (nextLeft == 0) ? OTChannelID( 0u ) : OTChannelID( aChannel.station(),
-							    aChannel.layer(),
-							    aChannel.quarter(),
-							    aChannel.module(),
-							    nextLeft );
+  return (nextLeft == 0u) ? OTChannelID( 0u ) : OTChannelID( aChannel.station(),
+                                                             aChannel.layer(),
+                                                             aChannel.quarter(),
+                                                             aChannel.module(),
+                                                             nextLeft );
 }
 
 OTChannelID DeOTDetector::nextChannelRight(const OTChannelID aChannel) const {
   DeOTModule* aModule = findModule(aChannel);
   int nextRight = aModule->nextRightStraw(aChannel.straw());
-  return (nextRight == 0) ? OTChannelID( 0u ) : OTChannelID( aChannel.station(),
-							     aChannel.layer(),
-							     aChannel.quarter(),
-							     aChannel.module(),
-							     nextRight );
+  return (nextRight == 0u) ? OTChannelID( 0u ) : OTChannelID( aChannel.station(),
+                                                              aChannel.layer(),
+                                                              aChannel.quarter(),
+                                                              aChannel.module(),
+                                                              nextRight );
 }
 
 std::auto_ptr<LHCb::Trajectory> DeOTDetector::trajectoryFirstWire(const LHCb::LHCbID& id, 

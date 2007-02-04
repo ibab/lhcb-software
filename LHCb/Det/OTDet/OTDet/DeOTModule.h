@@ -1,4 +1,4 @@
-// $Id: DeOTModule.h,v 1.21 2007-02-02 09:25:04 janos Exp $
+// $Id: DeOTModule.h,v 1.22 2007-02-04 11:34:35 janos Exp $
 #ifndef OTDET_DEOTMODULE_H
 #define OTDET_DEOTMODULE_H 1
 
@@ -456,6 +456,7 @@ inline double DeOTModule::wireLength(const LHCb::OTChannelID aChan) const {
       return ((aChan.straw() <= m_nStraws)?m_ySizeModule-m_inefficientRegion:m_ySizeModule);
       /// check if it is bottom module
     } else if (aChan.quarter() < 2u) {
+      /// check if it is the first or second monolayer
       return ((aChan.straw() <= m_nStraws)?m_ySizeModule:m_ySizeModule-m_inefficientRegion);
     }
   } else {
@@ -506,7 +507,7 @@ inline Gaudi::XYZPoint DeOTModule::globalPoint(const double x,
 
 /// This gives you the x position of the wire
 inline double DeOTModule::localUOfStraw(const unsigned int aStraw) const {
-  int tmpStraw = (!monoLayerB(aStraw)?aStraw-1u:aStraw-m_nStraws-1u);
+  unsigned int tmpStraw = (!monoLayerB(aStraw)?aStraw-1u:aStraw-m_nStraws-1u);
   double uLeftStraw = (!monoLayerB(aStraw)?-(0.5*m_nStraws-0.25)
 		       :(-(0.5*m_nStraws-0.25)+0.5))*m_xPitch;
   return uLeftStraw + tmpStraw * m_xPitch;
@@ -553,14 +554,16 @@ inline Gaudi::Plane3D DeOTModule::exitPlane() const {
 
 inline unsigned int DeOTModule::hitStrawA(const double u) const {
   double dU = u - localUOfStraw(1);
-  unsigned int strawA = (unsigned int)(dU/m_xPitch + 1.5);
-  return std::min(std::max(1u ,strawA), m_nStraws);
+  // this can be negative!
+  int strawA = int(dU/m_xPitch + 1.5);
+  return std::min(std::max(1,strawA), int(m_nStraws));
 }
 
 inline unsigned int DeOTModule::hitStrawB(const double u) const {
   double dU = u - localUOfStraw(m_nStraws+1);
-  unsigned int strawB = m_nStraws + (unsigned int)(dU/m_xPitch + 1.5);
-  return std::min(std::max(m_nStraws + 1u,strawB),2*m_nStraws);
+  // this can be negative
+  int strawB = int(m_nStraws) + int(dU/m_xPitch + 1.5);
+  return std::min(std::max(int(m_nStraws) + 1,strawB),int(2*m_nStraws));
 }
 
 /// See LHCb note: 2003-019
