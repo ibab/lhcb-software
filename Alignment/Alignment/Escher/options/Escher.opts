@@ -12,11 +12,11 @@
 //*********************************
 // Instantiate Escher phases
 //*******************************
-ApplicationMgr.TopAlg += { //"ProcessPhase/Init",
-			   "ProcessPhase/Selection" //select tracks
-			   //"ProcessPhase/Alignment", //alignment algorithm
-			   //"ProcessPhase/Monitoring",//monitor alignment
-			   ,"ProcessPhase/Output" //store selected tracks
+ApplicationMgr.TopAlg += { "ProcessPhase/Init",
+			   "ProcessPhase/Selection", 	//select tracks
+			   "ProcessPhase/Alignment", 	//alignment algorithm
+			   "ProcessPhase/Monitoring",	//monitor alignment
+			   "ProcessPhase/Output" 	//store selected tracks
 };
 
 #include "$ESCHEROPTS/Alignment.opts"

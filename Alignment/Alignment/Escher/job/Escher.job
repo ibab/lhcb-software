@@ -45,7 +45,7 @@ endif
 set current = $PWD
 #
 # set location of DaVinci executable
-set Dversion = "v1r0"
+set Dversion = "v1r2"
 setenv MYJOBROOT $HOME/cmtuser/Alignment/Escher/$Dversion
 
 # == set the program environment

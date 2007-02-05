@@ -1,9 +1,57 @@
+Init.DetectorList += {
+};
+
 Selection.DetectorList += {
 	"TStation"
 };
-ApplicationMgr.DLLs += { "TAlignment", "SelectorTools"};
+
+Alignment.DetectorList += {
+       "IT"
+};
+
+ApplicationMgr.DLLs += { 
+			"AlignTrTools"
+			, "AlignmentTools"
+			, "TrackTools"
+};
+ApplicationMgr.DLLs += { 
+			"VeloTools"
+			,"STTools"
+			,"TAlignment"
+};
+
+
+// Data on demand service for decoding RawBuffer
+ApplicationMgr.ExtSvc += { "DataOnDemandSvc" };
+#include "$STDOPTS/DecodeRawEvent.opts"
+
+
+#include "$VELOTOOLSROOT/options/VeloClusterPosition.opts"
+#include "$STTOOLSROOT/options/Brunel.opts"
+
 SelectionTStationSeq.Members += { "TStation/OT" };
 OT.OTTrackContainer = "Alignment/OTTracks";
+
+
+//AlignmentOTSeq.Members += { "GAlign/Align" };
+AlignmentITSeq.Members += {"GAlign/Align"};
+
+Align.Detectors = {"Velo", "IT", "TT", "OT"};
+Align.Velo_left_modules  = {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
+Align.Velo_right_modules = {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
+
+Align.InputContainer = "Rec/Track/Best";
+Align.MillepedeTool = "Millepede";
+
+Align.OT_layer = true;
+Align.IT_layer = true;
+Align.TT_layer = true;
+
+
+//Align.InputContainer = "Rec/Track/Best";
+//Align.Detectors += {"OT"};
+//Align.MillepedeTool = "Millepede";
+
 //SelectionTStationSeq.Members += { "TStation/IT" };
 //IT.ITTrackContainer = "Alignment/ITTracks";
 

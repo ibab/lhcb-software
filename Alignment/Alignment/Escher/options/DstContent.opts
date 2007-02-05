@@ -8,7 +8,7 @@ Output.DetectorList += { "DST" };
 // Define DST content for Brunel real data
 
 // Include rDST objects
-#include "$STDOPTS/rDstContent.opts"
+//#include "$STDOPTS/rDstContent.opts"
 
 DstWriter.ItemList += {
 	"/Event#1"

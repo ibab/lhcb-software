@@ -19,7 +19,7 @@ MagneticFieldSvc.FieldMapFile = "$FIELDMAPROOT/cdf/field047.cdf";
 //---------------------------------------------------------------------------
 // Number of events to process, optionally skipping some events
 //---------------------------------------------------------------------------
-ApplicationMgr.EvtMax = -1;
+ApplicationMgr.EvtMax = 1;
 //EventSelector.FirstEvent = 187;  // To skip some events
 //---------------------------------------------------------------------------
 // Histogram output
@@ -34,7 +34,7 @@ HistogramPersistencySvc.OutputFile = "Escher_0601-11144100.root";  // Monitoring
   // ,"xmlcatalog_http://cattanem.home.cern.ch/cattanem/POOL/MyCatalog.xml"
 //};
 EventSelector.Input   = {
-  "DATAFILE='PFN:/afs/cern.ch/lhcb/group/davinci/vol1/jpalac/Brunel/v30r6/0601-11144100.rdst' TYP='POOL_ROOTTREE' OPT='READ'"
+  "DATAFILE='PFN:/software/production/DC06/v1-lumi2/00001395/DST/0001/00001395_00000110_5.dst' TYP='POOL_ROOTTREE' OPT='READ'"
 };
 //---------------------------------------------------------------------------
 // Event output
