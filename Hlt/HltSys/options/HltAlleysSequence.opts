@@ -385,7 +385,8 @@ HltMuonTriggerDiMuons.IsTrigger = true ;
 
 // L0CaloEntry.L0ChannelsName = {"calorimeter"};
 L0CaloEntry.OutputLevel = 3;
-L0CaleEntry.NoFilterPeriod = 1;
+L0CaloEntry.L0ChannelsName = {"electron","photon","localPi0","globalPi0"};
+//L0CaleEntry.NoFilterPeriod = 0;
 
 //------- the Calorimeter PreTrigger ------------
 //HltCaloPreTrigger0.NoFilterPeriod = 1;
