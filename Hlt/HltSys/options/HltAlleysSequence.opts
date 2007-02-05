@@ -26,7 +26,7 @@ Hlt.Members += {"PatInitEvent",
 //HltEnd.onTES = false;
 //HltEnd.onTES = false;
 
-HltAllAlleys.Members+={
+HltAllAlleys.Members ={
   "HltSequencer/HltMuonAlley"
   ,"HltSequencer/HltHadAlley"
   ,"HltSequencer/HltCaloAlley"

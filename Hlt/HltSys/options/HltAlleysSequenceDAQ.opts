@@ -1,3 +1,11 @@
 #include "HLTSYSROOT/options/HltAlleysSequence.opts"
 
+
+HltAllAlleys.Members ={
+  "HltSequencer/HltMuonAlley"
+  ,"HltSequencer/HltHadAlley"
+  //  ,"HltSequencer/HltCaloAlley"
+};
+
 L0HadEntry.L0ChannelsName = {"hadron","electron","photon","localPi0","globalPi0"};
+
