@@ -71,6 +71,7 @@ PatPV2D.OutputVerticesName = "Hlt/Vertex/PV2D";
 HltRecoVeloSeq.Members += { "HltTracking/HltRecoVelo",
                             "PatPV3D"
 };
+PatPV3D.InputTracksName = "Hlt/Track/Velo";
 PatPV3D.OutputVerticesName = "Hlt/Vertex/PV3D";
 
 // Decode TT
@@ -89,6 +90,8 @@ createITLiteClusters.detType = "IT";
 
 // VeloTT
 //----------------
+
+//TODO: should be this be here or in the sequencer?
 
 PatHltHadRecoIPVeloTT.triggerQuality = true;
 // Use global reduction factor and max chi2 cut to vary the track quality
