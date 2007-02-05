@@ -4,6 +4,9 @@
 ! Purpose     : Decision Algorithms for the muon trigger
 !-----------------------------------------------------------------------------
 
+! 2007-02-05 - Jose A. Hernando
+ - src/*DiMuons.cpp chaning info() to debug() for dd printout
+
 ! ======================== HltMuonAlley v1r2 2007-01-11 ======================
 ! 2007-01-11 - Marco Cattaneo
  - Use DECLARE_xxx_FACTORY macros

@@ -1,4 +1,4 @@
-// $Id: HltMuonTriggerDiMuons.cpp,v 1.4 2006-10-30 08:39:45 asatta Exp $
+// $Id: HltMuonTriggerDiMuons.cpp,v 1.5 2007-02-05 09:21:19 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -193,7 +193,7 @@ StatusCode HltMuonTriggerDiMuons::execute() {
     //fillHisto(h_IP,p,1.0);
     setDecisionType(HltEnums::JPsi);
     saveInSummary(m_selevertices);
-    info()<<" dd "<<m_selevertices.size()<<endreq;
+    debug()<<" dd "<<m_selevertices.size()<<endreq;
     
   }
   
