@@ -1,0 +1,50 @@
+//------------------------------
+// DLLs and main HLT Sequencer
+//-----------------------------
+
+Hlt.MeasureTime = true;
+Hlt.Members = {"PatInitEvent",
+               "HltInit",
+               "GaudiSequencer/HltReco",
+               "HltEnd"
+};
+
+HltReco.Members+={
+  "GaudiSequencer/HltRecoVeloRZSeq",
+  "HltTracking/HltRecoVelo",
+  "GaudiSequencer/HltDecodeTT",
+  "HltTracking/HltRecoVeloTT",
+  "GaudiSequencer/HltDecodeT",
+  "HltTracking/HltRecoForward"
+};
+
+// HltRecoVelo.InputTracksName = "Rec/Track/RZVelo";
+HltRecoVelo.OutputTracksName = "Hlt/Track/Velo";
+HltRecoVelo.RecoName = "Velo";
+HltRecoVelo.HistogramUpdatePeriod = 0;
+HltRecoVelo.OutputLevel = 3;
+
+//HltRecoVeloTT.InputTracksName = "Hlt/Track/Velo";
+HltRecoVeloTT.OutputTracksName = "Hlt/Track/VeloTT";
+HltRecoVeloTT.RecoName = "VeloTT";
+HltRecoVeloTT.HistogramUpdatePeriod = 0;
+HltRecoVeloTT.OutputLevel = 3;
+
+// Use online Pat-Conditions
+PatHltRecoVeloTT.triggerQuality = true;
+// Use global reduction factor and max chi2 cut to vary the track quality
+PatHltRecoVeloTT.globalReductionFactor = 1.;
+PatHltRecoVeloTT.maxChi2 = 256.;
+PatHltRecoVeloTT.minMomentum = 2000.;
+PatHltRecoVeloTT.DxGroupFactor = 0.0;
+
+PatHltRecoVeloTT.removeUsed = false;
+PatHltRecoVeloTT.OutputLevel = 3;
+
+// HltRecoForward.InputTracksName = "Hlt/Track/Velo";
+HltRecoForward.OutputTracksName = "Hlt/Track/Forward";
+HltRecoForward.RecoName = "Forward";
+HltRecoForward.HistogramUpdatePeriod = 0;
+HltRecoForward.OutputLevel = 3;
+
+

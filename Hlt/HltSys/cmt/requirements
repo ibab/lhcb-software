@@ -14,3 +14,8 @@ use HltRecChecker       v1r1    Hlt   # Jose Angel Hernando-Morata
 use HltMuon             v1r2    Hlt   # Alessia Satta
 use HltMuonAlley        v1r2    Hlt   # Alessia Satta
 use HltCaloAlley        v1r1    Hlt   # Stefano Villa
+
+# use HltHadL0Conf        v*    Hlt   # Jose Angel Hernando-Morata
+# use HltPython           v*    Hlt   # Jose Angel Hernando-Morata
+
+# use HltRecChecker	v*	Hlt	# Jose Angel Hernando-Morata

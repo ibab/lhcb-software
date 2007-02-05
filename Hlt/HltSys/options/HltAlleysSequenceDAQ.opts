@@ -1,0 +1,3 @@
+#include "HLTSYSROOT/options/HltAlleysSequence.opts"
+
+L0HadEntry.L0ChannelsName = {"hadron","electron","photon","localPi0","globalPi0"};

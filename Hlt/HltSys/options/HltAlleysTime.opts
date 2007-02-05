@@ -1,0 +1,41 @@
+
+//---------------------------
+// HLT
+//--------------------------
+
+Hlt.MeasureTime = true;
+HltAllalleys.MeasureTime=true;
+
+//-----------------------------
+// HLT Common reconstruction
+//-----------------------------
+
+HltRecoVeloRZSeq.MeasureTime = true;
+HltRecoVeloSeq.MeasureTime = true;
+HltDecodeTT.MeasureTime = true;
+HltDecodeT.MeasureTime = true;
+
+//----------------------------
+//  HLT Hadron Alley
+//----------------------------
+
+HltHadAlley.MeasureTime = true;
+HltHadPreTrigger.MeasureTime = true;
+
+//----------------------------
+//  HLT Muon Alley
+//----------------------------
+
+HltMuonAlley.MeasureTime = true;
+
+HltMuonPreTrigger.MeasureTime = true;
+HltMuonPreTriggerSingleMuon.MeasureTime = true;
+HltMuonTrigger.MeasureTime = true;
+HltMuonTriggerSingleMuon.MeasureTime = true;
+
+//----------------------------
+//  HLT Calo Alley
+//----------------------------
+HltCaloAlley.MeasureTime = true;
+
+HltCaloPreTrigger.MeasureTime = true;
