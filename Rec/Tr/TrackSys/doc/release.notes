@@ -4,6 +4,7 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+!============================ TrackSys v4r1 2007-02-05 ======================
 ! 2007-01-29 - David Hutchcroft
  - Added VeloOpenTracking.opts which retunes the VELO pattern recognition for 
    the open VELO case
