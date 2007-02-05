@@ -5,7 +5,7 @@
  * Implementation file for class : RichHPDPixelClusteringTool
  *
  * CVS Log :-
- * $Id: RichHPDPixelClusteringTool.cpp,v 1.3 2007-02-02 21:38:39 jonrob Exp $
+ * $Id: RichHPDPixelClusteringTool.cpp,v 1.4 2007-02-05 15:02:35 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date   21/03/2006
@@ -110,5 +110,5 @@ HPDPixelClusteringTool::findClusters( LHCb::RichSmartID::Vector & smartIDs ) con
   } // pixel loop
 
   // finally, return a shared auto smart pointer to this cluster object
-  return Rich::HPDPixelClusters::ConstSharedPtn(pixelData);
+  return HPDPixelClusters::ConstSharedPtn(pixelData);
 }

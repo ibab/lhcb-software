@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::DAQ::HPDPixelClusteringTool
  *
  *  CVS Log :-
- *  $Id: RichHPDPixelClusteringTool.h,v 1.3 2007-02-02 21:38:39 jonrob Exp $
+ *  $Id: RichHPDPixelClusteringTool.h,v 1.4 2007-02-05 15:02:35 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   21/03/2006
@@ -44,6 +44,8 @@ namespace Rich
      *
      *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
      *  @date   21/03/2006
+     *
+     *  @todo Review if it is really need to sort the HPD hits each time (should not)
      */
     //-----------------------------------------------------------------------------
 
