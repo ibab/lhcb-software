@@ -13,3 +13,11 @@
 		       AlignmentInterfaces v1r0
 	 	       AlignTrTools        v2r1
 		       TAlignment	   v1r1
+! 05/02/2007 Johan Blouw
+
+- this version uses:
+		AlignmentInterfaces v1r0
+		AlignmentTools      v2r3
+	        AlignTrTools        v2r2
+                Escher		    v1r2
+                EscherSys           v1r1
