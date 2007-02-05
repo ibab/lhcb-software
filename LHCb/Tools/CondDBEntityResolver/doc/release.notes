@@ -3,8 +3,9 @@
 ! Responsible : Marco Clemencic
 ! Purpose     : Implement the IXmlEntityREsolver interface to be able to use
 !               CondDB URLs into xml documents
-! $ Id: $
 !-----------------------------------------------------------------------------
+
+================= Tools/CondDBEntityResolver v3r1 2007-02-04 =================
 
                    ==== NEEDS Tools/XmlTools v4r1 ====
 
