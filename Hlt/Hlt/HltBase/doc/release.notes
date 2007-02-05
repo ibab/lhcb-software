@@ -4,5 +4,49 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2007-02-05 - Jose Angel Hernando Morata
+ - src/HltBaseAlg.cpp: default: do not book generic histogram
+ - HltBase/HltAlgorithm.h HltBaseAlg.h add comments to methods
+
+
 ! 2007-01-16 - Jose Angel Hernando Morata
- - Hlt/HltFunctions.cpp: bug in sortByPt, consider key of track if two trackshas the same Pt
+ - HltBase/HltFunctions.cpp: bug in sortByPt, consider key of track if two trackshas the same Pt
+
+!========================= Hlt/HltBase v2r0 2006-12-14 =====================
+! 2006-12-06 - Florence RANJARD
+ - apply_pattern install_more_includes
+
+! 2006-12-24 - Jose A. Hernando
+	- HltBase/HltUtils : function to compare two tracks via its LHCbIDs
+  - HltBase/ESequences : algos to count the number of objts
+  - HltBase/HltAlgorithm : minor changes to simplify use with the summary
+
+!========================== Hlt/HltBase v1r1 2006-11-03 ======================
+! 2006-10-25 - Jose A. Hernando
+	- HltBase/HltAlgorithm : minor changes
+
+! 2006-10-23 - Jose A. Hernando
+	- HltBase/HltMonitorAlgorithm : base class to monitor from HltSummary
+  - HltBase/ERelations : helper class to keep relations 
+
+!========================== Hlt/HltBase v1r0 2006-09-26 ======================
+
+ - HltBase/HltAlgorithm.h : the base class for HLT algorithm
+     - deals with input/output tracks and vertices
+     - deals with the summary
+     - deals with input/output histograms and upgrading them
+     - deals with the conditions
+ - HltBase/HltContainers.h : containers used in HLT (normal std::vector)
+ - HltBase/IHltDataStore.h : interface to a storege tools
+     - that holds the collections of tracks and vertex (logical) containers
+     - and the summary
+ - HltBase/HltUtils.h: common c-functions used in HLT
+ - HltBase/HltFunctions.h : common functions used in HLT
+ - HltBase/HltSequences.h : common loop in containers in HLT
+ - HltBase/EFunctions.h: template funtions (a la LoKi)	
+ - HltBase/ESequences.h: template loops in containers (a la LoKi)
+ - HltBase/ParserDescriptor.h : helper class to parser a string option
+
+ - src/HltAlgorithm.cpp : code of the base class
+ - src/HltUtils.cpp     : code of the c-functions of the HLT
+ - src/ParseDescriptor.cpp : helper code to parse a strip option

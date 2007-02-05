@@ -1,4 +1,4 @@
-// $Id: HltBaseAlg.h,v 1.1 2006-12-20 09:32:44 hernando Exp $
+// $Id: HltBaseAlg.h,v 1.2 2007-02-05 08:40:16 hernando Exp $
 #ifndef HLTBASE_HLTBASEALG_H 
 #define HLTBASE_HLTBASEALG_H 1
 
@@ -11,8 +11,19 @@
 
 /** @class HltBaseAlg 
  *  
- *  Base class for HLT algorithms
- *  extra functionality from Gaudi:
+ *  Base class for HLT algorithms adding extra functionality from Gaudi:
+ *
+ *  functionality:
+ *       Histogram booking via options
+ *       Filling histogram in a given period
+ *       Counters of input, accepted events
+ *
+ *  Options:
+ *       PassPeriod: period to always accept/pass the algorithm
+ *       HistogramUpdatePeriod: period to fill histograms
+ *       ConditionsName: path to the conditions of the derived algorithm
+ *       HistoDescriptor: a list of strings to book histograms
+ *              i.e MyAlgo.HistoDescriptor = {"PT,100,0.,5000."};
  *
  *  @author Hugo Ruiz Perez
  *  @author Jose Angel Hernando Morata
@@ -29,21 +40,40 @@ public:
 
   virtual ~HltBaseAlg( ); ///< Destructor
 
+  /** initialize algorithm
+   *     initialize message level, generic counters, and conditions
+   **/
   virtual StatusCode initialize();
+
+  /** execute algorithm
+   *  Note: call HltBaseAlg::beginExecute(), HltBaseAlg::endExecute() 
+   * at the begin and end of your algorithm
+   **/
   virtual StatusCode execute   ();
+
+  /** finalize algorithm
+   *  print info of passed/accepted events
+   **/
   virtual StatusCode finalize  ();
 
 protected:
 
+  /** begin the execution
+   * always call it at the begining of your execution method
+   * increase counters, set monitor and filter pass according with the
+   * PassPeriod and HitogramUpdatePeriod options
+   * set decision (pass algo) to false (except if the filter pass flag is on,
+   *                                    in that case it is set to true)
+   **/
   virtual bool beginExecute();
   
+  /** end of the execution
+   * always call at the end of your execution method
+   * increase counter, and set decsion (pass) to true
+   **/
   virtual bool endExecute();
 
 protected:
-
-  //-----------------------
-  // stop and error methods
-  //-----------------------
 
   // check that this a required container it is not null
   template <class CON>
@@ -60,7 +90,7 @@ protected:
     return (t != NULL);
   }
 
-  // getting out of the execute method, print a message or send a error
+  // stop the execute method, print a message or send a error
   inline StatusCode stop(const std::string& message, bool err = false)
   {
     if (err) error() << message << endreq;
@@ -70,13 +100,10 @@ protected:
 
 protected:
 
-  //---------------------------------------------
-  // methods dealing with histograms and counters 
-  //---------------------------------------------
-
+  // typedef to histogram
   typedef AIDA::IHistogram1D* HltHisto;
 
-  // Counter class
+  // Internal counter class
   // TODO: to be revisit, we should use histogram instead
   class HltCounter {
   public:
@@ -117,24 +144,30 @@ protected:
   //                      float weight);
 
 
-  // initialize Histos from descritor
+  /** initialize Histos from descritor
+   *  histograms will be book using the HistoDescriptor option
+   **/
   void initializeHistosFromDescriptor();
   
-  // initialize and book this histogram
-  // the booking can be changed via options using the HisDescriptor
+  /** initialize and book this histogram
+   *  the booking can be changed via options using the HisDescriptor
+   **/
   void initializeHisto( HltHisto& histo, const std::string& name,
                         float min = 0., float max = 100., int nBins = 100 );
   
-  // fill histogram with this wait
-  // it will be filled with the period set by options
+  /** fill histogram with this wait
+   *  it will be filled only when the monitor flag is on 
+   *  this flag it is controlled by the HitogramUpdatePeriod option
+   **/
   void fillHisto( HltHisto& histo, float x, float weight );
 
 
-  // initialize counter
-  // TODO: revisit
+  /** initialize counter
+   * TODO: revisit
+  **/
   void initializeCounter( HltCounter& counter, const std::string& name );
   
-  // increase counter
+  /// increase counter
   void increaseCounter( HltCounter& counter, int increase = 1);
   
   
@@ -144,10 +177,12 @@ protected:
   // Formated text messages, print also fraction of events
   void infoSubsetEvents   ( int nEventsInSubset, int  nTotEvts, 
                             const std::string& subsetName );
-  
+
+  // Formated text messages, print also fraction of events  
   void infoInputObjects   ( int nInputObjects, int  nTotEvts, 
                             const std::string& objectsName  );  
 
+  // Formated text messages, print also fraction of events
   void infoAcceptedObjects( int nAcceptedObjects, int  nTotEvts, 
                             const std::string& objectsName );
 
@@ -178,9 +213,9 @@ protected:
     return (n>0);
   }
 
-
-  // fill the histogram with the info stored in the objects of the container
-  // intended to do internal monitoring, before we apply any cut
+  /** fill the histogram with the info stored in the objects of the container
+   * intended to do internal monitoring, before we apply any cut
+  **/
   template <class INPUT >
   void monitor(INPUT& con, int key, HltHisto& histo){
     if (!m_monitor) return;
@@ -193,6 +228,7 @@ protected:
   
 protected:
 
+  // Counters of events
   HltCounter m_counterEntries;
   HltCounter m_counterOverruled;
   HltCounter m_counterPassed;
@@ -202,19 +238,20 @@ protected:
   // Minimum number of candidates needed to set filterPassed to true
   long m_nCandidates;
 
+  // increasing the number of candidates
   void candidateFound() { m_nCandidates++; };
 
   // The period to always return a positive decision
   int m_passPeriod;
 
   // always force a positive decision of the algorithms 
-  // (controlled by options)
+  // (controlled by PassPeriod option)
   bool m_filter;
 
-  // monitor this event (depends on a period set by options)
+  // monitor this event (depends on HistogramUpdatePeriod option)
   bool m_monitor;
 
-  // setting the decision, inform Gaudi about the decision
+  // setting the decision, set FilterPass to inform the Gaudi sequencer
   inline void setDecision(bool ok) {
     if (m_filter) setFilterPassed(ok);
     debug() << " set decision " << ok << endreq;
@@ -224,7 +261,6 @@ protected:
 
   // initialize the Msg service
   void initMsg();
-  
   
   // initialize the conditions
   bool initConditions();
@@ -260,7 +296,6 @@ protected:
 
   // internal method to deal with the conditions
   StatusCode i_cacheConditions();
-
     
   // pointer to conditions
   Condition* m_conditions;

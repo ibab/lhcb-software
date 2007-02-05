@@ -1,4 +1,4 @@
-// $Id: HltBaseAlg.cpp,v 1.3 2007-02-01 16:05:31 villas Exp $
+// $Id: HltBaseAlg.cpp,v 1.4 2007-02-05 08:40:16 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -227,6 +227,8 @@ void HltBaseAlg::infoAcceptedObjects(int nAcceptedObjects, int  nTotEvts,
 
 void HltBaseAlg::initializeHistosFromDescriptor() {
 
+  if (m_histogramUpdatePeriod == 0) return;
+
   const std::vector<std::string>& hdes = m_histoDescriptor.value();
   for (std::vector<std::string>::const_iterator it = hdes.begin();
        it != hdes.end(); it++){
@@ -249,6 +251,8 @@ void HltBaseAlg::initializeHisto( HltHisto& histo,
                                   const std::string& title,
                                   float x0, float xf, int nbins) {
   
+  if (m_histogramUpdatePeriod == 0) return;
+
   const std::vector<std::string> values = m_histoDescriptor.value();
   for (std::vector<std::string >::const_iterator it = values.begin();
        it != values.end(); ++it) {
@@ -275,13 +279,16 @@ void HltBaseAlg::fillHisto( HltHisto& histo, float x, float weight) {
 void HltBaseAlg::initializeCounter ( HltCounter& counter, 
                                      const std::string& inputString) { 
   counter.m_name = inputString;
-  initializeHisto(counter.m_histo,inputString,0.,1.,1);
+  counter.m_histo = NULL;
+  if (m_histogramUpdatePeriod >0)
+    initializeHisto(counter.m_histo,inputString,0.,1.,1);
   counter.m_counter = 0;
 };
 
 void HltBaseAlg::increaseCounter( HltCounter& count, int increase) {
   count.m_counter += increase;
-  this->fill( count.m_histo, 0.5, 1.*increase);  
+  if (count.m_histo)
+    this->fill( count.m_histo, 0.5, 1.*increase);  
   return;
 }
 

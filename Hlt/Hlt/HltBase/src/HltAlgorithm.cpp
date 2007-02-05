@@ -1,4 +1,4 @@
-// $Id: HltAlgorithm.cpp,v 1.5 2006-12-20 09:32:46 hernando Exp $
+// $Id: HltAlgorithm.cpp,v 1.6 2007-02-05 08:40:16 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -65,10 +65,10 @@ StatusCode HltAlgorithm::initialize() {
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   if (m_selectionSummaryName != "") {
-    info() << " selection summary Name " << m_selectionSummaryName << endreq;
     m_selectionSummaryID = 
       HltNames::selectionSummaryID(m_selectionSummaryName);
-    info() << " selection summary ID " << m_selectionSummaryID << endreq;
+    info() << " selection summary Name " << m_selectionSummaryName 
+           << "  ID " << m_selectionSummaryID << endreq;
   }
   
   bool ok = true;

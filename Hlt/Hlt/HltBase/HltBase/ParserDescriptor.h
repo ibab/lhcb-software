@@ -1,4 +1,4 @@
-// $Id: ParserDescriptor.h,v 1.1.1.1 2006-09-26 12:57:36 cattanem Exp $
+// $Id: ParserDescriptor.h,v 1.2 2007-02-05 08:40:16 hernando Exp $
 #ifndef HLTBASE_PARSEDESCRIPTOR_H 
 #define HLTBASE_PARSEDESCRIPTOR_H 1
 
@@ -9,6 +9,7 @@
 
 /** @class ProperyHistos ProperyHistos.h HltBase/ProperyHistos.h
  *  
+ *  Helper class to book histogram from a string
  *
  *  @author Jose Angel Hernando Morata
  *  @date   2006-03-01
