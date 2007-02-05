@@ -1,4 +1,4 @@
-// $Id: TestCacheInjection.cpp,v 1.9 2006-08-31 13:53:44 marcocle Exp $
+// $Id: TestCacheInjection.cpp,v 1.10 2007-02-05 19:05:13 marcocle Exp $
 // Include files 
 
 // from Gaudi
@@ -54,10 +54,10 @@ StatusCode TestCacheInjection::initialize() {
     if ( !sc.isSuccess() ) return sc;
 
     info() << "*** register conditions ***" << endreq;
-    registerCondition<TestCacheInjection>("/dd/CacheTest/Object1",m_cond1);
-    registerCondition<TestCacheInjection>("/dd/CacheTest/Object2",m_cond2);
-    registerCondition<TestCacheInjection>("/dd/CacheTest/Object3",m_cond3);
-    registerCondition<TestCacheInjection>("/dd/CacheTest/Object4",m_cond4);
+    registerCondition<TestCacheInjection>("CacheTest/Object1",m_cond1);
+    registerCondition<TestCacheInjection>("CacheTest/Object2",m_cond2);
+    registerCondition<TestCacheInjection>("CacheTest/Object3",m_cond3);
+    registerCondition<TestCacheInjection>("CacheTest/Object4",m_cond4);
   }
   catch (GaudiException) {
     return StatusCode::FAILURE;
@@ -138,7 +138,25 @@ StatusCode TestCacheInjection::finalize() {
 //=========================================================================
 StatusCode TestCacheInjection::i_injectData() {
 
-  // add a couple of folders
+  // add the main catalog entry
+  if (!m_dbAccSvc->cacheAddXMLFolder("/lhcb.xml")) return StatusCode::FAILURE;
+  if (!m_dbAccSvc->
+      cacheAddXMLData("/lhcb.xml",
+                      Gaudi::Time::epoch(),Gaudi::Time::max(),
+                      "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+                      "<!DOCTYPE DDDB SYSTEM \"structure.dtd\">\n"
+                      "<DDDB> \n"
+                      "  <catalog name=\"dd\">\n"
+                      "    <catalog name=\"CacheTest\">\n"
+                      "      <conditionref href=\"test/cache/folder1#Object1\"/>\n"
+                      "      <conditionref href=\"test/cache/folder2#Object2\"/>\n"
+                      "      <conditionref href=\"test/cache/folder3#Object3\"/>\n"
+                      "      <conditionref href=\"test/cache/folder3:1#Object4\"/>\n"
+                      "    </catalog>\n"
+                      "  </catalog>\n"
+                      "</DDDB>\n"));
+
+  // add a few of folders
   if (!m_dbAccSvc->cacheAddXMLFolder("/test/cache/folder1")) return StatusCode::FAILURE;
   if (!m_dbAccSvc->cacheAddXMLFolder("/test/cache/folder2")) return StatusCode::FAILURE;
   if (!m_dbAccSvc->cacheAddXMLFolder("/test/cache/folder3")) return StatusCode::FAILURE;

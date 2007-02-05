@@ -3,11 +3,12 @@
 
 // Detector Persistency service setup: 
 DetectorDataSvc.UsePersistency = true;
-DetectorDataSvc.DetDbLocation  = "$XMLDDDBROOT/DDDB/lhcb-200601.xml";
+//DetectorDataSvc.DetDbLocation  = "$XMLDDDBROOT/DDDB/lhcb-200601.xml";
+//DetectorDataSvc.DetDbLocation  = "/scratch/marcocle/Devel/test1/LHCb_v22r0/Det/SQLDDDB/v1r0/tmp/Det/SQLDDDB_BackUp/DDDB.test/lhcb.xml";
 DetectorDataSvc.DetDbRootName  = "dd";
 DetectorDataSvc.DetStorageType = 7;
 
-DetectorPersistencySvc.CnvServices += { "CondDBCnvSvc" };
+//DetectorPersistencySvc.CnvServices += { "CondDBCnvSvc" };
 CondDBAccessSvc.ConnectionString = "$CONDDBCONNECTIONSTRING";
 
 XmlCnvSvc.AllowGenericConversion = true;
@@ -48,5 +49,6 @@ CondDBAccessSvc.CheckTAGTrials = 10;
 CondDBAccessSvc.CheckTAGTimeOut = 5;
 
 LoadDDDB.Node = "/dd/Conditions*";
+LoadDDDB.Node = "/dd*";
 DumpDetectorStore.DumpConditions = true;
 

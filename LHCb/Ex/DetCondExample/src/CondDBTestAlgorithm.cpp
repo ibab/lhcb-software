@@ -1,4 +1,4 @@
-// $Id: CondDBTestAlgorithm.cpp,v 1.19 2007-02-02 18:17:36 marcocle Exp $
+// $Id: CondDBTestAlgorithm.cpp,v 1.20 2007-02-05 19:05:13 marcocle Exp $
 // Include files 
 
 // from Gaudi
@@ -38,7 +38,7 @@ CondDBTestAlgorithm::CondDBTestAlgorithm( const std::string& name,
     m_avg_temp(-1e20),
     m_evtCount(0)
 {
-
+  declareProperty("TestDirectMapping",m_direct_mapping_test = true);
 }
 //=============================================================================
 // Destructor
@@ -181,16 +181,20 @@ StatusCode CondDBTestAlgorithm::execute() {
          << m_m12->matrix()
          << endmsg;
 
-  info() << "Test COOL FolderSets mapping to catalogs (get Conditions/Online/Cave)" << endmsg;
-  DataObject* dataObj = getDet<DataObject>("Conditions/Online/Cave");
+  if (m_direct_mapping_test){
+    
+    info() << "Test COOL FolderSets mapping to catalogs (get Conditions/Online/Cave)" << endmsg;
+    DataObject* dataObj = getDet<DataObject>("Conditions/Online/Cave");
   
-  if ( dataObj ) {
-    info() << "Found the DataObject " << dataObj->registry()->identifier() << endmsg;
-  } else {
-    error() << "DataObject not found!" << endmsg;
-    return StatusCode::FAILURE;
-  }
+    if ( dataObj ) {
+      info() << "Found the DataObject " << dataObj->registry()->identifier() << endmsg;
+    } else {
+      error() << "DataObject not found!" << endmsg;
+      return StatusCode::FAILURE;
+    }
 
+  }
+  
   info() << "Test self-referencing XML string (get Conditions/TestFolder/TestSubFolder/TestCondition)" << endmsg;
   Condition* testCond = getDet<Condition>("Conditions/TestFolder/TestSubFolder/TestCondition");
 

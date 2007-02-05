@@ -1,4 +1,4 @@
-// $Id: TestTimeOut.cpp,v 1.3 2006-09-21 13:15:47 marcocle Exp $
+// $Id: TestTimeOut.cpp,v 1.4 2007-02-05 19:05:13 marcocle Exp $
 // Include files 
 
 // from Gaudi
@@ -58,12 +58,12 @@ StatusCode TestTimeOut::execute() {
   info() << "Try to access the db..." << endmsg;
   DetectorElement *lhcb = getDet<DetectorElement>( "/dd/Structure/LHCb" );
   
-  Condition* alLHCb = lhcb->condition("SlowControl");
+  Condition* alLHCb = lhcb->condition("Temperature");
   if (alLHCb) {
-    info() << "Succesfully retrieved condition '" << lhcb->condition("SlowControl").path() << "'" << endmsg;
+    info() << "Succesfully retrieved condition '" << lhcb->condition("Temperature").path() << "'" << endmsg;
   }
   else {
-    error() << "Cannot retrieve condition '" << lhcb->condition("SlowControl").path() << "'" << endmsg;
+    error() << "Cannot retrieve condition '" << lhcb->condition("Temperature").path() << "'" << endmsg;
     return StatusCode::FAILURE;
   }
   

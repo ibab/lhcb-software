@@ -1,9 +1,9 @@
-//$Id: TestTimeOut.opts,v 1.4 2007-02-02 18:17:21 marcocle Exp $
+//$Id: TestTimeOut.opts,v 1.5 2007-02-05 19:05:13 marcocle Exp $
 //==============================================================
 // Job options to test connection time-out feature of CondDBAccessSvc
 //==============================================================
 
-#include "$DETCONDEXAMPLEROOT/options/common.opts"
+#include "$DETCONDEXAMPLEROOT/options/cool.opts"
 
 //--------------------------------------------------------------
 // Sequence of algorithms to be applied

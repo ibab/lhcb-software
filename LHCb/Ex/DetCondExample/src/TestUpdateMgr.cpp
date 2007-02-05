@@ -1,4 +1,4 @@
-// $Id: TestUpdateMgr.cpp,v 1.5 2006-01-19 18:32:11 marcocle Exp $
+// $Id: TestUpdateMgr.cpp,v 1.6 2007-02-05 19:05:13 marcocle Exp $
 // Include files 
 
 // from Gaudi
@@ -50,15 +50,15 @@ StatusCode TestUpdateMgr::initialize() {
 
   try {
     
-    registerCondition("/dd/SlowControl/LHCb/scLHCb",&TestUpdateMgr::i_updateMethod1);
-    registerCondition("/dd/SlowControl/LHCb/scLHCb",&TestUpdateMgr::i_updateMethod2);
-    registerCondition("/dd/SlowControl/Hcal/scHcal",&TestUpdateMgr::i_updateMethod3);
-    registerCondition("/dd/SlowControl/Hcal/scHcal",&TestUpdateMgr::i_updateMethod3);
-    registerCondition("/dd/SlowControl/Hcal/scHcal",&TestUpdateMgr::i_updateMethod2);
+    registerCondition("Conditions/Environment/LHCb/Temperature",&TestUpdateMgr::i_updateMethod1);
+    registerCondition("Conditions/Environment/LHCb/Temperature",&TestUpdateMgr::i_updateMethod2);
+    registerCondition("Conditions/Environment/Hcal/Temperature",&TestUpdateMgr::i_updateMethod3);
+    registerCondition("Conditions/Environment/Hcal/Temperature",&TestUpdateMgr::i_updateMethod3);
+    registerCondition("Conditions/Environment/Hcal/Temperature",&TestUpdateMgr::i_updateMethod2);
     
-    registerCondition("/dd/Structure/LHCb/Dummy",&TestUpdateMgr::i_updateMethod3);
+    registerCondition("Conditions/Environment/DummyDE/Temperature",&TestUpdateMgr::i_updateMethod3);
     
-    updMgrSvc()->registerCondition(&m_intermediate,"/dd/SlowControl/Hcal/scHcal",&InternalClass::myTinyMethod);
+    updMgrSvc()->registerCondition(&m_intermediate,"Conditions/Environment/Hcal/Temperature",&InternalClass::myTinyMethod);
     
     registerCondition(&m_intermediate,&TestUpdateMgr::i_updateMethod4);
 

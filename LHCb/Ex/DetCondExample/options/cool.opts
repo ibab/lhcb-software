@@ -2,6 +2,8 @@
 // Common job options to use a COOL in DetCondExample
 //==============================================================
 
+#include "$DETCONDEXAMPLEROOT/options/common.opts"
+
 //--------------------------------------------------------------
 // Detector Persistency Service Setup
 //--------------------------------------------------------------

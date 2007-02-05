@@ -1,0 +1,10 @@
+//$Id: testCondDB-XMLCache.opts,v 1.1 2007-02-05 19:05:13 marcocle Exp $
+//==============================================================
+// Job options for DetCondExample test of CondDB
+//==============================================================
+
+#include "$DETCONDEXAMPLEROOT/options/testCondDB.opts"
+
+DetectorPersistencySvc.CnvServices -= { "CondDBCnvSvc" };
+
+CondDBTestAlgorithm.TestDirectMapping = false;

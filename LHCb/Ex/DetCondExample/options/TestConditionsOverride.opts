@@ -1,11 +1,12 @@
-//$Id: TestConditionsOverride.opts,v 1.2 2007-02-02 18:17:21 marcocle Exp $
+//$Id: TestConditionsOverride.opts,v 1.3 2007-02-05 19:05:13 marcocle Exp $
 //==============================================================
 // Job options to test double CondDB usage in DetCondExample
 //==============================================================
 
-#include "$DETCONDEXAMPLEROOT/options/common.opts"
+#include "$DETCONDEXAMPLEROOT/options/cool.opts"
 
 DetectorDataSvc.DetDbLocation  = "$DETCONDEXAMPLE_XMLDDDB/multi.xml";
+XmlCnvSvc.DtdLocation = "$DETCONDEXAMPLE_XMLDDDB/DTD";
 
 //--------------------------------------------------------------
 // Sequence of algorithms to be applied
@@ -39,10 +40,8 @@ MessageSvc.OutputLevel = 1;
 //--------------------------------------------------------------
 // DetCond extra options
 //--------------------------------------------------------------
-ApplicationMgr.DLLs += { "DetCond" };
-
-//DetectorPersistencySvc.CnvServices += { "CondDBCnvSvc" };
-CondDBCnvSvc.CondDBReader = "CondDBAccessSvc/DB2"  ;
+ApplicationMgr.SvcOptMapping += { "CondDBAccessSvc/DB2" };
+CondDBCnvSvc.CondDBReader = "DB2"  ;
 
 DB2.ConnectionString     = "$CONDDBCONNECTIONSTRING2";
 

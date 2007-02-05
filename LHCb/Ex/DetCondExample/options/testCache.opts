@@ -1,12 +1,14 @@
-//$Id: testCache.opts,v 1.6 2007-02-02 18:17:21 marcocle Exp $
+//$Id: testCache.opts,v 1.7 2007-02-05 19:05:13 marcocle Exp $
 //==============================================================
 // Job options to test double CondDB usage in DetCondExample
 //==============================================================
 
-#include "$DETCONDEXAMPLEROOT/options/common.opts"
 #include "$DETCONDEXAMPLEROOT/options/cool.opts"
 
-DetectorDataSvc.DetDbLocation  = "$DETCONDEXAMPLE_XMLDDDB/cache.xml";
+DetectorDataSvc.DetDbLocation  = "/lhcb.xml";
+DetectorDataSvc.DetDbRootName  = "dd";
+DetectorDataSvc.DetStorageType = 9;
+XmlCnvSvc.DtdLocation = "$DETCONDEXAMPLE_XMLDDDB/DTD";
 
 // disable database access
 CondDBAccessSvc.UseCache = true;

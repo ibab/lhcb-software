@@ -1,9 +1,14 @@
 ! =============================================================================
-! $Id: release.notes,v 1.90 2007-01-23 07:54:54 cattanem Exp $
+! $Id: release.notes,v 1.91 2007-02-05 19:05:12 marcocle Exp $
 ! =============================================================================
 ! package Ex/DetCondExample
 ! package manager : Marco Clemencic
 ! =============================================================================
+
+!=========== Ex/DetCondExample v10r0 2007-02-05 ==============================
+! 2007-02-05 - Marco Clemencic
+ - Updated to a more recent version of DDDB (both XmlDDDB and XmlConditions)
+ - Added a test for the usage of XmlParserSvc cache with CondDB
 
 !=========== Ex/DetCondExample v9r4 2007-01-23 ==============================
 ! 2007-01-23 - Marco Cattaneo

@@ -7,6 +7,7 @@ source setup.csh
 
 foreach n ( testXml.opts \
 	    fillCondDB.opts testCondDB.opts testCondDB-COLD.opts \
+	    testCondDB-XMLCache.opts \
 	    testCache.opts testMultiDB.opts testLayers.opts \
 	    testUpdateMgr.opts testUMSError.opts \
 	    TestTimeOut.opts TestConditionsOverride.opts \

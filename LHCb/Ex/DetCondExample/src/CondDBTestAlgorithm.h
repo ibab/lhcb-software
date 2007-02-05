@@ -1,4 +1,4 @@
-// $Id: CondDBTestAlgorithm.h,v 1.6 2006-01-19 18:32:10 marcocle Exp $
+// $Id: CondDBTestAlgorithm.h,v 1.7 2007-02-05 19:05:13 marcocle Exp $
 #ifndef CONDDBTESTALGORITHM_H 
 #define CONDDBTESTALGORITHM_H 1
 
@@ -63,6 +63,8 @@ private:
   size_t m_evtCount;
 
   IDetDataSvc *m_dds;
+
+  bool m_direct_mapping_test;
 
 };
 #endif // CONDDBTESTALGORITHM_H

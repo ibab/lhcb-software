@@ -1,104 +1,52 @@
 JobOptionsSvc        INFO 
 //GP:================================================================================
 //GP: include ../options/testCache.opts                                       (0,0)
-//GP: include /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/options/common.opts (6,10)
-ApplicationMgr.DLLs =  [ "DetDescSvc" , "GaudiAlg" , "XmlTools" , "DetDescCnv" ] ;//GP: (11,1)
-ApplicationMgr.HistogramPersistency = "NONE";                           //GP: (14,1)
-MessageSvc.Format = "% F%25W%S%7W%R%T %0W%M";                           //GP: (21,1)
-DetectorDataSvc.UsePersistency = 1;                                     //GP: (26,1)
-DetectorDataSvc.DetDbLocation = "$DETCONDEXAMPLE_XMLDDDB/dddb.xml";     //GP: (27,1)
-DetectorDataSvc.DetDbRootName = "dd";                                   //GP: (28,1)
-DetectorDataSvc.DetStorageType = 7;                                     //GP: (29,1)
-XmlCnvSvc.AllowGenericConversion = 1;                                   //GP: (30,1)
-XmlCnvSvc.DtdLocation = "$DETCONDEXAMPLE_XMLDDDB/DTD";                  //GP: (31,1)
-DetectorPersistencySvc.CnvServices +=  [ "XmlCnvSvc" ] ;                //GP: (36,1)
-GaudiSequencer.MeasureTime = 1;                                         //GP: (41,1)
-//GP: end  /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/options/common.opts (47,1)
-//GP: include /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/options/cool.opts (7,10)
-ApplicationMgr.DLLs +=  [ "DetCond" ] ;                                 //GP: (10,1)
-CondDBAccessSvc.ConnectionString = "$CONDDBCONNECTIONSTRING";           //GP: (17,1)
-//GP: end  /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/options/cool.opts (27,1)
-DetectorDataSvc.DetDbLocation = "$DETCONDEXAMPLE_XMLDDDB/cache.xml";    //GP: (9,1)
-CondDBAccessSvc.UseCache = 1;                                           //GP: (12,1)
-CondDBAccessSvc.NoDB = 1;                                               //GP: (13,1)
-ApplicationMgr.TopAlg =  [ "Sequencer" ] ;                              //GP: (18,1)
-Sequencer.Members =  [  ] ;                                             //GP: (19,1)
-Sequencer.Members +=  [ "TestCacheInjection" ] ;                        //GP: (20,1)
-Sequencer.Members +=  [ "DumpDetectorStore" ] ;                         //GP: (21,1)
-ApplicationMgr.EvtSel = "NONE";                                         //GP: (27,1)
-ApplicationMgr.EvtMax = 3;                                              //GP: (30,1)
-EventClockSvc.FakeEventTime.StartTime = 5;                              //GP: (33,1)
-EventClockSvc.FakeEventTime.TimeStep = 10;                              //GP: (34,1)
-MessageSvc.OutputLevel = 1;                                             //GP: (42,1)
-ApplicationMgr.DLLs +=  [ "DetCond" ] ;                                 //GP: (47,1)
-DetectorPersistencySvc.CnvServices +=  [ "CondDBCnvSvc" ] ;             //GP: (49,1)
-//GP: end  ../options/testCache.opts                                          (51,1)
+//GP: include /scratch/marcocle/Devel/test1/LHCb_v22r0/Ex/DetCondExample/v9r4/options/cool.opts (6,10)
+//GP: include /scratch/marcocle/Devel/test1/LHCb_v22r0/Ex/DetCondExample/v9r4/options/common.opts (5,10)
+ApplicationMgr.HistogramPersistency = "NONE";                           //GP: (11,1)
+MessageSvc.Format = "% F%25W%S%7W%R%T %0W%M";                           //GP: (18,1)
+DetectorDataSvc.UsePersistency = 1;                                     //GP: (23,1)
+DetectorDataSvc.DetDbLocation = "$DETCONDEXAMPLE_XMLDDDB/lhcb.xml";     //GP: (24,1)
+DetectorDataSvc.DetDbRootName = "dd";                                   //GP: (25,1)
+DetectorDataSvc.DetStorageType = 7;                                     //GP: (26,1)
+XmlCnvSvc.AllowGenericConversion = 1;                                   //GP: (27,1)
+DetectorPersistencySvc.CnvServices +=  [ "XmlCnvSvc" ] ;                //GP: (32,1)
+GaudiSequencer.MeasureTime = 1;                                         //GP: (37,1)
+//GP: end  /scratch/marcocle/Devel/test1/LHCb_v22r0/Ex/DetCondExample/v9r4/options/common.opts (43,1)
+DetectorPersistencySvc.CnvServices +=  [ "CondDBCnvSvc" ] ;             //GP: (10,1)
+XmlParserSvc.EntityResolverSvc = "CondDBEntityResolverSvc";             //GP: (11,1)
+CondDBAccessSvc.ConnectionString = "$CONDDBCONNECTIONSTRING";           //GP: (18,1)
+//GP: end  /scratch/marcocle/Devel/test1/LHCb_v22r0/Ex/DetCondExample/v9r4/options/cool.opts (28,1)
+DetectorDataSvc.DetDbLocation = "/lhcb.xml";                            //GP: (8,1)
+DetectorDataSvc.DetDbRootName = "dd";                                   //GP: (9,1)
+DetectorDataSvc.DetStorageType = 9;                                     //GP: (10,1)
+XmlCnvSvc.DtdLocation = "$DETCONDEXAMPLE_XMLDDDB/DTD";                  //GP: (11,1)
+CondDBAccessSvc.UseCache = 1;                                           //GP: (14,1)
+CondDBAccessSvc.NoDB = 1;                                               //GP: (15,1)
+ApplicationMgr.TopAlg =  [ "Sequencer" ] ;                              //GP: (20,1)
+Sequencer.Members =  [  ] ;                                             //GP: (21,1)
+Sequencer.Members +=  [ "TestCacheInjection" ] ;                        //GP: (22,1)
+Sequencer.Members +=  [ "DumpDetectorStore" ] ;                         //GP: (23,1)
+ApplicationMgr.EvtSel = "NONE";                                         //GP: (29,1)
+ApplicationMgr.EvtMax = 3;                                              //GP: (32,1)
+EventClockSvc.FakeEventTime.StartTime = 5;                              //GP: (35,1)
+EventClockSvc.FakeEventTime.TimeStep = 10;                              //GP: (36,1)
+MessageSvc.OutputLevel = 1;                                             //GP: (44,1)
+ApplicationMgr.DLLs +=  [ "DetCond" ] ;                                 //GP: (49,1)
+//GP: end  ../options/testCache.opts                                          (52,1)
 //GP:================================================================================
 
 JobOptionsSvc        INFO Job options successfully read in from ../options/testCache.opts
 ApplicationMgr             DEBUG Getting my own properties
 ApplicationMgr           SUCCESS 
 ====================================================================================================================================
-                                                   Welcome to DetCondExample version v9r2
-                                          running on pclhcb55.cern.ch on Wed Oct 25 15:32:58 2006
+                                                   Welcome to DetCondExample version v9r4
+                                          running on pclhcb55.cern.ch on Mon Feb  5 19:57:40 2007
 ====================================================================================================================================
-ApplicationMgr              INFO Removed duplicate entries for modules : DetCond(2)
-DllClassManager            DEBUG Found factory Service UpdateManagerSvc
-DllClassManager            DEBUG Found factory Service TransportSvc
-DllClassManager            DEBUG Found factory PreloadGeometryTool
-ObjectManager              DEBUG Added object factory for class:PreloadGeometryTool
-DllClassManager            DEBUG Found factory FakeEventTime
-ObjectManager              DEBUG Added object factory for class:FakeEventTime
-DllClassManager            DEBUG Found factory Service EventClockSvc
-DllClassManager            DEBUG Found factory Service DetElemFinder
-DllClassManager            DEBUG Loaded 6 factories from module DetDescSvc
-DllClassManager            DEBUG Found factory TupleTool
-ObjectManager              DEBUG Added object factory for class:TupleTool
-DllClassManager            DEBUG Found factory SequencerTimerTool
-ObjectManager              DEBUG Added object factory for class:SequencerTimerTool
-DllClassManager            DEBUG Found factory HistoTool
-ObjectManager              DEBUG Added object factory for class:HistoTool
-DllClassManager            DEBUG Found factory Algorithm EventCounter
-DllClassManager            DEBUG Found factory Algorithm Prescaler
-DllClassManager            DEBUG Found factory Algorithm Sequencer
-DllClassManager            DEBUG Found factory Algorithm GaudiAlgorithm
-DllClassManager            DEBUG Found factory Algorithm GaudiSequencer
-DllClassManager            DEBUG Found factory ErrorTool
-ObjectManager              DEBUG Added object factory for class:ErrorTool
-DllClassManager            DEBUG Loaded 9 factories from module GaudiAlg
-DllClassManager            DEBUG Found factory Service XmlParserSvc
-DllClassManager            DEBUG Found factory Service XmlCnvSvc
-DllClassManager            DEBUG Loaded 2 factories from module XmlTools
-DllClassManager            DEBUG Found factory XmlTabulatedPropertyCnv
-ConverterFactory           DEBUG Added converter for class:XmlTabulatedPropertyCnv Storage id:7 clID:1300
-DllClassManager            DEBUG Found factory XmlSurfaceCnv
-ConverterFactory           DEBUG Added converter for class:XmlSurfaceCnv Storage id:7 clID:1110
-DllClassManager            DEBUG Found factory XmlMixtureCnv
-ConverterFactory           DEBUG Added converter for class:XmlMixtureCnv Storage id:7 clID:1203
-DllClassManager            DEBUG Found factory XmlLVolumeCnv
-ConverterFactory           DEBUG Added converter for class:XmlLVolumeCnv Storage id:7 clID:1100
-DllClassManager            DEBUG Found factory XmlIsotopeCnv
-ConverterFactory           DEBUG Added converter for class:XmlIsotopeCnv Storage id:7 clID:1201
-DllClassManager            DEBUG Found factory XmlElementCnv
-ConverterFactory           DEBUG Added converter for class:XmlElementCnv Storage id:7 clID:1202
-DllClassManager            DEBUG Found factory XmlDetectorElementCnv
-ConverterFactory           DEBUG Added converter for class:XmlDetectorElementCnv Storage id:7 clID:2
-DllClassManager            DEBUG Found factory XmlConditionCnv
-ConverterFactory           DEBUG Added converter for class:XmlConditionCnv Storage id:7 clID:5
-DllClassManager            DEBUG Found factory XmlCatalogCnv
-ConverterFactory           DEBUG Added converter for class:XmlCatalogCnv Storage id:7 clID:3
-DllClassManager            DEBUG Found factory XmlUserConditionCnv<AlignmentCondition>
-ConverterFactory           DEBUG Added converter for class:XmlUserConditionCnv<AlignmentCondition> Storage id:7 clID:6
-DllClassManager            DEBUG Loaded 10 factories from module DetDescCnv
-DllClassManager            DEBUG Found factory RelyConverter
-ConverterFactory           DEBUG Added converter for class:RelyConverter Storage id:9 clID:0
-DllClassManager            DEBUG Found factory Service CondDBLayeringSvc
-DllClassManager            DEBUG Found factory Service CondDBDispatcherSvc
-DllClassManager            DEBUG Found factory Service CondDBCnvSvc
-DllClassManager            DEBUG Found factory Service CondDBAccessSvc
-DllClassManager            DEBUG Loaded 5 factories from module DetCond
-ApplicationMgr              INFO Successfully loaded modules : DetDescSvc, GaudiAlg, XmlTools, DetDescCnv, DetCond
+ApplicationMgr              INFO Successfully loaded modules : DetCond
 ApplicationMgr              INFO Application Manager Configured successfully
+ServiceManager             DEBUG Initializing service IncidentSvc
+IncidentSvc                DEBUG Service base class initialized successfully
 ServiceManager             DEBUG Initializing service AppMgrRunable
 AppMgrRunable              DEBUG Service base class initialized successfully
 ServiceManager             DEBUG Initializing service EventLoopMgr
@@ -111,7 +59,7 @@ Sequencer                  DEBUG DumpDetectorStore doesn't exist - created and a
 Sequencer                   INFO Member list: TestCacheInjection, DumpDetectorStore
 TestCacheInjection         DEBUG Property update for OutputLevel : new value = 1
 TestCacheInjection         DEBUG Initialize base class GaudiCommon<PBASE>
-TestCacheInjection         DEBUG List of ALL properties of TestCacheInjection/TestCacheInjection  #properties = 14
+TestCacheInjection         DEBUG List of ALL properties of TestCacheInjection/TestCacheInjection  #properties = 18
 TestCacheInjection         DEBUG Property ['Name': Value] =  'GlobalTimeOffset':0
 TestCacheInjection         DEBUG Property ['Name': Value] =  'RootOnTES':
 TestCacheInjection         DEBUG Property ['Name': Value] =  'Context':
@@ -119,9 +67,13 @@ TestCacheInjection         DEBUG Property ['Name': Value] =  'TypePrint':True
 TestCacheInjection         DEBUG Property ['Name': Value] =  'StatPrint':True
 TestCacheInjection         DEBUG Property ['Name': Value] =  'PropertiesPrint':False
 TestCacheInjection         DEBUG Property ['Name': Value] =  'ErrorsPrint':True
+TestCacheInjection         DEBUG Property ['Name': Value] =  'AuditEndRun':False
+TestCacheInjection         DEBUG Property ['Name': Value] =  'AuditBeginRun':False
 TestCacheInjection         DEBUG Property ['Name': Value] =  'AuditFinalize':False
-TestCacheInjection         DEBUG Property ['Name': Value] =  'AuditExecute':True
+TestCacheInjection         DEBUG Property ['Name': Value] =  'AuditExecute':False
+TestCacheInjection         DEBUG Property ['Name': Value] =  'AuditReinitialize':False
 TestCacheInjection         DEBUG Property ['Name': Value] =  'AuditInitialize':False
+TestCacheInjection         DEBUG Property ['Name': Value] =  'AuditAlgorithms':False
 TestCacheInjection         DEBUG Property ['Name': Value] =  'ErrorCount':0
 TestCacheInjection         DEBUG Property ['Name': Value] =  'ErrorMax':1
 TestCacheInjection         DEBUG Property ['Name': Value] =  'Enable':True
@@ -139,19 +91,35 @@ TestCacheInjection          INFO *** register conditions ***
 UpdateManagerSvc           DEBUG Service base class initialized successfully
 UpdateManagerSvc           DEBUG --- initialize ---
 DetectorDataSvc            DEBUG Service base class initialized successfully
-IncidentSvc                DEBUG Service base class initialized successfully
-DetectorDataSvc          VERBOSE ServiceLocatorHelper::createService: got service IncidentSvc
+DetectorDataSvc          VERBOSE ServiceLocatorHelper::createService: found service IncidentSvc
 DetectorPersistencySvc      INFO  'CnvServices':[ 'XmlCnvSvc' , 'CondDBCnvSvc' ]
 DetectorPersistencySvc     DEBUG Service base class initialized successfully
-DetectorDataSvc            DEBUG Storage type used is: 7
+DetectorDataSvc            DEBUG Storage type used is: 9
 DetectorDataSvc            DEBUG Setting DetectorDataSvc root node... 
 XmlCnvSvc                  DEBUG Service base class initialized successfully
 XmlParserSvc               DEBUG Service base class initialized successfully
-DetectorPersistencySvc   VERBOSE ServiceLocatorHelper::createService: got service XmlCnvSvc
+CondDBEntityResolverSvc    DEBUG Service base class initialized successfully
+CondDBEntityResolverSvc     INFO Initializing...
+CondDBEntityResolverSvc  VERBOSE ServiceLocatorHelper::createService: found service DetDataSvc/DetectorDataSvc
+CondDBEntityResolverSvc    DEBUG Succesfully located service DetDataSvc/DetectorDataSvc
+CondDBCnvSvc               DEBUG Service base class initialized successfully
+CondDBCnvSvc               DEBUG Specific initialization starting
+CondDBCnvSvc             VERBOSE ServiceLocatorHelper::createService: found service CondDBAccessSvc
+CondDBCnvSvc               DEBUG Retrieved CondDBAccessSvc
+CondDBCnvSvc               DEBUG Specific initialization completed
+CondDBEntityResolverSvc  VERBOSE ServiceLocatorHelper::createService: found service CondDBCnvSvc
+CondDBEntityResolverSvc    DEBUG Succesfully located service CondDBCnvSvc
+CondDBEntityResolverSvc     INFO Successfully initialized.
+XmlParserSvc             VERBOSE ServiceLocatorHelper::createService: found service CondDBEntityResolverSvc
+XmlParserSvc               DEBUG using the xercesc::EntityResolver provided by CondDBEntityResolverSvc
+XmlParserSvc             VERBOSE ServiceLocatorHelper::createService: found service DetectorDataSvc
+XmlParserSvc               DEBUG Got pointer to IDetDataSvc "DetectorDataSvc"
+DetectorPersistencySvc   VERBOSE ServiceLocatorHelper::createService: found service XmlCnvSvc
 DetectorPersistencySvc      INFO Added successfully Conversion service:XmlCnvSvc
-XmlCnvSvc                VERBOSE Create an XML address
-XmlCnvSvc                VERBOSE XML source is an XML file name
-DetectorDataSvc          SUCCESS Detector description database: /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/cache.xml
+DetectorPersistencySvc   VERBOSE ServiceLocatorHelper::createService: found service CondDBCnvSvc
+DetectorPersistencySvc      INFO Added successfully Conversion service:CondDBCnvSvc
+CondDBCnvSvc               DEBUG entering createAddress
+DetectorDataSvc          SUCCESS Detector description database: /lhcb.xml
 UpdateManagerSvc           DEBUG Got pointer to IDataProviderSvc "DetectorDataSvc"
 UpdateManagerSvc           DEBUG Got pointer to IDetDataSvc "DetectorDataSvc"
 EventClockSvc              DEBUG Service base class initialized successfully
@@ -159,86 +127,136 @@ EventClockSvc              DEBUG --- initialize ---
 EventClockSvc            VERBOSE ServiceLocatorHelper::createService: found service DetectorDataSvc
 EventClockSvc              DEBUG Got pointer to IDetDataSvc "DetectorDataSvc"
 ToolSvc                    DEBUG Service base class initialized successfully
-EventClockSvc            VERBOSE ServiceLocatorHelper::createService: got service ToolSvc
+ToolSvc                     INFO History Service not active - AlgTools not registered
+EventClockSvc            VERBOSE ServiceLocatorHelper::createService: found service ToolSvc
 EventClockSvc              DEBUG Got pointer to ToolSvc 
+ToolSvc                  VERBOSE Created tool FakeEventTime/EventClockSvc.FakeEventTime
 EventClockSvc.FakeEven...  DEBUG --- initialize ---
 EventDataSvc               DEBUG Service base class initialized successfully
 EventDataSvc             VERBOSE ServiceLocatorHelper::createService: found service IncidentSvc
 EventPersistencySvc        DEBUG Service base class initialized successfully
-EventClockSvc.FakeEven...VERBOSE ServiceLocatorHelper::createService: got service EventDataSvc
+EventClockSvc.FakeEven...VERBOSE ServiceLocatorHelper::createService: found service EventDataSvc
 EventClockSvc.FakeEven...  DEBUG Got pointer to IDataProviderSvc "EventDataSvc"
 EventClockSvc.FakeEven...   INFO Event times generated from 5 with steps of 10
 EventClockSvc              DEBUG Got pointer to FakeEventTime
 EventClockSvc              DEBUG Initialize event time to 0
 DetectorDataSvc            DEBUG Event Time set to 0.0
 EventClockSvc              DEBUG Got pointer to IncidentSvc
-UpdateManagerSvc         VERBOSE ServiceLocatorHelper::createService: got service EventClockSvc
+UpdateManagerSvc         VERBOSE ServiceLocatorHelper::createService: found service EventClockSvc
 UpdateManagerSvc           DEBUG Good: EventClockSvc found
 UpdateManagerSvc           DEBUG Got pointer to IncidentSvc
 UpdateManagerSvc           DEBUG registering condition "CacheTest/Object1" for object of type 18TestCacheInjection
 UpdateManagerSvc           DEBUG registering condition "CacheTest/Object2" for object of type 18TestCacheInjection
 UpdateManagerSvc           DEBUG registering condition "CacheTest/Object3" for object of type 18TestCacheInjection
 UpdateManagerSvc           DEBUG registering condition "CacheTest/Object4" for object of type 18TestCacheInjection
-UpdateManagerSvc           DEBUG Update specific object at 0xa10a9c8
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa11d158) 0xa10a9c8 ---BEGIN---
+UpdateManagerSvc           DEBUG Update specific object at 0x9654ee0
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x966cb78) 0x9654ee0 ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000001 -> 0.0
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 0
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa11c420) 0 ---BEGIN--- CacheTest/Object1
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x966b6d8) 0 ---BEGIN--- CacheTest/Object1
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000001 -> 0.0
 UpdateManagerSvc::Item     DEBUG Retrieve object CacheTest/Object1 from data provider
 DetectorDataSvc          VERBOSE Requested object /dd
-XmlGenericCnv              DEBUG Address: filename = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/cache.xml, ObjectName = dd
-XmlParserSvc               DEBUG parsing file /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/cache.xml
+CondDBGenericCnv           DEBUG Succesfully located DetectorDataSvc
+RelyConverter              DEBUG Retrieved IConversionSvc interface of DetectorPersistencySvc
+RelyConverter              DEBUG entering createObj
+RelyConverter              DEBUG Entering "i_delegatedCreation"
+CondDBAccessSvc.Cache      DEBUG Request Folder '/lhcb.xml'  @ 0 channel 0 FOUND
+RelyConverter              DEBUG delegate to DetectorPersistencySvc
+XmlCnvSvc                VERBOSE Create an XML address
+XmlCnvSvc                VERBOSE XML source beginning by "<?xml" is interpreted as an XML string
+RelyConverter              DEBUG register tmpAddress to registry /dd
+RelyConverter              DEBUG tmpAddress registered to registry /dd
+CondDBCnvSvc               DEBUG entering createAddress
+XmlGenericCnv              DEBUG Address for string: orig. path = conddb:/lhcb.xml:0, ObjectName = dd, string = <?xml version="1.0" en...
+XmlCnvSvc                VERBOSE Set correct DTD location in the string to be parsed
+XmlCnvSvc                VERBOSE DTD literal is now: "/scratch/marcocle/Devel/test1/LHCb_v22r0/Ex/DetCondExample/v9r4/XMLDDDB/DTD/structure.dtd"
+CondDBEntityResolverSv...  DEBUG systemId = "/scratch/marcocle/Devel/test1/LHCb_v22r0/Ex/DetCondExample/v9r4/XMLDDDB/DTD/structure.dtd"
+CondDBEntityResolverSv...VERBOSE Not a conddb URL
+XmlParserSvc               DEBUG parsing xml string...
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
 XmlCatalogCnv            VERBOSE tag is catalog, clsID is 3
 XmlGenericCnv            VERBOSE Href points to a regular URL: #CacheTest
-XmlGenericCnv            VERBOSE Now build an XML address for location=/scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/cache.xml and entryName=/CacheTest
-XmlCnvSvc                VERBOSE Create an XML address
-XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/cache.xml, entry name = /CacheTest isString : 0
+XmlGenericCnv            VERBOSE Href points to a conddb URL: conddb:/lhcb.xml:0#CacheTest
+XmlGenericCnv            VERBOSE Now build a CondDB address for path=/lhcb.xml channelId=0 and entryName=/CacheTest
+CondDBCnvSvc               DEBUG entering createAddress
+XmlGenericCnv              DEBUG New address created : path = /lhcb.xml, channel id = 0, entry name = /CacheTest
+RelyConverter              DEBUG Setting object validity
+CondDBGenericCnv           DEBUG Created object (CLID = 1) does not implement IValidity: cannot set validity
+RelyConverter              DEBUG New object successfully created
 DetectorDataSvc          VERBOSE Object /dd created
 DetectorDataSvc          VERBOSE Filling object /dd
+RelyConverter              DEBUG entering fillObjRefs
+RelyConverter              DEBUG Entering "i_delegatedCreation"
+CondDBAccessSvc.Cache      DEBUG Request Folder '/lhcb.xml'  @ 0 channel 0 FOUND
+RelyConverter              DEBUG delegate to DetectorPersistencySvc
+XmlCnvSvc                VERBOSE Create an XML address
+XmlCnvSvc                VERBOSE XML source beginning by "<?xml" is interpreted as an XML string
+RelyConverter              DEBUG register tmpAddress to registry /dd
+RelyConverter              DEBUG tmpAddress registered to registry /dd
+RelyConverter              DEBUG New object successfully created
 DetectorDataSvc          VERBOSE Object /dd successfully loaded
 DetectorDataSvc          VERBOSE Requested object /dd/CacheTest
-XmlGenericCnv              DEBUG Address: filename = /scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/cache.xml, ObjectName = /CacheTest
+RelyConverter              DEBUG entering createObj
+RelyConverter              DEBUG Entering "i_delegatedCreation"
+CondDBAccessSvc.Cache      DEBUG Request Folder '/lhcb.xml'  @ 0 channel 0 FOUND
+RelyConverter              DEBUG delegate to DetectorPersistencySvc
+XmlCnvSvc                VERBOSE Create an XML address
+XmlCnvSvc                VERBOSE XML source beginning by "<?xml" is interpreted as an XML string
+RelyConverter              DEBUG register tmpAddress to registry /dd/CacheTest
+RelyConverter              DEBUG tmpAddress registered to registry /dd/CacheTest
+XmlGenericCnv              DEBUG Address for string: orig. path = conddb:/lhcb.xml:0, ObjectName = /CacheTest, string = <?xml version="1.0" en...
+XmlCnvSvc                VERBOSE Set correct DTD location in the string to be parsed
+XmlCnvSvc                VERBOSE DTD literal is now: "/scratch/marcocle/Devel/test1/LHCb_v22r0/Ex/DetCondExample/v9r4/XMLDDDB/DTD/structure.dtd"
+CondDBEntityResolverSv...  DEBUG systemId = "/scratch/marcocle/Devel/test1/LHCb_v22r0/Ex/DetCondExample/v9r4/XMLDDDB/DTD/structure.dtd"
+CondDBEntityResolverSv...VERBOSE Not a conddb URL
+XmlParserSvc               DEBUG parsing xml string...
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
 XmlCatalogCnv            VERBOSE tag is conditionref, clsID is 5
+CondDBCnvSvc               DEBUG entering createAddress
+XmlBaseConditionCnv      VERBOSE Initializing converter for class ID 5
+XmlGenericCnv            VERBOSE Href points to a regular URL: test/cache/folder1#Object1
 XmlGenericCnv            VERBOSE Href points to a conddb URL: conddb:/test/cache/folder1#Object1
 XmlGenericCnv            VERBOSE Now build a CondDB address for path=/test/cache/folder1 channelId=0 and entryName=/Object1
-CondDBCnvSvc               DEBUG Service base class initialized successfully
-CondDBCnvSvc               DEBUG Specific initialization starting
-CondDBCnvSvc             VERBOSE ServiceLocatorHelper::createService: found service CondDBAccessSvc
-CondDBCnvSvc               DEBUG Retrieved CondDBAccessSvc
-CondDBCnvSvc               DEBUG Specific initialization completed
-DetectorPersistencySvc   VERBOSE ServiceLocatorHelper::createService: got service CondDBCnvSvc
-DetectorPersistencySvc      INFO Added successfully Conversion service:CondDBCnvSvc
 CondDBCnvSvc               DEBUG entering createAddress
 XmlGenericCnv              DEBUG New address created : path = /test/cache/folder1, channel id = 0, entry name = /Object1
 XmlCatalogCnv            VERBOSE tag is conditionref, clsID is 5
+XmlGenericCnv            VERBOSE Href points to a regular URL: test/cache/folder2#Object2
 XmlGenericCnv            VERBOSE Href points to a conddb URL: conddb:/test/cache/folder2#Object2
 XmlGenericCnv            VERBOSE Now build a CondDB address for path=/test/cache/folder2 channelId=0 and entryName=/Object2
 CondDBCnvSvc               DEBUG entering createAddress
 XmlGenericCnv              DEBUG New address created : path = /test/cache/folder2, channel id = 0, entry name = /Object2
 XmlCatalogCnv            VERBOSE tag is conditionref, clsID is 5
+XmlGenericCnv            VERBOSE Href points to a regular URL: test/cache/folder3#Object3
 XmlGenericCnv            VERBOSE Href points to a conddb URL: conddb:/test/cache/folder3#Object3
 XmlGenericCnv            VERBOSE Now build a CondDB address for path=/test/cache/folder3 channelId=0 and entryName=/Object3
 CondDBCnvSvc               DEBUG entering createAddress
 XmlGenericCnv              DEBUG New address created : path = /test/cache/folder3, channel id = 0, entry name = /Object3
 XmlCatalogCnv            VERBOSE tag is conditionref, clsID is 5
+XmlGenericCnv            VERBOSE Href points to a regular URL: test/cache/folder3:1#Object4
 XmlGenericCnv            VERBOSE Href points to a conddb URL: conddb:/test/cache/folder3:1#Object4
 XmlGenericCnv            VERBOSE Now build a CondDB address for path=/test/cache/folder3 channelId=1 and entryName=/Object4
 CondDBCnvSvc               DEBUG entering createAddress
 XmlGenericCnv              DEBUG New address created : path = /test/cache/folder3, channel id = 1, entry name = /Object4
+RelyConverter              DEBUG Setting object validity
+CondDBGenericCnv           DEBUG Created object (CLID = 1) does not implement IValidity: cannot set validity
+RelyConverter              DEBUG New object successfully created
 DetectorDataSvc          VERBOSE Object /dd/CacheTest created
 DetectorDataSvc          VERBOSE Filling object /dd/CacheTest
+RelyConverter              DEBUG entering fillObjRefs
+RelyConverter              DEBUG Entering "i_delegatedCreation"
+CondDBAccessSvc.Cache      DEBUG Request Folder '/lhcb.xml'  @ 0 channel 0 FOUND
+RelyConverter              DEBUG delegate to DetectorPersistencySvc
+XmlCnvSvc                VERBOSE Create an XML address
+XmlCnvSvc                VERBOSE XML source beginning by "<?xml" is interpreted as an XML string
+RelyConverter              DEBUG register tmpAddress to registry /dd/CacheTest
+RelyConverter              DEBUG tmpAddress registered to registry /dd/CacheTest
+RelyConverter              DEBUG New object successfully created
 DetectorDataSvc          VERBOSE Object /dd/CacheTest successfully loaded
 DetectorDataSvc          VERBOSE Requested object /dd/CacheTest/Object1
-CondDBCnvSvc               DEBUG converter not found, instantiating RelyConverter
-CondDBGenericCnv           DEBUG Succesfully located DetectorDataSvc
-RelyConverter              DEBUG Retrieved IConversionSvc interface of DetectorPersistencySvc
 RelyConverter              DEBUG entering createObj
 RelyConverter              DEBUG Entering "i_delegatedCreation"
 CondDBAccessSvc.Cache      DEBUG Request Folder '/test/cache/folder1'  @ 0 channel 0 FOUND
@@ -247,10 +265,11 @@ XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source beginning by "<?xml" is interpreted as an XML string
 RelyConverter              DEBUG register tmpAddress to registry /dd/CacheTest/Object1
 RelyConverter              DEBUG tmpAddress registered to registry /dd/CacheTest/Object1
-XmlBaseConditionCnv      VERBOSE Initializing converter for class ID 5
 XmlGenericCnv              DEBUG Address for string: orig. path = conddb:/test/cache/folder1:0, ObjectName = /Object1, string = <?xml version="1.0" en...
 XmlCnvSvc                VERBOSE Set correct DTD location in the string to be parsed
-XmlCnvSvc                VERBOSE DTD literal is now: "/scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/DTD/structure.dtd"
+XmlCnvSvc                VERBOSE DTD literal is now: "/scratch/marcocle/Devel/test1/LHCb_v22r0/Ex/DetCondExample/v9r4/XMLDDDB/DTD/structure.dtd"
+CondDBEntityResolverSv...  DEBUG systemId = "/scratch/marcocle/Devel/test1/LHCb_v22r0/Ex/DetCondExample/v9r4/XMLDDDB/DTD/structure.dtd"
+CondDBEntityResolverSv...VERBOSE Not a conddb URL
 XmlParserSvc               DEBUG parsing xml string...
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
@@ -272,8 +291,8 @@ RelyConverter              DEBUG New object successfully created
 DetectorDataSvc          VERBOSE Object /dd/CacheTest/Object1 successfully loaded
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.0 -> 0.00000001
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa11c420) 0xa14aee8 ---END--- CacheTest/Object1
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa11c4e0) 0 ---BEGIN--- CacheTest/Object2
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x966b6d8) 0x9689a98 ---END--- CacheTest/Object1
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x966b798) 0 ---BEGIN--- CacheTest/Object2
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000001 -> 0.0
 UpdateManagerSvc::Item     DEBUG Retrieve object CacheTest/Object2 from data provider
 DetectorDataSvc          VERBOSE Requested object /dd/CacheTest/Object2
@@ -287,7 +306,9 @@ RelyConverter              DEBUG register tmpAddress to registry /dd/CacheTest/O
 RelyConverter              DEBUG tmpAddress registered to registry /dd/CacheTest/Object2
 XmlGenericCnv              DEBUG Address for string: orig. path = conddb:/test/cache/folder2:0, ObjectName = /Object2, string = <?xml version="1.0" en...
 XmlCnvSvc                VERBOSE Set correct DTD location in the string to be parsed
-XmlCnvSvc                VERBOSE DTD literal is now: "/scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/DTD/structure.dtd"
+XmlCnvSvc                VERBOSE DTD literal is now: "/scratch/marcocle/Devel/test1/LHCb_v22r0/Ex/DetCondExample/v9r4/XMLDDDB/DTD/structure.dtd"
+CondDBEntityResolverSv...  DEBUG systemId = "/scratch/marcocle/Devel/test1/LHCb_v22r0/Ex/DetCondExample/v9r4/XMLDDDB/DTD/structure.dtd"
+CondDBEntityResolverSv...VERBOSE Not a conddb URL
 XmlParserSvc               DEBUG parsing xml string...
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
@@ -309,8 +330,8 @@ RelyConverter              DEBUG New object successfully created
 DetectorDataSvc          VERBOSE Object /dd/CacheTest/Object2 successfully loaded
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.0 -> 9223372036.854775807
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa11c4e0) 0xa137c90 ---END--- CacheTest/Object2
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa11c5a0) 0 ---BEGIN--- CacheTest/Object3
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x966b798) 0x96887d0 ---END--- CacheTest/Object2
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x966b898) 0 ---BEGIN--- CacheTest/Object3
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000001 -> 0.0
 UpdateManagerSvc::Item     DEBUG Retrieve object CacheTest/Object3 from data provider
 DetectorDataSvc          VERBOSE Requested object /dd/CacheTest/Object3
@@ -324,7 +345,9 @@ RelyConverter              DEBUG register tmpAddress to registry /dd/CacheTest/O
 RelyConverter              DEBUG tmpAddress registered to registry /dd/CacheTest/Object3
 XmlGenericCnv              DEBUG Address for string: orig. path = conddb:/test/cache/folder3:0, ObjectName = /Object3, string = <?xml version="1.0" en...
 XmlCnvSvc                VERBOSE Set correct DTD location in the string to be parsed
-XmlCnvSvc                VERBOSE DTD literal is now: "/scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/DTD/structure.dtd"
+XmlCnvSvc                VERBOSE DTD literal is now: "/scratch/marcocle/Devel/test1/LHCb_v22r0/Ex/DetCondExample/v9r4/XMLDDDB/DTD/structure.dtd"
+CondDBEntityResolverSv...  DEBUG systemId = "/scratch/marcocle/Devel/test1/LHCb_v22r0/Ex/DetCondExample/v9r4/XMLDDDB/DTD/structure.dtd"
+CondDBEntityResolverSv...VERBOSE Not a conddb URL
 XmlParserSvc               DEBUG parsing xml string...
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
@@ -346,8 +369,8 @@ RelyConverter              DEBUG New object successfully created
 DetectorDataSvc          VERBOSE Object /dd/CacheTest/Object3 successfully loaded
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.0 -> 0.00000002
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa11c5a0) 0xa136f48 ---END--- CacheTest/Object3
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa11c7e0) 0 ---BEGIN--- CacheTest/Object4
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x966b898) 0x9688148 ---END--- CacheTest/Object3
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x966cf00) 0 ---BEGIN--- CacheTest/Object4
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000001 -> 0.0
 UpdateManagerSvc::Item     DEBUG Retrieve object CacheTest/Object4 from data provider
 DetectorDataSvc          VERBOSE Requested object /dd/CacheTest/Object4
@@ -361,7 +384,9 @@ RelyConverter              DEBUG register tmpAddress to registry /dd/CacheTest/O
 RelyConverter              DEBUG tmpAddress registered to registry /dd/CacheTest/Object4
 XmlGenericCnv              DEBUG Address for string: orig. path = conddb:/test/cache/folder3:1, ObjectName = /Object4, string = <?xml version="1.0" en...
 XmlCnvSvc                VERBOSE Set correct DTD location in the string to be parsed
-XmlCnvSvc                VERBOSE DTD literal is now: "/scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/DTD/structure.dtd"
+XmlCnvSvc                VERBOSE DTD literal is now: "/scratch/marcocle/Devel/test1/LHCb_v22r0/Ex/DetCondExample/v9r4/XMLDDDB/DTD/structure.dtd"
+CondDBEntityResolverSv...  DEBUG systemId = "/scratch/marcocle/Devel/test1/LHCb_v22r0/Ex/DetCondExample/v9r4/XMLDDDB/DTD/structure.dtd"
+CondDBEntityResolverSv...VERBOSE Not a conddb URL
 XmlParserSvc               DEBUG parsing xml string...
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
@@ -383,13 +408,13 @@ RelyConverter              DEBUG New object successfully created
 DetectorDataSvc          VERBOSE Object /dd/CacheTest/Object4 successfully loaded
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.0 -> 9223372036.854775807
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa11c7e0) 0xa136390 ---END--- CacheTest/Object4
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x966cf00) 0x96871b8 ---END--- CacheTest/Object4
 UpdateManagerSvc::Item   VERBOSE Call m.f. 0
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.0 -> 0.00000001
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa11d158) 0xa10a9c8 ---END---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x966cb78) 0x9654ee0 ---END---
 DumpDetectorStore          DEBUG Property update for OutputLevel : new value = 1
 DumpDetectorStore          DEBUG Initialize base class GaudiCommon<PBASE>
-DumpDetectorStore          DEBUG List of ALL properties of DumpDetectorStore/DumpDetectorStore  #properties = 15
+DumpDetectorStore          DEBUG List of ALL properties of DumpDetectorStore/DumpDetectorStore  #properties = 19
 DumpDetectorStore          DEBUG Property ['Name': Value] =  'DumpConditions':False
 DumpDetectorStore          DEBUG Property ['Name': Value] =  'GlobalTimeOffset':0
 DumpDetectorStore          DEBUG Property ['Name': Value] =  'RootOnTES':
@@ -398,9 +423,13 @@ DumpDetectorStore          DEBUG Property ['Name': Value] =  'TypePrint':True
 DumpDetectorStore          DEBUG Property ['Name': Value] =  'StatPrint':True
 DumpDetectorStore          DEBUG Property ['Name': Value] =  'PropertiesPrint':False
 DumpDetectorStore          DEBUG Property ['Name': Value] =  'ErrorsPrint':True
+DumpDetectorStore          DEBUG Property ['Name': Value] =  'AuditEndRun':False
+DumpDetectorStore          DEBUG Property ['Name': Value] =  'AuditBeginRun':False
 DumpDetectorStore          DEBUG Property ['Name': Value] =  'AuditFinalize':False
-DumpDetectorStore          DEBUG Property ['Name': Value] =  'AuditExecute':True
+DumpDetectorStore          DEBUG Property ['Name': Value] =  'AuditExecute':False
+DumpDetectorStore          DEBUG Property ['Name': Value] =  'AuditReinitialize':False
 DumpDetectorStore          DEBUG Property ['Name': Value] =  'AuditInitialize':False
+DumpDetectorStore          DEBUG Property ['Name': Value] =  'AuditAlgorithms':False
 DumpDetectorStore          DEBUG Property ['Name': Value] =  'ErrorCount':0
 DumpDetectorStore          DEBUG Property ['Name': Value] =  'ErrorMax':1
 DumpDetectorStore          DEBUG Property ['Name': Value] =  'Enable':True
@@ -412,6 +441,7 @@ HistogramDataSvc         VERBOSE ServiceLocatorHelper::createService: found serv
 HistogramPersistencySvc     INFO  'CnvServices':[ 'HbookHistSvc' , 'RootHistSvc' ]
 HistogramPersistencySvc    DEBUG Service base class initialized successfully
 HistogramPersistencySvc  WARNING Histograms saving not required.
+HistogramDataSvc         VERBOSE ServiceLocatorHelper::createService: found service HistogramPersistencySvc
 ApplicationMgr              INFO Application Manager Initialized successfully
 EventClockSvc              DEBUG New BeginEvent incident received
 DetectorDataSvc            DEBUG Event Time set to 0.000000005
@@ -419,14 +449,11 @@ EventClockSvc              DEBUG DetDataSvc::eventTime() -> 0.000000005
 UpdateManagerSvc           DEBUG New BeginEvent incident received
 UpdateManagerSvc         VERBOSE newEvent(evtTime): acquiring mutex lock
 UpdateManagerSvc           DEBUG newEvent(evtTime): loop over head items
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa11d158) 0xa10a9c8 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x966cb78) 0x9654ee0 ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.00000001
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc         VERBOSE newEvent(evtTime): releasing mutex lock
-AuditorSvc                 DEBUG Service base class initialized successfully
-Sequencer                VERBOSE ServiceLocatorHelper::createService: got service AuditorSvc
 Sequencer                  DEBUG Sequencer Sequencer::execute( )
-TestCacheInjection       VERBOSE ServiceLocatorHelper::createService: found service AuditorSvc
 TestCacheInjection          INFO *************** execute(): process new event ***************
 TestCacheInjection          INFO Event 1
 TestCacheInjection          INFO Object1: 0.0 -> 0.00000001
@@ -437,18 +464,17 @@ TestCacheInjection          INFO Object3: 0.0 -> 0.00000002
 TestCacheInjection          INFO          data = object 3.0
 TestCacheInjection          INFO Object4: 0.0 -> 9223372036.854775807
 TestCacheInjection          INFO          data = object 4
-DumpDetectorStore        VERBOSE ServiceLocatorHelper::createService: found service AuditorSvc
 EventClockSvc              DEBUG New BeginEvent incident received
 DetectorDataSvc            DEBUG Event Time set to 0.000000015
 EventClockSvc              DEBUG DetDataSvc::eventTime() -> 0.000000015
 UpdateManagerSvc           DEBUG New BeginEvent incident received
 UpdateManagerSvc         VERBOSE newEvent(evtTime): acquiring mutex lock
 UpdateManagerSvc           DEBUG newEvent(evtTime): loop over head items
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa11d158) 0xa10a9c8 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x966cb78) 0x9654ee0 ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.00000001
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 0
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa11c420) 0xa14aee8 ---BEGIN--- CacheTest/Object1
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x966b6d8) 0x9689a98 ---BEGIN--- CacheTest/Object1
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.00000001
 UpdateManagerSvc::Item     DEBUG Update object CacheTest/Object1 from data provider
 DetectorDataSvc            DEBUG Method updateObject starting
@@ -464,7 +490,9 @@ RelyConverter              DEBUG register tmpAddress to registry /dd/CacheTest/O
 RelyConverter              DEBUG tmpAddress registered to registry /dd/CacheTest/Object1
 XmlGenericCnv              DEBUG Address for string: orig. path = conddb:/test/cache/folder1:0, ObjectName = /Object1, string = <?xml version="1.0" en...
 XmlCnvSvc                VERBOSE Set correct DTD location in the string to be parsed
-XmlCnvSvc                VERBOSE DTD literal is now: "/scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/DTD/structure.dtd"
+XmlCnvSvc                VERBOSE DTD literal is now: "/scratch/marcocle/Devel/test1/LHCb_v22r0/Ex/DetCondExample/v9r4/XMLDDDB/DTD/structure.dtd"
+CondDBEntityResolverSv...  DEBUG systemId = "/scratch/marcocle/Devel/test1/LHCb_v22r0/Ex/DetCondExample/v9r4/XMLDDDB/DTD/structure.dtd"
+CondDBEntityResolverSv...VERBOSE Not a conddb URL
 XmlParserSvc               DEBUG parsing xml string...
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
@@ -485,19 +513,19 @@ RelyConverter              DEBUG New object successfully created
 DetectorDataSvc            DEBUG Method updateObject exiting successfully
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.00000001 -> 9223372036.854775807
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa11c420) 0xa14aee8 ---END--- CacheTest/Object1
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa11c4e0) 0xa137c90 ---BEGIN--- CacheTest/Object2
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x966b6d8) 0x9689a98 ---END--- CacheTest/Object1
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x966b798) 0x96887d0 ---BEGIN--- CacheTest/Object2
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 9223372036.854775807
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa11c5a0) 0xa136f48 ---BEGIN--- CacheTest/Object3
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x966b898) 0x9688148 ---BEGIN--- CacheTest/Object3
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.00000002
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa11c7e0) 0xa136390 ---BEGIN--- CacheTest/Object4
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x966cf00) 0x96871b8 ---BEGIN--- CacheTest/Object4
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 9223372036.854775807
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc::Item   VERBOSE Call m.f. 0
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.00000001 -> 0.00000002
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa11d158) 0xa10a9c8 ---END---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x966cb78) 0x9654ee0 ---END---
 UpdateManagerSvc         VERBOSE newEvent(evtTime): releasing mutex lock
 Sequencer                  DEBUG Sequencer Sequencer::execute( )
 TestCacheInjection          INFO *************** execute(): process new event ***************
@@ -522,14 +550,14 @@ EventClockSvc              DEBUG DetDataSvc::eventTime() -> 0.000000025
 UpdateManagerSvc           DEBUG New BeginEvent incident received
 UpdateManagerSvc         VERBOSE newEvent(evtTime): acquiring mutex lock
 UpdateManagerSvc           DEBUG newEvent(evtTime): loop over head items
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa11d158) 0xa10a9c8 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x966cb78) 0x9654ee0 ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000001 -> 0.00000002
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 0
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa11c420) 0xa14aee8 ---BEGIN--- CacheTest/Object1
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x966b6d8) 0x9689a98 ---BEGIN--- CacheTest/Object1
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000001 -> 9223372036.854775807
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa11c4e0) 0xa137c90 ---BEGIN--- CacheTest/Object2
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x966b798) 0x96887d0 ---BEGIN--- CacheTest/Object2
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.00000002
 UpdateManagerSvc::Item     DEBUG Update object CacheTest/Object2 from data provider
 DetectorDataSvc            DEBUG Method updateObject starting
@@ -545,7 +573,9 @@ RelyConverter              DEBUG register tmpAddress to registry /dd/CacheTest/O
 RelyConverter              DEBUG tmpAddress registered to registry /dd/CacheTest/Object2
 XmlGenericCnv              DEBUG Address for string: orig. path = conddb:/test/cache/folder2:0, ObjectName = /Object2, string = <?xml version="1.0" en...
 XmlCnvSvc                VERBOSE Set correct DTD location in the string to be parsed
-XmlCnvSvc                VERBOSE DTD literal is now: "/scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/DTD/structure.dtd"
+XmlCnvSvc                VERBOSE DTD literal is now: "/scratch/marcocle/Devel/test1/LHCb_v22r0/Ex/DetCondExample/v9r4/XMLDDDB/DTD/structure.dtd"
+CondDBEntityResolverSv...  DEBUG systemId = "/scratch/marcocle/Devel/test1/LHCb_v22r0/Ex/DetCondExample/v9r4/XMLDDDB/DTD/structure.dtd"
+CondDBEntityResolverSv...VERBOSE Not a conddb URL
 XmlParserSvc               DEBUG parsing xml string...
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
@@ -566,8 +596,8 @@ RelyConverter              DEBUG New object successfully created
 DetectorDataSvc            DEBUG Method updateObject exiting successfully
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.00000002 -> 9223372036.854775807
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa11c4e0) 0xa137c90 ---END--- CacheTest/Object2
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa11c5a0) 0xa136f48 ---BEGIN--- CacheTest/Object3
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x966b798) 0x96887d0 ---END--- CacheTest/Object2
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x966b898) 0x9688148 ---BEGIN--- CacheTest/Object3
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.00000002
 UpdateManagerSvc::Item     DEBUG Update object CacheTest/Object3 from data provider
 DetectorDataSvc            DEBUG Method updateObject starting
@@ -583,7 +613,9 @@ RelyConverter              DEBUG register tmpAddress to registry /dd/CacheTest/O
 RelyConverter              DEBUG tmpAddress registered to registry /dd/CacheTest/Object3
 XmlGenericCnv              DEBUG Address for string: orig. path = conddb:/test/cache/folder3:0, ObjectName = /Object3, string = <?xml version="1.0" en...
 XmlCnvSvc                VERBOSE Set correct DTD location in the string to be parsed
-XmlCnvSvc                VERBOSE DTD literal is now: "/scratch/marcocle/Devel/LHCB/Ex/DetCondExample/v9r2/XMLDDDB/DTD/structure.dtd"
+XmlCnvSvc                VERBOSE DTD literal is now: "/scratch/marcocle/Devel/test1/LHCb_v22r0/Ex/DetCondExample/v9r4/XMLDDDB/DTD/structure.dtd"
+CondDBEntityResolverSv...  DEBUG systemId = "/scratch/marcocle/Devel/test1/LHCb_v22r0/Ex/DetCondExample/v9r4/XMLDDDB/DTD/structure.dtd"
+CondDBEntityResolverSv...VERBOSE Not a conddb URL
 XmlParserSvc               DEBUG parsing xml string...
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
@@ -604,13 +636,13 @@ RelyConverter              DEBUG New object successfully created
 DetectorDataSvc            DEBUG Method updateObject exiting successfully
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.00000002 -> 0.00000003
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa11c5a0) 0xa136f48 ---END--- CacheTest/Object3
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa11c7e0) 0xa136390 ---BEGIN--- CacheTest/Object4
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x966b898) 0x9688148 ---END--- CacheTest/Object3
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x966cf00) 0x96871b8 ---BEGIN--- CacheTest/Object4
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 9223372036.854775807
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc::Item   VERBOSE Call m.f. 0
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.00000002 -> 0.00000003
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0xa11d158) 0xa10a9c8 ---END---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x966cb78) 0x9654ee0 ---END---
 UpdateManagerSvc         VERBOSE newEvent(evtTime): releasing mutex lock
 Sequencer                  DEBUG Sequencer Sequencer::execute( )
 TestCacheInjection          INFO *************** execute(): process new event ***************
@@ -623,6 +655,7 @@ TestCacheInjection          INFO Object3: 0.00000002 -> 0.00000003
 TestCacheInjection          INFO          data = object 3.1
 TestCacheInjection          INFO Object4: 0.0 -> 9223372036.854775807
 TestCacheInjection          INFO          data = object 4
+ServiceManager             DEBUG Finalizing service EventLoopMgr
 TestCacheInjection         DEBUG ==> Finalize
 TestCacheInjection         DEBUG Finalize base class GaudiAlgorithm
 TestCacheInjection         DEBUG Tools to release :
@@ -643,61 +676,80 @@ DumpDetectorStore          DEBUG Finalize base class GaudiAlgorithm
 DumpDetectorStore          DEBUG Tools to release :
 DumpDetectorStore          DEBUG Services to release :
 EventLoopMgr                INFO Histograms converted successfully according to request.
-ServiceManager             DEBUG Finalizing service EventLoopMgr
-ServiceManager             DEBUG Finalizing service AppMgrRunable
-ServiceManager             DEBUG Finalizing service AuditorSvc
 ServiceManager             DEBUG Finalizing service HistogramDataSvc
 ServiceManager             DEBUG Finalizing service HistogramPersistencySvc
-CondDBCnvSvc               DEBUG Finalizing
-ServiceManager             DEBUG Finalizing service CondDBCnvSvc
+ServiceManager             DEBUG Finalizing service UpdateManagerSvc
 UpdateManagerSvc           DEBUG --- finalize ---
 UpdateManagerSvc           DEBUG --- Dump
 UpdateManagerSvc           DEBUG     5 items registered
 UpdateManagerSvc           DEBUG      of which 1 in the head
 UpdateManagerSvc           DEBUG          head IOV = 0.00000002 - 0.00000003
-UpdateManagerSvc           DEBUG --item 0 0xa11d158 (head)
-UpdateManagerSvc           DEBUG        ptr  = 0xa10a9c8
+UpdateManagerSvc           DEBUG --item 0 0x966cb78 (head)
+UpdateManagerSvc           DEBUG        ptr  = 0x9654ee0
 UpdateManagerSvc           DEBUG         IOV = 0.00000002 - 0.00000003
 UpdateManagerSvc           DEBUG        depend on :
-UpdateManagerSvc           DEBUG                    0xa11c420 0xa11c4e0 0xa11c5a0 0xa11c7e0
-UpdateManagerSvc           DEBUG --item 1 0xa11c420
-UpdateManagerSvc           DEBUG        ptr  = 0xa14aee8
+UpdateManagerSvc           DEBUG                    0x966b6d8 0x966b798 0x966b898 0x966cf00
+UpdateManagerSvc           DEBUG --item 1 0x966b6d8
+UpdateManagerSvc           DEBUG        ptr  = 0x9689a98
 UpdateManagerSvc           DEBUG        path = CacheTest/Object1
 UpdateManagerSvc           DEBUG         IOV = 0.00000001 - 9223372036.854775807
-UpdateManagerSvc           DEBUG --item 2 0xa11c4e0
-UpdateManagerSvc           DEBUG        ptr  = 0xa137c90
+UpdateManagerSvc           DEBUG --item 2 0x966b798
+UpdateManagerSvc           DEBUG        ptr  = 0x96887d0
 UpdateManagerSvc           DEBUG        path = CacheTest/Object2
 UpdateManagerSvc           DEBUG         IOV = 0.00000002 - 9223372036.854775807
-UpdateManagerSvc           DEBUG --item 3 0xa11c5a0
-UpdateManagerSvc           DEBUG        ptr  = 0xa136f48
+UpdateManagerSvc           DEBUG --item 3 0x966b898
+UpdateManagerSvc           DEBUG        ptr  = 0x9688148
 UpdateManagerSvc           DEBUG        path = CacheTest/Object3
 UpdateManagerSvc           DEBUG         IOV = 0.00000002 - 0.00000003
-UpdateManagerSvc           DEBUG --item 4 0xa11c7e0
-UpdateManagerSvc           DEBUG        ptr  = 0xa136390
+UpdateManagerSvc           DEBUG --item 4 0x966cf00
+UpdateManagerSvc           DEBUG        ptr  = 0x96871b8
 UpdateManagerSvc           DEBUG        path = CacheTest/Object4
 UpdateManagerSvc           DEBUG         IOV = 0.0 - 9223372036.854775807
 UpdateManagerSvc           DEBUG Found 1 head items: OK
-ServiceManager             DEBUG Finalizing service UpdateManagerSvc
-EventClockSvc              DEBUG --- finalize ---
 ServiceManager             DEBUG Finalizing service EventClockSvc
+EventClockSvc              DEBUG --- finalize ---
 ServiceManager             DEBUG Finalizing service EventDataSvc
 ServiceManager             DEBUG Finalizing service EventPersistencySvc
-ToolSvc                     INFO Removing all tools created by ToolSvc
-ToolSvc                    DEBUG  Tool List : EventClockSvc.FakeEventTime 
-ToolSvc                    DEBUG Examining tool EventClockSvc.FakeEventTime
-ToolSvc                    DEBUG  Performing finalization of EventClockSvc.FakeEventTime
-EventClockSvc.FakeEven...  DEBUG --- finalize ---
 ServiceManager             DEBUG Finalizing service ToolSvc
-DetectorDataSvc            DEBUG Finalizing
+ToolSvc.finalize()          INFO Removing all tools created by ToolSvc
+ToolSvc.finalize()         DEBUG   Tool List : EventClockSvc.FakeEventTime:1 
+ToolSvc.finalize()         DEBUG 1 tools left to finalize. Summed refCounts: 1
+ToolSvc.finalize()         DEBUG Will finalize tools with refCount <= 1
+ToolSvc.finalize()         DEBUG   Performing finalization of EventClockSvc.FakeEventTime (refCount 1)
+EventClockSvc.FakeEven...  DEBUG --- finalize ---
+ToolSvc.finalize()         DEBUG Deleting 1 finalized tools
+ToolSvc.finalize()         DEBUG   Performing deletion of EventClockSvc.FakeEventTime
 ServiceManager             DEBUG Finalizing service DetectorDataSvc
+DetectorDataSvc            DEBUG Finalizing
 ServiceManager             DEBUG Finalizing service XmlCnvSvc
 ServiceManager             DEBUG Finalizing service XmlParserSvc
+ServiceManager             DEBUG Finalizing service CondDBEntityResolverSvc
+ServiceManager             DEBUG Finalizing service CondDBCnvSvc
+CondDBCnvSvc               DEBUG Finalizing
 ServiceManager             DEBUG Finalizing service DetectorPersistencySvc
-ServiceManager             DEBUG Finalizing service IncidentSvc
+ServiceManager             DEBUG Finalizing service CondDBAccessSvc
 CondDBAccessSvc            DEBUG Finalize
 CondDBAccessSvc.Cache      DEBUG Cache content dump --------------------- BEGIN
 CondDBAccessSvc.Cache      DEBUG  Thresholds (high/low) -> 100/10
-CondDBAccessSvc.Cache      DEBUG  Level = 8
+CondDBAccessSvc.Cache      DEBUG  Level = 9
+CondDBAccessSvc.Cache      DEBUG Folder '/lhcb.xml' (sticky)
+CondDBAccessSvc.Cache      DEBUG   Channel 0
+CondDBAccessSvc.Cache      DEBUG   Object 0
+CondDBAccessSvc.Cache      DEBUG     Score: 1
+CondDBAccessSvc.Cache      DEBUG     Validity: 0 - 9223372036854775807
+CondDBAccessSvc.Cache      DEBUG     Data: [data (string) : <?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE DDDB SYSTEM "structure.dtd">
+<DDDB> 
+  <catalog name="dd">
+    <catalog name="CacheTest">
+      <conditionref href="test/cache/folder1#Object1"/>
+      <conditionref href="test/cache/folder2#Object2"/>
+      <conditionref href="test/cache/folder3#Object3"/>
+      <conditionref href="test/cache/folder3:1#Object4"/>
+    </catalog>
+  </catalog>
+</DDDB>
+]
 CondDBAccessSvc.Cache      DEBUG Folder '/test/cache/folder1' (sticky)
 CondDBAccessSvc.Cache      DEBUG   Channel 0
 CondDBAccessSvc.Cache      DEBUG   Object 0
@@ -746,6 +798,8 @@ CondDBAccessSvc.Cache      DEBUG     Validity: 0 - 9223372036854775807
 CondDBAccessSvc.Cache      DEBUG     Data: [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="Object4"><param name="data" type="other">object 4</param></condition></DDDB>
 ]
 CondDBAccessSvc.Cache      DEBUG Cache content dump --------------------- END
-CondDBAccessSvc.Cache      DEBUG Cache deleted. Level was = 8
-ServiceManager             DEBUG Finalizing service CondDBAccessSvc
+CondDBAccessSvc.Cache      DEBUG Cache deleted. Level was = 9
+ServiceManager             DEBUG Finalizing service AppMgrRunable
+ServiceManager             DEBUG Finalizing service IncidentSvc
 ApplicationMgr              INFO Application Manager Finalized successfully
+ApplicationMgr              INFO Application Manager Terminated successfully
