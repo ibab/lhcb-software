@@ -6,6 +6,9 @@ Purpose: LHCb High Level Trigger packages.
          LHCb High Level Trigger 
 
 ! 2007-02-05 Adding options
+    - options/HltReco.opts
+             to run only the Hlt reconstruction (partial and full)
+	           need to be included into the HltAlleysSequence.opts
     - options/HltAlleysSequence.opts: 
              cleaned of histograms and time measurements
     - options/HltAlleysTime.opts
@@ -14,8 +17,6 @@ Purpose: LHCb High Level Trigger packages.
              add this opts to get internal histos monitoring of HltAlleys
     - options/HltAlleysSequenceDAQ.opts
              temporally (for DAT only)
-    - options/HltReco.opts
-             to run only the Hlt full reconstruction
     - options/HltRecoCheck.opts
              to check the Hlt full reconstruction
 

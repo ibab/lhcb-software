@@ -2,16 +2,14 @@
 // DLLs and main HLT Sequencer
 //-----------------------------
 
-ApplicationMgr.DLLs += { "VeloDAQ" };
-ApplicationMgr.DLLs += { "STDAQ" };
-ApplicationMgr.DLLs += { "OTDAQ" };
-ApplicationMgr.DLLs += { "CaloDAQ" };
-ApplicationMgr.DLLs += { "RichDAQ" };
-ApplicationMgr.DLLs += { "MuonDAQ" };
-
-ApplicationMgr.DLLs += { "PatTools", "PatUtils"};
-ApplicationMgr.DLLs += { "PatVelo", "PatPV", "PatVeloTT", "PatForward" };
 ApplicationMgr.DLLs += { "HltCommon", "HltTracking"};
+
+
+//---------------------------
+// HLT Reconstruction
+//--------------------------
+
+#include "$HLTSYSROOT/options/HltReco.opts"
 
 //---------------------------
 // HLT
@@ -33,72 +31,6 @@ HltAllAlleys.Members ={
 };
 HltAllAlleys.ModeOr=true;
 
-//-----------------------------
-// HLT Common reconstruction
-//-----------------------------
-
-// RZ Velo tracking and PV
-//-------------------------
-HltRecoVeloRZSeq.Members += { "DecodeVeloRawBuffer",
-                              "PatVeloLoadClusters",
-                              "PatVeloRTracking",
-                              "PatPV2D"
-};
-PatPV2D.OutputVerticesName = "Hlt/Vertex/PV2D";
-
-// 3D Velo tracking and PV
-//------------------------
-HltRecoVeloSeq.Members += { "HltTracking/HltRecoVelo",
-                            "PatPV3D"
-};
-
-//HltRecoVelo.OutputTracksName = "Hlt/Track/Velo";
-HltRecoVelo.RecoName = "Velo";
-HltRecoVelo.OutputLevel = 3;
-
-PatPV3D.OutputVerticesName = "Hlt/Vertex/PV3D";
-
-// Decode TT
-//-------------
-ApplicationMgr.DLLs += { "STAlgorithms"};
-HltDecodeTT.Members += { "RawBankToSTLiteClusterAlg/createTTLiteClusters",
-                         "PatTTCoordFromRaw"
-};
-
-// Decode T
-//--------------
-HltDecodeT.Members += { "RawBankToSTLiteClusterAlg/createITLiteClusters",
-                        "PatTCoordFromRaw"
-};
-createITLiteClusters.detType = "IT";
-
-// VeloTT
-//----------------
-// #include "$TRACKSYSROOT/options/TrackLoad.opts"
-// ApplicationMgr.DLLs += { "TrackExtrapolators","TrackFitter"}; 
-//                         "TrackTools","TrackProjectors",""};
-
-PatHltHadRecoIPVeloTT.triggerQuality = true;
-// Use global reduction factor and max chi2 cut to vary the track quality
-PatHltHadRecoIPVeloTT.globalReductionFactor = 1.;
-PatHltHadRecoIPVeloTT.maxChi2 = 256.;
-//
-PatHltHadRecoIPVeloTT.minMomentum = 2000.;
-PatHltHadRecoIPVeloTT.DxGroupFactor = 0.0;
-
-PatHltHadRecoIPVeloTT.removeUsed = false;
-PatHltHadRecoIPVeloTT.OutputLevel = 3;
-
-// Forward
-//----------------
-PatHltHadRecoIPForward.OutputLevel   = 3;
-PatHltMuonForwardPartial.OutputLevel = 3;
-#include "$PATFORWARDROOT/options/PatFwdTool.opts"
-ToolSvc.PatForwardTool.OutputLevel = 3;
-ToolSvc.PatForwardTool.MinMomentum = 1000. ;  
-ToolSvc.PatForwardTool.MinPt       = 80. ;   
-ToolSvc.PatAddTTCoord.OutputLevel = 3;
-//ToolSvc.PatForwardTool.AddTTClusterName = "";
 
 //----------------------------
 //  HLT Hadron Alley
