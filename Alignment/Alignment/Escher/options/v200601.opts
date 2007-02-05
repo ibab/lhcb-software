@@ -34,7 +34,7 @@ HistogramPersistencySvc.OutputFile = "Escher_0601-11144100.root";  // Monitoring
   // ,"xmlcatalog_http://cattanem.home.cern.ch/cattanem/POOL/MyCatalog.xml"
 //};
 EventSelector.Input   = {
-  "DATAFILE='PFN:/software/production/DC06/v1-lumi2/00001395/DST/0001/00001395_00000110_5.dst' TYP='POOL_ROOTTREE' OPT='READ'"
+  "DATAFILE='PFN:/afs/cern.ch/user/j/jblouw/scratch0/00001395_00000110_5.dst' TYP='POOL_ROOTTREE' OPT='READ'"
 };
 //---------------------------------------------------------------------------
 // Event output
