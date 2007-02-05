@@ -5,9 +5,12 @@
 !               CondDB URLs into xml documents
 !-----------------------------------------------------------------------------
 
-================= Tools/CondDBEntityResolver v3r1 2007-02-04 =================
+================= Tools/CondDBEntityResolver v3r1 2007-02-05 =================
 
-                   ==== NEEDS Tools/XmlTools v4r1 ====
+                   ==== NEEDS Tools/XmlTools v5r0 ====
+
+! 2007-02-05 - Marco CLEMENCIC
+ - Throw a GaudiException in case of error.
 
 ! 2007-02-02 - Marco CLEMENCIC
  - Made the entity resolver aware of the special meaning of '@' in the path.

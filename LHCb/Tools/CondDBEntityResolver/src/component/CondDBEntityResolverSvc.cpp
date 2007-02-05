@@ -1,4 +1,4 @@
-// $Id: CondDBEntityResolverSvc.cpp,v 1.5 2007-02-02 08:21:55 marcocle Exp $
+// $Id: CondDBEntityResolverSvc.cpp,v 1.6 2007-02-05 18:44:45 marcocle Exp $
 // Include files 
 
 #include "GaudiKernel/IDetDataSvc.h"
@@ -6,6 +6,7 @@
 #include "GaudiKernel/SvcFactory.h"
 
 #include "GaudiKernel/Time.h"
+#include "GaudiKernel/GaudiException.h"
 
 #include "DetCond/ICondDBReader.h"
 
@@ -188,12 +189,15 @@ xercesc::InputSource *CondDBEntityResolverSvc::resolveEntity(const XMLCh *const,
   StatusCode sc = m_condDBReader->getObject(path,now,data,descr,since,until,channel).isSuccess();
 
   if (sc.isSuccess()) {
+    if ( data.get() == NULL ) {
+      throw GaudiException("Cannot find any data at " + systemIdString, name(), StatusCode::FAILURE);
+    }
+
     std::string xml_data;
     try {
       xml_data = (*data)[data_field_name].data<std::string>();
     } catch (coral::AttributeListException &e) {
-      log << MSG::ERROR << "I cannot find the data inside COOL object: " << e.what() << endmsg;
-      return NULL;
+      throw GaudiException(std::string("I cannot find the data inside COOL object: ") + e.what(), name(), StatusCode::FAILURE);
     }
     // Create a copy of the string for the InputSource
     unsigned int buff_size = xml_data.size();
