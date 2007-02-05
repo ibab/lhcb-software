@@ -1,4 +1,4 @@
-// $Id: IXmlSvc.h,v 1.4 2005-03-18 14:52:34 cattanem Exp $
+// $Id: IXmlSvc.h,v 1.5 2007-02-05 18:51:19 marcocle Exp $
 
 #ifndef DETDESCCNV_IXMLSVC_H
 #define DETDESCCNV_IXMLSVC_H
@@ -30,13 +30,6 @@ public:
 
   /// Retrieve interface ID
   static const InterfaceID& interfaceID() { return IID_IXmlSvc; }
-
-  /**
-   * Parses an XmlFile and produces the corresponding DOMTree
-   * @param fileName the name of the file to be parsed
-   * @return the corresponding DOMTree or 0 if the parsing was not successfull
-   */
-  virtual xercesc::DOMDocument* parse (const char* fileName) = 0;
 
   /**
    * Tells whether generic conversion of user defined detector elements should

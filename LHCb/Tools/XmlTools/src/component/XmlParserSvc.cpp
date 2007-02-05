@@ -1,4 +1,4 @@
-// $Id: XmlParserSvc.cpp,v 1.12 2007-02-02 08:10:50 marcocle Exp $
+// $Id: XmlParserSvc.cpp,v 1.13 2007-02-05 18:51:19 marcocle Exp $
 
 // Include Files
 #include <limits.h>
@@ -17,7 +17,7 @@
 #include "XmlTools/ValidInputSource.h"
 
 #include "XmlParserSvc.h"
-#include "IOVDOMDocument.h"
+#include "XmlTools/IOVDOMDocument.h"
 
 // -----------------------------------------------------------------------
 // Instantiation of a static factory class used by clients to create
@@ -136,7 +136,7 @@ XmlParserSvc::~XmlParserSvc() { }
 // -----------------------------------------------------------------------
 //  Parse
 // -----------------------------------------------------------------------
-xercesc::DOMDocument* XmlParserSvc::parse (const char* fileName) {
+IOVDOMDocument* XmlParserSvc::parse (const char* fileName) {
   MsgStream log (msgSvc(), name());
   // first look in the cache
   cacheType::iterator it = m_cache.find(fileName);
@@ -151,8 +151,7 @@ xercesc::DOMDocument* XmlParserSvc::parse (const char* fileName) {
         increaseCacheAge();
         ++it->second.utility;
         ++it->second.lock;
-        //return it->second.document;
-        return it->second.document->getDOM();
+        return it->second.document;
       }
       else {
         // the document is not valid: I try to remove it from the cache
@@ -204,9 +203,11 @@ xercesc::DOMDocument* XmlParserSvc::parse (const char* fileName) {
           cache_doc->setValidity(iov_is->validSince(),iov_is->validTill());
         }
         cacheItem (fileName, cache_doc);
+        // returns the parsed document
+        return cache_doc;
       }
-      // returns the parsed document
-      return doc;
+      // return empty document
+      return NULL;
     } catch (xercesc::XMLPlatformUtilsException e) {
       log << MSG::ERROR << "Unable to find file " << fileName
           << " !" << endreq;      
@@ -220,7 +221,7 @@ xercesc::DOMDocument* XmlParserSvc::parse (const char* fileName) {
 // -----------------------------------------------------------------------
 // Parses an Xml file and provides the DOM tree representing it
 // -----------------------------------------------------------------------
-xercesc::DOMDocument* XmlParserSvc::parseString (std::string source) {
+IOVDOMDocument* XmlParserSvc::parseString (std::string source) {
   // there is of course no cache for parsing XML strings directly
   // try to parse the string if a parser exists
   if (0 != m_parser) {
@@ -234,8 +235,11 @@ xercesc::DOMDocument* XmlParserSvc::parseString (std::string source) {
     m_parser->parse(inputSource);
     MsgStream log (msgSvc(), name());
     log << MSG::DEBUG << "parsing xml string..." << endreq;
-    // returns the parsed document
-    return m_parser->adoptDocument();
+    xercesc::DOMDocument *doc = m_parser->adoptDocument();
+    // returns the parsed document if successful
+    if (doc != 0) {
+      return new IOVDOMDocument(doc);
+    }
   }
   // no way to parse the string, returns an empty document
   return 0;
@@ -267,16 +271,15 @@ void XmlParserSvc::clearCache() {
 //=========================================================================
 //  Release the lock for documents in cache
 //=========================================================================
-void XmlParserSvc::releaseDoc(xercesc::DOMDocument* doc) {
+void XmlParserSvc::releaseDoc(IOVDOMDocument* doc) {
   // find the DOMDocument in the cache
   cacheType::iterator it = m_cache.begin();
-  //while (it != m_cache.end() && it->second.document != doc) {
-  while (it != m_cache.end() && it->second.document->getDOM() != doc) {
+  while (it != m_cache.end() && it->second.document != doc) {
     ++it;
   }
   if ( it == m_cache.end() ) {
     // the item was never cached (parsed from a string) ==> delete it
-    doc->release();
+    delete doc;
   } else {
     if ( --it->second.lock < 0 ) {
       MsgStream log (msgSvc(), name());

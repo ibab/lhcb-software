@@ -1,4 +1,4 @@
-#include "IOVDOMDocument.h"
+#include "XmlTools/IOVDOMDocument.h"
 
 
 IOVDOMDocument::IOVDOMDocument(xercesc::DOMDocument *dom):

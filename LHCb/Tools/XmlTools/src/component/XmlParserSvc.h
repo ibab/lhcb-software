@@ -1,4 +1,4 @@
-// $Id: XmlParserSvc.h,v 1.8 2007-02-02 08:10:50 marcocle Exp $
+// $Id: XmlParserSvc.h,v 1.9 2007-02-05 18:51:19 marcocle Exp $
 #ifndef DETDESCCNV_XMLPARSERSVC_H
 #define DETDESCCNV_XMLPARSERSVC_H
 
@@ -15,7 +15,6 @@
 // Forward and external declarations
 class IXmlEntityResolverSvc;
 class IDetDataSvc;
-class IOVDOMDocument;
 
 template <class TYPE> class SvcFactory;
 
@@ -75,7 +74,7 @@ public:
    * @param fileName the name of the file to parse
    * @return the document issued from the parsing
    */
-  virtual xercesc::DOMDocument* parse (const char* fileName);
+  virtual IOVDOMDocument* parse (const char* fileName);
 
   /**
    * This method parses XML from a string and produces the corresponding DOM
@@ -84,7 +83,7 @@ public:
    * @param source the string to parse
    * @return the document issued from the parsing
    */
-  virtual xercesc::DOMDocument* parseString (std::string source);
+  virtual IOVDOMDocument* parseString (std::string source);
 
   /**
    * This clears the cache of previously parsed xml files.
@@ -93,7 +92,7 @@ public:
 
   /// Method to remove the lock from a document in the cache or to delete the document
   /// generated from a string.
-  virtual void releaseDoc(xercesc::DOMDocument* doc);
+  virtual void releaseDoc(IOVDOMDocument* doc);
 
   //////////////////////////////////////////////////////
   // implementation of the SAX ErrorHandler interface //

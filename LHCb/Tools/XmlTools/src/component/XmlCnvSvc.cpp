@@ -1,4 +1,4 @@
-// $Id: XmlCnvSvc.cpp,v 1.12 2007-02-05 09:08:54 cattanem Exp $
+// $Id: XmlCnvSvc.cpp,v 1.13 2007-02-05 18:51:19 marcocle Exp $
 
 // Include Files
 #include <xercesc/util/PlatformUtils.hpp>
@@ -194,7 +194,7 @@ StatusCode XmlCnvSvc::createAddress(long  svc_type,
 // -----------------------------------------------------------------------
 // Parses an Xml file and provides the DOM tree representing it
 // -----------------------------------------------------------------------
-xercesc::DOMDocument* XmlCnvSvc::parse (const char* fileName) {
+IOVDOMDocument* XmlCnvSvc::parse (const char* fileName) {
   if (0 != m_parserSvc) {
     return m_parserSvc->parse(fileName);
   }
@@ -207,7 +207,7 @@ xercesc::DOMDocument* XmlCnvSvc::parse (const char* fileName) {
 // -----------------------------------------------------------------------
 // Parses an Xml file and provides the DOM tree representing it
 // -----------------------------------------------------------------------
-xercesc::DOMDocument* XmlCnvSvc::parseString (std::string source) {
+IOVDOMDocument* XmlCnvSvc::parseString (std::string source) {
   MsgStream log (msgSvc(), name());
 
   // First prepend the proper DTD path where appropriate
@@ -261,7 +261,7 @@ void XmlCnvSvc::clearCache() {
 // -----------------------------------------------------------------------
 // release a DOMDocument pointer
 // -----------------------------------------------------------------------
-void XmlCnvSvc::releaseDoc(xercesc::DOMDocument* doc) {
+void XmlCnvSvc::releaseDoc(IOVDOMDocument* doc) {
   if (0 != m_parserSvc) {
     m_parserSvc->releaseDoc(doc);
     return;
