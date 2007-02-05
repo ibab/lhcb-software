@@ -1,4 +1,4 @@
-// $Id: OTSmearer.h,v 1.5 2006-02-03 16:44:24 janos Exp $
+// $Id: OTSmearer.h,v 1.6 2007-02-05 09:46:40 cattanem Exp $
 #ifndef OTSIMULATION_OTSMEARER_H
 #define OTSIMULATION_OTSMEARER_H 1
 
@@ -41,9 +41,6 @@ public:
 
   /// initialize method
   virtual StatusCode initialize();
-
-  /// finalize method
-  virtual StatusCode finalize();
 
   /// tool 'operation' - returns smeared distance + sigma used
   StatusCode smear(LHCb::MCOTDeposit* aDeposit);

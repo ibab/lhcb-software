@@ -1,4 +1,4 @@
-// $Id: OTrtRelation.cpp,v 1.12 2006-07-21 08:05:07 janos Exp $
+// $Id: OTrtRelation.cpp,v 1.13 2007-02-05 09:46:40 cattanem Exp $
 
 // Gaudi files
 #include "GaudiKernel/ToolFactory.h"
@@ -8,8 +8,8 @@
 #include "OTDet/DeOTDetector.h"
 
 // MathCore
-#include "Kernel/Vector3DTypes.h"
-#include "Kernel/Point3DTypes.h"
+#include "GaudiKernel/Vector3DTypes.h"
+#include "GaudiKernel/Point3DTypes.h"
 
 // MCEvent
 #include "Event/MCHit.h"

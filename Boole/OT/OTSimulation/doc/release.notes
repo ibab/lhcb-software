@@ -1,6 +1,11 @@
-! $Id: release.notes,v 1.40 2007-02-02 09:28:44 janos Exp $
-Package         : OTSimulation
-Package manager : Jan Amoraal
+! Package         : OTSimulation
+! Package manager : Jan Amoraal
+!--------------------------------------------------------------------------
+
+!====================== OTSimulation v3r9 2007-02-05 ======================
+! 2007-02-05 - Marco Cattaneo
+ - Remove LHCbDefinitions includes
+ - Remove unneccessary OTSmearer::finalize method
 
 ! 2007-02-02 - Jan Amoraal
  - minor updates due to minor changes in OTDet

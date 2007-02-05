@@ -1,4 +1,4 @@
-// $Id: OTSmearer.cpp,v 1.10 2006-06-21 14:36:29 janos Exp $
+// $Id: OTSmearer.cpp,v 1.11 2007-02-05 09:46:40 cattanem Exp $
 
 // Gaudi files
 #include "GaudiKernel/ToolFactory.h"
@@ -7,8 +7,8 @@
 #include "GaudiKernel/IMagneticFieldSvc.h"
 
 // MathCore
-#include "Kernel/Vector3DTypes.h"
-#include "Kernel/Point3DTypes.h"
+#include "GaudiKernel/Vector3DTypes.h"
+#include "GaudiKernel/Point3DTypes.h"
 
 // OTDet
 #include "OTDet/DeOTDetector.h"
@@ -47,16 +47,6 @@ OTSmearer::~OTSmearer()
   //destructor
 }
 
-StatusCode OTSmearer::finalize()
-{
-  // release services and tools requested at initialization
-  if ( 0 != m_magFieldSvc ) {
-    m_magFieldSvc->release();
-    m_magFieldSvc = 0;
-  }
-  return GaudiTool::finalize();  // must be called after all other actions   
-}
-
 StatusCode OTSmearer::initialize() 
 {
  StatusCode sc = GaudiTool::initialize();
@@ -77,10 +67,7 @@ StatusCode OTSmearer::initialize()
   randSvc->release();
 
   // retrieve pointer to magnetic field service
-  sc = serviceLocator()->service("MagneticFieldSvc", m_magFieldSvc, true);
-  if ( sc.isFailure() ) {
-    return Error ("Failed to retrieve magnetic field service",sc);
-  }
+  m_magFieldSvc = svc<IMagneticFieldSvc>( "MagneticFieldSvc", true );
 
   // Loading OT Geometry from XML
   IDataProviderSvc* detSvc; 

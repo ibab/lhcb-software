@@ -1,10 +1,11 @@
-// $Id: MCOTDepositCreator.cpp,v 1.20 2007-02-02 09:28:44 janos Exp $
+// $Id: MCOTDepositCreator.cpp,v 1.21 2007-02-05 09:46:40 cattanem Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/IRndmGenSvc.h"
 #include "GaudiKernel/RndmGenerators.h"
 #include "GaudiKernel/SystemOfUnits.h"
+#include "GaudiKernel/Point3DTypes.h"
 
 // OTDet
 #include "OTDet/DeOTDetector.h" 
@@ -16,7 +17,6 @@
 
 // Kernel
 #include "Kernel/OTDataFunctor.h"
-#include "Kernel/Point3DTypes.h"
 #include "Kernel/OTChannelID.h"
 
 // OTDAQ
