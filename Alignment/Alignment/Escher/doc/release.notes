@@ -15,3 +15,5 @@
 ! 28/11/2006 Johan Blouw v1r2
   - update of requirements file using Gaudi v18r11
   - update of requirements file to be equivalent to Brunel v30r14 release
+! 05/02/2007 Johan Blouw v1r3
+  - update of requirements file. Now includes S. Viret's stuff

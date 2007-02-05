@@ -1,5 +1,5 @@
 package Escher
-version v1r2
+version v1r3
 
 branches doc cmt job options
 
@@ -35,7 +35,7 @@ use LbcomSys            v*       -no_auto_imports
 use RecSys              v*         -no_auto_imports
 
 #-- Alignment packages
-use AlignmentSys        v1r1         -no_auto_imports
+use AlignmentSys        v1r2         -no_auto_imports
 
 #
 #===== build Escher =========================
