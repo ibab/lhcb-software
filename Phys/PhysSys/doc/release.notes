@@ -3,7 +3,10 @@ Package     : PhysSys
 Package Coordinator : Juan Palacios
 Purpose     : LHCb physics packages
 
-</PRE><H1><A NAME=v5r0>2007-01-31 Phys v5r0 </A></H1><PRE>
+</PRE><H1><A NAME=v5r0>2007-02-05 Phys v5r0 </A></H1><PRE>
+
+Final DC06 stripping preparation version.
+ - 31/39 pre-selections cleared for CPU performance and retention rate.
 
 ##################################### PHYS ####################################
 
@@ -141,13 +144,205 @@ Purpose     : LHCb physics packages
 
 
 ##################################### PHYSSEL #################################
+!========================== Ccbar v1r3 2007-01-30 ===================
+
+! 2007-01-30 -Juan PALACIOS
+
+  - options/DVPreselJpsi2MuMu.opts: rename as DVSelJpsi2MuMu.opts to take
+    out of stripping.
+  - cmt/reuirements
+    . Increase version to v1r3
+
+!========================== B2Dilepton v1r2 2007-01-30 ===================
+
+! 20-07-01-30 - Juan PALACIOS
+  - Fix compliance problems with PreselBd2Kstaree
+
+! 20a07-01-30 - Juan PALACIOS for Helder LOPES
+  - New preselection Bd2Kstaree.
+
+! 2007-01-26 - Jose A. Hernando
+
+  - options/DVPreselBs2MuMu.opts
+    . adding opts to preselect Bs->mumu
+      requires: 2 std loose muons
+                An inv mass of 600 MeV window
+                A Vertex chi2 < 14
+                A smalest Bs IP < 6
+      expected reduction: bb inc < 10-3   
+
+!========================== B2D0X v1r7 2007-02-05 =========================
+
+! 2007-02-05  - Juan PALACIOS for Kazu AKIBA
+  - options/DVPreselBd2D0Kst_D02HH.opts
+    . Remove vertex isolation cut.
+
+! 2007-01-31 - Juan PALACIOS for Kazu AKIBA
+  - options/DVPreselBd2D0Kst_D02HH.opts
+    . Use new tight standard K*
+
+! 2007-01-30 - Juan PALACIOS for Mitesh PATEL
+  - options/SpecialD0ForB2D0K.opts
+    De-activate DLL cuts on PiandKForB2D0K and TightD02KK_PiPiForB2D0K
+
+! 2007-01-26 - Juan PALACIOS for Olivier LEROY
+  - options/DVPreselBu2D0Pi.opts
+    . Bux fix: FilterD0forBu2D0Pi should be FilterD0ForBu2D0Pi
+  - Increase version to v1r7
+
+! 2007-01-25 - Juan PALACIOS for Cristina Lazzeroni
+
+  - Changes to Bu2D0K_D02KsKK and Bu2D0K_D02KsPiPi pre-selections 
+
+!========================== B2DsX v1r3 2007-02-01 ===================
+
+! 2007-02-01 - Juan PALACIOS
+  - options/DoPreselBs2DsH.opts
+    . Remove comment inside of field. Parser threw ERROR.
+
+! 2007-01-31 - Yuehong Xie
+  - options/PreselBs2DsMuX.opts
+    . allow wrong sign Ds mu combination
+
+! 2007-01-31 - Yuehong Xie
+  - options/PreselBs2DsMuX.opts
+    . add k/pi/mu DLL cuts and tighten k/pi ip cuts
+
+! 2007-01-30 - Juan PALACIOS for Jeremie BOREL
+  - options/DoPreselBs2DsH.opts
+    . Reduce mas window around Ds from 200 MeV to 100 MeV 
+
+! 2007-01-26- Yasmine Amhis
+
+ - options/DoPreselBs2DsRho.opts
+
+  .Add Bs Cuts.
+
+
+! 2007-01-25- Yasmine Amhis
+
+ - options/DoPreselBs2DsRho.opts
+   . Tightened Cuts
+
+
+! 2007-01-23 - O. Deschamps for Yasmine Amhis
+  - re-organize PreselBs2DsRho options  :
+        - sequence in DVPreselBs2DsRho.opt modified
+        - DoPreselBs2DsRho.opts added
+
+
+! 2007-01-16 - Juan PALACIOS
+
+  - options/PreselBs2DsDs.opts
+    . Remove PreselBs2DsDs.MotherFilter.Momentum2FlightAngleFilterCriterion.CutBestPV cut: no longer applicable.
+
+! 2007-01-16 - Juan PALACIOS for Stephane MONTEIL
+
+  - Add PreselBs2DsDs options.
+  - Split PreselBs2DsDs.opts into DVPresel, DoPresel and Presel files.
+
+  - cmt/requirements
+    . Increase version to v1r3
+
+!========================== B2DstarX v1r4 2007-02-02 ===================
+
+! 2007-02-02 Juan PALACIOS for Marta Calvi
+  - options/DVPreselBd2DstarMu.opts
+    . Fix bug resulting in excessive retention rate
+
+! 2007-01-31 - Juan PALACIOS
+  - cmt/requirements
+    . Increase version to v1r4.
+
+! 2007-01-31 - Juan PALACIOS for Marta CALVI
+  - options/DVPreselBd2Dstarmu.opts
+    . Changes to reduce high luminosity retention rate.
+
+!========================== B2uds v2r2 2006-02-05 ===================
+
+! 2007-02-05 - Juan PALACIOS
+  - options
+    . Remove PreselLambdaB2LambdaRho, PreselLambdaB2LambdaPhi and PreselBu2HHH
+
+! 2007-01-26 - Juan PALACIOS for Angelo CARBONE
+  - options/DVPreselB2HH.opts
+    . Changes in cuts
+  - options/DVSelB2HH.opts
+    . New selection file
+
+
+! 2007-01-23 - P. Koppenburg for Gabriel Guerrer
+  - options/DVPreselBu2HHH.opts
+    . New B+->KKK,KKPi,KPiPi,PiPiPi preselection reconstructed as
+      B+ -> 3pi without PID.
+  - increment to v2r2
+
+!========================== Bs2JpsiPhi v3r3 2007-01-08 ===================
+
+! 2007-01-08 - Juan PALACIOS
+  - cmt/requirements
+    . Increase version to v3r3
+
+! 2007-01-02 - Jan Amoraal
+ - Removed TDR and DC04 selections. This version is now incompatible with DaVinci v12r*.
+	 Use Phys/PhysSelections for DaVinci v12r*.
+ 
+! 2006-12-12 - Jan Amoraal
+  - Fixed DC06 options
+  - Added monitoring and debugging options
+
+!========================== Bd2PiPiPi0 v4r1 2007-02-05 ======================
+
+! 2007-02-05 - Juan PALACIOS
+  - options/PreselBd2RhoRho.opts
+    . Change path of histograms. Was clashing with that of another pre-selection.
+
+! 2007-02-02 Olivier Deschamps 
+  -  add DVPreselBd2KPiPi0.opts 
+  -  add DVPreselBd2Rho0Rho0.opts
+
+! 2007-01-28 Juan PALACIOS
+  - cmt/requirements
+    . Increase version to v4r1
+
+! 2007-01-26 Olivier Deschamps 
+  -  clean PreselBd2PiPiPi0.opts
+  -  adapt PreselBd2PiPiPi0.cpp for CC modes (required to handle K+pi-pi0) 
+
+!========================== JetsSel v1r2 2007-01-31 ===================
+
+! 2007-01-31 Juan PALACIOS for Victor COCO
+  - options/DVPreselHWZ2bbl.opts
+    . Change some cuts to improve retention rate
+  - cmt/requirements
+    . Increase version to v1r2
+
+!========================== Radiative v2r1 2007-02-05 --=================
+
+! 2007-01-10 - Juan PALACIOS	for Lesya SHCHUTSKA
+  - changes to options/DoPreselXb2GammaX.opts and src/PreselXb2GammaX.cpp
+  - cmt/requirements
+    . Increase version to v2r1
+
+
 ##################################### TOOLS ###################################
-!========================== Utilities v4r0 2007-01-09 =====================
+
+!========================== Utilities v4r0 2007-02-02 =====================
+
+! 2007-02-01 - Gerhard Raven
+   - Add a 'deterministic' prescaler based on the eventnumber. 
+     The prescaler is configured with an option string like "ARRAAAR", where
+     'A' is for accept and 'R' is for reject. The algorithm takes the
+     eventnumber modulo the stringlenght, and uses that as index to the string.
+     If an 'A' is found the event is accepted, and otherwise rejected
+
 ! 2007-01-09 - Florence RANJARD
  - move Utilitities/*.h to src/.
  - update *.h and *.cpp accordingly
  - remove include_dirs from requirements 
  - update *.cpp to use new FACTORY
+
+
 
 ##################################### TESTS ###################################
 ###############################################################################
