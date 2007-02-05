@@ -1,10 +1,10 @@
 #ifndef HLT_HLTUTILS_H 
 #define HLT_HLTUTILS_H 1
 
-#include "Kernel/Point3DTypes.h"
-#include "Kernel/Vector3DTypes.h"
-#include "Kernel/SymmetricMatrixTypes.h"
-#include "Kernel/GenericMatrixTypes.h"
+#include "GaudiKernel/Point3DTypes.h"
+#include "GaudiKernel/Vector3DTypes.h"
+//#include "GaudiKernel/SymmetricMatrixTypes.h"
+//#include "GaudiKernel/GenericMatrixTypes.h"
 
 #include "Event/Track.h"
 #include "Event/RecVertex.h"
@@ -16,9 +16,6 @@ typedef Gaudi::XYZVector EVector;
 typedef Gaudi::XYZPoint EPoint;
 
 typedef LHCb::RecVertex TVertex;
-
-// typedef Gaudi::XYZVector EVector;
-// typedef Gaudi::XYZPoint EPoint;
 
 namespace HltUtils
 {
