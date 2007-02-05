@@ -1,4 +1,4 @@
-// $Id: BooleInit.cpp,v 1.21 2006-11-14 13:06:36 cattanem Exp $
+// $Id: BooleInit.cpp,v 1.22 2007-02-05 16:06:08 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -6,6 +6,7 @@
 
 // from LHCbKernel
 #include "Kernel/IGenericTool.h"
+#include "Kernel/IEventTimeDecoder.h"
 
 // from EventBase
 #include "Event/ProcessHeader.h"
@@ -37,7 +38,7 @@ DECLARE_ALGORITHM_FACTORY( BooleInit );
 BooleInit::BooleInit( const std::string& name,
                       ISvcLocator* pSvcLocator)
   : LbAppInit ( name , pSvcLocator ), 
-    m_memoryTool(0)
+    m_memoryTool(0), m_odinTool(0)
 {
 
 }
@@ -58,6 +59,9 @@ StatusCode BooleInit::initialize() {
   // Private tool to plot the memory usage
   if ( "" == rootOnTES() )
     m_memoryTool = tool<IGenericTool>( "MemoryTool", "BooleMemory", this, true );
+
+  // Tool do put the ODIN object on the TES
+  m_odinTool = tool<IEventTimeDecoder>( "OdinTimeDecoder" );
   
   return StatusCode::SUCCESS;
 };
@@ -112,6 +116,9 @@ StatusCode BooleInit::execute() {
   
   LHCb::RawBank* odinBank = raw->createBank(0,LHCb::RawBank::ODIN,2, 8+36, odin);
   raw->adoptBank(odinBank, true);
+
+  // Now decode the bank and put it on the TES, for use by other algorithms
+  m_odinTool->getTime();
 
   return StatusCode::SUCCESS;
 };

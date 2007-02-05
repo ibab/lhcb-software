@@ -1,4 +1,4 @@
-// $Id: MergeEventAlg.cpp,v 1.14 2006-06-27 12:29:51 cattanem Exp $
+// $Id: MergeEventAlg.cpp,v 1.15 2007-02-05 16:06:08 cattanem Exp $
 #define MERGEEVENTALG_CPP
 // Include files
 
@@ -230,9 +230,10 @@ StatusCode MergeEventAlg::readSpillover( )
 //=============================================================================
 StatusCode MergeEventAlg::readAndLoadEvent( const std::string& subPath ) 
 {
-
   if ( m_mergeIt == 0 ) {  // first event from this algorithm event selector
-    m_mergeISelector->createContext(m_mergeIt);
+    if( m_mergeISelector->createContext(m_mergeIt).isFailure() ) {
+      return Error("Cannot create context for "+m_mergeSelectorName+" stream" );
+    }
   }
   // Read next event
   if ( m_mergeISelector->next(*m_mergeIt).isFailure() )

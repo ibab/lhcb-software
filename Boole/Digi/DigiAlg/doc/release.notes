@@ -4,6 +4,11 @@
 ! Purpose     : Holds generic digitization algorithms
 !-----------------------------------------------------------------------------
 
+!========================== DigiAlg v4r6 2007-02-05 ==========================
+! 2007-02-05 - Marco Cattaneo
+ - BooleInit now puts an ODIN object on the TES after creating the ODIN bank
+ - Fix an unchecked StatusCode in MergeEventAlg
+
 !========================== DigiAlg v4r5 2006-11-16 ==========================
 ! 2006-11-14 - Marco Cattaneo
  - In BooleInit, plot memory and initialize random number seeds only if
