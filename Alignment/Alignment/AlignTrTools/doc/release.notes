@@ -14,3 +14,7 @@
 ! Johan Blouw, October 4th, 2006 AlignTrTools v1r1
   Johan Blouw : - added source code for a simple track selector
                 - modified requirements file to reflect Louis' code dependencies
+
+! J.Blouw 05/02/2007
+  - added the simple track selector tool
+  - updated factory accordingly
