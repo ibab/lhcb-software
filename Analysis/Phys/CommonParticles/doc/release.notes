@@ -4,6 +4,10 @@
 ! Purpose     : Common particles
 !-----------------------------------------------------------------------------
 
+! 2007-02-05 - P. Koppenburg
+  - opitons/StandardDs.opts
+    . Remove flight distance FC.
+
 !========================== CommonParticles v3r7 2007-02-02 ===================
 
 ! 2007-02-02 - Juan PALACIOS
