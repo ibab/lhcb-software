@@ -3,15 +3,13 @@
 ! Resposible:	Johan Blouw
 ! Purpose:	Groups the T-station related alignment packages.
 !***************************
-
-
-!=========== AlignmentSys v1r0 ===================
- -This version uses :
-			AlignmentInterfaces v1r0
-			AlignTrTools	v1r0
-			TAlignment          v1r0
-!===========    v1r1          ===================
+!===========     v1r1     ========================
+- October 4th, 2006 Johan Blouw
+- This version is an update reflecting a change in name of
+  the SelectorTools package to AlignTrTools.
+  And the fact that there is now code in AlignTrTools v1r1
+! =======
 - this version uses :
 		       AlignmentInterfaces v1r0
-	 	       AlignTrTools        v1r2
+	 	       AlignTrTools        v2r1
 		       TAlignment	   v1r1

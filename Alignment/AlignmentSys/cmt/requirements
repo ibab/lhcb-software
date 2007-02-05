@@ -8,6 +8,7 @@ branches cmt doc
 #=======================================================
 
 # General purpose components
+use AlignmentTools	v2r3	Alignment # S. Viret
 use AlignmentInterfaces	v1r0	Alignment # Johan Blouw
 use AlignTrTools	v1r2	Alignment # Johan Blouw
 use TAlignment		v1r1	Alignment # Johan Blouw
