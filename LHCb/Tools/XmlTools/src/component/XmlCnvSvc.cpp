@@ -1,20 +1,16 @@
-// $Id: XmlCnvSvc.cpp,v 1.11 2007-01-12 12:43:42 cattanem Exp $
+// $Id: XmlCnvSvc.cpp,v 1.12 2007-02-05 09:08:54 cattanem Exp $
 
 // Include Files
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/XMLString.hpp>
 
-#include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/SvcFactory.h"
-#include "GaudiKernel/CnvFactory.h"
-#include "GaudiKernel/IConverter.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/GenericAddress.h"
 
 #include "XmlCnvSvc.h"
-#include "XmlParserSvc.h"
 
 
 // -----------------------------------------------------------------------
