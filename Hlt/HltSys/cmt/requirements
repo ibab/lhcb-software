@@ -17,5 +17,5 @@ use HltCaloAlley        v1r1    Hlt   # Stefano Villa
 use HltRecChecker	v1r1	Hlt	# Jose Angel Hernando-Morata
 use HltHadL0Conf        v1r0    Hlt   # Jose Angel Hernando-Morata
 
-# use HltPython           v*    Hlt   # Jose Angel Hernando-Morata
+use HltPython           v1r0    Hlt   # Jose Angel Hernando-Morata
 
