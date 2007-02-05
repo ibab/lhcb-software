@@ -1,4 +1,4 @@
-// $Id: HltTrackIPSelection.h,v 1.4 2006-09-26 13:54:58 cattanem Exp $
+// $Id: HltTrackIPSelection.h,v 1.5 2007-02-05 09:09:08 hernando Exp $
 #ifndef HLTTRACKIPSELECTION_H 
 #define HLTTRACKIPSELECTION_H 1
 
@@ -8,7 +8,15 @@
 #include "HltBase/HltFunctions.h"
 
 /** @class HltTrackIPSelection HltTrackIPSelection.h
- *  
+ *
+ *  functionality:
+ *         selects tracks within a given smallest IP windows respect Vertices
+ *         can select the vertex with largest number of tracks in IP window
+ *
+ *  options:
+ *        MinIP,MaxIP, range of the window of Impact Parameter IP
+ *        IPAbs, take the abs value of the IP
+ *        IPType: please indicate "2DIP" for RZ tracks or "3DIP",for 3D tracks
  *
  *  @author Jose Angel Hernando Morata
  *  @date   2005-11-17

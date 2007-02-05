@@ -1,4 +1,4 @@
-// $Id: HltEnd.h,v 1.3 2006-10-24 09:44:03 hernando Exp $
+// $Id: HltEnd.h,v 1.4 2007-02-05 09:09:08 hernando Exp $
 #ifndef HLT_HLTEND_H 
 #define HLT_HLTEND_H 1
 
@@ -12,6 +12,15 @@
 
 /** @class HltEnd HltEnd.h
  *  
+ *  functionality:
+ *         task to be done at the end of HLT 
+ *         temporally and algorithm could evolve to a sequencer
+ *         temporally store to deal with Pat and Hlt DataStores and the TES
+ *
+ *  options:
+ *         OnTes: copy all the HltDataStore collection on TES
+ *         PatToHlt: copy all the collection of PatDataStore on HltDataStore
+ *         SumaryName: copy the track and vertices saved in summary in TES
  *
  *  @author Jose Angel Hernando Morata
  *  @date   2006-07-25

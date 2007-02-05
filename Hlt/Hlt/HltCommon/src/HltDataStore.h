@@ -1,4 +1,4 @@
-// $Id: HltDataStore.h,v 1.2 2006-09-26 13:54:54 cattanem Exp $
+// $Id: HltDataStore.h,v 1.3 2007-02-05 09:09:08 hernando Exp $
 #ifndef HLTCOMMON_HLTDATASTORE_H 
 #define HLTCOMMON_HLTDATASTORE_H 1
 
@@ -11,6 +11,11 @@
 
 /** @class HltDataStore HltDataStore.h
  *  
+ * functionality:
+ *      store of collections of tracks and vertices by key string
+ *      tool to share these collections between HltAlgorithms
+ *      the pointers tracks and vertices are owned by an external container
+ *           (i.e PatDataStore)
  *
  *  @author Jose Angel Hernando Morata
  *  @date   2006-07-19
@@ -26,12 +31,16 @@ public:
   virtual ~HltDataStore( ); ///< Destructor
 
   //TODO
+  // clear of the containers
   void clear() {}
-  
+
+  // getting the map of all collection of tracks by name  
   const MapTracks& tracks() const {return m_mapTracks;}
 
+  // getting the map of all collection of tracks by name
   MapTracks& tracks() {return m_mapTracks;};
 
+  // getting the collection of tracks with a given name
   const Hlt::TrackContainer& tracks(const std::string& name) const {
     if (m_mapTracks.find(name) == m_mapTracks.end())
       error() << " No  of tracks in HltDataStore named " 
@@ -39,6 +48,7 @@ public:
     return m_mapTracks.find(name)->second;
   }
 
+  // getting the collection of tracks with a given name
   Hlt::TrackContainer& tracks(const std::string& name) {
     if (m_mapTracks.find(name) == m_mapTracks.end()) {
       info() << " creating track container " << name << endreq;
@@ -49,11 +59,13 @@ public:
     return m_mapTracks.find(name)->second;
   }
 
-  
+  // getting the map of all collection of vertices by name  
   const MapVertices& vertices() const {return m_mapVertices;}
 
+  // getting the map of all collection of vertices by name
   MapVertices& vertices() {return m_mapVertices;};
 
+  // getting the collection of vertices with a given name
   const Hlt::VertexContainer& vertices(const std::string& name) const {
     if (m_mapVertices.find(name) == m_mapVertices.end())
       error() << " No  of vertices in HltDataStore named " 
@@ -61,6 +73,7 @@ public:
     return m_mapVertices.find(name)->second;
   }
 
+  // getting the collection of vertices with a given name
   Hlt::VertexContainer& vertices(const std::string& name) {
     if (m_mapVertices.find(name) == m_mapVertices.end()) {
       info() << " creating vertex container " << name << endreq;
@@ -73,9 +86,11 @@ public:
 
 
 protected:
-  
+
+  // map of collection of tracks by name
   MapTracks m_mapTracks;
 
+  // map of collection of vertices by name
   MapVertices m_mapVertices;
   
 };

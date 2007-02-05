@@ -1,4 +1,4 @@
-// $Id: HltSequencer.h,v 1.5 2007-02-01 18:35:54 hernando Exp $
+// $Id: HltSequencer.h,v 1.6 2007-02-05 09:09:08 hernando Exp $
 #ifndef GAUDISEQUENCER_H 
 #define GAUDISEQUENCER_H 1
 
@@ -12,9 +12,21 @@
 class ISequencerTimerTool;
 
 /** @class HltSequencer HltSequencer.h
- *  Sequencer for executing several algorithms, stopping when one is faulty.
+ *
+ *  functionality:
+ *        GaudiSequencer with histogram of timing added
+ *        It creates a histogram with the rate per algorithm
+ *        modeOR forces to execute the algorithms in OR
+ *        Histogram can be booked via options 
+ *
+ *  Options:
+ *        ModeOr, force the execution of all algorithms, or is performed
+ *        HistoDescriptor: to book time-histogram, use name of the algorithm
+ *                         in the sequencer as the title of the histogram
+ *        MeasureTime: makes histos of time, including rate plot
  *
  *  @author Olivier Callot
+ *  @author Jose Angel Hernando Morata
  *  @date   2004-05-13
  */
 class HltSequencer : public GaudiHistoAlg {

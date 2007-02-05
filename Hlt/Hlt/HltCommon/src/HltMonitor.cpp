@@ -1,4 +1,4 @@
-// $Id: HltMonitor.cpp,v 1.5 2007-01-11 14:07:13 hernando Exp $
+// $Id: HltMonitor.cpp,v 1.6 2007-02-05 09:09:08 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -23,7 +23,7 @@ DECLARE_ALGORITHM_FACTORY( HltMonitor );
 //=============================================================================
 HltMonitor::HltMonitor( const std::string& name,
                         ISvcLocator* pSvcLocator)
-  : HltMonitorAlgorithm ( name , pSvcLocator )
+  : HltAlgorithm ( name , pSvcLocator )
 {
 
 }
@@ -36,7 +36,7 @@ HltMonitor::~HltMonitor() {}
 // Initialization
 //=============================================================================
 StatusCode HltMonitor::initialize() {
-  StatusCode sc = HltMonitorAlgorithm::initialize(); // must be executed first
+  StatusCode sc = HltAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   // initializeHistosFromDescriptor();
@@ -52,7 +52,7 @@ StatusCode HltMonitor::execute() {
 
   StatusCode sc = StatusCode::SUCCESS;
 
-  bool ok = HltMonitorAlgorithm::beginExecute();
+  bool ok = HltAlgorithm::beginExecute();
   if (!ok) return sc;
 
 
@@ -72,7 +72,7 @@ StatusCode HltMonitor::finalize() {
 
   debug() << "==> Finalize" << endmsg;
   
-  return HltMonitorAlgorithm::finalize();
+  return HltAlgorithm::finalize();
 }
 
 //=============================================================================

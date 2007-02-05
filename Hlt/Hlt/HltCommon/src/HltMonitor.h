@@ -1,19 +1,23 @@
-// $Id: HltMonitor.h,v 1.3 2006-10-24 09:44:03 hernando Exp $
+// $Id: HltMonitor.h,v 1.4 2007-02-05 09:09:08 hernando Exp $
 #ifndef HLTMONITOR_H 
 #define HLTMONITOR_H 1
 
 // Include files
 // from Gaudi
-#include "HltBase/HltMonitorAlgorithm.h"
+#include "HltBase/HltAlgorithm.h"
 #include "Event/HltNames.h"
+
+//typedef HltAlgorithm HltAlgorithm
 
 /** @class HltMonitor HltMonitor.h
  *  
+ *  functionality (TODO):
+ *         generic monitoring/histograms of info stores in tracks and vertices
  *
  *  @author Jose Angel Hernando Morata
  *  @date   2006-09-01
  */
-class HltMonitor : public HltMonitorAlgorithm {
+class HltMonitor : public HltAlgorithm {
 public: 
   /// Standard constructor
   HltMonitor( const std::string& name, ISvcLocator* pSvcLocator );

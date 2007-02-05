@@ -1,4 +1,4 @@
-// $Id: L0Entry.h,v 1.4 2006-12-18 09:46:47 hernando Exp $
+// $Id: L0Entry.h,v 1.5 2007-02-05 09:09:08 hernando Exp $
 #ifndef L0ENTRY_H 
 #define L0ENTRY_H 1
 
@@ -12,6 +12,15 @@
 
 /** @class L0Entry L0Entry.h
  *  
+ *  functionality:
+ *      give pass if the L0 has fired a given decision (controlled via options)
+ *      if monitor, make histogram with the L0 decisions
+ *
+ *  Options:
+ *      L0ChannelNames: list of names of the L0 decision to accept
+ *                      if no names are listed, all decision are accepted
+ *         names valid: "hadron","muon","dimuon", "electron","photon",
+                        "localPi0","globalPi0" 
  *
  *  @author Jose Angel Hernando Morata
  *  @date   2006-01-16

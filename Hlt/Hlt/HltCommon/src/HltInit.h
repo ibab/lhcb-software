@@ -1,4 +1,4 @@
-// $Id: HltInit.h,v 1.2 2006-09-26 13:54:58 cattanem Exp $
+// $Id: HltInit.h,v 1.3 2007-02-05 09:09:08 hernando Exp $
 #ifndef HLTDATASTOREINIT_H 
 #define HLTDATASTOREINIT_H 1
 
@@ -11,6 +11,10 @@
 
 /** @class HltInit HltInit.h
  *  
+ *  functionality:
+ *         task to be done at the begining of the HLT sequence
+ *         clean the HltDataStore collections
+ *         create the HltSummary (empty) for this event
  *
  *  @author Jose Angel Hernando Morata
  *  @date   2006-07-25

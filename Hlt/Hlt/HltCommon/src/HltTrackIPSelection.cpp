@@ -36,8 +36,7 @@ HltTrackIPSelection::HltTrackIPSelection( const std::string& name,
   declareProperty("IPAbs", m_ipabs = false);
 
   declareCondition("MinIP", m_ipmin = 0. ); 
-  declareCondition("MaxIP", m_ipmax = 0. ); 
-
+  declareCondition("MaxIP", m_ipmax = 0. );
 
 }
 //=============================================================================
@@ -89,9 +88,12 @@ StatusCode HltTrackIPSelection::initialize() {
     return StatusCode::FAILURE;
   }
   
-  checkInput(m_inputTracks," no input tracks");
-  checkInput(m_primaryVertices," no primary Vertices");
-  checkInput(m_outputTracks," no output tracks");
+  if (m_inputTracksName != "")
+    checkInput(m_inputTracks," no input tracks");
+  if (m_primaryVerticesName != "")
+    checkInput(m_primaryVertices," no primary Vertices");
+  if (m_outputTracksName != "")
+    checkInput(m_outputTracks," no output tracks");
   if (m_selectPrimaryVertex)
     checkInput(m_outputVertices," no output vertices");
 

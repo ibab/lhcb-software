@@ -1,4 +1,4 @@
-// $Id: PhysSelEntry.h,v 1.1 2007-02-01 18:35:55 hernando Exp $
+// $Id: PhysSelEntry.h,v 1.2 2007-02-05 09:09:09 hernando Exp $
 #ifndef PHYSSELENTRY_H 
 #define PHYSSELENTRY_H 1
 
@@ -12,6 +12,14 @@
 
 /** @class PhysSelEntry PhysSelEntry.h
  *  
+ *  functionality:
+ *         accept (set pass) if an event pass a selection
+ *                it checks in SelResults for a decay descriptor 
+ *                of the selection
+ *
+ *  Options:
+ *         PhysSelLocations: TES location of the PhysSels selections
+ *         PhysSelNames: list of decay descriptors of the selections
  *
  *  @author Jose Angel Hernando Morata
  *  @date   2006-01-16

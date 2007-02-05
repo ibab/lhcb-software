@@ -1,4 +1,4 @@
-// $Id: HltL0Monitor.h,v 1.1 2006-10-24 09:44:03 hernando Exp $
+// $Id: HltL0Monitor.h,v 1.2 2007-02-05 09:09:08 hernando Exp $
 #ifndef HLTL0MONITOR_H 
 #define HLTL0MONITOR_H 1
 
@@ -12,7 +12,11 @@
 #include "HltBase/HltAlgorithm.h"
 
 /** @class HltL0Monitor HltL0Monitor.h
- *  
+ *
+ *  functionality:
+ *        monitor the L0 result
+ *        make histogram of L0 decision
+ *        make histograms with the input of the L0 decison (muon,calo,hadron)  
  *
  *  @author Jose Angel Hernando Morata
  *  @date   2006-01-16

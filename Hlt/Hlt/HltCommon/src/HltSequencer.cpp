@@ -1,4 +1,4 @@
-// $Id: HltSequencer.cpp,v 1.7 2007-02-01 18:35:54 hernando Exp $
+// $Id: HltSequencer.cpp,v 1.8 2007-02-05 09:09:08 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -58,22 +58,28 @@ StatusCode HltSequencer::initialize() {
   }
 
   // generic histograms
-  m_histoTime  = book1D("time",0.,50.,500);
-  m_histoTime0 = book1D("time0",0.,50.,500);
-
-  int nalgs = m_entries.size();
-  m_histoRate = book1D("rate",0.,1.*(nalgs+1),nalgs+1);
-
+  m_histoTime = NULL;
+  m_histoTime0 = NULL;
+  m_histoRate = NULL;
+  if (m_measureTime) {
+    m_histoTime  = book1D("time",0.,50.,500);
+    m_histoTime0 = book1D("time0",0.,50.,500);
+    int nalgs = m_entries.size();
+    m_histoRate = book1D("rate",0.,1.*(nalgs+1),nalgs+1);
+  }
+  
   // external booking algorithms
-  const std::vector<std::string>& hdes = m_hisDescriptor.value();
-  for (std::vector<std::string>::const_iterator it = hdes.begin();
-       it != hdes.end(); it++){
-    std::string title = "";
-    int n = 100;
-    float x0 = 0.;
-    float xf = 1.;
-    if (ParserDescriptor::parseHisto1D(*it,title,n,x0,xf)) 
-      book1D(title,x0,xf,n);
+  if (m_measureTime) {
+    const std::vector<std::string>& hdes = m_hisDescriptor.value();
+    for (std::vector<std::string>::const_iterator it = hdes.begin();
+         it != hdes.end(); it++){
+      std::string title = "";
+      int n = 100;
+      float x0 = 0.;
+      float xf = 1.;
+      if (ParserDescriptor::parseHisto1D(*it,title,n,x0,xf)) 
+        book1D(title,x0,xf,n);
+    }
   }
 
   //== Initialize the algorithms
@@ -84,8 +90,8 @@ StatusCode HltSequencer::initialize() {
       const std::string algname = (*itE).algorithm()->name();
       (*itE).setTimer( m_timerTool->addTimer( algname ));
       AIDA::IHistogram1D* h = histo1D(algname);
-      info() << " found histogram of " << algname << " ? " 
-             << h << endreq;
+      debug() << " found histogram of " << algname << " ? " 
+              << h << endreq;
       m_histoTimeAlgs.push_back(h);
     }
     // if (!m_propHisto.hasHisto(algname))
@@ -136,7 +142,7 @@ StatusCode HltSequencer::execute() {
       bool algPassed = myAlg->filterPassed();
       debug() << " algorithm " << myAlg->name() << " " 
               << " passed? " << algPassed << endreq;
-      if (algPassed) fill(m_histoRate,1.*ialg,1.);
+      if (algPassed && m_measureTime) fill(m_histoRate,1.*ialg,1.);
       passed  = m_modeOR? (passed || algPassed) : (passed && algPassed);
       if (!m_ignoreFilter) 
         if ((!passed) && (!m_modeOR)) break;
@@ -145,7 +151,7 @@ StatusCode HltSequencer::execute() {
   if (!m_ignoreFilter) setFilterPassed(passed);
   else setFilterPassed( true );
   debug() << " HltSequencer passed? " << passed << endreq;
-  if (passed) fill(m_histoRate,ialg,1.);
+  if (passed && m_measureTime) fill(m_histoRate,ialg,1.);
   setExecuted( true );
 
   if ( m_measureTime ) {
