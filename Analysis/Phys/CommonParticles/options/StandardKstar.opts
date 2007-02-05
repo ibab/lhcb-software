@@ -1,6 +1,6 @@
-// $Id: StandardKstar.opts,v 1.7 2007-02-02 11:53:45 jpalac Exp $
+// $Id: StandardKstar.opts,v 1.8 2007-02-05 10:12:20 jpalac Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.7 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.8 $
 // ============================================================================
 
 /** @file 
@@ -42,7 +42,7 @@ StdTightKstar2KPi.Window = 150.0 * MeV; // hlt presel: 160.0 * MeV;
 StdTightKstar2KPi.MinPt  =  750 * MeV; // hlt presel: 500 MeV
 // Cuts for mother
 StdTightKstar2KPi.MotherFilter.Selections = { "K*(892)0 : VtxFilterCriterion" } ; 
-StdTightKstar2KPi.MotherFilter.VtxFilterCriterion.MaxChi2 = 25.0; // hlt presel: 100
+StdTightKstar2KPi.MotherFilter.VtxFilterCriterion.MaxChi2 = 15.0; // hlt presel: 100
 
 
 /*************************************************************************
