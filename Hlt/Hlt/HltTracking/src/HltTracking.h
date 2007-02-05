@@ -1,4 +1,4 @@
-// $Id: HltTracking.h,v 1.4 2006-10-27 15:14:14 hernando Exp $
+// $Id: HltTracking.h,v 1.5 2007-02-05 09:18:17 hernando Exp $
 #ifndef HLTTRACKING_H 
 #define HLTTRACKING_H 1
 
@@ -12,6 +12,27 @@
 
 /** @class HltTracking HltTracking.h
  *  
+ *  functionality:
+ *        master algorithms to steer tracks reconstraction of HLT
+ *        do reconstruct only selected tracks
+ *        if they were already reconstructed, do not do it again
+ *        it can order output tracks by Pt
+ *        it can store output tracks in HltDataStore.
+ *
+ *  Options:
+ *        RecoName: name of the reconstruction to be done,
+ *           valid names: "Velo","VeloTT","Forward","MuonForward"
+ *        OrderByPt: true/false order by Pt output tracks in HltDataStore
+ *
+ *  Note:
+ *        HltTracking will flag tracks to reconstruct with the IPSelected flag
+ *        first it will check that the tracks are not already reconstructed
+ *        The containers that own the tracks are the default container in
+ *     PatDataStore, you can see the code in the constructor.
+ *        If not outputTrackName is used in options, tracks will be only in the
+ *     PatDataStore
+ *        If OutTracksName is indicated in the options, they will be
+ *     a collection in HltDataStore with that name
  *
  *  @author Jose Angel Hernando Morata
  *  @date   2006-08-28
@@ -61,6 +82,7 @@ protected:
 protected:
 
   std::string m_recoName;
+  bool m_orderByPt;
 
   int m_recoKey;
   int m_prevrecoKey;
@@ -105,7 +127,7 @@ protected:
     if (!m_outputTracks) return;
     for (typename CON::iterator it = con.begin(); it != con.end(); ++it) 
       if ( (*it)->checkFlag(LHCb::Track::IPSelected)) 
-      {setReco(**it); loadFrom(**it);}    
+      {setReco(**it); loadFrom(**it);}
   }
 
 private:

@@ -5,6 +5,11 @@
 !-----------------------------------------------------------------------------
 
 ! 2007-1-16 - Jose A. Hernando
+  - HltTracking: adding options OrderByPt (default false) to order or not
+          tracks by pt
+  - adding comments
+
+! 2007-1-16 - Jose A. Hernando
   - HltTracking small bug with VeloTTKey
 
 ! ======================== HltTracking v1r2 2006-11-07 =======================

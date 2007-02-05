@@ -1,4 +1,4 @@
-// $Id: HltTracking.cpp,v 1.8 2007-01-16 16:36:52 hernando Exp $
+// $Id: HltTracking.cpp,v 1.9 2007-02-05 09:18:17 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -30,8 +30,9 @@ HltTracking::HltTracking( const std::string& name,
   : HltAlgorithm ( name , pSvcLocator )
 {
 
-  declareProperty( "MeasureTime"   , m_measureTime   = false );
+  declareProperty("MeasureTime"   , m_measureTime   = false );
   declareProperty("RecoName", m_recoName = "empty");
+  declareProperty("OrderByPt", m_orderByPt = false);
 
   m_configs["Velo"] = RecoConfiguration("Velo","RZVelo","PatVeloSpaceTracking",
                                         LHCb::TrackLocation::RZVelo,
@@ -206,6 +207,7 @@ void HltTracking::loadFrom(const Track& mon) {
   int keymon = mon.key();
   for (PatTrackContainer::iterator it = m_patOutputTracks->begin();
        it != m_patOutputTracks->end(); ++it) {
+    if ((*it)->nStates() <=0) continue; // TODO protection to bugy tracks
     Track& son = **it;
     bool ok = false;
     int ikeymon = (int) son.info(m_prevrecoKey,-1);
@@ -226,9 +228,8 @@ void HltTracking::load() {
   if (m_inputTracks) loadTracks(*m_inputTracks);
   else loadTracks(*m_patInputTracks);
   
-  if ((m_outputTracks) && (m_recoKey >= m_recoHasPt)) 
+  if ((m_orderByPt) && (m_outputTracks) && (m_recoKey >= m_recoHasPt)) 
     std::sort(m_outputTracks->begin(),m_outputTracks->end(),_sortByPt);
-  
 
   if (m_measureTime) m_timer->stop(m_timeLoad);
   if (m_debug) {
