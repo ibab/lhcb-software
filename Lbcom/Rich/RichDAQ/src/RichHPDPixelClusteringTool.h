@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::DAQ::HPDPixelClusteringTool
  *
  *  CVS Log :-
- *  $Id: RichHPDPixelClusteringTool.h,v 1.4 2007-02-05 15:02:35 jonrob Exp $
+ *  $Id: RichHPDPixelClusteringTool.h,v 1.5 2007-02-05 15:05:39 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   21/03/2006
@@ -29,11 +29,6 @@ namespace Rich
 {
   namespace DAQ
   {
-
-    namespace PixClusInfo
-    {
-      static const int nPixelRowsOrCols = 32;
-    }
 
     //-----------------------------------------------------------------------------
     /** @class HPDPixelClusteringTool RichHPDPixelClusteringTool.h
