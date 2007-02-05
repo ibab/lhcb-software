@@ -1,4 +1,4 @@
-// $Id: XmlGenericCnv.cpp,v 1.18 2007-02-02 08:17:08 marcocle Exp $
+// $Id: XmlGenericCnv.cpp,v 1.19 2007-02-05 18:55:33 marcocle Exp $
 
 // Include files
 #include "DetDescCnv/XmlGenericCnv.h"
@@ -15,6 +15,8 @@
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/IConversionSvc.h"
 #include "GaudiKernel/MsgStream.h"
+
+#include "DetDesc/ValidDataObject.h"
 
 #include "XmlTools/IXmlSvc.h"
 
@@ -120,7 +122,7 @@ StatusCode XmlGenericCnv::createObj (IOpaqueAddress* addr,
   }
 
   // parses the xml file or the xml string and retrieves a DOM document
-  xercesc::DOMDocument* document = NULL;
+  IOVDOMDocument* document = NULL;
   bool isAString = 1 == addr->ipar()[0];
 
   // displays the address for debug purposes 
@@ -150,7 +152,7 @@ StatusCode XmlGenericCnv::createObj (IOpaqueAddress* addr,
   if (document != NULL) {
     // checks version of the file
     // first find the "DDDB" or "materials" element
-    xercesc::DOMNodeList* list = document->getChildNodes();
+    xercesc::DOMNodeList* list = document->getDOM()->getChildNodes();
     xercesc::DOMElement* mainNode = NULL;
     unsigned int index;
     for (index = 0;
@@ -239,16 +241,23 @@ StatusCode XmlGenericCnv::createObj (IOpaqueAddress* addr,
   
         // finds the corresponding node in the DOM tree
         XMLCh* nameString = xercesc::XMLString::transcode(objectName.c_str());
-        xercesc::DOMElement* element = document->getElementById (nameString);
+        xercesc::DOMElement* element = document->getDOM()->getElementById (nameString);
         xercesc::XMLString::release(&nameString);
         if (element != NULL) {
           try {
             // deal with the node found itself
             sc = internalCreateObj (element, refpObject, addr);
+            if ( sc.isSuccess() ){
+              IValidity * val = dynamic_cast<IValidity *>(refpObject);
+              if ( NULL != val ) { // if the created object implements IValidity, set the IOV from the returned one
+                val->setValidity(document->validSince(),document->validTill());
+              }
+            }
           } catch (GaudiException e) {
             log << MSG::FATAL << "An exception went out of the conversion process : ";
             e.printOut (log);
             log << endmsg;
+            sc =  e.code();
           }
         } else { // (element == NULL)
           log << MSG::FATAL << objectName << " : " << "No such object in file " << addr->par()[0] << endreq;
@@ -370,8 +379,34 @@ StatusCode XmlGenericCnv::internalCreateObj (xercesc::DOMElement* element,
 // -----------------------------------------------------------------------
 // Update the transient object from the other representation.
 // -----------------------------------------------------------------------
-StatusCode XmlGenericCnv::updateObj (IOpaqueAddress* /*pAddress*/,
-                                     DataObject*     /*refpObject*/) {
+StatusCode XmlGenericCnv::updateObj (IOpaqueAddress* pAddress,
+                                     DataObject*     pObject) {
+  DataObject* pNewObject; // create a new object and copy it to the old version
+
+  StatusCode sc = createObj(pAddress,pNewObject);
+  if (sc.isFailure()){
+    MsgStream log( msgSvc(), "XmlGenericCnv" );
+    log << MSG::ERROR << "Cannot create the new object to update the existing one" << endmsg;
+    return sc;
+  }
+
+  // We need to do dynamic_cast because DataObject::operator= is not virtual.
+  ValidDataObject* pVDO = dynamic_cast<ValidDataObject*>(pObject);
+  ValidDataObject* pNewVDO = dynamic_cast<ValidDataObject*>(pNewObject);
+  if ( 0 == pVDO || 0 == pNewVDO ) {
+    MsgStream log( msgSvc(), "XmlGenericCnv" );
+    log << MSG::ERROR
+        << "Cannot update objects other than ValidDataObject: " 
+        << "update() must be defined!"
+        << endmsg;
+    return StatusCode::FAILURE;
+  }
+  // Deep copy the new Condition into the old DataObject
+  pVDO->update( *pNewVDO );  
+
+  // Delete the useless Condition
+  delete pNewVDO;
+
   return StatusCode::SUCCESS;
 }
 
@@ -509,10 +544,26 @@ XmlGenericCnv::createAddressForHref (std::string href,
     // here we deal with a regular URL
     // first parse the href to get entryName and location
     std::string::size_type poundPosition = href.find_last_of('#');
-    // builds an entryName
-    std::string entryName = "/" + href.substr(poundPosition + 1);
-    // builds the location of the file
-    std::string location = href.substr(0, poundPosition);
+    std::string entryName;
+    std::string location;
+    if ( poundPosition != href.npos ) {
+      // builds an entryName
+      entryName = "/" + href.substr(poundPosition + 1);
+      // builds the location of the file
+      location = href.substr(0, poundPosition);
+    }
+    else { // if there is no '#' we use the file name (/path/to/file.xml -> /path/to/file.xml#file.xml)
+      location = href;
+      std::string::size_type pos = href.find_last_of('/');
+      if ( pos == href.npos ) {
+        // no '/' -> href = "something"
+        entryName = "/" + href;
+      }
+      else {
+        entryName = "/" + href.substr(pos + 1);
+      }
+    }
+    
     if( location.empty() ) {
       // This means that "href" has the form "#objectID" and referenced
       // object resides in the same file we are currently parsing
@@ -542,10 +593,10 @@ XmlGenericCnv::createAddressForHref (std::string href,
                                || ( location[0] >= 'A' && location[0] <= 'Z' )
                                ) && location[1] == ':'
                               )
-                          // consider URLs as absolute paths
-                          || ( location.find(":") != href.npos )
                           );
-      if ( !is_abs_path ) {
+      // consider conddb URLs as absolute paths
+      bool is_url = location.find("conddb:") == 0;
+      if ( (!is_abs_path) && (!is_url) ) {
         if ( parent->ipar()[0] == 0) {
           // The address points to a file
           std::string::size_type dPosU  = parent->par()[0].find_last_of('/'); // search Unix separator
@@ -590,9 +641,9 @@ XmlGenericCnv::createAddressForHref (std::string href,
       upwardStringPos = location.find(upwardString);
     }
     // Now, location should be a clean URL or absolute path.
-    if ( parent->ipar()[0] == 1
+    if ( parent->ipar()[0] == 1  // the URL comes from a string
          && location[0] != '/' ) // avoid infinite loops
-      return createAddressForHref(location + href.substr(poundPosition), clid, parent);
+      return createAddressForHref(location + "#" + entryName.substr(1), clid, parent);
 
     log << MSG::VERBOSE
         << "Now build an XML address for location=" << location

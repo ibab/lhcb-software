@@ -4,7 +4,13 @@
 ! Purpose     : standard converters for the LHCb Detector Description
 !-----------------------------------------------------------------------------
 
-!================ DetDescCnv v4r1 2007-02-02 ==================================
+!================ DetDescCnv v4r1 2007-02-05 ==================================
+ ================ NEEDS XmlTools >= v5r0 ======================================
+! 2007-02-02 - Marco Clemencic
+ - Fixed a bug in the handling of hrefs occurring in very special cases.
+ - Implemented the changes needed for the changes in IXmlParserSvc.
+ - Added implementetation of XmlGenericCnv::updateObj.
+ 
 ! 2007-02-02 - Marco Cattaneo
  - Remove dependency on LHCbDefinitions from an include file
 
