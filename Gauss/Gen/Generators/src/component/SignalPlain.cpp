@@ -1,4 +1,4 @@
-// $Id: SignalPlain.cpp,v 1.13 2007-02-01 22:16:03 robbep Exp $
+// $Id: SignalPlain.cpp,v 1.14 2007-02-06 11:11:33 robbep Exp $
 // Include files 
 
 // local
@@ -66,27 +66,25 @@ bool SignalPlain::generate( const unsigned int nPileUp ,
       ParticleVector theParticleList ;
       if ( checkPresence( m_pids , theGenEvent , theParticleList ) ) {
 
-        unsigned int nSignal = theParticleList.size() ;        
-        
-        m_nEventsBeforeCut++ ;
-        
-        updateCounters( theParticleList , m_nParticlesBeforeCut , 
-                        m_nAntiParticlesBeforeCut , false ) ;          
-        
-        bool passCut = true ;
-        if ( 0 != m_cutTool ) 
-          passCut = m_cutTool -> applyCut( theParticleList , theGenEvent ,
-                                           theGenCollision , m_decayTool , 
-                                           m_cpMixture , 0 ) ;
-        
-        if ( passCut && ( ! theParticleList.empty() ) ) {
-          m_nEventsAfterCut++ ;
+        // establish correct multiplicity of signal
+        if ( ensureMultiplicity( theParticleList.size() ) ) {
           
-          updateCounters( theParticleList , m_nParticlesAfterCut , 
-                          m_nAntiParticlesAfterCut , true ) ;
+          m_nEventsBeforeCut++ ;
           
-          // establish correct multiplicity of signal
-          if ( ensureMultiplicity( nSignal ) ) {
+          updateCounters( theParticleList , m_nParticlesBeforeCut , 
+                          m_nAntiParticlesBeforeCut , false ) ;          
+          
+          bool passCut = true ;
+          if ( 0 != m_cutTool ) 
+            passCut = m_cutTool -> applyCut( theParticleList , theGenEvent ,
+                                             theGenCollision , m_decayTool , 
+                                             m_cpMixture , 0 ) ;
+          
+          if ( passCut && ( ! theParticleList.empty() ) ) {
+            m_nEventsAfterCut++ ;
+            
+            updateCounters( theParticleList , m_nParticlesAfterCut , 
+                            m_nAntiParticlesAfterCut , true ) ;          
             
             HepMC::GenParticle * theSignal =
               chooseAndRevert( theParticleList ) ;
