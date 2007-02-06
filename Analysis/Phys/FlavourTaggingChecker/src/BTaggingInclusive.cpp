@@ -1,4 +1,4 @@
-// $Id: BTaggingInclusive.cpp,v 1.2 2006-10-24 10:21:06 jpalac Exp $
+// $Id: BTaggingInclusive.cpp,v 1.3 2007-02-06 16:51:18 jpalac Exp $
 
 // local
 #include "BTaggingInclusive.h"
@@ -28,14 +28,9 @@ DECLARE_ALGORITHM_FACTORY( BTaggingInclusive );
 BTaggingInclusive::BTaggingInclusive( const std::string& name,
                                       ISvcLocator* pSvcLocator)
   : DVAlgorithm ( name , pSvcLocator )
-  , m_setDecay(false)
-  , m_evtTypeSvc(NULL)
-  , m_mcFinder(NULL)
 {
   declareProperty("TagsLocation",m_tagslocation = "/Event/Phys/Tags" );
   declareProperty("OSTagsLocation",m_ostagslocation = "/Event/Phys/OSTags" );
-  declareProperty( "EvtCodeFromData",  m_fromData = true );
-  declareProperty( "EvtCode",          m_evtCode  = 0 );
 }
 //=============================================================================
 // Destructor
@@ -51,22 +46,6 @@ StatusCode BTaggingInclusive::initialize() {
   if( ! m_debug ) {
     fatal() << "Unable to retrieve Debug tool "<< endreq;
     return StatusCode::FAILURE;
-  }
-
-  // Retrieve the EvtTypeSvc here so that it is always done at initialization
-  m_evtTypeSvc = svc<IEvtTypeSvc>( "EvtTypeSvc", true );  
-  // Check that EvtType code has been set with appropriate value
-  // if it will not be read from data
-  if( !m_fromData ) {
-    if(  m_evtCode == 0 ) {
-      fatal() << "With EvtCodeFromData = false you MUST set EvtCode"<< endmsg;
-      return StatusCode::FAILURE;
-    }
-    // Set the decay descriptor to pass to the MCDecayFinder if using evtCode
-    if( (setDecayToFind( m_evtCode )).isFailure() ) {
-      fatal() << " 'setDecayToFind' failed in 'initialize' "<< endmsg;
-      return StatusCode::FAILURE;
-    }
   }
 
   nsele=0;
@@ -89,18 +68,24 @@ StatusCode BTaggingInclusive::execute() {
   ///////////////////////////////////////
   MCParticle* B0 = 0;
   MCParticle::Vector B0daughters(0);
-
-  if( m_fromData && !m_setDecay ) {
-    LHCb::GenHeader* header = 
-      get<LHCb::GenHeader>( evtSvc(), LHCb::GenHeaderLocation::Default );
-    if( setDecayToFind( header->evType()) ) {
-      fatal() << " 'setDecayToFind' failed in 'execute' "<< endmsg;
-      return StatusCode::FAILURE;
-    }
+  SmartDataPtr<HepMCEvents> hepVect(eventSvc(), HepMCEventLocation::Default);
+  if ( ! hepVect ) {
+    fatal() << "This event has no HepMCEvent" << endreq;
+    return StatusCode::FAILURE;
   }
-  if( m_mcFinder ) if( m_mcFinder->hasDecay() ){
-    m_mcFinder->decayMembers( B0, B0daughters );
-    debug()<<" Analysing decay: "<<m_mcFinder->decay()<< endmsg;
+  for( std::vector<LHCb::HepMCEvent*>::iterator q=hepVect->begin();
+       q!=hepVect->end(); ++q ) {
+    for ( HepMC::GenEvent::particle_iterator 
+	    p  = (*q)->pGenEvt()->particles_begin();
+	    p != (*q)->pGenEvt()->particles_end();   ++p ) {
+      if( (*p)->status() != 889 ) continue;
+      debug()<<"truth search for: "<<(*p)->pdg_id()
+	     <<"  p="<<(*p)->momentum().vect().mag()
+	     <<"  th="<<(*p)->momentum().vect().theta()
+	     <<"  status "<<(*p)->status()<<endreq;
+      B0 = associatedofHEP(*p);
+      if(B0) break; 
+    }
   }
   //-------------------
 
@@ -346,3 +331,22 @@ StatusCode BTaggingInclusive::finalize() {
 }
 
 //=============================================================================
+MCParticle* BTaggingInclusive::associatedofHEP(HepMC::GenParticle* hepmcp) {
+
+  SmartDataPtr<MCParticles> mcpart (eventSvc(), MCParticleLocation::Default );
+
+  int mid = hepmcp->pdg_id();
+  double mothmom = hepmcp->momentum().vect().mag();
+  double moththeta = hepmcp->momentum().vect().theta();
+  MCParticles::const_iterator imc;
+  for ( imc = mcpart->begin(); imc != mcpart->end(); ++imc ) {
+    if( mid == (*imc)->particleID().pid() ) {
+      if( fabs(mothmom - (*imc)->momentum().P())< 1.0){
+	if( fabs(moththeta -(*imc)->momentum().Theta())< 0.0001){
+	  return (*imc);
+	}
+      }
+    }
+  }
+  return 0;
+}
