@@ -1,4 +1,4 @@
-// $Id: RichDigiAlgMoni.h,v 1.11 2007-02-02 10:13:42 jonrob Exp $
+// $Id: RichDigiAlgMoni.h,v 1.12 2007-02-06 15:44:36 cattanem Exp $
 #ifndef RICHMONITOR_RICHDIGIALGMONI_H
 #define RICHMONITOR_RICHDIGIALGMONI_H 1
 
@@ -12,6 +12,7 @@
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/ParticleProperty.h"
+#include "GaudiKernel/Vector3DTypes.h"
 
 // Event model
 #include "Event/MCRichDigit.h"
@@ -27,7 +28,6 @@
 #include "Kernel/RichDetectorType.h"
 #include "Kernel/RichRadiatorType.h"
 #include "Kernel/RichParticleIDType.h"
-#include "Kernel/Vector3DTypes.h"
 
 // GSL
 #include "gsl/gsl_math.h"

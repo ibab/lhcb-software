@@ -4,6 +4,10 @@
 ! Purpose     : Rich Digitisation
 !-----------------------------------------------------------------------------
 
+!======================== RichReadout v2r4 2007-02-06 ========================
+! 2007-02-06 - Marco Cattaneo
+ - Clean up includes
+
 ! 2007-02-02 - Chris Jones
  - Adapt to new RICH namespaces
 

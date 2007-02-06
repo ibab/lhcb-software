@@ -5,7 +5,7 @@
  *  Header file for RICH digitisation algorithm : Rich::MC::Digi::SimpleChargeSharing
  *
  *  CVS Log :-
- *  $Id: RichSimpleChargeSharing.h,v 1.3 2007-02-02 10:13:42 jonrob Exp $
+ *  $Id: RichSimpleChargeSharing.h,v 1.4 2007-02-06 15:44:36 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   23/01/2006
@@ -20,7 +20,6 @@
 
 // from Gaudi
 #include "GaudiKernel/RndmGenerators.h"
-#include "GaudiKernel/SmartDataPtr.h"
 
 // Event model
 #include "Event/MCParticle.h"
@@ -28,8 +27,8 @@
 #include "Event/MCRichDeposit.h"
 #include "Event/MCRichSummedDeposit.h"
 
-// from CLHEP
-#include "Kernel/Point3DTypes.h"
+// Math
+#include "GaudiKernel/Point3DTypes.h"
 
 // interfaces
 #include "RichKernel/IRichSmartIDTool.h"

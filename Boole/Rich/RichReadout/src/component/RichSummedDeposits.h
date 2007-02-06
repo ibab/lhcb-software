@@ -5,7 +5,7 @@
  *  Header file for RICH digitisation algorithm : Rich::MC::Digi::SummedDeposits
  *
  *  CVS Log :-
- *  $Id: RichSummedDeposits.h,v 1.5 2007-02-02 10:13:42 jonrob Exp $
+ *  $Id: RichSummedDeposits.h,v 1.6 2007-02-06 15:44:36 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @author Alex Howard   a.s.howard@ic.ac.uk
@@ -21,7 +21,6 @@
 
 // from Gaudi
 #include "GaudiKernel/RndmGenerators.h"
-#include "GaudiKernel/SmartDataPtr.h"
 
 // Event model
 #include "Event/MCParticle.h"
@@ -29,8 +28,8 @@
 #include "Event/MCRichDeposit.h"
 #include "Event/MCRichSummedDeposit.h"
 
-// from CLHEP
-#include "Kernel/Point3DTypes.h"
+// Math
+#include "GaudiKernel/Point3DTypes.h"
 
 // kernel
 #include "Kernel/ParticleID.h"

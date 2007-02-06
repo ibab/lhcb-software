@@ -1,7 +1,10 @@
-// $Id: RichDigiAlgMoni.cpp,v 1.13 2007-02-02 10:13:42 jonrob Exp $
+// $Id: RichDigiAlgMoni.cpp,v 1.14 2007-02-06 15:44:36 cattanem Exp $
 
 // Units
 #include "GaudiKernel/SystemOfUnits.h"
+
+// From GaudiKernel
+#include "GaudiKernel/SmartDataPtr.h"
 
 // local
 #include "RichDigiAlgMoni.h"
