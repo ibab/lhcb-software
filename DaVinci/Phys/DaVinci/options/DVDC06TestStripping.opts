@@ -1,8 +1,12 @@
-#include "$STRIPPINGROOT/options/DVPresel.opts"
-//#include "$DAVINCIROOT/options/myDVPresel.opts"
 #include "$COMMONPARTICLESROOT/options/StandardParticles.opts"
 #include "$COMMONPARTICLESROOT/options/StandardOptions.opts"
-//
-//PoolDbCacheSvc.Catalog = { "xmlcatalog_file:$DAVINCIROOT/options/TestBBinclDataCatalogue.xml" };
+#include "$DAVINCIROOT/options/loadParticlesSeq.opts"
+#include "$STRIPPINGROOT/options/DVPresel.opts"
+#include "$STRIPPINGROOT/options/Correlations.opts"
 EventClocksvc.EventTimeDecoder = "FakeEventTime";
-ApplicationMgr.EvtMax = 5;
+ApplicationMgr.EvtMax = 10000;
+EventSelector.PrintFreq  = 10;
+// ToolSvc.OutputLevel=1;
+// ToolSvc.CheckOverlap.OutputLevel=3;
+// ToolSvc.Particle2State.OutputLevel=3;
+//ToolSvc.RelatedPVFinder.ContextTool.GeomDispCalculator.OutputLevel=1;

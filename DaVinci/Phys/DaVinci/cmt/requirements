@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.339 2007-02-01 18:35:52 jpalac Exp $
+# $Id: requirements,v 1.340 2007-02-06 09:26:00 jpalac Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg, J. Palacios
 #
@@ -22,6 +22,7 @@ apply_pattern DaVinciVersion
 use RELAX v* LCG_Interfaces          
 
 #-- Gaudi libraries
+use GaudiConf           v*
 use GaudiAlg 		v*         
 use GaudiAud            v*         
 use GaudiGSL		v*         
@@ -37,8 +38,25 @@ use XmlConditions       v2r4    Det
 use FieldMap            v4r7         
 use ParamFiles          v5r0         
 
-#-- LHCb libraries
-use LHCb	v22r0
+#-- LHCb
+# Kernel packages
+use KernelSys           v*   Kernel
+
+# Detector description
+use DetSys              v*   Det
+
+# Event data model
+use EventSys            v*   Event
+
+# DAQ Buffer encoding and decoding
+use DAQSys              v*   DAQ
+
+# Extra stuff
+use LHCbAlgs            v*    Kernel
+use CaloInterfaces      v*    Calo
+use CaloUtils           v*    Calo
+use SimComponents       v*    Sim
+use LinkerInstances     v*    Event
 
 #-- Lbcom
 use LbcomSys    v6r0
