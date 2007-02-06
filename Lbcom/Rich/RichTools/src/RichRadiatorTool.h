@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::RadiatorTool
  *
  *  CVS Log :-
- *  $Id: RichRadiatorTool.h,v 1.5 2007-02-01 17:51:10 jonrob Exp $
+ *  $Id: RichRadiatorTool.h,v 1.6 2007-02-06 15:23:37 cattanem Exp $
  *
  *  @author Antonis Papanestis
  *  @date   2006-03-01
@@ -25,7 +25,9 @@
 // LHCbKernel
 #include "Kernel/RichRadiatorType.h"
 #include "Kernel/RichRadIntersection.h"
-#include "Kernel/Transform3DTypes.h"
+
+// Math
+#include "GaudiKernel/Transform3DTypes.h"
 
 // from RichDet
 #include "RichDet/DeRichRadiator.h"

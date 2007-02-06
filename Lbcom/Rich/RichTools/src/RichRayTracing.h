@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::RayTracing
  *
  *  CVS History :
- *  $Id: RichRayTracing.h,v 1.29 2007-02-01 17:51:10 jonrob Exp $
+ *  $Id: RichRayTracing.h,v 1.30 2007-02-06 15:23:37 cattanem Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-03-29
@@ -29,9 +29,11 @@
 // RichEvent
 #include "RichEvent/RichGeomPhoton.h"
 
+// Math
+#include "GaudiKernel/Point3DTypes.h"
+#include "GaudiKernel/Vector3DTypes.h"
+
 // Kernel
-#include "Kernel/Point3DTypes.h"
-#include "Kernel/Vector3DTypes.h"
 #include "Kernel/RichSide.h"
 #include "Kernel/RichSmartID.h"
 #include "Kernel/RichTraceMode.h"
