@@ -1,8 +1,11 @@
-// $Id: IJetMaker.cpp,v 1.1 2005-07-26 16:26:17 ibelyaev Exp $
+// $Id: IJetMaker.cpp,v 1.2 2007-02-06 09:57:56 pkoppenb Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.1 $ 
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $ 
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2005/07/26 16:26:17  ibelyaev
+//  add new abstract interface IJetMaker
+// 
 // ============================================================================
 // Include files
 // ============================================================================

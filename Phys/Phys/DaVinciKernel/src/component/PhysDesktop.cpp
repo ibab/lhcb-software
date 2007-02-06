@@ -128,7 +128,7 @@ PhysDesktop::PhysDesktop( const std::string& type,
   if (m_outputLocn.empty()) Exception("OutputLocation is not set") ;
 
   // instance of PV relator
-  declareProperty( "RelatedPVFinderName", m_pvRelatorName = "RelatedPVFinder" );
+  declareProperty( "RelatedPVFinderName", m_pvRelatorName = "Default" );
 
 
 } ;
@@ -176,8 +176,14 @@ StatusCode PhysDesktop::initialize()
   m_OnOffline = tool<IOnOffline>("OnOfflineTool",this);
 
   // PV relator
-  m_pvRelator = tool<IRelatedPVFinder>(m_pvRelatorName); // not owned by desktop
-
+  if ( m_pvRelatorName != "Default" ){
+    Warning("Will be using non standard IRelatedPVFinder "+m_pvRelatorName);
+    m_pvRelator = tool<IRelatedPVFinder>(m_pvRelatorName); // not owned by desktop
+  } else {
+    m_pvRelator = m_OnOffline->pvRelator() ;
+  }
+  
+  
   return sc;
 }
 

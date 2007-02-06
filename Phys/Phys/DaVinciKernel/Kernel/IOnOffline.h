@@ -1,4 +1,4 @@
-// $Id: IOnOffline.h,v 1.4 2006-03-15 13:34:02 pkoppenb Exp $
+// $Id: IOnOffline.h,v 1.5 2007-02-06 09:57:56 pkoppenb Exp $
 #ifndef DAVINCIKERNEL_IONOFFLINE_H 
 #define DAVINCIKERNEL_IONOFFLINE_H 1
 
@@ -19,6 +19,7 @@ static const InterfaceID IID_IOnOffline ( "IOnOffline", 2, 0 );
  *  @author Patrick KOPPENBURG
  *  @date   2005-06-08
  */
+class IRelatedPVFinder ;
 class IOnOffline : virtual public IAlgTool {
 public: 
 
@@ -36,6 +37,9 @@ public:
 
   /// Get PV location in TES
   virtual std::string getPVLocation(void) const = 0 ;
+
+  /// PV relator
+  virtual IRelatedPVFinder* pvRelator(void) const = 0 ;
 
 };
 #endif // DAVINCIKERNEL_IONOFFLINE_H

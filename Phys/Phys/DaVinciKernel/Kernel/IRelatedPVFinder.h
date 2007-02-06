@@ -1,4 +1,4 @@
-// $Id: IRelatedPVFinder.h,v 1.1 2006-10-22 13:15:55 pkoppenb Exp $
+// $Id: IRelatedPVFinder.h,v 1.2 2007-02-06 09:57:56 pkoppenb Exp $
 #ifndef KERNEL_IRELATEDPVFINDER_H 
 #define KERNEL_IRELATEDPVFINDER_H 1
 
@@ -8,6 +8,7 @@
 
 #include "Event/RecVertex.h"
 #include "Event/Particle.h"
+#include "Kernel/Particle2Vertex.h"
 
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
@@ -32,6 +33,8 @@ public:
   /// Build relation table and store it in desktop
   virtual StatusCode relatedPVs(const LHCb::Particle* p, 
                                 Particle2Vertex::Table* ) const =  0;
+
+  virtual StatusCode setDefaults(std::string PVloc, std::string geomTool) = 0 ;
 
 protected:
 

@@ -3,6 +3,11 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+! 2007-02-06 - P. Koppenburg
+ - get context-dependent RelatedPVFinder in Desktop. Allows to get relations
+   to online PV in HLT.
+ - IRelatedPV.h should return VertexBase instead of a RecVertex.
+
 !========================= DaVinciKernel v6r0 2007-01-09 ===================
 
 ! 2007-01-30 - Juan PALACIOS

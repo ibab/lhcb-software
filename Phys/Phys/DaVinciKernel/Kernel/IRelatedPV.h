@@ -1,4 +1,4 @@
-// $Id: IRelatedPV.h,v 1.2 2006-10-22 13:15:55 pkoppenb Exp $
+// $Id: IRelatedPV.h,v 1.3 2007-02-06 09:57:56 pkoppenb Exp $
 #ifndef KERNEL_IRELATEDPV_H 
 #define KERNEL_IRELATEDPV_H 1
 
@@ -6,7 +6,7 @@
 // from STL
 #include <string>
 
-#include "Event/RecVertex.h"
+#include "Event/VertexBase.h"
 #include "Event/Particle.h"
 
 // from Gaudi
@@ -31,11 +31,11 @@ public:
   static const InterfaceID& interfaceID() { return IID_IRelatedPV; }
 
   /// Returns the best related PV 
-  virtual const LHCb::RecVertex* bestPV(const LHCb::Particle*) = 0 ;
+  virtual const LHCb::VertexBase* bestPV(const LHCb::Particle*) = 0 ;
   
   /// Returns all related PVs ordered by weight and above a given weight 
   virtual StatusCode allPVs(const LHCb::Particle*p, 
-                            LHCb::RecVertex::ConstVector&,
+                            LHCb::VertexBase::ConstVector&,
                             double minweight=0) = 0 ;  
 
 protected:

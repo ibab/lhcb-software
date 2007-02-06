@@ -1,6 +1,6 @@
-// $Id: IParticleCombiner.h,v 1.3 2006-03-15 13:34:02 pkoppenb Exp $
+// $Id: IParticleCombiner.h,v 1.4 2007-02-06 09:57:56 pkoppenb Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $; version $Revision: 1.3 $
+// CVS tag $Name: not supported by cvs2svn $; version $Revision: 1.4 $
 // ============================================================================
 // 
 // ============================================================================

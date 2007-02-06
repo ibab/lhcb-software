@@ -1,8 +1,11 @@
-// $Id: IJetMaker.h,v 1.3 2006-03-15 13:34:02 pkoppenb Exp $
+// $Id: IJetMaker.h,v 1.4 2007-02-06 09:57:56 pkoppenb Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2006/03/15 13:34:02  pkoppenb
+// Head is now DC06
+//
 // Revision 1.2.4.1  2006/01/17 08:54:45  pkoppenb
 // First DC06 version
 //
