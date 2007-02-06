@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : Rich::Rec::VeloTTTrackSelector
  *
  *  CVS Log :-
- *  $Id: RichVeloTTTrackSelector.cpp,v 1.3 2007-02-02 10:10:42 jonrob Exp $
+ *  $Id: RichVeloTTTrackSelector.cpp,v 1.4 2007-02-06 16:18:34 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/08/2006
@@ -13,7 +13,7 @@
 //-----------------------------------------------------------------------------
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h"
+#include "GaudiKernel/ToolFactory.h"
 
 // local
 #include "RichVeloTTTrackSelector.h"

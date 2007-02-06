@@ -4,6 +4,10 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+!===================== RichRecTools v3r8 2007-02-06 =======================
+! 2007-02-06 - Marco Cattaneo
+ - Clean up includes
+
 ! 2007-02-02 - Chris Jones
  - Adapt to new RICH namespaces
 
