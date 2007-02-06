@@ -1,14 +1,13 @@
-// $Id: HltOffMonitorExample.cpp,v 1.2 2007-01-11 14:07:14 hernando Exp $
+// $Id: HltOffMonitorExample.cpp,v 1.3 2007-02-06 08:15:50 cattanem Exp $
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/AlgFactory.h" 
 
 // local
 #include "HltOffMonitorExample.h"
 
 #include "Event/HltSummary.h"
-//#include "Event/HltSummaryFunctor.h"
 #include "Event/HltNames.h"
 #include "Event/Track.h"
 #include "TrackInterfaces/ITrackCloneFinder.h"
