@@ -10,7 +10,6 @@
    the converters.
  - Moved IOVDOMDocument to public includes.
 
-!======================== XmlTools v4r1 2007-02-04 ===========================
 ! 2007-02-02 - Marco CLEMENCIC
  - Added the class ValidInputSource to allow the propagation of the validity
    through the interface IXmlEntityResolverSvc (for the CondDB implementation)
