@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 !========================== RichMCMonitors v1r1 2007-02-06 ===================
+! 2007-02-06 - Marco Cattaneo
+ - Add dependency on GSL, no longer inherited from used packages
+
 ! 2007-02-01 - Chris Jones
  - Adapt to new RICH namespaces
 

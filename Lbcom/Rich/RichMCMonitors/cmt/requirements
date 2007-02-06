@@ -15,6 +15,7 @@ branches          cmt doc src
 #============================================================================
 use   RichKernel   v*    Rich
 use   MCEvent      v*    Event
+use   GSL          v*    LCG_Interfaces
 
 include_path      none
 
