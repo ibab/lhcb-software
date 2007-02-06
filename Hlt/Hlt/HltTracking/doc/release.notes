@@ -4,12 +4,13 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
-! 2007-1-16 - Jose A. Hernando
+! ======================== HltTracking v1r3 2007-02-06 =======================
+! 2007-01-16 - Jose A. Hernando
   - HltTracking: adding options OrderByPt (default false) to order or not
           tracks by pt
   - adding comments
 
-! 2007-1-16 - Jose A. Hernando
+! 2007-01-16 - Jose A. Hernando
   - HltTracking small bug with VeloTTKey
 
 ! ======================== HltTracking v1r2 2006-11-07 =======================

@@ -1,8 +1,8 @@
-// $Id: HltTracking.cpp,v 1.9 2007-02-05 09:18:17 hernando Exp $
+// $Id: HltTracking.cpp,v 1.10 2007-02-06 08:43:37 cattanem Exp $
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/IAlgManager.h"
 #include "GaudiKernel/IJobOptionsSvc.h"
 

@@ -1,8 +1,8 @@
-// $Id: HltTrackSelector.cpp,v 1.3 2006-10-03 12:22:37 hernando Exp $
+// $Id: HltTrackSelector.cpp,v 1.4 2007-02-06 08:43:37 cattanem Exp $
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/ToolFactory.h" 
 
 // local
 #include "HltTrackSelector.h"
