@@ -4,6 +4,7 @@
 ! Purpose     : Common reconstruction algorithms for the RICH
 !-----------------------------------------------------------------------------
 
+!===================== RichRecAlgorithms v2r5 2007-02-06 =====================
 ! 2007-02-02 - Chris Jones
  - Adapt to new RICH namespaces
 
