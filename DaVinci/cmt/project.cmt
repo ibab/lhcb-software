@@ -3,7 +3,7 @@ project DAVINCI
 use PHYS  PHYS_v5r0
 use REC   REC_v4r0
 use LBCOM LBCOM_v6r0 
-use HLT   HLT_v1r1
+#use HLT   HLT_v1r1
 
 build_strategy with_installarea
 setup_strategy root
