@@ -158,8 +158,6 @@ private:
       
   int m_photonID; ///< Photon particle ID
 
-  IParticleStuffer* m_stuffer ; ///< Particle stuffer
-
   IParticleTransporter* m_transporter;
 
   IParticlePropertySvc* m_ppSvc;

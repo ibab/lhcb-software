@@ -1,4 +1,4 @@
-// $Id: OfflineVertexFitter.cpp,v 1.18 2007-01-12 14:17:54 ranjard Exp $
+// $Id: OfflineVertexFitter.cpp,v 1.19 2007-02-06 10:07:30 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -55,7 +55,6 @@ OfflineVertexFitter::OfflineVertexFitter( const std::string& type,
                                   const IInterface* parent )
   : GaudiTool ( type, name , parent )
     , m_photonID(22)
-    , m_stuffer()
     , m_transporter()
     , m_transporterName ("ParticleTransporter:PUBLIC")
 {
@@ -83,7 +82,6 @@ OfflineVertexFitter::~OfflineVertexFitter() {};
 StatusCode OfflineVertexFitter::initialize(){
   StatusCode sc = GaudiTool::initialize();
   if (!sc) return sc;
-  m_stuffer = tool<IParticleStuffer>("ParticleStuffer");
   m_transporter = tool<IParticleTransporter>(m_transporterName, this);
   m_ppSvc = svc<IParticlePropertySvc>("ParticlePropertySvc");
 
@@ -185,6 +183,13 @@ StatusCode OfflineVertexFitter::fit( const LHCb::Particle::ConstVector& parts,
 
   for(Particle::ConstVector::const_iterator iterP = parts.begin(); iterP != parts.end(); iterP++) {
     P.addToDaughters(*iterP);
+  }
+
+  for(Particle::ConstVector::const_iterator iterP = VertexedParticles.begin(); iterP != VertexedParticles.end(); iterP++) {
+    V.addToOutgoingParticles(*iterP);
+  }
+
+  for(Particle::ConstVector::const_iterator iterP = FlyingParticles.begin(); iterP != FlyingParticles.end(); iterP++) {
     V.addToOutgoingParticles(*iterP);
   }
 
