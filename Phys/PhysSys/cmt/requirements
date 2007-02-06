@@ -28,7 +28,7 @@ use  DaVinciMCKernel            v2r0     Phys
 use  DaVinciMCTools     	v9r0     Phys
 use  DaVinciAssociators         v8r0     Phys
 use  MCStandardParticles        v1r2     Phys
-use  FlavourTaggingChecker      v2r1     Phys
+use  FlavourTaggingChecker      v2r1p1   Phys
 use  DaVinciUser      	        v8r0     Phys
 
 ####################################################################
