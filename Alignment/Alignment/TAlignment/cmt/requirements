@@ -13,7 +13,6 @@ include_path      none
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #    Put as many lines as needed, with all packages, without the '#'
 #============================================================================
-<<<<<<< requirements
 use 	GSL               	v*	LCG_Interfaces
 use   	GaudiAlg          	v*
 use 	AlignTrTools		v2r2	Alignment
@@ -24,17 +23,6 @@ use   	RecEvent          	v*      Event
 use 	TrackEvent		v*	Event
 use 	TrackFitEvent		v*	Tr
 use   	TrackInterfaces   	v*      Tr
-=======
-use GSL                 v*    LCG_Interfaces
-use   GaudiAlg          v*
-use AlignTrTools	v2r1	Alignment
-use AlignmentInterfaces	v1r0	Alignment
-#use   MCEvent           v*      Event
-use   RecEvent          v*      Event
-use   TrackEvent        v*      Event
-#use   LinkerEvent       v*      Event
->>>>>>> 1.3
-
 
 #============================================================================
 # Component library building rule
