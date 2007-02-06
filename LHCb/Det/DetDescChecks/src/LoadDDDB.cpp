@@ -1,9 +1,8 @@
-// $Id: LoadDDDB.cpp,v 1.1 2007-01-31 13:44:47 marcocle Exp $
+// $Id: LoadDDDB.cpp,v 1.2 2007-02-06 13:50:56 cattanem Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
-#include "GaudiKernel/DeclareFactoryEntries.h" 
 
 #include "GaudiKernel/DataStoreItem.h"
 #include "GaudiKernel/MsgStream.h"
