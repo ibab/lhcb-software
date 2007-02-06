@@ -1,4 +1,4 @@
-// $Id: TrgVertexFitter.cpp,v 1.14 2007-02-02 17:51:52 pkoppenb Exp $
+// $Id: TrgVertexFitter.cpp,v 1.15 2007-02-06 10:13:58 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -196,9 +196,9 @@ StatusCode TrgVertexFitter::fit( const LHCb::Particle::ConstVector& parts,
   }
   
   // Add daugthers
-  for(Particle::ConstVector::const_iterator iterP = parts.begin(); iterP != parts.end(); iterP++) {
+  for(Particle::ConstVector::const_iterator iterP = partsToFit.begin(); iterP != partsToFit.end(); iterP++) {
     V.addToOutgoingParticles(*iterP);
-    verbose() << "Particle added to vertex outgoingParticles: " << (*iterP)->particleID() << endreq;
+    verbose() << "Particle added to vertex outgoingParticles: " << (*iterP)->particleID().pid() << endreq;
   }
 
   debug() << "Returning vertex " << V.position() << " with error " 
@@ -224,11 +224,17 @@ StatusCode TrgVertexFitter::doFit(const LHCb::Particle::ConstVector& partsToFit,
 
   // Compute relevant summatories
   int i=0;
-  for ( std::vector<const Particle*>::const_iterator iPartIt=partsToFit.begin(); iPartIt!=partsToFit.end(); ++iPartIt ) {
+  for ( std::vector<const Particle*>::const_iterator iPartIt=partsToFit.begin(); 
+        iPartIt!=partsToFit.end(); ++iPartIt ) {
     const Particle* parPointer = *iPartIt;
     const Particle& par = *(parPointer);
     const Gaudi::XYZPoint& point = par.referencePoint();
     const Gaudi::SymMatrix7x7& cov = par.covMatrix();
+
+    verbose() << "cov " << cov << endmsg ;
+    verbose() << "cov " << cov(0,0) << " " << cov(1,1) << endmsg ;
+    
+
     const Gaudi::XYZVector slopes = par.slopes();
     iMX = slopes.X();
     iMY = slopes.Y();
@@ -287,6 +293,9 @@ StatusCode TrgVertexFitter::vertexPositionAndError(const double& AX, const doubl
                                                    const double& DY, const double& EY,
                                                    double& vX, double& vY, double& vZ, Vertex &V) const
 {
+          
+  verbose() << "X : " << AX << " " << BX << " " << CX << " " << DX << " " << EX << " " << endmsg ;
+  verbose() << "Y : " << AY << " " << BY << " " << CY << " " << DY << " " << EY << " " << endmsg ;
 
   // Vertex position
   vZ = ( CX*AX/BX + CY*AY/BY - EX - EY ) / (DX +DY - CX*CX/BX - CY*CY/BY);
