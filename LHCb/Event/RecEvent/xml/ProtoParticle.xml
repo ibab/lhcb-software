@@ -102,7 +102,7 @@
         <enumval name="CombDLLk"        value="603"  desc="The combined delta log likelihood value for the kaon hypothesis"/>
         <enumval name="CombDLLp"        value="604"  desc="The combined delta log likelihood value for the proton hypothesis"/>
 
-        <enumval name="LastGlobal"       value="10000"  desc="The last official flag value. Private user variables should use flags greater than this value"/>
+        <enumval name="LastGlobal"      value="10000"  desc="The last official flag value. Private user variables should use flags greater than this value"/>
 
        </enum>
 
@@ -152,6 +152,24 @@
         getMeth="TRUE"
        />
 
+	<constructor 
+		desc     = "Copy constructor. Creates a new ProtoParticle with the same physics information" 
+		initList = "KeyedObject&lt;int&gt;(), m_extraInfo(proto.extraInfo()), m_calo(proto.calo()), m_track(proto.track()), m_richPID(proto.richPID()), m_muonPID(proto.muonPID())">
+                <arg const="TRUE" name="proto" type="LHCb::ProtoParticle"/>
+                <code/>
+      	</constructor>
+
+      <method
+        name="clone"
+        desc="Clone this ProtoParticle. Returns a pointer to a new ProtoParticle (user must take ownership)"
+        type="LHCb::ProtoParticle*"
+        const="TRUE"
+        >
+        <code>
+          return new LHCb::ProtoParticle(*this);
+        </code>
+      </method>
+
        <method
         name    = "hasInfo"
         const   = "TRUE"
@@ -192,16 +210,16 @@
         </code>
        </method>
 
-        <method 
-          name    = "fillStream" 
-          desc    = "Print this ProtoParticle in a human readable way"
-          type    = "std::ostream&amp;" 
-          virtual = "FALSE" 
-          const   = "TRUE">
-          <arg 
-            type = "std::ostream" 
-            name = "s"/>
-        </method>
+       <method 
+         name    = "fillStream" 
+         desc    = "Print this ProtoParticle in a human readable way"
+         type    = "std::ostream&amp;" 
+         virtual = "FALSE" 
+         const   = "TRUE">
+         <arg 
+           type = "std::ostream" 
+           name = "s"/>
+       </method>
 
     </class>
   </package>
