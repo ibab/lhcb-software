@@ -1,4 +1,4 @@
- // $Id: SignalRepeatedHadronization.cpp,v 1.12 2007-02-01 22:16:03 robbep Exp $
+ // $Id: SignalRepeatedHadronization.cpp,v 1.13 2007-02-06 11:19:47 robbep Exp $
 // Include files 
 
 // local
@@ -114,36 +114,37 @@ bool SignalRepeatedHadronization::generate( const unsigned int nPileUp ,
         // Check if one particle of the requested list is present in event
         ParticleVector theParticleList ;
         if ( checkPresence( m_pids , theGenEvent , theParticleList ) ) {
-          
-          unsigned int nSignal = theParticleList.size() ;
-          
-          m_nEventsBeforeCut++ ;
-          
-          // Count particles and anti-particles of Signal type before 
-          // the cut in all directions
-          updateCounters( theParticleList , m_nParticlesBeforeCut , 
-                          m_nAntiParticlesBeforeCut , false ) ;
-          
-          bool passCut = true ;
-          if ( 0 != m_cutTool ) 
-            passCut = m_cutTool -> applyCut( theParticleList , theGenEvent ,
-                                             theGenCollision , m_decayTool , 
-                                             m_cpMixture , 0 ) ;
-          
-          if ( passCut && ( ! theParticleList.empty() ) ) {
-            m_nEventsAfterCut++ ;
+
+          // establish correct multiplicity of signal
+          if ( ensureMultiplicity( theParticleList.size() ) ) {
             
-            // Count particles and anti-particles of Signal type with
-            // pz>0, after generator level cut
-            updateCounters( theParticleList , m_nParticlesAfterCut , 
-                            m_nAntiParticlesAfterCut , true ) ;
+            m_nEventsBeforeCut++ ;
             
-            // establish correct multiplicity of signal
-            if ( ensureMultiplicity( nSignal ) ) {
+            // If there are several particles passing the cuts, choose one  
+            // and revert event if it has pz < 0 
+            theSignal = chooseAndRevert( theParticleList ) ;
+            theParticleList.clear() ;
+            theParticleList.push_back( theSignal ) ;
+            
+            // Count particles and anti-particles of Signal type before 
+            // the cut in all directions
+            updateCounters( theParticleList , m_nParticlesBeforeCut , 
+                            m_nAntiParticlesBeforeCut , false ) ;
+            
+            bool passCut = true ;
+            if ( 0 != m_cutTool ) 
+              passCut = m_cutTool -> applyCut( theParticleList , theGenEvent ,
+                                               theGenCollision , m_decayTool , 
+                                               m_cpMixture , 0 ) ;
+            
+            if ( passCut && ( ! theParticleList.empty() ) ) {
+              m_nEventsAfterCut++ ;
               
-              // If there are several particles passing the cuts, choose one  
-              // and revert event if it has pz < 0 
-              theSignal = chooseAndRevert( theParticleList ) ;
+              // Count particles and anti-particles of Signal type with
+              // pz>0, after generator level cut
+              updateCounters( theParticleList , m_nParticlesAfterCut , 
+                              m_nAntiParticlesAfterCut , true ) ;
+              
               
               flip = false ;
               if ( m_cpMixture ) m_decayTool -> enableFlip( ) ;

@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.87 2007-01-30 21:44:28 robbep Exp $
+! $Id: release.notes,v 1.88 2007-02-06 11:19:47 robbep Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Gen/Generators
 ! Responsible : Patrick ROBBE
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
+
+! 2007-02-06 - Patrick Robbe
+ - Fix problem with biased hadron fractions (SignalPlain and
+   SignalRepeatedHadronization)
 
 ! 2007-01-30 - Patrick Robbe
  - Fix problem with flip by EvtGen in Cut tools (DaughtersInLHCb, 

@@ -1,4 +1,4 @@
-// $Id: SignalPlain.cpp,v 1.14 2007-02-06 11:11:33 robbep Exp $
+// $Id: SignalPlain.cpp,v 1.15 2007-02-06 11:19:47 robbep Exp $
 // Include files 
 
 // local
@@ -68,7 +68,13 @@ bool SignalPlain::generate( const unsigned int nPileUp ,
 
         // establish correct multiplicity of signal
         if ( ensureMultiplicity( theParticleList.size() ) ) {
-          
+
+          // choose randomly one particle          
+          HepMC::GenParticle * theSignal =
+            chooseAndRevert( theParticleList ) ;
+          theParticleList.clear() ;
+          theParticleList.push_back( theSignal ) ;
+
           m_nEventsBeforeCut++ ;
           
           updateCounters( theParticleList , m_nParticlesBeforeCut , 
@@ -84,10 +90,7 @@ bool SignalPlain::generate( const unsigned int nPileUp ,
             m_nEventsAfterCut++ ;
             
             updateCounters( theParticleList , m_nParticlesAfterCut , 
-                            m_nAntiParticlesAfterCut , true ) ;          
-            
-            HepMC::GenParticle * theSignal =
-              chooseAndRevert( theParticleList ) ;
+                            m_nAntiParticlesAfterCut , true ) ;            
             
             bool flip ;
             if ( m_cpMixture ) m_decayTool -> enableFlip( ) ;
