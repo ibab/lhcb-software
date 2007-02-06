@@ -2,6 +2,11 @@
 ! Responsible : Sebastien Viret
 
 !=============================================================================
+! 06/02/2007 - Johan Blouw  ** v2r4 **
+
+Added "#include math.h" in order to be able to compile & link on slc4
+
+!=============================================================================
 ! 13/12/2006 - Sebastien Viret  ** v2r3 **
 
   Memory allocation problems have been fixed, code speed has been optimized a little bit,

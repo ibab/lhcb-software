@@ -1,6 +1,8 @@
 // Include files 
 
 // from Gaudi
+#include "math.h" // added by J. Blouw, in order to compile & link it on slc4
+
 #include "GaudiKernel/ToolFactory.h" 
 #include "GaudiKernel/MsgStream.h"
 
