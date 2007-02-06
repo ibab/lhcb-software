@@ -1,8 +1,8 @@
-// $Id: StateThinMSCorrectionTool.cpp,v 1.2 2006-09-01 16:35:25 erodrigu Exp $
+// $Id: StateThinMSCorrectionTool.cpp,v 1.3 2007-02-06 13:15:36 cattanem Exp $
 // Include files 
 // -------------
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/ToolFactory.h" 
 
 // from GSL
 #include "gsl/gsl_math.h"

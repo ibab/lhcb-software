@@ -1,15 +1,13 @@
-// $Id: TrackInterpolator.cpp,v 1.2 2006-11-22 13:09:27 jvantilb Exp $
+// $Id: TrackInterpolator.cpp,v 1.3 2007-02-06 13:15:36 cattanem Exp $
 // Include files
 // -------------
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
+#include "GaudiKernel/GenericVectorTypes.h"
+#include "GaudiKernel/SymmetricMatrixTypes.h"
 
 // From LHCbMath
 #include "LHCbMath/MatrixManip.h"
-
-// from LHCbDefinitions
-#include "Kernel/GenericVectorTypes.h"
-#include "Kernel/SymmetricMatrixTypes.h"
 
 // from TrackEvent
 #include "Event/TrackUnitsConverters.h"

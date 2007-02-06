@@ -5,13 +5,14 @@
  * Implementation file for tool TrackVelodEdxCharge
  *
  * CVS Log :-
- * $Id: TrackVelodEdxCharge.cpp,v 1.1 2006-07-19 16:11:18 jonrob Exp $
+ * $Id: TrackVelodEdxCharge.cpp,v 1.2 2007-02-06 13:15:36 cattanem Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 18/07/2006
  */
 //-----------------------------------------------------------------------------
 
+#include "GaudiKernel/ToolFactory.h"
 #include "TrackVelodEdxCharge.h"
 
 // namespaces

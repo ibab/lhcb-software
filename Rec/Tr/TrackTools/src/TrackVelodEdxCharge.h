@@ -5,7 +5,7 @@
  * Header file for tool TrackVelodEdxCharge
  *
  * CVS Log :-
- * $Id: TrackVelodEdxCharge.h,v 1.1 2006-07-19 16:11:18 jonrob Exp $
+ * $Id: TrackVelodEdxCharge.h,v 1.2 2007-02-06 13:15:36 cattanem Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 18/07/2006
@@ -14,9 +14,6 @@
 
 #ifndef TRACKTOOLS_TrackVelodEdxCharge_H
 #define TRACKTOOLS_TrackVelodEdxCharge_H
-
-// Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h"
 
 // base class
 #include "GaudiAlg/GaudiTool.h"

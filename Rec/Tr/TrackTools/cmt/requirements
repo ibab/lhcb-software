@@ -3,7 +3,7 @@
 # Maintainer : Jose Hernando, Eduardo Rodrigues
 #============================================================================
 package           TrackTools
-version           v2r10
+version           v2r11
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -15,7 +15,6 @@ include_path      none
 use     GSL           v*     LCG_Interfaces
 
 use   GaudiAlg        v*
-use   LHCbDefinitions v*     Kernel
 use   LHCbKernel      v*     Kernel
 use   TrackEvent      v*     Event
 use   DigiEvent       v*     Event

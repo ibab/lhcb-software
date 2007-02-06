@@ -1,4 +1,4 @@
-// $Id: TrackPtKick.cpp,v 1.9 2006-08-17 14:06:59 mneedham Exp $
+// $Id: TrackPtKick.cpp,v 1.10 2007-02-06 13:15:36 cattanem Exp $
 // Include files
 // -------------
 
@@ -9,12 +9,10 @@
 // from GSL
 #include "gsl/gsl_math.h"
 
-// from LHCbDefinitions
-#include "Kernel/TrackTypes.h"
-
 // from TrackEvent
 #include "Event/TrackParameters.h"
 #include "Event/State.h"
+#include "Event/TrackTypes.h"
 
 // local
 #include "TrackPtKick.h"

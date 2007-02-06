@@ -2,14 +2,12 @@
 // -------------
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
-
-// from LHCbDefinitions
-#include "Kernel/GenericVectorTypes.h"
-#include "Kernel/SymmetricMatrixTypes.h"
-#include "Kernel/TrackTypes.h"
+#include "GaudiKernel/GenericVectorTypes.h"
+#include "GaudiKernel/SymmetricMatrixTypes.h"
 
 // from TrackEvent
 #include "Event/TrackUnitsConverters.h"
+#include "Event/TrackTypes.h"
 
 // local
 #include "TrackChi2Calculator.h"

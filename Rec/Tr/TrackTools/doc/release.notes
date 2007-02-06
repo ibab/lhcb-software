@@ -4,6 +4,10 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+!======================== TrackTools v2r11 2007-02-06 ========================
+! 2007-02-06 - Marco Cattaneo
+ - Remove LHCbDefinitions includes and dependency
+
 ! 2007-01-23 - Eduardo Rodrigues
  - bug fix in the TrackCloneFinder tool
    (affects comparisons of hits in the seeding stations)

@@ -1,8 +1,8 @@
-// $Id: StateSimpleBetheBlochEnergyCorrectionTool.cpp,v 1.1 2006-08-22 12:37:51 erodrigu Exp $
+// $Id: StateSimpleBetheBlochEnergyCorrectionTool.cpp,v 1.2 2007-02-06 13:15:36 cattanem Exp $
 // Include files
 // -------------
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/ToolFactory.h" 
 
 // from GSL
 #include "gsl/gsl_math.h"
