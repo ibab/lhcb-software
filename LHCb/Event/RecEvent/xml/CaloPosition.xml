@@ -3,7 +3,7 @@
 <gdd>
   <package name="RecEvent">
 <!-- **************************************************************************
-  * $Id: CaloPosition.xml,v 1.7 2006-05-17 15:51:28 cattanem Exp $
+  * $Id: CaloPosition.xml,v 1.8 2007-02-06 12:58:16 cattanem Exp $
   *****************************************************************************
   * XML-description of CaloPosition class                                     *
   * author: Vanya Belyaev Ivan.Belyaev@itep.ru                                *
@@ -22,8 +22,8 @@
  *
  *</desc>
 
-<import name = "Kernel/SymmetricMatrixTypes" />
-<import name = "Kernel/GenericVectorTypes"/>
+<import name = "GaudiKernel/SymmetricMatrixTypes" />
+<import name = "GaudiKernel/GenericVectorTypes"/>
 <import name = "GaudiKernel/SystemOfUnits" />
 
 <enum  

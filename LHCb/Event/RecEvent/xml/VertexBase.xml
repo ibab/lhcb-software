@@ -23,8 +23,8 @@
 
       <import name="GaudiKernel/SystemOfUnits.h"/>
       <import name="GaudiKernel/VectorMap.h"/>
-      <import name="Kernel/Point3DTypes.h"/>
-      <import name="Kernel/SymmetricMatrixTypes.h"/>
+      <import name="GaudiKernel/Point3DTypes.h"/>
+      <import name="GaudiKernel/SymmetricMatrixTypes.h"/>
 
       <base name="KeyedObject&lt;int&gt;"/>
        &KeyedObject; 

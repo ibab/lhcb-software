@@ -1,14 +1,17 @@
 !-----------------------------------------------------------------------------
-! $Id: release.notes,v 1.52 2007-02-06 10:56:05 jonrob Exp $
+! $Id: release.notes,v 1.53 2007-02-06 12:58:16 cattanem Exp $
 ! Package     : Event/RecEvent
 ! Responsible : Marco Cattaneo
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
 !-----------------------------------------------------------------------------
 
+!========================= RecEvent v2r1 2007-02-06 ==========================
+! 2007-02-06 - Marco Cattaneo
+ - Remove LHCbDefinitions includes
+
 ! 2007-02-06 - Chris Jones
  - Add copy constructor and clone method for ProtoParticle (useful for micro-DST)
 
-!========================= RecEvent v2r1 2007-02-02 ==========================
 ! 2007-02-02 - Marco Cattaneo
  - Remove unnecessary component library pattern for dictionary
 

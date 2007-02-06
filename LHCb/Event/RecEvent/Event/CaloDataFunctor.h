@@ -1,4 +1,4 @@
-// $Id: CaloDataFunctor.h,v 1.5 2006-05-29 15:26:08 odescham Exp $
+// $Id: CaloDataFunctor.h,v 1.6 2007-02-06 12:58:16 cattanem Exp $
 // ============================================================================
 #ifndef EVENT_CALODATAFUNCTOR_H 
 #define EVENT_CALODATAFUNCTOR_H 1
@@ -8,11 +8,11 @@
 #include <functional>
 #include <cmath> 
 // ============================================================================
-// CLHEP
+// MathCore
 // ============================================================================
-#include "Kernel/GenericMatrixTypes.h"
-#include "Kernel/GenericVectorTypes.h"
-#include "Kernel/Point3DTypes.h"
+#include "GaudiKernel/GenericMatrixTypes.h"
+#include "GaudiKernel/GenericVectorTypes.h"
+#include "GaudiKernel/Point3DTypes.h"
 // ============================================================================
 // Event 
 // ============================================================================
