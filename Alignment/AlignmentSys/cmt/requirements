@@ -8,7 +8,7 @@ branches cmt doc
 #=======================================================
 
 # General purpose components
-use AlignmentTools	v2r3	Alignment # S. Viret
+use AlignmentTools	v2r4	Alignment # S. Viret
 use VeloAlignment     	v2r1	Alignment # S. Viret
 use EscherSys		v1r2	Alignment # Johan Blouw
 use Escher		v1r3	Alignment # Johan Blouw
