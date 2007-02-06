@@ -3,7 +3,7 @@
 # Maintainer : Sandra Amato 
 #============================================================================
 package           HltMuonAlley
-version           v1r2
+version           v1r2p1
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -21,7 +21,7 @@ use HltBase             v*    Hlt
 use PatTools            v*    Pat
 use MuonDet             v*    Det
 
-use     TrackInterfaces v*      Tr
+use TrackInterfaces     v*    Tr
 
 #============================================================================
 # Component library building rule
