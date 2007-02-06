@@ -16,7 +16,7 @@ include_path      none
 use 	GSL               	v*	LCG_Interfaces
 use   	GaudiAlg          	v*
 use 	AlignTrTools		v2r2	Alignment
-use	AlignmentTools		v2r3    Alignment
+use	AlignmentTools		v2r4    Alignment
 use 	AlignmentInterfaces	v1r0	Alignment
 use 	DigiEvent		v*	Event
 use   	RecEvent          	v*      Event
