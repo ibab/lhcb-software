@@ -4,7 +4,7 @@
  *  Header file for detector description class : DeRich
  *
  *  CVS Log :-
- *  $Id: DeRich.h,v 1.21 2007-02-01 16:41:12 jonrob Exp $
+ *  $Id: DeRich.h,v 1.22 2007-02-06 15:01:53 cattanem Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -18,9 +18,9 @@
 #include "RichDet/Rich1DTabProperty.h"
 
 // Mathcore
-#include "Kernel/Point3DTypes.h"
-#include "Kernel/Vector3DTypes.h"
-#include "Kernel/Plane3DTypes.h"
+#include "GaudiKernel/Point3DTypes.h"
+#include "GaudiKernel/Vector3DTypes.h"
+#include "GaudiKernel/Plane3DTypes.h"
 
 // LHCbKernel
 #include "Kernel/RichSide.h"

@@ -5,7 +5,7 @@
  *  Header file for detector description class : DeRichRadiator
  *
  *  CVS Log :-
- *  $Id: DeRichRadiator.h,v 1.21 2007-02-01 16:41:12 jonrob Exp $
+ *  $Id: DeRichRadiator.h,v 1.22 2007-02-06 15:01:53 cattanem Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -15,8 +15,8 @@
 #ifndef RICHDET_DERICHRADIATOR_H
 #define RICHDET_DERICHRADIATOR_H 1
 
-// Include files
-#include "Kernel/Point3DTypes.h"
+// Math typedefs
+#include "GaudiKernel/Point3DTypes.h"
 
 // DetDesc
 #include "DetDesc/DetectorElement.h"

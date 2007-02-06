@@ -3,13 +3,11 @@
  *
  *  Implementation file for detector description class : DeRichSingleSolidRadiator
  *
- *  $Id: DeRichSingleSolidRadiator.cpp,v 1.20 2007-02-01 16:41:13 jonrob Exp $
+ *  $Id: DeRichSingleSolidRadiator.cpp,v 1.21 2007-02-06 15:01:53 cattanem Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
  */
-
-#define DERICHSINGLESOLIDRADIATOR_CPP
 
 // Include files
 #include "RichDet/DeRichSingleSolidRadiator.h"
@@ -18,8 +16,8 @@
 #include "GaudiKernel/MsgStream.h"
 
 // MathCore files
-#include "Kernel/Transform3DTypes.h"
-#include "Kernel/Vector3DTypes.h"
+#include "GaudiKernel/Transform3DTypes.h"
+#include "GaudiKernel/Vector3DTypes.h"
 
 /// Detector description classes
 #include "DetDesc/SolidBoolean.h"

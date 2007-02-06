@@ -2,11 +2,11 @@
 # Created    : 2003-11-06
 # Maintainer : Christopher Rob Jones
 #============================================================================
-# $Id: requirements,v 1.54 2007-02-01 17:24:55 jonrob Exp $
+# $Id: requirements,v 1.55 2007-02-06 15:02:28 cattanem Exp $
 #============================================================================
 
 package RichKernel
-version v7r0
+version v7r1
 
 # ================ structure =================================================
 branches RichKernel RichEvent cmt doc src
@@ -15,7 +15,6 @@ branches RichKernel RichEvent cmt doc src
 # ================ dependencies ==============================================
 use DetDesc            v*   Det
 use LHCbKernel         v*   Kernel
-use LHCbDefinitions    v*   Kernel
 use GaudiAlg           v*
 use Boost              v*   LCG_Interfaces
 

@@ -3,7 +3,7 @@
  *
  *  Header file for RICH utility class : RichGeomPhoton
  *
- *  $Id: RichGeomPhoton.h,v 1.3 2007-02-01 17:24:53 jonrob Exp $
+ *  $Id: RichGeomPhoton.h,v 1.4 2007-02-06 15:02:28 cattanem Exp $
  *
  *  @author Antonis Papanestis
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
@@ -17,7 +17,7 @@
 #include <iostream>
 
 // geometry
-#include "Kernel/Point3DTypes.h"
+#include "GaudiKernel/Point3DTypes.h"
 
 // from Kernel
 #include "Kernel/RichSmartID.h"

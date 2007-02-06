@@ -4,7 +4,7 @@
 <package name="RichRecBase">
 
 <!-- **************************************************************************
-  * $Id: RichRecPixel.xml,v 1.16 2007-02-01 17:26:23 jonrob Exp $
+  * $Id: RichRecPixel.xml,v 1.17 2007-02-06 15:01:22 cattanem Exp $
   *****************************************************************************
   * XML-description of RichRecPixel class                                     *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -28,7 +28,7 @@
         <import name="RichRecBase/RichRecPixelParentType"/>
         <import name="Kernel/RichRadiatorType"/>
         <import name="Kernel/RichDetectorType"/>
-        <import name="Kernel/Point3DTypes"/>
+        <import name="GaudiKernel/Point3DTypes"/>
         <import name="Event/RichRecRingOnPixel"   soft="FALSE" />
         <import name="Event/RichRecTrack"   soft="TRUE" />
         <import name="Event/RichRecPhoton"  soft="TRUE" />

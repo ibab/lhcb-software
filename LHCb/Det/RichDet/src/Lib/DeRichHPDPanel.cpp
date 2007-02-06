@@ -1,17 +1,14 @@
-
 //----------------------------------------------------------------------------
 /** @file DeRichHPDPanel.cpp
  *
  *  Implementation file for detector description class : DeRichHPDPanel
  *
- *  $Id: DeRichHPDPanel.cpp,v 1.51 2007-02-01 16:41:13 jonrob Exp $
+ *  $Id: DeRichHPDPanel.cpp,v 1.52 2007-02-06 15:01:53 cattanem Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
  */
 //----------------------------------------------------------------------------
-
-#define DERICHHPDPANEL_CPP
 
 // Include files
 #include <time.h>
@@ -21,7 +18,7 @@
 #include "RichDet/DeRichHPDPanel.h"
 
 // MathCore files
-#include "Kernel/Transform3DTypes.h"
+#include "GaudiKernel/Transform3DTypes.h"
 
 // DetDesc
 #include "DetDesc/SolidBox.h"

@@ -3,13 +3,11 @@
  *
  *  Implementation file for detector description class : DeRichSphMirror
  *
- *  $Id: DeRichSphMirror.cpp,v 1.25 2007-02-01 16:41:13 jonrob Exp $
+ *  $Id: DeRichSphMirror.cpp,v 1.26 2007-02-06 15:01:53 cattanem Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
  */
-
-#define DERICHSPHMIRROR_CPP
 
 // Include files
 #include "GaudiKernel/MsgStream.h"
@@ -18,8 +16,8 @@
 #include "GaudiKernel/IUpdateManagerSvc.h"
 #include "GaudiKernel/SystemOfUnits.h"
 
-#include "Kernel/Vector3DTypes.h"
-#include "Kernel/Transform3DTypes.h"
+#include "GaudiKernel/Vector3DTypes.h"
+#include "GaudiKernel/Transform3DTypes.h"
 
 /// Detector description classes
 #include "DetDesc/IGeometryInfo.h"

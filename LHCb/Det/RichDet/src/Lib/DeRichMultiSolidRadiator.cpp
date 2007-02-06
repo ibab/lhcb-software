@@ -3,13 +3,11 @@
  *
  *  Implementation file for detector description class : DeRichMultiSolidRadiator
  *
- *  $Id: DeRichMultiSolidRadiator.cpp,v 1.15 2006-10-20 12:37:30 jonrob Exp $
+ *  $Id: DeRichMultiSolidRadiator.cpp,v 1.16 2007-02-06 15:01:53 cattanem Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
  */
-
-#define DERICHSINGLESOLIDRADIATOR_CPP
 
 // Include files
 #include "RichDet/DeRichMultiSolidRadiator.h"
@@ -19,7 +17,7 @@
 #include "GaudiKernel/SmartDataPtr.h"
 
 // MathCore files
-#include "Kernel/Vector3DTypes.h"
+#include "GaudiKernel/Vector3DTypes.h"
 
 /// Detector description classes
 #include "DetDesc/SolidBoolean.h"

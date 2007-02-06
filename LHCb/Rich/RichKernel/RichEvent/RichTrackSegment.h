@@ -5,7 +5,7 @@
  *  Header file for tool interface : RichTrackSegment
  *
  *  CVS Log :-
- *  $Id: RichTrackSegment.h,v 1.8 2007-02-01 17:24:54 jonrob Exp $
+ *  $Id: RichTrackSegment.h,v 1.9 2007-02-06 15:02:28 cattanem Exp $
  *
  *  @author Antonis Papanestis   Antonis.Papanestis@cern.ch
  *  @author Chris Jones          Christopher.Rob.Jones@cern.ch
@@ -22,12 +22,12 @@
 // LHCbKernel
 #include "Kernel/RichRadiatorType.h"
 #include "Kernel/RichDetectorType.h"
-#include "Kernel/Transform3DTypes.h"
 #include "Kernel/RichRadIntersection.h"
 
 // geometry
-#include "Kernel/Point3DTypes.h"
-#include "Kernel/Vector3DTypes.h"
+#include "GaudiKernel/Point3DTypes.h"
+#include "GaudiKernel/Vector3DTypes.h"
+#include "GaudiKernel/Transform3DTypes.h"
 
 // Richkernel
 #include "RichKernel/BoostMemPoolAlloc.h"

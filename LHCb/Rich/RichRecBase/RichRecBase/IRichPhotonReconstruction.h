@@ -2,7 +2,7 @@
  *
  *  Header file for tool interface : Rich::Rec::IPhotonReconstruction
  *
- *  $Id: IRichPhotonReconstruction.h,v 1.3 2007-02-01 17:26:21 jonrob Exp $
+ *  $Id: IRichPhotonReconstruction.h,v 1.4 2007-02-06 15:01:22 cattanem Exp $
  *
  *  @author Antonis Papanestis
  *  @date   2003-10-28
@@ -15,7 +15,7 @@
 #include "GaudiKernel/IAlgTool.h"
 
 // from MathCore
-#include "Kernel/Point3DTypes.h"
+#include "GaudiKernel/Point3DTypes.h"
 
 // RichKernel
 #include "Kernel/RichSmartID.h"
