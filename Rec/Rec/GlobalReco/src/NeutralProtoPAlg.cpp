@@ -1,11 +1,11 @@
-// $Id: NeutralProtoPAlg.cpp,v 1.9 2006-12-22 10:50:45 odescham Exp $
+// $Id: NeutralProtoPAlg.cpp,v 1.10 2007-02-06 16:00:38 cattanem Exp $
 // Include files
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
-// from kernel
-#include "Kernel/Vector3DTypes.h"
-#include "Kernel/Vector4DTypes.h"
+// Math
+#include "GaudiKernel/Vector3DTypes.h"
+#include "GaudiKernel/Vector4DTypes.h"
 // from CaloUtils
 #include "CaloUtils/Calo2Track.h"
 #include "CaloUtils/CaloMomentum.h"

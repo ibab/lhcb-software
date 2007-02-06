@@ -5,7 +5,7 @@
  * Implemenrtation file for algorithm ProtoParticleTupleAlg
  *
  * CVS Log :-
- * $Id: ProtoParticleTupleAlg.cpp,v 1.2 2007-01-31 18:25:12 jonrob Exp $
+ * $Id: ProtoParticleTupleAlg.cpp,v 1.3 2007-02-06 16:00:38 cattanem Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-11-15
@@ -13,7 +13,7 @@
 //-----------------------------------------------------------------------------
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h"
+#include "GaudiKernel/AlgFactory.h"
 
 // local
 #include "ProtoParticleTupleAlg.h"
