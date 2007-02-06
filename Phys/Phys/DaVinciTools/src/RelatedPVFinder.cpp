@@ -1,4 +1,4 @@
-// $Id: RelatedPVFinder.cpp,v 1.2 2007-01-12 15:05:08 pkoppenb Exp $
+// $Id: RelatedPVFinder.cpp,v 1.3 2007-02-06 10:17:30 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -19,7 +19,7 @@
 // Declaration of the Tool Factory
 DECLARE_TOOL_FACTORY( RelatedPVFinder );
 
-typedef LHCb::RecVertex::ConstVector::const_iterator rv_iter;
+typedef LHCb::RecVertices::const_iterator rv_iter;
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -28,7 +28,6 @@ RelatedPVFinder::RelatedPVFinder( const std::string& type,
                                   const std::string& name,
                                   const IInterface* parent )
   : GaudiTool ( type, name , parent )
-    , m_context(0)
     , m_geom(0)
 {
   declareInterface<IRelatedPVFinder>(this);
@@ -71,16 +70,23 @@ StatusCode RelatedPVFinder::initialize(){
     warning() << "Use (default) IP distance for final state particles" << endmsg ;
   }  
 
-  m_context = tool<IContextTool>("ContextTool",this);
-  m_geom = m_context->geomTool();
-  if ( NULL==m_geom ){
-    err() << "Context tool does not provide a geomTool" << endmsg ;
-    return StatusCode::FAILURE;
-  }
+  m_geom = NULL ;
 
   return StatusCode::SUCCESS;
 }
-
+//=============================================================================
+/// Set defaults
+//===========================================================================
+StatusCode RelatedPVFinder::setDefaults(std::string PVloc, std::string geomTool){
+  if (NULL!=m_geom){
+    debug() << "Already initialised" << endmsg;
+    return StatusCode::SUCCESS ;
+  }
+  
+  m_geom = tool<IGeomDispCalculator>(geomTool,this);
+  m_pvLocation = PVloc ;
+  return StatusCode::SUCCESS ;
+}
 //=============================================================================
 /// Build relations table and store it in desktop
 //============================================================================
@@ -89,18 +95,20 @@ StatusCode RelatedPVFinder::relatedPVs(const LHCb::Particle* p,
   
 
   if (NULL==p) return Error("Particle is NULL") ;
+  if (NULL==m_geom) return Error("RelatedPVFinder has not been initialsied with setDefaults");
+  
   debug() << "Building PV relations for " << p->particleID().pid() << endmsg ;
   // sanity check
   const LHCb::Vertex* v = p->endVertex() ;
   if ( (m_closestZ || m_closest) && (NULL==v)) 
     return Error("Cannot measure distances without vertex. You have been warned at initialisation!");
   
-  const LHCb::RecVertex::ConstVector pvs = m_context->primaryVertices() ;
+  LHCb::RecVertices* pvs = get<LHCb::RecVertices>( m_pvLocation );
 
   double fom = 0;
   double err = 0 ;
-  verbose() << "Looping over " << pvs.size() << " PVs" << endmsg ;
-  for ( rv_iter i = pvs.begin() ; i!=pvs.end() ; ++i){
+  verbose() << "Looping over " << pvs->size() << " PVs" << endmsg ;
+  for ( rv_iter i = pvs->begin() ; i!=pvs->end() ; ++i){
     if ( m_closestZ ) {
       fom = fabs(v->position().z()-(*i)->position().z());
       if ( m_significance ) fom = fom/sqrt((*i)->covMatrix()(2,2)*(*i)->covMatrix()(2,2)
@@ -121,6 +129,7 @@ StatusCode RelatedPVFinder::relatedPVs(const LHCb::Particle* p,
 
     debug() << "... PV at " << (*i)->position() << " gets weight 1/" << fom << endmsg ;
   }
-  verbose() << "Done relations for " << pvs.size() << " PVs" << endmsg ;
+  verbose() << "Done relations for " << pvs->size() << " PVs" << endmsg ;
   return StatusCode::SUCCESS ;
 }
+

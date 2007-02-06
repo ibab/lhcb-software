@@ -1,4 +1,4 @@
-// $Id: RelatedPVFinder.h,v 1.1 2006-10-22 13:19:49 pkoppenb Exp $
+// $Id: RelatedPVFinder.h,v 1.2 2007-02-06 10:17:30 pkoppenb Exp $
 #ifndef RELATEDPVFINDER_H 
 #define RELATEDPVFINDER_H 1
 
@@ -34,16 +34,19 @@ public:
   StatusCode relatedPVs(const LHCb::Particle* p, 
                        Particle2Vertex::Table* ) const ;
 
+  virtual StatusCode setDefaults(std::string PVloc, std::string geomTool) ;
+
 protected:
   
 private:
 
-  IContextTool* m_context ; ///< On offline tool
   const IGeomDispCalculator* m_geom; ///< pointer to Geom tool. Take same as DVAlgo.
 
   bool m_closestZ ; ///< Take closest PV in Z
   bool m_closest ; ///< Take closest PV
   bool m_smallestIP ; ///< Take the one with smallest IP
   bool m_significance ; ///< Cut on significance, not absolute numbers
+  std::string m_pvLocation ; ///< Location of PV
+  
 };
 #endif // RELATEDPVFINDER_H

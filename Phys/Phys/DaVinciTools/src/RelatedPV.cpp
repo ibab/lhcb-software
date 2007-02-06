@@ -1,4 +1,4 @@
-// $Id: RelatedPV.cpp,v 1.5 2006-10-23 10:20:24 pkoppenb Exp $
+// $Id: RelatedPV.cpp,v 1.6 2007-02-06 10:17:30 pkoppenb Exp $
 // Include files
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
@@ -40,7 +40,6 @@ StatusCode RelatedPV::initialize(){
   StatusCode sc = GaudiTool::initialize() ;
   if (!sc) return sc;
 
-
   m_context = tool<IContextTool>("ContextTool",this);
   m_desktop = m_context->desktop();
   if ( NULL==m_desktop ){
@@ -53,7 +52,7 @@ StatusCode RelatedPV::initialize(){
 //=============================================================================
 // Get all PVs
 //=============================================================================
-StatusCode RelatedPV::allPVs(const LHCb::Particle* p, LHCb::RecVertex::ConstVector& pvs, 
+StatusCode RelatedPV::allPVs(const LHCb::Particle* p, LHCb::VertexBase::ConstVector& pvs, 
                              double minweight){
   if ( p==NULL ) {
     err() << "Passing NULL Particle" << endmsg ;
@@ -69,10 +68,10 @@ StatusCode RelatedPV::allPVs(const LHCb::Particle* p, LHCb::RecVertex::ConstVect
     debug() << "Found a PV at " << i->to()->position() << " with weight " << i->weight() ;
     if ( i->weight() >= minweight ){
       debug() << " -> keeping it" <<  endmsg ;
-      const LHCb::RecVertex* rv = dynamic_cast<const LHCb::RecVertex*>(i->to());
+      const LHCb::VertexBase* rv = i->to();
       if ( NULL==rv ){
         err() << "Vertex Base at " << i->to()->position() << " associated to a " 
-              << p->particleID().pid() << " is not a RecVertex. isPrimary: " 
+              << p->particleID().pid() << " is not a VertexBase. isPrimary: " 
               << i->to()->isPrimary() << endmsg ;
         return StatusCode::FAILURE ;
       }
@@ -88,9 +87,7 @@ StatusCode RelatedPV::allPVs(const LHCb::Particle* p, LHCb::RecVertex::ConstVect
 //=============================================================================
 /// Returns the best related PV 
 //=============================================================================
-const LHCb::RecVertex* RelatedPV::bestPV(const LHCb::Particle* p){
+const LHCb::VertexBase* RelatedPV::bestPV(const LHCb::Particle* p){
   const LHCb::VertexBase* vb = desktop()->relatedVertex(p);
-  const LHCb::RecVertex* rv = NULL ;
-  if (NULL!=vb) rv = dynamic_cast<const LHCb::RecVertex*>(vb);
-  return rv ;
+  return vb ;
 }

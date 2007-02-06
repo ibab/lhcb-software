@@ -1,4 +1,4 @@
-// $Id: OnOfflineTool.cpp,v 1.9 2007-01-15 10:32:36 jpalac Exp $
+// $Id: OnOfflineTool.cpp,v 1.10 2007-02-06 10:17:30 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -7,6 +7,8 @@
 
 // from Event model
 #include "Event/RecVertex.h" 
+
+#include "Kernel/IRelatedPVFinder.h"
 // local
 #include "OnOfflineTool.h"
 
@@ -25,11 +27,12 @@ DECLARE_TOOL_FACTORY( OnOfflineTool );
 OnOfflineTool::OnOfflineTool( const std::string& type,
                               const std::string& name,
                               const IInterface* parent )
-  : GaudiTool ( type, name , parent ){
+  : GaudiTool ( type, name , parent ), m_pvRelator(0){
   declareInterface<IOnOffline>(this);
 
   declareProperty( "OfflinePVLocation", m_offlinePVLocation = LHCb::RecVertexLocation::Primary);
   declareProperty( "OnlinePVLocation", m_onlinePVLocation = LHCb::RecVertexLocation::Velo3D );
+
   declareProperty( "Online", m_online = false );
 
   declareProperty( "OfflineGeomTool", m_offlineGeomTool = "GeomDispCalculator" );
@@ -37,6 +40,9 @@ OnOfflineTool::OnOfflineTool( const std::string& type,
 
   declareProperty( "OfflineVertexFitter", m_offlineVertexFitter = "OfflineVertexFitter" );
   declareProperty( "OnlineVertexFitter", m_onlineVertexFitter = "TrgVertexFitter" );
+
+  declareProperty( "OfflinePVRelatorName", m_offlinePVRelatorName = "RelatedPVFinder" );
+  declareProperty( "OnlinePVRelatorName", m_onlinePVRelatorName = "RelatedPVFinder/OnlinePVFinder" );
   
 }
 //=============================================================================
@@ -64,6 +70,13 @@ StatusCode OnOfflineTool::initialize(){
     err() << "Parent of OnOfflineTool is ToolSvc. OnOfflineTool *must* be private" << endmsg ;
     return StatusCode::FAILURE;
   }
+
+  if ( m_online) {
+    m_pvRelator = tool<IRelatedPVFinder>(m_onlinePVRelatorName); // not private
+  } else {
+    m_pvRelator = tool<IRelatedPVFinder>(m_offlinePVRelatorName); // not private    
+  }
+  m_pvRelator->setDefaults(getPVLocation(),dispCalculator());
 
   return sc;
    

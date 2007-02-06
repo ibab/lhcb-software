@@ -1,4 +1,4 @@
-// $Id: OnOfflineTool.h,v 1.3 2005-10-17 12:28:42 pkoppenb Exp $
+// $Id: OnOfflineTool.h,v 1.4 2007-02-06 10:17:30 pkoppenb Exp $
 #ifndef ONOFFLINETOOL_H 
 #define ONOFFLINETOOL_H 1
 
@@ -13,6 +13,7 @@
  *  @author Patrick KOPPENBURG
  *  @date   2005-06-08
  */
+class IRelatedPVFinder ;
 class OnOfflineTool : public GaudiTool, virtual public IOnOffline {
 public: 
   /// Standard constructor
@@ -39,6 +40,9 @@ public:
   /// Set PV location in TES
   StatusCode setPVLocation(const std::string&)  ;
 
+  /// Get PV relator
+  IRelatedPVFinder* pvRelator(void) const { return m_pvRelator ; } ;
+
 protected :
 
 private:
@@ -49,5 +53,8 @@ private:
   std::string m_onlineGeomTool ; ///< online geom tool
   std::string m_offlineVertexFitter ; ///< offline vertex fitter
   std::string m_onlineVertexFitter ; ///< online vertex fitter
+  std::string m_offlinePVRelatorName ; ///< offline PV Relator Name
+  std::string m_onlinePVRelatorName ; ///< online PV Relator Name
+  IRelatedPVFinder* m_pvRelator ; ///< PV relator
 };
 #endif // ONOFFLINETOOL_H

@@ -1,11 +1,17 @@
-! $Id: release.notes,v 1.250 2007-01-30 11:04:13 jpalac Exp $
+! $Id: release.notes,v 1.251 2007-02-06 10:17:29 pkoppenb Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
 
-!========================== DaVinciTools v15r1 2007-01-30 ==================
+! 2007-02-06 - P. Koppenburg
+  - OnOfflineTools: get an instance of PVRelator and return it via pvRelator()
+    method.
+  - RelatedPV: use veretxbase instead of RecVertex
+  - RelatedPVFinder: cannot use context tool. Initialise explicitly instead.
 
+
+!========================== DaVinciTools v15r1 2007-01-30 ==================
 
 ! 2007-01-30 - Juan PALACIOS
   - Remove CaloElectron tool (now in CaloUtils)

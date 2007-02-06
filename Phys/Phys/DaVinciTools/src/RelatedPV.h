@@ -1,4 +1,4 @@
-// $Id: RelatedPV.h,v 1.3 2006-10-22 13:19:49 pkoppenb Exp $
+// $Id: RelatedPV.h,v 1.4 2007-02-06 10:17:30 pkoppenb Exp $
 #ifndef RELATEDPV_H 
 #define RELATEDPV_H 1
 // Include files
@@ -28,10 +28,10 @@ public:
   StatusCode initialize();
   
   /// Returns the best related PV 
-  const LHCb::RecVertex* bestPV(const LHCb::Particle* p);
+  const LHCb::VertexBase* bestPV(const LHCb::Particle* p);
   
   /// Returns all related PVs ordered by weight and above a given weight 
-  StatusCode allPVs(const LHCb::Particle* p, LHCb::RecVertex::ConstVector&, double minweight=0) ;
+  StatusCode allPVs(const LHCb::Particle* p, LHCb::VertexBase::ConstVector&, double minweight=0) ;
 
 protected:
 
