@@ -35,6 +35,9 @@ apply_pattern    reflex_dictionary                                     \
                  selectionfile=$(HLTPYTHONROOT)/src/HltPythonDict.xml \
                  options="-U__MINGW32__"
 
+# Hack for cmt v1r19 bug to link dictionary on windows
+macro HltPythonDict_use_linkopts $(use_linkopts)
+
 # =============== patterns ====================================================
 apply_pattern    library_path    library=HltPythonDict
 
@@ -43,5 +46,4 @@ path_remove  PYTHONPATH "/GaudiPython/" WIN32 "\GaudiPython\"
 path_prepend PYTHONPATH "$(GAUDIPYTHONROOT)/python"
 path_remove  PYTHONPATH "/HltPython/" WIN32 "\HltPython\"
 path_append  PYTHONPATH "$(HLTPYTHONROOT)/python"
-path_append  LD_LIBRARY_PATH "$(HLTPYTHONROOT)/slc3_ia32_gcc323"
 
