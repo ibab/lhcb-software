@@ -1,8 +1,11 @@
-// $Id: GenMCParticles.h,v 1.3 2007-01-23 13:29:18 ibelyaev Exp $
+// $Id: GenMCParticles.h,v 1.4 2007-02-06 12:44:35 ranjard Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ version $Revision: 1.3 $
+// CVS tag $Name: not supported by cvs2svn $ version $Revision: 1.4 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2007/01/23 13:29:18  ibelyaev
+//  fix for Ex/LoKiExample
+//
 // Revision 1.2  2006/02/18 18:15:44  ibelyaev
 //  fix a typo
 //
@@ -19,6 +22,7 @@
 // ============================================================================
 // LoKi
 // ============================================================================
+#include "Relations/IRelation.h"
 #include "LoKi/Interface.h"
 #include "LoKi/UniqueKeeper.h"
 #include "LoKi/MCTypes.h"

@@ -1,8 +1,11 @@
-// $Id: LoKiGenMC.cpp,v 1.2 2006-02-18 18:15:44 ibelyaev Exp $
+// $Id: LoKiGenMC.cpp,v 1.3 2007-02-06 12:44:35 ranjard Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/02/18 18:15:44  ibelyaev
+//  fix a typo
+//
 // Revision 1.1  2006/02/09 17:52:35  ibelyaev
 //  regular update: add *.opts configuration files
 //
