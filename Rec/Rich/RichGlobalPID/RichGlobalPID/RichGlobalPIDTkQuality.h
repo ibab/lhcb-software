@@ -4,14 +4,7 @@
  *  Header file for track quality enumeration for the Global PID algorithm
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDTkQuality.h,v 1.5 2004-08-19 09:49:00 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.4  2004/08/17 16:46:14  jonrob
- *  Updates to adapt to the new RichPID object
- *
- *  Revision 1.3  2004/07/27 10:56:36  jonrob
- *  Add doxygen file documentation and CVS information
- *
+ *  $Id: RichGlobalPIDTkQuality.h,v 1.6 2007-02-06 19:39:18 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-08-13
@@ -25,7 +18,6 @@
 #include <iostream>
 
 // from Gaudi
-#include "GaudiKernel/StreamBuffer.h"
 #include "GaudiKernel/MsgStream.h"
 
 /** @namespace Rich
@@ -35,77 +27,68 @@
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-12
  */
-namespace Rich {
+namespace Rich
+{
 
-  /** @namespace Rich::GlobalPID
+  /** @namespace Rich::Rec
    *
-   *  Enumeration for Global PID track quality
+   *  General namespace for RICH reconstruction software
    *
    *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
-   *  @date   2002-07-12
+   *  @date   08/07/2004
    */
-  namespace GlobalPID {
+  namespace Rec
+  {
 
-    /** @enum TkQuality
+    //-----------------------------------------------------------------------------
+    /** @namespace GlobalPID
      *
-     *  Track quality for the Global PID
+     *  General namespace for Global PID software
      *
      *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
-     *  @date   08/07/2004
+     *  @date   04/12/2006
      */
-    enum TkQuality
+    //-----------------------------------------------------------------------------
+    namespace GlobalPID
+    {
+
+      /** @enum TkQuality
+       *
+       *  Track quality for the Global PID
+       *
+       *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+       *  @date   08/07/2004
+       */
+      enum TkQuality
+        {
+          Unknown = -1,    ///< Track quality
+          Unusable,        ///< Track is not usable
+          LikelihoodOnly,  ///< Track can be used during the likelihood minimisation, but not for physics
+          Physics          ///< Track is of physics quality
+        };
+
+      /// Text conversion for Global PID track quality enumeration
+      inline std::string text( const Rich::Rec::GlobalPID::TkQuality& track )
       {
-        Unknown = -1,    ///< Track quality
-        Unusable,        ///< Track is not usable
-        LikelihoodOnly,  ///< Track can be used during the likelihood minimisation, but not for physics
-        Physics          ///< Track is of physics quality
-      };
+        switch( track )
+        {
+        case Rich::Rec::GlobalPID::Unknown:         return "unknown";
+        case Rich::Rec::GlobalPID::Unusable:        return "unusable";
+        case Rich::Rec::GlobalPID::LikelihoodOnly:  return "likelihood only";
+        case Rich::Rec::GlobalPID::Physics:         return "physics";
+        default:                                    return "SHOULD NEVER SEE THIS";
+        }
+      }
 
-
-  }
-
-  /// Text conversion for Global PID track quality enumeration
-  inline  std::string text( const Rich::GlobalPID::TkQuality& track )
-  {
-    switch( track ) {
-    case Rich::GlobalPID::Unknown:         return "unknown";
-    case Rich::GlobalPID::Unusable:        return "unusable";
-    case Rich::GlobalPID::LikelihoodOnly:  return "likelihood only";
-    case Rich::GlobalPID::Physics:         return "physics";
-    default:                               return "SHOULD NEVER SEE THIS";
     }
   }
-
-}
-
-/// Implement StreamBuffer >> method for Rich::GlobalPID::TkQuality enumeration
-inline StreamBuffer& operator >> ( StreamBuffer& s,
-                                   Rich::GlobalPID::TkQuality& qual ) {
-  int intType;
-  s >> intType;
-  qual = (Rich::GlobalPID::TkQuality)intType;
-  return s;
-}
-
-/// Implement StreamBuffer << method for Rich::GlobalPID::TkQuality enumeration
-inline StreamBuffer& operator << ( StreamBuffer& s,
-                                   const Rich::GlobalPID::TkQuality& qual ) {
-  s << (int)qual;
-  return s;
 }
 
 /// Implement textual ostream << method for Rich::GlobalPID::TkQuality enumeration
 inline std::ostream& operator << ( std::ostream& s,
-                                   const Rich::GlobalPID::TkQuality& qual ) {
-  s << Rich::text( qual );
-  return s;
-}
-
-/// Implement textual MsgStream << method for Rich::GlobalPID::TkQuality enumeration
-inline MsgStream& operator << ( MsgStream& s,
-                                const Rich::GlobalPID::TkQuality& qual ) {
-  s << Rich::text( qual );
-  return s;
+                                   const Rich::Rec::GlobalPID::TkQuality& qual )
+{
+  return s << Rich::Rec::GlobalPID::text( qual );
 }
 
 #endif // RICHGLOBALPID_RICHGLOBALPIDTKQUALITY_H
