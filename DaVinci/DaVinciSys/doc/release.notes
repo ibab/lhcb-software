@@ -3,6 +3,12 @@ Package     : Phys/DaVinci
 Package Coordinator : Juan Palacios
 Purpose     : LHCb analysis program 
 
+</PRE><H1><A NAME=v18r0>2007-02-06 DaVinci v18r0. Final DC06 stripping pre-seleciton tuning versin.</A></H1><PRE>
+Based on Phys v5r0, Rec v4r0, HLT v1r1, Lbcom v6r0 LHCb v22r0, Gaudi v19r0, LCGCMT 48a. 
+Highlights:
+
+ - Improvements to most pre-selections. 31/39 Pre-selections cleared for stripping based on CPU and retention rate.
+
 </PRE><H1><A NAME=v17r8>2007-01-12 DaVinci v17r8. First DC06 version with HLT. </A></H1><PRE>
 Based on Phys v4r6, Rec v3r14p1, HLT v1r1, Lbcom v5r9 LHCb v21r12, Gaudi v18r11, LCGCMT 48a. 
 Highlights:
