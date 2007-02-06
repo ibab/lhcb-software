@@ -4,6 +4,7 @@
 ! Purpose     : Monitor algorithms that exclusively use MCEvent data objects
 !-----------------------------------------------------------------------------
 
+!========================== RichMCMonitors v1r1 2007-02-06 ===================
 ! 2007-02-01 - Chris Jones
  - Adapt to new RICH namespaces
 
