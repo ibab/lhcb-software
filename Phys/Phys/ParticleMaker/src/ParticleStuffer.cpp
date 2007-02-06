@@ -1,4 +1,4 @@
-// $Id: ParticleStuffer.cpp,v 1.9 2007-01-12 14:14:28 ranjard Exp $
+// $Id: ParticleStuffer.cpp,v 1.10 2007-02-06 09:59:57 pkoppenb Exp $
 // Include files 
 
 // 
@@ -123,6 +123,14 @@ StatusCode ParticleStuffer::fillParticle( const LHCb::Particle::ConstVector& dau
   // by Particle via setPosMomCorr
 //    HepMatrix pseMat( 3, 3, 0 );  
 //    part.setPosSlopesCorr( pseMat );
+
+  for(LHCb::Particle::ConstVector::const_iterator iterP = daughters.begin(); 
+      iterP != daughters.end(); iterP++) {
+    part.addToDaughters(*iterP);
+  }
+
+
+
   
   return StatusCode::SUCCESS;
 }

@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.53 2007-01-12 14:14:20 ranjard Exp $ 
+! $Id: release.notes,v 1.54 2007-02-06 09:59:57 pkoppenb Exp $ 
 ! Package     : ParticleMaker
 ! Responsible : P. Koppenburg, J. Palacios
 !==============================================================================
+
+
+! 2007-02-06 - P. Koppenburg
+ - add daughters to particle in ParticleStuffer.
 
 !========================= ParticleMaker v3r0 2007-01-12 ====================
 ! 2007-01-12 - Florence Ranjard
