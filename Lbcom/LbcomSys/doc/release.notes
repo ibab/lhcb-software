@@ -6,6 +6,32 @@
 !             : Contains packages shared by Boole and other applications   
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v6r1>2007-02-07 LbcomSys v6r1</A></H1><PRE>
+This version uses Gaudi v19r1 and LHCb v22r1
+
+Packages modified: RichDAQ v3r7, RichMCMonitors v1r1, RichMCTools v3r4,
+                   RichTools v2r10
+
+- In RichDAQ v3r7
+  . New data format version (encoding and decoding) to match the latest L1
+    firmware. Not yet used in Boole simulation
+    + Encoding and decoding now requires the ODIN data object, due to new
+      data integrity checks in the RICH data format.
+  . Split pixel clustering code out of the suppression tool into a standalone
+    clustering tool, that can then be used in other applications.
+    + New pixel cluster object added to RichKernel
+
+- In RichTools v2r10
+  . Use new method in DeRichBeamPipe that only tests for presence of an 
+    intersection without computing the points
+  . Make RichRayTrace::reflectFlatPlane a public method
+
+- In RichDAQ v3r7, RichMCMonitors v1r1, RichMCTools v3r4, RichTools v2r10
+  . Updates for new RICH namespaces
+
+- In RichTools v2r10
+  . Remove LHCbDefinitions includes
+
 </PRE><H1><A NAME=v6r0>2007-01-23 LbcomSys v6r0</A></H1><PRE>
 This version uses Gaudi v19r1 and LHCb v22r0.
 It introduces the use of CMT Install areas
