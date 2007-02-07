@@ -3,6 +3,39 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+</PRE><H1><A NAME=v31r1>2007-02-07 Brunel v31r1</A></H1><PRE>
+This version uses projects Gaudi v19r1, LHCb v22r1, Lbcom v6r1, Rec v4r1
+ and databases XmlDDDB v40r0, XmlConditions v2r4, ParamFiles v5r0, FieldMap v4r7
+
+Compatible with DC06 data
+
+- New features
+  . Possibility to decode new Rich1 data format to match latest L1 firmware.
+    (RichDAQ v3r7, RichDet v10r1)
+
+- New tuning
+  . Reworking and retuning of PatKShort, improved efficiency by 4-5 % with 2%
+    extra ghost rate (PatKShort v1r4, PatFitParams v2r4)
+  . Update Charged and Neutral ProtoPAlg (new CaloTrajectoryL info + ecalE) 
+    (GlobalReco v6r7)
+  . Update pixel suppression options to use new clustering tool (RichRecSys v3r1)
+
+- Bug fixes
+  . Fix DeOTModule::wireLength method to return correct wire length
+    (OTDet v7r1, TsaAlgorithms v2r1, PatForward v2r11)
+  . Fix findStraws. Check that right most straw is not negative (OTDet v7r1)
+  . Add check for entry and exit points. Make sure they are inside (OTDet v7r1)
+  . Fix some unchecked StatusCodes (OTDet v7r1)
+  . Fix overlaps in RF foil (XmlDDDB v40r0)
+  . Temporary fix in STMeasurement to make sure correct strip is used for the 
+    trajectory calculation (TrFitEvent v3r1)
+  . Fix in TrackCloneFinder tool (affects comparisons of hits in the seeding 
+    stations) (TrackTools v2r11)
+
+- Monitoring changes
+  . New monitoring options for PID tables with various pt cuts (RichRecQC v2r8)
+
+
 </PRE><H1><A NAME=v31r0>2006-12-23 Brunel v31r0</A></H1><PRE>
 This version uses projects Gaudi v19r1, LHCb v22r0, Lbcom v6r0, Rec v4r0
  and databases XmlDDDB v30r14, XmlConditions v2r4, ParamFiles v5r0, FieldMap v4r7
