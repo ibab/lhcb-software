@@ -5,7 +5,7 @@
  *  Header file for RICH utility class : Rich::RadIntersection
  *
  *  CVS Log :-
- *  $Id: RichRadIntersection.h,v 1.3 2007-02-01 16:45:31 jonrob Exp $
+ *  $Id: RichRadIntersection.h,v 1.4 2007-02-07 15:18:22 cattanem Exp $
  *
  *  @author Antonis Papanestis
  *  @date   2006-02-28
@@ -17,6 +17,7 @@
 
 // STL
 #include <functional>
+#include <algorithm> // for std::sort
 
 // Include files
 #include "GaudiKernel/Point3DTypes.h"
