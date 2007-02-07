@@ -1,11 +1,11 @@
 package MooreSys
-version v2r0
+version v2r1
 
 branches doc cmt
 
 #=======================================================
 # Don't forget the applications
 #=======================================================
-use HltApp v1r4    Hlt
+use HltApp v1r5    Hlt
 # Moore not yet ported to DC06
 #use  Moore  v2r0    Hlt
