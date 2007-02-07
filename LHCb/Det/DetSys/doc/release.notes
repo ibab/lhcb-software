@@ -4,7 +4,11 @@
 ! Purpose     : collect Det packages and build corresponding dictionaries
 !-----------------------------------------------------------------------------
 
-!========================= DetSys v9r0 2006-01-31 ============================
+!========================= DetSys v9r1 2007-02-06 ============================
+! 2007-02-06 - Marco Cattaneo
+ - Use DetDescCnv v4r1, OTDet v7r1, RichDet v10r1, XmlTools v5r0
+
+!========================= DetSys v9r0 2007-01-31 ============================
 ! 2007-01-31 - Marco Cattaneo
  - Fix reflex dict link for Windows and retag requirements
 
