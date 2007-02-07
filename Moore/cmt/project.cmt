@@ -1,0 +1,8 @@
+project MOORE
+
+use HLT		HLT_v1r2
+use LBCOM	LBCOM_v6r1
+use REC		REC_v4r1
+
+build_strategy	with_installarea
+setup_strategy	root
