@@ -1,4 +1,4 @@
-// $Id: CaloElectron.cpp,v 1.3 2007-01-15 07:52:58 cattanem Exp $
+// $Id: CaloElectron.cpp,v 1.4 2007-02-07 15:37:58 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -39,7 +39,7 @@ CaloElectron::CaloElectron( const std::string& type,
     , m_calopos        ( NULL )
     , m_calo (){
   declareInterface<ICaloElectron>(this);
-  declareProperty ( "ExtrapolatorType" , m_extrapolatorType = "TrackMasterExtrapolator" ) ;
+  declareProperty ( "ExtrapolatorType" , m_extrapolatorType = "TrackHerabExtrapolator" ) ;
   declareProperty ( "Tolerance"        , m_tolerance = 0.01 ) ;
   declareProperty ( "zOffset"          , m_zOffset   = 0. ) ; // Should be 0.0 if ShowerMax plane is correctly defined in condDB
   declareProperty ( "Detector"         , m_det   = DeCalorimeterLocation::Ecal );
