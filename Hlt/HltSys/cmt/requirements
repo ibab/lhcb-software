@@ -7,12 +7,12 @@ branches cmt doc options
 # LHCb High Level Trigger packages
 #=======================================================
 
-use HltCommon           v1r2    Hlt   # Jose Angel Hernando-Morata
-use HltTracking         v1r2    Hlt   # Jose Angel Hernando-Morata
-use HltHadAlley         v1r1    Hlt   # Jose Angel Hernando-Morata
+use HltCommon           v1r3    Hlt   # Jose Angel Hernando-Morata
+use HltTracking         v1r3    Hlt   # Jose Angel Hernando-Morata
+use HltHadAlley         v1r2    Hlt   # Jose Angel Hernando-Morata
 use HltMuon             v1r2    Hlt   # Alessia Satta
-use HltMuonAlley        v1r2    Hlt   # Alessia Satta
-use HltCaloAlley        v1r1    Hlt   # Stefano Villa
+use HltMuonAlley        v1r2p1  Hlt   # Alessia Satta
+use HltCaloAlley        v1r2    Hlt   # Stefano Villa
 
 use HltRecChecker	v1r1	Hlt   # Jose Angel Hernando-Morata
 use HltHadL0Conf        v1r0    Hlt   # Jose Angel Hernando-Morata

@@ -5,25 +5,39 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
 
-! 2007-02-05 Adding options
-    - options/HltReco.opts
-             to run only the Hlt reconstruction (partial and full)
-	           need to be included into the HltAlleysSequence.opts
-    - options/HltAlleysSequence.opts: 
-             cleaned of histograms and time measurements
-    - options/HltAlleysTime.opts
-             add this opts to get time and rates from the HltAlleys
-    - options/HltAlleysHistos.opts
-             add this opts to get internal histos monitoring of HltAlleys
-    - options/HltAlleysSequenceDAQ.opts
-             temporally (for DAT only)
-    - options/HltRecoCheck.opts
-             to check the Hlt full reconstruction
+</PRE><H1><A NAME=v1r2>2007-02-07 HltSys v1r2</A></H1><PRE>
+This version uses Gaudi v19r1 and LHCb v22r1, introducing CMTPROJECTPATH
 
-</PRE><H1><A NAME=v1r2>2007-02-01 HltSys v1r2</A></H1><PRE>
-This version uses Gaudi v19r1 and LHCb v22r0.
+Packages added: HltPython    v1r0 - Exposes Hlt tools to Python
+                HltHadL0Conf v1r0 - Tools and code for L0 Hadron confirmation
+Packages modified: HltCaloAlley v1r2, HltCommon v1r3, HltHadAlley v1r2,
+                   HltMuonAlley v1r2p1, HltTracking v1r3
 
-Identical to v1r1 but introducing CMTPROJECTPATH
+- In HltSys v1r2 options
+  . HltReco.opts: To run only the Hlt reconstruction (partial and full)
+	                need to be included into the HltAlleysSequence.opts
+  . HltAlleysSequence.opts: Cleaned of histograms and time measurements
+  . HltAlleysTime.opts: Add this opts to get time and rates from the HltAlleys
+  . HltAlleysHistos.opts: Opts to get internal histos monitoring of HltAlleys
+  . HltAlleysSequenceDAQ.opts: Temporary (for DAQ only)
+  . HltRecoCheck.opts: To check the Hlt full reconstruction
+
+- In HltCaloAlley v1r2
+  . Minor changes
+
+- In  HltCommon v1r3
+  . HltSequencer - Default: do not book histograms
+  . PhysSelEntry - entry point according with a SelResult
+
+- In HltHadAlley v1r2
+  . Fixes to compile with new base classes
+                   
+- In HltMuonAlley v1r2p1
+  . src/*DiMuons.cpp chaning info() to debug() for dd printout
+
+- In HltTracking v1r3
+  . Add option OrderByPt (default false) to order or not tracks by pt
+  . Fix small bug with VeloTTKey
 
 </PRE><H1><A NAME=v1r1>2007-01-11 HltSys v1r1</A></H1><PRE>
 This version uses Gaudi v18r10 and LHCb v21r12.
