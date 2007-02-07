@@ -102,7 +102,7 @@ This version uses Gaudi v19r1. Fully compatible with DC06 data
 - In LHCbKernel v7r1, DigiEvent v2r0p1, EventBase v2r0p1, GenEvent v5r0p1,
      PhysEvent v11r0p1, RecEvent v2r1, TrackEvent v4r0p1, HltEvent v8r0p1,
      L0Event v16r0p1, LinkerEvent v3r0p1, MCEvent v2r0p1,
-  . Remove unnecessary component library pattern for dictionary
+  . Remove unneccessary rootmap for dictionary
 
 </PRE><H1><A NAME=v22r0>2007-01-22 LHCbSys v22r0</A></H1><PRE>
 This version is using the InstallArea. Uses Gaudi v19r1
