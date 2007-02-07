@@ -46,8 +46,8 @@ library          TrackFitEventDict     ../$(tag)/dict/TrackFitEvent/*.cpp
 # define library link options
 #============================================================================
 apply_pattern linker_library	library=TrackFitEvent
-
-macro_append TrackFitEvent_linkopts  "" WIN32 "/include:_TrackFitEvent_loadRef" 
+apply_pattern component_library library=TrackFitEventDict
+macro_remove constituents TrackFitEventDictRootMap
 
 private
 use GaudiObjDesc v*
