@@ -5,6 +5,94 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
+</PRE><H1><A NAME=v4r1>2007-02-07 RecSys v4r1</A></H1><PRE>
+This version uses Gaudi v19r1 and LHCb v22r1.
+
+- Packages updated: TsaAlgorithms v2r1, PatForward v2r11, PatVelo v2r11,
+    PatFitParams v2r4, PatKShort v1r4, PatPv v2r5, TrackSys v4r1,
+    TrackFitEvent v3r1, TrackTools v2r11, GlobalReco v6r7, RichRecSys v3r1,
+    RichGlobalPID v3r1, RichLocalPID v3r1, RichPIDMerge v2r3,
+    RichRecAlgorithms v2r5, RichRecMCTools v2r8, RichRecMonitors v2r7,
+    RichRecQC v2r8, RichRecTools v3r8, RichTrgGlobalPID v3r4
+
+- In TsaAlgorithms v2r1, PatForward v2r11
+  . Remove references to LHCbDefinitions includes
+  . Minor update due to changes in OTDet
+
+- In PatVelo v2r11
+  . Added an option (off by default) to PatVeloSpaceTool to use the RZ crossing
+    tracks better when the VELO is open
+  . Added an option (off by default) to PatVeloRTracking to look for RZ tracks
+    crossing R sectors when the VELO is open
+  . PatVeloGeneric - change the seeding so that it looks for clusters in three
+    consecutive READ-OUT sensors. This means the seeding in the Generic case will
+    work even if there is a switched-off module between working ones
+
+- In PatFitParams v2r4
+  . New algorithm SeedFitParams to fit the parameters of PatSeeding
+  . Common tool FitTool to fit straight lines, parabola and cubics.
+  . Update KsFitParams to fit a pion track at a time. Adaptation to root tuples.
+  . Fitted parameters for DC06 KShort.
+
+- In PatKShort v1r4
+  . Re-work PatKShort: Introduce curvature in TT, common x-y fit, re-fit 
+    parameters, introduce not straight Y projection.
+  . Tuned with PatSeeding, but can run with TSA or PatSeeding.
+  . Improved efficiency by 4-5 % with 2% extra ghost rate
+  . Removed PatNewKShort algorithm, was for future development, no longer needed
+
+- In PatPv v2r5
+  . Return setFilterPassed(false) if no PV was found in PatPV2D and 3D.
+  . Use LHCb::RecVertexLocation::Velo3D and 2D in PatPV3D.cpp, PatPV2D.cpp 
+    instead of hard-coded strings.
+
+- In TrackSys v4r1
+  . Added VeloOpenTracking.opts which retunes the VELO pattern recognition for 
+    the open VELO case
+
+- In TrackFitEvent v3r1
+  . Remove rootmap for Dict library
+  . Temp fix in STMeasurement to make sure correct strip is used for the 
+    trajectory calculation 
+
+- In TrackTools v2r11
+  . bug fix in the TrackCloneFinder tool
+    (affects comparisons of hits in the seeding stations)
+
+- In GlobalReco v6r7
+  . Allow sub-det information to be absent when creating ProtoParticles with
+    ChargedProtoPAlg.
+  . Suppress FAILURE from warning messages when PID information is missing
+  . add protections in ChargedProtoCombineDLLsAlg
+  . add the possibility to disable some Det in ChargedProtoCombineDLLsAlg
+  . update Charged and Neutral ProtoPAlg (new CaloTrajectoryL info + ecalE)
+  . Rename ProtoPTupleAlg as ProtoParticleTupleAlg + fix some doxygen comments
+
+- In RichGlobalPID v3r1
+  . Rename RichGlobalPIDAlg RichGlobalPIDLikelihood
+
+- In RichRecQC v2r8
+  . Add new monitoring options for PID tables with various pt cuts
+
+- In RichRecSys v3r1
+  . Update pixel suppression options to use new clustering tool
+
+- In RichRecTools v3r8
+  . Use new method in DeRichBeamPipe to only test for intersection
+
+- In TsaAlgorithms v2r1, PatForward v2r11
+  . Minor update due to changes in OTDet
+
+- In TsaAlgorithms v2r1, PatForward v2r11, PatFitParams v2r4, PatKShort v1r4,
+     TrackTools v2r11, GlobalReco v6r7
+  . Remove references to LHCbDefinitions includes
+
+- In RichRecSys v3r1, RichGlobalPID v3r1, RichLocalPID v3r1, RichPIDMerge v2r3,
+     RichRecAlgorithms v2r5, RichRecMCTools v2r8, RichRecMonitors v2r7,
+     RichRecQC v2r8, RichRecTools v3r8, RichTrgGlobalPID v3r4
+  . Adapt to new RICH namespaces
+
+
 </PRE><H1><A NAME=v4r0>2007-01-23 RecSys v4r0</A></H1><PRE>
 This version uses Gaudi v19r1 and LHCb v22r0.
 
