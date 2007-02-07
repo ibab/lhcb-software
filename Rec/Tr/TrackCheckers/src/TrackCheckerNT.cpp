@@ -1,4 +1,4 @@
-// $Id: TrackCheckerNT.cpp,v 1.1 2006-11-16 08:20:56 mschille Exp $
+// $Id: TrackCheckerNT.cpp,v 1.2 2007-02-07 16:57:11 mschille Exp $
 // Include files 
 
 // local
@@ -793,7 +793,7 @@ void TrackCheckerNT::fillDetTrackParametersAtMeasurements(
 	for (; i < arrmax; ++i)
 	  if (Cxx[nTrack][i] < 0.) break;
 	// complain if we don't find one
-	if ((i >= arrmax) && (Cxx[nTrack][i] >= 0.)) {
+	if ((i >= arrmax) || (Cxx[nTrack][i] >= 0.)) {
 	  warning() << "Refusing to overwrite previous measurement at (" <<
 	    x[nTrack][j]/mm << "/" << y[nTrack][j]/mm << "/" <<
 	    z[nTrack][j]/mm << ") in " << pfx << ", new one is at (" <<
