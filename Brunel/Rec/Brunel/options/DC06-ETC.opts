@@ -22,7 +22,6 @@ EventNodeKiller.Nodes = { "Rec" };
 // Add selection results to DST
 //---------------------------------------------------------------------------
 ApplicationMgr.ExtSvc += {"TagCollectionSvc/EvtTupleSvc"};
-ApplicationMgr.DLLs += { "RecUtils" };
 InitBrunelSeq.Members += { "ReadStripETC/TagReader" };
 TagReader.CollectionName = "TagCreator" ;
 

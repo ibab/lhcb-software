@@ -34,14 +34,14 @@ else
   shift
 endif
 #   
-set Bversion = "v30r14"
+set Bversion = "v31r1"
 echo "Executing valgrind for Brunel $Bversion using options file $Dver.opts"
 #
 
 if ($?LS_SUBCWD) then 
 # in BATCH, WORKDIR is set by the system
 # in BATCH, location of executable has to be given explicitly
-  setenv MYJOBROOT ~/cmtuser/Rec/Brunel/$Bversion
+  setenv MYJOBROOT ~/cmtuser/Brunel_$Bversion/Rec/Brunel/$Bversion
 else
 # in interactive set WORKDIR to submission directory
   set WORKDIR = $PWD
@@ -54,11 +54,6 @@ endif
 # == set the program environment
 source /afs/cern.ch/lhcb/group/rich/vol4/jonrob/scripts/new-valgrind.csh
 
-if ($?Brunel_release_area) then
-  source $Brunel_release_area/BrunelEnv/$Bversion/cmt/setup.csh
-else
-  source $LHCb_release_area/BrunelEnv/$Bversion/cmt/setup.csh
-endif
 source $MYJOBROOT/cmt/setup.csh -tag=$CMTDEB
 
 # Go to working directory

@@ -14,7 +14,6 @@ Check.DetectorList = {
 //--------------------------------------------------------------
 
 // Pattern recognition
-ApplicationMgr.DLLs += { "PatChecker" };
 CheckPatSeq.Members += {
                          "PatLHCbID2MCParticle"
                        , "PatTrack2MCParticle"
@@ -22,5 +21,4 @@ CheckPatSeq.Members += {
                        };
 
 // Rich reconstruction
-ApplicationMgr.DLLs += { "RichRecQC", "RichMCTools", "RichRecMCTools" };
 #include "$RICHRECQCOPTS/RecQC_Brunel.opts"

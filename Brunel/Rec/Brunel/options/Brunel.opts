@@ -17,16 +17,7 @@
 // By default, Brunel only needs to open one input file at a time
 PoolDbCacheSvc.AgeLimit = 0;
 
-// DLLs for RawEvent decoding
-ApplicationMgr.DLLs += { "VeloDAQ" };
-ApplicationMgr.DLLs += { "STDAQ" };
-ApplicationMgr.DLLs += { "OTDAQ" };
-ApplicationMgr.DLLs += { "CaloDAQ" };
-ApplicationMgr.DLLs += { "RichDAQ" };
-ApplicationMgr.DLLs += { "MuonDAQ" };
-
 // Get the event time (for CondDb) from ODIN
-ApplicationMgr.DLLs += { "DAQEvent" };
 EventClockSvc.EventTimeDecoder = "OdinTimeDecoder";
 
 //----------------------------------------------------------------------------
@@ -40,7 +31,6 @@ ApplicationMgr.TopAlg += { "ProcessPhase/Init",
                            "ProcessPhase/Output" };
 
 // Initialisation phase
-ApplicationMgr.DLLs += { "RecAlgs" };
 Init.DetectorList = { "Etc", "Brunel", "Calo" };
 InitBrunelSeq.Members += { "RecInit/Brunel" };
 

@@ -16,12 +16,10 @@
 MCLinks.DetectorList = { "Unpack", "Tr" };
 
 // Unpack Sim data
-ApplicationMgr.DLLs += { "SimComponents" };
 MCLinksUnpackSeq.Members += { "UnpackMCParticle" };
 MCLinksUnpackSeq.Members += { "UnpackMCVertex" };
 
 // MC truth for tracks
-ApplicationMgr.DLLs  += { "TrackAssociators" };
 MCLinksTrSeq.Members += { "TrackAssociator" };
 
 //------------------------------------------------------------------------

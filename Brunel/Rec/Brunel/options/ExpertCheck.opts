@@ -2,35 +2,36 @@
 // Assumes BrunelMoni.opts and BrunelCheck.opts have also been included
 //------------------------------------------------------------------------------
 
+// Uncomment next line to find unchecked status codes (slow!!)
+// ApplicationMgr.StatusCodeCheck = true;
+
 // Allow two input files open at the same time (.digi, and .sim for the MCHits)
 PoolDbCacheSvc.AgeLimit = 1;
 
 // Data on Demand for MCParticle to MCHit association, needed by ST, IT, Tr
 ApplicationMgr.ExtSvc += { "DataOnDemandSvc" };
-ApplicationMgr.DLLs   += { "Associators" };
 #include "$ASSOCIATORSROOT/options/Brunel.opts"
 
 // ST cluster monitoring, to be compared to identical montoring in Boole
-ApplicationMgr.DLLs += { "STCheckers" };
+#include "$STCHECKERSROOT/options/Boole.opts"
 Moni.DetectorList   += { "TT" };
-MoniTTSeq.Members   += { "STClusterChecker/TTClusterChecker" }; // Needs MCHits
+MoniTTSeq.Members   += { "STClusterMonitor/TTClusterMonitor" };
+TTClusterMonitor.FullDetail = true;
 
 Moni.DetectorList   += { "IT" }; 
-MoniITSeq.Members   += { "STClusterChecker/ITClusterChecker" }; // Needs MCHits
-ITClusterChecker.detType = "IT";
+MoniITSeq.Members   += { "STClusterMonitor/ITClusterMonitor" };
+ITClusterMonitor.FullDetail = true;
 
 // IT and TT efficiency, to be compared to identical montoring in Boole
 Check.DetectorList  += { "TT" }; 
-CheckTTSeq.Members  += { "STEffMonitor/TTEffMonitor" };
-TTEffMonitor.fullDetail = true;
+CheckTTSeq.Members  += { "STEffChecker/TTEffChecker" };
+TTEffChecker.FullDetail = true;
 
 Check.DetectorList  += { "IT" }; 
-CheckITSeq.Members  += { "STEffMonitor/ITEffMonitor" };
-ITEffMonitor.detType = "IT";
-ITEffMonitor.fullDetail = true;
+CheckITSeq.Members  += { "STEffChecker/ITEffChecker" };
+ITEffChecker.FullDetail = true;
 
 // OT - These histograms should be identical to those already done in Boole.
-ApplicationMgr.DLLs += { "OTMonitor" };
 Moni.DetectorList   += { "OT" }; 
 MoniOTSeq.Members   += { "OTTimeMonitor" };
 Check.DetectorList  += { "OT" }; 
@@ -44,7 +45,6 @@ Check.DetectorList  += { "Tr" };
 // Detailed RICH reconstruction monitors
 //To use the RICH expert monitoring options you need to enable tuples with
 //NTupleSvc.Output={"FILE1 DATAFILE='brunel.tuples.root' TYP='ROOT' OPT='NEW'"};
-ApplicationMgr.DLLs += { "RichRecMonitors" };
 //#include "$RICHRECQCOPTS/RecQC_Brunel_Detailed.opts" // PID tables for all track types
 //#include "$RICHRECMONITORSOPTS/RecoMoni_Brunel.opts" // Expert common reconstruction monitors
 //#include "$RICHGLOBALPIDOPTS/RecoMoni_Brunel.opts"   // Global PID monitor

@@ -18,5 +18,4 @@ Moni.DetectorList = {
 //--------------------------------------------------------------
 
 // Muon reconstruction
-//ApplicationMgr.DLLs += { "MuonMoniDst" };
 MoniMUONSeq.Members += { "MuonRecChecker" };

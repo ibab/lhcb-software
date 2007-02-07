@@ -3,6 +3,17 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v31r1>2007-02-05 Brunel v31r1</A></H1><PRE>
+ - Adapt requirements to Rec v4r1, Lbcom v6r1, LHCb v22r1
+ - Use XmlDDDB v40r0
+ - Remove ApplicationMgr.DLLs options, not needed with new plugin manager
+ - Adapt monitoring options to new names of STChecker algorithms
+ - Adapt valgrind.job to work with new CMT environment
+
+</PRE><H1><A NAME=v31r0>2007-01-23 Brunel v31r0</A></H1><PRE>
+ - Adapt requirements to Rec v4r0, Lbcom v6r0, LHCb v22r0, Gaudi v19r1
+ - Use XmlConditions v2r5
+
 </PRE><H1><A NAME=v30r14>2006-12-01 Brunel v30r14</A></H1><PRE>
  - Adapt requirements to Rec v3r14, Lbcom v5r9, LHCb v21r12, Gaudi v18r11
  - Use XmlDDDB v30r14
