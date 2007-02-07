@@ -3,6 +3,26 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v13r1>2007-02-06 Boole v13r1</A></H1><PRE>
+This version uses projects Gaudi v19r1, LHCb v22r1, Lbcom v6r1
+ and databases XmlDDDB v40r0, XmlConditions v2r5, ParamFiles v5r0, FieldMap v4r7
+
+- New features
+  . New Rich1 data format to match latest L1 firmware. Encoding and decoding
+    now requires ODIN object, due to new integrity checks in the data format
+    New format not yet enabled, default is still DC06 format (RichDAQ v3r7)
+  . BooleInit now puts an ODIN object on the TES after creating the ODIN bank
+    (DigiAlgs v4r6)
+
+- New tuning
+  . Switch on G4 parameterisation of Muon background instead of old GCALOR one
+    (Boole.opts)
+
+- Bug fixes
+  . Fixed DeOTModule::wireLength method to return correct wire length
+    (OTDet v7r1, OTSimulation v3r9)
+  . Fix some unchecked StatusCodes (DigiAlg v4r6, OTDet v7r1, OTSimulation v3r9) 
+
 </PRE><H1><A NAME=v13r0>2007-01-23 Boole v13r0</A></H1><PRE>
 This version uses projects Gaudi v19r1, LHCb v22r0, Lbcom v6r0
  and databases XmlDDDB v30r14, XmlConditions v2r5, ParamFiles v5r0, FieldMap v4r7
