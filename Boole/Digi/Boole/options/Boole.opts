@@ -77,10 +77,9 @@ InitDataSeq.Members += { "MergeEventAlg/SpilloverAlg" };
 
 // Muon Background
 InitMUONSeq.Members += { "MuonBackground/MuonLowEnergy" };
-#include "$MUONBACKGROUNDROOT/options/MuonLowEnergy-GCALOR.opts"
+#include "$MUONBACKGROUNDROOT/options/MuonLowEnergy-G4.opts"
 InitMUONSeq.Members += { "MuonBackground/MuonFlatSpillover" };
-#include "$MUONBACKGROUNDROOT/options/MuonFlatSpillover-GCALOR.opts"
-
+#include "$MUONBACKGROUNDROOT/options/MuonFlatSpillover-G4.opts"
 
 // Subdetector algorithms
 //--------------------------------------------------------------
