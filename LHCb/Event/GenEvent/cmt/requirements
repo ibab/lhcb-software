@@ -21,6 +21,8 @@ library GenEvent      *.cpp
 library GenEventDict  ../$(tag)/dict/GenEvent/*.cpp
 
 apply_pattern linker_library    library=GenEvent
+apply_pattern component_library library=GenEventDict
+macro_remove constituents GenEventDictRootMap
 
 private
 use GaudiObjDesc v* -no_auto_imports

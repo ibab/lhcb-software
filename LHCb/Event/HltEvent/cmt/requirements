@@ -24,6 +24,8 @@ apply_pattern install_more_includes more=Event
 document obj2dict HltEventObj2Dict ../xml/*.xml
 
 library          HltEventDict     ../$(tag)/dict/HltEvent/*.cpp
+apply_pattern component_library library=HltEventDict
+macro_remove constituents HltEventDictRootMap
 
 private
 use GaudiObjDesc v* -no_auto_imports

@@ -30,6 +30,8 @@ library          L0EventDict     ../$(tag)/dict/L0Event/*.cpp
 # define library link options
 #============================================================================
 apply_pattern linker_library	library=L0Event
+apply_pattern component_library library=L0EventDict
+macro_remove constituents L0EventDictRootMap
 
 private
 use GaudiObjDesc v* -no_auto_imports

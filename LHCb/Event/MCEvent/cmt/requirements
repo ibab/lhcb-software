@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.18 2007-02-02 09:43:52 cattanem Exp $
+# $Id: requirements,v 1.19 2007-02-07 13:07:20 cattanem Exp $
 # Created    : 08/03/2002
 # Maintainer : Marco Cattaneo
 #
@@ -39,6 +39,8 @@ library          MCEventDict  ../$(tag)/dict/MCEvent/*.cpp
 # Define link options
 #============================================================================
 apply_pattern linker_library    library=MCEvent
+apply_pattern component_library library=MCEventDict
+macro_remove constituents MCEventDictRootMap
 
 private
 use GaudiObjDesc v* -no_auto_imports

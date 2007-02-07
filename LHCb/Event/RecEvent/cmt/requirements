@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.16 2007-02-02 09:48:12 cattanem Exp $
+# $Id: requirements,v 1.17 2007-02-07 13:05:01 cattanem Exp $
 # Created    : 13/12/2005
 # Maintainer : Marco Cattaneo
 #
@@ -31,6 +31,8 @@ library          RecEventDict  ../$(tag)/dict/RecEvent/*.cpp
 # Define link options
 #============================================================================
 apply_pattern linker_library    library=RecEvent
+apply_pattern component_library library=RecEventDict
+macro_remove constituents RecEventDictRootMap
 
 private
 use GaudiObjDesc v* -no_auto_imports

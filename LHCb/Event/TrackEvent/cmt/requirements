@@ -28,6 +28,8 @@ library          TrackEventDict     ../$(tag)/dict/TrackEvent/*.cpp
 # define library link options
 #============================================================================
 apply_pattern linker_library	library=TrackEvent
+apply_pattern component_library library=TrackEventDict
+macro_remove constituents TrackEventDictRootMap
 
 private
 use GaudiObjDesc v* -no_auto_imports
