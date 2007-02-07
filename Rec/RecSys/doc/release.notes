@@ -15,10 +15,6 @@ This version uses Gaudi v19r1 and LHCb v22r1.
     RichRecAlgorithms v2r5, RichRecMCTools v2r8, RichRecMonitors v2r7,
     RichRecQC v2r8, RichRecTools v3r8, RichTrgGlobalPID v3r4
 
-- In TsaAlgorithms v2r1, PatForward v2r11
-  . Remove references to LHCbDefinitions includes
-  . Minor update due to changes in OTDet
-
 - In PatVelo v2r11
   . Added an option (off by default) to PatVeloSpaceTool to use the RZ crossing
     tracks better when the VELO is open
@@ -58,7 +54,7 @@ This version uses Gaudi v19r1 and LHCb v22r1.
 - In TrackTools v2r11
   . bug fix in the TrackCloneFinder tool
     (affects comparisons of hits in the seeding stations)
-
+ 
 - In GlobalReco v6r7
   . Allow sub-det information to be absent when creating ProtoParticles with
     ChargedProtoPAlg.
