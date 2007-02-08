@@ -1,4 +1,4 @@
-// $Id: HltBaseAlg.cpp,v 1.4 2007-02-05 08:40:16 hernando Exp $
+// $Id: HltBaseAlg.cpp,v 1.5 2007-02-08 17:32:39 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -149,7 +149,7 @@ StatusCode HltBaseAlg::finalize() {
 
   infoTotalEvents( m_counterEntries );
   infoSubsetEvents( m_counterPassed, m_counterEntries, " passed/entries");
-  if (m_passPeriod >=0) {
+  if (m_passPeriod > 0) {
     infoSubsetEvents( m_counterOverruled, m_counterEntries,
                       " overruled/entries");
     infoSubsetEvents( m_counterOverruled, m_counterPassed,

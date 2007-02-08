@@ -1,4 +1,4 @@
-// $Id: HltAlgorithm.h,v 1.6 2007-02-05 08:40:15 hernando Exp $
+// $Id: HltAlgorithm.h,v 1.7 2007-02-08 17:32:39 hernando Exp $
 #ifndef HLTBASE_HLTALGORITHM_H 
 #define HLTBASE_HLTALGORITHM_H 1
 
@@ -32,7 +32,7 @@
  *                           by an external container (in this case PatDataStore)
  *      PatInputTracksName,PatInputTrack2Name,PatInputVerticesName:
  *          input tracks and vertices from the PatDataStore (own objectes)
- *      SummaryName: location of the HltSummary 
+ *      SummaryLocation: location of the HltSummary 
  *      SelectionName: name of the SelectionSummary of this algorithm
  *                     (see Event/HltEnums.h)  
  *      IsTrigger: if the decision is possitive a valid trigger will be issued 
@@ -215,18 +215,18 @@ protected:
             const std::string& name);
 protected:
 
+  /** get the summary 
+   **/
+  LHCb::HltSummary& summary() {
+    if (!m_summary) 
+      m_summary = getOrCreate<LHCb::HltSummary,LHCb::HltSummary>(m_summaryLocation);
+    return *m_summary;
+  }
+
   /** get the selection summary with a give ID (see Event/HltEnums.h)
    *  by defaul: the selection summary indicated in the option "SelectionName"
    **/
-  LHCb::HltSelectionSummary& selectionSummary(int id = -1) {
-    if (!m_summary) m_summary = get<LHCb::HltSummary>(m_summaryName);
-    if (id>0) return m_summary->selectionSummary(id);
-    id = m_selectionSummaryID;
-    if (!m_selectionSummary)
-      debug() << " retrieving selection summary id " << id << endreq;
-    m_selectionSummary = &(m_summary->selectionSummary(id));
-    return *m_selectionSummary;
-  }
+  LHCb::HltSelectionSummary& selectionSummary(int id = -1);
   
 protected:
 
@@ -237,14 +237,16 @@ protected:
   bool m_decision;
   
   // name of the location of the summary
-  std::string m_summaryName;
+  std::string m_summaryLocation;
 
   // name of the selection summary
-  std::string m_selectionSummaryName;
+  std::string m_selectionName;
 
   // ID of the selection summary
   int m_selectionSummaryID;
   
+ protected:
+
   // pointer to the summary
   LHCb::HltSummary* m_summary;
 

@@ -1,4 +1,4 @@
-// $Id: HltAlgorithm.cpp,v 1.6 2007-02-05 08:40:16 hernando Exp $
+// $Id: HltAlgorithm.cpp,v 1.7 2007-02-08 17:32:39 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -28,10 +28,10 @@ HltAlgorithm::HltAlgorithm( const std::string& name,
 {
   
   // location of the summary and the summary box name
-  declareProperty("SummaryName",
-                  m_summaryName = LHCb::HltSummaryLocation::Default);
+  declareProperty("SummaryLocation",
+                  m_summaryLocation = LHCb::HltSummaryLocation::Default);
   declareProperty("SelectionName",
-                  m_selectionSummaryName = "");
+                  m_selectionName = "");
   declareProperty("IsTrigger", m_isTrigger = false);
   
   // location of the input tracks, primary vertices and vertices
@@ -64,10 +64,10 @@ StatusCode HltAlgorithm::initialize() {
   StatusCode sc = HltBaseAlg::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  if (m_selectionSummaryName != "") {
+  if (m_selectionName != "") {
     m_selectionSummaryID = 
-      HltNames::selectionSummaryID(m_selectionSummaryName);
-    info() << " selection summary Name " << m_selectionSummaryName 
+      HltNames::selectionSummaryID(m_selectionName);
+    info() << " selection summary Name " << m_selectionName 
            << "  ID " << m_selectionSummaryID << endreq;
   }
   
@@ -219,8 +219,11 @@ bool HltAlgorithm::beginExecute() {
 
   m_summary = NULL;
   m_selectionSummary = NULL;
-  if (m_selectionSummaryID>0) selectionSummary();
-    
+  if (m_selectionSummaryID>0) {
+    selectionSummary();
+    if (!m_filter) m_selectionSummary->setDecisionType(HltEnums::Forced, true);
+  }
+  
   ok = size(m_inputTracks,m_nInputTracks,m_histoInputTracks,
             " input tracks ");
   if (!ok) return ok;
@@ -289,3 +292,12 @@ StatusCode HltAlgorithm::finalize() {
 }
 
 
+HltSelectionSummary& HltAlgorithm::selectionSummary(int id) {
+  if (!m_summary) summary();
+  if (id>0) return m_summary->selectionSummary(id);
+  id = m_selectionSummaryID;
+  if (!m_selectionSummary)
+    debug() << " retrieving selection summary id " << id << endreq;
+  m_selectionSummary = &(m_summary->selectionSummary(id));
+  return *m_selectionSummary;
+}
