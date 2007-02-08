@@ -4,7 +4,11 @@
 ! Purpose     : "Interface" to Hijing 
 !-----------------------------------------------------------------------------
 
-!========================= LbHijing v2r0 2007-01-08 =======================
+!========================= LbHijing v2r0 2007-02-08 =======================
+! 2007-02-08 - Gloria Corti
+ - modify requirements to be compatible with GENSER 1_4_1 and without
+   install area (for Gauss v25 series)
+
 ! 2007-01-08 - Florence Ranjard
  - update HijingProduction.cpp to use new FACTORY
 
