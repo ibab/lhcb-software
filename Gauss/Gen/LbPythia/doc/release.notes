@@ -4,7 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
-!===================== LbPythia v5r0 2007-01-08 ===========================
+!===================== LbPythia v4r10 2007-02-08 ===========================
+! 2007-02-08 - Gloria Corti
+ - to use with Gauss v25 series use include_dir in requirements 
+
 ! 2007-01-08 - Florence Ranjard
  - move GaussUserProcess.inc from LbPythia/ to src/Lib
  - move PythiaProduction.cpp from src/component to src/Lib
