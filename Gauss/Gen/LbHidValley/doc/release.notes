@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.5 2007-01-26 14:54:11 ibelyaev Exp $ 
+! $Id: release.notes,v 1.6 2007-02-08 18:19:48 gcorti Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Gen/LbHidValley
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -19,6 +19,8 @@
 !
 ! -----------------------------------------------------------------------------
 
+!========================= LbHidValley v1r2 2007-02-08 ========================
+
 ! 2007-01-26 - Vanya BELYAEV
 
  - src/Lib/lenocchv.F
@@ -27,8 +29,6 @@
    src/Lib/hvsetpar.F
     make use of LENOCCHV instead of LENOCC 
  
-
-!========================= LbHidValley v1r2 2007-01-19 ========================
 
 ! 2007-01-19 - Vanya BELYAEV
 
