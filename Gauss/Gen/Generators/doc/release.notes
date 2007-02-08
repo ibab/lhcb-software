@@ -1,9 +1,15 @@
-! $Id: release.notes,v 1.88 2007-02-06 11:19:47 robbep Exp $
+! $Id: release.notes,v 1.89 2007-02-08 17:46:06 gcorti Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Gen/Generators
 ! Responsible : Patrick ROBBE
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
+
+!====================== Generators v6r8 2007-02-08 ===========================
+! 2007-02-08 - Gloria Corti
+ - Slighlty change message levels at initialization to see beam energy and
+   primary interation vertex ( CollidingBeams.cpp, FixedTarget.cpp,
+   BeamSpotSmearVertex.cpp, FixedNInteractions.cpp)
 
 ! 2007-02-06 - Patrick Robbe
  - Fix problem with biased hadron fractions (SignalPlain and

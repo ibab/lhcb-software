@@ -1,4 +1,4 @@
-// $Id: BeamSpotSmearVertex.cpp,v 1.7 2007-01-12 15:17:34 ranjard Exp $
+// $Id: BeamSpotSmearVertex.cpp,v 1.8 2007-02-08 17:46:06 gcorti Exp $
 // Include files 
 
 // local
@@ -58,16 +58,23 @@ StatusCode BeamSpotSmearVertex::initialize( ) {
   if ( ! sc.isSuccess() ) 
     return Error( "Could not initialize gaussian random number generator" ) ;
 
-  debug() << "Vertex smearing activated : " << endmsg ;
-  debug() << "Smearing of interaction point with Gaussian distribution " 
-          << endmsg ;
-  debug() << " with sigma(X) = " << m_sigmaX / Gaudi::Units::mm << " mm troncated at " 
-          << m_xcut << " sigma(X)" << endmsg ;
-  debug() << " with sigma(Y) = " << m_sigmaY / Gaudi::Units::mm << " mm troncated at " 
-          << m_ycut << " sigma(Y)" << endmsg ;
-  debug() << " with sigma(Z) = " << m_sigmaZ / Gaudi::Units::mm << " mm troncated at " 
-          << m_zcut << " sigma(Z)" << endmsg ;
-
+  info() << "Smearing of interaction point with Gaussian distribution "
+         << endmsg;
+  if( msgLevel(MSG::DEBUG) ) {
+    debug() << " with sigma(X) = " << m_sigmaX / Gaudi::Units::mm 
+            << " mm troncated at " << m_xcut << " sigma(X)";
+    debug() << " with sigma(Y) = " << m_sigmaY / Gaudi::Units::mm 
+            << " mm troncated at " 
+            << m_ycut << " sigma(Y)" << endmsg ;
+    debug() << " with sigma(Z) = " << m_sigmaZ / Gaudi::Units::mm 
+            << " mm troncated at " 
+            << m_zcut << " sigma(Z)" << endmsg ;
+  } else {
+    info() << " with sigma(X,Y,Z) = " << m_sigmaX / Gaudi::Units::mm << " mm, "
+           << m_sigmaY / Gaudi::Units::mm << " mm, " 
+           << m_sigmaZ / Gaudi::Units::mm << " mm" << endmsg;
+  }
+    
   release( randSvc ) ;
  
   return sc ;

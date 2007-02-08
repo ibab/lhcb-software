@@ -1,4 +1,4 @@
-// $Id: FixedTarget.cpp,v 1.3 2007-01-12 15:17:37 ranjard Exp $
+// $Id: FixedTarget.cpp,v 1.4 2007-02-08 17:46:06 gcorti Exp $
 // Include files 
 
 // local
@@ -64,11 +64,11 @@ StatusCode FixedTarget::initialize( ) {
     m_angleSmear = sqrt( m_emittance / m_betaStar ) ;
   else m_angleSmear = 0.0 ;
 
-  debug() << "Collision with fixed target" << endmsg ;
-  debug() << "Beam Momentum (TeV): " << m_beamMomentum / Gaudi::Units::TeV << endmsg ;
-  debug() << "Vertical crossing angle (microradian): " 
+  info() << "Collision with fixed target" << endmsg ;
+  info() << "Beam Momentum (TeV): " << m_beamMomentum / Gaudi::Units::TeV << endmsg ;
+  info() << "Vertical crossing angle (microradian): " 
           << m_verticalXAngle / ( Gaudi::Units::milliradian * 1.e-3 ) << endmsg ;
-  debug() << "Horizontal crossing angle (microradian): " 
+  info() << "Horizontal crossing angle (microradian): " 
           << m_horizontalXAngle / ( Gaudi::Units::milliradian * 1.e-3 ) << endmsg ;
   debug() << "Emittance (1.e-9 rad.m): " 
           << m_emittance / ( 1.e-9 * Gaudi::Units::rad * Gaudi::Units::m ) << endmsg ;

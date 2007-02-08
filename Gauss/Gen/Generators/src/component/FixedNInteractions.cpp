@@ -1,4 +1,4 @@
-// $Id: FixedNInteractions.cpp,v 1.3 2007-01-12 15:17:36 ranjard Exp $
+// $Id: FixedNInteractions.cpp,v 1.4 2007-02-08 17:46:06 gcorti Exp $
 // Include files 
 
 // local
@@ -48,6 +48,8 @@ StatusCode FixedNInteractions::initialize( ) {
     info() << "Single Interaction Mode" << endmsg ;
   else info() << "Fixed Number of Interactions per Event = : "
               << m_nInteractions << endmsg ;
+  info() << "Luminosity (10^32 / cm^2 s) stored in events: " 
+         << m_luminosity / 1.e32 * Gaudi::Units::cm2 * Gaudi::Units::s << endmsg ;
 
   return sc ;
 }
