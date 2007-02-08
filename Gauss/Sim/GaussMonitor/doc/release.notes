@@ -4,9 +4,11 @@
 ! Purpose     : Hold monitoring algorithms for Gauss
 !-----------------------------------------------------------------------------
 
-!=================== GaussMonitor v5r0 2007-01-12 ===========================
+!=================== GaussMonitor v4r3 2007-02-08 ===========================
 ! 2007-01-12 - Gloria Corti
- - adapt code to Gaudi v19r0
+ - adapt code to Gaudi v19r0, use Gaudi macro for factory (also compatible
+   with Gaud v18):
+   . MCDecayCounter.cpp
 
 !=================== GaussMonitor v4r2 2006-11-01 ============================
 ! 2006-10-31 - Patrick Robbe
