@@ -1,10 +1,11 @@
-// $Id: GiGaFlushAlgorithm.cpp,v 1.4 2007-01-12 15:23:41 ranjard Exp $
+// $Id: GiGaFlushAlgorithm.cpp,v 1.5 2007-02-08 19:00:20 gcorti Exp $
 // Include files
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/MsgStream.h"
 
-// from GiGa 
+// from GiGa
 #include "GiGa/IGiGaSvc.h"
 #include "GiGa/DumpG4Event.h"
 

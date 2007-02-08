@@ -4,9 +4,20 @@
 ! Responsible : G.Corti
 ! -----------------------------------------------------------------------------
 
-!===================== GaussAlgs v3r0 2007-01-12 =========================
+!!===================== GaussAlgs v2r4 2007-02-08 =========================
+ 2007-02-08 - Gloria Corti
+ - Re-introduce include of GaudiKernel/MsgStream.h otherwise it does not
+   compile with Gaudi v18
+   . GiGaFlushAlgorithm.cpp
+
 ! 2007-01-12 - Gloria Corti
- - update code to cope with Gaudi v19r0
+ - update code to cope with Gaudi v19r0 (compatible with v18 as well):
+   use Gaudi macro for factories, constructors are public (remove friend
+   factory), some clean up:
+   . PrintEventAlg.{h,cpp} 
+   . GiGaGetEventAlg.{h,cpp}
+   . GiGaFlushAlgorithm.{h,cpp}
+   . GiGaCheckEventStatus.cpp
 
 !===================== GaussAlgs v2r3 2006-05-02  =========================
 ! 2006-05-02 - Gloria CORTI
