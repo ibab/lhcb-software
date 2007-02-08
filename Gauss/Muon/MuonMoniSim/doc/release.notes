@@ -1,11 +1,16 @@
 Package         : MuonMoniSim
 Package manager : A Sarti
 
-!====================== MuonMoniSim v3r0 2007-01-12 =======================
-! 2007-01-12 - Gloria Corti
- - update code to cope with Gaudi v19r0
+!====================== MuonMoniSim v2r2 2007-02-08 =======================
+! 2007-01-12 - Gloria CORTI
+ - update code to cope with Gaudi v19r0: use macro for factory (also
+   compatible with v18) 
+   . MuonHitChecker
+! 2007-01-12 - Florence RANJARD
+ - Use single pattern for compenent library instead of two
+   . requirements
 
-!!====================== MuonMoniSim v2r1 2006-04-12  ========================
+!====================== MuonMoniSim v2r1 2006-04-12  ========================
  2006-04-12 - Gloria CORTI
  - Put message "Hello" in debug mode in execute method, not necessary in
    production
