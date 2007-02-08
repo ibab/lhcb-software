@@ -4,7 +4,6 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
-!======================== EvtGen v8r15 2007-01-24 =========================
 ! 2007-01-24 - Patrick Robbe
  - Add new class EvtDiLog to replace di-logarithm function DDILOG from
    the CERNLIB.
