@@ -4,6 +4,13 @@
 ! Purpose     : Code to exchange kinematic information with Geant4
 !-----------------------------------------------------------------------------
 
+!========================== GaussKine v1r5 2007-02-08 ========================
+! 2007-01-12 - Gloria Corti
+ - Use Gaudi macro for factories so to be comaptible with both Gaudi v18
+   and v19:
+   . G4HepMCToMCTruth.cpp
+   . GeneratorToG4
+
 !========================== GaussKine v1r4 2006-06-07 ========================
 ! 2006-06-07 - Patrick Robbe
  - GeneratorToG4: HepMC event units for time are ns, so do the boost
