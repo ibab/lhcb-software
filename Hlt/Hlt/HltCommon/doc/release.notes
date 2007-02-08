@@ -4,6 +4,16 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !-----------------------------------------------------------------------------
 
+! 2007-02-08 - Jose A. Hernando
+ - src/HltSummaryTool 
+       tool to simplify the current access to hltsummary info
+ - src/HltMonitorEffvsPt
+       algorithm to monitor the eff of L0/hlt selections vs Pt (offline) track
+ - src/HltTrackFromTes
+       algorithm to import tracks from the TES (ie Best) into HltDataStore
+ - src/L0Names.h
+       temporaly int<->str translation of the L0 channel default configuration
+
 ! ======================== HltCommon v1r3 2007-02-06 =========================
 ! 2007-02-05 - Jose A. Hernando
  - HltSequencer - Default: do not book histograms

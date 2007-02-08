@@ -1,4 +1,4 @@
-// $Id: L0Entry.h,v 1.5 2007-02-05 09:09:08 hernando Exp $
+// $Id: L0Entry.h,v 1.6 2007-02-08 17:38:06 hernando Exp $
 #ifndef L0ENTRY_H 
 #define L0ENTRY_H 1
 
@@ -55,25 +55,6 @@ protected:
 protected:
 
   void monitor();
-  
-  HltHisto m_histoL0EtHad;
-  HltHisto m_histoL0Et1Had;  
-
-  HltHisto m_histoL0EtEle;
-  HltHisto m_histoL0Et1Ele;  
-
-  HltHisto m_histoL0EtGamma;
-  HltHisto m_histoL0Et1Gamma;  
-
-  HltHisto m_histoL0EtPi0L;
-  HltHisto m_histoL0Et1Pi0L;  
-
-  HltHisto m_histoL0EtPi0G;
-  HltHisto m_histoL0Et1Pi0G;
-
-  HltHisto m_histoL0Et;
-
-  HltHisto m_histoL0SPD;  
 
 };
 #endif // L0ENTRY_H
