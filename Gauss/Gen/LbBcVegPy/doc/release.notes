@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.6 2007-01-12 15:18:51 ranjard Exp $
+! $Id: release.notes,v 1.7 2007-02-08 18:15:08 gcorti Exp $
 ! Package     : Gen/LbBcGen
 ! Responsible : Patrick ROBBE
 
-!===================== LbBcVegPy v2r0 2007-01-08 =====================
+!===================== LbBcVegPy v1r4 2007-02-08 =====================
+! 2007-02-08 - Gloria Corti
+ - include files are private, so use include_dirs. This makes it 
+   usable both with/without install area
+
 ! 2007-01-08 - Florence Ranjard
  - update BcVegPyProduction.cpp to use new FACTORY.
 
