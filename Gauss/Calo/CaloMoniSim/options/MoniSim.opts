@@ -1,7 +1,4 @@
-// $Id: MoniSim.opts,v 1.1.1.1 2004-10-25 08:53:25 ibelyaev Exp $ 
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
+// $Id: MoniSim.opts,v 1.2 2007-02-08 19:20:14 gcorti Exp $ 
 
 /** @file 
  *  The configuration of monitoring algorithms 
@@ -9,8 +6,6 @@
  *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
  *  @date 2004-01-28
  */
-
-ApplicationMgr.DLLs += { "CaloMoniSim" } ;
 
 SpdMonitor.Detector="Spd";
 SpdMonitor.Regions = true ;
@@ -32,8 +27,3 @@ HcalMonitor.Regions = true ;
 HcalMonitor.MaximumEnergy=1000 MeV;
 HcalMonitor.Threshold=5MeV;
 
-// ============================================================================
-// The END 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// ============================================================================

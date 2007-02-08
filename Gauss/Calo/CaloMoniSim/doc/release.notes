@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.9 2007-01-12 16:11:52 ranjard Exp $ 
+! $Id: release.notes,v 1.10 2007-02-08 19:20:14 gcorti Exp $ 
 ! -----------------------------------------------------------------------------
 ! CVS tag $Name: not supported by cvs2svn $
 ! -----------------------------------------------------------------------------
@@ -7,9 +7,13 @@
 ! Purpose     : 
 ! -----------------------------------------------------------------------------
 
-!===================== CaloMoniSim v4r0 2007-01-12 ==========================
+!===================== CaloMoniSim v3r1 2007-02-08 ==========================
 ! 2007-01-12 - Gloria Corti
- - update code to cope with Gaudi v19r0
+ - update code to cope with Gaudi v19r0. Use Gaudi macro for factory (also
+   compatible with v18)
+   . MCCaloMonitor.cpp 
+ - Remove loading of dll in options.
+   . MoniSim.opts
 
 !==================== CaloMoniSim v3r0 2006-06-23 =============================
 ! 2006-06-23 - Gloria Corti

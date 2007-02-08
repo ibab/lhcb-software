@@ -1,7 +1,4 @@
-// $Id: Gauss.opts,v 1.1.1.1 2004-10-25 08:53:25 ibelyaev Exp $ 
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
+// $Id: Gauss.opts,v 1.2 2007-02-08 19:20:14 gcorti Exp $ 
 
 /** @file 
  *  prototype file for MC Calo Hit monitoring in Gauss
@@ -10,7 +7,7 @@
  *  @date 2004-01-28
  */
 
-ApplicationMgr.DLLs += { "CaloMoniSim" } ;
+ApplicationMgr.DLLs += { "CaloMoniSim" } ;  // only necessary for Gauss < v30
 
 GaussMonitor.Members += 
   { "MCCaloMonitor/SpdMonitor"  ,
@@ -20,8 +17,3 @@ GaussMonitor.Members +=
 
 #include "$CALOMONISIMOPTS/MoniSim.opts"
 
-// ============================================================================
-// The END 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// ============================================================================
