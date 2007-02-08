@@ -2,6 +2,10 @@
 ! Package     : MuonPIDChecker
 ! Responsible : E. Polycarpo, M. Gandelman
 
+! 2007-02-08 - Chris Jones
+ - Some minor tweeks for gaudi v19r1
+ - Remove some temporary files not needed in CVS
+
 ! 20070116 - MuonPIDChecker v1
              First Checker algorithm for the MuonID package
 ! ====================================================================

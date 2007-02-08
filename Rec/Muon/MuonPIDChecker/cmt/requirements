@@ -1,7 +1,8 @@
 package MuonPIDChecker
 version v1r0
 
-branches MuonPIDChecker src cmt doc options
+branches src cmt doc options
+include_path none
 
 # add "use" statements
 use GaudiAlg           v*
