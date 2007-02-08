@@ -1,0 +1,28 @@
+package		HltL0Conf
+version 	v1r0
+
+# ================ structure =============================================
+branches	src cmt doc options
+include_path none
+
+# ================ options ===============================================
+set HLTLOCONFOPTS	$(HLTL0CONFROOT)/options
+
+# ================ used packages =========================================
+use GaudiKernel         v*
+use LinkerEvent 	v*	Event
+use CaloDAQ	        v*	Calo
+use CaloUtils           v*      Calo
+use MuonDet             v*      Det
+        
+use TsaAlgorithms       v*      Tr  
+use TsaKernel           v*      Tr
+
+use HltBase             v*      Hlt
+
+# macro ROOT_native_version 5.13.04b
+
+# ================ component library =====================================
+library		HltL0Conf	../src/*.cpp
+
+apply_pattern component_library library=HltL0Conf

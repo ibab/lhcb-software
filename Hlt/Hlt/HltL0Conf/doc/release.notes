@@ -1,0 +1,18 @@
+!-----------------------------------------------------------------------------
+! Package     : Hlt/HltL0Conf
+! Responsible : Johannes Albrecht
+! Purpose     : L0-Tsa Confirmation algorithms
+!-----------------------------------------------------------------------------
+
+
+! 2007-02-08 Jose A. Hernando (on behalf of Johannes Albrecht)
+   - cmt/requirements
+   - src/PrepareElectronSeed
+	   from L0CaloCandidate (electron/foton/pi0) to +/- states
+   - src/PrepareHadronSeed
+	   from L0CaloCandidate (hadron) to +/- states
+   - src/PrepareMuonSeed
+	   from L0MuonCandidate to state
+   - src/TsaConfirmTool
+	   Tsa tool to select tracks from a state
+     
