@@ -1,4 +1,4 @@
-// $Id: TrackChecker.cpp,v 1.20 2007-01-19 16:23:31 cattanem Exp $
+// $Id: TrackChecker.cpp,v 1.21 2007-02-08 10:06:08 cattanem Exp $
 // Include files 
 
 // local
@@ -6,7 +6,6 @@
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
-#include "GaudiKernel/IRegistry.h"
 
 // from Event/LinkerEvent
 #include "Linker/LinkedTo.h"

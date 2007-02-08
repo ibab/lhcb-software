@@ -1,4 +1,4 @@
-// $Id: TrackCheckerNT.cpp,v 1.2 2007-02-07 16:57:11 mschille Exp $
+// $Id: TrackCheckerNT.cpp,v 1.3 2007-02-08 10:06:09 cattanem Exp $
 // Include files 
 
 // local
@@ -6,7 +6,6 @@
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
-#include "GaudiKernel/IRegistry.h"
 
 // from Event/TrackEvent
 #include "Event/TrackFunctor.h"

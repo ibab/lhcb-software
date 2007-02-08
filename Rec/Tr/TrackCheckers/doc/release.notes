@@ -4,6 +4,11 @@
 ! Purpose     : Package for track checking algorithms
 !-----------------------------------------------------------------------------
 
+!======================= TrackCheckers v2r12 2007-02-08 ======================
+! 2007-02-08 - Marco Cattaneo (for Manuel Schiller)
+ - Fix bug in TrackCheckerNT algorithm which could cause Brunel to crash under
+   some circumstances.
+
 !======================= TrackCheckers v2r11 2007-01-19 ======================
 ! 2007-01-19 - Eduardo Rodrigues
  - Replacement of master projector by the new projector selector
