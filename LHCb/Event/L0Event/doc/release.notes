@@ -1,7 +1,13 @@
-! $Id: release.notes,v 1.61 2007-02-07 13:06:21 cattanem Exp $
+! $Id: release.notes,v 1.62 2007-02-09 14:05:57 jucogan Exp $
 ! Package : L0Event
 ! Package manager : Olivier Callot
 !-----------------------------------------------------------------------------
+
+! 2007-02-09 - Julien Cogan
+ - Add the method L0MuonCandidate::muonTileIDs which returns a vector of 
+   MuonTileIDs matching the muon detector geometry for a given station.
+ - Remove the method L0MuonCandidate::pad which returned a single MuonTileID 
+   that was in some case not recognize by the muon geometry tools.
 
 !======================== L0Event v16r0p1 2007-02-02 =========================
 ! 2007-02-02 - Marco Cattaneo

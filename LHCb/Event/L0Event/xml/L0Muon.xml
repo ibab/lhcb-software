@@ -13,9 +13,9 @@
                             std::vector&lt;MuonTileID&gt; pads, int encodedPt" 
 			    desc="Constructor with full information"/>
 
-      <method const="TRUE" type="MuonTileID" name="pad" argList="unsigned int station" 
-                    desc="Accessor to the pad in a given station"/>
-
+      <method const="TRUE" type="std::vector&lt;MuonTileID&gt;" name="muonTileIDs" argList="unsigned int station" 
+                    desc="Accessor to the list of MuonTileIDs in a given station"/>
+      
       <method const="TRUE" type="bool" name="operator&lt;" argList="const L0MuonCandidate lmc" 
                     desc="Comparison operator for sorting candidates in Pt"/>
       
