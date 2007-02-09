@@ -1,0 +1,36 @@
+#pragma print off
+#printOptions full
+
+/** @file 
+ * 
+ *  Job options for Gauss to produce events with geometry version
+ *  lhcb-200601.opts (DC06) 
+ *  Velo Open
+ *  Magnetic field on
+ *
+ */
+
+//--------------------------------------------------------------------------
+// Execute a standard production Gauss job
+//--------------------------------------------------------------------------
+#include "$GAUSSOPTS/Gauss.opts"
+
+//--------------------------------------------------------------------------
+// Geometry database dependent options
+//--------------------------------------------------------------------------
+#include "$STDOPTS/DC06Conditions.opts"
+
+// Set generator settings
+#include "$GAUSSOPTS/PilotRun.opts"
+
+// Set initial time as to indentiy in data different configuration
+EventClockSvc.FakeEventTime.StartTime   = 6*s;
+
+// VELO Close (is default)
+#include "$GAUSSOPTS/SimVeloGeometry.opts"
+ApplicationMgr.Environment = { "CONDITIONS_PATH" : "$XMLCONDITIONSROOT/DDDB/Conditions/MainCatalog.xml" };
+
+// Magnetic Field On (is default) has influence on crossing angle at 450 GeV
+Generation.MinimumBias.PythiaProduction.CollidingBeams.HorizontalCrossingAngle = 2.1*mrad;
+Generation.MinimumBias.PythiaProduction.FixedTarget.HorizontalCrossingAngle = 2.1*mrad;
+ 

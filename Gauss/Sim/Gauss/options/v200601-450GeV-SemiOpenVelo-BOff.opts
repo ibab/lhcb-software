@@ -1,0 +1,37 @@
+#pragma print off
+#printOptions full
+
+/** @file 
+ * 
+ *  Job options for Gauss to produce events with geometry version
+ *  lhcb-200601.opts (DC06) 
+ *  Velo SemiOpen
+ *  Magnetic field off
+ *
+ */
+
+//--------------------------------------------------------------------------
+// Execute a standard production Gauss job
+//--------------------------------------------------------------------------
+#include "$GAUSSOPTS/Gauss.opts"
+
+//--------------------------------------------------------------------------
+// Geometry database dependent options
+//--------------------------------------------------------------------------
+#include "$STDOPTS/DC06Conditions.opts"
+
+// Set generator settings
+#include "$GAUSSOPTS/PilotRun.opts"
+
+// Set initial time as to indentiy in data different configuration
+EventClockSvc.FakeEventTime.StartTime   = 2*s;
+
+// VELO SemiOpen 
+#include "$GAUSSOPTS/SimVeloGeometry.opts"
+ApplicationMgr.Environment = { "CONDITIONS_PATH" : "$XMLCONDITIONSROOT/DDDB/Conditions/MainCatalog_SemiOpenVelo.xml" };
+
+// Magnetic Field Off, no crossing angle
+MagneticFieldSvc.UseConstantField = true;
+Generation.MinimumBias.PythiaProduction.CollidingBeams.HorizontalCrossingAngle = 0.0;
+Generation.MinimumBias.PythiaProduction.FixedTarget.HorizontalCrossingAngle = 0.0;
+ 
