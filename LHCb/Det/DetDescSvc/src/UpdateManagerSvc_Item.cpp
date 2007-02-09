@@ -1,4 +1,4 @@
-// $Id: UpdateManagerSvc_Item.cpp,v 1.1 2006-10-25 13:46:06 marcocle Exp $
+// $Id: UpdateManagerSvc_Item.cpp,v 1.2 2007-02-09 13:06:54 marcocle Exp $
 // Include files 
 
 #include "GaudiKernel/IDataProviderSvc.h"
@@ -161,14 +161,20 @@ BaseObjectMemberFunction * UpdateManagerSvc::Item::addChild(BaseObjectMemberFunc
   if (std::find(mfIt->items->begin(),mfIt->items->end(),child) == mfIt->items->end()){
     // it is a new child (not in current m.f. list)
     mfIt->items->push_back(child);
+
+    // intersect M.F. validity with the new child
     if (mfIt->since < child->since) mfIt->since = child->since;
     if (mfIt->until > child->until) mfIt->until = child->until;
 
+    // add the new child to the list of childs if not already included
     if (std::find(children.begin(),children.end(),child) == children.end()){
       children.push_back(child);
-      if (since < child->since) since = child->since;
-      if (until > child->until) until = child->until;
     }
+    
+    // intersect the item validity with the one of the member function
+    if (since < mfIt->since) since = mfIt->since;
+    if (until > mfIt->until) until = mfIt->until;
+
   }
   // return the real pointer since thisMF can be deleted
   return mfIt->mf;

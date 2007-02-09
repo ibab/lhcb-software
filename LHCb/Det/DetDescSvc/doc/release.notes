@@ -1,10 +1,14 @@
 ! =============================================================================
-! $Id: release.notes,v 1.20 2007-01-23 07:16:24 cattanem Exp $ 
+! $Id: release.notes,v 1.21 2007-02-09 13:06:54 marcocle Exp $ 
 ! =============================================================================
 ! package DetDescSvc
 ! package manager : Marco Clemencic, Juan Palacios ?
 ! purpose:          Component library for Detector Description Services
 ! =============================================================================
+
+! 2007-02-29 - Marco Clemencic
+ - Fixed a bug in UpdateManagerSvc (in some special cases, registerCondition
+   did not invalidate the user item)
 
 !========================= DetDescSvc v1r9 2007-01-23 =========================
 ! 2007-01-23 - Marco Cattaneo
