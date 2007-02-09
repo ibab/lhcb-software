@@ -5,7 +5,7 @@
  * Implementation file for algorithm MuonPIDsFromProtoParticlesAlg
  *
  * CVS Log :-
- * $Id: MuonPIDsFromProtoParticlesAlg.cpp,v 1.3 2006-12-11 20:48:20 jonrob Exp $
+ * $Id: MuonPIDsFromProtoParticlesAlg.cpp,v 1.4 2007-02-09 14:07:25 ukerzel Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 29/03/2006
@@ -33,8 +33,8 @@ MuonPIDsFromProtoParticlesAlg::MuonPIDsFromProtoParticlesAlg( const std::string&
                                                               ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
 {
-  declareProperty( "InputProtoParticles", m_protoPloc  = ProtoParticleLocation::Charged );
-  declareProperty( "OutputMuonPIDs",      m_muonPIDloc = MuonPIDLocation::Default       );
+  declareProperty( "InputProtoParticles", m_protoPloc  = rootOnTES() + ProtoParticleLocation::Charged );
+  declareProperty( "OutputMuonPIDs",      m_muonPIDloc = MuonPIDLocation::Default                     );
 }
 //=============================================================================
 // Destructor
@@ -72,6 +72,7 @@ StatusCode MuonPIDsFromProtoParticlesAlg::execute()
   for ( ProtoParticles::const_iterator iP = protos->begin();
         iP != protos->end(); ++iP )
   {
+
     // get Track pointer
     const Track * track = (*iP)->track();
     if ( !track )
@@ -79,6 +80,10 @@ StatusCode MuonPIDsFromProtoParticlesAlg::execute()
       Warning( "Charged ProtoParticle has NULL Track pointer" );
       continue;
     }
+
+    if ( msgLevel(MSG::VERBOSE) ) {
+      verbose() << "track with |p| " << track->p() << " has key " <<  track->key() << endmsg;
+    }//if
 
     // does this proto have any Muon info in it ?
     if ( (*iP)->hasInfo(ProtoParticle::MuonPIDStatus) )
@@ -89,6 +94,14 @@ StatusCode MuonPIDsFromProtoParticlesAlg::execute()
       // Add to container with same key as Track 
       mpids->insert( pid, track->key() );
 
+      // set this MuonPID to the proto-particle
+      //  needed in case a clone of the proto-particle
+      //  is written to a new file and the corresponding
+      //  information is re-created when the proto-particle is
+      //  read back .
+      (*iP)->setMuonPID(pid);
+      
+
       // copy info
 
       // history word
@@ -98,11 +111,15 @@ StatusCode MuonPIDsFromProtoParticlesAlg::execute()
       pid->setIDTrack( track );
 
       // PID info
+      if ( msgLevel(MSG::VERBOSE) ) {
+        verbose() << "muon LL mu " << (*iP)->info(ProtoParticle::MuonMuLL,    0) << endmsg;
+        verbose() << "        bg " << (*iP)->info(ProtoParticle::MuonBkgLL,   0) << endmsg;
+      }// if
       pid->setMuonLLMu( (*iP)->info(ProtoParticle::MuonMuLL,    0) );
       pid->setMuonLLBg( (*iP)->info(ProtoParticle::MuonBkgLL,   0) );
       pid->setNShared(  static_cast<int>((*iP)->info(ProtoParticle::MuonNShared, 0)) );
 
-    } // has muon info
+    }// has muon info
 
   }
 

@@ -5,7 +5,7 @@
  * Implementation file for algorithm RichPIDsFromProtoParticlesAlg
  *
  * CVS Log :-
- * $Id: RichPIDsFromProtoParticlesAlg.cpp,v 1.3 2006-12-11 20:48:22 jonrob Exp $
+ * $Id: RichPIDsFromProtoParticlesAlg.cpp,v 1.4 2007-02-09 14:07:25 ukerzel Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 29/03/2006
@@ -33,8 +33,8 @@ RichPIDsFromProtoParticlesAlg::RichPIDsFromProtoParticlesAlg( const std::string&
                                                               ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
 {
-  declareProperty( "InputProtoParticles", m_protoPloc  = ProtoParticleLocation::Charged );
-  declareProperty( "OutputRichPIDs",      m_richPIDloc = RichPIDLocation::Default       );
+  declareProperty( "InputProtoParticles", m_protoPloc  = rootOnTES() + ProtoParticleLocation::Charged );
+  declareProperty( "OutputRichPIDs",      m_richPIDloc = RichPIDLocation::Default                     );
 }
 //=============================================================================
 // Destructor
@@ -63,6 +63,10 @@ StatusCode RichPIDsFromProtoParticlesAlg::execute()
 
   // load ProtoParticles
   const ProtoParticles * protos = get<ProtoParticles>( m_protoPloc );
+  if ( msgLevel(MSG::VERBOSE) ) {
+    verbose() << "got " << protos->size() << " proto-particles from TES" << endmsg;
+  } //if
+
 
   // new RichPID container
   RichPIDs * rpids = new RichPIDs();
@@ -72,6 +76,9 @@ StatusCode RichPIDsFromProtoParticlesAlg::execute()
   for ( ProtoParticles::const_iterator iP = protos->begin();
         iP != protos->end(); ++iP )
   {
+
+    verbose() << "consider new proto-particle " << endmsg;
+
     // get Track pointer
     const Track * track = (*iP)->track();
     if ( !track )
@@ -79,6 +86,10 @@ StatusCode RichPIDsFromProtoParticlesAlg::execute()
       Warning( "Charged ProtoParticle has NULL Track pointer" );
       continue;
     }
+
+    if ( msgLevel(MSG::VERBOSE) ) {
+      verbose() << "track with |p| " << track->p() << " has key " <<  track->key() << endmsg;
+    }//if
 
     // does this proto have any Rich info in it ?
     if ( (*iP)->hasInfo(ProtoParticle::RichPIDStatus) )
@@ -89,6 +100,13 @@ StatusCode RichPIDsFromProtoParticlesAlg::execute()
       // Add to container with same key as Track 
       rpids->insert( pid, track->key() );
 
+      // set this RichPID to the proto-particle
+      //  needed in case a clone of the proto-particle
+      //  is written to a new file and the corresponding
+      //  information is re-created when the proto-particle is
+      //  read back .
+      (*iP)->setRichPID(pid);
+
       // copy info
 
       // history word
@@ -98,11 +116,21 @@ StatusCode RichPIDsFromProtoParticlesAlg::execute()
       pid->setTrack( track );
 
       // DLLs
+      if ( msgLevel(MSG::VERBOSE) ) {
+        verbose() << "set DLLs" << endmsg;
+        verbose() << "DLL e  " << (*iP)->info(ProtoParticle::RichDLLe,  -999) << endmsg;
+        verbose() << "DLL mu " << (*iP)->info(ProtoParticle::RichDLLmu, -999) << endmsg;
+        verbose() << "DLL pi " << (*iP)->info(ProtoParticle::RichDLLpi, -999) << endmsg;
+        verbose() << "DLL K  " << (*iP)->info(ProtoParticle::RichDLLk,  -999) << endmsg;
+        verbose() << "DLL p  " << (*iP)->info(ProtoParticle::RichDLLp,  -999) << endmsg;
+      }//if
+
       pid->setParticleDeltaLL(Rich::Electron,(*iP)->info(ProtoParticle::RichDLLe, -999));
       pid->setParticleDeltaLL(Rich::Muon,    (*iP)->info(ProtoParticle::RichDLLmu,-999));
       pid->setParticleDeltaLL(Rich::Pion,    (*iP)->info(ProtoParticle::RichDLLpi,-999));
       pid->setParticleDeltaLL(Rich::Kaon,    (*iP)->info(ProtoParticle::RichDLLk, -999));
       pid->setParticleDeltaLL(Rich::Proton,  (*iP)->info(ProtoParticle::RichDLLp, -999));
+
 
     } // has rich info
 

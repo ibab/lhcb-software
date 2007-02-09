@@ -5,6 +5,12 @@
 !-----------------------------------------------------------------------------
 
 !========================== GlobalReco v6r7 2007-02-06 ===================
+! 2007-02-09 - Ulrich Kerzel
+ - set RichPID and MuonPID explicitly to the proto-particle.
+   Needed if a clone is written to a separate file and the information
+   is re-created when the particle is read back.
+ - add some verbose() debug statements
+
 ! 2007-02-06 - Marco Cattaneo
  - Remove LHCbDefinitions dependency
 
