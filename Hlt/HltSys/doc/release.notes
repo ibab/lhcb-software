@@ -5,6 +5,10 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
 
+! 2007-02-09 Jose A. Hernando
+  - options/L0DAQ.opts and HltDAQ.opts to run L0 and Hlt for the DAQ studies
+  - removing HltAlleysSequenceDAQ.opts
+
 </PRE><H1><A NAME=v1r2>2007-02-07 HltSys v1r2</A></H1><PRE>
 This version uses Gaudi v19r1 and LHCb v22r1, introducing CMTPROJECTPATH
 
