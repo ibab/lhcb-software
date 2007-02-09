@@ -1,6 +1,6 @@
 
 #include "STDet/DeSTBaseElement.h"
-
+#include "GaudiKernel/IUpdateManagerSvc.h"
 #include "DetDesc/IGeometryInfo.h"
 
 
@@ -33,9 +33,25 @@ StatusCode DeSTBaseElement::initialize() {
   if (sc.isFailure() ){
     msg << MSG::ERROR << "Failed to initialize detector element" << endreq; 
   }
+ 
+  // cache trajectories
+  try {
+    msg << MSG::DEBUG << "Registering conditions" << endmsg;
+    updMgrSvc()->registerCondition(this,this->geometry(),&DeSTBaseElement::cachePoint);
+    msg << MSG::DEBUG << "Start first update" << endmsg;
+    sc = updMgrSvc()->update(this);
+  } 
+  catch (DetectorElementException &e) {
+   msg << MSG::ERROR << e << endmsg;
+   return StatusCode::FAILURE;
+  }
 
+  return StatusCode::SUCCESS;
+}
+
+StatusCode DeSTBaseElement::cachePoint(){
+ 
   m_globalCentre = toGlobal(Gaudi::XYZPoint(0,0,0));
-
   return StatusCode::SUCCESS;
 }
 

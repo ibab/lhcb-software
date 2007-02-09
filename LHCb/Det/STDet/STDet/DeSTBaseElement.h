@@ -1,4 +1,4 @@
-// $Id: DeSTBaseElement.h,v 1.6 2006-04-19 07:41:37 mneedham Exp $
+// $Id: DeSTBaseElement.h,v 1.7 2007-02-09 12:36:20 mneedham Exp $
 #ifndef _DeSTBaseElement_H_
 #define _DeSTBaseElement_H_
 
@@ -80,6 +80,7 @@ public:
 
 private:
 
+  StatusCode cachePoint();
 
   bool duplicate(const std::string& testString, 
                  const std::vector<std::string>& names) const;

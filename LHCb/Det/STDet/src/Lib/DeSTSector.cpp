@@ -1,4 +1,4 @@
-// $Id: DeSTSector.cpp,v 1.26 2006-08-30 14:23:14 cattanem Exp $
+// $Id: DeSTSector.cpp,v 1.27 2007-02-09 12:36:20 mneedham Exp $
 #include "STDet/DeSTSector.h"
 
 #include "DetDesc/IGeometryInfo.h"
@@ -12,6 +12,8 @@
 
 #include "GaudiKernel/SystemOfUnits.h"
 #include "GaudiKernel/GaudiException.h"
+
+#include "GaudiKernel/IUpdateManagerSvc.h"
 
 /** @file DeSTSector.cpp
 *
@@ -133,10 +135,18 @@ StatusCode DeSTSector::initialize() {
     determineSense();
 
     // cache trajectories
-    cacheInfo();    
-    
+    try {
+      updMgrSvc()->invalidate(this);
+      msg << MSG::DEBUG << "Registering conditions" << endmsg;
+      updMgrSvc()->registerCondition(this,this->geometry(),&DeSTSector::cacheInfo);
+      msg << MSG::DEBUG << "Start first update" << endmsg;
+      sc = updMgrSvc()->update(this);
+    } 
+    catch (DetectorElementException &e) {
+     msg << MSG::ERROR << e << endmsg;
+     return StatusCode::FAILURE;
+    }
   }
-
   return StatusCode::SUCCESS;
 }
 
@@ -268,8 +278,9 @@ void DeSTSector::determineSense()
   if (g1.y() > g3.y()) {m_yInverted = true;}
 }
 
-void DeSTSector::cacheInfo()
+StatusCode DeSTSector::cacheInfo()
 {
+
   clear();
 
   double yUpper =  m_vMaxLocal;
@@ -301,6 +312,7 @@ void DeSTSector::cacheInfo()
   m_entryPlane = Gaudi::Plane3D(m_plane.Normal(), globalPoint(0.,0.,-0.5*m_thickness));
   m_exitPlane = Gaudi::Plane3D(m_plane.Normal(), globalPoint(0.,0., 0.5*m_thickness));
 
+  return StatusCode::SUCCESS;
 }
 
 STChannelID DeSTSector::nextLeft(const STChannelID testChan) const
