@@ -1,4 +1,4 @@
-// $Id: Monitor.opts,v 1.22 2006-11-13 16:12:08 gcorti Exp $ 
+// $Id: Monitor.opts,v 1.23 2007-02-09 09:12:40 gcorti Exp $ 
 
 /** @file 
  * 
@@ -64,6 +64,7 @@ OTHitMonitor.zStations    = { 7938.0, 8625.0, 9315.0 };
 #include "$GAUSSRICHROOT/options/RichAnalysis.opts"
 
 // Calorimeters
+ApplicationMgr.DLLs       += { "CaloMoniSim" } ;
 DetectorsMonitor.Members  += { "MCCaloMonitor/SpdMonitor" };
 DetectorsMonitor.Members  += { "MCCaloMonitor/PrsMonitor" }; 
 DetectorsMonitor.Members  += { "MCCaloMonitor/EcalMonitor" };
