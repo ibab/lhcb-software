@@ -1,4 +1,4 @@
-// $Id: DeSTSector.h,v 1.14 2007-02-09 12:36:20 mneedham Exp $
+// $Id: DeSTSector.h,v 1.15 2007-02-09 13:01:57 cattanem Exp $
 #ifndef _DeSTSector_H_
 #define _DeSTSector_H_
 
@@ -9,7 +9,7 @@
 #include "Kernel/STChannelID.h"
 #include "STDet/DeSTBaseElement.h"
 
-#include "Kernel/Plane3DTypes.h"
+#include "GaudiKernel/Plane3DTypes.h"
 
 
 /** @class DeSTSector DeSTSector.h "STDet/DeSTSector.h"

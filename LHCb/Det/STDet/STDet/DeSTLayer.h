@@ -1,4 +1,4 @@
-// $Id: DeSTLayer.h,v 1.6 2006-12-13 13:48:52 mneedham Exp $
+// $Id: DeSTLayer.h,v 1.7 2007-02-09 13:01:57 cattanem Exp $
 #ifndef _DeSTLayer_H_
 #define _DeSTLayer_H_
 
@@ -6,7 +6,7 @@
 
 #include "Kernel/STChannelID.h"
 #include "STDet/DeSTBaseElement.h"
-#include "Kernel/Plane3DTypes.h"
+#include "GaudiKernel/Plane3DTypes.h"
 
 /** @class DeSTLayer DeSTLayer.h "STDet/DeSTLayer.h"
  *
