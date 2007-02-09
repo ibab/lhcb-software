@@ -1,60 +1,86 @@
-# $Id: requirements,v 1.11 2005-07-18 14:56:22 cattanem Exp $
+#============================================================================
+# $Id: requirements,v 1.12 2007-02-09 10:46:53 hernando Exp $
 # Created    : 03/06/2005 by P. Koppenburg
-# Maintainer : P. Koppenburg & M. Cattaneo
-#
+# Maintainer : J.A. Hernando & P. Koppenburg & M. Cattaneo
+#============================================================================
 
 #============================================================================
 package Moore
 version v1r2
 
-# Structure, i.e. directories to process. 
-#============================================================================
 branches doc cmt options
 
-# Used packages. 
 #============================================================================
 
-#-- Gaudi libraries (from GAUDI_v16r5)
-use GaudiKernel         v19r3
-use GaudiSvc            v14r0
-use GaudiAlg            v8r9
-use GaudiPoolDb         v1r14
-use RootHistCnv         v9r4
+#-- CMT and GaudiPolicy
+use GaudiPolicy v6r3
 
-#-- Databases
-use XmlDDDB     v26r1   Det
-use ParamFiles  v3r11   -no_auto_imports
-use FieldMap    v4r5
+#-- External libraries now taken from LCG, version defined by GaudiEnv
+use RELAX v* LCG_Interfaces          -no_auto_imports
 
-#-- LHCb libraries (from LHCB_v18r8)
-use LHCb        v18r8
+#-- Gaudi libraries (from GAUDI_v19r1)
+use GaudiKernel		v22r0
+use GaudiSvc 		v15r1        -no_auto_imports
+use GaudiAlg 		v9r11        -no_auto_imports
+use GaudiAud 	        v8r0         -no_auto_imports
+use GaudiGSL		v6r5         -no_auto_imports
+use GaudiPoolDb	        v2r10        -no_auto_imports
+use RootHistCnv         v9r11        -no_auto_imports
 
-#-- Lbcom packages (from LBCOM_v2r4)
-use LbcomSys    v2r4
+#-- Database
+use XmlDDDB             v40r0   Det  -no_auto_imports
+use XmlConditions       v2r5    Det  -no_auto_imports
+use FieldMap		v4r7         -no_auto_imports
+use ParamFiles          v5r0         -no_auto_imports
 
-#-- Rec packages (from REC_v1r4)
-use RecSys      v1r4
+#-- LHCb libraries (from LHCB_v22r1)
+use GaudiConf           v10r1          -no_auto_imports
+use GaudiObjDesc        v9r8p1         -no_auto_imports
+use KernelSys           v6r1    Kernel -no_auto_imports
+use DetSys              v9r1    Det    -no_auto_imports
+use EventSys            v23r1   Event  -no_auto_imports
+use DAQSys              v3r0    DAQ    -no_auto_imports
+use LHCbAlgs            v2r5    Kernel -no_auto_imports
+use SimComponents       v2r0    Sim    -no_auto_imports
+use PatTools            v3r0    Pat    -no_auto_imports
 
-#-- Phys packages (from PHYS_v1r4)
-use PhysCoreSys v1r3   Phys
-use HltSys      v1r4   Hlt
+#-- Lbcom packages (from LBCOM_v6r1)
+use LbcomSys            v6r1         -no_auto_imports
 
-#-- Online packages (from Online v1r4) - not on Windows
-macro useOnline "OnlineSys v1r4" WIN32 ""
-use $(useOnline)
-#
-#===== build Moore. On Win32 online app is same as offline... =====
-macro buildOnline "$(GAUCHOJOBROOT)/src/GaudiOnlineMain.cpp \
-                   $(GAUCHOJOBROOT)/src/GaudiDimController.cpp" \
-            WIN32 "$(GAUDICONFROOT)/src/GaudiMain.cpp"
-application Moore $(buildOnline)
+#-- Rec packages (from REC_v4r1)
+use RecSys              v4r1         -no_auto_imports
 
-application MooreOffline $(GAUDICONFROOT)/src/GaudiMain.cpp
+use HltSys		v1r2	     -no_auto_imports
+
+#============================================================================
+application Moore $(GAUDICONFROOT)/src/GaudiMain.cpp
+
+#============================================================================
+macro Moorep_linkopts    "$(application_linkopts)"
+
 apply_pattern application_path
-# ========================= set macros ============================
 
 # Set the default path for Moore options.
 set MOOREOPTS ${MOOREROOT}/options
 
 # define aliases
 alias Moore "${MOOREROOT}/${BINDIR}/MooreOffline.exe"
+
+
+#===============================================================
+#-- Online packages 
+# macro useOnline "OnlineSys v1r4" WIN32 ""
+# use $(useOnline)
+#
+#===== build Moore. On Win32 online app is same as offline... =====
+# macro buildOnline "$(GAUCHOJOBROOT)/src/GaudiOnlineMain.cpp \
+#                   $(GAUCHOJOBROOT)/src/GaudiDimController.cpp" \
+#            WIN32 "$(GAUDICONFROOT)/src/GaudiMain.cpp"
+# application Moore $(buildOnline)
+#
+# application MooreOffline $(GAUDICONFROOT)/src/GaudiMain.cpp
+# apply_pattern application_path
+#===============================================================
+
+
+
