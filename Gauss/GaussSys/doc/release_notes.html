@@ -3,15 +3,204 @@ Package : GaussSys
 Package manager : Gloria Corti
 Purpose: LHCb Simulation program
 
-</PRE><H1><A NAME="v30r1">2007-01-12 - GaussSys v30r1</A></H1><PRE>
+</PRE><H1><A NAME="v25r8">2007-02-09 - GaussSys v25r8</A></H1><PRE>
+<H2><A NAME="Note">DC06 version</A></H2>
+<H3><A NAME="Use">This version uses:
+   LHCb v21r12 (and Gaudi v18r11)
+   Pythia 6_325.2, photos 215.2, lhapdf 4.2 (via GENSER 1_4_1)
+   HepMC 1.26 (via LCG external)
+   Geant4 v71r0p16 (based on geant4.7.1.p01a)
+   DecFiles v13r8, ParamFiles v5r0 
+   XmlDDDB v30r14, XmlConditions v2r4, FieldMap v4r7</A></H3>
+<H3><A NAME="Exe">Used by GaussXXX executables:
+   Herwig 6_510.2, Jimmy 4_2.2
+   Hijing 1_383bs.2</A></H3>
+<H3><A NAME="Details">
+   Possibility to generate various Engeeering Run configurations in production.
+   Fix in Generators for problems observed in production of signal events.
+   Technical modifications to be compatible also with Gaudi v19r1.
+</A></H3>
 
-!===================== GaussPhysics v4r0 ================================
-! 2006-01-09 - Patrick Robbe
- - Adapt particle definitions to Geant4.8
- - Use new physics lists in G4hadlists of Geant4.8 (has to be checked !)
-
-!==========================================================================
-
+!======================== Gauss v25r8 2007-02-09 =============================
+! 2007-02-08 - Gloria Corti
+ - Make v25r8 version: DC06 compatible.
+ - Use version of GENSER v1r141p2 with compilation flag for 32 bits fortran
+   compatibility on slc4.
+ - Use new versions for packages with technical modifications that are
+   compatible with Gaudi v18r11 and v19r1: factories or similar changes
+   (LbPythia v4r10, LbHerwig v3r4, BcVegPy v1r0p1, LbBcVegPy v1r4,
+    LbHijing v1r2, ParticleGuns v3r2, GaussKine v1r5, GaussAlgs v2r4,
+    GaussMonitor v4r3, CaloMoniSim v3r1, VeloGauss v2r1, MuonMoniSim v2r2)
+ - Use new version of Hidden Valley with options for production and compatible
+   with both Gaudi v18r11 and v19r1 (LbHidValley v1r2)
+ - Use latest version of DecFiles v13r8 with new event types
+ - Use new version of Generators v6r8 with fixes for bugs observed in
+   production of signals (see release notes for details) and changes for
+   factories
+ - Introduce options for various configurations of 2007 Engeneering Run
+   (aka Pilot Run) to be used by production instead of v200601.opts
+   . v200601-450GeV-CloseVelo-BOff.opts     - NEW
+   . v200601-450GeV-CloseVelo-BOn.opts      - NEW
+   . v200601-450GeV-OpenVelo-BOff.opts      - NEW
+   . v200601-450GeV-OpenVelo-BOn.opts       - NEW
+   . v200601-450GeV-SemiOpenVelo-BOff.opts  - NEW
+   . v200601-450GeV-SemiOpenVelo-BOn.opts   - NEW
+   . Gauss.opts                             - Modify comments
+   . PilotRun.opts                          - Simplify options for field off
+ - Introduce loading of dll of CaloMoniSim that has been removed from
+   options in package (only necessary for Gauss v25rX series)
+ 
+!====================== MuonMoniSim v2r2 2007-02-08 =======================
+! 2007-01-12 - Gloria CORTI
+ - update code to cope with Gaudi v19r0: use macro for factory (also
+   compatible with v18)
+   . MuonHitChecker
+! 2007-01-12 - Florence RANJARD
+ - Use single pattern for compenent library instead of two
+   . requirements
+ 
+!========================== VeloGauss v2r1 2007-02-08 ========================
+! 2007-02-08 - Gloria Corti
+ - Remove import of VeloAlgorithms not necessary and preventing compilation
+   with Gaudi v19
+   . requirements
+ - Use Gaudi macro for factory necessary for Gaudi v19 and also compatible
+   with v18
+ 
+!===================== CaloMoniSim v3r1 2007-02-08 ==========================
+! 2007-01-12 - Gloria Corti
+ - update code to cope with Gaudi v19r0. Use Gaudi macro for factory (also
+   compatible with v18)
+   . MCCaloMonitor.cpp
+ - Remove loading of dll in options.
+   . MoniSim.opts
+ 
+!=================== GaussMonitor v4r3 2007-02-08 ===========================
+! 2007-01-12 - Gloria Corti
+ - adapt code to Gaudi v19r0, use Gaudi macro for factory (also compatible
+   with Gaud v18):
+   . MCDecayCounter.cpp
+ 
+!===================== GaussAlgs v2r4 2007-02-08 =========================
+ 2007-02-08 - Gloria Corti
+ - Re-introduce include of GaudiKernel/MsgStream.h otherwise it does not
+   compile with Gaudi v18
+   . GiGaFlushAlgorithm.cpp
+ 
+! 2007-01-12 - Gloria Corti
+ - update code to cope with Gaudi v19r0 (compatible with v18 as well):
+   use Gaudi macro for factories, constructors are public (remove friend
+   factory), some clean up:
+   . PrintEventAlg.{h,cpp}
+   . GiGaGetEventAlg.{h,cpp}
+   . GiGaFlushAlgorithm.{h,cpp}
+   . GiGaCheckEventStatus.cpp
+ 
+!========================== GaussKine v1r5 2007-02-08 ========================
+! 2007-01-12 - Gloria Corti
+ - Use Gaudi macro for factories so to be comaptible with both Gaudi v18
+   and v19:
+   . G4HepMCToMCTruth.cpp
+   . GeneratorToG4
+ 
+!====================== ParticleGuns v3r2 2007-02-08 =====================
+! 2007-01-08 - Florence Ranjard
+ - update SingleParticleGuns.cpp, ParticleGuns.cpp, MaterialEvalGun.cpp
+   to use new FACTORY
+ 
+!========================= LbHidValley v1r2 2007-02-08 ========================
+! 2007-01-26 - Vanya BELYAEV
+ - src/Lib/lenocchv.F
+    new function ( copy of lenocc.F from CERNLIB)
+ - src/Lib/hvgetpar.F
+   src/Lib/hvsetpar.F
+    make use of LENOCCHV instead of LENOCC
+ 
+! 2007-01-19 - Vanya BELYAEV
+   - remove the obsolete *.opts file
+   - options/HidValley.opts
+       new file, required to minimize the modification in production tools
+   - cmt/requirements
+       version increment to v1r2
+ 
+!===================== LbBcVegPy v1r4 2007-02-08 =====================
+! 2007-02-08 - Gloria Corti
+ - include files are private, so use include_dirs. This makes it
+   usable both with/without install area
+ 
+! 2007-01-08 - Florence Ranjard
+ - update BcVegPyProduction.cpp to use new FACTORY.
+ 
+! ====================== BcVegPy v1r0p1 2007-01-22 ========================
+! 2007-01-22 - Florence RANJARD
+ - Remove compilation of *.F in requirements (not existing in src)
+ 
+!========================= LbHijing v1r2 2007-02-08 =======================
+! 2007-02-08 - Gloria Corti
+ - modify requirements to be compatible with GENSER 1_4_1 and without
+   install area (for Gauss v25 series)
+ 
+! 2007-01-08 - Florence Ranjard
+ - update HijingProduction.cpp to use new FACTORY
+ 
+! 2006-11-15 - Gloria CORTI for Daniele GREGORI
+ - Fix bug in example options were there is an extra "," before closing brakets
+ 
+!======================== LbHerwig v3r4 2007-02-08 ==========================
+! 2007-02-08 - Gloria Corti
+ - modify requirements to use with Gauss v25 series
+ 
+! 2007-01-08 - Florence Ranjard
+ - update HerwigProduction.cpp to use new FACTORY
+ 
+!===================== LbPythia v4r10 2007-02-08 ===========================
+! 2007-02-08 - Gloria Corti
+ - to use with Gauss v25 series use include_dir in requirements
+ 
+! 2007-01-08 - Florence Ranjard
+ - move GaussUserProcess.inc from LbPythia/ to src/Lib
+ - move PythiaProduction.cpp from src/component to src/Lib
+ - update PythiaHiggs.cpp and PythiaProduction.cpp to use new FACTORY
+ 
+!====================== Generators v6r8 2007-02-08 ===========================
+! 2007-02-08 - Gloria Corti
+ - Slighlty change message levels at initialization to see beam energy and
+   primary interation vertex ( CollidingBeams.cpp, FixedTarget.cpp,
+   BeamSpotSmearVertex.cpp, FixedNInteractions.cpp)
+ 
+! 2007-02-06 - Patrick Robbe
+ - Fix problem with biased hadron fractions (SignalPlain and
+   SignalRepeatedHadronization)
+ 
+! 2007-01-30 - Patrick Robbe
+ - Fix problem with flip by EvtGen in Cut tools (DaughtersInLHCb,
+   SelectedDaughtersInLHCb and ListOfDaughtersInLHCb)
+ 
+! 2007-01-23 - Gloria Corti
+ - Modify requirements to have a version with all changes in code but
+   compatible with DC06.
+ - Change default for flat smearing of primary vertex, to have correct values
+   at 7 TeV for beam gas, i.e. 100 microns in x and y
+ 
+! 2007-01-08 - Florence Ranjard
+ - update in many *.cpp to use new FACTORY and SystemOfUnits from GaudiKernel
+ 
+!======================== EvtGen v8r15 2007-02-08 =========================
+! 2007-01-24 - Patrick Robbe
+ - Add new class EvtDiLog to replace di-logarithm function DDILOG from
+   the CERNLIB.
+ - Modify code to use this new class:
+   . EvtGenModels/EvtbTosllAmp.hh
+   . src/EvtBtoXsllUtil.cpp
+   . src/EvtVubdGamma.cpp
+   . src/EvtbTosllAmp.cpp
+ 
+!===================== GENSER v1r141p2 2007-02-08 ==========================
+                     built on v1r130p1b branch to use GENSER_1_4_1
+! 2007-02-08 - Gloria Corti
+ - requirements - use -m32 flag for compatibility with 32 bits on slc4
+ 
+!=============================================================================
 </PRE><H1><A NAME="v25r7">2006-12-05 - GaussSys v25r7</A></H1><PRE>
 <H2><A NAME="Note">DC06 version</A></H2>
 <H3><A NAME="Use">This version uses:
