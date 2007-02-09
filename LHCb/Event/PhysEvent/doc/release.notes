@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.122 2007-02-07 13:04:31 cattanem Exp $
+! $Id: release.notes,v 1.123 2007-02-09 08:48:02 cattanem Exp $
 ! Package     : PhysEvent 
 ! Responsible : P. Koppenburg, J.P. Palacios
 !----------------------------------------------------------------------------
 
-!======================== PhysEvent v11r0p1 2007-02-02 ======================
+!======================== PhysEvent v11r1 2007-02-09 ========================
+! 2007-02-09 - Marco Cattaneo
+ - Remove obsolete (DC04) VertexLocation::Primary, use RecVertexLocation::Primary
+ - Remove LHCbDefintions dependencies
+
 ! 2007-02-02 - Marco Cattaneo
  - Remove unneccessary rootmap for dictionary
 

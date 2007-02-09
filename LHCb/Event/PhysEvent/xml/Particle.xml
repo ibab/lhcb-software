@@ -21,11 +21,11 @@
       <import name="Event/Vertex" soft="TRUE"/>
       <import name="Event/ProtoParticle" soft="TRUE"/>
       <import name="GaudiKernel/VectorMap"/>
-      <import name="Kernel/Point3DTypes.h"/>
-      <import name="Kernel/Vector3DTypes.h"/>
-      <import name="Kernel/Vector4DTypes.h"/>
-      <import name="Kernel/GenericMatrixTypes.h"/>
-      <import name="Kernel/SymmetricMatrixTypes.h"/>
+      <import name="GaudiKernel/Point3DTypes.h"/>
+      <import name="GaudiKernel/Vector3DTypes.h"/>
+      <import name="GaudiKernel/Vector4DTypes.h"/>
+      <import name="GaudiKernel/GenericMatrixTypes.h"/>
+      <import name="GaudiKernel/SymmetricMatrixTypes.h"/>
       <import name="Kernel/ParticleID"/>
       <typedef
         type="GaudiUtils::VectorMap&lt;int,double&gt;"

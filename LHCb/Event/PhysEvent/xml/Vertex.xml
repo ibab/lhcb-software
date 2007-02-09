@@ -40,7 +40,6 @@
 
       <location name="User" place="Phys/User/Vertices"/>
       <location name="Production" place="Phys/Prod/Vertices"/>       
-      <location name="Primary" place="Phys/PrimaryVertices"/>
 
       <constructor
         argList="Vertex rhs"

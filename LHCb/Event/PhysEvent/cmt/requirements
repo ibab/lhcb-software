@@ -1,9 +1,9 @@
-# $Id: requirements,v 1.75 2007-02-07 13:04:31 cattanem Exp $
+# $Id: requirements,v 1.76 2007-02-09 08:48:02 cattanem Exp $
 # Created      : 20/06/2001
 # Maintainer   : P. Koppenburg
 #
 package           PhysEvent
-version           v11r0
+version           v11r1
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -13,7 +13,6 @@ branches          cmt doc src xml Event
 #============================================================================
 use RecEvent        v*  Event
 use LHCbKernel      v*  Kernel
-use LHCbDefinitions v*  Kernel
 use LHCbMath        v*  Kernel
 use GaudiKernel     v*  
 
