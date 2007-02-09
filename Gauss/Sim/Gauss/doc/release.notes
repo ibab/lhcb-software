@@ -4,10 +4,34 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
-
-!======================== Gauss v30r1 2006-12-20 =============================
-! 2006-12-20 - Florence RANJARD
- - Simulations.opts : use new physics lists from geant4 8.1
+!======================== Gauss v25r8 2007-02-09 =============================
+! 2007-02-08 - Gloria Corti
+ - Make v25r8 version: DC06 compatible. 
+ - Use version of GENSER v1r141p2 with compilation flag for 32 bits fortran
+   compatibility on slc4.
+ - Use new versions for packages with technical modifications that are 
+   compatible with Gaudi v18r11 and v19r1: factories or similar changes
+   (LbPythia v4r10, LbHerwig v3r4, BcVegPy v1r0p1, LbBcVegPy v1r4, 
+    LbHijing v1r2, ParticleGuns v3r2, GaussKine v1r5, GaussAlgs v2r4,
+    GaussMonitor v4r3, CaloMoniSim v3r1, VeloGauss v2r1, MuonMoniSim v2r2)
+ - Use new version of Hidden Valley with options for production and compatible
+   with both Gaudi v18r11 and v19r1 (LbHidValley v1r2)
+ - Use latest version of DecFiles v13r8 with new event types
+ - Use new version of Generators v6r8 with fixes for bugs observed in 
+   production of signals (see release notes for details) and changes for
+   factories
+ - Introduce options for various configurations of 2007 Engeneering Run
+   (aka Pilot Run) to be used by production instead of v200601.opts
+   . v200601-450GeV-CloseVelo-BOff.opts     - NEW
+   . v200601-450GeV-CloseVelo-BOn.opts      - NEW
+   . v200601-450GeV-OpenVelo-BOff.opts      - NEW
+   . v200601-450GeV-OpenVelo-BOn.opts       - NEW
+   . v200601-450GeV-SemiOpenVelo-BOff.opts  - NEW
+   . v200601-450GeV-SemiOpenVelo-BOn.opts   - NEW
+   . Gauss.opts                             - Modify comments
+   . PilotRun.opts                          - Simplify options for field off
+ - Introduce loading of dll of CaloMoniSim that has been removed from 
+   options in package (only necessary for Gauss v25rX series)
 
 !======================== Gauss v25r7 2006-12-05 =============================
 ! 2006-12-05 - Gloria Corti
