@@ -126,39 +126,39 @@ structure of this file:<br>
 <span style="font-family: monospace;">&nbsp;</span><br
  style="font-family: monospace;">
 <span style="font-family: monospace;">&lt;connection
-name="oracle://int4r_lb/lhcb_conddb"&gt;</span><br
+name="oracle://an_oracle_server/schema"&gt;</span><br
  style="font-family: monospace;">
 <span style="font-family: monospace;">&nbsp; &lt;parameter name="user"
-value="lhcb_conddb_reader" /&gt;</span><br
+value="username" /&gt;</span><br
  style="font-family: monospace;">
 <span style="font-family: monospace;">&nbsp; &lt;parameter
-name="password" value="dx\D2jdG" /&gt;</span><br
+name="password" value="THE_PASSWD" /&gt;</span><br
  style="font-family: monospace;">
 <span style="font-family: monospace;">&lt;/connection&gt;</span><br
  style="font-family: monospace;">
 <span style="font-family: monospace;">&nbsp;</span><br
  style="font-family: monospace;">
 <span style="font-family: monospace;">&lt;connection
-name="oracle://LCGDB2/lhcb_conddb"&gt;</span><br
+name="oracle://another_oracle_server/schema"&gt;</span><br
  style="font-family: monospace;">
 <span style="font-family: monospace;">&nbsp; &lt;parameter name="user"
-value="lhcb_conddb_reader" /&gt;</span><br
+value="username" /&gt;</span><br
  style="font-family: monospace;">
 <span style="font-family: monospace;">&nbsp; &lt;parameter
-name="password" value="LHCB_CONDDB_READER_pswd" /&gt;</span><br
+name="password" value="THE_PASSWD" /&gt;</span><br
  style="font-family: monospace;">
 <span style="font-family: monospace;">&lt;/connection&gt;</span><br
  style="font-family: monospace;">
 <span style="font-family: monospace;">&nbsp;</span><br
  style="font-family: monospace;">
 <span style="font-family: monospace;">&lt;connection
-name="oracle://CCLCG3D.IN2P3.FR/lhcb_conddb"&gt;</span><br
+name="mysql://a_mysql_server/schema"&gt;</span><br
  style="font-family: monospace;">
 <span style="font-family: monospace;">&nbsp; &lt;parameter name="user"
-value="lhcb_conddb_reader" /&gt;</span><br
+value="username" /&gt;</span><br
  style="font-family: monospace;">
 <span style="font-family: monospace;">&nbsp; &lt;parameter
-name="password" value="LHCB_CONDDB_READER_pswd" /&gt;</span><br
+name="password" value="THE_PASSWD" /&gt;</span><br
  style="font-family: monospace;">
 <span style="font-family: monospace;">&lt;/connection&gt;</span><br
  style="font-family: monospace;">
@@ -184,10 +184,10 @@ by default. Here is an example:<br>
 <span style="font-family: monospace;">&lt;servicelist&gt;</span><br
  style="font-family: monospace;">
 <span style="font-family: monospace;"><br>
-&nbsp; &lt;logicalservice name="CERN"&gt;</span><br
+&nbsp; &lt;logicalservice name="MasterDB"&gt;</span><br
  style="font-family: monospace;">
 <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; &lt;service
-name="oracle://int4r_lb/lhcb_conddb"
+name="oracle://an_oracle_server/schema"
 accessMode="update" authentication="password" /&gt;</span><br
  style="font-family: monospace;">
 <span style="font-family: monospace;">&nbsp; &lt;/logicalservice&gt;</span><br
@@ -195,9 +195,9 @@ accessMode="update" authentication="password" /&gt;</span><br
 <span style="font-family: monospace;">&nbsp;</span><br
  style="font-family: monospace;">
 <span style="font-family: monospace;">&nbsp; &lt;logicalservice
-name="GridKa"&gt;</span><br style="font-family: monospace;">
+name="FirstReplicaDB"&gt;</span><br style="font-family: monospace;">
 <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; &lt;service
-name="oracle://LCGDB2/lhcb_conddb"
+name="oracle://another_oracle_server/schema"
 accessMode="update" authentication="password" /&gt;</span><br
  style="font-family: monospace;">
 <span style="font-family: monospace;">&nbsp; &lt;/logicalservice&gt;</span><br
@@ -205,9 +205,9 @@ accessMode="update" authentication="password" /&gt;</span><br
 <span style="font-family: monospace;">&nbsp;</span><br
  style="font-family: monospace;">
 <span style="font-family: monospace;">&nbsp; &lt;logicalservice
-name="IN2P3"&gt;</span><br style="font-family: monospace;">
+name="MyLocalDB"&gt;</span><br style="font-family: monospace;">
 <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; &lt;service
-name="oracle://CCLCG3D.IN2P3.FR/lhcb_conddb" accessMode="update"
+name="mysql://a_mysql_server/schema" accessMode="update"
 authentication="password" /&gt;</span><br
  style="font-family: monospace;">
 <span style="font-family: monospace;">&nbsp; &lt;/logicalservice&gt;</span><br
