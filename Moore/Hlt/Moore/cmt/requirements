@@ -1,12 +1,12 @@
 #============================================================================
-# $Id: requirements,v 1.12 2007-02-09 10:46:53 hernando Exp $
+# $Id: requirements,v 1.13 2007-02-12 17:35:34 cattanem Exp $
 # Created    : 03/06/2005 by P. Koppenburg
 # Maintainer : J.A. Hernando & P. Koppenburg & M. Cattaneo
 #============================================================================
 
 #============================================================================
 package Moore
-version v1r2
+version v2r1
 
 branches doc cmt options
 
@@ -56,7 +56,7 @@ use HltSys		v1r2	     -no_auto_imports
 application Moore $(GAUDICONFROOT)/src/GaudiMain.cpp
 
 #============================================================================
-macro Moorep_linkopts    "$(application_linkopts)"
+macro Moore_linkopts    "$(application_linkopts)"
 
 apply_pattern application_path
 
@@ -64,7 +64,7 @@ apply_pattern application_path
 set MOOREOPTS ${MOOREROOT}/options
 
 # define aliases
-alias Moore "${MOOREROOT}/${BINDIR}/MooreOffline.exe"
+alias Moore "${MOOREROOT}/${BINDIR}/Moore.exe"
 
 
 #===============================================================
