@@ -6,14 +6,12 @@ include_path none
 
 # add "use" statements
 use GaudiAlg           v*
-use MuonID             v* Muon
 use L0Event            v* Event
 use RecEvent           v* Event
 use TrackEvent         v* Event
 use MCEvent            v* Event
 use LinkerEvent        v* Event
 use MuonDet            v* Det
-use ROOT               v* LCG_Interfaces
 
 
 # build a component library

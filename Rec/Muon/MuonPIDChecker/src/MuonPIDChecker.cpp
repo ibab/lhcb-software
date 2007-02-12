@@ -5,8 +5,6 @@
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 
-
-#include "DetDesc/IGeometryInfo.h"
 #include "Linker/LinkedTo.h"
 
 // local
