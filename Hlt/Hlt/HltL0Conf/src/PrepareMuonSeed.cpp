@@ -64,8 +64,11 @@ StatusCode PrepareMuonSeed::prepareSeed( const LHCb::L0MuonCandidate& muonL0Cand
 
   seedState.setState(0,0,0,0,0,0);
 
-  MuonTileID mpad1 = muonL0Cand.pad(0);
-  MuonTileID mpad2 = muonL0Cand.pad(1);
+  // JAH 12--2-07 temporally fix
+  std::vector<MuonTileID> mpads1 = muonL0Cand.muonTileIDs(0); 
+  std::vector<MuonTileID> mpads2 = muonL0Cand.muonTileIDs(1); 
+  MuonTileID mpad1 = *(mpads1.begin());
+  MuonTileID mpad2 = *(mpads2.begin());
   //MuonTileID mpad3 = muonL0Cand.pad(2);
 
     int regionL0Cand;

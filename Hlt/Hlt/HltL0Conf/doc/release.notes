@@ -4,6 +4,10 @@
 ! Purpose     : L0-Tsa Confirmation algorithms
 !-----------------------------------------------------------------------------
 
+! 2007-02-12 Jose A. Hernando 
+   - src/PrepareMuonSeed
+       quick fix to use L0MuonCandidate updated class
+
 !=========================== HltL0Conf v1r0 2007-02-12 =======================
 ! 2007-02-08 Jose A. Hernando (on behalf of Johannes Albrecht)
    - cmt/requirements
