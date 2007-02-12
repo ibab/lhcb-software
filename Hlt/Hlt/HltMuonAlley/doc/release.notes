@@ -3,13 +3,13 @@
 ! Responsible : Sandra Amato & Alessia Satta
 ! Purpose     : Decision Algorithms for the muon trigger
 !-----------------------------------------------------------------------------
-!========================== HltMuonAlley v1r2p1 2007-02-12 ==========================
+
+!========================== HltMuonAlley v1r3 2007-02-12 =====================
 ! 2007-02-12 - Alessia Satta
  - Updated for new L0MuonCandidate methods
 
-! ======================== HltMuonAlley v1r2p1 2007-02-06 ====================
 ! 2007-02-05 - Jose A. Hernando
- - src/*DiMuons.cpp chaning info() to debug() for dd printout
+ - src/*DiMuons.cpp changing info() to debug() for dd printout
 
 ! ======================== HltMuonAlley v1r2 2007-01-11 ======================
 ! 2007-01-11 - Marco Cattaneo
