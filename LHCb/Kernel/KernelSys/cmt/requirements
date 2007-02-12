@@ -3,7 +3,6 @@ version v6r1
 
 branches doc cmt
 
-use LHCbDefinitions  v2r0   Kernel
 use LHCbKernel       v7r1   Kernel
 use LHCbMath         v2r0   Kernel
 use Relations        v5r0   Kernel
