@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2007-02-12 - Jose Angel Hernando Morata
+ - src/HltAlgorithm.cpp:
+      small changes in finalize method
+
 !========================= Hlt/HltBase v2r1 2007-02-12 =====================
 ! 2007-02-08 - Jose Angel Hernando Morata
  - src/HltAlgorithm.cpp: small modifications with summary and Force type

@@ -1,4 +1,4 @@
-// $Id: HltAlgorithm.cpp,v 1.7 2007-02-08 17:32:39 hernando Exp $
+// $Id: HltAlgorithm.cpp,v 1.8 2007-02-12 16:13:25 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -286,9 +286,13 @@ bool HltAlgorithm::endExecute() {
 ////  Finalize
 StatusCode HltAlgorithm::finalize() {
 
-  infoSubsetEvents  ( m_counterPassed , m_counterInput,  " passed/inputs ");
+  StatusCode sc =  HltBaseAlg::finalize();
   infoSubsetEvents  ( m_counterAccepted , m_counterInput,  " accepted/inputs ");  
-  return HltBaseAlg::finalize();  
+  if (m_passPeriod >0) 
+    infoSubsetEvents  ( m_counterPassed , m_counterInput,  " passed/inputs ");
+
+  return sc;
+  
 }
 
 
