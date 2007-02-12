@@ -1,7 +1,7 @@
 // $id:  $
 
 // // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h"
+#include "GaudiKernel/ToolFactory.h"
 
 // from Event
 #include "Event/CaloDigit.h"
@@ -14,11 +14,6 @@
 
 //local
 #include "PrepareElectronSeed.h"
-
-// Declaration of the Tool Factory
-// static const  ToolFactory<PrepareElectronSeed>          s_factory ;
-// const        IToolFactory& PrepareElectronSeedFactory = s_factory ;
-
 
 DECLARE_TOOL_FACTORY( PrepareElectronSeed );
 

@@ -4,7 +4,7 @@
 ! Purpose     : L0-Tsa Confirmation algorithms
 !-----------------------------------------------------------------------------
 
-
+!=========================== HltL0Conf v1r0 2007-02-12 =======================
 ! 2007-02-08 Jose A. Hernando (on behalf of Johannes Albrecht)
    - cmt/requirements
    - src/PrepareElectronSeed

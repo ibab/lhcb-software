@@ -1,8 +1,8 @@
-// $Id: TsaConfirmTool.cpp,v 1.1.1.1 2007-02-08 17:17:48 hernando Exp $
+// $Id: TsaConfirmTool.cpp,v 1.2 2007-02-12 10:21:14 cattanem Exp $
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/ToolFactory.h" 
 
 // event
 #include "Event/Track.h"
@@ -16,10 +16,6 @@
 #include "TsaKernel/ITsaCollector.h"
 #include "TsaKernel/STCluster.h"
 #include "TsaKernel/OTCluster.h"
-
-#include "TsaKernel/TimeSummary.h"
-// #include "TsaKernel/Track.h"
-// #include "TsaKernel/TsaConstants.h"
 
 #include "TsaKernel/SeedHit.h"
 #include "TsaKernel/SeedTrack.h"
@@ -47,10 +43,6 @@
 // 2007-01-26 : Johannes Albrecht
 //-----------------------------------------------------------------------------
 using namespace LHCb;
-
-// Declaration of the Tool Factory
-// static const  ToolFactory<TsaConfirmTool>          s_factory ;
-// const        IToolFactory& TsaConfirmToolFactory = s_factory ;
 
 DECLARE_TOOL_FACTORY( TsaConfirmTool );
 
