@@ -1,4 +1,4 @@
-// $Id: MatchPatVeloSpaceL0.cpp,v 1.3 2007-01-11 16:11:46 cattanem Exp $
+// $Id: MatchPatVeloSpaceL0.cpp,v 1.4 2007-02-12 12:34:40 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -180,8 +180,11 @@ StatusCode MatchPatVeloSpaceL0::match3dMuon(Track* pTr3d,
     L0MuonCandidate* itMuon = *itL0Mu;
     
     double theta  = itMuon->theta();
-    double phi    = itMuon->phi();
-    MuonTileID tileM2=itMuon->pad(1);
+    double phi    = itMuon->phi();    
+    std::vector<MuonTileID> list_of_tile= itMuon->muonTileIDs(1);
+    MuonTileID tileM2=*(list_of_tile.begin());
+
+    //    MuonTileID tileM2=itMuon->pad(1);
     double xM2,yM2,zM2;
     double dx,dy,dz;
     
@@ -194,7 +197,10 @@ StatusCode MatchPatVeloSpaceL0::match3dMuon(Track* pTr3d,
     double dxtile = dx;
     double dytile = dy;
     //double dztile = itMuon->dztile();
-    int idtile = itMuon->pad(2);
+    std::vector<MuonTileID> list_of_tile_inM3= itMuon->muonTileIDs(2);
+    MuonTileID idtile=*(list_of_tile_inM3.begin());   
+
+    //    int idtile = itMuon->pad(2);
   //  MuonTileID hh=idtile;
 //info()<<" coordinate "<<xtile<<" "<<ytile<<" "<<ztile<<endreq;
 //if(xtile==0)info()<<hh.station()<<" "<<hh.region()<<endreq;

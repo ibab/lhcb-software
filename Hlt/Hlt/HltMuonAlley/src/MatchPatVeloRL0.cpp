@@ -1,4 +1,4 @@
-// $Id: MatchPatVeloRL0.cpp,v 1.2 2007-01-11 16:11:46 cattanem Exp $
+// $Id: MatchPatVeloRL0.cpp,v 1.3 2007-02-12 12:34:40 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -156,7 +156,10 @@ StatusCode MatchPatVeloRL0::match2dMuon(Track* pTr2d, float & chi)  {
               << trackDrDz << " " << trackPhi << " track" << endreq; 
       }
       
-      MuonTileID tileM2=itMuon->pad(1);
+      std::vector<MuonTileID> list_of_tile= itMuon->muonTileIDs(1);
+      MuonTileID tileM2=*(list_of_tile.begin());   
+
+      //      MuonTileID tileM2=itMuon->pad(1);
       double xM2,yM2,zM2;
       double dx,dy,dz;
   
