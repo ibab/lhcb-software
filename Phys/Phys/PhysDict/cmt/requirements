@@ -22,5 +22,5 @@ apply_pattern     reflex_dictionary                            \
                   selectionfile=$(PHYSDICTROOT)/dict/PhysDict.xml \
                   options="-U__MINGW32__"
 
-
+macro PhysDict_use_linkopts $(use_linkopts)
 
