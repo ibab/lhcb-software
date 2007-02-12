@@ -15,7 +15,7 @@ use  DaVinciTransporter 	v3r5     Phys
 use  ParticleMaker      	v3r0     Phys
 use  VertexFit			v4r0     Phys
 use  CommonParticles            v3r7     Phys
-use  PhysDict                   v2r2     Phys
+use  PhysDict                   v3r0     Phys
 use  FlavourTagging             v7r1p1   Phys
 # Generic tools 
 use  Utilities          	v4r0   Tools
