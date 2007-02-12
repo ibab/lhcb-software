@@ -1,13 +1,12 @@
-// $Id: HltBaseAlg.h,v 1.2 2007-02-05 08:40:16 hernando Exp $
+// $Id: HltBaseAlg.h,v 1.3 2007-02-12 09:53:19 cattanem Exp $
 #ifndef HLTBASE_HLTBASEALG_H 
 #define HLTBASE_HLTBASEALG_H 1
 
 // Include files
 
-#include "GaudiAlg/GaudiHistoAlg.h"
 #include "GaudiAlg/GaudiTupleAlg.h"
-#include "DetDesc/Condition.h"
 
+class Condition;
 
 /** @class HltBaseAlg 
  *  

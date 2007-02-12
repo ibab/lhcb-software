@@ -1,8 +1,10 @@
-// $Id: HltBaseAlg.cpp,v 1.5 2007-02-08 17:32:39 hernando Exp $
+// $Id: HltBaseAlg.cpp,v 1.6 2007-02-12 09:53:20 cattanem Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/IUpdateManagerSvc.h"
+
+#include "DetDesc/Condition.h"
 
 // local
 #include "HltBase/HltBaseAlg.h"
