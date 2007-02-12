@@ -10,14 +10,15 @@ branches cmt doc options
 use HltCommon           v1r3    Hlt   # Jose Angel Hernando-Morata
 use HltTracking         v1r3    Hlt   # Jose Angel Hernando-Morata
 use HltHadAlley         v1r2    Hlt   # Jose Angel Hernando-Morata
-use HltMuon             v1r2    Hlt   # Alessia Satta
-use HltMuonAlley        v1r2p1  Hlt   # Alessia Satta
+use HltMuon             v1r3    Hlt   # Alessia Satta
+use HltMuonAlley        v1r3    Hlt   # Alessia Satta
 use HltCaloAlley        v1r2    Hlt   # Stefano Villa
 
 use HltL0Conf           v1r0    Hlt   # Johannes Albrecht
 
 use HltRecChecker	v1r1	Hlt   # Jose Angel Hernando-Morata
 use HltHadL0Conf        v1r0    Hlt   # Jose Angel Hernando-Morata
+use HltL0Conf           v1r0    Hlt   # Johannes Albrecht
 
-use HltPython           v1r0    Hlt   # Jose Angel Hernando-Morata
+use HltPython           v1r1    Hlt   # Jose Angel Hernando-Morata
 

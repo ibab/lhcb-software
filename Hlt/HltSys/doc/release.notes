@@ -5,17 +5,14 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
 
-! 2007-02-09 Jose A. Hernando
-  - options/L0DAQ.opts and HltDAQ.opts to run L0 and Hlt for the DAQ studies
-  - removing HltAlleysSequenceDAQ.opts
-
-</PRE><H1><A NAME=v1r2>2007-02-07 HltSys v1r2</A></H1><PRE>
+</PRE><H1><A NAME=v1r2>2007-02-12 HltSys v1r2</A></H1><PRE>
 This version uses Gaudi v19r1 and LHCb v22r1, introducing CMTPROJECTPATH
 
 Packages added: HltPython    v1r0 - Exposes Hlt tools to Python
                 HltHadL0Conf v1r0 - Tools and code for L0 Hadron confirmation
+                HltL0Conf    v1r0 - L0-Tsa Confirmation algorithms
 Packages modified: HltCaloAlley v1r2, HltCommon v1r3, HltHadAlley v1r2,
-                   HltMuonAlley v1r2p1, HltTracking v1r3
+  HltMuon v1r3, HltMuonAlley v1r3, HltTracking v1r3, HltPython v1r1
 
 - In HltSys v1r2 options
   . HltReco.opts: To run only the Hlt reconstruction (partial and full)
@@ -23,7 +20,7 @@ Packages modified: HltCaloAlley v1r2, HltCommon v1r3, HltHadAlley v1r2,
   . HltAlleysSequence.opts: Cleaned of histograms and time measurements
   . HltAlleysTime.opts: Add this opts to get time and rates from the HltAlleys
   . HltAlleysHistos.opts: Opts to get internal histos monitoring of HltAlleys
-  . HltAlleysSequenceDAQ.opts: Temporary (for DAQ only)
+  . L0DAQ.opts and HltDAQ.opts to run L0 and Hlt for the DAQ studies
   . HltRecoCheck.opts: To check the Hlt full reconstruction
 
 - In HltCaloAlley v1r2
@@ -32,16 +29,29 @@ Packages modified: HltCaloAlley v1r2, HltCommon v1r3, HltHadAlley v1r2,
 - In  HltCommon v1r3
   . HltSequencer - Default: do not book histograms
   . PhysSelEntry - entry point according with a SelResult
+  . HltSummaryTool - tool to simplify the current access to hltsummary info
+  . HltMonitorEffvsPt -
+       algorithm to monitor the eff of L0/hlt selections vs Pt (offline) track
+  . HltTrackFromTes
+       algorithm to import tracks from the TES (ie Best) into HltDataStore
+  . L0Names.h
+       temporaly int<->str translation of the L0 channel default configuration
 
 - In HltHadAlley v1r2
   . Fixes to compile with new base classes
                    
-- In HltMuonAlley v1r2p1
+- In HltMuonAlley v1r3
   . src/*DiMuons.cpp chaning info() to debug() for dd printout
+
+- In HltMuonAlley v1r3, HltMuon v1r3
+  . Updated for new L0MuonCandidate methods
 
 - In HltTracking v1r3
   . Add option OrderByPt (default false) to order or not tracks by pt
   . Fix small bug with VeloTTKey
+
+- In HltPython v1r1
+  . Remove obsolete interfaces
 
 </PRE><H1><A NAME=v1r1>2007-01-11 HltSys v1r1</A></H1><PRE>
 This version uses Gaudi v18r10 and LHCb v21r12.
