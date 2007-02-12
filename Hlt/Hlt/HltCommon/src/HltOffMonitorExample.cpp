@@ -1,4 +1,4 @@
-// $Id: HltOffMonitorExample.cpp,v 1.3 2007-02-06 08:15:50 cattanem Exp $
+// $Id: HltOffMonitorExample.cpp,v 1.4 2007-02-12 10:07:41 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -67,7 +67,7 @@ StatusCode HltOffMonitorExample::execute() {
   debug() << "==> Execute" << endmsg;
 
   HltSummary* summary = get<HltSummary>(m_summaryName);
-  Tracks* tracks = get<Tracks>("Rec/Track/Best");
+  //  Tracks* tracks = get<Tracks>("Rec/Track/Best");
   
   std::vector<int> sids = summary->selectionSummaryIDs();
   debug() << " number of selections in summary " << sids.size() << endreq;
