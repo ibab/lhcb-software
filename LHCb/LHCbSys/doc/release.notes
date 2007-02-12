@@ -5,7 +5,7 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v22r1>2007-02-07 LHCbSys v22r1</A></H1><PRE>
+</PRE><H1><A NAME=v22r1>2007-02-12 LHCbSys v22r1</A></H1><PRE>
 This version uses Gaudi v19r1. Fully compatible with DC06 data
 
 - Packages added:    MDF v2r4 - Package to handle online data files
@@ -13,11 +13,11 @@ This version uses Gaudi v19r1. Fully compatible with DC06 data
 - Packages modified: GaudiObjDesc v9r8p1, GaudiConf v10r1, HltBase v2r1, 
    KernelSys v6r1, LHCbKernel v7r1, RichKernel v7r1, RichRecBase v3r1,
    EventSys v23r1,  DAQEvent v7r1, DigiEvent v2r0p1, EventBase v2r0p1,
-   GenEvent v5r0p1, PhysEvent v11r0p1, RecEvent v2r1, TrackEvent v4r0p1
-   HltEvent v8r0p1, L0Event v16r0p1, LinkerEvent v3r0p1, MCEvent v2r0p1,
+   GenEvent v5r0p1, PhysEvent v11r1, RecEvent v2r1, TrackEvent v4r0p1
+   HltEvent v8r0p1, L0Event v16r1, LinkerEvent v3r0p1, MCEvent v2r0p1,
    DetSys v9r1, DetDescCnv v4r1, OTDet v7r1, RichDet v10r1, XmlTools v5r0, 
    CondDbEntityResolver v3r1, DetCondExample v10r0, DetDescExample v7r3,
-   DetDescChecks v4r1 
+   DetDescChecks v4r1, CaloUtils v7r1, DetDescSvc v1r10
 
 - In GaudiObjDesc v9r8p1
   . Add -m32 to gccxmlflags, avoids having to set external environment variable
@@ -30,6 +30,18 @@ This version uses Gaudi v19r1. Fully compatible with DC06 data
   . HltBaseAlg.cpp: default: do not book generic histogram
   . HltFunctions.cpp: bug in sortByPt, consider key of track if two tracks
     have the same Pt
+  . HltAlgorithm.cpp: small modifications with summary and Force type
+  . HltMonitorAlgorithm:  Only deals with summary and not with Hlt tracks methods
+  . HltBase/IHltSummaryTool
+      interface to a tool to simplify clients the use of the summary
+  . HltBase/IPrepareCaloTool
+      interface for L0-Conf (fron L0CaloCandidate to States)
+  . HltBase/IPrepareMuonTool
+      interface for L0-Conf (fron L0MuonCandidate to State)
+  . HltBase/ITrackConfirmTool
+      interface to create tracks from a state
+  . HltBase/IHltTrackL0CaloMatchTool renamed to ITrackL0CaloMatchTool
+  . HltBase/IL0CaloStates removed
 
 - In LHCbKernel v7r1
   . Remove MsgStream and StreamBuffer methods in Rich files
@@ -45,6 +57,15 @@ This version uses Gaudi v19r1. Fully compatible with DC06 data
   . Add copy constructor and clone method to ProtoParticle (useful for micro-DST)
   . Add new calo-related items in ProtoParticle enum
 
+- In PhysEvent v11r1
+  . Remove VertexLocation::Primary, use RecVertexLocation::Primary instead
+
+- In L0Event v16r1
+  . Add the method L0MuonCandidate::muonTileIDs which returns a vector of 
+    MuonTileIDs matching the muon detector geometry for a given station.
+  . Remove the method L0MuonCandidate::pad which returned a single MuonTileID 
+    that was in some case not recognized by the muon geometry tools.
+ 
 - In OTDet v7r1
   . Fix findStraws. Check that right most straw is not negative.
   . Add check for entry and exit points. Make sure they are inside.
@@ -55,6 +76,16 @@ This version uses Gaudi v19r1. Fully compatible with DC06 data
 - In RichDet v10r1
   . Updates to RichDAQDefinitions for new L1 data format
   . Removal of old "XXX_old" location names
+
+- In STDet v3r1
+  . Ensure cached numbers in detectorElements are updated
+
+- In CaloUtils v7r1
+  . Change default extrapolator in CaloElectron ('HeraB' instead of 'Master')
+
+- In DetDescSvc v1r10
+  . Fixed a bug in UpdateManagerSvc (in some special cases, registerCondition
+    did not invalidate the user item)
 
 - In XmlTools v5r0
   . Changes to IXmlParserSvc to expose the validity of the parsed document to
@@ -95,13 +126,14 @@ This version uses Gaudi v19r1. Fully compatible with DC06 data
   . Initialise XmlDDDB indirectly through DC06Conditions.opts
   . Remove ApplicationMgr.DLLs
 
-- In HltBase v2r1, LHCbKernel v7r1, RichKernel v7r1, RichRecBase v3r1,
-     RecEvent v2r1, DetDescCnv v4r1, OTDet v7r1, RichDet v10r1
+- In KernelSys v6r1, LHCbKernel v7r1, RichKernel v7r1, RichRecBase v3r1,
+     RecEvent v2r1, PhysEvent v11r1, DetDescCnv v4r1, OTDet v7r1, RichDet v10r1,
+     HltBase v2r1, STDet v3r1, L0Event v16r1
   . Remove dependency on LHCbDefinitions includes
 
 - In LHCbKernel v7r1, DigiEvent v2r0p1, EventBase v2r0p1, GenEvent v5r0p1,
-     PhysEvent v11r0p1, RecEvent v2r1, TrackEvent v4r0p1, HltEvent v8r0p1,
-     L0Event v16r0p1, LinkerEvent v3r0p1, MCEvent v2r0p1,
+     PhysEvent v11r1, RecEvent v2r1, TrackEvent v4r0p1, HltEvent v8r0p1,
+     L0Event v16r1, LinkerEvent v3r0p1, MCEvent v2r0p1
   . Remove unneccessary rootmap for dictionary
 
 </PRE><H1><A NAME=v22r0>2007-01-22 LHCbSys v22r0</A></H1><PRE>
