@@ -1,4 +1,4 @@
-// $Id: HltMuonRefine.cpp,v 1.3 2007-01-11 16:03:05 cattanem Exp $
+// $Id: HltMuonRefine.cpp,v 1.4 2007-02-12 12:20:52 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -199,7 +199,8 @@ StatusCode HltMuonRefine::execute() {
         for (itL0Mu=m_inputL0Muon->begin();itL0Mu!=m_inputL0Muon->end();
              itL0Mu++){
           L0MuonCandidate* itMuon = *itL0Mu;
-          MuonTileID tileM2=itMuon->pad(1);
+	  std::vector<MuonTileID> list_of_tile= itMuon->muonTileIDs(1);
+          MuonTileID tileM2=*(list_of_tile.begin());
           m_iPosTool->
           calcTilePos(tileM2,XMuon, dx,YMuon, dy,ZMuon, dz);
           dist=calcDist(slX,slY,X,Y,Z,XMuon,YMuon,ZMuon);   
