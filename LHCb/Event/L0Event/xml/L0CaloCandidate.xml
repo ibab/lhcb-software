@@ -10,7 +10,7 @@
       <base name="ContainedObject"/>
       &ContainedObject;
       <import name="Kernel/CaloCellID"/>
-      <import name="Kernel/Point3DTypes.h"/>
+      <import name="GaudiKernel/Point3DTypes.h"/>
       <import name="GaudiKernel/MsgStream"/>
 
       <location name="Default" place="/Event/Trig/L0/Calo"/>

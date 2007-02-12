@@ -1,19 +1,22 @@
-! $Id: release.notes,v 1.62 2007-02-09 14:05:57 jucogan Exp $
+! $Id: release.notes,v 1.63 2007-02-12 09:28:26 cattanem Exp $
 ! Package : L0Event
 ! Package manager : Olivier Callot
 !-----------------------------------------------------------------------------
+
+!======================== L0Event v16r1 2007-02-12 ===========================
+! 2007-02-12 - Marco Cattaneo
+ - Remove LHCbDefinitions dependency
 
 ! 2007-02-09 - Julien Cogan
  - Add the method L0MuonCandidate::muonTileIDs which returns a vector of 
    MuonTileIDs matching the muon detector geometry for a given station.
  - Remove the method L0MuonCandidate::pad which returned a single MuonTileID 
-   that was in some case not recognize by the muon geometry tools.
+   that was in some case not recognized by the muon geometry tools.
 
-!======================== L0Event v16r0p1 2007-02-02 =========================
 ! 2007-02-02 - Marco Cattaneo
  - Remove unnecessary rootmap for dictionary
 
-!======================== L0Event v16r0 2006-12-14 ========================
+!======================== L0Event v16r0 2006-12-14 ===========================
 ! 2006-12-06 - Florence RANJARD
  - replace include_dirs with apply_pattern install_more_includes
 

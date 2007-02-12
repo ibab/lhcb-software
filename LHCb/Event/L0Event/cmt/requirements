@@ -3,7 +3,7 @@
 # Maintainer : Olivier Callot
 #============================================================================
 package           L0Event
-version           v16r0p1
+version           v16r1
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -12,7 +12,6 @@ branches          cmt doc Event xml src
 # Used packages.
 #============================================================================
 use     LHCbKernel      v*      Kernel
-use     LHCbDefinitions v*      Kernel
 use     Boost           v*      LCG_Interfaces
 
 #============================================================================
