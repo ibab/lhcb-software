@@ -47,9 +47,9 @@ HistogramPersistencySvc.OutputFile = "Moore_minbias.root";
 //---------------------------------------------------------------------------
 // POOL file catalogs. First one is read-write, others are read only
 //---------------------------------------------------------------------------
-PoolDbCacheSvc.Catalog = {
-  "xmlcatalog_file:$HLTAPPROOT/job/NewCatalog.xml"
-};
+// PoolDbCacheSvc.Catalog = {
+//  "xmlcatalog_file:$HLTAPPROOT/job/NewCatalog.xml"
+// };
 
 //---------------------------------------------------------------------------
 // Event input
