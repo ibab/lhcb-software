@@ -34,6 +34,7 @@ use DAQSys              v3r0    DAQ    -no_auto_imports
 use LHCbAlgs            v2r5    Kernel -no_auto_imports
 use SimComponents       v2r0    Sim    -no_auto_imports
 use PatTools            v3r0    Pat    -no_auto_imports
+use CaloUtils           v7r1    Calo   -no_auto_imports
 
 #-- Lbcom packages (from LBCOM_v6r1)
 use LbcomSys            v6r1         -no_auto_imports

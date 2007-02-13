@@ -19,6 +19,8 @@ Compatible with DC06 data
   . Update Charged and Neutral ProtoPAlg (new CaloTrajectoryL info + ecalE) 
     (GlobalReco v6r7)
   . Update pixel suppression options to use new clustering tool (RichRecSys v3r1)
+  . Change default extrapolator in CaloElectron ('HeraB' instead of 'Master')
+    (CaloUtils v7r1)
 
 - Bug fixes
   . Fix DeOTModule::wireLength method to return correct wire length
@@ -31,9 +33,13 @@ Compatible with DC06 data
     trajectory calculation (TrFitEvent v3r1)
   . Fix in TrackCloneFinder tool (affects comparisons of hits in the seeding 
     stations) (TrackTools v2r11)
+  . Fix bug in TrackCheckerNT which could cause crash under some circumstances
+    (TrackCheckers v2r11)
+  . Remove parsing of LCG DoxyGen tagfiles, not used in this project
 
 - Monitoring changes
   . New monitoring options for PID tables with various pt cuts (RichRecQC v2r8)
+  . Add MuonPID checking (BrunelCheck.opts, MuonPIDChecker v1r0)
 
 
 </PRE><H1><A NAME=v31r0>2006-12-23 Brunel v31r0</A></H1><PRE>

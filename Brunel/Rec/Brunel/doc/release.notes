@@ -9,6 +9,7 @@ Purpose: LHCb reconstruction program
  - Remove ApplicationMgr.DLLs options, not needed with new plugin manager
  - Adapt monitoring options to new names of STChecker algorithms
  - Adapt valgrind.job to work with new CMT environment
+ - Add MuonPID checking
 
 </PRE><H1><A NAME=v31r0>2007-01-23 Brunel v31r0</A></H1><PRE>
  - Adapt requirements to Rec v4r0, Lbcom v6r0, LHCb v22r0, Gaudi v19r1
