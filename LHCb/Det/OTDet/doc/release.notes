@@ -1,10 +1,10 @@
-! $Id: release.notes,v 1.75 2007-02-13 11:56:17 janos Exp $
+! $Id: release.notes,v 1.76 2007-02-13 11:59:06 janos Exp $
 ! Package     : OTDet
 ! Responsible : Jeroen van Tilburg, Jacopo Nardulli, Jan Amoraal
 !--------------------------------------------------------------------------
 
 ! 2007-02-13 Jan Amoraal
- - Add callback methods to DeOTLayer & DeOTModule to update chached
+ - Add callback methods to DeOTLayer & DeOTModule to update cached
    values when alignment conditions change.
 
 !========================== OTDet v7r1 2007-02-04 =========================
