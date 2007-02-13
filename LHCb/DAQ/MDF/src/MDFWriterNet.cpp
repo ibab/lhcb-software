@@ -12,6 +12,7 @@
 #include "Event/RawEvent.h"
 #include "MDF/Connection.h"
 #include "MDF/MDFWriterNet.h"
+#include "MDF/MDFHeader.h"
 #include "TMD5.h"
 
 DECLARE_NAMESPACE_ALGORITHM_FACTORY(LHCb,MDFWriterNet)
@@ -79,6 +80,50 @@ StatusCode MDFWriterNet::initialize(void)
   return StatusCode::SUCCESS;
 }
 
+/** Overrides MDFWriter::finalize().
+  * Closes the file if it is open, and writes its entry in the
+  * Run Database.
+  */
+StatusCode MDFWriterNet::finalize(void)
+{
+  if(m_fileOpen) {
+
+    struct cmd_header header;
+    header.cmd = CMD_CLOSE_FILE;
+
+    // Get both sums.
+    m_md5->Final(header.data.stop_data.md5_sum);
+    header.data.stop_data.adler32_sum = m_adler32;
+
+    delete m_md5;
+
+    m_connection->sendCommand(&header);
+    m_bytesWritten = 0;
+    m_fileOpen = 0;
+
+
+    try {
+
+      m_rpcObj->confirmFile(m_fileName, 
+	header.data.stop_data.adler32_sum, 
+	header.data.stop_data.md5_sum); 
+
+    } catch(std::runtime_error rte) {
+      *m_log << MSG::ERROR << "Could not update Run Database Record ";
+      *m_log << "Cause: " << rte.what() << std::endl;
+      *m_log << "Record is: FileName=" << m_fileName;
+      *m_log << " Adler32 Sum=" << header.data.stop_data.adler32_sum;
+      *m_log << " MD5 Sum=" << header.data.stop_data.md5_sum << endmsg;
+      return StatusCode::FAILURE;
+    }
+  }
+
+  return StatusCode::SUCCESS;
+  
+}
+
+
+
 /** Overrides MDFWriter::writeBuffer().
   * Writes out the buffer to the socket through the Connection object.
   * This function first checks if a new file needs to be created. After
@@ -106,6 +151,18 @@ StatusCode MDFWriterNet::writeBuffer(void *const /*fd*/, const void *data, size_
     m_md5 = new TMD5();
     m_adler32 = adler32(0, NULL, 0);
 
+    int runNumber = getRunNumber(data, len);
+     //TODO: Fix up location
+    try {
+
+      m_rpcObj->createFile(m_fileName, runNumber);
+
+    } catch(std::runtime_error rte) {
+      *m_log << MSG::ERROR << "Could not create Run Database Record ";
+      *m_log << "Cause: " << rte.what() << std::endl;
+      *m_log << "Record is: FileName=" << m_fileName;
+      *m_log << " Run Number=" << runNumber << endmsg;
+    }
   }
 
   header.cmd = CMD_WRITE_CHUNK;
@@ -131,14 +188,41 @@ StatusCode MDFWriterNet::writeBuffer(void *const /*fd*/, const void *data, size_
 
     delete m_md5;
 
+    //TODO: Fix up location
+    try {
+
+      m_rpcObj->confirmFile(m_fileName, 
+	header.data.stop_data.adler32_sum, 
+	header.data.stop_data.md5_sum); 
+
+    } catch(std::runtime_error rte) {
+      *m_log << MSG::ERROR << "Could not update Run Database Record ";
+      *m_log << "Cause: " << rte.what() << std::endl;
+      *m_log << "Record is: FileName=" << m_fileName;
+      *m_log << " Adler32 Sum=" << header.data.stop_data.adler32_sum;
+      *m_log << " MD5 Sum=" << header.data.stop_data.md5_sum << endmsg;
+    }
+
     m_connection->sendCommand(&header);
     m_bytesWritten = 0;
     m_fileOpen = 0;
-    //TODO: Tell RunDB
   }
 
   //Close it, reset counter.
   return StatusCode::SUCCESS;
+}
+
+
+/** Obtains the run number from the MDF header.
+  * @param data  The data from which MDF information may be retrieved
+  * @param len   The length of the data.
+  * @return The run number.
+  */
+inline int MDFWriterNet::getRunNumber(const void *data, size_t /*len*/)
+{
+  MDFHeader *mHeader;
+  mHeader = (MDFHeader*)data;
+  return mHeader->subHeader().H1->m_runNumber;
 }
 
 
