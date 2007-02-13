@@ -5,15 +5,17 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
-</PRE><H1><A NAME=v4r1>2007-02-07 RecSys v4r1</A></H1><PRE>
+</PRE><H1><A NAME=v4r1>2007-02-12 RecSys v4r1</A></H1><PRE>
 This version uses Gaudi v19r1 and LHCb v22r1.
+
+- Packages added:   MuonPIDChecker v1r0 - Checking algorithms for MuonID
 
 - Packages updated: TsaAlgorithms v2r1, PatForward v2r11, PatVelo v2r11,
     PatFitParams v2r4, PatKShort v1r4, PatPv v2r5, TrackSys v4r1,
     TrackFitEvent v3r1, TrackTools v2r11, GlobalReco v6r7, RichRecSys v3r1,
     RichGlobalPID v3r1, RichLocalPID v3r1, RichPIDMerge v2r3,
     RichRecAlgorithms v2r5, RichRecMCTools v2r8, RichRecMonitors v2r7,
-    RichRecQC v2r8, RichRecTools v3r8, RichTrgGlobalPID v3r4
+    RichRecQC v2r8, RichRecTools v3r8, RichTrgGlobalPID v3r4, TrackCheckers v2r12
 
 - In PatVelo v2r11
   . Added an option (off by default) to PatVeloSpaceTool to use the RZ crossing
@@ -78,6 +80,10 @@ This version uses Gaudi v19r1 and LHCb v22r1.
 
 - In TsaAlgorithms v2r1, PatForward v2r11
   . Minor update due to changes in OTDet
+
+- In TrackCheckers v2r12
+  . Fix bug in TrackCheckerNT which could cause Brunel to crash under 
+    some circumstances.
 
 - In TsaAlgorithms v2r1, PatForward v2r11, PatFitParams v2r4, PatKShort v1r4,
      TrackTools v2r11, GlobalReco v6r7
