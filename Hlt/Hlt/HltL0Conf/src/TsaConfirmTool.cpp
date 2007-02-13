@@ -1,4 +1,4 @@
-// $Id: TsaConfirmTool.cpp,v 1.2 2007-02-12 10:21:14 cattanem Exp $
+// $Id: TsaConfirmTool.cpp,v 1.3 2007-02-13 09:19:41 albrecht Exp $
 // Include files 
 
 // from Gaudi
@@ -177,9 +177,7 @@ StatusCode TsaConfirmTool::tracks(const LHCb::State& seedState, std::vector<Trac
  
   if (m_initIT == true) m_itDataSvc->initializeEvent(itClusters);
   if (m_initOT == true) m_otDataSvc->initializeEvent(otClusters);
-
-
-
+  
   //***************************************************************************************
   //-------------------------------------------------------------------------
   //  Steering routine for track seeding
@@ -282,6 +280,13 @@ StatusCode TsaConfirmTool::tracks(const LHCb::State& seedState, std::vector<Trac
   }
 
   if( m_debugInfo ) debug()<<"tracks found sofar in TsaSearch Tool: "<<outputTracks.size()<<endmsg;
+
+
+  delete otClusters;
+  delete itClusters;
+  delete hitsCont;
+  delete stubsCont;
+  delete seedSel;
   
   return StatusCode::SUCCESS;
   
