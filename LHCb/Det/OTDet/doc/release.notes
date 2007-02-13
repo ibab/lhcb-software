@@ -1,12 +1,16 @@
-! $Id: release.notes,v 1.74 2007-02-05 08:54:39 cattanem Exp $
+! $Id: release.notes,v 1.75 2007-02-13 11:56:17 janos Exp $
 ! Package     : OTDet
 ! Responsible : Jeroen van Tilburg, Jacopo Nardulli, Jan Amoraal
 !--------------------------------------------------------------------------
 
+! 2007-02-13 Jan Amoraal
+ - Add callback methods to DeOTLayer & DeOTModule to update chached
+   values when alignment conditions change.
+
 !========================== OTDet v7r1 2007-02-04 =========================
 ! 2007-02-04 Jan Amoraal
  - Fix findStraws. Check that right most straw is not negative.
- - Add check for entry and exit points. Make sure their inside.
+ - Add check for entry and exit points. Make sure they're inside.
 
 ! 2007-02-02 Jan Amoraal
  - Removed LHCbDefinitions includes

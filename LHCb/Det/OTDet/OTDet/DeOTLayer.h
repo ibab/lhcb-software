@@ -1,4 +1,4 @@
-// $Id: DeOTLayer.h,v 1.11 2007-02-02 09:25:04 janos Exp $
+// $Id: DeOTLayer.h,v 1.12 2007-02-13 11:56:16 janos Exp $
 #ifndef OTDET_DEOTLAYER_H
 #define OTDET_DEOTLAYER_H 1
 
@@ -94,7 +94,7 @@ class DeOTLayer : public DetectorElement {
   */
   Gaudi::Plane3D plane() const;
 
-  void cachePlane();
+  StatusCode cachePlane();
 
   /** flat vector of quarters
    * @return vector of quarters

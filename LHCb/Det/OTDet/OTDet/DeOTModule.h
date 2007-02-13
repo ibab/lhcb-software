@@ -1,4 +1,4 @@
-// $Id: DeOTModule.h,v 1.22 2007-02-04 11:34:35 janos Exp $
+// $Id: DeOTModule.h,v 1.23 2007-02-13 11:56:17 janos Exp $
 #ifndef OTDET_DEOTMODULE_H
 #define OTDET_DEOTMODULE_H 1
 
@@ -276,7 +276,7 @@ private:
   
   void clear();
 
-  void cacheInfo();
+  StatusCode cacheInfo();
 
   /** Return range of hit straws for a given local entry and exit point.
    * @param local entryPoint

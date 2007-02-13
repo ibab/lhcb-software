@@ -1,7 +1,8 @@
-// $Id: DeOTLayer.cpp,v 1.11 2007-02-02 09:25:04 janos Exp $
+// $Id: DeOTLayer.cpp,v 1.12 2007-02-13 11:56:18 janos Exp $
 
 /// GaudiKernel
 #include "GaudiKernel/SystemOfUnits.h"
+#include "GaudiKernel/IUpdateManagerSvc.h"
 
 /// DetDesc
 #include "DetDesc/IGeometryInfo.h"
@@ -60,9 +61,21 @@ StatusCode DeOTLayer::initialize() {
   setElementID(aChan);
 
   m_stereoAngle = param<double>("stereoAngle");
-
-  /// cache planes
-  cachePlane();
+  
+  /// Update and chache planes
+  MsgStream msg(msgSvc(), name() );
+  try {
+    msg << MSG::DEBUG << "Registering conditions" << endmsg;
+    updMgrSvc()->registerCondition(this,this->geometry(),&DeOTLayer::cachePlane);
+    msg << MSG::DEBUG << "Start first update" << endmsg;
+    StatusCode sc = updMgrSvc()->update(this);
+    if ( !sc.isSuccess() ) {
+      return sc;
+    }
+  } catch (DetectorElementException &e) {
+    msg << MSG::ERROR << e << endmsg;
+    return StatusCode::FAILURE;
+  }
 
   return StatusCode::SUCCESS;
 }
@@ -81,10 +94,12 @@ DeOTQuarter* DeOTLayer::findQuarter(const Gaudi::XYZPoint& aPoint) const {
   return (iQ != m_quarters.end() ? (*iQ) : 0);
 }
 
-void DeOTLayer::cachePlane() {
+StatusCode DeOTLayer::cachePlane() {
   Gaudi::XYZPoint g1 = this->geometry()->toGlobal(Gaudi::XYZPoint(0.0, 0.0, 0.0));
   Gaudi::XYZPoint g2 = this->geometry()->toGlobal(Gaudi::XYZPoint(3.5*Gaudi::Units::m, 0.0, 0.0));
   Gaudi::XYZPoint g3 = this->geometry()->toGlobal(Gaudi::XYZPoint(0.0, 2.5*Gaudi::Units::m, 0.0));
   
   m_plane = Gaudi::Plane3D(g1, g2, g3);
+
+  return StatusCode::SUCCESS;
 }

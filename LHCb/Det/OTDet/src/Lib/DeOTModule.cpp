@@ -1,6 +1,9 @@
-// $Id: DeOTModule.cpp,v 1.26 2007-02-04 11:34:36 janos Exp $
-/// Kernel
+// $Id: DeOTModule.cpp,v 1.27 2007-02-13 11:56:18 janos Exp $
+/// GaudiKernel
 #include "GaudiKernel/Point3DTypes.h"
+#include "GaudiKernel/IUpdateManagerSvc.h"
+
+/// LHCbKernel
 #include "Kernel/LineTraj.h"
 
 /// LHCbMath
@@ -63,7 +66,6 @@ const CLID& DeOTModule::clID() const {
   return classID();
 }
 
-
 StatusCode DeOTModule::initialize() {
   IDetectorElement* quarter = this->parentIDetectorElement();
   IDetectorElement* layer = quarter->parentIDetectorElement();
@@ -100,10 +102,22 @@ StatusCode DeOTModule::initialize() {
   m_xMinLocal = -m_xMaxLocal;
   m_yMaxLocal = mainBox->yHalfLength();
   m_yMinLocal = -m_yMaxLocal;
-  
-  /// cache trajectories/planes
-  cacheInfo();
 
+  /// Update and chache trajectories/planes
+  MsgStream msg(msgSvc(), name() );
+  try {
+    msg << MSG::DEBUG << "Registering conditions" << endmsg;
+    updMgrSvc()->registerCondition(this,this->geometry(),&DeOTModule::cacheInfo);
+    msg << MSG::DEBUG << "Start first update" << endmsg;
+    StatusCode sc = updMgrSvc()->update(this);
+    if ( !sc.isSuccess() ) {
+      return sc;
+    }
+  } catch (DetectorElementException &e) {
+    msg << MSG::ERROR << e << endmsg;
+    return StatusCode::FAILURE;
+  }
+  
   return StatusCode::SUCCESS;
 }
 
@@ -304,7 +318,7 @@ void DeOTModule::clear() {
   m_midTraj[1].reset();
 }
 
-void DeOTModule::cacheInfo() {
+StatusCode DeOTModule::cacheInfo() {
   clear();
   
   double xUpper = m_xMaxLocal;
@@ -352,6 +366,7 @@ void DeOTModule::cacheInfo() {
   m_exitPlane = Gaudi::Plane3D(m_plane.Normal(), globalPoint(0.,0., 0.5*m_sensThickness));
   m_centerModule = globalPoint(0.,0.,0.);
 
+  return StatusCode::SUCCESS;
 }
 
 std::auto_ptr<LHCb::Trajectory> DeOTModule::trajectoryFirstWire(int monolayer) const {
