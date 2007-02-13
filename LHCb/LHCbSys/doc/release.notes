@@ -5,10 +5,10 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v22r1>2007-02-12 LHCbSys v22r1</A></H1><PRE>
+</PRE><H1><A NAME=v22r1>2007-02-13 LHCbSys v22r1</A></H1><PRE>
 This version uses Gaudi v19r1. Fully compatible with DC06 data
 
-- Packages added:    MDF v2r4 - Package to handle online data files
+- Packages added:    MDF v2r4p1 - Package to handle online data files
 
 - Packages modified: GaudiObjDesc v9r8p1, GaudiConf v10r1, HltBase v2r1, 
    KernelSys v6r1, LHCbKernel v7r1, RichKernel v7r1, RichRecBase v3r1,

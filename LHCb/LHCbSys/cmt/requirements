@@ -77,7 +77,7 @@ use CondDBEntityResolver  v3r1   Tools   # Marco Clemencic
 use LoKiCore              v2r0   Phys    # Ivan Belyaev
 use LoKiGen               v2r0   Phys	 # Ivan Belyaev
 use SimComponents         v2r0   Sim     # Gloria Corti, Marco Cattaneo
-use MDF                   v2r4   DAQ     # Markus Frank
+use MDF                   v2r4p1 DAQ     # Markus Frank
 use LHCbDefinitions       v2r0   Kernel  # Obsolete, moved to GaudiKernel
 
 # LHCb  Examples
