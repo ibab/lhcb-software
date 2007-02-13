@@ -176,7 +176,7 @@ StatusCode MuonPIDChecker::execute() {
 	   LHCb::MCParticle* mcPnext = mcP;
 	   while ( mcPnext != NULL ){
 	     m_TrnLinks++;
-	     if ( fabs(mcPnext->particleID().pid()) == 13 ) mcP = mcPnext;
+	     if ( abs(mcPnext->particleID().pid()) == 13 ) mcP = mcPnext;
 	     mcPnext = myLinkToTrack.next();
 	   }
 	   const LHCb::MCParticle* thismcP = mcP; 
@@ -274,7 +274,7 @@ StatusCode MuonPIDChecker::CheckMCAss(const LHCb::Track *pTrack,
 	SmartRefVector<LHCb::MCParticle>::const_iterator it;
 	for ( it= (*iVtx)->products().begin();it !=
 	    (*iVtx)->products().end(); it++ ){ 
-	  if ( fabs((*it)->particleID().pid()) == 13) {  
+	  if ( abs((*it)->particleID().pid()) == 13) {  
 
 	    m_TrzDecay = (*iVtx)->position().z()/Gaudi::Units::cm;
 
@@ -323,14 +323,14 @@ int MuonPIDChecker::getTrType( const LHCb::Track *pTrack,
 
     m_TrMCp0 = mcP->p()/Gaudi::Units::GeV;
 
-    if ( fabs (mcP->particleID().pid()) == 13  && 
+    if ( abs (mcP->particleID().pid()) == 13  && 
 	(m_TrnLinks == 1 && m_TrzOrigin < m_zOriginCut) ){ 
         
       type = 1;  
 
-    } else if ( ((fabs (mcP->particleID().pid()) == 13)  &&
+    } else if ( ((abs (mcP->particleID().pid()) == 13)  &&
 	  ( (m_TrnLinks==1 && m_TrzOrigin>=m_zOriginCut) || m_TrnLinks==2)) ||
-	       (fabs (mcP->particleID().pid()) !=13 && m_TrzDecay > 0 )){
+	       (abs (mcP->particleID().pid()) !=13 && m_TrzDecay > 0 )){
 
       type = 2;  
 
