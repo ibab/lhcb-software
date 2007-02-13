@@ -67,7 +67,8 @@ StatusCode PrepareMuonSeed::prepareSeed( const LHCb::L0MuonCandidate& muonL0Cand
   // JAH 12--2-07 temporally fix
   std::vector<MuonTileID> mpads1 = muonL0Cand.muonTileIDs(0); 
   std::vector<MuonTileID> mpads2 = muonL0Cand.muonTileIDs(1); 
-  MuonTileID mpad1 = *(mpads1.begin());
+  
+  //MuonTileID mpad1 = *(mpads1.begin());
   MuonTileID mpad2 = *(mpads2.begin());
   //MuonTileID mpad3 = muonL0Cand.pad(2);
 
@@ -83,16 +84,38 @@ StatusCode PrepareMuonSeed::prepareSeed( const LHCb::L0MuonCandidate& muonL0Cand
       return StatusCode::SUCCESS;
     }
 
-    double xTileM1 , yTileM1, zTileM1;
+    double x , y, z;
     double dxTileM1, dyTileM1, dzTileM1;
-   
-    //positions in M1
-    StatusCode sc = m_iPosTool->calcTilePos( mpad1,
-                                             xTileM1, dxTileM1,
-                                             yTileM1, dyTileM1,
-                                             zTileM1, dzTileM1);
-
-    if (!sc)  return StatusCode::SUCCESS;
+    int numberOfTiles = 0;
+    double xTileM1 = 0.;
+    double yTileM1 = 0.;
+    double zTileM1 = 0.;
+    StatusCode sc;
+    
+    for( std::vector<MuonTileID>::iterator it = (mpads1.begin());
+         it != (mpads1.end()) ; 
+         it++ ) {
+      
+      numberOfTiles++;
+      MuonTileID mpad1 = *it;
+      
+      //positions in M1
+      sc = m_iPosTool->calcTilePos( mpad1,
+                                    x, dxTileM1,
+                                    y, dyTileM1,
+                                    z, dzTileM1);
+      
+      if (!sc)  return StatusCode::SUCCESS;
+      
+      xTileM1 += x;
+      yTileM1 += y;
+      zTileM1 += z;
+    }
+    
+    xTileM1 = xTileM1 / double(numberOfTiles);
+    yTileM1 = yTileM1 / double(numberOfTiles);
+    zTileM1 = zTileM1 / double(numberOfTiles);
+    
 
     double xTileM2 , yTileM2, zTileM2;
     double dxTileM2, dyTileM2, dzTileM2;
