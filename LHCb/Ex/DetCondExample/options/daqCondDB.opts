@@ -1,10 +1,12 @@
-//$Id: daqCondDB.opts,v 1.7 2007-02-02 18:17:21 marcocle Exp $
+//$Id: daqCondDB.opts,v 1.8 2007-02-14 16:32:14 marcocle Exp $
 //==============================================================
 // Job options for DetCondExample DAQ test of CondDB
 //==============================================================
 
 #include "$DETCONDEXAMPLEROOT/options/common.opts"
 #include "$DETCONDEXAMPLEROOT/options/cool.opts"
+
+CondDBAccessSvc.ConnectionString = "$DAQCONNECTIONSTRING";
 
 //--------------------------------------------------------------
 // Sequence of algorithms to be applied
@@ -22,17 +24,17 @@ GaudiSequencer.MeasureTime = true;
 ApplicationMgr.EvtSel = "NONE";
 
 // Number of events to be processed
-ApplicationMgr.EvtMax = $DETCONDEXAMPLE_DAQEVTMAX;
+ApplicationMgr.EvtMax = 1000;
 
 //--------------------------------------------------------------
 // ConditionsDB folder and string size
 //--------------------------------------------------------------
 
 // Relative folder name under /CONDDB (do NOT put any "/")
-DAQCondDBAlgorithm.daqFolderName = "$DETCONDEXAMPLE_DAQFOLDERNAME";
+DAQCondDBAlgorithm.daqFolderName = "$DAQFOLDERNAME";
 
 // Size of the string stored at each event 
-DAQCondDBAlgorithm.daqRecordSize = $DETCONDEXAMPLE_DAQRECORDSIZE;
+DAQCondDBAlgorithm.daqRecordSize = 100000;
 
 // Show event by event progress ( every n events if n>0 )
 DAQCondDBAlgorithm.daqShowProgress = 1;
@@ -44,13 +46,6 @@ DAQCondDBAlgorithm.daqShowProgress = 1;
 // Set output level threshold 
 // Levels: 1=VERBOSE, 2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL
 MessageSvc.OutputLevel = 3;
-
-//--------------------------------------------------------------
-// DetCond extra options
-//--------------------------------------------------------------
-
-// be sure that the db is not dropped
-CondDBAccessSvc.RecreateDB = true;
 
 //==============================================================
 // End of job options for DetCondExample test of CondDB

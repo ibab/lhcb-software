@@ -1,4 +1,4 @@
-// $Id: DummyDetectorElement.cpp,v 1.6 2006-02-01 19:50:30 marcocle Exp $
+// $Id: DummyDetectorElement.cpp,v 1.7 2007-02-14 16:32:14 marcocle Exp $
 // Include files 
 
 #include <string>
@@ -14,6 +14,11 @@
 // 2005-04-11 : Marco CLEMENCIC
 //-----------------------------------------------------------------------------
 
+#include "DetDescCnv/XmlUserDetElemCnv.h"
+#include "GaudiKernel/CnvFactory.h"
+
+typedef  XmlUserDetElemCnv<DummyDetectorElement>  XmlDummyDetectorElementCnv;
+DECLARE_CONVERTER_FACTORY(XmlDummyDetectorElementCnv)
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -39,7 +44,7 @@ StatusCode DummyDetectorElement::initialize(){
   
   try {
     log << MSG::DEBUG << "Registering conditions" << endmsg;
-    updMgrSvc()->registerCondition(this,condition("SlowControl").path(),&DummyDetectorElement::i_updateTemperatures);
+    updMgrSvc()->registerCondition(this,condition("Temperature").path(),&DummyDetectorElement::i_updateTemperatures);
     updMgrSvc()->registerCondition(this,condition("ReadOut").path(),&DummyDetectorElement::i_updateTemperatures);
     updMgrSvc()->registerCondition(this,condition("ReadOut").path(),&DummyDetectorElement::i_updateChannels);
     log << MSG::DEBUG << "Start first update" << endmsg;
@@ -60,7 +65,7 @@ StatusCode DummyDetectorElement::i_updateTemperatures(){
   MsgStream log(msgSvc(),name());
   log << MSG::DEBUG << "Entering i_updateTemperatures()" << endmsg;
   try {
-    m_slowTemp   = condition("SlowControl")->param<double>("Temperature");
+    m_slowTemp   = condition("Temperature")->param<double>("Temperature");
     m_cratesTemp = condition("ReadOut")->param<std::vector<double> >("CrateTemps");
   } catch (...) {
     log << MSG::ERROR << "i_updateTemperatures: couldn't access condition" << endmsg;

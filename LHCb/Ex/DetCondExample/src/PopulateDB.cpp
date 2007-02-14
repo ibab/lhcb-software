@@ -1,4 +1,4 @@
-// $Id: PopulateDB.cpp,v 1.35 2007-02-02 18:17:36 marcocle Exp $
+// $Id: PopulateDB.cpp,v 1.36 2007-02-14 16:32:14 marcocle Exp $
 // Include files
 #include <iostream>
 #include <fstream>
@@ -27,9 +27,7 @@
 #include "CoolKernel/IObject.h"
 #include "CoolKernel/IObjectIterator.h"
 #include "CoolKernel/types.h"
-
-// from CORAL
-#include "CoralBase/AttributeList.h"
+#include "CoolKernel/Record.h"
 
 // local
 #include "PopulateDB.h"
@@ -689,10 +687,7 @@ StatusCode PopulateDB::i_dumpFolder( const std::string& folderName,
     
     info() << "    | " << objp->since() << " -> " << objp->until() << endmsg;
     info() << "      size = " << objp->payload().size() << endmsg;
-
-    std::ostringstream pl_data;
-    objp->payload().toOutputStream(pl_data);
-    info() << "      " << pl_data.str() << endmsg;
+    info() << "      " << objp->payload() << endmsg;
   }
 
   return StatusCode::SUCCESS;

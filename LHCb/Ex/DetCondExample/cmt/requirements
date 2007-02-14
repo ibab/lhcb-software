@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.59 2007-02-05 19:05:12 marcocle Exp $
+# $Id: requirements,v 1.60 2007-02-14 16:32:12 marcocle Exp $
 package DetCondExample
 version v10r0
 
@@ -46,11 +46,6 @@ macro oracle_linkopts
 set DETCONDEXAMPLE_XMLDDDB ${DETCONDEXAMPLEROOT}/XMLDDDB
 set CONDITIONS_PATH "conddb:/Conditions/MainCatalog.xml"
 
-# DAQ test parameters (number of events, folder name and record size in bytes)
-set DETCONDEXAMPLE_DAQEVTMAX 10
-set DETCONDEXAMPLE_DAQFOLDERNAME DAQ
-set DETCONDEXAMPLE_DAQRECORDSIZE 100000
-
 apply_pattern application_path
 
 #==================================================================
@@ -60,11 +55,17 @@ private
 application DetCondExample *.cpp $(GAUDICONFROOT)/src/GaudiMain.cpp
 
 # Set default environment variables to use SQLite by default for tests.
-set CONDDBCONNECTIONSTRING  "sqlite://none;schema=CONDDB.sqlite;dbname=CONDDB"
+set CONDDBCONNECTIONSTRING  "sqlite_file:CONDDB.db/CONDDB"
 
 # for testMultiDB.opts and testLayering.opts
-set CONDDBCONNECTIONSTRING1 "sqlite://none;schema=CONDDB1.sqlite;dbname=CONDDB1"
-set CONDDBCONNECTIONSTRING2 "sqlite://none;schema=CONDDB2.sqlite;dbname=CONDDB2"
+set CONDDBCONNECTIONSTRING1 "sqlite_file:CONDDB1.db/CONDDB1"
+set CONDDBCONNECTIONSTRING2 "sqlite_file:CONDDB2.db/CONDDB2"
+
+# DAQ test parameters (number of events, folder name and record size in bytes)
+#set DAQEVTMAX 10
+set DAQFOLDERNAME DAQ
+#set DAQRECORDSIZE 100000
+set DAQCONNECTIONSTRING  "sqlite_file:DAQ.db/DAQ"
 
 macro_append SEAL_linkopts ' -llcg_SealServices ' WIN32 ' lcg_SealServices.lib '
 

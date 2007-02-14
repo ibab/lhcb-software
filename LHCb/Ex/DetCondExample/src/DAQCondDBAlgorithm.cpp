@@ -1,4 +1,4 @@
-//$Id: DAQCondDBAlgorithm.cpp,v 1.15 2006-08-31 13:53:44 marcocle Exp $
+//$Id: DAQCondDBAlgorithm.cpp,v 1.16 2007-02-14 16:32:14 marcocle Exp $
 
 #include "DAQCondDBAlgorithm.h"
 
@@ -17,10 +17,6 @@
 #include "CoolKernel/IObjectIterator.h"
 #include "CoolKernel/types.h"
 #include "CoolKernel/ValidityKey.h"
-
-// from CORAL
-//#include "CoralBase/AttributeListSpecification.h"
-#include "CoralBase/AttributeList.h"
 
 /// Instantiation of a static factory to create instances of this algorithm
 DECLARE_ALGORITHM_FACTORY( DAQCondDBAlgorithm );

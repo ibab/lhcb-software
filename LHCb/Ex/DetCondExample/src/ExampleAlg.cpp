@@ -1,4 +1,4 @@
-// $Id: ExampleAlg.cpp,v 1.1 2006-02-09 08:29:12 marcocle Exp $
+// $Id: ExampleAlg.cpp,v 1.2 2007-02-14 16:32:14 marcocle Exp $
 // Include files 
 
 // from Gaudi
@@ -26,7 +26,8 @@ DECLARE_ALGORITHM_FACTORY( ExampleAlg );
 ExampleAlg::ExampleAlg( const std::string& name,
                         ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator ),
-    m_myCond1(NULL), m_myCond2(NULL), m_myAlignment(NULL),m_cond1(0.0),m_cond2()
+    m_myCond1(NULL), m_myCond2(NULL), m_myAlignment(NULL),
+    m_cond1(0.0), m_cond2()
 {
 
 }
@@ -45,11 +46,11 @@ StatusCode ExampleAlg::initialize() {
   debug() << "==> Initialize" << endmsg;
 
   try {
-    registerCondition("/dd/Conditions/Environment/MyDet/Cond1",
+    registerCondition("Conditions/Environment/MyDet/Cond1",
                       m_myCond1, &ExampleAlg::i_cacheCondition1Data);
-    registerCondition("/dd/Conditions/Readout/MyDet/Cond2",
+    registerCondition("Conditions/ReadoutConf/MyDet/Cond2",
                       m_myCond2, &ExampleAlg::i_cacheCondition2Data);
-    registerCondition("/dd/Conditions/Alignment/MyDet/Alignment",
+    registerCondition("Conditions/Alignment/MyDet/Alignment",
                       m_myAlignment, &ExampleAlg::i_cacheAlignmentData);
   }
   catch (GaudiException &e){

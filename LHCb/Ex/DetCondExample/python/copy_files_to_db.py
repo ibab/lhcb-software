@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-from PyCool import cool, coral
+from PyCool import cool
 
 from optparse import OptionParser
 import os
@@ -73,15 +73,14 @@ def main():
         parser.error("Bad arguments, use -h for help.")
 
     #### prepare structres to create and fill the folders
-    folderspec = cool.ExtendedAttributeListSpecification()
-    #folderspec.push_back("data","string",cool.PredefinedStorageHints.STRING_MAXSIZE_255)
-    #folderspec.push_back("data","string",cool.PredefinedStorageHints.STRING_MAXSIZE_4K)
-    #folderspec.push_back("data","string",cool.PredefinedStorageHints.STRING_MAXSIZE_64K)
-    folderspec.push_back("data","string",cool.PredefinedStorageHints.STRING_MAXSIZE_16M)
+    folderspec = cool.FolderSpecification(cool.FolderVersioning.MULTI_VERSION)
+    #folderspec.payloadSpecification().extend("data",cool.StorageType.String255)
+    #folderspec.payloadSpecification().extend("data",cool.StorageType.String4k)
+    #folderspec.payloadSpecification().extend("data",cool.StorageType.String64k)
+    folderspec.payloadSpecification().extend("data",cool.StorageType.String16M)
     folderdesc = "<storage_type=7>"
 
-    payload = coral.AttributeList()
-    payload.extend("data","string")
+    payload = cool.Record(folderspec.payloadSpecification())
     payload["data"] = "XML stuff" # dummy value, just to start
     
     #### initialize COOL
@@ -91,7 +90,8 @@ def main():
         dbs.dropDatabase(options.connectString)
         db = dbs.createDatabase(options.connectString)
     else:
-        db = dbs.openDatabase(options.connectString)
+        print 
+        db = dbs.openDatabase(options.connectString, False)
     
     excludes = [ 'clhep2dtd.pl' ]
     
@@ -134,14 +134,13 @@ def main():
                 folder = db.getFolder(folder_path)
             else:
                 folder = db.createFolder(folder_path,
-                                         folderspec,folderdesc,
-                                         cool.FolderVersioning.MULTI_VERSION)
+                                         folderspec,folderdesc)
             xml_data = open(os.path.join(root,f)).read()
             fixed_data = fix_system_ids(xml_data,"conddb:"+dbroot)
             #fixed_data = xml_data
             fixed_data = fix_env_vars(fixed_data)
             payload["data"] = fixed_data
-            folder.storeObject(cool.ValidityKeyMin,cool.ValidityKeyMax,payload,0)    
+            folder.storeObject(cool.ValidityKeyMin,cool.ValidityKeyMax,payload,0) 
 
     print "Total files inserted = %d"%sum
 

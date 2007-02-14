@@ -1,8 +1,8 @@
 JobOptionsSvc        INFO 
 //GP:================================================================================
 //GP: include ../options/fillCondDB.opts                                      (0,0)
-//GP: include /scratch/marcocle/Devel/test1/LHCb_v22r0/Ex/DetCondExample/v9r4/options/cool.opts (6,10)
-//GP: include /scratch/marcocle/Devel/test1/LHCb_v22r0/Ex/DetCondExample/v9r4/options/common.opts (5,10)
+//GP: include /scratch/marcocle/Devel/LHCb_newCOOL/Ex/DetCondExample/v10r0/options/cool.opts (6,10)
+//GP: include /scratch/marcocle/Devel/LHCb_newCOOL/Ex/DetCondExample/v10r0/options/common.opts (5,10)
 ApplicationMgr.HistogramPersistency = "NONE";                           //GP: (11,1)
 MessageSvc.Format = "% F%25W%S%7W%R%T %0W%M";                           //GP: (18,1)
 DetectorDataSvc.UsePersistency = 1;                                     //GP: (23,1)
@@ -12,11 +12,11 @@ DetectorDataSvc.DetStorageType = 7;                                     //GP: (2
 XmlCnvSvc.AllowGenericConversion = 1;                                   //GP: (27,1)
 DetectorPersistencySvc.CnvServices +=  [ "XmlCnvSvc" ] ;                //GP: (32,1)
 GaudiSequencer.MeasureTime = 1;                                         //GP: (37,1)
-//GP: end  /scratch/marcocle/Devel/test1/LHCb_v22r0/Ex/DetCondExample/v9r4/options/common.opts (43,1)
+//GP: end  /scratch/marcocle/Devel/LHCb_newCOOL/Ex/DetCondExample/v10r0/options/common.opts (43,1)
 DetectorPersistencySvc.CnvServices +=  [ "CondDBCnvSvc" ] ;             //GP: (10,1)
 XmlParserSvc.EntityResolverSvc = "CondDBEntityResolverSvc";             //GP: (11,1)
 CondDBAccessSvc.ConnectionString = "$CONDDBCONNECTIONSTRING";           //GP: (18,1)
-//GP: end  /scratch/marcocle/Devel/test1/LHCb_v22r0/Ex/DetCondExample/v9r4/options/cool.opts (28,1)
+//GP: end  /scratch/marcocle/Devel/LHCb_newCOOL/Ex/DetCondExample/v10r0/options/cool.opts (28,1)
 CondDBAccessSvc.ReadOnly = 0;                                           //GP: (13,1)
 ApplicationMgr.TopAlg =  [ "PopulateDB" ] ;                             //GP: (18,1)
 ApplicationMgr.EvtSel = "NONE";                                         //GP: (25,1)
@@ -29,8 +29,8 @@ JobOptionsSvc        INFO Job options successfully read in from ../options/fillC
 ApplicationMgr             DEBUG Getting my own properties
 ApplicationMgr           SUCCESS 
 ====================================================================================================================================
-                                                   Welcome to DetCondExample version v9r4
-                                          running on pclhcb55.cern.ch on Mon Feb  5 19:57:04 2007
+                                                   Welcome to DetCondExample version v10r0
+                                          running on pclhcb55.cern.ch on Wed Feb 14 17:14:18 2007
 ====================================================================================================================================
 ApplicationMgr              INFO Successfully loaded modules : 
 ApplicationMgr              INFO Application Manager Configured successfully
@@ -66,35 +66,8 @@ CondDBAccessSvc            DEBUG Service base class initialized successfully
 CondDBAccessSvc            DEBUG Initialize
 CondDBAccessSvc            DEBUG Connection string = "sqlite://none;schema=CONDDB.sqlite;dbname=CONDDB"
 CondDBAccessSvc            DEBUG Get cool::DatabaseSvc
-ConfigurationService: level[Warning] Configuration file /scratch/marcocle/Devel/test1/LHCb_v22r0/Ex/DetCondExample/v9r4/cmt/seal.opts does not exist or is not readable!
-ConfigurationService: level[Warning] Please check env. variable SEAL_CONFIGURATION_FILE!
- Application     Info Instantiate a COOL Application
- Application     Info Load the COOL database service
-RalDatabaseSvc     Info Instantiate the RalDatabaseSvc
 CondDBAccessSvc            DEBUG cool::DatabaseSvc got
 CondDBAccessSvc            DEBUG Opening connection
-RalSessionMgr     Info Instantiate a RalSessionMgr for 'sqlite://none;schema=CONDDB.sqlite;dbname=CONDDB'
-RalSessionMgr     Info Load the CORAL connection service
-CORAL/Services/ConnectionService     Info Loading default plugin for coral::IRelationalService: CORAL/Services/RelationalService
-CORAL/Services/RelationalService     Info Found plugin for RDBMS technology "frontier" with native implementation
-CORAL/Services/RelationalService     Info Found plugin for RDBMS technology "mysql" with native implementation
-CORAL/Services/RelationalService     Info Found plugin for RDBMS technology "oracle" with native implementation
-CORAL/Services/RelationalService     Info Found plugin for RDBMS technology "sqlite" with native implementation
-CORAL/Services/RelationalService     Info Default implementation for RDBMS technology "frontier" is native
-CORAL/Services/RelationalService     Info Default implementation for RDBMS technology "mysql" is native
-CORAL/Services/RelationalService     Info Default implementation for RDBMS technology "oracle" is native
-CORAL/Services/RelationalService     Info Default implementation for RDBMS technology "sqlite" is native
-CORAL/Services/ConnectionService     Info Loading default plugin for coral::IAuthenticationService: CORAL/Services/XMLAuthenticationService
-CORAL/Services/XMLAuthenticationService    Error Could not open "authentication.xml" for reading
-CORAL/Services/ConnectionService  Warning Failure while retrieving credential parameter "user" from authentication service: Connection string "sqlite_file:CONDDB.sqlite" is not known to the service ( CORAL : "IAuthenticationService::credentials" from "CORAL/Services/XMLAuthenticationService" )
-CORAL/Services/XMLAuthenticationService    Error Could not open "authentication.xml" for reading
-CORAL/Services/ConnectionService  Warning Failure while retrieving credential parameter "password" from authentication service: Connection string "sqlite_file:CONDDB.sqlite" is not known to the service ( CORAL : "IAuthenticationService::credentials" from "CORAL/Services/XMLAuthenticationService" )
-CORAL/Services/XMLAuthenticationService    Error Could not open "authentication.xml" for reading
-CORAL/Services/ConnectionService  Warning Failure while retrieving credential parameter "user" from authentication service: Connection string "sqlite_file:CONDDB.sqlite" is not known to the service ( CORAL : "IAuthenticationService::credentials" from "CORAL/Services/XMLAuthenticationService" )
-CORAL/Services/XMLAuthenticationService    Error Could not open "authentication.xml" for reading
-CORAL/Services/ConnectionService  Warning Failure while retrieving credential parameter "password" from authentication service: Connection string "sqlite_file:CONDDB.sqlite" is not known to the service ( CORAL : "IAuthenticationService::credentials" from "CORAL/Services/XMLAuthenticationService" )
-CORAL/Services/ConnectionService     Info Update Connection to service  established. Id=abd46416-b54a-11db-bd91-001320a397bc
-CORAL/Services/ConnectionService     Info Session on connection to service  started for user . Id=abd46416-b54a-11db-bd91-001320a397bc
 CondDBAccessSvc            DEBUG Retrieve the root folderset.
 CondDBAccessSvc          VERBOSE Check availability of tag ""
 CondDBAccessSvc          VERBOSE "" is a HEAD tag: OK
@@ -231,64 +204,64 @@ PopulateDB                  INFO     | using tag ="COLD"
 PopulateDB                  INFO     | 3 objects in folder
 PopulateDB                  INFO     | 0 -> 24
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">25.16</param></condition></DDDB>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">25.16</param></condition></DDDB>
 ]
 PopulateDB                  INFO     | 24 -> 48
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">29.33</param></condition></DDDB>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">29.33</param></condition></DDDB>
 ]
 PopulateDB                  INFO     | 48 -> 72
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">33.5</param></condition></DDDB>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">33.5</param></condition></DDDB>
 ]
 PopulateDB                  INFO     | using tag ="HOT"
 PopulateDB                  INFO     | 3 objects in folder
 PopulateDB                  INFO     | 0 -> 24
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">25.16</param></condition></DDDB>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">25.16</param></condition></DDDB>
 ]
 PopulateDB                  INFO     | 24 -> 48
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">29.33</param></condition></DDDB>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">29.33</param></condition></DDDB>
 ]
 PopulateDB                  INFO     | 48 -> 72
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">33.5</param></condition></DDDB>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">33.5</param></condition></DDDB>
 ]
 PopulateDB                  INFO     | using tag ="HEAD"
 PopulateDB                  INFO     | 3 objects in folder
 PopulateDB                  INFO     | 0 -> 24
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">25.16</param></condition></DDDB>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">25.16</param></condition></DDDB>
 ]
 PopulateDB                  INFO     | 24 -> 48
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">29.33</param></condition></DDDB>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">29.33</param></condition></DDDB>
 ]
 PopulateDB                  INFO     | 48 -> 72
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">33.5</param></condition></DDDB>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">33.5</param></condition></DDDB>
 ]
 PopulateDB                  INFO     | using tag ="FORFUN"
 PopulateDB                  INFO     | 3 objects in folder
 PopulateDB                  INFO     | 0 -> 24
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">25.16</param></condition></DDDB>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">25.16</param></condition></DDDB>
 ]
 PopulateDB                  INFO     | 24 -> 48
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">29.33</param></condition></DDDB>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">29.33</param></condition></DDDB>
 ]
 PopulateDB                  INFO     | 48 -> 72
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">33.5</param></condition></DDDB>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">33.5</param></condition></DDDB>
 ]
 PopulateDB                  INFO    /Conditions/DummyDE/EnvironmentCatalog.xml  
 PopulateDB                  INFO     | using tag ="COLD"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 <catalog name="DummyDE">
@@ -300,7 +273,7 @@ PopulateDB                  INFO     | using tag ="HOT"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 <catalog name="DummyDE">
@@ -312,7 +285,7 @@ PopulateDB                  INFO     | using tag ="HEAD"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 <catalog name="DummyDE">
@@ -324,7 +297,7 @@ PopulateDB                  INFO     | using tag ="FORFUN"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 <catalog name="DummyDE">
@@ -338,64 +311,64 @@ PopulateDB                  INFO     | using tag ="COLD"
 PopulateDB                  INFO     | 3 objects in folder
 PopulateDB                  INFO     | 0 -> 24
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Configuration"><paramVector name="Channels" type="int">0 1 2 3 4 5 6 7 8 9</paramVector><paramVector name="CrateTemps" type="double">20.16 19.24 18.32 17.4 16.48 15.56 14.64 13.72 12.8 11.88</paramVector><param name="NChannels" type="int">10</param></condition></DDDB>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Configuration"><paramVector name="Channels" type="int">0 1 2 3 4 5 6 7 8 9</paramVector><paramVector name="CrateTemps" type="double">20.16 19.24 18.32 17.4 16.48 15.56 14.64 13.72 12.8 11.88</paramVector><param name="NChannels" type="int">10</param></condition></DDDB>
 ]
 PopulateDB                  INFO     | 24 -> 48
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Configuration"><paramVector name="Channels" type="int">0 2 4 6 8</paramVector><paramVector name="CrateTemps" type="double">24.33 23.41 22.49 21.57 20.65 19.73 18.81 17.89 16.97 16.05</paramVector><param name="NChannels" type="int">10</param></condition></DDDB>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Configuration"><paramVector name="Channels" type="int">0 2 4 6 8</paramVector><paramVector name="CrateTemps" type="double">24.33 23.41 22.49 21.57 20.65 19.73 18.81 17.89 16.97 16.05</paramVector><param name="NChannels" type="int">10</param></condition></DDDB>
 ]
 PopulateDB                  INFO     | 48 -> 72
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Configuration"><paramVector name="Channels" type="int">0 3 6 9</paramVector><paramVector name="CrateTemps" type="double">28.5 27.58 26.66 25.74 24.82 23.9 22.98 22.06 21.14 20.22</paramVector><param name="NChannels" type="int">10</param></condition></DDDB>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Configuration"><paramVector name="Channels" type="int">0 3 6 9</paramVector><paramVector name="CrateTemps" type="double">28.5 27.58 26.66 25.74 24.82 23.9 22.98 22.06 21.14 20.22</paramVector><param name="NChannels" type="int">10</param></condition></DDDB>
 ]
 PopulateDB                  INFO     | using tag ="HOT"
 PopulateDB                  INFO     | 3 objects in folder
 PopulateDB                  INFO     | 0 -> 24
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Configuration"><paramVector name="Channels" type="int">0 1 2 3 4 5 6 7 8 9</paramVector><paramVector name="CrateTemps" type="double">20.16 19.24 18.32 17.4 16.48 15.56 14.64 13.72 12.8 11.88</paramVector><param name="NChannels" type="int">10</param></condition></DDDB>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Configuration"><paramVector name="Channels" type="int">0 1 2 3 4 5 6 7 8 9</paramVector><paramVector name="CrateTemps" type="double">20.16 19.24 18.32 17.4 16.48 15.56 14.64 13.72 12.8 11.88</paramVector><param name="NChannels" type="int">10</param></condition></DDDB>
 ]
 PopulateDB                  INFO     | 24 -> 48
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Configuration"><paramVector name="Channels" type="int">0 2 4 6 8</paramVector><paramVector name="CrateTemps" type="double">24.33 23.41 22.49 21.57 20.65 19.73 18.81 17.89 16.97 16.05</paramVector><param name="NChannels" type="int">10</param></condition></DDDB>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Configuration"><paramVector name="Channels" type="int">0 2 4 6 8</paramVector><paramVector name="CrateTemps" type="double">24.33 23.41 22.49 21.57 20.65 19.73 18.81 17.89 16.97 16.05</paramVector><param name="NChannels" type="int">10</param></condition></DDDB>
 ]
 PopulateDB                  INFO     | 48 -> 72
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Configuration"><paramVector name="Channels" type="int">0 3 6 9</paramVector><paramVector name="CrateTemps" type="double">28.5 27.58 26.66 25.74 24.82 23.9 22.98 22.06 21.14 20.22</paramVector><param name="NChannels" type="int">10</param></condition></DDDB>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Configuration"><paramVector name="Channels" type="int">0 3 6 9</paramVector><paramVector name="CrateTemps" type="double">28.5 27.58 26.66 25.74 24.82 23.9 22.98 22.06 21.14 20.22</paramVector><param name="NChannels" type="int">10</param></condition></DDDB>
 ]
 PopulateDB                  INFO     | using tag ="HEAD"
 PopulateDB                  INFO     | 3 objects in folder
 PopulateDB                  INFO     | 0 -> 24
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Configuration"><paramVector name="Channels" type="int">0 1 2 3 4 5 6 7 8 9</paramVector><paramVector name="CrateTemps" type="double">20.16 19.24 18.32 17.4 16.48 15.56 14.64 13.72 12.8 11.88</paramVector><param name="NChannels" type="int">10</param></condition></DDDB>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Configuration"><paramVector name="Channels" type="int">0 1 2 3 4 5 6 7 8 9</paramVector><paramVector name="CrateTemps" type="double">20.16 19.24 18.32 17.4 16.48 15.56 14.64 13.72 12.8 11.88</paramVector><param name="NChannels" type="int">10</param></condition></DDDB>
 ]
 PopulateDB                  INFO     | 24 -> 48
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Configuration"><paramVector name="Channels" type="int">0 2 4 6 8</paramVector><paramVector name="CrateTemps" type="double">24.33 23.41 22.49 21.57 20.65 19.73 18.81 17.89 16.97 16.05</paramVector><param name="NChannels" type="int">10</param></condition></DDDB>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Configuration"><paramVector name="Channels" type="int">0 2 4 6 8</paramVector><paramVector name="CrateTemps" type="double">24.33 23.41 22.49 21.57 20.65 19.73 18.81 17.89 16.97 16.05</paramVector><param name="NChannels" type="int">10</param></condition></DDDB>
 ]
 PopulateDB                  INFO     | 48 -> 72
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Configuration"><paramVector name="Channels" type="int">0 3 6 9</paramVector><paramVector name="CrateTemps" type="double">28.5 27.58 26.66 25.74 24.82 23.9 22.98 22.06 21.14 20.22</paramVector><param name="NChannels" type="int">10</param></condition></DDDB>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Configuration"><paramVector name="Channels" type="int">0 3 6 9</paramVector><paramVector name="CrateTemps" type="double">28.5 27.58 26.66 25.74 24.82 23.9 22.98 22.06 21.14 20.22</paramVector><param name="NChannels" type="int">10</param></condition></DDDB>
 ]
 PopulateDB                  INFO     | using tag ="FORFUN"
 PopulateDB                  INFO     | 3 objects in folder
 PopulateDB                  INFO     | 0 -> 24
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Configuration"><paramVector name="Channels" type="int">0 1 2 3 4 5 6 7 8 9</paramVector><paramVector name="CrateTemps" type="double">20.16 19.24 18.32 17.4 16.48 15.56 14.64 13.72 12.8 11.88</paramVector><param name="NChannels" type="int">10</param></condition></DDDB>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Configuration"><paramVector name="Channels" type="int">0 1 2 3 4 5 6 7 8 9</paramVector><paramVector name="CrateTemps" type="double">20.16 19.24 18.32 17.4 16.48 15.56 14.64 13.72 12.8 11.88</paramVector><param name="NChannels" type="int">10</param></condition></DDDB>
 ]
 PopulateDB                  INFO     | 24 -> 48
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Configuration"><paramVector name="Channels" type="int">0 2 4 6 8</paramVector><paramVector name="CrateTemps" type="double">24.33 23.41 22.49 21.57 20.65 19.73 18.81 17.89 16.97 16.05</paramVector><param name="NChannels" type="int">10</param></condition></DDDB>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Configuration"><paramVector name="Channels" type="int">0 2 4 6 8</paramVector><paramVector name="CrateTemps" type="double">24.33 23.41 22.49 21.57 20.65 19.73 18.81 17.89 16.97 16.05</paramVector><param name="NChannels" type="int">10</param></condition></DDDB>
 ]
 PopulateDB                  INFO     | 48 -> 72
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Configuration"><paramVector name="Channels" type="int">0 3 6 9</paramVector><paramVector name="CrateTemps" type="double">28.5 27.58 26.66 25.74 24.82 23.9 22.98 22.06 21.14 20.22</paramVector><param name="NChannels" type="int">10</param></condition></DDDB>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Configuration"><paramVector name="Channels" type="int">0 3 6 9</paramVector><paramVector name="CrateTemps" type="double">28.5 27.58 26.66 25.74 24.82 23.9 22.98 22.06 21.14 20.22</paramVector><param name="NChannels" type="int">10</param></condition></DDDB>
 ]
 PopulateDB                  INFO    /Conditions/DummyDE/ReadoutConfCatalog.xml  
 PopulateDB                  INFO     | using tag ="COLD"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 <catalog name="DummyDE">
@@ -407,7 +380,7 @@ PopulateDB                  INFO     | using tag ="HOT"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 <catalog name="DummyDE">
@@ -419,7 +392,7 @@ PopulateDB                  INFO     | using tag ="HEAD"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 <catalog name="DummyDE">
@@ -431,7 +404,7 @@ PopulateDB                  INFO     | using tag ="FORFUN"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 <catalog name="DummyDE">
@@ -445,7 +418,7 @@ PopulateDB                  INFO     | using tag ="COLD"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 
@@ -458,7 +431,7 @@ PopulateDB                  INFO     | using tag ="HOT"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 
@@ -471,7 +444,7 @@ PopulateDB                  INFO     | using tag ="HEAD"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 
@@ -484,7 +457,7 @@ PopulateDB                  INFO     | using tag ="FORFUN"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 
@@ -499,7 +472,7 @@ PopulateDB                  INFO     | using tag ="COLD"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 
@@ -522,7 +495,7 @@ PopulateDB                  INFO     | using tag ="HOT"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 
@@ -545,7 +518,7 @@ PopulateDB                  INFO     | using tag ="HEAD"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 
@@ -568,7 +541,7 @@ PopulateDB                  INFO     | using tag ="FORFUN"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 
@@ -592,7 +565,7 @@ PopulateDB                  INFO     | using tag ="COLD"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 
@@ -609,7 +582,7 @@ PopulateDB                  INFO     | using tag ="HOT"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 
@@ -626,7 +599,7 @@ PopulateDB                  INFO     | using tag ="HEAD"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 
@@ -643,7 +616,7 @@ PopulateDB                  INFO     | using tag ="FORFUN"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 
@@ -662,7 +635,7 @@ PopulateDB                  INFO     | using tag ="COLD"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 <!--- Id: -->
@@ -932,7 +905,7 @@ PopulateDB                  INFO     | using tag ="HOT"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 <!--- Id: -->
@@ -1202,7 +1175,7 @@ PopulateDB                  INFO     | using tag ="HEAD"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 <!--- Id: -->
@@ -1472,7 +1445,7 @@ PopulateDB                  INFO     | using tag ="FORFUN"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 <!--- Id: -->
@@ -1743,7 +1716,7 @@ PopulateDB                  INFO     | using tag ="COLD"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 
@@ -1760,7 +1733,7 @@ PopulateDB                  INFO     | using tag ="HOT"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 
@@ -1777,7 +1750,7 @@ PopulateDB                  INFO     | using tag ="HEAD"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 
@@ -1794,7 +1767,7 @@ PopulateDB                  INFO     | using tag ="FORFUN"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 
@@ -1813,7 +1786,7 @@ PopulateDB                  INFO     | using tag ="COLD"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 
@@ -1826,7 +1799,7 @@ PopulateDB                  INFO     | using tag ="HOT"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 
@@ -1839,7 +1812,7 @@ PopulateDB                  INFO     | using tag ="HEAD"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 
@@ -1852,7 +1825,7 @@ PopulateDB                  INFO     | using tag ="FORFUN"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 
@@ -1867,7 +1840,7 @@ PopulateDB                  INFO     | using tag ="COLD"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 
@@ -1890,7 +1863,7 @@ PopulateDB                  INFO     | using tag ="HOT"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 
@@ -1913,7 +1886,7 @@ PopulateDB                  INFO     | using tag ="HEAD"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 
@@ -1936,7 +1909,7 @@ PopulateDB                  INFO     | using tag ="FORFUN"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 
@@ -1960,7 +1933,7 @@ PopulateDB                  INFO     | using tag ="COLD"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 
@@ -1977,7 +1950,7 @@ PopulateDB                  INFO     | using tag ="HOT"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 
@@ -1994,7 +1967,7 @@ PopulateDB                  INFO     | using tag ="HEAD"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 
@@ -2011,7 +1984,7 @@ PopulateDB                  INFO     | using tag ="FORFUN"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 
@@ -2030,120 +2003,120 @@ PopulateDB                  INFO     | using tag ="COLD"
 PopulateDB                  INFO     | 3 objects in folder
 PopulateDB                  INFO     | 0 -> 16
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">4.2</param></condition></DDDB>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">4.2</param></condition></DDDB>
 ]
 PopulateDB                  INFO     | 16 -> 32
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">14.6</param></condition></DDDB>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">14.6</param></condition></DDDB>
 ]
 PopulateDB                  INFO     | 32 -> 48
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">25</param></condition></DDDB>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">25</param></condition></DDDB>
 ]
 PopulateDB                  INFO     | using tag ="HOT"
 PopulateDB                  INFO     | 3 objects in folder
 PopulateDB                  INFO     | 0 -> 16
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">105</param></condition></DDDB>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">105</param></condition></DDDB>
 ]
 PopulateDB                  INFO     | 16 -> 32
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">115</param></condition></DDDB>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">115</param></condition></DDDB>
 ]
 PopulateDB                  INFO     | 32 -> 48
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">125</param></condition></DDDB>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">125</param></condition></DDDB>
 ]
 PopulateDB                  INFO     | using tag ="HEAD"
 PopulateDB                  INFO     | 10 objects in folder
 PopulateDB                  INFO     | 0 -> 10
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">9</param></condition></DDDB>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">9</param></condition></DDDB>
 ]
 PopulateDB                  INFO     | 10 -> 20
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">14.4</param></condition></DDDB>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">14.4</param></condition></DDDB>
 ]
 PopulateDB                  INFO     | 20 -> 30
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">19.8</param></condition></DDDB>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">19.8</param></condition></DDDB>
 ]
 PopulateDB                  INFO     | 30 -> 40
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">25.2</param></condition></DDDB>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">25.2</param></condition></DDDB>
 ]
 PopulateDB                  INFO     | 40 -> 50
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">30.6</param></condition></DDDB>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">30.6</param></condition></DDDB>
 ]
 PopulateDB                  INFO     | 50 -> 60
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">36</param></condition></DDDB>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">36</param></condition></DDDB>
 ]
 PopulateDB                  INFO     | 60 -> 70
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">41.40000000000001</param></condition></DDDB>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">41.40000000000001</param></condition></DDDB>
 ]
 PopulateDB                  INFO     | 70 -> 80
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">46.8</param></condition></DDDB>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">46.8</param></condition></DDDB>
 ]
 PopulateDB                  INFO     | 80 -> 90
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">52.2</param></condition></DDDB>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">52.2</param></condition></DDDB>
 ]
 PopulateDB                  INFO     | 90 -> 100
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">57.6</param></condition></DDDB>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">57.6</param></condition></DDDB>
 ]
 PopulateDB                  INFO     | using tag ="FORFUN"
 PopulateDB                  INFO     | 10 objects in folder
 PopulateDB                  INFO     | 0 -> 10
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">9</param></condition></DDDB>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">9</param></condition></DDDB>
 ]
 PopulateDB                  INFO     | 10 -> 20
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">14.4</param></condition></DDDB>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">14.4</param></condition></DDDB>
 ]
 PopulateDB                  INFO     | 20 -> 30
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">19.8</param></condition></DDDB>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">19.8</param></condition></DDDB>
 ]
 PopulateDB                  INFO     | 30 -> 40
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">25.2</param></condition></DDDB>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">25.2</param></condition></DDDB>
 ]
 PopulateDB                  INFO     | 40 -> 50
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">30.6</param></condition></DDDB>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">30.6</param></condition></DDDB>
 ]
 PopulateDB                  INFO     | 50 -> 60
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">36</param></condition></DDDB>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">36</param></condition></DDDB>
 ]
 PopulateDB                  INFO     | 60 -> 70
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">41.40000000000001</param></condition></DDDB>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">41.40000000000001</param></condition></DDDB>
 ]
 PopulateDB                  INFO     | 70 -> 80
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">46.8</param></condition></DDDB>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">46.8</param></condition></DDDB>
 ]
 PopulateDB                  INFO     | 80 -> 90
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">52.2</param></condition></DDDB>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">52.2</param></condition></DDDB>
 ]
 PopulateDB                  INFO     | 90 -> 100
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">57.6</param></condition></DDDB>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">57.6</param></condition></DDDB>
 ]
 PopulateDB                  INFO    /Conditions/Hcal/EnvironmentCatalog.xml  
 PopulateDB                  INFO     | using tag ="COLD"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 <catalog name="Hcal">
@@ -2155,7 +2128,7 @@ PopulateDB                  INFO     | using tag ="HOT"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 <catalog name="Hcal">
@@ -2167,7 +2140,7 @@ PopulateDB                  INFO     | using tag ="HEAD"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 <catalog name="Hcal">
@@ -2179,7 +2152,7 @@ PopulateDB                  INFO     | using tag ="FORFUN"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 <catalog name="Hcal">
@@ -2193,7 +2166,7 @@ PopulateDB                  INFO     | using tag ="COLD"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 
@@ -2284,7 +2257,7 @@ PopulateDB                  INFO     | using tag ="HOT"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 
@@ -2375,7 +2348,7 @@ PopulateDB                  INFO     | using tag ="HEAD"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 
@@ -2466,7 +2439,7 @@ PopulateDB                  INFO     | using tag ="FORFUN"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 
@@ -2558,7 +2531,7 @@ PopulateDB                  INFO     | using tag ="COLD"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 
@@ -2575,7 +2548,7 @@ PopulateDB                  INFO     | using tag ="HOT"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 
@@ -2592,7 +2565,7 @@ PopulateDB                  INFO     | using tag ="HEAD"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 
@@ -2609,7 +2582,7 @@ PopulateDB                  INFO     | using tag ="FORFUN"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 
@@ -2629,7 +2602,7 @@ PopulateDB                  INFO     | using tag ="COLD"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 
@@ -2644,7 +2617,7 @@ PopulateDB                  INFO     | using tag ="HOT"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 
@@ -2659,7 +2632,7 @@ PopulateDB                  INFO     | using tag ="HEAD"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 
@@ -2674,7 +2647,7 @@ PopulateDB                  INFO     | using tag ="FORFUN"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 
@@ -2690,7 +2663,7 @@ PopulateDB                  INFO     | using tag ="COLD"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 
@@ -2704,7 +2677,7 @@ PopulateDB                  INFO     | using tag ="HOT"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 
@@ -2718,7 +2691,7 @@ PopulateDB                  INFO     | using tag ="HEAD"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 
@@ -2732,7 +2705,7 @@ PopulateDB                  INFO     | using tag ="FORFUN"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 
@@ -2748,7 +2721,7 @@ PopulateDB                  INFO     | using tag ="COLD"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 
@@ -2764,7 +2737,7 @@ PopulateDB                  INFO     | using tag ="HOT"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 
@@ -2780,7 +2753,7 @@ PopulateDB                  INFO     | using tag ="HEAD"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 
@@ -2796,7 +2769,7 @@ PopulateDB                  INFO     | using tag ="FORFUN"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 
@@ -2813,56 +2786,56 @@ PopulateDB                  INFO     | using tag ="COLD"
 PopulateDB                  INFO     | 3 objects in folder
 PopulateDB                  INFO     | 0 -> 16
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">5</param></condition></DDDB>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">5</param></condition></DDDB>
 ]
 PopulateDB                  INFO     | 16 -> 32
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">15</param></condition></DDDB>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">15</param></condition></DDDB>
 ]
 PopulateDB                  INFO     | 32 -> 48
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">25</param></condition></DDDB>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">25</param></condition></DDDB>
 ]
 PopulateDB                  INFO     | using tag ="HOT"
 PopulateDB                  INFO     | 3 objects in folder
 PopulateDB                  INFO     | 0 -> 16
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">105</param></condition></DDDB>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">105</param></condition></DDDB>
 ]
 PopulateDB                  INFO     | 16 -> 32
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">115</param></condition></DDDB>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">115</param></condition></DDDB>
 ]
 PopulateDB                  INFO     | 32 -> 48
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">125</param></condition></DDDB>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">125</param></condition></DDDB>
 ]
 PopulateDB                  INFO     | using tag ="HEAD"
 PopulateDB                  INFO     | 2 objects in folder
 PopulateDB                  INFO     | 0 -> 24
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">9.199999999999999</param></condition></DDDB>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">9.199999999999999</param></condition></DDDB>
 ]
 PopulateDB                  INFO     | 24 -> 48
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">14.2</param></condition></DDDB>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">14.2</param></condition></DDDB>
 ]
 PopulateDB                  INFO     | using tag ="FORFUN"
 PopulateDB                  INFO     | 2 objects in folder
 PopulateDB                  INFO     | 0 -> 24
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">9.199999999999999</param></condition></DDDB>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">9.199999999999999</param></condition></DDDB>
 ]
 PopulateDB                  INFO     | 24 -> 48
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">14.2</param></condition></DDDB>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Temperature"><param name="Temperature" type="double">14.2</param></condition></DDDB>
 ]
 PopulateDB                  INFO    /Conditions/LHCb/EnvironmentCatalog.xml  
 PopulateDB                  INFO     | using tag ="COLD"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 <catalog name="LHCb">
@@ -2875,7 +2848,7 @@ PopulateDB                  INFO     | using tag ="HOT"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 <catalog name="LHCb">
@@ -2888,7 +2861,7 @@ PopulateDB                  INFO     | using tag ="HEAD"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 <catalog name="LHCb">
@@ -2901,7 +2874,7 @@ PopulateDB                  INFO     | using tag ="FORFUN"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 <catalog name="LHCb">
@@ -2915,7 +2888,7 @@ PopulateDB                  INFO     | using tag ="COLD"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 <catalog name="Conditions">
@@ -2980,7 +2953,7 @@ PopulateDB                  INFO     | using tag ="HOT"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 <catalog name="Conditions">
@@ -3045,7 +3018,7 @@ PopulateDB                  INFO     | using tag ="HEAD"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 <catalog name="Conditions">
@@ -3110,7 +3083,7 @@ PopulateDB                  INFO     | using tag ="FORFUN"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 <catalog name="Conditions">
@@ -3176,33 +3149,33 @@ PopulateDB                  INFO     | using tag ="COLD"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 3
-PopulateDB                  INFO       [A (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Object"><param name="Datum" type="other">A</param></condition></DDDB>
-], [B (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Object"><param name="Datum" type="other">B</param></condition></DDDB>
-], [C (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Object"><param name="Datum" type="other">C</param></condition></DDDB>
+PopulateDB                  INFO       [A (String16M) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Object"><param name="Datum" type="other">A</param></condition></DDDB>
+], [B (String16M) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Object"><param name="Datum" type="other">B</param></condition></DDDB>
+], [C (String16M) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Object"><param name="Datum" type="other">C</param></condition></DDDB>
 ]
 PopulateDB                  INFO     | using tag ="HOT"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 3
-PopulateDB                  INFO       [A (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Object"><param name="Datum" type="other">A</param></condition></DDDB>
-], [B (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Object"><param name="Datum" type="other">B</param></condition></DDDB>
-], [C (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Object"><param name="Datum" type="other">C</param></condition></DDDB>
+PopulateDB                  INFO       [A (String16M) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Object"><param name="Datum" type="other">A</param></condition></DDDB>
+], [B (String16M) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Object"><param name="Datum" type="other">B</param></condition></DDDB>
+], [C (String16M) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Object"><param name="Datum" type="other">C</param></condition></DDDB>
 ]
 PopulateDB                  INFO     | using tag ="HEAD"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 3
-PopulateDB                  INFO       [A (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Object"><param name="Datum" type="other">A</param></condition></DDDB>
-], [B (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Object"><param name="Datum" type="other">B</param></condition></DDDB>
-], [C (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Object"><param name="Datum" type="other">C</param></condition></DDDB>
+PopulateDB                  INFO       [A (String16M) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Object"><param name="Datum" type="other">A</param></condition></DDDB>
+], [B (String16M) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Object"><param name="Datum" type="other">B</param></condition></DDDB>
+], [C (String16M) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Object"><param name="Datum" type="other">C</param></condition></DDDB>
 ]
 PopulateDB                  INFO     | using tag ="FORFUN"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 3
-PopulateDB                  INFO       [A (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Object"><param name="Datum" type="other">A</param></condition></DDDB>
-], [B (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Object"><param name="Datum" type="other">B</param></condition></DDDB>
-], [C (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Object"><param name="Datum" type="other">C</param></condition></DDDB>
+PopulateDB                  INFO       [A (String16M) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Object"><param name="Datum" type="other">A</param></condition></DDDB>
+], [B (String16M) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Object"><param name="Datum" type="other">B</param></condition></DDDB>
+], [C (String16M) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="5" name="Object"><param name="Datum" type="other">C</param></condition></DDDB>
 ]
 PopulateDB                  INFO  S /Conditions/Online  
 PopulateDB                  INFO  S /Conditions/Online/Cave  
@@ -3220,22 +3193,22 @@ PopulateDB                  INFO     | using tag ="COLD"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><catalog name="TestFolder"><catalog name="TestSubFolder"><conditionref href="#TestCondition"/></catalog></catalog><condition name="TestCondition"><paramVector name="ChannelMap" type="int">1 2 3 4</paramVector></condition></DDDB>]
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><catalog name="TestFolder"><catalog name="TestSubFolder"><conditionref href="#TestCondition"/></catalog></catalog><condition name="TestCondition"><paramVector name="ChannelMap" type="int">1 2 3 4</paramVector></condition></DDDB>]
 PopulateDB                  INFO     | using tag ="HOT"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><catalog name="TestFolder"><catalog name="TestSubFolder"><conditionref href="#TestCondition"/></catalog></catalog><condition name="TestCondition"><paramVector name="ChannelMap" type="int">1 2 3 4</paramVector></condition></DDDB>]
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><catalog name="TestFolder"><catalog name="TestSubFolder"><conditionref href="#TestCondition"/></catalog></catalog><condition name="TestCondition"><paramVector name="ChannelMap" type="int">1 2 3 4</paramVector></condition></DDDB>]
 PopulateDB                  INFO     | using tag ="HEAD"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><catalog name="TestFolder"><catalog name="TestSubFolder"><conditionref href="#TestCondition"/></catalog></catalog><condition name="TestCondition"><paramVector name="ChannelMap" type="int">1 2 3 4</paramVector></condition></DDDB>]
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><catalog name="TestFolder"><catalog name="TestSubFolder"><conditionref href="#TestCondition"/></catalog></catalog><condition name="TestCondition"><paramVector name="ChannelMap" type="int">1 2 3 4</paramVector></condition></DDDB>]
 PopulateDB                  INFO     | using tag ="FORFUN"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><catalog name="TestFolder"><catalog name="TestSubFolder"><conditionref href="#TestCondition"/></catalog></catalog><condition name="TestCondition"><paramVector name="ChannelMap" type="int">1 2 3 4</paramVector></condition></DDDB>]
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><catalog name="TestFolder"><catalog name="TestSubFolder"><conditionref href="#TestCondition"/></catalog></catalog><condition name="TestCondition"><paramVector name="ChannelMap" type="int">1 2 3 4</paramVector></condition></DDDB>]
 PopulateDB                  INFO  S /Conditions/Tests  
 PopulateDB                  INFO  S /Conditions/Tests/Properties  
 PopulateDB                  INFO    /Conditions/Tests/Properties/TestFunction.xml  
@@ -3243,41 +3216,41 @@ PopulateDB                  INFO     | using tag ="COLD"
 PopulateDB                  INFO     | 2 objects in folder
 PopulateDB                  INFO     | 0 -> 30
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/geometry.dtd"><DDDB><tabproperty name="TestFunction" type="(Unknown)" xaxis="(empty)" yaxis="(empty)"><entry x = '0'  y = '0' /><entry x = '0.2'  y = '0.04000000000000001' /><entry x = '0.4'  y = '0.16' /><entry x = '0.6000000000000001'  y = '0.3600000000000001' /><entry x = '0.8'  y = '0.6400000000000001' /><entry x = '1'  y = '1' /><entry x = '1.2'  y = '1.44' /><entry x = '1.4'  y = '1.96' /><entry x = '1.6'  y = '2.56' /><entry x = '1.8'  y = '3.239999999999999' /><entry x = '2'  y = '3.999999999999999' /></tabproperty></DDDB>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/geometry.dtd"><DDDB><tabproperty name="TestFunction" type="(Unknown)" xaxis="(empty)" yaxis="(empty)"><entry x = '0'  y = '0' /><entry x = '0.2'  y = '0.04000000000000001' /><entry x = '0.4'  y = '0.16' /><entry x = '0.6000000000000001'  y = '0.3600000000000001' /><entry x = '0.8'  y = '0.6400000000000001' /><entry x = '1'  y = '1' /><entry x = '1.2'  y = '1.44' /><entry x = '1.4'  y = '1.96' /><entry x = '1.6'  y = '2.56' /><entry x = '1.8'  y = '3.239999999999999' /><entry x = '2'  y = '3.999999999999999' /></tabproperty></DDDB>
 ]
 PopulateDB                  INFO     | 30 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/geometry.dtd"><DDDB><tabproperty name="TestFunction" type="(Unknown)" xaxis="(empty)" yaxis="(empty)"><entry x = '0'  y = '0' /><entry x = '0.2'  y = '0.02' /><entry x = '0.4'  y = '0.08000000000000002' /><entry x = '0.6000000000000001'  y = '0.18' /><entry x = '0.8'  y = '0.3200000000000001' /><entry x = '1'  y = '0.5' /><entry x = '1.2'  y = '0.72' /><entry x = '1.4'  y = '0.9799999999999999' /><entry x = '1.6'  y = '1.28' /><entry x = '1.8'  y = '1.62' /><entry x = '2'  y = '2' /></tabproperty></DDDB>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/geometry.dtd"><DDDB><tabproperty name="TestFunction" type="(Unknown)" xaxis="(empty)" yaxis="(empty)"><entry x = '0'  y = '0' /><entry x = '0.2'  y = '0.02' /><entry x = '0.4'  y = '0.08000000000000002' /><entry x = '0.6000000000000001'  y = '0.18' /><entry x = '0.8'  y = '0.3200000000000001' /><entry x = '1'  y = '0.5' /><entry x = '1.2'  y = '0.72' /><entry x = '1.4'  y = '0.9799999999999999' /><entry x = '1.6'  y = '1.28' /><entry x = '1.8'  y = '1.62' /><entry x = '2'  y = '2' /></tabproperty></DDDB>
 ]
 PopulateDB                  INFO     | using tag ="HOT"
 PopulateDB                  INFO     | 2 objects in folder
 PopulateDB                  INFO     | 0 -> 30
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/geometry.dtd"><DDDB><tabproperty name="TestFunction" type="(Unknown)" xaxis="(empty)" yaxis="(empty)"><entry x = '0'  y = '0' /><entry x = '0.2'  y = '0.04000000000000001' /><entry x = '0.4'  y = '0.16' /><entry x = '0.6000000000000001'  y = '0.3600000000000001' /><entry x = '0.8'  y = '0.6400000000000001' /><entry x = '1'  y = '1' /><entry x = '1.2'  y = '1.44' /><entry x = '1.4'  y = '1.96' /><entry x = '1.6'  y = '2.56' /><entry x = '1.8'  y = '3.239999999999999' /><entry x = '2'  y = '3.999999999999999' /></tabproperty></DDDB>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/geometry.dtd"><DDDB><tabproperty name="TestFunction" type="(Unknown)" xaxis="(empty)" yaxis="(empty)"><entry x = '0'  y = '0' /><entry x = '0.2'  y = '0.04000000000000001' /><entry x = '0.4'  y = '0.16' /><entry x = '0.6000000000000001'  y = '0.3600000000000001' /><entry x = '0.8'  y = '0.6400000000000001' /><entry x = '1'  y = '1' /><entry x = '1.2'  y = '1.44' /><entry x = '1.4'  y = '1.96' /><entry x = '1.6'  y = '2.56' /><entry x = '1.8'  y = '3.239999999999999' /><entry x = '2'  y = '3.999999999999999' /></tabproperty></DDDB>
 ]
 PopulateDB                  INFO     | 30 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/geometry.dtd"><DDDB><tabproperty name="TestFunction" type="(Unknown)" xaxis="(empty)" yaxis="(empty)"><entry x = '0'  y = '0' /><entry x = '0.2'  y = '0.02' /><entry x = '0.4'  y = '0.08000000000000002' /><entry x = '0.6000000000000001'  y = '0.18' /><entry x = '0.8'  y = '0.3200000000000001' /><entry x = '1'  y = '0.5' /><entry x = '1.2'  y = '0.72' /><entry x = '1.4'  y = '0.9799999999999999' /><entry x = '1.6'  y = '1.28' /><entry x = '1.8'  y = '1.62' /><entry x = '2'  y = '2' /></tabproperty></DDDB>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/geometry.dtd"><DDDB><tabproperty name="TestFunction" type="(Unknown)" xaxis="(empty)" yaxis="(empty)"><entry x = '0'  y = '0' /><entry x = '0.2'  y = '0.02' /><entry x = '0.4'  y = '0.08000000000000002' /><entry x = '0.6000000000000001'  y = '0.18' /><entry x = '0.8'  y = '0.3200000000000001' /><entry x = '1'  y = '0.5' /><entry x = '1.2'  y = '0.72' /><entry x = '1.4'  y = '0.9799999999999999' /><entry x = '1.6'  y = '1.28' /><entry x = '1.8'  y = '1.62' /><entry x = '2'  y = '2' /></tabproperty></DDDB>
 ]
 PopulateDB                  INFO     | using tag ="HEAD"
 PopulateDB                  INFO     | 2 objects in folder
 PopulateDB                  INFO     | 0 -> 30
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/geometry.dtd"><DDDB><tabproperty name="TestFunction" type="(Unknown)" xaxis="(empty)" yaxis="(empty)"><entry x = '0'  y = '0' /><entry x = '0.2'  y = '0.04000000000000001' /><entry x = '0.4'  y = '0.16' /><entry x = '0.6000000000000001'  y = '0.3600000000000001' /><entry x = '0.8'  y = '0.6400000000000001' /><entry x = '1'  y = '1' /><entry x = '1.2'  y = '1.44' /><entry x = '1.4'  y = '1.96' /><entry x = '1.6'  y = '2.56' /><entry x = '1.8'  y = '3.239999999999999' /><entry x = '2'  y = '3.999999999999999' /></tabproperty></DDDB>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/geometry.dtd"><DDDB><tabproperty name="TestFunction" type="(Unknown)" xaxis="(empty)" yaxis="(empty)"><entry x = '0'  y = '0' /><entry x = '0.2'  y = '0.04000000000000001' /><entry x = '0.4'  y = '0.16' /><entry x = '0.6000000000000001'  y = '0.3600000000000001' /><entry x = '0.8'  y = '0.6400000000000001' /><entry x = '1'  y = '1' /><entry x = '1.2'  y = '1.44' /><entry x = '1.4'  y = '1.96' /><entry x = '1.6'  y = '2.56' /><entry x = '1.8'  y = '3.239999999999999' /><entry x = '2'  y = '3.999999999999999' /></tabproperty></DDDB>
 ]
 PopulateDB                  INFO     | 30 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/geometry.dtd"><DDDB><tabproperty name="TestFunction" type="(Unknown)" xaxis="(empty)" yaxis="(empty)"><entry x = '0'  y = '0' /><entry x = '0.2'  y = '0.02' /><entry x = '0.4'  y = '0.08000000000000002' /><entry x = '0.6000000000000001'  y = '0.18' /><entry x = '0.8'  y = '0.3200000000000001' /><entry x = '1'  y = '0.5' /><entry x = '1.2'  y = '0.72' /><entry x = '1.4'  y = '0.9799999999999999' /><entry x = '1.6'  y = '1.28' /><entry x = '1.8'  y = '1.62' /><entry x = '2'  y = '2' /></tabproperty></DDDB>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/geometry.dtd"><DDDB><tabproperty name="TestFunction" type="(Unknown)" xaxis="(empty)" yaxis="(empty)"><entry x = '0'  y = '0' /><entry x = '0.2'  y = '0.02' /><entry x = '0.4'  y = '0.08000000000000002' /><entry x = '0.6000000000000001'  y = '0.18' /><entry x = '0.8'  y = '0.3200000000000001' /><entry x = '1'  y = '0.5' /><entry x = '1.2'  y = '0.72' /><entry x = '1.4'  y = '0.9799999999999999' /><entry x = '1.6'  y = '1.28' /><entry x = '1.8'  y = '1.62' /><entry x = '2'  y = '2' /></tabproperty></DDDB>
 ]
 PopulateDB                  INFO     | using tag ="FORFUN"
 PopulateDB                  INFO     | 2 objects in folder
 PopulateDB                  INFO     | 0 -> 30
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/geometry.dtd"><DDDB><tabproperty name="TestFunction" type="(Unknown)" xaxis="(empty)" yaxis="(empty)"><entry x = '0'  y = '0' /><entry x = '0.2'  y = '0.04000000000000001' /><entry x = '0.4'  y = '0.16' /><entry x = '0.6000000000000001'  y = '0.3600000000000001' /><entry x = '0.8'  y = '0.6400000000000001' /><entry x = '1'  y = '1' /><entry x = '1.2'  y = '1.44' /><entry x = '1.4'  y = '1.96' /><entry x = '1.6'  y = '2.56' /><entry x = '1.8'  y = '3.239999999999999' /><entry x = '2'  y = '3.999999999999999' /></tabproperty></DDDB>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/geometry.dtd"><DDDB><tabproperty name="TestFunction" type="(Unknown)" xaxis="(empty)" yaxis="(empty)"><entry x = '0'  y = '0' /><entry x = '0.2'  y = '0.04000000000000001' /><entry x = '0.4'  y = '0.16' /><entry x = '0.6000000000000001'  y = '0.3600000000000001' /><entry x = '0.8'  y = '0.6400000000000001' /><entry x = '1'  y = '1' /><entry x = '1.2'  y = '1.44' /><entry x = '1.4'  y = '1.96' /><entry x = '1.6'  y = '2.56' /><entry x = '1.8'  y = '3.239999999999999' /><entry x = '2'  y = '3.999999999999999' /></tabproperty></DDDB>
 ]
 PopulateDB                  INFO     | 30 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/geometry.dtd"><DDDB><tabproperty name="TestFunction" type="(Unknown)" xaxis="(empty)" yaxis="(empty)"><entry x = '0'  y = '0' /><entry x = '0.2'  y = '0.02' /><entry x = '0.4'  y = '0.08000000000000002' /><entry x = '0.6000000000000001'  y = '0.18' /><entry x = '0.8'  y = '0.3200000000000001' /><entry x = '1'  y = '0.5' /><entry x = '1.2'  y = '0.72' /><entry x = '1.4'  y = '0.9799999999999999' /><entry x = '1.6'  y = '1.28' /><entry x = '1.8'  y = '1.62' /><entry x = '2'  y = '2' /></tabproperty></DDDB>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/geometry.dtd"><DDDB><tabproperty name="TestFunction" type="(Unknown)" xaxis="(empty)" yaxis="(empty)"><entry x = '0'  y = '0' /><entry x = '0.2'  y = '0.02' /><entry x = '0.4'  y = '0.08000000000000002' /><entry x = '0.6000000000000001'  y = '0.18' /><entry x = '0.8'  y = '0.3200000000000001' /><entry x = '1'  y = '0.5' /><entry x = '1.2'  y = '0.72' /><entry x = '1.4'  y = '0.9799999999999999' /><entry x = '1.6'  y = '1.28' /><entry x = '1.8'  y = '1.62' /><entry x = '2'  y = '2' /></tabproperty></DDDB>
 ]
 PopulateDB                  INFO  S /Conditions/Trigger  
 PopulateDB                  INFO    /Conditions/Trigger/Catalog.xml  
@@ -3285,7 +3258,7 @@ PopulateDB                  INFO     | using tag ="COLD"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
   <catalog name ="Trigger">
@@ -3298,7 +3271,7 @@ PopulateDB                  INFO     | using tag ="HOT"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
   <catalog name ="Trigger">
@@ -3311,7 +3284,7 @@ PopulateDB                  INFO     | using tag ="HEAD"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
   <catalog name ="Trigger">
@@ -3324,7 +3297,7 @@ PopulateDB                  INFO     | using tag ="FORFUN"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
   <catalog name ="Trigger">
@@ -3338,7 +3311,7 @@ PopulateDB                  INFO     | using tag ="COLD"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 
@@ -3380,7 +3353,7 @@ PopulateDB                  INFO     | using tag ="HOT"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 
@@ -3422,7 +3395,7 @@ PopulateDB                  INFO     | using tag ="HEAD"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 
@@ -3464,7 +3437,7 @@ PopulateDB                  INFO     | using tag ="FORFUN"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 
@@ -3507,7 +3480,7 @@ PopulateDB                  INFO     | using tag ="COLD"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 
@@ -3553,7 +3526,7 @@ PopulateDB                  INFO     | using tag ="HOT"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 
@@ -3599,7 +3572,7 @@ PopulateDB                  INFO     | using tag ="HEAD"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 
@@ -3645,7 +3618,7 @@ PopulateDB                  INFO     | using tag ="FORFUN"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 
@@ -3694,7 +3667,7 @@ PopulateDB                  INFO     | using tag ="COLD"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 
@@ -4142,7 +4115,7 @@ PopulateDB                  INFO     | using tag ="HOT"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 
@@ -4590,7 +4563,7 @@ PopulateDB                  INFO     | using tag ="HEAD"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 
@@ -5038,7 +5011,7 @@ PopulateDB                  INFO     | using tag ="FORFUN"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 
@@ -5487,7 +5460,7 @@ PopulateDB                  INFO     | using tag ="COLD"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd" >
 <DDDB>
 
@@ -5514,7 +5487,7 @@ PopulateDB                  INFO     | using tag ="HOT"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd" >
 <DDDB>
 
@@ -5541,7 +5514,7 @@ PopulateDB                  INFO     | using tag ="HEAD"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd" >
 <DDDB>
 
@@ -5568,7 +5541,7 @@ PopulateDB                  INFO     | using tag ="FORFUN"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd" >
 <DDDB>
 
@@ -5596,32 +5569,32 @@ PopulateDB                  INFO     | using tag ="COLD"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="6" name="Module00"><paramVector name="dPosXYZ" type="double">0 0 0</paramVector><paramVector name="dRotXYZ" type="double">0 0 0</paramVector><paramVector name="pivotXYZ" type="double">0 0 0</paramVector></condition></DDDB>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="6" name="Module00"><paramVector name="dPosXYZ" type="double">0 0 0</paramVector><paramVector name="dRotXYZ" type="double">0 0 0</paramVector><paramVector name="pivotXYZ" type="double">0 0 0</paramVector></condition></DDDB>
 ]
 PopulateDB                  INFO     | using tag ="HOT"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="6" name="Module00"><paramVector name="dPosXYZ" type="double">0 0 0</paramVector><paramVector name="dRotXYZ" type="double">0 0 0</paramVector><paramVector name="pivotXYZ" type="double">0 0 0</paramVector></condition></DDDB>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="6" name="Module00"><paramVector name="dPosXYZ" type="double">0 0 0</paramVector><paramVector name="dRotXYZ" type="double">0 0 0</paramVector><paramVector name="pivotXYZ" type="double">0 0 0</paramVector></condition></DDDB>
 ]
 PopulateDB                  INFO     | using tag ="HEAD"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="6" name="Module00"><paramVector name="dPosXYZ" type="double">0 0 0</paramVector><paramVector name="dRotXYZ" type="double">0 0 0</paramVector><paramVector name="pivotXYZ" type="double">0 0 0</paramVector></condition></DDDB>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="6" name="Module00"><paramVector name="dPosXYZ" type="double">0 0 0</paramVector><paramVector name="dRotXYZ" type="double">0 0 0</paramVector><paramVector name="pivotXYZ" type="double">0 0 0</paramVector></condition></DDDB>
 ]
 PopulateDB                  INFO     | using tag ="FORFUN"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="6" name="Module00"><paramVector name="dPosXYZ" type="double">0 0 0</paramVector><paramVector name="dRotXYZ" type="double">0 0 0</paramVector><paramVector name="pivotXYZ" type="double">0 0 0</paramVector></condition></DDDB>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd"><DDDB><condition classID="6" name="Module00"><paramVector name="dPosXYZ" type="double">0 0 0</paramVector><paramVector name="dRotXYZ" type="double">0 0 0</paramVector><paramVector name="pivotXYZ" type="double">0 0 0</paramVector></condition></DDDB>
 ]
 PopulateDB                  INFO    /Conditions/Velo/Alignment/Modules.xml  
 PopulateDB                  INFO     | using tag ="COLD"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 
@@ -5861,7 +5834,7 @@ PopulateDB                  INFO     | using tag ="HOT"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 
@@ -6101,7 +6074,7 @@ PopulateDB                  INFO     | using tag ="HEAD"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 
@@ -6341,7 +6314,7 @@ PopulateDB                  INFO     | using tag ="FORFUN"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 
@@ -6582,7 +6555,7 @@ PopulateDB                  INFO     | using tag ="COLD"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 <catalog name="Velo">
@@ -6726,7 +6699,7 @@ PopulateDB                  INFO     | using tag ="HOT"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 <catalog name="Velo">
@@ -6870,7 +6843,7 @@ PopulateDB                  INFO     | using tag ="HEAD"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 <catalog name="Velo">
@@ -7014,7 +6987,7 @@ PopulateDB                  INFO     | using tag ="FORFUN"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="ISO-8859-1"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
 <DDDB>
 <catalog name="Velo">
@@ -7159,7 +7132,7 @@ PopulateDB                  INFO     | using tag ="COLD"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="UTF-8"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/geometry.dtd">
 <!-- Id: properties.xml,v 1.1 2007/02/02 18:19:27 marcocle Exp $ -->
 <DDDB> 
@@ -7172,7 +7145,7 @@ PopulateDB                  INFO     | using tag ="HOT"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="UTF-8"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/geometry.dtd">
 <!-- Id: properties.xml,v 1.1 2007/02/02 18:19:27 marcocle Exp $ -->
 <DDDB> 
@@ -7185,7 +7158,7 @@ PopulateDB                  INFO     | using tag ="HEAD"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="UTF-8"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/geometry.dtd">
 <!-- Id: properties.xml,v 1.1 2007/02/02 18:19:27 marcocle Exp $ -->
 <DDDB> 
@@ -7198,65 +7171,12 @@ PopulateDB                  INFO     | using tag ="FORFUN"
 PopulateDB                  INFO     | 1 objects in folder
 PopulateDB                  INFO     | 0 -> 9223372036854775807
 PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="UTF-8"?>
+PopulateDB                  INFO       [data (String16M) : <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE DDDB SYSTEM "conddb:/DTD/geometry.dtd">
 <!-- Id: properties.xml,v 1.1 2007/02/02 18:19:27 marcocle Exp $ -->
 <DDDB> 
   <catalog name="Properties">
     <tabpropertyref href="Tests/Properties/TestFunction.xml#TestFunction"/>
-  </catalog>
-</DDDB>
-]
-PopulateDB                  INFO    /Conditions/properties.xml~  
-PopulateDB                  INFO     | using tag ="COLD"
-PopulateDB                  INFO     | 1 objects in folder
-PopulateDB                  INFO     | 0 -> 9223372036854775807
-PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE DDDB SYSTEM "conddb:/Conditions/DTD/geometry.dtd">
-<!-- Id: properties.xml,v 1.1 2005/08/16 09:28:52 marcocle Exp $ -->
-<DDDB> 
-  <catalog name="Properties">
-    <tabpropertyref href="conddb:/Properties/TestFunction#TestFunction"/>
-  </catalog>
-</DDDB>
-]
-PopulateDB                  INFO     | using tag ="HOT"
-PopulateDB                  INFO     | 1 objects in folder
-PopulateDB                  INFO     | 0 -> 9223372036854775807
-PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE DDDB SYSTEM "conddb:/Conditions/DTD/geometry.dtd">
-<!-- Id: properties.xml,v 1.1 2005/08/16 09:28:52 marcocle Exp $ -->
-<DDDB> 
-  <catalog name="Properties">
-    <tabpropertyref href="conddb:/Properties/TestFunction#TestFunction"/>
-  </catalog>
-</DDDB>
-]
-PopulateDB                  INFO     | using tag ="HEAD"
-PopulateDB                  INFO     | 1 objects in folder
-PopulateDB                  INFO     | 0 -> 9223372036854775807
-PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE DDDB SYSTEM "conddb:/Conditions/DTD/geometry.dtd">
-<!-- Id: properties.xml,v 1.1 2005/08/16 09:28:52 marcocle Exp $ -->
-<DDDB> 
-  <catalog name="Properties">
-    <tabpropertyref href="conddb:/Properties/TestFunction#TestFunction"/>
-  </catalog>
-</DDDB>
-]
-PopulateDB                  INFO     | using tag ="FORFUN"
-PopulateDB                  INFO     | 1 objects in folder
-PopulateDB                  INFO     | 0 -> 9223372036854775807
-PopulateDB                  INFO       size = 1
-PopulateDB                  INFO       [data (string) : <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE DDDB SYSTEM "conddb:/Conditions/DTD/geometry.dtd">
-<!-- Id: properties.xml,v 1.1 2005/08/16 09:28:52 marcocle Exp $ -->
-<DDDB> 
-  <catalog name="Properties">
-    <tabpropertyref href="conddb:/Properties/TestFunction#TestFunction"/>
   </catalog>
 </DDDB>
 ]
@@ -7302,9 +7222,5 @@ CondDBAccessSvc.Cache      DEBUG  Level = 0
 CondDBAccessSvc.Cache      DEBUG Cache content dump --------------------- END
 CondDBAccessSvc.Cache      DEBUG Cache deleted. Level was = 0
 ServiceManager             DEBUG Finalizing service AppMgrRunable
-RelationalDatabase     Info Delete the RalDatabase for 'sqlite://none;schema=CONDDB.sqlite;dbname=CONDDB'
-RalSessionMgr     Info Delete the RalSessionMgr for 'sqlite://none;schema=CONDDB.sqlite;dbname=CONDDB'
-CORAL/RelationalPlugins/sqlite  Warning No active transaction to roll back
 ApplicationMgr              INFO Application Manager Finalized successfully
 ApplicationMgr              INFO Application Manager Terminated successfully
- Application     Info Delete the COOL Application
