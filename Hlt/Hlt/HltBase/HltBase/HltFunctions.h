@@ -1,10 +1,11 @@
-// $Id: HltFunctions.h,v 1.3 2006-12-14 11:21:35 hernando Exp $
+// $Id: HltFunctions.h,v 1.4 2007-02-14 17:23:51 cattanem Exp $
 #ifndef HLTBASE_HLTFUNCTIONS_H 
 #define HLTBASE_HLTFUNCTIONS_H 1
 
 // Include files
 
-/** common HLT functions and filters that operates in tracks, and vertices
+/** @file 
+ *  Common HLT functions and filters that operate on tracks and vertices
  *
  *  @author Jose Angel Hernando Morata
  *          based on LoKi ideas by I. Belyaev

@@ -1,12 +1,11 @@
-// $Id: HltSequences.h,v 1.2 2006-10-03 13:24:24 cattanem Exp $
+// $Id: HltSequences.h,v 1.3 2007-02-14 17:23:51 cattanem Exp $
 #ifndef HLTBASE_HLTSEQUENCES_H 
 #define HLTBASE_HLTSEQUENCES_H 1
 
 #include "HltBase/ESequences.h"
 #include "HltBase/EFunctions.h"
 
-/** namespace of sequences
- *  
+/** @file
  *  Common HLT sequences: operation to be perform in containers
  *
  *  @author Jose Angel Hernando Morata
@@ -14,6 +13,7 @@
  *  @date   2006-07-18
  */
 
+/// Namespace of Hlt functions, filters and sequences
 namespace Hlt {
 
   /* map: 

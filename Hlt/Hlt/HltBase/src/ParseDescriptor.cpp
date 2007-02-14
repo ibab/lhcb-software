@@ -2,7 +2,7 @@
 #include <iostream>
 #include <stdlib.h>
 
-/** @class ParseDescriptor ParseDescriptor.h
+/** @file
  *  
  *
  *  @author Jose Angel Hernando Morata

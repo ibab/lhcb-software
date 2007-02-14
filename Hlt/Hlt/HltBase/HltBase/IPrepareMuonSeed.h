@@ -1,4 +1,4 @@
-// $Id: IPrepareMuonSeed.h,v 1.1 2007-02-08 17:32:39 hernando Exp $
+// $Id: IPrepareMuonSeed.h,v 1.2 2007-02-14 17:23:52 cattanem Exp $
 #ifndef TMP_IPREPAREMUONSEED_H 
 #define TMP_IPREPAREMUONSEED_H 1
 
@@ -10,6 +10,10 @@
 #include "GaudiKernel/IAlgTool.h"
 
 //forward declarations
+namespace LHCb {
+  class L0MuonCandidate;
+  class State;
+};
 
 static const InterfaceID IID_IPrepareMuonSeed ( "IPrepareMuonSeed", 1, 0 );
 

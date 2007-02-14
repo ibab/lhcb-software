@@ -1,4 +1,4 @@
-// $Id: IPrepareCaloSeed.h,v 1.1 2007-02-08 17:32:39 hernando Exp $
+// $Id: IPrepareCaloSeed.h,v 1.2 2007-02-14 17:23:51 cattanem Exp $
 #ifndef HLTBASE_IIPREPARECALOSEED_H 
 #define HLTBASE_IIPREPARECALOSEED_H 1
 
@@ -8,14 +8,17 @@
 
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
-#include "Event/Track.h"
-#include "Event/L0CaloCandidate.h"
 
 //forward declarations
+namespace LHCb {
+  class L0CaloCandidate;
+  class State;
+};
+
 
 static const InterfaceID IID_IPrepareCaloSeed ( "IPrepareCaloSeed", 1, 0 );
 
-/** @class IIPrepareCaloSeed IIPrepareCaloSeed.h tmp/IIPrepareCaloSeed.h
+/** @class IPrepareCaloSeed IPrepareCaloSeed.h tmp/IPrepareCaloSeed.h
  *
  *  functionality: 
  *      tool to simplify common task asked to the HltSummary  

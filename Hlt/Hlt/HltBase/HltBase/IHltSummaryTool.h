@@ -1,4 +1,4 @@
-// $Id: IHltSummaryTool.h,v 1.1 2007-02-08 17:32:39 hernando Exp $
+// $Id: IHltSummaryTool.h,v 1.2 2007-02-14 17:23:51 cattanem Exp $
 #ifndef HLTBASE_IHLTSUMMARYTOOL_H 
 #define HLTBASE_IHLTSUMMARYTOOL_H 1
 
@@ -8,10 +8,12 @@
 
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
-#include "Event/HltSummary.h"
-#include "Event/Track.h"
 
 //forward declarations
+namespace LHCb {
+  class HltSummary;
+  class State;
+};
 
 static const InterfaceID IID_IHltSummaryTool ( "IHltSummaryTool", 1, 0 );
 

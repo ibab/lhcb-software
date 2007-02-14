@@ -3,14 +3,17 @@
 
 #include "GaudiKernel/Point3DTypes.h"
 #include "GaudiKernel/Vector3DTypes.h"
-//#include "GaudiKernel/SymmetricMatrixTypes.h"
-//#include "GaudiKernel/GenericMatrixTypes.h"
 
-#include "Event/Track.h"
+//#include "Event/Track.h"
 #include "Event/RecVertex.h"
 
 #include <algorithm>
 #include <functional>
+
+//forward declarations
+namespace LHCb {
+  class Track;
+};
 
 typedef Gaudi::XYZVector EVector;
 typedef Gaudi::XYZPoint EPoint;

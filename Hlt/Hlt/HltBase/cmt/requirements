@@ -3,19 +3,19 @@
 # Maintainer : Jose Angel Hernando Morata 
 #============================================================================
 package           HltBase
-version           v2r1
+version           v2r2
 
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          cmt doc src HltBase
+branches          cmt doc dict src HltBase
 
 # Used packages
 #============================================================================
 
 use GaudiAlg            v*
 use HltEvent            v*    Event
-use TrackEvent		v*    Event
-use RecEvent		v*    Event
+use TrackEvent          v*    Event
+use RecEvent            v*    Event
 
 use DetDesc             v*    Det
 
@@ -34,3 +34,15 @@ library          HltBase    ../src/*.cpp
 # define linker library link options
 #============================================================================
 apply_pattern    linker_library library=HltBase
+
+#============================================================================
+# make LCG dictionary for the interfaces
+#============================================================================
+apply_pattern    reflex_dictionary                                 \
+                 dictionary=HltBase                                \
+                 headerfiles=$(HLTBASEROOT)/dict/HltBaseDict.h     \
+                 selectionfile=$(HLTBASEROOT)/dict/HltBaseDict.xml \
+                 options="-U__MINGW32__"
+
+# Hack for cmt v1r19 bug to link dictionary on windows
+macro HltBaseDict_use_linkopts $(use_linkopts)

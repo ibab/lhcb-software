@@ -1,10 +1,11 @@
-// $Id: IHltDataStore.h,v 1.2 2007-02-05 08:40:16 hernando Exp $
+// $Id: IHltDataStore.h,v 1.3 2007-02-14 17:23:51 cattanem Exp $
 #ifndef HLTBASE_IHLTDATASTORE_H 
 #define HLTBASE_IHLTDATASTORE_H 1
 
 // Include files
 // from STL
 #include <string>
+#include <map>
 
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"

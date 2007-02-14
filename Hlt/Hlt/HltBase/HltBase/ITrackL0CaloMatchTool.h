@@ -1,4 +1,4 @@
-// $Id: ITrackL0CaloMatchTool.h,v 1.1 2007-02-08 17:32:39 hernando Exp $
+// $Id: ITrackL0CaloMatchTool.h,v 1.2 2007-02-14 17:23:52 cattanem Exp $
 #ifndef HLTBASE_ITRACKL0CALOMATCHTOOL_H 
 #define HLTBASE_ITRACKL0CALOMATCHTOOL_H 1
 
@@ -9,8 +9,11 @@
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
 
-#include "Event/Track.h"
-#include "Event/L0CaloCandidate.h"
+//forward declarations
+namespace LHCb {
+  class L0CaloCandidate;
+  class State;
+};
 
 static const InterfaceID IID_ITrackL0CaloMatchTool ( "ITrackL0CaloMatchTool", 1, 0 );
 

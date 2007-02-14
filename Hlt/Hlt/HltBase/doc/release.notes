@@ -4,6 +4,12 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!========================= Hlt/HltBase v2r2 2007-02-14 =====================
+! 2007-02-14 - Marco Cattaneo
+ - Add dictionary generation for all Interfaces. Replaces HltPython package
+ - Use forward declarations to minimise external dependencies of interfaces
+ - Fix some doxygen warnings
+
 !========================= Hlt/HltBase v2r1 2007-02-12 =====================
 ! 2007-02-12 - Jose Angel Hernando Morata
  - src/HltAlgorithm.cpp:

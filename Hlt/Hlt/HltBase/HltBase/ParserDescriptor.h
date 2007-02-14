@@ -1,14 +1,12 @@
-// $Id: ParserDescriptor.h,v 1.2 2007-02-05 08:40:16 hernando Exp $
-#ifndef HLTBASE_PARSEDESCRIPTOR_H 
-#define HLTBASE_PARSEDESCRIPTOR_H 1
+// $Id: ParserDescriptor.h,v 1.3 2007-02-14 17:23:52 cattanem Exp $
+#ifndef HLTBASE_PARSERDESCRIPTOR_H 
+#define HLTBASE_PARSERDESCRIPTOR_H 1
 
 // Include files
-// from DaVinci, this is a specialized GaudiAlgorithm
 #include <string>
 #include <vector>
 
-/** @class ProperyHistos ProperyHistos.h HltBase/ProperyHistos.h
- *  
+/** @class ParserDescriptor ParserDescriptor.h
  *  Helper class to book histogram from a string
  *
  *  @author Jose Angel Hernando Morata
@@ -25,4 +23,4 @@ namespace ParserDescriptor
   
 
 };
-#endif // HLTBASE_PARSEDESCRIPTOR_H
+#endif // HLTBASE_PARSERDESCRIPTOR_H

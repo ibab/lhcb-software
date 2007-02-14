@@ -1,4 +1,4 @@
-// $Id: ERelations.h,v 1.1 2006-10-24 09:31:19 hernando Exp $
+// $Id: ERelations.h,v 1.2 2007-02-14 17:23:51 cattanem Exp $
 #ifndef HLTBASE_RELATIONS_H 
 #define HLTBASE_RELATIONS_H 1
 
@@ -9,19 +9,15 @@
 #include <vector>
 #include <map>
 
-// Include files
-
-/** Template base class to define relationw between objects
- *  between them
- *  
- *  @author Jose Angel Hernando Morata
- *  @date   2006-10-04
- */
 
 namespace Estd
 {
 
-  //--- Base classes
+  /** Template base class to define relations between objects
+   *  
+   *  @author Jose Angel Hernando Morata
+   *  @date   2006-10-04
+   */
   
   template <class T1, class T2>
   class relation 

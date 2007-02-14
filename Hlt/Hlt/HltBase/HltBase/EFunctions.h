@@ -1,4 +1,4 @@
-// $Id: EFunctions.h,v 1.4 2006-10-24 09:31:19 hernando Exp $
+// $Id: EFunctions.h,v 1.5 2007-02-14 17:23:51 cattanem Exp $
 #ifndef HLTBASE_OPER_H 
 #define HLTBASE_OPER_H 1
 
@@ -7,10 +7,7 @@
 #include <ostream>
 #include <cmath>
 
-// Include files
-
-/** Template base class to define functions and filters and operations
- *  between them
+/** Namespace for Hlt template base classes
  *  
  *  @author Jose Angel Hernando Morata
  *          based on LoKi ideas by I. Belyaev
@@ -20,7 +17,13 @@
 namespace Estd
 {
 
-  //--- Base classes
+  /** Template base class to define functions and filters and operations
+   *  between them
+   *  
+   *  @author Jose Angel Hernando Morata
+   *          based on LoKi ideas by I. Belyaev
+   *  @date   2006-07-18
+   */
   
   template <class T>
   class function : public std::unary_function<const T,double> 

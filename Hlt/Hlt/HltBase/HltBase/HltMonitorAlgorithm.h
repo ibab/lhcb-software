@@ -1,4 +1,4 @@
-// $Id: HltMonitorAlgorithm.h,v 1.3 2007-02-08 17:32:39 hernando Exp $
+// $Id: HltMonitorAlgorithm.h,v 1.4 2007-02-14 17:23:51 cattanem Exp $
 #ifndef HLTBASE_HLTMONITORALGORITHM_H 
 #define HLTBASE_HLTMONITORALGORITHM_H 1
 
@@ -6,10 +6,15 @@
 #include "Event/HltSummary.h"
 #include "Event/HltSummaryFunctor.h"
 #include "Event/HltNames.h"
-#include "Event/Track.h"
 
 #include "HltBase/HltBaseAlg.h"
 #include "HltBase/HltContainers.h"
+
+//forward declarations
+namespace LHCb {
+  class Track;
+};
+
 
 /** @class HltMonitorAlgorithm 
  *  
