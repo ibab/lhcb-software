@@ -2,7 +2,7 @@
      <import name="Kernel/&channelIDName;"/>
      <import name="Kernel/FastClusterContainer"/>
      <import name="Kernel/SiDataFunctor"/>
-     <import name="Kernel/LHCbMath"/>
+     <import name="LHCbMath/LHCbMath"/>
 
      <typedef desc = "channelID type"
        type =  "LHCb::&channelIDName;"

@@ -4,6 +4,10 @@
 ! Purpose     : Event model classes related to Digitization
 !-----------------------------------------------------------------------------
 
+!========================== DigiEvent v2r1 2007-02-14 ========================
+! 2007-02-14 - Marco Cattaneo
+ - Remove LHCbDefinitions include, add LHCbMath dependency
+
 !========================== DigiEvent v2r0p1 2007-02-02 ======================
 ! 2007-02-02 - Marco Cattaneo
  - Remove unneccessary rootmap for dictionary
