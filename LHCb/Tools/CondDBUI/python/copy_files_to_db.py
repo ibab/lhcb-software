@@ -1,70 +1,18 @@
 #!/usr/bin/env python
 import sys
 
-_tmp_argv = sys.argv
-sys.argv = sys.argv[0:1]
-from PyCool import cool, coral
-sys.argv = _tmp_argv
-
 import conddbui
+from PyCool import cool
 
 from optparse import OptionParser
-import os
-import re
-
-sysIdRE = re.compile('SYSTEM[^>"\']*("[^">]*"|'+"'[^'>]*')")
-def fix_system_ids(xml_data,path):
-    data = xml_data
-    m = sysIdRE.search(data)
-    while m != None:
-        pos = m.start()
-        s = m.start(1)+1
-        e = m.end(1)-1
-        p = os.path.join(path,data[s:e])
-        p = os.path.normpath(p)
-        data = data[0:s] + p + data[e:] 
-        m = sysIdRE.search(data,pos+1)
-    return data
-
-envVarRE = re.compile('\$([A-Za-z][A-Za-z0-9_]*)')
-#cvs_vars = [ 'Id', 'Name', 'Log' ]
-def fix_env_vars(xml_data):
-    data = xml_data
-    m = envVarRE.search(data)
-    while m != None:
-        pos = m.start()
-        s = m.start(1)
-        e = m.end(1)
-        name = m.group(1)
-        
-        if os.environ.has_key(name):
-            val = os.environ[name]
-        else:
-            val = name
-            
-        data = data[0:pos] + val + data[e:]
-        m = envVarRE.search(data,pos+1)
-    return data
-
-import codecs
-encodingRE = re.compile('encoding="([^"]*)"')
-def fix_encoding(xml_data):
-    data = xml_data
-    m = encodingRE.search(data)
-    if m:
-        name = m.group(1).lower().replace('utf-','utf_')
-        if name != 'iso-8859-1':
-            dec = codecs.getdecoder(name)
-            enc = codecs.getencoder('iso-8859-1')
-            data = enc(dec(data)[0])[0].replace(m.group(1),'ISO-8859-1')
-    return data
+import os, re
 
 #### connectStrings: ####
 # "oracle://intr1-v.cern.ch/INTR;schema=lhcb_cool;user=lhcb_cool;dbname=DDDB"
-# "sqlite://none;schema=XmlDDDB_v26r2.sqlite;user=none;password=none;dbname=DDDB"
+# "sqlite://none;schema=XmlDDDB_v26r2.db;user=none;password=none;dbname=DDDB"
 # "mysql://pclhcb55.cern.ch;schema=MARCOCLE;user=marcocle;dbname=DDDB"
 # "oracle://oradev10.cern.ch:10520/D10;schema=lhcb_lcg_cool_dev;user=lhcb_lcg_cool_dev;dbname=DDDB"
-
+# "sqlite_file:XmlDDDB_v26r2.db/DDDB"
 ################################################################################
 def main():
     parser = OptionParser()
@@ -99,76 +47,62 @@ def main():
     if options.drop:
         conddbui.CondDB.dropDatabase(options.connectString)
     db = conddbui.CondDB(options.connectString, create_new_db = True, readOnly=False)
-    
-    excludes = [ 'clhep2dtd.pl' ]
-    
-    # count files (just to know)
-    sum = 0
-    for root, dirs, files in os.walk(options.source):
-        if 'CVS' in root: # skip CVS directories
-            continue
-        for x in excludes:
-            if x in files:
-                files.remove(x)
-        sum += len(files)
 
-    num_len = len(str(sum))
-    # populate the database
-    n = 0
-    for root, dirs, files in os.walk(options.source):
-        # remove base path
-        dbroot = root.replace(options.source,options.dest)
-        dbroot = dbroot.replace('//','/')
-        
-        if 'CVS' in root: # skip CVS directories
-            continue
-    
-        if dbroot != "/": # it means it is not "/"
-            if not db.db.existsFolderSet(dbroot):
-                db.createNode(path = dbroot, storageType = 'NODE')
-        #else:
-        #    dbroot = "/"
-        
-        print dbroot
-        for x in excludes:
-            if x in files:
-                files.remove(x)
-        folderDict = {}
-        while files:
-            f = files.pop()
-            if '@' in f:
-                key, folder_name = f.split('@')
-                if options.noextension:
-                    folder_name = os.path.splitext(folder_name)[0]
-            else:
-                key = 'data'
-                if options.noextension:
-                    folder_name = os.path.splitext(f)[0]
-                else:
-                    folder_name = f
-            if folderDict.has_key(folder_name):
-                folderDict[folder_name][key] = os.path.join(root, f)
-            else:
-                folderDict[folder_name] = {key: os.path.join(root,f)}
+    # prepare the list of nodes to insert 
+    nodes = conddbui._collect_tree_info(options.source, excludes = [])
 
-        for folder_name in folderDict.keys():
-            n+=1
-            print ("%" + str(num_len) + "d %" + str(num_len) + "d  %s")%(n,sum-n,folder_name)
-            folder_keys = folderDict[folder_name].keys()
-            folder_path = os.path.join(dbroot,folder_name)
+    count_folders = 0
+    for folderset in nodes:
+        count_folders += len(nodes[folderset])
+    count_folders_len = str(len(str(count_folders)))
+
+    file_count = 0
+    folder_count = 0
+    foldersets = nodes.keys()
+    foldersets.sort()
+    for folderset in foldersets:
+        
+        folders = nodes[folderset].keys()
+        folders.sort()
+
+        for folder in folders:
+            keys = nodes[folderset][folder].keys()
+            keys.sort()
+            
+            folder_path = re.sub('/+','/','/'.join([options.dest,folderset,folder]))
+            if options.noextension:
+                folder_path = os.path.splitext(folder_path)[0]
+
             if not db.db.existsFolder(folder_path):
-                db.createNode(path = folder_path, storageKeys = folder_keys)
+                db.createNode(path = folder_path, storageKeys = keys)
+                
+            collection = {}
+            for key in keys:
+                for channel in nodes[folderset][folder][key].keys():
+                    
+                    if channel not in collection:
+                        collection[channel] = {}
+                        for k in keys:
+                            collection[channel][k] = ""
+            
+                    collection[channel][key] = conddbui._fix_xml(open(nodes[folderset][folder][key][channel],"rb").read(),
+                                                                 "conddb:"+folderset)
+                    
+            xmllist = []
+            for channel in collection:
+                xmllist.append({ 'payload': collection[channel],
+                                 'since': cool.ValidityKeyMin,
+                                 'until': cool.ValidityKeyMax,
+                                 'channel': channel })
+                
+            folder_count += 1
+            file_count += len(keys)
+            print ("%" + count_folders_len + "d %" + count_folders_len + "d  %s (%d files)")%\
+                  (folder_count,count_folders-folder_count,folder_path,len(keys))
+            db.storeXMLStringList(folder_path, xmllist)
 
-            payload = {}
-            for k in folder_keys:
-                xml_data = open(folderDict[folder_name][k],"rb").read()
-                xml_data = fix_encoding(xml_data)
-                xml_data = fix_system_ids(xml_data,"conddb:"+dbroot)
-                xml_data = fix_env_vars(xml_data)
-                payload[k] = xml_data
-            db.storeXMLString(folder_path, payload, cool.ValidityKeyMin, cool.ValidityKeyMax, 0)
-
-    print "Total files inserted = %d"%sum
+    print "Total folders inserted = %d"%folder_count
+    print "Total files inserted = %d"%file_count
 
 if __name__ == '__main__':
     main()

@@ -226,7 +226,7 @@ class guiChannel(guiTreeElement):
                 raise Exception, details
             
         self.condDBCache[tag] = []
-        objList = self.listView().bridge.getAttributeListList(self.parent().fullName, fromTime, toTime, self.ID, tag)
+        objList = self.listView().bridge.getPayloadList(self.parent().fullName, fromTime, toTime, self.ID, tag)
         for obj in objList:
             payload = obj[0]
             since   = obj[1]
@@ -237,13 +237,14 @@ class guiChannel(guiTreeElement):
             self.condDBCache[tag].append({'since':     since,
                                           'until':     until,
                                           'payload':   payload,
-                                          'insertion': insert.format(True, "%Y.%m.%d; %H:%M:%S")})
+                                          'insertion': "%d.%02d.%02d; %02d:%02d:%02d"%(insert.year(),insert.month(),insert.day(),
+                                                                                       insert.hour(),insert.minute(),insert.second())})
 
     def getCondDBCache(self, tagName):
-        '''
+        """
         Retrieve the contents of the channel's CondDBCache for the given tag name. If the
         tag is an ancestor, the real tag name is automatically resolved.
-        '''
+        """
         # special case of the 'HEAD' or empty tag.
         if tagName == '' or tagName == 'HEAD':
             tag = 'HEAD'

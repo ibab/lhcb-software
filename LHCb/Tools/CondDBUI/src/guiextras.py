@@ -1,6 +1,7 @@
 import os, re
 import qt, qttable
 import conddbui, guitree
+import tempfile
 
 #=============================================#
 #               DBLOOKUP READER               #
@@ -118,14 +119,14 @@ class movePad(qt.QVBox):
         self.setSpacing(5)
         self.labels     = labels
         
+        self.boxTop     = qt.QHBox(self, 'boxTop')
+        self.buttonLeft  = qt.QPushButton(self.labels[3], self.boxTop, 'buttonAdd')
+        self.buttonRight = qt.QPushButton(self.labels[2], self.boxTop, 'buttonDel')
+        
         self.buttonUp   = qt.QPushButton(self.labels[0], self, 'buttonUp')
-        self.boxCentral = qt.QHBox(self, 'boxCentral')
         self.buttonDown = qt.QPushButton(self.labels[1], self, 'buttonDown')
 
-        self.buttonLeft  = qt.QPushButton(self.labels[2], self.boxCentral, 'buttonDel')
-        self.buttonRight = qt.QPushButton(self.labels[3], self.boxCentral, 'buttonAdd')
-
-        self.boxCentral.setSpacing(5)
+        self.boxTop.setSpacing(5)
         self.buttonLeft.setSizePolicy(qt.QSizePolicy.Expanding, qt.QSizePolicy.Fixed)
         self.buttonRight.setSizePolicy(qt.QSizePolicy.Expanding, qt.QSizePolicy.Fixed)
         
@@ -610,16 +611,20 @@ class CondDBTree(qt.QVBox):
 
 class ConditionEditor(qt.QVBox):
 
-    def __init__(self, parent, name = 'ConditionEditor', f = 0):
+    def __init__(self, parent, name = 'ConditionEditor', f = 0, extension = '', externalEditorCmd = ''):
         qt.QVBox.__init__(self, parent, name, f)
 
         #--- buttons ---#
-        self.layoutButton = qt.QHBox(self, 'layoutButton')
-        self.buttonLoad = qt.QPushButton('Load', self.layoutButton)
-        self.buttonExport = qt.QPushButton('Export', self.layoutButton)
-        self.buttonCondition = qt.QPushButton('<condition>', self.layoutButton)
-        self.buttonParam = qt.QPushButton('<param>', self.layoutButton)
-        self.buttonParamVector = qt.QPushButton('<paramvector>', self.layoutButton)
+        self.layoutButton = qt.QVBox(self, 'layoutButton')
+        self.layoutButton1 = qt.QHBox(self.layoutButton, 'layoutButton1')
+        self.buttonLoad = qt.QPushButton('Load', self.layoutButton1)
+        self.buttonExport = qt.QPushButton('Export', self.layoutButton1)
+        self.buttonExtEdit = qt.QPushButton('Edit with emacs', self.layoutButton1)
+        self.layoutButton2 = qt.QHBox(self.layoutButton, 'layoutButton2')
+        self.buttonCondition = qt.QPushButton('<condition>', self.layoutButton2)
+        self.buttonAlignmentCondition = qt.QPushButton('<align.condition>', self.layoutButton2)
+        self.buttonParam = qt.QPushButton('<param>', self.layoutButton2)
+        self.buttonParamVector = qt.QPushButton('<paramvector>', self.layoutButton2)
         #---------------#
 
         #--- editor ---#
@@ -629,10 +634,17 @@ class ConditionEditor(qt.QVBox):
         #--- Signal connections ---#
         self.connect(self.buttonLoad, qt.SIGNAL("clicked()"), self.loadFromFile)
         self.connect(self.buttonExport, qt.SIGNAL("clicked()"), self.exportToFile)
+        self.connect(self.buttonExtEdit, qt.SIGNAL("clicked()"), self.editExternally)
         self.connect(self.buttonCondition, qt.SIGNAL("clicked()"), self.addCondition)
+        self.connect(self.buttonAlignmentCondition, qt.SIGNAL("clicked()"), self.addAlignmentCondition)
         self.connect(self.buttonParam, qt.SIGNAL("clicked()"), self.addParam)
         self.connect(self.buttonParamVector, qt.SIGNAL("clicked()"), self.addParamVector)
         #--------------------------#
+
+        #--- External editor ---#
+        self.externalEditorCmd = externalEditorCmd
+        self.fileExtension = extension
+        #-----------------------#
 
     def loadFromFile(self):
         '''
@@ -672,42 +684,49 @@ class ConditionEditor(qt.QVBox):
                 xmlFile.write(str(self.xmlEditor.text()))
                 xmlFile.close()
 
-    def addCondition(self):
+    def editExternally(self):
+        '''
+        Export the condition to a temporary file, end edit with emacs.
+        '''
+        fd,name = tempfile.mkstemp(suffix=self.fileExtension)
+        os.fdopen(fd,"w").write(str(self.xmlEditor.text()))
+        try:
+            if os.system("%s %s"%(self.externalEditorCmd,name)) == 0 :
+                xmlText = open(name).read()
+                self.xmlEditor.clear()
+                self.xmlEditor.setText(xmlText)
+        finally:
+            os.remove(name)
+
+    def addCondition(self, class_id=5, name="##_CONDITION_NAME_HERE_##"):
         '''
         Add a condition tag to the xml editor, at cursor position
         '''
-        conditionTag = '<condition classID="6" name=" ##_CONDITION_NAME_HERE_## ">\n\n</condition>'
+        conditionTag = '<condition classID="%d" name="%s">\n\n</condition>'%(class_id,name)
         self.xmlEditor.insert(conditionTag)
 
-    def addParam(self):
+    def addAlignmentCondition(self, name="##_CONDITION_NAME_HERE_##"):
+        '''
+        Add a condition tag to the xml editor, at cursor position
+        '''
+        conditionTag = '<condition classID="6" name="%s">\n'%(name) + \
+                       '<paramVector name="dPosXYZ" type="double">0 0 0</paramVector>\n' + \
+                       '<paramVector name="dRotXYZ" type="double">0 0 0</paramVector>\n' + \
+                       '<paramVector name="pivotXYZ" type="double">0 0 0</paramVector>\n' + \
+                       '</condition>'
+        self.xmlEditor.insert(conditionTag)
+
+    def addParam(self,name="##_PARAM_NAME_HERE_##",type_id='##_INT_DOUBLE_STRING_##',value=''):
         '''
         Add a param tag to the xml editor, at cursor position
         '''
-        paramTag = '<param name=" ##_PARAM_NAME_HERE_## " type=" ##_INT_DOUBLE_STRING_## "> </param>'
+        paramTag = '<param name="%s" type="%s">%s</param>'%(name,type_id,value)
         self.xmlEditor.insert(paramTag)
 
-    def addParamVector(self):
+    def addParamVector(self,name="##_PARAMVECTOR_NAME_HERE_##",type_id='##_INT_DOUBLE_STRING_##',value=''):
         '''
         Add a paramVector tag to the xml editor, at cursor position
         '''
-        paramVectorTag = '<paramVector name=" ##_PARAMVECTOR_NAME_HERE_## " type=" ##_INT_DOUBLE_STRING_## "> </paramVector>'
+        paramVectorTag = '<param name="%s" type="%s">%s</param>'%(name,type_id,value)
         self.xmlEditor.insert(paramVectorTag)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

@@ -5,8 +5,15 @@ import os, shelve
 #############################
 #     General Variables     #
 #############################
-versionNumber = 'v1r0'
-versionDate   = '2006.09.29'
+versionNumber = '$Name: not supported by cvs2svn $'.split()[1]
+if versionNumber == "$":
+    versionNumber = 'HEAD'
+
+versionId  = '$Id: guiwin.py,v 1.23 2007-02-14 16:33:50 marcocle Exp $'.split()
+if len(versionId) < 4:
+    versionDate = 'unknown'
+else:
+    versionDate = versionId[3]
 
 ####################################################
 #                   Main Window                    #
@@ -29,6 +36,10 @@ class myWindow(qt.QMainWindow):
         else:
             self.connectionString = ''
 
+        #---- Configurations ----#
+        self.externalEditorCmd = "emacs"
+        #------------------------#
+        
         #---- Status Bar ----#
         self.statusBar = qt.QStatusBar(self, 'statusBar')
         #--------------------#
@@ -37,7 +48,8 @@ class myWindow(qt.QMainWindow):
         self.dialogCreateNewDB  = guidialogs.createCondDBDialog(self,'dialogCreateNewDB')
         self.dialogSliceDB      = guidialogs.slicingDialog(self,'dialogSliceDB')
         self.dialogConnectDB    = guidialogs.condDBConnectDialog(self,'dialogConnectDB')
-        self.dialogAddCondition = guidialogs.addConditionDialog(self, 'dialogAddCondition')
+        self.dialogAddCondition = guidialogs.addConditionDialog(self, 'dialogAddCondition',
+                                                                externalEditorCmd = self.externalEditorCmd)
         self.dialogCreateNode   = guidialogs.createNodeDialog(self, 'dialogCreateNode')
         self.dialogCreateTag    = guidialogs.createTagDialog(self, 'dialogCreateTag')
         self.dialogDeleteNode   = guidialogs.deleteNodeDialog(self, 'dialogDeleteFolder')
@@ -75,7 +87,6 @@ class myWindow(qt.QMainWindow):
             for i in range(5):
                 s[str(i)] = ''
             s.close()
-
         #----------------------#
 
         #---- Menu ----#
@@ -201,8 +212,8 @@ class myWindow(qt.QMainWindow):
                 self.connectionString = self.dialogCreateNewDB.connectionString
                 bridge = conddbui.CondDB(self.connectionString, True)
                 self.setBridge(bridge)
-                self.editLocation.setEnabled(True)
-                self.buttonGo.setEnabled(True)
+                #self.editLocation.setEnabled(True)
+                #self.buttonGo.setEnabled(True)
         except Exception, details:
             self.catchException('guiwin.createNewDB', str(Exception), str(details))
 
@@ -238,7 +249,7 @@ class myWindow(qt.QMainWindow):
         it. If the link to the CondDB is properly established, then the main window
         can be used. If a connection problem occures, an error message is displayed.
         It is also possible to create a new (empty) condition database using this dialog.
-        It is limited to the SQLite backend and can't override an existing DB.
+        It is limited to the SQLite backend and cannot override an existing DB.
         '''
         self.setCursor(qt.QCursor(qt.Qt.WaitCursor))
         try:
@@ -270,6 +281,8 @@ class myWindow(qt.QMainWindow):
                 if self.dialogSliceDB.exec_loop():
                     schema = str(self.dialogSliceDB.editSchema.text())
                     dbName = str(self.dialogSliceDB.editDBName.text())
+                    # This will work with COOL > 2.0 (bug #23597)
+                    #connectString = 'sqlite_file:%s/%s'%(schema, dbName)
                     connectString = 'sqlite://;schema=%s;dbname=%s'%(schema, dbName)
                     objList = self.dialogSliceDB.objectList
                     selectionList = []
@@ -277,6 +290,8 @@ class myWindow(qt.QMainWindow):
                         s = conddbui.PyCoolCopy.Selection(o['path'], o['since'], o['until'], tags = o['tag'])
                         selectionList.append(s)
                     copyTool = conddbui.PyCoolCopy.PyCoolCopy(self.bridge.db)
+                    # reduce the verbosity of PyCoolCopy
+                    conddbui.PyCoolCopy.log.setLevel( conddbui.PyCoolCopy.logging.WARNING )
                     if self.dialogSliceDB.do_copy:
                         copyTool.copy(connectString, selectionList)
                     else:
@@ -385,14 +400,14 @@ class myWindow(qt.QMainWindow):
                 keyList = self.bridge.getFolderStorageKeys(item.fullName)
                 for k in keyList:
                     xmlDict[k] = xmlHeader
-                self.dialogAddCondition.reset(item.fullName, xmlDict)
+                self.dialogAddCondition.reset(item.fullName, xmlDict, externalEditorCmd=self.externalEditorCmd)
             elif isinstance(item, guitree.guiChannel):
                 row = self.dbTable.tableDB.currentRow()
                 tagName = str(self.dbTable.choseTagName.currentText())
                 keyList = self.bridge.getFolderStorageKeys(item.parent().fullName)
                 for k in keyList:
                     xmlDict[k] = item.getCondDBCache(tagName)[row]['payload'][k]
-                self.dialogAddCondition.reset(item.parent().fullName, xmlDict, item.ID)
+                self.dialogAddCondition.reset(item.parent().fullName, xmlDict, item.ID, externalEditorCmd=self.externalEditorCmd)
             else:
                 errorMsg = qt.QMessageBox('conddbui.py',
                                           "No COOL folder selected\nInsertion in the CondDB can only be done in existing COOL folder",
@@ -498,7 +513,9 @@ class myWindow(qt.QMainWindow):
 
         The Graphical Library is PyQt, based on Qt 3.3
 
-        Nicolas Gilardi, %s'''%(versionNumber, versionDate)
+        Marco Clemencic, Nicolas Gilardi
+        (last change: %s)
+        '''%(versionNumber, versionDate)
         aboutMsg = qt.QMessageBox('browser.py', message, qt.QMessageBox.Information,
                                   qt.QMessageBox.Ok, qt.QMessageBox.NoButton, qt.QMessageBox.NoButton)
         aboutMsg.exec_loop()

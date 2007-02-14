@@ -89,8 +89,6 @@ class slicingDialog(qt.QDialog):
         # Stack table
         self.groupStack = qt.QHGroupBox('Selection Objects List', self.layoutStack, 'groupStack')
 
-        self.movePad = guiextras.movePad(self.groupStack, 'movePad', ['Move Up', 'Move Down', 'Del', 'Add'])
-
         self.tableSelectObjects = qttable.QTable(0, 0, self.groupStack, 'tableCondObjects')
         self.columnLabels = [('path', 'Path'), ('tag', 'Tag Name'), ('since', 'Since'), ('until', 'Until')]
         for col in self.columnLabels:
@@ -99,6 +97,8 @@ class slicingDialog(qt.QDialog):
             self.tableSelectObjects.horizontalHeader().setLabel(i, col[1])
             self.tableSelectObjects.adjustColumn(i)
         self.tableSelectObjects.setReadOnly(True)
+        
+        self.movePad = guiextras.movePad(self.groupStack, 'movePad', ['Move Up', 'Move Down', 'Del', 'Add'])
         #-------------------------------#
 
         #--- Exit buttons ---#
@@ -116,8 +116,8 @@ class slicingDialog(qt.QDialog):
         self.connect(self.buttonAppend,        qt.SIGNAL("clicked()"), self.acceptAppend)
         self.connect(self.choseNode,           qt.SIGNAL("textChanged(const QString &)"), self.loadTags)
         self.connect(self.buttonSchema,        qt.SIGNAL("clicked()"), self.schemaSelect)
-        self.connect(self.movePad.buttonRight, qt.SIGNAL("clicked()"), self.addObject)
-        self.connect(self.movePad.buttonLeft,  qt.SIGNAL("clicked()"), self.removeObject)
+        self.connect(self.movePad.buttonLeft,  qt.SIGNAL("clicked()"), self.addObject)
+        self.connect(self.movePad.buttonRight, qt.SIGNAL("clicked()"), self.removeObject)
         self.connect(self.movePad.buttonUp,    qt.SIGNAL("clicked()"), self.moveObjectUp)
         self.connect(self.movePad.buttonDown,  qt.SIGNAL("clicked()"), self.moveObjectDown)
         #--------------------------#
@@ -427,7 +427,8 @@ class deleteTagDialog(qt.QDialog):
         if nodeName <> '':
             tagList = bridge.getTagList(nodeName)
             for tag in tagList:
-                self.choseTag.insertItem(tag.name)
+                if tag.name != 'HEAD':
+                    self.choseTag.insertItem(tag.name)
 
     def accept(self):
         return qt.QDialog.accept(self)
@@ -631,7 +632,7 @@ class addConditionDialog(qt.QDialog):
     package) and modified. Be aware however that no xml validity checking
     is performed !
     '''
-    def __init__(self, parent, name = 'addConditionDialog'):
+    def __init__(self, parent, name = 'addConditionDialog', externalEditorCmd = ''):
         '''
         initialisation of the dialog window.
         '''
@@ -645,8 +646,8 @@ class addConditionDialog(qt.QDialog):
         self.activeObject = None
         self.activePayload = {}
 
-        self.xmlEditor = conditionEditorDialog(self)
-
+        self.xmlEditor = conditionEditorDialog(self, extension = '', externalEditorCmd = externalEditorCmd)
+        
         #--- Main Layout ---#
         self.layoutDialog = qt.QVBoxLayout(self, 5, -1, 'layoutDialog')
         #-------------------#
@@ -699,8 +700,6 @@ class addConditionDialog(qt.QDialog):
         # Stack table
         self.groupStack = qt.QHGroupBox('Condition Objects Stack', self.layoutStack, 'groupStack')
 
-        self.movePad = guiextras.movePad(self.groupStack, 'movePad', ['Move Up', 'Move Down', 'Del', 'Add'])
-
         self.tableCondObjects = qttable.QTable(0, 0, self.groupStack, 'tableCondObjects')
         self.columnLabels = [('path', 'Path'), ('channel', 'ChannelID'), ('since', 'Since'), ('until', 'Until')]
         for col in self.columnLabels:
@@ -709,6 +708,8 @@ class addConditionDialog(qt.QDialog):
             self.tableCondObjects.horizontalHeader().setLabel(i, col[1])
             self.tableCondObjects.adjustColumn(i)
         self.tableCondObjects.setReadOnly(True)
+        
+        self.movePad = guiextras.movePad(self.groupStack, 'movePad', ['Move Up', 'Move Down', 'Del', 'Add'])
         #-------------------------------#
 
         #--- Exit buttons ---#
@@ -729,12 +730,11 @@ class addConditionDialog(qt.QDialog):
         self.connect(self.tableCondObjects, qt.SIGNAL("currentChanged(int, int)"), self.reloadObject)
         self.connect(self.tableCondObjects, qt.SIGNAL("selectionChanged()"),       self.reloadObject)
 
-        self.connect(self.movePad.buttonRight, qt.SIGNAL("clicked()"), self.addObject)
-        self.connect(self.movePad.buttonLeft,  qt.SIGNAL("clicked()"), self.removeObject)
+        self.connect(self.movePad.buttonLeft,  qt.SIGNAL("clicked()"), self.addObject)
+        self.connect(self.movePad.buttonRight, qt.SIGNAL("clicked()"), self.removeObject)
         self.connect(self.movePad.buttonUp,    qt.SIGNAL("clicked()"), self.moveObjectUp)
         self.connect(self.movePad.buttonDown,  qt.SIGNAL("clicked()"), self.moveObjectDown)
         #--------------------------#
-
 
     def _fillTable(self):
         '''
@@ -765,8 +765,10 @@ class addConditionDialog(qt.QDialog):
         for k in keyList:
             self.selectPayload.insertItem(k)
         # select the first item
-        if self.selectPayload.count() > 0:
-            self.selectPayload.setCurrentItem(self.selectPayload.count() - 1)
+        # if self.selectPayload.count() > 0:
+        #     self.selectPayload.setCurrentItem(self.selectPayload.count() - 1)
+        for i in range( self.selectPayload.count() ):
+            self.selectPayload.setSelected(i,True)
 
 
     def editPayloadKeys(self):
@@ -788,10 +790,12 @@ class addConditionDialog(qt.QDialog):
                     self.activePayload[k] = payload[k]
 
 
-    def reset(self, defaultFolder = '/', xmlDict = {}, defaultChannelID = 0):
+    def reset(self, defaultFolder = '/', xmlDict = {}, defaultChannelID = 0, externalEditorCmd = ''):
         '''
         Reset everything to initial values.
         '''
+        self.xmlEditor.extension = os.path.splitext(defaultFolder)[1]
+        self.xmlEditor.externalEditorCmd = externalEditorCmd
         self.objectList = []
         self.activePayload = xmlDict.copy()
         self.selectPayload.clear()
@@ -800,8 +804,7 @@ class addConditionDialog(qt.QDialog):
         self.setIoV(self.timeValidator.valKeyMin, self.timeValidator.valKeyMax)
         self._fillTable()
         self._fillPayloadKeys()
-
-
+        
     def removeObject(self):
         '''
         Remove an object form the list
@@ -913,7 +916,7 @@ class addConditionDialog(qt.QDialog):
 
 class conditionEditorDialog(qt.QDialog):
 
-    def __init__(self, parent, name = 'conditionEditorDialog'):
+    def __init__(self, parent, name = 'conditionEditorDialog', extension = '', externalEditorCmd = ''):
         qt.QDialog.__init__(self, parent, name)
 
         self.layoutDialog = qt.QVBoxLayout(self, 0, 10)
@@ -928,6 +931,9 @@ class conditionEditorDialog(qt.QDialog):
 
         self.connect(self.buttonOK, qt.SIGNAL("clicked()"), self.accept)
         self.connect(self.buttonCancel, qt.SIGNAL("clicked()"), self.reject)
+        
+        self.extension = extension
+        self.externalEditorCmd = externalEditorCmd
 
     def reset(self):
         while self.tabEditors.count() > 0:
@@ -936,8 +942,12 @@ class conditionEditorDialog(qt.QDialog):
             del(page)
 
     def setPayload(self, payload):
-        for key in payload.keys():
-            page = guiextras.ConditionEditor(self)
+        keys = payload.keys()
+        keys.sort()
+        for key in keys:
+            page = guiextras.ConditionEditor(self,
+                                             extension=self.extension,
+                                             externalEditorCmd=self.externalEditorCmd)
             page.setEditorText(payload[key])
             self.tabEditors.addTab(page, key)
 
@@ -1062,9 +1072,7 @@ class condDBConnectDialog(qt.QDialog):
         dbname = str(self.editDBName.text())
         # FIXME: this check does not work always (CORAL alias can have a '/')
         if alias.find(os.sep) != -1:
-            # in COOL 2.0.0 we can use the following
-            #self.connectString = 'sqlite_file:%s/%s'%(alias, dbname)
-            self.connectString = 'sqlite://;schema=%s;dbname=%s'%(alias, dbname)
+            self.connectString = 'sqlite_file:%s/%s'%(alias, dbname)
         else:
             self.connectString = '%s/%s'%(alias, dbname)
         return qt.QDialog.accept(self)
@@ -1139,7 +1147,7 @@ class createCondDBDialog(qt.QDialog):
         '''
         Set the values of the schema and dbnames.
         '''
-        self.connectionString = 'sqlite://; schema=%s; dbname=%s;'%(str(self.editSchema.text()), str(self.editDBName.text()))
+        self.connectionString = 'sqlite_file:%s/%s'%(str(self.editSchema.text()), str(self.editDBName.text()))
         self.editSchema.setText('')
         self.editDBName.setText('')
         return qt.QDialog.accept(self)

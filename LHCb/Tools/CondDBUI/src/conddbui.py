@@ -10,18 +10,10 @@ Please note that most of the functions of the conddbui module are used in the co
 browser.
 '''
 
-import os, md5, random, sys
-
-# PyROOT is intercepting the options passed on the command line
-# it is better not to have any option while importing PyCool
-_tmp_argv = sys.argv
-sys.argv = sys.argv[0:1]
+import os, md5, random, sys, re
 
 import PyCoolCopy
-from PyCool import cool, coral
-
-# revert to the original command line options
-sys.argv = _tmp_argv
+from PyCool import cool
 
 #########################################################################################
 #                                    Tag Class                                          #
@@ -232,7 +224,7 @@ class CondDB:
                               -> Default = 'HEAD'
             readOnly:         boolean; open the conddb in read only mode if True, or read/write
                               mode if False.
-                              -> Default = True
+                              -> Default = True (or False if the database is created)
         outputs:
             none
         """
@@ -278,6 +270,7 @@ class CondDB:
             if create_new_db:
                 # if opening has failed, create a new database
                 self.createDatabase(self.connectionString)
+                self.readOnly = False
             else:
                 self.db = None
                 raise Exception, "Database not found: %s"%details
@@ -348,7 +341,7 @@ class CondDB:
 
     def getFolderStorageKeys(self, path):
         '''
-        Retrieve the keys of the Coral Attribute List Specification for the given folder.
+        Retrieve the keys of the Record Specification for the given folder.
         inputs:
             path: string; path to the folder.
         outputs:
@@ -357,16 +350,12 @@ class CondDB:
         assert self.db <> None, "No database connected !"
         assert self.db.existsFolder(path), "Folder %s not found"%path
         folder = self.db.getFolder(path)
-        payloadSpec = folder.payloadSpecification()
-        keyList = []
-        for i in range(payloadSpec.size()):
-            keyList.append(payloadSpec[i].name())
-        return keyList
+        return folder.payloadSpecification().keys()
 
 
-    def getAttributeList(self, path, when, channelID = 0, tag = ''):
+    def getPayload(self, path, when, channelID = 0, tag = ''):
         '''
-        Retrieve the Coral Attribute List of the condition object valid at a given time.
+        Retrieve the payload of the condition object valid at a given time.
         inputs:
             path:      string; path to the condition data in the database.
             when:      integer; time stamp (most likely an event time) at which the
@@ -407,24 +396,23 @@ class CondDB:
                        -> Default = 0
             tag:       string; name of the version. If empty, defaultTag is used.
                        -> Default = ''
-            payloadKey: string; key of the coral attribute list element we want to
-                        retrieve.
+            payloadKey: string; key of the Record element we want to retrieve.
                         -> Default = 'data'
         outputs:
             string; the contents of the condition data.
         '''
         assert self.db <> None, "No database connected !"
         try:
-            attList = self.getAttributeList(path, when, channelID, tag)
-            xmlString = str(attList[payloadKey])
+            payload = self.getPayload(path, when, channelID, tag)
+            xmlString = str(payload[payloadKey])
         except Exception, details:
             raise Exception, details
         else:
             return xmlString
 
-    def getAttributeListList(self, path, fromTime, toTime, channelID = 0, tag = ''):
+    def getPayloadList(self, path, fromTime, toTime, channelID = 0, tag = ''):
         '''
-        Retrieve the coral attribute list of the condition objects valid during a given time interval.
+        Retrieve the payload of the condition objects valid during a given time interval.
         inputs:
             path:       string; path to the condition data in the database.
             fromTime:   integer; lower bound of the studied time interval.
@@ -437,10 +425,9 @@ class CondDB:
             tag:        string; name of the version. If empty, defaultTag is used.
                         -> Default = ''
         outputs:
-            list of [dictionary, integer, integer, integer, integer]; the dictionary is the coral
-            attribute list. The first two integers are the since and until values of the interval
-            of validity. The third integer is the channel ID, and the last integer is the insertion
-            time.
+            list of [dictionary, integer, integer, integer, integer]; the dictionary is the payload.
+            The first two integers are the since and until values of the interval of validity. The
+            third integer is the channel ID, and the last integer is the insertion time.
         '''
         assert self.db <> None, "No database connected !"
         if channelID <> None:
@@ -464,12 +451,12 @@ class CondDB:
             # Fill the object list
             for i in range(objIter.size()):
                 obj = objIter.next()
-                attList = dict(obj.payload())
+                payload = dict(obj.payload())
                 since = obj.since()
                 until = obj.until()
                 chID = obj.channelId()
                 insertTime = obj.insertionTime()
-                objList.append([attList, since, until, chID, insertTime])
+                objList.append([payload, since, until, chID, insertTime])
         return objList
 
 
@@ -487,8 +474,7 @@ class CondDB:
                         -> Default = 0
             tag:        string; name of the version. If empty, defaultTag is used.
                         -> Default = ''
-            payloadKey: string; key of the coral attribute list element we want to
-                        retrieve.
+            payloadKey: string; key of the record element we want to retrieve.
                         -> Default = 'data'
         outputs:
             list of [string, integer, integer, integer, integer]; the string is the payload.
@@ -497,7 +483,7 @@ class CondDB:
         '''
         assert self.db <> None, "No database connected !"
         try:
-            objList = self.getAttributeListList(path, fromTime, toTime, channelID, tag)
+            objList = self.getPayloadList(path, fromTime, toTime, channelID, tag)
             for i in range(len(objList)):
                 objList[i][0] = objList[i][0][payloadKey]
         except Exception, details:
@@ -601,10 +587,10 @@ class CondDB:
             # not the foldersets.
             if self.db.existsFolder(nodeName):
                 folder = self.db.getFolder(nodeName)
-                payload = coral.AttributeList(folder.payloadSpecification())
+                payload = cool.Record(folder.payloadSpecification())
                 # Separate the case of single version (no need for tag) and multi
                 # version folders.
-                if folder.versioningMode() == cool.FolderVersioning.MULTI_VERSION:
+                if folder.versioningMode() == cool.FolderVersioning.MULTI_VERSION and tag.upper() != 'HEAD':
                     try:
                         objIter = folder.browseObjects(cool.ValidityKeyMin, cool.ValidityKeyMax, cool.ChannelSelection(), folder.resolveTag(tag))
                     except Exception, details:
@@ -1065,13 +1051,12 @@ class CondDB:
                 raise Exception, "Impossible to create the folderset: %s"%details
         else:
             if versionMode == 'MULTI':
-                folderVersion = cool.FolderVersioning.MULTI_VERSION
+                folderSpec = cool.FolderSpecification(cool.FolderVersioning.MULTI_VERSION)
             else:
-                folderVersion = cool.FolderVersioning.SINGLE_VERSION
+                folderSpec = cool.FolderSpecification(cool.FolderVersioning.SINGLE_VERSION)
 
-            folderSpec = cool.ExtendedAttributeListSpecification()
             for key in storageKeys:
-                folderSpec.push_back(key,"string",cool.PredefinedStorageHints.STRING_MAXSIZE_16M)
+                folderSpec.payloadSpecification().extend(key,cool.StorageType.String16M)
 
             # WARNING: this folderdesc stuff is VERY important for LHCb: it tells the CondDB conversion
             #          service which type of converter to call. In this case (storage_type = 7), it calls
@@ -1079,7 +1064,7 @@ class CondDB:
             folderDesc = description + " <storage_type=7>"
 
             try:
-                self.db.createFolderExtended(path, folderSpec, folderDesc, folderVersion, True)
+                self.db.createFolder(path, folderSpec, folderDesc, True)
             except Exception, details:
                 raise Exception, "Impossible to create the folder: %s"%details
 
@@ -1099,6 +1084,8 @@ class CondDB:
         outputs:
             none
         '''
+        if type(data) is str:
+            data = { 'data': data }
         objDict = {'payload': data,
                    'since':   since,
                    'until':   until,
@@ -1124,7 +1111,7 @@ class CondDB:
         if self.db.existsFolder(path):
             folder = self.db.getFolder(path)
             # Create a payload object with the correct specifications
-            payload = coral.AttributeList(folder.payloadSpecification())
+            payload = cool.Record(folder.payloadSpecification())
             for key in payload.keys():
                 payload[key] = 'nothing'
             # Start filling the buffer...
@@ -1182,334 +1169,153 @@ class CondDB:
             raise Exception, "Impossible to delete node %s: %s"%(path, details)
 
 #########################################################################################
-#                                       TESTS                                           #
+#                                Utility functions                                      #
 #########################################################################################
 
-def testDBAccess(connectionString):
-    '''
-    Create a CondDB object, connect to a database and show its contents
-    '''
-    bb = CondDB(connectionString, readOnly = False)
-
-    print
-    print "-> List of all database nodes: ", bb.getAllNodes()
-    print
-    CondDB.dropDatabase(connectionString)
-
-
-def testNodeCreation(connectionString):
-    '''
-    Connect to a database and create the nodes given in the nodeList
-    '''
-    nodeList = []
-    nodeList.append(['/a','Folderset','NODE',''])
-    nodeList.append(['/a/multi','Folder','XML','MULTI'])
-    nodeList.append(['/a/single','Folder','XML','SINGLE'])
-    nodeList.append(['/b/c','Folder','XML','MULTI'])
-    nodeList.append(['/b/c/d','Folder','XML','MULTI']) # this one must fail: /b/c is a folder
-    bb = CondDB(connectionString, readOnly = False)
-
-    for nodeParams in nodeList:
-        path        = nodeParams[0]
-        description = nodeParams[1]
-        storageType = nodeParams[2]
-        versionMode = nodeParams[3]
-        try:
-            bb.createNode(path, description, storageType, versionMode)
-        except Exception, details:
-            print details
-    print
-    print "-> List of all database nodes: ", bb.getAllNodes()
-    print
-    CondDB.dropDatabase(connectionString)
-
-
-def testXMLStorage(connectionString):
-    '''
-    connect to a db, create a folder and store a condition object in it
-    '''
-    folder = ['/a/b/c', 'Folder to store XML strings', 'XML', 'MULTI']
-    obj    = ['value = 1', 0, 10, 0]
-    bb     = CondDB(connectionString, readOnly = False)
-
-    try:
-        bb.createNode(folder[0], folder[1], folder[2], folder[3])
-    except Exception, details:
-        print details
-    path      = folder[0]
-    data      = obj[0]
-    since     = obj[1]
-    until     = obj[2]
-    channelID = obj[3]
-    try:
-        bb.storeXMLString(path, data, since, until, channelID)
-    except Exception, details:
-        print details
-    try:
-        value = bb.getXMLString(path, (since + until)/2, channelID, 'HEAD')
-    except Exception, details:
-        print details
-    else:
-        print
-        print "-> Condition value at time ", (since + until)/2, ": ", value
-        print
-    CondDB.dropDatabase(connectionString)
-
-
-def testXMLListStorage(connectionString):
-    '''
-    connect to a db, create a folder and store a condition object list in it
-    '''
-    folder  = ['/a/b/c', 'Folder to store a list of conditions', 'XML', 'MULTI']
-    objList = []
-    for i in range(100):
-        objList.append(['value '+str(i), 10*i, 10*(i+1), 0])
-    for i in range(100):
-        objList.append(['value '+str(i), 15*i, 15*(i+1), 1])
-    bb = CondDB(connectionString, readOnly = False)
-
-    try:
-        bb.createNode(folder[0], folder[1], folder[2], folder[3])
-    except Exception, details:
-        print details
-    path = folder[0]
-    try:
-        bb.storeXMLStringList(path, objList)
-    except Exception, details:
-        print details
-
-    objList = bb.getXMLStringList(path, cool.ValidityKeyMin, cool.ValidityKeyMax, None, 'HEAD')
-    print
-    for obj in objList:
-        print "-> Condition value in channel ", obj[3], ": ", obj[0]
-    print
-    CondDB.dropDatabase(connectionString)
-
-
-def testMD5(connectionString):
-    '''
-    connect to a db and compute an md5 checksum
-    '''
-    folder  = ['/a/b/c', 'Folder to store a list of conditions', 'XML', 'MULTI']
-    objList = []
-    for i in range(100):
-        objList.append(['value '+str(i), 10*i, 10*(i+1), 0])
-    for i in range(100):
-        objList.append(['value '+str(i), 15*i, 15*(i+1), 1])
-    bb = CondDB(connectionString, readOnly = False)
-
-    try:
-        bb.createNode(folder[0], folder[1], folder[2], folder[3])
-    except Exception, details:
-        print details
-    path = folder[0]
-    try:
-        bb.storeXMLStringList(path, objList)
-    except Exception, details:
-        print details
-
-    md5Sum = bb.payloadToMd5('/', 'HEAD')
-    print
-    print "-> md5 CheckSum = ", md5Sum.hexdigest()
-    print
-    CondDB.dropDatabase(connectionString)
-
-
-def testRemoveNode(connectionString):
-    '''
-    connect to a db and remove a node from it
-    '''
-    bb = CondDB(connectionString, readOnly = False)
-
-    bb.createNode('/a', '', 'XML', 'MULTI')
-    bb.createNode('/b/c', '', 'XML', 'MULTI')
-    bb.createNode('/d', '', 'XML', 'MULTI')
-    print
-    print "-> Nodes of the database before removal: ", bb.getAllNodes()
-    bb.deleteNode('/b', True)
-    print "-> Nodes of the database after removal: ", bb.getAllNodes()
-    print
-    CondDB.dropDatabase(connectionString)
-
-
-def testTagLeafNode(connectionString):
-    '''
-    Connect to a db, create a dummy folder with dummy condition and tag the HEAD
-    '''
-    tagName = 'dummyTag'
-    bb = CondDB(connectionString, readOnly = False)
-
-    bb.createNode('/a', "Dummy Folder", 'XML', 'MULTI')
-    bb.storeXMLString('/a', "dummy condition value", cool.ValidityKeyMin, cool.ValidityKeyMax, 0)
-    bb.tagLeafNode('/a', tagName, "dummy tag")
-    bb.storeXMLString('/a', "another dummy condition value", cool.ValidityKeyMin, cool.ValidityKeyMax, 0)
-    print
-    print "-> HEAD value = ", bb.getXMLString('/a', 1000, 0, 'HEAD')
-    print "-> %s value = "%tagName, bb.getXMLString('/a', 1000, 0, tagName)
-    print
-    CondDB.dropDatabase(connectionString)
-
-def testRecursiveTag(connectionString):
-    '''
-    Connect to a db, create a node architecture and recursively tag the root folderset
-    and its children.
-    '''
-    bb = CondDB(connectionString, readOnly = False)
-
-    bb.createNode('/a/b/c', "Folder for recursive tagging test", 'XML', 'MULTI')
-    bb.storeXMLString('/a/b/c', "condition value", cool.ValidityKeyMin, cool.ValidityKeyMax, 0)
-    bb.recursiveTag('/', 'version1', "recursive tag")
-    bb.recursiveTag('/', 'blabla2', "other recursive tag")
-    allNodes = bb.getAllNodes()
-    print
-    for nodeName in allNodes:
-        if bb.db.existsFolder(nodeName):
-            node = bb.db.getFolder(nodeName)
-        else:
-            node = bb.db.getFolderSet(nodeName)
-        print "-> Tags for ", nodeName, ": ", list(node.listTags())
-    print
-    CondDB.dropDatabase(connectionString)
-
-def testTagWithAncestorTag(connectionString):
-    '''
-    Connect to the db, create a node architecture and tag some tree elements using
-    ancestor tags.
-    '''
-    bb = CondDB(connectionString, readOnly = False)
-
-    bb.createNode('/a/b/c', "Folder for ancestor tagging test", 'XML', 'MULTI')
-    bb.createNode('/a/bb', "FolderSet for ancestor tagging test", 'NODE')
-    bb.storeXMLString('/a/b/c', "value 1 for /a/b/c", cool.ValidityKeyMin, cool.ValidityKeyMax, 0)
-    bb.recursiveTag('/', 'version1', "version 1")
-
-    allNodes = bb.getAllNodes()
-    print
-    for nodeName in allNodes:
-        if bb.db.existsFolder(nodeName):
-            node = bb.db.getFolder(nodeName)
-        else:
-            node = bb.db.getFolderSet(nodeName)
-        print "-> Tags for ", nodeName, ": ", list(node.listTags())
-    print
-
-    bb.createNode('/a/bb/d', "Folder for ancestor tagging test", 'XML', 'MULTI')
-    bb.storeXMLString('/a/bb/d', "value 1 for /a/b/d", cool.ValidityKeyMin, cool.ValidityKeyMax, 0)
-    bb.tagWithAncestorTag('/a/bb', 'version1')
-    allNodes = bb.getAllNodes()
-    print
-    for nodeName in allNodes:
-        if bb.db.existsFolder(nodeName):
-            node = bb.db.getFolder(nodeName)
-        else:
-            node = bb.db.getFolderSet(nodeName)
-        print "-> Tags for ", nodeName, ": ", list(node.listTags())
-    print
-    CondDB.dropDatabase(connectionString)
-
-def testGetTagList(connectionString):
-    '''
-    Connect to the db, create a node architecture and tag some tree elements, then
-    retrieve some tag list.
-    '''
-    bb = CondDB(connectionString, readOnly = False)
-
-    bb.createNode('/a/b/c', "Folder for ancestor tagging test", 'XML', 'MULTI')
-    bb.storeXMLString('/a/b/c', "value 1 for /a/b/c", cool.ValidityKeyMin, cool.ValidityKeyMax, 0)
-    bb.tagLeafNode('/a/b/c', 'c-v1', 'first version')
-    bb.storeXMLString('/a/b/c', "value 2 for /a/b/c", cool.ValidityKeyMin, cool.ValidityKeyMax, 0)
-    bb.tagLeafNode('/a/b/c', 'c-v2', 'second version')
-
-    bb.createTagRelation('/a/b/c', 'b-v1', 'c-v1')
-    bb.createTagRelation('/a/b/c', 'b-v2', 'c-v1')
-    bb.createTagRelation('/a/b/c', 'b-v3', 'c-v2')
-
-    bb.createTagRelation('/a/b', 'a-v1', 'b-v1')
-    bb.createTagRelation('/a/b', 'a-v3', 'b-v1')
-    bb.createTagRelation('/a/b', 'a-v2', 'b-v2')
-    bb.createTagRelation('/a/b', 'a-v4', 'b-v3')
-
-    bb.createTagRelation('/a', 'v1', 'a-v1')
-    bb.createTagRelation('/a', 'v2', 'a-v3')
-
-    tagList = bb.getTagList('/a/b')
-    print
-    print '-> list of tags:'
-    for tag in tagList:
-        print repr(tag)
-    print
-
-    CondDB.dropDatabase(connectionString)
-
-
-#########################################################################################
-#                                        MAIN                                           #
-#########################################################################################
-
-def run_tests():
-    import os
-    # create a temporary file to use for the tests
-    from tempfile import mkstemp
-    (filehandle, filepath) = mkstemp(dir="/tmp")
-    os.close(filehandle) # the returned file is already open, so I close it
+def _collect_tree_info(source_dir, includes = [], excludes = [], includesFirst = True):
+    """
+    Create a list of folders and foldersets to create starting from a filesystem tree.
+        inputs:
+            source_dir: string; root node were to start scanning
+            includes: list regular expressions an accepted path must match
+            excludes: list regular expressions to exclude files matching them
+            includesFirst: if True, first check includes, then excludes; vice-versa if
+                           False
+        outputs:
+            list of folders and foldersets to be created
     
-    # prepare the connection string
-    connectionString = "sqlite://;schema=%s;dbname=TEST"%filepath
-    try:
+    """
+    # add to the exclude list CVS and back-up files
+    excludes += [ x for x in ['CVS', '.*~'] if x not in excludes ]
+    # convert to regular expression objects
+    includes = [ re.compile(x) for x in includes]
+    excludes = [ re.compile(x) for x in excludes]
 
-#         print "***************************\n"
-#         print "1st test: Database Access\n"
-#         testDBAccess(connectionString)
-#         print "***************************\n"
+    name_format = re.compile("(?:([a-zA-Z0-9_.-]*)@)?([a-zA-Z0-9_.-]*)(?::([0-9]+))?$")
+    nodes = {}
+    for root, dirs, files in os.walk(source_dir):
+        base_path = root.replace(source_dir,"")
+        if base_path == '': base_path = '/'
+
+        # Check if the base_path is ok or not
+        include_match, exclude_match = False, False # default
+        for p in includes:
+            if p.search(base_path):
+                include_match = True
+                break
+        if len(includes) == 0: include_match = True
+            
+        for p in excludes:
+            if p.search(base_path):
+                exclude_match = True
+                break
+       
+        if includesFirst:
+            is_good = include_match and not exclude_match
+        else:
+            is_good = include_match
         
-#         print "**************************\n"
-#         print "2nd test: Node Creation\n"
-#         testNodeCreation(connectionString)
-#         print "**************************\n"
+        if not is_good : continue # ignore the whole dir
+            
+        nodes[base_path] = {}
         
-#         print "**************************\n"
-#         print "3rd test: XML storage\n"
-#         testXMLStorage(connectionString)
-#         print "**************************\n"
-        
-#         print "**************************\n"
-#         print "4th test: XML list storage\n"
-#         testXMLListStorage(connectionString)
-#         print "**************************\n"
-        
-#         print "**************************\n"
-#         print "5th test: md5Checksum\n"
-#         testMD5(connectionString)
-#         print "**************************\n"
-        
-#         print "**************************\n"
-#         print "6th test: node removal\n"
-#         testRemoveNode(connectionString)
-#         print "**************************\n"
-        
-#         print "**************************\n"
-#         print "7th test: leaf tagging\n"
-#         testTagLeafNode(connectionString)
-#         print "**************************\n"
-        
-#         print "**************************\n"
-#         print "8th test: recursive tagging\n"
-#         testRecursiveTag(connectionString)
-#         print "**************************\n"
-        
-#         print "**************************\n"
-#         print "9th test: ancestor tagging\n"
-#         testTagWithAncestorTag(connectionString)
-#         print "**************************\n"
-        
-        print "**************************\n"
-        print "10th test: tag listing\n"
-        testGetTagList(connectionString)
-        print "**************************\n"
-        
-    finally:
-        # delete the temporary file once finished
-        os.remove(filepath)
-        
-if __name__ == '__main__':
-    run_tests()
+        for f in files :
+            # Check if the file_path is ok or not
+            include_match, exclude_match = False, False # default
+            file_path = os.path.join(base_path,f)
+            
+            for p in includes:
+                if p.search(file_path):
+                    include_match = True
+                    break
+            if len(includes) == 0: include_match = True
+            
+            for p in excludes:
+                if p.search(file_path):
+                    exclude_match = True
+                    break
+            
+            if includesFirst:
+                is_good = include_match and not exclude_match
+            else:
+                is_good = include_match
+
+            if not is_good : continue # ignore the file
+            
+            m = name_format.match(f)
+            if m:
+                key,folder,chid = m.groups()
+                if not key : key = 'data'
+                if not chid : chid = 0
+                
+                if folder not in nodes[base_path]:
+                    nodes[base_path][folder] = {}
+                    
+                if key not in nodes[base_path][folder]:
+                    nodes[base_path][folder][key] = {}
+                
+                nodes[base_path][folder][key][chid] = os.path.join(root,f)
+            else:
+                print "WARNING: '%s' does not seem in the format [key@]folder[:channel]"%file_path
+
+    return nodes
+
+def _fix_xml(xml_data,folderset_path):
+    """
+    Function used to clean up the XML files before inserting them in the database.
+    It corrects:
+     - paths to system ids
+     - environment variable expansion
+     - encoding (we need iso-8859-1)
+    """
+    sysIdRE = re.compile('SYSTEM[^>"\']*("[^">]*"|'+"'[^'>]*')")
+    def fix_system_ids(xml_data,path):
+        data = xml_data
+        m = sysIdRE.search(data)
+        while m != None:
+            pos = m.start()
+            s = m.start(1)+1
+            e = m.end(1)-1
+            p = os.path.join(path,data[s:e])
+            p = os.path.normpath(p)
+            data = data[0:s] + p + data[e:] 
+            m = sysIdRE.search(data,pos+1)
+        return data
+    
+    envVarRE = re.compile('\$([A-Za-z][A-Za-z0-9_]*)')
+    #cvs_vars = [ 'Id', 'Name', 'Log' ]
+    def fix_env_vars(xml_data):
+        data = xml_data
+        m = envVarRE.search(data)
+        while m != None:
+            pos = m.start()
+            s = m.start(1)
+            e = m.end(1)
+            name = m.group(1)
+            
+            if os.environ.has_key(name):
+                val = os.environ[name]
+            else:
+                val = name
+                
+            data = data[0:pos] + val + data[e:]
+            m = envVarRE.search(data,pos+1)
+        return data
+    
+    import codecs
+    encodingRE = re.compile('encoding="([^"]*)"')
+    def fix_encoding(xml_data):
+        data = xml_data
+        m = encodingRE.search(data)
+        if m:
+            name = m.group(1).lower().replace('utf-','utf_')
+            if name != 'iso-8859-1':
+                dec = codecs.getdecoder(name)
+                enc = codecs.getencoder('iso-8859-1')
+                data = enc(dec(data)[0])[0].replace(m.group(1),'ISO-8859-1')
+        return data
+
+    xml_data = fix_encoding(xml_data)
+    xml_data = fix_system_ids(xml_data,folderset_path)
+    xml_data = fix_env_vars(xml_data)
+    return xml_data
