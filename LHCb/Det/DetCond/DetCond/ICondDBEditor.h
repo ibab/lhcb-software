@@ -1,4 +1,4 @@
-// $Id: ICondDBEditor.h,v 1.3 2006-08-31 13:53:02 marcocle Exp $
+// $Id: ICondDBEditor.h,v 1.4 2007-02-14 16:13:30 marcocle Exp $
 #ifndef DETCOND_ICONDDBEDITOR_H 
 #define DETCOND_ICONDDBEDITOR_H 1
 
@@ -13,11 +13,7 @@
 
 // from COOL
 #include "CoolKernel/types.h"
-
-// Forward declarations
-namespace cool {
-   class ExtendedAttributeListSpecification;
-}
+#include "CoolKernel/ChannelId.h"
 
 static const InterfaceID IID_ICondDBEditor ( "ICondDBEditor", 1, 0 );
 

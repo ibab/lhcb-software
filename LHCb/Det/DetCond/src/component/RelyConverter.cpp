@@ -1,4 +1,4 @@
-// $Id: RelyConverter.cpp,v 1.20 2006-12-14 12:56:16 ranjard Exp $
+// $Id: RelyConverter.cpp,v 1.21 2007-02-14 16:13:31 marcocle Exp $
 // Include files 
 #include "RelyConverter.h"
 
@@ -15,9 +15,8 @@
 #include "DetDesc/ValidDataObject.h"
 
 #include "CoolKernel/IObject.h"
-
-#include "CoralBase/AttributeList.h"
-#include "CoralBase/AttributeListException.h"
+#include "CoolKernel/IRecord.h"
+#include "CoolKernel/RecordException.h"
 
 #include <string>
 #include <sstream>
@@ -194,7 +193,7 @@ StatusCode RelyConverter::i_delegatedCreation(IOpaqueAddress* pAddress, DataObje
 
   MsgStream log(msgSvc(),"RelyConverter");
 
-  boost::shared_ptr<coral::AttributeList> data;
+  ICondDBReader::DataPtr data;
   std::string description;
   Gaudi::Time since,until;
   
@@ -291,8 +290,8 @@ StatusCode RelyConverter::i_delegatedCreation(IOpaqueAddress* pAddress, DataObje
   IOpaqueAddress *tmpAddress;
   std::string xml_data;
   try {
-    xml_data = (*data)[data_field_name].data<std::string>();
-  } catch (coral::AttributeListException &e) {
+    xml_data = (*data.get())[data_field_name].data<std::string>();
+  } catch (cool::RecordSpecificationUnknownField &e) {
     log << MSG::ERROR << "I cannot find the data inside COOL object: " << e.what() << endmsg;
     return StatusCode::FAILURE;
   }

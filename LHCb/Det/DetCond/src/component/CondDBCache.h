@@ -1,4 +1,4 @@
-// $Id: CondDBCache.h,v 1.5 2006-04-25 17:20:20 marcocle Exp $
+// $Id: CondDBCache.h,v 1.6 2007-02-14 16:13:31 marcocle Exp $
 #ifndef COMPONENT_CONDDBCACHE_H 
 #define COMPONENT_CONDDBCACHE_H 1
 
@@ -12,9 +12,16 @@
 #include "GaudiKernel/HashMap.h"
 
 #include "CoolKernel/types.h"
+#include "CoolKernel/pointers.h"
 #include "CoolKernel/ValidityKey.h"
 #include "CoolKernel/IObject.h"
 #include "CoolKernel/IFolder.h"
+#include "CoolKernel/IRecord.h"
+#include "CoolKernel/Record.h"
+#include "CoolKernel/IRecordSpecification.h"
+#include "CoolKernel/RecordSpecification.h"
+
+#include "DetCond/ICondDBReader.h"
 
 /** @class CondDBCache CondDBCache.h component/CondDBCache.h
  *  
@@ -39,15 +46,15 @@ public:
   /// \warning {no check performed}
   bool insert(const cool::IFolderPtr &folder,const cool::IObjectPtr &obj, const cool::ChannelId &channel = 0);
 
-  bool addFolder(const std::string &path, const std::string &descr, const cool::ExtendedAttributeListSpecification& spec);
+  bool addFolder(const std::string &path, const std::string &descr, const cool::IRecordSpecification& spec);
   bool addFolderSet(const std::string &path, const std::string &descr);
   bool addObject(const std::string &path, const cool::ValidityKey &since, const cool::ValidityKey &until,
-                 const coral::AttributeList& al, const cool::ChannelId &channel, IOVType *iov_before = NULL);
+                 const cool::IRecord& rec, const cool::ChannelId &channel, IOVType *iov_before = NULL);
   /// (version kept for backward compatibility)
   inline bool addObject(const std::string &path, const cool::ValidityKey &since, const cool::ValidityKey &until,
-                        const coral::AttributeList& al, IOVType *iov_before = NULL)
+                        const cool::IRecord& rec, IOVType *iov_before = NULL)
   {
-    return addObject(path,since,until,al,0,iov_before);
+    return addObject(path,since,until,rec,0,iov_before);
   }
   
 
@@ -55,13 +62,13 @@ public:
   bool get(const std::string &path, const cool::ValidityKey &when,
            const cool::ChannelId &channel,
            cool::ValidityKey &since, cool::ValidityKey &until,
-           std::string &descr, boost::shared_ptr<coral::AttributeList> &payload) ;
+           std::string &descr, ICondDBReader::DataPtr &payload) ;
 
   /// Search an entry in the cache and returns the data string or an empty string if no object is found.
   /// (version kept for backward compatibility)
   inline bool get(const std::string &path, const cool::ValidityKey &when,
                   cool::ValidityKey &since, cool::ValidityKey &until,
-                  std::string &descr, boost::shared_ptr<coral::AttributeList> &payload) {
+                  std::string &descr, ICondDBReader::DataPtr &payload) {
     return get(path,when,0,since,until,descr,payload);
   }
 
@@ -108,13 +115,13 @@ private:
     /// Constructor.
     CondItem(CondFolder *myFolder, const cool::IObjectPtr &obj):
       folder(myFolder),iov(obj->since(),obj->until()),
-      data(new coral::AttributeList(obj->payload())),score(1.0) {}
+      data(new cool::Record(obj->payload())),score(1.0) {}
     CondItem(CondFolder *myFolder, const cool::ValidityKey &since, const cool::ValidityKey &until,
-             const coral::AttributeList &al):
-      folder(myFolder),iov(since,until), data(new coral::AttributeList(al)),score(1.0) {}
+             const cool::IRecord &rec):
+      folder(myFolder),iov(since,until), data(new cool::Record(rec)),score(1.0) {}
     CondFolder *folder;
     IOVType iov;
-    boost::shared_ptr<coral::AttributeList> data;
+    ICondDBReader::DataPtr data;
     float score;
     /// Check if the CondItem is valid at the given time.
     inline bool valid(const cool::ValidityKey &when) const {
@@ -129,15 +136,15 @@ private:
     
     CondFolder(const cool::IFolderPtr &fld):
       description(fld->description()),
-      spec(new cool::ExtendedAttributeListSpecification(fld->extendedPayloadSpecification())),
+      spec(new cool::RecordSpecification(fld->payloadSpecification())),
       sticky(false) {}
-    CondFolder(const std::string &descr, const cool::ExtendedAttributeListSpecification& new_spec):
-      description(descr),spec(new cool::ExtendedAttributeListSpecification(new_spec)),sticky(true) {}
+    CondFolder(const std::string &descr, const cool::IRecordSpecification& new_spec):
+      description(descr),spec(new cool::RecordSpecification(new_spec)),sticky(true) {}
     // for a folderset (FolderSets are identified by missing spec)
     CondFolder(const std::string &descr):
       description(descr),sticky(true) {}
     std::string description;
-    boost::shared_ptr<cool::ExtendedAttributeListSpecification> spec;
+    boost::shared_ptr<cool::IRecordSpecification> spec;
     StorageType items;
     bool sticky;
     /// Search for the first item in the storage valid at the given time.

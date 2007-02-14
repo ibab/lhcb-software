@@ -1,4 +1,4 @@
-// $Id: ICondDBAccessSvc.h,v 1.14 2006-08-31 13:53:02 marcocle Exp $
+// $Id: ICondDBAccessSvc.h,v 1.15 2007-02-14 16:13:30 marcocle Exp $
 #ifndef DETCOND_ICONDDBACCESSSVC_H 
 #define DETCOND_ICONDDBACCESSSVC_H 1
 
@@ -14,17 +14,19 @@
 
 // from COOL
 #include "CoolKernel/types.h"
+#include "CoolKernel/ChannelId.h"
+#include "CoolKernel/pointers.h"
 #include "CoolKernel/ValidityKey.h"
 
 // Forward declarations
 namespace Gaudi {
   class Time;
 }
-namespace coral {
-  class AttributeList;
+namespace cool {
+  class IRecord;
+  class IRecordSpecification;
 }
 namespace cool {
-   class ExtendedAttributeListSpecification;
 }
 
 static const InterfaceID IID_ICondDBAccessSvc ( "ICondDBAccessSvc", 1, 0 );
@@ -64,7 +66,7 @@ public:
 
   /// Add a folder to the cache (bypass the DB)
   virtual StatusCode cacheAddFolder(const std::string &path, const std::string &descr,
-                                    const cool::ExtendedAttributeListSpecification& spec) = 0;
+                                    const cool::IRecordSpecification& spec) = 0;
   
   /// Add a folder-set to the cache (bypass the DB)
   virtual StatusCode cacheAddFolderSet(const std::string &path, const std::string &descr) = 0;
@@ -77,7 +79,7 @@ public:
 
   /// Add an object to the cache (bypass the DB)
   virtual StatusCode cacheAddObject(const std::string &path, const Gaudi::Time &since, const Gaudi::Time &until,
-                                    const coral::AttributeList &payload, cool::ChannelId channel = 0) = 0;
+                                    const cool::IRecord &payload, cool::ChannelId channel = 0) = 0;
   
   /// Deprecated: use ICondDBAccessSvc::cacheAddXMLData instead
   inline StatusCode cacheAddXMLObject(const std::string &path, const Gaudi::Time &since, const Gaudi::Time &until,
@@ -94,6 +96,9 @@ public:
   /// Add an XML object to the cache (bypass the DB)
   virtual StatusCode cacheAddXMLData(const std::string &path, const Gaudi::Time &since, const Gaudi::Time &until,
                                      const std::map<std::string,std::string> &data, cool::ChannelId channel = 0) = 0;
+
+  /// Clear the cache
+  virtual void clearCache() = 0;
 
   /// Dump the cache (debug)
   virtual void dumpCache() const = 0;

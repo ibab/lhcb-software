@@ -1,4 +1,4 @@
-// $Id: CondDBGenericCnv.h,v 1.14 2006-07-14 09:27:32 marcocle Exp $
+// $Id: CondDBGenericCnv.h,v 1.15 2007-02-14 16:13:30 marcocle Exp $
 #ifndef DETCOND_CONDDBGENERICCNV_H 
 #define DETCOND_CONDDBGENERICCNV_H 1
 
@@ -10,17 +10,14 @@
 #include "GaudiKernel/ClassID.h"
 #include "GaudiKernel/Time.h"
 
+#include "DetCond/ICondDBReader.h"
+
 #include "CoolKernel/types.h"
 
 // Forward and external declarations
 class ISvcLocator;
 class IDetDataSvc;
 class DataObject;
-class ICondDBReader;
-namespace coral {
-  class AttributeList;
-}
-
 
 template <class TYPE> class CnvFactory;
 
@@ -107,12 +104,12 @@ protected:
    * set to NULL.
    */
   StatusCode getObject(const std::string &path, const cool::ChannelId &channel,
-                       boost::shared_ptr<coral::AttributeList> &obj,
+                       ICondDBReader::DataPtr &obj,
                        std::string &descr, Gaudi::Time &since, Gaudi::Time &until);
 
   /// Method kept for backward compatibility
   inline StatusCode getObject(const std::string &path,
-                              boost::shared_ptr<coral::AttributeList> &obj,
+                              ICondDBReader::DataPtr &obj,
                               std::string &descr, Gaudi::Time &since, Gaudi::Time &until)
   {
     return getObject(path,0,obj,descr,since,until);

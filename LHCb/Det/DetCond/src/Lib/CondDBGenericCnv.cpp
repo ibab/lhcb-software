@@ -1,4 +1,4 @@
-// $Id: CondDBGenericCnv.cpp,v 1.13 2006-07-14 09:27:33 marcocle Exp $
+// $Id: CondDBGenericCnv.cpp,v 1.14 2007-02-14 16:13:31 marcocle Exp $
 // Include files 
 #include "GaudiKernel/IDetDataSvc.h"
 #include "GaudiKernel/Time.h"
@@ -16,7 +16,6 @@
 #include "CoolKernel/Exception.h"
 
 // local
-#include "DetCond/ICondDBReader.h"
 #include "DetCond/CondDBGenericCnv.h"
 
 //-----------------------------------------------------------------------------
@@ -113,7 +112,7 @@ void CondDBGenericCnv::setObjValidity(Gaudi::Time &since, Gaudi::Time &till, Dat
 //  get an object from the conditions database
 //=========================================================================
 StatusCode CondDBGenericCnv::getObject (const std::string &path, const cool::ChannelId &channel,
-                                        boost::shared_ptr<coral::AttributeList> &data,
+                                        ICondDBReader::DataPtr &data,
                                         std::string &descr, Gaudi::Time &since, Gaudi::Time &until) {
 
   Gaudi::Time now;

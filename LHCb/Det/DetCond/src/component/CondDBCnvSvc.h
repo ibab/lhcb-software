@@ -1,4 +1,4 @@
-//$Id: CondDBCnvSvc.h,v 1.7 2006-12-14 12:56:16 ranjard Exp $
+//$Id: CondDBCnvSvc.h,v 1.8 2007-02-14 16:13:31 marcocle Exp $
 #ifndef DETCOND_CONDDBCNVSVC_H
 #define DETCOND_CONDDBCNVSVC_H 1
 
@@ -72,7 +72,7 @@ public:
   /// Try to retrieve an object from the Condition DataBase. If path points to a FolderSet,
   /// channel and when are ignored and data is set ot NULL.
   virtual StatusCode getObject (const std::string &path, const Gaudi::Time &when,
-                                boost::shared_ptr<coral::AttributeList> &data,
+                                DataPtr &data,
                                 std::string &descr, Gaudi::Time &since, Gaudi::Time &until, cool::ChannelId channel = 0);
 
   /// Retrieve the names of the children nodes of a FolderSet.

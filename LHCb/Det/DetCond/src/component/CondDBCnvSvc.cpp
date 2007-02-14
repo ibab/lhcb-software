@@ -1,4 +1,4 @@
-//$Id: CondDBCnvSvc.cpp,v 1.11 2006-12-14 12:56:16 ranjard Exp $
+//$Id: CondDBCnvSvc.cpp,v 1.12 2007-02-14 16:13:31 marcocle Exp $
 #include <string>
 
 #include "CondDBCnvSvc.h"
@@ -137,7 +137,7 @@ StatusCode CondDBCnvSvc::queryInterface(const InterfaceID& riid,
 //----------------------------------------------------------------------------
 // Implementation of ICondDBReader
 StatusCode CondDBCnvSvc::getObject (const std::string &path, const Gaudi::Time &when,
-                                           boost::shared_ptr<coral::AttributeList> &data,
+                                           DataPtr &data,
                                            std::string &descr, Gaudi::Time &since, Gaudi::Time &until, cool::ChannelId channel)
 {
   return m_dbReader->getObject(path,when,data,descr,since,until,channel);

@@ -1,4 +1,4 @@
-// $Id: CondDBDispatcherSvc.h,v 1.2 2006-07-14 09:27:33 marcocle Exp $
+// $Id: CondDBDispatcherSvc.h,v 1.3 2007-02-14 16:13:31 marcocle Exp $
 #ifndef COMPONENT_CONDDBDISPATCHERSVC_H 
 #define COMPONENT_CONDDBDISPATCHERSVC_H 1
 
@@ -37,7 +37,7 @@ public:
   /// Try to retrieve an object from the Condition DataBase. If path points to a FolderSet,
   /// channel and when are ignored and data is set ot NULL.
   virtual StatusCode getObject (const std::string &path, const Gaudi::Time &when,
-                                boost::shared_ptr<coral::AttributeList> &data,
+                                DataPtr &data,
                                 std::string &descr, Gaudi::Time &since, Gaudi::Time &until, cool::ChannelId channel = 0);
 
   /// Retrieve the names of the children nodes of a FolderSet.

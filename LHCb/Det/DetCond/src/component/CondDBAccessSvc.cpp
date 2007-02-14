@@ -1,4 +1,4 @@
-// $Id: CondDBAccessSvc.cpp,v 1.29 2006-08-31 13:53:03 marcocle Exp $
+// $Id: CondDBAccessSvc.cpp,v 1.30 2007-02-14 16:13:31 marcocle Exp $
 // Include files
 #include <sstream>
 //#include <cstdlib>
@@ -22,8 +22,10 @@
 #include "CoolKernel/IFolderSet.h"
 #include "CoolKernel/IObject.h"
 #include "CoolKernel/Exception.h"
-#include "CoolKernel/ExtendedAttributeListSpecification.h"
-#include "CoolKernel/PredefinedStorageHints.h"
+#include "CoolKernel/RecordSpecification.h"
+#include "CoolKernel/FolderSpecification.h"
+#include "CoolKernel/StorageType.h"
+#include "CoolKernel/Record.h"
 
 #include "CoolApplication/DatabaseSvcFactory.h"
 
@@ -43,7 +45,7 @@ DECLARE_SERVICE_FACTORY(CondDBAccessSvc)
 //-----------------------------------------------------------------------------
 
 // ==== Static data members
-cool::ExtendedAttributeListSpecification *CondDBAccessSvc::s_XMLstorageAttListSpec = NULL;
+cool::RecordSpecification *CondDBAccessSvc::s_XMLstorageSpec = NULL;
 unsigned long long CondDBAccessSvc::s_instances = 0;
 
 //=============================================================================
@@ -68,10 +70,10 @@ CondDBAccessSvc::CondDBAccessSvc(const std::string& name, ISvcLocator* svcloc):
   
   declareProperty("ConnectionTimeOut", m_connectionTimeOut = 0 );
   
-  if (s_XMLstorageAttListSpec == NULL){
+  if (s_XMLstorageSpec == NULL){
     // attribute list spec template
-    s_XMLstorageAttListSpec = new cool::ExtendedAttributeListSpecification();
-    s_XMLstorageAttListSpec->push_back("data", "string", cool::PredefinedStorageHints::STRING_MAXSIZE_16M);
+    s_XMLstorageSpec = new cool::RecordSpecification();
+    s_XMLstorageSpec->extend("data", cool::StorageType::String16M);
   }
   ++s_instances;
 }
@@ -81,9 +83,9 @@ CondDBAccessSvc::CondDBAccessSvc(const std::string& name, ISvcLocator* svcloc):
 CondDBAccessSvc::~CondDBAccessSvc() {
   // check how many instances are still around.
   // if it is the last one, delete the attribute list (if still there).
-  if (--s_instances == 0 && s_XMLstorageAttListSpec != NULL) {
-    delete s_XMLstorageAttListSpec;
-    s_XMLstorageAttListSpec = NULL;
+  if (--s_instances == 0 && s_XMLstorageSpec != NULL) {
+    delete s_XMLstorageSpec;
+    s_XMLstorageSpec = NULL;
   }
 }
 
@@ -256,10 +258,8 @@ StatusCode CondDBAccessSvc::setTag(const std::string &_tag){
   StatusCode sc = i_checkTag(_tag);
   if ( sc.isSuccess() ) {
     m_dbTAG = _tag;
-    if (m_useCache) {
-      // the cache must be cleared if the tag is changed
-      m_cache->clear();
-    }
+    // the cache must be cleared if the tag is changed
+    clearCache();
   } else {
     MsgStream log(msgSvc(), name() );
     log << MSG::WARNING << "Unable to set TAG \"" << _tag
@@ -329,15 +329,17 @@ StatusCode CondDBAccessSvc::createNode(const std::string &path,
       break;
     case XML:
       {
+        cool::FolderSpecification spec((vers == SINGLE)
+                                       ?cool::FolderVersioning::SINGLE_VERSION
+                                       :cool::FolderVersioning::MULTI_VERSION,
+                                       *s_XMLstorageSpec);
+        
         // append to the description the storage type
         std::ostringstream _descr;
         _descr << descr << " <storage_type=" << std::dec << XML_StorageType << ">";
         m_db->createFolder(path,
-                           *s_XMLstorageAttListSpec,
+                           spec,
                            _descr.str(),
-                           (vers == SINGLE)
-                           ?cool::FolderVersioning::SINGLE_VERSION
-                           :cool::FolderVersioning::MULTI_VERSION,
                            true);
       }
       break;
@@ -385,19 +387,21 @@ StatusCode CondDBAccessSvc::createNode(const std::string &path,
       break;
     case XML:
       {
+        cool::RecordSpecification recSpec;
+        for (std::set<std::string>::const_iterator f = fields.begin(); f != fields.end(); ++f ){
+          recSpec.extend(*f, cool::StorageType::String16M);
+        }
+        cool::FolderSpecification spec((vers == SINGLE)
+                                       ?cool::FolderVersioning::SINGLE_VERSION
+                                       :cool::FolderVersioning::MULTI_VERSION,
+                                       recSpec);
+
         // append to the description the storage type
         std::ostringstream _descr;
         _descr << descr << " <storage_type=" << std::dec << XML_StorageType << ">";
-        cool::ExtendedAttributeListSpecification spec;
-        for (std::set<std::string>::const_iterator f = fields.begin(); f != fields.end(); ++f ){
-          spec.push_back(*f, "string", cool::PredefinedStorageHints::STRING_MAXSIZE_16M);
-        }
         m_db->createFolder(path,
                            spec,
                            _descr.str(),
-                           (vers == SINGLE)
-                           ?cool::FolderVersioning::SINGLE_VERSION
-                           :cool::FolderVersioning::MULTI_VERSION,
                            true);
       }
       break;
@@ -439,10 +443,8 @@ StatusCode CondDBAccessSvc::storeXMLData(const std::string &path, const std::str
   try {
     // retrieve folder pointer
     cool::IFolderPtr folder = m_db->getFolder(path);
-    coral::AttributeList payload;
-    /// @todo This will probably change with newer COOL
-    payload.extend("data","string");
-    payload["data"].data<std::string>() = data;
+    cool::Record payload(folder->payloadSpecification());
+    payload["data"].setValue<cool::String16M>(data);
     folder->storeObject(timeToValKey(since),timeToValKey(until),payload,channel);
 
   } catch (cool::FolderNotFound) {
@@ -483,11 +485,9 @@ StatusCode CondDBAccessSvc::storeXMLData(const std::string &path, const std::map
   try {
     // retrieve folder pointer
     cool::IFolderPtr folder = m_db->getFolder(path);
-
-    /// @todo This will change with COOL 1.4
-    coral::AttributeList payload(folder->payloadSpecification());
+    cool::Record payload(folder->payloadSpecification());
     for (std::map<std::string,std::string>::const_iterator d = data.begin(); d != data.end(); ++d ){
-      payload[d->first].data<std::string>() = d->second;
+      payload[d->first].setValue<cool::String16M>(d->second);
     }
     
     folder->storeObject(timeToValKey(since),timeToValKey(until),payload,channel);
@@ -681,7 +681,7 @@ StatusCode CondDBAccessSvc::i_recursiveTag(const std::string &path, const std::s
 }
 
 StatusCode CondDBAccessSvc::getObject(const std::string &path, const Gaudi::Time &when,
-                                      boost::shared_ptr<coral::AttributeList> &data,
+                                      DataPtr &data,
                                       std::string &descr, Gaudi::Time &since, Gaudi::Time &until, cool::ChannelId channel){
 
   try {
@@ -738,7 +738,7 @@ StatusCode CondDBAccessSvc::getObject(const std::string &path, const Gaudi::Time
       }
 
       // deep copy of the attr. list
-      data = boost::shared_ptr<coral::AttributeList>(new coral::AttributeList(obj->payload()));
+      data = DataPtr(new cool::Record(obj->payload()));
 
       since = valKeyToTime(obj->since());
       until = valKeyToTime(obj->until());
@@ -814,7 +814,7 @@ StatusCode CondDBAccessSvc::getChildNodes (const std::string &path, std::vector<
 //
 //=========================================================================
 StatusCode CondDBAccessSvc::cacheAddFolder(const std::string &path, const std::string &descr,
-                                           const cool::ExtendedAttributeListSpecification& spec) {
+                                           const cool::IRecordSpecification& spec) {
   if (!m_useCache) {
     MsgStream log(msgSvc(),name());
     log << MSG::ERROR << "Cache not in use: I cannot add a folder to it." << endmsg;
@@ -841,7 +841,7 @@ StatusCode CondDBAccessSvc::cacheAddFolderSet(const std::string &path, const std
 StatusCode CondDBAccessSvc::cacheAddXMLFolder(const std::string &path) {
   std::ostringstream _descr;
   _descr << " <storage_type=" << std::dec << XML_StorageType << ">";
-  return cacheAddFolder(path,_descr.str(),*s_XMLstorageAttListSpec);
+  return cacheAddFolder(path,_descr.str(),*s_XMLstorageSpec);
 }
 
 //=========================================================================
@@ -850,9 +850,9 @@ StatusCode CondDBAccessSvc::cacheAddXMLFolder(const std::string &path) {
 StatusCode CondDBAccessSvc::cacheAddXMLFolder(const std::string &path, const std::set<std::string> &fields) {
   std::ostringstream _descr;
   _descr << " <storage_type=" << std::dec << XML_StorageType << ">";
-  cool::ExtendedAttributeListSpecification spec;
+  cool::RecordSpecification spec;
   for (std::set<std::string>::const_iterator f = fields.begin(); f != fields.end(); ++f ){
-    spec.push_back(*f, "string", cool::PredefinedStorageHints::STRING_MAXSIZE_16M);
+    spec.extend(*f, cool::StorageType::String16M);
   }
   return cacheAddFolder(path,_descr.str(),spec);
 }
@@ -861,7 +861,7 @@ StatusCode CondDBAccessSvc::cacheAddXMLFolder(const std::string &path, const std
 //
 //=========================================================================
 StatusCode CondDBAccessSvc::cacheAddObject(const std::string &path, const Gaudi::Time &since, const Gaudi::Time &until,
-                                           const coral::AttributeList& payload, cool::ChannelId channel) {
+                                           const cool::IRecord& payload, cool::ChannelId channel) {
   if (!m_useCache) {
     MsgStream log(msgSvc(),name());
     log << MSG::ERROR << "Cache not in use: I cannot add an object to it." << endmsg;
@@ -878,9 +878,8 @@ StatusCode CondDBAccessSvc::cacheAddObject(const std::string &path, const Gaudi:
 StatusCode CondDBAccessSvc::cacheAddXMLData(const std::string &path, const Gaudi::Time &since, const Gaudi::Time &until,
                                             const std::string &data, cool::ChannelId channel) {
   /// @todo this is affected by the evolution in COOL API
-  coral::AttributeList payload;
-  payload.extend("data","string");
-  payload["data"].data<std::string>() = data;
+  cool::Record payload(*s_XMLstorageSpec);
+  payload["data"].setValue<cool::String16M>(data);
   return cacheAddObject(path,since,until,payload,channel);
 }
 
@@ -889,13 +888,27 @@ StatusCode CondDBAccessSvc::cacheAddXMLData(const std::string &path, const Gaudi
 //=========================================================================
 StatusCode CondDBAccessSvc::cacheAddXMLData(const std::string &path, const Gaudi::Time &since, const Gaudi::Time &until,
                                             const std::map<std::string,std::string> &data, cool::ChannelId channel) {
-  /// @todo this is affected by the evolution in COOL API
-  coral::AttributeList payload;
+  cool::RecordSpecification spec;
   for (std::map<std::string,std::string>::const_iterator d = data.begin(); d != data.end(); ++d ){
-    payload.extend(d->first,"string");
-    payload[d->first].data<std::string>() = d->second;
+    spec.extend(d->first,cool::StorageType::String16M);
+  }
+  
+  cool::Record payload(spec);
+
+  for (std::map<std::string,std::string>::const_iterator d = data.begin(); d != data.end(); ++d ){
+    payload[d->first].setValue<cool::String16M>(d->second);
   }
   return cacheAddObject(path,since,until,payload,channel);
+}
+
+//=========================================================================
+//
+//=========================================================================
+void CondDBAccessSvc::clearCache()
+{
+  if (m_useCache) {
+    m_cache->clear();
+  }
 }
 
 //=========================================================================

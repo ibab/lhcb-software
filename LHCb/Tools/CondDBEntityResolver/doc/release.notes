@@ -5,6 +5,12 @@
 !               CondDB URLs into xml documents
 !-----------------------------------------------------------------------------
 
+
+!============================ NEEDS LCGCMT >= 50 ==============================
+
+! 2007-02-14 - Marco CLEMENCIC
+ - Updated to changes in COOL API
+
 ================= Tools/CondDBEntityResolver v3r1 2007-02-05 =================
 
                    ==== NEEDS Tools/XmlTools v5r0 ====

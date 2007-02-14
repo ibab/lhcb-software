@@ -1,4 +1,4 @@
-// $Id: CondDBEntityResolverSvc.cpp,v 1.6 2007-02-05 18:44:45 marcocle Exp $
+// $Id: CondDBEntityResolverSvc.cpp,v 1.7 2007-02-14 16:12:52 marcocle Exp $
 // Include files 
 
 #include "GaudiKernel/IDetDataSvc.h"
@@ -15,9 +15,8 @@
 #include "XmlTools/ValidInputSource.h"
 
 #include "CoolKernel/IObject.h"
-
-#include "CoralBase/AttributeList.h"
-#include "CoralBase/AttributeListException.h"
+#include "CoolKernel/IRecord.h"
+#include "CoolKernel/RecordException.h"
 
 // local
 #include "CondDBEntityResolverSvc.h"
@@ -183,7 +182,7 @@ xercesc::InputSource *CondDBEntityResolverSvc::resolveEntity(const XMLCh *const,
 
   // outputs
   std::string descr;
-  boost::shared_ptr<coral::AttributeList> data;
+  ICondDBReader::DataPtr data;
   Gaudi::Time since, until;
   
   StatusCode sc = m_condDBReader->getObject(path,now,data,descr,since,until,channel).isSuccess();
@@ -196,7 +195,7 @@ xercesc::InputSource *CondDBEntityResolverSvc::resolveEntity(const XMLCh *const,
     std::string xml_data;
     try {
       xml_data = (*data)[data_field_name].data<std::string>();
-    } catch (coral::AttributeListException &e) {
+    } catch (cool::RecordSpecificationUnknownField &e) {
       throw GaudiException(std::string("I cannot find the data inside COOL object: ") + e.what(), name(), StatusCode::FAILURE);
     }
     // Create a copy of the string for the InputSource

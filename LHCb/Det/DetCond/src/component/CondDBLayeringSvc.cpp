@@ -1,4 +1,4 @@
-// $Id: CondDBLayeringSvc.cpp,v 1.1 2006-07-14 09:27:33 marcocle Exp $
+// $Id: CondDBLayeringSvc.cpp,v 1.2 2007-02-14 16:13:31 marcocle Exp $
 // Include files 
 
 #include "GaudiKernel/SvcFactory.h"
@@ -94,7 +94,7 @@ StatusCode CondDBLayeringSvc::finalize(){
 //  retrieve an object
 //=========================================================================
 StatusCode CondDBLayeringSvc::getObject (const std::string &path, const Gaudi::Time &when,
-                                           boost::shared_ptr<coral::AttributeList> &data,
+                                           DataPtr &data,
                                            std::string &descr, Gaudi::Time &since, Gaudi::Time &until, cool::ChannelId channel)
 {
   std::vector<ICondDBReader*>::iterator layer;
