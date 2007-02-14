@@ -6,6 +6,10 @@
 !               MEP fragments
 !-----------------------------------------------------------------------------
 
+! 2007-02-14 - Sai Suman
+ - Removed MDFWriterNet files completely from DAQ/MDF/src and 
+   DAQ/MDF/MDF (to remove dependence on XMLRPC).
+
 !======================= MDF v2r4p1 2007-02-13 ===============================
 ! 2007-02-13 - Marco Cattaneo
  - Fix requirements for InstallArea
