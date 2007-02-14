@@ -23,7 +23,7 @@
       -->
       <detelemref href="Downstream/structure.xml#DownstreamRegion" />
 
-      <detelem classID="9999" name="Dummy">
+      <detelem classID="6669999" name="Dummy">
 	<param name="comment" type="string"> Dummy detector element used to test the update </param>
 	<conditioninfo name="ReadOut" condition="/dd/Conditions/ReadoutConf/DummyDE/Configuration"/>
 	<conditioninfo name="Temperature" condition="/dd/Conditions/Environment/DummyDE/Temperature"/>
