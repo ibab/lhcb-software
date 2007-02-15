@@ -1,4 +1,4 @@
-// $Id: IHltSummaryTool.h,v 1.2 2007-02-14 17:23:51 cattanem Exp $
+// $Id: IHltSummaryTool.h,v 1.3 2007-02-15 09:32:18 cattanem Exp $
 #ifndef HLTBASE_IHLTSUMMARYTOOL_H 
 #define HLTBASE_IHLTSUMMARYTOOL_H 1
 
@@ -12,7 +12,7 @@
 //forward declarations
 namespace LHCb {
   class HltSummary;
-  class State;
+  class Track;
 };
 
 static const InterfaceID IID_IHltSummaryTool ( "IHltSummaryTool", 1, 0 );
