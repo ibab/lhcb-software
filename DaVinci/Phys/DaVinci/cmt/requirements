@@ -1,11 +1,11 @@
-# $Id: requirements,v 1.340 2007-02-06 09:26:00 jpalac Exp $
+# $Id: requirements,v 1.341 2007-02-15 11:31:00 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg, J. Palacios
 #
 
 #============================================================================
 package           DaVinci
-version           v18r0
+version           v18r1
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -59,16 +59,16 @@ use SimComponents       v*    Sim
 use LinkerInstances     v*    Event
 
 #-- Lbcom
-use LbcomSys    v6r0
+use LbcomSys    v6r1
 
 #-- Rec
-use RecSys      v4r0
+use RecSys      v4r1
 
 #-- Hlt
 #use HltSys      v1r1
 
 #--Phys
-use PhysSys     v5r0
+use PhysSys     v5r1
 
 # Build DaVinci Application with standard executable
 # Note that user code is located in a component library (see details

@@ -1,8 +1,15 @@
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
-! Responsible : Juan. Palacios
+! Responsible : Juan Palacios
 ! Purpose     : Analysis program for LHCb
 !-----------------------------------------------------------------------------
+
+! 2007-02-15 - Patrick Koppenburg
+ - Updated version with HLT
+
+!========================== DaVinci v17r8 2007-01-12 ===================
+! 2007-??-?? - Juan PALACIOS
+ - First version with install area
 
 !========================== DaVinci v17r8 2007-01-12 ===================
 
