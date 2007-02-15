@@ -1,12 +1,13 @@
 ! =============================================================================
-! $Id: release.notes,v 1.92 2007-02-14 16:32:12 marcocle Exp $
+! $Id: release.notes,v 1.93 2007-02-15 16:59:06 cattanem Exp $
 ! =============================================================================
 ! package Ex/DetCondExample
 ! package manager : Marco Clemencic
 ! =============================================================================
 
-!============================ NEEDS LCGCMT >= 50 ==============================
+!=========== Ex/DetCondExample v11r0 2007-02-15 ==============================
 
+               ======= NEEDS LCGCMT >= 50 ========
 ! 2007-02-14 - Marco CLEMENCIC
  - Updated to changes in COOL API
  - Removed few obsolete file
