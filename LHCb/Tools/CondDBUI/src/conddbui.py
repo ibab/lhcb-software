@@ -322,7 +322,7 @@ class CondDB:
            (i.e. if the node is a multi version folder OR if it is a folderset or does not
            exist).
         '''
-        assert self.db <> None, "Database not connected !"
+        assert self.db != None, "Database not connected !"
         if self.db.existsFolder(path):
             folder = self.db.getFolder(path)
             return folder.versioningMode() == cool.FolderVersioning.SINGLE_VERSION
@@ -347,7 +347,7 @@ class CondDB:
         outputs:
             list of strings; the list of storage keys.
         '''
-        assert self.db <> None, "No database connected !"
+        assert self.db != None, "No database connected !"
         assert self.db.existsFolder(path), "Folder %s not found"%path
         folder = self.db.getFolder(path)
         return folder.payloadSpecification().keys()
@@ -368,14 +368,19 @@ class CondDB:
         outputs:
             dictionary; the contents of the attribute list
         '''
-        assert self.db <> None, "No database connected !"
+        assert self.db != None, "No database connected !"
         if self.db.existsFolder(path):
             folder = self.db.getFolder(path)
-            if tag == '':
-                if folder.versioningMode() == cool.FolderVersioning.MULTI_VERSION:
-                    tag = self.defaultTag
             try:
-                obj = folder.findObject(cool.ValidityKey(when), channelID, tag)
+                if folder.versioningMode() == cool.FolderVersioning.MULTI_VERSION:
+                    tag == '': tag = self.defaultTag
+                    if tag.upper() not in [ '', HEAD ]:
+                        obj = folder.findObject(cool.ValidityKey(when), channelID, folder.resolveTag(tag))
+                    else:
+                        obj = folder.findObject(cool.ValidityKey(when), channelID)
+                else:
+                    obj = folder.findObject(cool.ValidityKey(when), channelID)
+                    
             except Exception, details:
                 raise Exception, details
             else:
@@ -401,7 +406,7 @@ class CondDB:
         outputs:
             string; the contents of the condition data.
         '''
-        assert self.db <> None, "No database connected !"
+        assert self.db != None, "No database connected !"
         try:
             payload = self.getPayload(path, when, channelID, tag)
             xmlString = str(payload[payloadKey])
@@ -429,8 +434,8 @@ class CondDB:
             The first two integers are the since and until values of the interval of validity. The
             third integer is the channel ID, and the last integer is the insertion time.
         '''
-        assert self.db <> None, "No database connected !"
-        if channelID <> None:
+        assert self.db != None, "No database connected !"
+        if channelID != None:
             channelSelection = cool.ChannelSelection(channelID)
         else:
             channelSelection = cool.ChannelSelection()
@@ -442,7 +447,10 @@ class CondDB:
                 if folder.versioningMode() == cool.FolderVersioning.MULTI_VERSION:
                     if tag == '':
                         tag = self.defaultTag
-                    objIter = folder.browseObjects(cool.ValidityKey(fromTime), cool.ValidityKey(toTime), channelSelection, tag)
+                    if tag.upper() not in [ '', HEAD ]:
+                        objIter = folder.browseObjects(cool.ValidityKey(fromTime), cool.ValidityKey(toTime), channelSelection, folder.resolve(tag))
+                    else:
+                        objIter = folder.browseObjects(cool.ValidityKey(fromTime), cool.ValidityKey(toTime), channelSelection)
                 else:
                     objIter = folder.browseObjects(cool.ValidityKey(fromTime), cool.ValidityKey(toTime), channelSelection)
             except Exception, details:
@@ -481,7 +489,7 @@ class CondDB:
             The first two integers are the since and until values of the interval of validity.
             The third integer is the channel ID, and the last integer is the insertion time.
         '''
-        assert self.db <> None, "No database connected !"
+        assert self.db != None, "No database connected !"
         try:
             objList = self.getPayloadList(path, fromTime, toTime, channelID, tag)
             for i in range(len(objList)):
@@ -500,7 +508,7 @@ class CondDB:
         outputs:
             list of strings; the paths of the child nodes.
         '''
-        assert self.db <> None, "No database connected !"
+        assert self.db != None, "No database connected !"
         if self.db.existsFolderSet(path):
             folderSet = self.db.getFolderSet(path)
             nodeList = list(folderSet.listFolders()) + list(folderSet.listFolderSets())
@@ -519,7 +527,7 @@ class CondDB:
             list of strings; the paths of all the elements of the tree under the
             given node.
         '''
-        assert self.db <> None, "No database connected !"
+        assert self.db != None, "No database connected !"
         if self.db.existsFolderSet(path):
             folderSet = self.db.getFolderSet(path)
             # Get the lists of folders and foldersets
@@ -545,7 +553,7 @@ class CondDB:
         outputs:
             list of strings; the paths of all the nodes of the database
         '''
-        assert self.db <> None, "No database connected !"
+        assert self.db != None, "No database connected !"
         return list(self.db.listAllNodes())
 
 
@@ -565,7 +573,7 @@ class CondDB:
         outputs:
             md5 object; result from the md5 check sum.
         '''
-        assert self.db <> None, "No database connected !"
+        assert self.db != None, "No database connected !"
         # retrieve the list of nodes to check
         if self.db.existsFolderSet(path):
             nodesToCheck = self.getAllChildNodes(path)
@@ -622,7 +630,7 @@ class CondDB:
             tagList: list of Tag; the list of Tag objects defined for this node.
                      They contains links to their parent Tag objects.
         '''
-        assert self.db <> None, "No database connected !"
+        assert self.db != None, "No database connected !"
         if not self.db.existsFolderSet(path) and not self.db.existsFolder(path):
             raise Exception, "Node %s was not found"%path
         else:
@@ -688,7 +696,7 @@ class CondDB:
         outputs:
             none
         '''
-        assert self.db <> None, "No database connected !"
+        assert self.db != None, "No database connected !"
         assert not self.readOnly , "The database is in Read Only mode."
         if self.db.existsFolder(path):
             node = self.db.getFolder(path)
@@ -711,7 +719,7 @@ class CondDB:
         outputs:
             none
         '''
-        assert self.db <> None, "No database connected !"
+        assert self.db != None, "No database connected !"
         assert not self.readOnly , "The database is in Read Only mode."
         if self.db.existsFolder(path):
             node = self.db.getFolder(path)
@@ -737,7 +745,7 @@ class CondDB:
             string; the generated tag name. Its format is:
             '_auto_' + baseName + '-' + 6 random alphanumeric characters.
         """
-        assert self.db <> None, "No database connected !"
+        assert self.db != None, "No database connected !"
         # Create the list of ASCII codes for alpha numeric characters
         alphaNumList = range(0x30, 0x3a) + range(0x41, 0x5b) + range(0x61, 0x7b)
         tagName = ''
@@ -760,7 +768,7 @@ class CondDB:
         outputs:
             none
         '''
-        assert self.db <> None, "No database connected !"
+        assert self.db != None, "No database connected !"
         assert not self.readOnly , "The database is in Read Only mode."
         if self.db.existsFolder(path):
             folder = self.db.getFolder(path)
@@ -790,9 +798,9 @@ class CondDB:
         outputs:
             none
         '''
-        assert self.db <> None, "No database connected !"
+        assert self.db != None, "No database connected !"
         assert not self.readOnly , "The database is in Read Only mode."
-        if reserved <> None:
+        if reserved != None:
             reservedTags = reserved[:]
         else:
             reservedTags = []
@@ -852,7 +860,7 @@ class CondDB:
         outputs:
             none
         '''
-        assert self.db <> None, "No database connected !"
+        assert self.db != None, "No database connected !"
         assert not self.readOnly , "The database is in Read Only mode."
         # Check if the ancestor tag really exists.
         if not self.db.existsTag(ancestorTag):
@@ -936,7 +944,7 @@ class CondDB:
         outputs:
             none
         '''
-        assert self.db <> None, "No database connected !"
+        assert self.db != None, "No database connected !"
         assert not self.readOnly , "The database is in Read Only mode."
         # Retrieve the node
         if self.db.existsFolder(path):
@@ -952,7 +960,7 @@ class CondDB:
         # Get the tag object to be able to access parent tags
         tagList = self.getTagList(path)
         tag = tagList.pop()
-        while tagList and tag.name <> tagName:
+        while tagList and tag.name != tagName:
             tag = tagList.pop()
 
         # If the node is a folderset, deleting the tag consists in deleting
@@ -1042,7 +1050,7 @@ class CondDB:
         outputs:
             none
         '''
-        assert self.db <> None, "No database connected !"
+        assert self.db != None, "No database connected !"
         assert not self.readOnly , "The database is in Read Only mode."
         if storageType == 'NODE':
             try:
@@ -1106,7 +1114,7 @@ class CondDB:
         outputs:
             none
         '''
-        assert self.db <> None, "No database connected !"
+        assert self.db != None, "No database connected !"
         assert not self.readOnly , "The database is in Read Only mode."
         if self.db.existsFolder(path):
             folder = self.db.getFolder(path)
@@ -1150,7 +1158,7 @@ class CondDB:
         outputs:
             none
         """
-        assert self.db <> None, "No database connected !"
+        assert self.db != None, "No database connected !"
         assert not self.readOnly , "The database is in Read Only mode."
         # Deal first with the full tree deletion
         if delete_subnodes and self.db.existsFolderSet(path):
