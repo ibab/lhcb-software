@@ -1,4 +1,4 @@
-// $Id: ITrackL0CaloMatchTool.h,v 1.2 2007-02-14 17:23:52 cattanem Exp $
+// $Id: ITrackL0CaloMatchTool.h,v 1.3 2007-02-15 09:18:14 cattanem Exp $
 #ifndef HLTBASE_ITRACKL0CALOMATCHTOOL_H 
 #define HLTBASE_ITRACKL0CALOMATCHTOOL_H 1
 
@@ -12,7 +12,7 @@
 //forward declarations
 namespace LHCb {
   class L0CaloCandidate;
-  class State;
+  class Track;
 };
 
 static const InterfaceID IID_ITrackL0CaloMatchTool ( "ITrackL0CaloMatchTool", 1, 0 );
