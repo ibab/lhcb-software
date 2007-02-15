@@ -3,6 +3,9 @@
 !----------------------------------------------------------------------------
 
 !======================== MuonPIDChecker v1r0 2007-02-12 ====================
+! 2007-02-14 - Erica Polycarpo
+- Updated reference values in the printout
+
 ! 2007-02-08 - Chris Jones
  - Some minor tweeks for gaudi v19r1
  - Remove some temporary files not needed in CVS
