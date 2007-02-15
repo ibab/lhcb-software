@@ -1,5 +1,5 @@
 package EventSys
-version v23r1
+version v23r2
 
 branches doc cmt
 
@@ -7,7 +7,7 @@ branches doc cmt
 
 use EventBase   v2r0p1  Event
 use MCEvent     v2r0p1  Event
-use DigiEvent   v2r0p1  Event
+use DigiEvent   v2r1    Event
 use RecEvent    v2r1    Event
 use L0Event     v16r1   Event
 use PhysEvent   v11r1   Event
