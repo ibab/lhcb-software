@@ -1,4 +1,4 @@
-// $Id: DeVeloSensor.cpp,v 1.25 2006-12-20 15:34:30 cattanem Exp $
+// $Id: DeVeloSensor.cpp,v 1.26 2007-02-15 17:37:03 dhcroft Exp $
 //==============================================================================
 #define VELODET_DEVELOSENSOR_CPP 1
 //==============================================================================
@@ -80,7 +80,11 @@ StatusCode DeVeloSensor::initialize()
   initSensor();
   IGeometryInfo* geom = geometry();
   m_geometry = geom;
-  cacheGeometry();
+  sc = cacheGeometry();
+  if(!sc){    
+    msg << MSG::ERROR <<"Failed to cache geometry"<<endmsg; 
+    return sc;
+  }
 
   // get parent Velo Half box for pattern recognition alignment purposes
   // heirarchy should be sensor -> R/Phi Pair -> Module -> Velo(Left|Right)
@@ -116,9 +120,10 @@ StatusCode DeVeloSensor::initialize()
 //==============================================================================
 /// Cache geometry parameters
 //==============================================================================
-void DeVeloSensor::cacheGeometry() 
+StatusCode DeVeloSensor::cacheGeometry() 
 {
   m_z = m_geometry->toGlobal(Gaudi::XYZPoint(0,0,0)).z();
+  return StatusCode::SUCCESS;
 }
 //==============================================================================
 /// Convert local position to global position
@@ -333,6 +338,10 @@ StatusCode DeVeloSensor::registerConditionCallBacks() {
   updMgrSvc()->registerCondition(this,
                                  condition(m_readoutConditionName.c_str()).path(),
                                  &DeVeloSensor::updateReadoutCondition);
+
+  // geometry conditions (just m_z for now)
+  updMgrSvc()->
+    registerCondition(this,this->m_geometry,&DeVeloSensor::cacheGeometry);
 
   sc = updMgrSvc()->update(this);
   if(!sc.isSuccess()) {
