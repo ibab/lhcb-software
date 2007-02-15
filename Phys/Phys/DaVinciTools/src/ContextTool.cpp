@@ -1,4 +1,4 @@
-// $Id: ContextTool.cpp,v 1.3 2007-01-15 10:32:27 jpalac Exp $
+// $Id: ContextTool.cpp,v 1.4 2007-02-15 17:18:01 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -81,19 +81,19 @@ StatusCode ContextTool::getTools(){
       if (NULL==m_desktop) {
         err() << "No desktop found" << endmsg;
         return StatusCode::FAILURE;
-      } else info() << "Desktop of parent DVAlgorithm found" << endmsg ;
+      } else debug() << "Desktop of parent DVAlgorithm found" << endmsg ;
       
       m_geom = dvalgo->geomDispCalculator() ;
       if (NULL==m_geom) {
         err() << "No geomDispCalculator found" << endmsg;
         return StatusCode::FAILURE;
-      } else info() << "geomDispCalculator of parent DVAlgorithm found" << endmsg ;
+      } else debug() << "geomDispCalculator of parent DVAlgorithm found" << endmsg ;
       
       m_fitter = dvalgo->vertexFitter() ;
       if (NULL==m_geom) {
         err() << "No geomDispCalculator found" << endmsg;
         return StatusCode::FAILURE;
-      } else info() << "geomDispCalculator of parent DVAlgorithm found" << endmsg ;
+      } else debug() << "geomDispCalculator of parent DVAlgorithm found" << endmsg ;
     }
   }
   m_onOffline = tool<IOnOffline>("OnOfflineTool",this);

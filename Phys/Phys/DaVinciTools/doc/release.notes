@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.251 2007-02-06 10:17:29 pkoppenb Exp $
+! $Id: release.notes,v 1.252 2007-02-15 17:18:01 pkoppenb Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2007-02-15 - Patrick Koppenburg
+ - ContextTool: reduce verbosity of initialisation
 
 ! 2007-02-06 - P. Koppenburg
   - OnOfflineTools: get an instance of PVRelator and return it via pvRelator()
