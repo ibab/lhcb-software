@@ -5,6 +5,12 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v22r2>2007-02-15 LHCbSys v22r2</A></H1><PRE>
+This version uses Gaudi v19r1. Fully compatible with DC06 data
+
+- Packages modified: DetSys v9r2, OTDet v7r2, EventSys v23r2, DigiEvent v2r1,
+                     HltBase v2r2, LinkerInstances v3r2p1
+
 </PRE><H1><A NAME=v22r1>2007-02-13 LHCbSys v22r1</A></H1><PRE>
 This version uses Gaudi v19r1. Fully compatible with DC06 data
 

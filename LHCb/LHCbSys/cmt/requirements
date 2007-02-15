@@ -1,5 +1,5 @@
 package LHCbSys
-version v22r1
+version v22r2
 
 branches doc cmt
 
@@ -23,13 +23,13 @@ use L0MuonKernel          v6r0    L0      # Andrei Tsaregorodtsev, Julien Cogan
 use ProcessorKernel       v4r0    L0      # Andrei Tsaregorodtsev, Julien Cogan
 
 # Detector description
-use DetSys                v9r1    Det     # Marco Cattaneo
+use DetSys                v9r2    Det     # Marco Cattaneo
 use VeloDet               v11r0   Det     # Mark Tobin
 use DetDesc               v17r0   Det     # Marco Clemencic, Juan Palacios
 use DetDescCnv            v4r1    Det     # Marco Clemencic, Juan Palacios
 use DetDescSvc            v1r10   Det     # Marco Clemencic, Matt Needham
 use XmlTools              v5r0    Tools   # Marco Clemencic
-use OTDet                 v7r1    Det     # Jan Amoraal
+use OTDet                 v7r2    Det     # Jan Amoraal
 use CaloDet               v8r0    Det     # Olivier Deschamps
 use CaloDetXmlCnv         v3r0    Det     # Olivier Deschamps
 use MuonDet               v6r0    Det     # Alessia Satta, Alessio Sarti
@@ -38,10 +38,10 @@ use RichDet               v10r1   Det     # Chris Jones
 use STDet                 v3r1    Det     # Jeroen van Tilburg, Matt Needham
 
 # Event data model
-use EventSys              v23r1   Event   # Marco Cattaneo
+use EventSys              v23r2   Event   # Marco Cattaneo
 use EventBase             v2r0p1  Event   # Marco Cattaneo, Gloria Corti
 use MCEvent               v2r0p1  Event   # Gloria Corti and sub-det experts
-use DigiEvent             v2r0p1  Event   # Marco Cattaneo and sub-det experts
+use DigiEvent             v2r1    Event   # Marco Cattaneo and sub-det experts
 use RecEvent              v2r1    Event   # Marco Cattaneo and sub-det experts
 use L0Event               v16r1   Event   # Julien Cogan
 use PhysEvent             v11r1   Event   # Patrick Koppenburg, Juan Palacios
@@ -70,8 +70,8 @@ use PatTools              v3r0   Pat     # Olivier Callot
 use TrackInterfaces       v3r0   Tr      # Eduardo Rodrigues, Jose Hernando
 use TrackMCInterfaces     v2r0   Tr      # Eduardo Rodrigues
 use TsaKernel             v2r1   Tr      # Matt Needham
-use HltBase               v2r1   Hlt     # Jose Angel Hernando-Morata
-use LinkerInstances       v3r2   Event   # Eduardo Rodrigues, Thomas Ruf
+use HltBase               v2r2   Hlt     # Jose Angel Hernando-Morata
+use LinkerInstances       v3r2p1 Event   # Eduardo Rodrigues, Thomas Ruf
 use DetCond               v10r0  Det     # Marco Clemencic
 use CondDBEntityResolver  v3r1   Tools   # Marco Clemencic
 use LoKiCore              v2r0   Phys    # Ivan Belyaev
