@@ -1,12 +1,11 @@
 package MuonPIDChecker
-version v1r0
+version v1r0p1
 
 branches src cmt doc options
 include_path none
 
 # add "use" statements
 use GaudiAlg           v*
-use L0Event            v* Event
 use RecEvent           v* Event
 use TrackEvent         v* Event
 use MCEvent            v* Event
