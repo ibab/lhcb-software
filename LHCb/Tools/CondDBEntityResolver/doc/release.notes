@@ -6,12 +6,14 @@
 !-----------------------------------------------------------------------------
 
 
-!============================ NEEDS LCGCMT >= 50 ==============================
+!================ Tools/CondDBEntityResolver v3r2 2007-02-15 =================
+
+                      ==== NEEDS LCGCMT >= 50 ====
 
 ! 2007-02-14 - Marco CLEMENCIC
  - Updated to changes in COOL API
 
-================= Tools/CondDBEntityResolver v3r1 2007-02-05 =================
+!================= Tools/CondDBEntityResolver v3r1 2007-02-05 ================
 
                    ==== NEEDS Tools/XmlTools v5r0 ====
 
@@ -24,18 +26,18 @@
    propagate the validity of the CondDB string back to the caller.
    (needs Tools/XmlTools v4r1)
 
-================= Tools/CondDBEntityResolver v3r0 2006-07-14 =================
+!================= Tools/CondDBEntityResolver v3r0 2006-07-14 ================
 ! 2006-07-14 - Marco CLEMENCIC
  - Updated to DetCond v9r0
 
-================= Tools/CondDBEntityResolver v2r0 2006-05-08 =================
+!================= Tools/CondDBEntityResolver v2r0 2006-05-08 ================
 ! 2006-05-08 - Marco Clemencic
  - Updated to Gaudi v18r3, DetCond v8r0
 
-================= Tools/CondDBEntityResolver v1r1 2006-02-03 =================
+!================= Tools/CondDBEntityResolver v1r1 2006-02-03 ================
 ! 2006-02-01 - Marco Clemencic
  - Updated to Gaudi v18r2 (use Gaudi::Time instead of ITime+TimePoint)
 
-================= Tools/CondDBEntityResolver v1r0 2005-10-26 =================
+!================= Tools/CondDBEntityResolver v1r0 2005-10-26 ================
 ! 2005-10-26 - Marco Clemencic
  - First implementation
