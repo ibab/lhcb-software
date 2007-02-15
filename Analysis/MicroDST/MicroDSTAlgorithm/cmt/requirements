@@ -1,0 +1,30 @@
+package MicroDST
+version v1r0
+
+
+#############################################################
+# BRANCHES
+#############################################################
+branches component src cmt doc
+
+#############################################################
+# USE
+#############################################################
+use DaVinciKernel      v*  Phys
+use MCEvent            v*  Event
+use LinkerEvent        v*  Event
+
+#for ODIN
+use   DAQEvent        v*    Event
+
+#############################################################
+# BUILD
+#############################################################
+# build a component library
+library MicroDST ../src/*.cpp
+
+apply_pattern component_library library=MicroDST
+
+#===============================================================
+
+

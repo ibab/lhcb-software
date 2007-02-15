@@ -1,0 +1,32 @@
+
+// ====================================================
+//                  LIBRARIES
+// ====================================================
+ApplicationMgr.DLLs    += { "MicroDST"};
+
+
+// ====================================================
+//                  DICTIONARIES          
+// ====================================================
+//#include "$STDOPTS/SimDicts.opts"
+PoolDbCacheSvc.DLLs    += { "PhysEventDict"};
+
+
+// ====================================================
+//                  OUTPUT STREAM
+// ====================================================
+ApplicationMgr.OutStream   = { "DSTStream"};
+
+DSTStream.RequireAlgs      = { "microDST"};
+DSTStream.ItemList         = {"/Event/microDST#99"};
+DSTStream.Output           = "DATAFILE='microDST.dst' TYP='POOL_ROOTTREE' OPT='REC'";
+DSTStream.OutputLevel      = 1;
+
+// ====================================================
+//                  
+// ====================================================
+//
+// N.B. remember to include the microDST in your
+//      sequence and configure the input
+//      locations
+//
