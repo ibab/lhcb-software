@@ -1,6 +1,6 @@
-// $Id: StandardDs.opts,v 1.5 2007-02-05 18:15:11 pkoppenb Exp $
+// $Id: StandardDs.opts,v 1.6 2007-02-15 13:18:56 pkoppenb Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.5 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.6 $
 // ============================================================================
 
 /** @file 
@@ -36,7 +36,7 @@ StdLooseDs2KKPi.DaughterFilter.PVIPFilterCriterion.MinIPsignif = 2.0; // hlt tun
 StdLooseDs2KKPi.Window = 200.0 * MeV; // hlt presel: 45 MeV, enlarge by JB to merge with the Dstar_s
 StdLooseDs2KKPi.MinPt  = 1000.0 * MeV; // hlt presel: 1750 MeV, modified by JB
 // Cuts for mother
-StdLooseDs2KKPi.MotherFilter.Selections = {"D_s- : VtxFilterCriterion, PVIPFilterCriterion"} // , FlightDistanceFilterCriterion"}; 
+StdLooseDs2KKPi.MotherFilter.Selections = {"D_s- : VtxFilterCriterion, PVIPFilterCriterion"}; // , FlightDistanceFilterCriterion"}; 
 StdLooseDs2KKPi.MotherFilter.VtxFilterCriterion.MaxChi2 = 20.0; // hlt presel: 36
 StdLooseDs2KKPi.MotherFilter.PVIPFilterCriterion.MinIPsignif = 3.0; // added by JB
 // StdLooseDs2KKPi.MotherFilter.FlightDistanceFilterCriterion.MinFSPV = 2.0; // added by JB, still subject to discussion, will not be release now...
