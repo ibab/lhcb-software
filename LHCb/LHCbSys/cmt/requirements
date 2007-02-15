@@ -27,7 +27,7 @@ use DetSys                v9r2    Det     # Marco Cattaneo
 use VeloDet               v11r0   Det     # Mark Tobin
 use DetDesc               v17r0   Det     # Marco Clemencic, Juan Palacios
 use DetDescCnv            v4r1    Det     # Marco Clemencic, Juan Palacios
-use DetDescSvc            v1r10   Det     # Marco Clemencic, Matt Needham
+use DetDescSvc            v1r10p1 Det     # Marco Clemencic, Matt Needham
 use XmlTools              v5r0    Tools   # Marco Clemencic
 use OTDet                 v7r2    Det     # Jan Amoraal
 use CaloDet               v8r0    Det     # Olivier Deschamps
