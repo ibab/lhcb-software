@@ -1,4 +1,4 @@
-// $Id: DeOTDetector.h,v 1.33 2007-02-02 09:25:04 janos Exp $
+// $Id: DeOTDetector.h,v 1.34 2007-02-15 07:55:57 cattanem Exp $
 #ifndef OTDET_DEOTDETECTOR_H
 #define OTDET_DEOTDETECTOR_H 1
 
@@ -31,7 +31,6 @@ class DeOTModule;
 
 namespace LHCb
 {
-  class Point3DTypes;
   class LHCbID;
   class Trajectory;
 }
@@ -94,13 +93,13 @@ public:
   DeOTStation* findStation(const Gaudi::XYZPoint& aPoint) const;
 
   /** Check contains channel
-   *  @param channel
-   *  @return bool
+   *  @param aChannel The channel to check
+   *  @return bool    True if channel is contained
    */
   bool contains(const LHCb::OTChannelID aChannel) const;
 
   /** Check channel number is valid 
-   * @param channel
+   * @param aChannel
    * @return bool
    */
   /* bool isValid(const LHCb::OTChannelID aChannel); */
@@ -127,12 +126,12 @@ public:
   DeOTModule* findModule(const Gaudi::XYZPoint& aPoint) const;
 
   /** @return the channel left from a given channel 
-   * @param channel
+   *  @param aChannel The given channel
    */
   LHCb::OTChannelID nextChannelLeft(const LHCb::OTChannelID aChannel) const;
 
   /** @return the channel right from a given channel 
-   * @param channel
+   *  @param aChannel The given channel
    */
   LHCb::OTChannelID nextChannelRight(const LHCb::OTChannelID aChannel) const;
 
@@ -140,9 +139,9 @@ public:
   const int sensitiveVolumeID(const Gaudi::XYZPoint& aPoint) const;
   
   /** Calculate the distance along a wire for a given channel and XY position
-   * @param channel
-   * @param x coordinate
-   * @param y coordinate
+   * @param aChannel The given channel
+   * @param xHit     x coordinate
+   * @param yHit     y coordinate
    * @return distance
    */
   double distanceAlongWire(const LHCb::OTChannelID aChannel, 
@@ -157,15 +156,15 @@ public:
    * @param By
    * @return resolution
    */
-  double resolution(const double by) const;
+  double resolution(const double By) const;
 
   /** @return propagation delay (ns/mm) */
   double propagationDelay() const;
 
   /** Calculate the propagation delay along a wire
-   * @param channel
-   * @param x-coordinate
-   * @param y-coordinate 
+   * @param aChannel The given channel
+   * @param x        x coordinate
+   * @param y        y coordinate
    */
   double propagationTime(const LHCb::OTChannelID aChannel, 
                          const double x, const double y ) const;
@@ -174,7 +173,7 @@ public:
    * @param By
    * @return Max drift time correction
    */
-  double maxDriftTimeFunc(const double by) const;
+  double maxDriftTimeFunc(const double By) const;
   
   /** @return r-t relation */
   double driftTime(const double driftDist) const;

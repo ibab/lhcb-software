@@ -1,4 +1,4 @@
-// $Id: DeOTQuarter.h,v 1.10 2007-02-02 09:25:04 janos Exp $
+// $Id: DeOTQuarter.h,v 1.11 2007-02-15 07:55:57 cattanem Exp $
 #ifndef OTDET_DEOTQUARTER_H
 #define OTDET_DEOTQUARTER_H 1
 
@@ -21,11 +21,6 @@
 
 /// Forward declarations
 class DeOTModule;
-
-namespace LHCb
-{
-  class Point3DTypes;
-}
 
 static const CLID& CLID_DeOTQuarter = 8104;
 
@@ -67,7 +62,7 @@ class DeOTQuarter : public DetectorElement {
   void setElementID(const LHCb::OTChannelID& chanID);
   
   /** Check contains channel
-   *  @param channel
+   *  @param  aChannel The channel to check
    *  @return bool
    */
   bool DeOTQuarter::contains(const LHCb::OTChannelID aChannel) const;

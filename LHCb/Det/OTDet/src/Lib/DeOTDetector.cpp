@@ -1,12 +1,12 @@
-// $Id: DeOTDetector.cpp,v 1.28 2007-02-04 11:34:36 janos Exp $
+// $Id: DeOTDetector.cpp,v 1.29 2007-02-15 07:55:57 cattanem Exp $
 /// Kernel
 #include "Kernel/LHCbID.h"
 #include "Kernel/OTChannelID.h"
-#include "Kernel/Point3DTypes.h"
 #include "Kernel/Trajectory.h"
 
 // GaudiKernel
 #include "GaudiKernel/GaudiException.h"
+#include "GaudiKernel/Point3DTypes.h"
 
 /// OTDet
 #include "OTDet/DeOTDetector.h"

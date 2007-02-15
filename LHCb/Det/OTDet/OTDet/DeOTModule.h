@@ -1,4 +1,4 @@
-// $Id: DeOTModule.h,v 1.23 2007-02-13 11:56:17 janos Exp $
+// $Id: DeOTModule.h,v 1.24 2007-02-15 07:55:57 cattanem Exp $
 #ifndef OTDET_DEOTMODULE_H
 #define OTDET_DEOTMODULE_H 1
 
@@ -9,10 +9,10 @@
 /// Kernel
 #include "Kernel/OTChannelID.h"
 #include "GaudiKernel/Plane3DTypes.h"
+#include "GaudiKernel/Point3DTypes.h"
 
 namespace LHCb
 {
-  class Point3DTypes;
   class Trajectory;
 }
 
@@ -93,7 +93,7 @@ public:
   /** @return moduleID */
   unsigned int moduleID() const;
   
-  /** @retrun quarterID */
+  /** @return quarterID */
   unsigned int quarterID() const;
   
   /** @return  layerID */
@@ -112,7 +112,7 @@ public:
   unsigned int uniqueModule() const;
   
   /** Check contains channel
-   *  @param channel
+   *  @param aChannel The channel to check
    *  @return bool
    */
   bool contains(const LHCb::OTChannelID aChannel) const;
@@ -154,13 +154,13 @@ public:
   unsigned int nChannels() const;
 
   /** Check if straw is in monolayer A
-   * @param straw
+   * @param aStraw The straw to check
    * @return bool
    */
   bool monoLayerA(const unsigned int aStraw) const;
   
   /** Check if straw is in monolayer B
-   * @param straw
+   * @param aStraw the straw to check
    * @return bool
    */
   bool monoLayerB(const unsigned int aStraw) const;
@@ -202,20 +202,20 @@ public:
   Gaudi::XYZPoint globalPoint(const double x, const double y, const double z) const;
 
   /** Calculate straws which are hit 
-   * @param entry point
-   * @param exit point
-   * @param vector of pairs of channel and drift distance
-   * @retrun void
+   * @param  entryPoint  entry point
+   * @param  exitPoint   exit point
+   * @param  chanAndDist vector of pairs of channel and drift distance
+   * @return void
    */
   void DeOTModule::calculateHits(const Gaudi::XYZPoint& entryPoint,
                                  const Gaudi::XYZPoint& exitPoint,
                                  std::vector<std::pair<LHCb::OTChannelID, double> >& chanAndDist) const;
   
   /** Calculate the distance from a given vector in space to the straw 
-   * @param straw
-   * @param point
-   * @param dx/dz
-   * @param dy/dz
+   * @param aStraw straw
+   * @param aPoint point
+   * @param tx     dx/dz
+   * @param ty     dy/dz
    * @return distance
    */
   double distanceToWire(const unsigned int aStraw, 
@@ -279,9 +279,9 @@ private:
   StatusCode cacheInfo();
 
   /** Return range of hit straws for a given local entry and exit point.
-   * @param local entryPoint
-   * @param local exitPoint
-   * @return hit straws
+   * @param entryPoint local entry point
+   * @param exitPoint  local exit point
+   * @param straws     hit straws
    */
   void findStraws(const Gaudi::XYZPoint& entryPoint, 
                   const Gaudi::XYZPoint& exitPoint,
@@ -306,13 +306,13 @@ private:
   unsigned int hitStrawB(const double u) const;  
 
   /** Check if Y is inside efficient region of monolayer A
-   * @param Y coordinate
+   * @param  y    Y coordinate to check
    * @return bool
    */
   bool isEfficientA(const double y) const;
 
   /** Check if Y is inside efficient region of monolayer B
-   * @param Y coordinate
+   * @param  y    Y coordinate to check
    * @return bool
    */
   bool isEfficientB(const double y) const;

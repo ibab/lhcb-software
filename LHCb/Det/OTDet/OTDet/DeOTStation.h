@@ -1,4 +1,4 @@
-// $Id: DeOTStation.h,v 1.7 2007-02-02 09:25:04 janos Exp $
+// $Id: DeOTStation.h,v 1.8 2007-02-15 07:55:57 cattanem Exp $
 #ifndef OTDET_DEOTSTATION_H
 #define OTDET_DEOTSTATION_H 1
 
@@ -11,9 +11,6 @@
 // Kernel
 #include "Kernel/OTChannelID.h"
 
-// OTDet
-#include "OTDet/DeOTDetector.h"
-
 /** @class DeOTStation DeOTStation.h "OTDet/DeOTStation.h"
  *
  *  This is the detector element class for a Outer Tracker Station.
@@ -24,11 +21,6 @@
 
 /// Forward declarations
 class DeOTLayer;
-
-namespace LHCb 
-{
-  class Point3DTypes;
-}
 
 static const CLID& CLID_DeOTStation = 8102;
 
@@ -72,7 +64,7 @@ class DeOTStation : public DetectorElement {
   void setElementID(const LHCb::OTChannelID& chanID);
   
   /** Check contains channel
-   *  @param channel
+   *  @param  aChannel The channel to check
    *  @return bool
    */
   bool contains(const LHCb::OTChannelID aChannel) const;

@@ -1,17 +1,14 @@
-// $Id: DeOTLayer.h,v 1.12 2007-02-13 11:56:16 janos Exp $
+// $Id: DeOTLayer.h,v 1.13 2007-02-15 07:55:57 cattanem Exp $
 #ifndef OTDET_DEOTLAYER_H
 #define OTDET_DEOTLAYER_H 1
 
-/// DetDesc
+// DetDesc
 #include "DetDesc/DetectorElement.h"
 
-/// Kernel
+// Kernel
 #include "Kernel/OTChannelID.h"
 #include "GaudiKernel/Plane3DTypes.h"
 #include "GaudiKernel/VectorMap.h"
-
-/// OTDet
-#include "OTDet/DeOTDetector.h"
 
 /** @class DeOTLayer DeOTLayer.h "OTDet/DeOTLayer.h"
  *
@@ -21,14 +18,9 @@
  *  @date   04-04-2003
  */
 
-/// Forward declarations
+// Forward declarations
 class DeOTQuarter;
 class DeOTModule;
-
-namespace LHCb
-{
-  class Point3DTypes;
-}
 
 static const CLID& CLID_DeOTLayer = 8103;
 
@@ -74,7 +66,7 @@ class DeOTLayer : public DetectorElement {
   void setElementID(const LHCb::OTChannelID& chanID);
 
   /** check contains channel
-   *  @param channel
+   *  @param  aChannel The channel to check
    *  @return bool
    */
   bool contains(const LHCb::OTChannelID aChannel) const;
