@@ -5,7 +5,10 @@
 !-----------------------------------------------------------------------------
 
 ! 2007-02-15 - Patrick Koppenburg
- - Updated version with HLT
+ - Also load pions and muons
+
+! 2007-02-15 - Patrick Koppenburg
+ - Updated version without HLT
 
 !========================== DaVinci v17r8 2007-01-12 ===================
 ! 2007-??-?? - Juan PALACIOS
