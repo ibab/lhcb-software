@@ -1,0 +1,20 @@
+package Writer
+version v1r1
+
+#============================================================================
+
+branches          cmt src Writer
+use GaudiKernel   v*
+use DAQEvent      v* Event            -no_auto_imports
+use XMLRPC        v1 Online
+use MDF           v* DAQ
+
+
+
+# ==================== libraries ==================================
+apply_pattern install_more_includes more=Writer
+library Writer *.cpp -import=DAQEvent -import=ROOT -import=MDF
+apply_pattern linker_library library=Writer
+apply_pattern ld_library_path
+apply_pattern generate_rootmap library=Writer
+
