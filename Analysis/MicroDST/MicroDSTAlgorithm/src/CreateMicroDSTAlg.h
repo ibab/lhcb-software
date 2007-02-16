@@ -1,4 +1,4 @@
-// $Id: CreateMicroDSTAlg.h,v 1.1.1.1 2007-02-15 14:07:05 ukerzel Exp $
+// $Id: CreateMicroDSTAlg.h,v 1.2 2007-02-16 18:00:27 ukerzel Exp $
 #ifndef CREATEMICRODSTALG_H 
 #define CREATEMICRODSTALG_H 1
 
@@ -49,16 +49,16 @@ private:
   //
   // typedef
   //
-  typedef LinkerWithKey< LHCb::VertexBase,LHCb::Particle > Part2Vertex;
+  typedef LinkerWithKey< LHCb::RecVertex ,LHCb::Particle > Part2Vertex;
 
   //
   // methods
   //
   StatusCode StorePV(std::string location);               ///< store primary vertices into microDST
   StatusCode StoreParticle(const LHCb::Particle * particle);
-  StatusCode StoreLink2PV(const LHCb::Particle * particle,
-                          std::string            linkerLocation);
+  StatusCode StoreLink2PV(const LHCb::Particle * particle);
   StatusCode StoreOdin();
+
   template<class T>
   T *getContainer(std::string containerID);
 
@@ -71,11 +71,7 @@ private:
   //
   // data members
   //
-  std::vector<std::string> m_InputLocations;       ///< locations to get particles from
-  std::string              m_OutputPrefix;         ///< prefix for the output paths, eg. microDST
-
-  std::vector<int>         m_storedParticles;      ///< keep track of already stored particles using its key
-
+  std::string              m_OutputPrefix;                    ///< prefix for the output paths, eg. microDST
   std::map<std::string, ObjectContainerBase*> m_ContainerMap; ///< map of container - locations to store
 
 };

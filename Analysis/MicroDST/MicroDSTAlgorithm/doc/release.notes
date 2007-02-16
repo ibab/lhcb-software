@@ -1,6 +1,15 @@
-! $Id: release.notes,v 1.1.1.1 2007-02-15 14:07:05 ukerzel Exp $
+! $Id: release.notes,v 1.2 2007-02-16 18:00:27 ukerzel Exp $
 ! Package     : MicroDST
 ! Responsible : Ulrich Kerzel
+
+! 2007-02-16 - Ulrich Kerzel
+ - let PhysDesktop handle all input locations
+   -> fixes issue with relatedPV() when creating microDST
+ - write linker table for particle -> PV to
+   /Event/Link/<prefix=microDST>/LHCb::RecVertex::Primary
+
+
+
 
 ! 2007-02-15 - Ulrich Kerzel
  - initial revision of MicroDST package.

@@ -1,4 +1,4 @@
-// $Id: CreateMicroDSTAlg.cpp,v 1.1.1.1 2007-02-15 14:07:05 ukerzel Exp $
+// $Id: CreateMicroDSTAlg.cpp,v 1.2 2007-02-16 18:00:27 ukerzel Exp $
 // Include files 
 
 // from Gaudi
@@ -29,7 +29,6 @@ CreateMicroDSTAlg::CreateMicroDSTAlg( const std::string& name,
     m_OutputPrefix       ( "microDST"                       )
 {
  
-  declareProperty( "InputLocations"      , m_InputLocations                   );
   declareProperty( "OutputPrefix"        , m_OutputPrefix        = "microDST" );
  
 } //constructor
@@ -46,13 +45,6 @@ StatusCode CreateMicroDSTAlg::initialize() {
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   debug() << "==> Initialize" << endmsg;
-  std::vector<std::string>::const_iterator iLoc;
-  std::vector<std::string>::const_iterator iLocBegin = m_InputLocations.begin();
-  std::vector<std::string>::const_iterator iLocEnd   = m_InputLocations.end();
-  info() << "store particles from the following locations into microDST " << endmsg;
-  for (iLoc = iLocBegin; iLoc != iLocEnd; iLoc++) {
-    info() << " --> " << (*iLoc) << endmsg;
-  }//for iLoc
 
   info() << "output prefix for microDST           " << m_OutputPrefix        << endmsg;
 
@@ -71,14 +63,12 @@ StatusCode CreateMicroDSTAlg::execute() {
   //
   // setups
   //
-  m_storedParticles.clear();  //reset
   m_ContainerMap.clear();  //reset
 
   //
   // setup containers holding elements to be written to microDST
   //
   verbose() << "setup the containers holding the quantities to be stored" << endmsg;
-  std::string containerLocation;
 
   //
   // store "official" primary vertices 
@@ -99,54 +89,86 @@ StatusCode CreateMicroDSTAlg::execute() {
   //
   // loop over all input locations and store the particles found there
   //
-  std::vector<std::string>::const_iterator iLoc;
-  std::vector<std::string>::const_iterator iLocBegin = m_InputLocations.begin();
-  std::vector<std::string>::const_iterator iLocEnd   = m_InputLocations.end();
+  
+  LHCb::Particle::ConstVector particles = desktop()->particles();
+  debug() << "got #particles  " << particles.size() << endmsg;
+  if ( particles.size()<= 0) {
+    verbose() << "no particle found, skip" << endmsg;
+    return StatusCode::SUCCESS;
+  }//if nBsCand
 
-  LHCb::Particles::const_iterator iParticle;
-  LHCb::Particles::const_iterator iParticleBegin;
-  LHCb::Particles::const_iterator iParticleEnd;
+  LHCb::Particle::ConstVector::const_iterator iParticle;
+  LHCb::Particle::ConstVector::const_iterator iParticleBegin = particles.begin();
+  LHCb::Particle::ConstVector::const_iterator iParticleEnd   = particles.end();
+  std::map<std::string, bool> locations;
 
+  for (iParticle = iParticleBegin; iParticle != iParticleEnd; iParticle++){
 
-  for (iLoc = iLocBegin; iLoc != iLocEnd; iLoc++) {
-    verbose() << "now store particles at input location " << (*iLoc) << endmsg;
+    std::string locTES = CreateMicroDSTAlg::objectLocation((*iParticle)->parent());
+    verbose() << "store particles from " << locTES << endmsg;
 
-    // store "private" primary vertices specific to an algorithm
-    sc = CreateMicroDSTAlg::StorePV((*iLoc)+"/PrimaryVertices");
-    if (sc != StatusCode::SUCCESS) {
-      Warning("storing primary vertices into microDST failed");
-    }//if
+    //
+    // get base location (w/o trailing "/Particles", etc)
+    //
+    std::string            tmpString  = "/Event/";
+    std::string            tmp2String = "/Particles";
 
-    std::string particleLoc = (*iLoc)+"/Particles";
-    verbose() << "input location for particles " << particleLoc << endmsg;
+    std::string::size_type loc = locTES.find(tmpString);
+    if ( loc != std::string::npos) {
+      locTES.replace(loc, tmpString.length(),"");
+      verbose() << "TES location ID is now " << locTES << endmsg;
+    } //if loc
 
-    if ( exist<LHCb::Particles>( particleLoc ) ){ 
-      LHCb::Particles* particles = get<LHCb::Particles>( particleLoc );
-      verbose() << "found #particles at this location " << particles->size() << endmsg;
+    loc  = locTES.find(tmp2String);
+    if ( loc != std::string::npos) {
+      locTES.replace(loc, tmp2String.length(),"");
+      verbose() << "TES location ID is now " << locTES << endmsg;
+    } //if loc
 
-      iParticleBegin = particles->begin();
-      iParticleEnd   = particles->end();
-      for (iParticle = iParticleBegin; iParticle != iParticleEnd; iParticle++) {
+    locTES.insert(0, tmpString);
+    verbose() << "base-location on TES " << locTES << endmsg;
 
-        verbose() << "now call StoreParticle" << endmsg;
-        sc = CreateMicroDSTAlg::StoreParticle(*iParticle); 
-        if (sc != StatusCode::SUCCESS) {
-          Warning("something went wrong when storing particle", StatusCode::SUCCESS);
-        }// if sc
-
-        verbose() << "now call StoreLink2PV" << endmsg;
-        sc = CreateMicroDSTAlg::StoreLink2PV(*iParticle, (*iLoc)+"/Particle2VertexLinks");
-        if (sc != StatusCode::SUCCESS) {
-          Warning("something went wrong when storing links to PV", StatusCode::SUCCESS);
-        } // if sc
-
-      }// for iParticle
-
+    //
+    // store user primary vertices
+    //    
+    // determine if this locaton has already been processed
+    // (need to do only once per location)
+    //
+    std::map<std::string, bool>::const_iterator iLoc;
+    iLoc = locations.find(locTES);
+    if (iLoc != locations.end() ) {
+      verbose() << "user PVs from this location already stored, total number of locations so far " 
+                << locations.size()
+                << endmsg;
     } else {
-      verbose() << "no particles found at this location" << endmsg;
-    } // if exist particles
+      verbose() << "store user primary vertices for this location" << endmsg;      
+      sc = CreateMicroDSTAlg::StorePV(locTES+"/PrimaryVertices");
+      if (sc != StatusCode::SUCCESS) {
+        Warning("storing primary vertices into microDST failed");
+      }//if
+      locations[locTES] = true;  // mark this location done
+    }// if iLoc
 
-  }//for iLoc
+    //
+    // now store particle
+    //
+    verbose() << "now call StoreParticle" << endmsg;
+    sc = CreateMicroDSTAlg::StoreParticle(*iParticle); 
+    if (sc != StatusCode::SUCCESS) {
+      Warning("something went wrong when storing particle", StatusCode::SUCCESS);
+    }// if sc
+    
+    //
+    // now store links to PVs
+    //
+    verbose() << "now call StoreLink2PV" << endmsg;
+    sc = CreateMicroDSTAlg::StoreLink2PV(*iParticle);
+    if (sc != StatusCode::SUCCESS) {
+      Warning("something went wrong when storing links to PV", StatusCode::SUCCESS);
+    } // if sc
+
+  } // for iParticle
+
 
   setFilterPassed(true);   // accept event
   return StatusCode::SUCCESS;
@@ -169,7 +191,11 @@ StatusCode CreateMicroDSTAlg::StorePV(std::string location) {
 
 
   // get primary vertices to store from TES
-  LHCb::RecVertices *primaryVertices = get<LHCb::RecVertices>(location);
+  LHCb::RecVertices *primaryVertices = NULL;
+  if (exist<LHCb::RecVertices>(location)) {
+    primaryVertices = get<LHCb::RecVertices>(location);
+  } // if exist
+
   if (!primaryVertices) {
     Warning("Could not get input primary vertices",  StatusCode::SUCCESS);
     return StatusCode::SUCCESS;
@@ -445,12 +471,14 @@ template<class T> T *CreateMicroDSTAlg::getContainer(std::string locTES){
 
 
 //=============================================================================
-StatusCode CreateMicroDSTAlg::StoreLink2PV(const LHCb::Particle * particle,
-                                           std::string            linkerLocation) {
+StatusCode CreateMicroDSTAlg::StoreLink2PV(const LHCb::Particle * particle) {
 
   //
   // save the connection between the particle and the related (primary) vertex
   //
+
+  std::string linkerLocation = "/Event/" + m_OutputPrefix + "/" + LHCb::RecVertexLocation::Primary;
+
   verbose() << "save connection between (primary) vertex and particle to " 
             << linkerLocation << endmsg;
   verbose() << " particle PID " << particle->particleID().pid() 
@@ -488,6 +516,7 @@ StatusCode CreateMicroDSTAlg::StoreLink2PV(const LHCb::Particle * particle,
     const double weight = desktop()->weight(particle, relatedPV);
     verbose() << "particle with PID "    << particle->particleID().pid() 
               << " is related to PV at " << relatedPV->position() 
+              << " #tracks "             << (dynamic_cast<const LHCb::RecVertex*>(relatedPV))->tracks().size()
               << " with weight "         << weight << endmsg;
     
     
@@ -499,9 +528,13 @@ StatusCode CreateMicroDSTAlg::StoreLink2PV(const LHCb::Particle * particle,
       verbose() << "got corresponding container" << endmsg;
       LHCb::RecVertex* pvClone = pvContainer->object(relatedPV->key()); //get corresponding cloned PV
       if (pvClone) {
-        verbose() << "position of cloned PV " << pvClone->position() << endmsg;
-
+        verbose() << "now link particle to clonedPV at " << pvClone->position()
+                  << " with #tracks "                    << pvClone->tracks().size()
+                  << " weight "                          << weight
+                  << endmsg;
         // relate particle-clone to PV-clone with same weight
+        // first  argument: source
+        // second         : target
         p2VLinker->link(particleClone, pvClone, weight);
 
       } // if pvClone
@@ -520,18 +553,12 @@ StatusCode CreateMicroDSTAlg::StoreOdin() {
   verbose() << "try to get ODIN bank" << endmsg;
 
   LHCb::ODIN * odin = NULL;
-  try {
+  if (exist<LHCb::ODIN>( LHCb::ODINLocation::Default ) ) {
     odin = get<LHCb::ODIN>( LHCb::ODINLocation::Default );
-    if (odin) {
-      verbose() << "got ODIN bank" << endmsg;
-    } else {
-      return StatusCode::SUCCESS;
-    }
-  }
-  catch(...) {
-    Warning("no ODIN bank found");
+  } else {
+    Warning("no ODIN bank found", StatusCode::SUCCESS);
     return StatusCode::SUCCESS;
-  } // catch
+  } // if exist
   
   verbose() << "now copy ODIN information" << endmsg;
   LHCb::ODIN *newOdin = new LHCb::ODIN();
