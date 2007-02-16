@@ -1,4 +1,4 @@
-// $Id: FilterCriterionBase.cpp,v 1.3 2006-09-14 17:58:02 pkoppenb Exp $
+// $Id: FilterCriterionBase.cpp,v 1.4 2007-02-16 13:40:26 pkoppenb Exp $
 // Include files 
 
 // local
@@ -19,6 +19,7 @@ FilterCriterionBase::FilterCriterionBase( const std::string& type,
   : GaudiTool ( type, name , parent ),
     m_tesTool ( 0 )
   , m_relatedPV( 0 )
+  , m_inactive(true)
 {
   declareProperty( "SaveFilterResults", m_saveResults = false );
   declareProperty( "FlaggingMode",      m_flagMode    = false );
@@ -55,6 +56,12 @@ bool FilterCriterionBase::operator()( const LHCb::Particle* const & part )
 
 bool FilterCriterionBase::isSatisfied( const LHCb::Particle* const & part ) 
 {
+  
+  if (isInactive()) {
+    Warning("Filter is inactive. Will always return true.",StatusCode::SUCCESS,1);
+    return true ;
+  }
+
   // run the actual filter in derived class
   const bool result = testParticle( part );
   

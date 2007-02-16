@@ -147,9 +147,9 @@ StatusCode PhysDesktop::initialize()
   incSvc()->addListener( this, IncidentType::EndEvent, 100 );
 
   if ( m_pMakerType == "" ){
-    info() << " No ParticleMaker requested in job options"
+    debug() << "No ParticleMaker requested in job options"
            << endmsg
-           << " Only previously produced particles will be loaded"
+           << "Only previously produced particles will be loaded"
            << endmsg;
   } else {
     // Retrieve the ParticleMaker tool:
@@ -163,7 +163,8 @@ StatusCode PhysDesktop::initialize()
 
   // Check if InputLocation has been set
   if ( m_inputLocn.empty() ){
-    info() << "Empty list of input locations -> No particles from previous processing" << endmsg;
+    if ( m_pMakerType == "" ) warning() << "No inputLocations nor ParticleMaker defined" << endmsg ;
+    debug() << "Empty list of input locations -> No particles from previous processing" << endmsg;
   } else {
     info() << "Particles and Vertices will be loaded from :- "  << endreq ;
     for ( std::vector<std::string>::iterator iloc = m_inputLocn.begin();

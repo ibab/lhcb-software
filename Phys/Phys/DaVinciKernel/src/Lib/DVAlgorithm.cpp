@@ -88,14 +88,14 @@ StatusCode DVAlgorithm::initialize () {
   StatusCode sc = GaudiTupleAlg::initialize();  
   if ( sc.isFailure() ) return sc;
   
-  if ( m_avoidSelResult ) { Warning( "Avoiding SelResult" ) ; }
+  if ( m_avoidSelResult ) info() << "Avoiding SelResult" << endmsg; 
   
   // Load tools very
   sc = loadTools() ;
   if ( sc.isFailure() ) { return Error("Unable to load tools", sc ) ; }
   
   if (m_decayDescriptor == "not specified"){
-    warning() << "Decay Descriptor string not specified" << endreq;
+    info() << "Decay Descriptor string not specified" << endreq;
   } else{
     info() << "Decay Descriptor: " << m_decayDescriptor << endreq;
   }

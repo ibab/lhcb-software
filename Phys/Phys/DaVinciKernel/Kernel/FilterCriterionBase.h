@@ -1,4 +1,4 @@
-// $Id: FilterCriterionBase.h,v 1.3 2006-09-14 17:58:01 pkoppenb Exp $
+// $Id: FilterCriterionBase.h,v 1.4 2007-02-16 13:40:26 pkoppenb Exp $
 #ifndef FILTERCRITERIONBASE_H 
 #define FILTERCRITERIONBASE_H 1
 
@@ -49,7 +49,17 @@ protected:
   virtual bool testParticle( const LHCb::Particle* const & part ) = 0; 
 
   /// RelatedPV
-  IRelatedPV * relatedPV(){return m_relatedPV;} ;
+  inline IRelatedPV * relatedPV(){return m_relatedPV;} ;
+
+  /// This filter is inactive. I.e. will always return true.
+  /// This method is called before testParticle( const LHCb::Particle* const & part ) 
+  /// and the filter returns true if it is found to be inactive.
+  inline bool isInactive()const{return m_inactive;}
+
+  /// Set this filter to be active. It is mandatory
+  /// to call this method in the initialize() of the actual implementation.
+  /// Else the filter will do nothing.
+  void setActive(){m_inactive = false ;return ;}
 
 private: // methods
 
@@ -78,6 +88,7 @@ private: // data
   /// Pointer to IRelatedPV tool
   mutable IRelatedPV * m_relatedPV ;
 
+  bool m_inactive;             ///< Inactive filter. True by default. Has to be set to false using setActive().
 };
 
 #endif // FILTERCRITERIONBASE_H

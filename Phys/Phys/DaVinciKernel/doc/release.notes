@@ -3,6 +3,18 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+! 2007-02-16 - Patrick Koppenburg
+ - Add two new methods in FilterCriterionBase.h
+   . isInactive() that is called before any attempt is made to apply the filter.
+		 if the filter is inactive it returns always true and issues a warning once.
+   . setActive(): it is mandatory to call this method in initialsie if any cut 
+	   is changed from the defaults. 
+ - DVAlgorithm: change "Avoiding SelResult" to info() level.
+ - PhysDesktop: change "No ParticleMaker requested in job options" and 
+	 "Empty list of input locations" to debug(). A warning is issued
+	 only if both occur.
+ - increment to v6r1 
+
 ! 2007-02-06 - P. Koppenburg
  - get context-dependent RelatedPVFinder in Desktop. Allows to get relations
    to online PV in HLT.
