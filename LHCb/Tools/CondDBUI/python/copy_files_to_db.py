@@ -1,13 +1,15 @@
 #!/usr/bin/env python
+# $ Id: $
 import sys
 
 import conddbui
 from PyCool import cool
 
 from optparse import OptionParser
+
 import os, re
 
-#### connectStrings: ####
+############################### connectStrings: ################################
 # "oracle://intr1-v.cern.ch/INTR;schema=lhcb_cool;user=lhcb_cool;dbname=DDDB"
 # "sqlite://none;schema=XmlDDDB_v26r2.db;user=none;password=none;dbname=DDDB"
 # "mysql://pclhcb55.cern.ch;schema=MARCOCLE;user=marcocle;dbname=DDDB"
@@ -40,6 +42,7 @@ def main():
 #    parser.add_option("-k", "--keep-db",
 #                      action="store_false", dest="drop",
 #                      help="keep the existing database and merge with the new files (default)")
+
     (options, args) = parser.parse_args()
     if len(args) != 0 or not options.source or not options.dest:
         parser.error("Bad arguments, use -h for help.")
@@ -48,18 +51,34 @@ def main():
         conddbui.CondDB.dropDatabase(options.connectString)
     db = conddbui.CondDB(options.connectString, create_new_db = True, readOnly=False)
 
-    # prepare the list of nodes to insert 
+    # prepare the list of nodes to insert
+    # the format is something like:
+    # {
+    #   "/path/to/folderset" : {
+    #                           "folder.xml" : {
+    #                                           "data": { 0 : "filename",
+    #                                                     ...
+    #                                                   },
+    #                                           ...
+    #                                          },
+    #                           ...
+    #                          },
+    #   ...
+    # }
     nodes = conddbui._collect_tree_info(options.source, excludes = [])
 
+    # Just count the number of folders we are goinfg to write
     count_folders = 0
     for folderset in nodes:
         count_folders += len(nodes[folderset])
     count_folders_len = str(len(str(count_folders)))
 
+    # initialize conters for progress output
     file_count = 0
     folder_count = 0
     foldersets = nodes.keys()
-    foldersets.sort()
+    foldersets.sort() # not needed, but it seems more clean
+    
     for folderset in foldersets:
         
         folders = nodes[folderset].keys()

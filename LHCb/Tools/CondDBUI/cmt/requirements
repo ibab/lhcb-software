@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.12 2007-02-15 16:54:25 cattanem Exp $
+# $Id: requirements,v 1.13 2007-02-16 15:54:05 marcocle Exp $
 package CondDBUI
 
 version v2r0
@@ -42,13 +42,26 @@ set  CORAL_AUTH_PATH       ${HOME}/private
 set  CORAL_DBLOOKUP_PATH   ${CONDDBUIROOT}/cmt
 
 # Qt libraries access
-macro        Qt_home         "/afs/cern.ch/sw/lcg/external/qt/3.3.4"
-path_prepend LD_LIBRARY_PATH "$(Qt_home)/slc3_ia32_gcc323/lib"
+#macro         qt_native_version "4.2.1"
+macro         qt_native_version "3.3.4"
+macro         qt_base         "$(LCG_external)/qt/$(qt_native_version)"
+macro         qt_home         "$(qt_base)/$(LCG_system)"
+#apply_pattern set_lib_path
+path_remove  LD_LIBRARY_PATH "/qt/" WIN32 ""
+path_prepend LD_LIBRARY_PATH "$(qt_home)/lib" WIN32 ""
 
 # python path update
-macro        Pyqt_home       "/afs/cern.ch/sw/lcg/external/pyqt/3.13_python234"
-path_prepend PYTHONPATH      "$(Pyqt_home)/slc3_gcc323/lib/python2.3.4/site-packages"
-path_prepend PYTHONPATH      "${CONDDBUIROOT}/src"
+# python path update
+#macro        pyqt_native_version "4.1"
+macro        pyqt_native_version "3.13_python234"
+macro        pyqt_base           "$(LCG_external)/pyqt/$(pyqt_native_version)"
+macro        pyqt_home           "$(pyqt_base)/$(LCG_system)"
+path_remove  PYTHONPATH 	 "/pyqt/" WIN32 "\pyqt\"
+#path_prepend PYTHONPATH          "$(pyqt_home)/lib/python$(Python_version)/site-packages"
+path_prepend PYTHONPATH          "$(pyqt_base)/slc3_gcc323/lib/python2.3.4/site-packages"
+
+path_remove  PYTHONPATH 	 "/<Package>/" WIN32 "\<Package>\"
+path_prepend PYTHONPATH          "$(CONDDBUIROOT)/src"
 
 # Sessions path
 set  CONDDBUI_SESSIONS_PATH ${CONDDBUIROOT}/python

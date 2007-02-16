@@ -1,9 +1,13 @@
 ! =============================================================================
-! $Id: release.notes,v 1.36 2007-02-15 16:54:25 cattanem Exp $
+! $Id: release.notes,v 1.37 2007-02-16 15:54:05 marcocle Exp $
 ! =============================================================================
 ! package Tools/CondDBUI
 ! package manager : Marco Clemencic / Nicolas Gilardi
 ! =============================================================================
+
+! 2007-02-16 - Marco Clemencic
+ - Some clean up in the requirements
+ - Some more comments in copy_files_to_db.py
 
 !===================== Tools/CondDBUI v2r0 2007-02-15 =========================
   NEEDS LCGCMT >= 50
