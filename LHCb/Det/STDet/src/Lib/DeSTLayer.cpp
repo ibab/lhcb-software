@@ -4,6 +4,7 @@
 #include "DetDesc/SolidBox.h"
 
 #include "GaudiKernel/SystemOfUnits.h"
+#include "GaudiKernel/IUpdateManagerSvc.h"
 
 /** @file DeSTLayer.cpp
 *
@@ -39,7 +40,18 @@ StatusCode DeSTLayer::initialize() {
     m_angle = param<double>("stereoangle");
     m_cosAngle = cos(m_angle);
     m_sinAngle = sin(m_angle);
-    cachePlane();
+     
+  // cache trajectories
+  try {
+    msg << MSG::DEBUG << "Registering conditions" << endmsg;
+    updMgrSvc()->invalidate(this);
+    updMgrSvc()->registerCondition(this,this->geometry(),&DeSTLayer::cachePlane);
+    sc = updMgrSvc()->update(this);
+  } 
+  catch (DetectorElementException &e) {
+   msg << MSG::ERROR << e << endmsg;
+   return StatusCode::FAILURE;
+  }
   }
 
   return StatusCode::SUCCESS;
@@ -65,7 +77,7 @@ MsgStream& DeSTLayer::printOut( MsgStream& os ) const{
   return os;
 }
 
-void DeSTLayer::cachePlane(){
+StatusCode DeSTLayer::cachePlane(){
 
  Gaudi::XYZPoint p1 = globalPoint(0,0,0);
  Gaudi::XYZPoint p2 = globalPoint(3*Gaudi::Units::m,0,0);

@@ -1,4 +1,4 @@
-// $Id: DeSTLayer.h,v 1.7 2007-02-09 13:01:57 cattanem Exp $
+// $Id: DeSTLayer.h,v 1.8 2007-02-16 12:31:02 mneedham Exp $
 #ifndef _DeSTLayer_H_
 #define _DeSTLayer_H_
 
@@ -86,7 +86,7 @@ protected:
 
 private:
 
-  void cachePlane();
+  StatusCode cachePlane();
 
   Gaudi::Plane3D m_plane;
 

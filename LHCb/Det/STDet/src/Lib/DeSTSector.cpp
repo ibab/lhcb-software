@@ -1,4 +1,4 @@
-// $Id: DeSTSector.cpp,v 1.27 2007-02-09 12:36:20 mneedham Exp $
+// $Id: DeSTSector.cpp,v 1.28 2007-02-16 12:31:02 mneedham Exp $
 #include "STDet/DeSTSector.h"
 
 #include "DetDesc/IGeometryInfo.h"
@@ -139,7 +139,6 @@ StatusCode DeSTSector::initialize() {
       updMgrSvc()->invalidate(this);
       msg << MSG::DEBUG << "Registering conditions" << endmsg;
       updMgrSvc()->registerCondition(this,this->geometry(),&DeSTSector::cacheInfo);
-      msg << MSG::DEBUG << "Start first update" << endmsg;
       sc = updMgrSvc()->update(this);
     } 
     catch (DetectorElementException &e) {
