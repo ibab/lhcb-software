@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.14 2007-02-17 09:06:15 marcocle Exp $
+# $Id: requirements,v 1.15 2007-02-17 10:08:58 marcocle Exp $
 package CondDBUI
 
 version v2r0
@@ -6,30 +6,34 @@ version v2r0
 branches python src cmt db
 ignore_pattern package_stamps
 
+use Python  v* LCG_Interfaces -no_auto_imports
+use COOL    v* LCG_Interfaces -no_auto_imports
+apply_tag    NEEDS_PYCOOL
+use ROOT    v* LCG_Interfaces -no_auto_imports
+
+path_remove  PYTHONPATH 	 "/<package>/" WIN32 "\<package>\"
+path_prepend PYTHONPATH          "$(CONDDBUIROOT)/src"
+
 # ====================================================================
 private
 # ============== Dependencies ========================================
 
 # library path needed for mysql backend
-use mysql         v*    LCG_Interfaces -no_auto_imports
+# use mysql         v*    LCG_Interfaces -no_auto_imports
 
 # library path needed for sqlite backend
 use sqlite        v*    LCG_Interfaces -no_auto_imports
 
 # library path needed for oracle backend
-use oracle        v*    LCG_Interfaces -no_auto_imports
- 
-#set TNS_ADMIN "$SITEROOT/project/oracle/admin" WIN32 "$SITEROOT\project\oracle\admin"
-set TNS_ADMIN ${CONDDBUIROOT}/cmt
+# use oracle        v*    LCG_Interfaces -no_auto_imports
+##set TNS_ADMIN "$SITEROOT/project/oracle/admin" WIN32 "$SITEROOT\project\oracle\admin"
+#set TNS_ADMIN ${CONDDBUIROOT}/cmt
 
 # Needed for whatever reason...
-use COOL v* LCG_Interfaces -no_auto_imports
-use CORAL v* LCG_Interfaces -no_auto_imports
-use ROOT  v* LCG_Interfaces -no_auto_imports
-apply_tag    NEEDS_COOL_FACTORY
-apply_tag    NEEDS_PYCOOL
+use CORAL v* LCG_Interfaces -no_auto_imports 
 
-use Python v* LCG_Interfaces -no_auto_imports
+apply_tag    NEEDS_COOL_FACTORY
+
 
 # This one is needed by CORAL
 use XercesC v* LCG_Interfaces -no_auto_imports
@@ -61,9 +65,6 @@ macro        pyqt_home           "$(pyqt_base)/$(LCG_system)"
 path_remove  PYTHONPATH 	 "/pyqt/" WIN32 "\pyqt\"
 #path_prepend PYTHONPATH          "$(pyqt_home)/lib/python$(Python_version)/site-packages"
 path_prepend PYTHONPATH          "$(pyqt_base)/slc3_gcc323/lib/python2.3.4/site-packages"
-
-path_remove  PYTHONPATH 	 "/<Package>/" WIN32 "\<Package>\"
-path_prepend PYTHONPATH          "$(CONDDBUIROOT)/src"
 
 # Sessions path
 set  CONDDBUI_SESSIONS_PATH ${CONDDBUIROOT}/python
