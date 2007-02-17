@@ -1,9 +1,16 @@
 ! =============================================================================
-! $Id: release.notes,v 1.37 2007-02-16 15:54:05 marcocle Exp $
+! $Id: release.notes,v 1.38 2007-02-17 09:06:15 marcocle Exp $
 ! =============================================================================
 ! package Tools/CondDBUI
 ! package manager : Marco Clemencic / Nicolas Gilardi
 ! =============================================================================
+
+! 2007-02-17 - Marco Clemencic
+ - Moved all the dependencies to and environment to the private section
+   to avoid unwanted dependencies
+ - Added copy_files_to_db_wiht_time.py:
+   version of copy_files_to_db that inserts randomly generated IOVs
+   (contribution by Anatoly Solomin)
 
 ! 2007-02-16 - Marco Clemencic
  - Some clean up in the requirements

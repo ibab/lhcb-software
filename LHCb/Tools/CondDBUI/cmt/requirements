@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.13 2007-02-16 15:54:05 marcocle Exp $
+# $Id: requirements,v 1.14 2007-02-17 09:06:15 marcocle Exp $
 package CondDBUI
 
 version v2r0
@@ -6,34 +6,36 @@ version v2r0
 branches python src cmt db
 ignore_pattern package_stamps
 
+# ====================================================================
+private
 # ============== Dependencies ========================================
 
 # library path needed for mysql backend
-use mysql         v*    LCG_Interfaces
+use mysql         v*    LCG_Interfaces -no_auto_imports
 
 # library path needed for sqlite backend
-use sqlite        v*    LCG_Interfaces
+use sqlite        v*    LCG_Interfaces -no_auto_imports
 
 # library path needed for oracle backend
-use oracle        v*    LCG_Interfaces
+use oracle        v*    LCG_Interfaces -no_auto_imports
  
 #set TNS_ADMIN "$SITEROOT/project/oracle/admin" WIN32 "$SITEROOT\project\oracle\admin"
 set TNS_ADMIN ${CONDDBUIROOT}/cmt
 
 # Needed for whatever reason...
-use COOL v* LCG_Interfaces
-use CORAL v* LCG_Interfaces
-use ROOT  v* LCG_Interfaces
+use COOL v* LCG_Interfaces -no_auto_imports
+use CORAL v* LCG_Interfaces -no_auto_imports
+use ROOT  v* LCG_Interfaces -no_auto_imports
 apply_tag    NEEDS_COOL_FACTORY
 apply_tag    NEEDS_PYCOOL
 
-use Python v* LCG_Interfaces
+use Python v* LCG_Interfaces -no_auto_imports
 
 # This one is needed by CORAL
-use XercesC v* LCG_Interfaces
+use XercesC v* LCG_Interfaces -no_auto_imports
 
 # Needed because of a bug in PyCintex
-use CLHEP v* LCG_Interfaces
+use CLHEP v* LCG_Interfaces -no_auto_imports
 
 # ============== Environment =========================================
 
@@ -68,5 +70,3 @@ set  CONDDBUI_SESSIONS_PATH ${CONDDBUIROOT}/python
 
 alias CondDBBrowser "python ${CONDDBUIROOT}/python/browser.py"
 
-#=====================================================================
-private
