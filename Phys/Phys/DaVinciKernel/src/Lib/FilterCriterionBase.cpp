@@ -1,4 +1,4 @@
-// $Id: FilterCriterionBase.cpp,v 1.4 2007-02-16 13:40:26 pkoppenb Exp $
+// $Id: FilterCriterionBase.cpp,v 1.5 2007-02-17 12:53:09 pkoppenb Exp $
 // Include files 
 
 // local
@@ -64,6 +64,7 @@ bool FilterCriterionBase::isSatisfied( const LHCb::Particle* const & part )
 
   // run the actual filter in derived class
   const bool result = testParticle( part );
+  counter("#passed") += result ;
   
   // print out result
   if ( msgLevel(MSG::DEBUG) )
