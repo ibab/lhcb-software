@@ -1,4 +1,4 @@
-// $Id: MakeResonances.cpp,v 1.23 2007-01-15 10:32:36 jpalac Exp $
+// $Id: MakeResonances.cpp,v 1.24 2007-02-17 12:51:01 pkoppenb Exp $
 
 #include <algorithm>
 
@@ -391,8 +391,8 @@ StatusCode MakeResonances::applyDecay(Decay& d, LHCb::Particle::ConstVector& Res
       const LHCb::Particle* Mother = 
         makeMother(DaughterVector,d.getMotherPid());
       if (0==Mother){
-        if(m_motherToNGammas) Warning("Something failed making mother to n gammas");
-        else Warning("Something failed in vertex fitting");
+        if(m_motherToNGammas) Warning("Something failed making mother to n gammas",StatusCode::SUCCESS,1);
+        else Warning("Something failed in vertex fitting",StatusCode::SUCCESS,1);
       }
       else {
         verbose() << "Getting mother " << Mother->particleID().pid()
@@ -424,7 +424,7 @@ const LHCb::Particle* MakeResonances::makeMother(const LHCb::Particle::ConstVect
  } else{
     sc = vertexFitter()->fit(Daughters,Candidate,CandidateVertex);
     if (!sc){
-      Warning("Failed to fit vertex");
+      Warning("Failed to fit vertex",StatusCode::SUCCESS,1);
       return 0;
     }
     debug() << "Fit vertex at " << CandidateVertex.position()

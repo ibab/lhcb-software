@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.252 2007-02-15 17:18:01 pkoppenb Exp $
+! $Id: release.notes,v 1.253 2007-02-17 12:51:01 pkoppenb Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2007-02-17 - Patrick Koppenburg
+ - Reduce number of times vertex fit warning is issued in MakeResonances
 
 ! 2007-02-15 - Patrick Koppenburg
  - ContextTool: reduce verbosity of initialisation
