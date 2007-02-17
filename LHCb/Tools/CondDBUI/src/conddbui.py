@@ -373,7 +373,7 @@ class CondDB:
             folder = self.db.getFolder(path)
             try:
                 if folder.versioningMode() == cool.FolderVersioning.MULTI_VERSION:
-                    tag == '': tag = self.defaultTag
+                    if tag == '': tag = self.defaultTag
                     if tag.upper() not in [ '', HEAD ]:
                         obj = folder.findObject(cool.ValidityKey(when), channelID, folder.resolveTag(tag))
                     else:
