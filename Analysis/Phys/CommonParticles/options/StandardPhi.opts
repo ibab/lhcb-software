@@ -1,6 +1,6 @@
-// $Id: StandardPhi.opts,v 1.3 2006-05-18 15:27:53 pkoppenb Exp $
+// $Id: StandardPhi.opts,v 1.4 2007-02-17 13:04:41 pkoppenb Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $
 // ============================================================================
 
 /** @file 
@@ -27,9 +27,9 @@ StdLoosePhi2KK.PhysDesktop.InputLocations =
 StdLoosePhi2KK.DecayDescriptor = "phi(1020) -> K+ K-";
 // Cuts for daughters
 StdLoosePhi2KK.DaughterFilter.Selections = 
-  {"K+ : KinFilterCriterion, PVIPFilterCriterion"};
-StdLoosePhi2KK.DaughterFilter.KinFilterCriterion.MinPt =        0.0 * MeV; // hlt tuned: 300 MeV, hlt presel: 200 MeV
-StdLoosePhi2KK.DaughterFilter.KinFilterCriterion.MinMomentum =  0.0 * MeV; // hlt tuned: 2 GeV, hlt presel: 1 GeV
+  {"K+ : PVIPFilterCriterion"};
+//StdLoosePhi2KK.DaughterFilter.KinFilterCriterion.MinPt =        0.0 * MeV; // hlt tuned: 300 MeV, hlt presel: 200 MeV
+//StdLoosePhi2KK.DaughterFilter.KinFilterCriterion.MinMomentum =  0.0 * MeV; // hlt tuned: 2 GeV, hlt presel: 1 GeV
 StdLoosePhi2KK.DaughterFilter.PVIPFilterCriterion.MinIPsignif = 2.0; // hlt tuned: 2, hlt presel: 1
 // Cuts for combination
 StdLoosePhi2KK.Window = 50.0 * MeV; // hlt presel: 50 * MeV;

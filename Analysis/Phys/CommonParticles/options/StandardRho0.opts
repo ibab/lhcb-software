@@ -1,6 +1,6 @@
-// $Id: StandardRho0.opts,v 1.1 2006-05-18 15:27:53 pkoppenb Exp $
+// $Id: StandardRho0.opts,v 1.2 2007-02-17 13:04:41 pkoppenb Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.1 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
 // ============================================================================
 
 /** @file 
@@ -26,9 +26,9 @@ StdLooseRho02PiPi.PhysDesktop.InputLocations = { "Phys/StdLoosePions" };
 StdLooseRho02PiPi.DecayDescriptor = "rho(770)0 -> pi+ pi-";
 // Cuts for daughters
 StdLooseRho02PiPi.DaughterFilter.Selections = 
-  {"pi+ : KinFilterCriterion, PVIPFilterCriterion"};
-StdLooseRho02PiPi.DaughterFilter.KinFilterCriterion.MinPt        = 0.0 * MeV; 
-StdLooseRho02PiPi.DaughterFilter.KinFilterCriterion.MinMomentum  = 0.0 * MeV; 
+  {"pi+ : PVIPFilterCriterion"};
+//StdLooseRho02PiPi.DaughterFilter.KinFilterCriterion.MinPt        = 0.0 * MeV; 
+//StdLooseRho02PiPi.DaughterFilter.KinFilterCriterion.MinMomentum  = 0.0 * MeV; 
 StdLooseRho02PiPi.DaughterFilter.PVIPFilterCriterion.MinIPsignif = 2.0; 
 // Cuts for combination
 StdLooseRho02PiPi.Window = 250.0 * MeV; 

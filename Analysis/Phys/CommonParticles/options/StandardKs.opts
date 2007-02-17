@@ -1,6 +1,6 @@
-// $Id: StandardKs.opts,v 1.6 2007-01-25 14:01:08 lazzecri Exp $
+// $Id: StandardKs.opts,v 1.7 2007-02-17 13:04:41 pkoppenb Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.6 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.7 $
 // ============================================================================
 
 /** @file 
@@ -111,5 +111,5 @@ StdLooseKsDD.MotherFilter.VtxFilterCriterion.MaxChi2 = 30.;
 //StdLooseKsDD.MotherFilter.VtxFilterCriterion.MinZPos = -100.*mm;
 //StdLooseKsDD.MotherFilter.VtxFilterCriterion.MinRPos = 10.*mm;
 //StdLooseKsDD.MotherFilter.VtxFilterCriterion.MinZPos = 0.*mm;
-StdLooseKsLL.MotherFilter.MassFilterCriterion.Window = 64.*MeV ; //
+StdLooseKsDD.MotherFilter.MassFilterCriterion.Window = 64.*MeV ; //
 
