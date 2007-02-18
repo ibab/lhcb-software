@@ -109,9 +109,9 @@ def main():
                       help="read in the file containing a list of files \
     with their startTime, stopTime, periodicity and dispersion \
     in human-friendly units, starting from seconds, like follows: \
-    #                Source                    Destination-in-CondDB     Start-Date-Time          Stop-Date-Time   Periodicity  Dispersion \
-    DDDB/Conditions/Rich1/Environment/Aerogel.xml       /           2006-01-01T00:00:00GMT   2007-01-01T00:00:00GMT   4.5 weeks   2 days   \
-    DDDB/Conditions/Rich1/Environment/Gas.xml           /           2006-01-01T00:00:00GMT   2006-02-01T00:00:00GMT   1 day       3.5 hours  \
+    #                Source                    Destination-in-CondDB     Start-Date-Time          Stop-Date-Time   Periodicity  Dispersion  \
+    DDDB/Conditions/Rich1/Environment/Aerogel.xml       /           2006-01-01T00:00:00GMT   2007-01-01T00:00:00GMT   4.5 weeks   2 days    \
+    DDDB/Conditions/Rich1/Environment/Gas.xml           /           2006-01-01T00:00:00GMT   2006-02-01T00:00:00GMT   1 day       3.5 hours \
     ...")
 
     (options, args) = parser.parse_args()
@@ -144,8 +144,8 @@ def main():
     # command-line. Here is an example how a steering file may look like:
     #
     # #                Source                    Destination-in-CondDB     Start-Date-Time          Stop-Date-Time   Periodicity  Dispersion
-    # DDDB/Conditions/Rich1/Environment/Aerogel.xml       /           2006-01-01T00:00:00GMT   2007-01-01T00:00:00GMT   4.5 weeks   2 days  
-    # DDDB/Conditions/Rich1/Environment/Gas.xml           /           2006-01-01T00:00:00GMT   2006-02-01T00:00:00GMT   1 day       3.5 hours 
+    # DDDB/Conditions/Rich1/Environment/Aerogel.xml       /           2006-01-01T00:00:00GMT   2007-01-01T00:00:00GMT   4.5 weeks   2 days
+    # DDDB/Conditions/Rich1/Environment/Gas.xml           /           2006-01-01T00:00:00GMT   2006-02-01T00:00:00GMT   1 day       3.5 hours
     #
     # The first line is the legend
     if options.listWithPeriods:
@@ -171,7 +171,7 @@ def main():
     # So this is done for consistency and hence - universality
     # of the procedure below:
     else:
-        optionsSource = options.source+' '+options.dest+' 1970-01-01T00:00:00GMT 2038-01-19T03:14:07GMT 2147483647 seconds 0 seconds'
+        optionsSource = options.source+' '+options.dest+' 1970-01-01T00:00:00GMT 2262-04-12T00:47:16GMT 9223372036 seconds 0 seconds'
         listOfConditions.append(optionsSource)
 
     # Dictionary of human-friendly time units expressed in seconds:
@@ -328,24 +328,24 @@ def main():
                 # the following is formal, just the starting value for the loop:
                 startTimeInNanoSec = 1000000000*timegm(strptime(str(startDateTime),
                 "%Y-%m-%dT%H:%M:%S%Z"))
+                if  startTimeInNanoSec   <= 0:
+                    startTimeInNanoSec    = 0
 #               print 'startTimeInNanoSec =', startTimeInNanoSec
                 stopTimeInNanoSec  = 1000000000*timegm(strptime(str(stopDateTime),
                 "%Y-%m-%dT%H:%M:%S%Z"))
                 # For the sake of consistency with COOL, the equivalent of
-                # 2038-01-19T03:14:07GMT in nanoseconds: 2147483647000000000 is
-                # replaced by the cool.ValidityKeyMax == 9223372036854775807.
-                if  stopTimeInNanoSec    == 2147483647000000000:
+                # 2262-04-12T00:47:16GMT in nanoseconds: 9223372036000000000 is
+                # replaced by the cool.ValidityKeyMax == 9223372036854775807,
+                # which is equal to (2^63 - 1).
+                if  stopTimeInNanoSec    >= 9223372036000000000:
                     stopTimeInNanoSec     = 9223372036854775807
 #               print 'stopTimeInNanoSec  =', stopTimeInNanoSec
                 periodicityInNanoSec      = 1000000000*periodicityInSeconds
                 dispersionInNanoSec       = 1000000000*dispersionInSeconds
                 # The same is done for the periodicity:
-                if  periodicityInNanoSec == 2147483647000000000:
+                if  periodicityInNanoSec >= 9223372036000000000:
                     periodicityInNanoSec  = 9223372036854775807
 #               print 'periodicityInNanoSec                         =', periodicityInNanoSec
-                # The same is done for the dispersion:
-                if  dispersionInNanoSec  == 2147483647000000000:
-                    dispersionInNanoSec   = 9223372036854775807
 #               print 'dispersionInNanoSec                          =', dispersionInNanoSec
                 stopDateTimeReached = False
 

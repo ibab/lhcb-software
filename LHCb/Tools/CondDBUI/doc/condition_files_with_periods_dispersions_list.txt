@@ -1,0 +1,3 @@
+#		 Source 		  Destination-in-CondDB    Start-Date-Time	   Stop-Date-Time     Periodicity  Dispersion
+DDDB/Conditions/Rich1/Environment/Aerogel.xml	    /	      2006-01-01T00:00:00GMT   2007-01-01T00:00:00GMT	4.5 weeks   2 days
+DDDB/Conditions/Rich1/Environment/Gas.xml	    /	      2006-01-01T00:00:00GMT   2006-02-01T00:00:00GMT	1 day	    3.5 hours

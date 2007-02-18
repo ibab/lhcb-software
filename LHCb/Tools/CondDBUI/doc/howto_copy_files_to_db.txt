@@ -1,0 +1,131 @@
+1. In the world without IoVs (they are simply "infinite").
+
+   1.1. To create a DB from scratch you can do something like follows
+        (replace proprietary naming and/or versions appropriately):
+
+       # ---------- BEGIN ----------
+       setenv User_release_area /afs/cern.ch/user/a/asolomin/dev_area/conddb
+       setenvLHCb v22r1
+
+       getpack Tools/CondDBUI head
+       cd Tools/CondDBUI/v2r0/cmt
+       source setup.csh
+
+       cd ../../../../
+
+       getpack Det/XmlConditions head
+       cd Det/XmlConditions/v2r5
+       source setup.csh
+
+       python $CONDDBUIROOT/python/copy_files_to_db_with_time.py \
+       --connect-string="sqlite://none;schema=LHCBCOND.sqlite;dbname=LHCBCOND" \
+       --source=DDDB
+       # ---------- END ----------
+
+       That will create a database with the content of the directory DDDB.
+
+
+
+   1.2. To change one Condition (or a folder of Conitions) in the DB, you can
+        submit as a "source" only the file you need (or the path to that
+        folder).
+
+       Example:
+
+       cd $XMLCONDITIONSROOT
+       # ---------- BEGIN ----------
+       # edit, say, some numbers in the file:
+       emacs DDDB/Conditions/Rich1/Environment/Aerogel.xml
+       # remove backup files:
+       rm `find DDDB -name "*~"`
+
+       python $CONDDBUIROOT/python/copy_files_to_db_with_time.py \
+       --connect-string="sqlite://none;schema=LHCBCOND.sqlite;dbname=LHCBCOND" \
+       --source=DDDB/Conditions/Rich1/Environment/Aerogel.xml
+       # ---------- END ----------
+
+       You can check the effect using the browser:
+
+       python $CONDDBUIROOT/python/browser.py
+
+       click "DataBase" button, then "Open",
+       in the "DBLookup Alias:" field choose "SQLite file",
+       from the file menu choose "LHCBCOND.sqlite",
+       "OK",
+       and in the "Database Name:" field of the form type "LHCBCOND",
+       "Open DB".
+
+       You can check now that in the database the
+       /Conditions/Rich1/Environment/Aerogel.xml file is new.
+
+
+2. The world starts thinking IoVs-wise.
+
+   2.1. To breakdown a Condition to several IoVs (without changing the
+   parameter values, just for testing how conditions with IoVs will be handled
+   during the reconstruction), you will have to supply a steering file which
+   may look like this (the following are long lines, sorry about that):
+
+       #                Source                    Destination-in-CondDB     Start-Date-Time          Stop-Date-Time   Periodicity  Dispersion
+       DDDB/Conditions/Rich1/Environment/Aerogel.xml       /           2006-01-01T00:00:00GMT   2007-01-01T00:00:00GMT   4.5 weeks   2 days  
+       DDDB/Conditions/Rich1/Environment/Gas.xml           /           2006-01-01T00:00:00GMT   2006-02-01T00:00:00GMT   1 day       3.5 hours
+
+       Destination-in-CondDB == '/' means you are working with the root
+       directory in the database, which is probably a typical case.
+
+       Start-Date-Time and Stop-Date-Time define the time range where you
+       want to have a different granularity of IoVs. And the granularity is
+       determined by the Periodicity in human-friendly units, second through
+       year (any of them may be used both in plural and in single)
+
+       Dispersion is used to smear the IoV lengths in a uniformly
+       distributed random manner. It can be 0, however.
+
+       Now, if such a file is
+       $CONDDBUIROOT/doc/condition_files_with_periods_dispersions_list.txt
+       you can say this:
+
+       cd $XMLCONDITIONSROOT
+       python $CONDDBUIROOT/python/copy_files_to_db_with_time.py \
+       --connect-string="sqlite://none;schema=LHCBCOND.sqlite;dbname=LHCBCOND" \
+       --periods-list=$CONDDBUIROOT/doc/condition_files_with_periods_dispersions_list.txt
+
+       If you have already created a "single-infinite-IoV" CondDB in advance,
+       then as a result of such an operation, for each of the quoted in the
+       steering file Conditions, you will first have one, whose IoV stretches
+       from the beginning of the epoch to the Start-Date-Time, then a series
+       of conditions with the given  Periodicity up to Stop-Date-Time and
+       finally - the reminder, with its IoV stretching from Stop-Date-Time to
+       the end of the epoch. The newly created IoVs will be smeared according
+       to the quoted Dispersions, uniformly randomly within +/-Dispersion
+       around the average, which is equal to the Periodicity.
+
+   2.2. No "year 2038" problem anymore: that was only on 32-bit platforms.
+
+       It is worthwhile to note here that the "time_t" platform (i.e. a
+       collection of functions in system's C shared library that deals with all
+       kinds of time conversions, etc., on which Python is based as well) works
+       only up to 2038-01-19T03:14:07GMT (which is the timestamp range for
+       platform time_t on the 32-bit machines). Only functions like
+       gmtime(<timestamp>) are affected, because they cannot take arguments (in
+       seconds)  greater than (2^31 - 1 = 2147483647): gmtime(2147483647) = Tue
+       Jan 19 04:14:07 2038 is "the last time".
+
+       Actually, In our script we are not using conversion that way: we only
+       convert from human-readable timestamps to integer numbers of seconds,
+       which works fine up to: timegm(strptime(9999-12-31T23:59:59GMT,
+       %Y-%m-%dT%H:%M:%S%Z))) = 253402300799... But under some other
+       circumstances we might need to do the above-mentioned conversion as
+       well, e.g. if we want to represent IoVs in the CondBUI in a
+       human-friendly format.
+
+   2.3. The "Year 2262" problem is ubiquitous, in spite of the switch to 64-bit
+        system.
+
+       Of course, gmtime can now take arguments (meaning number of seconds) up to
+       2^63 - 1 = 9223372036854775807. But since we are using nanoseconds, our
+       maximum time in seconds is only   9223372036 (9223372036000000000
+       nanoseconds). And that is: gmtime(9223372036)=Sat Apr 12 00:47:16 2262.
+       So for the sake of consistency with COOL, inside the script the
+       9223372036000000000 (if used) is replaced by the   cool.ValidityKeyMax ==
+       9223372036854775807.
