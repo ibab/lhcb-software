@@ -5,7 +5,7 @@
  * Implementation file for algorithm ChargedProtoCombineDLLsAlg
  *
  * CVS Log :-
- * $Id: ChargedProtoCombineDLLsAlg.cpp,v 1.7 2007-02-19 12:05:57 jonrob Exp $
+ * $Id: ChargedProtoCombineDLLsAlg.cpp,v 1.8 2007-02-19 17:21:56 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 15/11/2006
@@ -169,7 +169,7 @@ ChargedProtoCombineDLLsAlg::addRich( LHCb::ProtoParticle * proto, CombinedLL & c
   // Apply renormalisation of RICH el and mu DLL values
   // Eventually, should make these tunable job options .... 
   if( 0 !=  m_elCombDll & richMask ) combDLL.elDLL += 7.0*tanh( proto->info(LHCb::ProtoParticle::RichDLLe,0)/40.0  );
-  if( 0 !=  m_muCombDll & richMask ) combDLL.muDLL += 7.0*tanh( proto->info(LHCb::ProtoParticle::RichDLLmu,0)/40.0 );
+  if( 0 !=  m_muCombDll & richMask ) combDLL.muDLL += 7.0*tanh( proto->info(LHCb::ProtoParticle::RichDLLmu,0)/5.0 );
   if( 0 !=  m_piCombDll & richMask ) combDLL.piDLL += proto->info ( LHCb::ProtoParticle::RichDLLpi , 0 );
   if( 0 !=  m_kaCombDll & richMask ) combDLL.kaDLL += proto->info ( LHCb::ProtoParticle::RichDLLk  , 0 );
   if( 0 !=  m_prCombDll & richMask ) combDLL.prDLL += proto->info ( LHCb::ProtoParticle::RichDLLp  , 0 );
