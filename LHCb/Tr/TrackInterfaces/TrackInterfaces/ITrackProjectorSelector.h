@@ -1,4 +1,4 @@
-// $Id: ITrackProjectorSelector.h,v 1.1 2006-12-15 19:12:34 graven Exp $
+// $Id: ITrackProjectorSelector.h,v 1.2 2007-02-19 12:38:15 cattanem Exp $
 #ifndef TRACKINTERFACES_ITRACKPROJECTORSELECTOR_H
 #define TRACKINTERFACES_ITRACKPROJECTORSELECTOR_H 1
 
@@ -17,7 +17,7 @@ namespace LHCb {
 /// Static Interface Identification
 static const InterfaceID IID_ITrackProjectorSelector( "ITrackProjectorSelector" , 1 , 0 );
 
-/** @class ITrProjectorSelector ITrProjectorSelector "TrProjectorpolator/ITrProjectorSelector"
+/** @class ITrackProjectorSelector ITrackProjectorSelector.h TrackInterfaces/ITrackProjectorSelector.h
  *
  *  Interface class to select which Projector to use.
  *

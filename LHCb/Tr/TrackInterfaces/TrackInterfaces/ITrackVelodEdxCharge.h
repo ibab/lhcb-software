@@ -5,7 +5,7 @@
  * Interface header file for ITrackVelodEdxCharge
  *
  * CVS Log :-
- * $Id: ITrackVelodEdxCharge.h,v 1.1 2006-07-19 13:04:04 jonrob Exp $
+ * $Id: ITrackVelodEdxCharge.h,v 1.2 2007-02-19 12:38:15 cattanem Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 18/07/2006
@@ -27,7 +27,7 @@ namespace LHCb
 static const InterfaceID IID_ITrackVelodEdxCharge( "ITrackVelodEdxCharge" , 1, 0 );
 
 //-----------------------------------------------------------------------------
-/** @class ITrackVelodEdxCharge ITrackVelodEdxCharge.h
+/** @class ITrackVelodEdxCharge ITrackVelodEdxCharge.h TrackInterfaces/ITrackVelodEdxCharge.h
  *
  *  Interface for TrackVeloCharge tool.
  *
@@ -59,7 +59,7 @@ public:
   /** Returns the estimated number of tracks in the VELO for the given
    *  Track object
    *  @param track Pointer to a Track object to analyze
-   *  @param nTrks Number of velo tracks
+   *  @param nTks  Number of velo tracks
    *  @return StatusCode indicating if the calculation was successfully
    *          performed or not
    */

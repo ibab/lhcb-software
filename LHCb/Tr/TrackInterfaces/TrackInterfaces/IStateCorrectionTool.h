@@ -1,4 +1,4 @@
-// $Id: IStateCorrectionTool.h,v 1.2 2006-08-29 17:56:52 erodrigu Exp $
+// $Id: IStateCorrectionTool.h,v 1.3 2007-02-19 12:38:15 cattanem Exp $
 #ifndef TRACKINTERFACES_ISTATECORRECTIONTOOL_H 
 #define TRACKINTERFACES_ISTATECORRECTIONTOOL_H 1
 
@@ -15,7 +15,7 @@ namespace LHCb {
 
 static const InterfaceID IID_IStateCorrectionTool ( "IStateCorrectionTool", 1, 0 );
 
-/** @class IStateCorrectionTool TrackExtrapolators/IStateCorrectionTool.h
+/** @class IStateCorrectionTool IStateCorrectionTool.h TrackInterfaces/IStateCorrectionTool.h
  *  
  *  Interface for state correction tools
  *

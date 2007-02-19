@@ -1,4 +1,4 @@
-// $Id: IMeasurementProvider.h,v 1.5 2006-02-17 15:34:05 erodrigu Exp $
+// $Id: IMeasurementProvider.h,v 1.6 2007-02-19 12:38:15 cattanem Exp $
 #ifndef TRACKINTERFACES_IMEASUREMENTPROVIDER_H 
 #define TRACKINTERFACES_IMEASUREMENTPROVIDER_H 1
 
@@ -53,7 +53,7 @@ public:
    *  @param  par: extra parameter for the XxxMeasurement constructor
    *               (refer to XxxMeasurement.h for details)
    */
-  virtual LHCb::Measurement* measurement( const LHCb::LHCbID&, 
+  virtual LHCb::Measurement* measurement( const LHCb::LHCbID& id, 
                                           double par = 0. ) = 0;
 
 protected:

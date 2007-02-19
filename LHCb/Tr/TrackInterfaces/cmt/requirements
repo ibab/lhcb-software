@@ -3,7 +3,7 @@
 # Maintainer : Jose Hernando, Eduardo Rodrigues
 #============================================================================
 package           TrackInterfaces
-version           v3r0
+version           v3r1
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -17,3 +17,12 @@ use GaudiKernel      v*
 # =============== include directories =======================================
 apply_pattern install_more_includes more=TrackInterfaces
 
+# =============== LCG Dictionaries ============================================
+apply_pattern reflex_dictionary                                                 \
+              dictionary=TrackInterfaces                                        \
+              headerfiles=$(TRACKINTERFACESROOT)/dict/TrackInterfacesDict.h     \
+              selectionfile=$(TRACKINTERFACESROOT)/dict/TrackInterfacesDict.xml \
+              options="-U__MINGW32__"
+
+# Hack for cmt v1r19 bug to link dictionary on windows
+macro TrackInterfacesDict_use_linkopts $(use_linkopts)

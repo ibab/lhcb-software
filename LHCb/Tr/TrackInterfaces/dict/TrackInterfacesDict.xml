@@ -1,0 +1,20 @@
+<lcgdict>
+  <class name    = "IAddTTClusterTool"       />
+  <class name    = "IMeasurementProvider"    />
+  <class name    = "IPatForwardTool"         />
+  <class name    = "IStateCorrectionTool"    />
+  <class name    = "ITrackCaloMatch"         />
+  <class name    = "ITrackChi2Calculator"    />
+  <class name    = "ITrackCloneFinder"       />
+  <class name    = "ITrackExtrapolator"      />
+  <class name    = "ITrackExtraSelector"     />
+  <class name    = "ITrackFitter"            />
+  <class name    = "ITrackInterpolator"      />
+  <class name    = "ITrackManipulator"       />
+  <class name    = "ITrackProjector"         />
+  <class name    = "ITrackProjectorSelector" />
+  <class name    = "ITrackPtKick"            />
+  <class name    = "ITrackSelector"          />
+  <class name    = "ITrackVelodEdxCharge"    />
+  <class name    = "ITrajectoryProvider"     />
+</lcgdict>

@@ -1,15 +1,17 @@
-// $Id: IAddTTClusterTool.h,v 1.2 2006-06-30 14:03:59 cattanem Exp $
-#ifndef TRACKMATCHING_IADDTTCLUSTERTOOL_H
-#define TRACKMATCHING_IADDTTCLUSTERTOOL_H 1
+// $Id: IAddTTClusterTool.h,v 1.3 2007-02-19 12:38:15 cattanem Exp $
+#ifndef TRACKINTERFACES_IADDTTCLUSTERTOOL_H
+#define TRACKINTERFACES_IADDTTCLUSTERTOOL_H 1
 
 // Include files
 // -------------
+#include <vector>
+
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
 
 static const InterfaceID IID_IAddTTClusterTool ( "IAddTTClusterTool", 1, 0 );
 
-/** @class IAddTTClusterTool IAddTTClusterTool.h  
+/** @class IAddTTClusterTool IAddTTClusterTool.h TrackInterfaces/IAddClusterTool.h
  *
  *  @author:  Jeroen van Tilburg Jeroen.van.Tilburg@cern.nl
  *  @date:    12-05-2006
@@ -40,4 +42,4 @@ public:
                                   const LHCb::STCluster& ttCluster ) = 0;
 
 };
-#endif // TRACKMATCHING_IADDTTCLUSTERTOOL_H
+#endif // TRACKINTERFACES_IADDTTCLUSTERTOOL_H

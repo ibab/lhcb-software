@@ -1,4 +1,4 @@
-// $Id: ITrackExtraSelector.h,v 1.2 2006-01-12 15:24:26 erodrigu Exp $
+// $Id: ITrackExtraSelector.h,v 1.3 2007-02-19 12:38:15 cattanem Exp $
 #ifndef TRACKINTERFACES_ITRACKEXTRASELECTOR_H
 #define TRACKINTERFACES_ITRACKEXTRASELECTOR_H 1
 
@@ -14,7 +14,7 @@ class ITrackExtrapolator;
 /// Static Interface Identification
 static const InterfaceID IID_ITrackExtraSelector( "ITrackExtraSelector" , 1 , 0 );
 
-/** @class ITrExtraSelector ITrExtraSelector "TrExtrapolator/ITrExtraSelector"
+/** @class ITrackExtraSelector ITrackExtraSelector.h TrackInterfaces/ITrackExtraSelector
  *
  *  Interface class to select which extrapolator to use.
  *
