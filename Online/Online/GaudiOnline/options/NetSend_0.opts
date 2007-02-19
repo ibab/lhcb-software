@@ -1,7 +1,11 @@
 #include "$GAUDIONLINEROOT/options/OnlineEnvironment.opts"
 ApplicationMgr.HistogramPersistency  = "NONE";
 ApplicationMgr.ExtSvc               += {"IncidentSvc"};
-ApplicationMgr.ExtSvc               += {"LHCb::OnlineEvtSelector/EventSelector"};
+ApplicationMgr.ExtSvc               += { "LHCb::OnlineEvtSelector/EventSelector"};
+ApplicationMgr.SvcOptMapping        += { "LHCb::EventRunable/Runable"};
+ApplicationMgr.SvcOptMapping        += { "LHCb::RawDataCnvSvc/RawDataCnvSvc" };
+ApplicationMgr.SvcOptMapping        += { "LHCb::OnlineEvtSelector/EventSelector"};
+
 Runable.MEPManager                   = "";
 ApplicationMgr.Runable               = "LHCb::EventRunable/Runable";
 ApplicationMgr.TopAlg               += {"LHCb::DimDataSender/Sender"};
@@ -13,8 +17,10 @@ Sender.Compress                      = 0;
 EventSelector.Input                  = "OUT";
 EventSelector.PartitionBuffer        = true;
 EventSelector.PartitionID            = @OnlineEnv.PartititonID;
+EventSelector.AllowSuspend           = true;
+EventSelector.Decode                 = false;
 EventDataSvc.RootCLID                = 1;
 EventDataSvc.EnableFaultHandler      = true ;
 EventPersistencySvc.CnvServices      = {"LHCb::RawDataCnvSvc/RawDataCnvSvc" };
 EventSelector.REQ1 = "EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0";
-MessageSvc.OutputLevel               = 5;
+MessageSvc.OutputLevel               = 1;

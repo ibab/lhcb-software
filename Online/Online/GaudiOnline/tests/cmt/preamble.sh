@@ -9,8 +9,8 @@ export TAN_NODE=$HOSTNAME
 export DIM_DNS_NODE=$HOSTNAME
 #
 export OPTS=$GAUDIONLINEROOT/options
-export msg_svc=LHCb::DimMessageSvc
 export msg_svc=MessageSvc
+export msg_svc=LHCb::DimMessageSvc
 
 export test_exe="$ONLINEKERNELROOT/$CMTCONFIG/test.exe "
 export gaudi_run="$GAUDIONLINEROOT/$CMTCONFIG/Gaudi.exe libGaudiOnline.so OnlineStart "
