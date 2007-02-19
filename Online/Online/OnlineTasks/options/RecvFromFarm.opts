@@ -1,0 +1,25 @@
+//
+//     Options file to receive contiguous events from the HLT farm and declare them
+//     to an event buffer "Event" on the Storage Layer
+// 
+#include "$GAUDIONLINEROOT/options/OnlineEnvironment.opts"
+ApplicationMgr.HistogramPersistency  = "NONE";
+ApplicationMgr.EvtSel                = "NONE";
+ApplicationMgr.Runable               = "LHCb::OnlineRunable/Runable";
+ApplicationMgr.SvcOptMapping        += { "LHCb::OnlineRunable/Runable"};
+ApplicationMgr.SvcOptMapping        += { "LHCb::RawDataCnvSvc/RawDataCnvSvc" };
+ApplicationMgr.SvcOptMapping        += { "LHCb::OnlineEvtSelector/EventSelector"};
+
+Runable.Wait                         = 3;  // noop
+ApplicationMgr.ExtSvc               += {"IncidentSvc"};
+ApplicationMgr.ExtSvc               += { "LHCb::DimDataReceiver/Receiver" };
+ApplicationMgr.SvcOptMapping        += { "LHCb::DimDataReceiver/Receiver" };
+//ApplicationMgr.ExtSvc               += {"LHCb::AMSService/AMS"};
+//ApplicationMgr.ExtSvc               += { "LHCb::AmsDataReceiver/Receiver" };
+//ApplicationMgr.SvcOptMapping        += { "LHCb::AmsDataReceiver/Receiver" };
+Receiver.Buffer                      = "Event";
+Receiver.PartitionID                 = @OnlineEnv.PartititonID;
+Receiver.MonitorSvcType              = @OnlineEnv.MonitorSvcType;
+// Receiver.UseEventRequests            = true;
+MessageSvc.OutputLevel               = 1;
+//MessageSvc.OutputLevel               = 3;
