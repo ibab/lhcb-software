@@ -3,8 +3,8 @@ extern "C" {
 #include <string.h>
 }
 
-#include <list>
 #include <iostream>
+#include <stdexcept>
 
 #include "Writer/MM.h"
 
@@ -93,26 +93,60 @@ void MM::freeCommand(struct cmd_header *cmd)
   */
 void MM::enqueueCommand(struct cmd_header *cmd)
 {
-  m_maxSeqPending = cmd->data.chunk_data.seq_num;
-  if(m_cmdList.size() == 0) {
-    m_minSeqPending = m_maxSeqPending;
+  struct list_head *newElem;
+
+  newElem = (struct list_head *)malloc(sizeof(struct list_head));
+  if(!newElem) {
+    throw std::runtime_error("Could not malloc for new command.");
   }
-  m_cmdList.push_back(cmd);
+  newElem->cmd = cmd;
+  newElem->next = NULL;
+
+  pthread_mutex_lock(&m_listLock);
+  if(m_head == NULL) {
+    m_head = newElem;
+    m_tail = newElem;
+  } else {
+    m_tail->next = newElem;
+    m_tail = newElem;
+  }
+  pthread_mutex_unlock(&m_listLock);
 }
 
 /**
   * Removes a command from the queue.
-  * @param it An iterator which is  currently at the position
-  * where the command to be dequeued is located.
+  * @param sequenceNum The sequence number of the command to be
+  * dequeued.
   */
-void MM::dequeueCommand(std::list<struct cmd_header*>::iterator it)
+struct cmd_header* MM::dequeueCommand(unsigned int sequenceNum)
 {
-  m_cmdList.erase(it);
-  if(m_cmdList.size() > 0) {
-    m_minSeqPending = (*m_cmdList.begin())->data.start_data.seq_num;
-  } else {
-    m_minSeqPending = 0;
-    m_maxSeqPending = 0;
+  struct list_head *tmp, *prev;
+  struct cmd_header *retCmd;
+
+  prev = NULL;
+
+  pthread_mutex_lock(&m_listLock);
+  tmp = m_head;
+  while(tmp != NULL) {
+    if(tmp->cmd->data.chunk_data.seq_num == sequenceNum) {
+      if(!prev) {
+	m_head = tmp->next;
+	if(!m_head) {
+	  m_tail = NULL;
+	}
+      } else {
+        prev->next = tmp->next;
+      }
+      pthread_mutex_unlock(&m_listLock);
+      retCmd = tmp->cmd;
+      free(tmp);
+      return retCmd;
+    }
+    prev = tmp;
+    tmp = tmp->next;
   }
+
+  pthread_mutex_unlock(&m_listLock);
+  return NULL;
 }
 

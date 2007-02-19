@@ -43,7 +43,7 @@ struct cmd_stop_header {
  */
 struct cmd_header {
 	unsigned int cmd;
-	unsigned char file_name[MAX_FILE_NAME];
+	char file_name[MAX_FILE_NAME];
 	union {
 		struct cmd_start_header 	start_data;
 		struct cmd_stop_header 		stop_data;

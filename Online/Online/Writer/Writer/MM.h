@@ -4,6 +4,7 @@
 extern "C" {
 #include "Writer/chunk_headers.h"
 #include <sys/types.h>
+#include <malloc.h>
 }
 
 #include <list>
@@ -28,6 +29,15 @@ namespace LHCb {
 
       /// The minimum pending sequence number in the cached list.
       unsigned int m_minSeqPending;
+
+      /// A lock to protect the list.
+      pthread_mutex_t m_listLock;
+
+      /// The list head and tail.
+      struct list_head {
+	struct cmd_header *cmd;
+	struct list_head *next;
+      } *m_head, *m_tail;
 
     public:
 
@@ -56,14 +66,22 @@ namespace LHCb {
       /// Basic constructor.
       MM()
       {
-	m_maxSeqPending = m_minSeqPending = 0;
+	m_head = NULL;
+	m_tail = NULL;
+	pthread_mutex_init(&m_listLock, NULL);
+      }
+
+      ~MM()
+      {
+	if(m_head)
+		free(m_head);
       }
 
       /// Enqueues a command.
       void enqueueCommand(struct cmd_header *cmd);
 
       /// Dequeues a command and frees it.
-      void dequeueCommand(std::list<struct cmd_header*>::iterator );
+      struct cmd_header* dequeueCommand(unsigned int seqNum);
 
       /// Returns the first command in the list.
       std::list<struct cmd_header*>::iterator getCommandIterator(void)

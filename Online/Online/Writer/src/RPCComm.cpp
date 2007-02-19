@@ -25,8 +25,9 @@ void RPCComm::confirmFile(std::string & fileName, unsigned int adlerSum, const u
 {
   xmlrpc_c::value result;
   int ret;
-  char md5CharString[33];
+
   char adler32String[9];
+  char md5CharString[33];
 
   /* We need to send this as a string because it's not very clear how the
    * XMLRPC library handles unsigned values.
@@ -38,7 +39,7 @@ void RPCComm::confirmFile(std::string & fileName, unsigned int adlerSum, const u
     md5CSum[8], md5CSum[9], md5CSum[10], md5CSum[11], 
     md5CSum[12], md5CSum[13], md5CSum[14], md5CSum[15]);
 
-  sprintf(adler32String, "%X", adlerSum);
+  sprintf(adler32String, "%08X", adlerSum);
 
   try {
     m_clientInstance.call(m_serverURL, confirmString, "sss", &result,

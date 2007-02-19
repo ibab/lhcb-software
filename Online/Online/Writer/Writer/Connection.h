@@ -21,6 +21,8 @@ extern "C" {
 
 namespace LHCb {
 
+  class INotifyClient;
+
   /**@class Connection
     * Abstracts away the networking / failover part of the MDF
     * Writer.
@@ -28,6 +30,16 @@ namespace LHCb {
   class Connection
   {
     private:
+
+      /// Flag to tell the acking thread to shut down.
+      volatile int m_stopAcking;
+
+      /// A handle to the ack thread.
+      pthread_t m_ackThread;
+
+      /// A client to be notified.
+      INotifyClient *m_notifyClient;
+
       /// One of the Connection::STATE_XXX values.
       int m_state;
 
@@ -58,11 +70,15 @@ namespace LHCb {
       /// A MessageSvc object to log messages to.
       MsgStream *m_log;
 
-      /// Processes acknowledgements and dequeues the acknowledged commands.
-      void processAcks(int blocking);
-
       /// Fails over onto an alternative storage cluster node.
       void failover(void);
+
+      /// Starts the acknowledgement thread.
+      void startAckThread(void);
+
+      /// Stops the acknowledgement thread.
+      void stopAckThread(void);
+
 
     public:
 
@@ -73,6 +89,8 @@ namespace LHCb {
       /// The connection is open, but no file is open.
       static const int STATE_CONN_OPEN	=	0x03;
 
+      /// Processes acknowledgements and dequeues the acknowledged commands.
+      void processAcks(int blocking);
 
       /// Connects to a storage cluster node.
       void connectAndNegotiate(std::string serverAddr, int serverPort,
@@ -90,6 +108,9 @@ namespace LHCb {
       /// Returns the state in which the Connection is.
       int getState() { return m_state; }
 
+      /// Sets a notification listener for events on this connection.
+      void setNotifyClient(INotifyClient *nClient) { m_notifyClient = nClient; }
+
   };
 
   /** @class An interface that can be used to register for notifications.
@@ -99,7 +120,10 @@ namespace LHCb {
   class INotifyClient
   {
     public:
-      virtual void sendError(struct cmd_header *header, int errno) = 0;
+      /// Called when the Connection object is notified of an error.
+      virtual void notifyError(struct cmd_header *header, int errno) = 0;
+      /// Called when the Connection object is notified of a successful close.
+      virtual void notifyClose(struct cmd_header *header) = 0;
   };
 
 }

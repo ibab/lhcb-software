@@ -23,6 +23,33 @@ static inline unsigned long adler32(unsigned long adler,
     const char *buf,
     unsigned int len);
 
+/**
+  * Macro for initialising a close command.
+  */
+#define INIT_CLOSE_COMMAND(h, adler32, md5) { \
+  (h)->cmd = CMD_CLOSE_FILE; \
+  (md5)->Final((h)->data.stop_data.md5_sum); \
+  (h)->data.stop_data.adler32_sum = (adler32); \
+}
+
+/**
+  * Macro for initialising a write command.
+  */
+#define INIT_WRITE_COMMAND(h, len, off, fname) { \
+  (h)->cmd = CMD_WRITE_CHUNK; \
+  (h)->data.chunk_data.size = (len); \
+  (h)->data.chunk_data.offset = (off); \
+  strncpy((h)->file_name, (fname), MAX_FILE_NAME); \
+}
+
+/**
+  * Macro for initialising an open command.
+  */
+#define INIT_OPEN_COMMAND(h, fname) { \
+  (h)->cmd = CMD_OPEN_FILE; \
+  strncpy((h)->file_name, (fname), MAX_FILE_NAME); \
+}
+  
 
 /// Extended algorithm constructor
 MDFWriterNet::MDFWriterNet(MDFIO::Writer_t typ, const std::string& nam,	ISvcLocator* pSvc) : MDFWriter(typ, nam, pSvc)
@@ -90,12 +117,8 @@ StatusCode MDFWriterNet::finalize(void)
   if(m_fileOpen) {
 
     struct cmd_header header;
-    header.cmd = CMD_CLOSE_FILE;
 
-    // Get both sums.
-    m_md5->Final(header.data.stop_data.md5_sum);
-    header.data.stop_data.adler32_sum = m_adler32;
-
+    INIT_CLOSE_COMMAND(&header, m_adler32, m_md5);
     delete m_md5;
 
     m_connection->sendCommand(&header);
@@ -149,8 +172,7 @@ StatusCode MDFWriterNet::writeBuffer(void *const /*fd*/, const void *data, size_
   if(!m_fileOpen) {
 
     getNewFileName(m_fileName, data, len);
-    header.cmd = CMD_OPEN_FILE;
-    strncpy((char*)header.file_name, m_fileName.c_str(), MAX_FILE_NAME);
+    INIT_OPEN_COMMAND(&header, m_fileName.c_str());
     m_connection->sendCommand(&header);
     m_fileOpen = 1;
 
@@ -171,67 +193,15 @@ StatusCode MDFWriterNet::writeBuffer(void *const /*fd*/, const void *data, size_
     }
   }
 
-  header.cmd = CMD_WRITE_CHUNK;
-  header.data.chunk_data.size = len;
-  header.data.chunk_data.offset = m_bytesWritten;
-  strncpy((char*)header.file_name,
-    m_fileName.c_str(), MAX_FILE_NAME);
-
+  INIT_WRITE_COMMAND(&header, len, m_bytesWritten, m_fileName.c_str());
   m_connection->sendCommand(&header, (void*)data);
-
   m_md5->Update((UChar_t*)data, (UInt_t)len);
   m_adler32 = adler32(m_adler32, (const char*)data, len);
 
   //How much have we written?
   m_bytesWritten += len;
   if(m_bytesWritten > (m_maxFileSizeMB << 20)) {
-    //Tell Run DB about it.
-    header.cmd = CMD_CLOSE_FILE;
-
-    // Get both sums.
-    m_md5->Final(header.data.stop_data.md5_sum);
-    header.data.stop_data.adler32_sum = m_adler32;
-
-    delete m_md5;
-
-    //TODO: Fix up location
-    try {
-
-      char md5buf[33];
-      unsigned char *md5sum;
-      md5sum = header.data.stop_data.md5_sum;
-      sprintf(md5buf, "%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X",
-        md5sum[0],md5sum[1],md5sum[2],md5sum[3],
-        md5sum[4],md5sum[5],md5sum[6],md5sum[7],
-        md5sum[8],md5sum[9],md5sum[10],md5sum[11],
-        md5sum[12],md5sum[13],md5sum[14],md5sum[15]);
-
-      *m_log << MSG::INFO << "Sum before = " << md5buf << "*" << endmsg;
-
-      m_rpcObj->confirmFile(m_fileName, 
-	header.data.stop_data.adler32_sum, 
-	md5sum);
-
-    } catch(std::runtime_error rte) {
-      char md5buf[33];
-      unsigned char *md5sum = header.data.stop_data.md5_sum;
-      sprintf(md5buf, "%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X",
-        md5sum[0],md5sum[1],md5sum[2],md5sum[3],
-        md5sum[4],md5sum[5],md5sum[6],md5sum[7],
-        md5sum[8],md5sum[9],md5sum[10],md5sum[11],
-        md5sum[12],md5sum[13],md5sum[14],md5sum[15]);
-
-      *m_log << MSG::ERROR << "Could not update Run Database Record ";
-      *m_log << "Cause: " << rte.what() << std::endl;
-      *m_log << "Record is: FileName=" << m_fileName;
-      *m_log << " Adler32 Sum=" << header.data.stop_data.adler32_sum;
-      *m_log << " MD5 Sum=" << md5buf << endmsg;
-
-    }
-
-    m_connection->sendCommand(&header);
-    m_bytesWritten = 0;
-    m_fileOpen = 0;
+    finalize();
   }
 
   //Close it, reset counter.
@@ -276,9 +246,8 @@ void MDFWriterNet::getNewFileName(std::string &newFileName,
 MDFWriterNet::~MDFWriterNet()
 {
   if(m_connection->getState() & m_connection->STATE_FILE_OPEN) {
-    cmd_header h;
-    h.cmd = CMD_CLOSE_FILE;
-    m_connection->sendCommand(&h);
+    *m_log << MSG::WARNING << "Destructor called before finalize. Normal?" << endmsg;
+    finalize();
   } else {
     //Not in the open state, so nothing to do.
   }

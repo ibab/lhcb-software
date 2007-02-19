@@ -7,8 +7,10 @@ extern "C" {
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <poll.h>
 #include <netdb.h>
 #include <errno.h>
+#include <pthread.h>
 #include "Writer/chunk_headers.h"
 }
 
@@ -29,7 +31,7 @@ using namespace LHCb;
  * @param msgSvc An IMessageSvc to m_log messages to.
  */
 void Connection::connectAndNegotiate(std::string serverAddr, int serverPort,
-    int soTimeout, int sndRcvSizes, MsgStream * log)
+    int /*soTimeout*/, int sndRcvSizes, MsgStream * log)
 {
   int ret;
   int sockoptval;
@@ -43,6 +45,7 @@ void Connection::connectAndNegotiate(std::string serverAddr, int serverPort,
   m_serverPort = serverPort;
   m_ackHeaderReceived = 0;
   m_log = log;
+  m_notifyClient = NULL;
 
   m_sockfd = socket(AF_INET, SOCK_STREAM, 0);
   if(m_sockfd < 0) {
@@ -88,6 +91,7 @@ void Connection::connectAndNegotiate(std::string serverAddr, int serverPort,
       //TODO: Get the list of other nodes that can be connected to.
       *m_log << MSG::INFO << "Connected to a host." << endmsg;
       m_state = Connection::STATE_CONN_OPEN;
+      startAckThread();
       return;
     }
 
@@ -110,6 +114,8 @@ void Connection::connectAndNegotiate(std::string serverAddr, int serverPort,
   */
 void Connection::closeConnection()
 {
+  stopAckThread();
+
   while(m_mmObj.getQueueLength() != 0)
     processAcks(1);
 
@@ -141,82 +147,105 @@ void Connection::processAcks(int blocking)
   int ret;
   unsigned char *ptr;
 
+  struct pollfd pollfds[1];
+
+  pollfds[0].fd = m_sockfd;
+  pollfds[0].events = POLLIN | POLLERR;
+  pollfds[0].revents = 0;
+
+
   ptr = (unsigned char*)&m_ackHeaderBuf;
 
-  while(m_mmObj.getQueueLength() > 0) {
+  /* If blocking is 1, then it means we should block
+   * till all commands are cleared out.
+   */
 
+  while(1) 
+  {
+
+    /* Get out if we're told to stop.*/
+    if(m_stopAcking)
+      return;
+
+    /* If we're running in a thread, we poll and read.*/
+    if(!blocking) {
+      pollfds[0].revents = 0;
+      ret = poll(pollfds, 1, 5000);
+      if(ret == 0) {
+        continue;
+      } else if(ret < 0 && (errno == EINTR || errno == EAGAIN)) {
+        continue;
+      } else if(ret < 0) {
+        *m_log << MSG::WARNING << "Poll failed, errno = " << errno << endmsg;
+        continue;
+      }
+    }
+
+    /* Means we got something to read. */
     ret = recv(m_sockfd, ptr + m_ackHeaderReceived,
 	sizeof(struct ack_header) - m_ackHeaderReceived,
 	blocking ? MSG_WAITALL : MSG_DONTWAIT);
 
+    /* On failover, just exit - we'll be restarted anyway */
     if(ret < 0 && (errno == EINTR || errno == EAGAIN)) {
-      if(!blocking)
-	return;
-      else
 	ret = 0;
     } else if(ret == 0) {
-
       *m_log << MSG::WARNING << "Disconnected, should fail over." << endmsg;
-
       failover();
-
+      return;
     } else if(ret < 0) {
-
       *m_log << MSG::WARNING << "Receive failed, should fail over." << endmsg;
-
       failover();
+      return;
     }
 
     m_ackHeaderReceived += ret;
 
-    if(m_ackHeaderReceived == sizeof(struct ack_header)) {
-      m_ackHeaderReceived = 0;
+    /* Still haven't received a full acknowledgement header, loop over. */
 
-      //Process the ack.
-      unsigned int totalNumAcked = 0;
-      if(m_ackHeaderBuf.min_seq_num > m_ackHeaderBuf.max_seq_num) {
-	//Wraparound of sequence number has occurred.
-	totalNumAcked = 0xffffffff - m_ackHeaderBuf.min_seq_num + 1;
-	totalNumAcked += m_ackHeaderBuf.max_seq_num;
-      } else {
-	totalNumAcked = m_ackHeaderBuf.max_seq_num -
-	  m_ackHeaderBuf.min_seq_num + 1;
-      }
+    *m_log << MSG::WARNING << "Received one package." << m_ackHeaderBuf.min_seq_num << " to " << m_ackHeaderBuf.max_seq_num << endmsg;
 
-      //Go over the elements from the front, pop all that match.
-      for(unsigned int i=0, seqNum=m_ackHeaderBuf.min_seq_num;
-	  i<totalNumAcked;
-	  i++,seqNum++) {
 
-	std::list<struct cmd_header*>::iterator first, last;
-	first = m_mmObj.getCommandIterator();
-	last = m_mmObj.getLastCommand();
 
-	while(first != last) {
-	  if((*first)->data.start_data.seq_num == seqNum) {
-	    struct cmd_header* del_this;
-	    del_this = (struct cmd_header*)*first;
+    if((unsigned)m_ackHeaderReceived < sizeof(struct ack_header))
+      continue;
 
-	    m_mmObj.dequeueCommand(first);
-	    m_mmObj.freeCommand(del_this);
-	    break;
-	  }
-	  first++;
-	}
-	if(first == last) {
+    m_ackHeaderReceived = 0;
 
-          *m_log << MSG::ERROR << "FATAL, Received an unsolicited ack." << endmsg;
-	  break;
-	}
-	if(m_mmObj.getQueueLength() == 0)
-	  break;
-      }
+    //Process the ack.
+    unsigned int totalNumAcked = 0;
+    if(m_ackHeaderBuf.min_seq_num > m_ackHeaderBuf.max_seq_num) {
+      //Wraparound of sequence number has occurred.
+      totalNumAcked = 0xffffffff - m_ackHeaderBuf.min_seq_num + 1;
+      totalNumAcked += m_ackHeaderBuf.max_seq_num;
     } else {
-      //Haven't read enough to process a full ack. Let's try later.
-      break;
+      totalNumAcked = m_ackHeaderBuf.max_seq_num - m_ackHeaderBuf.min_seq_num + 1;
+    }
+
+    for(unsigned int i=0, seqNum=m_ackHeaderBuf.min_seq_num;
+	i<totalNumAcked;
+	i++,seqNum++) {
+
+      struct cmd_header *cmd;
+
+    if((cmd = m_mmObj.dequeueCommand(seqNum)) == NULL) {
+	*m_log << MSG::ERROR << "FATAL, Received an unsolicited ack." << endmsg;
+      } else {
+        if(cmd->cmd == CMD_CLOSE_FILE && m_notifyClient) {
+	  m_notifyClient->notifyClose(cmd);
+        }
+        m_mmObj.freeCommand(cmd);
+      }
+    }
+
+    if(blocking && m_mmObj.getQueueLength() == 0) {
+      /* If we're in blocking (cleanup) mode, then
+       * if the queue is empty, we've got nothing
+       * else to do. Get out.
+       */
+      return;
     }
   }
-
 }
 
 
@@ -254,8 +283,7 @@ void Connection::sendCommand(struct cmd_header *header, void *data)
   switch(header->cmd) {
     case CMD_WRITE_CHUNK:
       totalSize += header->data.chunk_data.size;
-    
-      case CMD_CLOSE_FILE:
+    case CMD_CLOSE_FILE:
       m_state = STATE_CONN_OPEN;
     case CMD_OPEN_FILE:
       m_state = STATE_FILE_OPEN;
@@ -295,11 +323,44 @@ void Connection::sendCommand(struct cmd_header *header, void *data)
       failover();
     }
   }
-
-  //Try to read some acknowledgements right away.
-  processAcks(0);
-
-  //*m_log << MSG::INFO << "Sent command, " << m_mmObj.getQueueLength()
-  //  << " objects in queue." << endmsg;
-
 }
+
+/**
+  * The ack thread body.
+  * This thread just starts the processAcks() method of the
+  * specified connection object in a separate thread.
+  */
+static void *ack_thread(void *args)
+{
+  Connection *conn;
+  conn = (Connection*)args;
+  conn->processAcks(0);
+  return NULL;
+}
+
+/**
+  * Starts up the ack thread.
+  */
+void Connection::startAckThread()
+{
+  int ret;
+  m_stopAcking = 0;
+  ret = pthread_create(&m_ackThread, NULL, ack_thread, this);
+  if(ret != 0) {
+    *m_log << MSG::FATAL << "Could not create ack thread " << errno << endmsg;
+  }
+}
+
+/**
+  * Stops the ack thread (blocking).
+  */
+void Connection::stopAckThread()
+{
+  int ret;
+  m_stopAcking = 1;
+  ret = pthread_join(m_ackThread, NULL);
+  if(ret != 0) {
+    *m_log << MSG::ERROR << "Could not stop ack thread " << errno << endmsg;
+  }
+}
+
