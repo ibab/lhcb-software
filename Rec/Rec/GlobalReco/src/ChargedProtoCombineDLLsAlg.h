@@ -5,7 +5,7 @@
  * Header file for algorithm ChargedProtoCombineDLLsAlg
  *
  * CVS Log :-
- * $Id: ChargedProtoCombineDLLsAlg.h,v 1.4 2007-01-08 13:22:47 odescham Exp $
+ * $Id: ChargedProtoCombineDLLsAlg.h,v 1.5 2007-02-19 11:38:05 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 15/11/2006
@@ -20,8 +20,6 @@
 
 // Event
 #include "Event/ProtoParticle.h"
-
-
 
 //-----------------------------------------------------------------------------
 /** @class ChargedProtoCombineDLLsAlg ChargedProtoCombineDLLsAlg.h
@@ -46,7 +44,6 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 protected:
   /// Converts a string to entirely upper case
@@ -71,6 +68,7 @@ private: // utility classes
   //-----------------------------------------------------------------------------
   class CombinedLL
   {
+
   public:
     /// Standard constructor with initialisation value
     CombinedLL( const double init = 0 )

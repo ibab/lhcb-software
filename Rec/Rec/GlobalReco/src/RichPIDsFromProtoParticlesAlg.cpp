@@ -5,7 +5,7 @@
  * Implementation file for algorithm RichPIDsFromProtoParticlesAlg
  *
  * CVS Log :-
- * $Id: RichPIDsFromProtoParticlesAlg.cpp,v 1.4 2007-02-09 14:07:25 ukerzel Exp $
+ * $Id: RichPIDsFromProtoParticlesAlg.cpp,v 1.5 2007-02-19 11:38:06 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 29/03/2006
@@ -61,6 +61,12 @@ StatusCode RichPIDsFromProtoParticlesAlg::initialize()
 StatusCode RichPIDsFromProtoParticlesAlg::execute() 
 {
 
+  // check data is not already there
+  if ( exist<RichPIDs>( m_richPIDloc ) ) 
+  {
+    return Warning( "Data already exists at " + m_richPIDloc, StatusCode::SUCCESS );
+  }
+
   // load ProtoParticles
   const ProtoParticles * protos = get<ProtoParticles>( m_protoPloc );
   if ( msgLevel(MSG::VERBOSE) ) {
@@ -97,15 +103,12 @@ StatusCode RichPIDsFromProtoParticlesAlg::execute()
 
       // new RichPID
       RichPID * pid = new RichPID();
+
       // Add to container with same key as Track 
       rpids->insert( pid, track->key() );
 
-      // set this RichPID to the proto-particle
-      //  needed in case a clone of the proto-particle
-      //  is written to a new file and the corresponding
-      //  information is re-created when the proto-particle is
-      //  read back .
-      (*iP)->setRichPID(pid);
+      // make sure proto points to this RichPID
+      (*iP)->setRichPID( pid );
 
       // copy info
 
@@ -136,15 +139,12 @@ StatusCode RichPIDsFromProtoParticlesAlg::execute()
 
   }
 
-  return StatusCode::SUCCESS;
-}
+  if ( msgLevel(MSG::DEBUG) ) 
+  {
+    debug() << "Created " << rpids->size() << " RichPIDs at " << m_richPIDloc << endreq;
+  }
 
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode RichPIDsFromProtoParticlesAlg::finalize() 
-{
-  return GaudiAlgorithm::finalize();
+  return StatusCode::SUCCESS;
 }
 
 //=============================================================================

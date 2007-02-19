@@ -5,7 +5,7 @@
  * Implementation file for algorithm MuonPIDsFromProtoParticlesAlg
  *
  * CVS Log :-
- * $Id: MuonPIDsFromProtoParticlesAlg.cpp,v 1.4 2007-02-09 14:07:25 ukerzel Exp $
+ * $Id: MuonPIDsFromProtoParticlesAlg.cpp,v 1.5 2007-02-19 11:38:05 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 29/03/2006
@@ -60,6 +60,12 @@ StatusCode MuonPIDsFromProtoParticlesAlg::initialize()
 //=============================================================================
 StatusCode MuonPIDsFromProtoParticlesAlg::execute() 
 {
+  
+  // check data is not already there
+  if ( exist<MuonPIDs>( m_muonPIDloc ) ) 
+  {
+    return Warning( "Data already exists at " + m_muonPIDloc, StatusCode::SUCCESS );
+  }
 
   // load ProtoParticles
   const ProtoParticles * protos = get<ProtoParticles>( m_protoPloc );
@@ -91,16 +97,12 @@ StatusCode MuonPIDsFromProtoParticlesAlg::execute()
 
       // new MuonPID
       MuonPID * pid = new MuonPID();
+
       // Add to container with same key as Track 
       mpids->insert( pid, track->key() );
 
-      // set this MuonPID to the proto-particle
-      //  needed in case a clone of the proto-particle
-      //  is written to a new file and the corresponding
-      //  information is re-created when the proto-particle is
-      //  read back .
-      (*iP)->setMuonPID(pid);
-      
+      // make sure proto points to this MuonPID
+      (*iP)->setMuonPID( pid );
 
       // copy info
 
@@ -117,21 +119,18 @@ StatusCode MuonPIDsFromProtoParticlesAlg::execute()
       }// if
       pid->setMuonLLMu( (*iP)->info(ProtoParticle::MuonMuLL,    0) );
       pid->setMuonLLBg( (*iP)->info(ProtoParticle::MuonBkgLL,   0) );
-      pid->setNShared(  static_cast<int>((*iP)->info(ProtoParticle::MuonNShared, 0)) );
+      pid->setNShared ( static_cast<int>((*iP)->info(ProtoParticle::MuonNShared, 0)) );
 
     }// has muon info
 
   }
 
-  return StatusCode::SUCCESS;
-}
+  if ( msgLevel(MSG::DEBUG) ) 
+  {
+    debug() << "Created " << mpids->size() << " MuonPIDs at " << m_muonPIDloc << endreq;
+  }
 
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode MuonPIDsFromProtoParticlesAlg::finalize() 
-{
-  return GaudiAlgorithm::finalize();
+  return StatusCode::SUCCESS;
 }
 
 //=============================================================================

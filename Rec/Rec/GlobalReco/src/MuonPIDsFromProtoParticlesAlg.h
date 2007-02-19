@@ -5,7 +5,7 @@
  * Header file for algorithm MuonPIDsFromProtoParticlesAlg
  *
  * CVS Log :-
- * $Id: MuonPIDsFromProtoParticlesAlg.h,v 1.1 2006-08-02 10:06:45 jonrob Exp $
+ * $Id: MuonPIDsFromProtoParticlesAlg.h,v 1.2 2007-02-19 11:38:06 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 29/03/2006
@@ -45,7 +45,6 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 private:
 

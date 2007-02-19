@@ -5,7 +5,7 @@
  * Header file for algorithm RichPIDsFromProtoParticlesAlg
  *
  * CVS Log :-
- * $Id: RichPIDsFromProtoParticlesAlg.h,v 1.1 2006-08-02 10:06:46 jonrob Exp $
+ * $Id: RichPIDsFromProtoParticlesAlg.h,v 1.2 2007-02-19 11:38:06 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 29/03/2006
@@ -45,7 +45,6 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 private:
 

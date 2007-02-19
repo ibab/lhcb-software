@@ -1,19 +1,19 @@
 
 //-----------------------------------------------------------------------------
-/** @file ProtoParticleTupleAlg.h
+/** @file ChargedProtoParticleTupleAlg.h
  *
- * Header file for algorithm ProtoParticleTupleAlg
+ * Header file for algorithm ChargedProtoParticleTupleAlg
  *
  * CVS Log :-
- * $Id: ProtoParticleTupleAlg.h,v 1.1 2006-12-11 20:48:22 jonrob Exp $
+ * $Id: ChargedProtoParticleTupleAlg.h,v 1.1 2007-02-19 11:38:05 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-11-15
  */
 //-----------------------------------------------------------------------------
 
-#ifndef GLOBALRECO_ProtoParticleTupleAlg_H 
-#define GLOBALRECO_ProtoParticleTupleAlg_H 1
+#ifndef GLOBALRECO_ChargedProtoParticleTupleAlg_H
+#define GLOBALRECO_ChargedProtoParticleTupleAlg_H 1
 
 // from Gaudi
 #include "GaudiAlg/GaudiTupleAlg.h"
@@ -28,25 +28,25 @@
 #include "RichRecBase/IRichRecMCTruthTool.h"
 
 //-----------------------------------------------------------------------------
-/** @class ProtoParticleTupleAlg ProtoParticleTupleAlg.h
- *  
- *  Simple algorithm to produce an ntuple containing the ProtoParticle
+/** @class ChargedProtoParticleTupleAlg ChargedProtoParticleTupleAlg.h
+ *
+ *  Simple algorithm to produce an ntuple containing the charged ProtoParticle
  *  PID information. Useful for tuning purposes.
- *  
+ *
  *  @author Chris Jones
  *  @date   2006-11-15
  */
 //-----------------------------------------------------------------------------
 
-class ProtoParticleTupleAlg : public GaudiTupleAlg
+class ChargedProtoParticleTupleAlg : public GaudiTupleAlg
 {
 
-public: 
+public:
 
   /// Standard constructor
-  ProtoParticleTupleAlg( const std::string& name, ISvcLocator* pSvcLocator );
+  ChargedProtoParticleTupleAlg( const std::string& name, ISvcLocator* pSvcLocator );
 
-  virtual ~ProtoParticleTupleAlg( ); ///< Destructor
+  virtual ~ChargedProtoParticleTupleAlg( ); ///< Destructor
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
@@ -60,4 +60,4 @@ private:
 
 };
 
-#endif // GLOBALRECO_ProtoParticleTupleAlg_H 
+#endif // GLOBALRECO_ChargedProtoParticleTupleAlg_H

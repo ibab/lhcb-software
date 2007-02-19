@@ -5,7 +5,7 @@
  * Implementation file for algorithm ChargedProtoCombineDLLsAlg
  *
  * CVS Log :-
- * $Id: ChargedProtoCombineDLLsAlg.cpp,v 1.5 2007-01-08 13:22:46 odescham Exp $
+ * $Id: ChargedProtoCombineDLLsAlg.cpp,v 1.6 2007-02-19 11:38:05 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 15/11/2006
@@ -160,49 +160,45 @@ StatusCode ChargedProtoCombineDLLsAlg::execute()
 }
 
 void
-ChargedProtoCombineDLLsAlg::addRich( LHCb::ProtoParticle * proto, CombinedLL & combDLL ){
-  // Add RICH Dll information. Default, for when not available is 0
-  int richMask = m_maskTechnique["RICH"];
-  if( 0 !=  m_elCombDll & richMask )combDLL.elDLL += proto->info ( LHCb::ProtoParticle::RichDLLe  , 0 );
-  if( 0 !=  m_muCombDll & richMask )combDLL.muDLL += proto->info ( LHCb::ProtoParticle::RichDLLmu , 0 );
-  if( 0 !=  m_piCombDll & richMask )combDLL.piDLL += proto->info ( LHCb::ProtoParticle::RichDLLpi , 0 );
-  if( 0 !=  m_kaCombDll & richMask )combDLL.kaDLL += proto->info ( LHCb::ProtoParticle::RichDLLk  , 0 );
-  if( 0 !=  m_prCombDll & richMask )combDLL.prDLL += proto->info ( LHCb::ProtoParticle::RichDLLp  , 0 );
-}
-
-void
-ChargedProtoCombineDLLsAlg::addMuon( LHCb::ProtoParticle * proto, CombinedLL & combDLL ){
-  int muonMask = m_maskTechnique["MUON"];
-  if( 0 != m_elCombDll  & muonMask )combDLL.elDLL += proto->info ( LHCb::ProtoParticle::MuonBkgLL,0 );
-  if( 0 != m_muCombDll  & muonMask )combDLL.muDLL += proto->info ( LHCb::ProtoParticle::MuonMuLL, 0 );
-  if( 0 != m_piCombDll  & muonMask )combDLL.piDLL += proto->info ( LHCb::ProtoParticle::MuonBkgLL,0 );
-  if( 0 != m_kaCombDll  & muonMask )combDLL.kaDLL += proto->info ( LHCb::ProtoParticle::MuonBkgLL,0 );
-  if( 0 != m_prCombDll  & muonMask )combDLL.prDLL += proto->info ( LHCb::ProtoParticle::MuonBkgLL,0 );
-}
-
-void
-ChargedProtoCombineDLLsAlg::addCalo( LHCb::ProtoParticle * proto, CombinedLL & combDLL ){
-  int ecalMask = m_maskTechnique["ECAL"];
-  int hcalMask = m_maskTechnique["HCAL"];
-  int prsMask  = m_maskTechnique["PRS"];
-  int bremMask = m_maskTechnique["BREM"];
-  // DLL(el)
-  if( 0 != m_elCombDll & ecalMask )combDLL.elDLL += proto->info ( LHCb::ProtoParticle::EcalPIDe, 0  );
-  if( 0 != m_elCombDll & hcalMask )combDLL.elDLL += proto->info ( LHCb::ProtoParticle::HcalPIDe, 0  );
-  if( 0 != m_elCombDll & prsMask  )combDLL.elDLL += proto->info ( LHCb::ProtoParticle::PrsPIDe , 0  );
-  if( 0 != m_elCombDll & bremMask )combDLL.elDLL += proto->info ( LHCb::ProtoParticle::BremPIDe, 0  );
-  // DLL(mu)
-  if( 0 != m_muCombDll & ecalMask )combDLL.muDLL += proto->info ( LHCb::ProtoParticle::EcalPIDmu, 0 );
-  if( 0 != m_muCombDll & hcalMask )combDLL.muDLL += proto->info ( LHCb::ProtoParticle::HcalPIDmu, 0 );
-}
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode ChargedProtoCombineDLLsAlg::finalize()
+ChargedProtoCombineDLLsAlg::addRich( LHCb::ProtoParticle * proto, CombinedLL & combDLL )
 {
-  // execute base class finalise and return
-  return GaudiAlgorithm::finalize();
+  // Add RICH Dll information. Default, for when not available is 0
+  const int richMask = m_maskTechnique["RICH"];
+  // Apply renormalisation of RICH el and mu DLL values
+  // Eventually, should make these tunable job options .... 
+  if( 0 !=  m_elCombDll & richMask ) combDLL.elDLL += 7.0*tanh( proto->info(LHCb::ProtoParticle::RichDLLe,0)/40.0  );
+  if( 0 !=  m_muCombDll & richMask ) combDLL.muDLL += 7.0*tanh( proto->info(LHCb::ProtoParticle::RichDLLmu,0)/40.0 );
+  if( 0 !=  m_piCombDll & richMask ) combDLL.piDLL += proto->info ( LHCb::ProtoParticle::RichDLLpi , 0 );
+  if( 0 !=  m_kaCombDll & richMask ) combDLL.kaDLL += proto->info ( LHCb::ProtoParticle::RichDLLk  , 0 );
+  if( 0 !=  m_prCombDll & richMask ) combDLL.prDLL += proto->info ( LHCb::ProtoParticle::RichDLLp  , 0 );
+}
+
+void
+ChargedProtoCombineDLLsAlg::addMuon( LHCb::ProtoParticle * proto, CombinedLL & combDLL )
+{
+  const int muonMask = m_maskTechnique["MUON"];
+  if( 0 != m_elCombDll  & muonMask ) combDLL.elDLL += proto->info ( LHCb::ProtoParticle::MuonBkgLL,0 );
+  if( 0 != m_muCombDll  & muonMask ) combDLL.muDLL += proto->info ( LHCb::ProtoParticle::MuonMuLL, 0 );
+  if( 0 != m_piCombDll  & muonMask ) combDLL.piDLL += proto->info ( LHCb::ProtoParticle::MuonBkgLL,0 );
+  if( 0 != m_kaCombDll  & muonMask ) combDLL.kaDLL += proto->info ( LHCb::ProtoParticle::MuonBkgLL,0 );
+  if( 0 != m_prCombDll  & muonMask ) combDLL.prDLL += proto->info ( LHCb::ProtoParticle::MuonBkgLL,0 );
+}
+
+void
+ChargedProtoCombineDLLsAlg::addCalo( LHCb::ProtoParticle * proto, CombinedLL & combDLL )
+{
+  const int ecalMask = m_maskTechnique["ECAL"];
+  const int hcalMask = m_maskTechnique["HCAL"];
+  const int prsMask  = m_maskTechnique["PRS"];
+  const int bremMask = m_maskTechnique["BREM"];
+  // DLL(el)
+  if( 0 != m_elCombDll & ecalMask ) combDLL.elDLL += proto->info ( LHCb::ProtoParticle::EcalPIDe, 0  );
+  if( 0 != m_elCombDll & hcalMask ) combDLL.elDLL += proto->info ( LHCb::ProtoParticle::HcalPIDe, 0  );
+  if( 0 != m_elCombDll & prsMask  ) combDLL.elDLL += proto->info ( LHCb::ProtoParticle::PrsPIDe , 0  );
+  if( 0 != m_elCombDll & bremMask ) combDLL.elDLL += proto->info ( LHCb::ProtoParticle::BremPIDe, 0  );
+  // DLL(mu)
+  if( 0 != m_muCombDll & ecalMask ) combDLL.muDLL += proto->info ( LHCb::ProtoParticle::EcalPIDmu, 0 );
+  if( 0 != m_muCombDll & hcalMask ) combDLL.muDLL += proto->info ( LHCb::ProtoParticle::HcalPIDmu, 0 );
 }
 
 //=============================================================================
