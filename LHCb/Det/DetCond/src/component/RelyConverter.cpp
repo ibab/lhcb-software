@@ -1,4 +1,4 @@
-// $Id: RelyConverter.cpp,v 1.21 2007-02-14 16:13:31 marcocle Exp $
+// $Id: RelyConverter.cpp,v 1.22 2007-02-19 17:10:12 marcocle Exp $
 // Include files 
 #include "RelyConverter.h"
 
@@ -312,7 +312,6 @@ StatusCode RelyConverter::i_delegatedCreation(IOpaqueAddress* pAddress, DataObje
     return sc;
   }
   
-  if (sc.isFailure()) return sc;
   tmpAddress->addRef();
   if ( pAddress->registry() ){
     log << MSG::DEBUG << "register tmpAddress to registry " << pAddress->registry()->identifier()

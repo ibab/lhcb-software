@@ -1,9 +1,12 @@
-# $Id: release.notes,v 1.87 2007-02-15 16:43:52 cattanem Exp $
+# $Id: release.notes,v 1.88 2007-02-19 17:10:12 marcocle Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Det/DetCond
 ! Responsible : Marco Clemencic
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
+
+! 2007-02-19 - Marco Clemencic
+ - Minor change in RelyConverter.cpp (removed a useless line)
 
 !================ Det/DetCond v11r0 2007-02-15 =============================
   NEEDS LCGCMT >= 50
