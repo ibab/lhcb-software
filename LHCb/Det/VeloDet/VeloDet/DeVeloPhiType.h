@@ -1,11 +1,11 @@
-// $Id: DeVeloPhiType.h,v 1.20 2006-11-16 21:58:25 mtobin Exp $
+// $Id: DeVeloPhiType.h,v 1.21 2007-02-19 09:37:26 cattanem Exp $
 #ifndef VELODET_DEVELOPHITYPE_H 
 #define VELODET_DEVELOPHITYPE_H 1
 
 // Include files
 
-// from Kernel
-#include "Kernel/Point3DTypes.h"
+// Gaudi Math definitions
+#include "GaudiKernel/Point3DTypes.h"
 
 /// from VeloDet
 #include "VeloDet/DeVeloSensor.h"

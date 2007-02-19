@@ -1,4 +1,4 @@
-// $Id: DeVeloPhiType.cpp,v 1.31 2006-12-20 15:34:30 cattanem Exp $
+// $Id: DeVeloPhiType.cpp,v 1.32 2007-02-19 09:37:26 cattanem Exp $
 //==============================================================================
 #define VELODET_DEVELOPHITYPE_CPP 1
 //==============================================================================
@@ -13,7 +13,7 @@
 #include "GaudiKernel/PhysicalConstants.h"
 
 // From LHCb
-#include "Kernel/LHCbMath.h"
+#include "LHCbMath/LHCbMath.h"
 #include "gsl/gsl_math.h"
 
 // From Velo

@@ -1,6 +1,11 @@
-! $Id: release.notes,v 1.158 2007-02-15 17:37:03 dhcroft Exp $
+! $Id: release.notes,v 1.159 2007-02-19 09:40:10 cattanem Exp $
 package VeloDet
 package manager : Velo Group
+
+!======================== VeloDet v11r1 2007-02-19 ===========================
+! 2007-02-19 - Marco Cattaneo
+ - Removed LHCbDefintions includes and added dependency on LHCbMath
+ - Fixed some doxygen warnings
 
 ! 2007-02-15 - David Hutchcroft
  - Added an update to the cached z of the sensors when the geometry changes

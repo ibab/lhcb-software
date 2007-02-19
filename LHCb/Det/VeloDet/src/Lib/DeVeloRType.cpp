@@ -1,4 +1,4 @@
-// $Id: DeVeloRType.cpp,v 1.38 2006-12-20 15:34:30 cattanem Exp $
+// $Id: DeVeloRType.cpp,v 1.39 2007-02-19 09:37:26 cattanem Exp $
 //==============================================================================
 #define VELODET_DEVELORTYPE_CPP 1
 //==============================================================================
@@ -13,16 +13,14 @@
 #include "GaudiKernel/PhysicalConstants.h"
 
 // From LHCb
-#include "Kernel/LHCbMath.h"
+#include "LHCbMath/LHCbMath.h"
 #include "gsl/gsl_math.h"
 
 // From Velo
 #include "VeloDet/DeVeloRType.h"
 
 namespace VeloDet {
-/** @function VeloDet::deVeloRTypeStaticRStrips
- * 
- *  This function simply provides access to a local static
+/** This function simply provides access to a local static
  *  data which is used to initialize references in each instance
  *  of DeVeloRType.
  *  The purpose of this function is to work around
@@ -38,9 +36,7 @@ namespace VeloDet {
     return s_rStrips;
   }
 
-/** @function VeloDet::deVeloRTypeStaticRPitch
- * 
- *  This function simply provides access to a local static
+/** This function simply provides access to a local static
  *  data which is used to initialize references in each instance
  *  of DeVeloRType.
  *  The purpose of this function is to work around
@@ -56,10 +52,7 @@ namespace VeloDet {
     return s_rPitch;
   }
 
-
-/** @function VeloDet::deVeloRTypeStaticPhiMin
- * 
- *  This function simply provides access to a local static
+/** This function simply provides access to a local static
  *  data which is used to initialize references in each instance
  *  of DeVeloRType.
  *  The purpose of this function is to work around
@@ -75,9 +68,7 @@ namespace VeloDet {
     return s_phiMin;
   }
 
-/** @function VeloDet::deVeloRTypeStaticPhiMax
- * 
- *  This function simply provides access to a local static
+/** This function simply provides access to a local static
  *  data which is used to initialize references in each instance
  *  of DeVeloRType.
  *  The purpose of this function is to work around
@@ -93,9 +84,7 @@ namespace VeloDet {
     return s_phiMax;
   }
 
-/** @function VeloDet::deVeloRTypeStaticStripPhiLimits
- * 
- *  This function simply provides access to a local static
+/** This function simply provides access to a local static
  *  data which is used to initialize references in each instance
  *  of DeVeloRType.
  *  The purpose of this function is to work around
