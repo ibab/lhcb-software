@@ -15,7 +15,7 @@ include_path      none
 use   TrackEvent           v4r*    Event
 use   TrackFitEvent        v3r*    Tr
 
-use   TrackMCInterfaces    v2r*    Tr
+use   TrackMCInterfaces    v3r*    Tr
 use   TrackInterfaces      v3r*    Tr
 
 use   TrackExtrapolators   v2r*    Tr
