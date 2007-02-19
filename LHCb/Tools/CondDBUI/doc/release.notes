@@ -1,9 +1,14 @@
 ! =============================================================================
-! $Id: release.notes,v 1.41 2007-02-19 09:03:53 cattanem Exp $
+! $Id: release.notes,v 1.42 2007-02-19 11:43:59 marcocle Exp $
 ! =============================================================================
 ! package Tools/CondDBUI
 ! package manager : Marco Clemencic / Nicolas Gilardi
 ! =============================================================================
+
+! 2007-02-19 - Marco Clemencic
+ - Moved the script to generate SQLDDDB from Det/SQLDDDB to CondDBUI:
+      python/create_SQLDDDB.py
+   (Det/SQLDDDB does not depend anymore on CondDBUI)
 
 !===================== Tools/CondDBUI v2r0 2007-02-19 =========================
   NEEDS LCGCMT >= 50
