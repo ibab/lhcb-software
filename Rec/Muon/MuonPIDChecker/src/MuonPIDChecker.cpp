@@ -377,7 +377,7 @@ StatusCode MuonPIDChecker::finalize() {
   info()<<"------------------------------------------------------------------"
         <<  endreq;
   info()<<" Muons      :   "<<  format( " %7.2f ", Ef1[1] ) <<
-                      "    :    (96.49+-0.0r6 - (95.3 +- 0.2)" << endreq;
+                      "    :    (96.49+-0.06 - (95.3 +- 0.2)" << endreq;
   info()<<" Decays     :   "<<  format( " %7.2f ", Ef1[2] )<< 
                       "    :    (66.1 +- 0.2) - (63.0 +- 0.2)" << endreq;
   info()<<" Non-muons  :   "<<  format( " %7.2f ", Ef1[3] ) << 
