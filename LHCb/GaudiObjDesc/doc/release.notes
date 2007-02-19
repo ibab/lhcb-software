@@ -4,7 +4,7 @@
 ! Package manager: Stefan Roiser
 !-----------------------------------------------------------------------------
 
-!=========================== GaudiObjDEsc v10r0 =============================
+!=========================== GaudiObjDesc v9r9 =============================
 ! 2007-02-19 - Pere Mato
  - scripts/genClasses.py - replace the static const CLID& CLID_xxx = yyy
    with  a static const CLID CLID_xxx = yyy to solve the problem encountered
