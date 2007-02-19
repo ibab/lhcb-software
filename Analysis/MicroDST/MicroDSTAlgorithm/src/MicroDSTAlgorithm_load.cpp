@@ -1,4 +1,4 @@
-// $Id: MicroDSTAlgorithm_load.cpp,v 1.1.1.1 2007-02-15 14:07:05 ukerzel Exp $
+// $Id: MicroDSTAlgorithm_load.cpp,v 1.2 2007-02-19 09:22:04 ukerzel Exp $
 // Include files 
 
 
@@ -16,4 +16,5 @@
 DECLARE_FACTORY_ENTRIES(MicroDST) {
   DECLARE_ALGORITHM(TestDST)
   DECLARE_ALGORITHM(CreateMicroDSTAlg)  
+  DECLARE_ALGORITHM(CreateMicroDSTMCAlg)  
 }
