@@ -1,0 +1,26 @@
+package AlignSolvTools
+#Author: Adlene Hicheur, EPFL, Adlene.Hicheur@cern.ch
+
+branches AlignSolvTools src cmt doc
+
+# add "use" statements
+
+use cernlib v* LCG_Interfaces
+use GSL v* LCG_Interfaces 
+use GaudiKernel    v*
+use GaudiAlg       v*
+use GaudiGSL            v6r4         -no_auto_imports
+
+use MCEvent        v* Event
+use HbookCnv v*
+
+macro cernlib_linkopts " -L$(cernlib_home)/lib -lpdflib804 -lmathlib -llapack3 -lblas -lpacklib -lphtools -lkernlib" 
+
+# build a component library
+library AlignSolvTools ../src/*.cpp ../src/minres/*.f
+
+apply_pattern component_library library=AlignSolvTools
+
+#===============================================================
+
+
