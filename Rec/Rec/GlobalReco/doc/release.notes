@@ -4,6 +4,11 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+!========================== GlobalReco v6r8 2007-02-19 =======================
+! 2007-02-19 - Marco Cattaneo
+ - Move doxygen documentation of NeutralProtoPAlg to .h (from .cpp) to conform
+   to convention and to fix a doxygen warning
+
 ! 2007-02-19 - Chris Jones
  - Renormalise Rich DLL contributions to the el and mu combined DLL values
    in order to suppress huge values, which adversely affect the performance
