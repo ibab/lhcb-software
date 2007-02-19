@@ -51,7 +51,7 @@ class genClasses(genSrcUtils.genSrcUtils):
     if classAtt.has_key('id'):
       s += '\n'
       s += '// Class ID definition\n'
-      s += 'static const CLID& CLID_%s = %s;\n' % ( classAtt['name'], classAtt['id']) 
+      s += 'static const CLID CLID_%s = %s;\n' % ( classAtt['name'], classAtt['id']) 
     return s
 #--------------------------------------------------------------------------------
   def genClassVersion(self, godClass):
