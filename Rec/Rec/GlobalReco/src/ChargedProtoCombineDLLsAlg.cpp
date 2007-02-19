@@ -5,7 +5,7 @@
  * Implementation file for algorithm ChargedProtoCombineDLLsAlg
  *
  * CVS Log :-
- * $Id: ChargedProtoCombineDLLsAlg.cpp,v 1.6 2007-02-19 11:38:05 jonrob Exp $
+ * $Id: ChargedProtoCombineDLLsAlg.cpp,v 1.7 2007-02-19 12:05:57 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 15/11/2006
@@ -66,6 +66,8 @@ StatusCode ChargedProtoCombineDLLsAlg::initialize()
 {
   const StatusCode sc = GaudiAlgorithm::initialize();
   if ( sc.isFailure() ) return sc;
+
+  info() << "Using retuned RICH el and mu DLL values in combined DLLs" << endreq;
   
   StatusCode scc = StatusCode::SUCCESS;
   for(std::vector<std::string>::iterator itech = m_elDisable.begin(); itech != m_elDisable.end(); ++itech){
