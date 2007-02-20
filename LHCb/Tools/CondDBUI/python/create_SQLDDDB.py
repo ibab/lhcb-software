@@ -84,7 +84,7 @@ try:
                     local_dir = local_dir[d]
                 local_dir[f.split("/")[-1]] = None
     
-            os.system("python %s -s Det/SQLDDDB_BackUp/%s -c \"%s\""%(copy_script,dbname,connection_string(dbname)))
+            os.system("python %s -s %s -c \"%s\""%(copy_script,os.path.join(data_dir,dbname),connection_string(dbname)))
             #os.path.rename("%s.db"%dbname,os.path.join("..","db"))
             print "Creating tag %s"%tag
             conddbui.CondDB(connection_string(dbname),readOnly=False).recursiveTag("/",tag,desc)
