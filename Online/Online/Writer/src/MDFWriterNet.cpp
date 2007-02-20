@@ -26,10 +26,11 @@ static inline unsigned long adler32(unsigned long adler,
 /**
   * Macro for initialising a close command.
   */
-#define INIT_CLOSE_COMMAND(h, adler32, md5) { \
+#define INIT_CLOSE_COMMAND(h, fname, adler32, md5) { \
   (h)->cmd = CMD_CLOSE_FILE; \
   (md5)->Final((h)->data.stop_data.md5_sum); \
   (h)->data.stop_data.adler32_sum = (adler32); \
+  strncpy((h)->file_name, (fname), MAX_FILE_NAME); \
 }
 
 /**
@@ -117,7 +118,7 @@ StatusCode MDFWriterNet::finalize(void)
 {
   if(m_fileOpen) {
     struct cmd_header header;
-    INIT_CLOSE_COMMAND(&header, m_adler32, m_md5);
+    INIT_CLOSE_COMMAND(&header, m_fileName.c_str(), m_adler32, m_md5);
 
     delete m_md5;
     m_connection->sendCommand(&header);
@@ -177,7 +178,7 @@ StatusCode MDFWriterNet::writeBuffer(void *const /*fd*/, const void *data, size_
 
     //Write out close command; runDB record created upon receiving ack.
     struct cmd_header header;
-    INIT_CLOSE_COMMAND(&header, m_adler32, m_md5);
+    INIT_CLOSE_COMMAND(&header, m_fileName.c_str(), m_adler32, m_md5);
 
     delete m_md5;
     m_connection->sendCommand(&header);
