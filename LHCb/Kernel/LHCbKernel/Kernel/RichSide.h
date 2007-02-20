@@ -5,7 +5,7 @@
  *  Header file for RICH particle ID enumeration : Rich::Side
  *
  *  CVS Log :-
- *  $Id: RichSide.h,v 1.9 2007-02-01 16:45:31 jonrob Exp $
+ *  $Id: RichSide.h,v 1.10 2007-02-20 16:42:02 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -20,13 +20,6 @@
 #include <vector>
 #include <iostream>
 
-/** @namespace Rich
- *
- *  General namespace for RICH specific definitions
- *
- *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
- *  @date   08/07/2004
- */
 namespace Rich 
 {
 

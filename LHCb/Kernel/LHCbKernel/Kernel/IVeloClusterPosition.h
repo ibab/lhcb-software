@@ -1,4 +1,4 @@
-// $Id: IVeloClusterPosition.h,v 1.5 2006-04-06 13:47:47 dhcroft Exp $
+// $Id: IVeloClusterPosition.h,v 1.6 2007-02-20 16:42:02 cattanem Exp $
 #ifndef VELOALGORITHMS_IVELOCLUSTERPOSITION_H 
 #define VELOALGORITHMS_IVELOCLUSTERPOSITION_H 1
 
@@ -8,11 +8,11 @@
 
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
-#include "SiPositionInfo.h"
+#include "Kernel/SiPositionInfo.h"
 
 static const InterfaceID IID_IVeloClusterPos ("IVeloClusterPos", 1, 0);
 
-/** @class IVeloClusterPos IVeloClusterPos.h VeloAlgorithms/IVeloClusterPos.h
+/** @class IVeloClusterPosition IVeloClusterPosition.h
  *  
  *
  *  @author Tomasz Szumlak

@@ -5,7 +5,7 @@
  *  Header file for RICH utility class : Rich::RadIntersection
  *
  *  CVS Log :-
- *  $Id: RichRadIntersection.h,v 1.4 2007-02-07 15:18:22 cattanem Exp $
+ *  $Id: RichRadIntersection.h,v 1.5 2007-02-20 16:42:02 cattanem Exp $
  *
  *  @author Antonis Papanestis
  *  @date   2006-02-28
@@ -26,13 +26,6 @@
 // DetDesc
 class DeRichRadiator;
 
-/** @namespace Rich
- *
- *  General namespace for RICH specific definitions
- *
- *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
- *  @date   08/07/2004
- */
 namespace Rich
 {
 

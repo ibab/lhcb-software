@@ -17,8 +17,22 @@
   <class pattern ="GaudiUtils::VectorMap<*>"/>
   <class pattern ="LHCb::DifTraj<*"/>
   <class pattern ="LHCb::SiPositionInfo<*>"/>
-
+<!--- Add here all interfaces from Kernel directory --> 
+  <class name = "IBdlTool"             />
+  <class name = "IBIntergrator"        />
+  <class name = "ICheckTool"           />
+  <class name = "IDetElemFinder"       />
+  <class name = "IEventTimeDecoder"    />
+  <class name = "IEvtTypeSvc"          />
+  <class name = "IGenericTool"         />
+  <class name = "IInAcceptance"        />
+  <class name = "IMCParticleSelector"  />
+  <class name = "IMCVeloFEType"        />
+  <class name = "INormalizeTool"       />
+  <class name = "ISiAmplifierResponse" />
   <class name = "ISTClusterPosition"   />
+  <class name = "ITrajPoca"            />
+  <class name = "IUsedLHCbID"          />
   <class name = "IVeloClusterPosition" />
 </lcgdict>
 

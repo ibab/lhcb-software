@@ -1,8 +1,4 @@
-// $Id: IInAcceptance.cpp,v 1.1 2006-04-05 10:16:31 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
-// ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Id: IInAcceptance.cpp,v 1.2 2007-02-20 16:42:02 cattanem Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -26,8 +22,7 @@
 namespace 
 {
   // ==========================================================================
-  /** @var IID_InAcceptance 
-   *   The unique identifier for IInAcceptance interface
+  /** The unique identifier for IInAcceptance interface
    *  @see IInterface
    *  @see InterfaceID
    */      

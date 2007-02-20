@@ -1,16 +1,13 @@
-
-//---------------------------------------------------------------------------------
 /** @file LHCbConstants.h
  *
  *  Constants of LHCb general interest 
  *
  *  CVS Log :-
- *  $Id: LHCbConstants.h,v 1.5 2006-12-15 14:21:09 cattanem Exp $
+ *  $Id: LHCbConstants.h,v 1.6 2007-02-20 16:42:02 cattanem Exp $
  *
  *  @author Marco Cattaneo
  *  @date   2004-03-26
  */
-//---------------------------------------------------------------------------------
 
 #ifndef KERNEL_LHCBCONSTANTS_H 
 #define KERNEL_LHCBCONSTANTS_H 1
@@ -18,9 +15,7 @@
 // Include files
 #include "GaudiKernel/PhysicalConstants.h"
 
-/** @file LHCbConstants.h Kernel/LHCbConstants.h
- *
- *  Namespace for constants of LHCb general interest 
+/**  Namespace for constants of LHCb general interest 
  *
  *  @author Marco Cattaneo
  *  @date   2004-03-26

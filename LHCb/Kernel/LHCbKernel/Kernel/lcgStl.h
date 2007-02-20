@@ -1,4 +1,4 @@
-// $Id: lcgStl.h,v 1.25 2006-08-31 14:53:26 erodrigu Exp $
+// $Id: lcgStl.h,v 1.26 2007-02-20 16:42:02 cattanem Exp $
 #ifndef KERNEL_LCGSTL_H 
 #define KERNEL_LCGSTL_H 1
 
@@ -19,7 +19,21 @@
 #include "Kernel/ParabolaTraj.h"
 #include "Kernel/SiPositionInfo.h"
 
+#include "Kernel/IBdlTool.h"
+#include "Kernel/IBIntegrator.h"
+#include "Kernel/ICheckTool.h"
+#include "Kernel/IDetElemFinder.h"
+#include "Kernel/IEventTimeDecoder.h"
+#include "Kernel/IEvtTypeSvc.h"
+#include "Kernel/IGenericTool.h"
+#include "Kernel/IInAcceptance.h"
+#include "Kernel/IMCParticleSelector.h"
+#include "Kernel/IMCVeloFEType.h"
+#include "Kernel/INormalizeTool.h"
+#include "Kernel/ISiAmplifierResponse.h"
 #include "Kernel/ISTClusterPosition.h"
+#include "Kernel/ITrajPoca.h"
+#include "Kernel/IUsedLHCbID.h"
 #include "Kernel/IVeloClusterPosition.h"
 
 // end include files

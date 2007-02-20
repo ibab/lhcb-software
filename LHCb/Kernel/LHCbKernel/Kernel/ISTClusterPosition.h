@@ -1,4 +1,4 @@
-// $Id: ISTClusterPosition.h,v 1.2 2006-03-02 07:40:01 mneedham Exp $
+// $Id: ISTClusterPosition.h,v 1.3 2007-02-20 16:42:02 cattanem Exp $
 #ifndef _ISTClusterPosition_H
 #define _ISTClusterPosition_H
 
@@ -13,7 +13,7 @@ class STCluster;
 class STDigit;
 };
 
-/** @class ISTClusterPosition ISTClusterPosition.h
+/** @class ISTClusterPosition ISTClusterPosition.h Kernel/ISTClusterPosition.h
  *
  *  Interface Class for charge sharing IT strip
  *
@@ -34,25 +34,25 @@ public:
   static const InterfaceID& interfaceID() { return IID_ISTClusterPosition; }
    
   /** calc position
-  * @param cluster
+  * @param aCluster cluster
   * @return Info (simple struct) 
-  * strip = floored nearest channel
-  * fractionStrip = interstrip position (in fraction of strip)
-  * error = estimate of the error 
+  * <br> strip = floored nearest channel
+  * <br> fractionStrip = interstrip position (in fraction of strip)
+  * <br> error = estimate of the error 
   */
   virtual Info estimate(const LHCb::STCluster* aCluster) const=0;
 
   /** calc position
-  * @param vector of digits
+  * @param digits vector of digits
   * @return Measurement (pair of pairs)
-  * first.first = floored nearest channel
-  * first.second = interstrip position (in fraction of strip)
-  * second = estimate of the error 
+  * <br> first.first = floored nearest channel
+  * <br> first.second = interstrip position (in fraction of strip)
+  * <br> second = estimate of the error 
   */
   virtual Info estimate(const SmartRefVector<LHCb::STDigit>& digits) const=0;
 
   /** error parameterized as cluster size
-  * @param number of strips
+  * @param nStrips number of strips
   * @return error estimate
   */
   virtual double error(const unsigned int nStrips) const =0;
