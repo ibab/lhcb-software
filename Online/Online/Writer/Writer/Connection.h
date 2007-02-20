@@ -123,6 +123,8 @@ namespace LHCb {
       virtual void notifyError(struct cmd_header *header, int errno) = 0;
       /// Called when the Connection object is notified of a successful close.
       virtual void notifyClose(struct cmd_header *header) = 0;
+      /// Called when the Connection object is notified of a successful open.
+      virtual void notifyOpen(struct cmd_header *header) = 0;
   };
 
 }

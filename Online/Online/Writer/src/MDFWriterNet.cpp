@@ -45,9 +45,10 @@ static inline unsigned long adler32(unsigned long adler,
 /**
   * Macro for initialising an open command.
   */
-#define INIT_OPEN_COMMAND(h, fname) { \
+#define INIT_OPEN_COMMAND(h, fname, r_num) { \
   (h)->cmd = CMD_OPEN_FILE; \
   strncpy((h)->file_name, (fname), MAX_FILE_NAME); \
+  (h)->data.start_data.run_num = r_num; \
 }
   
 
@@ -152,26 +153,17 @@ StatusCode MDFWriterNet::writeBuffer(void *const /*fd*/, const void *data, size_
   //Is a file already open?
   if(!m_fileOpen) {
 
+
+    unsigned int runNumber = getRunNumber(data, len);
+
     getNewFileName(m_fileName, data, len);
-    INIT_OPEN_COMMAND(&header, m_fileName.c_str());
+    INIT_OPEN_COMMAND(&header, m_fileName.c_str(), runNumber);
     m_connection->sendCommand(&header);
     m_fileOpen = 1;
 
     m_md5 = new TMD5();
     m_adler32 = adler32(0, NULL, 0);
 
-    unsigned int runNumber = getRunNumber(data, len);
-     //TODO: Fix up location
-    try {
-
-      m_rpcObj->createFile(m_fileName, runNumber);
-
-    } catch(std::runtime_error rte) {
-      *m_log << MSG::ERROR << "Could not create Run Database Record ";
-      *m_log << "Cause: " << rte.what() << std::endl;
-      *m_log << "Record is: FileName=" << m_fileName;
-      *m_log << " Run Number=" << runNumber << endmsg;
-    }
   }
 
   INIT_WRITE_COMMAND(&header, len, m_bytesWritten, m_fileName.c_str());
@@ -242,6 +234,23 @@ MDFWriterNet::~MDFWriterNet()
   delete m_log;
 }
 
+/** A notify listener callback, which is executed when an open command is acked.
+  */
+void MDFWriterNet::notifyOpen(struct cmd_header *cmd)
+{
+  try {
+
+    m_rpcObj->createFile(m_fileName, cmd->data.start_data.run_num);
+
+    //TODO: Changen all exceptions to std::exception
+  } catch(std::exception e) {
+    *m_log << MSG::ERROR << "Could not create Run Database Record ";
+    *m_log << "Cause: " << e.what() << std::endl;
+    *m_log << "Record is: FileName=" << m_fileName;
+    *m_log << " Run Number=" << cmd->data.start_data.run_num << endmsg;
+  }
+}
+
 /** A notify listener callback, which is executed  when a close command is acked.
   */
 void MDFWriterNet::notifyClose(struct cmd_header *cmd)
@@ -274,11 +283,6 @@ void MDFWriterNet::notifyError(struct cmd_header* /*cmd*/, int /*errno*/)
 {
 	/* Not Used Yet. */
 }
-
-
-
-
-
 
 /* The standard Adler32 algorithm taken from the Linux kernel.*/
 

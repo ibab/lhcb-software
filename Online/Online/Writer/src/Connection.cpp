@@ -258,8 +258,17 @@ int Connection::processAcks(int blocking)
       if((cmd = m_mmObj.dequeueCommand(seqNum)) == NULL) {
 	*m_log << MSG::ERROR << "FATAL, Received an unsolicited ack." << endmsg;
       } else {
-        if(cmd->cmd == CMD_CLOSE_FILE && m_notifyClient) {
-	  m_notifyClient->notifyClose(cmd);
+        if(m_notifyClient) {
+          switch(cmd->cmd) {
+            case CMD_CLOSE_FILE:
+	      m_notifyClient->notifyClose(cmd);
+              break;
+            case CMD_OPEN_FILE:
+	      m_notifyClient->notifyOpen(cmd);
+              break;
+            default:
+              break;
+          }
         }
         m_mmObj.freeCommand(cmd);
       }

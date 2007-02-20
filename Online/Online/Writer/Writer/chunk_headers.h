@@ -22,6 +22,7 @@ struct cmd_chunk_header {
  */
 struct cmd_start_header {
 	unsigned int seq_num;
+        unsigned int run_num;
 } __attribute__((__packed__));
 
 /**

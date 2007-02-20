@@ -111,6 +111,9 @@ namespace LHCb {
 
       /// Implemented from INotifyClient.
       virtual void notifyError(struct cmd_header *cmd, int errno);
+
+      /// Implemented from INotifyClient.
+      virtual void notifyOpen(struct cmd_header *cmd);
   };
 }
 
