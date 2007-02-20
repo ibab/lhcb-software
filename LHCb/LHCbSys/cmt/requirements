@@ -8,12 +8,12 @@ branches doc cmt
 #===============================================================
 
 use GaudiConf	         v10r1
-use GaudiObjDesc         v9r8p1
+use GaudiObjDesc         v9r9
 
 #                                         Maintainer
 # Kernel packages
-use KernelSys             v6r1    Kernel  # Marco Cattaneo
-use LHCbKernel            v7r1    Kernel  # Marco Cattaneo
+use KernelSys             v6r2    Kernel  # Marco Cattaneo
+use LHCbKernel            v7r2    Kernel  # Marco Cattaneo
 use LHCbMath              v2r0    Kernel  # Juan Palacios
 use Relations             v5r0    Kernel  # Ivan Belyaev
 use CaloKernel            v5r0    Calo    # Olivier Deschamps
@@ -24,7 +24,7 @@ use ProcessorKernel       v4r0    L0      # Andrei Tsaregorodtsev, Julien Cogan
 
 # Detector description
 use DetSys                v9r2    Det     # Marco Cattaneo
-use VeloDet               v11r0   Det     # Mark Tobin
+use VeloDet               v11r1   Det     # Mark Tobin
 use DetDesc               v17r0   Det     # Marco Clemencic, Juan Palacios
 use DetDescCnv            v4r1    Det     # Marco Clemencic, Juan Palacios
 use DetDescSvc            v1r10p1 Det     # Marco Clemencic, Matt Needham
@@ -67,13 +67,14 @@ use CaloInterfaces        v7r0   Calo    # Olivier Deschamps
 use CaloUtils             v7r1   Calo    # Olivier Deschamps
 use RichRecBase           v3r1   Rich    # Chris Jones
 use PatTools              v3r0   Pat     # Olivier Callot
-use TrackInterfaces       v3r0   Tr      # Eduardo Rodrigues, Jose Hernando
-use TrackMCInterfaces     v2r0   Tr      # Eduardo Rodrigues
+use TrackInterfaces       v3r1   Tr      # Eduardo Rodrigues, Jose Hernando
+use TrackMCInterfaces     v3r0   Tr      # Eduardo Rodrigues
 use TsaKernel             v2r1   Tr      # Matt Needham
 use HltBase               v2r2   Hlt     # Jose Angel Hernando-Morata
 use LinkerInstances       v3r2p1 Event   # Eduardo Rodrigues, Thomas Ruf
-use DetCond               v10r0  Det     # Marco Clemencic
-use CondDBEntityResolver  v3r1   Tools   # Marco Clemencic
+use DetCond               v11r0  Det     # Marco Clemencic
+use CondDBEntityResolver  v4r0   Tools   # Marco Clemencic
+use CondDBUI              v2r0   Tools   # Marco Clemencic
 use LoKiCore              v2r0   Phys    # Ivan Belyaev
 use LoKiGen               v2r0   Phys	 # Ivan Belyaev
 use SimComponents         v2r0   Sim     # Gloria Corti, Marco Cattaneo
@@ -84,4 +85,4 @@ use LHCbDefinitions       v2r0   Kernel  # Obsolete, moved to GaudiKernel
 use DetDescChecks         v4r1   Det     # Ivan Belyaev
 use DetDescExample        v7r3   Ex      # Marco Clemencic
 use IOExample             v2r0p2 Ex      # Marco Cattaneo
-use DetCondExample        v10r0  Ex      # Marco Clemencic
+use DetCondExample        v11r0  Ex      # Marco Clemencic
