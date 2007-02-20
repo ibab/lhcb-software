@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.61 2007-02-15 16:59:05 cattanem Exp $
+# $Id: requirements,v 1.62 2007-02-20 10:25:11 marcocle Exp $
 package DetCondExample
 version v11r0
 
@@ -32,15 +32,13 @@ use Python v* LCG_Interfaces
 apply_tag NEEDS_PYCOOL
 
 # library path needed for mysql backend
-use mysql    v* LCG_Interfaces
+use mysql    v* LCG_Interfaces -no_auto_imports
 
 # library path needed for sqlite backend
-use sqlite   v* LCG_Interfaces
+use sqlite   v* LCG_Interfaces -no_auto_imports
 
 # library path needed for oracle backend
-use oracle   v* LCG_Interfaces
-# we do not need to lik against Oracle libraries
-macro oracle_linkopts
+use oracle   v* LCG_Interfaces -no_auto_imports
 
 # XML detector description database location
 set DETCONDEXAMPLE_XMLDDDB ${DETCONDEXAMPLEROOT}/XMLDDDB
