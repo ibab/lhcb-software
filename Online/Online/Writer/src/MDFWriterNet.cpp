@@ -240,13 +240,13 @@ void MDFWriterNet::notifyOpen(struct cmd_header *cmd)
 {
   try {
 
-    m_rpcObj->createFile(m_fileName, cmd->data.start_data.run_num);
+    m_rpcObj->createFile(cmd->file_name, cmd->data.start_data.run_num);
 
     //TODO: Changen all exceptions to std::exception
   } catch(std::exception e) {
     *m_log << MSG::ERROR << "Could not create Run Database Record ";
     *m_log << "Cause: " << e.what() << std::endl;
-    *m_log << "Record is: FileName=" << m_fileName;
+    *m_log << "Record is: FileName=" << cmd->file_name;
     *m_log << " Run Number=" << cmd->data.start_data.run_num << endmsg;
   }
 }
@@ -257,7 +257,7 @@ void MDFWriterNet::notifyClose(struct cmd_header *cmd)
 {
   try {
 
-    m_rpcObj->confirmFile(m_fileName, 
+    m_rpcObj->confirmFile(cmd->file_name, 
 	cmd->data.stop_data.adler32_sum, 
 	cmd->data.stop_data.md5_sum); 
   } catch(std::runtime_error rte) {
@@ -271,7 +271,7 @@ void MDFWriterNet::notifyClose(struct cmd_header *cmd)
 
     *m_log << MSG::ERROR << "Could not update Run Database Record ";
     *m_log << "Cause: " << rte.what() << std::endl;
-    *m_log << "Record is: FileName=" << m_fileName;
+    *m_log << "Record is: FileName=" << cmd->file_name;
     *m_log << " Adler32 Sum=" << cmd->data.stop_data.adler32_sum;
     *m_log << " MD5 Sum=" << md5buf << endmsg;
   }

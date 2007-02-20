@@ -31,13 +31,13 @@ namespace LHCb {
        * "Confirms" that the file is completely written to, closed,
        * and ready for migration to tape.
        */
-      void confirmFile(std::string & fileName, unsigned int adlerSum, unsigned const char *md5Sum);
+      void confirmFile(char *fileName, unsigned int adlerSum, unsigned const char *md5Sum);
 
       /**
        * Creates an entry in the Run Database for the specified file,
        * associated with the specified Run Number and Stream.
        */
-      void createFile(std::string & fileName, unsigned int runNumber);
+      void createFile(char *fileName, unsigned int runNumber);
 
   };
 }

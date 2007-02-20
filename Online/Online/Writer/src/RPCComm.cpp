@@ -23,7 +23,7 @@ RPCComm::RPCComm(std::string serverURL)
   * @param adlerSum The Adler32 checksum of the entire file.
   * @param md5CSum   The MD5 checksum of the entire file.
   */
-void RPCComm::confirmFile(std::string & fileName, unsigned int adlerSum, const unsigned char *md5CSum)
+void RPCComm::confirmFile(char *fileName, unsigned int adlerSum, const unsigned char *md5CSum)
 {
   xmlrpc_c::value result;
   int ret;
@@ -47,7 +47,7 @@ void RPCComm::confirmFile(std::string & fileName, unsigned int adlerSum, const u
 
   try {
     m_clientInstance.call(m_serverURL, confirmString, "sss", &result,
-      fileName.c_str(), adler32String, md5CharString);
+      fileName, adler32String, md5CharString);
     ret = xmlrpc_c::value_int(result);
   } catch(girerr::error err) {
 
@@ -75,7 +75,7 @@ void RPCComm::confirmFile(std::string & fileName, unsigned int adlerSum, const u
   * @param fileName The name of the file that has been created.
   * @param runNumber The run number to which the file belongs.
   */
-void RPCComm::createFile(std::string & fileName, unsigned int runNumber)
+void RPCComm::createFile(char *fileName, unsigned int runNumber)
 {
   xmlrpc_c::value result;
   int ret;
@@ -86,7 +86,7 @@ void RPCComm::createFile(std::string & fileName, unsigned int runNumber)
     char runNumberString[20];
     ::sprintf(runNumberString, "%u", runNumber);
     m_clientInstance.call(m_serverURL, createString, "ss", &result,
-      fileName.c_str(), runNumberString);
+      fileName, runNumberString);
     ret = xmlrpc_c::value_int(result);
   } catch(girerr::error err) {
 
