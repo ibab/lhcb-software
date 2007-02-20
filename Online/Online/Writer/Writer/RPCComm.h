@@ -23,6 +23,7 @@ namespace LHCb {
        */
       xmlrpc_c::clientSimple  m_clientInstance;
       std::string m_serverURL;
+      pthread_mutex_t m_rpcLock;
 
     public:
       RPCComm(std::string serverURL);

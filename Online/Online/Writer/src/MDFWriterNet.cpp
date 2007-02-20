@@ -98,7 +98,7 @@ StatusCode MDFWriterNet::initialize(void)
   try {
 
     m_connection->connectAndNegotiate(m_serverAddr, m_serverPort,
-      m_soTimeout, m_sndRcvSizes, m_log);
+      m_soTimeout, m_sndRcvSizes, m_log, this);
 
   } catch(const std::exception& e) {
     *m_log << MSG::ERROR << "Caught Exception:" << e.what() << endmsg;
@@ -115,43 +115,24 @@ StatusCode MDFWriterNet::initialize(void)
 StatusCode MDFWriterNet::finalize(void)
 {
   if(m_fileOpen) {
-
     struct cmd_header header;
-
     INIT_CLOSE_COMMAND(&header, m_adler32, m_md5);
-    delete m_md5;
 
+    delete m_md5;
     m_connection->sendCommand(&header);
     m_bytesWritten = 0;
     m_fileOpen = 0;
-
-    //TODO: Fix up order.
-    try {
-
-      m_rpcObj->confirmFile(m_fileName, 
-	header.data.stop_data.adler32_sum, 
-	header.data.stop_data.md5_sum); 
-
-    } catch(std::runtime_error rte) {
-      char md5buf[33];
-      unsigned char *md5sum = header.data.stop_data.md5_sum;
-      sprintf(md5buf, "%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X",
-        md5sum[0],md5sum[1],md5sum[2],md5sum[3],
-        md5sum[4],md5sum[5],md5sum[6],md5sum[7],
-        md5sum[8],md5sum[9],md5sum[10],md5sum[11],
-        md5sum[12],md5sum[13],md5sum[14],md5sum[15]);
-
-      *m_log << MSG::ERROR << "Could not update Run Database Record ";
-      *m_log << "Cause: " << rte.what() << std::endl;
-      *m_log << "Record is: FileName=" << m_fileName;
-      *m_log << " Adler32 Sum=" << header.data.stop_data.adler32_sum;
-      *m_log << " MD5 Sum=" << md5buf << endmsg;
-      return StatusCode::FAILURE;
-    }
   }
 
+  // closeConnection() blocks till everything is flushed.
+  m_connection->closeConnection();
+  delete m_connection;
+  delete m_rpcObj;
+
+  m_connection = NULL;
+  m_rpcObj = NULL;
+
   return StatusCode::SUCCESS;
-  
 }
 
 
@@ -201,7 +182,15 @@ StatusCode MDFWriterNet::writeBuffer(void *const /*fd*/, const void *data, size_
   //How much have we written?
   m_bytesWritten += len;
   if(m_bytesWritten > (m_maxFileSizeMB << 20)) {
-    finalize();
+
+    //Write out close command; runDB record created upon receiving ack.
+    struct cmd_header header;
+    INIT_CLOSE_COMMAND(&header, m_adler32, m_md5);
+
+    delete m_md5;
+    m_connection->sendCommand(&header);
+    m_bytesWritten = 0;
+    m_fileOpen = 0;
   }
 
   //Close it, reset counter.
@@ -233,6 +222,7 @@ void MDFWriterNet::getNewFileName(std::string &newFileName,
   //TODO: Do something here to fill in a new file name.
   char buf[MAX_FILE_NAME];
   static unsigned long random;
+  random++;
   sprintf(buf, "%s.%lu.%lu",
     m_filePrefix.c_str(),
     random,
@@ -245,19 +235,50 @@ void MDFWriterNet::getNewFileName(std::string &newFileName,
   */
 MDFWriterNet::~MDFWriterNet()
 {
-  if(m_connection->getState() & m_connection->STATE_FILE_OPEN) {
+  if(m_connection) {
     *m_log << MSG::WARNING << "Destructor called before finalize. Normal?" << endmsg;
     finalize();
-  } else {
-    //Not in the open state, so nothing to do.
   }
-
-  m_connection->closeConnection();
-
-  delete m_rpcObj;
-  delete m_connection;
   delete m_log;
 }
+
+/** A notify listener callback, which is executed  when a close command is acked.
+  */
+void MDFWriterNet::notifyClose(struct cmd_header *cmd)
+{
+  try {
+
+    m_rpcObj->confirmFile(m_fileName, 
+	cmd->data.stop_data.adler32_sum, 
+	cmd->data.stop_data.md5_sum); 
+  } catch(std::runtime_error rte) {
+    char md5buf[33];
+    unsigned char *md5sum = cmd->data.stop_data.md5_sum;
+    sprintf(md5buf, "%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X",
+	md5sum[0],md5sum[1],md5sum[2],md5sum[3],
+	md5sum[4],md5sum[5],md5sum[6],md5sum[7],
+	md5sum[8],md5sum[9],md5sum[10],md5sum[11],
+	md5sum[12],md5sum[13],md5sum[14],md5sum[15]);
+
+    *m_log << MSG::ERROR << "Could not update Run Database Record ";
+    *m_log << "Cause: " << rte.what() << std::endl;
+    *m_log << "Record is: FileName=" << m_fileName;
+    *m_log << " Adler32 Sum=" << cmd->data.stop_data.adler32_sum;
+    *m_log << " MD5 Sum=" << md5buf << endmsg;
+  }
+}
+
+/** A notify listener callback, which is executed  when an error occurs.
+  */
+void MDFWriterNet::notifyError(struct cmd_header* /*cmd*/, int /*errno*/)
+{
+	/* Not Used Yet. */
+}
+
+
+
+
+
 
 /* The standard Adler32 algorithm taken from the Linux kernel.*/
 

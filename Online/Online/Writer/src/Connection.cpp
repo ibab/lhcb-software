@@ -18,6 +18,9 @@ extern "C" {
 #include "Writer/MM.h"
 #include "GaudiKernel/MsgStream.h"
 
+#define POLL_INTERVAL 	5000	/*5 Seconds.*/
+#define MAX_EMPTY_POLLS 6	/*Meaning 30 seconds of empty polls.*/
+
 
 using namespace LHCb;
 
@@ -31,7 +34,7 @@ using namespace LHCb;
  * @param msgSvc An IMessageSvc to m_log messages to.
  */
 void Connection::connectAndNegotiate(std::string serverAddr, int serverPort,
-    int /*soTimeout*/, int sndRcvSizes, MsgStream * log)
+    int /*soTimeout*/, int sndRcvSizes, MsgStream * log, INotifyClient *nClient)
 {
   int ret;
   int sockoptval;
@@ -45,7 +48,7 @@ void Connection::connectAndNegotiate(std::string serverAddr, int serverPort,
   m_serverPort = serverPort;
   m_ackHeaderReceived = 0;
   m_log = log;
-  m_notifyClient = NULL;
+  m_notifyClient = nClient;
 
   m_sockfd = socket(AF_INET, SOCK_STREAM, 0);
   if(m_sockfd < 0) {
@@ -141,13 +144,16 @@ void Connection::failover()
   * server as long as there are acks to be read.
   * @param blocking Block until all pending acknowledgements are
   * received if 1, do not block if 0.
+  * @return EAGAIN in case of failover, and the processAcks call
+  * has to be restarted, or 0 in case of success.
   */
-void Connection::processAcks(int blocking)
+int Connection::processAcks(int blocking)
 {
   int ret;
   unsigned char *ptr;
 
   struct pollfd pollfds[1];
+  int emptyPollCount = 0;
 
   pollfds[0].fd = m_sockfd;
   pollfds[0].events = POLLIN | POLLERR;
@@ -157,28 +163,50 @@ void Connection::processAcks(int blocking)
   ptr = (unsigned char*)&m_ackHeaderBuf;
 
   /* If blocking is 1, then it means we should block
-   * till all commands are cleared out.
+   * till all commands are cleared out. blocking == 1
+   * _only_ in case we're not being called within a 
+   * thread.
    */
 
   while(1) 
   {
 
-    /* Get out if we're told to stop.*/
-    if(m_stopAcking)
-      return;
-
-    /* If we're running in a thread, we poll and read.*/
-    if(!blocking) {
-      pollfds[0].revents = 0;
-      ret = poll(pollfds, 1, 5000);
-      if(ret == 0) {
-        continue;
-      } else if(ret < 0 && (errno == EINTR || errno == EAGAIN)) {
-        continue;
-      } else if(ret < 0) {
-        *m_log << MSG::WARNING << "Poll failed, errno = " << errno << endmsg;
-        continue;
+    if(blocking) {
+      if(blocking && m_mmObj.getQueueLength() == 0) {
+        /* If we're in blocking (cleanup) mode, then
+         * if the queue is empty, we've got nothing
+         * else to do. Get out.
+         */
+        return 0;
       }
+    } else {
+      if(m_stopAcking) {
+        return 0;
+      }
+    }
+
+    pollfds[0].revents = 0;
+    ret = poll(pollfds, 1, POLL_INTERVAL);
+    if(ret == 0) {
+      emptyPollCount++;
+      if(blocking && emptyPollCount > MAX_EMPTY_POLLS) {
+        *m_log << MSG::WARNING << emptyPollCount << 
+          " empty polls, no response. Failing over." << endmsg;
+        /* It will come here only if a) we're in blocking ack,
+         * meaning we are blocking till all acks are cleaned up,
+         * and b) we haven't received any acks for MAX_EMPTY_POLLS x
+         * POLL_INTERVAL milliseconds, and c) there are commands
+         * which need to be acked.
+         */
+        failover();
+        return EAGAIN;
+      }
+      continue;
+    } else if(ret < 0 && (errno == EINTR || errno == EAGAIN)) {
+      continue;
+    } else if(ret < 0) {
+      *m_log << MSG::WARNING << "Poll failed, errno = " << errno << endmsg;
+      continue;
     }
 
     /* Means we got something to read. */
@@ -192,20 +220,19 @@ void Connection::processAcks(int blocking)
     } else if(ret == 0) {
       *m_log << MSG::WARNING << "Disconnected, should fail over." << endmsg;
       failover();
-      return;
+      return EAGAIN;
     } else if(ret < 0) {
       *m_log << MSG::WARNING << "Receive failed, should fail over." << endmsg;
       failover();
-      return;
+      return EAGAIN;
     }
 
     m_ackHeaderReceived += ret;
 
     /* Still haven't received a full acknowledgement header, loop over. */
 
-    *m_log << MSG::WARNING << "Received one package." << m_ackHeaderBuf.min_seq_num << " to " << m_ackHeaderBuf.max_seq_num << endmsg;
-
-
+    *m_log << MSG::DEBUG << "Received one package." << m_ackHeaderBuf.min_seq_num 
+      << " to " << m_ackHeaderBuf.max_seq_num << endmsg;
 
     if((unsigned)m_ackHeaderReceived < sizeof(struct ack_header))
       continue;
@@ -228,7 +255,7 @@ void Connection::processAcks(int blocking)
 
       struct cmd_header *cmd;
 
-    if((cmd = m_mmObj.dequeueCommand(seqNum)) == NULL) {
+      if((cmd = m_mmObj.dequeueCommand(seqNum)) == NULL) {
 	*m_log << MSG::ERROR << "FATAL, Received an unsolicited ack." << endmsg;
       } else {
         if(cmd->cmd == CMD_CLOSE_FILE && m_notifyClient) {
@@ -237,15 +264,9 @@ void Connection::processAcks(int blocking)
         m_mmObj.freeCommand(cmd);
       }
     }
-
-    if(blocking && m_mmObj.getQueueLength() == 0) {
-      /* If we're in blocking (cleanup) mode, then
-       * if the queue is empty, we've got nothing
-       * else to do. Get out.
-       */
-      return;
-    }
   }
+
+  return 0;
 }
 
 

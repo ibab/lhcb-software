@@ -1,5 +1,6 @@
 #include <stdexcept>
 #include <iostream>
+#include <pthread.h>
 #include "Writer/RPCComm.h"
 
 using namespace LHCb;
@@ -11,6 +12,7 @@ std::string createString("createNewFile");
 RPCComm::RPCComm(std::string serverURL)
 {
   m_serverURL = serverURL;
+  pthread_mutex_init(&m_rpcLock, NULL);
 }
 
 /**
@@ -41,15 +43,21 @@ void RPCComm::confirmFile(std::string & fileName, unsigned int adlerSum, const u
 
   sprintf(adler32String, "%08X", adlerSum);
 
+  pthread_mutex_lock(&m_rpcLock);
+
   try {
     m_clientInstance.call(m_serverURL, confirmString, "sss", &result,
       fileName.c_str(), adler32String, md5CharString);
     ret = xmlrpc_c::value_int(result);
   } catch(girerr::error err) {
+
+    pthread_mutex_unlock(&m_rpcLock);
     std::cout << err.what();
     throw std::runtime_error(
       "Could not initiate connection to Run DB for createFile().");
   }
+
+  pthread_mutex_unlock(&m_rpcLock);
 
   ret = xmlrpc_c::value_int(result);
   if(ret == RUNDB_SERVICE_FAIL) {
@@ -72,6 +80,8 @@ void RPCComm::createFile(std::string & fileName, unsigned int runNumber)
   xmlrpc_c::value result;
   int ret;
 
+  pthread_mutex_lock(&m_rpcLock);
+
   try {
     char runNumberString[20];
     ::sprintf(runNumberString, "%u", runNumber);
@@ -79,10 +89,14 @@ void RPCComm::createFile(std::string & fileName, unsigned int runNumber)
       fileName.c_str(), runNumberString);
     ret = xmlrpc_c::value_int(result);
   } catch(girerr::error err) {
+
+    pthread_mutex_unlock(&m_rpcLock);
     std::cout << err.what();
     throw std::runtime_error(
       "Could not initiate connection to Run DB for createFile().");
   }
+
+  pthread_mutex_unlock(&m_rpcLock);
 
   ret = xmlrpc_c::value_int(result);
   if(ret == RUNDB_SERVICE_FAIL) {
@@ -90,26 +104,5 @@ void RPCComm::createFile(std::string & fileName, unsigned int runNumber)
       "Could not call RunDB service for create(). Check RunDB logs.");
   }
   return;
-}
-
-int main(int argc, char **argv)
-{
-  std::string serverUrl("http://lbondiskdev.cern.ch:8080/");
-  RPCComm *c = new RPCComm(serverUrl);
-
-  for(int i=0;i<10;i++) {
-    unsigned char md5[16] = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
-      0x08, 0x09, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15};
-
-    char buffer[20];
-    unsigned char *fstar = md5;
-
-    sprintf(buffer, "%s_%i", "File18_Random_File_Name_Run_", i);
-
-    std::string fName(buffer);
-
-    //c->createFile(fName, 1);
-    c->confirmFile(fName, 0x123456u, fstar);
-  }
 }
 

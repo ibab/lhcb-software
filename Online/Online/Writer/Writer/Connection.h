@@ -90,11 +90,11 @@ namespace LHCb {
       static const int STATE_CONN_OPEN	=	0x03;
 
       /// Processes acknowledgements and dequeues the acknowledged commands.
-      void processAcks(int blocking);
+      int processAcks(int blocking);
 
       /// Connects to a storage cluster node.
       void connectAndNegotiate(std::string serverAddr, int serverPort,
-	  int soTimeout, int sndRcvSizes, MsgStream *log);
+	  int soTimeout, int sndRcvSizes, MsgStream *log, INotifyClient *nClient);
 
       /// Closes the connection to the storage cluster node.
       void closeConnection(void);
@@ -110,7 +110,6 @@ namespace LHCb {
 
       /// Sets a notification listener for events on this connection.
       void setNotifyClient(INotifyClient *nClient) { m_notifyClient = nClient; }
-
   };
 
   /** @class An interface that can be used to register for notifications.

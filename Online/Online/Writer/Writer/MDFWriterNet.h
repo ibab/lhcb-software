@@ -22,7 +22,7 @@ namespace LHCb {
     * @version: 1.0
     */
 
-  class MDFWriterNet : public MDFWriter {
+  class MDFWriterNet : public MDFWriter, INotifyClient {
 
     protected:
 
@@ -105,6 +105,12 @@ namespace LHCb {
 
       /// Writes a chunk to the storage cluster server. Overrides Algorithm::writeBuffer().
       virtual StatusCode writeBuffer(void *const ioDesc, const void *data, size_t len);
+
+      /// Implemented from INotifyClient.
+      virtual void notifyClose(struct cmd_header *cmd);
+
+      /// Implemented from INotifyClient.
+      virtual void notifyError(struct cmd_header *cmd, int errno);
   };
 }
 
