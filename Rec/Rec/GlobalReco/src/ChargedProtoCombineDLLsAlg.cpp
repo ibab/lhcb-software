@@ -5,7 +5,7 @@
  * Implementation file for algorithm ChargedProtoCombineDLLsAlg
  *
  * CVS Log :-
- * $Id: ChargedProtoCombineDLLsAlg.cpp,v 1.8 2007-02-19 17:21:56 jonrob Exp $
+ * $Id: ChargedProtoCombineDLLsAlg.cpp,v 1.9 2007-02-21 17:52:59 ukerzel Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 15/11/2006
@@ -37,7 +37,7 @@ ChargedProtoCombineDLLsAlg::ChargedProtoCombineDLLsAlg( const std::string& name,
       
   // Job Options
   declareProperty( "ProtoParticleLocation",
-                   m_protoPath = LHCb::ProtoParticleLocation::Charged );
+                   m_protoPath = rootOnTES() + LHCb::ProtoParticleLocation::Charged );
   declareProperty("ElectronDllDisable"  , m_elDisable);
   declareProperty("MuonDllDisable"      , m_muDisable);
   declareProperty("KaonDllDisable"      , m_kaDisable);
