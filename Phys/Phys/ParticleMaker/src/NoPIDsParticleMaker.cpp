@@ -1,4 +1,4 @@
-// $Id: NoPIDsParticleMaker.cpp,v 1.8 2006-05-17 16:28:20 jpalac Exp $
+// $Id: NoPIDsParticleMaker.cpp,v 1.9 2007-02-21 19:43:33 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -171,6 +171,10 @@ StatusCode NoPIDsParticleMaker::makeParticles( LHCb::Particle::ConstVector & par
   for( Addresses::const_iterator input = m_inputs.begin() ;
        m_inputs.end() != input ; ++input ) 
   {
+    if ( !exist<LHCb::ProtoParticles>( *input ) ){
+      Warning("No ProtoParticles at "+*input);
+      continue ;
+    }
     const LHCb::ProtoParticles* pps = get<LHCb::ProtoParticles>( *input );
     if( !pps ) {  Warning ("Invalid container '"+(*input)+"' ") ; continue ; }
     // loop over all protoparticles 
