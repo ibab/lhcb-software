@@ -1,4 +1,4 @@
-// $Id: CreateMicroDSTMCAlg.cpp,v 1.2 2007-02-21 10:57:13 ukerzel Exp $
+// $Id: CreateMicroDSTMCAlg.cpp,v 1.3 2007-02-21 11:01:15 ukerzel Exp $
 // Include files 
 
 // from Gaudi
@@ -158,12 +158,6 @@ StatusCode CreateMicroDSTMCAlg::StoreMCParticle(const LHCb::Particle * particle)
 
   verbose() << "got #associated particles " << associatedParticles.size() << endmsg;
   if (associatedParticles.size() > 0) {
-
-    // create linker: tracks -> MCParticle
-    std::string linkerLocation = "/Event/" + LHCb::TrackLocation::Default;
-    verbose() << "links from track -> MCParticle written to " << linkerLocation << endmsg;
-    Track2MCPart *track2MCPartLinker = new Track2MCPart(evtSvc(), msgSvc(), linkerLocation);
-
 
     std::vector<const LHCb::MCParticle*>::const_iterator iMCPart;
     std::vector<const LHCb::MCParticle*>::const_iterator iMCPartBegin = associatedParticles.begin();

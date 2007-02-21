@@ -1,4 +1,4 @@
-// $Id: CreateMicroDSTMCAlg.h,v 1.2 2007-02-21 10:57:13 ukerzel Exp $
+// $Id: CreateMicroDSTMCAlg.h,v 1.3 2007-02-21 11:01:15 ukerzel Exp $
 #ifndef CREATEMICRODSTALG_H 
 #define CREATEMICRODSTALG_H 1
 
@@ -51,7 +51,6 @@ private:
   //
   // typedef
   //
-  typedef LinkerWithKey<LHCb::MCParticle, LHCb::Track > Track2MCPart;
 
   //
   // methods
