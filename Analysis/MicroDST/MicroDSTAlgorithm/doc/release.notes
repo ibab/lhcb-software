@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.6 2007-02-21 16:11:04 ukerzel Exp $
+! $Id: release.notes,v 1.7 2007-02-21 17:43:28 ukerzel Exp $
 ! Package     : MicroDST
 ! Responsible : Ulrich Kerzel
+
+! 2007-02-21 - Ulrich Kerzel
+ - assume rootOnTes() ends with a "/", edit TestDST accordingly
+
 
 ! 2007-02-21 - Ulrich Kerzel
  - remove from microDST.opt

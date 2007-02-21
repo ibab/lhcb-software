@@ -1,4 +1,4 @@
-// $Id: TestDST.cpp,v 1.2 2007-02-21 09:12:49 ukerzel Exp $
+// $Id: TestDST.cpp,v 1.3 2007-02-21 17:43:28 ukerzel Exp $
 // Include files 
 
 // from Gaudi
@@ -61,7 +61,7 @@ StatusCode TestDST::initialize() {
 
   // initialise associator to MC
   m_part2MCLinkerComposite = new Particle2MCLinker(this,Particle2MCMethod::Composite,"")  ;
-  m_part2MCLinkerLinks     = new Particle2MCLinker(this,Particle2MCMethod::Links,"")  ;
+  m_part2MCLinkerLinks     = new Particle2MCLinker(this,Particle2MCMethod::Links, rootOnTES() + LHCb::TrackLocation::Default)  ;
 
   return StatusCode::SUCCESS;
 }
@@ -76,9 +76,7 @@ StatusCode TestDST::execute() {
   // code goes here  
   debug()<< " rootOnTES is " << rootOnTES () << endmsg;
 
-  LHCb::ODIN * odin = get<LHCb::ODIN>( "/Event/" +
-                                       rootOnTES()+ "/" +
-                                       LHCb::ODINLocation::Default );
+  LHCb::ODIN * odin = get<LHCb::ODIN>( rootOnTES()+ LHCb::ODINLocation::Default );
   
   verbose() << " ODIN event time " << odin->eventTime() 
             << " runNr "           << odin->runNumber ()
@@ -156,9 +154,7 @@ StatusCode  TestDST::PrintDefaultPV(){
   LHCb::RecVertex::ConstVector::const_iterator iPV;
   LHCb::RecVertex::ConstVector::const_iterator iPVBegin = primaryVertices.begin();
   LHCb::RecVertex::ConstVector::const_iterator iPVEnd   = primaryVertices.end();  
-  LHCb::RecVertices* verts                              = get<LHCb::RecVertices>("/Event/" +
-                                                                                 rootOnTES()+ "/" +
-                                                                                 LHCb::RecVertexLocation::Primary);
+  LHCb::RecVertices* verts                              = get<LHCb::RecVertices>(rootOnTES()+ LHCb::RecVertexLocation::Primary);
 
   for (iPV = iPVBegin;  iPV !=iPVEnd ; iPV++){      
    const LHCb::RecVertex *thisPV = (*iPV);
@@ -284,7 +280,7 @@ StatusCode TestDST::PrintRelatedPV(const LHCb::Particle* particle) {
   //
   // get linked vertices
   //  from links stored into microDST
-  std::string linksLocation = "/Event/" + rootOnTES() + "/" + LHCb::RecVertexLocation::Primary;;
+  std::string linksLocation =  rootOnTES() +  LHCb::RecVertexLocation::Primary;;
   verbose() << " get associator from " << linksLocation << endmsg;
   Part2Vertex associator(eventSvc(), linksLocation  );
   const Part2VertexTable* table = associator.direct();
@@ -362,7 +358,7 @@ StatusCode TestDST::PrintParticleInfo(const LHCb::Particle *particle) {
 //=============================================================================
 StatusCode TestDST::PrintMCParticles() {
 
-  std::string locTES = "/Event/" + rootOnTES()+ "/" + LHCb::MCParticleLocation::Default;
+  std::string locTES = rootOnTES()+  LHCb::MCParticleLocation::Default;
   if (exist<LHCb::MCParticles>(locTES)) {
     LHCb::MCParticles *MCParticles = get<LHCb::MCParticles>(locTES);
     verbose() << " got #MC Particles " << MCParticles->size() << endmsg;
@@ -395,7 +391,7 @@ StatusCode TestDST::PrintMCParticles() {
 StatusCode TestDST::PrintMCVertices() {
 
 
-  std::string locTES = "/Event/" + rootOnTES()+ "/" + LHCb::MCVertexLocation::Default;
+  std::string locTES = rootOnTES()+  LHCb::MCVertexLocation::Default;
   verbose() << "try to load MC vertices from " << locTES << endmsg;
 
   if (exist<LHCb::MCVertices>(locTES)) {
@@ -446,7 +442,7 @@ std::vector<const LHCb::MCParticle*> TestDST::GetMCParticle (const LHCb::Particl
     verbose() << "found proto-particle " << endmsg;
     if (particle->proto()->track()) {
       verbose() << "found track with key " << particle->proto()->track()->key() << endmsg;
-      std::string linksLocation = "/Event/" + LHCb::TrackLocation::Default;
+      std::string linksLocation = "/Event/Link/microDST/Rec/Track/Best"; // "/Event/" + LHCb::TrackLocation::Default;
       verbose() << " get associator from " << linksLocation << endmsg;
       Track2MCPart associator(eventSvc(), linksLocation  );
       const Track2MCPartTable *table = associator.direct();
@@ -457,7 +453,9 @@ std::vector<const LHCb::MCParticle*> TestDST::GetMCParticle (const LHCb::Particl
           const LHCb::MCParticle *mcPart = iRel->to();
           double                  weight = iRel->weight();
           verbose() << "track related to MCPart with pid " << mcPart->particleID().pid() 
-                    << " weight " << weight << endmsg;
+                    << " weight " << weight 
+                    << " on TES " <<  TestDST::objectLocation(mcPart->parent())
+                    << endmsg;
         } //for iRed
       } else {
         verbose() << "table not found" << endmsg;
