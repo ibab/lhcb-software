@@ -1,15 +1,31 @@
-! $Id: release.notes,v 1.2 2007-02-16 18:00:27 ukerzel Exp $
+! $Id: release.notes,v 1.3 2007-02-21 09:12:49 ukerzel Exp $
 ! Package     : MicroDST
 ! Responsible : Ulrich Kerzel
+
+! 2007-02-21 - Ulrich Kerzel
+
+ - CreateMicroDSTAlg
+   clone/store calorimeter information accessed via proto-particle
+   or set SmartRef (default) depending on alg.-property
+   Some Calorimeter information is accessible via extraInfo in
+   the proto-particle itself, thus by default just store SmartRef
+
+-  TestDST
+   put loops into smaller sub-routines
+
+- CreateMicroDSTMCAlg
+  initial revision - not yet to be used for physics analyses
+  - clone and store all directly associated particles/vertices
+  - do not follow all links up and down the chain of the particles/vertices
+    involved: would copy over many objects -> set SmartRef instead and
+    have property in case the user wants it
+
 
 ! 2007-02-16 - Ulrich Kerzel
  - let PhysDesktop handle all input locations
    -> fixes issue with relatedPV() when creating microDST
  - write linker table for particle -> PV to
    /Event/Link/<prefix=microDST>/LHCb::RecVertex::Primary
-
-
-
 
 ! 2007-02-15 - Ulrich Kerzel
  - initial revision of MicroDST package.

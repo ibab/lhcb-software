@@ -1,4 +1,4 @@
-// $Id: CreateMicroDSTAlg.cpp,v 1.2 2007-02-16 18:00:27 ukerzel Exp $
+// $Id: CreateMicroDSTAlg.cpp,v 1.3 2007-02-21 09:12:49 ukerzel Exp $
 // Include files 
 
 // from Gaudi
@@ -26,10 +26,12 @@ DECLARE_ALGORITHM_FACTORY( CreateMicroDSTAlg );
 CreateMicroDSTAlg::CreateMicroDSTAlg( const std::string& name,
                                       ISvcLocator* pSvcLocator)
   : DVAlgorithm          ( name , pSvcLocator               ),
-    m_OutputPrefix       ( "microDST"                       )
+    m_OutputPrefix       ( "microDST"                       ),
+    m_StoreCalo2DST      ( false                            )
 {
  
   declareProperty( "OutputPrefix"        , m_OutputPrefix        = "microDST" );
+  declareProperty( "StoreCalo2DST"       , m_StoreCalo2DST       = false      );
  
 } //constructor
 //=============================================================================
@@ -47,6 +49,7 @@ StatusCode CreateMicroDSTAlg::initialize() {
   debug() << "==> Initialize" << endmsg;
 
   info() << "output prefix for microDST           " << m_OutputPrefix        << endmsg;
+  info() << "store calorimeter info into microDST " << m_StoreCalo2DST       << endmsg;
 
   return StatusCode::SUCCESS;
 }
@@ -414,9 +417,36 @@ StatusCode CreateMicroDSTAlg::StoreParticle(const LHCb::Particle * particle) {
        }
      }// if track
      
-     // set SmartRefs for Calo
-     // -> doens't work yet
-     
+     // set Calo
+     const SmartRefVector< LHCb::CaloHypo > &caloVec = particle->proto()->calo();
+     verbose() << "#calo elements " << caloVec.size() << endmsg;
+     if (caloVec.size() >0) {
+       protoClone->clearCalo();
+       LHCb::CaloHypos *caloHypoContainer = NULL;
+
+       SmartRefVector< LHCb::CaloHypo >::const_iterator iCalo;
+       SmartRefVector< LHCb::CaloHypo >::const_iterator iCaloBegin = caloVec.begin();
+       SmartRefVector< LHCb::CaloHypo >::const_iterator iCaloEnd   = caloVec.end();
+       for (iCalo = iCaloBegin; iCalo != iCaloEnd; iCalo++) {
+         locTES = CreateMicroDSTAlg::objectLocation((*iCalo)->parent());
+         verbose() << "next calorimeter hypothesis on TES " << locTES  << endmsg;
+         if (m_StoreCalo2DST) {
+           verbose() << "store Calorimeter info into microDST" << endmsg;
+           caloHypoContainer =  CreateMicroDSTAlg::getContainer<LHCb::CaloHypos>(locTES);
+           if (caloHypoContainer) {
+             LHCb::CaloHypo *caloHypoClone = (*iCalo)->clone();
+             caloHypoContainer->insert(caloHypoClone,(*iCalo)->key());
+             protoClone->addToCalo(caloHypoClone);
+           } else {
+             Warning("could not obtain container for calorimeter hypotheses",StatusCode::SUCCESS);
+           }// if container
+         } else {
+           verbose() << "set SmartRef to Calorimeter info" << endmsg;
+           protoClone->addToCalo(*iCalo);
+         } // if storeCalo
+       } // for iCalo
+     }// if calo
+
   }//if proto
   
 

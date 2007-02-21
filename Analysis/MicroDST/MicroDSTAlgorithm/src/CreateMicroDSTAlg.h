@@ -1,4 +1,4 @@
-// $Id: CreateMicroDSTAlg.h,v 1.2 2007-02-16 18:00:27 ukerzel Exp $
+// $Id: CreateMicroDSTAlg.h,v 1.3 2007-02-21 09:12:49 ukerzel Exp $
 #ifndef CREATEMICRODSTALG_H 
 #define CREATEMICRODSTALG_H 1
 
@@ -72,6 +72,7 @@ private:
   // data members
   //
   std::string              m_OutputPrefix;                    ///< prefix for the output paths, eg. microDST
+  bool                     m_StoreCalo2DST;                   ///< store calorimeter info to microDST (true) or set SmartRef (false=default)
   std::map<std::string, ObjectContainerBase*> m_ContainerMap; ///< map of container - locations to store
 
 };
