@@ -1,6 +1,4 @@
 #include "$DAVINCIROOT/options/DaVinciCommon.opts"
-// #include "$DAVINCIROOT/options/DaVinciReco.opts"
-
 
 ApplicationMgr.DLLs    += { "DaVinciAssociators" };
 ApplicationMgr.DLLs    += { "DaVinciUser" };
@@ -47,44 +45,27 @@ RootHistCnv.ForceAlphaIds           = true;
 ApplicationMgr.HistogramPersistency = "ROOT";
 HistogramPersistencySvc.OutputFile  = "Histos.root";
 
-
 //
-// TEST DST
+// print structure/content of TES
 //
-
-TestSeq.RootOnTES                                = "microDST/";
-
-ChargedProtoCombineDLLsAlg.RootOnTES             = "microDST/";
-// ChargedProtoCombineDLLsAlg.OutputLevel           = 1;
-
-CreateRichPIDs.OutputLevel                       = 1;
-CreateRichPIDs.RootOnTES                         = "microDST/";
-// CreateRichPIDs.InputProtoParticles               = "microDST/Rec/ProtoP/Charged";
-
-CreateMuonPIDs.OutputLevel                       = 1;
-CreateMuonPIDs.RootOnTES                         = "microDST/";
-// CreateMuonPIDs.InputProtoParticles               = "microDST/Rec/ProtoP/Charged";
-
-// ToolSvc.PhysDesktop.OutputLevel                  = 1;
-// ToolSvc.PhysDesktop.RootOnTES                    = "microDST";
-
-ToolSvc.UnpackMCVertex.OutputLevel               = 1;
-ToolSvc.UnpackMCParticle.OutputLevel             =  1;
-
-
-// Data-on-Demand?
-TestSeq.Members                                 += {"MuonPIDsFromProtoParticlesAlg/CreateMuonPIDs"};
-TestSeq.Members                                 += {"RichPIDsFromProtoParticlesAlg/CreateRichPIDs"};
-
-TestSeq.Members                                 += {"StoreExplorerAlg" };
-
-
-
-// ApplicationMgr.TopAlg                += { "StoreExplorerAlg" };
+ApplicationMgr.TopAlg                += { "StoreExplorerAlg" };
 StoreExplorerAlg.Load                = 1;
 StoreExplorerAlg.PrintFreq           = 1.0;
 StoreExplorerAlg.Outputlevel         = 1;
 
+
+//
+// don't use Data-on-Demand for these
+//
+TestSeq.Members                                 += {"MuonPIDsFromProtoParticlesAlg/CreateMuonPIDs"};
+TestSeq.Members                                 += {"RichPIDsFromProtoParticlesAlg/CreateRichPIDs"};
+
+//
+// TEST DST
+//
+DaVinciMainSeq.RootOnTES                         = "microDST/";
+ProtoPRecalibration.RootOnTES                    = "microDST/";
+TestSeq.RootOnTES                                = "microDST/";
 
 TestSeq.Members                                    += {"TestDST/TestDST"};
 TestDST.PhysDesktop.OutputLevel                     = 1;
@@ -104,8 +85,18 @@ TestDST.Particle2MCLinks.ChargedPPLocation        = {"/Event/microDST/Rec/ProtoP
                                                      "/Event/microDST/Rec/ProtoP/Upstream"};
 
 
-TestDST.Particle2MCLinks.ChargedPP2MC.OutputLevel  = 1;
 
+
+//
+// VERBOSITY for some needed algorithms/tools
+//
+
+// for ProtoParticle related algorithms
+// ChargedProtoCombineDLLsAlg.OutputLevel           = 1;
+// CreateRichPIDs.OutputLevel                       = 1;
+// CreateMuonPIDs.OutputLevel                       = 1;
+
+// for calorimeter
 //EcalClust.OutputLevel                            = 1;
 //EcalShare.OutputLevel                            = 1;
 //EcalCovar.OutputLevel                            = 1;
@@ -114,3 +105,6 @@ TestDST.Particle2MCLinks.ChargedPP2MC.OutputLevel  = 1;
 //PrsFromRaw.OutputLevel                           = 1;
 //EcalZSup.OutputLevel                             = 1;
 //HcalZSup.OutputLevel                             = 1;
+
+// for MC truth association
+TestDST.Particle2MCLinks.ChargedPP2MC.OutputLevel  = 1;
