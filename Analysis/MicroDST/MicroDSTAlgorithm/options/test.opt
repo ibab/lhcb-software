@@ -48,16 +48,13 @@ ApplicationMgr.HistogramPersistency = "ROOT";
 HistogramPersistencySvc.OutputFile  = "Histos.root";
 
 
-
-
-
-
-
 //
 // TEST DST
 //
 
-ChargedProtoCombineDLLsAlg.RootOnTES             = "microDST";
+TestSeq.RootOnTES                                = "microDST";
+
+// ChargedProtoCombineDLLsAlg.RootOnTES             = "microDST";
 // ChargedProtoCombineDLLsAlg.OutputLevel           = 1;
 ChargedProtoCombineDLLsAlg.ProtoParticleLocation = "microDST/Rec/ProtoP/Charged";
 
@@ -67,22 +64,49 @@ CreateRichPIDs.InputProtoParticles               = "microDST/Rec/ProtoP/Charged"
 CreateMuonPIDs.OutputLevel                       = 1;
 CreateMuonPIDs.InputProtoParticles               = "microDST/Rec/ProtoP/Charged";
 
-ToolSvc.PhysDesktop.OutputLevel                  = 1;
-ToolSvc.PhysDesktop.RootOnTES                    = "microDST";
+// ToolSvc.PhysDesktop.OutputLevel                  = 1;
+// ToolSvc.PhysDesktop.RootOnTES                    = "microDST";
+
+ToolSvc.UnpackMCVertex.OutputLevel               = 1;
+ToolSvc.UnpackMCParticle.OutputLevel             =  1;
+
 
 // Data-on-Demand?
 TestSeq.Members                                 += {"MuonPIDsFromProtoParticlesAlg/CreateMuonPIDs"};
 TestSeq.Members                                 += {"RichPIDsFromProtoParticlesAlg/CreateRichPIDs"};
-//TestSeq.Members                                 += {"CellularAutomaton/EcalClust"};
-//TestSeq.Members                                 += {"CaloSharedCellAlg/EcalShare"};
-//TestSeq.Members                                 += {"CaloClusterCovarianceAlg/EcalCovar"};
-//TestSeq.Members                                 += {"CaloClusterCorrect3x3Position"};
-//TestSeq.Members                                 += {"CaloDigitsFromRaw/SpdFromRaw"};
-//TestSeq.Members                                 += {"CaloDigitsFromRaw/PrsFromRaw"};
-//TestSeq.Members                                 += {"CaloZSupAlg/EcalZSup"};
-//TestSeq.Members                                 += {"CaloZSupAlg/HcalZSup"};
 
 TestSeq.Members                                 += {"StoreExplorerAlg" };
+
+
+
+// ApplicationMgr.TopAlg                += { "StoreExplorerAlg" };
+StoreExplorerAlg.Load                = 1;
+StoreExplorerAlg.PrintFreq           = 1.0;
+StoreExplorerAlg.Outputlevel         = 1;
+
+
+TestSeq.Members                                    += {"TestDST/TestDST"};
+TestDST.PhysDesktop.OutputLevel                     = 1;
+// TestDST.PhysDesktop.RootOnTES                       = "microDST";
+TestDST.PhysDesktop.InputPrimaryVertices            = "microDST/Rec/Vertex/Primary";
+TestDST.PhysDesktop.OnOfflineTool.OfflinePVLocation = "/Event/microDST/Rec/Vertex/Primary";
+TestDST.PhysDesktop.InputLocations                  = {"/Event/microDST/Phys/PreSelBsKK"};
+TestDST.OutputLevel                                 = 1;
+TestDST.RootOnTES                                   = "microDST";
+
+
+ToolSvc.RelatedPVFinder.OutputLevel              = 1;
+ToolSvc.RelatedPVFinder.ContextTool.OnOfflineTool.OfflinePVLocation = "/Event/microDST/Rec/Vertex/Primary";
+
+
+TestDST.Particle2MCLinks.OutputLevel              = 1;
+// TestDST.Particle2MCLinks.RootOnTES                = "microDST";
+// TestDST.Particle2MCLinks.NeutralPPLocation        = "/Event/microDST/Rec/ProtoP/Neutrals";
+TestDST.Particle2MCLinks.ChargedPPLocation        = {"/Event/microDST/Rec/ProtoP/Charged",
+                                                     "/Event/microDST/Rec/ProtoP/Upstream"};
+
+
+TestDST.Particle2MCLinks.ChargedPP2MC.OutputLevel  = 1;
 
 //EcalClust.OutputLevel                            = 1;
 //EcalShare.OutputLevel                            = 1;
@@ -92,23 +116,3 @@ TestSeq.Members                                 += {"StoreExplorerAlg" };
 //PrsFromRaw.OutputLevel                           = 1;
 //EcalZSup.OutputLevel                             = 1;
 //HcalZSup.OutputLevel                             = 1;
-
-// ApplicationMgr.TopAlg                += { "StoreExplorerAlg" };
-StoreExplorerAlg.Load                = 1;
-StoreExplorerAlg.PrintFreq           = 1.0;
-StoreExplorerAlg.Outputlevel         = 1;
-
-
-TestSeq.Members                                 += {"TestDST/TestDST"};
-TestDST.PhysDesktop.OutputLevel                  = 1;
-TestDST.PhysDesktop.RootOnTES                    = "microDST";
-TestDST.PhysDesktop.InputPrimaryVertices         = "microDST/Rec/Vertex/Primary";
-TestDST.PhysDesktop.InputLocations               = {"/Event/microDST/Phys/PreSelBsKK"};
-TestDST.OutputLevel                              = 1;
-TestDST.RootOnTES                                = "microDST";
-
-
-
-
-
-
