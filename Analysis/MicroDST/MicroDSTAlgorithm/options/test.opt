@@ -52,17 +52,18 @@ HistogramPersistencySvc.OutputFile  = "Histos.root";
 // TEST DST
 //
 
-TestSeq.RootOnTES                                = "microDST";
+TestSeq.RootOnTES                                = "microDST/";
 
-// ChargedProtoCombineDLLsAlg.RootOnTES             = "microDST";
+ChargedProtoCombineDLLsAlg.RootOnTES             = "microDST/";
 // ChargedProtoCombineDLLsAlg.OutputLevel           = 1;
-ChargedProtoCombineDLLsAlg.ProtoParticleLocation = "microDST/Rec/ProtoP/Charged";
 
 CreateRichPIDs.OutputLevel                       = 1;
-CreateRichPIDs.InputProtoParticles               = "microDST/Rec/ProtoP/Charged";
+CreateRichPIDs.RootOnTES                         = "microDST/";
+// CreateRichPIDs.InputProtoParticles               = "microDST/Rec/ProtoP/Charged";
 
 CreateMuonPIDs.OutputLevel                       = 1;
-CreateMuonPIDs.InputProtoParticles               = "microDST/Rec/ProtoP/Charged";
+CreateMuonPIDs.RootOnTES                         = "microDST/";
+// CreateMuonPIDs.InputProtoParticles               = "microDST/Rec/ProtoP/Charged";
 
 // ToolSvc.PhysDesktop.OutputLevel                  = 1;
 // ToolSvc.PhysDesktop.RootOnTES                    = "microDST";
@@ -87,12 +88,10 @@ StoreExplorerAlg.Outputlevel         = 1;
 
 TestSeq.Members                                    += {"TestDST/TestDST"};
 TestDST.PhysDesktop.OutputLevel                     = 1;
-// TestDST.PhysDesktop.RootOnTES                       = "microDST";
 TestDST.PhysDesktop.InputPrimaryVertices            = "microDST/Rec/Vertex/Primary";
 TestDST.PhysDesktop.OnOfflineTool.OfflinePVLocation = "/Event/microDST/Rec/Vertex/Primary";
 TestDST.PhysDesktop.InputLocations                  = {"/Event/microDST/Phys/PreSelBsKK"};
 TestDST.OutputLevel                                 = 1;
-TestDST.RootOnTES                                   = "microDST";
 
 
 ToolSvc.RelatedPVFinder.OutputLevel              = 1;
@@ -100,7 +99,6 @@ ToolSvc.RelatedPVFinder.ContextTool.OnOfflineTool.OfflinePVLocation = "/Event/mi
 
 
 TestDST.Particle2MCLinks.OutputLevel              = 1;
-// TestDST.Particle2MCLinks.RootOnTES                = "microDST";
 // TestDST.Particle2MCLinks.NeutralPPLocation        = "/Event/microDST/Rec/ProtoP/Neutrals";
 TestDST.Particle2MCLinks.ChargedPPLocation        = {"/Event/microDST/Rec/ProtoP/Charged",
                                                      "/Event/microDST/Rec/ProtoP/Upstream"};
