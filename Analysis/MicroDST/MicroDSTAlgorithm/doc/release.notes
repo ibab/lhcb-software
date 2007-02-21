@@ -1,6 +1,12 @@
-! $Id: release.notes,v 1.5 2007-02-21 15:43:36 ukerzel Exp $
+! $Id: release.notes,v 1.6 2007-02-21 16:11:04 ukerzel Exp $
 ! Package     : MicroDST
 ! Responsible : Ulrich Kerzel
+
+! 2007-02-21 - Ulrich Kerzel
+ - remove from microDST.opt
+   DSTStream.OptItemList      = {"/Event/Link/Rec/Track/Best#1"};
+
+
 
 ! 2007-02-21 - Ulrich Kerzel
  - CreateMicroDSTAlg

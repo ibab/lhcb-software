@@ -21,7 +21,7 @@ DSTStream.RequireAlgs      = { "microDST"};
 DSTStream.ItemList         = {"/Event/microDST#99",
                               "/Event/Link/microDST#99"};
 
-DSTStream.OptItemList      = {"/Event/Link/Rec/Track/Best#1"};
+
 DSTStream.Output           = "DATAFILE='microDST.dst' TYP='POOL_ROOTTREE' OPT='REC'";
 // DSTStream.OutputLevel      = 1;
 
