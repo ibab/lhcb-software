@@ -1,4 +1,4 @@
-// $Id: CreateMicroDSTAlg.cpp,v 1.3 2007-02-21 09:12:49 ukerzel Exp $
+// $Id: CreateMicroDSTAlg.cpp,v 1.4 2007-02-21 15:43:36 ukerzel Exp $
 // Include files 
 
 // from Gaudi
@@ -156,8 +156,8 @@ StatusCode CreateMicroDSTAlg::execute() {
     // now store particle
     //
     verbose() << "now call StoreParticle" << endmsg;
-    sc = CreateMicroDSTAlg::StoreParticle(*iParticle); 
-    if (sc != StatusCode::SUCCESS) {
+    LHCb::Particle *particleClone =  CreateMicroDSTAlg::StoreParticle(*iParticle); 
+    if (!particleClone) {
       Warning("something went wrong when storing particle", StatusCode::SUCCESS);
     }// if sc
     
@@ -241,7 +241,7 @@ StatusCode CreateMicroDSTAlg::StorePV(std::string location) {
 } //sc StorePV
 
 //=============================================================================
-StatusCode CreateMicroDSTAlg::StoreParticle(const LHCb::Particle * particle) {
+LHCb::Particle *CreateMicroDSTAlg::StoreParticle(const LHCb::Particle * particle) {
 
    
   verbose() << "StoreParticle for particle with key " << particle->key()
@@ -261,7 +261,7 @@ StatusCode CreateMicroDSTAlg::StoreParticle(const LHCb::Particle * particle) {
   LHCb::Particles *particleContainer = CreateMicroDSTAlg::getContainer<LHCb::Particles>(locTES);
   if (!particleContainer) {
     Warning("Could not obtain particle container", StatusCode::SUCCESS);
-    return StatusCode::SUCCESS;
+    return NULL;
   } // if !particleContainer    
 
   LHCb::Particle  *particleClone = particleContainer->object(particle->key());
@@ -324,37 +324,14 @@ StatusCode CreateMicroDSTAlg::StoreParticle(const LHCb::Particle * particle) {
                 << " and key " << (*iDaughter)->key() 
                 << " and TES location " << locTES
                 << endmsg;
-
-      LHCb::Particle *daughterClone = NULL;
-      LHCb::Particles* daughterContainer = CreateMicroDSTAlg::getContainer<LHCb::Particles>(locTES);
-      if (daughterContainer) {
-         daughterClone = daughterContainer->object((*iDaughter)->key());
-        if (daughterClone) {
-
-          verbose() << "daughter already exists in TES" << endmsg;
-
-        } else {
       
-          verbose() << "clone and store daughter" << endmsg;
-          daughterClone =  (*iDaughter)->clone();
-          daughterContainer->insert(daughterClone,(*iDaughter)->key() ); // store to container
-        } // if daughterClone
-
-        particleClone->addToDaughters(daughterClone);  //set relations
-        if (endVertexClone) {
-          endVertexClone->addToOutgoingParticles(daughterClone);
-        }// if endVertex
-        
-      } else {
-        Warning("Daugher container could not be obtained");
-      }
-      
-      // recursively store all daughter's daughters
-      sc = CreateMicroDSTAlg::StoreParticle((*iDaughter));
-                                            
-      if (sc != StatusCode::SUCCESS) {
-        Warning("something went wrong while storing the daughter particle");
-      } // if sc
+       LHCb::Particle *daughterClone = CreateMicroDSTAlg::StoreParticle((*iDaughter));
+       if (daughterClone) {
+         particleClone->addToDaughters(daughterClone);  //set relations
+         if (endVertexClone) {
+           endVertexClone->addToOutgoingParticles(daughterClone);
+         }// if endVertex
+       } // if daugtherClone
     } //for iDaughter
   }// if endVertex
 
@@ -449,8 +426,8 @@ StatusCode CreateMicroDSTAlg::StoreParticle(const LHCb::Particle * particle) {
 
   }//if proto
   
-
-  return StatusCode::SUCCESS;
+  verbose() << " --> end of StoreParticle, return clone <<--" << endmsg;
+  return particleClone;
 }//sc StoreParticle
 
 //=============================================================================
