@@ -1,4 +1,4 @@
-// $Id: CreateMicroDSTMCAlg.cpp,v 1.3 2007-02-21 11:01:15 ukerzel Exp $
+// $Id: CreateMicroDSTMCAlg.cpp,v 1.4 2007-02-21 13:49:52 ukerzel Exp $
 // Include files 
 
 // from Gaudi
@@ -173,16 +173,34 @@ StatusCode CreateMicroDSTMCAlg::StoreMCParticle(const LHCb::Particle * particle)
       LHCb::MCParticle* mcParticleClone = CreateMicroDSTMCAlg::StoreMCParticle(*iMCPart, true);
       verbose() << "got clone of stored particle with PID " << mcParticleClone->particleID().pid() << endmsg;
       
-      if (mcParticleClone && particle->proto()) {
-        if (particle->proto()->track()) {
-          verbose() << "now store link from track -> MCParticle" << endmsg;
-          sc = StoreLink<LHCb::Track,LHCb::MCParticle>(particle->proto()->track(),mcParticleClone);
-          if (sc != StatusCode::SUCCESS) {
-            Warning("something went wrong when storing link from track-clone->MCPart", StatusCode::SUCCESS);
-          }// if sc
+      if (mcParticleClone) {
+
+        // check if particle has a proto-particle
+        if (particle->proto()) {
+
+          // check if (proto-) particle has a track -> link track -> MCParticle
+          if (particle->proto()->track()) {
+            verbose() << "now store link from track -> MCParticle" << endmsg;
+            sc = StoreLink<LHCb::Track,LHCb::MCParticle>(particle->proto()->track(),mcParticleClone);
+            if (sc != StatusCode::SUCCESS) {
+              Warning("something went wrong when storing link from track-clone->MCPart", StatusCode::SUCCESS);
+            }// if sc
+          } else {
+            verbose() << "no track attached to this (proto) particle" << endmsg;
+          } // if track
         } else {
-          verbose() << "no track attached to this (proto) particle" << endmsg;
-        } // if track
+          verbose() << "no proto-particle for this particle" << endmsg;
+        } // if proto
+
+//        // check if particle has daughters: if yes, link composite particle to MC particle
+//        // ?? done this way??
+//        if (!particle->isBasicParticle ()) {
+//          verbose() << "this particle is not a basic particle, link composite particle" << endmsg;
+//          sc = StoreLink<LHCb::Particle,LHCb::MCParticle>(particle,mcParticleClone);
+//          if (sc != StatusCode::SUCCESS) {
+//            Warning("something went wrong when storing link from particle->MCPart", StatusCode::SUCCESS);
+//          }// if sc          
+//        } // isBasicParticle
 
       } else {
         verbose() << "did not get clone of MC particle " << endmsg;
@@ -598,9 +616,10 @@ template<class S, class T> StatusCode CreateMicroDSTMCAlg::StoreLink(const S* s,
   // cloned source object sClone -> (MC) target object t
   //
   verbose() << "now setup linker" << endmsg;
-  LinkerWithKey<T, S> *linker = new LinkerWithKey<T, S>(evtSvc(), msgSvc(), linkerLocation);
+  LinkerWithKey<T, S> linker(evtSvc(), msgSvc(), linkerLocation);
+
   verbose() << "now link sClone with key " << sClone->key() <<" to target t wth key " << t->key() << endmsg;
-  linker->link(sClone, t);
+  linker.link(sClone, t);
 
   return StatusCode::SUCCESS;
 }// sc StoreLink  
