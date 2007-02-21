@@ -1,11 +1,10 @@
-
 //-----------------------------------------------------------------------------
 /** @file ChargedProtoPAlg.cpp
  *
  * Implementation file for algorithm ChargedProtoPAlg
  *
  * CVS Log :-
- * $Id: ChargedProtoPAlg.cpp,v 1.52 2007-02-19 11:38:05 jonrob Exp $
+ * $Id: ChargedProtoPAlg.cpp,v 1.53 2007-02-21 19:24:09 pkoppenb Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 29/03/2006
@@ -99,7 +98,8 @@ StatusCode ChargedProtoPAlg::execute()
   // Load the Track objects (manditory - should be there for each event)
   if ( !exist<Tracks>(m_tracksPath) )
   {
-    return Warning( "No Tracks at '"+m_tracksPath+"'" );
+    setFilterPassed(false);
+    return Warning( "No Tracks at '"+m_tracksPath+"'", StatusCode::SUCCESS );
   }
   const Tracks * tracks = get<Tracks>( m_tracksPath );
   if ( msgLevel(MSG::DEBUG) )
