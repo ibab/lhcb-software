@@ -1,4 +1,4 @@
-// $Id: CreateMicroDSTMCAlg.cpp,v 1.1 2007-02-21 09:12:49 ukerzel Exp $
+// $Id: CreateMicroDSTMCAlg.cpp,v 1.2 2007-02-21 10:57:13 ukerzel Exp $
 // Include files 
 
 // from Gaudi
@@ -181,29 +181,19 @@ StatusCode CreateMicroDSTMCAlg::StoreMCParticle(const LHCb::Particle * particle)
       
       if (mcParticleClone && particle->proto()) {
         if (particle->proto()->track()) {
-          // link track from proto-particle to this MC particle
-          std::string   locTES         = CreateMicroDSTMCAlg::objectLocation(particle->proto()->track()->parent());
-          LHCb::Tracks *trackContainer = CreateMicroDSTMCAlg::getContainer<LHCb::Tracks>(locTES);
-          LHCb::Track  *trackClone     = NULL;
-        
-          if (trackContainer) {
-            trackClone = trackContainer->object(particle->proto()->track()->key());
-            if (trackClone) {
-              verbose() << "got clone of track with key " << particle->proto()->track()->key()
-                        << " now establish link to MC particle clone " << endmsg;
-              track2MCPartLinker->link(trackClone, mcParticleClone); //weight ?
-            } else {
-              verbose() << "track clone not found in container" << endmsg;
-            } // if trackClone
-          } else {
-            verbose() << "could not get container for cloned tracks " << endmsg;
-          } // if trackContainer 
+          verbose() << "now store link from track -> MCParticle" << endmsg;
+          sc = StoreLink<LHCb::Track,LHCb::MCParticle>(particle->proto()->track(),mcParticleClone);
+          if (sc != StatusCode::SUCCESS) {
+            Warning("something went wrong when storing link from track-clone->MCPart", StatusCode::SUCCESS);
+          }// if sc
         } else {
           verbose() << "no track attached to this (proto) particle" << endmsg;
         } // if track
+
       } else {
-        verbose() << "did not get clnoe of MC particle " << endmsg;
+        verbose() << "did not get clone of MC particle " << endmsg;
       } // if particleClone
+
     }//for iMCPart
   } else {
     verbose() << "no MC particle associated to this particle" << endmsg;
@@ -543,5 +533,82 @@ LHCb::MCVertex* CreateMicroDSTMCAlg::StoreMCVertex(const LHCb::MCVertex *mcVerte
   verbose() << "--> end of StoreMCVertex, return mcVertexClone <--" << endmsg;
   return mcVertexClone;
 }// sc StoreMCVertex
+//=============================================================================
+//=============================================================================
+template<class S, class T> StatusCode CreateMicroDSTMCAlg::StoreLink(const S* s, const T* t){
+  
+  verbose() << "now store link from reconstructed source object s -> MC object t" << endmsg;
+
+  if ( (!s) || (!t)) {
+    Warning("either source s or target t do not exist, cannot establish link", StatusCode::SUCCESS);
+    return StatusCode::SUCCESS;
+  }// if
+
+  std::string tmpString = "/Event/";
+
+  //
+  // get location for linker
+  //
+  std::string linkerLocation = CreateMicroDSTMCAlg::objectLocation(s->parent());
+  verbose() << "original source location on TES for link " << linkerLocation << endmsg;
+
+  std::string::size_type loc       = linkerLocation.find(tmpString);
+  if ( loc == std::string::npos) {
+    verbose() << "insert /Event " << endmsg;
+    linkerLocation.insert(0,"/Event/");
+  } //if loc
+  verbose() << "position for linker " << linkerLocation << endmsg;
+
+
+  //
+  // get location for cloned source object (e.g. reconstructed track)
+  //
+  
+  std::string containerLocation =  CreateMicroDSTMCAlg::objectLocation(s->parent());
+  loc = linkerLocation.find(tmpString);
+  if (loc != std::string::npos) {
+    containerLocation.replace(loc, tmpString.length(),"");
+  }// if loc
+  // now insert identifier for microDST after "/Event/"
+  containerLocation.insert(0,"/Event/"+ m_OutputPrefix + "/");
+  verbose() << "location of container for cloned source in TES " << containerLocation << endmsg;
+
+  //
+  // get source container
+  //
+  //  typedef KeyedContainer<ProtoParticle, Containers::HashMap> ProtoParticles;
+  KeyedContainer<S,Containers::HashMap> *sourceContainer = NULL;
+  if (exist< KeyedContainer<S,Containers::HashMap> >(containerLocation)) {
+    sourceContainer = get< KeyedContainer<S,Containers::HashMap> >(containerLocation);
+  } else {
+    Warning("could not get container of cloned source particle, cannot establish link", StatusCode::SUCCESS);
+    return StatusCode::SUCCESS;
+  }//if exist
+
+  //
+  // now get clone of source object: sClone
+  // (N.B. clone has same key as orignal object)
+  //
+  S *sClone = sourceContainer->object(s->key());
+  if (!sClone) {
+    Warning("could not get source particle", StatusCode::SUCCESS);
+    return StatusCode::SUCCESS;
+  }// if sClone
+
+  verbose() << "TES locatio of source s            " << CreateMicroDSTMCAlg::objectLocation(s->parent())      << endmsg;
+  verbose() << "                      clone sClone " << CreateMicroDSTMCAlg::objectLocation(sClone->parent()) << endmsg;
+  verbose() << "                      target       " << CreateMicroDSTMCAlg::objectLocation(t->parent())      << endmsg;
+
+  //
+  // now setup linker to store the connection between
+  // cloned source object sClone -> (MC) target object t
+  //
+  verbose() << "now setup linker" << endmsg;
+  LinkerWithKey<T, S> *linker = new LinkerWithKey<T, S>(evtSvc(), msgSvc(), linkerLocation);
+  verbose() << "now link sClone with key " << sClone->key() <<" to target t wth key " << t->key() << endmsg;
+  linker->link(sClone, t);
+
+  return StatusCode::SUCCESS;
+}// sc StoreLink  
 //=============================================================================
 //=============================================================================

@@ -1,4 +1,4 @@
-// $Id: CreateMicroDSTMCAlg.h,v 1.1 2007-02-21 09:12:49 ukerzel Exp $
+// $Id: CreateMicroDSTMCAlg.h,v 1.2 2007-02-21 10:57:13 ukerzel Exp $
 #ifndef CREATEMICRODSTALG_H 
 #define CREATEMICRODSTALG_H 1
 
@@ -65,6 +65,12 @@ private:
 
   template<class T>
   T *getContainer(std::string containerID);
+
+  template<class S, class T>                           
+  StatusCode StoreLink(const S* s, const T* t);                  /** store link between cloned reconstructed
+                                                    *  object (Source s) to cloned corresponding
+                                                    *  MC object (Target t)
+                                                    */
 
   inline std::string objectLocation(const DataObject *pObject) const 
   {
