@@ -1,6 +1,13 @@
 Package		: L0/L0Calo
 Package Manager : Olivier Callot
 
+
+
+! 2007-02-22 - Olivier Deschamps
+ - Adapt to change in CaloDAQ
+ - protect against the possibility to have Pin-diode FE-Cards in condDB
+	(rejected from the L0Calo processing)
+
 !========================= L0Calo v9r6 2006-11-23 =========================
 ! 2006-11-22 - Olivier Callot
  - Add the rootOnTES() prefix where needed.

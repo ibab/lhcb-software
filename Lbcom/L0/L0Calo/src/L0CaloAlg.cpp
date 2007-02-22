@@ -1,4 +1,4 @@
-// $Id: L0CaloAlg.cpp,v 1.40 2006-11-22 14:54:21 ocallot Exp $
+// $Id: L0CaloAlg.cpp,v 1.41 2007-02-22 23:55:10 odescham Exp $
 
 /// Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -54,28 +54,30 @@ StatusCode L0CaloAlg::initialize() {
     return Error( "The name of the Output data container is empty!" );
   }
 
-  // Retrieve the ECAL detector element, build cards
+  // Warning m_ecalFE & m_hcalFE  HAVE to contain PIN-diode FEs
+  // in order to ensure the card numbering is correct afterward.
+  // Pin-diode FE are anyway excluded from the L0 processing in the code
 
+
+  // Retrieve the ECAL detector element, build cards
   m_ecal = getDet<DeCalorimeter>( DeCalorimeterLocation::Ecal );
   int eCard;
   int hCard;
   m_nbValidation = 0;
-  
   m_ecalFe.reserve( m_ecal->nCards() );
   for  ( eCard = 0; m_ecal->nCards() > eCard; ++eCard ) {
     m_ecalFe.push_back( TriggerCard( eCard, m_ecal ) );
     int validationNb =  m_ecal->validationNumber( eCard );
-    m_ecalFe[eCard].setValidationNumber( validationNb );
     if ( m_nbValidation <= validationNb ) m_nbValidation = validationNb + 1;
-  }
-  
+    if( !m_ecal->isPinCard(eCard) )m_ecalFe[eCard].setValidationNumber( validationNb );
+  }  
   // Retrieve the HCAL detector element, build cards
-
   m_hcal = getDet<DeCalorimeter>( DeCalorimeterLocation::Hcal );  
   m_hcalFe.reserve( m_hcal->nCards() );
   for  ( hCard = 0; m_hcal->nCards() > hCard; ++hCard ) {
     m_hcalFe.push_back( TriggerCard( hCard, m_hcal ) );
   }
+
 
   // Link the ECAL cards to the HCAL cards for the trigger.
   // Method: An ECAL card is connected to a single HCAL card.
@@ -93,6 +95,7 @@ StatusCode L0CaloAlg::initialize() {
   double zRatio = m_hcal->cellSize( m_hcal->firstCellID( 1 ) ) /
     m_ecal->cellSize( m_ecal->firstCellID( 0 ) ) / 2. ;
   for ( eCard=0 ;  m_ecal->nCards() > eCard; ++eCard ) {
+    if( m_ecal->isPinCard(eCard) )continue;// reject pin readout FE-cards
     LHCb::CaloCellID ecalID  = m_ecal->firstCellID( eCard );
     Gaudi::XYZPoint  center  = m_ecal->cellCenter( ecalID ) * zRatio;
     LHCb::CaloCellID hcalID  = m_hcal->Cell( center );
@@ -128,6 +131,7 @@ StatusCode L0CaloAlg::initialize() {
   // Debug the cards
 
   for ( eCard=0 ;  m_ecal->nCards() > eCard; ++eCard ) {
+    if( m_ecal->isPinCard(eCard) )continue;// reject pin readout FE-cards
     debug() << "Ecal card " 
             << format( "Ecal card%4d Area%2d Row%3d Col%3d Validation%3d", 
                        eCard,
@@ -149,6 +153,7 @@ StatusCode L0CaloAlg::initialize() {
             << endreq;
   }
   for ( hCard=0 ;  m_hcal->nCards() > hCard; ++hCard ) {
+    if( m_hcal->isPinCard(hCard) )continue;// reject pin readout FE-cards
     debug() << format( "Hcal card%4d Area%2d Row%3d Col%3d ",
                        hCard,
                        m_hcal->cardArea(hCard),
@@ -188,7 +193,7 @@ StatusCode L0CaloAlg::initialize() {
   // Initialise the cuts
 
   info() << m_ecal->nCards() << " Ecal and "
-         << m_hcal->nCards() << " front end cards." << endreq;
+         << m_hcal->nCards() << " Hcal front end cards." << endreq;
 
   m_totRawSize = 0.;
   m_nbEvents   = 0 ;
@@ -210,6 +215,9 @@ StatusCode L0CaloAlg::execute() {
     // Get the ECAL data, store them in the Front-End card
 
   sumEcalData( );
+
+  // Get Spd+Prs data
+  m_PrsSpdIds = m_bitsFromRaw->prsSpdCells( );
 
   // Get the Prs information. Adds it to the m_ecalFe[] objects
 
@@ -240,6 +248,7 @@ StatusCode L0CaloAlg::execute() {
 
   int eCard;
   for( eCard = 0; m_ecal->nCards() > eCard; ++eCard ) {
+    if( m_ecal->isPinCard(eCard) )continue;// reject pin readout FE-cards
     int etMax   = m_ecalFe[eCard].etMax()  ;
     int etTot   = m_ecalFe[eCard].etTot()  ;
     LHCb::CaloCellID ID = m_ecalFe[eCard].cellIdMax() ;
@@ -340,6 +349,7 @@ StatusCode L0CaloAlg::execute() {
 
   int hCard;
   for ( hCard = 0; hCard < m_hcal->nCards(); ++hCard ) {
+    if( m_hcal->isPinCard(hCard) )continue;// reject pin readout FE-cards
     if ( !m_hcalFe[hCard].empty() ) {
       int maxEcalEt = 0;
       int hCol = m_hcalFe[hCard].colMax();
@@ -412,6 +422,7 @@ StatusCode L0CaloAlg::execute() {
     saveInRawEvent(  L0DUBase::Fiber::CaloPhoton, allPhotons[kk], 1 );
   }
   for ( hCard = 0; hCard < m_hcal->nCards(); ++hCard ) {
+    if( m_hcal->isPinCard(hCard) )continue;// reject pin readout FE-cards
     hadron.setCandidate( m_hcalFe[hCard].etMax(), m_hcalFe[hCard].cellIdMax() );
     saveInRawEvent(  L0DUBase::Fiber::CaloHadron, hadron, 0 );
   }
@@ -474,6 +485,7 @@ void L0CaloAlg::sumEcalData(  ) {
   // Reset the cards collection
 
   for( int eCard = 0; m_ecal->nCards() > eCard;  ++eCard ) {
+    if( m_ecal->isPinCard(eCard) )continue;// reject pin readout FE-cards
     m_ecalFe[eCard].reset( );
   }
 
@@ -518,6 +530,7 @@ void L0CaloAlg::sumEcalData(  ) {
 void L0CaloAlg::sumHcalData( ) {
 
   for( int hCard = 0; m_hcal->nCards() > hCard;  ++hCard ) {
+    if( m_hcal->isPinCard(hCard) )continue;// reject pin readout FE-cards
     m_hcalFe[hCard].reset( );
   }
 
@@ -571,7 +584,7 @@ void L0CaloAlg::addPrsData( ) {
   int card, row,  col  ;
   int down, left, corner  ;
 
-  std::vector<LHCb::CaloCellID>& ids = m_bitsFromRaw->firedCells( true );
+  std::vector<LHCb::CaloCellID>& ids = m_PrsSpdIds.first;
 
   debug() << "Found " << ids.size() << " PRS bits" << endreq;
 
@@ -611,7 +624,8 @@ void L0CaloAlg::addSpdData( ) {
   int card, row,  col  ;
   int down, left, corner  ;
 
-  std::vector<LHCb::CaloCellID>& ids = m_bitsFromRaw->firedCells( false );
+  std::vector<LHCb::CaloCellID>& ids = m_PrsSpdIds.second;
+
 
   debug() << "Found " << ids.size() << " SPD bits" << endreq;
 

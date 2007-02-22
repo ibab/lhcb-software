@@ -1,6 +1,6 @@
 #ifndef   L0CALO_L0CALOALG_H
 #define   L0CALO_L0CALOALG_H  1
-// $Id: L0CaloAlg.h,v 1.19 2006-11-07 16:08:28 ocallot Exp $
+// $Id: L0CaloAlg.h,v 1.20 2007-02-22 23:55:10 odescham Exp $
 
 // from Gaudi 
 #include "GaudiAlg/GaudiAlgorithm.h"
@@ -131,5 +131,6 @@ private:
 
   double m_totRawSize;
   int m_nbEvents;  
+  LHCb::Calo::PrsSpdFiredCells m_PrsSpdIds;
 };
 #endif //   L0CALO_L0CALOALG_H
