@@ -1,4 +1,4 @@
-// $Id: ListOfDaughtersInLHCb.cpp,v 1.3 2007-01-30 21:44:28 robbep Exp $
+// $Id: ListOfDaughtersInLHCb.cpp,v 1.4 2007-02-22 13:30:24 robbep Exp $
 // Include files 
 
 // local
@@ -88,33 +88,14 @@ StatusCode ListOfDaughtersInLHCb::initialize() {
 // Acceptance function
 //=============================================================================
 bool ListOfDaughtersInLHCb::applyCut( ParticleVector & theParticleVector ,
-                                       const HepMC::GenEvent * /* theEvent */ ,
-                                       const LHCb::GenCollision * 
-                                       /* theHardInfo */ ,
-                                       IDecayTool * theDecayTool , 
-                                       bool cpMixture ,
-                                       const HepMC::GenParticle * 
-                                       theSignalAtRest ) const {
+                                      const HepMC::GenEvent * /* theEvent */ ,
+                                      const LHCb::GenCollision * 
+                                      /* theHardInfo */ ) const {
   ParticleVector::iterator it ;
-  bool flip ;
   
   for ( it = theParticleVector.begin() ; it != theParticleVector.end() ; ) {
-    // Signal decay
-    flip = false ;
-
-    if ( 0 == theSignalAtRest ) {
-      if ( cpMixture ) theDecayTool -> enableFlip( ) ;
-      theDecayTool -> generateSignalDecay( *it , flip ) ;
-    } else {
-      Gaudi::LorentzVector mom( (*it) -> momentum() ) ;
-      ROOT::Math::Boost theBoost( -mom.BoostToCM() ) ;
-
-      boostTree( *it , theSignalAtRest , theBoost ) ;
-    }
     
-    if ( ( flip ) || ( ! passCuts( *it ) ) ) {
-      HepMCUtils::RemoveDaughters( *it ) ;
-      if ( flip ) (*it) -> set_pdg_id( - (*it) -> pdg_id() ) ;
+    if ( ! passCuts( *it ) ) {
       it = theParticleVector.erase( it ) ;
     } else ++it ;
   }

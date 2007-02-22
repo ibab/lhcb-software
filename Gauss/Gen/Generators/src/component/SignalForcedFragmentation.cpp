@@ -1,4 +1,4 @@
-// $Id: SignalForcedFragmentation.cpp,v 1.11 2007-01-12 15:17:40 ranjard Exp $
+// $Id: SignalForcedFragmentation.cpp,v 1.12 2007-02-22 13:30:24 robbep Exp $
 // Include files
 
 // local
@@ -76,6 +76,10 @@ bool SignalForcedFragmentation::generate( const unsigned int nPileUp ,
   theSignalAtRest -> 
     set_momentum( HepLorentzVector( 0., 0., 0., m_signalMass ) ) ;
 
+  // Memorize if signal has been inverted (not used here)
+  bool isInverted = false ;
+  bool dummyHasFlipped = false ;
+
   // Create an origin vertex at (0,0,0,0) for the signal particle at rest
   HepMC::GenVertex * theVertex =  
     new HepMC::GenVertex( HepLorentzVector( 0., 0., 0., 0. ) ) ;
@@ -134,33 +138,39 @@ bool SignalForcedFragmentation::generate( const unsigned int nPileUp ,
         m_nEventsBeforeCut++ ;
         
         updateCounters( theParticleList , m_nParticlesBeforeCut , 
-                        m_nAntiParticlesBeforeCut , false ) ;
+                        m_nAntiParticlesBeforeCut , false , false ) ;
+
+        HepMC::GenParticle * theSignal = chooseAndRevert( theParticleList , 
+                                                          isInverted ,
+                                                          dummyHasFlipped ) ;
+
+        theParticleList.clear() ;
+        theParticleList.push_back( theSignal ) ;
+
+        // Now boost signal at rest to frame of signal produced by 
+        // production generator
+        Gaudi::LorentzVector mom( theSignal -> momentum() ) ;
+        ROOT::Math::Boost theBoost( -mom.BoostToCM() ) ;
+        
+        // Give signal status
+        theSignal -> set_status( LHCb::HepMCEvent::SignalInLabFrame ) ;
+        
+        sc = boostTree( theSignal , theSignalAtRest , theBoost ) ;
+        if ( ! sc.isSuccess() ) Exception( "Cannot boost signal tree" ) ;
 
         bool passCut = true ;
         if ( 0 != m_cutTool ) 
           passCut = m_cutTool -> applyCut( theParticleList , theGenEvent ,
-                                           theGenCollision , m_decayTool , 
-                                           m_cpMixture , theSignalAtRest ) ;
+                                           theGenCollision ) ;
         
         if ( passCut && ( ! theParticleList.empty() ) ) {          
           m_nEventsAfterCut++ ;
-
-          updateCounters( theParticleList , m_nParticlesAfterCut , 
-                          m_nAntiParticlesAfterCut , true ) ;
-
-          HepMC::GenParticle * theSignal = chooseAndRevert( theParticleList ) ;
-
-          // Now boost signal at rest to frame of signal produced by 
-          // production generator
-          Gaudi::LorentzVector mom( theSignal -> momentum() ) ;
-          ROOT::Math::Boost theBoost( -mom.BoostToCM() ) ;
-
-          // Give signal status
-          theSignal -> set_status( LHCb::HepMCEvent::SignalInLabFrame ) ;
           
-          sc = boostTree( theSignal , theSignalAtRest , theBoost ) ;
-          if ( ! sc.isSuccess() ) Exception( "Cannot boost signal tree" ) ;
-
+          updateCounters( theParticleList , m_nParticlesAfterCut , 
+                          m_nAntiParticlesAfterCut , true , false ) ;
+          
+          if ( isInverted ) ++m_nInvertedEvents ;
+          
           if ( m_cleanEvents ) { 
             sc = isolateSignal( theSignal ) ;
             if ( ! sc.isSuccess() ) Exception( "Cannot isolate signal" ) ;

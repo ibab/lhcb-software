@@ -1,4 +1,4 @@
-// $Id: BiasedBB.cpp,v 1.3 2007-01-12 15:17:34 ranjard Exp $
+// $Id: BiasedBB.cpp,v 1.4 2007-02-22 13:30:24 robbep Exp $
 // Include files 
 
 // local
@@ -49,9 +49,7 @@ BiasedBB::~BiasedBB( ) { ; }
 //=============================================================================
 bool BiasedBB::applyCut( ParticleVector & theParticleVector ,
                          const HepMC::GenEvent * /* theGenEvent */ ,
-                         const LHCb::GenCollision * /* col */ , 
-                         IDecayTool * /* theDecayTool */ , bool /* cp */ , 
-                         const HepMC::GenParticle * /* p */ ) const {
+                         const LHCb::GenCollision * /* col */ ) const {
   double eta , pT , v , ctau ;
   ParticleVector::iterator it ;
   for ( it = theParticleVector.begin() ; it != theParticleVector.end() ; ) {

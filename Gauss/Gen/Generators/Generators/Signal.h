@@ -1,4 +1,4 @@
-// $Id: Signal.h,v 1.7 2006-10-01 22:43:38 robbep Exp $
+// $Id: Signal.h,v 1.8 2007-02-22 13:30:24 robbep Exp $
 #ifndef GENERATORS_SIGNAL_H 
 #define GENERATORS_SIGNAL_H 1
 
@@ -143,8 +143,14 @@ protected:
 
   /** Choose randomly a particle in a list of particles 
    *  and returns the chosen particle. Invert the event if pz(Signal)<0.
+   *  isInverted is set to true when the chosen particle is inverted.
+   *  The signal particle is forced to decay inside this function. 
+   *  hasFlipped is set to true if the particle is flipped by EvtGen
+   *  to generate CP violation. 
    */
-  HepMC::GenParticle * chooseAndRevert( const ParticleVector & particleList ) ;
+  HepMC::GenParticle * chooseAndRevert( const ParticleVector & particleList ,
+                                        bool & isInverted , 
+                                        bool & hasFlipped ) ;
 
   /** Ensures correct multiplicity of signal particles with an accept/reject
    *  algorithm.
@@ -162,11 +168,14 @@ protected:
    *  @param[out] antiparticleCounter  Number of anti-particles in particleList
    *  @param[in]  onlyForwardParticles If true, count only particles and 
    *                                   anti-particles with pz>0.
+   *  @param[in]  isInverted           If true, the first particle in the
+   *                                   particleList has been inverted z -> -z
    */
   void updateCounters( const ParticleVector & particleList , 
                        unsigned int & particleCounter , 
                        unsigned int & antiparticleCounter ,
-                       bool onlyForwardParticles ) const ;
+                       bool onlyForwardParticles , 
+                       bool isInverted ) const ;
   
  private:
   /** Add to an existing event a new decay tree.

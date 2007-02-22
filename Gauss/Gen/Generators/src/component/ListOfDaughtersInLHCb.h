@@ -1,4 +1,4 @@
-// $Id: ListOfDaughtersInLHCb.h,v 1.1 2006-10-23 15:56:53 robbep Exp $
+// $Id: ListOfDaughtersInLHCb.h,v 1.2 2007-02-22 13:30:24 robbep Exp $
 #ifndef GENERATORS_LISTOFDAUGHTERSINLHCB_H 
 #define GENERATORS_LISTOFDAUGHTERSINLHCB_H 1
 
@@ -39,9 +39,7 @@ class ListOfDaughtersInLHCb : public GaudiTool, virtual public IGenCutTool {
    */
   virtual bool applyCut( ParticleVector & theParticleVector , 
                          const HepMC::GenEvent * theEvent , 
-                         const LHCb::GenCollision * theCollision , 
-                         IDecayTool * theDecayTool , bool cpMixture , 
-                         const HepMC::GenParticle * theSignalAtReset ) const ;
+                         const LHCb::GenCollision * theCollision ) const ;
 
  private:
   /** Study a particle a returns true when all stable daughters

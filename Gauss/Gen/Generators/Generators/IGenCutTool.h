@@ -1,4 +1,4 @@
-// $Id: IGenCutTool.h,v 1.5 2006-10-01 22:43:38 robbep Exp $
+// $Id: IGenCutTool.h,v 1.6 2007-02-22 13:30:24 robbep Exp $
 #ifndef GENERATORS_IGENCUTTOOL_H 
 #define GENERATORS_IGENCUTTOOL_H 1
 
@@ -31,7 +31,7 @@ class IDecayTool ;
  *  @date   2005-08-17
  */
 
-static const InterfaceID IID_IGenCutTool( "IGenCutTool" , 3 , 0 ) ;
+static const InterfaceID IID_IGenCutTool( "IGenCutTool" , 5 , 0 ) ;
 
 class IGenCutTool : virtual public IAlgTool {
 public:
@@ -52,18 +52,11 @@ public:
    *  @param[in]     theCollision       Hard process information of the
    *                                    interaction which can be used by
    *                                    the cut to take the decision.
-   *  @param[in]     theDecayTool       tool to generate the signal decay
-   *                                    before applying the cut.
-   *  @param[in]     cpMixture          indicate the generation of a CP mixture
-   *  @param[in]     theSignalAtRest    signal at reset (for forced 
-   *                                    fragmentation).
    *  @return        true  if the event passes the generator level cut.
    */
   virtual bool applyCut( ParticleVector & theParticleVector , 
                          const HepMC::GenEvent * theGenEvent ,
-                         const LHCb::GenCollision * theCollision ,
-                         IDecayTool * theDecayTool , bool cpMixture ,
-                         const HepMC::GenParticle * theSignalAtRest ) 
+                         const LHCb::GenCollision * theCollision ) 
     const = 0 ;
 };
 #endif // GENERATORS_ICUTTOOL_H

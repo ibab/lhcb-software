@@ -1,4 +1,4 @@
-// $Id: BiasedBB.h,v 1.2 2006-10-01 22:43:38 robbep Exp $
+// $Id: BiasedBB.h,v 1.3 2007-02-22 13:30:24 robbep Exp $
 #ifndef GENERATORS_BIASEDBB_H 
 #define GENERATORS_BIASEDBB_H 1
 
@@ -30,9 +30,7 @@ class BiasedBB : public GaudiTool, virtual public IGenCutTool {
    */
   virtual bool applyCut( ParticleVector & theParticleVector , 
                          const HepMC::GenEvent * theGenEvent , 
-                         const LHCb::GenCollision * theCollision , 
-                         IDecayTool * theDecayTool , bool cpMixture , 
-                         const HepMC::GenParticle * theSignalAtRest ) const ;
+                         const LHCb::GenCollision * theCollision ) const ;
   
  private:
   /// Maximum value of eta (set by options) 

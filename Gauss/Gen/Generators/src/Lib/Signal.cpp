@@ -1,4 +1,4 @@
-// $Id: Signal.cpp,v 1.18 2006-10-31 22:17:09 robbep Exp $
+// $Id: Signal.cpp,v 1.19 2007-02-22 13:30:24 robbep Exp $
 // Include files 
 
 // local
@@ -291,9 +291,13 @@ StatusCode Signal::fillHepMCEvent( HepMC::GenParticle * theNewParticle ,
 // Choose one particle in acceptance 
 //=============================================================================
 HepMC::GenParticle * Signal::chooseAndRevert( const ParticleVector & 
-                                              theParticleList ) {
+                                              theParticleList , 
+                                              bool & isInverted ,
+                                              bool & hasFlipped ) {
   HepMC::GenParticle * theSignal ;
-  
+  isInverted = false ;
+  hasFlipped = false ;
+
   unsigned int nPart = theParticleList.size() ;
   if ( nPart > 1 ) {
     unsigned int iPart = 
@@ -310,8 +314,12 @@ HepMC::GenParticle * Signal::chooseAndRevert( const ParticleVector &
 
   if ( theSignal -> momentum().pz() < 0 ) {
     revertEvent( theSignal -> parent_event() ) ;
-    m_nInvertedEvents++ ;
+    isInverted = true ;
   }
+
+  // now force the particle to decay
+  if ( m_cpMixture ) m_decayTool -> enableFlip() ;
+  m_decayTool -> generateSignalDecay( theSignal , hasFlipped ) ;
   
   return theSignal ;
 }
@@ -332,18 +340,23 @@ bool Signal::ensureMultiplicity( const unsigned int nSignal ) {
 void Signal::updateCounters( const ParticleVector & particleList , 
                              unsigned int & particleCounter , 
                              unsigned int & antiparticleCounter ,
-                             bool onlyForwardParticles ) const {
+                             bool onlyForwardParticles , 
+                             bool isInverted ) const {
   int nP( 0 ) , nAntiP( 0 ) ;
   ParticleVector::const_iterator from = particleList.begin() ;
   ParticleVector::const_iterator to = particleList.end() ;
   
   if ( onlyForwardParticles ) {
-    nP = std::count_if( from , to , isForwardParticle() ) ;
-    nAntiP = std::count_if( from , to , isForwardAntiParticle() ) ;
+    // if the particle has been inverted z -> -z, do not count it
+    if ( ! isInverted ) {
+      nP = std::count_if( from , to , isForwardParticle() ) ;
+      nAntiP = std::count_if( from , to , isForwardAntiParticle() ) ;
+    }
   } else {
     nP = std::count_if( from , to , isParticle() ) ;
     nAntiP = particleList.size() - nP ;
   }
+
   particleCounter += nP ;
   antiparticleCounter += nAntiP ;
 }

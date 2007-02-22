@@ -1,4 +1,4 @@
-// $Id: Special.cpp,v 1.7 2007-01-12 15:17:46 ranjard Exp $
+// $Id: Special.cpp,v 1.8 2007-02-22 13:30:24 robbep Exp $
 // Include files 
 
 // local
@@ -72,8 +72,7 @@ bool Special::generate( const unsigned int /* nPileUp */ ,
     bool passCut = true ;
     if ( 0 != m_cutTool ) 
       passCut = m_cutTool -> applyCut( theParticleList , theGenEvent , 
-                                       theGenCollision , m_decayTool , 
-                                       false , 0 ) ;
+                                       theGenCollision ) ;
     
     if ( passCut ) {
       m_nEventsAfterCut++ ;

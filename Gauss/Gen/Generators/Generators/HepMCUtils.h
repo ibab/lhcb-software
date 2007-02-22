@@ -1,4 +1,4 @@
-// $Id: HepMCUtils.h,v 1.6 2006-10-01 22:43:38 robbep Exp $
+// $Id: HepMCUtils.h,v 1.7 2007-02-22 13:30:24 robbep Exp $
 #ifndef GENERATORS_HEPMCUTILS_H 
 #define GENERATORS_HEPMCUTILS_H 1
 
@@ -103,6 +103,8 @@ HepMCUtils::IsBAtProduction( const HepMC::GenParticle * thePart ) {
 //=============================================================================
 inline 
 void HepMCUtils::RemoveDaughters( HepMC::GenParticle * theParticle ) {
+  if ( 0 == theParticle ) return ;
+  
   HepMC::GenVertex * EV = theParticle -> end_vertex() ;
   
   if ( 0 == EV ) return ;

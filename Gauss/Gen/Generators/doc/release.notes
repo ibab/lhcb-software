@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.89 2007-02-08 17:46:06 gcorti Exp $
+! $Id: release.notes,v 1.90 2007-02-22 13:30:24 robbep Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Gen/Generators
 ! Responsible : Patrick ROBBE
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
+
+! 2007-02-20 - Patrick Robbe
+ - Fix efficiency counters for CP violation decay modes (=> change IGenCutTool
+   applyCut function arguments). The signal decay is now always performed
+   before applying any generator cut.
 
 !====================== Generators v6r8 2007-02-08 ===========================
 ! 2007-02-08 - Gloria Corti
