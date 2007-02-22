@@ -16,6 +16,8 @@
       <import name="Kernel/CaloCellID"/>
       <location name="Ecal" place="/Event/Trig/L0/EcalRaw"/>
       <location name="Hcal" place="/Event/Trig/L0/HcalRaw"/>
+      <location name="EcalPin" place="/Event/Trig/L0/EcalPin"/>
+      <location name="HcalPin" place="/Event/Trig/L0/HcalPin"/>
       <attribute 
 	desc    = "8-bit transverse energy" 
 	name    = "adc" 
