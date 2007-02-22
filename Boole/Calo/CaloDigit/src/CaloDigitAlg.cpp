@@ -1,4 +1,4 @@
-// $Id: CaloDigitAlg.cpp,v 1.14 2006-11-23 14:15:52 cattanem Exp $
+// $Id: CaloDigitAlg.cpp,v 1.15 2007-02-22 23:57:20 odescham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -200,6 +200,8 @@ StatusCode CaloDigitAlg::execute() {
   if ( "" != m_inputPrevData ) {
     if ( exist<LHCb::MCCaloDigits>( m_inputPrevData ) ) prevDigits = get<LHCb::MCCaloDigits>( m_inputPrevData );
   }
+
+  
 
   //***  prepare and register the output container it into the Transient Store!
 

@@ -1,0 +1,93 @@
+//---------------------------------------------------------------------------
+//
+// Boole setup to produce  'Calibration Events'  (Calo LED data)
+//
+// Warning : banks from other sub-det are remove from rawEvent
+// On real Calib. events banks (containing noise only) will be there
+//
+//---------------------------------------------------------------------------
+
+
+//==============================================================
+// Led data :
+//==============================================================
+
+EcalPinDigit.LedRate   = 50;
+EcalPinDigit.LedSignal = {100.};
+EcalPinDigit.LedSpread = {2.};
+
+HcalPinDigit.LedRate   = 50;
+HcalPinDigit.LedSignal = {75. , 125.};
+HcalPinDigit.LedSpread = {2.  ,  5.};
+
+EcalPinDigit.OutputLevel  = 3;
+EcalDigit.OutputLevel  = 3;
+
+HcalPinDigit.OutputLevel  = 3;
+HcalDigit.OutputLevel  = 3;
+
+MessageSvc.setDebug +={"EcalDet.BuildMonitoringSystem"};
+MessageSvc.setDebug +={"HcalDet.BuildMonitoringSystem"};
+
+
+ApplicationMgr.EvtMax = 500;
+
+#include "$BOOLEOPTS/RawWriter.opts"
+RawWriter.Output = "DATAFILE='PFN:0000000_00000000_1.raw' TYP='POOL_ROOTTREE' OPT='REC'";
+
+
+
+//==============================================================
+// Modified Boole setup :
+//==============================================================
+#include "$STDOPTS/DC06Conditions.opts"
+PoolDbCacheSvc.Catalog = {"xmlcatalog_file:NewCatalog.xml"};
+EventSelector.Input = {
+  "DATAFILE='PFN:rfio:/castor/cern.ch/grid/lhcb/production/DC06/v1-lumi2/00001330/SIM/00001330_00000103_1.sim' TYP='POOL_ROOTTREE' OPT='READ'"
+};  // No matter the type 
+EventSelector.PrintFreq = -1;
+MessageSvc.OutputLevel = 3;
+//==============================================================
+#include "$STDOPTS/LHCbApplication.opts"
+#include "$STDOPTS/DigiDicts.opts"
+// Phases to be executed
+ApplicationMgr.TopAlg += { "ProcessPhase/Init"
+                         , "ProcessPhase/Digi"
+                         , "ProcessPhase/Output"
+                         };
+// Detectors to be processed in each phase
+Init.DetectorList += { "Boole", "Data"};
+Digi.DetectorList += { "CALO" };
+// Initialization (Empty events)
+InitBooleSeq.Members += { "BooleInit/Boole" };
+InitDataSeq.Members = { "EventNodeKiller/MCKill" };
+MCKill.Nodes = { "MC" };
+// Subdetector algorithms
+//--------------------------------------------------------------
+// Calorimeter digitisation
+DigiCALOSeq.Members = { 
+  "CaloSignalAlg/SpdSignal",
+  "CaloSignalAlg/PrsSignal",
+  "CaloSignalAlg/EcalSignal",
+  "CaloSignalAlg/HcalSignal",
+  "CaloDigitAlg/SpdDigit",
+  "CaloDigitAlg/PrsDigit",
+  "CaloDigitAlg/EcalDigit",
+  "CaloDigitAlg/HcalDigit",
+
+  "CaloPinDigitAlg/EcalPinDigit",    // Produce LED Signal
+  "CaloPinDigitAlg/HcalPinDigit",    // Produce LED Signal
+
+  "CaloFillPrsSpdRawBuffer"
+ ,"CaloFillRawBuffer/EcalFillRawBuffer"
+ ,"CaloFillRawBuffer/HcalFillRawBuffer"
+};
+// set the coding type for TELL1: 
+EcalFillRawBuffer.DataCodingType = 2;
+HcalFillRawBuffer.DataCodingType = 2;
+CaloFillPrsSpdRawBuffer.DataCodingType = 3;
+
+
+//--------------------------------------------------------------
+// Relations to MC truth. Built unconditionally regardless of monitoring
+//--------------------------------------------------------------

@@ -1,4 +1,4 @@
-// $Id: CaloDigit_load.cpp,v 1.7 2006-03-15 12:54:14 odescham Exp $
+// $Id: CaloDigit_load.cpp,v 1.8 2007-02-22 23:57:20 odescham Exp $
 // Include files 
 
 
@@ -16,4 +16,5 @@ DECLARE_FACTORY_ENTRIES(CaloDigit) {
  
   DECLARE_ALGORITHM( CaloSignalAlg );
   DECLARE_ALGORITHM( CaloDigitAlg  );
+  DECLARE_ALGORITHM( CaloPinDigitAlg  );
 }

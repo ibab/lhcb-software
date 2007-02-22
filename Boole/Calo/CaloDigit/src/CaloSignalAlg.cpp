@@ -1,4 +1,4 @@
-// $Id: CaloSignalAlg.cpp,v 1.11 2006-11-23 14:15:52 cattanem Exp $
+// $Id: CaloSignalAlg.cpp,v 1.12 2007-02-22 23:57:20 odescham Exp $
 
 /// Kernel
 #include "Kernel/Point3DTypes.h"
@@ -132,6 +132,7 @@ StatusCode CaloSignalAlg::execute() {
   }
   
   // get the input data
+  if(!exist<LHCb::MCCaloHits>( m_inputData ))return StatusCode::SUCCESS;
   LHCb::MCCaloHits* hits = get<LHCb::MCCaloHits>( m_inputData );
 
   // initialize the background random number
