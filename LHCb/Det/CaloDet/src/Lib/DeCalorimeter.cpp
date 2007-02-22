@@ -1,4 +1,4 @@
-// $Id: DeCalorimeter.cpp,v 1.33 2006-12-15 16:15:07 cattanem Exp $ 
+// $Id: DeCalorimeter.cpp,v 1.34 2007-02-22 23:17:18 odescham Exp $ 
 // ============================================================================
 #define  CALODET_DECALORIMETER_CPP 1
 // ============================================================================
@@ -42,8 +42,10 @@
  */
 DeCalorimeter::DeCalorimeter( const std::string& name )
   :  DetectorElement     ( name       )
-  ,  m_initialized       ( false      )
-  ,  m_cardsInitialized  ( false      )
+  ,  m_initialized            ( false  )
+  ,  m_cardsInitialized       ( false  )
+  ,  m_tell1sInitialized      ( false  )
+  ,  m_monitoringInitialized  ( false  )
   ,  m_caloIndex         ( -1         )
   ,  m_maxEtInCenter     ( 10.0 * Gaudi::Units::GeV )
   ,  m_maxEtSlope        ( 0.0  * Gaudi::Units::GeV )
@@ -66,6 +68,8 @@ DeCalorimeter::~DeCalorimeter() {};
 // ============================================================================
 const CLID& DeCalorimeter::clID () const { return DeCalorimeter::classID() ; }
 
+
+
 //----------------------------------------------------------------------------
 // ** Defines the maximum and center Row and Column in the cell number
 //----------------------------------------------------------------------------
@@ -81,10 +85,14 @@ void DeCalorimeter::setCoding( const unsigned int nb ) {
 // ============================================================================
 StatusCode DeCalorimeter::initialize() 
 {
-  /// initialze the base 
+
+
+  /// initialize the base 
   StatusCode sc = DetectorElement::initialize();
-  if ( sc.isFailure() ) { return sc ; }
-  
+  if ( sc.isFailure() ) { return sc ; }  
+  MsgStream msg( msgSvc(), name() );
+  msg << MSG::DEBUG << "'INITIALIZE DeCalorimeter "<< name() <<endreq;
+
   {
     // collect the sub-calorimeters
     typedef IDetectorElement::IDEContainer::iterator _IT ;
@@ -131,6 +139,7 @@ StatusCode DeCalorimeter::initialize()
     pars.erase( it );
   }
   
+
   //== Get other information from the condition database
   Condition* gain = condition( "Gain" );
   if ( 0 == gain ) {
@@ -172,10 +181,20 @@ StatusCode DeCalorimeter::initialize()
   m_centralHoleX = hardware->paramAsInt("centralHoleX");
   m_centralHoleY = hardware->paramAsInt("centralHoleY");
   
-  if ( sc.isSuccess() ) { sc = buildCells (); }
-
-  if ( sc.isSuccess() ) { sc = buildCards (); }
   
+  if ( sc.isSuccess() ) {msg << MSG::DEBUG << "INIT cells " << endreq; sc = buildCells (); }
+  if ( sc.isSuccess() ) {msg << MSG::DEBUG << "INIT Cards " << endreq; sc = buildCards (); }
+  if ( sc.isSuccess() ) {msg << MSG::DEBUG << "INIT Tell1s " << endreq; sc = buildTell1s (); }
+  if ( sc.isSuccess() ) {msg << MSG::DEBUG << "INIT Monitoring " << endreq; sc = buildMonitoringSystem (); }
+  
+  if ( sc.isSuccess() ) {
+    msg << MSG::DEBUG << "'DeCalorimeter correctly initalized "<< name() <<endreq;
+  }
+  else{
+    msg << MSG::DEBUG << "'DeCalorimeter initalization failed "<< name() <<endreq;
+  }
+  
+
   Assert ( 0 != geometry() , "Invalid IGeometryInfo!" ) ;
   
   return sc;
@@ -267,8 +286,11 @@ StatusCode DeCalorimeter::buildCells( ) {
         LHCb::CaloCellID id( m_caloIndex, Area , Row , Column ) ;
         m_cells.addEntry( CellParam(id) , id );  // store the new cell
 
+
         pointGlobal = geoData->toGlobal( pointLocal );
         m_cells[id].setCenterSize( pointGlobal , cellSize[ Area ] ) ;
+        m_cells[id].setValid( true );
+
 
         double gain = ( maxEtInCenter() / m_cells[id].sine() ) + maxEtSlope();
         gain        = gain / (double) adcMax() ;
@@ -410,7 +432,7 @@ StatusCode DeCalorimeter::buildCards( )  {
 
   Condition* cond = condition( "CellsToCards" );
   if ( 0 == cond ) {
-    msg << MSG::DEBUG << "No 'CellsToCards' condition" << endreq;  // SPD case
+    msg << MSG::ERROR << "No 'CellsToCards' condition" << endreq;  // SPD case
     return StatusCode::SUCCESS;
   }
   if ( !cond->exists( "cards" ) ) {
@@ -418,13 +440,21 @@ StatusCode DeCalorimeter::buildCards( )  {
     return StatusCode::FAILURE;
   }
 
+  if ( !cond->exists( "PinArea" ) ) {
+    msg << MSG::INFO << "No PIN FE-board " << endreq;
+    m_pinArea = -1;
+  } else{
+    m_pinArea = cond->paramAsInt( "PinArea" );
+  }
+  
+  int aSize = cond->paramAsInt( "CardArraySize" );
   std::vector<int> temp = cond->paramAsIntVect( "cards" );
-  msg << MSG::DEBUG << "The calorimeter has " << temp.size()/8
+  msg << MSG::DEBUG << "The calorimeter has " << temp.size()/aSize
       << " front end cards." << endreq;
   int firstCrate = temp[6];
   int prevValidation = -1;
-  for ( unsigned int kk = 0; temp.size()/8 > kk  ; ++kk ) {
-    int ll = 8*kk;
+  for ( unsigned int kk = 0; temp.size()/aSize > kk  ; ++kk ) {
+    int ll = aSize*kk;
     int cardNum = temp[ll];
     int area    = temp[ll+1];
     int fCol    = temp[ll+2];
@@ -439,17 +469,31 @@ StatusCode DeCalorimeter::buildCards( )  {
     int cornerCard   = -1;
     int previousCard = -1;
 
-    bool first = true;
+    
+    // build the FEcard
+    CardParam myCard(area, fRow, fCol , cardNum, crate, slot);
+    if(m_pinArea == area)myCard.setIsPin(true);
+    if ( (int) kk != cardNum ) {
+      msg << MSG::ERROR << "FE-Card number not in sequence: Found " << cardNum
+          << " expect " << kk << endreq;
+      return StatusCode::FAILURE;
+    }
+
+    // Update CellParam
+    LHCb::CaloCellID dummy( 0, 0, 0, 0 );
     for ( int row = fRow; lRow >= row; ++row ) {
       for ( int col = fCol; lCol >= col; ++col ) {
-        LHCb::CaloCellID id( m_caloIndex, area, row, col );
-        if ( valid( id ) ) {
+        LHCb::CaloCellID id( m_caloIndex, area, row, col );        
+        if ( !valid( id ) ) {
+          // Add 32 dummy cellIDs in PIN FE-board
+          // Will be updated in BuildMonitoring
+         myCard.addID( dummy );
+        }else{  
           m_cells[id].setFeCard( cardNum, col-fCol, row-fRow );
-
-          first = false;
+          myCard.addID( id ); // update myCard
 
           //== Find the cards TO WHICH this card sends data.
-          //== previous card in crate: only non zero row numer
+          //== previous card in crate: only non zero row number
           if ( (row == fRow ) && (0 < fRow) ) {
             LHCb::CaloCellID testID( m_caloIndex, area , row-1 , col );
             if ( cardNumber(testID) >= 0 ) {
@@ -477,6 +521,7 @@ StatusCode DeCalorimeter::buildCards( )  {
       }
     }
 
+
     int validationCard = 2 * ( crate-firstCrate);
     if ( 7 < slot ) validationCard += 1;
     if ( prevValidation == validationCard ) {
@@ -484,15 +529,18 @@ StatusCode DeCalorimeter::buildCards( )  {
     } else {
       prevValidation = validationCard;
     }
-    CardParam myCard(area, fRow, fCol );
-    myCard.setNeighboringCards( downCard, leftCard, cornerCard , previousCard);
-    myCard.setValidationNumber( validationCard );
+
+    if( area != m_pinArea ){
+      myCard.setNeighboringCards( downCard, leftCard, cornerCard , previousCard);
+      myCard.setValidationNumber( validationCard );
+    }
+    
     m_feCards.push_back( myCard ); // add card
 
     msg << MSG::DEBUG
-        << format ( "Card %3d (crate %2d slot%2d) has down %3d left %3d corner %3d previous %3d validation %2d",
+        << format ( "Card %3d (crate %2d slot%2d) has down %3d left %3d corner %3d previous %3d validation %2d #channels %4d",
                     cardNum, crate, slot, downCard, leftCard, cornerCard, 
-                    previousCard, validationCard )
+                    previousCard, validationCard,myCard.ids().size() )
         << endreq;
   }
 
@@ -500,6 +548,269 @@ StatusCode DeCalorimeter::buildCards( )  {
 
   return StatusCode::SUCCESS;
 };
+
+
+//--------------------------------
+// ** Construct the Tell1 Readout 
+//--------------------------------
+
+StatusCode DeCalorimeter::buildTell1s( )  {
+
+  if( m_tell1sInitialized ) { return StatusCode::SUCCESS; }
+  
+  int index =  CaloCellCode::CaloNumFromName( name() );
+  std::string myName = CaloCellCode::CaloNameFromNum( index ) + "Det";
+  MsgStream msg( msgSvc(), myName + ".BuildTell1s" );
+  
+  m_tell1sInitialized = true;
+  m_tell1Boards.clear();
+  
+  Condition* cond = condition( "CellsToCards" );
+  if ( 0 == cond ) {
+    msg << MSG::WARNING << "No 'CellsToCards' condition" << endreq;  // SPD case
+    return StatusCode::SUCCESS;
+  }
+  if ( !cond->exists( "Tell1" ) ) {
+    msg << MSG::WARNING << "No 'Tell1' parameters in 'CellsToCards' condition" << endreq;
+    return StatusCode::SUCCESS;
+  }
+  
+  std::vector<int> temp = cond->paramAsIntVect( "Tell1" );
+  std::vector<int>::iterator it = temp.begin();
+  while( temp.end() > it ) {
+    unsigned int num = (*it++);
+    if ( num != m_tell1Boards.size() ) {
+      msg << MSG::ERROR << "TELL1 number not in sequence: Found " << num 
+          << " expect " << m_tell1Boards.size() << endreq;
+      return StatusCode::FAILURE;
+    }
+    int nb  = (*it++);
+    Tell1Param tell1( num );
+    msg << MSG::DEBUG << " create Tell1 number " << num << " handling : " << endreq;
+    while ( 0 < nb-- ) {
+      unsigned int feCard = *it++;
+      msg << MSG::DEBUG << "   ----> FE-Card number " << feCard << endreq;
+      if ( m_feCards.size() < feCard ) {
+        msg << MSG::ERROR << "**** TELL1 " << num << " reads unknown card " << feCard << endreq;
+        return StatusCode::FAILURE;
+      }
+      if( m_feCards[feCard].tell1() > 0 ){
+        msg << MSG::ERROR << "**** FE-Card " << feCard << " already linked to Tell1 board " 
+            << m_feCards[feCard].tell1() << " - Cannot link to Tell1 board " << num << endreq;
+        return StatusCode::FAILURE;
+      }
+      m_feCards[feCard].setTell1( num );
+      tell1.addFeCard( feCard );
+      if( m_feCards[feCard].isPinCard() )tell1.setReadPin( true );
+    } 
+    if ( tell1.readPin() )m_pinTell1s.push_back( num );
+    m_tell1Boards.push_back( tell1 );   
+  }  
+  msg << MSG::DEBUG << "Initialized, " << nTell1s() << " Tell1 board "<< endreq;  
+  return StatusCode::SUCCESS;
+}
+
+
+//----------------------------------------------
+// ** Construct the monitoring readout (LED/PIN)
+//----------------------------------------------
+
+StatusCode DeCalorimeter::buildMonitoringSystem( )  {
+
+  int index =  CaloCellCode::CaloNumFromName( name() );
+  std::string myName = CaloCellCode::CaloNameFromNum( index ) + "Det";
+  MsgStream msg( msgSvc(), myName + ".BuildMonitoringSystem" );
+
+  // ** do not initialize, if already initialized
+  if( m_monitoringInitialized ) { return StatusCode::SUCCESS; }
+  m_monitoringInitialized = true;
+  
+  // load conditions
+  Condition* cond = condition( "MonitoringSystem" );
+  if ( 0 == cond ) {
+    msg << MSG::WARNING << "No 'MonitoringSystem' condition" << endreq; // Spd/Prs
+    return StatusCode::SUCCESS;
+  }
+  if ( !cond->exists( "PIN" ) ) {
+    msg << MSG::WARNING << "No 'PIN' parameters in 'Monitoring' condition" << endreq;
+    return StatusCode::FAILURE;
+  }
+
+  std::vector<int> temp = cond->paramAsIntVect( "PIN" );
+  int ll = -1;
+  int kk = -1;
+  while ( ll+1 < (int) temp.size() ) {
+    // constant size sub-array
+    int box       = temp[++ll];
+    int pinIndex  = temp[++ll];
+    int side      = temp[++ll]; // 0 = Left ; 1 = Right
+    int crate     = temp[++ll];
+    int slot      = temp[++ll];
+    int adc       = temp[++ll];
+    int cLed      = temp[++ll];
+    int rLed      = temp[++ll];
+    int nReg      = temp[++ll];
+    // floating size  sub-array      
+    int area      = temp[++ll];
+    int fCol      = temp[++ll];
+    int fRow      = temp[++ll];
+    int lCol      = temp[++ll];
+    int lRow      = temp[++ll];
+    int area2 = -1;
+    int fCol2 = -1;
+    int fRow2 = -1;
+    int lCol2 = -1;
+    int lRow2 = -1;
+    if( 2 == nReg ){
+      area2      = temp[++ll];
+      fCol2      = temp[++ll];
+      fRow2      = temp[++ll];
+      lCol2      = temp[++ll];
+      lRow2      = temp[++ll];
+    }
+    kk++;
+    // Define a CaloCellId for PIN-diode : 
+    // area = m_pinArea,  
+    // relative PinRow/PinCol derives from adc 
+    // absolute PinRow/PinCol according to Card condDB 
+
+    // Relative position within card (8x4)
+    int pinRow = (int) adc/nColCaloCard;
+    int pinCol = adc - pinRow * nColCaloCard;
+    // Absolute Row & Col wrt to CardParam
+    int iCard = cardIndexByCode( crate , slot );
+    if( 0 > iCard ){
+      msg << MSG::ERROR << " No FE-Card defined in crate/slot "
+          << crate << "/" << slot << endreq;
+      return StatusCode::FAILURE;
+      
+    }
+    LHCb::CaloCellID pinId(m_caloIndex, 
+                           m_pinArea, 
+                           m_feCards[iCard].firstRow() + pinRow, 
+                           m_feCards[iCard].firstColumn() + pinCol );    
+    
+    CaloPin pin(pinId);
+    pin.addCaloRegion(area, fCol,fRow,lCol,lRow);
+    if( area2 >= 0)pin.addCaloRegion(area2,fCol2,fRow2,lCol2,lRow2); // Hcal Leds can be  distributed on 2 areas
+    pin.setPinLocation(box,pinIndex,side);
+    pin.setFELocation(crate,slot,adc);
+    m_pins.addEntry( pin  , pinId ); // store CaloPin    
+    msg << MSG::DEBUG << "PIN diode " << kk << " " << pin << endreq;
+
+
+    // built a new VALID 'virtual' cell associated with the PIN 
+    m_cells.addEntry(CellParam(pinId),pinId);
+    m_cells[pinId].addPin(pinId);
+    m_cells[pinId].setValid( true ); 
+    m_cells[pinId].setFeCard( iCard, pinCol , pinRow);
+    // update FE-Card
+    std::vector<LHCb::CaloCellID>& ids = m_feCards[iCard].ids();
+    ids[adc] = pinId;
+    
+
+    // Built the Led system
+    int rSize = (lRow-fRow+1)/rLed;
+    int cSize = (lCol-fCol+1)/cLed;
+    for(int ir = 1; ir != rLed+1 ; ir++){
+      for(int ic = 1; ic != cLed+1 ; ic++){
+
+        // Local numbering (ic,ir) -> ic + (ir-1)*cLed
+        //   +---+---+  
+        //  | 3 | 4 |  
+        //  +-------+  
+        // | 1 | 2 |  
+        // +-------+  
+
+        // LED numbering (jc,jr) -> index - as in Irina document
+        //       C-side     A-side
+        //   +---+---+  +---+---+
+        //  | 2 | 1 |  | 1 | 2 |
+        //  +-------+  +-------+
+        // | 4 | 3 |  | 3 | 4 |
+        // +-------+  +-------+
+
+        int jr = rLed+1-ir;
+        int jc = ic;
+        if(0 == side)jc = cLed+1-ic;
+        int ledIndex = jc + (jr-1)*cLed;
+
+        int fColLed = fCol + (ic-1)*cSize ;
+        int lColLed = fColLed + cSize -1 ;
+        int fRowLed = fRow + (ir-1)*rSize ;
+        int lRowLed = fRowLed + rSize -1;        
+
+        // Define a CaloCellId for LED == first cell ID 
+        LHCb::CaloCellID ledId(m_caloIndex, area , fRowLed, fColLed);
+        CaloLed   led( ledId );
+        led.setIndex(ledIndex);
+        led.addCaloRegion(area, fColLed,fRowLed,lColLed,lRowLed);
+        led.setPin(pinId);        
+        m_pins[pinId].addLed(ledId); // update CaloPin 
+        // Hcal Leds can be distributed on 2 areas
+        if( 0 <= area2 ){
+          if( 1 != rLed*cLed ){
+            msg << MSG::ERROR 
+                << "Don't know how to distributed Leds array on several Calo area" 
+                << endreq;
+            return StatusCode::FAILURE;
+          }
+          led.addCaloRegion(area2,fCol2,fRow2,lCol2,lRow2);
+        }
+        m_leds.addEntry(led, ledId); // store CaloLed
+        msg << MSG::DEBUG << "   --- " << led << endreq;
+      }
+    }
+    
+ 
+    // Link to cell
+    std::vector<LHCb::CaloCellID> leds = m_pins[pinId].leds();
+    for(std::vector<LHCb::CaloCellID>::iterator iled=leds.begin() ; 
+        iled != leds.end() ; ++iled ) {
+      
+      LHCb::CaloCellID ledId = (*iled);
+      CaloLed& led = m_leds[ ledId ];
+      
+      for( unsigned int ireg = 0 ; ireg < led.areas().size();  ++ireg ){
+        int ar = led.areas()[ireg];
+        int fr = led.firstRows()[ireg];
+        int lr = led.lastRows()[ireg];
+        int fc = led.firstColumns()[ireg];
+        int lc = led.lastColumns()[ireg];
+       for ( int row = fr ; lr >= row; ++row ) {
+         for ( int col = fc; lc >= col; ++col ) {
+           LHCb::CaloCellID id( m_caloIndex, ar, row, col );
+           msg << MSG::VERBOSE << " Connected cells to LED/Pin " << id << " valid ? " << valid(id) << endreq;
+           if ( valid( id ) ) {
+             m_cells[id].addPin( pinId );
+             m_cells[id].addLed( ledId );
+             m_cells[pinId].addLed( ledId); // add the Led to the virtual pin cell
+             m_leds[ledId].addCell(id);  // update led            
+             m_pins[pinId].addCell(id);  // update pin
+           }
+         }  
+       }
+      }
+    }
+  }      
+  
+
+  // check all cells (including virtual) are connected to a Led
+  for(CaloVector<CellParam>::iterator icel = m_cells.begin(); icel != m_cells.end() ; ++icel){
+    msg << MSG::VERBOSE << " Cell " << (*icel).cellID() << " <- Led " << (*icel).leds() << " -> Pin " << (*icel).pins() << endreq;
+    if(  0 == (*icel).leds().size() ){
+      msg << MSG::ERROR << "Cell id = " << (*icel).cellID() << " is not connect to the monitoring system."<< endreq;
+      return StatusCode::FAILURE;
+    }    
+  }
+
+
+  msg << MSG::DEBUG << "Initialized, " << m_leds.size() << " monitoring LEDs" << endreq;
+  msg << MSG::DEBUG << "Initialized, " << m_pins.size() << " PIN-diodes." << endreq;
+
+  return StatusCode::SUCCESS;
+};
+
 
 // ============================================================================
 /// print to std::stream
@@ -623,6 +934,3 @@ MsgStream&    DeCalorimeter::printOut( MsgStream&    os ) const {
   return os ;
 };
 
-// ============================================================================
-// The End
-// ============================================================================

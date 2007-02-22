@@ -1,57 +1,35 @@
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.2  2001/07/17 17:26:52  ibelyaev
-// modifications to improve Doxygen documentation
-//
-// Revision 1.1  2001/07/02 17:17:59  ibelyaev
-// improvements in readability of DeCalorimeter.h
-//
 // ============================================================================
-#define  CALODET_CARDPARAM_CPP 1 
+#define  CALODET_TELL1PARAM_CPP 1 
 // ============================================================================
 /// Include files
 /// local
 #include "CaloDet/DeCalorimeter.h"
-#include "CaloDet/CardParam.h"
+#include "CaloDet/Tell1Param.h"
 
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : CardParam
+// Implementation file for class : Tell1Param
 //
-// 02/07/2001 : Ivan Belyaev
+// 01/30/2007 : Olivier Deschamps
 //-----------------------------------------------------------------------------
 
 // ============================================================================
 // Standard creator, initializes variables
 // ============================================================================
-CardParam::CardParam( int iArea , 
-                      int iRow  , 
-                      int iCol  ,
-                      int iNum  ,
-                      int iCrate,
-                      int iSlot) 
-  : m_Area           ( iArea )
-    , m_Row            ( iRow )
-    , m_Col            ( iCol )
-    , m_DownNumber     ( -1 )
-    , m_LeftNumber     ( -1 )
-    , m_CornerNumber   ( -1 ) 
-    , m_PreviousNumber ( -1 )
-    ,m_isPin (false)
-    ,m_number( iNum)
-    ,m_crate( iCrate)
-    ,m_slot( iSlot)
-    ,m_tell1 (-1)
+Tell1Param::Tell1Param( int num )
+  : m_number ( num )
 {
-  m_ids.reserve( 64 );
+  m_feCards.reserve( 24 );
+  m_isPin = false;
 } ;
 
 // ============================================================================
 // Destructor
 // ============================================================================
-CardParam::~CardParam(){};
+Tell1Param::~Tell1Param(){};
 
 // ============================================================================
 

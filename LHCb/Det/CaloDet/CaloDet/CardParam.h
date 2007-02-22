@@ -1,5 +1,5 @@
 /// ===========================================================================
-/// $Id: CardParam.h,v 1.4 2005-07-06 15:30:24 ibelyaev Exp $
+/// $Id: CardParam.h,v 1.5 2007-02-22 23:17:18 odescham Exp $
 /// ===========================================================================
 #ifndef CALODET_CARDPARAM_H 
 #define CALODET_CARDPARAM_H 1
@@ -27,7 +27,11 @@ public:
   */
   CardParam( int iArea = 0 , 
              int iRow  = 0 , 
-             int iCol  = 0 ) ;
+             int iCol  = 0 ,
+             int iNum  = 0 ,
+             int iCrate= 0 ,
+             int iSlot = 0
+) ;
   
   /// destructor 
   ~CardParam();
@@ -40,11 +44,19 @@ public:
   int area            () const { return m_Area           ; }
   int firstRow        () const { return m_Row            ; }
   int firstColumn     () const { return m_Col            ; }
+  bool isPinCard      () const { return m_isPin          ; }
+  int tell1           () const { return m_tell1          ; }
+  int  number         () const { return m_number         ; }
+  int  crate          () const { return m_crate          ; }
+  int  slot           () const { return m_slot           ; }
+  int  code           () const { return 16*m_crate+m_slot; }
+
+  std::vector<LHCb::CaloCellID>& ids() { return m_ids; }
   
-  void setValidationNumber( int num ) {
-    m_validationNumber = num;
-  }
   
+  void addID( LHCb::CaloCellID id )    { m_ids.push_back( id ); }  
+  void setTell1(int tell1)             { m_tell1 = tell1; }
+  void setValidationNumber( int num )  {m_validationNumber = num;}  
   void setNeighboringCards  ( const int down  ,   
                               const int left, 
                               const int corner, 
@@ -54,6 +66,8 @@ public:
     m_CornerNumber = corner ; 
     m_PreviousNumber = previous;
   }
+  void setIsPin(bool pin)  {    m_isPin = pin;  }
+  
   
 private:
   
@@ -65,6 +79,13 @@ private:
   int m_CornerNumber;
   int m_PreviousNumber;
   int m_validationNumber;
+  bool m_isPin;
+  int m_number;
+  std::vector<LHCb::CaloCellID> m_ids;
+  int m_crate;
+  int m_slot;
+  int m_code;
+  int m_tell1;
 };
 
 

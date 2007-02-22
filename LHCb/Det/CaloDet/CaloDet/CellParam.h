@@ -1,12 +1,11 @@
 /// ===========================================================================
-// $Id: CellParam.h,v 1.4 2006-05-17 16:01:55 cattanem Exp $
+// $Id: CellParam.h,v 1.5 2007-02-22 23:17:18 odescham Exp $
 #ifndef CALODET_CELLPARAM_H 
 #define CALODET_CELLPARAM_H 1
 /// ===========================================================================
 
 // Include files
 #include "GaudiKernel/PhysicalConstants.h"
-
 class DeCalorimeter;
 
 typedef std::vector<LHCb::CaloCellID> CaloNeighbors ;
@@ -34,8 +33,8 @@ public:
   /// destructor 
   ~CellParam();
   
-  bool                 valid         () const { return size() > 0      ; }   
-  LHCb::CaloCellID           cellID        () const { return m_cellID        ; }
+  bool                 valid         () const { return m_valid      ; }   
+  LHCb::CaloCellID     cellID        () const { return m_cellID        ; }
   double               x             () const { return m_center.x()    ; }
   double               y             () const { return m_center.y()    ; }
   double               z             () const { return m_center.z()    ; }
@@ -48,17 +47,28 @@ public:
   int                  cardRow       () const { return m_cardRow       ; }
   int                  cardColumn    () const { return m_cardColumn    ; }
   
+  
+    
+
+  LHCb::CaloCellID firstPin() const  { return *(m_pin.begin()) ;}
+  LHCb::CaloCellID firstLed() const  { return *(m_led.begin()) ;}    
+  std::vector<LHCb::CaloCellID> pins() const  { return m_pin ;}
+  std::vector<LHCb::CaloCellID> leds() const  { return m_led ;}    
+  
   const CaloNeighbors& neighbors     () const { return m_neighbors     ; }
   const CaloNeighbors& zsupNeighbors () const { return m_zsupNeighbors ; }
   
   // ** To initialize the cell: Geometry, neighbours, gain
   
+  void  setValid( bool valid ) { m_valid = valid ;  }
+
   void  setCenterSize( const Gaudi::XYZPoint& point, double S) {
     m_center = point; 
     m_size   = S; 
     //    m_sine   = sqrt( (point.x()*point.x() + point.y()*point.y()) / 
     //                 point.mag2() ); 
-    m_sine   = point.Rho()/point.R();  // MathCore methods (Cartesian3D)
+    m_sine = 0;
+    if(point.R() != 0)m_sine   = point.Rho()/point.R();  // MathCore methods (Cartesian3D)
     m_time   = point.R() /Gaudi::Units::c_light *Gaudi::Units::ns; //R=sqrt(Mag2)
   }
   
@@ -72,6 +82,8 @@ public:
     m_cardColumn  = relCol;
     m_cardRow     = relRow;
   }
+  void addPin(LHCb::CaloCellID id){ m_pin.push_back(id) ;}
+  void addLed(LHCb::CaloCellID id){ m_led.push_back(id) ;}
   
   bool operator==( const CellParam& c2 ) const { 
     return center() == c2.center() && size() == c2.size(); }
@@ -89,7 +101,9 @@ private:
   int           m_cardColumn     ;
   CaloNeighbors m_neighbors      ; ///< List of neighbors
   CaloNeighbors m_zsupNeighbors  ; ///< List of neighbors in same area
-  
+  bool m_valid;
+  std::vector<LHCb::CaloCellID> m_pin;
+  std::vector<LHCb::CaloCellID> m_led;
 };
 
 /// ===========================================================================

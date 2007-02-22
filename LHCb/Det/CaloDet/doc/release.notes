@@ -1,15 +1,30 @@
-! $Id: release.notes,v 1.66 2006-12-15 16:15:07 cattanem Exp $ 
+! $Id: release.notes,v 1.67 2007-02-22 23:17:18 odescham Exp $ 
 ! =============================================================================
 Package         : CaloDet   
 Package manager : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
+
+
+! 2006-12-15 - Olivier Deschamps
+
+ - Implement the Calo Monitoring System (Led system) in DeCalorimeter
+
+ - BuildMonitoringSystem() in Decalorimeter::initialize()
+
+ - add a lot of new methods in DeCalorimeter to allow the navigation
+   between Cells<->FECard<->Tell1 and Cells<->Leds<->Pins
+
+ - add CaloLed and CaloPin (header and implementation files)
+
+ - add Tell1Param and update CardParam (using CaloDAQ definition)
+
 
 !======================== CaloDet v8r0 2006-12-15 ============================
 ! 2006-12-15 - Marco Cattaneo
  - Use SystemOfUnits.h from GaudiKernel
  - Remove dependency on LHCbDefinitions
  - Cleanup CaloDet_load.cpp
-
+/bin/ls -I InstallArea 
 ! 2006-12-06 - Florence RANJARD
  - apply_pattern install_more_includes
  - fixes for new Plugins
