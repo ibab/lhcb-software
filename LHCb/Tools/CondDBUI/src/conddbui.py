@@ -374,7 +374,7 @@ class CondDB:
             try:
                 if folder.versioningMode() == cool.FolderVersioning.MULTI_VERSION:
                     if tag == '': tag = self.defaultTag
-                    if tag.upper() not in [ '', HEAD ]:
+                    if tag.upper() not in [ '', 'HEAD' ]:
                         obj = folder.findObject(cool.ValidityKey(when), channelID, folder.resolveTag(tag))
                     else:
                         obj = folder.findObject(cool.ValidityKey(when), channelID)
@@ -447,7 +447,7 @@ class CondDB:
                 if folder.versioningMode() == cool.FolderVersioning.MULTI_VERSION:
                     if tag == '':
                         tag = self.defaultTag
-                    if tag.upper() not in [ '', HEAD ]:
+                    if tag.upper() not in [ '', 'HEAD' ]:
                         objIter = folder.browseObjects(cool.ValidityKey(fromTime), cool.ValidityKey(toTime), channelSelection, folder.resolve(tag))
                     else:
                         objIter = folder.browseObjects(cool.ValidityKey(fromTime), cool.ValidityKey(toTime), channelSelection)
