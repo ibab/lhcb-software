@@ -1,9 +1,15 @@
-! $Id: release.notes,v 1.90 2007-02-22 13:30:24 robbep Exp $
+! $Id: release.notes,v 1.91 2007-02-22 14:38:14 gcorti Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Gen/Generators
 ! Responsible : Patrick ROBBE
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
+
+! 2007-02-22 - Gloria CORTI
+ - Change default values of ZMin and ZMax of flat primary vertex according
+   to what chosen for Luminosity studies for beam gas (+/- 1500 mm) as
+   communicated by Daniele GREGORI
+   . FlatZSmearVertex.cpp
 
 ! 2007-02-20 - Patrick Robbe
  - Fix efficiency counters for CP violation decay modes (=> change IGenCutTool
