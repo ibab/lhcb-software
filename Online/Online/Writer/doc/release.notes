@@ -1,4 +1,7 @@
 | 2007-02-20 : Suman
+|    a. Failover works, tested at 200 Hz of event injection.
+-----------------------------------------------------
+| 2007-02-20 : Suman
 |    a. Added locks around RPC routines.
 |    b. Reordered code in MDFWriterNet to comply with initialize()-finalize() states.
 |    c. Added INotifyClient implementation to MDFWriterNet.

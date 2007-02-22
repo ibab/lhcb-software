@@ -5,9 +5,18 @@ extern "C" {
 #include "Writer/chunk_headers.h"
 #include <sys/types.h>
 #include <malloc.h>
+#include <sys/sem.h>
+#include <sys/ipc.h>
+#include <errno.h>
 }
 
 #include <list>
+
+#define LIST_SEM_KEY 0x61243
+struct list_head {
+  struct cmd_header *cmd;
+  struct list_head *next;
+};
 
 /*
  * LHCb namespace;
@@ -21,33 +30,33 @@ namespace LHCb {
   class MM
   {
     private:
-      /// A list which is used to to queue commands.
-      std::list<struct cmd_header*> m_cmdList;
-
-      /// The maximum pending sequence number in the cached list.
-      unsigned int m_maxSeqPending;
-
-      /// The minimum pending sequence number in the cached list.
-      unsigned int m_minSeqPending;
-
       /// A lock to protect the list.
       pthread_mutex_t m_listLock;
 
       /// The list head and tail.
-      struct list_head {
-	struct cmd_header *cmd;
-	struct list_head *next;
-      } *m_head, *m_tail;
+      struct list_head *m_head, *m_tail;
 
-    public:
+      /// The list send pointer (till where all entries have been sent).
+      struct list_head *m_sendPointer;
 
-      ////////STATIC MEMBERS AND METHODS///////
+      /// The number of elements in the queue.
+      unsigned int m_queueLength;
+
+      /// A semaphore to synchronize the enqueueing and the moving of the
+      /// Send pointer.
+      int m_queueSem;
 
       /// The total number of bytes allocated so far by all MM objects.
       static size_t m_allocByteCount;
       /// The total number of commands allocated so far by all MM objects.
       static size_t m_allocCmdCount;
 
+    public:
+    	/// Constructor.
+    	MM();
+
+    	/// Destructor.
+    	~MM();
 
       /// Allocates space for a command and makes a copy of it.
       static struct cmd_header* allocAndCopyCommand(struct cmd_header *, void *data);
@@ -61,49 +70,24 @@ namespace LHCb {
       /// Returns the total number of commands allocated so far.
       static int getAllocCmdCount(void) {return m_allocCmdCount;};
 
-      /////////INSTANCE MEMBERS AND METHODS///////////
-
-      /// Basic constructor.
-      MM()
-      {
-	m_head = NULL;
-	m_tail = NULL;
-	pthread_mutex_init(&m_listLock, NULL);
-      }
-
-      ~MM()
-      {
-	if(m_head)
-		free(m_head);
-      }
-
       /// Enqueues a command.
       void enqueueCommand(struct cmd_header *cmd);
 
-      /// Dequeues a command and frees it.
-      struct cmd_header* dequeueCommand(unsigned int seqNum);
+      /// Dequeues a command.
+      struct cmd_header* dequeueCommand(unsigned int sequenceNum);
 
-      /// Returns the first command in the list.
-      std::list<struct cmd_header*>::iterator getCommandIterator(void)
-      {
-	return m_cmdList.begin();
-      }
+      /// Moves the send pointer ahead, returns old value at send pointer.
+      struct cmd_header* moveSendPointer(void);
 
-      /// Returns the last command in the list.
-      std::list<struct cmd_header*>::iterator getLastCommand(void)
-      {
-	return m_cmdList.end();
-      }
+      /// Resets send pointer to the start of the list.
+      void resetSendPointer(void);
 
       /// Returns the number of commands enqueued in this object.
       int getQueueLength(void)
       {
-	return m_cmdList.size();
+        return m_queueLength;
       }
-
-
   };
-
 }
 
 #endif /*MM_H*/

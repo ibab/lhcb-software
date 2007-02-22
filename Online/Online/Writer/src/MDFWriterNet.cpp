@@ -15,7 +15,7 @@
 #include "Writer/MDFWriterNet.h"
 #include "TMD5.h"
 
-DECLARE_NAMESPACE_ALGORITHM_FACTORY(LHCb,MDFWriterNet)
+DECLARE_NAMESPACE_ALGORITHM_FACTORY(LHCb,MDFWriterNet);
 
 using namespace LHCb;
 
@@ -24,37 +24,37 @@ static inline unsigned long adler32(unsigned long adler,
     unsigned int len);
 
 /**
-  * Macro for initialising a close command.
-  */
+ * Macro for initialising a close command.
+ */
 #define INIT_CLOSE_COMMAND(h, fname, adler32, md5) { \
   (h)->cmd = CMD_CLOSE_FILE; \
-  (md5)->Final((h)->data.stop_data.md5_sum); \
-  (h)->data.stop_data.adler32_sum = (adler32); \
-  strncpy((h)->file_name, (fname), MAX_FILE_NAME); \
+    (md5)->Final((h)->data.stop_data.md5_sum); \
+    (h)->data.stop_data.adler32_sum = (adler32); \
+    strncpy((h)->file_name, (fname), MAX_FILE_NAME); \
 }
 
 /**
-  * Macro for initialising a write command.
-  */
+ * Macro for initialising a write command.
+ */
 #define INIT_WRITE_COMMAND(h, len, off, fname) { \
   (h)->cmd = CMD_WRITE_CHUNK; \
-  (h)->data.chunk_data.size = (len); \
-  (h)->data.chunk_data.offset = (off); \
-  strncpy((h)->file_name, (fname), MAX_FILE_NAME); \
+    (h)->data.chunk_data.size = (len); \
+    (h)->data.chunk_data.offset = (off); \
+    strncpy((h)->file_name, (fname), MAX_FILE_NAME); \
 }
 
 /**
-  * Macro for initialising an open command.
-  */
+ * Macro for initialising an open command.
+ */
 #define INIT_OPEN_COMMAND(h, fname, r_num) { \
   (h)->cmd = CMD_OPEN_FILE; \
-  strncpy((h)->file_name, (fname), MAX_FILE_NAME); \
-  (h)->data.start_data.run_num = r_num; \
+    strncpy((h)->file_name, (fname), MAX_FILE_NAME); \
+    (h)->data.start_data.run_num = r_num; \
 }
-  
+
 
 /// Extended algorithm constructor
-MDFWriterNet::MDFWriterNet(MDFIO::Writer_t typ, const std::string& nam,	ISvcLocator* pSvc) : MDFWriter(typ, nam, pSvc)
+MDFWriterNet::MDFWriterNet(MDFIO::Writer_t typ, const std::string& nam,  ISvcLocator* pSvc) : MDFWriter(typ, nam, pSvc)
 {
   constructNet();
 }
@@ -89,18 +89,18 @@ void MDFWriterNet::constructNet()
 }
 
 /** Overrides MDFWriter::initialize(). Initialises the Connection object.
-  */
+ */
 StatusCode MDFWriterNet::initialize(void)
 {
 
   m_fileOpen = 0;
   m_bytesWritten = 0;
-  m_connection = new Connection();
+  m_connection = new Connection(m_serverAddr, m_serverPort,
+      m_soTimeout, m_sndRcvSizes, m_log, this);
   m_rpcObj = new RPCComm(m_runDBURL);
   try {
 
-    m_connection->connectAndNegotiate(m_serverAddr, m_serverPort,
-      m_soTimeout, m_sndRcvSizes, m_log, this);
+    m_connection->connectAndStartThreads();
 
   } catch(const std::exception& e) {
     *m_log << MSG::ERROR << "Caught Exception:" << e.what() << endmsg;
@@ -111,9 +111,9 @@ StatusCode MDFWriterNet::initialize(void)
 }
 
 /** Overrides MDFWriter::finalize().
-  * Closes the file if it is open, and writes its entry in the
-  * Run Database.
-  */
+ * Closes the file if it is open, and writes its entry in the
+ * Run Database.
+ */
 StatusCode MDFWriterNet::finalize(void)
 {
   if(m_fileOpen) {
@@ -140,13 +140,13 @@ StatusCode MDFWriterNet::finalize(void)
 
 
 /** Overrides MDFWriter::writeBuffer().
-  * Writes out the buffer to the socket through the Connection object.
-  * This function first checks if a new file needs to be created. After
-  * that, it writes data out to the new file. The MD5 and Adler32 checksums
-  * are computed incrementally for the current file. In case the file is above
-  * the maximum size limit, then a RunDB call is executed, to which the
-  * file name, MD5 sum, and the Adler32 sum are supplied.
-  */
+ * Writes out the buffer to the socket through the Connection object.
+ * This function first checks if a new file needs to be created. After
+ * that, it writes data out to the new file. The MD5 and Adler32 checksums
+ * are computed incrementally for the current file. In case the file is above
+ * the maximum size limit, then a RunDB call is executed, to which the
+ * file name, MD5 sum, and the Adler32 sum are supplied.
+ */
 StatusCode MDFWriterNet::writeBuffer(void *const /*fd*/, const void *data, size_t len)
 {
   struct cmd_header header;
@@ -192,10 +192,10 @@ StatusCode MDFWriterNet::writeBuffer(void *const /*fd*/, const void *data, size_
 
 
 /** Obtains the run number from the MDF header.
-  * @param data  The data from which MDF information may be retrieved
-  * @param len   The length of the data.
-  * @return The run number.
-  */
+ * @param data  The data from which MDF information may be retrieved
+ * @param len   The length of the data.
+ * @return The run number.
+ */
 inline unsigned int MDFWriterNet::getRunNumber(const void *data, size_t /*len*/)
 {
   MDFHeader *mHeader;
@@ -205,27 +205,27 @@ inline unsigned int MDFWriterNet::getRunNumber(const void *data, size_t /*len*/)
 
 
 /** Generates a new file name from the MDF information.
-  * @param newFileName A string to put the new file name in.
-  * @param data        The data from which MDF information may be retrieved.
-  * @param len         The length of the data buffer supplied.
-  */
+ * @param newFileName A string to put the new file name in.
+ * @param data        The data from which MDF information may be retrieved.
+ * @param len         The length of the data buffer supplied.
+ */
 void MDFWriterNet::getNewFileName(std::string &newFileName,
-		const void * /*data*/, size_t /*len*/)
+    const void * /*data*/, size_t /*len*/)
 {
   //TODO: Do something here to fill in a new file name.
   char buf[MAX_FILE_NAME];
   static unsigned long random;
   random++;
   sprintf(buf, "%s.%lu.%lu",
-    m_filePrefix.c_str(),
-    random,
-    time(NULL));
+      m_filePrefix.c_str(),
+      random,
+      time(NULL));
   newFileName = buf;
 }
 
 /** Destructor.
-  * Checks if a file is open, and closes it before closing the connection.
-  */
+ * Checks if a file is open, and closes it before closing the connection.
+ */
 MDFWriterNet::~MDFWriterNet()
 {
   if(m_connection) {
@@ -236,15 +236,14 @@ MDFWriterNet::~MDFWriterNet()
 }
 
 /** A notify listener callback, which is executed when an open command is acked.
-  */
+ */
 void MDFWriterNet::notifyOpen(struct cmd_header *cmd)
 {
   try {
 
     m_rpcObj->createFile(cmd->file_name, cmd->data.start_data.run_num);
 
-    //TODO: Changen all exceptions to std::exception
-  } catch(std::exception e) {
+  } catch(std::exception& e) {
     *m_log << MSG::ERROR << "Could not create Run Database Record ";
     *m_log << "Cause: " << e.what() << std::endl;
     *m_log << "Record is: FileName=" << cmd->file_name;
@@ -253,22 +252,22 @@ void MDFWriterNet::notifyOpen(struct cmd_header *cmd)
 }
 
 /** A notify listener callback, which is executed  when a close command is acked.
-  */
+ */
 void MDFWriterNet::notifyClose(struct cmd_header *cmd)
 {
   try {
 
-    m_rpcObj->confirmFile(cmd->file_name, 
-	cmd->data.stop_data.adler32_sum, 
-	cmd->data.stop_data.md5_sum); 
-  } catch(std::runtime_error rte) {
+    m_rpcObj->confirmFile(cmd->file_name,
+        cmd->data.stop_data.adler32_sum,
+        cmd->data.stop_data.md5_sum);
+  } catch(std::exception& rte) {
     char md5buf[33];
     unsigned char *md5sum = cmd->data.stop_data.md5_sum;
     sprintf(md5buf, "%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X",
-	md5sum[0],md5sum[1],md5sum[2],md5sum[3],
-	md5sum[4],md5sum[5],md5sum[6],md5sum[7],
-	md5sum[8],md5sum[9],md5sum[10],md5sum[11],
-	md5sum[12],md5sum[13],md5sum[14],md5sum[15]);
+        md5sum[0],md5sum[1],md5sum[2],md5sum[3],
+        md5sum[4],md5sum[5],md5sum[6],md5sum[7],
+        md5sum[8],md5sum[9],md5sum[10],md5sum[11],
+        md5sum[12],md5sum[13],md5sum[14],md5sum[15]);
 
     *m_log << MSG::ERROR << "Could not update Run Database Record ";
     *m_log << "Cause: " << rte.what() << std::endl;
@@ -279,10 +278,10 @@ void MDFWriterNet::notifyClose(struct cmd_header *cmd)
 }
 
 /** A notify listener callback, which is executed  when an error occurs.
-  */
+ */
 void MDFWriterNet::notifyError(struct cmd_header* /*cmd*/, int /*errno*/)
 {
-	/* Not Used Yet. */
+  /* Not Used Yet. */
 }
 
 /* The standard Adler32 algorithm taken from the Linux kernel.*/
@@ -303,28 +302,28 @@ static inline unsigned long adler32(unsigned long adler,
     const char *buf,
     unsigned int len)
 {
-    unsigned long s1 = adler & 0xffff;
-    unsigned long s2 = (adler >> 16) & 0xffff;
-    int k;
+  unsigned long s1 = adler & 0xffff;
+  unsigned long s2 = (adler >> 16) & 0xffff;
+  int k;
 
-    if (buf == NULL) return 1L;
+  if (buf == NULL) return 1L;
 
-    while (len > 0) {
-        k = len < NMAX ? len : NMAX;
-        len -= k;
-        while (k >= 16) {
-            DO16(buf);
-        buf += 16;
-            k -= 16;
-        }
-        if (k != 0) do {
-            s1 += *buf++;
-        s2 += s1;
-        } while (--k);
-        s1 %= BASE;
-        s2 %= BASE;
+  while (len > 0) {
+    k = len < NMAX ? len : NMAX;
+    len -= k;
+    while (k >= 16) {
+      DO16(buf);
+      buf += 16;
+      k -= 16;
     }
-    return (s2 << 16) | s1;
+    if (k != 0) do {
+      s1 += *buf++;
+      s2 += s1;
+    } while (--k);
+    s1 %= BASE;
+    s2 %= BASE;
+  }
+  return (s2 << 16) | s1;
 }
 
 

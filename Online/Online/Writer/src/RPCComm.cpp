@@ -16,13 +16,13 @@ RPCComm::RPCComm(std::string serverURL)
 }
 
 /**
-  * "Confirms" that the file is completely written to and closed.
-  * This creates a record in the run database specifying that the
-  * file may now be migrated to tape.
-  * @param fileName The name of the file which has been closed.
-  * @param adlerSum The Adler32 checksum of the entire file.
-  * @param md5CSum   The MD5 checksum of the entire file.
-  */
+ * "Confirms" that the file is completely written to and closed.
+ * This creates a record in the run database specifying that the
+ * file may now be migrated to tape.
+ * @param fileName The name of the file which has been closed.
+ * @param adlerSum The Adler32 checksum of the entire file.
+ * @param md5CSum   The MD5 checksum of the entire file.
+ */
 void RPCComm::confirmFile(char *fileName, unsigned int adlerSum, const unsigned char *md5CSum)
 {
   xmlrpc_c::value result;
@@ -36,10 +36,10 @@ void RPCComm::confirmFile(char *fileName, unsigned int adlerSum, const unsigned 
    */
 
   sprintf(md5CharString, "%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X",
-    md5CSum[0], md5CSum[1], md5CSum[2], md5CSum[3], 
-    md5CSum[4], md5CSum[5], md5CSum[6], md5CSum[7], 
-    md5CSum[8], md5CSum[9], md5CSum[10], md5CSum[11], 
-    md5CSum[12], md5CSum[13], md5CSum[14], md5CSum[15]);
+      md5CSum[0], md5CSum[1], md5CSum[2], md5CSum[3], 
+      md5CSum[4], md5CSum[5], md5CSum[6], md5CSum[7], 
+      md5CSum[8], md5CSum[9], md5CSum[10], md5CSum[11], 
+      md5CSum[12], md5CSum[13], md5CSum[14], md5CSum[15]);
 
   sprintf(adler32String, "%08X", adlerSum);
 
@@ -47,14 +47,14 @@ void RPCComm::confirmFile(char *fileName, unsigned int adlerSum, const unsigned 
 
   try {
     m_clientInstance.call(m_serverURL, confirmString, "sss", &result,
-      fileName, adler32String, md5CharString);
+        fileName, adler32String, md5CharString);
     ret = xmlrpc_c::value_int(result);
-  } catch(girerr::error err) {
+  } catch(girerr::error& err) {
 
     pthread_mutex_unlock(&m_rpcLock);
     std::cout << err.what();
     throw std::runtime_error(
-      "Could not initiate connection to Run DB for createFile().");
+        "Could not initiate connection to Run DB for createFile().");
   }
 
   pthread_mutex_unlock(&m_rpcLock);
@@ -62,19 +62,19 @@ void RPCComm::confirmFile(char *fileName, unsigned int adlerSum, const unsigned 
   ret = xmlrpc_c::value_int(result);
   if(ret == RUNDB_SERVICE_FAIL) {
     throw std::runtime_error(
-      "Could not call RunDB service for confirm(). Check RunDB logs.");
+        "Could not call RunDB service for confirm(). Check RunDB logs.");
   }
   return;
 }
 
 /**
-  * Creates an entry for the file in the Run Database.
-  * This call is used to create a record in the run database, indicating
-  * that a file of the specified name, and belonging to the specified
-  * run number has been created (but not necessarily written fully to).
-  * @param fileName The name of the file that has been created.
-  * @param runNumber The run number to which the file belongs.
-  */
+ * Creates an entry for the file in the Run Database.
+ * This call is used to create a record in the run database, indicating
+ * that a file of the specified name, and belonging to the specified
+ * run number has been created (but not necessarily written fully to).
+ * @param fileName The name of the file that has been created.
+ * @param runNumber The run number to which the file belongs.
+ */
 void RPCComm::createFile(char *fileName, unsigned int runNumber)
 {
   xmlrpc_c::value result;
@@ -86,14 +86,14 @@ void RPCComm::createFile(char *fileName, unsigned int runNumber)
     char runNumberString[20];
     ::sprintf(runNumberString, "%u", runNumber);
     m_clientInstance.call(m_serverURL, createString, "ss", &result,
-      fileName, runNumberString);
+        fileName, runNumberString);
     ret = xmlrpc_c::value_int(result);
-  } catch(girerr::error err) {
+  } catch(girerr::error& err) {
 
     pthread_mutex_unlock(&m_rpcLock);
     std::cout << err.what();
     throw std::runtime_error(
-      "Could not initiate connection to Run DB for createFile().");
+        "Could not initiate connection to Run DB for createFile().");
   }
 
   pthread_mutex_unlock(&m_rpcLock);
@@ -101,7 +101,7 @@ void RPCComm::createFile(char *fileName, unsigned int runNumber)
   ret = xmlrpc_c::value_int(result);
   if(ret == RUNDB_SERVICE_FAIL) {
     throw std::runtime_error(
-      "Could not call RunDB service for create(). Check RunDB logs.");
+        "Could not call RunDB service for create(). Check RunDB logs.");
   }
   return;
 }

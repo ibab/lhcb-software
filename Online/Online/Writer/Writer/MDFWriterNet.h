@@ -17,17 +17,15 @@
 namespace LHCb {
 
   /** @class MDFWriterNet
-    *
-    * @author: Sai Suman Cherukuwada
-    * @version: 1.0
-    */
+   *
+   * @author: Sai Suman Cherukuwada
+   * @version: 1.0
+   */
 
   class MDFWriterNet : public MDFWriter, INotifyClient {
 
     protected:
-
       /// The initial storage server hostname to connect to.
-
       std::string m_serverAddr;
 
       /// The port of the storage server to connect to.
@@ -80,7 +78,7 @@ namespace LHCb {
 
       /// Returns the run number from an MDF header.
       unsigned int getRunNumber(const void *data, size_t len);
-      
+
     public:
       /// Destructor.
       virtual ~MDFWriterNet();
@@ -110,7 +108,7 @@ namespace LHCb {
       virtual void notifyClose(struct cmd_header *cmd);
 
       /// Implemented from INotifyClient.
-      virtual void notifyError(struct cmd_header *cmd, int errno);
+      virtual void notifyError(struct cmd_header *cmd, int err_no);
 
       /// Implemented from INotifyClient.
       virtual void notifyOpen(struct cmd_header *cmd);

@@ -1,9 +1,7 @@
-
-
 #ifndef NETWORK_H_
 #define NETWORK_H_
 
-#define MAX_RETRIES	4
+#define MAX_RETRIES  4
 
 extern "C" {
 
@@ -24,9 +22,9 @@ namespace LHCb {
   class INotifyClient;
 
   /**@class Connection
-    * Abstracts away the networking / failover part of the MDF
-    * Writer.
-    */
+   * Abstracts away the networking / failover part of the MDF
+   * Writer.
+   */
   class Connection
   {
     private:
@@ -34,8 +32,18 @@ namespace LHCb {
       /// Flag to tell the acking thread to shut down.
       volatile int m_stopAcking;
 
+      /// Flag to tell the sending thread to shut down.
+      volatile int m_stopSending;
+
       /// A handle to the ack thread.
       pthread_t m_ackThread;
+
+      /// A handle to the send thread.
+      pthread_t m_sendThread;
+
+      /// A lock to be held by a thread that goes into failover.
+      /// This is to prevent both threads from initiating failover.
+      pthread_mutex_t m_failoverLock;
 
       /// A client to be notified.
       INotifyClient *m_notifyClient;
@@ -59,7 +67,10 @@ namespace LHCb {
       MM m_mmObj;
 
       /// The currently open socket to the server.
-      int m_sockfd;
+      volatile int m_sockfd;
+
+      /// Socket buffer sizes.
+      int m_sndRcvSizes;
 
       /// A buffer in which acknowledgement packets can be received.
       struct ack_header m_ackHeaderBuf;
@@ -71,30 +82,44 @@ namespace LHCb {
       MsgStream *m_log;
 
       /// Fails over onto an alternative storage cluster node.
-      void failover(void);
+      int failover(void);
 
       /// Starts the acknowledgement thread.
-      void startAckThread(void);
+      void startAckThread();
 
       /// Stops the acknowledgement thread.
-      void stopAckThread(void);
+      void stopAckThread(int stopLevel);
+
+      /// Starts the sender thread.
+      void startSendThread();
+
+      /// Stops the sender thread.
+      void stopSendThread(int stopLevel);
 
 
     public:
 
       /// The connection is closed, no files are open.
-      static const int STATE_CONN_CLOSED	=	0x01;
+      static const int STATE_CONN_CLOSED  =  0x01;
       /// The connection is open, and a file is open.
-      static const int STATE_FILE_OPEN	=	0x02;
+      static const int STATE_FILE_OPEN  =  0x02;
       /// The connection is open, but no file is open.
-      static const int STATE_CONN_OPEN	=	0x03;
+      static const int STATE_CONN_OPEN  =  0x03;
 
       /// Processes acknowledgements and dequeues the acknowledged commands.
-      int processAcks(int blocking);
+      int processAcks(void);
+
+      /// Processes messages put in the queue, and sends them over the socket.
+      int processSends(void);
 
       /// Connects to a storage cluster node.
-      void connectAndNegotiate(std::string serverAddr, int serverPort,
-	  int soTimeout, int sndRcvSizes, MsgStream *log, INotifyClient *nClient);
+      void connectToServer(void);
+
+      /// Connects to a storage cluster node, and starts threads.
+      void connectAndStartThreads(void);
+
+      /// Conencts to a storage cluster node, and starts threads.
+      void connectAndNegotiate(int startThreads);
 
       /// Closes the connection to the storage cluster node.
       void closeConnection(void);
@@ -110,17 +135,22 @@ namespace LHCb {
 
       /// Sets a notification listener for events on this connection.
       void setNotifyClient(INotifyClient *nClient) { m_notifyClient = nClient; }
+
+      /// Constructor
+      Connection(std::string serverAddr, int serverPort,
+          int /*soTimeout*/, int sndRcvSizes,
+          MsgStream * log, INotifyClient *nClient);
   };
 
   /** @class An interface that can be used to register for notifications.
-    * This interface must be implemented by any class that wants to receive
-    * notifications of completions or errors in any of the send requests.
-    */
+   * This interface must be implemented by any class that wants to receive
+   * notifications of completions or errors in any of the send requests.
+   */
   class INotifyClient
   {
     public:
       /// Called when the Connection object is notified of an error.
-      virtual void notifyError(struct cmd_header *header, int errno) = 0;
+      virtual void notifyError(struct cmd_header *header, int err_no) = 0;
       /// Called when the Connection object is notified of a successful close.
       virtual void notifyClose(struct cmd_header *header) = 0;
       /// Called when the Connection object is notified of a successful open.
