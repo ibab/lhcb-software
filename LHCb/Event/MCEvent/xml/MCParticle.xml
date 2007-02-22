@@ -26,6 +26,36 @@
         type="Gaudi::LorentzVector"
         init="0.0, 0.0, 0.0, -1*Gaudi::Units::GeV" 
        />
+       <constructor 
+           desc     = "Copy Constructor" 
+           argList  = "const LHCb::MCParticle* right"
+           initList = "KeyedObject&lt;int&gt;(), m_momentum ( right->momentum() ) , m_particleID( right->particleID()), m_originVertex(right->originVertex()) ,m_endVertices(right->endVertices())  " 
+           > <code/> </constructor>
+
+      <method
+        name="clone"
+        desc="Clone this MCParticle. Returns a pointer to a new MCParticle (user must take ownership)"
+        type="LHCb::MCParticle*"
+        const="TRUE"
+        >
+        <code>
+          return new LHCb::MCParticle(this);
+        </code>
+      </method>
+
+      <method
+        name="cloneWithKey"
+        desc="Clone this MCParticle including key. Returns a pointer to a new MCParticle (user must take ownership)"
+        type="LHCb::MCParticle*"
+        const="TRUE"
+        >
+        <code>
+           LHCb::MCParticle *clone = new LHCb::MCParticle(this);
+           clone -> setKey(this->key());
+          return clone;
+        </code>
+      </method>
+
        <attribute
         desc="Particle ID"
         name="particleID"
