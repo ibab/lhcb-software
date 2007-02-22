@@ -1,4 +1,4 @@
-// $Id: CondDBAccessSvc.h,v 1.23 2007-02-14 16:13:31 marcocle Exp $
+// $Id: CondDBAccessSvc.h,v 1.24 2007-02-22 14:20:19 marcocle Exp $
 #ifndef COMPONENT_CONDDBACCESSSVC_H 
 #define COMPONENT_CONDDBACCESSSVC_H 1
 
@@ -306,7 +306,7 @@ private:
         if ( last_access.sec == m_owner->lastAccess().sec ) { // no further accesses
 
           if ( m_owner->database()->isOpen() ) { // close the database
-            log << MSG::DEBUG << "Disconnect from database" << endmsg;
+            log << MSG::INFO << "Disconnect from database" << endmsg;
             m_owner->database()->closeDatabase();
           }
 
@@ -330,13 +330,18 @@ private:
   class DataBaseOperationLock 
   {
     CondDBAccessSvc    *m_owner;
+    MsgStream           log;
     boost::mutex::scoped_lock busy_lock;
   public:
     DataBaseOperationLock(const CondDBAccessSvc *owner):
       m_owner(const_cast<CondDBAccessSvc*>(owner)),
+      log(m_owner->msgSvc(),m_owner->name()+".DataBaseOperationLock"),
       busy_lock(m_owner->m_busy) // lock the access to the db
     {
-      if (!owner->m_db->isOpen()) owner->m_db->openDatabase(); // ensure that the db is open
+      if (!owner->m_db->isOpen()){
+        log << MSG::INFO << "Connecting to database" << endmsg;
+        owner->m_db->openDatabase(); // ensure that the db is open
+      }
     }
  
     ~DataBaseOperationLock() 

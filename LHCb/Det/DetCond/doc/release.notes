@@ -1,10 +1,18 @@
-# $Id: release.notes,v 1.88 2007-02-19 17:10:12 marcocle Exp $
+# $Id: release.notes,v 1.89 2007-02-22 14:20:19 marcocle Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Det/DetCond
 ! Responsible : Marco Clemencic
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
+! 2007-02-22 - Marco Clemencic
+ - Fixed a bug (segfault) occurring when requiring the time-out task without
+   a connection (pure memory cache).
+ - Moved few message from DEBUG to INFO and added few more messages (like
+   the connection string and the tag used).
+ - Activated by default the diconnect on time-out feature (with time out set
+   to 10 min.)
+ 
 ! 2007-02-19 - Marco Clemencic
  - Minor change in RelyConverter.cpp (removed a useless line)
 
@@ -13,6 +21,7 @@
 
 ! 2007-02-14 - Marco CLEMENCIC
  - Updated to changes in COOL API
+ - Added to CondDBAccessSvc a function to clear the cache
 
 !================ Det/DetCond v10r0 2007-01-31 =============================
 ! 2007-01-31 - Marco Cattaneo

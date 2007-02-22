@@ -1,4 +1,4 @@
-// $Id: CondDBAccessSvc.cpp,v 1.30 2007-02-14 16:13:31 marcocle Exp $
+// $Id: CondDBAccessSvc.cpp,v 1.31 2007-02-22 14:20:19 marcocle Exp $
 // Include files
 #include <sstream>
 //#include <cstdlib>
@@ -68,7 +68,7 @@ CondDBAccessSvc::CondDBAccessSvc(const std::string& name, ISvcLocator* svcloc):
   declareProperty("CheckTAGTimeOut",  m_checkTagTimeOut  = 60    );
   declareProperty("ReadOnly",         m_readonly         = true );
   
-  declareProperty("ConnectionTimeOut", m_connectionTimeOut = 0 );
+  declareProperty("ConnectionTimeOut", m_connectionTimeOut = 600 );
   
   if (s_XMLstorageSpec == NULL){
     // attribute list spec template
@@ -134,10 +134,11 @@ StatusCode CondDBAccessSvc::initialize(){
       log << MSG::ERROR << "Set the option \"" << name() << ".ConnectionString\"." << endmsg;
       return StatusCode::FAILURE;
     }
-    log << MSG::DEBUG << "Connection string = \""  << m_connectionString << "\"" << endmsg;
+    log << MSG::DEBUG << "Connection string = \"" << m_connectionString << "\"" << endmsg;
     
     sc = i_openConnection();
     if (!sc.isSuccess()) return sc;
+    log << MSG::INFO << "Connected to database \"" << m_connectionString << "\"" << endmsg;
 
     // Check the existence of the provided tag.
     sc = i_checkTag();
@@ -157,6 +158,8 @@ StatusCode CondDBAccessSvc::initialize(){
       log << MSG::ERROR << "Bad TAG given: \"" << tag() << "\" not in the database" << endmsg;
       return sc;
     }
+
+    log << MSG::INFO << "Using TAG \"" << tag() << "\"" << endmsg;
 
   } 
   else {
@@ -194,7 +197,7 @@ StatusCode CondDBAccessSvc::finalize(){
   log << MSG::DEBUG << "Finalize" << endmsg;
 
   // stop TimeOut thread
-  if (m_connectionTimeOut) {
+  if (NULL != m_timeOutCheckerThread.get()) {
     m_stop.notify_all(); // tell the thread to stop
     m_timeOutCheckerThread->join(); // wait for it
     m_timeOutCheckerThread.reset(); // delete it
@@ -260,6 +263,8 @@ StatusCode CondDBAccessSvc::setTag(const std::string &_tag){
     m_dbTAG = _tag;
     // the cache must be cleared if the tag is changed
     clearCache();
+    MsgStream log(msgSvc(), name() );
+    log << MSG::WARNING << "TAG changed to \"" << _tag << "\"" << endmsg;
   } else {
     MsgStream log(msgSvc(), name() );
     log << MSG::WARNING << "Unable to set TAG \"" << _tag
