@@ -1,4 +1,4 @@
-// $Id: CaloTriggerAdcsFromRawAlg.cpp,v 1.6 2007-01-12 10:42:57 cattanem Exp $
+// $Id: CaloTriggerAdcsFromRawAlg.cpp,v 1.7 2007-02-22 23:39:52 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -26,15 +26,17 @@ CaloTriggerAdcsFromRawAlg::CaloTriggerAdcsFromRawAlg( const std::string& name,
   : GaudiAlgorithm ( name , pSvcLocator )
 {
   declareProperty("OutputData"  , m_outputData  );  
-  declareProperty("ToolName"    , m_toolName    );
+  declareProperty( "Extension"  ,  m_extension = "" );
+  declareProperty( "PinContainer"  ,  m_pinContainer );
 
   m_toolType = "CaloTriggerAdcsFromRaw";  
   m_toolName  = name + "Tool";  
   if ( "Ecal" == name.substr( 0 , 4 ) ) {
-    m_outputData =  rootOnTES() + LHCb::L0CaloAdcLocation::Ecal ;
-    
+    m_outputData =  rootOnTES() + LHCb::L0CaloAdcLocation::Ecal + m_extension;    
+    m_pinContainer = rootOnTES() + LHCb::L0CaloAdcLocation::EcalPin + m_extension; 
   } else if ( "Hcal" == name.substr( 0 , 4 ) ) {
-    m_outputData =  rootOnTES() + LHCb::L0CaloAdcLocation::Hcal ;
+    m_outputData =  rootOnTES() + LHCb::L0CaloAdcLocation::Hcal + m_extension;
+    m_pinContainer = rootOnTES() + LHCb::L0CaloAdcLocation::HcalPin + m_extension; 
   }
 
 }
@@ -72,9 +74,28 @@ StatusCode CaloTriggerAdcsFromRawAlg::execute() {
   for( il0Adc = l0Adcs.begin(); l0Adcs.end() != il0Adc ; ++il0Adc ) {
     LHCb::L0CaloAdc* adc = new LHCb::L0CaloAdc( (*il0Adc).cellID(), (*il0Adc).adc() );
     newL0Adcs->insert( adc ) ;
-  };
+  }
+  debug() << " L0CaloAdcs container" << m_outputData 
+          <<" size " << newL0Adcs->size() << endreq;
+  
+  //*** get the PinDiode data and fill the output container
+  // MUST BE AFTER STANDARD ADCs
+  std::vector<LHCb::L0CaloAdc>& l0PinAdcs = m_l0AdcTool->pinAdcs( );
+  if( "None" != m_pinContainer && 0 != l0PinAdcs.size() ){
+    LHCb::L0CaloAdcs* newL0PinAdcs = new LHCb::L0CaloAdcs();
+    put( newL0PinAdcs, m_pinContainer );
+    std::vector<LHCb::L0CaloAdc>::const_iterator il0PinAdc;
+    for( il0PinAdc = l0PinAdcs.begin(); l0PinAdcs.end() != il0PinAdc ; ++il0PinAdc ) {
+      LHCb::L0CaloAdc* pinAdc = new LHCb::L0CaloAdc( (*il0PinAdc).cellID(), (*il0PinAdc).adc() );
+      newL0PinAdcs->insert( pinAdc ) ;
+    }
+    debug() << " PinDiode : L0CaloAdcs container " << m_pinContainer 
+            << " size " << newL0Adcs->size() << endreq;
+  }
 
-  debug() << " L0CaloAdcs container size " << newL0Adcs->size() << endreq;
+
+
+
   
   return StatusCode::SUCCESS;
 }

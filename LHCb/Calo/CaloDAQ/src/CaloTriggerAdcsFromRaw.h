@@ -1,4 +1,4 @@
-// $Id: CaloTriggerAdcsFromRaw.h,v 1.3 2006-09-26 12:42:03 odescham Exp $
+// $Id: CaloTriggerAdcsFromRaw.h,v 1.4 2007-02-22 23:39:52 odescham Exp $
 #ifndef CALOTRIGGERADCSFROMRAW_H 
 #define CALOTRIGGERADCSFROMRAW_H 1
 
@@ -6,7 +6,6 @@
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 #include "CaloDAQ/ICaloTriggerAdcsFromRaw.h"            // Interface
-#include "Event/RawEvent.h"
 #include "CaloDAQ/CaloReadoutTool.h"
 
 /** @class CaloTriggerAdcsFromRaw CaloTriggerAdcsFromRaw.h
@@ -15,7 +14,7 @@
  *  @author Olivier Callot
  *  @date   2005-01-05
  */
-class CaloTriggerAdcsFromRaw : public GaudiTool, virtual public ICaloTriggerAdcsFromRaw {
+class CaloTriggerAdcsFromRaw : public CaloReadoutTool, virtual public ICaloTriggerAdcsFromRaw {
 public: 
   /// Standard constructor
   CaloTriggerAdcsFromRaw( const std::string& type, 
@@ -27,15 +26,26 @@ public:
   virtual StatusCode initialize();
 
   virtual std::vector<LHCb::L0CaloAdc>& adcs( );
+  virtual std::vector<LHCb::L0CaloAdc>& adcs( int source );
+  virtual std::vector<LHCb::L0CaloAdc>& adcs( LHCb::RawBank* bank);
+  virtual std::vector<LHCb::L0CaloAdc>& pinAdcs( );
+
+  // Useful method  to setup m_banks externally only once
+  // Avoid call to getCaloBanksFromRaw() at each call of adc(bank)
+  virtual StatusCode getCaloBanks(){
+    m_getRaw = false;
+    return getCaloBanksFromRaw();
+  };
+  virtual void setBanks(const std::vector<LHCb::RawBank*>* bank ){
+    m_getRaw = false;
+    m_banks = bank;
+  };
 
 protected:
-
+  StatusCode getData ( LHCb::RawBank* bank );
 private:
-  std::string            m_detectorName;
-  bool m_packedIsDefault;  
-  CaloReadoutTool*       m_roTool;
-  LHCb::RawBank::BankType m_packedType;
-  LHCb::RawBank::BankType m_shortType;
-  std::vector<LHCb::L0CaloAdc> m_adcs;
+  std::vector<LHCb::L0CaloAdc> m_data;
+  std::vector<LHCb::L0CaloAdc> m_pinData;
+  unsigned int m_pinArea;
 };
 #endif // CALOTRIGGERADCSFROMRAW_H

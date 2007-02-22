@@ -1,4 +1,4 @@
-// $Id: CaloFillRawBuffer.cpp,v 1.13 2006-11-23 13:38:32 cattanem Exp $
+// $Id: CaloFillRawBuffer.cpp,v 1.14 2007-02-22 23:39:52 odescham Exp $
 // Include files 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
@@ -45,7 +45,6 @@ CaloFillRawBuffer::CaloFillRawBuffer( const std::string& name,
 
   declareProperty( "DataCodingType",   m_dataCodingType = 1 );
   declareProperty( "InputBank",        m_inputBank          );
-  //  declareProperty( "BankType",         m_bankType          );
 }
 //=============================================================================
 // Destructor
@@ -63,12 +62,10 @@ StatusCode CaloFillRawBuffer::initialize() {
 
   m_calo = getDet<DeCalorimeter>( m_detectorLocation );
 
-  std::string toolName = "CaloReadoutTool/" + m_detectorName + "ReadoutTool";
-  m_roTool = tool<CaloReadoutTool>( toolName );
 
   if ( 2 == m_dataCodingType ) {
     //== TELL1 coding format: packed data, starting from Full banks
-    m_numberOfBanks =  m_roTool->nbTell1();
+    m_numberOfBanks =  m_calo->nTell1s();
     if ( "Ecal" == m_detectorName ) {
       m_bankType  = LHCb::RawBank::EcalPacked;
       m_inputBank = rootOnTES() + LHCb::CaloAdcLocation::FullEcal;
@@ -76,8 +73,8 @@ StatusCode CaloFillRawBuffer::initialize() {
       m_bankType  = LHCb::RawBank::HcalPacked;
       m_inputBank = rootOnTES() + LHCb::CaloAdcLocation::FullHcal;
     }
-    info() << "Processing " << m_roTool->nbFECards() 
-           << " FE Cards and " << m_roTool->nbTell1() << " TELL1"
+    info() << "Processing " << m_calo->nCards() 
+           << " FE-Cards and " << m_calo->nTell1s() << " TELL1"
            << endreq;
 
   }
@@ -229,12 +226,12 @@ void CaloFillRawBuffer::fillPackedBank ( ) {
   LHCb::L0CaloAdcs* trigAdcs = get<LHCb::L0CaloAdcs>( m_triggerBank );
   
   for ( int kTell1 = 0 ; m_numberOfBanks > kTell1 ; kTell1++ ) {
-    std::vector<int> feCards = m_roTool->feCardsInTell1( kTell1 );
+    std::vector<int> feCards = m_calo->tell1ToCards( kTell1 );
     for ( std::vector<int>::iterator iFe = feCards.begin(); feCards.end() != iFe; ++iFe ) {
       int cardNum = *iFe;
       int sizeIndex  = m_banks[kTell1].size();
-      m_banks[kTell1].push_back( m_roTool->cardCode( cardNum ) << 14 );
-      std::vector<LHCb::CaloCellID> ids = m_roTool->cellInFECard( cardNum );
+      m_banks[kTell1].push_back( m_calo->cardCode( cardNum ) << 14 );
+      std::vector<LHCb::CaloCellID> ids = m_calo->cardChannels( cardNum );
 
       //=== The trigger part is first
       int patternIndex = m_banks[kTell1].size();

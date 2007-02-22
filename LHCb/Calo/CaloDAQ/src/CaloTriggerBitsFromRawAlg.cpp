@@ -1,4 +1,4 @@
-// $Id: CaloTriggerBitsFromRawAlg.cpp,v 1.4 2007-01-12 10:42:57 cattanem Exp $
+// $Id: CaloTriggerBitsFromRawAlg.cpp,v 1.5 2007-02-22 23:39:52 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -26,15 +26,15 @@ CaloTriggerBitsFromRawAlg::CaloTriggerBitsFromRawAlg( const std::string& name,
   : GaudiAlgorithm ( name , pSvcLocator )
 {
   declareProperty("OutputData"  , m_outputData  );  
-  declareProperty("ToolName"    , m_toolName    );
+  declareProperty( "Extension"  ,  m_extension = "" );
 
   m_toolType  = "CaloTriggerBitsFromRaw";
   m_toolName = name + "Tool";
   if ( "Prs" == name.substr( 0 , 3 ) ) {
-    m_outputData = rootOnTES() + LHCb::L0PrsSpdHitLocation::Prs;
+    m_outputData = rootOnTES() + LHCb::L0PrsSpdHitLocation::Prs + m_extension;
     m_isPrs = true;
   } else if ( "Spd" == name.substr( 0 , 3 ) ) {
-    m_outputData = rootOnTES() + LHCb::L0PrsSpdHitLocation::Spd;
+    m_outputData = rootOnTES() + LHCb::L0PrsSpdHitLocation::Spd + m_extension;
     m_isPrs = false;
   }
 
@@ -51,7 +51,8 @@ StatusCode CaloTriggerBitsFromRawAlg::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  debug() << "==> Initialize" <<  endreq;  
+  debug() << "==> Initialize " << name() << endmsg;
+
   m_l0BitTool = tool<ICaloTriggerBitsFromRaw>( m_toolType, m_toolName , this);
   return StatusCode::SUCCESS;
 }
@@ -68,7 +69,14 @@ StatusCode CaloTriggerBitsFromRawAlg::execute() {
   put( newL0Bits , m_outputData );
 
   //*** get the input data from Raw and fill the output container
-  std::vector<LHCb::CaloCellID> l0Cells = m_l0BitTool->firedCells(m_isPrs );
+  LHCb::Calo::FiredCells l0Cells ;
+  if( m_isPrs){    
+    l0Cells = m_l0BitTool->prsCells();
+  }
+  else {
+    l0Cells = m_l0BitTool->spdCells();
+  }  
+  
   std::vector<LHCb::CaloCellID>::const_iterator iCell;
   
   for( iCell = l0Cells.begin(); l0Cells.end() != iCell ; ++iCell ) {

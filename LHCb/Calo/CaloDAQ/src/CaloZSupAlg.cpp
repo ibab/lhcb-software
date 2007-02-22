@@ -1,4 +1,4 @@
-// $Id: CaloZSupAlg.cpp,v 1.5 2006-11-23 13:38:32 cattanem Exp $
+// $Id: CaloZSupAlg.cpp,v 1.6 2007-02-22 23:39:52 odescham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -33,6 +33,7 @@ CaloZSupAlg::CaloZSupAlg( const std::string& name, ISvcLocator* pSvcLocator)
   declareProperty("ZsupMethod"      , m_zsupMethod         ) ;
   declareProperty("ZsupThreshold"   , m_zsupThreshold      ) ;
   declareProperty("OutputType"      , m_outputType = "Digits"  ) ;
+  declareProperty( "Extension"  ,  m_extension = "" );
 
 
 
@@ -47,14 +48,14 @@ CaloZSupAlg::CaloZSupAlg( const std::string& name, ISvcLocator* pSvcLocator)
   m_inputToolName = name + "Tool";
   if ( "Ecal" == name.substr( 0 , 4 ) ) {
     m_detectorName     = DeCalorimeterLocation::Ecal;
-    m_outputADCData    = LHCb::CaloAdcLocation::Ecal;
-    m_outputDigitData  = LHCb::CaloDigitLocation::Ecal;
+    m_outputADCData    = rootOnTES() + LHCb::CaloAdcLocation::Ecal + m_extension;
+    m_outputDigitData  = rootOnTES() + LHCb::CaloDigitLocation::Ecal + m_extension;
     m_zsupMethod       = "2D";
     m_zsupThreshold    = 20;
   } else if ( "Hcal" == name.substr( 0 , 4 ) ) {
     m_detectorName     = DeCalorimeterLocation::Hcal;
-    m_outputADCData    = LHCb::CaloAdcLocation::Hcal;
-    m_outputDigitData  = LHCb::CaloDigitLocation::Hcal;
+    m_outputADCData    = rootOnTES() + LHCb::CaloAdcLocation::Hcal + m_extension;
+    m_outputDigitData  = rootOnTES() + LHCb::CaloDigitLocation::Hcal + m_extension;
     m_zsupMethod       = "1D";
     m_zsupThreshold    = 4;
   }
@@ -89,12 +90,12 @@ StatusCode CaloZSupAlg::initialize() {
                           << endreq;
   
   // Retrieve the calorimeter we are working with.
-  m_calo = getDet<DeCalorimeter>( m_detectorName );
+  debug() << " get DeCalorimeter from " << m_detectorName << endreq;
+  m_calo = getDet<DeCalorimeter>( m_detectorName );  
   m_numberOfCells = m_calo->numberOfCells();
   m_pedShift      = m_calo->pedestalShift();
   
   //*** A few check of the parameters
-
   if ( "NO" != m_zsupMethod && 
        "1D" != m_zsupMethod && 
        "2D" != m_zsupMethod) {
@@ -171,9 +172,10 @@ StatusCode CaloZSupAlg::execute() {
   int index;
   
   // == Apply the threshold. If 2DZsup, tag also the neighbours
-
   for( anAdc = adcs.begin(); adcs.end() != anAdc ; ++anAdc ) {
+
     LHCb::CaloCellID id = (*anAdc).cellID();
+
     index         = m_calo->cellIndex( id );
     int    digAdc = (*anAdc).adc();
     if( m_zsupThreshold <= digAdc ) {

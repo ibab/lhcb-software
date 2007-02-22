@@ -1,4 +1,4 @@
-// $Id: CaloFillPrsSpdRawBuffer.h,v 1.4 2005-12-19 19:29:14 ocallot Exp $
+// $Id: CaloFillPrsSpdRawBuffer.h,v 1.5 2007-02-22 23:39:52 odescham Exp $
 #ifndef CALOFILLPRSSPDRAWBUFFER_H 
 #define CALOFILLPRSSPDRAWBUFFER_H 1
 
@@ -7,7 +7,6 @@
 #include "GaudiAlg/GaudiAlgorithm.h"
 
 #include "CaloDet/DeCalorimeter.h"
-#include "CaloDAQ/CaloReadoutTool.h"
 
 /** @class CaloFillPrsSpdRawBuffer CaloFillPrsSpdRawBuffer.h
  *  
@@ -48,7 +47,6 @@ private:
   int    m_dataCodingType;
 
   DeCalorimeter* m_calo;
-  CaloReadoutTool* m_roTool;
 
   // Statistics
   

@@ -1,4 +1,4 @@
-// $Id: CaloFillRawBuffer.h,v 1.5 2006-01-19 12:18:51 cattanem Exp $
+// $Id: CaloFillRawBuffer.h,v 1.6 2007-02-22 23:39:52 odescham Exp $
 #ifndef CALOFILLRAWBUFFER_H 
 #define CALOFILLRAWBUFFER_H 1
 
@@ -8,7 +8,6 @@
 
 #include "Event/RawEvent.h"
 #include "CaloDet/DeCalorimeter.h"
-#include "CaloDAQ/CaloReadoutTool.h"
 
 /** @class CaloFillRawBuffer CaloFillRawBuffer.h
  *  Fills the Raw Buffer banks for the calorimeter
@@ -46,7 +45,6 @@ private:
   int    m_dataCodingType;
 
   DeCalorimeter* m_calo;
-  CaloReadoutTool* m_roTool;
 
   // Statistics
   

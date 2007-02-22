@@ -1,4 +1,4 @@
-// $Id: CaloDigitsFromRaw.h,v 1.4 2006-06-27 16:55:39 odescham Exp $
+// $Id: CaloDigitsFromRaw.h,v 1.5 2007-02-22 23:39:52 odescham Exp $
 #ifndef CALOEVENT_CALODIGITSFROMRAW_H 
 #define CALOEVENT_CALODIGITSFROMRAW_H 1
 
@@ -6,14 +6,12 @@
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
 
-// from CaloEvent
+// from LHCb
 #include "Event/CaloDigit.h"
-
 #include "CaloDAQ/ICaloTriggerBitsFromRaw.h"
 #include "CaloDAQ/ICaloEnergyFromRaw.h"
-
 #include "GaudiAlg/ISequencerTimerTool.h"
-// from DAQEvent
+#include "CaloDet/DeCalorimeter.h"
 #include "Event/RawEvent.h"
 
 /** @class CaloDigitsFromRaw CaloDigitsFromRaw.h component/CaloDigitsFromRaw.h
@@ -54,7 +52,7 @@ private:
   
 private:
   std::string m_extension ; ///< Added to the default container name, for tests
-  int         m_calo      ;
+  int         m_detectorNum      ;
 
   ICaloTriggerBitsFromRaw* m_spdTool;
   ICaloEnergyFromRaw*  m_energyTool;
@@ -62,7 +60,10 @@ private:
   bool m_adcOnTES;
   bool m_digitOnTES;
   std::string m_outputType;
-
-
+  std::string m_pinContainerName;
+  std::string m_outputDigits;
+  std::string m_outputADCs;
+  DeCalorimeter* m_calo;
+  
 };
 #endif // CALOEVENT_CALODIGITSFROMRAW_H

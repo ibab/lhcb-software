@@ -1,4 +1,4 @@
-// $Id: CaloZSupAlg.h,v 1.3 2006-09-26 12:42:03 odescham Exp $ 
+// $Id: CaloZSupAlg.h,v 1.4 2007-02-22 23:39:52 odescham Exp $ 
 #ifndef   CALODIGIT_CALOZSUPALG_H
 #define   CALODIGIT_CALOZSUPALG_H 1
 
@@ -51,6 +51,7 @@ private:
   bool m_digitOnTES;
   double m_pedShift;
   std::string m_outputType;
+  std::string m_extension;
   
 
   DeCalorimeter*         m_calo;    ///< Detector element pointer

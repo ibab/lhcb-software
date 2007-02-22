@@ -1,4 +1,4 @@
-// $Id: ICaloEnergyFromRaw.h,v 1.3 2005-12-19 19:29:14 ocallot Exp $
+// $Id: ICaloEnergyFromRaw.h,v 1.4 2007-02-22 23:39:52 odescham Exp $
 #ifndef CALODAQ_ICALOENERGYFROMRAW_H 
 #define CALODAQ_ICALOENERGYFROMRAW_H 1
 
@@ -9,6 +9,7 @@
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
 
+#include "Event/RawEvent.h"
 #include "Event/CaloAdc.h"
 #include "Event/CaloDigit.h"
 
@@ -27,8 +28,19 @@ public:
   static const InterfaceID& interfaceID() { return IID_ICaloEnergyFromRaw; }
 
   virtual std::vector<LHCb::CaloAdc>&   adcs( ) = 0;
+  virtual std::vector<LHCb::CaloAdc>&   adcs( int source ) = 0;
+  virtual std::vector<LHCb::CaloAdc>&   adcs( LHCb::RawBank* bank ) = 0;
+  virtual std::vector<LHCb::CaloAdc>&   pinAdcs( ) = 0;
   
   virtual std::vector<LHCb::CaloDigit>& digits( ) = 0;
+  virtual std::vector<LHCb::CaloDigit>& digits( int source  ) = 0;
+  virtual std::vector<LHCb::CaloDigit>& digits( LHCb::RawBank* bank ) = 0;
+
+  virtual StatusCode  getCaloBanks()=0;
+  virtual void setBanks(const std::vector<LHCb::RawBank*>* bank ) = 0;
+  
+
+  
   
 protected:
 

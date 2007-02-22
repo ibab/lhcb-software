@@ -1,4 +1,4 @@
-// $Id: CaloFillPrsSpdRawBuffer.cpp,v 1.11 2006-11-23 13:38:32 cattanem Exp $
+// $Id: CaloFillPrsSpdRawBuffer.cpp,v 1.12 2007-02-22 23:39:52 odescham Exp $
 // Include files 
 #include "Event/RawEvent.h"
 
@@ -49,10 +49,9 @@ StatusCode CaloFillPrsSpdRawBuffer::initialize() {
   debug() << "==> Initialize" << endmsg;
 
   m_calo = getDet<DeCalorimeter>( DeCalorimeterLocation::Prs );
-  m_roTool = tool<CaloReadoutTool>( "CaloReadoutTool/PrsReadoutTool" );
 
   if ( 3 == m_dataCodingType ) {
-    m_numberOfBanks =  m_roTool->nbTell1();
+    m_numberOfBanks =  m_calo->nTell1s();
     m_bankType      = LHCb::RawBank::PrsPacked;
   }
 
@@ -302,15 +301,15 @@ void CaloFillPrsSpdRawBuffer::fillPackedBank ( ) {
   LHCb::L0PrsSpdHits* spd = get<LHCb::L0PrsSpdHits>( m_spdBank );
   
   for ( int kTell1 = 0 ; m_numberOfBanks > kTell1 ; kTell1++ ) {
-    std::vector<int> feCards = m_roTool->feCardsInTell1( kTell1 );
+    std::vector<int> feCards = m_calo->tell1ToCards( kTell1 );
     for ( std::vector<int>::iterator iFe = feCards.begin(); feCards.end() != iFe; ++iFe ) {
       int cardNum = *iFe;
       int sizeIndex  = m_banks[kTell1].size();
-      m_banks[kTell1].push_back( m_roTool->cardCode( cardNum ) << 14 );
+      m_banks[kTell1].push_back( m_calo->cardCode( cardNum ) << 14 );
       int sizeAdc = 0;
       int sizeTrig = 0;
 
-      std::vector<LHCb::CaloCellID> ids = m_roTool->cellInFECard( cardNum );
+      std::vector<LHCb::CaloCellID> ids = m_calo->cardChannels( cardNum );
 
       //== First the trigger bits
 
