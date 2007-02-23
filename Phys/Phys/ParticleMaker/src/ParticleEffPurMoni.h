@@ -5,7 +5,7 @@
  *  Header file for class : ParticleEffPurMoni
  *
  *  CVS Log :-
- *  $Id: ParticleEffPurMoni.h,v 1.2 2007-02-23 17:03:52 jonrob Exp $
+ *  $Id: ParticleEffPurMoni.h,v 1.3 2007-02-23 17:05:53 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2007-002-21
@@ -64,7 +64,7 @@ public:
 
 private: // definitions
 
-  /** @class ParticleHistory
+  /** @class ParticleHistory ParticleEffPurMoni.h
    *  Utility class containing basic Particle history information for the ParticleEffPurMoni algorithm
    *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
    *  @date   2007-02-21
@@ -103,7 +103,7 @@ private: // definitions
   /// Simple tally map for each particle type
   typedef std::map<std::string, unsigned long int> TypeTally;
 
-  /** @class MCSummary
+  /** @class MCSummary ParticleEffPurMoni.h
    *  Utility class containing summary MC tallies for the ParticleEffPurMoni algorithm
    *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
    *  @date   2007-02-21
@@ -111,6 +111,7 @@ private: // definitions
   class MCSummary
   {
   public:
+    /// Default Constructor
     MCSummary() : nReco(0) { }
   public:
     TypeTally trueMCType;     ///< Total number of each MC type
@@ -118,10 +119,15 @@ private: // definitions
     std::string decayHistory; ///< The particle decay history
   };
 
-  // typedef std::pair<std::string,std::string>      FullPartName;
+  /** @class FullPartName ParticleEffPurMoni.h
+   *  Utility class containing unique name information for the Particle
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   2007-02-21
+   */
   class FullPartName
   {
   public:
+    /// Default Constructor
     FullPartName( const std::string & name = "",
                   const std::string & tree = "",
                   const std::string & type = "") 
@@ -145,12 +151,12 @@ private: // definitions
     { return os << "[ " << name.particleName << " " 
                 << name.decayTree << " " << name.protoType << " ]"; }
   public:
-    std::string particleName;
-    std::string decayTree;
-    std::string protoType;
+    std::string particleName; ///< Particle name (K+, pi- etc.)
+    std::string decayTree;    ///< The decay tree for the particle
+    std::string protoType;    ///< The ProtoParticle type
   };
 
-  typedef std::map< FullPartName, MCSummary >     MCSummaryMap;
+  typedef std::map< FullPartName, MCSummary >     MCSummaryMap; 
   typedef std::map< std::string, MCSummary >      MCSummaryMap2;
   typedef std::map< std::string, MCSummaryMap >   LocationMap;
 
