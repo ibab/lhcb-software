@@ -16,6 +16,7 @@ StdNoPIDsPionsSeq.Members += { "ParticleEffPurMoni/StdNoPIDsPionsMoni" };
 StdNoPIDsPionsMoni.PhysDesktop.InputLocations = { "Phys/StdNoPIDsPions" };
 StdLoosePionsSeq.Members += { "ParticleEffPurMoni/StdLoosePionsMoni" };
 StdLoosePionsMoni.PhysDesktop.InputLocations = { "Phys/StdLoosePions" };
+
 StdTightPionsSeq.Members += { "ParticleEffPurMoni/StdTightPionsMoni" };
 StdTightPionsMoni.PhysDesktop.InputLocations = { "Phys/StdTightPions" };
 StdLooseVTTPionsSeq.Members += { "ParticleEffPurMoni/StdLooseVTTPionsMoni" };
@@ -160,27 +161,27 @@ StdLoosePhi2KKMoni.PhysDesktop.InputLocations = { "Phys/StdLoosePhi2KK" };
 // ==============================================================================
 // loose
 StdLooseLambda1115_LL_Seq.Members += { "ParticleEffPurMoni/StdLooseLambda1115_LL_Moni" };
-StdLooseLambda1115_LL_Mon.PhysDesktop.InputLocations = { "Phys/StdLooseLambda1115_LL" };
+StdLooseLambda1115_LL_Moni.PhysDesktop.InputLocations = { "Phys/StdLooseLambda1115_LL" };
 StdLooseLambda1115_DD_Seq.Members += { "ParticleEffPurMoni/StdLooseLambda1115_DD_Moni" };
-StdLooseLambda1115_DD_Mon.PhysDesktop.InputLocations = { "Phys/StdLooseLambda1115_DD" };
+StdLooseLambda1115_DD_Moni.PhysDesktop.InputLocations = { "Phys/StdLooseLambda1115_DD" };
 StdLooseLambda1115_LU_Seq.Members += { "ParticleEffPurMoni/StdLooseLambda1115_LU_Moni" };
-StdLooseLambda1115_LU_Mon.PhysDesktop.InputLocations = { "Phys/StdLooseLambda1115_LU" };
+StdLooseLambda1115_LU_Moni.PhysDesktop.InputLocations = { "Phys/StdLooseLambda1115_LU" };
 StdLooseLambda1115_UL_Seq.Members += { "ParticleEffPurMoni/StdLooseLambda1115_UL_Moni" };
-StdLooseLambda1115_UL_Mon.PhysDesktop.InputLocations = { "Phys/StdLooseLambda1115_UL" };
+StdLooseLambda1115_UL_Moni.PhysDesktop.InputLocations = { "Phys/StdLooseLambda1115_UL" };
 StdLooseLambda1115_LD_Seq.Members += { "ParticleEffPurMoni/StdLooseLambda1115_LD_Moni" };
-StdLooseLambda1115_LD_Mon.PhysDesktop.InputLocations = { "Phys/StdLooseLambda1115_LD" };
+StdLooseLambda1115_LD_Moni.PhysDesktop.InputLocations = { "Phys/StdLooseLambda1115_LD" };
 StdLooseLambda1115_DL_Seq.Members += { "ParticleEffPurMoni/StdLooseLambda1115_DL_Moni" };
-StdLooseLambda1115_DL_Mon.PhysDesktop.InputLocations = { "Phys/StdLooseLambda1115_DL" };
+StdLooseLambda1115_DL_Moni.PhysDesktop.InputLocations = { "Phys/StdLooseLambda1115_DL" };
 // tight
 StdTightLambda1115_LL_Seq.Members += { "ParticleEffPurMoni/StdTightLambda1115_LL_Moni" };
-StdTightLambda1115_LL_Mon.PhysDesktop.InputLocations = { "Phys/StdTightLambda1115_LL" };
+StdTightLambda1115_LL_Moni.PhysDesktop.InputLocations = { "Phys/StdTightLambda1115_LL" };
 StdTightLambda1115_DD_Seq.Members += { "ParticleEffPurMoni/StdTightLambda1115_DD_Moni" };
-StdTightLambda1115_DD_Mon.PhysDesktop.InputLocations = { "Phys/StdTightLambda1115_DD" };
+StdTightLambda1115_DD_Moni.PhysDesktop.InputLocations = { "Phys/StdTightLambda1115_DD" };
 StdTightLambda1115_LU_Seq.Members += { "ParticleEffPurMoni/StdTightLambda1115_LU_Moni" };
-StdTightLambda1115_LU_Mon.PhysDesktop.InputLocations = { "Phys/StdTightLambda1115_LU" };
+StdTightLambda1115_LU_Moni.PhysDesktop.InputLocations = { "Phys/StdTightLambda1115_LU" };
 StdTightLambda1115_UL_Seq.Members += { "ParticleEffPurMoni/StdTightLambda1115_UL_Moni" };
-StdTightLambda1115_UL_Mon.PhysDesktop.InputLocations = { "Phys/StdTightLambda1115_UL" };
+StdTightLambda1115_UL_Moni.PhysDesktop.InputLocations = { "Phys/StdTightLambda1115_UL" };
 StdTightLambda1115_LD_Seq.Members += { "ParticleEffPurMoni/StdTightLambda1115_LD_Moni" };
-StdTightLambda1115_LD_Mon.PhysDesktop.InputLocations = { "Phys/StdTightLambda1115_LD" };
+StdTightLambda1115_LD_Moni.PhysDesktop.InputLocations = { "Phys/StdTightLambda1115_LD" };
 StdTightLambda1115_DL_Seq.Members += { "ParticleEffPurMoni/StdTightLambda1115_DL_Moni" };
-StdTightLambda1115_DL_Mon.PhysDesktop.InputLocations = { "Phys/StdTightLambda1115_DL" };
+StdTightLambda1115_DL_Moni.PhysDesktop.InputLocations = { "Phys/StdTightLambda1115_DL" };
