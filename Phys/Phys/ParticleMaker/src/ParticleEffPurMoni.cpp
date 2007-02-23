@@ -5,7 +5,7 @@
  *  Implementation file for class : ParticleEffPurMoni
  *
  *  CVS Log :-
- *  $Id: ParticleEffPurMoni.cpp,v 1.3 2007-02-23 17:39:35 jonrob Exp $
+ *  $Id: ParticleEffPurMoni.cpp,v 1.4 2007-02-23 18:14:16 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2007-002-21
@@ -251,7 +251,7 @@ ParticleEffPurMoni::addParticle( const LHCb::Particle * particle,
                                  const std::string & history,
                                  const bool toplevel ) const
 {
-  // protect against too many recursive calls...
+  // protect against too many recursive calls... (should never ever get this deep)
   ++m_recurCount;
   if ( m_recurCount > 9999 )
   {
@@ -316,11 +316,11 @@ void ParticleEffPurMoni::printStats() const
 {
 
   const std::string & LINES =
-    "==============================================================================";
+    "================================================================================================";
   const std::string & lines =
-    "------------------------------------------------------------------------------";
+    "------------------------------------------------------------------------------------------------";
 
-  const Rich::PoissonEffFunctor eff;
+  const Rich::PoissonEffFunctor eff("%6.2f +-%5.2f");
 
   always() << LINES << endreq;
 
@@ -348,7 +348,7 @@ void ParticleEffPurMoni::printStats() const
           iSum != (*iLoc).second.end(); ++iSum )
     {
       const long nRecoTrue  = (*iSum).second.trueMCType[(*iSum).first.particleName];
-      const long nTotalTrue = m_mcProtoCount[(*iSum).first.protoType].trueMCType[(*iSum).first.particleName];
+      //const long nTotalTrue = m_mcProtoCount[(*iSum).first.protoType].trueMCType[(*iSum).first.particleName];
       if ( lastType != (*iSum).first.protoType )
       {
         always() << "  " << (*iSum).first.protoType << endreq;
@@ -356,8 +356,9 @@ void ParticleEffPurMoni::printStats() const
       }
       always() << "    Reco. Tree : " << (*iSum).first.decayTree
                << " : " << nRecoTrue << " Particles";
-      if ( (*iSum).first.decayTree == (*iSum).first.particleName )
-      { always() << " : Reco. Eff. = " << eff(nRecoTrue,nTotalTrue) << " %"; }
+      const bool primaryPart = ( (*iSum).first.decayTree == (*iSum).first.particleName );
+      //if ( primaryPart )
+      //{ always() << " : Reco. Eff. = " << eff(nRecoTrue,nTotalTrue) << " %"; }
       always() << endreq;
       if ( (*iSum).second.nReco > 0 )
       {
@@ -367,17 +368,20 @@ void ParticleEffPurMoni::printStats() const
               iT != (*iSum).second.trueMCType.end(); ++iT )
         {
           std::string mcT = (*iT).first;
-          mcT.resize(25,' ');
+          mcT.resize(15,' ');
           if ( (100*(*iT).second)/(*iSum).second.nReco > m_minContrib )
           {
+            const long nBkgTrue = m_mcProtoCount[(*iSum).first.protoType].trueMCType[(*iT).first];
             always() << "     -> True MC Type : " << mcT
                      << " " << eff( (*iT).second, (*iSum).second.nReco )
-                     << " % of sample" << endreq;
+                     << " % of sample"; 
+            if ( primaryPart ) always() << " : ID eff. = " << eff( (*iT).second, nBkgTrue ) << " %";
+            always() << endreq;
           } else { ++suppressedContribs; }
         }
         if ( suppressedContribs>0 )
         {
-          always() << "     -> Suppressed " << suppressedContribs << " contributuions below " 
+          always() << "     -> Suppressed " << suppressedContribs << " contribution(s) below " 
                    <<  m_minContrib << " %" << endreq;
         }
       }
