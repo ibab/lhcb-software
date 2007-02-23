@@ -1,8 +1,11 @@
-// $Id: MCParticles.cpp,v 1.7 2006-10-26 11:57:41 ibelyaev Exp $
+// $Id: MCParticles.cpp,v 1.8 2007-02-23 09:01:51 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.7 $
+// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.8 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2006/10/26 11:57:41  ibelyaev
+//  SLC4: fix error and many warnings
+//
 // Revision 1.6  2006/05/17 16:23:24  jpalac
 // *** empty log message ***
 //
@@ -355,8 +358,6 @@ LoKi::MCParticles::ThreeCharge::operator()
 LoKi::MCParticles::ThreeCharge*
 LoKi::MCParticles::ThreeCharge::clone() const 
 { return new LoKi::MCParticles::ThreeCharge(*this) ; }
-// ============================================================================
-
 // ============================================================================
 std::ostream&
 LoKi::MCParticles::ThreeCharge::fillStream

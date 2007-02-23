@@ -1,6 +1,6 @@
-! $Id: release.notes,v 1.15 2007-01-23 13:27:18 ibelyaev Exp $ 
+! $Id: release.notes,v 1.16 2007-02-23 09:01:51 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.15 $
+! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.16 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -16,6 +16,14 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 !
 ! -----------------------------------------------------------------------------
+
+!========================== LoKiMC v2r1 2007-02-23 ====================
+
+! 2007-02-23 - Vanya BELYAEV
+ - LoKi/MCParticles.h 
+     replace "struct" -> "class"
+ - cmt/requirements 
+     version increment to v2r1 
 
 !========================== LoKiMC v2r0 2007-01-23 ====================
 
@@ -243,6 +251,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.15  2007/01/23 13:27:18  ibelyaev
+!  add MCVALID/MCVVALID
+!
 ! Revision 1.14  2007/01/12 14:10:23  ranjard
 ! v2r0 - use Gaudi v19r0
 !

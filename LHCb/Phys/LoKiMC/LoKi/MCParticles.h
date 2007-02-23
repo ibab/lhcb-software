@@ -1,8 +1,11 @@
-// $Id: MCParticles.h,v 1.7 2006-11-27 11:58:37 ibelyaev Exp $
+// $Id: MCParticles.h,v 1.8 2007-02-23 09:01:51 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.7 $ 
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.8 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2006/11/27 11:58:37  ibelyaev
+//  prepare for LoKi v4r3
+//
 // Revision 1.6  2006/10/26 11:57:41  ibelyaev
 //  SLC4: fix error and many warnings
 //
@@ -83,13 +86,15 @@ namespace LoKi
    */
   namespace  MCParticles 
   {
-    /** @struct Momentum 
+    /** @class Momentum 
      *  evaluator of the momentum of the particle 
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    struct Momentum : public LoKi::Function<const LHCb::MCParticle*> 
+    class Momentum 
+      : public LoKi::Function<const LHCb::MCParticle*> 
     {
+    public:
       /// clone method (mandatory!)
       virtual Momentum* clone() const  ; 
       /// the only one essential method 
@@ -98,14 +103,16 @@ namespace LoKi
       virtual  std::ostream& fillStream( std::ostream& s ) const ;      
     };
     
-    /** @struct Energy 
+    /** @class Energy 
      *  evaluator of the energy of the particle 
      *  
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    struct Energy : public LoKi::Function<const LHCb::MCParticle*>
+    class Energy 
+      : public LoKi::Function<const LHCb::MCParticle*>
     {
+    public:
       /// clone method (mandatory!)
       virtual Energy* clone() const ;
       /// the only one essential method 
@@ -114,14 +121,16 @@ namespace LoKi
       virtual  std::ostream& fillStream( std::ostream& s ) const ;      
     };
     
-    /** @struct TransverseMomentum
+    /** @class TransverseMomentum
      *  evaluator of the transverse momentum of the particle 
      *  
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    struct TransverseMomentum : public LoKi::Function<const LHCb::MCParticle*>
+    class TransverseMomentum 
+      : public LoKi::Function<const LHCb::MCParticle*>
     {
+    public:
       /// clone method (mandatory!)
       virtual TransverseMomentum* clone() const ;
       /// the only one essential method 
@@ -130,14 +139,16 @@ namespace LoKi
       virtual  std::ostream& fillStream( std::ostream& s ) const ;      
     };
     
-    /** @struct MomentumX
+    /** @class MomentumX
      *  evaluator of the x component of the particle's momentum 
      *  
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    struct MomentumX : public LoKi::Function<const LHCb::MCParticle*>
-    {      
+    class MomentumX 
+      : public LoKi::Function<const LHCb::MCParticle*>
+    { 
+    public:
       /// clone method (mandatory!)
       virtual MomentumX* clone() const ;
       /// the only one essential method 
@@ -146,14 +157,16 @@ namespace LoKi
       virtual  std::ostream& fillStream( std::ostream& s ) const ;      
     };
     
-    /** @struct MomentumY
+    /** @class MomentumY
      *  evaluator of the y component of the particle's momentum 
      *  
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    struct MomentumY : public LoKi::Function<const LHCb::MCParticle*>
-    {      
+    class MomentumY 
+      : public LoKi::Function<const LHCb::MCParticle*>
+    {  
+    public:
       /// clone method (mandatory!)
       virtual MomentumY* clone() const ;
       /// the only one essential method 
@@ -162,14 +175,16 @@ namespace LoKi
       virtual  std::ostream& fillStream( std::ostream& s ) const ;      
     };
     
-    /** @struct MomentumZ
+    /** @class MomentumZ
      *  evaluator of the z component of the particle's momentum 
      *  
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    struct MomentumZ : public LoKi::Function<const LHCb::MCParticle*>
-    {      
+    class MomentumZ
+      : public LoKi::Function<const LHCb::MCParticle*>
+    { 
+    public:
       /// clone method (mandatory!)
       virtual MomentumZ* clone() const  ;
       /// the only one essential method 
@@ -177,15 +192,17 @@ namespace LoKi
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;      
     };
-
-    /** @struct PseudoRapidity
+    
+    /** @class PseudoRapidity
      *  evaluator of the seudorapidity of the particle 
      *  
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    struct PseudoRapidity : public LoKi::Function<const LHCb::MCParticle*>
-    {      
+    class PseudoRapidity 
+      : public LoKi::Function<const LHCb::MCParticle*>
+    {    
+    public:
       /// clone method (mandatory!)
       virtual PseudoRapidity* clone() const ;
       /// the only one essential method 
@@ -194,14 +211,16 @@ namespace LoKi
       virtual  std::ostream& fillStream( std::ostream& s ) const ;      
     };
     
-    /** @struct Theta
+    /** @class Theta
      *  evaluator of the pseudorapidity of the particle 
      *  
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2002-07-15
      */
-    struct Theta : public LoKi::Function<const LHCb::MCParticle*>
-    {      
+    class Theta 
+      : public LoKi::Function<const LHCb::MCParticle*>
+    {  
+    public:
       /// clone method (mandatory!)
       virtual Theta* clone() const ;
       /// the only one essential method 
@@ -210,14 +229,16 @@ namespace LoKi
       virtual  std::ostream& fillStream( std::ostream& s ) const ;      
     };
     
-    /** @struct Phi
+    /** @class Phi
      *  evaluator of the 'Phi' of the particle 
      *  
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    struct Phi : public LoKi::Function<const LHCb::MCParticle*>
-    {      
+    class Phi 
+      : public LoKi::Function<const LHCb::MCParticle*>
+    { 
+    public:
       /// clone method (mandatory!)
       virtual Phi* clone() const ;
       /// the only one essential method 
@@ -225,15 +246,17 @@ namespace LoKi
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;      
     };
-
-    /** @struct Mass
+    
+    /** @class Mass
      *  evaluator of the mass of the particle 
      *  
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    struct Mass : public LoKi::Function<const LHCb::MCParticle*>
-    {      
+    class Mass 
+      : public LoKi::Function<const LHCb::MCParticle*>
+    { 
+    public:
       /// clone method (mandatory!)
       virtual Mass* clone() const ;
       /// the only one essential method 
@@ -242,13 +265,14 @@ namespace LoKi
       virtual  std::ostream& fillStream( std::ostream& s ) const ;      
     };
     
-    /** @struct Identifier
+    /** @class Identifier
      *  evaluator of the id of the particle 
      *  
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class Identifier : public LoKi::Function<const LHCb::MCParticle*>
+    class Identifier 
+      : public LoKi::Function<const LHCb::MCParticle*>
     {    
     public:
       /// clone method (mandatory!)
@@ -258,15 +282,15 @@ namespace LoKi
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;      
     };
-
-    /** @struct AbsIdentifier
+    
+    /** @class AbsIdentifier
      *  evaluator of the id of the particle 
      *  
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class AbsIdentifier : 
-      public LoKi::Function<const LHCb::MCParticle*>
+    class AbsIdentifier 
+      : public LoKi::Function<const LHCb::MCParticle*>
     {      
     public:
       /// clone method (mandatory!)
@@ -276,16 +300,16 @@ namespace LoKi
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;      
     };
-
-    /** @struct Oscillated
+    
+    /** @class Oscillated
      *
      *  It evaluates to 'true' for oscillated particles 
      *  
      *  @author Vanya Belyaev ibelyaev@physics.syr.edu
      *  @date   2006-02-05
      */
-    class Oscillated: 
-      public LoKi::Predicate<const LHCb::MCParticle*>
+    class Oscillated
+      : public LoKi::Predicate<const LHCb::MCParticle*>
     {      
     public:
       /// clone method (mandatory!)
@@ -296,14 +320,16 @@ namespace LoKi
       virtual  std::ostream& fillStream( std::ostream& s ) const ;      
     };
     
-    /** @struct ThreeCharge
+    /** @class ThreeCharge
      *  evaluator of the id of the particle 
      *  
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    struct ThreeCharge : public LoKi::Function<const LHCb::MCParticle*>
-    {      
+    class ThreeCharge 
+      : public LoKi::Function<const LHCb::MCParticle*>
+    { 
+    public:
       /// clone method (mandatory!)
       virtual ThreeCharge* clone() const ;
       /// the only one essential method 
@@ -312,7 +338,7 @@ namespace LoKi
       virtual  std::ostream& fillStream( std::ostream& s ) const ;      
     };
 
-    /** @struct ProperLifeTime 
+    /** @class ProperLifeTime 
      *  evaluator of the proper lifetime of the particle 
      *  
      *  Properlife time formaly evaluated as the 
@@ -322,8 +348,10 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date   2004-01-25
      */
-    struct ProperLifeTime : public LoKi::Function<const LHCb::MCParticle*>
-    {      
+    class ProperLifeTime 
+      : public LoKi::Function<const LHCb::MCParticle*>
+    { 
+    public:
       /// clone method (mandatory!)
       virtual ProperLifeTime* clone() const ;
       /// the only one essential method 
@@ -338,7 +366,8 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date   2004-01-25
      */
-    class  HasQuark  : public LoKi::Predicate<const LHCb::MCParticle*>
+    class  HasQuark  
+      : public LoKi::Predicate<const LHCb::MCParticle*>
     {
     public:
       HasQuark (  const LHCb::ParticleID::Quark quark ) ;
@@ -363,8 +392,10 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date   2004-01-25
      */
-    struct IsCharged : public LoKi::Predicate<const LHCb::MCParticle*>
+    class IsCharged 
+      : public LoKi::Predicate<const LHCb::MCParticle*>
     {
+    public:
       /// clone method (mandatory!)
       virtual IsCharged* clone() const ;
       /// the only one essential method 
@@ -378,8 +409,10 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date   2004-01-25
      */
-    struct IsNeutral : public LoKi::Predicate<const LHCb::MCParticle*>
+    class IsNeutral 
+      : public LoKi::Predicate<const LHCb::MCParticle*>
     {
+    public:
       /// clone method (mandatory!)
       virtual IsNeutral* clone() const ;
       /// the only one essential method 
@@ -393,8 +426,10 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date   2004-01-25
      */
-    struct IsLepton : public LoKi::Predicate<const LHCb::MCParticle*>
+    class IsLepton 
+      : public LoKi::Predicate<const LHCb::MCParticle*>
     {
+    public:
       /// clone method (mandatory!)
       virtual IsLepton* clone() const ;
       /// the only one essential method 
@@ -408,8 +443,10 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date   2004-01-25
      */
-    struct IsMeson : public LoKi::Predicate<const LHCb::MCParticle*>
+    class IsMeson 
+      : public LoKi::Predicate<const LHCb::MCParticle*>
     {
+    public:
       /// clone method (mandatory!)
       virtual IsMeson* clone() const ;
       /// the only one essential method 
@@ -423,8 +460,10 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date   2004-01-25
      */
-    struct IsBaryon : public LoKi::Predicate<const LHCb::MCParticle*>
+    class IsBaryon 
+      : public LoKi::Predicate<const LHCb::MCParticle*>
     {
+    public:
       /// clone method (mandatory!)
       virtual IsBaryon* clone() const ;
       /// the only one essential method 
@@ -438,8 +477,10 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date   2004-01-25
      */
-    struct IsHadron : public LoKi::Predicate<const LHCb::MCParticle*>
+    class IsHadron 
+      : public LoKi::Predicate<const LHCb::MCParticle*>
     {
+    public:
       /// clone method (mandatory!)
       virtual IsHadron* clone() const ;
       /// the only one essential method 
@@ -453,8 +494,10 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date   2004-01-25
      */
-    struct IsNucleus : public LoKi::Predicate<const LHCb::MCParticle*>
+    class IsNucleus 
+      : public LoKi::Predicate<const LHCb::MCParticle*>
     {
+    public:
       /// clone method (mandatory!)
       virtual IsNucleus* clone() const ;
       /// the only one essential method 
@@ -462,14 +505,15 @@ namespace LoKi
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;      
     };
-
+    
     /** @class FromMCDecayTree 
      *  simple predicate whoch evaluates if the MC particle belons to 
      *  MC decay tree of other MC particle
      *  @author Vanya BELYAEV  Ivan.Belyaev@itep.ru
      *  @date   2004-07-07
      */
-    class FromMCDecayTree : public LoKi::Predicate<const LHCb::MCParticle*>
+    class FromMCDecayTree 
+      : public LoKi::Predicate<const LHCb::MCParticle*>
     {
     protected:
       typedef std::vector<const LHCb::MCParticle*> MCCont ;
