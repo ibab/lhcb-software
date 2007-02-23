@@ -4,6 +4,15 @@
 ! Purpose     : Digitisation and Zero-suppression of the Calorimeters
 !-----------------------------------------------------------------------------
 
+
+! 2007-02-22 - Olivier Deschamps 
+ - add new algorithm : CaloPinDigitAlg : allow to produce
+	"Calibration Data (LED)" for Ecal/Hcal
+ - options/CaliBoole.opts : special setup of Boole to produce Calo 
+	"calibration data"  (only Calo Banks are filled)
+
+
+
 !======================== CaloDigit v2r2 2006-11-23 ==========================
 ! 2006-11-23 - Marco Cattaneo
  - get SystemOfUnits from GaudiKernel
