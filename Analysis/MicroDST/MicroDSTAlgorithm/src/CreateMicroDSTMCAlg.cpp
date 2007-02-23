@@ -1,4 +1,4 @@
-// $Id: CreateMicroDSTMCAlg.cpp,v 1.4 2007-02-21 13:49:52 ukerzel Exp $
+// $Id: CreateMicroDSTMCAlg.cpp,v 1.5 2007-02-23 09:23:00 ukerzel Exp $
 // Include files 
 
 // from Gaudi
@@ -22,12 +22,16 @@ DECLARE_ALGORITHM_FACTORY( CreateMicroDSTMCAlg );
 //=============================================================================
 CreateMicroDSTMCAlg::CreateMicroDSTMCAlg( const std::string& name,
                                       ISvcLocator* pSvcLocator)
-  : DVAlgorithm          ( name , pSvcLocator               ),
-    m_OutputPrefix       ( "microDST"                       ),
-    m_CloneEndVertices   ( false                            ),
-    m_CloneVertexProducts( false                            ),
-    m_part2MCLinkerComposite(),
-    m_part2MCLinkerLinks()
+  : DVAlgorithm                    ( name , pSvcLocator  ),
+    m_OutputPrefix                 ( "microDST"          ),
+    m_CloneEndVertices             ( false               ),
+    m_CloneVertexProducts          ( false               ),
+    m_part2MCLinkerComposite       ( 0                   ),
+    m_part2MCLinkerLinks           ( 0                   ),
+    m_nBasicParticles              ( 0                   ),
+    m_nCompositeParticles          ( 0                   ),
+    m_nBasicParticlesAssociated    ( 0                   ),
+    m_nCompositeParticlesAssociated( 0                   )
 {
  
   declareProperty( "OutputPrefix"        , m_OutputPrefix        = "microDST" );
@@ -48,7 +52,6 @@ StatusCode CreateMicroDSTMCAlg::initialize() {
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   debug() << "==> Initialize" << endmsg;
-  std::vector<std::string>::const_iterator iLoc;
 
   info() << "output prefix for microDST           " << m_OutputPrefix        << endmsg;
   info() << "clone end vertices of particles      " << m_CloneEndVertices    << endmsg;
@@ -69,14 +72,6 @@ StatusCode CreateMicroDSTMCAlg::execute() {
   debug() << "==> Execute" << endmsg;
 
   StatusCode sc;
-
-  //
-  // setups
-  //
-  m_ContainerMap.clear();  //reset
-
-
-
 
   //
   // get particles in input-location(s) from PhysDesktop
@@ -117,6 +112,11 @@ StatusCode CreateMicroDSTMCAlg::execute() {
 StatusCode CreateMicroDSTMCAlg::finalize() {
 
   debug() << "==> Finalize" << endmsg;
+
+  info() << "# associations attempted for basic particles     " << m_nBasicParticles               << endmsg;
+  info() << "  #successful                                    " << m_nBasicParticlesAssociated     << endmsg;
+  info() << "# associations attempted for composite particles " << m_nCompositeParticles           << endmsg;
+  info() << "  #successful                                    " << m_nCompositeParticlesAssociated << endmsg;
 
   //
   // clean up
@@ -174,6 +174,14 @@ StatusCode CreateMicroDSTMCAlg::StoreMCParticle(const LHCb::Particle * particle)
       verbose() << "got clone of stored particle with PID " << mcParticleClone->particleID().pid() << endmsg;
       
       if (mcParticleClone) {
+
+        if (!particle->isBasicParticle()) {
+          verbose() << "store direct link for composite particle" << endmsg;
+          sc = StoreLink<LHCb::Particle,LHCb::MCParticle>(particle,mcParticleClone);
+          if (sc != StatusCode::SUCCESS) {
+            Warning("something went wrong when storing link from part->MCPart", StatusCode::SUCCESS);
+          }// if sc
+        }// if !basicPart
 
         // check if particle has a proto-particle
         if (particle->proto()) {
@@ -274,32 +282,6 @@ template<class T> T *CreateMicroDSTMCAlg::getContainer(std::string locTES){
     return container;
   }// if exist
 
-//  std::map<std::string, ObjectContainerBase*>::const_iterator iMap;
-//  std::map<std::string, ObjectContainerBase*>::const_iterator iMapEnd = m_ContainerMap.end();
-//
-//  // check if location already known
-//  iMap = m_ContainerMap.find(locTES);
-//  if (iMap != iMapEnd) {
-//
-//    verbose() << "return existing container" << endmsg;
-//    return dynamic_cast<T*>(m_ContainerMap[locTES]);
-//
-//  } else {
-//
-//    verbose() << "container does not exisit yet, create" << endmsg;
-//    std::string containerLocation =  locTES;
-//    // now insert identifier for microDST after "/Event/"
-//    containerLocation.insert(0,"/Event/"+ m_OutputPrefix + "/");
-//    verbose() << "location of container in TES " << containerLocation << endmsg;
-//
-//    // create new container and store into TES
-//    T* container = new T();
-//    put (container, containerLocation);     
-//    m_ContainerMap[locTES] = dynamic_cast<ObjectContainerBase*>(container);
-//    return dynamic_cast<T*>(m_ContainerMap[locTES]);
-//
-//  }// if iMap
-
   return NULL; // something went wrong
 }// getContainer
 
@@ -315,6 +297,19 @@ std::vector<const LHCb::MCParticle*> CreateMicroDSTMCAlg::GetMCParticle (const L
             << " and mass " << particle->measuredMass() << " +- " 
             << particle->measuredMassErr()
             << endmsg;
+
+  bool basicParticle = particle->isBasicParticle();
+
+  //
+  // statistics
+  //
+
+  if (basicParticle) {
+     m_nBasicParticles++;
+  } else {
+    m_nCompositeParticles++;
+  } // if basic
+
   //
   // init
   //
@@ -350,8 +345,23 @@ std::vector<const LHCb::MCParticle*> CreateMicroDSTMCAlg::GetMCParticle (const L
     verbose() << "MC particle not found" << endmsg;
   } // if mcParticle
 
+  const int nAssociations = associatedParticles.size();
 
-  verbose() << "return #associated particles " << associatedParticles.size() << endmsg;  
+  //
+  // statistics
+  //
+  if (basicParticle && nAssociations > 0) {
+    m_nBasicParticlesAssociated++;
+  } 
+  
+  if (!basicParticle && nAssociations > 0){
+    m_nCompositeParticlesAssociated++;
+  }
+
+
+  verbose() << "return #associated particles " << nAssociations 
+            << " basic particle "              << basicParticle 
+            << endmsg;  
   return associatedParticles;
 
 }// void GetMCParticleLinks
@@ -393,9 +403,10 @@ LHCb::MCParticle* CreateMicroDSTMCAlg::StoreMCParticle(const LHCb::MCParticle *m
   //
 
   verbose() <<" MC particle not yet in microDST container" << endmsg;
-  mcParticleClone = new LHCb::MCParticle();
-  mcParticleClone->setMomentum  (mcParticle->momentum());
-  mcParticleClone->setParticleID(mcParticle->particleID());
+  mcParticleClone = mcParticle->clone();
+  //  mcParticleClone = new LHCb::MCParticle(mcParticle);
+  //  mcParticleClone->setMomentum  (mcParticle->momentum());
+  //  mcParticleClone->setParticleID(mcParticle->particleID());
   
   mcParticleContainer->insert (mcParticleClone, mcParticle->key());
  
@@ -510,10 +521,11 @@ LHCb::MCVertex* CreateMicroDSTMCAlg::StoreMCVertex(const LHCb::MCVertex *mcVerte
   // clone and store vertex
   //
   verbose() << "Now clone and store MC Vertex " << endmsg;
-  mcVertexClone =  new LHCb::MCVertex();
-  mcVertexClone->setPosition(mcVertex->position());
-  mcVertexClone->setTime    (mcVertex->time());
-  mcVertexClone->setType    (mcVertex->type());
+  mcVertexClone = mcVertex->clone();
+  //mcVertexClone =  new LHCb::MCVertex(mcVertex);
+  //mcVertexClone->setPosition(mcVertex->position());
+  //mcVertexClone->setTime    (mcVertex->time());
+  //mcVertexClone->setType    (mcVertex->type());
   mcVertexContainer->insert(mcVertexClone, mcVertex->key());
 
   //
@@ -565,10 +577,14 @@ template<class S, class T> StatusCode CreateMicroDSTMCAlg::StoreLink(const S* s,
   verbose() << "original source location on TES for link " << linkerLocation << endmsg;
 
   std::string::size_type loc       = linkerLocation.find(tmpString);
-  if ( loc == std::string::npos) {
-    verbose() << "insert /Event " << endmsg;
-    linkerLocation.insert(0,"/Event/");
-  } //if loc
+//  if ( loc == std::string::npos) {
+//    verbose() << "insert /Event " << endmsg;
+//    linkerLocation.insert(0,"/Event/");
+//  } //if loc
+  if (loc != std::string::npos) {
+    linkerLocation.replace(loc, tmpString.length(),"");
+  } //if
+  linkerLocation.insert(0,"/Event/"+ m_OutputPrefix + "/");
   verbose() << "position for linker " << linkerLocation << endmsg;
 
 
@@ -588,7 +604,6 @@ template<class S, class T> StatusCode CreateMicroDSTMCAlg::StoreLink(const S* s,
   //
   // get source container
   //
-  //  typedef KeyedContainer<ProtoParticle, Containers::HashMap> ProtoParticles;
   KeyedContainer<S,Containers::HashMap> *sourceContainer = NULL;
   if (exist< KeyedContainer<S,Containers::HashMap> >(containerLocation)) {
     sourceContainer = get< KeyedContainer<S,Containers::HashMap> >(containerLocation);

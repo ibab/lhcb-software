@@ -1,4 +1,4 @@
-// $Id: CreateMicroDSTMCAlg.h,v 1.3 2007-02-21 11:01:15 ukerzel Exp $
+// $Id: CreateMicroDSTMCAlg.h,v 1.4 2007-02-23 09:22:59 ukerzel Exp $
 #ifndef CREATEMICRODSTALG_H 
 #define CREATEMICRODSTALG_H 1
 
@@ -92,13 +92,14 @@ private:
                                         *   default: false, use SmartRef
                                         */
 
-                                         
-
-
-  std::map<std::string, ObjectContainerBase*> m_ContainerMap; ///< map of container - locations to store
-
   std::string        m_nameMCAsct;                ///< Name of MC associator
   Particle2MCLinker* m_part2MCLinkerComposite ;   ///< associator using composite method
   Particle2MCLinker* m_part2MCLinkerLinks     ;   ///< associator       links
+
+  // counters
+  int m_nBasicParticles;                          ///< these counters are updated when trying to do the association part -> MC part
+  int m_nCompositeParticles;
+  int m_nBasicParticlesAssociated;
+  int m_nCompositeParticlesAssociated;
 };
 #endif // CREATEMICRODSTALG_H
