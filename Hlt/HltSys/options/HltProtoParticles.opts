@@ -48,10 +48,9 @@ HltFullReco.Members += { "GaudiSequencer/SeqHltMuons" } ;
 SeqHltMuons.Members += {"ChargedProtoPAlg/HltMuonPAlg"   } ;
 SeqHltMuons.IgnoreFilterPassed = true ;
 SeqHltMuons.MeasureTime = true ;
-//HltMuonPAlg.InputTrackLocation = "Hlt/Track/ForwardMuonRefined" ; 
-HltMuonPAlg.InputTrackLocation = "Hlt/Track/MuonsForward" ; 
+HltMuonPAlg.InputTrackLocation = "Hlt/Track/ForwardMuonRefined" ; 
+//HltMuonPAlg.InputTrackLocation = "Hlt/Track/MuonsForward" ; 
 HltMuonPAlg.OutputProtoParticleLocation = "Hlt/ProtoP/Muons" ;
-HltMuonPAlg.OutputLevel = 2 ;
 
 HltFullReco.Members += { "PreLoadParticles/HltMuons" };
 HltMuons.PhysDesktop.ParticleMakerType = "NoPIDsParticleMaker" ;
@@ -71,3 +70,4 @@ HltElectrons.DecayDescriptor = "Electron" ;
 //---------------------------------------------------------------------
 // Special case for photons - NO PHOTONS YET
 //---------------------------------------------------------------------
+
