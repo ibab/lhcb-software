@@ -5,7 +5,7 @@
  *  Implementation file for class : ParticleEffPurMoni
  *
  *  CVS Log :-
- *  $Id: ParticleEffPurMoni.cpp,v 1.2 2007-02-23 17:03:52 jonrob Exp $
+ *  $Id: ParticleEffPurMoni.cpp,v 1.3 2007-02-23 17:39:35 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2007-002-21
@@ -398,9 +398,9 @@ StatusCode ParticleEffPurMoni::finalize()
   // Print out summary info
   if ( m_nEvts > 0 ) printStats();
   // cleanup
-  delete m_particleLinker;
-  delete m_chargedProtoLinker;
-  delete m_neutralProtoLinker;
+  if ( m_particleLinker     ) { delete m_particleLinker;     m_particleLinker     = NULL; }
+  if ( m_chargedProtoLinker ) { delete m_chargedProtoLinker; m_chargedProtoLinker = NULL; }
+  if ( m_neutralProtoLinker ) { delete m_neutralProtoLinker; m_neutralProtoLinker = NULL; }
   // finalize base class
   return DVAlgorithm::finalize();
 }
