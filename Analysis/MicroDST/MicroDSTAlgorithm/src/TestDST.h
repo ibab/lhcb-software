@@ -1,4 +1,4 @@
-// $Id: TestDST.h,v 1.2 2007-02-21 09:12:49 ukerzel Exp $
+// $Id: TestDST.h,v 1.3 2007-02-23 09:43:52 ukerzel Exp $
 #ifndef TESTDST_H 
 #define TESTDST_H 1
 
@@ -43,6 +43,11 @@ private:
   typedef Track2MCPart::DirectType                      Track2MCPartTable;
   typedef Track2MCPartTable::Range                      Track2MCPartRange;
   typedef Track2MCPartTable::iterator                   Track2MCPartIterator;
+
+  typedef LinkerTool< LHCb::Particle, LHCb::MCParticle> Part2MCPart;
+  typedef Part2MCPart::DirectType                       Part2MCPartTable;
+  typedef Part2MCPartTable::Range                       Part2MCPartRange;
+  typedef Part2MCPartTable::iterator                    Part2MCPartIterator;
 
 
   StatusCode PrintDefaultPV();

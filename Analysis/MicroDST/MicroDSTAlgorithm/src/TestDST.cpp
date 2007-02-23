@@ -1,4 +1,4 @@
-// $Id: TestDST.cpp,v 1.3 2007-02-21 17:43:28 ukerzel Exp $
+// $Id: TestDST.cpp,v 1.4 2007-02-23 09:43:52 ukerzel Exp $
 // Include files 
 
 // from Gaudi
@@ -60,8 +60,8 @@ StatusCode TestDST::initialize() {
   debug() << "==> Initialize" << endmsg;
 
   // initialise associator to MC
-  m_part2MCLinkerComposite = new Particle2MCLinker(this,Particle2MCMethod::Composite,"")  ;
-  m_part2MCLinkerLinks     = new Particle2MCLinker(this,Particle2MCMethod::Links, rootOnTES() + LHCb::TrackLocation::Default)  ;
+  m_part2MCLinkerComposite = new Particle2MCLinker(this,Particle2MCMethod::Composite, "");
+  m_part2MCLinkerLinks     = new Particle2MCLinker(this,Particle2MCMethod::Links    , rootOnTES() + LHCb::TrackLocation::Default);
 
   return StatusCode::SUCCESS;
 }
@@ -435,14 +435,36 @@ std::vector<const LHCb::MCParticle*> TestDST::GetMCParticle (const LHCb::Particl
 
 
   //
-  // check track to MC link
+  // check direct association for composite particles
+  //
+  std::string locTES = TestDST::objectLocation(particle->parent() );
+  verbose() << "try to get direct link for particle on TES" << locTES << endmsg;
+  Part2MCPart p2pAssociator(eventSvc(), locTES);
+  const Part2MCPartTable *p2pTable = p2pAssociator.direct();
+  if (p2pTable) {
+    Part2MCPartRange p2pRange =  p2pTable->relations(particle);
+    verbose() << "found #relations " << p2pRange.size() << endmsg;
+    for (Part2MCPartIterator iRel = p2pRange.begin(); iRel != p2pRange.end(); iRel++) {
+      const LHCb::MCParticle *mcPart = iRel->to();
+      double                  weight = iRel->weight();
+      verbose() << "particle related to MCPart with pid " << mcPart->particleID().pid() 
+                << " weight " << weight 
+                << " on TES " <<  TestDST::objectLocation(mcPart->parent())
+                << endmsg;     
+    }//for iRel
+  } else {
+    verbose() << "table for direct association not found " << endmsg;
+  }// if table
+
+  //
+  // check direct association for track to MC link
   //
 
   if (particle->proto() ) {
     verbose() << "found proto-particle " << endmsg;
     if (particle->proto()->track()) {
       verbose() << "found track with key " << particle->proto()->track()->key() << endmsg;
-      std::string linksLocation = "/Event/Link/microDST/Rec/Track/Best"; // "/Event/" + LHCb::TrackLocation::Default;
+      std::string linksLocation = rootOnTES() + LHCb::TrackLocation::Default;
       verbose() << " get associator from " << linksLocation << endmsg;
       Track2MCPart associator(eventSvc(), linksLocation  );
       const Track2MCPartTable *table = associator.direct();
