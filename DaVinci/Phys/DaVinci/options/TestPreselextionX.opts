@@ -8,6 +8,9 @@
 // Common includes
 #include "$COMMONPARTICLESROOT/options/StandardParticles.opts"
 #include "$COMMONPARTICLESROOT/options/StandardOptions.opts"
+// CRJ : turn on monitoring of standard particles
+// Comment out to disable
+#include "$COMMONPARTICLESROOT/options/EnableStandardParticleMonitors.opts"
 #include "$DAVINCIROOT/options/DaVinciCommon.opts"
 // Print algorithm name with 60 characters
 MessageSvc.Format = "% F%60W%S%7W%R%T %0W%M";

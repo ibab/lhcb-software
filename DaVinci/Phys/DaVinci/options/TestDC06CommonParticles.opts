@@ -10,7 +10,7 @@
 
 // standard particles
 #include "$COMMONPARTICLESROOT/options/StandardOptions.opts"
-// turn on monitoring of stndard particles
+// turn on monitoring of standard particles
 #include "$COMMONPARTICLESROOT/options/EnableStandardParticleMonitors.opts"
 
 ApplicationMgr.TopAlg += { "GaudiSequencer/ParticleTests" };

@@ -37,6 +37,8 @@
 // Include CommonParticles
 //#include "$COMMONPARTICLESROOT/options/StandardParticles.opts"
 //#include "$COMMONPARTICLESROOT/options/StandardOptions.opts"
+// CRJ : turn on monitoring of standard particles
+//#include "$COMMONPARTICLESROOT/options/EnableStandardParticleMonitors.opts"
 // Test the stripping
 //#include "$STRIPPINGROOT/options/DVPresel.opts"
 //--------------------------------------------------------------
