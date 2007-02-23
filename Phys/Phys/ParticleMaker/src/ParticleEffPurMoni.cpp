@@ -5,7 +5,7 @@
  *  Implementation file for class : ParticleEffPurMoni
  *
  *  CVS Log :-
- *  $Id: ParticleEffPurMoni.cpp,v 1.1 2007-02-23 14:04:42 jonrob Exp $
+ *  $Id: ParticleEffPurMoni.cpp,v 1.2 2007-02-23 17:03:52 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2007-002-21
@@ -118,7 +118,10 @@ StatusCode ParticleEffPurMoni::execute()
       MCSummaryMap & mcMap = m_locMap[tesLoc];
 
       // get the summary for this reco particle type
-      MCSummary & mcSum = mcMap[ FullPartName((*iPart).properties->particle(),(*iPart).history) ];
+      const FullPartName partName( (*iPart).properties->particle(),
+                                   (*iPart).history,
+                                   protoParticleType((*iPM).first) );
+      MCSummary & mcSum = mcMap[ partName ];
 
       // count the number reconstructed for this type
       ++mcSum.nReco;
@@ -137,7 +140,7 @@ StatusCode ParticleEffPurMoni::execute()
     // get the protos at this location
     const std::string & tesLoc = (*iProtoLoc).first;
     const LHCb::ProtoParticles * protos = get<LHCb::ProtoParticles>( tesLoc );
-    // loop over them
+    debug() << "Looping over " << protos->size() << " ProtoParticles at " << tesLoc << endreq;
     for ( LHCb::ProtoParticles::const_iterator proto = protos->begin();
           proto != protos->end(); ++proto )
     {
@@ -157,7 +160,7 @@ StatusCode ParticleEffPurMoni::execute()
       if ( NULL != mcProp ) ++(m_protoTesStats[tesLoc].nWithMC);
 
       // count
-      ++m_mcProtoCount.trueMCType[ mcProp ? mcProp->particle() : "NoMC" ];
+      ++m_mcProtoCount[protoParticleType(*proto)].trueMCType[ mcProp ? mcProp->particle() : "NoMC" ];
 
     } // loop over all protos at one location in TES
 
@@ -286,13 +289,36 @@ ParticleEffPurMoni::addParticle( const LHCb::Particle * particle,
   }
 }
 
+std::string ParticleEffPurMoni::protoParticleType( const LHCb::ProtoParticle * proto ) const
+{
+  if ( 0 != proto->charge() )
+  {
+    const LHCb::Track * track = proto->track();
+    if ( !track ) Exception( "NULL Track pointer for charged ProtoParticle" );
+    switch ( track->type() )
+    {
+    case LHCb::Track::Long        : return "Charged : Long Track";
+    case LHCb::Track::Upstream    : return "Charged : Upstream Track";
+    case LHCb::Track::Downstream  : return "Charged : Downstream Track";
+    case LHCb::Track::Ttrack      : return "Charged : Ttrack Track";
+    case LHCb::Track::Velo        : return "Charged : Velo Track";
+    case LHCb::Track::VeloR       : return "Charged : VeloR Track";
+    default                       : return "Charged : UNKNOWN TYPE";
+    }
+  }
+  else
+  {
+    return "Neutral ProtoParticle";
+  }
+}
+
 void ParticleEffPurMoni::printStats() const
 {
 
   const std::string & LINES =
-    "=========================================================================================";
+    "==============================================================================";
   const std::string & lines =
-    "-----------------------------------------------------------------------------------------";
+    "------------------------------------------------------------------------------";
 
   const Rich::PoissonEffFunctor eff;
 
@@ -317,18 +343,25 @@ void ParticleEffPurMoni::printStats() const
     always()  << " Particle Location : " << (*iLoc).first << endreq
               << lines << endreq;
     // loop over reco particle types for this location
+    std::string lastType;
     for ( MCSummaryMap::iterator iSum = (*iLoc).second.begin();
           iSum != (*iLoc).second.end(); ++iSum )
     {
-      const long nRecoTrue  = (*iSum).second.trueMCType[(*iSum).first.first];
-      const long nTotalTrue = m_mcProtoCount.trueMCType[(*iSum).first.first];
-      always() << "   Reco. Type : " << (*iSum).first.second;
-      if ( (*iSum).first.second == (*iSum).first.first )
+      const long nRecoTrue  = (*iSum).second.trueMCType[(*iSum).first.particleName];
+      const long nTotalTrue = m_mcProtoCount[(*iSum).first.protoType].trueMCType[(*iSum).first.particleName];
+      if ( lastType != (*iSum).first.protoType )
+      {
+        always() << "  " << (*iSum).first.protoType << endreq;
+        lastType = (*iSum).first.protoType;
+      }
+      always() << "    Reco. Tree : " << (*iSum).first.decayTree
+               << " : " << nRecoTrue << " Particles";
+      if ( (*iSum).first.decayTree == (*iSum).first.particleName )
       { always() << " : Reco. Eff. = " << eff(nRecoTrue,nTotalTrue) << " %"; }
       always() << endreq;
       if ( (*iSum).second.nReco > 0 )
       {
-        bool suppressedContribs(false);
+        int suppressedContribs(0);
         // loop over the MC Types for this reco type
         for ( TypeTally::const_iterator iT = (*iSum).second.trueMCType.begin();
               iT != (*iSum).second.trueMCType.end(); ++iT )
@@ -337,15 +370,15 @@ void ParticleEffPurMoni::printStats() const
           mcT.resize(25,' ');
           if ( (100*(*iT).second)/(*iSum).second.nReco > m_minContrib )
           {
-            always() << "    -> MC Type : " << mcT
+            always() << "     -> True MC Type : " << mcT
                      << " " << eff( (*iT).second, (*iSum).second.nReco )
                      << " % of sample" << endreq;
-          } else { suppressedContribs = true; }
+          } else { ++suppressedContribs; }
         }
-        if ( suppressedContribs )
+        if ( suppressedContribs>0 )
         {
-          always() << "    -> Some contributions below " <<  m_minContrib
-                   << "% were suppressed" << endreq;
+          always() << "     -> Suppressed " << suppressedContribs << " contributuions below " 
+                   <<  m_minContrib << " %" << endreq;
         }
       }
 

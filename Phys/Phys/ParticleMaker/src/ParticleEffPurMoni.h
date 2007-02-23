@@ -5,7 +5,7 @@
  *  Header file for class : ParticleEffPurMoni
  *
  *  CVS Log :-
- *  $Id: ParticleEffPurMoni.h,v 1.1 2007-02-23 14:04:42 jonrob Exp $
+ *  $Id: ParticleEffPurMoni.h,v 1.2 2007-02-23 17:03:52 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2007-002-21
@@ -113,13 +113,45 @@ private: // definitions
   public:
     MCSummary() : nReco(0) { }
   public:
-    TypeTally trueMCType; ///< Total number of each MC type
-    unsigned int nReco;   ///< Total number reconstructed
+    TypeTally trueMCType;     ///< Total number of each MC type
+    unsigned int nReco;       ///< Total number reconstructed
     std::string decayHistory; ///< The particle decay history
   };
 
-  typedef std::pair<std::string,std::string>      FullPartName;
+  // typedef std::pair<std::string,std::string>      FullPartName;
+  class FullPartName
+  {
+  public:
+    FullPartName( const std::string & name = "",
+                  const std::string & tree = "",
+                  const std::string & type = "") 
+      :  particleName(name),
+         decayTree(tree),
+         protoType(type) { }
+    /// Operator <
+    inline bool operator< ( const FullPartName& name ) const
+    { return ( this->protoType + this->particleName + this->decayTree <
+               name.protoType  + name.particleName  + name.decayTree ); } 
+    /// Equality operator
+    inline bool operator== ( const FullPartName& name ) const
+    { return ( this->particleName == name.particleName &&
+               this->decayTree    == name.decayTree    &&
+               this->protoType    == name.protoType     ); }
+    /// Non-Equality operator
+    inline bool operator!= ( const FullPartName& name ) const
+    { return ! this->operator==(name); }
+    /// Overloaded operator to ostream
+    friend inline std::ostream& operator << ( std::ostream& os, const FullPartName & name )
+    { return os << "[ " << name.particleName << " " 
+                << name.decayTree << " " << name.protoType << " ]"; }
+  public:
+    std::string particleName;
+    std::string decayTree;
+    std::string protoType;
+  };
+
   typedef std::map< FullPartName, MCSummary >     MCSummaryMap;
+  typedef std::map< std::string, MCSummary >      MCSummaryMap2;
   typedef std::map< std::string, MCSummaryMap >   LocationMap;
 
   /// ProtoParticle TES statistics summary class
@@ -215,6 +247,9 @@ private: // methods
              (0 != proto->charge() ? m_minAssWeightCh : m_minAssWeightNu) );
   }
 
+  /// Returns the ProtoParticle 'type'
+  std::string protoParticleType( const LHCb::ProtoParticle * proto ) const;
+
 private: // data
 
   /// Particle/Proto map
@@ -239,7 +274,7 @@ private: // data
   mutable LocationMap m_locMap;
 
   /// Total true number of particles of each type at each TES location
-  mutable MCSummary m_mcProtoCount;
+  mutable MCSummaryMap2 m_mcProtoCount;
 
   /// ProtoParticle stats for each TES location
   mutable ProtoTESStatsMap m_protoTesStats;
