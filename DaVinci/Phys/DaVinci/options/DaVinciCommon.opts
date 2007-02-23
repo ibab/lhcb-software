@@ -71,11 +71,7 @@ ApplicationMgr.HistogramPersistency = "ROOT";
 // Magnetic field map version
 MagneticFieldSvc.FieldMapFile = "$FIELDMAPROOT/cdf/field047.cdf";
 //=================================================================
-// RichPID and MuonPID data-on-demand
-ApplicationMgr.DLLs += {"GlobalReco"};
-DataOnDemandSvc.Algorithms += { "DATA='/Event/Rec/Rich/PIDs' TYPE='RichPIDsFromProtoParticlesAlg/CreateRichPIDs'", "DATA='/Event/Rec/Muon/MuonPID' TYPE='MuonPIDsFromProtoParticlesAlg/CreateMuonPIDs'"
-};
-//=================================================================
+
 // Start DaVinci sequence
 //
 #include "$DAVINCIROOT/options/DaVinciMainSeq.opts"

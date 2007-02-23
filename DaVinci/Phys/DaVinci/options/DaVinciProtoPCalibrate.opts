@@ -5,3 +5,15 @@ ProtoPRecalibration.MeasureTime = true;
 
 // Fills the combined DLL values in the charged Proto Particles
 ProtoPRecalibration.Members += { "ChargedProtoCombineDLLsAlg" };
+
+// Rebuild RichPID and MuonPID data-on-demand
+
+// Run by default the algs to recreate the RichPIDs and MuonPIDs from the protos
+// Should be done by the DoD, but seems unstable.
+ProtoPRecalibration.Members += { "MuonPIDsFromProtoParticlesAlg/MuonPIDsFromProtos" };
+ProtoPRecalibration.Members += { "RichPIDsFromProtoParticlesAlg/RichPIDsFromProtos" };
+// on demand. disable whilst some small problems are investigated
+// CRJ : Disable whilst instabilities are investigated. Run by default by DaVinciProtoPCalibrate.opts
+//DataOnDemandSvc.Algorithms += { "DATA='/Event/Rec/Rich/PIDs' TYPE='RichPIDsFromProtoParticlesAlg/CreateRichPIDs'", 
+//                                "DATA='/Event/Rec/Muon/MuonPID' TYPE='MuonPIDsFromProtoParticlesAlg/CreateMuonPIDs'" };
+//=================================================================
