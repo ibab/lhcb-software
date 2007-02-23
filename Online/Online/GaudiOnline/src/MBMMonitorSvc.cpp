@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MBMMonitorSvc.cpp,v 1.5 2007-01-24 19:21:08 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MBMMonitorSvc.cpp,v 1.6 2007-02-23 12:42:09 scheruku Exp $
 //  ====================================================================
 //  MBMMonitorSvc.cpp
 //  --------------------------------------------------------------------
@@ -34,7 +34,7 @@ void LHCb::MBMMonitorSvc::Client::publish(MBMDescriptor* dsc, const std::string&
   }
   else  {
 #ifdef _USE_FAT_DEVICES
-    const std::string fmt_Client = "C4;I:4;F:2;C:32";
+    const std::string fmt_Client = "C:4;I:4;F:2;C:32";
 #else
     const std::string fmt_Client = "I:3;F:2;C:32";
 #endif
