@@ -1,4 +1,4 @@
-// $Id: CreateMicroDSTAlg.h,v 1.3 2007-02-21 09:12:49 ukerzel Exp $
+// $Id: CreateMicroDSTAlg.h,v 1.4 2007-02-23 09:21:48 ukerzel Exp $
 #ifndef CREATEMICRODSTALG_H 
 #define CREATEMICRODSTALG_H 1
 
@@ -55,7 +55,7 @@ private:
   // methods
   //
   StatusCode StorePV(std::string location);               ///< store primary vertices into microDST
-  StatusCode StoreParticle(const LHCb::Particle * particle);
+  LHCb::Particle* StoreParticle(const LHCb::Particle * particle);
   StatusCode StoreLink2PV(const LHCb::Particle * particle);
   StatusCode StoreOdin();
 
