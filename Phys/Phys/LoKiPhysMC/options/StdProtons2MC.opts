@@ -1,0 +1,82 @@
+// $Id: StdProtons2MC.opts,v 1.1 2007-02-23 20:15:40 ibelyaev Exp $ 
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $ 
+// ============================================================================
+// $Log: not supported by cvs2svn $ 
+// ============================================================================
+/** @file
+ *
+ *  Configuration file to build the MC-relation tables for some standard pions 
+ *
+ *  Essentially it transate the information from Linker tables into 
+ *  usable form of Relation tables
+ *
+ *  @attention For "Links" associations, the native LoKi way of making 
+ *  relations is MUCH MORE EFFICIENT
+ *
+ *  @see Kernel/Particle2MC.h
+ *  @see LoKi_P2MC 
+ *  @see LoKi_P2MCW 
+ *
+ *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+ *  @date 2007-02-23
+ */
+// ============================================================================
+#include "$DAVINCIASSOCIATORSROOT/options/DaVinciAssociators.opts"
+// ============================================================================
+ApplicationMgr.DLLs   += { "LoKiCore" , "LoKiPhysMC" } ;
+ApplicationMgr.ExtSvc += { "LoKiSvc"  } ;
+// ============================================================================
+// Deal with standard pions 
+// ============================================================================
+#include "$COMMONPARTICLESROOT/options/StandardProtons.opts"
+// ============================================================================
+// Instrument Data-On-Demand Service
+// ============================================================================
+DataOnDemandSvc.AlgMap +=  {
+  // Relation table for all standard pions  CHI2 
+  "Relations/Phys/StdProtons/Chi2"     : "LoKi_P2MC/StdProtons2MCChi2"      ,
+  // Relation table for all standard pions  LINKS 
+  "Relations/Phys/StdProtons/Links"    : "LoKi_P2MC/StdProtons2MCLinks"     ,
+  // Relation table for all standard pions  WITHCHI2 
+  "Relations/Phys/StdProtons/WithChi2" : "LoKi_P2MCW/StdProtons2MCWithChi2" 
+} ;
+// ============================================================================
+// Relation table for all standard pions  CHI2 
+// ============================================================================
+StdProtons2MCChi2.Inputs =  { 
+  //"Phys/StdNoPIDsProtons"          , 
+  "Phys/StdLooseProtons"             ,
+  //"Phys/StdLooseDownstreamProtons" , 
+  "Phys/StdTightProtons"
+} ;
+StdProtons2MCChi2.Method = @Particle2MCMethod.Chi2        ;
+StdProtons2MCChi2.Output = "Relations/Phys/StdProtons/Chi2" ;
+// ============================================================================
+// Relation table for all standard pions  CHI2 
+// ============================================================================
+StdProtons2MCLinks.Inputs =  { 
+  //"Phys/StdNoPIDsProtons"          , 
+  "Phys/StdLooseProtons"             ,
+  //"Phys/StdLooseDownstreamProtons" ,  
+  "Phys/StdTightProtons"
+} ;
+StdProtons2MCLinks.Method = @Particle2MCMethod.Links        ;
+StdProtons2MCLinks.Output = "Relations/Phys/StdProtons/Links" ;
+// ============================================================================
+// Relation table for all standard pions  WITHCHI2 
+// ============================================================================
+StdProtons2MCWithChi2.Inputs =  { 
+  //"Phys/StdNoPIDsProtons"          , 
+  "Phys/StdLooseProtons"             ,
+  //"Phys/StdLooseDownstreamProtons" , 
+  "Phys/StdTightProtons"
+} ;
+StdProtons2MCWithChi2.Method = @Particle2MCMethod.WithChi2        ;
+StdProtons2MCWithChi2.Output = "Relations/Phys/StdProtons/WithChi2" ;
+// ============================================================================
+
+
+// ============================================================================
+// The END 
+// ============================================================================

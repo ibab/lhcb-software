@@ -1,9 +1,32 @@
-! $Id: release.notes,v 1.22 2007-01-20 14:47:22 ibelyaev Exp $ 
+! $Id: release.notes,v 1.23 2007-02-23 20:15:39 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhysMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : RC <--> MC part of LoKi 
 ! -----------------------------------------------------------------------------
+
+!========================== LoKiPhysMC v4r0 2007-02-23 =======================
+
+! 2007-02-23 - Vanya BELYAEV
+ - add an "On-Demand" conversion of Linkers into Relation tables.
+   - options/StdParticles2MC.opts
+     options/StdKaons2MC.opts
+     options/StdMuons2MC.opts
+     options/StdPions2MC.opts
+     options/StdProtons2MC.opts
+     options/StdElectrons2MC.opts
+     options/StdD02MC.opts
+     options/StdDplus2MC.opts
+     options/StdPhi2MC.opts
+     options/StdJpsi2MC.opts
+
+    Configuration files to run an automatic on-demand decoding of linker objects 
+    into  Relation tables.
+    The configurtaionis just approximate, 
+      for each concrete case, some tuning could be needed  
+ 
+ - cmt/requirements
+    version increment to v4r0 
 
 !========================== LoKiPhysMC v3r0 2007-01-20 =======================
 
