@@ -1,0 +1,73 @@
+/** @file 
+ *
+ *  Hlt exclusive selections particle making
+ *
+ *  @author P. Koppenburg
+ *  @date 2006-02-01
+ */
+//---------------------------------------------------------------------
+// Charged ProtoParticles
+//---------------------------------------------------------------------
+HltFullReco.Members += { "GaudiSequencer/SeqHltCharged" } ;
+SeqHltCharged.Members += { "ChargedProtoPAlg/HltChargedProtoPAlg" } ;
+SeqHltCharged.MeasureTime = true ;
+HltChargedProtoPAlg.InputTrackLocation = "Hlt/Track/Forward" ; // what about match?
+HltChargedProtoPAlg.OutputProtoParticleLocation = "Hlt/ProtoP/Charged" ;
+
+// no RICH
+// ChargedProtoPAlg.InputRichPIDLocation = "" ;
+// no calo yet
+HltChargedProtoPAlg.CaloSpdPID = false ;
+HltChargedProtoPAlg.CaloPrsPID = false ;
+HltChargedProtoPAlg.CaloEcalPID = false ;
+HltChargedProtoPAlg.CaloHcalPID = false ;
+HltChargedProtoPAlg.CaloBremPID = false ;
+
+HltChargedProtoPAlg.OutputLevel = 3 ;
+
+//---------------------------------------------------------------------
+// Charged Particles - so far make all to Pi and K
+//---------------------------------------------------------------------
+SeqHltCharged.Members += { "PreLoadParticles/HltNoPIDsPions",
+	                 "PreLoadParticles/HltNoPIDsKaons" }; 
+
+HltNoPIDsPions.PhysDesktop.ParticleMakerType = "NoPIDsParticleMaker" ;
+HltNoPIDsPions.PhysDesktop.NoPIDsParticleMaker.Inputs =  {"Hlt/ProtoP/Charged"} ;
+HltNoPIDsPions.PhysDesktop.NoPIDsParticleMaker.Particle =  "pion" ;
+HltNoPIDsPions.DecayDescriptor = "Pion" ;
+
+HltNoPIDsKaons.PhysDesktop.ParticleMakerType = "NoPIDsParticleMaker" ;
+HltNoPIDsKaons.PhysDesktop.NoPIDsParticleMaker.Inputs =  {"Hlt/ProtoP/Charged"} ;
+HltNoPIDsKaons.PhysDesktop.NoPIDsParticleMaker.Particle =  "kaon" ;
+HltNoPIDsKaons.DecayDescriptor = "Kaon" ;
+
+//---------------------------------------------------------------------
+// Special case for muons
+//---------------------------------------------------------------------
+HltFullReco.Members += { "GaudiSequencer/SeqHltMuons" } ;
+SeqHltMuons.Members += {"ChargedProtoPAlg/HltMuonPAlg"   } ;
+SeqHltMuons.IgnoreFilterPassed = true ;
+SeqHltMuons.MeasureTime = true ;
+//HltMuonPAlg.InputTrackLocation = "Hlt/Track/ForwardMuonRefined" ; 
+HltMuonPAlg.InputTrackLocation = "Hlt/Track/MuonsForward" ; 
+HltMuonPAlg.OutputProtoParticleLocation = "Hlt/ProtoP/Muons" ;
+HltMuonPAlg.OutputLevel = 2 ;
+
+HltFullReco.Members += { "PreLoadParticles/HltMuons" };
+HltMuons.PhysDesktop.ParticleMakerType = "NoPIDsParticleMaker" ;
+HltMuons.PhysDesktop.NoPIDsParticleMaker.Inputs =  { "Hlt/ProtoP/Muons"} ;
+HltMuons.PhysDesktop.NoPIDsParticleMaker.Particle =  "muon" ;
+HltMuons.DecayDescriptor = "Muon" ;
+
+//---------------------------------------------------------------------
+// Special case for electrons - NO ELECTRON ID YET
+//---------------------------------------------------------------------
+SeqHltCharged.Members += { "PreLoadParticles/HltElectrons"};
+HltElectrons.PhysDesktop.ParticleMakerType = "NoPIDsParticleMaker" ;
+HltElectrons.PhysDesktop.NoPIDsParticleMaker.Inputs =  {"Hlt/ProtoP/Charged"} ;
+HltElectrons.PhysDesktop.NoPIDsParticleMaker.Particle =  "electron" ;
+HltElectrons.DecayDescriptor = "Electron" ;
+
+//---------------------------------------------------------------------
+// Special case for photons - NO PHOTONS YET
+//---------------------------------------------------------------------

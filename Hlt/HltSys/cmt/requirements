@@ -22,3 +22,4 @@ use HltL0Conf           v1r0    Hlt   # Johannes Albrecht
 
 use HltPython           v1r1    Hlt   # Jose Angel Hernando-Morata
 
+use HltSelections       v5r0    Hlt   # Patrick Koppenburg

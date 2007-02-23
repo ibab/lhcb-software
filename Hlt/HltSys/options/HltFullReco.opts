@@ -1,0 +1,57 @@
+/** @file 
+ *
+ *  Hlt exclusive selections full reconstruction
+ *
+ *  @author P. Koppenburg
+ *  @date 2006-02-01
+ */
+//---------------------------------------------------------------------
+// Main sequencer
+//---------------------------------------------------------------------
+HltSelections.Members += { "GaudiSequencer/HltFullReco" } ;
+HltFullReco.MeasureTime = true ;
+//---------------------------------------------------------------------
+// Options from Jose Hernando
+//---------------------------------------------------------------------
+HltFullReco.Members+={
+  "GaudiSequencer/HltRecoVeloRZSeq",       // likely to have already been done
+  "PatPV2D",                               // likely to have already been done
+  "HltTracking/HltRecoVelo",               // likely to have already been done
+  "PatPV3D",
+  "GaudiSequencer/HltDecodeTT",            // likely to have already been done
+  "HltTracking/HltRecoVeloTT",             
+  "GaudiSequencer/HltDecodeT",             // likely to have already been done
+  "HltTracking/HltRecoForward"
+};
+
+// HltRecoVelo.InputTracksName = "Rec/Track/RZVelo";
+HltRecoVelo.OutputTracksName = "Hlt/Track/Velo";
+HltRecoVelo.RecoName = "Velo";
+HltRecoVelo.HistogramUpdatePeriod = 0;
+HltRecoVelo.OutputLevel = 3;
+
+//HltRecoVeloTT.InputTracksName = "Hlt/Track/Velo";
+HltRecoVeloTT.OutputTracksName = "Hlt/Track/VeloTT";
+HltRecoVeloTT.RecoName = "VeloTT";
+HltRecoVeloTT.HistogramUpdatePeriod = 0;
+HltRecoVeloTT.OutputLevel = 3;
+
+// Use online Pat-Conditions
+PatHltRecoVeloTT.triggerQuality = true;
+// Use global reduction factor and max chi2 cut to vary the track quality
+PatHltRecoVeloTT.globalReductionFactor = 1.;
+PatHltRecoVeloTT.maxChi2 = 256.;
+PatHltRecoVeloTT.minMomentum = 2000.;
+PatHltRecoVeloTT.DxGroupFactor = 0.0;
+
+PatHltRecoVeloTT.removeUsed = false;
+PatHltRecoVeloTT.OutputLevel = 3;
+
+// HltRecoForward.InputTracksName = "Hlt/Track/Velo";
+HltRecoForward.OutputTracksName = "Hlt/Track/Forward";
+HltRecoForward.RecoName = "Forward";
+HltRecoForward.HistogramUpdatePeriod = 0;
+HltRecoForward.OutputLevel = 3;
+
+PatPV3D.InputTracksName = "Hlt/Track/Velo" ;
+

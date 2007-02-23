@@ -72,7 +72,7 @@ HltRecoVeloSeq.Members += { "HltTracking/HltRecoVelo",
                             "PatPV3D"
 };
 PatPV3D.InputTracksName = "Hlt/Track/Velo";
-PatPV3D.OutputVerticesName = "Hlt/Vertex/PV3D";
+//PatPV3D.OutputVerticesName = "Hlt/Vertex/PV3D";
 
 // Decode TT
 //-------------
