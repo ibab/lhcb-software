@@ -1,6 +1,6 @@
-// $Id: StandardLambda.opts,v 1.2 2006-05-24 11:07:12 pkoppenb Exp $
+// $Id: StandardLambda.opts,v 1.3 2007-02-23 14:00:50 jonrob Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $
 // ============================================================================
 
 /** @file 
@@ -16,43 +16,69 @@
 DataOnDemandSvc.Algorithms += {
 //
 // Loose Lambdas with Long Protons and Long pions 
-  "DATA='/Event/Phys/StdLooseLambda1115_LL/Particles'     TYPE='MakeResonances/StdLooseLambda1115_LL'",
-  "DATA='/Event/Phys/StdLooseLambda1115_LL/Vertices'      TYPE='MakeResonances/StdLooseLambda1115_LL'",
+  "DATA='/Event/Phys/StdLooseLambda1115_LL/Particles'     TYPE='GaudiSequencer/StdLooseLambda1115_LL_Seq'",
+  "DATA='/Event/Phys/StdLooseLambda1115_LL/Vertices'      TYPE='GaudiSequencer/StdLooseLambda1115_LL_Seq'",
 // Loose Lambdas with Downstream Protons and Downstream pions 
-  "DATA='/Event/Phys/StdLooseLambda1115_DD/Particles'     TYPE='MakeResonances/StdLooseLambda1115_DD'",
-  "DATA='/Event/Phys/StdLooseLambda1115_DD/Vertices'      TYPE='MakeResonances/StdLooseLambda1115_DD'",
+  "DATA='/Event/Phys/StdLooseLambda1115_DD/Particles'     TYPE='GaudiSequencer/StdLooseLambda1115_DD_Seq'",
+  "DATA='/Event/Phys/StdLooseLambda1115_DD/Vertices'      TYPE='GaudiSequencer/StdLooseLambda1115_DD_Seq'",
 // Loose Lambdas with Long Protons and  pions 
-  "DATA='/Event/Phys/StdLooseLambda1115_LU/Particles'     TYPE='MakeResonances/StdLooseLambda1115_LU'",
-  "DATA='/Event/Phys/StdLooseLambda1115_LU/Vertices'      TYPE='MakeResonances/StdLooseLambda1115_LU'",
+  "DATA='/Event/Phys/StdLooseLambda1115_LU/Particles'     TYPE='GaudiSequencer/StdLooseLambda1115_LU_Seq'",
+  "DATA='/Event/Phys/StdLooseLambda1115_LU/Vertices'      TYPE='GaudiSequencer/StdLooseLambda1115_LU_Seq'",
 // Loose Lambdas with VTT Protons and Long pions 
-  "DATA='/Event/Phys/StdLooseLambda1115_UL/Particles'     TYPE='MakeResonances/StdLooseLambda1115_UL'",
-  "DATA='/Event/Phys/StdLooseLambda1115_UL/Vertices'      TYPE='MakeResonances/StdLooseLambda1115_UL'",
+  "DATA='/Event/Phys/StdLooseLambda1115_UL/Particles'     TYPE='GaudiSequencer/StdLooseLambda1115_UL_Seq'",
+  "DATA='/Event/Phys/StdLooseLambda1115_UL/Vertices'      TYPE='GaudiSequencer/StdLooseLambda1115_UL_Seq'",
 // Loose Lambdas with Long Protons and Downstream pions 
-  "DATA='/Event/Phys/StdLooseLambda1115_LD/Particles'     TYPE='MakeResonances/StdLooseLambda1115_LD'",
-  "DATA='/Event/Phys/StdLooseLambda1115_LD/Vertices'      TYPE='MakeResonances/StdLooseLambda1115_LD'",
+  "DATA='/Event/Phys/StdLooseLambda1115_LD/Particles'     TYPE='GaudiSequencer/StdLooseLambda1115_LD_Seq'",
+  "DATA='/Event/Phys/StdLooseLambda1115_LD/Vertices'      TYPE='GaudiSequencer/StdLooseLambda1115_LD_Seq'",
 // Loose Lambdas with Downstream Protons and Long pions 
-  "DATA='/Event/Phys/StdLooseLambda1115_DL/Particles'     TYPE='MakeResonances/StdLooseLambda1115_DL'",
-  "DATA='/Event/Phys/StdLooseLambda1115_DL/Vertices'      TYPE='MakeResonances/StdLooseLambda1115_DL'",
+  "DATA='/Event/Phys/StdLooseLambda1115_DL/Particles'     TYPE='GaudiSequencer/StdLooseLambda1115_DL_Seq'",
+  "DATA='/Event/Phys/StdLooseLambda1115_DL/Vertices'      TYPE='GaudiSequencer/StdLooseLambda1115_DL_Seq'",
 //
 // Tight Lambdas with Long Protons and Long pions 
-  "DATA='/Event/Phys/StdTightLambda1115_LL/Particles'     TYPE='MakeResonances/StdTightLambda1115_LL'",
-  "DATA='/Event/Phys/StdTightLambda1115_LL/Vertices'      TYPE='MakeResonances/StdTightLambda1115_LL'",
+  "DATA='/Event/Phys/StdTightLambda1115_LL/Particles'     TYPE='GaudiSequencer/StdTightLambda1115_LL_Seq'",
+  "DATA='/Event/Phys/StdTightLambda1115_LL/Vertices'      TYPE='GaudiSequencer/StdTightLambda1115_LL_Seq'",
 // Tight Lambdas with Downstream Protons and Downstream pions 
-  "DATA='/Event/Phys/StdTightLambda1115_DD/Particles'     TYPE='MakeResonances/StdTightLambda1115_DD'",
-  "DATA='/Event/Phys/StdTightLambda1115_DD/Vertices'      TYPE='MakeResonances/StdTightLambda1115_DD'",
+  "DATA='/Event/Phys/StdTightLambda1115_DD/Particles'     TYPE='GaudiSequencer/StdTightLambda1115_DD_Seq'",
+  "DATA='/Event/Phys/StdTightLambda1115_DD/Vertices'      TYPE='GaudiSequencer/StdTightLambda1115_DD_Seq'",
 // Tight Lambdas with Long Protons and VTT pions 
-  "DATA='/Event/Phys/StdTightLambda1115_LU/Particles'     TYPE='MakeResonances/StdTightLambda1115_LU'",
-  "DATA='/Event/Phys/StdTightLambda1115_LU/Vertices'      TYPE='MakeResonances/StdTightLambda1115_LU'",
+  "DATA='/Event/Phys/StdTightLambda1115_LU/Particles'     TYPE='GaudiSequencer/StdTightLambda1115_LU_Seq'",
+  "DATA='/Event/Phys/StdTightLambda1115_LU/Vertices'      TYPE='GaudiSequencer/StdTightLambda1115_LU_Seq'",
 // Tight Lambdas with VTT Protons and Long pions 
-  "DATA='/Event/Phys/StdTightLambda1115_UL/Particles'     TYPE='MakeResonances/StdTightLambda1115_UL'",
-  "DATA='/Event/Phys/StdTightLambda1115_UL/Vertices'      TYPE='MakeResonances/StdTightLambda1115_UL'",
+  "DATA='/Event/Phys/StdTightLambda1115_UL/Particles'     TYPE='GaudiSequencer/StdTightLambda1115_UL_Seq'",
+  "DATA='/Event/Phys/StdTightLambda1115_UL/Vertices'      TYPE='GaudiSequencer/StdTightLambda1115_UL_Seq'",
 // Tight Lambdas with Long Protons and Downstream pions 
-  "DATA='/Event/Phys/StdTightLambda1115_LD/Particles'     TYPE='MakeResonances/StdTightLambda1115_LD'",
-  "DATA='/Event/Phys/StdTightLambda1115_LD/Vertices'      TYPE='MakeResonances/StdTightLambda1115_LD'",
+  "DATA='/Event/Phys/StdTightLambda1115_LD/Particles'     TYPE='GaudiSequencer/StdTightLambda1115_LD_Seq'",
+  "DATA='/Event/Phys/StdTightLambda1115_LD/Vertices'      TYPE='GaudiSequencer/StdTightLambda1115_LD_Seq'",
 // Tight Lambdas with Downstream Protons and Long pions 
-  "DATA='/Event/Phys/StdTightLambda1115_DL/Particles'     TYPE='MakeResonances/StdTightLambda1115_DL'",
-  "DATA='/Event/Phys/StdTightLambda1115_DL/Vertices'      TYPE='MakeResonances/StdTightLambda1115_DL'" 
+  "DATA='/Event/Phys/StdTightLambda1115_DL/Particles'     TYPE='GaudiSequencer/StdTightLambda1115_DL_Seq'",
+  "DATA='/Event/Phys/StdTightLambda1115_DL/Vertices'      TYPE='GaudiSequencer/StdTightLambda1115_DL_Seq'" 
 };
+
+StdLooseLambda1115_LL_Seq.Members += { "MakeResonances/StdLooseLambda1115_LL" };
+StdLooseLambda1115_LL_Seq.MeasureTime = true;
+StdLooseLambda1115_DD_Seq.Members += { "MakeResonances/StdLooseLambda1115_DD" };
+StdLooseLambda1115_DD_Seq.MeasureTime = true;
+StdLooseLambda1115_LU_Seq.Members += { "MakeResonances/StdLooseLambda1115_LU" };
+StdLooseLambda1115_LU_Seq.MeasureTime = true;
+StdLooseLambda1115_UL_Seq.Members += { "MakeResonances/StdLooseLambda1115_UL" };
+StdLooseLambda1115_UL_Seq.MeasureTime = true;
+StdLooseLambda1115_LD_Seq.Members += { "MakeResonances/StdLooseLambda1115_LD" };
+StdLooseLambda1115_LD_Seq.MeasureTime = true;
+StdLooseLambda1115_DL_Seq.Members += { "MakeResonances/StdLooseLambda1115_DL" };
+StdLooseLambda1115_DL_Seq.MeasureTime = true;
+
+StdTightLambda1115_LL_Seq.Members += { "MakeResonances/StdTightLambda1115_LL" };
+StdTightLambda1115_LL_Seq.MeasureTime = true;
+StdTightLambda1115_DD_Seq.Members += { "MakeResonances/StdTightLambda1115_DD" };
+StdTightLambda1115_DD_Seq.MeasureTime = true;
+StdTightLambda1115_LU_Seq.Members += { "MakeResonances/StdTightLambda1115_LU" };
+StdTightLambda1115_LU_Seq.MeasureTime = true;
+StdTightLambda1115_UL_Seq.Members += { "MakeResonances/StdTightLambda1115_UL" };
+StdTightLambda1115_UL_Seq.MeasureTime = true;
+StdTightLambda1115_LD_Seq.Members += { "MakeResonances/StdTightLambda1115_LD" };
+StdTightLambda1115_LD_Seq.MeasureTime = true;
+StdTightLambda1115_DL_Seq.Members += { "MakeResonances/StdTightLambda1115_DL" };
+StdTightLambda1115_DL_Seq.MeasureTime = true;
 
 //------------------------------------------------------------------------------
 //

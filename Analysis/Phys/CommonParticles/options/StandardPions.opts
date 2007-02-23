@@ -13,21 +13,33 @@
  */
 DataOnDemandSvc.Algorithms += {
   // No PID pions
-  "DATA='/Event/Phys/StdNoPIDsPions/Particles'     TYPE='PreLoadParticles/StdNoPIDsPions'",
-  "DATA='/Event/Phys/StdNoPIDsPions/Vertices'      TYPE='PreLoadParticles/StdNoPIDsPions'",
+  "DATA='/Event/Phys/StdNoPIDsPions/Particles'     TYPE='GaudiSequencer/StdNoPIDsPionsSeq'",
+  "DATA='/Event/Phys/StdNoPIDsPions/Vertices'      TYPE='GaudiSequencer/StdNoPIDsPionsSeq'",
   // Loose pions       
-  "DATA='/Event/Phys/StdLoosePions/Particles'     TYPE='PreLoadParticles/StdLoosePions'",
-  "DATA='/Event/Phys/StdLoosePions/Vertices'      TYPE='PreLoadParticles/StdLoosePions'",
+  "DATA='/Event/Phys/StdLoosePions/Particles'     TYPE='GaudiSequencer/StdLoosePionsSeq'",
+  "DATA='/Event/Phys/StdLoosePions/Vertices'      TYPE='GaudiSequencer/StdLoosePionsSeq'",
   // Loose VTT pions  
-  "DATA='/Event/Phys/StdLooseVTTPions/Particles'     TYPE='PreLoadParticles/StdLooseVTTPions'",
-  "DATA='/Event/Phys/StdLooseVTTPions/Vertices'      TYPE='PreLoadParticles/StdLooseVTTPions'",  
+  "DATA='/Event/Phys/StdLooseVTTPions/Particles'     TYPE='GaudiSequencer/StdLooseVTTPionsSeq'",
+  "DATA='/Event/Phys/StdLooseVTTPions/Vertices'      TYPE='GaudiSequencer/StdLooseVTTPionsSeq'",  
   // Loose Downstream pions  
-  "DATA='/Event/Phys/StdLooseDownstreamPions/Particles'     TYPE='PreLoadParticles/StdLooseDownstreamPions'",
-  "DATA='/Event/Phys/StdLooseDownstreamPions/Vertices'      TYPE='PreLoadParticles/StdLooseDownstreamPions'",
+  "DATA='/Event/Phys/StdLooseDownstreamPions/Particles' TYPE='GaudiSequencer/StdLooseDownstreamPionsSeq'",
+  "DATA='/Event/Phys/StdLooseDownstreamPions/Vertices'  TYPE='GaudiSequencer/StdLooseDownstreamPionsSeq'",
   // Tight pions
-  "DATA='/Event/Phys/StdTightPions/Particles'     TYPE='PreLoadParticles/StdTightPions'",
-  "DATA='/Event/Phys/StdTightPions/Vertices'      TYPE='PreLoadParticles/StdTightPions'"
+  "DATA='/Event/Phys/StdTightPions/Particles'     TYPE='GaudiSequencer/StdTightPionsSeq'",
+  "DATA='/Event/Phys/StdTightPions/Vertices'      TYPE='GaudiSequencer/StdTightPionsSeq'"
 };
+
+StdNoPIDsPionsSeq.Members += { "PreLoadParticles/StdNoPIDsPions" };
+StdNoPIDsPionsSeq.MeasureTime = true;
+StdLoosePionsSeq.Members += { "PreLoadParticles/StdLoosePions" };
+StdLoosePionsSeq.MeasureTime = true;
+StdLooseVTTPionsSeq.Members += { "PreLoadParticles/StdLooseVTTPions" };
+StdLooseVTTPionsSeq.MeasureTime = true;
+StdLooseDownstreamPionsSeq.Members += { "PreLoadParticles/StdLooseDownstreamPions" };
+StdLooseDownstreamPionsSeq.MeasureTime = true;
+StdTightPionsSeq.Members += { "PreLoadParticles/StdTightPions" };
+StdTightPionsSeq.MeasureTime = true;
+
 // ============================================================================
 // NO PID, all tracks
 // ============================================================================

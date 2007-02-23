@@ -1,12 +1,12 @@
-// $Id: StandardDstar.opts,v 1.4 2006-05-19 10:29:56 gligorov Exp $
+// $Id: StandardDstar.opts,v 1.5 2007-02-23 14:00:50 jonrob Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.5 $
 // ============================================================================
 
-/** @file 
+/** @file
  *
  *  Configuration file for "standard" D*
- * 
+ *
  *  @see StandardParticles.opts for basic particles
  *  @see StandardD0.opts for the D0 definition
  *  @see StandardOptions.opts for other intermediate states
@@ -15,72 +15,79 @@
  *  @date 2006-01-30
  */
 DataOnDemandSvc.Algorithms += {
-// Loose D* -> D0 Pi with D0->KPi
-  "DATA='/Event/Phys/StdLooseDstarWithD02KPi/Particles'     TYPE='MakeResonances/StdLooseDstarWithD02KPi'",
-  "DATA='/Event/Phys/StdLooseDstarWithD02KPi/Vertices'      TYPE='MakeResonances/StdLooseDstarWithD02KPi'",
-// Loose D* -> D0 Pi with D0->PiPi
-  "DATA='/Event/Phys/StdLooseDstarWithD02PiPi/Particles'    TYPE='MakeResonances/StdLooseDstarWithD02PiPi'",
-  "DATA='/Event/Phys/StdLooseDstarWithD02PiPi/Vertices'     TYPE='MakeResonances/StdLooseDstarWithD02PiPi'",
-// Loose D* -> D0 Pi with D0->KK
-  "DATA='/Event/Phys/StdLooseDstarWithD02KK/Particles'      TYPE='MakeResonances/StdLooseDstarWithD02KK'",
-  "DATA='/Event/Phys/StdLooseDstarWithD02KK/Vertices'       TYPE='MakeResonances/StdLooseDstarWithD02KK'"
+  // Loose D* -> D0 Pi with D0->KPi
+  "DATA='/Event/Phys/StdLooseDstarWithD02KPi/Particles'     TYPE='GaudiSequencer/StdLooseDstarWithD02KPiSeq'",
+  "DATA='/Event/Phys/StdLooseDstarWithD02KPi/Vertices'      TYPE='GaudiSequencer/StdLooseDstarWithD02KPiSeq'",
+  // Loose D* -> D0 Pi with D0->PiPi
+  "DATA='/Event/Phys/StdLooseDstarWithD02PiPi/Particles'    TYPE='GaudiSequencer/StdLooseDstarWithD02PiPiSeq'",
+  "DATA='/Event/Phys/StdLooseDstarWithD02PiPi/Vertices'     TYPE='GaudiSequencer/StdLooseDstarWithD02PiPiSeq'",
+  // Loose D* -> D0 Pi with D0->KK
+  "DATA='/Event/Phys/StdLooseDstarWithD02KK/Particles'      TYPE='GaudiSequencer/StdLooseDstarWithD02KKSeq'",
+  "DATA='/Event/Phys/StdLooseDstarWithD02KK/Vertices'       TYPE='GaudiSequencer/StdLooseDstarWithD02KKSeq'"
 };
+StdLooseDstarWithD02KPiSeq.Members += { "MakeResonances/StdLooseDstarWithD02KPi" };
+StdLooseDstarWithD02KPiSeq.MeasureTime = true;
+StdLooseDstarWithD02PiPiSeq.Members += { "MakeResonances/StdLooseDstarWithD02PiPi" };
+StdLooseDstarWithD02PiPiSeq.MeasureTime = true;
+StdLooseDstarWithD02KKSeq.Members += { "MakeResonances/StdLooseDstarWithD02KK" };
+StdLooseDstarWithD02KKSeq.MeasureTime = true;
+
 //
-// Here it would be sooooo nice to have python options 
+// Here it would be sooooo nice to have python options
 // instead of these duplications
 //
 /*************************************************************************
-*  Standard Loose D* with D0->KPi
-*/
+ *  Standard Loose D* with D0->KPi
+ */
 StdLooseDstarWithD02KPi.PhysDesktop.InputLocations = { "Phys/StdLooseD02KPi", "Phys/StdLoosePions", "Phys/StdLooseVTTPions" };
 StdLooseDstarWithD02KPi.DecayDescriptor = "[D*(2010)+ -> pi+ D0]cc";
 // Cuts for daughters
 StdLooseDstarWithD02KPi.DaughterFilter.Selections = {"pi+ : PVIPFilterCriterion"};
-StdLooseDstarWithD02KPi.DaughterFilter.FilterByDescendents = false ; 
+StdLooseDstarWithD02KPi.DaughterFilter.FilterByDescendents = false ;
 StdLooseDstarWithD02KPi.DaughterFilter.PVIPFilterCriterion.MinIPsignif = 1.0; // hlt tuned: 2, hlt presel: 1
 // Cuts for combination
 StdLooseDstarWithD02KPi.Window = 50.0 * MeV; // hlt presel: 50 MeV
 StdLooseDstarWithD02KPi.MinPt  = 1250.0 * MeV; // hlt presel: 2000 MeV
 // Cuts for mother
-StdLooseDstarWithD02KPi.MotherFilter.Selections = {"D*(2010)+ : VtxFilterCriterion, MassDifferenceFilterCriterion"}; 
+StdLooseDstarWithD02KPi.MotherFilter.Selections = {"D*(2010)+ : VtxFilterCriterion, MassDifferenceFilterCriterion"};
 StdLooseDstarWithD02KPi.MotherFilter.VtxFilterCriterion.MaxChi2 = 25.0; // hlt presel: 16
 StdLooseDstarWithD02KPi.MotherFilter.MassDifferenceFilterCriterion.Window = 20.0 * MeV; // hlt tuned: 10 MeV, hlt presel: 60 MeV, from Thomas: 5 MeV
 StdLooseDstarWithD02KPi.MotherFilter.MassDifferenceFilterCriterion.DaughterName = "D0";
 StdLooseDstarWithD02KPi.MotherFilter.MassDifferenceFilterCriterion.MotherName = "D*(2010)+";
 
 /*************************************************************************
-*  Standard Loose D* with D0->PiPi
-*/
+ *  Standard Loose D* with D0->PiPi
+ */
 StdLooseDstarWithD02PiPi.PhysDesktop.InputLocations = { "Phys/StdLooseD02PiPi", "Phys/StdLoosePions", "Phys/StdLooseVTTPions" };
 StdLooseDstarWithD02PiPi.DecayDescriptor = "[D*(2010)+ -> pi+ D0]cc";
 // Cuts for daughters
 StdLooseDstarWithD02PiPi.DaughterFilter.Selections = {"pi+ : PVIPFilterCriterion"};
-StdLooseDstarWithD02PiPi.DaughterFilter.FilterByDescendents = false ; 
+StdLooseDstarWithD02PiPi.DaughterFilter.FilterByDescendents = false ;
 StdLooseDstarWithD02PiPi.DaughterFilter.PVIPFilterCriterion.MinIPsignif = 1.0; // hlt tuned: 2, hlt presel: 1
 // Cuts for combination
 StdLooseDstarWithD02PiPi.Window = 50.0 * MeV; // hlt presel: 50 MeV
 StdLooseDstarWithD02PiPi.MinPt  = 1250.0 * MeV; // hlt presel: 2000 MeV
 // Cuts for mother
-StdLooseDstarWithD02PiPi.MotherFilter.Selections = {"D*(2010)+  : VtxFilterCriterion, MassDifferenceFilterCriterion"}; 
+StdLooseDstarWithD02PiPi.MotherFilter.Selections = {"D*(2010)+  : VtxFilterCriterion, MassDifferenceFilterCriterion"};
 StdLooseDstarWithD02PiPi.MotherFilter.VtxFilterCriterion.MaxChi2 = 25.0; // hlt presel: 16
 StdLooseDstarWithD02PiPi.MotherFilter.MassDifferenceFilterCriterion.Window = 20.0 * MeV; // hlt tuned: 10 MeV, hlt presel: 60 MeV, from Thomas: 5 MeV
 StdLooseDstarWithD02PiPi.MotherFilter.MassDifferenceFilterCriterion.DaughterName = "D0";
 StdLooseDstarWithD02PiPi.MotherFilter.MassDifferenceFilterCriterion.MotherName = "D*(2010)+";
 
 /*************************************************************************
-*  Standard Loose D* with D0->KK
-*/
+ *  Standard Loose D* with D0->KK
+ */
 StdLooseDstarWithD02KK.PhysDesktop.InputLocations = { "Phys/StdLooseD02KK", "Phys/StdLoosePions", "Phys/StdLooseVTTPions" };
 StdLooseDstarWithD02KK.DecayDescriptor = "[D*(2010)+ -> pi+ D0]cc";
 // Cuts for daughters
 StdLooseDstarWithD02KK.DaughterFilter.Selections = {"pi+ : PVIPFilterCriterion"};
-StdLooseDstarWithD02KK.DaughterFilter.FilterByDescendents = false ; 
+StdLooseDstarWithD02KK.DaughterFilter.FilterByDescendents = false ;
 StdLooseDstarWithD02KK.DaughterFilter.PVIPFilterCriterion.MinIPsignif = 1.0; // hlt tuned: 2, hlt presel: 1
 // Cuts for combination
 StdLooseDstarWithD02KK.Window = 50.0 * MeV; // hlt presel: 50 MeV
 StdLooseDstarWithD02KK.MinPt  = 1250.0 * MeV; // hlt presel: 2000 MeV
 // Cuts for mother
-StdLooseDstarWithD02KK.MotherFilter.Selections = {"D*(2010)+ : VtxFilterCriterion, MassDifferenceFilterCriterion"}; 
+StdLooseDstarWithD02KK.MotherFilter.Selections = {"D*(2010)+ : VtxFilterCriterion, MassDifferenceFilterCriterion"};
 StdLooseDstarWithD02KK.MotherFilter.VtxFilterCriterion.MaxChi2 = 25.0; // hlt presel: 16
 StdLooseDstarWithD02KK.MotherFilter.MassDifferenceFilterCriterion.Window = 20.0 * MeV; // hlt tuned: 10 MeV, hlt presel: 60 MeV, from Thomas: 5 MeV
 StdLooseDstarWithD02KK.MotherFilter.MassDifferenceFilterCriterion.DaughterName = "D0";

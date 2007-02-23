@@ -1,12 +1,12 @@
-// $Id: StandardKs.opts,v 1.7 2007-02-17 13:04:41 pkoppenb Exp $
+// $Id: StandardKs.opts,v 1.8 2007-02-23 14:00:50 jonrob Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.7 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.8 $
 // ============================================================================
 
-/** @file 
+/** @file
  *
  *  Configuration file for "standard" Ks
- * 
+ *
  *  @see StandardParticles.opts for basic particles
  *  @see StandardOptions.opts for other intermediate states
  *
@@ -14,16 +14,23 @@
  *  @date 2006-05-18
  */
 DataOnDemandSvc.Algorithms += {
-// Loose Long-Long Ks
-  "DATA='/Event/Phys/StdLooseKsLL/Particles'     TYPE='MakeResonances/StdLooseKsLL'",
-  "DATA='/Event/Phys/StdLooseKsLL/Vertices'      TYPE='MakeResonances/StdLooseKsLL'",
-// Tight Long-Long Ks
-  "DATA='/Event/Phys/StdTightKsLL/Particles'     TYPE='MakeResonances/StdTightKsLL'",
-  "DATA='/Event/Phys/StdTightKsLL/Vertices'      TYPE='MakeResonances/StdTightKsLL'",
-// Loose Downstream-Downstream Ks
-  "DATA='/Event/Phys/StdLooseKsDD/Particles'     TYPE='MakeResonances/StdLooseKsDD'",
-  "DATA='/Event/Phys/StdLooseKsDD/Vertices'      TYPE='MakeResonances/StdLooseKsDD'"
+  // Loose Long-Long Ks
+  "DATA='/Event/Phys/StdLooseKsLL/Particles'     TYPE='GaudiSequencer/StdLooseKsLLSeq'",
+  "DATA='/Event/Phys/StdLooseKsLL/Vertices'      TYPE='GaudiSequencer/StdLooseKsLLSeq'",
+  // Tight Long-Long Ks
+  "DATA='/Event/Phys/StdTightKsLL/Particles'     TYPE='GaudiSequencer/StdTightKsLLSeq'",
+  "DATA='/Event/Phys/StdTightKsLL/Vertices'      TYPE='GaudiSequencer/StdTightKsLLSeq'",
+  // Loose Downstream-Downstream Ks
+  "DATA='/Event/Phys/StdLooseKsDD/Particles'     TYPE='GaudiSequencer/StdLooseKsDDSeq'",
+  "DATA='/Event/Phys/StdLooseKsDD/Vertices'      TYPE='GaudiSequencer/StdLooseKsDDSeq'"
 };
+
+StdLooseKsLLSeq.Members += { "MakeResonances/StdLooseKsLL" };
+StdLooseKsLLSeq.MeasureTime = true;
+StdTightKsLLSeq.Members += { "MakeResonances/StdTightKsLL" };
+StdTightKsLLSeq.MeasureTime = true;
+StdLooseKsDDSeq.Members += { "MakeResonances/StdLooseKsDD" };
+StdLooseKsDDSeq.MeasureTime = true;
 
 /*************************************************************************
 / Common Ks LongLong
@@ -40,16 +47,16 @@ StdLooseKsLL.DaughterFilter.Selections = {"pi+ : KinFilterCriterion,
                                                  PVIPFilterCriterion,
                                                  TrackQualityFilterCriterion"};
 
-StdLooseKsLL.DaughterFilter.KinFilterCriterion.MinMomentum = 2.0*GeV; 
+StdLooseKsLL.DaughterFilter.KinFilterCriterion.MinMomentum = 2.0*GeV;
 StdLooseKsLL.DaughterFilter.PVIPFilterCriterion.MinIPsignif = 3.0;
 StdLooseKsLL.DaughterFilter.TrackQualityFilterCriterion.Chi2Max = 20.0;
 
 StdLooseKsLL.KillOverlap = true;
-StdLooseKsLL.Window = 50.*MeV ; // 
+StdLooseKsLL.Window = 50.*MeV ; //
 //StdLooseKsLL.MinPt = 0.; // MeV
 StdLooseKsLL.MotherFilter.Selections = { "KS0 :         VtxFilterCriterion,
                                                        MassFilterCriterion " };
-StdLooseKsLL.MotherFilter.VtxFilterCriterion.MaxChi2 = 30.;  
+StdLooseKsLL.MotherFilter.VtxFilterCriterion.MaxChi2 = 30.;
 //StdLooseKsLL.MotherFilter.VtxFilterCriterion.MaxZPos = 650.; //mm
 //StdLooseKsLL.MotherFilter.VtxFilterCriterion.MinZPos = -100.;
 //StdLooseKsLL.MotherFilter.VtxFilterCriterion.MinRPos = 0.5;
@@ -68,17 +75,17 @@ StdTightKsLL.DaughterFilter.Selections = {"pi+ : TrackQualityFilterCriterion,
                                                 KinFilterCriterion,
                                                  PVIPFilterCriterion"};
 
-StdTightKsLL.DaughterFilter.KinFilterCriterion.MinMomentum = 3.0*GeV; 
+StdTightKsLL.DaughterFilter.KinFilterCriterion.MinMomentum = 3.0*GeV;
 StdTightKsLL.DaughterFilter.PVIPFilterCriterion.MinIPsignif = 4.0;
 StdTightKsLL.DaughterFilter.TrackQualityFilterCriterion.Chi2Max = 2.0;
 
 StdTightKsLL.KillOverlap = true;
-StdTightKsLL.Window = 50.*MeV ; // 
+StdTightKsLL.Window = 50.*MeV ; //
 StdTightKsLL.MinPt = 50.; // MeV
 StdTightKsLL.MotherFilter.Selections = { "KS0 :         VtxFilterCriterion
                                                      , KinFilterCriterion,
                                                        MassFilterCriterion " };
-StdTightKsLL.MotherFilter.VtxFilterCriterion.MaxChi2 = 10.;  
+StdTightKsLL.MotherFilter.VtxFilterCriterion.MaxChi2 = 10.;
 StdTightKsLL.MotherFilter.VtxFilterCriterion.MaxZPos = 650.; //mm
 StdTightKsLL.MotherFilter.VtxFilterCriterion.MinZPos = -100.;
 StdTightKsLL.MotherFilter.VtxFilterCriterion.MinRPos = 0.5;
@@ -97,16 +104,16 @@ StdLooseKsDD.DaughterFilter.Selections = {"pi+ : KinFilterCriterion,
                                                  PVIPFilterCriterion,
                                                  TrackQualityFilterCriterion"};
 
-StdLooseKsDD.DaughterFilter.KinFilterCriterion.MinMomentum = 2.0*GeV; 
+StdLooseKsDD.DaughterFilter.KinFilterCriterion.MinMomentum = 2.0*GeV;
 StdLooseKsDD.DaughterFilter.PVIPFilterCriterion.MinIPsignif = 2.0;
 StdLooseKsDD.DaughterFilter.TrackQualityFilterCriterion.Chi2Max = 20.0;
 
 StdLooseKsDD.KillOverlap = true;
-StdLooseKsDD.Window = 80.*MeV ; // 
+StdLooseKsDD.Window = 80.*MeV ; //
 //StdLooseKsDD.MinPt = 0.*MeV; // MeV
 StdLooseKsDD.MotherFilter.Selections = { "KS0 : VtxFilterCriterion,
                                            MassFilterCriterion " };
-StdLooseKsDD.MotherFilter.VtxFilterCriterion.MaxChi2 = 30.;  
+StdLooseKsDD.MotherFilter.VtxFilterCriterion.MaxChi2 = 30.;
 //StdLooseKsDD.MotherFilter.VtxFilterCriterion.MaxZPos = 2500.*mm; //mm
 //StdLooseKsDD.MotherFilter.VtxFilterCriterion.MinZPos = -100.*mm;
 //StdLooseKsDD.MotherFilter.VtxFilterCriterion.MinRPos = 10.*mm;

@@ -15,21 +15,32 @@
  */
 DataOnDemandSvc.Algorithms += {
   // No PID protons 
-  "DATA='/Event/Phys/StdNoPIDsProtons/Particles'   TYPE='PreLoadParticles/StdNoPIDsProtons'",
-  "DATA='/Event/Phys/StdNoPIDsProtons/Vertices'    TYPE='PreLoadParticles/StdNoPIDsProtons'",
+  "DATA='/Event/Phys/StdNoPIDsProtons/Particles'   TYPE='GaudiSequencer/StdNoPIDsProtonsSeq'",
+  "DATA='/Event/Phys/StdNoPIDsProtons/Vertices'    TYPE='GaudiSequencer/StdNoPIDsProtonsSeq'",
   // Loose protons:    RICH & DLL(p-pi)>-5
-  "DATA='/Event/Phys/StdLooseProtons/Particles'   TYPE='PreLoadParticles/StdLooseProtons'",
-  "DATA='/Event/Phys/StdLooseProtons/Vertices'    TYPE='PreLoadParticles/StdLooseProtons'",
+  "DATA='/Event/Phys/StdLooseProtons/Particles'   TYPE='GaudiSequencer/StdLooseProtonsSeq'",
+  "DATA='/Event/Phys/StdLooseProtons/Vertices'    TYPE='GaudiSequencer/StdLooseProtonsSeq'",
   // Loose VTT protons:    RICH & DLL(p-pi)>-5
-  "DATA='/Event/Phys/StdLooseVTTProtons/Particles'   TYPE='PreLoadParticles/StdLooseVTTProtons'",
-  "DATA='/Event/Phys/StdLooseVTTProtons/Vertices'    TYPE='PreLoadParticles/StdLooseVTTProtons'",
+  "DATA='/Event/Phys/StdLooseVTTProtons/Particles'   TYPE='GaudiSequencer/StdLooseVTTProtonsSeq'",
+  "DATA='/Event/Phys/StdLooseVTTProtons/Vertices'    TYPE='GaudiSequencer/StdLooseVTTProtonsSeq'",
   // Loose Downstream protons:    RICH & DLL(p-pi)>-5
-  "DATA='/Event/Phys/StdLooseDownstreamProtons/Particles'   TYPE='PreLoadParticles/StdLooseDownstreamProtons'",
-  "DATA='/Event/Phys/StdLooseDownstreamProtons/Vertices'    TYPE='PreLoadParticles/StdLooseDownstreamProtons'",
+  "DATA='/Event/Phys/StdLooseDownstreamProtons/Particles'   TYPE='GaudiSequencer/StdLooseDownstreamProtonsSeq'",
+  "DATA='/Event/Phys/StdLooseDownstreamProtons/Vertices'    TYPE='GaudiSequencer/StdLooseDownstreamProtonsSeq'",
   // Tight protons
-  "DATA='/Event/Phys/StdTightProtons/Particles'   TYPE='PreLoadParticles/StdTightProtons'",
-  "DATA='/Event/Phys/StdTightProtons/Vertices'    TYPE='PreLoadParticles/StdTightProtons'"
+  "DATA='/Event/Phys/StdTightProtons/Particles'   TYPE='GaudiSequencer/StdTightProtonsSeq'",
+  "DATA='/Event/Phys/StdTightProtons/Vertices'    TYPE='GaudiSequencer/StdTightProtonsSeq'"
 };
+StdNoPIDsProtonsSeq.Members += { "PreLoadParticles/StdNoPIDsProtons" };
+StdNoPIDsProtonsSeq.MeasureTime = true;
+StdLooseProtonsSeq.Members += { "PreLoadParticles/StdLooseProtons" };
+StdLooseProtonsSeq.MeasureTime = true;
+StdLooseVTTProtonsSeq.Members += { "PreLoadParticles/StdLooseVTTProtons" };
+StdLooseVTTProtonsSeq.MeasureTime = true;
+StdLooseDownstreamProtonsSeq.Members += { "PreLoadParticles/StdLooseDownstreamProtons" };
+StdLooseDownstreamProtonsSeq.MeasureTime = true;
+StdTightProtonsSeq.Members += { "PreLoadParticles/StdTightProtons" };
+StdTightProtonsSeq.MeasureTime = true;
+
 // ============================================================================
 // NO PID, all tracks
 // ============================================================================

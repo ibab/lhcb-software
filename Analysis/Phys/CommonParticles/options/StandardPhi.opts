@@ -1,6 +1,6 @@
-// $Id: StandardPhi.opts,v 1.4 2007-02-17 13:04:41 pkoppenb Exp $
+// $Id: StandardPhi.opts,v 1.5 2007-02-23 14:00:50 jonrob Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.5 $
 // ============================================================================
 
 /** @file 
@@ -15,9 +15,11 @@
  */
 DataOnDemandSvc.Algorithms += {
 // Loose Phi->KK
-  "DATA='/Event/Phys/StdLoosePhi2KK/Particles'     TYPE='MakeResonances/StdLoosePhi2KK'",
-  "DATA='/Event/Phys/StdLoosePhi2KK/Vertices'      TYPE='MakeResonances/StdLoosePhi2KK'"
+  "DATA='/Event/Phys/StdLoosePhi2KK/Particles'     TYPE='GaudiSequencer/StdLoosePhi2KKSeq'",
+  "DATA='/Event/Phys/StdLoosePhi2KK/Vertices'      TYPE='GaudiSequencer/StdLoosePhi2KKSeq'"
 };
+StdLoosePhi2KKSeq.Members += { "MakeResonances/StdLoosePhi2KK" };
+StdLoosePhi2KKSeq.MeasureTime = true;
 
 /*************************************************************************
 *  Standard Loose Phi->KK

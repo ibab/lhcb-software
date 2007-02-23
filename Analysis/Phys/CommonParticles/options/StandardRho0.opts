@@ -1,6 +1,6 @@
-// $Id: StandardRho0.opts,v 1.2 2007-02-17 13:04:41 pkoppenb Exp $
+// $Id: StandardRho0.opts,v 1.3 2007-02-23 14:00:50 jonrob Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $
 // ============================================================================
 
 /** @file 
@@ -15,9 +15,11 @@
  */
 DataOnDemandSvc.Algorithms += {
   // Loose rho0 -> pi+ pi-
-  "DATA='/Event/Phys/StdLooseRho02PiPi/Particles' TYPE='MakeResonances/StdLooseRho02PiPi'",
-  "DATA='/Event/Phys/StdLooseRho02PiPi/Vertices'  TYPE='MakeResonances/StdLooseRho02PiPi'"
+  "DATA='/Event/Phys/StdLooseRho02PiPi/Particles' TYPE='GaudiSequencer/StdLooseRho02PiPiSeq'",
+  "DATA='/Event/Phys/StdLooseRho02PiPi/Vertices'  TYPE='GaudiSequencer/StdLooseRho02PiPiSeq'"
 };
+StdLooseRho02PiPiSeq.Members += { "MakeResonances/StdLooseRho02PiPi" };
+StdLooseRho02PiPiSeq.MeasureTime = true;
 
 /*************************************************************************
 *  Standard Loose rho(770)0 -> pi+ pi-

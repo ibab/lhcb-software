@@ -7,9 +7,10 @@
  */
 
 DataOnDemandSvc.Algorithms += {
-  "DATA='/Event/Phys/StdLooseResolvedPi0s/Particles'     TYPE='PreLoadParticles/StdLooseResolvedPi0s'"
+  "DATA='/Event/Phys/StdLooseResolvedPi0s/Particles'     TYPE='GaudiSequencer/StdLooseResolvedPi0sSeq'"
 };
-
+StdLooseResolvedPi0sSeq.Members += { "PreLoadParticles/StdLooseResolvedPi0s" };
+StdLooseResolvedPi0sSeq.MeasureTime = true;
 
 StdLooseResolvedPi0s.PhysDesktop.ParticleMakerType =  "CaloParticleMaker";
 StdLooseResolvedPi0s.PhysDesktop.CaloParticleMaker.Type = "ResolvedPi0Maker";

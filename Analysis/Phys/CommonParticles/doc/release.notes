@@ -4,6 +4,18 @@
 ! Purpose     : Common particles
 !-----------------------------------------------------------------------------
 
+! 2007-02-23 - Chris Jones
+ - Minor change to how the Standard Particle DoD sequences are set up
+  + For each Data-On-Demand entry alter the configuration to run
+    instead of the required algorithm, a GaudiSequencer.
+  + By default this GaudiSequencer runs only the original algorithm so
+    there is no change to the functionality. The reason for this change is it
+    allows other algorithms to optionally be appended to the end of the
+    sequencer.
+  + A new option file is added 'EnableStandardParticleMonitors.opts' which for each
+		of the standard particle sequences appends a monitor algorithm that produces some
+    basic performance monitoring.
+
 ! 2007-02-17 - Patrick Koppenburg
  - Correct many typos
 

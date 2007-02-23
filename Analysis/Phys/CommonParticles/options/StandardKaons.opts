@@ -11,17 +11,25 @@
  *  @author Juan PALACIOS juan.palacios@cern.ch
  *  @date 2006-06-27
  */
+
 DataOnDemandSvc.Algorithms += {
   // No PID kaons
-  "DATA='/Event/Phys/StdNoPIDsKaons/Particles'     TYPE='PreLoadParticles/StdNoPIDsKaons'",
-  "DATA='/Event/Phys/StdNoPIDsKaons/Vertices'      TYPE='PreLoadParticles/StdNoPIDsKaons'",
+  "DATA='/Event/Phys/StdNoPIDsKaons/Particles'     TYPE='GaudiSequencer/StdNoPIDsKaonsSeq'",
+  "DATA='/Event/Phys/StdNoPIDsKaons/Vertices'      TYPE='GaudiSequencer/StdNoPIDsKaonsSeq'",
   // Loose kaons      
-  "DATA='/Event/Phys/StdLooseKaons/Particles'     TYPE='PreLoadParticles/StdLooseKaons'",
-  "DATA='/Event/Phys/StdLooseKaons/Vertices'      TYPE='PreLoadParticles/StdLooseKaons'",
+  "DATA='/Event/Phys/StdLooseKaons/Particles'     TYPE='GaudiSequencer/StdLooseKaonsSeq'",
+  "DATA='/Event/Phys/StdLooseKaons/Vertices'      TYPE='GaudiSequencer/StdLooseKaonsSeq'",
   // Tight kaons  
-  "DATA='/Event/Phys/StdTightKaons/Particles'     TYPE='PreLoadParticles/StdTightKaons'",
-  "DATA='/Event/Phys/StdTightKaons/Vertices'      TYPE='PreLoadParticles/StdTightKaons'"
+  "DATA='/Event/Phys/StdTightKaons/Particles'     TYPE='GaudiSequencer/StdTightKaonsSeq'",
+  "DATA='/Event/Phys/StdTightKaons/Vertices'      TYPE='GaudiSequencer/StdTightKaonsSeq'"
 };
+StdNoPIDsKaonsSeq.Members += { "PreLoadParticles/StdNoPIDsKaons" };
+StdNoPIDsKaonsSeq.MeasureTime = true;
+StdLooseKaonsSeq.Members += { "PreLoadParticles/StdLooseKaons" };
+StdLooseKaonsSeq.MeasureTime = true;
+StdTightKaonsSeq.Members += { "PreLoadParticles/StdTightKaons" };
+StdTightKaonsSeq.MeasureTime = true;
+
 // ============================================================================
 // NO PID, all tracks
 // ============================================================================

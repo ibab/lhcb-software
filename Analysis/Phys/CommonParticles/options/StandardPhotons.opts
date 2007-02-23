@@ -1,21 +1,27 @@
 /** @file 
  *
- *  The configuration file for "standard" reolved pi0s, created "on-demand"
+ *  The configuration file for "standard" resolved photons, created "on-demand"
  *
  *  @author Olivier Deschamps odescham@in2p3.fr
  *  @date 2006-11-28
  */
 DataOnDemandSvc.Algorithms += {
   // Non-converted photons 
-  "DATA='/Event/Phys/StdLoosePhotons/Particles'   TYPE='PreLoadParticles/StdLoosePhotons'",
-  "DATA='/Event/Phys/StdLoosePhotons/Vertices'    TYPE='PreLoadParticles/StdLoosePhotons'",
+  "DATA='/Event/Phys/StdLoosePhotons/Particles'   TYPE='GaudiSequencer/StdLoosePhotonsSeq'",
+  "DATA='/Event/Phys/StdLoosePhotons/Vertices'    TYPE='GaudiSequencer/StdLoosePhotonsSeq'",
   // Converted photons (late conversion after magnet)
-  "DATA='/Event/Phys/StdLooseCnvPhotons/Particles' TYPE='PreLoadParticles/StdLooseCnvPhotons'",
-  "DATA='/Event/Phys/StdLooseCnvPhotons/Vertices'  TYPE='PreLoadParticles/StdLooseCnvPhotons'",
+  "DATA='/Event/Phys/StdLooseCnvPhotons/Particles' TYPE='GaudiSequencer/StdLooseCnvPhotonsSeq'",
+  "DATA='/Event/Phys/StdLooseCnvPhotons/Vertices'  TYPE='GaudiSequencer/StdLooseCnvPhotonsSeq'",
   // All photons: non-converted and dconverted 
-  "DATA='/Event/Phys/StdLooseAllPhotons/Particles' TYPE='PreLoadParticles/StdLooseAllPhotons'",
-  "DATA='/Event/Phys/StdLooseAllPhotons/Vertices'  TYPE='PreLoadParticles/StdLooseAllPhotons'"
+  "DATA='/Event/Phys/StdLooseAllPhotons/Particles' TYPE='GaudiSequencer/StdLooseAllPhotonsSeq'",
+  "DATA='/Event/Phys/StdLooseAllPhotons/Vertices'  TYPE='GaudiSequencer/StdLooseAllPhotonsSeq'"
 };
+StdLoosePhotonsSeq.Members += { "PreLoadParticles/StdLoosePhotons" };
+StdLoosePhotonsSeq.MeasureTime = true;
+StdLooseCnvPhotonsSeq.Members += { "PreLoadParticles/StdLooseCnvPhotons" };
+StdLooseCnvPhotonsSeq.MeasureTime = true;
+StdLooseAllPhotonsSeq.Members += { "PreLoadParticles/StdLooseAllPhotons" };
+StdLooseAllPhotonsSeq.MeasureTime = true;
 
 StdLoosePhotons.PhysDesktop.ParticleMakerType = "CaloParticleMaker"  ;
 StdLoosePhotons.PhysDesktop.CaloParticleMaker.Type = "PhotonMaker";

@@ -14,15 +14,21 @@
 
 DataOnDemandSvc.Algorithms += {
   // No PID electrons 
-  "DATA='/Event/Phys/StdNoPIDsElectrons/Particles'     TYPE='PreLoadParticles/StdNoPIDsElectrons'",
-  "DATA='/Event/Phys/StdNoPIDsElectrons/Vertices'      TYPE='PreLoadParticles/StdNoPIDsElectrons'",
+  "DATA='/Event/Phys/StdNoPIDsElectrons/Particles'     TYPE='GaudiSequencer/StdNoPIDsElectronsSeq'",
+  "DATA='/Event/Phys/StdNoPIDsElectrons/Vertices'      TYPE='GaudiSequencer/StdNoPIDsElectronsSeq'",
   // Loose electrons       ELECTRON & DLL(mu-pi)>-10
-  "DATA='/Event/Phys/StdLooseElectrons/Particles'     TYPE='PreLoadParticles/StdLooseElectrons'",
-  "DATA='/Event/Phys/StdLooseElectrons/Vertices'      TYPE='PreLoadParticles/StdLooseElectrons'",
+  "DATA='/Event/Phys/StdLooseElectrons/Particles'     TYPE='GaudiSequencer/StdLooseElectronsSeq'",
+  "DATA='/Event/Phys/StdLooseElectrons/Vertices'      TYPE='GaudiSequencer/StdLooseElectronsSeq'",
   // Tight electrons
-  "DATA='/Event/Phys/StdTightElectrons/Particles'     TYPE='PreLoadParticles/StdTightElectrons'",
-  "DATA='/Event/Phys/StdTightElectrons/Vertices'      TYPE='PreLoadParticles/StdTightElectrons'"
+  "DATA='/Event/Phys/StdTightElectrons/Particles'     TYPE='GaudiSequencer/StdTightElectronsSeq'",
+  "DATA='/Event/Phys/StdTightElectrons/Vertices'      TYPE='GaudiSequencer/StdTightElectronsSeq'"
 };
+StdNoPIDsElectronsSeq.Members += { "PreLoadParticles/StdNoPIDsElectrons" };
+StdNoPIDsElectronsSeq.MeasureTime = true;
+StdLooseElectronsSeq.Members += { "PreLoadParticles/StdLooseElectrons" };
+StdLooseElectronsSeq.MeasureTime = true;
+StdTightElectronsSeq.Members += { "PreLoadParticles/StdTightElectrons" };
+StdTightElectronsSeq.MeasureTime = true;
 
 // ============================================================================
 // NO PID, all tracks
