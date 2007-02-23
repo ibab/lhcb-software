@@ -5,7 +5,7 @@
  * Header file for Particle maker CombinedParticleMaker
  *
  * CVS Log :-
- * $Id: CombinedParticleMaker.h,v 1.13 2006-11-20 15:57:38 jonrob Exp $
+ * $Id: CombinedParticleMaker.h,v 1.14 2007-02-23 14:04:42 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-05-03
@@ -155,6 +155,9 @@ private:
 
   /// Total number of tracks considered and selected
   TrackMap m_nTracks;
+
+  /// Minimum percentage to include in final summary printout
+  double m_minPercForPrint;
 
 };
 

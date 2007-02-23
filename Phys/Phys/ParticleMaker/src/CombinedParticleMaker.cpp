@@ -5,7 +5,7 @@
  * Implmentation file for Particle maker CombinedParticleMaker
  *
  * CVS Log :-
- * $Id: CombinedParticleMaker.cpp,v 1.20 2007-01-12 14:14:24 ranjard Exp $
+ * $Id: CombinedParticleMaker.cpp,v 1.21 2007-02-23 14:04:42 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-05-03
@@ -64,6 +64,7 @@ CombinedParticleMaker::CombinedParticleMaker( const std::string& type,
   declareProperty( "ProtonFilter",   m_prProtoFilter = "ProtoParticleCALOFilter" );
   declareProperty( "AddBremPhoton",  m_addBremPhoton = true );
   declareProperty( "ExclusiveSelection", m_exclusive = false );
+  declareProperty( "MinPercentForPrint", m_minPercForPrint = 0.01 );
 
 }
 
@@ -171,23 +172,23 @@ StatusCode CombinedParticleMaker::finalize()
   {
     const TrackTally & tally = (*iT).second;
     const double tkSel = 100 * ( tally.totProtos>0 ? (double)tally.selProtos/(double)tally.totProtos : 0 );
-    info() << "Selected " << tkSel << "% of '" << (*iT).first << "' ProtoParticles" << endreq;
-    if ( tally.selProtos > 0 )
+    if ( tkSel > m_minPercForPrint )
     {
+      info() << "Selected " << tkSel << "% of '" << (*iT).first << "' ProtoParticles" << endreq;
       const double elEff = 100 * (double)tally.el/(double)tally.selProtos;
       const double muEff = 100 * (double)tally.mu/(double)tally.selProtos;
       const double piEff = 100 * (double)tally.pi/(double)tally.selProtos;
       const double kaEff = 100 * (double)tally.ka/(double)tally.selProtos;
       const double prEff = 100 * (double)tally.pr/(double)tally.selProtos;
-      if ( tally.el>0 )
+      if ( elEff>m_minPercForPrint )
         info() << "  -> Electrons " << elEff << "% of selected ProtoParticles" << endreq;
-      if ( tally.mu>0 )
+      if ( muEff>m_minPercForPrint )
         info() << "  -> Muons     " << muEff << "% of selected ProtoParticles" << endreq;
-      if ( tally.pi>0 )
+      if ( piEff>m_minPercForPrint )
         info() << "  -> Pions     " << piEff << "% of selected ProtoParticles" << endreq;
-      if ( tally.ka>0 )
+      if ( kaEff>m_minPercForPrint )
         info() << "  -> Kaons     " << kaEff << "% of selected ProtoParticles" << endreq;
-      if ( tally.pr>0 )
+      if ( prEff>m_minPercForPrint )
         info() << "  -> Protons   " << prEff << "% of selected ProtoParticles" << endreq;
     }
   }
@@ -231,6 +232,36 @@ StatusCode CombinedParticleMaker::makeParticles( Particle::ConstVector & parts )
     if ( !m_trSel->accept(*track) ) continue;
     verbose() << " -> Track selected" << track->key() << endreq;
     ++tally.selProtos;
+
+    // test RICH links
+    if ( (*iProto)->hasInfo( LHCb::ProtoParticle::RichPIDStatus ) )
+    {
+      verbose() << " -> Proto has RICH info" << endreq;
+      const LHCb::RichPID * rpid = (*iProto)->richPID();
+      if ( !rpid )
+      {
+        error() << "Proto has null RichPID" << endreq;
+      }
+      else
+      {
+        verbose() << "   -> RichPID pointer is OK" << endreq;
+      }
+    }
+
+    // test MUON links
+    if ( (*iProto)->hasInfo( LHCb::ProtoParticle::MuonPIDStatus ) )
+    {
+      verbose() << " -> Proto has MUON info" << endreq;
+      const LHCb::MuonPID * mpid = (*iProto)->muonPID();
+      if ( !mpid )
+      {
+        error() << "Proto has null MuonPID" << endreq;
+      }
+      else
+      {
+        verbose() << "   -> MuonPID pointer is OK" << endreq;
+      }
+    }
 
     // loop over particle types to make
     for ( ProtoMap::const_iterator iP = m_protoMap.begin();

@@ -1,10 +1,15 @@
-! $Id: release.notes,v 1.55 2007-02-21 19:43:33 pkoppenb Exp $ 
+! $Id: release.notes,v 1.56 2007-02-23 14:04:42 jonrob Exp $ 
 ! Package     : ParticleMaker
 ! Responsible : P. Koppenburg, J. Palacios
 !==============================================================================
 
+! 2007-02-23 - Chris Jones
+ - Add new monitor algorithm ParticleEffPurMoni which reads in Particles
+   and produces some standard performance information for them
+ - Suppress some meaningless printout from CombinedParticleMaker
+
 ! 2007-02-21 - Patrick Koppenburg
- - Do not stop when location is not theer in NoPIDsPM
+ - Do not stop when location is not there in NoPIDsPM
 
 ! 2007-02-06 - P. Koppenburg
  - add daughters to particle in ParticleStuffer.
