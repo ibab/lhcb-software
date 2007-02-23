@@ -7,35 +7,88 @@
  */
 // Everything that works can go in there
 #include "$DAVINCIROOT/options/DaVinci.opts"
-//get some standard particles!
-#include "$COMMONPARTICLESROOT/options/StandardMuons.opts"
-#include "$COMMONPARTICLESROOT/options/StandardPions.opts"
-#include "$COMMONPARTICLESROOT/options/StandardJpsi.opts"
-#include "$COMMONPARTICLESROOT/options/StandardKs.opts"
-//
-ApplicationMgr.DLLs += { "TrackTools",
-                         "ProtoParticleFilter",
-                         "ParticleMaker"};
-ApplicationMgr.DLLs += { "DaVinciUser" };
-ApplicationMgr.TopAlg += { "DC06Tests1/TestCommonParticles" };
-//
-//TestCommonParticles.TestPrimVertices = false;
-// TestCommonParticles.PhysDesktop.InputLocations = {"Phys/StdLooseKaons",
-//                                                   "Phys/StdLooseProtons"};
-//TestCommonParticles.PhysDesktop.InputLocations = {"Phys/StdUnbiasedJpsi2MuMu"};
-TestCommonParticles.PhysDesktop.InputLocations = {"Phys/StdUnbiasedHeavyDimuon"};
-//TestCommonParticles.TestParticlePVTable = false;
-TestCommonParticles.OutputLevel = 1;
 
-MessageSvc.Format = "% F%60W%S%7W%R%T %0W%M";
+// standard particles
+#include "$COMMONPARTICLESROOT/options/StandardOptions.opts"
+// turn on monitoring of stndard particles
+#include "$COMMONPARTICLESROOT/options/EnableStandardParticleMonitors.opts"
+
+ApplicationMgr.TopAlg += { "GaudiSequencer/ParticleTests" };
+ParticleTests.MeasureTime = true;
+
+ParticleTests.Members += { "PreLoadParticles/TestCommonParticles" };
+
+//TestCommonParticles.TestPrimVertices = false;
+
+TestCommonParticles.PhysDesktop.InputLocations += { "Phys/StdLooseKaons" };
+TestCommonParticles.PhysDesktop.InputLocations += { "Phys/StdLoosePions" };
+TestCommonParticles.PhysDesktop.InputLocations += { "Phys/StdLooseProtons" };
+TestCommonParticles.PhysDesktop.InputLocations += { "Phys/StdLooseMuons" };
+TestCommonParticles.PhysDesktop.InputLocations += { "Phys/StdLooseElectrons" };
+
+TestCommonParticles.PhysDesktop.InputLocations += { "Phys/StdTightKaons" };
+TestCommonParticles.PhysDesktop.InputLocations += { "Phys/StdTightPions" };
+TestCommonParticles.PhysDesktop.InputLocations += { "Phys/StdTightProtons" };
+TestCommonParticles.PhysDesktop.InputLocations += { "Phys/StdTightMuons" };
+TestCommonParticles.PhysDesktop.InputLocations += { "Phys/StdTightElectrons" };
+
+TestCommonParticles.PhysDesktop.InputLocations += { "Phys/StdLooseVTTPions" };
+TestCommonParticles.PhysDesktop.InputLocations += { "Phys/StdLooseVTTProtons" };
+
+TestCommonParticles.PhysDesktop.InputLocations += { "Phys/StdLooseDownstreamPions" };
+TestCommonParticles.PhysDesktop.InputLocations += { "Phys/StdLooseDownstreamProtons" };
+
+TestCommonParticles.PhysDesktop.InputLocations += { "Phys/StdLooseLambda1115_LL" };
+TestCommonParticles.PhysDesktop.InputLocations += { "Phys/StdLooseLambda1115_DD" };
+TestCommonParticles.PhysDesktop.InputLocations += { "Phys/StdLooseLambda1115_LU" };
+TestCommonParticles.PhysDesktop.InputLocations += { "Phys/StdLooseLambda1115_UL" };
+TestCommonParticles.PhysDesktop.InputLocations += { "Phys/StdLooseLambda1115_LD" };
+TestCommonParticles.PhysDesktop.InputLocations += { "Phys/StdLooseLambda1115_DL" };
+
+TestCommonParticles.PhysDesktop.InputLocations += { "Phys/StdLooseDs2KKPi" };
+TestCommonParticles.PhysDesktop.InputLocations += { "Phys/StdLooseD2KPiPi" };
+TestCommonParticles.PhysDesktop.InputLocations += { "Phys/StdLooseRho02PiPi" };
+TestCommonParticles.PhysDesktop.InputLocations += { "Phys/StdLoosePhi2KK" };
+TestCommonParticles.PhysDesktop.InputLocations += { "Phys/StdLooseKstar2KPi" };
+TestCommonParticles.PhysDesktop.InputLocations += { "Phys/StdTightKstar2KPi" };
+TestCommonParticles.PhysDesktop.InputLocations += { "Phys/StdLooseKsLL" };
+TestCommonParticles.PhysDesktop.InputLocations += { "Phys/StdTightKsLL" };
+TestCommonParticles.PhysDesktop.InputLocations += { "Phys/StdLooseKsDD" };
+TestCommonParticles.PhysDesktop.InputLocations += { "Phys/StdUnbiasedHeavyDimuon" };
+TestCommonParticles.PhysDesktop.InputLocations += { "Phys/StdUnbiasedJpsi2MuMu" };
+TestCommonParticles.PhysDesktop.InputLocations += { "Phys/StdLooseBiasedJpsi2MuMu" };
+TestCommonParticles.PhysDesktop.InputLocations += { "Phys/StdLooseJpsi2ee" };
+TestCommonParticles.PhysDesktop.InputLocations += { "Phys/StdLooseDstarWithD02KK" };
+TestCommonParticles.PhysDesktop.InputLocations += { "Phys/StdLooseDstarWithD02KPi" };
+TestCommonParticles.PhysDesktop.InputLocations += { "Phys/StdLooseDstarWithD02PiPi" };
+TestCommonParticles.PhysDesktop.InputLocations += { "Phys/StdLooseD02PiPi" };
+TestCommonParticles.PhysDesktop.InputLocations += { "Phys/StdLooseD02KK" };
+TestCommonParticles.PhysDesktop.InputLocations += { "Phys/StdLooseD02KPi" };
+TestCommonParticles.PhysDesktop.InputLocations += { "Phys/StdLooseD02KsPiPi" };
+TestCommonParticles.PhysDesktop.InputLocations += { "Phys/StdLooseD02KsKK" };
+TestCommonParticles.PhysDesktop.InputLocations += { "Phys/StdLooseD02KKPiPiNoCC" };
+TestCommonParticles.PhysDesktop.InputLocations += { "Phys/StdLooseD02KPiPiPiCA" };
+TestCommonParticles.PhysDesktop.InputLocations += { "Phys/StdLooseResolvedPi0s" };
+TestCommonParticles.PhysDesktop.InputLocations += { "Phys/StdLooseMergedPi0s" };
+TestCommonParticles.PhysDesktop.InputLocations += { "Phys/StdLoosePhotons" };
+TestCommonParticles.PhysDesktop.InputLocations += { "Phys/StdLooseCnvPhotons" };
+TestCommonParticles.PhysDesktop.InputLocations += { "Phys/StdLooseAllPhotons" };
+
+//StdTightKaons.OutputLevel = 1;
+
+//ParticleTests.Members += { "ChargedProtoParticleTupleAlg/ChargedProtoTuple" };
+
+MessageSvc.Format = "% F%30W%S%7W%R%T %0W%M";
 
 ApplicationMgr.HistogramPersistency = "ROOT";
 //HistogramPersistencySvc.OutputFile = "TestCommonParticles.root";
 //HistogramPersistencySvc.OutputFile = "StdUnbiasedJpsi2MuMu.root";
-HistogramPersistencySvc.OutputFile = "StdUnbiasedHeavyDimuon.root";
 
+NTupleSvc.Output={"FILE1 DATAFILE='gpid-Allevts.root' TYP='ROOT' OPT='NEW'"};
+HistogramPersistencySvc.OutputFile = "histos2.root";
 
-ApplicationMgr.EvtMax  = -1 ;
+ApplicationMgr.EvtMax   = 5000;
+EventSelector.PrintFreq = 250;
 
 //-----------------------------------------------------------------------------
 // EventSelector.Input   = {
@@ -47,3 +100,11 @@ ApplicationMgr.EvtMax  = -1 ;
 //    "DATAFILE='PFN:/afs/cern.ch/lhcb/group/davinci/vol1/jpalac/Brunel/v30r6/0601-11144100.dst' TYP='POOL_ROOTTREE' OPT='READ'"
 // };
 //PoolDbCacheSvc.Catalog = { "xmlcatalog_file:$DAVINCIROOT/options/NewCatalog.xml" };
+
+//#include "$HOME/MyDataOptions/Brunel-v30r14-2e32Lumi-dst.opts"
+//#include "$HOME/MyDataOptions/Brunel-v30r14-NewHPDQE-dst.opts"
+
+//CreateRichPIDs.OutputLevel = 1;
+//CreateMuonPIDs.OutputLevel = 1;
+//TestCommonParticles.OutputLevel = 1;
+//StdLooseKaons.PhysDesktop.CombinedParticleMaker.OutputLevel = 1;
