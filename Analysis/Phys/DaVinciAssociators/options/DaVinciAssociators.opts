@@ -3,3 +3,8 @@
 
 #include "$DAVINCIASSOCIATORSROOT/options/ChargedPP2MC.opts"
 #include "$DAVINCIASSOCIATORSROOT/options/NeutralPP2MC.opts"
+
+Particle2MCMethod.WithChi2  = 1 ;
+Particle2MCMethod.Chi2      = 2 ;
+Particle2MCMethod.Links     = 3 ;
+Particle2MCMethod.Composite = 4 ;
