@@ -1,4 +1,4 @@
-// $Id: BackgroundCategory.h,v 1.16 2006-10-18 14:22:14 jpalac Exp $
+// $Id: BackgroundCategory.h,v 1.17 2007-02-24 14:31:00 pkoppenb Exp $
 #ifndef BACKGROUNDCATEGORY_H 
 #define BACKGROUNDCATEGORY_H 1
 
@@ -9,9 +9,9 @@
 //#include "Event/Collision.h"
 #include "Kernel/IBackgroundCategory.h"          // Interface
 #include "Kernel/IParticleDescendants.h"
-//#include "DaVinciAssociators/ProtoParticle2MCAsct.h"
-//#include "DaVinciAssociators/Particle2MCWithChi2Asct.h"
-#include "DaVinciAssociators/Particle2MCLinker.h"
+//#include "Kernel/ProtoParticle2MCAsct.h"
+//#include "Kernel/Particle2MCWithChi2Asct.h"
+#include "Kernel/Particle2MCLinker.h"
 #include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/ParticleProperty.h"
 

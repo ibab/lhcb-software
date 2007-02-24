@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.99 2007-02-24 14:27:15 pkoppenb Exp $
+! $Id: release.notes,v 1.100 2007-02-24 14:29:48 pkoppenb Exp $
 !==============================================================================
 ! Package     : DaVinciAssociators
 ! Responsible : Philippe Charpentier
@@ -9,6 +9,7 @@
  - Correct other header files accordingly
  - Package does not need to export directory anymore. Pure component now.
  - Remove DaVinciAssociators/ directory
+ - Increment to v8r1
 
 !======================== DaVinciAssociators v8r0 2007-01-09 ================
 ! 2007-01-09 - Florence RANJARD

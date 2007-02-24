@@ -21,7 +21,7 @@ class IOnOffline;
 
 #ifdef MCCheck
 class IMCDecayFinder;
-#include "DaVinciAssociators/Particle2MCLinker.h"
+#include "Kernel/Particle2MCLinker.h"
 #include "Relations/IRelationWeighted.h"
 #include "Relations/RelationWeighted.h"
 #include "Event/CaloCluster.h"

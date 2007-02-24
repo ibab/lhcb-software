@@ -1,11 +1,14 @@
-! $Id: release.notes,v 1.149 2007-01-12 14:35:04 ranjard Exp $
+! $Id: release.notes,v 1.150 2007-02-24 14:31:00 pkoppenb Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
 
-!========================== DaVinciMCTools v9r0 2007-01-12 =================
+! 2007-02-24 - Patrick Koppenburg
+ - Corrected include of DaVinciAssociator include files.
+ - Increment to v9r0
 
+!========================== DaVinciMCTools v9r0 2007-01-12 =================
 ! 2007-01-12 - Florence Ranjard
  - remove VisPrimVertTool.* , MCReconstructible.* moved to LHCb/SimComponents
 
