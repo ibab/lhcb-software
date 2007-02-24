@@ -1,11 +1,25 @@
-! $Id: release.notes,v 1.23 2007-02-23 20:15:39 ibelyaev Exp $ 
+! $Id: release.notes,v 1.24 2007-02-24 18:28:03 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhysMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : RC <--> MC part of LoKi 
 ! -----------------------------------------------------------------------------
 
-!========================== LoKiPhysMC v4r0 2007-02-23 =======================
+
+!========================== LoKiPhysMC v4r0 2007-02-25 =======================
+
+! 2007-02-24 - Vanya BELYAEV
+  - src/Components/LoKi_P2MC.cpp ,
+    src/Components/LoKi_P2MCW.cpp
+       1) adapt to new location of Particle2MCLinker 
+       2) eliminate the code duplication through insertion of base class 
+          LoKi::P2MC
+  - src/Components/P2MC.h,
+    src/Components/P2MC.cpp
+      new base class to remove the code duplication in P2MC and 
+      P2MCW algorithms
+
+  - retag as v4r0
 
 ! 2007-02-23 - Vanya BELYAEV
  - add an "On-Demand" conversion of Linkers into Relation tables.
