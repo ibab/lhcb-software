@@ -1,4 +1,4 @@
-// $Id: Particle2MCChi2.h,v 1.8 2006-10-18 14:57:50 jpalac Exp $
+// $Id: Particle2MCChi2.h,v 1.9 2007-02-24 14:27:15 pkoppenb Exp $
 #ifndef Particle2MCChi2_H 
 #define Particle2MCChi2_H 1
 
@@ -11,7 +11,7 @@
 #include "GaudiKernel/IToolSvc.h"
 
 // local
-#include "DaVinciAssociators/Particle2MCLinker.h"
+#include "Kernel/Particle2MCLinker.h"
 #include "AsctAlgorithm.h"
 
 /** @class Particle2MCChi2 Particle2MCChi2.h

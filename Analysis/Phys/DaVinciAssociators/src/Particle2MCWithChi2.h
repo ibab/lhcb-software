@@ -1,4 +1,4 @@
-// $Id: Particle2MCWithChi2.h,v 1.6 2006-06-23 14:54:39 phicharp Exp $
+// $Id: Particle2MCWithChi2.h,v 1.7 2007-02-24 14:27:15 pkoppenb Exp $
 #ifndef Particle2MCWithChi2_H 
 #define Particle2MCWithChi2_H 1
 
@@ -20,7 +20,7 @@
 #include "GaudiAlg/GaudiAlgorithm.h"
 
 // local
-#include "DaVinciAssociators/Particle2MCLinker.h"
+#include "Kernel/Particle2MCLinker.h"
 #include "AsctAlgorithm.h"
 
 #include "GaudiKernel/PhysicalConstants.h"

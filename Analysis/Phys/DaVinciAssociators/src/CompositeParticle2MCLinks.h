@@ -1,4 +1,4 @@
-// $Id: CompositeParticle2MCLinks.h,v 1.14 2006-10-18 14:57:49 jpalac Exp $
+// $Id: CompositeParticle2MCLinks.h,v 1.15 2007-02-24 14:27:15 pkoppenb Exp $
 #ifndef CompositeParticle2MCLinks_H 
 #define CompositeParticle2MCLinks_H 1
 
@@ -10,7 +10,7 @@
 #include "GaudiKernel/IParticlePropertySvc.h"
 
 // local
-#include "DaVinciAssociators/Particle2MCLinker.h"
+#include "Kernel/Particle2MCLinker.h"
 #include "AsctAlgorithm.h"
 
 /** @class CompositeParticle2MCLinks CompositeParticle2MCLinks.h

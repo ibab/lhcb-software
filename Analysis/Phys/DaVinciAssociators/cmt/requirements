@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.46 2007-01-12 13:58:52 ranjard Exp $
+# $Id: requirements,v 1.47 2007-02-24 14:27:15 pkoppenb Exp $
 # Created    : 24/04/2002
 # Maintainer : Philippe Charpentier
 #
@@ -24,10 +24,6 @@ use DaVinciKernel   v*     Phys
 use DaVinciMCKernel v*     Phys
 use Relations       v*     Kernel
 use CaloUtils       v*     Calo
-
-# Exported header files
-#============================================================================
-apply_pattern install_more_includes more=DaVinciAssociators
 
 # Component library building rule
 #============================================================================

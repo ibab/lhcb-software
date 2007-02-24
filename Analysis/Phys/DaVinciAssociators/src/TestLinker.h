@@ -1,4 +1,4 @@
-// $Id: TestLinker.h,v 1.3 2006-06-23 14:54:41 phicharp Exp $
+// $Id: TestLinker.h,v 1.4 2007-02-24 14:27:15 pkoppenb Exp $
 #ifndef TestLinker_H
 #define TestLinker_H 1
 
@@ -6,7 +6,7 @@
 #include "GaudiAlg/GaudiAlgorithm.h"
 
 // from Associators
-#include "DaVinciAssociators/Particle2MCLinker.h"
+#include "Kernel/Particle2MCLinker.h"
 #include "AsctAlgorithm.h"
 
 /** @class TestLinker TestLinker.h
