@@ -209,7 +209,7 @@ const LHCb::RecVertex::ConstVector& PhysDesktop::primaryVertices(){
   if ( m_primVerts.empty()) getPrimaryVertices();
   if ( m_primVerts.empty()) {
     if ( m_primVtxLocn == "" ){
-      Warning("Empty primary vertex container at"+m_OnOffline->getPVLocation()) ;      
+      Warning("Empty primary vertex container at "+m_OnOffline->getPVLocation()) ;      
     } else {
       Warning("Empty primary vertex container at "+m_primVtxLocn);
     } 
