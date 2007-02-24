@@ -5,7 +5,7 @@
  *  Implementation file for class : ParticleEffPurMoni
  *
  *  CVS Log :-
- *  $Id: ParticleEffPurMoni.cpp,v 1.4 2007-02-23 18:14:16 jonrob Exp $
+ *  $Id: ParticleEffPurMoni.cpp,v 1.5 2007-02-24 11:50:44 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2007-002-21
@@ -37,9 +37,9 @@ ParticleEffPurMoni::ParticleEffPurMoni( const std::string& name,
     m_nEvts       ( 0    )
 {
   declareProperty( "MinContributionInSummary",     m_minContrib       = 0.05 );
-  declareProperty( "MinChargedProtoPMCAssWeight",  m_minAssWeightCh   = 0.2  );
-  declareProperty( "MinNeutralProtoPMCAssWeight",  m_minAssWeightNu   = 0.2  );
-  declareProperty( "MinCompositePartMCAssWeight",  m_minAssWeightComp = 0.2  );
+  declareProperty( "MinChargedProtoPMCAssWeight",  m_minAssWeightCh   = 0.9  );
+  declareProperty( "MinNeutralProtoPMCAssWeight",  m_minAssWeightNu   = 0.9  );
+  declareProperty( "MinCompositePartMCAssWeight",  m_minAssWeightComp = 0.9  );
 }
 
 //=============================================================================
@@ -97,7 +97,8 @@ StatusCode ParticleEffPurMoni::execute()
     debug() << "     -> selected " << endreq;
 
     // store this proto TES location
-    protoLocations[ objectLocation((*iPM).first->parent()) ] = true;
+    const std::string protoTesLoc = objectLocation((*iPM).first->parent());
+    protoLocations[ protoTesLoc ] = true;
 
     // Get the MCParticle
     const LHCb::MCParticle * mcPart = mcParticle((*iPM).first);
@@ -120,7 +121,8 @@ StatusCode ParticleEffPurMoni::execute()
       // get the summary for this reco particle type
       const FullPartName partName( (*iPart).properties->particle(),
                                    (*iPart).history,
-                                   protoParticleType((*iPM).first) );
+                                   protoParticleType((*iPM).first),
+                                   protoTesLoc );
       MCSummary & mcSum = mcMap[ partName ];
 
       // count the number reconstructed for this type
@@ -160,7 +162,7 @@ StatusCode ParticleEffPurMoni::execute()
       if ( NULL != mcProp ) ++(m_protoTesStats[tesLoc].nWithMC);
 
       // count
-      ++m_mcProtoCount[protoParticleType(*proto)].trueMCType[ mcProp ? mcProp->particle() : "NoMC" ];
+      ++(m_mcProtoCount[tesLoc])[protoParticleType(*proto)].trueMCType[ mcProp ? mcProp->particle() : "NoMC" ];
 
     } // loop over all protos at one location in TES
 
@@ -259,32 +261,31 @@ ParticleEffPurMoni::addParticle( const LHCb::Particle * particle,
     return;
   }
 
-  // get the history for the Particle
-  const ParticleProperty * prop = partProp( particle->particleID() );
-  if ( !prop ) { Exception( "Failed to retrieve ParticleProperty" ); }
-
   // Does this particle have a ProtoParticle. I.e. its stable
   const LHCb::ProtoParticle * proto = particle->proto();
+
+  // get the history for the Particle
+  const ParticleProperty * prop = partProp( particle->particleID() );
+  // If not available, just abort
+  if ( !prop ) { return; }
 
   // add to map
   if ( proto )
   {
-    const std::string newHist = history + prop->particle();
-    m_partProtoMap[proto].push_back( ParticleHistory(particle,firstParticle,newHist,prop,toplevel) );
+    // down to a basic particle, so save with history
+    m_partProtoMap[proto].push_back( ParticleHistory( particle, firstParticle,
+                                                      history + prop->particle(),
+                                                      prop, toplevel ) );
   }
   // if no proto, try and save descendants
-  else
+  else if ( !particle->isBasicParticle() )
   {
-    // does it have any daughters ?
-    if ( !particle->isBasicParticle() )
+    // loop over them and to add them instead
+    const LHCb::Particle::ConstVector daughters = particle->daughtersVector();
+    for ( LHCb::Particle::ConstVector::const_iterator iP = daughters.begin();
+          iP != daughters.end(); ++iP )
     {
-      // loop over them and to add them instead
-      const LHCb::Particle::ConstVector daughters = particle->daughtersVector();
-      for ( LHCb::Particle::ConstVector::const_iterator iP = daughters.begin();
-            iP != daughters.end(); ++iP )
-      {
-        addParticle( *iP, firstParticle, history + prop->particle() + " -> ", false );
-      }
+      addParticle( *iP, firstParticle, history + prop->particle() + " -> ", false );
     }
   }
 }
@@ -308,7 +309,7 @@ std::string ParticleEffPurMoni::protoParticleType( const LHCb::ProtoParticle * p
   }
   else
   {
-    return "Neutral ProtoParticle";
+    return "Neutral Particle";
   }
 }
 
@@ -348,18 +349,14 @@ void ParticleEffPurMoni::printStats() const
           iSum != (*iLoc).second.end(); ++iSum )
     {
       const long nRecoTrue  = (*iSum).second.trueMCType[(*iSum).first.particleName];
-      //const long nTotalTrue = m_mcProtoCount[(*iSum).first.protoType].trueMCType[(*iSum).first.particleName];
       if ( lastType != (*iSum).first.protoType )
       {
         always() << "  " << (*iSum).first.protoType << endreq;
         lastType = (*iSum).first.protoType;
       }
       always() << "    Reco. Tree : " << (*iSum).first.decayTree
-               << " : " << nRecoTrue << " Particles";
+               << " : " << nRecoTrue << " Particles" << endreq;
       const bool primaryPart = ( (*iSum).first.decayTree == (*iSum).first.particleName );
-      //if ( primaryPart )
-      //{ always() << " : Reco. Eff. = " << eff(nRecoTrue,nTotalTrue) << " %"; }
-      always() << endreq;
       if ( (*iSum).second.nReco > 0 )
       {
         int suppressedContribs(0);
@@ -371,17 +368,18 @@ void ParticleEffPurMoni::printStats() const
           mcT.resize(15,' ');
           if ( (100*(*iT).second)/(*iSum).second.nReco > m_minContrib )
           {
-            const long nBkgTrue = m_mcProtoCount[(*iSum).first.protoType].trueMCType[(*iT).first];
+            const long nBkgTrue =
+              (m_mcProtoCount[(*iSum).first.protoTESLoc])[(*iSum).first.protoType].trueMCType[(*iT).first];
             always() << "     -> True MC Type : " << mcT
                      << " " << eff( (*iT).second, (*iSum).second.nReco )
-                     << " % of sample"; 
+                     << " % of sample";
             if ( primaryPart ) always() << " : ID eff. = " << eff( (*iT).second, nBkgTrue ) << " %";
             always() << endreq;
           } else { ++suppressedContribs; }
         }
         if ( suppressedContribs>0 )
         {
-          always() << "     -> Suppressed " << suppressedContribs << " contribution(s) below " 
+          always() << "     -> Suppressed " << suppressedContribs << " contribution(s) below "
                    <<  m_minContrib << " %" << endreq;
         }
       }

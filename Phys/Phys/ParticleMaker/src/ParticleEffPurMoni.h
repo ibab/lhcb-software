@@ -5,7 +5,7 @@
  *  Header file for class : ParticleEffPurMoni
  *
  *  CVS Log :-
- *  $Id: ParticleEffPurMoni.h,v 1.3 2007-02-23 17:05:53 jonrob Exp $
+ *  $Id: ParticleEffPurMoni.h,v 1.4 2007-02-24 11:50:44 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2007-002-21
@@ -130,19 +130,22 @@ private: // definitions
     /// Default Constructor
     FullPartName( const std::string & name = "",
                   const std::string & tree = "",
-                  const std::string & type = "") 
+                  const std::string & type = "",
+                  const std::string & protoTes = "" ) 
       :  particleName(name),
          decayTree(tree),
-         protoType(type) { }
+         protoType(type),
+         protoTESLoc(protoTes) { }
     /// Operator <
     inline bool operator< ( const FullPartName& name ) const
-    { return ( this->protoType + this->particleName + this->decayTree <
-               name.protoType  + name.particleName  + name.decayTree ); } 
+    { return ( this->protoTESLoc + this->protoType + this->particleName + this->decayTree <
+               name.protoTESLoc  + name.protoType  + name.particleName  + name.decayTree ); } 
     /// Equality operator
     inline bool operator== ( const FullPartName& name ) const
     { return ( this->particleName == name.particleName &&
                this->decayTree    == name.decayTree    &&
-               this->protoType    == name.protoType     ); }
+               this->protoType    == name.protoType    &&
+               this->protoTESLoc  == name.protoTESLoc   ); }
     /// Non-Equality operator
     inline bool operator!= ( const FullPartName& name ) const
     { return ! this->operator==(name); }
@@ -154,10 +157,11 @@ private: // definitions
     std::string particleName; ///< Particle name (K+, pi- etc.)
     std::string decayTree;    ///< The decay tree for the particle
     std::string protoType;    ///< The ProtoParticle type
+    std::string protoTESLoc;  ///< ProtoParticle container location in TES
   };
 
   typedef std::map< FullPartName, MCSummary >     MCSummaryMap; 
-  typedef std::map< std::string, MCSummary >      MCSummaryMap2;
+  typedef std::map< std::string, std::map< std::string, MCSummary > > MCSummaryMapAllProtos;
   typedef std::map< std::string, MCSummaryMap >   LocationMap;
 
   /// ProtoParticle TES statistics summary class
@@ -280,7 +284,7 @@ private: // data
   mutable LocationMap m_locMap;
 
   /// Total true number of particles of each type at each TES location
-  mutable MCSummaryMap2 m_mcProtoCount;
+  mutable MCSummaryMapAllProtos m_mcProtoCount;
 
   /// ProtoParticle stats for each TES location
   mutable ProtoTESStatsMap m_protoTesStats;
