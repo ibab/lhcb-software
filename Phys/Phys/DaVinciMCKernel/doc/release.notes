@@ -4,6 +4,10 @@
 ! Purpose     : MCEvent dependent interfaces and base classes.
 !-----------------------------------------------------------------------------
 
+! 2007-02-24 - Patrick Koppenburg
+ - Added public includes from DaVinciAssociators
+ - Increment to v2r1
+
 !====================== DaVinciMCKernel v2r0 2007-01-09 =====================
 ! 2007-01-09 - Florence RANJARD
  - install include files

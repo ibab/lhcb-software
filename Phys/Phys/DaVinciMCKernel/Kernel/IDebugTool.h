@@ -1,4 +1,4 @@
-// $Id: IDebugTool.h,v 1.1.1.1 2006-10-11 13:35:09 jpalac Exp $
+// $Id: IDebugTool.h,v 1.2 2007-02-24 14:29:15 pkoppenb Exp $
 #ifndef DAVINCIMCTOOLS_IDEBUGTOOL_H
 #define DAVINCIMCTOOLS_IDEBUGTOOL_H 1
 
@@ -10,14 +10,11 @@
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
 
-// from LHCbKernel
-/// @todo restore Particle2MCAsct when DaVinciAssociators is ready
-//#include "DaVinciAssociators/Particle2MCAsct.h"
 #include "Event/Particle.h"
 #include "Event/MCParticle.h"
 
 // From DaVinci
-#include "DaVinciAssociators/Particle2MCLinker.h"
+#include "Kernel/Particle2MCLinker.h"
 
 // Declaration of the interface ID (interface id, major version, minor version)
 static const InterfaceID IID_IDebugTool("IDebugTool", 2, 0);
