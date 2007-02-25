@@ -5,7 +5,7 @@
  *  Implementation file for class : ParticleEffPurMoni
  *
  *  CVS Log :-
- *  $Id: ParticleEffPurMoni.cpp,v 1.5 2007-02-24 11:50:44 jonrob Exp $
+ *  $Id: ParticleEffPurMoni.cpp,v 1.6 2007-02-25 12:13:05 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2007-002-21
@@ -237,7 +237,8 @@ ParticleEffPurMoni::mcParticle( const LHCb::Particle * part ) const
 const ParticleProperty *
 ParticleEffPurMoni::partProp( const LHCb::ParticleID id ) const
 {
-  const ParticleProperty * prop = ppSvc()->findByPythiaID( id.pid() );
+  //const ParticleProperty * prop = ppSvc()->findByPythiaID( id.pid() );
+  const ParticleProperty * prop = ppSvc()->findByStdHepID( id.pid() );
   if ( NULL == prop )
   {
     std::ostringstream mess;
