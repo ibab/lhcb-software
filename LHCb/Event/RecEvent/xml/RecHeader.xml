@@ -9,9 +9,12 @@
       author="M. Cattaneo"
       desc="Header for reconstruction information"
       name="RecHeader"
-      location="LHCb::ProcessHeaderLocation::Rec"
       id="105"
      >
+       <location name= "Default"
+                 place="LHCb::ProcessHeaderLocation::Rec"
+                 noQuote="TRUE"
+       />
        &DataObject;
        <base name="ProcessHeader"/>
        <import name="Event/ProcessHeader"/>
