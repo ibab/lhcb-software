@@ -1,4 +1,4 @@
-// $Id: SolidPolycone.cpp,v 1.14 2007-01-09 16:01:23 cattanem Exp $
+// $Id: SolidPolycone.cpp,v 1.15 2007-02-26 12:07:11 cattanem Exp $
 // ============================================================================
 #include "DetDesc/SolidPolycone.h"
 
@@ -6,7 +6,6 @@
 #include "GaudiKernel/SystemOfUnits.h"
 #include "GaudiKernel/MsgStream.h"
 // DetDesc
-#include "DetDesc/SolidFactory.h"
 #include "DetDesc/SolidCons.h"
 #include "DetDesc/SolidTubs.h"
 #include "DetDesc/SolidTicks.h" 

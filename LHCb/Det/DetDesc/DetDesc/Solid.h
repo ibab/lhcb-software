@@ -1,4 +1,4 @@
-// $Id: Solid.h,v 1.6 2007-01-17 12:10:15 cattanem Exp $
+// $Id: Solid.h,v 1.7 2007-02-26 12:07:11 cattanem Exp $
 /// ===========================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
@@ -21,23 +21,7 @@
  */
 
 namespace Solid 
-{
-  
-  /** create (using abstract factory technique) the 
-   *  concrete solid of given type 
-   *  
-   *  @see ISolid
-   *  @see ISolidFactory
-   *
-   *  @author Vanya Belyaev Ivan.Belyaev@itep.ru 
-   *  @date 03/08/2001 
-   *
-   *  @exception SolidException  wrong solid type or environment 
-   *  @param solidType           type of solid 
-   *  @return pointer to new created ISolid object 
-   */
-  ISolid* createSolid( const std::string& solidType );
-  
+{  
   /** @class IsInside Solid.h "DetDesc/Solid.h"
    *  
    *  useful class to check if point is inside of 

@@ -1,4 +1,4 @@
-// $Id: SolidUnion.cpp,v 1.14 2007-01-09 16:01:25 cattanem Exp $ 
+// $Id: SolidUnion.cpp,v 1.15 2007-02-26 12:07:11 cattanem Exp $ 
 // ===========================================================================
 /** STD & STL  */
 #include <iostream> 
@@ -6,7 +6,6 @@
 /** DetDesc */ 
 #include "DetDesc/SolidUnion.h"
 #include "DetDesc/SolidException.h"
-#include "DetDesc/SolidFactory.h"
 #include "DetDesc/Solid.h"
 #include "DetDesc/SolidBox.h"
 
