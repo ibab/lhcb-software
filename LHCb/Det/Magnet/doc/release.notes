@@ -4,6 +4,11 @@
 ! Purpose     : Provides magnetic field map and Bdl tools
 !-----------------------------------------------------------------------------
 
+!====================== Magnet v3r5 2007-02-26 ===============================
+! 2007-02-26 - Marco Cattaneo
+ - Remove LHCbDefinitions dependency
+ - Remove ApplicationMgr.DLLs option from job.opts
+
 !====================== Magnet v3r4 2006-10-19 ===============================
 ! 2006-10-19 - Marco Cattaneo
  - Adapt requirements to run test application with cmt v1r18p*

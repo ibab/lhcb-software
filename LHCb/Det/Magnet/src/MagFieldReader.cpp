@@ -1,4 +1,4 @@
-// $Id: MagFieldReader.cpp,v 1.4 2006-10-13 13:14:17 cattanem Exp $
+// $Id: MagFieldReader.cpp,v 1.5 2007-02-26 14:50:47 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -6,9 +6,9 @@
 #include "GaudiKernel/IMagneticFieldSvc.h"
 #include "GaudiKernel/SystemOfUnits.h"
 
-// from LHCbDefinitions
-#include "Kernel/Vector3DTypes.h"
-#include "Kernel/Point3DTypes.h"
+// Math Definitions
+#include "GaudiKernel/Vector3DTypes.h"
+#include "GaudiKernel/Point3DTypes.h"
 
 // local
 #include "MagFieldReader.h"

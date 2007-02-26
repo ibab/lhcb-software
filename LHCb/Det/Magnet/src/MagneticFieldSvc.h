@@ -1,12 +1,12 @@
-// $Id: MagneticFieldSvc.h,v 1.11 2006-07-20 15:05:48 cattanem Exp $
+// $Id: MagneticFieldSvc.h,v 1.12 2007-02-26 14:50:47 cattanem Exp $
 #ifndef MAGNETICFIELDSVC_H
 #define MAGNETICFIELDSVC_H 1
 
 // Include files
 #include "GaudiKernel/Service.h"
 #include "GaudiKernel/IMagneticFieldSvc.h"
-#include "Kernel/Vector3DTypes.h"
-#include "Kernel/Point3DTypes.h"
+#include "GaudiKernel/Vector3DTypes.h"
+#include "GaudiKernel/Point3DTypes.h"
 
 // Forward declarations
 template <class TYPE> class SvcFactory;

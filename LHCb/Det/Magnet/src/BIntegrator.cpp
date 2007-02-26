@@ -1,4 +1,4 @@
-// $Id: BIntegrator.cpp,v 1.5 2006-10-13 13:14:16 cattanem Exp $
+// $Id: BIntegrator.cpp,v 1.6 2007-02-26 14:50:47 cattanem Exp $
 // Include files 
 // -------------
 
@@ -7,9 +7,9 @@
 #include "GaudiKernel/IMagneticFieldSvc.h"
 #include "GaudiKernel/SystemOfUnits.h"
 
-// from LHCbDefinitions
-#include "Kernel/Point3DTypes.h"
-#include "Kernel/Vector3DTypes.h"
+// Math Definitions
+#include "GaudiKernel/Point3DTypes.h"
+#include "GaudiKernel/Vector3DTypes.h"
 
 // local
 #include "BIntegrator.h"

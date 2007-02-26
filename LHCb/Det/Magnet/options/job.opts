@@ -5,7 +5,6 @@ ApplicationMgr.ExtSvc += { "MagneticFieldSvc" };
 //--------------------------------------------------------------
 // Private Application Configuration options
 //--------------------------------------------------------------
-ApplicationMgr.DLLs   += { "Magnet"};
 ApplicationMgr.TopAlg  = { "MagFieldReader" };
 
 //--------------------------------------------------------------

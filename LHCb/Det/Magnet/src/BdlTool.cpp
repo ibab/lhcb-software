@@ -1,4 +1,4 @@
-// $Id: BdlTool.cpp,v 1.4 2006-10-13 13:14:16 cattanem Exp $
+// $Id: BdlTool.cpp,v 1.5 2007-02-26 14:50:47 cattanem Exp $
 
 // Include files
 #include "GaudiKernel/ToolFactory.h"
@@ -8,8 +8,8 @@
 #include "GaudiKernel/SystemOfUnits.h"
 
 // Mathlib
-#include "Kernel/Point3DTypes.h"
-#include "Kernel/Vector3DTypes.h"
+#include "GaudiKernel/Point3DTypes.h"
+#include "GaudiKernel/Vector3DTypes.h"
 
 // local
 #include "BdlTool.h"

@@ -1,4 +1,4 @@
-// $Id: BIntegrator.h,v 1.2 2005-12-08 15:16:43 cattanem Exp $
+// $Id: BIntegrator.h,v 1.3 2007-02-26 14:50:47 cattanem Exp $
 #ifndef MAGNET_BINTEGRATOR_H 
 #define MAGNET_BINTEGRATOR_H 1
 
@@ -10,9 +10,9 @@
 // from LHCbKernel
 #include "Kernel/IBIntegrator.h"            // Interface
 
-// from LHCbDefinitions
-#include "Kernel/Point3DTypes.h"
-#include "Kernel/Vector3DTypes.h"
+// Math Definitions
+#include "GaudiKernel/Point3DTypes.h"
+#include "GaudiKernel/Vector3DTypes.h"
 
 // Forward declarations
 class IMagneticFieldSvc;

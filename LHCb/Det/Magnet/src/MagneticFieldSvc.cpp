@@ -1,4 +1,4 @@
-// $Id: MagneticFieldSvc.cpp,v 1.18 2006-10-19 12:59:42 cattanem Exp $
+// $Id: MagneticFieldSvc.cpp,v 1.19 2007-02-26 14:50:47 cattanem Exp $
 
 // Include files
 #include "GaudiKernel/SvcFactory.h"
@@ -8,8 +8,8 @@
 
 #include "MagneticFieldSvc.h"
 
-#include "Kernel/Vector3DTypes.h"
-#include "Kernel/Point3DTypes.h"
+#include "GaudiKernel/Vector3DTypes.h"
+#include "GaudiKernel/Point3DTypes.h"
 
 #include <cstdlib>
 #include <fstream>
