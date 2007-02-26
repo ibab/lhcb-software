@@ -1,4 +1,4 @@
-// $Id: PythiaHiggs.cpp,v 1.4 2007-01-12 15:21:18 ranjard Exp $
+// $Id: PythiaHiggs.cpp,v 1.5 2007-02-26 16:44:19 robbep Exp $
 // Include files 
 // local
 #include "PythiaHiggs.h"
@@ -44,9 +44,7 @@ PythiaHiggs::~PythiaHiggs( ) { ; }
 //=============================================================================
 bool PythiaHiggs::applyCut( ParticleVector & /* theParticleVector */ ,
                             const HepMC::GenEvent * theEvent ,
-                            const LHCb::GenCollision * /* theCollision */ , 
-                            IDecayTool * /* dkto */ , bool /* cp */ , 
-                            const HepMC::GenParticle * /* p */ ) 
+                            const LHCb::GenCollision * /* theCollision */ ) 
   const {
   std::list< HepMC::GenParticle * > higgsList ;
   HepMC::copy_if( theEvent -> particles_begin() , theEvent -> particles_end() ,

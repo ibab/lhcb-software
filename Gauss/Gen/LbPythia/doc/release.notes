@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2007-02-26 - Patrick Robbe
+ - PythiaHiggs: adapt to new generator cut tool.
+
 !===================== LbPythia v4r10 2007-02-08 ===========================
 ! 2007-02-08 - Gloria Corti
  - to use with Gauss v25 series use include_dir in requirements 
