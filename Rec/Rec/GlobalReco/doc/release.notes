@@ -4,15 +4,13 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+!========================== GlobalReco v6r8 2007-02-26 =======================
 ! 2007-02-21 - Patrick Koppenburg
  - Exit with StatusCode::SUCCESS but setFilterPassed(false) when
    no tracks are there.
 
 ! 2007-02-21 - Ulrich Kerzel
  - use rootOnTES() in ChargedProtoCombineDLLsAlg for ProtoP location
-
-!========================== GlobalReco v6r8 2007-02-19 =======================
-
 
 ! 2007-02-19 - Marco Cattaneo
  - Move doxygen documentation of NeutralProtoPAlg to .h (from .cpp) to conform
