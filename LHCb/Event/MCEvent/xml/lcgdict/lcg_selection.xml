@@ -1,9 +1,10 @@
 <lcgdict>
   <class name = "MCTrackInfo" />
 
+  <class name = "IForcedBDecayTool"  />
   <class name = "IMCDecayFinder"     />
   <class name = "IMCReconstructible" />
-  <class name = "IMuonPad2MCTool" />
+  <class name = "IMuonPad2MCTool"    />
   <class name = "ISiDepositedCharge" />
   <class name = "IVisPrimVertTool"   />
 

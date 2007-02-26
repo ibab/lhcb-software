@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.64 2007-02-26 10:34:06 cattanem Exp $
+! $Id: release.notes,v 1.65 2007-02-26 15:10:35 cattanem Exp $
 ! Package     : Event/MCEvent
 ! Responsible : Marco Cattaneo, Gloria Corti
 ! Purpose     : LHCb Event model. MC truth classes (Gauss and Boole output) 
@@ -6,6 +6,7 @@
 
 !======================== MCEvent v2r1 2007-02-26 ============================
 ! 2007-02-26 - Marco Cattaneo
+ - Add IForcedBDecayTool interface from Marco Musy
  - MCHeaderLocation::Default now defined in terms of ProcessHeaderLocation::MC
  - Fix some doxygen warnings
 

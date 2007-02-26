@@ -1,4 +1,4 @@
-// $Id: lcgDict.h,v 1.4 2007-01-15 16:11:54 cattanem Exp $
+// $Id: lcgDict.h,v 1.5 2007-02-26 15:10:35 cattanem Exp $
 #ifndef MCEVENT_LCGDICT_H 
 #define MCEVENT_LCGDICT_H 1
 
@@ -7,6 +7,7 @@
 // begin include files
 #include "Event/MCTrackInfo.h"
 
+#include "Kernel/IForcedBDecayTool.h"
 #include "Kernel/IMCDecayFinder.h"
 #include "Kernel/IMCReconstructible.h"
 #include "Kernel/IMuonPad2MCTool.h"
