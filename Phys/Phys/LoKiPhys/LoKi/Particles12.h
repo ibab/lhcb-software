@@ -1,8 +1,11 @@
-// $Id: Particles12.h,v 1.3 2006-11-27 12:01:31 ibelyaev Exp $
+// $Id: Particles12.h,v 1.4 2007-02-26 09:19:22 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2006/11/27 12:01:31  ibelyaev
+//  prepare for LoKi v4r3
+//
 // Revision 1.2  2006/03/08 14:14:51  ibelyaev
 //  add Particles14.h/.cpp
 //
@@ -145,7 +148,7 @@ namespace LoKi
     } ;
 
     
-    /** @struct ProtoHasRichPID 
+    /** @class ProtoHasRichPID 
      *  the trivial predicate wich tests the validity of 
      *  ProtoParticle::richPID 
      * 
@@ -159,9 +162,10 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-15
      */
-    struct ProtoHasRichPID 
+    class ProtoHasRichPID 
       : public LoKi::Predicate<const LHCb::Particle*>
     {
+    public:
       /// MANDATORY: virtual destructor 
       virtual ~ProtoHasRichPID() {}
       /// MANDATORY: clone method ("virtual constructor")
@@ -173,7 +177,7 @@ namespace LoKi
       virtual std::ostream& fillStream( std::ostream& s ) const ;
     } ;
     
-    /** @struct ProtoHasMuonPID 
+    /** @class ProtoHasMuonPID 
      *  the trivial predicate wich tests the validity of 
      *  ProtoParticle::muonPID 
      * 
@@ -187,9 +191,10 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-15
      */
-    struct ProtoHasMuonPID 
+    class ProtoHasMuonPID 
       : public LoKi::Predicate<const LHCb::Particle*>
     {
+    public:
       /// MANDATORY: virtual destructor 
       virtual ~ProtoHasMuonPID() {}
       /// MANDATORY: clone method ("virtual constructor")
@@ -201,7 +206,7 @@ namespace LoKi
       virtual std::ostream& fillStream( std::ostream& s ) const ;
     } ;
     
-    /** @struct ProtoHasCaloHypos
+    /** @class ProtoHasCaloHypos
      *  the trivial predicate wich tests the validity of 
      *  ProtoParticle::calo() 
      * 
@@ -214,9 +219,10 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-15
      */
-    struct ProtoHasCaloHypos
+    class ProtoHasCaloHypos
       : public LoKi::Predicate<const LHCb::Particle*>
     {
+    public:
       /// MANDATORY: virtual destructor 
       virtual ~ProtoHasCaloHypos() {}
       /// MANDATORY: clone method ("virtual constructor")
@@ -227,8 +233,33 @@ namespace LoKi
       /// OPTIONAL: the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
     } ;
-    
 
+    
+    /** @class IsMuon
+     *  The trivial predicate whith returns LHCb::MuonPID::isMuon
+     *
+     *  @see LHCb::Particle
+     *  @see LHCb::ProtoParticle
+     *  @see LHCb::MuonPID 
+     *  @see LoKi::CutsISMUON
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2007-02-25
+     */
+    class IsMuon 
+      : public LoKi::Predicate<const LHCb::Particle*>
+    {
+    public:
+      /// MANDATORY: virtual destructor 
+      virtual ~IsMuon() {} ;
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  IsMuon* clone() const { return new IsMuon(*this); }
+      /// MANDATORY: the only one essential method 
+      result_type operator() ( argument p ) const ;
+      /// OPTIONAL: the specific printout 
+      virtual std::ostream& fillStream( std::ostream& s ) const ;
+    } ;
+    
   }  // end of namespace Particles 
   
 }  // end of namespace LoKi 

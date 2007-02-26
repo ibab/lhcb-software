@@ -1,8 +1,11 @@
-// $Id: Particles12.cpp,v 1.3 2006-10-27 13:39:32 ibelyaev Exp $
+// $Id: Particles12.cpp,v 1.4 2007-02-26 09:19:22 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2006/10/27 13:39:32  ibelyaev
+//  fix for SLC4 platform
+//
 // Revision 1.2  2006/03/08 14:14:52  ibelyaev
 //  add Particles14.h/.cpp
 //
@@ -252,6 +255,44 @@ LoKi::Particles::ProtoHasCaloHypos::fillStream ( std::ostream& s ) const
 { return s << "HASCALOS" ; }
 // ============================================================================
 
+
+// ============================================================================
+LoKi::Particles::IsMuon::result_type 
+LoKi::Particles::IsMuon::operator() 
+  ( LoKi::Particles::IsMuon::argument p ) const
+{
+  //
+  if ( 0 == p ) 
+  {
+    Error ( " Invalid Particle, return 'false'" ) ;
+    return false ;                                    // RETURN 
+  }
+  // 
+  const LHCb::ProtoParticle* pp = p->proto() ;
+  //
+  if ( 0 == pp ) 
+  {
+    Error ( " Invalid ProtoParticle, return 'false'" ) ;
+    return false ;                                   // RETURN 
+  }
+  //
+  const LHCb::MuonPID* mPID = pp->muonPID() ;
+  //
+  if ( 0 == mPID ) 
+  {
+    Error ( " Invalid MuonPID, return 'false'" ) ;
+    return false ;                                   // RETURN 
+  }
+  //
+  return mPID -> IsMuon() ;                          // RETURN   
+} ;
+// ============================================================================
+/// OPTIONAL: the specific printout 
+// ============================================================================
+std::ostream& 
+LoKi::Particles::IsMuon::fillStream ( std::ostream& s ) const 
+{ return s << "ISMUON" ; }
+// ============================================================================
 
 
 

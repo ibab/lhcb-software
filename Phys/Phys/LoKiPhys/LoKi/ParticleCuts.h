@@ -1,8 +1,11 @@
-// $Id: ParticleCuts.h,v 1.15 2007-01-22 11:18:22 ibelyaev Exp $
+// $Id: ParticleCuts.h,v 1.16 2007-02-26 09:19:22 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.15 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.16 $
 // ============================================================================
 //  $Log: not supported by cvs2svn $
+//  Revision 1.15  2007/01/22 11:18:22  ibelyaev
+//   fix for LoKiExample
+//
 //  Revision 1.14  2006/12/16 13:22:25  ibelyaev
 //   add Particles16: DIRA&DANG
 //
@@ -3653,6 +3656,29 @@ namespace LoKi
      *  @date 2006-02-15
      */
     const LoKi::Particles::ProtoHasCaloHypos                       HASCALOS ;
+    // ========================================================================
+
+    // ========================================================================
+    /** @var ISMUON
+     *  The simple evaluator of LHCb::MuonPID::isMuon
+     *  
+     *  @code 
+     *
+     *  const LHCb::Particle* p = ... ;
+     * 
+     *  bool muon = ISMUON ( p ) ;
+     *
+     *  @endcode 
+     *     
+     *  @see LHCb::Particle
+     *  @see LHCb::ProtoParticle
+     *  @see LHCb::MuonPID 
+     *  @see LoKi::Particles::IsMuon
+     *  
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @daet 2007-02-25
+     */
+    const LoKi::Particles::IsMuon                                   ISMUON ;
     // ========================================================================
 
     // ========================================================================

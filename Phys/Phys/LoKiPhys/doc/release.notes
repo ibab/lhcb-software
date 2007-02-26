@@ -1,9 +1,22 @@
-! $Id: release.notes,v 1.17 2007-01-23 13:30:44 ibelyaev Exp $ 
+! $Id: release.notes,v 1.18 2007-02-26 09:19:22 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhys
 ! Responsible : Vanya Belyaev
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
+
+!========================== LoKiPhys v3r1 2007-02-25 ==================
+
+! 2007-02-26 - Vanya BELYAEV
+ - LoKi/Particles12.h, src/Particles12.cpp
+
+   add new function LoKi::Particles::IsMuon (shortcut ISMUON)
+   which eeesentially return LHCb::MuonPID::IsMuon
+
+ - cmt/requirements 
+  
+   version increment to v3r1 
+
 
 !========================== LoKiPhys v3r0 2007-01-23 ==================
 ! 2007-01-23 - Vanya BELYAEV
@@ -106,6 +119,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.17  2007/01/23 13:30:44  ibelyaev
+!  fix for Ex/LoKiExample
+!
 ! Revision 1.16  2007/01/12 14:12:47  ranjard
 ! v3r0 - use Gaudi v19r0
 !
