@@ -1,4 +1,4 @@
-#// $Id: VeloSim.h,v 1.7 2006-05-29 11:55:23 szumlat Exp $
+#// $Id: VeloSim.h,v 1.8 2007-02-26 15:54:18 cattanem Exp $
 #ifndef VELOSIM_H
 #define VELOSIM_H 1
 
@@ -9,7 +9,7 @@
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
 #include "GaudiKernel/RndmGenerators.h"
-#include "Kernel/Point3DTypes.h"
+#include "GaudiKernel/Point3DTypes.h"
 
 // from Velo
 #include "Event/MCVeloFE.h"

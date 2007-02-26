@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!===================== VeloSimulation v2r5 2007-02-26 ======================
+! 2007-02-26 - Marco Cattaneo
+ - Remove LHCbDefinitions includes
+
 !===================== VeloSimulation v2r4 2006-06-15 ======================
 ! 2006-06-15 - Tomasz Szumlak
  - Changes for test beam simulation

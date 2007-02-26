@@ -1,12 +1,12 @@
-// $Id: VeloSim.cpp,v 1.16 2006-05-29 11:55:23 szumlat Exp $
+// $Id: VeloSim.cpp,v 1.17 2007-02-26 15:54:18 cattanem Exp $
 // Include files
 // STL
 #include <string>
 #include <vector>
 
 // Mathcore
-#include "Kernel/Point3DTypes.h"
-#include "Kernel/Vector3DTypes.h"
+#include "GaudiKernel/Point3DTypes.h"
+#include "GaudiKernel/Vector3DTypes.h"
 
 // GSL
 #include "gsl/gsl_sf_erf.h"
@@ -16,7 +16,7 @@
 #include "GaudiKernel/RndmGenerators.h"
 
 // from LHCbKernel
-#include "Kernel/LHCbMath.h"
+#include "LHCbMath/LHCbMath.h"
 #include "Kernel/VeloEventFunctor.h"
 
 // from MCEvent
