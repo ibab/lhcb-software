@@ -1,6 +1,4 @@
-// $Id: ICaloCorrection.h,v 1.6 2006-03-22 18:21:51 odescham Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $
+// $Id: ICaloCorrection.h,v 1.7 2007-02-26 14:02:41 cattanem Exp $
 // ============================================================================
 #ifndef CALOINTERFACES_ICALOCORRECTION_H 
 #define CALOINTERFACES_ICALOCORRECTION_H 1
@@ -9,7 +7,7 @@
 #include <functional>
 // GaudiKernel
 #include "GaudiKernel/IAlgTool.h"
-#include "Kernel/Point3DTypes.h"
+#include "GaudiKernel/Point3DTypes.h"
 #include "Event/CaloPosition.h"
 
 /** @class ICaloCorrection ICaloCorrection.h CaloInterfaces/ICaloCorrection.h

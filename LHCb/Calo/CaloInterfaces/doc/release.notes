@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.32 2007-01-15 07:30:07 cattanem Exp $
+! $Id: release.notes,v 1.33 2007-02-26 14:02:41 cattanem Exp $
 ! =============================================================================
 ! Package     : CaloInterfaces
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
+
+!========================== CaloInterfaces v7r1 2007-02-26  ===================
+! 2007-02-26 - Marco Cattaneo
+ - Remove an LHCbDefinitions include
 
 !========================== CaloInterfaces v7r0 2007-01-14  ===================
 ! 2007-12-01 - Olivier Deschamps 
