@@ -1,11 +1,10 @@
-// $Id: LbAppInit.cpp,v 1.6 2006-12-20 14:54:33 cattanem Exp $
+// $Id: LbAppInit.cpp,v 1.7 2007-02-26 12:05:23 cattanem Exp $
 // Include files
 #include <string>
 #include <vector>
 #include "boost/format.hpp"
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/SmartIF.h"
 #include "GaudiKernel/IProperty.h"
 #include "GaudiKernel/IRndmEngine.h"
@@ -22,9 +21,8 @@
 // 2005-12-21 : Marco Cattaneo
 //-----------------------------------------------------------------------------
 
-// Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( LbAppInit );
-
+// Factory not declared here to avoid it appearing in the LHCbKernel library
+// and in all component libraries depending on LHCBKernel. Moved to LHCbApps
 
 //=============================================================================
 // Standard constructor, initializes variables
