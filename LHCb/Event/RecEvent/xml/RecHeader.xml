@@ -9,7 +9,7 @@
       author="M. Cattaneo"
       desc="Header for reconstruction information"
       name="RecHeader"
-      location="Rec/Header"
+      location="LHCb::ProcessHeaderLocation::Rec"
       id="105"
      >
        &DataObject;
