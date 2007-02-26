@@ -1,12 +1,12 @@
-// $Id: TrajPoca.cpp,v 1.2 2006-11-30 14:44:28 ebos Exp $
+// $Id: TrajPoca.cpp,v 1.3 2007-02-26 12:02:07 cattanem Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
 
-// from LHCbDefinitions
-#include "Kernel/Point3DTypes.h"
-#include "Kernel/Vector3DTypes.h"
+// Math Definitions
+#include "GaudiKernel/Point3DTypes.h"
+#include "GaudiKernel/Vector3DTypes.h"
 
 // local
 #include "TrajPoca.h"

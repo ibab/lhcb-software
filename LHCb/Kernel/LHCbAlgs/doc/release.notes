@@ -4,6 +4,13 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+!======================== LHCbAlgs v2r6 2007-02-26 =======================
+! 2007-02-26 - Marco Cattaneo
+ - Add LbAppInit factory declaration to LHCbAlgs_dll.cpp, to avoid having it 
+   in LHCbKernel link library (and all .rootmaps of packages using LHCbKernel)
+ - Remove obsolete LHCbAlgs_load.cpp file
+ - Remove LHCBDefinitions includes
+
 !======================== LHCbAlgs v2r5 2006-11-30 =======================
 ! 2006-11-30 - Edwin Bos
  - Fixed the return StatusCode of TrajPoca
