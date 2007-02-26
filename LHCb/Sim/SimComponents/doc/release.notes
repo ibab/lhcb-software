@@ -5,6 +5,11 @@
 !               processing stage accessing the MC event classes
 !-----------------------------------------------------------------------------
 
+!====================== SimComponents v2r1 2007-02-26 ========================
+! 2007-02-26 - Marco Cattaneo
+ - Add ForcedBDecayTool from Marco Musy
+ - Remove obsolete SimComponents_load.cpp file
+
 !====================== SimComponents v2r0 2007-01-12 ========================
 ! 2007-01-12 - Marco Cattaneo
  - Use xxx_FACTORY macros
