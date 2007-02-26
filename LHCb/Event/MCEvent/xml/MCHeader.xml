@@ -9,9 +9,12 @@
       author="P. Koppenburg, revised by G.Corti"
       desc="Header for simulation information"
       name="MCHeader"
-      location="MC/Header"
       id="104"
      >
+       <location name= "Default"
+                 place="LHCb::ProcessHeaderLocation::MC"
+                 noQuote="TRUE"
+       />
        &DataObject;
        <base name="ProcessHeader"/>
        <import name="Event/ProcessHeader"/>

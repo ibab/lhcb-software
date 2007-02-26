@@ -1,4 +1,4 @@
-// $Id: ISiDepositedCharge.h,v 1.1 2006-05-16 08:29:41 mneedham Exp $
+// $Id: ISiDepositedCharge.h,v 1.2 2007-02-26 10:34:05 cattanem Exp $
 #ifndef _ISiDepositedCharge_H
 #define _ISiDepositedCharge_H
 
@@ -27,7 +27,7 @@ public:
   static const InterfaceID& interfaceID() { return IID_ISiDepositedCharge; }
    
   /** calculate deposited charge (in electrons)
-  * @param hit 
+  * @param  aHit hit 
   * @return deposited charge 
   */
   virtual double charge(const LHCb::MCHit* aHit) const=0;

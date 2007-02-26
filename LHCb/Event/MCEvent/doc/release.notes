@@ -1,17 +1,20 @@
-! $Id: release.notes,v 1.63 2007-02-22 15:24:09 ukerzel Exp $
+! $Id: release.notes,v 1.64 2007-02-26 10:34:06 cattanem Exp $
 ! Package     : Event/MCEvent
 ! Responsible : Marco Cattaneo, Gloria Corti
 ! Purpose     : LHCb Event model. MC truth classes (Gauss and Boole output) 
 !-----------------------------------------------------------------------------
 
+!======================== MCEvent v2r1 2007-02-26 ============================
+! 2007-02-26 - Marco Cattaneo
+ - MCHeaderLocation::Default now defined in terms of ProcessHeaderLocation::MC
+ - Fix some doxygen warnings
+
+! 2007-02-22 - Ulrich Kerzel
+ - Add copy-constructor, clone and cloneWithKey methods to MCVertex, MCParticle
 
 !======================== MCEvent v2r0p1 2007-02-02 ==========================
 ! 2007-02-02 - Marco Cattaneo
  - Remove unneccessary rootmap for dictionary
-
-! 2007-02-22 - Ulrich Kerzel
- - Add copy-constructor, clone and cloneWithKey method to MCVertex, MCParticle
-
 
 !======================== MCEvent v2r0 2007-01-15 ============================
 ! 2007-01-15 - Marco Cattaneo
