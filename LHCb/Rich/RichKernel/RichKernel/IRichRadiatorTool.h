@@ -4,7 +4,7 @@
  *
  *  Header file for RICH tool interface : Rich::IRadiatorTool
  *
- *  $Id: IRichRadiatorTool.h,v 1.6 2007-02-01 17:24:54 jonrob Exp $
+ *  $Id: IRichRadiatorTool.h,v 1.7 2007-02-26 13:52:00 cattanem Exp $
  *
  *  @author Antonis Papanestis
  *  @date   2006-03-01
@@ -21,8 +21,8 @@
 #include "GaudiKernel/IAlgTool.h"
 
 // from MathCore
-#include "Kernel/Point3DTypes.h"
-#include "Kernel/Vector3DTypes.h"
+#include "GaudiKernel/Point3DTypes.h"
+#include "GaudiKernel/Vector3DTypes.h"
 
 // from LHCbKernel
 #include "Kernel/RichRadiatorType.h"

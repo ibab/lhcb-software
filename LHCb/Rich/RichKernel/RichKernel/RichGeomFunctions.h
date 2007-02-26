@@ -5,7 +5,7 @@
  *  Header file for RICH geometrical utility functions
  *
  *  CVS Log :-
- *  $Id: RichGeomFunctions.h,v 1.4 2007-02-01 17:24:54 jonrob Exp $
+ *  $Id: RichGeomFunctions.h,v 1.5 2007-02-26 13:52:01 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/01/2006
@@ -18,18 +18,9 @@
 #include <cmath>
 
 // Gaudi
-#include "Kernel/Point3DTypes.h"
-#include "Kernel/Vector3DTypes.h"
+#include "GaudiKernel/Point3DTypes.h"
+#include "GaudiKernel/Vector3DTypes.h"
 
-//-----------------------------------------------------------------------------
-/** @namespace Rich
- *
- *  General namespace for RICH software
- *
- *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
- *  @date   08/07/2004
- */
-//-----------------------------------------------------------------------------
 namespace Rich
 {
 
@@ -47,7 +38,7 @@ namespace Rich
     /** Calculates the angle between two vectors
      *
      *  @param a First vector
-     *  @param a Second vector
+     *  @param b Second vector
      *
      *  @return Angle between vectors (in rad)
      */

@@ -5,7 +5,7 @@
  *  Header file for RICH utility class : RichHistoID
  *
  *  CVS Log :-
- *  $Id: RichHistoID.h,v 1.4 2007-02-01 17:24:54 jonrob Exp $
+ *  $Id: RichHistoID.h,v 1.5 2007-02-26 13:52:01 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   27/10/2005
@@ -24,15 +24,6 @@
 #include "Kernel/RichDetectorType.h"
 #include "Kernel/RichParticleIDType.h"
 
-//-----------------------------------------------------------------------------
-/** @namespace Rich
- *
- *  General namespace for RICH software
- *
- *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
- *  @date   08/07/2004
- */
-//-----------------------------------------------------------------------------
 namespace Rich
 {
 
@@ -86,7 +77,7 @@ namespace Rich
 
     /** Create histo ID for given radiator type and histogram tag
      *
-     *  @param rad RICH detector type
+     *  @param det RICH detector type
      *  @param tag Histogram tag
      *
      *  @return Full histogram identifier string

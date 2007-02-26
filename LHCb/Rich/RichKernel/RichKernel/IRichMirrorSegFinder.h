@@ -4,7 +4,7 @@
  *
  *  Header file for tool interface : Rich::IMirrorSegFinder
  *
- *  $Id: IRichMirrorSegFinder.h,v 1.11 2007-02-01 17:24:54 jonrob Exp $
+ *  $Id: IRichMirrorSegFinder.h,v 1.12 2007-02-26 13:52:00 cattanem Exp $
  *
  *  @author Antonis Papanestis
  *  @date   2003-11-04
@@ -22,7 +22,7 @@
 #include "Kernel/RichSide.h"
 
 // from MathCore
-#include "Kernel/Point3DTypes.h"
+#include "GaudiKernel/Point3DTypes.h"
 
 // RichDet
 class DeRichSphMirror;

@@ -4,7 +4,7 @@
  *
  *  Header file for tool interface : Rich::IRayTracing
  *
- *  $Id: IRichRayTracing.h,v 1.26 2007-02-01 17:24:54 jonrob Exp $
+ *  $Id: IRichRayTracing.h,v 1.27 2007-02-26 13:52:00 cattanem Exp $
  *
  *  @author Antonis Papanestis
  *  @date   2003-10-28
@@ -23,9 +23,9 @@
 #include "Kernel/RichTraceMode.h"
 
 // from MathCore
-#include "Kernel/Point3DTypes.h"
-#include "Kernel/Vector3DTypes.h"
-#include "Kernel/Plane3DTypes.h"
+#include "GaudiKernel/Point3DTypes.h"
+#include "GaudiKernel/Vector3DTypes.h"
+#include "GaudiKernel/Plane3DTypes.h"
 
 // forward decs
 namespace LHCb
