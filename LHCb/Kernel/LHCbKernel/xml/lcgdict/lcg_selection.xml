@@ -19,7 +19,7 @@
   <class pattern ="LHCb::SiPositionInfo<*>"/>
 <!--- Add here all interfaces from Kernel directory --> 
   <class name = "IBdlTool"             />
-  <class name = "IBIntergrator"        />
+  <class name = "IBIntegrator"         />
   <class name = "ICheckTool"           />
   <class name = "IDetElemFinder"       />
   <class name = "IEventTimeDecoder"    />
