@@ -1,4 +1,4 @@
-// $Id: MCOTDepositMonitor.cpp,v 1.10 2007-02-26 15:39:11 cattanem Exp $
+// $Id: MCOTDepositMonitor.cpp,v 1.11 2007-02-26 15:46:08 cattanem Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -32,7 +32,7 @@
  *  
  *  @author M. Needham
  *  @date   19-09-2000
- *  @Adapted J.Nardulli
+ *  @author adapted by J.Nardulli
  *  @date   20-07-2004
  */
 

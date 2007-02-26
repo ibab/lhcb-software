@@ -1,4 +1,4 @@
-// $Id: MCOTDepositMonitor.h,v 1.5 2006-04-11 19:23:16 janos Exp $
+// $Id: MCOTDepositMonitor.h,v 1.6 2007-02-26 15:46:08 cattanem Exp $
 #ifndef OTMONITOR_MCOTDEPOSITMONITOR_H
 #define OTMONITOR_MCOTDEPOSITMONITOR_H 1
 
@@ -8,14 +8,13 @@
 /// Gaudi
 #include "GaudiAlg/GaudiHistoAlg.h"
 
-/** @class MCOTDepositMonitor MCOTDepositMonitor.h \ 
- *         "OTMonitor/MCOTDepositMonitor.h"
+/** @class MCOTDepositMonitor MCOTDepositMonitor.h
  *
  *  Monitoring algorithm for the MCOTDeposits of the Outer Tracker.
  *
  *  @author M.Needham
  *  @date   21/4/2001
- *  @Adapted J.Nardulli
+ *  @author adapted by J.Nardulli
  *  @date   20/07/2004
  */
 
