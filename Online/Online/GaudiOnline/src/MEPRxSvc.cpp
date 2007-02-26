@@ -8,7 +8,7 @@
 //  Author    : Niko Neufeld
 //                  using code by B. Gaidioz and M. Frank
 //
-//      Version   : $Id: MEPRxSvc.cpp,v 1.46 2007-01-24 19:21:08 frankb Exp $
+//      Version   : $Id: MEPRxSvc.cpp,v 1.47 2007-02-26 19:01:14 scheruku Exp $
 //
 //  ===========================================================
 #ifdef _WIN32
@@ -16,6 +16,7 @@
 #endif
 #include <cstdlib>
 #include <algorithm>
+#include <iostream>
 
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/MsgStream.h"
@@ -239,10 +240,11 @@ void MEPRx::incompleteEvent() {
 int MEPRx::setupMDFBank() {
   unsigned int mask[] = {~0,~0,~0,~0};
   MDFHeader* hdr = (MDFHeader *) m_MDFBankHdr->data();
+  hdr->setHdr(0);
   hdr->setSize(0);
+  hdr->setHeaderVersion(3);
   hdr->setChecksum(0);
   hdr->setCompression(0);
-  hdr->setHeaderVersion(3);
   hdr->setDataType(MDFHeader::BODY_TYPE_BANKS);
   hdr->setSubheaderLength(sizeof(MDFHeader::Header1));
   MDFHeader::SubHeader h = hdr->subHeader();
