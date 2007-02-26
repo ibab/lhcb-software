@@ -1,4 +1,4 @@
-// $Id: MCOTDepositMonitor.cpp,v 1.9 2006-07-21 08:06:06 janos Exp $
+// $Id: MCOTDepositMonitor.cpp,v 1.10 2007-02-26 15:39:11 cattanem Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -16,7 +16,7 @@
 #include "Event/MCOTDeposit.h"
 
 // MathCore
-#include "Kernel/Point3DTypes.h"
+#include "GaudiKernel/Point3DTypes.h"
 
 /// BOOST
 #include "boost/lexical_cast.hpp"
