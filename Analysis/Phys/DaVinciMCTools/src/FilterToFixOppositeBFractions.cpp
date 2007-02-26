@@ -1,4 +1,4 @@
-// $Id: FilterToFixOppositeBFractions.cpp,v 1.1 2007-02-26 09:46:43 sposs Exp $
+// $Id: FilterToFixOppositeBFractions.cpp,v 1.2 2007-02-26 18:28:55 sposs Exp $
 // Include files
 
 // from Gaudi
@@ -105,9 +105,23 @@ StatusCode FilterToFixOppositeBFractions::initialize() {
   m_et[55]=24142001;// incl_Jpsi,mm=DecProdCut
   m_et[56]=24152001;// incl_Jpsi,ee=DecProdCut
 
+  m_gx[1] = 0.5683;// Bd_pipi=DecProdCut
   m_gx[6] = 0.4998;// Bd_JpsiKst,mm=DecProdCut
+  m_gx[13]= 0.4954;// Bd_Dstmunu,Kpi=cocktail,D0muInAcc
+  m_gx[15]= 0.5026;// Bu_JpsiK,mm=DecProdCut
+  m_gx[23]= 0.4879;// Bu_D0h,Kpi=cocktail,D0InAcc
+  m_gx[25]= 0.4990;// Bu_D0munu,Kpi=cocktail,D0muInAcc
+  m_gx[37]= 0.1372;// Bs_Dspi=DecProdCut
+  m_gx[43]= 0.1404;// Bs_Dsmunu=cocktail,DsmuInAcc
 
+  m_fx[1] = 0.406;// Bd_pipi=DecProdCut
   m_fx[6] = 0.406;// Bd_JpsiKst,mm=DecProdCut
+  m_fx[13]= 0.406;// Bd_Dstmunu,Kpi=cocktail,D0muInAcc
+  m_fx[15]= 0.406;// Bu_JpsiK,mm=DecProdCut
+  m_fx[23]= 0.406;// Bu_D0h,Kpi=cocktail,D0InAcc
+  m_fx[25]= 0.406;// Bu_D0munu,Kpi=cocktail,D0muInAcc
+  m_fx[37]= 0.099;// Bs_Dspi=DecProdCut
+  m_fx[43]= 0.099;// Bs_Dsmunu=cocktail,DsmuInAcc
 
   return StatusCode::SUCCESS;
 }
@@ -270,8 +284,8 @@ StatusCode FilterToFixOppositeBFractions::finalize() {
 
 
   info() << "==> Finalize" << endmsg;
-  info() << "           Total evts =" <<m_coutevt<<endreq;
-  info() << "Total Same Opposite B ="
+  info() << "           Total evts = " <<m_coutevt<<endreq;
+  info() << "Total Same Opposite B = "
          <<100.*m_coutSameB/m_coutevt<<"%"
          <<endreq;
   info() << "        Total Bu oppo = "<<r(m_BuBC)<<" +/- "
@@ -283,9 +297,9 @@ StatusCode FilterToFixOppositeBFractions::finalize() {
   info() << "        Total Ot oppo = "<<r(m_OtBC)<<" +/- "
          <<r(m_errOtBC)<<"%"<<endreq;
   info() << endreq;
-  info() << "        Total rejected ="
+  info() << "        Total rejected = "
          <<100.*m_rejected/m_coutevt<<"%"<<endreq;
-  info() << "   Total evts After cut ="
+  info() << "   Total evts After cut = "
          <<m_coutevtAC<<endreq;
   info() << "        Total Bu oppo AC= "<<r(m_BuAC)<<" +/- "
          <<r(m_errBuAC)<<"%"<<endreq;
