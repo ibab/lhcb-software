@@ -18,6 +18,7 @@
        &DataObject;
        <base name="DataObject"/>
        <location name = "Digi" place = "MC/DigiHeader" />
+       <location name = "MC"  place = "Rec/Header" />
        <location name = "Rec"  place = "Rec/Header" />
        <attribute
         desc="random number seeds for this step"
