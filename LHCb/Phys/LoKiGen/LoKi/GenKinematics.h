@@ -1,8 +1,11 @@
-// $Id: GenKinematics.h,v 1.5 2006-11-25 19:14:19 ibelyaev Exp $
+// $Id: GenKinematics.h,v 1.6 2007-02-26 11:03:03 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2006/11/25 19:14:19  ibelyaev
+//  improve Doxygen
+//
 // Revision 1.4  2006/05/02 14:30:27  ibelyaev
 //  censored
 //
@@ -43,8 +46,7 @@ namespace LoKi
 {  
   namespace Kinematics 
   { 
-    /** @fn momentum
-     *  The most trivial function.
+    /** The most trivial function.
      *  It seems to be almost useless from the first sight, but 
      *  effectivel it is useful in conjunction with 
      *  algorithms, acting as "converter" of the particle 
@@ -73,8 +75,7 @@ namespace LoKi
         ( const HepMC::GenParticle* p ) const { return momentum ( p ) ; }  
     };
     
-    /** @fn mass 
-     *  trivial function to evaluate the mass HepMC::GenParticle
+    /** trivial function to evaluate the mass HepMC::GenParticle
      *  @param  p particle 
      *  @return invariant mass 
      *  @see HepMC::GenParticle 
@@ -84,8 +85,7 @@ namespace LoKi
     double mass 
     ( const HepMC::GenParticle* p ) ;
     
-    /** @fn mass 
-     *  trivial function to evaluate the mass HepMC::GenParticle
+    /** trivial function to evaluate the mass HepMC::GenParticle
      *  @param  p1 the first particle 
      *  @param  p2 the second particle 
      *  @return invariant mass 
@@ -97,8 +97,7 @@ namespace LoKi
     ( const HepMC::GenParticle* p1 , 
       const HepMC::GenParticle* p2 ) ;
 
-    /** @fn mass 
-     *  trivial function to evaluate the mass HepMC::GenParticle
+    /** trivial function to evaluate the mass HepMC::GenParticle
      *  @param  p1 the first particle 
      *  @param  p2 the third particle 
      *  @param  p3 the second particle 
@@ -112,8 +111,7 @@ namespace LoKi
       const HepMC::GenParticle* p2 ,
       const HepMC::GenParticle* p3 ) ;
     
-    /** @fn mass 
-     *  trivial function to evaluate the mass HepMC::GenParticle
+    /** trivial function to evaluate the mass HepMC::GenParticle
      *  @param  p1 the first particle 
      *  @param  p2 the second particle 
      *  @param  p3 the third  particle 

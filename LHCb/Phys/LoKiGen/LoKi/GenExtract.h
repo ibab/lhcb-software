@@ -1,8 +1,11 @@
-// $Id: GenExtract.h,v 1.6 2006-10-10 09:04:49 ibelyaev Exp $
+// $Id: GenExtract.h,v 1.7 2007-02-26 11:03:03 cattanem Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.6 $ 
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.7 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2006/10/10 09:04:49  ibelyaev
+//  tiny fix needed for good&valid dictionaries
+//
 // Revision 1.5  2006/06/09 09:01:46  cattanem
 // fix typo
 //
@@ -50,8 +53,7 @@ namespace LoKi
 {
   namespace Extract
   {
-    /** @fn getGenParticles 
-     *  simple function which allow to extract a certain 
+    /** Simple function which allow to extract a certain 
      *  particles from HepMC graph.
      *   
      *  e.g. one can get all  b(and anti-b)quarks from 
@@ -98,8 +100,7 @@ namespace LoKi
       return output ;
     };
     
-    /** @fn getGenParticles 
-     *  simple function which allows to extract a certain 
+    /** simple function which allows to extract a certain 
      *  particles from HepMC graph.
      *   
      *  e.g. one can get all  b(and anti-b)quarks from 
@@ -135,8 +136,7 @@ namespace LoKi
       return getGenParticles ( event->pGenEvt() , output , predicate ) ;
     };
     
-    /** @fn getGenParticles 
-     *  simple function which allows to extract a certain 
+    /** simple function which allows to extract a certain 
      *  particles from HepMC graph.
      *   
      *  e.g. one can get all  b(and anti-b)quarks from 
@@ -175,8 +175,7 @@ namespace LoKi
         ( events->begin() , events->end () , output , predicate ) ; 
     };
     
-    /** @fn getGenParticles 
-     *  simple function which allows to extract a certain 
+    /** simple function which allows to extract a certain 
      *  particles from HepMC vertex 
      *   
      *  @see HepMC::GenParticle
@@ -201,8 +200,7 @@ namespace LoKi
           v->particles_end  ( range ) , output , predicate ) ;
     };
     
-    /** @fn getGenParticles 
-     *  simple function which allow to extract a certain 
+    /** simple function which allow to extract a certain 
      *  particles from HepMC graph.
      *   
      *  @see LoKi::Cuts::GABSID
@@ -224,8 +222,7 @@ namespace LoKi
       return output ;
     };
 
-    /** @fn genParticles 
-     *  simple function which allow to extract a certain 
+    /** simple function which allow to extract a certain 
      *  particles from HepMC graph.
      *   
      *  e.g. one can get all  b(and anti-b)quarks from 
@@ -258,8 +255,7 @@ namespace LoKi
       const PREDICATE&       predicate )
     { return getGenParticles ( event , output , predicate ) ; }
     
-    /** @fn genParticles 
-     *  simple function which allows to extract a certain 
+    /** simple function which allows to extract a certain 
      *  particles from HepMC graph.
      *   
      *  e.g. one can get all  b(and anti-b)quarks from 
@@ -292,8 +288,7 @@ namespace LoKi
       const PREDICATE&         predicate )
     { return getGenParticles ( event , output , predicate ) ; } ;
     
-    /** @fn genParticles 
-     *  simple function which allows to extract a certain 
+    /** simple function which allows to extract a certain 
      *  particles from HepMC graph.
      *   
      *  e.g. one can get all  b(and anti-b)quarks from 
@@ -328,8 +323,7 @@ namespace LoKi
       const PREDICATE&         predicate )
     { return getGenParticles ( events , output , predicate ) ; } ;
     
-    /** @fn genParticles 
-     *  simple function which allows to extract a certain 
+    /** simple function which allows to extract a certain 
      *  particles from HepMC vertex 
      *   
      *  @see HepMC::GenParticle
@@ -346,8 +340,7 @@ namespace LoKi
       const PREDICATE&        predicate ) 
     { return getGenParticles ( vertex , range , output , predicate ) ; } ;
 
-    /** @fn genParticles 
-     *  simple function which allow to extract a certain 
+    /** simple function which allow to extract a certain 
      *  particles from HepMC graph.
      *   
      *  @see LoKi::Cuts::GABSID

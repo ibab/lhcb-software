@@ -1,8 +1,11 @@
-// $Id: PrintHepMCDecay.h,v 1.2 2006-11-09 16:35:31 ibelyaev Exp $
+// $Id: PrintHepMCDecay.h,v 1.3 2007-02-26 11:03:03 cattanem Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $,  version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $,  version $Revision: 1.3 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/11/09 16:35:31  ibelyaev
+//  v1r7: improve the printout functions
+//
 // Revision 1.1  2006/05/27 11:38:44  ibelyaev
 //  add PrintHepMCDecay utilities
 // 
@@ -43,7 +46,7 @@ class MsgStream ;
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
  *  By usage of this code one clearly states the disagreement 
- *  with the campain of <XXXXXXX> et al.: 
+ *  with the campain of \<XXXXXXX\> et al.: 
  *  "No Vanya's lines are allowed in LHCb/Gaudi software."
  *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -59,8 +62,7 @@ namespace LoKi
     /// maximal possible recursion level 
     const int s_maxLevel1 = std::numeric_limits<int>::max() ;
     
-    /** @fn printHepMCDecay
-     *  Simple function to print HepMC decay in more or less "readable" format 
+    /** Simple function to print HepMC decay in more or less "readable" format 
      *
      *  @code
      *
@@ -84,8 +86,7 @@ namespace LoKi
       LoKi::BooleanConstant<const HepMC::GenParticle*> ( true ) , 
       const int                      level = s_maxLevel1        ,
       const std::string&             blank = "<cut>"            ) ;
-    /** @fn printHepMCDecay
-     *  Simple function to print HepMC decay in more or less "readable" format 
+    /** Simple function to print HepMC decay in more or less "readable" format 
      *
      *  @code
      *
@@ -109,8 +110,7 @@ namespace LoKi
       LoKi::BooleanConstant<const HepMC::GenParticle*> ( true ) , 
       const int                    level = s_maxLevel1          ,
       const std::string&           blank = "<cut>"              ) ;
-    /** @fn printHepMCDecay
-     *  Simple function to print HepMC decay in more or less "readable" format 
+    /** Simple function to print HepMC decay in more or less "readable" format 
      *
      *  @code
      *
@@ -132,8 +132,7 @@ namespace LoKi
       LoKi::BooleanConstant<const HepMC::GenParticle*> ( true ) , 
       const int                    level = s_maxLevel1          ,
       const std::string&           blank = "<cut>"              ) ;
-    /** @fn printDecay
-     *  Simple function to print HepMC decay in more or less "readable" format 
+    /** Simple function to print HepMC decay in more or less "readable" format 
      *
      *  @code
      *
@@ -156,8 +155,7 @@ namespace LoKi
       const int                    level = s_maxLevel1          ,
       const std::string&           blank = "<cut>"              )
     { return printHepMCDecay ( particle , cut , level , blank ) ; }
-    /** @fn printDecay
-     *  Simple function to print HepMC decay in more or less "readable" format 
+    /** Simple function to print HepMC decay in more or less "readable" format 
      *
      *  @code
      *
@@ -182,8 +180,7 @@ namespace LoKi
       const int                      level = s_maxLevel1        ,
       const std::string&             blank = "<cut>"             ) 
     { return printHepMCDecay ( particle , stream , cut , level , blank ) ; }
-    /** @fn printDecay
-     *  Simple function to print HepMC decay in more or less "readable" format 
+    /** Simple function to print HepMC decay in more or less "readable" format 
      *
      *  @code
      *

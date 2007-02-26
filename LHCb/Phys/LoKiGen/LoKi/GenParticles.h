@@ -1,8 +1,11 @@
-// $Id: GenParticles.h,v 1.12 2007-01-23 10:59:03 ibelyaev Exp $
+// $Id: GenParticles.h,v 1.13 2007-02-26 11:03:03 cattanem Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.12 $ 
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.13 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.12  2007/01/23 10:59:03  ibelyaev
+//  fixes to build Ex/LoKiExample
+//
 // Revision 1.11  2007/01/19 13:11:46  ibelyaev
 //  add BuildGenTrees.h file
 //
@@ -144,7 +147,7 @@ namespace LoKi
       virtual ~AbsIdentifier() ;
       /// MANDATORY: the only one essential method 
       virtual  result_type operator() ( argument p ) const ;
-      /// "SHORT" representation, see @LoKi::AuxFunBase 
+      /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;
     };
 
@@ -190,7 +193,7 @@ namespace LoKi
       virtual ~PseudoRapidity();
       /// the only one essential method 
       virtual  result_type operator() ( argument p ) const ;
-      /// "SHORT" representation, see @LoKi::AuxFunBase 
+      /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;
     };
     
@@ -211,7 +214,7 @@ namespace LoKi
       virtual ~Phi();
       /// the only one essential method 
       virtual  result_type operator() ( argument p ) const ;
-      /// "SHORT" representation, see @LoKi::AuxFunBase 
+      /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;
     };
 
@@ -232,7 +235,7 @@ namespace LoKi
       virtual ~Theta();
       /// the only one essential method 
       virtual  result_type operator() ( argument p ) const ;
-      /// "SHORT" representation, see @LoKi::AuxFunBase 
+      /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;
     };
 
@@ -253,7 +256,7 @@ namespace LoKi
       virtual ~Momentum();
       /// the only one essential method 
       virtual  result_type operator() ( argument p ) const ;
-      /// "SHORT" representation, see @LoKi::AuxFunBase 
+      /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;
     };
 
@@ -274,7 +277,7 @@ namespace LoKi
       virtual ~TransverseMomentum();
       /// the only one essential method 
       virtual  result_type operator() ( argument p ) const ;
-      /// "SHORT" representation, see @LoKi::AuxFunBase 
+      /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;
     };
 
@@ -295,7 +298,7 @@ namespace LoKi
       virtual ~Energy();
       /// the only one essential method 
       virtual  result_type operator() ( argument p ) const ;
-      /// "SHORT" representation, see @LoKi::AuxFunBase 
+      /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;
     };
 
@@ -316,7 +319,7 @@ namespace LoKi
       virtual ~Mass();
       /// the only one essential method 
       virtual  result_type operator() ( argument p ) const ;
-      /// "SHORT" representation, see @LoKi::AuxFunBase 
+      /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;
     };
 
@@ -337,7 +340,7 @@ namespace LoKi
       virtual ~MomentumX();
       /// the only one essential method 
       virtual  result_type operator() ( argument p ) const ;
-      /// "SHORT" representation, see @LoKi::AuxFunBase 
+      /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;
     };
     
@@ -358,7 +361,7 @@ namespace LoKi
       virtual ~MomentumY();
       /// the only one essential method 
       virtual  result_type operator() ( argument p ) const ;
-      /// "SHORT" representation, see @LoKi::AuxFunBase 
+      /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;
     };
 
@@ -379,7 +382,7 @@ namespace LoKi
       virtual ~MomentumZ();
       /// the only one essential method 
       virtual  result_type operator() ( argument p ) const ;
-      /// "SHORT" representation, see @LoKi::AuxFunBase 
+      /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;
     };
 
@@ -405,7 +408,7 @@ namespace LoKi
       virtual ~ValidEndVertex() ;
       /// MANDATORY: the only one essential method 
       virtual  result_type operator() ( argument p ) const ;
-      /// "SHORT" representation, see @LoKi::AuxFunBase 
+      /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;
     };
 
@@ -876,8 +879,8 @@ namespace LoKi
       double m_bad ;
     };
     
-    /** @struct NominalLifeTime (c*tau) 
-     *  evaluator of the nominal lifetime of the particle 
+    /** @struct NominalLifeTime
+     *  (c*tau) evaluator of the nominal lifetime of the particle 
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-01-18
      */
@@ -1001,7 +1004,7 @@ namespace LoKi
       virtual ~ThreeCharge(){} ;
       /// MANDATORY: the only one essential method 
       virtual  result_type operator() ( argument p ) const ;
-      /// "SHORT" representation, see @LoKi::AuxFunBase 
+      /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;
     };
 

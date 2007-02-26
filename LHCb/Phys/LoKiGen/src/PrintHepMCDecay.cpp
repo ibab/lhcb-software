@@ -1,8 +1,11 @@
-// $Id: PrintHepMCDecay.cpp,v 1.3 2006-11-25 19:14:19 ibelyaev Exp $
+// $Id: PrintHepMCDecay.cpp,v 1.4 2007-02-26 11:03:03 cattanem Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2006/11/25 19:14:19  ibelyaev
+//  improve Doxygen
+//
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -50,7 +53,7 @@
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
  *  By usage of this code one clearly states the disagreement 
- *  with the campain of <XXXXXXX> : 
+ *  with the campain of \<XXXXXXX\> : 
  *  "No Vanya's lines are allowed in LHCb/Gaudi software."
  *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu

@@ -1,8 +1,11 @@
-// $Id: GenAlgs.h,v 1.7 2006-11-25 19:14:19 ibelyaev Exp $
+// $Id: GenAlgs.h,v 1.8 2007-02-26 11:03:03 cattanem Exp $
 // ========================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $
 // ========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2006/11/25 19:14:19  ibelyaev
+//  improve Doxygen
+//
 // Revision 1.6  2006/10/05 11:53:32  ibelyaev
 //  fix compilation problem at slc4_ia32_gcc345
 //
@@ -155,8 +158,8 @@ namespace LoKi
      *
      *  @see LoKi::Cuts::BEAUTY
      *
-     *  @param event pointer to HepMC event
-     *  @param cut   the condidion/predicate/criterion
+     *  @param events pointer to HepMC event
+     *  @param cut    the condidion/predicate/criterion
      *  @return number of elements which satisfy the criterion
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-01-23
@@ -309,8 +312,8 @@ namespace LoKi
      *  @see LoKi::Cuts::GCHARM
      *  @see LoKi::Cuts::GMESON
      *
-     *  @param event pointer to HepMC event
-     *  @param cut   the condidion/predicate/criterion
+     *  @param events pointer to HepMC event
+     *  @param cut    the condidion/predicate/criterion
      *  @return true if the particle, which satisfies the criterion is found
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-01-23
@@ -370,9 +373,7 @@ namespace LoKi
     // ========================================================================
 
     // ========================================================================
-    /**@fn accumulate
-     *
-     *  Simple algorithm for accumulation of
+    /** Simple algorithm for accumulation of
      *  the function value through the  HepMC graph
      *
      *  E.g. one can 'accumulate' the total
@@ -418,9 +419,7 @@ namespace LoKi
     // ========================================================================
     
     // ========================================================================
-    /**@fn accumulate
-     *
-     *  Simple algorithm for accumulation of
+    /** Simple algorithm for accumulation of
      *  the function value through the  HepMC graph
      *
      *  E.g. one can 'accumulate' the total
@@ -465,9 +464,7 @@ namespace LoKi
     // ========================================================================
 
     // ========================================================================
-    /**@fn accumulate
-     *
-     *  Simple algorithm for accumulation of
+    /** Simple algorithm for accumulation of
      *  the function value through the  HepMC graph
      *
      *  E.g. one can 'accumulate' the total

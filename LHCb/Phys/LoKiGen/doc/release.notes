@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.26 2007-01-23 10:59:06 ibelyaev Exp $ 
+! $Id: release.notes,v 1.27 2007-02-26 11:03:03 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiGen
 ! Responsible : Vanya BELYAEV
@@ -14,14 +14,16 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
-! 2007-01-23 - Vanya BELYAEV
+!=========================== LoKiGen v2r1 2007-02-26 ==========================
+! 2007-02-26 - Marco Cattaneo
+ - Fix many doxygen warnings
 
+! 2007-01-23 - Vanya BELYAEV
  - LoKi/GenParticles.h, src/GenParticles.cpp  
      many tiny fixes to build Ex/LoKiExample package 
 
  - cmt/requirements 
      version increment to v2r1 
-
 
 !=========================== LoKiGen v2r0 2007-01-19 ==========================
 ! 2007-01-19 - Vanya BELYAEV

@@ -1,8 +1,11 @@
-// $Id: BuildGenTrees.h,v 1.1 2007-01-19 13:11:45 ibelyaev Exp $
+// $Id: BuildGenTrees.h,v 1.2 2007-02-26 11:03:03 cattanem Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2007/01/19 13:11:45  ibelyaev
+//  add BuildGenTrees.h file
+//
 // ============================================================================
 #ifndef LOKI_BUILDGENTREES_H 
 #define LOKI_BUILDGENTREES_H 1
@@ -41,8 +44,7 @@ namespace LoKi
    */
   namespace GenTrees 
   {
-    /** @fn buildTrees
-     *  simple function which 'builds' the trees from flat list 
+    /** Simple function which 'builds' the trees from flat list 
      *
      *  @code
      *
