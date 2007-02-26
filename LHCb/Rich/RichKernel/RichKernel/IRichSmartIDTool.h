@@ -4,7 +4,7 @@
  *
  *  Header file for tool interface : Rich::ISmartIDTool
  *
- *  $Id: IRichSmartIDTool.h,v 1.16 2007-02-26 13:52:00 cattanem Exp $
+ *  $Id: IRichSmartIDTool.h,v 1.17 2007-02-26 14:20:04 cattanem Exp $
  *
  *  @author Antonis Papanestis  a.papanestis@rl.ac.uk
  *  @date   2003-10-28
@@ -25,7 +25,7 @@
 #include "Kernel/RichSmartID.h"
 
 // from MathCore
-#include "RichKernel/Point3DTypes.h"
+#include "GaudiKernel/Point3DTypes.h"
 
 /// Static Interface Identification
 static const InterfaceID IID_IRichSmartIDTool( "Rich::ISmartIDTool", 1, 0 );
