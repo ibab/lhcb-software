@@ -1,8 +1,11 @@
-// $Id: ParticleProperties.cpp,v 1.4 2006-05-08 09:04:27 cattanem Exp $
+// $Id: ParticleProperties.cpp,v 1.5 2007-02-26 13:13:09 cattanem Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.5 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2006/05/08 09:04:27  cattanem
+// Units now in Gaudi::Units namespace
+//
 // Revision 1.3  2006/05/02 14:29:11  ibelyaev
 //  censored
 //
@@ -54,8 +57,7 @@
 // ============================================================================
 
 // ============================================================================
-/** @fn pidFromName 
- *  retrieve particle ID from Particle name 
+/** retrieve particle ID from Particle name 
  *  @param name particle name 
  *  @return particle ID 
  */
@@ -76,8 +78,7 @@ LHCb::ParticleID LoKi::Particles::pidFromName( const std::string& name )
 // ============================================================================
 
 // ============================================================================
-/** @fn _ppFromName 
- *  retrieve particle ID from Particle name 
+/** retrieve particle ID from Particle name 
  *  @param name particle name 
  *  @return particle ID 
  */
@@ -102,8 +103,7 @@ const ParticleProperty* LoKi::Particles::_ppFromName
 
 
 // ============================================================================
-/** @fn ppFromName 
- *  retrieve particle ID from Particle name 
+/** retrieve particle ID from Particle name 
  *  @param name particle name 
  *  @return particle ID 
  */
@@ -126,8 +126,7 @@ const ParticleProperty* LoKi::Particles::ppFromName
 
 
 // ============================================================================
-/** @fn _ppFromPID 
- *  retrieve ParticleProperty from ParticleID 
+/** retrieve ParticleProperty from ParticleID 
  *  @param pid particle ID 
  *  @param particle property 
  */
@@ -153,8 +152,7 @@ const ParticleProperty* LoKi::Particles::_ppFromPID
 // ============================================================================
 
 // ============================================================================
-/** @fn ppFromPID 
- *  retrieve ParticleProperty from ParticleID 
+/** retrieve ParticleProperty from ParticleID 
  *  @param pid particle ID 
  *  @param particle property 
  */
@@ -177,8 +175,7 @@ const ParticleProperty* LoKi::Particles::ppFromPID
 // ============================================================================
 
 // ============================================================================
-/** @fn massFromPID 
- *  retrieve ParticleProperty from ParticleID 
+/** retrieve ParticleProperty from ParticleID 
  *  @param pid particle ID 
  *  @param particle mass 
  */
@@ -199,8 +196,7 @@ const double LoKi::Particles::massFromPID  ( const LHCb::ParticleID& pid   )
 // ============================================================================
 
 // ============================================================================
-/** @fn massFromName 
- *  retrieve ParticleProperty from ParticleID 
+/** retrieve ParticleProperty from ParticleID 
  *  @param pid particle ID 
  *  @param particle property 
  */
@@ -221,8 +217,7 @@ const double LoKi::Particles::massFromName ( const std::string&  name )
 // ============================================================================
 
 // ============================================================================
-/** @fn antiParticle 
- *  get name of 'antiparticle'
+/** get name of 'antiparticle'
  *  @param name particlre name 
  *  @return anme of antiParticle 
  */
@@ -254,8 +249,7 @@ std::string LoKi::Particles::antiParticle( const std::string&      name )
 // ============================================================================
 
 // ============================================================================
-/** @fn antiParticle 
- *  get name of 'antiparticle'
+/** get name of 'antiparticle'
  *  @param name particlre name 
  *  @return anme of antiParticle 
  */
@@ -290,8 +284,7 @@ LoKi::Particles::antiParticle ( const ParticleProperty* pp )
 // ============================================================================
 
 // ============================================================================
-/** @fn antiParticle 
- *  get Particle ID for antiparticle 
+/** get Particle ID for antiparticle 
  *  @param  pid particle 
  *  @return pid fro antiparticle 
  */
@@ -319,8 +312,7 @@ LHCb::ParticleID LoKi::Particles::antiParticle( const LHCb::ParticleID& pid  )
 // ============================================================================
 
 // ============================================================================
-/** @fn nameFromPID 
- *  retrieve particle name for given PID 
+/** retrieve particle name for given PID 
  *  @param pid particle PID 
  *  @return particle name 
  */
@@ -342,8 +334,7 @@ std::string  LoKi::Particles::nameFromPID ( const LHCb::ParticleID& pid )
 // ============================================================================
 
 // ============================================================================
-/** @fn lifeTime 
- *  retrieve the lifetime for the particle form the name 
+/** retrieve the lifetime for the particle form the name 
  *  @param name particle name 
  */
 // ============================================================================
@@ -365,8 +356,7 @@ const double LoKi::Particles::lifeTime
 // ============================================================================
 
 // ============================================================================
-/** @fn lifeTime 
- *  retrieve the lifetime for the particle form the name 
+/** retrieve the lifetime for the particle form the name 
  *  @param name particle name 
  */
 // ============================================================================

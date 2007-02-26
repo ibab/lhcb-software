@@ -1,8 +1,11 @@
-// $Id: FuncAdapters.h,v 1.6 2006-11-25 19:12:55 ibelyaev Exp $
+// $Id: FuncAdapters.h,v 1.7 2007-02-26 13:13:08 cattanem Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2006/11/25 19:12:55  ibelyaev
+//  improve Doxygen
+//
 // Revision 1.5  2006/10/05 11:52:05  ibelyaev
 //  fix compilation warnings for slc4_ia32_gcc345
 //
@@ -90,7 +93,7 @@ namespace LoKi
         , m_fun  ( fun ) 
       {};
       /** copy constructor 
-       *  @param rigth object to be copied 
+       *  @param right object to be copied 
        */
       FunAdapter ( const MyType& right ) 
         : LoKi::AuxFunBase ( right ) 
@@ -160,7 +163,7 @@ namespace LoKi
         , m_cut  ( cut ) 
       {};
       /** copy constructor 
-       *  @param rigth object to be copied 
+       *  @param right object to be copied 
        */
       CutAdapter ( const MyType& right ) 
         : LoKi::AuxFunBase ( right ) 
@@ -187,8 +190,7 @@ namespace LoKi
     
   } // end of namespace Adapters
   
-  /** @fn aFun 
-   *  helper templated function to make easier the 
+  /** helper templated function to make easier the 
    *  creation of adapter-functors:
    *
    *  @code 
@@ -215,8 +217,7 @@ namespace LoKi
   inline LoKi::Adapters::FunAdapter<TYPE> aFun ( double (*fun) ( TYPE )  ) 
   { return LoKi::Adapters::FunAdapter<TYPE> ( fun ) ; } ;
   
-  /** @fn aCut 
-   *  helper templated function to make easier the 
+  /** helper templated function to make easier the 
    *  creation of adapter-functors:
    *
    *  @code 

@@ -1,8 +1,11 @@
-// $Id: LoKiSvc.cpp,v 1.7 2006-12-15 08:37:20 ranjard Exp $
+// $Id: LoKiSvc.cpp,v 1.8 2007-02-26 13:13:09 cattanem Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2006/12/15 08:37:20  ranjard
+// v2r0 - InstallArea and new Plugins
+//
 // Revision 1.6  2006/11/09 17:01:06  ibelyaev
 //  v1r8: improve printout
 //
@@ -250,7 +253,7 @@ public:
 protected:
   /** standard constructor 
    *  @param name service instance name 
-   *  @param pointer to the service locator 
+   *  @param pSvc pointer to the service locator 
    */
   LoKiSvc 
   ( const std::string& name , 

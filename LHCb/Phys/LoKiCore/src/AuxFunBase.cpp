@@ -1,8 +1,11 @@
-// $Id: AuxFunBase.cpp,v 1.3 2006-05-02 14:29:10 ibelyaev Exp $
+// $Id: AuxFunBase.cpp,v 1.4 2007-02-26 13:13:09 cattanem Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2006/05/02 14:29:10  ibelyaev
+//  censored
+//
 // ============================================================================
 // Include files
 // ============================================================================
@@ -51,8 +54,7 @@
 namespace LoKi
 {
   // ==========================================================================
-  /** @var s_AuxFunBaseCounter 
-   *  statsic instace counter for all functions 
+  /** static instance counter for all functions 
    */
   // ==========================================================================
 #ifdef LOKI_DEBUG

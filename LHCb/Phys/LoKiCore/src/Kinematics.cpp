@@ -1,8 +1,11 @@
-// $Id: Kinematics.cpp,v 1.6 2006-05-02 14:29:11 ibelyaev Exp $
+// $Id: Kinematics.cpp,v 1.7 2007-02-26 13:13:09 cattanem Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2006/05/02 14:29:11  ibelyaev
+//  censored
+//
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -41,8 +44,7 @@
 // ============================================================================
 
 // ============================================================================
-/** @fn euclidianNorm2 
- *  simple function for evaluation of the euclidiam norm
+/** simple function for evaluation of the euclidiam norm
  *  for LorentzVectors 
  *  (E**2+Px**2+Py**2+Pz**2)
  *  @param vct the vector
@@ -63,8 +65,7 @@ double LoKi::Kinematics::euclidianNorm2
 // ============================================================================
 
 // ============================================================================
-/** @fn euclidianNorm 
- *  simple function for evaluation of the euclidiam norm
+/** simple function for evaluation of the euclidiam norm
  *  for LorentzVectors 
  *  sqrt(E**2+Px**2+Py**2+Pz**2)
  *  @param vct the vector
@@ -79,8 +80,7 @@ double LoKi::Kinematics::euclidianNorm
 // ============================================================================
 
 // ============================================================================
-/** @fn delta2euclidian 
- *  simple function for evaluation of the square of 
+/** simple function for evaluation of the square of 
  *  the euclidian distance inbetwee 2 LorentzVectors 
  *  (DeltaE**2+DeltaPx**2+DeltaPy**2+DeltaPz**2)
  *  @param vct1 the first vector
@@ -97,8 +97,7 @@ double LoKi::Kinematics::delta2euclidian
 // ============================================================================
 
 // ============================================================================
-/** @fn transverseMomentumDir 
- *  simple function which evaluates the transverse 
+/** simple function which evaluates the transverse 
  *  momentum with respect a certain 3D-direction
  *  @param mom the momentum
  *  @param dir the direction
@@ -121,9 +120,7 @@ double LoKi::Kinematics::transverseMomentumDir
 
 
 // ============================================================================
-/** @fn decayAngle 
- *  
- *  This routine returns the cosine angle theta 
+/** This routine returns the cosine angle theta 
  *  The decay angle calculated  is that between 
  *  the flight direction of the daughter neson, "D",
  *  in the rest frame of "M" (the parent of "D"), 
@@ -161,8 +158,7 @@ double LoKi::Kinematics::decayAngle
 // ============================================================================
 
 // ============================================================================
-/** @fn decayAngle 
- *  This routine returns the cosine angle theta 
+/** This routine returns the cosine angle theta 
  *  The decay angle calculated  is that between 
  *  the flight direction of the daughter neson, "D",
  *  in the rest frame of "Q" (the parent of "D"), 
@@ -207,8 +203,7 @@ double LoKi::Kinematics::decayAngle
 // ============================================================================
 
 // // ============================================================================
-// /** @fn transversityAngle 
-//  *  This routine evaluates the cosine of "transversity angle", 
+// /** This routine evaluates the cosine of "transversity angle", 
 //  *  useful e.g. to disantangle the different partiasl vaves in 
 //  *  0 -> 1 + 1 decay (e.g. Bs -> J/psi Phi 
 //  *  
@@ -237,8 +232,7 @@ double LoKi::Kinematics::decayAngle
 // // ============================================================================
 
 // // ============================================================================
-// /** @fn forwardBackwardAngle
-//  *  This routine evaluated the angle theta_FB
+// /** This routine evaluated the angle theta_FB
 //  *  used e.g. for evaluation of forward-backward 
 //  *  asymmetry for decay B -> K* mu+ mu- 
 //  *  The angle calculated is that 

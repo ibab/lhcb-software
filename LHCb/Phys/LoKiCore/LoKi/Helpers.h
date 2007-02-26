@@ -1,8 +1,11 @@
-// $Id: Helpers.h,v 1.3 2006-11-25 19:12:55 ibelyaev Exp $
+// $Id: Helpers.h,v 1.4 2007-02-26 13:13:08 cattanem Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2006/11/25 19:12:55  ibelyaev
+//  improve Doxygen
+//
 // Revision 1.2  2006/05/02 14:29:09  ibelyaev
 //  censored
 //
@@ -38,8 +41,7 @@ namespace LoKi
    */
   namespace Helpers 
   {
-    /** @fn _First 
-     *  trivial helper which returns either the first element 
+    /** Trivial helper which returns either the first element 
      *  of the container, or its default" value (for empty 
      *  container)
      *  @param cnt the container itself 
@@ -55,8 +57,7 @@ namespace LoKi
       return typename CONTAINER::value_type() ;
     } ;
     
-    /** @fn _First 
-     *  trivial helper which returns either the first element 
+    /** Trivial helper which returns either the first element 
      *  of the container, or its default" value (for empty 
      *  or invalid container)
      *  @param cnt pointer to the the container

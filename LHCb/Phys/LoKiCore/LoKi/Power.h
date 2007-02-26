@@ -1,8 +1,11 @@
-// $Id: Power.h,v 1.6 2006-11-25 19:12:56 ibelyaev Exp $
+// $Id: Power.h,v 1.7 2007-02-26 13:13:09 cattanem Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.6 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.7 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2006/11/25 19:12:56  ibelyaev
+//  improve Doxygen
+//
 // Revision 1.5  2006/10/05 11:52:06  ibelyaev
 //  fix compilation warnings for slc4_ia32_gcc345
 //
@@ -62,7 +65,7 @@ namespace LoKi
       , m_val ( val ) 
     {};
     /** copy constructor 
-     *  @param rigth, object to be copied 
+     *  @param right object to be copied 
      */
     Power ( const _Self & right ) 
       : LoKi::AuxFunBase ( right ) 
@@ -98,8 +101,7 @@ namespace LoKi
     int                               m_val ;
   };
   
-  /** @fn pow
-   *  pow for LoKi functions
+  /** pow for LoKi functions
    *  @see LoKi::Power 
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   2005-04-09
@@ -110,8 +112,7 @@ namespace LoKi
         const int                   val ) 
   { return LoKi::Power<TYPE> ( fun , val ) ; }
   
-  /** @fn pow2
-   *  pow2 for LoKi functions
+  /** pow2 for LoKi functions
    *  @see LoKi::pow
    *  @see LoKi::Power 
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
@@ -122,8 +123,7 @@ namespace LoKi
   pow2 ( const LoKi::Function<TYPE>& fun ) 
   { return LoKi::pow ( fun , 2 ) ; }
   
-  /** @fn pow3
-   *  pow3 for LoKi functions
+  /** pow3 for LoKi functions
    *  @see LoKi::pow
    *  @see LoKi::Power 
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
@@ -134,8 +134,7 @@ namespace LoKi
   pow3 ( const LoKi::Function<TYPE>& fun ) 
   { return LoKi::pow ( fun , 3 ) ; }
   
-  /** @fn pow4
-   *  pow4 for LoKi functions
+  /** pow4 for LoKi functions
    *  @see LoKi::pow
    *  @see LoKi::Power 
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
@@ -146,8 +145,7 @@ namespace LoKi
   pow4 ( const LoKi::Function<TYPE>& fun ) 
   { return LoKi::pow ( fun , 4 ) ; }
   
-  /** @fn square
-   *  pow2 for LoKi functions
+  /** pow2 for LoKi functions
    *  @see LoKi::pow
    *  @see LoKi::Power 
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru

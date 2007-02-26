@@ -1,8 +1,11 @@
-// $Id: Algs.h,v 1.6 2006-11-25 19:12:55 ibelyaev Exp $
+// $Id: Algs.h,v 1.7 2007-02-26 13:13:08 cattanem Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2006/11/25 19:12:55  ibelyaev
+//  improve Doxygen
+//
 // Revision 1.5  2006/05/02 14:29:09  ibelyaev
 //  censored
 //
@@ -48,8 +51,7 @@ namespace LoKi
   namespace  Algs 
   {
     // ========================================================================
-    /** @fn accumulate
-     *  The trivial algorithm which accumulated the value 
+    /** The trivial algorithm which accumulated the value 
      *  of the function over the sequence
      * 
      *  @param first    'begin'-iterator for the sequence
@@ -73,8 +75,7 @@ namespace LoKi
     // ========================================================================
     
     // ========================================================================
-    /** @fn accumulate
-     *  The trivial algorithm which accumulates the value 
+    /** The trivial algorithm which accumulates the value 
      *  of the function over the sequence for elements which 
      *  satisfy certain criteria 
      * 
@@ -101,8 +102,7 @@ namespace LoKi
     } ;
     // ========================================================================
     
-    /** @fn copy_if 
-     *  The missing "copy_if" algorithm from STL 
+    /** The missing "copy_if" algorithm from STL 
      *
      *  @param first 'begin'-iterator for the input sequence of objects
      *  @param last  'end'-iterator for the input sequence of objects

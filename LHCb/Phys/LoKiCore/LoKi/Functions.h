@@ -1,8 +1,11 @@
-// $Id: Functions.h,v 1.15 2006-11-25 19:12:55 ibelyaev Exp $
+// $Id: Functions.h,v 1.16 2007-02-26 13:13:08 cattanem Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.15 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.16 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.15  2006/11/25 19:12:55  ibelyaev
+//  improve Doxygen
+//
 // Revision 1.14  2006/10/27 13:34:18  ibelyaev
 //  v1r7p1: fix warnings for SLC4 platform
 //
@@ -1180,7 +1183,7 @@ namespace LoKi
     
     /** constructor from 2 functions 
      *  @param fun1 the first  function
-     *  @aparm fun2 the second function
+     *  @param fun2 the second function
      */
     Min( const FunB& fun1 , 
          const FunB& fun2 ) 
@@ -1234,15 +1237,15 @@ namespace LoKi
 
     /** constructor from 2 functions 
      *  @param fun1 the first  function
-     *  @aparm fun2 the second function
+     *  @param fun2 the second function
      */
     Max ( const FunB& fun1 , 
           const FunB& fun2 ) 
       : FunctionFromTwoFunctions<TYPE>( fun1 , fun2 ) {}
     /** constructor from 3 functions 
      *  @param fun1 the first  function
-     *  @aparm fun2 the second function
-     *  @aparm fun3 the third  function
+     *  @param fun2 the second function
+     *  @param fun3 the third  function
      */
     Max ( const FunB& fun1 , 
           const FunB& fun2 ,
@@ -1250,9 +1253,9 @@ namespace LoKi
       : FunctionFromTwoFunctions<TYPE>( Self( fun1 , fun2 ) , fun3 ) {}
     /** constructor from 4 functions 
      *  @param fun1 the first  function
-     *  @aparm fun2 the second function
-     *  @aparm fun3 the third  function
-     *  @aparm fun4 the fourth  function
+     *  @param fun2 the second function
+     *  @param fun3 the third  function
+     *  @param fun4 the fourth  function
      */
     Max ( const FunB& fun1 , 
           const FunB& fun2 ,

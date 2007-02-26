@@ -1,8 +1,11 @@
-// $Id: Geometry.h,v 1.4 2006-11-25 19:12:55 ibelyaev Exp $
+// $Id: Geometry.h,v 1.5 2007-02-26 13:13:08 cattanem Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, verison $Revision: 1.4 $
+// CVS tag $Name: not supported by cvs2svn $, verison $Revision: 1.5 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2006/11/25 19:12:55  ibelyaev
+//  improve Doxygen
+//
 // Revision 1.3  2006/05/02 14:29:09  ibelyaev
 //  censored
 //
@@ -22,10 +25,10 @@
 // ============================================================================
 #include "GaudiKernel/StatusCode.h"
 // ============================================================================
-// Kernel
+// Math definitions
 // ============================================================================
-#include "Kernel/GenericMatrixTypes.h"
-#include "Kernel/SymmetricMatrixTypes.h"
+#include "GaudiKernel/GenericMatrixTypes.h"
+#include "GaudiKernel/SymmetricMatrixTypes.h"
 // ============================================================================
 // LoKiCore 
 // ============================================================================
@@ -59,8 +62,7 @@ namespace LoKi
   namespace Geometry 
   {
     
-    /** @fn distance 
-     *  The trivial function, which evaluated the distance 
+    /** The trivial function, which evaluated the distance 
      *  between the point and the line. 
      *
      *  The line is parameterized with the point 'p0' and the 
@@ -78,8 +80,7 @@ namespace LoKi
       const LoKi::Point3D&  p0    , 
       const LoKi::Vector3D& v0    ) ;
     
-    /** @fn distance 
-     *  The trivial function, which evaluates the distance 
+    /** The trivial function, which evaluates the distance 
      *  between two lines 
      *  Each line is parameterized with the point at the line 
      *  and the direction vectors
@@ -98,9 +99,7 @@ namespace LoKi
       const LoKi::Point3D&  p2 , 
       const LoKi::Vector3D& v2 ) ;
     
-    /** @fn chi2 
-     *  
-     *  The trivial function, 
+    /** The trivial function, 
      *  which evaluates the distance between two points 
      *  in "chi2" units 
      *  
@@ -122,9 +121,7 @@ namespace LoKi
       const Gaudi::SymMatrix3x3& cov2  , 
       double&                    value ) ;
 
-    /** @fn chi2 
-     *  
-     *  The trivial function, 
+    /** The trivial function, 
      *  which evaluates the distance between two points 
      *  in "chi2" units 
      *  

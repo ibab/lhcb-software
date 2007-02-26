@@ -1,8 +1,11 @@
-// $Id: LoKiCore.h,v 1.15 2006-11-25 19:12:55 ibelyaev Exp $
+// $Id: LoKiCore.h,v 1.16 2007-02-26 13:13:09 cattanem Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.15 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.16 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.15  2006/11/25 19:12:55  ibelyaev
+//  improve Doxygen
+//
 // Revision 1.14  2006/10/10 09:03:21  ibelyaev
 //  many tiny fixed needed for good&valid dictionaries
 //
@@ -84,71 +87,16 @@
  */
 namespace LoKi
 {
-  /** @namespace LoKi::Algs 
-   *  Namespace with few generic "STL-like" algorithms 
-   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-   *  @date 2006-11-25 
-   */
   namespace Algs {} 
-  /** @namespace LoKi::Cast
-   *  Casting functions 
-   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-   *  @date   2006-11-25
-   */
   namespace  Cast {}
-  /** @namespace LoKi::Adapters 
-   *  Basic adapter functions 
-   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-   *  @date   2006-11-25
-   */
   namespace Adapters {}
-  /** @namespace LoKi::Constants
-   *  Namespace  with the collection of useful constants
-   *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-   *  @date   2003-07-10
-   */
   namespace Constants {}
-  /** @namespace LoKi::Kinematics 
-   *  collection of few trivial functions for kinematical evaluations
-   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-   *  @date 2006-01-17
-   */
   namespace Kinematics {}
-  /** @namespace  LoKi::Geometry
-   *  Namespace with the collection of useful "geoemtry" functions   
-   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-   *  @date   2006-02-17
-   */
   namespace Geometry{}
-  /** @namespace LoKi::Particles
-   *  Simple namespace with functions related to particles 
-   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-   *  @date 2006-11-25
-   */
   namespace  Particles {}  
-  /** @namespace LoKi::Print
-   *  Collection of useful utilities for printout 
-   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-   *  @date   2006-02-16
-   */
   namespace Print {}
-  /** @namespace LoKi::Types 
-   *  colelction of basic LoKi-types 
-   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-   *  @date   2006-02-16
-   */
   namespace Types {}
-  /** @namespace LoKi::Cuts
-   *  collelction of basic LoKi- functions and cuts  
-   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-   *  @date   2006-02-16
-   */
   namespace Cuts  {}
-  /** @namespace LoKi::Objects 
-   *  Collection of useful small objects for LoKi 
-   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-   *  @date   2006-02-08
-   */
   namespace Objects {}
 }
 

@@ -1,8 +1,11 @@
-// $Id: Range.cpp,v 1.3 2006-05-02 14:29:11 ibelyaev Exp $
+// $Id: Range.cpp,v 1.4 2007-02-26 13:13:09 cattanem Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2006/05/02 14:29:11  ibelyaev
+//  censored
+//
 // ============================================================================
 // Include files
 // ============================================================================
@@ -30,8 +33,7 @@
 // ============================================================================
 
 // ============================================================================
-/** @fn rangeException
- *  Helpful function to throw an out-of-range exception for class Range_
+/** Helpful function to throw an out-of-range exception for class Range_
  *  @param index invalid index
  *  @param size  range size 
  */

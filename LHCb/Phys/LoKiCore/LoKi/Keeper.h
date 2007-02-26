@@ -1,8 +1,11 @@
-// $Id: Keeper.h,v 1.9 2007-01-20 14:25:43 ibelyaev Exp $
+// $Id: Keeper.h,v 1.10 2007-02-26 13:13:08 cattanem Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.9 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.10 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.9  2007/01/20 14:25:43  ibelyaev
+//  add <...>Keeper::clear() method
+//
 // Revision 1.8  2006/11/25 19:12:55  ibelyaev
 //  improve Doxygen
 //
@@ -255,7 +258,7 @@ namespace LoKi
     }
   public:
     /** sort the container using the sorting criteria 
-     *  @param cmt operation used as corting criteria ("strickt less") 
+     *  @param cmp operation used as corting criteria ("strickt less") 
      */
     template <class COMPARISON>
     void sort( COMPARISON cmp ) 
@@ -264,7 +267,7 @@ namespace LoKi
     void sort() 
     { std::sort ( m_objects.begin() , m_objects.end() ) ; }
     /** remove the duplicates from the container 
-     *  @param cmt comparison criteria used for sorting 
+     *  @param cmp comparison criteria used for sorting 
      */
     template <class COMPARISON>
     size_t unique ( COMPARISON cmp ) 

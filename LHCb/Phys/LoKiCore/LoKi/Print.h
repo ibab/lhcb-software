@@ -1,8 +1,11 @@
-// $Id: Print.h,v 1.6 2006-11-25 19:12:56 ibelyaev Exp $
+// $Id: Print.h,v 1.7 2007-02-26 13:13:09 cattanem Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2006/11/25 19:12:56  ibelyaev
+//  improve Doxygen
+//
 // Revision 1.5  2006/05/23 10:58:07  ibelyaev
 //  minor fix in LoKi/Print.h
 //
@@ -70,8 +73,7 @@ namespace LoKi
     inline std::string print ( const size_t value ) 
     { return print( long(value) ) ; }
     
-    /** @fn toStream 
-     *  Trivial generic printout to some stream 
+    /** Trivial generic printout to some stream 
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-02-16
      */
@@ -81,8 +83,7 @@ namespace LoKi
       const TYPE&     object ) 
     { stream << object ;  return stream ; }
     
-    /** @fn _toStream 
-     *  Trivial generic printout to some stream 
+    /** Trivial generic printout to some stream 
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-02-16
      */
@@ -92,8 +93,7 @@ namespace LoKi
       const TYPE&     object ) 
     { return toStream( stream , object ) ;  }
     
-    /** @fn toStream 
-     *  Trivial specialization for string (a'la Python)
+    /** Trivial specialization for string (a'la Python)
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-02-16
      */
@@ -109,8 +109,7 @@ namespace LoKi
       return stream ; 
     }
     
-    /** @fn toStream
-     *  Trivial generic printout to some stream 
+    /** Trivial generic printout to some stream 
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-02-16
      */        
@@ -131,8 +130,7 @@ namespace LoKi
       return stream ;
     }
 
-    /** @fn toStream
-     *  Trivial generic printout to some stream 
+    /** Trivial generic printout to some stream 
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-02-16
      */        
@@ -153,8 +151,7 @@ namespace LoKi
       return stream ;
     }
     
-    /** @fn toStream 
-     *  Trivial specialization for pairs (a'la Python's tuples)
+    /** Trivial specialization for pairs (a'la Python's tuples)
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-02-16
      */
@@ -171,8 +168,7 @@ namespace LoKi
       return stream ;
     } ;
 
-    /** @fn toStream 
-     *  Trivial specialization for pairs (a'la Python's dictionary entries)
+    /** Trivial specialization for pairs (a'la Python's dictionary entries)
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-02-16
      */
@@ -189,8 +185,7 @@ namespace LoKi
       return stream ;
     } ;
     
-    /** @fn toStream 
-     *  Trivial specialization for vectors (a'la Python's lists)
+    /** Trivial specialization for vectors (a'la Python's lists)
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-02-16
      */
@@ -205,8 +200,7 @@ namespace LoKi
       return stream ;
     } ;
     
-    /** @fn toStream 
-     *  Trivial specialization for maps (a'la Python's dictionaries)
+    /** Trivial specialization for maps (a'la Python's dictionaries)
      *  @see LoKi::Print::_toStream
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-02-16
@@ -222,8 +216,7 @@ namespace LoKi
       return stream  ;
     } ;
     
-    /** @fn toStream 
-     *  Trivial specialization for GaudiUtils::VectorMap 
+    /** Trivial specialization for GaudiUtils::VectorMap 
      *  (a'la Python's dictionaries)
      *  @see LoKi::Print::_toStream
      *  @see GaudiUtils::VectorMap
@@ -241,8 +234,7 @@ namespace LoKi
       return stream  ;
     } ;
     
-    /** @fn toStream 
-     *  Trivial specialization for GaudiUtils::Map 
+    /** Trivial specialization for GaudiUtils::Map 
      *  (a'la Python's dictionaries)
      *  @see LoKi::Print::_toStream
      *  @see GaudiUtils::Map
@@ -260,8 +252,7 @@ namespace LoKi
       return stream  ;
     } ;
     
-    /** @fn toStream 
-     *  Trivial specialization for GaudiUtils::HashMap 
+    /** Trivial specialization for GaudiUtils::HashMap 
      *  (a'la Python's dictionaries)
      *  @see LoKi::Print::_toStream
      *  @see GaudiUtils::HashMap
@@ -279,8 +270,7 @@ namespace LoKi
       return stream  ;
     } ;
     
-    /** @fn toStream 
-     *  Trivial specialization for SmartRefVector
+    /** Trivial specialization for SmartRefVector
      *  (a'la Python's lists)
      *  @see SmartRefVector
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -297,8 +287,7 @@ namespace LoKi
       return stream  ;
     } ;
     
-    /** @fn toStream 
-     *  Trivial specialization for SmartRef
+    /** Trivial specialization for SmartRef
      *  @see SmartRef
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-02-16
@@ -313,8 +302,7 @@ namespace LoKi
       return stream ;
     } ;
     
-    /** @fn toString
-     *  Generic conversion to the string
+    /** Generic conversion to the string
      *  @see LoKi::Print::toStream
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-02-16

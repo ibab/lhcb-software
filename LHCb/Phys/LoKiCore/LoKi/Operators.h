@@ -1,8 +1,11 @@
-// $Id: Operators.h,v 1.4 2006-10-11 12:14:16 ibelyaev Exp $
+// $Id: Operators.h,v 1.5 2007-02-26 13:13:09 cattanem Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2006/10/11 12:14:16  ibelyaev
+//  optimize the operators
+//
 // Revision 1.3  2006/05/02 14:29:10  ibelyaev
 //  censored
 //
@@ -35,8 +38,7 @@
 
 
 // ============================================================================
-/** @fn operator&& 
- *  inline construction of logical 'AND'
+/** inline construction of logical 'AND'
  *  @code 
  *  typedef Predicate<SomeType>     Pred ;
  *  typedef PredicateFromPredicate  PfP  ;
@@ -57,8 +59,7 @@ operator&&  ( const  LoKi::Predicate<TYPE>& fun1 ,
 // ============================================================================
 
 // ============================================================================
-/** @fn operator& 
- *  it is an alias for <tt>operator&&</tt> method 
+/** it is an alias for <tt>operator&&</tt> method 
  */
 template <class TYPE>
 inline   LoKi::PredicateFromPredicate<TYPE> 
@@ -68,8 +69,7 @@ operator&   ( const  LoKi::Predicate<TYPE>& fun1 ,
 // ============================================================================
 
 // ============================================================================
-/** @fn operator&& 
- *  inline construction of logical 'AND' 
+/** inline construction of logical 'AND' 
  *  @see LoKi::And
  *  @return functor
  */
@@ -81,8 +81,7 @@ operator&&  ( const  LoKi::Predicate<TYPE>& fun  ,
 // ============================================================================
 
 // ============================================================================
-/** @fn operator& 
- *  it is an alias for <tt>operator&&</tt> method 
+/** it is an alias for <tt>operator&&</tt> method 
  */
 template <class TYPE>
 inline   LoKi::PredicateFromPredicate<TYPE> 
@@ -92,8 +91,7 @@ operator&   ( const  LoKi::Predicate<TYPE>& fun  ,
 // ============================================================================
 
 // ============================================================================
-/** @fn operator&& 
- *  inline construction of logical 'AND' 
+/** inline construction of logical 'AND' 
  *  @see LoKi::And
  *  @return functor
  */
@@ -105,8 +103,7 @@ operator&&  ( const  bool                   val  ,
 // ============================================================================
 
 // ============================================================================
-/** @fn operator& 
- *  it is an alias for <tt>operator&&</tt> method 
+/** it is an alias for <tt>operator&&</tt> method 
  */
 template <class TYPE>
 inline   LoKi::PredicateFromPredicate<TYPE> 
@@ -117,8 +114,7 @@ operator&   ( const  bool                   val  ,
 
 
 // ============================================================================
-/** @fn operator||
- *  inline construction of logical 'OR' 
+/** inline construction of logical 'OR' 
  *  @code 
  *  typedef Predicate<SomeType>     Pred ;
  *  typedef PredicateFromPredicate  PfP  ;
@@ -139,8 +135,7 @@ operator|| ( const  LoKi::Predicate<TYPE>& fun1 ,
 // ============================================================================
 
 // ============================================================================
-/** @fn operator|
- *  it is an alias for <tt>operator|</tt> method 
+/** it is an alias for <tt>operator|</tt> method 
  */
 template <class TYPE>
 inline   LoKi::PredicateFromPredicate<TYPE> 
@@ -150,8 +145,7 @@ operator|  ( const  LoKi::Predicate<TYPE>& fun1 ,
 // ============================================================================
 
 // ============================================================================
-/** @fn operator|| 
- *  inline construction of logical 'OR' 
+/** inline construction of logical 'OR' 
  *  @see LoKi::BooleanConstant
  *  @see LoKi::Or
  *  @return functor
@@ -164,8 +158,7 @@ operator||  ( const  LoKi::Predicate<TYPE>& fun  ,
 // ============================================================================
 
 // ============================================================================
-/** @fn operator|
- *  it is an alias for <tt>operator|</tt> method 
+/** it is an alias for <tt>operator|</tt> method 
  */
 template <class TYPE>
 inline   LoKi::PredicateFromPredicate<TYPE> 
@@ -175,8 +168,7 @@ operator|   ( const  LoKi::Predicate<TYPE>& fun  ,
 // ============================================================================
 
 // ============================================================================
-/** @fn operator|| 
- *  inline construction of logical 'OR' 
+/** inline construction of logical 'OR' 
  *  @see LoKi::Or
  *  @see LoKi::BooleanConstant
  *  @return functor
@@ -189,8 +181,7 @@ operator|| ( const  bool                   val  ,
 // ============================================================================
 
 // ============================================================================
-/** @fn operator|
- *  it is an alias for <tt>operator|</tt> method 
+/** it is an alias for <tt>operator|</tt> method 
  */
 template <class TYPE>
 inline   LoKi::PredicateFromPredicate<TYPE> 
@@ -200,8 +191,7 @@ operator|  ( const  bool                   val  ,
 // ============================================================================
 
 // ============================================================================
-/** @fn operator!
- *  it is an alias for <tt>operator!</tt> method 
+/** it is an alias for <tt>operator!</tt> method 
  */
 template <class TYPE>
 inline   LoKi::PredicateFromPredicate<TYPE> 
@@ -210,8 +200,7 @@ operator!  ( const  LoKi::Predicate<TYPE>& fun  )
 // ============================================================================
 
 // ============================================================================
-/** @fn operator<
- *  inline construction of operator "<" 
+/** inline construction of operator "<" 
  *  @code 
  *  typedef Function<SomeType>     Func ;
  *  typedef PredicateFromPredicate PfP  ;
@@ -232,8 +221,7 @@ operator<  ( const  LoKi::Function<TYPE>&  fun1 ,
 // ============================================================================
 
 // ============================================================================
-/** @fn operator<
- *  inline construction of operator "<" 
+/**inline construction of operator "<" 
  *  @see LoKi::Less
  *  @see LoKi::Constant
  *  @return functor
@@ -246,8 +234,7 @@ operator<  ( const  LoKi::Function<TYPE>&  fun  ,
 // ============================================================================
 
 // ============================================================================
-/** @fn operator<
- *  inline construction of operator "<" 
+/** inline construction of operator "<" 
  *  @see LoKi::Less
  *  @see LoKi::Constant
  *  @return functor
@@ -260,8 +247,7 @@ operator<  ( const  double                 val  ,
 // ============================================================================
 
 // ============================================================================
-/** @fn operator>
- *  inline construction of operator ">" 
+/** inline construction of operator ">" 
  *  @code 
  *  typedef Function<SomeType>     Func ;
  *  typedef PredicateFromPredicate PfP  ;
@@ -282,8 +268,7 @@ operator>  ( const  LoKi::Function<TYPE>&  fun1 ,
 // ============================================================================
 
 // ============================================================================
-/** @fn operator>
- *  inline construction of operator ">" 
+/** inline construction of operator ">" 
  *  @see LoKi::Less
  *  @see LoKi::Constant
  *  @return functor
@@ -296,8 +281,7 @@ operator>  ( const  LoKi::Function<TYPE>&  fun  ,
 // ============================================================================
 
 // ============================================================================
-/** @fn operator>
- *  inline construction of operator ">" 
+/** inline construction of operator ">" 
  *  @see LoKi::Less
  *  @see LoKi::Constant
  *  @return functor
@@ -310,8 +294,7 @@ operator>  ( const  double                 val  ,
 // ============================================================================
 
 // ============================================================================
-/** @fn operator==
- *  inline construction of operator "==" 
+/** inline construction of operator "==" 
  *  @code 
  *  typedef Function<SomeType>     Func ;
  *  typedef PredicateFromPredicate PfP  ;
@@ -332,8 +315,7 @@ operator== ( const LoKi::Function<TYPE>&  fun1 ,
 // ============================================================================
 
 // ============================================================================
-/** @fn operator==
- *  inline construction of operator "==" 
+/** inline construction of operator "==" 
  *  @see LoKi::Equal
  *  @see LoKi::Constant
  *  @return functor
@@ -346,8 +328,7 @@ operator== ( const LoKi::Function<TYPE>&  fun  ,
 // ============================================================================
 
 // ============================================================================
-/** @fn operator==
- *  inline construction of operator "==" 
+/** inline construction of operator "==" 
  *  @see LoKi::Equal
  *  @see LoKi::Constant
  *  @return functor
@@ -360,8 +341,7 @@ operator== ( const double                 val  ,
 // ============================================================================
 
 // ============================================================================
-/** @fn operator<=
- *  inline construction of operator "<=" 
+/** inline construction of operator "<=" 
  *  @see LoKi::LessOrEqual
  *  @return functor
  */
@@ -373,8 +353,7 @@ operator<= ( const  LoKi::Function<TYPE>&  fun1 ,
 // ============================================================================
 
 // ============================================================================
-/** @fn operator<=
- *  inline construction of operator "<=" 
+/** inline construction of operator "<=" 
  *  @code 
  *  typedef Function<SomeType>     Func ;
  *  typedef PredicateFromPredicate PfP  ;
@@ -396,8 +375,7 @@ operator<= ( const  LoKi::Function<TYPE>&  fun  ,
 // ============================================================================
 
 // ============================================================================
-/** @fn operator<=
- *  inline construction of operator "<=" 
+/** inline construction of operator "<=" 
  *  @see LoKi::LessOrEqual
  *  @see LoKi::Constant
  *  @return functor
@@ -410,8 +388,7 @@ operator<= ( const  double                 val  ,
 // ============================================================================
 
 // ============================================================================
-/** @fn operator>=
- *  inline construction of operator ">=" 
+/** inline construction of operator ">=" 
  *  @code 
  *  typedef Function<SomeType>     Func ;
  *  typedef PredicateFromPredicate PfP  ;
@@ -432,8 +409,7 @@ operator>= ( const  LoKi::Function<TYPE>&  fun1 ,
 // ============================================================================
 
 // ============================================================================
-/** @fn operator>=
- *  inline construction of operator ">=" 
+/** inline construction of operator ">=" 
  *  @see LoKi::LessOrEqual
  *  @return functor
  */
@@ -445,8 +421,7 @@ operator>= ( const  LoKi::Function<TYPE>&  fun  ,
 // ============================================================================
 
 // ============================================================================
-/** @fn operator>=
- *  inline construction of operator ">=" 
+/** inline construction of operator ">=" 
  *  @see LoKi::LessOrEqual
  *  @return functor
  */
@@ -458,8 +433,7 @@ operator>= ( const  double                 val  ,
 // ============================================================================
 
 // ============================================================================
-/** @fn operator!=
- *  inline construction of operator "!=" 
+/** inline construction of operator "!=" 
  *  @code 
  *  typedef Function<SomeType>     Func ;
  *  typedef PredicateFromPredicate PfP  ;
@@ -481,8 +455,7 @@ operator!= ( const LoKi::Function<TYPE>&  fun1 ,
 // ============================================================================
 
 // ============================================================================
-/** @fn operator!=
- *  inline construction of operator "!=" 
+/** inline construction of operator "!=" 
  *  @see LoKi::Equal
  *  @see LoKi::Not
  *  @see LoKi::Constant
@@ -496,8 +469,7 @@ operator!= ( const LoKi::Function<TYPE>&  fun  ,
 // ============================================================================
 
 // ============================================================================
-/** @fn operator!=
- *  inline construction of operator "!=" 
+/** inline construction of operator "!=" 
  *  @see LoKi::Equal
  *  @see LoKi::Not
  *  @see LoKi::Constant
@@ -511,8 +483,7 @@ operator!= ( const double                 val  ,
 // ============================================================================
 
 // ============================================================================
-/** @fn operator+
- *  inline construction of operator "+" 
+/** inline construction of operator "+" 
  *  @code 
  *  typedef Function<SomeType>     Func ;
  *  typedef FunctionFromFunction   FfF  ;
@@ -533,8 +504,7 @@ operator+ ( const LoKi::Function<TYPE>&  fun1 ,
 // ============================================================================
 
 // ============================================================================
-/** @fn operator+
- *  inline construction of operator "+" 
+/** inline construction of operator "+" 
  *  @see LoKi::Plus
  *  @see LoKi::Constant
  *  @return functor
@@ -547,8 +517,7 @@ operator+ ( const LoKi::Function<TYPE>&  fun  ,
 // ============================================================================
 
 // ============================================================================
-/** @fn operator+
- *  inline construction of operator "+" 
+/** inline construction of operator "+" 
  *  @see LoKi::Plus
  *  @see LoKi::Constant
  *  @return functor
@@ -561,8 +530,7 @@ operator+ ( const double                 val  ,
 // ============================================================================
 
 // ============================================================================
-/** @fn operator-
- *  inline construction of operator "-" 
+/** inline construction of operator "-" 
  *  @code 
  *  typedef Function<SomeType>     Func ;
  *  typedef FunctionFromFunction   FfF  ;
@@ -583,8 +551,7 @@ operator- ( const LoKi::Function<TYPE>&  fun1 ,
 // ============================================================================
 
 // ============================================================================
-/** @fn operator-
- *  inline construction of operator "-" 
+/** inline construction of operator "-" 
  *  @see LoKi::Minus
  *  @see LoKi::Constant
  *  @return functor
@@ -597,8 +564,7 @@ operator- ( const LoKi::Function<TYPE>&  fun  ,
 // ============================================================================
 
 // ============================================================================
-/** @fn operator-
- *  inline construction of operator "-" 
+/** inline construction of operator "-" 
  *  @see LoKi::Minus
  *  @see LoKi::Constant
  *  @return functor
@@ -611,8 +577,7 @@ operator- ( const double                 val  ,
 // ============================================================================
 
 // ============================================================================
-/** @fn operator/
- *  inline construction of operator "/" 
+/** inline construction of operator "/" 
  *  @code 
  *  typedef Function<SomeType>     Func ;
  *  typedef FunctionFromFunction   FfF  ;
@@ -633,8 +598,7 @@ operator/ ( const LoKi::Function<TYPE>&  fun1 ,
 // ============================================================================
 
 // ============================================================================
-/** @fn operator/
- *  inline construction of operator "/" 
+/** inline construction of operator "/" 
  *  @see LoKi::Divide
  *  @see LoKi::Constant
  *  @return functor
@@ -647,8 +611,7 @@ operator/ ( const LoKi::Function<TYPE>&  fun  ,
 // ============================================================================
 
 // ============================================================================
-/** @fn operator/
- *  inline construction of operator "/" 
+/** inline construction of operator "/" 
  *  @see LoKi::Divide
  *  @see LoKi::Constant
  *  @return functor
@@ -661,8 +624,7 @@ operator/ ( const double                 val  ,
 // ============================================================================
 
 // ============================================================================
-/** @fn operator*
- *  inline construction of operator "*" 
+/** inline construction of operator "*" 
  *  @code 
  *  typedef Function<SomeType>     Func ;
  *  typedef FunctionFromFunction   FfF  ;
@@ -683,8 +645,7 @@ operator* ( const LoKi::Function<TYPE>&  fun1 ,
 // ============================================================================
 
 // ============================================================================
-/** @fn operator*
- *  inline construction of operator "*" 
+/** inline construction of operator "*" 
  *  @see LoKi::Multiply
  *  @see LoKi::Constant
  *  @return functor
@@ -697,8 +658,7 @@ operator* ( const LoKi::Function<TYPE>&  fun  ,
 // ============================================================================
 
 // ============================================================================
-/** @fn operator*
- *  inline construction of operator "*" 
+/** inline construction of operator "*" 
  *  @see LoKi::Multiply
  *  @see LoKi::Constant
  *  @return functor

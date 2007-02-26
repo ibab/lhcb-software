@@ -1,8 +1,11 @@
-// $Id: Range.h,v 1.8 2006-11-25 19:12:56 ibelyaev Exp $
+// $Id: Range.h,v 1.9 2007-02-26 13:13:09 cattanem Exp $
 // ============================================================================
-// $CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $
+// $CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.9 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2006/11/25 19:12:56  ibelyaev
+//  improve Doxygen
+//
 // Revision 1.7  2006/10/27 13:34:18  ibelyaev
 //  v1r7p1: fix warnings for SLC4 platform
 //
@@ -41,8 +44,7 @@ namespace LoKi
 {  
   namespace Range_Local 
   {
-    /** @fn rangeException
-     *  Helpful function to throw an out-of-range exception for class Range_
+    /** Helpful function to throw an out-of-range exception for class Range_
      *  @param index invalid index
      *  @param size  range size 
      */

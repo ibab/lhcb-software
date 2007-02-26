@@ -1,6 +1,6 @@
-// $Id: WrongMass.h,v 1.4 2006-11-25 19:12:56 ibelyaev Exp $
+// $Id: WrongMass.h,v 1.5 2007-02-26 13:13:09 cattanem Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, verision $Revision: 1.4 $
+// CVS tag $Name: not supported by cvs2svn $, verision $Revision: 1.5 $
 // ============================================================================
 #ifndef LOKI_WRONGMASS_H 
 #define LOKI_WRONGMASS_H 1
@@ -30,17 +30,10 @@ namespace LHCb { class ParticleID ; } ;
 
 namespace LoKi
 {
-  /** @namespace LoKi::Kinematics LoKi/WrongMass.h
-   *  function for dealing with "wrong  mass hypothesis"
-   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-   *  @date 2006-03-08
-   */
   namespace Kinematics 
   {
 
-    /** @fn wrongMass 
-     * 
-     *  Use a wrong mass-hypothesis for the given 4-momemtum
+    /** Use a wrong mass-hypothesis for the given 4-momemtum
      *  @param v vector of 4-momentum 
      *  @param m mass to be used 
      *  @return the 4-momneum with "wrong" mass hypothesis 
@@ -58,9 +51,7 @@ namespace LoKi
       return v0 ; 
     } ;
     
-    /** @fn wrongMass 
-     * 
-     *  Use a wrong mass-hypothesis for the given 4-momentum 
+    /** Use a wrong mass-hypothesis for the given 4-momentum 
      *  @param v    vector of 4-momentum 
      *  @param name particle name  
      *  @return the 4-momentum with "wrong" mass hypothesis 
@@ -73,9 +64,7 @@ namespace LoKi
     ( const LoKi::LorentzVector& v    , 
       const std::string&         name ) ;
     
-    /** @fn wrongMass 
-     * 
-     *  Use a wrong mass-hypothesis for the given 4-momentum 
+    /** Use a wrong mass-hypothesis for the given 4-momentum 
      *  @param v    vector of 4-momentum 
      *  @param name particle name  
      *  @return the 4-momentum with "wrong" mass hypothesis 
@@ -88,9 +77,7 @@ namespace LoKi
     ( const LoKi::LorentzVector& v    , 
       const LHCb::ParticleID&    pid  ) ;
 
-    /** @fn wrongMass 
-     * 
-     *  Use a wrong mass-hypothesis for the given 4-momenta 
+    /** Use a wrong mass-hypothesis for the given 4-momenta 
      *  to evaluate the effective invarinat mass 
      *
      *  @param v1 the first 4-momentum 
@@ -111,9 +98,7 @@ namespace LoKi
     { return mass ( wrongMass ( v1 , m1 ) , 
                     wrongMass ( v2 , m2 ) ) ; }
 
-    /** @fn wrongMass 
-     * 
-     *  Use a wrong mass-hypothesis for the given 4-momenta 
+    /** Use a wrong mass-hypothesis for the given 4-momenta 
      *  to evaluate the effective invarinat mass 
      *
      *  @param v1    the first 4-momentum 
@@ -132,9 +117,7 @@ namespace LoKi
       const LoKi::LorentzVector& v2    , 
       const std::string&         name2 ) ;
 
-    /** @fn wrongMass 
-     * 
-     *  Use a wrong mass-hypothesis for the given 4-momenta 
+    /** Use a wrong mass-hypothesis for the given 4-momenta 
      *  to evaluate the effective invarinat mass 
      *
      *  @param v1    the first 4-momentum 

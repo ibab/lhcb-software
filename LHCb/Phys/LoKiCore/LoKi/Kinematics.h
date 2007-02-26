@@ -1,8 +1,11 @@
-// $Id: Kinematics.h,v 1.10 2006-11-25 19:12:55 ibelyaev Exp $
+// $Id: Kinematics.h,v 1.11 2007-02-26 13:13:08 cattanem Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.10 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.11 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.10  2006/11/25 19:12:55  ibelyaev
+//  improve Doxygen
+//
 // Revision 1.9  2006/05/02 14:29:09  ibelyaev
 //  censored
 //
@@ -15,11 +18,11 @@
 // ============================================================================
 // Include files
 // ============================================================================
-// LHCbDefinitions 
+// Math Definitions 
 // ============================================================================
-#include "Kernel/Vector4DTypes.h"
-#include "Kernel/Vector3DTypes.h"
-#include "Kernel/Point3DTypes.h"
+#include "GaudiKernel/Vector4DTypes.h"
+#include "GaudiKernel/Vector3DTypes.h"
+#include "GaudiKernel/Point3DTypes.h"
 // ============================================================================
 
 // ============================================================================
@@ -62,8 +65,7 @@ namespace LoKi
    */
   namespace Kinematics 
   {
-    /** @fn euclidianNorm2 
-     *  simple function for evaluation of the euclidiam norm
+    /** simple function for evaluation of the euclidiam norm
      *  for LorentzVectors 
      *  (E**2+Px**2+Py**2+Pz**2)
      *  @param vct the vector
@@ -74,8 +76,7 @@ namespace LoKi
     double euclidianNorm2 
     ( const LoKi::LorentzVector& vct ) ;
 
-    /** @fn euclidianNorm 
-     *  simple function for evaluation of the euclidiam norm
+    /** simple function for evaluation of the euclidiam norm
      *  for LorentzVectors 
      *  sqrt(E**2+Px**2+Py**2+Pz**2)
      *  @param vct the vector
@@ -86,8 +87,7 @@ namespace LoKi
     double euclidianNorm
     ( const LoKi::LorentzVector& vct ) ;
 
-    /** @fn delta2euclidian 
-     *  simple function for evaluation of the square of 
+    /** simple function for evaluation of the square of 
      *  the euclidian distance inbetwee 2 LorentzVectors 
      *  (DeltaE**2+DeltaPx**2+DeltaPy**2+DeltaPz**2)
      *  @param vct1 the first vector
@@ -100,8 +100,7 @@ namespace LoKi
     ( const LoKi::LorentzVector& vct1 , 
       const LoKi::LorentzVector& vct2 ) ;
     
-    /** @fn transverseMomentumDir 
-     *  simple function which evaluates the transverse 
+    /** simple function which evaluates the transverse 
      *  momentum with respect a certain 3D-direction
      *  @param mom the momentum
      *  @param dir the direction
@@ -113,8 +112,7 @@ namespace LoKi
     ( const LoKi::LorentzVector& mom , 
       const LoKi::ThreeVector&   dir ) ;
     
-    /** @fn mass 
-     *  trivial function to evaluate the mass of 4-vector 
+    /** trivial function to evaluate the mass of 4-vector 
      *  @param mom lorenz vector
      *  @return invariant mass 
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -123,8 +121,7 @@ namespace LoKi
     inline double mass 
     ( const LoKi::LorentzVector& mom ) { return mom.M() ; }
     
-    /** @fn mass 
-     *  trivial function to evaluate the mass of 4-vectors  
+    /** trivial function to evaluate the mass of 4-vectors  
      *  @param v1  the first lorenz vector 
      *  @param v2  the second lorenz vector
      *  @return invariant mass 
@@ -135,8 +132,7 @@ namespace LoKi
     ( const LoKi::LorentzVector& v1 , 
       const LoKi::LorentzVector& v2 ) { return mass ( v1 + v2 ) ; }
     
-    /** @fn mass 
-     *  trivial function to evaluate the mass of 4-vectors  
+    /** trivial function to evaluate the mass of 4-vectors  
      *  @param v1  the first  lorenz vector 
      *  @param v2  the second lorenz vector
      *  @param v3  the third  lorenz vector
@@ -155,8 +151,7 @@ namespace LoKi
       return mass ( v0 ) ; 
     } ;
     
-    /** @fn mass 
-     *  trivial function to evaluate the mass of 4-vectors  
+    /** trivial function to evaluate the mass of 4-vectors  
      *  @param v1  the first  lorenz vector 
      *  @param v2  the second lorenz vector
      *  @param v3  the third  lorenz vector
@@ -188,6 +183,7 @@ namespace LoKi
      *  "const LHCb::Particle*","const LHCb::MCParticle*" or 
      *  "const HepMC::GenParticle*" could be used.
      *
+     *  @code 
      *  const LHCb::Vertex*             vertex = ... ;
      *  const LHCb::MCParticles*        mcps   = ... ; 
      *  const LHCb::Particles*          ps     = ... ; 
@@ -257,6 +253,7 @@ namespace LoKi
      *  "const LHCb::Particle*","const LHCb::MCParticle*" or 
      *  "const HepMC::GenParticle*" could be used.
      *
+     *  @code 
      *  const LHCb::Vertex*             vertex = ... ;
      *
      *  // get the 4-mometum of all charged daughter particle at  vertex:
@@ -334,9 +331,7 @@ namespace LoKi
       const LoKi::LorentzVector& result = LoKi::LorentzVector() ) 
     { return addMomenta ( seq.begin() , seq.end() , result ) ; };
     
-    /** @fn decayAngle 
-     *  
-     *  This routine returns the cosine angle theta 
+    /** This routine returns the cosine angle theta 
      *  The decay angle calculated  is that between 
      *  the flight direction of the daughter neson, "D",
      *  in the rest frame of "M" (the parent of "D"), 
@@ -356,8 +351,7 @@ namespace LoKi
     ( const LoKi::LorentzVector& D , 
       const LoKi::LorentzVector& M ) ;
 
-    /** @fn decayAngle 
-     *  This routine returns the cosine angle theta 
+    /** This routine returns the cosine angle theta 
      *  The decay angle calculated  is that between 
      *  the flight direction of the daughter neson, "D",
      *  in the rest frame of "Q" (the parent of "D"), 
@@ -381,8 +375,7 @@ namespace LoKi
       const LoKi::LorentzVector& Q ,
       const LoKi::LorentzVector& D ) ;
     
-//     /** @fn transversityAngle 
-//      *  This routine evaluates the cosine of "transversity angle", 
+//     /** This routine evaluates the cosine of "transversity angle", 
 //      *  useful e.g. to disantangle the different partial waves in 
 //      *  0 -> 1 + 1 decay (e.g. Bs -> J/psi Phi) 
 //      *  
@@ -405,8 +398,7 @@ namespace LoKi
 //       const LoKi::LorentzVector& p1 , 
 //       const LoKi::LorentzVector& p2 ) ;
     
-//     /** @fn forwardBackwardAngle
-//      *  This routine evaluated the angle theta_FB
+//     /** This routine evaluated the angle theta_FB
 //      *  used e.g. for evaluation of forward-backward 
 //      *  asymmetry for decay B -> K* mu+ mu- 
 //      *  The angle calculated is that 

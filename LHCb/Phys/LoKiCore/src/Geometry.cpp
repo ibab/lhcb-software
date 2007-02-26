@@ -1,19 +1,22 @@
-// $Id: Geometry.cpp,v 1.5 2006-07-12 11:27:25 cattanem Exp $
+// $Id: Geometry.cpp,v 1.6 2007-02-26 13:13:09 cattanem Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2006/07/12 11:27:25  cattanem
+// use SMatrix::Inverse instead of Sinverse
+//
 // Revision 1.4  2006/05/02 14:29:10  ibelyaev
 //  censored
 //
 // ============================================================================
 // Include files 
 // ============================================================================
-// LHCbDefinitions
+// Math Definitions
 // ============================================================================
-#include "Kernel/Point3DTypes.h"
-#include "Kernel/Vector3DTypes.h"
-#include "Kernel/GenericVectorTypes.h"
+#include "GaudiKernel/Point3DTypes.h"
+#include "GaudiKernel/Vector3DTypes.h"
+#include "GaudiKernel/GenericVectorTypes.h"
 // ============================================================================
 // LoKiCore 
 // ============================================================================
@@ -41,8 +44,7 @@
 // ============================================================================
 
 // ============================================================================
-/** @fn distance 
- *  The trivial function, which evaluated the distance 
+/** The trivial function, which evaluated the distance 
  *  between the point and the line. 
  *
  *  The line is parameterized with the point 'p0' and the 
@@ -78,8 +80,7 @@ double LoKi::Geometry::distance
 // ============================================================================
 
 // ============================================================================
-/** @fn distance 
- *  The trivial function, which evaluates the distance 
+/** The trivial function, which evaluates the distance 
  *  between two lines 
  *  Each line is parameterized with the point at the line 
  *  and the direction vectors
@@ -150,9 +151,7 @@ double LoKi::Geometry::distance
 // ============================================================================
 
 // ============================================================================
-/** @fn chi2 
- *  
- *  The trivial function, 
+/** The trivial function, 
  *  which evaluates the distance between two points 
  *  in "chi2" units 
  *  
@@ -198,9 +197,7 @@ StatusCode LoKi::Geometry::chi2
 // ============================================================================
 
 // ============================================================================
-/** @fn chi2 
- *  
- *  The trivial function, 
+/** The trivial function, 
  *  which evaluates the distance between two points 
  *  in "chi2" units 
  *  

@@ -1,8 +1,11 @@
-// $Id: Release.h,v 1.3 2006-11-25 19:12:56 ibelyaev Exp $
+// $Id: Release.h,v 1.4 2007-02-26 13:13:09 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2006/11/25 19:12:56  ibelyaev
+//  improve Doxygen
+//
 // Revision 1.2  2006/05/02 14:29:10  ibelyaev
 //  censored
 //
@@ -75,8 +78,7 @@ namespace LoKi
     }
   } ;
   
-  /** @fn release
-   *  helper function to invoke properly TYPE::release method 
+  /** helper function to invoke properly TYPE::release method 
    *  avoiding the template ambiguity for GCC compiler 
    *
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu

@@ -1,8 +1,11 @@
-// $Id: select.h,v 1.4 2006-11-25 19:12:56 ibelyaev Exp $
+// $Id: select.h,v 1.5 2007-02-26 13:13:09 cattanem Exp $
 // ============================================================================
-// CVS Tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $
+// CVS Tag $Name: not supported by cvs2svn $ , version $Revision: 1.5 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2006/11/25 19:12:56  ibelyaev
+//  improve Doxygen
+//
 // Revision 1.3  2006/05/02 14:29:10  ibelyaev
 //  censored
 //
@@ -31,9 +34,7 @@
 
 namespace LoKi
 {  
-  /** @fn select 
-   *
-   *  helpful utility to select object from the container
+  /** helpful utility to select object from the container
    *  to another container. 
    *  Indeed it is missing <tt>std::copy_if</tt> algorithm from STL
    *

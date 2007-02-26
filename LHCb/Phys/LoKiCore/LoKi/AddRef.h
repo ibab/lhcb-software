@@ -1,8 +1,11 @@
-// $Id: AddRef.h,v 1.2 2006-05-02 14:29:09 ibelyaev Exp $
+// $Id: AddRef.h,v 1.3 2007-02-26 13:13:08 cattanem Exp $
 // ============================================================================
-// CVS tag $NAme:$, version $Revision: 1.2 $ 
+// CVS tag $NAme:$, version $Revision: 1.3 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/05/02 14:29:09  ibelyaev
+//  censored
+//
 // Revision 1.1  2006/03/14 18:56:59  ibelyaev
 //  v1r1 : add a lot of new utilities
 // 
@@ -69,8 +72,7 @@ namespace LoKi
     }
   } ;
   
-  /** @fn addRef
-   *  helper function to invoke properly TYPE::addRef method 
+  /** Helper function to invoke properly TYPE::addRef method 
    *  avoiding the template ambiguity for GCC compiler 
    *
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
