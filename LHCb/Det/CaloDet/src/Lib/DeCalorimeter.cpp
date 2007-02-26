@@ -1,4 +1,4 @@
-// $Id: DeCalorimeter.cpp,v 1.34 2007-02-22 23:17:18 odescham Exp $ 
+// $Id: DeCalorimeter.cpp,v 1.35 2007-02-26 21:51:03 odescham Exp $ 
 // ============================================================================
 #define  CALODET_DECALORIMETER_CPP 1
 // ============================================================================
@@ -747,6 +747,7 @@ StatusCode DeCalorimeter::buildMonitoringSystem( )  {
         led.addCaloRegion(area, fColLed,fRowLed,lColLed,lRowLed);
         led.setPin(pinId);        
         m_pins[pinId].addLed(ledId); // update CaloPin 
+        m_cells[pinId].addLed(ledId); // add the Led to the virtual pin cell
         // Hcal Leds can be distributed on 2 areas
         if( 0 <= area2 ){
           if( 1 != rLed*cLed ){
@@ -784,7 +785,6 @@ StatusCode DeCalorimeter::buildMonitoringSystem( )  {
            if ( valid( id ) ) {
              m_cells[id].addPin( pinId );
              m_cells[id].addLed( ledId );
-             m_cells[pinId].addLed( ledId); // add the Led to the virtual pin cell
              m_leds[ledId].addCell(id);  // update led            
              m_pins[pinId].addCell(id);  // update pin
            }
