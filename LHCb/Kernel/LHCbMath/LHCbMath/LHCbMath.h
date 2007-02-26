@@ -1,11 +1,11 @@
 
 //---------------------------------------------------------------------------------
-/** @file LHCbMath.h
+/** @file
  *
  *  Collection of math related functions for general use in LHCb
  *
  *  CVS Log :-
- *  $Id: LHCbMath.h,v 1.1 2006-12-15 13:42:59 cattanem Exp $
+ *  $Id: LHCbMath.h,v 1.2 2007-02-26 17:17:13 cattanem Exp $
  *
  *  @author Juan PALACIOS
  *  @date   2005-11-21
@@ -17,14 +17,11 @@
 
 // Include files
 
-/** @namespace LHCbMath LHCbMath.h LHCbMath/LHCbMath.h 
- *  
- *  Collection of math related functions for general use in LHCb
+/** Collection of math related functions for general use in LHCb
  *
  *  @author Marco Cattaneo
  *  @date   2004-03-02
  */
-
 namespace LHCbMath 
 {
   // Parameters for numerical calculations (M.Needham)

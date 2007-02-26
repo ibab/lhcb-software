@@ -4,7 +4,7 @@
 #============================================================================
 
 package Kernel/LHCbMath
-version v2r0
+version v2r1
 
 #============================================================================
 # Structure, i.e. directories to process. 
@@ -21,8 +21,8 @@ use GSL             v*      LCG_Interfaces
 
 apply_pattern install_more_includes more=LHCbMath
 
-macro LHCbMath_linkopts  " -L$(ROOT_home)/lib  -lMathCore -lSmatrix " \
-         WIN32  " /LIBPATH:$(ROOT_home)/lib libMathCore.lib libSmatrix.lib "
+macro LHCbMath_linkopts  " -L$(ROOT_home)/lib  -lMathCore " \
+                  WIN32  " /LIBPATH:$(ROOT_home)/lib libMathCore.lib "
 
 # ================= constituens: linker library ===============================
 library             LHCbMath    *.cpp

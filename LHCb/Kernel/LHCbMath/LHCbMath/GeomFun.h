@@ -1,4 +1,4 @@
-// $Id: GeomFun.h,v 1.4 2006-10-27 15:34:42 jpalac Exp $
+// $Id: GeomFun.h,v 1.5 2007-02-26 17:17:13 cattanem Exp $
 #ifndef LHCBMATH_GEOMFUN_H
 #define LHCBMATH_GEOMFUN_H 1
 
@@ -65,7 +65,7 @@ namespace Gaudi{
      *  @date    01/05/2006
      *  @param   plane0:    aPlane to be intersected 
      *  @param   plane1:    aPlane to be intersected
-     *  @param   plane3:    aPlane to be intersected
+     *  @param   plane2:    aPlane to be intersected
      *  @param   intersect: aPoint, point of intersection between three planes
      *  @return  true if intersection exists, false if any two planes parallel
      *  @todo test for any two planes being parallel.
@@ -117,11 +117,9 @@ namespace Gaudi{
      *  @author  Juan Palacios Juan.Palacios@cern.ch
      *  @date    01/05/2006
      *  @param   line0: first aLine in distance calculation
-     *  @param   line0: second aLine in distance calculation
+     *  @param   line1: second aLine in distance calculation
      *  @param   p0: closest point line0.beginPoint() + mu0 * line0.direction()
      *  @param   p1: closest point line1.beginPoint() + mu1 * line1.direction()
-     *  @param   mu0: line0 scalar definint p0
-     *  @param   mu1: line1 scalar definint p1
      *  @return  false if not numerically calculable
      */
     template <typename aLine, typename aPoint>

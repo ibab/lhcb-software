@@ -1,14 +1,4 @@
-// $Id: MatrixUtils.h,v 1.1 2006-05-31 13:38:31 jpalac Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.2  2006/05/30 09:44:37  jpalac
-// *** empty log message ***
-//
-// Revision 1.1  2006/05/26 10:54:02  ibelyaev
-//  add BlindVertexFitter
-// 
+// $Id: MatrixUtils.h,v 1.2 2007-02-26 17:17:13 cattanem Exp $
 // ============================================================================
 #ifndef MATRIXUTILS_H 
 #define MATRIXUTILS_H 1
@@ -47,8 +37,8 @@ namespace Gaudi
      *
      *  @endcode 
      *  
-     *  @param source (input)  3D-point
-     *  @param dest   (output) Linear Algebra vector 
+     *  @param[in]  source 3D-point
+     *  @param[out] dest   Linear Algebra vector 
      *  @return linear algebra vector 
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-05-24
@@ -378,8 +368,8 @@ namespace Gaudi
      *  Gaudi::Math::setToUnit ( mtrx2 , 2.0 ) ;
      *  @endcode 
      * 
-     *  @param m  (input/output) matrix to be modified 
-     *  @param v  (input) value to be used as diagonal elements
+     *  @param[in,out] m  matrix to be modified 
+     *  @param[in] value  value to be used as diagonal elements
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-05-24
      */  
@@ -716,7 +706,6 @@ namespace Gaudi
     { return std::min_element( m.begin() , m.end() , cmp ) - m.begin() ; }
     /** find an index of the maximal element in the vector 
      *  @param m (input) vector to be studied
-     *  @param cmp comparison criteria
      *  @return the index of the maximal element 
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-05-24
@@ -728,7 +717,6 @@ namespace Gaudi
     { return std::max_element( m.begin() , m.end() ) - m.begin() ; }    
     /** find an index of the minimal element in the vector 
      *  @param m (input) vector to be studied
-     *  @param cmp comparison criteria
      *  @return the index of the minimal element 
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-05-24
@@ -796,7 +784,6 @@ namespace Gaudi
     { return ind_min_element( m , _AbsCompare<T>() ) ; } ;
     /** find an index of the element with maximal absolute value
      *  @param m (input) vector to be studied
-     *  @param cmp comparison criteria
      *  @return the index of the element with the maximal absolute value 
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-05-24
@@ -808,7 +795,6 @@ namespace Gaudi
     { return ind_max_element ( m , _AbsCompare<T>() ) ; }    
     /** find an index of the element with minimal absolute value 
      *  @param m (input) vector to be studied
-     *  @param cmp comparison criteria
      *  @return the index of the element with minimal absolute value 
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-05-24

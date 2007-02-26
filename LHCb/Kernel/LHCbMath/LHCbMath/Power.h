@@ -32,7 +32,7 @@ namespace Gaudi
      *   
      *   const double result = Gaudi::Math::pow ( value , 10 ) ;
      *
-     *  @code 
+     *  @endcode 
      *
      *  The actual code is copied from 
      *     std::__cmath_power bits/cmath.tcc 

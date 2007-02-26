@@ -1,11 +1,11 @@
 
 //---------------------------------------------------------------------------------
-/** @file LineTypes.h
+/** @file
  *
  *  3D line typedefs
  *
  *  CVS Log :-
- *  $Id: LineTypes.h,v 1.1 2006-12-15 13:42:59 cattanem Exp $
+ *  $Id: LineTypes.h,v 1.2 2007-02-26 17:17:13 cattanem Exp $
  *
  *  @author Juan PALACIOS
  *  @date   2005-11-21
