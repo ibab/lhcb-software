@@ -1,4 +1,4 @@
-// $Id: DaVinciMCTools_load.cpp,v 1.19 2006-10-18 15:51:07 jpalac Exp $
+// $Id: DaVinciMCTools_load.cpp,v 1.20 2007-02-26 09:46:43 sposs Exp $
 // Include files 
 
 
@@ -32,6 +32,7 @@ DECLARE_FACTORY_ENTRIES(DaVinciMCTools) {
  /// @todo Restore PrintBackgroundCategory
 //  DECLARE_ALGORITHM( PrintBackgroundCategory ); 
   DECLARE_ALGORITHM( MCParticleLinkerMaker ); 
-
+  DECLARE_ALGORITHM( FilterToFixOppositeBFractions );
+  
 
 }
