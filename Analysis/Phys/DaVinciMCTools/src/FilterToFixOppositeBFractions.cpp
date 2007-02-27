@@ -1,4 +1,4 @@
-// $Id: FilterToFixOppositeBFractions.cpp,v 1.2 2007-02-26 18:28:55 sposs Exp $
+// $Id: FilterToFixOppositeBFractions.cpp,v 1.3 2007-02-27 10:20:13 sposs Exp $
 // Include files
 
 // from Gaudi
@@ -9,6 +9,20 @@
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : FilterToFixOppositeBFractions
+//
+// This Filter is created to fix the Bug2 observed on DC06 data
+// and reported by Patrick Robbe on the 13 feb 2007.
+// This bug affects the B composition of the opposite side. This filter will 
+// remove specific fraction of events where abs(BsigID) equal abs(BoppoID)
+// depending on events type.
+// It checks for signal B, using HepMC, looks for opposite B using the MC
+// originVertex() method. The case with more than 2 B's coming from the same
+// vertex is not handled for the time being.
+// To use it, add :
+// ApplicationMgr.DLLs += { "DaVinciMCTools" };
+// and create a sequence with all the algorithms that have to be processed 
+// each events. The FilterToFixOppositeBFractions has to be the first in the
+// list.
 //
 // 2007-02-22 : Stephane Poss
 //-----------------------------------------------------------------------------
@@ -150,15 +164,13 @@ StatusCode FilterToFixOppositeBFractions::execute() {
     }
     /// Look at event type :
     /// proceed only if evt type corresponds to buggy type
-    //if(!m_printevt){
     for(int i =0;i!=57;i++){
       if(m_et[i]==gene->evType()){
-	m_ievt=i;
-	m_evttype=true;
-	break;
+        m_ievt=i;
+        m_evttype=true;
+        break;
       }
     }
-    //}
     if(m_evttype){
       if(!m_printevt){
         info()<<"Event type corresponds to buggy type : Correction activated"
@@ -184,7 +196,6 @@ StatusCode FilterToFixOppositeBFractions::execute() {
         err() << "No MCParticles retrieved" << endreq;
         return StatusCode::FAILURE;
       }
-      //Get Event and Run numbers to initialize srand method.
       int evtn = evt->evtNumber();
       int runn = evt->runNumber();
       debug()<<"Event ="<<evtn<<"    Run="<<runn<<endreq;
@@ -284,31 +295,34 @@ StatusCode FilterToFixOppositeBFractions::finalize() {
 
 
   info() << "==> Finalize" << endmsg;
-  info() << "           Total evts = " <<m_coutevt<<endreq;
-  info() << "Total Same Opposite B = "
-         <<100.*m_coutSameB/m_coutevt<<"%"
+
+  info() << "   Event Type was :"<<m_et[m_ievt]<<endreq;
+  info() << "   Total evts Before any corrections= " <<m_coutevt<<endreq;
+  info() << " Fraction where opposite B ID = Signal B ID : "
+         <<r(100.*m_coutSameB/m_coutevt)<<" +/- "<<r(m_errBuBC)<<" %"
          <<endreq;
   info() << "        Total Bu oppo = "<<r(m_BuBC)<<" +/- "
-         <<r(m_errBuBC)<<"%"<<endreq;
+         <<r(m_errBuBC)<<" %"<<endreq;
   info() << "        Total Bd oppo = "<<r(m_BdBC)<<" +/- "
-         <<r(m_errBdBC)<<"%"<<endreq;
+         <<r(m_errBdBC)<<" %"<<endreq;
   info() << "        Total Bs oppo = "<<r(m_BsBC)<<" +/- "
-         <<r(m_errBsBC)<<"%"<<endreq;
+         <<r(m_errBsBC)<<" %"<<endreq;
   info() << "        Total Ot oppo = "<<r(m_OtBC)<<" +/- "
-         <<r(m_errOtBC)<<"%"<<endreq;
+         <<r(m_errOtBC)<<" %"<<endreq;
   info() << endreq;
   info() << "        Total rejected = "
-         <<100.*m_rejected/m_coutevt<<"%"<<endreq;
-  info() << "   Total evts After cut = "
+         <<r(100.*m_rejected/m_coutevt)<<" +/- "
+         <<r(errorp(m_rejected,m_coutevt))<<" %"<<endreq;
+  info() << "   Total evts After Correction = "
          <<m_coutevtAC<<endreq;
   info() << "        Total Bu oppo AC= "<<r(m_BuAC)<<" +/- "
-         <<r(m_errBuAC)<<"%"<<endreq;
+         <<r(m_errBuAC)<<" %"<<endreq;
   info() << "        Total Bd oppo AC= "<<r(m_BdAC)<<" +/- "
-         <<r(m_errBdAC)<<"%"<<endreq;
+         <<r(m_errBdAC)<<" %"<<endreq;
   info() << "        Total Bs oppo AC= "<<r(m_BsAC)<<" +/- "
-         <<r(m_errBsAC)<<"%"<<endreq;
+         <<r(m_errBsAC)<<" %"<<endreq;
   info() << "        Total Ot oppo AC= "<<r(m_OtAC)<<" +/- "
-         <<r(m_errOtAC)<<"%"<<endreq;
+         <<r(m_errOtAC)<<" %"<<endreq;
 
 
   return DVAlgorithm::finalize(); //=== For DC04, return StatusCode::SUCCESS;
