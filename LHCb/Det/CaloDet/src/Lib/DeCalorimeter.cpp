@@ -1,4 +1,4 @@
-// $Id: DeCalorimeter.cpp,v 1.35 2007-02-26 21:51:03 odescham Exp $ 
+// $Id: DeCalorimeter.cpp,v 1.36 2007-02-27 16:37:16 odescham Exp $ 
 // ============================================================================
 #define  CALODET_DECALORIMETER_CPP 1
 // ============================================================================
@@ -432,11 +432,11 @@ StatusCode DeCalorimeter::buildCards( )  {
 
   Condition* cond = condition( "CellsToCards" );
   if ( 0 == cond ) {
-    msg << MSG::ERROR << "No 'CellsToCards' condition" << endreq;  // SPD case
+    msg << MSG::INFO << "No 'CellsToCards' condition" << endreq;  // SPD case
     return StatusCode::SUCCESS;
   }
   if ( !cond->exists( "cards" ) ) {
-    msg << MSG::INFO << "No 'cards' parameters in 'CellsToCards' condition" << endreq;
+    msg << MSG::ERROR << "No 'cards' parameters in 'CellsToCards' condition" << endreq;
     return StatusCode::FAILURE;
   }
 
@@ -567,11 +567,11 @@ StatusCode DeCalorimeter::buildTell1s( )  {
   
   Condition* cond = condition( "CellsToCards" );
   if ( 0 == cond ) {
-    msg << MSG::WARNING << "No 'CellsToCards' condition" << endreq;  // SPD case
+    msg << MSG::INFO << "No 'CellsToCards' condition" << endreq;  // SPD case
     return StatusCode::SUCCESS;
   }
   if ( !cond->exists( "Tell1" ) ) {
-    msg << MSG::WARNING << "No 'Tell1' parameters in 'CellsToCards' condition" << endreq;
+    msg << MSG::INFO << "No 'Tell1' parameters in 'CellsToCards' condition" << endreq;
     return StatusCode::SUCCESS;
   }
   
@@ -632,7 +632,7 @@ StatusCode DeCalorimeter::buildMonitoringSystem( )  {
     return StatusCode::SUCCESS;
   }
   if ( !cond->exists( "PIN" ) ) {
-    msg << MSG::WARNING << "No 'PIN' parameters in 'Monitoring' condition" << endreq;
+    msg << MSG::ERROR << "No 'PIN' parameters in 'Monitoring' condition" << endreq;
     return StatusCode::FAILURE;
   }
 
