@@ -5,10 +5,10 @@ branches doc cmt
 
 # LHCb Event libraries
 
-use EventBase   v2r0p1  Event
-use MCEvent     v2r0p1  Event
+use EventBase   v2r1    Event
+use MCEvent     v2r1    Event
 use DigiEvent   v2r1    Event
-use RecEvent    v2r1    Event
+use RecEvent    v2r2    Event
 use L0Event     v16r1   Event
 use PhysEvent   v11r1   Event
 use DAQEvent    v7r1    Event
