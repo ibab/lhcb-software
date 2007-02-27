@@ -6,6 +6,7 @@
 #include "MuonPhyChannelInput.h"    
 #include "MuonPhysicalChannel.h" 
 #include "MuonPhysicalChannelOutput.h" 
+#include "MuonCardiacChannelOutput.h"
 
 template<class T> 
 MuonDigitizationData<T>::MuonDigitizationData(const std::string &path, 
@@ -153,6 +154,8 @@ template<class T> bool MuonDigitizationData<T>::isEmpty(int i){
 template class  MuonDigitizationData<MuonPhyChannelInput>;
 template class  MuonDigitizationData<MuonPhysicalChannel>;
 template class  MuonDigitizationData<MuonPhysicalChannelOutput>;
+template class  MuonDigitizationData<MuonCardiacChannelOutput>;
+
 #endif
 
 

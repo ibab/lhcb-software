@@ -12,6 +12,7 @@
 #include "MuonPhyChannelInput.h"
 #include "MuonPhysicalChannel.h"
 #include "MuonPhysicalChannelOutput.h" 
+#include "MuonCardiacChannelOutput.h" 
 #include "MuonDetectorResponse.h" 
 
 // Event model
@@ -46,8 +47,16 @@ public:
                                   MuonDigitizationData
                                   <MuonPhysicalChannelOutput>&
                                   PhysicalChannelOutput);
+  StatusCode  fillCardiacChannel(MuonDigitizationData<MuonPhysicalChannelOutput>& 
+                                  PhysicalChannel,
+                                  MuonDigitizationData
+                                  <MuonCardiacChannelOutput>&
+                                  PhysicalChannelOutput);
   StatusCode createLogicalChannel(MuonDigitizationData
                                   <MuonPhysicalChannelOutput>& PhyChaOutput,
+                                  LHCb::MCMuonDigits & mcDigitContainer);
+  StatusCode createLogicalChannel(MuonDigitizationData
+                                  <MuonCardiacChannelOutput>& PhyChaOutput,
                                   LHCb::MCMuonDigits & mcDigitContainer);
   StatusCode createRAWFormat(LHCb::MCMuonDigits & mcDigitContainer, 
                                  LHCb::MuonDigits & digitContainer);
@@ -66,7 +75,8 @@ private:
   bool m_applyElectronicNoise;	 
   bool m_applyXTalk;	 
   bool m_applyEfficiency;	 
-  bool m_applyDeadtime;	 
+  bool m_applyDeadtime;	  
+  bool m_applyDialogDeadtime;	 
   bool m_applyTimeAdjustment;	 
   bool m_registerPhysicalChannelOutput;
 ;  

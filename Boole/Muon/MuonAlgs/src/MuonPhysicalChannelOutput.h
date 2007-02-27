@@ -5,6 +5,7 @@
 #include <algorithm>
 #include "GaudiKernel/KeyedObject.h"
 #include "MuonPhChID.h"
+#include "MuonCardiacChID.h"
 #include "MuonPhysicalChannel.h"
 #include "MuonHitTraceBack.h"
 #include "Event/MCMuonDigitInfo.h"
@@ -39,11 +40,16 @@ origHits):m_ID(origID),m_Hits(origHits){};
 	double firingTime();
   void calculateTileID(int & numberOfTileInOutput,LHCb::MuonTileID phChTileID[2],
                        DeMuonDetector* muonDetector);
+  void calculateCardiacORID(MuonCardiacChID& phChTileID,
+                       DeMuonDetector* muonDetector);
+  void fillTimeList();
 private:
  MuonPhChID m_ID;
  std::vector<MuonHitTraceBack> m_Hits;
  LHCb::MCMuonDigitInfo m_phChInfo;
- double m_FiringTime;
+ double m_FiringTime; 
+ std::vector<float> m_timeList;
+
 };	
 
 inline   const std::vector<MuonHitTraceBack>& 

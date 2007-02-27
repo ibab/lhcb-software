@@ -1,0 +1,12 @@
+// Uncomment to change the defaults
+//MuonDigitizationNext2.BXTime= 25 ;
+MuonDigitizationNext2.TimeGate= 25 ;
+// MuonDigitizationNext2.VerboseDebug= true ;
+//MuonDigitizationNext2.ApplyTimeJitter=false;
+//MuonDigitizationNext2.ApplyChamberNoise=false;
+//MuonDigitizationNext2.ApplyElectronicNoise=false;
+//MuonDigitizationNext2.ApplyXTalk=false;
+//MuonDigitizationNext2.ApplyEfficiency=false;
+MuonDigitizationNext2.ApplyTimeAdjustment=false;
+//MuonDigitizationNext2.ApplyDeadtime=false;
+//MuonDigitizationNext2.ApplyDialogDeadtime=false;

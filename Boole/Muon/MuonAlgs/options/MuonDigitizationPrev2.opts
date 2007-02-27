@@ -1,0 +1,12 @@
+// Uncomment to change the defaults
+//MuonDigitizationPrev2.BXTime= 25 ;
+MuonDigitizationPrev2.TimeGate= 25 ;
+// MuonDigitization.VerboseDebug= true ;
+//MuonDigitizationPrev2.ApplyTimeJitter=false;
+//MuonDigitizationPrev2.ApplyChamberNoise=false;
+//MuonDigitizationPrev2.ApplyElectronicNoise=false;
+//MuonDigitizationPrev2.ApplyXTalk=false;
+//MuonDigitizationPrev2.ApplyEfficiency=false;
+MuonDigitizationPrev2.ApplyTimeAdjustment=false;
+//MuonDigitizationPrev2.ApplyDeadtime=false;
+//MuonDigitizationPrev2.ApplyDialogDeadtime=false;
