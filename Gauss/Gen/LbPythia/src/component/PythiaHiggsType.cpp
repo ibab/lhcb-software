@@ -1,0 +1,352 @@
+// Include files
+// local
+#include "PythiaHiggsType.h"
+
+// from Gaudi
+#include "GaudiKernel/ToolFactory.h"
+
+// from HepMC
+#include "HepMC/GenParticle.h"
+#include "HepMC/GenEvent.h"
+
+//-----------------------------------------------------------------------------
+// Implementation file for class : PythiaHiggsType
+//
+// 2007-01-21 : Victor Coco,
+//
+//-----------------------------------------------------------------------------
+
+// Declaration of the Tool Factory
+
+DECLARE_TOOL_FACTORY( PythiaHiggsType ) ;
+
+
+//=============================================================================
+// Standard constructor, initializes variables
+//=============================================================================
+PythiaHiggsType::PythiaHiggsType( const std::string & type , 
+                                  const std::string & name ,
+                                  const IInterface * parent )
+  : GaudiTool  ( type, name , parent ) ,
+    m_thetaMax    ( 400 * mrad ) ,
+    m_nbLepton    ( 1          ) ,
+    m_ptMin       ( 10 * GeV   ) ,
+    m_leptonWZ    ( true       ) ,
+    m_nbbquarks   ( 1          ) ,
+    m_motherofb_id( 25         ) {
+	declareInterface< IGenCutTool >( this ) ;
+
+	// default properties are set for Higgs production with the 2b 
+  // in the acceptance and a Lepton with pt>10GeV
+
+	//Rough definition of the acceptance
+	declareProperty( "ThetaMax" , m_thetaMax) ; //default=400 * mrad
+
+	//Number of leptons requiered to be in the acceptance
+	declareProperty( "NumberOfLepton" , m_nbLepton) ; //max 2 leptons -- 
+                                                    //0 - 1 - 2 default=1
+
+  //LeptonPtMin is the minimum value the pt of lepton can have
+	declareProperty( "LeptonPtMin" , m_ptMin) ; //default=10*GeV
+	
+  //LeptonIsFromWZ enabled will requiered that the lepton comes from a W or Z
+	declareProperty( "LeptonIsFromWZ" , m_leptonWZ) ; //default=true
+	
+  //Number of bquarks requiered to be in the acceptance
+	declareProperty( "NumberOfbquarks" , m_nbbquarks ) ; //max 2 b quarks -- 
+  // 0(only with pzb>0) - 1 - 2  and -1(desactivated) default=1
+	// BECAREFULL NumberOfbquarks=0 will search b comming from mother 
+  // with pz>0 if you don't want b (ex: Z->mumu) put -1.
+
+	// MotherOfThebquarks define the mother of the b quarks
+	declareProperty( "MotherOfThebquarks" , m_motherofb_id) ; //default=25
+}
+
+//=============================================================================
+// Destructor
+//=============================================================================
+PythiaHiggsType::~PythiaHiggsType( ) { ; }
+
+//=============================================================================
+// Initialise
+//============================================================================
+StatusCode PythiaHiggsType::initialize() {
+  StatusCode sc = GaudiTool::initialize() ;
+  if ( ! sc.isSuccess() ) return sc ;
+  
+	if ( ( 6 == m_motherofb_id ) && ( 2 == m_nbbquarks ) ) {
+		info() << "You want to have both b in the acceptance, " 
+           << "check in pythia commands that you ask both top to decay in b" 
+           << endmsg;
+	}
+
+	if ( ( 1 != m_nbLepton ) && ( 2 != m_nbLepton ) && ( 0 != m_nbLepton ) ) {
+		fatal() << "The only choices for NumberOfLepton property are 0, 1 or 2" 
+            << endmsg;
+		return StatusCode::FAILURE;
+	}
+
+	if ( ( 1 != m_nbbquarks ) && ( 2 != m_nbbquarks ) && ( 0 != m_nbbquarks ) && 
+       ( -1 != m_nbbquarks ) ) {
+		fatal() << "The only choices for NumberOfbquarks property are 0, 1 or 2" 
+            << endmsg;
+		return StatusCode::FAILURE;
+	}
+  
+	return sc ;
+}
+
+//=============================================================================
+// b quark tagging
+//=============================================================================
+bool PythiaHiggsType::Isb( const HepMC::GenParticle * p) const {
+	if ( 5 == abs( p -> pdg_id() ) ) {
+		HepMC::GenVertex * thePV =  p -> production_vertex() ;
+		HepMC::GenVertex::particle_iterator iter ;
+		for(iter = thePV -> particles_begin( HepMC::parents);
+        iter != thePV -> particles_end(HepMC::parents); ++iter){
+			if( m_motherofb_id == abs((*iter)->pdg_id())) return true;
+		}
+	}
+	return false;
+}
+
+//=============================================================================
+// look for lepton
+//=============================================================================
+bool PythiaHiggsType::IsLepton( const HepMC::GenParticle * p ) const {
+	if ( ( 11 == abs( p -> pdg_id() ) ) || ( 13 == abs( p -> pdg_id() ) ) ) {
+		if ( ! m_leptonWZ ) return true ;
+		else {
+			HepMC::GenVertex * thePV =  p -> production_vertex() ;
+			HepMC::GenVertex::particle_iterator iter ;
+			for(iter = thePV -> particles_begin( HepMC::parents);
+          iter != thePV -> particles_end(HepMC::parents); ++iter){
+        if( ( 23 == abs((*iter)->pdg_id()) ) ||  
+            ( 24 == abs((*iter)->pdg_id()) ) ) return true;
+			}
+		}
+	}
+	return false;
+}
+
+//=============================================================================
+// Accept function
+//=============================================================================
+bool PythiaHiggsType::applyCut( ParticleVector & /* theParticleVector */ ,
+                            const HepMC::GenEvent * theEvent ,
+                            const LHCb::GenCollision * /* theCollision */ )
+  const {
+	// Selection of the b quarks
+	std::list< const HepMC::GenParticle * > bList ;
+	for(HepMC::GenEvent::particle_const_iterator iterall = 
+        theEvent -> particles_begin() ;
+      iterall!= theEvent -> particles_end();iterall++) {
+    if ( Isb( *(iterall) ) ) bList.push_back( *(iterall) ) ;
+	}
+  
+	const HepMC::GenParticle * theb1(0), *theb2(0);
+	std::list<const HepMC::GenParticle * >::iterator iterb = bList.begin() ;
+	if( 2<= bList.size() ) {
+    theb1 = *(iterb); 
+		theb2 = *(++iterb);
+	}
+
+	if ( ( 1 == bList.size() ) && ( m_motherofb_id != 6 ) ) {
+    Warning( "No b pairs in this event!" ) ;
+  //can occure in ttbar event when one top decay on another mode than bW
+    return false ;
+  }
+	
+  if( ( 1 == bList.size() ) && ( m_motherofb_id==6 ) ) {
+		theb1 = *(iterb);
+		theb2 = *(iterb);
+	}
+  
+	if( ( 0== bList.size() ) && ( m_nbbquarks != -1 ) ) {
+    Warning( "No b in this event!" ) ;
+    return false ;
+  }
+
+	double pxb1,pyb1,pzb1,ppb1,thetab1;
+	double pxb2,pyb2,pzb2,ppb2,thetab2;
+	if( ( m_nbbquarks != -1 ) && ( bList.size() > 0 ) ) {
+		pxb1 = theb1 -> momentum() . px() * GeV ;
+		pyb1 = theb1 -> momentum() . py() * GeV ;
+		pzb1 = theb1 -> momentum() . pz() * GeV ;
+		ppb1 = sqrt( pxb1*pxb1 + pyb1*pyb1 + pzb1*pzb1 ) ;
+		thetab1 = acos( fabs( pzb1 ) / ppb1 ) ;
+    
+		pxb2 = theb2 -> momentum() . px() * GeV ;
+		pyb2 = theb2 -> momentum() . py() * GeV ;
+		pzb2 = theb2 -> momentum() . pz() * GeV ;
+		ppb2 = sqrt( pxb2*pxb2 + pyb2*pyb2 + pzb2*pzb2 ) ;
+		thetab2 = acos( fabs( pzb2 ) / ppb2 ) ;
+	}
+
+	if( ( 1== bList.size() ) && ( m_motherofb_id==6 ) ) { 
+    // necessary in order to avoid case where we ask 2b in ttbar event 
+    // and that only one top decay in b in the acceptance
+		pzb2=-1000;
+		thetab2=1000000;
+	}
+
+	if( 0 == bList.size() ) {
+		pzb2=-1000;
+		thetab2=1000000;
+		pzb1=-1000;
+		thetab1=1000000;
+	}
+
+	// Selection of the lepton
+	std::list< const HepMC::GenParticle * > LeptonList ;
+	for ( HepMC::GenEvent::particle_const_iterator iterall = 
+          theEvent -> particles_begin() ;
+        iterall!= theEvent -> particles_end() ; iterall++ ) {
+    if ( IsLepton( *(iterall) ) ) LeptonList.push_back( *(iterall) ) ;
+	}
+
+	double pxl1,pyl1,pzl1,ppl1,ptl1,thetal1;
+	double pxl2,pyl2,pzl2,ppl2,ptl2,thetal2;
+	if ( m_nbLepton <= ( int ) LeptonList.size() ) {
+		const HepMC::GenParticle * theLepton1(0), *theLepton2(0);
+		std::list<const HepMC::GenParticle * >::iterator iterLepton = 
+      LeptonList.begin() ;
+		if ( 2 == LeptonList.size() ) {
+			theLepton1 = *(iterLepton);
+			theLepton2 = *(++iterLepton);
+		}
+		if( 1== LeptonList.size() ) {
+			theLepton1 = *(iterLepton);
+			theLepton2 = *(iterLepton);
+		}
+
+		pxl1 = theLepton1 -> momentum() . px() ;
+		pyl1 = theLepton1 -> momentum() . py() ;
+		pzl1 = theLepton1 -> momentum() . pz() ;
+		ppl1 = sqrt( pxl1*pxl1 + pyl1*pyl1 + pzl1*pzl1 ) ;
+		ptl1 = sqrt( pxl1*pxl1 + pyl1*pyl1 ) ;
+		thetal1 = acos( fabs( pzl1 ) / ppl1 ) ;
+
+		pxl2 = theLepton2 -> momentum() . px() ;
+		pyl2 = theLepton2 -> momentum() . py() ;
+		pzl2 = theLepton2 -> momentum() . pz() ;
+		ppl2 = sqrt( pxl2*pxl2 + pyl2*pyl2 + pzl2*pzl2 ) ;
+		ptl2 = sqrt( pxl2*pxl2 + pyl2*pyl2 ) ;
+		thetal2 = acos( fabs( pzl2 ) / ppl2 ) ;
+
+		if ( 1 == LeptonList.size() ) {
+			thetal2= 100000;
+			ptl2=-1000;
+			pzl2=-1000;
+		}
+	} else {
+		thetal1= 100000;
+		ptl1=-1000;
+		pzl1=-1000;
+		thetal2= 100000;
+		ptl2=-1000;
+		pzl2=-1000;
+	}
+
+	if((m_nbbquarks==-1 &&  m_nbLepton ==0)// no cut
+		||(m_nbbquarks==-1 &&  m_nbLepton ==1 && 
+       ( ( ( thetal1 <= m_thetaMax )&& ( pzl1 >= 0. ) && ( ptl1 >= m_ptMin ) )
+         || ( ( thetal2 <= m_thetaMax ) && ( pzl2 >= 0. )  && 
+              ( ptl2 >= m_ptMin ) ) ) )// no b cut on 1 lepton
+     ||(m_nbbquarks==-1 &&  m_nbLepton ==2 && 
+        ( ( ( thetal1 <= m_thetaMax )&& ( pzl1 >= 0. ) && 
+            ( ptl1 >= m_ptMin ) )&& ( ( thetal2 <= m_thetaMax ) && 
+                                      ( pzl2 >= 0. )  
+                                      && ( ptl2 >= m_ptMin ) ) ) )
+     // no b cut on 2 lepton
+     ||(m_nbbquarks==0 &&  m_nbLepton ==0 
+        &&  (  ( pzb1 >= 0. )
+               || (  pzb2 >= 0. ) ) ) // only cut on pzb no lepton cut
+     || (m_nbbquarks==0 &&  m_nbLepton ==1 
+         &&  ( ( pzb1 >= 0. )
+               || ( pzb2 >= 0. ) ) &&  
+         ( ( ( thetal1 <= m_thetaMax )&& ( pzl1 >= 0. ) 
+             && ( ptl1 >= m_ptMin ) )|| ( ( thetal2 <= m_thetaMax ) 
+                                          && ( pzl2 >= 0. )  && 
+                                          ( ptl2 >= m_ptMin ) ) ) )
+     // only cut on pzb and 1 lepton
+     ||(m_nbbquarks==0 &&  m_nbLepton ==2 
+        &&  ( ( pzb1 >= 0. )
+              || ( pzb2 >= 0. ) ) &&  ( ( ( thetal1 <= m_thetaMax )
+                                          && ( pzl1 >= 0. ) && 
+                                          ( ptl1 >= m_ptMin ) ) && 
+                                        ( ( thetal2 <= m_thetaMax ) && 
+                                          ( pzl2 >= 0. )  && 
+                                          ( ptl2 >= m_ptMin ) ) ) )
+     // only cut on pzb and 2 lepton
+     ||(m_nbbquarks==1 &&  m_nbLepton ==0 &&  ( ( ( thetab1 <= m_thetaMax ) 
+                                                  && ( pzb1 >= 0. ) )
+                                                || ( ( thetab2 <= m_thetaMax )
+                                                     && ( pzb2 >= 0. ) ) ) )
+     // cut on 1b no lepton cut
+     || (m_nbbquarks==1 &&  m_nbLepton ==1 &&  ( ( ( thetab1 <= m_thetaMax ) 
+                                                   && ( pzb1 >= 0. ) )
+                                                 || ( ( thetab2 <= m_thetaMax )
+                                                      && ( pzb2 >= 0. ) ) )
+         &&  ( ( ( thetal1 <= m_thetaMax )&& ( pzl1 >= 0. ) && 
+                 ( ptl1 >= m_ptMin ) )|| ( ( thetal2 <= m_thetaMax ) && 
+                                           ( pzl2 >= 0. )  && 
+                                           ( ptl2 >= m_ptMin ) ) ) )
+     // cut on 1b and 1 lepton
+     ||(m_nbbquarks==1 &&  m_nbLepton ==2 &&  
+        ( ( ( thetab1 <= m_thetaMax ) && ( pzb1 >= 0. ) )
+          || ( ( thetab2 <= m_thetaMax ) && ( pzb2 >= 0. ) ) ) &&  
+        ( ( ( thetal1 <= m_thetaMax )&& ( pzl1 >= 0. ) && 
+            ( ptl1 >= m_ptMin ) ) && ( ( thetal2 <= m_thetaMax ) && 
+                                       ( pzl2 >= 0. )  && ( ptl2 >= m_ptMin ) )
+          ) )// cut on 1b and 2 lepton
+     ||(m_nbbquarks==2 &&  m_nbLepton ==0 &&  ( ( ( thetab1 <= m_thetaMax ) 
+                                                  && ( pzb1 >= 0. ) )
+                                                && ( ( thetab2 <= m_thetaMax )
+                                                     && ( pzb2 >= 0. ) ) ) )
+     // cut on 2b no lepton cut
+     ||(m_nbbquarks==2 &&  m_nbLepton ==1 &&  ( ( ( thetab1 <= m_thetaMax ) 
+                                                  && ( pzb1 >= 0. ) )
+                                                && ( ( thetab2 <= m_thetaMax )
+                                                     && ( pzb2 >= 0. ) ) )
+        &&  ( ( ( thetal1 <= m_thetaMax )&& ( pzl1 >= 0. ) && 
+                ( ptl1 >= m_ptMin ) ) || ( ( thetal2 <= m_thetaMax ) && 
+                                           ( pzl2 >= 0. )  && 
+                                           ( ptl2 >= m_ptMin ) ) ) )
+     // cut on 2b and 1 lepton
+     ||(m_nbbquarks==2 &&  m_nbLepton ==1 &&  ( ( ( thetab1 <= m_thetaMax ) 
+                                                  && ( pzb1 >= 0. ) )
+                                                && ( ( thetab2 <= m_thetaMax )
+                                                     && ( pzb2 >= 0. ) ) ) && 
+        ( ( ( thetal1 <= m_thetaMax )&& ( pzl1 >= 0. ) && ( ptl1 >= m_ptMin ) )
+          && ( ( thetal2 <= m_thetaMax ) && ( pzl2 >= 0. )  && 
+               ( ptl2 >= m_ptMin ) ) ) )// cut on 2b and 2 lepton
+     ) {
+		debug()  << "Event passed with requierement of "
+             << m_nbLepton << " lepton and " 
+             << m_nbbquarks <<" bquarks" << endmsg ;
+		debug()  << " [thetab1 = " << thetab1<< "] [thetab2 = " << thetab2 
+             << "] " << "[pzb1 = " << pzb1 << "] [pzb2 = " << pzb2
+             << " [thetal1 = " << thetal1 << "] [pzl1 = " << pzl1 
+             << "] [ptl1 = " << ptl1 << "] [thetal2 = "
+             << thetal2 << "] [pzl2 = " << pzl2 << "] [ptl2 = " << ptl2 
+             << "]" << endmsg ;
+
+		return true;
+	} else {
+		debug() << "Event rejected with requierement of "<< m_nbLepton
+            << " lepton and " << m_nbbquarks << " bquarks" << endmsg ;
+		debug() << " [thetab1 = " << thetab1 << "] [thetab2 = " 
+            << thetab2 << "] " << "[pzb1 = " << pzb1 
+            << "] [pzb2 = " << pzb2 << " [thetal1 = "<< thetal1 
+            << "] [pzl1 = "<< pzl1 << "] [ptl1 = "<< ptl1 << "] [thetal2 = "
+            << thetal2 << "] [pzl2 = "<< pzl2 << "] [ptl2 = "<< ptl2 << "]" 
+            << endmsg ;
+		return false;
+	}
+	return false ;
+}
+
+
+
