@@ -5,15 +5,18 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v22r2>2007-02-20 LHCbSys v22r2</A></H1><PRE>
+</PRE><H1><A NAME=v22r2>2007-02-26 LHCbSys v22r2</A></H1><PRE>
 This version uses Gaudi v19r2 and LCGCMT 50. Fully compatible with DC06 data
 
 - Packages added:    CondDBUI v2r0
-- Packages modified: GaudiObjDesc v9r9, KernelSys v6r2, LHCbKernel v7r2
-    DetSys v9r2, OTDet v7r2, VeloDet v11r1, DetDescSvc v1r10p1,
-    EventSys v23r2, DigiEvent v2r1, HltBase v2r2, LinkerInstances v3r2p1,
-    TrackInterfaces v3r1, TrackMCInterfaces v3r0, DetCond v11r0,
-    CondDBEntityResolver v4r0, DetCondExample v11r0
+- Packages removed:  LHCbInterfaces - use includes from GaudiKernel instead
+- Packages modified: GaudiObjDesc v9r9, KernelSys v6r2, LHCbKernel v7r2,
+    LHcbMath v2r1, RichKernel v7r2, CaloInterfaces v7r1, DetSys v9r2,
+    DetDesc v7r1, OTDet v7r2, VeloDet v11r1, DetDescSvc v1r10p1, Magnet v3r5,
+    EventSys v23r2, EventBase v2r1, MCEvent v2r1, DigiEvent v2r1, ReceEvent v2r2,
+    LinkerInstances v3r2p1, HltBase v2r2, LHCbAlgs v2r6, TrackInterfaces v3r1,
+    TrackMCInterfaces v3r0, DetCond v11r0, CondDBEntityResolver v4r0,
+    DetCondExample v11r0, LoKiGen v2r1, LoKiCore v2r1, SimComponents v2r1
 
 - In GaudiObjDesc v9r9
   . In scripts/genClasses.py - replace the static const CLID& CLID_xxx = yyy
@@ -22,11 +25,37 @@ This version uses Gaudi v19r2 and LCGCMT 50. Fully compatible with DC06 data
 - In LHCbKernel v7r2, HltBase v2r2, TrackInterfaces v3r1, TrackMCInterfaces v3r0
   . Make reflex dictionary for all interfaces defined in Kernel directory
 
+- In LHCbAlgs v2r6, LHCbKernel v7r2
+  . Move LbAppInit factory to LHCbAlgs, keeping LHCbAlgs base class in LHCbKernel
+
+- In LHCbKernel v7r2, LHCbMath v2r1
+  . Do not add SMatrix to ROOT_linkopts (not needed with new plugins) 
+
+- In LHCbKernel v7r2
+  . Do not add Reflex to ROOT_linkopts (already done by GaudiKernel)
+
+- In LHCbAlgs v2r6, SimComponents v2r1
+  . Remove obsolete file xxx_load.cpp
+
+- In DetDesc v17r1
+  . Remove all factories, obsolete remnant of an old DetDesc implementation
+  . Fixed a minor bug in a debug function of ParamValidDataObject
+
 - In OTDet v7r2, VeloDet v11r1
   . Add callback methods to update cached values when alignment conditions change
 
 - In DetDescSvc v1r10p1
   . Add a couple of useful warnings in UpdateManagerSvc
+
+- In EventBase v2r1, MCEvent v2r1, RecEvent v2r2
+  . Define all Header locations in ProcessHeader, for reuse in derived classes
+
+- In MCEvent v2r1
+  . Add copy-constructor, clone and cloneWithKey methods to MCVertex, MCParticle
+  . Add IForcedBDecayTool interface
+
+- In SimComponents v2r1
+  . Add ForcedBDecayTool
 
 - In LinkerInstances v3r2p1,
   . Remove modification to PATH, no longer needed with InstallArea
@@ -41,14 +70,24 @@ This version uses Gaudi v19r2 and LCGCMT 50. Fully compatible with DC06 data
   . Removed not needed link options for MySQL, SQLite and Oracle
   . Minor fix in prepare_DBs.csh
 
-- In LHCbKernel v7r2,OTDet v7r2,VeloDet v11r1, HltBase v2r2, TrackInterfaces v3r1
+- In LoKiGen v2r1
+  . Many tiny fixes to build Ex/LoKiExample package 
+
+- In LHCbKernel v7r2, OTDet v7r2, VeloDet v11r1, MCEvent v2r1, HltBase v2r2,
+     TrackInterfaces v3r1, LoKiGen v2r1, LoKiCore v2r1, RichKernel v7r2,
+     LHCbMath v2r1
   . Fix some doxygen comments
 
-- In OTDet v7r2, VeloDet v11r1, DigiEvent v2r1, TrackMCInterfaces v3r0
+- In OTDet v7r2, VeloDet v11r1, DigiEvent v2r1, TrackMCInterfaces v3r0,
+     LHCbAlgs v2r6, LoKiCore v2r1, RichKernel v7r2, CaloInterfaces v7r1,
+     Magnet v3r5
   . Remove LHCbDefinitions dependency
 
 - In VeloDet v11r1, DigiEvent v2r1
   . Add dependency on LHCbMath
+
+- In Magnet v3r5
+  . Remove ApplicationMgr.DLLs from job options
 
 </PRE><H1><A NAME=v22r1>2007-02-13 LHCbSys v22r1</A></H1><PRE>
 This version uses Gaudi v19r1. Fully compatible with DC06 data
