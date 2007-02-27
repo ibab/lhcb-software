@@ -1,4 +1,4 @@
-// $Id: MuonBackground.cpp,v 1.36 2006-11-06 11:00:33 cattanem Exp $
+// $Id: MuonBackground.cpp,v 1.37 2007-02-27 08:39:16 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -704,7 +704,7 @@ MuonBackground::initializeRNDDistribution1D(IHistogram1D*
   Rndm::Numbers* pdf=new Rndm::Numbers; 
   debug()<<"total "<<total<<endreq;
   
-  if(total==0){
+  if(total<=0){
     pointerToFlags.push_back(false);
   }
   else{
@@ -740,7 +740,7 @@ MuonBackground::initializeRNDDistribution2D(IHistogram2D* histoPointer,
     IHistogram1D* ySlice = histoSvc()->histogramFactory()->
       sliceY( "MuBG/1" , *histoPointer, xbin);
     int entries=ySlice->entries();
-    if(entries==0) {
+    if(entries<=0) {
       debug()<<" zero entries"<<endmsg;
     }
     initializeRNDDistribution1D(ySlice,distributions , 
@@ -966,7 +966,7 @@ StatusCode MuonBackground::createHit(LHCb::MCHits*
         }        
       }     
     }else{
-      Warning( "Impossible to add the requested hits, see debug() for details", 0 );
+      debug()<<"Impossible to add the requested hits, see debug() for details"<< endmsg;
       debug() << " impossible to add the requested hits in station " << station
               << " and multiplicity " <<multi << endmsg;
     } 
