@@ -1,4 +1,4 @@
-// $Id: FilterToFixOppositeBFractions.cpp,v 1.3 2007-02-27 10:20:13 sposs Exp $
+// $Id: FilterToFixOppositeBFractions.cpp,v 1.4 2007-02-27 12:48:22 sposs Exp $
 // Include files
 
 // from Gaudi
@@ -173,7 +173,8 @@ StatusCode FilterToFixOppositeBFractions::execute() {
     }
     if(m_evttype){
       if(!m_printevt){
-        info()<<"Event type corresponds to buggy type : Correction activated"
+        info()<<"Event type "<<m_et[m_ievt]
+              <<" corresponds to buggy type : Correction activated"
               <<endreq;
         m_printevt=true;
       }
@@ -301,13 +302,21 @@ StatusCode FilterToFixOppositeBFractions::finalize() {
   info() << " Fraction where opposite B ID = Signal B ID : "
          <<r(100.*m_coutSameB/m_coutevt)<<" +/- "<<r(m_errBuBC)<<" %"
          <<endreq;
-  info() << "        Total Bu oppo = "<<r(m_BuBC)<<" +/- "
+  info() << "        Total Bu oppo = "
+         <<m_coutBu<<"/"<<m_coutevt<<" = "
+         <<r(m_BuBC)<<" +/- "
          <<r(m_errBuBC)<<" %"<<endreq;
-  info() << "        Total Bd oppo = "<<r(m_BdBC)<<" +/- "
+  info() << "        Total Bd oppo = "
+         <<m_coutBd<<"/"<<m_coutevt<<" = "
+         <<r(m_BdBC)<<" +/- "
          <<r(m_errBdBC)<<" %"<<endreq;
-  info() << "        Total Bs oppo = "<<r(m_BsBC)<<" +/- "
+  info() << "        Total Bs oppo = "
+         <<m_coutBs<<"/"<<m_coutevt<<" = "
+         <<r(m_BsBC)<<" +/- "
          <<r(m_errBsBC)<<" %"<<endreq;
-  info() << "        Total Ot oppo = "<<r(m_OtBC)<<" +/- "
+  info() << "        Total Ot oppo = "
+         <<m_coutOt<<"/"<<m_coutevt<<" = "
+         <<r(m_OtBC)<<" +/- "
          <<r(m_errOtBC)<<" %"<<endreq;
   info() << endreq;
   info() << "        Total rejected = "
@@ -315,13 +324,21 @@ StatusCode FilterToFixOppositeBFractions::finalize() {
          <<r(errorp(m_rejected,m_coutevt))<<" %"<<endreq;
   info() << "   Total evts After Correction = "
          <<m_coutevtAC<<endreq;
-  info() << "        Total Bu oppo AC= "<<r(m_BuAC)<<" +/- "
+  info() << "        Total Bu oppo AC= "
+         <<m_coutBuAC<<"/"<<m_coutevtAC<<" = "
+         <<r(m_BuAC)<<" +/- "
          <<r(m_errBuAC)<<" %"<<endreq;
-  info() << "        Total Bd oppo AC= "<<r(m_BdAC)<<" +/- "
+  info() << "        Total Bd oppo AC= "
+         <<m_coutBdAC<<"/"<<m_coutevtAC<<" = "
+         <<r(m_BdAC)<<" +/- "
          <<r(m_errBdAC)<<" %"<<endreq;
-  info() << "        Total Bs oppo AC= "<<r(m_BsAC)<<" +/- "
+  info() << "        Total Bs oppo AC= "
+         <<m_coutBsAC<<"/"<<m_coutevtAC<<" = "
+         <<r(m_BsAC)<<" +/- "
          <<r(m_errBsAC)<<" %"<<endreq;
-  info() << "        Total Ot oppo AC= "<<r(m_OtAC)<<" +/- "
+  info() << "        Total Ot oppo AC= "
+         <<m_coutOtAC<<"/"<<m_coutevtAC<<" = "
+         <<r(m_OtAC)<<" +/- "
          <<r(m_errOtAC)<<" %"<<endreq;
 
 
