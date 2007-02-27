@@ -1,4 +1,4 @@
-// $Id: MuonStationCabling.h,v 1.1 2004-02-03 11:40:27 asatta Exp $
+// $Id: MuonStationCabling.h,v 1.2 2007-02-27 11:13:57 asatta Exp $
 #ifndef MUONDET_MUONSTATIONCABLING_H 
 #define MUONDET_MUONSTATIONCABLING_H 1
 
@@ -20,7 +20,9 @@ public:
   MuonStationCabling( ); 
 
   virtual ~MuonStationCabling( ); ///< Destructor
-  StatusCode update(std::string newL1Pointer);
+
+  virtual void update ( Condition& obj );
+  virtual void update ( ValidDataObject& obj );
 
  /// Class ID of this class
   inline static  const CLID& classID() {
@@ -29,6 +31,11 @@ public:
 
 inline	long getNumberOfL1Board(){return m_numberOfL1Board;};
 inline std::string getL1Name(unsigned int i){return m_listOfL1[i];};  
+inline std::vector<std::string> getAllL1Names(){return m_listOfL1;};  
+ StatusCode update(long l1numb);
+  StatusCode addL1Name(std::string name);
+
+ 
 protected:
 
 private:

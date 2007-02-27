@@ -1,4 +1,4 @@
-// $Id: XmlMuonCablingCnv.cpp,v 1.4 2006-12-14 13:27:07 ranjard Exp $
+// $Id: XmlMuonCablingCnv.cpp,v 1.5 2007-02-27 11:13:58 asatta Exp $
 // Include files 
 
 #include <vector>
@@ -59,28 +59,20 @@ protected:
                                         MuonStationCabling* dataObj,
                                         IOpaqueAddress* address);
 
+virtual StatusCode updateRep (IOpaqueAddress *pAddress, DataObject *pObject);
+
 private:
 StatusCode splitList( std::string &stringList,
                      std::vector<long>& vectorList);
   
-StatusCode L1BoardReadAndCreate( xercesc::DOMNode* L1Board,
-                                 IOpaqueAddress* address);
+
   
 private:
   const XMLCh* CablingString;
   const XMLCh* SupportString;
-  const XMLCh* L1String;
-  const XMLCh* L1NameString;
+  const XMLCh* L1ListString;
+  const XMLCh* L1ListRefString;
   const XMLCh* L1NumberString;
-  const XMLCh* L1StationString;
-  const XMLCh* ODENumberString;
-  const XMLCh* ODEListString;
-  const XMLCh* ODEReferenceString;
-  const XMLCh* ODEConditionString;
-  const XMLCh* TSLayoutString;
-  const XMLCh* TSLayoutRegionString;
-  const XMLCh* TSLayoutXString;
-  const XMLCh* TSLayoutYString;
   
 }; 
 
@@ -89,6 +81,7 @@ private:
 // instances of this service
 // -----------------------------------------------------------------------
 DECLARE_CONVERTER_FACTORY(XmlMuonCablingCnv)
+
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
@@ -100,18 +93,9 @@ XmlUserConditionCnv<MuonStationCabling> (svc)
     
     CablingString= xercesc::XMLString::transcode("MuonStationCabling");
     SupportString= xercesc::XMLString::transcode("SupportPath");
-    L1String= xercesc::XMLString::transcode("L1Board");
-    L1NameString= xercesc::XMLString::transcode("L1Name");
-    L1NumberString= xercesc::XMLString::transcode("L1SerialNumber");
-    L1StationString= xercesc::XMLString::transcode("L1Station");
-    ODENumberString= xercesc::XMLString::transcode("ODENumber");
-    ODEListString= xercesc::XMLString::transcode("ODEList");
-    ODEReferenceString= xercesc::XMLString::transcode("conditionref");
-    ODEConditionString= xercesc::XMLString::transcode("href");
-    TSLayoutString= xercesc::XMLString::transcode("TSLayout");
-    TSLayoutRegionString= xercesc::XMLString::transcode("Region");    
-    TSLayoutXString= xercesc::XMLString::transcode("TSLayoutX");    
-    TSLayoutYString= xercesc::XMLString::transcode("TSLayoutY");
+    L1ListString= xercesc::XMLString::transcode("conditionref");
+    L1ListRefString=xercesc::XMLString::transcode("href");
+    L1NumberString= xercesc::XMLString::transcode("L1Number");
  }
 
 //=============================================================================
@@ -120,21 +104,19 @@ XmlUserConditionCnv<MuonStationCabling> (svc)
 XmlMuonCablingCnv::~XmlMuonCablingCnv() {
   xercesc::XMLString::release((XMLCh**)&CablingString);
   xercesc::XMLString::release((XMLCh**)&SupportString);
-  xercesc::XMLString::release((XMLCh**)&L1String);
-  xercesc::XMLString::release((XMLCh**)&L1NameString);
+  xercesc::XMLString::release((XMLCh**)&L1ListString);
+  xercesc::XMLString::release((XMLCh**)&L1ListRefString);
   xercesc::XMLString::release((XMLCh**)&L1NumberString);
-  xercesc::XMLString::release((XMLCh**)&L1StationString);
-  xercesc::XMLString::release((XMLCh**)&ODENumberString);
-  xercesc::XMLString::release((XMLCh**)&ODEListString);
-  xercesc::XMLString::release((XMLCh**)&ODEReferenceString);
-  xercesc::XMLString::release((XMLCh**)&ODEConditionString);
-  xercesc::XMLString::release((XMLCh**)&TSLayoutString);
-  xercesc::XMLString::release((XMLCh**)&TSLayoutRegionString);
-  xercesc::XMLString::release((XMLCh**)&TSLayoutXString);
-  xercesc::XMLString::release((XMLCh**)&TSLayoutYString);  
+
 }; 
 
 //=============================================================================
+
+
+StatusCode XmlMuonCablingCnv::updateRep (IOpaqueAddress *pAddress, DataObject *pObject){
+ MsgStream msg(msgSvc(), "XmlMuonCablingCnv");
+ msg<<MSG::INFO<<" number of L1 "<<endreq;
+};
 
 
 // -----------------------------------------------------------------------
@@ -150,41 +132,35 @@ XmlMuonCablingCnv::i_fillSpecificObj(xercesc::DOMElement* childElement,
   if (0 == xercesc::XMLString::compareString(CablingString, tagName)) {
     const std::string  support =
       dom2Std (childElement->getAttribute (SupportString));
-    //search for L1 board definition inside the Cabling element
+    const std::string l1NumberString =
+      dom2Std (childElement->getAttribute (L1NumberString));
+    long l1NumberValue=atol(l1NumberString.c_str());
+    dataObj->update(l1NumberValue);
+    msg<<MSG::DEBUG<<" number of L1 "<<l1NumberValue<<endreq;
     xercesc::DOMNodeList* nodeChildren = childElement->getChildNodes();
     unsigned int i;
     for(i=0; i < nodeChildren->getLength(); ++i){
-      msg << MSG::VERBOSE << "Processing child "<<
-        dom2Std(nodeChildren->item(i)->getNodeName())<<endreq;
-      if(dom2Std(nodeChildren->item(i)->getNodeName()) ==   
-         dom2Std(L1String)){
-        L1BoardReadAndCreate(nodeChildren->item(i),address);
-        
-        const std::string  L1Name =
-          dom2Std(nodeChildren->item(i)
-                  ->getAttributes()->getNamedItem(L1NameString)
-                  ->getNodeValue());
-        const std::string  L1Number = dom2Std(nodeChildren->item(i)
-                  ->getAttributes()->getNamedItem(L1NumberString)
-                                              ->getNodeValue());
-        //       const std::string  L1Station = dom2Std(nodeChildren->item(i)
-        //          ->getAttributes()->getNamedItem(L1StationString)
-        //                                      ->getNodeValue());
-        
-        //int L1NumberValue= atof(L1Number.c_str());
-        //int L1StationValue= atof(L1Station.c_str());        
-        msg << MSG::DEBUG<< atof(L1Number.c_str())<<endreq;
-        msg << MSG::VERBOSE<< L1Name<<endreq;  
-        dataObj->update(L1Name); 
-      
-        
+      if(dom2Std(nodeChildren->item(i)->getNodeName()) ==
+         dom2Std(L1ListString)){
+        xercesc::DOMNamedNodeMap* attributes =
+          nodeChildren->item(i)->getAttributes();   
+        xercesc::DOMNode* L1Node = attributes->
+          getNamedItem(L1ListRefString);
+        std::string  L1Reference = dom2Std (L1Node->getNodeValue());
+        unsigned int poundPosition = L1Reference.find_last_of('#');
+        std::string entryName = "/" + L1Reference.substr(poundPosition + 1);
+        dataObj->addL1Name(L1Reference.substr(poundPosition + 1));
+ msg<<MSG::DEBUG<<"name of L1 "<<L1Reference.substr(poundPosition + 1)<<endreq;        
       }
-      
     }
+    
+    
+    
   }  
   return StatusCode::SUCCESS;
   
 }
+
 
 
 
@@ -202,129 +178,6 @@ XmlMuonCablingCnv::splitList( std::string &stringList,
   }
   vectorList.push_back(atol(stringList.c_str())); 
 return StatusCode::SUCCESS;
-}
-
-
-StatusCode 
-XmlMuonCablingCnv::L1BoardReadAndCreate( xercesc::DOMNode* L1Board,
-                                         IOpaqueAddress* address)
-{
-  MsgStream msg(msgSvc(), "XmlMuonCablingCnv");
-  StatusCode sc;
-  MuonL1Board* createdBoard=new MuonL1Board();
-  
-  const std::string  L1Name =
-    dom2Std(L1Board->getAttributes()->getNamedItem(L1NameString)
-            ->getNodeValue());
-  const std::string  L1Number = dom2Std(L1Board
-                                        ->getAttributes()->
-                                        getNamedItem(L1NumberString)
-                                        ->getNodeValue());
-  long L1NumberValue=atol(L1Number.c_str());
-  const std::string  L1Station = dom2Std(L1Board
-                                        ->getAttributes()->
-                                        getNamedItem(L1StationString)
-                                        ->getNodeValue());
-  long L1StationValue=atol(L1Station.c_str());
-  
-  const std::string  ODENumber = dom2Std(L1Board
-                                        ->getAttributes()->
-                                        getNamedItem(ODENumberString)
-                                        ->getNodeValue());
-  long ODENumberValue=atol(ODENumber.c_str());
-
-  std::string  ODEList = dom2Std(L1Board
-                                        ->getAttributes()->
-                                        getNamedItem(ODEListString)
-                                        ->getNodeValue());
-  std::vector<long> ODEListValue;
-  splitList(ODEList,ODEListValue);
-  
-  xercesc::DOMNodeList* nodeChildren = L1Board->getChildNodes();
-  unsigned int i;
-  unsigned int iODE=0;
-  
-  for(i=0; i < nodeChildren->getLength(); ++i){   
-    msg << MSG::VERBOSE << "Processing child "<<
-      dom2Std(nodeChildren->item(i)->getNodeName())<<endreq;
-    if(dom2Std(nodeChildren->item(i)->getNodeName()) == 
-       dom2Std(ODEReferenceString)){
-      
-      msg << MSG::VERBOSE << "Processing element "
-          << dom2Std(ODEReferenceString) <<" "<<iODE<< endreq;
-      xercesc::DOMNamedNodeMap* attributes =      
-        nodeChildren->item(i)->getAttributes();
-      xercesc::DOMNode* odeNode = attributes->
-        getNamedItem(ODEConditionString);
-      std::string  OdeReference = dom2Std (odeNode->getNodeValue());  
-      unsigned int poundPosition = OdeReference.find_last_of('#');
-      // std::string entryName = "/" + OdeReference.substr(poundPosition + 1);
-      //      std::string location = address->par()[0];
-      //      std::string location1 = address->par()[1];
-      //      IOpaqueAddress* xmlAddr = 0;      
-      //      xmlAddr = createAddressForHref (OdeReference, 5, address);
-      //      msg << MSG::VERBOSE << " location : " << xmlAddr->par()[0]
-      //          << " entryName : " << xmlAddr->par()[1]
-      //          << " isString : " << xmlAddr->ipar()[0] << endreq;      
-      //      msg << MSG::DEBUG << "Processing element "
-      //   << OdeReference << " "<<entryName<< " "<<location 
-      //   <<" "<<location1<<" "<<dataObj->name()<<endreq;
-      createdBoard->addODE(ODEListValue[iODE],
-                           OdeReference.substr(poundPosition + 1));
-      msg << MSG::VERBOSE <<ODEListValue[iODE]<<" "<<
-        OdeReference.substr(poundPosition + 1)<<endreq;
-      iODE++;
-      
-    }
-    
-    else if(dom2Std(nodeChildren->item(i)->getNodeName()) == 
-            dom2Std(TSLayoutString)){
-      msg << MSG::VERBOSE << "Processing element "<<
-        dom2Std(TSLayoutString)<<endreq;
-      
-      xercesc::DOMNamedNodeMap* attributes =      
-        nodeChildren->item(i)->getAttributes();
-      xercesc::DOMNode* TSRegionNode = attributes->
-        getNamedItem(TSLayoutRegionString);
-      long  TSRegionValue = atol(dom2Std(TSRegionNode
-                                         ->getNodeValue()).c_str());  
-
-      xercesc::DOMNode* TSLayoutXNode = attributes->
-        getNamedItem(TSLayoutXString);
-      long TSXValue = atol(dom2Std (TSLayoutXNode
-                                    ->getNodeValue()).c_str());
-
-   
-      xercesc::DOMNode* TSLayoutYNode = attributes->
-        getNamedItem(TSLayoutYString);
-      long TSYValue = atol(dom2Std (TSLayoutYNode
-                                     ->getNodeValue()).c_str()); ;
-	msg<<MSG::VERBOSE<<"layout "<<TSXValue<<" "<<TSYValue<<
-        " "<<TSRegionValue<<endreq;	
-      createdBoard->addLayout(TSRegionValue,TSXValue,TSYValue);
-      
-    }
-    
-  }
-  
-  
-  createdBoard->setL1Number(L1NumberValue);
-  createdBoard->setL1Station(L1StationValue);
-  createdBoard->setNumberOfODE(ODENumberValue);
-  
-  DataSvcHelpers::RegistryEntry* cablingEntry = 
-    dynamic_cast<DataSvcHelpers::RegistryEntry*> 
-    (address->registry());
-    DataSvcHelpers::RegistryEntry* TESEntry = 
-    dynamic_cast<DataSvcHelpers::RegistryEntry*> 
-    (cablingEntry->parent());
-  sc = TESEntry->add(L1Name,createdBoard);    
- if(StatusCode::SUCCESS != sc) {
-      msg << MSG::WARNING << "The store rejected L1Board "
-          << L1Name << endreq;
-      return StatusCode::FAILURE;
-  }
-  return StatusCode::SUCCESS;
 }
 
 
