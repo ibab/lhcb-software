@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2007-02-27 - Patrick Robbe for Victor Coco
+ - Add new tool PythiaHiggsType to generate Higgs, W, Z, and top events
+
 ! 2007-02-26 - Patrick Robbe
  - PythiaHiggs: adapt to new generator cut tool.
 

@@ -1,4 +1,4 @@
-// $Id: LbPythia_load.cpp,v 1.4 2006-10-04 20:03:03 robbep Exp $
+// $Id: LbPythia_load.cpp,v 1.5 2007-02-27 22:14:19 robbep Exp $
 // Include files 
 
 //
@@ -28,5 +28,5 @@ DECLARE_FACTORY_ENTRIES(LbPythia) {
  
   // Cut tools
   DECLARE_TOOL( PythiaHiggs ) ;
-  
+  DECLARE_TOOL( PythiaHiggsType ) ;
 }

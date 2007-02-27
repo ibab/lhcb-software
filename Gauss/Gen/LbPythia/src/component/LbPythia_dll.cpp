@@ -1,8 +1,7 @@
-// $Id: LbPythia_dll.cpp,v 1.1 2006-07-04 11:32:56 gcorti Exp $
+// $Id: LbPythia_dll.cpp,v 1.2 2007-02-27 22:14:19 robbep Exp $
 // Include files 
 
 #include "GaudiKernel/LoadFactoryEntries.h"
 
 
 LOAD_FACTORY_ENTRIES(LbPythia)
-
