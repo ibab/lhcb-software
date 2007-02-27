@@ -1,4 +1,4 @@
-// $Id: DeMuonDetector.cpp,v 1.29 2006-12-14 13:27:07 ranjard Exp $
+// $Id: DeMuonDetector.cpp,v 1.30 2007-02-27 08:54:17 asatta Exp $
 
 // Include files
 #include "MuonDet/DeMuonDetector.h"
@@ -927,6 +927,66 @@ StatusCode  DeMuonDetector::fillGeoInfo()
       }
     }    
   }
+  //initializatuon by hand of the OR inside the same Cardiac
+  m_phCardiacORNX[1][0]=1;
+  m_phCardiacORNX[1][1]=1;
+  m_phCardiacORNX[1][2]=2;
+  m_phCardiacORNX[0][3]=2;
+  m_phCardiacORNY[1][0]=1;
+  m_phCardiacORNY[1][1]=2;
+  m_phCardiacORNY[1][2]=1;
+  m_phCardiacORNY[0][3]=1;
+  
+  m_phCardiacORNX[0][4]=1;
+  m_phCardiacORNX[1][4]=1;
+  m_phCardiacORNX[0][5]=1;
+  m_phCardiacORNX[1][5]=2;
+  m_phCardiacORNX[1][6]=1;
+  m_phCardiacORNX[0][7]=1;
+
+  m_phCardiacORNY[0][4]=1;
+  m_phCardiacORNY[1][4]=1;
+  m_phCardiacORNY[0][5]=1;
+  m_phCardiacORNY[1][5]=2;
+  m_phCardiacORNY[1][6]=1;
+  m_phCardiacORNY[0][7]=1;
+
+  m_phCardiacORNX[0][8]=1;
+  m_phCardiacORNX[1][8]=1;
+  m_phCardiacORNX[0][9]=1;
+  m_phCardiacORNX[1][9]=2;
+  m_phCardiacORNX[1][10]=1;
+  m_phCardiacORNX[0][11]=1;
+
+  m_phCardiacORNY[0][8]=1;
+  m_phCardiacORNY[1][8]=1;
+  m_phCardiacORNY[0][9]=1;
+  m_phCardiacORNY[1][9]=2;
+  m_phCardiacORNY[1][10]=1;
+  m_phCardiacORNY[0][11]=1;
+
+  m_phCardiacORNX[1][12]=1;
+  m_phCardiacORNX[1][13]=1;
+  m_phCardiacORNX[1][14]=2;
+  m_phCardiacORNX[0][15]=4;
+
+  m_phCardiacORNY[1][12]=1;
+  m_phCardiacORNY[1][13]=1;
+  m_phCardiacORNY[1][14]=1;
+  m_phCardiacORNY[0][15]=1;
+
+  m_phCardiacORNX[1][16]=1;
+  m_phCardiacORNX[1][17]=1;
+  m_phCardiacORNX[1][18]=2;
+  m_phCardiacORNX[0][19]=4;
+
+  m_phCardiacORNY[1][16]=1;
+  m_phCardiacORNY[1][17]=1;
+  m_phCardiacORNY[1][18]=1;
+  m_phCardiacORNY[0][19]=1;
+
+
+
   return sc;
 };
 

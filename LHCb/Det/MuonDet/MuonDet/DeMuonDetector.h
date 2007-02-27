@@ -1,4 +1,4 @@
-// $Id: DeMuonDetector.h,v 1.17 2006-05-19 14:39:46 asarti Exp $
+// $Id: DeMuonDetector.h,v 1.18 2007-02-27 08:54:17 asatta Exp $
 // ============================================================================
 #ifndef MUONDET_DEMUONDETECTOR_H
 #define MUONDET_DEMUONDETECTOR_H 1
@@ -16,6 +16,10 @@
 #include "MuonDet/MuonFrontEndID.h"
 
 #include "MuonDet/PackMCMuonHit.h"  
+#include "MuonDet/MuonL1Board.h"
+#include "MuonDet/MuonStationCabling.h"
+#include "MuonDet/MuonODEBoard.h"
+#include "MuonDet/MuonTSMap.h"
 
 
 /** @class DeMuonDetector DeMuonDetector.h MuonDet/DeMuonDetector.h
@@ -238,6 +242,16 @@ public:
     return m_stationBox[station][3];
   };
 
+  unsigned int getCardiacORX(const int par, const unsigned int readoutType){
+    return m_phCardiacORNX[readoutType][par];
+  };
+  unsigned int getCardiacORY(const int par, const unsigned int readoutType){
+    return m_phCardiacORNY[readoutType][par];
+  };
+// unsigned int getReadoutType(int station, int region,MuonLayout lay);  
+// MuonODEBoard* getODEContainingTile(LHCb::MuonTileID digit);  
+// MuonL1Board* getL1ContainingTile(LHCb::MuonTileID digit);
+
 private:
 
   //My data provider
@@ -268,6 +282,9 @@ private:
   unsigned int m_LogMapMergey[maxReadoutType][partition];
   unsigned int m_phChannelNX[maxReadoutType][partition];
   unsigned int m_phChannelNY[maxReadoutType][partition];
+  unsigned int m_phCardiacORNX[maxReadoutType][partition];
+  unsigned int m_phCardiacORNY[maxReadoutType][partition];
+
   float m_padSizeX[partition];
   float m_padSizeY[partition];
   int m_gapPerFE[partition];
