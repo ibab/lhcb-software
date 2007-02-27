@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.92 2007-02-23 14:33:06 gcorti Exp $
+! $Id: release.notes,v 1.93 2007-02-27 22:12:39 robbep Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Gen/Generators
 ! Responsible : Patrick ROBBE
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
+
+! 2007-02-27 - Patrick Robbe
+ - Fix output level of Special production tool
 
 ! 2007-02-23 - Gloria Corti
  - Increase major version due to change in IGenCutTool interface 

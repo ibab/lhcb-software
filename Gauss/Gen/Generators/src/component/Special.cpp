@@ -1,4 +1,4 @@
-// $Id: Special.cpp,v 1.8 2007-02-22 13:30:24 robbep Exp $
+// $Id: Special.cpp,v 1.9 2007-02-27 22:12:39 robbep Exp $
 // Include files 
 
 // local
@@ -88,6 +88,11 @@ bool Special::generate( const unsigned int /* nPileUp */ ,
 //=============================================================================
 void Special::printCounters( ) const {
   using namespace GenCounters ;
+
+  info() << "************* Special generation counters   ***************"
+         << std::endl ;
+
   printEfficiency( info() , "generator level cut" , m_nEventsAfterCut , 
                    m_nEventsBeforeCut ) ;
+  info() << endmsg ;
 }
