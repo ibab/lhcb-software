@@ -1,4 +1,4 @@
-// $Id: CaloPinDigitAlg.cpp,v 1.1 2007-02-22 23:57:20 odescham Exp $
+// $Id: CaloPinDigitAlg.cpp,v 1.2 2007-02-27 22:36:32 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -191,15 +191,15 @@ StatusCode CaloPinDigitAlg::execute() {
   // ================//
   // Create LED data //
   // ================//
-  CaloVector<CaloLed>&  caloLeds = m_calo->caloLeds();
+  std::vector<CaloLed>&  caloLeds = m_calo->caloLeds();
 
   debug() << " Get " << caloLeds.size() << " LEDs " << endreq;
   
 
   // loop over LEDs
-  for(CaloVector<CaloLed>::iterator iLed = caloLeds.begin() ; iLed != caloLeds.end() ; ++iLed ) {
+  for(std::vector<CaloLed>::iterator iLed = caloLeds.begin() ; iLed != caloLeds.end() ; ++iLed ) {
 
-    int index = iLed-caloLeds.begin();
+    int index = (*iLed).number();
     debug() << "Led index " << index << endreq;
     // LED firing : use m_rate & m_count
     if( index-m_count < 0 )continue;
@@ -207,7 +207,7 @@ StatusCode CaloPinDigitAlg::execute() {
     debug() << "---> is fired" << endreq;
 
     //if( !ledIsFired ) continue;
-    debug () << "-----> LED id " << (*iLed).id() 
+    debug () << "-----> LED id " << (*iLed).number() 
              << " => "  << (*iLed).cells().size()  << " cells "
              << " => PIN id " <<(*iLed).pin() <<  " => " << caloPins[(*iLed).pin()].cells().size() <<" cells"<< endreq; 
     
@@ -236,7 +236,7 @@ StatusCode CaloPinDigitAlg::execute() {
       // Hcal : 2 LEDs -> PMT
       if( 1 != data.size() ){
         int index = m_calo->caloPins()[(*iLed).pin()].index();
-        if(m_calo->cellParam(*iCell).leds().size() == (int) data.size() &&  index < (int) data.size() ){
+        if(m_calo->cellParam(*iCell).leds().size() ==  data.size() && (unsigned) index <  data.size() ){
           newAdc = data[ index ] + adc->adc();
         }
         else{
@@ -264,7 +264,7 @@ StatusCode CaloPinDigitAlg::execute() {
     int newAdc = pinAdc->adc() + data[0]; // add data
     if( 1 != data.size() ){
       int index = m_calo->caloPins()[(*iLed).pin()].index();
-      if( index < data.size() ){
+      if( (unsigned) index < data.size() ){
         newAdc = data[index] + pinAdc->adc();
         }
       else{
