@@ -448,7 +448,7 @@ class CondDB:
                     if tag == '':
                         tag = self.defaultTag
                     if tag.upper() not in [ '', 'HEAD' ]:
-                        objIter = folder.browseObjects(cool.ValidityKey(fromTime), cool.ValidityKey(toTime), channelSelection, folder.resolve(tag))
+                        objIter = folder.browseObjects(cool.ValidityKey(fromTime), cool.ValidityKey(toTime), channelSelection, folder.resolveTag(tag))
                     else:
                         objIter = folder.browseObjects(cool.ValidityKey(fromTime), cool.ValidityKey(toTime), channelSelection)
                 else:
