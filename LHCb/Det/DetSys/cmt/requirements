@@ -3,7 +3,7 @@ version v9r2
 
 branches cmt doc dict
 
-use DetDesc             v17r0   Det
+use DetDesc             v17r1   Det
 use DetDescCnv          v4r1    Det
 use DetDescSvc          v1r10p1 Det
 use XmlTools            v5r0    Tools
@@ -12,7 +12,7 @@ use OTDet               v7r2    Det
 use CaloDet             v8r0    Det
 use CaloDetXmlCnv       v3r0    Det
 use MuonDet             v6r0    Det
-use Magnet              v3r4    Det
+use Magnet              v3r5    Det
 use RichDet             v10r1   Det
 use STDet               v3r1    Det
 
