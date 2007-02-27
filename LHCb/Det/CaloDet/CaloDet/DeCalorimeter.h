@@ -1,4 +1,4 @@
-// $Id: DeCalorimeter.h,v 1.26 2007-02-22 23:17:18 odescham Exp $ 
+// $Id: DeCalorimeter.h,v 1.27 2007-02-27 22:36:09 odescham Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -177,15 +177,12 @@ public:
   // Return collections
   CaloVector<CellParam>& cellParams(){return m_cells;}
   CaloVector<CaloPin>&  caloPins(){return m_pins;}
-  CaloVector<CaloLed>&  caloLeds(){return m_leds;}
+  std::vector<CaloLed>&  caloLeds(){return m_leds;}
   std::vector<CardParam>& cardParams(){return m_feCards;}
   std::vector<Tell1Param>& tell1Params(){return m_tell1Boards;}
     
 
 
-  // Get pin from a cell CaloCellID - WORK ALSO WITH VIRTUAL 'PIN' cells
-  CaloPin& firstCaloPin(LHCb::CaloCellID id) {LHCb::CaloCellID pinId = m_cells[id].firstPin(); return m_pins[pinId];  }
-  CaloLed& firstCaloLed(LHCb::CaloCellID id) {LHCb::CaloCellID ledId = m_cells[id].firstLed(); return m_leds[ledId];  }
   ///  accessor to pinFE flag for cards/Tell1/Id
   bool isPinCard (const int card) { return m_feCards[card].isPinCard(); };
   bool isPinTell1(const int tell1) { return m_tell1Boards[tell1].readPin(); };
@@ -316,7 +313,7 @@ private:
 
   // Collection of PIN-diodes/LEDs
   CaloVector<CaloPin> m_pins;
-  CaloVector<CaloLed> m_leds;
+  std::vector<CaloLed> m_leds;
   int m_pinArea;
   std::vector<int> m_pinTell1s;
 

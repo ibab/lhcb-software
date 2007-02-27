@@ -1,4 +1,4 @@
-// $Id: DeCalorimeter.cpp,v 1.36 2007-02-27 16:37:16 odescham Exp $ 
+// $Id: DeCalorimeter.cpp,v 1.37 2007-02-27 22:36:09 odescham Exp $ 
 // ============================================================================
 #define  CALODET_DECALORIMETER_CPP 1
 // ============================================================================
@@ -635,7 +635,7 @@ StatusCode DeCalorimeter::buildMonitoringSystem( )  {
     msg << MSG::ERROR << "No 'PIN' parameters in 'Monitoring' condition" << endreq;
     return StatusCode::FAILURE;
   }
-
+  
   std::vector<int> temp = cond->paramAsIntVect( "PIN" );
   int ll = -1;
   int kk = -1;
@@ -740,14 +740,14 @@ StatusCode DeCalorimeter::buildMonitoringSystem( )  {
         int fRowLed = fRow + (ir-1)*rSize ;
         int lRowLed = fRowLed + rSize -1;        
 
-        // Define a CaloCellId for LED == first cell ID 
-        LHCb::CaloCellID ledId(m_caloIndex, area , fRowLed, fColLed);
-        CaloLed   led( ledId );
+        // Build the LED
+        unsigned int ledNum = m_leds.size();
+        CaloLed   led( ledNum );
         led.setIndex(ledIndex);
         led.addCaloRegion(area, fColLed,fRowLed,lColLed,lRowLed);
         led.setPin(pinId);        
-        m_pins[pinId].addLed(ledId); // update CaloPin 
-        m_cells[pinId].addLed(ledId); // add the Led to the virtual pin cell
+        m_pins[pinId].addLed(ledNum); // update CaloPin 
+        m_cells[pinId].addLed(ledNum); // add the Led to the virtual pin cell
         // Hcal Leds can be distributed on 2 areas
         if( 0 <= area2 ){
           if( 1 != rLed*cLed ){
@@ -758,19 +758,19 @@ StatusCode DeCalorimeter::buildMonitoringSystem( )  {
           }
           led.addCaloRegion(area2,fCol2,fRow2,lCol2,lRow2);
         }
-        m_leds.addEntry(led, ledId); // store CaloLed
+        m_leds.push_back(led); // store CaloLed
         msg << MSG::DEBUG << "   --- " << led << endreq;
       }
     }
     
  
     // Link to cell
-    std::vector<LHCb::CaloCellID> leds = m_pins[pinId].leds();
-    for(std::vector<LHCb::CaloCellID>::iterator iled=leds.begin() ; 
+    std::vector<int>& leds = m_pins[pinId].leds();
+    for(std::vector<int>::iterator iled=leds.begin() ; 
         iled != leds.end() ; ++iled ) {
       
-      LHCb::CaloCellID ledId = (*iled);
-      CaloLed& led = m_leds[ ledId ];
+      int ledNum = (*iled);
+      CaloLed& led = m_leds[ ledNum ];
       
       for( unsigned int ireg = 0 ; ireg < led.areas().size();  ++ireg ){
         int ar = led.areas()[ireg];
@@ -784,8 +784,8 @@ StatusCode DeCalorimeter::buildMonitoringSystem( )  {
            msg << MSG::VERBOSE << " Connected cells to LED/Pin " << id << " valid ? " << valid(id) << endreq;
            if ( valid( id ) ) {
              m_cells[id].addPin( pinId );
-             m_cells[id].addLed( ledId );
-             m_leds[ledId].addCell(id);  // update led            
+             m_cells[id].addLed( ledNum );
+             m_leds[ledNum].addCell(id);  // update led            
              m_pins[pinId].addCell(id);  // update pin
            }
          }  

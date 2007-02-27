@@ -28,7 +28,7 @@ public:
 
   // getters
   LHCb::CaloCellID   id()      const {return m_id ;}
-  std::vector<LHCb::CaloCellID>& leds() {return m_leds; }
+  std::vector<int>& leds() {return m_leds; }
   std::vector<LHCb::CaloCellID>& cells() {return m_cells; }
 
 
@@ -56,7 +56,7 @@ public:
 
   // setters
   void setId(LHCb::CaloCellID id){m_id = id;}  
-  void addLed(LHCb::CaloCellID ledId){ m_leds.push_back(ledId);}  
+  void addLed(int id){ m_leds.push_back(id);}  
   void addCell(LHCb::CaloCellID cell){ m_cells.push_back(cell);}  
   void addCaloRegion(int area , int fCol, int fRow, int lCol, int lRow)  {
     m_area.push_back( area );
@@ -100,7 +100,7 @@ private:
   std::vector<int> m_fRow;
   std::vector<int> m_lCol;
   std::vector<int> m_lRow;
-  std::vector<LHCb::CaloCellID> m_leds;
+  std::vector<int> m_leds;
   std::vector<LHCb::CaloCellID> m_cells;
 };
 

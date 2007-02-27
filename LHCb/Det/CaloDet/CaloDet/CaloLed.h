@@ -20,8 +20,8 @@ public:
   
   /** constructors
   */
-  CaloLed():m_id(LHCb::CaloCellID())  {}  
-  CaloLed(LHCb::CaloCellID id);
+  CaloLed():m_id( -1 )  {}  
+  CaloLed(int number);
   
   
   /// destructor 
@@ -29,7 +29,7 @@ public:
   
 
   //getters
-  LHCb::CaloCellID id()  const  { return m_id ; }
+  int number()  const  { return m_id ; }
   std::vector<LHCb::CaloCellID>& cells() {return m_cells; }
   LHCb::CaloCellID   pin() const {return m_pin;   }
 
@@ -46,7 +46,7 @@ public:
   int  index()       const {return m_index; }
 
   // setters
-  void setId(const LHCb::CaloCellID id){m_id = id;}
+  void setNumber(int number){m_id = number;}
   void addCell(const LHCb::CaloCellID cell){ m_cells.push_back(cell);}  
   void setPin(const LHCb::CaloCellID pin){m_pin = pin; }
   void setIndex(const int index){ m_index =index;  }
@@ -61,23 +61,24 @@ public:
     m_region = s.str();
   }
   friend std::ostream& operator<< (std::ostream& str,  CaloLed obj){ return obj.fillStream(str);}
-  std::ostream&  fillStream(std::ostream& str)  {    return str << " Led : " << index() <<" : " <<  m_region 
+  std::ostream&  fillStream(std::ostream& str)  {    return str << " Led : " << number() 
+                                                                << " index "  << index() 
+                                                                <<" : "      <<  m_region 
                                                                 << " readout by  PINId" << pin() ;  }
   
     
 
 private:
-  LHCb::CaloCellID m_id;
+  int m_id;
   std::string m_region;
   LHCb::CaloCellID m_pin;
-  int m_index;
   std::vector<int> m_area;  
   std::vector<int> m_fCol;
   std::vector<int> m_fRow;
   std::vector<int> m_lCol;
   std::vector<int> m_lRow;
+  int m_index;
   std::vector<LHCb::CaloCellID> m_cells;
-  
 };
 
 

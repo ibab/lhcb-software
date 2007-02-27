@@ -15,7 +15,7 @@
 //=============================================================================
 // Standard creator, initializes variables
 //=============================================================================
-CaloLed::CaloLed(LHCb::CaloCellID id )
+CaloLed::CaloLed(int id )
   : m_id(id),
     m_pin(),
     m_area(),

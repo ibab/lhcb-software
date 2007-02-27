@@ -1,5 +1,5 @@
 /// ===========================================================================
-// $Id: CellParam.h,v 1.5 2007-02-22 23:17:18 odescham Exp $
+// $Id: CellParam.h,v 1.6 2007-02-27 22:36:09 odescham Exp $
 #ifndef CALODET_CELLPARAM_H 
 #define CALODET_CELLPARAM_H 1
 /// ===========================================================================
@@ -50,10 +50,8 @@ public:
   
     
 
-  LHCb::CaloCellID firstPin() const  { return *(m_pin.begin()) ;}
-  LHCb::CaloCellID firstLed() const  { return *(m_led.begin()) ;}    
   std::vector<LHCb::CaloCellID> pins() const  { return m_pin ;}
-  std::vector<LHCb::CaloCellID> leds() const  { return m_led ;}    
+  std::vector<int> leds() const  { return m_led ;}    
   
   const CaloNeighbors& neighbors     () const { return m_neighbors     ; }
   const CaloNeighbors& zsupNeighbors () const { return m_zsupNeighbors ; }
@@ -83,7 +81,7 @@ public:
     m_cardRow     = relRow;
   }
   void addPin(LHCb::CaloCellID id){ m_pin.push_back(id) ;}
-  void addLed(LHCb::CaloCellID id){ m_led.push_back(id) ;}
+  void addLed(int id){ m_led.push_back(id) ;}
   
   bool operator==( const CellParam& c2 ) const { 
     return center() == c2.center() && size() == c2.size(); }
@@ -103,7 +101,7 @@ private:
   CaloNeighbors m_zsupNeighbors  ; ///< List of neighbors in same area
   bool m_valid;
   std::vector<LHCb::CaloCellID> m_pin;
-  std::vector<LHCb::CaloCellID> m_led;
+  std::vector<int> m_led;
 };
 
 /// ===========================================================================
