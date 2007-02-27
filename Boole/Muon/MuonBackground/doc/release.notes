@@ -7,7 +7,7 @@
 
 !====================== MuonBackground v2r2 2007-02-27 =====================
 ! 2007-02-27 - Alessia Satta
- - Remove printou in intialization due to empty bins in histo
+ - Remove printout in intialization due to empty bins in histo
 
 ! 2006-11-06 - Marco Cattaneo
  - Print "impossible to add the requested hits" warning only once per job
