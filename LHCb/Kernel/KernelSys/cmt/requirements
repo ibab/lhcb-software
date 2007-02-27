@@ -4,10 +4,10 @@ version v6r2
 branches doc cmt
 
 use LHCbKernel       v7r2   Kernel
-use LHCbMath         v2r0   Kernel
+use LHCbMath         v2r1   Kernel
 use Relations        v5r0   Kernel
 use CaloKernel       v5r0   Calo
 use MuonKernel       v4r0   Muon
-use RichKernel       v7r1   Rich
+use RichKernel       v7r2   Rich
 use L0MuonKernel     v6r0   L0
 use ProcessorKernel  v4r0   L0
