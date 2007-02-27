@@ -157,6 +157,19 @@
 	<code>  Packer::setBit(m_DigitInfo,PackMCMuonDigitInfo::shiftDeadtimeDigitInfo   ,PackMCMuonDigitInfo::maskDeadtimeDigitInfo  , deadtimeKilled); </code>
       </method>						
       <method 
+	desc="is the digit in the dialog deadtime?" 
+	name="isInDialogDeadTime" 
+	type="bool">
+	<code> return Packer::getBit(m_DigitInfo,PackMCMuonDigitInfo::maskDialogDeadtimeDigitInfo ,PackMCMuonDigitInfo::shiftDialogDeadtimeDigitInfo )!=0; </code>
+      </method>     
+      <method 
+	argList="unsigned int deadtimeKilled" 
+	desc="set the killed by deadtime flag in the DIGITINFO word" 
+	name="setDialogDeadtimeDigit" 
+	type="void">
+	<code>  Packer::setBit(m_DigitInfo,PackMCMuonDigitInfo::shiftDialogDeadtimeDigitInfo   ,PackMCMuonDigitInfo::maskDialogDeadtimeDigitInfo  , deadtimeKilled); </code>
+      </method>	
+      <method 
 	desc="is the digit in chamber inefficiency?" 
 	name="isDeadForChamberInefficiency" 
 	type="bool">

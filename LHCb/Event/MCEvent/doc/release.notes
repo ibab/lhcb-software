@@ -1,10 +1,13 @@
-! $Id: release.notes,v 1.65 2007-02-26 15:10:35 cattanem Exp $
+! $Id: release.notes,v 1.66 2007-02-27 08:49:06 asatta Exp $
 ! Package     : Event/MCEvent
 ! Responsible : Marco Cattaneo, Gloria Corti
 ! Purpose     : LHCb Event model. MC truth classes (Gauss and Boole output) 
 !-----------------------------------------------------------------------------
 
 !======================== MCEvent v2r1 2007-02-26 ============================
+! 2007-02-27 - Alessia Satta
+ - Update Muon classes for dialog chip deatime simulation (backward compatible)
+
 ! 2007-02-26 - Marco Cattaneo
  - Add IForcedBDecayTool interface from Marco Musy
  - MCHeaderLocation::Default now defined in terms of ProcessHeaderLocation::MC

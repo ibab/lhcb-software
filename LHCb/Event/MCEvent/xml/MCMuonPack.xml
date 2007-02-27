@@ -70,6 +70,12 @@
 	init="1" 
 	name="bitGeometryAcceptanceDigitInfo" 
 	type="static const unsigned int"/>
+      <attribute
+        desc="number of bit to define if the digit is killed by dialog deadtime "
+        init="1"
+        name="bitDialogDeadtimeDigitInfo"
+        type="static const unsigned int"/>
+
       <attribute 
 	desc=" " 
 	init="0" 
@@ -119,9 +125,15 @@
 	init="shiftAliveTimeAdjustmentDigitInfo+bitAliveTimeAdjustmentDigitInfo" 
 	name="shiftGeometryAcceptanceDigitInfo" 
 	type="static const unsigned int"/>
+      <attribute
+        desc=" "
+        init="shiftGeometryAcceptanceDigitInfo+bitGeometryAcceptanceDigitInfo"
+        name="shiftDialogDeadtimeDigitInfo"
+        type="static const unsigned int"/>
+
       <attribute 
 	desc=" " 
-	init="shiftGeometryAcceptanceDigitInfo+bitGeometryAcceptanceDigitInfo-shiftSecondPart" 
+	init="shiftDialogDeadtimeDigitInfo+bitDialogDeadtimeDigitInfo-shiftSecondPart" 
 	name="bitSecondPart" 
 	type="static const unsigned int"/>        
       <attribute 
@@ -179,7 +191,15 @@
 	bitGeometryAcceptanceDigitInfo   ) - 1  ) &lt;&lt;
 	shiftGeometryAcceptanceDigitInfo   " 
 	name="maskGeometryAcceptanceDigitInfo" 
+	type="static const unsigned int"/>  
+      <attribute 
+	desc="" 
+	init=" ( ( ( (unsigned int) 1 ) &lt;&lt;  
+	bitDialogDeadtimeDigitInfo   ) - 1  ) &lt;&lt;
+	shiftDialogDeadtimeDigitInfo   " 
+	name="maskDialogDeadtimeDigitInfo" 
 	type="static const unsigned int"/>
+
       <attribute 
 	desc="" 
 	init=" ( ( ( (unsigned int) 1 ) &lt;&lt;  bitSecondPart   ) - 1  ) 
@@ -233,6 +253,11 @@
 	desc="number of bit to define the BX to which the hit belong" 
 	init="3" 
 	name="bitNatureOfHitHistory" 
+	type="static const unsigned int"/>     
+      <attribute 
+	desc="number of bit to define is hit is in dialog deadtime" 
+	init="1" 
+	name="bitDialogDeadtimeHitHistory" 
 	type="static const unsigned int"/>
       <attribute 
 	desc=" " 
@@ -278,7 +303,12 @@
 	desc=" " 
 	init=" shiftBXbelongOfHitHistory+ bitBXbelongOfHitHistory " 
 	name="shiftNatureOfHitHistory " 
-	type="static const unsigned int"/>                 
+	type="static const unsigned int"/>  
+      <attribute 
+	desc=" " 
+	init="shiftNatureOfHitHistory+ bitNatureOfHitHistory " 
+	name="shiftDialogDeadtimeHitHistory " 
+	type="static const unsigned int"/>                     
       <attribute 
 	desc="" 
 	init=" ( ( ( (unsigned int) 1 ) &lt;&lt;  bitFiredHitHistory  ) - 1  ) 
@@ -334,6 +364,12 @@
 	- 1  ) &lt;&lt;shiftNatureOfHitHistory  " 
 	name="maskNatureOfHitHistory " 
 	type="static const unsigned int"/>		
+      <attribute 
+	desc="" 
+	init=" ( ( ( (unsigned int) 1 ) &lt;&lt;  bitDialogDeadtimeHitHistory  ) 
+	- 1  ) &lt;&lt;shiftDialogDeadtimeHitHistory  " 
+	name="maskDialogDeadtimeHitHistory " 
+	type="static const unsigned int"/>	
     </namespace>
  </package>
 </gdd>

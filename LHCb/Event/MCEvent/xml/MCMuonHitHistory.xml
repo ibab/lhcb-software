@@ -179,7 +179,25 @@
 name="isHitOriginatedInPrevPrevPrevPrevEvent" type="bool"  >
 	<code> return							
 	  (Packer::getBit(m_hitHistory,PackMCMuonDigitHistory::maskBXbelongOfHitHistory,PackMCMuonDigitHistory::shiftBXbelongOfHitHistory)==MuonBXFlag::FOURPREV)!=0; </code>
+      </method>    
+      <method 
+	desc="is the hit in dialog deadtime ?" 
+name="isHitInDialogDeadtime" type="bool"  >
+	<code> return							
+	  Packer::getBit(m_hitHistory,PackMCMuonDigitHistory::maskDialogDeadtimeHitHistory,PackMCMuonDigitHistory::shiftDialogDeadtimeHitHistory); </code>
       </method>      
+      <method  
+	desc="set the killed by dilaog deadtime flag in the hitHistory word"
+	name="setKilledByDialogDeadtimeHit" 
+	type="void">
+	<arg 
+	  type="unsigned int" 
+	  name="killedChamberIneff " 
+	  inout="INPUT" />
+	<code>  Packer::setBit(m_hitHistory,PackMCMuonDigitHistory::shiftDialogDeadtimeHitHistory,PackMCMuonDigitHistory::maskDialogDeadtimeHitHistory,killedChamberIneff ); </code>
+      </method>	
+
+
       <method  
 	desc="set the nature of hit in the hitHistory word"
 	name="setNatureOfHit" 
@@ -248,7 +266,15 @@ name="isHitOriginatedInPrevPrevPrevPrevEvent" type="bool"  >
 	type="bool">
 	<code> return (Packer::getBit(m_hitHistory ,  PackMCMuonDigitHistory::maskNatureOfHitHistory , PackMCMuonDigitHistory::shiftNatureOfHitHistory
 	  )==MuonOriginFlag::LHCBACKGROUND)!=0; </code>	
+      </method>	    
+      <method 
+	desc="Is hit firing the frontend ?" 
+	name="isHitFiring" 
+	type="bool">
+	<code> return !(isHitOutGeoAccemtance()||isKilledByChamberInefficiency()||isHitInDeadtime());
+	</code>	
       </method>								
+ 							
     </class>		
   </package>
 </gdd>
