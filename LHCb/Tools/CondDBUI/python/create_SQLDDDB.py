@@ -69,10 +69,11 @@ try:
             sys.stdout.write("\b")
             #out = os.popen4("cvs -d %s co -r %s Det/SQLDDDB_BackUp/%s"%(cvsroot,tag,dbname))[1].readlines()
             
-            updated_files = [ l.split()[1].replace("Det/SQLDDDB_BackUp/%s/"%dbname,"")
+            updated_files = [ l.split()[1].replace("Det/SQLDDDB_BackUp/%s"%dbname,"")
                               for l in out if l.startswith("U") ]
             print "found %d files"%len(updated_files)
-    
+
+            open(os.path.join(tmp_dir,dbname+"-includes"),"w").write('\n'.join(updated_files)+'\n')
             # this is a dictionary where a directory points to a dictionary and a file points to None
             tree = {}
             local_dir = tree
@@ -83,8 +84,12 @@ try:
                         local_dir[d] = {}
                     local_dir = local_dir[d]
                 local_dir[f.split("/")[-1]] = None
-    
-            os.system("python %s -s %s -c \"%s\""%(copy_script,os.path.join(data_dir,dbname),connection_string(dbname)))
+
+            
+            os.system("python %s -s %s -c \"%s\" --include-from-file=%s"%(copy_script,
+                                                                          os.path.join(data_dir,dbname),
+                                                                          connection_string(dbname),
+                                                                          os.path.join(tmp_dir,dbname+"-includes")))
             #os.path.rename("%s.db"%dbname,os.path.join("..","db"))
             print "Creating tag %s"%tag
             conddbui.CondDB(connection_string(dbname),readOnly=False).recursiveTag("/",tag,desc)

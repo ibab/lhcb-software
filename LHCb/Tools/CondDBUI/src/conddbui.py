@@ -1180,13 +1180,16 @@ class CondDB:
 #                                Utility functions                                      #
 #########################################################################################
 
-def _collect_tree_info(source_dir, includes = [], excludes = [], includesFirst = True):
+def _collect_tree_info(source_dir, includes = [], excludes = [],
+                       include_dirs = [], exclude_dirs = [], includesFirst = True):
     """
     Create a list of folders and foldersets to create starting from a filesystem tree.
         inputs:
             source_dir: string; root node were to start scanning
-            includes: list regular expressions an accepted path must match
-            excludes: list regular expressions to exclude files matching them
+            includes:      list regular expressions an accepted path must match
+            excludes:      list regular expressions to exclude files matching them
+            include_dirs:  list regular expressions an accepted dir must match
+            exclude_dirs:  list regular expressions to exclude dirs matching them
             includesFirst: if True, first check includes, then excludes; vice-versa if
                            False
         outputs:
@@ -1194,10 +1197,13 @@ def _collect_tree_info(source_dir, includes = [], excludes = [], includesFirst =
     
     """
     # add to the exclude list CVS and back-up files
-    excludes += [ x for x in ['CVS', '.*~'] if x not in excludes ]
+    exclude_dirs += [ x for x in ['CVS'] if x not in exclude_dirs ]
+    excludes += [ x for x in ['.*~'] if x not in excludes ]
     # convert to regular expression objects
     includes = [ re.compile(x) for x in includes]
+    include_dirs = [ re.compile(x) for x in include_dirs]
     excludes = [ re.compile(x) for x in excludes]
+    exclude_dirs = [ re.compile(x) for x in exclude_dirs]
 
     name_format = re.compile("(?:([a-zA-Z0-9_.-]*)@)?([a-zA-Z0-9_.-]*)(?::([0-9]+))?$")
     nodes = {}
@@ -1207,13 +1213,13 @@ def _collect_tree_info(source_dir, includes = [], excludes = [], includesFirst =
 
         # Check if the base_path is ok or not
         include_match, exclude_match = False, False # default
-        for p in includes:
+        for p in include_dirs:
             if p.search(base_path):
                 include_match = True
                 break
-        if len(includes) == 0: include_match = True
+        if len(include_dirs) == 0: include_match = True
             
-        for p in excludes:
+        for p in exclude_dirs:
             if p.search(base_path):
                 exclude_match = True
                 break
@@ -1231,7 +1237,7 @@ def _collect_tree_info(source_dir, includes = [], excludes = [], includesFirst =
             # Check if the file_path is ok or not
             include_match, exclude_match = False, False # default
             file_path = os.path.join(base_path,f)
-            
+
             for p in includes:
                 if p.search(file_path):
                     include_match = True

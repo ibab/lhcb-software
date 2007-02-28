@@ -997,6 +997,9 @@ class condDBConnectDialog(qt.QDialog):
         #--- Database Name ---#
         self.labelDBName = qt.QLabel('Database Name: ', self, 'labelDBName')
         self.editDBName  = qt.QLineEdit(self, 'editDBName')
+        #self.choseDBName = qt.QComboBox(self, 'editDBName')
+        #self.choseDBName.setEditable(True)
+        #self.choseDBName.setAutoCompletion(True)
 
         #--- Action Buttons ---#
         # Display locked/unlocked status of the database
@@ -1017,6 +1020,7 @@ class condDBConnectDialog(qt.QDialog):
 
         self.layoutDialog.addWidget(self.labelDBName, 1, 0)
         self.layoutDialog.addWidget(self.editDBName,  1, 1)
+        #self.layoutDialog.addWidget(self.choseDBName,  1, 1)
 
         self.layoutDialog.addMultiCellLayout(self.layoutButton, 2, 2, 0, 2)
         self.layoutButton.addWidget(self.buttonOpenDB)
@@ -1070,6 +1074,7 @@ class condDBConnectDialog(qt.QDialog):
         '''
         alias  = str(self.choseAlias.currentText())
         dbname = str(self.editDBName.text())
+        #dbname = str(self.choseDBName.currentText())
         # FIXME: this check does not work always (CORAL alias can have a '/')
         if alias.find(os.sep) != -1:
             self.connectString = 'sqlite_file:%s/%s'%(alias, dbname)

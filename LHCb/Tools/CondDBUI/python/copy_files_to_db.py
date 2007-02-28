@@ -39,6 +39,10 @@ def main():
                       action="store_true", dest="noextension",
                       help="Remove filename extension when creating a COOL Folder",
                       default=False)
+    parser.add_option("", "--include-from-file",
+                      dest="includeFile", type="string",
+                      metavar="INCFILE",
+                      help="store only the files included in the INCFILE")
 #    parser.add_option("-k", "--keep-db",
 #                      action="store_false", dest="drop",
 #                      help="keep the existing database and merge with the new files (default)")
@@ -65,7 +69,10 @@ def main():
     #                          },
     #   ...
     # }
-    nodes = conddbui._collect_tree_info(options.source, excludes = [])
+    includes = []
+    if options.includeFile:
+        includes = [ l.strip() for l in open(options.includeFile).xreadlines() ]
+    nodes = conddbui._collect_tree_info(options.source, includes = includes, excludes = [])
 
     # Just count the number of folders we are goinfg to write
     count_folders = 0

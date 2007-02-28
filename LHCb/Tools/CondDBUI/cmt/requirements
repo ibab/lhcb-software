@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.15 2007-02-17 10:08:58 marcocle Exp $
+# $Id: requirements,v 1.16 2007-02-28 18:29:31 marcocle Exp $
 package CondDBUI
 
 version v2r0
@@ -18,11 +18,13 @@ path_prepend PYTHONPATH          "$(CONDDBUIROOT)/src"
 private
 # ============== Dependencies ========================================
 
+use SQLDDDB       v*    Det -no_auto_imports
+
 # library path needed for mysql backend
 # use mysql         v*    LCG_Interfaces -no_auto_imports
 
 # library path needed for sqlite backend
-use sqlite        v*    LCG_Interfaces -no_auto_imports
+#use sqlite        v*    LCG_Interfaces -no_auto_imports
 
 # library path needed for oracle backend
 # use oracle        v*    LCG_Interfaces -no_auto_imports
