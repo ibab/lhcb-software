@@ -5,8 +5,11 @@
 !-----------------------------------------------------------------------------
 
 
-! 2007-02-22 - Olivier Deschamps
+! 2007-02-28 - Olivier Deschamps
+ - Add a new tool : CaloDataProvider : fast calo data decoding (for Orwell and HLT usage)
+ - fix a small bug in CaloFillPrsSpdRawBuffer (problem when filling Prs bank when Zsup threshold =0)
 
+! 2007-02-22 - Olivier Deschamps
  - Implement the readout of PIN-diode data (using DeCalorimeter)
  - Remove CaloReadoutTool.{h,cpp} (was containing FECard and Tell1 description 
 	now implemented	in CaloDet)

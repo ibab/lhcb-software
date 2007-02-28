@@ -1,4 +1,4 @@
-// $Id: CaloTriggerAdcsFromRaw.cpp,v 1.9 2007-02-22 23:39:52 odescham Exp $
+// $Id: CaloTriggerAdcsFromRaw.cpp,v 1.10 2007-02-28 22:44:34 odescham Exp $
 // Include files
 
 // from Gaudi
@@ -105,7 +105,7 @@ std::vector<LHCb::L0CaloAdc>& CaloTriggerAdcsFromRaw::adcs (int source ) {
     } 
   }
   if( !ok ){
-    error() << " Bank source " << source << " has not been found " << endreq;
+    error() << " Expected bank source " << source << " has not been found " << endreq;
     sc = StatusCode::FAILURE;
   }
   if( !sc.isSuccess() ){

@@ -1,4 +1,4 @@
-// $Id: CaloFillPrsSpdRawBuffer.cpp,v 1.12 2007-02-22 23:39:52 odescham Exp $
+// $Id: CaloFillPrsSpdRawBuffer.cpp,v 1.13 2007-02-28 22:44:34 odescham Exp $
 // Include files 
 #include "Event/RawEvent.h"
 
@@ -299,6 +299,7 @@ void CaloFillPrsSpdRawBuffer::fillPackedBank ( ) {
   LHCb::CaloAdcs*  digs   = get<LHCb::CaloAdcs>( m_inputBank );
   LHCb::L0PrsSpdHits* prs = get<LHCb::L0PrsSpdHits>( m_prsBank );
   LHCb::L0PrsSpdHits* spd = get<LHCb::L0PrsSpdHits>( m_spdBank );
+
   
   for ( int kTell1 = 0 ; m_numberOfBanks > kTell1 ; kTell1++ ) {
     std::vector<int> feCards = m_calo->tell1ToCards( kTell1 );
@@ -354,7 +355,7 @@ void CaloFillPrsSpdRawBuffer::fillPackedBank ( ) {
             ids.end() != itId; ++itId ) {
         LHCb::CaloCellID id = *itId;
         LHCb::CaloAdc* adcEntry = digs->object( id );
-        if ( 0 != adcEntry ) {
+        if ( 0 != adcEntry &&  0 != adcEntry->adc()) {
           int adc = adcEntry->adc();
           adc = ( adc & 0x3FF ) | ( num << 10 );
           if ( 0 == word ) {
