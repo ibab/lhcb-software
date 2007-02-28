@@ -4,6 +4,10 @@
 ! Purpose     : Analysis program for LHCb
 !-----------------------------------------------------------------------------
 
+! 2007-02-28 - Patrick Koppenburg
+ - Depend on AnalysisSys
+ - Remove PhysCoreSys and PhysMCSys dependencies
+
 ! 2007-02-23 - Chris Jones
  - Update ProtoParticle recalibration options to not use DoD for the moment
    whilst a few issues are resolved

@@ -11,14 +11,14 @@
 
 //--------------------------------------------------------------
 // Main initialisation
-#include "$PHYSCORESYSROOT/options/DaVinciInit.opts"
+#include "$PHYSYSROOT/options/DaVinciInit.opts"
 // POOL Persistency
 #include "$STDOPTS/DstDicts.opts"
 //--------------------------------------------------------------
 // Physics packages and dependent packages
-#include "$PHYSCORESYSROOT/options/PhysCoreSys.opts"
+#include "$PHYSSYSROOT/options/PhysCoreSys.opts"
 //    ... for physics check on MC data
-#include "$PHYSMCSYSROOT/options/PhysMCSys.opts"
+#include "$ANALYSISSYSROOT/options/PhysMCSys.opts"
 //--------------------------------------------------------------
 #include "$DAVINCIROOT/options/DaVinciProtoPCalibrate.opts"
 //--------------------------------------------------------------

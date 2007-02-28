@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.341 2007-02-15 11:31:00 pkoppenb Exp $
+# $Id: requirements,v 1.342 2007-02-28 18:12:38 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg, J. Palacios
 #
@@ -65,10 +65,13 @@ use LbcomSys    v6r1
 use RecSys      v4r1
 
 #-- Hlt
-#use HltSys      v1r1
+use HltSys      v1r2
 
-#--Phys
+#-- Phys
 use PhysSys     v5r1
+
+#-- Analysis
+use AnalysisSys v1r0
 
 # Build DaVinci Application with standard executable
 # Note that user code is located in a component library (see details
