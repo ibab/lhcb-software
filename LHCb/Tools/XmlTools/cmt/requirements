@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.19 2007-02-05 18:51:47 marcocle Exp $ 
+# $Id: requirements,v 1.20 2007-02-28 18:28:48 marcocle Exp $ 
 # =============================================================================
 package       XmlTools
 version       v5r0
@@ -21,3 +21,12 @@ library       XmlTools           component/*.cpp
 # =========== standard patterns (the order is essential!) ====================== 
 apply_pattern component_library library=XmlTools 
 apply_pattern linker_library    library=XmlToolsLib 
+
+# =============== LCG Dictionaries ============================================
+apply_pattern     reflex_dictionary                                   \
+                  dictionary=XmlTools                                 \
+                  headerfiles=$(XMLTOOLSROOT)/dict/XmlToolsDict.h     \
+                  selectionfile=$(XMLTOOLSROOT)/dict/XmlToolsDict.xml \
+                  options="-U__MINGW32__"
+
+macro_append XmlToolsDict_use_linkopts ' $(XmlToolsLib_use_linkopts) '
