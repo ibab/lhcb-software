@@ -1,0 +1,70 @@
+package AnalysisSys
+version v1r0
+
+branches doc cmt
+
+####################################################################
+
+#===================================================================
+use  CommonParticles            v3r8     Phys
+use  FlavourTagging             v7r1p1   Phys  # someting changed
+
+####################################################################
+use  DaVinciMCKernel            v2r1     Phys   # move to LHCb
+use  DaVinciMCTools     	v9r1     Phys
+use  DaVinciAssociators         v9r0     Phys
+use  MCStandardParticles        v1r2     Phys
+use  FlavourTaggingChecker      v2r1p1   Phys
+use  DaVinciUser      	        v8r1     Phys
+
+####################################################################
+use  PhysSelSys      	v10r1   PhysSel
+#===================================================================
+use Ccbar	        v1r3    PhysSel # Jan Amoraal, Miriam Calvo
+use B2Dilepton		v1r3	PhysSel # Rare Decays Working Group
+use B2D0X		v1r8	PhysSel # 
+use B2DplusX		v1r0	PhysSel # 
+use B2DsX		v1r4	PhysSel # 
+use B2DstarX		v1r4	PhysSel # 
+use B2uds	        v2r2    PhysSel # Juan Palacios, Gabriel Guerrer, Eric Conte
+use JetsSel	        v1r2    PhysSel # 
+use Radiative           v2r1    PhysSel # Vanya BELYAEV
+
+# temporary packages
+use Bs2JpsiPhi          v3r3    PhysSel # Gerhard Raven, Jan Amoraal
+use Bd2PiPiPi0          v4r2    PhysSel # Olivier Deschamps
+
+####################################################################
+use               LoKiAll          v5r1   Phys
+#===================================================================
+use               LoKiMC           v2r1   Phys
+use               LoKiGenMC        v2r0   Phys
+use               LoKiPhys         v3r1   Phys
+use               LoKiPhysMC       v4r0   Phys
+use               LoKiAlgo         v3r1   Phys
+use               LoKiAlgoMC       v3r0   Phys
+use               LoKiJets         v2r1   Phys
+use               LoKiHybrid       v1r0   Phys 
+use               LoKiDict         v5r1   Phys 
+use               LoKi             v5r0   Phys
+
+#use               LoKiExample      v*   Ex 
+
+use               LoKiCoreTest     v1r2   Tests 
+use               LoKiMCTest       v1r0   Tests 
+use               LoKiGenTest      v1r2   Tests 
+use               LoKiPhysTest     v1r0   Tests 
+use               LoKiAlgoTest     v1r1   Tests 
+use               LoKiAlgoMCTest   v1r0   Tests 
+use               LoKiTests        v1r2   Tests
+
+####################################################################
+use  Stripping          v6r0    Tools
+
+####################################################################
+use  KtJet              v2r0    External
+####################################################################
+
+# TEMPORARY
+use PhysSys v*
+

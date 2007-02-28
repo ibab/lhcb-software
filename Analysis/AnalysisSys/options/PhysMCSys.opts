@@ -1,0 +1,18 @@
+//--------------------------------------------------------------
+// Associators
+
+// #include "$ASSOCIATORSSYSROOT/options/DLLs.opts"
+// ApplicationMgr.DLLs += { "TrAssociators" };
+//ApplicationMgr.DLLs += { "DaVinciAssociators" };
+//#include "$DAVINCIASSOCIATORSROOT/options/DaVinciAssociators.opts"
+
+ApplicationMgr.DLLs += { "SimComponents" };
+ApplicationMgr.DLLs += { "DaVinciMCTools" };
+// ApplicationMgr.DLLs += { "DaVinciEff" };
+
+
+DataOnDemandSvc.Nodes += { "DATA='/Event/MC' TYPE='DataObject'" };
+DataOnDemandSvc.Algorithms += {
+  "DATA='/Event/MC/Particles'       TYPE='UnpackMCParticle'",
+  "DATA='/Event/MC/Vertices'        TYPE='UnpackMCVertex'"
+};
