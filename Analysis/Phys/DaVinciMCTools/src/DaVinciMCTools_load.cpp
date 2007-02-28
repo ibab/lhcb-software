@@ -1,6 +1,5 @@
-// $Id: DaVinciMCTools_load.cpp,v 1.20 2007-02-26 09:46:43 sposs Exp $
-// Include files 
-
+// $Id: DaVinciMCTools_load.cpp,v 1.21 2007-02-28 12:27:12 jonrob Exp $
+// Include files
 
 #include "GaudiKernel/DeclareFactoryEntries.h"
 
@@ -12,27 +11,28 @@
 //
 // They should be inside the 'DECLARE_FACTORY_ENTRIES' body.
 
-DECLARE_FACTORY_ENTRIES(DaVinciMCTools) {
+DECLARE_FACTORY_ENTRIES(DaVinciMCTools) 
+{
 
   DECLARE_TOOL( DebugTool );
   DECLARE_TOOL( MCParticleMaker );
-/// @todo test TrueMCFilterCriterion
+  /// @todo test TrueMCFilterCriterion
   DECLARE_TOOL( TrueMCFilterCriterion );
-/// @todo Restore CheatedLifetimeFitter tool if needed
-//  DECLARE_TOOL( CheatedLifetimeFitter ); 
-  DECLARE_TOOL( BackgroundCategory ); 
+  /// @todo Restore CheatedLifetimeFitter tool if needed
+  //  DECLARE_TOOL( CheatedLifetimeFitter );
+  DECLARE_TOOL( BackgroundCategory );
 
-/// @todo Restore MCPIDProtoPAlg and move to someplace in REC
-//  DECLARE_ALGORITHM( MCPIDProtoPAlg ); 
+  /// @todo Restore MCPIDProtoPAlg and move to someplace in REC
+  //  DECLARE_ALGORITHM( MCPIDProtoPAlg );
   DECLARE_ALGORITHM( PrintMCTree );
   DECLARE_ALGORITHM( PrintTree );
   DECLARE_ALGORITHM( FilterGoodDecay );
   DECLARE_ALGORITHM( IsBEvent );
-  DECLARE_ALGORITHM( DecayChainNTuple );  
- /// @todo Restore PrintBackgroundCategory
-//  DECLARE_ALGORITHM( PrintBackgroundCategory ); 
-  DECLARE_ALGORITHM( MCParticleLinkerMaker ); 
+  DECLARE_ALGORITHM( DecayChainNTuple );
+  /// @todo Restore PrintBackgroundCategory
+  //  DECLARE_ALGORITHM( PrintBackgroundCategory );
+  DECLARE_ALGORITHM( MCParticleLinkerMaker );
   DECLARE_ALGORITHM( FilterToFixOppositeBFractions );
-  
+
 
 }
