@@ -3,6 +3,10 @@ Package     : PhysSys
 Package Coordinator : Juan Palacios
 Purpose     : LHCb physics packages
 
+</PRE><H1><A NAME=v6r0>2007-02-28 Phys v6r0 </A></H1><PRE>
+Phys split into Phys and Analysis. Phys contains everything 
+needed by the HLT and no more.
+
 </PRE><H1><A NAME=v5r0>2007-02-05 Phys v5r0 </A></H1><PRE>
 
 Final DC06 stripping preparation version.

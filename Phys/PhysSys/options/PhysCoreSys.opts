@@ -1,0 +1,18 @@
+ApplicationMgr.DLLs += { "DaVinciTools" };
+ApplicationMgr.DLLs += { "DaVinciTransporter" };
+ApplicationMgr.DLLs += { "ProtoParticleFilter" };
+ApplicationMgr.DLLs += { "DaVinciFilter" };
+ApplicationMgr.DLLs += { "ParticleMaker" };
+ApplicationMgr.DLLs += { "DaVinciKernel" };
+ApplicationMgr.DLLs += { "VertexFit" };
+ApplicationMgr.DLLs += { "TrackTools" };
+
+// ApplicationMgr.DLLs += { "Ks2PiPiSel" };
+// ApplicationMgr.DLLs += { "FlavourTagging" };
+ApplicationMgr.DLLs += { "Utilities" };
+
+//DataOnDemandSvc.OutputLevel = 1 ;
+ApplicationMgr.ExtSvc += { "DataOnDemandSvc" };
+
+// #include "$CALORECOROOT/options/CaloRecoOnDemand.opts"
+ApplicationMgr.DLLs += { "TrackExtrapolators" }; 
