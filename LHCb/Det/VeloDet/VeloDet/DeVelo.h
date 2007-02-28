@@ -1,4 +1,4 @@
-// $Id: DeVelo.h,v 1.51 2006-12-06 23:24:31 mjohn Exp $
+// $Id: DeVelo.h,v 1.52 2007-02-28 18:32:28 marcocle Exp $
 #ifndef       VELODET_DEVELO_H
 #define       VELODET_DEVELO_H 1
 // ============================================================================
@@ -24,7 +24,7 @@
  *  @date 22/4/2003
  */
 
-static const CLID& CLID_DeVelo = 8100; 
+static const CLID CLID_DeVelo = 8100; 
 
 namespace DeVeloLocation{
   static const std::string& Default="/dd/Structure/LHCb/BeforeMagnetRegion/Velo";

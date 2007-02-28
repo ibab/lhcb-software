@@ -1,6 +1,9 @@
-! $Id: release.notes,v 1.159 2007-02-19 09:40:10 cattanem Exp $
+! $Id: release.notes,v 1.160 2007-02-28 18:32:28 marcocle Exp $
 package VeloDet
 package manager : Velo Group
+
+! 2007-02-28 - Marco Clemencic
+ - Replaced "static const CLID&" with "static const CLID"
 
 !======================== VeloDet v11r1 2007-02-19 ===========================
 ! 2007-02-19 - Marco Cattaneo

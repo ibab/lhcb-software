@@ -1,4 +1,4 @@
-// $Id: DeVeloSensor.h,v 1.30 2007-02-19 09:37:26 cattanem Exp $
+// $Id: DeVeloSensor.h,v 1.31 2007-02-28 18:32:28 marcocle Exp $
 #ifndef VELODET_DEVELOSENSOR_H 
 #define VELODET_DEVELOSENSOR_H 1
 
@@ -20,7 +20,7 @@
 #include "Kernel/Trajectory.h"
 
 // Unique class identifier
-static const CLID& CLID_DeVeloSensor = 1008101 ;
+static const CLID CLID_DeVeloSensor = 1008101 ;
 
 
 /** @class DeVeloSensor DeVeloSensor.h VeloDet/DeVeloSensor.h

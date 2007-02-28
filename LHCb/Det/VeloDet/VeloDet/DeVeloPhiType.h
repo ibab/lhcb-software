@@ -1,4 +1,4 @@
-// $Id: DeVeloPhiType.h,v 1.21 2007-02-19 09:37:26 cattanem Exp $
+// $Id: DeVeloPhiType.h,v 1.22 2007-02-28 18:32:28 marcocle Exp $
 #ifndef VELODET_DEVELOPHITYPE_H 
 #define VELODET_DEVELOPHITYPE_H 1
 
@@ -17,7 +17,7 @@
 #include "Kernel/LineTraj.h"
 
 // Unique class identifier
-static const CLID& CLID_DeVeloPhiType = 1008103 ;
+static const CLID CLID_DeVeloPhiType = 1008103 ;
 
 
 /** @class DeVeloPhiType DeVeloPhiType.h VeloDet/DeVeloPhiType.h
