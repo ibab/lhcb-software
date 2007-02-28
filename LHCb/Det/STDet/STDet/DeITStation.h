@@ -1,4 +1,4 @@
-// $Id: DeITStation.h,v 1.2 2006-12-13 13:48:52 mneedham Exp $
+// $Id: DeITStation.h,v 1.3 2007-02-28 18:30:45 marcocle Exp $
 #ifndef _DeITStation_H_
 #define _DeITStation_H_
 
@@ -22,7 +22,7 @@ class DeITDetector;
  *  @author Matthew Needham Matthew.Needham@cern.ch
  */
 
-static const CLID& CLID_DeITStation = 9202; // needs fixing !
+static const CLID CLID_DeITStation = 9202; // needs fixing !
 
 class DeITStation : public DeSTStation  {
 

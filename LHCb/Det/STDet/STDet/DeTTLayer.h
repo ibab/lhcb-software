@@ -1,4 +1,4 @@
-// $Id: DeTTLayer.h,v 1.3 2006-12-13 13:48:52 mneedham Exp $
+// $Id: DeTTLayer.h,v 1.4 2007-02-28 18:30:45 marcocle Exp $
 #ifndef _DeTTLayer_H_
 #define _DeTTLayer_H_
 
@@ -22,7 +22,7 @@ class DeTTStation;
  *
  */
 
-static const CLID& CLID_DeTTLayer = 9103;
+static const CLID CLID_DeTTLayer = 9103;
 
 class DeTTLayer : public DeSTLayer  {
 

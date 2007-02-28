@@ -1,4 +1,4 @@
-// $Id: DeTTDetector.h,v 1.4 2006-12-13 13:48:52 mneedham Exp $
+// $Id: DeTTDetector.h,v 1.5 2007-02-28 18:30:45 marcocle Exp $
 #ifndef _DeTTDetector_H_
 #define _DeTTDetector_H_
 
@@ -19,7 +19,7 @@ class DeSTSector;
  *
  */
 
-static const CLID& CLID_DeTTDetector = 9101;
+static const CLID CLID_DeTTDetector = 9101;
 
 class DeTTDetector : public DeSTDetector  {
 

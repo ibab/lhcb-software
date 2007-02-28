@@ -1,4 +1,4 @@
-// $Id: DeTTHalfModule.h,v 1.3 2006-12-13 13:48:52 mneedham Exp $
+// $Id: DeTTHalfModule.h,v 1.4 2007-02-28 18:30:45 marcocle Exp $
 
 #ifndef _DeTTHalfModule_H_
 #define _DeTTHalfModule_H_
@@ -24,7 +24,7 @@ class DeTTLayer;
  **
  */
 
-static const CLID& CLID_DeTTHalfModule = 9110;
+static const CLID CLID_DeTTHalfModule = 9110;
 
 class DeTTHalfModule : public DeSTBaseElement  {
 

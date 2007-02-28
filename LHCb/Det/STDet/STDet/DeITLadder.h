@@ -1,4 +1,4 @@
-// $Id: DeITLadder.h,v 1.4 2006-12-13 13:48:52 mneedham Exp $
+// $Id: DeITLadder.h,v 1.5 2007-02-28 18:30:45 marcocle Exp $
 #ifndef _DeITLadder_H_
 #define _DeITLadder_H_
 
@@ -21,7 +21,7 @@ class DeITLadder;
  *
  */
 
-static const CLID& CLID_DeITLadder = 9205; // needs fixing !
+static const CLID CLID_DeITLadder = 9205; // needs fixing !
 
 class DeITLadder : public DeSTBaseElement  {
 

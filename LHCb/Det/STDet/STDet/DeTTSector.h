@@ -20,7 +20,7 @@
 
 class DeTTHalfModule;
 
-static const CLID& CLID_DeTTSector = 9120;
+static const CLID CLID_DeTTSector = 9120;
 
 class DeTTSector : public DeSTSector  {
 

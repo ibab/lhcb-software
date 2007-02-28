@@ -20,7 +20,7 @@ class DeITLayer;
  *  @author Matthew Needham Matthew.Needham@cern.ch
  */
 
-static const CLID& CLID_DeITSector = 9210;
+static const CLID CLID_DeITSector = 9210;
 
 class DeITSector : public DeSTSector  {
 

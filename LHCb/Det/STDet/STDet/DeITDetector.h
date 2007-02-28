@@ -1,11 +1,11 @@
-// $Id: DeITDetector.h,v 1.3 2006-12-13 13:48:52 mneedham Exp $
+// $Id: DeITDetector.h,v 1.4 2007-02-28 18:30:45 marcocle Exp $
 #ifndef _DeITDetector_H_
 #define _DeITDetector_H_
 
 #include "STDet/DeSTDetector.h"
 #include "GaudiKernel/VectorMap.h"
 
-static const CLID& CLID_DeITDetector = 9201;
+static const CLID CLID_DeITDetector = 9201;
 
 /** @class DeITDetector DeITDetector.h "STDet/DeITDetector.h"
  *

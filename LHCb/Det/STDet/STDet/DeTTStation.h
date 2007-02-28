@@ -21,7 +21,7 @@ class DeTTDetector;
  * 
  */
 
-static const CLID& CLID_DeTTStation = 9102;
+static const CLID CLID_DeTTStation = 9102;
 
 class DeTTStation : public DeSTStation  {
 
