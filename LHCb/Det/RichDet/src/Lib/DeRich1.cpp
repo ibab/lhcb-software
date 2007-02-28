@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRich1
  *
- *  $Id: DeRich1.cpp,v 1.27 2007-02-01 16:41:13 jonrob Exp $
+ *  $Id: DeRich1.cpp,v 1.28 2007-02-28 18:31:07 marcocle Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -26,7 +26,7 @@
 
 //-----------------------------------------------------------------------------
 
-const CLID& CLID_DERich1 = 12001;  // User defined
+const CLID CLID_DERich1 = 12001;  // User defined
 
 // Standard Constructors
 DeRich1::DeRich1() { m_name = "DeRich1"; }

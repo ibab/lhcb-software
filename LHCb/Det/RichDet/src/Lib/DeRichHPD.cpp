@@ -3,7 +3,7 @@
  *
  * Implementation file for class : DeRichHPD
  *
- * $Id: DeRichHPD.cpp,v 1.2 2006-10-25 09:49:53 cattanem Exp $
+ * $Id: DeRichHPD.cpp,v 1.3 2007-02-28 18:31:07 marcocle Exp $
  *
  * @author Antonis Papanestis a.papanestis@rl.ac.uk
  * @date   2006-09-19
@@ -34,7 +34,7 @@
 
 //=============================================================================
 
-const CLID& CLID_DERichHPD = 12015;  // User defined
+const CLID CLID_DERichHPD = 12015;  // User defined
 
 //=============================================================================
 // Standard constructor, initializes variables

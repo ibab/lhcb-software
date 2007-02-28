@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRichSingleSolidRadiator
  *
- *  $Id: DeRichSingleSolidRadiator.cpp,v 1.21 2007-02-06 15:01:53 cattanem Exp $
+ *  $Id: DeRichSingleSolidRadiator.cpp,v 1.22 2007-02-28 18:31:07 marcocle Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -24,7 +24,7 @@
 
 //----------------------------------------------------------------------------
 
-const CLID& CLID_DeRichSingleSolidRadiator = 12040;  // User defined
+const CLID CLID_DeRichSingleSolidRadiator = 12040;  // User defined
 
 // Standard Constructor
 DeRichSingleSolidRadiator::DeRichSingleSolidRadiator()

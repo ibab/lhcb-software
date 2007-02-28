@@ -4,7 +4,7 @@
  *  Header file for detector description class : DeRichBeamPipe
  *
  *  CVS Log :-
- *  $Id: DeRichBeamPipe.h,v 1.5 2007-02-01 16:41:12 jonrob Exp $
+ *  $Id: DeRichBeamPipe.h,v 1.6 2007-02-28 18:31:07 marcocle Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2006-11-27
@@ -22,7 +22,7 @@
 // LHCbKernel
 
 // External declarations
-extern const CLID& CLID_DERichBeamPipe;
+extern const CLID CLID_DERichBeamPipe;
 
 
 /** @namespace DeRichBeamPipeLocation

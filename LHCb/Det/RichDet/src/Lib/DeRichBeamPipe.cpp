@@ -3,7 +3,7 @@
  *
  * Implementation file for class : DeRichBeamPipe
  *
- * $Id: DeRichBeamPipe.cpp,v 1.4 2006-12-03 01:59:49 jonrob Exp $
+ * $Id: DeRichBeamPipe.cpp,v 1.5 2007-02-28 18:31:07 marcocle Exp $
  *
  * @author Antonis Papanestis a.papanestis@rl.ac.uk
  * @date   2006-11-27
@@ -18,7 +18,7 @@
 
 //=============================================================================
 
-const CLID& CLID_DERichBeamPipe = 12050;  // User defined
+const CLID CLID_DERichBeamPipe = 12050;  // User defined
 
 //=============================================================================
 // Standard constructor, initializes variables

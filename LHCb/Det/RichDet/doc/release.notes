@@ -4,6 +4,9 @@
 ! Purpose     : interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2007-02-28 - Marco Clemencic
+ - Replaced "const CLID&" with "const CLID"
+
 !======================== RichDet v10r1 2006-02-06 ========================
 ! 2007-02-06 - Marco Cattaneo
  - Remove LHCbDefinitions includes

@@ -4,7 +4,7 @@
  *
  * Implementation file for class : DeRichSystem
  *
- * $Id: DeRichSystem.cpp,v 1.8 2007-02-01 16:41:13 jonrob Exp $
+ * $Id: DeRichSystem.cpp,v 1.9 2007-02-28 18:31:07 marcocle Exp $
  *
  * @author Antonis Papanestis a.papanestis@rl.ac.uk
  * @date   2006-01-27
@@ -26,7 +26,7 @@
 
 //=============================================================================
 
-const CLID& CLID_DERichSystem = 12005;  // User defined
+const CLID CLID_DERichSystem = 12005;  // User defined
 
 //=============================================================================
 // Standard constructor, initializes variables

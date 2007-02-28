@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRichHPDPanel
  *
- *  $Id: DeRichHPDPanel.cpp,v 1.52 2007-02-06 15:01:53 cattanem Exp $
+ *  $Id: DeRichHPDPanel.cpp,v 1.53 2007-02-28 18:31:07 marcocle Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -33,7 +33,7 @@
 
 //----------------------------------------------------------------------------
 
-const CLID& CLID_DeRichHPDPanel = 12010;  // User defined
+const CLID CLID_DeRichHPDPanel = 12010;  // User defined
 
 // Standard Constructor
 DeRichHPDPanel::DeRichHPDPanel() :

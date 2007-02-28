@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRichSphMirror
  *
- *  $Id: DeRichSphMirror.cpp,v 1.26 2007-02-06 15:01:53 cattanem Exp $
+ *  $Id: DeRichSphMirror.cpp,v 1.27 2007-02-28 18:31:07 marcocle Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -30,7 +30,7 @@
 
 //======================================================================
 
-const CLID& CLID_DeRichSphMirror = 12030;  // User defined
+const CLID CLID_DeRichSphMirror = 12030;  // User defined
 
 // Standard Constructor
 DeRichSphMirror::DeRichSphMirror()

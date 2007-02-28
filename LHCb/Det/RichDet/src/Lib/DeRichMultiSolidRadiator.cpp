@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRichMultiSolidRadiator
  *
- *  $Id: DeRichMultiSolidRadiator.cpp,v 1.16 2007-02-06 15:01:53 cattanem Exp $
+ *  $Id: DeRichMultiSolidRadiator.cpp,v 1.17 2007-02-28 18:31:07 marcocle Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -24,7 +24,7 @@
 
 //----------------------------------------------------------------------------
 
-const CLID& CLID_DeRichMultiSolidRadiator = 12041;  // User defined
+const CLID CLID_DeRichMultiSolidRadiator = 12041;  // User defined
 
 // Standard Constructor
 DeRichMultiSolidRadiator::DeRichMultiSolidRadiator() {}

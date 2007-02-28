@@ -4,7 +4,7 @@
  *  Header file for detector description class : DeRichSystem
  *
  *  CVS Log :-
- *  $Id: DeRichSystem.h,v 1.4 2007-02-01 16:41:12 jonrob Exp $
+ *  $Id: DeRichSystem.h,v 1.5 2007-02-28 18:31:07 marcocle Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2006-01-26
@@ -28,7 +28,7 @@
 #include "RichDet/RichDAQDefinitions.h"
 
 // External declarations
-extern const CLID& CLID_DERichSystem;
+extern const CLID CLID_DERichSystem;
 
 /** @namespace DeRichLocation
  *

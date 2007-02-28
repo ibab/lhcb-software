@@ -5,7 +5,7 @@
  *  Implementation file for detector description class : DeRichGasRadiator
  *
  *  CVS Log :-
- *  $Id: DeRichGasRadiator.cpp,v 1.8 2006-08-31 11:13:21 cattanem Exp $
+ *  $Id: DeRichGasRadiator.cpp,v 1.9 2007-02-28 18:31:07 marcocle Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2006-03-02
@@ -30,7 +30,7 @@
 // 2006-03-02 : Antonis Papanestis
 //-----------------------------------------------------------------------------
 
-const CLID& CLID_DeRichGasRadiator = 12042;  // User defined
+const CLID CLID_DeRichGasRadiator = 12042;  // User defined
 
 //=============================================================================
 // Standard constructor, initializes variables
