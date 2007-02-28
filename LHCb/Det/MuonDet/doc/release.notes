@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.83 2007-02-28 18:33:18 marcocle Exp $
+! $Id: release.notes,v 1.84 2007-02-28 18:40:11 marcocle Exp $
 ! Package     : MuonDet
 ! Responsible : Alessia Satta
 !----------------------------------------------------------------------------
@@ -7,7 +7,8 @@
  - Replaced "static const CLID&" with "static const CLID"
  - Moved declaration of factories from link library to component library
    (MuonDet_dll.cpp)
-
+ - Moved call to "this->dataSvc()" (in DeMuonDetector) from constructor to
+   initialize 
 !========================= MuonDet v6r0 2007-02-27 ========================
 ! 2007-02-27 - Alessia Satta
  - add methods for proper readout condition
