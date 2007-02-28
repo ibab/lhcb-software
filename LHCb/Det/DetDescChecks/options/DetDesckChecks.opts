@@ -2,9 +2,6 @@
 #include "$STDOPTS/DetDesc.opts"
 #include "$STDOPTS/DC06Conditions.opts"
 
-// Uncomment the following line to use Det/SQLDDDB
-// #include "$SQLDDDBROOT/options/SQLDDDB.opts"
-
 ApplicationMgr.HistogramPersistency = "ROOT";
 
 HistogramPersistencySvc.OutputFile = "histo.root";

@@ -1,4 +1,8 @@
-#include "$DETDESCCHECKSROOT/options/DetDesckChecks.opts"
+#include "$STDOPTS/DetDesc.opts"
+#include "$STDOPTS/DC06Conditions.opts"
+
+ApplicationMgr.EvtSel     = "NONE" ;
+ApplicationMgr.EvtMax     = 1 ;
 
 //----------------------------------------------------------------------------
 // Load det desc and dump the content
