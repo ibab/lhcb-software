@@ -1,4 +1,4 @@
-// $Id: SVertexTool.h,v 1.3 2006-10-24 10:16:45 jpalac Exp $
+// $Id: SVertexTool.h,v 1.4 2007-02-28 08:27:58 sposs Exp $
 #ifndef SVERTEXTOOL_H 
 #define SVERTEXTOOL_H 1
 // Include files
@@ -42,6 +42,23 @@ public:
 private:
   IGeomDispCalculator* geom;
   IVertexFit *fitter;
+
+  float  m_ipfitpol0;
+  float  m_ipfitpol1;
+  float  m_ipfitpol2;
+  float  m_ipfitpol3;
+  float  m_ipfitpol4;
+  float  m_ipfitpol5;
+  
+  float  m_ptfitpol0;
+  float  m_ptfitpol1;
+  float  m_ptfitpol2;
+  float  m_ptfitpol3;
+  float  m_ptfitpol4;
+
+  float  m_anglepol0;
+  float  m_anglepol1;
+  float  m_anglepol2;  
 
   double angle( Gaudi::LorentzVector , Gaudi::LorentzVector );
   double ipprob(double x) ;

@@ -1,4 +1,4 @@
-// $Id: SVertexTool.cpp,v 1.4 2006-10-24 10:16:44 jpalac Exp $
+// $Id: SVertexTool.cpp,v 1.5 2007-02-28 08:27:58 sposs Exp $
 #include "SVertexTool.h"
 
 //-----------------------------------------------------------------------------
@@ -21,6 +21,24 @@ SVertexTool::SVertexTool( const std::string& type,
                           const IInterface* parent ) :
   GaudiTool ( type, name, parent ) { 
   declareInterface<ISecondaryVertexTool>(this);
+
+  declareProperty( "IPFitPol0", m_ipfitpol0= -0.0386294 );
+  declareProperty( "IPFitPol1", m_ipfitpol1= 0.198011 );
+  declareProperty( "IPFitPol2", m_ipfitpol2= -0.0214092 );
+  declareProperty( "IPFitPol3", m_ipfitpol3= 0.00103611 );
+  declareProperty( "IPFitPol4", m_ipfitpol4= -2.34523e-05 );
+  declareProperty( "IPFitPol5", m_ipfitpol5= 1.99983e-07 );
+
+  declareProperty( "PtFitPol0", m_ptfitpol0= 0.0785018 );
+  declareProperty( "PtFitPol1", m_ptfitpol1= 1.76885 );
+  declareProperty( "PtFitPol2", m_ptfitpol2= -1.50309 );
+  declareProperty( "PtFitPol3", m_ptfitpol3= 0.558458 );
+  declareProperty( "PtFitPol4", m_ptfitpol4= -0.0749303 );
+
+  declareProperty( "AnglePol0", m_anglepol0= 0.743526 );
+  declareProperty( "AnglePol1", m_anglepol1= -2.09646 );
+  declareProperty( "AnglePol2", m_anglepol2= 8.60807 );
+  
 }
 
 StatusCode SVertexTool::initialize() {
@@ -62,8 +80,8 @@ std::vector<Vertex> SVertexTool::buildVertex( const RecVertex& RecVert,
   for ( jp = vtags.begin(); jp != vtags.end(); jp++ ) {
 
     //FIRST seed particle -----------------------------------
-    if( (*jp)->particleID().abspid()==13 
-	&& (*jp)->pt()/GeV >1.2 && (*jp)->p()/GeV >5.0 ) continue;//exclude mu
+    //if( (*jp)->particleID().abspid()==13 
+    //&& (*jp)->pt()/GeV >1.2 && (*jp)->p()/GeV >5.0 ) continue;//exclude mu
     sc = geom->calcImpactPar(**jp, RecVert, ipl, iperrl);
     if( sc.isFailure() ) continue;
     if( iperrl > 1.0 ) continue;                                //preselection
@@ -75,15 +93,15 @@ std::vector<Vertex> SVertexTool::buildVertex( const RecVertex& RecVert,
     if (!proto) continue ;
     const Track* track = proto->track();
     lcs = track->chi2PerDoF();
-    //if( lcs > 2.0 ) continue; //xxx                                  //preselection
+    //if( lcs > 2.0 ) continue; //xxx                           //preselection
     //must be long  
     if( track->type() != Track::Long ) continue;                //preselection
 
     //SECOND seed particle -----------------------------------
     for ( kp = (jp+1) ; kp != vtags.end(); kp++ ) {
 
-      if( (*kp)->particleID().abspid()==13 
-	  && (*kp)->pt()/GeV >1.2 && (*kp)->p()/GeV >5.0 ) continue;
+      //if( (*kp)->particleID().abspid()==13 
+      //&& (*kp)->pt()/GeV >1.2 && (*kp)->p()/GeV >5.0 ) continue;
 
       sc = geom->calcImpactPar(**kp, RecVert, ips, iperrs);
       if( sc.isFailure() ) continue;  
@@ -96,7 +114,7 @@ std::vector<Vertex> SVertexTool::buildVertex( const RecVertex& RecVert,
       if( !proto ) continue;    
       const Track* track = proto->track();
       lcs = track->chi2PerDoF();
-      //if( lcs > 2.0 ) continue;   //xxx                               //preselection
+      //if( lcs > 2.0 ) continue;   //xxx                        //preselection
       //second particle must also be long
       if( track->type() != Track::Long ) continue;             //preselection
 
@@ -111,8 +129,8 @@ std::vector<Vertex> SVertexTool::buildVertex( const RecVertex& RecVert,
       if( sum.M()/GeV > 0.490 && sum.M()/GeV < 0.505 
           &&  (*jp)->particleID().abspid() == 211
           &&  (*kp)->particleID().abspid() == 211
-          && ((*jp)->particleID().threeCharge())
-          * ((*kp)->particleID().threeCharge()) < 0 ) {
+          && ((*jp)->charge())
+          * ((*kp)->charge()) < 0 ) {
         debug() << "This is a Ks candidate! skip."<<endreq;
         //set their energy to 0 so that they're not used afterwards
         Gaudi::LorentzVector zero(0.0001,0.0001,0.0001,0.0001);
@@ -121,6 +139,19 @@ std::vector<Vertex> SVertexTool::buildVertex( const RecVertex& RecVert,
         continue;
       }
 
+      if( sum.M()/GeV > 1.05 && sum.M()/GeV < 1.2
+          && (*jp)->particleID().abspid() == 211
+          && (*kp)->particleID().abspid() == 2212
+          && ((*jp)->charge())
+          * ((*kp)->charge()) < 0 ){
+        debug() << "This is a Lambda0 candidate! skip."<<endreq;
+        //set their energy to 0 so that they're not used afterwards
+        Gaudi::LorentzVector zero(0.0001,0.0001,0.0001,0.0001);
+        //(*jp)->setMomentum(zero);
+        //(*kp)->setMomentum(zero);//xxx
+        continue;
+      }
+      
       //build a likelihood that the combination comes from B ---------
       double probi1, probi2, probp1, probp2, proba, probs, probb;
       // impact parameter
@@ -134,7 +165,7 @@ std::vector<Vertex> SVertexTool::buildVertex( const RecVertex& RecVert,
       // total
       probs=probi1*probi2*probp1*probp2*proba;
       probb=(1-probi1)*(1-probi2)*(1-probp1)*(1-probp2)*(1-proba);
-      if( probs/(probs+probb) < 0.2 ) continue;                   //preselection
+      if( probs/(probs+probb) < 0.2 ) continue;                  //preselection
       if( probs/(probs+probb) > probf ) {
         probf = probs/(probs+probb);
         Vfit = vtx;
@@ -175,7 +206,7 @@ std::vector<Vertex> SVertexTool::buildVertex( const RecVertex& RecVert,
       double probs=probi1*probp1;
       double probb=(1-probi1)*(1-probp1);
       double likeb=probs/(probs+probb);
-      if( likeb < 0.2 ) continue;                                         //cut
+      if( likeb < 0.2 ) continue;                                       //cut
 
       Pfit.push_back(*jpp);
 
@@ -196,7 +227,7 @@ std::vector<Vertex> SVertexTool::buildVertex( const RecVertex& RecVert,
       for( kpp=Pfit.begin(); kpp!=Pfit.end(); kpp++, ikpp++ ){
         if( Pfit.size() < 3 ) break;
 
-	Particle::ConstVector tmplist = Pfit;
+        Particle::ConstVector tmplist = Pfit;
         tmplist.erase( tmplist.begin() + ikpp );
 
         sc = fitter->fit( tmplist, vtx ); 
@@ -228,7 +259,8 @@ std::vector<Vertex> SVertexTool::buildVertex( const RecVertex& RecVert,
   }
   debug() << "================ Fit Results: " << Pfit.size() <<endreq;
   Vfit.clearOutgoingParticles();
-  for( jp=Pfit.begin(); jp!=Pfit.end(); jp++ ) Vfit.addToOutgoingParticles(*jp);
+  for( jp=Pfit.begin(); jp!=Pfit.end(); jp++ ) 
+    Vfit.addToOutgoingParticles(*jp);
 
   vtxvect.push_back(Vfit);
   return vtxvect;
@@ -248,20 +280,26 @@ double SVertexTool::angle( Gaudi::LorentzVector a, Gaudi::LorentzVector b) {
 }
 double SVertexTool::ipprob(double x) {
   if( x > 40. ) return 0.6;
-  double r = - 0.535 + 0.3351*x - 0.03102*pow(x,2) + 0.001316*pow(x,3)
-    - 0.00002598*pow(x,4) + 0.0000001919*pow(x,5);
+  //double r = - 0.535 + 0.3351*x - 0.03102*pow(x,2) + 0.001316*pow(x,3)
+  //- 0.00002598*pow(x,4) + 0.0000001919*pow(x,5);
+  double r = m_ipfitpol0 + m_ipfitpol1*x + m_ipfitpol2*pow(x,2) 
+    + m_ipfitpol3*pow(x,3) + m_ipfitpol4*pow(x,4) + m_ipfitpol5*pow(x,5);
   if(r<0) r=0;
   return r;
 }
 double SVertexTool::ptprob(double x) {
   if( x > 5.0 ) return 0.65;
-  double r = 0.04332 + 0.9493*x - 0.5283*pow(x,2) + 0.1296*pow(x,3)
-    - 0.01094*pow(x,4);
+  //double r = 0.04332 + 0.9493*x - 0.5283*pow(x,2) + 0.1296*pow(x,3)
+  //  - 0.01094*pow(x,4);
+  double r = m_ptfitpol0 + m_ptfitpol1*x + m_ptfitpol2*pow(x,2) 
+    + m_ptfitpol3*pow(x,3) + m_ptfitpol4*pow(x,4);
   if(r<0) r=0;
   return r;
 }
 double SVertexTool::aprob(double x) {
-  if( x < 0.02 ) return 0.32;
-  return 0.4516 - 1.033*x;
+  if( x > 0.25 ) return 0.7;
+  double r = m_anglepol0 + m_anglepol1*x + m_anglepol2*x*x;
+  if(r<0) r=0;
+  return r;
 }
 //=============================================================================

@@ -1,4 +1,4 @@
-// $Id: TaggerElectronTool.h,v 1.7 2006-11-03 20:52:17 musy Exp $
+// $Id: TaggerElectronTool.h,v 1.8 2007-02-28 08:27:58 sposs Exp $
 #ifndef USER_TAGGERELECTRONTOOL_H 
 #define USER_TAGGERELECTRONTOOL_H 1
 
@@ -9,7 +9,7 @@
 // from Event
 #include "Kernel/IGeomDispCalculator.h"
 #include "Kernel/ITagger.h"
-
+#include "CaloInterfaces/ICaloElectron.h" 
 #include "INNetTool.h"
 
 /** @class TaggerElectronTool TaggerElectronTool.h 
@@ -41,6 +41,8 @@ public:
 private:
   IGeomDispCalculator *m_Geom;
   INNetTool* m_nnet;
+  ICaloElectron*  m_electron;
+
   std::string m_CombinationTechnique, m_NeuralNetName;
 
   StatusCode calcIP( const LHCb::Particle* , 
