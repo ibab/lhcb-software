@@ -1,8 +1,8 @@
 JobOptionsSvc        INFO 
 //GP:================================================================================
 //GP: include ../options/TestTimeOut.opts                                     (0,0)
-//GP: include /scratch/marcocle/Devel/LHCb_newCOOL/Ex/DetCondExample/v10r0/options/cool.opts (6,10)
-//GP: include /scratch/marcocle/Devel/LHCb_newCOOL/Ex/DetCondExample/v10r0/options/common.opts (5,10)
+//GP: include ~/cmtuser/Ex/DetCondExample/v11r0/options/cool.opts (6,10)
+//GP: include ~/cmtuser/Ex/DetCondExample/v11r0/options/common.opts (5,10)
 ApplicationMgr.HistogramPersistency = "NONE";                           //GP: (11,1)
 MessageSvc.Format = "% F%25W%S%7W%R%T %0W%M";                           //GP: (18,1)
 DetectorDataSvc.UsePersistency = 1;                                     //GP: (23,1)
@@ -12,11 +12,11 @@ DetectorDataSvc.DetStorageType = 7;                                     //GP: (2
 XmlCnvSvc.AllowGenericConversion = 1;                                   //GP: (27,1)
 DetectorPersistencySvc.CnvServices +=  [ "XmlCnvSvc" ] ;                //GP: (32,1)
 GaudiSequencer.MeasureTime = 1;                                         //GP: (37,1)
-//GP: end  /scratch/marcocle/Devel/LHCb_newCOOL/Ex/DetCondExample/v10r0/options/common.opts (43,1)
+//GP: end  ~/cmtuser/Ex/DetCondExample/v11r0/options/common.opts (43,1)
 DetectorPersistencySvc.CnvServices +=  [ "CondDBCnvSvc" ] ;             //GP: (10,1)
 XmlParserSvc.EntityResolverSvc = "CondDBEntityResolverSvc";             //GP: (11,1)
 CondDBAccessSvc.ConnectionString = "$CONDDBCONNECTIONSTRING";           //GP: (18,1)
-//GP: end  /scratch/marcocle/Devel/LHCb_newCOOL/Ex/DetCondExample/v10r0/options/cool.opts (28,1)
+//GP: end  ~/cmtuser/Ex/DetCondExample/v11r0/options/cool.opts (28,1)
 ApplicationMgr.TopAlg =  [ "TestTimeOut" ] ;                            //GP: (11,1)
 ApplicationMgr.EvtSel = "NONE";                                         //GP: (18,1)
 ApplicationMgr.EvtMax = 1;                                              //GP: (21,1)
@@ -33,8 +33,8 @@ JobOptionsSvc        INFO Job options successfully read in from ../options/TestT
 ApplicationMgr             DEBUG Getting my own properties
 ApplicationMgr           SUCCESS 
 ====================================================================================================================================
-                                                   Welcome to DetCondExample version v10r0
-                                          running on pclhcb55.cern.ch on Wed Feb 14 17:15:02 2007
+                                                   Welcome to DetCondExample version v11r0
+                                          running on lxbuild035.cern.ch on Mon Feb 26 15:43:30 2007
 ====================================================================================================================================
 ApplicationMgr              INFO Successfully loaded modules : DetCond
 ApplicationMgr              INFO Application Manager Configured successfully
@@ -43,7 +43,7 @@ IncidentSvc                DEBUG Service base class initialized successfully
 ServiceManager             DEBUG Initializing service CondDBAccessSvc
 CondDBAccessSvc            DEBUG Service base class initialized successfully
 CondDBAccessSvc            DEBUG Initialize
-CondDBAccessSvc            DEBUG Connection string = "sqlite://none;schema=CONDDB.sqlite;dbname=CONDDB"
+CondDBAccessSvc            DEBUG Connection string = "sqlite_file:CONDDB.db/CONDDB"
 CondDBAccessSvc            DEBUG Get cool::DatabaseSvc
 CondDBAccessSvc            DEBUG cool::DatabaseSvc got
 CondDBAccessSvc            DEBUG Opening connection
@@ -96,9 +96,9 @@ HistogramDataSvc         VERBOSE ServiceLocatorHelper::createService: found serv
 ApplicationMgr              INFO Application Manager Initialized successfully
 TestTimeOut                DEBUG ==> Execute
 TestTimeOut                 INFO Sleeping ...
-CondDBAccessSvc.TimeOu...VERBOSE Time-out reached (1171469712)
+CondDBAccessSvc.TimeOu...VERBOSE Time-out reached (1172501020)
 CondDBAccessSvc.TimeOu...  DEBUG Disconnect from database
-CondDBAccessSvc.TimeOu...VERBOSE Time-out reached (1171469722)
+CondDBAccessSvc.TimeOu...VERBOSE Time-out reached (1172501030)
 TestTimeOut                 INFO Try to access the db...
 DetectorDataSvc            DEBUG Service base class initialized successfully
 DetectorDataSvc          VERBOSE ServiceLocatorHelper::createService: found service IncidentSvc
@@ -128,15 +128,15 @@ DetectorPersistencySvc   VERBOSE ServiceLocatorHelper::createService: found serv
 DetectorPersistencySvc      INFO Added successfully Conversion service:XmlCnvSvc
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-DetectorDataSvc          SUCCESS Detector description database: /scratch/marcocle/Devel/LHCb_newCOOL/Ex/DetCondExample/v10r0/XMLDDDB/lhcb.xml
+DetectorDataSvc          SUCCESS Detector description database: ~/cmtuser/Ex/DetCondExample/v11r0/XMLDDDB/lhcb.xml
 TestTimeOut              VERBOSE ServiceLocatorHelper::createService: found service DetectorDataSvc
 DetectorDataSvc          VERBOSE Requested object /dd
 DetectorPersistencySvc   VERBOSE ServiceLocatorHelper::createService: found service CondDBCnvSvc
 DetectorPersistencySvc      INFO Added successfully Conversion service:CondDBCnvSvc
 CondDBCnvSvc               DEBUG entering createAddress
-XmlGenericCnv              DEBUG Address: filename = /scratch/marcocle/Devel/LHCb_newCOOL/Ex/DetCondExample/v10r0/XMLDDDB/lhcb.xml, ObjectName = dd
-XmlParserSvc               DEBUG parsing file /scratch/marcocle/Devel/LHCb_newCOOL/Ex/DetCondExample/v10r0/XMLDDDB/lhcb.xml
-CondDBEntityResolverSv...  DEBUG systemId = "/scratch/marcocle/Devel/LHCb_newCOOL/Ex/DetCondExample/v10r0/XMLDDDB/lhcb.xml"
+XmlGenericCnv              DEBUG Address: filename = ~/cmtuser/Ex/DetCondExample/v11r0/XMLDDDB/lhcb.xml, ObjectName = dd
+XmlParserSvc               DEBUG parsing file ~/cmtuser/Ex/DetCondExample/v11r0/XMLDDDB/lhcb.xml
+CondDBEntityResolverSv...  DEBUG systemId = "~/cmtuser/Ex/DetCondExample/v11r0/XMLDDDB/lhcb.xml"
 CondDBEntityResolverSv...VERBOSE Not a conddb URL
 CondDBEntityResolverSv...  DEBUG systemId = "DTD/structure.dtd"
 CondDBEntityResolverSv...VERBOSE Not a conddb URL
@@ -144,22 +144,22 @@ XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
 XmlCatalogCnv            VERBOSE tag is catalogref, clsID is 3
 XmlGenericCnv            VERBOSE Href points to a regular URL: structure.xml#Structure
-XmlGenericCnv            VERBOSE Now build an XML address for location=/scratch/marcocle/Devel/LHCb_newCOOL/Ex/DetCondExample/v10r0/XMLDDDB/structure.xml and entryName=/Structure
+XmlGenericCnv            VERBOSE Now build an XML address for location=~/cmtuser/Ex/DetCondExample/v11r0/XMLDDDB/structure.xml and entryName=/Structure
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /scratch/marcocle/Devel/LHCb_newCOOL/Ex/DetCondExample/v10r0/XMLDDDB/structure.xml, entry name = /Structure isString : 0
+XmlGenericCnv              DEBUG New address created : location = ~/cmtuser/Ex/DetCondExample/v11r0/XMLDDDB/structure.xml, entry name = /Structure isString : 0
 XmlCatalogCnv            VERBOSE tag is catalogref, clsID is 3
 XmlGenericCnv            VERBOSE Href points to a regular URL: geometry.xml#Geometry
-XmlGenericCnv            VERBOSE Now build an XML address for location=/scratch/marcocle/Devel/LHCb_newCOOL/Ex/DetCondExample/v10r0/XMLDDDB/geometry.xml and entryName=/Geometry
+XmlGenericCnv            VERBOSE Now build an XML address for location=~/cmtuser/Ex/DetCondExample/v11r0/XMLDDDB/geometry.xml and entryName=/Geometry
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /scratch/marcocle/Devel/LHCb_newCOOL/Ex/DetCondExample/v10r0/XMLDDDB/geometry.xml, entry name = /Geometry isString : 0
+XmlGenericCnv              DEBUG New address created : location = ~/cmtuser/Ex/DetCondExample/v11r0/XMLDDDB/geometry.xml, entry name = /Geometry isString : 0
 XmlCatalogCnv            VERBOSE tag is catalogref, clsID is 3
 XmlGenericCnv            VERBOSE Href points to a regular URL: materials/materials.xml#Materials
-XmlGenericCnv            VERBOSE Now build an XML address for location=/scratch/marcocle/Devel/LHCb_newCOOL/Ex/DetCondExample/v10r0/XMLDDDB/materials/materials.xml and entryName=/Materials
+XmlGenericCnv            VERBOSE Now build an XML address for location=~/cmtuser/Ex/DetCondExample/v11r0/XMLDDDB/materials/materials.xml and entryName=/Materials
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /scratch/marcocle/Devel/LHCb_newCOOL/Ex/DetCondExample/v10r0/XMLDDDB/materials/materials.xml, entry name = /Materials isString : 0
+XmlGenericCnv              DEBUG New address created : location = ~/cmtuser/Ex/DetCondExample/v11r0/XMLDDDB/materials/materials.xml, entry name = /Materials isString : 0
 XmlCatalogCnv            VERBOSE tag is catalogref, clsID is 3
 XmlGenericCnv            VERBOSE Found environment variable in path $CONDITIONS_PATH#Conditions
 XmlGenericCnv            VERBOSE path expanded to conddb:/Conditions/MainCatalog.xml#Conditions
@@ -171,9 +171,9 @@ DetectorDataSvc          VERBOSE Object /dd created
 DetectorDataSvc          VERBOSE Filling object /dd
 DetectorDataSvc          VERBOSE Object /dd successfully loaded
 DetectorDataSvc          VERBOSE Requested object /dd/Structure
-XmlGenericCnv              DEBUG Address: filename = /scratch/marcocle/Devel/LHCb_newCOOL/Ex/DetCondExample/v10r0/XMLDDDB/structure.xml, ObjectName = /Structure
-XmlParserSvc               DEBUG parsing file /scratch/marcocle/Devel/LHCb_newCOOL/Ex/DetCondExample/v10r0/XMLDDDB/structure.xml
-CondDBEntityResolverSv...  DEBUG systemId = "/scratch/marcocle/Devel/LHCb_newCOOL/Ex/DetCondExample/v10r0/XMLDDDB/structure.xml"
+XmlGenericCnv              DEBUG Address: filename = ~/cmtuser/Ex/DetCondExample/v11r0/XMLDDDB/structure.xml, ObjectName = /Structure
+XmlParserSvc               DEBUG parsing file ~/cmtuser/Ex/DetCondExample/v11r0/XMLDDDB/structure.xml
+CondDBEntityResolverSv...  DEBUG systemId = "~/cmtuser/Ex/DetCondExample/v11r0/XMLDDDB/structure.xml"
 CondDBEntityResolverSv...VERBOSE Not a conddb URL
 CondDBEntityResolverSv...  DEBUG systemId = "DTD/structure.dtd"
 CondDBEntityResolverSv...VERBOSE Not a conddb URL
@@ -183,15 +183,15 @@ XmlCatalogCnv            VERBOSE tag is detelem, clsID is 2
 CondDBCnvSvc               DEBUG entering createAddress
 XmlBaseDetElemCnv        VERBOSE Initializing converter for class ID 2
 XmlGenericCnv            VERBOSE Href points to a regular URL: #LHCb
-XmlGenericCnv            VERBOSE Now build an XML address for location=/scratch/marcocle/Devel/LHCb_newCOOL/Ex/DetCondExample/v10r0/XMLDDDB/structure.xml and entryName=/LHCb
+XmlGenericCnv            VERBOSE Now build an XML address for location=~/cmtuser/Ex/DetCondExample/v11r0/XMLDDDB/structure.xml and entryName=/LHCb
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /scratch/marcocle/Devel/LHCb_newCOOL/Ex/DetCondExample/v10r0/XMLDDDB/structure.xml, entry name = /LHCb isString : 0
+XmlGenericCnv              DEBUG New address created : location = ~/cmtuser/Ex/DetCondExample/v11r0/XMLDDDB/structure.xml, entry name = /LHCb isString : 0
 DetectorDataSvc          VERBOSE Object /dd/Structure created
 DetectorDataSvc          VERBOSE Filling object /dd/Structure
 DetectorDataSvc          VERBOSE Object /dd/Structure successfully loaded
 DetectorDataSvc          VERBOSE Requested object /dd/Structure/LHCb
-XmlGenericCnv              DEBUG Address: filename = /scratch/marcocle/Devel/LHCb_newCOOL/Ex/DetCondExample/v10r0/XMLDDDB/structure.xml, ObjectName = /LHCb
+XmlGenericCnv              DEBUG Address: filename = ~/cmtuser/Ex/DetCondExample/v11r0/XMLDDDB/structure.xml, ObjectName = /LHCb
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
 XmlBaseDetElemCnv        VERBOSE Normal generic detector element conversion
@@ -234,8 +234,8 @@ GeometryInfoPlus         VERBOSE registerCondition
 UpdateManagerSvc           DEBUG registering object of type 16GeometryInfoPlus (without condition)
 GeometryInfoPlus         VERBOSE registerSupportGI
 GeometryInfoPlus         VERBOSE No parent 
-UpdateManagerSvc           DEBUG Update specific object at 0x9170570
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x91741e0) 0x9170570 ---BEGIN---
+UpdateManagerSvc           DEBUG Update specific object at 0x########
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000001 -> 0.0
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 0
@@ -244,9 +244,9 @@ GeometryInfoPlus         VERBOSE cache() calculating matrices
 GeometryInfoPlus         VERBOSE calculateMatrices: clearing matrices
 GeometryInfoPlus         VERBOSE Welcome to calculateMatrices for volume /dd/Geometry/LHCb/lvLHCb support 
 DetectorDataSvc          VERBOSE Requested object /dd/Geometry
-XmlGenericCnv              DEBUG Address: filename = /scratch/marcocle/Devel/LHCb_newCOOL/Ex/DetCondExample/v10r0/XMLDDDB/geometry.xml, ObjectName = /Geometry
-XmlParserSvc               DEBUG parsing file /scratch/marcocle/Devel/LHCb_newCOOL/Ex/DetCondExample/v10r0/XMLDDDB/geometry.xml
-CondDBEntityResolverSv...  DEBUG systemId = "/scratch/marcocle/Devel/LHCb_newCOOL/Ex/DetCondExample/v10r0/XMLDDDB/geometry.xml"
+XmlGenericCnv              DEBUG Address: filename = ~/cmtuser/Ex/DetCondExample/v11r0/XMLDDDB/geometry.xml, ObjectName = /Geometry
+XmlParserSvc               DEBUG parsing file ~/cmtuser/Ex/DetCondExample/v11r0/XMLDDDB/geometry.xml
+CondDBEntityResolverSv...  DEBUG systemId = "~/cmtuser/Ex/DetCondExample/v11r0/XMLDDDB/geometry.xml"
 CondDBEntityResolverSv...VERBOSE Not a conddb URL
 CondDBEntityResolverSv...  DEBUG systemId = "DTD/geometry.dtd"
 CondDBEntityResolverSv...VERBOSE Not a conddb URL
@@ -313,23 +313,23 @@ XmlGenericCnv              DEBUG Added DDDB Parameter UX85C13100ZStartIP = 13095
 XmlGenericCnv              DEBUG Added DDDB Parameter UX854ZStartIP = 14400.00*mm
 XmlCatalogCnv            VERBOSE tag is catalogref, clsID is 3
 XmlGenericCnv            VERBOSE Href points to a regular URL: LHCb/geometry.xml#LHCb
-XmlGenericCnv            VERBOSE Now build an XML address for location=/scratch/marcocle/Devel/LHCb_newCOOL/Ex/DetCondExample/v10r0/XMLDDDB/LHCb/geometry.xml and entryName=/LHCb
+XmlGenericCnv            VERBOSE Now build an XML address for location=~/cmtuser/Ex/DetCondExample/v11r0/XMLDDDB/LHCb/geometry.xml and entryName=/LHCb
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /scratch/marcocle/Devel/LHCb_newCOOL/Ex/DetCondExample/v10r0/XMLDDDB/LHCb/geometry.xml, entry name = /LHCb isString : 0
+XmlGenericCnv              DEBUG New address created : location = ~/cmtuser/Ex/DetCondExample/v11r0/XMLDDDB/LHCb/geometry.xml, entry name = /LHCb isString : 0
 XmlCatalogCnv            VERBOSE tag is catalogref, clsID is 3
 XmlGenericCnv            VERBOSE Href points to a regular URL: Downstream/geometry.xml#DownstreamRegion
-XmlGenericCnv            VERBOSE Now build an XML address for location=/scratch/marcocle/Devel/LHCb_newCOOL/Ex/DetCondExample/v10r0/XMLDDDB/Downstream/geometry.xml and entryName=/DownstreamRegion
+XmlGenericCnv            VERBOSE Now build an XML address for location=~/cmtuser/Ex/DetCondExample/v11r0/XMLDDDB/Downstream/geometry.xml and entryName=/DownstreamRegion
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /scratch/marcocle/Devel/LHCb_newCOOL/Ex/DetCondExample/v10r0/XMLDDDB/Downstream/geometry.xml, entry name = /DownstreamRegion isString : 0
+XmlGenericCnv              DEBUG New address created : location = ~/cmtuser/Ex/DetCondExample/v11r0/XMLDDDB/Downstream/geometry.xml, entry name = /DownstreamRegion isString : 0
 DetectorDataSvc          VERBOSE Object /dd/Geometry created
 DetectorDataSvc          VERBOSE Filling object /dd/Geometry
 DetectorDataSvc          VERBOSE Object /dd/Geometry successfully loaded
 DetectorDataSvc          VERBOSE Requested object /dd/Geometry/LHCb
-XmlGenericCnv              DEBUG Address: filename = /scratch/marcocle/Devel/LHCb_newCOOL/Ex/DetCondExample/v10r0/XMLDDDB/LHCb/geometry.xml, ObjectName = /LHCb
-XmlParserSvc               DEBUG parsing file /scratch/marcocle/Devel/LHCb_newCOOL/Ex/DetCondExample/v10r0/XMLDDDB/LHCb/geometry.xml
-CondDBEntityResolverSv...  DEBUG systemId = "/scratch/marcocle/Devel/LHCb_newCOOL/Ex/DetCondExample/v10r0/XMLDDDB/LHCb/geometry.xml"
+XmlGenericCnv              DEBUG Address: filename = ~/cmtuser/Ex/DetCondExample/v11r0/XMLDDDB/LHCb/geometry.xml, ObjectName = /LHCb
+XmlParserSvc               DEBUG parsing file ~/cmtuser/Ex/DetCondExample/v11r0/XMLDDDB/LHCb/geometry.xml
+CondDBEntityResolverSv...  DEBUG systemId = "~/cmtuser/Ex/DetCondExample/v11r0/XMLDDDB/LHCb/geometry.xml"
 CondDBEntityResolverSv...VERBOSE Not a conddb URL
 CondDBEntityResolverSv...  DEBUG systemId = "../DTD/geometry.dtd"
 CondDBEntityResolverSv...VERBOSE Not a conddb URL
@@ -342,15 +342,15 @@ XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.
 XmlCatalogCnv            VERBOSE tag is logvol, clsID is 1100
 CondDBCnvSvc               DEBUG entering createAddress
 XmlGenericCnv            VERBOSE Href points to a regular URL: #lvLHCb
-XmlGenericCnv            VERBOSE Now build an XML address for location=/scratch/marcocle/Devel/LHCb_newCOOL/Ex/DetCondExample/v10r0/XMLDDDB/LHCb/geometry.xml and entryName=/lvLHCb
+XmlGenericCnv            VERBOSE Now build an XML address for location=~/cmtuser/Ex/DetCondExample/v11r0/XMLDDDB/LHCb/geometry.xml and entryName=/lvLHCb
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /scratch/marcocle/Devel/LHCb_newCOOL/Ex/DetCondExample/v10r0/XMLDDDB/LHCb/geometry.xml, entry name = /lvLHCb isString : 0
+XmlGenericCnv              DEBUG New address created : location = ~/cmtuser/Ex/DetCondExample/v11r0/XMLDDDB/LHCb/geometry.xml, entry name = /lvLHCb isString : 0
 DetectorDataSvc          VERBOSE Object /dd/Geometry/LHCb created
 DetectorDataSvc          VERBOSE Filling object /dd/Geometry/LHCb
 DetectorDataSvc          VERBOSE Object /dd/Geometry/LHCb successfully loaded
 DetectorDataSvc          VERBOSE Requested object /dd/Geometry/LHCb/lvLHCb
-XmlGenericCnv              DEBUG Address: filename = /scratch/marcocle/Devel/LHCb_newCOOL/Ex/DetCondExample/v10r0/XMLDDDB/LHCb/geometry.xml, ObjectName = /lvLHCb
+XmlGenericCnv              DEBUG Address: filename = ~/cmtuser/Ex/DetCondExample/v11r0/XMLDDDB/LHCb/geometry.xml, ObjectName = /lvLHCb
 XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
 DetectorDataSvc          VERBOSE Object /dd/Geometry/LHCb/lvLHCb created
@@ -365,17 +365,17 @@ GeometryInfoPlus         VERBOSE calculateMatrices: stored 1 ideal and 1 delta m
 GeometryInfoPlus         VERBOSE 	/dd/Geometry/LHCb/lvLHCb
 GeometryInfoPlus         VERBOSE calculated full matrices
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.0 -> 9223372036.854775807
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x91741e0) 0x9170570 ---END---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---END---
 XmlGenericCnv            VERBOSE Href points to a regular URL: Downstream/structure.xml#DownstreamRegion
-XmlGenericCnv            VERBOSE Now build an XML address for location=/scratch/marcocle/Devel/LHCb_newCOOL/Ex/DetCondExample/v10r0/XMLDDDB/Downstream/structure.xml and entryName=/DownstreamRegion
+XmlGenericCnv            VERBOSE Now build an XML address for location=~/cmtuser/Ex/DetCondExample/v11r0/XMLDDDB/Downstream/structure.xml and entryName=/DownstreamRegion
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /scratch/marcocle/Devel/LHCb_newCOOL/Ex/DetCondExample/v10r0/XMLDDDB/Downstream/structure.xml, entry name = /DownstreamRegion isString : 0
+XmlGenericCnv              DEBUG New address created : location = ~/cmtuser/Ex/DetCondExample/v11r0/XMLDDDB/Downstream/structure.xml, entry name = /DownstreamRegion isString : 0
 XmlGenericCnv            VERBOSE Href points to a regular URL: #Dummy
-XmlGenericCnv            VERBOSE Now build an XML address for location=/scratch/marcocle/Devel/LHCb_newCOOL/Ex/DetCondExample/v10r0/XMLDDDB/structure.xml and entryName=/Dummy
+XmlGenericCnv            VERBOSE Now build an XML address for location=~/cmtuser/Ex/DetCondExample/v11r0/XMLDDDB/structure.xml and entryName=/Dummy
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /scratch/marcocle/Devel/LHCb_newCOOL/Ex/DetCondExample/v10r0/XMLDDDB/structure.xml, entry name = /Dummy isString : 0
+XmlGenericCnv              DEBUG New address created : location = ~/cmtuser/Ex/DetCondExample/v11r0/XMLDDDB/structure.xml, entry name = /Dummy isString : 0
 DetectorDataSvc          VERBOSE Object /dd/Structure/LHCb created
 DetectorDataSvc          VERBOSE Filling object /dd/Structure/LHCb
 XmlBaseDetElemCnv        VERBOSE Method fillObjRefs() starting
@@ -629,8 +629,8 @@ UpdateManagerSvc           DEBUG --- Dump
 UpdateManagerSvc           DEBUG     1 items registered
 UpdateManagerSvc           DEBUG      of which 1 in the head
 UpdateManagerSvc           DEBUG          head IOV = 0.000000001 - 0.0
-UpdateManagerSvc           DEBUG --item 0 0x91741e0 (head)
-UpdateManagerSvc           DEBUG        ptr  = 0x9170570
+UpdateManagerSvc           DEBUG --item 0 0x######## (head)
+UpdateManagerSvc           DEBUG        ptr  = 0x########
 UpdateManagerSvc           DEBUG         IOV = 0.0 - 9223372036.854775807
 UpdateManagerSvc           DEBUG        depend on :
 UpdateManagerSvc           DEBUG                   

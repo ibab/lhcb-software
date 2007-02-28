@@ -1,8 +1,8 @@
 JobOptionsSvc        INFO 
 //GP:================================================================================
 //GP: include ../options/testUpdateMgr.opts                                   (0,0)
-//GP: include /scratch/marcocle/Devel/LHCb_newCOOL/Ex/DetCondExample/v10r0/options/cool.opts (6,10)
-//GP: include /scratch/marcocle/Devel/LHCb_newCOOL/Ex/DetCondExample/v10r0/options/common.opts (5,10)
+//GP: include ~/cmtuser/Ex/DetCondExample/v11r0/options/cool.opts (6,10)
+//GP: include ~/cmtuser/Ex/DetCondExample/v11r0/options/common.opts (5,10)
 ApplicationMgr.HistogramPersistency = "NONE";                           //GP: (11,1)
 MessageSvc.Format = "% F%25W%S%7W%R%T %0W%M";                           //GP: (18,1)
 DetectorDataSvc.UsePersistency = 1;                                     //GP: (23,1)
@@ -12,11 +12,11 @@ DetectorDataSvc.DetStorageType = 7;                                     //GP: (2
 XmlCnvSvc.AllowGenericConversion = 1;                                   //GP: (27,1)
 DetectorPersistencySvc.CnvServices +=  [ "XmlCnvSvc" ] ;                //GP: (32,1)
 GaudiSequencer.MeasureTime = 1;                                         //GP: (37,1)
-//GP: end  /scratch/marcocle/Devel/LHCb_newCOOL/Ex/DetCondExample/v10r0/options/common.opts (43,1)
+//GP: end  ~/cmtuser/Ex/DetCondExample/v11r0/options/common.opts (43,1)
 DetectorPersistencySvc.CnvServices +=  [ "CondDBCnvSvc" ] ;             //GP: (10,1)
 XmlParserSvc.EntityResolverSvc = "CondDBEntityResolverSvc";             //GP: (11,1)
 CondDBAccessSvc.ConnectionString = "$CONDDBCONNECTIONSTRING";           //GP: (18,1)
-//GP: end  /scratch/marcocle/Devel/LHCb_newCOOL/Ex/DetCondExample/v10r0/options/cool.opts (28,1)
+//GP: end  ~/cmtuser/Ex/DetCondExample/v11r0/options/cool.opts (28,1)
 ApplicationMgr.TopAlg =  [ "GaudiSequencer" ] ;                         //GP: (11,1)
 GaudiSequencer.Members =  [  ] ;                                        //GP: (12,1)
 GaudiSequencer.Members +=  [ "TestUpdateMgr" ] ;                        //GP: (13,1)
@@ -34,8 +34,8 @@ JobOptionsSvc        INFO Job options successfully read in from ../options/testU
 ApplicationMgr             DEBUG Getting my own properties
 ApplicationMgr           SUCCESS 
 ====================================================================================================================================
-                                                   Welcome to DetCondExample version v10r0
-                                          running on pclhcb55.cern.ch on Wed Feb 14 17:14:57 2007
+                                                   Welcome to DetCondExample version v11r0
+                                          running on lxbuild035.cern.ch on Mon Feb 26 15:43:26 2007
 ====================================================================================================================================
 ApplicationMgr              INFO Successfully loaded modules : 
 ApplicationMgr              INFO Application Manager Configured successfully
@@ -101,15 +101,15 @@ ToolSvc.SequencerTimer...  DEBUG Property ['Name': Value] =  'PropertiesPrint':F
 ToolSvc.SequencerTimer...  DEBUG Property ['Name': Value] =  'ErrorsPrint':True
 ToolSvc.SequencerTimer...  DEBUG Property ['Name': Value] =  'AuditFinalize':False
 ToolSvc.SequencerTimer...  DEBUG Property ['Name': Value] =  'AuditInitialize':False
-ToolSvc.SequencerTimer...  DEBUG Property ['Name': Value] =  'OutputLevel':1
 ToolSvc.SequencerTimer...  DEBUG Property ['Name': Value] =  'AuditTools':False
+ToolSvc.SequencerTimer...  DEBUG Property ['Name': Value] =  'OutputLevel':1
 RndmGenSvc                 DEBUG Service base class initialized successfully
 RndmGenSvc.Engine          DEBUG Service base class initialized successfully
 IncidentSvc                DEBUG Service base class initialized successfully
 RndmGenSvc.Engine           INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine           INFO Current Seed:1234567 Luxury:3
 RndmGenSvc                  INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-ToolSvc.SequencerTimer...   INFO This machine has a speed about   0.73 times the speed of a 2.8 GHz Xeon.
+ToolSvc.SequencerTimer...   INFO This machine has a speed about   0.83 times the speed of a 2.8 GHz Xeon.
 TestUpdateMgr              DEBUG Property update for OutputLevel : new value = 1
 TestUpdateMgr              DEBUG Initialize base class GaudiCommon<PBASE>
 TestUpdateMgr              DEBUG List of ALL properties of TestUpdateMgr/TestUpdateMgr  #properties = 18
@@ -150,7 +150,7 @@ CondDBCnvSvc               DEBUG Service base class initialized successfully
 CondDBCnvSvc               DEBUG Specific initialization starting
 CondDBAccessSvc            DEBUG Service base class initialized successfully
 CondDBAccessSvc            DEBUG Initialize
-CondDBAccessSvc            DEBUG Connection string = "sqlite://none;schema=CONDDB.sqlite;dbname=CONDDB"
+CondDBAccessSvc            DEBUG Connection string = "sqlite_file:CONDDB.db/CONDDB"
 CondDBAccessSvc            DEBUG Get cool::DatabaseSvc
 CondDBAccessSvc            DEBUG cool::DatabaseSvc got
 CondDBAccessSvc            DEBUG Opening connection
@@ -173,7 +173,7 @@ DetectorPersistencySvc   VERBOSE ServiceLocatorHelper::createService: found serv
 DetectorPersistencySvc      INFO Added successfully Conversion service:XmlCnvSvc
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-DetectorDataSvc          SUCCESS Detector description database: /scratch/marcocle/Devel/LHCb_newCOOL/Ex/DetCondExample/v10r0/XMLDDDB/lhcb.xml
+DetectorDataSvc          SUCCESS Detector description database: ~/cmtuser/Ex/DetCondExample/v11r0/XMLDDDB/lhcb.xml
 UpdateManagerSvc           DEBUG Got pointer to IDataProviderSvc "DetectorDataSvc"
 UpdateManagerSvc           DEBUG Got pointer to IDetDataSvc "DetectorDataSvc"
 EventClockSvc              DEBUG Service base class initialized successfully
@@ -204,9 +204,9 @@ UpdateManagerSvc           DEBUG registering condition "Conditions/Environment/H
 UpdateManagerSvc           DEBUG registering condition "Conditions/Environment/Hcal/Temperature" for object of type 13TestUpdateMgr
 UpdateManagerSvc           DEBUG registering condition "Conditions/Environment/DummyDE/Temperature" for object of type 13TestUpdateMgr
 UpdateManagerSvc           DEBUG registering condition "Conditions/Environment/Hcal/Temperature" for object of type N13TestUpdateMgr13InternalClassE
-UpdateManagerSvc           DEBUG registering object at 0x97bb684 for object of type 13TestUpdateMgr
+UpdateManagerSvc           DEBUG registering object at 0x######## for object of type 13TestUpdateMgr
 UpdateManagerSvc           DEBUG registering object of type 10DataObject (without condition)
-UpdateManagerSvc           DEBUG registering object at 0x97b5970 for object of type 13TestUpdateMgr
+UpdateManagerSvc           DEBUG registering object at 0x######## for object of type 13TestUpdateMgr
 TestUpdateMgr2             DEBUG Property update for OutputLevel : new value = 1
 TestUpdateMgr2             DEBUG Initialize base class GaudiCommon<PBASE>
 TestUpdateMgr2             DEBUG List of ALL properties of TestUpdateMgr/TestUpdateMgr2  #properties = 18
@@ -236,9 +236,9 @@ UpdateManagerSvc           DEBUG registering condition "Conditions/Environment/H
 UpdateManagerSvc           DEBUG registering condition "Conditions/Environment/Hcal/Temperature" for object of type 13TestUpdateMgr
 UpdateManagerSvc           DEBUG registering condition "Conditions/Environment/DummyDE/Temperature" for object of type 13TestUpdateMgr
 UpdateManagerSvc           DEBUG registering condition "Conditions/Environment/Hcal/Temperature" for object of type N13TestUpdateMgr13InternalClassE
-UpdateManagerSvc           DEBUG registering object at 0x97bc3e4 for object of type 13TestUpdateMgr
+UpdateManagerSvc           DEBUG registering object at 0x######## for object of type 13TestUpdateMgr
 UpdateManagerSvc           DEBUG registering object of type 10DataObject (without condition)
-UpdateManagerSvc           DEBUG registering object at 0x97bb4c8 for object of type 13TestUpdateMgr
+UpdateManagerSvc           DEBUG registering object at 0x######## for object of type 13TestUpdateMgr
 DumpDetectorStore          DEBUG Property update for OutputLevel : new value = 1
 DumpDetectorStore          DEBUG Initialize base class GaudiCommon<PBASE>
 DumpDetectorStore          DEBUG List of ALL properties of DumpDetectorStore/DumpDetectorStore  #properties = 19
@@ -276,20 +276,20 @@ EventClockSvc              DEBUG DetDataSvc::eventTime() -> 0.000000004
 UpdateManagerSvc           DEBUG New BeginEvent incident received
 UpdateManagerSvc         VERBOSE newEvent(evtTime): acquiring mutex lock
 UpdateManagerSvc           DEBUG newEvent(evtTime): loop over head items
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97e57a0) 0x97bb528 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000001 -> 0.0
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 0
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97f1b48) 0 ---BEGIN--- Conditions/Environment/LHCb/Temperature
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0 ---BEGIN--- Conditions/Environment/LHCb/Temperature
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000001 -> 0.0
 UpdateManagerSvc::Item     DEBUG Retrieve object Conditions/Environment/LHCb/Temperature from data provider
 DetectorDataSvc          VERBOSE Requested object /dd
 DetectorPersistencySvc   VERBOSE ServiceLocatorHelper::createService: found service CondDBCnvSvc
 DetectorPersistencySvc      INFO Added successfully Conversion service:CondDBCnvSvc
 CondDBCnvSvc               DEBUG entering createAddress
-XmlGenericCnv              DEBUG Address: filename = /scratch/marcocle/Devel/LHCb_newCOOL/Ex/DetCondExample/v10r0/XMLDDDB/lhcb.xml, ObjectName = dd
-XmlParserSvc               DEBUG parsing file /scratch/marcocle/Devel/LHCb_newCOOL/Ex/DetCondExample/v10r0/XMLDDDB/lhcb.xml
-CondDBEntityResolverSv...  DEBUG systemId = "/scratch/marcocle/Devel/LHCb_newCOOL/Ex/DetCondExample/v10r0/XMLDDDB/lhcb.xml"
+XmlGenericCnv              DEBUG Address: filename = ~/cmtuser/Ex/DetCondExample/v11r0/XMLDDDB/lhcb.xml, ObjectName = dd
+XmlParserSvc               DEBUG parsing file ~/cmtuser/Ex/DetCondExample/v11r0/XMLDDDB/lhcb.xml
+CondDBEntityResolverSv...  DEBUG systemId = "~/cmtuser/Ex/DetCondExample/v11r0/XMLDDDB/lhcb.xml"
 CondDBEntityResolverSv...VERBOSE Not a conddb URL
 CondDBEntityResolverSv...  DEBUG systemId = "DTD/structure.dtd"
 CondDBEntityResolverSv...VERBOSE Not a conddb URL
@@ -297,22 +297,22 @@ XmlGenericCnv            VERBOSE found element DDDB at top level of xml file.
 XmlGenericCnv              DEBUG Detector Description Markup Language Version 3.3
 XmlCatalogCnv            VERBOSE tag is catalogref, clsID is 3
 XmlGenericCnv            VERBOSE Href points to a regular URL: structure.xml#Structure
-XmlGenericCnv            VERBOSE Now build an XML address for location=/scratch/marcocle/Devel/LHCb_newCOOL/Ex/DetCondExample/v10r0/XMLDDDB/structure.xml and entryName=/Structure
+XmlGenericCnv            VERBOSE Now build an XML address for location=~/cmtuser/Ex/DetCondExample/v11r0/XMLDDDB/structure.xml and entryName=/Structure
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /scratch/marcocle/Devel/LHCb_newCOOL/Ex/DetCondExample/v10r0/XMLDDDB/structure.xml, entry name = /Structure isString : 0
+XmlGenericCnv              DEBUG New address created : location = ~/cmtuser/Ex/DetCondExample/v11r0/XMLDDDB/structure.xml, entry name = /Structure isString : 0
 XmlCatalogCnv            VERBOSE tag is catalogref, clsID is 3
 XmlGenericCnv            VERBOSE Href points to a regular URL: geometry.xml#Geometry
-XmlGenericCnv            VERBOSE Now build an XML address for location=/scratch/marcocle/Devel/LHCb_newCOOL/Ex/DetCondExample/v10r0/XMLDDDB/geometry.xml and entryName=/Geometry
+XmlGenericCnv            VERBOSE Now build an XML address for location=~/cmtuser/Ex/DetCondExample/v11r0/XMLDDDB/geometry.xml and entryName=/Geometry
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /scratch/marcocle/Devel/LHCb_newCOOL/Ex/DetCondExample/v10r0/XMLDDDB/geometry.xml, entry name = /Geometry isString : 0
+XmlGenericCnv              DEBUG New address created : location = ~/cmtuser/Ex/DetCondExample/v11r0/XMLDDDB/geometry.xml, entry name = /Geometry isString : 0
 XmlCatalogCnv            VERBOSE tag is catalogref, clsID is 3
 XmlGenericCnv            VERBOSE Href points to a regular URL: materials/materials.xml#Materials
-XmlGenericCnv            VERBOSE Now build an XML address for location=/scratch/marcocle/Devel/LHCb_newCOOL/Ex/DetCondExample/v10r0/XMLDDDB/materials/materials.xml and entryName=/Materials
+XmlGenericCnv            VERBOSE Now build an XML address for location=~/cmtuser/Ex/DetCondExample/v11r0/XMLDDDB/materials/materials.xml and entryName=/Materials
 XmlCnvSvc                VERBOSE Create an XML address
 XmlCnvSvc                VERBOSE XML source is an XML file name
-XmlGenericCnv              DEBUG New address created : location = /scratch/marcocle/Devel/LHCb_newCOOL/Ex/DetCondExample/v10r0/XMLDDDB/materials/materials.xml, entry name = /Materials isString : 0
+XmlGenericCnv              DEBUG New address created : location = ~/cmtuser/Ex/DetCondExample/v11r0/XMLDDDB/materials/materials.xml, entry name = /Materials isString : 0
 XmlCatalogCnv            VERBOSE tag is catalogref, clsID is 3
 XmlGenericCnv            VERBOSE Found environment variable in path $CONDITIONS_PATH#Conditions
 XmlGenericCnv            VERBOSE path expanded to conddb:/Conditions/MainCatalog.xml#Conditions
@@ -560,14 +560,14 @@ RelyConverter              DEBUG New object successfully created
 DetectorDataSvc          VERBOSE Object /dd/Conditions/Environment/LHCb/Temperature successfully loaded
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.0 -> 0.000000024
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97f1b48) 0x98180d0 ---END--- Conditions/Environment/LHCb/Temperature
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---END--- Conditions/Environment/LHCb/Temperature
 UpdateManagerSvc::Item   VERBOSE Call m.f. 0
 TestUpdateMgr               INFO method 1 called
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 1
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97f1b48) 0x98180d0 ---BEGIN--- Conditions/Environment/LHCb/Temperature
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---BEGIN--- Conditions/Environment/LHCb/Temperature
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.000000024
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97eb9c0) 0 ---BEGIN--- Conditions/Environment/Hcal/Temperature
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0 ---BEGIN--- Conditions/Environment/Hcal/Temperature
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000001 -> 0.0
 UpdateManagerSvc::Item     DEBUG Retrieve object Conditions/Environment/Hcal/Temperature from data provider
 DetectorDataSvc          VERBOSE Requested object /dd/Conditions/Environment/Hcal
@@ -643,14 +643,14 @@ RelyConverter              DEBUG New object successfully created
 DetectorDataSvc          VERBOSE Object /dd/Conditions/Environment/Hcal/Temperature successfully loaded
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.0 -> 0.00000001
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97eb9c0) 0x981a868 ---END--- Conditions/Environment/Hcal/Temperature
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---END--- Conditions/Environment/Hcal/Temperature
 UpdateManagerSvc::Item   VERBOSE Call m.f. 1
 TestUpdateMgr               INFO method 2 called
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 2
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97eb9c0) 0x981a868 ---BEGIN--- Conditions/Environment/Hcal/Temperature
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---BEGIN--- Conditions/Environment/Hcal/Temperature
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.00000001
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97ebba8) 0 ---BEGIN--- Conditions/Environment/DummyDE/Temperature
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0 ---BEGIN--- Conditions/Environment/DummyDE/Temperature
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000001 -> 0.0
 UpdateManagerSvc::Item     DEBUG Retrieve object Conditions/Environment/DummyDE/Temperature from data provider
 DetectorDataSvc          VERBOSE Requested object /dd/Conditions/Environment/DummyDE
@@ -726,86 +726,86 @@ RelyConverter              DEBUG New object successfully created
 DetectorDataSvc          VERBOSE Object /dd/Conditions/Environment/DummyDE/Temperature successfully loaded
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.0 -> 0.000000024
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97ebba8) 0x9825a70 ---END--- Conditions/Environment/DummyDE/Temperature
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---END--- Conditions/Environment/DummyDE/Temperature
 UpdateManagerSvc::Item   VERBOSE Call m.f. 2
 TestUpdateMgr               INFO method 3 called
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 3
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97eba60) 0x97bb684 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000001 -> 0.0
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 0
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97eb9c0) 0x981a868 ---BEGIN--- Conditions/Environment/Hcal/Temperature
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---BEGIN--- Conditions/Environment/Hcal/Temperature
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.00000001
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc::Item   VERBOSE Call m.f. 0
 ***InternalClass::myTinyMethod()***
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.0 -> 0.00000001
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97eba60) 0x97bb684 ---END---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---END---
 UpdateManagerSvc::Item   VERBOSE Call m.f. 3
 TestUpdateMgr               INFO method 4 called
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 4
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97f0538) 0x97b5970 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000001 -> 0.0
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 0
 UpdateManagerSvc::Item   VERBOSE Call m.f. 0
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.0 -> 9223372036.854775807
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97f0538) 0x97b5970 ---END---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---END---
 UpdateManagerSvc::Item   VERBOSE Call m.f. 4
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.0 -> 0.00000001
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97e57a0) 0x97bb528 ---END---
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97bea88) 0x97bc288 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---END---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000001 -> 0.0
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 0
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97f1b48) 0x98180d0 ---BEGIN--- Conditions/Environment/LHCb/Temperature
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---BEGIN--- Conditions/Environment/LHCb/Temperature
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.000000024
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc::Item   VERBOSE Call m.f. 0
 TestUpdateMgr2              INFO method 1 called
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 1
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97f1b48) 0x98180d0 ---BEGIN--- Conditions/Environment/LHCb/Temperature
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---BEGIN--- Conditions/Environment/LHCb/Temperature
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.000000024
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97eb9c0) 0x981a868 ---BEGIN--- Conditions/Environment/Hcal/Temperature
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---BEGIN--- Conditions/Environment/Hcal/Temperature
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.00000001
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc::Item   VERBOSE Call m.f. 1
 TestUpdateMgr2              INFO method 2 called
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 2
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97eb9c0) 0x981a868 ---BEGIN--- Conditions/Environment/Hcal/Temperature
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---BEGIN--- Conditions/Environment/Hcal/Temperature
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.00000001
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97ebba8) 0x9825a70 ---BEGIN--- Conditions/Environment/DummyDE/Temperature
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---BEGIN--- Conditions/Environment/DummyDE/Temperature
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.000000024
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc::Item   VERBOSE Call m.f. 2
 TestUpdateMgr2              INFO method 3 called
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 3
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97c1330) 0x97bc3e4 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000001 -> 0.0
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 0
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97eb9c0) 0x981a868 ---BEGIN--- Conditions/Environment/Hcal/Temperature
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---BEGIN--- Conditions/Environment/Hcal/Temperature
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.00000001
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc::Item   VERBOSE Call m.f. 0
 ***InternalClass::myTinyMethod()***
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.0 -> 0.00000001
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97c1330) 0x97bc3e4 ---END---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---END---
 UpdateManagerSvc::Item   VERBOSE Call m.f. 3
 TestUpdateMgr2              INFO method 4 called
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 4
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97c1478) 0x97bb4c8 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000001 -> 0.0
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 0
 UpdateManagerSvc::Item   VERBOSE Call m.f. 0
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.0 -> 9223372036.854775807
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97c1478) 0x97bb4c8 ---END---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---END---
 UpdateManagerSvc::Item   VERBOSE Call m.f. 4
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.0 -> 0.00000001
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97bea88) 0x97bc288 ---END---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---END---
 UpdateManagerSvc         VERBOSE newEvent(evtTime): releasing mutex lock
 GaudiSequencer             DEBUG ==> Execute
 TestUpdateMgr              DEBUG ==> Execute
@@ -816,14 +816,14 @@ EventClockSvc              DEBUG DetDataSvc::eventTime() -> 0.000000012
 UpdateManagerSvc           DEBUG New BeginEvent incident received
 UpdateManagerSvc         VERBOSE newEvent(evtTime): acquiring mutex lock
 UpdateManagerSvc           DEBUG newEvent(evtTime): loop over head items
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97e57a0) 0x97bb528 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.00000001
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 1
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97f1b48) 0x98180d0 ---BEGIN--- Conditions/Environment/LHCb/Temperature
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---BEGIN--- Conditions/Environment/LHCb/Temperature
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.000000024
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97eb9c0) 0x981a868 ---BEGIN--- Conditions/Environment/Hcal/Temperature
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---BEGIN--- Conditions/Environment/Hcal/Temperature
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.00000001
 UpdateManagerSvc::Item     DEBUG Update object Conditions/Environment/Hcal/Temperature from data provider
 DetectorDataSvc            DEBUG Method updateObject starting
@@ -862,71 +862,71 @@ RelyConverter              DEBUG New object successfully created
 DetectorDataSvc            DEBUG Method updateObject exiting successfully
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.00000001 -> 0.00000002
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97eb9c0) 0x981a868 ---END--- Conditions/Environment/Hcal/Temperature
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---END--- Conditions/Environment/Hcal/Temperature
 UpdateManagerSvc::Item   VERBOSE Call m.f. 1
 TestUpdateMgr               INFO method 2 called
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 2
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97eb9c0) 0x981a868 ---BEGIN--- Conditions/Environment/Hcal/Temperature
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---BEGIN--- Conditions/Environment/Hcal/Temperature
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000001 -> 0.00000002
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97ebba8) 0x9825a70 ---BEGIN--- Conditions/Environment/DummyDE/Temperature
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---BEGIN--- Conditions/Environment/DummyDE/Temperature
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.000000024
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc::Item   VERBOSE Call m.f. 2
 TestUpdateMgr               INFO method 3 called
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 3
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97eba60) 0x97bb684 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.00000001
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 0
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97eb9c0) 0x981a868 ---BEGIN--- Conditions/Environment/Hcal/Temperature
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---BEGIN--- Conditions/Environment/Hcal/Temperature
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000001 -> 0.00000002
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc::Item   VERBOSE Call m.f. 0
 ***InternalClass::myTinyMethod()***
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.00000001 -> 0.00000002
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97eba60) 0x97bb684 ---END---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---END---
 UpdateManagerSvc::Item   VERBOSE Call m.f. 3
 TestUpdateMgr               INFO method 4 called
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.00000001 -> 0.00000002
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97e57a0) 0x97bb528 ---END---
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97bea88) 0x97bc288 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---END---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.00000001
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 1
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97f1b48) 0x98180d0 ---BEGIN--- Conditions/Environment/LHCb/Temperature
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---BEGIN--- Conditions/Environment/LHCb/Temperature
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.000000024
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97eb9c0) 0x981a868 ---BEGIN--- Conditions/Environment/Hcal/Temperature
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---BEGIN--- Conditions/Environment/Hcal/Temperature
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000001 -> 0.00000002
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc::Item   VERBOSE Call m.f. 1
 TestUpdateMgr2              INFO method 2 called
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 2
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97eb9c0) 0x981a868 ---BEGIN--- Conditions/Environment/Hcal/Temperature
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---BEGIN--- Conditions/Environment/Hcal/Temperature
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000001 -> 0.00000002
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97ebba8) 0x9825a70 ---BEGIN--- Conditions/Environment/DummyDE/Temperature
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---BEGIN--- Conditions/Environment/DummyDE/Temperature
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.000000024
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc::Item   VERBOSE Call m.f. 2
 TestUpdateMgr2              INFO method 3 called
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 3
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97c1330) 0x97bc3e4 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.00000001
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 0
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97eb9c0) 0x981a868 ---BEGIN--- Conditions/Environment/Hcal/Temperature
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---BEGIN--- Conditions/Environment/Hcal/Temperature
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000001 -> 0.00000002
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc::Item   VERBOSE Call m.f. 0
 ***InternalClass::myTinyMethod()***
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.00000001 -> 0.00000002
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97c1330) 0x97bc3e4 ---END---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---END---
 UpdateManagerSvc::Item   VERBOSE Call m.f. 3
 TestUpdateMgr2              INFO method 4 called
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.00000001 -> 0.00000002
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97bea88) 0x97bc288 ---END---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---END---
 UpdateManagerSvc         VERBOSE newEvent(evtTime): releasing mutex lock
 GaudiSequencer             DEBUG ==> Execute
 TestUpdateMgr              DEBUG ==> Execute
@@ -937,14 +937,14 @@ EventClockSvc              DEBUG DetDataSvc::eventTime() -> 0.00000002
 UpdateManagerSvc           DEBUG New BeginEvent incident received
 UpdateManagerSvc         VERBOSE newEvent(evtTime): acquiring mutex lock
 UpdateManagerSvc           DEBUG newEvent(evtTime): loop over head items
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97e57a0) 0x97bb528 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000001 -> 0.00000002
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 1
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97f1b48) 0x98180d0 ---BEGIN--- Conditions/Environment/LHCb/Temperature
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---BEGIN--- Conditions/Environment/LHCb/Temperature
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.000000024
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97eb9c0) 0x981a868 ---BEGIN--- Conditions/Environment/Hcal/Temperature
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---BEGIN--- Conditions/Environment/Hcal/Temperature
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000001 -> 0.00000002
 UpdateManagerSvc::Item     DEBUG Update object Conditions/Environment/Hcal/Temperature from data provider
 DetectorDataSvc            DEBUG Method updateObject starting
@@ -983,90 +983,90 @@ RelyConverter              DEBUG New object successfully created
 DetectorDataSvc            DEBUG Method updateObject exiting successfully
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.00000002 -> 0.00000003
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97eb9c0) 0x981a868 ---END--- Conditions/Environment/Hcal/Temperature
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---END--- Conditions/Environment/Hcal/Temperature
 UpdateManagerSvc::Item   VERBOSE Call m.f. 1
 TestUpdateMgr               INFO method 2 called
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 2
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97eb9c0) 0x981a868 ---BEGIN--- Conditions/Environment/Hcal/Temperature
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---BEGIN--- Conditions/Environment/Hcal/Temperature
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000002 -> 0.00000003
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97ebba8) 0x9825a70 ---BEGIN--- Conditions/Environment/DummyDE/Temperature
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---BEGIN--- Conditions/Environment/DummyDE/Temperature
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.000000024
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc::Item   VERBOSE Call m.f. 2
 TestUpdateMgr               INFO method 3 called
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 3
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97eba60) 0x97bb684 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000001 -> 0.00000002
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 0
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97eb9c0) 0x981a868 ---BEGIN--- Conditions/Environment/Hcal/Temperature
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---BEGIN--- Conditions/Environment/Hcal/Temperature
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000002 -> 0.00000003
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc::Item   VERBOSE Call m.f. 0
 ***InternalClass::myTinyMethod()***
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.00000002 -> 0.00000003
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97eba60) 0x97bb684 ---END---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---END---
 UpdateManagerSvc::Item   VERBOSE Call m.f. 3
 TestUpdateMgr               INFO method 4 called
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.00000002 -> 0.000000024
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97e57a0) 0x97bb528 ---END---
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97bea88) 0x97bc288 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---END---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000001 -> 0.00000002
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 1
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97f1b48) 0x98180d0 ---BEGIN--- Conditions/Environment/LHCb/Temperature
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---BEGIN--- Conditions/Environment/LHCb/Temperature
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.000000024
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97eb9c0) 0x981a868 ---BEGIN--- Conditions/Environment/Hcal/Temperature
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---BEGIN--- Conditions/Environment/Hcal/Temperature
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000002 -> 0.00000003
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc::Item   VERBOSE Call m.f. 1
 TestUpdateMgr2              INFO method 2 called
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 2
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97eb9c0) 0x981a868 ---BEGIN--- Conditions/Environment/Hcal/Temperature
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---BEGIN--- Conditions/Environment/Hcal/Temperature
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000002 -> 0.00000003
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97ebba8) 0x9825a70 ---BEGIN--- Conditions/Environment/DummyDE/Temperature
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---BEGIN--- Conditions/Environment/DummyDE/Temperature
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.000000024
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc::Item   VERBOSE Call m.f. 2
 TestUpdateMgr2              INFO method 3 called
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 3
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97c1330) 0x97bc3e4 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000001 -> 0.00000002
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 0
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97eb9c0) 0x981a868 ---BEGIN--- Conditions/Environment/Hcal/Temperature
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---BEGIN--- Conditions/Environment/Hcal/Temperature
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000002 -> 0.00000003
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc::Item   VERBOSE Call m.f. 0
 ***InternalClass::myTinyMethod()***
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.00000002 -> 0.00000003
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97c1330) 0x97bc3e4 ---END---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---END---
 UpdateManagerSvc::Item   VERBOSE Call m.f. 3
 TestUpdateMgr2              INFO method 4 called
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.00000002 -> 0.000000024
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97bea88) 0x97bc288 ---END---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---END---
 UpdateManagerSvc         VERBOSE newEvent(evtTime): releasing mutex lock
 GaudiSequencer             DEBUG ==> Execute
 TestUpdateMgr              DEBUG ==> Execute
 TestUpdateMgr              DEBUG  invalidating m_intermediate
-UpdateManagerSvc           DEBUG Invalidate object at 0x97bb684
+UpdateManagerSvc           DEBUG Invalidate object at 0x########
 TestUpdateMgr2             DEBUG ==> Execute
 TestUpdateMgr2             DEBUG  invalidating m_intermediate
-UpdateManagerSvc           DEBUG Invalidate object at 0x97bc3e4
+UpdateManagerSvc           DEBUG Invalidate object at 0x########
 EventClockSvc              DEBUG New BeginEvent incident received
 DetectorDataSvc            DEBUG Event Time set to 0.000000028
 EventClockSvc              DEBUG DetDataSvc::eventTime() -> 0.000000028
 UpdateManagerSvc           DEBUG New BeginEvent incident received
 UpdateManagerSvc         VERBOSE newEvent(evtTime): acquiring mutex lock
 UpdateManagerSvc           DEBUG newEvent(evtTime): loop over head items
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97e57a0) 0x97bb528 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000001 -> 0.0
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 0
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97f1b48) 0x98180d0 ---BEGIN--- Conditions/Environment/LHCb/Temperature
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---BEGIN--- Conditions/Environment/LHCb/Temperature
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.000000024
 UpdateManagerSvc::Item     DEBUG Update object Conditions/Environment/LHCb/Temperature from data provider
 DetectorDataSvc            DEBUG Method updateObject starting
@@ -1105,23 +1105,23 @@ RelyConverter              DEBUG New object successfully created
 DetectorDataSvc            DEBUG Method updateObject exiting successfully
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.000000024 -> 0.000000048
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97f1b48) 0x98180d0 ---END--- Conditions/Environment/LHCb/Temperature
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---END--- Conditions/Environment/LHCb/Temperature
 UpdateManagerSvc::Item   VERBOSE Call m.f. 0
 TestUpdateMgr               INFO method 1 called
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 1
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97f1b48) 0x98180d0 ---BEGIN--- Conditions/Environment/LHCb/Temperature
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---BEGIN--- Conditions/Environment/LHCb/Temperature
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000024 -> 0.000000048
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97eb9c0) 0x981a868 ---BEGIN--- Conditions/Environment/Hcal/Temperature
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---BEGIN--- Conditions/Environment/Hcal/Temperature
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000002 -> 0.00000003
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc::Item   VERBOSE Call m.f. 1
 TestUpdateMgr               INFO method 2 called
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 2
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97eb9c0) 0x981a868 ---BEGIN--- Conditions/Environment/Hcal/Temperature
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---BEGIN--- Conditions/Environment/Hcal/Temperature
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000002 -> 0.00000003
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97ebba8) 0x9825a70 ---BEGIN--- Conditions/Environment/DummyDE/Temperature
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---BEGIN--- Conditions/Environment/DummyDE/Temperature
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.0 -> 0.000000024
 UpdateManagerSvc::Item     DEBUG Update object Conditions/Environment/DummyDE/Temperature from data provider
 DetectorDataSvc            DEBUG Method updateObject starting
@@ -1160,56 +1160,56 @@ RelyConverter              DEBUG New object successfully created
 DetectorDataSvc            DEBUG Method updateObject exiting successfully
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.000000024 -> 0.000000048
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97ebba8) 0x9825a70 ---END--- Conditions/Environment/DummyDE/Temperature
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---END--- Conditions/Environment/DummyDE/Temperature
 UpdateManagerSvc::Item   VERBOSE Call m.f. 2
 TestUpdateMgr               INFO method 3 called
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 3
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97eba60) 0x97bb684 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000001 -> 0.0
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.00000002 -> 0.00000003
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97eba60) 0x97bb684 ---END---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---END---
 UpdateManagerSvc::Item   VERBOSE Call m.f. 3
 TestUpdateMgr               INFO method 4 called
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.000000024 -> 0.00000003
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97e57a0) 0x97bb528 ---END---
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97bea88) 0x97bc288 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---END---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000001 -> 0.0
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 0
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97f1b48) 0x98180d0 ---BEGIN--- Conditions/Environment/LHCb/Temperature
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---BEGIN--- Conditions/Environment/LHCb/Temperature
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000024 -> 0.000000048
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc::Item   VERBOSE Call m.f. 0
 TestUpdateMgr2              INFO method 1 called
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 1
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97f1b48) 0x98180d0 ---BEGIN--- Conditions/Environment/LHCb/Temperature
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---BEGIN--- Conditions/Environment/LHCb/Temperature
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000024 -> 0.000000048
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97eb9c0) 0x981a868 ---BEGIN--- Conditions/Environment/Hcal/Temperature
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---BEGIN--- Conditions/Environment/Hcal/Temperature
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000002 -> 0.00000003
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc::Item   VERBOSE Call m.f. 1
 TestUpdateMgr2              INFO method 2 called
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 2
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97eb9c0) 0x981a868 ---BEGIN--- Conditions/Environment/Hcal/Temperature
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---BEGIN--- Conditions/Environment/Hcal/Temperature
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000002 -> 0.00000003
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97ebba8) 0x9825a70 ---BEGIN--- Conditions/Environment/DummyDE/Temperature
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---BEGIN--- Conditions/Environment/DummyDE/Temperature
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000024 -> 0.000000048
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc::Item   VERBOSE Call m.f. 2
 TestUpdateMgr2              INFO method 3 called
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 3
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97c1330) 0x97bc3e4 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000001 -> 0.0
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.00000002 -> 0.00000003
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97c1330) 0x97bc3e4 ---END---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---END---
 UpdateManagerSvc::Item   VERBOSE Call m.f. 3
 TestUpdateMgr2              INFO method 4 called
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.000000024 -> 0.00000003
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97bea88) 0x97bc288 ---END---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---END---
 UpdateManagerSvc         VERBOSE newEvent(evtTime): releasing mutex lock
 GaudiSequencer             DEBUG ==> Execute
 TestUpdateMgr              DEBUG ==> Execute
@@ -1220,14 +1220,14 @@ EventClockSvc              DEBUG DetDataSvc::eventTime() -> 0.000000036
 UpdateManagerSvc           DEBUG New BeginEvent incident received
 UpdateManagerSvc         VERBOSE newEvent(evtTime): acquiring mutex lock
 UpdateManagerSvc           DEBUG newEvent(evtTime): loop over head items
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97e57a0) 0x97bb528 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000024 -> 0.00000003
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 1
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97f1b48) 0x98180d0 ---BEGIN--- Conditions/Environment/LHCb/Temperature
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---BEGIN--- Conditions/Environment/LHCb/Temperature
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000024 -> 0.000000048
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97eb9c0) 0x981a868 ---BEGIN--- Conditions/Environment/Hcal/Temperature
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---BEGIN--- Conditions/Environment/Hcal/Temperature
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000002 -> 0.00000003
 UpdateManagerSvc::Item     DEBUG Update object Conditions/Environment/Hcal/Temperature from data provider
 DetectorDataSvc            DEBUG Method updateObject starting
@@ -1266,71 +1266,71 @@ RelyConverter              DEBUG New object successfully created
 DetectorDataSvc            DEBUG Method updateObject exiting successfully
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.00000003 -> 0.00000004
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97eb9c0) 0x981a868 ---END--- Conditions/Environment/Hcal/Temperature
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---END--- Conditions/Environment/Hcal/Temperature
 UpdateManagerSvc::Item   VERBOSE Call m.f. 1
 TestUpdateMgr               INFO method 2 called
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 2
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97eb9c0) 0x981a868 ---BEGIN--- Conditions/Environment/Hcal/Temperature
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---BEGIN--- Conditions/Environment/Hcal/Temperature
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000003 -> 0.00000004
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97ebba8) 0x9825a70 ---BEGIN--- Conditions/Environment/DummyDE/Temperature
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---BEGIN--- Conditions/Environment/DummyDE/Temperature
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000024 -> 0.000000048
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc::Item   VERBOSE Call m.f. 2
 TestUpdateMgr               INFO method 3 called
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 3
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97eba60) 0x97bb684 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000002 -> 0.00000003
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 0
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97eb9c0) 0x981a868 ---BEGIN--- Conditions/Environment/Hcal/Temperature
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---BEGIN--- Conditions/Environment/Hcal/Temperature
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000003 -> 0.00000004
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc::Item   VERBOSE Call m.f. 0
 ***InternalClass::myTinyMethod()***
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.00000003 -> 0.00000004
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97eba60) 0x97bb684 ---END---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---END---
 UpdateManagerSvc::Item   VERBOSE Call m.f. 3
 TestUpdateMgr               INFO method 4 called
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.00000003 -> 0.00000004
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97e57a0) 0x97bb528 ---END---
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97bea88) 0x97bc288 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---END---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000024 -> 0.00000003
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 1
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97f1b48) 0x98180d0 ---BEGIN--- Conditions/Environment/LHCb/Temperature
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---BEGIN--- Conditions/Environment/LHCb/Temperature
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000024 -> 0.000000048
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97eb9c0) 0x981a868 ---BEGIN--- Conditions/Environment/Hcal/Temperature
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---BEGIN--- Conditions/Environment/Hcal/Temperature
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000003 -> 0.00000004
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc::Item   VERBOSE Call m.f. 1
 TestUpdateMgr2              INFO method 2 called
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 2
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97eb9c0) 0x981a868 ---BEGIN--- Conditions/Environment/Hcal/Temperature
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---BEGIN--- Conditions/Environment/Hcal/Temperature
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000003 -> 0.00000004
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97ebba8) 0x9825a70 ---BEGIN--- Conditions/Environment/DummyDE/Temperature
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---BEGIN--- Conditions/Environment/DummyDE/Temperature
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000024 -> 0.000000048
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc::Item   VERBOSE Call m.f. 2
 TestUpdateMgr2              INFO method 3 called
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 3
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97c1330) 0x97bc3e4 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000002 -> 0.00000003
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 0
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97eb9c0) 0x981a868 ---BEGIN--- Conditions/Environment/Hcal/Temperature
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---BEGIN--- Conditions/Environment/Hcal/Temperature
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000003 -> 0.00000004
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc::Item   VERBOSE Call m.f. 0
 ***InternalClass::myTinyMethod()***
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.00000003 -> 0.00000004
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97c1330) 0x97bc3e4 ---END---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---END---
 UpdateManagerSvc::Item   VERBOSE Call m.f. 3
 TestUpdateMgr2              INFO method 4 called
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.00000003 -> 0.00000004
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97bea88) 0x97bc288 ---END---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---END---
 UpdateManagerSvc         VERBOSE newEvent(evtTime): releasing mutex lock
 GaudiSequencer             DEBUG ==> Execute
 TestUpdateMgr              DEBUG ==> Execute
@@ -1341,14 +1341,14 @@ EventClockSvc              DEBUG DetDataSvc::eventTime() -> 0.000000044
 UpdateManagerSvc           DEBUG New BeginEvent incident received
 UpdateManagerSvc         VERBOSE newEvent(evtTime): acquiring mutex lock
 UpdateManagerSvc           DEBUG newEvent(evtTime): loop over head items
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97e57a0) 0x97bb528 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000003 -> 0.00000004
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 1
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97f1b48) 0x98180d0 ---BEGIN--- Conditions/Environment/LHCb/Temperature
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---BEGIN--- Conditions/Environment/LHCb/Temperature
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000024 -> 0.000000048
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97eb9c0) 0x981a868 ---BEGIN--- Conditions/Environment/Hcal/Temperature
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---BEGIN--- Conditions/Environment/Hcal/Temperature
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000003 -> 0.00000004
 UpdateManagerSvc::Item     DEBUG Update object Conditions/Environment/Hcal/Temperature from data provider
 DetectorDataSvc            DEBUG Method updateObject starting
@@ -1387,71 +1387,71 @@ RelyConverter              DEBUG New object successfully created
 DetectorDataSvc            DEBUG Method updateObject exiting successfully
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.00000004 -> 0.00000005
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97eb9c0) 0x981a868 ---END--- Conditions/Environment/Hcal/Temperature
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---END--- Conditions/Environment/Hcal/Temperature
 UpdateManagerSvc::Item   VERBOSE Call m.f. 1
 TestUpdateMgr               INFO method 2 called
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 2
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97eb9c0) 0x981a868 ---BEGIN--- Conditions/Environment/Hcal/Temperature
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---BEGIN--- Conditions/Environment/Hcal/Temperature
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000004 -> 0.00000005
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97ebba8) 0x9825a70 ---BEGIN--- Conditions/Environment/DummyDE/Temperature
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---BEGIN--- Conditions/Environment/DummyDE/Temperature
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000024 -> 0.000000048
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc::Item   VERBOSE Call m.f. 2
 TestUpdateMgr               INFO method 3 called
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 3
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97eba60) 0x97bb684 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000003 -> 0.00000004
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 0
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97eb9c0) 0x981a868 ---BEGIN--- Conditions/Environment/Hcal/Temperature
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---BEGIN--- Conditions/Environment/Hcal/Temperature
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000004 -> 0.00000005
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc::Item   VERBOSE Call m.f. 0
 ***InternalClass::myTinyMethod()***
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.00000004 -> 0.00000005
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97eba60) 0x97bb684 ---END---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---END---
 UpdateManagerSvc::Item   VERBOSE Call m.f. 3
 TestUpdateMgr               INFO method 4 called
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.00000004 -> 0.000000048
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97e57a0) 0x97bb528 ---END---
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97bea88) 0x97bc288 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---END---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000003 -> 0.00000004
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 1
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97f1b48) 0x98180d0 ---BEGIN--- Conditions/Environment/LHCb/Temperature
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---BEGIN--- Conditions/Environment/LHCb/Temperature
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000024 -> 0.000000048
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97eb9c0) 0x981a868 ---BEGIN--- Conditions/Environment/Hcal/Temperature
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---BEGIN--- Conditions/Environment/Hcal/Temperature
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000004 -> 0.00000005
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc::Item   VERBOSE Call m.f. 1
 TestUpdateMgr2              INFO method 2 called
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 2
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97eb9c0) 0x981a868 ---BEGIN--- Conditions/Environment/Hcal/Temperature
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---BEGIN--- Conditions/Environment/Hcal/Temperature
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000004 -> 0.00000005
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97ebba8) 0x9825a70 ---BEGIN--- Conditions/Environment/DummyDE/Temperature
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---BEGIN--- Conditions/Environment/DummyDE/Temperature
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.000000024 -> 0.000000048
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc::Item   VERBOSE Call m.f. 2
 TestUpdateMgr2              INFO method 3 called
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 3
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97c1330) 0x97bc3e4 ---BEGIN---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---BEGIN---
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000003 -> 0.00000004
 UpdateManagerSvc::Item   VERBOSE Enter dependencies update loop
 UpdateManagerSvc::Item   VERBOSE Loop over dependencies of m.f. 0
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97eb9c0) 0x981a868 ---BEGIN--- Conditions/Environment/Hcal/Temperature
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---BEGIN--- Conditions/Environment/Hcal/Temperature
 UpdateManagerSvc::Item   VERBOSE     initial validity: 0.00000004 -> 0.00000005
 UpdateManagerSvc::Item   VERBOSE Item valid, not need to update
 UpdateManagerSvc::Item   VERBOSE Call m.f. 0
 ***InternalClass::myTinyMethod()***
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.00000004 -> 0.00000005
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97c1330) 0x97bc3e4 ---END---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---END---
 UpdateManagerSvc::Item   VERBOSE Call m.f. 3
 TestUpdateMgr2              INFO method 4 called
 UpdateManagerSvc::Item   VERBOSE     final validity: 0.00000004 -> 0.000000048
-UpdateManagerSvc::Item     DEBUG Updating (Item* 0x97bea88) 0x97bc288 ---END---
+UpdateManagerSvc::Item     DEBUG Updating (Item* 0x########) 0x######## ---END---
 UpdateManagerSvc         VERBOSE newEvent(evtTime): releasing mutex lock
 GaudiSequencer             DEBUG ==> Execute
 TestUpdateMgr              DEBUG ==> Execute
@@ -1463,60 +1463,60 @@ UpdateManagerSvc           DEBUG --- Dump
 UpdateManagerSvc           DEBUG     9 items registered
 UpdateManagerSvc           DEBUG      of which 2 in the head
 UpdateManagerSvc           DEBUG          head IOV = 0.00000004 - 0.000000048
-UpdateManagerSvc           DEBUG --item 0 0x97e57a0 (head)
-UpdateManagerSvc           DEBUG        ptr  = 0x97bb528
+UpdateManagerSvc           DEBUG --item 0 0x######## (head)
+UpdateManagerSvc           DEBUG        ptr  = 0x########
 UpdateManagerSvc           DEBUG         IOV = 0.00000004 - 0.000000048
 UpdateManagerSvc           DEBUG        depend on :
-UpdateManagerSvc           DEBUG                    0x97f1b48
-UpdateManagerSvc           DEBUG                    0x97f1b48 0x97eb9c0
-UpdateManagerSvc           DEBUG                    0x97eb9c0 0x97ebba8
-UpdateManagerSvc           DEBUG                    0x97eba60
-UpdateManagerSvc           DEBUG                    0x97f0538
-UpdateManagerSvc           DEBUG --item 1 0x97f1b48
-UpdateManagerSvc           DEBUG        ptr  = 0x98180d0
+UpdateManagerSvc           DEBUG                    0x########
+UpdateManagerSvc           DEBUG                    0x######## 0x########
+UpdateManagerSvc           DEBUG                    0x######## 0x########
+UpdateManagerSvc           DEBUG                    0x########
+UpdateManagerSvc           DEBUG                    0x########
+UpdateManagerSvc           DEBUG --item 1 0x########
+UpdateManagerSvc           DEBUG        ptr  = 0x########
 UpdateManagerSvc           DEBUG        path = Conditions/Environment/LHCb/Temperature
 UpdateManagerSvc           DEBUG         IOV = 0.000000024 - 0.000000048
-UpdateManagerSvc           DEBUG --item 2 0x97eb9c0
-UpdateManagerSvc           DEBUG        ptr  = 0x981a868
+UpdateManagerSvc           DEBUG --item 2 0x########
+UpdateManagerSvc           DEBUG        ptr  = 0x########
 UpdateManagerSvc           DEBUG        path = Conditions/Environment/Hcal/Temperature
 UpdateManagerSvc           DEBUG         IOV = 0.00000004 - 0.00000005
-UpdateManagerSvc           DEBUG --item 3 0x97ebba8
-UpdateManagerSvc           DEBUG        ptr  = 0x9825a70
+UpdateManagerSvc           DEBUG --item 3 0x########
+UpdateManagerSvc           DEBUG        ptr  = 0x########
 UpdateManagerSvc           DEBUG        path = Conditions/Environment/DummyDE/Temperature
 UpdateManagerSvc           DEBUG         IOV = 0.000000024 - 0.000000048
-UpdateManagerSvc           DEBUG --item 4 0x97eba60
-UpdateManagerSvc           DEBUG        ptr  = 0x97bb684
+UpdateManagerSvc           DEBUG --item 4 0x########
+UpdateManagerSvc           DEBUG        ptr  = 0x########
 UpdateManagerSvc           DEBUG         IOV = 0.00000004 - 0.00000005
 UpdateManagerSvc           DEBUG        depend on :
-UpdateManagerSvc           DEBUG                    0x97eb9c0
-UpdateManagerSvc           DEBUG --item 5 0x97f0538
-UpdateManagerSvc           DEBUG        ptr  = 0x97b5970
+UpdateManagerSvc           DEBUG                    0x########
+UpdateManagerSvc           DEBUG --item 5 0x########
+UpdateManagerSvc           DEBUG        ptr  = 0x########
 UpdateManagerSvc           DEBUG         IOV = 0.0 - 9223372036.854775807
 UpdateManagerSvc           DEBUG        depend on :
 UpdateManagerSvc           DEBUG                   
-UpdateManagerSvc           DEBUG --item 6 0x97bea88 (head)
-UpdateManagerSvc           DEBUG        ptr  = 0x97bc288
+UpdateManagerSvc           DEBUG --item 6 0x######## (head)
+UpdateManagerSvc           DEBUG        ptr  = 0x########
 UpdateManagerSvc           DEBUG         IOV = 0.00000004 - 0.000000048
 UpdateManagerSvc           DEBUG        depend on :
-UpdateManagerSvc           DEBUG                    0x97f1b48
-UpdateManagerSvc           DEBUG                    0x97f1b48 0x97eb9c0
-UpdateManagerSvc           DEBUG                    0x97eb9c0 0x97ebba8
-UpdateManagerSvc           DEBUG                    0x97c1330
-UpdateManagerSvc           DEBUG                    0x97c1478
-UpdateManagerSvc           DEBUG --item 7 0x97c1330
-UpdateManagerSvc           DEBUG        ptr  = 0x97bc3e4
+UpdateManagerSvc           DEBUG                    0x########
+UpdateManagerSvc           DEBUG                    0x######## 0x########
+UpdateManagerSvc           DEBUG                    0x######## 0x########
+UpdateManagerSvc           DEBUG                    0x########
+UpdateManagerSvc           DEBUG                    0x########
+UpdateManagerSvc           DEBUG --item 7 0x########
+UpdateManagerSvc           DEBUG        ptr  = 0x########
 UpdateManagerSvc           DEBUG         IOV = 0.00000004 - 0.00000005
 UpdateManagerSvc           DEBUG        depend on :
-UpdateManagerSvc           DEBUG                    0x97eb9c0
-UpdateManagerSvc           DEBUG --item 8 0x97c1478
-UpdateManagerSvc           DEBUG        ptr  = 0x97bb4c8
+UpdateManagerSvc           DEBUG                    0x########
+UpdateManagerSvc           DEBUG --item 8 0x########
+UpdateManagerSvc           DEBUG        ptr  = 0x########
 UpdateManagerSvc           DEBUG         IOV = 0.0 - 9223372036.854775807
 UpdateManagerSvc           DEBUG        depend on :
 UpdateManagerSvc           DEBUG                   
 UpdateManagerSvc           DEBUG Found 2 head items: OK
-UpdateManagerSvc           DEBUG Unregister object at 0x97b5970
-UpdateManagerSvc           DEBUG Unregister object at 0x97bb684
-UpdateManagerSvc           DEBUG Unregister object at 0x97bb528
+UpdateManagerSvc           DEBUG Unregister object at 0x########
+UpdateManagerSvc           DEBUG Unregister object at 0x########
+UpdateManagerSvc           DEBUG Unregister object at 0x########
 TestUpdateMgr              DEBUG Finalize base class GaudiAlgorithm
 TestUpdateMgr              DEBUG Tools to release :
 TestUpdateMgr              DEBUG Services to release : UpdateManagerSvc
@@ -1526,41 +1526,41 @@ UpdateManagerSvc           DEBUG --- Dump
 UpdateManagerSvc           DEBUG     6 items registered
 UpdateManagerSvc           DEBUG      of which 1 in the head
 UpdateManagerSvc           DEBUG          head IOV = 0.00000004 - 0.000000048
-UpdateManagerSvc           DEBUG --item 0 0x97f1b48
-UpdateManagerSvc           DEBUG        ptr  = 0x98180d0
+UpdateManagerSvc           DEBUG --item 0 0x########
+UpdateManagerSvc           DEBUG        ptr  = 0x########
 UpdateManagerSvc           DEBUG        path = Conditions/Environment/LHCb/Temperature
 UpdateManagerSvc           DEBUG         IOV = 0.000000024 - 0.000000048
-UpdateManagerSvc           DEBUG --item 1 0x97eb9c0
-UpdateManagerSvc           DEBUG        ptr  = 0x981a868
+UpdateManagerSvc           DEBUG --item 1 0x########
+UpdateManagerSvc           DEBUG        ptr  = 0x########
 UpdateManagerSvc           DEBUG        path = Conditions/Environment/Hcal/Temperature
 UpdateManagerSvc           DEBUG         IOV = 0.00000004 - 0.00000005
-UpdateManagerSvc           DEBUG --item 2 0x97ebba8
-UpdateManagerSvc           DEBUG        ptr  = 0x9825a70
+UpdateManagerSvc           DEBUG --item 2 0x########
+UpdateManagerSvc           DEBUG        ptr  = 0x########
 UpdateManagerSvc           DEBUG        path = Conditions/Environment/DummyDE/Temperature
 UpdateManagerSvc           DEBUG         IOV = 0.000000024 - 0.000000048
-UpdateManagerSvc           DEBUG --item 3 0x97bea88 (head)
-UpdateManagerSvc           DEBUG        ptr  = 0x97bc288
+UpdateManagerSvc           DEBUG --item 3 0x######## (head)
+UpdateManagerSvc           DEBUG        ptr  = 0x########
 UpdateManagerSvc           DEBUG         IOV = 0.00000004 - 0.000000048
 UpdateManagerSvc           DEBUG        depend on :
-UpdateManagerSvc           DEBUG                    0x97f1b48
-UpdateManagerSvc           DEBUG                    0x97f1b48 0x97eb9c0
-UpdateManagerSvc           DEBUG                    0x97eb9c0 0x97ebba8
-UpdateManagerSvc           DEBUG                    0x97c1330
-UpdateManagerSvc           DEBUG                    0x97c1478
-UpdateManagerSvc           DEBUG --item 4 0x97c1330
-UpdateManagerSvc           DEBUG        ptr  = 0x97bc3e4
+UpdateManagerSvc           DEBUG                    0x########
+UpdateManagerSvc           DEBUG                    0x######## 0x########
+UpdateManagerSvc           DEBUG                    0x######## 0x########
+UpdateManagerSvc           DEBUG                    0x########
+UpdateManagerSvc           DEBUG                    0x########
+UpdateManagerSvc           DEBUG --item 4 0x########
+UpdateManagerSvc           DEBUG        ptr  = 0x########
 UpdateManagerSvc           DEBUG         IOV = 0.00000004 - 0.00000005
 UpdateManagerSvc           DEBUG        depend on :
-UpdateManagerSvc           DEBUG                    0x97eb9c0
-UpdateManagerSvc           DEBUG --item 5 0x97c1478
-UpdateManagerSvc           DEBUG        ptr  = 0x97bb4c8
+UpdateManagerSvc           DEBUG                    0x########
+UpdateManagerSvc           DEBUG --item 5 0x########
+UpdateManagerSvc           DEBUG        ptr  = 0x########
 UpdateManagerSvc           DEBUG         IOV = 0.0 - 9223372036.854775807
 UpdateManagerSvc           DEBUG        depend on :
 UpdateManagerSvc           DEBUG                   
 UpdateManagerSvc           DEBUG Found 1 head items: OK
-UpdateManagerSvc           DEBUG Unregister object at 0x97bb4c8
-UpdateManagerSvc           DEBUG Unregister object at 0x97bc3e4
-UpdateManagerSvc           DEBUG Unregister object at 0x97bc288
+UpdateManagerSvc           DEBUG Unregister object at 0x########
+UpdateManagerSvc           DEBUG Unregister object at 0x########
+UpdateManagerSvc           DEBUG Unregister object at 0x########
 TestUpdateMgr2             DEBUG Finalize base class GaudiAlgorithm
 TestUpdateMgr2             DEBUG Tools to release :
 TestUpdateMgr2             DEBUG Services to release : UpdateManagerSvc
@@ -1609,16 +1609,16 @@ UpdateManagerSvc           DEBUG --- Dump
 UpdateManagerSvc           DEBUG     3 items registered
 UpdateManagerSvc           DEBUG      of which 3 in the head
 UpdateManagerSvc           DEBUG          head IOV = 0.00000004 - 0.000000048
-UpdateManagerSvc           DEBUG --item 0 0x97f1b48 (head)
-UpdateManagerSvc           DEBUG        ptr  = 0x98180d0
+UpdateManagerSvc           DEBUG --item 0 0x######## (head)
+UpdateManagerSvc           DEBUG        ptr  = 0x########
 UpdateManagerSvc           DEBUG        path = Conditions/Environment/LHCb/Temperature
 UpdateManagerSvc           DEBUG         IOV = 0.000000024 - 0.000000048
-UpdateManagerSvc           DEBUG --item 1 0x97eb9c0 (head)
-UpdateManagerSvc           DEBUG        ptr  = 0x981a868
+UpdateManagerSvc           DEBUG --item 1 0x######## (head)
+UpdateManagerSvc           DEBUG        ptr  = 0x########
 UpdateManagerSvc           DEBUG        path = Conditions/Environment/Hcal/Temperature
 UpdateManagerSvc           DEBUG         IOV = 0.00000004 - 0.00000005
-UpdateManagerSvc           DEBUG --item 2 0x97ebba8 (head)
-UpdateManagerSvc           DEBUG        ptr  = 0x9825a70
+UpdateManagerSvc           DEBUG --item 2 0x######## (head)
+UpdateManagerSvc           DEBUG        ptr  = 0x########
 UpdateManagerSvc           DEBUG        path = Conditions/Environment/DummyDE/Temperature
 UpdateManagerSvc           DEBUG         IOV = 0.000000024 - 0.000000048
 UpdateManagerSvc           DEBUG Found 3 head items: OK
@@ -2010,13 +2010,13 @@ ToolSvc.finalize()         DEBUG   Performing finalization of EventClockSvc.Fake
 EventClockSvc.FakeEven...  DEBUG --- finalize ---
 ToolSvc.finalize()         DEBUG   Performing finalization of ToolSvc.SequencerTimerTool (refCount 1)
 ToolSvc.SequencerTimer...   INFO ------------------------------------------------------------------------------------------------
-ToolSvc.SequencerTimer...   INFO This machine has a speed about   0.73 times the speed of a 2.8 GHz Xeon.
+ToolSvc.SequencerTimer...   INFO This machine has a speed about   0.83 times the speed of a 2.8 GHz Xeon.
 ToolSvc.SequencerTimer...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 ToolSvc.SequencerTimer...   INFO ------------------------------------------------------------------------------------------------
-ToolSvc.SequencerTimer...   INFO GaudiSequencer                |     0.000 |     0.706 |    0.472       1.2 |       6 |     0.004 |
-ToolSvc.SequencerTimer...   INFO   TestUpdateMgr               |     0.000 |     0.227 |    0.149       0.6 |       6 |     0.001 |
-ToolSvc.SequencerTimer...   INFO   TestUpdateMgr2              |     0.000 |     0.292 |    0.145       0.7 |       6 |     0.002 |
-ToolSvc.SequencerTimer...   INFO   DumpDetectorStore           |     0.000 |     0.008 |    0.007       0.0 |       6 |     0.000 |
+ToolSvc.SequencerTimer...   INFO GaudiSequencer                |     0.000 |     0.312 |    0.232       0.6 |       6 |     0.002 |
+ToolSvc.SequencerTimer...   INFO   TestUpdateMgr               |     0.000 |     0.122 |    0.069       0.3 |       6 |     0.001 |
+ToolSvc.SequencerTimer...   INFO   TestUpdateMgr2              |     0.000 |     0.100 |    0.067       0.2 |       6 |     0.001 |
+ToolSvc.SequencerTimer...   INFO   DumpDetectorStore           |     0.000 |     0.003 |    0.003       0.0 |       6 |     0.000 |
 ToolSvc.SequencerTimer...   INFO ------------------------------------------------------------------------------------------------
 ToolSvc.SequencerTimer...  DEBUG  ==> Finalize the base class GaudiTool 
 ToolSvc.SequencerTimer...  DEBUG Tools to release :

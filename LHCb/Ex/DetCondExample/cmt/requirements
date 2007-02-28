@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.62 2007-02-20 10:25:11 marcocle Exp $
+# $Id: requirements,v 1.63 2007-02-28 18:35:05 marcocle Exp $
 package DetCondExample
 version v11r0
 
@@ -17,9 +17,9 @@ use GaudiAlg v*
 use DetDesc v* Det
 use DetDescSvc v* Det
 use DetDescCnv v* Det
-use XmlDDDB v* Det
-use XmlConditions v* Det
-# use CondDBConditions v* Det
+#use XmlDDDB v* Det
+#use XmlConditions v* Det
+use SQLDDDB v* Det
 
 # Xml Parsing services (XmlCnvSvc)
 use XmlTools v* Tools
