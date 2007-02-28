@@ -1,13 +1,8 @@
 //--------------------------------------------------------------
 // Standard Options to use the Detector Geometry
 //--------------------------------------------------------------
-ApplicationMgr.ExtSvc += { "DetDataSvc/DetectorDataSvc" }; 
-ApplicationMgr.ExtSvc += { "XmlCnvSvc" , "XmlParserSvc" };
+//ApplicationMgr.ExtSvc += { "DetDataSvc/DetectorDataSvc" }; 
 
-//--------------------------------------------------------------
-// Location of detector description XML database is a URL
-// so never use "\" (Use only "/")
-//--------------------------------------------------------------
 DetectorDataSvc.UsePersistency = true;
 DetectorDataSvc.DetDbRootName  = "dd";
 DetectorDataSvc.DetStorageType = 7;
@@ -29,3 +24,24 @@ XmlParserSvc.MaxDocNbInCache = 10;
 // to make it keep only reused files.
 XmlParserSvc.CacheBehavior = 3;
 
+//--------------------------------------------------------------
+// Standard Options to use the Conditions Database
+//--------------------------------------------------------------
+
+//DetectorPersistencySvc.CnvServices += { "CondDBCnvSvc" };
+
+// Tell XmlParser how to resolve "conddb:" URLs.
+XmlParserSvc.EntityResolverSvc = "CondDBEntityResolverSvc";
+
+// Define the main DB service name and the alternative for
+// conditions (and, in the future, for online)
+CondDBCnvSvc.CondDBReader = "CondDBDispatcherSvc";
+CondDBDispatcherSvc.MainAccessSvc = "CondDBAccessSvc/DDDB";
+CondDBDispatcherSvc.Alternatives = { "/Conditions=CondDBAccessSvc/LHCBCOND" };
+// CondDBDispatcherSvc.Alternatives = { "/Conditions/Online=CondDBAccessSvc/ONLINE" };
+
+// Connection strings to connect to the databases
+DDDB.ConnectionString = "sqlite_file:$SQLDDDBROOT/db/DDDB.db/DDDB";
+DDDB.CacheHighLevel = 450;
+
+LHCBCOND.ConnectionString = "sqlite_file:$SQLDDDBROOT/db/LHCBCOND.db/LHCBCOND";

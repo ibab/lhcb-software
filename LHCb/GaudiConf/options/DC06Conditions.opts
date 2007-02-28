@@ -1,4 +1,18 @@
 // Defines standard conditions for DC06 production data
 
-DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb.xml";
+//--------------------------------------------------------------
+// Location of detector description XML database is a URL
+// so never use "\" (Use only "/")
+//--------------------------------------------------------------
+
+//DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb.xml";
+
+// Entry point
+DetectorDataSvc.DetDbLocation = "conddb:/lhcb.xml";
+
+// Default tags
+DDDB.DefaultTAG = "DC06";
+LHCBCOND.DefaultTAG = "DC06";
+
 MagneticFieldSvc.FieldMapFile = "$FIELDMAPROOT/cdf/field047.cdf";
+
