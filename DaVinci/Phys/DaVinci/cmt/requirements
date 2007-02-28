@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.342 2007-02-28 18:12:38 pkoppenb Exp $
+# $Id: requirements,v 1.343 2007-02-28 18:40:34 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg, J. Palacios
 #
@@ -68,7 +68,7 @@ use RecSys      v4r1
 use HltSys      v1r2
 
 #-- Phys
-use PhysSys     v5r1
+use PhysSys     v6r0
 
 #-- Analysis
 use AnalysisSys v1r0
