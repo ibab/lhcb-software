@@ -1,4 +1,4 @@
-// $Id: VeloSim.cpp,v 1.17 2007-02-26 15:54:18 cattanem Exp $
+// $Id: VeloSim.cpp,v 1.18 2007-02-28 17:01:43 szumlat Exp $
 // Include files
 // STL
 #include <string>
@@ -441,17 +441,20 @@ void VeloSim::chargePerPoint(LHCb::MCHit* hit, int Npoints,
     Spoints[i]=chargeEqualN+fluctuate;
     verbose()<< "charge for pt" << i << " is " << Spoints[i] 
              << endmsg;
-   // inhomogeneous charge dist from delta rays
-    if (m_inhomogeneousCharge){
-      deltaRayCharge(charge-chargeEqual, 0.001*charge, Npoints, Spoints);
-      // ensure total charge is allocated
-      double total=0.;
-      for (int i=0; i<Npoints; i++){total+=Spoints[i];}
-      verbose()<< "charge distributed: " << total <<endmsg;
-      if( charge < total ) {
-       double adjust=charge/total;
-       for (int j=0; j<Npoints; j++){Spoints[j]*=adjust;}
-      }
+  }
+  // inhomogeneous charge dist from delta rays
+  if(m_inhomogeneousCharge){
+    deltaRayCharge(charge-chargeEqual, 0.001*charge, Npoints, Spoints);
+    // ensure total charge is allocated
+    double total=0.;
+    for(int i=0; i<Npoints; i++){
+      total+=Spoints[i];
+    }
+    verbose()<< "charge distributed: " << total <<endmsg;
+    // normalize the chrge each time
+    double adjust=charge/total;
+    for(int j=0; j<Npoints; j++){
+      Spoints[j]*=adjust;
     }
   }
   double totalCharge=0.;
@@ -459,7 +462,13 @@ void VeloSim::chargePerPoint(LHCb::MCHit* hit, int Npoints,
     totalCharge+=Spoints[i];
   }
   verbose()<< "total charge after correction: " << totalCharge <<endmsg;
-  
+  // if distributed charge not equal to charge taken from 
+  // a hit issue a warning
+  if(fabs(totalCharge-charge)>1.e-6){
+    Warning("Normalization problems!");
+    info()<< "total charge after correction: " << totalCharge <<endmsg;
+    info()<< "total charge from a hit:" << charge <<endmsg;
+  }
   //
   return;
 }

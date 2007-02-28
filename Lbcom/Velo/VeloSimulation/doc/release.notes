@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!===================== VeloSimulation v2r6 2007-02-28 ======================
+! 2007-02-28 - Tomasz Szumlak
+ - Bug fix - get rid of biased residuals
+
 !===================== VeloSimulation v2r5 2007-02-26 ======================
 ! 2007-02-26 - Marco Cattaneo
  - Remove LHCbDefinitions includes
