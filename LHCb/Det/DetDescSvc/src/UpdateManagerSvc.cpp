@@ -1,4 +1,4 @@
-// $Id: UpdateManagerSvc.cpp,v 1.11 2007-02-15 12:31:29 marcocle Exp $
+// $Id: UpdateManagerSvc.cpp,v 1.12 2007-02-28 18:32:42 marcocle Exp $
 // Include files 
 
 #include "GaudiKernel/SvcFactory.h"
@@ -182,7 +182,7 @@ StatusCode UpdateManagerSvc::finalize(){
   MsgStream log(msgSvc(),name());
   log << MSG::DEBUG << "--- finalize ---" << endmsg;
 
-  if (msgSvc()->outputLevel() <= 1) dump();
+  if ( m_outputLevel <= MSG::DEBUG ) dump();
 
   // release the interfaces used
   if (m_dataProvider != NULL) m_dataProvider->release();
