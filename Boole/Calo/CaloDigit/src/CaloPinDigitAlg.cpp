@@ -1,4 +1,4 @@
-// $Id: CaloPinDigitAlg.cpp,v 1.2 2007-02-27 22:36:32 odescham Exp $
+// $Id: CaloPinDigitAlg.cpp,v 1.3 2007-02-28 22:46:12 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -122,7 +122,7 @@ StatusCode CaloPinDigitAlg::initialize() {
 
   m_saturateAdc = m_calo->adcMax();  
   m_rndmSvc = svc< IRndmGenSvc>( "RndmGenSvc" , true );
-  m_count = 0;
+  m_count = -1;
 
   
   
@@ -136,6 +136,7 @@ StatusCode CaloPinDigitAlg::initialize() {
 StatusCode CaloPinDigitAlg::execute() {
 
   debug() << "==> Execute" << endmsg;
+  ++m_count;
 
   
   if( m_count >= m_rate)m_count = 0;
@@ -143,18 +144,38 @@ StatusCode CaloPinDigitAlg::execute() {
   // Init
   Rndm::Numbers normale( rndmSvc() , Rndm::Gauss( 0.0 , 1.0) );
   
+  
   // get the ADCs (normal cells) 
   LHCb::CaloAdcs* adcs = get<LHCb::CaloAdcs>( m_data );
-
-  // Trivial monitoring system for Prs/Spd : 1 Led -> 1 Cell + no Monitoring !!!
+  
   if( "Prs" == m_detectorName || "Spd" == m_detectorName ){
+    LHCb::L0PrsSpdHits* spdBank = get<LHCb::L0PrsSpdHits>( rootOnTES()+ LHCb::L0PrsSpdHitLocation::Spd );
+    LHCb::L0PrsSpdHits* prsBank = get<LHCb::L0PrsSpdHits>( rootOnTES()+ LHCb::L0PrsSpdHitLocation::Prs );
+    prsBank->clear();// remove trigger on noise
+    spdBank->clear();// remove trigger on noise
+    debug() << "Name " << m_detectorName << adcs->size() << endreq;
+    // Trivial monitoring system for Prs/Spd : 1 Led -> 1 Cell !!!
     // loop over Cells
     for(LHCb::CaloAdcs::const_iterator iCell = adcs->begin() ; iCell != adcs->end() ; ++iCell ) {
+      int index = iCell - adcs->begin();
+      debug() << " Prs/Spd " << index  << " " << m_count << endreq;
+      if( index-m_count < 0 )continue;
+      if( 0 !=  m_rate*( (int) (index-m_count)/m_rate)-(index-m_count) )continue;
       double signal = m_signal[0];
       double spread = normale() *  m_spread[0];
       int newAdc = (*iCell)->adc() + (int) floor( signal + spread +0.5 ) ;
       if ( newAdc > m_saturateAdc ) { newAdc = m_saturateAdc ; } 
+      debug() << " Prs/Spd Add signal " << newAdc << endreq;
       (*iCell)->setAdc( newAdc );
+      if ( newAdc > 0 ){
+        debug() << "  insert SPD/Prs" << endreq;
+        LHCb::CaloCellID prsId = (*iCell)->cellID();
+        LHCb::CaloCellID spdId(0,prsId.area(),prsId.col(),prsId.row());
+        LHCb::L0PrsSpdHit* spdHit = new LHCb::L0PrsSpdHit( spdId );
+        LHCb::L0PrsSpdHit* prsHit = new LHCb::L0PrsSpdHit( prsId );
+        spdBank->insert( spdHit );
+        prsBank->insert( prsHit );
+      }      
     }
     return StatusCode::SUCCESS;
   }
@@ -174,7 +195,6 @@ StatusCode CaloPinDigitAlg::execute() {
   // Create Noise for the pinDiode 
   // ============================== 
   CaloVector<CaloPin>&  caloPins = m_calo->caloPins();
-  CaloVector<int> pinSignal ;
 
   // (in)coherent noise
   Rndm::Numbers rndCNoise( rndmSvc() , Rndm::Gauss( 0.0 , m_cNoise ) );// coherent noise
@@ -182,11 +202,13 @@ StatusCode CaloPinDigitAlg::execute() {
   double cNoise = rndCNoise();
   for( CaloVector<CaloPin>::iterator iPin = caloPins.begin() ; iPin != caloPins.end() ; ++iPin ) {
     const LHCb::CaloCellID   id    = (*iPin).id();
-    pinSignal.addEntry( (int) floor( cNoise + rndINoise() + 0.5 ) , id );    
+    int pinSignal  = (int) floor( cNoise + rndINoise() + 0.5 );    
     debug() << " PIN " << iPin-caloPins.begin() << " id " << id 
-            << " pedestal : " << pinSignal[id] << " Leds : " << (*iPin).leds() << endreq;
+            << " pedestal : " << pinSignal << " Leds : " << (*iPin).leds() << endreq;
+    LHCb::CaloAdc* pinAdc = new LHCb::CaloAdc(id , pinSignal );
+    pinAdcs->insert( pinAdc ); 
   }
-  debug() << " Initialized : " << pinSignal.size() << " ADCs for pin Diode " << endreq;
+  debug() << " Initialized : " << pinAdcs->size() << " ADCs for pin Diode " << endreq;
 
   // ================//
   // Create LED data //
@@ -250,16 +272,7 @@ StatusCode CaloPinDigitAlg::execute() {
 
     // Add data to Corresponding Pin-Diode
     LHCb::CaloCellID pin = (*iLed).pin();
-    LHCb::CaloAdc* pinAdc;
-    if( NULL != pinAdcs->object( pin ) ){
-      pinAdc =  pinAdcs->object( pin );
-      warning() << "pinDiode " << pin << " already fired by another LED !!! "  << endreq;
-    }else{
-      debug() << " Create new pinAdc for pin " << pin << endreq;
-      pinAdc = new LHCb::CaloAdc(pin , 0 );
-      pinAdc->setAdc ( pinSignal[pin] ); // set pedestal
-      pinAdcs->insert( pinAdc ); 
-    } 
+    LHCb::CaloAdc* pinAdc =  pinAdcs->object( pin );
 
     int newAdc = pinAdc->adc() + data[0]; // add data
     if( 1 != data.size() ){
@@ -277,7 +290,6 @@ StatusCode CaloPinDigitAlg::execute() {
     pinAdc->setAdc ( newAdc ); 
     debug() << " -----> pin Adc " << newAdc << endreq;
   } 
-  ++m_count;
   verbose() << " The End " << endreq;
   return StatusCode::SUCCESS; 
 }

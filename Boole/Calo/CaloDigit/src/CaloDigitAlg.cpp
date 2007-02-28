@@ -1,4 +1,4 @@
-// $Id: CaloDigitAlg.cpp,v 1.15 2007-02-22 23:57:20 odescham Exp $
+// $Id: CaloDigitAlg.cpp,v 1.16 2007-02-28 22:46:12 odescham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -180,7 +180,6 @@ StatusCode CaloDigitAlg::initialize() {
     }
     info() << endreq;
   }
-  
   return StatusCode::SUCCESS;
 };
 

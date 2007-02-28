@@ -16,6 +16,14 @@ EcalPinDigit.LedRate   = 50;
 EcalPinDigit.LedSignal = {100.};
 EcalPinDigit.LedSpread = {2.};
 
+PrsPinDigit.LedRate   = 50;
+PrsPinDigit.LedSignal = {80.};
+PrsPinDigit.LedSpread = {2.};
+
+SpdPinDigit.LedRate   = 50;
+SpdPinDigit.LedSignal = {80.};
+SpdPinDigit.LedSpread = {2.};
+
 HcalPinDigit.LedRate   = 50;
 HcalPinDigit.LedSignal = {75. , 125.};
 HcalPinDigit.LedSpread = {2.  ,  5.};
@@ -30,7 +38,7 @@ MessageSvc.setDebug +={"EcalDet.BuildMonitoringSystem"};
 MessageSvc.setDebug +={"HcalDet.BuildMonitoringSystem"};
 
 
-ApplicationMgr.EvtMax = 500;
+ApplicationMgr.EvtMax = 1000;
 
 #include "$BOOLEOPTS/RawWriter.opts"
 RawWriter.Output = "DATAFILE='PFN:0000000_00000000_1.raw' TYP='POOL_ROOTTREE' OPT='REC'";
@@ -75,8 +83,9 @@ DigiCALOSeq.Members = {
   "CaloDigitAlg/EcalDigit",
   "CaloDigitAlg/HcalDigit",
 
-  "CaloPinDigitAlg/EcalPinDigit",    // Produce LED Signal
-  "CaloPinDigitAlg/HcalPinDigit",    // Produce LED Signal
+  "CaloPinDigitAlg/EcalPinDigit",    // Produce LED Signal for Ecal
+  "CaloPinDigitAlg/HcalPinDigit",    // Produce LED Signal for Hcal
+  "CaloPinDigitAlg/PrsPinDigit",     // Produce LED Signal for Spd/Prs
 
   "CaloFillPrsSpdRawBuffer"
  ,"CaloFillRawBuffer/EcalFillRawBuffer"
@@ -86,8 +95,9 @@ DigiCALOSeq.Members = {
 EcalFillRawBuffer.DataCodingType = 2;
 HcalFillRawBuffer.DataCodingType = 2;
 CaloFillPrsSpdRawBuffer.DataCodingType = 3;
-
-
+PrsDigit.ZSupThreshold=0;
+SpdDigit.ZSupThreshold=0;
+CaloFillPrsSpdRawBuffer.OutputLevel=3;
 //--------------------------------------------------------------
 // Relations to MC truth. Built unconditionally regardless of monitoring
 //--------------------------------------------------------------
