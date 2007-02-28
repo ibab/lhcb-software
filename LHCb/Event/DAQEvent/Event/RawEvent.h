@@ -12,7 +12,7 @@ namespace LHCb
 {
 
   // Class ID definition
-  static const CLID& CLID_RawEvent = 1002;
+  static const CLID CLID_RawEvent = 1002;
 
   // Namespace for locations in TDS
   namespace RawEventLocation {

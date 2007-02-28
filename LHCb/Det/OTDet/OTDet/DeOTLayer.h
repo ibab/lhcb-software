@@ -1,4 +1,4 @@
-// $Id: DeOTLayer.h,v 1.13 2007-02-15 07:55:57 cattanem Exp $
+// $Id: DeOTLayer.h,v 1.14 2007-02-28 18:31:44 marcocle Exp $
 #ifndef OTDET_DEOTLAYER_H
 #define OTDET_DEOTLAYER_H 1
 
@@ -22,7 +22,7 @@
 class DeOTQuarter;
 class DeOTModule;
 
-static const CLID& CLID_DeOTLayer = 8103;
+static const CLID CLID_DeOTLayer = 8103;
 
 class DeOTLayer : public DetectorElement {
 

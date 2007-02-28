@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.77 2007-02-15 07:55:57 cattanem Exp $
+! $Id: release.notes,v 1.78 2007-02-28 18:31:44 marcocle Exp $
 ! Package     : OTDet
 ! Responsible : Jeroen van Tilburg, Jacopo Nardulli, Jan Amoraal
 !--------------------------------------------------------------------------
+
+! 2007-02-28 - Marco Clemencic
+ - Replaced "static const CLID&" with "static const CLID"
 
 !========================== OTDet v7r2 2007-02-15 =========================
 ! 2007-02-15 - Marco Cattaneo

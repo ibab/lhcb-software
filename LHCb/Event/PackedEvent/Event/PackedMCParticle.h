@@ -1,4 +1,4 @@
-// $Id: PackedMCParticle.h,v 1.2 2006-02-16 15:21:15 cattanem Exp $
+// $Id: PackedMCParticle.h,v 1.3 2007-02-28 18:27:09 marcocle Exp $
 #ifndef EVENT_PACKEDMCPARTICLE_H 
 #define EVENT_PACKEDMCPARTICLE_H 1
 
@@ -31,7 +31,7 @@ namespace LHCb
     std::vector<int>endVertices;
   };
 
-  static const CLID& CLID_PackedMCParticles = 1510;
+  static const CLID CLID_PackedMCParticles = 1510;
 
   // Namespace for locations in TDS
   namespace PackedMCParticleLocation {

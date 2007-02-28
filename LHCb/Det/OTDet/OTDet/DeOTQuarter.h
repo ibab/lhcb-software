@@ -1,4 +1,4 @@
-// $Id: DeOTQuarter.h,v 1.11 2007-02-15 07:55:57 cattanem Exp $
+// $Id: DeOTQuarter.h,v 1.12 2007-02-28 18:31:44 marcocle Exp $
 #ifndef OTDET_DEOTQUARTER_H
 #define OTDET_DEOTQUARTER_H 1
 
@@ -22,7 +22,7 @@
 /// Forward declarations
 class DeOTModule;
 
-static const CLID& CLID_DeOTQuarter = 8104;
+static const CLID CLID_DeOTQuarter = 8104;
 
 class DeOTQuarter : public DetectorElement {
 

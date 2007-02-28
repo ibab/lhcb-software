@@ -4,6 +4,9 @@
 ! Purpose     : Pack, Unpack and Compare containers for optimized persistency
 !-----------------------------------------------------------------------------
 
+! 2007-02-28 - Marco Clemencic
+ - Replaced "static const CLID&" to "static const CLID"
+
 !======================= PackedEvent v3r0 2007-01-30 =========================
 ! 2007-01-30 - Marco Cattaneo
  - Fix requirements for linking Reflex dict on Windows and retag

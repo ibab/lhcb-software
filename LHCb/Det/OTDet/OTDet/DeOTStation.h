@@ -1,4 +1,4 @@
-// $Id: DeOTStation.h,v 1.8 2007-02-15 07:55:57 cattanem Exp $
+// $Id: DeOTStation.h,v 1.9 2007-02-28 18:31:44 marcocle Exp $
 #ifndef OTDET_DEOTSTATION_H
 #define OTDET_DEOTSTATION_H 1
 
@@ -22,7 +22,7 @@
 /// Forward declarations
 class DeOTLayer;
 
-static const CLID& CLID_DeOTStation = 8102;
+static const CLID CLID_DeOTStation = 8102;
 
 class DeOTStation : public DetectorElement {
 

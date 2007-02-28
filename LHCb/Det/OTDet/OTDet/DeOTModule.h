@@ -1,4 +1,4 @@
-// $Id: DeOTModule.h,v 1.24 2007-02-15 07:55:57 cattanem Exp $
+// $Id: DeOTModule.h,v 1.25 2007-02-28 18:31:44 marcocle Exp $
 #ifndef OTDET_DEOTMODULE_H
 #define OTDET_DEOTMODULE_H 1
 
@@ -59,7 +59,7 @@ namespace LHCb
 
 namespace LHCb{ class Trajectory; }
 
-static const CLID& CLID_DeOTModule = 8105;
+static const CLID CLID_DeOTModule = 8105;
 
 class DeOTModule : public DetectorElement {
 

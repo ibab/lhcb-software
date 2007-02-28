@@ -1,4 +1,4 @@
-// $Id: DeOTDetector.h,v 1.34 2007-02-15 07:55:57 cattanem Exp $
+// $Id: DeOTDetector.h,v 1.35 2007-02-28 18:31:43 marcocle Exp $
 #ifndef OTDET_DEOTDETECTOR_H
 #define OTDET_DEOTDETECTOR_H 1
 
@@ -40,7 +40,7 @@ namespace DeOTDetectorLocation{
   static const std::string& Default="/dd/Structure/LHCb/AfterMagnetRegion/T/OT";
 };
 
-static const CLID& CLID_DeOTDetector = 8101;
+static const CLID CLID_DeOTDetector = 8101;
 
 class DeOTDetector : public DetectorElement {
 

@@ -1,4 +1,4 @@
-// $Id: PackedMCVertex.h,v 1.3 2006-06-28 13:08:43 cattanem Exp $
+// $Id: PackedMCVertex.h,v 1.4 2007-02-28 18:27:09 marcocle Exp $
 #ifndef EVENT_PACKEDMCVERTEX_H 
 #define EVENT_PACKEDMCVERTEX_H 1
 
@@ -31,7 +31,7 @@ namespace LHCb
     std::vector<int> products;
   };
 
-  static const CLID& CLID_PackedMCVertices = 1511;
+  static const CLID CLID_PackedMCVertices = 1511;
 
   // Namespace for locations in TDS
   namespace PackedMCVertexLocation {
