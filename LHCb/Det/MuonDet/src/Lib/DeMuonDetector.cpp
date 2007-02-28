@@ -1,4 +1,4 @@
-// $Id: DeMuonDetector.cpp,v 1.30 2007-02-27 08:54:17 asatta Exp $
+// $Id: DeMuonDetector.cpp,v 1.31 2007-02-28 18:33:18 marcocle Exp $
 
 // Include files
 #include "MuonDet/DeMuonDetector.h"
@@ -20,17 +20,12 @@
  *
  */
 
-#include "DetDescCnv/XmlUserDetElemCnv.h"
-
-typedef XmlUserDetElemCnv<DeMuonDetector>       XmlDeMuonDetector;
-DECLARE_CONVERTER_FACTORY(XmlDeMuonDetector)
-
 /// Standard Constructor
 DeMuonDetector::DeMuonDetector() {
 
   bool debug = false;
   if(debug) std::cout<< "Building the Detector !!!" <<std::endl;
-  m_detSvc = this->dataSvc();
+  m_detSvc = 0;
   m_stations = 0;
   m_regions = 0;
 }
@@ -57,6 +52,8 @@ StatusCode DeMuonDetector::initialize()
     msg << MSG::ERROR << "Failure to initialize DetectorElement" << endreq;
     return sc ; 
   }
+
+  m_detSvc = this->dataSvc();
 
   //Initialize the maximum number of allowed chambers per region
   int myDum[4] = {12,24,48,192};

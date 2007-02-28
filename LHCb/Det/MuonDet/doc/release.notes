@@ -1,7 +1,12 @@
-! $Id: release.notes,v 1.82 2007-02-27 11:13:57 asatta Exp $
+! $Id: release.notes,v 1.83 2007-02-28 18:33:18 marcocle Exp $
 ! Package     : MuonDet
 ! Responsible : Alessia Satta
 !----------------------------------------------------------------------------
+
+! 2007-02-28 - Marco Clemencic
+ - Replaced "static const CLID&" with "static const CLID"
+ - Moved declaration of factories from link library to component library
+   (MuonDet_dll.cpp)
 
 !========================= MuonDet v6r0 2007-02-27 ========================
 ! 2007-02-27 - Alessia Satta

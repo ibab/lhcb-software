@@ -1,4 +1,4 @@
-// $Id: MuonL1Board.h,v 1.1 2004-02-03 11:40:26 asatta Exp $
+// $Id: MuonL1Board.h,v 1.2 2007-02-28 18:33:18 marcocle Exp $
 #ifndef MUONDET_MUONL1BOARD_H 
 #define MUONDET_MUONL1BOARD_H 1
 #include <vector>
@@ -8,7 +8,7 @@
 
 // Include files
 #include "MuonDet/CLID_MuonL1Board.h"
-//static const CLID&  CLID_MuonL1Board = 11090;
+//static const CLID  CLID_MuonL1Board = 11090;
 
 /** @class MuonL1Board MuonL1Board.h MuonDet/MuonL1Board.h
  *  

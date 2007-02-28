@@ -1,4 +1,4 @@
-// $Id: DeMuonGasGap.h,v 1.6 2006-05-09 14:21:32 cattanem Exp $
+// $Id: DeMuonGasGap.h,v 1.7 2007-02-28 18:33:18 marcocle Exp $
 // ============================================================================
 #ifndef MUONDET_DEMUONGASGAP_H
 #define MUONDET_DEMUONGASGAP_H 1
@@ -22,7 +22,7 @@
 
 
 /// CLID of a Muon system gas gap
-static const CLID& CLID_DEMuonGasGap = 11007;  
+static const CLID CLID_DEMuonGasGap = 11007;  
 
 class DeMuonGasGap: public DetectorElement {
 

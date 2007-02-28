@@ -1,4 +1,4 @@
-// $Id: DeMuonChamber.h,v 1.6 2005-10-31 15:27:28 asarti Exp $
+// $Id: DeMuonChamber.h,v 1.7 2007-02-28 18:33:17 marcocle Exp $
 // ============================================================================
 // CVS tag $Name:
 // ============================================================================
@@ -23,7 +23,7 @@
  */
 
 /// Class ID of chambers 
-static const CLID& CLID_DEMuonChamber = 11006;  
+static const CLID CLID_DEMuonChamber = 11006;  
 
 class DeMuonChamber: public DetectorElement {
 

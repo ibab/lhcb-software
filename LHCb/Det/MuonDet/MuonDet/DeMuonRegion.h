@@ -1,4 +1,4 @@
-// $Id: DeMuonRegion.h,v 1.8 2005-12-07 08:46:46 asarti Exp $
+// $Id: DeMuonRegion.h,v 1.9 2007-02-28 18:33:18 marcocle Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -22,7 +22,7 @@
  */
 
 /// Class ID of DeMuonRegion
-static const CLID& CLID_DEMuonRegion = 11005;  
+static const CLID CLID_DEMuonRegion = 11005;  
 
 class DeMuonRegion: public DetectorElement {
 

@@ -1,4 +1,4 @@
-// $Id: DeMuonDetector.h,v 1.18 2007-02-27 08:54:17 asatta Exp $
+// $Id: DeMuonDetector.h,v 1.19 2007-02-28 18:33:17 marcocle Exp $
 // ============================================================================
 #ifndef MUONDET_DEMUONDETECTOR_H
 #define MUONDET_DEMUONDETECTOR_H 1
@@ -37,7 +37,7 @@
 #define numberGap 4
 #define nFE 2
 #define nLogMap 2
-static const CLID& CLID_DEMuonDetector = 11009;  
+static const CLID CLID_DEMuonDetector = 11009;  
 
 class DeMuonDetector: public DetectorElement {
 

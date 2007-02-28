@@ -1,4 +1,4 @@
-// $Id: MuonChamberGrid.h,v 1.5 2005-12-13 11:06:57 asatta Exp $
+// $Id: MuonChamberGrid.h,v 1.6 2007-02-28 18:33:18 marcocle Exp $
 #ifndef MUONDET_MUONCHAMBERGRID_H 
 #define MUONDET_MUONCHAMBERGRID_H 1
 
@@ -15,7 +15,7 @@
  */
 
 /// Class ID of the Muon Grid
-static const CLID& CLID_MuonChamberGrid = 11094;  
+static const CLID CLID_MuonChamberGrid = 11094;  
 
 class MuonChamberGrid: public Condition {
 public: 
