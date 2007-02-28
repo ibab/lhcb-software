@@ -80,7 +80,7 @@ Tagger TaggerElectronTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     double Emeas= -1;
     const ProtoParticle* proto = (*ipart)->proto();
     const Track* track = proto->track();
-    const SmartRefVector<CaloHypo>& vcalo = proto->calo();
+    //const SmartRefVector<CaloHypo>& vcalo = proto->calo();
     //if(vcalo.size()==1) Emeas = (vcalo.at(0))->e()/GeV; //xxx//crashes
     double eOverP = -999.9;
     if(m_electron->set(*ipart)){
