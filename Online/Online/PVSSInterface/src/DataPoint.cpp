@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DataPoint.cpp,v 1.4 2007-03-01 21:27:46 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DataPoint.cpp,v 1.5 2007-03-01 21:54:06 frankb Exp $
 //  ====================================================================
 //  DataPoint.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: DataPoint.cpp,v 1.4 2007-03-01 21:27:46 frankb Exp $
+// $Id: DataPoint.cpp,v 1.5 2007-03-01 21:54:06 frankb Exp $
 #ifdef _WIN32
   // Disable warning C4250: 'const float' : forcing value to bool 'true' or 'false' (performance warning)
   #pragma warning ( disable : 4800 )
@@ -78,23 +78,24 @@ namespace PVSS {
   }
   template <class T, class Q> Q convertValue(Value* v) {
     if ( v->type() != DataValue<T>::type_id())invalidValue();
+#ifdef _WIN32
+    return ((DataValue<T>*)v)->value<Q>();
+#else
     return (Q)((DataValue<T>*)v)->data();
+#endif
   }
-  template <typename T> T default_value()                { return T();                    }
-  template <> std::string  default_value<std::string>()  { return std::string("");        }
-  template <> DpIdentifier default_value<DpIdentifier>() { return DpIdentifier(s_nullDP); }
-  static void copy_string(std::string& t,const char* s)  { t = s;                         }
-
-  template <class T> void insert_vector(std::vector<T>& v,const T& o){ v.push_back(o); }
-
-  static void insert_bool  (std::vector<bool>& t,const bool s)         { t.push_back(s);  }
-  static void insert_char  (std::vector<char>& t,const char s)         { t.push_back(s);  }
-  static void insert_short (std::vector<short>& t,const short s)       { t.push_back(s);  }
-  static void insert_int   (std::vector<int>& t,const int s)           { t.push_back(s);  }
-  static void insert_float (std::vector<float>& t,const float s)       { t.push_back(s);  }
-  static void insert_time_t(std::vector<time_t>& t,const time_t s)     { t.push_back(s);  }
-  static void insert_dpid  (std::vector<DpIdentifier>& t,const DpIdentifier& s) { t.push_back(s);  }
-  static void insert_string(std::vector<std::string>& t,const char* s) { t.push_back(s);  }
+  template <typename T> T default_value()                        { return T();                    }
+  template <> std::string  default_value<std::string>()          { return std::string("");        }
+  template <> DpIdentifier default_value<DpIdentifier>()         { return DpIdentifier(s_nullDP); }
+  static void copy_string  (std::string& t,const char* s)        { t = s;                         }
+  static void insert_bool  (std::vector<bool>& t,bool s)         { t.push_back(s);                }
+  static void insert_char  (std::vector<char>& t,char s)         { t.push_back(s);                }
+  static void insert_short (std::vector<short>& t,short s)       { t.push_back(s);                }
+  static void insert_int   (std::vector<int>& t,int s)           { t.push_back(s);                }
+  static void insert_float (std::vector<float>& t,float s)       { t.push_back(s);                }
+  static void insert_time_t(std::vector<time_t>& t,time_t s)     { t.push_back(s);                }
+  static void insert_dpid  (std::vector<DpIdentifier>& t,const DpIdentifier& s) { t.push_back(s); }
+  static void insert_string(std::vector<std::string>& t,const char* s)          { t.push_back(s); }
 
   /// Allocate data buffer
   static PVSS::Value* createValue(int typ)   {
@@ -383,27 +384,25 @@ template <class T> const T& DataPoint::reference()  const  {
 
 // Some hacks due to comipler hickup!
 #ifdef _WIN32
-template <typename T> struct GetRef  
-{   T& get(DataPoint& dp) { return dp.reference<T>(); } };
-template <typename T> struct ConstRef  
-{   const T& get(const DataPoint& dp) { return dp.reference<T>(); } };
-#define BASIC_SPECIALIZATIONS(x)   BASIC_SPECIALIZATIONS1(x) \
-  namespace PVSS { template GetRef< x >; template ConstRef< x >;  }
+template <typename T> struct GetRef   {   
+  T& ref1(DataPoint& dp)             { return dp.reference<T>(); } 
+  const T& ref2(const DataPoint& dp) { return dp.reference<T>(); } 
+};
+template <typename T> struct GetData {
+  T get1(const DataPoint& dp) { return dp.data<T>();  } 
+  T get2(DataPoint& dp)       { return dp.data<T>(); } 
+};
+#define BASIC_SPECIALIZATIONS(x)   BASIC_SPECIALIZATIONS1(x) namespace PVSS { template GetRef< x >; }
+#define SPECIALIZATIONS(x) BASIC_SPECIALIZATIONS(x) namespace PVSS { template GetData< x >;}
+
 #else
 #define BASIC_SPECIALIZATIONS(x)   BASIC_SPECIALIZATIONS1(x) namespace PVSS { 
-  template <> x& DataPoint::reference< x >();                   \
-  template <> const x& DataPoint::reference< x >() const; }
+  template <> x& DataPoint::reference< x >();             \
+  template <> const x& DataPoint::reference< x >() const; \
+  template <> x DataPoint::data< x >();                   \
+  template <> const x DataPoint::data< x >() const; }
 #endif
 
-#define SPECIALIZATIONS(x) BASIC_SPECIALIZATIONS(x)           \
-  namespace PVSS {                                            \
-    template <> x DataPoint::data< x >();                     \
-    template <> const x DataPoint::data< x >() const;         \
-  }
-#define SPECIALIZATIONS2(x) BASIC_SPECIALIZATIONS(x)           \
-  namespace PVSS {                                            \
-    template <> x DataPoint::data< x >();                     \
-  }
 
 #define VECTOR_SPECIALIZATIONS(x) BASIC_SPECIALIZATIONS(std::vector< x >)
 
@@ -467,13 +466,13 @@ void DataPoint::setValue(int typ, const Variable* variable)  {
       DatapointIO::value(variable,copy_string,reference<std::string>());
       break;
     case DevTypeElement::DYNCHAR:
-      DatapointIO::value(variable,PVSS::insert_char,reference<std::vector<char> >());
+      DatapointIO::value(variable,insert_char,reference<std::vector<char> >());
       break;
     case DevTypeElement::DYNINT:
       //do_vector_io(variable,reference<std::vector<short> >());
       //break;
     case DevTypeElement::DYNUINT:
-      DatapointIO::value(variable,PVSS::insert_int,reference<std::vector<int> >());
+      DatapointIO::value(variable,insert_int,reference<std::vector<int> >());
       break;
     case DevTypeElement::DYNTEXT:
       DatapointIO::value(variable,insert_string,reference<std::vector<std::string> >());
@@ -485,10 +484,10 @@ void DataPoint::setValue(int typ, const Variable* variable)  {
       DatapointIO::value(variable,insert_bool,reference<std::vector<bool> >());
       break;
     case DevTypeElement::DYNFLOAT:
-      DatapointIO::value(variable,PVSS::insert_float,reference<std::vector<float> >());
+      DatapointIO::value(variable,insert_float,reference<std::vector<float> >());
       break;
     case DevTypeElement::DYNDPID:
-      DatapointIO::value(variable,PVSS::insert_dpid,reference<std::vector<DpIdentifier> >());
+      DatapointIO::value(variable,insert_dpid,reference<std::vector<DpIdentifier> >());
       break;
     case DevTypeElement::BIT32:
     default:
