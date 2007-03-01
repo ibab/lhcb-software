@@ -1,4 +1,4 @@
-// $Id: lcgDict.h,v 1.5 2007-02-26 15:10:35 cattanem Exp $
+// $Id: lcgDict.h,v 1.6 2007-03-01 09:29:53 mato Exp $
 #ifndef MCEVENT_LCGDICT_H 
 #define MCEVENT_LCGDICT_H 1
 
@@ -6,6 +6,7 @@
 
 // begin include files
 #include "Event/MCTrackInfo.h"
+#include "Event/MCParticle.h"
 
 #include "Kernel/IForcedBDecayTool.h"
 #include "Kernel/IMCDecayFinder.h"
@@ -19,6 +20,7 @@
 namespace {
   struct _Instantiations {
     // begin instantiations
+    std::vector<const LHCb::MCParticle*> _i1;
     // end instantiations
   };
 }
