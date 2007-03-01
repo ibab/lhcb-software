@@ -4,7 +4,7 @@
 <package name="MCEvent">
 
 <!-- **************************************************************************
-  * $Id: MCRichDigitHistoryCode.xml,v 1.7 2006-09-01 10:32:38 jonrob Exp $
+  * $Id: MCRichDigitHistoryCode.xml,v 1.8 2007-03-01 20:14:49 jonrob Exp $
   *****************************************************************************
   * XML-description of MCRichDigitHistoryCode class                           *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -103,7 +103,7 @@
                 desc  = "Returns true if at least one of the hits contributing to this digit came from unscattered Cherenkov radiation from one of the main RICH radiators" 
                 type  = "bool" >
                 <code>
-    return ( ( aerogelHit() || c4f10Hit() || cf4Hit() ) &amp;&amp; !scatteredHit() );
+    return ( ( aerogelHit() || c4f10Hit() || cf4Hit() ) &amp;&amp; !scatteredHit() &amp;&amp; !chargeShareHit() );
                 </code>
         </method>
 
