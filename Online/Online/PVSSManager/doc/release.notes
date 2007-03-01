@@ -1,0 +1,13 @@
+Package: PVSSManager
+Author:  Markus Frank
+
+!================== PVSSManagerv1r0 2007-03-101 =============================
+! 10-05-2005 Markus Frank
+  C++ Interface to PVSS API manager.
+  The interface entirely isolates PVSS from the user interface (PVSSInterface)
+
+  Note:
+  This package MUST be build with a valid PVSS platform configuration.
+  ie. for WIN32 currently with VC++ 6!
+
+  New Package.

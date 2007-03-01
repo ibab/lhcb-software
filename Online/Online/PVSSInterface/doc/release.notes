@@ -1,0 +1,8 @@
+Package: PVSSInterface 
+Author:  Markus Frank
+
+!================== PVSSInterface v1r0 2007-03-101 =============================
+! 10-05-2005 Markus Frank
+  C++ and Python Interface to PVSS
+
+  New Package.

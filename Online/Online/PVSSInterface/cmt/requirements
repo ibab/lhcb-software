@@ -1,0 +1,27 @@
+package PVSSInterface
+version v1r0
+
+branches  cmt doc
+use PVSSManager  v* Online
+use OnlineKernel v* Online
+use RELAX        v* LCG_Interfaces
+use Reflex       v* LCG_Interfaces
+use Python       v* LCG_Interfaces -no_auto_import
+use ROOT         v* LCG_Interfaces -no_auto_import
+
+include_dirs $(PVSSINTERFACEROOT)
+document      install_includes install_includes
+
+library PVSSInterface *.cpp
+apply_pattern linker_library library=PVSSInterface
+apply_pattern ld_library_path
+
+path_remove  PYTHONPATH "/PVSSInterface/" WIN32 "\PVSSInterface\"
+path_prepend PYTHONPATH "$(PVSSINTERFACEROOT)/scripts"
+
+set GCCXML_CXXFLAGS "" slc4-ia32 " -m32"
+macro_append gccxmlopts " --no_templatetypedefs --no_membertypedefs -D__GCCXML "
+apply_pattern reflex_dictionary dictionary=PVSSInterface \
+                                headerfiles=$(PVSSINTERFACEROOT)/dict/dictionary.h \
+                                selectionfile=$(PVSSINTERFACEROOT)/dict/dictionary.xml
+macro PVSSInterfaceDict_use_linkopts $(use_linkopts)

@@ -1,0 +1,14 @@
+package PVSSManager
+version v1r0
+
+branches  cmt doc
+use PVSS v* Externals -no_auto_imports
+
+include_dirs $(PVSSMANAGERROOT)
+
+document install_includes install_includes
+library PVSSManager *.cpp -import=PVSS
+apply_pattern linker_library library=PVSSManager
+macro_append PVSSManager_shlibflags $(PVSS_linkopts)
+
+application PVSS00python  ../main/*.cpp

@@ -1,0 +1,23 @@
+<lcgdict>
+  <selection>
+    <class pattern="PVSS::*"/>
+    <class pattern="std::map<*,PVSS::*>"/>
+    <class pattern="std::vector<PVSS::*>"/>
+    <class pattern="std::vector<const PVSS::*>"/>
+    <class pattern="std::list<PVSS::*>"/>
+    <class pattern="std::set<PVSS::*>"/>
+    <class pattern="std::auto_ptr<PVSS::*>"/>
+    <class name="Event"/>
+    <!-- class name="Address"/ -->
+    <class name="Message"/>
+    <class name="Sensor"/>
+    <class name="Interactor"/>
+    <function pattern="PVSS*"/>
+  </selection>
+<!--
+  <exclusion>
+    <class name="PVSS::DeviceIO::Read"/>
+    <class name="PVSS::DeviceIO::Write"/>
+  </exclusion>
+-->
+</lcgdict>
