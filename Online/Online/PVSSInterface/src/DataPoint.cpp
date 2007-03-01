@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DataPoint.cpp,v 1.3 2007-03-01 20:08:55 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DataPoint.cpp,v 1.4 2007-03-01 21:27:46 frankb Exp $
 //  ====================================================================
 //  DataPoint.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: DataPoint.cpp,v 1.3 2007-03-01 20:08:55 frankb Exp $
+// $Id: DataPoint.cpp,v 1.4 2007-03-01 21:27:46 frankb Exp $
 #ifdef _WIN32
   // Disable warning C4250: 'const float' : forcing value to bool 'true' or 'false' (performance warning)
   #pragma warning ( disable : 4800 )
@@ -80,8 +80,6 @@ namespace PVSS {
     if ( v->type() != DataValue<T>::type_id())invalidValue();
     return (Q)((DataValue<T>*)v)->data();
   }
-  template <typename T> struct ConvertRef 
-  { static T& ref(Value* v)   { return holder<T>(v).data();  }                            };
   template <typename T> T default_value()                { return T();                    }
   template <> std::string  default_value<std::string>()  { return std::string("");        }
   template <> DpIdentifier default_value<DpIdentifier>() { return DpIdentifier(s_nullDP); }
@@ -323,7 +321,7 @@ template <> const std::string DataPoint::data<std::string>() const  {
         os << this->data<bool>();
         return os.str();
       case DevTypeElement::TEXT:
-        return ConvertRef<std::string>::ref(m_val);
+        return holder<std::string>(m_val).data();
       default: 
         break;
     }
@@ -356,7 +354,7 @@ template <> std::string DataPoint::data<std::string>()  {
         os << this->data<bool>();
         return os.str();
       case DevTypeElement::TEXT:
-        return ConvertRef<std::string>::ref(m_val);
+        return holder<std::string>(m_val).data();
       default: 
         break;
     }
@@ -366,22 +364,36 @@ template <> std::string DataPoint::data<std::string>()  {
   return "";
 }
 
-template <class T> T& DataPoint::reference()  
-{  return ConvertRef<T>::ref(m_val);                                }
+template <class T> T& DataPoint::reference()  {
+  if ( m_val->type()!=DataValue<T>::type_id() ) invalidValue(DataValue<T>::type_info());
+  return ((DataValue<T>*)m_val)->data();
+}
 
-template <class T> const T& DataPoint::reference()  const
-{  return ConvertRef<T>::ref(m_val);                                }
+template <class T> const T& DataPoint::reference()  const  {
+  if ( m_val->type()!=DataValue<T>::type_id() ) invalidValue(DataValue<T>::type_info());
+  return ((DataValue<T>*)m_val)->data();
+}
 
+#define BASIC_SPECIALIZATIONS1(x)   namespace PVSS {            \
+  template <> int Value::type_id< x > (const x&);               \
+  template <> int DataValue< x >::type_id();                    \
+  template <> void DataPoint::set< x >(const x&);               \
+  template <> DataValue< x > createDataValue< x >(const x& o);  \
+}
 
-#define BASIC_SPECIALIZATIONS(x)                                  \
-  namespace PVSS {                                                \
-    template <> int Value::type_id< x > (const x&);               \
-    template <> int DataValue< x >::type_id();                    \
-    template <> void DataPoint::set< x >(const x&);               \
-    template <> x& DataPoint::reference< x >();                   \
-    template <> const x& DataPoint::reference< x >() const;       \
-    template <> DataValue< x > createDataValue< x >(const x& o);  \
-  }
+// Some hacks due to comipler hickup!
+#ifdef _WIN32
+template <typename T> struct GetRef  
+{   T& get(DataPoint& dp) { return dp.reference<T>(); } };
+template <typename T> struct ConstRef  
+{   const T& get(const DataPoint& dp) { return dp.reference<T>(); } };
+#define BASIC_SPECIALIZATIONS(x)   BASIC_SPECIALIZATIONS1(x) \
+  namespace PVSS { template GetRef< x >; template ConstRef< x >;  }
+#else
+#define BASIC_SPECIALIZATIONS(x)   BASIC_SPECIALIZATIONS1(x) namespace PVSS { 
+  template <> x& DataPoint::reference< x >();                   \
+  template <> const x& DataPoint::reference< x >() const; }
+#endif
 
 #define SPECIALIZATIONS(x) BASIC_SPECIALIZATIONS(x)           \
   namespace PVSS {                                            \
@@ -395,35 +407,35 @@ template <class T> const T& DataPoint::reference()  const
 
 #define VECTOR_SPECIALIZATIONS(x) BASIC_SPECIALIZATIONS(std::vector< x >)
 
-  BASIC_SPECIALIZATIONS(bool)
-  BASIC_SPECIALIZATIONS(char)
-  SPECIALIZATIONS(unsigned char)
-  BASIC_SPECIALIZATIONS(short)
-  SPECIALIZATIONS(unsigned short)
-  BASIC_SPECIALIZATIONS(int)
-  SPECIALIZATIONS(unsigned int)
-  BASIC_SPECIALIZATIONS(long)
-  SPECIALIZATIONS(unsigned long)
-  BASIC_SPECIALIZATIONS(float)
-  SPECIALIZATIONS(double)
-  BASIC_SPECIALIZATIONS(std::string)
-  BASIC_SPECIALIZATIONS(DpIdentifier)
-  BASIC_SPECIALIZATIONS(DPRef)
-  BASIC_SPECIALIZATIONS(DPTime)
+BASIC_SPECIALIZATIONS(bool)
+BASIC_SPECIALIZATIONS(char)
+SPECIALIZATIONS(unsigned char)
+BASIC_SPECIALIZATIONS(short)
+SPECIALIZATIONS(unsigned short)
+BASIC_SPECIALIZATIONS(int)
+SPECIALIZATIONS(unsigned int)
+BASIC_SPECIALIZATIONS(long)
+SPECIALIZATIONS(unsigned long)
+BASIC_SPECIALIZATIONS(float)
+SPECIALIZATIONS(double)
+BASIC_SPECIALIZATIONS(std::string)
+BASIC_SPECIALIZATIONS(DpIdentifier)
+BASIC_SPECIALIZATIONS(DPRef)
+BASIC_SPECIALIZATIONS(DPTime)
 
-  VECTOR_SPECIALIZATIONS(bool)
-  VECTOR_SPECIALIZATIONS(char)
-  VECTOR_SPECIALIZATIONS(unsigned char)
-  VECTOR_SPECIALIZATIONS(short)
-  VECTOR_SPECIALIZATIONS(unsigned short)
-  VECTOR_SPECIALIZATIONS(int)
-  VECTOR_SPECIALIZATIONS(unsigned int)
-  VECTOR_SPECIALIZATIONS(long)
-  VECTOR_SPECIALIZATIONS(unsigned long)
-  VECTOR_SPECIALIZATIONS(float)
-  VECTOR_SPECIALIZATIONS(double)
-  VECTOR_SPECIALIZATIONS(std::string)
-  VECTOR_SPECIALIZATIONS(DpIdentifier)
+VECTOR_SPECIALIZATIONS(bool)
+VECTOR_SPECIALIZATIONS(char)
+VECTOR_SPECIALIZATIONS(unsigned char)
+VECTOR_SPECIALIZATIONS(short)
+VECTOR_SPECIALIZATIONS(unsigned short)
+VECTOR_SPECIALIZATIONS(int)
+VECTOR_SPECIALIZATIONS(unsigned int)
+VECTOR_SPECIALIZATIONS(long)
+VECTOR_SPECIALIZATIONS(unsigned long)
+VECTOR_SPECIALIZATIONS(float)
+VECTOR_SPECIALIZATIONS(double)
+VECTOR_SPECIALIZATIONS(std::string)
+VECTOR_SPECIALIZATIONS(DpIdentifier)
 
 /// Set value data
 void DataPoint::setValue(int typ, const Variable* variable)  {
