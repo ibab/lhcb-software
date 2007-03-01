@@ -1,14 +1,14 @@
-! $Id: release.notes,v 1.67 2007-03-01 09:29:53 mato Exp $
+! $Id: release.notes,v 1.68 2007-03-01 15:43:59 cattanem Exp $
 ! Package     : Event/MCEvent
 ! Responsible : Marco Cattaneo, Gloria Corti
 ! Purpose     : LHCb Event model. MC truth classes (Gauss and Boole output) 
 !-----------------------------------------------------------------------------
 
+!======================== MCEvent v2r1 2007-03-01 ============================
 ! 2007-03-01 - Pere Mato
- - Added dictionary for std::vector<const LHCb::MPParticle*> needed by DecayFinder and
-   other tools from Python
+ - Added dictionary for std::vector<const LHCb::MCParticle*> needed by 
+   DecayFinder and other tools from Python
 
-!======================== MCEvent v2r1 2007-02-26 ============================
 ! 2007-02-27 - Alessia Satta
  - Update Muon classes for dialog chip deatime simulation (backward compatible)
 
