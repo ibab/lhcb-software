@@ -1,5 +1,16 @@
-// $Id: MCReconstructible.cpp,v 1.1 2007-01-12 14:16:40 cattanem Exp $
-// Include files 
+
+//-----------------------------------------------------------------------------
+/** @file MCReconstructible.cpp
+ *
+ *  Implementation file for class : MCReconstructible
+ *
+ *  CVS Log :-
+ *  $Id: MCReconstructible.cpp,v 1.2 2007-03-01 20:24:56 jonrob Exp $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date 28/02/2007
+ */
+//-----------------------------------------------------------------------------
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -11,10 +22,6 @@
 #include "Event/MCParticle.h"
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : MCReconstructible
-//
-// 2004-04-06 : Christian Jacoby
-//-----------------------------------------------------------------------------
 
 DECLARE_TOOL_FACTORY( MCReconstructible );
 
@@ -22,127 +29,165 @@ DECLARE_TOOL_FACTORY( MCReconstructible );
 // Standard constructor, initializes variables
 //=============================================================================
 MCReconstructible::MCReconstructible( const std::string& type,
-                                const std::string& name,
-                                const IInterface* parent )
-  : GaudiTool ( type, name , parent )
-  , m_zECAL(12696.0*Gaudi::Units::mm)
-  , m_xECALInn(363.3*Gaudi::Units::mm)
-  , m_yECALInn(363.3*Gaudi::Units::mm)
-  , m_xECALOut(3757.2*Gaudi::Units::mm)
-  , m_yECALOut(3030.0*Gaudi::Units::mm)
-  , m_lowEt(200*Gaudi::Units::MeV)
+                                      const std::string& name,
+                                      const IInterface* parent )
+  : GaudiTool  ( type, name , parent      )
+  // misc CALO params. Hopefully to go into specific CALO reconstructibility tool
+  , m_zECAL    ( 12696.0*Gaudi::Units::mm )
+  , m_xECALInn ( 363.3*Gaudi::Units::mm   )
+  , m_yECALInn ( 363.3*Gaudi::Units::mm   )
+  , m_xECALOut ( 3757.2*Gaudi::Units::mm  )
+  , m_yECALOut ( 3030.0*Gaudi::Units::mm  )
+  , m_lowEt    ( 200*Gaudi::Units::MeV    )
+  // charged track info object
+  , m_tkInfo   ( NULL )
+  , m_mcSel    ( NULL )
 {
+  // Interface
   declareInterface<IMCReconstructible>(this);
-
 }
+
 //=============================================================================
 // Destructor
 //=============================================================================
-MCReconstructible::~MCReconstructible() {}; 
-
-//=============================================================================
-
+MCReconstructible::~MCReconstructible() 
+{
+  // clean up
+  delete m_tkInfo;
+}
 
 //=============================================================================
 // Initialize
 //=============================================================================
-StatusCode MCReconstructible::initialize() {
+StatusCode MCReconstructible::initialize()
+{
+  const StatusCode sc = GaudiTool::initialize();
+  if ( sc.isFailure() ) return sc;
 
-  StatusCode sc = GaudiTool::initialize() ;
-  if (!sc) return sc;
+  // tools
+  m_mcSel = tool<IMCParticleSelector>( "MCParticleSelector" );
 
-  debug() << ">>> Initialize" << endreq;
+  // Setup incident services
+  incSvc()->addListener( this, IncidentType::BeginEvent );
 
   return sc;
-   
-};
- 
-//=============================================================================
-// Finalize
-//=============================================================================
-StatusCode MCReconstructible::finalize()
+}
+
+// Method that handles various Gaudi "software events"
+void MCReconstructible::handle ( const Incident& incident )
 {
-  
-  debug() << ">>> Finalize" << endreq;
- 
+  if ( IncidentType::BeginEvent == incident.type() )
+  {
+    m_tkInfo = NULL;
+  }
+}
 
-
-  return GaudiTool::finalize();
+bool MCReconstructible::inAcceptance( const LHCb::MCParticle* mcPart ) const
+{
+  return ( !mcPart ? false : ( 0 == mcPart->particleID().threeCharge() ?
+                               accept_neutral(mcPart) : accept_charged(mcPart) ) );
 }
 
 //====================================================================
 // Check if a neutral MCParticle is within the geomtrical acceptance
 //====================================================================
-bool MCReconstructible::accepted( const LHCb::MCParticle* part ) {
-  bool acc = false;
-  if( !part->originVertex() ) return acc;
-  double x = part->originVertex()->position().x();
-  double y = part->originVertex()->position().y();
-  double z = part->originVertex()->position().z();
-  double sx = part->momentum().px()/part->momentum().pz();
-  double sy = part->momentum().py()/part->momentum().pz();  
-  debug() << "accpted " << x << " " << y << " " << z << " & " << sx << " " << sy << endmsg ;
+bool MCReconstructible::accept_neutral( const LHCb::MCParticle* mcPart ) const
+{
+  // Acceptance stuff for neutrals
+  // Temporary home here whilst a proper CALO tool is being prepared
 
-  //  if( (part->particleID().threeCharge()) == 0 ) {
-    // For neutral particles, the ECAL front has to be hit
-    // ---------------------------------------------------
-    double xECAL = x + sx * ( m_zECAL - z );
-    double yECAL = y + sy * ( m_zECAL - z );
-    if( ((fabs(xECAL) <= m_xECALOut) && (fabs(yECAL) <= m_yECALOut))
-        && ((fabs(xECAL) >= m_xECALInn) || (fabs(yECAL) >= m_yECALInn ))
-        ) {
-      if( part->pt() >= m_lowEt ) {
-        acc = true;
-      }
+  bool acc = false;
+  if( !mcPart->originVertex() ) return acc;
+  const double x  = mcPart->originVertex()->position().x();
+  const double y  = mcPart->originVertex()->position().y();
+  const double z  = mcPart->originVertex()->position().z();
+  const double sx = mcPart->momentum().px()/mcPart->momentum().pz();
+  const double sy = mcPart->momentum().py()/mcPart->momentum().pz();
+  //debug() << "accepted " << x << " " << y << " " << z << " & " << sx << " " << sy << endmsg ;
+
+  //  if( (mcPart->particleID().threeCharge()) == 0 ) {
+  // For neutral particles, the ECAL front has to be hit
+  // ---------------------------------------------------
+  const double xECAL = x + sx * ( m_zECAL - z );
+  const double yECAL = y + sy * ( m_zECAL - z );
+  if( ((fabs(xECAL) <= m_xECALOut) && (fabs(yECAL) <= m_yECALOut))
+      && ((fabs(xECAL) >= m_xECALInn) || (fabs(yECAL) >= m_yECALInn ))
+      ) {
+    if( mcPart->pt() >= m_lowEt ) {
+      acc = true;
     }
-    //  }
+  }
+
   return acc;
-};
+}
+
+//====================================================================
+// Check if a charged MCParticle is within the geomtrical acceptance
+//====================================================================
+bool MCReconstructible::accept_charged( const LHCb::MCParticle * mcPart ) const
+{
+  return ( mcTkInfo().accVelo(mcPart) || 
+           mcTkInfo().accTT(mcPart)   || 
+           mcTkInfo().accT(mcPart)     );
+}
+
 //=============================================================================
 //  Method to check if a particle is reconstructible
 //=============================================================================
-IMCReconstructible::RecblCategory MCReconstructible::reconstructible( const LHCb::MCParticle* iMCstable )
+IMCReconstructible::RecCategory
+MCReconstructible::reconstructible( const LHCb::MCParticle* mcPart ) const
 {
+  if ( !mcPart ) return NoClassification;
 
-  if (iMCstable->particleID().threeCharge() != 0){ ///< for charged
-    if (NULL != iMCstable->mother() ) {
+  // Base class MCParticle selection
+  if ( m_mcSel->accept(mcPart) )
+  {
+    // Does MCParticle have a mother (CRJ : why this check ?)
+    if (NULL != mcPart->mother() )
+    {
 
-      /* not yet available
-      /// for long tracks
-      if (trInfo.hasVeloAndT(iMCstable)) {
-        return IMCReconstructible::Long;
+      // Is the MCParticle charged or not
+      if ( mcPart->particleID().threeCharge() != 0 )
+      {
+
+        // in charged acceptance ?
+        if ( accept_charged(mcPart) )
+        {
+          // decide the type
+          if      ( mcTkInfo().hasVeloAndT(mcPart) )
+          {
+            return ChargedLong;
+          }
+          else if ( mcTkInfo().hasVelo(mcPart) && mcTkInfo().hasTT(mcPart) )
+          {
+            return ChargedUpstream;
+          }
+          else if ( mcTkInfo().hasT(mcPart) && mcTkInfo().hasTT(mcPart) )
+          {
+            return ChargedDownstream;
+          }
+          else if ( mcTkInfo().hasVelo(mcPart) )
+          {
+            return ChargedVelo;
+          }
+          else if ( mcTkInfo().hasT(mcPart) )
+          {
+            return ChargedTtrack;
+          }
+        }
       }
-      
-      /// for downstream tracks (TTT)
-      if (trInfo.hasTT(iMCstable) && trInfo.hasT(iMCstable)) {
-        return IMCReconstructible::TTT;
-      }
-      
-      /// for upstream tracks (VTT)
-      if (trInfo.hasVelo(iMCstable) && trInfo.hasTT(iMCstable)) {
-        return IMCReconstructible::VTT;
-      }
-      */
-      /// @todo Remove TEMPORARY hard-coded patch
-      debug() << iMCstable->p() << endmsg ;
-      if ( (iMCstable->p()>1*Gaudi::Units::GeV) &&
-           accepted(iMCstable)){
-        return IMCReconstructible::Long;
+      else // neutral
+      {
+        // in charged acceptance ?
+        if ( accept_neutral(mcPart) )
+        {
+          return Neutral;
+        }
       }
 
-    }
-  }
-  else { ///< for neutrals
-    if (NULL != iMCstable->mother() ) {
-      
-      if (accepted(iMCstable)){
-        return IMCReconstructible::Neutral;
-      }
-    }
-  }
-  
-  return IMCReconstructible::NotRec;
-  
+    } // has mother
+  } // MCP selection
+
+  // if get here, cannot reconstruct particle
+  return NotReconstructible;
 }
-
-

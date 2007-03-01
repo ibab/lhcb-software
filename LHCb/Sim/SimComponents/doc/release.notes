@@ -5,6 +5,18 @@
 !               processing stage accessing the MC event classes
 !-----------------------------------------------------------------------------
 
+! 2007-03-01 - Chris Jones
+ - Update MCParticleSelector to
+  + Not reject electrons by default (needed by default Particle monitors)
+  + Not implicitly reject neutrals. New options to reject either neutrals
+    or charged particles
+  + Add Max P cut (default is no cut, 999999 GeV)
+ - New version of MCReconstructible
+  + For charged Particles, defers reconstructibility decision to MCTrackInfo
+    data object
+  + For neutrals, uses private hard-coded definitions. To be updated to use
+    CALO tool when available.
+
 !====================== SimComponents v2r1 2007-02-26 ========================
 ! 2007-02-26 - Marco Cattaneo
  - Add ForcedBDecayTool from Marco Musy
