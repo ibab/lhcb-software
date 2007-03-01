@@ -12,7 +12,7 @@ $WIDETERM ErrorLogger@${HOST}    -e "setenv UTGID ErrLog; $gaudi_exe2 -opts=$GAU
 sleep 3
 $MINITERM ErrServ@${HOST} -e "setenv UTGID ErrServ   ; $gaudi_exe -main=$GAUDIONLINEROOT/options/ErrorSrv.opts -opt=$GAUDIONLINEROOT/options/Daemon.opts " &
 #
-sleep 8
+sleep 4
 #
 $BIGTERM MBMMon@${HOST} -e "/bin/sh -c 'export UTGID=MBMMon;$gaudi_run libOnlineKernel.so mbm_mon'" &
 #

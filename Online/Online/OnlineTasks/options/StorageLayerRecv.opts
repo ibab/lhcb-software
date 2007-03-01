@@ -26,7 +26,6 @@ EventSelector.REQ1 = "EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xff
 WriterNet.StorageServerAddr	     =  "137.138.214.205";
 WriterNet.StorageServerPort  	     = 	45247;
 WriterNet.RunDBServiceURL            = "http://lbondiskdev.cern.ch:8080/";
-WriterNet.SoTimeout                  = 5;
 WriterNet.MaxFileSizeMB              = 100;
 WriterNet.SndRcvSizes                = 6553600;
 WriterNet.FilePrefix                 = "MDFWriterNet_File";
