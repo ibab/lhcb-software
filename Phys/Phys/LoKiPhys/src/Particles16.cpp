@@ -1,8 +1,11 @@
-// $Id: Particles16.cpp,v 1.1 2006-12-16 13:22:31 ibelyaev Exp $
+// $Id: Particles16.cpp,v 1.2 2007-03-01 16:14:40 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.1 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2006/12/16 13:22:31  ibelyaev
+//  add Particles16: DIRA&DANG
+// 
 // ============================================================================
 // Include files
 // ============================================================================
@@ -64,7 +67,8 @@ LoKi::Particles::CosineDirectionAngle::CosineDirectionAngle
 // ============================================================================
 LoKi::Particles::CosineDirectionAngle::CosineDirectionAngle
 ( const LoKi::Particles::CosineDirectionAngle& right ) 
-  : LoKi::Function<const LHCb::Particle*> ( right )
+  : LoKi::AuxFunBase                      ( right )
+  , LoKi::Function<const LHCb::Particle*> ( right )
   , LoKi::Vertices::VertexHolder          ( right ) 
 {}
 // ============================================================================

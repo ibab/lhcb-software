@@ -1,8 +1,11 @@
-// $Id: ParticleCuts.h,v 1.16 2007-02-26 09:19:22 ibelyaev Exp $
+// $Id: ParticleCuts.h,v 1.17 2007-03-01 16:14:39 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.16 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.17 $
 // ============================================================================
 //  $Log: not supported by cvs2svn $
+//  Revision 1.16  2007/02/26 09:19:22  ibelyaev
+//   add LoKi::Particles::IsMuon (alias: ISMUON)
+//
 //  Revision 1.15  2007/01/22 11:18:22  ibelyaev
 //   fix for LoKiExample
 //
@@ -1619,6 +1622,60 @@ namespace LoKi
      *  @date 2006-02-15
      */
     const LoKi::Particles::HasVertex                          HASVERTEX ;
+    // ========================================================================
+
+    // ========================================================================
+    /** @typedef PTDIR
+     *  Simple evaluator of the transverse momentum of the particle 
+     *  relative to some direction 
+     *
+     *  @code
+     *
+     *   const LHCb::Particle* jet = ... ;
+     *  
+     *   Fun ptdir = PTDIR( jet ) ;
+     *  
+     *   const LHCb::Particle* p = ... ;
+     *
+     *   double pt = prdir( p ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LHCb::Particle
+     *  @see LoKi::Particles:TransverseMomentumRel 
+     *  @see LoKi::Cuts::PTREL 
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2007-03-01
+     */
+    typedef LoKi::Particles::TransverseMomentumRel            PTDIR     ;
+    // ========================================================================
+
+    // ========================================================================
+    /** @typedef PTREL
+     *  Simple evaluator of the transverse momentum of the particle 
+     *  relative to some direction 
+     *
+     *  @code
+     *
+     *   const LHCb::Particle* jet = ... ;
+     *  
+     *   Fun ptdir = PTREL( jet ) ;
+     *  
+     *   const LHCb::Particle* p = ... ;
+     *
+     *   double pt = prdir( p ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LHCb::Particle
+     *  @see LoKi::Particles:TransverseMomentumRel 
+     *  @see LoKi::Cuts::PTDIR
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2007-03-01
+     */
+    typedef LoKi::Particles::TransverseMomentumRel            PTREL     ;
     // ========================================================================
     
     // ========================================================================

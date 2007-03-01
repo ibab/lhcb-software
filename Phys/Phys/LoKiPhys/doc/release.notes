@@ -1,9 +1,27 @@
-! $Id: release.notes,v 1.18 2007-02-26 09:19:22 ibelyaev Exp $ 
+! $Id: release.notes,v 1.19 2007-03-01 16:14:39 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhys
 ! Responsible : Vanya Belyaev
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
+
+!========================== LoKiPhys v3r1 2007-03-01 ==================
+
+! 2007-03-01 - Vanya BELYAEV
+ 
+ - LoKi/Particles0.h, src/Particles0.cpp, LoKi/ParticleCuts.h
+
+    add new function LoKi::Particles::TransverseMomentumDir
+     ( aliases PTDIR and PTREL ) 
+    for evaluationof the transvers emomentum of the particle with 
+    respect to some direction.
+    This function is very useful for jet studies, in particular 
+    for b-tagging.
+ - LoKi/Particles17.h, src/Particles17.cpp 
+
+     new files - placeholder for expected "jet-related" functions 
+ 
+ - retag as v3r1 
 
 !========================== LoKiPhys v3r1 2007-02-25 ==================
 
@@ -119,6 +137,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.18  2007/02/26 09:19:22  ibelyaev
+!  add LoKi::Particles::IsMuon (alias: ISMUON)
+!
 ! Revision 1.17  2007/01/23 13:30:44  ibelyaev
 !  fix for Ex/LoKiExample
 !

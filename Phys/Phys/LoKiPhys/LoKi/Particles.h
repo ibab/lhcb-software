@@ -1,8 +1,11 @@
-// $Id: Particles.h,v 1.8 2006-12-16 13:22:26 ibelyaev Exp $
+// $Id: Particles.h,v 1.9 2007-03-01 16:14:39 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.9 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2006/12/16 13:22:26  ibelyaev
+//  add Particles16: DIRA&DANG
+//
 // Revision 1.7  2006/11/27 12:01:31  ibelyaev
 //  prepare for LoKi v4r3
 //
@@ -37,6 +40,7 @@
 #include "LoKi/Particles14.h"
 #include "LoKi/Particles15.h"
 #include "LoKi/Particles16.h"
+#include "LoKi/Particles17.h"
 // ============================================================================
 
 // ============================================================================

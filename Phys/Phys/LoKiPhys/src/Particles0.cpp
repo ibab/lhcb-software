@@ -1,16 +1,8 @@
-// $Id: Particles0.cpp,v 1.7 2006-10-27 13:39:32 ibelyaev Exp $
+// $Id: Particles0.cpp,v 1.8 2007-03-01 16:14:40 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.6  2006/05/23 11:33:51  ibelyaev
-//  add Q and SUMQ functions
-//
-// Revision 1.5  2006/05/17 16:24:14  jpalac
-// *** empty log message ***
-//
-// Revision 1.4  2006/04/23 10:06:13  ibelyaev
-//   add operators for ID and ABSID
 //
 // ============================================================================
 // Include files 
@@ -1353,6 +1345,76 @@ LoKi::Particles::HasVertex::fillStream
 ( std::ostream& s ) const 
 { return s << "HASVERTEX" ; }
 // ============================================================================
+
+// ============================================================================
+/// constructor from 3-vector 
+// ============================================================================
+LoKi::Particles::TransverseMomentumRel::TransverseMomentumRel
+( const LoKi::ThreeVector&  v ) 
+  : LoKi::Function<const LHCb::Particle*>() 
+  , m_momentum ( v ) 
+{} ;
+// ============================================================================
+/// constructor from 4-vector 
+// ============================================================================
+LoKi::Particles::TransverseMomentumRel::TransverseMomentumRel
+( const LoKi::LorentzVector&  v ) 
+  : LoKi::Function<const LHCb::Particle*>() 
+  , m_momentum ( v ) 
+{} ;
+// ============================================================================
+/// constructor from LHCb::Particle
+// ============================================================================
+LoKi::Particles::TransverseMomentumRel::TransverseMomentumRel
+( const LHCb::Particle*  v ) 
+  : LoKi::Function<const LHCb::Particle*>() 
+  , m_momentum () 
+{
+  if ( 0 == v ) { Exception ( "Invalid LHCb::Particle*!" ) ; }
+  m_momentum = v->momentum() ;
+} ;
+// ============================================================================
+/// copy constructor 
+// ============================================================================
+LoKi::Particles::TransverseMomentumRel::TransverseMomentumRel 
+( const LoKi::Particles::TransverseMomentumRel& right ) 
+  : LoKi::AuxFunBase                     ( right ) 
+  , LoKi::Function<const LHCb::Particle*>( right ) 
+  , m_momentum ( right.m_momentum ) 
+{} ;
+// ============================================================================
+/// MANDATORY: clone method ("virtual constructor") 
+// ============================================================================
+LoKi::Particles::TransverseMomentumRel*
+LoKi::Particles::TransverseMomentumRel::clone() const 
+{ return new LoKi::Particles::TransverseMomentumRel(*this) ; }
+// ============================================================================
+/// MANDATORY: virtual destructor 
+// ============================================================================
+LoKi::Particles::TransverseMomentumRel::~TransverseMomentumRel(){}
+// ============================================================================
+/// MANDATORY: the only one essential mehtod 
+// ============================================================================
+LoKi::Particles::TransverseMomentumRel::result_type 
+LoKi::Particles::TransverseMomentumRel::operator() 
+  ( LoKi::Particles::TransverseMomentumRel::argument p ) const 
+{
+  if ( 0 == p ) 
+  {
+    Error("Invalid argument, return 'Invalid Momentum'") ;
+    return LoKi::Constants::InvalidMomentum ;
+  }
+  // use the function
+  return LoKi::Kinematics::transverseMomentumDir( p->momentum() , m_momentum );
+} ;
+// ============================================================================
+/// OPTIONAL: the specific printout 
+// ============================================================================
+std::ostream& 
+LoKi::Particles::TransverseMomentumRel::fillStream( std::ostream& s ) const 
+{ return s << "PTDIR[" << m_momentum << "]" ; }
+// ============================================================================
+
 
 // ============================================================================
 // The END 
