@@ -1,8 +1,4 @@
-/// ===========================================================================
-/// $Log: not supported by cvs2svn $
-/// ===========================================================================
-
-/// ===========================================================================
-/// standard options to load CaloDet package 
-/// ===========================================================================
-ApplicationMgr.DLLs  += { "CaloDet" };
+#print on
+/// DUMMY FILE KEPT FOR BACKWARDS COMPATIBILITY
+/// PLEASE REMOVE INCLUSION OF CaloDet.opts FROM YOUR JOB OPTIONS
+#print off

@@ -1,12 +1,5 @@
-// $Id: DeCalorimeter.icpp,v 1.3 2006-06-15 14:39:46 ibelyaev Exp $ 
+// $Id: DeCalorimeter.icpp,v 1.4 2007-03-01 11:29:49 cattanem Exp $ 
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
-// ============================================================================
-//  $Log: not supported by cvs2svn $
-//  Revision 1.2  2006/06/15 09:27:27  ibelyaev
-//   add DeCalorimeter::Cell_ function
-// 
-// ============================================================================ 
 #ifndef    CALODET_DECALORIMETER_ICPP
 #define    CALODET_DECALORIMETER_ICPP 1 
 // ============================================================================ 
@@ -53,7 +46,7 @@ inline Gaudi::Plane3D DeCalorimeter::plane
 /** return parameters of cell, which contains the global point.
  *  the function shodul be a bit more fast and efficent, 
  *  @param globalPoint point to be checked 
- *  @param cell parameters (null if point is not in Calorimter 
+ *  @return cell parameters (null if point is not in Calorimter 
  */
 // ============================================================================
 const CellParam* 
