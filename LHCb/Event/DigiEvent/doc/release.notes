@@ -4,11 +4,10 @@
 ! Purpose     : Event model classes related to Digitization
 !-----------------------------------------------------------------------------
 
+!========================== DigiEvent v2r1 2007-03-01 ========================
 ! 2007-02-22 - Olivier Deschamps
-	 - xml/CaloADC.xml : default location for Ecal/Hcal PIN CaloAdcs
+ - xml/CaloADC.xml : default location for Ecal/Hcal PIN CaloAdcs
 
-
-!========================== DigiEvent v2r1 2007-02-14 ========================
 ! 2007-02-14 - Marco Cattaneo
  - Remove LHCbDefinitions include, add LHCbMath dependency
 
