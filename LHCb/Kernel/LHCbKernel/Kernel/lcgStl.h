@@ -1,4 +1,4 @@
-// $Id: lcgStl.h,v 1.26 2007-02-20 16:42:02 cattanem Exp $
+// $Id: lcgStl.h,v 1.27 2007-03-01 16:49:38 cattanem Exp $
 #ifndef KERNEL_LCGSTL_H 
 #define KERNEL_LCGSTL_H 1
 
@@ -19,6 +19,7 @@
 #include "Kernel/ParabolaTraj.h"
 #include "Kernel/SiPositionInfo.h"
 
+#include "Kernel/IAlgorithmCorrelations.h"
 #include "Kernel/IBdlTool.h"
 #include "Kernel/IBIntegrator.h"
 #include "Kernel/ICheckTool.h"

@@ -18,6 +18,7 @@
   <class pattern ="LHCb::DifTraj<*"/>
   <class pattern ="LHCb::SiPositionInfo<*>"/>
 <!--- Add here all interfaces from Kernel directory --> 
+  <class name = "IAlgorithmCorrelations" />
   <class name = "IBdlTool"             />
   <class name = "IBIntegrator"         />
   <class name = "ICheckTool"           />

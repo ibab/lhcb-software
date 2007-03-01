@@ -4,7 +4,10 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
-!===================== LHCbKernel v7r2 2007-02-26 ========================
+!===================== LHCbKernel v7r2 2007-03-01 ========================
+! 2007-03-01 - Marco Cattaneo
+ - Add IAlgorithmCorrelations interface, previously in Tools/Utilities
+
 ! 2007-02-26 - Marco Cattaneo
  - Do not add Reflex to ROOT_linkopts (already done by GaudiKernel)
  - Do not add SMatrix to ROOT_linkopts (not needed with new plugins) 
