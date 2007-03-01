@@ -169,7 +169,7 @@ void MM::enqueueCommand(struct cmd_header *cmd)
   sbuf[0].sem_flg = 0;
 
   if(semop(m_queueSem, sbuf, 1) != 0) {
-  	throw std::runtime_error("Could not up semaphore after enqueuing command.");
+  	throw std::runtime_error("Could not up semaphore after enqueuing command." + errno);
   }
 }
 
