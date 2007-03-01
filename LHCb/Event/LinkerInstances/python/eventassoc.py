@@ -1,5 +1,4 @@
 import gaudimodule
-gaudimodule.loaddict('LinkerInstancesDict')
 
 def linkedTo( t1, t2, location ):
   appMgr = gaudimodule.AppMgr()

@@ -2,6 +2,8 @@
 ! Package manager: T.Ruf
 ! Purpose: Creates dictionaries for the use of Linker relations in Python
 !------------------------------------------------------------------------------
+! 2007-03-01 - Thomas Ruf
+ - Remove loaddict in eventassoc.py, not needed with rootmap files
 
 !===================== LinkerInstances v3r2p1 2007-02-15 ======================
 ! 2007-02-15 - Marco Cattaneo
