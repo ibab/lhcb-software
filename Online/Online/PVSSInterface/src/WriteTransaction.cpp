@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/WriteTransaction.cpp,v 1.2 2007-03-01 15:47:56 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/WriteTransaction.cpp,v 1.3 2007-03-01 20:08:55 frankb Exp $
 //  ====================================================================
 //  WriteTransaction.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: WriteTransaction.cpp,v 1.2 2007-03-01 15:47:56 frankb Exp $
+// $Id: WriteTransaction.cpp,v 1.3 2007-03-01 20:08:55 frankb Exp $
 
 // Framework include files
 #include "PVSS/DataPoint.h"
@@ -17,10 +17,6 @@
 #include "PVSS/Array.h"
 
 using namespace PVSS;
-
-static void error_handler(const char* msg) {
-  std::cout << "Error:" << msg << std::endl;
-}
 
 /// Initializing constructor
 WriteTransaction::WriteTransaction(ControlsManager* mgr) 

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/PVSS/NamedIdentified.h,v 1.1 2007-03-01 10:39:49 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/PVSS/NamedIdentified.h,v 1.2 2007-03-01 20:08:55 frankb Exp $
 //  ====================================================================
 //  NamedIdentified.h
 //  --------------------------------------------------------------------

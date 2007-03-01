@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DeviceIO.cpp,v 1.2 2007-03-01 15:47:56 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DeviceIO.cpp,v 1.3 2007-03-01 20:08:55 frankb Exp $
 //  ====================================================================
 //  DeviceIO.cpp
 //  --------------------------------------------------------------------
@@ -6,13 +6,14 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: DeviceIO.cpp,v 1.2 2007-03-01 15:47:56 frankb Exp $
+// $Id: DeviceIO.cpp,v 1.3 2007-03-01 20:08:55 frankb Exp $
 
 // Framework include files
 #include "PVSS/DevTypeElement.h"
 #include "PVSS/DeviceIO.h"
 #include "PVSS/Internals.h"
 #include "PVSS/DevAnswer.h"
+#include <stdexcept>
 
 using namespace PVSS;
 
@@ -39,7 +40,7 @@ void DeviceIO::Read::dropList()  {
 }
 
 /// Execute PVSS IO action
-bool DeviceIO::Read::exec(bool keep_list, bool wait, DeviceIO* par, DevAnswer* a) {
+bool DeviceIO::Read::exec(bool keep_list, DeviceIO* par, DevAnswer* a) {
   const DataPoints& p = par->points();
   if ( !m_context )  {
     pvss_list_create(m_context);
@@ -65,7 +66,7 @@ void DeviceIO::Write::dropList()  {
 }
 
 /// Execute PVSS IO action
-bool DeviceIO::Write::exec(bool keep_list, bool wait, DeviceIO* par, DevAnswer* a)  {
+bool DeviceIO::Write::exec(bool keep_list, DeviceIO* par, DevAnswer* a)  {
   const DataPoints& p = par->points();
   void* listCtxt = 0;
   if ( !m_context )  {
@@ -128,13 +129,13 @@ void DeviceIO::setValue(const DpIdentifier& dpid, int typ, const Variable* val) 
 bool DeviceIO::execute(bool keep_list, bool wait)  {
   if ( wait )  {
     DevAnswer a;
-    m_devIO->exec(keep_list, wait, this, &a);
+    m_devIO->exec(keep_list, this, &a);
     if ( a.state() != DevAnswer::FINISHED )  {
       a.print();
     }
     return a.state() == DevAnswer::FINISHED;
   }
-  m_devIO->exec(keep_list, wait, this, 0);
+  m_devIO->exec(keep_list, this, 0);
   if ( !keep_list ) m_points.clear();
   return true;
 }

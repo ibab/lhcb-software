@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DataPoint.cpp,v 1.2 2007-03-01 15:47:56 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DataPoint.cpp,v 1.3 2007-03-01 20:08:55 frankb Exp $
 //  ====================================================================
 //  DataPoint.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: DataPoint.cpp,v 1.2 2007-03-01 15:47:56 frankb Exp $
+// $Id: DataPoint.cpp,v 1.3 2007-03-01 20:08:55 frankb Exp $
 #ifdef _WIN32
   // Disable warning C4250: 'const float' : forcing value to bool 'true' or 'false' (performance warning)
   #pragma warning ( disable : 4800 )
@@ -17,9 +17,9 @@
 #include "PVSS/DataPoint.h"
 #include "PVSS/Internals.h"
 #include "PVSS/DevTypeElement.h"
-#include "PVSSManager/DataPointIO.h"
+#include "PVSSManager/DatapointIO.h"
 #include <algorithm>
-#include <strstream>
+#include <sstream>
 #include <stdexcept>
 #include <memory>
 #include <vector>
@@ -62,7 +62,7 @@ template <> int DataValue<std::vector<long> >::type_id()           { return DevT
 template <> int DataValue<std::vector<unsigned long> >::type_id()  { return DevTypeElement::NOELEMENT; }
 template <> int DataValue<std::vector<float> >::type_id()          { return DevTypeElement::DYNFLOAT;  }
 template <> int DataValue<std::vector<double> >::type_id()         { return DevTypeElement::NOELEMENT; }
-//template <> int DataValue<std::vector<time_t> >::type_id()         { return DevTypeElement::DYNTIME;   }
+//template <> int DataValue<std::vector<time_t> >::type_id()       { return DevTypeElement::DYNTIME;   }
 template <> int DataValue<std::vector<std::string> >::type_id()    { return DevTypeElement::DYNTEXT;   }
 template <> int DataValue<std::vector<DpIdentifier> >::type_id()   { return DevTypeElement::DYNDPID;   }
 template <> int DataValue<std::vector<DPTime> >::type_id()         { return DevTypeElement::DYNTIME;   }
@@ -71,18 +71,32 @@ template <> int DataValue<std::vector<DPRef> >::type_id()          { return DevT
 namespace PVSS {
   static Value* invalidValue() 
   { throw std::runtime_error("Invalid type for data conversion.");                        }
-  template <typename T> static inline DataValue<T>& holder(Value* v) 
-  { return *(DataValue<T>*)(v->type()==DataValue<T>::type_id() ? v : invalidValue());     }
-  template <typename T,typename Q> struct ConvertValue 
-  { static Q get(Value* v)    { return holder<T>(v).value<Q>();  }                        };
+  template <typename T> static DataValue<T>& holder(Value* v)   { 
+    if(v->type()==DataValue<T>::type_id()) return *(DataValue<T>*)v;
+    invalidValue();
+    return *(DataValue<T>*)v;
+  }
+  template <class T, class Q> Q convertValue(Value* v) {
+    if ( v->type() != DataValue<T>::type_id())invalidValue();
+    return (Q)((DataValue<T>*)v)->data();
+  }
   template <typename T> struct ConvertRef 
   { static T& ref(Value* v)   { return holder<T>(v).data();  }                            };
   template <typename T> T default_value()                { return T();                    }
   template <> std::string  default_value<std::string>()  { return std::string("");        }
   template <> DpIdentifier default_value<DpIdentifier>() { return DpIdentifier(s_nullDP); }
   static void copy_string(std::string& t,const char* s)  { t = s;                         }
-  template <typename T> static void insert_vector(std::vector<T>& v, const T& o)  { v.push_back(o);  }
-  static void insert_string(std::vector<std::string>& t,const char* s) { t.push_back(s);   }
+
+  template <class T> void insert_vector(std::vector<T>& v,const T& o){ v.push_back(o); }
+
+  static void insert_bool  (std::vector<bool>& t,const bool s)         { t.push_back(s);  }
+  static void insert_char  (std::vector<char>& t,const char s)         { t.push_back(s);  }
+  static void insert_short (std::vector<short>& t,const short s)       { t.push_back(s);  }
+  static void insert_int   (std::vector<int>& t,const int s)           { t.push_back(s);  }
+  static void insert_float (std::vector<float>& t,const float s)       { t.push_back(s);  }
+  static void insert_time_t(std::vector<time_t>& t,const time_t s)     { t.push_back(s);  }
+  static void insert_dpid  (std::vector<DpIdentifier>& t,const DpIdentifier& s) { t.push_back(s);  }
+  static void insert_string(std::vector<std::string>& t,const char* s) { t.push_back(s);  }
 
   /// Allocate data buffer
   static PVSS::Value* createValue(int typ)   {
@@ -255,12 +269,12 @@ std::string DataPoint::sysname(const std::string& dp)   {
 template <typename T> T DataPoint::data()  {
   if ( m_val )  {
     switch(m_val->type())  {
-      case DevTypeElement::FLOAT: return ConvertValue<float,T>::get(m_val);
-      case DevTypeElement::CHAR:  return ConvertValue<char,T>::get(m_val);
-      case DevTypeElement::INT:   return ConvertValue<int,T>::get(m_val);
-      case DevTypeElement::UINT:  return ConvertValue<int,T>::get(m_val);
-      case DevTypeElement::TIME:  return ConvertValue<time_t,T>::get(m_val);
-      case DevTypeElement::BIT:   return ConvertValue<bool,T>::get(m_val);
+      case DevTypeElement::FLOAT: return convertValue<float,T>(m_val);
+      case DevTypeElement::CHAR:  return convertValue<char,T>(m_val);
+      case DevTypeElement::INT:   return convertValue<int,T>(m_val);
+      case DevTypeElement::UINT:  return convertValue<int,T>(m_val);
+      case DevTypeElement::TIME:  return convertValue<time_t,T>(m_val);
+      case DevTypeElement::BIT:   return convertValue<bool,T>(m_val);
       default:                    break;
     }
     invalidConversion(typeid(T));
@@ -272,12 +286,12 @@ template <typename T> T DataPoint::data()  {
 template <typename T> const T DataPoint::data()  const {
   if ( m_val )  {
     switch(m_val->type())  {
-      case DevTypeElement::FLOAT: return ConvertValue<float,T>::get(m_val);
-      case DevTypeElement::CHAR:  return ConvertValue<char,T>::get(m_val);
-      case DevTypeElement::INT:   return ConvertValue<int,T>::get(m_val);
-      case DevTypeElement::UINT:  return ConvertValue<int,T>::get(m_val);
-      case DevTypeElement::TIME:  return ConvertValue<time_t,T>::get(m_val);
-      case DevTypeElement::BIT:   return ConvertValue<bool,T>::get(m_val);
+      case DevTypeElement::FLOAT: return convertValue<float,T>(m_val);
+      case DevTypeElement::CHAR:  return convertValue<char,T>(m_val);
+      case DevTypeElement::INT:   return convertValue<int,T>(m_val);
+      case DevTypeElement::UINT:  return convertValue<int,T>(m_val);
+      case DevTypeElement::TIME:  return convertValue<time_t,T>(m_val);
+      case DevTypeElement::BIT:   return convertValue<bool,T>(m_val);
       default:                    break;
     }
     invalidConversion(typeid(T));
@@ -288,7 +302,7 @@ template <typename T> const T DataPoint::data()  const {
 
 template <> const std::string DataPoint::data<std::string>() const  {
   if ( m_val )  {
-    std::strstream os;
+    std::stringstream os;
     switch(m_val->type())  {
       case DevTypeElement::FLOAT:
         os << this->data<float>();
@@ -321,7 +335,7 @@ template <> const std::string DataPoint::data<std::string>() const  {
 
 template <> std::string DataPoint::data<std::string>()  {
   if ( m_val )  {
-    std::strstream os;
+    std::stringstream os;
     switch(m_val->type())  {
       case DevTypeElement::FLOAT:
         os << this->data<float>();
@@ -358,10 +372,58 @@ template <class T> T& DataPoint::reference()
 template <class T> const T& DataPoint::reference()  const
 {  return ConvertRef<T>::ref(m_val);                                }
 
-template <typename T> static void do_vector_io(const Variable* variable,T& ref)  
-{  DatapointIO::value(variable,insert_vector<T::value_type>,ref);   }
-static void do_string_vector_io(const Variable* variable,std::vector<std::string>& ref)  
-{  DatapointIO::value(variable,insert_string,ref);                  }
+
+#define BASIC_SPECIALIZATIONS(x)                                  \
+  namespace PVSS {                                                \
+    template <> int Value::type_id< x > (const x&);               \
+    template <> int DataValue< x >::type_id();                    \
+    template <> void DataPoint::set< x >(const x&);               \
+    template <> x& DataPoint::reference< x >();                   \
+    template <> const x& DataPoint::reference< x >() const;       \
+    template <> DataValue< x > createDataValue< x >(const x& o);  \
+  }
+
+#define SPECIALIZATIONS(x) BASIC_SPECIALIZATIONS(x)           \
+  namespace PVSS {                                            \
+    template <> x DataPoint::data< x >();                     \
+    template <> const x DataPoint::data< x >() const;         \
+  }
+#define SPECIALIZATIONS2(x) BASIC_SPECIALIZATIONS(x)           \
+  namespace PVSS {                                            \
+    template <> x DataPoint::data< x >();                     \
+  }
+
+#define VECTOR_SPECIALIZATIONS(x) BASIC_SPECIALIZATIONS(std::vector< x >)
+
+  BASIC_SPECIALIZATIONS(bool)
+  BASIC_SPECIALIZATIONS(char)
+  SPECIALIZATIONS(unsigned char)
+  BASIC_SPECIALIZATIONS(short)
+  SPECIALIZATIONS(unsigned short)
+  BASIC_SPECIALIZATIONS(int)
+  SPECIALIZATIONS(unsigned int)
+  BASIC_SPECIALIZATIONS(long)
+  SPECIALIZATIONS(unsigned long)
+  BASIC_SPECIALIZATIONS(float)
+  SPECIALIZATIONS(double)
+  BASIC_SPECIALIZATIONS(std::string)
+  BASIC_SPECIALIZATIONS(DpIdentifier)
+  BASIC_SPECIALIZATIONS(DPRef)
+  BASIC_SPECIALIZATIONS(DPTime)
+
+  VECTOR_SPECIALIZATIONS(bool)
+  VECTOR_SPECIALIZATIONS(char)
+  VECTOR_SPECIALIZATIONS(unsigned char)
+  VECTOR_SPECIALIZATIONS(short)
+  VECTOR_SPECIALIZATIONS(unsigned short)
+  VECTOR_SPECIALIZATIONS(int)
+  VECTOR_SPECIALIZATIONS(unsigned int)
+  VECTOR_SPECIALIZATIONS(long)
+  VECTOR_SPECIALIZATIONS(unsigned long)
+  VECTOR_SPECIALIZATIONS(float)
+  VECTOR_SPECIALIZATIONS(double)
+  VECTOR_SPECIALIZATIONS(std::string)
+  VECTOR_SPECIALIZATIONS(DpIdentifier)
 
 /// Set value data
 void DataPoint::setValue(int typ, const Variable* variable)  {
@@ -393,28 +455,28 @@ void DataPoint::setValue(int typ, const Variable* variable)  {
       DatapointIO::value(variable,copy_string,reference<std::string>());
       break;
     case DevTypeElement::DYNCHAR:
-      do_vector_io(variable,reference<std::vector<char> >());
+      DatapointIO::value(variable,PVSS::insert_char,reference<std::vector<char> >());
       break;
     case DevTypeElement::DYNINT:
       //do_vector_io(variable,reference<std::vector<short> >());
       //break;
     case DevTypeElement::DYNUINT:
-      do_vector_io(variable,reference<std::vector<int> >());
+      DatapointIO::value(variable,PVSS::insert_int,reference<std::vector<int> >());
       break;
     case DevTypeElement::DYNTEXT:
-      do_string_vector_io(variable,reference<std::vector<std::string> >());
+      DatapointIO::value(variable,insert_string,reference<std::vector<std::string> >());
       break;
     case DevTypeElement::DYNTIME:
-      do_vector_io(variable,reference<std::vector<time_t> >());
+      DatapointIO::value(variable,insert_time_t,reference<std::vector<time_t> >());
       break;
     case DevTypeElement::DYNBIT:
-      do_vector_io(variable,reference<std::vector<bool> >());
+      DatapointIO::value(variable,insert_bool,reference<std::vector<bool> >());
       break;
     case DevTypeElement::DYNFLOAT:
-      do_vector_io(variable,reference<std::vector<float> >());
+      DatapointIO::value(variable,PVSS::insert_float,reference<std::vector<float> >());
       break;
     case DevTypeElement::DYNDPID:
-      do_vector_io(variable,reference<std::vector<DpIdentifier> >());
+      DatapointIO::value(variable,PVSS::insert_dpid,reference<std::vector<DpIdentifier> >());
       break;
     case DevTypeElement::BIT32:
     default:
@@ -464,41 +526,4 @@ bool DPListActor::lookup(const std::string& typ_nam, const DevType* typ)  {
     return true;
   }
   throw std::runtime_error("Cannot load datapoint identifiers for type:"+typ_nam);
-}
-
-namespace  {
-  template <typename T> struct SingleRefs0  {
-    static const T& ref0(const DataPoint& dp) { return dp.reference<T>(); }  
-  };
-  template <typename T> struct SingleRefs {
-    static T& ref1(DataPoint& dp)  { return dp.reference<T>();           }  
-    static void set(DataPoint& dp) { return dp.set(default_value<T>());  }  
-  };
-  template <typename T> struct SingleData  {
-    T data(DataPoint& dp)                    { return dp.data<T>(); }
-    const T data(const DataPoint& dp) const  { return dp.data<T>(); }
-    void setData(DataPoint& dp, const T& v)  { dp.set(v);           }
-  };
-
-#define MAKE_CONV(x,y) template SingleData<x>; template SingleData<y>;
-  MAKE_CONV(char, unsigned char);
-  MAKE_CONV(short,unsigned short);
-  MAKE_CONV(int,  unsigned int);
-  MAKE_CONV(long, unsigned long);
-  MAKE_CONV(float,double);
-  MAKE_CONV(bool, time_t);
-
-#define MAKE_REFS(x,y) \
-  template SingleRefs<x>; template SingleRefs<y >;  \
-  template SingleRefs<std::vector<x> >; template SingleRefs<std::vector<y> >;  \
-  template SingleRefs0<x >; template SingleRefs0<y >; \
-  template SingleRefs0<std::vector<x> >; template SingleRefs0<std::vector<y> >;  
-  MAKE_REFS(char,        unsigned char)
-  MAKE_REFS(short,       unsigned short);
-  MAKE_REFS(int,         unsigned int);
-  MAKE_REFS(long,        unsigned long);
-  MAKE_REFS(float,       time_t);
-  MAKE_REFS(bool,        double);
-  MAKE_REFS(std::string, DpIdentifier);
-  MAKE_REFS(DPRef,       DPTime);
 }

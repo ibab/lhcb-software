@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/PVSS/DpIdentifier.h,v 1.1 2007-03-01 10:39:49 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/PVSS/DpIdentifier.h,v 1.2 2007-03-01 20:08:55 frankb Exp $
 //  ====================================================================
 //  DpIdentifier.h
 //  --------------------------------------------------------------------
@@ -82,7 +82,7 @@ public:
   }
 #ifndef __GCCXML
   /// PVSS overload: debug
-  virtual void debug(ostream &to, int level) const {}
+  virtual void debug(ostream &, int) const {}
 #endif
   /// Assignment operator
   bool operator==(const DpIdentifier& c) const {

@@ -1,4 +1,4 @@
-#include <strstream>
+#include <sstream>
 #include "PVSS/ControlsManager.h"
 #include "PVSS/DeviceManager.h"
 #include "PVSS/DeviceIO.h"
@@ -49,7 +49,7 @@ static void exec(void (*fun)(ControlsManager*),ControlsManager* mgr)  {
   }
 }
 
-static void run_setdp(ControlsManager* mgr)  {
+void pvss_test_run_setdp(ControlsManager* mgr)  {
   header("run_setdp  -- setting datapoint values");
   DataPoint p1(mgr,"ExampleDP_Arg1");
   DataPoint p2(mgr,"ExampleDP_Arg2");
@@ -67,7 +67,7 @@ static void run_setdp(ControlsManager* mgr)  {
   }
 }
 
-static void run_getdp(ControlsManager* mgr)  {
+void pvss_test_run_getdp(ControlsManager* mgr)  {
   header("run_setdp  -- set/retrieve datapoint values");
   DataPoint p0(mgr,"ExampleDP_Arg0");
   DataPoint p1(mgr,"ExampleDP_Arg1");
@@ -103,7 +103,7 @@ static void run_getdp(ControlsManager* mgr)  {
       p0.name().c_str(),v0,p1.name().c_str(),v1,p2.name().c_str(),v2,p3.name().c_str(),v3);
   }
 }
-static void run_getdp2(ControlsManager* mgr)  {
+void pvss_test_run_getdp2(ControlsManager* mgr)  {
   header("run_setdp2  -- set/retrieve datapoint values with device reader");
   DataPoint p0(mgr,DataPoint::original("ExampleDP_Arg0"));
   DataPoint p1(mgr,"ExampleDP_Arg1");
@@ -127,9 +127,9 @@ static void run_getdp2(ControlsManager* mgr)  {
     trR->add(p2);
     trR->addOnline(p3);
     trR->execute();
-    double v1 = p1.data<double>();
-    int    v2 = p2.data<int>();
-    short  v3 = p3.data<short>();
+    //double v1 = p1.data<double>();
+    //int    v2 = p2.data<int>();
+    //short  v3 = p3.data<short>();
     printf("run_getdp(Original): %s:%f %s:%f %s:%d %s:%d\n",
       p0.name().c_str(),p0.data<float>(),
       p1.name().c_str(),p1.data<double>(),
@@ -138,7 +138,7 @@ static void run_getdp2(ControlsManager* mgr)  {
   }
 }
 
-void run_createdp(ControlsManager* mgr)    {
+void pvss_test_run_createdp(ControlsManager* mgr)    {
   header("run_createdp: create datapoints & set rangealarm structure");
   /// Create a new datapoint
   DeviceManager* devMgr = mgr->deviceMgr();
@@ -164,9 +164,8 @@ void run_createdp(ControlsManager* mgr)    {
   }
 }
 
-void run_setalm(ControlsManager* mgr)    {
+void pvss_test_run_setalm(ControlsManager* mgr)    {
   header("run_setalm: set rangealarm/bitalarm structure");
-  DeviceManager* devMgr = mgr->deviceMgr();
   std::auto_ptr<WriteTransaction> tr(mgr->writeTransaction());
   std::string m = "ExampleDP_Arg4";
   tr->start();
@@ -190,7 +189,7 @@ void run_setalm(ControlsManager* mgr)    {
   tr->execute();
 }
 
-void run_deldp(ControlsManager* mgr)    {
+void pvss_test_run_deldp(ControlsManager* mgr)    {
   header("run_deldp: delete datapoint");
   DeviceManager* devMgr = mgr->deviceMgr();
   if ( !devMgr->deleteDevice("Test_Int",true) )
@@ -199,11 +198,11 @@ void run_deldp(ControlsManager* mgr)    {
     printf("Deleted datapoint Test_Int\n");
 }
 
-static void run_prt_mgr(ControlsManager* mgr)  {
+void pvss_test_run_prt_mgr(ControlsManager* mgr)  {
   header("run_prt_mgr: Print data types and configs");
-  std::strstream os;
+  std::stringstream os;
   createAsciiPrinter(os)->print(*mgr);
-  printf("%s\n",os.str());
+  printf("%s\n",os.str().c_str());
 }
 #include "PVSS/DeviceSensor.h"
 #include "CPP/Interactor.h"
@@ -227,7 +226,7 @@ namespace {
     }
   };
 }
-static void run_connect_dp(ControlsManager* mgr)  {
+void pvss_test_run_connect_dp(ControlsManager* mgr)  {
   header("run_connect_dp: Connect to datapoints and listen to changes");
   DeviceHandler* handler = new DeviceHandler();
   std::vector<DataPoint> dps;
@@ -248,15 +247,15 @@ extern "C" long pvss_test2(void (*exit_call)(int ret))  {
   ControlsManager* mgr =  CfgManip<ControlsManager>::create(PVSS::defaultSystemID(),PVSS::defaultSystemName());
   ::lib_rtl_sleep(1000);
 //#if 0
-  //exec(run_setdp,mgr);
-  //exec(run_getdp2,mgr);
-  //exec(run_getdp,mgr);
-  //exec(run_createdp,mgr);
-  exec(run_setalm,mgr);
+  //exec(pvss_test_run_setdp,mgr);
+  //exec(pvss_test_run_getdp2,mgr);
+  //exec(pvss_test_run_getdp,mgr);
+  //exec(pvss_test_run_createdp,mgr);
+  exec(pvss_test_run_setalm,mgr);
   ::lib_rtl_sleep(1000);
-  exec(run_deldp,mgr);
-  exec(run_connect_dp,mgr);
-  //run_prt_mgr(mgr);
+  exec(pvss_test_run_deldp,mgr);
+  exec(pvss_test_run_connect_dp,mgr);
+  //pvss_test_run_prt_mgr(mgr);
   if ( exit_call ) (*exit_call)(1);
   return 1;
 }

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/PVSS/DeviceIO.h,v 1.1 2007-03-01 10:39:49 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/PVSS/DeviceIO.h,v 1.2 2007-03-01 20:08:55 frankb Exp $
 //  ====================================================================
 //  DeviceIO.h
 //  --------------------------------------------------------------------
@@ -103,7 +103,7 @@ namespace PVSS {
       /// Drop PVSS IO list
       virtual void dropList() = 0;
       /// Execute PVSS IO action
-      virtual bool exec(bool keep_list, bool wait, DeviceIO* par, DevAnswer* a) = 0;
+      virtual bool exec(bool keep_list, DeviceIO* par, DevAnswer* a) = 0;
     };
     /** @class Read  DeviceIO.h  PVSS/DeviceIO.h
       *
@@ -117,7 +117,7 @@ namespace PVSS {
       /// Drop PVSS IO list
       virtual void dropList();
       /// Execute PVSS IO action
-      virtual bool exec(bool keep_list, bool wait, DeviceIO* par, DevAnswer* a);
+      virtual bool exec(bool keep_list, DeviceIO* par, DevAnswer* a);
     public:
       /// Default constructor
       Read();
@@ -136,7 +136,7 @@ namespace PVSS {
       /// Drop PVSS IO list
       virtual void dropList();
       /// Execute PVSS IO action
-      virtual bool exec(bool keep_list, bool wait, DeviceIO* par, DevAnswer* a);
+      virtual bool exec(bool keep_list, DeviceIO* par, DevAnswer* a);
     public:
       /// Default constructor
       Write();

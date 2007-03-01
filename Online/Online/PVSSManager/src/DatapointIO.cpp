@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/src/DatapointIO.cpp,v 1.2 2007-03-01 15:48:04 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/src/DatapointIO.cpp,v 1.3 2007-03-01 20:09:09 frankb Exp $
 //  ====================================================================
 //  DatapointIO.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: DatapointIO.cpp,v 1.2 2007-03-01 15:48:04 frankb Exp $
+// $Id: DatapointIO.cpp,v 1.3 2007-03-01 20:09:09 frankb Exp $
 #include "DpIdentifierVar.hxx"
 #include "DpIdValueList.hxx"
 #include "DpIdentifier.hxx"
@@ -30,6 +30,7 @@ template <class T> static void simple_conversion(const Variable* var, T& val)  {
   case INTEGER_VAR:  val = T(((IntegerVar*)var)->getValue());               return;
   case UINTEGER_VAR: val = T(((UIntegerVar*)var)->getValue());              return;
   case FLOAT_VAR:    val = T(((FloatVar*)var)->getValue());                 return;
+  default: break;
   }
   throw "Invalid variable type for data conversion";
 }
@@ -40,9 +41,10 @@ template <> static void simple_conversion<bool>(const Variable* var, bool& v)  {
   v = v0 != 0;
 }
 
-template <class T> static void vector_conversion(const Variable* var, void (*ldf)(T&,const T::value_type&), T& val)  {
+template <class T> static void 
+vector_conversion(const Variable* var, void (*ldf)(std::vector<T>&,const T), std::vector<T>& val)  {
   if ( var->isDynVar() )    {
-    T::value_type theVal;
+    T theVal;
     DynVar* theVar = (DynVar*)var;
     for (Variable* v=theVar->getFirst(); v; v=theVar->getNext())  {
       simple_conversion(v,theVal);
@@ -54,8 +56,8 @@ template <class T> static void vector_conversion(const Variable* var, void (*ldf
 }
 
 #define MAKE_CONVERSION(x) \
-void DatapointIO::value(const Variable* var,void (*ldf)(std::vector<x>&,const x&),std::vector<x>& val) \
-{ vector_conversion<std::vector<x> >(var,ldf,val);  } \
+void DatapointIO::value(const Variable* var,void (*ldf)(std::vector<x>&,const x),std::vector<x>& val) \
+{ vector_conversion<x>(var,ldf,val);  } \
 void DatapointIO::value(const Variable* var, x& val) {  simple_conversion(var,val);  }
 
 MAKE_CONVERSION(bool)

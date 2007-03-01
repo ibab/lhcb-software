@@ -47,7 +47,7 @@ APIManager::APIManager(const std::string& dll, const std::string& call)
 }
 
 /// Handle incoming hotlinks. This function is called from our hotlink object
-void APIManager::handleHotLink(const DpHLGroup &group)   {
+void APIManager::handleHotLink(const DpHLGroup &/* group */)   {
   // Print Debug information
   if (Resources::isDbgFlag(Resources::DBG_API_USR1))
     ::printf("Receiving HotLink\n");
@@ -80,7 +80,7 @@ int APIManager::initialize()   {
       ::printf("Failed to access procedure:%s id library:%s\n",m_call.c_str(),m_dll.c_str());
       return 0;
     }
-    pvss_start_thread(pvss_interface_run, fun);
+    pvss_start_thread(pvss_interface_run,(void*)fun);
   }
   return 1;
 }

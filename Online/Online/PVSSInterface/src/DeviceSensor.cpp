@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DeviceSensor.cpp,v 1.2 2007-03-01 15:47:56 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DeviceSensor.cpp,v 1.3 2007-03-01 20:08:55 frankb Exp $
 //  ====================================================================
 //  DevType.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: DeviceSensor.cpp,v 1.2 2007-03-01 15:47:56 frankb Exp $
+// $Id: DeviceSensor.cpp,v 1.3 2007-03-01 20:08:55 frankb Exp $
 
 // Framework include files
 #include "PVSS/DeviceSensor.h"
@@ -16,6 +16,7 @@
 #include "CPP/Sensor.h"
 #include "CPP/Event.h"
 #include "WT/wtdef.h"
+#include "WT/wt_facilities.h"
 #include <set>
 using namespace PVSS;
 

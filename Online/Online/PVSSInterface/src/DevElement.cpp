@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DevElement.cpp,v 1.2 2007-03-01 15:47:56 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DevElement.cpp,v 1.3 2007-03-01 20:08:55 frankb Exp $
 //  ====================================================================
 //  DevElement.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: DevElement.cpp,v 1.2 2007-03-01 15:47:56 frankb Exp $
+// $Id: DevElement.cpp,v 1.3 2007-03-01 20:08:55 frankb Exp $
 
 // Framework include files
 #include "PVSS/DevElement.h"
@@ -22,11 +22,11 @@ DevElement::DevElement(Device* dev, DevTypeElement* elem)
 }
 
 /// Add new config to the device element
-void DevElement::addConfig(const CfgType* config)   {
+void DevElement::addConfig(const CfgType* /* config */)   {
 }
 
 /// Remove config from the device element
-void DevElement::removeConfig(const CfgType* config)   {
+void DevElement::removeConfig(const CfgType* /* config */ )   {
 }
 
 /// Standard destructor
@@ -49,13 +49,13 @@ DeviceManager* DevElement::manager() const    {
 }
 
 /// Access sub-element by identifier
-std::auto_ptr<DevElement> DevElement::element(int id) const   {
+std::auto_ptr<DevElement> DevElement::element(int /* id */) const   {
   DevElement* e = 0;
   return std::auto_ptr<DevElement>(e);
 }
 
 /// Access sub-element by name
-std::auto_ptr<DevElement> DevElement::element(const std::string& nam) const   {
+std::auto_ptr<DevElement> DevElement::element(const std::string& /* nam */) const   {
   DevElement* e = 0;
   return std::auto_ptr<DevElement>(e);
 }

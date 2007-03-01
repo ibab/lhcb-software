@@ -11,4 +11,7 @@ library PVSSManager *.cpp -import=PVSS
 apply_pattern linker_library library=PVSSManager
 macro_append PVSSManager_shlibflags $(PVSS_linkopts)
 
+private
 application PVSS00python  ../main/*.cpp
+macro_append PVSS00python_cppflags " -m32 " WIN32 ""
+macro_append PVSS00pythonlinkopts " -m32 " WIN32 ""

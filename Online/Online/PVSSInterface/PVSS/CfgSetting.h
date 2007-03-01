@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/PVSS/CfgSetting.h,v 1.1 2007-03-01 10:39:49 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/PVSS/CfgSetting.h,v 1.2 2007-03-01 20:08:54 frankb Exp $
 //  ====================================================================
 //  CfgSetting.h
 //  --------------------------------------------------------------------
@@ -10,7 +10,7 @@
 #define ONLINE_PVSS_CFGSETTING_H
 
 // Framework include files
-#include "PVSS/WriteTransAction.h"
+#include "PVSS/WriteTransaction.h"
 #include "PVSS/DataPoint.h"
 
 // C++ include files

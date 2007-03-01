@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/ArchiveSetting.cpp,v 1.2 2007-03-01 15:47:56 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/ArchiveSetting.cpp,v 1.3 2007-03-01 20:08:55 frankb Exp $
 //  ====================================================================
 //  ArchiveSetting.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: ArchiveSetting.cpp,v 1.2 2007-03-01 15:47:56 frankb Exp $
+// $Id: ArchiveSetting.cpp,v 1.3 2007-03-01 20:08:55 frankb Exp $
 
 // Framework include files
 #include "PVSS/CfgType.h"
@@ -33,7 +33,7 @@ ArchiveSetting::set(bool save,
 }
 
 /// Apply alarm settings to datapoint identified by datapoint name
-void ArchiveSetting::i_remove(Transaction& tr, const std::string& dp_name)   {
+void ArchiveSetting::i_remove(Transaction& /*tr*/, const std::string& /*dp_name */)   {
   try  {
   }
   catch(const std::exception& e)  {

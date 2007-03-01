@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/PVSS/WriteTransaction.h,v 1.1 2007-03-01 10:39:49 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/PVSS/WriteTransaction.h,v 1.2 2007-03-01 20:08:55 frankb Exp $
 //  ====================================================================
 //  WriteTransaction.h
 //  --------------------------------------------------------------------
@@ -6,8 +6,8 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-#ifndef ONLINE_PVSS_DEVTRANSACTION_H
-#define ONLINE_PVSS_DEVTRANSACTION_H
+#ifndef ONLINE_PVSS_WRITETRANSACTION_H
+#define ONLINE_PVSS_WRITETRANSACTION_H
 
 // Framework include files
 #include "PVSS/Kernel.h"
@@ -108,4 +108,4 @@ namespace PVSS {
     { setValue(DataPoint::online(dp.name()),value);    }
   };
 }      // End namespace PVSS
-#endif // ONLINE_PVSS_DEVTRANSACTION_H
+#endif // ONLINE_PVSS_WRITETRANSACTION_H

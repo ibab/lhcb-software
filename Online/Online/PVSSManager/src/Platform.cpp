@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/src/Platform.cpp,v 1.2 2007-03-01 15:48:04 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/src/Platform.cpp,v 1.3 2007-03-01 20:09:09 frankb Exp $
 //  ====================================================================
 //  Platform.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: Platform.cpp,v 1.2 2007-03-01 15:48:04 frankb Exp $
+// $Id: Platform.cpp,v 1.3 2007-03-01 20:09:09 frankb Exp $
 
 #include "PVSS/Internals.h"
 #include <string>
@@ -115,6 +115,8 @@ int PVSS::pvss_release_lock(void* handle) {
 #else
 #include <dlfcn.h>
 #include <unistd.h>
+#include <semaphore.h>
+
 #define LOAD_LIB(x)  ::dlopen( x , )
 #define DLERROR      ::dlerror()
 
@@ -122,7 +124,7 @@ int PVSS::pvss_release_lock(void* handle) {
 int  PVSS::pvss_sleep(int millisecs)  {
   int sec  = millisecs/1000;
   int msec = millisecs%1000;
-  if ( sec ) ::sleep(srec);
+  if ( sec ) ::sleep(sec);
   if ( msec ) ::usleep(msec*1000);
   return 1;
 }
@@ -150,26 +152,48 @@ PVSS::pvss_function_t PVSS::pvss_load_function(const char* lib, const char* fun)
   return (pvss_function_t)::dlsym(handle,fun);
 }
 
+/// Start native thread
+int PVSS::pvss_start_thread(void (*fun)(void*), void* arg)  {
+  typedef void* (*pthread_fun)(void*);
+  pthread_t h;
+  int sc = ::pthread_create(&h,                     // Thread handle
+                            0,                      // Thread attribute (0=default)
+                            (pthread_fun)fun,       // thread function 
+                            arg);                   // argument to thread function 
+  return 0 == sc ? 1 : 0;
+}
+
+/// Terminate native thread
+int PVSS::pvss_end_thread(int exit_code) {
+  return 1;
+}
+
 /// Create lock to protect PVSS API manager from multithreaded trouble
 int PVSS::pvss_create_lock(void** handle)   {
-  *handle = ::sem_open(h->name, O_CREAT, 0777, 1);
-  if ( !*handle )
+  sem_t* s = new sem_t;
+  if ( 0 != ::sem_init(s, 0, 1) ) {
+    delete s;
     ::perror("SEVERE: sem_open: ");
-  return *handle ? 1 : 0;
+    *handle = 0;
+    return 0;
+  }
+  *handle = s;
+  return 1;
 }
 
 /// Delete PVSS lock object
 int PVSS::pvss_delete_lock(void* handle)   {
-  return handle ? ::sem_destroy(handle) == 0 ? 1 : 0 : 0;
+  std::auto_ptr<sem_t> s((sem_t*)handle);
+  return handle ? ::sem_destroy(s.get()) == 0 ? 1 : 0 : 0;
 }
 
 /// Take lock object
 int PVSS::pvss_take_lock(void* handle) {
-  return handle ? ::sem_wait(handle) == 0 ? 1 : 0 : 0;
+  return handle ? ::sem_wait((sem_t*)handle) == 0 ? 1 : 0 : 0;
 }
 
 /// Release lock object
 int PVSS::pvss_release_lock(void* handle) {
-  return handle ? ::sem_post(handle) == 0 ? 1 : 0 : 0;
+  return handle ? ::sem_post((sem_t*)handle) == 0 ? 1 : 0 : 0;
 }
 #endif
