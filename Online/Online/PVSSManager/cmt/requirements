@@ -2,7 +2,7 @@ package PVSSManager
 version v1r0
 
 branches  cmt doc
-use PVSS v* Externals -no_auto_imports
+use PVSS v* Online  -no_auto_imports
 
 include_dirs $(PVSSMANAGERROOT)
 
