@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DataPoint.cpp,v 1.5 2007-03-01 21:54:06 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DataPoint.cpp,v 1.6 2007-03-01 22:00:01 frankb Exp $
 //  ====================================================================
 //  DataPoint.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: DataPoint.cpp,v 1.5 2007-03-01 21:54:06 frankb Exp $
+// $Id: DataPoint.cpp,v 1.6 2007-03-01 22:00:01 frankb Exp $
 #ifdef _WIN32
   // Disable warning C4250: 'const float' : forcing value to bool 'true' or 'false' (performance warning)
   #pragma warning ( disable : 4800 )
@@ -396,11 +396,15 @@ template <typename T> struct GetData {
 #define SPECIALIZATIONS(x) BASIC_SPECIALIZATIONS(x) namespace PVSS { template GetData< x >;}
 
 #else
-#define BASIC_SPECIALIZATIONS(x)   BASIC_SPECIALIZATIONS1(x) namespace PVSS { 
+#define BASIC_SPECIALIZATIONS(x)   BASIC_SPECIALIZATIONS1(x) namespace PVSS { \
   template <> x& DataPoint::reference< x >();             \
-  template <> const x& DataPoint::reference< x >() const; \
+  template <> const x& DataPoint::reference< x >() const; }
+
+#define SPECIALIZATIONS(x) BASIC_SPECIALIZATIONS(x) namespace PVSS { \
   template <> x DataPoint::data< x >();                   \
   template <> const x DataPoint::data< x >() const; }
+
+
 #endif
 
 

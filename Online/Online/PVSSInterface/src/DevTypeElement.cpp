@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DevTypeElement.cpp,v 1.2 2007-03-01 15:47:56 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DevTypeElement.cpp,v 1.3 2007-03-01 22:00:01 frankb Exp $
 //  ====================================================================
 //  DevTypeElement.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: DevTypeElement.cpp,v 1.2 2007-03-01 15:47:56 frankb Exp $
+// $Id: DevTypeElement.cpp,v 1.3 2007-03-01 22:00:01 frankb Exp $
 
 // Framework include files
 #include "PVSS/DevTypeElement.h"
@@ -97,6 +97,8 @@ std::string DevTypeElement::typeName()  const  {
      _PRT(DYNBLOB);
      _PRT(DYNBLOBARRAY);
 #undef _PRT
+  default:
+    return "DPELEMENT_NOELEMENT";
   }
   return "Unknwon Type";
 }
@@ -153,6 +155,8 @@ bool DevTypeElement::isPrimitive()  const {
      _PRT(DYNBLOB);
      _PRT(DYNBLOBARRAY);
 #undef _PRT
+  default:
+    return false;
   }
   return false;
 }
