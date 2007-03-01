@@ -3,7 +3,7 @@
 # Maintainer : Marco CATTANEO
 #============================================================================
 package         DigiAlg
-version         v4r5
+version         v4r6p1
 
 branches        cmt doc src options
 include_path    none
@@ -12,7 +12,6 @@ use GenEvent        v* Event
 use MCEvent         v* Event
 use DAQEvent        v* Event
 use EventBase       v* Event
-use LHCbDefinitions v* Kernel
 use GaudiAlg        v*
 
 use STDet           v* Det
