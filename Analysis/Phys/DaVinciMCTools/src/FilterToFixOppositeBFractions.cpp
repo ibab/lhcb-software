@@ -1,4 +1,4 @@
-// $Id: FilterToFixOppositeBFractions.cpp,v 1.5 2007-02-28 09:49:44 sposs Exp $
+// $Id: FilterToFixOppositeBFractions.cpp,v 1.6 2007-03-01 12:57:55 sposs Exp $
 // Include files
 #include <sstream>
 #include "GaudiKernel/MsgStream.h"
@@ -235,7 +235,8 @@ StatusCode FilterToFixOppositeBFractions::finalize() {
   info() << "   Event Type was :"<<m_ievt<<endreq;
   info() << "   Total evts Before any corrections= " <<m_coutevt<<endreq;
   info() << " Fraction where opposite B ID = Signal B ID : "
-         <<r(100.*m_coutSameB/m_coutevt)<<" +/- "<<r(m_errBuBC)<<" %"
+         <<r(percent(m_coutSameB,m_coutevt))<<" +/- "
+         <<r(errorp(m_coutSameB,m_coutevt))<<" %"
          <<endreq;
   info() << "        Total Bu oppo = "
          <<m_coutBu<<"/"<<m_coutevt<<" = "
@@ -255,7 +256,7 @@ StatusCode FilterToFixOppositeBFractions::finalize() {
          <<r(m_errOtBC)<<" %"<<endreq;
   info() << endreq;
   info() << "        Total rejected = "
-         <<r(100.*m_rejected/m_coutevt)<<" +/- "
+         <<r(percent(m_rejected,m_coutevt))<<" +/- "
          <<r(errorp(m_rejected,m_coutevt))<<" %"<<endreq;
   info() << "   Total evts After Correction = "
          <<m_coutevtAC<<endreq;
