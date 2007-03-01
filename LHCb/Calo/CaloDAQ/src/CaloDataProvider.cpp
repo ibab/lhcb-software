@@ -129,6 +129,7 @@ double CaloDataProvider::digit (LHCb::CaloCellID id){
 //-------------------------------------------------------
 int CaloDataProvider::adc (LHCb::CaloCellID id){
   if( 0 >  m_adcs.index(id) )decodeCell( id );
+  if( 0 >  m_adcs.index(id) )return 0;
   return m_adcs[id].adc();
 }
 //-------------------------------------------------------
