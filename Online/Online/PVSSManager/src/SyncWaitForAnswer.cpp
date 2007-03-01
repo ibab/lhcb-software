@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/src/SyncWaitForAnswer.cpp,v 1.1 2007-03-01 10:40:00 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/src/SyncWaitForAnswer.cpp,v 1.2 2007-03-01 15:48:04 frankb Exp $
 //  ====================================================================
 //  SyncWaitForAnswer.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $ID: $
+// $Id: SyncWaitForAnswer.cpp,v 1.2 2007-03-01 15:48:04 frankb Exp $
 
 #include "PVSSManager/SyncWaitForAnswer.h"
 #include "PVSS/DevAnswer.h"

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/PVSS/DevAnswer.h,v 1.1 2007-03-01 10:39:59 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/PVSS/DevAnswer.h,v 1.2 2007-03-01 15:48:04 frankb Exp $
 //  ====================================================================
 //  CfgDetail.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $ID: $
+// $Id: DevAnswer.h,v 1.2 2007-03-01 15:48:04 frankb Exp $
 #ifndef PVSS_DEVANSER_H
 #define PVSS_DEVANSER_H
 

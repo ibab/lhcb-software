@@ -1,12 +1,12 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/src/DpRead.cpp,v 1.1 2007-03-01 10:40:00 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/src/DpRead.cpp,v 1.2 2007-03-01 15:48:04 frankb Exp $
 //  ====================================================================
-//  CfgDetail.cpp
+//  DpRead.cpp
 //  --------------------------------------------------------------------
 //
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $ID: $
+// $Id: DpRead.cpp,v 1.2 2007-03-01 15:48:04 frankb Exp $
 
 #include "PVSSManager/SyncWaitForAnswer.h"
 #include "PVSS/HotLinkCallback.h"
@@ -81,12 +81,6 @@ void PVSS::DpReadSync::call(DpMsgAnswer &answer)  {
       }
     }
   }
-}
-
-void PVSS::pvss_add_read(void*& ctxt,const DpIdentifier& dpid)  {
-  DpIdentList* rd = (DpIdentList*)ctxt;
-  if ( 0 == ctxt ) ctxt = rd = new DpIdentList;
-  rd->append(dpid);
 }
 
 bool PVSS::pvss_exec_read(void*& context,DevAnswer* a,HotLinkCallback* b,bool keep_list)  {

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/ArchiveSetting.cpp,v 1.1 2007-03-01 10:39:49 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/ArchiveSetting.cpp,v 1.2 2007-03-01 15:47:56 frankb Exp $
 //  ====================================================================
 //  ArchiveSetting.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $ID: $
+// $Id: ArchiveSetting.cpp,v 1.2 2007-03-01 15:47:56 frankb Exp $
 
 // Framework include files
 #include "PVSS/CfgType.h"

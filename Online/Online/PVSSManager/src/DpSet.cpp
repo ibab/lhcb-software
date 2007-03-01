@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/src/DpSet.cpp,v 1.1 2007-03-01 10:40:00 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/src/DpSet.cpp,v 1.2 2007-03-01 15:48:04 frankb Exp $
 //  ====================================================================
 //  DpSet.cpp
 //  --------------------------------------------------------------------
@@ -6,11 +6,12 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $ID: $
+// $Id: DpSet.cpp,v 1.2 2007-03-01 15:48:04 frankb Exp $
 #include "PVSSManager/SyncWaitForAnswer.h"
 #include "PVSS/Environment.h"
 #include "PVSS/Internals.h"
 #include "PVSS/DevAnswer.h"
+#include "PVSS/Lock.h"
 
 // PVSS include files
 #include "Manager.hxx"
@@ -46,6 +47,7 @@ namespace PVSS {
   }
 }
 bool PVSS::pvss_exec_dpset(void*& context,DevAnswer* a, bool keep_list)  {
+  Lock lock(pvss_global_lock());
   DpIdValueList* list = (DpIdValueList*)context;
   bool res = false;
   try  {

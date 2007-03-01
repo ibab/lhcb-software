@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DeviceIO.cpp,v 1.1 2007-03-01 10:39:50 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DeviceIO.cpp,v 1.2 2007-03-01 15:47:56 frankb Exp $
 //  ====================================================================
 //  DeviceIO.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $ID: $
+// $Id: DeviceIO.cpp,v 1.2 2007-03-01 15:47:56 frankb Exp $
 
 // Framework include files
 #include "PVSS/DevTypeElement.h"
@@ -44,7 +44,7 @@ bool DeviceIO::Read::exec(bool keep_list, bool wait, DeviceIO* par, DevAnswer* a
   if ( !m_context )  {
     pvss_list_create(m_context);
     for(DataPoints::const_iterator i=p.begin(); i != p.end(); ++i)
-      pvss_add_read(m_context,(*i).first);
+      pvss_list_add(m_context,(*i).first);
   }
   pvss_exec_read(m_context,a,par,keep_list);
   return true;

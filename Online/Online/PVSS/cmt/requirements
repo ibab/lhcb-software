@@ -4,7 +4,6 @@ version v3r1
 branches  cmt doc src
 use LCG_Settings v* 
 use GaudiPolicy  v*
-U:\cern\lhcb\online\control\pvss\3.6\api
 macro PVSS_home "$(SITEROOT)/lhcb/online/control/pvss/3.6" \
   WIN32         "C:/PGM/PVSS2_3.6"
 

@@ -1,6 +1,6 @@
 #ifndef PVSSMANAGER_DATAPOINTIO_H
 #define PVSSMANAGER_DATAPOINTIO_H
-// $ID= $
+// $Id: DatapointIO.h,v 1.2 2007-03-01 15:48:04 frankb Exp $
 
 // Forward declarations
 class Variable;

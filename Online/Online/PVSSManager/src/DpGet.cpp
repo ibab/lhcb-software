@@ -1,12 +1,12 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/src/DpGet.cpp,v 1.1 2007-03-01 10:40:00 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/src/DpGet.cpp,v 1.2 2007-03-01 15:48:04 frankb Exp $
 //  ====================================================================
-//  CfgDetail.cpp
+//  DpGet.cpp
 //  --------------------------------------------------------------------
 //
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $ID: $
+// $Id: DpGet.cpp,v 1.2 2007-03-01 15:48:04 frankb Exp $
 #ifdef _WIN32
   #pragma warning ( disable : 4786 )
 #endif
@@ -16,6 +16,7 @@
 #include "PVSS/Internals.h"
 #include "PVSS/DevAnswer.h"
 #include "PVSS/Environment.h"
+#include "PVSS/Lock.h"
 
 // PVSS include files
 #include "Manager.hxx"
@@ -173,6 +174,7 @@ static bool pvss_exec_dpgetA(PVSS::DpGetContext* rdx, PVSS::DevAnswer* a)  {
 }
 
 bool PVSS::pvss_exec_dpget(void*& context,DevAnswer* a)  {
+  Lock lock(pvss_global_lock());
   DpGetContext* cx = (DpGetContext*)context;
   context = 0;
   return a ? pvss_exec_dpgetW(cx,a) 

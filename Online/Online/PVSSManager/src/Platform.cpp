@@ -1,14 +1,22 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/src/Platform.cpp,v 1.1 2007-03-01 10:40:00 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/src/Platform.cpp,v 1.2 2007-03-01 15:48:04 frankb Exp $
 //  ====================================================================
-//  System.cpp
+//  Platform.cpp
 //  --------------------------------------------------------------------
 //
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $ID: $
+// $Id: Platform.cpp,v 1.2 2007-03-01 15:48:04 frankb Exp $
+
 #include "PVSS/Internals.h"
 #include <string>
+
+/// Access to global lock object
+void* PVSS::pvss_global_lock()  {
+  static void* lock = 0;
+  if ( 0 == lock )  pvss_create_lock(&lock);
+  return lock;
+}
 
 #ifdef _WIN32
 #include <windows.h>
@@ -62,6 +70,48 @@ int PVSS::pvss_end_thread(int exit_code) {
   return 1;
 }
 
+/// Create lock to protect PVSS API manager from multithreaded trouble
+int PVSS::pvss_create_lock(void** handle)   {
+  *handle = ::CreateMutex(0,FALSE,0);
+  if ( !*handle )
+    ::perror("SEVERE: CreateMutex: ");
+  return *handle ? 1 : 0;
+}
+
+/// Delete PVSS lock object
+int PVSS::pvss_delete_lock(void* handle)   {
+  return handle ? ::CloseHandle(handle) == 0 ? 0 : 1 : 0;
+}
+
+/// Take lock object
+int PVSS::pvss_take_lock(void* h) {
+  if ( h )  {
+    DWORD sc = WAIT_TIMEOUT;
+    const char* opt = "";
+    while ( h != 0 && sc == WAIT_TIMEOUT )  {
+      sc = ::WaitForSingleObject( h, 1000 /*INFINITE*/ );
+      switch(sc)  {
+        case WAIT_FAILED:       opt="WAIT_FAILED";    break;
+        case WAIT_ABANDONED:
+          sc = ::WaitForSingleObject( h, 1000 /*INFINITE*/ );
+          opt="WAIT_ABANDONED"; break;
+        case WAIT_TIMEOUT:      opt="WAIT_TIMEOUT";   break;
+        case WAIT_OBJECT_0:     opt=0;                break;
+        default:                                      break;
+      }
+      if ( opt )  {
+        ::perror(opt);
+      }
+    }
+    return sc==WAIT_FAILED ? 0 : 1;
+  }
+  return 0;
+}
+/// Release lock object
+int PVSS::pvss_release_lock(void* handle) {
+  return handle ? ::ReleaseMutex(handle) == 0 ? 0 : 1 : 0;
+}
+
 #else
 #include <dlfcn.h>
 #include <unistd.h>
@@ -98,5 +148,28 @@ PVSS::pvss_function_t PVSS::pvss_load_function(const char* lib, const char* fun)
     return pvss_function_t(0);
   }
   return (pvss_function_t)::dlsym(handle,fun);
+}
+
+/// Create lock to protect PVSS API manager from multithreaded trouble
+int PVSS::pvss_create_lock(void** handle)   {
+  *handle = ::sem_open(h->name, O_CREAT, 0777, 1);
+  if ( !*handle )
+    ::perror("SEVERE: sem_open: ");
+  return *handle ? 1 : 0;
+}
+
+/// Delete PVSS lock object
+int PVSS::pvss_delete_lock(void* handle)   {
+  return handle ? ::sem_destroy(handle) == 0 ? 1 : 0 : 0;
+}
+
+/// Take lock object
+int PVSS::pvss_take_lock(void* handle) {
+  return handle ? ::sem_wait(handle) == 0 ? 1 : 0 : 0;
+}
+
+/// Release lock object
+int PVSS::pvss_release_lock(void* handle) {
+  return handle ? ::sem_post(handle) == 0 ? 1 : 0 : 0;
 }
 #endif

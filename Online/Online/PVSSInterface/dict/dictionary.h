@@ -44,7 +44,6 @@
 #include "PVSS/RangeAlarm.h"
 #include "PVSS/ReadTransaction.h"
 #include "PVSS/WriteTransaction.h"
-#include "PVSS/DataPointContainer.h"
 #include "PVSS/DevAnswer.h"
 #include "PVSS/Environment.h"
 #include "PVSS/HotLinkCallback.h"
@@ -187,10 +186,6 @@ namespace  {
       DataPointMapActor<std::map<std::string,DataPoint> >  m_m1;
       ContainerModifier() : m_v1(0), m_l1(0), m_s1(0), m_m1(0) {}
     } _modifiers;
-    struct Containers {
-      DataPointVector                 v0;
-      DataPointList                   l0;
-    } _containers;
     struct Pointers {
       std::auto_ptr<DevElement>       p0;
       std::auto_ptr<WriteTransaction> p1;

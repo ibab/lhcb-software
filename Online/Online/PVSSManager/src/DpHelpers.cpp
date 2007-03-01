@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/src/DpHelpers.cpp,v 1.1 2007-03-01 10:40:00 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/src/DpHelpers.cpp,v 1.2 2007-03-01 15:48:04 frankb Exp $
 //  ====================================================================
 //  DpHelpers.cpp
 //  --------------------------------------------------------------------
@@ -6,8 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $ID: $
-#include "PVSS/Internals.h"
+// $Id: DpHelpers.cpp,v 1.2 2007-03-01 15:48:04 frankb Exp $
 
 // PVSS include files
 #include "Manager.hxx"
@@ -15,7 +14,9 @@
 #include "MapTableItem.hxx"
 #include "ConfigsMapper.hxx"
 
+#include "PVSS/Lock.h"
 #include "PVSS/DevAnswer.h"
+#include "PVSS/Internals.h"
 #include "PVSS/Environment.h"
 #include "PVSSManager/SyncWaitForAnswer.h"
 
@@ -134,12 +135,14 @@ bool PVSS::pvss_lookup_dpidset(const char* wildname,DpIdentifier*& array,long& c
 }
 
 bool PVSS::pvss_create_device(const char* name,int type, int systemId, DevAnswer* a)  {
+  Lock lock(pvss_global_lock());
   SyncWaitForAnswer* answer= new SyncWaitForAnswer(a);
   PVSSboolean res = Manager::dpCreate(name, DpTypeId(type), answer, systemId);
   return (PVSS_TRUE == res) ? a ? PVSS::Environment::instance().waitForAnswer(a) : true : false;
 }
 
 bool PVSS::pvss_delete_device(const DpIdentifier& dpid, int systemId, DevAnswer* a)  {
+  Lock lock(pvss_global_lock());
   SyncWaitForAnswer* answer= new SyncWaitForAnswer(a);
   PVSSboolean res = Manager::dpDelete(dpid, answer);
   return (PVSS_TRUE == res) ? a ? PVSS::Environment::instance().waitForAnswer(a) : true : false;

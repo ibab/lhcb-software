@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/src/DpConnect.cpp,v 1.1 2007-03-01 10:40:00 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/src/DpConnect.cpp,v 1.2 2007-03-01 15:48:04 frankb Exp $
 //  ====================================================================
 //  DpConnect.cpp
 //  --------------------------------------------------------------------
@@ -6,11 +6,12 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $ID: $
+// $Id: DpConnect.cpp,v 1.2 2007-03-01 15:48:04 frankb Exp $
 #include "PVSSManager/SyncWaitForAnswer.h"
 #include "PVSS/HotLinkCallback.h"
 #include "PVSS/Environment.h"
 #include "PVSS/Internals.h"
+#include "PVSS/Lock.h"
 
 // PVSS include files
 #include "Manager.hxx"
@@ -53,6 +54,7 @@ void PVSS::DpConnectSync::hotLinkCallBack(DpHLGroup &g)   {
 }
 
 bool PVSS::pvss_list_connect(void*& ctxt,HotLinkCallback* cb,void*& link)   {
+  Lock lock(pvss_global_lock());
   DevAnswer*         a = new DevAnswer;
   SyncWaitForAnswer* h = new DpConnectSync(a,cb);
   DpIdentList*       l = (DpIdentList*)ctxt;
@@ -70,6 +72,7 @@ bool PVSS::pvss_list_connect(void*& ctxt,HotLinkCallback* cb,void*& link)   {
 }
 
 bool PVSS::pvss_list_disconnect(void* ctxt,void* link)  {
+  Lock lock(pvss_global_lock());
   DpIdentList*       l = (DpIdentList*)ctxt;
   SyncWaitForAnswer* h = (DpConnectSync*)link;
   if ( !l || !h )  {

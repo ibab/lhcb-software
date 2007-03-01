@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DataPoint.cpp,v 1.1 2007-03-01 10:39:50 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DataPoint.cpp,v 1.2 2007-03-01 15:47:56 frankb Exp $
 //  ====================================================================
 //  DataPoint.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $ID: $
+// $Id: DataPoint.cpp,v 1.2 2007-03-01 15:47:56 frankb Exp $
 #ifdef _WIN32
   // Disable warning C4250: 'const float' : forcing value to bool 'true' or 'false' (performance warning)
   #pragma warning ( disable : 4800 )

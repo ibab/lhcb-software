@@ -1,12 +1,12 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/src/DpIdValueList.cpp,v 1.1 2007-03-01 10:40:00 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/src/DpIdValueList.cpp,v 1.2 2007-03-01 15:48:04 frankb Exp $
 //  ====================================================================
-//  pvss_val_list.cpp
+//  DpIdValueList.cpp
 //  --------------------------------------------------------------------
 //
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $ID: $
+// $Id: DpIdValueList.cpp,v 1.2 2007-03-01 15:48:04 frankb Exp $
 #include "PVSS/Internals.h"
 #include "PVSS/Array.h"
 #include "DpIdentifierVar.hxx"
