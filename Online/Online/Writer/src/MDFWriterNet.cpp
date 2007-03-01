@@ -80,7 +80,6 @@ void MDFWriterNet::constructNet()
   declareProperty("StorageServerAddr",  m_serverAddr="");
   declareProperty("StorageServerPort",  m_serverPort=45247);
   declareProperty("RunDBServiceURL",    m_runDBURL="");
-  declareProperty("SoTimeout",          m_soTimeout=5);
   declareProperty("MaxFileSizeMB",      m_maxFileSizeMB=1);
   declareProperty("SndRcvSizes",        m_sndRcvSizes=6553600);
   declareProperty("FilePrefix",         m_filePrefix="MDFWriterNet_File_");
@@ -96,7 +95,7 @@ StatusCode MDFWriterNet::initialize(void)
   m_fileOpen = 0;
   m_bytesWritten = 0;
   m_connection = new Connection(m_serverAddr, m_serverPort,
-      m_soTimeout, m_sndRcvSizes, m_log, this);
+  	m_sndRcvSizes, m_log, this);
   m_rpcObj = new RPCComm(m_runDBURL);
   try {
 
@@ -153,8 +152,6 @@ StatusCode MDFWriterNet::writeBuffer(void *const /*fd*/, const void *data, size_
 
   //Is a file already open?
   if(!m_fileOpen) {
-
-
     unsigned int runNumber = getRunNumber(data, len);
 
     getNewFileName(m_fileName, data, len);
@@ -212,7 +209,6 @@ inline unsigned int MDFWriterNet::getRunNumber(const void *data, size_t /*len*/)
 void MDFWriterNet::getNewFileName(std::string &newFileName,
     const void * /*data*/, size_t /*len*/)
 {
-  //TODO: Do something here to fill in a new file name.
   char buf[MAX_FILE_NAME];
   static unsigned long random;
   random++;

@@ -20,7 +20,7 @@ extern "C" {
 
 #define POLL_INTERVAL         5000   /*5 Seconds.*/
 #define MAX_EMPTY_POLLS        6        /*Meaning 30 seconds of empty polls.*/
-#define FAILOVER_RETRY_SLEEP  20      /*Seconds between failover retries.*/
+#define FAILOVER_RETRY_SLEEP  20      /*Seconds between  retries.*/
 
 /**Used to tell a thread to stop _now_, regardless the queue elements left to purge.*/
 #define STOP_URGENT				0x01
@@ -52,8 +52,7 @@ using namespace LHCb;
  * Constructor.
  * Does nothing except initialise member variables.
  */
-Connection::Connection(std::string serverAddr, int serverPort,
-    int /*soTimeout*/, int sndRcvSizes,
+Connection::Connection(std::string serverAddr, int serverPort, int sndRcvSizes,
     MsgStream * log, INotifyClient *nClient) {
 
   m_seqCounter = 0;
@@ -66,7 +65,6 @@ Connection::Connection(std::string serverAddr, int serverPort,
   m_sndRcvSizes = sndRcvSizes;
 
   pthread_mutex_init(&m_failoverLock, NULL);
-
   currThread = MDFWRITER_THREAD;
 }
 
@@ -104,10 +102,6 @@ void Connection::connectAndNegotiate(int startThreads)
 
   //Set options.
   optlen = sizeof(sockoptval);
-  /*ret = setsockopt(m_sockfd, SOL_SOCKET, SO_SNDTIMEO, &soTimeout, optlen);
-    if(ret < 0) {
-   *m_log << MSG::WARNING << "Could not set SND_TIMEO size." << endmsg;
-   }*/
   ret = setsockopt(m_sockfd, SOL_SOCKET, SO_SNDBUF, &m_sndRcvSizes, optlen);
   if(ret < 0) {
     *m_log << MSG::WARNING << "Could not set SO_SNDBUF size." << endmsg;
@@ -121,17 +115,18 @@ void Connection::connectAndNegotiate(int startThreads)
 
     //Resolve the name.
     hostname = gethostbyname(m_serverAddr.c_str());
-    if(!hostname) {
-      throw std::runtime_error("Could not resolve host name.");
+    if(!hostname || hostname->h_length == 0 || hostname->h_addr_list[0] == NULL) {
+    	*m_log << MSG::WARNING << "Could not resolve name : " <<
+    		m_serverAddr.c_str() << ", will retry. . ." << endmsg;
+    	sleep(3);
+    	continue;
     }
 
     //Init the IP address.
     memset(&m_destAddr, 0, sizeof(m_destAddr));
     m_destAddr.sin_family = AF_INET;
     m_destAddr.sin_port = htons(m_serverPort);
-    m_destAddr.sin_addr.s_addr = inet_addr(m_serverAddr.c_str());
-
-    //TODO: Must be a name lookup.
+    memcpy(&m_destAddr.sin_addr.s_addr, hostname->h_addr_list[0], hostname->h_length);
 
     //Connect
     ret = connect(m_sockfd, (struct sockaddr*)&m_destAddr,
@@ -189,6 +184,8 @@ void Connection::closeConnection()
 int Connection::failover()
 {
 	int ret = 0;
+
+
 	/* So that only one thread does failover recovery. */
 	ret = pthread_mutex_trylock(&m_failoverLock);
 	if(ret == EBUSY) {
@@ -197,6 +194,9 @@ int Connection::failover()
 		 */
 		return KILL_THREAD;
 	}
+
+	int oldSendStopLevel = m_stopSending;
+	int oldAckStopLevel = m_stopAcking;
 
 	/*
 	 * This is called only by the sender thread or the
@@ -255,6 +255,14 @@ int Connection::failover()
   	startSendThread();
   	*m_log << "Done" << endmsg;
   }
+
+  /* It could be possible that the failover is taking place
+   * during a finalize()/Connection::closeConnection(), where the
+   * threads were in STOP_AFTER_PURGE state. So for consistency,
+   * we just restore them to whatever state they were in.
+   */
+  m_stopAcking = oldAckStopLevel;
+  m_stopSending = oldSendStopLevel;
 
   *m_log << MSG::INFO << "Successfully failed over. " << endmsg;
   pthread_mutex_unlock(&m_failoverLock);
@@ -388,10 +396,6 @@ start:
     m_ackHeaderReceived += ret;
 
     /* Still haven't received a full acknowledgement header, loop over. */
-
-    std::cout << "SUMDEBUG: Received one package." << m_ackHeaderBuf.min_seq_num
-      << " to " << m_ackHeaderBuf.max_seq_num << std::endl;
-
     if((unsigned)m_ackHeaderReceived < sizeof(struct ack_header))
       continue;
 

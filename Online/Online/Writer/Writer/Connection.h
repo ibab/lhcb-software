@@ -137,8 +137,7 @@ namespace LHCb {
       void setNotifyClient(INotifyClient *nClient) { m_notifyClient = nClient; }
 
       /// Constructor
-      Connection(std::string serverAddr, int serverPort,
-          int /*soTimeout*/, int sndRcvSizes,
+      Connection(std::string serverAddr, int serverPort, int sndRcvSizes,
           MsgStream * log, INotifyClient *nClient);
   };
 
