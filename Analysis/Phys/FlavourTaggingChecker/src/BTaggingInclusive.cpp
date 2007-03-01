@@ -1,8 +1,6 @@
-// $Id: BTaggingInclusive.cpp,v 1.3 2007-02-06 16:51:18 jpalac Exp $
-
+// $Id: BTaggingInclusive.cpp,v 1.4 2007-03-01 21:15:44 musy Exp $
 // local
 #include "BTaggingInclusive.h"
-//#include "Kernel/StringUtils.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : BTaggingInclusive
@@ -27,7 +25,7 @@ DECLARE_ALGORITHM_FACTORY( BTaggingInclusive );
 //=============================================================================
 BTaggingInclusive::BTaggingInclusive( const std::string& name,
                                       ISvcLocator* pSvcLocator)
-  : DVAlgorithm ( name , pSvcLocator )
+  : DVAlgorithm ( name , pSvcLocator )//, m_forcedBtool(0)
 {
   declareProperty("TagsLocation",m_tagslocation = "/Event/Phys/Tags" );
   declareProperty("OSTagsLocation",m_ostagslocation = "/Event/Phys/OSTags" );
@@ -48,6 +46,12 @@ StatusCode BTaggingInclusive::initialize() {
     return StatusCode::FAILURE;
   }
 
+//   m_forcedBtool = tool<IForcedBDecayTool> ( "ForcedBDecayTool", this );
+//   if( ! m_forcedBtool ) {
+//     fatal() << "Unable to retrieve ForcedBDecayTool tool "<< endreq;
+//     return StatusCode::FAILURE;
+//   }
+
   nsele=0;
   for(int i=0; i<50; ++i) { nrt[i]=0; nwt[i]=0; }
 
@@ -66,28 +70,9 @@ StatusCode BTaggingInclusive::execute() {
   // Choose the forced B
   //
   ///////////////////////////////////////
-  MCParticle* B0 = 0;
+  const MCParticle* B0 = forcedB();
+//   const MCParticle* B0 = m_forcedBtool->forcedB();
   MCParticle::Vector B0daughters(0);
-  SmartDataPtr<HepMCEvents> hepVect(eventSvc(), HepMCEventLocation::Default);
-  if ( ! hepVect ) {
-    fatal() << "This event has no HepMCEvent" << endreq;
-    return StatusCode::FAILURE;
-  }
-  for( std::vector<LHCb::HepMCEvent*>::iterator q=hepVect->begin();
-       q!=hepVect->end(); ++q ) {
-    for ( HepMC::GenEvent::particle_iterator 
-	    p  = (*q)->pGenEvt()->particles_begin();
-	    p != (*q)->pGenEvt()->particles_end();   ++p ) {
-      if( (*p)->status() != 889 ) continue;
-      debug()<<"truth search for: "<<(*p)->pdg_id()
-	     <<"  p="<<(*p)->momentum().vect().mag()
-	     <<"  th="<<(*p)->momentum().vect().theta()
-	     <<"  status "<<(*p)->status()<<endreq;
-      B0 = associatedofHEP(*p);
-      if(B0) break; 
-    }
-  }
-  //-------------------
 
   int truetag = B0->particleID().pid()>0 ? 1 : -1;
   int ix = 0;
@@ -112,22 +97,22 @@ StatusCode BTaggingInclusive::execute() {
   debug()<< tags->size()  <<" tags found in "<< m_tagslocation   << endreq;
   debug()<< ostags->size()<<" tags found in "<< m_ostagslocation << endreq;
   //
-    int osmuondec = 0;
-    int oselectrondec = 0;
-    int oskaondec = 0;
-    int sskaondec = 0;
-    int vtxChargedec = 0;
+  int osmuondec = 0;
+  int oselectrondec = 0;
+  int oskaondec = 0;
+  int sskaondec = 0;
+  int vtxChargedec = 0;
     
-    for(FlavourTags::const_iterator it=tags->begin(); it!=tags->end(); it++){
+  for(FlavourTags::const_iterator it=tags->begin(); it!=tags->end(); it++){
    
     std::vector<Tagger> taggers = (*it)->taggers();
     for(size_t i=0;i<taggers.size();++i){
 
-  ////////////////////////////////////////
-  //
-  //   Retrieve Muon tagger decision
-  //   NB: assigned fictious category ix=1
-  ////////////////////////////////////////
+      ////////////////////////////////////////
+      //
+      //   Retrieve Muon tagger decision
+      //   NB: assigned fictious category ix=1
+      ////////////////////////////////////////
 
       if(taggers[i].type() == Tagger::OS_Muon){
         ix = 1;
@@ -135,18 +120,18 @@ StatusCode BTaggingInclusive::execute() {
       
         debug() << "OS Muon decision = " << osmuondec << endmsg;
       
-    info() << "Muon Tagger Decision "
-           << std::setw(3) << truetag
-           << std::setw(3) << ix
-           << std::setw(3) << osmuondec
-           << endreq;
+	info() << "Muon Tagger Decision "
+	       << std::setw(3) << truetag
+	       << std::setw(3) << ix
+	       << std::setw(3) << osmuondec
+	       << endreq;
       }
 
-  ////////////////////////////////////////
-  //
-  //   Retrieve Electron tagger decision
-  //   NB: assigned ficticious category ix=2
-  ////////////////////////////////////////
+      ////////////////////////////////////////
+      //
+      //   Retrieve Electron tagger decision
+      //   NB: assigned ficticious category ix=2
+      ////////////////////////////////////////
 
 
       if(taggers[i].type() == Tagger::OS_Electron){
@@ -155,18 +140,18 @@ StatusCode BTaggingInclusive::execute() {
 
         debug() << "OS Electron decision = " << oselectrondec << endmsg;
       
-    info() << "Electron Tagger Decision "
-           << std::setw(3) << truetag
-           << std::setw(3) << ix
-           << std::setw(3) << oselectrondec
-         << endreq;
+	info() << "Electron Tagger Decision "
+	       << std::setw(3) << truetag
+	       << std::setw(3) << ix
+	       << std::setw(3) << oselectrondec
+	       << endreq;
       }
 
-  ////////////////////////////////////////
-  //
-  //   Retrieve OS Kaon tagger decision
-  //   NB: assigned ficticious category ix=3
-  ////////////////////////////////////////
+      ////////////////////////////////////////
+      //
+      //   Retrieve OS Kaon tagger decision
+      //   NB: assigned ficticious category ix=3
+      ////////////////////////////////////////
 
       if(taggers[i].type() == Tagger::OS_Kaon){
         ix = 3;
@@ -174,18 +159,18 @@ StatusCode BTaggingInclusive::execute() {
 
         debug() << "OS Kaon decision = " << oskaondec << endmsg;
       
-    info() << "OS Kaon Decision "
-           << std::setw(3) << truetag
-           << std::setw(3) << ix
-           << std::setw(3) << oskaondec
-         << endreq;
+	info() << "OS Kaon Decision "
+	       << std::setw(3) << truetag
+	       << std::setw(3) << ix
+	       << std::setw(3) << oskaondec
+	       << endreq;
       }
 
-  ////////////////////////////////////////
-  //
-  //   Retrieve SS Kaon tagger decision
-  //   NB: assigned ficticious category ix=4
-  ////////////////////////////////////////
+      ////////////////////////////////////////
+      //
+      //   Retrieve SS Kaon tagger decision
+      //   NB: assigned ficticious category ix=4
+      ////////////////////////////////////////
 
       if(taggers[i].type() == Tagger::SS_Kaon){
         ix = 4;
@@ -193,18 +178,18 @@ StatusCode BTaggingInclusive::execute() {
 
         debug() << "SS Kaon decision = " << sskaondec << endmsg;
       
-    info() << "SS Kaon Tagger Decision "
-           << std::setw(3) << truetag
-           << std::setw(3) << ix
-           << std::setw(3) << sskaondec
-         << endreq;
+	info() << "SS Kaon Tagger Decision "
+	       << std::setw(3) << truetag
+	       << std::setw(3) << ix
+	       << std::setw(3) << sskaondec
+	       << endreq;
       }
 
-  ////////////////////////////////////////
-  //
-  //   Retrieve VtxCharge tagger decision
-  //   assigned ficticious category ix=5
-  ////////////////////////////////////////
+      ////////////////////////////////////////
+      //
+      //   Retrieve VtxCharge tagger decision
+      //   assigned ficticious category ix=5
+      ////////////////////////////////////////
 
       if(taggers[i].type() == Tagger::VtxCharge){
         ix = 5;
@@ -212,41 +197,41 @@ StatusCode BTaggingInclusive::execute() {
 
         debug() << "VtxCharge decision = " << vtxChargedec << endmsg;
       
-    info() << "VtxCharge Tagger Decision "
-           << std::setw(3) << truetag
-           << std::setw(3) << ix
-           << std::setw(3) << vtxChargedec
-         << endreq;
+	info() << "VtxCharge Tagger Decision "
+	       << std::setw(3) << truetag
+	       << std::setw(3) << ix
+	       << std::setw(3) << vtxChargedec
+	       << endreq;
       }
 
       if (ix > 5) continue; 
       // m_debug->printTree( (*it)->taggedB() );
     }
     
-    }
+  }
     
-    //////////////////////////////////////////////////////////////
-    //
-    //  Count right-tags and wrong-tags, first compare to truetag
-    //
-    //////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////
+  //
+  //  Count right-tags and wrong-tags, first compare to truetag
+  //
+  //////////////////////////////////////////////////////////////
 
-    nsele++;
+  nsele++;
 
-    if (osmuondec == truetag) {ix=1; nrt[ix]++;}
-    if (osmuondec == -truetag) {ix=1; nwt[ix]++;}
+  if (osmuondec == truetag) {ix=1; nrt[ix]++;}
+  if (osmuondec == -truetag) {ix=1; nwt[ix]++;}
  
-    if (oselectrondec == truetag) {ix=2; nrt[ix]++;}
-    if (oselectrondec == -truetag) {ix=2; nwt[ix]++;}
+  if (oselectrondec == truetag) {ix=2; nrt[ix]++;}
+  if (oselectrondec == -truetag) {ix=2; nwt[ix]++;}
 
-    if (oskaondec == truetag) {ix=3; nrt[ix]++;}
-    if (oskaondec == -truetag) {ix=3; nwt[ix]++;}
+  if (oskaondec == truetag) {ix=3; nrt[ix]++;}
+  if (oskaondec == -truetag) {ix=3; nwt[ix]++;}
 
-    if (sskaondec == truetag) {ix=4; nrt[ix]++;}
-    if (sskaondec == -truetag) {ix=4; nwt[ix]++;}
+  if (sskaondec == truetag) {ix=4; nrt[ix]++;}
+  if (sskaondec == -truetag) {ix=4; nwt[ix]++;}
 
-    if (vtxChargedec == truetag) {ix=5; nrt[ix]++;}
-    if (vtxChargedec == -truetag) {ix=5; nwt[ix]++;}
+  if (vtxChargedec == truetag) {ix=5; nrt[ix]++;}
+  if (vtxChargedec == -truetag) {ix=5; nwt[ix]++;}
 
   setFilterPassed(true);   // Mandatory. Set to true if event is accepted.
   return StatusCode::SUCCESS;
@@ -257,7 +242,7 @@ StatusCode BTaggingInclusive::execute() {
 //=============================================================================
 StatusCode BTaggingInclusive::finalize() {
 
- MsgStream req( msgSvc(), name() );
+  MsgStream req( msgSvc(), name() );
 
   ///////////////////////////////////////////////////////////
   //
@@ -272,9 +257,9 @@ StatusCode BTaggingInclusive::finalize() {
 
   info()<<"======================================================="<<endmsg;
   info()<< std::setw(40)<< "INCLUSIVE BTAGGING PERFORMANCE " <<endmsg;
- info()<<"======================================================="<<endmsg; 
- info()<< std::setw(10) <<"  Tagger           EFF        Etag          Wrong TF"
-       <<" r       w "<<endmsg;
+  info()<<"======================================================="<<endmsg; 
+  info()<< std::setw(10) <<"  Tagger           EFF        Etag          Wrong TF"
+	<<" r       w "<<endmsg;
 
   for( int it=1; it < 6; it++ ) {
   
@@ -329,11 +314,30 @@ StatusCode BTaggingInclusive::finalize() {
 
   return  StatusCode::SUCCESS;
 }
-
 //=============================================================================
+const MCParticle* BTaggingInclusive::forcedB() {
+
+  //check what is the B forced to decay
+  const MCParticle *BS = 0;
+  HepMCEvents* hepVect = get<HepMCEvents>( HepMCEventLocation::Default );
+
+  for( std::vector<HepMCEvent*>::iterator q=hepVect->begin();
+       q!=hepVect->end(); ++q ) {
+    for ( HepMC::GenEvent::particle_iterator 
+	    p  = (*q)->pGenEvt()->particles_begin();
+	  p != (*q)->pGenEvt()->particles_end();   ++p ) {
+      if( (*p)->status() != 889 ) continue;
+      BS = associatedofHEP(*p);
+      if(BS) break; 
+    }
+  }
+  return BS;
+
+}
+//============================================================================
 MCParticle* BTaggingInclusive::associatedofHEP(HepMC::GenParticle* hepmcp) {
 
-  SmartDataPtr<MCParticles> mcpart (eventSvc(), MCParticleLocation::Default );
+  MCParticles* mcpart = get<MCParticles> ( MCParticleLocation::Default );
 
   int mid = hepmcp->pdg_id();
   double mothmom = hepmcp->momentum().vect().mag();
@@ -350,3 +354,4 @@ MCParticle* BTaggingInclusive::associatedofHEP(HepMC::GenParticle* hepmcp) {
   }
   return 0;
 }
+

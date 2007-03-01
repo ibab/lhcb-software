@@ -1,4 +1,4 @@
-// $Id: BTaggingChecker.h,v 1.3 2006-11-03 20:51:41 musy Exp $
+// $Id: BTaggingChecker.h,v 1.4 2007-03-01 21:15:44 musy Exp $
 #ifndef BTAGGINGCHECKER_H 
 #define BTAGGINGCHECKER_H 1
 
@@ -12,6 +12,9 @@
 
 // from DaVinci
 #include "Kernel/DVAlgorithm.h"
+
+// from local
+//#include "IForcedBDecayTool.h"
 
 /** @class BTaggingChecker BTaggingChecker.h
  *  
@@ -30,14 +33,14 @@ class BTaggingChecker : public DVAlgorithm {
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
- protected:
-  LHCb::MCParticle* findBForcedToDecay( void );
-  LHCb::MCParticle* associatedofHEP( HepMC::GenParticle* );
-
  private:
   /// Vector of locations of the tags to monitor
   std::string m_tags_location; 
   IDebugTool* m_debug;
+
+  //IForcedBDecayTool* m_forcedBtool;
+  const LHCb::MCParticle* forcedB(void);
+  LHCb::MCParticle* associatedofHEP(HepMC::GenParticle* );
 
   int nsele,nrt[50],nwt[50];
 

@@ -14,5 +14,6 @@ DECLARE_FACTORY_ENTRIES(FlavourTaggingChecker) {
   DECLARE_ALGORITHM(BTaggingChecker);
   DECLARE_ALGORITHM(DoubleTagCorrelation);
   DECLARE_ALGORITHM(BTaggingAnalysis);
+  //DECLARE_TOOL(ForcedBDecayTool);
   
 }

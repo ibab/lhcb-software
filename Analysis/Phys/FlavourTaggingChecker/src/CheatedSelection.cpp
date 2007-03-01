@@ -17,9 +17,9 @@ DECLARE_ALGORITHM_FACTORY( CheatedSelection );
 // Standard constructor, initializes variables
 //=============================================================================
 CheatedSelection::CheatedSelection( const std::string& name,
-				    ISvcLocator* pSvcLocator)
-  : DVAlgorithm ( name , pSvcLocator ) 
-, m_linkLinks(0)
+                                    ISvcLocator* pSvcLocator)
+  : DVAlgorithm ( name , pSvcLocator )
+  , m_debug(0), m_linker(0)//, m_forcedBtool(0)
 {
   declareProperty( "BMassWindow", m_BMassWindow = 100.0 ); //MeV
   declareProperty( "AssociatorInputData", m_setInputData );
@@ -27,18 +27,18 @@ CheatedSelection::CheatedSelection( const std::string& name,
 }
 
 //=============================================================================
-CheatedSelection::~CheatedSelection() {}; 
+CheatedSelection::~CheatedSelection() {};
 
 //=============================================================================
 StatusCode CheatedSelection::initialize() {
 
   debug() << "CheatedSelection initialize"<< endreq;
 
-  m_linkLinks = new Particle2MCLinker( this, 
-				       Particle2MCMethod::Chi2,
-				       //Particle2MCMethod::Links , 
-				       m_setInputData);
-  if( !m_linkLinks ) {
+  m_linker = new Particle2MCLinker( this,
+				    Particle2MCMethod::Chi2,
+				    //Particle2MCMethod::Links,
+				    m_setInputData );
+  if( !m_linker ) {
     fatal()<< "Unable to retrieve Link Associator tool"<<endreq;
     return StatusCode::FAILURE;
   }
@@ -49,6 +49,12 @@ StatusCode CheatedSelection::initialize() {
     return StatusCode::FAILURE;
   }
 
+//   m_forcedBtool = tool<IForcedBDecayTool> ( "ForcedBDecayTool", this );
+//   if( ! m_forcedBtool ) {
+//     fatal() << "Unable to retrieve ForcedBDecayTool tool "<< endreq;
+//     return StatusCode::FAILURE;
+//   }
+
   return StatusCode::SUCCESS;
 }
 
@@ -56,58 +62,35 @@ StatusCode CheatedSelection::initialize() {
 // Main execution
 //=============================================================================
 StatusCode CheatedSelection::execute() {
-  
+
   setFilterPassed( false );
 
   debug() << "-> Processing CheatedSelection " <<endreq;
-  
+
   ////////////////////////////////////////////////////
   //check what is the B forced to decay
-  const MCParticle*     mcSignal = 0;
   Particle::ConstVector axdaughter(0);
   MCParticle::Vector    mcdaughter(0) ;
+//   const MCParticle*     mcSignal = m_forcedBtool->forcedB();
+  const MCParticle*     mcSignal = forcedB();
 
-  SmartDataPtr<HepMCEvents> hepVect(eventSvc(), HepMCEventLocation::Default);
-  if ( ! hepVect ) {
-    fatal() << "This event has no HepMCEvent" << endreq;
-    return StatusCode::FAILURE;
-  }
-
-  int iq=0;
-  for( std::vector<LHCb::HepMCEvent*>::iterator q=hepVect->begin();
-       q!=hepVect->end(); ++q ) {
-    for ( HepMC::GenEvent::particle_iterator 
-	    p  = (*q)->pGenEvt()->particles_begin();
-	    p != (*q)->pGenEvt()->particles_end();   ++p ) {
-      if( (*p)->status() != 889 ) continue;
-      debug()<<"Search for: "<<(*p)->pdg_id()
-	     <<"  p="<<(*p)->momentum().vect().mag()
-	     <<"  th="<<(*p)->momentum().vect().theta()
-	     <<"  status "<<(*p)->status()
-	     <<"  nr:"<<iq<<endreq;
-      mcSignal = associatedofHEP(*p);
-      ++iq;
-      if(mcSignal) break; 
-    }
-  }
   if(mcSignal){
     debug()<<"Found B="<<mcSignal->particleID().pid()<<endreq;
-    if(iq>1) debug()<<"More than one B found?"<<endreq;
   } else return StatusCode::SUCCESS;
 
   SignalTree( mcSignal, mcdaughter, axdaughter ); //fills daughter vectors
 
   Gaudi::LorentzVector ptotmc(0,0,0,0);
-  for ( MCParticle::Vector::iterator imcpart = mcdaughter.begin(); 
-	imcpart != mcdaughter.end(); imcpart++) 
-        ptotmc += (*imcpart)->momentum();
+  for ( MCParticle::Vector::iterator imcpart = mcdaughter.begin();
+        imcpart != mcdaughter.end(); imcpart++)
+    ptotmc += (*imcpart)->momentum();
   debug() << "Calculated signal MCmass= " <<ptotmc.M()<<endreq;
   if( fabs(ptotmc.M() - mcSignal->momentum().M()) < m_BMassWindow) {
     m_debug -> printTree(mcSignal);
   } else return StatusCode::SUCCESS;
-	  
+
   //----------------------------------------------------------------------
-  // Create candidate B 
+  // Create candidate B
 
   Vertex* VertB = new Vertex;
   VertB->clearOutgoingParticles( );
@@ -118,7 +101,7 @@ StatusCode CheatedSelection::execute() {
     ptot += (*ip)->momentum();
   }
 
-  //and set vertex position  
+  //and set vertex position
   VertB->setPosition( mcSignal->endVertices().at(0)->position() );
 
   Particle* candB = new Particle;
@@ -128,36 +111,35 @@ StatusCode CheatedSelection::execute() {
   candB->setReferencePoint(mcSignal->endVertices().at(0)->position());
 
   debug() << "Reconstructed "<< candB->particleID().pid()
-	  << " with m="      << candB->momentum().M()
-	  << " p="           << candB->p()/Gaudi::Units::GeV 
-	  << " pt="          << candB->pt()/Gaudi::Units::GeV <<endreq;
+          << " with m="      << candB->momentum().M()
+          << " p="           << candB->p()/Gaudi::Units::GeV
+          << " pt="          << candB->pt()/Gaudi::Units::GeV <<endreq;
 
   // save desktop to TES in location specified by jobOptions
   axdaughter.push_back(candB);
   debug()<<"Going to save this B hypo to TES with "<<axdaughter.size()-1
-	 <<" daughters."<<endreq;
+         <<" daughters."<<endreq;
   StatusCode sc = desktop()->saveTrees(axdaughter);
   if (sc.isFailure()) {
     warning() << "Unable to save Tree to TES" << endreq;
     return StatusCode::SUCCESS;
   }
 
-  info() << "BTAGGING MCB   " 
-	 << originof(mcdaughter.at(0))->particleID().pid()<<endreq;
+  info() << "BTAGGING MCB   " << mcSignal->particleID().pid()<<endreq;
 
   setFilterPassed( true );
   return StatusCode::SUCCESS;
 }
 //=============================================================================
-StatusCode CheatedSelection::finalize() { 
-  if( NULL != m_linkLinks ) delete m_linkLinks;
-  return StatusCode::SUCCESS; 
+StatusCode CheatedSelection::finalize() {
+  if( NULL != m_linker ) delete m_linker;
+  return StatusCode::SUCCESS;
 }
 
 //============================================================================
-void CheatedSelection::SignalTree(const MCParticle* B0, 
-				  MCParticle::Vector& mcdaughters, 
-				  Particle::ConstVector& daughters) {
+void CheatedSelection::SignalTree(const MCParticle* B0,
+                                  MCParticle::Vector& mcdaughters,
+                                  Particle::ConstVector& daughters) {
   daughters.clear();
   mcdaughters.clear();
 
@@ -168,38 +150,58 @@ void CheatedSelection::SignalTree(const MCParticle* B0,
 
     if( originof(*imc) == B0 ) {
 
-      Particle* axp = m_linkLinks->firstP( *imc ); 
+      Particle* axp = m_linker->firstP( *imc );
       if( axp ) {
-	m_debug -> printAncestor(*imc);
-	debug() << "ID=" << axp->particleID().pid()
-		<< " mcp=" << (*imc)->p()/Gaudi::Units::GeV
-		<< " axp=" << axp->p()/Gaudi::Units::GeV <<endreq;
-	if((*imc)->particleID().abspid() != axp->particleID().abspid()) {
-	  debug() << "Mis-ID true " << (*imc)->particleID().pid() 
-		  << " reconst as " << axp->particleID().pid() << endreq;
-	  double mcmass = (*imc)->momentum().M();
-	  Gaudi::LorentzVector pax = axp->momentum();
-	  Gaudi::LorentzVector newpax( pax.x(), pax.y(), pax.z(),
-				       sqrt(pax.Vect().Mag2()+mcmass*mcmass) );
-	  axp->setMomentum(newpax); //OVERWRITE mass and PID
-	  axp->setParticleID((*imc)->particleID());
-	}
-	mcdaughters.push_back(*imc);
-	daughters.push_back(axp);
-      }
+        m_debug -> printAncestor(*imc);
+        debug() << "ID=" << axp->particleID().pid()
+                << " mcp=" << (*imc)->p()/Gaudi::Units::GeV
+                << " axp=" << axp->p()/Gaudi::Units::GeV
+                <<endreq;
+        if((*imc)->particleID().abspid() != axp->particleID().abspid()) {
+          debug() << "Mis-ID true " << (*imc)->particleID().pid()
+                  << " reconst as " << axp->particleID().pid() << endreq;
+          double mcmass = (*imc)->momentum().M();
+          Gaudi::LorentzVector pax = axp->momentum();
+          Gaudi::LorentzVector newpax( pax.x(), pax.y(), pax.z(),
+                                       sqrt(pax.Vect().Mag2()+mcmass*mcmass) );
+          axp->setMomentum(newpax); //OVERWRITE mass and PID
+          axp->setParticleID((*imc)->particleID());
+        }
+        mcdaughters.push_back(*imc);
+        daughters.push_back(axp);
+      }      
     }
   }
 }
 //============================================================================
 const MCParticle* CheatedSelection::originof( const MCParticle* product ) {
   const MCParticle* mother = product->mother();
-  if ( (!mother) || product->particleID().hasBottom() ) return product; 
+  if ( (!mother) || product->particleID().hasBottom() ) return product;
   else return originof( mother );
+}
+const MCParticle* CheatedSelection::forcedB() {
+
+  //check what is the B forced to decay
+  const MCParticle *BS = 0;
+  HepMCEvents* hepVect = get<HepMCEvents>( HepMCEventLocation::Default );
+
+  for( std::vector<HepMCEvent*>::iterator q=hepVect->begin();
+       q!=hepVect->end(); ++q ) {
+    for ( HepMC::GenEvent::particle_iterator 
+	    p  = (*q)->pGenEvt()->particles_begin();
+	  p != (*q)->pGenEvt()->particles_end();   ++p ) {
+      if( (*p)->status() != 889 ) continue;
+      BS = associatedofHEP(*p);
+      if(BS) break; 
+    }
+  }
+  return BS;
+
 }
 //============================================================================
 MCParticle* CheatedSelection::associatedofHEP(HepMC::GenParticle* hepmcp) {
 
-  SmartDataPtr<MCParticles> mcpart (eventSvc(), MCParticleLocation::Default );
+  MCParticles* mcpart = get<MCParticles> ( MCParticleLocation::Default );
 
   int mid = hepmcp->pdg_id();
   double mothmom = hepmcp->momentum().vect().mag();
@@ -216,4 +218,3 @@ MCParticle* CheatedSelection::associatedofHEP(HepMC::GenParticle* hepmcp) {
   }
   return 0;
 }
-//============================================================================

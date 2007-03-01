@@ -1,4 +1,4 @@
-// $Id: CheatedSelection.h,v 1.3 2006-11-10 15:00:43 musy Exp $
+// $Id: CheatedSelection.h,v 1.4 2007-03-01 21:15:44 musy Exp $
 #ifndef USER_CheatedSelection_H 
 #define USER_CheatedSelection_H 1
 
@@ -12,6 +12,9 @@
 
 // from Associators
 #include "DaVinciAssociators/Particle2MCLinker.h"
+
+// from local
+//#include "IForcedBDecayTool.h"
 
 /** @class CheatedSelection CheatedSelection.h 
  *  
@@ -38,17 +41,18 @@ class CheatedSelection : public DVAlgorithm {
   void SignalTree( const LHCb::MCParticle*, 
 		   LHCb::MCParticle::Vector& , 
 		   LHCb::Particle::ConstVector& );
-  
-  double m_BHEPm;
-  IDebugTool* m_debug;
 
-  Particle2MCLinker* m_linkLinks; ///< Pointer to associator using links
+  IDebugTool* m_debug;
+  Particle2MCLinker* m_linker; ///< Pointer to associator using links
+
+  //IForcedBDecayTool* m_forcedBtool;
+  const LHCb::MCParticle* forcedB(void);
+  LHCb::MCParticle* associatedofHEP(HepMC::GenParticle* ) ;
+
   std::vector<std::string> m_setInputData;
 
   //properties
   double m_BMassWindow;
-
-  LHCb::MCParticle* associatedofHEP(HepMC::GenParticle* );
 
 };
 //===========================================================================//

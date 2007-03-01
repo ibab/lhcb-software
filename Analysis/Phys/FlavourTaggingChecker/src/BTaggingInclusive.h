@@ -17,6 +17,9 @@
 // from DaVinci
 #include "Kernel/DVAlgorithm.h"
 
+// from local
+//#include "IForcedBDecayTool.h"
+
 /** @class BTaggingInclusive BTaggingInclusive.h debug/BTaggingInclusive.h
  *  
  *
@@ -39,9 +42,12 @@ public:
   /// Vector of locations of the tags to monitor
   std::string m_tagslocation; 
   std::string m_ostagslocation;
-  LHCb::MCParticle* associatedofHEP(HepMC::GenParticle* );
 
   IDebugTool* m_debug;
+
+  //IForcedBDecayTool* m_forcedBtool;
+  const LHCb::MCParticle* forcedB(void);
+  LHCb::MCParticle* associatedofHEP(HepMC::GenParticle* ) ;
 
   int nsele,nrt[50],nwt[50];
  

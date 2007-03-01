@@ -1,6 +1,5 @@
-// $Id: DoubleTagCorrelation.cpp,v 1.2 2006-10-24 10:21:07 jpalac Exp $
+// $Id: DoubleTagCorrelation.cpp,v 1.3 2007-03-01 21:15:44 musy Exp $
 #include "DoubleTagCorrelation.h"
-//#include "Kernel/StringUtils.h"
 
 //--------------------------------------------------------------------------
 // Implementation file for class : DoubleTagCorrelation
@@ -17,10 +16,7 @@ DECLARE_ALGORITHM_FACTORY( DoubleTagCorrelation );
 //==========================================================================
 DoubleTagCorrelation::DoubleTagCorrelation( const std::string& name,
 					    ISvcLocator* pSvcLocator )
-  : DVAlgorithm ( name , pSvcLocator ) 
-  , m_setDecay(false)
-  , m_evtTypeSvc(NULL)
-  , m_mcFinder(NULL)
+  : DVAlgorithm ( name , pSvcLocator ), m_debug(0)//, m_forcedBtool(0)
 {  
   declareProperty("TagsLocation",m_tagslocation = "/Event/Phys/Tags" );
   declareProperty("OSTagsLocation",m_ostagslocation = "/Event/Phys/OSTags" );
@@ -40,22 +36,11 @@ StatusCode DoubleTagCorrelation::initialize() {
     fatal() << "Unable to retrieve Debug tool "<< endreq;
     return StatusCode::FAILURE;
   }
-
-  // Retrieve the EvtTypeSvc here so that it is always done at initialization
-  m_evtTypeSvc = svc<IEvtTypeSvc>( "EvtTypeSvc", true );  
-  // Check that EvtType code has been set with appropriate value
-  // if it will not be read from data
-  if( !m_fromData ) {
-    if(  m_evtCode == 0 ) {
-      fatal() << "With EvtCodeFromData = false you MUST set EvtCode"<< endmsg;
-      return StatusCode::FAILURE;
-    }
-    // Set the decay descriptor to pass to the MCDecayFinder if using evtCode
-    if( (setDecayToFind( m_evtCode )).isFailure() ) {
-      fatal() << " 'setDecayToFind' failed in 'initialize' "<< endmsg;
-      return StatusCode::FAILURE;
-    }
-  }
+//   m_forcedBtool = tool<IForcedBDecayTool> ( "ForcedBDecayTool", this );
+//   if( ! m_forcedBtool ) {
+//     fatal() << "Unable to retrieve ForcedBDecayTool tool "<< endreq;
+//     return StatusCode::FAILURE;
+//   }
 
   for(int i=0;i<2;++i) for(int j=0;j<2;++j) matrix[i][j] = 0;  
 
@@ -70,24 +55,11 @@ StatusCode DoubleTagCorrelation::execute() {
   setFilterPassed( false );
 
   //choose the forced B
-  MCParticle* B0 = 0;
+//   const MCParticle* B0 =  m_forcedBtool->forcedB();
+  const MCParticle* B0 =  forcedB();
   MCParticle::Vector B0daughters(0);
-
-  if( m_fromData && !m_setDecay ) {
-    LHCb::GenHeader* header = 
-      get<LHCb::GenHeader>( evtSvc(), LHCb::GenHeaderLocation::Default );
-    if( setDecayToFind( header->evType()) ) {
-      fatal() << " 'setDecayToFind' failed in 'execute' "<< endmsg;
-      return StatusCode::FAILURE;
-    }
-  }
-  if( m_mcFinder ) if( m_mcFinder->hasDecay() ){
-    m_mcFinder->decayMembers( B0, B0daughters );
-    debug()<<" Analysing decay: "<<m_mcFinder->decay()<< endmsg;
-  }
-  //-------------------
-
   int truetag = B0->particleID().pid()>0 ? 1 : -1;
+  //-------------------
 
   //look in TagLocation
   FlavourTags* tags;
@@ -135,35 +107,50 @@ StatusCode DoubleTagCorrelation::execute() {
     else if( !kaonright &&  osright ) ++matrix[0][1];
     else debug() << "Another decision?" << endmsg;
     
-    //m_debug->printTree( (*it)->taggedB() );
     ++ntags;
   }
 
   setFilterPassed( true );
   return StatusCode::SUCCESS;
 };
-//=============================================================================
-StatusCode DoubleTagCorrelation::setDecayToFind( const int evtCode ) {
- 
-  // Check if code exist
-  if( !(m_evtTypeSvc->typeExists( evtCode )) ) {
-    fatal() << "EvtCode " << evtCode << "is not known by the EvtTypeSvc"
-            << endmsg;
-    return StatusCode::FAILURE;
+const MCParticle* DoubleTagCorrelation::forcedB() {
+
+  //check what is the B forced to decay
+  const MCParticle *BS = 0;
+  HepMCEvents* hepVect = get<HepMCEvents>( HepMCEventLocation::Default );
+
+  for( std::vector<HepMCEvent*>::iterator q=hepVect->begin();
+       q!=hepVect->end(); ++q ) {
+    for ( HepMC::GenEvent::particle_iterator 
+	    p  = (*q)->pGenEvt()->particles_begin();
+	  p != (*q)->pGenEvt()->particles_end();   ++p ) {
+      if( (*p)->status() != 889 ) continue;
+      BS = associatedofHEP(*p);
+      if(BS) break; 
+    }
   }
-   
-  // Retrieve tool and set decay descriptor
-  m_mcFinder = tool<IMCDecayFinder>( "MCDecayFinder", this );
-  std::string sdecay = m_evtTypeSvc->decayDescriptor( evtCode );
-  if( (m_mcFinder->setDecay( sdecay )).isFailure() ) {
-    fatal() << "Unable to set decay for EvtCode " << evtCode << endmsg;
-    return StatusCode::FAILURE;
+  return BS;
+
+}
+//============================================================================
+MCParticle* DoubleTagCorrelation::associatedofHEP(HepMC::GenParticle* hepmcp) {
+
+  MCParticles* mcpart = get<MCParticles> ( MCParticleLocation::Default );
+
+  int mid = hepmcp->pdg_id();
+  double mothmom = hepmcp->momentum().vect().mag();
+  double moththeta = hepmcp->momentum().vect().theta();
+  MCParticles::const_iterator imc;
+  for ( imc = mcpart->begin(); imc != mcpart->end(); ++imc ) {
+    if( mid == (*imc)->particleID().pid() ) {
+      if( fabs(mothmom - (*imc)->momentum().P())< 1.0){
+	if( fabs(moththeta -(*imc)->momentum().Theta())< 0.0001){
+	  return (*imc);
+	}
+      }
+    }
   }
-   
-  m_setDecay = true;
-  m_evtCode  = evtCode;   // in case called when reading data
-     
-  return StatusCode::SUCCESS;
+  return 0;
 }
 
 //==========================================================================

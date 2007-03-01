@@ -1,7 +1,8 @@
-// $Id: BTaggingChecker.cpp,v 1.6 2006-11-03 20:51:40 musy Exp $
+// $Id: BTaggingChecker.cpp,v 1.7 2007-03-01 21:15:44 musy Exp $
 // local
+//#include "Kernel/StringUtils.h"
+
 #include "BTaggingChecker.h"
-#include "Kernel/StringUtils.h"
 
 //--------------------------------------------------------------------------
 // Implementation file for class : BTaggingChecker
@@ -18,7 +19,8 @@ DECLARE_ALGORITHM_FACTORY( BTaggingChecker );
 //==========================================================================
 BTaggingChecker::BTaggingChecker( const std::string& name,
 				  ISvcLocator* pSvcLocator )
-  : DVAlgorithm ( name , pSvcLocator ) {
+  : DVAlgorithm ( name , pSvcLocator )//, m_forcedBtool(0) 
+{
   declareProperty("TagsLocation", 
 		  m_tags_location = FlavourTagLocation::Default );
 }
@@ -34,6 +36,11 @@ StatusCode BTaggingChecker::initialize() {
     fatal() << "Unable to retrieve Debug tool "<< endreq;
     return StatusCode::FAILURE;
   }
+//   m_forcedBtool = tool<IForcedBDecayTool> ( "ForcedBDecayTool", this );
+//   if( ! m_forcedBtool ) {
+//     fatal() << "Unable to retrieve ForcedBDecayTool tool "<< endreq;
+//     return StatusCode::FAILURE;
+//   }
 
   nsele=0;
   for(int i=0; i<50; ++i) { nrt[i]=0; nwt[i]=0; }
@@ -48,13 +55,14 @@ StatusCode BTaggingChecker::execute() {
  
   setFilterPassed( false );
 
-  ///////////////////////////////////////
+  ////////////////////////////////////////////////////
   // Find the forced B
-  MCParticle* B0 = findBForcedToDecay();
-  ///////////////////////////////////////
+  //const MCParticle* BS =  m_forcedBtool->forcedB();
+  const MCParticle* BS =  forcedB();
+  ////////////////////////////////////////////////////
 
   int tagdecision=0, ix=0;
-  int truetag = B0->particleID().pid()>0 ? 1 : -1;
+  int truetag = BS->particleID().pid()>0 ? 1 : -1;
 
   //look in TagLocation
   FlavourTags* tags(0);
@@ -176,29 +184,31 @@ StatusCode BTaggingChecker::finalize(){
 
   return StatusCode::SUCCESS; 
 }
-//==========================================================================
-MCParticle* BTaggingChecker::findBForcedToDecay( void ) {
+const MCParticle* BTaggingChecker::forcedB() {
 
-  MCParticle* mcSignal = 0;
-  SmartDataPtr<HepMCEvents> hepVect(eventSvc(), HepMCEventLocation::Default);
-  if ( ! hepVect ) return mcSignal;
-  for( std::vector<LHCb::HepMCEvent*>::iterator q=hepVect->begin();
+  //check what is the B forced to decay
+  const MCParticle *BS = 0;
+  HepMCEvents* hepVect = get<HepMCEvents>( HepMCEventLocation::Default );
+
+  for( std::vector<HepMCEvent*>::iterator q=hepVect->begin();
        q!=hepVect->end(); ++q ) {
     for ( HepMC::GenEvent::particle_iterator 
 	    p  = (*q)->pGenEvt()->particles_begin();
-	    p != (*q)->pGenEvt()->particles_end();   ++p ) {
+	  p != (*q)->pGenEvt()->particles_end();   ++p ) {
       if( (*p)->status() != 889 ) continue;
-      mcSignal = associatedofHEP(*p);
-      if(mcSignal) break; 
+      BS = associatedofHEP(*p);
+      if(BS) break; 
     }
   }
-  return mcSignal;
+  return BS;
+
 }
 MCParticle* BTaggingChecker::associatedofHEP(HepMC::GenParticle* hepmcp) {
 
-  SmartDataPtr<MCParticles> mcpart (eventSvc(), MCParticleLocation::Default );
+  MCParticles* mcpart = get<MCParticles> ( MCParticleLocation::Default );
+
   int mid = hepmcp->pdg_id();
-  double mothmom   = hepmcp->momentum().vect().mag();
+  double mothmom = hepmcp->momentum().vect().mag();
   double moththeta = hepmcp->momentum().vect().theta();
   MCParticles::const_iterator imc;
   for ( imc = mcpart->begin(); imc != mcpart->end(); ++imc ) {
@@ -212,4 +222,3 @@ MCParticle* BTaggingChecker::associatedofHEP(HepMC::GenParticle* hepmcp) {
   }
   return 0;
 }
-//==========================================================================

@@ -15,6 +15,9 @@
 // from DaVinci
 #include "Kernel/DVAlgorithm.h"
 
+// from local
+//#include "IForcedBDecayTool.h"
+
 /** @class DoubleTagCorrelation DoubleTagCorrelation.h
  *  
  *  Algorithm to evaluate OS/SS tag correlation
@@ -34,20 +37,16 @@ class DoubleTagCorrelation : public DVAlgorithm {
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
- protected:
-  StatusCode setDecayToFind( const int evtCode );
-
  private:
   /// Vector of locations of the tags to monitor
   std::string m_tagslocation; 
   std::string m_ostagslocation;
 
-  bool            m_fromData;        ///< flag read event code from data
-  int             m_evtCode;         ///< event code to test
-  bool            m_setDecay;        ///< Flag is decay has been set
-  IEvtTypeSvc*    m_evtTypeSvc;      ///< Pointer to service
-  IMCDecayFinder* m_mcFinder;        ///< Pointer to tool
   IDebugTool* m_debug;
+
+  //IForcedBDecayTool* m_forcedBtool;
+  const LHCb::MCParticle* forcedB(void);
+  LHCb::MCParticle* associatedofHEP(HepMC::GenParticle* ) ;
 
   int** matrix;
 

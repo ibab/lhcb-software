@@ -9,6 +9,7 @@ ApplicationMgr.ExtSvc              += { "NTupleSvc" };
 NTupleSvc.Output={"FILE1 DATAFILE='DVNtuples.hbook' TYP='HBOOK' OPT='NEW'"};
 
 CheatedSelection.OutputLevel = 2;
+CheatedSelection.DebugTool.OutputLevel= 2;
 
 MessageSvc.Format = "% F%40W%S%7W%R%T %0W%M";
 //---------------------------------------------------
