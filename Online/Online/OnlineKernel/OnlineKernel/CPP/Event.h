@@ -7,7 +7,8 @@ enum EventType {
   UpiEvent,
   IocEvent,
   QioEvent,
-  TkEvent
+  TkEvent,
+  PVSSEvent
 };
 
 class Message;

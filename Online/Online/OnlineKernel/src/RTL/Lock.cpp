@@ -1,6 +1,3 @@
-/*
-** QUEUE ROUTINES BY TIM CHARITY - Sep 89
-*/
 #include "RTL/Lock.h"
 #include <cerrno>
 #include <cstdio>
