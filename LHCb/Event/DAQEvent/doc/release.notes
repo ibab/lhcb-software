@@ -4,6 +4,10 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !----------------------------------------------------------------------
 
+!================ DAQEvent v7r2 2007-03-01 ============================
+! 2007-03-01 - Marco Cattaneo
+ - Remove obsolete DAQEvent_load.cpp file
+
 ! 2007-02-28 - Marco Clemencic
  - Replaced "static const CLID&" with "static const CLID"
 
