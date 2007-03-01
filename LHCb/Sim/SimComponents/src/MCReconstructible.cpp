@@ -5,7 +5,7 @@
  *  Implementation file for class : MCReconstructible
  *
  *  CVS Log :-
- *  $Id: MCReconstructible.cpp,v 1.2 2007-03-01 20:24:56 jonrob Exp $
+ *  $Id: MCReconstructible.cpp,v 1.3 2007-03-01 20:46:53 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 28/02/2007
@@ -78,6 +78,7 @@ void MCReconstructible::handle ( const Incident& incident )
 {
   if ( IncidentType::BeginEvent == incident.type() )
   {
+    delete m_tkInfo;
     m_tkInfo = NULL;
   }
 }
