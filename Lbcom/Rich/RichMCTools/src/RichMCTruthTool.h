@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::MC::MCTruthTool
  *
  *  CVS Log :-
- *  $Id: RichMCTruthTool.h,v 1.32 2007-02-01 17:50:13 jonrob Exp $
+ *  $Id: RichMCTruthTool.h,v 1.33 2007-03-01 20:05:15 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -27,6 +27,7 @@
 // Kernel
 #include "RichKernel/RichMap.h"
 #include "Kernel/RichParticleIDType.h"
+#include "RichKernel/RichPixelCluster.h"
 
 // Event model
 #include "Kernel/RichParticleIDType.h"
@@ -45,27 +46,12 @@
 // Interfaces
 #include "RichKernel/IRichMCTruthTool.h"
 
-//-----------------------------------------------------------------------------
-/** @namespace Rich
- *
- *  General namespace for RICH software
- *
- *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
- *  @date   08/07/2004
- */
-//-----------------------------------------------------------------------------
+// boost
+//#include "boost/lambda/bind.hpp"
+//#include "boost/lambda/lambda.hpp"
+
 namespace Rich
 {
-
-  //-----------------------------------------------------------------------------
-  /** @namespace MC
-   *
-   *  General namespace for RICH MC related software
-   *
-   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
-   *  @date   05/12/2006
-   */
-  //-----------------------------------------------------------------------------
   namespace MC
   {
 
@@ -149,6 +135,29 @@ namespace Rich
 
       // Checks if RICH extended MC information (MCRichOpticalPhoton, MCRichSegment etc.)
       bool extendedMCAvailable() const;
+
+      // new ones
+
+      // Get the MCRichHits associated to a cluster of RichSmartIDs
+      void
+      mcRichHits( const Rich::HPDPixelCluster& cluster,
+                  SmartRefVector<LHCb::MCRichHit> & hits ) const;
+      
+      // Access the bit-pack history objects for the given cluster of RichSmartIDs
+      bool
+      getMcHistories( const Rich::HPDPixelCluster& cluster,
+                      std::vector<const LHCb::MCRichDigitSummary*> & histories ) const;
+
+      // Checks if the given cluster of RichSmartIDs is the result of a background
+      bool isBackground ( const Rich::HPDPixelCluster& cluster ) const;
+
+      // Checks if the given RichSmartID is the result of true Cherenkov
+      bool isCherenkovRadiation( const Rich::HPDPixelCluster& cluster,
+                                 const Rich::RadiatorType rad ) const;
+
+      // Get a vector of MCParticles associated to given RichSmartID cluster
+      bool mcParticles( const Rich::HPDPixelCluster& cluster,
+                        std::vector<const LHCb::MCParticle*> & mcParts ) const;
 
     private: // definitions
 

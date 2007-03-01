@@ -4,7 +4,7 @@
  *  Header file for tool : Rich::MC::TrackInfoTool
  *
  *  CVS Log :-
- *  $Id: RichMCTrackInfoTool.h,v 1.12 2007-02-01 17:50:13 jonrob Exp $
+ *  $Id: RichMCTrackInfoTool.h,v 1.13 2007-03-01 20:05:15 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -26,27 +26,8 @@
 #include "RichKernel/IRichRayTracing.h"
 #include "RichKernel/IRichSmartIDTool.h"
 
-//-----------------------------------------------------------------------------
-/** @namespace Rich
- *
- *  General namespace for RICH software
- *
- *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
- *  @date   08/07/2004
- */
-//-----------------------------------------------------------------------------
 namespace Rich
 {
-
-  //-----------------------------------------------------------------------------
-  /** @namespace MC
-   *
-   *  General namespace for RICH MC related software
-   *
-   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
-   *  @date   05/12/2006
-   */
-  //-----------------------------------------------------------------------------
   namespace MC
   {
 

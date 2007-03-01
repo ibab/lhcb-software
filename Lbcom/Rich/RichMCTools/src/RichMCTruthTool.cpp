@@ -5,7 +5,7 @@
  * Implementation file for class : RichMCTruthTool
  *
  * CVS Log :-
- * $Id: RichMCTruthTool.cpp,v 1.33 2007-02-01 17:50:13 jonrob Exp $
+ * $Id: RichMCTruthTool.cpp,v 1.34 2007-03-01 20:05:15 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -18,6 +18,8 @@
 #include "RichMCTruthTool.h"
 
 // namespace
+//using namespace boost;
+//using namespace boost::lambda;
 using namespace Rich::MC;
 
 DECLARE_TOOL_FACTORY( MCTruthTool );
@@ -55,7 +57,7 @@ MCTruthTool::~MCTruthTool() { cleanUpLinkers(); }
 StatusCode MCTruthTool::initialize()
 {
   // Sets up various tools and services
-  const StatusCode sc = RichToolBase::initialize();
+  StatusCode sc = RichToolBase::initialize();
   if ( sc.isFailure() ) return sc;
 
   // Retrieve particle property service
@@ -69,9 +71,6 @@ StatusCode MCTruthTool::initialize()
   m_localID[ abs(ppSvc->find("K+")->jetsetID()) ]  = Rich::Kaon;
   m_localID[ abs(ppSvc->find("p+")->jetsetID()) ]  = Rich::Proton;
 
-  // release service since it is no longer needed
-  release(ppSvc);
-
   // Setup incident services
   incSvc()->addListener( this, IncidentType::BeginEvent );
 
@@ -80,6 +79,9 @@ StatusCode MCTruthTool::initialize()
 
   // Make sure we are ready for a new event
   InitNewEvent();
+
+  // release service since it is no longer needed
+  sc = release(ppSvc);
 
   return sc;
 }
@@ -97,6 +99,21 @@ StatusCode MCTruthTool::finalize()
 void MCTruthTool::handle ( const Incident& incident )
 {
   if ( IncidentType::BeginEvent == incident.type() ) { InitNewEvent(); }
+}
+
+bool MCTruthTool::mcParticles( const Rich::HPDPixelCluster& cluster,
+                               std::vector<const LHCb::MCParticle*> & mcParts ) const
+{
+  mcParts.clear();
+  for ( LHCb::RichSmartID::Vector::const_iterator iS = cluster.smartIDs().begin();
+        iS != cluster.smartIDs().end(); ++iS )
+  {
+    std::vector<const LHCb::MCParticle*> tmp_vect;
+    mcParticles( *iS, tmp_vect );
+    for ( std::vector<const LHCb::MCParticle*>::const_iterator iP = tmp_vect.begin();
+          iP != tmp_vect.end(); ++iP ) { mcParts.push_back(*iP); }
+  }
+  return !mcParts.empty();
 }
 
 bool MCTruthTool::mcParticles( const LHCb::RichSmartID id,
@@ -158,6 +175,16 @@ MCTruthTool::mcOpticalPhoton( const LHCb::MCRichHit * mcHit ) const
   return ( mcPhotonLinks() ? mcPhotonLinks()->first(mcHit) : 0 );
 }
 
+bool MCTruthTool::isBackground ( const Rich::HPDPixelCluster& cluster ) const
+{
+  for ( LHCb::RichSmartID::Vector::const_iterator iS = cluster.smartIDs().begin();
+        iS != cluster.smartIDs().end(); ++iS )
+  {
+    if ( !isBackground( *iS ) ) return false;
+  }
+  return true;
+}
+
 bool MCTruthTool::isBackground ( const LHCb::RichSmartID id ) const
 {
 
@@ -169,10 +196,11 @@ bool MCTruthTool::isBackground ( const LHCb::RichSmartID id ) const
     for ( MCRichDigitSummaries::const_iterator iSum = (*iEn).second.begin();
           iSum != (*iEn).second.end(); ++iSum )
     {
-      if ( (*iSum)->history().isBackground() ) return true;
+      // returns true if hit is only background (no signal contribution)
+      if ( !(*iSum)->history().isBackground() ) return false;
     }
-    // if get here, not background
-    return false;
+    // if get here, is only background
+    return true;
   }
 
   // if all else fails, assume background
@@ -183,6 +211,17 @@ bool MCTruthTool::isBackground ( const LHCb::RichSmartID id ) const
 
   // if all else fails, assume background
   return true;
+}
+
+bool MCTruthTool::isCherenkovRadiation( const Rich::HPDPixelCluster& cluster,
+                                        const Rich::RadiatorType rad ) const
+{
+  for ( LHCb::RichSmartID::Vector::const_iterator iS = cluster.smartIDs().begin();
+        iS != cluster.smartIDs().end(); ++iS )
+  {
+    if ( isCherenkovRadiation(*iS,rad) ) return true;
+  }
+  return false;
 }
 
 bool
@@ -199,9 +238,12 @@ MCTruthTool::isCherenkovRadiation( const LHCb::RichSmartID id,
           iSum != (*iEn).second.end(); ++iSum )
     {
       const LHCb::MCRichDigitHistoryCode & code = (*iSum)->history();
-      if      ( Rich::Aerogel == rad && code.aerogelHit() ) { return true; }
-      else if ( Rich::C4F10   == rad && code.c4f10Hit()   ) { return true; }
-      else if ( Rich::CF4     == rad && code.cf4Hit()     ) { return true; }
+      if ( code.isSignal() )
+      {
+        if      ( Rich::Aerogel == rad && code.aerogelHit() ) { return true; }
+        else if ( Rich::C4F10   == rad && code.c4f10Hit()   ) { return true; }
+        else if ( Rich::CF4     == rad && code.cf4Hit()     ) { return true; }
+      }
     }
     // if get here, must be background
     return false;
@@ -209,6 +251,23 @@ MCTruthTool::isCherenkovRadiation( const LHCb::RichSmartID id,
 
   // finally, assume not
   return false;
+}
+
+bool
+MCTruthTool::getMcHistories( const Rich::HPDPixelCluster& cluster,
+                             std::vector<const LHCb::MCRichDigitSummary*> & histories ) const
+{
+  bool OK = false;
+  for ( LHCb::RichSmartID::Vector::const_iterator iS = cluster.smartIDs().begin();
+        iS != cluster.smartIDs().end(); ++iS )
+  {
+    std::vector<const LHCb::MCRichDigitSummary*> tmp_hists;
+    OK = ( getMcHistories(*iS,tmp_hists) || OK );
+    //std::for_each( tmp_hists.begin(), tmp_hists.end(), histories.push_back( _1 ) );
+    for ( std::vector<const LHCb::MCRichDigitSummary*>::const_iterator iSum = tmp_hists.begin();
+          iSum != tmp_hists.end(); ++iSum ) { histories.push_back(*iSum); }
+  }
+  return OK;
 }
 
 bool
@@ -459,6 +518,22 @@ MCTruthTool::mcRichHits( const LHCb::MCParticle * mcp ) const
 {
   MCPartToMCRichHits::const_iterator i = mcPartToMCRichHitsMap().find( mcp );
   return ( i != mcPartToMCRichHitsMap().end() ? (*i).second : m_emptyContainer );
+}
+
+void
+MCTruthTool::mcRichHits( const Rich::HPDPixelCluster& cluster,
+                         SmartRefVector<LHCb::MCRichHit> & hits ) const
+{
+  for ( LHCb::RichSmartID::Vector::const_iterator iS = cluster.smartIDs().begin();
+        iS != cluster.smartIDs().end(); ++iS )
+  {
+    const SmartRefVector<LHCb::MCRichHit> & tmp_hits = mcRichHits(*iS);
+    for ( SmartRefVector<LHCb::MCRichHit>::const_iterator iH = tmp_hits.begin();
+          iH != tmp_hits.end(); ++iH )
+    {
+      hits.push_back(*iH);
+    }
+  }
 }
 
 const SmartRefVector<LHCb::MCRichHit> &
