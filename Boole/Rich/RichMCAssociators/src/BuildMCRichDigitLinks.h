@@ -4,7 +4,7 @@
  *  Header file for RICH DAQ algorithm : BuildMCRichDigitLinks
  *
  *  CVS Log :-
- *  $Id: BuildMCRichDigitLinks.h,v 1.3 2007-02-02 10:13:13 jonrob Exp $
+ *  $Id: BuildMCRichDigitLinks.h,v 1.4 2007-03-01 19:37:22 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-09
@@ -21,27 +21,8 @@
 #include "Event/MCRichDigit.h"
 #include "Event/MCTruth.h"
 
-//-----------------------------------------------------------------------------
-/** @namespace Rich
- *
- *  General namespace for RICH software
- *
- *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
- *  @date   08/07/2004
- */
-//-----------------------------------------------------------------------------
 namespace Rich
 {
-
-  //-----------------------------------------------------------------------------
-  /** @namespace MC
-   *
-   *  General namespace for RICH MC related software
-   *
-   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
-   *  @date   05/12/2006
-   */
-  //-----------------------------------------------------------------------------
   namespace MC
   {
 
