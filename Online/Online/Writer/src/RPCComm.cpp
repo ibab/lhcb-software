@@ -52,9 +52,7 @@ void RPCComm::confirmFile(char *fileName, unsigned int adlerSum, const unsigned 
   } catch(girerr::error& err) {
 
     pthread_mutex_unlock(&m_rpcLock);
-    std::cout << err.what();
-    throw std::runtime_error(
-        "Could not initiate connection to Run DB for createFile().");
+    throw std::runtime_error(err.what());
   }
 
   pthread_mutex_unlock(&m_rpcLock);
@@ -91,9 +89,7 @@ void RPCComm::createFile(char *fileName, unsigned int runNumber)
   } catch(girerr::error& err) {
 
     pthread_mutex_unlock(&m_rpcLock);
-    std::cout << err.what();
-    throw std::runtime_error(
-        "Could not initiate connection to Run DB for createFile().");
+    throw std::runtime_error(err.what());
   }
 
   pthread_mutex_unlock(&m_rpcLock);

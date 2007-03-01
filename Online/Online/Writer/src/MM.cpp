@@ -12,6 +12,19 @@ extern "C" {
 
 using namespace LHCb;
 
+
+/**
+ * A malloc that does not return until it succeeds. 
+ * It loops over 1-second sleeps and ensures that an 
+ * out-of-memory situation does not throw an exception.
+ */
+static inline void* malloc_blocking(size_t size)
+{
+  void *ret = NULL;
+  while((ret = malloc(size)) == NULL) { sleep(1); }
+  return ret;
+}
+
 /*
  * To enable C++ compiler to know which compilation object
  * to place these variables in.
@@ -69,7 +82,6 @@ MM::~MM()
  */
 struct cmd_header* MM::allocAndCopyCommand(struct cmd_header *header, void *data)
 {
-  //TODO: Replace malloc() with more efficient impl if needed.
   struct cmd_header *newHeader;
   void *newData;
   int dataSize = 0;
@@ -84,7 +96,7 @@ struct cmd_header* MM::allocAndCopyCommand(struct cmd_header *header, void *data
       break;
   }
 
-  newHeader = (struct cmd_header*)malloc(dataSize + sizeof(struct cmd_header));
+  newHeader = (struct cmd_header*)malloc_blocking(dataSize + sizeof(struct cmd_header));
   newData = ((unsigned char*)newHeader) + sizeof(struct cmd_header);
   if(newHeader) {
     MM::m_allocByteCount+=dataSize + sizeof(struct cmd_header);
@@ -136,10 +148,7 @@ void MM::enqueueCommand(struct cmd_header *cmd)
 {
   struct list_head *newElem;
 
-  newElem = (struct list_head *)malloc(sizeof(struct list_head));
-  if(!newElem) {
-    throw std::runtime_error("Could not malloc for new command.");
-  }
+  newElem = (struct list_head *)malloc_blocking(sizeof(struct list_head));
   newElem->cmd = cmd;
   newElem->next = NULL;
 
@@ -168,9 +177,10 @@ void MM::enqueueCommand(struct cmd_header *cmd)
   sbuf[0].sem_op = 1;
   sbuf[0].sem_flg = 0;
 
-  if(semop(m_queueSem, sbuf, 1) != 0) {
-  	throw std::runtime_error("Could not up semaphore after enqueuing command." + errno);
+  while(semop(m_queueSem, sbuf, 1) != 0) {
+    sleep(1);
   }
+
 }
 
 /**
@@ -200,12 +210,12 @@ struct cmd_header* MM::moveSendPointer(void)
   tspec.tv_sec = 5;
   tspec.tv_nsec = 0;
 
-	ret = semtimedop(m_queueSem, sbuf, 1, &tspec);
-	if(ret != 0 && errno != EINTR && errno != EAGAIN) {
-		throw std::runtime_error("Could not down the semaphore to move send ptr.");
-	} else if(ret != 0) {
-		return NULL;
-	}
+  ret = semtimedop(m_queueSem, sbuf, 1, &tspec);
+  if(ret != 0 && errno != EINTR && errno != EAGAIN) {
+    throw std::runtime_error("FATAL:Could not down the semaphore to move send ptr.");
+  } else if(ret != 0) {
+    return NULL;
+  }
 
   pthread_mutex_lock(&m_listLock);
   if(m_sendPointer == NULL) {

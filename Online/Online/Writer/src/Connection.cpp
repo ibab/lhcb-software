@@ -237,7 +237,7 @@ int Connection::failover()
       break;
     }catch(std::exception& ex) {
       *m_log << MSG::FATAL
-        << "Could not failover to a different storage cluster!!!!"
+        << "Could not failover to a different storage cluster, will try again."
         << endmsg;
     }
     sleep(FAILOVER_RETRY_SLEEP);
