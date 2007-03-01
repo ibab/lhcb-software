@@ -4,22 +4,25 @@
 ! Purpose     : Convert Calo Digit and Trigger information to RawEvent banks.
 !-----------------------------------------------------------------------------
 
+!========================== CaloDAQ v3r1 2007-03-01 ==========================
+! 2007-03-01 - Marco Cattaneo
+ - Remove obsolete file CaloDAQ_load.cpp
 
 ! 2007-02-28 - Olivier Deschamps
- - Add a new tool : CaloDataProvider : fast calo data decoding (for Orwell and HLT usage)
- - fix a small bug in CaloFillPrsSpdRawBuffer (problem when filling Prs bank when Zsup threshold =0)
+ - Add a new tool : CaloDataProvider : fast calo data decoding
+   (for Orwell and HLT usage)
+ - fix a small bug in CaloFillPrsSpdRawBuffer
+   (problem when filling Prs bank when Zsup threshold =0)
 
 ! 2007-02-22 - Olivier Deschamps
  - Implement the readout of PIN-diode data (using DeCalorimeter)
  - Remove CaloReadoutTool.{h,cpp} (was containing FECard and Tell1 description 
-	now implemented	in CaloDet)
- - Add a bass class with the same name (CaloReadoutTool)from which 
-	inherit all the decoding tools (CaloEneryFromRaw, 
-	CaloTriggerAdcFromRaw and CaloTriggerBitsFromRaw)
+   now implemented in CaloDet)
+ - Add a base class with the same name (CaloReadoutTool)from which 
+	 inherit all the decoding tools (CaloEnergyFromRaw, 
+	 CaloTriggerAdcFromRaw and CaloTriggerBitsFromRaw)
 
-
-
-!========================== CaloDAQ v2r6 2007-01-12 ==========================
+!========================== CaloDAQ v3r0 2007-01-12 ==========================
 ! 2006-12-06 - Florence RANJARD
  - apply_pattern install_more_includes
  - use DECLARE_xxx_FACTORY macros

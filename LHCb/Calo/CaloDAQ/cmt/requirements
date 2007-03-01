@@ -1,9 +1,9 @@
 #============================================================================
 # Created    : 2004-12-17
-# Maintainer : Olivier Callot
+# Maintainer : Olivier Deschamps
 #============================================================================
 package           CaloDAQ
-version           v3r0
+version           v3r1
 
 #============================================================================
 # Structure, i.e. directories to process. 
