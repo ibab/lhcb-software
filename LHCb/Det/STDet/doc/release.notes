@@ -2,10 +2,10 @@
 !Package manager : M. Needham
 !-------------------------------------------------------------------------
 
-! 2007-03-01
+!======================== STDet v3r2 2007-03-01 ==========================
+! 2007-03-01 - Matt Needham
  - add statuscode to DeSTLayer::cachePlane 
 
-!======================== STDet v3r2 2007-03-01 ==========================
 ! 2007-03-01 - Marco Cattaneo
  - Fix broken doxygen comments
  - Remove obsolete STDet_load.cpp file
