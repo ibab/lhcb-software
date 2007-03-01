@@ -1,4 +1,4 @@
-// $Id: CombineTaggersTDR.h,v 1.3 2006-10-24 10:16:44 jpalac Exp $
+// $Id: CombineTaggersTDR.h,v 1.4 2007-03-01 20:59:23 musy Exp $
 #ifndef COMBINETAGGERSTDR_H 
 #define COMBINETAGGERSTDR_H 1
 // Include files
@@ -31,8 +31,6 @@ public:
   StatusCode finalize();
   
   int combineTaggers(LHCb::FlavourTag& theTag, std::vector<LHCb::Tagger*>& );
-
-private:
 
 };
 #endif // COMBINETAGGERSTDR_H

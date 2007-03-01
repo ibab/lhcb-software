@@ -1,4 +1,4 @@
-// $Id: NNetTool.cpp,v 1.9 2006-10-24 10:16:44 jpalac Exp $
+// $Id: NNetTool.cpp,v 1.10 2007-03-01 20:59:23 musy Exp $
 // Include files 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -312,8 +312,11 @@ double NNetTool::MLPpS(std::vector<double>& vect) {
   OUT1 = SIGMOID(RIN1);
   OUT2 = SIGMOID(RIN2);
  
-  return -9.122275e-01
+  double rnet = -9.122275e-01
     +(1.538327e+00) * OUT1
     +(3.393626e+00) * OUT2;
+
+  return 1.0-pol2(rnet, 1.0772, -1.1632 );
+
 };
 //=============================================================================

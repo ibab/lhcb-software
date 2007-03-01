@@ -6,12 +6,6 @@
 #include "$DAVINCIROOT/options/DaVinciCommon.opts"
 #pragma print on
 //--------
-//#include "$DAVINCIROOT/options/L0.opts"
-//#include "$TRGSYSROOT/options/L1.opts"
-//--------
-
-//includes upstream/downstream tracks (not mandatory) 
-//ChargedProtoPAlg.VeloTTTracks = true ;
 
 ////-------------------------------------------------------------- SELECTION
 ///example Bd Channel Selection 
@@ -44,13 +38,6 @@ BTagging.PhysDesktop.InputLocations = { "Phys/CheatedSelection" };
 // BTagging.OutputLevel = 2;
 // BTaggingChecker.OutputLevel = 2;
 
-//relax default cuts for taggers:
-ToolSvc.BTaggingTool.TaggerKaonOppositeTool.Kaon_forwardTrack_LCS_cut  =9999.;
-ToolSvc.BTaggingTool.TaggerKaonOppositeTool.Kaon_matchTrack_LCS_cut    =9999.;
-ToolSvc.BTaggingTool.TaggerKaonOppositeTool.Kaon_upstreamTrack_LCS_cut =9999.;
-ToolSvc.BTaggingTool.TaggerKaonSameTool.KaonS_upstreamTrack_LCS_cut    =9999.;
-ToolSvc.BTaggingTool.TaggerPionSameTool.PionS_upstreamTrack_LCS_cut    =9999.;
-
 ///---------------------------------------------------------------
 /// BTaggingChecker:
 /// example of an optional algorithm that reads in what is in TES
@@ -67,6 +54,14 @@ EventSelector.PrintFreq  = 1;
 //---------------------------------------------------------------
 // Example input data 
 //---------------------------------------------------------------
-EventSelector.Input = {"DATAFILE='PFN:rfio:/castor/cern.ch/grid/lhcb/production/DC06/v1-lumi2/00001395/DST/0000/00001395_00000022_5.dst' TYP='POOL_ROOTTREE' OPT='READ'"};//bsjpsiphi_mm
+//-- GAUDI data cards generated on Jan 25, 2007 9:48:09 PM
+//-- For Event Type = 13102003 / Data type = DST 1
+//--     Configuration = DC06 - phys-lumi2
+//--     DST 1 datasets produced by Brunel - v30r14
+//--     From DIGI 1 datasets produced by Boole - v12r10
+//--     From SIM 1 datasets produced by Gauss - v25r7
+//--     Database version = v30r14
+EventSelector.Input   = {
+  "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-lumi2/00001513/DST/0000/00001513_00000008_5.dst' TYP='POOL_ROOTTREE' OPT='READ'" };//bskk
 //---------------------------------------------------------------
 

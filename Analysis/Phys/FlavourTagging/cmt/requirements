@@ -5,7 +5,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           FlavourTagging
-version           v7r1p1
+version           v7r2
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -17,15 +17,10 @@ set FLAVOURTAGGINGOPTS ${FLAVOURTAGGINGROOT}/options
 
 # Used packages. 
 #============================================================================
-#use DaVinciKernel   v*  Phys
-#use TrgEvent        v*  Event
-#use RecoTools       v*  Rec
-#use MuonID          v*  Muon
-
 use TrackInterfaces v*   Tr
-use PhysEvent       v*     Event
-#use TrackEvent      v*     Event
-use DaVinciKernel   v*     Phys
+use PhysEvent       v*   Event
+use DaVinciKernel   v*   Phys
+use CaloUtils       v*   Calo
 
 
 # Component library building rule

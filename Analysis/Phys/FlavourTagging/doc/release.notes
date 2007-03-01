@@ -1,9 +1,19 @@
-! $Id: release.notes,v 1.103 2007-02-28 21:35:44 sposs Exp $
+! $Id: release.notes,v 1.104 2007-03-01 20:59:22 musy Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTagging
 ! Responsible : Marco Musy (marco.musy@cern.ch)
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
+
+! 2007-03-01 - Marco Musy
+ - general cleanup.
+ - change in the categorization tool CombineTaggersProbability.cpp
+   (before was CombineTaggersNNet). Changed way to sort taggers based on w.
+ - various changes in Taggers cuts.
+ - PID cuts changed for all types.
+ - TaggingUtils contains common utility methods used by many taggers.
+ - options files changed for PID definition. Now ExclusiveSelection=false.
+   (protection of Secondary vertex finder introduced)
 
 ! 2007-02-28 - Stephane Poss
   - Changes in TaggerElectronTool.cpp,h : change default cut values and 

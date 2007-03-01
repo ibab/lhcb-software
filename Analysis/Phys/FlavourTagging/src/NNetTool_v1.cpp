@@ -1,4 +1,4 @@
-// $Id: NNetTool_v1.cpp,v 1.3 2006-10-24 10:16:44 jpalac Exp $
+// $Id: NNetTool_v1.cpp,v 1.4 2007-03-01 20:59:23 musy Exp $
 // Include files 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -58,6 +58,8 @@ void NNetTool_v1::normaliseOS(std::vector<double>& par) {
     err()<<"normaliseOS too short par vector"<<endreq;
     return;
   }
+  debug()<<"before norm "<<par<<endreq;
+
   double mult  = par.at(2) / 90.;
   double ptB   = par.at(0)*sin(par.at(1)) /20.; //unused
   double partP = std::min( par.at(4) /80., 1.);
@@ -79,6 +81,7 @@ void NNetTool_v1::normaliseSS(std::vector<double>& par) {
     err()<<"normaliseSS too short par vector"<<endreq;
     return;
   }
+
   double deta = par.at(9)  /2.;
   double dphi = par.at(10) /3.;
   double dq   = par.at(11) /12.;
@@ -99,7 +102,9 @@ double NNetTool_v1::MLPm(std::vector<double>& par) {
 
   double pn = 1.0-pol2(rnet, 1.042397, -1.089925);//1-omega
 
-  debug()<<"entering ele: rnet="<<rnet<<" pn="<<pn<<endreq;
+  debug()<<"entering muon: rnet="<<rnet<<" pn="<<pn<<endreq;
+  debug()<<"par = "<<par.at(0)<<" "<<par.at(2)<<" "<<par.at(3)
+	 <<" "<<par.at(4)<<endreq;
 
   return pn;
 }; 
@@ -114,6 +119,8 @@ double NNetTool_v1::MLPe(std::vector<double>& par) {
   double pn = 1.0-pol2(rnet, 0.909170, -0.929768);//1-omega
 
   debug()<<"entering ele: rnet="<<rnet<<" pn="<<pn<<endreq;
+  debug()<<"par = "<<par.at(0)<<" "<<par.at(2)<<" "<<par.at(3)
+	 <<" "<<par.at(4)<<endreq;
 
   return pn;
 }; 
@@ -128,6 +135,8 @@ double NNetTool_v1::MLPk(std::vector<double>& par ) {
   double pn = 1.0-pol2(rnet, 0.9, -0.815);//1-omega
 
   debug()<<"entering k: rnet="<<rnet<<" pn="<<pn<<endreq;
+  debug()<<"par = "<<par.at(0)<<" "<<par.at(2)<<" "<<par.at(3)
+	 <<" "<<par.at(4)<<endreq;
 
   return pn;
 }; 
@@ -143,10 +152,10 @@ double NNetTool_v1::MLPkS(std::vector<double>& par) {
   
   double pn = 1.0-pol2(rnet, 0.984405, -0.988735);//1-omega
 
+  debug()<<"entering kS: rnet="<<rnet<<" pn="<<pn<<endreq;
   debug()<<"par = "<<par.at(0)<<" "<<par.at(2)<<" "<<par.at(3)
 	 <<" "<<par.at(4)<<" "<<par.at(5)<<" "<<par.at(6)
 	 <<" "<<par.at(7)<<endreq;
-  debug()<<"entering kS: rnet="<<rnet<<" pn="<<pn<<endreq;
 
   return pn;
 }; 
@@ -160,9 +169,12 @@ double NNetTool_v1::MLPpS(std::vector<double>& par) {
   double rnet = net.value(0, par.at(0),par.at(2),par.at(3),par.at(4),
 			  par.at(5),par.at(6),par.at(7) );
 
-  double pn = 1.0-pol2(rnet, 0.850815, -0.726422);//1-omega
+  double pn = 1.0-pol2(rnet, 1.150670, -1.249360);//1-omega
 
   debug()<<"entering pS: rnet="<<rnet<<" pn="<<pn<<endreq;
+  debug()<<"par = "<<par.at(0)<<" "<<par.at(2)<<" "<<par.at(3)
+	 <<" "<<par.at(4)<<" "<<par.at(5)<<" "<<par.at(6)
+	 <<" "<<par.at(7)<<endreq;
 
   return pn;
 };

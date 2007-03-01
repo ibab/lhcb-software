@@ -1,4 +1,4 @@
-// $Id: TaggerKaonOppositeTool.h,v 1.6 2006-10-24 10:16:45 jpalac Exp $
+// $Id: TaggerKaonOppositeTool.h,v 1.7 2007-03-01 20:59:23 musy Exp $
 #ifndef USER_TAGGERKAONOPPOSITETOOL_H 
 #define USER_TAGGERKAONOPPOSITETOOL_H 1
 
@@ -9,8 +9,9 @@
 // from Event
 #include "Event/FlavourTag.h"
 #include "Kernel/ITagger.h"
-#include "Kernel/IGeomDispCalculator.h"
 #include "INNetTool.h"
+
+#include "ITaggingUtils.h"
 
 /** @class TaggerKaonOppositeTool TaggerKaonOppositeTool.h 
  *
@@ -39,10 +40,8 @@ public:
   //-------------------------------------------------------------
 
 private:
-  void calcIP( const LHCb::Particle* , const LHCb::Vertex* , double& , double& );
-  void calcIP( const LHCb::Particle* , const LHCb::RecVertex* , double& , double& );
-
-  IGeomDispCalculator *m_Geom;
+  
+  ITaggingUtils* m_util;
   INNetTool* m_nnet;
   std::string m_CombinationTechnique, m_NeuralNetName;
 
@@ -50,8 +49,8 @@ private:
   double m_Pt_cut_kaon;
   double m_P_cut_kaon ;
   double m_IP_cut_kaon ;
-  double m_lcs_kf, m_lcs_km, m_lcs_ku, m_IP_kf;
-  double m_IP_km, m_IP_ku;
+  double m_lcs_kl, m_lcs_ku;
+  double m_IP_kl, m_IP_ku;
   double m_AverageOmega;
 
 };

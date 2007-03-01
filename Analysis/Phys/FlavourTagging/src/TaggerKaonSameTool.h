@@ -1,4 +1,4 @@
-// $Id: TaggerKaonSameTool.h,v 1.6 2006-10-24 10:16:45 jpalac Exp $
+// $Id: TaggerKaonSameTool.h,v 1.7 2007-03-01 20:59:23 musy Exp $
 #ifndef USER_TAGGERKAONSAMETOOL_H 
 #define USER_TAGGERKAONSAMETOOL_H 1
 
@@ -7,11 +7,13 @@
 #include "GaudiKernel/AlgTool.h"
 #include "GaudiKernel/ToolFactory.h"
 // from Event
-#include "Kernel/IGeomDispCalculator.h"
 #include "Event/FlavourTag.h"
 #include "Event/ProtoParticle.h"
 #include "Kernel/ITagger.h"
+
+// from local
 #include "INNetTool.h"
+#include "ITaggingUtils.h"
 
 /** @class TaggerKaonSameTool TaggerKaonSameTool.h 
  *
@@ -25,6 +27,7 @@ class TaggerKaonSameTool : public GaudiTool,
 	virtual public ITagger {
 
 public: 
+
   /// Standard constructor
   TaggerKaonSameTool( const std::string& type,
 		      const std::string& name,
@@ -40,11 +43,9 @@ public:
   //-------------------------------------------------------------
 
 private:
-  void calcIP( const LHCb::Particle* , const LHCb::Vertex* , double& , double& );
-  void calcIP( const LHCb::Particle* , const LHCb::RecVertex* , double& , double& );
 
-  IGeomDispCalculator *m_Geom;
   INNetTool* m_nnet;
+  ITaggingUtils* m_util;
   std::string m_CombinationTechnique, m_NeuralNetName;
 
   //properties 
@@ -54,7 +55,7 @@ private:
   double m_phicut_kaonS;
   double m_etacut_kaonS;
   double m_dQcut_kaonS;
-  double m_lcs_kSu;
+  double m_lcs_cut;
   double m_AverageOmega;
 };
 

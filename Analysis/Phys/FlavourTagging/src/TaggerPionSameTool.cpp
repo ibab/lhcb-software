@@ -22,24 +22,25 @@ TaggerPionSameTool::TaggerPionSameTool( const std::string& type,
 
   declareProperty( "CombTech", m_CombinationTechnique = "NNet" );
   declareProperty( "NeuralNetName",  m_NeuralNetName  = "NNetTool_v1" );
-  declareProperty( "ProbMin", m_ProbMin = 0.52);
-  declareProperty( "PionSame_Pt_cut", m_Pt_cut_pionS = 0.2 );
-  declareProperty( "PionSame_P_cut",  m_P_cut_pionS  = 2.0 );
-  declareProperty( "PionSame_IP_cut", m_IP_cut_pionS = 3.0 );
-  declareProperty( "PionSame_dQ_cut", m_dQcut_pionS  = 3.0 );
-  declareProperty( "PionS_upstreamTrack_LCS_cut", m_lcs_pSu = 2.5 );
-  declareProperty( "AverageOmega", m_AverageOmega = 0.44 );
+  declareProperty( "ProbMin", m_ProbMin               = 0.55);
+  declareProperty( "PionSame_Pt_cut", m_Pt_cut_pionS  = 0.2 );
+  declareProperty( "PionSame_P_cut",  m_P_cut_pionS   = 2.0 );
+  declareProperty( "PionSame_IPs_cut",m_IPs_cut_pionS = 3.0 );
+  declareProperty( "PionS_LCS_cut",   m_lcs_cut       = 3.0 );
+  declareProperty( "PionSame_dQ_cut", m_dQcut_pionS   = 3.0 );
+  declareProperty( "PionSame_dQ_extra_cut", m_dQcut_extra_pionS  = 1.0 );
+  declareProperty( "AverageOmega", m_AverageOmega     = 0.44 );
   m_nnet = 0;
-  m_Geom = 0;
+  m_util = 0;
 }
 TaggerPionSameTool::~TaggerPionSameTool() {}; 
 
 //=====================================================================
 StatusCode TaggerPionSameTool::initialize() { 
 
-  m_Geom = tool<IGeomDispCalculator> ("GeomDispCalculator", this);
-  if ( ! m_Geom ) {   
-    fatal() << "GeomDispCalculator could not be found" << endreq;
+  m_util = tool<ITaggingUtils> ( "TaggingUtils", this );
+  if( ! m_util ) {
+    fatal() << "Unable to retrieve TaggingUtils tool "<< endreq;
     return StatusCode::FAILURE;
   }
   m_nnet = tool<INNetTool> ( m_NeuralNetName, this);
@@ -66,54 +67,57 @@ Tagger TaggerPionSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
   //if more than one satisfies cuts, take the highest Pt one
   const Particle* ipionS=0;
   double ptmaxpS = -99.0;
-  Particle::ConstVector::const_iterator ipart;
+  Particle::ConstVector::const_iterator ipart, jpart;
   for( ipart = vtags.begin(); ipart != vtags.end(); ipart++ ) {
     if( (*ipart)->particleID().abspid() != 211 ) continue;
+
     double Pt = (*ipart)->pt()/GeV;
     if( Pt < m_Pt_cut_pionS )  continue;
+
     double P = (*ipart)->p()/GeV;
     if( P  < m_P_cut_pionS )  continue;
 
     //calculate signed IP wrt RecVert
     double IP, IPerr;
-    calcIP(*ipart, RecVert, IP, IPerr);
+    m_util->calcIP(*ipart, RecVert, IP, IPerr);
     if(!IPerr) continue;
     double IPsig = fabs(IP/IPerr);
-    debug() << " PioS P="<< P <<" Pt="<< Pt << " IPsig=" << IPsig 
-            << " IP=" << IP <<endreq;
+    if(IPsig > m_IPs_cut_pionS)  continue;   
 
-    if(IPsig < m_IP_cut_pionS) {
-      double dQ    = (ptotB+(*ipart)->momentum()).M()/GeV - B0mass;
-      debug() << "      dQ=" << dQ << endreq; 
-      if(dQ > m_dQcut_pionS ) continue;
+    double dQ = (ptotB+(*ipart)->momentum()).M()/GeV - B0mass;
+    if(dQ > m_dQcut_pionS ) continue;
 
-      long   trtyp= 3; //sometimes trtyp remains =0??? put default=3
-//      long   trtyp= 0;
-      double lcs  = 1000.;
-      const ProtoParticle* proto = (*ipart)->proto();
-      if ( proto ) {
-	const Track* track = proto->track();
-	lcs = track->chi2PerDoF();
-	if( track->type() == Track::Long ) trtyp = 1;
-	else if(track->type() == Track::Upstream ) trtyp = 3;
-      }
-    
-      debug()<< "      trtyp=" << trtyp << " lcs=" << lcs << endreq; 
-      if(trtyp==1 || (trtyp==3 && lcs<m_lcs_pSu)) {
-        if( Pt > ptmaxpS ) { 
-          ipionS = (*ipart);
-          ptmaxpS = Pt;
-        }
-      }
+    const ProtoParticle* proto = (*ipart)->proto();
+    const Track* track = proto->track();
+    double lcs = track->chi2PerDoF();
+    if( lcs > m_lcs_cut ) continue;
+    if( track->type() != Track::Long ) continue;
+
+    if( Pt < ptmaxpS ) continue;
+
+    bool dupli=false;
+    for( jpart = vtags.begin(); jpart != vtags.end(); jpart++ ) {
+      if((*jpart)->proto() == proto) if(ipart!=jpart) { dupli=true; break; }
     }
+    if( dupli ) continue;
+
+    //accept candidate
+    ipionS = (*ipart);
+    ptmaxpS = Pt;
+    debug() << " PioS P="<< P <<" Pt="<< Pt << " IPsig=" << IPsig 
+	    << " IP=" << IP << " dQ=" << dQ<<endreq;
   } 
+  if( ipionS  ) {
+    double extra_dQ = (ptotB+ipionS->momentum()).M()/GeV - B0mass;
+    if( extra_dQ > m_dQcut_extra_pionS ) return tpionS;
+  }
   if( !ipionS ) return tpionS;
 
   //calculate omega
   double pn = 1-m_AverageOmega;
   if(m_CombinationTechnique == "NNet") {
 
-    double rnet, IP, IPerr, ip, iperr, IPT=0.;
+    double IP, IPerr, ip, iperr, IPT=0.;
     double B0p  = ptotB.P()/GeV;
     double B0the= ptotB.Theta();
     double B0phi= ptotB.Phi();
@@ -122,16 +126,16 @@ Tagger TaggerPionSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     double dphi= std::min(fabs(ipionS->momentum().Phi()-B0phi), 
 			  6.283-fabs(ipionS->momentum().Phi()-B0phi));
     double dQ  = (ptotB+ipionS->momentum()).M()/GeV - B0mass;
-    calcIP(ipionS, RecVert, IP, IPerr);
+    m_util->calcIP(ipionS, RecVert, IP, IPerr);
     if(SecVert) {
-      calcIP(ipionS, SecVert, ip, iperr);
+      m_util->calcIP(ipionS, SecVert, ip, iperr);
       if(!iperr) IPT = ip/iperr;
     } else IPT = -1000.; 
 
     std::vector<double> inputs(12);
     inputs.at(0) = B0p;
     inputs.at(1) = B0the;
-    inputs.at(2) = vtags.size();
+    inputs.at(2) = m_util->countTracks(vtags);
     inputs.at(3) = 100;
     inputs.at(4) = ipionS->p()/GeV;
     inputs.at(5) = ipionS->pt()/GeV;
@@ -142,9 +146,8 @@ Tagger TaggerPionSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     inputs.at(10)= dphi;
     inputs.at(11)= dQ;
     
-    rnet = m_nnet->MLPpS( inputs );
+    pn = m_nnet->MLPpS( inputs );
 
-    pn = 1.0-pol2(rnet, 1.0772, -1.1632); 
     if( pn < m_ProbMin ) return tpionS;
   }
 
@@ -156,39 +159,6 @@ Tagger TaggerPionSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
   tpionS.addTaggerPart(*ipionS);
 
   return tpionS;
-}
-//====================================================================
-void TaggerPionSameTool::calcIP( const Particle* axp, 
-                                 const Vertex* RecVert, 
-                                 double& ip, double& iperr) {
-  ip   =-100.0;
-  iperr= 0.0;
-  Gaudi::XYZVector ipVec;
-  Gaudi::SymMatrix9x9 errMatrix;
-  StatusCode sc =  m_Geom->calcImpactPar(*axp, *RecVert, ip,
-                                         iperr, ipVec, errMatrix);
-  if( sc ) {
-    ip   = ipVec.z()>0 ? ip : -ip ; 
-    iperr= iperr; 
-  }
-}
-double TaggerPionSameTool::pol2(double x, double a0, double a1) { 
-  return a0+a1*x; 
-}
-//====================================================================
-void TaggerPionSameTool::calcIP( const Particle* axp, 
-                                 const RecVertex* RecVert, 
-                                 double& ip, double& iperr) {
-  ip   =-100.0;
-  iperr= 0.0;
-  Gaudi::XYZVector ipVec;
-  Gaudi::SymMatrix9x9 errMatrix;
-  StatusCode sc =  m_Geom->calcImpactPar(*axp, *RecVert, ip,
-                                         iperr, ipVec, errMatrix);
-  if( sc ) {
-    ip   = ipVec.z()>0 ? ip : -ip ; 
-    iperr= iperr; 
-  }
 }
 //==========================================================================
 StatusCode TaggerPionSameTool::finalize() { return StatusCode::SUCCESS; }

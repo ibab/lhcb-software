@@ -1,4 +1,4 @@
-// $Id: BTaggingTool.h,v 1.11 2006-11-03 20:52:17 musy Exp $
+// $Id: BTaggingTool.h,v 1.12 2007-03-01 20:59:22 musy Exp $
 #ifndef USER_BTAGGINGTOOL_H 
 #define USER_BTAGGINGTOOL_H 1
 
@@ -11,19 +11,17 @@
 #include "GaudiKernel/AlgTool.h"
 #include "GaudiKernel/ToolFactory.h"
 // from Event 
-#include "Event/Particle.h"
-#include "Event/ProtoParticle.h"
-/* #include "Event/EventHeader.h" */
 #include "Event/FlavourTag.h" 
 /* #include "Event/TrgDecision.h" */
 /* #include "Event/HltScore.h" */
-#include "Kernel/IGeomDispCalculator.h"
 #include "Kernel/IPhysDesktop.h"
 
 #include "ICombineTaggersTool.h" 
 #include "Kernel/ISecondaryVertexTool.h"
 #include "Kernel/ITagger.h" 
 #include "Kernel/IBTaggingTool.h" 
+
+#include "ITaggingUtils.h"
 
 /** @class BTaggingTool BTaggingTool.h 
  *
@@ -59,29 +57,22 @@ public:
 
 private:
   bool isinTree( const LHCb::Particle*, 
-		 std::vector<const LHCb::Particle*>& );
-
-  StatusCode calcIP( const LHCb::Particle*, 
-		     const LHCb::RecVertex*  , double&, double& );
-
-  StatusCode calcIP( const LHCb::Particle*, 
-		     const LHCb::RecVertex::ConstVector&, double&, double& );
+		 std::vector<const LHCb::Particle*>& , double& );
 
   LHCb::Particle::ConstVector FindDaughters( const LHCb::Particle* );
-
-  long trackType( const LHCb::Particle* );
 
   ISecondaryVertexTool* m_svtool;
   IDataProviderSvc* m_eventSvc;
   IGeomDispCalculator *m_Geom;
   IPhysDesktop *m_physd;
+  ITaggingUtils* m_util;
 
-  ITagger *m_taggerMu,*m_taggerEle,*m_taggerKaon,*m_taggerVtxCh;
-  ITagger *m_taggerKaonS,*m_taggerPionS, *m_taggerVtx, *m_taggerJetS ;
+  ITagger *m_taggerMu, *m_taggerEle, *m_taggerKaon, *m_taggerVtxCh;
+  ITagger *m_taggerKaonS, *m_taggerPionS, *m_taggerVtx, *m_taggerJetS;
   ICombineTaggersTool *m_combine;
 
   //properties ----------------
-  double m_thetaMin;
+  double m_thetaMin, m_distphi_cut;
   double m_IPPU_cut;
 
   std::string m_SecondaryVertexToolName;

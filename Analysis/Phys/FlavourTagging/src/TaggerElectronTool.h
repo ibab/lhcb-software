@@ -1,4 +1,4 @@
-// $Id: TaggerElectronTool.h,v 1.8 2007-02-28 08:27:58 sposs Exp $
+// $Id: TaggerElectronTool.h,v 1.9 2007-03-01 20:59:23 musy Exp $
 #ifndef USER_TAGGERELECTRONTOOL_H 
 #define USER_TAGGERELECTRONTOOL_H 1
 
@@ -7,9 +7,11 @@
 #include "GaudiKernel/AlgTool.h"
 #include "GaudiKernel/ToolFactory.h"
 // from Event
-#include "Kernel/IGeomDispCalculator.h"
 #include "Kernel/ITagger.h"
-#include "CaloInterfaces/ICaloElectron.h" 
+#include "Kernel/ICaloElectron.h"
+
+// from local
+#include "ITaggingUtils.h"
 #include "INNetTool.h"
 
 /** @class TaggerElectronTool TaggerElectronTool.h 
@@ -39,22 +41,18 @@ public:
   //-------------------------------------------------------------
 
 private:
-  IGeomDispCalculator *m_Geom;
   INNetTool* m_nnet;
+  ITaggingUtils*  m_util;
   ICaloElectron*  m_electron;
 
   std::string m_CombinationTechnique, m_NeuralNetName;
 
-  StatusCode calcIP( const LHCb::Particle* , 
-		     const LHCb::Vertex* , double&, double&);
-  StatusCode calcIP( const LHCb::Particle* , 
-		     const LHCb::RecVertex* , double&, double&);
   //properties 
   double m_Pt_cut_ele;
   double m_P_cut_ele;
   double m_VeloChMin;
   double m_VeloChMax;
-  double m_EoverP;  
+  double m_EoverP, m_lcs_cut_ele;  
   double m_AverageOmega;
 
 };

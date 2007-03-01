@@ -20,7 +20,7 @@ DECLARE_FACTORY_ENTRIES(FlavourTagging) {
   DECLARE_TOOL(TaggerPionSameTool);
   DECLARE_TOOL(TaggerVertexChargeTool);
   DECLARE_TOOL(TaggerJetSameTool);
-  DECLARE_TOOL(CombineTaggersNNet);
+  DECLARE_TOOL(CombineTaggersProbability);
   DECLARE_TOOL(CombineTaggersTDR);
   DECLARE_TOOL(CombineTaggersOSTDR);  
   DECLARE_TOOL(NNetTool);
@@ -28,4 +28,5 @@ DECLARE_FACTORY_ENTRIES(FlavourTagging) {
   DECLARE_TOOL(SVertexTool);
   DECLARE_TOOL(SVertexNNTool);
   DECLARE_TOOL(SVertexABTool);
+  DECLARE_TOOL(TaggingUtils);
 }
