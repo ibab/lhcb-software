@@ -1,0 +1,19 @@
+package PVSS
+version v3r1
+
+branches  cmt doc src
+use LCG_Settings v* 
+use GaudiPolicy  v*
+U:\cern\lhcb\online\control\pvss\3.6\api
+macro PVSS_home "$(SITEROOT)/lhcb/online/control/pvss/3.6" \
+  WIN32         "C:/PGM/PVSS2_3.6"
+
+macro PVSS_api   "$(PVSS_home)/api"
+macro PVSS_inc   "$(PVSS_api)/include"
+set PVSS_II      'J:/PVSS/JobOptions/config/config'
+set PVSS_II_HOME $(PVSS_home)
+path_append PATH "$(PVSS_home)/bin"
+
+include_dirs "$(PVSS_inc)" /I "$(PVSS_inc)/winnt/pvssincl" /I "$(PVSS_inc)/Basics/DpBasics" /I "$(PVSS_inc)/Basics/Utilities" /I "$(PVSS_inc)/Basics/Variables" /I "$(PVSS_inc)/Basics/NoPosix" /I "$(PVSS_inc)/Ctrl" /I "$(PVSS_inc)/BCMNew" /I "$(PVSS_inc)/Configs" /I "$(PVSS_inc)/Datapoint" /I "$(PVSS_inc)/Messages" /I "$(PVSS_inc)/Manager"
+macro_append PVSS_cppflags '/FI"$(PVSS_inc)/winnt/win32.h" /D "WIN32" /D "IS_MSWIN__" /D "_EXCURSION" /D "bcm_boolean_h" /D "FUNCPROTO" /GX /D _WIN32 '
+macro PVSS_linkopts ' /LIBPATH:"$(PVSS_api)/lib.winnt" libManager.lib libCtrl.lib libMessages.lib libDatapoint.lib libConfigs.lib libBasics.lib bcm.lib '
