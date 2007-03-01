@@ -1,4 +1,4 @@
-// $Id: DeITBox.h,v 1.3 2007-02-28 18:30:45 marcocle Exp $
+// $Id: DeITBox.h,v 1.4 2007-03-01 11:08:00 cattanem Exp $
 #ifndef _DeITBox_H_
 #define _DeITBox_H_
 
@@ -61,7 +61,7 @@ public:
 
 
    /** check whether contains 
-   *  @param channel
+   *  @param aChannel channel
    *  @return bool
    */ 
    bool contains(const LHCb::STChannelID aChannel) const; 
@@ -115,8 +115,8 @@ inline bool DeITBox::contains(const LHCb::STChannelID aChannel) const{
 /** ouput operator for class DeITBox
  *  @see DeITBox
  *  @see MsgStream
- *  @param os reference to STL output stream
- *  @param de reference to DeITBox object
+ *  @param os   reference to STL output stream
+ *  @param aBox reference to DeITBox object
  */
 inline std::ostream& operator<<( std::ostream& os , const DeITBox* aBox )
 { return aBox->printOut( os ); }
@@ -125,8 +125,8 @@ inline std::ostream& operator<<( std::ostream& os , const DeITBox* aBox )
 /** ouput operator for class DeITBox
  *  @see DeITBox
  *  @see MsgStream
- *  @param os reference to MsgStream output stream
- *  @param de reference to DeITBox object
+ *  @param os   reference to MsgStream output stream
+ *  @param aBox reference to DeITBox object
  */
 inline MsgStream& operator<<( MsgStream& os , const DeITBox* aBox )
 { return aBox->printOut( os ); }

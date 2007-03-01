@@ -1,4 +1,4 @@
-// $Id: DeSTLayer.h,v 1.8 2007-02-16 12:31:02 mneedham Exp $
+// $Id: DeSTLayer.h,v 1.9 2007-03-01 11:08:00 cattanem Exp $
 #ifndef _DeSTLayer_H_
 #define _DeSTLayer_H_
 
@@ -65,7 +65,7 @@ public:
   MsgStream& printOut( MsgStream& os) const;
 
   /** check contains channel
-  *  @param channel
+  *  @param  aChannel channel
   *  @return bool
   */
   virtual bool contains(const LHCb::STChannelID aChannel) const = 0;
@@ -124,8 +124,8 @@ inline Gaudi::Plane3D DeSTLayer::plane() const {
 /** ouput operator for class DeSTLayer
  *  @see DeSTLayer
  *  @see MsgStream
- *  @param os reference to STL output stream
- *  @param de reference to DeSTLayer object
+ *  @param os     reference to STL output stream
+ *  @param aLayer reference to DeSTLayer object
  */
 inline std::ostream& operator<<( std::ostream& os , const DeSTLayer* aLayer )
 { return aLayer->printOut( os ); }
@@ -134,8 +134,8 @@ inline std::ostream& operator<<( std::ostream& os , const DeSTLayer* aLayer )
 /** ouput operator for class DeSTLayer
  *  @see DeSTLayer
  *  @see MsgStream
- *  @param os reference to MsgStream output stream
- *  @param de reference to DeSTLayer object
+ *  @param os     reference to MsgStream output stream
+ *  @param aLayer reference to DeSTLayer object
  */
 inline MsgStream& operator<<( MsgStream& os , const DeSTLayer* aLayer )
 { return aLayer->printOut( os ); }

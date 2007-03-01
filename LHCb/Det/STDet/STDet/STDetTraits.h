@@ -1,9 +1,9 @@
-// $Id: STDetTraits.h,v 1.3 2006-02-06 10:24:18 mneedham Exp $
+// $Id: STDetTraits.h,v 1.4 2007-03-01 11:08:01 cattanem Exp $
 
 #ifndef _STDetTraits_H
 #define _STDetTraits_H
 
-/** @class DeSTraits DeSTTraits.h "STDet/DeSTTraits.h"
+/** @class STDetTraits STDetTraits.h "STDet/STDetTraits.h"
  *
  *  Traits info
  *

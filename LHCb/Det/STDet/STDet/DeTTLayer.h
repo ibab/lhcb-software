@@ -1,4 +1,4 @@
-// $Id: DeTTLayer.h,v 1.4 2007-02-28 18:30:45 marcocle Exp $
+// $Id: DeTTLayer.h,v 1.5 2007-03-01 11:08:01 cattanem Exp $
 #ifndef _DeTTLayer_H_
 #define _DeTTLayer_H_
 
@@ -69,7 +69,7 @@ public:
   DeTTHalfModule* findHalfModule(const Gaudi::XYZPoint& point) ;  
 
   /** check whether contains 
-  *  @param channel
+  *  @param  aChannel channel
   *  @return bool
   */ 
   bool contains(const LHCb::STChannelID aChannel) const; 

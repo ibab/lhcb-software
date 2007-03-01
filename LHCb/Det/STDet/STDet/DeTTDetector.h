@@ -1,4 +1,4 @@
-// $Id: DeTTDetector.h,v 1.5 2007-02-28 18:30:45 marcocle Exp $
+// $Id: DeTTDetector.h,v 1.6 2007-03-01 11:08:00 cattanem Exp $
 #ifndef _DeTTDetector_H_
 #define _DeTTDetector_H_
 
@@ -50,14 +50,14 @@ public:
 
   /** 
   *  short cut to pick up the wafer corresponding to x,y,z
-  * @param point in global frame  
+  * @param  aPoint point in global frame  
   * @return sector 
   */
   virtual DeSTSector* findSector(const Gaudi::XYZPoint& aPoint); 
 
   /** 
   *  short cut to pick up the wafer corresponding to a channel
-  * @param channel 
+  * @param  aChannel channel 
   * @return sector 
   */
   //virtual DeSTSector* findSector(const LHCb::STChannelID aChannel); 

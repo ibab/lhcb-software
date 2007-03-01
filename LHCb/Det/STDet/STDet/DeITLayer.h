@@ -1,4 +1,4 @@
-// $Id: DeITLayer.h,v 1.5 2007-02-28 18:30:45 marcocle Exp $
+// $Id: DeITLayer.h,v 1.6 2007-03-01 11:08:00 cattanem Exp $
 #ifndef _DeITLayer_H_
 #define _DeITLayer_H_
 
@@ -68,7 +68,7 @@ public:
   DeITLadder* findLadder(const Gaudi::XYZPoint& point) ;  
 
   /** check whether contains 
-  *  @param channel
+  *  @param  aChannel channel
   *  @return bool
   */ 
   bool contains(const LHCb::STChannelID aChannel) const; 

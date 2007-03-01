@@ -1,4 +1,4 @@
-// $Id: DeITLadder.h,v 1.5 2007-02-28 18:30:45 marcocle Exp $
+// $Id: DeITLadder.h,v 1.6 2007-03-01 11:08:00 cattanem Exp $
 #ifndef _DeITLadder_H_
 #define _DeITLadder_H_
 
@@ -58,7 +58,7 @@ public:
 
 
    /** check whether contains 
-   *  @param channel
+   *  @param  aChannel channel
    *  @return bool
    */ 
    bool contains(const LHCb::STChannelID aChannel) const; 
@@ -101,8 +101,8 @@ inline bool DeITLadder::contains(const LHCb::STChannelID aChannel) const{
 /** ouput operator for class DeITLadder
  *  @see DeITLadder
  *  @see MsgStream
- *  @param os reference to STL output stream
- *  @param de reference to DeITLadder object
+ *  @param os      reference to STL output stream
+ *  @param aLadder reference to DeITLadder object
  */
 inline std::ostream& operator<<( std::ostream& os , const DeITLadder* aLadder )
 { return aLadder->printOut( os ); }
@@ -111,8 +111,8 @@ inline std::ostream& operator<<( std::ostream& os , const DeITLadder* aLadder )
 /** ouput operator for class DeITLadder
  *  @see DeITLadder
  *  @see MsgStream
- *  @param os reference to MsgStream output stream
- *  @param de reference to DeITLadder object
+ *  @param os      reference to MsgStream output stream
+ *  @param aLadder reference to DeITLadder object
  */
 inline MsgStream& operator<<( MsgStream& os , const DeITLadder* aLadder )
 { return aLadder->printOut( os ); }

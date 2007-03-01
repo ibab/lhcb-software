@@ -1,4 +1,4 @@
-// $Id: DeSTSector.h,v 1.15 2007-02-09 13:01:57 cattanem Exp $
+// $Id: DeSTSector.h,v 1.16 2007-03-01 11:08:00 cattanem Exp $
 #ifndef _DeSTSector_H_
 #define _DeSTSector_H_
 
@@ -53,7 +53,7 @@ public:
   void setID(const unsigned int id);
 
   /** check whether contains
-  *  @param channel
+  *  @param  aChannel channel
   *  @return bool
   */
   bool contains(const LHCb::STChannelID aChannel) const;
@@ -75,7 +75,7 @@ public:
   bool isStrip(const unsigned int strip) const;
 
   /** convert a local u to a strip 
-  * @param local u
+  * @param  u local u
   * @return strip 
   **/ 
   unsigned int localUToStrip(const double u) const;
@@ -118,23 +118,23 @@ public:
   Gaudi::Plane3D exitPlane() const; 
 
   /** 
-  * @param point in local frame
-  * @param tolerance
+  * @param  point point in local frame
+  * @param  tol   tolerance
   * @return bool in active region 
   */
   bool localInActive(const Gaudi::XYZPoint& point, 
                      Gaudi::XYZPoint tol = Gaudi::XYZPoint(0.,0.,0.)) const;
    
   /** 
-  * @param v in local frame
-  * @param tolerance
+  * @param  v   v in local frame
+  * @param  tol tolerance
   * @return bool in a bond gap - ie dead region
   */
   bool localInBondGap( const double v ,double tol = 0) const;
   
   /** 
-  * @param u in local frame
-  * @param v in local frame
+  * @param u    u in local frame
+  * @param v    v in local frame
   * @param uTol
   * @param vTol
   * @return bool in active region of box 
@@ -144,24 +144,23 @@ public:
 
 
   /** 
-  * @param point in global frame
-  * @param tolerance
+  * @param  point point in global frame
+  * @param  tol   tolerance
   * @return bool in active region 
   */
   bool globalInActive(const Gaudi::XYZPoint& point, 
                      Gaudi::XYZPoint tol = Gaudi::XYZPoint(0.,0.,0.)) const;
    
   /** 
-  * @param point in global frame
-  * @param tolerance
+  * @param  gpoint point in global frame
+  * @param  tol    tolerance
   * @return bool in a bond gap - ie dead region
   */
   bool globalInBondGap(const Gaudi::XYZPoint& gpoint ,double tol = 0) const;
   
   /** 
-  * @param point in global frame
-  * @param uTol
-  * @param vTol
+  * @param  gpoint point in global frame
+  * @param  tol    vTol
   * @return bool in active region of box 
   */
   bool globalInBox(const Gaudi::XYZPoint& gpoint, 
@@ -295,8 +294,8 @@ inline Gaudi::Plane3D DeSTSector::exitPlane() const {
 /** ouput operator for class DeSTSector
  *  @see DeSTSector
  *  @see MsgStream
- *  @param os reference to STL output stream
- *  @param de reference to DeSTSector object
+ *  @param os      reference to STL output stream
+ *  @param aSector reference to DeSTSector object
  */
 inline std::ostream& operator<<( std::ostream& os , const DeSTSector* aSector )
 { return aSector->printOut( os ); }
@@ -305,8 +304,8 @@ inline std::ostream& operator<<( std::ostream& os , const DeSTSector* aSector )
 /** ouput operator for class DeSTSector
  *  @see DeSTSector
  *  @see MsgStream
- *  @param os reference to MsgStream output stream
- *  @param de reference to DeSTSector object
+ *  @param os      reference to MsgStream output stream
+ *  @param aSector reference to DeSTSector object
  */
 inline MsgStream& operator<<( MsgStream& os , const DeSTSector* aSector )
 { return aSector->printOut( os ); }

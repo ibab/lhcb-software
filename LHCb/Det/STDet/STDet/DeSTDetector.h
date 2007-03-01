@@ -1,4 +1,4 @@
-// $Id: DeSTDetector.h,v 1.19 2006-12-13 13:48:52 mneedham Exp $
+// $Id: DeSTDetector.h,v 1.20 2007-03-01 11:08:00 cattanem Exp $
 #ifndef _DeSTDetector_H_
 #define _DeSTDetector_H_
 
@@ -98,7 +98,7 @@ public:
   DeSTLayer* findLayer(const Gaudi::XYZPoint& point);
     
   /** check contains channel
-  *  @param channel
+  *  @param  aChannel channel
   *  @return bool
   */
   bool contains(const LHCb::STChannelID aChannel) const;
@@ -123,14 +123,14 @@ public:
 
   /** 
   *  short cut to pick up the wafer corresponding to x,y,z
-  * @param point in global frame  
+  * @param  aPoint point in global frame  
   * @return sector 
   */
   virtual DeSTSector* findSector(const Gaudi::XYZPoint& aPoint) = 0; 
 
   /** 
   *  short cut to pick up the wafer corresponding to a channel
-  * @param channel 
+  * @param  aChannel channel 
   * @return sector 
   */
   DeSTSector* findSector(const LHCb::STChannelID aChannel); 

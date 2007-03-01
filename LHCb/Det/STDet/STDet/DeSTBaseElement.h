@@ -1,4 +1,4 @@
-// $Id: DeSTBaseElement.h,v 1.7 2007-02-09 12:36:20 mneedham Exp $
+// $Id: DeSTBaseElement.h,v 1.8 2007-03-01 11:08:00 cattanem Exp $
 #ifndef _DeSTBaseElement_H_
 #define _DeSTBaseElement_H_
 
@@ -33,14 +33,14 @@ public:
   bool isInside(const Gaudi::XYZPoint& point) const;
 
   /** transform global to local point
-  * @param global point 
-  * @return local point
+  * @param  point global point 
+  * @return       local point
   */
   Gaudi::XYZPoint toLocal(const Gaudi::XYZPoint& point) const;
 
   /** transform global to local point
-  * @param local point 
-  * @return global point
+  * @param  point  local point 
+  * @return        global point
   */
   Gaudi::XYZPoint toGlobal(const Gaudi::XYZPoint& point) const;
 
@@ -51,9 +51,9 @@ public:
 
 
   /** convert x,y,z in local frame to global frame
-  * @param local x
-  * @param local y
-  * @param local z
+  * @param x local x
+  * @param y local y
+  * @param z local z
   * @return point 
   */
   Gaudi::XYZPoint globalPoint(const double x, 

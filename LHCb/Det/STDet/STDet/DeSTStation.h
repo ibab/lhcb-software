@@ -1,4 +1,4 @@
-// $Id: DeSTStation.h,v 1.2 2006-12-13 13:48:52 mneedham Exp $
+// $Id: DeSTStation.h,v 1.3 2007-03-01 11:08:00 cattanem Exp $
 #ifndef _DeSTStation_H_
 #define _DeSTStation_H_
 
@@ -54,7 +54,7 @@ public:
   MsgStream& printOut( MsgStream& os) const;
 
   /** check contains channel
-  *  @param channel
+  *  @param  aChannel channel
   *  @return bool
   */
   bool contains(const LHCb::STChannelID aChannel) const;
@@ -75,8 +75,8 @@ inline bool DeSTStation::contains(const LHCb::STChannelID aChannel) const{
 /** ouput operator for class DeSTStation
  *  @see DeSTStation
  *  @see MsgStream
- *  @param os reference to STL output stream
- *  @param de reference to DeSTStation object
+ *  @param os       reference to STL output stream
+ *  @param aStation reference to DeSTStation object
  */
 inline std::ostream& operator<<( std::ostream& os , const DeSTStation* aStation )
 { return aStation->printOut( os ); }
@@ -85,14 +85,10 @@ inline std::ostream& operator<<( std::ostream& os , const DeSTStation* aStation 
 /** ouput operator for class DeSTStation
  *  @see DeSTStation
  *  @see MsgStream
- *  @param os reference to MsgStream output stream
- *  @param de reference to DeSTStation object
+ *  @param os       reference to MsgStream output stream
+ *  @param aStation reference to DeSTStation object
  */
 inline MsgStream& operator<<( MsgStream& os , const DeSTStation* aStation )
 { return aStation->printOut( os ); }
 
 #endif // _DeSTStation_H
-
-
-
-
