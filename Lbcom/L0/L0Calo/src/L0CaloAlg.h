@@ -1,10 +1,10 @@
 #ifndef   L0CALO_L0CALOALG_H
 #define   L0CALO_L0CALOALG_H  1
-// $Id: L0CaloAlg.h,v 1.20 2007-02-22 23:55:10 odescham Exp $
+// $Id: L0CaloAlg.h,v 1.21 2007-03-01 16:40:26 cattanem Exp $
 
 // from Gaudi 
 #include "GaudiAlg/GaudiAlgorithm.h"
-#include "Kernel/Point3DTypes.h"
+#include "GaudiKernel/Point3DTypes.h"
 // from Calo
 #include "CaloDet/DeCalorimeter.h"
 
@@ -31,7 +31,6 @@ class L0Candidate {
 public:
   /** creator
    * @param det : The detector element pointer
-   * @param scale : et scale
    */
   L0Candidate( DeCalorimeter* det ) : m_ID() {
     m_det     = det ;

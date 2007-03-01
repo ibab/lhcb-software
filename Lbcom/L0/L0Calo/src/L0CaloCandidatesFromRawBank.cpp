@@ -1,8 +1,8 @@
-// $Id: L0CaloCandidatesFromRawBank.cpp,v 1.2 2006-11-07 16:08:28 ocallot Exp $
+// $Id: L0CaloCandidatesFromRawBank.cpp,v 1.3 2007-03-01 16:40:26 cattanem Exp $
 // Include files
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h"
+#include "GaudiKernel/ToolFactory.h"
 
 #include "Event/L0DUBase.h"
 
