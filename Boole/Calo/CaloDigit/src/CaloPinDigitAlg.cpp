@@ -1,8 +1,8 @@
-// $Id: CaloPinDigitAlg.cpp,v 1.3 2007-02-28 22:46:12 odescham Exp $
+// $Id: CaloPinDigitAlg.cpp,v 1.4 2007-03-01 17:08:43 cattanem Exp $
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/RndmGenerators.h"
 // local
 #include "Event/CaloAdc.h"

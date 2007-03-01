@@ -4,6 +4,9 @@
 ! Purpose     : Digitisation and Zero-suppression of the Calorimeters
 !-----------------------------------------------------------------------------
 
+!======================== CaloDigit v2r3 2007-03-01 ==========================
+! 2007-03-01 - Marco Cattaneo
+ - Remove obsolete CaloDigit_load.cpp file, and an LHCbDefinitions include
 
 ! 2007-02-28 - Olivier Deschamps 
  - complete CaloPinDigitAlg for production of LED data for Prs & Spd
@@ -16,8 +19,6 @@
 	"Calibration Data (LED)" for Ecal/Hcal
  - options/CaliBoole.opts : special setup of Boole to produce Calo 
 	"calibration data"  (only Calo Banks are filled)
-
-
 
 !======================== CaloDigit v2r2 2006-11-23 ==========================
 ! 2006-11-23 - Marco Cattaneo

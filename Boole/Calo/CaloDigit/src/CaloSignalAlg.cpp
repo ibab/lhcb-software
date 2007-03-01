@@ -1,12 +1,10 @@
-// $Id: CaloSignalAlg.cpp,v 1.12 2007-02-22 23:57:20 odescham Exp $
+// $Id: CaloSignalAlg.cpp,v 1.13 2007-03-01 17:08:43 cattanem Exp $
 
-/// Kernel
-#include "Kernel/Point3DTypes.h"
-
-/// Gaudi
+// Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/RndmGenerators.h"
 #include "GaudiKernel/SystemOfUnits.h"
+#include "GaudiKernel/Point3DTypes.h"
 
 #include "Event/MCParticle.h"
 
@@ -14,11 +12,11 @@
 #include "Kernel/CaloCellID.h"
 #include "CaloKernel/CaloVector.h"
 
-/// Event/CaloEvent
+// Event/CaloEvent
 #include "Event/MCCaloDigit.h"
 #include "Event/MCCaloHit.h"
 
-/// local
+// local
 #include "CaloSignalAlg.h"
 
 // ============================================================================
