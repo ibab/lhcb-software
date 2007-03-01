@@ -4,10 +4,14 @@
 ! Purpose     : Muon digitisation algorithms
 !-----------------------------------------------------------------------------
 
-!======================== MuonAlgs v6r1 2007-02-27 =========================
+!======================== MuonAlgs v6r2 2007-03-01 =========================
+! 2007-03-01 - Marco Cattaneo
+ - Remove obsolete MuonAlgs_load.cpp file
+
 ! 2007-02-27 - Alessia Satta
  - Modified for dialog deadtime
 
+!======================== MuonAlgs v6r1 2007-02-27 =========================
 ! 2006-11-16 - Alessia Satta
  - Modified for TAE
 
