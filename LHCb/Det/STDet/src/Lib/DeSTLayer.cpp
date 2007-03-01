@@ -85,5 +85,6 @@ StatusCode DeSTLayer::cachePlane(){
 
  m_plane = Gaudi::Plane3D(p1,p2,p3);
 
+ return StatusCode::SUCCESS;
 }
 
