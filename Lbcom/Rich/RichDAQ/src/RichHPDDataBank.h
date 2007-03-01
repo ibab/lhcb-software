@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ utility class : Rich::DAQ::HPDDataBank
  *
  *  CVS Log :-
- *  $Id: RichHPDDataBank.h,v 1.19 2007-02-01 17:42:29 jonrob Exp $
+ *  $Id: RichHPDDataBank.h,v 1.20 2007-03-01 19:39:07 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-17
@@ -25,27 +25,8 @@
 // Kernel
 #include "RichDet/RichDAQDefinitions.h"
 
-//-----------------------------------------------------------------------------
-/** @namespace Rich
- *
- *  General namespace for RICH software
- *
- *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
- *  @date   08/07/2004
- */
-//-----------------------------------------------------------------------------
 namespace Rich
 {
-
-  //-----------------------------------------------------------------------------
-  /** @namespace DAQ
-   *
-   *  namespace for RICH DAQ software
-   *
-   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
-   *  @date   08/07/2004
-   */
-  //-----------------------------------------------------------------------------
   namespace DAQ
   {
 
@@ -61,6 +42,7 @@ namespace Rich
     //-----------------------------------------------------------------------------
     class HPDDataBank
     {
+
     public:
 
       /** Decode the data bank to a RichSmartID vector

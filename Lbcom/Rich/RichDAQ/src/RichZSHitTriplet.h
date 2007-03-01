@@ -4,7 +4,7 @@
  *  Header file for RICH DAQ utility class : RichZSHitTriplet
  *
  *  CVS Log :-
- *  $Id: RichZSHitTriplet.h,v 1.13 2007-02-01 17:42:30 jonrob Exp $
+ *  $Id: RichZSHitTriplet.h,v 1.14 2007-03-01 19:39:07 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
@@ -19,39 +19,23 @@
 // numberings
 #include "RichDet/RichDAQDefinitions.h"
 
-//-----------------------------------------------------------------------------
-/** @namespace Rich
- *
- *  General namespace for RICH software
- *
- *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
- *  @date   08/07/2004
- */
-//-----------------------------------------------------------------------------
 namespace Rich
 {
-
-  //-----------------------------------------------------------------------------
-  /** @namespace DAQ
-   *
-   *  namespace for RICH DAQ software
-   *
-   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
-   *  @date   08/07/2004
-   */
-  //-----------------------------------------------------------------------------
   namespace DAQ
   {
 
-    /** @namespace RichZSHitTripletCode
+    /** @class RichZSHitTriplet RichZSHitTriplet.h
      *
-     *  Namespace for definitions related to RichZSHitTripletCode
+     *  Utility class representing three hits packed into a single word
      *
-     *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+     *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
      *  @date   2003-11-06
      */
-    namespace RichZSHitTripletCode 
+
+    class RichZSHitTriplet
     {
+
+    public: // definitions
 
       /// Number of bits for each row or column number
       static const Rich::DAQ::ShortType BitsHit    = 5;
@@ -74,19 +58,6 @@ namespace Rich
 
       // the max row/column values storable
       static const Rich::DAQ::ShortType MaxRowCol  = ( 1 << BitsHit ) - 1;
-
-    }
-
-    /** @class RichZSHitTriplet RichZSHitTriplet.h
-     *
-     *  Utility class representing three hits packed into a single word
-     *
-     *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
-     *  @date   2003-11-06
-     */
-
-    class RichZSHitTriplet 
-    {
 
     public: // methods
 
@@ -129,79 +100,79 @@ namespace Rich
       /// Set the first hit row number
       inline void setRow0( const Rich::DAQ::ShortType row )
       {
-        dataInRange(row,RichZSHitTripletCode::MaxRowCol);
-        set( row, RichZSHitTripletCode::ShiftRow0, RichZSHitTripletCode::MaskRow0 );
+        dataInRange(row,MaxRowCol);
+        set( row, ShiftRow0, MaskRow0 );
       }
 
       /// Set the first hit column number
       inline void setCol0( const Rich::DAQ::ShortType col )
       {
-        dataInRange(col,RichZSHitTripletCode::MaxRowCol);
-        set( col, RichZSHitTripletCode::ShiftCol0,RichZSHitTripletCode::MaskCol0 );
+        dataInRange(col,MaxRowCol);
+        set( col, ShiftCol0,MaskCol0 );
       }
 
       /// Set the second hit row number
       inline void setRow1( const Rich::DAQ::ShortType row )
       {
-        dataInRange(row,RichZSHitTripletCode::MaxRowCol);
-        set( row, RichZSHitTripletCode::ShiftRow1,RichZSHitTripletCode::MaskRow1 );
+        dataInRange(row,MaxRowCol);
+        set( row, ShiftRow1,MaskRow1 );
       }
 
       /// Set the second hit column number
       inline void setCol1( const Rich::DAQ::ShortType col )
       {
-        dataInRange(col,RichZSHitTripletCode::MaxRowCol);
-        set( col, RichZSHitTripletCode::ShiftCol1,RichZSHitTripletCode::MaskCol1 );
+        dataInRange(col,MaxRowCol);
+        set( col, ShiftCol1,MaskCol1 );
       }
 
       /// Set the third hit row number
       inline void setRow2( const Rich::DAQ::ShortType row )
       {
-        dataInRange(row,RichZSHitTripletCode::MaxRowCol);
-        set( row, RichZSHitTripletCode::ShiftRow2, RichZSHitTripletCode::MaskRow2 );
+        dataInRange(row,MaxRowCol);
+        set( row, ShiftRow2, MaskRow2 );
       }
 
       /// Set the third hit column number
       inline void setCol2( const Rich::DAQ::ShortType col )
       {
-        dataInRange(col,RichZSHitTripletCode::MaxRowCol);
-        set( col, RichZSHitTripletCode::ShiftCol2,RichZSHitTripletCode::MaskCol2 );
+        dataInRange(col,MaxRowCol);
+        set( col, ShiftCol2,MaskCol2 );
       }
 
       /// Retrieve the first hit row number
       inline Rich::DAQ::ShortType row0() const
       {
-        return ( (data() & RichZSHitTripletCode::MaskRow0) >> RichZSHitTripletCode::ShiftRow0 );
+        return ( (data() & MaskRow0) >> ShiftRow0 );
       }
 
       /// Retrieve the second hit row number
       inline Rich::DAQ::ShortType row1() const
       {
-        return ( (data() & RichZSHitTripletCode::MaskRow1) >> RichZSHitTripletCode::ShiftRow1 );
+        return ( (data() & MaskRow1) >> ShiftRow1 );
       }
 
       /// Retrieve the third hit row number
       inline Rich::DAQ::ShortType row2() const
       {
-        return ( (data() & RichZSHitTripletCode::MaskRow2) >> RichZSHitTripletCode::ShiftRow2 );
+        return ( (data() & MaskRow2) >> ShiftRow2 );
       }
 
       /// Retrieve the first hit column number
       inline Rich::DAQ::ShortType col0() const
       {
-        return ( (data() & RichZSHitTripletCode::MaskCol0) >> RichZSHitTripletCode::ShiftCol0 );
+        return ( (data() & MaskCol0) >> ShiftCol0 );
       }
 
       /// Retrieve the second hit column number
       inline Rich::DAQ::ShortType col1() const
       {
-        return ( (data() & RichZSHitTripletCode::MaskCol1) >> RichZSHitTripletCode::ShiftCol1 );
+        return ( (data() & MaskCol1) >> ShiftCol1 );
       }
 
       /// Retrieve the third hit column number
       inline Rich::DAQ::ShortType col2() const
       {
-        return ( (data() & RichZSHitTripletCode::MaskCol2) >> RichZSHitTripletCode::ShiftCol2 );
+        return ( (data() & MaskCol2) >> ShiftCol2 );
       }
 
     private: // methods

@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::DAQ::RawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.h,v 1.20 2007-02-01 17:42:30 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.h,v 1.21 2007-03-01 19:39:07 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-18
@@ -50,27 +50,8 @@
 #include "Event/RawEvent.h"
 #include "Event/ODIN.h"
 
-//-----------------------------------------------------------------------------
-/** @namespace Rich
- *
- *  General namespace for RICH software
- *
- *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
- *  @date   08/07/2004
- */
-//-----------------------------------------------------------------------------
 namespace Rich
 {
-
-  //-----------------------------------------------------------------------------
-  /** @namespace DAQ
-   *
-   *  namespace for RICH DAQ software
-   *
-   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
-   *  @date   08/07/2004
-   */
-  //-----------------------------------------------------------------------------
   namespace DAQ
   {
 
@@ -123,10 +104,6 @@ namespace Rich
       void fillRawEvent( const LHCb::RichSmartID::Vector & smartIDs,
                          const Rich::DAQ::BankVersion version = Rich::DAQ::LHCb2 ) const;
 
-      /// Decode a RawBank into RichSmartID identifiers
-      void decodeToSmartIDs( const LHCb::RawBank & bank,
-                             Rich::DAQ::PDMap & smartIDs ) const;
-
       /// Decode all RICH RawBanks into RichSmartID identifiers
       void decodeToSmartIDs( Rich::DAQ::PDMap & smartIDs ) const;
 
@@ -138,6 +115,10 @@ namespace Rich
       typedef Rich::Map< const L1IDandV, L1CountAndSize > L1TypeCount;
 
     private: // methods
+
+      /// Decode a RawBank into RichSmartID identifiers
+      void decodeToSmartIDs( const LHCb::RawBank & bank,
+                             Rich::DAQ::PDMap & smartIDs ) const;
 
       /** Creates a bank data of a given version from the given RichSmartID vector
        *
@@ -278,6 +259,20 @@ namespace Rich
 
       /// Flag to turn on/off the use of the ODIN data bank during decoding for integrity checks
       bool m_decodeUseOdin;
+
+      /// Turn off data integrity checks
+      bool m_checkDataIntegrity;
+
+      /** Option for deep debugging. Turns on the use of a fake HPD RichSmartID for each HPD data
+       *  data block. Useful for cases when the HPD L0 ID is missing in the database.
+       *  @attention If set to true, decoded data is not complete (RICH,HPD panel and HPD info is missing).
+       *             Consequently, this option should only be used to test the data decoding and not if the
+       *             RichSmartIDs are needed for analysis downstream.
+       */
+      bool m_useFakeHPDID;
+
+      /// Map of the number of time each L1 board ID is found per event (debugging variable)
+      mutable Rich::Map<Rich::DAQ::Level1ID,unsigned int> m_l1IdsDecoded;
 
     };
 

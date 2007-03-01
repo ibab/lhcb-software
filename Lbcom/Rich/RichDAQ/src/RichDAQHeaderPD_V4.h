@@ -4,7 +4,7 @@
  *
  *  Header file for RICH DAQ class : RichDAQHeaderV4::RichDAQHeaderPD
  *
- *  $Id: RichDAQHeaderPD_V4.h,v 1.1 2007-02-01 17:42:29 jonrob Exp $
+ *  $Id: RichDAQHeaderPD_V4.h,v 1.2 2007-03-01 19:39:07 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
@@ -35,33 +35,14 @@ namespace
   static const unsigned int nHeaderWordsExtended = 3;
 }
 
-//-----------------------------------------------------------------------------
-/** @namespace Rich
- *
- *  General namespace for RICH software
- *
- *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
- *  @date   08/07/2004
- */
-//-----------------------------------------------------------------------------
 namespace Rich
 {
-
-  //-----------------------------------------------------------------------------
-  /** @namespace DAQ
-   *
-   *  namespace for RICH DAQ software
-   *
-   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
-   *  @date   08/07/2004
-   */
-  //-----------------------------------------------------------------------------
   namespace DAQ
   {
 
-    /** @namespace RichDAQHeaderV4
+    /** @namespace Rich::DAQ::RichDAQHeaderV4
      *
-     *  Namespace for version 3 of the RichDAQHeaderPD object.
+     *  Namespace for version 4 of the RichDAQHeaderPD object.
      *
      *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
      *  @date   2004-12-17

@@ -5,7 +5,7 @@
  * Header file for monitor algorithm Rich::MC::MCCKPhotonYieldAlg
  *
  * CVS Log :-
- * $Id: RichMCCKPhotonYieldAlg.h,v 1.4 2007-02-01 17:49:09 jonrob Exp $
+ * $Id: RichMCCKPhotonYieldAlg.h,v 1.5 2007-03-01 19:40:33 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-11-03
@@ -35,25 +35,8 @@
 // GSL
 #include "gsl/gsl_math.h"
 
-/** @namespace Rich
- *
- *  General namespace for RICH specific definitions
- *
- *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
- *  @date   08/07/2004
- */
 namespace Rich
 {
-
-  //-----------------------------------------------------------------------------
-  /** @namespace MC
-   *
-   *  General namespace for RICH MC related software
-   *
-   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
-   *  @date   05/12/2006
-   */
-  //-----------------------------------------------------------------------------
   namespace MC
   {
 

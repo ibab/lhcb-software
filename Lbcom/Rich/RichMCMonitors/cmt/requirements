@@ -13,6 +13,7 @@ branches          cmt doc src
 #============================================================================
 # Used packages
 #============================================================================
+use   GSL          v*    LCG_Interfaces
 use   RichKernel   v*    Rich
 use   MCEvent      v*    Event
 use   GSL          v*    LCG_Interfaces

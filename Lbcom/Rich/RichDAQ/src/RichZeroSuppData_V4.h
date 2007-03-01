@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ utility class : RichZeroSuppData
  *
  *  CVS Log :-
- *  $Id: RichZeroSuppData_V4.h,v 1.1 2007-02-01 17:42:30 jonrob Exp $
+ *  $Id: RichZeroSuppData_V4.h,v 1.2 2007-03-01 19:39:07 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-17
@@ -25,33 +25,14 @@
 // Event Model
 #include "Event/ODIN.h"
 
-//-----------------------------------------------------------------------------
-/** @namespace Rich
- *
- *  General namespace for RICH software
- *
- *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
- *  @date   08/07/2004
- */
-//-----------------------------------------------------------------------------
 namespace Rich
 {
-
-  //-----------------------------------------------------------------------------
-  /** @namespace DAQ
-   *
-   *  namespace for RICH DAQ software
-   *
-   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
-   *  @date   08/07/2004
-   */
-  //-----------------------------------------------------------------------------
   namespace DAQ
   {
 
-    /** @namespace RichZeroSuppDataV4
+    /** @namespace Rich::DAQ::RichZeroSuppDataV4
      *
-     *  Namespace for version 1 of the RichZeroSuppData object.
+     *  Namespace for version 4 of the RichZeroSuppData object.
      *
      *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
      *  @date   2004-12-17

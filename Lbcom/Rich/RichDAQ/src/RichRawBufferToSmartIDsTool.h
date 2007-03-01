@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::DAQ::RawBufferToSmartIDsTool
  *
  *  CVS Log :-
- *  $Id: RichRawBufferToSmartIDsTool.h,v 1.13 2007-02-01 17:42:29 jonrob Exp $
+ *  $Id: RichRawBufferToSmartIDsTool.h,v 1.14 2007-03-01 19:39:07 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -29,27 +29,8 @@
 #include "RichKernel/IRichRawBufferToSmartIDsTool.h"
 #include "RichKernel/IRichRawDataFormatTool.h"
 
-//-----------------------------------------------------------------------------
-/** @namespace Rich
- *
- *  General namespace for RICH software
- *
- *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
- *  @date   08/07/2004
- */
-//-----------------------------------------------------------------------------
 namespace Rich
 {
-
-  //-----------------------------------------------------------------------------
-  /** @namespace DAQ
-   *
-   *  namespace for RICH DAQ software
-   *
-   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
-   *  @date   08/07/2004
-   */
-  //-----------------------------------------------------------------------------
   namespace DAQ
   {
 
@@ -109,9 +90,6 @@ namespace Rich
       /// Pointer to RICH raw data format tool
       const IRawDataFormatTool * m_rawFormatT;
 
-      /// Flag to turn on the sorting of the RichSmartIDs
-      //bool m_sortIDs;
-
       /// RichSmartIDs
       mutable Rich::DAQ::PDMap m_smartIDs;
 
@@ -123,7 +101,6 @@ namespace Rich
     inline void RawBufferToSmartIDsTool::InitNewEvent()
     {
       m_newEvent = true;
-      m_smartIDs.clear();
     }
 
   }

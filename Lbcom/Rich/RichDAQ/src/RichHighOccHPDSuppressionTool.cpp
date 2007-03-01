@@ -5,7 +5,7 @@
  * Implementation file for class : RichHighOccHPDSuppressionTool
  *
  * CVS Log :-
- * $Id: RichHighOccHPDSuppressionTool.cpp,v 1.15 2007-02-01 17:42:29 jonrob Exp $
+ * $Id: RichHighOccHPDSuppressionTool.cpp,v 1.16 2007-03-01 19:39:07 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 21/03/2006
@@ -39,15 +39,15 @@ HighOccHPDSuppressionTool( const std::string& type,
   m_condBDLocs[Rich::Rich1] = "/dd/Conditions/Environment/Rich1/AverageHPDOccupancies";
   m_condBDLocs[Rich::Rich2] = "/dd/Conditions/Environment/Rich2/AverageHPDOccupancies";
   declareProperty( "HPDOccLocs",        m_condBDLocs );
-  declareProperty( "PrintHPDSuppressions", m_sumPrint = false );
-  declareProperty( "MinHPDFills",       m_minFills   = 20     );
-  declareProperty( "AbsoluteMaxHPDOcc", m_overallMax = 100    );
-  declareProperty( "OccCutScaleFactor", m_scale      = 4      );
-  declareProperty( "MemoryFactor",      m_memory     = 20     );
-  declareProperty( "PrintXML",          m_printXML   = false  );
+  declareProperty( "PrintHPDSuppressions", m_sumPrint  = false  );
+  declareProperty( "MinHPDFills",       m_minFills     = 20     );
+  declareProperty( "AbsoluteMaxHPDOcc", m_overallMax   = 100    );
+  declareProperty( "OccCutScaleFactor", m_scale        = 4      );
+  declareProperty( "MemoryFactor",      m_memory       = 20     );
+  declareProperty( "PrintXML",          m_printXML     = false  );
   declareProperty( "ReadOccFromDB",     m_readFromCondDB = true );
-  declareProperty( "WhichRich",         m_whichRICH  = "UNDEFINED" );
-  declareProperty( "UseRunningOccupancies", m_useRunAv = false );
+  declareProperty( "WhichRich",         m_whichRICH    = "UNDEFINED" );
+  declareProperty( "UseRunningOccupancies", m_useRunAv = false  );
 
 }
 
@@ -71,17 +71,17 @@ StatusCode HighOccHPDSuppressionTool::initialize()
   sc = initOccMap();
 
   // summary printout of options
-  info() << rich() << " pixel suppression options :-" << endreq
-         << "  Occupancy memory                      = " << m_memory << endreq
-         << "  Occupancy scale factor                = " << m_scale << endreq
-         << "  Absolute max HPD occupancy            = " << m_overallMax << endreq;
+  debug() << rich() << " pixel suppression options :-" << endreq
+          << "  Occupancy memory                      = " << m_memory << endreq
+          << "  Occupancy scale factor                = " << m_scale << endreq
+          << "  Absolute max HPD occupancy            = " << m_overallMax << endreq;
   if ( m_useRunAv )
   {
-    info() << "  Will use running average HPD occupancies" << endreq;
+    debug() << "  Will use running average HPD occupancies" << endreq;
   }
   else
   {
-    info() << "  Will use fixed average HPD occupancies" << endreq;
+    debug() << "  Will use fixed average HPD occupancies" << endreq;
   }
 
   // return

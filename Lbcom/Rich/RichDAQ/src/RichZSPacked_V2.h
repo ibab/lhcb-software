@@ -4,7 +4,7 @@
  *  Header file for RICH DAQ utility class : RichZSPacked_V2::RichZSPacked
  *
  *  CVS Log :-
- *  $Id: RichZSPacked_V2.h,v 1.3 2007-02-01 17:42:30 jonrob Exp $
+ *  $Id: RichZSPacked_V2.h,v 1.4 2007-03-01 19:39:07 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
@@ -20,31 +20,12 @@
 // numberings
 #include "RichDet/RichDAQDefinitions.h"
 
-//-----------------------------------------------------------------------------
-/** @namespace Rich
- *
- *  General namespace for RICH software
- *
- *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
- *  @date   08/07/2004
- */
-//-----------------------------------------------------------------------------
 namespace Rich
 {
-
-  //-----------------------------------------------------------------------------
-  /** @namespace DAQ
-   *
-   *  namespace for RICH DAQ software
-   *
-   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
-   *  @date   08/07/2004
-   */
-  //-----------------------------------------------------------------------------
   namespace DAQ
   {
 
-    /** @namespace RichZSPacked_V2
+    /** @namespace Rich::DAQ::RichZSPacked_V2
      *
      *  Namespace for second version of LHCb mode ZS compressed data words
      *
@@ -54,9 +35,9 @@ namespace Rich
     namespace RichZSPacked_V2
     {
 
-      /** @namespace RichZSPackedCode
+      /** @namespace Rich::DAQ::RichZSPacked_V2::RichZSPackedCode
        *
-       *  Namespace for definitions related to RichZSPacked_V2::RichZSPackedCode
+       *  Namespace for definitions related to RichZSPacked_V2::RichZSPacked
        *
        *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
        *  @date   2005-01-12

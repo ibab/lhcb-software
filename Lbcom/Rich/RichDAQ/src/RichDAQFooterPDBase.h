@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ utility class : Rich::DAQ::FooterPDBase
  *
  *  CVS Log :-
- *  $Id: RichDAQFooterPDBase.h,v 1.3 2007-02-01 17:42:28 jonrob Exp $
+ *  $Id: RichDAQFooterPDBase.h,v 1.4 2007-03-01 19:39:07 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   05/09/2006
@@ -22,27 +22,8 @@
 // numberings
 #include "RichDet/RichDAQDefinitions.h"
 
-//-----------------------------------------------------------------------------
-/** @namespace Rich
- *
- *  General namespace for RICH software
- *
- *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
- *  @date   08/07/2004
- */
-//-----------------------------------------------------------------------------
 namespace Rich
 {
-
-  //-----------------------------------------------------------------------------
-  /** @namespace DAQ
-   *
-   *  namespace for RICH DAQ software
-   *
-   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
-   *  @date   08/07/2004
-   */
-  //-----------------------------------------------------------------------------
   namespace DAQ
   {
 

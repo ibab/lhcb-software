@@ -5,7 +5,7 @@
  * Implementation file for class : Rich::DAQ::RawBufferToSmartIDsTool
  *
  * CVS Log :-
- * $Id: RichRawBufferToSmartIDsTool.cpp,v 1.16 2007-02-01 17:42:29 jonrob Exp $
+ * $Id: RichRawBufferToSmartIDsTool.cpp,v 1.17 2007-03-01 19:39:07 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -75,6 +75,8 @@ const Rich::DAQ::PDMap & RawBufferToSmartIDsTool::allRichSmartIDs() const
 
 void RawBufferToSmartIDsTool::fillRichSmartIDs() const
 {
+  // clear current data
+  m_smartIDs.clear();
 
   // Use raw format tool to decode event
   m_rawFormatT->decodeToSmartIDs( m_smartIDs );
@@ -93,7 +95,6 @@ void RawBufferToSmartIDsTool::fillRichSmartIDs() const
         verbose() << "   " << *iID << " " << (*iID).key() << endreq;
       }
     }
-
   }
 
 }

@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ utility class : RichNonZeroSuppData
  *
  *  CVS Log :-
- *  $Id: RichNonZeroSuppData_V3.h,v 1.1 2007-02-01 17:42:29 jonrob Exp $
+ *  $Id: RichNonZeroSuppData_V3.h,v 1.2 2007-03-01 19:39:07 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-07
@@ -27,33 +27,14 @@
 
 //===================================================================================
 
-//-----------------------------------------------------------------------------
-/** @namespace Rich
- *
- *  General namespace for RICH software
- *
- *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
- *  @date   08/07/2004
- */
-//-----------------------------------------------------------------------------
 namespace Rich
 {
-
-  //-----------------------------------------------------------------------------
-  /** @namespace DAQ
-   *
-   *  namespace for RICH DAQ software
-   *
-   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
-   *  @date   08/07/2004
-   */
-  //-----------------------------------------------------------------------------
   namespace DAQ
   {
 
-    /** @namespace RichNonZeroSuppDataV3
+    /** @namespace Rich::DAQ::RichNonZeroSuppDataV3
      *
-     *  Namespace for version 2 of the RichNonZeroSuppData object.
+     *  Namespace for version 3 of the RichNonZeroSuppData object.
      *
      *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
      *  @date   2004-12-17

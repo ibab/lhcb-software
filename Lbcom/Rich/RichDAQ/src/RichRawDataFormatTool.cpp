@@ -5,7 +5,7 @@
  *  Implementation file for class : Rich::RawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.cpp,v 1.42 2007-02-01 17:42:30 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.cpp,v 1.43 2007-03-01 19:39:07 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2004-12-18
@@ -57,6 +57,8 @@ RawDataFormatTool::RawDataFormatTool( const std::string& type,
   declareProperty( "UseZeroSuppression", m_zeroSupp  = true );
   declareProperty( "UseExtendedFormat",  m_extendedFormat = false );
   declareProperty( "DecodeUsingODIN",    m_decodeUseOdin = true );
+  declareProperty( "CheckDataIntegrity", m_checkDataIntegrity = true );
+  declareProperty( "UseFakeHPDID",       m_useFakeHPDID = false );
 }
 
 // Destructor
@@ -191,9 +193,6 @@ RawDataFormatTool::createDataBank( const LHCb::RichSmartID::Vector & smartIDs,
                                    const BankVersion version,
                                    const LHCb::ODIN * odin ) const
 {
-
-  // flag the tool as having been used this event
-  m_hasBeenCalled = true;
 
   // pointer to HPD data block
   HPDDataBank * dataBank = 0;
@@ -573,6 +572,7 @@ void RawDataFormatTool::fillRawEvent( const LHCb::RichSmartID::Vector & smartIDs
 void RawDataFormatTool::decodeToSmartIDs( const LHCb::RawBank & bank,
                                           PDMap & smartIDs ) const
 {
+
   // Check this is a RICH bank
   if ( bank.type() != LHCb::RawBank::Rich )
   {
@@ -586,6 +586,9 @@ void RawDataFormatTool::decodeToSmartIDs( const LHCb::RawBank & bank,
 
   // Get bank version
   const BankVersion version = bankVersion( bank );
+
+  m_hasBeenCalled = true;
+  ++m_l1IdsDecoded[ Level1ID(bank.sourceID()) ];
 
   // Now, delegate the work to a version of the decoding appropriate to the version
 
@@ -636,9 +639,6 @@ void RawDataFormatTool::decodeToSmartIDs_2007( const LHCb::RawBank & bank,
       Exception( "Non-empty RICH Bank size is less than 2 !" );
     }
 
-    // flag the tool as having been used this event
-    m_hasBeenCalled = true;
-
     // Loop over bank, find headers and produce a data bank for each
     // Fill data into RichSmartIDs
     long lineC(0), ingressNum(0);
@@ -675,7 +675,7 @@ void RawDataFormatTool::decodeToSmartIDs_2007( const LHCb::RawBank & bank,
       if ( ingressWord.hpdsSuppressed() )
       {
         std::ostringstream mess;
-        mess << "L1 " << L1ID << " : Ingress " << ingressNum << " "
+        mess << "L1 board " << L1ID << " : Ingress " << ingressNum << " "
              << ingressWord << " is suppressed : " << nHPDs << " HPDs";
         Warning( mess.str() );
       }
@@ -691,13 +691,22 @@ void RawDataFormatTool::decodeToSmartIDs_2007( const LHCb::RawBank & bank,
           std::auto_ptr<const HPDDataBank> hpdBank ( createDataBank( &bank.data()[lineC], // pointer to start of data
                                                                      0, // Not needed here (to be removed). Must be 0 though
                                                                      version ) );
+          // is this HPD suppressed ?
+          const bool hpdIsSuppressed = hpdBank->suppressed();
+          if ( hpdIsSuppressed )
+          {
+            std::ostringstream mess;
+            mess << "L1 board " << L1ID << " : Ingress " << ingressNum << " HPD " << iHPD << " is suppressed"; 
+            Warning( mess.str(), StatusCode::SUCCESS );
+          }
 
           // Only try and decode this HPD if ODIN test was OK
-          if ( odinOK && !hpdBank->suppressed() )
+          if ( odinOK && !hpdIsSuppressed )
           {
 
             // get HPD RichSmartID
-            const LHCb::RichSmartID hpdID = m_richSys->richSmartID( hpdBank->level0ID() );
+            const LHCb::RichSmartID hpdID = ( m_useFakeHPDID ? LHCb::RichSmartID(Rich::Rich1,Rich::left,0,0) :
+                                              m_richSys->richSmartID( hpdBank->level0ID() ) );
 
             // local hit count
             unsigned int hpdHitCount(0);
@@ -706,7 +715,7 @@ void RawDataFormatTool::decodeToSmartIDs_2007( const LHCb::RawBank & bank,
             LHCb::RichSmartID::Vector & newids = smartIDs[hpdID];
 
             // Compare Event IDs for errors
-            bool OK = ( hpdBank->suppressed() ? true :
+            bool OK = ( hpdIsSuppressed ? true :
                         compareIDs( ingressWord.eventID(), hpdBank->eventID() ) );
             if ( !OK )
             {
@@ -722,7 +731,7 @@ void RawDataFormatTool::decodeToSmartIDs_2007( const LHCb::RawBank & bank,
               hpdHitCount = hpdBank->fillRichSmartIDs( newids, hpdID );
 
               // Do data integrity checks
-              OK = hpdBank->checkDataIntegrity(newids,warning());
+              OK = ( !m_checkDataIntegrity || hpdBank->checkDataIntegrity(newids,warning()) );
               if ( !OK ) Warning( "HPD data block failed integrity check" );
 
               if ( msgLevel(MSG::VERBOSE) )
@@ -752,8 +761,8 @@ void RawDataFormatTool::decodeToSmartIDs_2007( const LHCb::RawBank & bank,
               {
                 std::ostringstream hpd;
                 hpd << hpdID.panelID();
-                Warning( "Suppressed HPD in "+hpd.str(), StatusCode::SUCCESS, 0 );
-                smartIDs[hpdID].clear();
+                Warning( "Forced suppression of HPD "+hpd.str(), StatusCode::SUCCESS, 0 );
+                newids.clear();
               }
 
             }
@@ -798,7 +807,7 @@ void RawDataFormatTool::decodeToSmartIDs_2007( const LHCb::RawBank & bank,
   // debug printout
   if ( msgLevel(MSG::DEBUG) )
   {
-    debug() << "Decoded " << format("%2i",nHPDbanks) << " HPDs from Level1 Bank "
+    debug() << "Decoded " << format("%2i",nHPDbanks) << " HPDs from Level1 Bank ID = "
             << format("%2i",L1ID.data())
             << " : Size " << format("%4i",nL1HeaderWords+(bank.size()/4)) << " words : Version "
             << version << endreq;
@@ -831,9 +840,6 @@ void RawDataFormatTool::decodeToSmartIDs_2006TB( const LHCb::RawBank & bank,
       Exception( "Non-empty RICH Bank size is less than 2 !" );
     }
 
-    // flag the tool as having been used this event
-    m_hasBeenCalled = true;
-
     // Loop over bank, find headers and produce a data bank for each
     // Fill data into RichSmartIDs
     long lineC(0);
@@ -846,21 +852,22 @@ void RawDataFormatTool::decodeToSmartIDs_2006TB( const LHCb::RawBank & bank,
                                                                  version ) );
 
       // get HPD RichSmartID
-      const LHCb::RichSmartID hpdID = m_richSys->richSmartID( hpdBank->level0ID() );
+      const LHCb::RichSmartID hpdID = ( m_useFakeHPDID ? LHCb::RichSmartID(Rich::Rich1,Rich::left,0,0) :
+                                        m_richSys->richSmartID( hpdBank->level0ID() ) );
 
       // decode to smartIDs
       LHCb::RichSmartID::Vector & newids = smartIDs[hpdID];
       const unsigned int hpdHitCount = hpdBank->fillRichSmartIDs( newids, hpdID );
 
       // Do data integrity checks
-      const bool OK = hpdBank->checkDataIntegrity(newids,warning());
+      const bool OK = ( !m_checkDataIntegrity || hpdBank->checkDataIntegrity(newids,warning()) );
 
       if ( !OK || msgLevel(MSG::VERBOSE) )
       {
         // printout decoded RichSmartIDs
         verbose() << " Decoded RichSmartIDs :-" << endreq;
-        for ( LHCb::RichSmartID::Vector::const_iterator iID = smartIDs[hpdID].begin();
-              iID != smartIDs[hpdID].end(); ++iID )
+        for ( LHCb::RichSmartID::Vector::const_iterator iID = newids.begin();
+              iID != newids.end(); ++iID )
         {
           verbose() << "   " << *iID << endreq;
         }
@@ -880,8 +887,8 @@ void RawDataFormatTool::decodeToSmartIDs_2006TB( const LHCb::RawBank & bank,
         {
           std::ostringstream hpd;
           hpd << hpdID.panelID();
-          Warning( "Suppressed HPD in "+hpd.str(), StatusCode::SUCCESS, 0 );
-          smartIDs[hpdID].clear();
+          Warning( "Forced suppression of HPD "+hpd.str(), StatusCode::SUCCESS, 0 );
+          newids.clear();
         }
 
       }
@@ -959,8 +966,6 @@ void RawDataFormatTool::decodeToSmartIDs_DC0406( const LHCb::RawBank & bank,
       Exception( "Non-empty RICH Bank size is less than 2 !" );
     }
 
-    // flag the tool as having been used this event
-    m_hasBeenCalled = true;
 
     // Loop over bank, find headers and produce a data bank for each
     // Fill data into RichSmartIDs
@@ -1026,14 +1031,20 @@ void RawDataFormatTool::decodeToSmartIDs_DC0406( const LHCb::RawBank & bank,
         const HPDDataBank * hpdBank ( createDataBank( &bank.data()[lineHeader],
                                                       dataSize,
                                                       version ) );
-        // get hit count
-        const unsigned int hpdHitCount = hpdBank->hitCount();
+
         // get HPD RichSmartID
-        const LHCb::RichSmartID hpdID = m_richSys->richSmartID( hpdBank->level0ID() );
+        const LHCb::RichSmartID hpdID = ( m_useFakeHPDID ? LHCb::RichSmartID(Rich::Rich1,Rich::left,0,0) :
+                                          m_richSys->richSmartID( hpdBank->level0ID() ) );
+
+        // Vector to decode into
+        LHCb::RichSmartID::Vector & newids = smartIDs[hpdID];
+
+        // get hit count
+        const unsigned int hpdHitCount = hpdBank->fillRichSmartIDs( newids, hpdID );
+        
         // apply suppression of high occupancy HPDs
         if ( hpdHitCount < m_maxHPDOc )
         {
-          hpdBank->fillRichSmartIDs( smartIDs[hpdID], hpdID );
           ++nHPDbanks;
           decodedHits += hpdHitCount;
         }
@@ -1042,6 +1053,7 @@ void RawDataFormatTool::decodeToSmartIDs_DC0406( const LHCb::RawBank & bank,
           std::ostringstream hpd;
           hpd << hpdID.panelID();
           Warning( "Suppressed HPD in "+hpd.str(), StatusCode::SUCCESS, 0 );
+          newids.clear();
         }
         delete hpdBank;
 
@@ -1081,12 +1093,16 @@ void RawDataFormatTool::decodeToSmartIDs_DC0406( const LHCb::RawBank & bank,
 void
 RawDataFormatTool::decodeToSmartIDs( PDMap & smartIDs ) const
 {
+  m_hasBeenCalled = true;
 
   // Get the banks for the Rich
   const LHCb::RawBank::Vector & richBanks = rawEvent()->banks( LHCb::RawBank::Rich );
 
   // Purge SmartID container
   smartIDs.clear();
+
+  // clear the L1 ID map
+  m_l1IdsDecoded.clear();
 
   // Loop over data banks
   for ( LHCb::RawBank::Vector::const_iterator iBank = richBanks.begin();
@@ -1113,7 +1129,20 @@ RawDataFormatTool::decodeToSmartIDs( PDMap & smartIDs ) const
     }
   }
 
-  if ( msgLevel(MSG::DEBUG) )
+  // loop over the L1 map to check we only got each L1 ID once
+  for ( Rich::Map<Rich::DAQ::Level1ID,unsigned int>::const_iterator iL1 = m_l1IdsDecoded.begin();
+        iL1 != m_l1IdsDecoded.end(); ++iL1 )
+  {
+    if ( iL1->second > 1 ) 
+    {
+      std::ostringstream mess;
+      mess << "Found multiple RawBanks (" << iL1->second << ") for L1 ID " << iL1->first;
+      Warning( mess.str() );
+    }
+  }
+
+  // do not print if faking HPDID, since smartIDs.size() then has no meaning
+  if ( !m_useFakeHPDID && msgLevel(MSG::DEBUG) )
   {
     debug() << "Decoded in total " << smartIDs.size()
             << " HPDs from " << richBanks.size() << " RICH Level1 bank(s)" << endreq;

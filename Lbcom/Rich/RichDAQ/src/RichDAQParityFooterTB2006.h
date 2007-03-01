@@ -1,11 +1,11 @@
 
 //=============================================================================================
-/** @file RichDAQParityFooter.h
+/** @file RichDAQParityFooterTB2006.h
  *
- *  Header file for RICH DAQ utility class : Rich::DAQ::ParityFooter
+ *  Header file for RICH DAQ utility class : Rich::DAQ::ParityFooterTB2006
  *
  *  CVS Log :-
- *  $Id: RichDAQParityFooterTB2006.h,v 1.1 2007-02-01 17:42:29 jonrob Exp $
+ *  $Id: RichDAQParityFooterTB2006.h,v 1.2 2007-03-01 19:39:07 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   05/09/2006
@@ -17,27 +17,8 @@
 
 #include "RichDAQFooterPDBase.h"
 
-//-----------------------------------------------------------------------------
-/** @namespace Rich
- *
- *  General namespace for RICH software
- *
- *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
- *  @date   08/07/2004
- */
-//-----------------------------------------------------------------------------
 namespace Rich
 {
-
-  //-----------------------------------------------------------------------------
-  /** @namespace DAQ
-   *
-   *  namespace for RICH DAQ software
-   *
-   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
-   *  @date   08/07/2004
-   */
-  //-----------------------------------------------------------------------------
   namespace DAQ
   {
 
