@@ -1,4 +1,4 @@
-// $Id: VeloClusterPosition.cpp,v 1.5 2006-12-27 17:47:24 szumlat Exp $
+// $Id: VeloClusterPosition.cpp,v 1.6 2007-03-02 17:50:14 cattanem Exp $
 // Include files
 
 // stl
@@ -8,9 +8,9 @@
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/SystemOfUnits.h"
 
-// from LHCbDefinitions
-#include "Kernel/LHCbMath.h"
-#include "Kernel/Point3DTypes.h"
+// Math Definitions
+#include "LHCbMath/LHCbMath.h"
+#include "GaudiKernel/Point3DTypes.h"
 
 // Velo
 #include "VeloDet/DeVelo.h"

@@ -1,4 +1,4 @@
-// $Id: VeloClusterPosition.h,v 1.2 2006-12-27 17:47:24 szumlat Exp $
+// $Id: VeloClusterPosition.h,v 1.3 2007-03-02 17:50:14 cattanem Exp $
 #ifndef VELOCLUSTERPOS_H 
 #define VELOCLUSTERPOS_H 1
 
@@ -9,7 +9,7 @@
 #include "Kernel/VeloChannelID.h"
 #include "Kernel/SiPositionInfo.h"
 
-/** @class VeloClusterPos VeloClusterPos.h
+/** @class VeloClusterPosition VeloClusterPosition.h
  *  
  *   typedefs for object returned by tool
  *   typedef LHCb::SiPositionInfo<LHCb::VeloChannelID> toolInfo;

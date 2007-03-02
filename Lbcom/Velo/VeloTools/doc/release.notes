@@ -3,16 +3,20 @@
 ! Responsible : Tomasz Szumlak
 ! Purpose     : Velo Tools for reconstruction
 !-----------------------------------------------------------------------------
-!============================= VeloAlgorithms v1r2 ===========================
-! 2006-12-19 - Tomasz Szumlak
+
+!! 2007-03-02 - Marco Cattaneo
+ - Remove LHCbDefinitions includes
+ - Remove obsolete VeloTools_load.cpp file
+ - Fix a doxygen warning
+
+ 2006-12-19 - Tomasz Szumlak
  - modification determined by new real data format for the TELL1
 
-
-!============================= VeloAlgorithms v1r1 ===========================
+!========================== VeloTools v1r1 2006-12-19 ========================
 ! 2006-12-19 - Marco Cattaneo
  - Get SystemOfUnits.h from GaudiKernel
 
-!============================= VeloAlgorithms v1r0 ===========================
+!========================== VeloTools v1r0 2006-04-20 ========================
 ! 2006-04-20 - Tomasz Szumlak
  - default initialization of the tool provided as well inside constructor
  
