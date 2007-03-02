@@ -1,26 +1,4 @@
-// $Id: CaloExtraDigits.h,v 1.5 2006-05-30 09:42:02 odescham Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.4  2005/11/07 12:12:42  odescham
-// v3r0 : adapt to the new Track Event Model
-//
-// Revision 1.3  2004/02/17 12:08:06  ibelyaev
-//  update for new CaloKernel and CaloInterfaces
-//
-// Revision 1.2  2003/06/23 13:11:54  ibelyaev
-//  fix for gcc3.2
-//
-// Revision 1.1.1.1  2002/11/13 20:46:41  ibelyaev
-// new package 
-//
-// Revision 1.2  2002/06/13 12:32:39  ibelyaev
-//  version update
-//
-// Revision 1.1  2002/04/07 18:15:00  ibelyaev
-//  preliminary version ('omega'-release)
-//
+// $Id: CaloExtraDigits.h,v 1.6 2007-03-02 15:31:46 cattanem Exp $
 // ============================================================================
 #ifndef CALORECO_CALOEXTRADIGITS_H 
 #define CALORECO_CALOEXTRADIGITS_H 1
@@ -28,8 +6,8 @@
 // from STL
 #include <string>
 // Kernel 
-#include "Kernel/Point3DTypes.h"
-#include "Kernel/Vector3DTypes.h"
+#include "GaudiKernel/Point3DTypes.h"
+#include "GaudiKernel/Vector3DTypes.h"
 #include "GaudiKernel/SystemOfUnits.h"
 // from Gaudi
 #include "GaudiKernel/IIncidentListener.h"

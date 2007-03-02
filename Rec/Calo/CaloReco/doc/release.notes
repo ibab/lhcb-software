@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.99 2006-12-01 14:34:59 cattanem Exp $
+! $Id: release.notes,v 1.100 2007-03-02 15:31:46 cattanem Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloReco
 ! Responsible : Olivier Deschamps odescham@in2p3.fr 
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
+
+!========================== CaloReco v4r7 2007-03-02 ==========================
+! 2007-03-02 - Marco Cattaneo
+ - Remove LHCbDefinitions includes
+ - Remove obsolete CaloReco_load.cpp file
 
 !========================== CaloReco v4r6 2006-12-01 ==========================
 ! 2006-12-01 - Olivier Deschamps

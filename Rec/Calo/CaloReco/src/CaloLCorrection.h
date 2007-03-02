@@ -1,6 +1,4 @@
-// $Id: CaloLCorrection.h,v 1.4 2006-06-27 16:36:53 odescham Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $
+// $Id: CaloLCorrection.h,v 1.5 2007-03-02 15:31:46 cattanem Exp $
 // ============================================================================
 #ifndef CALORECO_CALOLCORRECTION_H 
 #define CALORECO_CALOLCORRECTION_H 1
@@ -17,7 +15,7 @@
 // from CaloUtils 
 #include "CaloUtils/ClusterFunctors.h"
 // Kernel
-#include "Kernel/Point3DTypes.h"
+#include "GaudiKernel/Point3DTypes.h"
 
 /** @namespace CaloLCorrection_Local
  */
