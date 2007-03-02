@@ -1,9 +1,10 @@
 package EventSys
 package manager: Marco Cattaneo
 
-!======================== EventSys v23r2 2007-02-26 ======================
-! 2007-02-26 - Marco Cattaneo
- - use EventBase v2r1, MCEvent v2r1, DigiEvent v2r1, RecEvent v2r2
+!======================== EventSys v23r2 2007-03-01 ======================
+! 2007-03-01 - Marco Cattaneo
+ - use EventBase v2r1, MCEvent v2r1, DigiEvent v2r1, RecEvent v2r2,
+       PackedEvent v3r1, DAQEvent v7r2, L0Event v16r2
 
 !======================== EventSys v23r1 2007-02-12 ======================
 ! 2007-02-12 - Marco Cattaneo
