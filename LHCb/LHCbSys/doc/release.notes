@@ -5,25 +5,37 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v22r2>2007-02-26 LHCbSys v22r2</A></H1><PRE>
+</PRE><H1><A NAME=v22r2>2007-03-02 LHCbSys v22r2</A></H1><PRE>
 This version uses Gaudi v19r2 and LCGCMT 50. Fully compatible with DC06 data
 
-- Packages added:    CondDBUI v2r0
+- Packages added:    CondDBUI v2r0        - scripts for use with CondDB
+                     DaVinciKernel   v6r1 - moved from PHYS
+                     DaVinciMCKernel v2r1 - moved from PHYS
 - Packages removed:  LHCbInterfaces - use includes from GaudiKernel instead
 - Packages modified: GaudiObjDesc v9r9, KernelSys v6r2, LHCbKernel v7r2,
-    LHcbMath v2r1, RichKernel v7r2, CaloInterfaces v7r1, DetSys v9r2,
-    DetDesc v7r1, OTDet v7r2, VeloDet v11r1, DetDescSvc v1r10p1, Magnet v3r5,
-    EventSys v23r2, EventBase v2r1, MCEvent v2r1, DigiEvent v2r1, ReceEvent v2r2,
-    LinkerInstances v3r2p1, HltBase v2r2, LHCbAlgs v2r6, TrackInterfaces v3r1,
-    TrackMCInterfaces v3r0, DetCond v11r0, CondDBEntityResolver v4r0,
-    DetCondExample v11r0, LoKiGen v2r1, LoKiCore v2r1, SimComponents v2r1
+    LHCbMath v2r1, RichKernel v7r2, CaloInterfaces v7r1, TsaKernel v2r2,
+    DetSys v9r2, DetDesc v7r1, OTDet v7r2, VeloDet v11r1, DetDescSvc v1r10p1,
+    Magnet v3r5, STDet v3r2, RichDet v10r2, CaloDet v8r1, MuonDet v6r1,
+    EventSys v23r2, EventBase v2r1, L0Event v16r2, MCEvent v2r1, DigiEvent v2r1,
+    RecEvent v2r2, PackedEvent v3r1, DAQEvent v7r2, LinkerInstances v3r2p2,
+    HltBase v2r2, LHCbAlgs v2r6, TrackInterfaces v3r1, TrackMCInterfaces v3r0,
+    DetCond v11r0, CondDBEntityResolver v4r0, DetCondExample v11r0, DAQSys v3r1,
+    CaloDAQ v3r1, LoKiGen v2r1, LoKiCore v2r1, SimComponents v2r1, XmlTools v5r1,
+    GaudiConf v10r2, DetDescExample v7r4, DetDescChecks v4r2
 
-- In GaudiObjDesc v9r9
-  . In scripts/genClasses.py - replace the static const CLID& CLID_xxx = yyy
-    with  a static const CLID CLID_xxx = yyy
+- In GaudiConf v10r2
+  . Modified DC06Conditions.opts and DetDesc.opts to use SQLDDDB
 
-- In LHCbKernel v7r2, HltBase v2r2, TrackInterfaces v3r1, TrackMCInterfaces v3r0
-  . Make reflex dictionary for all interfaces defined in Kernel directory
+- In DetDescExample v7r4, DetDescChecks v4r2
+  . Modified requirements to use SQLDDDB instead of XmlDDDB/XmlConditions
+
+- In GaudiObjDesc v9r9, PackedEvent v3r1, DAQEvent v7r2, CaloDet v8r1,OTDet v7r2,
+     MuonDet v6r1, RichDet v10r2, STDet v3r2, VeloDet v11r1, TsaKernel v2r2
+  . replace static const CLID& CLID_xxx = yyy by static const CLID CLID_xxx = yyy
+
+- In LHCbKernel v7r2, HltBase v2r2, TrackInterfaces v3r1, TrackMCInterfaces v3r0,
+     XmlTools v5r1
+  . Make reflex dictionary for interfaces defined in the package
 
 - In LHCbAlgs v2r6, LHCbKernel v7r2
   . Move LbAppInit factory to LHCbAlgs, keeping LHCbAlgs base class in LHCbKernel
@@ -33,35 +45,90 @@ This version uses Gaudi v19r2 and LCGCMT 50. Fully compatible with DC06 data
 
 - In LHCbKernel v7r2
   . Do not add Reflex to ROOT_linkopts (already done by GaudiKernel)
+  . Add IAlgorithmCorrelations interface, previously in Tools/Utilities
 
-- In LHCbAlgs v2r6, SimComponents v2r1
+- In LHCbAlgs v2r6
+  . Add general purpose components previously in Tools/Utilities:
+    AlgorithmCorrelations, DeterministicPrescaler, PostScaler, PrintHeader
+    Also EventCounter (previouly called EventNumber)
+
+- In LHCbAlgs v2r6, SimComponents v2r1, DAQEvent v7r2, STDet v3r2, RichDet v10r2,
+     CaloDet v8r1, OTDet v7r2, VeloDet v11r1, MuonDet v6r1, CaloDAQ v3r1
   . Remove obsolete file xxx_load.cpp
 
 - In DetDesc v17r1
   . Remove all factories, obsolete remnant of an old DetDesc implementation
   . Fixed a minor bug in a debug function of ParamValidDataObject
 
-- In OTDet v7r2, VeloDet v11r1
+- In OTDet v7r2, STDet v3r2, VeloDet v11r1
   . Add callback methods to update cached values when alignment conditions change
+
+- In CaloDet v8r1
+  . BuildMonitoringSystem() in Decalorimeter::initialize()
+  . Add a lot of new methods in DeCalorimeter to allow the navigation
+    between Cells<->FECard<->Tell1 and Cells<->Leds<->Pins
+  . Add CaloLed and CaloPin (header and implementation files)
+  . Add Tell1Param and update CardParam (using CaloDAQ definition)
+
+- In MuonDet v6r1
+  . Moved declaration of factories from link library to component library
+  . Moved call to "this->dataSvc()" (in DeMuonDetector) from constructor to
+    initialize
+  . Add methods for proper readout condition
+  . Add methods for dialog chip deadtime simulation
 
 - In DetDescSvc v1r10p1
   . Add a couple of useful warnings in UpdateManagerSvc
+  . Minor bugfix in DEBUG output of UpdateManagerSvc
 
 - In EventBase v2r1, MCEvent v2r1, RecEvent v2r2
   . Define all Header locations in ProcessHeader, for reuse in derived classes
 
+- In L0Event v16r2, DigiEvent v2r1
+	. xml/L0CaloADC.xml : default location for Ecal/Hcal PIN L0CaloAdcs
+
 - In MCEvent v2r1
   . Add copy-constructor, clone and cloneWithKey methods to MCVertex, MCParticle
   . Add IForcedBDecayTool interface
+  . Added dictionary for std::vector<const LHCb::MCParticle*> needed by 
+    DecayFinder and other tools from Python
+  . Updated Muon classes for dialog chip deatime simulation (backward compatible)
+  . Update IMCReconstructible tool interface
+  . Add check to MCRichDigitHistoryCode::isSignal that hit is not from charge
+    sharing in the HPD pixel chip silicon wafer
+
+- In RecEvent v2r2
+ - Add muon system acceptance flag to ProtoParticle enums
 
 - In SimComponents v2r1
   . Add ForcedBDecayTool
+  . Update MCParticleSelector to
+    + Not reject electrons by default (needed by default Particle monitors)
+    + Not implicitly reject neutrals. New options to reject either neutrals
+      or charged particles
+    + Add Max P cut (default is no cut, 999999 GeV)
+  . New version of MCReconstructible
+    + For charged Particles, defers reconstructibility decision to MCTrackInfo
+      data object
+    + For neutrals, uses private hard-coded definitions. To be updated to use
+      CALO tool when available.
 
-- In LinkerInstances v3r2p1,
+- In LinkerInstances v3r2p2
   . Remove modification to PATH, no longer needed with InstallArea
+  . Remove loaddict in eventassoc.py, not needed with rootmap files
 
 - In TrackMCInterfaces v3r0
   . Added consts to interface
+
+- In CaloDAQ v3r1
+  . Add a new tool : CaloDataProvider : fast calo data decoding
+  . Fix a small bug in CaloFillPrsSpdRawBuffer
+    (problem when filling Prs bank when Zsup threshold =0)
+  . Implement the readout of PIN-diode data (using DeCalorimeter)
+  . Remove CaloReadoutTool.{h,cpp} (was containing FECard and Tell1 description 
+    now implemented in CaloDet)
+  . Add a base class with the same name (CaloReadoutTool)from which 
+	  inherit all the decoding tools
 
 - In DetCond v11r0, CondDBEntityResolver v4r0, DetCondExample v11r0
   . Updated to changes in COOL API, needs LCGCMT >= 50
@@ -70,12 +137,15 @@ This version uses Gaudi v19r2 and LCGCMT 50. Fully compatible with DC06 data
   . Removed not needed link options for MySQL, SQLite and Oracle
   . Minor fix in prepare_DBs.csh
 
+- In DetCond v11r0
+  . Activated by default disconnect on time-out feature (time out set to 10 min.)
+
 - In LoKiGen v2r1
   . Many tiny fixes to build Ex/LoKiExample package 
 
 - In LHCbKernel v7r2, OTDet v7r2, VeloDet v11r1, MCEvent v2r1, HltBase v2r2,
      TrackInterfaces v3r1, LoKiGen v2r1, LoKiCore v2r1, RichKernel v7r2,
-     LHCbMath v2r1
+     LHCbMath v2r1, STDet v3r2, CaloDet v8r1, TsaKernel v2r2
   . Fix some doxygen comments
 
 - In OTDet v7r2, VeloDet v11r1, DigiEvent v2r1, TrackMCInterfaces v3r0,
@@ -86,7 +156,7 @@ This version uses Gaudi v19r2 and LCGCMT 50. Fully compatible with DC06 data
 - In VeloDet v11r1, DigiEvent v2r1
   . Add dependency on LHCbMath
 
-- In Magnet v3r5
+- In Magnet v3r5, CaloDet v8r1
   . Remove ApplicationMgr.DLLs from job options
 
 </PRE><H1><A NAME=v22r1>2007-02-13 LHCbSys v22r1</A></H1><PRE>
