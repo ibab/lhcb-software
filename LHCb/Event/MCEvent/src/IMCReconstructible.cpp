@@ -1,11 +1,11 @@
 
 //-----------------------------------------------------------------------------
-/** @file IMCReconstructible.h
+/** @file IMCReconstructible.cpp
  *
  *  Implementation file for class : IMCReconstructible
  *
  *  CVS Log :-
- *  $Id: IMCReconstructible.cpp,v 1.1 2007-03-01 20:32:08 jonrob Exp $
+ *  $Id: IMCReconstructible.cpp,v 1.2 2007-03-02 09:19:31 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 28/02/2007
