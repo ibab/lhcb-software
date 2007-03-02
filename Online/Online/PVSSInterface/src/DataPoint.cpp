@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DataPoint.cpp,v 1.9 2007-03-02 08:51:49 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DataPoint.cpp,v 1.10 2007-03-02 08:59:40 frankb Exp $
 //  ====================================================================
 //  DataPoint.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: DataPoint.cpp,v 1.9 2007-03-02 08:51:49 frankb Exp $
+// $Id: DataPoint.cpp,v 1.10 2007-03-02 08:59:40 frankb Exp $
 #ifdef _WIN32
   // Disable warning C4250: 'const float' : forcing value to bool 'true' or 'false' (performance warning)
   #pragma warning ( disable : 4800 )
@@ -367,7 +367,6 @@ template <> std::string DataPoint::data<std::string>()  {
 }
 
 template <class T> T& DataPoint::reference()  {
-
   if ( m_val->type()!=DataValue<T>::type_id() ) invalidValue(DataValue<T>::type_info());
   return ((DataValue<T>*)m_val)->data();
 }
@@ -382,6 +381,9 @@ template <class T> const T& DataPoint::reference()  const  {
   template <> int DataValue< x >::type_id();                    \
   template <> DataValue< x > createDataValue< x >(const x& o);  \
 }
+#define DATA_SPECIALIZATIONS(x) namespace PVSS {                \
+  template <> x DataPoint::data< x >();                         \
+  template <> const x DataPoint::data< x >() const; }
 
 // Some hacks due to comipler hickup!
 #ifdef _WIN32
@@ -395,8 +397,7 @@ template <typename T> struct GetData {
   T get2(DataPoint& dp)              { return dp.data<T>();      }
 };
 #define BASIC_SPECIALIZATIONS(x)   BASIC_SPECIALIZATIONS1(x) namespace PVSS { template GetRef< x >; }
-#define SPECIALIZATIONS(x) BASIC_SPECIALIZATIONS(x) namespace PVSS { template GetData< x >;}
-#define VECTOR_SPECIALIZATIONS(x) BASIC_SPECIALIZATIONS(std::vector< x >)
+#define SPECIALIZATIONS(x)         BASIC_SPECIALIZATIONS(x) namespace PVSS  { template GetData< x >;}
 
 #else
 #define BASIC_SPECIALIZATIONS(x)   BASIC_SPECIALIZATIONS1(x) namespace PVSS { \
@@ -404,19 +405,11 @@ template <typename T> struct GetData {
   template <> x& DataPoint::reference< x >();             \
   template <> const x& DataPoint::reference< x >() const; }
 
-#define SPECIALIZATIONS(x) BASIC_SPECIALIZATIONS(x) namespace PVSS { \
-  template <> x DataPoint::data< x >();                   \
-  template <> const x DataPoint::data< x >() const; }
-
-#define VECTOR_SPECIALIZATIONS(x) BASIC_SPECIALIZATIONS(std::vector< x >) \
-template <>  x DataPoint::data< x >()       { return this->reference< x >(); } \
-template <>  x DataPoint::data< x >() const { return this->reference< x >(); }
-
+#define SPECIALIZATIONS(x) BASIC_SPECIALIZATIONS(x) DATA_SPECIALIZATIONS(x)
 #endif
 
 #define VECTOR_SPECIALIZATIONS(x) BASIC_SPECIALIZATIONS(std::vector< x >) \
-template <>  x DataPoint::data< x >()       { return this->reference< x >(); } \
-template <>  x DataPoint::data< x >() const { return this->reference< x >(); }
+                                  DATA_SPECIALIZATIONS(std::vector< x >)
 
 
 BASIC_SPECIALIZATIONS(bool)
