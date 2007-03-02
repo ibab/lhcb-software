@@ -1,4 +1,4 @@
-// $Id: TrajPoca.cpp,v 1.3 2007-02-26 12:02:07 cattanem Exp $
+// $Id: TrajPoca.cpp,v 1.4 2007-03-02 08:49:27 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -10,9 +10,6 @@
 
 // local
 #include "TrajPoca.h"
-
-using namespace Gaudi;
-using namespace LHCb;
 
 DECLARE_TOOL_FACTORY( TrajPoca );
 
@@ -38,33 +35,22 @@ TrajPoca::TrajPoca( const std::string& type,
 //=============================================================================
 TrajPoca::~TrajPoca() {};
 
-//=============================================================================
-// Initialisation. Check parameters
-//=============================================================================
-StatusCode TrajPoca::initialize() {
-
-  // Mandatory initialization of GaudiAlgorithm
-  StatusCode sc = GaudiTool::initialize();
-  if( sc.isFailure() ) { return sc; }
-
-  return StatusCode::SUCCESS;
-};
 
 //=============================================================================
 // Find arclengths along trajectories having a distance smaller than tolerance
 //=============================================================================
-StatusCode TrajPoca::minimize( const Trajectory& traj1,
+StatusCode TrajPoca::minimize( const LHCb::Trajectory& traj1,
                                double& arclength1, 
                                bool restrictRange1,
-                               const Trajectory& traj2,
+                               const LHCb::Trajectory& traj2,
                                double& arclength2, 
                                bool restrictRange2, 
-                               XYZVector& distance,
+                               Gaudi::XYZVector& distance,
                                double precision )
 {
   StatusCode status = StatusCode::SUCCESS;
 
-  static XYZPoint newPos1, newPos2;
+  static Gaudi::XYZPoint newPos1, newPos2;
   double delta(0), prevdelta(0);
   int nOscillStep(0);
   int nDivergingStep(0);
@@ -99,7 +85,7 @@ StatusCode TrajPoca::minimize( const Trajectory& traj1,
       if( restrictRange1 && step1 == 0. || restrictRange2 && step2 == 0. ) {
         if( ++nStuck > m_maxnStuck ) {
           // downgrade to a point poca
-          XYZVector dist = XYZVector( 0., 0., 0. );
+          Gaudi::XYZVector dist = Gaudi::XYZVector( 0., 0., 0. );
           restrictRange2 ? 
             minimize( traj1, arclength1, restrictRange1, newPos2, dist, precision )
             : minimize( traj2, arclength2, restrictRange2, newPos1, dist, precision );
@@ -158,11 +144,11 @@ StatusCode TrajPoca::minimize( const Trajectory& traj1,
 //=============================================================================
 // 
 //=============================================================================
-StatusCode TrajPoca::minimize( const Trajectory& traj,
+StatusCode TrajPoca::minimize( const LHCb::Trajectory& traj,
                                double& arclength,
                                bool restrictRange,
-                               const XYZPoint& pt,
-                               XYZVector& distance,
+                               const Gaudi::XYZPoint& pt,
+                               Gaudi::XYZVector& distance,
                                double /*precision*/ )
 {
   arclength = restrictLen( traj.arclength( pt ), traj, restrictRange );
@@ -174,10 +160,10 @@ StatusCode TrajPoca::minimize( const Trajectory& traj,
 //=============================================================================
 // 
 //=============================================================================
-StatusCode TrajPoca::stepTowardPoca( const Trajectory& traj1,
+StatusCode TrajPoca::stepTowardPoca( const LHCb::Trajectory& traj1,
                                      double& arclength1,
                                      bool restrictRange1,
-                                     const Trajectory& traj2,
+                                     const LHCb::Trajectory& traj2,
                                      double& arclength2,
                                      bool restrictRange2,
                                      double tolerance ) const
@@ -185,13 +171,13 @@ StatusCode TrajPoca::stepTowardPoca( const Trajectory& traj1,
   // a bunch of ugly, unitialized statics 
   // -- but, believe me, it really is faster this way...
   // (assignment is faster than c'tor...)
-  static XYZVector dir1, dir2;
-  static XYZVector delDir1, delDir2;
-  static XYZPoint  pos1, pos2;
+  static Gaudi::XYZVector dir1, dir2;
+  static Gaudi::XYZVector delDir1, delDir2;
+  static Gaudi::XYZPoint  pos1, pos2;
 
   traj1.expansion( arclength1, pos1, dir1, delDir1 );
   traj2.expansion( arclength2, pos2, dir2, delDir2 );
-  XYZVector delta( pos1 - pos2 );
+  Gaudi::XYZVector delta( pos1 - pos2 );
   double ua  = -delta.Dot( dir1 );
   double ub  =  delta.Dot( dir2 );
   double caa =  dir1.mag2() + delta.Dot( delDir1 );
@@ -264,7 +250,7 @@ StatusCode TrajPoca::stepTowardPoca( const Trajectory& traj1,
 // 
 //=============================================================================
 double TrajPoca::restrictLen( double l,
-                              const Trajectory& t,
+                              const LHCb::Trajectory& t,
                               bool restrictRange ) const
 {
   return ( restrictRange ? t.restrictToRange(l) : l );

@@ -1,4 +1,4 @@
-// $Id: TrajPoca.h,v 1.2 2006-11-30 14:44:24 ebos Exp $
+// $Id: TrajPoca.h,v 1.3 2007-03-02 08:49:27 cattanem Exp $
 #ifndef TRACKTOOLS_TRAJPOCA_H 
 #define TRACKTOOLS_TRAJPOCA_H 1
 
@@ -34,9 +34,6 @@ public:
 
   /// Default destructor
   virtual ~TrajPoca();
-
-  /// Tool initialization
-  StatusCode initialize();
 
   /// Find arclengths along trajectories
   /// having a distance smaller than tolerance
