@@ -1,11 +1,11 @@
 
 //-----------------------------------------------------------------------------
-/** @file ProtoParticleDLLFilter.h
+/** @file ProtoParticleFilterBase.h
  *
  * Header file for algorithm ProtoParticleDLLFilter
  *
  * CVS Log :-
- * $Id: ProtoParticleFilterBase.h,v 1.1 2006-06-18 14:30:27 jonrob Exp $
+ * $Id: ProtoParticleFilterBase.h,v 1.2 2007-03-02 12:36:53 cattanem Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-05-03

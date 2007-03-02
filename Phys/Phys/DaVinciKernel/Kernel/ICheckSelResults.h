@@ -1,11 +1,4 @@
-// $Id: ICheckSelResults.h,v 1.2 2007-02-06 09:57:56 pkoppenb Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.1  2005/07/25 09:31:33  ibelyaev
-//  add new ICheckSelResults abstract interface
-// 
+// $Id: ICheckSelResults.h,v 1.3 2007-03-02 12:36:53 cattanem Exp $
 // ============================================================================
 #ifndef KERNEL_ICHECKSELRESULTS_H 
 #define KERNEL_ICHECKSELRESULTS_H 1
@@ -52,7 +45,7 @@ public:
   
   /** check if the event has been (pre)selected by certain selection(s)
    *  @param  selections vector of selection names 
-   *  @param  ANDmode    flag to distinguish AND/OR modes 
+   *  @param  ANDMode    flag to distinguish AND/OR modes 
    *  @return true if the event has been (pre)selected by *ALL* 
    *    selections (AND-mode) or by at least one preselection (OR-mode)
    */

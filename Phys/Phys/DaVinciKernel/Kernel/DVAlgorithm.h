@@ -227,8 +227,8 @@ public:
 protected:
   
   /** helper protected function to load the tool on-demand  
-   *  @param name of tool
-   *  @param tool 
+   *  @param name name of tool
+   *  @param t    tool 
    *  @param ptr the pointer to this or NULL for private or common tools
    *  @return tool 
    */
@@ -260,7 +260,7 @@ protected:
    *  @param nickName the nickname for the tool
    *  @param nameMap  the actual mapping "nickname -> type/name" 
    *                 (to be specified through the properties)
-   *  @param the actual storage of located tool, e.g. 
+   *  @param toolMap  the actual storage of located tool, e.g. 
    *         std::map<std::string,TYPE*> or 
    *         Gaudi::Utils::VectorMap<std::string,TYPE*> 
    *  @param parent the parent of the tools 

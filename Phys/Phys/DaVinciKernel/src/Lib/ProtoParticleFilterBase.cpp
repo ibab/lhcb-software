@@ -1,11 +1,11 @@
 
 //-----------------------------------------------------------------------------
-/** @file ProtoParticleDLLFilter.cp
+/** @file ProtoParticleFilterBase.cpp
  *
- * Implementation file for algorithm ProtoParticleDLLFilter
+ * Implementation file for tool ProtoParticleFilterBase
  *
  * CVS Log :-
- * $Id: ProtoParticleFilterBase.cpp,v 1.3 2006-11-20 15:52:51 jonrob Exp $
+ * $Id: ProtoParticleFilterBase.cpp,v 1.4 2007-03-02 12:36:54 cattanem Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-05-03
