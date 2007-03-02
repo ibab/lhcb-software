@@ -8,9 +8,9 @@
 // Forward declarations
 class IMagneticFieldSvc;
 
-/** @class TrackHerabExtrapolator TrackHerabExtrapolator.h "TrackHerabExtrapolator.h"
+/** @class TrackKiselExtrapolator TrackKiselExtrapolator.h
  *
- *  A TrackHerabExtrapolator is a ITrackExtrapolator which does a 'Kisel'
+ *  A TrackKiselExtrapolator is a ITrackExtrapolator which does a 'Kisel'
  *  extrapolation of a State.
  *  This code was orignally developed by I Kisel for CBM
  *  It doesn't take into account Multiple Scattering.

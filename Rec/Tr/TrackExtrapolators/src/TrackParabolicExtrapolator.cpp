@@ -10,9 +10,9 @@ using namespace Gaudi::Units;
 #include "gsl/gsl_math.h"
 #include "gsl/gsl_poly.h"
 
-// from LHCbDefinitions
-#include "Kernel/Vector3DTypes.h"
-#include "Kernel/Point3DTypes.h"
+// Math Definitions
+#include "GaudiKernel/Vector3DTypes.h"
+#include "GaudiKernel/Point3DTypes.h"
 
 // from TrackEvent
 #include "Event/TrackParameters.h"

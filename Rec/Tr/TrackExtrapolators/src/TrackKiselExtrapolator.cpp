@@ -1,4 +1,4 @@
-// $Id: TrackKiselExtrapolator.cpp,v 1.2 2006-06-15 08:08:59 mneedham Exp $
+// $Id: TrackKiselExtrapolator.cpp,v 1.3 2007-03-02 16:02:32 cattanem Exp $
 
 // from Gaudi
 #include "GaudiKernel/IMagneticFieldSvc.h"
@@ -15,12 +15,7 @@ using namespace Gaudi;
 
 DECLARE_TOOL_FACTORY( TrackKiselExtrapolator );
 
-/** @class TrackHerabExtrapolator TrackHerabExtrapolator.h "TrackHerabExtrapolator.h"
- *
- *  A TrackHerabExtrapolator is a ITrackExtrapolator which does a 'Kisel'
- *  extrapolation of a State.
- *  This code was orignally developed by I Kisel for CBM
- *  It doesn't take into account Multiple Scattering.
+/** @file
  *
  *  @author M Needham
  *  @date   02-06-2006
