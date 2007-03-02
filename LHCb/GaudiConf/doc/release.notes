@@ -2,6 +2,7 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+!======================== GaudiConf v10r2 2007-03-02 ========================
 ! 2007-02-28 - Marco Clemencic
  - Modified DC06Conditions.opts and DetDesc.opts to use SQLDDDB
  - Removed ApplicationMgr.ExtSvc from DetDesc.opts
