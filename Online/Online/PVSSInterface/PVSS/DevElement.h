@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/PVSS/DevElement.h,v 1.1 2007-03-01 10:39:49 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/PVSS/DevElement.h,v 1.2 2007-03-02 12:19:02 frankb Exp $
 //  ====================================================================
 //  DevElement.h
 //  --------------------------------------------------------------------
@@ -10,7 +10,7 @@
 #define ONLINE_PVSS_DEVELEMENT_H
 
 // Framework include files
-#include "PVSS/DevTypeElement.h"
+#include "PVSS/NamedIdentified.h"
 
 // C++ include files
 #include <vector>
@@ -69,7 +69,7 @@ namespace PVSS {
     /// Access to the device type
     const DevType* deviceType() const;
     /// Access to the element type
-    DevTypeElement::Type contentType() const;
+    int contentType() const;
     /// Add new config to the device element
     void addConfig(const CfgType* config);
     /// Remove config from the device element

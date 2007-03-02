@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/ControlsManager.cpp,v 1.2 2007-03-01 15:47:56 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/ControlsManager.cpp,v 1.3 2007-03-02 12:19:02 frankb Exp $
 //  ====================================================================
 //  ControlsManager.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: ControlsManager.cpp,v 1.2 2007-03-01 15:47:56 frankb Exp $
+// $Id: ControlsManager.cpp,v 1.3 2007-03-02 12:19:02 frankb Exp $
 //#define _UseSpecializedManip
 
 // Framework include files
@@ -72,12 +72,12 @@ namespace PVSS {
   };
   template <> struct DevManip<DevType>  {
     static DevType* add(DevTypeManager* m,int id, CCHAR n) 
-    { return DevManip<DevTypeManager>::add(m,new DevType(m,id,n));     }
+    { return DevManip<DevTypeManager>::add(m,new DevType(m,id,n,0));     }
     static void add(DevType* t, DevTypeElement* e)  {  t->add(e); }
   };
   template <> struct DevManip<DevTypeElement>  {
     static void add(DevType* t, int id, int typ, CCHAR n)
-    { DevManip<DevType>::add(t,new DevTypeElement(t,id,n,(DevTypeElement::Type)typ));     }
+    { DevManip<DevType>::add(t,new DevTypeElement(t,id,n,typ));     }
   };
 }
 

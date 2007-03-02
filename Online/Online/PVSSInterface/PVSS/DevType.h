@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/PVSS/DevType.h,v 1.1 2007-03-01 10:39:49 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/PVSS/DevType.h,v 1.2 2007-03-02 12:19:02 frankb Exp $
 //  ====================================================================
 //  DevType.h
 //  --------------------------------------------------------------------
@@ -36,7 +36,7 @@ namespace PVSS {
     DevTypeManager *m_manager;
 
     /// Initializing constructor
-    DevType(DevTypeManager* mgr, int i, const std::string& nam, Type typ=NOELEMENT);
+    DevType(DevTypeManager* mgr, int i, const std::string& nam, int typ);
 
     /// Standard destructor
     virtual ~DevType();

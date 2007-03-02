@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DataPoint.cpp,v 1.12 2007-03-02 10:01:14 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DataPoint.cpp,v 1.13 2007-03-02 12:19:02 frankb Exp $
 //  ====================================================================
 //  DataPoint.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: DataPoint.cpp,v 1.12 2007-03-02 10:01:14 frankb Exp $
+// $Id: DataPoint.cpp,v 1.13 2007-03-02 12:19:02 frankb Exp $
 #ifdef _WIN32
   // Disable warning C4250: 'const float' : forcing value to bool 'true' or 'false' (performance warning)
   #pragma warning ( disable : 4800 )
@@ -16,7 +16,7 @@
 #include "PVSS/DevType.h"
 #include "PVSS/DataPoint.h"
 #include "PVSS/Internals.h"
-#include "PVSS/DevTypeElement.h"
+//#include "PVSS/DevTypeElement.h"
 #include "PVSSManager/DatapointIO.h"
 #include <algorithm>
 #include <sstream>
@@ -70,20 +70,8 @@ template <> int DataValue<std::vector<DPRef> >::type_id()          { return DevT
 
 namespace PVSS {
   static Value* invalidValue() 
-  { throw std::runtime_error("Invalid type for data conversion.");                        }
-  template <typename T> static DataValue<T>& holder(Value* v)   { 
-    if(v->type()==DataValue<T>::type_id()) return *(DataValue<T>*)v;
-    invalidValue();
-    return *(DataValue<T>*)v;
-  }
-  template <class T, class Q> Q convertValue(Value* v) {
-    if ( v->type() != DataValue<T>::type_id())invalidValue();
-#ifdef _WIN32
-    return ((DataValue<T>*)v)->value<Q>();
-#else
-    return (Q)((DataValue<T>*)v)->data();
-#endif
-  }
+  { throw std::runtime_error("Invalid type for data conversion.");                                }
+  template <class T, class Q> Q convertValue(Value* v) {    return (Q)((DataValue<T>*)v)->data(); }
   template <typename T> T default_value()                        { return T();                    }
   template <> std::string  default_value<std::string>()          { return std::string("");        }
   template <> DpIdentifier default_value<DpIdentifier>()         { return DpIdentifier(s_nullDP); }
@@ -97,6 +85,37 @@ namespace PVSS {
   static void insert_uint  (std::vector<unsigned int>& t,unsigned int s)        { t.push_back(s); }
   static void insert_dpid  (std::vector<DpIdentifier>& t,const DpIdentifier& s) { t.push_back(s); }
   static void insert_string(std::vector<std::string>& t,const char* s)          { t.push_back(s); }
+
+  template <typename T> inline bool chk(const Value* v1,const DataValue<T>* v2)  
+  { return v1->type() == DataValue<T>::type_id(); }
+  template <typename T> inline void checkBasicTypeCompatibility(const Value* v1, const DataValue<T>* v2)  {
+    if ( !(v1 && v2 && chk(v1,v2)) )  {
+      std::string e = "The type ";
+      e += v1->id().name();
+      e += " is incompatible with ";
+      e += v2->id().name();
+      throw std::runtime_error(e);
+    }
+    return;
+  }
+  template <typename T> void checkTypeCompatibility(const Value* v1, const DataValue<T>* v2)  
+  { checkBasicTypeCompatibility(v1,v2);    }
+  template <> static void checkTypeCompatibility(const Value* v1, const DataValue<std::vector<char> >* v2)  {
+    if ( !(v1 && v2 && (chk(v1,v2) || v1->type()==DataValue<std::vector<unsigned char> >::type_id()) ) )
+      checkBasicTypeCompatibility(v1,v2);    
+  }
+  template <> static void checkTypeCompatibility(const Value* v1, const DataValue<std::vector<unsigned char> >* v2)  {
+    if ( !(v1 && v2 && (chk(v1,v2) || v1->type()==DataValue<std::vector<char> >::type_id()) ) )
+      checkBasicTypeCompatibility(v1,v2);    
+  }
+  template <> static void checkTypeCompatibility(const Value* v1, const DataValue<std::vector<int> >* v2)  {
+    if ( !(v1 && v2 && (chk(v1,v2) || v1->type()==DataValue<std::vector<unsigned int> >::type_id()) ) )
+      checkBasicTypeCompatibility(v1,v2);    
+  }
+  template <> static void checkTypeCompatibility(const Value* v1, const DataValue<std::vector<unsigned int> >* v2)  {
+    if ( !(v1 && v2 && (chk(v1,v2) || v1->type()==DataValue<std::vector<int> >::type_id()) ) )
+      checkBasicTypeCompatibility(v1,v2);    
+  }
 
   /// Allocate data buffer
   static PVSS::Value* createValue(int typ)   {
@@ -323,7 +342,7 @@ template <> const std::string DataPoint::data<std::string>() const  {
         os << this->data<bool>();
         return os.str();
       case DevTypeElement::TEXT:
-        return holder<std::string>(m_val).data();
+        return ((DataValue<std::string>*)m_val)->data();
       default: 
         break;
     }
@@ -356,7 +375,7 @@ template <> std::string DataPoint::data<std::string>()  {
         os << this->data<bool>();
         return os.str();
       case DevTypeElement::TEXT:
-        return holder<std::string>(m_val).data();
+        return ((DataValue<std::string>*)m_val)->data();
       default: 
         break;
     }
@@ -367,31 +386,20 @@ template <> std::string DataPoint::data<std::string>()  {
 }
 
 template <class T> T& DataPoint::reference()  {
-  if ( m_val->type()!=DataValue<T>::type_id() ) invalidValue(DataValue<T>::type_info());
+  checkTypeCompatibility(m_val,(DataValue<T>*)m_val);
   return ((DataValue<T>*)m_val)->data();
 }
 
 template <class T> const T& DataPoint::reference()  const  {
-  if ( m_val->type()!=DataValue<T>::type_id() ) invalidValue(DataValue<T>::type_info());
+  checkTypeCompatibility(m_val,(DataValue<T>*)m_val);
   return ((DataValue<T>*)m_val)->data();
-}
-
-#define BASIC_SPECIALIZATIONS1(x)   namespace PVSS {            \
-  template <> int Value::type_id< x > (const x&);               \
-  template <> int DataValue< x >::type_id();                    \
-  template <> DataValue< x > createDataValue< x >(const x& o);  \
 }
 
 // Some hacks due to comipler hickup!
 #ifdef _WIN32
 template <typename T> struct GetRef   {   
-  T& ref1(DataPoint& dp)             { return dp.reference<T>(); } 
-  const T& ref2(const DataPoint& dp) { return dp.reference<T>(); } 
-  void set(DataPoint& dp,const T& t) { dp.set(t);                }
-  //};
-  //template <typename T> struct GetData {
-  void get1(const DataPoint& dp, T& p)        { p = dp.data<T>(); }
-  void get2(DataPoint& dp, T& p)              { p = dp.data<T>(); }
+  const T& ref2(const DataPoint& d) { return d.reference<T>();   } 
+  void set(DataPoint& d) { d.set(d.reference<T>()=d.data<T>());  }
 };
 
 #define REF_SPECIALIZATIONS(x)   namespace PVSS { template GetRef< x >; }
@@ -406,16 +414,23 @@ template <typename T> struct GetRef   {
 #define DATA_SPECIALIZATIONS(x) namespace PVSS {                \
   template <> x DataPoint::data< x >(); \
   template <> const x DataPoint::data< x >() const; }
-
+DATA_SPECIALIZATIONS(short)
+DATA_SPECIALIZATIONS(unsigned short)
+DATA_SPECIALIZATIONS(unsigned char)
 #endif
+
 
 #define EXPLICIT_DATA_SPECIALIZATIONS(x) namespace PVSS {                \
   template <> x DataPoint::data< x >()             { return this->reference< x >();} \
   template <> const x DataPoint::data< x >() const { return this->reference< x >();} }
 
-#define BASIC_SPECIALIZATIONS(x)    BASIC_SPECIALIZATIONS1(x) REF_SPECIALIZATIONS(x)
+#define BASIC_SPECIALIZATIONS(x)   namespace PVSS {             \
+  template <> int Value::type_id< x > (const x&);               \
+  template <> int DataValue< x >::type_id();                    \
+  template <> DataValue< x > createDataValue< x >(const x& o);} \
+  REF_SPECIALIZATIONS(x)
 
-#define SPECIALIZATIONS(x)          BASIC_SPECIALIZATIONS(x)  DATA_SPECIALIZATIONS(x)
+#define SPECIALIZATIONS(x)          BASIC_SPECIALIZATIONS(x) DATA_SPECIALIZATIONS(x)
 
 #define VECTOR_SPECIALIZATIONS(x)   BASIC_SPECIALIZATIONS(std::vector< x >) \
                                     EXPLICIT_DATA_SPECIALIZATIONS(std::vector< x >)
