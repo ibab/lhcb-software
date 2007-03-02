@@ -4,7 +4,11 @@
 ! Purpose     : Perfect pattern recognition
 !-----------------------------------------------------------------------------
 
-!======================= TrackIdealPR v2r9 2007-02-01 ========================
+!======================= TrackIdealPR v2r9 2007-03-02 ========================
+! 2007-03-02 - Marco Cattaneo
+ - Remove LHCbDefinitions dependency
+ - Remove obsolete TrackIdealPR_load.cpp file
+
 ! 2007-02-01 Wouter Hulsbergen
  - fixed bug in seeding. seed-z is no longer cached between (!) tracks
 
