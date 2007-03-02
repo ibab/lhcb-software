@@ -4,13 +4,16 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+!========================== GlobalReco v6r8 2007-03-02 =======================
+! 2007-03-02 - Marco Cattaneo
+ - Remove obsolete GlobalReco_load.cpp file
+
 ! 2007-03-02 - Chris Jones
  - Always store Muon system acceptance flag in ProtoParticle, even if IsMuon
    is not satisfied, using new ProtoParticle flag.
   + Update ntuple algorithm to use this new flag
  - Add root direcitory containing useful scripts
 
-!========================== GlobalReco v6r8 2007-02-26 =======================
 ! 2007-02-21 - Patrick Koppenburg
  - Exit with StatusCode::SUCCESS but setFilterPassed(false) when
    no tracks are there.
