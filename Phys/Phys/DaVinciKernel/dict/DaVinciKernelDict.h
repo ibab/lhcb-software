@@ -1,4 +1,4 @@
-// $Id: DaVinciKernelDict.h,v 1.1 2007-03-02 10:59:57 cattanem Exp $
+// $Id: DaVinciKernelDict.h,v 1.2 2007-03-02 17:26:27 cattanem Exp $
 #ifndef DICT_DAVINCIKERNELDICT_H 
 #define DICT_DAVINCIKERNELDICT_H 1
 
@@ -13,7 +13,6 @@
 // ============================================================================
 // DaVinciKernel
 // ============================================================================
-#include "Kernel/DVAlgorithm.h"
 #include "Kernel/IAlgorithm2ID.h"
 #include "Kernel/IBestParticles.h"
 #include "Kernel/IBremAdder.h"
@@ -50,5 +49,6 @@
 #include "Kernel/ISecondaryVertexTool.h"
 #include "Kernel/ITagger.h"
 #include "Kernel/IVertexFit.h"
+#include "Kernel/DVAlgorithm.h" // Has to be last for compilation on Windows
 
 #endif // DICT_DAVINCIKERNELDICT_H
