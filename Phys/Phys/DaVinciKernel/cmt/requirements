@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.40 2007-03-02 10:59:57 cattanem Exp $
+# $Id: requirements,v 1.41 2007-03-02 13:44:23 cattanem Exp $
 # Created    : 05/02/2002
 # Maintainer : P. Koppenburg, J. Palcios
 #============================================================================
@@ -9,7 +9,7 @@ version           v6r1
 
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          cmt doc src Kernel
+branches          cmt doc dict src Kernel
 
 # Used packages. 
 #============================================================================
