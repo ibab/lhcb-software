@@ -1,15 +1,15 @@
-! $Id: release.notes,v 1.69 2007-03-01 20:14:49 jonrob Exp $
+! $Id: release.notes,v 1.70 2007-03-02 09:37:04 cattanem Exp $
 ! Package     : Event/MCEvent
 ! Responsible : Marco Cattaneo, Gloria Corti
 ! Purpose     : LHCb Event model. MC truth classes (Gauss and Boole output) 
 !-----------------------------------------------------------------------------
 
+!======================== MCEvent v2r1 2007-03-02 ============================
 ! 2007-03-01 - Chris Jones
  - Update IMCReconstructible tool interface
  - Add check to MCRichDigitHistoryCode::isSignal that hit is not from charge
    sharing in the HPD pixel chip silicon wafer
 
-!======================== MCEvent v2r1 2007-03-01 ============================
 ! 2007-03-01 - Pere Mato
  - Added dictionary for std::vector<const LHCb::MCParticle*> needed by 
    DecayFinder and other tools from Python
