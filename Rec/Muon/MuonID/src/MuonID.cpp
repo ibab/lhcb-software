@@ -82,7 +82,7 @@ StatusCode MuonID::initialize() {
   const StatusCode sc = GaudiAlgorithm::initialize();
   if ( sc.isFailure() ) { return sc; }
 
-  info()   << " MuonID v4r4 - DC06" << endmsg;
+  debug()   << "MuonID v4r4 - DC06" << endmsg;
 
   debug()  << "==> Initialise" << endreq;
   debug()  << "Input tracks in: " << m_TracksPath << endreq;
