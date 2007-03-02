@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DataPoint.cpp,v 1.8 2007-03-02 00:54:33 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DataPoint.cpp,v 1.9 2007-03-02 08:51:49 frankb Exp $
 //  ====================================================================
 //  DataPoint.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: DataPoint.cpp,v 1.8 2007-03-02 00:54:33 frankb Exp $
+// $Id: DataPoint.cpp,v 1.9 2007-03-02 08:51:49 frankb Exp $
 #ifdef _WIN32
   // Disable warning C4250: 'const float' : forcing value to bool 'true' or 'false' (performance warning)
   #pragma warning ( disable : 4800 )
@@ -367,6 +367,7 @@ template <> std::string DataPoint::data<std::string>()  {
 }
 
 template <class T> T& DataPoint::reference()  {
+
   if ( m_val->type()!=DataValue<T>::type_id() ) invalidValue(DataValue<T>::type_info());
   return ((DataValue<T>*)m_val)->data();
 }
@@ -395,6 +396,7 @@ template <typename T> struct GetData {
 };
 #define BASIC_SPECIALIZATIONS(x)   BASIC_SPECIALIZATIONS1(x) namespace PVSS { template GetRef< x >; }
 #define SPECIALIZATIONS(x) BASIC_SPECIALIZATIONS(x) namespace PVSS { template GetData< x >;}
+#define VECTOR_SPECIALIZATIONS(x) BASIC_SPECIALIZATIONS(std::vector< x >)
 
 #else
 #define BASIC_SPECIALIZATIONS(x)   BASIC_SPECIALIZATIONS1(x) namespace PVSS { \
@@ -406,11 +408,16 @@ template <typename T> struct GetData {
   template <> x DataPoint::data< x >();                   \
   template <> const x DataPoint::data< x >() const; }
 
+#define VECTOR_SPECIALIZATIONS(x) BASIC_SPECIALIZATIONS(std::vector< x >) \
+template <>  x DataPoint::data< x >()       { return this->reference< x >(); } \
+template <>  x DataPoint::data< x >() const { return this->reference< x >(); }
 
 #endif
 
+#define VECTOR_SPECIALIZATIONS(x) BASIC_SPECIALIZATIONS(std::vector< x >) \
+template <>  x DataPoint::data< x >()       { return this->reference< x >(); } \
+template <>  x DataPoint::data< x >() const { return this->reference< x >(); }
 
-#define VECTOR_SPECIALIZATIONS(x) BASIC_SPECIALIZATIONS(std::vector< x >)
 
 BASIC_SPECIALIZATIONS(bool)
 BASIC_SPECIALIZATIONS(char)
@@ -418,15 +425,12 @@ SPECIALIZATIONS(unsigned char)
 SPECIALIZATIONS(short)
 SPECIALIZATIONS(unsigned short)
 BASIC_SPECIALIZATIONS(int)
-  //#ifdef _WIN32
-  //SPECIALIZATIONS(unsigned int)
-  //#else
 BASIC_SPECIALIZATIONS(unsigned int)
-  //#endif
 BASIC_SPECIALIZATIONS(long)
 SPECIALIZATIONS(unsigned long)
 BASIC_SPECIALIZATIONS(float)
 SPECIALIZATIONS(double)
+
 BASIC_SPECIALIZATIONS(std::string)
 BASIC_SPECIALIZATIONS(DpIdentifier)
 BASIC_SPECIALIZATIONS(DPRef)
@@ -445,6 +449,8 @@ VECTOR_SPECIALIZATIONS(float)
 VECTOR_SPECIALIZATIONS(double)
 VECTOR_SPECIALIZATIONS(std::string)
 VECTOR_SPECIALIZATIONS(DpIdentifier)
+VECTOR_SPECIALIZATIONS(DPRef)
+VECTOR_SPECIALIZATIONS(DPTime)
 
 /// Set value data
 void DataPoint::setValue(int typ, const Variable* variable)  {
