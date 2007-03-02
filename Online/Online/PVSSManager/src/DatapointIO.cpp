@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/src/DatapointIO.cpp,v 1.4 2007-03-01 21:53:58 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/src/DatapointIO.cpp,v 1.5 2007-03-02 00:33:50 frankb Exp $
 //  ====================================================================
 //  DatapointIO.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: DatapointIO.cpp,v 1.4 2007-03-01 21:53:58 frankb Exp $
+// $Id: DatapointIO.cpp,v 1.5 2007-03-02 00:33:50 frankb Exp $
 #include "DpIdentifierVar.hxx"
 #include "DpIdValueList.hxx"
 #include "DpIdentifier.hxx"
@@ -56,7 +56,7 @@ vector_conversion(const Variable* var, void (*ldf)(std::vector<T>&,T), std::vect
 }
 
 #define MAKE_CONVERSION(x) \
-void DatapointIO::value(const Variable* var,void (*ldf)(std::vector< x >&,x),std::vector<x>& val) \
+void DatapointIO::value(const Variable* var,void (*ldf)(std::vector< x > &,x),std::vector< x > & val) \
 { vector_conversion<x>(var,ldf,val);  } \
 void DatapointIO::value(const Variable* var, x& val) {  simple_conversion(var,val);  }
 

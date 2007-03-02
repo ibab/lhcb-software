@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/ReadTransaction.cpp,v 1.2 2007-03-01 15:47:56 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/ReadTransaction.cpp,v 1.3 2007-03-02 00:33:37 frankb Exp $
 //  ====================================================================
 //  ReadTransaction.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: ReadTransaction.cpp,v 1.2 2007-03-01 15:47:56 frankb Exp $
+// $Id: ReadTransaction.cpp,v 1.3 2007-03-02 00:33:37 frankb Exp $
 
 // Framework include files
 #include "PVSS/ReadTransaction.h"
@@ -64,14 +64,6 @@ void ReadTransaction::getValue(const DataPoint& dp, char& value)
 /// Get datapoint value 
 void ReadTransaction::getValue(const DataPoint& dp, unsigned char& value)
 {  pvss_add_dpget(m_context,Value::type_id(value),0,dp.id(),&value);   }
-
-/// Get datapoint value 
-void ReadTransaction::getValue(const DataPoint& dp, short& value)
-{  pvss_add_dpget(m_context,DevTypeElement::INT,0,dp.id(),&value);    }
-
-/// Get datapoint value 
-void ReadTransaction::getValue(const DataPoint& dp, unsigned short& value)
-{  pvss_add_dpget(m_context,Value::type_id(value),0,dp.id(),&value);    }
 
 /// Get datapoint value 
 void ReadTransaction::getValue(const DataPoint& dp, int& value)
@@ -132,7 +124,7 @@ template <> void ReadTransaction::getValue<std::string>(const DataPoint& dp, std
 
 #define __T(x) template ReadTransactionSetValue <x >;
 #define INSTANTIATE_FUNCTIONS(x) \
-  __T(char) __T(unsigned char) __T(short) __T(unsigned short) __T(int) __T(unsigned int) \
+  __T(char) __T(unsigned char) __T(int) __T(unsigned int) \
   __T(long) __T(unsigned long) __T(float) __T(double) __T(bool) \
   __T(std::string) __T(DpIdentifier) __T(DPTime)
 

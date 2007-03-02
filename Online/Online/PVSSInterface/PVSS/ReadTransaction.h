@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/PVSS/ReadTransaction.h,v 1.1 2007-03-01 10:39:49 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/PVSS/ReadTransaction.h,v 1.2 2007-03-02 00:33:37 frankb Exp $
 //  ====================================================================
 //  ReadTransaction.h
 //  --------------------------------------------------------------------
@@ -60,10 +60,6 @@ namespace PVSS {
     void getValue(const DataPoint& dp, char& value);
     /// Get datapoint value 
     void getValue(const DataPoint& dp, unsigned char& value);
-    /// Get datapoint value 
-    void getValue(const DataPoint& dp, short& value);
-    /// Get datapoint value 
-    void getValue(const DataPoint& dp, unsigned short& value);
     /// Get datapoint value 
     void getValue(const DataPoint& dp, int& value);
     /// Get datapoint value 

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/PVSS/WriteTransaction.h,v 1.2 2007-03-01 20:08:55 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/PVSS/WriteTransaction.h,v 1.3 2007-03-02 00:33:37 frankb Exp $
 //  ====================================================================
 //  WriteTransaction.h
 //  --------------------------------------------------------------------
@@ -60,10 +60,6 @@ namespace PVSS {
     void setValue(const DataPoint& dp, const char& value);
     /// Set datapoint value 
     void setValue(const DataPoint& dp, const unsigned char& value);
-    /// Set datapoint value 
-    void setValue(const DataPoint& dp, const short& value);
-    /// Set datapoint value 
-    void setValue(const DataPoint& dp, const unsigned short& value);
     /// Set datapoint value 
     void setValue(const DataPoint& dp, const int& value);
     /// Set datapoint value 

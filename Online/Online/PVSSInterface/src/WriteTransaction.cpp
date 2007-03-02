@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/WriteTransaction.cpp,v 1.3 2007-03-01 20:08:55 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/WriteTransaction.cpp,v 1.4 2007-03-02 00:33:37 frankb Exp $
 //  ====================================================================
 //  WriteTransaction.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: WriteTransaction.cpp,v 1.3 2007-03-01 20:08:55 frankb Exp $
+// $Id: WriteTransaction.cpp,v 1.4 2007-03-02 00:33:37 frankb Exp $
 
 // Framework include files
 #include "PVSS/DataPoint.h"
@@ -69,18 +69,6 @@ void WriteTransaction::setValue(const DataPoint& dp, const unsigned char& value)
 }
 
 /// Set datapoint value 
-void WriteTransaction::setValue(const DataPoint& dp, const short& value) {
-  int val = value;
-  pvss_val_list_add(m_context,DevTypeElement::INT,dp.id(),&val);
-}
-
-/// Set datapoint value 
-void WriteTransaction::setValue(const DataPoint& dp, const unsigned short& value) {
-  int val = value;
-  pvss_val_list_add(m_context,DevTypeElement::INT,dp.id(),&val);
-}
-
-/// Set datapoint value 
 void WriteTransaction::setValue(const DataPoint& dp, const int& value) {
   pvss_val_list_add(m_context,DevTypeElement::INT,dp.id(),&value);    
 }
@@ -99,7 +87,7 @@ void WriteTransaction::setValue(const DataPoint& dp, const long& value) {
 /// Set datapoint value 
 void WriteTransaction::setValue(const DataPoint& dp, const unsigned long& value) {
   int val = value;
-  pvss_val_list_add(m_context,DevTypeElement::INT,dp.id(),&val);
+  pvss_val_list_add(m_context,DevTypeElement::UINT,dp.id(),&val);
 }
 
 /// Set datapoint value 
@@ -178,7 +166,7 @@ void WriteTransaction::setValue<bool>(const DataPoint& dp, const std::vector<boo
 }
 #define __T(x)  template WriteTransactionSetValue<x >;
 #define INSTANTIATE_FUNCTIONS(T)  \
-      __T(char)  __T(unsigned char) __T(short) __T(unsigned short)\
+      __T(char)  __T(unsigned char) \
       __T(int)   __T(unsigned int)  __T(long)  __T(unsigned long)\
       __T(float) __T(double) __T(bool) __T(std::string) \
       __T(DpIdentifier) __T(DPRef) __T(DPTime)

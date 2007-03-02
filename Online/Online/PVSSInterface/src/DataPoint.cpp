@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DataPoint.cpp,v 1.6 2007-03-01 22:00:01 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DataPoint.cpp,v 1.7 2007-03-02 00:33:37 frankb Exp $
 //  ====================================================================
 //  DataPoint.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: DataPoint.cpp,v 1.6 2007-03-01 22:00:01 frankb Exp $
+// $Id: DataPoint.cpp,v 1.7 2007-03-02 00:33:37 frankb Exp $
 #ifdef _WIN32
   // Disable warning C4250: 'const float' : forcing value to bool 'true' or 'false' (performance warning)
   #pragma warning ( disable : 4800 )
@@ -41,7 +41,7 @@ template <> int DataValue<unsigned char>::type_id()                { return DevT
 template <> int DataValue<short>::type_id()                        { return DevTypeElement::NOELEMENT; }
 template <> int DataValue<unsigned short>::type_id()               { return DevTypeElement::NOELEMENT; }
 template <> int DataValue<int>::type_id()                          { return DevTypeElement::INT;       }
-template <> int DataValue<unsigned int>::type_id()                 { return DevTypeElement::INT;       }
+template <> int DataValue<unsigned int>::type_id()                 { return DevTypeElement::UINT;       }
 template <> int DataValue<long>::type_id()                         { return DevTypeElement::NOELEMENT; }
 template <> int DataValue<unsigned long>::type_id()                { return DevTypeElement::NOELEMENT; }
 template <> int DataValue<float>::type_id()                        { return DevTypeElement::FLOAT;     }
@@ -57,7 +57,7 @@ template <> int DataValue<std::vector<unsigned char> >::type_id()  { return DevT
 template <> int DataValue<std::vector<short> >::type_id()          { return DevTypeElement::NOELEMENT; }
 template <> int DataValue<std::vector<unsigned short> >::type_id() { return DevTypeElement::NOELEMENT; }
 template <> int DataValue<std::vector<int> >::type_id()            { return DevTypeElement::DYNINT;    }
-template <> int DataValue<std::vector<unsigned int> >::type_id()   { return DevTypeElement::DYNINT;    }
+template <> int DataValue<std::vector<unsigned int> >::type_id()   { return DevTypeElement::DYNUINT;    }
 template <> int DataValue<std::vector<long> >::type_id()           { return DevTypeElement::NOELEMENT; }
 template <> int DataValue<std::vector<unsigned long> >::type_id()  { return DevTypeElement::NOELEMENT; }
 template <> int DataValue<std::vector<float> >::type_id()          { return DevTypeElement::DYNFLOAT;  }
@@ -94,6 +94,7 @@ namespace PVSS {
   static void insert_int   (std::vector<int>& t,int s)           { t.push_back(s);                }
   static void insert_float (std::vector<float>& t,float s)       { t.push_back(s);                }
   static void insert_time_t(std::vector<time_t>& t,time_t s)     { t.push_back(s);                }
+  static void insert_uint  (std::vector<unsigned int>& t,unsigned int s)        { t.push_back(s); }
   static void insert_dpid  (std::vector<DpIdentifier>& t,const DpIdentifier& s) { t.push_back(s); }
   static void insert_string(std::vector<std::string>& t,const char* s)          { t.push_back(s); }
 
@@ -105,9 +106,9 @@ namespace PVSS {
     case DevTypeElement::DYNCHAR:
       return new DataValue<std::vector<char> >(typ);
     case DevTypeElement::DYNINT:
-      //return new DataValue<std::vector<short> >(typ);
-    case DevTypeElement::DYNUINT:
       return new DataValue<std::vector<int> >(typ);
+    case DevTypeElement::DYNUINT:
+      return new DataValue<std::vector<unsigned int> >(typ);
     case DevTypeElement::DYNFLOAT:
       return new DataValue<std::vector<float> >(typ);
     case DevTypeElement::DYNTEXT:
@@ -121,9 +122,9 @@ namespace PVSS {
     case DevTypeElement::CHAR:
       return new DataValue<char>(typ);
     case DevTypeElement::INT:
-      //return new DataValue<short>(typ);
-    case DevTypeElement::UINT:
       return new DataValue<int>(typ);
+    case DevTypeElement::UINT:
+      return new DataValue<unsigned int>(typ);
     case DevTypeElement::FLOAT:
       return new DataValue<float>(typ);
     case DevTypeElement::TEXT:
@@ -271,7 +272,7 @@ template <typename T> T DataPoint::data()  {
       case DevTypeElement::FLOAT: return convertValue<float,T>(m_val);
       case DevTypeElement::CHAR:  return convertValue<char,T>(m_val);
       case DevTypeElement::INT:   return convertValue<int,T>(m_val);
-      case DevTypeElement::UINT:  return convertValue<int,T>(m_val);
+      case DevTypeElement::UINT:  return convertValue<unsigned int,T>(m_val);
       case DevTypeElement::TIME:  return convertValue<time_t,T>(m_val);
       case DevTypeElement::BIT:   return convertValue<bool,T>(m_val);
       default:                    break;
@@ -288,7 +289,7 @@ template <typename T> const T DataPoint::data()  const {
       case DevTypeElement::FLOAT: return convertValue<float,T>(m_val);
       case DevTypeElement::CHAR:  return convertValue<char,T>(m_val);
       case DevTypeElement::INT:   return convertValue<int,T>(m_val);
-      case DevTypeElement::UINT:  return convertValue<int,T>(m_val);
+      case DevTypeElement::UINT:  return convertValue<unsigned int,T>(m_val);
       case DevTypeElement::TIME:  return convertValue<time_t,T>(m_val);
       case DevTypeElement::BIT:   return convertValue<bool,T>(m_val);
       default:                    break;
@@ -310,10 +311,10 @@ template <> const std::string DataPoint::data<std::string>() const  {
         os << this->data<char>();
         return os.str();
       case DevTypeElement::INT:
-        os << this->data<short>();
+        os << this->data<int>();
         return os.str();
       case DevTypeElement::UINT:
-        os << this->data<int>();
+        os << this->data<unsigned int>();
         return os.str();
       case DevTypeElement::TIME:
         os << this->data<time_t>();
@@ -343,10 +344,10 @@ template <> std::string DataPoint::data<std::string>()  {
         os << this->data<char>();
         return os.str();
       case DevTypeElement::INT:
-        os << this->data<short>();
+        os << this->data<int>();
         return os.str();
       case DevTypeElement::UINT:
-        os << this->data<int>();
+        os << this->data<unsigned int>();
         return os.str();
       case DevTypeElement::TIME:
         os << this->data<time_t>();
@@ -378,7 +379,6 @@ template <class T> const T& DataPoint::reference()  const  {
 #define BASIC_SPECIALIZATIONS1(x)   namespace PVSS {            \
   template <> int Value::type_id< x > (const x&);               \
   template <> int DataValue< x >::type_id();                    \
-  template <> void DataPoint::set< x >(const x&);               \
   template <> DataValue< x > createDataValue< x >(const x& o);  \
 }
 
@@ -387,10 +387,11 @@ template <class T> const T& DataPoint::reference()  const  {
 template <typename T> struct GetRef   {   
   T& ref1(DataPoint& dp)             { return dp.reference<T>(); } 
   const T& ref2(const DataPoint& dp) { return dp.reference<T>(); } 
+  void set(DataPoint& dp,const T& t) { dp.set(t);                }
 };
 template <typename T> struct GetData {
-  T get1(const DataPoint& dp) { return dp.data<T>();  } 
-  T get2(DataPoint& dp)       { return dp.data<T>(); } 
+  T get1(const DataPoint& dp)        { return dp.data<T>();      }
+  T get2(DataPoint& dp)              { return dp.data<T>();      }
 };
 #define BASIC_SPECIALIZATIONS(x)   BASIC_SPECIALIZATIONS1(x) namespace PVSS { template GetRef< x >; }
 #define SPECIALIZATIONS(x) BASIC_SPECIALIZATIONS(x) namespace PVSS { template GetData< x >;}
@@ -401,6 +402,7 @@ template <typename T> struct GetData {
   template <> const x& DataPoint::reference< x >() const; }
 
 #define SPECIALIZATIONS(x) BASIC_SPECIALIZATIONS(x) namespace PVSS { \
+  template <> void DataPoint::set< x >(const x&);         \
   template <> x DataPoint::data< x >();                   \
   template <> const x DataPoint::data< x >() const; }
 
@@ -413,7 +415,7 @@ template <typename T> struct GetData {
 BASIC_SPECIALIZATIONS(bool)
 BASIC_SPECIALIZATIONS(char)
 SPECIALIZATIONS(unsigned char)
-BASIC_SPECIALIZATIONS(short)
+SPECIALIZATIONS(short)
 SPECIALIZATIONS(unsigned short)
 BASIC_SPECIALIZATIONS(int)
 SPECIALIZATIONS(unsigned int)
@@ -449,10 +451,10 @@ void DataPoint::setValue(int typ, const Variable* variable)  {
       DatapointIO::value(variable,reference<char>());
       break;
     case DevTypeElement::INT:
-      //DatapointIO::value(variable,reference<short>());
-      //break;
-    case DevTypeElement::UINT:
       DatapointIO::value(variable,reference<int>());
+      break;
+    case DevTypeElement::UINT:
+      DatapointIO::value(variable,reference<unsigned int>());
       break;
     case DevTypeElement::TIME:
       DatapointIO::value(variable,reference<time_t>());
@@ -473,10 +475,10 @@ void DataPoint::setValue(int typ, const Variable* variable)  {
       DatapointIO::value(variable,insert_char,reference<std::vector<char> >());
       break;
     case DevTypeElement::DYNINT:
-      //do_vector_io(variable,reference<std::vector<short> >());
-      //break;
-    case DevTypeElement::DYNUINT:
       DatapointIO::value(variable,insert_int,reference<std::vector<int> >());
+      break;
+    case DevTypeElement::DYNUINT:
+      DatapointIO::value(variable,insert_uint,reference<std::vector<unsigned int> >());
       break;
     case DevTypeElement::DYNTEXT:
       DatapointIO::value(variable,insert_string,reference<std::vector<std::string> >());
