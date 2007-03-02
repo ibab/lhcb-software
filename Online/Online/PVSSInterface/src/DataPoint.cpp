@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DataPoint.cpp,v 1.7 2007-03-02 00:33:37 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DataPoint.cpp,v 1.8 2007-03-02 00:54:33 frankb Exp $
 //  ====================================================================
 //  DataPoint.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: DataPoint.cpp,v 1.7 2007-03-02 00:33:37 frankb Exp $
+// $Id: DataPoint.cpp,v 1.8 2007-03-02 00:54:33 frankb Exp $
 #ifdef _WIN32
   // Disable warning C4250: 'const float' : forcing value to bool 'true' or 'false' (performance warning)
   #pragma warning ( disable : 4800 )
@@ -398,11 +398,11 @@ template <typename T> struct GetData {
 
 #else
 #define BASIC_SPECIALIZATIONS(x)   BASIC_SPECIALIZATIONS1(x) namespace PVSS { \
+  template <> void DataPoint::set< x >(const x&);         \
   template <> x& DataPoint::reference< x >();             \
   template <> const x& DataPoint::reference< x >() const; }
 
 #define SPECIALIZATIONS(x) BASIC_SPECIALIZATIONS(x) namespace PVSS { \
-  template <> void DataPoint::set< x >(const x&);         \
   template <> x DataPoint::data< x >();                   \
   template <> const x DataPoint::data< x >() const; }
 
@@ -418,7 +418,11 @@ SPECIALIZATIONS(unsigned char)
 SPECIALIZATIONS(short)
 SPECIALIZATIONS(unsigned short)
 BASIC_SPECIALIZATIONS(int)
-SPECIALIZATIONS(unsigned int)
+  //#ifdef _WIN32
+  //SPECIALIZATIONS(unsigned int)
+  //#else
+BASIC_SPECIALIZATIONS(unsigned int)
+  //#endif
 BASIC_SPECIALIZATIONS(long)
 SPECIALIZATIONS(unsigned long)
 BASIC_SPECIALIZATIONS(float)
