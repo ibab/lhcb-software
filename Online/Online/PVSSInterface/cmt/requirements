@@ -4,10 +4,7 @@ version v1r0
 branches  cmt doc
 use PVSSManager  v* Online
 use OnlineKernel v* Online
-use RELAX        v* LCG_Interfaces
-use Reflex       v* LCG_Interfaces
-use Python       v* LCG_Interfaces -no_auto_import
-use ROOT         v* LCG_Interfaces -no_auto_import
+use Reflex       v* LCG_Interfaces -no_auto_imports
 
 include_dirs $(PVSSINTERFACEROOT)
 document      install_includes install_includes
@@ -24,4 +21,8 @@ macro_append gccxmlopts " --no_templatetypedefs --no_membertypedefs -D__GCCXML "
 apply_pattern reflex_dictionary dictionary=PVSSInterface \
                                 headerfiles=$(PVSSINTERFACEROOT)/dict/dictionary.h \
                                 selectionfile=$(PVSSINTERFACEROOT)/dict/dictionary.xml
-macro PVSSInterfaceDict_use_linkopts $(use_linkopts)
+##  macro PVSSInterfaceDict_use_linkopts " $(use_linkopts) $(Reflex_linkopts) "
+
+private
+use RELAX        v* LCG_Interfaces -no_auto_imports
+use Python       v* LCG_Interfaces -no_auto_imports
