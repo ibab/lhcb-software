@@ -1,4 +1,4 @@
-// $Id: TrackMatchVeloSeed.h,v 1.15 2006-10-17 12:02:02 mneedham Exp $
+// $Id: TrackMatchVeloSeed.h,v 1.16 2007-03-02 17:17:05 cattanem Exp $
 #ifndef TRACKMATCHVELOSEED_H 
 #define TRACKMATCHVELOSEED_H 1
 
@@ -29,8 +29,8 @@
  *  value are rejected.
  *
  *  @author:   Jeroen van Tilburg Jeroen.van.Tilburg@cern.nl
- *  @date:     16-05-2001
- *  @modified: 14-01-2006
+ *  @date:           16-05-2001
+ *  @date: modified: 14-01-2006
  */
 
 class TrackMatchVeloSeed : public GaudiAlgorithm {

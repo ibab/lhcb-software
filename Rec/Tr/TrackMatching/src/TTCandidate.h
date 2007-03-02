@@ -1,4 +1,4 @@
-// $Id: TTCandidate.h,v 1.5 2006-08-03 09:14:38 mneedham Exp $
+// $Id: TTCandidate.h,v 1.6 2007-03-02 17:17:05 cattanem Exp $
 #ifndef TRACKMATCHING_TTCANDIDATE_H
 #define TRACKMATCHING_TTCANDIDATE_H 1
 
@@ -12,7 +12,7 @@
 #include "Event/STCluster.h"
 
 // from GaudiKernel
-#include "Kernel/TrackTypes.h"
+#include "Event/TrackTypes.h"
 
 #include "GaudiKernel/boost_allocator.h"
 

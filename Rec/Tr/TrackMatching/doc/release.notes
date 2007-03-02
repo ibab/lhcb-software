@@ -4,6 +4,11 @@
 ! Purpose     : Package for the track matching algorithms
 !-----------------------------------------------------------------------------
 
+!======================= TrackMatching v2r11 2007-03-02 ======================
+! 2007-03-02 - Marco Cattaneo
+ - Remove an LHCbDefinitions include
+ - Remove obsolete TrackMatching_load.cpp file
+
 !======================= TrackMatching v2r10 2006-11-30 ======================
 ! 2006-11-30 - Edwin Bos
  - Calls to TrajPoca minimize now handle returned StatusCode
