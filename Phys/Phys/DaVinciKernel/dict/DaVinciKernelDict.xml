@@ -1,0 +1,43 @@
+<lcgdict>
+
+<!-- DaVinciKernel -->
+
+  <class name = "DVAlgorithm"/>
+  <class name = "IAlgorithm2ID"/>
+  <class name = "IBestParticles"/>
+  <class name = "IBremAdder"/>
+  <class name = "IBTaggingTool"/>
+  <class name = "ICaloParticleMaker"/>
+  <class name = "IChangePIDTool"/>
+  <class name = "ICheckOverlap"/>
+  <class name = "ICheckSelResults"/>
+  <class name = "IContextTool"/>
+  <class name = "IDecayFinder"/>
+  <class name = "IDecodeSimpleDecayString"/>
+  <class name = "IDirectionFit"/>
+  <class name = "IFilterCriteriaTESTool"/>
+  <class name = "IFilterCriterion"/>
+  <class name = "IGeomDispCalculator"/>
+  <class name = "IJetMaker"/>
+  <class name = "ILifetimeFitter"/>
+  <class name = "IMassVertexFit"/>
+  <class name = "IOnOffline"/>
+  <class name = "IParticle2State"/>
+  <class name = "IParticle2VertexAsct"/>
+  <class name = "IParticleCombiner"/>
+  <class name = "IParticleDescendants"/>
+  <class name = "IParticleFilter"/>
+  <class name = "IParticleMaker"/>
+  <class name = "IParticleReFitter"/>
+  <class name = "IParticleStuffer"/>
+  <class name = "IPhysDesktop"/>
+  <class name = "IPlotTool"/>
+  <class name = "IProtoParticleFilter"/>
+  <class name = "IPVReFitter"/>
+  <class name = "IRelatedPVFinder"/>
+  <class name = "IRelatedPV"/>
+  <class name = "ISecondaryVertexTool"/> 
+  <class name = "ITagger"/>
+  <class name = "IVertexFit"/>
+
+</lcgdict>

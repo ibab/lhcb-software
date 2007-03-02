@@ -1,4 +1,4 @@
-// $Id: ICaloParticleMaker.h,v 1.1 2006-09-06 15:31:20 odescham Exp $
+// $Id: ICaloParticleMaker.h,v 1.2 2007-03-02 10:59:57 cattanem Exp $
 #ifndef DAVINCIKERNEL_ICALOPARTICLEMAKER_H
 #define DAVINCIKERNEL_ICALOPARTICLEMAKER_H 1
 
@@ -9,9 +9,13 @@
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
 #include "Event/Particle.h"
-#include "Event/Vertex.h"
-#include "Kernel/GenericVectorTypes.h"
-#include "Kernel/SymmetricMatrixTypes.h"
+#include "GaudiKernel/GenericVectorTypes.h"
+#include "GaudiKernel/SymmetricMatrixTypes.h"
+
+// Forward declarations
+namespace LHCb {
+  class Vertex;
+}
 
 static const InterfaceID IID_ICaloParticleMaker("ICaloParticleMaker", 1 , 0);
 

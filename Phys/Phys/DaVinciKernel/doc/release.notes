@@ -3,6 +3,14 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+!========================= DaVinciKernel v6r1 2007-03-02 ===================
+! 2007-03-02 - Marco Cattaneo
+ - Add dictionary for all interfaces (previously in PhysDict)  and for 
+   DVAlgorithm base class
+ - Remove obsolete DaVinciKernel_load.cpp file
+ - Remove LHCbDefinitions includes
+ - Replace some includes by forward declarations in interface definitions
+
 ! 2007-02-24 - Patrick Koppenburg
  - Added a space in PhysDesktop warning
 

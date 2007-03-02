@@ -1,15 +1,21 @@
-// $Id: IGeomDispCalculator.h,v 1.5 2006-07-20 11:29:37 jpalac Exp $
+// $Id: IGeomDispCalculator.h,v 1.6 2007-03-02 10:59:57 cattanem Exp $
 #ifndef DAVINCIKERNEL_IGEOMDISPCALCULATOR_H 
 #define DAVINCIKERNEL_IGEOMDISPCALCULATOR_H 1
 
 // Include files
 #include "GaudiKernel/IAlgTool.h"
-#include "Kernel/Vector3DTypes.h"
-#include "Event/VertexBase.h"
-#include "Event/Particle.h"
+#include "GaudiKernel/Point3DTypes.h"
+#include "GaudiKernel/Vector3DTypes.h"
+#include "GaudiKernel/SymmetricMatrixTypes.h"
 
 // Forward declarations
 class IParticlePropertySvc;
+
+namespace LHCb {
+  class Particle;
+  class VertexBase;
+}
+
 
 static const InterfaceID IID_IGeomDispCalculator("IGeomDispCalculator", 2 , 1); 
 

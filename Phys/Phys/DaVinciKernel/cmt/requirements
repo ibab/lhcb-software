@@ -1,9 +1,7 @@
-# $Id: requirements,v 1.39 2007-02-16 13:40:26 pkoppenb Exp $
+# $Id: requirements,v 1.40 2007-03-02 10:59:57 cattanem Exp $
 # Created    : 05/02/2002
 # Maintainer : P. Koppenburg, J. Palcios
-#
-# Documentation on the requirement file can be found at
-# http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
+#============================================================================
 
 package           DaVinciKernel
 version           v6r1
@@ -36,3 +34,12 @@ library          DaVinciKernel    ../src/component/*.cpp
 #============================================================================
 apply_pattern component_library library=DaVinciKernel
 apply_pattern linker_library    library=DaVinciKernelLib
+
+# =============== LCG Dictionaries ============================================
+apply_pattern reflex_dictionary                                             \
+              dictionary=DaVinciKernel                                      \
+              headerfiles=$(DAVINCIKERNELROOT)/dict/DaVinciKernelDict.h     \
+              selectionfile=$(DAVINCIKERNELROOT)/dict/DaVinciKernelDict.xml \
+              options="-U__MINGW32__"
+
+macro DaVinciKernelDict_use_linkopts $(use_linkopts)
