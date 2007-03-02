@@ -3,7 +3,7 @@
 # Maintainer : Jose Hernando, Eduardo Rodrigues
 #============================================================================
 package           TrackFitEvent
-version           v3r1
+version           v3r2
 
 #============================================================================
 # Structure, i.e. directories to process. 
@@ -50,4 +50,4 @@ apply_pattern component_library library=TrackFitEventDict
 macro_remove constituents TrackFitEventDictRootMap
 
 private
-use GaudiObjDesc v*
+use GaudiObjDesc v* -no_auto_imports
