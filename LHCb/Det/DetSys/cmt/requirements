@@ -6,15 +6,15 @@ branches cmt doc dict
 use DetDesc             v17r1   Det
 use DetDescCnv          v4r1    Det
 use DetDescSvc          v1r10p1 Det
-use XmlTools            v5r0    Tools
+use XmlTools            v5r1    Tools
 use VeloDet             v11r1   Det
 use OTDet               v7r2    Det
-use CaloDet             v8r0    Det
+use CaloDet             v8r1    Det
 use CaloDetXmlCnv       v3r0    Det
-use MuonDet             v6r0    Det
+use MuonDet             v6r1    Det
 use Magnet              v3r5    Det
-use RichDet             v10r1   Det
-use STDet               v3r1    Det
+use RichDet             v10r2   Det
+use STDet               v3r2    Det
 
 # =============== LCG Dictionaries ============================================
 apply_pattern     reflex_dictionary                            \
