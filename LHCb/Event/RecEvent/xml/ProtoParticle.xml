@@ -47,10 +47,11 @@
         <enumval name="RichDLLp"       value="104"  desc="The RICH delta log likelihood value for the proton hypothesis"/>
         <enumval name="RichPIDStatus"  value="105"  desc="The RichPID bit packed PID status word"/>
 
-        <enumval name="MuonMuLL"       value="200"  desc="The log likelihood from the MUON sytem for the ProtoParticle to be a muon"/>
-        <enumval name="MuonBkgLL"      value="201"  desc="The log likelihood from the MUON sytem for the ProtoParticle to be background"/>
+        <enumval name="MuonMuLL"       value="200"  desc="The log likelihood from the MUON system for the ProtoParticle to be a muon"/>
+        <enumval name="MuonBkgLL"      value="201"  desc="The log likelihood from the MUON system for the ProtoParticle to be background"/>
         <enumval name="MuonNShared"    value="202"  desc="The number of MUON hits that are shared with other ProtoParticles"/>
         <enumval name="MuonPIDStatus"  value="203"  desc="The MuonPID bit packed PID status word"/>
+        <enumval name="InAccMuon"      value="204"  desc="Acceptance flag for MUON system"/>
 
         <enumval name="InAccSpd"   value="300"  desc="Acceptance flag for Spd-based  CaloID (charged)"/>
         <enumval name="InAccPrs"   value="301"  desc="Acceptance flag for Prs-based  CaloID (charged)"/>
