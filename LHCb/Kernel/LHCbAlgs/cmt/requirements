@@ -16,6 +16,7 @@ include_path    none
 #============================================================================
 use GaudiAlg   v*
 use LHCbKernel v* Kernel -no_auto_imports
+use DAQEvent   v* Event
 
 #============================================================================
 # Component library building rule

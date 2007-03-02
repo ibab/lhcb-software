@@ -9,6 +9,7 @@
  - Add general purpose components previously in Tools/Utilities:
    AlgorithmCorrelations, DeterministicPrescaler, PostScaler, PrintHeader
    Also EventCounter (previouly called EventNumber)
+ - Add dependency on DAQEvent (for ODIN bank definition)
 
 ! 2007-02-26 - Marco Cattaneo
  - Add LbAppInit factory declaration to LHCbAlgs_dll.cpp, to avoid having it 
