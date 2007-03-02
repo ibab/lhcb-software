@@ -1,4 +1,4 @@
-// $Id: TaggerElectronTool.h,v 1.9 2007-03-01 20:59:23 musy Exp $
+// $Id: TaggerElectronTool.h,v 1.10 2007-03-02 13:08:33 pkoppenb Exp $
 #ifndef USER_TAGGERELECTRONTOOL_H 
 #define USER_TAGGERELECTRONTOOL_H 1
 
@@ -8,7 +8,7 @@
 #include "GaudiKernel/ToolFactory.h"
 // from Event
 #include "Kernel/ITagger.h"
-#include "Kernel/ICaloElectron.h"
+#include "CaloInterfaces/ICaloElectron.h"
 
 // from local
 #include "ITaggingUtils.h"

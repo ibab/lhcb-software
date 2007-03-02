@@ -88,7 +88,7 @@ Tagger TaggerElectronTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     if(track->type() != Track::Long) continue;
 
     double eOverP  = -999;
-    if( m_electron->setParticle(*ipart) ) { 
+    if( m_electron->set(*ipart) ) { 
       eOverP  = m_electron->eOverP();
     }
  

@@ -20,8 +20,7 @@ set FLAVOURTAGGINGOPTS ${FLAVOURTAGGINGROOT}/options
 use TrackInterfaces v*   Tr
 use PhysEvent       v*   Event
 use DaVinciKernel   v*   Phys
-use CaloUtils       v*   Calo
-
+use CaloInterfaces  v*   Calo
 
 # Component library building rule
 #============================================================================
