@@ -1,5 +1,10 @@
 ! Package     : MuonID
 ! Responsible : Erica Polycarpo
+!---------------------------------------------------------------------
+
+!========================== MuonID v4r5 2007-03-02 ===================
+! 2007-03-02 - Marco Cattaneo
+ - Remove obsolete MuonID_load.cpp file
 
 ! 2007-03-02 - Chris Jones
  - Save MuonPID in container with same key as associated Track
