@@ -21,7 +21,6 @@ macro_append gccxmlopts " --no_templatetypedefs --no_membertypedefs -D__GCCXML "
 apply_pattern reflex_dictionary dictionary=PVSSInterface \
                                 headerfiles=$(PVSSINTERFACEROOT)/dict/dictionary.h \
                                 selectionfile=$(PVSSINTERFACEROOT)/dict/dictionary.xml
-##  macro PVSSInterfaceDict_use_linkopts " $(use_linkopts) $(Reflex_linkopts) "
 
 private
 use RELAX        v* LCG_Interfaces -no_auto_imports
