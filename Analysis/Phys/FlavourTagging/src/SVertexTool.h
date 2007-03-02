@@ -1,4 +1,4 @@
-// $Id: SVertexTool.h,v 1.5 2007-03-01 20:59:23 musy Exp $
+// $Id: SVertexTool.h,v 1.6 2007-03-02 11:50:07 musy Exp $
 #ifndef SVERTEXTOOL_H 
 #define SVERTEXTOOL_H 1
 // Include files
@@ -43,6 +43,22 @@ private:
   IGeomDispCalculator* geom;
   IVertexFit *fitter;
   double m_lcs_cut;
+  float  m_ipfitpol0;
+  float  m_ipfitpol1;
+  float  m_ipfitpol2;
+  float  m_ipfitpol3;
+  float  m_ipfitpol4;
+  float  m_ipfitpol5;
+
+  float  m_ptfitpol0;
+  float  m_ptfitpol1;
+  float  m_ptfitpol2;
+  float  m_ptfitpol3;
+  float  m_ptfitpol4;
+
+  float  m_anglepol0;
+  float  m_anglepol1;
+  float  m_anglepol2;
 
   bool isin(LHCb::Particle::ConstVector& , const LHCb::Particle* );
 

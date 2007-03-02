@@ -1,4 +1,4 @@
-// $Id: SVertexTool.cpp,v 1.6 2007-03-01 20:59:23 musy Exp $
+// $Id: SVertexTool.cpp,v 1.7 2007-03-02 11:50:07 musy Exp $
 #include "SVertexTool.h"
 
 //-----------------------------------------------------------------------------
@@ -22,7 +22,26 @@ SVertexTool::SVertexTool( const std::string& type,
   GaudiTool ( type, name, parent ) 
 { 
   declareInterface<ISecondaryVertexTool>(this);
+
   declareProperty( "lcs_cut", m_lcs_cut = 999.0 );
+
+  declareProperty( "IPFitPol0", m_ipfitpol0= -0.0386294 );
+  declareProperty( "IPFitPol1", m_ipfitpol1= 0.198011 );
+  declareProperty( "IPFitPol2", m_ipfitpol2= -0.0214092 );
+  declareProperty( "IPFitPol3", m_ipfitpol3= 0.00103611 );
+  declareProperty( "IPFitPol4", m_ipfitpol4= -2.34523e-05 );
+  declareProperty( "IPFitPol5", m_ipfitpol5= 1.99983e-07 );
+
+  declareProperty( "PtFitPol0", m_ptfitpol0= 0.0785018 );
+  declareProperty( "PtFitPol1", m_ptfitpol1= 1.76885 );
+  declareProperty( "PtFitPol2", m_ptfitpol2= -1.50309 );
+  declareProperty( "PtFitPol3", m_ptfitpol3= 0.558458 );
+  declareProperty( "PtFitPol4", m_ptfitpol4= -0.0749303 );
+
+  declareProperty( "AnglePol0", m_anglepol0= 0.743526 );
+  declareProperty( "AnglePol1", m_anglepol1= -2.09646 );
+  declareProperty( "AnglePol2", m_anglepol2= 8.60807 );
+
 }
 
 StatusCode SVertexTool::initialize() {
@@ -258,7 +277,6 @@ bool SVertexTool::isin(Particle::ConstVector& vtags_toexclude, const Particle* a
   }
   return false;
 } 
-
 //=============================================================================
 double SVertexTool::angle( Gaudi::LorentzVector a, Gaudi::LorentzVector b) {
   double ang=0;
@@ -268,26 +286,32 @@ double SVertexTool::angle( Gaudi::LorentzVector a, Gaudi::LorentzVector b) {
     if(ang<0) ang=-ang;
   } else {
     err()<<"Zero vector! Arguments: "<<a.Vect().Mag2()
-	 <<" "<<b.Vect().Mag2()<<endreq;
+         <<" "<<b.Vect().Mag2()<<endreq;
   }
   return ang;
 }
 double SVertexTool::ipprob(double x) {
   if( x > 40. ) return 0.6;
-  double r = - 0.535 + 0.3351*x - 0.03102*pow(x,2) + 0.001316*pow(x,3)
-    - 0.00002598*pow(x,4) + 0.0000001919*pow(x,5);
+  //double r = - 0.535 + 0.3351*x - 0.03102*pow(x,2) + 0.001316*pow(x,3)
+  //- 0.00002598*pow(x,4) + 0.0000001919*pow(x,5);
+  double r = m_ipfitpol0 + m_ipfitpol1*x + m_ipfitpol2*pow(x,2)
+    + m_ipfitpol3*pow(x,3) + m_ipfitpol4*pow(x,4) + m_ipfitpol5*pow(x,5);
   if(r<0) r=0;
   return r;
 }
 double SVertexTool::ptprob(double x) {
   if( x > 5.0 ) return 0.65;
-  double r = 0.04332 + 0.9493*x - 0.5283*pow(x,2) + 0.1296*pow(x,3)
-    - 0.01094*pow(x,4);
+  //double r = 0.04332 + 0.9493*x - 0.5283*pow(x,2) + 0.1296*pow(x,3)
+  //  - 0.01094*pow(x,4);
+  double r = m_ptfitpol0 + m_ptfitpol1*x + m_ptfitpol2*pow(x,2)
+    + m_ptfitpol3*pow(x,3) + m_ptfitpol4*pow(x,4);
   if(r<0) r=0;
   return r;
 }
 double SVertexTool::aprob(double x) {
-  if( x < 0.02 ) return 0.32;
-  return 0.4516 - 1.033*x;
+  if( x > 0.25 ) return 0.7;
+  double r = m_anglepol0 + m_anglepol1*x + m_anglepol2*x*x;
+  if(r<0) r=0;
+  return r;
 }
 //=============================================================================
