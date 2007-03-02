@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DataPoint.cpp,v 1.11 2007-03-02 09:44:11 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DataPoint.cpp,v 1.12 2007-03-02 10:01:14 frankb Exp $
 //  ====================================================================
 //  DataPoint.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: DataPoint.cpp,v 1.11 2007-03-02 09:44:11 frankb Exp $
+// $Id: DataPoint.cpp,v 1.12 2007-03-02 10:01:14 frankb Exp $
 #ifdef _WIN32
   // Disable warning C4250: 'const float' : forcing value to bool 'true' or 'false' (performance warning)
   #pragma warning ( disable : 4800 )
@@ -381,13 +381,6 @@ template <class T> const T& DataPoint::reference()  const  {
   template <> int DataValue< x >::type_id();                    \
   template <> DataValue< x > createDataValue< x >(const x& o);  \
 }
-#define DATA_SPECIALIZATIONS(x) namespace PVSS {                \
-  template <> x DataPoint::data< x >(); \
-  template <> const x DataPoint::data< x >() const; }
-
-#define EXPLICIT_DATA_SPECIALIZATIONS(x) namespace PVSS {                \
-  template <> x DataPoint::data< x >()             { return this->reference< x >();} \
-  template <> const x DataPoint::data< x >() const { return this->reference< x >();} }
 
 // Some hacks due to comipler hickup!
 #ifdef _WIN32
@@ -395,26 +388,39 @@ template <typename T> struct GetRef   {
   T& ref1(DataPoint& dp)             { return dp.reference<T>(); } 
   const T& ref2(const DataPoint& dp) { return dp.reference<T>(); } 
   void set(DataPoint& dp,const T& t) { dp.set(t);                }
+  //};
+  //template <typename T> struct GetData {
+  void get1(const DataPoint& dp, T& p)        { p = dp.data<T>(); }
+  void get2(DataPoint& dp, T& p)              { p = dp.data<T>(); }
 };
-template <typename T> struct GetData {
-  T get1(const DataPoint& dp)        { return dp.data<T>();      }
-  T get2(DataPoint& dp)              { return dp.data<T>();      }
-};
-#define BASIC_SPECIALIZATIONS(x) BASIC_SPECIALIZATIONS1(x) namespace PVSS { template GetRef< x >; }
-#define SPECIALIZATIONS(x)       BASIC_SPECIALIZATIONS(x)  namespace PVSS { template GetData< x >;}
+
+#define REF_SPECIALIZATIONS(x)   namespace PVSS { template GetRef< x >; }
+#define DATA_SPECIALIZATIONS(x)  namespace PVSS { template GetRef< x >;}
 
 #else
-#define BASIC_SPECIALIZATIONS(x)   BASIC_SPECIALIZATIONS1(x) namespace PVSS { \
+#define REF_SPECIALIZATIONS(x) namespace PVSS { \
   template <> void DataPoint::set< x >(const x&);         \
   template <> x& DataPoint::reference< x >();             \
   template <> const x& DataPoint::reference< x >() const; }
 
-#define SPECIALIZATIONS(x) BASIC_SPECIALIZATIONS(x) DATA_SPECIALIZATIONS(x)
+#define DATA_SPECIALIZATIONS(x) namespace PVSS {                \
+  template <> x DataPoint::data< x >(); \
+  template <> const x DataPoint::data< x >() const; }
+
 #endif
 
-#define VECTOR_SPECIALIZATIONS(x) BASIC_SPECIALIZATIONS(std::vector< x >) \
-                                  EXPLICIT_DATA_SPECIALIZATIONS(std::vector< x >)
+#define EXPLICIT_DATA_SPECIALIZATIONS(x) namespace PVSS {                \
+  template <> x DataPoint::data< x >()             { return this->reference< x >();} \
+  template <> const x DataPoint::data< x >() const { return this->reference< x >();} }
 
+#define BASIC_SPECIALIZATIONS(x)    BASIC_SPECIALIZATIONS1(x) REF_SPECIALIZATIONS(x)
+
+#define SPECIALIZATIONS(x)          BASIC_SPECIALIZATIONS(x)  DATA_SPECIALIZATIONS(x)
+
+#define VECTOR_SPECIALIZATIONS(x)   BASIC_SPECIALIZATIONS(std::vector< x >) \
+                                    EXPLICIT_DATA_SPECIALIZATIONS(std::vector< x >)
+#define EXPLICIT_SPECIALIZATIONS(x) BASIC_SPECIALIZATIONS(x) \
+                                    EXPLICIT_DATA_SPECIALIZATIONS(x)
 
 BASIC_SPECIALIZATIONS(bool)
 BASIC_SPECIALIZATIONS(char)
@@ -429,9 +435,9 @@ BASIC_SPECIALIZATIONS(float)
 SPECIALIZATIONS(double)
 
 BASIC_SPECIALIZATIONS(std::string)
-BASIC_SPECIALIZATIONS(DpIdentifier)
-BASIC_SPECIALIZATIONS(DPRef)
-BASIC_SPECIALIZATIONS(DPTime)
+EXPLICIT_SPECIALIZATIONS(DpIdentifier)
+EXPLICIT_SPECIALIZATIONS(DPRef)
+EXPLICIT_SPECIALIZATIONS(DPTime)
 
 VECTOR_SPECIALIZATIONS(bool)
 VECTOR_SPECIALIZATIONS(char)
