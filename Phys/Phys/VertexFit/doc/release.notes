@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.88 2007-02-06 10:07:30 pkoppenb Exp $
+! $Id: release.notes,v 1.89 2007-03-02 17:21:14 xieyu Exp $
 !===========================================================================
 ! Package     : VertexFit
 ! Responsible : P. Koppenburg
 !===========================================================================
+
+! 2007-02-06 - Yuehong Xie
+  - PropertimeFitter.cpp: return tau (not ctau) in Gaudi unit of time,
+    which is nanosecond.
 
 ! 2007-02-06 - P. Koppenburg
   - Offloine vertexfitter: add correct particles to vertex.

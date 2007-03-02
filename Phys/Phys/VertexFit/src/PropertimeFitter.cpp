@@ -1,4 +1,4 @@
-// $Id: PropertimeFitter.cpp,v 1.5 2007-01-12 14:17:57 ranjard Exp $
+// $Id: PropertimeFitter.cpp,v 1.6 2007-03-02 17:21:14 xieyu Exp $
 // Include files 
 
 // from Gaudi
@@ -234,9 +234,9 @@ StatusCode PropertimeFitter::fit( const LHCb::VertexBase& PV, const LHCb::Partic
 
   error = sqrt(CovTau(0,0));
 
-  // convert to ps  
-  propertime /=  (picosecond*c_light);   
-  error /= (picosecond*c_light);
+  // convert c*tau to tau
+  propertime /=  c_light;   
+  error /= c_light;
 
   chisq =  chi2Fit;
 
