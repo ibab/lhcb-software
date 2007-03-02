@@ -1,17 +1,4 @@
-// $Id: PV2MC.h,v 1.2 2006-11-27 16:57:06 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.1.1.1  2006/10/11 13:35:09  jpalac
-// First import of package Phys/DaVinciMCKernel
-//
-// Revision 1.4  2006/08/29 11:40:47  ibelyaev
-//  many fixed to simplify MC-match
-//
-// Revision 1.3  2006/08/15 15:27:42  ibelyaev
-//  adaptation to new inheritance scheme for Vertices
-//
+// $Id: PV2MC.h,v 1.3 2007-03-02 13:26:58 cattanem Exp $
 // ============================================================================
 #ifndef KERNEL_PV2MC_H 
 #define KERNEL_PV2MC_H 1
@@ -51,7 +38,7 @@ namespace LHCb
 {
   namespace Relations_
   {
-    /// the actual type of "weight" (pair: #of tracks + chi2)
+    /// the actual type of "weight" (pair: /#of tracks + chi2)
     typedef std::pair<unsigned int,float>                    PV2MCWeight ;
     /// the actual type of PV   -> MC relations 
     typedef IRelationWeighted<LHCb::RecVertex,LHCb::MCVertex,PV2MCWeight> 

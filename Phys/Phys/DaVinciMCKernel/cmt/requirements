@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.7 2007-02-24 14:29:15 pkoppenb Exp $
+# $Id: requirements,v 1.8 2007-03-02 13:26:58 cattanem Exp $
 # =============================================================================
 # Created    : 11/10/2006
 # Maintainer : J. Palacios
@@ -10,7 +10,7 @@ package           DaVinciMCKernel
 version           v2r1
 
 #============================================================================
-branches          cmt doc src options Kernel
+branches          cmt doc dict src options Kernel
 
 # Used packages. 
 #============================================================================
@@ -21,8 +21,6 @@ use  LinkerEvent         v*  Event
 use  RecEvent            v*  Event
 use  DaVinciKernel       v*  Phys
 use  LoKiCore            v*  Phys
-#use  CaloAssociators     v*  Calo
-#use  CaloUtils           v*  Calo 
 
 # Exported header files
 #============================================================================
@@ -33,6 +31,12 @@ apply_pattern install_more_includes more=Kernel
 library          DaVinciMCKernelLib    ../src/Lib/*.cpp
 #============================================================================
 apply_pattern linker_library    library=DaVinciMCKernelLib
-# =============================================================================
-# The END 
-# =============================================================================
+
+# =============== LCG Dictionaries ============================================
+apply_pattern reflex_dictionary                                                 \
+              dictionary=DaVinciMCKernel                                        \
+              headerfiles=$(DAVINCIMCKERNELROOT)/dict/DaVinciMCKernelDict.h     \
+              selectionfile=$(DAVINCIMCKERNELROOT)/dict/DaVinciMCKernelDict.xml \
+              options="-U__MINGW32__"
+
+macro DaVinciMCKernelDict_use_linkopts $(use_linkopts)

@@ -1,11 +1,4 @@
-// $Id: MC2Collision.h,v 1.1.1.1 2006-10-11 13:35:09 jpalac Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1.1.1 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.3  2006/03/19 12:13:09  ibelyaev
-//  minor update
-//
+// $Id: MC2Collision.h,v 1.2 2007-03-02 13:26:58 cattanem Exp $
 // ============================================================================
 #ifndef KERNEL_MC2COLLISION_H 
 #define KERNEL_MC2COLLISION_H 1
@@ -81,8 +74,7 @@ namespace LHCb
 // ==========================================================================
 namespace MC2Collision 
 {
-  /** @fn collision 
-   *  get the GenCollision object, associated with the given vertex
+  /** get the GenCollision object, associated with the given vertex
    *
    *  @code 
    *
@@ -112,8 +104,7 @@ namespace MC2Collision
   ( const LHCb::MCVertex*           vertex , 
     const LHCb::MCVertex2Collision* table  ) ;
 
-  /** @fn collision 
-   *  get the GenCollision object, associated with the given particle
+  /** get the GenCollision object, associated with the given particle
    *
    *  @code 
    *
@@ -143,8 +134,7 @@ namespace MC2Collision
   ( const LHCb::MCParticle*         particle , 
     const LHCb::MCVertex2Collision* table    ) ;
 
-  /** @fn collision 
-   *  get the GenCollision object, associated with the given hit
+  /** get the GenCollision object, associated with the given hit
    *
    *  @code 
    *
@@ -174,8 +164,7 @@ namespace MC2Collision
   ( const LHCb::MCHit*              hit    , 
     const LHCb::MCVertex2Collision* table  ) ;
 
-  /** @fn collision 
-   *  get the GenCollision object, associated with the given hit
+  /** get the GenCollision object, associated with the given hit
    *
    *  @code 
    *
@@ -205,8 +194,7 @@ namespace MC2Collision
   ( const LHCb::MCHit*              hit    , 
     const LHCb::MCVertex2Collision* table  ) ;
 
-  /** @fn collision 
-   *  get the GenCollision object, associated with the given hit
+  /** get the GenCollision object, associated with the given hit
    *
    *  @code 
    *
@@ -236,8 +224,7 @@ namespace MC2Collision
   ( const LHCb::MCCaloHit*          hit    , 
     const LHCb::MCVertex2Collision* table  ) ;
 
-  /** @fn collision 
-   *  get the GenCollision object, associated with the given deposit
+  /** get the GenCollision object, associated with the given deposit
    *
    *  @code 
    *
@@ -267,8 +254,7 @@ namespace MC2Collision
   ( const LHCb::MCOTDeposit*        hit    , 
     const LHCb::MCVertex2Collision* table  ) ;
 
-  /** @fn collision 
-   *  get the GenCollision object, associated with the given deposit
+  /** get the GenCollision object, associated with the given deposit
    *
    *  @code 
    *
@@ -298,8 +284,7 @@ namespace MC2Collision
   ( const LHCb::MCSTDeposit*        hit    , 
     const LHCb::MCVertex2Collision* table  ) ;
 
-  /** @fn collision 
-   *  get the GenCollision object, associated with the given Rich hit
+  /** get the GenCollision object, associated with the given Rich hit
    *
    *  @code 
    *
@@ -329,8 +314,7 @@ namespace MC2Collision
   ( const LHCb::MCRichHit*          hit    , 
     const LHCb::MCVertex2Collision* table  ) ;
   
-  /** @fn primaryVertex
-   *  Simple function wich returns the primary vertex for the given vertex
+  /** Simple function wich returns the primary vertex for the given vertex
    *  
    *  @param vertex vertex
    *  @return the primary vertex 
@@ -340,8 +324,7 @@ namespace MC2Collision
    */
   const LHCb::MCVertex* 
   primaryVertex ( const LHCb::MCVertex* vertex ) ;
-  /** @fn primaryVertex
-   *  Simple function wich returns the primary vertex for the given particle 
+  /** Simple function wich returns the primary vertex for the given particle 
    *  
    *  @param particle particle
    *  @return the primary vertex 
@@ -351,8 +334,7 @@ namespace MC2Collision
    */
   const LHCb::MCVertex* 
   primaryVertex ( const LHCb::MCParticle* hit ) ;
-  /** @fn primaryVertex
-   *  Simple function wich returns the primary vertex for the given hit 
+  /** Simple function wich returns the primary vertex for the given hit 
    *  
    *  @param hit hit 
    *  @return the primary vertex 
@@ -362,8 +344,7 @@ namespace MC2Collision
    */
   const LHCb::MCVertex* 
   primaryVertex ( const LHCb::MCHit* hit ) ;
-  /** @fn primaryVertex
-   *  Simple function wich returns the primary vertex for the given hit 
+  /** Simple function wich returns the primary vertex for the given hit 
    *  
    *  @param hit hit 
    *  @return the primary vertex 
@@ -373,8 +354,7 @@ namespace MC2Collision
    */
   const LHCb::MCVertex* 
   primaryVertex ( const LHCb::MCCaloHit* hit ) ;
-  /** @fn primaryVertex
-   *  Simple function wich returns the primary vertex for the given hit 
+  /** Simple function wich returns the primary vertex for the given hit 
    *  
    *  @param hit hit 
    *  @return the primary vertex 
@@ -384,8 +364,7 @@ namespace MC2Collision
    */
   const LHCb::MCVertex* 
   primaryVertex ( const LHCb::MCRichHit* hit ) ;
-  /** @fn primaryVertex
-   *  Simple function wich returns the primary vertex for the given hit 
+  /** Simple function wich returns the primary vertex for the given hit 
    *  
    *  @param hit hit 
    *  @return the primary vertex 
@@ -395,8 +374,7 @@ namespace MC2Collision
    */
   const LHCb::MCVertex* 
   primaryVertex ( const LHCb::MCOTDeposit* hit ) ;
-  /** @fn primaryVertex
-   *  Simple function wich returns the primary vertex for the given hit 
+  /** Simple function wich returns the primary vertex for the given hit 
    *  
    *  @param hit hit 
    *  @return the primary vertex 
@@ -407,8 +385,7 @@ namespace MC2Collision
   const LHCb::MCVertex* 
   primaryVertex ( const LHCb::MCSTDeposit* hit ) ;
   
-  /** @fn fromCollision
-   *  Helper function which checs, is the given (primary) vertex 
+  /** Helper function which checs, is the given (primary) vertex 
    *  has as an origin the given collision
    *  @param vertex the vertex 
    *  @param collision the collision
@@ -420,9 +397,7 @@ namespace MC2Collision
     const LHCb::GenCollision*        collision , 
     const LHCb::MCVertex2Collision*  table     ) ;
   
-  /** @class FromCollision
-   *
-   *  Helper class(functor) to find check if the MC-objects 
+  /** Helper class(functor) to find check if the MC-objects 
    *  originates form a given GenCollision
    *  
    *  @code
