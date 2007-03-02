@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DevTypeElement.cpp,v 1.3 2007-03-01 22:00:01 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DevTypeElement.cpp,v 1.4 2007-03-02 12:19:02 frankb Exp $
 //  ====================================================================
 //  DevTypeElement.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: DevTypeElement.cpp,v 1.3 2007-03-01 22:00:01 frankb Exp $
+// $Id: DevTypeElement.cpp,v 1.4 2007-03-02 12:19:02 frankb Exp $
 
 // Framework include files
 #include "PVSS/DevTypeElement.h"
@@ -22,7 +22,7 @@ namespace PVSS {
 using namespace PVSS;
 
 /// Initializing constructor
-DevTypeElement::DevTypeElement(DevType* typ, int i, const std::string& nam, Type cont)
+DevTypeElement::DevTypeElement(DevType* typ, int i, const std::string& nam, int cont)
 : NamedIdentified(i,nam), m_type(typ), m_content(cont)
 {
 }

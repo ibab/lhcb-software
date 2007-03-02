@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/ReadTransaction.cpp,v 1.3 2007-03-02 00:33:37 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/ReadTransaction.cpp,v 1.4 2007-03-02 12:19:02 frankb Exp $
 //  ====================================================================
 //  ReadTransaction.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: ReadTransaction.cpp,v 1.3 2007-03-02 00:33:37 frankb Exp $
+// $Id: ReadTransaction.cpp,v 1.4 2007-03-02 12:19:02 frankb Exp $
 
 // Framework include files
 #include "PVSS/ReadTransaction.h"
@@ -99,7 +99,7 @@ void ReadTransaction::getValue(const DataPoint& dp, DpIdentifier& value)
 
 /// Set datapoint value
 void ReadTransaction::getValue(const DataPoint& dp, DPTime& value)  
-{  pvss_add_dpget(m_context,DevTypeElement::TIME,0,dp.id(),&value.time()); }
+{  pvss_add_dpget(m_context,Value::type_id(value),0,dp.id(),&value.time()); }
 
 template <typename T> static void insert_vector(std::vector<T>& v, const T& o)  { v.push_back(o);  }
 static void insert_string(std::vector<std::string>& t,const char* s) { t.push_back(s);   }

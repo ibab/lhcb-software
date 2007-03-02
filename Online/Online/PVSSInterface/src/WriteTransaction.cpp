@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/WriteTransaction.cpp,v 1.4 2007-03-02 00:33:37 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/WriteTransaction.cpp,v 1.5 2007-03-02 12:19:02 frankb Exp $
 //  ====================================================================
 //  WriteTransaction.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: WriteTransaction.cpp,v 1.4 2007-03-02 00:33:37 frankb Exp $
+// $Id: WriteTransaction.cpp,v 1.5 2007-03-02 12:19:02 frankb Exp $
 
 // Framework include files
 #include "PVSS/DataPoint.h"
@@ -55,82 +55,82 @@ bool WriteTransaction::start()  {
 
 /// Set datapoint value 
 void WriteTransaction::setValue(const DataPoint& dp, const bool& value)    {
-  pvss_val_list_add(m_context,DevTypeElement::BIT,dp.id(),&value);    
+  pvss_val_list_add(m_context,Value::type_id(value),dp.id(),&value);    
 }
 
 /// Set datapoint value 
 void WriteTransaction::setValue(const DataPoint& dp, const char& value)    {
-  pvss_val_list_add(m_context,DevTypeElement::CHAR,dp.id(),&value);    
+  pvss_val_list_add(m_context,Value::type_id(value),dp.id(),&value);    
 }
 
 /// Set datapoint value 
 void WriteTransaction::setValue(const DataPoint& dp, const unsigned char& value)   {
-  pvss_val_list_add(m_context,DevTypeElement::CHAR,dp.id(),&value);    
+  pvss_val_list_add(m_context,Value::type_id(value),dp.id(),&value);    
 }
 
 /// Set datapoint value 
 void WriteTransaction::setValue(const DataPoint& dp, const int& value) {
-  pvss_val_list_add(m_context,DevTypeElement::INT,dp.id(),&value);    
+  pvss_val_list_add(m_context,Value::type_id(value),dp.id(),&value);    
 }
 
 /// Set datapoint value 
 void WriteTransaction::setValue(const DataPoint& dp, const unsigned int& value)  {
-  pvss_val_list_add(m_context,DevTypeElement::UINT,dp.id(),&value);    
+  pvss_val_list_add(m_context,Value::type_id(value),dp.id(),&value);    
 }
 
 /// Set datapoint value 
 void WriteTransaction::setValue(const DataPoint& dp, const long& value) {
   int val = value;
-  pvss_val_list_add(m_context,DevTypeElement::INT,dp.id(),&val);
+  pvss_val_list_add(m_context,Value::type_id(value),dp.id(),&val);
 }
 
 /// Set datapoint value 
 void WriteTransaction::setValue(const DataPoint& dp, const unsigned long& value) {
   int val = value;
-  pvss_val_list_add(m_context,DevTypeElement::UINT,dp.id(),&val);
+  pvss_val_list_add(m_context,Value::type_id(value),dp.id(),&val);
 }
 
 /// Set datapoint value 
 void WriteTransaction::setValue(const DataPoint& dp, const float& value)  {
-  pvss_val_list_add(m_context,DevTypeElement::FLOAT,dp.id(),&value);    
+  pvss_val_list_add(m_context,Value::type_id(value),dp.id(),&value);    
 }
 
 /// Set datapoint value 
 void WriteTransaction::setValue(const DataPoint& dp, const double& value) {
   float val = (float)value;
-  pvss_val_list_add(m_context,DevTypeElement::FLOAT,dp.id(),&val);
+  pvss_val_list_add(m_context,Value::type_id(val),dp.id(),&val);
 }
 
 /// Set datapoint value 
 void WriteTransaction::setValue(const DataPoint& dp, const std::string& value)  {
   const char* c = value.c_str();
-  pvss_val_list_add(m_context,DevTypeElement::TEXT,dp.id(),c);
+  pvss_val_list_add(m_context,Value::type_id(value),dp.id(),c);
 }
 
 /// Set datapoint value 
 void WriteTransaction::setValue(const DataPoint& dp, const char* value)  {
-  pvss_val_list_add(m_context,DevTypeElement::TEXT,dp.id(),value);
+  pvss_val_list_add(m_context,Value::type_id(std::string()),dp.id(),value);
 }
 
 /// Set datapoint value 
 void WriteTransaction::setValue(const DataPoint& dp, const DPRef& value)  {
   DataPoint ref(dp.manager(),value.name());
-  pvss_val_list_add(m_context,DevTypeElement::DPID,dp.id(),&ref.id());
+  pvss_val_list_add(m_context,Value::type_id(value),dp.id(),&ref.id());
 }
 
 /// Set datapoint value 
 void WriteTransaction::setValue(const DataPoint& dp, const DpIdentifier& value)  {
-  pvss_val_list_add(m_context,DevTypeElement::DPID,dp.id(),&value);
+  pvss_val_list_add(m_context,Value::type_id(value),dp.id(),&value);
 }
 
 /// Set datapoint value 
 void WriteTransaction::setValue(const DataPoint& dp, const DataPoint& value)  {
-  pvss_val_list_add(m_context,DevTypeElement::DPID,dp.id(),&value.id());
+  pvss_val_list_add(m_context,Value::type_id(value.id()),dp.id(),&value.id());
 }
 
 /// Set datapoint value 
 void WriteTransaction::setValue(const DataPoint& dp, const DPTime& value)  {
-  pvss_val_list_add(m_context,DevTypeElement::TIME,dp.id(),&value.time());
+  pvss_val_list_add(m_context,Value::type_id(value),dp.id(),&value.time());
 }
 
 /// Set datapoint value for dynamic items

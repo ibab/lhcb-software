@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DevElement.cpp,v 1.3 2007-03-01 20:08:55 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DevElement.cpp,v 1.4 2007-03-02 12:19:02 frankb Exp $
 //  ====================================================================
 //  DevElement.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: DevElement.cpp,v 1.3 2007-03-01 20:08:55 frankb Exp $
+// $Id: DevElement.cpp,v 1.4 2007-03-02 12:19:02 frankb Exp $
 
 // Framework include files
 #include "PVSS/DevElement.h"
@@ -34,7 +34,7 @@ DevElement::~DevElement()   {
 }
 
 /// Access to the element type
-DevTypeElement::Type DevElement::contentType() const  {
+int DevElement::contentType() const  {
   return m_content->content();
 }
 

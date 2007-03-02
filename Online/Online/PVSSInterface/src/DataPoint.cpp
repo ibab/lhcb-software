@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DataPoint.cpp,v 1.13 2007-03-02 12:19:02 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DataPoint.cpp,v 1.14 2007-03-02 12:22:33 frankb Exp $
 //  ====================================================================
 //  DataPoint.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: DataPoint.cpp,v 1.13 2007-03-02 12:19:02 frankb Exp $
+// $Id: DataPoint.cpp,v 1.14 2007-03-02 12:22:33 frankb Exp $
 #ifdef _WIN32
   // Disable warning C4250: 'const float' : forcing value to bool 'true' or 'false' (performance warning)
   #pragma warning ( disable : 4800 )
@@ -69,8 +69,6 @@ template <> int DataValue<std::vector<DPTime> >::type_id()         { return DevT
 template <> int DataValue<std::vector<DPRef> >::type_id()          { return DevTypeElement::NOELEMENT; }
 
 namespace PVSS {
-  static Value* invalidValue() 
-  { throw std::runtime_error("Invalid type for data conversion.");                                }
   template <class T, class Q> Q convertValue(Value* v) {    return (Q)((DataValue<T>*)v)->data(); }
   template <typename T> T default_value()                        { return T();                    }
   template <> std::string  default_value<std::string>()          { return std::string("");        }
@@ -78,7 +76,7 @@ namespace PVSS {
   static void copy_string  (std::string& t,const char* s)        { t = s;                         }
   static void insert_bool  (std::vector<bool>& t,bool s)         { t.push_back(s);                }
   static void insert_char  (std::vector<char>& t,char s)         { t.push_back(s);                }
-  static void insert_short (std::vector<short>& t,short s)       { t.push_back(s);                }
+  //static void insert_short (std::vector<short>& t,short s)       { t.push_back(s);                }
   static void insert_int   (std::vector<int>& t,int s)           { t.push_back(s);                }
   static void insert_float (std::vector<float>& t,float s)       { t.push_back(s);                }
   static void insert_time_t(std::vector<time_t>& t,time_t s)     { t.push_back(s);                }
