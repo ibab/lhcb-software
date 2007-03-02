@@ -1,14 +1,14 @@
 !-----------------------------------------------------------------------------
-! $Id: release.notes,v 1.56 2007-03-02 09:43:54 jonrob Exp $
+! $Id: release.notes,v 1.57 2007-03-02 12:36:01 cattanem Exp $
 ! Package     : Event/RecEvent
 ! Responsible : Marco Cattaneo
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
 !-----------------------------------------------------------------------------
 
+!========================= RecEvent v2r2 2007-03-02 ==========================
 ! 2007-03-02 - Chris Jones
  - Add muon system acceptance flag to ProtoParticle enums
 
-!========================= RecEvent v2r2 2007-02-26 ==========================
 ! 2007-02-26 - Marco Cattaneo
  - Use ProcessHeaderLocation::Rec for RecHeaderLocation::Default
 
