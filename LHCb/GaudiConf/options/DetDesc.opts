@@ -1,7 +1,9 @@
 //--------------------------------------------------------------
 // Standard Options to use the Detector Geometry
 //--------------------------------------------------------------
-//ApplicationMgr.ExtSvc += { "DetDataSvc/DetectorDataSvc" }; 
+
+// DetetectorDataSvc must be external, to finalize after ToolSvc
+ApplicationMgr.ExtSvc += { "DetDataSvc/DetectorDataSvc" }; 
 
 DetectorDataSvc.UsePersistency = true;
 DetectorDataSvc.DetDbRootName  = "dd";
