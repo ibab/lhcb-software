@@ -1,8 +1,4 @@
-// $Id: CaloEnergyForTrack.h,v 1.1 2006-06-18 18:35:27 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
+// $Id: CaloEnergyForTrack.h,v 1.2 2007-03-02 15:22:07 cattanem Exp $
 // ============================================================================
 #ifndef CALOENERGYFORTRACK_H 
 #define CALOENERGYFORTRACK_H 1
@@ -15,9 +11,9 @@
 // ============================================================================
 // GaudiKernel
 // ============================================================================
-#include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IIncidentSvc.h"
 #include "GaudiKernel/IIncidentListener.h"
+#include "GaudiKernel/ToolFactory.h"
 // ============================================================================
 // CaloInterfaces 
 // ============================================================================

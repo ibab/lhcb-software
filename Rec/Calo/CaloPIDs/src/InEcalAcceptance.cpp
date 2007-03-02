@@ -1,20 +1,16 @@
-// $Id: InEcalAcceptance.cpp,v 1.1 2006-06-18 18:35:29 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Id: InEcalAcceptance.cpp,v 1.2 2007-03-02 15:22:08 cattanem Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
 // GaudiKernel
 // ============================================================================
-#include "GaudiKernel/DeclareFactoryEntries.h"
+#include "GaudiKernel/ToolFactory.h"
 // ============================================================================
 // Local
 // ============================================================================
 #include "InCaloAcceptance.h"
 // ============================================================================
-/** @class In EcalAcceptance 
+/** @class InEcalAcceptance 
  *  The precofigured instance of InCaloAcceptance Tool
  *  @author Victor EGORYCHEV Victor.Egorychev@cern.ch
  *  @author Vanya  BELYAEV    ibelyaev@phsycis.syr.edu

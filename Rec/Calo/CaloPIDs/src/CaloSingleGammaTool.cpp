@@ -1,20 +1,8 @@
-// ===========================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
-// ===========================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.8  2006/06/14 16:49:22  odescham
-// 2nd step of the migration towards DC06
-//
-// Revision 1.6  2005/11/07 12:12:43  odescham
-// v3r0 : adapt to the new Track Event Model
-//
-// Revision 1.5  2004/02/17 12:08:10  ibelyaev
-//  update for new CaloKernel and CaloInterfaces
-// 
+// $Id: CaloSingleGammaTool.cpp,v 1.2 2007-03-02 15:22:07 cattanem Exp $
 // ===========================================================================
 // Include files
 // GaudiKernel
-#include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/ToolFactory.h" 
 /// CaloDet 
 #include "CaloDet/DeCalorimeter.h"
 // Event

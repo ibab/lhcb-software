@@ -1,11 +1,4 @@
-// $Id: Linear.h,v 1.2 2006-09-28 09:56:54 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.1  2006/06/21 18:43:29  ibelyaev
-//  fix 'Brem' problem & speed-up it a bit
-// 
+// $Id: Linear.h,v 1.3 2007-03-02 15:22:08 cattanem Exp $
 // ============================================================================
 #ifndef CALOPIDS_LINEAR_H 
 #define CALOPIDS_LINEAR_H 1
@@ -15,20 +8,16 @@
 // Event 
 // ============================================================================
 #include "Event/State.h"
+#include "Event/TrackTypes.h"
 // ============================================================================
 // LHCbMath 
 // ============================================================================
 #include "LHCbMath/Line.h"
 #include "LHCbMath/GeomFun.h"
 // ============================================================================
-// LHCbDefintisons
+// Math Definitions
 // ============================================================================
-#include "Kernel/Plane3DTypes.h"
-#include "Kernel/TrackTypes.h"
-// ============================================================================
-// Event 
-// ============================================================================
-#include "Event/State.h"
+#include "GaudiKernel/Plane3DTypes.h"
 // ============================================================================
 
 namespace Utils
@@ -36,7 +25,7 @@ namespace Utils
   namespace Linear
   {  
     /** make a linear extrapiolation of the state to a certain Z 
-     *  @param satte (input/output) state to be extrapolated 
+     *  @param state (input/output) state to be extrapolated 
      *  @param newZ (input) z-position
      *  @return status code 
      */

@@ -2,9 +2,9 @@
 #define CALOSINGLEGAMMATOOL_H 1
 
 // Include files
-// Kernel
-#include "Kernel/Point3DTypes.h"
-#include "Kernel/Vector3DTypes.h"
+// Math
+#include "GaudiKernel/Point3DTypes.h"
+#include "GaudiKernel/Vector3DTypes.h"
 #include "LHCbMath/Line.h"
 #include "LHCbMath/GeomFun.h"
 // from Gaudi

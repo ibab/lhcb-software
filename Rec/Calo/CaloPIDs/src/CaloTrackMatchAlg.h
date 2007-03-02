@@ -1,8 +1,4 @@
-// $Id: CaloTrackMatchAlg.h,v 1.1 2006-06-18 18:35:28 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Id: CaloTrackMatchAlg.h,v 1.2 2007-03-02 15:22:07 cattanem Exp $
 // ============================================================================
 #ifndef CALOTRACKMATCHALG_H 
 #define CALOTRACKMATCHALG_H 1
@@ -12,7 +8,6 @@
 // GaudiKernel
 // ============================================================================
 #include "GaudiKernel/AlgFactory.h" 
-#include "GaudiKernel/DeclareFactoryEntries.h" 
 // ============================================================================
 // Relations 
 // ============================================================================

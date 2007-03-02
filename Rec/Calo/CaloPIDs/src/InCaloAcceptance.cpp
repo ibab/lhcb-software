@@ -1,28 +1,24 @@
-// $Id: InCaloAcceptance.cpp,v 1.1 2006-06-18 18:35:28 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, verison $Revision: 1.1 $
-// ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Id: InCaloAcceptance.cpp,v 1.2 2007-03-02 15:22:08 cattanem Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
 // GauduiKernel
 // ============================================================================
-#include "GaudiKernel/DeclareFactoryEntries.h"
+#include "GaudiKernel/ToolFactory.h"
 // ============================================================================
 // Event 
 // ============================================================================
 #include "Event/Track.h"
 // ============================================================================
-// LHCbDefinitions
+// Math Definitions
 // ============================================================================
-#include "Kernel/Point3DTypes.h"
-#include "Kernel/Vector3DTypes.h"
-#include "Kernel/Plane3DTypes.h"
-#include "Kernel/CaloCellCode.h"
+#include "GaudiKernel/Point3DTypes.h"
+#include "GaudiKernel/Vector3DTypes.h"
+#include "GaudiKernel/Plane3DTypes.h"
 // ============================================================================
 // CaloDet
 // ============================================================================
+#include "Kernel/CaloCellCode.h"
 #include "CaloDet/DeCalorimeter.h"
 #include "CaloUtils/CaloTrackAlg.h"
 // ============================================================================

@@ -1,8 +1,4 @@
-// $Id: InCaloAcceptanceAlg.h,v 1.1 2006-06-18 18:35:29 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revsion:$
-// ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Id: InCaloAcceptanceAlg.h,v 1.2 2007-03-02 15:22:08 cattanem Exp $
 // ============================================================================
 #ifndef CALOPIDS_INCALOACCEPTANCEALG_H 
 #define CALOPIDS_INCALOACCEPTANCEALG_H 1
@@ -12,7 +8,6 @@
 // GaudiKernel
 // ============================================================================
 #include "GaudiKernel/AlgFactory.h" 
-#include "GaudiKernel/DeclareFactoryEntries.h" 
 // ============================================================================
 // Relations 
 // ============================================================================

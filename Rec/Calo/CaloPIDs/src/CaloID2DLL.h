@@ -1,11 +1,4 @@
-// $Id: CaloID2DLL.h,v 1.2 2006-11-06 11:05:24 vegorych Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $$Revision: 1.2 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.1  2006/06/18 18:35:27  ibelyaev
-//  the firstcommmit for DC06 branch
-// 
+// $Id: CaloID2DLL.h,v 1.3 2007-03-02 15:22:07 cattanem Exp $
 // ============================================================================
 #ifndef CALOPIDS_CALOID2DLL_H 
 #define CALOPIDS_CALOID2DLL_H 1
@@ -19,7 +12,6 @@
 // GaudiKernel
 // ============================================================================
 #include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/DeclareFactoryEntries.h" 
 #include "GaudiKernel/VectorMap.h" 
 // ============================================================================
 // AIDA

@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.44 2007-03-02 15:22:07 cattanem Exp $ 
+! $Id: release.notes,v 1.45 2007-03-02 15:23:05 cattanem Exp $ 
 !------------------------------------------------------------------------------
 ! Package     : Calo/CaloPIDs
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
@@ -8,6 +8,7 @@
 !========================== CaloPIDs v4r6 2007-03-02 ==========================
 ! 2007-03-02 - Marco Cattaneo
  - Remove LHCbDefinitions includes
+ - Remove obsolete CaloPIDs_load.cpp file
  - Fix doxygen warnings and other minor cleanups
 
 !========================== CaloPIDs v4r5p1 2006-11-27 ===================

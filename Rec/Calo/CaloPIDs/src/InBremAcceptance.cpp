@@ -1,17 +1,10 @@
-// $Id: InBremAcceptance.cpp,v 1.2 2006-06-21 18:43:29 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.1  2006/06/18 18:35:28  ibelyaev
-//  the firstcommmit for DC06 branch
-// 
+// $Id: InBremAcceptance.cpp,v 1.3 2007-03-02 15:22:08 cattanem Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
 // GaudiKernel
 // ============================================================================
-#include "GaudiKernel/DeclareFactoryEntries.h"
+#include "GaudiKernel/ToolFactory.h"
 // ============================================================================
 // LHCbMath
 // ============================================================================
@@ -23,8 +16,8 @@
 #include "InCaloAcceptance.h"
 #include "Linear.h"
 // ============================================================================
-/** @class In BremAcceptance 
- *  The precofigured instance of InCaloAcceptance Tool
+/** @class InBremAcceptance 
+ *  The preconfigured instance of InCaloAcceptance Tool
  *  @author Victor EGORYCHEV Victor.Egorychev@cern.ch
  *  @author Vanya  BELYAEV    ibelyaev@phsycis.syr.edu
  *  @date   2006-05-28
