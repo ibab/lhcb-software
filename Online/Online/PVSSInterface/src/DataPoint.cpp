@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DataPoint.cpp,v 1.14 2007-03-02 12:22:33 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DataPoint.cpp,v 1.15 2007-03-02 12:28:38 frankb Exp $
 //  ====================================================================
 //  DataPoint.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: DataPoint.cpp,v 1.14 2007-03-02 12:22:33 frankb Exp $
+// $Id: DataPoint.cpp,v 1.15 2007-03-02 12:28:38 frankb Exp $
 #ifdef _WIN32
   // Disable warning C4250: 'const float' : forcing value to bool 'true' or 'false' (performance warning)
   #pragma warning ( disable : 4800 )
@@ -396,8 +396,8 @@ template <class T> const T& DataPoint::reference()  const  {
 // Some hacks due to comipler hickup!
 #ifdef _WIN32
 template <typename T> struct GetRef   {   
-  const T& ref2(const DataPoint& d) { return d.reference<T>();   } 
-  void set(DataPoint& d) { d.set(d.reference<T>()=d.data<T>());  }
+  bool b1(const DataPoint& d) { return d.reference<T>()==d.data<T>(); } 
+  void set(DataPoint& d)      { d.set(d.reference<T>()=d.data<T>());  }
 };
 
 #define REF_SPECIALIZATIONS(x)   namespace PVSS { template GetRef< x >; }

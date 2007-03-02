@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/PVSS/DataPoint.h,v 1.1 2007-03-01 10:39:49 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/PVSS/DataPoint.h,v 1.2 2007-03-02 12:28:38 frankb Exp $
 //  ====================================================================
 //  DataPoint.h
 //  --------------------------------------------------------------------
@@ -126,6 +126,8 @@ namespace PVSS {
     ~DPRef() {}
     /// Name of referenced datapoint
     const std::string& name() const {  return m_name; }
+    /// Equivalence check
+    bool operator==(const DPRef& r) const { return m_name == r.m_name; }
   };
 
   /** @class DPTime   DataPoint.h  PVSS/DataPoint.h
@@ -151,6 +153,8 @@ namespace PVSS {
     time_t& time()             {  return m_time; }
     /// Access to internal time variable (CONST)
     const time_t& time() const {  return m_time; }
+    /// Equivalence check
+    bool operator==(const DPTime& r) const { return m_time == r.m_time; }
   };
 
   /** @class DataPoint   DataPoint.h  PVSS/DataPoint.h
