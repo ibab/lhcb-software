@@ -4,7 +4,7 @@
  *  Header file for detector description class : DeRich
  *
  *  CVS Log :-
- *  $Id: DeRich.h,v 1.22 2007-02-06 15:01:53 cattanem Exp $
+ *  $Id: DeRich.h,v 1.23 2007-03-02 14:26:56 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -34,7 +34,7 @@ class DeRichHPDPanel;
 
 /** @namespace DeRichLocation
  *
- *  Namespace for the xml location of the detector elements Rich1 & Rich2
+ *  Namespace for the xml location of the detector elements
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18

@@ -4,7 +4,7 @@
  *  Header file for utility class : Rich::TabulatedProperty1D
  *
  *  CVS Log :-
- *  $Id: Rich1DTabProperty.h,v 1.5 2007-02-01 16:41:12 jonrob Exp $
+ *  $Id: Rich1DTabProperty.h,v 1.6 2007-03-02 14:26:57 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-08-13
@@ -22,19 +22,10 @@
 class ISvcLocator;
 class IUpdateManagerSvc;
 
-//-----------------------------------------------------------------------------
-/** @namespace Rich
- *
- *  General namespace for RICH software
- *
- *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
- *  @date   08/07/2004
- */
-//-----------------------------------------------------------------------------
 namespace Rich
 {
 
-  /** @class TabulatedProperty1D RichTabulatedProperty1D.h RichKernel/RichTabulatedProperty1D.h
+  /** @class TabulatedProperty1D Rich1DTabProperty.h RichKernel/Rich1DTabProperty.h
    *
    *  A derived class from RichTabulatedFunction1D for tabulated properties
    *

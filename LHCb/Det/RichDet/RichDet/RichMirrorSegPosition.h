@@ -4,7 +4,7 @@
  *  Header file for utility class : Rich::MirrorSegPosition
  *
  *  CVS Log :-
- *  $Id: RichMirrorSegPosition.h,v 1.5 2007-02-01 16:41:13 jonrob Exp $
+ *  $Id: RichMirrorSegPosition.h,v 1.6 2007-03-02 14:26:57 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-30
@@ -16,29 +16,23 @@
 // std include
 #include <iostream>
 
-//-----------------------------------------------------------------------------
-/** @namespace Rich
- *
- *  General namespace for RICH software
- *
- *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
- *  @date   08/07/2004
- */
-//-----------------------------------------------------------------------------
 namespace Rich
 {
 
-  /** @namespace RichMirrorSegPositionNames
+  /** @class MirrorSegPosition RichMirrorSegPosition.h RichDet/RichMirrorSegPosition.h
    *
-   * Namespace for bit-packing parameters used by the utility class
-   * RichMirrorSegPosition
+   *  Helper class to pack together row/column information for the mirror
+   *  segment position.
    *
-   * @author Antonis Papanestis a.papanestis@rl.ac.uk
-   * @date   2004-06-30
+   *  @author Antonis Papanestis a.papanestis@rl.ac.uk
+   *  @date   2004-06-30
    */
-  namespace RichMirrorSegPositionNames
+  class MirrorSegPosition
   {
-    // Type for dataword
+
+  public: // definitions
+
+    /// Type for dataword
     typedef unsigned int ShortType;
 
     static const ShortType BitsRow    = 3; ///< number of bits for the row
@@ -51,17 +45,6 @@ namespace Rich
     // Create the Masks
     static const ShortType MaskRow    = ((1 << BitsRow)-1) << ShiftRow;
     static const ShortType MaskColumn = ((1 << BitsColumn)-1) << ShiftColumn;
-  }
-
-  /** @class MirrorSegPosition RichMirrorSegPosition.h RichDet/RichMirrorSegPosition.h
-   *
-   *  Helper class to pack together row/column information for the mirror
-   *   segment position.
-   *  @author Antonis Papanestis a.papanestis@rl.ac.uk
-   *  @date   2004-06-30
-   */
-  class MirrorSegPosition
-  {
 
   public:
 
@@ -74,14 +57,14 @@ namespace Rich
      *
      *  @return the bit-packed data word
      */
-    inline RichMirrorSegPositionNames::ShortType data() const
+    inline ShortType data() const
     {
       return m_data;
     }
 
     /** Set the full bit-packed data word
      */
-    inline void setData( const RichMirrorSegPositionNames::ShortType data )
+    inline void setData( const ShortType data )
     {
       m_data = data;
     }
@@ -90,41 +73,35 @@ namespace Rich
      */
     inline void setRow( const int row )
     {
-      set( row,
-           RichMirrorSegPositionNames::ShiftRow,
-           RichMirrorSegPositionNames::MaskRow );
+      set( row, ShiftRow, MaskRow );
     }
 
     /** Retrieve the row number
      */
     inline int row() const
     {
-      return ( (data() & RichMirrorSegPositionNames::MaskRow)
-               >> RichMirrorSegPositionNames::ShiftRow  );
+      return ( (data() & MaskRow) >> ShiftRow );
     }
 
     /** Set the column number
      */
     inline void setColumn( const int column )
     {
-      set( column,
-           RichMirrorSegPositionNames::ShiftColumn,
-           RichMirrorSegPositionNames::MaskColumn );
+      set( column, ShiftColumn, MaskColumn );
     }
 
     /** Retrieve the column number
      */
     inline int column() const
     {
-      return ( (data() & RichMirrorSegPositionNames::MaskColumn)
-               >> RichMirrorSegPositionNames::ShiftColumn  );
+      return ( (data() & MaskColumn) >> ShiftColumn  );
     }
 
   private: // methods
 
-    inline void set( const RichMirrorSegPositionNames::ShortType value,
-                     const RichMirrorSegPositionNames::ShortType shift,
-                     const RichMirrorSegPositionNames::ShortType mask )
+    inline void set( const ShortType value,
+                     const ShortType shift,
+                     const ShortType mask )
     {
       setData( ((value << shift) & mask) | (data() & ~mask) );
     }
@@ -132,7 +109,7 @@ namespace Rich
   private: // data
 
     /// The bit-pack data word
-    RichMirrorSegPositionNames::ShortType m_data;
+    ShortType m_data;
 
   };
 

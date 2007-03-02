@@ -4,6 +4,9 @@
 ! Purpose     : interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2007-03-02 - Chris Jones
+ - Improve doxygen comments in DeRichSystem and for namespaces
+
 !======================== RichDet v10r2 2007-03-01 ========================
 ! 2007-03-01 - Marco Cattaneo
  - Remove obsolete RichDet_load.cpp 

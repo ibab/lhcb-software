@@ -5,7 +5,7 @@
  *  Header file for utility class : Rich::TabulatedFunction1D
  *
  *  CVS Log :-
- *  $Id: Rich1DTabFunc.h,v 1.5 2007-02-01 16:41:12 jonrob Exp $
+ *  $Id: Rich1DTabFunc.h,v 1.6 2007-03-02 14:26:57 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-08-13
@@ -24,22 +24,14 @@
 #include "gsl/gsl_errno.h"
 #include "gsl/gsl_spline.h"
 
-//-----------------------------------------------------------------------------
-/** @namespace Rich
- *
- *  General namespace for RICH software
- *
- *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
- *  @date   08/07/2004
- */
-//-----------------------------------------------------------------------------
 namespace Rich
 {
 
   //============================================================================
-  /** @class TabulatedFunction1D RichTabulatedFunction1D.h RichKernel/RichTabulatedFunction1D.h
+  /** @class TabulatedFunction1D Rich1DTabFunc.h RichKernel/Rich1DTabFunc.h
    *
-   *  A class describing a function based on the interpolation of data points
+   *  A class describing a function based on the interpolation of data points.
+   *
    *  The interpolation is based on the GSL library, with the default interpolation
    *  type based on a simple linear algorithm 'gsl_interp_linear'.
    *
@@ -73,9 +65,9 @@ namespace Rich
      *  @param interType GSL Interpolator type
      */
     TabulatedFunction1D::TabulatedFunction1D( const double x[],
-                          const double y[],
-                          const int size,
-                          const gsl_interp_type * interType = gsl_interp_linear );
+                                              const double y[],
+                                              const int size,
+                                              const gsl_interp_type * interType = gsl_interp_linear );
 
     /** Constructor from std::vectors containing x and y values
      *  Vectors must be of the same size and ordered such that entry i in each
@@ -86,8 +78,8 @@ namespace Rich
      *  @param interType GSL Interpolator type
      */
     TabulatedFunction1D::TabulatedFunction1D( const std::vector<double> & x,
-                          const std::vector<double> & y,
-                          const gsl_interp_type * interType = gsl_interp_linear );
+                                              const std::vector<double> & y,
+                                              const gsl_interp_type * interType = gsl_interp_linear );
 
     /** Constructor from map of x,y values
      *
@@ -95,7 +87,7 @@ namespace Rich
      *  @param interType GSL Interpolator type
      */
     TabulatedFunction1D::TabulatedFunction1D( const std::map<double,double> & data,
-                          const gsl_interp_type * interType = gsl_interp_linear );
+                                              const gsl_interp_type * interType = gsl_interp_linear );
 
     /** Constructor from vector of a pair of x,y values
      *
@@ -103,7 +95,7 @@ namespace Rich
      *  @param interType GSL Interpolator type
      */
     TabulatedFunction1D::TabulatedFunction1D( const std::vector< std::pair<double,double> > & data,
-                          const gsl_interp_type * interType = gsl_interp_linear );
+                                              const gsl_interp_type * interType = gsl_interp_linear );
 
     /// Destructor
     virtual ~TabulatedFunction1D( );
@@ -271,7 +263,7 @@ namespace Rich
   //============================================================================
 
   inline double TabulatedFunction1D::integral ( const double from,
-                                      const double to ) const
+                                                const double to ) const
   {
     return gsl_spline_eval_integ( m_mainDistSpline, from, to, m_mainDistAcc );
   }
@@ -279,7 +271,7 @@ namespace Rich
   //============================================================================
 
   inline double TabulatedFunction1D::meanX ( const double from,
-                                   const double to ) const
+                                             const double to ) const
   {
     const double bot = integral( from, to );
     return ( fabs(bot) > 0 ?

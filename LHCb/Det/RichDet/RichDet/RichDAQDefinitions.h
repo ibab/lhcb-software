@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ general definitions
  *
  *  CVS Log :-
- *  $Id: RichDAQDefinitions.h,v 1.9 2007-02-01 16:41:13 jonrob Exp $
+ *  $Id: RichDAQDefinitions.h,v 1.10 2007-03-02 14:26:57 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
@@ -29,27 +29,8 @@
 // Boost
 #include "boost/lexical_cast.hpp"
 
-//-----------------------------------------------------------------------------
-/** @namespace Rich
- *
- *  General namespace for RICH software
- *
- *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
- *  @date   08/07/2004
- */
-//-----------------------------------------------------------------------------
 namespace Rich
 {
-
-  //-----------------------------------------------------------------------------
-  /** @namespace DAQ
-   *
-   *  namespace for RICH DAQ software
-   *
-   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
-   *  @date   08/07/2004
-   */
-  //-----------------------------------------------------------------------------
   namespace DAQ
   {
 
@@ -84,7 +65,7 @@ namespace Rich
     //---------------------------------------------------------------------------------
 
     //---------------------------------------------------------------------------------
-    /** @class NumericType RichKernel/RichDAQDefinitions.h
+    /** @class NumericType RichDet/RichDAQDefinitions.h
      *
      *  Simple class with numeric characteristics but some additional type safety
      *
@@ -138,7 +119,7 @@ namespace Rich
 
     //---------------------------------------------------------------------------------
 
-    /** @class Level0ID RichKernel/RichDAQDefinitions.h
+    /** @class Level0ID RichDet/RichDAQDefinitions.h
      *
      *  Contains the Level 0 board number plus one bit identifying on of the two HPDs
      *
@@ -217,7 +198,7 @@ namespace Rich
 
     //---------------------------------------------------------------------------------
 
-    /** @class EventID RichKernel/RichDAQDefinitions.h
+    /** @class EventID RichDet/RichDAQDefinitions.h
      *
      *  The Event ID.
      *
@@ -242,7 +223,7 @@ namespace Rich
       ShortType m_nActiveBits;
     };
 
-    /** @class BXID RichKernel/RichDAQDefinitions.h
+    /** @class BXID RichDet/RichDAQDefinitions.h
      *
      *  The BX ID.
      *
@@ -263,11 +244,11 @@ namespace Rich
       /// Set the number of active bits
       inline void setActiveBits(const ShortType bits) { m_nActiveBits = bits; }
     private:
-      /// Number of sensitive bits in this EventID
+      /// Number of sensitive bits in this BXID
       ShortType m_nActiveBits;
     };
 
-    /** @class Level1ID RichKernel/RichDAQDefinitions.h
+    /** @class Level1ID RichDet/RichDAQDefinitions.h
      *
      *  The Level 1 board ID.
      *
@@ -282,7 +263,7 @@ namespace Rich
         : NumericType<ShortType>(id) { }
     };
 
-    /** @class L1IngressID RichKernel/RichDAQDefinitions.h
+    /** @class L1IngressID RichDet/RichDAQDefinitions.h
      *
      *  The L1 ingress number (which of the four groups of inputs to each L1 board)
      *
@@ -297,7 +278,7 @@ namespace Rich
         : NumericType<ShortType>(id) { }
     };
 
-    /** @class L1NumWithinIngress RichKernel/RichDAQDefinitions.h
+    /** @class L1InputWithinIngress RichDet/RichDAQDefinitions.h
      *
      *  The input number within a given L1 ingress
      *
@@ -312,7 +293,7 @@ namespace Rich
         : NumericType<ShortType>(id) { }
     };
 
-    /** @class Level1Input RichKernel/RichDAQDefinitions.h
+    /** @class Level1Input RichDet/RichDAQDefinitions.h
      *
      *  The Level 1 board input number.
      *
@@ -343,7 +324,7 @@ namespace Rich
       }
     };
 
-    /** @class HPDHardwareID RichKernel/RichDAQDefinitions.h
+    /** @class HPDHardwareID RichDet/RichDAQDefinitions.h
      *
      *  The (numeric) HPD hardware ID. Unique to each HPD and can be
      *  used to locate its physical properties, such as Q.E. curves.
@@ -359,7 +340,7 @@ namespace Rich
         : NumericType<ShortType>(id) { }
     };
 
-    /** @class HPDL1InputID RichKernel/RichDAQDefinitions.h
+    /** @class HPDL1InputID RichDet/RichDAQDefinitions.h
      *
      *  The HPD Level1 input ID. The Level1 board number and the input
      *  number on that board for a given HPD bit-packed into a single word.
