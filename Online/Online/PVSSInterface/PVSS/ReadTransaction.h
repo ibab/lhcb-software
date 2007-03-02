@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/PVSS/ReadTransaction.h,v 1.2 2007-03-02 00:33:37 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/PVSS/ReadTransaction.h,v 1.3 2007-03-02 19:54:05 frankb Exp $
 //  ====================================================================
 //  ReadTransaction.h
 //  --------------------------------------------------------------------
@@ -12,6 +12,7 @@
 // Framework include files
 #include "PVSS/Kernel.h"
 #include "PVSS/DataPoint.h"
+#include "PVSS/PVSSIO.h"
 #include <map>
 
 /*
@@ -24,6 +25,7 @@ namespace PVSS {
   class DataPoint;
   class DPRef;
   class DPTime;
+  namespace {  struct Actor;    }
 
   /** @class ReadTransaction   ReadTransaction.h  PVSS/ReadTransaction.h
     *
@@ -38,21 +40,22 @@ namespace PVSS {
 
     /// Reference to the controls manager
     ControlsManager *m_manager;
-    /// Transaction context (dpID-value list)
-    void            *m_context;
+    /// Transaction context/actor (dpID-value list)
+    Actor           *m_actor;
 
     /// Initializing constructor
     ReadTransaction(ControlsManager* mgr);
+
+    /// Internal helper for vector IO
+    void i_getValue(int typ,const DpIdentifier& dp,void* v);
 
   public:
     /// Standard destructor
     virtual ~ReadTransaction();
     /// Access ReadTransaction type manager
     ControlsManager* manager() const    {  return m_manager;   }
-    /// Execute dpset list
+    /// Execute  data point list read action
     bool execute(bool wait = true);
-    /// Restart dpset list (scratch old list if present)
-    bool start();
 
     /// Get datapoint value
     void getValue(const DataPoint& dp, bool& value);
@@ -79,8 +82,8 @@ namespace PVSS {
     /// Get datapoint value by name
     void getValue(const DataPoint& dp, DPTime& value);
     /// Get datapoint value for dynamic items
-    template <class T> void getValue(const DataPoint& dp, std::vector<T>& value);
-
+    template <class T> void getValue(const DataPoint& dp, std::vector<T>& value)
+    { i_getValue(Value::type_id(value),dp.id(),&value); }
     /// Set datapoint value by name
     template <class T> void getValue(const std::string& dp_name, T& value)
     { getValue(DataPoint(manager(),dp_name), value);    }

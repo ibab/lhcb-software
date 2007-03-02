@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/PVSS/WriteTransaction.h,v 1.3 2007-03-02 00:33:37 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/PVSS/WriteTransaction.h,v 1.4 2007-03-02 19:54:05 frankb Exp $
 //  ====================================================================
 //  WriteTransaction.h
 //  --------------------------------------------------------------------
@@ -11,6 +11,7 @@
 
 // Framework include files
 #include "PVSS/Kernel.h"
+#include "PVSS/PVSSIO.h"
 #include "PVSS/DataPoint.h"
 
 // C++ include files
@@ -85,7 +86,8 @@ namespace PVSS {
     /// Set datapoint value by name
     void setValue(const DataPoint& dp, const DPTime& value);
     /// Set datapoint value for dynamic items
-    template <class T> void setValue(const DataPoint& dp, const std::vector<T>& value);
+    template <class T> void setValue(const DataPoint& dp, const std::vector<T>& value)
+    { addWriteIO(m_context,Value::type_id(value),dp.id(),value);          }
 
     /// Set datapoint value by name
     template <class T> void setValue(const std::string& dp_name, const T& value)

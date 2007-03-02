@@ -12,7 +12,7 @@ macro PVSS_inc   "$(PVSS_api)/include"
 set PVSS_II      'J:/PVSS/JobOptions/config/config'
 set PVSS_II_HOME $(PVSS_home)
 path_append PATH "$(PVSS_home)/bin"
-path_append LD_LIBRARY_PATH "$(PVSS_home)/api/lib.linux"
+path_append LD_LIBRARY_PATH "$(PVSS_home)/api/lib.linux" WIN32 ""
 
 include_dirs "$(PVSS_inc)"
 
@@ -25,6 +25,8 @@ macro_append PVSS_cppflags \
 macro_append PVSS_cppflags " -D__PC -D__UNIX -DHAS_TEMPLATES=1 -DBC_DESTRUCTOR -Dbcm_boolean_h -DOS_LINUX -DLINUX -DLINUX2 -Wno-deprecated -DDLLEXP_BASICS= -DDLLEXP_DATAPOINT= -DDLLEXP_CONFIGS= -DDLLEXP_MANAGER=  -DDLLEXP_MESSAGES= -DDLLEXP_CTRL= -m32 " \
   WIN32 ' -I"$(PVSS_inc)/winnt/pvssincl" '
 
-macro PVSS_linkopts "-lstdc++ -lc -L$(PVSS_api)/lib.linux -lManager$(PVSS_native_version) -lCtrl$(PVSS_native_version) -lMessages$(PVSS_native_version) -lDatapoint$(PVSS_native_version) -lConfigs$(PVSS_native_version) -lBasics$(PVSS_native_version) -lbcm$(PVSS_native_version) -lPVSSUtilV36 -lwklin -lV24 -lm -lgs -lpam -m32 " \
-  WIN32 ' /LIBPATH:"$(PVSS_api)/lib.winnt" libManager.lib libCtrl.lib libMessages.lib libDatapoint.lib libConfigs.lib libBasics.lib bcm.lib '
+macro PVSS_linkopts "-lstdc++ -lc -L$(PVSS_api)/lib.linux -lManager$(PVSS_native_version) -lMessages$(PVSS_native_version) -lDatapoint$(PVSS_native_version) -lBasics$(PVSS_native_version) -lbcm$(PVSS_native_version) -lPVSSUtilV36 -lwklin -lV24 -lm -lgs -lpam -m32 " \
+  WIN32 ' /LIBPATH:"$(PVSS_api)/lib.winnt" libManager.lib libMessages.lib libDatapoint.lib libBasics.lib bcm.lib '
 
+# libCtrl.lib libConfigs.lib 
+# -lCtrl$(PVSS_native_version) -lConfigs$(PVSS_native_version) 

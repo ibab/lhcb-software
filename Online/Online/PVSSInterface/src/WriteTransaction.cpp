@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/WriteTransaction.cpp,v 1.5 2007-03-02 12:19:02 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/WriteTransaction.cpp,v 1.6 2007-03-02 19:54:05 frankb Exp $
 //  ====================================================================
 //  WriteTransaction.cpp
 //  --------------------------------------------------------------------
@@ -6,15 +6,15 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: WriteTransaction.cpp,v 1.5 2007-03-02 12:19:02 frankb Exp $
+// $Id: WriteTransaction.cpp,v 1.6 2007-03-02 19:54:05 frankb Exp $
 
 // Framework include files
 #include "PVSS/DataPoint.h"
 #include "PVSS/DevTypeElement.h"
 #include "PVSS/WriteTransaction.h"
-#include "PVSS/Internals.h"
 #include "PVSS/DevAnswer.h"
-#include "PVSS/Array.h"
+#include "PVSS/Internals.h"
+#include "PVSS/PVSSIO.h"
 
 using namespace PVSS;
 
@@ -131,55 +131,4 @@ void WriteTransaction::setValue(const DataPoint& dp, const DataPoint& value)  {
 /// Set datapoint value 
 void WriteTransaction::setValue(const DataPoint& dp, const DPTime& value)  {
   pvss_val_list_add(m_context,Value::type_id(value),dp.id(),&value.time());
-}
-
-/// Set datapoint value for dynamic items
-template <typename T> 
-void WriteTransaction::setValue(const DataPoint& dp, const std::vector<T>& value)    {
-  Vector<T> v(value);
-  pvss_val_list_add(m_context,Value::type_id(value),dp.id(),&v);
-}
-
-static void str_load(const void* s, int i, const void** v)  {
-  Vector<std::string>* vec = (Vector<std::string>*)s;
-  *v = vec->vec[i].c_str();
-}
-static void bool_load(const void* s, int i, const void** v)  {
-  static bool value;
-  Vector<bool>* vec = (Vector<bool>*)s;
-  value = vec->vec[i];
-  *v = &value;
-}
-
-/// Set datapoint value for dynamic items
-template <> 
-void WriteTransaction::setValue<std::string>(const DataPoint& dp, const std::vector<std::string>& value)    {
-  Vector<std::string> v(value,str_load);
-  pvss_val_list_add(m_context,Value::type_id(value),dp.id(),&v);
-}
-
-/// Set datapoint value for dynamic items
-template <> 
-void WriteTransaction::setValue<bool>(const DataPoint& dp, const std::vector<bool>& value)    {
-  Vector<bool> v(value,bool_load);
-  pvss_val_list_add(m_context,Value::type_id(value),dp.id(),&v);
-}
-#define __T(x)  template WriteTransactionSetValue<x >;
-#define INSTANTIATE_FUNCTIONS(T)  \
-      __T(char)  __T(unsigned char) \
-      __T(int)   __T(unsigned int)  __T(long)  __T(unsigned long)\
-      __T(float) __T(double) __T(bool) __T(std::string) \
-      __T(DpIdentifier) __T(DPRef) __T(DPTime)
-
-namespace {
-  template <typename T> struct WriteTransactionSetValue {
-    static void do1(const std::vector<T>& t)  { ((WriteTransaction*)0)->setValue("",t); }
-    static void dp1(const std::vector<T>& t)  { ((WriteTransaction*)0)->setValue(DataPoint(0,""),t); }
-    static void do2(const std::vector<T>& t)  { ((WriteTransaction*)0)->setOriginal("",t); }
-    static void do3(const std::vector<T>& t)  { ((WriteTransaction*)0)->setOnline("",t); }
-    static void do1(const T& t)               { ((WriteTransaction*)0)->setValue("",t); }
-    static void do2(const T& t)               { ((WriteTransaction*)0)->setOriginal("",t); }
-    static void do3(const T& t)               { ((WriteTransaction*)0)->setOnline("",t); }
-  };
-  INSTANTIATE_FUNCTIONS(1)
 }

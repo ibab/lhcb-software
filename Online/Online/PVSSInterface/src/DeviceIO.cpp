@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DeviceIO.cpp,v 1.3 2007-03-01 20:08:55 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DeviceIO.cpp,v 1.4 2007-03-02 19:54:05 frankb Exp $
 //  ====================================================================
 //  DeviceIO.cpp
 //  --------------------------------------------------------------------
@@ -6,13 +6,14 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: DeviceIO.cpp,v 1.3 2007-03-01 20:08:55 frankb Exp $
+// $Id: DeviceIO.cpp,v 1.4 2007-03-02 19:54:05 frankb Exp $
 
 // Framework include files
 #include "PVSS/DevTypeElement.h"
-#include "PVSS/DeviceIO.h"
 #include "PVSS/Internals.h"
 #include "PVSS/DevAnswer.h"
+#include "PVSS/DeviceIO.h"
+#include "PVSS/PVSSIO.h"
 #include <stdexcept>
 
 using namespace PVSS;
@@ -78,7 +79,7 @@ bool DeviceIO::Write::exec(bool keep_list, DeviceIO* par, DevAnswer* a)  {
       throw std::runtime_error("All datapoints must be set to perform a write action. "
         " Missing is:"+(*i).second->name());
     }
-    pvss_val_list_set(m_context,listCtxt,val->type(),(*i).first,Values(val->ptr()));
+    setGenWriteIO(m_context,listCtxt,(*i).first,val);
   }
   pvss_exec_dpset(m_context,a,keep_list);
   return true;

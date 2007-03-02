@@ -3,6 +3,7 @@
 // $ID= $
 
 class Variable;
+class DpIdentifier;
 
 /*
  *    Namespace PVSS

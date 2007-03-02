@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/src/DpSet.cpp,v 1.2 2007-03-01 15:48:04 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/src/DpSet.cpp,v 1.3 2007-03-02 19:53:46 frankb Exp $
 //  ====================================================================
 //  DpSet.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: DpSet.cpp,v 1.2 2007-03-01 15:48:04 frankb Exp $
+// $Id: DpSet.cpp,v 1.3 2007-03-02 19:53:46 frankb Exp $
 #include "PVSSManager/SyncWaitForAnswer.h"
 #include "PVSS/Environment.h"
 #include "PVSS/Internals.h"
@@ -19,29 +19,23 @@
 namespace PVSS {
   static bool pvss_exec_dpset_W(DpIdValueList* list, DevAnswer* a)  {
     SyncWaitForAnswer answer(a);
-    if ( !list )  {
+    if ( !list )
       answer.addError("pvss_exec_dpset> Invalid transaction handle: Transaction failed.");
-    }
-    else if ( PVSS_TRUE == Manager::dpSet(*list,&answer,PVSS_FALSE) )  {
+    else if ( PVSS_TRUE == Manager::dpSet(*list,&answer,PVSS_FALSE) )
       return Environment::instance().waitForAnswer(a);
-    }
-    else {
+    else
       answer.addError("pvss_exec_dpset> Transaction failed.");
-    }
     return false;
   }
 
   static bool pvss_exec_dpset_A(DpIdValueList* list, DevAnswer* a)  {
     SyncWaitForAnswer *answer = new SyncWaitForAnswer(a);
-    if ( !list )  {
+    if ( !list )
       answer->addError("pvss_exec_dpset> Invalid transaction handle: Transaction failed.");
-    }
-    if ( PVSS_TRUE == Manager::dpSet(*list,answer,PVSS_TRUE) )  {
+    else if ( PVSS_TRUE == Manager::dpSet(*list,answer,PVSS_TRUE) )
       return true;
-    }
-    else {
+    else
       answer->addError("pvss_exec_dpset> Transaction failed.");
-    }
     delete answer;
     return false;
   }

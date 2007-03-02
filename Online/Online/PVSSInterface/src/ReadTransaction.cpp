@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/ReadTransaction.cpp,v 1.4 2007-03-02 12:19:02 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/ReadTransaction.cpp,v 1.5 2007-03-02 19:54:05 frankb Exp $
 //  ====================================================================
 //  ReadTransaction.cpp
 //  --------------------------------------------------------------------
@@ -6,9 +6,10 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: ReadTransaction.cpp,v 1.4 2007-03-02 12:19:02 frankb Exp $
+// $Id: ReadTransaction.cpp,v 1.5 2007-03-02 19:54:05 frankb Exp $
 
 // Framework include files
+#include "PVSS/HotLinkCallback.h"
 #include "PVSS/ReadTransaction.h"
 #include "PVSS/DevTypeElement.h"
 #include "PVSS/DevAnswer.h"
@@ -16,129 +17,115 @@
 #include "PVSS/Internals.h"
 
 using namespace PVSS;
-typedef void (*LoadFunction)(void *,const void *);
+
+namespace PVSS { namespace {
+
+  struct Actor : public HotLinkCallback  {
+    typedef std::pair<int,void*> Entry;
+    typedef std::map<DpIdentifier,Entry> Points;
+
+    Points     m_points;
+    void*      m_context;
+
+    Actor() : m_context(0) {    }
+    virtual ~Actor()                            {    }
+    void add(const DpIdentifier& dpid, int t,void* v) 
+    {  m_points.insert(std::make_pair(dpid,Entry(t,v)));     }
+    bool exec(DevAnswer* a) {
+      pvss_list_create(m_context);
+      for(Points::const_iterator i=m_points.begin(); i != m_points.end(); ++i)
+        pvss_list_add(m_context,(*i).first);
+      pvss_exec_read(m_context,a,this,false);
+      return true;
+    }
+    virtual void setValue(const DpIdentifier& dpid, int typ, const Variable* val) {
+      Points::iterator i=m_points.find(dpid);
+      if ( i != m_points.end() )  {
+        Entry& e = (*i).second;
+        genReadIO(val, typ, e.second);
+      }
+    }
+    virtual void handleDataUpdate()  {
+      if ( m_context ) pvss_list_drop(m_context);
+      m_points.clear();
+      m_context = 0;
+    }
+  };
+}}
 
 /// Initializing constructor
 ReadTransaction::ReadTransaction(ControlsManager* mgr) 
-: m_manager(mgr), m_context(0)
+: m_manager(mgr), m_actor(new Actor)
 {
-  pvss_start_dpget(m_context);
 }
 
 /// Standard destructor
 ReadTransaction::~ReadTransaction()   {
-  if ( m_context )  {
-    execute();
-  }
+  delete m_actor;
 }
 
 /// Execute dpset list
 bool ReadTransaction::execute(bool wait)  {
   if ( wait )  {
     DevAnswer a;
-    pvss_exec_dpget(m_context,&a);
+    m_actor->exec(&a);
     if ( a.state() != DevAnswer::FINISHED )  {
       a.print();
     }
     return a.state() == DevAnswer::FINISHED;
   }
-  pvss_exec_dpget(m_context,0);
+  m_actor->exec(0);
   return true;
 }
 
-/// Restart dpset list (scratch old list if present)
-bool ReadTransaction::start()  {
-  if ( m_context ) pvss_drop_dpget(m_context);
-  pvss_start_dpget(m_context);
-  return true;
-}
+/// Internal helper for vector IO
+void ReadTransaction::i_getValue(int typ,const DpIdentifier& dp,void* v)
+{  m_actor->add(dp,typ,v);                                            }
 
 /// Get datapoint value 
 void ReadTransaction::getValue(const DataPoint& dp, bool& value)
-{  pvss_add_dpget(m_context,Value::type_id(value),0,dp.id(),&value);    }
+{  m_actor->add(dp.id(),Value::type_id(value),&value);                }
 
 /// Get datapoint value 
 void ReadTransaction::getValue(const DataPoint& dp, char& value)
-{  pvss_add_dpget(m_context,Value::type_id(value),0,dp.id(),&value);   }
+{  m_actor->add(dp.id(),Value::type_id(value),&value);                }
 
 /// Get datapoint value 
 void ReadTransaction::getValue(const DataPoint& dp, unsigned char& value)
-{  pvss_add_dpget(m_context,Value::type_id(value),0,dp.id(),&value);   }
+{  m_actor->add(dp.id(),Value::type_id(value),&value);                }
 
 /// Get datapoint value 
 void ReadTransaction::getValue(const DataPoint& dp, int& value)
-{  pvss_add_dpget(m_context,Value::type_id(value),0,dp.id(),&value);    }
+{  m_actor->add(dp.id(),Value::type_id(value),&value);                }
 
 /// Get datapoint value 
 void ReadTransaction::getValue(const DataPoint& dp, unsigned int& value)    
-{  pvss_add_dpget(m_context,Value::type_id(value),0,dp.id(),&value);    }
+{  m_actor->add(dp.id(),Value::type_id(value),&value);                }
 
 /// Get datapoint value 
 void ReadTransaction::getValue(const DataPoint& dp, long& value)
-{  pvss_add_dpget(m_context,Value::type_id(value),0,dp.id(),&value);    }
+{  m_actor->add(dp.id(),Value::type_id(value),&value);                }
 
 /// Get datapoint value 
 void ReadTransaction::getValue(const DataPoint& dp, unsigned long& value)    
-{  pvss_add_dpget(m_context,Value::type_id(value),0,dp.id(),&value);    }
+{  m_actor->add(dp.id(),Value::type_id(value),&value);                }
 
 /// Get datapoint value 
 void ReadTransaction::getValue(const DataPoint& dp, float& value)    
-{  pvss_add_dpget(m_context,Value::type_id(value),0,dp.id(),&value);    }
+{  m_actor->add(dp.id(),Value::type_id(value),&value);                }
 
 /// Get datapoint value 
 void ReadTransaction::getValue(const DataPoint& dp, double& value)    
-{  pvss_add_dpget(m_context,Value::type_id(value),0,dp.id(),&value);    }
+{  m_actor->add(dp.id(),Value::type_id(value),&value);                }
 
 /// Get datapoint value 
 void ReadTransaction::getValue(const DataPoint& dp, std::string& value)
-{  pvss_add_dpget(m_context,Value::type_id(value),0,dp.id(),&value);    }
+{  m_actor->add(dp.id(),Value::type_id(value),&value);                }
 
 /// Get datapoint value by name
 void ReadTransaction::getValue(const DataPoint& dp, DpIdentifier& value)    
-{  pvss_add_dpget(m_context,Value::type_id(value),0,dp.id(),&value);    }
+{  m_actor->add(dp.id(),Value::type_id(value),&value);                }
 
 /// Set datapoint value
 void ReadTransaction::getValue(const DataPoint& dp, DPTime& value)  
-{  pvss_add_dpget(m_context,Value::type_id(value),0,dp.id(),&value.time()); }
-
-template <typename T> static void insert_vector(std::vector<T>& v, const T& o)  { v.push_back(o);  }
-static void insert_string(std::vector<std::string>& t,const char* s) { t.push_back(s);   }
-
-union Loaders {
-  void* ptr;
-  LoadFunction func;
-  template <class T> Loaders(T p) : ptr((void*)p) {}
-};
-
-/// Get datapoint value for dynamic items
-template <class T> void ReadTransaction::getValue(const DataPoint& dp, std::vector<T>& value) {  
-  Loaders ldr(insert_vector<T>);
-  pvss_add_dpget(m_context,Value::type_id(value),ldr.func,dp.id(),&value);    
-}
-
-/// Get datapoint value for dynamic items
-template <> void ReadTransaction::getValue<std::string>(const DataPoint& dp, std::vector<std::string>& value) {  
-  Loaders ldr(insert_string);
-  pvss_add_dpget(m_context,Value::type_id(value),ldr.func,dp.id(),&value);    
-}
-
-#define __T(x) template ReadTransactionSetValue <x >;
-#define INSTANTIATE_FUNCTIONS(x) \
-  __T(char) __T(unsigned char) __T(int) __T(unsigned int) \
-  __T(long) __T(unsigned long) __T(float) __T(double) __T(bool) \
-  __T(std::string) __T(DpIdentifier) __T(DPTime)
-
-namespace {
-
-  template <typename T> struct ReadTransactionSetValue {
-    static void do1(std::vector<T>& t)  { ((ReadTransaction*)0)->getValue("",t); }
-    static void dp1(std::vector<T>& t)  { ((ReadTransaction*)0)->getValue(DataPoint(0,""),t); }
-    static void do2(std::vector<T>& t)  { ((ReadTransaction*)0)->getOriginal("",t); }
-    static void do3(std::vector<T>& t)  { ((ReadTransaction*)0)->getOnline("",t); }
-    static void do1(T& t)               { ((ReadTransaction*)0)->getValue("",t); }
-    static void do2(T& t)               { ((ReadTransaction*)0)->getOriginal("",t); }
-    static void do3(T& t)               { ((ReadTransaction*)0)->getOnline("",t); }
-  };
-  INSTANTIATE_FUNCTIONS(1)
-}
-
+{  m_actor->add(dp.id(),Value::type_id(value),&value);                }

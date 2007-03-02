@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/PVSS/Internals.h,v 1.3 2007-03-01 20:09:09 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/PVSS/Internals.h,v 1.4 2007-03-02 19:53:46 frankb Exp $
 //  ====================================================================
 //  Internals.h
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: Internals.h,v 1.3 2007-03-01 20:09:09 frankb Exp $
+// $Id: Internals.h,v 1.4 2007-03-02 19:53:46 frankb Exp $
 #ifndef PVSSMANAGER_PVSS_INTERNALS_H
 #define PVSSMANAGER_PVSS_INTERNALS_H
 
@@ -151,17 +151,6 @@ namespace PVSS  {
 
   // dpset transactions: Used by the WriteTransaction interface
   bool pvss_exec_dpset(void*& context,DevAnswer* answer, bool keep_list);
-
-  /** dpget transactions: Used by the ReadTransaction interface. DpGet.cpp  */
-
-  /// Start datapoint list transaction: creates transaction context
-  void pvss_start_dpget(void*& context);
-  /// Drop datapoint list transaction: deletes transaction context
-  void pvss_drop_dpget(void*& context);
-  /// Exec DpGet datapoint list transaction
-  bool pvss_exec_dpget(void*& context,DevAnswer* answer);
-  /// Add new datapoint to the pending datapoint list transaction
-  void pvss_add_dpget(void*& ctxt,int data_type,void (*ldf)(void*,const void*), const DpIdentifier& dpid,void* value);
 
   /** Read transaction handles: used by device reader. DpRead.cpp           */  
   /// Execute read transaction on DpIdentlist passed by context. Caller(=cb) gets notified for changes

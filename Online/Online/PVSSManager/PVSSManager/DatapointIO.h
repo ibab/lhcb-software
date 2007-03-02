@@ -1,6 +1,6 @@
 #ifndef PVSSMANAGER_DATAPOINTIO_H
 #define PVSSMANAGER_DATAPOINTIO_H
-// $Id: DatapointIO.h,v 1.4 2007-03-01 21:53:57 frankb Exp $
+// $Id: DatapointIO.h,v 1.5 2007-03-02 19:53:46 frankb Exp $
 
 // Forward declarations
 class Variable;
@@ -49,6 +49,7 @@ namespace PVSS {
     static void value(const Variable* var, void (*ldf)(std::vector<DpIdentifier>&,const DpIdentifier&),     std::vector<DpIdentifier>& val);
     static void value(const Variable* var, void (*ldf)(std::vector<std::string>&,const char*),              std::vector<std::string>& val);
 
+    static void value(const Variable* variable,int typ, void* buff);
   };
 }       /*  End namespace PVSS         */
 #endif  /*  PVSSMANAGER_DATAPOINTIO_H  */

@@ -85,7 +85,6 @@ void pvss_test_run_getdp(ControlsManager* mgr)  {
     trW->setOriginal(p2,val*100);
     trW->setOriginal(p3,val*1000);
     trW->execute(true);
-    trR->start();
     trR->getOriginal(p0, v0);
     trR->getOriginal(p1, v1);
     trR->getOriginal(p2, v2);
@@ -93,7 +92,6 @@ void pvss_test_run_getdp(ControlsManager* mgr)  {
     trR->execute();
     printf("run_getdp(Original): %s:%f %s:%f %s:%f %s:%f\n",
       p0.name().c_str(),v0,p1.name().c_str(),v1,p2.name().c_str(),v2,p3.name().c_str(),v3);
-    trR->start();
     trR->getOnline(p0, v0);
     trR->getOnline(p1, v1);
     trR->getOnline(p2, v2);

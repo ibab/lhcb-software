@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/src/DpRead.cpp,v 1.2 2007-03-01 15:48:04 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/src/DpRead.cpp,v 1.3 2007-03-02 19:53:46 frankb Exp $
 //  ====================================================================
 //  DpRead.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: DpRead.cpp,v 1.2 2007-03-01 15:48:04 frankb Exp $
+// $Id: DpRead.cpp,v 1.3 2007-03-02 19:53:46 frankb Exp $
 
 #include "PVSSManager/SyncWaitForAnswer.h"
 #include "PVSS/HotLinkCallback.h"
@@ -42,29 +42,23 @@ namespace PVSS  {
 
   static bool pvss_exec_readW(DpIdentList* rdx,DevAnswer* a,HotLinkCallback* b)  {
     DpReadSync answer(a,b);
-    if ( !rdx ) {
+    if ( !rdx )
       answer.addError("pvss_exec_read> Invalid transaction context."); 
-    }
-    else if ( PVSS_TRUE == Manager::dpGet(*rdx,&answer,PVSS_FALSE) )    {
+    else if ( PVSS_TRUE == Manager::dpGet(*rdx,&answer,PVSS_FALSE) )
       return PVSS::Environment::instance().waitForAnswer(a);
-    }
-    else  {   // Post condition
+    else   // Post condition
       answer.addError("pvss_exec_read> Transaction failed.");
-    }
     return false;
   }
 
   static bool pvss_exec_readA(DpIdentList* rdx, DevAnswer* a,HotLinkCallback* b)  {
     DpReadSync *answer = new PVSS::DpReadSync(a,b);
-    if ( !rdx )   {
+    if ( !rdx )
       answer->addError("pvss_exec_read> Invalid transaction context.");
-    }
-    else if ( PVSS_TRUE == Manager::dpGet(*rdx,answer,PVSS_TRUE) )    {
+    else if ( PVSS_TRUE == Manager::dpGet(*rdx,answer,PVSS_TRUE) )
       return true;
-    }
-    else  {   // Post condition
+    else  // Post condition
       answer->addError("pvss_exec_read> Transaction failed.");
-    }
     delete answer;
     return false;
   }
