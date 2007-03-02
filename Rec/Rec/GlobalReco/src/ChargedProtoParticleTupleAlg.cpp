@@ -5,7 +5,7 @@
  * Implemenrtation file for algorithm ChargedProtoParticleTupleAlg
  *
  * CVS Log :-
- * $Id: ChargedProtoParticleTupleAlg.cpp,v 1.1 2007-02-19 11:38:05 jonrob Exp $
+ * $Id: ChargedProtoParticleTupleAlg.cpp,v 1.2 2007-03-02 10:07:42 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-11-15
@@ -60,7 +60,7 @@ StatusCode ChargedProtoParticleTupleAlg::initialize()
 //=============================================================================
 StatusCode ChargedProtoParticleTupleAlg::execute()
 {
-  // Load the charged ProtoParticles
+   // Load the charged ProtoParticles
   const LHCb::ProtoParticles * protos = get<LHCb::ProtoParticles>( m_protoPath );
 
   // Loop over the protos
@@ -103,12 +103,12 @@ StatusCode ChargedProtoParticleTupleAlg::execute()
     tuple->column( "RichAbovePrThres", rpid ? rpid->protonHypoAboveThres() : false );
 
     // muon
-    const LHCb::MuonPID * mpid = proto->muonPID();
+    //const LHCb::MuonPID * mpid = proto->muonPID();
     tuple->column( "MuonBkgLL",    proto->info ( LHCb::ProtoParticle::MuonBkgLL, 99999 ) );
     tuple->column( "MuonMuLL",     proto->info ( LHCb::ProtoParticle::MuonMuLL,  99999 ) );
     tuple->column( "MuonNShared",  proto->info ( LHCb::ProtoParticle::MuonNShared, 99999 ) );
-    tuple->column( "MuonIsMuon",   mpid ? mpid->IsMuon()       : false );
-    tuple->column( "MuonInAcc",    mpid ? mpid->InAcceptance() : false );
+    tuple->column( "MuonIsMuon",   proto->hasInfo( LHCb::ProtoParticle::MuonPIDStatus ) );
+    tuple->column( "MuonInAcc",    proto->info ( LHCb::ProtoParticle::InAccMuon, false ) );
 
     // calo
     tuple->column( "InAccSpd",   proto->info ( LHCb::ProtoParticle::InAccSpd,  false ) );

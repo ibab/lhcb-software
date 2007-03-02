@@ -4,7 +4,7 @@
  * Implementation file for algorithm ChargedProtoPAlg
  *
  * CVS Log :-
- * $Id: ChargedProtoPAlg.cpp,v 1.53 2007-02-21 19:24:09 pkoppenb Exp $
+ * $Id: ChargedProtoPAlg.cpp,v 1.54 2007-03-02 10:07:42 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 29/03/2006
@@ -264,6 +264,13 @@ bool ChargedProtoPAlg::addMuon( LHCb::ProtoParticle * proto ) const
               << endreq;
   }
 
+  // store acceptance flag for those in acceptance (lack of flag signifies
+  // track was outside acceptance)
+  if ( muonPID->InAcceptance() ) 
+  {
+    proto->addInfo( ProtoParticle::InAccMuon, true );
+  }
+  
   // check IsMuon flag - Reject non-muons
   if ( !muonPID->IsMuon() ) return false;
 
