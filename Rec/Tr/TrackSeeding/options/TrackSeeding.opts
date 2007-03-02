@@ -1,7 +1,6 @@
 // --------------------
 // TrackSeeding options
 // --------------------
-ApplicationMgr.DLLs += { "TrackSeeding" };
 RecoTrSeq.Members += { "TrackSeedFind" };
 //TrackSeedFind.Outputlevel=2;
 //TrackSeedFind.maxXSlope = 0.6;

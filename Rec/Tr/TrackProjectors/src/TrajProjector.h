@@ -1,4 +1,4 @@
-// $Id: TrajProjector.h,v 1.1 2006-12-15 19:11:40 graven Exp $
+// $Id: TrajProjector.h,v 1.2 2007-03-02 17:31:27 cattanem Exp $
 #ifndef TRAJPROJECTOR_H 
 #define TRAJPROJECTOR_H 1
 
@@ -6,8 +6,8 @@
 
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
-#include "Kernel/Vector3DTypes.h"
-#include "Kernel/GenericMatrixTypes.h"
+#include "GaudiKernel/Vector3DTypes.h"
+#include "GaudiKernel/GenericMatrixTypes.h"
 
 #include "TrackProjector.h"
 

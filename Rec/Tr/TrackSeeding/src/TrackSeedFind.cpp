@@ -5,18 +5,20 @@
 #include "GaudiKernel/SmartIF.h"
 #include "GaudiKernel/IDetDataSvc.h"
 #include "GaudiKernel/IRegistry.h"
-// from LHCb definitions
-#include "Kernel/Transform3DTypes.h"
-#include "Kernel/Point3DTypes.h"
-#include "Kernel/Vector3DTypes.h"
+// Math definitions
+#include "GaudiKernel/Transform3DTypes.h"
+#include "GaudiKernel/Point3DTypes.h"
+#include "GaudiKernel/Vector3DTypes.h"
+
+// From LHCb
 #include "Kernel/Trajectory.h"
-#include "Kernel/TrackTypes.h"
 #include "Kernel/LHCbID.h"
 #include "Kernel/FastClusterContainer.h"
 #include "Event/Measurement.h"
 #include "Event/STMeasurement.h"
 #include "Event/OTMeasurement.h"
 #include "Event/Track.h"
+#include "Event/TrackTypes.h"
 
 #include "Event/STLiteCluster.h"
 #include "Event/OTTime.h"

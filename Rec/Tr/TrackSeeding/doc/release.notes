@@ -4,6 +4,12 @@
 ! Purpose     : Package for the Seeding Pattern Recognition algorithm
 !-----------------------------------------------------------------------------
 
+!========================= TrackSeeding v1r1 2007-03-02 ======================
+! 2007-03-02 - Marco Cattaneo
+ - Remove LHCbDefinitions includes
+ - Remove obsolete TrackSeeding_load.cpp file
+ - Remove obsolete ApplicationMgr.DLLs option
+
 !========================= TrackSeeding v1r0 2006-08-04 ======================
 ! 2006-08-04 - Marco Cattaneo
  - Remove TrackSeeding directory. All includes are in src
