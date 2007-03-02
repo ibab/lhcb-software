@@ -6,8 +6,6 @@
 
 ApplicationMgr.TopAlg     += { "ProcessPhase/BrunelCheck" };
 
-ApplicationMgr.DLLs += { "TrackIdealPR" };
-
 BrunelCheck.DetectorList    = { "Tr" };
 BrunelCheckTrSeq.Members   += { "IdealTracksCreator" };
 

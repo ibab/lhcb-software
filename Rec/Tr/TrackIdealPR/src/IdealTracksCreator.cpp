@@ -1,11 +1,11 @@
-// $Id: IdealTracksCreator.cpp,v 1.33 2007-02-01 10:15:10 wouter Exp $
+// $Id: IdealTracksCreator.cpp,v 1.34 2007-03-02 17:07:18 cattanem Exp $
 // Include files
 // -------------
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 
-// from LHCbDefinitions
-#include "Kernel/TrackTypes.h"
+// from TrackEvent
+#include "Event/TrackTypes.h"
 
 // from GaudiKernel
 #include "GaudiKernel/IMagneticFieldSvc.h"

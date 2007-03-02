@@ -8,6 +8,7 @@
 ! 2007-03-02 - Marco Cattaneo
  - Remove LHCbDefinitions dependency
  - Remove obsolete TrackIdealPR_load.cpp file
+ - Remove obsolete ApplicationMgr.DLLs options
 
 ! 2007-02-01 Wouter Hulsbergen
  - fixed bug in seeding. seed-z is no longer cached between (!) tracks
