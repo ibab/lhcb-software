@@ -1,12 +1,10 @@
-# $Id: requirements,v 1.28 2006-11-27 17:06:48 cattanem Exp $
-# =============================================================================
-# CVS tag $Name: not supported by cvs2svn $, verision  $Revision: 1.28 $
+# $Id: requirements,v 1.29 2007-03-02 15:22:07 cattanem Exp $
 # =============================================================================
 # Created    : 2006-05-28
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu
 # =============================================================================
 package           CaloPIDs
-version           v4r5p1
+version           v4r6
 
 # =============== structure ===================================================
 branches          cmt doc src options 
@@ -28,7 +26,7 @@ use               Boost           v* LCG_Interfaces -no_auto_imports
 # =============== exported include directories ================================
 include_path      none
 
-# =============== constituenst ================================================
+# =============== constituents ================================================
 library           CaloPIDs    ../src/*.cpp 
 
 # =============== patterns/rules ==============================================
@@ -36,6 +34,9 @@ apply_pattern     component_library library=CaloPIDs
 	
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.28  2006/11/27 17:06:48  cattanem
+# v4r5p1
+#
 # Revision 1.27  2006/11/27 15:48:08  vegorych
 # warning VERY PRELIMINARY was removed
 #
