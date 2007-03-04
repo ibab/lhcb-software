@@ -1,8 +1,11 @@
-// $Id: GenParticleCuts.h,v 1.8 2006-08-26 11:28:01 ibelyaev Exp $
+// $Id: GenParticleCuts.h,v 1.9 2007-03-04 16:41:18 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.8 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.9 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2006/08/26 11:28:01  ibelyaev
+//  add GSTATUS functor: HepMC::GenParticle::status()
+//
 // Revision 1.7  2006/05/26 17:32:11  ibelyaev
 //  update to allow HepMCParticleMaker to be OK
 //
@@ -927,10 +930,114 @@ namespace LoKi
      *  @date 2006-03-07
      */
     const LoKi::GenParticles::ThreeCharge                  G3Q    ;    
+    
+    /** @typedef GDPHI
+     *  simple evaluator of "delta phi" of the particle momenta
+     * 
+     *  @code 
+     *
+     *   double phi = ... ;
+     * 
+     *   // create the function: 
+     *  GFun dphi = GDPHI(phi) ;
+     * 
+     *  const HepMC::GenParticle* p = ... ;
+     *
+     *  // use the function 
+     *  const double result = dphi ( p ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::GenParticless::DeltaPhi 
+     *  @see LoKi::GenParticless::Phi
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2007-03-03 
+     */
+    typedef LoKi::GenParticles::DeltaPhi                    GDPHI ;
 
-  } ; // end of namespace LoKi::Cuts 
+    /** @typedef GDETA
+     *  simple evaluator of "delta eta" of the particle momenta
+     * 
+     *  @code 
+     *
+     *   double eta = ... ;
+     * 
+     *   // create the function: 
+     *  GFun deta = GDETA(eta) ;
+     * 
+     *  const HepMC::GenParticle* p = ... ;
+     *
+     *  // use the function 
+     *  const double result = deta ( p ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::GenParticless::DeltaEta 
+     *  @see LoKi::GenParticless::Eta
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2007-03-03 
+     */
+    typedef LoKi::GenParticles::DeltaEta                    GDETA ;
+
+    /** @typedef GDR2 
+     *  simple evaluator of "delta eta" of the particle momenta
+     * 
+     *  @code 
+     *
+     *   double et
+     * 
+     *   // create the function: 
+     *  GFun r2 = GDR2( v ) ;
+     * 
+     *  const HepMC::GenParticle* p = ... ;
+     *
+     *  // use the function 
+     *  const double result = r2 ( p ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::GenParticless::DeltaR2  
+     *  @see LoKi::GenParticless::DeltaEta
+     *  @see LoKi::GenParticless::DeltaPhi
+     *  @see LoKi::Cuts::GDELTAR2 
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2007-03-03 
+     */
+    typedef LoKi::GenParticles::DeltaR2                     GDR2     ;
+
+    /** @typedef GDELTAR2 
+     *  simple evaluator of "delta eta" of the particle momenta
+     * 
+     *  @code 
+     *
+     *   double et
+     * 
+     *   // create the function: 
+     *  GFun r2 = GDELTAR2( v ) ;
+     * 
+     *  const HepMC::GenParticle* p = ... ;
+     *
+     *  // use the function 
+     *  const double result = r2 ( p ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::GenParticless::DeltaR2  
+     *  @see LoKi::GenParticless::DeltaEta
+     *  @see LoKi::GenParticless::DeltaPhi
+     *  @see LoKi::Cuts::GDR2 
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2007-03-03 
+     */
+    typedef LoKi::GenParticles::DeltaR2                     GDELTAR2 ;
+    
+  } // end of namespace LoKi::Cuts 
   
-} ; // end of namespace LoKi
+} // end of namespace LoKi
 
 // ============================================================================
 // The END 
