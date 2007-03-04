@@ -1,20 +1,8 @@
-// $Id: ParticleCuts.h,v 1.17 2007-03-01 16:14:39 ibelyaev Exp $
+// $Id: ParticleCuts.h,v 1.18 2007-03-04 16:54:19 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.17 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.18 $
 // ============================================================================
 //  $Log: not supported by cvs2svn $
-//  Revision 1.16  2007/02/26 09:19:22  ibelyaev
-//   add LoKi::Particles::IsMuon (alias: ISMUON)
-//
-//  Revision 1.15  2007/01/22 11:18:22  ibelyaev
-//   fix for LoKiExample
-//
-//  Revision 1.14  2006/12/16 13:22:25  ibelyaev
-//   add Particles16: DIRA&DANG
-//
-//  Revision 1.13  2006/11/27 12:01:31  ibelyaev
-//   prepare for LoKi v4r3
-//
 //
 // ============================================================================
 #ifndef LOKI_PHYSPARTICLECUTS_H 
@@ -4173,7 +4161,110 @@ namespace LoKi
      */
     const LoKi::Particles::DecayAngle                   LV04(4);
     // ========================================================================
+
+    /** @typedef DPHI
+     *  simple evaluator of "delta phi" of the particle momenta
+     * 
+     *  @code 
+     *
+     *   double phi = ... ;
+     * 
+     *   // create the function: 
+     *  Fun dphi = DPHI(phi) ;
+     * 
+     *  const LHCb::Particle* p = ... ;
+     *
+     *  // use the function 
+     *  const double result = dphi ( p ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::Particless::DeltaPhi 
+     *  @see LoKi::Particless::Phi
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2007-03-03 
+     */
+    typedef LoKi::Particles::DeltaPhi                       DPHI ;
+
+    /** @typedef DETA
+     *  simple evaluator of "delta eta" of the particle momenta
+     * 
+     *  @code 
+     *
+     *   double eta = ... ;
+     * 
+     *   // create the function: 
+     *  Fun deta = DETA(eta) ;
+     * 
+     *  const LHCb::Particle* p = ... ;
+     *
+     *  // use the function 
+     *  const double result = deta ( p ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::Particless::DeltaEta 
+     *  @see LoKi::Particless::Eta
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2007-03-03 
+     */
+    typedef LoKi::Particles::DeltaEta                        DETA ;
     
+    /** @typedef DR2 
+     *  simple evaluator of "delta eta" of the particle momenta
+     * 
+     *  @code 
+     *
+     *   double et
+     * 
+     *   // create the function: 
+     *  Fun r2 = DR2( v ) ;
+     * 
+     *  const LHCb::Particle* p = ... ;
+     *
+     *  // use the function 
+     *  const double result = r2 ( p ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::Particless::DeltaR2  
+     *  @see LoKi::Particless::DeltaEta
+     *  @see LoKi::Particless::DeltaPhi
+     *  @see LoKi::Cuts::DELTAR2 
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2007-03-03 
+     */
+    typedef LoKi::Particles::DeltaR2                     DR2     ;
+    
+    /** @typedef DELTAR2 
+     *  simple evaluator of "delta eta" of the particle momenta
+     * 
+     *  @code 
+     *
+     *   double et
+     * 
+     *   // create the function: 
+     *  Fun r2 = DELTAR2( v ) ;
+     * 
+     *  const LHCb::::Particle* p = ... ;
+     *
+     *  // use the function 
+     *  const double result = r2 ( p ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::Particless::DeltaR2  
+     *  @see LoKi::Particless::DeltaEta
+     *  @see LoKi::Particless::DeltaPhi
+     *  @see LoKi::Cuts::DR2 
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2007-03-03 
+     */
+    typedef LoKi::Particles::DeltaR2                        DELTAR2 ;
 
   }  // end of namespace LoKi::Cuts  
 }  // end of namespace LoKi

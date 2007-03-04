@@ -1,9 +1,20 @@
-! $Id: release.notes,v 1.19 2007-03-01 16:14:39 ibelyaev Exp $ 
+! $Id: release.notes,v 1.20 2007-03-04 16:54:19 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhys
 ! Responsible : Vanya Belyaev
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
+
+!========================== LoKiPhys v3r2 2007-03-04 ==================
+
+! 2007-03-04 - Vanya BELYAEV
+ - LoKi/Particles17.h, src/Particles17.cpp 
+   LoKi/ParticleCuts.h
+    add new functions DeltaPhi/DeltaEta/DeltaR2 useful for jets studies 
+  
+ - cmt/requirements 
+   version increment to v3r2 
+  
 
 !========================== LoKiPhys v3r1 2007-03-01 ==================
 
@@ -137,6 +148,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.19  2007/03/01 16:14:39  ibelyaev
+!  add PTREL and PTDIR functions
+!
 ! Revision 1.18  2007/02/26 09:19:22  ibelyaev
 !  add LoKi::Particles::IsMuon (alias: ISMUON)
 !

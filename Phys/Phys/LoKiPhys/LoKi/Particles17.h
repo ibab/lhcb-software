@@ -1,8 +1,11 @@
-// $Id: Particles17.h,v 1.1 2007-03-01 16:14:39 ibelyaev Exp $
+// $Id: Particles17.h,v 1.2 2007-03-04 16:54:19 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ 
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2007/03/01 16:14:39  ibelyaev
+//  add PTREL and PTDIR functions
+// 
 // ============================================================================
 #ifndef LOKI_PARTICLES17_H 
 #define LOKI_PARTICLES17_H 1
@@ -39,6 +42,187 @@ namespace LoKi
 {
   namespace  Particles
   {
+    
+    /** @class DeltaPhi
+     *  Simple evaluator of "DeltaPhi" for the particle
+     *
+     *  @see LoKi::Cuts::DPHI 
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2007-03-03
+     */
+    class DeltaPhi 
+      : public LoKi::Function<const LHCb::Particle*>
+    {
+    public:
+      /// constructor from the angle
+      DeltaPhi ( const double phi ) ;
+      /// constructor from the vector 
+      DeltaPhi ( const LoKi::ThreeVector& v ) ;
+      /// constructor from the vector 
+      DeltaPhi ( const LoKi::LorentzVector& v ) ;
+      /// templated constructor from vector 
+      template <class VECTOR> 
+      DeltaPhi ( const VECTOR& v ) 
+        : LoKi::Function<const LHCb::Particle*> () 
+        , m_eval (         )
+        , m_phi  ( v.phi() )
+      { 
+        m_phi = adjust ( m_phi ) ;
+      } ;
+      /// constructor from the particle
+      DeltaPhi ( const LHCb::Particle* p ) ;
+      /// templated constructor from particle
+      template <class PARTICLE> 
+      DeltaPhi ( const PARTICLE* p ) 
+        : LoKi::Function<const LHCb::Particle*> () 
+        , m_eval (  )
+        , m_phi  (  )
+      { 
+        if ( 0 == p ) { Exception("Invalid PARTICLE*") ;}
+        m_phi = p->momentum().phi() ;
+        m_phi = adjust ( m_phi ) ;
+      } ;
+      /// copy constructor
+      DeltaPhi ( const DeltaPhi& right ) ;
+      /// MANDATORY: virtual destructor 
+      virtual ~DeltaPhi() {}
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  DeltaPhi* clone() const ; 
+      /// MANDATORY: the only essential method 
+      virtual result_type operator() ( argument p ) const ;
+      /// OPTIONAL: "SHORT" representation
+      virtual  std::ostream& fillStream( std::ostream& s ) const ;
+    public:
+      /// adjust delta phi into the raneg of [-180:180]degrees 
+      const double adjust ( double phi ) const ;
+    private:
+      // the default constructor is disabled 
+      DeltaPhi ();
+    private:
+      // the actual evaluator of phi
+      LoKi::Particles::Phi    m_eval ; ///< the actual evaluator of phi
+      // the angle itself 
+      double                  m_phi  ; ///< the angle itself 
+    } ;
+    
+    /** @class DeltaEta
+     *  Simple evaluator of "DeltaEta" for the particle
+     *
+     *  @see LoKi::Cuts::DETA
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2007-03-03
+     */
+    class DeltaEta 
+      : public LoKi::Function<const LHCb::Particle*>
+    {
+    public:
+      /// constructor from the eta
+      DeltaEta ( const double eta ) ;
+      /// constructor from the vector 
+      DeltaEta ( const LoKi::ThreeVector&   v ) ;
+      /// constructor from the vector 
+      DeltaEta ( const LoKi::LorentzVector& v ) ;
+      /// templated constructor from vector 
+      template <class VECTOR> 
+      DeltaEta ( const VECTOR& v ) 
+        : LoKi::Function<const LHCb::Particle*> () 
+        , m_eval (         )
+        , m_eta  ( v.Eta() )
+      {} ;
+      /// constructor from the particle
+      DeltaEta ( const LHCb::Particle* p ) ;
+      /// templated constructor from particle
+      template <class PARTICLE> 
+      DeltaEta ( const PARTICLE* p ) 
+        : LoKi::Function<const LHCb::Particle*> () 
+        , m_eval (  )
+        , m_eta  (  )
+      { 
+        if ( 0 == p ) { Exception("Invalid PARTICLE*") ;}
+        m_eta = p->momentum().Eta() ;
+      } ;
+      /// copy constructor
+      DeltaEta ( const DeltaEta& right ) ;
+      /// MANDATORY: virtual destructor 
+      virtual ~DeltaEta() {}
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  DeltaEta* clone() const ; 
+      /// MANDATORY: the only essential method 
+      virtual result_type operator() ( argument p ) const ;
+      /// OPTIONAL: "SHORT" representation
+      virtual  std::ostream& fillStream( std::ostream& s ) const ;
+    private:
+      // the default constructor is disabled 
+      DeltaEta ();
+    private:
+      // the actual evaluator of eta
+      LoKi::Particles::PseudoRapidity m_eval ; ///< the actual evaluator of eta
+      // the angle itself 
+      double                          m_eta  ; ///< the angle itself 
+   } ;
+
+    /** @class DeltaR2
+     *  Simple evaluator of "DeltaPhi**2+ DeltaEta**2"
+     *
+     *  @see LoKi::Cuts::DR2 
+     *  @see LoKi::Cuts::DELTAR2 
+     *  @see LoKi::Cuts::DPHI
+     *  @see LoKi::Cuts::DETA
+     *  @see LoKi::Particles::DeltaPhi
+     *  @see LoKi::Particles::DeltaEta
+     *  @see LoKi::Particles::Phi
+     *  @see LoKi::Particles::PseudoRapidity
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2007-03-03
+     */
+    class DeltaR2
+      : public LoKi::Function<const LHCb::Particle*>
+    {
+    public:
+      /// constructor from the vector 
+      DeltaR2 ( const LoKi::ThreeVector&   v ) ;
+      /// constructor from the vector 
+      DeltaR2 ( const LoKi::LorentzVector& v ) ;
+      /// templated constructor from vector 
+      template <class VECTOR> 
+      DeltaR2 ( const VECTOR& v ) 
+        : LoKi::Function<const LHCb::Particle*> () 
+        , m_dphi ( v )
+        , m_deta ( v )
+      {} ;
+      /// constructor from the particle
+      DeltaR2 ( const LHCb::Particle* p ) ;
+      /// templated constructor from particle
+      template <class PARTICLE> 
+      DeltaR2 ( const PARTICLE* p ) 
+        : LoKi::Function<const LHCb::Particle*> () 
+        , m_dphi ( p )
+        , m_deta ( p )
+      {} ;
+      /// copy constructor
+      DeltaR2 ( const DeltaR2& right ) ;
+      /// MANDATORY: virtual destructor 
+      virtual ~DeltaR2() {}
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  DeltaR2* clone() const ; 
+      /// MANDATORY: the only essential method 
+      virtual result_type operator() ( argument p ) const ;
+      /// OPTIONAL: "SHORT" representation
+      virtual  std::ostream& fillStream( std::ostream& s ) const ;
+    private:
+      // the default constructor is disabled 
+      DeltaR2 ();
+    private:
+      // the actual evaluator of delta phi
+      LoKi::Particles::DeltaPhi m_dphi ; ///< the actual evaluator of delta phi
+      // the actual evaluator of delta eta
+      LoKi::Particles::DeltaEta m_deta ; ///< the actual evaluator of delta eta
+    } ;
+
+
   } // end of namespace LoKi::Particles
 } // end of namespace LoKi
 
