@@ -1,6 +1,6 @@
-! $Id: release.notes,v 1.16 2007-02-23 09:01:51 ibelyaev Exp $ 
+! $Id: release.notes,v 1.17 2007-03-04 16:47:19 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.16 $
+! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.17 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -17,6 +17,16 @@
 !
 ! -----------------------------------------------------------------------------
 
+!========================== LoKiMC v2r2 2007-03-04 ====================
+
+! 2007-03-04 - Vanya BELYAEV
+ - LoKi/MCPArticles.h , LoKi/MCParticleCuts.h, 
+   src/MCParticles.cpp 
+    add new functions DeltaPhi, DeltaEta and DeltaR2, 
+    very useful for Jets-studies
+  - cmt/requirements
+    version increment to v2r2 
+ 
 !========================== LoKiMC v2r1 2007-02-23 ====================
 
 ! 2007-02-23 - Vanya BELYAEV
@@ -251,6 +261,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.16  2007/02/23 09:01:51  ibelyaev
+!  minor fix with struct/class
+!
 ! Revision 1.15  2007/01/23 13:27:18  ibelyaev
 !  add MCVALID/MCVVALID
 !

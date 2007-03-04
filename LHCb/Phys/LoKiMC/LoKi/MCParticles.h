@@ -1,25 +1,10 @@
-// $Id: MCParticles.h,v 1.8 2007-02-23 09:01:51 ibelyaev Exp $
+// $Id: MCParticles.h,v 1.9 2007-03-04 16:47:19 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.8 $ 
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.9 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.7  2006/11/27 11:58:37  ibelyaev
-//  prepare for LoKi v4r3
-//
-// Revision 1.6  2006/10/26 11:57:41  ibelyaev
-//  SLC4: fix error and many warnings
-//
-// Revision 1.5  2006/04/09 09:03:14  ibelyaev
-//  regular update
-//
-// Revision 1.4  2006/03/22 10:33:16  ibelyaev
-//  Add MCFilter: adapter for IMCParticleSelector tool
-//
-// Revision 1.3  2006/02/18 18:10:57  ibelyaev
-//  fix a typo
-//
-// Revision 1.2  2006/02/07 17:14:02  ibelyaev
-//  regular update
+// Revision 1.8  2007/02/23 09:01:51  ibelyaev
+//  minor fix with struct/class
 //
 // ============================================================================
 #ifndef LOKI_MCPARTICLES_H 
@@ -908,98 +893,193 @@ namespace LoKi
       LoKi::ThreeVector m_vct ;
     };
     
-    /** @class DeltaPhi 
-     *  Trivial evaluator of difference in 
-     *  asimuthal angle phi
-     *  with respect to a given direction 
-     *  
+    /** @class DeltaPhi
+     *  Simple evaluator of "DeltaPhi" for the particle
+     *
      *  @see LoKi::Cuts::MCDPHI 
-     *  @author Vanya BELYAEV  Ivan.Belyaev@lapp.in2p3.fr 
-     *  @date 2005-04-09
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2007-03-03
      */
-    class DeltaPhi: 
-      public LoKi::Function<const LHCb::MCParticle*> 
+    class DeltaPhi 
+      : public LoKi::Function<const LHCb::MCParticle*>
     {
     public:
-      /** constructor from the angle 
-       *  @param phi angle 
-       */
-      DeltaPhi ( const double               phi    ) ;
-      /** constructor from the direction 
-       *  @param vct 3D-vector 
-       */
-      DeltaPhi ( const LoKi::ThreeVector&   vct    ) ;
-      /** constructor from the direction 
-       *  @param vct 3D-vector 
-       */
-      DeltaPhi ( const LoKi::LorentzVector& vct   ) ;
-      /** copy constructor 
-       *  @param rigth object to be copied 
-       */
-      DeltaPhi ( const DeltaPhi&            right ) ;
+      /// constructor from the angle
+      DeltaPhi ( const double phi ) ;
+      /// constructor from the vector 
+      DeltaPhi ( const LoKi::ThreeVector& v ) ;
+      /// constructor from the vector 
+      DeltaPhi ( const LoKi::LorentzVector& v ) ;
+      /// templated constructor from vector 
+      template <class VECTOR> 
+      DeltaPhi ( const VECTOR& v ) 
+        : LoKi::Function<const LHCb::MCParticle*> () 
+        , m_eval (         )
+        , m_phi  ( v.phi() )
+      { 
+        m_phi = adjust ( m_phi ) ;
+      } ;
+      /// constructor from the particle
+      DeltaPhi ( const LHCb::MCParticle* p ) ;
+      /// templated constructor from particle
+      template <class PARTICLE> 
+      DeltaPhi ( const PARTICLE* p ) 
+        : LoKi::Function<const LHCb::MCParticle*> () 
+          , m_eval (  )
+          , m_phi  (  )
+      { 
+        if ( 0 == p ) { Exception("Invalid PARTICLE*") ;}
+        m_phi = p->momentum().phi() ;
+        m_phi = adjust ( m_phi ) ;
+      } ;
+      /// copy constructor
+      DeltaPhi ( const DeltaPhi& right ) ;
       /// MANDATORY: virtual destructor 
-      virtual ~DeltaPhi() ;
+      virtual ~DeltaPhi() {}
       /// MANDATORY: clone method ("virtual constructor")
-      virtual  DeltaPhi* clone() const ;
-      /// MANDATORY: the only one essential method 
+      virtual  DeltaPhi* clone() const ; 
+      /// MANDATORY: the only essential method 
       virtual result_type operator() ( argument p ) const ;
-      /// "SHORT" representation, @see LoKi::AuxFunBase 
-      virtual  std::ostream& fillStream( std::ostream& s ) const ;      
+      /// OPTIONAL: "SHORT" representation
+      virtual  std::ostream& fillStream( std::ostream& s ) const ;
+    public:
+      /// adjust delta phi into the raneg of [-180:180]degrees 
+      const double adjust ( double phi ) const ;
     private:
-      // private ocnstructor is disabled 
-      DeltaPhi() ;
+      // the default constructor is disabled 
+      DeltaPhi ();
     private:
-      double m_phi ;
-    };
-    
+      // the actual evaluator of phi
+      LoKi::MCParticles::Phi  m_eval ; ///< the actual evaluator of phi
+      // the angle itself 
+      double                  m_phi  ; ///< the angle itself 
+    } ;
+
     /** @class DeltaEta
-     *  Trivial evaluator of difference in 
-     *  pseudorapidity 
-     *  with respect to a given 4-momentum
-     *  
-     *  @see LoKi::Cuts::MCDETA
-     *  @author Vanya BELYAEV  Ivan.Belyaev@lapp.in2p3.fr 
-     *  @date 2005-04-09
+     *  Simple evaluator of "DeltaEta" for the particle
+     *
+     *  @see LoKi::Cuts::DETA
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2007-03-03
      */
-    class DeltaEta: 
-      public LoKi::Function<const LHCb::MCParticle*> 
+    class DeltaEta 
+      : public LoKi::Function<const LHCb::MCParticle*>
     {
     public:
-      /** constructor from pseudorapidity
-       *  @param eta pseudorapidity
-       */
+      /// constructor from the eta
       DeltaEta ( const double eta ) ;
-      /** constructor from the momentum
-       *  @param vct momentum
-       */
-      DeltaEta ( const LoKi::LorentzVector& vct ) ;
-      /** copy constructor 
-       *  @param rigth object to be copied 
-       */
-      DeltaEta ( const DeltaEta&            right ) ;
+      /// constructor from the vector 
+      DeltaEta ( const LoKi::ThreeVector&   v ) ;
+      /// constructor from the vector 
+      DeltaEta ( const LoKi::LorentzVector& v ) ;
+      /// templated constructor from vector 
+      template <class VECTOR> 
+      DeltaEta ( const VECTOR& v ) 
+        : LoKi::Function<const LHCb::MCParticle*> () 
+        , m_eval (         )
+        , m_eta  ( v.Eta() )
+      {} ;
+      /// constructor from the particle
+      DeltaEta ( const LHCb::MCParticle* p ) ;
+      /// templated constructor from particle
+      template <class PARTICLE> 
+      DeltaEta ( const PARTICLE* p ) 
+        : LoKi::Function<const LHCb::MCParticle*> () 
+        , m_eval (  )
+        , m_eta  (  )
+      { 
+        if ( 0 == p ) { Exception("Invalid PARTICLE*") ;}
+        m_eta = p->momentum().Eta() ;
+      } ;
+      /// copy constructor
+      DeltaEta ( const DeltaEta& right ) ;
       /// MANDATORY: virtual destructor 
-      virtual ~DeltaEta() ;
+      virtual ~DeltaEta() {}
       /// MANDATORY: clone method ("virtual constructor")
-      virtual  DeltaEta* clone() const ;
-      /// MANDATORY: the only one essential method 
-      virtual result_type operator() ( argument p ) const ; 
-      /// "SHORT" representation, @see LoKi::AuxFunBase 
-      virtual  std::ostream& fillStream( std::ostream& s ) const ;      
+      virtual  DeltaEta* clone() const ; 
+      /// MANDATORY: the only essential method 
+      virtual result_type operator() ( argument p ) const ;
+      /// OPTIONAL: "SHORT" representation
+      virtual  std::ostream& fillStream( std::ostream& s ) const ;
     private:
-      // private constructor is disabled 
-      DeltaEta() ;
+      // the default constructor is disabled 
+      DeltaEta ();
     private:
-      double m_eta ;
-    };
+      // the actual evaluator of eta
+      LoKi::MCParticles::PseudoRapidity m_eval ; ///< the actual evaluator of eta
+      // the angle itself 
+      double                             m_eta  ; ///< the angle itself 
+   } ;
+
+    /** @class DeltaR2
+     *  Simple evaluator of "DeltaPhi**2+ DeltaEta**2"
+     *
+     *  @see LoKi::Cuts::MCDR2 
+     *  @see LoKi::Cuts::MCDELTAR2 
+     *  @see LoKi::Cuts::MCDPHI
+     *  @see LoKi::Cuts::MCDETA
+     *  @see LoKi::MCParticles::DeltaPhi
+     *  @see LoKi::MCParticles::DeltaEta
+     *  @see LoKi::MCParticles::Phi
+     *  @see LoKi::MCParticles::PseudoRapidity
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2007-03-03
+     */
+    class DeltaR2
+      : public LoKi::Function<const LHCb::MCParticle*>
+    {
+    public:
+      /// constructor from the vector 
+      DeltaR2 ( const LoKi::ThreeVector&   v ) ;
+      /// constructor from the vector 
+      DeltaR2 ( const LoKi::LorentzVector& v ) ;
+      /// templated constructor from vector 
+      template <class VECTOR> 
+      DeltaR2 ( const VECTOR& v ) 
+        : LoKi::Function<const LHCb::MCParticle*> () 
+        , m_dphi ( v )
+        , m_deta ( v )
+      {} ;
+      /// constructor from the particle
+      DeltaR2 ( const LHCb::MCParticle* p ) ;
+      /// templated constructor from particle
+      template <class PARTICLE> 
+      DeltaR2 ( const PARTICLE* p ) 
+        : LoKi::Function<const LHCb::MCParticle*> () 
+        , m_dphi ( p )
+        , m_deta ( p )
+      {} ;
+      /// copy constructor
+      DeltaR2 ( const DeltaR2& right ) ;
+      /// MANDATORY: virtual destructor 
+      virtual ~DeltaR2() {}
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  DeltaR2* clone() const ; 
+      /// MANDATORY: the only essential method 
+      virtual result_type operator() ( argument p ) const ;
+      /// OPTIONAL: "SHORT" representation
+      virtual  std::ostream& fillStream( std::ostream& s ) const ;
+    private:
+      // the default constructor is disabled 
+      DeltaR2 ();
+    private:
+      // the actual evaluator of delta phi
+      LoKi::MCParticles::DeltaPhi m_dphi ; ///< the actual evaluator of delta phi
+      // the actual evaluator of delta eta
+      LoKi::MCParticles::DeltaEta m_deta ; ///< the actual evaluator of delta eta
+    } ;
     
-    /** @struct ValidOrigin 
+    /** @class ValidOrigin 
      *  Trivial predicat eto test teh valdity of "origin" vertex 
      *  for Monte Carlo particle
      *  @author Vanya BELYAEV Ivan.Belyaev@lapp.in2p3.fr
      *  @date 2005-05-16
      */
-    struct ValidOrigin : 
-      public LoKi::Predicate<const LHCb::MCParticle*>
+    class ValidOrigin 
+      : public LoKi::Predicate<const LHCb::MCParticle*>
     {
     public:
       /// MANDATORY : virtual destructor 
@@ -1018,8 +1098,8 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@lapp.in2p3.fr
      *  @date 2005-05-16
      */
-    class MCVertexFunAdapter : 
-      public LoKi::Function<const LHCb::MCParticle*> 
+    class MCVertexFunAdapter 
+      : public LoKi::Function<const LHCb::MCParticle*> 
     {
     public  :
       /** constructor from vertex funtion 

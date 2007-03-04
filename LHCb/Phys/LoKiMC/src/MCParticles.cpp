@@ -1,19 +1,8 @@
-// $Id: MCParticles.cpp,v 1.8 2007-02-23 09:01:51 ibelyaev Exp $
+// $Id: MCParticles.cpp,v 1.9 2007-03-04 16:47:19 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.8 $
+// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.9 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.7  2006/10/26 11:57:41  ibelyaev
-//  SLC4: fix error and many warnings
-//
-// Revision 1.6  2006/05/17 16:23:24  jpalac
-// *** empty log message ***
-//
-// Revision 1.5  2006/04/09 09:03:14  ibelyaev
-//  regular update
-//
-// Revision 1.4  2006/03/22 10:33:16  ibelyaev
-//  Add MCFilter: adapter for IMCParticleSelector tool
 //
 // ============================================================================
 // Include files
@@ -1169,176 +1158,6 @@ LoKi::MCParticles::TransverseMomentumRel::fillStream
 // ============================================================================
 
 // ============================================================================
-/** constructor from the phi
- *  @param phi angle phi 
- */
-// ============================================================================
-LoKi::MCParticles::DeltaPhi::DeltaPhi
-( const double phi ) 
-  : LoKi::Function<const LHCb::MCParticle*> ()
-  , m_phi ( phi ) 
-{};
-// ============================================================================
-
-// ============================================================================
-/** constructor from the direction 
- *  @param vct 3D-vector 
- */
-// ============================================================================
-LoKi::MCParticles::DeltaPhi::DeltaPhi
-( const LoKi::ThreeVector& vct ) 
-  : LoKi::Function<const LHCb::MCParticle*> ()
-  , m_phi ( vct.phi() ) 
-{};
-// ============================================================================
-
-// ============================================================================
-/** constructor from 4-momentum
- *  @param vct 4-momentum
- */
-// ============================================================================
-LoKi::MCParticles::DeltaPhi::DeltaPhi
-( const LoKi::LorentzVector& vct ) 
-  : LoKi::Function<const LHCb::MCParticle*> () 
-  , m_phi ( vct.phi() ) 
-{};
-// ============================================================================
-
-// ============================================================================
-/** copy constructor 
- *  @param rigth object to be copied 
- */
-// ============================================================================
-LoKi::MCParticles::DeltaPhi::DeltaPhi
-( const LoKi::MCParticles::DeltaPhi& right ) 
-  : LoKi::AuxFunBase                        ( right )
-  , LoKi::Function<const LHCb::MCParticle*> ( right )
-  , m_phi ( right.m_phi ) 
-{};
-// ============================================================================
-
-// ============================================================================
-/// MANDATORY: virtual destructor 
-// ============================================================================
-LoKi::MCParticles::DeltaPhi::~DeltaPhi(){};
-// ============================================================================
-
-// ============================================================================
-/// MANDATORY: clone method ("virtual constructor") 
-// ============================================================================
-LoKi::MCParticles::DeltaPhi*
-LoKi::MCParticles::DeltaPhi::clone() const 
-{ return new LoKi::MCParticles::DeltaPhi( *this ) ; }
-// ============================================================================
-
-// ============================================================================
-/// MANDATORY: the only one essential method
-// ============================================================================
-LoKi::MCParticles::DeltaPhi::result_type 
-LoKi::MCParticles::DeltaPhi::operator()
-  ( LoKi::MCParticles::DeltaPhi::argument p ) const 
-{
-  if ( 0 == p ) 
-  {
-    Error ( " MCParticle* points to NULL, return 'InvalidAngle'") ;
-    return LoKi::Constants::InvalidAngle ;
-  };
-  //
-  double dphi = p->momentum().phi() - m_phi ;
-  // adjust the value 
-  while ( dphi >   180 * Gaudi::Units::degree ) { dphi -= 360 * Gaudi::Units::degree ; }
-  while ( dphi <= -180 * Gaudi::Units::degree ) { dphi += 360 * Gaudi::Units::degree ; }
-  //
-  return dphi ;
-};
-// ============================================================================
-
-// ============================================================================
-/// "SHORT" representation, @see LoKi::AuxFunBase 
-// ============================================================================
-std::ostream& 
-LoKi::MCParticles::DeltaPhi::fillStream
-( std::ostream& s ) const { return s << "MCDPHI" ; }
-// ============================================================================
-
-// ============================================================================
-/** constructor from pseudorapidity
- *  @param eta pseudorapidity
- */
-// ============================================================================
-LoKi::MCParticles::DeltaEta::DeltaEta 
-( const double eta ) 
-  : LoKi::Function<const LHCb::MCParticle*> () 
-  , m_eta ( eta ) 
-{};
-// ============================================================================
-
-// ============================================================================
-/** constructor from the momentum
- *  @param vct momentum
- */
-// ============================================================================
-LoKi::MCParticles::DeltaEta::DeltaEta 
-( const LoKi::LorentzVector& vct ) 
-  : LoKi::Function<const LHCb::MCParticle*> () 
-  , m_eta ( vct.Eta()  ) 
-{};
-// ============================================================================
-
-// ============================================================================
-/** copy constructor 
- *  @param rigth object to be copied 
- */
-// ============================================================================
-LoKi::MCParticles::DeltaEta::DeltaEta 
-( const LoKi::MCParticles::DeltaEta& right ) 
-  : LoKi::AuxFunBase                        ( right )
-  , LoKi::Function<const LHCb::MCParticle*> ( right ) 
-  , m_eta ( right.m_eta ) 
-{};
-// ============================================================================
-
-// ============================================================================
-/// MANDATORY: virtual destructor 
-// ============================================================================
-LoKi::MCParticles::DeltaEta::~DeltaEta(){}
-// ============================================================================
-
-// ============================================================================
-/// MANDATORY: clone method ("virtual constructor")
-// ============================================================================
-LoKi::MCParticles::DeltaEta*
-LoKi::MCParticles::DeltaEta::clone() const  
-{ return new LoKi::MCParticles::DeltaEta( *this ) ; }
-// ============================================================================
-
-// ============================================================================
-/// MANDATORY: the only one essential method 
-// ============================================================================
-LoKi::MCParticles::DeltaEta::result_type
-LoKi::MCParticles::DeltaEta::operator() 
-  ( LoKi::MCParticles::DeltaEta::argument p ) const 
-{
-  if ( 0 == p ) 
-  {
-    Error ( " MCParticle* points to NULL, return 'InvalidAngle'") ;
-    return LoKi::Constants::InvalidAngle ;
-  };
-  //
-  return p->momentum().Eta() - m_eta ;
-};
-// ============================================================================
-
-// ============================================================================
-/// "SHORT" representation, @see LoKi::AuxFunBase 
-// ============================================================================
-std::ostream& 
-LoKi::MCParticles::DeltaEta::fillStream
-( std::ostream& s ) const { return s << "MCDETA" ; }
-// ============================================================================
-
-
-// ============================================================================
 /// MANDATORY: virtual destructor 
 // ============================================================================
 LoKi::MCParticles::ValidOrigin::~ValidOrigin(){}
@@ -1576,6 +1395,235 @@ LoKi::MCParticles::MCFilter::fillStream
   return s << "]" ;
 };
 // ============================================================================
+
+
+// ============================================================================
+/// constructor from the angle
+// ============================================================================
+LoKi::MCParticles::DeltaPhi::DeltaPhi ( const double phi ) 
+  : LoKi::Function<const LHCb::MCParticle*> () 
+  , m_eval (     )
+  , m_phi  ( phi )
+{ 
+  m_phi = adjust ( m_phi ) ; 
+} ; 
+// ============================================================================
+/// constructor from the vector 
+// ============================================================================
+LoKi::MCParticles::DeltaPhi::DeltaPhi ( const LoKi::ThreeVector& v ) 
+  : LoKi::Function<const LHCb::MCParticle*> () 
+  , m_eval (         )
+  , m_phi  ( v.Phi() )
+{ 
+  m_phi = adjust ( m_phi ) ; 
+} ; 
+// ============================================================================
+/// constructor from the vector 
+// ============================================================================
+LoKi::MCParticles::DeltaPhi::DeltaPhi ( const LoKi::LorentzVector& v ) 
+  : LoKi::Function<const LHCb::MCParticle*> () 
+  , m_eval (         )
+  , m_phi  ( v.Phi() )
+{ 
+  m_phi = adjust ( m_phi ) ; 
+} ; 
+// ============================================================================
+/// constructor from the particle
+// ============================================================================
+LoKi::MCParticles::DeltaPhi::DeltaPhi ( const LHCb::MCParticle* p )
+  : LoKi::Function<const LHCb::MCParticle*> () 
+  , m_eval ( )
+  , m_phi  ( )
+{ 
+  if ( 0 == p ) { Exception("Invalid LHCb::MCParticle*") ;}
+  m_phi = p->momentum().phi() ;
+  m_phi = adjust ( m_phi ) ; 
+} ; 
+// ============================================================================
+/// copy constructor
+// ============================================================================
+LoKi::MCParticles::DeltaPhi::DeltaPhi 
+( const LoKi::MCParticles::DeltaPhi& right ) 
+  : LoKi::AuxFunBase                        ( right ) 
+  , LoKi::Function<const LHCb::MCParticle*> ( right ) 
+  , m_eval ( right.m_eval )
+  , m_phi  ( right.m_phi  )
+{ 
+  m_phi = adjust ( m_phi ) ; 
+} ; 
+// ============================================================================
+/// MANDATORY: clone method ("virtual constructor")
+// ============================================================================
+LoKi::MCParticles::DeltaPhi*
+LoKi::MCParticles::DeltaPhi::clone() const
+{ return new LoKi::MCParticles::DeltaPhi(*this) ; }
+// ============================================================================
+/// MANDATORY: the only essential method 
+// ============================================================================
+LoKi::MCParticles::DeltaPhi::result_type
+LoKi::MCParticles::DeltaPhi::operator() 
+  ( LoKi::MCParticles::DeltaPhi::argument p ) const 
+{
+  if ( 0 == p ) 
+  {
+    Error ("LHCb::MCParticle* points to NULL, return 'InvalidAngle'") ;
+    return LoKi::Constants::InvalidAngle ;
+  }
+  return adjust ( m_eval( p ) - m_phi ) ;
+} ;
+// ============================================================================
+/// OPTIONAL: "SHORT" representation
+// ============================================================================
+std::ostream& LoKi::MCParticles::DeltaPhi::fillStream ( std::ostream& s ) const 
+{ return s << "MCDPHI[" << m_phi << "]" ; }
+// ============================================================================
+/// adjust delta phi into the range of [-180:180]degrees 
+// ============================================================================
+const double LoKi::MCParticles::DeltaPhi::adjust ( double phi ) const 
+{
+  static const double s_180 = 180 * Gaudi::Units::degree ;
+  static const double s_360 = 360 * Gaudi::Units::degree ;
+  //
+  while ( phi >      s_180 ) { phi -= s_360 ; }
+  while ( phi < -1 * s_180 ) { phi += s_360 ; }
+  //
+  return phi ; 
+} ;
+// ============================================================================
+
+
+// ============================================================================
+/// constructor from the angle
+// ============================================================================
+LoKi::MCParticles::DeltaEta::DeltaEta ( const double eta ) 
+  : LoKi::Function<const LHCb::MCParticle*> () 
+  , m_eval (     )
+  , m_eta  ( eta )
+{}
+// ============================================================================
+/// constructor from the vector 
+// ============================================================================
+LoKi::MCParticles::DeltaEta::DeltaEta ( const LoKi::ThreeVector& v ) 
+  : LoKi::Function<const LHCb::MCParticle*> () 
+  , m_eval (         )
+  , m_eta  ( v.Eta() )
+{}
+// ============================================================================
+/// constructor from the vector 
+// ============================================================================
+LoKi::MCParticles::DeltaEta::DeltaEta ( const LoKi::LorentzVector& v ) 
+  : LoKi::Function<const LHCb::MCParticle*> () 
+  , m_eval (         )
+  , m_eta  ( v.Eta() )
+{}
+// ============================================================================
+/// constructor from the particle
+// ============================================================================
+LoKi::MCParticles::DeltaEta::DeltaEta ( const LHCb::MCParticle* p ) 
+  : LoKi::Function<const LHCb::MCParticle*> () 
+  , m_eval ( )
+  , m_eta  ( )
+{
+  if ( 0 == p ) { Exception("Invalid LHCb::MCParticle*") ;}
+  m_eta = p->momentum().Eta() ;
+} ;
+// ============================================================================
+/// copy constructor
+// ============================================================================
+LoKi::MCParticles::DeltaEta::DeltaEta 
+( const LoKi::MCParticles::DeltaEta& right ) 
+  : LoKi::AuxFunBase                        ( right ) 
+  , LoKi::Function<const LHCb::MCParticle*> ( right ) 
+  , m_eval ( right.m_eval )
+  , m_eta  ( right.m_eta  )
+{} ; 
+// ============================================================================
+/// MANDATORY: clone method ("virtual constructor")
+// ============================================================================
+LoKi::MCParticles::DeltaEta* 
+LoKi::MCParticles::DeltaEta::clone() const 
+{ return new LoKi::MCParticles::DeltaEta(*this) ; }
+// ============================================================================
+/// MANDATORY: the only essential method 
+// ============================================================================
+LoKi::MCParticles::DeltaEta::result_type
+LoKi::MCParticles::DeltaEta::operator() 
+  ( LoKi::MCParticles::DeltaEta::argument p ) const 
+{
+  if ( 0 == p ) 
+  {
+    Error ("LHCb::MCParticle* points to NULL, return 'InvalidAngle'") ;
+    return LoKi::Constants::InvalidAngle ;
+  }
+  return m_eval( p ) - m_eta ;
+} ;
+// ============================================================================
+/// OPTIONAL: "SHORT" representation
+// ============================================================================
+std::ostream& LoKi::MCParticles::DeltaEta::fillStream ( std::ostream& s ) const 
+{ return s << "MCDETA[" << m_eta << "]" ; }
+// ============================================================================
+
+
+// ============================================================================
+/// constructor from the vector 
+// ============================================================================
+LoKi::MCParticles::DeltaR2::DeltaR2 ( const LoKi::ThreeVector& v ) 
+  : LoKi::Function<const LHCb::MCParticle*> () 
+  , m_dphi ( v ) 
+  , m_deta ( v ) 
+{}
+// ============================================================================
+/// constructor from the vector 
+// ============================================================================
+LoKi::MCParticles::DeltaR2::DeltaR2 ( const LoKi::LorentzVector& v ) 
+  : LoKi::Function<const LHCb::MCParticle*> () 
+  , m_dphi ( v ) 
+  , m_deta ( v ) 
+{}
+// ============================================================================
+/// constructor from the particle
+// ============================================================================
+LoKi::MCParticles::DeltaR2::DeltaR2 ( const LHCb::MCParticle* v ) 
+  : LoKi::Function<const LHCb::MCParticle*> () 
+  , m_dphi ( v ) 
+  , m_deta ( v ) 
+{}
+// ============================================================================
+/// copy constructor
+// ============================================================================
+LoKi::MCParticles::DeltaR2::DeltaR2 
+( const LoKi::MCParticles::DeltaR2& right ) 
+  : LoKi::AuxFunBase                        ( right ) 
+  , LoKi::Function<const LHCb::MCParticle*> ( right ) 
+  , m_dphi ( right.m_dphi )
+  , m_deta ( right.m_deta )
+{} ; 
+// ============================================================================
+/// MANDATORY: clone method ("virtual constructor")
+// ============================================================================
+LoKi::MCParticles::DeltaR2*
+LoKi::MCParticles::DeltaR2::clone() const 
+{ return new LoKi::MCParticles::DeltaR2(*this) ; }
+// ============================================================================
+/// MANDATORY: the only essential method 
+// ============================================================================
+LoKi::MCParticles::DeltaR2::result_type
+LoKi::MCParticles::DeltaR2::operator() 
+  ( LoKi::MCParticles::DeltaR2::argument p ) const 
+{
+  const double dphi = m_dphi ( p ) ;
+  const double deta = m_deta ( p ) ;
+  //
+  return dphi*dphi + deta*deta ;
+} ;
+// ============================================================================
+/// OPTIONAL: "SHORT" representation
+// ============================================================================
+std::ostream& LoKi::MCParticles::DeltaR2::fillStream ( std::ostream& s ) const 
+{ return s << "MCDR2[]" ; }
+// ============================================================================
+
 
 // ============================================================================
 // The END 

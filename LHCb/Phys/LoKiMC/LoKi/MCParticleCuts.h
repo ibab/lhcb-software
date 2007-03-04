@@ -1,8 +1,11 @@
-// $Id: MCParticleCuts.h,v 1.5 2007-01-23 13:27:18 ibelyaev Exp $
+// $Id: MCParticleCuts.h,v 1.6 2007-03-04 16:47:19 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.5 $
+// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.6 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2007/01/23 13:27:18  ibelyaev
+//  add MCVALID/MCVVALID
+//
 // Revision 1.4  2006/11/27 11:58:37  ibelyaev
 //  prepare for LoKi v4r3
 //
@@ -851,84 +854,6 @@ namespace LoKi
      */     
     typedef LoKi::MCParticles::TransverseMomentumRel MCPTDIR   ;
     
-    /** the evaluator of difference in asimuthal agle phi
-     *  respect to the given 3D-direction, useful 
-     *  e.g. for trivial "kinematical matching". 
-     *  It is especially good in a combination with 
-     *  LoKi::MCParticles::DeltaEta ( LoKi::Cuts::MCDETA ) 
-     *  
-     *  One can find 
-     *  the particle with "closest" 
-     *  to the given one:
-     *  
-     *
-     *  @code 
-     *
-     *  SEQUENCE            particles = ... ;
-     *  LoKi::LorentzVector vct       = ... ; 
-     * 
-     *  MCFun dphi = MCDPHI ( vct ) ;
-     *  MCFun deta = MCDETA ( vct ) ;
-     *  MCFun DR2  = pow2 ( dphi ) + pow2 ( deta )  
-     *
-     *  // find "best match" 
-     *  SEQUENCE::const_iterator imin = 
-     *    LoKi::select_min( particles.begin () , 
-     *                      particles.end   () , 
-     *                      dr2                ) ;
-     *
-     *  @endcode 
-     *
-     *  @see LoKi::LorentzVector 
-     *  @see LoKi::MCParticles::DeltaPhi
-     *  @see LoKi::MCParticles::DeltaEta 
-     *  @see LoKi::Cuts::MCDETA
-     *  @see LoKi::pow2 
-     *  
-     *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
-     *  @date 2005-04-09 
-     */
-    typedef LoKi::MCParticles::DeltaPhi              MCDPHI  ;
-    
-    /** the evaluator of difference in pseudorapidity with
-     *  respect to the given 3D-direction, useful 
-     *  e.g. for trivial "kinematical matching". 
-     *  It is especially good in a combination with 
-     *  LoKi::MCParticles::DeltaPhi ( LoKi::Cuts::MCDPHI ) 
-     *  
-     *  One can find 
-     *  the particle with "closest" 
-     *  to the given one:
-     *  
-     *
-     *  @code 
-     *
-     *  SEQUENCE            particles = ... ;
-     *  LoKi::LorentzVector vct       = ... ; 
-     * 
-     *  MCFun dphi = MCDPHI ( vct ) ;
-     *  MCFun deta = MCDETA ( vct ) ;
-     *  MCFun DR2  = pow2( dphi ) + pow2( deta )  
-     *
-     *  // find "best match" 
-     *  SEQUENCE::const_iterator imin = 
-     *    LoKi::select_min( particles.begin () , 
-     *                      particles.end   () , 
-     *                      DR2                ) ;
-     *
-     *  @endcode 
-     *
-     *  @see LoKi::LorentzVector 
-     *  @see LoKi::MCParticles::DeltaEta
-     *  @see LoKi::MCParticles::DeltaPhi 
-     *  @see LoKi::Cuts::MCDPHI
-     *  @see LoKi::pow2 
-     *  
-     *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
-     *  @date 2005-04-09 
-     */
-    typedef LoKi::MCParticles::DeltaEta              MCDETA  ;
-    
     /** @var MCOVALID 
      *  trivial predicate which evaluated to true for 
      *  MC particlres with valid "origin" vertex 
@@ -982,7 +907,112 @@ namespace LoKi
      */
     typedef LoKi::MCParticles::MCDecayPattern        MCDECAY ;
 
-    //
+    
+    /** @typedef MCDPHI
+     *  simple evaluator of "delta phi" of the particle momenta
+     * 
+     *  @code 
+     *
+     *   double phi = ... ;
+     * 
+     *   // create the function: 
+     *  MCFun dphi = GMCDPHI(phi) ;
+     * 
+     *  const LHCb::MCParticle* p = ... ;
+     *
+     *  // use the function 
+     *  const double result = dphi ( p ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::MCParticless::DeltaPhi 
+     *  @see LoKi::MCParticless::Phi
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2007-03-03 
+     */
+    typedef LoKi::MCParticles::DeltaPhi                    MCDPHI ;
+
+    /** @typedef MCDETA
+     *  simple evaluator of "delta eta" of the particle momenta
+     * 
+     *  @code 
+     *
+     *   double eta = ... ;
+     * 
+     *   // create the function: 
+     *  MCFun deta = MCDETA(eta) ;
+     * 
+     *  const LHCb::MCParticle* p = ... ;
+     *
+     *  // use the function 
+     *  const double result = deta ( p ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::MCParticless::DeltaEta 
+     *  @see LoKi::MCParticless::Eta
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2007-03-03 
+     */
+    typedef LoKi::MCParticles::DeltaEta                    MCDETA ;
+
+    /** @typedef GDR2 
+     *  simple evaluator of "delta eta" of the particle momenta
+     * 
+     *  @code 
+     *
+     *   double et
+     * 
+     *   // create the function: 
+     *  MCFun r2 = MCDR2( v ) ;
+     * 
+     *  const LHCb::MCParticle* p = ... ;
+     *
+     *  // use the function 
+     *  const double result = r2 ( p ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::MCParticless::DeltaR2  
+     *  @see LoKi::MCParticless::DeltaEta
+     *  @see LoKi::MCParticless::DeltaPhi
+     *  @see LoKi::Cuts::MCDELTAR2 
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2007-03-03 
+     */
+    typedef LoKi::MCParticles::DeltaR2                     MCDR2     ;
+    
+    /** @typedef MCDELTAR2 
+     *  simple evaluator of "delta eta" of the particle momenta
+     * 
+     *  @code 
+     *
+     *   double et
+     * 
+     *   // create the function: 
+     *  MCFun r2 = MCDELTAR2( v ) ;
+     * 
+     *  const LHCb::MCParticle* p = ... ;
+     *
+     *  // use the function 
+     *  const double result = r2 ( p ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::MCParticless::DeltaR2  
+     *  @see LoKi::MCParticless::DeltaEta
+     *  @see LoKi::MCParticless::DeltaPhi
+     *  @see LoKi::Cuts::MCDR2 
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2007-03-03 
+     */
+    typedef LoKi::MCParticles::DeltaR2                     MCDELTAR2 ;
+ 
+
   } // end of namespace LoKi::Cuts 
   //
 } // end of namespace LoKi
