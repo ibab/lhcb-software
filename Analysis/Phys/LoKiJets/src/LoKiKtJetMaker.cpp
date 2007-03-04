@@ -1,8 +1,11 @@
-// $Id: LoKiKtJetMaker.cpp,v 1.3 2006-11-12 15:13:36 ibelyaev Exp $
+// $Id: LoKiKtJetMaker.cpp,v 1.4 2007-03-04 16:50:53 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2006/11/12 15:13:36  ibelyaev
+//  fix many bugs + add configuration files for 'standard jets'
+//
 // Revision 1.2  2006/10/18 12:03:31  ibelyaev
 //  fix a bug, RE-tag!
 //
@@ -72,7 +75,7 @@ protected:
     , m_type     ( 4   )  
     , m_angle    ( 1   )
     , m_recom    ( 1   )
-    , m_r        ( 1.0 )
+    , m_r        ( 0.7 )
     //
     , m_sort     ( 2   )
     // 
@@ -166,15 +169,59 @@ namespace
   typedef std::vector<Jet>         Jets         ;
   typedef std::vector<const Jet*>  Constituents ;
   /// trivial function which "converts" particle into the "jet"
-  inline KtJet::KtLorentzVector makeJet 
-  ( const LHCb::Particle* p ) 
+  inline Jet makeJet ( const LHCb::Particle* p ) 
   {
-    if ( 0 == p ) { return KtJet::KtLorentzVector() ; }
-    //
+    if ( 0 == p ) { return Jet() ; }
     const Gaudi::LorentzVector& v = p->momentum() ;
-    //
-    return KtJet::KtLorentzVector ( v.Px() , v.Py() , v.Pz() , v.E () ) ;
-  };
+    return Jet( v.Px() , v.Py() , v.Pz() , v.E () ) ;
+  } ;
+  //
+  struct EuclidianNorm2 : public std::unary_function<Jet,double> 
+  {
+    inline double operator() ( const Jet& v ) const 
+    {
+      return 
+        v.e  () * v.e  () + 
+        v.px () * v.px () + 
+        v.py () * v.py () + 
+        v.pz () * v.pz () ; 
+    } ;
+  } ;
+  //
+  struct SmallEuclidianNorm2 : public std::binary_function<Jet,Jet,bool>
+  {
+    // constructor 
+    SmallEuclidianNorm2 ( const double cut ) : m_cut ( cut )  , m_norm () {}
+    // the main method 
+    inline bool operator() ( const Jet& v1 ,  const Jet& v2 ) const 
+    {
+      if ( &v1 == &v2 ) { return true ; }
+      const double  value = m_cut * std::min ( m_norm ( v1 )  , m_norm ( v2 ) )  ;
+      return  m_norm ( v1 - v2 ) <= value ;
+    } ;
+  private:
+    SmallEuclidianNorm2 ( ) ;
+  private:
+    double             m_cut  ;
+    EuclidianNorm2     m_norm ;
+  } ;
+  
+  class CompareByEuclidianNorm2 : public std::binary_function<Jet,Jet,double>
+  {
+  public:
+    // constructor 
+    CompareByEuclidianNorm2 ( const Jet& v ) : m_norm () , m_v ( v ) {}
+    // evaluator 
+    inline double operator() ( const Jet& v1 , const Jet& v2 ) const 
+    { return m_norm ( v1 - m_v ) < m_norm ( v2 - m_v ) ; }
+  private:
+    // default constructor is disabled 
+    CompareByEuclidianNorm2() ;
+  private:
+    EuclidianNorm2 m_norm ;
+    Jet            m_v    ;
+  } ;
+  
 }
 // ===========================================================================
 /** standard execution of the algorithm 
@@ -257,6 +304,10 @@ StatusCode LoKiKtJetMaker::analyse   ()
   }
   
   if ( jets.empty() ) {  Warning ( "No jets from KtEvent" ) ; }
+
+  // 
+  const       SmallEuclidianNorm2 ok ( 1.e-5 ) ;
+  typedef CompareByEuclidianNorm2 CMP ;
   
   LoKi::Point3D    point  = LoKi::Point3D( 0 , 0 , 0 ) ;
   for ( Jets::iterator ijet = jets.begin() ; jets.end() != ijet ; ++ijet ) 
@@ -280,9 +331,11 @@ StatusCode LoKiKtJetMaker::analyse   ()
       if ( 0 == c ) { continue ; }
       // find an appropriate input particle 
       Jets::const_iterator input = 
-        std::find ( inputs.begin () , inputs.end   ()   , *c ) ;
+        std::min_element ( inputs.begin() , inputs.end() , CMP ( *c ) ) ;
       if ( inputs.end() == input ) 
-      { Warning ( "Constituent is not found" ) ; continue ; };
+      { Warning ( "Constituent is not found (1)" ) ; continue ; } ;
+      if ( !ok ( *input , *c ) ) 
+      { Warning ( "Constituent is not found (2)" ) ; continue ; } ;
       const size_t index = input - inputs.begin() ;
       if ( index >= all.size() ) 
       { Warning ( "Illegal Constituent is found" ) ; continue ; };
