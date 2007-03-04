@@ -1,6 +1,6 @@
-! $Id: release.notes,v 1.13 2007-01-23 13:29:18 ibelyaev Exp $ 
+! $Id: release.notes,v 1.14 2007-03-04 16:33:27 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.13 $
+! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.14 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiGenMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -17,6 +17,20 @@
 ! 
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiGenMC v2r1 2007-03-04 ======================
+
+! 2007-03-04 - Vanya BELYAEV
+
+ - LoKi_HepMC2MCAlg.cpp 
+    fix one obvuoys bug (typo) and making soem patch for another problmem.
+    Those 2 problems result in only PARTIAL matching of HepMC and MC 
+    information.
+    I still need to find why for some cases we have IDENTICAL 4-momenta 
+    but a constant shift in 3D information. It is really puzzling..
+    Is it due to some features of bugs in Gauss? I do not know..
+ - cmt/requirements 
+    version increment to v2r1  
+  
 !========================= LoKiGenMC v2r0 2007-01-23 ======================
 
 ! 2007-01-23 - Vanya BELYAEV
@@ -317,6 +331,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.13  2007/01/23 13:29:18  ibelyaev
+!  fix for Ex/LoKiExample
+!
 ! Revision 1.12  2007/01/12 14:09:28  ranjard
 ! v2r0 - use Gaudi v19r0
 !

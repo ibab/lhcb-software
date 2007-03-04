@@ -1,19 +1,27 @@
-// $Id: LoKi_HepMC2MCAlg.cpp,v 1.13 2006-10-27 13:38:22 ibelyaev Exp $
+// $Id: LoKi_HepMC2MCAlg.cpp,v 1.14 2007-03-04 16:33:27 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.13 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.14 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.13  2006/10/27 13:38:22  ibelyaev
+//  fix for SLC4 platform
+//
 // Revision 1.12  2006/08/29 11:35:46  ibelyaev
 //  many fixes after detailed tests
 //
 // ============================================================================
 // Include files  
 // ============================================================================
+// STD & STL 
+// ============================================================================
+#include <map>
+// ============================================================================
 // GaudiKernel
 // ============================================================================
 #include "GaudiAlg/GaudiAlgorithm.h"
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/SystemOfUnits.h" 
+#include "GaudiKernel/ToStream.h" 
 // ============================================================================
 // Event 
 // ============================================================================
@@ -30,6 +38,7 @@
 #include "LoKi/MCVertexCuts.h"
 #include "LoKi/GenParticleCuts.h"
 #include "LoKi/Kinematics.h"
+#include "LoKi/ParticleProperties.h"
 // ============================================================================
 // Relations 
 // ============================================================================
@@ -144,8 +153,8 @@ protected:
     , m_hepmcs    (  1 , LHCb::HepMCEventLocation:: Default )
     , m_mcps      (  1 , LHCb::MCParticleLocation:: Default )
     , m_output    (      LHCb::HepMC2MCLocation::   Default )
-    , m_cut1      ( 0.01 * Gaudi::Units::MeV * Gaudi::Units::MeV )
-    , m_cut2      ( 1.e-6                   )
+    , m_cut1      ( 0.1  * Gaudi::Units::MeV * Gaudi::Units::MeV )
+    , m_cut2      ( 1.e-4                   )
     , m_vcut      ( 100  * Gaudi::Units::micrometer )
   {
     declareProperty ( "HepMCEvents" , m_hepmcs ) ;
@@ -264,6 +273,7 @@ StatusCode LoKi_HepMC2MCAlg::execute()
     if ( mcMap.end() == _imc ) { continue ; }                   // CONTNINUE     
     const MCPs& mcs = _imc->second ;
     if ( mcs.empty()         ) { continue ; }                   // CONTINNUE 
+
     // loop over all GenParticle of the given type 
     for ( GPs::iterator ip = gps.begin() ; gps.end() != ip ; ++ip ) 
     {
@@ -271,49 +281,68 @@ StatusCode LoKi_HepMC2MCAlg::execute()
       if ( 0 == p ) { continue ; }                  // CONTINUE
       // find a "nearest" MC particle to given through 
       // looping over all MC particles with the same ParticleID 
-      const LoKi::LorentzVector vct ( p->momentum() ) ;
+      const LoKi::LorentzVector vct ( p->momentum() ) ;      
       MCFun dist  = MCMOMDIST ( vct ) ;
+      
       // find the nearest particle:
       MCPs::const_iterator imc = mcs.end() ;
       //  check also the validity and the distance between 
       //  production and origin vertices  
-      const HepMC::GenVertex* pv = p->production_vertex () ;
-      if ( 0 != pv ) 
-      {
-        // The minimum is searched within MC  particles, which 
-        // have the valid origin vertex within certain distance 
-        // from production vertex or have no valid origin vertex 
-        // at all 
-        const LoKi::Point3D pp ( pv->point3d()  ) ;
-        MCCut mcCut1 = !MCOVALID ;
-        MCCut mcCut2 = MCVFASPF( MCVDIST( pp ) ) < ( m_vcut )  ;
-        imc = LoKi::select_min 
-          ( mcs.begin () , 
-            mcs.end   () , 
-            dist         , 
-            mcCut1 || mcCut2 ) ;    
-      }
-      else // look for all MC particles 
-      { imc == LoKi::select_min ( mcs.begin () , mcs.end () , dist ) ; }
-      //
+//       const HepMC::GenVertex* pv = p->production_vertex () ;
+//       if ( 0 != pv ) 
+//       {
+//         // The minimum is searched within MC  particles, which 
+//         // have the valid origin vertex within certain distance 
+//         // from production vertex or have no valid origin vertex 
+//         // at all 
+//         const LoKi::Point3D pp ( pv->point3d()  ) ;
+//         MCCut mcCut1 = !MCOVALID ;
+//         MCCut mcCut2 = MCVFASPF( MCVDIST( pp ) ) <  m_vcut   ;
+//         imc = LoKi::select_min 
+//           ( mcs.begin () , 
+//             mcs.end   () , 
+//             dist         , 
+//             mcCut1 || mcCut2 ) ;    
+        
+//         MCFun fun2 = MCVFASPF( MCVDIST( pp ) ) ;
+//         std::cout << " PARAMS 0  " 
+//                   << " DISTM : " << dist ( mcs.front() ) 
+//                   << " DISTR : " << fun2 ( mcs.front() ) 
+//                   << " CUT="     << (mcCut1||mcCut2)( mcs.front() ) 
+//                   << " FOUND "   << Gaudi::Utils::toString ( mcs.end() != imc ) 
+//                   << std::endl ;
+        
+//         const LHCb::MCVertex* v = mcs.front() -> originVertex() ;
+//         if ( 0 != v ) 
+//         {
+//           std::cout 
+//             << " GenVertex " << pv->point3d () 
+//             << " MCVertex "  << v ->position  () << std::endl;   
+//         }
+        
+//       }
+//       else // look for all MC particles 
+      { imc = LoKi::select_min ( mcs.begin () , mcs.end () , dist ) ; }
+
       if ( mcs.end() == imc ) { continue ; }                  // CONTINUE 
+      
       const LHCb::MCParticle* mcp = *imc ;
       if ( 0 == mcp         ) { continue ; }                  // CONTINUE 
-      
+      //
       double value =
         LoKi::Kinematics::delta2euclidian ( vct ,  mcp->momentum() ) ;
       if ( m_cut1 < value ) { continue ; }                        // CUT
       const double v1 = 
-        LoKi::Kinematics::euclidianNorm   ( vct             ) ;
-      if ( 0 != v1 ) { value /= v1 ; }
+        LoKi::Kinematics::euclidianNorm2  ( vct             ) ;
       const double v2 = 
-        LoKi::Kinematics::euclidianNorm   ( mcp->momentum() ) ;
-      if ( 0 != v2 ) { value /= v2 ; }
+        LoKi::Kinematics::euclidianNorm2  ( mcp->momentum() ) ;
       // finally: fill the table 
-      if ( value < m_cut2 )                                       // CUT 
-      { table->i_push ( p , *imc ) ; } // NB! "i_push" is used 
+      if ( value <= m_cut2 * std::min ( v1 , v2 ) )              // CUT 
+      {  table->i_push ( p , *imc ) ; } // NB! "i_push" is used 
       
     } // loop over all HepMC particles
+    
+    
   } // looo over ParticleID species 
   
   // mandatory call for "i_sort" after "i_push" ;
