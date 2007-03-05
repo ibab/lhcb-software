@@ -1,11 +1,11 @@
-// $Id: MergedPi0Maker.h,v 1.1 2006-09-06 15:21:47 odescham Exp $
+// $Id: MergedPi0Maker.h,v 1.2 2007-03-05 09:24:25 pkoppenb Exp $
 #ifndef MERGEDPI0PARTICLEPARTICLEMAKER_H 
 #define MERGEDPI0PARTICLEPARTICLEMAKER_H 1
 // Include files
 #include "GaudiAlg/GaudiTool.h"
 #include "Kernel/ICaloParticleMaker.h"
-#include "Kernel/GenericVectorTypes.h"
-#include "Kernel/SymmetricMatrixTypes.h"
+#include "GaudiKernel/GenericVectorTypes.h"
+#include "GaudiKernel/SymmetricMatrixTypes.h"
 #include "Event/Particle.h"
 #include "CaloDet/DeCalorimeter.h"
 

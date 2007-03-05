@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.57 2007-02-28 18:03:12 pkoppenb Exp $ 
+! $Id: release.notes,v 1.58 2007-03-05 09:24:25 pkoppenb Exp $ 
 ! Package     : ParticleMaker
 ! Responsible : P. Koppenburg, J. Palacios
 !==============================================================================
+
+! 2007-03-05 - Patrick Koppenburg
+ - Use Matrices from GaudiKernel
 
 ! 2007-02-28 - Patrick Koppenburg
  - Increment to v3r1
