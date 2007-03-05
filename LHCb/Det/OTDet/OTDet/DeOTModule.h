@@ -1,4 +1,4 @@
-// $Id: DeOTModule.h,v 1.25 2007-02-28 18:31:44 marcocle Exp $
+// $Id: DeOTModule.h,v 1.26 2007-03-05 11:37:45 janos Exp $
 #ifndef OTDET_DEOTMODULE_H
 #define OTDET_DEOTMODULE_H 1
 
@@ -448,20 +448,23 @@ inline double DeOTModule::sensThickness() const {
 }
 
 inline double DeOTModule::wireLength(const LHCb::OTChannelID aChan) const {
+
+  double wireLength = m_ySizeModule;
+
   /// check if it is a long module goes from 1 to 7 
   if ( aChan.module() < 8u) {
     /// check if it is top module
     if (aChan.quarter() > 1u) {
       /// check if it is the first or second monolayer
-      return ((aChan.straw() <= m_nStraws)?m_ySizeModule-m_inefficientRegion:m_ySizeModule);
+      wireLength = ((aChan.straw() <= m_nStraws)?m_ySizeModule-m_inefficientRegion:m_ySizeModule);
       /// check if it is bottom module
     } else if (aChan.quarter() < 2u) {
       /// check if it is the first or second monolayer
-      return ((aChan.straw() <= m_nStraws)?m_ySizeModule:m_ySizeModule-m_inefficientRegion);
+      wireLength = ((aChan.straw() <= m_nStraws)?m_ySizeModule:m_ySizeModule-m_inefficientRegion);
     }
-  } else {
-    return m_ySizeModule;
   }
+    
+  return wireLength;
 }
 
 inline double DeOTModule::cellRadius() const {
