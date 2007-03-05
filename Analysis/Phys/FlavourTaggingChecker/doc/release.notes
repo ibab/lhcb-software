@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.13 2007-03-05 11:44:34 pkoppenb Exp $
+! $Id: release.notes,v 1.14 2007-03-05 11:48:42 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTaggingChecker
 ! Responsible : Marco Musy (marco.musy@cern.ch)
@@ -7,6 +7,7 @@
 
 ! 2007-03-05 - Patrick Koppenburg
  - Do not depend on DaVinciAssociators
+ - CaloElectron moved to CaloInterfaces
 
 ! 2006-03-01 - Marco Musy
   - major cleanup of BTaggingAnalysis. Small bug fix on how the PV is
