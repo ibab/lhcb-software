@@ -5,10 +5,10 @@
 !               processing stage accessing the MC event classes
 !-----------------------------------------------------------------------------
 
+!====================== SimComponents v2r1 2007-03-05 ========================
 ! 2007-03-05 - Chris Jones
  - Add new 'Outside Acceptance' category to MC reconstructibility
 
-!====================== SimComponents v2r1 2007-03-02 ========================
 ! 2007-03-01 - Chris Jones
  - Update MCParticleSelector to
   + Not reject electrons by default (needed by default Particle monitors)
