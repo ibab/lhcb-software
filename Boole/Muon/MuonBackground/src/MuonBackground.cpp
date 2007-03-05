@@ -1,4 +1,4 @@
-// $Id: MuonBackground.cpp,v 1.37 2007-02-27 08:39:16 asatta Exp $
+// $Id: MuonBackground.cpp,v 1.38 2007-03-05 18:28:45 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -966,7 +966,6 @@ StatusCode MuonBackground::createHit(LHCb::MCHits*
         }        
       }     
     }else{
-      debug()<<"Impossible to add the requested hits, see debug() for details"<< endmsg;
       debug() << " impossible to add the requested hits in station " << station
               << " and multiplicity " <<multi << endmsg;
     } 

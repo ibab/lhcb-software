@@ -1,4 +1,4 @@
-// $Id: MuonBackground.h,v 1.12 2006-10-12 15:28:13 asatta Exp $
+// $Id: MuonBackground.h,v 1.13 2007-03-05 18:28:45 cattanem Exp $
 #ifndef MUONBACKGROUND_H 
 #define MUONBACKGROUND_H 1
 
@@ -13,9 +13,9 @@
 #include "GaudiAlg/GaudiAlgorithm.h"
 #include "MuonDet/DeMuonDetector.h"
 #include "MuBgDistribution.h"
-#include "Kernel/Point3DTypes.h"
-#include "Kernel/Transform3DTypes.h"
-#include "Kernel/Plane3DTypes.h"
+#include "GaudiKernel/Point3DTypes.h"
+#include "GaudiKernel/Transform3DTypes.h"
+#include "GaudiKernel/Plane3DTypes.h"
 
 // forward declarations
 class IHistogram1D;

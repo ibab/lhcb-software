@@ -5,10 +5,14 @@
 !               low energy components, flatspillover
 !-----------------------------------------------------------------------------
 
-!====================== MuonBackground v2r2 2007-02-27 =====================
+!====================== MuonBackground v2r3 2007-03-01 =====================
+! 2007-03-01 - Marco Cattaneo
+ - Remove obsolete MuonBackground_load.cpp file and LHCbDefinitions includes
+
 ! 2007-02-27 - Alessia Satta
  - Remove printout in intialization due to empty bins in histo
 
+!====================== MuonBackground v2r2 2007-02-27 =====================
 ! 2006-11-06 - Marco Cattaneo
  - Print "impossible to add the requested hits" warning only once per job
 
