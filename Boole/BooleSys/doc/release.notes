@@ -3,6 +3,28 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v13r2>2007-03-05 Boole v13r2</A></H1><PRE>
+This version uses projects Gaudi v19r2, LHCb v22r2, Lbcom v6r2
+ and databases SQLDDDB v1r*, ParamFiles v5r0, FieldMap v4r7
+
+- New features
+  . Now uses SQLDDDB database for geometry and conditions data
+  . Various fixes to deal with conditions data
+    (MuonDet v6r1, OTDet v7r2, STDet v3r2, VeloDet v11r1)
+  . Possibility to simulate calorimeter LED data
+    (CaloDet v8r1, DigiEvent v2r1, L0Event v16r2, CaloDigit v2r3)
+
+- New tuning
+  . Modified for dialog dead time (MuonAlgs v6r2)
+
+- Bug fixes
+  . Fix to get rid of biased Velo residuals (VeolSimulation v2r5)
+  . Small fix in CaloFillPrsSpdRawBuffer (problem when filling Prs bank when 
+    Zsup threshold =0) (CaloDAQ v3r1)
+  . Fixed spurious printout (MuonBackground v2r3)
+
+Updated DigiAlg, MuonAlgs, MuonBackground, CaloDigit
+
 </PRE><H1><A NAME=v13r1>2007-02-06 Boole v13r1</A></H1><PRE>
 This version uses projects Gaudi v19r1, LHCb v22r1, Lbcom v6r1
  and databases XmlDDDB v40r0, XmlConditions v2r5, ParamFiles v5r0, FieldMap v4r7
