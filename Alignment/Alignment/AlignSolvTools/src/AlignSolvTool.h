@@ -1,11 +1,11 @@
-// $Id: AlignSolvTool.h,v 1.1.1.1 2007-02-19 09:55:16 ahicheur Exp $
+// $Id: AlignSolvTool.h,v 1.2 2007-03-05 15:52:27 ahicheur Exp $
 #ifndef ALIGNSOLVTOOLS_ALIGNSOLVTOOL_H 
 #define ALIGNSOLVTOOLS_ALIGNSOLVTOOL_H 1
 
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
-#include "IAlignSolvTool.h"            // Interface
+#include "AlignSolvTools/IAlignSolvTool.h"            // Interface
 
 class AlSymMat;
 class AlMat;

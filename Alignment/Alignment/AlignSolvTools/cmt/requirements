@@ -14,6 +14,8 @@ use GaudiGSL            v6r4         -no_auto_imports
 use MCEvent        v* Event
 use HbookCnv v*
 
+include_dirs  $(ALIGNSOLVTOOLSROOT)
+
 macro cernlib_linkopts " -L$(cernlib_home)/lib -lpdflib804 -lmathlib -llapack3 -lblas -lpacklib -lphtools -lkernlib" 
 
 # build a component library
