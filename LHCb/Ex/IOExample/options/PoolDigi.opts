@@ -1,8 +1,5 @@
 // Options to read POOL .digi file and make a copy
 
-// Set up POOL persisteny and load DLLs that contain the necessary dictionaries
-#include "$STDOPTS/DigiDicts.opts"
-
 EventSelector.Input = {
   "DATAFILE='PFN:rfio:/castor/cern.ch/grid/lhcb/production/DC06/v1-lumi2/00001359/DIGI/0001/00001359_00000005_4.digi' TYP='POOL_ROOT' OPT='READ'"
 }; // B->J/Psi(mumu)Ks events with Boole v12r4, Gauss v25r2, XmlDDDB v30r8

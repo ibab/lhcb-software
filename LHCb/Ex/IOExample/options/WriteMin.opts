@@ -11,6 +11,9 @@ PoolDbCacheSvc.Catalog = {"xmlcatalog_file:MyCatalog.xml"};
 // Set up the OutputStream that copies an event data file
 ApplicationMgr.OutStream += {"InputCopyStream/InputCopyStream"};
 
+// Set up POOL persistency and load DLLs that contain the necessary dictionaries
+#include "$STDOPTS/SimDicts.opts"
+
 // Select an input file type
 //#include "$IOEXAMPLEROOT/options/PoolDst.opts"   // Copy a DST
 //#include "$IOEXAMPLEROOT/options/PoolDigi.opts"  // Copy a DIGI

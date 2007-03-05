@@ -1,8 +1,4 @@
 // Options to read POOL .dst file and make a copy
-
-// Set up POOL persistency and load DLLs that contain the necessary dictionaries
-#include "$STDOPTS/DstDicts.opts"
-
 EventSelector.Input   = {
   "DATAFILE='PFN:rfio:/castor/cern.ch/user/c/cattanem/Brunel/v30r10/0601-11144100.dst' TYP='POOL_ROOTTREE' OPT='READ'"
 };

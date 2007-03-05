@@ -1,4 +1,4 @@
-// $Id: ReadMin.opts,v 1.17 2006-07-28 09:27:20 cattanem Exp $
+// $Id: ReadMin.opts,v 1.18 2007-03-05 10:27:54 cattanem Exp $
 
 //--------------------------------------------------------------------
 // Example to navigate the event data store, starting from a POOL file
@@ -16,17 +16,12 @@ DumpMCEventAlg.OutputLevel = 3; // try also 2, or 1 !!
 
 ApplicationMgr.EvtMax      = 5;
 
-// Job options to set up the POOL persistency and
-// DLLs that contain the necessary dictionaries
-#include "$STDOPTS/DstDicts.opts"
+// Set up POOL persistency and load DLLs that contain the necessary dictionaries
+#include "$STDOPTS/SimDicts.opts"
 
 // The input catalog describes the input file.
 // In this example it is the catalog produced by WriteMin.opts
 PoolDbCacheSvc.Catalog = {"xmlcatalog_file:MyCatalog.xml"};
-
-// Configure the DataOnDemand Service to get the event header from RawBuffer
-ApplicationMgr.ExtSvc += { "DataOnDemandSvc" };
-EventDataSvc.EnableFaultHandler  = true ;
 
 // Unpack the packed containers on demand
 #include "$STDOPTS/UnpackDigi.opts"

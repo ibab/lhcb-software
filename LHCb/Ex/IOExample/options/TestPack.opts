@@ -1,31 +1,27 @@
-// $Id: TestPack.opts,v 1.1 2006-02-20 08:17:05 cattanem Exp $
+// $Id: TestPack.opts,v 1.2 2007-03-05 10:27:54 cattanem Exp $
 
 //--------------------------------------------------------------------
 // Options for a program to test packing and unpacking of .sim data
 //--------------------------------------------------------------------
 
 EventDataSvc.ForceLeaves = true;
-ApplicationMgr.DLLs       += { "SimComponents" };
-ApplicationMgr.TopAlg     += { "PackMCParticle", "UnpackMCParticle", "CompareMCParticle" };
+ApplicationMgr.TopAlg += { "PackMCParticle", "UnpackMCParticle", "CompareMCParticle" };
 UnpackMCParticle.OutputName = "MC/ParticlesTest";
-ApplicationMgr.TopAlg     += { "PackMCVertex", "UnpackMCVertex", "CompareMCVertex" };
+ApplicationMgr.TopAlg += { "PackMCVertex", "UnpackMCVertex", "CompareMCVertex" };
 UnpackMCVertex.OutputName = "MC/VerticesTest";
 
 ApplicationMgr.EvtMax   = -1;
 EventSelector.PrintFreq = 1.;
 
-// Job options to set up the POOL persistency and
-// DLLs that contain the necessary dictionaries
-#include "$STDOPTS/DstDicts.opts"
+CompareMCVertex.OutputLevel   = 2;
+CompareMCParticle.OutputLevel = 2;
+
+// Set up POOL persistency and load DLLs that contain the necessary dictionaries
+#include "$STDOPTS/SimDicts.opts"
 
 // The input catalog describes the input file.
 // In this example it is the catalog produced by WriteMin.opts
 PoolDbCacheSvc.Catalog = {"xmlcatalog_file:MyCatalog.xml"};
 
-// Configure the DataOnDemand Service to get the event header from RawBuffer
-ApplicationMgr.ExtSvc += { "DataOnDemandSvc" };
-EventDataSvc.EnableFaultHandler  = true ;
-
-EventSelector.Input = {
-   "DATAFILE='PFN:file:$LHCBDEV/GAUSS/Test_v24r1/30000000.100ev.rich.sim' TYP='POOL_ROOT' OPT='READ'"
-};  // 100 events minimum bias with Gauss v24r1
+// Input file
+#include "$IOEXAMPLEROOT/options/PoolSim.opts"

@@ -1,7 +1,11 @@
-$Id: release.notes,v 1.17 2006-10-23 15:56:10 cattanem Exp $
+$Id: release.notes,v 1.18 2007-03-05 10:27:54 cattanem Exp $
 Package: IOExample
 Package Manager: M.Frank
 Purpose: Demonstrate how to write and read back event data using POOL I/O.
+
+!====================== IOExample v2r0p3 2007-03-05 =======================
+! 2007-03-05 - Marco Cattaneo
+ - Remove obsolete ApplicationMgr.DLLs options and other cleanups in options
 
 !====================== IOExample v2r0p2 2006-10-23 =======================
 ! 2006-10-23 - Marco Cattaneo
