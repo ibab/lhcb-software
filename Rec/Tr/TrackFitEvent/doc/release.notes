@@ -4,10 +4,11 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
-!========================== TrackFitEvent v3r2 2007-03-02 ====================
-! 2007-03-02 - Marco Cattaneo
+!========================== TrackFitEvent v3r2 2007-03-05 ====================
+! 2007-03-05 - Marco Cattaneo
  - Add no_auto_imports to use GaudiObjDesc, to avoid getting a dependency on
    python in the TrackFitEvent link library
+ - Remove obsolete TrackFitEvent_load.cpp file
 
 !========================== TrackFitEvent v3r1 2007-02-05 ====================
 ! 2007-02-05 - Marco Cattaneo
