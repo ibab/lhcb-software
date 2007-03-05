@@ -1,5 +1,5 @@
 package OTDAQ
-version v5r0
+version v5r1
 
 branches OTDAQ cmt doc src options xml Event
 

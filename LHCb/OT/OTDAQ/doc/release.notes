@@ -2,6 +2,10 @@ Package         : OTDAQ
 Package manager : J. Nardulli
 !---------------------------------------------------------------------
 
+!======================= OTDAQ v5r1 2007-03-05 ======================
+! 2007-03-05 - Marco Cattaneo
+ - Remove obsolete OTDAQ_load.cpp file
+
 !======================= OTDAQ v5r0 2006-12-14 ======================
 ! 2006-12-06 - Florence RANJARD
  - apply_pattern install_more_includes
