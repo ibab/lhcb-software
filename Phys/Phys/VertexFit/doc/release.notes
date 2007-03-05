@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.89 2007-03-02 17:21:14 xieyu Exp $
+! $Id: release.notes,v 1.90 2007-03-05 08:52:40 pkoppenb Exp $
 !===========================================================================
 ! Package     : VertexFit
-! Responsible : P. Koppenburg
+! Responsible : Yuehong Xie
 !===========================================================================
+
+! 2007-02-28 - Patrick Koppenburg
+ - Increment to v4r1
 
 ! 2007-02-06 - Yuehong Xie
   - PropertimeFitter.cpp: return tau (not ctau) in Gaudi unit of time,
