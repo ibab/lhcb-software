@@ -557,9 +557,9 @@ StatusCode BTaggingAnalysis::execute() {
 
     double eOverP  = -999.9;
     double showerz = -999.9;
-    if(m_electron->setParticle(axp)){ /// CaloElectron tool
+    if(m_electron->set(axp)){ /// CaloElectron tool
       eOverP  = m_electron->eOverP();
-      showerz = m_electron->showerZ();
+      //      showerz = m_electron->showerZ();
     }
     m_EOverP[m_N] = eOverP;
     m_showerZ[m_N]= showerz;
