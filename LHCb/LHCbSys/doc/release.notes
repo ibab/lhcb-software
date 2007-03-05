@@ -5,7 +5,7 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v22r2>2007-03-02 LHCbSys v22r2</A></H1><PRE>
+</PRE><H1><A NAME=v22r2>2007-03-05 LHCbSys v22r2</A></H1><PRE>
 This version uses Gaudi v19r2 and LCGCMT 50. Fully compatible with DC06 data
 
 - Packages added:    CondDBUI v2r0        - scripts for use with CondDB
@@ -16,12 +16,14 @@ This version uses Gaudi v19r2 and LCGCMT 50. Fully compatible with DC06 data
     LHCbMath v2r1, RichKernel v7r2, CaloInterfaces v7r1, TsaKernel v2r2,
     DetSys v9r2, DetDesc v7r1, OTDet v7r2, VeloDet v11r1, DetDescSvc v1r10p1,
     Magnet v3r5, STDet v3r2, RichDet v10r2, CaloDet v8r1, MuonDet v6r1,
+    DetDescCnv v4r2, DetDescChecks v4r2, CaloDetXmlCnv v3r1, XmlTools v5r1,
     EventSys v23r2, EventBase v2r1, L0Event v16r2, MCEvent v2r1, DigiEvent v2r1,
     RecEvent v2r2, PackedEvent v3r1, DAQEvent v7r2, LinkerInstances v3r2p2,
     HltBase v2r2, LHCbAlgs v2r6, TrackInterfaces v3r1, TrackMCInterfaces v3r0,
     DetCond v11r0, CondDBEntityResolver v4r0, DetCondExample v11r0, DAQSys v3r1,
-    CaloDAQ v3r1, LoKiGen v2r1, LoKiCore v2r1, SimComponents v2r1, XmlTools v5r1,
-    GaudiConf v10r2, DetDescExample v7r4, DetDescChecks v4r2
+    CaloDAQ v3r1, MuonDAQ v3r1, OTDAQ v5r1, LoKiGen v2r1, LoKiCore v2r1,
+    SimComponents v2r1, PatTools v3r1, GaudiConf v10r2, DetDescExample v7r4,
+    IOExample v2r0p3
 
 - In GaudiConf v10r2
   . Modified DC06Conditions.opts and DetDesc.opts to use SQLDDDB
@@ -53,7 +55,10 @@ This version uses Gaudi v19r2 and LCGCMT 50. Fully compatible with DC06 data
     Also EventCounter (previouly called EventNumber)
 
 - In LHCbAlgs v2r6, SimComponents v2r1, DAQEvent v7r2, STDet v3r2, RichDet v10r2,
-     CaloDet v8r1, OTDet v7r2, VeloDet v11r1, MuonDet v6r1, CaloDAQ v3r1
+     CaloDet v8r1, OTDet v7r2, VeloDet v11r1, MuonDet v6r1, CaloDAQ v3r1,
+     CaloDetXmlCnv v3r1, LHCbKernel v7r2, DetDescSvc v1r10p1, Magnet v3r5,
+     DetDescChecks v4r2, DetCond v11r0, CondDbEntityResolver v4r0, XmlTools v5r1,
+     LoKiCore v2r1, DetDescCnv v4r2, MuonDAQ v3r1, OTDAQ v5r1, PatTools v3r1
   . Remove obsolete file xxx_load.cpp
 
 - In DetDesc v17r1
@@ -141,11 +146,12 @@ This version uses Gaudi v19r2 and LCGCMT 50. Fully compatible with DC06 data
   . Activated by default disconnect on time-out feature (time out set to 10 min.)
 
 - In LoKiGen v2r1
-  . Many tiny fixes to build Ex/LoKiExample package 
+  . Many tiny fixes to build Ex/LoKiExample package
+  . In GenParticles: Add 3 new functions DeltaPhi, DeltaEta and DeltaR2
 
 - In LHCbKernel v7r2, OTDet v7r2, VeloDet v11r1, MCEvent v2r1, HltBase v2r2,
      TrackInterfaces v3r1, LoKiGen v2r1, LoKiCore v2r1, RichKernel v7r2,
-     LHCbMath v2r1, STDet v3r2, CaloDet v8r1, TsaKernel v2r2
+     LHCbMath v2r1, STDet v3r2, CaloDet v8r1, TsaKernel v2r2, DetDescCnv v4r2
   . Fix some doxygen comments
 
 - In OTDet v7r2, VeloDet v11r1, DigiEvent v2r1, TrackMCInterfaces v3r0,
@@ -156,7 +162,8 @@ This version uses Gaudi v19r2 and LCGCMT 50. Fully compatible with DC06 data
 - In VeloDet v11r1, DigiEvent v2r1
   . Add dependency on LHCbMath
 
-- In Magnet v3r5, CaloDet v8r1
+- In Magnet v3r5, CaloDet v8r1, CaloDetXmlCnv v3r1, CaloDAQ v3r1,
+     DetCondExample v11r0, IOExample v2r0p3
   . Remove ApplicationMgr.DLLs from job options
 
 </PRE><H1><A NAME=v22r1>2007-02-13 LHCbSys v22r1</A></H1><PRE>
