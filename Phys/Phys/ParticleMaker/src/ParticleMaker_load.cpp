@@ -26,6 +26,5 @@ DECLARE_FACTORY_ENTRIES( ParticleMaker ) {
 
   DECLARE_TOOL( ParticleStuffer );
 
-  DECLARE_ALGORITHM( ParticleEffPurMoni );
 
 }

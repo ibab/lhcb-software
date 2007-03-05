@@ -18,10 +18,9 @@ branches          cmt doc options src
 #============================================================================
 use  DaVinciKernel   v*    Phys
 use  TrackInterfaces v*    Tr
-# use  PhysEvent      v*     Event
- use  RecEvent       v*     Event
- use  CaloUtils      v*     Calo
- use  CaloInterfaces v*     Calo
+use  RecEvent       v*     Event
+use  CaloUtils      v*     Calo
+use  CaloInterfaces v*     Calo
 
 # Component library building rule
 #============================================================================

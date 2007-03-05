@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.58 2007-03-05 09:24:25 pkoppenb Exp $ 
+! $Id: release.notes,v 1.59 2007-03-05 09:32:53 pkoppenb Exp $ 
 ! Package     : ParticleMaker
 ! Responsible : P. Koppenburg, J. Palacios
 !==============================================================================
+
+! 2007-03-05 - Patrick Koppenburg
+ - Remove ParticleEffPurMoni that depends on MC truth. 
 
 ! 2007-03-05 - Patrick Koppenburg
  - Use Matrices from GaudiKernel
