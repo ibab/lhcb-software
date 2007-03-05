@@ -1,12 +1,15 @@
 ! =============================================================================
-! $Id: release.notes,v 1.26 2007-03-02 09:18:20 cattanem Exp $ 
+! $Id: release.notes,v 1.27 2007-03-05 10:36:49 cattanem Exp $ 
 ! =============================================================================
 ! package DetDescSvc
 ! package manager : Marco Clemencic, Juan Palacios ?
 ! purpose:          Component library for Detector Description Services
 ! =============================================================================
 
-!========================= DetDescSvc v1r10p1 2007-03-01 ======================
+!========================= DetDescSvc v1r10p1 2007-03-05 ======================
+! 2007-03-05 - Marco Cattaneo
+ - Remove obsolete DetDescSvc_load.cpp file
+
 ! 2007-02-28 - Marco Clemencic
  - Minor bugfix in DEBUG output of UpdateManagerSvc
 
