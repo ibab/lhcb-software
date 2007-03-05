@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.28 2007-03-04 16:41:18 ibelyaev Exp $ 
+! $Id: release.notes,v 1.29 2007-03-05 08:44:36 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiGen
 ! Responsible : Vanya BELYAEV
@@ -14,16 +14,12 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+!=========================== LoKiGen v2r1 2007-03-05 ==========================
 ! 2007-03-04 - Vanya BELYAEV
+ - LoKi/GenParticles.h, LoKi/GenParticleCuts.h,  src/GenParticles.cpp
+   . Add 3 new functions DeltaPhi, DeltaEta and DeltaR2, very useful for 
+     jet-studies
 
- - LoKi/GenParticles.h, LoKi/GenParticleCuts.h 
-   src/GenParticles.cpp
-
-    add 3 new functions DeltaPhi, DeltaEta and DeltaR2, 
-    very useful dfor 
-    jet-studies .
-
-!=========================== LoKiGen v2r1 2007-02-26 ==========================
 ! 2007-02-26 - Marco Cattaneo
  - Fix many doxygen warnings
 
