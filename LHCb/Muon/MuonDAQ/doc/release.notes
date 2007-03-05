@@ -4,6 +4,10 @@
 ! Purpose     : Muon System Raw Buffer coding and decoding algorithms
 !-----------------------------------------------------------------------------
 
+!========================== MuonDAQ v3r1 2007-03-05 ==========================
+! 2007-03-05 - Marco Cattaneo
+ - Remove obsolete MuonDAQ_load.cpp file
+
 !========================== MuonDAQ v3r0 2006-12-14 ==========================
 ! 2006-12-06 - Florence RANJARD
  - apply_pattern install_more_includes
