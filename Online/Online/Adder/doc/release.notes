@@ -1,6 +1,10 @@
 ! Package     : Adder
 ! Responsible : Eric van Herwijnen/Monica Pepe-Altarelli
 
+! 20070209 - Eric vH       ==================== Adder v4r0 ==========================
+major rewrite. no root, no aida. service names include taskname, algorithmname,
+histogramname.
+
 ! 20070201 - Markus Frank  ==================== Adder v3r0 ==========================
 
 ! 20070129 - Markus Frank

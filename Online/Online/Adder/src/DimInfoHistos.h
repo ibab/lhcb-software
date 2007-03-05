@@ -1,13 +1,10 @@
 #include "dic.hxx"
+#include "dis.hxx"
 #include <string>
-#include "TH1.h"
-#include "TH2.h"
-#include "TProfile.h"
+#include <iostream>
 
 //forward declaration
-class TH1;
-class TH2;
-class TProfile;
+
 
 /*
   Class DimInfoHistos
@@ -18,31 +15,44 @@ class TProfile;
   
 */
 
+class DimService;
+
+class DimInfoHistoService : public DimService {
+public:
+   DimInfoHistoService(std::string hname, float* data, int size, int dimension);
+   virtual ~DimInfoHistoService();
+   int dimension;
+   float* data;
+   private:
+   void serviceHandler();
+   int size;	
+};
+
 class DimInfoHistos : public DimInfo {
   
 public : 
 	DimInfoHistos(std::string hSvcname, int rtime);
 	DimInfoHistos(std::string hSvcname);
 	virtual ~DimInfoHistos();
-	TH1* getHisto();
-	TH2* get2DHisto();
-	TProfile* getpHisto();
+	bool add(DimInfoHistos* h);
+	bool add2d(DimInfoHistos* h);
+	bool addp(DimInfoHistos* h);
+	void declareInfo(std::string SumSvcname);
+	void declareTitleInfo(std::string CommentSvcname, char* Title);
+	void updateSum();
+	std::string m_histoname;
+	int entries() const;
+	int m_dimension;
+	int m_entries;
+	int m_size;
+	float* m_data;
+	float getbuffercontent(int ibuffer) const;
+	DimInfoHistoService* m_dimSvc;
+	DimService* m_dimTitleSvc;
+	
+
 private:
   void infoHandler();// Overloaded method infoHandler, called whenever commands arrive 
-  // refresh interval
-	int m_rtime;
-  
-  // ROOT histogram
-	std::string m_histoname;
-	TH1* m_hist;
-	TH2* m_hist2d;
-	TProfile* m_histp;
-	int m_dimension;
-	
-  float* m_data;
-	bool m_hasData;   // true after histo has been filled first time
-  // private methods to fill the histograms
-  void setH1Data();
-  void setH2Data();
-  void setHPData();
-};
+
+
+  };

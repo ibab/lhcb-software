@@ -4,13 +4,7 @@
 // Include files
 #include "GaudiKernel/Algorithm.h"
 #include "GaudiKernel/Property.h"
-#include "GaudiKernel/IHistogramSvc.h"
-#include "AIDA/IHistogram1D.h"
-#include "AIDA/IHistogram2D.h"
-#include "AIDA/IProfile1D.h"
-#include "TH1.h"
-#include "TH2.h"
-#include "TProfile.h"
+#include "DimInfoHistos.h"
 
 #include<time.h>
 
@@ -20,9 +14,6 @@
 */
 
 // Forward declarations
-class IHistogram1D;
-class IHistogram2D;
-class IProfile1D;
 
 class Adder : public Algorithm {
 public:
@@ -33,26 +24,13 @@ public:
   StatusCode initialize();
   StatusCode execute();
   StatusCode finalize();
-private:
-  //TH1 * sum;
-  std::vector<TH1*> sum;
-  std::vector<TH2*> sum2d;
-  std::vector<TProfile*> sump;
-  IHistogramSvc* histoSvc;
-
-  IHistogram1D*  h;
-  IHistogram2D*  h2d;
-  IProfile1D* p;
-  
+private:  
   std::string m_nodename; 
   std::vector<std::string> m_histogramname; 
   std::vector<std::string> m_algorithmname; 
+  std::vector<std::string> m_taskname; 
   int m_refreshtime;
-  std::string m_dimclientdns; 
-  std::vector<int> j1D;
-  std::vector<int> j2D;
-  std::vector<int> jpD;
-  
+  std::string m_dimclientdns;   
   int counter;
   int icount;
   int icount2d;
@@ -63,9 +41,16 @@ private:
   std::vector<std::vector <std::string> >  hSvcname2d;
   std::vector<std::vector <std::string> > pSvcname;
   std::vector<std::vector <std::string> > commentSvcname;
+  
+  //the number of histograms found
   std::vector<int> nbof1dhistos;
   std::vector<int> nbof2dhistos;
   std::vector<int> nbofphistos; 
+  
+  //arrays with Dim buffers of each histogram service found
+  std::vector<std::vector<DimInfoHistos*> > hinfo;
+  std::vector<std::vector<DimInfoHistos*> > hinfo2d;
+  std::vector<std::vector<DimInfoHistos*> > pinfo;
 };
 
 #endif    // Adder_Adder_H

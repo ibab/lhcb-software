@@ -2,5 +2,5 @@
 #include "GaudiKernel/LoadFactoryEntries.h"
 
 
-LOAD_FACTORY_ENTRIES( Adder )
+LOAD_FACTORY_ENTRIES( Adder)
 
