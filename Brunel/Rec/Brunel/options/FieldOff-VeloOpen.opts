@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 ///   Job options for Brunel for data produced with Boole v11r0 or greater  ///
-///   geometry lhcb-200601 and zero field (e.g. pilot run conditions)       ///
+//                 geometry lhcb-200601 with Velo Open and zero field       ///
 ///////////////////////////////////////////////////////////////////////////////
 #pragma print off
 #include "$BRUNELOPTS/DstContent.opts"       // Define DST content
@@ -14,6 +14,7 @@ ApplicationMgr.OutStream += { "DstWriter" }; // Comment to switch off DST output
 #include "$STDOPTS/DC06Conditions.opts"
 MagneticFieldSvc.UseConstantField = true; // Constant (zero) field
 #include "$TRACKSYSROOT/options/NoFieldTracking.opts"
+#include "$TRACKSYSROOT/options/VeloOpenTracking.opts"
 #pragma print on
 
 //---------------------------------------------------------------------------
@@ -28,7 +29,7 @@ ApplicationMgr.EvtMax = -1;
 //---------------------------------------------------------------------------
 // Histogram output
 //---------------------------------------------------------------------------
-HistogramPersistencySvc.OutputFile = "FieldOff.root";  // Monitoring histos
+HistogramPersistencySvc.OutputFile = "FieldOff-VeloOpen.root";  // Monitoring histos
 
 //---------------------------------------------------------------------------
 // POOL file catalogs. First one is read-write, others are read only
@@ -42,11 +43,11 @@ PoolDbCacheSvc.Catalog = {
 // Event input
 //---------------------------------------------------------------------------
 EventSelector.Input = {
-  "DATAFILE='PFN:rfio:/castor/cern.ch/lhcb/background/Pilot_2007/30000000.5k.B_OFF.VeloClose.digi' TYP='POOL_ROOT' OPT='READ'"
-}; // 450 GeV on 450 GeV pp collisions, single interactions, no beam crossing angle, beam sigma(X) = sigma(Y) = 280 microns, magnetic field OFF
+  "DATAFILE='PFN:rfio:/castor/cern.ch/lhcb/background/Pilot_2007/30000000.5k.B_OFF.VeloOpen.digi' TYP='POOL_ROOT' OPT='READ'"
+}; // 450 GeV on 450 GeV pp collisions, single interactions, no beam crossing angle, beam sigma(X) = sigma(Y) = 280 microns, magnetic field OFF, Velo Open
 
 //---------------------------------------------------------------------------
 // Event output
 //---------------------------------------------------------------------------
-DstWriter.Output = "DATAFILE='PFN:FiledOff.dst' TYP='POOL_ROOTTREE' OPT='REC'";
+DstWriter.Output = "DATAFILE='PFN:FieldOff-VeloOpen.dst' TYP='POOL_ROOTTREE' OPT='REC'";
 //////////////////////////////////////////////////////////////////////////////

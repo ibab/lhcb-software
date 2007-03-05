@@ -1,46 +1,45 @@
 package Brunel
-version v31r1
+version v31r2
 
 branches doc cmt job options
 
 #-- CMT and GaudiPolicy
-use GaudiPolicy v6r3
+use GaudiPolicy v6r4
 
 #-- External libraries now taken from LCG, version defined by GaudiEnv
 use RELAX v* LCG_Interfaces          -no_auto_imports
 
-#-- Gaudi libraries (from GAUDI_v19r1)
-use GaudiKernel		v22r0
-use GaudiSvc 		v15r1        -no_auto_imports
-use GaudiAlg 		v9r11        -no_auto_imports
-use GaudiAud 	        v8r0         -no_auto_imports
-use GaudiGSL		v6r5         -no_auto_imports
-use GaudiPoolDb	        v2r10        -no_auto_imports
-use RootHistCnv         v9r11        -no_auto_imports
+#-- Gaudi libraries (from GAUDI_v19r2)
+use GaudiKernel		v22r1
+use GaudiSvc 		v15r2        -no_auto_imports
+use GaudiAlg 		v9r12        -no_auto_imports
+use GaudiAud 	        v8r1         -no_auto_imports
+use GaudiGSL		v6r6         -no_auto_imports
+use GaudiPoolDb	        v2r11        -no_auto_imports
+use RootHistCnv         v9r12        -no_auto_imports
 
 #-- Database
-use XmlDDDB             v40r0   Det  -no_auto_imports
-use XmlConditions       v2r5    Det  -no_auto_imports
+use SQLDDDB             v1r*    Det  -no_auto_imports
 use FieldMap		v4r7         -no_auto_imports
 use ParamFiles          v5r0         -no_auto_imports
 
-#-- LHCb libraries (from LHCB_v22r1)
-use GaudiConf           v10r1          -no_auto_imports
-use GaudiObjDesc        v9r8p1         -no_auto_imports
-use KernelSys           v6r1    Kernel -no_auto_imports
-use DetSys              v9r1    Det    -no_auto_imports
-use EventSys            v23r1   Event  -no_auto_imports
-use DAQSys              v3r0    DAQ    -no_auto_imports
-use LHCbAlgs            v2r5    Kernel -no_auto_imports
-use SimComponents       v2r0    Sim    -no_auto_imports
-use PatTools            v3r0    Pat    -no_auto_imports
+#-- LHCb libraries (from LHCB_v22r2)
+use GaudiConf           v10r2          -no_auto_imports
+use GaudiObjDesc        v9r9           -no_auto_imports
+use KernelSys           v6r2    Kernel -no_auto_imports
+use DetSys              v9r2    Det    -no_auto_imports
+use EventSys            v23r2   Event  -no_auto_imports
+use DAQSys              v3r1    DAQ    -no_auto_imports
+use LHCbAlgs            v2r6    Kernel -no_auto_imports
+use SimComponents       v2r1    Sim    -no_auto_imports
+use PatTools            v3r1    Pat    -no_auto_imports
 use CaloUtils           v7r1    Calo   -no_auto_imports
 
-#-- Lbcom packages (from LBCOM_v6r1)
-use LbcomSys            v6r1         -no_auto_imports
+#-- Lbcom packages (from LBCOM_v6r2)
+use LbcomSys            v6r2         -no_auto_imports
 
-#-- Rec packages (from REC_v4r1)
-use RecSys              v4r1         -no_auto_imports
+#-- Rec packages (from REC_v4r2)
+use RecSys              v4r2         -no_auto_imports
 
 #
 #===== build Brunel =========================
