@@ -1,4 +1,4 @@
-// $Id: Particle2MCWithChi2.h,v 1.7 2007-02-24 14:27:15 pkoppenb Exp $
+// $Id: Particle2MCWithChi2.h,v 1.8 2007-03-05 11:12:51 pkoppenb Exp $
 #ifndef Particle2MCWithChi2_H 
 #define Particle2MCWithChi2_H 1
 
@@ -12,9 +12,9 @@
 
 
 // vectors and matrices
-#include "Kernel/Vector4DTypes.h"
-#include "Kernel/SymmetricMatrixTypes.h"
-#include "Kernel/GenericVectorTypes.h"
+#include "GaudiKernel/Vector4DTypes.h"
+#include "GaudiKernel/SymmetricMatrixTypes.h"
+#include "GaudiKernel/GenericVectorTypes.h"
 
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"

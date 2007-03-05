@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.102 2007-02-28 17:46:37 pkoppenb Exp $
+! $Id: release.notes,v 1.103 2007-03-05 11:12:51 pkoppenb Exp $
 !==============================================================================
 ! Package     : DaVinciAssociators
 ! Responsible : Philippe Charpentier
 !==============================================================================
+
+! 2007-03-05 - Patrick Koppenburg
+ - Get vectors from GaudiKernel
 
 ! 2007-02-24 - Patrick Koppenburg
  - Public include files moved to Kernel/ in DaVinciMCKernel.
