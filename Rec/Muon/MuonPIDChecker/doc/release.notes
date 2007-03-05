@@ -2,7 +2,10 @@
 ! Responsible : E. Polycarpo, M. Gandelman
 !----------------------------------------------------------------------------
 
-!====================== MuonPIDChecker v1r0p1 2007-02-15 ====================
+!====================== MuonPIDChecker v1r0p1 2007-03-05 ====================
+! 2007-03-05 - Marco Cattaneo
+ - Remove obsolete MuonPIDChecker_load.cpp file
+
 ! 2007-02-15 - Marco Cattaneo
  - Remove unneccessary L0Event dependency
 
