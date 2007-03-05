@@ -1,4 +1,4 @@
-// $Id: XmlMuonCablingCnv.cpp,v 1.5 2007-02-27 11:13:58 asatta Exp $
+// $Id: XmlMuonCablingCnv.cpp,v 1.6 2007-03-05 07:19:37 cattanem Exp $
 // Include files 
 
 #include <vector>
@@ -116,6 +116,7 @@ XmlMuonCablingCnv::~XmlMuonCablingCnv() {
 StatusCode XmlMuonCablingCnv::updateRep (IOpaqueAddress *pAddress, DataObject *pObject){
  MsgStream msg(msgSvc(), "XmlMuonCablingCnv");
  msg<<MSG::INFO<<" number of L1 "<<endreq;
+ return StatusCode::SUCCESS;
 };
 
 
