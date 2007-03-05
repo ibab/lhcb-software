@@ -1,5 +1,5 @@
 package Boole
-version v13r1
+version v13r2
 
 branches doc cmt job options
 
@@ -7,64 +7,63 @@ branches doc cmt job options
 set BOOLEOPTS  $(BOOLEROOT)/options
 
 #-- CMT and GaudiPolicy
-use GaudiPolicy v6r3
+use GaudiPolicy v6r4
 
 #-- External libraries taken from LCG, version defined by GaudiEnv
 use RELAX v* LCG_Interfaces    -no_auto_imports
 use HepMC v* LCG_Interfaces    -no_auto_imports
 
-#-- Gaudi libraries (from GAUDI_v19r1)
-use GaudiKernel      v22r0
-use GaudiSvc         v15r1     -no_auto_imports
-use GaudiAlg         v9r11     -no_auto_imports
-use GaudiAud         v8r0      -no_auto_imports
-use GaudiPoolDb      v2r10     -no_auto_imports
-use RootHistCnv      v9r11     -no_auto_imports
+#-- Gaudi libraries (from GAUDI_v19r2)
+use GaudiKernel      v22r1
+use GaudiSvc         v15r2     -no_auto_imports
+use GaudiAlg         v9r12     -no_auto_imports
+use GaudiAud         v8r1      -no_auto_imports
+use GaudiPoolDb      v2r11     -no_auto_imports
+use RootHistCnv      v9r12     -no_auto_imports
 
 #-- Databases
-use XmlDDDB          v40r0   Det  -no_auto_imports
-use XmlConditions    v2r5    Det  -no_auto_imports
+use SQLDDDB          v1r*    Det  -no_auto_imports
 use ParamFiles       v5r0         -no_auto_imports
 use FieldMap         v4r7         -no_auto_imports
 
-#-- LHCb libraries (from LHCB_v22r1)
+#-- LHCb libraries (from LHCB_v22r2)
 #-- Explicitly use EventSys packages to avoid dependency on PhysEvent
-use GaudiConf        v10r1          -no_auto_imports
-use GaudiObjDesc     v9r8p1         -no_auto_imports
-use KernelSys        v6r1    Kernel -no_auto_imports
-use DetSys           v9r1    Det    -no_auto_imports
+use GaudiConf        v10r2          -no_auto_imports
+use GaudiObjDesc     v9r9           -no_auto_imports
+use KernelSys        v6r2    Kernel -no_auto_imports
+use DetSys           v9r2    Det    -no_auto_imports
 
-use EventBase        v2r0p1  Event  -no_auto_imports
-use MCEvent          v2r0p1  Event  -no_auto_imports
-use DigiEvent        v2r0p1  Event  -no_auto_imports
-use RecEvent         v2r1    Event  -no_auto_imports  # used by MuonDAQ, Calo
+use EventBase        v2r1    Event  -no_auto_imports
+use MCEvent          v2r1    Event  -no_auto_imports
+use DigiEvent        v2r1    Event  -no_auto_imports
+use RecEvent         v2r2    Event  -no_auto_imports  # used by MuonDAQ, Calo
 use TrackEvent       v4r0p1  Event  -no_auto_imports  # used by RecEvent
-use L0Event          v16r1   Event  -no_auto_imports
-use DAQEvent         v7r1    Event  -no_auto_imports
+use L0Event          v16r2   Event  -no_auto_imports
+use DAQEvent         v7r2    Event  -no_auto_imports
 use GenEvent         v5r0p1  Event  -no_auto_imports
-use PackedEvent      v3r0    Event  -no_auto_imports
+use PackedEvent      v3r1    Event  -no_auto_imports
 use VeloEvent        v15r0   Event  -no_auto_imports
 
-use DAQSys           v3r0    DAQ    -no_auto_imports
-use LHCbAlgs         v2r5    Kernel -no_auto_imports
-use SimComponents    v2r0    Sim    -no_auto_imports
+use DAQSys           v3r1    DAQ    -no_auto_imports
+use LHCbAlgs         v2r6    Kernel -no_auto_imports
+use SimComponents    v2r1    Sim    -no_auto_imports
 
-#-- Lbcom packages (from LBCOM_v6r1)
-use LbcomSys         v6r1           -no_auto_imports
+#-- Lbcom packages (from LBCOM_v6r2)
+use LbcomSys         v6r2           -no_auto_imports
 
-#-- BooleSys v12r10 packages
-use DigiAlg              v4r6   Digi -no_auto_imports
+#-- BooleSys v13r2 packages
+use DigiAlg              v4r6p1 Digi -no_auto_imports
 
 # Calorimeter
 use CaloMoniDigi         v2r2   Calo -no_auto_imports
-use CaloDigit            v2r2   Calo -no_auto_imports
+use CaloDigit            v2r3   Calo -no_auto_imports
 
 # Outer Tracker
 use OTSimulation         v3r9   OT   -no_auto_imports
 
 # Muon
-use MuonAlgs             v6r1   Muon -no_auto_imports
-use MuonBackground       v2r2   Muon -no_auto_imports
+use MuonAlgs             v6r2   Muon -no_auto_imports
+use MuonBackground       v2r3   Muon -no_auto_imports
 use MuonMoniDigi         v2r1   Muon -no_auto_imports
 
 # Rich

@@ -16,7 +16,7 @@ InitDataSeq.Members -= { "MergeEventAlg/SpilloverAlg" }; // Remove spillover
 // Database specific options
 //--------------------------------------------------------------------------- 
 #pragma print on
-DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200601.xml";
+#include "$STDOPTS/DC06Conditions.opts"
 MagneticFieldSvc.UseConstantField = true; // Constant (zero) field
 // Switch off muon background
 InitMUONSeq.Members -= { "MuonBackground/MuonLowEnergy" };
