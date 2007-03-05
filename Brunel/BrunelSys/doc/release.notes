@@ -3,6 +3,36 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+</PRE><H1><A NAME=v31r2>2007-03-05 Brunel v31r2</A></H1><PRE>
+This version uses projects Gaudi v19r1, LHCb v22r2, Lbcom v6r2, Rec v4r2
+ and databases SQLDDDB v1r*, ParamFiles v5r0, FieldMap v4r7
+
+Compatible with DC06 data
+
+- New features
+  . Possibility to reconstruct Field off data with both Velo closed and Velo open
+    (FieldOff.opts, FieldOff-VeloOpen.opts)
+  . Now uses SQLDDDB database for geometry and conditions data
+  . Add muon system acceptance flag to ProtoParticle
+    (RecEvent v2r2, MuonID v4r5, GlobalReco v6r8)
+  . Various fixes to deal with conditions data 
+    (MuonDet v6r1, OTDet v7r2, STDet v3r2, VeloDet v11r1, PatVelo v2r12)
+
+- New tuning
+  . Do not add SMatrix to ROOT_linkopts. Ensures inlining of SMatrix function
+    calls, resulting in large speed inprovement, particularly in track fit
+    (LHCbKernel v7r2, LHCbMath v2r1)
+  . Various speed improvements (PatForward v2r12, PatChecker v2r12)
+  . Renormalise Rich DLL contributions to the el and mu combined DLL values
+    in order to suppress huge values, which adversely affect the performance
+    (GlobalReco v6r8)
+
+- Bug fixes
+  . Fix qOverP in KShort TT state: Was unsigned! (PatKShort v1r4)
+
+- Monitoring changes
+  . Additional options in PatChecker (PatChecker v2r12)
+
 </PRE><H1><A NAME=v31r1>2007-02-07 Brunel v31r1</A></H1><PRE>
 This version uses projects Gaudi v19r1, LHCb v22r1, Lbcom v6r1, Rec v4r1
  and databases XmlDDDB v40r0, XmlConditions v2r4, ParamFiles v5r0, FieldMap v4r7
