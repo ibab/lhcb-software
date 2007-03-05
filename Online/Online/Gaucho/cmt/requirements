@@ -1,5 +1,5 @@
 package Gaucho
-version v5r4
+version v5r5
 
 branches src cmt doc
 
@@ -9,6 +9,7 @@ use AIDA v* LCG_Interfaces
 use DIM v* Online
 use GaudiAlg v*
 use OnlineKernel v* Online
+use OnlineHistDB v* Online
 
 # build a component library
 library Gaucho ../src/*.cpp

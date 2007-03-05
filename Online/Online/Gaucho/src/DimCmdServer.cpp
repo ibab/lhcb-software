@@ -1,4 +1,4 @@
-// $Id: DimCmdServer.cpp,v 1.5 2006-11-28 13:13:14 evh Exp $
+// $Id: DimCmdServer.cpp,v 1.6 2007-03-05 16:52:26 evh Exp $
 
 #include "GaudiKernel/StatusCode.h"
 #include "GaudiKernel/MsgStream.h"
@@ -24,6 +24,7 @@
 #include "GaudiKernel/IRegistry.h"
 #include "GaudiKernel/Incident.h"
 #include "GaudiKernel/IIncidentSvc.h"
+#include "OnlineHistDB/OnlineHistDB.h"
 
 #ifdef WIN32
 namespace wins {
@@ -103,9 +104,14 @@ void DimCmdServer::commandHandler() {
   //! hardcoded string length limits
 
   nextcommand=getString();  
+  
   if ( m_incidentSvc ) {
      Incident incident("DimCmdServer","SAVE_HISTOS");
+     Incident incident2("DimCmdServer","INSERT_HISTOS");
      if (strncmp(nextcommand,"save_histos",11)==0) m_incidentSvc->fireIncident(incident);
+     if (strncmp(nextcommand,"insert_histos",13)==0){
+        m_incidentSvc->fireIncident(incident2);
+     } 
   }   
   log << MSG::INFO << "received command " << nextcommand << endreq;       		
   if (strncmp(nextcommand,"/stat/",6)==0) {	   

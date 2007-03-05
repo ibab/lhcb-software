@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/src/DimCmdServer.h,v 1.2 2006-11-28 13:13:15 evh Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/src/DimCmdServer.h,v 1.3 2007-03-05 16:52:26 evh Exp $
 #ifndef GAUCHO_DIMCMDSERVER_H
 #define GAUCHO_DIMCMDSERVER_H 1
 
@@ -40,7 +40,7 @@ private:
   IHistogram* myhisto;
   DataObject* mydataobject;
   IMonitorSvc* m_publishsvc;
-
+ 
 };
 
 #endif //GAUCHO_DIMCMDSERVER_H
