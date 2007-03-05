@@ -1,8 +1,11 @@
-// $Id: NeutralPP2MC.cpp,v 1.15 2007-01-12 13:58:53 ranjard Exp $
+// $Id: NeutralPP2MC.cpp,v 1.16 2007-03-05 11:28:11 pkoppenb Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.15 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.16 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.15  2007/01/12 13:58:53  ranjard
+// v8r0 - use Gaudi v19r0
+//
 // Revision 1.14  2006/10/18 14:57:50  jpalac
 // New version v7r0
 //
@@ -42,7 +45,7 @@
 // ============================================================================
 // DaVinci associators 
 // ============================================================================
-#include "DaVinciAssociators/Particle2MCLinker.h"
+#include "Kernel/Particle2MCLinker.h"
 // ============================================================================
 // local 
 // ============================================================================

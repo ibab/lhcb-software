@@ -1,4 +1,4 @@
-// $Id: ChargedPP2MC.cpp,v 1.11 2007-01-12 13:58:53 ranjard Exp $
+// $Id: ChargedPP2MC.cpp,v 1.12 2007-03-05 11:28:11 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -18,7 +18,7 @@
 #include "Kernel/PP2MCLocation.h"
 
 // local
-#include "DaVinciAssociators/Particle2MCLinker.h"
+#include "Kernel/Particle2MCLinker.h"
 #include "AsctAlgorithm.h"
 
 static const std::string& 
