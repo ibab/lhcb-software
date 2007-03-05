@@ -5,7 +5,7 @@
  *  Implementation file for class : IMCReconstructible
  *
  *  CVS Log :-
- *  $Id: IMCReconstructible.cpp,v 1.2 2007-03-02 09:19:31 jonrob Exp $
+ *  $Id: IMCReconstructible.cpp,v 1.3 2007-03-05 12:49:44 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 28/02/2007
@@ -21,6 +21,7 @@ std::string IMCReconstructible::text( const RecCategory cat )
 {
   switch ( cat )
   {
+  case IMCReconstructible::OutsideAcceptance  : return "Outside Detector Acceptance";
   case IMCReconstructible::NotReconstructible : return "Not Reconstructible";
   case IMCReconstructible::ChargedLong        : return "Charged Long Particle";
   case IMCReconstructible::ChargedDownstream  : return "Charged Downstream Particle";

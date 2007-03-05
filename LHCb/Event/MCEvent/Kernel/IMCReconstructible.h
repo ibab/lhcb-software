@@ -5,7 +5,7 @@
  *  Header file for class : IMCReconstructible
  *
  *  CVS Log :-
- *  $Id: IMCReconstructible.h,v 1.2 2007-03-01 20:14:49 jonrob Exp $
+ *  $Id: IMCReconstructible.h,v 1.3 2007-03-05 12:49:44 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 28/02/2007
@@ -50,7 +50,8 @@ public:
   enum RecCategory 
     { 
       NoClassification=-1,  ///< No MC classification possible (e.g. NO MC)
-      NotReconstructible=0, ///< Not reconstructible at all
+      OutsideAcceptance=0,  ///< Outside detector acceptance
+      NotReconstructible,   ///< In acceptance but not reconstructible
       ChargedLong,          ///< Reconstructible as a Long charged track
       ChargedDownstream,    ///< Reconstructible as a Downstream charged track
       ChargedUpstream,      ///< Reconstructible as an Upstream charged track

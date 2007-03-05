@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.70 2007-03-02 09:37:04 cattanem Exp $
+! $Id: release.notes,v 1.71 2007-03-05 12:49:44 jonrob Exp $
 ! Package     : Event/MCEvent
 ! Responsible : Marco Cattaneo, Gloria Corti
 ! Purpose     : LHCb Event model. MC truth classes (Gauss and Boole output) 
 !-----------------------------------------------------------------------------
+
+! 2007-03-05 - Chris Jones
+ - Add new 'Outside Acceptance' category to MC reconstructibility
 
 !======================== MCEvent v2r1 2007-03-02 ============================
 ! 2007-03-01 - Chris Jones
