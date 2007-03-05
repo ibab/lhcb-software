@@ -37,16 +37,17 @@ use Bd2PiPiPi0          v4r2    PhysSel # Olivier Deschamps
 ####################################################################
 use               LoKiAll          v5r1   Phys  # I. Belyaev
 #===================================================================
-use               LoKiMC           v2r1   Phys  # I. Belyaev
-use               LoKiGenMC        v2r0   Phys  # I. Belyaev
-use               LoKiPhys         v3r1   Phys  # I. Belyaev
+use               LoKiMC           v2r2   Phys  # I. Belyaev
+use               LoKiGenMC        v2r1   Phys  # I. Belyaev
+use               LoKiPhys         v3r2   Phys  # I. Belyaev
 use               LoKiPhysMC       v4r0   Phys  # I. Belyaev
-use               LoKiAlgo         v3r1   Phys  # I. Belyaev
+use               LoKiAlgo         v3r2   Phys  # I. Belyaev
 use               LoKiAlgoMC       v3r0   Phys  # I. Belyaev
-use               LoKiJets         v2r1   Phys  # I. Belyaev
+use               LoKiJets         v2r2   Phys  # I. Belyaev
 use               LoKiHybrid       v1r0   Phys  # I. Belyaev
 use               LoKiDict         v5r1   Phys  # I. Belyaev
-use               LoKi             v5r0   Phys  # I. Belyaev
+use               LoKiCutsDict     v5r1   Phys  # I. Belyaev
+use               LoKi             v5r1   Phys  # I. Belyaev
 
 #use               LoKiExample      v*   Ex 
 
