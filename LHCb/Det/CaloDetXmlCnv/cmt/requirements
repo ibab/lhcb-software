@@ -1,19 +1,16 @@
-# $Id: requirements,v 1.12 2006-12-14 12:51:15 ranjard Exp $ 
+# $Id: requirements,v 1.13 2007-03-05 09:57:03 cattanem Exp $ 
 # =============================================================================
-# The package with XML-converters gfor Caloriometer Detector Model 
+# The package with XML-converters for Caloriometer Detector Model 
 # =============================================================================
 package   CaloDetXmlCnv
-version   v3r0
+version   v3r1
 
 # =============== structure ===================================================	
-branches         src cmt doc options 
+branches         src cmt doc
 
 # =============== used packages ===============================================
 use CaloDet      v*  Det 
 use DetDescCnv   v*  Det 
-
-# =============== own options =================================================
-set CALODETXMLCNVOPTS  ${CALODETXMLCNVROOT}/options
 
 # =============== component library ===========================================
 library          CaloDetXmlCnv  *.cpp
