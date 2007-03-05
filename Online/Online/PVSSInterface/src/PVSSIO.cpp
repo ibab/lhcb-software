@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/PVSSIO.cpp,v 1.1 2007-03-02 19:54:05 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/PVSSIO.cpp,v 1.2 2007-03-05 16:16:26 frankb Exp $
 //  ====================================================================
 //  PVSSIO.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: PVSSIO.cpp,v 1.1 2007-03-02 19:54:05 frankb Exp $
+// $Id: PVSSIO.cpp,v 1.2 2007-03-05 16:16:26 frankb Exp $
 
 // Framework include files
 #include "PVSS/Kernel.h"
@@ -105,12 +105,17 @@ namespace PVSS {
     case DevTypeElement::DYNBIT:
       setWriteIO(context,listCtxt,typ,dp,*v.boolV);
       break;
+    case DevTypeElement::TEXT:
+      if ( typeid(*val) == typeid(DataValue<std::string>) )  {
+        DataValue<std::string>* sval = (DataValue<std::string>*)val;
+        pvss_val_list_set(context,listCtxt,typ,dp,Values(sval->data().c_str()));
+        break;
+      }
     case DevTypeElement::DPID:
     case DevTypeElement::CHAR:
     case DevTypeElement::INT:
     case DevTypeElement::UINT:
     case DevTypeElement::FLOAT:
-    case DevTypeElement::TEXT:
     case DevTypeElement::TIME:
     case DevTypeElement::BIT:
       pvss_val_list_set(context,listCtxt,typ,dp,Values(val->ptr()));

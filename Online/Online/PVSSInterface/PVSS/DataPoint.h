@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/PVSS/DataPoint.h,v 1.2 2007-03-02 12:28:38 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/PVSS/DataPoint.h,v 1.3 2007-03-05 16:16:26 frankb Exp $
 //  ====================================================================
 //  DataPoint.h
 //  --------------------------------------------------------------------
@@ -54,6 +54,8 @@ namespace PVSS {
     virtual const void* ptr() const = 0;
     /// C++ Type id
     virtual const std::type_info& id() const = 0;
+    /// Clone object
+    virtual Value* clone() const = 0;
     /// PVSS data type
     template <class T> static int type_id(const T&);
   };
@@ -77,12 +79,17 @@ namespace PVSS {
     DataValue(int typ) : Value(typ)           {                   }
     /// Initializing constructor
     DataValue(int typ, const T& v)   : Value(typ), m_data(v)    { }
+    /// Copy constructor
+    DataValue(const DataValue& c) 
+    : Value(c.type()), m_data(c.data())       {                   }
     /// Standard destructor
     virtual ~DataValue()                      {                   }
     /// Pointer to data item (CONST)
     virtual const void* ptr() const           { return &m_data;   }
     /// Pointer to data item
     virtual void* ptr()                       { return &m_data;   }
+    /// Clone object
+    virtual Value* clone() const { return new DataValue<T>(*this);}
     /// Access to data
     T& data()                                 { return m_data;    }
     /// Access to data (CONST)
@@ -173,6 +180,8 @@ namespace PVSS {
     DpIdentifier     m_id;
     /// Flag to check if datapoint identifier is valid
     char             m_valid;
+    /// Flag for debugging (and padding)
+    char             m_flag[3];
     /// Datapoint name
     std::string      m_name;
     /// Reference to controls manager
@@ -201,9 +210,9 @@ namespace PVSS {
     /// Standard destructor
     virtual ~DataPoint();
     /// Access to the Datapoint's name
-    const std::string& name()  const {    return m_name;  }
+    const std::string& name()  const {    return m_name;        }
     /// Access to controls manager environment
-    ControlsManager* manager() const {    return m_mgr;   }
+    ControlsManager* manager() const {    return m_mgr;         }
     /// Assignment
     DataPoint& operator=(const DataPoint& c);
     /// Equivalence check
@@ -212,11 +221,17 @@ namespace PVSS {
     bool operator<(const DataPoint& c) const;
     /// Datapoint identifier
     const DpIdentifier& id() const 
-    { return m_valid ? m_id : load();                       }
+    { return m_valid ? m_id : load();                           }
     /// Set value data
     void setValue(int typ, const Variable* data);
     /// Access to datapoint's value
-    Value* value() const             {  return m_val;       }
+    Value* value() const             {  return m_val;           }
+    /// Set debug flag
+    void setFlag(int which, signed char val)
+    { if ( which >= 0 && which < 3 ) m_flag[which]=val;         }
+    /// Access debug flag
+    int flag(int which)  const
+    { return (which >= 0 && which < 3) ? m_flag[which] : -1; }
     /// Template access to data - overloaded for concrete types
     template <class T> T data();
     /// Template access to data (CONST) - overloaded for concrete types

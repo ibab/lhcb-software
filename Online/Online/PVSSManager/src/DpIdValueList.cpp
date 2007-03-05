@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/src/DpIdValueList.cpp,v 1.3 2007-03-02 19:53:46 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/src/DpIdValueList.cpp,v 1.4 2007-03-05 16:16:42 frankb Exp $
 //  ====================================================================
 //  DpIdValueList.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: DpIdValueList.cpp,v 1.3 2007-03-02 19:53:46 frankb Exp $
+// $Id: DpIdValueList.cpp,v 1.4 2007-03-05 16:16:42 frankb Exp $
 #include "PVSS/Internals.h"
 #include "PVSS/Array.h"
 #include "DpIdentifierVar.hxx"
@@ -110,12 +110,12 @@ void PVSS::pvss_val_list_drop(void*& context)    {
 void PVSS::pvss_val_list_set(void* ctxt,void*& listctxt, int type,const DpIdentifier& id,const Values& val)  {
   DpIdValueList* rd = (DpIdValueList*)ctxt;
   DpVCItem *idx = (DpVCItem*)listctxt;
-  DpVCItem *itm = (0 == listctxt) ? rd->getFirstItem() : rd->getNextItem(idx);
+  DpVCItem *itm = (((void*)~0x0) == listctxt) ? rd->getFirstItem() : rd->getNextItem(idx);
+  listctxt = itm;
   if ( !itm )  {
     pvss_val_list_add(ctxt,type,id,val);
     return;
   }
-  listctxt = itm;
   itm->setDpIdentifier(id);
   switch(type)   {
   case DPELEMENT_DPID:

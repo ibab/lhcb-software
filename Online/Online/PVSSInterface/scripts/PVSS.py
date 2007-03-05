@@ -86,6 +86,7 @@ def controlsMgr(systemID=1,systemName='dist_1'):
 #  def infoHandler(self):    pass
 
 """
+
 import time, PVSS
 DP=PVSS.DataPoint
 m=PVSS.createAPIMgr()
@@ -106,12 +107,31 @@ print t.id()
 dps = PVSS.DataPointVector()
 for i in xrange(10000):
   s='test_dev_'+str(i)+'.value'
-  if dm.exists(s): 
-    dps.push_back(DP(c,DP.original(s)))
+  if dm.exists(s):
+    d = DP(c,DP.original(s))
+    d.setFlag(1,'a')
+    dps.push_back(d)
 
 
 
 print 'Found ',len(dps), ' valid devices.'
+
+wr=c.devWriter()
+for i in dps:
+  i.set('ddddd')
+  wr.add(i)
+
+
+rdr.clear()
+for i in dps:
+  i.set('---------------------')
+  rdr.add(i)
+
+rdr.execute(1,1)
+
+wr.execute(1,1)
+
+wr=c.writeTransaction()
 wr.start()
 for i in dps:
   s='Hello darling:'+i.name()
@@ -120,6 +140,16 @@ for i in dps:
 
 
 print 'Execute transaction:',wr.execute(1,1)
+
+wrt=c.devWriter()
+for i in dps:
+  i.set('471896454674396574365784Hello darling:'+i.name())
+  wrt.add(i)
+
+
+
+wrt.execute()
+
 
 
 """

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/ReadTransaction.cpp,v 1.5 2007-03-02 19:54:05 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/ReadTransaction.cpp,v 1.6 2007-03-05 16:16:26 frankb Exp $
 //  ====================================================================
 //  ReadTransaction.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: ReadTransaction.cpp,v 1.5 2007-03-02 19:54:05 frankb Exp $
+// $Id: ReadTransaction.cpp,v 1.6 2007-03-05 16:16:26 frankb Exp $
 
 // Framework include files
 #include "PVSS/HotLinkCallback.h"
@@ -21,16 +21,21 @@ using namespace PVSS;
 namespace PVSS { namespace {
 
   struct Actor : public HotLinkCallback  {
-    typedef std::pair<int,void*> Entry;
-    typedef std::map<DpIdentifier,Entry> Points;
-
+    typedef std::pair<int,void*>          Entry;
+    typedef std::map<DpIdentifier,Entry>  Points;
+    /// Container of datapoints in transaction
     Points     m_points;
+    /// Transaction context (list)
     void*      m_context;
 
+    /// Default constructor
     Actor() : m_context(0) {    }
-    virtual ~Actor()                            {    }
+    /// Default destructor
+    virtual ~Actor()       {    }
+    /// Add datapoint to read trabsaction
     void add(const DpIdentifier& dpid, int t,void* v) 
     {  m_points.insert(std::make_pair(dpid,Entry(t,v)));     }
+    /// Execute transaction
     bool exec(DevAnswer* a) {
       pvss_list_create(m_context);
       for(Points::const_iterator i=m_points.begin(); i != m_points.end(); ++i)
@@ -38,13 +43,15 @@ namespace PVSS { namespace {
       pvss_exec_read(m_context,a,this,false);
       return true;
     }
+    /// Bind reading for a datapoint
     virtual void setValue(const DpIdentifier& dpid, int typ, const Variable* val) {
       Points::iterator i=m_points.find(dpid);
-      if ( i != m_points.end() )  {
-        Entry& e = (*i).second;
-        genReadIO(val, typ, e.second);
-      }
+      if ( i != m_points.end() )
+        genReadIO(val, typ, (*i).second.second);
+      else
+        printf("Attempt to set datapoint, which is not contained in the transaction.\n");
     }
+    /// Clear list after end of reading
     virtual void handleDataUpdate()  {
       if ( m_context ) pvss_list_drop(m_context);
       m_points.clear();

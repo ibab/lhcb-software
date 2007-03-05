@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DeviceIO.cpp,v 1.4 2007-03-02 19:54:05 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DeviceIO.cpp,v 1.5 2007-03-05 16:16:26 frankb Exp $
 //  ====================================================================
 //  DeviceIO.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: DeviceIO.cpp,v 1.4 2007-03-02 19:54:05 frankb Exp $
+// $Id: DeviceIO.cpp,v 1.5 2007-03-05 16:16:26 frankb Exp $
 
 // Framework include files
 #include "PVSS/DevTypeElement.h"
@@ -37,7 +37,7 @@ DeviceIO::Read::~Read()  {
 
 /// Drop PVSS IO list
 void DeviceIO::Read::dropList()  {
-  pvss_list_drop(m_context);
+  if ( m_context ) pvss_list_drop(m_context);
 }
 
 /// Execute PVSS IO action
@@ -45,8 +45,10 @@ bool DeviceIO::Read::exec(bool keep_list, DeviceIO* par, DevAnswer* a) {
   const DataPoints& p = par->points();
   if ( !m_context )  {
     pvss_list_create(m_context);
-    for(DataPoints::const_iterator i=p.begin(); i != p.end(); ++i)
+    for(DataPoints::const_iterator i=p.begin(); i != p.end(); ++i)  {
       pvss_list_add(m_context,(*i).first);
+      (*i).second->setFlag(1,2);
+    }
   }
   pvss_exec_read(m_context,a,par,keep_list);
   return true;
@@ -64,12 +66,13 @@ DeviceIO::Write::~Write()  {
 /// Drop PVSS IO list
 void DeviceIO::Write::dropList()  {
   pvss_val_list_drop(m_context);
+  m_context = 0;
 }
 
 /// Execute PVSS IO action
 bool DeviceIO::Write::exec(bool keep_list, DeviceIO* par, DevAnswer* a)  {
   const DataPoints& p = par->points();
-  void* listCtxt = 0;
+  void* listCtxt = (void*)~0x0;
   if ( !m_context )  {
     pvss_val_list_create(m_context);
   }
@@ -79,6 +82,7 @@ bool DeviceIO::Write::exec(bool keep_list, DeviceIO* par, DevAnswer* a)  {
       throw std::runtime_error("All datapoints must be set to perform a write action. "
         " Missing is:"+(*i).second->name());
     }
+    (*i).second->setFlag(1,2);
     setGenWriteIO(m_context,listCtxt,(*i).first,val);
   }
   pvss_exec_dpset(m_context,a,keep_list);
@@ -86,16 +90,12 @@ bool DeviceIO::Write::exec(bool keep_list, DeviceIO* par, DevAnswer* a)  {
 }
 
 /// Initializing constructor for reading
-DeviceIO::DeviceIO(ControlsManager* mgr, const Read& ) 
-: m_manager(mgr)
-{
+DeviceIO::DeviceIO(ControlsManager* mgr, const Read& ) : m_manager(mgr)  {
   setRead();
 }
 
 /// Initializing constructor for writing
-DeviceIO::DeviceIO(ControlsManager* mgr, const Write& ) 
-: m_manager(mgr)
-{
+DeviceIO::DeviceIO(ControlsManager* mgr, const Write& ) : m_manager(mgr)  {
   setWrite();
 }
 
@@ -104,12 +104,12 @@ DeviceIO::~DeviceIO()   {
 }
 
 /// Change Device IO to writing mode
-void DeviceIO::setWrite()   { 
+void DeviceIO::setWrite()   {
   m_devIO = std::auto_ptr<IDevIO>(new Write);
 }
 
 /// Change Device IO to writing mode
-void DeviceIO::setRead()    {
+void DeviceIO::setRead()    {  
   m_devIO = std::auto_ptr<IDevIO>(new Read);
 }
 
@@ -123,6 +123,10 @@ void DeviceIO::setValue(const DpIdentifier& dpid, int typ, const Variable* val) 
   if ( i != m_points.end() )  {
     DataPoint* dp = (*i).second;
     dp->setValue(typ,val);
+    dp->setFlag(1,3);
+  }
+  else  {
+    printf("Attempt to set datapoint, which is not contained in the transaction.\n");
   }
 }
 
@@ -141,11 +145,10 @@ bool DeviceIO::execute(bool keep_list, bool wait)  {
   return true;
 }
 
-/// Restart dpset list (scratch old list if present)
-bool DeviceIO::start()  {
-  clear();
-  return true;
-}
+/// Length of known datapoints
+size_t DeviceIO::length() const
+{  return m_points.size();                                  }
+
 /// Clear the datapoint container
 void DeviceIO::clear()   {
   m_points.clear();
@@ -154,36 +157,31 @@ void DeviceIO::clear()   {
 
 /// add datapoint value
 void DeviceIO::i_add(const DpIdentifier& id, DataPoint& dp) {
-  m_points.insert(std::make_pair(id,&dp));
   if ( m_devIO->context() ) m_devIO->dropList();
+  m_points.insert(std::make_pair(id,&dp));
+  dp.setFlag(1,1);
 }
 
 /// add datapoint value by name
-void DeviceIO::add(DataPoint& dp) {
-  i_add(dp.id(),dp);
-}
+void DeviceIO::add(DataPoint& dp) 
+{  i_add(dp.id(),dp);                                       }
 
 /// add datapoint value by name
-void DeviceIO::addOnline(DataPoint& dp) {
-  i_add(lookup(DataPoint::online(dp.name())),dp);
-}
+void DeviceIO::addOnline(DataPoint& dp) 
+{  i_add(lookup(DataPoint::online(dp.name())),dp);          }
 
 /// add datapoint value by name
-void DeviceIO::addOriginal(DataPoint& dp) {
-  i_add(lookup(DataPoint::original(dp.name())),dp);
-}
+void DeviceIO::addOriginal(DataPoint& dp) 
+{  i_add(lookup(DataPoint::original(dp.name())),dp);        }
 
 /// add datapoint values
-void DeviceIO::add(std::vector<DataPoint>& dp)  {
-  std::for_each(dp.begin(),dp.end(),addData());
-}
+void DeviceIO::add(std::vector<DataPoint>& dp)  
+{  std::for_each(dp.begin(),dp.end(),addData());            }
 
 /// add original datapoint values
-void DeviceIO::addOriginal(std::vector<DataPoint>& dp)  {
-  std::for_each(dp.begin(),dp.end(),addOriginalData());
-}
+void DeviceIO::addOriginal(std::vector<DataPoint>& dp)
+{  std::for_each(dp.begin(),dp.end(),addOriginalData());    }
 
 /// add online datapoint values
-void DeviceIO::addOnline(std::vector<DataPoint>& dp)  {
-  std::for_each(dp.begin(),dp.end(),addOnlineData());
-}
+void DeviceIO::addOnline(std::vector<DataPoint>& dp)
+{  std::for_each(dp.begin(),dp.end(),addOnlineData());      }

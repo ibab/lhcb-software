@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/PVSS/DeviceIO.h,v 1.2 2007-03-01 20:08:55 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/PVSS/DeviceIO.h,v 1.3 2007-03-05 16:16:26 frankb Exp $
 //  ====================================================================
 //  DeviceIO.h
 //  --------------------------------------------------------------------
@@ -175,10 +175,10 @@ namespace PVSS {
     void setRead();
     /// Execute dpset list
     bool execute(bool keep_list = false, bool wait = true);
-    /// Restart dpset list (scratch old list if present)
-    bool start();
     /// Clear the datapoint container
     void clear();
+    /// Length of known datapoints
+    size_t length() const;
     /// add datapoint value 
     void add(DataPoint& dp);
     /// add original datapoint

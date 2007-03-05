@@ -119,7 +119,7 @@ void pvss_test_run_getdp2(ControlsManager* mgr)  {
     trW->setValue(p2,val*100);
     trW->setOriginal(p3,val*1000);
     trW->execute(true);
-    trR->start();
+    trR->clear();
     trR->add(p0);
     trR->addOriginal(p1);
     trR->add(p2);
