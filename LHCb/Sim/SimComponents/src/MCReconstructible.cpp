@@ -5,7 +5,7 @@
  *  Implementation file for class : MCReconstructible
  *
  *  CVS Log :-
- *  $Id: MCReconstructible.cpp,v 1.5 2007-03-05 13:42:59 jonrob Exp $
+ *  $Id: MCReconstructible.cpp,v 1.6 2007-03-05 13:48:39 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 28/02/2007
@@ -151,7 +151,7 @@ MCReconstructible::reconstructible( const LHCb::MCParticle* mcPart ) const
   // Base class MCParticle selection
   if ( m_mcSel->accept(mcPart) )
   {
-    // Does neutral MCParticle have a mother (CRJ : why this check ?)
+    // Does MCParticle have a mother
     if ( m_allowPrimary || NULL != mcPart->mother() )
     {
 
