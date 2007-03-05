@@ -6,8 +6,8 @@
 #include "GaudiAlg/GaudiTool.h"
 #include "Event/Particle.h"
 #include "Kernel/ICaloParticleMaker.h"
-#include "Kernel/GenericVectorTypes.h"
-#include "Kernel/SymmetricMatrixTypes.h"
+#include "GaudiKernel/GenericVectorTypes.h"
+#include "GaudiKernel/SymmetricMatrixTypes.h"
 
 namespace LHCb{
   class ProtoParticle ;  
