@@ -1,11 +1,15 @@
-! $Id: release.notes,v 1.10 2007-01-18 13:06:10 ibelyaev Exp $ 
+! $Id: release.notes,v 1.11 2007-03-05 11:09:59 pkoppenb Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.10 $
+! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.11 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiAlgo
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : LoKi-algorthm related stuff 
 ! -----------------------------------------------------------------------------
+
+! 2007-03-05 - Patrick Koppenburg
+ - Get vector types from GaudiKernel
+ - Increment to v3r2
 
 !========================= LoKiAlgo v3r1 2007-01-18 ====================
 
