@@ -1,4 +1,4 @@
-// $Id: ParticleTransporter.cpp,v 1.15 2006-12-04 15:56:57 jpalac Exp $
+// $Id: ParticleTransporter.cpp,v 1.16 2007-03-05 10:09:19 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -6,7 +6,7 @@
 #include "GaudiKernel/ParticleProperty.h"
 #include "GaudiKernel/IParticlePropertySvc.h"
 
-#include "Kernel/TrackTypes.h" /// @todo temporary
+#include "Event/TrackTypes.h" /// @todo temporary
 #include "TrackInterfaces/ITrackExtrapolator.h"        // TrackExtrapolator
 #include "Kernel/IParticle2State.h"
 #include "LHCbMath/MatrixManip.h"

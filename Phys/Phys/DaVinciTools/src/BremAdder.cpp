@@ -1,11 +1,11 @@
-// $Id: BremAdder.cpp,v 1.3 2006-12-07 17:58:44 odescham Exp $
+// $Id: BremAdder.cpp,v 1.4 2007-03-05 10:08:34 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h" 
 // from LHCb
 #include "CaloUtils/CaloMomentum.h"
-#include "Kernel/Point3DTypes.h"
+#include "GaudiKernel/Point3DTypes.h"
 //#include "Event/CaloCellID.h"
 // local
 #include "BremAdder.h"

@@ -1,4 +1,4 @@
-// $Id: ParticleTransporter.h,v 1.5 2006-10-20 14:14:03 pkoppenb Exp $
+// $Id: ParticleTransporter.h,v 1.6 2007-03-05 10:09:19 pkoppenb Exp $
 #ifndef PARTICLETRANSPORTER_H 
 #define PARTICLETRANSPORTER_H 1
 
@@ -63,7 +63,7 @@ private:
   IParticle2State* m_p2s ;
 
   /// Electron ID
-  int m_eID ;
+  unsigned int m_eID ;
 
 };
 #endif // PARTICLETRANSPORTER_H

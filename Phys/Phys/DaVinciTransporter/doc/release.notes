@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.44 2007-03-05 09:13:03 pkoppenb Exp $
+! $Id: release.notes,v 1.45 2007-03-05 10:09:19 pkoppenb Exp $
 ! Package     : DaVinciTransporter
 ! Responsible : P. Koppenburg, J. Palacios
 !==============================================================================
+
+! 2007-03-05 - Patrick Koppenburg
+ - Get vectices and matrices from gaudiKernel
 
 ! 2007-03-05 - Patrick Koppenburg
  - Remove LHCbDefinitions dependency

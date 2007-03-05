@@ -1,12 +1,12 @@
-// $Id: TransporterFunctions.h,v 1.5 2006-10-04 12:20:06 jpalac Exp $
+// $Id: TransporterFunctions.h,v 1.6 2007-03-05 10:09:19 pkoppenb Exp $
 #ifndef TRANSPORTERFUNCTIONS_H 
 #define TRANSPORTERFUNCTIONS_H 1
 
 // Include files
 #include "GaudiKernel/StatusCode.h"
-#include "Kernel/GenericMatrixTypes.h"
-#include "Kernel/Point3DTypes.h"
-#include "Kernel/Vector3DTypes.h"
+#include "GaudiKernel/GenericMatrixTypes.h"
+#include "GaudiKernel/Point3DTypes.h"
+#include "GaudiKernel/Vector3DTypes.h"
 
 /** @namespace DaVinciTransporter TransporterFunctions.h
  *  

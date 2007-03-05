@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.254 2007-03-05 09:05:35 pkoppenb Exp $
+! $Id: release.notes,v 1.255 2007-03-05 10:08:34 pkoppenb Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2007-03-05 - Patrick Koppenburg
+ - Get vector and matrices from GaudiKernel
 
 ! 2007-03-05 - Patrick Koppenburg
  - Moved SelResults tools and algos fro Tools/Utilities

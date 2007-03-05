@@ -1,11 +1,11 @@
-// $Id: Particle2State.cpp,v 1.5 2006-10-24 02:13:57 xieyu Exp $
+// $Id: Particle2State.cpp,v 1.6 2007-03-05 10:08:34 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h" 
 
 // LHCb
-#include "Kernel/GenericMatrixTypes.h"
+#include "GaudiKernel/GenericMatrixTypes.h"
 #include "LHCbMath/MatrixManip.h"
 
 // local

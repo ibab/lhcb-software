@@ -1,4 +1,4 @@
-// $Id: GeomDispCalculator.h,v 1.9 2006-07-20 13:19:21 jpalac Exp $
+// $Id: GeomDispCalculator.h,v 1.10 2007-03-05 10:08:34 pkoppenb Exp $
 #ifndef GEOMDISPCALCULATOR_H
 #define GEOMDISPCALCULATOR_H 1
 
@@ -10,9 +10,9 @@
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 // from LHCb
-#include "Kernel/GenericVectorTypes.h"
-#include "Kernel/SymmetricMatrixTypes.h"
-#include "Kernel/Point3DTypes.h"
+#include "GaudiKernel/GenericVectorTypes.h"
+#include "GaudiKernel/SymmetricMatrixTypes.h"
+#include "GaudiKernel/Point3DTypes.h"
 #include "LHCbMath/Line.h"
 // from DaVinciKernel
 #include "Kernel/IGeomDispCalculator.h"
