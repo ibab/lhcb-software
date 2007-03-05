@@ -1,4 +1,4 @@
-// $Id: XmlLVolumeCnv.h,v 1.8 2007-02-02 12:09:22 cattanem Exp $
+// $Id: XmlLVolumeCnv.h,v 1.9 2007-03-05 12:51:06 cattanem Exp $
 
 #ifndef DETDESCCNV_XMLCNVSVC_XMLLVOLUMECNV_H
 #define DETDESCCNV_XMLCNVSVC_XMLLVOLUMECNV_H
@@ -166,7 +166,7 @@ class XmlLVolumeCnv : public XmlGenericCnv {
   std::string locateElement (xercesc::DOMElement* element);
 
   /**
-   * deals with the xml tag /<physvol/>. Creates the corresponding C++ Object.
+   * deals with the xml tag \<physvol\>. Creates the corresponding C++ Object.
    * Take care that memory is allocated in case the return value is not null
    * and that the caller is responsible for deallocating it
    * @param element the DOM element representing the tag
@@ -175,7 +175,7 @@ class XmlLVolumeCnv : public XmlGenericCnv {
   PVolumeItem* dealWithPhysvol (xercesc::DOMElement* element);
 
   /**
-   * deals with the xml tags /<paramphysvol/>, /<paramphysvol2D/>, /<paramphysvol3D/>.
+   * deals with the xml tags \<paramphysvol\>, \<paramphysvol2D\>, \<paramphysvol3D\>.
    * Instead of creating a C++ object corresponding to these parametrised
    * volumes, this method expands them in a vector of simple physical volumes.
    * The return value is a pointer on this vector or 0 if there is an
@@ -228,8 +228,8 @@ class XmlLVolumeCnv : public XmlGenericCnv {
 								std::vector<Gaudi::Transform3D*> transformations);
 
   /**
-   * deals with the xml tag /<surf/>. Returns a string giving the address of
-   * the surface or 0 if the element does not correspond to the /<surf/>
+   * deals with the xml tag \<surf\>. Returns a string giving the address of
+   * the surface or 0 if the element does not correspond to the \<surf\>
    * tag.
    * @param element the DOM element representing the tag
    * @return the address of the surface
@@ -237,8 +237,8 @@ class XmlLVolumeCnv : public XmlGenericCnv {
   std::string dealWithSurf (xercesc::DOMElement* element);
 
   /**
-   * deals with the xml tags /<box/>, /<trd/>, /<trap/>, /<cons/>, /<tubs/>,
-   * /<sphere/>, /<union/>, /<subtraction/> and /<intersection/>.
+   * deals with the xml tags \<box\>, \<trd\>, \<trap\>, \<cons\>, \<tubs\>,
+   * \<sphere\>, \<union\>, \<subtraction\> and \<intersection\>.
    * Creates the corresponding
    * C++ Object or 0 if the element does not correspond to one of these
    * tags. Take care that memory is allocated in case the return value is
@@ -249,7 +249,7 @@ class XmlLVolumeCnv : public XmlGenericCnv {
   ISolid* dealWithSolid (xercesc::DOMElement* element);
 
   /**
-   * deals with the xml tags /<union/>, /<subtraction/> and /<intersection/>.
+   * deals with the xml tags \<union\>, \<subtraction\> and \<intersection\>.
    * Creates the corresponding C++ Object or 0 if the element does not
    * correspond to one of these tags. Take care that memory is allocated
    * in case the return value is not null and that the caller is responsible
@@ -269,8 +269,8 @@ class XmlLVolumeCnv : public XmlGenericCnv {
   PlacedSolidList* dealWithBooleanChildren (xercesc::DOMElement* element);
 
   /**
-   * deals with the xml tags /<box/>, /<cons/>, /<sphere/>, /<tubs/>, /<trd/> 
-   * and /<trap/>.
+   * deals with the xml tags \<box\>, \<cons\>, \<sphere\>, \<tubs\>, \<trd\> 
+   * and \<trap\>.
    * Creates the corresponding C++ Object or 0 if the element does not
    * correspond to one of these tags. Take care that memory is allocated
    * in case the return value is not null and that the caller is responsible
@@ -281,7 +281,7 @@ class XmlLVolumeCnv : public XmlGenericCnv {
   ISolid* dealWithSimpleSolid (xercesc::DOMElement* element);
 
   /**
-   * deals with the xml tag /<box/>. Creates the corresponding C++ Object.
+   * deals with the xml tag \<box\>. Creates the corresponding C++ Object.
    * Take care that memory is allocated and that the caller is responsible
    * for deallocating it
    * @param element the DOM element representing the tag
@@ -290,7 +290,7 @@ class XmlLVolumeCnv : public XmlGenericCnv {
   SolidBox* dealWithBox (xercesc::DOMElement* element);
 
   /**
-   * deals with the xml tag /<trd/>. Creates the corresponding C++ Object.
+   * deals with the xml tag \<trd\>. Creates the corresponding C++ Object.
    * Take care that memory is allocated and that the caller is responsible
    * for deallocating it
    * @param element the DOM element representing the tag
@@ -299,7 +299,7 @@ class XmlLVolumeCnv : public XmlGenericCnv {
   SolidTrd* dealWithTrd (xercesc::DOMElement* element);
 
   /**
-   * deals with the xml tag /<trap/>. Creates the corresponding C++ Object.
+   * deals with the xml tag \<trap\>. Creates the corresponding C++ Object.
    * Take care that memory is allocated and that the caller is responsible
    * for deallocating it
    * @param element the DOM element representing the tag
@@ -308,7 +308,7 @@ class XmlLVolumeCnv : public XmlGenericCnv {
   SolidTrap* dealWithTrap (xercesc::DOMElement* element);
 
   /**
-   * deals with the xml tag /<cons/>. Creates the corresponding C++ Object.
+   * deals with the xml tag \<cons\>. Creates the corresponding C++ Object.
    * Take care that memory is allocated and that the caller is responsible
    * for deallocating it
    * @param element the DOM element representing the tag
@@ -318,7 +318,7 @@ class XmlLVolumeCnv : public XmlGenericCnv {
   SolidCons* dealWithCons (xercesc::DOMElement* element);
 
   /**
-   * deals with the xml tag /<polycone/>. Creates the corresponding C++ Object.
+   * deals with the xml tag \<polycone\>. Creates the corresponding C++ Object.
    * Take care that memory is allocated and that the caller is responsible
    * for deallocating it
    * @param element the DOM element representing the tag
@@ -328,7 +328,7 @@ class XmlLVolumeCnv : public XmlGenericCnv {
   SolidPolycone* dealWithPolycone (xercesc::DOMElement* element);
 
   /**
-   * deals with the xml tag /<tubs/>. Creates the corresponding C++ Object.
+   * deals with the xml tag \<tubs\>. Creates the corresponding C++ Object.
    * Take care that memory is allocated and that the caller is responsible
    * for deallocating it
    * @param element the DOM element representing the tag
@@ -337,7 +337,7 @@ class XmlLVolumeCnv : public XmlGenericCnv {
   SolidTubs* dealWithTubs (xercesc::DOMElement* element);
 
   /**
-   * deals with the xml tag /<sphere/>. Creates the corresponding C++ Object.
+   * deals with the xml tag \<sphere\>. Creates the corresponding C++ Object.
    * Take care that memory is allocated and that the caller is responsible
    * for deallocating it
    * @param element the DOM element representing the tag
@@ -370,7 +370,7 @@ class XmlLVolumeCnv : public XmlGenericCnv {
   Gaudi::Transform3D* dealWithTransformation (xercesc::DOMElement* element);
 
   /**
-   * deals with the xml tag /<posXYZ/>. Creates the corresponding Gaudi::TranslationXYZ
+   * deals with the xml tag \<posXYZ\>. Creates the corresponding Gaudi::TranslationXYZ
    * and allocates the corresponding memory. The deallocation is the
    * responsability of the caller
    * @param element the DOM element representing the tag
@@ -379,7 +379,7 @@ class XmlLVolumeCnv : public XmlGenericCnv {
   Gaudi::Transform3D* dealWithPosXYZ (xercesc::DOMElement* element);
 
   /**
-   * deals with the xml tag /<posRPhiZ/>. Creates the corresponding Gaudi::TranslationXYZ
+   * deals with the xml tag \<posRPhiZ\>. Creates the corresponding Gaudi::TranslationXYZ
    * and allocates the corresponding memory. The deallocation is the
    * responsability of the caller.
    * An XmlCnvException will be launched if the tag attribute r has a negative
@@ -390,7 +390,7 @@ class XmlLVolumeCnv : public XmlGenericCnv {
   Gaudi::Transform3D* dealWithPosRPhiZ (xercesc::DOMElement* element);
 
   /**
-   * deals with the xml tag /<posRThPhi/>. Creates the corresponding
+   * deals with the xml tag \<posRThPhi\>. Creates the corresponding
    * Gaudi::TranslationXYZ and allocates the corresponding memory. The deallocation
    * is the responsability of the caller
    * An XmlCnvException will be launched if the tag attribute r has a negative
@@ -401,7 +401,7 @@ class XmlLVolumeCnv : public XmlGenericCnv {
   Gaudi::Transform3D* dealWithPosRThPhi (xercesc::DOMElement* element);
 
   /**
-   * deals with the xml tag /<rotXYZ/>. Creates the corresponding Gaudi::Rotation
+   * deals with the xml tag \<rotXYZ\>. Creates the corresponding Gaudi::Rotation
    * and allocates the corresponding memory. The deallocation is the
    * responsability of the caller
    * @param element the DOM element representing the tag
@@ -410,7 +410,7 @@ class XmlLVolumeCnv : public XmlGenericCnv {
   Gaudi::Transform3D* dealWithRotXYZ (xercesc::DOMElement* element);
 
   /**
-   * deals with the xml tag /<rotAxis/>. Creates the corresponding Gaudi::Rotation
+   * deals with the xml tag \<rotAxis\>. Creates the corresponding Gaudi::Rotation
    * and allocates the corresponding memory. The deallocation is the
    * responsability of the caller
    * An XmlCnvException will be launched if the tag attribute theta has a
