@@ -1,10 +1,21 @@
-// $Id:
-// Include files
+
+//=========================================================================
+/** @file ParticleMaker_load.cpp
+ *
+ *  Declaration of objects in the component library ParticleMaker
+ *
+ *  CVS Log :-
+ *  $Id: ParticleMaker_load.cpp,v 1.7 2007-03-05 10:41:56 jonrob Exp $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   2006-05-03
+ */
+//=========================================================================
 
 #include "GaudiKernel/DeclareFactoryEntries.h"
-#include "GaudiKernel/ObjectFactory.h"
 
-DECLARE_FACTORY_ENTRIES( ParticleMaker ) {
+DECLARE_FACTORY_ENTRIES( ParticleMaker ) 
+{
 
   // Particle Makers
   DECLARE_TOOL( CombinedParticleMaker );
@@ -22,9 +33,8 @@ DECLARE_FACTORY_ENTRIES( ParticleMaker ) {
 
   /// @todo Restore photon parameters tools
   //DECLARE_TOOL( PhotonParameters ) ;
-  //  DECLARE_TOOL( PhotonFromMergedParameters );
+  //DECLARE_TOOL( PhotonFromMergedParameters );
 
   DECLARE_TOOL( ParticleStuffer );
-
 
 }
