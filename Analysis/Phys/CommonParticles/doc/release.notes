@@ -4,6 +4,9 @@
 ! Purpose     : Common particles
 !-----------------------------------------------------------------------------
 
+! 2007-03-05 - Patrick Koppenburg
+ - Depend on DaVinciKernel, not DaVinciTools
+
 ! 2007-02-23 - Chris Jones
  - Minor change to how the Standard Particle DoD sequences are set up
   + For each Data-On-Demand entry alter the configuration to run
