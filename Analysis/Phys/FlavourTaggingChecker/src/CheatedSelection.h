@@ -1,4 +1,4 @@
-// $Id: CheatedSelection.h,v 1.4 2007-03-01 21:15:44 musy Exp $
+// $Id: CheatedSelection.h,v 1.5 2007-03-05 11:44:34 pkoppenb Exp $
 #ifndef USER_CheatedSelection_H 
 #define USER_CheatedSelection_H 1
 
@@ -11,7 +11,7 @@
 #include "Kernel/IDebugTool.h"
 
 // from Associators
-#include "DaVinciAssociators/Particle2MCLinker.h"
+#include "Kernel/Particle2MCLinker.h"
 
 // from local
 //#include "IForcedBDecayTool.h"

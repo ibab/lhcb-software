@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.12 2007-03-01 21:15:44 musy Exp $
+! $Id: release.notes,v 1.13 2007-03-05 11:44:34 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTaggingChecker
 ! Responsible : Marco Musy (marco.musy@cern.ch)
 ! Purpose     : Checker package for Phys/FlavourTagging
 !-----------------------------------------------------------------------------
+
+! 2007-03-05 - Patrick Koppenburg
+ - Do not depend on DaVinciAssociators
 
 ! 2006-03-01 - Marco Musy
   - major cleanup of BTaggingAnalysis. Small bug fix on how the PV is

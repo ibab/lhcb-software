@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.154 2007-03-01 12:57:55 sposs Exp $
+! $Id: release.notes,v 1.155 2007-03-05 11:44:01 pkoppenb Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+! 2007-03-05 - Patrick Koppenburg
+ - Do not depend on DaVinciAssociators
 
 ! 2007-03-01 - Stephane Poss
  - In FilterToFixOppositeBFractions : fix error calculation
