@@ -5,6 +5,103 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
+</PRE><H1><A NAME=v4r2>2007-03-05 RecSys v4r2</A></H1><PRE>
+This version uses Gaudi v19r2 and LHCb v22r2.
+
+- Packages updated: PatVelo v2r12, PatForward v2r12, PatKShort v1r4, PatPV v2r6,
+    PatChecker v2r12, GlobalReco v6r8, MuonPIDChecker v1r0p1, TrackSys v4r2, 
+    TrackPython v3r0, TrackMCTools v2r9, CaloPIDs v4r6, CaloReco v4r7, 
+    PatFitParams v2r5, PatVeloTT v2r9, TrackExtrapolators v2r9,TrackIdealPR v2r9,
+    TrackMatching v2r11, TrackProjectors v2r10, TrackSeeding v1r1,
+    VeloTools v1r1p1, TrackFitEvent v3r2, MuonID v4r5
+
+- In PatVelo v2r12
+  . Added small tolerance to code to fix phi between -pi and pi in PatVeloSectors
+  . Ensured that the sensors not in the readout are skipped in PatVeloRTracking
+    and PatVeloSpaceTool
+  . PatVeloAlignTool now regsisters all of the sensors with the update manager
+    service so the cached parameters will update correctly.
+    PatVeloDataHolder is also updated via PatVeloAlignTool
+
+- In PatForward v2r12
+  . New algorithm PatMatch to match seeds and Velo tracks using the centre of the
+    magnet to match the two straight line extrapolations.
+  . Avoid using [] access in PatOTModule and PatITSector
+  . Check the best RL ambiguity also for Y projection in PatSeeding.
+  . Use the selected RL ambiguity in the initial stereo fit in PatSeedTool
+
+- In PatKShort v1r4
+  . Add a missing protection when debugging if there is no MC truth available.
+  . Fix qOverP in TT state: Was unsigned!
+  . Add PatMakeKShort algorithm with corresponding  options file
+
+- In PatPV v2r6,
+  . Small memory leak in PatPV3D removed
+  . Get and check statuscodes when available
+
+- In PatChecker v2r12
+  . Large speed improvement by computing once the list of LHCbID per MCParticle
+    in PatChecker, not by inverting the relation in each counter!
+  . New option MeasureTime in PatChecker to distinguish between initialisation
+    per event and loop over tracks.
+  . Use either Tsa or PatSeeding tracks to compute the Ks efficiencies (requires
+    to have a seed) and to debug the missed Ks tracks
+
+- In GlobalReco v6r8
+  . Always store Muon system acceptance flag in ProtoParticle, even if IsMuon
+    is not satisfied, using new ProtoParticle flag.
+  . Update ntuple algorithm to use this new flag
+  . Add root direcitory containing useful scripts
+  . Exit with StatusCode::SUCCESS but setFilterPassed(false) when no tracks 
+    are there.
+  . use rootOnTES() in ChargedProtoCombineDLLsAlg for ProtoP location
+  . Renormalise Rich DLL contributions to the el and mu combined DLL values
+    in order to suppress huge values, which adversely affect the performance
+  . Rename ProtoCombineDLLsAlg to ChargedProtoCombineDLLsAlg
+
+- In MuonPIDChecker v1r0p1
+  . Remove unneccessary L0Event dependency
+  . Updated reference values in the printout
+
+- In TrackPython v3r0
+  . Remove reflex dictionary generation. This is now done directly in the
+    LHCb v22r2 packages containing the interface header files
+
+- In TrackMCTools v2r9
+  . added consts to interface
+  . added test on non-empty vector of states in TrackCriteriaSelector
+  . removed buggy caching in TrackCriteriaSelector
+  
+- In TrackIdealPR v2r9
+  . fixed bug in seeding. seed-z is no longer cached between (!) tracks
+
+- In TrackFitEvent v3r2
+  . Add no_auto_imports to use GaudiObjDesc, to avoid getting a dependency on
+    python in the TrackFitEvent link library
+
+- In MuonID v4r5
+  . Save MuonPID in container with same key as associated Track
+
+- In PatVelo v2r12, CaloPIDs v4r6, CaloReco v4r7, PatFitParams v2r5,
+     PatVeloTT v2r9, VeloTools v1r1p1,TrackExtrapolators v2r9, TrackIdealPR v2r9,
+     TrackMatching v2r11, TrackProjectors v2r10, TrackSeeding v1r1
+  . Remove LHCbDefinitions includes
+
+- In PatVelo v2r12, PatForward v2r12, PatKShort v1r4,PatPV v2r6,PatChecker v2r12,
+     GlobalReco v6r8, MuonPIDChecker v1r0p1, TrackMCTools v2r9, CaloPIDs v4r6,
+     CaloReco v4r7, PatFitParams v2r5, PatVeloTT v2r9, TrackExtrapolators v2r9,
+     TrackIdealPR v2r9, TrackMatching v2r11, TrackProjectors v2r10,
+     TrackSeeding v1r1, VeloTools v1r1p1, TrackFitEvent v3r2, MuonID v4r5
+  . Remove obsolete xxx_load.cpp file
+
+- In PatPV v2r6, CaloReco v4r7, PatFitParams v2r5, PatVeloTT v2r9,
+     TrackIdealPR v2r9, TrackSeeding v1r1
+  . Remove obsolete ApplicationMgr.DLLs options
+
+- In GlobalReco v6r8, TrackMCTools v2r9, CaloPIDs v4r6, TrackExtrapolators v2r9,
+     VeloTools v1r1p1
+  . Fix doxygen warnings
+
 </PRE><H1><A NAME=v4r1>2007-02-12 RecSys v4r1</A></H1><PRE>
 This version uses Gaudi v19r1 and LHCb v22r1.
 
