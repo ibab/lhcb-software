@@ -14,8 +14,7 @@ branches          cmt doc src
 include_path none
 
 #============================================================================
-# Used packages. Specify the version, * at the end specifies 'any revision'
-#    Put as many lines as needed, with all packages, without the '#'
+# Used packages
 #============================================================================
 use   Boost            v*      LCG_Interfaces
 use   GSL              v*      LCG_Interfaces
@@ -23,7 +22,6 @@ use   GSL              v*      LCG_Interfaces
 use   GaudiKernel      v*
 use   GaudiAlg         v*
 
-use   LHCbDefinitions  v*      Kernel
 use   STDet            v*      Det
 use   DigiEvent        v*      Event
 use   TrackEvent       v*      Event
