@@ -5,7 +5,7 @@
  *  Implementation file for class : MCReconstructible
  *
  *  CVS Log :-
- *  $Id: MCReconstructible.cpp,v 1.3 2007-03-01 20:46:53 jonrob Exp $
+ *  $Id: MCReconstructible.cpp,v 1.4 2007-03-05 12:49:16 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 28/02/2007
@@ -50,7 +50,7 @@ MCReconstructible::MCReconstructible( const std::string& type,
 //=============================================================================
 // Destructor
 //=============================================================================
-MCReconstructible::~MCReconstructible() 
+MCReconstructible::~MCReconstructible()
 {
   // clean up
   delete m_tkInfo;
@@ -127,8 +127,8 @@ bool MCReconstructible::accept_neutral( const LHCb::MCParticle* mcPart ) const
 //====================================================================
 bool MCReconstructible::accept_charged( const LHCb::MCParticle * mcPart ) const
 {
-  return ( mcTkInfo().accVelo(mcPart) || 
-           mcTkInfo().accTT(mcPart)   || 
+  return ( mcTkInfo().accVelo(mcPart) ||
+           mcTkInfo().accTT(mcPart)   ||
            mcTkInfo().accT(mcPart)     );
 }
 
@@ -140,6 +140,12 @@ MCReconstructible::reconstructible( const LHCb::MCParticle* mcPart ) const
 {
   if ( !mcPart ) return NoClassification;
 
+  // charged or neutral
+  const bool isCharged = mcPart->particleID().threeCharge() != 0;
+
+  // acceptance ?
+  if ( !inAcceptance(mcPart) ) return OutsideAcceptance;
+
   // Base class MCParticle selection
   if ( m_mcSel->accept(mcPart) )
   {
@@ -148,42 +154,38 @@ MCReconstructible::reconstructible( const LHCb::MCParticle* mcPart ) const
     {
 
       // Is the MCParticle charged or not
-      if ( mcPart->particleID().threeCharge() != 0 )
+      if ( isCharged )
       {
 
-        // in charged acceptance ?
-        if ( accept_charged(mcPart) )
+        // decide the type
+        if      ( mcTkInfo().hasVeloAndT(mcPart) )
         {
-          // decide the type
-          if      ( mcTkInfo().hasVeloAndT(mcPart) )
-          {
-            return ChargedLong;
-          }
-          else if ( mcTkInfo().hasVelo(mcPart) && mcTkInfo().hasTT(mcPart) )
-          {
-            return ChargedUpstream;
-          }
-          else if ( mcTkInfo().hasT(mcPart) && mcTkInfo().hasTT(mcPart) )
-          {
-            return ChargedDownstream;
-          }
-          else if ( mcTkInfo().hasVelo(mcPart) )
-          {
-            return ChargedVelo;
-          }
-          else if ( mcTkInfo().hasT(mcPart) )
-          {
-            return ChargedTtrack;
-          }
+          return ChargedLong;
         }
+        else if ( mcTkInfo().hasVelo(mcPart) && mcTkInfo().hasTT(mcPart) )
+        {
+          return ChargedUpstream;
+        }
+        else if ( mcTkInfo().hasT(mcPart) && mcTkInfo().hasTT(mcPart) )
+        {
+          return ChargedDownstream;
+        }
+        else if ( mcTkInfo().hasVelo(mcPart) )
+        {
+          return ChargedVelo;
+        }
+        else if ( mcTkInfo().hasT(mcPart) )
+        {
+          return ChargedTtrack;
+        }
+
       }
       else // neutral
       {
-        // in charged acceptance ?
-        if ( accept_neutral(mcPart) )
-        {
-          return Neutral;
-        }
+
+        // only one type at the moment
+        return Neutral;
+
       }
 
     } // has mother

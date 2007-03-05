@@ -5,7 +5,7 @@
  *  Header file for class : MCReconstructible
  *
  *  CVS Log :-
- *  $Id: MCReconstructible.h,v 1.2 2007-03-01 20:24:56 jonrob Exp $
+ *  $Id: MCReconstructible.h,v 1.3 2007-03-05 12:49:16 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 28/02/2007
