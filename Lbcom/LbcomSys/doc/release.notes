@@ -6,6 +6,25 @@
 !             : Contains packages shared by Boole and other applications   
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v6r2>2007-03-05 LbcomSys v6r2</A></H1><PRE>
+This version uses Gaudi v19r2 and LHCb v22r2
+
+Packages modified:  L0Calo v9r7, OTMonitor v2r4, VeloSimulation v2r5
+
+- In L0Calo v9r7
+  . Adapt to code changes in CaloDAQ v3r1
+  . Protect against the possibility to have Pin-diode FE-Cards in condDB
+ 
+- In VeloSimulation v2r5
+  . Bug fix to get rid of biased residuals
+
+- In L0Calo v9r7, OTMonitor v2r4, VeloSimulation v2r5
+  . Remove obsolete xxx_load.cpp file
+  . Remove LHCbDefinitions includes
+
+- In L0Calo v9r7, OTMonitor v2r4
+  . Fix a doxygen warning
+
 </PRE><H1><A NAME=v6r1>2007-02-07 LbcomSys v6r1</A></H1><PRE>
 This version uses Gaudi v19r1 and LHCb v22r1
 

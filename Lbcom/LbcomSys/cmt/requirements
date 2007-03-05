@@ -8,13 +8,13 @@ branches doc cmt
 #===============================================================
 
 # L0 trigger simulation                 # Maintainer
-use L0Calo            v9r6  L0          # Olivier Callot
+use L0Calo            v9r7  L0          # Olivier Callot
 use L0DU              v7r4  L0          # Olivier Deschamps   
 use L0Muon            v7r0  L0          # Andrei Tsarogorodtsev, Julien Cogan
 use PuVeto            v7r2  L0          # Marko Zupan
 
 # Outer tracker
-use OTMonitor         v2r3  OT          # Jan Amoraal
+use OTMonitor         v2r4  OT          # Jan Amoraal
 use OTAssociators     v4r1  OT          # Jan Amoraal
 
 # Rich
@@ -40,7 +40,7 @@ use CaloAssociators   v6r3  Calo        # Olivier Deschamps
 use VeloDAQ           v3r5  Velo        # Kurt Rinnert
 use VeloAssociators   v2r2  Velo        # Tomasz Szumlak
 use VeloAlgorithms    v4r6  Velo        # Tomasz Szumlak
-use VeloSimulation    v2r4  Velo        # Tomasz Szumlak
+use VeloSimulation    v2r5  Velo        # Tomasz Szumlak
 
 # Muon
 use MuonAssociators   v3r0  Muon        # Alessia Satta
