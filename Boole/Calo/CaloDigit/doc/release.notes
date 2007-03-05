@@ -4,6 +4,38 @@
 ! Purpose     : Digitisation and Zero-suppression of the Calorimeters
 !-----------------------------------------------------------------------------
 
+! 2007-03-05 - Vanya BELYAEV
+
+ -  src/MCCaloLED.h
+     very simple algorithm which produces MC-LED signals.
+     Algorithm parameters: 
+
+    Output:             the location of output MCCaloHit container
+         default value: LHCb::MCCaloHitLocation::Ecal
+    Calorimeter:        Calorimeter to simulate, 
+         default value: DeCalorimeterLocation::Ecal
+    MeanET:             Mean value of LED signal in (ET) 
+         default value: 5.00 * Gaudi::Units::GeV  of transverse enerty,
+                        close to the middle of the dynamic range
+    Sigma:              Relative sigma in LED 
+         default value: 0.25 * Gaudi::Units::perCent, 
+                        close to 5 ADC channel near the middle of the dynamic range
+    Fraction:           Fraction of cells to be fired
+         default value: 1/16 
+
+    If this algorithm runs BEFORE CaloSignalAlg, 
+    It produces a good emulation of LED event.
+    All sources of possible non-perfectness 
+    (noise, time-treatment, spillover, etc..) are treated 
+    by subsequent digitization algorithms 
+    exactly as for any other data.
+
+ - cmt/requirements 
+
+    version increment to v2r4 
+
+
+
 !======================== CaloDigit v2r3 2007-03-01 ==========================
 ! 2007-03-01 - Marco Cattaneo
  - Remove obsolete CaloDigit_load.cpp file, and an LHCbDefinitions include
