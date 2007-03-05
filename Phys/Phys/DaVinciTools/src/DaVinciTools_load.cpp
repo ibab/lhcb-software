@@ -1,4 +1,4 @@
-// $Id: DaVinciTools_load.cpp,v 1.73 2006-12-18 11:17:01 jpalac Exp $
+// $Id: DaVinciTools_load.cpp,v 1.74 2007-03-05 09:05:35 pkoppenb Exp $
 // Include files 
 
 #include "GaudiKernel/DeclareFactoryEntries.h"
@@ -36,10 +36,12 @@ DECLARE_FACTORY_ENTRIES( DaVinciTools ) {
 
   // Algorithms
   DECLARE_ALGORITHM( CheckPV );  
+  DECLARE_ALGORITHM( CheckSelResult );
   DECLARE_ALGORITHM( ConjugateNeutralPID );
   DECLARE_ALGORITHM( MakeResonances ) ;
-  DECLARE_ALGORITHM( SimplePlots );  
   DECLARE_ALGORITHM( Particle2VertexAsctAlg );  
+  DECLARE_ALGORITHM( SimplePlots );  
+  DECLARE_ALGORITHM( SelResultsCorrelations );
 
 }
 
