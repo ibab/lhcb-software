@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.43 2006-12-06 16:23:46 jpalac Exp $
+! $Id: release.notes,v 1.44 2007-03-05 09:13:03 pkoppenb Exp $
 ! Package     : DaVinciTransporter
 ! Responsible : P. Koppenburg, J. Palacios
 !==============================================================================
+
+! 2007-03-05 - Patrick Koppenburg
+ - Remove LHCbDefinitions dependency
+ - Increment to v3r6
 
 !========================== DaVinciTransporter v3r5 2006-12-06 ================
 
