@@ -1,0 +1,12 @@
+!-----------------------------------------------------------------------------
+! Package     : Phys/ParticleMakerChecker
+! Responsible : Chris Jones
+! Purpose     : MC checker algorithms for ParticleMakers
+!-----------------------------------------------------------------------------
+
+! 2007-03-05 - Chris Jones
+ - First version. Contains initial implementation of ParticleEffPurMoni
+   to provide 'standard' monitoring of Particles.
+   This implementation gives efficiency and composition information for a
+   given Particle location. For composite Particles the algorithm searches the
+   daughter tree until it finds the basic Particles and uses them.
