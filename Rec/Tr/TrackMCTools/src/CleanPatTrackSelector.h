@@ -1,8 +1,8 @@
-// $Id: CleanPatTrackSelector.h,v 1.1 2006-06-29 06:08:28 mneedham Exp $
+// $Id: CleanPatTrackSelector.h,v 1.2 2007-03-05 15:24:43 cattanem Exp $
 #ifndef _CleanPatTrackSelector_H
 #define _CleanPatTrackSelector_H
 
-/** @class CleanPatTrackSelector CleanPatTrackSelector TrackTools/CleanPatTrackSelector.h
+/** @class CleanPatTrackSelector CleanPatTrackSelector.h
  *
  *  Track Selection tool
  *

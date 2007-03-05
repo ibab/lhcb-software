@@ -1,4 +1,4 @@
-// $Id: TrackCriteriaSelector.h,v 1.8 2007-02-01 10:11:28 wouter Exp $
+// $Id: TrackCriteriaSelector.h,v 1.9 2007-03-05 15:24:43 cattanem Exp $
 #ifndef TRACKMCTOOLS_TRACKCRITERIASELECTOR_H 
 #define TRACKMCTOOLS_TRACKCRITERIASELECTOR_H 1
 
@@ -60,39 +60,39 @@ public:
   virtual StatusCode initialize();
 
   /** Select the Track.
-   *  @return True, if the track is selected; false otherwise.
-   *  @param  track, Input track, which is checked for selection.
+   *  @return      True if the track is selected; False otherwise.
+   *  @param track Input track, which is checked for selection.
    */
   virtual bool select( const LHCb::Track* track ) const;
 
   /** Select the MCParticle.
-   *  @return True, if the MCParticle is selected; false otherwise.
-   *  @param  mcParticle, Input MCParticle, which is checked for selection.
+   *  @return           True if the MCParticle is selected; False otherwise.
+   *  @param mcParticle Input MCParticle, which is checked for selection.
    */
   virtual bool select( const LHCb::MCParticle* mcParticle ) const;
 
   /** Select the Track only by track type, unique- and valid-flag .
-   *  @return True, if the track is selected; false otherwise.
-   *  @param  track, Input track, which is checked for selection.
+   *  @return      True if the track is selected; False otherwise.
+   *  @param track Input track, which is checked for selection.
    */
   virtual bool selectByTrackType( const LHCb::Track* track ) const;
 
   /** Select the MCParticle only by track type.
-   *  @return True, if the MCParticle is selected; false otherwise.
-   *  @param  mcParticle, Input MCParticle, which is checked for selection.
+   *  @return           True if the MCParticle is selected; False otherwise.
+   *  @param mcParticle Input MCParticle, which is checked for selection.
    */
   virtual bool selectByTrackType( const LHCb::MCParticle* mcParticle ) const;
 
-  /** Get the track type identifyer of the MCParticle.
-   *  @return Track type identifyer as defined in Track.h
-   *  @param  mcParticle, Input MCParticle.
+  /** Get the track type identifier of the MCParticle.
+   *  @return           Track type identifier as defined in Track.h
+   *  @param mcParticle Input MCParticle.
    */
   virtual unsigned int trackType( const LHCb::MCParticle* mcPart ) const ;
 
   /** Set the track type of a Track with an MCParticle's type.
-   *  @return StatusCode.
-   *  @param  mcPart, MCParticle which will determine the type of the (true) Track.
-   *  @param  track,  Track of which the type will be set.
+   *  @return        StatusCode.
+   *  @param mcPart MCParticle which will determine the type of the (true) Track.
+   *  @param track  Track of which the type will be set.
    */
   virtual StatusCode setTrackType( const LHCb::MCParticle* mcPart,
                                    LHCb::Track*& track ) const ;
