@@ -4,8 +4,6 @@
 // Setup the CaloReco on-Demand for DaVinci usage
 //
 
-ApplicationMgr.DLLs += { "CaloReco"};
-
 // CaloDigits
 #include "$CALODAQROOT/options/CaloDigitsOnDemand.opts"
 
