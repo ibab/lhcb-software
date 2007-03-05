@@ -1,4 +1,4 @@
-//$Id: testUMSError.opts,v 1.4 2007-02-05 19:05:13 marcocle Exp $
+//$Id: testUMSError.opts,v 1.5 2007-03-05 09:41:50 cattanem Exp $
 //==============================================================
 // Job options to test double CondDB usage in DetCondExample
 //==============================================================
@@ -42,10 +42,5 @@ EventClockSvc.FakeEventTime.TimeStep = 10;
 // Set output level threshold 
 // Levels: 1=VERBOSE, 2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL
 MessageSvc.OutputLevel = 1;
-
-//--------------------------------------------------------------
-// DetCond extra options
-//--------------------------------------------------------------
-ApplicationMgr.DLLs += { "DetCond" };
 
 
