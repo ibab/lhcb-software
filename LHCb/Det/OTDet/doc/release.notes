@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.79 2007-03-01 11:32:48 cattanem Exp $
+! $Id: release.notes,v 1.80 2007-03-05 11:39:18 janos Exp $
 ! Package     : OTDet
 ! Responsible : Jeroen van Tilburg, Jacopo Nardulli, Jan Amoraal
 !--------------------------------------------------------------------------
 
+! 2007-03-06 - Jan Amoraal
+ - Fix warning in DeOTModule.h
+ 
 !========================== OTDet v7r2 2007-03-01 =========================
 ! 2007-03-01 - Marco Cattaneo
  - Remove obsolete OTDet_load.cpp file
