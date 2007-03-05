@@ -4,7 +4,10 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
-!===================== LHCbKernel v7r2 2007-03-01 ========================
+!===================== LHCbKernel v7r2 2007-03-05 ========================
+! 2007-03-05 - Marco Cattaneo
+ - Remove obsolete LHCbKernel_load.cpp file
+
 ! 2007-03-01 - Marco Cattaneo
  - Add IAlgorithmCorrelations interface, previously in Tools/Utilities
 
