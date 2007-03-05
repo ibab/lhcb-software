@@ -4,7 +4,11 @@
 ! Purpose     : Interface to XML Xerces Parser plus some extra services
 !-----------------------------------------------------------------------------
 
-!======================== XmlTools v5r1 2007-03-02 ==========================
+!======================== XmlTools v5r1 2007-03-05 ===========================
+! 2007-03-05 - Marco Cattaneo
+ - Disable IXmlParserSvc dictionary on Windows (doesn't compile)
+ - Remove obsolete XmlTools_load.cpp file
+
 ! 2007-02-28 - Marco Clemencic
  - Added dictionaries for IXmlParserSvc and IXmlEntityResolverSvc
 
