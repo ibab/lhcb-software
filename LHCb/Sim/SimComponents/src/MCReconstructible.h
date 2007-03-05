@@ -5,7 +5,7 @@
  *  Header file for class : MCReconstructible
  *
  *  CVS Log :-
- *  $Id: MCReconstructible.h,v 1.3 2007-03-05 12:49:16 jonrob Exp $
+ *  $Id: MCReconstructible.h,v 1.4 2007-03-05 13:42:59 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 28/02/2007
@@ -99,6 +99,9 @@ private: // data
 
   /// Threshold for Et gammas reconstructibility
   double m_lowEt;
+
+  /// Allow primary particles
+  bool m_allowPrimary;
 
   /// Pointer to MCTrackInfo object
   mutable MCTrackInfo * m_tkInfo;

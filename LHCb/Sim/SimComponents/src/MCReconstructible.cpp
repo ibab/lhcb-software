@@ -5,7 +5,7 @@
  *  Implementation file for class : MCReconstructible
  *
  *  CVS Log :-
- *  $Id: MCReconstructible.cpp,v 1.4 2007-03-05 12:49:16 jonrob Exp $
+ *  $Id: MCReconstructible.cpp,v 1.5 2007-03-05 13:42:59 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 28/02/2007
@@ -45,6 +45,8 @@ MCReconstructible::MCReconstructible( const std::string& type,
 {
   // Interface
   declareInterface<IMCReconstructible>(this);
+  // job options
+  declareProperty( "AllowPrimaryParticles", m_allowPrimary = true );
 }
 
 //=============================================================================
@@ -149,8 +151,8 @@ MCReconstructible::reconstructible( const LHCb::MCParticle* mcPart ) const
   // Base class MCParticle selection
   if ( m_mcSel->accept(mcPart) )
   {
-    // Does MCParticle have a mother (CRJ : why this check ?)
-    if (NULL != mcPart->mother() )
+    // Does neutral MCParticle have a mother (CRJ : why this check ?)
+    if ( m_allowPrimary || NULL != mcPart->mother() )
     {
 
       // Is the MCParticle charged or not
