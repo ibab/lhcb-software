@@ -1,8 +1,11 @@
-// $Id: MomentumCombiner.cpp,v 1.1 2006-08-16 14:44:51 ibelyaev Exp $
+// $Id: MomentumCombiner.cpp,v 1.2 2007-03-05 09:22:21 pkoppenb Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2006/08/16 14:44:51  ibelyaev
+//  add MomentumCombiner tool + minor fixes to enable the usage of IParticleCombiner interface
+//
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -18,7 +21,7 @@
 // ============================================================================
 // LHCbKernel
 // ============================================================================
-#include "Kernel/GenericVectorTypes.h"
+#include "GaudiKernel/GenericVectorTypes.h"
 // ============================================================================
 // DaVinciKernel
 // ============================================================================
