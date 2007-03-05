@@ -1,5 +1,5 @@
 ! ------------------------------------------------------------------------------
-! $Id: release.notes,v 1.21 2007-03-02 10:11:24 cattanem Exp $ 
+! $Id: release.notes,v 1.22 2007-03-05 10:34:25 cattanem Exp $ 
 ! ------------------------------------------------------------------------------
 ! Package     : Det/DetDescChecks
 ! Responsible : Vanya Belyaev Ivan.Belyaev@itep.ru
@@ -7,7 +7,10 @@
 !               Detector Description, Material Budget etc 
 ! ------------------------------------------------------------------------------
 
-!======================= DetDescChecks v4r2 2007-03-02 ========================
+!======================= DetDescChecks v4r2 2007-03-05 ========================
+! 2007-03-05 - Marco Cattaneo
+ - Remove obsolete DetDescChecks_load.cpp file
+
 ! 2007-02-28 - Marco Clemencic
  - Use SQLDDDB instad of XmlDDDB and XmlConditions
  - Clean up of LoadDDDB.opts
