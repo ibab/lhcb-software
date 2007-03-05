@@ -1,4 +1,3 @@
 //Check.DetectorList += { "MUON" }; // included in BrunelCheck.opts
-//ApplicationMgr.DLLs  += { "MuonPIDChecker" }; CRJ : No longer needed with Gaudi v19r1
 CheckMUONSeq.Members += { "MuonPIDChecker" };
 MuonPIDChecker.HistoTopDir = "Muon/MuonPID";
