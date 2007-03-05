@@ -1,8 +1,9 @@
 Package         : OTMonitor
 Package manager : J. Nardulli
 
-!==================== OTMonitor v2r4 2006-02-26 =====================
-! 2007-02-26 - Marco Cattaneo
+!==================== OTMonitor v2r4 2006-03-05 =====================
+! 2007-03-05 - Marco Cattaneo
+ - Remove obsolete OTMonitor_load.cpp file
  - Remove an LHCbDefinitions include
  - Fix a doxygen warning
 
