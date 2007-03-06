@@ -10,13 +10,12 @@ use  CommonParticles            v3r8     Phys   # Juan Palacios, WGs
 use  FlavourTagging             v7r2     Phys   # Marco Musy
 
 ####################################################################
-use  DaVinciMCKernel            v2r1     Phys   # move to LHCb
 use  DaVinciMCTools     	v9r1     Phys   # Juan Palacios
 use  DaVinciAssociators         v9r0     Phys   # Philippe Charpentier
 use  MCStandardParticles        v1r2     Phys   # Juan Palacios
 use  FlavourTaggingChecker      v2r2     Phys   # Marco Musy
 use  DaVinciUser      	        v8r1     Phys   # Juan Palacios
-
+use  ParticleMakerChecker       v1r0     Phys   # Chris Jones
 ####################################################################
 use  PhysSelSys      	v10r1   PhysSel
 #===================================================================
@@ -26,8 +25,8 @@ use B2D0X		v1r8	PhysSel # WGs
 use B2DplusX		v1r0	PhysSel # WGs
 use B2DsX		v1r4	PhysSel # WGs
 use B2DstarX		v1r4	PhysSel # WGs
-use B2uds	        v2r2    PhysSel # Juan Palacios, Gabriel Guerrer, Eric Conte
-use JetsSel	        v1r2    PhysSel # Jest WG
+use B2uds	        v2r3    PhysSel # Juan Palacios, Gabriel Guerrer, Eric Conte
+use JetsSel	        v1r3    PhysSel # Jest WG
 use Radiative           v2r1    PhysSel # Vanya BELYAEV
 
 # temporary packages
