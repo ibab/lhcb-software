@@ -1,4 +1,4 @@
-// $Id: FilterToFixOppositeBFractions.cpp,v 1.6 2007-03-01 12:57:55 sposs Exp $
+// $Id: FilterToFixOppositeBFractions.cpp,v 1.7 2007-03-06 09:37:56 sposs Exp $
 // Include files
 #include <sstream>
 #include "GaudiKernel/MsgStream.h"
@@ -81,7 +81,46 @@ StatusCode FilterToFixOppositeBFractions::initialize() {
   m_evtGxFx[11102003] = std::pair<double,double>(0.5654,0.406);// Bd_K+pi-=CPV,DecProdCut
   m_evtGxFx[11102013] = std::pair<double,double>(0.5683,0.406);// Bd_pi+pi-=CPV,DecProdCut
   m_evtGxFx[11144103] = std::pair<double,double>(0.7044,0.406);// Bd_JpsiKS,mm=CPV,DecProdCut
-  
+  m_evtGxFx[13112001] = std::pair<double,double>(0.1349,0.099);// Bs_mumu=DecProdCut
+  m_evtGxFx[13102201] = std::pair<double,double>(0.1245,0.099);// Bs_phigamma=DecProdCut
+  m_evtGxFx[11164011] = std::pair<double,double>(0.4908,0.406);// Bd_D0Kst,Kpi=DecProdCut
+  m_evtGxFx[13104011] = std::pair<double,double>(0.1338,0.099);// Bs_phiphi=DecProdCut
+  m_evtGxFx[13264401] = std::pair<double,double>(0.1443,0.099);// Bs_Dsrho=DecProdCut
+  m_evtGxFx[13336001] = std::pair<double,double>(0.1423,0.099);// Bs_etacphi=DecProdCut
+  m_evtGxFx[11463000] = std::pair<double,double>(0.4527,0.406);// Bd_Dst+X,2body
+  m_evtGxFx[12463000] = std::pair<double,double>(0.4469,0.406);// Bu_Dst+X,2body
+  m_evtGxFx[12163011] = std::pair<double,double>(0.5034,0.406);// Bu_D0K,Kpi=DecProdCut
+  m_evtGxFx[11166101] = std::pair<double,double>(0.5025,0.406);// Bd_D0Kst,KSpipi=DecProdCut
+  m_evtGxFx[11166111] = std::pair<double,double>(0.4940,0.406);// Bd_D0Kst,KSKK=DecProdCut
+  m_evtGxFx[12265001] = std::pair<double,double>(0.5053,0.406);// Bu_D0K,Kpipipi=DecProdCut
+  m_evtGxFx[12265101] = std::pair<double,double>(0.4950,0.406);// Bu_D0K,KSKK=DecProdCut
+  m_evtGxFx[11104121] = std::pair<double,double>(0.4886,0.406);// Bd_KSpi+pi-=DecProdCut
+  m_evtGxFx[12565001] = std::pair<double,double>(0.5070,0.406);// Bu_D0tau,Kpi,pipipi=DecProdCut
+  m_evtGxFx[15102228] = std::pair<double,double>(0.1103,0.089);// Lb_gammaLambda1670=trpol,DecProdCut
+  m_evtGxFx[15104111] = std::pair<double,double>(0.1111,0.089);// Lb_phiLambda=DecProdCut
+  m_evtGxFx[15104105] = std::pair<double,double>(0.1130,0.089);// Lb_rhoLambda=omegaMix,DecProdCut
+  m_evtGxFx[12165001] = std::pair<double,double>(0.4979,0.406);// Bu_D0K,KKpipi=DecProdCut
+  m_evtGxFx[11124001] = std::pair<double,double>(0.4997,0.406);// Bd_Kstee=DecProdCut
+  m_evtGxFx[13396001] = std::pair<double,double>(0.1427,0.099);// Bs_DsstDsst=DecProdCut
+  m_evtGxFx[11264001] = std::pair<double,double>(0.5004,0.406);// Bd_D-pi+=DecProdCut
+  m_evtGxFx[11114001] = std::pair<double,double>(0.5019,0.406);// Bd_Kstmumu=DecProdCut
+  m_evtGxFx[11912001] = std::pair<double,double>(0.5053,0.406);// Bd_smumu=DecProdCut
+  m_evtGxFx[12912001] = std::pair<double,double>(0.5088,0.406);// Bu_smumu=DecProdCut
+  m_evtGxFx[15164001] = std::pair<double,double>(0.1207,0.089);// Lb_Lambdacpi=DecProdCut
+  m_evtGxFx[15264001] = std::pair<double,double>(0.1217,0.089);// Lb_Dsp=DecProdCut
+  m_evtGxFx[11102021] = std::pair<double,double>(0.4835,0.406);// Bd_K+K-=DecProdCut
+  m_evtGxFx[11102031] = std::pair<double,double>(0.4900,0.406);// Bd_pp=DecProdCut
+  m_evtGxFx[13102013] = std::pair<double,double>(0.1561,0.099);// Bs_pi+K-=CPV,DecProdCut
+  m_evtGxFx[13102021] = std::pair<double,double>(0.1338,0.099);// Bs_pi+pi-=DecProdCut
+  m_evtGxFx[13102031] = std::pair<double,double>(0.1334,0.099);// Bs_pp=DecProdCut
+  m_evtGxFx[15102001] = std::pair<double,double>(0.1175,0.089);// Lb_pK=DecProdCut
+  m_evtGxFx[15102011] = std::pair<double,double>(0.1175,0.089);// Lb_ppi=DecProdCut
+  m_evtGxFx[13442001] = std::pair<double,double>(0.1333,0.099);// Bs_JpsiX,mm=JpsiInAcc
+  m_evtGxFx[12442001] = std::pair<double,double>(0.4935,0.406);// Bu_JpsiX,mm=JpsiInAcc
+  m_evtGxFx[11442001] = std::pair<double,double>(0.4885,0.406);// Bd_JpsiX,mm=JpsiInAcc
+  m_evtGxFx[15442001] = std::pair<double,double>(0.1162,0.089);// Lb_JpsiX,mm=JpsiInAcc
+  m_evtGxFx[13410001] = std::pair<double,double>(0.1337,0.099);// Bs_DsX=cocktail,DsInAcc
+  m_evtGxFx[12163021] = std::pair<double,double>(0.4974,0.406);// Bu_D0K,KK=DecProdCut  
 
   return StatusCode::SUCCESS;
 }
