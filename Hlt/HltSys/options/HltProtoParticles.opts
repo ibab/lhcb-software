@@ -61,7 +61,7 @@ HltMuons.DecayDescriptor = "Muon" ;
 //---------------------------------------------------------------------
 // Special case for electrons - NO ELECTRON ID YET
 //---------------------------------------------------------------------
-SeqHltCharged.Members += { "PreLoadParticles/HltElectrons"};
+//SeqHltCharged.Members += { "PreLoadParticles/HltElectrons"};
 HltElectrons.PhysDesktop.ParticleMakerType = "NoPIDsParticleMaker" ;
 HltElectrons.PhysDesktop.NoPIDsParticleMaker.Inputs =  {"Hlt/ProtoP/Charged"} ;
 HltElectrons.PhysDesktop.NoPIDsParticleMaker.Particle =  "electron" ;
