@@ -60,41 +60,67 @@ class valKeyValidator(qt.QValidator):
     def validate(self, inputString, cursorPos):
         '''
         An overridden function checking if the given input is a valid
-        cool.ValidityKey. The parameter cursorPos is not used.
+        date-time. The parameter cursorPos is not used.
 
-        WARNING: for the moment, an empty string and all non numeric
-        characteres are forbiden. The consequence is that the QLineEdit
-        widget can not be empty.
-        This is done for "esthetical reasons" and may change in the
-        future if necessary.
+        The validation is accepting any string as "intermediate", which
+        means that string inserted by the user may not be valid.
         '''
-        #print "'%s' %d"%(str(inputString),cursorPos)
-        inputValue = str(inputString).strip()
-        if re.match(conddbui.ValidityKeyWrapper.format_re,inputValue):
-            inVal = conddbui.ValidityKeyWrapper(inputValue)
-            if self.valKeyMin <= inVal <= self.valKeyMax:
-                return (qt.QValidator.Acceptable, cursorPos)
-            else:
+        inputValue = str(inputString)
+        if re.match('^[1-2]?[0-9]{0,3}-?(0?[0-9]?|1[0-2]?)?-?[0-3]?[0-9]?[ T]?'+
+                    '([01]?[0-9]?|2[0-3]?)?:?[0-5]?[0-9]?:?[0-5]?[0-9]?'+ \
+                    '(\.[0-9]{0,9})?$' +
+                    '|^[+]?[iI]?[nN]?[fF]?$',
+                    #'^[0-9]{0,4}-?[0-9]{0,2}-?[0-9]{0,2}[ T]?'+
+                    #'[0-9]{0,2}:?[0-9]{0,2}:?[0-9]{0,2}'+
+                    #'(\.[0-9]{0,9})?$|^[+]?[iI]?[nN]?[fF]?$',
+                    inputValue):
+            if re.match(conddbui.ValidityKeyWrapper.format_re,inputValue):
+                try:
+                    inVal = conddbui.ValidityKeyWrapper(inputValue)
+                    if self.valKeyMin <= inVal <= self.valKeyMax:
+                        return (qt.QValidator.Acceptable, cursorPos)
+                except:
+                    pass
                 return (qt.QValidator.Invalid, cursorPos)
-        elif re.match('[0-9 \-+inf]*',inputValue):
-            return (qt.QValidator.Intermediate, cursorPos)
-        else:
-            return (qt.QValidator.Invalid, cursorPos)
+            else:
+                return (qt.QValidator.Intermediate, cursorPos)
+        return (qt.QValidator.Invalid, cursorPos)
             
     def fixup(self, inputString):
         '''
         Modify the input value such that it is never greater than
         cool::ValidityKeyMax or smaller than cool::ValidityKeyMin.
         '''
-        if str(inputString).strip() == '':
+        completable_datetime = '(?P<year>(?:19|2[01])?[0-9]{2})-(?P<month>(?:0?[0-9]|1[0-2]))-(?P<day>[0-3]?[0-9])[ T]'+ \
+                               '(?P<hour>(?:[01]?[0-9]|2[0-3])):(?P<minute>[0-5]?[0-9]):(?P<s>[0-5]?[0-9])'+ \
+                               '(?:\.(?P<ns>[0-9]{0,9}))?'
+        inputValue = str(inputString)
+        if inputValue.strip() == '':
             inputString.remove(0, len(inputString))
             inputString.prepend(str(conddbui.ValidityKeyWrapper()))
         else:
-            try:
-                inVal = conddbui.ValidityKeyWrapper(str(inputString))
+            mtch = re.match(completable_datetime,inputValue)
+            if mtch:
+                y,m,d,H,M,S,ns = mtch.groups()
+                if len(y) < 4:
+                    if int(y) < 70: y = '20'+y
+                    else: y = '19'+y
+                if len(m) == 1 : m = '0' + m
+                if len(d) == 1 : d = '0' + d
+                if len(H) == 1 : H = '0' + H
+                if len(M) == 1 : M = '0' + M
+                if len(S) == 1 : S = '0' + S
+                inputValue = '%s-%s-%s %s:%s:%s'%(y,m,d,H,M,S)
+                if ns:
+                    inputValue += '.' + ns
                 inputString.remove(0, len(inputString))
-                inputString.prepend(str(inVal))
-            except:
+                inputString.prepend(str(inputValue))
+                try:
+                    conddbui.ValidityKeyWrapper(inputValue)
+                except:
+                    inputString.remove(0, len(inputString))
+                    inputString.prepend(str(self.valKeyMin))
+            else:
                 inputString.remove(0, len(inputString))
                 inputString.prepend(str(self.valKeyMin))
                 

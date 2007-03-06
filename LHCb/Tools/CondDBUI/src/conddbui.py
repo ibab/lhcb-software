@@ -1177,9 +1177,9 @@ class CondDB:
             raise Exception, "Impossible to delete node %s: %s"%(path, details)
 
 class ValidityKeyWrapper:
-    format_re = ' *(?P<year>[0-9]{4})-(?P<month>[0-9]{2})-(?P<day>[0-9]{2})[ T]'+ \
-                '(?P<hour>[0-9]{2}):(?P<minute>[0-9]{2}):(?P<s>[0-9]{2})'+ \
-                '(?:\.(?P<ns>[0-9]{0,9}))? *'
+    format_re = '(?P<year>(?:19|2[01])[0-9]{2})-(?P<month>(?:0[0-9]|1[0-2]))-(?P<day>[0-3][0-9])[ T]'+ \
+                '(?P<hour>(?:[01][0-9]|2[0-3])):(?P<minute>[0-5][0-9]):(?P<s>[0-5][0-9])'+ \
+                '(?:\.(?P<ns>[0-9]{0,9}))?'
     def __init__(self,value=None):
         self.value = None
         self.ns = 0
