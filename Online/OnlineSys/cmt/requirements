@@ -1,17 +1,17 @@
 package OnlineSys
-version v3r0
+version v3r1
 
 branches cmt doc
  
 #=======================================================
 # LHCb Online packages
 #=======================================================
-use MDF               v2r4     DAQ
+use MDF               v2r4p1   DAQ
 
 use Adder             v3r0     Online
 use CCPCHist          v2r0     Online
 use DIM	          v16r7    Online
-#use DimCond           v1r0         Online
+#use DimCond           v1r0     Online
 use ExampleGaucho     v2r2     Online
 use Gaucho            v5r4     Online
 use GauchoJob         v3r1     Online
@@ -24,7 +24,7 @@ use OnlineHistDB      v1r3     Online
 use OnlineKernel      v1r6     Online
 use OnlineTasks       v1r3     Online
 use PyDIM             v1r1     Online
-#use RunDatabase       v1r1         Online
+#use RunDatabase       v1r1     Online
 use Saver             v1r1     Online
 use UPI               v1r1     Online
 use Viewer            v1r2     Online
