@@ -20,8 +20,6 @@
 //    ... for physics check on MC data
 #include "$ANALYSISSYSROOT/options/PhysMCSys.opts"
 //--------------------------------------------------------------
-#include "$DAVINCIROOT/options/DaVinciProtoPCalibrate.opts"
-//--------------------------------------------------------------
 #include "$DAVINCIROOT/options/DaVinciTransporter.opts"
 //--------------------------------------------------------------
 
@@ -73,3 +71,6 @@ ApplicationMgr.HistogramPersistency = "ROOT";
 //
 #include "$DAVINCIROOT/options/DaVinciMainSeq.opts"
 ApplicationMgr.AppName = "DaVinci" ;
+
+//--------------------------------------------------------------
+#include "$DAVINCIROOT/options/DaVinciProtoPCalibrate.opts"

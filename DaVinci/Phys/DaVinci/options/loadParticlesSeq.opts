@@ -1,4 +1,4 @@
-ApplicationMgr.TopAlg += { "GaudiSequencer/SeqLoadStdParticles" } ;
+DaVinciMainSeq.Members += { "GaudiSequencer/SeqLoadStdParticles" } ;
 //
 SeqLoadStdParticles.Members += {"PreLoadParticles/LoadStdLooseMuons",
                                 "PreLoadParticles/LoadStdLoosePions",

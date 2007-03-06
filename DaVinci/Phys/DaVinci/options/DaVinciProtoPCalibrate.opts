@@ -1,6 +1,6 @@
 
 // General sequence for ProtoParticle recalibration in DaVinci
-ApplicationMgr.TopAlg += { "GaudiSequencer/ProtoPRecalibration" };
+DaVinciMainSeq.Members += { "GaudiSequencer/ProtoPRecalibration" };
 ProtoPRecalibration.MeasureTime = true;
 
 // Fills the combined DLL values in the charged Proto Particles

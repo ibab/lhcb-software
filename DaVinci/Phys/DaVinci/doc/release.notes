@@ -5,6 +5,16 @@
 !-----------------------------------------------------------------------------
 
 ! 2007-03-06 - Patrick Koppenburg
+ - DaVinciCommon.opts
+ - DaVinciProtoPCalibrate.opts
+   . Do Proto calibration in DaVinciMainSeq
+ - loadCommonParticles.opts
+   . Do in DaVinciMainSeq but after calibration
+ - DVDC06TestStripping.test
+   . load DaVinciCommon.opts
+   . load Presel.opts
+
+! 2007-03-06 - Patrick Koppenburg
  - Increment to projects based on LHCb v22r2
  - Use SQLDDDB instead of XmlDDDB
  - Increement to v19r0

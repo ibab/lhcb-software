@@ -1,10 +1,33 @@
-#include "$COMMONPARTICLESROOT/options/StandardParticles.opts"
-#include "$COMMONPARTICLESROOT/options/StandardOptions.opts"
-// CRJ : turn on monitoring of standard particles
-//#include "$COMMONPARTICLESROOT/options/EnableStandardParticleMonitors.opts"
+/*
+ * Options to test stripping
+ */
+/*
+ * Initialisation
+ */
+#include "$DAVINCIROOT/options/DaVinciCommon.opts"
+/*
+ * load common particles
+ */
 #include "$DAVINCIROOT/options/loadParticlesSeq.opts"
-#include "$STRIPPINGROOT/options/DVPresel.opts"
+/*
+ * standard particles options
+ */
+#include "$COMMONPARTICLESROOT/options/StandardOptions.opts"
+/*
+ * Monitoring of standard Particles. Needs MC.
+ */
+//#include "$COMMONPARTICLESROOT/options/EnableStandardParticleMonitors.opts"
+/*
+ * Stripping options
+ */
+#include "$STRIPPINGROOT/options/Presel.opts"
+/*
+ * Correlation options
+ */
 #include "$STRIPPINGROOT/options/Correlations.opts"
+/*
+ * Job steering
+ */
 EventClocksvc.EventTimeDecoder = "FakeEventTime";
 ApplicationMgr.EvtMax = 100;
 EventSelector.PrintFreq  = 10;
@@ -12,4 +35,3 @@ EventSelector.PrintFreq  = 10;
 // ToolSvc.CheckOverlap.OutputLevel=3;
 // ToolSvc.Particle2State.OutputLevel=3;
 //ToolSvc.RelatedPVFinder.ContextTool.GeomDispCalculator.OutputLevel=1;
-
