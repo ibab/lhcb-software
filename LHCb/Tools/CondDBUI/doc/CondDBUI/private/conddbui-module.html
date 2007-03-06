@@ -57,6 +57,9 @@ way.</td></tr>
   <b><a href="conddbui.Tag-class.html"><code>Tag</code></a></b></td>
   <td>Basic class allowing to manipulate more easily the tags in the tag 
 hierarchy.</td></tr>
+<tr><td width="15%">
+  <b><a href="conddbui.ValidityKeyWrapper-class.html"><code>ValidityKeyWrapper</code></a></b></td>
+  <td>&nbsp;</td></tr>
 </table><br />
 
 
@@ -65,55 +68,20 @@ hierarchy.</td></tr>
 <tr bgcolor="#70b0f0" class="summary">
   <th colspan="2">Function Summary</th></tr>
 <tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
-  <td><code><a name="run_tests"></a><span class="summary-sig"><span class="summary-sig-name">run_tests</span>()</span></code>
-</td></tr>
-<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
-  <td><code><span class="summary-sig"><a href="conddbui-module.html#testDBAccess" class="summary-sig-name"><code>testDBAccess</code></a>(<span class=summary-sig-arg>connectionString</span>)</span></code>
+  <td><code><span class="summary-sig"><a href="../private/conddbui-module.html#_collect_tree_info" class="summary-sig-name"><code>_collect_tree_info</code></a>(<span class=summary-sig-arg>source_dir</span>,
+          <span class=summary-sig-arg>includes</span>,
+          <span class=summary-sig-arg>excludes</span>,
+          <span class=summary-sig-arg>include_dirs</span>,
+          <span class=summary-sig-arg>exclude_dirs</span>,
+          <span class=summary-sig-arg>includesFirst</span>)</span></code>
 <br />
-Create a CondDB object, connect to a database and show its 
-contents</td></tr>
+Create a list of folders and foldersets to create starting from a filesystem tree.</td></tr>
 <tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
-  <td><code><span class="summary-sig"><a href="conddbui-module.html#testGetTagList" class="summary-sig-name"><code>testGetTagList</code></a>(<span class=summary-sig-arg>connectionString</span>)</span></code>
+  <td><code><span class="summary-sig"><a href="../private/conddbui-module.html#_fix_xml" class="summary-sig-name"><code>_fix_xml</code></a>(<span class=summary-sig-arg>xml_data</span>,
+          <span class=summary-sig-arg>folderset_path</span>)</span></code>
 <br />
-Connect to the db, create a node architecture and tag some tree 
-elements, then retrieve some tag list.</td></tr>
-<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
-  <td><code><span class="summary-sig"><a href="conddbui-module.html#testMD5" class="summary-sig-name"><code>testMD5</code></a>(<span class=summary-sig-arg>connectionString</span>)</span></code>
-<br />
-connect to a db and compute an md5 checksum</td></tr>
-<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
-  <td><code><span class="summary-sig"><a href="conddbui-module.html#testNodeCreation" class="summary-sig-name"><code>testNodeCreation</code></a>(<span class=summary-sig-arg>connectionString</span>)</span></code>
-<br />
-Connect to a database and create the nodes given in the nodeList</td></tr>
-<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
-  <td><code><span class="summary-sig"><a href="conddbui-module.html#testRecursiveTag" class="summary-sig-name"><code>testRecursiveTag</code></a>(<span class=summary-sig-arg>connectionString</span>)</span></code>
-<br />
-Connect to a db, create a node architecture and recursively tag the 
-root folderset and its children.</td></tr>
-<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
-  <td><code><span class="summary-sig"><a href="conddbui-module.html#testRemoveNode" class="summary-sig-name"><code>testRemoveNode</code></a>(<span class=summary-sig-arg>connectionString</span>)</span></code>
-<br />
-connect to a db and remove a node from it</td></tr>
-<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
-  <td><code><span class="summary-sig"><a href="conddbui-module.html#testTagLeafNode" class="summary-sig-name"><code>testTagLeafNode</code></a>(<span class=summary-sig-arg>connectionString</span>)</span></code>
-<br />
-Connect to a db, create a dummy folder with dummy condition and tag 
-the HEAD</td></tr>
-<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
-  <td><code><span class="summary-sig"><a href="conddbui-module.html#testTagWithAncestorTag" class="summary-sig-name"><code>testTagWithAncestorTag</code></a>(<span class=summary-sig-arg>connectionString</span>)</span></code>
-<br />
-Connect to the db, create a node architecture and tag some tree 
-elements using ancestor tags.</td></tr>
-<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
-  <td><code><span class="summary-sig"><a href="conddbui-module.html#testXMLListStorage" class="summary-sig-name"><code>testXMLListStorage</code></a>(<span class=summary-sig-arg>connectionString</span>)</span></code>
-<br />
-connect to a db, create a folder and store a condition object list in 
-it</td></tr>
-<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
-  <td><code><span class="summary-sig"><a href="conddbui-module.html#testXMLStorage" class="summary-sig-name"><code>testXMLStorage</code></a>(<span class=summary-sig-arg>connectionString</span>)</span></code>
-<br />
-connect to a db, create a folder and store a condition object in 
-it</td></tr>
+Function used to clean up the XML files before inserting them in the 
+database.</td></tr>
 </table><br />
 
 
@@ -123,99 +91,50 @@ it</td></tr>
   <th colspan="2">Function Details</th></tr>
 </table>
 
-<a name="testDBAccess"></a>
+<a name="_collect_tree_info"></a>
 <table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
-  <h3><span class="sig"><span class="sig-name">testDBAccess</span>(<span class=sig-arg>connectionString</span>)</span>
+  <h3><span class="sig"><span class="sig-name">_collect_tree_info</span>(<span class=sig-arg>source_dir</span>,
+          <span class=sig-arg>includes</span>=<span class=sig-default>[]</span>,
+          <span class=sig-arg>excludes</span>=<span class=sig-default>[]</span>,
+          <span class=sig-arg>include_dirs</span>=<span class=sig-default>[]</span>,
+          <span class=sig-arg>exclude_dirs</span>=<span class=sig-default>[]</span>,
+          <span class=sig-arg>includesFirst</span>=<span class=sig-default>True</span>)</span>
   </h3>
-  Create a CondDB object, connect to a database and show its 
-  contents
+<pre class="literalblock">
+Create a list of folders and foldersets to create starting from a filesystem tree.
+    inputs:
+        source_dir: string; root node were to start scanning
+        includes:      list regular expressions an accepted path must match
+        excludes:      list regular expressions to exclude files matching them
+        include_dirs:  list regular expressions an accepted dir must match
+        exclude_dirs:  list regular expressions to exclude dirs matching them
+        includesFirst: if True, first check includes, then excludes; vice-versa if
+                       False
+    outputs:
+        list of folders and foldersets to be created
+</pre>
   <dl><dt></dt><dd>
   </dd></dl>
 </td></tr></table>
 
-<a name="testGetTagList"></a>
+<a name="_fix_xml"></a>
 <table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
-  <h3><span class="sig"><span class="sig-name">testGetTagList</span>(<span class=sig-arg>connectionString</span>)</span>
+  <h3><span class="sig"><span class="sig-name">_fix_xml</span>(<span class=sig-arg>xml_data</span>,
+          <span class=sig-arg>folderset_path</span>)</span>
   </h3>
-  Connect to the db, create a node architecture and tag some tree 
-  elements, then retrieve some tag list.
-  <dl><dt></dt><dd>
-  </dd></dl>
-</td></tr></table>
-
-<a name="testMD5"></a>
-<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
-  <h3><span class="sig"><span class="sig-name">testMD5</span>(<span class=sig-arg>connectionString</span>)</span>
-  </h3>
-  connect to a db and compute an md5 checksum
-  <dl><dt></dt><dd>
-  </dd></dl>
-</td></tr></table>
-
-<a name="testNodeCreation"></a>
-<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
-  <h3><span class="sig"><span class="sig-name">testNodeCreation</span>(<span class=sig-arg>connectionString</span>)</span>
-  </h3>
-  Connect to a database and create the nodes given in the nodeList
-  <dl><dt></dt><dd>
-  </dd></dl>
-</td></tr></table>
-
-<a name="testRecursiveTag"></a>
-<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
-  <h3><span class="sig"><span class="sig-name">testRecursiveTag</span>(<span class=sig-arg>connectionString</span>)</span>
-  </h3>
-  Connect to a db, create a node architecture and recursively tag the 
-  root folderset and its children.
-  <dl><dt></dt><dd>
-  </dd></dl>
-</td></tr></table>
-
-<a name="testRemoveNode"></a>
-<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
-  <h3><span class="sig"><span class="sig-name">testRemoveNode</span>(<span class=sig-arg>connectionString</span>)</span>
-  </h3>
-  connect to a db and remove a node from it
-  <dl><dt></dt><dd>
-  </dd></dl>
-</td></tr></table>
-
-<a name="testTagLeafNode"></a>
-<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
-  <h3><span class="sig"><span class="sig-name">testTagLeafNode</span>(<span class=sig-arg>connectionString</span>)</span>
-  </h3>
-  Connect to a db, create a dummy folder with dummy condition and tag 
-  the HEAD
-  <dl><dt></dt><dd>
-  </dd></dl>
-</td></tr></table>
-
-<a name="testTagWithAncestorTag"></a>
-<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
-  <h3><span class="sig"><span class="sig-name">testTagWithAncestorTag</span>(<span class=sig-arg>connectionString</span>)</span>
-  </h3>
-  Connect to the db, create a node architecture and tag some tree 
-  elements using ancestor tags.
-  <dl><dt></dt><dd>
-  </dd></dl>
-</td></tr></table>
-
-<a name="testXMLListStorage"></a>
-<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
-  <h3><span class="sig"><span class="sig-name">testXMLListStorage</span>(<span class=sig-arg>connectionString</span>)</span>
-  </h3>
-  connect to a db, create a folder and store a condition object list 
-  in it
-  <dl><dt></dt><dd>
-  </dd></dl>
-</td></tr></table>
-
-<a name="testXMLStorage"></a>
-<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
-  <h3><span class="sig"><span class="sig-name">testXMLStorage</span>(<span class=sig-arg>connectionString</span>)</span>
-  </h3>
-  connect to a db, create a folder and store a condition object in 
-  it
+  Function used to clean up the XML files before inserting them in the 
+  database. It corrects:
+  <ul>
+    <li>
+      paths to system ids
+    </li>
+    <li>
+      environment variable expansion
+    </li>
+    <li>
+      encoding (we need iso-8859-1)
+    </li>
+  </ul>
   <dl><dt></dt><dd>
   </dd></dl>
 </td></tr></table>
@@ -235,7 +154,7 @@ it</td></tr>
 
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
   <tr>
-    <td align="left"><font size="-2">Generated by Epydoc 2.1 on Thu Feb  8 19:06:24 2007</font></td>
+    <td align="left"><font size="-2">Generated by Epydoc 2.1 on Tue Mar  6 18:29:23 2007</font></td>
     <td align="right"><a href="http://epydoc.sourceforge.net"
                       ><font size="-2">http://epydoc.sf.net</font></a></td>
   </tr>
