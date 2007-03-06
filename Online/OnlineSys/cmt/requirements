@@ -6,7 +6,8 @@ branches cmt doc
 #=======================================================
 # LHCb Online packages
 #=======================================================
-use MDF               v2r4p1   DAQ
+# Now in LHCB:
+#use MDF               v2r4p1   DAQ
 
 use Adder             v3r0     Online
 use CCPCHist          v2r0     Online
