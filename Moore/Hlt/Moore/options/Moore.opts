@@ -14,8 +14,10 @@
 //-----------------------------------------------------------------
 
 // Default options to rerun L0 and run Hlt 
-// #include "$HLTSYSROOT/options/L0.opts"
-// #include "$HLTSYSROOT/options/Hlt.opts"
+#include "$HLTSYSROOT/options/L0.opts"
+#include "$HLTSYSROOT/options/Hlt.opts"
+#include "$HLTSYSROOT/options/HltSelections.opts"
+
 // For DAQ studies replace the includes above for these ones:
 #include "$HLTSYSROOT/options/L0DAQ.opts"
 #include "$HLTSYSROOT/options/HltDAQ.opts"
