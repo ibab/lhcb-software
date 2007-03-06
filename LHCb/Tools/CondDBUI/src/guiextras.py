@@ -52,8 +52,10 @@ class valKeyValidator(qt.QValidator):
     '''
     def __init__(self, parent, name = 'valKeyValidator'):
         qt.QValidator.__init__(self, parent, name)
-        self.valKeyMin = long(conddbui.cool.ValidityKeyMin)
-        self.valKeyMax = long(conddbui.cool.ValidityKeyMax)
+        #self.valKeyMin = long(conddbui.cool.ValidityKeyMin)
+        self.valKeyMin = conddbui.ValidityKeyWrapper(conddbui.cool.ValidityKeyMin)
+        #self.valKeyMax = long(conddbui.cool.ValidityKeyMax)
+        self.valKeyMax = conddbui.ValidityKeyWrapper(conddbui.cool.ValidityKeyMax)
 
     def validate(self, inputString, cursorPos):
         '''
@@ -66,39 +68,37 @@ class valKeyValidator(qt.QValidator):
         This is done for "esthetical reasons" and may change in the
         future if necessary.
         '''
+        #print "'%s' %d"%(str(inputString),cursorPos)
         inputValue = str(inputString).strip()
-        try:
-            inVal = long(inputValue)
-        except ValueError:
-            if inputValue == '':
-                self.fixup(inputString)
+        if re.match(conddbui.ValidityKeyWrapper.format_re,inputValue):
+            inVal = conddbui.ValidityKeyWrapper(inputValue)
+            if self.valKeyMin <= inVal <= self.valKeyMax:
                 return (qt.QValidator.Acceptable, cursorPos)
             else:
                 return (qt.QValidator.Invalid, cursorPos)
-        
-        if self.valKeyMin <= inVal <= self.valKeyMax:
-            return (qt.QValidator.Acceptable, cursorPos)
+        elif re.match('[0-9 \-+inf]*',inputValue):
+            return (qt.QValidator.Intermediate, cursorPos)
         else:
-            self.fixup(inputString)
-            return (qt.QValidator.Acceptable, cursorPos)
-        
+            return (qt.QValidator.Invalid, cursorPos)
+            
     def fixup(self, inputString):
         '''
         Modify the input value such that it is never greater than
         cool::ValidityKeyMax or smaller than cool::ValidityKeyMin.
         '''
-
-        inputValue = str(inputString).strip()
-        if inputValue == '':
+        if str(inputString).strip() == '':
             inputString.remove(0, len(inputString))
-            inputString.prepend(str(self.valKeyMin))
-        elif long(inputValue) < self.valKeyMin:
-            inputString.remove(0, len(inputString))
-            inputString.prepend(str(self.valKeyMin))
-        elif long(inputValue) > self.valKeyMax:
-            inputString.remove(0, len(inputString))
-            inputString.prepend(str(self.valKeyMax))
-
+            inputString.prepend(str(conddbui.ValidityKeyWrapper()))
+        else:
+            try:
+                inVal = conddbui.ValidityKeyWrapper(str(inputString))
+                inputString.remove(0, len(inputString))
+                inputString.prepend(str(inVal))
+            except:
+                inputString.remove(0, len(inputString))
+                inputString.prepend(str(self.valKeyMin))
+                
+                
 #=============================================#
 #                   MOVEPAD                   #
 #=============================================#
@@ -366,8 +366,8 @@ class myDBTable(qt.QSplitter):
         '''
         if self.activeChannel:
             tagName  = str(tag).split()[0]
-            fromTime = long(str(self.editTimeFrom.text()))
-            toTime   = long(str(self.editTimeTo.text()))
+            fromTime = conddbui.ValidityKeyWrapper(str(self.editTimeFrom.text()))
+            toTime   = conddbui.ValidityKeyWrapper(str(self.editTimeTo.text()))
 
             if tagName.find('---') != -1:
                 self.choseTagName.setCurrentItem(self.defaultTagIndex)
@@ -379,7 +379,7 @@ class myDBTable(qt.QSplitter):
                 self.editTimeTo.setText(self.editTimeFrom.text())
 
             if self.timeModified or not self.activeChannel.getCondDBCache(tagName):
-                self.activeChannel.setCondDBCache(tagName, fromTime, toTime)
+                self.activeChannel.setCondDBCache(tagName, long(fromTime), long(toTime))
 
             self.timeModified = False
             self._fillTable(tagName)
@@ -394,14 +394,14 @@ class myDBTable(qt.QSplitter):
         self.timeModified = True
         if self.activeChannel:
             tagName  = str(self.choseTagName.currentText()).split()[0]
-            fromTime = long(str(self.editTimeFrom.text()))
-            toTime   = long(str(self.editTimeTo.text()))
+            fromTime = conddbui.ValidityKeyWrapper(str(self.editTimeFrom.text()))
+            toTime   = conddbui.ValidityKeyWrapper(str(self.editTimeTo.text()))
 
             if fromTime > toTime:
                 toTime = fromTime
                 self.editTimeTo.setText(self.editTimeFrom.text())
 
-            self.activeChannel.setCondDBCache(tagName, fromTime, toTime)
+            self.activeChannel.setCondDBCache(tagName, long(fromTime), long(toTime))
             self._fillTable(tagName)
 
 

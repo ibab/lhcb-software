@@ -9,7 +9,7 @@ versionNumber = '$Name: not supported by cvs2svn $'.split()[1]
 if versionNumber == "$":
     versionNumber = 'HEAD'
 
-versionId  = '$Id: guiwin.py,v 1.24 2007-03-06 13:10:54 marcocle Exp $'.split()
+versionId  = '$Id: guiwin.py,v 1.25 2007-03-06 17:22:56 marcocle Exp $'.split()
 if len(versionId) < 4:
     versionDate = 'unknown'
 else:
@@ -70,11 +70,11 @@ class myWindow(qt.QMainWindow):
         #--------------------------------#
 
         #---- Old Sessions ----#
-        #sessionFile = os.environ['CONDDBUI_SESSIONS_PATH'] + os.sep + 'sessions.dbm'
-        sessionFile = os.path.join(os.environ['HOME'],'.conddb_browser_sessions.dbm')
+        #self.sessionFile = os.environ['CONDDBUI_SESSIONS_PATH'] + os.sep + 'sessions.dbm'
+        self.sessionFile = os.path.join(os.environ['HOME'],'.conddb_browser_sessions.dbm')
         self.oldSessions = []
-        if os.access(sessionFile, os.F_OK):
-            s = shelve.open(sessionFile)
+        if os.access(self.sessionFile, os.F_OK):
+            s = shelve.open(self.sessionFile)
             keys = s.keys()
             keys.sort()
             for k in keys:
@@ -84,7 +84,7 @@ class myWindow(qt.QMainWindow):
             if len(self.oldSessions) > 5:
                 self.oldSessions = self.oldSessions[0:5]
         else:
-            s = shelve.open(sessionFile)
+            s = shelve.open(self.sessionFile)
             for i in range(5):
                 s[str(i)] = ''
             s.close()
@@ -288,7 +288,7 @@ class myWindow(qt.QMainWindow):
                     objList = self.dialogSliceDB.objectList
                     selectionList = []
                     for o in objList:
-                        s = conddbui.PyCoolCopy.Selection(o['path'], o['since'], o['until'], tags = o['tag'])
+                        s = conddbui.PyCoolCopy.Selection(o['path'], long(o['since']), long(o['until']), tags = o['tag'])
                         selectionList.append(s)
                     copyTool = conddbui.PyCoolCopy.PyCoolCopy(self.bridge.db)
                     # reduce the verbosity of PyCoolCopy
@@ -307,8 +307,7 @@ class myWindow(qt.QMainWindow):
         '''
         Save the old sessions to the sessions.dbm file and close the window
         '''
-        sessionFile = os.environ['CONDDBUI_SESSIONS_PATH'] + os.sep + 'sessions.dbm'
-        s = shelve.open(sessionFile)
+        s = shelve.open(self.sessionFile)
         for i in range(len(self.oldSessions)):
             s[str(i)] = self.oldSessions[i]
         s.close()

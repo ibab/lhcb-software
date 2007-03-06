@@ -10,7 +10,7 @@ Please note that most of the functions of the conddbui module are used in the co
 browser.
 '''
 
-import os, md5, random, sys, re
+import os, md5, random, sys, re, time, datetime
 
 import PyCoolCopy
 from PyCool import cool
@@ -1176,6 +1176,102 @@ class CondDB:
         except Exception, details:
             raise Exception, "Impossible to delete node %s: %s"%(path, details)
 
+class ValidityKeyWrapper:
+    format_re = ' *(?P<year>[0-9]{4})-(?P<month>[0-9]{2})-(?P<day>[0-9]{2})[ T]'+ \
+                '(?P<hour>[0-9]{2}):(?P<minute>[0-9]{2}):(?P<s>[0-9]{2})'+ \
+                '(?:\.(?P<ns>[0-9]{0,9}))? *'
+    def __init__(self,value=None):
+        self.value = None
+        self.ns = 0
+        self.set(value)
+        
+    def set(self,value):
+        if type(value) == type(''):
+            if value.lower().find('inf') >= 0:
+                self.value = datetime.datetime.max
+                self.ns = 0
+            else:
+                m = re.match(self.format_re,value)
+                if m:
+                    self.value = datetime.datetime(int(m.group('year')),int(m.group('month')),int(m.group('day')),
+                                                   int(m.group('hour')),int(m.group('minute')),int(m.group('s')))
+                    if m.group('ns'):
+                        self.ns = int(m.group('ns') + "0" * ( 9 - len(m.group('ns'))))
+                    else:
+                        ns = 0
+                else:
+                    raise ValueError("Cannot convert string '%s' to ValidityKey"%value)
+        elif value is None: # means now
+            self.value = datetime.datetime.now().replace(microsecond=0)
+            self.ns = 0
+        elif type(value) == type(0) or type(value) == type(0L):
+            try:
+                self.value = datetime.datetime.fromtimestamp(int(value/1000000000))
+                self.ns = value%1000000000
+            except ValueError, x:
+                if str(x).find('out of range')>=0:
+                    self.value = datetime.datetime.max
+                    self.ns = 0
+                else:
+                    raise
+        elif type(value) == type(datetime.datetime.max):
+            self.value = value
+            
+    def toValidityKey(self):
+        return self.__long__()
+    
+    def __long__(self):
+        try:
+            ns = int(time.mktime(self.value.timetuple())*1e9) + self.ns
+            if ns < cool.ValidityKeyMin:
+                return cool.ValidityKeyMin
+            if ns > cool.ValidityKeyMax:
+                return cool.ValidityKeyMax
+            return ns
+        except OverflowError, x:
+            if str(x).find('out of range')>=0:
+                return cool.ValidityKeyMax
+            else:
+                raise
+    
+    def __str__(self):
+        if self.toValidityKey() == cool.ValidityKeyMax:
+            return '+inf'
+        s = str(self.value)
+        if self.ns:
+            s += (".%09d"%self.ns).rstrip('0')
+        return s
+
+    def __lt__(self,rhs):
+        if type(self) == type(rhs):
+            return self.value < rhs.value
+        return self.value < rhs
+
+    def __gt__(self,rhs):
+        if type(self) == type(rhs):
+            return self.value > rhs.value
+        return self.value > rhs
+
+    def __le__(self,rhs):
+        if type(self) == type(rhs):
+            return self.value <= rhs.value
+        return self.value <= rhs
+
+    def __ge__(self,rhs):
+        if type(self) == type(rhs):
+            return self.value >= rhs.value
+        return self.value >= rhs
+
+    def __eq__(self,rhs):
+        if type(self) == type(rhs):
+            return self.value == rhs.value
+        return self.value == rhs
+    
+    def __eq__(self,rhs):
+        if type(self) == type(rhs):
+            return self.value != rhs.value
+        return self.value != rhs
+    
 #########################################################################################
 #                                Utility functions                                      #
 #########################################################################################

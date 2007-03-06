@@ -3,6 +3,7 @@ import os.path
 from   xpmimg import *
 ##
 from time import time
+from conddbui import ValidityKeyWrapper
 ##
 
 #-------------------------------------#
@@ -229,16 +230,16 @@ class guiChannel(guiTreeElement):
         objList = self.listView().bridge.getPayloadList(self.parent().fullName, fromTime, toTime, self.ID, tag)
         for obj in objList:
             payload = obj[0]
-            since   = obj[1]
-            until   = obj[2]
+            since   = ValidityKeyWrapper(obj[1])
+            until   = ValidityKeyWrapper(obj[2])
             insert  = obj[4]
             # If something changes here, be careful to update the table display
             # as well.
             self.condDBCache[tag].append({'since':     since,
                                           'until':     until,
                                           'payload':   payload,
-                                          'insertion': "%d.%02d.%02d; %02d:%02d:%02d"%(insert.year(),insert.month(),insert.day(),
-                                                                                       insert.hour(),insert.minute(),insert.second())})
+                                          'insertion': "%d-%02d-%02d %02d:%02d:%02d"%(insert.year(),insert.month(),insert.day(),
+                                                                                      insert.hour(),insert.minute(),insert.second())})
 
     def getCondDBCache(self, tagName):
         """

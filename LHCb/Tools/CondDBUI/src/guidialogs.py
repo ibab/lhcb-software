@@ -1,6 +1,7 @@
 import qt, qttable
 import os
 import guiextras
+import conddbui
 
 #=======================================#
 #             SLICINGDIALOG             #
@@ -230,8 +231,8 @@ class slicingDialog(qt.QDialog):
         '''
         newObject = {}
         try:
-            newObject['since'] = long(str(self.editSince.text()))
-            newObject['until'] = long(str(self.editUntil.text()))
+            newObject['since'] = conddbui.ValidityKeyWrapper(str(self.editSince.text()))
+            newObject['until'] = conddbui.ValidityKeyWrapper(str(self.editUntil.text()))
             newObject['path']  = str(self.choseNode.currentText())
             newObject['tag']   = []
             for i in range(self.choseTag.count()):
@@ -241,7 +242,7 @@ class slicingDialog(qt.QDialog):
                         newObject['tag'].append(str(item.text()))
         except:
             errorMsg = qt.QMessageBox('conddbui.py',\
-                                      'At least one field is empty\nPlease give all the necessary information to create a new object.',\
+                                      'At least one field is not correct\nPlease give all the necessary information to create a new object.',\
                                       qt.QMessageBox.Warning,\
                                       qt.QMessageBox.Ok,\
                                       qt.QMessageBox.NoButton,\
@@ -861,13 +862,13 @@ class addConditionDialog(qt.QDialog):
         newObject = {}
         try:
             newObject['channel'] = int(str(self.editChannelID.text()))
-            newObject['since']   = long(str(self.editSince.text()))
-            newObject['until']   = long(str(self.editUntil.text()))
+            newObject['since']   = conddbui.ValidityKeyWrapper(str(self.editSince.text()))
+            newObject['until']   = conddbui.ValidityKeyWrapper(str(self.editUntil.text()))
             newObject['path']    = str(self.editFolder.text())
             newObject['payload'] = self.activePayload.copy()
         except:
             errorMsg = qt.QMessageBox('conddbui.py',\
-                                      'At least one field is empty\nPlease give all the necessary information to create a new object.',\
+                                      'At least one field is not correct\nPlease give all the necessary information to create a new object.',\
                                       qt.QMessageBox.Warning,\
                                       qt.QMessageBox.Ok,\
                                       qt.QMessageBox.NoButton,\
