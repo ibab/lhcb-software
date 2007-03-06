@@ -1,4 +1,4 @@
-// $Id: BTaggingAnalysis.h,v 1.5 2007-03-05 11:48:42 pkoppenb Exp $
+// $Id: BTaggingAnalysis.h,v 1.6 2007-03-06 08:27:04 musy Exp $
 #ifndef USER_BTAGGINGANALYSIS_H 
 #define USER_BTAGGINGANALYSIS_H 1
 
@@ -9,16 +9,18 @@
 #include "Event/SelResult.h"
 #include "Event/GenHeader.h"
 #include "Event/RecHeader.h"
-//#include "Event/L0DUReport.h"
+#include "Event/L0DUReport.h"
 
+//#include "GaudiKernel/NTuple.h"
 #include "GaudiKernel/INTupleSvc.h"
 #include "Kernel/ISecondaryVertexTool.h"
 #include "Kernel/IBTaggingTool.h"
 #include "Kernel/IGeomDispCalculator.h"
 #include "Kernel/IDebugTool.h"
+
 #include "CaloInterfaces/ICaloElectron.h"
 
-#include "Kernel/Particle2MCLinker.h"
+#include "DaVinciAssociators/Particle2MCLinker.h"
 
 //#include "IForcedBDecayTool.h"
 
@@ -83,7 +85,7 @@ class BTaggingAnalysis : public DVAlgorithm {
   NTuple::Item<long>      m_Taggers;
   NTuple::Item<long>      m_type;
   NTuple::Item<long>      m_trigger;
-  NTuple::Item<long>      m_Tamper;
+  //  NTuple::Item<long>      m_Tamper;
   NTuple::Item<long>      m_BSID;
   NTuple::Item<float>     m_BSthe;
   NTuple::Item<float>     m_BSphi;
@@ -125,11 +127,8 @@ class BTaggingAnalysis : public DVAlgorithm {
   NTuple::Array<float>     m_IPPU;
   NTuple::Array<long>      m_trtyp;
   NTuple::Array<float>     m_lcs;
-  NTuple::Array<float>     m_elChi;
   NTuple::Array<float>     m_distphi;
-  NTuple::Array<float>     m_Emeas;
   NTuple::Array<float>     m_EOverP;
-  NTuple::Array<float>     m_showerZ;
   NTuple::Array<float>     m_veloch;
   NTuple::Array<float>     m_PIDe;
   NTuple::Array<float>     m_PIDm;

@@ -83,14 +83,15 @@ StatusCode BTaggingAnalysis::initialize() {
   }
 
   // Now book ntuples
-  NTuplePtr nt(ntupleSvc(), "/NTUPLES/FILE1/1");
+  NTuplePtr nt(ntupleSvc(), "FILE1/tagging");
   if ( !nt ) {
-    nt = ntupleSvc()->book ("/NTUPLES/FILE1", 1,
+    nt = ntupleSvc()->book ("FILE1/tagging",
 			     CLID_ColumnWiseTuple, "BTaggingAnalysis");
     if ( !nt ) {
       fatal() << "Could not book Ntuple" << endreq;
       return StatusCode::FAILURE;
     }
+    debug()<<"Add elements to ntuple definition "<<endreq;
     // Add elements to ntuple definition:
     nt->addItem ("Run",    m_Run);
     nt->addItem ("Event",  m_Event);
@@ -100,7 +101,6 @@ StatusCode BTaggingAnalysis::initialize() {
     nt->addItem ("Taggers",m_Taggers);
     nt->addItem ("evType", m_type);
     nt->addItem ("trig",   m_trigger);
-    nt->addItem ("Tamper", m_Tamper);
 
     //reconstructed signal
     nt->addItem ("BSx",   m_BSx);
@@ -141,41 +141,38 @@ StatusCode BTaggingAnalysis::initialize() {
 
     //particles
     nt->addItem ("N",     m_N, 0, 200 ); //limite
-    nt->addItem ("ID",     m_N, m_ID);
-    nt->addItem ("P",      m_N, m_P);
-    nt->addItem ("Pt",     m_N, m_Pt);
-    nt->addItem ("phi",    m_N, m_phi);
-    nt->addItem ("ch",     m_N, m_ch);
-    nt->addItem ("ip",     m_N, m_IP);
-    nt->addItem ("iperr",  m_N, m_IPerr);
-    nt->addItem ("ipPU",   m_N, m_IPPU);
-    nt->addItem ("trtyp",  m_N, m_trtyp);
-    nt->addItem ("lcs",    m_N, m_lcs);
-    nt->addItem ("elChi",  m_N, m_elChi);
-    nt->addItem ("distPhi",m_N, m_distphi);
-    nt->addItem ("veloch", m_N, m_veloch);
-    nt->addItem ("Emeas",  m_N, m_Emeas);
-    nt->addItem ("EOverP", m_N, m_EOverP);
-    nt->addItem ("ShowerZ",m_N, m_showerZ);
-    nt->addItem ("PIDe",   m_N, m_PIDe);
-    nt->addItem ("PIDm",   m_N, m_PIDm);
-    nt->addItem ("PIDk",   m_N, m_PIDk);
-    nt->addItem ("PIDp",   m_N, m_PIDp);
-    nt->addItem ("PIDfl",  m_N, m_PIDfl);
-    nt->addItem ("RichPID",m_N, m_RichPID);
-    nt->addItem ("vFlag",  m_N, m_vFlag);
+    nt->addIndexedItem ("ID",     m_N, m_ID);
+    nt->addIndexedItem ("P",      m_N, m_P);
+    nt->addIndexedItem ("Pt",     m_N, m_Pt);
+    nt->addIndexedItem ("phi",    m_N, m_phi);
+    nt->addIndexedItem ("ch",     m_N, m_ch);
+    nt->addIndexedItem ("ip",     m_N, m_IP);
+    nt->addIndexedItem ("iperr",  m_N, m_IPerr);
+    nt->addIndexedItem ("ipPU",   m_N, m_IPPU);
+    nt->addIndexedItem ("trtyp",  m_N, m_trtyp);
+    nt->addIndexedItem ("lcs",    m_N, m_lcs);
+    nt->addIndexedItem ("distPhi",m_N, m_distphi);
+    nt->addIndexedItem ("veloch", m_N, m_veloch);
+    nt->addIndexedItem ("EOverP", m_N, m_EOverP);
+    nt->addIndexedItem ("PIDe",   m_N, m_PIDe);
+    nt->addIndexedItem ("PIDm",   m_N, m_PIDm);
+    nt->addIndexedItem ("PIDk",   m_N, m_PIDk);
+    nt->addIndexedItem ("PIDp",   m_N, m_PIDp);
+    nt->addIndexedItem ("PIDfl",  m_N, m_PIDfl);
+    nt->addIndexedItem ("RichPID",m_N, m_RichPID);
+    nt->addIndexedItem ("vFlag",  m_N, m_vFlag);
 
-    nt->addItem ("MCID",   m_N, m_MCID);
-    nt->addItem ("MCP",    m_N, m_MCP);
-    nt->addItem ("MCPt",   m_N, m_MCPt);
-    nt->addItem ("MCphi"  ,m_N, m_MCphi);
-    nt->addItem ("MCz"    ,m_N, m_MCz);
-    nt->addItem ("mothID" ,m_N, m_mothID);
-    nt->addItem ("ancID"  ,m_N, m_ancID);
-    nt->addItem ("bFlag"  ,m_N, m_bFlag);
-    nt->addItem ("dFlag"  ,m_N, m_dFlag);
-    nt->addItem ("xFlag"  ,m_N, m_xFlag);
-    nt->addItem ("IPT"    ,m_N, m_IPT);
+    nt->addIndexedItem ("MCID",   m_N, m_MCID);
+    nt->addIndexedItem ("MCP",    m_N, m_MCP);
+    nt->addIndexedItem ("MCPt",   m_N, m_MCPt);
+    nt->addIndexedItem ("MCphi"  ,m_N, m_MCphi);
+    nt->addIndexedItem ("MCz"    ,m_N, m_MCz);
+    nt->addIndexedItem ("mothID" ,m_N, m_mothID);
+    nt->addIndexedItem ("ancID"  ,m_N, m_ancID);
+    nt->addIndexedItem ("bFlag"  ,m_N, m_bFlag);
+    nt->addIndexedItem ("dFlag"  ,m_N, m_dFlag);
+    nt->addIndexedItem ("xFlag"  ,m_N, m_xFlag);
+    nt->addIndexedItem ("IPT"    ,m_N, m_IPT);
  
     //Particles FITTED
     nt->addItem ("TVx",      m_TVx);
@@ -199,20 +196,21 @@ StatusCode BTaggingAnalysis::execute() {
 
   setFilterPassed( false );
    
-  NTuplePtr nt(ntupleSvc(), "/NTUPLES/FILE1/1");
+  NTuplePtr nt(ntupleSvc(), "FILE1/tagging");
   if ( !nt ) {
     err() << "Unable to book ntpl" << endreq;
     return StatusCode::FAILURE;
   }
 
-//   L0DUReport* L0decision = get<L0DUReport>( L0DUReportLocation::Default );
-//   debug() << "L0 decision : " << L0decision->decision() << " fired:";
-//   for ( int bit=0; 32 > bit; ++bit  ) {
-//     if ( L0decision->channelDecision( bit ) ) {
-//       debug() << bit << "=" << L0decision->channelName( bit ) << ",";
-//     }
-//   }
-//   debug() << endreq;
+  L0DUReport* L0decision = get<L0DUReport>( L0DUReportLocation::Default );
+  debug() << "L0 decision : " << L0decision->decision() << " fired:";
+  for ( int bit=0; 32 > bit; ++bit  ) {
+    if ( L0decision->channelDecision( bit ) ) {
+      debug() << bit << "=" << L0decision->channelName( bit ) << ",";
+    }
+  }
+  debug() <<endreq;
+  m_trigger = L0decision->decision();
 
 // Retrieve trigger/tampering info
 //   int trigger=-1;
@@ -550,38 +548,34 @@ StatusCode BTaggingAnalysis::execute() {
     m_IPPU[m_N]  = IPPU;
     m_lcs[m_N]   = lcs;
     m_distphi[m_N]= distphi;
-    m_Emeas[m_N] = -1.0;
 
 // electrons
     m_PIDe[m_N] = proto->info( ProtoParticle::CombDLLe, -1000.0 );
 
     double eOverP  = -999.9;
-    double showerz = -999.9;
     if(m_electron->set(axp)){ /// CaloElectron tool
       eOverP  = m_electron->eOverP();
-      //      showerz = m_electron->showerZ();
     }
     m_EOverP[m_N] = eOverP;
-    m_showerZ[m_N]= showerz;
-    m_elChi[m_N] = proto->info(LHCb::ProtoParticle::CaloEcalChi2, 10000.);
     m_veloch[m_N]= proto->info( ProtoParticle::VeloCharge, 0.0 );
 
-    const bool inEcalACC = proto->info(ProtoParticle::InAccEcal, false);
-    const bool inHcalACC = proto->info(ProtoParticle::InAccHcal, false);
-
-    if( inEcalACC ){
-      const SmartRefVector<CaloHypo> hypos = proto->calo();// get CaloHypos
-      if( hypos.size() !=0) {      
-	// When available the 'electron' hypo is the first one
-	// This implies inEcal = true (the possible second one is BremStrahlung)
-	SmartRefVector<CaloHypo>::const_iterator ihypo =  hypos.begin();
-	const CaloHypo* hypo = *ihypo;
-	if(hypo) if( hypo->hypothesis() == CaloHypo::EmCharged) 
-	  m_Emeas[m_N] = hypo->position()->e();
-	debug()<<" Calo Emeas="<<m_Emeas[m_N]<<" elChi="<<m_elChi[m_N]<<endreq;
-      }
-    }
-
+//     m_Emeas[m_N] = -1.0;
+//     m_elChi[m_N] = proto->info(LHCb::ProtoParticle::CaloEcalChi2, 10000.);
+//     const bool inEcalACC = proto->info(ProtoParticle::InAccEcal, false);
+//     const bool inHcalACC = proto->info(ProtoParticle::InAccHcal, false);
+//     if( inEcalACC ){
+//       const SmartRefVector<CaloHypo> hypos = proto->calo();// get CaloHypos
+//       if( hypos.size() !=0) {      
+// 	// When available the 'electron' hypo is the first one
+// 	// This implies inEcal = true (the possible second one is BremStrahlung)
+// 	SmartRefVector<CaloHypo>::const_iterator ihypo =  hypos.begin();
+// 	const CaloHypo* hypo = *ihypo;
+// 	if(hypo) if( hypo->hypothesis() == CaloHypo::EmCharged) 
+// 	  m_Emeas[m_N] = hypo->position()->e();
+// 	debug()<<" Calo Emeas="<<m_Emeas[m_N]<<" elChi="<<m_elChi[m_N]<<endreq;
+//       }
+//     }
+  
 // muons
     m_PIDm[m_N] = proto->info( ProtoParticle::CombDLLmu, -1000.0 );
     int muonNSH = (int) proto->info( ProtoParticle::MuonNShared, -1.0 );
@@ -597,8 +591,8 @@ StatusCode BTaggingAnalysis::execute() {
     if( proto->muonPID() ) 
       if(proto->muonPID()->IsMuon()) m_PIDfl[m_N] += 100000;
     if( muonNSH>0 )                  m_PIDfl[m_N] +=  10000;
-    if( inHcalACC )                  m_PIDfl[m_N] +=   1000;
-    if( inEcalACC )                  m_PIDfl[m_N] +=    100;
+//     if( inHcalACC )                  m_PIDfl[m_N] +=   1000;
+//     if( inEcalACC )                  m_PIDfl[m_N] +=    100;
     if( proto->info(ProtoParticle::MuonPIDStatus, 0) ) m_PIDfl[m_N] += 10;
     if( proto->info(ProtoParticle::RichPIDStatus, 0) ) m_PIDfl[m_N] +=  1;
 
@@ -636,6 +630,7 @@ StatusCode BTaggingAnalysis::execute() {
     m_ancID[m_N] = 0;
     m_bFlag[m_N] = 0;
     m_dFlag[m_N] = 0;
+    m_xFlag[m_N] = 0;
 
     const MCParticle* mcp = m_linkLinks->first( axp );
     if( mcp ) {
@@ -651,7 +646,7 @@ StatusCode BTaggingAnalysis::execute() {
 	if(motherVtx.size()) 
 	  m_MCz[m_N] = (motherVtx.at(0))->position().z()/Gaudi::Units::mm;
       }
-  
+
       const MCParticle* ancestor = originof(mcp) ;
       m_ancID[m_N] = ancestor->particleID().pid();
       if( ancestor->particleID().hasBottom() ) {

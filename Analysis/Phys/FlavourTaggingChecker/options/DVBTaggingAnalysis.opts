@@ -5,6 +5,11 @@
 
 #include "$DAVINCIROOT/options/DaVinciCommon.opts"
 
+ApplicationMgr.TopAlg += { "GaudiSequencer/L0" };
+ApplicationMgr.TopAlg += { "L0MuonCandidatesFromRaw"};
+ApplicationMgr.TopAlg += { "GaudiSequencer/MoniL0" };
+#include "$L0DUROOT/options/L0Sequence.opts"
+
 ///example Bd Channel Selection ----------------------------------
 // #include "$B2HHROOT/options/DoTDRselBd2KPi.opts"
 // Analysis.PhysDesktop.InputLocations = { "/Event/Phys/TDRselBd2KPi" };
@@ -82,7 +87,7 @@ BTaggingAnalysis.Particle2MCChi2.Chi2Cut = 75.; // Default is 100.
 //---------------------------------------------------------------
 // Number of events to process, skip and printing frequency
 //---------------------------------------------------------------
-MessageSvc.Format = "% F%20W%S%7W%R%T %0W%M";
+MessageSvc.Format = "% F%40W%S%7W%R%T %0W%M";
 Analysis.DebugTool.Informations = "Name P Pt theta Vz";
 ApplicationMgr.EvtMax    = -1;
 EventSelector.FirstEvent =  1;

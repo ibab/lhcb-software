@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.14 2007-03-05 11:48:42 pkoppenb Exp $
+! $Id: release.notes,v 1.15 2007-03-06 08:27:04 musy Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTaggingChecker
 ! Responsible : Marco Musy (marco.musy@cern.ch)
 ! Purpose     : Checker package for Phys/FlavourTagging
 !-----------------------------------------------------------------------------
+
+! 2007-03-06 - Marco Musy
+  - Bug fix in BTaggingAnalysis corrected. Some unused variables dropped.
+  - trigger included in ntuple, Ntuple name is set to "tagging".
 
 ! 2007-03-05 - Patrick Koppenburg
  - Do not depend on DaVinciAssociators
