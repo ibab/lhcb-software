@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/OnlineMessageSvc.h,v 1.3 2007-03-06 15:53:06 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/OnlineMessageSvc.h,v 1.4 2007-03-06 15:59:11 frankb Exp $
 #ifndef GAUDI_ONLINEMESSAGESVC_H
 #define GAUDI_ONLINEMESSAGESVC_H
 
@@ -125,7 +125,7 @@ namespace LHCb {
 
   private:
     bool          m_loggerOnly;                 ///< Property to suppress local logging
-    size_t        m_msgCount[MSG::NUM_LEVELS];  ///< Counter of messages of a given type
+    int           m_msgCount[MSG::NUM_LEVELS];  ///< Counter of messages of a given type
     std::ostream* m_defaultStream;              ///< Pointer to the output stream.
     Message       m_defaultMessage;             ///< Default Message
     StreamMap     m_streamMap;                  ///< Stream map

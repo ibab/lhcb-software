@@ -1,4 +1,4 @@
-// $Id: OnlineMessageSvc.cpp,v 1.8 2007-03-06 15:52:58 frankb Exp $
+// $Id: OnlineMessageSvc.cpp,v 1.9 2007-03-06 15:59:11 frankb Exp $
 
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiOnline/IErrorLogger.h"
@@ -43,6 +43,10 @@ StatusCode LHCb::OnlineMessageSvc::initialize() {
   }
   // Set my own properties
   setProperties();
+  
+  // Reset message counters
+  for(int i=0; i<MSG::NUM_LEVELS;++i) 
+    m_msgCount[i] = 0;
 
   // Set the output level thresholds from properties
   for ( int lvl = MSG::VERBOSE; lvl < MSG::NUM_LEVELS; lvl++ ) {
