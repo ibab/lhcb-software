@@ -11,7 +11,7 @@
 
 //--------------------------------------------------------------
 // Main initialisation
-#include "$PHYSYSROOT/options/DaVinciInit.opts"
+#include "$PHYSSYSROOT/options/DaVinciInit.opts"
 // POOL Persistency
 #include "$STDOPTS/DstDicts.opts"
 //--------------------------------------------------------------
@@ -68,10 +68,6 @@ ApplicationMgr.HistogramPersistency = "ROOT";
 // Default Database dependent configurations. The latest
 // compatible database is included from here.
 #include "$DAVINCIROOT/options/DaVinciDDDB.opts"
-//=================================================================
-// Magnetic field map version
-MagneticFieldSvc.FieldMapFile = "$FIELDMAPROOT/cdf/field047.cdf";
-//=================================================================
 
 // Start DaVinci sequence
 //

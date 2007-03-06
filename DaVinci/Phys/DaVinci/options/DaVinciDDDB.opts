@@ -9,4 +9,8 @@
  *  @date 2004-01-26
  */
 
-DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200601.xml" ;
+// obsolete
+// DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200601.xml" ;
+
+
+#include "$STDOPTS/DC06Conditions.opts"

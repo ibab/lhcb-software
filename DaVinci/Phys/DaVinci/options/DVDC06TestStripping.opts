@@ -1,15 +1,15 @@
 #include "$COMMONPARTICLESROOT/options/StandardParticles.opts"
 #include "$COMMONPARTICLESROOT/options/StandardOptions.opts"
 // CRJ : turn on monitoring of standard particles
-// Comment out to disable
-#include "$COMMONPARTICLESROOT/options/EnableStandardParticleMonitors.opts"
+//#include "$COMMONPARTICLESROOT/options/EnableStandardParticleMonitors.opts"
 #include "$DAVINCIROOT/options/loadParticlesSeq.opts"
 #include "$STRIPPINGROOT/options/DVPresel.opts"
 #include "$STRIPPINGROOT/options/Correlations.opts"
 EventClocksvc.EventTimeDecoder = "FakeEventTime";
-ApplicationMgr.EvtMax = 10000;
+ApplicationMgr.EvtMax = 100;
 EventSelector.PrintFreq  = 10;
 // ToolSvc.OutputLevel=1;
 // ToolSvc.CheckOverlap.OutputLevel=3;
 // ToolSvc.Particle2State.OutputLevel=3;
 //ToolSvc.RelatedPVFinder.ContextTool.GeomDispCalculator.OutputLevel=1;
+
