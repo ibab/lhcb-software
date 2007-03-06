@@ -1,4 +1,4 @@
-// $Id: BTaggingAnalysis.h,v 1.6 2007-03-06 08:27:04 musy Exp $
+// $Id: BTaggingAnalysis.h,v 1.7 2007-03-06 08:35:33 musy Exp $
 #ifndef USER_BTAGGINGANALYSIS_H 
 #define USER_BTAGGINGANALYSIS_H 1
 
@@ -17,10 +17,9 @@
 #include "Kernel/IBTaggingTool.h"
 #include "Kernel/IGeomDispCalculator.h"
 #include "Kernel/IDebugTool.h"
+#include "Kernel/Particle2MCLinker.h"
 
 #include "CaloInterfaces/ICaloElectron.h"
-
-#include "DaVinciAssociators/Particle2MCLinker.h"
 
 //#include "IForcedBDecayTool.h"
 
