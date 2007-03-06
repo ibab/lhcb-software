@@ -1,5 +1,5 @@
-#ifndef ONLINEKERNEL_GaudiDeamon_H
-#define ONLINEKERNEL_GaudiDeamon_H
+#ifndef ONLINEKERNEL_GAUDIDEAMON_H
+#define ONLINEKERNEL_GAUDIDEAMON_H
 
 // Framework includes
 #include "GaudiOnline/DimTaskFSM.h"
@@ -38,4 +38,4 @@ namespace LHCb  {
     virtual StatusCode unload();
   };
 }
-#endif // ONLINEKERNEL_GaudiDeamon_H
+#endif // ONLINEKERNEL_GAUDIDEAMON_H
