@@ -1,0 +1,7 @@
+project ANALYSIS
+
+use LHCB	LHCB_v22r2
+
+build_strategy	with_installarea
+setup_strategy	root
+
