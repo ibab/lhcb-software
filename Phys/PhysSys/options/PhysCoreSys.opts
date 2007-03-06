@@ -7,10 +7,6 @@ ApplicationMgr.DLLs += { "DaVinciKernel" };
 ApplicationMgr.DLLs += { "VertexFit" };
 ApplicationMgr.DLLs += { "TrackTools" };
 
-// ApplicationMgr.DLLs += { "Ks2PiPiSel" };
-// ApplicationMgr.DLLs += { "FlavourTagging" };
-ApplicationMgr.DLLs += { "Utilities" };
-
 //DataOnDemandSvc.OutputLevel = 1 ;
 ApplicationMgr.ExtSvc += { "DataOnDemandSvc" };
 
