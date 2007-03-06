@@ -1,4 +1,4 @@
-// $Id: DimCmdServer.cpp,v 1.6 2007-03-05 16:52:26 evh Exp $
+// $Id: DimCmdServer.cpp,v 1.7 2007-03-06 18:19:25 frankb Exp $
 
 #include "GaudiKernel/StatusCode.h"
 #include "GaudiKernel/MsgStream.h"
@@ -26,18 +26,10 @@
 #include "GaudiKernel/IIncidentSvc.h"
 #include "OnlineHistDB/OnlineHistDB.h"
 
-#ifdef WIN32
-namespace wins {
-#include <winsock.h>
-}
-#else
-#include <unistd.h>
-#endif
-
 //HDS =HistogramDataService but used as generic name for anything on store
-IHistogramSvc* HDS=0; 
-IService* m_HDS;
-char *nextcommand;
+static IHistogramSvc* HDS = 0; 
+static IService* m_HDS = 0;
+static char *nextcommand = 0;
 
 
 DimCmdServer::DimCmdServer(std::string name, ISvcLocator* svclocator) : 
