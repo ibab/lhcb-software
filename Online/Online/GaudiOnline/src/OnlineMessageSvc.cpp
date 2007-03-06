@@ -1,4 +1,4 @@
-// $Id: OnlineMessageSvc.cpp,v 1.9 2007-03-06 15:59:11 frankb Exp $
+// $Id: OnlineMessageSvc.cpp,v 1.10 2007-03-06 16:00:10 frankb Exp $
 
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiOnline/IErrorLogger.h"
