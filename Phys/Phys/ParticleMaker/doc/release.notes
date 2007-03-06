@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.59 2007-03-05 09:32:53 pkoppenb Exp $ 
+! $Id: release.notes,v 1.60 2007-03-06 12:29:28 jonrob Exp $ 
 ! Package     : ParticleMaker
 ! Responsible : P. Koppenburg, J. Palacios
 !==============================================================================
+
+! 2007-03-06 - Chris Jones
+ - Tidy up PID consistency checks in CombinedParticleMaker
 
 ! 2007-03-05 - Patrick Koppenburg
  - Remove ParticleEffPurMoni that depends on MC truth. 

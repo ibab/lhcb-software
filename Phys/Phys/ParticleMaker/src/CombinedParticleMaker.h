@@ -5,7 +5,7 @@
  * Header file for Particle maker CombinedParticleMaker
  *
  * CVS Log :-
- * $Id: CombinedParticleMaker.h,v 1.14 2007-02-23 14:04:42 jonrob Exp $
+ * $Id: CombinedParticleMaker.h,v 1.15 2007-03-06 12:29:28 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-05-03
@@ -88,6 +88,9 @@ private:
                      const ParticleProperty    * pprop,
                      LHCb::Particle            * particle ) const;
 
+  /// Test the PID information consistency
+  void checkPIDInfo( const LHCb::ProtoParticle * proto ) const;
+
 private:
 
   /// Job option wtih TES input for ProtoParticles
@@ -158,6 +161,9 @@ private:
 
   /// Minimum percentage to include in final summary printout
   double m_minPercForPrint;
+
+  /// Flag to turn on consistency checks on PID information
+  bool m_testPIDinfo;
 
 };
 

@@ -5,7 +5,7 @@
  * Implmentation file for Particle maker CombinedParticleMaker
  *
  * CVS Log :-
- * $Id: CombinedParticleMaker.cpp,v 1.21 2007-02-23 14:04:42 jonrob Exp $
+ * $Id: CombinedParticleMaker.cpp,v 1.22 2007-03-06 12:29:28 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-05-03
@@ -65,6 +65,9 @@ CombinedParticleMaker::CombinedParticleMaker( const std::string& type,
   declareProperty( "AddBremPhoton",  m_addBremPhoton = true );
   declareProperty( "ExclusiveSelection", m_exclusive = false );
   declareProperty( "MinPercentForPrint", m_minPercForPrint = 0.01 );
+
+  // Test PID info consistency
+  declareProperty( "CheckPIDConsistency", m_testPIDinfo = true );
 
 }
 
@@ -233,35 +236,8 @@ StatusCode CombinedParticleMaker::makeParticles( Particle::ConstVector & parts )
     verbose() << " -> Track selected" << track->key() << endreq;
     ++tally.selProtos;
 
-    // test RICH links
-    if ( (*iProto)->hasInfo( LHCb::ProtoParticle::RichPIDStatus ) )
-    {
-      verbose() << " -> Proto has RICH info" << endreq;
-      const LHCb::RichPID * rpid = (*iProto)->richPID();
-      if ( !rpid )
-      {
-        error() << "Proto has null RichPID" << endreq;
-      }
-      else
-      {
-        verbose() << "   -> RichPID pointer is OK" << endreq;
-      }
-    }
-
-    // test MUON links
-    if ( (*iProto)->hasInfo( LHCb::ProtoParticle::MuonPIDStatus ) )
-    {
-      verbose() << " -> Proto has MUON info" << endreq;
-      const LHCb::MuonPID * mpid = (*iProto)->muonPID();
-      if ( !mpid )
-      {
-        error() << "Proto has null MuonPID" << endreq;
-      }
-      else
-      {
-        verbose() << "   -> MuonPID pointer is OK" << endreq;
-      }
-    }
+    // Do PID checks ?
+    if ( m_testPIDinfo ) checkPIDInfo(*iProto);
 
     // loop over particle types to make
     for ( ProtoMap::const_iterator iP = m_protoMap.begin();
@@ -303,6 +279,31 @@ StatusCode CombinedParticleMaker::makeParticles( Particle::ConstVector & parts )
 }
 
 //=========================================================================
+// Test PID info
+//=========================================================================
+void CombinedParticleMaker::checkPIDInfo( const LHCb::ProtoParticle * proto ) const
+{
+  // test RICH links
+  if ( proto->hasInfo( LHCb::ProtoParticle::RichPIDStatus ) )
+  {
+    const LHCb::RichPID * rpid = proto->richPID();
+    if ( !rpid )
+    {
+      Error( "ProtoParticle has RICH information but NULL RichPID SmartRef !" ); 
+    }
+  }
+  // test MUON links
+  if ( proto->hasInfo( LHCb::ProtoParticle::MuonPIDStatus ) )
+  {
+    const LHCb::MuonPID * mpid = proto->muonPID();
+    if ( !mpid )
+    {
+      Error( "ProtoParticle has MUON information but NULL MuonPID SmartRef !" ); 
+    }
+  }
+}
+
+//=========================================================================
 // Fill particles parameters
 //=========================================================================
 StatusCode CombinedParticleMaker::fillParticle( const ProtoParticle* proto,
@@ -331,8 +332,8 @@ StatusCode CombinedParticleMaker::fillParticle( const ProtoParticle* proto,
     if( m_brem->addBrem( particle ) )
       debug() << " ------- BremStrahlung has been added to the particle" << endreq;
   }
-  return sc;  
-} 
+  return sc;
+}
 
 void
 CombinedParticleMaker::setConfLevel( const LHCb::ProtoParticle * proto,
