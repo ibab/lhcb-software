@@ -1,4 +1,4 @@
-// $Id: OnlineMessageSvc.cpp,v 1.7 2006-05-08 18:14:27 frankb Exp $
+// $Id: OnlineMessageSvc.cpp,v 1.8 2007-03-06 15:52:58 frankb Exp $
 
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiOnline/IErrorLogger.h"
@@ -88,6 +88,8 @@ bool LHCb::OnlineMessageSvc::i_reportMessage(const Message& msg)  {
 /// Dispatch a message to the relevant streams.
 void LHCb::OnlineMessageSvc::reportMessage(const Message& msg)  {
   bool reported = i_reportMessage(msg);
+  int lvl = msg.getType();
+  if (lvl >= MSG::NIL && lvl <= MSG::NUM_LEVELS) ++m_msgCount[lvl];
   if ( reported && s_logger )  {
     s_logger->report(msg.getType(), msg.getSource(), msg.getMessage());
   }
@@ -254,4 +256,9 @@ void LHCb::OnlineMessageSvc::setOutputLevel(const std::string& source, int level
     m_thresholdMap.erase ( p.first );
     m_thresholdMap.insert(ThresholdMap::value_type( source, level) );
   }
+}
+
+// ---------------------------------------------------------------------------
+int LHCb::OnlineMessageSvc::messageCount( MSG::Level lvl ) const  {
+  return (lvl >= MSG::NIL && lvl <= MSG::NUM_LEVELS) ? m_msgCount[lvl] : -1;
 }

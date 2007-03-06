@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/OnlineMessageSvc.h,v 1.2 2006-05-08 18:14:27 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/OnlineMessageSvc.h,v 1.3 2007-03-06 15:53:06 frankb Exp $
 #ifndef GAUDI_ONLINEMESSAGESVC_H
 #define GAUDI_ONLINEMESSAGESVC_H
 
@@ -116,18 +116,22 @@ namespace LHCb {
     // Implementation of IMessageSvc::getLogColor()
     virtual std::string getLogColor(int /* logLevel */) const {  return ""; };
 
+    /// Get the number of messages issued at a particular level
+    virtual int messageCount( MSG::Level level ) const;
+
   protected:
     virtual bool i_reportMessage( const Message& message );
     static void setErrorLogger(IErrorLogger* logger);
 
   private:
-    bool          m_loggerOnly;         ///< Property to suppress local logging
-    std::ostream* m_defaultStream;      ///< Pointer to the output stream.
-    Message       m_defaultMessage;     ///< Default Message
-    StreamMap     m_streamMap;          ///< Stream map
-    MessageMap    m_messageMap;         ///< Message map
-    ThresholdMap  m_thresholdMap;       ///< Output level threshold map
-    std::string   m_defaultFormat;      ///< Default format for the messages
+    bool          m_loggerOnly;                 ///< Property to suppress local logging
+    size_t        m_msgCount[MSG::NUM_LEVELS];  ///< Counter of messages of a given type
+    std::ostream* m_defaultStream;              ///< Pointer to the output stream.
+    Message       m_defaultMessage;             ///< Default Message
+    StreamMap     m_streamMap;                  ///< Stream map
+    MessageMap    m_messageMap;                 ///< Message map
+    ThresholdMap  m_thresholdMap;               ///< Output level threshold map
+    std::string   m_defaultFormat;              ///< Default format for the messages
     std::vector<std::string> m_thresholdProp[MSG::NUM_LEVELS]; ///< Properties controling
   };
 } // End namespace LHCb
