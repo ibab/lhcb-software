@@ -10,7 +10,7 @@
 #include "Event/RecHeader.h"
 #include "Event/MCHeader.h"
 //#include "Event/ProtoParticle.h"
-// #include "Kernel/ILifetimeFitter.h"
+#include "Kernel/ILifetimeFitter.h"
 #include "Kernel/IOnOffline.h"
 //#include "Event/FlavourTag.h"
 #include "Event/GenCollision.h"
@@ -57,7 +57,7 @@ DecayChainNTuple::DecayChainNTuple( const std::string& name,
     , m_ppSvc(0)
     , m_pDKFinder(0)
     , m_IPTool(0)
-     //, m_pLifetimeFitter(0)
+    , m_pLifetimeFitter(0)
 #ifdef MCCheck
     , m_VISPrimVertTool(0)
     , m_bkgCategory(0)
@@ -86,6 +86,7 @@ DecayChainNTuple::DecayChainNTuple( const std::string& name,
   declareProperty("UseOnlineCalo", m_useOnlineCalo = false); // Protection for MC -> Part online association 
   declareProperty("RichOnlinePIDLocation", m_richOnlinePIDLocation = "Rec/Rich/TrgPIDs" );
   declareProperty("GeomTool", m_geomToolName = "Default"); // For online use TrgDispCalculator
+  declareProperty("FillProperTime", m_FillProperTime = false);
 }
 //=============================================================================
 // Destructor
@@ -114,13 +115,13 @@ StatusCode DecayChainNTuple::initialize() {
 
   // Retrieve the LifetimeFitter
   // sc = toolSvc()->retrieveTool("LifetimeFitter", m_pLifetimeFitter, this);
-  /*
-  m_pLifetimeFitter = tool<ILifetimeFitter>("LifetimeFitter", this);
+  
+  m_pLifetimeFitter = tool<ILifetimeFitter>("PropertimeFitter", this);
   if(!m_pLifetimeFitter){
     err() << " Unable to retrieve LifetimeFitter tool" << endreq;
     return sc;
   }
-  */
+  
 
   // Set the dk to be looked at
   m_pDKFinder->setDecay(m_Decay);
@@ -350,11 +351,12 @@ StatusCode DecayChainNTuple::finalize() {
 //  DecayChainNTuple::HandleNTuple::HandleNTuple
 //=============================================================================
 DecayChainNTuple::HandleNTuple::HandleNTuple(NTuplePtr& nt, unsigned int& number, 
-                                             // ILifetimeFitter *lifetimefitter,
+                                             ILifetimeFitter *lifetimefitter,
                                              IGeomDispCalculator* iptool,
-                                             IVisPrimVertTool* visPrimVertTool)
+                                             IVisPrimVertTool* visPrimVertTool,bool doPropTime)
   : m_iptool(iptool)
-  , m_visPrimVertTool(visPrimVertTool)//, m_lifetimefitter(lifetimefitter)
+  , m_visPrimVertTool(visPrimVertTool), 
+  m_lifetimefitter(lifetimefitter)
 {
   StatusCode sc;
 
@@ -454,10 +456,15 @@ DecayChainNTuple::HandleNTuple::HandleNTuple(NTuplePtr& nt, unsigned int& number
   sc = nt->addIndexedItem("cospF_lab"+label,m_n,m_cospF);
 
   // Lifetime
-  // sc = nt->addIndexedItem("taufit_lab"+label,m_n,m_taufit);
-  // sc = nt->addIndexedItem("taufitErr_lab"+label,m_n,m_taufitErr);
-  // sc = nt->addIndexedItem("ctfitChi2_lab"+label,m_n,m_ctfitChi2);
 
+  if (doPropTime) {
+    
+    sc = nt->addIndexedItem("taufit_lab"+label,m_n,m_taufit);
+    sc = nt->addIndexedItem("taufitErr_lab"+label,m_n,m_taufitErr);
+    sc = nt->addIndexedItem("ctfitChi2_lab"+label,m_n,m_ctfitChi2);
+
+  }
+  
   // Track information
   sc = nt->addIndexedItem("trchitwo_lab"+label,m_n,m_trchitwo);
   sc = nt->addIndexedItem("trDoF_lab"+label,m_n,m_trDoF);
@@ -535,13 +542,13 @@ DecayChainNTuple::HandleNTuple::HandleNTuple(NTuplePtr& nt, unsigned int& number
 //=============================================================================
 #ifndef MCCheck
 void DecayChainNTuple::HandleNTuple::FillNTuple(const LHCb::Particle& part, LHCb::RecVertex::ConstVector& pvs, 
-                                                LHCb::RichPIDs* globalPIDs,IPhysDesktop* desktop)
+                                                LHCb::RichPIDs* globalPIDs,IPhysDesktop* desktop,bool doPropTime)
 #endif
 
 #ifdef MCCheck
   void DecayChainNTuple::HandleNTuple::FillNTuple(const LHCb::Particle& part, LHCb::RecVertex::ConstVector& pvs,
                                                   bool& isSig, const LHCb::MCParticle* mclink, LHCb::RichPIDs* globalPIDs,
-                                                  IPhysDesktop* desktop)
+                                                  IPhysDesktop* desktop,bool doPropTime)
 #endif
 {
 
@@ -902,23 +909,25 @@ void DecayChainNTuple::HandleNTuple::FillNTuple(const LHCb::Particle& part, LHCb
   }
 
   // Lifetime
-  /*
-  double ct, ctErr, ctChi2;
-  
-  if(!v){ // no sec vtx
-    m_taufit[m_n] = -999.;
-    m_taufitErr[m_n] = -999.;
-    m_ctfitChi2[m_n] = -999.;
-  }
-  else{
-    m_lifetimefitter->fit(*sIPSPV, part, ct, ctErr, ctChi2);
+  if (doPropTime) {
     
-    // tau in ps
-    m_taufit[m_n] = 1000 * (((ct/mm) /c_light)/ns);
-    m_taufitErr[m_n] = 1000 * (((ctErr/mm) /c_light)/ns) ;
-    m_ctfitChi2[m_n] = ctChi2;
+    double ct, ctErr, ctChi2;
+  
+    if(!v){ // no sec vtx
+      m_taufit[m_n] = -999.;
+      m_taufitErr[m_n] = -999.;
+      m_ctfitChi2[m_n] = -999.;
+    }
+    else{
+      m_lifetimefitter->fit(*sIPSPV, part, ct, ctErr, ctChi2);
+    
+      // tau in ps
+      m_taufit[m_n] = 1000 * (((ct/mm) /c_light)/ns);
+      m_taufitErr[m_n] = 1000 * (((ctErr/mm) /c_light)/ns) ;
+      m_ctfitChi2[m_n] = ctChi2;
+    }
   }
-  */
+  
 
 #ifdef MCCheck
   // Look if a the particle is associated to signal
@@ -1051,8 +1060,8 @@ StatusCode DecayChainNTuple::BookNTuple(LHCb::Particle::Vector mothervec) {
         forthekeymother++;
 
         int key =  ((offsetmother + (500000*forthekeymother)));
-        add = new HandleNTuple(nt, mothernr, //m_pLifetimeFitter, 
-                               m_IPTool,m_VISPrimVertTool);
+        add = new HandleNTuple(nt, mothernr, m_pLifetimeFitter, 
+                               m_IPTool,m_VISPrimVertTool,m_FillProperTime);
         m_HandleNTupleMap.insert(std::make_pair(key, add));
 
         verbose() << "Added " << pnamemother << " with key " << key
@@ -1080,8 +1089,8 @@ StatusCode DecayChainNTuple::BookNTuple(LHCb::Particle::Vector mothervec) {
           forthekeydau++;
 
           int keydau =  ((offsetdau + (500000*forthekeydau)));           
-          adddau = new HandleNTuple(nt, subdaunr,   // m_pLifetimeFitter,
-                                                  m_IPTool,m_VISPrimVertTool);
+          adddau = new HandleNTuple(nt, subdaunr,   m_pLifetimeFitter,
+                                                  m_IPTool,m_VISPrimVertTool,m_FillProperTime);
           m_HandleNTupleMap.insert(std::make_pair(keydau, adddau));
           
           verbose() << "Added " << pname << " with key " << keydau
@@ -1491,7 +1500,7 @@ StatusCode DecayChainNTuple::WriteNTuple(LHCb::Particle::Vector mothervec) {
 
 #ifndef MCCheck
     if (jkeymother != m_HandleNTupleMap.end()){
-      jkeymother->second->FillNTuple(**imother, PVs, globalPIDs,mydesktop);
+      jkeymother->second->FillNTuple(**imother, PVs, globalPIDs,mydesktop,m_FillProperTime);
     }
 #endif
 
@@ -1518,7 +1527,7 @@ StatusCode DecayChainNTuple::WriteNTuple(LHCb::Particle::Vector mothervec) {
     debug() << "First Is the particle signal (1: yes, 0: false)? ==> " << isSig << endreq;
 
     if (jkeymother != m_HandleNTupleMap.end()){
-      jkeymother->second->FillNTuple(**imother, PVs, isSig, mclink, globalPIDs,mydesktop);
+      jkeymother->second->FillNTuple(**imother, PVs, isSig, mclink, globalPIDs,mydesktop,m_FillProperTime);
     }
 #endif
 
@@ -1661,13 +1670,13 @@ StatusCode DecayChainNTuple::WriteNTuple(LHCb::Particle::Vector mothervec) {
       
 #ifndef MCCheck
       if (jkeydau != m_HandleNTupleMap.end()){
-        jkeydau->second->FillNTuple(**ichild, PVs, globalPIDs,mydesktop);
+        jkeydau->second->FillNTuple(**ichild, PVs, globalPIDs,mydesktop,m_FillProperTime);
       }
 #endif
 
 #ifdef MCCheck
       if (jkeydau != m_HandleNTupleMap.end()){
-        jkeydau->second->FillNTuple(**ichild, PVs, isSig, mclink, globalPIDs,mydesktop);
+        jkeydau->second->FillNTuple(**ichild, PVs, isSig, mclink, globalPIDs,mydesktop,m_FillProperTime);
       }
 #endif
 

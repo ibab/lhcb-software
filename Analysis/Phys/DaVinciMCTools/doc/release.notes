@@ -1,11 +1,14 @@
-! $Id: release.notes,v 1.156 2007-03-06 09:37:56 sposs Exp $
+! $Id: release.notes,v 1.157 2007-03-06 14:25:58 pkoppenb Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
 
+! 2007-03-06 - Patrick Koppenbur for Adlene Hicheur
+ - Restored propertime in DecayChainNtuple
+
 ! 2007-03-06 - Stephane Poss
- - Updqate FilterTofixOppositeBFractions : add more corrected channels
+ - Update FilterTofixOppositeBFractions : add more corrected channels
 
 ! 2007-03-05 - Patrick Koppenburg
  - Do not depend on DaVinciAssociators

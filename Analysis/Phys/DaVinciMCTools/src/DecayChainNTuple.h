@@ -16,7 +16,7 @@ class IDecayFinder;
 class INTuple;
 class IParticlePropertySvc;
 class IGeomDispCalculator;
-// class ILifetimeFitter;
+class ILifetimeFitter;
 class IOnOffline;
 
 #ifdef MCCheck
@@ -115,7 +115,8 @@ private:
   bool m_useOnlineCalo; // Protection for MC -> Part online association
   std::string m_richOnlinePIDLocation;
   std::string m_geomToolName; // Name of Geometrical Tool
-
+  bool m_FillProperTime;
+  
   // Flag to book the NTuple only once
   bool m_bookedNTuple;
 
@@ -139,7 +140,7 @@ private:
   // Reference to GeomDispCalculator
   IGeomDispCalculator* m_IPTool;
   // Reference to LifetimeFitter
-  // ILifetimeFitter *m_pLifetimeFitter;
+   ILifetimeFitter *m_pLifetimeFitter;
   // Check if the MCPV is visible
   IVisPrimVertTool* m_VISPrimVertTool;
 
@@ -257,23 +258,23 @@ private:
   //-----------------------------------------------------------------------------
   // HandleNTuple
   //-----------------------------------------------------------------------------
-
+  
   class HandleNTuple{
   public:
 
     HandleNTuple(NTuplePtr& nt, unsigned int& number, 
-                 // ILifetimeFitter *lifetimefitter,
-                 IGeomDispCalculator* iptool,IVisPrimVertTool* visPrimVertTool);
+                 ILifetimeFitter *lifetimefitter,
+                 IGeomDispCalculator* iptool,IVisPrimVertTool* visPrimVertTool,                  bool doPropTime);
 
 #ifndef MCCheck
     void FillNTuple(const LHCb::Particle& part, LHCb::RecVertex::ConstVector& pvs, LHCb::RichPIDs* globalPIDs,
-                    IPhysDesktop* desktop);
+                    IPhysDesktop* desktop,bool doPropTime);
 #endif
 
 #ifdef MCCheck
     void FillNTuple(const LHCb::Particle& part, LHCb::RecVertex::ConstVector& pvs, bool& isSig, 
                     const LHCb::MCParticle* mclink, LHCb::RichPIDs* globalPIDs,
-                    IPhysDesktop* desktop);
+                    IPhysDesktop* desktop,bool doPropTime);
     void FillMCNTuple(LHCb::MCParticle& mcpart, const Gaudi::XYZPoint& MCPVPosition, bool& isReco);
 #endif
 
@@ -287,7 +288,7 @@ private:
     // Tools
     IGeomDispCalculator* m_iptool;
     IVisPrimVertTool* m_visPrimVertTool;
-    // ILifetimeFitter *m_lifetimefitter;
+    ILifetimeFitter *m_lifetimefitter;
 
     // NTuple variables
 
@@ -391,9 +392,9 @@ private:
     NTuple::Array<float> m_cospF;
 
     // Lifetime
-    // NTuple::Array<float> m_taufit;
-    // NTuple::Array<float> m_taufitErr;
-    // NTuple::Array<float> m_ctfitChi2;
+     NTuple::Array<float> m_taufit;
+     NTuple::Array<float> m_taufitErr;
+     NTuple::Array<float> m_ctfitChi2;
 
 #ifdef MCCheck
     // Look if a the particle is associated to signal
