@@ -1,9 +1,13 @@
 ! =============================================================================
-! $Id: release.notes,v 1.46 2007-03-02 09:09:48 cattanem Exp $
+! $Id: release.notes,v 1.47 2007-03-06 13:10:54 marcocle Exp $
 ! =============================================================================
 ! package Tools/CondDBUI
 ! package manager : Marco Clemencic / Nicolas Gilardi
 ! =============================================================================
+
+! 2007-03-06 - Marco Clemencic
+ - Changed the path to the sessions database to
+   "$HOME/.conddb_browser_sessions.dbm"
 
 !===================== Tools/CondDBUI v2r0 2007-03-02 =========================
                             NEEDS LCGCMT >= 50

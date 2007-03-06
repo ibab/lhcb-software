@@ -9,7 +9,7 @@ versionNumber = '$Name: not supported by cvs2svn $'.split()[1]
 if versionNumber == "$":
     versionNumber = 'HEAD'
 
-versionId  = '$Id: guiwin.py,v 1.23 2007-02-14 16:33:50 marcocle Exp $'.split()
+versionId  = '$Id: guiwin.py,v 1.24 2007-03-06 13:10:54 marcocle Exp $'.split()
 if len(versionId) < 4:
     versionDate = 'unknown'
 else:
@@ -70,7 +70,8 @@ class myWindow(qt.QMainWindow):
         #--------------------------------#
 
         #---- Old Sessions ----#
-        sessionFile = os.environ['CONDDBUI_SESSIONS_PATH'] + os.sep + 'sessions.dbm'
+        #sessionFile = os.environ['CONDDBUI_SESSIONS_PATH'] + os.sep + 'sessions.dbm'
+        sessionFile = os.path.join(os.environ['HOME'],'.conddb_browser_sessions.dbm')
         self.oldSessions = []
         if os.access(sessionFile, os.F_OK):
             s = shelve.open(sessionFile)

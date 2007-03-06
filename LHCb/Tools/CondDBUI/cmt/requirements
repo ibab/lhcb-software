@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.16 2007-02-28 18:29:31 marcocle Exp $
+# $Id: requirements,v 1.17 2007-03-06 13:10:54 marcocle Exp $
 package CondDBUI
 
 version v2r0
@@ -69,7 +69,7 @@ path_remove  PYTHONPATH 	 "/pyqt/" WIN32 "\pyqt\"
 path_prepend PYTHONPATH          "$(pyqt_base)/slc3_gcc323/lib/python2.3.4/site-packages"
 
 # Sessions path
-set  CONDDBUI_SESSIONS_PATH ${CONDDBUIROOT}/python
+#set  CONDDBUI_SESSIONS_PATH ${CONDDBUIROOT}/python
 
 alias CondDBBrowser "python ${CONDDBUIROOT}/python/browser.py"
 
