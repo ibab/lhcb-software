@@ -88,8 +88,7 @@ class valKeyValidator(qt.QValidator):
             
     def fixup(self, inputString):
         '''
-        Modify the input value such that it is never greater than
-        cool::ValidityKeyMax or smaller than cool::ValidityKeyMin.
+        Fix the inputString if fixable.
         '''
         completable_datetime = '(?P<year>(?:19|2[01])?[0-9]{2})-(?P<month>(?:0?[0-9]|1[0-2]))-(?P<day>[0-3]?[0-9])[ T]'+ \
                                '(?P<hour>(?:[01]?[0-9]|2[0-3])):(?P<minute>[0-5]?[0-9]):(?P<s>[0-5]?[0-9])'+ \
