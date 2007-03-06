@@ -1,3 +1,5 @@
+#ifndef _WIN32
+
 #include <string>
 #include <stdexcept>
 #include <iostream>
@@ -73,7 +75,7 @@ Connection::Connection(std::string serverAddr, int serverPort, int sndRcvSizes,
  */
 void Connection::connectToServer(void)
 {
-	connectAndNegotiate(0);
+  connectAndNegotiate(0);
 }
 
 /**
@@ -81,7 +83,7 @@ void Connection::connectToServer(void)
  */
 void Connection::connectAndStartThreads(void)
 {
-	connectAndNegotiate(1);
+  connectAndNegotiate(1);
 }
 
 /** Connects to a storage cluster node.
@@ -570,3 +572,4 @@ void Connection::stopAckThread(int stopLevel)
   }
 }
 
+#endif /* _WIN32 */

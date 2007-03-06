@@ -1,3 +1,7 @@
+-----------------------------------------------------
+| 2007-03-06 : Suman
+|    Added #ifndefs to comment out all code for Windows.
+-----------------------------------------------------
 | 2007-03-01 : Suman
 |    a. Added blocking semop and malloc to cause
 |       back pressure in case of too many elements

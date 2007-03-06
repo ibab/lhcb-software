@@ -1,3 +1,5 @@
+#ifndef _WIN32
+
 extern "C" {
 #include <malloc.h>
 #include <string.h>
@@ -282,3 +284,4 @@ struct cmd_header* MM::dequeueCommand(unsigned int sequenceNum)
   return NULL;
 }
 
+#endif /* _WIN32 */

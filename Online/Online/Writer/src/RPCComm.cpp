@@ -1,3 +1,5 @@
+#ifndef _WIN32
+
 #include <stdexcept>
 #include <iostream>
 #include <pthread.h>
@@ -102,3 +104,4 @@ void RPCComm::createFile(char *fileName, unsigned int runNumber)
   return;
 }
 
+#endif /* _WIN32 */

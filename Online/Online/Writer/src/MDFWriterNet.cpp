@@ -1,3 +1,5 @@
+#ifndef _WIN32
+
 #include <string>
 #include <stdexcept>
 #include <ctime>
@@ -322,4 +324,4 @@ static inline unsigned long adler32(unsigned long adler,
   return (s2 << 16) | s1;
 }
 
-
+#endif /* _WIN32 */
