@@ -1,11 +1,11 @@
-# $Id: requirements,v 1.343 2007-02-28 18:40:34 pkoppenb Exp $
+# $Id: requirements,v 1.344 2007-03-06 09:35:57 pkoppenb Exp $
 # Created    : 07/02/2002
-# Maintainer : P. Koppenburg, J. Palacios
+# Maintainer : J. Palacios
 #
 
 #============================================================================
 package           DaVinci
-version           v18r1
+version           v19r0
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -33,8 +33,7 @@ use GaudiSvc 		v*
 use RootHistCnv         v*         
 
 #-- Database
-use XmlDDDB             v30r14   Det  
-use XmlConditions       v2r4    Det  
+use SQLDDDB             v1r*    Det  -no_auto_imports
 use FieldMap            v4r7         
 use ParamFiles          v5r0         
 
@@ -59,13 +58,13 @@ use SimComponents       v*    Sim
 use LinkerInstances     v*    Event
 
 #-- Lbcom
-use LbcomSys    v6r1
+use LbcomSys    v6r2
 
 #-- Rec
-use RecSys      v4r1
+use RecSys      v4r2
 
 #-- Hlt
-use HltSys      v1r2
+use HltSys      v1r3
 
 #-- Phys
 use PhysSys     v6r0
