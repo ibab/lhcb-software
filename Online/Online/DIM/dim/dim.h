@@ -13,7 +13,7 @@
 
 #include "dim_common.h"
 
-#define DIM_VERSION_NUMBER 1609
+#define DIM_VERSION_NUMBER 1610
 
 #define MY_LITTLE_ENDIAN	0x1
 #define MY_BIG_ENDIAN 		0x2
@@ -535,6 +535,7 @@ _DIM_PROTOE( int get_dns_port_number, () );
 _DIM_PROTOE( int get_dns_node_name, ( char *node_name ) );
 
 _DIM_PROTOE( int get_dns_accepted_domains, ( char *domains ) );
+_DIM_PROTOE( int get_dns_accepted_nodes, ( char *nodes ) );
 
 _DIM_PROTO( double _swapd_by_addr, (double *d) );
 _DIM_PROTO( int _swapl_by_addr, (int *l) );

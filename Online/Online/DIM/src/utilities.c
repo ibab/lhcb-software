@@ -227,11 +227,38 @@ int get_dns_accepted_domains( domains )
 char *domains;
 {
 	char	*p;
+	int append = 0;
 
+	if(get_dns_accepted_nodes(domains))
+		append = 1;
 	if( (p = getenv("DIM_DNS_ACCEPTED_DOMAINS")) == NULL )
+	{
+		if(!append)
+			return(0);
+		else
+			return(1);
+	}
+	else {
+		if(!append)
+			strcpy( domains, p );
+		else
+		{
+			strcat( domains, ",");
+			strcat( domains, p);
+		}
+		return(1);
+	}
+}
+
+int get_dns_accepted_nodes( nodes )
+char *nodes;
+{
+	char	*p;
+
+	if( (p = getenv("DIM_DNS_ACCEPTED_NODES")) == NULL )
 		return(0);
 	else {
-		strcpy( domains, p );
+		strcpy( nodes, p );
 		return(1);
 	}
 }

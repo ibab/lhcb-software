@@ -83,6 +83,9 @@ static char RPC_dummy = 0;
 static char *Rpc_info = &RPC_dummy;
 static int Rpc_info_size = 0;
 
+static char DNS_accepted_domains[1024] = {0};
+static char DNS_accepted_nodes[1024] = {0};
+
 _DIM_PROTO( DNS_SERVICE *service_exists, (char *name) );
 _DIM_PROTO( void check_validity,         (int conn_id) );
 _DIM_PROTO( void send_dns_server_info,   (int conn_id, int **bufp, int *size) );
@@ -181,7 +184,6 @@ int tmout_flag;
 	int format;
 	DNS_CONNECTION *connp;
 	int n_services;
-	char accepted_domains[256];
 	char *ptr, *ptr1;
 	int found;
 	void do_update_did();
@@ -216,9 +218,15 @@ int tmout_flag;
 		Dns_conns[conn_id].pid = vtohl(packet->pid);
 		Dns_conns[conn_id].port = vtohl(packet->port);
 
-		if(get_dns_accepted_domains(accepted_domains))
+		if(strcmp(Dns_conns[conn_id].task_name,"DIS_DNS"))
+		if(DNS_accepted_domains[0] == 0)
 		{
-			ptr = accepted_domains;
+			if(!get_dns_accepted_domains(DNS_accepted_domains))
+				DNS_accepted_domains[0] = -1;
+		}
+		if((DNS_accepted_domains[0] != -1) && (strcmp(Dns_conns[conn_id].task_name,"DIS_DNS")))
+		{
+			ptr = DNS_accepted_domains;
 			found = 0;
 			while(*ptr)
 			{
@@ -571,10 +579,11 @@ DIC_DNS_PACKET *packet;
 	int i, service_id;
 	DNS_DIC_PACKET dic_packet;
 	SERVICE_REG *serv_regp; 
-	char *ptr;
 	void service_insert();
 	void service_remove();
 	void tcpip_get_addresses();
+	char *ptr, *ptr1;
+	int found;
 
 	serv_regp = (SERVICE_REG *)(&(packet->service));
 	if(Debug)
@@ -585,6 +594,61 @@ DIC_DNS_PACKET *packet;
 			serv_regp->service_name);
 		fflush(stdout);
 	}
+
+	if(DNS_accepted_nodes[0] == 0)
+	{
+		if(!get_dns_accepted_nodes(DNS_accepted_nodes))
+			DNS_accepted_nodes[0] = -1;
+	}
+	if(DNS_accepted_nodes[0] != -1)
+	{
+		ptr = DNS_accepted_nodes;
+		found = 0;
+		while(*ptr)
+		{
+			ptr1 = strchr(ptr,',');
+			if(ptr1)
+			{
+				*ptr1 = '\0';
+				ptr1++;
+			}
+			else
+			{
+				ptr1 = ptr;
+				ptr1 += strlen(ptr);
+			}
+			if(strstr(Net_conns[conn_id].node,ptr))
+			{
+				found = 1;
+				break;
+			}
+			ptr = ptr1;
+		}
+		if(!found)
+		{
+			dic_packet.service_id = serv_regp->service_id;
+			dic_packet.node_name[0] = -1; 
+			dic_packet.task_name[0] = 0;
+			dic_packet.node_addr[0] = 0;
+			dic_packet.size = htovl(DNS_DIC_HEADER);
+			if( !dna_write_nowait(conn_id, &dic_packet, DNS_DIC_HEADER) )
+			{
+				dim_print_date_time();
+				printf(" Handle req : Couldn't write, releasing %d\n",conn_id);
+				fflush(stdout);
+				release_conn(conn_id);
+			}
+			dim_print_date_time();
+			printf(" Connection from %s refused, stopping client pid=%s\n",
+					Net_conns[conn_id].node,
+					Net_conns[conn_id].task);
+			fflush(stdout);
+			release_conn(conn_id);
+
+			return 0;
+		}
+	}
+	
 	service_id = vtohl(serv_regp->service_id);
 	if( service_id == -1 )  /* remove service */
 	{

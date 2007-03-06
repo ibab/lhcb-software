@@ -1379,6 +1379,7 @@ DNS_DIC_PACKET *packet;
 	int find_connection();
 
 	service_id = vtohl(packet->service_id);
+
 	servp = (DIC_SERVICE *)id_get_ptr(service_id, SRC_DIC);
 	if(!servp)
 		return(0);
@@ -1391,6 +1392,12 @@ DNS_DIC_PACKET *packet;
 			vtohl(packet->service_id));
 	}
 	node_name = packet->node_name; 
+	if(node_name[0] == -1)
+	{
+		error_handler(0, DIM_FATAL, DIMDNSREFUS, "DIM_DNS refuses connection");
+		return(0);
+	}
+	
 	task_name =  packet->task_name;
 	strcpy(node_info,node_name);
 	for(i = 0; i < 4; i ++)

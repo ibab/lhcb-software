@@ -826,7 +826,9 @@ int severity, errcode;
 		strcat(msg, str);
 	}
 	if(Dna_conns[conn_id].error_ast)
+	{
 		Dna_conns[conn_id].error_ast(conn_id, severity, errcode, msg);
+	}
 }
 
 static void save_node_task(conn_id, buffer)

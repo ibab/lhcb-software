@@ -238,6 +238,14 @@ int thr_flag;
 
 void dim_tcpip_stop()
 {
+#ifdef WIN32
+	closesock(DIM_IO_path[0]);
+#else
+	close(DIM_IO_path[0]);
+	close(DIM_IO_path[1]);
+#endif
+	DIM_IO_path[0] = 0;
+	DIM_IO_path[1] = 0;
 	init_done = 0;
 }
 

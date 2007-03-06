@@ -520,6 +520,8 @@ DNS_DIS_PACKET *packet;
 						  register_services, NONE ); 
 		break;
 	default :	   /* normal packet */
+		if(vtohl(packet->size) != DNS_DIS_HEADER)
+			break;
 		switch( vtohl(packet->type) )
 		{
 		case DNS_DIS_REGISTER :
@@ -2412,12 +2414,13 @@ int *tag;
 int *bufp;
 int *size;
 {
+
 	if(Exit_user_routine)
 		(Exit_user_routine)( bufp );
 	else
 	{
 /*
-		printf("Exiting!\n");
+		printf("%s PID %d Exiting!\n", Task_name, getpid());
 */
 		exit(*bufp);
 	}
