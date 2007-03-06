@@ -29,8 +29,9 @@
  * Job steering
  */
 EventClocksvc.EventTimeDecoder = "FakeEventTime";
-ApplicationMgr.EvtMax = 100;
+ApplicationMgr.EvtMax = 10000 ;
 EventSelector.PrintFreq  = 10;
+EventSelector.FirstEvent = 3800 ;
 // ToolSvc.OutputLevel=1;
 // ToolSvc.CheckOverlap.OutputLevel=3;
 // ToolSvc.Particle2State.OutputLevel=3;

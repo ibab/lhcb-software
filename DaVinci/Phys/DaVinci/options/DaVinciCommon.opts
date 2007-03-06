@@ -37,14 +37,6 @@ XmlParserSvc.OutputLevel                = 4;
 
 #include "$CALORECOROOT/options/CaloRecoOnDemand.opts"
 
-// Data-on-demand service
-ApplicationMgr.ExtSvc += { "DataOnDemandSvc" };
-DataOnDemandSvc.Nodes +=  {  "DATA='/Event/Rec'             TYPE='DataObject'",
-                             "DATA='/Event/Rec/Muon'        TYPE='DataObject'",
-                             "DATA='/Event/Rec/Rich'        TYPE='DataObject'",
-                             "DATA='/Event/Phys'            TYPE='DataObject'",
-                             "DATA='/Event/Relations/Phys'  TYPE='DataObject'"
-}; 
 // DaVinciAssociators DLL and options
 ApplicationMgr.DLLs += { "DaVinciAssociators" } ;
 #include "$DAVINCIASSOCIATORSROOT/options/DaVinciAssociators.opts"
