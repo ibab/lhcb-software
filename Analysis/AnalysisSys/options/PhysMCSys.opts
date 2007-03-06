@@ -1,15 +1,8 @@
 //--------------------------------------------------------------
-// Associators
-
-// #include "$ASSOCIATORSSYSROOT/options/DLLs.opts"
-// ApplicationMgr.DLLs += { "TrAssociators" };
-//ApplicationMgr.DLLs += { "DaVinciAssociators" };
-//#include "$DAVINCIASSOCIATORSROOT/options/DaVinciAssociators.opts"
-
 ApplicationMgr.DLLs += { "SimComponents" };
 ApplicationMgr.DLLs += { "DaVinciMCTools" };
 // ApplicationMgr.DLLs += { "DaVinciEff" };
-
+ApplicationMgr.DLLs += { "ParticleMakerChecker" };
 
 DataOnDemandSvc.Nodes += { "DATA='/Event/MC' TYPE='DataObject'" };
 DataOnDemandSvc.Algorithms += {
