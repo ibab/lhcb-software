@@ -27,7 +27,7 @@ use OnlineTasks       v1r3     Online
 use PyDIM             v1r1     Online
 #use RunDatabase       v1r1     Online
 use Saver             v1r1     Online
-use UPI               v1r1     Online
+use UPI               v1r2     Online
 use Viewer            v1r2     Online
 use Writer            v1r0     Online
 use XMLRPC            v1r6     Online
