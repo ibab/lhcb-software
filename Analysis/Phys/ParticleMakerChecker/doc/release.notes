@@ -4,6 +4,10 @@
 ! Purpose     : MC checker algorithms for ParticleMakers
 !-----------------------------------------------------------------------------
 
+! 2007-03-06 - Patrick Koppenburg
+ - Associator headers have been moved to DaVinciMCKernel
+ - Depend on DaVinciMCKernel
+
 ! 2007-03-05 - Chris Jones
  - First version. Contains initial implementation of ParticleEffPurMoni
    to provide 'standard' monitoring of Particles.

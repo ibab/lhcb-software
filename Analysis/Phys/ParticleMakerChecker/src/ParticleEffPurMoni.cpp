@@ -1,11 +1,10 @@
-
 //-----------------------------------------------------------------------------
 /** @file ParticleEffPurMoni.cpp
  *
  *  Implementation file for class : ParticleEffPurMoni
  *
  *  CVS Log :-
- *  $Id: ParticleEffPurMoni.cpp,v 1.1.1.1 2007-03-05 10:43:47 jonrob Exp $
+ *  $Id: ParticleEffPurMoni.cpp,v 1.2 2007-03-06 11:18:56 pkoppenb Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2007-002-21

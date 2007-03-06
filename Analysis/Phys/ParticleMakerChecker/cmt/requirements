@@ -13,8 +13,8 @@ branches          cmt doc src
 #============================================================================
 # Used packages.
 #============================================================================
-use  DaVinciKernel   v*    Phys
-use  MCEvent         v*    Event
+use  DaVinciKernel           v*    Phys
+use  DaVinciMCKernel         v*    Phys
 
 include_path      none
 #============================================================================

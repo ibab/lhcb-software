@@ -1,11 +1,10 @@
-
 //-----------------------------------------------------------------------------
 /** @file ParticleEffPurMoni.h
  *
  *  Header file for class : ParticleEffPurMoni
  *
  *  CVS Log :-
- *  $Id: ParticleEffPurMoni.h,v 1.1.1.1 2007-03-05 10:43:48 jonrob Exp $
+ *  $Id: ParticleEffPurMoni.h,v 1.2 2007-03-06 11:18:57 pkoppenb Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2007-002-21
@@ -34,7 +33,7 @@
 #include "RichKernel/RichPoissonEffFunctor.h"
 
 // MC association
-#include "DaVinciAssociators/Particle2MCLinker.h"
+#include "Kernel/Particle2MCLinker.h"
 
 // Event
 #include "Event/MCParticle.h"
