@@ -1,8 +1,11 @@
-// $Id: Particles5.cpp,v 1.2 2006-10-27 13:39:33 ibelyaev Exp $
+// $Id: Particles5.cpp,v 1.3 2007-03-07 09:19:52 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/10/27 13:39:33  ibelyaev
+//  fix for SLC4 platform
+//
 // Revision 1.1  2006/02/22 20:53:47  ibelyaev
 //  add a lot of new functions (without fillStream)
 //
@@ -151,8 +154,10 @@ LoKi::Particles::SumTree::SumTree
 LoKi::Particles::SumTree::result_type 
 LoKi::Particles::SumTree::operator() 
   ( LoKi::Particles::SumTree::argument p ) const 
-{ return LoKi::PhysAlgs::accumulate
-    ( p , m_fun , m_cut , m_res , std::plus<result_type>() ) ; };
+{ 
+  return  LoKi::PhysAlgs::accumulate
+    ( p , m_fun , m_cut , m_res , std::plus<result_type>() ) ;
+} ;
 // ============================================================================
 /// OPTIONAL: the specific printout 
 // ============================================================================

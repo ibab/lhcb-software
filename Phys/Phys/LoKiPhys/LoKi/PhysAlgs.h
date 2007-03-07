@@ -1,8 +1,11 @@
-// $Id: PhysAlgs.h,v 1.3 2006-11-27 12:01:32 ibelyaev Exp $
+// $Id: PhysAlgs.h,v 1.4 2007-03-07 09:19:52 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2006/11/27 12:01:32  ibelyaev
+//  prepare for LoKi v4r3
+//
 // Revision 1.2  2006/03/18 12:40:17  ibelyaev
 //  fix a warning for Win32
 //
@@ -74,18 +77,19 @@ namespace LoKi
       const PREDICATE&      cut ) 
     {
       size_t result = 0  ;
+      if ( 0 != p ) 
+      {
+        // (1) count in daughters
+        typedef SmartRefVector<LHCb::Particle> CHILDREN;
+        const CHILDREN&  children = p->daughters() ;
+        for ( CHILDREN::const_iterator child = children.begin()  ;
+              children.end() != child ; ++child ) 
+        { result += LoKi::PhysAlgs::count_if ( *child , cut ) ; } // RECURSION
+      }
       // (1) check itself 
       if ( cut( p ) ) {        ++result ; }                      // INCREMENT  
-      // (2) check the validity
-      if ( 0 == p   ) { return   result ; }                      // RETURN 
-      // (3) check daughters 
-      typedef SmartRefVector<LHCb::Particle> CHILDREN;
-      const CHILDREN&  children = p->daughters() ;
-      for ( CHILDREN::const_iterator child = children.begin()  ;
-              children.end() != child ; ++child ) 
-      { result += LoKi::PhysAlgs::count_if ( *child , cut ) ; } // RECURSION
       //
-      return result ;                                           // RETURN 
+      return result ;                                            // RETURN 
     } ;
     
     /** @fn found 
@@ -114,7 +118,7 @@ namespace LoKi
       typedef SmartRefVector<LHCb::Particle> CHILDREN;
       const CHILDREN&  children = p->daughters() ;
       for ( CHILDREN::const_iterator child = children.begin() ; 
-              children.end() != child ; ++child ) 
+            children.end() != child ; ++child ) 
       { 
         if ( LoKi::PhysAlgs::found ( *child , cut ) )     // RECURSION
         { return true ; } ;                               // EETURN 
@@ -164,21 +168,23 @@ namespace LoKi
       typename FUNCTION::result_type result ,
       OPERATION                      binop  ) 
     {
-      // (1) check itself 
-      if ( cut( p ) ) { result = binop( result  , fun( p ) ) ; }
-      // (2) check the validity
-      if ( 0 == p   ) { return result ; }                           // RETURN 
-      // (3) check daughters 
-      typedef SmartRefVector<LHCb::Particle> CHILDREN;
-      const CHILDREN&  children = p->daughters() ;
-      for ( CHILDREN::const_iterator child = children.begin() ; 
-            children.end() != child ; ++child ) 
-      { 
-        result += LoKi::PhysAlgs::accumulate 
-          ( *child , fun , cut , result , binop ) ;                // RECURSION
+      // traverse the tree if possible 
+      if ( 0 != p && !p->daughters().empty() ) 
+      {
+        // (1) accumulate from daughters 
+        typedef SmartRefVector<LHCb::Particle> CHILDREN;
+        const CHILDREN&  children = p->daughters() ;
+        for ( CHILDREN::const_iterator child = children.begin() ; 
+              children.end() != child ; ++child ) 
+        { 
+          result = LoKi::PhysAlgs::accumulate 
+            ( *child , fun , cut , result , binop ) ;                // RECURSION
+        }
       }
-      //
-      return result ;                                              // RETURN 
+      // (2) check itself 
+      if ( cut( p ) ) { result = binop ( result  , fun( p ) ) ; }    // INCREMENT
+      // 
+      return result ;                                                // RETURN 
     } ;
 
     /** @fn min_value
@@ -204,19 +210,21 @@ namespace LoKi
       const PREDICATE&               cut    , 
       typename FUNCTION::result_type minval ) 
     {
-      // (1) check itself 
-      if ( cut( p ) ) { minval = std::min ( minval , fun(p) ) ; }
-      // (2) check the validity
-      if ( 0 == p   ) { return minval ; }                     // RETURN 
-      // (3) check daughters 
-      typedef SmartRefVector<LHCb::Particle> CHILDREN;
-      const CHILDREN&  children = p->daughters() ;
-      for ( CHILDREN::const_iterator child = children.begin() ; 
-              children.end() != child ; ++child ) 
+      // traverse the tree if possible 
+      if ( 0 != p && !p->daughters().empty() ) 
       {
-        minval = LoKi::PhysAlgs::min_value 
-          ( *child , fun , cut , minval ) ;                  // RECURSION
-      }  
+        // (1) check daughters 
+        typedef SmartRefVector<LHCb::Particle> CHILDREN;
+        const CHILDREN&  children = p->daughters() ;
+        for ( CHILDREN::const_iterator child = children.begin() ; 
+              children.end() != child ; ++child ) 
+        {
+          minval = LoKi::PhysAlgs::min_value 
+            ( *child , fun , cut , minval ) ;                  // RECURSION
+        }  
+      }
+      // (2) check itself 
+      if ( cut( p ) ) { minval = std::min ( minval , fun(p) ) ; }
       //
       return minval ;                                        // RETURN 
     } ;
@@ -243,19 +251,21 @@ namespace LoKi
       const PREDICATE&               cut    , 
       typename FUNCTION::result_type maxval ) 
     {
-      // (1) check itself 
-      if ( cut( p ) ) { maxval = std::max ( maxval , fun(p) ) ; }
-      // (2) check the validity
-      if ( 0 == p   ) { return maxval ; }                     // RETURN 
-      // (3) check daughters 
-      typedef SmartRefVector<LHCb::Particle> CHILDREN;
-      const CHILDREN&  children = p->daughters() ;
-      for ( CHILDREN::const_iterator child = children.begin() ; 
-              children.end() != child ; ++child ) 
+      // (1) traverse the tree if possible 
+      if ( 0 != p && !p->daughters().empty()  )
       {
-        maxval = LoKi::PhysAlgs::max_value 
-          ( *child , fun , cut , maxval ) ;                  // RECURSION
+        // (2) check daughters 
+        typedef SmartRefVector<LHCb::Particle> CHILDREN;
+        const CHILDREN&  children = p->daughters() ;
+        for ( CHILDREN::const_iterator child = children.begin() ; 
+              children.end() != child ; ++child ) 
+        {
+          maxval = LoKi::PhysAlgs::max_value 
+            ( *child , fun , cut , maxval ) ;                  // RECURSION
+        }  
       }  
+      // (3) check itself 
+      if ( cut( p ) ) { maxval = std::max ( maxval , fun(p) ) ; }
       //
       return maxval ;                                        // RETURN 
     } ;
