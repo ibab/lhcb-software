@@ -47,7 +47,6 @@ public:
   /// Initialization
   virtual StatusCode initialize();
   virtual StatusCode TransformTrack(LHCb::Track* ftrack, LHCb::AlignTrack* atrack, double Map_VELO[]);
-  virtual StatusCode GetPGUN_Track(LHCb::AlignTrack* my_track, double Map_VELO[]); 
   virtual StatusCode GetTrackSlope(LHCb::AlignTrack* atrack);
 
 protected:

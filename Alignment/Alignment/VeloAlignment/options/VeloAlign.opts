@@ -31,23 +31,15 @@ Align.Internal_alignment    = true;   // Turn this step on
 
 // Modules to be aligned (1=ON, 0=OFF)
 
-//Align.Internal_Mod_Left  = {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
-//Align.Internal_Mod_Right = {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
-
-// in ACDC2, one have station 3,1,2 in this order
-// !!! They become 2,0,1 in Millepede, as station 0 is not taken in) !!!
-
-Align.Internal_Mod_Left  = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-Align.Internal_Mod_Right = {0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-
+Align.Internal_Mod_Left  = {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
+Align.Internal_Mod_Right = {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
 
 Align.Internal_DOF          = {1,1,1,1,1,1};                         // DOFs to look at
-Align.Internal_PTerms       = {0.01,0.01,0.01,0.0004,0.0004,0.0002}; // ParSig values/DOFs (penalty terms)
+Align.Internal_PTerms       = {0.01,0.01,0.005,0.0005,0.0005,0.0002}; // ParSig values/DOFs (penalty terms)
 Align.Internal_EQs          = {1,1,1,1,1,1,1,1,1};                   // Constraint equations
-//Align.Internal_EQs          = {0,0,0,0,0,0,0,0,0};                   // Constraint equations (for ACDC2 only)
-Align.Internal_Residual_Cut = {0.2,0.06};                            // Cuts on track residuals (in mm)
+Align.Internal_Residual_Cut = {0.3,0.06};                            // Cuts on track residuals (in mm)
 Align.General_StartFactor   = 100.0;                                  // Localfit chisquare initial cut
-Align.General_Maxtracks     = 20;                                     // Max. number of track per event
+Align.General_Maxtracks     = 60;                                     // Max. number of track per event
 
 // Option files for pattern recognition tuning and track selection
 #include "$VELOALIGNMENTOPTS/TRGtune.opts"
@@ -56,32 +48,24 @@ Align.General_Maxtracks     = 20;                                     // Max. nu
 
 ////////////////////////////////////////////////////
 //
-// 2. Box alignment with primary vertices
+// 2. Box alignment
 //
 ////////////////////////////////////////////////////
 
 
-Align.Box_alignment        = false;
-Align.Box_DOF              = {1,1,0,1,1,0};                         
-Align.Box_PTerms           = {0.3,0.3,0.0,0.005,0.005,0.0}; 
-Align.Box_Residual_Cut     = {1.,0.5};                            
+Align.Box_alignment        = true;
+Align.Box_DOF              = {1,1,1,1,1,1};                         
+Align.Box_PTerms           = {0.2,0.2,0.1,0.001,0.001,0.001}; 
+Align.Box_EQs              = {1,1,1,1,1,0}; 
+Align.Box_Residual_Cut     = {1.5,0.4};
+
+// Specific options for primary vertices
+                            
 Align.Box_Z_window         = 350.;    // Where to look for PV seeds (in mm)
-Align.Box_MinTracks_perPV  = 15;      // Minimal number of tracks per PV
+Align.Box_MinTracks_perPV  = 5;      // Minimal number of tracks per PV
 Align.Box_PV_Z_window      = 1.;      // Zclos range for all PV candidate tracks
-Align.Box_PV_IPmax         = 1.;      // Max IP for PV candidate
+Align.Box_PV_IPmax         = 0.8;      // Max IP for PV candidate
 Align.Box_PV_Track_IPmax   = 0.5;     // Max track IP (w.r.t. PV candidate)
-
-
-////////////////////////////////////////////////////
-//
-// 3. Box alignment with overlaps
-//
-////////////////////////////////////////////////////
-
-Align.Overlap_alignment     = false;
-Align.Overlap_DOF           = {1,1,1,1,1,1};                         
-Align.Overlap_PTerms        = {0.1,0.1,0.005,0.001,0.001,0.0005}; 
-Align.Overlap_Residual_Cut  = {3.,1.5};  
 
 
 ////////////////////////////////////////////////////
@@ -95,7 +79,3 @@ ToolSvc.Millepede.Iteration     = true;
 ToolSvc.Millepede.ModuleFixed   = -1; // Fix the a module in Millepede (use Millepede numbering)
                                       // (put -1 if you don't want to fix anything) 
                                       //
-
-
-
-

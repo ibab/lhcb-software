@@ -33,7 +33,6 @@ public:
   static const InterfaceID& interfaceID() { return IID_ITrackStore; }
 
   virtual StatusCode TransformTrack(LHCb::Track* ftrack, LHCb::AlignTrack* atrack, double Map_VELO[]) = 0;
-  virtual StatusCode GetPGUN_Track(LHCb::AlignTrack* my_track, double Map_VELO[]) = 0; 
   virtual StatusCode GetTrackSlope(LHCb::AlignTrack* atrack) = 0;
 };
 #endif // VELOALIGNMENT_ITRACKSTORE_H

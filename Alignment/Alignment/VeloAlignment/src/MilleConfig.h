@@ -27,11 +27,17 @@ public:
 		     std::vector<bool> Cons, int nloc, double starfact, 
 		     int nstd, std::vector<double> res_cut, double VELOmap[]); 
 
+  void InitBox(IMillepede *my_millepede,
+	       std::vector<bool> DOF, std::vector<double> Sigm,
+	       std::vector<bool> Cons, double starfact, 
+	       std::vector<double> res_cut, double zmoy); 
+
   StatusCode PutTrack(LHCb::AlignTrack* atrack, IMillepede *my_millepede);
 
   StatusCode PutOverlapTrack(LHCb::AlignTrack* atrack, IMillepede *my_millepede);
 
-  StatusCode PutPVTrack(LHCb::AlignTracks* aPV, IMillepede* my_millepede, int nPV);    
+  StatusCode PutPVTrack(LHCb::AlignTracks* aPV, IMillepede* my_millepede, int nPV,
+			double zmoyl, double zmoyr);    
 
   StatusCode correcTrack(LHCb::AlignTrack* mistrack, 
 			 LHCb::AlignTrack* correctrack, 

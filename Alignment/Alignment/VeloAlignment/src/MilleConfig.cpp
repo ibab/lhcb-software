@@ -75,7 +75,7 @@ void MilleConfig::InitMilleTool(IMillepede *my_millepede, bool i_align, int righ
   m_zmoy  = zmoy;
   m_szmoy = s_zmoy;
    
-  m_i_align ? m_nglo = nonzer : m_nglo = 2;    // Number of station to align (2 if box alignment)
+  m_i_align ? m_nglo = nonzer : m_nglo = 4;    // Number of station to align (4 if box alignment)
   m_nloc      = nloc;                          // Number of local params
   m_startfact = starfact;                      // Start factor for Chi^2 local fit cut
   m_nstd      = nstd;                          // Num. of std deviations for local fit 
@@ -159,6 +159,79 @@ void MilleConfig::InitMilleTool(IMillepede *my_millepede, bool i_align, int righ
 }
 
 
+void MilleConfig::InitBox(IMillepede *my_millepede,
+			  std::vector<bool> DOF, std::vector<double> Sigm,
+			  std::vector<bool> Cons, double starfact, 
+			  std::vector<double> res_cut, double zmoy) 
+{
+  m_zmoy  = zmoy;
+
+  m_i_align = false;    // Is it internal (TRUE) or box alignment (FALSE) ?
+
+  for (int j=0; j<6; j++) {m_DOF[j] = DOF[j];}   // What are the parameter to align ?
+  for (int j=0; j<6; j++) {m_Cons[j] = Cons[j];} // What are the constraints equations to define ?
+  for (int j=0; j<6; j++) {m_Sigm[j] = Sigm[j];} // What are the 'annealing' factors transmitted to the global matrix ?
+   
+  m_nglo      = 4;            // Number of station to align (4 if box alignment)
+  m_nloc      = 7;            // Number of local params
+  m_startfact = starfact;     // Start factor for Chi^2 local fit cut
+  m_nstd      = 0;            // Num. of std deviations for local fit 
+
+  // Initialize Millepede
+
+  my_millepede->InitMille(&m_DOF[0], &m_Sigm[0], m_nglo, m_nloc, 
+			  m_startfact, m_nstd, res_cut[1], res_cut[0]);
+
+
+  // constraint on the shearing
+  double Const_X[6*m_nglo];
+  double Const_Y[6*m_nglo];
+  double Const_Z[6*m_nglo];
+  double Const_SX[6*m_nglo];
+  double Const_SY[6*m_nglo];
+  double Const_SZ[6*m_nglo];
+
+  for (int i = 0; i< 6*m_nglo; ++i)
+  {
+    Const_X[i] = 0.0;
+    Const_Y[i] = 0.0;
+    Const_Z[i] = 0.0;
+    Const_SX[i] = 0.0;
+    Const_SY[i] = 0.0;
+    Const_SZ[i] = 0.0;
+  }
+
+  Const_X[0]         = 1.;
+  Const_X[1]         = -1.;
+  Const_X[3]        = 1.;
+
+  Const_Y[4]         = 1.;
+  Const_Y[5]         = -1.;
+  Const_Y[7]        = 1.;
+
+  Const_Z[8]         = 1.;
+  Const_Z[9]         = -1.;
+  Const_Z[11]        = 1.;
+
+  Const_SX[12]         = 1.;
+  Const_SX[13]         = -1.;
+  Const_SX[15]         = 1.;
+
+  Const_SY[16]         = 1.;
+  Const_SY[17]         = -1.;
+  Const_SY[19]        =  1.;
+
+  if (m_DOF[0] && m_Cons[0]) my_millepede->ConstF(&Const_X[0],  0.0);   
+  if (m_DOF[1] && m_Cons[1]) my_millepede->ConstF(&Const_Y[0],  0.0); 
+  if (m_DOF[2] && m_Cons[2]) my_millepede->ConstF(&Const_Z[0],  0.0); 
+  if (m_DOF[3] && m_Cons[3]) my_millepede->ConstF(&Const_SX[0],  0.0);
+  if (m_DOF[4] && m_Cons[4]) my_millepede->ConstF(&Const_SY[0],  0.0);
+
+  // this is it! Millepede is now ready to align boxes...
+
+
+}
+
 /*
 -----------------------------------------------------------
   PUTTRACK : Feed the Millepede object with track info
@@ -171,11 +244,6 @@ void MilleConfig::InitMilleTool(IMillepede *my_millepede, bool i_align, int righ
 
   my_config = configuration of the Millepede job
               (see MilleConfig class for more info)
-
-  after     = PUTTRACK could be used in 2 ways: if after=0
-              one do the local fit and update the Millepede
-	      object. after=1 means that you just fit the track
-	      and don't update Millepede.
 
 -----------------------------------------------------------
 */
@@ -194,19 +262,20 @@ StatusCode MilleConfig::PutTrack(LHCb::AlignTrack* atrack, IMillepede *my_millep
   std::vector<double>   derLC; 
   std::vector<double>   derGB;
   std::vector<double>   derNonLin;
+  std::vector<double>   derNonLin_i;
 
   derGB.resize(Nparams);          // Vector containing the global derivatives 
   derNonLin.resize(Nparams);      // Global derivatives non linearly related to residual
+  derNonLin_i.resize(Nparams);    // Global derivatives non linearly related to residual
   derLC.resize(Nlocal);           // Vector containing the local derivatives
-  m_aliConstants.resize(Nparams); // Vector containing the alignment constants 
 
-  for (int i=0; i<Nparams; i++) {derGB[i]=0.; m_aliConstants[i]=0.;}
+  for (int i=0; i<Nparams; i++) {derGB[i]=0.; derNonLin[i]=0.; derNonLin_i[i]=0.;}
   for (int i=0; i<Nlocal; i++)  {derLC[i]=0.;}
 
 
-  double track_params[10];     // Vector containing the track parameters 
+  double track_params[2*Nlocal+2];     // Vector containing the track parameters 
 
-  for (int i=0; i<10; i++) {track_params[i]=0.;}
+  for (int i=0; i<2*Nlocal+2; i++) {track_params[i]=0.;}
 
   int n_station = 0;
 
@@ -230,7 +299,7 @@ StatusCode MilleConfig::PutTrack(LHCb::AlignTrack* atrack, IMillepede *my_millep
     err_x = ((atrack->Coords()[k]).second).x();
     err_y = ((atrack->Coords()[k]).second).y();
 
-    my_millepede->ZerLoc(&derGB[0],&derLC[0],&derNonLin[0]); // reset derLC and derGB arrays
+    my_millepede->ZerLoc(&derGB[0],&derLC[0],&derNonLin[0],&derNonLin_i[0]); 
 
     // LOCAL 1st derivatives for the X equation
 	    
@@ -241,24 +310,33 @@ StatusCode MilleConfig::PutTrack(LHCb::AlignTrack* atrack, IMillepede *my_millep
 
     // GLOBAL 1st derivatives (see LHCbnote-2005-101 for definition)
 
-    if (m_DOF[0]) derGB[n_station]             = -1.0;             // dX	    
-    if (m_DOF[1]) derGB[Nstations+n_station]   =  0.0;             // dY
-    if (m_DOF[2]) derGB[2*Nstations+n_station] =  0.0;          // dZ
+    if (m_DOF[0]) derGB[n_station]             = -1.0;    // dX	    
+    if (m_DOF[1]) derGB[Nstations+n_station]   =  0.0;    // dY
+    if (m_DOF[2]) derGB[2*Nstations+n_station] =  0.0;    // dZ
     if (m_DOF[3]) derGB[3*Nstations+n_station] =  0.0;    // d_alpha
     if (m_DOF[4]) derGB[4*Nstations+n_station] =  0.0;    // d_beta
-    if (m_DOF[5]) derGB[5*Nstations+n_station] =  y_cor;           // d_gamma
+    if (m_DOF[5]) derGB[5*Nstations+n_station] =  y_cor;  // d_gamma
     
-    if (m_DOF[0]) derNonLin[n_station]             =  0.0;             // dX	    
-    if (m_DOF[1]) derNonLin[Nstations+n_station]   =  0.0;             // dY
-    if (m_DOF[2]) derNonLin[2*Nstations+n_station] =  2000.0 + 1.0;          // dZ
-    if (m_DOF[3]) derNonLin[3*Nstations+n_station] =  2000.0 + y_cor;    // d_alpha
-    if (m_DOF[4]) derNonLin[4*Nstations+n_station] =  2000.0 + x_cor;    // d_beta
-    if (m_DOF[5]) derNonLin[5*Nstations+n_station] =  0.0;           // d_gamma
+    if (m_DOF[0]) derNonLin[n_station]             =  0.0;      // dX	    
+    if (m_DOF[1]) derNonLin[Nstations+n_station]   =  0.0;      // dY
+    if (m_DOF[2]) derNonLin[2*Nstations+n_station] =  1.0;      // dZ
+    if (m_DOF[3]) derNonLin[3*Nstations+n_station] =  y_cor;    // d_alpha
+    if (m_DOF[4]) derNonLin[4*Nstations+n_station] =  x_cor;    // d_beta
+    if (m_DOF[5]) derNonLin[5*Nstations+n_station] =  0.0;      // d_gamma
     
-    sc = my_millepede->EquLoc(&derGB[0], &derLC[0], &derNonLin[0], x_cor, err_x); // Store hits parameters
+    if (m_DOF[0]) derNonLin_i[n_station]             =  0.0;      // dX	    
+    if (m_DOF[1]) derNonLin_i[Nstations+n_station]   =  0.0;      // dY
+    if (m_DOF[2]) derNonLin_i[2*Nstations+n_station] =  1.0;      // dZ
+    if (m_DOF[3]) derNonLin_i[3*Nstations+n_station] =  1.0;      // d_alpha
+    if (m_DOF[4]) derNonLin_i[4*Nstations+n_station] =  1.0;      // d_beta
+    if (m_DOF[5]) derNonLin_i[5*Nstations+n_station] =  0.0;      // d_gamma
+
+    
+    sc = my_millepede->EquLoc(&derGB[0], &derLC[0], &derNonLin[0], &derNonLin_i[0], 
+			      x_cor, err_x); // Store hits parameters
     if (! sc) {break;} 	
 
-    my_millepede->ZerLoc(&derGB[0],&derLC[0],&derNonLin[0]); // reset derLC and derGB arrays
+    my_millepede->ZerLoc(&derGB[0],&derLC[0],&derNonLin[0],&derNonLin_i[0]); 
 
     // LOCAL 1st derivatives for the Y equation
 
@@ -269,21 +347,29 @@ StatusCode MilleConfig::PutTrack(LHCb::AlignTrack* atrack, IMillepede *my_millep
 
     // GLOBAL 1st derivatives
 
-    if (m_DOF[0]) derGB[n_station]             =  0.0;             // dX	    
-    if (m_DOF[1]) derGB[Nstations+n_station]   = -1.0;             // dY
-    if (m_DOF[2]) derGB[2*Nstations+n_station] = 0.0;           // dZ
-    if (m_DOF[3]) derGB[3*Nstations+n_station] = 0.0;     // d_alpha
-    if (m_DOF[4]) derGB[4*Nstations+n_station] = 0.0;     // d_beta
-    if (m_DOF[5]) derGB[5*Nstations+n_station] = -x_cor;           // d_gamma
+    if (m_DOF[0]) derGB[n_station]             =  0.0;        // dX	    
+    if (m_DOF[1]) derGB[Nstations+n_station]   = -1.0;        // dY
+    if (m_DOF[2]) derGB[2*Nstations+n_station] = 0.0;         // dZ
+    if (m_DOF[3]) derGB[3*Nstations+n_station] = 0.0;         // d_alpha
+    if (m_DOF[4]) derGB[4*Nstations+n_station] = 0.0;         // d_beta
+    if (m_DOF[5]) derGB[5*Nstations+n_station] = -x_cor;      // d_gamma
     
-    if (m_DOF[0]) derNonLin[n_station]             =  0.0;             // dX	    
-    if (m_DOF[1]) derNonLin[Nstations+n_station]   =  0.0;             // dY
-    if (m_DOF[2]) derNonLin[2*Nstations+n_station] =  -2000.0 + 1.0;          // dZ
-    if (m_DOF[3]) derNonLin[3*Nstations+n_station] =  -2000.0 + y_cor;    // d_alpha
-    if (m_DOF[4]) derNonLin[4*Nstations+n_station] =  -2000.0 + x_cor;    // d_beta
-    if (m_DOF[5]) derNonLin[5*Nstations+n_station] =  0.0;           // d_gamma
+    if (m_DOF[0]) derNonLin[n_station]             =  0.0;     // dX	    
+    if (m_DOF[1]) derNonLin[Nstations+n_station]   =  0.0;     // dY
+    if (m_DOF[2]) derNonLin[2*Nstations+n_station] =  1.0;     // dZ
+    if (m_DOF[3]) derNonLin[3*Nstations+n_station] =  y_cor;   // d_alpha
+    if (m_DOF[4]) derNonLin[4*Nstations+n_station] =  x_cor;   // d_beta
+    if (m_DOF[5]) derNonLin[5*Nstations+n_station] =  0.0;     // d_gamma
+    
+    if (m_DOF[0]) derNonLin_i[n_station]             =  0.0;      // dX	    
+    if (m_DOF[1]) derNonLin_i[Nstations+n_station]   =  0.0;      // dY
+    if (m_DOF[2]) derNonLin_i[2*Nstations+n_station] =  3.0;      // dZ
+    if (m_DOF[3]) derNonLin_i[3*Nstations+n_station] =  3.0;      // d_alpha
+    if (m_DOF[4]) derNonLin_i[4*Nstations+n_station] =  3.0;      // d_beta
+    if (m_DOF[5]) derNonLin_i[5*Nstations+n_station] =  0.0;      // d_gamma
 
-    sc = my_millepede->EquLoc(&derGB[0], &derLC[0], &derNonLin[0], y_cor, err_y); // Store hits parameters
+    sc = my_millepede->EquLoc(&derGB[0], &derLC[0], &derNonLin[0], &derNonLin_i[0],
+			      y_cor, err_y); // Store hits parameters
     if (! sc) {break;} 	
   }
 
@@ -330,7 +416,7 @@ StatusCode MilleConfig::PutOverlapTrack(LHCb::AlignTrack* atrack, IMillepede *my
   int Nstations  = GetNstations();   // Number of stations to be aligned (for VELO)
   int Nlocal     = GetNlocal();      // Number of params to be aligned (for VELO)
   int Nparams    = 6*Nstations;      // Number of params to be aligned (for VELO)
-  double zmoyr = Get_zmoy();
+  double zmoy    = Get_zmoy();
 
   int after      = 0;
 
@@ -341,17 +427,21 @@ StatusCode MilleConfig::PutOverlapTrack(LHCb::AlignTrack* atrack, IMillepede *my
   std::vector<double>   derLC; 
   std::vector<double>   derGB;
   std::vector<double>   derNonLin;
+  std::vector<double>   derNonLin_i;
 
   derNonLin.resize(Nparams);   
+  derNonLin_i.resize(Nparams);   
   derGB.resize(Nparams);     // Vector containing the global derivatives 
   derLC.resize(Nlocal);      // Vector containing the local derivatives
 
   for (int i=0; i<Nparams; i++) {derGB[i]=0.;}
+  for (int i=0; i<Nparams; i++) {derNonLin[i]=0.;}
+  for (int i=0; i<Nparams; i++) {derNonLin_i[i]=0.;}
   for (int i=0; i<Nlocal; i++) {derLC[i]=0.;}
 
-  double track_params[10];     // Vector containing the track parameters 
+  double track_params[2*Nlocal+2];     // Vector containing the track parameters 
 
-  for (int i=0; i<10; i++) {track_params[i]=0.;}
+  for (int i=0; i<2*Nlocal+2; i++) {track_params[i]=0.;}
 
   for (int k=0; k<(atrack->nGoodCoordinates()); k++)  // We loop an all the track hits
   {
@@ -369,7 +459,7 @@ StatusCode MilleConfig::PutOverlapTrack(LHCb::AlignTrack* atrack, IMillepede *my
 
     n_station = n_station%2;
 
-    my_millepede->ZerLoc(&derGB[0],&derLC[0],&derNonLin[0]); // reset derLC and derGB arrays
+    my_millepede->ZerLoc(&derGB[0],&derLC[0],&derNonLin[0],&derNonLin_i[0]); // reset derLC and derGB arrays
 
     if (isdebug == 1)
     {
@@ -392,25 +482,33 @@ StatusCode MilleConfig::PutOverlapTrack(LHCb::AlignTrack* atrack, IMillepede *my
     
     if (n_station == 1)
     {
-      if (m_DOF[0]) derGB[n_station]    = -1.0;             // dX	    
-      if (m_DOF[1]) derGB[2+n_station]  =  0.0;             // dY
-      if (m_DOF[2]) derGB[4+n_station]  =  0.0;          // dZ
-      if (m_DOF[3]) derGB[6+n_station]  =  0.0;    // d_alpha
-      if (m_DOF[4]) derGB[8+n_station]  =  z_cor - zmoyr;    // d_beta
-      if (m_DOF[5]) derGB[10+n_station] =  y_cor;           // d_gamma
+      if (m_DOF[0]) derGB[2+n_station]  = -1.0;             // dX	    
+      if (m_DOF[1]) derGB[6+n_station]  =  0.0;             // dY
+      if (m_DOF[2]) derGB[10+n_station] =  0.0;             // dZ
+      if (m_DOF[3]) derGB[18+n_station] =  0.0;             // d_alpha
+      if (m_DOF[4]) derGB[14+n_station] =  z_cor - zmoy;    // d_beta
+      if (m_DOF[5]) derGB[22+n_station] =  y_cor;           // d_gamma
       
-      if (m_DOF[0]) derNonLin[n_station]    =  0.0;             // dX	    
-      if (m_DOF[1]) derNonLin[2+n_station]  =  0.0;             // dY
-      if (m_DOF[2]) derNonLin[4+n_station]  =  2000.0 + 1.;          // dZ
-      if (m_DOF[3]) derNonLin[6+n_station]  =  2000.0 + y_cor;    // d_alpha
-      if (m_DOF[4]) derNonLin[8+n_station]  =  2000.0 + x_cor;    // d_beta
-      if (m_DOF[5]) derNonLin[10+n_station] =  0.0;           // d_gamma
+      if (m_DOF[0]) derNonLin[2+n_station]  =  0.0;      // dX	    
+      if (m_DOF[1]) derNonLin[6+n_station]  =  0.0;      // dY
+      if (m_DOF[2]) derNonLin[10+n_station] =  1.;       // dZ
+      if (m_DOF[3]) derNonLin[18+n_station] =  y_cor;    // d_alpha
+      if (m_DOF[4]) derNonLin[14+n_station] =  x_cor;    // d_beta
+      if (m_DOF[5]) derNonLin[22+n_station] =  0.0;      // d_gamma
+
+      if (m_DOF[0]) derNonLin_i[2+n_station]  =  0.0;    // dX	    
+      if (m_DOF[1]) derNonLin_i[6+n_station]  =  0.0;    // dY
+      if (m_DOF[2]) derNonLin_i[10+n_station] =  1.0;    // dZ
+      if (m_DOF[3]) derNonLin_i[18+n_station] =  1.0;    // d_alpha
+      if (m_DOF[4]) derNonLin_i[14+n_station] =  1.0;    // d_beta
+      if (m_DOF[5]) derNonLin_i[22+n_station] =  0.0;    // d_gamma
     }
 
-    sc = my_millepede->EquLoc(&derGB[0], &derLC[0],&derNonLin[0], x_cor, err_x); // Store hits parameters
+    sc = my_millepede->EquLoc(&derGB[0], &derLC[0], &derNonLin[0], &derNonLin_i[0],
+			      x_cor, err_x); // Store hits parameters
     if (! sc) {break;} 	
 
-    my_millepede->ZerLoc(&derGB[0],&derLC[0],&derNonLin[0]); // reset derLC and derGB arrays
+    my_millepede->ZerLoc(&derGB[0],&derLC[0],&derNonLin[0],&derNonLin_i[0]); // reset derLC and derGB arrays
 
     // LOCAL 1st derivatives for the Y equation
 
@@ -423,22 +521,30 @@ StatusCode MilleConfig::PutOverlapTrack(LHCb::AlignTrack* atrack, IMillepede *my
 
     if (n_station == 1)
     {   
-      if (m_DOF[0]) derGB[n_station]    =  0.0;             // dX	    
-      if (m_DOF[1]) derGB[2+n_station]  = -1.0;             // dY
-      if (m_DOF[2]) derGB[4+n_station]  =  0.0;           // dZ
-      if (m_DOF[3]) derGB[6+n_station]  =  z_cor - zmoyr;     // d_alpha
-      if (m_DOF[4]) derGB[8+n_station]  =  0.0;     // d_beta
-      if (m_DOF[5]) derGB[10+n_station] = -x_cor;           // d_gamma
+      if (m_DOF[0]) derGB[2+n_station]  =  0.0;            // dX	    
+      if (m_DOF[1]) derGB[6+n_station]  = -1.0;            // dY
+      if (m_DOF[2]) derGB[10+n_station] =  0.0;            // dZ
+      if (m_DOF[3]) derGB[18+n_station] =  z_cor - zmoy;   // d_alpha
+      if (m_DOF[4]) derGB[14+n_station] =  0.0;            // d_beta
+      if (m_DOF[5]) derGB[22+n_station] = -x_cor;          // d_gamma
       
-      if (m_DOF[0]) derNonLin[n_station]    =  0.0;             // dX	    
-      if (m_DOF[1]) derNonLin[2+n_station]  =  0.0;             // dY
-      if (m_DOF[2]) derNonLin[4+n_station]  = -2000.0 + 1.;          // dZ
-      if (m_DOF[3]) derNonLin[6+n_station]  = -2000.0 + y_cor;    // d_alpha
-      if (m_DOF[4]) derNonLin[8+n_station]  = -2000.0 + x_cor;    // d_beta
-      if (m_DOF[5]) derNonLin[10+n_station] =  0.0;           // d_gamma
+      if (m_DOF[0]) derNonLin[2+n_station]  =  0.0;      // dX	    
+      if (m_DOF[1]) derNonLin[6+n_station]  =  0.0;      // dY
+      if (m_DOF[2]) derNonLin[10+n_station] =  1.;       // dZ
+      if (m_DOF[3]) derNonLin[18+n_station] =  y_cor;    // d_alpha
+      if (m_DOF[4]) derNonLin[14+n_station] =  x_cor;    // d_beta
+      if (m_DOF[5]) derNonLin[22+n_station] =  0.0;      // d_gamma
+
+      if (m_DOF[0]) derNonLin_i[2+n_station]  =  0.0;    // dX	    
+      if (m_DOF[1]) derNonLin_i[6+n_station]  =  0.0;    // dY
+      if (m_DOF[2]) derNonLin_i[10+n_station] =  3.0;    // dZ
+      if (m_DOF[3]) derNonLin_i[18+n_station] =  3.0;    // d_alpha
+      if (m_DOF[4]) derNonLin_i[14+n_station] =  3.0;    // d_beta
+      if (m_DOF[5]) derNonLin_i[22+n_station] =  0.0;    // d_gamma
     }
 
-    sc = my_millepede->EquLoc(&derGB[0], &derLC[0],&derNonLin[0], y_cor, err_y); // Store hits parameters
+    sc = my_millepede->EquLoc(&derGB[0], &derLC[0],&derNonLin[0], &derNonLin_i[0],
+			      y_cor, err_y); // Store hits parameters
     if (! sc) {break;} 	
   }
 
@@ -465,7 +571,8 @@ StatusCode MilleConfig::PutOverlapTrack(LHCb::AlignTrack* atrack, IMillepede *my
 -----------------------------------------------------------
 */
 
-StatusCode MilleConfig::PutPVTrack(LHCb::AlignTracks* aPV, IMillepede* my_millepede, int nPV)
+StatusCode MilleConfig::PutPVTrack(LHCb::AlignTracks* aPV, IMillepede* my_millepede, int nPV,
+				   double zmoyl, double zmoyr)
 {
 
   int Nstations  = GetNstations();   // Number of stations to be aligned (for VELO)
@@ -475,23 +582,27 @@ StatusCode MilleConfig::PutPVTrack(LHCb::AlignTracks* aPV, IMillepede* my_millep
   LHCb::AlignTracks::const_iterator itrack;
 
   double slx, sly, x0, y0, errx, erry, zclos;
+  double zmoy=0;
 
  // Global parameters initializations
 
   std::vector<double>   derLC; 
   std::vector<double>   derGB;
   std::vector<double>   derNonLin;
+  std::vector<double>   derNonLin_i;
 
   derGB.resize(Nparams);     // Vector containing the global derivatives 
   derNonLin.resize(Nparams);     
+  derNonLin_i.resize(Nparams);     
   derLC.resize(Nlocal);      // Vector containing the local derivatives
 
   for (int i=0; i<Nparams; i++) {derGB[i]=0.;}
+  for (int i=0; i<Nparams; i++) {derNonLin[i]=0.;}
+  for (int i=0; i<Nparams; i++) {derNonLin_i[i]=0.;}
   for (int i=0; i<Nlocal; i++) {derLC[i]=0.;}
 
-  double vertex_params[8];     // Vector containing the vertex parameters 
-
-  for (int i=0; i<8; i++) {vertex_params[i]=0.;}
+  double vertex_params[2*Nlocal+2];     // Vector containing the vertex parameters 
+  for (int i=0; i<2*Nlocal+2; i++) {vertex_params[i]=0.;}
 
   StatusCode sc;
 
@@ -507,61 +618,50 @@ StatusCode MilleConfig::PutPVTrack(LHCb::AlignTracks* aPV, IMillepede* my_millep
       erry = (*itrack)->nErrY_y();;
 
       zclos = (*itrack)->nPV_z();      
-      y0    = sly*zclos+y0;
-      x0    = slx*zclos+x0;
+
+      if ((*itrack)->nType() == 0) zmoy = zmoyl;
+      if ((*itrack)->nType() == 1) zmoy = zmoyr;
       
-      my_millepede->ZerLoc(&derGB[0],&derLC[0],&derNonLin[0]); // reset derLC and derGB arrays
+      my_millepede->ZerLoc(&derGB[0],&derLC[0],&derNonLin[0],&derNonLin_i[0]); // reset derLC and derGB arrays
       
       // LOCAL 1st derivatives for v_x 
       
-      derLC[0] = 0.;
-      derLC[1] = 0.;
-      derLC[2] = -slx;
+      derLC[4] = 0.;
+      derLC[5] = 0.;
+      derLC[6] = -slx;
       
       // GLOBAL 1st derivatives
       
       if (m_DOF[0]) derGB[(*itrack)->nType()]     =  -1.0;             // dX	    
-      if (m_DOF[1]) derGB[2+(*itrack)->nType()]   =  0.0;            // dY
-      if (m_DOF[2]) derGB[4+(*itrack)->nType()]   = 0.0;            // dZ
-      if (m_DOF[3]) derGB[6+(*itrack)->nType()]   = -zclos;            // dtX    
-      if (m_DOF[4]) derGB[8+(*itrack)->nType()]   = 0.0;            // dtY    
-      if (m_DOF[5]) derGB[10+(*itrack)->nType()]  = y0;            // dtZ   
+      if (m_DOF[1]) derGB[4+(*itrack)->nType()]   =  0.0;            // dY
+      if (m_DOF[2]) derGB[8+(*itrack)->nType()]   = slx;            // dZ
+      if (m_DOF[3]) derGB[12+(*itrack)->nType()]  = zclos-zmoy;            // dtX    
+      if (m_DOF[4]) derGB[16+(*itrack)->nType()]  = 0.0;            // dtY    
+      if (m_DOF[5]) derGB[20+(*itrack)->nType()]  = 0.0;            // dtZ   
 
-      if (m_DOF[0]) derNonLin[(*itrack)->nType()]     =  0.0;             // dX	    
-      if (m_DOF[1]) derNonLin[2+(*itrack)->nType()]   =  0.0;            // dY
-      if (m_DOF[2]) derNonLin[4+(*itrack)->nType()]   =  0.0;            // dZ
-      if (m_DOF[3]) derNonLin[6+(*itrack)->nType()]   =  0.0;            // dtX    
-      if (m_DOF[4]) derNonLin[8+(*itrack)->nType()]   =  0.0;            // dtY    
-      if (m_DOF[5]) derNonLin[10+(*itrack)->nType()]  =  0.0;            // dtZ   
-
-      sc = my_millepede->EquLoc(&derGB[0], &derLC[0],&derNonLin[0], x0, errx); // Store hits parameters
+      sc = my_millepede->EquLoc(&derGB[0], &derLC[0],&derNonLin[0],&derNonLin_i[0], 
+				x0, errx); // Store hits parameters
       if (! sc) {break;}
       
-      my_millepede->ZerLoc(&derGB[0],&derLC[0],&derNonLin[0]); // reset derLC and derGB arrays
+      my_millepede->ZerLoc(&derGB[0],&derLC[0],&derNonLin[0],&derNonLin_i[0]); // reset derLC and derGB arrays
       
       // LOCAL 1st derivatives for v_y
       
-      derLC[0] = 0.;
-      derLC[1] = 0.;
-      derLC[2] = -sly;	    
+      derLC[4] = 0.;
+      derLC[5] = 0.;
+      derLC[6] = -sly;	    
       
       // GLOBAL 1st derivatives
       
       if (m_DOF[0]) derGB[(*itrack)->nType()]     =  0.0;             // dX	    
-      if (m_DOF[1]) derGB[2+(*itrack)->nType()]   =  -1.0;            // dY
-      if (m_DOF[2]) derGB[4+(*itrack)->nType()]   = 0.0;            // dZ
-      if (m_DOF[3]) derGB[6+(*itrack)->nType()]   = 0.0;            // dtX    
-      if (m_DOF[4]) derGB[8+(*itrack)->nType()]   = -zclos;            // dtY   
-      if (m_DOF[5]) derGB[10+(*itrack)->nType()]  = -x0;            // dtZ   
+      if (m_DOF[1]) derGB[4+(*itrack)->nType()]   =  -1.0;            // dY
+      if (m_DOF[2]) derGB[8+(*itrack)->nType()]   = sly;            // dZ
+      if (m_DOF[3]) derGB[12+(*itrack)->nType()]  = 0.0;            // dtX    
+      if (m_DOF[4]) derGB[16+(*itrack)->nType()]  = zclos-zmoy;            // dtY   
+      if (m_DOF[5]) derGB[20+(*itrack)->nType()]  = 0.0;            // dtZ   
 
-      if (m_DOF[0]) derNonLin[(*itrack)->nType()]     =  0.0;             // dX	    
-      if (m_DOF[1]) derNonLin[2+(*itrack)->nType()]   =  0.0;            // dY
-      if (m_DOF[2]) derNonLin[4+(*itrack)->nType()]   =  0.0;            // dZ
-      if (m_DOF[3]) derNonLin[6+(*itrack)->nType()]   =  0.0;            // dtX    
-      if (m_DOF[4]) derNonLin[8+(*itrack)->nType()]   =  0.0;            // dtY    
-      if (m_DOF[5]) derNonLin[10+(*itrack)->nType()]  =  0.0;            // dtZ 
-
-      sc = my_millepede->EquLoc(&derGB[0], &derLC[0],&derNonLin[0], y0, erry); // Store hits parameters
+      sc = my_millepede->EquLoc(&derGB[0], &derLC[0],&derNonLin[0],&derNonLin_i[0],
+				y0, erry); // Store hits parameters
       if (! sc) {break;}
     }
   }
@@ -664,13 +764,13 @@ StatusCode MilleConfig::correcTrack(LHCb::AlignTrack* mistrack,
       // Correct the X coordinate
 
       x_cor = x_o + left_constants[iStation]
-	          + box_constants[0] + box_constants[6]*(VELOmap[iStation]-z_moy_L) 
+	          + box_constants[0] + box_constants[12]*(VELOmap[iStation]-z_moy_L) 
 	          - y_o*left_constants[iStation+5*n_left];
       
       // Correct the Y coordinate
 
       y_cor = y_o + left_constants[iStation+n_left]
-	          + box_constants[2] + box_constants[8]*(VELOmap[iStation]-z_moy_L) 
+	          + box_constants[4] + box_constants[16]*(VELOmap[iStation]-z_moy_L) 
 	          + x_o*left_constants[iStation+5*n_left];
     }
     else // Right hit
@@ -678,13 +778,13 @@ StatusCode MilleConfig::correcTrack(LHCb::AlignTrack* mistrack,
       // Correct the X coordinate
 
       x_cor = x_o + right_constants[iStation]
-	          + box_constants[1] + box_constants[7]*(VELOmap[iStation+21]-z_moy_R) 
+	          + box_constants[1] + box_constants[13]*(VELOmap[iStation+21]-z_moy_R) 
 	          - y_o*right_constants[iStation+5*n_right];
       
       // Correct the Y coordinate
 
       y_cor = y_o + right_constants[iStation+n_right]
-	          + box_constants[3] + box_constants[9]*(VELOmap[iStation+21]-z_moy_R) 
+	          + box_constants[5] + box_constants[17]*(VELOmap[iStation+21]-z_moy_R) 
   	          + x_o*right_constants[iStation+5*n_right];
     }
 

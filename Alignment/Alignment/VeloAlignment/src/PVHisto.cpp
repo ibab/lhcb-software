@@ -162,9 +162,9 @@ StatusCode PVHisto::FindPVTracks(LHCb::AlignTracks* aPV, double m_z_min,
        	if((*itrack)->nPVnumber() == -99)  
 	{
 	  zclos_bin = zCloseHisto.getbin((*itrack)->nZclos());      
-
-	  //cout << (*itrack)->nZclos() << endl;
-	  
+	  //
+	  //	  cout << (*itrack)->nZclos() << endl;
+	  //
 	  if (zclos_bin <= end && zclos_bin >= start)
 	  {
 	    n_v_tracks++;
@@ -326,18 +326,18 @@ StatusCode PVHisto::FitPV(LHCb::AlignTracks* aPV, int PV_number)
       (*itrack)->setNPV_chi(chisq); 
     }
   }
+  /*
+  cout << " " << endl;
+  cout << "Primary vertex coordinates (in mm): " << endl;
+  cout << "x_v = " << vp_x << endl;
+  cout << "y_v = " << vp_y << endl;
+  cout << "z_v = " << vp_z << endl;
+  cout << " " << endl;
   
-  //cout << " " << endl;
-  //cout << "Primary vertex coordinates (in mm): " << endl;
-  //cout << "x_v = " << vp_x << endl;
-  //cout << "y_v = " << vp_y << endl;
-  //cout << "z_v = " << vp_z << endl;
-  //cout << " " << endl;
+  cout << " Final Chisquare is " << chisq << endl;
+  cout << " Final ndof is " << n_dof << endl;
+  cout << " " << endl;  
   
-  //cout << " Final Chisquare is " << chisq << endl;
-  //cout << " Final ndof is " << n_dof << endl;
-  //cout << " " << endl;  
-  
-
+  */
   return StatusCode::SUCCESS;
 } 

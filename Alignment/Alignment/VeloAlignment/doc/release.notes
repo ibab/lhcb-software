@@ -2,6 +2,19 @@
 ! Responsible : Sebastien Viret
 
 !=============================================================================
+! 07/03/2007 - Sebastien Viret  ** v2r3 **
+
+  This release presents the final version of boxes alignment, mixing primary vertices 
+  and overlaps in one single fit. It needs the latest version of Millepede (v2r4),
+  with the new non-linear treatment. Major modifications are in Milleconfig.cpp method.
+
+  Information on 'how-to' run this code (including analysis macros), might be found 
+  at the following address:
+
+  http://ppewww.physics.gla.ac.uk/LHCb/VeloAlign/VeloApplication_7.html
+
+
+!=============================================================================
 ! 19/09/2006 - Sebastien Viret  ** v2r2 **
 
   Modifications mainly in TrackStore.cpp. Misalignments contained in the XmlConditions

@@ -2,47 +2,51 @@
 // tuning for Pattern recognition algorithm
 //
 
+PatVeloLoadClusters.IgnoreAlignment    = true;
+PatVeloLoadClusters.FromClusters       = true; // rather than VeloLiteClusters
+PatVeloLoadClusters.LowThreshold       = 4;
+PatVeloLoadClusters.OutputLevel        = 3;
+ToolSvc.PatVeloDataHolder.OutputLevel  = 3;
+PatVeloGeneric.OutputLevel             = 3;
+
 // 
 // 1. For classic VELO tracks
 // 
 
-//PatVeloRTracking.rMatchTol   = 5.;
-//PatVeloRTracking.rExtraTol   = 5.;
-//PatVeloRTracking.MaxRSlope   = 0.8;
-//PatVeloRTracking.rOverlapTol = 5.;
-
 PatVeloRTracking.rMatchTol   = 2.;
 PatVeloRTracking.rExtraTol   = 2.;
 PatVeloRTracking.MaxRSlope   = 0.6;
-PatVeloRTracking.rOverlapTol = 2.;
+PatVeloRTracking.rOverlapTol = 0.;
 //PatVeloRTracking.PrivateBest = true; // !!! This option is not yet available
-PatVeloSpaceTracking.CleanOverlaps= true;
 
-PatVeloSpaceTracking.PhiAngularTol = 0.01;
-PatVeloSpaceTracking.PhiMatchTol   = 0.5;
-PatVeloSpaceTracking.PhiFirstTol   = 0.5;
-PatVeloSpaceTracking.MaxChiSq      = 30.0;
+ToolSvc.PatVeloSpaceTool.PhiAngularTol = 0.01;
+ToolSvc.PatVeloSpaceTool.PhiMatchTol   = 0.5;
+ToolSvc.PatVeloSpaceTool.PhiFirstTol   = 0.5;
+PatVeloSpaceTracking.MaxChiSq          = 15.0;
+PatVeloSpaceTracking.CleanOverlaps     = true;
 
 //
 // 2. For HALO tracks
 //
 
-PatVeloGeneric.CleanSeed   = true;
-PatVeloGeneric.PrivateBest = true;
-PatVeloGeneric.MinModules  = 3;
-PatVeloGeneric.SigmaTol    = 4;
-PatVeloGeneric.RAliTol     = 0.05;
-PatVeloGeneric.PAliTol     = 0.005;
+
+PatVeloGeneric.FullAlignment        = true;
+PatVeloGeneric.MinModules           = 5;
+PatVeloGeneric.ClusterCut           = 20;
+PatVeloGeneric.KalmanState          = 4;
+PatVeloGeneric.ForwardProp          = true;
+PatVeloGeneric.MaxSkip              = 3;
+PatVeloGeneric.CleanSeed            = true;
+PatVeloGeneric.PrivateBest          = true;
+
+PatVeloGeneric.SigmaTol             = 5;
+PatVeloGeneric.RAliTol              = 0.05;
+PatVeloGeneric.PAliTol              = 0.005;
+
+//PatVeloGeneric.OverlapProp          = true; // !!! Option not yet available
+//PatVeloGeneric.ACDC2                = true; // !!! Option available until PatVelo v2r10
 
 
-// These options are for ACDC2 only (!!! PatVelo v2r7 or higher requested !!!)
 
-//PatVeloGeneric.SigmaTol    = 5;
-//PatVeloGeneric.RAliTol     = 0.1;
-//PatVeloGeneric.PAliTol     = 0.004;
-
-//PatVeloGeneric.ClusterCut  = 3;
-//PatVeloLoadClusters.FromClusters  = true;
-//PatVeloLoadClusters.LowThreshold  = 20;
 
 

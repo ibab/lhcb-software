@@ -48,9 +48,6 @@ public:
   StatusCode fill_primary(LHCb::AlignTracks* aPV, int PV_numb);
 
   StatusCode GetAlignmentConstants();
-  StatusCode UpdateAlignmentConstants();
-
-  StatusCode GetCanonicalConstants(); 
 
   inline std::string itos(int i)	// convert int to string
   {
@@ -72,6 +69,7 @@ private:
   PVHisto           *my_PV_finder;
 
   LHCb::AlignTracks    *selected_tracks;
+  LHCb::AlignTracks    *stored_tracks;
   LHCb::AlignTracks    *control_tracks;
   LHCb::AlignTracks    *overlap_tracks;
   LHCb::AlignTracks    *PV_tracks;
@@ -104,6 +102,7 @@ private:
   bool                m_step2;
   std::vector<bool>   m_alignb;
   std::vector<double> m_sigmab;
+  std::vector<bool>   m_constrainb;
   std::vector<double> m_residual_cutb;
   double              m_z_range;
   int                 m_PV_trackmin;

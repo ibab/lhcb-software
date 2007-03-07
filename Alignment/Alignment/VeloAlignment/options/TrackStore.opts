@@ -1,11 +1,11 @@
 //
-//Job options defining track selection cuts
+// Job options defining track selection cuts
+// (see TrackStore.cpp for meaning)
 //
 
-ToolSvc.TrackStore.MomentumCut   = 0.0;    
 ToolSvc.TrackStore.RDiffMax      = 3.;
-ToolSvc.TrackStore.NonzerMin     = 3;
-ToolSvc.TrackStore.NonzerOverlap = 1;
+ToolSvc.TrackStore.NonzerMin     = 4;
+ToolSvc.TrackStore.NonzerOverlap = 2;
 ToolSvc.TrackStore.XOverlapCut	 = 5.; 
 ToolSvc.TrackStore.MissedHits    = true;
 ToolSvc.TrackStore.TakeOverlap   = true;
