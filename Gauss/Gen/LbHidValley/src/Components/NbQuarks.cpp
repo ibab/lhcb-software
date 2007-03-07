@@ -1,8 +1,11 @@
-// $Id: NbQuarks.cpp,v 1.1.1.1 2006-10-28 14:06:41 ibelyaev Exp $
+// $Id: NbQuarks.cpp,v 1.2 2007-03-07 19:14:00 gcorti Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1.1.1 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2006/10/28 14:06:41  ibelyaev
+// New package: "Hidden Valley" production 
+// 
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -68,10 +71,7 @@ public:
   virtual bool applyCut
   ( ParticleVector&           theParticleVector , 
     const HepMC::GenEvent*    theGenEvent       ,
-    const LHCb::GenCollision* theCollision      ,
-    IDecayTool*               theDecayTool      , 
-    bool                      cpMixture         ,
-    const HepMC::GenParticle* theSignalAtRest   ) const ;
+    const LHCb::GenCollision* theCollision      ) const ;
 protected:
   /** standard constructor
    *  @param type tool type(?)
@@ -126,10 +126,7 @@ DECLARE_TOOL_FACTORY ( NbQuarks ) ;
 bool NbQuarks::applyCut
 ( ParticleVector&           /* theParticleVector */ , 
   const HepMC::GenEvent*       theGenEvent          ,
-  const LHCb::GenCollision* /* theCollision      */ ,
-  IDecayTool*               /* theDecayTool      */ , 
-  bool                      /* cpMixture         */ ,
-  const HepMC::GenParticle* /* theSignalAtRest   */ ) const 
+  const LHCb::GenCollision* /* theCollision      */ ) const 
 {
   using namespace LoKi::Cuts ;
   
