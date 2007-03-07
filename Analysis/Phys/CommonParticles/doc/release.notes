@@ -4,6 +4,9 @@
 ! Purpose     : Common particles
 !-----------------------------------------------------------------------------
 
+! 2007-03-07 - Patrick Koppenburg for Adlene Hicheur
+ - Updated J/psi->ee
+
 ! 2007-03-05 - Patrick Koppenburg
  - Depend on DaVinciKernel, not DaVinciTools
 

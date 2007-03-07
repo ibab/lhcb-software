@@ -1,5 +1,5 @@
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.12 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.13 $
 // ============================================================================
 
 /** @file
@@ -83,23 +83,36 @@ StdLooseBiasedJpsi2MuMu.DecayDescriptor = "J/psi(1S) -> mu+ mu-";
 StdLooseBiasedJpsi2MuMu.Filter.Selections = {"J/psi(1S) : FlightDistanceFilterCriterion"};
 StdLooseBiasedJpsi2MuMu.Filter.FlightDistanceFilterCriterion.MinFSPV = 2.0; // hlt presel: 2
 
+
+
 /*************************************************************************
- *  Standard Loose Jpsi->ee
- */
-StdLooseJpsi2ee.PhysDesktop.InputLocations = { "Phys/StdLooseElectrons" };
+*  Standard Loose Jpsi->ee
+*  @authors M. Calvo, A. Hicheur
+*/
+StdLooseJpsi2ee.PhysDesktop.InputLocations = { "Phys/StdTightElectrons" };
 StdLooseJpsi2ee.DecayDescriptor = "J/psi(1S) -> e+ e-";
 // Cuts for daughters
-StdLooseJpsi2ee.DaughterFilter.Selections = {"e+ : KinFilterCriterion, PVIPFilterCriterion"};
+StdLooseJpsi2ee.DaughterFilter.Selections = {"e+ : KinFilterCriterion"};
 StdLooseJpsi2ee.DaughterFilter.KinFilterCriterion.MinPt = 500.0 * MeV;
-StdLooseJpsi2ee.DaughterFilter.PVIPFilterCriterion.MinIPsignif = 1.5;
 // Cuts for combination
-StdLooseJpsi2ee.LowerWindow = 400 * MeV;
-StdLooseJpsi2ee.UpperWindow = 100 * MeV;
+StdLooseJpsi2ee.LowerWindow = 1000 * MeV;
+StdLooseJpsi2ee.UpperWindow = 400 * MeV;
 // Cuts for mother
-StdLooseJpsi2ee.MotherFilter.Selections = {"J/psi(1S) : VtxFilterCriterion, FlightDistanceFilterCriterion"};
-StdLooseJpsi2ee.MotherFilter.VtxFilterCriterion.MaxChi2 = 6.0; //
-StdLooseJpsi2ee.MotherFilter.FlightDistanceFilterCriterion.MinFSPV = 2.0; //
+StdLooseJpsi2ee.MotherFilter.Selections = {"J/psi(1S) : VtxFilterCriterion"};
+StdLooseJpsi2ee.MotherFilter.VtxFilterCriterion.MaxChi2 = 9.0; 
 
-//******
-//Bremsstrahlung recovery ?
-// StdLooseElectrons.PhysDesktop.CombinedParticleMaker.AddBremPhoton = true;
+/*************************************************************************
+*  Standard Loose Biased Jpsi->ee
+*  @authors M. Calvo, A. Hicheur
+*/
+StdLooseBiasedJpsi2ee.PhysDesktop.InputLocations = { "Phys/StdLooseJpsi2ee" };
+StdLooseBiasedJpsi2ee.DecayDescriptor = "J/psi(1S) -> e+ e-";
+StdLooseBiasedJpsi2ee.Filter.Selections = { "J/psi(1S) : MassFilterCriterion, ByPIDFilterCriterion" } ;
+StdLooseBiasedJpsi2ee.Filter.MassFilterCriterion.LowerWindow = 500 * MeV;
+StdLooseBiasedJpsi2ee.Filter.MassFilterCriterion.UpperWindow = 400 * MeV;
+StdLooseBiasedJpsi2ee.Filter.ByPIDFilterCriterion.FilterByDescendents = true ;
+StdLooseBiasedJpsi2ee.Filter.ByPIDFilterCriterion.ApplyCC = true;
+StdLooseBiasedJpsi2ee.Filter.ByPIDFilterCriterion.Selections = { "e+: PVIPFilterCriterion"};
+StdLooseBiasedJpsi2ee.Filter.ByPIDFilterCriterion.PVIPFilterCriterion.MinIPsignif = 1.0;
+
+
