@@ -1,4 +1,4 @@
-// $Id: AlignSolvTool.h,v 1.2 2007-03-05 15:52:27 ahicheur Exp $
+// $Id: AlignSolvTool.h,v 1.3 2007-03-07 13:09:15 ahicheur Exp $
 #ifndef ALIGNSOLVTOOLS_ALIGNSOLVTOOL_H 
 #define ALIGNSOLVTOOLS_ALIGNSOLVTOOL_H 1
 
@@ -26,7 +26,7 @@ public:
 
   virtual ~AlignSolvTool( ); ///< Destructor
 
-  virtual StatusCode compute(AlSymMat& ,AlVec&); ///< Call method to compute the solution, get symetric matrix and vector in input and replaces them by inverse matrix and solution vector in output.
+  virtual bool compute(AlSymMat& ,AlVec&); ///< Call method to compute the solution, get symetric matrix and vector in input and replaces them by inverse matrix and solution vector in output.
 
   //enum Solver {SPMINV, 
   //               DIAG, 

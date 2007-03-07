@@ -1,4 +1,4 @@
-// $Id: AlignSolvTool.cpp,v 1.1.1.1 2007-02-19 09:55:16 ahicheur Exp $
+// $Id: AlignSolvTool.cpp,v 1.2 2007-03-07 13:09:15 ahicheur Exp $
 // Include files 
 
 #include <stdio.h>
@@ -51,13 +51,13 @@ AlignSolvTool::~AlignSolvTool() {}
 
 //=============================================================================
 
-StatusCode AlignSolvTool::compute(AlSymMat& m,AlVec& b) 
+bool AlignSolvTool::compute(AlSymMat& m,AlVec& b) 
 {
   if (m_method==1) SolvSpmInv(m,b);
   if (m_method==2) SolvDiag(m,b);
   
 
-  return StatusCode::SUCCESS;
+  return true;
 }
 
 
