@@ -35,8 +35,9 @@ public:
   virtual StatusCode ParGlo(int index, double param);
   virtual StatusCode ParSig(int index, double sigma);
   virtual StatusCode ConstF(double dercs[], double rhs);
-  virtual StatusCode EquLoc(double dergb[], double derlc[], double dernl[], double rmeas, double sigma);
-  virtual StatusCode ZerLoc(double dergb[], double derlc[], double dernl[]);
+  virtual StatusCode EquLoc(double dergb[], double derlc[], double dernl[], double dernl_i[],
+			    double rmeas, double sigma);
+  virtual StatusCode ZerLoc(double dergb[], double derlc[], double dernl[], double dernl_i[]);
   virtual StatusCode FitLoc(int n, double track_params[], int single_fit);
   virtual int  GetTrackNumber();
   virtual void SetTrackNumber(int value);
@@ -50,6 +51,9 @@ private:
   static const int mcs			= 10;  // Max. number of constraint equations
   static const int mgl			= 410; // mglobl+mlocal
 
+  static const int nonlin_param		= 1000000; // For non-linear terms treatment
+                                                   // See how it works in EquLoc() and MakeGlobalFit() 
+                                                   // , Should be much larger than any of the derivatives
 
 // Private methods 
 

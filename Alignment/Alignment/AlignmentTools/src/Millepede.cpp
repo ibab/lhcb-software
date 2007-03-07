@@ -1,13 +1,12 @@
 // Include files 
 
 // from Gaudi
-#include "math.h" // added by J. Blouw, in order to compile & link it on slc4
-
 #include "GaudiKernel/ToolFactory.h" 
 #include "GaudiKernel/MsgStream.h"
 
 // local
 #include "Millepede.h"
+#include "math.h" // added by J. Blouw, in order to compile & link it on slc4
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : Millepede
@@ -325,6 +324,9 @@ StatusCode Millepede::ConstF(double dercs[], double rhs)
 -----------------------------------------------------------
 
   dergb[1..nagb]	= global parameters derivatives
+  dernl[1..nagb]		= global parameters 'non-linear' derivatives
+  dernl_i[1..nagb]		= array linking 'non-linear' derivatives 
+                                  and corresponding local param
   derlc[1..nalc] 	= local parameters derivatives
   rmeas  		= measured value
   sigma 		= error on measured value (nothin to do with ParSig!!!)
@@ -332,7 +334,8 @@ StatusCode Millepede::ConstF(double dercs[], double rhs)
 -----------------------------------------------------------
 */
 
-StatusCode Millepede::EquLoc(double dergb[], double derlc[], double dernl[], double rmeas, double sigma)
+StatusCode Millepede::EquLoc(double dergb[], double derlc[], double dernl[], double dernl_i[], 
+			     double rmeas, double sigma)
 {	
 
   if (sigma<=0.0) // If parameter is fixed, then no equation
@@ -403,14 +406,27 @@ StatusCode Millepede::EquLoc(double dergb[], double derlc[], double dernl[], dou
   arest.push_back(wght);
   arenl.push_back(0.);
 
-  for (int i=iagb; i<=ibgb; i++)
+  if (iagb != -1)
   {
-    if (dergb[i]!=0.0 || dernl[i]!=0.0)
+    for (int i=iagb; i<=ibgb; i++)
     {
-      indst.push_back(i);
-      arest.push_back(dergb[i]);
-      arenl.push_back(dernl[i]);
-      dergb[i]   = 0.0;
+      if (dergb[i]!=0.0 || dernl[i]!=0.0)
+      {
+	indst.push_back(i);
+	arest.push_back(dergb[i]);
+	
+	if (dernl[i]!=0.0) 
+	{
+	  arenl.push_back(dernl[i]+(dernl_i[i]+0.5)*nonlin_param);
+	}
+	else
+	{
+	  arenl.push_back(0.);
+	}
+
+	dergb[i]   = 0.0;
+	dernl[i]   = 0.0;
+      }
     }
   }	
   
@@ -425,16 +441,20 @@ StatusCode Millepede::EquLoc(double dergb[], double derlc[], double dernl[], dou
 -----------------------------------------------------------
 
   dergb[1..nagb]		= global parameters derivatives
+  dernl[1..nagb]		= global parameters 'non-linear' derivatives
+  dernl_i[1..nagb]		= array linking 'non-linear' derivatives 
+                                  and corresponding local param
   dergb[1..nalc]		= local parameters derivatives
  
 -----------------------------------------------------------
 */
  
-StatusCode Millepede::ZerLoc(double dergb[], double derlc[], double dernl[])
+StatusCode Millepede::ZerLoc(double dergb[], double derlc[], double dernl[], double dernl_i[])
 {
   for(int i=0; i<nalc; i++) {derlc[i] = 0.0;}
   for(int i=0; i<nagb; i++) {dergb[i] = 0.0;}
   for(int i=0; i<nagb; i++) {dernl[i] = 0.0;}
+  for(int i=0; i<nagb; i++) {dernl_i[i] = 0.0;}
 
   return StatusCode::SUCCESS;
 }
@@ -489,7 +509,7 @@ StatusCode Millepede::FitLoc(int n, double track_params[], int single_fit)
       storeare.push_back(arest[i]);
       storenl.push_back(arenl[i]);
 
-      if (arenl[i] != 0.) arest[i] = 0.0; // Reset global derivatives if non linear and first iteration
+      //      if (arenl[i] != 0.) arest[i] = 0.0; // Reset global derivatives if non linear and first iteration
     }
 
     arenl.clear();
@@ -653,6 +673,11 @@ StatusCode Millepede::FitLoc(int n, double track_params[], int single_fit)
 	
 	for (i=(jb+1); i<ist; i++)
 	{verbose() << indst[i] << " / " << arest[i] 
+		   << " / " << pparm[indst[i]] << endmsg;} 
+	verbose() << "Global Non-Lin derivatives are: (index/derivative/parvalue) " << endmsg;
+	
+	for (i=(jb+1); i<ist; i++)
+	{verbose() << indst[i] << " / " << arenl[i] 
 		   << " / " << pparm[indst[i]] << endmsg;} 
 
 	verbose() << "Local derivatives are: (index/derivative) " << endmsg;
@@ -884,11 +909,9 @@ StatusCode Millepede::MakeGlobalFit(double par[], double error[], double pull[])
 
   ntotal_start = GetTrackNumber();
 
-  std::vector<double> track_slopes;
-
-  track_slopes.resize(2*ntotal_start);
-
-  for (i=0; i<2*ntotal_start; i++) track_slopes[i] = 0.;
+  std::vector<double> local_params; // For non-linear treatment
+  local_params.resize(mlocal*ntotal_start);
+  for (int i=0; i<mlocal*ntotal_start; i++) local_params[i] = 0.;
 	
   if (itert <= 1) itelim=10;    // Max number of iterations
 
@@ -1069,19 +1092,20 @@ StatusCode Millepede::MakeGlobalFit(double par[], double error[], double pull[])
 	  
 	  if (storenl[j] == 0) arest.push_back(storeare[j]);
 	  
-	  if (itert > 1) // Non-linear treatment (after two iterations)
+	  if (itert > 1 && storenl[j] != 0.) // Non-linear treatment (after two iterations)
 	  {  
-	    if (storenl[j] > 0.) arest.push_back(storeare[j] + track_slopes[2*i]*(storenl[j]-2000.));
-	    if (storenl[j] < 0.) arest.push_back(storeare[j] + track_slopes[2*i+1]*(storenl[j]+2000.));
+	    int local_index = int(storenl[j])/nonlin_param;
+
+	    arest.push_back(storeare[j] + local_params[nalc*i+local_index]
+			    *(storenl[j]-nonlin_param*(local_index+0.5)));
 	  }
 	}
 
 	for (int j=0; j<2*nalc; j++) {trackpars[j] = 0.;}	
 
 	bool sc = Millepede::FitLoc(i,trackpars,0); // Redo the fit
-	
-	track_slopes[2*i] = trackpars[2];
-	track_slopes[2*i+1] = trackpars[6];
+
+	for (int j=0; j<nalc; j++) {local_params[nalc*i+j] = trackpars[2*j];}
 	
 	if (sc) final_chi2 += trackpars[2*nalc+1]; 
 	if (sc) final_ndof += trackpars[2*nalc]; 

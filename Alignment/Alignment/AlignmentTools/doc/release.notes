@@ -2,6 +2,21 @@
 ! Responsible : Sebastien Viret
 
 !=============================================================================
+! 07/03/2007 - Sebastien Viret  ** v2r4 **
+
+-> Final modifications of the code in order to handle non-linear derivatives. The process
+is now generalized, and handled by 2 arrays: dernl (contains the global derivative
+related to a non-linear term) and dernl_i (contains the reference to the corresponding 
+non-linear term, ie the local parameter number). This new way of doing is illustrated in 
+a simple example available at the following address:
+
+http://ppewww.physics.gla.ac.uk/LHCb/VeloAlign/StandaloneCode.html
+
+-> Minor bug fixes in EquLoc method.
+
+-> The package has been tested on both slc3 and slc4 with Brunel v30r14
+ 
+
 ! 06/02/2007 - Johan Blouw  ** v2r4 **
 
 Added "#include math.h" in order to be able to compile & link on slc4
