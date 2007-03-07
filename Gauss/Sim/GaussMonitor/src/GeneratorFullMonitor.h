@@ -1,4 +1,4 @@
-// $Id: GeneratorFullMonitor.h,v 1.4 2005-12-16 20:13:50 gcorti Exp $
+// $Id: GeneratorFullMonitor.h,v 1.5 2007-03-07 18:48:26 gcorti Exp $
 #ifndef GAUSSMONITOR_GENERATORFULLMONITOR_H 
 #define GAUSSMONITOR_GENERATORFULLMONITOR_H 1
 
@@ -12,10 +12,11 @@
 
 
 /** @class GeneratorFullMonitor GeneratorFullMonitor.h GaussMonitor/GeneratorFullMonitor.h
- *  Algorithm filling an ntuple with the content of the MC Truth
+ *  Algorithm filling an ntuple with the content of the MC Truth and 
+ *  with the hard process info
  *
- *  @author Patrick Robbe
- *  @date   2004-03-02
+ *  @author Patrick Robbe, Paul Szczypka
+ *  @date   2004-03-02 (last modified: 2007-01-30)  
  */
 class GeneratorFullMonitor : public GaudiAlgorithm {
 public:
@@ -32,7 +33,7 @@ protected:
 
 private:
   /// pointer to NTuple
-  INTuple * m_nTuple ;
+  INTuple* m_nTuple ;
 
   /// NTuple variables PART block
   NTuple::Item < long > m_nPart  ; ///< Number of particles in event
@@ -53,6 +54,16 @@ private:
   /// NTuple variables INTER Block
   NTuple::Item < long > m_nInter ; ///< Number of interactions in event
   NTuple::Array< long > m_isBB ; ///< 1 if b-bbar interaction 0 if not
+
+  // NTuple variables Mandelstam block and process ID
+  NTuple::Item < long  > m_event;/// number of hard events
+  NTuple::Array< float > m_shat; ///< S_hat madelstam variable
+  NTuple::Array< float > m_that; ///< T_hat madelstam variable
+  NTuple::Array< float > m_uhat; ///< U_hat madelstam variable
+  NTuple::Array< float > m_x1;   ///< x1 mandelstam variable
+  NTuple::Array< float > m_x2;   ///< x2 madelstam variable
+  NTuple::Array< long  > m_procId;   ///< hard process ID
+
   /// Fill Ntuple info from one particle
   void FillNtuple( HepMC::GenParticle * thePart , int motherPdgCode ,
                    int motherIndex ) ;
@@ -60,6 +71,9 @@ private:
   int m_nPartMax ;
   /// Maximum size of INTER block
   int m_nInterMax ;
+  /// Maximum size of Madelstam block
+  int m_event_max ;
+
   /// Location where to find HepMC event
   std::string m_inputHepMC;
   /// Location where to find GenCollision

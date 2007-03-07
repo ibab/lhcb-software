@@ -1,4 +1,4 @@
-// $Id: GeneratorFullMonitor.cpp,v 1.5 2005-12-16 20:13:50 gcorti Exp $
+// $Id: GeneratorFullMonitor.cpp,v 1.6 2007-03-07 18:48:26 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -25,6 +25,8 @@
 // Implementation file for class : GeneratorFullMonitor
 //
 // 2004-03-02 : Patrick Robbe
+// 2007-01-30 : Paul Szczypka, add information on hard interaction
+// 2007-02-16 : Gloria Corti, initialize m_event
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
@@ -62,8 +64,16 @@ GeneratorFullMonitor::GeneratorFullMonitor( const std::string& name,
     , m_indexInter( )
     , m_nInter( ) 
     , m_isBB( ) 
+    , m_event ( )
+    , m_shat ( )
+    , m_that ( )
+    , m_uhat ( )
+    , m_x1 ( )
+    , m_x2 ( )
+    , m_procId ( )
     , m_nPartMax( 2000 ) 
     , m_nInterMax( 20 ) 
+    , m_event_max( 5 )
 {
   declareProperty( "HepMCEvents", 
                    m_inputHepMC = LHCb::HepMCEventLocation::Default);
@@ -193,6 +203,30 @@ StatusCode GeneratorFullMonitor::initialize() {
   if ( sc.isSuccess() ) {
     sc = nt -> addIndexedItem ( "isBB" , m_nInter , m_isBB ) ;
   }
+
+  // Event Variables  
+  if ( sc.isSuccess() ) {
+    sc = nt -> addItem ( "Mandelstam" , m_event , 0 , m_event_max ) ;
+  }
+  if ( sc.isSuccess() ) {
+    sc = nt -> addIndexedItem ( "s_hat" , m_event , m_shat ) ;
+  }
+  if ( sc.isSuccess() ) {
+    sc = nt -> addIndexedItem ( "t_hat" , m_event , m_that ) ;
+  }
+  if ( sc.isSuccess() ) {
+    sc = nt -> addIndexedItem ( "u_hat" , m_event , m_uhat ) ;
+  }
+  if ( sc.isSuccess() ) {
+    sc = nt -> addIndexedItem ( "x1_Bjork" , m_event , m_x1 ) ;
+    }
+  if ( sc.isSuccess() ) {
+    sc = nt -> addIndexedItem ( "x2_Bjork" , m_event , m_x2 ) ;
+  }
+  if ( sc.isSuccess() ) {
+    sc = nt -> addIndexedItem ( "m_procId" , m_event , m_procId ) ;
+  }
+
   if ( ! sc.isSuccess() ) {
     error() << "Error declaring NTuple" << endmsg ;
   }
@@ -207,13 +241,30 @@ StatusCode GeneratorFullMonitor::execute() {
 
   debug() << "==> Execute" << endmsg;
 
+  m_event = 0;
   LHCb::GenCollisions* collisions = get<LHCb::GenCollisions>( m_inputColl );
   for( LHCb::GenCollisions::iterator itC = collisions->begin(); 
          collisions->end() != itC; ++itC ) {
     debug() << "GenCollision ::: " << endmsg;
     debug() << (*itC) << " ," 
             << (*itC)->event()->pGenEvt()->signal_process_id() << " "
+            << " sHat = " << (*itC)->sHat() << " "
+            << " tHat = " << (*itC)->tHat() << " "
+            << " uHat = " << (*itC)->uHat() << " "
+            << " x1 = " << (*itC)->x1Bjorken() << " "
+            << " x2 = " << (*itC)->x2Bjorken() << " "
             << endmsg;
+    m_procId [ m_event ] = (*itC)->event()->pGenEvt()->signal_process_id();
+    m_shat   [ m_event ] = (*itC)->sHat();
+    m_that   [ m_event ] = (*itC)->tHat();
+    m_uhat   [ m_event ] = (*itC)->uHat();
+    m_x1     [ m_event ] = (*itC)->x1Bjorken();
+    m_x2     [ m_event ] = (*itC)->x2Bjorken();
+    m_event++;
+    if(m_event >= m_event_max){
+      warning() << "Not all Hard Process info recorded." << endmsg;
+      break;
+    }    
   }
 
   // Get HepMCEvents
@@ -291,7 +342,7 @@ StatusCode GeneratorFullMonitor::execute() {
 //=============================================================================
 StatusCode GeneratorFullMonitor::finalize() {
 
-  debug() << "==> Execute" << endmsg;
+  debug() << "==> Finalize" << endmsg;
 
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
