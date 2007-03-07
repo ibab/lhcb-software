@@ -1,4 +1,4 @@
-// $Id: MakeResonances.cpp,v 1.24 2007-02-17 12:51:01 pkoppenb Exp $
+// $Id: MakeResonances.cpp,v 1.25 2007-03-07 17:27:20 pkoppenb Exp $
 
 #include <algorithm>
 
@@ -60,6 +60,7 @@ MakeResonances::MakeResonances( const std::string& name,
   //  declareProperty( "MakePlots" , m_makePlots = false) ;
   declareProperty( "MotherToNGammas" , m_motherToNGammas = false) ;
   declareProperty( "OutputLocation" , m_outputLocation = "" ) ;
+  declareProperty( "PrintStats", m_printStats = false ) ;
   setProperty ( "HistoProduce", "0" ) ; // overwrites GaudiHistoAlg.cpp
 }
 //=============================================================================
@@ -259,7 +260,6 @@ StatusCode MakeResonances::createDecay(const std::string& mother,
 //#############################################################################
 StatusCode MakeResonances::execute() {
 
-  debug() << "==> Execute" << endmsg;
   ++m_nEvents ;
 
   setFilterPassed(false);   // Mandatory. Set to true if event is accepted.
@@ -276,6 +276,9 @@ StatusCode MakeResonances::execute() {
   sc = makePlots(Daughters,m_daughterPlots);
   if (!sc) return sc;
 
+  if ( msgLevel(MSG::DEBUG) || m_printStats )
+    always() << "Going to loop on " << Daughters.size() << " daughters" << endmsg;
+
   // The LOOP ///
   for ( Decays::iterator d = m_decays.begin() ; d != m_decays.end() ; ++d ){
     verbose() << "New Decay loop" << endmsg ;
@@ -286,7 +289,8 @@ StatusCode MakeResonances::execute() {
     sc = applyDecay(*d,Resonances); // make the resonances
     if (!sc) return sc;
   }
-  debug() << "Found " << Resonances.size() << " candidates" << endmsg ;
+  if ( msgLevel(MSG::DEBUG) || m_printStats )
+    always() << "Found " << Resonances.size() << " candidates" << endmsg ;
   // filter
   LHCb::Particle::ConstVector Final ;
   sc = applyFilter(Resonances,Final,m_motherFilter);
@@ -307,6 +311,8 @@ StatusCode MakeResonances::execute() {
     ++m_nAccepted;
     m_nCandidates+=Final.size();
   }
+  if ( msgLevel(MSG::DEBUG) || m_printStats )
+    always() << "Found " << Final.size() << " candidates " << endmsg ;
   
   return StatusCode::SUCCESS;
 };

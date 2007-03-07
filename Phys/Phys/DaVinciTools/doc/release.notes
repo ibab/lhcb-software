@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.255 2007-03-05 10:08:34 pkoppenb Exp $
+! $Id: release.notes,v 1.256 2007-03-07 17:27:20 pkoppenb Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2007-03-07 - Patrick Koppenburg
+ - More debug info in MakeResonances
 
 ! 2007-03-05 - Patrick Koppenburg
  - Get vector and matrices from GaudiKernel
