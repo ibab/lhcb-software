@@ -5,7 +5,7 @@
  * Implementation file for tool ProtoParticleFilterBase
  *
  * CVS Log :-
- * $Id: ProtoParticleFilterBase.cpp,v 1.4 2007-03-02 12:36:54 cattanem Exp $
+ * $Id: ProtoParticleFilterBase.cpp,v 1.5 2007-03-07 18:32:53 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-05-03
@@ -38,8 +38,7 @@ ProtoParticleFilterBase::ProtoParticleFilterBase( const std::string& type,
 
   // job options
 
-  // Must find a better way to do this
-  // const std::string NAME = to_upper(name);
+  // Maybe find a better way to do this ?
   const int pos = name.find_last_of(".");
   if ( pos>0 )
   {
@@ -51,22 +50,21 @@ ProtoParticleFilterBase::ProtoParticleFilterBase( const std::string& type,
 
     else if ( NAME == "MUON" )
     {
-      m_selectionOpts.push_back("RequiresDet='MUON' mu-pi>'-8.0'");
+      m_selectionOpts.push_back("RequiresDet='MUON' CombDLL(mu-pi)>'-8.0'");
     }
     else if ( NAME == "ELECTRON" )
     {
-      m_selectionOpts.push_back("RequiresDet='CALO' e-pi>'0.0'");
+      m_selectionOpts.push_back("RequiresDet='CALO' CombDLL(e-pi)>'0.0'");
     }
     else if ( NAME == "KAON" )
     {
-      m_selectionOpts.push_back("RequiresDet='RICH' k-pi>'2.0' k-p>'-2.0'");
+      m_selectionOpts.push_back("RequiresDet='RICH' CombDLL(k-pi)>'2.0' CombDLL(k-p)>'-2.0'");
     }
     else if ( NAME == "PROTON" )
     {
-      m_selectionOpts.push_back("RequiresDet='RICH' p-pi>'3.0'");
+      m_selectionOpts.push_back("RequiresDet='RICH' CombDLL(p-pi)>'3.0'");
     }
   }
-
   declareProperty( "Selection", m_selectionOpts );
 
 }

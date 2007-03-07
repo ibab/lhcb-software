@@ -5,7 +5,7 @@
  * Header file for utility class ProtoParticleSelection
  *
  * CVS Log :-
- * $Id: ProtoParticleSelection.h,v 1.5 2006-12-11 20:47:34 jonrob Exp $
+ * $Id: ProtoParticleSelection.h,v 1.6 2007-03-07 18:32:53 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-05-03
@@ -353,47 +353,26 @@ public: // Helper classes
 
   private:
 
-    // Methods to test in a ProtoParticle has any sub-det DLL information
-
-    /// Does this ProtoParticle have RICH DLL information
-    inline bool hasRichDLL( const LHCb::ProtoParticle * proto ) const
-    {
-      return proto->hasInfo( LHCb::ProtoParticle::RichPIDStatus );
-    }
-    
-    /// Does this ProtoParticle have MUON DLL information
-    inline bool hasMuonDLL( const LHCb::ProtoParticle * proto ) const
-    {
-      return proto->hasInfo( LHCb::ProtoParticle::MuonPIDStatus );
-    }
-    
-    /// Does this ProtoParticle have CALO DLL information
-    inline bool hasCaloDLL( const LHCb::ProtoParticle * proto ) const
-    {
-      //return proto->hasInfo( LHCb::ProtoParticle::CaloElectronMatch );
-      return proto->info( LHCb::ProtoParticle::InAccEcal, false );
-    }
-
     // Methods to test a ProtoParticle has specific RICH radiators
 
     /// Does this ProtoParticle have RICH information from the aerogel radiator
     inline bool hasRichAerogel( const LHCb::ProtoParticle * proto ) const
     {
-      return ( hasRichDLL(proto) && NULL != proto->richPID() ? 
+      return ( hasRichDLL(proto) && NULL != proto->richPID() ?
                proto->richPID()->usedAerogel() : false );
     }
 
     /// Does this ProtoParticle have RICH information from the Rich1Gas radiator
     inline bool hasRich1Gas( const LHCb::ProtoParticle * proto ) const
     {
-      return ( hasRichDLL(proto) && NULL != proto->richPID() ? 
+      return ( hasRichDLL(proto) && NULL != proto->richPID() ?
                proto->richPID()->usedRich1Gas() : false );
     }
 
     /// Does this ProtoParticle have RICH information from the Rich2Gas radiator
     inline bool hasRich2Gas( const LHCb::ProtoParticle * proto ) const
     {
-      return ( hasRichDLL(proto) && NULL != proto->richPID() ? 
+      return ( hasRichDLL(proto) && NULL != proto->richPID() ?
                proto->richPID()->usedRich2Gas() : false );
     }
 
@@ -402,31 +381,51 @@ public: // Helper classes
     /// Does this ProtoParticle have CALO SPD information
     inline bool hasCaloSPD( const LHCb::ProtoParticle * proto ) const
     {
-      return proto->info( LHCb::ProtoParticle::InAccSpd, false );
+      return (bool) proto->info( LHCb::ProtoParticle::InAccSpd, false );
     }
 
     /// Does this ProtoParticle have CALO PRS information
     inline bool hasCaloPRS( const LHCb::ProtoParticle * proto ) const
     {
-      return proto->info( LHCb::ProtoParticle::InAccPrs, false );
+      return (bool) proto->info( LHCb::ProtoParticle::InAccPrs, false );
     }
 
     /// Does this ProtoParticle have CALO ECAL information
     inline bool hasCaloECAL( const LHCb::ProtoParticle * proto ) const
     {
-      return proto->info( LHCb::ProtoParticle::InAccEcal, false );
+      return (bool) proto->info( LHCb::ProtoParticle::InAccEcal, false );
     }
 
     /// Does this ProtoParticle have CALO HCAL information
     inline bool hasCaloHCAL( const LHCb::ProtoParticle * proto ) const
     {
-      return proto->info( LHCb::ProtoParticle::InAccHcal, false );
+      return (bool) proto->info( LHCb::ProtoParticle::InAccHcal, false );
     }
 
-     /// Does this ProtoParticle have CALO Brem information
+    /// Does this ProtoParticle have CALO Brem information
     inline bool hasCaloBREM( const LHCb::ProtoParticle * proto ) const
     {
-      return proto->info( LHCb::ProtoParticle::InAccBrem, false );
+      return (bool) proto->info( LHCb::ProtoParticle::InAccBrem, false );
+    }
+
+    // Methods to test if a ProtoParticle has any sub-det DLL information
+
+    /// Does this ProtoParticle have RICH DLL information
+    inline bool hasRichDLL( const LHCb::ProtoParticle * proto ) const
+    {
+      return proto->hasInfo( LHCb::ProtoParticle::RichPIDStatus );
+    }
+
+    /// Does this ProtoParticle have MUON DLL information
+    inline bool hasMuonDLL( const LHCb::ProtoParticle * proto ) const
+    {
+      return proto->hasInfo( LHCb::ProtoParticle::MuonPIDStatus );
+    }
+
+    /// Does this ProtoParticle have CALO DLL information
+    inline bool hasCaloDLL( const LHCb::ProtoParticle * proto ) const
+    {
+      return ( hasCaloECAL(proto) || hasCaloPRS(proto) );
     }
 
   private: // data
