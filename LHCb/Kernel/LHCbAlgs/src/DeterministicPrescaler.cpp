@@ -24,21 +24,21 @@ DeterministicPrescaler::initialize()
 {
   const StatusCode sc = GaudiAlgorithm::initialize();
   if ( !sc) return sc;
-
+  
   // scan m_prescaleSpec and fill m_prescale accordingly
   // add support for 'repeats' at a later point...
   for (std::string::const_iterator  i=m_prescaleSpec.begin();
-                                   i!=m_prescaleSpec.end(); ++i ) {
-        if(*i!='A'&&*i!='R') {
-             err()  << "Prescale pattern should be consists of a string of 'A' and 'R'"
-                    << " to indicate Accept and Reject" << endmsg;
-             return StatusCode::FAILURE;
-        }
-        m_prescale.push_back(*i=='A');
+       i!=m_prescaleSpec.end(); ++i ) {
+    if(*i!='A'&&*i!='R') {
+      err()  << "Prescale pattern should be consists of a string of 'A' and 'R'"
+             << " to indicate Accept and Reject" << endmsg;
+      return StatusCode::FAILURE;
+    }
+    m_prescale.push_back(*i=='A');
   }
   if (!m_prescale.empty()) {
-      info() << "Prescaling events according to the pattern "
-             << m_prescale << "[evtnum % " << m_prescale.size() << "]" << endmsg;
+    info() << "Prescaling events according to the pattern "
+           << m_prescale << "[evtnum % " << m_prescale.size() << "]" << endmsg;
   }
   return sc;
 }
@@ -52,6 +52,6 @@ DeterministicPrescaler::execute()
 
   bool accept = m_prescale.empty() || m_prescale[evtNumber%m_prescale.size()];
   setFilterPassed(accept);
-  info() << " event # " << evtNumber << " : " << (accept?"Accepted":"Rejected") << endmsg ;
+  debug() << " event # " << evtNumber << " : " << (accept?"Accepted":"Rejected") << endmsg ;
   return StatusCode::SUCCESS;
 }
