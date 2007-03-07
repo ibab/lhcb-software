@@ -4,6 +4,20 @@
 ! Purpose     : Hold monitoring algorithms for Gauss
 !-----------------------------------------------------------------------------
 
+!=================== GaussMonitor v4r4 2007-03-07 ===========================
+! 2007-03-07 - Gloria CORTI
+ - Introduce algorithm with detailed histograms for generators studies and
+   validation from Paul SZCZYPKA. Some clean up with respect to its code.
+   . GeneratorAnalysis.{h,cpp} - NEW
+ - Introduce function extracted from GeneratorAnalysis to provide lifetime
+   (c*tau) in GaussGenUtil namespace
+   . GaussGenUtil.{h,cpp} 
+ - Add hard interaction information to ntuple (from Paul SZCZYPKA)
+   . GeneratorFullMonitor.{h,cpp}
+ - Add declaration of new algorithm GeneratorAnalysis. Necessary for the
+   package to be compatible with both Gaudi v18 (DC06) and v19.
+   . GaussMonitor_load.cpp 
+
 !=================== GaussMonitor v4r3 2007-02-08 ===========================
 ! 2007-01-12 - Gloria Corti
  - adapt code to Gaudi v19r0, use Gaudi macro for factory (also compatible

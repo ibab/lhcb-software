@@ -1,4 +1,4 @@
-// $Id: GaussMonitor_load.cpp,v 1.4 2005-10-02 15:14:03 gcorti Exp $
+// $Id: GaussMonitor_load.cpp,v 1.5 2007-03-07 18:51:42 gcorti Exp $
 // Include files 
 
 
@@ -20,5 +20,6 @@ DECLARE_FACTORY_ENTRIES(GaussMonitor) {
   DECLARE_ALGORITHM( MCDecayCounter );
   DECLARE_ALGORITHM( GeneratorFullMonitor );
   DECLARE_ALGORITHM( GenMonitorAlg );
+  DECLARE_ALGORITHM( GeneratorAnalysis );
   
 }
