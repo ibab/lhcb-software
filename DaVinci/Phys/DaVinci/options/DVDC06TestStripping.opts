@@ -31,8 +31,14 @@
 EventClocksvc.EventTimeDecoder = "FakeEventTime";
 ApplicationMgr.EvtMax = 10000 ;
 EventSelector.PrintFreq  = 10;
-EventSelector.FirstEvent = 3800 ;
+EventSelector.FirstEvent = 1 ;
 // ToolSvc.OutputLevel=1;
 // ToolSvc.CheckOverlap.OutputLevel=3;
 // ToolSvc.Particle2State.OutputLevel=3;
 //ToolSvc.RelatedPVFinder.ContextTool.GeomDispCalculator.OutputLevel=1;
+
+MessageSvc.OutputLevel = 3 ;
+//StdLooseEtac2PiPiPiPi.OutputLevel = 2 ;
+
+//CountPionsForEtac.OutputLevel = 2 ;
+//CountPionsForEtac.PhysDesktop.OutputLevel = 3 ;
