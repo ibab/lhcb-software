@@ -1,17 +1,17 @@
 ! =============================================================================
-! $Id: release.notes,v 1.48 2007-03-06 17:22:56 marcocle Exp $
+! $Id: release.notes,v 1.49 2007-03-07 13:08:56 cattanem Exp $
 ! =============================================================================
 ! package Tools/CondDBUI
 ! package manager : Marco Clemencic / Nicolas Gilardi
 ! =============================================================================
 
+!===================== Tools/CondDBUI v2r0 2007-03-07 =========================
+                            NEEDS LCGCMT >= 50
+
 ! 2007-03-06 - Marco Clemencic
  - Changed the path to the sessions database to
    "$HOME/.conddb_browser_sessions.dbm"
  - Use ISO date-time format (yyyy-mm-dd HH:MM:SS.S) for the validity key.
-
-!===================== Tools/CondDBUI v2r0 2007-03-02 =========================
-                            NEEDS LCGCMT >= 50
 
 ! 2007-02-28 - Marco Clemencic
  - Clean up in requirements (depend on Det/SQLDDDB)
