@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2007-03-07 - Gloria CORTI
+ - Increase major version number due to change in interface used
+
 ! 2007-02-27 - Patrick Robbe for Victor Coco
  - Add new tool PythiaHiggsType to generate Higgs, W, Z, and top events
 
