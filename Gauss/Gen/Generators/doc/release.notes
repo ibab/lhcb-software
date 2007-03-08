@@ -1,9 +1,17 @@
-! $Id: release.notes,v 1.93 2007-02-27 22:12:39 robbep Exp $
+! $Id: release.notes,v 1.94 2007-03-08 13:44:56 robbep Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Gen/Generators
 ! Responsible : Patrick ROBBE
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
+
+! 2007-03-08 - Patrick Robbe
+ - IProductionTool: Add new function "initializeGenerator()" which will
+   contain the generator specific initialization procedure.
+ - ReadHepMCAsciiFile: adapt for new production tool interface
+ - Special: Add the possibility to generate pile-up for special production
+ - FixedLuminosityForRareProcess: new pile-up tool to generate correctly
+   pile-up distributions for rare process events
 
 ! 2007-02-27 - Patrick Robbe
  - Fix output level of Special production tool

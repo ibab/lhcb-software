@@ -1,4 +1,4 @@
-// $Id: Generators_load.cpp,v 1.7 2006-10-25 11:23:11 ibelyaev Exp $
+// $Id: Generators_load.cpp,v 1.8 2007-03-08 13:44:56 robbep Exp $
 // Include files 
 
 //
@@ -33,6 +33,7 @@ DECLARE_FACTORY_ENTRIES(Generators) {
   // Luminosity Tools
   DECLARE_TOOL( VariableLuminosity ) ;
   DECLARE_TOOL( FixedLuminosity ) ;
+  DECLARE_TOOL( FixedLuminosityForRareProcess ) ;
   DECLARE_TOOL( FixedNInteractions ) ;
  
   // Sample Generation tools
