@@ -1,4 +1,4 @@
-// $Id: FixedLuminosityForRareProcess.cpp,v 1.1 2007-03-08 13:43:21 robbep Exp $
+// $Id: FixedLuminosityForRareProcess.cpp,v 1.2 2007-03-08 19:57:03 robbep Exp $
 // Include files 
 
 // local
@@ -73,7 +73,7 @@ unsigned int FixedLuminosityForRareProcess::numberOfPileUp( double & currentLumi
   unsigned int result = 0 ;
   m_nEvents++ ;
   Rndm::Numbers poissonGenerator( m_randSvc , Rndm::Poisson( m_mean ) ) ;
-  result = (unsigned int) poissonGenerator() + 1.0 ;
+  result = (unsigned int) ( poissonGenerator() + 1.0 ) ;
   return result ;
 }
 
