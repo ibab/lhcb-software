@@ -11,6 +11,7 @@ SeqLoadStdParticles.Members += {"PreLoadParticles/LoadStdLooseMuons",
                                 "PreLoadParticles/LoadStdLooseAllPhotons",
                                 "PreLoadParticles/LoadStdUnbiasedHeavyDimuon",
                                 "PreLoadParticles/LoadStdLooseJpsi2ee",
+                                "PreLoadParticles/LoadStdLooseBiasedJpsi2ee",
                                 "PreLoadParticles/LoadStdLooseD02KK",
                                 "PreLoadParticles/LoadStdLooseLambda1115_LU",
                                 "PreLoadParticles/LoadStdLooseDs2KKPi",
@@ -47,6 +48,7 @@ LoadStdLoosePhotons.PhysDesktop.InputLocations = {"Phys/StdLoosePhotons"};
 LoadStdLooseCnvPhotons.PhysDesktop.InputLocations = {"Phys/StdLooseCnvPhotons"};
 LoadStdLooseAllPhotons.PhysDesktop.InputLocations = {"Phys/StdLooseAllPhotons"};
 LoadStdLooseJpsi2ee.PhysDesktop.InputLocations = {"Phys/StdLooseJpsi2ee"};
+LoadStdLooseBiasedJpsi2ee.PhysDesktop.InputLocations = {"Phys/StdLooseBiasedJpsi2ee"};
 LoadStdLooseD02KK.PhysDesktop.InputLocations = {"Phys/StdLooseD02KK"};
 LoadStdLooseLambda1115_LU.PhysDesktop.InputLocations = {"Phys/StdLooseLambda1115_LU"};
 LoadStdLooseDs2KKPi.PhysDesktop.InputLocations = {"Phys/StdLooseDs2KKPi"};
