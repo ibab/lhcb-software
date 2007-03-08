@@ -37,14 +37,14 @@ StdTightElectronsSeq.MeasureTime = true;
 StdNoPIDsElectrons.PhysDesktop.ParticleMakerType = "NoPIDsParticleMaker" ;
 StdNoPIDsElectrons.PhysDesktop.NoPIDsParticleMaker.Particle =  "electron" ;
 StdNoPIDsElectrons.DecayDescriptor = "Electron" ;
+
 // ============================================================================
 // LOOSE long
 // ============================================================================
-
 StdLooseElectrons.PhysDesktop.ParticleMakerType = "CombinedParticleMaker" ;
 StdLooseElectrons.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = false ;
 StdLooseElectrons.PhysDesktop.CombinedParticleMaker.Particles = {"electron"} ;
-StdLooseElectrons.PhysDesktop.CombinedParticleMaker.Electron.Selection = {"RequiresDet='CALO' CombDLL(e-pi)>'-5.0'" } ;
+StdLooseElectrons.PhysDesktop.CombinedParticleMaker.Electron.Selection = {"RequiresDet='CALO' CombDLL(e-pi)>'-2.0'" } ;
 StdLooseElectrons.PhysDesktop.CombinedParticleMaker.TrackSelector.TrackTypes = {"Long"};
 StdLooseElectrons.DecayDescriptor = "Electron" ;
 

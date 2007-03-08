@@ -25,10 +25,10 @@ DataOnDemandSvc.Algorithms += {
 };
 StdNoPIDsKaonsSeq.Members += { "PreLoadParticles/StdNoPIDsKaons" };
 StdNoPIDsKaonsSeq.MeasureTime = true;
-StdLooseKaonsSeq.Members += { "PreLoadParticles/StdLooseKaons" };
-StdLooseKaonsSeq.MeasureTime = true;
-StdTightKaonsSeq.Members += { "PreLoadParticles/StdTightKaons" };
-StdTightKaonsSeq.MeasureTime = true;
+StdLooseKaonsSeq.Members  += { "PreLoadParticles/StdLooseKaons" };
+StdLooseKaonsSeq.MeasureTime  = true;
+StdTightKaonsSeq.Members  += { "PreLoadParticles/StdTightKaons" };
+StdTightKaonsSeq.MeasureTime  = true;
 
 // ============================================================================
 // NO PID, all tracks
@@ -36,6 +36,7 @@ StdTightKaonsSeq.MeasureTime = true;
 StdNoPIDsKaons.PhysDesktop.ParticleMakerType = "NoPIDsParticleMaker" ;
 StdNoPIDsKaons.PhysDesktop.NoPIDsParticleMaker.Particle =  "kaon" ;
 StdNoPIDsKaons.DecayDescriptor = "Kaon" ;
+
 // ============================================================================
 // LOOSE long
 // ============================================================================
@@ -52,7 +53,7 @@ StdLooseKaons.DecayDescriptor = "Kaon" ;
 StdTightKaons.PhysDesktop.ParticleMakerType = "CombinedParticleMaker" ;
 StdTightKaons.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = false ;
 StdTightKaons.PhysDesktop.CombinedParticleMaker.Particles = {"kaon"} ;
-StdTightKaons.PhysDesktop.CombinedParticleMaker.Kaon.Selection = {"RequiresDet='RICH' CombDLL(k-pi)>'0.0'" }  ;
+StdTightKaons.PhysDesktop.CombinedParticleMaker.Kaon.Selection = {"RequiresDet='RICH' CombDLL(k-pi)>'0.0'" };
 StdTightKaons.PhysDesktop.CombinedParticleMaker.TrackSelector.TrackTypes = {"Long"};
 StdTightKaons.DecayDescriptor = "Kaon" ;
 

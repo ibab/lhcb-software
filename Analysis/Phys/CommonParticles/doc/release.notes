@@ -4,6 +4,11 @@
 ! Purpose     : Common particles
 !-----------------------------------------------------------------------------
 
+! 2007-03-08 - Chris Jones
+ - Some changes to default cuts for Standard basic particles
+  + Loose electrons - Tighten DLL cut from -5 to -2
+  + Tight Muons     - Loosen DLL cut from  0 to -3
+
 ! 2007-03-08 - Patrick Koppenburg
  - Correction for StdLooseBiased J/psi -> ee
 
