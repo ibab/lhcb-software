@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ utility class : RichZeroSuppData
  *
  *  CVS Log :-
- *  $Id: RichZeroSuppData_V1.h,v 1.3 2007-03-01 19:39:07 jonrob Exp $
+ *  $Id: RichZeroSuppData_V1.h,v 1.4 2007-03-08 18:14:28 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-17
@@ -41,7 +41,7 @@ namespace Rich
 
       /** @class RichZeroSuppData RichZeroSuppData_V1.h
        *
-       *  The RICH HPD non zero suppressed data format.
+       *  The RICH HPD zero suppressed data format.
        *  Second iteration of the format. Identical to version 0
        *  apart from a new header word format.
        *

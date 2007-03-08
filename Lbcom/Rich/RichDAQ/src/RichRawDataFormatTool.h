@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::DAQ::RawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.h,v 1.21 2007-03-01 19:39:07 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.h,v 1.22 2007-03-08 18:14:28 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-18
@@ -260,7 +260,13 @@ namespace Rich
       /// Flag to turn on/off the use of the ODIN data bank during decoding for integrity checks
       bool m_decodeUseOdin;
 
-      /// Turn off data integrity checks
+      /// Turn on/off Event ID integrity checks
+      bool m_checkEventsIDs;
+
+      /// Turn on/off BX ID integrity checks
+      bool m_checkBxIDs;
+
+      /// Turn on/off data integrity checks
       bool m_checkDataIntegrity;
 
       /** Option for deep debugging. Turns on the use of a fake HPD RichSmartID for each HPD data

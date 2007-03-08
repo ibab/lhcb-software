@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ utility class : RichNonZeroSuppALICEData
  *
  *  CVS Log :-
- *  $Id: RichNonZeroSuppALICEData_V2.h,v 1.2 2007-03-01 19:39:07 jonrob Exp $
+ *  $Id: RichNonZeroSuppALICEData_V2.h,v 1.3 2007-03-08 18:14:27 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-07
@@ -68,13 +68,15 @@ namespace Rich
          *  @param digits Vector of RichSmartIDs listing the active channels in this HPD
          */
         explicit RichNonZeroSuppALICEData( const Level0ID l0ID,
-                                           const LHCb::RichSmartID::Vector & digits )
+                                           const LHCb::RichSmartID::Vector & digits,
+                                           const bool extendedFormat = false,
+                                           const LHCb::ODIN * odin = NULL )
           : HPDDataBankImp<Version,Header,Footer> ( Header ( false, // Non-ZS
                                                              true,  // Is ALICE mode
-                                                             false, // normal data format
+                                                             extendedFormat, // data format
                                                              false, // No GT inhibit
                                                              l0ID,  // The L0 ID
-                                                             EventID(0), // Event ID (TO BE DONE?)
+                                                             EventID( odin ? odin->eventNumber() : 0 ), // Event ID
                                                              0 // filled by buildData call
                                                              ),
                                                     Footer(),

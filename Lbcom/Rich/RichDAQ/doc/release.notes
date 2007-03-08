@@ -4,6 +4,9 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
+! 2007-03-08 - Chris Jones
+ - Add support for ALICE zero-suppressed mode data in the LHCb5 version
+
 ! 2007-03-01 - Chris Jones
  - Tidy update doxygen namespace documentation
 

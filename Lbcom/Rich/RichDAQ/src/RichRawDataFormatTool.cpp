@@ -5,7 +5,7 @@
  *  Implementation file for class : Rich::RawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.cpp,v 1.43 2007-03-01 19:39:07 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.cpp,v 1.44 2007-03-08 18:14:28 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2004-12-18
@@ -53,12 +53,14 @@ RawDataFormatTool::RawDataFormatTool( const std::string& type,
                    m_rawEventLoc = LHCb::RawEventLocation::Default );
   declareProperty( "PrintSummary",       m_summary   = true );
   declareProperty( "MaxHPDOccupancy",    m_maxHPDOc );
-  declareProperty( "DumpRawBanks",       m_dumpBanks = false );
-  declareProperty( "UseZeroSuppression", m_zeroSupp  = true );
-  declareProperty( "UseExtendedFormat",  m_extendedFormat = false );
-  declareProperty( "DecodeUsingODIN",    m_decodeUseOdin = true );
+  declareProperty( "DumpRawBanks",       m_dumpBanks          = false );
+  declareProperty( "UseZeroSuppression", m_zeroSupp           = true );
+  declareProperty( "UseExtendedFormat",  m_extendedFormat     = false );
+  declareProperty( "DecodeUsingODIN",    m_decodeUseOdin      = true );
   declareProperty( "CheckDataIntegrity", m_checkDataIntegrity = true );
-  declareProperty( "UseFakeHPDID",       m_useFakeHPDID = false );
+  declareProperty( "CheckEventIDs",      m_checkEventsIDs     = true );
+  declareProperty( "CheckBXIDs",         m_checkBxIDs         = true );
+  declareProperty( "UseFakeHPDID",       m_useFakeHPDID       = false );
 }
 
 // Destructor
@@ -93,6 +95,11 @@ StatusCode RawDataFormatTool::initialize()
   }
 
   if ( m_extendedFormat ) info() << "Will encode RawEvent using extended HPD format" << endreq;
+
+  if ( !m_decodeUseOdin )      Warning( "ODIN integrity checks are disabled", StatusCode::SUCCESS );
+  if ( !m_checkDataIntegrity ) Warning( "HPD Data integrity checks are disabled", StatusCode::SUCCESS );
+  if ( !m_checkEventsIDs )     Warning( "Header Event ID checks are disabled", StatusCode::SUCCESS );
+  if ( !m_checkBxIDs )         Warning( "Header BX ID checks are disabled", StatusCode::SUCCESS );
 
   // Setup incident services
   incSvc()->addListener( this, IncidentType::BeginEvent );
@@ -307,7 +314,7 @@ RawDataFormatTool::createDataBank( const LHCb::RichSmartID::Vector & smartIDs,
   if ( msgLevel(MSG::VERBOSE) )
   {
     // Print out SmartIDs to encode
-    verbose() << "   Creating encoding HPD " << smartIDs.front().hpdID()
+    verbose() << endreq << "   Creating encoding HPD " << smartIDs.front().hpdID()
               << " bank from " << smartIDs.size() << " RichSmartIDs :-" << endreq;
     for ( LHCb::RichSmartID::Vector::const_iterator iID = smartIDs.begin();
           iID != smartIDs.end(); ++iID )
@@ -339,7 +346,14 @@ RawDataFormatTool::createDataBank( const LongType * dataStart,
     // Decide to zero suppress or not depending on number of hits
     if ( header.zeroSuppressed() )
     {
-      dataBank = (HPDDataBank*) new RichDAQ_LHCb5::ZeroSuppLHCb( dataStart );
+      if ( header.aliceMode() )
+      {
+        dataBank = (HPDDataBank*) new RichDAQ_LHCb5::ZeroSuppAlice( dataStart );
+      }
+      else
+      {
+        dataBank = (HPDDataBank*) new RichDAQ_LHCb5::ZeroSuppLHCb( dataStart );
+      }
     }
     else
     {
@@ -363,7 +377,14 @@ RawDataFormatTool::createDataBank( const LongType * dataStart,
     // Decide to zero suppress or not depending on number of hits
     if ( header.zeroSuppressed() )
     {
-      dataBank = (HPDDataBank*) new RichDAQ_LHCb4::ZeroSuppLHCb( dataStart );
+      if ( header.aliceMode() )
+      {
+        Warning ( "LHCb4 data format does not support ZS Alice mode data" );
+      }
+      else
+      {
+        dataBank = (HPDDataBank*) new RichDAQ_LHCb4::ZeroSuppLHCb( dataStart );
+      }
     }
     else
     {
@@ -387,7 +408,14 @@ RawDataFormatTool::createDataBank( const LongType * dataStart,
     // Decide to zero suppress or not depending on number of hits
     if ( header.zeroSuppressed() )
     {
-      dataBank = (HPDDataBank*) new RichDAQ_LHCb3::ZeroSuppLHCb( dataStart );
+      if ( header.aliceMode() )
+      {
+        Warning ( "LHCb3 data format does not support ZS Alice mode data" );
+      }
+      else
+      {
+        dataBank = (HPDDataBank*) new RichDAQ_LHCb3::ZeroSuppLHCb( dataStart );
+      }
     }
     else
     {
@@ -445,7 +473,8 @@ RawDataFormatTool::createDataBank( const LongType * dataStart,
   // Printout this bank
   if ( msgLevel(MSG::VERBOSE) )
   {
-    verbose() << "Created HPD Data Bank for Decoding :-" << endreq;
+    verbose() << endreq 
+              << "Created HPD Data Bank for Decoding :-" << endreq;
     verbose() << *dataBank << endreq;
   }
 
@@ -655,8 +684,8 @@ void RawDataFormatTool::decodeToSmartIDs_2007( const LHCb::RawBank & bank,
 
       // Compare Ingress header to the ODIN
       const bool odinOK = ( !m_decodeUseOdin ? true :
-                            compareIDs( ingressWord.eventID(), EventID(odin()->eventNumber()) ) &&
-                            compareIDs( ingressWord.bxID(),    BXID   (odin()->orbitNumber()) ) );
+                            ( !m_checkEventsIDs || compareIDs( ingressWord.eventID(), EventID(odin()->eventNumber()) ) ) &&
+                            ( !m_checkBxIDs     || compareIDs( ingressWord.bxID(),    BXID   (odin()->orbitNumber()) ) ) );
       if ( !odinOK )
       {
         std::ostringstream mess;
@@ -716,7 +745,7 @@ void RawDataFormatTool::decodeToSmartIDs_2007( const LHCb::RawBank & bank,
 
             // Compare Event IDs for errors
             bool OK = ( hpdIsSuppressed ? true :
-                        compareIDs( ingressWord.eventID(), hpdBank->eventID() ) );
+                        !m_checkEventsIDs || compareIDs( ingressWord.eventID(), hpdBank->eventID() ) );
             if ( !OK )
             {
               std::ostringstream mess;
@@ -1171,10 +1200,11 @@ void RawDataFormatTool::dumpRawBank( const LHCb::RawBank & bank,
   // Is this an empty bank ?
   if ( bankSize > 0 )
   {
-    const std::string & LINES = "-------------------------------------------------------------------------------------------------------------------";
+    const std::string & LINES = "----------------------------------------------------------------------------------------------------------------";
 
     // Bit numbers
-    os << "           bit :";
+    os << LINES << endreq;
+    os << "          bit |";
     for ( int iCol = 31; iCol >= 0; --iCol )
     {
       os << format("%3i",iCol);
@@ -1188,8 +1218,8 @@ void RawDataFormatTool::dumpRawBank( const LHCb::RawBank & bank,
       std::ostringstream hexW;
       hexW << std::hex << *dataW;
       std::string tmpW = hexW.str();
-      tmpW.resize(10,' ');
-      os << " -- " << tmpW << " :";
+      if ( tmpW.size() < 8 ) { tmpW = std::string(8-tmpW.size(),'0')+tmpW; }
+      os << " -- " << tmpW << "  |";
       for ( int iCol = 31; iCol >= 0; --iCol )
       {
         os << "  " << isBitOn( *dataW, iCol );

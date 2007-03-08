@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ utility class : RichNonZeroSuppData
  *
  *  CVS Log :-
- *  $Id: RichNonZeroSuppData_V3.h,v 1.2 2007-03-01 19:39:07 jonrob Exp $
+ *  $Id: RichNonZeroSuppData_V3.h,v 1.3 2007-03-08 18:14:28 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-07
@@ -76,8 +76,8 @@ namespace Rich
          */
         explicit RichNonZeroSuppData( const Level0ID l0ID,
                                       const LHCb::RichSmartID::Vector & digits,
-                                      const bool extendedFormat,
-                                      const LHCb::ODIN * odin )
+                                      const bool extendedFormat = false,
+                                      const LHCb::ODIN * odin = NULL )
           : HPDDataBankImp<Version,Header,Footer> ( Header( false, // Not ZS
                                                             false, // Not ALICE mode
                                                             extendedFormat, // data format

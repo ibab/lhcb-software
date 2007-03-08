@@ -4,7 +4,7 @@
  *
  *  Instantiates specific versions of templated types for Rich DAQ software
  *
- *  $Id: RichDAQVersions.cpp,v 1.5 2007-02-01 17:42:29 jonrob Exp $
+ *  $Id: RichDAQVersions.cpp,v 1.6 2007-03-08 18:14:27 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-17
@@ -15,8 +15,14 @@
 
 #include "RichHPDDataBank.icpp"
 
+// ALICE Mode formats
+
 #include "RichNonZeroSuppALICEData_V1.icpp"
 #include "RichNonZeroSuppALICEData_V2.icpp"
+
+#include "RichZeroSuppALICEData_V1.icpp"
+
+// LHCb mode format
 
 #include "RichNonZeroSuppData_V1.icpp"
 #include "RichNonZeroSuppData_V2.icpp"
@@ -55,5 +61,5 @@ template class RichZeroSuppDataV3::RichZeroSuppData<RichDAQ_LHCb4::LHCb4,RichDAQ
 template class HPDDataBankImp<RichDAQ_LHCb5::LHCb5,RichDAQ_LHCb5::Header,RichDAQ_LHCb5::Footer> ;
 template class RichNonZeroSuppALICEDataV2::RichNonZeroSuppALICEData<RichDAQ_LHCb5::LHCb5,RichDAQ_LHCb5::Header,RichDAQ_LHCb5::Footer>;
 template class RichNonZeroSuppDataV3::RichNonZeroSuppData<RichDAQ_LHCb5::LHCb5,RichDAQ_LHCb5::Header,RichDAQ_LHCb5::Footer>;
+template class RichZeroSuppALICEDataV1::RichZeroSuppALICEData<RichDAQ_LHCb5::LHCb5,RichDAQ_LHCb5::Header,RichDAQ_LHCb5::Footer>;
 template class RichZeroSuppDataV4::RichZeroSuppData<RichDAQ_LHCb5::LHCb5,RichDAQ_LHCb5::Header,RichDAQ_LHCb5::Footer>;
-

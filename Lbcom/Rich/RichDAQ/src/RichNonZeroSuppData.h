@@ -2,10 +2,10 @@
 //-----------------------------------------------------------------------------
 /** @file RichNonZeroSuppData.h
  *
- *  Header file for RICH DAQ utility class : RichNonZeroSuppData
+ *  Header file for RICH Alice mode non-ZS data formats
  *
  *  CVS Log :-
- *  $Id: RichNonZeroSuppData.h,v 1.23 2007-02-01 17:42:29 jonrob Exp $
+ *  $Id: RichNonZeroSuppData.h,v 1.24 2007-03-08 18:14:27 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-07

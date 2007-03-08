@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ utility class : RichZeroSuppData
  *
  *  CVS Log :-
- *  $Id: RichZeroSuppData_V4.h,v 1.2 2007-03-01 19:39:07 jonrob Exp $
+ *  $Id: RichZeroSuppData_V4.h,v 1.3 2007-03-08 18:14:28 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-17
@@ -42,7 +42,7 @@ namespace Rich
 
       /** @class RichZeroSuppData RichZeroSuppData.h
        *
-       *  The RICH HPD non zero suppressed data format.
+       *  The RICH HPD zero suppressed data format.
        *  Third iteration of the format using a new packing scheme.
        *
        *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
@@ -72,8 +72,8 @@ namespace Rich
          */
         explicit RichZeroSuppData( const Level0ID l0ID,
                                    const LHCb::RichSmartID::Vector & digits,
-                                   const bool extendedFormat,
-                                   const LHCb::ODIN * odin )
+                                   const bool extendedFormat = false,
+                                   const LHCb::ODIN * odin = NULL )
           : HPDDataBankImp<Version,Header,Footer> ( Header ( true,  // Is ZS
                                                              false, // Not ALICE mode
                                                              extendedFormat, // data format

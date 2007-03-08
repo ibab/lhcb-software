@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ utility class : Rich::DAQ::HPDDataBank
  *
  *  CVS Log :-
- *  $Id: RichHPDDataBank.h,v 1.20 2007-03-01 19:39:07 jonrob Exp $
+ *  $Id: RichHPDDataBank.h,v 1.21 2007-03-08 18:14:27 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-17
@@ -321,14 +321,13 @@ namespace Rich
 
     private:
 
-      /// turn a number into a hex string
+      /// Turn a number into a hex string, with leading zeros padded to length 8
       inline std::string asHex( const LongType word ) const
       {
         std::ostringstream AsHex;
         AsHex << std::hex << word;
         std::string tmpW = AsHex.str();
-        tmpW.resize(10,' ');
-        return tmpW;
+        return ( tmpW.size() < 8 ? std::string(8-tmpW.size(),'0')+tmpW : tmpW );
       }
 
     private: // data
