@@ -5,6 +5,11 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
 
+</PRE><H1><A NAME=v1r3>2007-03-08 HltSys v1r3</A></H1><PRE>
+This version uses Gaudi v19r2 and LHCb v22r2
+
+Packages removed: HltPython - dictionary moved to HltBase v2r2
+
 - In HltSys options
   . Added options to run the exclusive sleections
     - options/HltFullReco.opts: full reconstruct of what's still missing
