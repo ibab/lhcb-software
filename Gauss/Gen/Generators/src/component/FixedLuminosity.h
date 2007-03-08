@@ -1,4 +1,4 @@
-// $Id: FixedLuminosity.h,v 1.2 2005-12-12 16:06:20 robbep Exp $
+// $Id: FixedLuminosity.h,v 1.3 2007-03-08 13:39:36 robbep Exp $
 #ifndef GENERATORS_FIXEDLUMINOSITY_H 
 #define GENERATORS_FIXEDLUMINOSITY_H 1
 
@@ -57,6 +57,8 @@ private:
   int    m_numberOfZeroInteraction ; ///< Counter of empty events
 
   int    m_nEvents ; ///< Counter of events (including empty events)
+
+  double m_mean ; ///< Mean number of events per crossing
 
   IRndmGenSvc * m_randSvc ; ///< Pointer to random number generator service
 };

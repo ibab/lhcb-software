@@ -1,4 +1,4 @@
-// $Id: FixedLuminosity.cpp,v 1.4 2007-01-12 15:17:36 ranjard Exp $
+// $Id: FixedLuminosity.cpp,v 1.5 2007-03-08 13:39:36 robbep Exp $
 // Include files 
 
 // local
@@ -61,6 +61,8 @@ StatusCode FixedLuminosity::initialize( ) {
   info() << "Total cross section (mbarn): " << m_totalXSection / Gaudi::Units::millibarn 
          << endreq ;
 
+  m_mean = m_luminosity * m_totalXSection / m_crossingRate ;
+
   return sc ;
 }
 
@@ -70,11 +72,9 @@ StatusCode FixedLuminosity::initialize( ) {
 unsigned int FixedLuminosity::numberOfPileUp( double & currentLuminosity ) {
   currentLuminosity = m_luminosity ;
   unsigned int result = 0 ;
-  double mean ;
   while ( 0 == result ) {
     m_nEvents++ ;
-    mean = m_luminosity * m_totalXSection / m_crossingRate ;
-    Rndm::Numbers poissonGenerator( m_randSvc , Rndm::Poisson( mean ) ) ;
+    Rndm::Numbers poissonGenerator( m_randSvc , Rndm::Poisson( m_mean ) ) ;
     result = (unsigned int) poissonGenerator() ;
     if ( 0 == result ) m_numberOfZeroInteraction++ ;
   }
