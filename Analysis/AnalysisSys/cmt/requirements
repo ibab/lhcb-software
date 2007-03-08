@@ -62,6 +62,6 @@ use               LoKiTests        v1r2   Tests   # I. Belyaev
 use  Stripping          v6r1    Tools             # Juan Palacios
 
 ####################################################################
-use  KtJet              v2r0    External          # I. Belyaev
+use  KtJet              v2r1    External          # I. Belyaev
 ####################################################################
 
