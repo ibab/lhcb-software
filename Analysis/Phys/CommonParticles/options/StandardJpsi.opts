@@ -1,5 +1,5 @@
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.13 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.14 $
 // ============================================================================
 
 /** @file
@@ -24,7 +24,10 @@ DataOnDemandSvc.Algorithms += {
   "DATA='/Event/Phys/StdLooseBiasedJpsi2MuMu/Vertices'      TYPE='GaudiSequencer/StdLooseBiasedJpsi2MuMuSeq'",
   // Loose Jpsi->ee
   "DATA='/Event/Phys/StdLooseJpsi2ee/Particles'     TYPE='GaudiSequencer/StdLooseJpsi2eeSeq'",
-  "DATA='/Event/Phys/StdLooseJpsi2ee/Vertices'      TYPE='GaudiSequencer/StdLooseJpsi2eeSeq'"
+  "DATA='/Event/Phys/StdLooseJpsi2ee/Vertices'      TYPE='GaudiSequencer/StdLooseJpsi2eeSeq'",
+  // Loose Biased Jpsi->ee
+  "DATA='/Event/Phys/StdLooseBiasedJpsi2ee/Particles'     TYPE='GaudiSequencer/StdLooseBiasedJpsi2eeSeq'",
+  "DATA='/Event/Phys/StdLooseBiasedJpsi2ee/Vertices'      TYPE='GaudiSequencer/StdLooseBiasedJpsi2eeSeq'"
 };
 StdUnbiasedHeavyDimuonSeq.Members += { "MakeResonances/StdUnbiasedHeavyDimuon" };
 StdUnbiasedHeavyDimuonSeq.MeasureTime = true;
@@ -34,6 +37,8 @@ StdLooseBiasedJpsi2MuMuSeq.Members += { "FilterDesktop/StdLooseBiasedJpsi2MuMu" 
 StdLooseBiasedJpsi2MuMuSeq.MeasureTime = true;
 StdLooseJpsi2eeSeq.Members += { "MakeResonances/StdLooseJpsi2ee" };
 StdLooseJpsi2eeSeq.MeasureTime = true;
+StdLooseBiasedJpsi2eeSeq.Members += { "FilterDesktop/StdLooseBiasedJpsi2ee" };
+StdLooseBiasedJpsi2eeSeq.MeasureTime = true;
 
 /*************************************************************************
  *  Standard Lifetime Unbiased J/psi->MuMu
