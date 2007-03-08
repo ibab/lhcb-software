@@ -31,7 +31,7 @@
 EventClocksvc.EventTimeDecoder = "FakeEventTime";
 ApplicationMgr.EvtMax = 10000 ;
 EventSelector.PrintFreq  = 10;
-EventSelector.FirstEvent = 1 ;
+//EventSelector.FirstEvent = 1090 ;
 // ToolSvc.OutputLevel=1;
 // ToolSvc.CheckOverlap.OutputLevel=3;
 // ToolSvc.Particle2State.OutputLevel=3;
@@ -42,3 +42,8 @@ MessageSvc.OutputLevel = 3 ;
 
 //CountPionsForEtac.OutputLevel = 2 ;
 //CountPionsForEtac.PhysDesktop.OutputLevel = 3 ;
+
+//Jets.OutputLevel = 2 ;
+
+ApplicationMgr.HistogramPersistency = "ROOT";
+HistogramPersistencySvc.OutputFile = "DVHistos.root";

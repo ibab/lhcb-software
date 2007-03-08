@@ -1,0 +1,16 @@
+//-- GAUDI data cards generated on Mar 8, 2007 11:07:06 AM
+//-- For Event Type = 10000010 / Data type = RDST 1
+//--     Configuration = DC06 - phys-v2-lumi5
+//--     RDST 1 datasets produced by Brunel - v30r14
+//--     From DIGI 1 datasets produced by Boole - v12r6
+//--     From SIM 1 datasets produced by Gauss - v25r4
+//--     Database version = Default
+//--     Cards content = physical
+//--     
+//-- Datasets replicated at CERN
+//-- 1 dataset(s) - NbEvents = 9925
+//-- 
+
+EventSelector.Input   = {
+"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi5/00001687/RDST/0000/00001687_00000001_1.rdst' TYP='POOL_ROOTTREE' OPT='READ'" 
+};
