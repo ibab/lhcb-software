@@ -1,4 +1,4 @@
-// $Id: Special.h,v 1.4 2005-12-31 17:32:01 robbep Exp $
+// $Id: Special.h,v 1.5 2007-03-08 13:42:17 robbep Exp $
 #ifndef GENERATORS_SPECIAL_H 
 #define GENERATORS_SPECIAL_H 1
 
@@ -26,6 +26,9 @@ class Special : public ExternalGenerator {
   
   /// Initialize method
   virtual StatusCode initialize( ) ;
+
+  /// Finalize function
+  virtual StatusCode finalize() ;
   
   /** Generate a single interaction (No Pile-up for the moment.
    *  Implements ISampleGenerationTool::generate.
@@ -46,5 +49,27 @@ private:
 
   /// Counter of events after the generator level cut
   unsigned int m_nEventsAfterCut ;
+
+  /// Number of pile-up events to generate at once
+  unsigned int m_maxInteractions ;
+
+  /// Vector to contain pile-up events
+  std::vector< HepMC::GenEvent * > m_pileUpEventsVector ;
+  
+  /// Vector to contain collision infos
+  std::vector< LHCb::GenCollision * > m_pileUpCollisionsVector ;
+  
+  /// function to generate a set of pile up events
+  void generatePileUp() ;
+  
+  /// production tool which generates pile-up interactions
+  IProductionTool * m_pileUpProductionTool ;
+
+  /// Name of the production tool for pile-up
+  std::string m_pileUpProductionToolName ;
+
+  /// Copy collision FROM to TO
+  void copyCollision( const LHCb::GenCollision * FROM , 
+                      LHCb::GenCollision * TO ) const ;
 };
 #endif // GENERATORS_SPECIAL_H
