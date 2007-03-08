@@ -11,6 +11,9 @@
  *
  */
  
-Generation.PileUpTool                 = "FixedLuminosity";
+// Default PileUpTool = "FixedLuminosity";
 Generation.FixedLuminosity.Luminosity =  5*LumiUnit;
+
+// For rare events a special tool is specified in EventType
+Generation.FixedLuminosityForRareProcess.Luminosity =  5*LumiUnit;
 

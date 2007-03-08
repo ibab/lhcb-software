@@ -4,6 +4,10 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2007-03-08 - Gloria Corti
+ - Introduce settings for special events pileup
+   . FixedLumi-5.opts
+
 ! 2007-03-02 - Gloria CORTI
  - Introduce configuration for Hijing at 450 GeV
    . PilotRun.opts
