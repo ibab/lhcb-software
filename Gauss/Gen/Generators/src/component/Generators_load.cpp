@@ -1,4 +1,4 @@
-// $Id: Generators_load.cpp,v 1.8 2007-03-08 13:44:56 robbep Exp $
+// $Id: Generators_load.cpp,v 1.9 2007-03-08 19:56:40 robbep Exp $
 // Include files 
 
 //
@@ -65,7 +65,7 @@ DECLARE_FACTORY_ENTRIES(Generators) {
   DECLARE_ALGORITHM ( WriteHepMCAsciiFile ) ;
   
   // Full event cut tools
-  DECLARE_TOOL( LeptonInAcceptance ) ; 
-  DECLARE_TOOL( MuXMaxBias         ) ;
-
+  DECLARE_TOOL( LeptonInAcceptance   ) ; 
+  DECLARE_TOOL( MuXMaxBias           ) ;
+  DECLARE_TOOL( DiLeptonInAcceptance ) ;
 }

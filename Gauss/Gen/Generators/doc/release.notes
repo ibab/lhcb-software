@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.94 2007-03-08 13:44:56 robbep Exp $
+! $Id: release.notes,v 1.95 2007-03-08 19:56:40 robbep Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Gen/Generators
 ! Responsible : Patrick ROBBE
@@ -12,6 +12,9 @@
  - Special: Add the possibility to generate pile-up for special production
  - FixedLuminosityForRareProcess: new pile-up tool to generate correctly
    pile-up distributions for rare process events
+
+! 2007-03-08 - Patrick Robbe for Thomas Blake
+ - DiLeptonInAcceptance: new FullEventGenCutTool to accept events with dimuons.
 
 ! 2007-02-27 - Patrick Robbe
  - Fix output level of Special production tool
