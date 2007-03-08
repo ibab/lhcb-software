@@ -1,4 +1,4 @@
-// $Id: IProductionTool.h,v 1.6 2005-12-31 17:30:37 robbep Exp $
+// $Id: IProductionTool.h,v 1.7 2007-03-08 13:40:09 robbep Exp $
 #ifndef GENERATORS_IPRODUCTIONTOOL_H 
 #define GENERATORS_IPRODUCTIONTOOL_H 1
 
@@ -21,7 +21,7 @@ class ParticleProperty ;
  *  @date   2005-08-16
  */
 
-static const InterfaceID IID_IProductionTool( "IProductionTool" , 2 , 0 ) ;
+static const InterfaceID IID_IProductionTool( "IProductionTool" , 3 , 0 ) ;
 
 class IProductionTool : virtual public IAlgTool {
 public:
@@ -77,5 +77,8 @@ public:
 
   /// Prepare the generator to force fragmentationto in the thePdgId flavour.
   virtual StatusCode setupForcedFragmentation( const int thePdgId ) = 0 ;
+
+  /// Specific initialization of the Generator
+  virtual StatusCode initializeGenerator( ) = 0 ;
 };
 #endif // GENERATORS_IPRODUCTIONTOOL_H
