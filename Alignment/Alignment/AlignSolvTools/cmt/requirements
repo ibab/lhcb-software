@@ -16,6 +16,7 @@ use HbookCnv v*
 
 include_dirs  $(ALIGNSOLVTOOLSROOT)
 
+macro cernlib_linkopts " -L$(cernlib_home)/lib  -llapack3 -lblas -lpacklib -lphtools -lkernlib" 
 #macro cernlib_linkopts " -L$(cernlib_home)/lib -lpdflib804 -lmathlib -llapack3 -lblas -lpacklib -lphtools -lkernlib" 
 
 # build a component library
