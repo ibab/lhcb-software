@@ -1,4 +1,4 @@
-// $Id: GeneratorAnalysis.cpp,v 1.1 2007-03-07 18:51:42 gcorti Exp $
+// $Id: GeneratorAnalysis.cpp,v 1.2 2007-03-08 13:56:05 robbep Exp $
 // Include files 
 
 // from Gaudi
@@ -534,7 +534,7 @@ void GeneratorAnalysis::bookHistos(bool neutral)
   //General Histograms
   debug() << "Booking General Histograms." << endmsg;
   i++;
-  m_hNPileUp = book( 101, "Num. of primary interaction per bunch", -0.5, 10.5, 11 );
+  m_hNPileUp = book( 150, "Num. of primary interaction per bunch", -0.5, 10.5, 11 );
   m_pHisto.push_back( m_hNPileUp );
   i++;
   m_hPrimX   = book( 101, "PrimaryVertex x (mm)", -0.5, 0.5, 100 );
@@ -578,7 +578,7 @@ void GeneratorAnalysis::bookHistos(bool neutral)
   m_pHisto.push_back( m_hProtoPDG );
   i++;
   m_hProtoLTime = 
-    book( 132, "Lifetime protostable particles (mm)", -15., 15., 100 );
+    book( 132, "Lifetime protostable particles (mm)", 0., 20., 100 );
   m_pHisto.push_back( m_hProtoLTime );
   i++;
   m_hStableEta = 

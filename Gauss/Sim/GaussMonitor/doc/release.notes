@@ -4,6 +4,11 @@
 ! Purpose     : Hold monitoring algorithms for Gauss
 !-----------------------------------------------------------------------------
 
+! 2007-03-08 - Patrick Robbe
+ - GaussGenUtil.cpp: fix lifetime computation
+ - GeneratorAnalysis.cpp: change histogram number 101 (conflict with another
+   histogram with the same number), adapt lifetime range to mm. 
+
 !=================== GaussMonitor v4r4 2007-03-07 ===========================
 ! 2007-03-07 - Gloria CORTI
  - Introduce algorithm with detailed histograms for generators studies and

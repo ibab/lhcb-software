@@ -1,4 +1,4 @@
-// $Id: GaussGenUtil.cpp,v 1.1 2007-03-07 18:51:03 gcorti Exp $
+// $Id: GaussGenUtil.cpp,v 1.2 2007-03-08 13:56:05 robbep Exp $
 // Include files 
 
 // from Gaudi
@@ -28,9 +28,16 @@ namespace GaussGenUtil {
     if ( thePart -> momentum().restMass2() < 0 ) return -10.0 ;
     
     if ( thePart->end_vertex() ) {   
-      HepLorentzVector thePosition = thePart->end_vertex()->position();
+      HepLorentzVector thePosition = thePart->end_vertex()->position() -
+        thePart->production_vertex()->position() ;
+      HepLorentzVector theNewPosition ;
+      theNewPosition.setX( thePosition.x() ) ;
+      theNewPosition.setY( thePosition.y() ) ;
+      theNewPosition.setZ( thePosition.z() ) ;
+      theNewPosition.setT( thePosition.t() * Gaudi::Units::c_light ) ;
+
       Hep3Vector theBoost = thePart->momentum().boostVector() ;
-      HepLorentzVector thePositionBoost = thePosition.boost( -theBoost );
+      HepLorentzVector thePositionBoost = theNewPosition.boost( -theBoost );
       return thePositionBoost.t();  // in mm
     } else {
       return -10.0 ;
