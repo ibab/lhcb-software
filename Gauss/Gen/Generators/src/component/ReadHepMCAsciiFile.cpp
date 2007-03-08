@@ -1,8 +1,11 @@
-// $Id: ReadHepMCAsciiFile.cpp,v 1.2 2007-01-12 15:17:39 ranjard Exp $
+// $Id: ReadHepMCAsciiFile.cpp,v 1.3 2007-03-08 13:41:06 robbep Exp $
 // ===========================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2007/01/12 15:17:39  ranjard
+// v7r0 - use GAUDI v19r0
+//
 // Revision 1.1  2006/10/06 14:11:17  ibelyaev
 //  add (Read,Write)HepMCAsciiFile components
 //
@@ -79,6 +82,8 @@ public:
     return GaudiTool::finalize() ;
   }
 public:
+  virtual StatusCode initializeGenerator() { return StatusCode::SUCCESS ; } 
+  
   // ===================================================================
   /** Generate a primary interaction. 
    *  The generated event contains all what happens up to the decay of
