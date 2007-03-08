@@ -1,4 +1,4 @@
-// $Id: PythiaProduction.h,v 1.5 2006-10-25 11:29:45 ibelyaev Exp $
+// $Id: PythiaProduction.h,v 1.6 2007-03-08 13:51:46 robbep Exp $
 #ifndef LBPYTHIA_PYTHIAPRODUCTION_H 
 #define LBPYTHIA_PYTHIAPRODUCTION_H 1
 
@@ -33,6 +33,8 @@ public:
   
   virtual StatusCode generateEvent( HepMC::GenEvent * theEvent , 
                                     LHCb::GenCollision * theCollision ) ;
+
+  virtual StatusCode initializeGenerator( ) ;
   
   virtual void setStable( const ParticleProperty * thePP ) ;
 

@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2007-03-08 - Patrick Robbe
+ - Adapt PythiaProduction to new IProductionTool interface
+
 ! 2007-03-07 - Gloria CORTI
  - Increase major version number due to change in interface used
 

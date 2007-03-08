@@ -1,4 +1,4 @@
-// $Id: PythiaProduction.cpp,v 1.1 2007-01-12 15:21:17 ranjard Exp $
+// $Id: PythiaProduction.cpp,v 1.2 2007-03-08 13:51:47 robbep Exp $
 
 // Include files
 
@@ -154,8 +154,23 @@ StatusCode PythiaProduction::initialize( ) {
 
   // Obtain beam tool
   m_beamTool = tool< IBeamTool >( m_beamToolName , this ) ;
+
+
+  // Set size of common blocks in HEPEVT: note these correspond to stdhep
+  HepMC::HEPEVT_Wrapper::set_sizeof_int( 4 ) ;
+  HepMC::HEPEVT_Wrapper::set_sizeof_real( 8 ) ;
+  HepMC::HEPEVT_Wrapper::set_max_number_entries( 10000 ) ;  
+
+  return initializeGenerator() ;
+}
+
+//=============================================================================
+// Part specific to generator initialization
+//=============================================================================
+StatusCode PythiaProduction::initializeGenerator( ) {
+  StatusCode sc = StatusCode::SUCCESS ;
   
-  // Initialize output
+    // Initialize output
   if ( msgLevel( MSG::DEBUG ) ) {
     Pythia::pydat1().mstu( 12 ) = 1 ;
     Pythia::pydat1().mstu( 13 ) = 1 ;
@@ -244,12 +259,7 @@ StatusCode PythiaProduction::initialize( ) {
   std::remove( m_pythiaListingFileName.c_str() ) ;
   Pythia::InitPyBlock( m_pythiaListingUnit , m_pythiaListingFileName ) ;
   
-  Pythia::PyInit( m_frame, m_beam, m_target, m_win ) ;
-  
-  // Set size of common blocks in HEPEVT: note these correspond to stdhep
-  HepMC::HEPEVT_Wrapper::set_sizeof_int( 4 ) ;
-  HepMC::HEPEVT_Wrapper::set_sizeof_real( 8 ) ;
-  HepMC::HEPEVT_Wrapper::set_max_number_entries( 10000 ) ; 
+  Pythia::PyInit( m_frame, m_beam, m_target, m_win ) ;  
 
   // Reset forced fragmentation flag
   Pythia::pydat1().mstu( 150 ) = 0 ;
