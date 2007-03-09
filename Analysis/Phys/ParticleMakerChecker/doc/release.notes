@@ -4,6 +4,7 @@
 ! Purpose     : MC checker algorithms for ParticleMakers
 !-----------------------------------------------------------------------------
 
+!========================== ParticleMakerChecker v1r0 2007-03-09 ===================
 ! 2007-03-06 - Patrick Koppenburg
  - Associator headers have been moved to DaVinciMCKernel
  - Depend on DaVinciMCKernel
