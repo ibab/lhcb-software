@@ -4,7 +4,7 @@
  *  Header file for RICH algorithm : Rich::Rec::HierarchicalPIDMerge
  *
  *  CVS Log :-
- *  $Id: RichHierarchicalPIDMerge.h,v 1.3 2007-02-02 10:05:17 jonrob Exp $
+ *  $Id: RichHierarchicalPIDMerge.h,v 1.4 2007-03-09 22:40:52 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-07-31
@@ -25,25 +25,8 @@
 #include "Event/RichGlobalPID.h"
 #include "Event/RichLocalPID.h"
 
-//-----------------------------------------------------------------------------
-/** @namespace Rich
- *
- *  General namespace for RICH software
- *
- *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
- *  @date   08/07/2004
- */
-//-----------------------------------------------------------------------------
 namespace Rich
 {
-
-  /** @namespace Rich::Rec
-   *
-   *  General namespace for RICH reconstruction software
-   *
-   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
-   *  @date   08/07/2004
-   */
   namespace Rec
   {
 

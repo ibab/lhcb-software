@@ -4,6 +4,9 @@
 ! Purpose     : Contains the merging algorithms for final RICH PID results
 !-----------------------------------------------------------------------------
 
+! 2007-03-09 - Chris Jones
+ - Remove doxygen namespace comments (now in standalone file)
+
 !======================= RichPIDMerge v2r3 2007-02-06 =======================
 ! 2007-02-02 - Chris Jones
  - Adapt to new RICH namespaces
