@@ -25,15 +25,17 @@ RecoRICHSeq.Members += { "Rich::Rec::GlobalPID::Initialize/RichGloPIDInit",
                          "Rich::Rec::GlobalPID::TrackSel/RichGloPIDTrSel" };
 
 // First iteration of background estimation then Global PID iteration
-RecoRICHSeq.Members += { "Rich::Rec::BackgroundEsti/RichBckEst1" };
+RecoRICHSeq.Members += { "Rich::Rec::BackgroundEstiAvHPD/RichBckEst1" };
+//RecoRICHSeq.Members += { "Rich::Rec::BackgroundEstiClustering/RichBckEst1" };
 RecoRICHSeq.Members += { "Rich::Rec::GlobalPID::Likelihood/RichGloPIDIt1" };
 
 // Second iteration of background estimation then Global PID iteration
-RecoRICHSeq.Members += { "Rich::Rec::BackgroundEsti/RichBckEst2" };
+RecoRICHSeq.Members += { "Rich::Rec::BackgroundEstiAvHPD/RichBckEst2" };
+//RecoRICHSeq.Members += { "Rich::Rec::BackgroundEstiClustering/RichBckEst2" };
 RecoRICHSeq.Members += { "Rich::Rec::GlobalPID::Likelihood/RichGloPIDIt2" };
 
 // Third iteration of background estimation then Global PID iteration
-//RecoRICHSeq.Members += { "Rich::Rec::BackgroundEsti/RichBckEst3",
+//RecoRICHSeq.Members += { "Rich::Rec::BackgroundEstiAvHPD/RichBckEst3",
 //                         "Rich::Rec::GlobalPID::Likelihood/RichGloPIDIt3" };
 
 // Ring refit - uses working PIDs to identify good photons and refit angles
@@ -53,6 +55,9 @@ RecoRICHSeq.Members += { "Rich::Rec::SummaryAlg/RichRecSummary" };
 
 // Reconstruction algorithm parameters
 // ========================================================================================
+
+// Bacground clustering tool
+ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::DAQ::HPDPixelClusteringTool/BackgroundClustering" };
 
 // Local Algorithm parameters
 RichLocPID.TrackSelector.TrackAlgs = { "Seed","Match","Forward","KsTrack","VeloTT" };
@@ -130,7 +135,6 @@ RichRecSummary.PhotonNSigma = { 1.0, 1.5, 1.5 };
 // Test stuff
 // ---------------------------------------------------------------------------------
 /*
-ApplicationMgr.DLLs += { "RichMarkovRingFinder" };
 RecoRICHSeq.Members += { "Rich2RightPanelMarkovRingFinderAlg/Rich2RingFindRight" };
 RecoRICHSeq.Members += { "Rich2LeftPanelMarkovRingFinderAlg/Rich2RingFindLeft" };
 */

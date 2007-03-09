@@ -1,0 +1,16 @@
+
+// the clustering tools to use in each RICH
+ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::DAQ::HPDPixelClusteringTool/PixelCreatorClustering" };
+
+// use clustered hits                                     RICH1   RICH2 
+ToolSvc.Offline.RichPixelCreator.ApplyPixelClustering = { false,  false };
+
+// RICH1 options
+ToolSvc.Offline.RichPixelCreator.PixelClusteringRich1.AllowDiagonalsInClusters = true;
+ToolSvc.Offline.RichPixelCreator.PixelClusteringRich1.MinClusterSize = 1;
+ToolSvc.Offline.RichPixelCreator.PixelClusteringRich1.MaxClusterSize = 9999;
+
+// RICH2 options
+ToolSvc.Offline.RichPixelCreator.PixelClusteringRich2.AllowDiagonalsInClusters = true;
+ToolSvc.Offline.RichPixelCreator.PixelClusteringRich2.MinClusterSize = 1;
+ToolSvc.Offline.RichPixelCreator.PixelClusteringRich2.MaxClusterSize = 9999;

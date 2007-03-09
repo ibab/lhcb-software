@@ -54,6 +54,9 @@ ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::TrackSelector/TrackSelec
 // Pixel suppression
 #include "$RICHRECSYSOPTS/tools/RichPixelSuppress.opts"
 
+// clustering
+#include "$RICHRECSYSOPTS/tools/RichPixelClustering.opts"
+
 // ================================== Photon Creators ==========================================
 
 // Photon reconstruction using full reconstructed information (Default)
