@@ -3,9 +3,116 @@ Package     : PhysSys
 Package Coordinator : Juan Palacios
 Purpose     : LHCb physics packages
 
-</PRE><H1><A NAME=v6r0>2007-02-28 Phys v6r0 </A></H1><PRE>
+</PRE><H1><A NAME=v6r0>2007-03-03 Phys v6r0 </A></H1><PRE>
 Phys split into Phys and Analysis. Phys contains everything 
-needed by the HLT and no more.
+needed by the HLT and by DaVinci and nothing else. 
+So far that 6 packages: DaVinciFilter, DaVinciTools, DaVinciTransporter, ParticleMaker, ProtoParticleFilter, VertexFit.
+
+#######################################MM#######################################
+#                                  PHYS v6r0                                   #
+################################################################################
+##################################### PHYS #####################################
+!========================== DaVinciFilter v6r2 2007-03-09 ===================
+! 2007-02-16 - Patrick Koppenburg
+ - New algorithm NumberOfParticlesFilter that allows to interrupt
+ 	 the sequence depending on the number of Particles in the desktop. Don't
+   forget the InputLocation!
+
+! 2007-02-16 - Patrick Koppenburg
+ - Adapt to new FilterCriterionBase : call setActive() from all
+ 	 initialize()
+
+! 2007-02-15 - Patrick Koppenburg
+ - Correct VertexLocation::Primary into RecVertexLocation::Primary
+   in three filters
+ - increment to v6r2
+
+! 2007-02-09 - P. Koppenburg
+  - src/MassDifferenceFilterCriterion.cpp
+  - src/MassDifferenceFilterCriterion.h
+  - src/MomentumMotherDirectionFilterCriterion.cpp
+  - src/MomentumMotherDirectionFilterCriterion.h
+  - src/MomentumMotherFlightAngleFilterCriterion.cpp
+  - src/MomentumMotherFlightAngleFilterCriterion.h
+    . Correct some int==unsigned int disliked by the compilator
+
+! 2007-02-06 - P. Koppenburg
+ - Use VertexBase for related vertices.
+ - more debug info
+ - check that related PV is there.
+
+!========================== ParticleMaker v3r1 2007-03-09 ===================
+! 2007-03-06 - Chris Jones
+ - Tidy up PID consistency checks in CombinedParticleMaker
+
+! 2007-03-05 - Patrick Koppenburg
+ - Remove ParticleEffPurMoni that depends on MC truth. 
+
+! 2007-03-05 - Patrick Koppenburg
+ - Use Matrices from GaudiKernel
+
+! 2007-02-28 - Patrick Koppenburg
+ - Increment to v3r1
+
+! 2007-02-23 - Chris Jones
+ - Add new monitor algorithm ParticleEffPurMoni which reads in Particles
+   and produces some standard performance information for them
+ - Suppress some meaningless printout from CombinedParticleMaker
+
+! 2007-02-21 - Patrick Koppenburg
+ - Do not stop when location is not there in NoPIDsPM
+
+! 2007-02-06 - P. Koppenburg
+ - add daughters to particle in ParticleStuffer.
+
+!========================== VertexFit v4r1 2007-03-09 ===================
+! 2007-03-05 - Patrick Koppenburg
+ - get vector types from gaudiKernel
+
+! 2007-02-28 - Patrick Koppenburg
+ - Increment to v4r1
+
+! 2007-02-06 - Yuehong Xie
+  - PropertimeFitter.cpp: return tau (not ctau) in Gaudi unit of time,
+    which is nanosecond.
+
+! 2007-02-06 - P. Koppenburg
+  - Offloine vertexfitter: add correct particles to vertex.
+
+! 2007-02-02 - P. Koppenburg
+  - TrgVertexFitter.cpp
+    . Error matrices now start from (0,0) not (1,1).
+
+!======================== DaVinciTransporter v3r6 2007-03-09 =================
+! 2007-03-05 - Patrick Koppenburg
+ - Get vectices and matrices from gaudiKernel
+
+! 2007-03-05 - Patrick Koppenburg
+ - Remove LHCbDefinitions dependency
+ - Increment to v3r6
+
+!========================== DaVinciTools v15r2 2007-03-09 ===================
+! 2007-03-07 - Patrick Koppenburg
+ - More debug info in MakeResonances
+
+! 2007-03-05 - Patrick Koppenburg
+ - Get vector and matrices from GaudiKernel
+
+! 2007-03-05 - Patrick Koppenburg
+ - Moved SelResults tools and algos fro Tools/Utilities
+
+! 2007-02-17 - Patrick Koppenburg
+ - Reduce number of times vertex fit warning is issued in MakeResonances
+
+! 2007-02-15 - Patrick Koppenburg
+ - ContextTool: reduce verbosity of initialisation
+
+! 2007-02-06 - P. Koppenburg
+  - OnOfflineTools: get an instance of PVRelator and return it via pvRelator()
+    method.
+  - RelatedPV: use veretxbase instead of RecVertex
+  - RelatedPVFinder: cannot use context tool. Initialise explicitly instead.
+
 
 </PRE><H1><A NAME=v5r0>2007-02-05 Phys v5r0 </A></H1><PRE>
 
