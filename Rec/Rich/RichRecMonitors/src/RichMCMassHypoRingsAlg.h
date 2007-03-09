@@ -4,7 +4,7 @@
  *  Header file for algorithm class : Rich::Rec::MC::MCMassHypoRingsAlg
  *
  *  CVS Log :-
- *  $Id: RichMCMassHypoRingsAlg.h,v 1.7 2007-02-02 10:07:11 jonrob Exp $
+ *  $Id: RichMCMassHypoRingsAlg.h,v 1.8 2007-03-09 22:59:34 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   10/01/2003
@@ -29,37 +29,10 @@
 #include "RichRecBase/IRichMassHypothesisRingCreator.h"
 #include "RichRecBase/IRichRayTraceCherenkovCone.h"
 
-//-----------------------------------------------------------------------------
-/** @namespace Rich
- *
- *  General namespace for RICH software
- *
- *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
- *  @date   08/07/2004
- */
-//-----------------------------------------------------------------------------
 namespace Rich
 {
-
-  /** @namespace Rec
-   *
-   *  General namespace for RICH reconstruction software
-   *
-   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
-   *  @date   08/07/2004
-   */
   namespace Rec
   {
-
-    //-----------------------------------------------------------------------------
-    /** @namespace MC
-     *
-     *  General namespace for RICH MC related software
-     *
-     *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
-     *  @date   05/12/2006
-     */
-    //-----------------------------------------------------------------------------
     namespace MC
     {
 

@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool : Rich::Rec::MCTruthTool
  *
  *  CVS Log :-
- *  $Id: RichRecMCTruthTool.h,v 1.22 2007-02-02 10:06:27 jonrob Exp $
+ *  $Id: RichRecMCTruthTool.h,v 1.23 2007-03-09 22:57:42 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -49,37 +49,10 @@
 #include "RichRecBase/IRichRecMCTruthTool.h"
 #include "RichKernel/IRichMCTruthTool.h"
 
-//-----------------------------------------------------------------------------
-/** @namespace Rich
- *
- *  General namespace for RICH software
- *
- *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
- *  @date   08/07/2004
- */
-//-----------------------------------------------------------------------------
 namespace Rich
 {
-
-  /** @namespace Rec
-   *
-   *  General namespace for RICH reconstruction software
-   *
-   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
-   *  @date   08/07/2004
-   */
   namespace Rec
   {
-
-    //-----------------------------------------------------------------------------
-    /** @namespace MC
-     *
-     *  General namespace for RICH MC related software
-     *
-     *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
-     *  @date   05/12/2006
-     */
-    //-----------------------------------------------------------------------------
     namespace MC
     {
 
@@ -150,10 +123,11 @@ namespace Rich
                          std::vector<const LHCb::MCParticle*> & mcParts ) const;
 
         // Find parent MCRichDigit association for a given RichRecPixel
-        const LHCb::MCRichDigit * mcRichDigit( const LHCb::RichRecPixel * richPixel ) const;
+        //const LHCb::MCRichDigit * mcRichDigit( const LHCb::RichRecPixel * richPixel ) const;
 
         // Find parent MCRichHits for a given RichRecPixel
-        const SmartRefVector<LHCb::MCRichHit> & mcRichHits( const LHCb::RichRecPixel * richPixel ) const;
+        void mcRichHits( const LHCb::RichRecPixel * richPixel,
+                         SmartRefVector<LHCb::MCRichHit> & hits ) const;
 
         // Find parent MCRichOpticalPhotons associated to a given RichRecPixel
         bool mcRichOpticalPhoton( const LHCb::RichRecPixel * richPixel,
@@ -172,6 +146,10 @@ namespace Rich
         // Does the RichSmartID result from a hit from the given MCParticle
         const LHCb::MCParticle * trueRecPhoton( const LHCb::MCParticle * mcPart,
                                                 const LHCb::RichSmartID id ) const;
+
+        // Is this a true photon candidate ?
+        const LHCb::MCParticle * trueRecPhoton( const LHCb::MCParticle * mcPart,
+                                                const Rich::HPDPixelCluster& cluster ) const;
 
         // Returns the associated MCRichHit if given RichRecPhoton is true (null otherwise)
         const LHCb::MCRichHit * trueCherenkovHit( const LHCb::RichRecPhoton * photon ) const;
@@ -207,6 +185,10 @@ namespace Rich
 
         // Is the RichSmartID due to true MC Cherenkov radiation from given radiator medium ?
         const LHCb::MCParticle * trueCherenkovRadiation( const LHCb::RichSmartID id,
+                                                         const Rich::RadiatorType rad ) const;
+
+        // Is any of the RichSmartIDs in nthe cluster due to true MC Cherenkov radiation from given radiator medium
+        const LHCb::MCParticle * trueCherenkovRadiation( const Rich::HPDPixelCluster& cluster,
                                                          const Rich::RadiatorType rad ) const;
 
         // Returns the MCRichSegment associated to a given RichRecSegment

@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2007-03-09 - Chris Jones
+ - Adapt to new HPD pixel clusters
+ - Remove doxygen namespace comments
+
 !====================== RichRecMonitors v2r7 2007-02-06 ======================
 ! 2007-02-02 - Chris Jones
  - Adapt to new RICH namespaces

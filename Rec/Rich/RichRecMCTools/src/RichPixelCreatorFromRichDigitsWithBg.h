@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool : Rich::Rec::PixelCreatorFromRichDigitsWithBg
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromRichDigitsWithBg.h,v 1.13 2007-02-02 10:06:27 jonrob Exp $
+ *  $Id: RichPixelCreatorFromRichDigitsWithBg.h,v 1.14 2007-03-09 22:57:42 jonrob Exp $
  *
  *  @author Andy Buckley   buckley@hep.phy.cam.ac.uk
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
@@ -30,37 +30,10 @@
 #include "Event/RichDigit.h"
 #include "Event/MCRichDigit.h"
 
-//-----------------------------------------------------------------------------
-/** @namespace Rich
- *
- *  General namespace for RICH software
- *
- *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
- *  @date   08/07/2004
- */
-//-----------------------------------------------------------------------------
 namespace Rich
 {
-
-  /** @namespace Rec
-   *
-   *  General namespace for RICH reconstruction software
-   *
-   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
-   *  @date   08/07/2004
-   */
   namespace Rec
   {
-
-    //-----------------------------------------------------------------------------
-    /** @namespace MC
-     *
-     *  General namespace for RICH MC related software
-     *
-     *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
-     *  @date   05/12/2006
-     */
-    //-----------------------------------------------------------------------------
     namespace MC
     {
 
@@ -116,9 +89,6 @@ namespace Rich
         StatusCode fillBgTrackStack() const;
 
       private: // data
-
-        /// Pointer to RichSmartID tool
-        const ISmartIDTool * m_smartIDTool;
 
         /// Pointer to RichMCTruth tool
         const Rich::MC::IMCTruthTool * m_mcTool;

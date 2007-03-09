@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : RichPhotonCreatorFromMCRichOpticalPhotons
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreatorFromMCRichOpticalPhotons.cpp,v 1.14 2007-02-02 10:06:27 jonrob Exp $
+ *  $Id: RichPhotonCreatorFromMCRichOpticalPhotons.cpp,v 1.15 2007-03-09 22:57:42 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -31,7 +31,7 @@ PhotonCreatorFromMCRichOpticalPhotons( const std::string& type,
                                        const std::string& name,
                                        const IInterface* parent )
   : PhotonCreatorBase ( type, name, parent ),
-    m_mcRecTool           ( NULL ) {  }
+    m_mcRecTool       ( NULL ) {  }
 
 StatusCode PhotonCreatorFromMCRichOpticalPhotons::initialize()
 {
@@ -43,12 +43,6 @@ StatusCode PhotonCreatorFromMCRichOpticalPhotons::initialize()
   acquireTool( "RichRecMCTruthTool", m_mcRecTool );
 
   return sc;
-}
-
-StatusCode PhotonCreatorFromMCRichOpticalPhotons::finalize()
-{
-  // Execute base class method
-  return PhotonCreatorBase::finalize();
 }
 
 LHCb::RichRecPhoton *
@@ -78,7 +72,7 @@ PhotonCreatorFromMCRichOpticalPhotons::buildPhoton( LHCb::RichRecSegment * segme
                                   mcPhoton->pdIncidencePoint(),
                                   mcPhoton->sphericalMirrorReflectPoint(),
                                   mcPhoton->flatMirrorReflectPoint(),
-                                  pixel->smartID(),
+                                  pixel->hpdPixelCluster(),
                                   1 );
 
       // make new RichRecPhoton from the MC information

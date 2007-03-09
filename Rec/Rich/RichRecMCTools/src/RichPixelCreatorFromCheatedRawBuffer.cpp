@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : Rich::Rec::PixelCreatorFromCheatedRawBuffer
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromCheatedRawBuffer.cpp,v 1.3 2007-02-02 10:06:27 jonrob Exp $
+ *  $Id: RichPixelCreatorFromCheatedRawBuffer.cpp,v 1.4 2007-03-09 22:57:42 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/09/2003
@@ -46,17 +46,19 @@ StatusCode PixelCreatorFromCheatedRawBuffer::initialize()
 }
 
 LHCb::RichRecPixel *
-PixelCreatorFromCheatedRawBuffer::buildPixel( const LHCb::RichSmartID id ) const
+PixelCreatorFromCheatedRawBuffer::buildPixel( const Rich::HPDPixelCluster& cluster ) const
 {
+  // Should here produce one pixel per true hit in the cluster ??
 
   // First run base class method to produce reconstructed pixel
-  LHCb::RichRecPixel * pixel = Rich::Rec::PixelCreatorBase::buildPixel(id);
+  LHCb::RichRecPixel * pixel = Rich::Rec::PixelCreatorBase::buildPixel(cluster);
   if ( !pixel ) return NULL;
 
   // Now, update coords using MC information
 
   // Find associated MCRichOpticalPhoton
-  const SmartRefVector<LHCb::MCRichHit> & mcRichHits = m_mcTool->mcRichHits(id);
+  SmartRefVector<LHCb::MCRichHit> mcRichHits;
+  m_mcTool->mcRichHits(cluster,mcRichHits);
   if ( !mcRichHits.empty() )
   {
     // Just use first hit for the moment (should do better)
@@ -68,7 +70,7 @@ PixelCreatorFromCheatedRawBuffer::buildPixel( const LHCb::RichSmartID id ) const
       pixel->setLocalPosition( smartIDTool()->globalToPDPanel(pixel->globalPosition()) );
       if ( msgLevel(MSG::VERBOSE) )
       {
-        verbose() << "Pixel " << id
+        verbose() << "Pixel " << cluster
                   << " MC cheated global pos " << pixel->globalPosition() << endreq;
       }
     }

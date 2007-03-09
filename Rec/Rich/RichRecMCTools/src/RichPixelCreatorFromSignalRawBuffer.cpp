@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : RichPixelCreatorFromSignalRawBuffer
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromSignalRawBuffer.cpp,v 1.4 2007-02-02 10:06:27 jonrob Exp $
+ *  $Id: RichPixelCreatorFromSignalRawBuffer.cpp,v 1.5 2007-03-09 22:57:42 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/09/2003
@@ -64,17 +64,17 @@ StatusCode PixelCreatorFromSignalRawBuffer::initialize()
 
 // Forms a new RichRecPixel object from a RichDigit
 LHCb::RichRecPixel *
-PixelCreatorFromSignalRawBuffer::buildPixel( const LHCb::RichSmartID id ) const
+PixelCreatorFromSignalRawBuffer::buildPixel( const Rich::HPDPixelCluster& cluster ) const
 {
 
-  // Test if this is a background hit
-  if ( m_rejBackHits && m_mcTool->isBackground(id) ) return NULL;
+  // Test if this is a background cluster
+  if ( m_rejBackHits && m_mcTool->isBackground(cluster) ) return NULL;
 
   // if requested, filter trackless hits
   if ( m_trackFilter )
   {
     std::vector<const LHCb::MCParticle*> mcParts;
-    m_mcTool->mcParticles( id, mcParts );
+    m_mcTool->mcParticles( cluster, mcParts );
     bool found = false;
     for ( std::vector<const LHCb::MCParticle*>:: const_iterator iMP = mcParts.begin();
           iMP != mcParts.end(); ++iMP )
@@ -86,7 +86,7 @@ PixelCreatorFromSignalRawBuffer::buildPixel( const LHCb::RichSmartID id ) const
   }
 
   // Finally, delegate work to pixel creator
-  return RichPixelCreatorBase::buildPixel(id);
+  return RichPixelCreatorBase::buildPixel(cluster);
 }
 
 PixelCreatorFromSignalRawBuffer::TrackedMCPList &

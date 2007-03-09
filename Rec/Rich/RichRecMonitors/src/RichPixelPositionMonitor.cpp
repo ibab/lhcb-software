@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : RichPixelPositionMonitor
  *
- *  $Id: RichPixelPositionMonitor.cpp,v 1.9 2007-02-02 10:07:12 jonrob Exp $
+ *  $Id: RichPixelPositionMonitor.cpp,v 1.10 2007-03-09 22:59:34 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -99,7 +99,7 @@ StatusCode PixelPositionMonitor::execute()
     ++nPixs[rich];
 
     // HPD ID
-    const LHCb::RichSmartID pdID = pixel->smartID().hpdID();
+    const LHCb::RichSmartID pdID = pixel->hpdPixelCluster().hpd();
 
     // Centre point of HPD
     const Gaudi::XYZPoint hpdGlo = m_idTool->hpdPosition(pdID);
@@ -107,7 +107,7 @@ StatusCode PixelPositionMonitor::execute()
 
     if ( msgLevel(MSG::VERBOSE) )
     {
-      verbose() << "  -> Pixel            " << pixel->smartID() << endreq
+      verbose() << "  -> Pixel            " << pixel->hpdPixelCluster() << endreq
                 << "     global           " << gPos << endreq
                 << "     local            " << lPos << endreq;
       if ( rich == Rich::Rich1)
@@ -124,7 +124,11 @@ StatusCode PixelPositionMonitor::execute()
     }
 
     // map of hits in each HPD
-    pdMap[pixel->smartID().hpdID()].push_back( pixel->smartID() );
+    for ( LHCb::RichSmartID::Vector::const_iterator iS = pixel->hpdPixelCluster().smartIDs().begin();
+          iS != pixel->hpdPixelCluster().smartIDs().end(); ++iS )
+    {
+      pdMap[pdID].push_back( *iS );
+    }
 
     // Position plots
     plot1D( gPos.x(), hid(rich,"obsXglo"), "Observed hits x global",
@@ -199,7 +203,8 @@ StatusCode PixelPositionMonitor::execute()
     }
 
     // MCHits
-    const SmartRefVector<LHCb::MCRichHit> & mcHits = m_richRecMCTruth->mcRichHits( pixel );
+    SmartRefVector<LHCb::MCRichHit> mcHits;
+    m_richRecMCTruth->mcRichHits( pixel, mcHits );
     for ( SmartRefVector<LHCb::MCRichHit>::const_iterator iHit = mcHits.begin();
           iHit != mcHits.end(); ++iHit )
     {
@@ -261,7 +266,7 @@ StatusCode PixelPositionMonitor::execute()
     ++nR1;
     if ( msgLevel(MSG::DEBUG) )
     {
-      debug() << "  -> Pixel " << (*iPix)->smartID() << endreq;
+      debug() << "  -> Pixel " << (*iPix)->hpdPixelCluster() << endreq;
     }
   }
   if ( nR1 != nPixs[Rich::Rich1] )
@@ -275,7 +280,7 @@ StatusCode PixelPositionMonitor::execute()
     ++nR2;
     if ( msgLevel(MSG::DEBUG) )
     {
-      debug() << "  -> Pixel " << (*iPix)->smartID() << endreq;
+      debug() << "  -> Pixel " << (*iPix)->hpdPixelCluster() << endreq;
     }
   }
   if ( nR2 != nPixs[Rich::Rich2] )

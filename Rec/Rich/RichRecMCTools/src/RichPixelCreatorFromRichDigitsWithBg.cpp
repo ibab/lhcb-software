@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : Rich::Rec::PixelCreatorFromRichDigitsWithBg
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromRichDigitsWithBg.cpp,v 1.18 2007-02-02 10:06:27 jonrob Exp $
+ *  $Id: RichPixelCreatorFromRichDigitsWithBg.cpp,v 1.19 2007-03-09 22:57:42 jonrob Exp $
  *
  *  @author Andy Buckley  buckley@hep.phy.cam.ac.uk
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -32,7 +32,6 @@ PixelCreatorFromRichDigitsWithBg( const std::string& type,
                                   const std::string& name,
                                   const IInterface* parent )
   : Rich::Rec::PixelCreatorBase ( type, name, parent ),
-    m_smartIDTool        ( NULL ),
     m_numBgTracksToAdd   ( Rich::NRiches, 0 )
 {
   // Define job option parameters
@@ -48,7 +47,6 @@ StatusCode PixelCreatorFromRichDigitsWithBg::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
-  acquireTool( "RichSmartIDTool", m_smartIDTool, 0, true );
   acquireTool( "RichMCTruthTool", m_mcTool, 0, true      );
 
   // warn that this background adding creator is being used
@@ -171,17 +169,14 @@ PixelCreatorFromRichDigitsWithBg::newPixel( const LHCb::RichSmartID id ) const
     {
 
       // Make a new RichRecPixel
-      newPix = new LHCb::RichRecPixel();
-
-      // Positions
-      newPix->setGlobalPosition( m_smartIDTool->globalPosition(id) );
-      newPix->setLocalPosition( m_smartIDTool->globalToPDPanel(newPix->globalPosition()) );
+      const Gaudi::XYZPoint gPos = smartIDTool()->globalPosition( id );
+      newPix = new LHCb::RichRecPixel( id, gPos,
+                                       smartIDTool()->globalToPDPanel(gPos),
+                                       Rich::Rec::PixelParent::RawBuffer, NULL  
+                                       );
 
       // compute corrected local coordinates
       computeRadCorrLocalPositions( newPix );
-
-      // Set smartID
-      newPix->setSmartID( id );
 
       // save this pixel
       savePixel( newPix );

@@ -5,7 +5,7 @@
  *  Header file for algorithm class : Rich::Rec::MC::GhostTrackMoni
  *
  *  CVS Log :-
- *  $Id: RichGhostTrackMoni.h,v 1.3 2007-02-02 10:07:11 jonrob Exp $
+ *  $Id: RichGhostTrackMoni.h,v 1.4 2007-03-09 22:59:34 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -37,29 +37,10 @@
 // GSL
 #include "gsl/gsl_math.h"
 
-/// General RICH namespace
 namespace Rich
 {
-
-  /** @namespace Rec
-   *
-   *  General namespace for RICH reconstruction software
-   *
-   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
-   *  @date   08/07/2004
-   */
   namespace Rec
   {
-
-    //-----------------------------------------------------------------------------
-    /** @namespace MC
-     *
-     *  General namespace for RICH MC related software
-     *
-     *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
-     *  @date   05/12/2006
-     */
-    //-----------------------------------------------------------------------------
     namespace MC
     {
 
