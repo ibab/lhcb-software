@@ -1,7 +1,15 @@
-! $Id: release.notes,v 1.139 2007-02-26 13:52:02 cattanem Exp $
+! $Id: release.notes,v 1.140 2007-03-09 17:58:13 jonrob Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
+
+! 2007-03-09 - Chris Jones
+ - Remove namespace doxygen comments (now in standalone file)
+ - Add new pixel cluster class Rich::HPDPixelCluster to represent 
+   a group of channels (RichSmartIDs)
+ - Update RichGeomPhoton to use Rich::HPDPixelCluster
+ - Update RichSmartIDTool interface to add new method to return
+   the global position of an HPD pixel cluster
 
 !====================== RichKernel v7r2 2007-02-26 ====================
 ! 2007-02-26 - Marco Cattaneo

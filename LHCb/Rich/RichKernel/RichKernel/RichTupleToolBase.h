@@ -5,7 +5,7 @@
  *  Header file for tool base class : RichTupleToolBase
  *
  *  CVS Log :-
- *  $Id: RichTupleToolBase.h,v 1.3 2007-02-01 17:24:55 jonrob Exp $
+ *  $Id: RichTupleToolBase.h,v 1.4 2007-03-09 17:58:13 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -24,15 +24,6 @@
 // histogramming utilities
 #include "RichKernel/RichHistoID.h"
 
-//-----------------------------------------------------------------------------
-/** @namespace Rich
- *
- *  General namespace for RICH software
- *
- *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
- *  @date   08/07/2004
- */
-//-----------------------------------------------------------------------------
 namespace Rich
 {
 

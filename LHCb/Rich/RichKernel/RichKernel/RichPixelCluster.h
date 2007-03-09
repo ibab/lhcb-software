@@ -5,7 +5,7 @@
  *  Header file for pixel clustering class Rich::DAQ::PixelCluster
  *
  *  CVS Log :-
- *  $Id: RichPixelCluster.h,v 1.1 2007-02-02 17:40:14 jonrob Exp $
+ *  $Id: RichPixelCluster.h,v 1.2 2007-03-09 17:58:13 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   02/02/2007
@@ -21,6 +21,7 @@
 
 // Gaudi
 #include "GaudiKernel/MsgStream.h"
+#include "Kernel/SerializeStl.h"
 
 // Kernel
 #include "Kernel/RichSmartID.h"
@@ -31,6 +32,77 @@
 
 namespace Rich
 {
+
+  //-----------------------------------------------------------------------------------------------
+  /** @class HPDPixelCluster RichPixelCluster.h RichKernel/RichPixelCluster.h
+   *
+   *  Utility class used to represent a single cluster of HPD pixels
+   *
+   *  @author Chris Jones
+   *  @date   07/02/2007
+   */
+  //-----------------------------------------------------------------------------------------------
+  class HPDPixelCluster : public Rich::BoostMemPoolAlloc<HPDPixelCluster>
+  {
+
+  public:
+
+    /// Default Constructor
+    HPDPixelCluster() : m_ids() { }
+
+    /// Constructor from a single channel (one pixel cluster)
+    HPDPixelCluster( const LHCb::RichSmartID id ) : m_ids(1,id) { }
+
+    /// Constructor from a vector of RichSmartIDs
+    HPDPixelCluster( const LHCb::RichSmartID::Vector & ids ) : m_ids(ids) { }
+
+    /// Destructor
+    ~HPDPixelCluster( ) { }
+
+  public:
+
+    /// const access to the list of HPD pixels
+    inline const LHCb::RichSmartID::Vector & smartIDs() const { return m_ids; }
+
+    /// The primary (seed) channel ID
+    inline LHCb::RichSmartID primaryID() const { return smartIDs().front(); }
+
+    /// The RICH detector for this cluster
+    inline Rich::DetectorType rich() const { return primaryID().rich(); }
+
+    /// The RICH panel for this cluster
+    inline LHCb::RichSmartID panel() const { return primaryID().panelID(); }
+
+    /// The RICH HPD for this cluster
+    inline LHCb::RichSmartID hpd() const { return primaryID().hpdID(); }
+
+    /// Number of channels in this cluster
+    inline unsigned int size() const { return smartIDs().size(); }
+
+  public:
+
+    /// Add a channel to this cluster
+    inline void addChannel( const LHCb::RichSmartID id )
+    {
+      m_ids.push_back(id);
+    }
+
+  public:
+
+    /// overload printout to ostream operator <<
+    friend inline std::ostream& operator << ( std::ostream& s,
+                                              const HPDPixelCluster & cluster )
+    {
+      return s << "[ " << cluster.smartIDs() << " ]";
+    }
+
+
+  private:
+
+    /// The vector of RichSmartIDs for this cluster
+    LHCb::RichSmartID::Vector m_ids;
+
+  };
 
   namespace
   {
@@ -56,14 +128,15 @@ namespace Rich
     typedef boost::shared_ptr<const HPDPixelClusters> ConstSharedPtn;
 
     /// Shared pointer to a HPDPixelClusters
-    typedef boost::shared_ptr<HPDPixelClusters> SharedPtn;
+    typedef boost::shared_ptr<HPDPixelClusters>       SharedPtn;
 
   public:
 
     //-----------------------------------------------------------------------------
     /** @class Cluster RichPixelCluster.h
      *
-     *  Utility class representing a cluster of HPD pixels
+     *  Utility class representing a cluster of HPD pixels together with a unique 
+     *  (within an HPD) cluster ID
      *
      *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
      *  @date   21/03/2006
@@ -74,42 +147,42 @@ namespace Rich
 
     public: // definitions
 
-      /// data describing a single pixel
-      typedef std::pair<unsigned int,unsigned int> Pixel;
-
-      /// a vector of pixels
-      typedef std::vector< Pixel >                 Data;
+      /// Vector of cluster pointers
+      typedef std::list<Cluster*> PtnVector;
 
     public: // methods
 
       /// Constructor
-      Cluster( const int id = -1 ) : m_clusterID(id)
-      { m_cluster.reserve(10); }
+      Cluster( const int id = -1 ) : m_clusterID(id) { }
 
       /// Get cluster ID
-      inline int id() const { return m_clusterID; }
+      inline int id() const 
+      { 
+        return m_clusterID; 
+      }
 
-      /// Add a pixel (row,col) to this cluster
-      inline void addPixel( const unsigned int row,
-                            const unsigned int col )
-      { m_cluster.push_back( Pixel(row,col) ); }
-
-      /// Add a pixel (row,col) to this cluster
-      inline void addPixel( const Pixel & pixel )
-      { m_cluster.push_back( pixel ); }
+      /// Add a pixel to this cluster
+      inline void addPixel( const LHCb::RichSmartID id )
+      { 
+        m_cluster.addChannel( id ); 
+      }
 
       /// Get read access to cluster data
-      inline const Cluster::Data & pixels() const
-      { return m_cluster; }
+      inline const Rich::HPDPixelCluster & pixels() const
+      {
+        return m_cluster; 
+      }
 
-      /// Return cluster size
+      /// Shortcut to the cluster size
       inline unsigned int size() const
-      { return pixels().size(); }
+      {
+        return pixels().smartIDs().size(); 
+      }
 
     private:
 
-      int  m_clusterID;  ///< Cluster ID
-      Data m_cluster;    ///< list of pixels in this cluster
+      int  m_clusterID;          ///< Cluster ID
+      HPDPixelCluster m_cluster; ///< list of pixels in this cluster
 
     };
 
@@ -134,14 +207,20 @@ namespace Rich
     void setCluster( const int row, const int col, Cluster * clus );
 
     /// Create a new cluster with given ID
-    Cluster * createNewCluster( const int id );
+    Cluster * createNewCluster();
 
     /// Create a new cluster with given ID
     Cluster * mergeClusters( Cluster * clus1, Cluster * clus2 );
 
+    /// Read access to the vector of clusters
+    inline const Cluster::PtnVector & clusters() const { return m_allclus; }
+
     /// Create a new vector of suppressed RichSmartIDs
     void suppressIDs( LHCb::RichSmartID::Vector & smartIDs,
                       const unsigned int maxSize ) const;
+
+    /// Split the given clusters up into single channel clusters
+    void splitClusters( const Cluster::PtnVector & clusters );
 
     /// Print in a human readable way
     MsgStream& fillStream( MsgStream& os ) const;
@@ -151,7 +230,15 @@ namespace Rich
                                            const HPDPixelClusters & data )
     { return data.fillStream(os); }
 
-  private:
+  private: // methods
+
+    /// Remove a cluster
+    void removeCluster( Cluster * clus );
+
+  private: // data
+
+    /// HPD ID
+    LHCb::RichSmartID m_hpdID;
 
     /// Raw input data (false means no hit, true means hit)
     bool m_data[nPixelRowsOrCols][nPixelRowsOrCols];
@@ -160,7 +247,10 @@ namespace Rich
     Cluster * m_clusters[nPixelRowsOrCols][nPixelRowsOrCols];
 
     /// Vector of all created clusters
-    std::vector<Cluster*> m_allclus;
+    Cluster::PtnVector m_allclus;
+
+    /// working variable, storing the last used cluster ID
+    unsigned int m_lastID;
 
   };
 
@@ -184,14 +274,27 @@ namespace Rich
   inline void HPDPixelClusters::setCluster( const int row, const int col, Cluster * clus )
   {
     (m_clusters[row])[col] = clus;
-    clus->addPixel(row,col);
+    LHCb::RichSmartID tmpID(m_hpdID);
+    tmpID.setPixelRow(row);
+    tmpID.setPixelCol(col);
+    clus->addPixel(tmpID);
   }
 
   inline HPDPixelClusters::Cluster *
-  HPDPixelClusters::createNewCluster( const int id )
+  HPDPixelClusters::createNewCluster()
   {
-    m_allclus.push_back( new Cluster(id) );
+    m_allclus.push_back( new Cluster(++m_lastID) );
     return m_allclus.back();
+  }
+
+  inline void HPDPixelClusters::removeCluster( Cluster * clus )
+  { 
+    Cluster::PtnVector::iterator iF = std::find( m_allclus.begin(), m_allclus.end(), clus );
+    if ( iF != m_allclus.end() ) 
+    {
+      m_allclus.erase( iF );
+      delete clus;
+    }
   }
 
 }

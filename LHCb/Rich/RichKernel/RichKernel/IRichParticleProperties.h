@@ -4,7 +4,7 @@
  *
  *  Header file for RICH reconstruction tool interface : Rich::IParticleProperties
  *
- *  $Id: IRichParticleProperties.h,v 1.4 2007-02-01 17:24:54 jonrob Exp $
+ *  $Id: IRichParticleProperties.h,v 1.5 2007-03-09 17:58:13 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -21,15 +21,6 @@
 /// Static Interface Identification
 static const InterfaceID IID_IRichParticleProperties( "Rich::IParticleProperties", 1, 0 );
 
-//-----------------------------------------------------------------------------
-/** @namespace Rich
- *
- *  General namespace for RICH software
- *
- *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
- *  @date   08/07/2004
- */
-//-----------------------------------------------------------------------------
 namespace Rich
 {
 

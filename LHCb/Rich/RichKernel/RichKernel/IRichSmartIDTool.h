@@ -4,7 +4,7 @@
  *
  *  Header file for tool interface : Rich::ISmartIDTool
  *
- *  $Id: IRichSmartIDTool.h,v 1.17 2007-02-26 14:20:04 cattanem Exp $
+ *  $Id: IRichSmartIDTool.h,v 1.18 2007-03-09 17:58:13 jonrob Exp $
  *
  *  @author Antonis Papanestis  a.papanestis@rl.ac.uk
  *  @date   2003-10-28
@@ -27,18 +27,15 @@
 // from MathCore
 #include "GaudiKernel/Point3DTypes.h"
 
+// forward decs
+namespace Rich
+{
+  class HPDPixelCluster;
+}
+
 /// Static Interface Identification
 static const InterfaceID IID_IRichSmartIDTool( "Rich::ISmartIDTool", 1, 0 );
 
-//-----------------------------------------------------------------------------
-/** @namespace Rich
- *
- *  General namespace for RICH software
- *
- *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
- *  @date   08/07/2004
- */
-//-----------------------------------------------------------------------------
 namespace Rich
 {
 
@@ -70,6 +67,14 @@ namespace Rich
      *  @return The channel position in global LHCb coordinates
      */
     virtual Gaudi::XYZPoint globalPosition ( const LHCb::RichSmartID smartid ) const = 0;
+
+    /** Finds the average position of a cluster of RichSmartIDs, in global LHCb coordinates
+     *
+     *  @param cluster   The RichSmartID cluster
+     *
+     *  @return The cluster position in global LHCb coordinates
+     */
+    virtual Gaudi::XYZPoint globalPosition ( const Rich::HPDPixelCluster& cluster ) const = 0;
 
     /** Converts an HPD RichSmartID identification into a position in
      *  global LHCb coordinates.

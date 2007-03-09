@@ -5,7 +5,7 @@
  *  Header file for tool interface : Rich::IMCTruthTool
  *
  *  CVS Log :-
- *  $Id: IRichMCTruthTool.h,v 1.22 2007-02-01 17:24:54 jonrob Exp $
+ *  $Id: IRichMCTruthTool.h,v 1.23 2007-03-09 17:58:13 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-07-31
@@ -34,31 +34,16 @@ namespace LHCb
   class MCRichHit;
   class MCRichDigitSummary;
 }
+namespace Rich
+{
+  class HPDPixelCluster;
+}
 
 /// Static Interface Identification
 static const InterfaceID IID_IRichMCTruthTool( "Rich::IMCTruthTool", 1, 0 );
 
-//-----------------------------------------------------------------------------
-/** @namespace Rich
- *
- *  General namespace for RICH software
- *
- *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
- *  @date   08/07/2004
- */
-//-----------------------------------------------------------------------------
 namespace Rich
 {
-
-  //-----------------------------------------------------------------------------
-  /** @namespace MC
-   *
-   *  General namespace for RICH MC related software
-   *
-   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
-   *  @date   05/12/2006
-   */
-  //-----------------------------------------------------------------------------
   namespace MC
   {
 
@@ -100,6 +85,16 @@ namespace Rich
       virtual const SmartRefVector<LHCb::MCRichHit> &
       mcRichHits( const LHCb::RichSmartID smartID ) const = 0;
 
+      /** Get the MCRichHits associated to a cluster of RichSmartIDs
+       *
+       *  @param cluster cluster of RichSmartIDs
+       *  @param hits The associated hits
+       *
+       *  @return Vector of associated MCRichHits
+       */
+      virtual void mcRichHits( const Rich::HPDPixelCluster& cluster,
+                               SmartRefVector<LHCb::MCRichHit> & hits ) const = 0;
+
       /** Get a vector of MCParticles associated to given RichSmartID
        *
        *  @param id RichSmartID identifying the RICH readout channel
@@ -107,6 +102,15 @@ namespace Rich
        *  @return boolean indicating if any associated MCParticles where found
        */
       virtual bool mcParticles( const LHCb::RichSmartID id,
+                                std::vector<const LHCb::MCParticle*> & mcParts ) const = 0;
+
+      /** Get a vector of MCParticles associated to given RichSmartID cluster
+       *
+       *  @param cluster RichSmartID cluster
+       *
+       *  @return boolean indicating if any associated MCParticles where found
+       */
+      virtual bool mcParticles( const Rich::HPDPixelCluster& cluster,
                                 std::vector<const LHCb::MCParticle*> & mcParts ) const = 0;
 
       /** Determines the particle mass hypothesis for a given MCParticle
@@ -164,6 +168,19 @@ namespace Rich
       getMcHistories( const LHCb::RichSmartID id,
                       std::vector<const LHCb::MCRichDigitSummary*> & histories ) const = 0;
 
+      /** Access the bit-pack history objects for the given cluster of RichSmartIDs
+       *
+       *  @param cluster   Cluster of RichSmartID
+       *  @param histories Vector of pointers to history objects
+       *
+       *  @return Boolean indicating if at least one history object was found
+       *  @retval true  History objects were found
+       *  @retval false No history objects were found
+       */
+      virtual bool
+      getMcHistories( const Rich::HPDPixelCluster& cluster,
+                      std::vector<const LHCb::MCRichDigitSummary*> & histories ) const = 0;
+
       /** Checks if the given RichSmartID is the result of a background
        *  hit, i.e. not a true Cherenkov hit
        *
@@ -187,6 +204,32 @@ namespace Rich
        *  @retval false RichSmartID did not originate from Cherenkov radiation
        */
       virtual bool isCherenkovRadiation( const LHCb::RichSmartID id,
+                                         const Rich::RadiatorType rad ) const = 0;
+
+      /** Checks if the given cluster of RichSmartIDs is the result of background,
+       *  i.e. none of the channels came from a true Cherenkov hit
+       *
+       *  @param cluster Cluster of RichSmartIDs
+       *
+       *  @return Boolean indicating if the digit is background
+       *  @retval true  RichSmartID originated from a background hit
+       *  @retval false RichSmartID originated from Cherenkov Radiation
+       */
+      virtual bool isBackground ( const Rich::HPDPixelCluster& cluster ) const = 0;
+
+      /** Checks if the given RichSmartID is the result of true Cherenkov
+       *  radiation from the given radiator. I.e. At least of of the associated
+       *  hits came from a true Cherenkov hit in the correct radiator.
+       *
+       *  @param id  cluster Cluster of RichSmartIDs
+       *  @param rad Radiator medium
+       *
+       *  @return Boolean indicating if the hit is Cherenkov radiation
+       *          in given radiator
+       *  @retval true  RichSmartID did originate from Cherenkov radiation
+       *  @retval false RichSmartID did not originate from Cherenkov radiation
+       */
+      virtual bool isCherenkovRadiation( const Rich::HPDPixelCluster& cluster,
                                          const Rich::RadiatorType rad ) const = 0;
 
       /** Checks if MC summary information for the RICH hits (RichSmartIDs) are available

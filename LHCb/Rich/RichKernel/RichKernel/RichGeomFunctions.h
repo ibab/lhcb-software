@@ -5,7 +5,7 @@
  *  Header file for RICH geometrical utility functions
  *
  *  CVS Log :-
- *  $Id: RichGeomFunctions.h,v 1.5 2007-02-26 13:52:01 cattanem Exp $
+ *  $Id: RichGeomFunctions.h,v 1.6 2007-03-09 17:58:13 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/01/2006
@@ -24,10 +24,10 @@
 namespace Rich
 {
 
-  /** @namespace Geom
+  /** @namespace Rich::Geom
    *
    *  Namespace for a collection of geomtrical utilities, such as useful functions 
-   *  not available in MathMore
+   *  not available in ROOT's MatchCore or MathMore
    *
    *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
    *  @date   20/01/2006

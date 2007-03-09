@@ -5,7 +5,7 @@
  *  Header file for tool base class : Rich::ToolBase
  *
  *  CVS Log :-
- *  $Id: RichToolBase.h,v 1.12 2007-02-01 17:24:55 jonrob Exp $
+ *  $Id: RichToolBase.h,v 1.13 2007-03-09 17:58:13 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -21,15 +21,6 @@
 // local
 #include "RichKernel/RichCommonBase.h"
 
-//-----------------------------------------------------------------------------
-/** @namespace Rich
- *
- *  General namespace for RICH software
- *
- *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
- *  @date   08/07/2004
- */
-//-----------------------------------------------------------------------------
 namespace Rich
 {
 

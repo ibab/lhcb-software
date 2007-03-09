@@ -5,7 +5,7 @@
  *  Header file for RICH utility class : Rich::ObjPtn
  *
  *  CVS Log :-
- *  $Id: RichObjPtn.h,v 1.4 2007-02-01 17:24:55 jonrob Exp $
+ *  $Id: RichObjPtn.h,v 1.5 2007-03-09 17:58:13 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   13/11/2005
@@ -15,15 +15,6 @@
 #ifndef RICHKERNEL_RICHOBJPTN_H
 #define RICHKERNEL_RICHOBJPTN_H 1
 
-//-----------------------------------------------------------------------------
-/** @namespace Rich
- *
- *  General namespace for RICH software
- *
- *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
- *  @date   08/07/2004
- */
-//-----------------------------------------------------------------------------
 namespace Rich
 {
 

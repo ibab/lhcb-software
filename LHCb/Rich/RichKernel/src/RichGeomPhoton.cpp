@@ -5,7 +5,7 @@
  *  Implementation file for class : RichGeomPhoton
  *
  *  CVS Log :-
- *  $Id: RichGeomPhoton.cpp,v 1.1 2007-02-01 17:24:55 jonrob Exp $
+ *  $Id: RichGeomPhoton.cpp,v 1.2 2007-03-09 17:58:13 jonrob Exp $
  *
  *  @author  Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @author  Antonis Papanestis
@@ -27,7 +27,7 @@ std::ostream & LHCb::RichGeomPhoton::fillStream ( std::ostream& s ) const
     << " flatMirReflectionPoint:\t"<<flatMirReflectionPoint()<<std::endl
     << " sphMirNumber:\t" << sphMirrorNum()<<std::endl
     << " flatMirNumber:\t" << flatMirrorNum()<<std::endl
-    << " smartID:\t" << smartID() << std::endl
+    << " pixelCluster:\t" << pixelCluster() << std::endl
     << " activeSegmentFraction:\t" << activeSegmentFraction() << " } ";
   return s;
 }

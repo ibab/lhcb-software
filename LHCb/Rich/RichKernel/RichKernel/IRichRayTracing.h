@@ -4,7 +4,7 @@
  *
  *  Header file for tool interface : Rich::IRayTracing
  *
- *  $Id: IRichRayTracing.h,v 1.27 2007-02-26 13:52:00 cattanem Exp $
+ *  $Id: IRichRayTracing.h,v 1.28 2007-03-09 17:58:13 jonrob Exp $
  *
  *  @author Antonis Papanestis
  *  @date   2003-10-28
@@ -36,15 +36,6 @@ namespace LHCb
 /// Static Interface Identification
 static const InterfaceID IID_IRichRayTracing( "Rich::IRayTracing", 1, 0 );
 
-//-----------------------------------------------------------------------------
-/** @namespace Rich
- *
- *  General namespace for RICH software
- *
- *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
- *  @date   08/07/2004
- */
-//-----------------------------------------------------------------------------
 namespace Rich
 {
 

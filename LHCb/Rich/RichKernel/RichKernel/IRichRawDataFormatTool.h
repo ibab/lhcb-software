@@ -5,7 +5,7 @@
  *  Header file for tool interface : Rich::DAQ::IRawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: IRichRawDataFormatTool.h,v 1.9 2007-02-01 17:24:54 jonrob Exp $
+ *  $Id: IRichRawDataFormatTool.h,v 1.10 2007-03-09 17:58:13 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-18
@@ -33,27 +33,8 @@ namespace LHCb
 /// Static Interface Identification
 static const InterfaceID IID_IRichRawDataFormatTool ( "Rich::DAQ::IRawDataFormatTool", 1, 0 );
 
-//-----------------------------------------------------------------------------
-/** @namespace Rich
- *
- *  General namespace for RICH software
- *
- *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
- *  @date   08/07/2004
- */
-//-----------------------------------------------------------------------------
 namespace Rich
 {
-
-  //-----------------------------------------------------------------------------
-  /** @namespace DAQ
-   *
-   *  namespace for RICH DAQ software
-   *
-   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
-   *  @date   08/07/2004
-   */
-  //-----------------------------------------------------------------------------
   namespace DAQ
   {
 
@@ -82,14 +63,6 @@ namespace Rich
        */
       virtual void fillRawEvent( const LHCb::RichSmartID::Vector & smartIDs,
                                  const Rich::DAQ::BankVersion version = Rich::DAQ::LHCb2 ) const = 0;
-
-      /** Decode a single RawBank into RichSmartID identifiers
-       *
-       *  @param bank     Pointer to RawBank to decode
-       *  @param smartIDs Vector of RichSmartIDs to fill
-       */
-      virtual void decodeToSmartIDs( const LHCb::RawBank & bank,
-                                     Rich::DAQ::PDMap & smartIDs ) const = 0;
 
       /** Decode all RICH RawBanks into RichSmartID identifiers
        *

@@ -5,7 +5,7 @@
  *  Header file for tool interface : Rich::DAQ::IRawBufferToSmartIDsTool
  *
  *  CVS Log :-
- *  $Id: IRichRawBufferToSmartIDsTool.h,v 1.7 2007-02-01 17:24:54 jonrob Exp $
+ *  $Id: IRichRawBufferToSmartIDsTool.h,v 1.8 2007-03-09 17:58:13 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-07-31
@@ -27,27 +27,8 @@
 /// Static Interface Identification
 static const InterfaceID IID_IRichRawBufferToSmartIDsTool( "Rich::DAQ::IRawBufferToSmartIDsTool", 1, 0 );
 
-//-----------------------------------------------------------------------------
-/** @namespace Rich
- *
- *  General namespace for RICH software
- *
- *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
- *  @date   08/07/2004
- */
-//-----------------------------------------------------------------------------
 namespace Rich
 {
-
-  //-----------------------------------------------------------------------------
-  /** @namespace DAQ
-   *
-   *  namespace for RICH DAQ software
-   *
-   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
-   *  @date   08/07/2004
-   */
-  //-----------------------------------------------------------------------------
   namespace DAQ
   {
 
@@ -61,7 +42,8 @@ namespace Rich
      */
     //-----------------------------------------------------------------------------
 
-    class IRawBufferToSmartIDsTool : public virtual IAlgTool {
+    class IRawBufferToSmartIDsTool : public virtual IAlgTool 
+    {
 
     public:
 
