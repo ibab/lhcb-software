@@ -1,9 +1,10 @@
-! $Id: release.notes,v 1.91 2007-03-05 09:22:21 pkoppenb Exp $
+! $Id: release.notes,v 1.92 2007-03-09 10:30:04 pkoppenb Exp $
 !===========================================================================
 ! Package     : VertexFit
 ! Responsible : Yuehong Xie
 !===========================================================================
 
+!========================== VertexFit v4r1 2007-03-09 ===================
 ! 2007-03-05 - Patrick Koppenburg
  - get vector types from gaudiKernel
 
