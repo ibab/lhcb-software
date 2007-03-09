@@ -1,4 +1,4 @@
-//$Id: MuonDigitization.cpp,v 1.32 2007-02-27 08:51:32 asatta Exp $
+//$Id: MuonDigitization.cpp,v 1.33 2007-03-09 12:54:06 asatta Exp $
 
 #include <iostream>
 #include <algorithm>
@@ -1251,6 +1251,8 @@ createLogicalChannel(MuonDigitizationData<MuonCardiacChannelOutput>&
           PhyChaOutput.getPartition(i)->end();iter++){	
      //  if(m_verboseDebug){
 //         debug()<<"FE ID "<<(*iter)->phChID()->getID()<<endreq;}
+//if((*iter)->
+//info()<<" "<<(*iter)->
       LHCb::MuonTileID phChTileID[2];
       int numberOfTileID;  
       if(m_verboseDebug) info()<<"FE ID "<<
@@ -1402,7 +1404,7 @@ createLogicalChannel(MuonDigitizationData<MuonCardiacChannelOutput>&
               // info()<<" add hits "<<(*iter)->hitsTraceBack().size()<<endreq;
               // info()<<" add hits "<< iterOnHitsCardiac<<endreq;
               
-              if((*iter)->hitsTraceBack().end()==iterOnHitsCardiac)
+              //if((*iter)->hitsTraceBack().end()==iterOnHitsCardiac)
                 //  info()<<" add hits at the end"<<endreq;
               
               (*iterDigit)->HitsHistory().push_back((*iterOnHitsCardiac)->
@@ -1440,7 +1442,6 @@ createLogicalChannel(MuonDigitizationData<MuonCardiacChannelOutput>&
           newMCDigit->setFiringTime((*iter)->firingTime());
           //info()<<(*iter)->firingTime()<<" qui "
           //     <<(*iter)->chInfo().isAlive()<<endreq;
-          
           mcDigitContainer.insert(newMCDigit); 
           ++countDigits;
         }
@@ -1462,6 +1463,9 @@ createRAWFormat(LHCb::MCMuonDigits& mcDigitContainer,
  	LHCb::MCMuonDigits::iterator iterMCDigit; 
  	for( iterMCDigit = mcDigitContainer.begin();iterMCDigit < 
          mcDigitContainer.end() ; iterMCDigit ++){
+
+
+
     LHCb::MCMuonDigitInfo digiinfo=(*iterMCDigit)->DigitInfo();
     
 	  if(digiinfo.isAlive()){		  
