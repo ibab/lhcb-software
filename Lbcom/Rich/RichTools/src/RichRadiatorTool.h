@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::RadiatorTool
  *
  *  CVS Log :-
- *  $Id: RichRadiatorTool.h,v 1.6 2007-02-06 15:23:37 cattanem Exp $
+ *  $Id: RichRadiatorTool.h,v 1.7 2007-03-09 17:40:29 jonrob Exp $
  *
  *  @author Antonis Papanestis
  *  @date   2006-03-01
@@ -32,15 +32,6 @@
 // from RichDet
 #include "RichDet/DeRichRadiator.h"
 
-//-----------------------------------------------------------------------------
-/** @namespace Rich
- *
- *  General namespace for RICH software
- *
- *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
- *  @date   08/07/2004
- */
-//-----------------------------------------------------------------------------
 namespace Rich
 {
 

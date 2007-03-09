@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::ToolRegistry
  *
  *  CVS Log :-
- *  $Id: RichToolRegistry.h,v 1.13 2007-02-01 17:51:11 jonrob Exp $
+ *  $Id: RichToolRegistry.h,v 1.14 2007-03-09 17:40:29 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -26,15 +26,6 @@
 // Kernel
 #include "RichKernel/RichHashMap.h"
 
-//-----------------------------------------------------------------------------
-/** @namespace Rich
- *
- *  General namespace for RICH software
- *
- *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
- *  @date   08/07/2004
- */
-//-----------------------------------------------------------------------------
 namespace Rich
 {
 

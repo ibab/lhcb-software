@@ -5,7 +5,7 @@
  * Implementation file for class : RichSmartIDTool
  *
  * CVS Log :-
- * $Id: RichSmartIDTool.cpp,v 1.27 2007-02-01 17:51:10 jonrob Exp $
+ * $Id: RichSmartIDTool.cpp,v 1.28 2007-03-09 17:40:29 jonrob Exp $
  *
  * @author Antonis Papanestis
  * @date 2003-10-28
@@ -74,6 +74,21 @@ StatusCode Rich::SmartIDTool::initialize()
 StatusCode Rich::SmartIDTool::finalize()
 {
   return RichToolBase::finalize();
+}
+
+//=============================================================================
+// Returns the position of a RichSmartID cluster in global coordinates
+//=============================================================================
+Gaudi::XYZPoint 
+Rich::SmartIDTool::globalPosition ( const Rich::HPDPixelCluster& cluster ) const
+{
+  Gaudi::XYZPoint clusterPos(0,0,0);
+  for ( LHCb::RichSmartID::Vector::const_iterator iS = cluster.smartIDs().begin();
+        iS != cluster.smartIDs().end(); ++iS )
+  {
+    clusterPos += (Gaudi::XYZVector)globalPosition(*iS);
+  }
+  return ( cluster.smartIDs().empty() ? clusterPos : clusterPos/((double)cluster.size()) );
 }
 
 //=============================================================================
@@ -249,15 +264,19 @@ const LHCb::RichSmartID::Vector& Rich::SmartIDTool::readoutChannelList( ) const
     // Reserve size ( RICH1 + RICH2 );
     m_readoutChannels.reserve( 400000 );
 
+    StatusCode sc = StatusCode::SUCCESS;
+
     // Fill for RICH1
-    m_photoDetPanels[Rich::Rich1][Rich::top]->readoutChannelList(m_readoutChannels);
-    m_photoDetPanels[Rich::Rich1][Rich::bottom]->readoutChannelList(m_readoutChannels);
+    sc = m_photoDetPanels[Rich::Rich1][Rich::top]->readoutChannelList(m_readoutChannels);
+    sc = sc && m_photoDetPanels[Rich::Rich1][Rich::bottom]->readoutChannelList(m_readoutChannels);
     const unsigned int nRich1 = m_readoutChannels.size();
 
     // Fill for RICH2
-    m_photoDetPanels[Rich::Rich2][Rich::left]->readoutChannelList(m_readoutChannels);
-    m_photoDetPanels[Rich::Rich2][Rich::right]->readoutChannelList(m_readoutChannels);
+    sc = sc && m_photoDetPanels[Rich::Rich2][Rich::left]->readoutChannelList(m_readoutChannels);
+    sc = sc && m_photoDetPanels[Rich::Rich2][Rich::right]->readoutChannelList(m_readoutChannels);
     const unsigned int nRich2 = m_readoutChannels.size() - nRich1;
+
+    if ( sc.isFailure() ) Exception( "Problem reading readout channel lists from DeRichHPDPanels" );
 
     // Sort the list
     SmartIDSorter::sortByRegion(m_readoutChannels);

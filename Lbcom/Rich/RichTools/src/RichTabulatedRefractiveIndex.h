@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::TabulatedRefractiveIndex
  *
  *  CVS Log :-
- *  $Id: RichTabulatedRefractiveIndex.h,v 1.15 2007-02-01 17:51:11 jonrob Exp $
+ *  $Id: RichTabulatedRefractiveIndex.h,v 1.16 2007-03-09 17:40:29 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -34,15 +34,6 @@
 #include "RichDet/DeRichRadiator.h"
 #include "RichDet/Rich1DTabProperty.h"
 
-//-----------------------------------------------------------------------------
-/** @namespace Rich
- *
- *  General namespace for RICH software
- *
- *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
- *  @date   08/07/2004
- */
-//-----------------------------------------------------------------------------
 namespace Rich
 {
 

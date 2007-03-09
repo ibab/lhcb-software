@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::MirrorSegFinder
  *
  *  CVS Log :-
- *  $Id: RichMirrorSegFinder.h,v 1.14 2007-02-01 17:51:10 jonrob Exp $
+ *  $Id: RichMirrorSegFinder.h,v 1.15 2007-03-09 17:40:29 jonrob Exp $
  *
  *  @author Antonis Papanestis
  *  @date   2003-11-04
@@ -31,15 +31,6 @@
 #include "RichDet/DeRich2.h"
 #include "RichDet/DeRichSphMirror.h"
 
-//-----------------------------------------------------------------------------
-/** @namespace Rich
- *
- *  General namespace for RICH software
- *
- *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
- *  @date   08/07/2004
- */
-//-----------------------------------------------------------------------------
 namespace Rich
 {
 

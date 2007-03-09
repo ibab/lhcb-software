@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::SmartIDTool
  *
  *  CVS Log :-
- *  $Id: RichSmartIDTool.h,v 1.18 2007-02-01 17:51:10 jonrob Exp $
+ *  $Id: RichSmartIDTool.h,v 1.19 2007-03-09 17:40:29 jonrob Exp $
  *
  *  @author Antonis Papanestis
  *  @date   2003-10-28
@@ -22,20 +22,12 @@
 // from RichKernel
 #include "RichKernel/BoostArray.h"
 #include "RichKernel/RichSmartIDSorter.h"
+#include "RichKernel/RichPixelCluster.h"
 
 // RichDet
 #include "RichDet/DeRichHPDPanel.h"
 #include "RichDet/DeRichSystem.h"
 
-//-----------------------------------------------------------------------------
-/** @namespace Rich
- *
- *  General namespace for RICH software
- *
- *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
- *  @date   08/07/2004
- */
-//-----------------------------------------------------------------------------
 namespace Rich
 {
 
@@ -78,6 +70,9 @@ namespace Rich
 
     // Converts a RichSmartID channel identification into a position in global LHCb coordinates.
     virtual Gaudi::XYZPoint globalPosition ( const LHCb::RichSmartID smartid ) const;
+
+    // Finds the average position of a cluster of RichSmartIDs, in global LHCb coordinates
+    virtual Gaudi::XYZPoint globalPosition ( const Rich::HPDPixelCluster& cluster ) const;
 
     // Converts an HPD RichSmartID identification into a position in global LHCb coordinates.
     virtual Gaudi::XYZPoint hpdPosition ( const LHCb::RichSmartID hpdid ) const;

@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::ParticleProperties
  *
  *  CVS Log :-
- *  $Id: RichParticleProperties.cpp,v 1.4 2007-02-01 17:51:10 jonrob Exp $
+ *  $Id: RichParticleProperties.cpp,v 1.5 2007-03-09 17:40:29 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -39,7 +39,7 @@ StatusCode Rich::ParticleProperties::initialize()
 {
 
   // Sets up various tools and services
-  const StatusCode sc = RichToolBase::initialize();
+  StatusCode sc = RichToolBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
@@ -63,9 +63,6 @@ StatusCode Rich::ParticleProperties::initialize()
   m_particleMassSq[Rich::Kaon]     = gsl_pow_2( m_particleMass[Rich::Kaon]     );
   m_particleMassSq[Rich::Proton]   = gsl_pow_2( m_particleMass[Rich::Proton]   );
 
-  // release service
-  release(ppSvc);
-
   // Informational Printout
   debug() << " Particle masses (MeV/c^2)     = " << m_particleMass << endreq;
 
@@ -86,6 +83,9 @@ StatusCode Rich::ParticleProperties::initialize()
 
   // release tool
   releaseTool(refIndex);
+
+  // release service
+  sc = release(ppSvc);
 
   return sc;
 }

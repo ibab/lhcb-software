@@ -4,6 +4,13 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+! 2007-03-09 - Chris Jones
+ - Remove doxygen comments for namespaces (now in standalone file)
+
+! 2007-02-08 - Chris Jones
+ - Add new method to compute the global position of a cluster of RichSmartIDs
+ - Tidy update doxygen namespace documentation
+
 !=========================== RichTools v2r10 2007-02-06 ======================
 ! 2007-02-06 - Marco Cattaneo
  - Remove LHCbDefinitions includes

@@ -5,7 +5,7 @@
  * Implementation file for class : RichRayTracing
  *
  * CVS Log :-
- * $Id: RichRayTracing.cpp,v 1.34 2007-02-01 17:51:10 jonrob Exp $
+ * $Id: RichRayTracing.cpp,v 1.35 2007-03-09 17:40:29 jonrob Exp $
  *
  * @author Antonis Papanestis
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -215,7 +215,7 @@ StatusCode Rich::RayTracing::traceToDetector ( const Rich::DetectorType rich,
   }
 
   // Set remaining RichGeomPhoton data
-  photon.setSmartID        ( smartID     );
+  photon.setPixelCluster   ( smartID     );
   photon.setEmissionPoint  ( startPoint  );
 
   // test for beam pipe intersections ?
