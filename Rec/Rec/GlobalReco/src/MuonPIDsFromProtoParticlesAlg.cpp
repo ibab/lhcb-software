@@ -5,7 +5,7 @@
  * Implementation file for algorithm MuonPIDsFromProtoParticlesAlg
  *
  * CVS Log :-
- * $Id: MuonPIDsFromProtoParticlesAlg.cpp,v 1.5 2007-02-19 11:38:05 jonrob Exp $
+ * $Id: MuonPIDsFromProtoParticlesAlg.cpp,v 1.6 2007-03-09 18:13:37 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 29/03/2006
@@ -13,7 +13,7 @@
 //-----------------------------------------------------------------------------
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
+#include "GaudiKernel/AlgFactory.h"
 
 // local
 #include "MuonPIDsFromProtoParticlesAlg.h"
@@ -39,15 +39,15 @@ MuonPIDsFromProtoParticlesAlg::MuonPIDsFromProtoParticlesAlg( const std::string&
 //=============================================================================
 // Destructor
 //=============================================================================
-MuonPIDsFromProtoParticlesAlg::~MuonPIDsFromProtoParticlesAlg() {} 
+MuonPIDsFromProtoParticlesAlg::~MuonPIDsFromProtoParticlesAlg() {}
 
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode MuonPIDsFromProtoParticlesAlg::initialize() 
+StatusCode MuonPIDsFromProtoParticlesAlg::initialize()
 {
-  const StatusCode sc = GaudiAlgorithm::initialize(); 
-  if ( sc.isFailure() ) return sc;  
+  const StatusCode sc = GaudiAlgorithm::initialize();
+  if ( sc.isFailure() ) return sc;
 
   info() << "Creating MuonPIDs '" << m_muonPIDloc << "' from ProtoParticles at '"
          << m_protoPloc << "'" << endmsg;
@@ -58,11 +58,11 @@ StatusCode MuonPIDsFromProtoParticlesAlg::initialize()
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode MuonPIDsFromProtoParticlesAlg::execute() 
+StatusCode MuonPIDsFromProtoParticlesAlg::execute()
 {
-  
+
   // check data is not already there
-  if ( exist<MuonPIDs>( m_muonPIDloc ) ) 
+  if ( exist<MuonPIDs>( m_muonPIDloc ) )
   {
     return Warning( "Data already exists at " + m_muonPIDloc, StatusCode::SUCCESS );
   }
@@ -87,10 +87,6 @@ StatusCode MuonPIDsFromProtoParticlesAlg::execute()
       continue;
     }
 
-    if ( msgLevel(MSG::VERBOSE) ) {
-      verbose() << "track with |p| " << track->p() << " has key " <<  track->key() << endmsg;
-    }//if
-
     // does this proto have any Muon info in it ?
     if ( (*iP)->hasInfo(ProtoParticle::MuonPIDStatus) )
     {
@@ -98,7 +94,7 @@ StatusCode MuonPIDsFromProtoParticlesAlg::execute()
       // new MuonPID
       MuonPID * pid = new MuonPID();
 
-      // Add to container with same key as Track 
+      // Add to container with same key as Track
       mpids->insert( pid, track->key() );
 
       // make sure proto points to this MuonPID
@@ -113,10 +109,6 @@ StatusCode MuonPIDsFromProtoParticlesAlg::execute()
       pid->setIDTrack( track );
 
       // PID info
-      if ( msgLevel(MSG::VERBOSE) ) {
-        verbose() << "muon LL mu " << (*iP)->info(ProtoParticle::MuonMuLL,    0) << endmsg;
-        verbose() << "        bg " << (*iP)->info(ProtoParticle::MuonBkgLL,   0) << endmsg;
-      }// if
       pid->setMuonLLMu( (*iP)->info(ProtoParticle::MuonMuLL,    0) );
       pid->setMuonLLBg( (*iP)->info(ProtoParticle::MuonBkgLL,   0) );
       pid->setNShared ( static_cast<int>((*iP)->info(ProtoParticle::MuonNShared, 0)) );
@@ -125,7 +117,7 @@ StatusCode MuonPIDsFromProtoParticlesAlg::execute()
 
   }
 
-  if ( msgLevel(MSG::DEBUG) ) 
+  if ( msgLevel(MSG::DEBUG) )
   {
     debug() << "Created " << mpids->size() << " MuonPIDs at " << m_muonPIDloc << endreq;
   }
