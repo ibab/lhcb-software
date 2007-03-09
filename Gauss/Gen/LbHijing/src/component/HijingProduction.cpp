@@ -364,3 +364,11 @@ StatusCode HijingProduction::finalize( ) {
   return GaudiTool::finalize( ) ;
 }  
 
+//=============================================================================
+// dummy method
+//=============================================================================
+StatusCode HijingProduction::initializeGenerator() {
+  return StatusCode::SUCCESS;
+}
+
+//=============================================================================

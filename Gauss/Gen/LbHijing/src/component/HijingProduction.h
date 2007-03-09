@@ -1,4 +1,4 @@
-// $Id: HijingProduction.h,v 1.1.1.1 2006-07-03 17:23:35 gcorti Exp $
+// $Id: HijingProduction.h,v 1.2 2007-03-09 12:47:33 gcorti Exp $
 #ifndef LBHIJING_HIJINGPRODUCTION_H 
 #define LBHIJING_HIJINGPRODUCTION_H 1
 
@@ -31,6 +31,8 @@ public:
   virtual StatusCode generateEvent( HepMC::GenEvent * theEvent , 
                                     LHCb::GenCollision * theCollision ) ;
   
+  virtual StatusCode initializeGenerator( ) ;
+
   virtual void setStable( const ParticleProperty * thePP ) ;
   
   virtual void updateParticleProperties( const ParticleProperty * thePP ) ;
