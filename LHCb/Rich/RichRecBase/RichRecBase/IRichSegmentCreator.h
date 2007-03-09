@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool interface : Rich::Rec::ISegmentCreator
  *
  *  CVS Log :-
- *  $Id: IRichSegmentCreator.h,v 1.8 2007-02-01 17:26:22 jonrob Exp $
+ *  $Id: IRichSegmentCreator.h,v 1.9 2007-03-09 18:04:33 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -21,25 +21,8 @@
 /// Static Interface Identification
 static const InterfaceID IID_IRichSegmentCreator( "Rich::Rec::ISegmentCreator", 1, 0 );
 
-//-----------------------------------------------------------------------------
-/** @namespace Rich
- *
- *  General namespace for RICH software
- *
- *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
- *  @date   08/07/2004
- */
-//-----------------------------------------------------------------------------
 namespace Rich
 {
-
-  /** @namespace Rich::Rec
-   *
-   *  General namespace for RICH reconstruction software
-   *
-   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
-   *  @date   08/07/2004
-   */
   namespace Rec
   {
 

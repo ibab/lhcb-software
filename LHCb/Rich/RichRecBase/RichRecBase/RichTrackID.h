@@ -4,7 +4,7 @@
  *
  * Header file for utility class : RichTrackID
  *
- * $Id: RichTrackID.h,v 1.23 2007-02-01 17:26:22 jonrob Exp $
+ * $Id: RichTrackID.h,v 1.24 2007-03-09 18:04:34 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date   08/07/2004
@@ -22,25 +22,8 @@ namespace LHCb
   class MCRichTrack;
 }
 
-//-----------------------------------------------------------------------------
-/** @namespace Rich
- *
- *  General namespace for RICH specific definitions
- *
- *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
- *  @date   08/07/2004
- */
-//-----------------------------------------------------------------------------
 namespace Rich
 {
-
-  /** @namespace Rich::Rec
-   *
-   *  General namespace for RICH reconstruction software
-   *
-   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
-   *  @date   08/07/2004
-   */
   namespace Rec
   {
 
@@ -132,7 +115,7 @@ namespace Rich
 
     }
 
-    /** @namespace TrackParent
+    /** @namespace Rich::Rec::TrackParent
      *
      *  Namespace for information on the track parent type
      *

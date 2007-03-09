@@ -5,7 +5,7 @@
  * Header file for reconstruction tool base class : RichRecTupleToolBase
  *
  * CVS Log :-
- * $Id: RichRecTupleToolBase.h,v 1.2 2007-02-01 17:26:22 jonrob Exp $
+ * $Id: RichRecTupleToolBase.h,v 1.3 2007-03-09 18:04:34 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date   2005/01/13
@@ -19,25 +19,8 @@
 #include "RichKernel/RichTupleToolBase.h"
 #include "RichRecBase/RichRecBase.h"
 
-//-----------------------------------------------------------------------------
-/** @namespace Rich
- *
- *  General namespace for RICH specific definitions
- *
- *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
- *  @date   08/07/2004
- */
-//-----------------------------------------------------------------------------
 namespace Rich
 {
-
-  /** @namespace Rich::Rec
-   *
-   *  General namespace for RICH reconstruction software
-   *
-   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
-   *  @date   08/07/2004
-   */
   namespace Rec
   {
 

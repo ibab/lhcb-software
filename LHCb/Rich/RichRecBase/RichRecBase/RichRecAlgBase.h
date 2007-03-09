@@ -5,7 +5,7 @@
  *  Header file for reconstruction algorithm base class : Rich::Rec::AlgBase
  *
  *  CVS Log :-
- *  $Id: RichRecAlgBase.h,v 1.22 2007-02-01 17:26:22 jonrob Exp $
+ *  $Id: RichRecAlgBase.h,v 1.23 2007-03-09 18:04:33 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -19,25 +19,8 @@
 #include "RichKernel/RichAlgBase.h"
 #include "RichRecBase/RichRecBase.h"
 
-//-----------------------------------------------------------------------------
-/** @namespace Rich
- *
- *  General namespace for RICH software
- *
- *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
- *  @date   08/07/2004
- */
-//-----------------------------------------------------------------------------
 namespace Rich
 {
-
-  /** @namespace Rich::Rec
-   *
-   *  General namespace for RICH reconstruction software
-   *
-   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
-   *  @date   08/07/2004
-   */
   namespace Rec
   {
 

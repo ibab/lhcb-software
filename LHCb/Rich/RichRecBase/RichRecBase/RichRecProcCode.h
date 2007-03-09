@@ -4,7 +4,7 @@
  *
  * Header file for enumeration Rich::Rec::ProcStat
  *
- * $Id: RichRecProcCode.h,v 1.6 2007-02-01 17:26:22 jonrob Exp $
+ * $Id: RichRecProcCode.h,v 1.7 2007-03-09 18:04:34 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date   2003-05-10
@@ -16,14 +16,6 @@
 
 namespace Rich 
 {
-
-  /** @namespace Rich::Rec
-   *
-   *  General namespace for RICH reconstruction software
-   *
-   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
-   *  @date   08/07/2004
-   */
   namespace Rec 
   {
 

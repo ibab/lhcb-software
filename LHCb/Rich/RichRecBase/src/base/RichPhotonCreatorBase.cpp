@@ -5,7 +5,7 @@
  *  Implementation file for tool base class : Rich::Rec::PhotonCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreatorBase.cpp,v 1.16 2007-02-01 17:26:23 jonrob Exp $
+ *  $Id: RichPhotonCreatorBase.cpp,v 1.17 2007-03-09 18:04:34 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/05/2005
@@ -270,7 +270,7 @@ namespace Rich
       if ( msgLevel(MSG::VERBOSE) )
       {
         verbose() << "Trying photon reco. with segment " << segment->key()
-                  << " and pixel " << pixel->key() << " " << pixel->smartID()
+                  << " and pixel " << pixel->key() << " " << pixel->hpdPixelCluster()
                   << endreq;
       }
 

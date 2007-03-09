@@ -4,7 +4,7 @@
  *
  *  Header file for RICH reconstruction tool interface : Rich::Rec::IMCTruthTool
  *
- *  $Id: IRichRecMCTruthTool.h,v 1.18 2007-02-01 17:26:22 jonrob Exp $
+ *  $Id: IRichRecMCTruthTool.h,v 1.19 2007-03-09 18:04:33 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -40,41 +40,18 @@ namespace LHCb
   class RichRecPhoton;
   class RichRecPixel;
 }
+namespace Rich
+{
+  class HPDPixelCluster;
+}
 
 /// Static Interface Identification
 static const InterfaceID IID_IRichRecMCTruthTool( "Rich::Rec::IMCTruthTool", 1, 0 );
 
-//-----------------------------------------------------------------------------
-/** @namespace Rich
- *
- *  General namespace for RICH software
- *
- *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
- *  @date   08/07/2004
- */
-//-----------------------------------------------------------------------------
 namespace Rich
 {
-
-  /** @namespace Rich::Rec
-   *
-   *  General namespace for RICH reconstruction software
-   *
-   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
-   *  @date   08/07/2004
-   */
   namespace Rec
   {
-
-    //-----------------------------------------------------------------------------
-    /** @namespace MC
-     *
-     *  General namespace for RICH MC related software
-     *
-     *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
-     *  @date   05/12/2006
-     */
-    //-----------------------------------------------------------------------------
     namespace MC
     {
 
@@ -199,17 +176,19 @@ namespace Rich
          *  @retval NULL  No Monte Carlo association was possible
          *  @retval !NULL Monte Carlo association was successful
          */
-        virtual const LHCb::MCRichDigit *
-        mcRichDigit( const LHCb::RichRecPixel * richPixel ) const = 0;
+        //virtual const LHCb::MCRichDigit *
+        //mcRichDigit( const LHCb::RichRecPixel * richPixel ) const = 0;
 
         /** Find the parent MCRichHits for a given RichRecPixel
          *
          *  @param richPixel Pointer to a RichRecPixel
+         *  @param hits      The associated hits
          *
          *  @return Reference to the SmartRefVector of associated MCRichHits
          */
-        virtual const SmartRefVector<LHCb::MCRichHit> &
-        mcRichHits( const LHCb::RichRecPixel * richPixel ) const = 0;
+        virtual void
+        mcRichHits( const LHCb::RichRecPixel * richPixel,
+                    SmartRefVector<LHCb::MCRichHit> & hits ) const = 0;
 
         /** Find the parent MCRichOpticalPhotons associated to a given RichRecPixel
          *
@@ -305,6 +284,20 @@ namespace Rich
         trueRecPhoton( const LHCb::MCParticle * mcPart,
                        const LHCb::RichSmartID id ) const = 0;
 
+        /** Is this a true photon candidate ?
+         *  Does the one of the hits in the RichSmartID cluster result from a hit from the given MCParticle
+         *
+         *  @param mcPart  Pointer to an MCParticle
+         *  @param cluster RichSmartID cluster for the pixel
+         *
+         *  @return Pointer to associated MCParticle
+         *  @retval NULL  No Monte Carlo association was possible
+         *  @retval !NULL Monte Carlo association was successful
+         */
+        virtual const LHCb::MCParticle *
+        trueRecPhoton( const LHCb::MCParticle * mcPart,
+                       const Rich::HPDPixelCluster& cluster ) const = 0;
+
         /** Is this a true Cherenkov photon candidate ?
          *  Do the associated segment and pixel have the same MC parent AND was the pixel
          *  the result of Cherenkov radiation from the relevant radiator
@@ -379,6 +372,20 @@ namespace Rich
          */
         virtual const LHCb::MCParticle *
         trueCherenkovRadiation( const LHCb::RichSmartID id,
+                                const Rich::RadiatorType rad ) const = 0;
+
+        /** Is any of the RichSmartIDs in nthe cluster due to true MC Cherenkov radiation from given radiator medium ?
+         *
+         *  @param cluster  RichSmartID cluster
+         *  @param rad      The radiator type
+         *
+         *  @return Pointer to the associated MCParticle
+         *  @retval NULL  No Monte Carlo association was possible or photon is not a true
+         *                Cherenkov photon
+         *  @retval !NULL Monte Carlo association was successful
+         */
+        virtual const LHCb::MCParticle *
+        trueCherenkovRadiation( const Rich::HPDPixelCluster& cluster,
                                 const Rich::RadiatorType rad ) const = 0;
 
         /** Access the MCRichSegment associated to a given RichRecSegment

@@ -4,7 +4,7 @@
  *
  *  Header file for tool interface : Rich::Rec::ITrSegMaker
  *
- *  $Id: IRichTrSegMaker.h,v 1.3 2007-02-06 15:01:22 cattanem Exp $
+ *  $Id: IRichTrSegMaker.h,v 1.4 2007-03-09 18:04:33 jonrob Exp $
  *
  *  @author Chris Jones         Christopher.Rob.Jones@cern.ch
  *  @author Antonis Papanestis  a.papanestis@rl.ac.uk
@@ -34,25 +34,8 @@ namespace LHCb
 /// Static Interface Identification
 static const InterfaceID IID_IRichTrSegMaker( "Rich::Rec::ITrSegMaker", 1, 0 );
 
-//-----------------------------------------------------------------------------
-/** @namespace Rich
- *
- *  General namespace for RICH software
- *
- *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
- *  @date   08/07/2004
- */
-//-----------------------------------------------------------------------------
 namespace Rich
 {
-
-  /** @namespace Rich::Rec
-   *
-   *  General namespace for RICH reconstruction software
-   *
-   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
-   *  @date   08/07/2004
-   */
   namespace Rec
   {
 

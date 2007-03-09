@@ -2,7 +2,7 @@
  *
  *  Header file for tool interface : Rich::Rec::IPhotonReconstruction
  *
- *  $Id: IRichPhotonReconstruction.h,v 1.4 2007-02-06 15:01:22 cattanem Exp $
+ *  $Id: IRichPhotonReconstruction.h,v 1.5 2007-03-09 18:04:33 jonrob Exp $
  *
  *  @author Antonis Papanestis
  *  @date   2003-10-28
@@ -27,29 +27,16 @@ namespace LHCb
   class RichGeomPhoton;
   class RichTrackSegment;
 }
+namespace Rich
+{
+  class HPDPixelCluster;
+}
 
 /// Static Interface Identification
 static const InterfaceID IID_IRichPhotonReconstruction ( "Rich::Rec::IPhotonReconstruction", 1, 0 );
 
-//-----------------------------------------------------------------------------
-/** @namespace Rich
- *
- *  General namespace for RICH software
- *
- *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
- *  @date   08/07/2004
- */
-//-----------------------------------------------------------------------------
 namespace Rich
 {
-
-  /** @namespace Rich::Rec
-   *
-   *  General namespace for RICH reconstruction software
-   *
-   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
-   *  @date   08/07/2004
-   */
   namespace Rec
   {
 
@@ -75,9 +62,9 @@ namespace Rich
       /** Reconstructs the geometrical photon candidate for a given RichTrackSegment
        *  and RichSmartID channel identifier
        *
-       *  @param trSeg    The RichTrackSegment to reconstruct the photon against
-       *  @param smartID  The hit position to use, encoded as a RichSmartID
-       *  @param gPhoton  The reconstructed photon
+       *  @param trSeg     The RichTrackSegment to reconstruct the photon against
+       *  @param smartIDs  The hit position to use, encoded as a RichSmartID cluster
+       *  @param gPhoton   The reconstructed photon
        *
        *  @return Status of the reconstruction
        *  @retval StatusCode::SUCCESS Photon reconstruction was successful
@@ -85,17 +72,17 @@ namespace Rich
        */
       virtual StatusCode
       reconstructPhoton ( const LHCb::RichTrackSegment& trSeg,
-                          const LHCb::RichSmartID smartID,
+                          const Rich::HPDPixelCluster& smartIDs,
                           LHCb::RichGeomPhoton& gPhoton ) const = 0;
 
       /** Reconstructs the geometrical photon candidate for a given RichTrackSegment
        *  and hit position in global LHCb coordinates
        *
-       *  @param trSeg          The RichTrackSegment to reconstruct the photon against
-       *  @param detectionPoint The hit position in global LHCb coordinates
-       *  @param gPhoton        The reconstructed photon
-       *  @param smartID        The RichSmartID associated to the hit position
-       *                        (optional, used to set the data member in reconstructed photon)
+       *  @param trSeg           The RichTrackSegment to reconstruct the photon against
+       *  @param detectionPoint  The hit position in global LHCb coordinates
+       *  @param gPhoton         The reconstructed photon
+       *  @param smartIDs        The RichSmartID cluster associated to the hit position
+       *                         (optional, used to set the data member in reconstructed photon)
        *
        *  @return Status of the reconstruction
        *  @retval StatusCode::SUCCESS Photon reconstruction was successful
@@ -105,7 +92,7 @@ namespace Rich
       reconstructPhoton ( const LHCb::RichTrackSegment& trSeg,
                           const Gaudi::XYZPoint& detectionPoint,
                           LHCb::RichGeomPhoton& gPhoton,
-                          const LHCb::RichSmartID smartID = LHCb::RichSmartID() ) const = 0;
+                          const Rich::HPDPixelCluster& smartIDs = Rich::HPDPixelCluster() ) const = 0;
 
     };
 

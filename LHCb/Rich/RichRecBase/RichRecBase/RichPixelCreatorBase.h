@@ -5,7 +5,7 @@
  *  Header file for tool base class : Rich::Rec::PixelCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorBase.h,v 1.14 2007-02-01 17:26:22 jonrob Exp $
+ *  $Id: RichPixelCreatorBase.h,v 1.15 2007-03-09 18:04:33 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/04/2005
@@ -29,6 +29,7 @@
 #include "RichRecBase/IRichPixelCreator.h"
 #include "RichRecBase/IRichRecGeomTool.h"
 #include "RichKernel/IRichPixelSuppressionTool.h"
+#include "RichKernel/IRichPixelClusteringTool.h"
 #include "RichKernel/IRichSmartIDTool.h"
 #include "RichKernel/IRichRawBufferToSmartIDsTool.h"
 
@@ -44,25 +45,8 @@
 // Boost
 #include "boost/multi_array.hpp"
 
-//-----------------------------------------------------------------------------
-/** @namespace Rich
- *
- *  General namespace for RICH software
- *
- *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
- *  @date   08/07/2004
- */
-//-----------------------------------------------------------------------------
 namespace Rich
 {
-
-  /** @namespace Rec
-   *
-   *  General namespace for RICH reconstruction software
-   *
-   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
-   *  @date   08/07/2004
-   */
   namespace Rec
   {
 
@@ -206,7 +190,7 @@ namespace Rich
                                   LHCb::RichSmartID::Vector & smartIDs ) const;
 
       /// Build a new RichRecPixel
-      virtual LHCb::RichRecPixel * buildPixel ( const LHCb::RichSmartID id ) const;
+      virtual LHCb::RichRecPixel * buildPixel ( const Rich::HPDPixelCluster& cluster ) const;
 
       /// Access the RichSmartIDTool
       inline const ISmartIDTool * smartIDTool() const
@@ -241,8 +225,11 @@ namespace Rich
       /// Reconstruction geometry tool
       const IGeomTool * m_recGeom;
 
-      /// HPD occupancy tool
+      /// HPD occupancy tools
       mutable std::vector<const Rich::DAQ::IPixelSuppressionTool *> m_hpdOcc;
+
+      /// HPD clustering tools
+      mutable std::vector<const Rich::DAQ::IPixelClusteringTool *> m_hpdClus;
 
       /// Pointer to RichSmartID tool
       mutable const ISmartIDTool * m_idTool;
@@ -258,6 +245,9 @@ namespace Rich
 
       /// Flag to turn on or off the explicit checking of the HPD status
       bool m_hpdCheck;
+
+      /// Flag to turn on/off clustering in HPDs
+      std::vector<bool> m_clusterHits;
 
       /// Flags for which RICH detectors to create pixels for
       std::vector<bool> m_usedDets;
@@ -308,6 +298,9 @@ namespace Rich
       /// returns a pointer to the HPD suppression tool for the given RICH
       const Rich::DAQ::IPixelSuppressionTool * hpdSuppTool( const Rich::DetectorType rich ) const;
 
+      /// returns a pointer to the HPD clustering tool for the given RICH
+      const Rich::DAQ::IPixelClusteringTool * hpdClusTool( const Rich::DetectorType rich ) const;
+
     private: // helper classes
 
       /// Class to sort the RichRecPixels according to detector regions
@@ -319,7 +312,9 @@ namespace Rich
         inline bool operator() ( const LHCb::RichRecPixel * p1,
                                  const LHCb::RichRecPixel * p2 ) const
         {
-          return ( p1->smartID().dataBitsOnly().key() < p2->smartID().dataBitsOnly().key() );
+          // only using the first smartID here. what else can we do ?
+          return ( p1->hpdPixelCluster().primaryID().dataBitsOnly().key() < 
+                   p2->hpdPixelCluster().primaryID().dataBitsOnly().key() );
         }
       };
 
@@ -357,7 +352,7 @@ namespace Rich
     inline void PixelCreatorBase::savePixel( LHCb::RichRecPixel * pix ) const
     {
       richPixels()->insert( pix );
-      ++m_hitCount[pix->smartID().rich()];
+      ++m_hitCount[pix->detector()];
       m_hasBeenCalled = true;
     }
 
@@ -408,6 +403,17 @@ namespace Rich
         acquireTool( "PixelSuppress"+Rich::text(rich), m_hpdOcc[rich], this );
       }
       return m_hpdOcc[rich];
+    }
+
+    inline const Rich::DAQ::IPixelClusteringTool * 
+    PixelCreatorBase::hpdClusTool( const Rich::DetectorType rich ) const
+    {
+      if ( !m_hpdClus[rich] )
+      {
+        acquireTool( "PixelCreatorClustering",
+                     "PixelClustering"+Rich::text(rich), m_hpdClus[rich], this );
+      }
+      return m_hpdClus[rich];
     }
 
     inline bool

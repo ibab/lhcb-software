@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction base class : Rich::Rec::CommonBase
  *
  *  CVS Log :-
- *  $Id: RichRecBase.h,v 1.4 2007-02-01 17:26:22 jonrob Exp $
+ *  $Id: RichRecBase.h,v 1.5 2007-03-09 18:04:33 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-26
@@ -33,25 +33,8 @@ namespace LHCb
 #include "RichRecBase/IRichPixelCreator.h"
 #include "RichRecBase/IRichStatusCreator.h"
 
-//-----------------------------------------------------------------------------
-/** @namespace Rich
- *
- *  General namespace for RICH specific definitions
- *
- *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
- *  @date   08/07/2004
- */
-//-----------------------------------------------------------------------------
 namespace Rich
 {
-
-  /** @namespace Rich::Rec
-   *
-   *  General namespace for RICH reconstruction software
-   *
-   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
-   *  @date   08/07/2004
-   */
   namespace Rec
   {
 

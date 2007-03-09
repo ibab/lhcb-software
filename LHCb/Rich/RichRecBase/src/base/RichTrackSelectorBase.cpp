@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : RichTrackSelectorBase
  *
  *  CVS Log :-
- *  $Id: RichTrackSelectorBase.cpp,v 1.5 2007-02-06 15:01:22 cattanem Exp $
+ *  $Id: RichTrackSelectorBase.cpp,v 1.6 2007-03-09 18:04:34 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/08/2006
@@ -119,6 +119,8 @@ namespace Rich
         verbose() << "Acquiring RichTrackSelector '" << m_tkToolNames[type]
                   << "' for type " << Rich::text(type) << endreq;
 
+      StatusCode sc = StatusCode::SUCCESS;
+
       if ( "" == m_tkToolNames[type] )
       {
         return Error( "Selection tool for track algorithm '"+Rich::text(type)+"' undefined" );
@@ -159,7 +161,8 @@ namespace Rich
                 //if ( msgLevel(MSG::VERBOSE) )
                 if (msgLevel(MSG::VERBOSE))
                   verbose() << " Adding option " << *iP << " to " << fullname << endmsg;
-                joSvc()->addPropertyToCatalogue( fullname, *(*itP) );
+                sc = joSvc()->addPropertyToCatalogue( fullname, *(*itP) );
+                if ( sc.isFailure() ) { return Error( "Cannot set options for " + fullname ); }
               }
               //---------------------------------------------------------------------------------
             }
@@ -171,7 +174,7 @@ namespace Rich
       m_tkTools[type] =
         tool<IBaseTrackSelector>( m_tkToolNames[type], Rich::text(type), this );
 
-      return StatusCode::SUCCESS;
+      return sc;
     }
 
     //=============================================================================

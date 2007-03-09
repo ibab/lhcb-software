@@ -4,7 +4,7 @@
 <package name="RichRecBase">
 
 <!-- **************************************************************************
-  * $Id: RichRecPixel.xml,v 1.17 2007-02-06 15:01:22 cattanem Exp $
+  * $Id: RichRecPixel.xml,v 1.18 2007-03-09 18:04:34 jonrob Exp $
   *****************************************************************************
   * XML-description of RichRecPixel class                                     *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -33,6 +33,7 @@
         <import name="Event/RichRecTrack"   soft="TRUE" />
         <import name="Event/RichRecPhoton"  soft="TRUE" />
         <import name="Kernel/RichSmartID"/>
+        <import name="RichKernel/RichPixelCluster"/>
 
         <location name="Offline" place="Rec/Rich/OfflineEvent/Pixels"/>
         <location name="HLT"     place="Rec/Rich/HLTEvent/Pixels"/>
@@ -46,18 +47,29 @@
 
         <constructor 
                 desc     = "Constructor with arguments" 
-                initList = "m_smartID(smartID), m_globalPosition(gPos), m_localPosition(lPos), m_radCorrLocalPositions(Rich::NRadiatorTypes,lPos), m_currentBackground(0), m_parentType(parentType), m_richRecTracks(), m_richRecPhotons(), m_parentPixel(parent)">
-                <arg inout="BYVALUE"  const="TRUE" name="smartID"    type="LHCb::RichSmartID"         />
-                <arg                  const="TRUE" name="gPos"       type="Gaudi::XYZPoint"           />
-                <arg                  const="TRUE" name="lPos"       type="Gaudi::XYZPoint"           />
+                initList = "m_hpdPixelCluster(hpdPixelCluster), m_globalPosition(gPos), m_localPosition(lPos), m_radCorrLocalPositions(Rich::NRadiatorTypes,lPos), m_currentBackground(0), m_parentType(parentType), m_richRecTracks(), m_richRecPhotons(), m_parentPixel(parent)">
+                <arg inout="BYVALUE"  const="TRUE" name="hpdPixelCluster" type="Rich::HPDPixelCluster"  />
+                <arg                  const="TRUE" name="gPos"       type="Gaudi::XYZPoint"            />
+                <arg                  const="TRUE" name="lPos"       type="Gaudi::XYZPoint"            />
                 <arg inout="BYVALUE"  const="TRUE" name="parentType" type="Rich::Rec::PixelParent::Type"   />
-                <arg                  const="TRUE" name="parent"     type="ContainedObject*"    />
+                <arg                  const="TRUE" name="parent"     type="ContainedObject*"           />
+                <code/>
+        </constructor>
+
+        <constructor 
+                desc     = "Constructor with arguments" 
+                initList = "m_hpdPixelCluster(smartID), m_globalPosition(gPos), m_localPosition(lPos), m_radCorrLocalPositions(Rich::NRadiatorTypes,lPos), m_currentBackground(0), m_parentType(parentType), m_richRecTracks(), m_richRecPhotons(), m_parentPixel(parent)">
+                <arg inout="BYVALUE"  const="TRUE" name="smartID"    type="LHCb::RichSmartID"          />
+                <arg                  const="TRUE" name="gPos"       type="Gaudi::XYZPoint"            />
+                <arg                  const="TRUE" name="lPos"       type="Gaudi::XYZPoint"            />
+                <arg inout="BYVALUE"  const="TRUE" name="parentType" type="Rich::Rec::PixelParent::Type"   />
+                <arg                  const="TRUE" name="parent"     type="ContainedObject*"           />
                 <code/>
         </constructor>
 
         <constructor 
                 desc     = "Copy Constructor. Creates a new RichRecPixel with the same physics content" 
-                initList = "KeyedObject&lt;int&gt;(), m_smartID(pixel.smartID()), m_globalPosition(pixel.globalPosition()), m_localPosition(pixel.localPosition()), m_radCorrLocalPositions(pixel.radCorrLocalPositions()), m_currentBackground(pixel.currentBackground()), m_parentType(pixel.parentType()), m_richRecTracks(pixel.richRecTracks()), m_richRecPhotons(pixel.richRecPhotons()), m_parentPixel(pixel.parentPixel())">
+                initList = "KeyedObject&lt;int&gt;(), m_hpdPixelCluster(pixel.hpdPixelCluster()), m_globalPosition(pixel.globalPosition()), m_localPosition(pixel.localPosition()), m_radCorrLocalPositions(pixel.radCorrLocalPositions()), m_currentBackground(pixel.currentBackground()), m_parentType(pixel.parentType()), m_richRecTracks(pixel.richRecTracks()), m_richRecPhotons(pixel.richRecPhotons()), m_parentPixel(pixel.parentPixel())">
                 <arg  const="TRUE" name="pixel" type="LHCb::RichRecPixel" />
                 <code/>
         </constructor>
@@ -68,7 +80,7 @@
                 name  = "detector" 
                 type  = "Rich::DetectorType">
                 <code>
-                        return m_smartID.rich();
+                        return hpdPixelCluster().rich();
                 </code>
         </method>
             
@@ -78,7 +90,7 @@
                 name  = "hpd" 
                 type  = "LHCb::RichSmartID" >
                 <code>
-                        return m_smartID.hpdID();
+                        return hpdPixelCluster().hpd();
                 </code>
         </method>
             
@@ -88,7 +100,7 @@
                 name  = "panel" 
                 type  = "LHCb::RichSmartID" >
                 <code>
-                        return m_smartID.panelID();
+                        return hpdPixelCluster().panel();
                 </code>
         </method>
 
@@ -136,12 +148,11 @@
         </method>
 
         <attribute 
-                desc = "RichSmartID for the pixel associated to this reconstructed hit" 
-                name = "smartID" 
-                type = "LHCb::RichSmartID"
-                init = "0" 
+                desc = "The RichSmartID (or cluster of SmartIDs) that this pixel represents" 
+                name = "hpdPixelCluster"
+                type = "Rich::HPDPixelCluster" 
         />
-            
+
         <attribute 
                 desc = "Position in global LHCb coordinate system" 
                 name = "globalPosition" 
@@ -219,6 +230,12 @@
                 name         = "richRecRings" 
                 type         = "std::vector&lt;LHCb::RichRecRingOnPixel&gt;"
                 nonconstaccessor = "TRUE"
+        />
+
+        <attribute 
+                desc    = "The HPD channel cluster this pixel is associated to" 
+                name    = "associatedCluster"
+                type    = "Rich::HPDPixelCluster"
         />
 
 </class>

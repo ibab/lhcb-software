@@ -5,7 +5,7 @@
  *  Implementation file for tool base class : RichPixelCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorBase.cpp,v 1.17 2007-02-01 17:26:23 jonrob Exp $
+ *  $Id: RichPixelCreatorBase.cpp,v 1.18 2007-03-09 18:04:34 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/04/2005
@@ -32,12 +32,14 @@ namespace Rich
         m_richSys       ( NULL  ),
         m_recGeom       ( NULL  ),
         m_hpdOcc        ( Rich::NRiches ),
+        m_hpdClus       ( Rich::NRiches ),
         m_idTool        ( NULL  ),
         m_decoder       ( NULL  ),
         m_pixels        ( NULL  ),
         m_bookKeep      ( false ),
         m_hpdCheck      ( false ),
-        m_usedDets      ( Rich::NRiches, true ),
+        m_clusterHits   ( Rich::NRiches, false ),
+        m_usedDets      ( Rich::NRiches, true  ),
         m_richRecPixelLocation ( LHCb::RichRecPixelLocation::Default ),
         m_begins        ( boost::extents[Rich::NRiches][Rich::NHPDPanelsPerRICH] ),
         m_ends          ( boost::extents[Rich::NRiches][Rich::NHPDPanelsPerRICH] ),
@@ -63,10 +65,13 @@ namespace Rich
       declareProperty( "UseDetectors",        m_usedDets  );
       declareProperty( "CheckHPDsAreActive",  m_hpdCheck  );
       declareProperty( "ApplyPixelSuppression", m_applyPixelSuppression );
+      declareProperty( "ApplyPixelClustering",  m_clusterHits );
 
       // Initialise
-      m_hpdOcc[Rich::Rich1] = NULL;
-      m_hpdOcc[Rich::Rich2] = NULL;
+      m_hpdOcc[Rich::Rich1]  = NULL;
+      m_hpdOcc[Rich::Rich2]  = NULL;
+      m_hpdClus[Rich::Rich1] = NULL;
+      m_hpdClus[Rich::Rich2] = NULL;
 
     }
 
@@ -82,7 +87,7 @@ namespace Rich
       }
 
       // get tools
-      acquireTool( "RichRecGeometry",    m_recGeom );
+      acquireTool( "RichRecGeometry", m_recGeom );
       if ( m_hpdCheck )
       {
         m_richSys = getDet<DeRichSystem>( DeRichLocation::RichSystem );
@@ -107,8 +112,8 @@ namespace Rich
       m_suppressedHitCount[Rich::Rich2] = 0;
 
       // load hit suppression tools (avoids loading during first event)
-      if ( m_applyPixelSuppression && m_usedDets[Rich::Rich1] ) { hpdSuppTool(Rich::Rich1); }
-      if ( m_applyPixelSuppression && m_usedDets[Rich::Rich2] ) { hpdSuppTool(Rich::Rich2); }
+      //if ( m_applyPixelSuppression && m_usedDets[Rich::Rich1] ) { hpdSuppTool(Rich::Rich1); }
+      //if ( m_applyPixelSuppression && m_usedDets[Rich::Rich2] ) { hpdSuppTool(Rich::Rich2); }
 
       return sc;
     }
@@ -149,8 +154,16 @@ namespace Rich
     }
 
     LHCb::RichRecPixel *
-    PixelCreatorBase::buildPixel( const LHCb::RichSmartID id ) const
+    PixelCreatorBase::buildPixel( const Rich::HPDPixelCluster& cluster ) const
     {
+
+      if ( msgLevel(MSG::DEBUG) )
+      {
+        debug() << " -> Creating RichRecPixel from cluster " << cluster << endreq;
+      }
+
+      // the core cluster ID
+      const LHCb::RichSmartID id = cluster.primaryID();
 
       // See if this RichRecPixel already exists
       LHCb::RichRecPixel * pixel = ( bookKeep() && m_pixelDone[id] ? m_pixelExists[id] : 0 );
@@ -161,8 +174,8 @@ namespace Rich
       {
 
         // Make a new RichRecPixel
-        const Gaudi::XYZPoint gPos = smartIDTool()->globalPosition( id );
-        pixel = new LHCb::RichRecPixel( id,                              // SmartID for pixel
+        const Gaudi::XYZPoint gPos = smartIDTool()->globalPosition( cluster );
+        pixel = new LHCb::RichRecPixel( cluster,                         // SmartID cluster for pixel
                                         gPos,                            // position in global coords
                                         smartIDTool()->globalToPDPanel(gPos), // position in local coords
                                         Rich::Rec::PixelParent::RawBuffer,    // parent type
@@ -177,9 +190,7 @@ namespace Rich
 
         if ( msgLevel(MSG::VERBOSE) )
         {
-          verbose() << "Created pixel " << pixel->smartID() << endreq;
-          verbose() << "  -> gPos = " << pixel->globalPosition()
-                    << " lPos = " << pixel->localPosition() << endreq;
+          verbose() << "Created pixel " << *pixel << endreq;
         }
 
       }
@@ -217,21 +228,54 @@ namespace Rich
           LHCb::RichSmartID::Vector smartIDs = (*iHPD).second;
           applyPixelSuppression( (*iHPD).first, smartIDs );
 
-          // create working pixels from suppressed smart IDs
-          for ( LHCb::RichSmartID::Vector::const_iterator iID = smartIDs.begin();
-                iID != smartIDs.end(); ++iID )
+          // if any left, proceed and make pixels
+          if ( !smartIDs.empty() )
           {
-            // Make a Pixel for this RichSmartID
-            buildPixel(*iID);
-          }
 
+            // which rich
+            const Rich::DetectorType rich = (*iHPD).first.rich();
+
+            // perform clustering on the remaining pixels
+            HPDPixelClusters::ConstSharedPtn clusters = hpdClusTool(rich)->findClusters( smartIDs );
+
+            // get the clusters
+            if ( msgLevel(MSG::DEBUG) )
+            {
+              debug() << "From " << smartIDs.size() << " found "
+                      << clusters->clusters().size() << " clusters" << endreq;
+            }
+
+            // loop over the clusters
+            for ( HPDPixelClusters::Cluster::PtnVector::const_iterator iC = clusters->clusters().begin();
+                  iC != clusters->clusters().end(); ++iC )
+            {
+
+              if ( m_clusterHits[(*iHPD).first.rich()] )
+              {
+                // make a single pixel for this cluster
+                LHCb::RichRecPixel * pixel = buildPixel( (*iC)->pixels() );
+                pixel->setAssociatedCluster( (*iC)->pixels() );
+              }
+              else
+              {
+                // make a smartID for each channel in the cluster
+                for ( LHCb::RichSmartID::Vector::const_iterator iID = (*iC)->pixels().smartIDs().begin();
+                      iID != (*iC)->pixels().smartIDs().end(); ++iID )
+                {
+                  LHCb::RichRecPixel * pixel = buildPixel( *iID );
+                  pixel->setAssociatedCluster( (*iC)->pixels() );
+                }
+              }
+
+            } // loop over clusters
+
+          } // any smartids left after clustering ?
 
         } // loop over HPDs
 
         // find iterators
-        // note : we are relying on the sorting of the input RichSmartIDs here, so we
-        // don't manually sort the RichRecPixels for speed unlike in other tool
-        // implementations
+        // note : we are relying on the sorting of the input RichSmartIDs here, so we don't
+        // manually sort the RichRecPixels for speed unlike in other tool implementations
         fillIterators();
 
       }
@@ -253,9 +297,9 @@ namespace Rich
       {
 
         LHCb::RichRecPixels::iterator iPix = richPixels()->begin();
-        Rich::DetectorType rich      = (*iPix)->smartID().rich();
-        Rich::Side        panel      = (*iPix)->smartID().panel();
-        LHCb::RichSmartID hpd        = (*iPix)->smartID().hpdID();
+        Rich::DetectorType rich      = (*iPix)->detector();
+        Rich::Side        panel      = (*iPix)->panel().panel();
+        LHCb::RichSmartID hpd        = (*iPix)->hpd().hpdID();
         Rich::DetectorType lastrich  = rich;
         Rich::Side        lastpanel  = panel;
         LHCb::RichSmartID lasthpd    = hpd;
@@ -264,23 +308,23 @@ namespace Rich
         // loop over remaining pixels
         for ( ; iPix != richPixels()->end(); ++iPix )
         {
-          if ( panel != (*iPix)->smartID().panel() )
+          if ( panel != (*iPix)->panel().panel() )
           {
-            panel = (*iPix)->smartID().panel();
-            m_begins[(*iPix)->smartID().rich()][panel] = iPix;
-            m_ends[lastrich][lastpanel]                = iPix;
+            panel = (*iPix)->panel().panel();
+            m_begins[(*iPix)->detector()][panel] = iPix;
+            m_ends[lastrich][lastpanel]          = iPix;
             lastpanel = panel;
           }
-          if ( rich != (*iPix)->smartID().rich() )
+          if ( rich != (*iPix)->detector() )
           {
-            rich                = (*iPix)->smartID().rich();
+            rich                = (*iPix)->detector();
             m_richBegin[rich]   = iPix;
             m_richEnd[lastrich] = iPix;
             lastrich            = rich;
           }
-          if ( hpd != (*iPix)->smartID().hpdID() )
+          if ( hpd != (*iPix)->hpd().hpdID() )
           {
-            hpd                 = (*iPix)->smartID().hpdID();
+            hpd                 = (*iPix)->hpd().hpdID();
             m_hpdBegin[hpd]     = iPix;
             m_hpdEnd[lasthpd]   = iPix;
             lasthpd             = hpd;
@@ -330,8 +374,9 @@ namespace Rich
             for ( LHCb::RichRecPixels::const_iterator iPixel = m_pixels->begin();
                   iPixel != m_pixels->end(); ++iPixel )
             {
-              m_pixelExists [ (*iPixel)->smartID() ] = *iPixel;
-              m_pixelDone   [ (*iPixel)->smartID() ] = true;
+              // should look into making this book keeping map use the full vector of IDs ?
+              m_pixelExists [ (*iPixel)->hpdPixelCluster().primaryID() ] = *iPixel;
+              m_pixelDone   [ (*iPixel)->hpdPixelCluster().primaryID() ] = true;
             }
           }
 

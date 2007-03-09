@@ -5,7 +5,7 @@
  *  Header file for tool base class : RichTrackCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorBase.h,v 1.8 2007-02-01 17:26:22 jonrob Exp $
+ *  $Id: RichTrackCreatorBase.h,v 1.9 2007-03-09 18:04:34 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/05/2005
@@ -36,25 +36,8 @@
 // Event
 #include "Event/RichRecTrack.h"
 
-//-----------------------------------------------------------------------------
-/** @namespace Rich
- *
- *  General namespace for RICH specific definitions
- *
- *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
- *  @date   08/07/2004
- */
-//-----------------------------------------------------------------------------
 namespace Rich
 {
-
-  /** @namespace Rich::Rec
-   *
-   *  General namespace for RICH reconstruction software
-   *
-   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
-   *  @date   08/07/2004
-   */
   namespace Rec
   {
 

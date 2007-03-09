@@ -6,7 +6,7 @@
  *  Rich::Rec::HistoAlgBase
  *
  *  CVS Log :-
- *  $Id: RichRecHistoAlgBase.h,v 1.2 2007-02-01 17:26:22 jonrob Exp $
+ *  $Id: RichRecHistoAlgBase.h,v 1.3 2007-03-09 18:04:33 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005/01/13
@@ -20,25 +20,8 @@
 #include "RichKernel/RichHistoAlgBase.h"
 #include "RichRecBase/RichRecBase.h"
 
-//-----------------------------------------------------------------------------
-/** @namespace Rich
- *
- *  General namespace for RICH software
- *
- *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
- *  @date   08/07/2004
- */
-//-----------------------------------------------------------------------------
 namespace Rich
 {
-
-  /** @namespace Rich::Rec
-   *
-   *  General namespace for RICH reconstruction software
-   *
-   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
-   *  @date   08/07/2004
-   */
   namespace Rec
   {
 
