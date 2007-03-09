@@ -29,21 +29,11 @@
  * Job steering
  */
 EventClocksvc.EventTimeDecoder = "FakeEventTime";
-ApplicationMgr.EvtMax = 10000 ;
+ApplicationMgr.EvtMax = 5000 ;
 EventSelector.PrintFreq  = 10;
 //EventSelector.FirstEvent = 1090 ;
-// ToolSvc.OutputLevel=1;
-// ToolSvc.CheckOverlap.OutputLevel=3;
-// ToolSvc.Particle2State.OutputLevel=3;
-//ToolSvc.RelatedPVFinder.ContextTool.GeomDispCalculator.OutputLevel=1;
 
 MessageSvc.OutputLevel = 3 ;
-//StdLooseEtac2PiPiPiPi.OutputLevel = 2 ;
-
-//CountPionsForEtac.OutputLevel = 2 ;
-//CountPionsForEtac.PhysDesktop.OutputLevel = 3 ;
-
-//Jets.OutputLevel = 2 ;
 
 ApplicationMgr.HistogramPersistency = "ROOT";
 HistogramPersistencySvc.OutputFile = "DVHistos.root";
