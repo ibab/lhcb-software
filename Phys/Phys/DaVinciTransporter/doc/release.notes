@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.45 2007-03-05 10:09:19 pkoppenb Exp $
+! $Id: release.notes,v 1.46 2007-03-09 10:30:51 pkoppenb Exp $
 ! Package     : DaVinciTransporter
 ! Responsible : P. Koppenburg, J. Palacios
 !==============================================================================
 
+!======================== DaVinciTransporter v3r6 2007-03-09 =================
 ! 2007-03-05 - Patrick Koppenburg
  - Get vectices and matrices from gaudiKernel
 
