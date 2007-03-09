@@ -1,0 +1,293 @@
+<PRE>
+Package     : AnalysisSys
+Package Coordinator : Juan Palacios
+Purpose     : LHCb analysis packages
+
+</PRE><H1><A NAME=v1r0>2007-03-09 Phys v6r0 </A></H1><PRE>
+Phys split into Phys and Analysis. Phys contains everything 
+needed by the HLT and by DaVinci and nothing else. 
+
+All the rest goes into Analysis: MC tools, physics selections, LoKi. Some
+packages might be moved to Phys if they are needed by the HLT.
+
+#######################################MM#######################################
+#                                ANALYSIS v1r0                                 #
+################################################################################
+#################################### EXTERNAL ##################################
+!========================= KtJet v2r1 2007-03-08 ==============================
+! 2007-03-08 - Vanya BELYAEV
+ - use new native version 1-07
+##################################### PHYS #####################################
+!========================== CommonParticles v3r8 2007-03-09 ===================
+! 2007-03-08 - Chris Jones
+ - Some changes to default cuts for Standard basic particles
+  + Loose electrons - Tighten DLL cut from -5 to -2
+  + Tight Muons     - Loosen DLL cut from  0 to -3
+
+! 2007-03-08 - Patrick Koppenburg
+ - Correction for StdLooseBiased J/psi -> ee
+
+! 2007-03-07 - Patrick Koppenburg for Adlene Hicheur
+ - Updated J/psi->ee
+
+! 2007-03-05 - Patrick Koppenburg
+ - Depend on DaVinciKernel, not DaVinciTools
+
+! 2007-02-23 - Chris Jones
+ - Minor change to how the Standard Particle DoD sequences are set up
+  + For each Data-On-Demand entry alter the configuration to run
+    instead of the required algorithm, a GaudiSequencer.
+  + By default this GaudiSequencer runs only the original algorithm so
+    there is no change to the functionality. The reason for this change is it
+    allows other algorithms to optionally be appended to the end of the
+    sequencer.
+  + A new option file is added 'EnableStandardParticleMonitors.opts' which for each
+		of the standard particle sequences appends a monitor algorithm that produces some
+    basic performance monitoring.
+
+! 2007-02-17 - Patrick Koppenburg
+ - Correct many typos
+
+! 2007-02-15 - P. Koppenburg
+  - opitons/StandardDs.opts
+    . Correct typo
+
+! 2007-02-05 - P. Koppenburg
+  - opitons/StandardDs.opts
+    . Remove flight distance FC.
+!======================== DaVinciAssociators v9r0 2007-03-09 =================
+! 2007-03-05 - Patrick Koppenburg
+ - Get vectors from GaudiKernel
+ - Particle2MCLinker.h moved to Kernel/
+
+! 2007-02-24 - Patrick Koppenburg
+ - Public include files moved to Kernel/ in DaVinciMCKernel.
+ - Correct other header files accordingly
+ - Package does not need to export directory anymore. Pure component now.
+ - Remove DaVinciAssociators/ directory
+ - Added coding convention for Methods in options
+ - Increment to v9r0
+
+!========================== DaVinciMCTools v9r1 2007-03-09 ===================
+! 2007-03-06 - Patrick Koppenburg for Adlene Hicheur
+ - Restored propertime in DecayChainNtuple
+
+! 2007-03-06 - Stephane Poss
+ - Update FilterTofixOppositeBFractions : add more corrected channels
+
+! 2007-03-05 - Patrick Koppenburg
+ - Do not depend on DaVinciAssociators
+
+! 2007-03-01 - Stephane Poss
+ - In FilterToFixOppositeBFractions : fix error calculation
+
+! 2007-02-28 - Stephane Poss
+ - Add FilterToFixOppositeBFractions: 
+   This tool corrects the fraction of the opposite side B's by selecting 
+   events using their event numbers. This bug was described by Patrick
+   Robbe at the tuesday meeting of the 13 feb 2007.
+
+! 2007-02-28 - Chris Jones
+ - Remove MCReconstructible (Now available in Sim/SimComponents)
+
+! 2007-02-24 - Patrick Koppenburg
+ - Corrected include of DaVinciAssociator include files.
+ - Increment to v9r1
+
+!========================== DaVinciUser v8r1 2007-03-09 ===================
+! 2007-02-07 - Juan PALACIOS
+  - src/TestPVAssociation.cpp
+    . Fix conversion from const VertexBase* to const RecVertex* problem
+      by using dynamic_cast.
+  - cmt/requirements
+    . Increase version to v8r1.
+
+!========================== FlavourTagging v7r2 2007-03-09 ===================
+! 2007-03-02 - Patrick Koppenburg
+ - Adapt to new ICaloElectron interface.
+ - Depend on CaloInterfaces, not CaloUtils
+
+! 2007-03-01 - Marco Musy
+ - general cleanup.
+ - change in the categorization tool CombineTaggersProbability.cpp
+   (before was CombineTaggersNNet). Changed way to sort taggers based on w.
+ - various changes in Taggers cuts.
+ - PID cuts changed for all types.
+ - TaggingUtils contains common utility methods used by many taggers.
+ - options files changed for PID definition. Now ExclusiveSelection=false.
+   (protection of Secondary vertex finder introduced)
+
+! 2007-02-28 - Stephane Poss
+  - Changes in TaggerElectronTool.cpp,h : change default cut values and 
+    add correct E/p from O.Deschamp (ICaloElectron)
+  - Changes in SVertexTool.cpp : put PDF polynomes parameters in 
+    declareProperties and update them.
+
+!======================= FlavourTaggingChecker v2r2 2007-03-09 ===================
+! 2007-03-06 - Marco Musy
+  - Bug fix in BTaggingAnalysis corrected. Some unused variables dropped.
+  - trigger included in ntuple, Ntuple name is set to "tagging".
+
+! 2007-03-05 - Patrick Koppenburg
+ - Do not depend on DaVinciAssociators
+ - CaloElectron moved to CaloInterfaces
+
+! 2006-03-01 - Marco Musy
+  - major cleanup of BTaggingAnalysis. Small bug fix on how the PV is
+    chosen. Added in some new vars in ntuple. Dropped dQ variable.
+    Added xFlag to spot kaons and pions coming from excited B states.
+
+!=========================== LoKi v5r1 2007-02-23 =================
+
+! 2007-02-23 - Vanya Belyaev
+ - cmt/requirements 
+    version increment to v5r1 
+
+!========================= LoKiAlgo v3r2 2007-03-09 ====================
+! 2007-03-05 - Patrick Koppenburg
+ - Get vector types from GaudiKernel
+ - Increment to v3r2
+
+!============================= LoKiDict v5r1 2007-03-02 ======================
+! 2007-03-02 - Florence Ranjard
+ - cmt/requirements - replace -U__MINGW32_ with -U__MINGW32__
+
+! 2007-02-23 - Vanya Belyaev
+ - dict/LokiCuts.h, dict/LoKiCuts.xml 
+    remove 
+ - cmt/requirements
+     remove the dictionary LoKiCutsDict 
+     version increment to v5r1 
+
+!========================== LoKiMC v2r2 2007-03-04 ====================
+
+! 2007-03-04 - Vanya BELYAEV
+ - LoKi/MCPArticles.h , LoKi/MCParticleCuts.h, 
+   src/MCParticles.cpp 
+    add new functions DeltaPhi, DeltaEta and DeltaR2, 
+    very useful for Jets-studies
+  - cmt/requirements
+    version increment to v2r2 
+ 
+!========================= LoKiGenMC v2r1 2007-03-04 ======================
+
+! 2007-03-04 - Vanya BELYAEV
+
+ - LoKi_HepMC2MCAlg.cpp 
+    fix one obvuoys bug (typo) and making soem patch for another problmem.
+    Those 2 problems result in only PARTIAL matching of HepMC and MC 
+    information.
+    I still need to find why for some cases we have IDENTICAL 4-momenta 
+    but a constant shift in 3D information. It is really puzzling..
+    Is it due to some features of bugs in Gauss? I do not know..
+ - cmt/requirements 
+    version increment to v2r1  
+  
+!========================== LoKiJets v2r2 2007-03-04 ===================
+
+! 2007-03-04 - Vanya BELYAEV
+
+ - src/LoKiKtJetMaker.cpp
+   improve the selection of the associated particle
+ - cmt/requirements 
+   version increment to v2r2  
+
+!========================== LoKiPhys v3r2 2007-03-07 ==================
+
+! 2007-03-07 - Vanya BELYAEV
+ - LoKi/PhysAlgs.h  
+   fix a stupid bug in "LoKi::PhysAlgs::accumulate" method..
+   All tree-relates functions (SUMTREE,MULTREE, etc..) are affected..
+ - retag as v3r2 
+
+! 2007-03-04 - Vanya BELYAEV
+ - LoKi/Particles17.h, src/Particles17.cpp 
+   LoKi/ParticleCuts.h
+    add new functions DeltaPhi/DeltaEta/DeltaR2 useful for jets studies 
+  
+ - cmt/requirements 
+   version increment to v3r2 
+  
+!========================== ParticleMakerChecker v1r0 2007-03-09 ===================
+! 2007-03-06 - Patrick Koppenburg
+ - Associator headers have been moved to DaVinciMCKernel
+ - Depend on DaVinciMCKernel
+
+! 2007-03-05 - Chris Jones
+ - First version. Contains initial implementation of ParticleEffPurMoni
+   to provide 'standard' monitoring of Particles.
+   This implementation gives efficiency and composition information for a
+   given Particle location. For composite Particles the algorithm searches the
+   daughter tree until it finds the basic Particles and uses them.
+
+#################################### PHYSSEL ###################################
+!========================== B2D0X v1r8 2007-03-09 ===================! 
+2007-03-06 - Patrick Koppenburg
+ - B->D0K* uses now StdTightKstar
+
+! 2007-02-24 - Patrick Koppenburg
+ - Added preselection for B->D0K, D0->KmuNu by Mitesh Patel
+ - Rplaced the string Thight by Tight thoughout
+
+! 2007-02-17 - Patrick Koppenburg
+ - Remove useless cuts
+ - Increment to v1r8
+
+!========================== B2Dilepton v1r3 2007-03-09 ===================
+! 2007-02-17 - Patrick Koppenburg
+ - Remove useless cuts
+ - increment to v1r3
+
+!========================== B2DsX v1r4 2007-03-09 ===================
+! 2007-02-17 - Patrick Koppenburg
+ - Bug fix in mass cut
+ - Increment to v1r4
+
+! 2007-02-15 - Patrick Koppenburg
+ - Bug fix in DsDs selection (double Bs creation)
+
+! 2007-02-15 - Patrick Koppenburg
+ - Bug fix in DsRho selection
+
+! 2007-02-15 - Patrick Koppenburg
+ - Remove explicit use of StdLooseDs2KKPi
+ - Increment to v1r3p1
+
+!========================== B2uds v2r3 2007-03-09 ===================
+! 2007-03-05 - Patrick Koppenburg
+ - Restored Lambda_b -> Lambda (rho,phi,omega) selections
+ - Increment to v2r3
+
+!========================== Bd2PiPiPi0 v4r2 2007-03-09 ===================
+! 2007-03-05 - Patrick Koppenburg
+ - Get vector types from GaudiKernel
+ - Do not depend on DaVinciTools and DaVinciAssociators
+
+! 2007-02-17 - Patrick Koppenburg
+ - Remove useless cuts
+ - Increment to v4r2
+
+!========================== Ccbar v1r4 2007-03-09 ===================
+! 2007-03-09 - Patrick Koppenburg for Jeremie Borel
+ - Even better ordering of Bs->PhiEtac
+
+! 2007-03-08 - Patrick Koppenburg
+ - Change ordering in Bs->EtacPhi to allow a check for 
+   number of tracks in event. Skip if more than 30 pions with
+   high IP and Pt.
+
+! 2007-03-07 - Patrick Koppenburg fopr Adlene Hicheur
+ - New preselection for unbiased J/psi -> ee
+ - Updated Jpsi2ee preselection
+##################################### TESTS ####################################
+##################################### TOOLS ####################################
+!========================== Stripping v6r1 2007-03-09 ===================
+! 2007-03-07 - Patrick Koppenburg
+ - Do not add AvoidSelResults option for DeterminiticPrescaler
+
+! 2007-03-07 - Patrick Koppenburg
+ - Remove check for no J/psi presel outside of Jpsi package
+
+! 2007-03-06 - Patrick Koppenburg
+ - Base.opts does not inculde DaVinciCommon.opts
+ - stripping.py produces a file Presel.opts, not DVPresel.opts
