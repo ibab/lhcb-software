@@ -1,5 +1,16 @@
-// $Id: ProtoParticleFilter_load.cpp,v 1.2 2006-11-20 15:59:49 jonrob Exp $
-// Include files 
+
+//=========================================================================
+/** @file ProtoParticleFilter_load.cpp
+ *
+ *  Declaration of objects in the component library ProtoParticleFilter
+ *
+ *  CVS Log :-
+ *  $Id: ProtoParticleFilter_load.cpp,v 1.3 2007-03-09 18:12:26 jonrob Exp $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   2006-05-03
+ */
+//=========================================================================
 
 #include "GaudiKernel/DeclareFactoryEntries.h"
 
