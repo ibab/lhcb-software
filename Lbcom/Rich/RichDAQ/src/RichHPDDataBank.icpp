@@ -5,7 +5,7 @@
  *  Implementation file for RICH DAQ helper class : RichHPDDataBank
  *
  *  CVS Log :-
- *  $Id: RichHPDDataBank.icpp,v 1.9 2007-03-08 18:14:27 jonrob Exp $
+ *  $Id: RichHPDDataBank.icpp,v 1.10 2007-03-09 17:38:54 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-17
@@ -201,7 +201,6 @@ namespace Rich
     template< class Version, class Header, class Footer >
     void HPDDataBankImp<Version,Header,Footer>::fillRAWBank( RAWBank & rawData ) const
     {
-
       // fill with header word(s)
       header().fillRAWBank(rawData);
       // ... then data words
