@@ -1,0 +1,8 @@
+/*
+* Initialisation for Phys part of HLT
+*
+*  @author P. Koppenburg
+*/
+#include "$PHYSSYSROOT/options/DaVinciInit.opts"
+#include "$PHYSSYSROOT/options/PhysCoreSys.opts"
+#include "$STDOPTS/DstDicts.opts"
