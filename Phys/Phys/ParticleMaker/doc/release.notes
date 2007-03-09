@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.60 2007-03-06 12:29:28 jonrob Exp $ 
+! $Id: release.notes,v 1.61 2007-03-09 10:29:38 pkoppenb Exp $ 
 ! Package     : ParticleMaker
 ! Responsible : P. Koppenburg, J. Palacios
 !==============================================================================
 
+!========================== ParticleMaker v3r1 2007-03-09 ===================
 ! 2007-03-06 - Chris Jones
  - Tidy up PID consistency checks in CombinedParticleMaker
 
