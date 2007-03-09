@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ general definitions
  *
  *  CVS Log :-
- *  $Id: RichDAQDefinitions.h,v 1.10 2007-03-02 14:26:57 jonrob Exp $
+ *  $Id: RichDAQDefinitions.h,v 1.11 2007-03-09 17:41:35 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
@@ -47,8 +47,11 @@ namespace Rich
     /// Maximum data block size (LHCb mode)
     static const ShortType MaxDataSize = 32;
 
+    /// Number of Alice pixels per LHCb pixel
+    static const ShortType NumAlicePixelsPerLHCbPixel = 8;
+
     /// Maximum data block size (ALICE mode)
-    static const ShortType MaxDataSizeALICE = 256;
+    static const ShortType MaxDataSizeALICE = MaxDataSize * NumAlicePixelsPerLHCbPixel;
 
     /// Number of bits per data word
     static const ShortType BitsPerDataWord = 32;
@@ -61,6 +64,9 @@ namespace Rich
 
     /// Total number of inputs to an L1 board
     static const ShortType MaxL1Inputs = NumIngressPerL1 * NumL1InputsPerIngress;
+
+    /// Maximum ZS address value
+    static const ShortType MaxZSAddress = 255;
 
     //---------------------------------------------------------------------------------
 

@@ -4,6 +4,9 @@
 ! Purpose     : interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2007-03-09 - Chris Jones
+ - Add some new DAQ definitions
+
 ! 2007-03-02 - Chris Jones
  - Improve doxygen comments in DeRichSystem and for namespaces
 
