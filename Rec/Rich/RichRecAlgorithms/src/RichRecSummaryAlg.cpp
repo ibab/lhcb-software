@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichRecSummaryAlg
  *
  *  CVS Log :-
- *  $Id: RichRecSummaryAlg.cpp,v 1.6 2007-02-02 10:05:51 jonrob Exp $
+ *  $Id: RichRecSummaryAlg.cpp,v 1.7 2007-03-09 22:48:41 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -180,8 +180,8 @@ StatusCode SummaryAlg::execute()
           // set angles
           sumPhot.setCherenkovTheta(ckTheta);
           sumPhot.setCherenkovPhi(ckPhi);
-          // channel ID
-          sumPhot.setSmartID( (*iPhot)->richRecPixel()->smartID() );
+          // channel ID (only store primary ID)
+          sumPhot.setSmartID( (*iPhot)->richRecPixel()->hpdPixelCluster().primaryID() );
         }
 
       } // loop over reco photons

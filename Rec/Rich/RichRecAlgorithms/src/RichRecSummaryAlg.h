@@ -5,7 +5,7 @@
  *  Header file for algorithm class : Rich::Rec::SummaryAlg
  *
  *  CVS Log :-
- *  $Id: RichRecSummaryAlg.h,v 1.5 2007-02-02 10:05:51 jonrob Exp $
+ *  $Id: RichRecSummaryAlg.h,v 1.6 2007-03-09 22:48:41 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   10/01/2003
@@ -32,27 +32,8 @@
 #include "RichRecBase/IRichCherenkovResolution.h"
 #include "RichRecBase/IRichExpectedTrackSignal.h"
 
-//-----------------------------------------------------------------------------
-/** @namespace Rich
- *
- *  General namespace for RICH software
- *
- *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
- *  @date   08/07/2004
- */
-//-----------------------------------------------------------------------------
 namespace Rich
 {
-
-  //-----------------------------------------------------------------------------
-  /** @namespace Rec
-   *
-   *  General namespace for RICH reconstruction software
-   *
-   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
-   *  @date   08/07/2004
-   */
-  //-----------------------------------------------------------------------------
   namespace Rec
   {
 
@@ -63,6 +44,9 @@ namespace Rich
      *
      *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
      *  @date   07/06/2006
+     *
+     *  @todo Review if we need to store all RichSmartIDs associated to a pixel 
+     *        or if the primary ID is enough ?
      */
     //---------------------------------------------------------------------------
 
