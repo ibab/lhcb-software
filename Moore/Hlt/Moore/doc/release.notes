@@ -2,6 +2,11 @@ Package     : Hlt/Moore
 Package Coordinator : Patrick Koppenburg and Marco Cattaneo
 Purpose     : LHCb HLT application
 
+</PRE><H1><A NAME=v2r2>2007-03-09 Moore v2r2</A></H1><PRE>
+ - Based on split Phys v6r0 only
+ - HltSelections restored, but not yet fully functional
+ - Based on LHCb v22r2 introducing condition database SQLDDDB
+
 </PRE><H1><A NAME=v2r1>2007-02-12 Moore v2r1</A></H1><PRE>
  - removing opts file of the previous moore version
  - Moore.opts is the driver opts file of Moore
