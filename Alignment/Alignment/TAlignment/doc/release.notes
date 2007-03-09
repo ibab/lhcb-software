@@ -1,13 +1,20 @@
 !--------------------------------------------------------
 ! Package	:	Alignment/TAlignment
-! Responsible	:	Johan Blouw
-! Purpose	:	algorithm for T-station alignment
+! Responsible	:	Jan Amoraal
+! Purpose	:	algorithm to align T stations
 !---------------------------------------------------------
 
-!*************** TAlignment v1r0 29/09/2006 **************
-
+!========================== TAlignment v2r0 2007-03-05 =========================
+! 2007-03-09 - Jan Amoraal
+ - First version of the (T) Alignment Framework
+ - AlignAlgorithm: Generic chi^2 minimisation algorithm
+   IAlignDetectorSelector: Detector selector interface for alignment
+   AlignOTDetector: Tool that provides information necessary for aligning the OT.
+     
+!========================== TAlignment v1r0 29/09/2006 ==========================
+! Johan Blouw
 - algorithm to be used for T-station alignment development
 
-!*************** TAlignment v1r1 05/02/2007 **************
-
+!========================== TAlignment v1r1 05/02/2007 ==========================
+! Johan Blouw
 - small changes to requirements file to fullfill Escher requirements

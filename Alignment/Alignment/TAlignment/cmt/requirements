@@ -1,37 +1,47 @@
 #============================================================================
-# Created    : 2006-09-29
-# Maintainer : Johan Blouw
+# Created    : 2007-03-09
+# Maintainer : Jan Amoraal
 #============================================================================
 package           TAlignment
-version           v1r2
+version           v2r0
+
 #============================================================================
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          cmt doc src
+branches          cmt doc src options
 include_path      none
+
 #============================================================================
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #    Put as many lines as needed, with all packages, without the '#'
 #============================================================================
-use 	GSL               	v*	LCG_Interfaces
-use   	GaudiAlg          	v*
-use 	AlignTrTools		v2r2	Alignment
-use	AlignmentTools		v2r4    Alignment
-use 	AlignmentInterfaces	v1r0	Alignment
-use 	DigiEvent		v*	Event
-use   	RecEvent          	v*      Event
-use 	TrackEvent		v*	Event
-use 	TrackFitEvent		v*	Tr
-use   	TrackInterfaces   	v*      Tr
+use           cernlib           v*  LCG_Interfaces
+use           GSL               v*  LCG_Interfaces
+use           GaudiKernel       v*
+use           GaudiSvc          v*
+use           GaudiAlg          v*
+use           GaudiObjDesc      v*
+use           STDet             v*  Det
+use           OTDet             v*  Det
+use           TrackEvent        v*  Event
+use           TrackFitEvent     v*  Tr
+use           TrackInterfaces   v*  Tr
+use           AlignTrTools      v*  Alignment
+# use           AlignSolvTools    v* Alignment
+# use           Brunel            v*  Rec  
 
 blah
 
 #============================================================================
 # Component library building rule
 #============================================================================
-public
-library		TAlignment	../src/*.cpp -import=AIDA
+library TAlignment ../src/*.cpp
+
 #============================================================================
 # define component library link options
 #============================================================================
-apply_pattern    linker_library		library=TAlignment
+apply_pattern component_library library=TAlignment
+
+#===============================================================
+
+
