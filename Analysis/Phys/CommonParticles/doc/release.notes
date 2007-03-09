@@ -4,6 +4,7 @@
 ! Purpose     : Common particles
 !-----------------------------------------------------------------------------
 
+!========================== CommonParticles v3r8 2007-03-09 ===================
 ! 2007-03-08 - Chris Jones
  - Some changes to default cuts for Standard basic particles
   + Loose electrons - Tighten DLL cut from -5 to -2
