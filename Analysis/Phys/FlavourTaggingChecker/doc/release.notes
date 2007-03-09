@@ -1,10 +1,11 @@
-! $Id: release.notes,v 1.15 2007-03-06 08:27:04 musy Exp $
+! $Id: release.notes,v 1.16 2007-03-09 11:23:09 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTaggingChecker
 ! Responsible : Marco Musy (marco.musy@cern.ch)
 ! Purpose     : Checker package for Phys/FlavourTagging
 !-----------------------------------------------------------------------------
 
+!======================= FlavourTaggingChecker v2r2 2007-03-09 ===================
 ! 2007-03-06 - Marco Musy
   - Bug fix in BTaggingAnalysis corrected. Some unused variables dropped.
   - trigger included in ntuple, Ntuple name is set to "tagging".
