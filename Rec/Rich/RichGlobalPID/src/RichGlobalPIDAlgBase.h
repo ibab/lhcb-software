@@ -5,7 +5,7 @@
  *  Header file for RICH global PID algorithm base class : Rich::Rec::GlobalPID::AlgBase
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDAlgBase.h,v 1.7 2007-02-02 10:03:58 jonrob Exp $
+ *  $Id: RichGlobalPIDAlgBase.h,v 1.8 2007-03-09 22:10:41 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2002-11-30
@@ -29,37 +29,10 @@
 #include "RichGlobalPID/RichGlobalPIDTkQuality.h"
 #include "RichRecBase/RichTrackID.h"
 
-//-----------------------------------------------------------------------------
-/** @namespace Rich
- *
- *  General namespace for RICH software
- *
- *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
- *  @date   08/07/2004
- */
-//-----------------------------------------------------------------------------
 namespace Rich
 {
-
-  /** @namespace Rich::Rec
-   *
-   *  General namespace for RICH reconstruction software
-   *
-   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
-   *  @date   08/07/2004
-   */
   namespace Rec
   {
-
-    //-----------------------------------------------------------------------------
-    /** @namespace GlobalPID
-     *
-     *  General namespace for Global PID software
-     *
-     *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
-     *  @date   04/12/2006
-     */
-    //-----------------------------------------------------------------------------
     namespace GlobalPID
     {
 

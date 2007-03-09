@@ -5,7 +5,7 @@
  *  Header file for RICH Global PID algorithm class : Rich::Rec::GlobalPID::TrackSel
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDTrTrackSel.h,v 1.17 2007-02-02 10:03:58 jonrob Exp $
+ *  $Id: RichGlobalPIDTrTrackSel.h,v 1.18 2007-03-09 22:10:41 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/12/2002
@@ -25,37 +25,10 @@
 #include "RichRecBase/IRichExpectedTrackSignal.h"
 #include "RichRecBase/IRichTrackSelector.h"
 
-//-----------------------------------------------------------------------------
-/** @namespace Rich
- *
- *  General namespace for RICH software
- *
- *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
- *  @date   08/07/2004
- */
-//-----------------------------------------------------------------------------
 namespace Rich
 {
-
-  /** @namespace Rich::Rec
-   *
-   *  General namespace for RICH reconstruction software
-   *
-   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
-   *  @date   08/07/2004
-   */
   namespace Rec
   {
-
-    //-----------------------------------------------------------------------------
-    /** @namespace GlobalPID
-     *
-     *  General namespace for Global PID software
-     *
-     *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
-     *  @date   04/12/2006
-     */
-    //-----------------------------------------------------------------------------
     namespace GlobalPID
     {
 

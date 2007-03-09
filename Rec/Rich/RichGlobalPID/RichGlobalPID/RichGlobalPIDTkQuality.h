@@ -4,7 +4,7 @@
  *  Header file for track quality enumeration for the Global PID algorithm
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDTkQuality.h,v 1.6 2007-02-06 19:39:18 jonrob Exp $
+ *  $Id: RichGlobalPIDTkQuality.h,v 1.7 2007-03-09 22:10:39 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-08-13
@@ -20,35 +20,10 @@
 // from Gaudi
 #include "GaudiKernel/MsgStream.h"
 
-/** @namespace Rich
- *
- *  General namespace for RICH specific definitions
- *
- *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
- *  @date   2002-07-12
- */
 namespace Rich
 {
-
-  /** @namespace Rich::Rec
-   *
-   *  General namespace for RICH reconstruction software
-   *
-   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
-   *  @date   08/07/2004
-   */
   namespace Rec
   {
-
-    //-----------------------------------------------------------------------------
-    /** @namespace GlobalPID
-     *
-     *  General namespace for Global PID software
-     *
-     *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
-     *  @date   04/12/2006
-     */
-    //-----------------------------------------------------------------------------
     namespace GlobalPID
     {
 

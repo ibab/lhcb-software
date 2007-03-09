@@ -4,6 +4,9 @@
 ! Purpose     : The Rich Global PID algorithm
 !-----------------------------------------------------------------------------
 
+! 2007-03-09 - Chris Jones
+ - Move namespace doxygen comments to single standalone header file
+
 !======================= RichGlobalPID v3r1 2007-02-06 =======================
 ! 2007-02-02 - Chris Jones
  - Adapt to new RICH namespaces
