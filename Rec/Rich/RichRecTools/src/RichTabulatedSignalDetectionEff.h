@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::Rec::TabulatedSignalDetectionEff
  *
  *  CVS Log :-
- *  $Id: RichTabulatedSignalDetectionEff.h,v 1.12 2007-02-02 10:10:42 jonrob Exp $
+ *  $Id: RichTabulatedSignalDetectionEff.h,v 1.13 2007-03-10 13:19:20 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -31,25 +31,8 @@
 #include "RichDet/DeRich1.h"
 #include "RichDet/DeRich2.h"
 
-//-----------------------------------------------------------------------------
-/** @namespace Rich
- *
- *  General namespace for RICH software
- *
- *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
- *  @date   08/07/2004
- */
-//-----------------------------------------------------------------------------
 namespace Rich
 {
-
-  /** @namespace Rec
-   *
-   *  General namespace for RICH reconstruction software
-   *
-   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
-   *  @date   08/07/2004
-   */
   namespace Rec
   {
 

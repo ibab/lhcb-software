@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::Rec::FunctionalRayleighScatter
  *
  *  CVS Log :-
- *  $Id: RichFunctionalRayleighScatter.h,v 1.9 2007-02-02 10:10:40 jonrob Exp $
+ *  $Id: RichFunctionalRayleighScatter.h,v 1.10 2007-03-10 13:19:20 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -27,27 +27,8 @@
 // interfaces
 #include "RichRecBase/IRichRayleighScatter.h"
 
-//-----------------------------------------------------------------------------
-/** @namespace Rich
- *
- *  General namespace for RICH software
- *
- *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
- *  @date   08/07/2004
- */
-//-----------------------------------------------------------------------------
 namespace Rich
 {
-
-  //-----------------------------------------------------------------------------
-  /** @namespace Rec
-   *
-   *  General namespace for RICH reconstruction software
-   *
-   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
-   *  @date   08/07/2004
-   */
-  //-----------------------------------------------------------------------------
   namespace Rec
   {
 

@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::Rec::DelegatedTrackCreatorFromRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichDelegatedTrackCreatorFromRecoTracks.h,v 1.4 2007-02-02 10:10:40 jonrob Exp $
+ *  $Id: RichDelegatedTrackCreatorFromRecoTracks.h,v 1.5 2007-03-10 13:19:19 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -25,27 +25,8 @@
 // Event
 #include "Event/Track.h"
 
-//-----------------------------------------------------------------------------
-/** @namespace Rich
- *
- *  General namespace for RICH software
- *
- *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
- *  @date   08/07/2004
- */
-//-----------------------------------------------------------------------------
 namespace Rich
 {
-
-  //-----------------------------------------------------------------------------
-  /** @namespace Rec
-   *
-   *  General namespace for RICH reconstruction software
-   *
-   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
-   *  @date   08/07/2004
-   */
-  //-----------------------------------------------------------------------------
   namespace Rec
   {
 

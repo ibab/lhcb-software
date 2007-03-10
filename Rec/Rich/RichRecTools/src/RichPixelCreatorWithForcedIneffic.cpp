@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::PixelCreatorWithForcedIneffic
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorWithForcedIneffic.cpp,v 1.3 2007-02-02 10:10:41 jonrob Exp $
+ *  $Id: RichPixelCreatorWithForcedIneffic.cpp,v 1.4 2007-03-10 13:19:20 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   23/11/2006
@@ -66,9 +66,9 @@ StatusCode PixelCreatorWithForcedIneffic::finalize()
 }
 
 LHCb::RichRecPixel *
-PixelCreatorWithForcedIneffic::buildPixel( const LHCb::RichSmartID id ) const
+PixelCreatorWithForcedIneffic::buildPixel( const Rich::HPDPixelCluster& cluster ) const
 {
-  const double rF = m_rejFrac[id.rich()][id.panel()];
+  const double rF = m_rejFrac[cluster.rich()][cluster.panel().panel()];
   return ( 0 < rF && m_rndm() < rF ?
-           NULL : PixelCreatorFromRawBuffer::buildPixel(id) );
+           NULL : PixelCreatorFromRawBuffer::buildPixel(cluster) );
 }

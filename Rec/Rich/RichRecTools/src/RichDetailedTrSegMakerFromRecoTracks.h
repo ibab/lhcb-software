@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::Rec::DetailedTrSegMakerFromRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichDetailedTrSegMakerFromRecoTracks.h,v 1.14 2007-02-02 10:10:40 jonrob Exp $
+ *  $Id: RichDetailedTrSegMakerFromRecoTracks.h,v 1.15 2007-03-10 13:19:20 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   14/01/2002
@@ -51,27 +51,8 @@
 // GSL
 #include "gsl/gsl_math.h"
 
-//-----------------------------------------------------------------------------
-/** @namespace Rich
- *
- *  General namespace for RICH software
- *
- *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
- *  @date   08/07/2004
- */
-//-----------------------------------------------------------------------------
 namespace Rich
 {
-
-  //-----------------------------------------------------------------------------
-  /** @namespace Rec
-   *
-   *  General namespace for RICH reconstruction software
-   *
-   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
-   *  @date   08/07/2004
-   */
-  //-----------------------------------------------------------------------------
   namespace Rec
   {
 
@@ -109,9 +90,6 @@ namespace Rich
 
       // Initialization of the tool after creation
       virtual StatusCode initialize();
-
-      // Finalization of the tool before deletion
-      virtual StatusCode finalize  ();
 
     public: // methods (and doxygen comments) inherited from interface
 
@@ -167,13 +145,13 @@ namespace Rich
        * @param refState     Reference starting state.
        *
        * @return The status of the extrapolation
-       * @retval StatusCode::SUCCESS State was successfully extrapolated to the new z position
-       * @retval StatusCode::FAILURE State could not be extrapolated to the z position.
+       * @retval true  State was successfully extrapolated to the new z position
+       * @retval false State could not be extrapolated to the z position.
        *         State remains unaltered.
        */
-      StatusCode moveState( LHCb::State *& stateToMove,
-                            const double z,
-                            const LHCb::State * refState = 0 ) const;
+      bool moveState( LHCb::State *& stateToMove,
+                      const double z,
+                      const LHCb::State * refState = 0 ) const;
 
       /// Access primary track extrapolator tool
       inline ITrackExtrapolator * primaryExtrapolator() const
@@ -189,14 +167,14 @@ namespace Rich
       }
 
       /// Creates the middle point information
-      StatusCode createMiddleInfo( const Rich::RadiatorType rad,
-                                   LHCb::State *& fState,
-                                   const LHCb::State * fStateRef,
-                                   LHCb::State *& lState,
-                                   const LHCb::State * lStateRef,
-                                   Gaudi::XYZPoint & midPoint,
-                                   Gaudi::XYZVector & midMomentum,
-                                   LHCb::RichTrackSegment::StateErrors & errors ) const;
+      bool createMiddleInfo( const Rich::RadiatorType rad,
+                             LHCb::State *& fState,
+                             const LHCb::State * fStateRef,
+                             LHCb::State *& lState,
+                             const LHCb::State * lStateRef,
+                             Gaudi::XYZPoint & midPoint,
+                             Gaudi::XYZVector & midMomentum,
+                             LHCb::RichTrackSegment::StateErrors & errors ) const;
 
       /// Access the DeRich beam pipe objects, creating as needed on demand
       inline const DeRichBeamPipe* deBeam( const Rich::RadiatorType rad ) const

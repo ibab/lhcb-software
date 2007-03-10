@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::PhotonCreator
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreator.cpp,v 1.36 2007-02-02 10:10:41 jonrob Exp $
+ *  $Id: RichPhotonCreator.cpp,v 1.37 2007-03-10 13:19:20 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -67,7 +67,7 @@ PhotonCreator::buildPhoton( LHCb::RichRecSegment * segment,
   if ( ( m_photonReco->reconstructPhoton( segment->trackSegment(),
                                           pixel->globalPosition(),
                                           *geomPhoton,
-                                          pixel->smartID() ).isSuccess() ) &&
+                                          pixel->hpdPixelCluster() ).isSuccess() ) &&
        // Check photon is OK
        ( ( geomPhoton->CherenkovTheta() > 0. ||
            geomPhoton->CherenkovPhi()   > 0. ) &&

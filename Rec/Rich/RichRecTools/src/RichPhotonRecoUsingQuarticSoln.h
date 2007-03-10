@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::Rec::PhotonRecoUsingQuarticSoln
  *
  *  CVS Log :-
- *  $Id: RichPhotonRecoUsingQuarticSoln.h,v 1.13 2007-02-06 16:18:34 cattanem Exp $
+ *  $Id: RichPhotonRecoUsingQuarticSoln.h,v 1.14 2007-03-10 13:19:20 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @author Antonis Papanestis
@@ -60,27 +60,8 @@
 //#include "zsolve_quartic.h"
 #include "zsolve_quartic_RICH.h"
 
-//-----------------------------------------------------------------------------
-/** @namespace Rich
- *
- *  General namespace for RICH software
- *
- *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
- *  @date   08/07/2004
- */
-//-----------------------------------------------------------------------------
 namespace Rich
 {
-
-  //-----------------------------------------------------------------------------
-  /** @namespace Rec
-   *
-   *  General namespace for RICH reconstruction software
-   *
-   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
-   *  @date   08/07/2004
-   */
-  //-----------------------------------------------------------------------------
   namespace Rec
   {
 
@@ -126,15 +107,16 @@ namespace Rich
       // Reconstructs the geometrical photon candidate for a given RichTrackSegment
       // and RichSmartID channel identifier.
       virtual StatusCode reconstructPhoton( const LHCb::RichTrackSegment& trSeg,
-                                            const LHCb::RichSmartID smartID,
+                                            const Rich::HPDPixelCluster& smartIDs,
                                             LHCb::RichGeomPhoton& gPhoton ) const;
 
       // Reconstructs the geometrical photon candidate for a given RichTrackSegment
       // and hit position in global LHCb coordinates.
-      virtual StatusCode reconstructPhoton ( const LHCb::RichTrackSegment& trSeg,
-                                             const Gaudi::XYZPoint& detectionPoint,
-                                             LHCb::RichGeomPhoton& gPhoton,
-                                             const LHCb::RichSmartID smartID = LHCb::RichSmartID() ) const;
+      virtual StatusCode 
+      reconstructPhoton ( const LHCb::RichTrackSegment& trSeg,
+                          const Gaudi::XYZPoint& detectionPoint,
+                          LHCb::RichGeomPhoton& gPhoton,
+                          const Rich::HPDPixelCluster& smartIDs = Rich::HPDPixelCluster() ) const;
 
     private: // methods
 

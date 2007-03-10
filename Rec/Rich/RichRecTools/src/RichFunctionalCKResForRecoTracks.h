@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::Rec::FunctionalCKResForRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichFunctionalCKResForRecoTracks.h,v 1.3 2007-02-02 10:10:40 jonrob Exp $
+ *  $Id: RichFunctionalCKResForRecoTracks.h,v 1.4 2007-03-10 13:19:20 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/10/2004
@@ -37,27 +37,8 @@
 // kernel
 #include "RichKernel/RichGeomFunctions.h"
 
-//-----------------------------------------------------------------------------
-/** @namespace Rich
- *
- *  General namespace for RICH software
- *
- *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
- *  @date   08/07/2004
- */
-//-----------------------------------------------------------------------------
 namespace Rich
 {
-
-  //-----------------------------------------------------------------------------
-  /** @namespace Rec
-   *
-   *  General namespace for RICH reconstruction software
-   *
-   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
-   *  @date   08/07/2004
-   */
-  //-----------------------------------------------------------------------------
   namespace Rec
   {
 

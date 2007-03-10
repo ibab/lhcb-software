@@ -5,7 +5,7 @@
  * Implementation file for class : Rich::Rec::PhotonRecoUsingQuarticSoln
  *
  * CVS Log :-
- * $Id: RichPhotonRecoUsingQuarticSoln.cpp,v 1.15 2007-02-02 10:10:41 jonrob Exp $
+ * $Id: RichPhotonRecoUsingQuarticSoln.cpp,v 1.16 2007-03-10 13:19:20 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @author Antonis Papanestis
@@ -175,13 +175,13 @@ StatusCode PhotonRecoUsingQuarticSoln::initialize()
 StatusCode
 PhotonRecoUsingQuarticSoln::
 reconstructPhoton ( const LHCb::RichTrackSegment& trSeg,
-                    const LHCb::RichSmartID smartID,
+                    const Rich::HPDPixelCluster& smartIDs,
                     LHCb::RichGeomPhoton& gPhoton ) const
 {
   return reconstructPhoton( trSeg,
-                            m_idTool->globalPosition(smartID),
+                            m_idTool->globalPosition(smartIDs),
                             gPhoton,
-                            smartID );
+                            smartIDs );
 }
 
 //-------------------------------------------------------------------------
@@ -192,7 +192,7 @@ PhotonRecoUsingQuarticSoln::
 reconstructPhoton ( const LHCb::RichTrackSegment& trSeg,
                     const Gaudi::XYZPoint& detectionPoint,
                     LHCb::RichGeomPhoton& gPhoton,
-                    const LHCb::RichSmartID smartID ) const
+                    const Rich::HPDPixelCluster& smartIDs ) const
 {
 
   // Detector information (RICH, radiator and HPD panel)
@@ -537,7 +537,7 @@ reconstructPhoton ( const LHCb::RichTrackSegment& trSeg,
   gPhoton.setCherenkovPhi           ( static_cast<float>(phiCerenkov)   );
   gPhoton.setActiveSegmentFraction  ( static_cast<float>(fraction)      );
   gPhoton.setDetectionPoint         ( detectionPoint );
-  gPhoton.setSmartID                ( smartID        );
+  gPhoton.setPixelCluster           ( smartIDs       );
   gPhoton.setMirrorNumValid         ( unambigPhoton  );
   gPhoton.setSphMirrorNum           ( sphSegment ? sphSegment->mirrorNumber() : 0 );
   gPhoton.setFlatMirrorNum          ( secSegment ? secSegment->mirrorNumber() : 0 );
@@ -577,10 +577,11 @@ findMirrorData( const Rich::DetectorType rich,
   if ( m_useSecMirs )
   {
     // find the sec mirror intersction point and secondary mirror segment
-    m_rayTracing->intersectPlane( sphReflPoint,
-                                  virtDetPoint - sphReflPoint,
-                                  m_rich[rich]->nominalPlane(side),
-                                  secReflPoint);
+    const StatusCode sc = m_rayTracing->intersectPlane( sphReflPoint,
+                                                        virtDetPoint - sphReflPoint,
+                                                        m_rich[rich]->nominalPlane(side),
+                                                        secReflPoint );
+    if ( sc.isFailure() ) { return false; }
     secSegment = m_mirrorSegFinder->findSecMirror(rich, side, secReflPoint);
   }
 

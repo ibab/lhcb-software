@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::GeomEffPhotonTracing
  *
  *  CVS Log :-
- *  $Id: RichGeomEffPhotonTracing.cpp,v 1.25 2007-02-02 10:10:40 jonrob Exp $
+ *  $Id: RichGeomEffPhotonTracing.cpp,v 1.26 2007-03-10 13:19:20 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -98,10 +98,10 @@ StatusCode GeomEffPhotonTracing::initialize()
 StatusCode GeomEffPhotonTracing::finalize()
 {
   // Release things
-  m_uniDist.finalize();
+  const StatusCode sc = m_uniDist.finalize();
 
   // Execute base class method
-  return RichRecToolBase::finalize();
+  return RichRecToolBase::finalize() && sc;
 }
 
 double
@@ -161,14 +161,14 @@ GeomEffPhotonTracing::geomEfficiency ( LHCb::RichRecSegment * segment,
           }
 
           // Check HPD status
-          if ( m_hpdCheck && !m_richSys->hpdIsActive(photon.smartID()) ) continue;
+          if ( m_hpdCheck && !m_richSys->hpdIsActive(photon.pixelCluster().hpd()) ) continue;
 
           // count detected photons
           ++nDetect;
 
           // update efficiency per HPD tally
           segment->addToGeomEfficiencyPerPD( id,
-                                             photon.smartID().hpdID(),
+                                             photon.pixelCluster().hpd(),
                                              m_pdInc );
 
           // flag regions where we expect hits for this segment
@@ -260,7 +260,7 @@ GeomEffPhotonTracing::geomEfficiencyScat ( LHCb::RichRecSegment * segment,
                                                m_traceMode ) )
         {
           // Check HPD status
-          if ( m_hpdCheck && !m_richSys->hpdIsActive(photon.smartID()) ) continue;
+          if ( m_hpdCheck && !m_richSys->hpdIsActive(photon.pixelCluster().hpd()) ) continue;
           // count detected
           ++nDetect;
         }

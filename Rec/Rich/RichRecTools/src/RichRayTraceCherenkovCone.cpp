@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::RayTraceCherenkovCone
  *
  *  CVS Log :-
- *  $Id: RichRayTraceCherenkovCone.cpp,v 1.17 2007-02-02 10:10:41 jonrob Exp $
+ *  $Id: RichRayTraceCherenkovCone.cpp,v 1.18 2007-03-10 13:19:20 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -156,8 +156,6 @@ RayTraceCherenkovCone::rayTrace ( const Rich::DetectorType rich,
       // temp photon
       LHCb::RichGeomPhoton photon;
 
-      //if ( mode.detPlaneBound() == LHCb::RichTraceMode::RespectHPDTubes )
-
       LHCb::RichRecPointOnRing * point = NULL;
 
       // first ray trace to infinite plane to get point
@@ -200,7 +198,7 @@ RayTraceCherenkovCone::rayTrace ( const Rich::DetectorType rich,
         const Gaudi::XYZPoint & gP = photon.detectionPoint();
         point->setGlobalPosition(gP);
         point->setLocalPosition(m_smartIDTool->globalToPDPanel(gP));
-        point->setSmartID( photon.smartID() );
+        point->setSmartID( photon.pixelCluster().primaryID() );
       }
 
     }

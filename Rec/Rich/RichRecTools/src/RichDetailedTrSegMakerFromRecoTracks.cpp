@@ -5,7 +5,7 @@
  * Implementation file for class : Rich::Rec::DetailedTrSegMakerFromRecoTracks
  *
  * CVS Log :-
- * $Id: RichDetailedTrSegMakerFromRecoTracks.cpp,v 1.14 2007-02-02 10:10:40 jonrob Exp $
+ * $Id: RichDetailedTrSegMakerFromRecoTracks.cpp,v 1.15 2007-03-10 13:19:20 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -177,15 +177,6 @@ StatusCode DetailedTrSegMakerFromRecoTracks::initialize()
 }
 
 //=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode DetailedTrSegMakerFromRecoTracks::finalize()
-{
-  // Execute base class method
-  return Rich::Rec::ToolBase::finalize();
-}
-
-//=============================================================================
 // Constructs the track segments for a given Track
 //=============================================================================
 int
@@ -348,7 +339,7 @@ constructSegments( const ContainedObject * obj,
     } // end !aerogel if
 
     // transport entry and exit states to best points
-    StatusCode sc = StatusCode::FAILURE;
+    bool sc = false;
     if ( entryStateOK && exitStateOK )
     {
       if (msgLevel(MSG::VERBOSE)) verbose() << "  Both states OK : Zentry=" << entryPoint1.z()
@@ -357,10 +348,10 @@ constructSegments( const ContainedObject * obj,
       // make sure at current z positions
       if (msgLevel(MSG::VERBOSE))
         verbose() << "  Checking entry point is at final z=" << entryPoint1.z() << endreq;
-      const StatusCode sc1 = moveState( entryPState, entryPoint1.z(), entryPStateRaw );
+      const bool sc1 = moveState( entryPState, entryPoint1.z(), entryPStateRaw );
       if (msgLevel(MSG::VERBOSE))
         verbose() << "  Checking exit point is at final z=" << intersects2.back().exitPoint().z() << endreq;
-      const StatusCode sc2 = moveState( exitPState,  intersects2.back().exitPoint().z(), exitPStateRaw );
+      const bool sc2 = moveState( exitPState,  intersects2.back().exitPoint().z(), exitPStateRaw );
       sc = sc1 && sc2;
 
     }
@@ -381,10 +372,10 @@ constructSegments( const ContainedObject * obj,
       // make sure at current z positions
       if (msgLevel(MSG::VERBOSE))
         verbose() << "  Checking entry point is at final z= " << entryPoint1.z() << endreq;
-      const StatusCode sc1 = moveState( entryPState, entryPoint1.z(), entryPStateRaw );
+      const bool sc1 = moveState( entryPState, entryPoint1.z(), entryPStateRaw );
       if (msgLevel(MSG::VERBOSE))
         verbose() << "  Checking exit point is at final z= " << intersects1.back().exitPoint().z() << endreq;
-      const StatusCode sc2 = moveState( exitPState, intersects1.back().exitPoint().z(), exitPStateRaw );
+      const bool sc2 = moveState( exitPState, intersects1.back().exitPoint().z(), exitPStateRaw );
       sc = sc1 && sc2;
 
     }
@@ -402,10 +393,10 @@ constructSegments( const ContainedObject * obj,
       // make sure at current z positions
       if (msgLevel(MSG::VERBOSE))
         verbose() << "  Checking entry point is at final z= " << entryPoint2.z() << endreq;
-      const StatusCode sc1 = moveState( entryPState, entryPoint2.z(), entryPStateRaw );
+      const bool sc1 = moveState( entryPState, entryPoint2.z(), entryPStateRaw );
       if (msgLevel(MSG::VERBOSE))
         verbose() << "  Checking exit point is at final z= " << intersects2.back().exitPoint().z() << endreq;
-      const StatusCode sc2 = moveState( exitPState,  intersects2.back().exitPoint().z(), exitPStateRaw );
+      const bool sc2 = moveState( exitPState,  intersects2.back().exitPoint().z(), exitPStateRaw );
       sc = sc1 && sc2;
 
     }
@@ -419,7 +410,7 @@ constructSegments( const ContainedObject * obj,
     }
 
     // Test final status code
-    if ( sc.isFailure() )
+    if ( !sc )
     {
       delete entryPState;
       delete exitPState;
@@ -442,7 +433,7 @@ constructSegments( const ContainedObject * obj,
       if (msgLevel(MSG::VERBOSE))
         verbose() << "  --> Beam Intersects : " << intType << " : " << inter1 << " " << inter2 << endreq;
 
-      sc = StatusCode::SUCCESS;
+      sc = true;
       if ( intType == DeRichBeamPipe::NoIntersection )
       {
         verbose() << "   --> No beam intersections -> No corrections needed" << endreq;
@@ -466,7 +457,7 @@ constructSegments( const ContainedObject * obj,
         verbose() << "   --> Correcting exit point to point on cone" << endreq;
         sc = moveState( exitPState, inter1.z(), exitPStateRaw );
       }
-      if ( sc.isFailure() )
+      if ( !sc )
       {
         delete entryPState;
         delete exitPState;
@@ -570,7 +561,7 @@ constructSegments( const ContainedObject * obj,
         const bool OK = createMiddleInfo( rad,
                                           entryPState, entryPStateRaw,
                                           exitPState,  exitPStateRaw,
-                                          midPoint, midMomentum, midErrs ).isSuccess();
+                                          midPoint, midMomentum, midErrs );
 
         if ( OK )
         {
@@ -636,10 +627,9 @@ constructSegments( const ContainedObject * obj,
 }
 //====================================================================================================
 
-
 //====================================================================================================
 // creates middle point info
-StatusCode
+bool
 DetailedTrSegMakerFromRecoTracks::createMiddleInfo( const Rich::RadiatorType rad,
                                                     LHCb::State *& fState,
                                                     const LHCb::State * fStateRef,
@@ -656,11 +646,11 @@ DetailedTrSegMakerFromRecoTracks::createMiddleInfo( const Rich::RadiatorType rad
   const double midZ = (fState->position().z()+lState->position().z())/2;
 
   // move start state to this z
-  const StatusCode moveFirst = moveState( fState, midZ, fStateRef );
+  const bool moveFirst = moveState( fState, midZ, fStateRef );
 
   // move end state to this z
-  const StatusCode moveLast = ( Rich::Rich1Gas == rad ?
-                                moveState( lState, midZ, lStateRef ) : StatusCode::FAILURE );
+  const bool moveLast = ( Rich::Rich1Gas == rad ?
+                          moveState( lState, midZ, lStateRef ) : false );
 
   if ( moveFirst && moveLast )
   {
@@ -757,7 +747,8 @@ DetailedTrSegMakerFromRecoTracks::fixRich1GasEntryPoint( LHCb::State *& state,
     if ( aerogelExitPoint.z() > state->z() )
     {
       if (msgLevel(MSG::VERBOSE)) verbose() << "   Correcting Rich1Gas entry point" << endreq;
-      moveState( state, aerogelExitPoint.z(), refState );
+      const bool sc = moveState( state, aerogelExitPoint.z(), refState );
+      if ( !sc ) Warning( "Problem correcting RICH1Gas entry point for aerogel" );
     }
   }
 }
@@ -772,6 +763,8 @@ DetailedTrSegMakerFromRecoTracks::correctRadExitMirror( const DeRichRadiator* ra
   if (msgLevel(MSG::VERBOSE))
     verbose() << "   --> Attempting Correction to exit point for spherical mirror" << endreq;
 
+  bool sc = true;
+
   // get rich information
   const Rich::DetectorType rich = radiator->rich();
 
@@ -780,7 +773,7 @@ DetailedTrSegMakerFromRecoTracks::correctRadExitMirror( const DeRichRadiator* ra
 
   // move state to be on the inside of the mirror
   verbose() << "    --> Moving state first to be inside mirror" << endreq;
-  moveState( state, state->z() - m_mirrShift[rich], refState );
+  sc = sc && moveState( state, state->z() - m_mirrShift[rich], refState );
   bool correct = false;
 
   // find mirror intersection using the reflect method
@@ -803,20 +796,21 @@ DetailedTrSegMakerFromRecoTracks::correctRadExitMirror( const DeRichRadiator* ra
   {
     if (msgLevel(MSG::VERBOSE))
       verbose() << "    --> Found correction is needed" << endreq;
-    moveState( state, intersection.z(), refState );
+    sc = sc && moveState( state, intersection.z(), refState );
   }
   else
   {
     if (msgLevel(MSG::VERBOSE))
       verbose() << "    --> Found correction not needed. Moving back to original position" << endreq;
-    moveState( state, initialZ, refState );
+    sc = sc && moveState( state, initialZ, refState );
   }
 
+  if ( !sc ) Warning( "Problem correcting segment exit to mirror intersection" );
 }
 //====================================================================================================
 
 //====================================================================================================
-StatusCode
+bool
 DetailedTrSegMakerFromRecoTracks::moveState( LHCb::State *& stateToMove,
                                              const double z,
                                              const LHCb::State * refState ) const
@@ -857,7 +851,7 @@ DetailedTrSegMakerFromRecoTracks::moveState( LHCb::State *& stateToMove,
         // Both failed ...
         Warning("Failed to extrapolate state using either '"+
                 m_trExt1Name+"' or '"+m_trExt2Name+"'");
-        return StatusCode::FAILURE;
+        return false;
       }
     }
 
@@ -870,6 +864,6 @@ DetailedTrSegMakerFromRecoTracks::moveState( LHCb::State *& stateToMove,
 
   }
 
-  return StatusCode::SUCCESS;
+  return true;
 }
 //====================================================================================================

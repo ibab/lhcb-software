@@ -5,7 +5,7 @@
  *  Declaration of objects in the component library RichRecTools
  *
  *  CVS Log :-
- *  $Id: RichRecTools_load.cpp,v 1.31 2007-02-02 10:10:41 jonrob Exp $
+ *  $Id: RichRecTools_load.cpp,v 1.32 2007-03-10 13:19:20 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -13,7 +13,6 @@
 //=========================================================================
 
 #include "GaudiKernel/DeclareFactoryEntries.h"
-
 
 DECLARE_FACTORY_ENTRIES( RichRecTools )
 {

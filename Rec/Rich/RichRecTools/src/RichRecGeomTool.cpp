@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::GeomTool
  *
  *  CVS Log :-
- *  $Id: RichRecGeomTool.cpp,v 1.14 2007-02-02 10:10:41 jonrob Exp $
+ *  $Id: RichRecGeomTool.cpp,v 1.15 2007-03-10 13:19:20 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -85,7 +85,7 @@ double GeomTool::trackPixelHitSep2( const LHCb::RichRecSegment * segment,
   const Gaudi::XYZPoint & pixP = pixel->localPosition(rad);
 
   // Which detector side is the hit on
-  const Rich::Side side = pixel->smartID().panel();
+  const Rich::Side side = pixel->hpdPixelCluster().panel().panel();
 
   // segment position ray traced to HPD panel, in local HPD coords
   const Gaudi::XYZPoint & segP = segment->pdPanelHitPointLocal();

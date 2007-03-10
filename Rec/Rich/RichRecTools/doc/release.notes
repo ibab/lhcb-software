@@ -4,6 +4,13 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2007-03-10 - Chris Jones
+ - Remove doxygen comments for namespaces
+ - StatusCode warnings
+  + Replace some internal use of StatusCodes with booleans
+  + Add checks on untested StatusCodes
+ - Adapt to new HPD pixel clusters
+
 !===================== RichRecTools v3r8 2007-02-06 =======================
 ! 2007-02-06 - Marco Cattaneo
  - Clean up includes
