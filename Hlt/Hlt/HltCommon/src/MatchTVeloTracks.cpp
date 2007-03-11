@@ -1,4 +1,4 @@
-// $Id: MatchTVeloTracks.cpp,v 1.1 2007-03-08 07:49:08 asatta Exp $
+// $Id: MatchTVeloTracks.cpp,v 1.2 2007-03-11 09:41:34 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -54,6 +54,8 @@ info()<<" qui "<<endreq;
 }
 StatusCode MatchTVeloTracks::finalize() 
 {
+ StatusCode sc = GaudiTool::finalize();
+ return StatusCode::SUCCESS;
   
 }
 
@@ -94,7 +96,8 @@ StatusCode MatchTVeloTracks::match2dVelo(LHCb::Track& veloTrack,LHCb::Track& Ttr
   float slopexT=Ttrack.firstState().tx();
   float slopeyT=Ttrack.firstState().ty();
   slopeyT=yT/(zT-zpv);
-  // debug()<<" parameter "<<yT<<" "<<slopeyT<<" "<<zT<<" "<<trackZ<<endreq;    
+//   debug()<<" parameter "<<yT<<" "<<slopeyT<<" "<<zT<<" 
+//"<<trackZ<<endreq;    
   yVelo = yT -  (slopeyT * (zT - trackZ));
   //debug()<<"yvelo "<<yVelo<<endreq;
     
@@ -124,11 +127,11 @@ StatusCode MatchTVeloTracks::match2dVelo(LHCb::Track& veloTrack,LHCb::Track& Ttr
     //  double x_muon_magnet=xM2-(xM3-xM2)/(zM3-zM2)*(zM2-z_magnet_center$
     
     float x_distance= x_velo_mag -x_muon_magnet;
-    debug()<<"distanza in X  "<<x_distance<<" "<<x_muon_magnet<<" "
-           <<x_velo_mag<<" "<<endreq;
+    //debug()<<"distanza in X  "<<x_distance<<" "<<x_muon_magnet<<" "
+    //       <<x_velo_mag<<" "<<endreq;
     
     //      if(fabs(x_distance)>m_x_cut)continue;        
-    if(fabs(x_distance)<m_x_cut){
+    if(fabs(x_distance)<m_2dx_cut){
       return StatusCode::SUCCESS;
     }
       
@@ -136,7 +139,7 @@ StatusCode MatchTVeloTracks::match2dVelo(LHCb::Track& veloTrack,LHCb::Track& Ttr
     
   }
   
-  debug()<<" end of match"<<endreq;
+  //debug()<<" end of match"<<endreq;
   
   return StatusCode::FAILURE;
 
