@@ -1,12 +1,12 @@
-#include "CCPCHist.h"
+#include "CCPCHist/CCPCHist.h"
 #ifdef WIN32
 #include "windows.h"
 #define sleep Sleep
 #else
 #include "unistd.h"
 #endif
-#include <stdio.h>
-#include <stdlib.h>
+#include <cstdio>
+#include <cstdlib>
 int main(int , char** )
 {
   Histo *h[4];

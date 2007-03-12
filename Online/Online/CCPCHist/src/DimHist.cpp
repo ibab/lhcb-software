@@ -1,8 +1,8 @@
 #include <memory.h>
-#include <stdio.h>
-#include "dimhist.h"
+#include <cstdio>
+#include "CCPCHist/dimhist.h"
 #include <vector>
-#include "ctype.h"
+#include <cctype>
 //#include <iostream>
 
 HistServer::HistServer()

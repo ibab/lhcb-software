@@ -1,7 +1,7 @@
 #ifndef DIMHIST_DEF
 #define DIMHIST_DEF
-#include "iCCPCHist.h"
-#include "dis.hxx"
+#include "CCPCHist/iCCPCHist.h"
+#include "dim/dis.hxx"
 #define dimtype float
 //#define L_TITLE 80
 class DimHistbuff1

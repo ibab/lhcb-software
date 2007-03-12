@@ -1,6 +1,6 @@
 #ifndef CCPCHIST_TAG
 #define CCPCHIST_TAG
-#include "hist_types.h"
+#include "CCPCHist/hist_types.h"
 #define H_IllegalID 1
 
 #ifdef __cplusplus
