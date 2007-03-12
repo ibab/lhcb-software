@@ -95,7 +95,6 @@ void Connection::connectAndNegotiate(int startThreads)
   int ret;
   int sockoptval;
   socklen_t optlen;
-  struct hostent *hostname;
   int numRetries = 0;
 
   m_sockfd = socket(AF_INET, SOCK_STREAM, 0);
