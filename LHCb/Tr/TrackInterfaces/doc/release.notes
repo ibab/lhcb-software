@@ -4,6 +4,9 @@
 ! Purpose     : package for tracking tools interfaces
 !-----------------------------------------------------------------------------
 
+! 2007-03-12 M. Needham
+ - Add IVeloExpectation interface
+
 !====================== TrackInterfaces v3r1 2007-02-19 =====================
 ! 2007-02-19 - Marco Cattaneo
  - Add reflex dictionary generation for all interfaces
