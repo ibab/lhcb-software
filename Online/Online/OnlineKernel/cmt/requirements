@@ -3,7 +3,6 @@ version v1r4
 
 branches  cmt doc src
 use GaudiPolicy v*
-include_dirs  $(OnlineKernel_cmtpath)/$(cmt_installarea_prefix)/include
 apply_pattern install_more_includes more=OnlineKernel
 
 library       OnlineKernel ../src/WT/*.cpp      \
@@ -21,6 +20,7 @@ apply_pattern ld_library_path
 apply_pattern linker_library   library=OnlineKernel
 application   test             ../main/wt.cpp
 application   gentest          ../main/gentest.cpp
+macro_append  use_includes     ' $(ppcmd)"$(OnlineKernel_cmtpath)/$(cmt_installarea_prefix)/include/OnlineKernel" '
 macro_append  use_linkopts     ' -ldl ' WIN32 ''
 path_remove PYTHONPATH '/OnlineKernel/'    WIN32 '\OnlineKernel\'
 path_append PYTHONPATH $(ONLINEKERNELROOT)/python
