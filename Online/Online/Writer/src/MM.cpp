@@ -1,14 +1,12 @@
 #ifndef _WIN32
 
-extern "C" {
-#include <malloc.h>
-#include <string.h>
-#include <time.h>
-}
-
+#include <cstdlib>
+#include <cstring>
+#include <ctime>
 #include <iostream>
 #include <stdexcept>
 
+#include <unistd.h>
 #include "Writer/MM.h"
 
 
