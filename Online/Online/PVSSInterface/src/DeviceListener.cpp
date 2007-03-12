@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DeviceListener.cpp,v 1.1 2007-03-12 10:07:24 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DeviceListener.cpp,v 1.2 2007-03-12 19:30:17 frankb Exp $
 //  ====================================================================
 //  DevType.cpp
 //  --------------------------------------------------------------------
@@ -6,14 +6,15 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: DeviceListener.cpp,v 1.1 2007-03-12 10:07:24 frankb Exp $
+// $Id: DeviceListener.cpp,v 1.2 2007-03-12 19:30:17 frankb Exp $
 
 // Framework include files
 #include "PVSS/DeviceListener.h"
 #include "PVSS/DeviceSensor.h"
 #include "CPP/Event.h"
+// C++ include files
 #include <iostream>
-
+#include <stdexcept>
 using namespace PVSS;
 
 /// Initializing constructor
