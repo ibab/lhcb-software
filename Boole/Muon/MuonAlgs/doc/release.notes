@@ -4,13 +4,14 @@
 ! Purpose     : Muon digitisation algorithms
 !-----------------------------------------------------------------------------
 
-!======================== MuonAlgs v6r2 2007-03-01 =========================
+!======================== MuonAlgs v6r3 2007-03-11 =========================
 ! 2007-03-09 - Alessia Satta
- - Bug fix
+ - Fix bug in v6r2 change that was causing access to an unitialised pointer
+   (reported by valgrind, causing crash on Windows)
 
+!======================== MuonAlgs v6r2 2007-03-01 =========================
 ! 2007-03-01 - Marco Cattaneo
  - Remove obsolete MuonAlgs_load.cpp file
-
 
 ! 2007-02-27 - Alessia Satta
  - Modified for dialog deadtime
