@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/RangeAlarm.cpp,v 1.3 2007-03-01 20:08:55 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/RangeAlarm.cpp,v 1.4 2007-03-12 18:56:03 frankb Exp $
 //  ====================================================================
 //  RangeAlarm.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: RangeAlarm.cpp,v 1.3 2007-03-01 20:08:55 frankb Exp $
+// $Id: RangeAlarm.cpp,v 1.4 2007-03-12 18:56:03 frankb Exp $
 
 // Framework include files
 #include "PVSS/CfgType.h"
@@ -173,12 +173,12 @@ bool RangeAlarm<T>::operator<(const RangeAlarm& alm) const  {
   return false;
 }
 
-template RangeAlarm<double>;
-template RangeAlarm<char>;
-template RangeAlarm<unsigned char>;
-template RangeAlarm<short>;
-template RangeAlarm<float>;
-template RangeAlarm<int>;
-template RangeAlarm<unsigned int>;
-template RangeAlarm<long>;
-template RangeAlarm<unsigned long>;
+template class RangeAlarm<double>;
+template class RangeAlarm<char>;
+template class RangeAlarm<unsigned char>;
+template class RangeAlarm<short>;
+template class RangeAlarm<float>;
+template class RangeAlarm<int>;
+template class RangeAlarm<unsigned int>;
+template class RangeAlarm<long>;
+template class RangeAlarm<unsigned long>;

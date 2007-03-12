@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DataPoint.cpp,v 1.19 2007-03-12 09:04:13 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DataPoint.cpp,v 1.20 2007-03-12 18:56:03 frankb Exp $
 //  ====================================================================
 //  DataPoint.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: DataPoint.cpp,v 1.19 2007-03-12 09:04:13 frankb Exp $
+// $Id: DataPoint.cpp,v 1.20 2007-03-12 18:56:03 frankb Exp $
 #ifdef _WIN32
   // Disable warning C4250: 'const float' : forcing value to bool 'true' or 'false' (performance warning)
   #pragma warning ( disable : 4800 )
@@ -40,14 +40,14 @@ template <> int DataValue<unsigned char>::type_id()                { return DevT
 template <> int DataValue<short>::type_id()                        { return DevTypeElement::NOELEMENT; }
 template <> int DataValue<unsigned short>::type_id()               { return DevTypeElement::NOELEMENT; }
 template <> int DataValue<int>::type_id()                          { return DevTypeElement::INT;       }
-template <> int DataValue<unsigned int>::type_id()                 { return DevTypeElement::UINT;       }
+template <> int DataValue<unsigned int>::type_id()                 { return DevTypeElement::UINT;      }
 template <> int DataValue<long>::type_id()                         { return DevTypeElement::NOELEMENT; }
 template <> int DataValue<unsigned long>::type_id()                { return DevTypeElement::NOELEMENT; }
 template <> int DataValue<float>::type_id()                        { return DevTypeElement::FLOAT;     }
 template <> int DataValue<double>::type_id()                       { return DevTypeElement::NOELEMENT; }
-//template <> int DataValue<time_t>::type_id()                       { return DevTypeElement::TIME;    }
+//template <> int DataValue<time_t>::type_id()                     { return DevTypeElement::TIME;    }
 template <> int DataValue<std::string>::type_id()                  { return DevTypeElement::TEXT;      }
-template <> int DataValue<DpID>::type_id()                 { return DevTypeElement::DPID;      }
+template <> int DataValue<DpID>::type_id()                         { return DevTypeElement::DPID;      }
 template <> int DataValue<DPTime>::type_id()                       { return DevTypeElement::TIME;      }
 template <> int DataValue<DPRef>::type_id()                        { return DevTypeElement::NOELEMENT; }
 template <> int DataValue<std::vector<bool> >::type_id()           { return DevTypeElement::DYNBIT;    }
@@ -56,14 +56,14 @@ template <> int DataValue<std::vector<unsigned char> >::type_id()  { return DevT
 template <> int DataValue<std::vector<short> >::type_id()          { return DevTypeElement::NOELEMENT; }
 template <> int DataValue<std::vector<unsigned short> >::type_id() { return DevTypeElement::NOELEMENT; }
 template <> int DataValue<std::vector<int> >::type_id()            { return DevTypeElement::DYNINT;    }
-template <> int DataValue<std::vector<unsigned int> >::type_id()   { return DevTypeElement::DYNUINT;    }
+template <> int DataValue<std::vector<unsigned int> >::type_id()   { return DevTypeElement::DYNUINT;   }
 template <> int DataValue<std::vector<long> >::type_id()           { return DevTypeElement::NOELEMENT; }
 template <> int DataValue<std::vector<unsigned long> >::type_id()  { return DevTypeElement::NOELEMENT; }
 template <> int DataValue<std::vector<float> >::type_id()          { return DevTypeElement::DYNFLOAT;  }
 template <> int DataValue<std::vector<double> >::type_id()         { return DevTypeElement::NOELEMENT; }
 //template <> int DataValue<std::vector<time_t> >::type_id()       { return DevTypeElement::DYNTIME;   }
 template <> int DataValue<std::vector<std::string> >::type_id()    { return DevTypeElement::DYNTEXT;   }
-template <> int DataValue<std::vector<DpID> >::type_id()   { return DevTypeElement::DYNDPID;   }
+template <> int DataValue<std::vector<DpID> >::type_id()           { return DevTypeElement::DYNDPID;   }
 template <> int DataValue<std::vector<DPTime> >::type_id()         { return DevTypeElement::DYNTIME;   }
 template <> int DataValue<std::vector<DPRef> >::type_id()          { return DevTypeElement::NOELEMENT; }
 
@@ -277,8 +277,8 @@ std::string DataPoint::sysname(const std::string& dp)   {
     return dp.substr(0,id1);
   return dp.substr(0,id1);
 }
-
-template <typename T> T DataPoint::data()  {
+#if 0
+template <typename T> T PVSS::DataPoint::data()  {
   if ( m_val )  {
     switch(m_val->type())  {
       case DevTypeElement::FLOAT: return convertValue<float,T>(m_val);
@@ -312,7 +312,7 @@ template <typename T> const T DataPoint::data()  const {
   return default_value<T>();
 }
 
-template <> const std::string DataPoint::data<std::string>() const  {
+template <> const std::string PVSS::DataPoint::data<std::string>() const  {
   if ( m_val )  {
     std::stringstream os;
     switch(m_val->type())  {
@@ -345,7 +345,7 @@ template <> const std::string DataPoint::data<std::string>() const  {
   return "";
 }
 
-template <> std::string DataPoint::data<std::string>()  {
+template <> std::string PVSS::DataPoint::data<std::string>()  {
   if ( m_val )  {
     std::stringstream os;
     switch(m_val->type())  {
@@ -377,7 +377,7 @@ template <> std::string DataPoint::data<std::string>()  {
   invalidValue(typeid(std::string));
   return "";
 }
-
+#endif
 template <class T> T& DataPoint::reference()  {
   checkTypeCompatibility(m_val,(DataValue<T>*)m_val);
   return ((DataValue<T>*)m_val)->data();

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/PVSSIO.cpp,v 1.3 2007-03-12 09:04:13 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/PVSSIO.cpp,v 1.4 2007-03-12 18:56:03 frankb Exp $
 //  ====================================================================
 //  PVSSIO.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: PVSSIO.cpp,v 1.3 2007-03-12 09:04:13 frankb Exp $
+// $Id: PVSSIO.cpp,v 1.4 2007-03-12 18:56:03 frankb Exp $
 
 // Framework include files
 #include "PVSS/Kernel.h"
@@ -15,6 +15,9 @@
 #include "PVSS/DataPoint.h"
 #include "PVSSManager/DatapointIO.h"
 #include "PVSS/DevTypeElement.h"
+
+// C++ include files
+#include <stdexcept>
 
 namespace PVSS {
   typedef void (*LoadFunction)(void *,const void *);
@@ -195,20 +198,23 @@ namespace PVSS {
       break;
     }
   }
+#ifdef _WIN32
 
   #define __T(x) template ReadTransactionSetValue <x >;
+  namespace {
+    template <typename T> struct ReadTransactionSetValue {
+      static void do1(std::vector<T>& t)  { void* p;PVSS::setWriteIO(0,p,0,DpID(0),t);  }
+      static void dp1(std::vector<T>& t)  { PVSS::addWriteIO(0,0,DpID(0),t);            }
+    };
+  }
+#else
+  #define __T(x) template <> void addWriteIO(void* context,int typ,const DpID& dp,const std::vector< x >& v);
+
+#endif
   #define INSTANTIATE_FUNCTIONS(x) \
     __T(char) __T(unsigned char) __T(int) __T(unsigned int) \
     __T(long) __T(unsigned long) __T(float) __T(double) __T(bool) \
     __T(std::string) __T(DpID) __T(DPTime)
 
-  namespace {
-
-    template <typename T> struct ReadTransactionSetValue {
-      static void do1(std::vector<T>& t)  { void* p;setWriteIO(0,p,0,DpID(0),t);  }
-      static void dp1(std::vector<T>& t)  { addWriteIO(0,0,DpID(0),t);            }
-    };
     INSTANTIATE_FUNCTIONS(1)
-  }
-
 }

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/PVSS/DataPoint.h,v 1.4 2007-03-12 09:04:12 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/PVSS/DataPoint.h,v 1.5 2007-03-12 18:56:03 frankb Exp $
 //  ====================================================================
 //  DataPoint.h
 //  --------------------------------------------------------------------
@@ -275,7 +275,7 @@ namespace PVSS {
     DPPushback(ControlsManager* m, T& c) : DPContainerInserter<T>(m,c) {}
     /// Callback function for datapoint insertion into container
     virtual void operator()(const DpID& dpid)  
-    {   container->push_back(DataPoint(manager,dpid));  }
+    {   this->container->push_back(DataPoint(this->manager,dpid));  }
   };
 
   /**@class DPInsert DataPoint.h PVSS/DataPoint.h 
@@ -288,7 +288,7 @@ namespace PVSS {
     DPInsert(ControlsManager* m, T& c) : DPContainerInserter<T>(m,c) {}
     /// Callback function for datapoint insertion into container
     virtual void operator()(const DpID& dpid)
-    {   container->insert(DataPoint(manager,dpid));    }
+    {   this->container->insert(DataPoint(this->manager,dpid));    }
   };
 
   /// Helper function to create data point insertion object for STL sets
@@ -349,7 +349,7 @@ namespace PVSS {
     /// Callback function to operate on datapoints
     void operator()(const DpID& dpid)  {
       std::string dpn = DataPoint::dpname(dpid);
-      container.insert(std::make_pair(dpn,DataPoint(m_manager,dpn)));
+      this->container.insert(std::make_pair(dpn,DataPoint(this->m_manager,dpn)));
     }
   };
 
@@ -363,7 +363,7 @@ namespace PVSS {
     DataPointContainerActor(ControlsManager* m, T c=T()) : DPListActor(m), DPContainerActor<T>(c)  {}
     /// Callback function to operate on datapoints
     void operator()(const DpID& dpid)  
-    {  container.push_back(DataPoint(m_manager,DataPoint::dpname(dpid))); }
+    {  this->container.push_back(DataPoint(this->m_manager,DataPoint::dpname(dpid))); }
   };
 
   /**@class DataPointSet DataPoint.h PVSS/DataPoint.h 
@@ -376,7 +376,7 @@ namespace PVSS {
     DataPointSetActor(ControlsManager* m, T c=T()) : DPListActor(m), DPContainerActor<T>(c)  {}
     /// Callback function to operate on datapoints
     void operator()(const DpID& dpid)  
-    {  container.insert(DataPoint(m_manager,DataPoint::dpname(dpid)));  }
+    {  this->container.insert(DataPoint(this->m_manager,DataPoint::dpname(dpid)));  }
   };
 
 }      // End namespace PVSS

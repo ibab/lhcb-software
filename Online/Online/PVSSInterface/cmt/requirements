@@ -11,6 +11,7 @@ apply_pattern install_more_includes more=PVSSInterface offset=PVSS
 
 library PVSSInterface *.cpp -import=Python
 apply_pattern linker_library library=PVSSInterface
+apply_pattern generate_rootmap library=PVSSInterface
 apply_pattern ld_library_path
 
 path_remove  PYTHONPATH "/PVSSInterface/" WIN32 "\PVSSInterface\"

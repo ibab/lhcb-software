@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/PVSS/DpID.h,v 1.2 2007-03-12 10:11:38 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/PVSS/DpID.h,v 1.3 2007-03-12 18:56:09 frankb Exp $
 //  ====================================================================
 //  DpID.h
 //  --------------------------------------------------------------------
@@ -11,6 +11,7 @@
 
 // Forward declarations
 class DpIdentifier;
+class __ostream;
 
 /*
  * PVSS namespace declaration
@@ -110,7 +111,7 @@ namespace PVSS {
     }
   #ifndef __GCCXML
     /// PVSS overload: debug
-    virtual void debug(ostream &, int) const {}
+    virtual void debug(__ostream &, int) const {}
   #endif
     /// Assignment operator
     bool operator==(const DpID& c) const {
