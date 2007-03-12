@@ -1,4 +1,4 @@
-#ifndef _WIN32
+#ifdef BUILD_WRITER
 
 #include <string>
 #include <cerrno>

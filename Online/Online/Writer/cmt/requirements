@@ -19,5 +19,5 @@ apply_pattern generate_rootmap library=Writer
 private
 macro_append use_cpp_flags " -DBUILD_WRITER=1 "\
  WIN32                     "" \
- slc3                      ""
+ slc3-ia32&gcc323          ""
  
