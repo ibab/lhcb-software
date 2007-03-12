@@ -24,9 +24,9 @@ use OnlineDummyReader v1r1     Online
 use OnlineHistDB      v1r3     Online
 use OnlineKernel      v1r6     Online
 use OnlineTasks       v1r3     Online
-use PVSS              v1r0     Online
-use PVSSInterface     v1r0     Online
-use PVSSManager       v1r0     Online
+#use PVSS              v1r0     Online
+#use PVSSInterface     v1r0     Online
+#use PVSSManager       v1r0     Online
 use PyDIM             v1r1     Online
 #use RunDatabase       v1r2     Online
 use Saver             v1r2     Online
