@@ -1,6 +1,4 @@
-#ifndef MuonAlgs_MuonPhysicalChannelOutput_CPP
-#define MuonAlgs_MuonPhysicalChannelOutput_CPP  1
-
+// $Id: MuonPhysicalChannelOutput.cpp,v 1.14 2007-03-12 10:32:53 cattanem Exp $
 #include <iostream>
 
 #include "MuonDet/DeMuonDetector.h"
@@ -161,11 +159,6 @@ void MuonPhysicalChannelOutput::
 calculateCardiacORID(MuonCardiacChID & cardiacID,                     
                      DeMuonDetector* muonDetector)
 {
-  
-
-
-  bool debug=false;
-
   unsigned int station=phChID()->getStation();
   unsigned int region=phChID()->getRegion();
   unsigned int chamber=phChID()->getChamber();
@@ -199,12 +192,6 @@ void MuonPhysicalChannelOutput::fillTimeList()
     if((*iterInHits).getMCMuonHistory().isHitFiring()){
       // add time to the list
       m_timeList.push_back((*iterInHits).hitArrivalTime());
-      
     }
-    
   }
-  
 }
-
-
-#endif
