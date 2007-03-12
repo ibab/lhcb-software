@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/ReadTransaction.cpp,v 1.6 2007-03-05 16:16:26 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/ReadTransaction.cpp,v 1.7 2007-03-12 09:04:13 frankb Exp $
 //  ====================================================================
 //  ReadTransaction.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: ReadTransaction.cpp,v 1.6 2007-03-05 16:16:26 frankb Exp $
+// $Id: ReadTransaction.cpp,v 1.7 2007-03-12 09:04:13 frankb Exp $
 
 // Framework include files
 #include "PVSS/HotLinkCallback.h"
@@ -22,7 +22,7 @@ namespace PVSS { namespace {
 
   struct Actor : public HotLinkCallback  {
     typedef std::pair<int,void*>          Entry;
-    typedef std::map<DpIdentifier,Entry>  Points;
+    typedef std::map<DpID,Entry>  Points;
     /// Container of datapoints in transaction
     Points     m_points;
     /// Transaction context (list)
@@ -33,7 +33,7 @@ namespace PVSS { namespace {
     /// Default destructor
     virtual ~Actor()       {    }
     /// Add datapoint to read trabsaction
-    void add(const DpIdentifier& dpid, int t,void* v) 
+    void add(const DpID& dpid, int t,void* v) 
     {  m_points.insert(std::make_pair(dpid,Entry(t,v)));     }
     /// Execute transaction
     bool exec(DevAnswer* a) {
@@ -44,7 +44,7 @@ namespace PVSS { namespace {
       return true;
     }
     /// Bind reading for a datapoint
-    virtual void setValue(const DpIdentifier& dpid, int typ, const Variable* val) {
+    virtual void setValue(const DpID& dpid, int typ, const Variable* val) {
       Points::iterator i=m_points.find(dpid);
       if ( i != m_points.end() )
         genReadIO(val, typ, (*i).second.second);
@@ -86,7 +86,7 @@ bool ReadTransaction::execute(bool wait)  {
 }
 
 /// Internal helper for vector IO
-void ReadTransaction::i_getValue(int typ,const DpIdentifier& dp,void* v)
+void ReadTransaction::i_getValue(int typ,const DpID& dp,void* v)
 {  m_actor->add(dp,typ,v);                                            }
 
 /// Get datapoint value 
@@ -130,7 +130,7 @@ void ReadTransaction::getValue(const DataPoint& dp, std::string& value)
 {  m_actor->add(dp.id(),Value::type_id(value),&value);                }
 
 /// Get datapoint value by name
-void ReadTransaction::getValue(const DataPoint& dp, DpIdentifier& value)    
+void ReadTransaction::getValue(const DataPoint& dp, DpID& value)    
 {  m_actor->add(dp.id(),Value::type_id(value),&value);                }
 
 /// Set datapoint value

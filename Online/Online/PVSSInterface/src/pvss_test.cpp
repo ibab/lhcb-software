@@ -209,16 +209,17 @@ void pvss_test_run_prt_mgr(ControlsManager* mgr)  {
 namespace {
   struct DeviceHandler : public Interactor {
   public:
-    typedef std::map<DpIdentifier,DataPoint> DevDesc;
+    typedef std::map<DpID,DataPoint*> DevDesc;
     DeviceHandler() {}
     virtual ~DeviceHandler() {}
     virtual void handle(const Event& ev)  {
       if ( ev.type == PVSSEvent )  {
-        DevDesc& m = *(DevDesc*)ev.data;
+        DeviceSensor* s = (DeviceSensor*)ev.data;
+        DevDesc& m = s->devices();
         printf("----------------> Device group changed:\n");
         for(DevDesc::const_iterator i=m.begin(); i!=m.end();++i)  {
-          const DataPoint& dp = (*i).second;
-          printf("Device:%s Value=%f\n",dp.name().c_str(),dp.data<float>());
+          const DataPoint* dp = (*i).second;
+          printf("Device:%s Value=%f\n",dp->name().c_str(),dp->data<float>());
         }
       }
     }

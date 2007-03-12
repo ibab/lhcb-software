@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/WriteTransaction.cpp,v 1.7 2007-03-05 16:16:26 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/WriteTransaction.cpp,v 1.8 2007-03-12 09:04:13 frankb Exp $
 //  ====================================================================
 //  WriteTransaction.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: WriteTransaction.cpp,v 1.7 2007-03-05 16:16:26 frankb Exp $
+// $Id: WriteTransaction.cpp,v 1.8 2007-03-12 09:04:13 frankb Exp $
 
 // Framework include files
 #include "PVSS/DataPoint.h"
@@ -109,7 +109,7 @@ void WriteTransaction::setValue(const DataPoint& dp, const DPRef& value)  {
 }
 
 /// Set datapoint value 
-void WriteTransaction::setValue(const DataPoint& dp, const DpIdentifier& value)  
+void WriteTransaction::setValue(const DataPoint& dp, const DpID& value)  
 {  pvss_val_list_add(m_context,Value::type_id(value),dp.id(),&value);           }
 
 /// Set datapoint value 

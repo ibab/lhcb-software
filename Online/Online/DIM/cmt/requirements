@@ -4,7 +4,6 @@ version           v16r7
 #============================================================================
 use GaudiPolicy   v*
 branches          cmt src
-include_dirs      $(DIMROOT)/dim
 
 make_fragment buildproto
 macro_remove  cflags '' WIN32 '-fmessage-length=0 -fPIC'
@@ -13,6 +12,7 @@ pattern dim_exe \
     macro_append <name>_cflags  " $(<package>_cppflags)" ; \
     macro_append <name>linkopts " $(cpplinkflags) $(DIM_linkopts) "
 
+apply_pattern install_more_includes more=dim
 # ==================== component libraries ==================================
 library dim conn_handler.c copy_swap.c dic.c dim_thr.c dis.c dll.c dna.c \
             dtq.c hash.c open_dns.c sll.c swap.c tcpip.c \

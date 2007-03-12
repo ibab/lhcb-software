@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/PVSS/Internals.h,v 1.4 2007-03-02 19:53:46 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/PVSS/Internals.h,v 1.5 2007-03-12 09:04:13 frankb Exp $
 //  ====================================================================
 //  Internals.h
 //  --------------------------------------------------------------------
@@ -6,12 +6,10 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: Internals.h,v 1.4 2007-03-02 19:53:46 frankb Exp $
+// $Id: Internals.h,v 1.5 2007-03-12 09:04:13 frankb Exp $
 #ifndef PVSSMANAGER_PVSS_INTERNALS_H
 #define PVSSMANAGER_PVSS_INTERNALS_H
 
-// PVSS forward declarations
-class DpIdentifier;
 #include <ctime>
 
 /*
@@ -29,6 +27,7 @@ namespace PVSS  {
   class CfgType;
   class DevAnswer;
   class Array;
+  class DpID;
 
   /**@union Values Internals.h PVSS/Internals.h
     *
@@ -38,7 +37,7 @@ namespace PVSS  {
     *  @version 1.0
     */
   union Values {
-    DpIdentifier*   dpid;
+    DpID*   dpid;
     unsigned char*  uchar;
     char*           schar;
     unsigned int*   uint;
@@ -106,18 +105,18 @@ namespace PVSS  {
 
   /** PVSS data point utilities: DpHelpers.cpp                             */
 
-  /// Check wrapper DpIdentifier
-  void pvss_setup_null_dp(const DpIdentifier* data, size_t len);
+  /// Check wrapper DpID
+  void pvss_setup_null_dp(const DpID* data, size_t len);
   /// Lookup datapoint name by datatpoint identifier
-  bool pvss_lookup_name(const DpIdentifier& id,char*& nam);
+  bool pvss_lookup_name(const DpID& id,char*& nam);
   /// Lookup datapoint identifier by it's name
-  bool pvss_lookup_dpid(const char* nam, DpIdentifier& id);
+  bool pvss_lookup_dpid(const char* nam, DpID& id);
   /// Lookup datapoint set by wildcard name
-  bool pvss_lookup_dpidset(const char* wildname,DpIdentifier*& array,long& count,int typeId=0);
+  bool pvss_lookup_dpidset(const char* wildname,DpID*& array,long& count,int typeId=0);
   /// Create PVSS data point
   bool pvss_create_device(const char* name, int type, int systemId, DevAnswer* answer);
   /// Delete PVSS data point
-  bool pvss_delete_device(const DpIdentifier& id, int systemId, DevAnswer* answer);
+  bool pvss_delete_device(const DpID& id, int systemId, DevAnswer* answer);
 
 
   /** DpIdentList handling: DpIdentList.cpp                                */
@@ -127,9 +126,9 @@ namespace PVSS  {
   /// Drop datapoint identifier list
   bool pvss_list_drop(void*& ctxt);
   /// Add identifier to list
-  bool pvss_list_add(void* ctxt,const DpIdentifier& dpid);
+  bool pvss_list_add(void* ctxt,const DpID& dpid);
   /// Add result of wildcard search to the list
-  bool pvss_list_add_wild(void* ctxt,const char* wild_name,DpIdentifier*& array,long& count,int typeId=0);
+  bool pvss_list_add_wild(void* ctxt,const char* wild_name,DpID*& array,long& count,int typeId=0);
 
   /** DpIdValueList handling: DpIdValueList.cpp                            */
 
@@ -138,9 +137,9 @@ namespace PVSS  {
   /// Drop exisiting datapoint ID - Value list
   void pvss_val_list_drop(void*& ctxt);
   /// Add/Append identifier-value pair to list
-  void pvss_val_list_add(void*& ctxt,int data_type,const DpIdentifier& dpid,const Values& value);
+  void pvss_val_list_add(void*& ctxt,int data_type,const DpID& dpid,const Values& value);
   /// Set item in an existing identifier-value list. The loop is initiated with listctxt=0
-  void pvss_val_list_set(void* ctxt,void*& listctxt, int data_type,const DpIdentifier& dpid,const Values& value);
+  void pvss_val_list_set(void* ctxt,void*& listctxt, int data_type,const DpID& dpid,const Values& value);
 
   /** Data point connect/disconnect handling: DpConnect.cpp                 */
 

@@ -4,15 +4,14 @@ package           RunDatabase
 version           v1r1
 #============================================================================
 branches          cmt doc src
-include_dirs      $(RUNDATABASEROOT)
 use GaudiKernel   v*
 use OnlineKernel  v* Online
 use MDF           v* DAQ            -no_auto_imports
 use Boost         v* LCG_Interfaces -no_auto_imports
 use cx_oracle     v* LCG_Interfaces -no_auto_imports
-
+#
+apply_pattern install_more_includes more=RunDatabase
 # ==================== component libraries ==================================
-document install_includes install_includes
 apply_pattern lcg_python_module name=DimRunDb files=" -import=MDF -import=DAQEvent -import=ROOT *.cpp"
 macro_append  DimRunDb_shlibflags ' $(Boost_linkopts_python) $(MDF_linkopts) $(DAQEvent_linkopts) $(ROOT_linkopts) '
 

@@ -1,6 +1,8 @@
 package MEPMaker
 version v2r0
-
+#
+branches src cmt MEPMaker
+#
 use DAQEvent            v* Event
 use GaudiConf    	v*            -no_auto_imports
 use ROOT		v* LCG_Interfaces
@@ -12,15 +14,12 @@ use GenEvent     v* Event      -no_auto_imports
 use EventSys	 v* Event      -no_auto_imports
 use RootHistCnv  v*            -no_auto_imports
 use RELAX        v* LCG_Interfaces
-branches src cmt MEPMaker
-include_dirs $(MEPMAKERROOT)
+#
+apply_pattern install_more_includes more=MEPMaker
 # 
 library MEPMaker MEPMaker.cpp DAQDummy.cpp MEPMaker_dll.cpp MEPMaker_load.cpp RootTune.cpp -import=AIDA
-
-#define component library link options
+#
 apply_pattern library_Clinkopts library=MEPMaker 
-
-# to run use: $GAUDIKERNELROOT/$CMTCONFIG/Gaudi.exe
 
 
 

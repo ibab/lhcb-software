@@ -7,7 +7,7 @@ use GaudiPolicy   v*
 build_strategy    no_prototypes
 #============================================================================
 branches          cmt doc src SFCClient
-include_dirs      $(SFCCLIENTROOT)
+apply_pattern install_more_includes more=SFCClient
 # ==================== component libraries ==================================
 library SFCClient  ../src/*.c
 apply_pattern library_Llinkopts library=SFCClient

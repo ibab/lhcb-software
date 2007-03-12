@@ -2,16 +2,9 @@ package OnlineKernel
 version v1r4
 
 branches  cmt doc src
-
-include_dirs $(ONLINEKERNELROOT)/OnlineKernel
 use GaudiPolicy v*
 
-document      install_includes install_includes
-
-# Not needed anymore. Just keep it to remember how to build the pthread library on WIN32
-#library       pthread_extern  ../thread/pthread.cpp
-#macro_append  pthread_extern_cppflags ' -DNEED_SEM -D__CLEANUP_C -DWIN32 -D_DEBUG -D_WINDOWS -D_USRDLL -DPTW32_BUILD'
-#apply_pattern linker_library   library=pthread_extern
+apply_pattern install_more_includes more=OnlineKernel
 
 library       OnlineKernel ../src/WT/*.cpp      \
                            ../src/MBM/*.cpp     \
@@ -33,4 +26,4 @@ path_remove PYTHONPATH '/OnlineKernel/'    WIN32 '\OnlineKernel\'
 path_append PYTHONPATH $(ONLINEKERNELROOT)/python
 
 private
-macro_append  cppflags " -g -ansi -pedantic -W -Wall -Woverloaded-virtual -Wno-long-long -Wnon-virtual-dtor -Wwrite-strings -Wpointer-arith -Wno-non-template-friend -Wimplicit -Wreturn-type -Wunused -Wparentheses -Wctor-dtor-privacy -pthread -fmessage-length=0 -ftemplate-depth-300 " WIN32 ""
+macro_append  cppflags " -ansi -pedantic -W -Wall -Woverloaded-virtual -Wno-long-long -Wnon-virtual-dtor -Wwrite-strings -Wpointer-arith -Wno-non-template-friend -Wimplicit -Wreturn-type -Wunused -Wparentheses -Wctor-dtor-privacy -pthread -fmessage-length=0 -ftemplate-depth-300 " WIN32 ""

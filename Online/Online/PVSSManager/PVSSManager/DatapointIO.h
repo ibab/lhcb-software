@@ -1,10 +1,10 @@
 #ifndef PVSSMANAGER_DATAPOINTIO_H
 #define PVSSMANAGER_DATAPOINTIO_H
-// $Id: DatapointIO.h,v 1.5 2007-03-02 19:53:46 frankb Exp $
+// $Id: DatapointIO.h,v 1.6 2007-03-12 09:04:13 frankb Exp $
 
+#include "PVSS/DpID.h"
 // Forward declarations
 class Variable;
-class DpIdentifier;
 
 #include <string>
 #include <vector>
@@ -32,7 +32,7 @@ namespace PVSS {
     static void value(const Variable* var, unsigned long& val);
     static void value(const Variable* var, float& val);
     static void value(const Variable* var, double& val);
-    static void value(const Variable* var, DpIdentifier& val);
+    static void value(const Variable* var, DpID& val);
     static void value(const Variable* var, void (*ldf)(std::string&,const char*), std::string& val);
     /// PVSS data access to DYN-type variables
     static void value(const Variable* var, void (*ldf)(std::vector<bool>&,bool),                      std::vector<bool>& val);
@@ -46,8 +46,8 @@ namespace PVSS {
     static void value(const Variable* var, void (*ldf)(std::vector<unsigned long>&,unsigned long),    std::vector<unsigned long>& val);
     static void value(const Variable* var, void (*ldf)(std::vector<float>&,float),                    std::vector<float>& val);
     static void value(const Variable* var, void (*ldf)(std::vector<double>&,double),                  std::vector<double>& val);
-    static void value(const Variable* var, void (*ldf)(std::vector<DpIdentifier>&,const DpIdentifier&),     std::vector<DpIdentifier>& val);
-    static void value(const Variable* var, void (*ldf)(std::vector<std::string>&,const char*),              std::vector<std::string>& val);
+    static void value(const Variable* var, void (*ldf)(std::vector<DpID>&,const DpID&),               std::vector<DpID>& val);
+    static void value(const Variable* var, void (*ldf)(std::vector<std::string>&,const char*),        std::vector<std::string>& val);
 
     static void value(const Variable* variable,int typ, void* buff);
   };

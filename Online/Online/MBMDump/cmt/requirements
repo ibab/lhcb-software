@@ -5,11 +5,9 @@ package           MBMDump
 version           v1r0
 #============================================================================
 branches          cmt doc MBMDump src
-include_dirs      $(MBMDUMPROOT)
 use OnlineKernel  v* Online
-
+apply_pattern install_more_includes more=MBMDump
 # ==================== component libraries ==================================
-document install_includes install_includes
 library         MBMDump          *.cpp
 apply_pattern   linker_library   library=MBMDump
 apply_pattern   ld_library_path

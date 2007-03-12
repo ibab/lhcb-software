@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/src/DatapointIO.cpp,v 1.5 2007-03-02 00:33:50 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/src/DatapointIO.cpp,v 1.6 2007-03-12 09:04:13 frankb Exp $
 //  ====================================================================
 //  DatapointIO.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: DatapointIO.cpp,v 1.5 2007-03-02 00:33:50 frankb Exp $
+// $Id: DatapointIO.cpp,v 1.6 2007-03-12 09:04:13 frankb Exp $
 #include "DpIdentifierVar.hxx"
 #include "DpIdValueList.hxx"
 #include "DpIdentifier.hxx"
@@ -93,21 +93,21 @@ void DatapointIO::value(const Variable* var, void (*ldf)(std::vector<std::string
   throw "Invalid variable type for DYN type data conversion";
 }
 
-void DatapointIO::value(const Variable* var,DpIdentifier& val)  {
+void DatapointIO::value(const Variable* var,DpID& val)  {
   if(var->isA() == DPIDENTIFIER_VAR)
     val = ((DpIdentifierVar*)var)->getValue();
   else
-    throw "Invalid variable type for data conversion to DpIdentifier";
+    throw "Invalid variable type for data conversion to DpID";
 }
 
-void DatapointIO::value(const Variable* var,void (*ldf)(std::vector<DpIdentifier>&,const DpIdentifier&),std::vector<DpIdentifier>& val)  {
+void DatapointIO::value(const Variable* var,void (*ldf)(std::vector<DpID>&,const DpID&),std::vector<DpID>& val)  {
   if ( var->isDynVar() )    {
     const DynVar* theVar = (const DynVar*)var;
     for (Variable* v=theVar->getFirst(); v; v=theVar->getNext())  {
       if(v->isA() == DPIDENTIFIER_VAR)
-        (*ldf)(val,((DpIdentifierVar*)v)->getValue());
+        (*ldf)(val,(DpID&)((DpIdentifierVar*)v)->getValue());
       else
-        throw "Invalid variable type for data conversion to DpIdentifier";
+        throw "Invalid variable type for data conversion to DpID";
     }
     return;
   }

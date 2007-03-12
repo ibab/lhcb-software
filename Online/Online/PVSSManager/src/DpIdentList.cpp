@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/src/DpIdentList.cpp,v 1.2 2007-03-01 15:48:04 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/src/DpIdentList.cpp,v 1.3 2007-03-12 09:04:13 frankb Exp $
 //  ====================================================================
 //  DpIdentList.cpp
 //  --------------------------------------------------------------------
@@ -6,8 +6,12 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: DpIdentList.cpp,v 1.2 2007-03-01 15:48:04 frankb Exp $
+// $Id: DpIdentList.cpp,v 1.3 2007-03-12 09:04:13 frankb Exp $
+
+#include <iostream.h>
+
 #include "PVSS/Internals.h"
+#include "PVSS/DpID.h"
 
 // PVSS include files
 #include "DpIdentList.hxx"
@@ -26,7 +30,7 @@ bool PVSS::pvss_list_drop(void*& context)    {
   return false;
 }
 
-bool PVSS::pvss_list_add(void* ctxt,const DpIdentifier& dpid)    {
+bool PVSS::pvss_list_add(void* ctxt,const DpID& dpid)    {
   if ( ctxt )  {
     DpIdentList*  list = (DpIdentList*)ctxt;
     list->append(dpid);
@@ -35,7 +39,7 @@ bool PVSS::pvss_list_add(void* ctxt,const DpIdentifier& dpid)    {
   return false;
 }
 
-bool PVSS::pvss_list_add_wild(void* ctxt,const char* wildname,DpIdentifier*& array,long& cnt,int typ)  {
+bool PVSS::pvss_list_add_wild(void* ctxt,const char* wildname,DpID*& array,long& cnt,int typ)  {
   DpIdentList*  list = (DpIdentList*)ctxt;
   if ( ctxt )  {
     if ( pvss_lookup_dpidset(wildname,array,cnt,typ) )  {

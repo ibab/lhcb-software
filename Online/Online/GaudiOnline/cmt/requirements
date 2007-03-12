@@ -5,7 +5,6 @@ package           GaudiOnline
 version           v2r3
 #============================================================================
 branches          cmt doc src GaudiOnline 
-include_dirs      $(GAUDIONLINEROOT)
 # dependency list
 use AIDA          v* LCG_Interfaces -no_auto_imports
 use DAQEvent      v* Event          -no_auto_imports
@@ -13,8 +12,8 @@ use MDF           v* DAQ            -no_auto_imports
 use DIM           v* Online         -no_auto_imports
 use OnlineKernel  v* Online
 use GaudiKernel   v*
+apply_pattern install_more_includes more=GaudiOnline
 # ==================== component libraries ==================================
-document install_includes install_includes
 library  GaudiOnline  *.cpp -import=DIM -import=DAQEvent -import=MDF -import=AIDA
 apply_pattern linker_library   library=GaudiOnline
 apply_pattern generate_rootmap library=GaudiOnline

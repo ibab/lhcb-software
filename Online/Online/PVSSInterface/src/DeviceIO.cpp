@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DeviceIO.cpp,v 1.5 2007-03-05 16:16:26 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DeviceIO.cpp,v 1.6 2007-03-12 09:04:13 frankb Exp $
 //  ====================================================================
 //  DeviceIO.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: DeviceIO.cpp,v 1.5 2007-03-05 16:16:26 frankb Exp $
+// $Id: DeviceIO.cpp,v 1.6 2007-03-12 09:04:13 frankb Exp $
 
 // Framework include files
 #include "PVSS/DevTypeElement.h"
@@ -18,8 +18,8 @@
 
 using namespace PVSS;
 
-static DpIdentifier lookup(const std::string& nam)  {
-  DpIdentifier onl(0);
+static DpID lookup(const std::string& nam)  {
+  DpID onl(0);
   if ( !pvss_lookup_dpid(DataPoint::online(nam).c_str(),onl) )    {
     throw std::invalid_argument("The datapoint:"+nam+" does not exist!");
   }
@@ -118,7 +118,7 @@ void DeviceIO::handleDataUpdate()  {
 }
 
 /// HotLinkCallback overload: Set data value
-void DeviceIO::setValue(const DpIdentifier& dpid, int typ, const Variable* val)  {
+void DeviceIO::setValue(const DpID& dpid, int typ, const Variable* val)  {
   DataPoints::iterator i=m_points.find(dpid);
   if ( i != m_points.end() )  {
     DataPoint* dp = (*i).second;
@@ -138,6 +138,7 @@ bool DeviceIO::execute(bool keep_list, bool wait)  {
     if ( a.state() != DevAnswer::FINISHED )  {
       a.print();
     }
+    if ( !keep_list ) m_points.clear();
     return a.state() == DevAnswer::FINISHED;
   }
   m_devIO->exec(keep_list, this, 0);
@@ -156,7 +157,7 @@ void DeviceIO::clear()   {
 }
 
 /// add datapoint value
-void DeviceIO::i_add(const DpIdentifier& id, DataPoint& dp) {
+void DeviceIO::i_add(const DpID& id, DataPoint& dp) {
   if ( m_devIO->context() ) m_devIO->dropList();
   m_points.insert(std::make_pair(id,&dp));
   dp.setFlag(1,1);

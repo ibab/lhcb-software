@@ -4,11 +4,13 @@
 # =============================================================================
 package             OnlineHistDB
 version             v1r2
-
+#
 branches            cmt doc src OnlineHistDB sql www
-include_dirs        $(ONLINEHISTDBROOT) $(oracle_home)/include
 use GaudiKernel    v*
 use oracle         v*  LCG_Interfaces
+#
+apply_pattern install_more_includes more=OnlineHistDB
+#
 library             OnlineHistDB    *.cpp
 
 apply_pattern  linker_library library=OnlineHistDB 

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/PVSS/DeviceIO.h,v 1.3 2007-03-05 16:16:26 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/PVSS/DeviceIO.h,v 1.4 2007-03-12 09:04:12 frankb Exp $
 //  ====================================================================
 //  DeviceIO.h
 //  --------------------------------------------------------------------
@@ -39,7 +39,7 @@ namespace PVSS {
   class DeviceIO : public HotLinkCallback  {
   public:
     friend class ControlsManager;
-    typedef std::map<DpIdentifier,DataPoint*> DataPoints;
+    typedef std::map<DpID,DataPoint*> DataPoints;
 
     /** @struct GetData DeviceIO.h PVSS/DeviceIO.h
       */
@@ -158,9 +158,9 @@ namespace PVSS {
     /// HotLinkCallback overload: Handle callback for device group
     virtual void handleDataUpdate();
     /// HotLinkCallback overload: Set data value
-    virtual void setValue(const DpIdentifier& dpid, int typ, const Variable* val);
+    virtual void setValue(const DpID& dpid, int typ, const Variable* val);
     /// Internal add datapoint value
-    void i_add(const DpIdentifier& id, DataPoint& dp);
+    void i_add(const DpID& id, DataPoint& dp);
 
   public:
     /// Standard destructor

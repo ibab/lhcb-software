@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/PVSSIO.cpp,v 1.2 2007-03-05 16:16:26 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/PVSSIO.cpp,v 1.3 2007-03-12 09:04:13 frankb Exp $
 //  ====================================================================
 //  PVSSIO.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: PVSSIO.cpp,v 1.2 2007-03-05 16:16:26 frankb Exp $
+// $Id: PVSSIO.cpp,v 1.3 2007-03-12 09:04:13 frankb Exp $
 
 // Framework include files
 #include "PVSS/Kernel.h"
@@ -45,39 +45,39 @@ namespace PVSS {
   static void insert_float (std::vector<float>& t,float s)       { t.push_back(s);                }
   static void insert_time_t(std::vector<time_t>& t,time_t s)     { t.push_back(s);                }
   static void insert_uint  (std::vector<unsigned int>& t,unsigned int s)        { t.push_back(s); }
-  static void insert_dpid  (std::vector<DpIdentifier>& t,const DpIdentifier& s) { t.push_back(s); }
+  static void insert_dpid  (std::vector<DpID>& t,const DpID& s) { t.push_back(s); }
 
-  template <class T> void addWriteIO(void* context,int typ,const DpIdentifier& dp,const std::vector<T>& v) {
+  template <class T> void addWriteIO(void* context,int typ,const DpID& dp,const std::vector<T>& v) {
     ArrayVector<T> vec(v);
     pvss_val_list_add(context,typ,dp,Values(&vec));
   }
 
-  template <> void addWriteIO(void* context,int typ,const DpIdentifier& dp,const std::vector<bool>& v)  {
+  template <> void addWriteIO(void* context,int typ,const DpID& dp,const std::vector<bool>& v)  {
     ArrayVector<bool> vec(v, bool_load); 
     pvss_val_list_add(context,typ,dp,Values(&vec));
   }
 
-  template <> void addWriteIO(void* context,int typ,const DpIdentifier& dp,const std::vector<std::string>& v) {
+  template <> void addWriteIO(void* context,int typ,const DpID& dp,const std::vector<std::string>& v) {
     ArrayVector<std::string> vec(v, str_load);
     pvss_val_list_add(context,typ,dp,Values(&vec));
   }
 
-  template <class T> void setWriteIO(void* context,void*& listCtxt,int typ,const DpIdentifier& dp,const std::vector<T>& v) {
+  template <class T> void setWriteIO(void* context,void*& listCtxt,int typ,const DpID& dp,const std::vector<T>& v) {
     ArrayVector<T> vec(v);
     pvss_val_list_set(context,listCtxt,typ,dp,Values(&vec));
   }
 
-  template <> void setWriteIO(void* context,void*& listCtxt,int typ,const DpIdentifier& dp,const std::vector<bool>& v) {
+  template <> void setWriteIO(void* context,void*& listCtxt,int typ,const DpID& dp,const std::vector<bool>& v) {
     ArrayVector<bool> vec(v, bool_load); 
     pvss_val_list_set(context,listCtxt,typ,dp,Values(&vec));
   }
 
-  template <> void setWriteIO(void* context,void*& listCtxt,int typ,const DpIdentifier& dp,const std::vector<std::string>& v) {
+  template <> void setWriteIO(void* context,void*& listCtxt,int typ,const DpID& dp,const std::vector<std::string>& v) {
     ArrayVector<std::string> vec(v, str_load);
     pvss_val_list_set(context,listCtxt,typ,dp,Values(&vec));
   }
 
-  void setGenWriteIO(void* context,void*& listCtxt,const DpIdentifier& dp,const Value* val)  {
+  void setGenWriteIO(void* context,void*& listCtxt,const DpID& dp,const Value* val)  {
     DataPointValues v(val->ptr());
     int typ = val->type();
     switch(typ)  {
@@ -154,27 +154,35 @@ namespace PVSS {
       DatapointIO::value(variable,copy_string,*v.string);
       break;
     case DevTypeElement::DYNCHAR:
+      v.charV->clear();
       DatapointIO::value(variable,insert_char,*v.charV);
       break;
     case DevTypeElement::DYNINT:
+      v.intV->clear();
       DatapointIO::value(variable,insert_int,*v.intV);
       break;
     case DevTypeElement::DYNUINT:
+      v.uintV->clear();
       DatapointIO::value(variable,insert_uint,*v.uintV);
       break;
     case DevTypeElement::DYNTEXT:
+      v.stringV->clear();
       DatapointIO::value(variable,insert_string,*v.stringV);
       break;
     case DevTypeElement::DYNTIME:
+      v.timeV->clear();
       DatapointIO::value(variable,insert_time_t,*v.timeV);
       break;
     case DevTypeElement::DYNBIT:
+      v.boolV->clear();
       DatapointIO::value(variable,insert_bool,*v.boolV);
       break;
     case DevTypeElement::DYNFLOAT:
+      v.floatV->clear();
       DatapointIO::value(variable,insert_float,*v.floatV);
       break;
     case DevTypeElement::DYNDPID:
+      v.identV->clear();
       DatapointIO::value(variable,insert_dpid,*v.identV);
       break;
     case DevTypeElement::BIT32:
@@ -192,13 +200,13 @@ namespace PVSS {
   #define INSTANTIATE_FUNCTIONS(x) \
     __T(char) __T(unsigned char) __T(int) __T(unsigned int) \
     __T(long) __T(unsigned long) __T(float) __T(double) __T(bool) \
-    __T(std::string) __T(DpIdentifier) __T(DPTime)
+    __T(std::string) __T(DpID) __T(DPTime)
 
   namespace {
 
     template <typename T> struct ReadTransactionSetValue {
-      static void do1(std::vector<T>& t)  { void* p;setWriteIO(0,p,0,DpIdentifier(0),t);  }
-      static void dp1(std::vector<T>& t)  { addWriteIO(0,0,DpIdentifier(0),t);            }
+      static void do1(std::vector<T>& t)  { void* p;setWriteIO(0,p,0,DpID(0),t);  }
+      static void dp1(std::vector<T>& t)  { addWriteIO(0,0,DpID(0),t);            }
     };
     INSTANTIATE_FUNCTIONS(1)
   }

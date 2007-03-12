@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/src/DpHelpers.cpp,v 1.3 2007-03-01 20:09:09 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/src/DpHelpers.cpp,v 1.4 2007-03-12 09:04:13 frankb Exp $
 //  ====================================================================
 //  DpHelpers.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: DpHelpers.cpp,v 1.3 2007-03-01 20:09:09 frankb Exp $
+// $Id: DpHelpers.cpp,v 1.4 2007-03-12 09:04:13 frankb Exp $
 
 // PVSS include files
 #include "Manager.hxx"
@@ -14,6 +14,7 @@
 #include "MapTableItem.hxx"
 #include "ConfigsMapper.hxx"
 
+#include "PVSS/DpID.h"
 #include "PVSS/Lock.h"
 #include "PVSS/DevAnswer.h"
 #include "PVSS/Internals.h"
@@ -101,7 +102,7 @@ int PVSS::pvss_load_device_types(PVSS::DevTypeManager* mgr, int id,
   return 1;
 }
 
-void PVSS::pvss_setup_null_dp(const DpIdentifier* /* data */, size_t len)   {
+void PVSS::pvss_setup_null_dp(const DpID* /* data */, size_t len)   {
   if ( len == sizeof(DpIdentifier) )  {
     printf("Internal DP length:%d bytes, DpIdentifier size:%d bytes\n",len,sizeof(DpIdentifier));
     return;
@@ -110,11 +111,11 @@ void PVSS::pvss_setup_null_dp(const DpIdentifier* /* data */, size_t len)   {
   throw "Error in size comparison of PVSS DpIdentifier structure";
 }
 
-bool PVSS::pvss_lookup_dpid(const char* nam, DpIdentifier& id)  {
+bool PVSS::pvss_lookup_dpid(const char* nam, DpID& id)  {
   return Manager::getId(nam,id) == PVSS_TRUE;
 }
 
-bool PVSS::pvss_lookup_name(const DpIdentifier& id, char*& nam)  {
+bool PVSS::pvss_lookup_name(const DpID& id, char*& nam)  {
   static char* n = 0;
   if ( n ) delete [] n;
   bool res = Manager::getName(id,n) == PVSS_TRUE;
@@ -122,8 +123,11 @@ bool PVSS::pvss_lookup_name(const DpIdentifier& id, char*& nam)  {
   return res;
 }
 
-bool PVSS::pvss_lookup_dpidset(const char* wildname,DpIdentifier*& array,long& cnt,int typ)  {
-  return Manager::getIdSet(wildname,array,cnt,typ) == PVSS_TRUE;
+bool PVSS::pvss_lookup_dpidset(const char* wildname,DpID*& array,long& cnt,int typ)  {
+  DpIdentifier* arr = 0;
+  bool res = Manager::getIdSet(wildname,arr,cnt,typ) == PVSS_TRUE;
+  array = (DpID*)arr;
+  return res;
 }
 
 bool PVSS::pvss_create_device(const char* name,int type, int systemId, DevAnswer* a)  {
@@ -133,7 +137,7 @@ bool PVSS::pvss_create_device(const char* name,int type, int systemId, DevAnswer
   return (PVSS_TRUE == res) ? a ? PVSS::Environment::instance().waitForAnswer(a) : true : false;
 }
 
-bool PVSS::pvss_delete_device(const DpIdentifier& dpid, int /* systemId */, DevAnswer* a)  {
+bool PVSS::pvss_delete_device(const DpID& dpid, int /* systemId */, DevAnswer* a)  {
   Lock lock(pvss_global_lock());
   SyncWaitForAnswer* answer= new SyncWaitForAnswer(a);
   PVSSboolean res = Manager::dpDelete(dpid, answer);

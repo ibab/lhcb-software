@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DataPoint.cpp,v 1.18 2007-03-05 16:16:26 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DataPoint.cpp,v 1.19 2007-03-12 09:04:13 frankb Exp $
 //  ====================================================================
 //  DataPoint.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: DataPoint.cpp,v 1.18 2007-03-05 16:16:26 frankb Exp $
+// $Id: DataPoint.cpp,v 1.19 2007-03-12 09:04:13 frankb Exp $
 #ifdef _WIN32
   // Disable warning C4250: 'const float' : forcing value to bool 'true' or 'false' (performance warning)
   #pragma warning ( disable : 4800 )
@@ -27,7 +27,7 @@
 using namespace PVSS;
 
 namespace {
-  DpIdentifier s_nullDP(0);
+  DpID s_nullDP(0);
   struct _Init {
     _Init()  {  pvss_setup_null_dp(&s_nullDP,sizeof(s_nullDP));    }
   };
@@ -47,7 +47,7 @@ template <> int DataValue<float>::type_id()                        { return DevT
 template <> int DataValue<double>::type_id()                       { return DevTypeElement::NOELEMENT; }
 //template <> int DataValue<time_t>::type_id()                       { return DevTypeElement::TIME;    }
 template <> int DataValue<std::string>::type_id()                  { return DevTypeElement::TEXT;      }
-template <> int DataValue<DpIdentifier>::type_id()                 { return DevTypeElement::DPID;      }
+template <> int DataValue<DpID>::type_id()                 { return DevTypeElement::DPID;      }
 template <> int DataValue<DPTime>::type_id()                       { return DevTypeElement::TIME;      }
 template <> int DataValue<DPRef>::type_id()                        { return DevTypeElement::NOELEMENT; }
 template <> int DataValue<std::vector<bool> >::type_id()           { return DevTypeElement::DYNBIT;    }
@@ -63,7 +63,7 @@ template <> int DataValue<std::vector<float> >::type_id()          { return DevT
 template <> int DataValue<std::vector<double> >::type_id()         { return DevTypeElement::NOELEMENT; }
 //template <> int DataValue<std::vector<time_t> >::type_id()       { return DevTypeElement::DYNTIME;   }
 template <> int DataValue<std::vector<std::string> >::type_id()    { return DevTypeElement::DYNTEXT;   }
-template <> int DataValue<std::vector<DpIdentifier> >::type_id()   { return DevTypeElement::DYNDPID;   }
+template <> int DataValue<std::vector<DpID> >::type_id()   { return DevTypeElement::DYNDPID;   }
 template <> int DataValue<std::vector<DPTime> >::type_id()         { return DevTypeElement::DYNTIME;   }
 template <> int DataValue<std::vector<DPRef> >::type_id()          { return DevTypeElement::NOELEMENT; }
 
@@ -71,7 +71,7 @@ namespace PVSS {
   template <class T, class Q> Q convertValue(Value* v) {    return (Q)((DataValue<T>*)v)->data(); }
   template <typename T> T default_value()                        { return T();                    }
   template <> std::string  default_value<std::string>()          { return std::string("");        }
-  template <> DpIdentifier default_value<DpIdentifier>()         { return DpIdentifier(s_nullDP); }
+  template <> DpID default_value<DpID>()         { return DpID(s_nullDP); }
 
   inline bool chk(const Value* v1,const Value* v2)  { return v1->type() == v2->type(); }
   inline void _checkBasicTypeCompatibility(int v1, int v2)  {
@@ -109,7 +109,7 @@ namespace PVSS {
   static PVSS::Value* createValue(int typ)   {
     switch(typ)  {
     case DevTypeElement::DYNDPID:
-      return new DataValue<std::vector<DpIdentifier> >(typ);
+      return new DataValue<std::vector<DpID> >(typ);
     case DevTypeElement::DYNCHAR:
       return new DataValue<std::vector<char> >(typ);
     case DevTypeElement::DYNINT:
@@ -125,7 +125,7 @@ namespace PVSS {
     case DevTypeElement::DYNBIT:
       return new DataValue<std::vector<bool> >(typ);
     case DevTypeElement::DPID:
-      return new DataValue<DpIdentifier>(typ,s_nullDP);
+      return new DataValue<DpID>(typ,s_nullDP);
     case DevTypeElement::CHAR:
       return new DataValue<char>(typ);
     case DevTypeElement::INT:
@@ -161,7 +161,7 @@ DataPoint::DataPoint(ControlsManager* m, const std::string& nam)
 }
 
 /// Initializing constructor
-DataPoint::DataPoint(ControlsManager* m, const DpIdentifier& dpid)  
+DataPoint::DataPoint(ControlsManager* m, const DpID& dpid)  
 : m_id(dpid), m_valid(1), m_name(), m_mgr(m), m_val(0) 
 {
   char* nam = 0;
@@ -190,7 +190,7 @@ DataPoint::~DataPoint()   {
 }
 
 /// load datapoint identifier
-const DpIdentifier& DataPoint::load() const  {
+const DpID& DataPoint::load() const  {
   DataPoint* p = const_cast<DataPoint*>(this);
   if ( !pvss_lookup_dpid(m_name.c_str(),p->m_id) )    {
     throw std::invalid_argument("The datapoint:"+m_name+" does not exist!");
@@ -243,9 +243,9 @@ std::string DataPoint::original(const std::string& dp)  {
 }
 
 /// Extract name of datapoint from online/original name
-std::string DataPoint::dpname(const DpIdentifier& dpid)    {
+std::string DataPoint::dpname(const DpID& dpid)    {
   char* nam = "";
-  if ( !pvss_lookup_name(*(DpIdentifier*)&dpid,nam) )  {
+  if ( !pvss_lookup_name(*(DpID*)&dpid,nam) )  {
     return "";
   }
   return nam;
@@ -443,7 +443,7 @@ BASIC_SPECIALIZATIONS(float)
 SPECIALIZATIONS(double)
 
 BASIC_SPECIALIZATIONS(std::string)
-EXPLICIT_SPECIALIZATIONS(DpIdentifier)
+EXPLICIT_SPECIALIZATIONS(DpID)
 EXPLICIT_SPECIALIZATIONS(DPRef)
 EXPLICIT_SPECIALIZATIONS(DPTime)
 
@@ -459,7 +459,7 @@ VECTOR_SPECIALIZATIONS(unsigned long)
 VECTOR_SPECIALIZATIONS(float)
 VECTOR_SPECIALIZATIONS(double)
 VECTOR_SPECIALIZATIONS(std::string)
-VECTOR_SPECIALIZATIONS(DpIdentifier)
+VECTOR_SPECIALIZATIONS(DpID)
 VECTOR_SPECIALIZATIONS(DPRef)
 VECTOR_SPECIALIZATIONS(DPTime)
 
@@ -482,15 +482,28 @@ void DataPoint::setValue(int typ, const Variable* variable)  {
 
 /// Set value data (for publishing data to PVSS
 template <typename T> void DataPoint::set(const T& val)  {
-  if ( !m_val ) m_val = createValue(DataValue<T>::type_id());
-  reference<T>() = val;
+  try  {
+    if ( !m_val ) m_val = createValue(DataValue<T>::type_id());
+    reference<T>() = val;
+    return;
+  }
+  catch(const std::exception& e)  {
+    if ( m_val ) delete m_val;
+    m_val = 0;
+    throw e;
+  }
+  catch(...)  {
+    if ( m_val ) delete m_val;
+    m_val = 0;
+    invalidConversion(typeid(T));
+  }
 }
 
 namespace {
   struct ListHandler {
     DPListActor* m_l;
     ListHandler(DPListActor* l) : m_l(l) {}
-    void operator()(const DpIdentifier& dpid)  {
+    void operator()(const DpID& dpid)  {
       m_l->operator()(dpid);
     }
   };

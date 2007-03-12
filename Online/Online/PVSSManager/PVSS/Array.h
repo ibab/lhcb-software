@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/PVSS/Array.h,v 1.3 2007-03-02 19:53:46 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/PVSS/Array.h,v 1.4 2007-03-12 09:04:13 frankb Exp $
 //  ====================================================================
 //  Array.h
 //  --------------------------------------------------------------------
@@ -6,20 +6,20 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: Array.h,v 1.3 2007-03-02 19:53:46 frankb Exp $
+// $Id: Array.h,v 1.4 2007-03-12 09:04:13 frankb Exp $
 #ifndef PVSS_ARRAY_H
 #define PVSS_ARRAY_H
 
 #include <vector>
 #include <string>
 
-class DpIdentifier;
-
 /*
  *    PVSS namespace
  */
 namespace PVSS {
 
+  // Forward declarations
+  class DpID;
   class Array;
 
   /** @union DataPointValues
@@ -28,7 +28,7 @@ namespace PVSS {
     *  @version 1.0
     */
   union DataPointValues {
-    DpIdentifier*                 dpid;
+    DpID*                 dpid;
     unsigned char*                uchar;
     char*                         schar;
     unsigned int*                 uint;
@@ -42,7 +42,7 @@ namespace PVSS {
     std::string*                  string;
     Array*                        array;
     std::vector<std::string>*     stringV;
-    std::vector<DpIdentifier>*    identV;
+    std::vector<DpID>*    identV;
     std::vector<unsigned char>*   ucharV;
     std::vector<char>*            charV;
     std::vector<unsigned int>*    uintV;

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DeviceManager.cpp,v 1.2 2007-03-01 15:47:56 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DeviceManager.cpp,v 1.3 2007-03-12 09:04:13 frankb Exp $
 //  ====================================================================
 //  DeviceManager.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: DeviceManager.cpp,v 1.2 2007-03-01 15:47:56 frankb Exp $
+// $Id: DeviceManager.cpp,v 1.3 2007-03-12 09:04:13 frankb Exp $
 
 // Framework include files
 #include "PVSS/ControlsManager.h"
@@ -40,13 +40,13 @@ DeviceManager::~DeviceManager()   {
 
 /// Check if device exists
 bool DeviceManager::exists(const std::string& nam)  const  {
-  DpIdentifier id(0);
+  DpID id(0);
   return pvss_lookup_dpid(nam.c_str(), id);
 }
 
 /// Access device by name - if it's not active it is searched....
 std::auto_ptr<Device> DeviceManager::device(const std::string& nam)  {
-  DpIdentifier id(0);
+  DpID id(0);
   if ( pvss_lookup_dpid(nam.c_str(), id) )  {
     const DevType* typ = manager()->typeMgr()->type(id.type());
     return std::auto_ptr<Device>(DevManip<Device>::create(this,typ,nam));
@@ -92,7 +92,7 @@ bool DeviceManager::deleteDevice(Device* device, bool wait)  {
 /// Delete a device
 bool DeviceManager::deleteDevice(const std::string& dev_name, bool wait)  {
   DevAnswer a;
-  DpIdentifier dpid(0);
+  DpID dpid(0);
   if ( pvss_lookup_dpid(dev_name.c_str(),dpid) )  {
     bool ret = pvss_delete_device(dpid,id(),wait ? &a : 0);
     if ( !ret ) a.print();

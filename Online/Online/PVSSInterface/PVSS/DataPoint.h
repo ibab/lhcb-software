@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/PVSS/DataPoint.h,v 1.3 2007-03-05 16:16:26 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/PVSS/DataPoint.h,v 1.4 2007-03-12 09:04:12 frankb Exp $
 //  ====================================================================
 //  DataPoint.h
 //  --------------------------------------------------------------------
@@ -11,7 +11,7 @@
 
 // Framework include files
 #include "PVSS/Kernel.h"
-#include "PVSS/DpIdentifier.h"
+#include "PVSS/DpID.h"
 
 // C++ include files
 #include <set>
@@ -177,7 +177,7 @@ namespace PVSS {
   class DataPoint   {
   protected:
     /// Datapoint identifier
-    DpIdentifier     m_id;
+    DpID             m_id;
     /// Flag to check if datapoint identifier is valid
     char             m_valid;
     /// Flag for debugging (and padding)
@@ -189,7 +189,7 @@ namespace PVSS {
     /// Pointer to data value
     Value*           m_val;
     /// load datapoint identifier
-    const DpIdentifier& load() const;
+    const DpID& load() const;
 #ifdef __GCCXML
   public:
     /// Default constructor
@@ -204,7 +204,7 @@ namespace PVSS {
     /// Initializing constructor
     DataPoint(ControlsManager* m, const std::string& nam);
     /// Initializing constructor
-    DataPoint(ControlsManager* m, const DpIdentifier& dpid);
+    DataPoint(ControlsManager* m, const DpID& dpid);
     /// Copy constructor
     DataPoint(const DataPoint& nam);
     /// Standard destructor
@@ -220,7 +220,7 @@ namespace PVSS {
     /// Operator less
     bool operator<(const DataPoint& c) const;
     /// Datapoint identifier
-    const DpIdentifier& id() const 
+    const DpID& id() const 
     { return m_valid ? m_id : load();                           }
     /// Set value data
     void setValue(int typ, const Variable* data);
@@ -251,7 +251,7 @@ namespace PVSS {
     /// Extract system name of datapoint from online/original name
     static std::string sysname(const std::string& dp);
     /// Extract name of datapoint from online/original name
-    static std::string dpname(const DpIdentifier& dpid);
+    static std::string dpname(const DpID& dpid);
     /// Exception function
     static void invalidValue(const std::type_info& tid);
     /// Exception function
@@ -274,7 +274,7 @@ namespace PVSS {
     /// Initializing constructor
     DPPushback(ControlsManager* m, T& c) : DPContainerInserter<T>(m,c) {}
     /// Callback function for datapoint insertion into container
-    virtual void operator()(const DpIdentifier& dpid)  
+    virtual void operator()(const DpID& dpid)  
     {   container->push_back(DataPoint(manager,dpid));  }
   };
 
@@ -287,7 +287,7 @@ namespace PVSS {
     /// Initializing constructor
     DPInsert(ControlsManager* m, T& c) : DPContainerInserter<T>(m,c) {}
     /// Callback function for datapoint insertion into container
-    virtual void operator()(const DpIdentifier& dpid)
+    virtual void operator()(const DpID& dpid)
     {   container->insert(DataPoint(manager,dpid));    }
   };
 
@@ -312,7 +312,7 @@ namespace PVSS {
   struct DPListActor  {
   protected:
     /// Datapoint identifiers contained in selected list
-    DpIdentifier*    m_dpids;
+    DpID*            m_dpids;
     /// Number of Datapoint identifiers contained in selected list
     long             m_count;
     /// Reference to controls manager
@@ -325,7 +325,7 @@ namespace PVSS {
     /// Lookup datapoint items
     bool lookup(const std::string& typ_nam, const DevType* typ);
     /// Callback function to operate on datapoints
-    virtual void operator()(const DpIdentifier& dpid) = 0;
+    virtual void operator()(const DpID& dpid) = 0;
   };
 
   template <typename T> struct DPContainerActor  {
@@ -347,7 +347,7 @@ namespace PVSS {
     /// Initializing constructor
     DataPointMapActor(ControlsManager* m, T c=T()) : DPListActor(m), DPContainerActor<T>(c)  {}
     /// Callback function to operate on datapoints
-    void operator()(const DpIdentifier& dpid)  {
+    void operator()(const DpID& dpid)  {
       std::string dpn = DataPoint::dpname(dpid);
       container.insert(std::make_pair(dpn,DataPoint(m_manager,dpn)));
     }
@@ -362,7 +362,7 @@ namespace PVSS {
     /// Initializing constructor
     DataPointContainerActor(ControlsManager* m, T c=T()) : DPListActor(m), DPContainerActor<T>(c)  {}
     /// Callback function to operate on datapoints
-    void operator()(const DpIdentifier& dpid)  
+    void operator()(const DpID& dpid)  
     {  container.push_back(DataPoint(m_manager,DataPoint::dpname(dpid))); }
   };
 
@@ -375,7 +375,7 @@ namespace PVSS {
     /// Initializing constructor
     DataPointSetActor(ControlsManager* m, T c=T()) : DPListActor(m), DPContainerActor<T>(c)  {}
     /// Callback function to operate on datapoints
-    void operator()(const DpIdentifier& dpid)  
+    void operator()(const DpID& dpid)  
     {  container.insert(DataPoint(m_manager,DataPoint::dpname(dpid)));  }
   };
 

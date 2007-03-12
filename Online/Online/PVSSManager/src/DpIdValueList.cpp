@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/src/DpIdValueList.cpp,v 1.4 2007-03-05 16:16:42 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/src/DpIdValueList.cpp,v 1.5 2007-03-12 09:04:13 frankb Exp $
 //  ====================================================================
 //  DpIdValueList.cpp
 //  --------------------------------------------------------------------
@@ -6,9 +6,13 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: DpIdValueList.cpp,v 1.4 2007-03-05 16:16:42 frankb Exp $
+// $Id: DpIdValueList.cpp,v 1.5 2007-03-12 09:04:13 frankb Exp $
+#include <memory>
+#include <iostream.h>
+
 #include "PVSS/Internals.h"
 #include "PVSS/Array.h"
+#include "PVSS/DpID.h"
 #include "DpIdentifierVar.hxx"
 #include "DpIdValueList.hxx"
 #include "DpElementType.hxx"
@@ -22,7 +26,6 @@
 #include "BitVar.hxx"
 #include "DynVar.hxx"
 
-#include <memory>
 ///=====
 template <typename V, typename T> static 
 std::auto_ptr<DynVar> get_dyn_var(const PVSS::Array* arr)  {
@@ -107,7 +110,7 @@ void PVSS::pvss_val_list_drop(void*& context)    {
   context = 0;
 }
 
-void PVSS::pvss_val_list_set(void* ctxt,void*& listctxt, int type,const DpIdentifier& id,const Values& val)  {
+void PVSS::pvss_val_list_set(void* ctxt,void*& listctxt, int type,const DpID& id,const Values& val)  {
   DpIdValueList* rd = (DpIdValueList*)ctxt;
   DpVCItem *idx = (DpVCItem*)listctxt;
   DpVCItem *itm = (((void*)~0x0) == listctxt) ? rd->getFirstItem() : rd->getNextItem(idx);
@@ -173,7 +176,7 @@ void PVSS::pvss_val_list_set(void* ctxt,void*& listctxt, int type,const DpIdenti
   }
 }
 
-void PVSS::pvss_val_list_add(void*& ctxt,int type,const DpIdentifier& id,const Values& val)   {
+void PVSS::pvss_val_list_add(void*& ctxt,int type,const DpID& id,const Values& val)   {
   if ( 0 == ctxt ) ctxt = new DpIdValueList;
   DpIdValueList& list = *(DpIdValueList*)ctxt;
   switch(type)   {

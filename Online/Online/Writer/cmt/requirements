@@ -7,11 +7,11 @@ branches          cmt src Writer
 use GaudiKernel   v*
 use DAQEvent      v* Event     -no_auto_imports
 use XMLRPC        v* Online    -no_auto_imports
-use MDF           v* DAQ       -no_auto_imports
+use MDF           v* DAQ
 
 # ==================== libraries ==================================
 apply_pattern install_more_includes more=Writer
-library Writer *.cpp -import=DAQEvent -import=ROOT -import=MDF -import=XMLRPC
+library Writer *.cpp -import=DAQEvent -import=ROOT -import=XMLRPC
 apply_pattern linker_library library=Writer
 apply_pattern ld_library_path
 apply_pattern generate_rootmap library=Writer

@@ -1,11 +1,10 @@
 package CCPCHist
 
 branches  cmt doc src
-include_dirs $(CCPCHISTROOT)/CCPCHist
 use GaudiPolicy v*
 use DIM         v* Online
 
-document      install_includes install_includes
+apply_pattern install_more_includes more=CCPCHist
 library       CCPCHist *.cpp
 macro_append CCPCHist_cppflags "-march=i486" \
             WIN32 ""

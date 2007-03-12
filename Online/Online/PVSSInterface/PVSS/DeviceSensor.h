@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/PVSS/DeviceSensor.h,v 1.1 2007-03-01 10:39:49 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/PVSS/DeviceSensor.h,v 1.2 2007-03-12 09:04:12 frankb Exp $
 //  ====================================================================
 //  DeviceSensor.h
 //  --------------------------------------------------------------------
@@ -37,44 +37,44 @@ namespace PVSS {
     *  PVSS DeviceSensor descriptor.
     *
     *  Note:
-    *
     *  One sensor can handle only ONE device group
     *  Dynamic reconfiguration is not possible.
     *
-    *  If the datapoint to be watched is NOT a primitive 
-    *  type, the primitive leaves will be added.
-    *
-    *  This may be unwanted in case there are many
-    *  leaves - since the callback includes all leaves
+    *  The datapoints must be held by the client object,
+    *  internally only pointers are held
     *
     *   @author  M.Frank
     *   @version 1.0
     */
   class DeviceSensor : public HotLinkCallback  {
-    typedef std::map<DpIdentifier,DataPoint> DataPoints;
-    typedef std::set<Interactor*>  Listeners;
+  public:
+    // Type definitions
+    typedef std::map<DpID,DataPoint*> DataPoints;
+    typedef std::vector<DataPoint*>   DataPointArray;
+    typedef std::set<Interactor*>     Listeners;
 
+  protected:
     /// Reference to controls manager
-    ControlsManager* m_manager;
+    ControlsManager*  m_manager;
     /// Device datapoints
-    DataPoints  m_datapoints;
+    DataPoints        m_datapoints;
+    /// Datapoint array
+    DataPointArray    m_pointArray;
     /// Device listeners
-    Listeners   m_listeners;
+    Listeners         m_listeners;
     /// PVSS list context
-    void*       m_context;
+    void*             m_context;
     /// PVSS hotlink context
-    void*       m_hotlink;
+    void*             m_hotlink;
     /// Disconnect from data points
     void disconnect();
     /// Connect from data points
     void connect();
   public:
-    /// Default constructor
-    DeviceSensor(ControlsManager* mgr, const std::string& dp);
     /// Initializing constructor
-    DeviceSensor(ControlsManager* mgr, const DataPoint& dp);
+    DeviceSensor(ControlsManager* mgr, DataPoint& dp);
     /// Initializing constructor
-    DeviceSensor(ControlsManager* mgr, const std::vector<DataPoint>& dp);
+    DeviceSensor(ControlsManager* mgr, std::vector<DataPoint>& dp);
     /// Standard destructor
     virtual ~DeviceSensor();
     /// Run the sensors
@@ -82,17 +82,27 @@ namespace PVSS {
     /// HotLinkCallback overload: Handle callback for device group
     virtual void handleDataUpdate();
     /// HotLinkCallback overload: Set data value
-    virtual void setValue(const DpIdentifier& dpid, int typ, const Variable* val);
+    virtual void setValue(const DpID& dpid, int typ, const Variable* val);
     /// Delayed handling callback for device group
     virtual void handle();
     /// Access DeviceSensor type manager
-    ControlsManager* manager() const    {  return m_manager;   }
+    ControlsManager* manager() const          {  return m_manager;    }
+    /// Access to the device map
+    DataPoints& devices()                     {  return m_datapoints; }
+    /// Access to the device map (CONST)
+    const DataPoints& devices() const         {  return m_datapoints; }
+    /// Access to the device array
+    DataPointArray& deviceArray()             {  return m_pointArray; }
+    /// Access to the device array (CONST)
+    const DataPointArray& deviceArray() const {  return m_pointArray; }
     /// Add device listener
     void addListener(Interactor* listener);
     /// Remove listener
     void removeListener(Interactor* listener);
     /// Remove all listeners
     void removeListeners();
+    /// Run Sensor instance
+    int run(bool seperate_thread);
   };
 }      // End namespace PVSS
 #endif // ONLINE_PVSS_DEVLISTENER_H

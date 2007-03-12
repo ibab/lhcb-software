@@ -4,9 +4,9 @@ version v1r2
 branches doc src cmt
 
 use ROOT v* LCG_Interfaces
-use DIM v*  Online
+use DIM  v* Online
 
-include_dirs $(VIEWERRROOT)
+apply_pattern install_more_includes more=Viewer
 
 # Viewer does not build library
 ignore_pattern package_stamps

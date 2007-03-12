@@ -4,9 +4,8 @@ version v1r0
 branches  cmt doc
 use PVSS v* Online  -no_auto_imports
 
-include_dirs $(PVSSMANAGERROOT)
+apply_pattern install_more_includes more=PVSSManager offset=PVSS
 
-document install_includes install_includes
 library PVSSManager *.cpp -import=PVSS
 apply_pattern linker_library library=PVSSManager
 macro_append PVSSManager_shlibflags $(PVSS_linkopts)

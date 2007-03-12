@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/PVSS/ReadTransaction.h,v 1.3 2007-03-02 19:54:05 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/PVSS/ReadTransaction.h,v 1.4 2007-03-12 09:04:12 frankb Exp $
 //  ====================================================================
 //  ReadTransaction.h
 //  --------------------------------------------------------------------
@@ -36,7 +36,7 @@ namespace PVSS {
     */
   class ReadTransaction  {
     friend class ControlsManager;
-    typedef std::map<DpIdentifier,DataPoint*> DataPoints;
+    typedef std::map<DpID,DataPoint*> DataPoints;
 
     /// Reference to the controls manager
     ControlsManager *m_manager;
@@ -47,7 +47,7 @@ namespace PVSS {
     ReadTransaction(ControlsManager* mgr);
 
     /// Internal helper for vector IO
-    void i_getValue(int typ,const DpIdentifier& dp,void* v);
+    void i_getValue(int typ,const DpID& dp,void* v);
 
   public:
     /// Standard destructor
@@ -78,7 +78,7 @@ namespace PVSS {
     /// Get datapoint value 
     void getValue(const DataPoint& dp, std::string& value);
     /// Get datapoint value by name
-    void getValue(const DataPoint& dp, DpIdentifier& value);
+    void getValue(const DataPoint& dp, DpID& value);
     /// Get datapoint value by name
     void getValue(const DataPoint& dp, DPTime& value);
     /// Get datapoint value for dynamic items

@@ -1,18 +1,32 @@
 <lcgdict>
   <selection>
+<!--    
+    <class name="PVSS::TestObject"/>
+    <class name="std::map<int,PVSS::TestObject>"/>
+    <class name="std::map<int,PVSS::TestObject*>"/>
+    <class name="std::vector<PVSS::TestObject>"/>
+    <class name="std::vector<PVSS::TestObject*>"/>
+-->
+    <!-- class pattern="*PVSS::*"/ -->
     <class pattern="PVSS::*"/>
+
     <class pattern="std::map<*,PVSS::*>"/>
+    <class pattern="std::_Tree<*PVSS::*>"/>
     <class pattern="std::vector<PVSS::*>"/>
     <class pattern="std::vector<const PVSS::*>"/>
     <class pattern="std::list<PVSS::*>"/>
     <class pattern="std::set<PVSS::*>"/>
     <class pattern="std::auto_ptr<PVSS::*>"/>
+
+    <class name="std::vector<char>"/>
+    <class name="std::vector<float>"/>
+
     <class name="Event"/>
-    <!-- class name="Address"/ -->
     <class name="Message"/>
     <class name="Sensor"/>
     <class name="Interactor"/>
     <function pattern="PVSS*"/>
+    <!-- class name="Address"/ -->
   </selection>
 <!--
   <exclusion>

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DeviceSensor.cpp,v 1.3 2007-03-01 20:08:55 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DeviceSensor.cpp,v 1.4 2007-03-12 09:04:13 frankb Exp $
 //  ====================================================================
 //  DevType.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: DeviceSensor.cpp,v 1.3 2007-03-01 20:08:55 frankb Exp $
+// $Id: DeviceSensor.cpp,v 1.4 2007-03-12 09:04:13 frankb Exp $
 
 // Framework include files
 #include "PVSS/DeviceSensor.h"
@@ -17,13 +17,15 @@
 #include "CPP/Event.h"
 #include "WT/wtdef.h"
 #include "WT/wt_facilities.h"
+#include "RTL/rtl.h"
 #include <set>
 using namespace PVSS;
 
 struct DevSensor : public Sensor {
   typedef std::set<DeviceSensor*> SensorMap;
-  SensorMap m_clients;
-  DevSensor() : Sensor(WT_FACILITY_PVSS,"PVSSDeviceSensor",true) {}
+  SensorMap          m_clients;
+  ::lib_rtl_thread_t m_threadH;
+  DevSensor() : Sensor(WT_FACILITY_PVSS,"PVSSDeviceSensor",true), m_threadH(0) {}
   virtual ~DevSensor() {}
   static DevSensor& instance()  {
     static DevSensor inst;
@@ -44,18 +46,27 @@ struct DevSensor : public Sensor {
   }
   virtual void rearm() {
   }
+  static int s_runSensor(void* arg)  {
+    DevSensor* s = (DevSensor*)arg;
+    ::printf("All current and future PVSS Device sensors are now active.\n");
+    s->run();
+    return 1;
+  }
+  virtual int runSensor(bool seperate_thread)  {
+    if ( seperate_thread && m_threadH == 0 )  {
+      int sc = ::lib_rtl_start_thread(s_runSensor,this,&m_threadH);
+      if ( !lib_rtl_is_success(sc) )  {
+        ::lib_rtl_signal_message(LIB_RTL_OS,"Failed to start device sensor thread.");
+      }
+      return 1;
+    }
+    else if ( !seperate_thread )  {
+      s_runSensor(this);
+      return 1;
+    }
+    return 0;
+  }
 };
-
-/// Default constructor
-DeviceSensor::DeviceSensor(ControlsManager* mgr, const std::string& dp_name)  
-: m_manager(mgr), m_context(0), m_hotlink(0)
-{
-  DevSensor::instance().add(this);
-  DataPoint dp(mgr,dp_name);
-  dp.id();
-  m_datapoints.insert(std::make_pair(dp.id(),dp));
-  connect();
-}
 
 /// Run the sensors
 void DeviceSensor::run()  {
@@ -63,23 +74,25 @@ void DeviceSensor::run()  {
 }
 
 /// Initializing constructor
-DeviceSensor::DeviceSensor(ControlsManager* mgr, const DataPoint& dp)
+DeviceSensor::DeviceSensor(ControlsManager* mgr, DataPoint& dp)
 : m_manager(mgr), m_context(0), m_hotlink(0)
 {
   DevSensor::instance().add(this);
   dp.id();
-  m_datapoints.insert(std::make_pair(dp.id(),dp));
+  m_datapoints.insert(std::make_pair(dp.id(),&dp));
+  m_pointArray.push_back(&dp);
   connect();
 }
 
 /// Initializing constructor
-DeviceSensor::DeviceSensor(ControlsManager* mgr, const std::vector<DataPoint>& dp)
+DeviceSensor::DeviceSensor(ControlsManager* mgr, std::vector<DataPoint>& dp)
 : m_manager(mgr), m_context(0), m_hotlink(0)
 {
   DevSensor::instance().add(this);
-  for(std::vector<DataPoint>::const_iterator i=dp.begin();i!=dp.end();++i)  {
+  for(std::vector<DataPoint>::iterator i=dp.begin();i!=dp.end();++i)  {
     (*i).id();
-    m_datapoints.insert(std::make_pair((*i).id(),*i));
+    m_datapoints.insert(std::make_pair((*i).id(),&(*i)));
+    m_pointArray.push_back(&(*i));
   }
   connect();
 }
@@ -114,17 +127,17 @@ void DeviceSensor::handleDataUpdate()  {
 void DeviceSensor::handle()  {
   Event ev;
   ev.type = PVSSEvent;
-  ev.data = &m_datapoints;
+  ev.data = this;
   for(Listeners::iterator i=m_listeners.begin();i!=m_listeners.end();++i)  {
     // Handle each listener
     (*i)->handle(ev);
   }
 }
 
-void DeviceSensor::setValue(const DpIdentifier& id, int typ, const Variable* val) {
+void DeviceSensor::setValue(const DpID& id, int typ, const Variable* val) {
   DataPoints::iterator i = m_datapoints.find(id);
   if ( i != m_datapoints.end() )  {
-    (*i).second.setValue(typ,val);
+    (*i).second->setValue(typ,val);
   }
 }
 
@@ -143,4 +156,9 @@ void DeviceSensor::removeListener(Interactor* listener)  {
 /// Remove all listeners
 void DeviceSensor::removeListeners()  {
   m_listeners.clear();
+}
+
+/// Run Sensor instance
+int DeviceSensor::run(bool seperate_thread)  {
+  return DevSensor::instance().runSensor(seperate_thread);
 }

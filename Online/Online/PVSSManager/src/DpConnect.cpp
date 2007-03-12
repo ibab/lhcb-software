@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/src/DpConnect.cpp,v 1.2 2007-03-01 15:48:04 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/src/DpConnect.cpp,v 1.3 2007-03-12 09:04:13 frankb Exp $
 //  ====================================================================
 //  DpConnect.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: DpConnect.cpp,v 1.2 2007-03-01 15:48:04 frankb Exp $
+// $Id: DpConnect.cpp,v 1.3 2007-03-12 09:04:13 frankb Exp $
 #include "PVSSManager/SyncWaitForAnswer.h"
 #include "PVSS/HotLinkCallback.h"
 #include "PVSS/Environment.h"
@@ -47,7 +47,7 @@ void PVSS::DpConnectSync::hotLinkCallBack(DpHLGroup &g)   {
     for (DpVCItem *i = g.getFirstItem(); i; i = g.getNextItem())	{
       const DpIdentifier& id = i->getDpIdentifier();
       Manager::getElementType(id,elt_t);
-      m_cb->setValue(id,elt_t,i->getValuePtr());
+      m_cb->setValue((DpID&)id,elt_t,i->getValuePtr());
     }
     m_cb->handleDataUpdate();
   }

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/PVSS/WriteTransaction.h,v 1.4 2007-03-02 19:54:05 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/PVSS/WriteTransaction.h,v 1.5 2007-03-12 09:04:12 frankb Exp $
 //  ====================================================================
 //  WriteTransaction.h
 //  --------------------------------------------------------------------
@@ -80,7 +80,7 @@ namespace PVSS {
     /// Set datapoint reference value by name
     void setValue(const DataPoint& dp, const DPRef& value);
     /// Set datapoint reference value by name
-    void setValue(const DataPoint& dp, const DpIdentifier& value);
+    void setValue(const DataPoint& dp, const DpID& value);
     /// Set datapoint reference value by name
     void setValue(const DataPoint& dp, const DataPoint& value);
     /// Set datapoint value by name
