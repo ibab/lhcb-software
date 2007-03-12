@@ -3,7 +3,7 @@ version v1r4
 
 branches  cmt doc src
 use GaudiPolicy v*
-
+include_dirs  $(OnlineKernel_cmtpath)/$(cmt_installarea_prefix)/include
 apply_pattern install_more_includes more=OnlineKernel
 
 library       OnlineKernel ../src/WT/*.cpp      \
