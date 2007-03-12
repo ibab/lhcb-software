@@ -3,7 +3,7 @@ Package     : AnalysisSys
 Package Coordinator : Juan Palacios
 Purpose     : LHCb analysis packages
 
-</PRE><H1><A NAME=v1r0>2007-03-09 Analysis v6r0 </A></H1><PRE>
+</PRE><H1><A NAME=v1r0>2007-03-09 Analysis v1r0 </A></H1><PRE>
 Phys split into Phys and Analysis. Phys contains everything 
 needed by the HLT and by DaVinci and nothing else. 
 
