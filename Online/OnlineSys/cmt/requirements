@@ -9,7 +9,7 @@ branches cmt doc
 # Now in LHCB:
 #use MDF               v2r4p1   DAQ
 
-use Adder             v4r0     Online
+use Adder             v4r1     Online
 use CCPCHist          v2r1     Online
 use DIM	          v16r7    Online
 #use DimCond           v1r0     Online
