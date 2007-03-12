@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2007-03-12 M. Needham
+ - Add VeloExpectation tool
+
 !======================== TrackTools v2r11 2007-02-06 ========================
 ! 2007-02-06 - Marco Cattaneo
  - Remove LHCbDefinitions includes and dependency

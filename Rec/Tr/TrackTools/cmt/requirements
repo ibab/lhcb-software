@@ -19,6 +19,7 @@ use   LHCbKernel      v*     Kernel
 use   TrackEvent      v*     Event
 use   DigiEvent       v*     Event
 
+use   TsaKernel       v*     Tr
 use   TrackFitEvent   v*     Tr
 use   TrackInterfaces v*     Tr
 use   Relations       v*     Kernel
