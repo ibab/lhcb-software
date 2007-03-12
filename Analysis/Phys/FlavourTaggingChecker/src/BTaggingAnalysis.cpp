@@ -987,7 +987,7 @@ HepMC::GenParticle* BTaggingAnalysis::HEPassociated(const MCParticle* mcp) {
             p  = (*q)->pGenEvt()->particles_begin();
           p != (*q)->pGenEvt()->particles_end();   ++p ) {
       if( mid == (*p)->pdg_id() ) {
-	if( fabs(mothmom - (*p)->momentum().vect().mag()< 1.0) ){
+	if( fabs(mothmom - (*p)->momentum().vect().mag()) < 1.0 ){
 	  if( fabs(moththeta -(*p)->momentum().vect().theta())< 0.0001 ){
 	    return (*p);
 	  }
