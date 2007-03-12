@@ -1,9 +1,14 @@
 ! =============================================================================
-! $Id: release.notes,v 1.49 2007-03-07 13:08:56 cattanem Exp $
+! $Id: release.notes,v 1.50 2007-03-12 14:38:12 marcocle Exp $
 ! =============================================================================
 ! package Tools/CondDBUI
 ! package manager : Marco Clemencic / Nicolas Gilardi
 ! =============================================================================
+
+! 2007-03-12 - Marco Clemencic
+ - Fixed a small bug when trying to find the tags of a folder.
+   If one of the tags in and ancestor folderset does not have a correspondent
+   in the folder, COOL throws na exception that was not properly handled.
 
 !===================== Tools/CondDBUI v2r0 2007-03-07 =========================
                             NEEDS LCGCMT >= 50

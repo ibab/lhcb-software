@@ -671,10 +671,18 @@ class CondDB:
                         node = nodeDict[tag.path]
                         parentNode = nodeDict[os.path.dirname(tag.path)]
                         for parentTagName in parentNode.listTags():
-                            if tagDict[parentTagName].child:
-                                continue
-                            elif tag.name == node.findTagRelation(parentTagName):
-                                tagDict[parentTagName].connectChild(tag)
+                            try:
+                                if tagDict[parentTagName].child:
+                                    continue
+                                elif tag.name == node.findTagRelation(parentTagName):
+                                    tagDict[parentTagName].connectChild(tag)
+                            except RuntimeError, x:
+                                if str(x).find("No child tag can be found") >= 0:
+                                    # the folder does not conatin one of the parent tags
+                                    pass
+                                else:
+                                    raise
+                                
             finally:
                 # recover the original value of os.path.sep
                 os.path.sep = sep
