@@ -1,11 +1,12 @@
-// $Id: FilterToFixOppositeBFractions.cpp,v 1.7 2007-03-06 09:37:56 sposs Exp $
+// $Id: FilterToFixOppositeBFractions.cpp,v 1.8 2007-03-12 14:30:55 cattanem Exp $
 // Include files
 #include <sstream>
-#include "GaudiKernel/MsgStream.h"
-
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h"
+#include "GaudiKernel/AlgFactory.h"
+
+// from LHCb
+#include "LHCbMath/LHCbMath.h"
 
 // local
 #include "FilterToFixOppositeBFractions.h"
@@ -353,5 +354,5 @@ double FilterToFixOppositeBFractions::errorp(int a, double b)
 //=============================================================================
 double FilterToFixOppositeBFractions::r(double x)
 {
-  return round(x * 100.)/100.;
+  return LHCbMath::round(x * 100.)/100.;
 }
