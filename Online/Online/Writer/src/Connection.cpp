@@ -1,18 +1,19 @@
 #ifndef _WIN32
 
 #include <string>
+#include <cerrno>
 #include <stdexcept>
 #include <iostream>
 
-extern "C" {
 #include <sys/ioctl.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <poll.h>
 #include <netdb.h>
-#include <errno.h>
 #include <pthread.h>
+#include <unistd.h>
+extern "C" {
 #include "Writer/chunk_headers.h"
 }
 
