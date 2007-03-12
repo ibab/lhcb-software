@@ -4,6 +4,7 @@
  * <b>The classes used by Moore are documented in the following reference manuals:</b>
  *
  * \li \ref hltsysdoxygenmain "HltSys documentation (LHCb High Level Trigger classes)"
+ * \li \ref physsysdoxygenmain "PhysSys documentation (LHCb physics packages)"
  * \li \ref recsysdoxygenmain "RecSys documentation (LHCb reconstruction packages)"
  * \li \ref lbcomdoxygenmain "LbcomSys documentation (LHCb packages shared with Digitization)"
  * \li \ref lhcbdoxygenmain  "LHCbSys documentation (LHCb core packages)"
