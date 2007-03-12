@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/PVSS/DpID.h,v 1.1 2007-03-12 10:06:21 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/PVSS/DpID.h,v 1.2 2007-03-12 10:11:38 frankb Exp $
 //  ====================================================================
 //  DpID.h
 //  --------------------------------------------------------------------
@@ -54,7 +54,7 @@ namespace PVSS {
     {
     }
   #endif
-    DpID(char d) 
+    DpID(char /* d */) 
     : systemID(0), dpID(0), elmentID(0), configNo(ZERO), 
       detailNo(0), attrNo(0), dpTypeID(0)
     {
