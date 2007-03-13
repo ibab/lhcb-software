@@ -1,10 +1,11 @@
-! $Id: release.notes,v 1.95 2007-03-08 19:56:40 robbep Exp $
+! $Id: release.notes,v 1.96 2007-03-13 13:55:43 gcorti Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Gen/Generators
 ! Responsible : Patrick ROBBE
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
 
+!====================== Generators v7r0 2007-03-13 ===========================
 ! 2007-03-08 - Patrick Robbe
  - IProductionTool: Add new function "initializeGenerator()" which will
    contain the generator specific initialization procedure.
