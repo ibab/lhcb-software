@@ -1,4 +1,4 @@
-// $Id: MonitorInDetail.opts,v 1.5 2006-04-12 19:50:03 gcorti Exp $ 
+// $Id: MonitorInDetail.opts,v 1.6 2007-03-13 18:48:17 gcorti Exp $ 
 
 /** @file 
  * 
@@ -17,6 +17,10 @@ NTupleSvc.Output={"FILE1 DATAFILE='GaussMonitor.root' TYP='ROOT' OPT='NEW'"};
 
 // Algorithm filling detailed info in an ntuple from HepMC
 GenMonitor.Members       += { "GeneratorFullMonitor" };
+
+// Algorithm filling histograms for detailed analysis of Generators
+GenMonitor.Members      += { "GeneratorAnalysis" };
+GeneratorAnalysis.NeutralParticleHistos = true;
 
 // Algorithm filling detailed info in an ntuple from MCParticle
 SimMonitor.Members       += { "MCTruthFullMonitor" };
