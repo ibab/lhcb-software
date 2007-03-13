@@ -4,6 +4,27 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+!======================== Gauss v25r9 2007-03-13 =============================
+! 2007-03-13 - Gloria Corti
+ - Introduce new algorithm for detailed generator studies (GaussMonitor v4r4).
+   Not used in production! 
+   . MonitorInDetail.opts (problem when running Herwig)
+
+! 2007-03-09 - Gloria CORTI
+ - Allow generation of new event types (Z, W, top, Higgs, beam gas in VELO,
+   min bias and b events with new cuts applied at generator level).
+   Also possible to generate rare events with pileup.
+   Use: 
+   . DecFiles    v3r9 - new event types
+   . Generators  v7r0 - new tools, modified IProductionTool and IGenCutTool
+                        interfaces
+   . LbPythia    v5r0 - new tool, adapt to change in IProductionTool and
+                        IGenCutTool
+   . LbHidValley v2r0 - adapt to change in IGenCutTool
+   . LbHijing    v2r0 - adapt to change in IProductionTool
+   . LbHerwig    v4r0 - adapt to change in IProductionTool and prepare code
+                        for compatibility with Gauss v30
+
 ! 2007-03-08 - Gloria Corti
  - Introduce settings for special events pileup
    . FixedLumi-5.opts

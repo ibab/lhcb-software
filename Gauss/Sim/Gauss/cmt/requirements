@@ -1,5 +1,5 @@
 package Gauss
-version v25r8
+version v25r9
 
 #=========================================================================
 #-- Structure
@@ -12,18 +12,18 @@ branches src doc options cmt job
 use XmlDDDB             v30r14  Det   -no_auto_imports
 use XmlConditions       v2r4    Det   -no_auto_imports
 use FieldMap            v4r7          -no_auto_imports
-use DecFiles            v13r8   Gen   -no_auto_imports
+use DecFiles            v13r9   Gen   -no_auto_imports
 use ParamFiles          v5r0          -no_auto_imports
 use Geant4Files		v71r0	      -no_auto_imports
 
 #========================================================================
 
 #-- Optional Hijing
-macro LbHijing_use "" Linux&Hijing "LbHijing v1r2 Gen"
+macro LbHijing_use "" Linux&Hijing "LbHijing v2r0 Gen"
 use $(LbHijing_use)
 
 #-- Optional Herwig
-macro LbHerwig_use "" Linux&Herwig "LbHerwig v3r4 Gen"
+macro LbHerwig_use "" Linux&Herwig "LbHerwig v4r0 Gen"
 use $(LbHerwig_use)
 
 #-- Optional BcVegPy
@@ -31,13 +31,13 @@ macro LbBcVegPy_use "" Linux&BcVegPy "LbBcVegPy v1r4 Gen"
 use $(LbBcVegPy_use)
 
 #-- Optional Hidden Valley
-macro LbHidValley_use "" Linux&HidValley "LbHidValley v1r2 Gen"
+macro LbHidValley_use "" Linux&HidValley "LbHidValley v2r0 Gen"
 use $(LbHidValley_use)
 
 #-- Generator
 use ParticleGuns         v3r2    Gen
-use LbPythia             v4r10   Gen
-use Generators           v6r8    Gen
+use LbPythia             v5r0    Gen
+use Generators           v7r0    Gen
 
 #-- Simulation
 use GiGa                 v18r3   Sim
@@ -59,7 +59,7 @@ macro GDMLG4Writer_use "" Linux&GDML "GDMLG4Writer v2r0 Sim"
 use $(GDMLG4Writer_use)
 
 #-- Monitoring
-use GaussMonitor        v4r3    Sim
+use GaussMonitor        v4r4    Sim
 use CaloMoniSim         v3r1    Calo
 use VeloGauss           v2r1    Velo
 use MuonMoniSim         v2r2    Muon
