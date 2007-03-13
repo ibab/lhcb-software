@@ -17,4 +17,5 @@
   <class name    = "ITrackSelector"          />
   <class name    = "ITrackVelodEdxCharge"    />
   <class name    = "ITrajectoryProvider"     />
+  <class name    = "IVeloExpectation"        />
 </lcgdict>

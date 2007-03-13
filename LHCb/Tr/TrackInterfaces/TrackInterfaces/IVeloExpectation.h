@@ -1,4 +1,4 @@
-// $Id: IVeloExpectation.h,v 1.1 2007-03-12 16:16:41 mneedham Exp $ 
+// $Id: IVeloExpectation.h,v 1.2 2007-03-13 13:38:46 cattanem Exp $ 
 #ifndef _IVeloExpectation_H
 #define _IVeloExpectation_H
  
@@ -6,7 +6,7 @@
  
 static const InterfaceID IID_IVeloExpectation( "IVeloExpectation", 0, 0 );
  
-/** @class IVeloExpectation
+/** @class IVeloExpectation IVeloExpectation.h TrackInterfaces/IVeloExpectation.h
  *
  *  interface for selecting tracks....
  *

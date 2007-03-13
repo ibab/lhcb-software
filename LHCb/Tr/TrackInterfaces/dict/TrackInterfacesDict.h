@@ -19,6 +19,7 @@
 #include "TrackInterfaces/ITrackSelector.h"
 #include "TrackInterfaces/ITrackVelodEdxCharge.h"
 #include "TrackInterfaces/ITrajectoryProvider.h"
+#include "TrackInterfaces/IVeloExpectation.h"
 
 #endif // DICT_TRACKINTERFACESDICT_H
 
