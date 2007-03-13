@@ -1,4 +1,4 @@
-// $Id: TrackInterpolator.cpp,v 1.3 2007-02-06 13:15:36 cattanem Exp $
+// $Id: TrackInterpolator.cpp,v 1.4 2007-03-13 14:32:31 cattanem Exp $
 // Include files
 // -------------
 // from Gaudi
@@ -185,7 +185,7 @@ StatusCode TrackInterpolator::filter(const FitNode& node, State& state)
 // M. Needham 13/6/2000
 // J.A. Hernando (we trust you) 15/05/05
 //=========================================================================
-StatusCode TrackInterpolator::invertMatrix( TrackSymMatrix& m )
+StatusCode TrackInterpolator::invertMatrix( Gaudi::TrackSymMatrix& m )
 {
   TrackUnitsConverters::convertToG3( m );
   bool OK = m.Invert();

@@ -57,10 +57,10 @@ StatusCode TrackChi2Calculator::initialize() {
 //=============================================================================
 //
 //=============================================================================
-StatusCode TrackChi2Calculator::calculateChi2( const TrackVector& trackVector1,
-                                               const TrackSymMatrix& trackCov1,
-                                               const TrackVector& trackVector2,
-                                               const TrackSymMatrix& trackCov2,
+StatusCode TrackChi2Calculator::calculateChi2( const Gaudi::TrackVector& trackVector1,
+                                               const Gaudi::TrackSymMatrix& trackCov1,
+                                               const Gaudi::TrackVector& trackVector2,
+                                               const Gaudi::TrackSymMatrix& trackCov2,
                                                double& chi2 ) const
 {
   if ( !m_addMomentum ) { // then the dimension is 4
@@ -109,9 +109,9 @@ StatusCode TrackChi2Calculator::calculateChi2( const TrackVector& trackVector1,
 //=============================================================================
 //
 //=============================================================================
-StatusCode TrackChi2Calculator::calculateChi2( Vector4& trackVector1,
-                                               Vector4& trackVector2,
-                                               SymMatrix4x4& trackCov12,
+StatusCode TrackChi2Calculator::calculateChi2( Gaudi::Vector4& trackVector1,
+                                               Gaudi::Vector4& trackVector2,
+                                               Gaudi::SymMatrix4x4& trackCov12,
                                                double& chi2 ) const
 {
   // initialize chi2
@@ -146,7 +146,7 @@ StatusCode TrackChi2Calculator::calculateChi2( Vector4& trackVector1,
 //=============================================================================
 //
 //=============================================================================
-StatusCode TrackChi2Calculator::invertMatrix( TrackSymMatrix& invC ) const
+StatusCode TrackChi2Calculator::invertMatrix( Gaudi::TrackSymMatrix& invC ) const
 {
   // This routine is taken from TrKalmanSmoother.cpp. It rescales
   // the matrix before it actually calls the DSINV wrapper.
@@ -183,7 +183,7 @@ StatusCode TrackChi2Calculator::invertMatrix( TrackSymMatrix& invC ) const
 //=============================================================================
 //
 //=============================================================================
-StatusCode TrackChi2Calculator::invertMatrix( SymMatrix4x4& invC ) const
+StatusCode TrackChi2Calculator::invertMatrix( Gaudi::SymMatrix4x4& invC ) const
 {
   // This routine is taken from TrKalmanSmoother.cpp. It rescales
   // the matrix before it actually calls the DSINV wrapper.

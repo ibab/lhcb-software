@@ -1,8 +1,8 @@
-// $Id: LongTrackReferenceCreator.h,v 1.3 2006-06-23 12:41:12 jvantilb Exp $
+// $Id: LongTrackReferenceCreator.h,v 1.4 2007-03-13 14:32:31 cattanem Exp $
 #ifndef _LongTrackReferenceCreator_H
 #define _LongTrackReferenceCreator_H
 
-/** @class LongTrackReferenceCreator TrackTools/LongTrackReferenceCreator.h
+/** @class LongTrackReferenceCreator LongTrackReferenceCreator.h
  *
  * Implementation of TrackCaloMatch tool
  * see interface header for description

@@ -1,4 +1,4 @@
-// $Id: TrajectoryProvider.cpp,v 1.11 2006-05-19 11:55:51 dhcroft Exp $
+// $Id: TrajectoryProvider.cpp,v 1.12 2007-03-13 14:32:31 cattanem Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -136,7 +136,7 @@ std::auto_ptr<Trajectory> TrajectoryProvider::trajectory( const State& state )
 //=============================================================================
 // Return a "State trajectory" from a State vector and a z-position
 //=============================================================================
-std::auto_ptr<Trajectory> TrajectoryProvider::trajectory( const TrackVector& stateVector,
+std::auto_ptr<Trajectory> TrajectoryProvider::trajectory( const Gaudi::TrackVector& stateVector,
                                                           const double z )
 {
   XYZVector bField;

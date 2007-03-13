@@ -1,9 +1,9 @@
-//  $Id: VeloExpectation.h,v 1.1 2007-03-12 16:17:32 mneedham Exp $
+//  $Id: VeloExpectation.h,v 1.2 2007-03-13 14:32:31 cattanem Exp $
 #ifndef TRACKTOOLS_VeloExpectation_H
 #define TRACKTOOLS_VeloExpectation_H
 
 //-----------------------------------------------------------------------------
-/** @class VeloExpectation VeloExpectation TrackTools/VeloExpectation.h
+/** @class VeloExpectation VeloExpectation.h
  *
  *  Tool to estimate how many hits are expected in the velo
  *

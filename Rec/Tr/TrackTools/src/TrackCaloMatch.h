@@ -1,8 +1,8 @@
-// $Id: TrackCaloMatch.h,v 1.1 2006-02-21 14:54:16 mneedham Exp $
+// $Id: TrackCaloMatch.h,v 1.2 2007-03-13 14:32:31 cattanem Exp $
 #ifndef _TrackCaloMatch_H
 #define _TrackCaloMatch_H
 
-/** @class TrackCaloMatch TrackCaloMatch TrackTools/TrackCaloMatch.h
+/** @class TrackCaloMatch TrackCaloMatch.h
  *
  * Implementation of TrackCaloMatch tool
  * see interface header for description

@@ -1,8 +1,8 @@
-// $Id: TrackUsedLHCbID.h,v 1.1 2006-08-17 09:35:18 mneedham Exp $
+// $Id: TrackUsedLHCbID.h,v 1.2 2007-03-13 14:32:31 cattanem Exp $
 #ifndef _TrackUsedLHCbID_H
 #define _TrackUsedLHCbID_H
 
-/** @class TrackUsedLHCbID TrackTools/TrackUsedLHCbID.h
+/** @class TrackUsedLHCbID TrackUsedLHCbID.h
  *
  * Implementation of TrackUsedLHCbID
  * check if an LHCbID is used

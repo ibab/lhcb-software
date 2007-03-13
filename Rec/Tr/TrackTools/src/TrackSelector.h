@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool : TrackSelector
  *
  *  CVS Log :-
- *  $Id: TrackSelector.h,v 1.4 2006-07-06 13:16:34 jonrob Exp $
+ *  $Id: TrackSelector.h,v 1.5 2007-03-13 14:32:31 cattanem Exp $
  *
  *  @author M.Needham Matt.Needham@cern.ch
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -17,7 +17,7 @@
 #define TRACKTOOLS_TrackSelector_H
 
 //-----------------------------------------------------------------------------
-/** @class TrackSelector TrackSelector TrackTools/TrackSelector.h
+/** @class TrackSelector TrackSelector.h
  *
  *  General track Selection tool
  *

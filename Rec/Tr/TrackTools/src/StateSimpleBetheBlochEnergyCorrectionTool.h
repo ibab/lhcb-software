@@ -1,4 +1,4 @@
-// $Id: StateSimpleBetheBlochEnergyCorrectionTool.h,v 1.1 2006-08-22 12:37:51 erodrigu Exp $
+// $Id: StateSimpleBetheBlochEnergyCorrectionTool.h,v 1.2 2007-03-13 14:32:31 cattanem Exp $
 #ifndef TRACKTOOLS_STATESIMPLEBETHEBLOCHENERGYCORRECTIONTOOL_H 
 #define TRACKTOOLS_STATESIMPLEBETHEBLOCHENERGYCORRECTIONTOOL_H 1
 
@@ -13,7 +13,7 @@
 // from TrackEvent
 #include "Event/State.h"
 
-/** @class StateSimpleBetheBlochEnergyCorrectionTool.h
+/** @class StateSimpleBetheBlochEnergyCorrectionTool
  *  
  *  This state correction tool applies a dE/dx energy loss correction
  *  with a simplified version of the Bethe-Bloch equation.
