@@ -3,6 +3,155 @@ Package : GaussSys
 Package manager : Gloria Corti
 Purpose: LHCb Simulation program
 
+</PRE><H1><A NAME="v25r9">2007-03-13 - GaussSys v25r9</A></H1><PRE>
+<H2><A NAME="Note">DC06 version</A></H2>
+<H3><A NAME="Use">This version uses:
+   LHCb v21r12 (and Gaudi v18r11)
+   Pythia 6_325.2, photos 215.2, lhapdf 4.2 (via GENSER 1_4_1)
+   HepMC 1.26 (via LCG external)
+   Geant4 v71r0p16 (based on geant4.7.1.p01a)
+   DecFiles v13r9, ParamFiles v5r0 
+   XmlDDDB v30r14, XmlConditions v2r4, FieldMap v4r7</A></H3>
+<H3><A NAME="Exe">Used by GaussXXX executables:
+   Herwig 6_510.2, Jimmy 4_2.2
+   Hijing 1_383bs.2</A></H3>
+<H3><A NAME="Details">
+   Introduced generation of new events types.
+   Algorithm for detailed generator studies and comparison available.
+</A></H3>
+
+!======================== Gauss v25r9 2007-03-13 =============================
+! 2007-03-13 - Gloria Corti
+ - Introduce new algorithm for detailed generator studies (GaussMonitor v4r4).
+   Not used in production!
+   . MonitorInDetail.opts (problem when running Herwig)
+ 
+! 2007-03-09 - Gloria CORTI
+ - Allow generation of new event types (Z, W, top, Higgs, beam gas in VELO,
+   min bias and b events with new cuts applied at generator level).
+   Also possible to generate rare events with pileup.
+   Use:
+   . DecFiles    v3r9 - new event types
+   . Generators  v7r0 - new tools, modified IProductionTool and IGenCutTool
+                        interfaces
+   . LbPythia    v5r0 - new tool, adapt to change in IProductionTool and
+                        IGenCutTool
+   . LbHidValley v2r0 - adapt to change in IGenCutTool
+   . LbHijing    v2r0 - adapt to change in IProductionTool
+   . LbHerwig    v4r0 - adapt to change in IProductionTool and prepare code
+                        for compatibility with Gauss v30
+ 
+! 2007-03-08 - Gloria Corti
+ - Introduce settings for special events pileup
+   . FixedLumi-5.opts
+ 
+! 2007-03-02 - Gloria CORTI
+ - Introduce configuration for Hijing at 450 GeV
+   . PilotRun.opts
+ 
+!====================== Generators v7r0 2007-03-13 ===========================
+! 2007-03-08 - Patrick Robbe
+ - IProductionTool: Add new function "initializeGenerator()" which will
+   contain the generator specific initialization procedure.
+ - ReadHepMCAsciiFile: adapt for new production tool interface
+ - Special: Add the possibility to generate pile-up for special production
+ - FixedLuminosityForRareProcess: new pile-up tool to generate correctly
+   pile-up distributions for rare process events
+ 
+! 2007-03-08 - Patrick Robbe for Thomas Blake
+ - DiLeptonInAcceptance: new FullEventGenCutTool to accept events with dimuons.
+ 
+! 2007-02-27 - Patrick Robbe
+ - Fix output level of Special production tool
+ 
+! 2007-02-23 - Gloria Corti
+ - Increase major version due to change in IGenCutTool interface
+ 
+! 2007-02-22 - Gloria CORTI
+ - Change default values of ZMin and ZMax of flat primary vertex according
+   to what chosen for Luminosity studies for beam gas (+/- 1500 mm) as
+   communicated by Daniele GREGORI
+   . FlatZSmearVertex.cpp
+ 
+! 2007-02-20 - Patrick Robbe
+ - Fix efficiency counters for CP violation decay modes (=> change IGenCutTool
+   applyCut function arguments). The signal decay is now always performed
+   before applying any generator cut.
+ 
+!===================== LbPythia v5r00 2007-03-13 ============================
+! 2007-03-08 - Patrick Robbe
+ - Adapt PythiaProduction to new IProductionTool interface
+ 
+! 2007-03-07 - Gloria CORTI
+ - Increase major version number due to change in interface used
+ 
+! 2007-02-27 - Patrick Robbe for Victor Coco
+ - Add new tool PythiaHiggsType to generate Higgs, W, Z, and top events
+ 
+! 2007-02-26 - Patrick Robbe
+ - PythiaHiggs: adapt to new generator cut tool.
+ 
+!======================== LbHerwig v4r0 2007-03-13 ==========================
+! 2007-03-13 - Gloria CORTI
+ - Fix compilation errors in modified Fortran routines
+   . mcatnlo_uti.F - reduce lenght of line not to exceed 72 characters,
+                     fix lenght of characters to respect modification
+   . mcatnlo_qqxsec.F - replace some left-over DDILOG calls with MCATNLO_DDILOG
+ - Adapt to changes in IProduction interface. Implementation of new method
+   initializeGenerator() is empty
+   . HeprwigProduction.{h,cpp}
+                      
+! 2007-02-09 - Karl Harrison
+ - modified src/Lib/mcatnlo to include copies of CERNLIB subroutines/functions
+   => Added file mcatnlo_uti.f (renamed to mcatnlo_uti.F)
+      from MC@NLO 3.2 distribution
+      * File defines: ABEND, DDILOG, DIVDIF, FINT, KERMTR, KERSET
+      * Each name prefixed by "MCATNLO_" to avoid possible name clashes
+        with other packages
+   => Deleted file mcatnlo_lhauti.f, which contains another copy of DIVDIF
+   => Modified files mcatnlo_qqxsec.f (renamed mcatnlo_qqxsec.F) to
+      take into account change in function name from DDILOG to
+      MCATNLO_DDILOG
+ 
+!========================= LbHijing v2r0 2007-03-09 =======================
+! 2007-03-09 - Gloria CORTI
+ - Adapt to changes in IProduction interface. Implementation of new method
+   initializeGenerator() is empty
+   . HijingProduction.{h,cpp}
+ 
+!========================= LbHidValley v2r0 2007-03-07 ========================
+! 2007-03-07 - Gloria CORTI
+ - src/Components/NbQuarks.cpp
+    adapt to change in interface in IGenCutTool
+ 
+!=================== GaussMonitor v4r4 2007-03-13 ===========================
+! 2007-03-13 - Gloria Corti
+ - Remove un-necessary include of EvtConst.hh
+   . GeneratorAnalysis.cpp
+ - Set return value of lifetime to -1.0 when not possible to calculate it
+   . GaussGenUtil.cpp
+ - Put boundary of lifetime histogram to include bin at -1.0
+   . GeneratorAnalysis.cpp
+ 
+! 2007-03-08 - Patrick Robbe
+ - GaussGenUtil.cpp: fix lifetime computation
+ - GeneratorAnalysis.cpp: change histogram number 101 (conflict with another
+   histogram with the same number), adapt lifetime range to mm.
+ 
+! 2007-03-07 - Gloria CORTI
+ - Introduce algorithm with detailed histograms for generators studies and
+   validation from Paul SZCZYPKA. Some clean up with respect to its code.
+   . GeneratorAnalysis.{h,cpp} - NEW
+ - Introduce function extracted from GeneratorAnalysis to provide lifetime
+   (c*tau) in GaussGenUtil namespace
+   . GaussGenUtil.{h,cpp}
+ - Add hard interaction information to ntuple (from Paul SZCZYPKA)
+   . GeneratorFullMonitor.{h,cpp}
+ - Add declaration of new algorithm GeneratorAnalysis. Necessary for the
+   package to be compatible with both Gaudi v18 (DC06) and v19.
+   . GaussMonitor_load.cpp
+ 
+!=============================================================================
 </PRE><H1><A NAME="v25r8">2007-02-09 - GaussSys v25r8</A></H1><PRE>
 <H2><A NAME="Note">DC06 version</A></H2>
 <H3><A NAME="Use">This version uses:
