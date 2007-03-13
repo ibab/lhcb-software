@@ -4,12 +4,20 @@
 ! Purpose     : Hold monitoring algorithms for Gauss
 !-----------------------------------------------------------------------------
 
+!=================== GaussMonitor v4r4 2007-03-13 ===========================
+! 2007-03-13 - Gloria Corti
+ - Remove un-necessary include of EvtConst.hh
+   . GeneratorAnalysis.cpp
+ - Set return value of lifetime to -1.0 when not possible to calculate it
+   . GaussGenUtil.cpp
+ - Put boundary of lifetime histogram to include bin at -1.0
+   . GeneratorAnalysis.cpp
+
 ! 2007-03-08 - Patrick Robbe
  - GaussGenUtil.cpp: fix lifetime computation
  - GeneratorAnalysis.cpp: change histogram number 101 (conflict with another
    histogram with the same number), adapt lifetime range to mm. 
 
-!=================== GaussMonitor v4r4 2007-03-07 ===========================
 ! 2007-03-07 - Gloria CORTI
  - Introduce algorithm with detailed histograms for generators studies and
    validation from Paul SZCZYPKA. Some clean up with respect to its code.

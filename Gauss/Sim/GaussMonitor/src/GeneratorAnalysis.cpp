@@ -1,4 +1,4 @@
-// $Id: GeneratorAnalysis.cpp,v 1.2 2007-03-08 13:56:05 robbep Exp $
+// $Id: GeneratorAnalysis.cpp,v 1.3 2007-03-13 19:13:26 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -12,9 +12,6 @@
 
 // From LHCb
 #include "Kernel/ParticleID.h"
-
-// From EvtGen
-#include "EvtGenBase/EvtConst.hh"
 
 // local
 #include "GeneratorAnalysis.h"
@@ -221,7 +218,8 @@ StatusCode GeneratorAnalysis::execute() {
           if( produceHistos() ) {
             m_hProtoP->fill( p );
             m_hProtoPDG->fill( pID );
-            m_hProtoLTime->fill( GaussGenUtil::lifetime( hepMCpart )/ Gaudi::Units::mm);
+            m_hProtoLTime->fill( GaussGenUtil::lifetime( hepMCpart )/
+                                 Gaudi::Units::mm);
           }
 
           // A stable particle does not have an outgoing vertex
@@ -578,7 +576,7 @@ void GeneratorAnalysis::bookHistos(bool neutral)
   m_pHisto.push_back( m_hProtoPDG );
   i++;
   m_hProtoLTime = 
-    book( 132, "Lifetime protostable particles (mm)", 0., 20., 100 );
+    book( 132, "Lifetime protostable particles (mm)", -1., 20., 105 );
   m_pHisto.push_back( m_hProtoLTime );
   i++;
   m_hStableEta = 

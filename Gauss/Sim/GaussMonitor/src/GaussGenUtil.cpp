@@ -1,4 +1,4 @@
-// $Id: GaussGenUtil.cpp,v 1.2 2007-03-08 13:56:05 robbep Exp $
+// $Id: GaussGenUtil.cpp,v 1.3 2007-03-13 19:13:26 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -25,7 +25,7 @@ namespace GaussGenUtil {
   double lifetime( const HepMC::GenParticle* thePart ) {
 
     // Exit for off-shell particles
-    if ( thePart -> momentum().restMass2() < 0 ) return -10.0 ;
+    if ( thePart -> momentum().restMass2() < 0 ) return -1.0 ;
     
     if ( thePart->end_vertex() ) {   
       HepLorentzVector thePosition = thePart->end_vertex()->position() -
@@ -39,9 +39,9 @@ namespace GaussGenUtil {
       Hep3Vector theBoost = thePart->momentum().boostVector() ;
       HepLorentzVector thePositionBoost = theNewPosition.boost( -theBoost );
       return thePositionBoost.t();  // in mm
-    } else {
-      return -10.0 ;
     }
+    return -1.0 ;
+
   }
   
 }
