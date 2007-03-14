@@ -1,0 +1,31 @@
+#============================================================================
+# Created    : 2007-03-14
+# Maintainer : Marco Cattaneo
+#============================================================================
+package           DDDB
+##############################################################
+# The major version ofthe package has to be used to identify #
+# the compatibility of the schema (if the DB is  readable or #
+# not with the version of the software being used).          #
+# The version of the geometry is in the database tag.        #
+##############################################################
+version           v1r0
+
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc options
+
+# Used packages. 
+#============================================================================
+# The database
+use   SQLDDDB               v2r*  Det
+
+# Database access and conversion package
+use   DetCond               v*    Det   -no_auto_imports
+# Bridge from XML parser to database
+use   CondDBEntityResolver  v*    Tools -no_auto_imports
+
+# Database back-end library
+use   sqlite                v*    LCG_Interfaces -no_auto_imports
+
+include_path      none

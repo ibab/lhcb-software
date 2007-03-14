@@ -1,0 +1,16 @@
+!-----------------------------------------------------------------------------
+! Package     : Det/DDDB
+! Responsible : Marco Cattaneo
+! Purpose     : Interface package to Geometry and Conditions DB
+!-----------------------------------------------------------------------------
+
+!========================== DDDB v1r0 2007-03-14 =============================
+
+! 2007-03-14 - Marco Cattaneo
+ - New package to interface to the Geometry and Conditions DB. Contains:
+   . cmt/requirements:  dependencies to SQLDDDB database and packages needed to
+                        read it.
+   . options/DDDB.opts: options for setting up CondDb access.
+                        Replaces $STDOPTS/DetDesc.opts
+   . options/DC06.opts: options to select DC06 tags 
+                        Replaces $STDOPTS/DC06Conditions.opts

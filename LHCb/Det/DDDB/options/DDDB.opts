@@ -1,0 +1,58 @@
+//--------------------------------------------------------------
+// Standard Options to use the Geometry and Conditions Database 
+//--------------------------------------------------------------
+
+// DetetectorDataSvc must be external, to finalize after ToolSvc
+ApplicationMgr.ExtSvc += { "DetDataSvc/DetectorDataSvc" }; 
+DetectorDataSvc.UsePersistency = true;
+DetectorDataSvc.DetDbRootName  = "dd";
+
+//--------------------------------------------------------------
+// Location of detector description XML database is a URL
+// so never use "\" (Use only "/")
+//--------------------------------------------------------------
+//DetectorDataSvc.DetDbLocation = "/lhcb.xml";
+//DetectorDataSvc.DetStorageType = 9;
+DetectorDataSvc.DetDbLocation = "conddb:/lhcb.xml";
+DetectorDataSvc.DetStorageType = 7;
+
+//----------------------------------------------------------------------------
+// Detector Persistency service setup: 
+//----------------------------------------------------------------------------
+DetectorPersistencySvc.CnvServices = { "XmlCnvSvc" };
+//DetectorPersistencySvc.CnvServices += { "CondDBCnvSvc" };
+
+// Set the maximum number of files to be put in the cache of the XmlCnvSvc
+XmlParserSvc.MaxDocNbInCache = 10;
+
+// Change the behavior of the cache of the XmlCnvService. A 0 value makes it FIFO
+// while a bigger value tends to make it keep only reused files.
+XmlParserSvc.CacheBehavior = 3;
+
+// Trigger generic detector element conversion
+// Useful in the case of visualization or in a case the required user
+// defined detector element converters are somehow not available
+//----------------------------------------------------------------------------
+XmlCnvSvc.AllowGenericConversion = true;
+
+//----------------------------------------------------------------------------
+// Tell to the XmlParserSvc how to resolve entities in the CondDB
+//----------------------------------------------------------------------------
+XmlParserSvc.EntityResolverSvc = "CondDBEntityResolverSvc";
+
+//----------------------------------------------------------------------------
+// Access to ConditionsDB
+//----------------------------------------------------------------------------
+
+// Define the main DB service name and the alternative for conditions 
+// (and, in the future, for online)
+CondDBCnvSvc.CondDBReader = "CondDBDispatcherSvc";
+CondDBDispatcherSvc.MainAccessSvc = "CondDBAccessSvc/DDDB";
+CondDBDispatcherSvc.Alternatives = { "/Conditions=CondDBAccessSvc/LHCBCOND" };
+// CondDBDispatcherSvc.Alternatives += { "/Conditions/Online=CondDBAccessSvc/ONLINE" };
+
+//----------------------------------------------------------------------------
+// Technology dependent options
+//----------------------------------------------------------------------------
+#include "$SQLDDDBROOT/options/SQLDDDB.opts"
+DDDB.CacheHighLevel = 450;
