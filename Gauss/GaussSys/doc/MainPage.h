@@ -18,7 +18,7 @@
  * \li <a href="http://mdobbs.home.cern.ch/mdobbs/HepMC/html_reference/index.html"> HepMC (Generator event format)</a>
  * \li <a href="http://cern.ch/LHCb-release-area/DOC/gauss/generator"> Generators documentation</a>
  * \li <a href="http://www.thep.lu.se/~torbjorn/Pythia.html"> Pythia - pp collisions default generator in Gauss</a>
- * \li <a href="http://cern.ch/LHCb-release-area/DOC/gauss/evtgen.htm"> EvtGen in LHCb - decay package</a>
+ * \li <a href="http://cern.ch/LHCb-release-area/DOC/gauss/generators/evtgen.php"> EvtGen in LHCb - decay package</a>
  * \li \ref externaldocs       "Related external libraries"
  *
  * <hr>
