@@ -7,8 +7,8 @@
 EventDataSvc.ForceLeaves = true;
 EventDataSvc.RootCLID    =    1;
 
-// Geometry and magnetic field
-#include "$STDOPTS/DetDesc.opts"
+// Geometry
+#include "$DDDBROOT/options/DDDB.opts"
 
 // Configure the DataOnDemand Service
 EventDataSvc.EnableFaultHandler = true ;

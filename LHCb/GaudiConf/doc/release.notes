@@ -2,6 +2,11 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+!======================== GaudiConf v10r3 2007-03-14 ========================
+! 2007-03-14 - Marco Cattaneo
+ - DC06Conditions.opts and DetDesc.opts are now obsolete, they just include
+   corresponding files from Det/DDDB
+
 !======================== GaudiConf v10r2 2007-03-02 ========================
 ! 2007-02-28 - Marco Clemencic
  - Modified DC06Conditions.opts and DetDesc.opts to use SQLDDDB

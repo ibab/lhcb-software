@@ -1,49 +1,7 @@
-//--------------------------------------------------------------
-// Standard Options to use the Detector Geometry
-//--------------------------------------------------------------
-
-// DetetectorDataSvc must be external, to finalize after ToolSvc
-ApplicationMgr.ExtSvc += { "DetDataSvc/DetectorDataSvc" }; 
-
-DetectorDataSvc.UsePersistency = true;
-DetectorDataSvc.DetDbRootName  = "dd";
-DetectorDataSvc.DetStorageType = 7;
-
-// Detector Persistency service setup: 
-DetectorPersistencySvc.CnvServices = { "XmlCnvSvc" };
-
-// Trigger generic detector element conversion
-// Useful in the case of visualization or in a case the required user
-// defined detector element converters are somehow not available
-XmlCnvSvc.AllowGenericConversion = true;
-
-// Sets the maximum number of files to be put in the cache
-// of the XmlCnvSvc
-XmlParserSvc.MaxDocNbInCache = 10;
-
-// Changes the behavior of the cache of the XmlCnvService
-// A 0 value makes it FIFO while a bigger values tends
-// to make it keep only reused files.
-XmlParserSvc.CacheBehavior = 3;
-
-//--------------------------------------------------------------
-// Standard Options to use the Conditions Database
-//--------------------------------------------------------------
-
-//DetectorPersistencySvc.CnvServices += { "CondDBCnvSvc" };
-
-// Tell XmlParser how to resolve "conddb:" URLs.
-XmlParserSvc.EntityResolverSvc = "CondDBEntityResolverSvc";
-
-// Define the main DB service name and the alternative for
-// conditions (and, in the future, for online)
-CondDBCnvSvc.CondDBReader = "CondDBDispatcherSvc";
-CondDBDispatcherSvc.MainAccessSvc = "CondDBAccessSvc/DDDB";
-CondDBDispatcherSvc.Alternatives = { "/Conditions=CondDBAccessSvc/LHCBCOND" };
-// CondDBDispatcherSvc.Alternatives = { "/Conditions/Online=CondDBAccessSvc/ONLINE" };
-
-// Connection strings to connect to the databases
-DDDB.ConnectionString = "sqlite_file:$SQLDDDBROOT/db/DDDB.db/DDDB";
-DDDB.CacheHighLevel = 450;
-
-LHCBCOND.ConnectionString = "sqlite_file:$SQLDDDBROOT/db/LHCBCOND.db/LHCBCOND";
+#pragma print on
+// WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING
+// The file $STDOPTS/DetDesc.opts is obsolete
+// Please include $DDDBROOT/options/DDDB.opts instead
+// WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING
+#pragma print off
+#include "$DDDBROOT/options/DDDB.opts"
