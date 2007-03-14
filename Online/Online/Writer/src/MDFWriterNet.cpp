@@ -101,7 +101,7 @@ StatusCode MDFWriterNet::initialize(void)
   m_rpcObj = new RPCComm(m_runDBURL);
   try {
 
-    m_connection->connectAndStartThreads();
+    m_connection->initialize();
 
   } catch(const std::exception& e) {
     *m_log << MSG::ERROR << "Caught Exception:" << e.what() << endmsg;

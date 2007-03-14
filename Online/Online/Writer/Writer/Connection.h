@@ -20,6 +20,7 @@ extern "C" {
 namespace LHCb {
 
   class INotifyClient;
+  class FailoverMonitor;
 
   /**@class Connection
    * Abstracts away the networking / failover part of the MDF
@@ -28,6 +29,9 @@ namespace LHCb {
   class Connection
   {
     private:
+
+    	/// A failover monitor object.
+    	FailoverMonitor *m_failoverMonitor;
 
       /// Flag to tell the acking thread to shut down.
       volatile int m_stopAcking;
@@ -67,16 +71,10 @@ namespace LHCb {
       MM m_mmObj;
 
       /// The currently open socket to the server.
-      volatile int m_sockfd;
+      int m_sockfd;
 
       /// Socket buffer sizes.
       int m_sndRcvSizes;
-
-      /// A buffer in which acknowledgement packets can be received.
-      struct ack_header m_ackHeaderBuf;
-
-      /// A count of how many bytes are in m_ackHeaderBuf
-      int m_ackHeaderReceived;
 
       /// A MessageSvc object to log messages to.
       MsgStream *m_log;
@@ -87,11 +85,17 @@ namespace LHCb {
       /// Starts the acknowledgement thread.
       void startAckThread();
 
+      //Reinits data that the ack thread uses.
+      void reInitAckThread();
+
       /// Stops the acknowledgement thread.
       void stopAckThread(int stopLevel);
 
       /// Starts the sender thread.
       void startSendThread();
+
+      //Reinits data that the sender thread uses.
+      void reInitSendThread();
 
       /// Stops the sender thread.
       void stopSendThread(int stopLevel);
@@ -112,14 +116,11 @@ namespace LHCb {
       /// Processes messages put in the queue, and sends them over the socket.
       int processSends(void);
 
-      /// Connects to a storage cluster node.
-      void connectToServer(void);
-
-      /// Connects to a storage cluster node, and starts threads.
-      void connectAndStartThreads(void);
-
       /// Conencts to a storage cluster node, and starts threads.
-      void connectAndNegotiate(int startThreads);
+      void initialize();
+
+      /// Connect.
+      void connect();
 
       /// Closes the connection to the storage cluster node.
       void closeConnection(void);
@@ -135,6 +136,9 @@ namespace LHCb {
 
       /// Sets a notification listener for events on this connection.
       void setNotifyClient(INotifyClient *nClient) { m_notifyClient = nClient; }
+
+      /// Notifies the notification listener.
+      void notify(struct cmd_header *cmd);
 
       /// Constructor
       Connection(std::string serverAddr, int serverPort, int sndRcvSizes,
