@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: VolumeCheck.py,v 1.1 2006-02-03 11:13:13 ibelyaev Exp $ 
+# $Id: VolumeCheck.py,v 1.2 2007-03-14 11:42:40 marcocle Exp $ 
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $ 
+# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ 
 # =============================================================================
 import os 
 import gaudimodule as gaudi
@@ -12,8 +12,8 @@ def init() :
 
     #gaudi.loaddict('DetDict')
     g=gaudi.AppMgr()
-    g.DLLs   += [ "XmlTools"   , "DetDescCnv"    ,
-                  "DetDescSvc" , "DetDescChecks" , "RootHistCnv" ]
+    #g.DLLs   += [ "XmlTools"   , "DetDescCnv"    ,
+    #              "DetDescSvc" , "DetDescChecks" , "RootHistCnv" ]
     g.ExtSvc += [ "XmlCnvSvc" , "XmlParserSvc" ] 
     g.EvtSel = "NONE"
     
@@ -22,12 +22,35 @@ def init() :
 
     det = g.service('XmlCnvSvc')
     det.AllowGenericConversion = True
+
+    XmlParserSvc = g.service('XmlParserSvc')
+    XmlParserSvc.EntityResolverSvc = "CondDBEntityResolverSvc"
+
+    CondDBCnvSvc = g.service('CondDBCnvSvc')
+    CondDBCnvSvc.CondDBReader = "CondDBDispatcherSvc"
+
+    CondDBDispatcherSvc = g.service('CondDBDispatcherSvc')
+    CondDBDispatcherSvc.MainAccessSvc = "CondDBAccessSvc/DDDB"
+    CondDBDispatcherSvc.Alternatives  = [ "/Conditions=CondDBAccessSvc/LHCBCOND" ]
+
+    db_dir = os.path.join(os.environ['SQLDDDBROOT'],'db')
+    DDDB = g.service('DDDB')
+    DDDB.ConnectionString = "sqlite_file:" + os.path.join(db_dir,'DDDB.db','DDDB')
+    DDDB.CacheHighLevel = 450
+
+    LHCBCOND = g.service('LHCBCOND')
+    LHCBCOND.ConnectionString = "sqlite_file:" + os.path.join(db_dir,'LHCBCOND.db','LHCBCOND')
+
+    DDDB.DefaultTAG = "DC06"
+    LHCBCOND.DefaultTAG = "DC06"
     
     det = g.service('DetectorDataSvc')
     det.UsePersistency = True
     det.DetDbRootName  = "dd"
     det.DetStorageType = 7
-    det.DetDbLocation  = os.environ['XMLDDDBROOT']+'/DDDB/lhcb-200601.xml'
+    #det.DetDbLocation  = os.environ['XMLDDDBROOT']+'/DDDB/lhcb-200601.xml'
+    det.DetDbLocation  = 'conddb:/lhcb.xml'
+    
     
 
 def run( volume , event = 1 ) :
