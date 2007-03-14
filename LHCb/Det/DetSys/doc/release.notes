@@ -4,6 +4,10 @@
 ! Purpose     : collect Det packages and build corresponding dictionaries
 !-----------------------------------------------------------------------------
 
+!========================= DetSys v9r3 2007-03-14 ============================
+! 2007-03-14 - Marco Cattaneo
+ - Add dictionary for std::vector<IDetectorElement*>
+
 !========================= DetSys v9r2 2007-03-05 ============================
 ! 2007-03-05 - Marco Cattaneo
  - Use DetDesc v17r2, OTDet v7r2, VeloDet v11r1, DetDescSvc v1r10p1,
