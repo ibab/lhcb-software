@@ -4,6 +4,9 @@
 ! Purpose     : Analysis program for LHCb
 !-----------------------------------------------------------------------------
 
+! 2007-03-14 - Patrick Koppenburg for Marco Cattaneo
+ - Added EventClockSvc.EventTimeDecoder = "OdinTimeDecoder"; to DaVinciCommon.opts
+
 !========================== DaVinci v19r0 2007-03-09 ===================
 ! 2007-03-06 - Patrick Koppenburg
  - DaVinciCommon.opts

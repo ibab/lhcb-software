@@ -22,6 +22,8 @@
 //--------------------------------------------------------------
 #include "$DAVINCIROOT/options/DaVinciTransporter.opts"
 //--------------------------------------------------------------
+// Get the event time (for CondDb) from ODIN 
+EventClockSvc.EventTimeDecoder = "OdinTimeDecoder";
 
 // Profiling
 #pragma print on

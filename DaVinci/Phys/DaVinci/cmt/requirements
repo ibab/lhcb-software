@@ -1,11 +1,11 @@
-# $Id: requirements,v 1.344 2007-03-06 09:35:57 pkoppenb Exp $
+# $Id: requirements,v 1.345 2007-03-14 09:09:54 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : J. Palacios
 #
 
 #============================================================================
 package           DaVinci
-version           v19r0
+version           v19r1
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -67,10 +67,10 @@ use RecSys      v4r2
 use HltSys      v1r3
 
 #-- Phys
-use PhysSys     v6r0
+use PhysSys     v6r1
 
 #-- Analysis
-use AnalysisSys v1r0
+use AnalysisSys v1r1
 
 # Build DaVinci Application with standard executable
 # Note that user code is located in a component library (see details
