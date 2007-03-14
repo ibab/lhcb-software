@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.24 2007-03-14 15:48:46 cattanem Exp $
+# $Id: requirements,v 1.25 2007-03-14 16:09:59 cattanem Exp $
 # =============================================================================
 # Created    : 2002-05-25
 # Maintainer : Vanya Belyaev Ivan.Belyaev@itep.ru
@@ -41,7 +41,7 @@ use               DDDB       v* Det -no_auto_imports
 use               RootHistCnv v*
 use               GaudiConf   v*
 use               GaudiSvc    v*
-use               GaudiPython v*
+use               GaudiPython v* -no_auto_imports
 use               DetDescCnv  v* Det
 macro DetDescCheck_linkopts "$(application_linkopts)"
 apply_pattern     application_path
