@@ -1,9 +1,9 @@
-// $Id: job.opts,v 1.9 2007-02-06 13:43:02 cattanem Exp $
+// $Id: job.opts,v 1.10 2007-03-14 15:50:02 cattanem Exp $
 // Do not use standard options, as we do not need event input
 
 // Set up the detector description
-#include "$STDOPTS/DetDesc.opts"
-#include "$STDOPTS/DC06Conditions.opts"
+#include "$DDDBROOT/options/DDDB.opts"
+#include "$DDDBROOT/options/DC06.opts"
 
 //--------------------------------------------------------------
 // Private Application Configuration options

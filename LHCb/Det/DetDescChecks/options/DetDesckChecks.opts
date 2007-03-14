@@ -1,6 +1,6 @@
 // Comment out the following two lines to use Det/SQLDDDB
-#include "$STDOPTS/DetDesc.opts"
-#include "$STDOPTS/DC06Conditions.opts"
+#include "$DDDBROOT/options/DDDB.opts"
+#include "$DDDBROOT/options/DC06.opts"
 
 ApplicationMgr.HistogramPersistency = "ROOT";
 

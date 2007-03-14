@@ -1,8 +1,13 @@
-$Id: release.notes,v 1.37 2007-03-02 10:09:52 cattanem Exp $
+$Id: release.notes,v 1.38 2007-03-14 15:50:02 cattanem Exp $
 Package: DetDescExample
 Package Manager: Marco Clemencic
 Purpose: Demonstrate how to access detector elements, their geometry 
          parameters and materials from detector description XML database.
+
+!==================DetDescExample v7r5 2007-03-14 ====================
+! 2007-03-14 - Marco Cattaneo
+ - Use DDDB instead of SQLDDDB directly, modify options accordingly
+ - Update Gaudi.job
 
 !==================DetDescExample v7r4 2007-03-02 ====================
 ! 2007-02-28 - Marco Clemencic

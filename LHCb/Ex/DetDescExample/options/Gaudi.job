@@ -24,28 +24,23 @@
 # in INTERACTIVE output files are written onto $WORKDIR
 # you have to set $WORKDIR to what you want
 #
+
 set MODE = $CMTCONFIG
-if ($?LS_SUBCWD) then 
-# in BATCH go to the BATCH local directory
-  cd $WORKDIR
-else
-# in interactive set WORKDIR to your output directory
-  setenv WORKDIR $HOME/w1
-  if ($#argv == 1) set MODE = "$1" 
-endif
-set current = $PWD
-#
+if ($#argv == 1) set MODE = "$1"
+
 # == set the root directory of your job
-setenv MYJOBROOT $HOME/newmycmt/Ex/DetDescExample/v5r2
-
-# == set the LHCB version number
-set opts = `grep STDOPTS $MYJOBROOT/cmt/${MODE}.make`
-set Lversion = `echo $opts | awk -F/ '{print $(NF-3)}' | awk -F_ '{print $2}'`
-
-#setenv MYJOBROOT $LHCb_release_area/LHCB/LHCB_${Lversion}/Ex/DetDescExample/v5r1
-
-# == set the environment
-source $LHCBHOME/scripts/LHCbEnv.csh ${Lversion}
+if ($?LS_SUBCWD) then 
+# in BATCH, WORKDIR is set by the system
+# in BATCH, location of executable has to be given explicitly
+  setenv MYJOBROOT $HOME/cmtuser/Ex/DetDescExample/v7r5
+else
+# in interactive set WORKDIR to submission directory
+  set WORKDIR = $PWD
+# in interactive, executable is under same root directory as this command file
+  cd `dirname $0` 
+  cd ..
+  set MYJOBROOT = $PWD
+endif
 
 # == set the program environment
 source $MYJOBROOT/cmt/setup.csh -tag=$MODE
@@ -73,7 +68,8 @@ ApplicationMgr.DLLs   = { "GaudiAud" };
 AuditorSvc.Auditors   = { "ChronoAuditor" };
 
 // Set up the detector description service
-#include "$STDOPTS/DetDesc.opts"
+#include "$DDDBROOT/options/DDDB.opts"
+#include "$DDDBROOT/options/DC06.opts"
 
 //--------------------------------------------------------------
 // Private Application Configuration options
@@ -88,11 +84,7 @@ EOF
 #
 # == run $EXEC.exe ============================================
 #
-if ($MODE == "Linuxdbx") then
-  ddd tmpjob.exe tmpjob.opts
-else
-  time tmpjob.exe tmpjob.opts
-endif
+time ./tmpjob.exe tmpjob.opts
 
 # == job is finished: remove temporary files ==========
 rm tmp*
