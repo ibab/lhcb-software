@@ -1,4 +1,4 @@
-// $Id: CreateMicroDSTMCAlg.cpp,v 1.5 2007-02-23 09:23:00 ukerzel Exp $
+// $Id: CreateMicroDSTMCAlg.cpp,v 1.6 2007-03-15 11:41:44 ukerzel Exp $
 // Include files 
 
 // from Gaudi
@@ -93,7 +93,7 @@ StatusCode CreateMicroDSTMCAlg::execute() {
     
     std::string locTES = CreateMicroDSTMCAlg::objectLocation((*iParticle)->parent());
 
-    verbose() << "now call StoreParticle for particle fom location " << locTES << endmsg;
+    verbose() << "now call StoreMCParticle for particle fom location " << locTES << endmsg;
     sc = CreateMicroDSTMCAlg::StoreMCParticle(*iParticle); 
     if (sc != StatusCode::SUCCESS) {
       Warning("something went wrong when storing particle", StatusCode::SUCCESS);
@@ -151,9 +151,11 @@ StatusCode CreateMicroDSTMCAlg::StoreMCParticle(const LHCb::Particle * particle)
   if (particle->isBasicParticle()) {
     verbose() << "get associated MC particles using linker: Links" << endmsg;
     associatedParticles = CreateMicroDSTMCAlg::GetMCParticle(particle,m_part2MCLinkerLinks);
+
   } else {
     verbose() << "get associated MC particles using linker: composite" << endmsg;
     associatedParticles = CreateMicroDSTMCAlg::GetMCParticle(particle,m_part2MCLinkerComposite);
+
   } // if isBasicParticle
 
   verbose() << "got #associated particles " << associatedParticles.size() << endmsg;
