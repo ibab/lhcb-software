@@ -1,4 +1,4 @@
-// $Id: IPrepareMuonTSeed.h,v 1.1 2007-03-08 07:47:18 asatta Exp $
+// $Id: IPrepareMuonTSeed.h,v 1.2 2007-03-16 16:29:36 cattanem Exp $
 #ifndef TMP_IPREPAREMUONTSEED_H 
 #define TMP_IPREPAREMUONTSEED_H 1
 
@@ -18,7 +18,7 @@ namespace LHCb {
 static const InterfaceID IID_IPrepareMuonTSeed ( "IPrepareMuonTSeed", 1, 0 
 );
 
-/** @class IPrepareMuonSeed IPrepareMuonSeed.h tmp/IPrepareMuonSeed.h
+/** @class IPrepareMuonTSeed IPrepareMuonTSeed.h HltBase/IPrepareMuonSeed.h
  *  
  *
  *  @author Johannes Albrecht

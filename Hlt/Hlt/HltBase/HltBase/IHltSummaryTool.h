@@ -1,4 +1,4 @@
-// $Id: IHltSummaryTool.h,v 1.3 2007-02-15 09:32:18 cattanem Exp $
+// $Id: IHltSummaryTool.h,v 1.4 2007-03-16 16:29:36 cattanem Exp $
 #ifndef HLTBASE_IHLTSUMMARYTOOL_H 
 #define HLTBASE_IHLTSUMMARYTOOL_H 1
 
@@ -17,7 +17,7 @@ namespace LHCb {
 
 static const InterfaceID IID_IHltSummaryTool ( "IHltSummaryTool", 1, 0 );
 
-/** @class IHltSummaryTool IHltSummaryTool.h tmp/IHltSummaryTool.h
+/** @class IHltSummaryTool IHltSummaryTool.h HltBase/IHltSummaryTool.h
  *
  *  functionality: 
  *      tool to simplify common task asked to the HltSummary  

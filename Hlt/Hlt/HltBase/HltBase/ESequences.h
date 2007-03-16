@@ -2,7 +2,9 @@
 #define HLT_ESEQUENCES_H 1
 
 
-/** Operations over sequences with begin, and end. To apply, functions,
+/** @file ESequences.h 
+ *
+ *  Operations over sequences with begin, and end. To apply, functions,
  *  filters, etc
  *
  *  @author Jose Angel Hernando Morata

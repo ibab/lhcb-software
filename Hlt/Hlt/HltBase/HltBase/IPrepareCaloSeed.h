@@ -1,4 +1,4 @@
-// $Id: IPrepareCaloSeed.h,v 1.2 2007-02-14 17:23:51 cattanem Exp $
+// $Id: IPrepareCaloSeed.h,v 1.3 2007-03-16 16:29:36 cattanem Exp $
 #ifndef HLTBASE_IIPREPARECALOSEED_H 
 #define HLTBASE_IIPREPARECALOSEED_H 1
 
@@ -18,7 +18,7 @@ namespace LHCb {
 
 static const InterfaceID IID_IPrepareCaloSeed ( "IPrepareCaloSeed", 1, 0 );
 
-/** @class IPrepareCaloSeed IPrepareCaloSeed.h tmp/IPrepareCaloSeed.h
+/** @class IPrepareCaloSeed IPrepareCaloSeed.h HltBase/IPrepareCaloSeed.h
  *
  *  functionality: 
  *      tool to simplify common task asked to the HltSummary  

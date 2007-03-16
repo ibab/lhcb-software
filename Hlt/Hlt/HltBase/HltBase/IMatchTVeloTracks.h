@@ -1,4 +1,4 @@
-// $Id: IMatchTVeloTracks.h,v 1.1 2007-03-08 07:47:18 asatta Exp $
+// $Id: IMatchTVeloTracks.h,v 1.2 2007-03-16 16:29:36 cattanem Exp $
 #ifndef HLTBASE_IMATCHTVELOTRACKS_H 
 #define HLTBASE_IMATCHTVELOTRACKS_H 1
 
@@ -17,7 +17,7 @@ namespace LHCb {
 
 static const InterfaceID IID_IMatchTVeloTracks ( "IMatchTVeloTracks", 1, 0 );
 
-/** @class IMatchTVeloTracks IMatchTVeloTracks.h tmp/IMatchTVeloTracks.h
+/** @class IMatchTVeloTracks IMatchTVeloTracks.h HltBase/IMatchTVeloTracks.h
  *  
  *
  *  @author Johannes Albrecht
