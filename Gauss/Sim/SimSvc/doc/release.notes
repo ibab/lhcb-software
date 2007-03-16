@@ -5,9 +5,17 @@
 !               volumes
 !-----------------------------------------------------------------------------
 
-!======================== SimSvc v5r0 ==================================
+!==================== SimSvc v5r0 2007-03-16 =================================
+! 2007-03-16 - Gloria Corti
+ - Modified to follow the changes in LHCb v22r1 XmlTools
+   . SimulationSvc.cpp
+
 ! 2007-01-12 - Gloria Corti
- - update code to cope with Gaudi v19r0
+ - Use install area for includes for Gaudi v19r0
+   . requirements
+ - Use Gaudi macros for factory declarations (Gaudi v19r0)
+   . SimSvc_load.cpp
+   . SimulationSvc.cpp
 
 !======================== SimSvc v4r2 ==================================
 ! 2005-11-10 - Gloria CORTI
