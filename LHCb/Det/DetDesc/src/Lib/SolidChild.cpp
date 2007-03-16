@@ -1,4 +1,4 @@
-// $Id: SolidChild.cpp,v 1.19 2007-01-09 16:01:23 cattanem Exp $ 
+// $Id: SolidChild.cpp,v 1.20 2007-03-16 15:57:23 cattanem Exp $ 
 // ===========================================================================
 /// Geometry definitions
 #include "GaudiKernel/Transform3DTypes.h" 
@@ -62,7 +62,7 @@ SolidChild::SolidChild( ISolid*               solid ,
 // ============================================================================
 /// set bounding parameters 
 // ============================================================================
-StatusCode SolidChild::setBP() 
+void SolidChild::setBP() 
 {  
   const SolidBase* base = dynamic_cast<SolidBase*> (m_sc_solid);
   if( 0 == base ) 
@@ -107,7 +107,6 @@ StatusCode SolidChild::setBP()
     }
   //
   checkBP();
-  return StatusCode::SUCCESS;
 };
 // ============================================================================
 

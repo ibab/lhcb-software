@@ -1,4 +1,4 @@
-// $Id: SolidTubs.cpp,v 1.17 2007-01-09 16:01:24 cattanem Exp $ 
+// $Id: SolidTubs.cpp,v 1.18 2007-03-16 15:57:23 cattanem Exp $ 
 // ============================================================================
 // Units
 #include "GaudiKernel/SystemOfUnits.h"
@@ -76,11 +76,9 @@ SolidTubs::SolidTubs( const std::string& name          ,
 // ============================================================================
 
 // ============================================================================
-/** set parameters for bounding solids (box, sphere and cylinder)
- *  @return status code 
- */
+/// set parameters for bounding solids (box, sphere and cylinder)
 // ============================================================================
-StatusCode SolidTubs::setBP() 
+void SolidTubs::setBP() 
 {
   // set bounding paramters of SolidBase class
   setZMin   ( -zHalfLength() );
@@ -169,7 +167,6 @@ StatusCode SolidTubs::setBP()
 
   //
   checkBP();
-  return StatusCode::SUCCESS;
 };
 // ============================================================================
 

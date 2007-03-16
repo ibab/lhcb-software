@@ -1,4 +1,4 @@
-// $Id: SolidSphere.cpp,v 1.19 2007-01-09 16:01:24 cattanem Exp $ 
+// $Id: SolidSphere.cpp,v 1.20 2007-03-16 15:57:23 cattanem Exp $ 
 // ===========================================================================
 // STD & STL 
 #include <algorithm>
@@ -100,11 +100,9 @@ SolidSphere::SolidSphere
 SolidSphere::~SolidSphere() {};
 
 // ============================================================================
-/** set parameters for bounding solids (box, sphere and cylinder)
- *  @return status code 
- */
+/// set parameters for bounding solids (box, sphere and cylinder)
 // ============================================================================
-StatusCode SolidSphere::setBP() 
+void SolidSphere::setBP() 
 {
   // set bounding parameters of SolidBase class
   setRMax ( outerRadius() );
@@ -223,7 +221,6 @@ StatusCode SolidSphere::setBP()
 
   ///
   checkBP();
-  return StatusCode::SUCCESS;
 };
 // ===========================================================================
 

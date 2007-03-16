@@ -1,9 +1,15 @@
 ! =============================================================================
-! $Id: release.notes,v 1.291 2007-02-26 12:07:11 cattanem Exp $ 
+! $Id: release.notes,v 1.292 2007-03-16 15:57:23 cattanem Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
+
+!====================== DetDesc v17r2 2007-03-16 ============================
+! 2007-03-16 - Marco Cattaneo
+ - setBP now returns void instead of StatusCode, as it was never checked (and
+   could not be!)
+ - Fixed doxygen warnings
 
 !====================== DetDesc v17r1 2007-02-23 ============================
 ! 2007-02-23 - Marco Cattaneo

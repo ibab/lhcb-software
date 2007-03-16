@@ -1,4 +1,4 @@
-// $Id: SolidPolyHedronHelper.h,v 1.13 2007-01-17 12:10:24 cattanem Exp $ 
+// $Id: SolidPolyHedronHelper.h,v 1.14 2007-03-16 15:57:09 cattanem Exp $ 
 // ===========================================================================
 #ifndef     DETDESC_SOLIDPOLYHEDRONHELPER_H
 #define     DETDESC_SOLIDPOLYHEDRONHELPER_H 1
@@ -129,14 +129,13 @@ protected:
   { return 0 >= Plane.Distance( Point ) ; };
 
   /** set bounding parameters 
-   *  @return status code 
    */
-  StatusCode setBP();
+  void setBP();
 
 private:
   /**
    * implementation of isInside
-   * @param reference to any kind of point with x(), y(), z()
+   * @param  point reference to any kind of point with x(), y(), z()
    * @return bool
    */
   template<class aPoint>

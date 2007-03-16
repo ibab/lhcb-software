@@ -1,4 +1,4 @@
-// $Id: SolidBox.cpp,v 1.17 2007-01-09 16:01:23 cattanem Exp $ 
+// $Id: SolidBox.cpp,v 1.18 2007-03-16 15:57:23 cattanem Exp $ 
 // ===========================================================================
 // DetDesc 
 #include "DetDesc/DetDesc.h" 
@@ -49,11 +49,9 @@ SolidBox::SolidBox
 // ============================================================================
 
 // ============================================================================
-/** set parameters for bounding solids (box, sphere and cylinder)
- *  @return status code 
- */
+/// set parameters for bounding solids (box, sphere and cylinder)
 // ============================================================================
-StatusCode SolidBox::setBP() 
+void SolidBox::setBP() 
 {
   /// set bounding paramters od SolidBase class
   setXMin   ( -xHalfLength() );
@@ -66,7 +64,6 @@ StatusCode SolidBox::setBP()
   setRhoMax ( sqrt( xMax() * xMax() + yMax() * yMax()                   ) );
   //
   checkBP () ;
-  return StatusCode::SUCCESS;
 };
 // ============================================================================
 

@@ -1,4 +1,4 @@
-// $Id: Services.h,v 1.4 2005-11-17 16:22:22 marcocle Exp $
+// $Id: Services.h,v 1.5 2007-03-16 15:57:09 cattanem Exp $
 #ifndef DETDESC_SERVICES_H 
 #define DETDESC_SERVICES_H 1
 
@@ -8,13 +8,6 @@ class ISvcLocator;
 class IDataProviderSvc;
 class IMessageSvc;
 class IUpdateManagerSvc;
-
-/** @file Services.h
- *   This namespace is already documented in the file DetDesc.h
- *
- *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
- * @author Sebastien Ponce
- */
 
 namespace DetDesc {
 

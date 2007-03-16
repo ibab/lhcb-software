@@ -1,4 +1,4 @@
-// $Id: SolidBox.h,v 1.16 2007-01-17 12:10:17 cattanem Exp $
+// $Id: SolidBox.h,v 1.17 2007-03-16 15:57:09 cattanem Exp $
 // ===========================================================================
 #ifndef     DETDESC_SOLIDBOX_H
 #define     DETDESC_SOLIDBOX_H
@@ -211,9 +211,8 @@ protected:
   SolidBox(); 
   
   /** set parameters for bounding solids (box, sphere and cylinder)
-   *  @return status code 
    */
-  StatusCode setBP() ;
+  void setBP() ;
   
 private:
   
@@ -222,7 +221,7 @@ private:
 
   /**
    * implementation of isInside
-   * @param reference to any kind of point with x(), y(), z()
+   * @param  point reference to any kind of point with x(), y(), z()
    * @return bool
    */
   template <class aPoint>
@@ -252,9 +251,3 @@ private:
 /// ===========================================================================
 #endif ///<  DETDESC_SOLIDBOX_H
 /// ===========================================================================
-
-
-
-
-
-

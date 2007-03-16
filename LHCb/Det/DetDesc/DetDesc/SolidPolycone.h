@@ -1,4 +1,4 @@
-// $Id: SolidPolycone.h,v 1.10 2007-01-17 12:10:24 cattanem Exp $ 
+// $Id: SolidPolycone.h,v 1.11 2007-03-16 15:57:09 cattanem Exp $ 
 // ============================================================================
 #ifndef DETDESC_SOLIDPOLYCONE_H 
 #define DETDESC_SOLIDPOLYCONE_H 1
@@ -213,9 +213,8 @@ protected:
   SolidPolycone( const std::string& Name = "Anonymous Polycone") ;
 
   /** set bounding parameters 
-   *  @return status code 
    */
-  StatusCode setBP();
+  void setBP();
   
 private:
   
@@ -224,7 +223,7 @@ private:
 
   /**
    * implementation of isInside
-   * @param reference to any kind of point with x(), y(), z()
+   * @param  point reference to any kind of point with x(), y(), z()
    * @return bool
    */
   template <class aPoint>

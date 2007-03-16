@@ -1,6 +1,4 @@
-// $Id: SolidTubs.h,v 1.15 2007-01-17 12:10:26 cattanem Exp $
-// ===========================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
+// $Id: SolidTubs.h,v 1.16 2007-03-16 15:57:09 cattanem Exp $
 // ===========================================================================
 #ifndef     DETDESC_SOLIDTUBS_H
 #define     DETDESC_SOLIDTUBS_H 1  
@@ -230,9 +228,8 @@ protected:
   SolidTubs( const std::string& name = "Anonymous Tubs");
 
   /** set bounding parameters dor base class SolidBox 
-   *  @return status code
    */
-  StatusCode setBP();
+  void setBP();
   
 private:
   
@@ -241,7 +238,7 @@ private:
 
   /**
    * implementation of isInside
-   * @param reference to any kind of point with x(), y(), z()
+   * @param  point reference to any kind of point with x(), y(), z()
    * @return bool
    */
   template <class aPoint>

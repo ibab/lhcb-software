@@ -1,6 +1,4 @@
-// $Id: SolidSphere.h,v 1.15 2006-05-17 16:02:38 cattanem Exp $ 
-// ===========================================================================
-// CVS $Name: not supported by cvs2svn $ 
+// $Id: SolidSphere.h,v 1.16 2007-03-16 15:57:09 cattanem Exp $ 
 // ===========================================================================
 #ifndef     DETDESC_SOLIDSPHERE_H
 #define     DETDESC_SOLIDSPHERE_H 1 
@@ -254,9 +252,8 @@ protected:
   SolidSphere( const std::string& name = "Anonymous Sphere" );
 
   /** set bounding parameters 
-   *  @return status code 
    */
-  StatusCode setBP();
+  void setBP();
   
 private:
   //
@@ -265,7 +262,7 @@ private:
 
   /**
    * implementation of isInside
-   * @param reference to any kind of point with x(), y(), z()
+   * @param  point reference to any kind of point with x(), y(), z()
    * @return bool
    */
   template <class aPoint>

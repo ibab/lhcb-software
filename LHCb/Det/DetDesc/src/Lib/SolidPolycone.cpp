@@ -1,4 +1,4 @@
-// $Id: SolidPolycone.cpp,v 1.15 2007-02-26 12:07:11 cattanem Exp $
+// $Id: SolidPolycone.cpp,v 1.16 2007-03-16 15:57:23 cattanem Exp $
 // ============================================================================
 #include "DetDesc/SolidPolycone.h"
 
@@ -70,11 +70,9 @@ SolidPolycone::SolidPolycone( const std::string&             Name          ,
 SolidPolycone::~SolidPolycone() {};
 
 // ============================================================================
-/** set parameters for bounding solids (box, sphere and cylinder)
- *  @return status code 
- */
+/// set parameters for bounding solids (box, sphere and cylinder)
 // ============================================================================
-StatusCode SolidPolycone::setBP()
+void SolidPolycone::setBP()
 {
   setZMin   ( m_triplets.front().first                  ) ;
   setZMax   ( m_triplets.front().first                  ) ;
@@ -186,7 +184,6 @@ StatusCode SolidPolycone::setBP()
 
   ///
   checkBP();
-  return StatusCode::SUCCESS;
 };
 // ============================================================================
 

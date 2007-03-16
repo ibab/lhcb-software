@@ -1,6 +1,4 @@
-// $Id: SolidTrd.h,v 1.10 2005-12-07 13:19:07 cattanem Exp $ 
-// ===========================================================================
-// CVS $Name: not supported by cvs2svn $ 
+// $Id: SolidTrd.h,v 1.11 2007-03-16 15:57:09 cattanem Exp $ 
 // ===========================================================================
 #ifndef     DETDESC_SOLIDTRD_H
 #define     DETDESC_SOLIDTRD_H 1 
@@ -58,8 +56,8 @@ class SolidTrd: public    virtual SolidBase             ,
   inline std::string typeName () const { return "SolidTrd"; };
   
   /** - retrieve the pointer to "simplified" solid - "cover"
-   *    -# The cover for general TRD is "symmetric" TRD 
-   *    -# the cover for symmetric TRD is BOX 
+   *    -\# The cover for general TRD is "symmetric" TRD 
+   *    -\# the cover for symmetric TRD is BOX 
    *  - implementation of ISolid abstract interface 
    *  @see ISolid 
    *  @return pointer to "simplified" solid - "cover"

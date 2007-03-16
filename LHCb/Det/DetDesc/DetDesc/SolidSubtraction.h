@@ -1,6 +1,4 @@
-// $Id: SolidSubtraction.h,v 1.14 2005-12-08 19:20:01 jpalac Exp $
-/// ===========================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
+// $Id: SolidSubtraction.h,v 1.15 2007-03-16 15:57:09 cattanem Exp $
 /// ===========================================================================
 #ifndef       DETDESC_SOLIDSUBTRACTION_H
 #define       DETDESC_SOLIDSUBTRACTION_H 1 
@@ -97,7 +95,7 @@ private:
 
   /**
    * implementation of isInside
-   * @param reference to any kind of point with x(), y(), z()
+   * @param  point reference to any kind of point with x(), y(), z()
    * @return bool
    */
   template <class aPoint>
@@ -108,5 +106,3 @@ private:
 /// ===========================================================================
 #endif  ///<   DETDESC_SOLIDSUBTRACTION_H
 /// ===========================================================================
-
-

@@ -1,4 +1,4 @@
-// $Id: SolidBoolean.cpp,v 1.17 2007-01-09 16:01:22 cattanem Exp $
+// $Id: SolidBoolean.cpp,v 1.18 2007-03-16 15:57:23 cattanem Exp $
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
@@ -72,7 +72,7 @@ SolidBoolean::~SolidBoolean()
 // ============================================================================
 /// set bounding parameters 
 // ============================================================================
-StatusCode SolidBoolean::setBP()
+void SolidBoolean::setBP()
 {
   const SolidBase* base = dynamic_cast<SolidBase*> (m_sb_first);
   if( 0 == base ) 
@@ -88,7 +88,6 @@ StatusCode SolidBoolean::setBP()
   setRhoMax ( base->rhoMax () );
   
   checkBP();
-  return StatusCode::SUCCESS;
 };
 // ============================================================================
 

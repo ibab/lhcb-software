@@ -1,4 +1,4 @@
-// $Id: SolidCons.cpp,v 1.19 2007-01-09 16:01:23 cattanem Exp $ 
+// $Id: SolidCons.cpp,v 1.20 2007-03-16 15:57:23 cattanem Exp $ 
 // ===========================================================================
 // Units
 #include "GaudiKernel/SystemOfUnits.h"
@@ -94,11 +94,9 @@ SolidCons::SolidCons( const std::string & name  ,
 SolidCons::~SolidCons() {};
 
 // ============================================================================
-/** set parameters for bounding solids (box, sphere and cylinder)
- *  @return status code 
- */
+/// set parameters for bounding solids (box, sphere and cylinder)
 // ============================================================================
-StatusCode SolidCons::setBP() 
+void SolidCons::setBP() 
 {
   // set bounding parameters of SolidBase class
   setZMin   ( -zHalfLength() );
@@ -189,7 +187,6 @@ StatusCode SolidCons::setBP()
 
   // check bounding parameters 
   checkBP() ;
-  return StatusCode::SUCCESS;
 };
 // ============================================================================
 

@@ -1,4 +1,4 @@
-// $Id: SU2LHCb.h,v 1.4 2007-01-17 12:10:15 cattanem Exp $
+// $Id: SU2LHCb.h,v 1.5 2007-03-16 15:57:09 cattanem Exp $
 #ifndef V16R7_SU2LHCB_H 
 #define V16R7_SU2LHCB_H 1
 
@@ -6,7 +6,7 @@
 #include "GaudiKernel/Transform3DTypes.h"
 #include "GaudiKernel/Point3DTypes.h"
 #include "GaudiKernel/PhysicalConstants.h"
-/** @namespace DetDesc SU2LHCb.h v16r7/SU2LHCb.h
+/** @file SU2LHCb.h
  *  
  *  Methods for transformations from LHCb cavern surveying frame of
  *  reference to LHCb frame. Accounts for X <-> Y axis shift and tilt wrt.
@@ -60,7 +60,7 @@ namespace DetDesc {
    *  Gaudi::XYZPoint pLHCb( 0.0, 0.0, 9450);
    *  Gaudi::XYZPoint pSU = DetDesc::LHCb2SU( pLHCb );
    *  @endcode
-   *  @param 3D point in LCHb reference frame
+   *  @param  point 3D point in LCHb reference frame
    *  @return 3D point transformed into SU frame
    *
    *  @author Juan PALACIOS
@@ -79,7 +79,7 @@ namespace DetDesc {
    *  Gaudi::XYZPoint pSU( 0.0, 0.0, 9450);
    *  Gaudi::XYZPoint pLHCb = DetDesc::SU2LHCb( pSU );
    *  @endcode
-   *  @param 3D point in SU reference frame
+   *  @param  point 3D point in SU reference frame
    *  @return 3D point transformed into LHCb frame
    *
    *  @author Juan PALACIOS

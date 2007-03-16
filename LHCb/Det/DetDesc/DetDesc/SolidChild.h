@@ -1,6 +1,4 @@
-// $Id: SolidChild.h,v 1.18 2007-01-17 12:10:21 cattanem Exp $ 
-// ===========================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
+// $Id: SolidChild.h,v 1.19 2007-03-16 15:57:09 cattanem Exp $ 
 // ===========================================================================
 #ifndef       DETDESC_SOLIDCHILD_H 
 #define       DETDESC_SOLIDCHILD_H 1
@@ -18,7 +16,7 @@ template <class TYPE>
 class SolidFactory;     ///< DetDesc 
 
 
-/** @class SolidChild SolidChild.h "DetDesc/SolidChils.h"
+/** @class SolidChild SolidChild.h DetDesc/SolidChild.h
  *
  *  Simple helper class for implementation of "complex" boolean solids
  *  represent a "solid with position" (e.g. hole in the "mother" solid)
@@ -161,9 +159,8 @@ public:
 protected:
   
   /** set boundary parameters 
-   *  @return status code 
    */
-  StatusCode setBP();
+  void setBP();
 
 private:
   
@@ -180,7 +177,7 @@ private:
 
   /**
    * implementation of isInside
-   * @param reference to any kind of point with x(), y(), z()
+   * @param  point reference to any kind of point with x(), y(), z()
    * @return bool
    */
   template<class aPoint>

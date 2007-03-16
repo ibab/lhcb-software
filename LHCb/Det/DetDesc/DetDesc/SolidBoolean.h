@@ -1,6 +1,4 @@
-// $Id: SolidBoolean.h,v 1.19 2005-12-08 19:20:01 jpalac Exp $ 
-// ===========================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
+// $Id: SolidBoolean.h,v 1.20 2007-03-16 15:57:09 cattanem Exp $ 
 // ===========================================================================
 #ifndef      DETDESC_SOLIDBOOLEAN_H 
 #define      DETDESC_SOLIDBOOLEAN_H  1 
@@ -216,9 +214,8 @@ private:
 protected:
   
   /** set bounding parameters 
-   *  @return status code 
    */
-  StatusCode setBP();
+  void setBP();
 
 private:
   ///

@@ -1,6 +1,4 @@
-// $Id: SolidTrap.h,v 1.15 2007-01-17 12:10:25 cattanem Exp $
-/// ===========================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
+// $Id: SolidTrap.h,v 1.16 2007-03-16 15:57:09 cattanem Exp $
 /// ===========================================================================
 #ifndef     DETDESC_SOLIDTRAP_H
 #define     DETDESC_SOLIDTRAP_H 1 
@@ -82,7 +80,7 @@ public:
   inline std::string typeName () const { return "SolidTrap"  ; };
   
   /** - retrieve the pointer to "simplified" solid - "cover"
-   *    -# the cover for Trap is Trd 
+   *    -\# the cover for Trap is Trd 
    *  - implementation of ISolid abstract interface 
    *  @see ISolid 
    *  @return pointer to "simplified" solid - "cover"

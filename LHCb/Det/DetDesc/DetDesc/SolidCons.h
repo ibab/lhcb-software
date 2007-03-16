@@ -1,4 +1,4 @@
-// $Id: SolidCons.h,v 1.17 2007-01-17 12:10:24 cattanem Exp $ 
+// $Id: SolidCons.h,v 1.18 2007-03-16 15:57:09 cattanem Exp $ 
 // ===========================================================================
 #ifndef     DETDESC_SOLIDCONS_H
 #define     DETDESC_SOLIDCONS_H 1   
@@ -75,17 +75,17 @@ public:
   bool isInside (  const Gaudi::XYZPoint& point ) const ;
   bool isInside ( const Gaudi::Polar3DPoint   & point ) const;
   bool isInside ( const Gaudi::RhoZPhiPoint   & point ) const; 
-  /** -# retrieve the pointer to "simplified" solid - "cover"
+  /** -\# retrieve the pointer to "simplified" solid - "cover"
    *    - for Model = 0 
-   *        -# the cover for the general conical tube segment is 
-   *           the conical tube 
-   *        -# the cover for the conical tube is conical cylinder 
-   *        -# the cover for the conical cylinder is TRD 
+   *        -\# the cover for the general conical tube segment is 
+   *            the conical tube 
+   *        -\# the cover for the conical tube is conical cylinder 
+   *        -\# the cover for the conical cylinder is TRD 
    *    - for Model != 0 
-   *        -# the cover for conical tube serment is conical cylinder segment 
-   *        -# the cover for conical cylinder segment is conical cylinder 
-   *        -# the cover for conical cylinder is TRD 
-   *  -# implementation of ISolid abstract interface 
+   *        -\# the cover for conical tube serment is conical cylinder segment 
+   *        -\# the cover for conical cylinder segment is conical cylinder 
+   *        -\# the cover for conical cylinder is TRD 
+   *  -\# implementation of ISolid abstract interface 
    *  @see ISolid 
    *  @return pointer to "simplified" solid - "cover"
    */
@@ -293,9 +293,8 @@ protected:
   SolidCons( const std::string& Name = "Anonymous CONS") ;
 
   /** set bounding parameters 
-   *  @return status code 
    */
-  StatusCode setBP();
+  void setBP();
 
 private:
 

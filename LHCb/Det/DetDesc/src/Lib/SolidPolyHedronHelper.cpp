@@ -1,4 +1,4 @@
-// $Id: SolidPolyHedronHelper.cpp,v 1.11 2007-01-09 16:01:23 cattanem Exp $ 
+// $Id: SolidPolyHedronHelper.cpp,v 1.12 2007-03-16 15:57:23 cattanem Exp $ 
 // ===========================================================================
 #include "DetDesc/SolidPolyHedronHelper.h"
 
@@ -33,11 +33,9 @@ SolidPolyHedronHelper::~SolidPolyHedronHelper()
 };
 
 // ============================================================================
-/** set parameters for bounding solids (box, sphere and cylinder)
- *  @return status code 
- */
+/// set parameters for bounding solids (box, sphere and cylinder)
 // ============================================================================
-StatusCode SolidPolyHedronHelper::setBP() 
+void SolidPolyHedronHelper::setBP() 
 {
   if( m_ph_vertices.empty() )
     { throw SolidException("SolidPHH::setBP(): no vertices are available!");}
@@ -68,7 +66,6 @@ StatusCode SolidPolyHedronHelper::setBP()
     }
   ///
   checkBP();
-  return StatusCode::SUCCESS;
 };
 // ============================================================================
 
