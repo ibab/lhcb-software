@@ -4,15 +4,32 @@
 ! Purpose     : Hold converters between LHCb and Geant4
 !-----------------------------------------------------------------------------
 
-!========================= GiGaCnv v18r0 2007-01-12 ========================
-! 2007-01-12 - Florence RANJARD, Gloria Corti
- - install include files on InstallArea
+!========================= GiGaCnv v18r0 2007-03-16 ==========================
+! 2007-01-12 - Gloria CORTI
  - update *.cpp to cope with GAUDI_v19r0
+ - Remove method locateOwnCnv() from base class since check not necessary
+   and preventing compilation with Gaudi v19r0
+   . GiGaCnvSvcBase.{h,cpp}
+ - Use Gaudi macros for factory declaration
+   . GiGaCatalogCnv.cpp
+   . GiGaDataStoreAlgorithm.cpp
+   . GiGaDetectorElementCnv.cpp
+   . GiGaElementCnv.cpp
+   . GiGaGeo.cpp
+   . GiGaIsotopeCnv.cpp
+   . GiGaKine.cpp
+   . GiGaLAssemblyCnv.cpp
+   . GiGaLVolumeCnv.cpp
+   . GiGaMixture.cpp
+   . GiGaSurfaceCnv.cpp
+
+! 2007-01-12 - Florence RANJARD
+ - install include files on InstallArea
 
 ! 2006-07-10 - Florence RANJARD
  - GiGaElementCnv.cpp, GiGaMixtureCnv.cpp, GiGaGeo.cpp, GiGaIsotopeCnv.cpp -
    call G4Material::GetMaterial and G4Element::GetElement with warning=false
-   to avoid printout
+   to avoid printout as possible with Geant4 8.1
 
 !======================= GiGaCnv v17r1 2006-07-27 ============================
 ! 2006-07-27 - Gloria CORTI
