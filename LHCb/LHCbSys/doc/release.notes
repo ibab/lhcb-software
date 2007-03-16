@@ -5,6 +5,40 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v22r3>2007-03-16 LHCbSys v22r3</A></H1><PRE>
+This version uses Gaudi v19r3 and LCG_50b. Fully compatible with DC06 data
+
+- Packages added:    Det/DDDB v1r0 - Interface package to (SQL)DDDB  
+- Packages modified: GaudiConf v10r3, TsaKernel v2r3, TrackInterfaces v3r2
+    DetSys v9r3, LinkerInstances v3r2p3, DetDescChecks v4r3, DetDescExample v7r5
+
+- In GaudiConf v10r3
+  . Move geometry related options to new DDDB package
+
+- In TsaKernel v2r3
+  . Add constructor to Line class
+
+- In TrackInterfaces v6r2
+  . Add IVeloExpectation interface
+
+- In DetSys v9r3
+  . Add dictionary for std::vector<IDetectorElement*>
+
+- In LinkerInstances v3r2p3
+  . Add dictionary for std::vector<std::pair<int,unsigned int> >
+
+- In DetDescChecks v4r3, DetDescExample v7r5
+  . Remove explicit dependency on SQLDDDB, use DDDB instead
+
+- In DetDescChecks v4r3
+  . VolumeCheck.py updated for SQLDDDB
+
+- In DetDescExample v7r5
+  . Update Gaudi.job
+
+- In TsaKernel v2r3
+  . Fix doxygen comments
+
 </PRE><H1><A NAME=v22r2>2007-03-05 LHCbSys v22r2</A></H1><PRE>
 This version uses Gaudi v19r2 and LCGCMT 50. Fully compatible with DC06 data
 

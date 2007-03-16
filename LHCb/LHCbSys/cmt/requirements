@@ -1,5 +1,5 @@
 package LHCbSys
-version v22r2
+version v22r3
 
 branches doc cmt
 
@@ -7,7 +7,7 @@ branches doc cmt
 # LHCb packages visible to all applications
 #===============================================================
 
-use GaudiConf	         v10r2
+use GaudiConf	         v10r3
 use GaudiObjDesc         v9r9
 
 #                                         Maintainer
@@ -23,7 +23,7 @@ use L0MuonKernel          v6r0    L0      # Andrei Tsaregorodtsev, Julien Cogan
 use ProcessorKernel       v4r0    L0      # Andrei Tsaregorodtsev, Julien Cogan
 
 # Detector description
-use DetSys                v9r2    Det     # Marco Cattaneo
+use DetSys                v9r3    Det     # Marco Cattaneo
 use VeloDet               v11r1   Det     # Mark Tobin
 use DetDesc               v17r1   Det     # Marco Clemencic, Juan Palacios
 use DetDescCnv            v4r2    Det     # Marco Clemencic, Juan Palacios
@@ -67,11 +67,11 @@ use CaloInterfaces        v7r1   Calo    # Olivier Deschamps
 use CaloUtils             v7r1   Calo    # Olivier Deschamps
 use RichRecBase           v3r1   Rich    # Chris Jones
 use PatTools              v3r1   Pat     # Olivier Callot
-use TrackInterfaces       v3r1   Tr      # Eduardo Rodrigues, Jose Hernando
+use TrackInterfaces       v3r2   Tr      # Eduardo Rodrigues, Jose Hernando
 use TrackMCInterfaces     v3r0   Tr      # Eduardo Rodrigues
-use TsaKernel             v2r2   Tr      # Matt Needham
+use TsaKernel             v2r3   Tr      # Matt Needham
 use HltBase               v2r2   Hlt     # Jose Angel Hernando-Morata
-use LinkerInstances       v3r2p2 Event   # Eduardo Rodrigues, Thomas Ruf
+use LinkerInstances       v3r2p3 Event   # Eduardo Rodrigues, Thomas Ruf
 use DetCond               v11r0  Det     # Marco Clemencic
 use CondDBEntityResolver  v4r0   Tools   # Marco Clemencic
 use CondDBUI              v2r0   Tools   # Marco Clemencic
@@ -81,9 +81,10 @@ use SimComponents         v2r1   Sim     # Gloria Corti, Marco Cattaneo
 use MDF                   v2r4p1 DAQ     # Markus Frank
 use DaVinciKernel         v6r1   Phys    # Juan Palacios
 use DaVinciMCKernel       v2r1   Phys    # Juan Palacios
+use DDDB                  v1r0   Det     # Marco Cattaneo
 
 # LHCb  Examples
-use DetDescChecks         v4r2   Det     # Ivan Belyaev
-use DetDescExample        v7r4   Ex      # Marco Clemencic
+use DetDescChecks         v4r3   Det     # Ivan Belyaev
+use DetDescExample        v7r5   Ex      # Marco Clemencic
 use IOExample             v2r0p3 Ex      # Marco Cattaneo
 use DetCondExample        v11r0  Ex      # Marco Clemencic
