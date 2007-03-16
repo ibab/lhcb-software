@@ -1,4 +1,4 @@
-// $Id: CondDBAccessSvc.h,v 1.24 2007-02-22 14:20:19 marcocle Exp $
+// $Id: CondDBAccessSvc.h,v 1.25 2007-03-16 16:49:56 marcocle Exp $
 #ifndef COMPONENT_CONDDBACCESSSVC_H 
 #define COMPONENT_CONDDBACCESSSVC_H 1
 
@@ -23,6 +23,7 @@ class CondDBCache;
 class IRndmGenSvc;
 
 namespace cool {
+  class Application;
   class RecordSpecification;
 }
 
@@ -229,6 +230,18 @@ private:
   /// (and needing the AttributeListSpecification pointers).
   static unsigned long long s_instances;
 
+  /// Pointer to a shared instance of the COOL Application
+  static std::auto_ptr<cool::Application> s_coolApplication;
+
+  /// Flag to turn off/on the CORAL LFCReplicaService (option UseLFCReplicaSvc, default = false).
+  /// Setting this option works only if it is set for the first CondDBAccessSvc initialized
+  /// because of a "feature" of CORAL.
+  bool m_useLFCReplicaSvc;
+
+  /// Flag to turn off/on the CORAL Automatinc connection clean up
+  /// (option EnableCoralConnectionCleanUp, default = false).
+  /// Setting this option works only if it is set for the first CondDBAccessSvc initialized.
+  bool m_coralConnCleanUp;
 
   // -------------------------------------
   // ---------- Time Out Thread ----------

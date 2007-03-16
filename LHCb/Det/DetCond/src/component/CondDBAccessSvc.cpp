@@ -1,4 +1,4 @@
-// $Id: CondDBAccessSvc.cpp,v 1.31 2007-02-22 14:20:19 marcocle Exp $
+// $Id: CondDBAccessSvc.cpp,v 1.32 2007-03-16 16:49:56 marcocle Exp $
 // Include files
 #include <sstream>
 //#include <cstdlib>
@@ -7,6 +7,11 @@
 
 // needed to sleep between retrials
 #include "SealBase/TimeInfo.h"
+#include "SealKernel/Context.h"
+#include "SealKernel/ComponentLoader.h"
+
+#include "RelationalAccess/IConnectionService.h"
+#include "RelationalAccess/IConnectionServiceConfiguration.h"
 
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/MsgStream.h"
@@ -27,6 +32,7 @@
 #include "CoolKernel/StorageType.h"
 #include "CoolKernel/Record.h"
 
+#include "CoolApplication/Application.h"
 #include "CoolApplication/DatabaseSvcFactory.h"
 
 #include "CoralBase/AttributeList.h"
@@ -48,6 +54,8 @@ DECLARE_SERVICE_FACTORY(CondDBAccessSvc)
 cool::RecordSpecification *CondDBAccessSvc::s_XMLstorageSpec = NULL;
 unsigned long long CondDBAccessSvc::s_instances = 0;
 
+std::auto_ptr<cool::Application> CondDBAccessSvc::s_coolApplication(NULL);
+
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
@@ -66,7 +74,9 @@ CondDBAccessSvc::CondDBAccessSvc(const std::string& name, ISvcLocator* svcloc):
   //declareProperty("CachePreload",     m_cachePreload=3600*1E9); // ns
   declareProperty("CheckTAGTrials",   m_checkTagTrials   = 1     );
   declareProperty("CheckTAGTimeOut",  m_checkTagTimeOut  = 60    );
-  declareProperty("ReadOnly",         m_readonly         = true );
+  declareProperty("ReadOnly",         m_readonly         = true  );
+  declareProperty("UseLFCReplicaSvc", m_useLFCReplicaSvc = false );
+  declareProperty("EnableCoralConnectionCleanUp", m_coralConnCleanUp = false );
   
   declareProperty("ConnectionTimeOut", m_connectionTimeOut = 600 );
   
@@ -224,8 +234,37 @@ StatusCode CondDBAccessSvc::i_openConnection(){
 
   try {
     if (! m_db) { // The database is not yet opened
+
+      if ( s_coolApplication.get() == NULL) {
+
+        log << MSG::DEBUG << "Initializing COOL Application" << endmsg;
+        s_coolApplication = std::auto_ptr<cool::Application>(new cool::Application());
+
+        if ( m_useLFCReplicaSvc ) {
+
+          log << MSG::INFO << "Loading CORAL LFCReplicaService" << endmsg;
+          seal::Handle<seal::ComponentLoader> loader = 
+            s_coolApplication->context()->component<seal::ComponentLoader>();
+          loader->load( "CORAL/Services/LFCReplicaService" );
+
+        }
+
+        if ( ! m_coralConnCleanUp ) {
+          seal::Handle<seal::ComponentLoader> loader = 
+            s_coolApplication->context()->component<seal::ComponentLoader>();
+          loader->load( "CORAL/Services/ConnectionService" );
+
+          std::vector< seal::IHandle< coral::IConnectionService > > loadedServices;
+          s_coolApplication->context()->query( loadedServices );
+
+          loadedServices.front()->configuration().disablePoolAutomaticCleanUp();
+          loadedServices.front()->configuration().setConnectionTimeOut( 0 );
+        }
+        
+      }
+
       log << MSG::DEBUG << "Get cool::DatabaseSvc" << endmsg;
-      cool::IDatabaseSvc &dbSvc = cool::DatabaseSvcFactory::databaseService();
+      cool::IDatabaseSvc &dbSvc = s_coolApplication->databaseService();
       log << MSG::DEBUG << "cool::DatabaseSvc got" << endmsg;
 
       log << MSG::DEBUG << "Opening connection" << endmsg;
@@ -273,6 +312,13 @@ StatusCode CondDBAccessSvc::setTag(const std::string &_tag){
   return sc;
 }
 StatusCode CondDBAccessSvc::i_checkTag(const std::string &tag) const {
+
+  if ( !m_db ) {
+    log << MSG::ERROR << "Check tag \"" << tag
+        << "\": the database is not opened!" << endmsg;
+    return StatusCode::FAILURE;
+  }
+
   DataBaseOperationLock dbLock(this);
 
   MsgStream log(msgSvc(), name() );
@@ -576,7 +622,7 @@ StatusCode CondDBAccessSvc::tagLeafNode(const std::string &path, const std::stri
 std::string CondDBAccessSvc::generateUniqueTagName(const std::string &base,
                                                    const std::set<std::string> &reserved) const {
 
-  if (!m_db->isOpen()) {
+  if ( !m_db->isOpen() ) {
     throw GaudiException("Database not open","CondDBAccessSvc::generateUniqueTagName",StatusCode::FAILURE);
   }
   if ( ! m_rndmSvc ) {
