@@ -1,4 +1,4 @@
-// $Id: MuonChamberGrid.cpp,v 1.10 2007-02-28 18:33:18 marcocle Exp $
+// $Id: MuonChamberGrid.cpp,v 1.11 2007-03-16 16:25:22 marcocle Exp $
 // Include files 
 
 // local
@@ -37,7 +37,7 @@ MuonChamberGrid::~MuonChamberGrid() {};
 StatusCode MuonChamberGrid::initialize(){
 
   char patt[400]; int Ngrid(0);
-  sprintf(patt,"%s",(this->name()).data());
+  sprintf(patt,"%s",(this->name()).c_str());
   sscanf(patt,"/G%d",&Ngrid);
   m_number_of_grid = Ngrid;
   

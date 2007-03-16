@@ -1,4 +1,4 @@
-// $Id: DeMuonDetector.cpp,v 1.31 2007-02-28 18:33:18 marcocle Exp $
+// $Id: DeMuonDetector.cpp,v 1.32 2007-03-16 16:25:22 marcocle Exp $
 
 // Include files
 #include "MuonDet/DeMuonDetector.h"
@@ -610,7 +610,7 @@ DeMuonDetector::listOfPhysChannels(Gaudi::XYZPoint my_entry, Gaudi::XYZPoint my_
   }
 
   //Getting the grid pointer
-  Condition* aGrid = myChPtr->condition((myChPtr->getGridName()).data());
+  Condition* aGrid = myChPtr->condition(myChPtr->getGridName());
   MuonChamberGrid* theGrid = dynamic_cast<MuonChamberGrid*>(aGrid);
 
   //Convert relative distances into absolute ones
@@ -679,7 +679,7 @@ StatusCode DeMuonDetector::getPCCenter(MuonFrontEndID fe,int chamber,
   float dx = box->xHalfLength();  
   float dy = box->yHalfLength();
   Condition* aGrid = 
-  myChPtr->condition((myChPtr->getGridName()).data());
+  myChPtr->condition(myChPtr->getGridName());
   MuonChamberGrid* theGrid = dynamic_cast<MuonChamberGrid*>(aGrid);
   double xcenter_norma=-1;
   double ycenter_norma=-1;  
@@ -756,7 +756,7 @@ StatusCode  DeMuonDetector::fillGeoInfo()
         m_gapPerRegion[station*4+region]=gaps;
         m_gapPerFE[station*4+region]=gaps/2; 
         
-        Condition* bGrid = (chPt)->condition((chPt->getGridName()).data());
+        Condition* bGrid = (chPt)->condition(chPt->getGridName());
         MuonChamberGrid* theGrid = dynamic_cast<MuonChamberGrid*>(bGrid);
         
         int nreadout=1;

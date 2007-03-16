@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.86 2007-03-05 07:19:36 cattanem Exp $
+! $Id: release.notes,v 1.87 2007-03-16 16:25:22 marcocle Exp $
 ! Package     : MuonDet
 ! Responsible : Alessia Satta
 !----------------------------------------------------------------------------
+
+! 2007-03-16 - Marco Clemencic
+ - Replaced calls to std::string::data() with std::string::c_str() or removed
+   where not needed.
 
 !========================= MuonDet v6r1 2007-03-05 ========================
 ! 2007-03-05 - Marco Cattaneo

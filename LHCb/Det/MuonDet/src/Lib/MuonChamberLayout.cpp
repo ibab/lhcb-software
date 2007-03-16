@@ -1,4 +1,4 @@
-// $Id: MuonChamberLayout.cpp,v 1.23 2006-05-09 14:21:32 cattanem Exp $
+// $Id: MuonChamberLayout.cpp,v 1.24 2007-03-16 16:25:22 marcocle Exp $
 // Include files 
 
 // Gaudi
@@ -493,7 +493,7 @@ std::vector<DeMuonChamber*>  MuonChamberLayout::fillChambersVector(IDataProvider
   for(itSt=muonSys->childBegin(); itSt<muonSys->childEnd(); itSt++){
 
     //Are there any void Stations?
-    sscanf((*itSt)->name().data(),"/dd/Structure/LHCb/DownstreamRegion/Muon/M%d",&obtIS);
+    sscanf((*itSt)->name().c_str(),"/dd/Structure/LHCb/DownstreamRegion/Muon/M%d",&obtIS);
     if(debug) std::cout<<"Station Name: "<<(*itSt)->name()<<" ::  "<<obtIS<<std::endl;    
     while(iS != obtIS-1) {
       std::cout<<"There is/are void stations. "<<std::endl;
@@ -513,7 +513,7 @@ std::vector<DeMuonChamber*>  MuonChamberLayout::fillChambersVector(IDataProvider
 
       //Are there any void Regions?
       
-sscanf((*itRg)->name().data(),"/dd/Structure/LHCb/DownstreamRegion/Muon/M%d/R%d",&obtIS,&obtIR);
+sscanf((*itRg)->name().c_str(),"/dd/Structure/LHCb/DownstreamRegion/Muon/M%d/R%d",&obtIS,&obtIR);
       if(debug) std::cout<<"Region Name: "<<(*itRg)->name()<<" ::  "<<obtIR<<std::endl;    
       while(iR != obtIR-1) {
 	std::cout<<"There is/are void regions. "<<std::endl;
@@ -716,7 +716,7 @@ StatusCode MuonChamberLayout::fillSystemGrids(DeMuonChamber *deChmb,
   bool debug = false;
 
   //Getting the grid pointer
-  Condition* aGrid = deChmb->condition((deChmb->getGridName()).data());
+  Condition* aGrid = deChmb->condition(deChmb->getGridName());
   MuonChamberGrid* theGrid = dynamic_cast<MuonChamberGrid*>(aGrid);
 
   if(!theGrid) {return StatusCode::FAILURE;}
@@ -738,7 +738,7 @@ StatusCode MuonChamberLayout::fillSystemGrids(DeMuonChamber *deChmb,
   }
 
   if(debug) {
-    std::cout<<"Grid "<<(deChmb->getGridName()).data()<<"  data:: "<<grX/m_cgX.at(reg)<<" "<<grY/m_cgY.at(reg)<<" "<<SgrX/m_cgX.at(reg)<<" "<<SgrY/m_cgY.at(reg);
+    std::cout<<"Grid "<< deChmb->getGridName() <<"  data:: "<<grX/m_cgX.at(reg)<<" "<<grY/m_cgY.at(reg)<<" "<<SgrX/m_cgX.at(reg)<<" "<<SgrY/m_cgY.at(reg);
     std::cout<<" ; Map:: "<<xm0<<" "<<ym0<<" "<<xm1<<" "<<ym1<<std::endl;
   }
 
