@@ -20,7 +20,7 @@ InitMUONSeq.Members -= { "MuonBackground/MuonFlatSpillover" };
 // Database specific options
 //--------------------------------------------------------------------------- 
 #pragma print on
-#include "$STDOPTS/DC06Conditions.opts"
+#include "$DDDBROOT/options/DC06.opts"
 MagneticFieldSvc.UseConstantField = true; // Constant (zero) field
 
 //---------------------------------------------------------------------------

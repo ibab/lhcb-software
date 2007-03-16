@@ -1,5 +1,5 @@
 package Boole
-version v13r2
+version v13r3
 
 branches doc cmt job options
 
@@ -13,7 +13,7 @@ use GaudiPolicy v6r4
 use RELAX v* LCG_Interfaces    -no_auto_imports
 use HepMC v* LCG_Interfaces    -no_auto_imports
 
-#-- Gaudi libraries (from GAUDI_v19r2)
+#-- Gaudi libraries (from GAUDI_v19r3)
 use GaudiKernel      v22r1
 use GaudiSvc         v15r2     -no_auto_imports
 use GaudiAlg         v9r12     -no_auto_imports
@@ -22,16 +22,16 @@ use GaudiPoolDb      v2r11     -no_auto_imports
 use RootHistCnv      v9r12     -no_auto_imports
 
 #-- Databases
-use SQLDDDB          v1r*    Det  -no_auto_imports
+use DDDB             v1r*    Det  -no_auto_imports
 use ParamFiles       v5r0         -no_auto_imports
 use FieldMap         v4r7         -no_auto_imports
 
-#-- LHCb libraries (from LHCB_v22r2)
+#-- LHCb libraries (from LHCB_v22r3)
 #-- Explicitly use EventSys packages to avoid dependency on PhysEvent
-use GaudiConf        v10r2          -no_auto_imports
+use GaudiConf        v10r3          -no_auto_imports
 use GaudiObjDesc     v9r9           -no_auto_imports
 use KernelSys        v6r2    Kernel -no_auto_imports
-use DetSys           v9r2    Det    -no_auto_imports
+use DetSys           v9r3    Det    -no_auto_imports
 
 use EventBase        v2r1    Event  -no_auto_imports
 use MCEvent          v2r1    Event  -no_auto_imports
@@ -48,8 +48,8 @@ use DAQSys           v3r1    DAQ    -no_auto_imports
 use LHCbAlgs         v2r6    Kernel -no_auto_imports
 use SimComponents    v2r1    Sim    -no_auto_imports
 
-#-- Lbcom packages (from LBCOM_v6r2)
-use LbcomSys         v6r2           -no_auto_imports
+#-- Lbcom packages (from LBCOM_v6r3)
+use LbcomSys         v6r3           -no_auto_imports
 
 #-- BooleSys v13r2 packages
 use DigiAlg              v4r6p1 Digi -no_auto_imports
@@ -62,7 +62,7 @@ use CaloDigit            v2r3   Calo -no_auto_imports
 use OTSimulation         v3r9   OT   -no_auto_imports
 
 # Muon
-use MuonAlgs             v6r2   Muon -no_auto_imports
+use MuonAlgs             v6r3   Muon -no_auto_imports
 use MuonBackground       v2r3   Muon -no_auto_imports
 use MuonMoniDigi         v2r1   Muon -no_auto_imports
 

@@ -3,6 +3,10 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v13r3>2007-03-14 Boole v13r3</A></H1><PRE>
+ - Adapt requirements to Lbcom v6r3, LHCb v22r3, Gaudi v19r3
+ - Use DDDB v1r* instead of SQLDDDB directly
+
 </PRE><H1><A NAME=v13r2>2007-03-02 Boole v13r2</A></H1><PRE>
  - Adapt requirements to Lbcom v6r2, LHCb v22r2, Gaudi v19r2
  - Use SQLDDDB v1r* instead of XmlDDDB and XmlConditions

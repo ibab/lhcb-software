@@ -16,7 +16,7 @@ InitDataSeq.Members -= { "MergeEventAlg/SpilloverAlg" }; // Remove spillover
 // Database specific options
 //--------------------------------------------------------------------------- 
 #pragma print on
-#include "$STDOPTS/DC06Conditions.opts"
+#include "$DDDBROOT/options/DC06.opts"
 MagneticFieldSvc.UseConstantField = true; // Constant (zero) field
 // Switch off muon background
 InitMUONSeq.Members -= { "MuonBackground/MuonLowEnergy" };
