@@ -1,4 +1,4 @@
-// $Id: GiGaCnvSvcBase.cpp,v 1.19 2007-01-12 15:45:55 ranjard Exp $ 
+// $Id: GiGaCnvSvcBase.cpp,v 1.20 2007-03-16 11:34:57 gcorti Exp $ 
 #define GIGACNV_GIGACNVSVCBASE_CPP 1  
 
 // Include files
@@ -13,8 +13,6 @@
 #include "GaudiKernel/IChronoStatSvc.h"
 #include "GaudiKernel/IToolSvc.h"
 #include "GaudiKernel/IIncidentSvc.h"
-//#include "GaudiKernel/ICnvManager.h"
-//#include "GaudiKernel/ICnvFactory.h"
 #include "GaudiKernel/IRegistry.h"
 #include "GaudiKernel/IConverter.h"
 #include "GaudiKernel/IDataManagerSvc.h"
@@ -238,38 +236,11 @@ StatusCode GiGaCnvSvcBase::initialize()
   ///
   setAddressCreator( this );
   
-//   StatusCode sc = locateOwnCnvs();
-//   if( sc.isFailure() ) { return Error(" Cannot locate own converters ",sc);}
-  
   return Print("GiGaCnvSvcBase initialized successfully" , 
                MSG::VERBOSE , StatusCode::SUCCESS ) ;
   ///
 };
 
-// ============================================================================
-/** locate all own converters 
- *  @return status code 
- */
-// ============================================================================
-// StatusCode GiGaCnvSvcBase::locateOwnCnvs() 
-// {  
-//   /// here we need to locate all converter factories and converters 
-//   if( 0 == cnvManager() ) 
-//     { return Error("locateOwnCnvs():ICnvManager* is not available!") ; }
-//   for( ICnvManager::CnvIterator it = cnvManager()->cnvBegin() ; 
-//        cnvManager()->cnvEnd() != it ; ++it )
-//     {
-//       if( 0 == *it || ( repSvcType() != (*it)->repSvcType()  ) ) { continue ; }
-//       StatusCode st = addConverter( (*it)->objType() ); 
-//       if( st.isFailure() )
-//         { return Error("locateOwnCnvs():Could not add converter=" + 
-//                        (*it)->typeName() , st ) ; }
-//       Print(" The converter for '" + (*it)->typeName() + 
-//             "' is found and added " , MSG::DEBUG , StatusCode::SUCCESS ); 
-//     } 
-//   ///
-//   return StatusCode::SUCCESS;
-// };
 
 // ============================================================================
 /** service initialization 

@@ -5,6 +5,10 @@
 !-----------------------------------------------------------------------------
 
 !========================= GiGaCnv v18r0 2007-03-16 ==========================
+! 2007-03-16 - Gloria Corti
+ - Remove left-over commented lines related to remove method
+   . GiGaCnvSvcBase.cpp
+
 ! 2007-01-12 - Gloria CORTI
  - update *.cpp to cope with GAUDI_v19r0
  - Remove method locateOwnCnv() from base class since check not necessary
