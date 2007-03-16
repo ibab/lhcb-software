@@ -5,6 +5,16 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
+</PRE><H1><A NAME=v4r3>2007-03-13 RecSys v4r3</A></H1><PRE>
+This version uses Gaudi v19r3 and LHCb v22r3.
+
+- Packages updated: TrackTools v2r12
+
+- In TrackTools v2r12
+  . Add VeloExpectation tool
+  . Fix doxygen warnings
+  . Remove obsolete TrackTools_load.cpp file
+
 </PRE><H1><A NAME=v4r2>2007-03-05 RecSys v4r2</A></H1><PRE>
 This version uses Gaudi v19r2 and LHCb v22r2.
 

@@ -1,5 +1,5 @@
 package RecSys
-version v4r2
+version v4r3
 
 branches cmt doc
  
@@ -24,7 +24,7 @@ use TrackSys            v4r2    Tr    # Eduardo Rodrigues
 use TrackExtrapolators  v2r9    Tr    # Eduardo Rodrigues
 use TrackMCTools        v2r9    Tr    # Eduardo Rodrigues
 use TrackFitEvent       v3r2    Tr    # Eduardo Rodrigues
-use TrackTools          v2r11   Tr    # Eduardo Rodrigues
+use TrackTools          v2r12   Tr    # Eduardo Rodrigues
 use TrackFitter         v2r12   Tr    # Eduardo Rodrigues
 use TrackProjectors     v2r10   Tr    # Eduardo Rodrigues, Edwin Bos
 use TrackIdealPR        v2r9    Tr    # Eduardo Rodrigues
