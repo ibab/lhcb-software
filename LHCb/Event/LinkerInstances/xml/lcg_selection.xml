@@ -4,4 +4,6 @@
   <exclusion>
     <class pattern="*::LRange"/>
   </exclusion>
+<!-- Additional STL classes needed for event model, not yet in RflxSTL -->
+  <class name="std::vector<std::pair<int,unsigned int> >" />
 </lcgdict>

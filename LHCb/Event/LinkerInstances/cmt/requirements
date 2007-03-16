@@ -1,10 +1,10 @@
-# $Id: requirements,v 1.17 2007-03-02 08:59:40 ranjard Exp $
+# $Id: requirements,v 1.18 2007-03-16 14:08:43 cattanem Exp $
 # =============================================================================
 package LinkerInstances
 author  Stefan Roiser
 manager Thomas Ruf
 
-version  v3r2p2
+version  v3r2p3
 branches cmt dict doc python xml 
 
 use LinkerEvent  v*    Event

@@ -3,6 +3,11 @@
 ! Purpose: Creates dictionaries for the use of Linker relations in Python
 !------------------------------------------------------------------------------
 
+!==================== LinkerInstances v3r2p3 2007-03-16 ====================
+! 2007-03-16 - Marco Cattaneo
+ - Temporarily add dictionary for std::vector<std::pair<int,unsigned int> >, to
+   be removed once it exists in RflxSTL 
+
 !==================== LinkerInstances v3r2p2 2007-03-02 ====================
 ! 2007-03-01 - Thomas Ruf
  - Remove loaddict in eventassoc.py, not needed with rootmap files
