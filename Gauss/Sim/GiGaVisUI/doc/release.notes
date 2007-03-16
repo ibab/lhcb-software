@@ -4,9 +4,16 @@
 ! Purpose          : GiGa visualisation and UI 
 !-----------------------------------------------------------------------------
 
-!========================= GiGaVisUI v4r0 2007-01-12 =====================
+!======================= GiGaVisUI v4r0 2007-03-16 ===========================
 ! 2007-01-12 - Gloria Corti
- - update code to cope withGaudi v19r0
+ - Remove making public includes directory that does not exist
+   . requirements
+ - Replace GiGaFactory with ToolFactory and use Gaudi macros, also make
+   contructor public
+   . GiGaSetVisAttributes.{h,cpp}
+   . GiGaUISession.cpp.{h,cpp}
+   . GiGaVisManager.{h,cpp}
+   . GiGaVisUI_load.cpp
 
 !========================= GiGaVisUI v3r1 2005-10-07 ======================
 ! 2005-10-07 - Florence Ranjard
