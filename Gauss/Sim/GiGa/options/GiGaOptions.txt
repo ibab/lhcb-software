@@ -9,9 +9,6 @@
 //--------------------------------------------------------------
 ApplicationMgr.ExtSvc = { "XmlCnvSvc" , "GiGaSvc" };
 
-ApplicationMgr.DLLs   = { "LHCbEvent", "HbookCnv", "DetDesc" , 
-                          "GiGa"     };
-
 // No input file
 ApplicationMgr.EvtSel = "NONE";
 
