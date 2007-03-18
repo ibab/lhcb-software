@@ -4,9 +4,59 @@
 ! Purpose       : G4 actions and some miscellaneous algs for Gauss
 !-----------------------------------------------------------------------------
 
-!======================== GaussTools v13r0 2007-01-12 ======================
-! 2007-01-12 - Gloria Corti
- - update code to cope with Gaudi v19r0
+!======================== GaussTools v13r0 2007-03-18 ========================
+! 2007-03-18 - Gloria Corti
+ - Clean up of left over commented lines of code
+   . GaussTrackActionBase.h
+   . GaussTrackActionZ.h
+
+! 2007-01-12 - Gloria CORTI
+ - Use install area for public include files
+   . requirements  
+ - Update code to cope with Gaudi v19r0
+   Remove GiGaFactory and use ToolFactory instead. Use Gaudi macros for 
+   factory declarations. Remove GiGaMACROs.h no longer existing. Make
+   standard constructor and destructor public . Also remove CVS Log and Name
+   . GaussTrackActionBase.h - Constructor still protected
+   . GaussTrackActionZ.h - Constructor still protected
+   . CommandTrackAction.{h,cpp} 
+   . CutsStepAction.{h,cpp}
+   . GaussEventActionHepMC.{h,cpp}
+   . GaussPostTrackAction.{h,cpp}
+   . GaussPreTrackAction.{h,cpp}
+   . GaussStepAction.{h,cpp}
+   . GaussTools_load.cpp
+   . GaussTrackActionByEnergy.{h,cpp}
+   . GaussTrackActionByEnergyProcess.{h,cpp}
+   . GaussTrackActionByEnergyType.{h,cpp}
+   . GaussTrackActionByProcess.{h,cpp}
+   . GaussTrackActionByType.{h,cpp}
+   . GaussTrackActionFinal.{h,cpp}
+   . GaussTrackActionGeneral.{h,cpp}
+   . GaussTrackActionHepMC.{h,cpp}
+   . GaussTrackActionStart.{h,cpp}
+   . GiGaEventActionCommand.{h,cpp}
+   . GiGaEventActionDraw.{h,cpp}
+   . GiGaEventActionSequence.{h,cpp}
+   . GiGaFieldMgr.{h,cpp}
+   . GiGaInputStream.{h,cpp}
+   . GiGaMagFieldGlobal.{h,cpp}
+   . GiGaMagFieldUniform.{h,cpp}
+   . GiGaOutputStream.{h,cpp}
+   . GiGaPhysListGeantino.{h,cpp}
+   . GiGaPhysListModular.{h,cpp}
+   . GiGaRegionsTool.{h,cpp}
+   . GiGaRegionTool.{h,cpp}
+   . GiGaRunActionCommand.{h,cpp}
+   . GiGaRunActionSequence.{h,cpp}
+   . GiGaSensDetBudget.{h,cpp}
+   . GiGaSensDetSequence.{h,cpp}
+   . GiGaSetSimAttributes.{h,cpp}
+   . GiGaStepActionDraw.{h,cpp}
+   . GiGaStepActionSequence.{h,cpp}
+   . GiGaTrackActionSequence.{h,cpp}
+   . TrCutsRunAction.{h,cpp}
+   . ZeroFieldMgr.{h,cpp}
 
 !======================== GaussTools v12r5 2006-10-05 =======================
 ! 2006-09-25 - Vanya Belyaev
