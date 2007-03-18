@@ -1,4 +1,4 @@
-// $Id: GaussTrackActionZ.h,v 1.2 2007-01-12 15:36:38 ranjard Exp $
+// $Id: GaussTrackActionZ.h,v 1.3 2007-03-18 19:16:12 gcorti Exp $
 #ifndef GAUSSTOOLS_GAUSSTRACKACTIONZ_H 
 #define GAUSSTOOLS_GAUSSTRACKACTIONZ_H 1
 
@@ -18,8 +18,6 @@ class GaussTrackInformation ;
  */
 class GaussTrackActionZ : public GaussTrackActionBase 
 {
-  /// friend factory for instantiation 
-  //  friend class GiGaFactory<GaussTrackActionZ> ;
 public:
   
   /** initialize the track action  

@@ -1,4 +1,4 @@
-// $Id: GaussTrackActionBase.h,v 1.4 2007-01-12 15:36:38 ranjard Exp $
+// $Id: GaussTrackActionBase.h,v 1.5 2007-03-18 19:16:12 gcorti Exp $
 #ifndef GAUSSTOOLS_GAUSSTRACKACTIONBASE_H 
 #define GAUSSTOOLS_GAUSSTRACKACTIONBASE_H 1
 // Include files
@@ -22,8 +22,6 @@ class GaussTrackInformation ;
  */
 class GaussTrackActionBase : public GiGaTrackActionBase 
 {
-  /// friend factory for instantiation 
-  //  friend class GiGaFactory<GaussTrackActionBase> ;
 public:
   
   /** initialize the track action  
