@@ -1,6 +1,4 @@
-! $Id: release.notes,v 1.67 2007-01-12 15:24:45 ranjard Exp $
-! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.67 $
+! $Id: release.notes,v 1.68 2007-03-18 21:33:47 gcorti Exp $
 ! -----------------------------------------------------------------------------
 ! Package          : Sim/GaussCalo
 ! Contributors     : Vanya Belyaev, Grigori Rybkine, Alexei Berdiouguine,
@@ -10,9 +8,32 @@
 !                  : G4 actions, etc for LHCb calorimeters
 ! -----------------------------------------------------------------------------
 
-!===================== GaussCalo v9r0 2007-01-12 ============================
+!===================== GaussCalo v9r0 2007-03-18 ============================
+! 2007-03-18 - Gloria Corti
+ - Modify requirements to put back creation of rootmap 
+ - Remove commented lines of code
+   . CaloSensDet.h
+   . EHCalSensDet.h
+   . EcalSensDet.h
+   . GaussSensPlaneDet.h
+
+! 2007-01-18 - Florence RANJARD for Gloria CORTI
+ - Remove GiGaCaloHitCnv.{h,cpp} that is obsolete and prevents creation of
+   rootmap. 
+
 ! 2007-01-12 - Gloria CORTI
- - update code to cope with Gaudi v19r0
+ - Update code to cope with Gaudi v19r0. Replace GiGaFactory with ToolFactory
+    and use Gaudi macros for factory declarations. Remove friend declaration
+    of GiGaFactory no longer in use and make public the standard LHCb 
+    constructor and destructor
+    . CaloSensDet.h
+    . EcalSensDet.{h,cpp}
+    . EHCalSensDet.h
+    . GaussSensPlaneDet.{h,cpp} 
+    . HcalSensDet.{h,cpp}
+    . SpdPrsSensDet.{h,cpp} 
+    . GaussCalo_load.cpp
+    . GetCaloHitsAlg.cpp
 
 !===================== GaussCalo v8r4 2006-07-04 =============================
 ! 2006-07-04 - Gloria CORTI
