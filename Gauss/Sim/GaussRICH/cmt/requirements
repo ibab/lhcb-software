@@ -2,26 +2,24 @@
 # Created    : 2002-12-12
 # Maintainer : Sajan Easo
 #============================================================================
-# $Id: requirements,v 1.47 2007-01-17 17:49:13 ranjard Exp $
-#============================================================================
-
-# =============================================================================
 package GaussRICH
-version v7
+version v7r0
 
-# =============== package structure ===========================================
-branches          cmt src doc
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt src doc options
 
-# =============== explicit dependencies =======================================
-use GaussTools    v*     Sim
-use AIDA          v*     LCG_Interfaces
+# Used packages. 
+#============================================================================
+use GaussTools    v*   Sim
+use AIDA          v*   LCG_Interfaces
 
-# =============== Event =======================================================
 use MCEvent       v*   Event
 use RichKernel    v*   Rich
 use RichDet       v*   Det
 
-# ============== component library ============================================
+# Component library building rule
+#============================================================================
 library          GaussRICH    *.cpp             \
                               SensDet/*.cpp     \ 
                               PhysProcess/*.cpp \
@@ -30,7 +28,8 @@ library          GaussRICH    *.cpp             \
                               RichAnalysis/*.cpp \
                               Misc/*.cpp   
 
-# ============== standard includes ============================================
+# Includes used internally
+#============================================================================
 private 
 include_dirs     $(GAUSSRICHROOT) \
                  $(GAUSSRICHROOT)/src/SensDet \
@@ -41,6 +40,10 @@ include_dirs     $(GAUSSRICHROOT) \
                  $(GAUSSRICHROOT)/src/srcG4
 
         
-# ============== standard patterns ===========================================
+# define component library link options
+#============================================================================
 apply_pattern    component_library library=GaussRICH
+
+# define options directory
+#============================================================================
 apply_pattern packageOpts

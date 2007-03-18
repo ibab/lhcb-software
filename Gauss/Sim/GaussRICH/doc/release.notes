@@ -4,9 +4,61 @@
 ! Purpose     : collection of sensitive detectors, G4 actions, etc for RICH
 !-----------------------------------------------------------------------------
 
-!======================== GaussRICH v7r0 2007-01-12 ========================
-! 2007-01-12 - Gloria Corti
- - adapt code to Gaudi v19r0
+!======================== GaussRICH v7r0 2007-03-18 ========================
+! 2007-03-18 - Gloria Corti
+ - Adapt to changes in RichStatDivFunctor.h with introduction of "Rich" 
+   namespace (RichKernel v7r1 in LHCb v22r1) 
+   . src/SensDet/GetMCRichHitsAlg.cpp
+   .             GetMCRichOpticalPhotonsAlg.cpp
+   .             GetMCRichSegmentsAlg.cpp
+   .             GetMCRichTracksAlg.cpp
+
+! 2007-01-12 - Florence RANJARD
+ - Use pattern packageOpts
+ - Replace obsolete "CLHEP/Units/PhysicalConstants.h" with 
+   "Kernel/SystemOfUnits.h" (Gaudi v19r0)
+   . src/RichAnalysis/RichG4HistoDefineSet1.cpp
+   .                  RichG4HistoDefineSet2.cpp
+   .                  RichG4HistoDefineSet3.cpp
+   .                  RichG4HistoDefineSet4.cpp
+   .                  RichG4HistoDefineTimer.cpp
+   .                  RichG4ReconFlatMirr.cpp
+
+! 2007-01-12 - Gloria CORTI, Florence RANJARD
+ - Adapt code to Gaudi v19r0
+   Remove GiGaFactory and use ToolFactory instead. Use Gaudi macros for
+   factory declarations. Remove GiGaMACROs.h no longer existing.
+   . src/GaussRICH_load.cpp
+   . src/PhysProcess/GiGaPhysConstructorHpd.cpp
+   .                 GiGaPhysConstructorOp.cpp
+   . src/RichAction/Rich1G4TrackActionUpstrPhoton.{h,cpp}
+   .                RichG4EventAction.{h,cpp}
+   .                RichG4RunAction.{h,cpp}
+   .                RichG4TrackActionAerogelPhoton.{h,cpp}             
+   .                RichG4TrackAction.{h,cpp}
+   .                RichG4TrackActionPhotOpt.{h,cpp}
+   . src/RichAnalysis/RichG4StepAnalysis3.cpp
+   .                  RichG4StepAnalysis4.cpp   
+   .                  RichG4StepAnalysis5.cpp
+   . src/SensDet/GetMCRichHitsAlg.cpp
+   .             GetMCRichOpticalPhotonsAlg.cpp
+   .             GetMCRichSegmentsAlg.cpp
+   .             GetMCRichTracksAlg.cpp
+   .             RichG4GeomProp.cpp 
+   .             RichSensDet.{h,cpp}
+ - Make standard constructor and destructor public. 
+   . src/RichAction/Rich1G4TrackActionUpstrPhoton.h
+   .                RichG4EventAction.h
+   .                RichG4RunAction.h
+   .                RichG4TrackActionAerogelPhoton.h             
+   .                RichG4TrackAction.{h,cpp}
+   . src/SensDet/RichSensDet.{h,cpp}
+ - Remove no longer existing include GiGaMACROs.h
+   . src/RichAnalysis/RichG4EventHitCount.cpp
+   .                  RichG4HistoFillSet1.cpp
+   .                  RichG4HistoFillSet2.cpp
+   .                  RichG4HistoFillSet3.cpp
+   .                  RichG4HistoFillSet4.cpp
 
 !======================== GaussRICH v6r8 2006-11-09 ===========================
 ! 2006-11-02 - Sajan Easo
