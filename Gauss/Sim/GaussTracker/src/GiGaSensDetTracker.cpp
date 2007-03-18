@@ -1,4 +1,4 @@
-// $Id: GiGaSensDetTracker.cpp,v 1.11 2007-01-12 15:41:23 ranjard Exp $
+// $Id: GiGaSensDetTracker.cpp,v 1.12 2007-03-18 18:39:07 gcorti Exp $
 // Include files 
 
 // from CLHEP
@@ -7,9 +7,6 @@
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h" 
 #include "GaudiKernel/MsgStream.h"
-
-// from GiGa 
-//#include "GiGa/GiGaMACROs.h"
 
 // from Geant4 
 #include "G4Step.hh"
