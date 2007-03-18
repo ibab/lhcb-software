@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.115 2007-01-12 15:45:02 ranjard Exp $
+! $Id: release.notes,v 1.116 2007-03-18 18:08:29 gcorti Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Sim/GiGa
 ! Responsible : Gloria CORTI, Vanya BELYAEV
@@ -6,8 +6,46 @@
 !               for G4 <-> Gaudi applications 
 !-----------------------------------------------------------------------------
 
-!======================= GiGa v19r0 2007-01-12 ===============================
-! 2007-01-12 - Florence RANJARD and Gloria Corti
+
+!======================= GiGa v19r0 2007-03-18 ===============================
+! 2007-03-18 - Gloria Corti
+ - Remove GiGaFactory no longer existing and special macro for implementation
+   of GiGaExtPhysics that are done with new Gauss factory implemenations in
+   package GaussPhysics v4r0
+
+! 2007-01-12 - Gloria CORTI
+ - Remove header of GiGaFactory no longer necessary since replaced by
+   ToolFactory and remove its include from files that were using it.
+   Remove also GiGaMACROs.h with macros for implementation and declaration
+   of GiGa-factories. Use Gaudi macros for ToolFactory declarations.
+   . GiGa/GiGaFactory.h - REMOVED
+   . GiGa/GiGaMACROs.h  - REMOVED
+   . GiGa/GiGaBase.h
+   . GiGa/GiGaFieldMgrBase.h
+   . GiGa/GiGaPhysicsListBase.h
+   . src/component/GiGa.cpp
+   . src/component/GiGa_load.cpp
+   . src/component/GiGaRunManager.{h,cpp}
+ - Make contructor public
+   . GiGa/GiGaBase.h
+   . GiGa/GiGaSensDetBase.h
+   . GiGa/GiGaStepActionBase.h
+   . GiGa/GiGaTrackActionBase.h
+   . src/component/GiGaRunManager.h
+ - Remove include of IObjManager.h (from GaudiKernel) no longer existing
+   . src/component/GiGa.cpp
+   . src/component/GiGaIGiGaSvc.cpp
+   . src/Lib/GiGaUtil.cpp (remove also ISvcLocator.h}
+ - Clean up of CVS $Name and $Log
+   . src/component/GiGa_dll.cpp
+   . src/component/GiGaIGiGaSvc.cpp
+   . src/component/GiGa_load.cpp
+   . src/component/GiGaRunManager.cpp
+ - Remove loading of dll from example options no longer necessary with
+   Gaudi v19r1
+   . GiGaOptions.txt
+
+! 2007-01-12 - Florence RANJARD
  - update for Gaudi v19r0 and InstallArea
 
 !======================= GiGa v18r3 2006-09-20 ================================
