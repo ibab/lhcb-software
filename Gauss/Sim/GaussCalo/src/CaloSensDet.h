@@ -1,4 +1,4 @@
-// $Id: CaloSensDet.h,v 1.14 2007-01-12 15:24:46 ranjard Exp $ 
+// $Id: CaloSensDet.h,v 1.15 2007-03-18 21:33:19 gcorti Exp $ 
 #ifndef       GAUSSCALO_CaloSensDet_H
 #define       GAUSSCALO_CaloSensDet_H 1 
 
@@ -111,7 +111,6 @@ protected:
   StatusCode locateVolumes();
   
 public:
-  //protected:
   
   /** standard constructor 
    *  @see GiGaSensDetBase 

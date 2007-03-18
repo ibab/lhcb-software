@@ -1,4 +1,4 @@
-// $Id: EcalSensDet.h,v 1.9 2007-01-12 15:24:47 ranjard Exp $ 
+// $Id: EcalSensDet.h,v 1.10 2007-03-18 21:33:19 gcorti Exp $ 
 #ifndef       GAUSSCALO_EcalSensDet_H
 #define       GAUSSCALO_EcalSensDet_H 1 
 
@@ -65,7 +65,6 @@ protected:
     const G4Step*               step        ) const ;
   
 public:
-  //protected:
   
   /** standard constructor 
    *  @see CaloSensDet 

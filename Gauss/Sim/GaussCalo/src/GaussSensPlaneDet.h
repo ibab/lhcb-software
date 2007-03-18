@@ -1,4 +1,4 @@
-// $Id: GaussSensPlaneDet.h,v 1.3 2007-01-12 15:24:49 ranjard Exp $ 
+// $Id: GaussSensPlaneDet.h,v 1.4 2007-03-18 21:33:19 gcorti Exp $ 
 #ifndef       GAUSS_GaussSensPlaneDet_H
 #define       GAUSS_GaussSensPlaneDet_H 1 
 
@@ -84,7 +84,6 @@ public:
    */
   virtual void EndOfEvent( G4HCofThisEvent* HCE ) ;
   
-  //protected:
   
   /** standard constructor 
    *  @see GiGaSensDetBase 

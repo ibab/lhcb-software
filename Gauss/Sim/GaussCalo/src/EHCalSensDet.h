@@ -1,8 +1,11 @@
-// $Id: EHCalSensDet.h,v 1.4 2007-01-12 15:24:46 ranjard Exp $ 
+// $Id: EHCalSensDet.h,v 1.5 2007-03-18 21:33:19 gcorti Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2007/01/12 15:24:46  ranjard
+// v9r0 - use GAUDI v19r0
+//
 // Revision 1.3  2006/01/17 15:52:57  odescham
 // v8r0 - Adapt to new Event Model & LHCb v20 migration
 //
@@ -46,7 +49,6 @@ class DeCalorimeter ;
 class EHCalSensDet: public CaloSensDet 
 { 
 public: 
-  //  protected:
   
   /** standard constructor 
    *  @see CaloSensDet 
