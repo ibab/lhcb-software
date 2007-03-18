@@ -5,9 +5,23 @@
 !                    tracker like detectors (Velo, OT, IT, Muon)
 !-----------------------------------------------------------------------------
 
-!======================== GaussTracker v6r0 2007-01-12 =====================
+!======================== GaussTracker v6r0 2007-03-18 =======================
+! 2007-03-18 - Gloria Corti
+ - Clean up, removing commented lines of code
+   . GiGaSensDetTracker.{h,cpp}
+
 ! 2007-01-12 - Gloria Corti
- - update code to cope with Gaudi v19r0
+ - Update code to cope with Gaudi v19r0. Replace GiGaFactory with Tool factory
+   and use Gaudi macros for factory declarations. Remove GiGaMACROs.h no 
+   longer existing. 
+   . GaussTracker_load.cpp
+   . GetTrackerHitsAlg.cpp
+   . GiGaSensDetTracker.{h,cpp}
+ - Make standard constructor and destructor public
+   . GiGaSensDetTracker.h
+
+! 2007-01-12 - Florence RANJARD
+ - Introduce pattern packageOpts
 
 !======================= GaussTracker v5r6 2006-07-28 ========================
 ! 2006-07-28 - Gloria CORTI
