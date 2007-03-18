@@ -1,11 +1,10 @@
-! $Id: release.notes,v 1.117 2007-03-18 18:25:05 gcorti Exp $
+! $Id: release.notes,v 1.118 2007-03-18 18:51:05 gcorti Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Sim/GiGa
 ! Responsible : Gloria CORTI, Vanya BELYAEV
 ! Purpose     : Holds interfaces and base classes plus generic implementation
 !               for G4 <-> Gaudi applications 
 !-----------------------------------------------------------------------------
-
 
 !======================= GiGa v19r0 2007-03-18 ===============================
 ! 2007-03-18 - Gloria Corti
@@ -45,7 +44,7 @@
    . src/component/GiGa.cpp
    . src/component/GiGaIGiGaSvc.cpp
    . src/Lib/GiGaUtil.cpp (remove also ISvcLocator.h}
- - Clean up of CVS $Name and $Log
+ - Clean up of CVS Name and Log
    . src/component/GiGa_dll.cpp
    . src/component/GiGaIGiGaSvc.cpp
    . src/component/GiGa_load.cpp
