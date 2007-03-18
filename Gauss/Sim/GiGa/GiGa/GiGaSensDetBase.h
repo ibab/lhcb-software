@@ -1,4 +1,4 @@
-// $Id: GiGaSensDetBase.h,v 1.10 2007-01-12 15:45:01 ranjard Exp $
+// $Id: GiGaSensDetBase.h,v 1.11 2007-03-18 18:25:05 gcorti Exp $
 #ifndef GIGA_GIGASENSDETBASE_H
 #define GIGA_GIGASENSDETBASE_H 1 
 
@@ -24,7 +24,6 @@ class GiGaSensDetBase: virtual public IGiGaSensDet ,
 {
 
 public:
-  //protected:
   
   /** standard constructor   
    *  @see GiGaBase 

@@ -1,22 +1,10 @@
-// $Id: GiGaPhysicsListBase.h,v 1.3 2007-01-12 15:45:01 ranjard Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.2  2003/12/05 16:18:24  witoldp
-// removed obsolete production cuts
-//
-// Revision 1.1  2003/04/06 18:49:46  ibelyaev
-//  see $GIGAROOT/doc/release.notes
-//
-// ============================================================================
+// $Id: GiGaPhysicsListBase.h,v 1.4 2007-03-18 18:25:05 gcorti Exp $
 #ifndef       GIGA_GiGaPhysicsListBase_H
 #define       GIGA_GiGaPhysicsListBase_H 1 
-// ============================================================================
-/// base classes 
+
+// Include files
 #include "GiGa/IGiGaPhysList.h"
 #include "GiGa/GiGaBase.h"
-//#include "GiGa/GiGaFactory.h"
 
 /** @class GiGaPhysicsListBase GiGaPhysicsListBase.h GiGa/GiGaPhysicListBase.h
  * 
@@ -46,8 +34,7 @@ protected:
   /// destrucutor 
   virtual ~GiGaPhysicsListBase();
   
-public:
-  
+public:  
   /** initialize the object 
    *  @see GiGaBase
    *  @see  AlgTool
@@ -102,11 +89,8 @@ private:
   double    m_cutForPositron    ;
   
 };
-// ============================================================================
- 
-// ============================================================================
+
 #endif    ///<  GIGA_GiGaPhysicsListBase_H
-// ============================================================================
 
 
 

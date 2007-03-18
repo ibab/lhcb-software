@@ -1,4 +1,4 @@
-// $Id: GiGaBase.h,v 1.24 2007-01-12 15:44:55 ranjard Exp $
+// $Id: GiGaBase.h,v 1.25 2007-03-18 18:25:04 gcorti Exp $
 #ifndef GIGA_GIGABASE_H
 #define GIGA_GIGABASE_H 1 
 
@@ -19,7 +19,6 @@
 
 // from GiGa
 #include "GiGa/IGiGaInterface.h"
-//#include "GiGa/GiGaFactory.h"
 
 // Forward declarations 
 class IMessageSvc          ;
@@ -52,7 +51,6 @@ class  GiGaBase: public virtual IGiGaInterface   ,
                  public         GaudiTool 
 {
 public:
-  //protected:
   
   /** standard constructor 
    *  @see GaudiTool 

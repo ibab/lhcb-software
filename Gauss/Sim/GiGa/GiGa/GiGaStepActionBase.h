@@ -1,23 +1,17 @@
-// $Id: GiGaStepActionBase.h,v 1.11 2007-01-12 15:45:01 ranjard Exp $ 
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.10  2002/05/07 12:21:30  ibelyaev
-//  see $GIGAROOT/doc/release.notes  7 May 2002
-//
-// ============================================================================
+// $Id: GiGaStepActionBase.h,v 1.12 2007-03-18 18:25:05 gcorti Exp $ 
 #ifndef     GIGA_GiGaStepActionBase_H
 #define     GIGA_GiGaStepActionBase_H 1 
-// ============================================================================
+
+// Include files
 // STL
 #include <vector> 
 // GiGa
 #include "GiGa/IGiGaStepAction.h" 
 #include "GiGa/GiGaBase.h" 
-//
+
+// Forward declarations
 class G4Step;
-//
+
 
 /** @class GiGaStepActionBase GiGaStepActionBase.h
  *
@@ -31,7 +25,7 @@ class GiGaStepActionBase:
   public virtual IGiGaStepAction ,
   public          GiGaBase
 {
-  //protected:
+
 public:  
   /** standard constructor 
    *  @see GiGaBase 
@@ -45,10 +39,8 @@ public:
     const std::string& name   , 
     const IInterface*  parent ) ;
   
-  virtual ~GiGaStepActionBase();
+  virtual ~GiGaStepActionBase();  ///< Destructor
 
-public:
-  
   /** initialize the step action  
    *  @see GiGaBase 
    *  @see  AlgTool 
@@ -66,21 +58,17 @@ public:
   virtual StatusCode         finalize   () ; 
 
 protected:
-  ///
+
   GiGaStepActionBase ();///< no default constructor!
   GiGaStepActionBase           ( const GiGaStepActionBase& ); ///< no copy 
   GiGaStepActionBase& operator=( const GiGaStepActionBase& ); ///< no = 
-  ///
-private:
-  ///
-};
-// ============================================================================
 
-// ============================================================================
-// The END 
-// ============================================================================
+private:
+
+};
+
 #endif   // GIGA_GiGaStepActionBase_H
-// ============================================================================
+
 
 
 

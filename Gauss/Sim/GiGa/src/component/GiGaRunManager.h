@@ -1,4 +1,4 @@
-// $Id: GiGaRunManager.h,v 1.8 2007-01-12 15:45:05 ranjard Exp $ 
+// $Id: GiGaRunManager.h,v 1.9 2007-03-18 18:25:05 gcorti Exp $ 
 #ifndef   GIGA_GIGARUNMANAGER_H
 #define   GIGA_GIGARUNMANAGER_H  1
 
@@ -32,7 +32,6 @@ class     ISvcLocator                    ;
 class     IGiGaGeoSrc                    ;
 class     G4UIsession                    ;
 class     G4UImanager                    ; 
-//template <class TOOL> class  GiGaFactory ;
 
 
 /** @class GiGaRunManager GiGaRunManager.h src/component/GiGaRunManager.h
@@ -49,10 +48,6 @@ class GiGaRunManager: public  virtual IGiGaRunManager  ,
                       public  virtual  GiGaBase        ,    
                       private virtual G4RunManager 
 {
-  /// friend factory
-  //  friend class GiGaFactory<GiGaRunManager>;
-  
-  // protected:
 public:
 
   /** standard constructor
@@ -69,8 +64,6 @@ public:
   
   /// virtual destructor 
   virtual ~GiGaRunManager();  
-
-public:
 
   /** declare the Geant4 Primary Generator Action 
    *  @see IGiGaRunManager 

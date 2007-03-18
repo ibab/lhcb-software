@@ -1,28 +1,10 @@
-// $Id: GiGaFieldMgrBase.h,v 1.5 2007-01-12 15:44:58 ranjard Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.4  2005/10/25 17:21:40  gcorti
-// new properties
-//
-// Revision 1.3  2004/07/05 16:06:19  gcorti
-// introduce property DeltaChord
-//
-// Revision 1.2  2003/10/30 16:33:33  witoldp
-// modified GiGaFieldManager
-//
-// Revision 1.1  2003/04/06 18:49:45  ibelyaev
-//  see $GIGAROOT/doc/release.notes
-// 
-// ============================================================================
+// $Id: GiGaFieldMgrBase.h,v 1.6 2007-03-18 18:25:05 gcorti Exp $
 #ifndef GIGA_GIGAFIELDMGRBASE_H 
 #define GIGA_GIGAFIELDMGRBASE_H 1
-// ============================================================================
+
 // Include files
 #include "GiGa/IGiGaFieldMgr.h"
 #include "GiGa/GiGaBase.h"
-//#include "GiGa/GiGaFactory.h"
 
 /** @class GiGaFieldMgrBase GiGaFieldMgrBase.h GiGa/GiGaFieldMgrBase.h
  *  
@@ -129,10 +111,6 @@ private:
   mutable G4MagIntegratorStepper* m_stepper     ;
   
 };
-// ============================================================================
 
-// ============================================================================
-// The END 
-// ============================================================================
 #endif // GIGA_GIGAFIELDMGRBASE_H
-// ============================================================================
+

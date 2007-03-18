@@ -1,4 +1,4 @@
-// $Id: GiGaRunManager.cpp,v 1.16 2007-01-12 15:45:05 ranjard Exp $ 
+// $Id: GiGaRunManager.cpp,v 1.17 2007-03-18 18:25:05 gcorti Exp $ 
 // Include files
 
 // STD & STL 
@@ -19,7 +19,6 @@
 #include  "GiGa/GiGaException.h"
 #include  "GiGa/IGiGaGeoSrc.h" 
 #include  "GiGa/GiGaUtil.h" 
-//#include  "GiGa/GiGaMACROs.h" 
 
 // Local 
 #include  "GiGaRunManager.h" 

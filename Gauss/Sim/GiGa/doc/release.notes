@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.116 2007-03-18 18:08:29 gcorti Exp $
+! $Id: release.notes,v 1.117 2007-03-18 18:25:05 gcorti Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Sim/GiGa
 ! Responsible : Gloria CORTI, Vanya BELYAEV
@@ -12,6 +12,15 @@
  - Remove GiGaFactory no longer existing and special macro for implementation
    of GiGaExtPhysics that are done with new Gauss factory implemenations in
    package GaussPhysics v4r0
+ - Remove commented include of GiGaFactory or GiGaMACROs, clean CVS $Name 
+   and $Log, commented "protected" or "private" declarations
+   . GiGa/GiGaBase.h
+   . GiGa/GiGaFieldMgrBase.h
+   . GiGa/GiGaPhysicsListBase.h
+   . GiGa/GiGaSensDetBase.h
+   . GiGa/GiGaStepActionBase.h
+   . GiGa/GiGaTrackActionBase.h
+   . src/component/GiGaRunManager.{h,cpp}
 
 ! 2007-01-12 - Gloria CORTI
  - Remove header of GiGaFactory no longer necessary since replaced by
@@ -26,7 +35,7 @@
    . src/component/GiGa.cpp
    . src/component/GiGa_load.cpp
    . src/component/GiGaRunManager.{h,cpp}
- - Make contructor public
+ - Make standard contructor and destructor public
    . GiGa/GiGaBase.h
    . GiGa/GiGaSensDetBase.h
    . GiGa/GiGaStepActionBase.h
