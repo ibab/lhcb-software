@@ -4,14 +4,50 @@
 ! Purpose          : collection of physics constructors for Gauss
 !-----------------------------------------------------------------------------
 
-!===================== GaussPhysics v4r0 ================================
+!======================= GaussPhysics v5r0 2007-03-18 ========================
+! 2007-03-18 - Gloria CORTI
+  . Adapt to new factory declarations from Gaudi v19r1 having removed 
+    special GiGaFactories and IMPLEMENT_ExtPhysics macro (GiGa v19r0).
+    Add new physics list from Geant4 8.2.
+    . src/GaussPhysics_load.cpp
+    The physics lists that can be instanciated from options are:
+     - For general processes (i.e. Decays)
+       GiGaExtPhysics< G4DecayPhysics > 
+     - For EM physics
+       GiGaExtPhysics< G4EmStandardPhysics >     - 8.2 
+       GiGaExtPhysics< G4EmStandardPhysics72 >   - similar to that of G4 7.2
+       GiGaExtPhysics< G4EmStandardPhysics71 >   - similar to that of G4 7.1
+       GiGaExtPhysics< G4EmExtraPhysics >        - synchroton radiation & 
+                                                   gamma-nuclear physics
+     - For hadronic physics
+       GiGaExtPhysics< HadronPhysicsLHEP >   - Low High Energy Parametrized
+       GiGaExtPhysics< HadronPhysicsQGSP >   - Quark Gluon String Precompound
+       GiGaExtPhysics< HadronPhysicsQGSP_BERT_HP > - and Bertini cascade in
+                                                     intermediate E range and
+                                                     High precision (low energy
+                                                     neutrons, < 1 keV) 
+       GiGaExtPhysics< HadronPhysicsLHEP_BERT_HP > - similar but for LHEP
+       GiGaExtPhysics< G4HadronElasticPhysics >    - hadron elactic scattering
+       GiGaExtPhysics< G4QStoppingPhysics >        - stopping physics 
+       GiGaExtPhysics< G4NeutronTrackingCut >      - neutron tracking cuts
+       GiGaExtPhysics< HadronPhysicsLHEP_EMV >  - To be used with EM 7.1
+       GiGaExtPhysics< HadronPhysicsQGSP_EMV >  - To be used with EM 7.1
+       GiGaExtPhysics< HadronPhysicsQGSP_EMX >  - To be used with EM 7.2
+     - For ion physics 
+       GiGaExtPhysics< G4IonPhysics >
+
+! 2007-01-17 - Florence RANJARD
+ - Use new internal physics lists of Geant4 8.2 (G4physics_lists instead
+   of G4hadlists)
+
+!======================= GaussPhysics v4r0 2006-01-09 ========================
 ! 2006-01-09 - Patrick Robbe
- - Adapt particle definitions to Geant4.8
- - Use new physics lists from G4physics_lists of Geant4.8 (has to be checked !)
+ - Adapt particle definitions to Geant4 8.1
+ - Use new physics lists from Geant4 8.1 (has to be checked !)
 
 !===================== GaussPhysics v3r3 =================================
 ! 2006-01-05 - Florence Ranjard
- - requirements - do not use G4LHCblists which is included in G4hadlists
+ - requirements - do not use G4LHCblists which is now included in G4hadlists 
 
 !====================== GaussPhysics v3r2 ===============================
 ! 2005-11-09 - Gloria CORTI

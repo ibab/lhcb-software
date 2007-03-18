@@ -1,72 +1,85 @@
-// $Id: GaussPhysics_load.cpp,v 1.9 2007-01-17 17:48:17 ranjard Exp $ 
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.8  2006/07/21 08:02:36  ranjard
-// v4r0 - use new physics lists from geant4 8.1
-//
-// Revision 1.7  2006/01/09 20:52:22  robbep
-// Adapt to Geant4.8
-//
-// Revision 1.6  2005/11/09 18:10:26  gcorti
-// add QGSP_BERT_HP from G4LHCblists
-//
-// Revision 1.5  2005/10/25 18:59:47  gcorti
-// new physics lists
-//
-// Revision 1.4  2004/02/18 13:52:54  ibelyaev
-//  new version with usage of 'external' physics lists
-// 
-// ============================================================================
-#define GAUSSPHYSICS_GAUSSPHYSICS_LOAD_CPP 1 
-// ============================================================================
-// include 
-// ============================================================================
-// GaudiKernel 
-// ============================================================================
+// $Id: GaussPhysics_load.cpp,v 1.10 2007-03-18 21:15:51 gcorti Exp $
+// Include files 
+
 #include "GaudiKernel/DeclareFactoryEntries.h" 
-// ============================================================================
-// GiGa 
-// ============================================================================
 #include "GiGa/GiGaExtPhysics.h"
-// ============================================================================
 
 
 /** @file 
  *  The mandatory file for declaration of component library entries 
- *  @author Witold Pokorsky Witold.Pokorsky@cern.ch 
- *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
- *  @date 2002-09-26
+ *  @author Witold Pokorsky
+ *  @author Vanya Belyaev
+ *  @author Gloria Corti, port to Gaudi v19
+ *  @date 2002-09-26, last modified 2007-01-19
  */
 
-// Packaging
+// Geant4 physics lists
+#include "G4DecayPhysics.hh"
+
+#// EM physics 
+#include "G4EmStandardPhysics71.hh"
+#include "G4EmStandardPhysics72.hh"
 #include "G4EmStandardPhysics.hh"
 #include "G4EmExtraPhysics.hh"
-#include "G4IonPhysics.hh"
 
+// Ion and hadrons
+#include "G4IonPhysics.hh"
+#include "G4QStoppingPhysics.hh"
+#include "G4HadronElasticPhysics.hh"
+#include "G4NeutronTrackingCut.hh"
+
+// LHEP hadrons
 #include "HadronPhysicsLHEP.hh"
 #include "HadronPhysicsLHEP_BERT_HP.hh"
+#include "HadronPhysicsLHEP_EMV.hh"  // with Em 7.1
 
+// QGSP hadrons
 #include "HadronPhysicsQGSP.hh"
-#include "HadronPhysicsQGSP_HP.hh"
-
 #include "HadronPhysicsQGSP_BERT_HP.hh"
+#include "HadronPhysicsQGSP_EMV.hh"  // with Em 7.1 
+#include "HadronPhysicsQGSP_EMX.hh"  // with Em 7.2 
 
-DECLARE_FACTORY_ENTRIES(GaussPhysics) 
-{ 
-  /// Physics Lists 
-  DECLARE_TOOL     (    G4EmStandardPhysics       ) ;
-  DECLARE_TOOL     (    G4EmExtraPhysics          ) ;
-  DECLARE_TOOL     (    G4IonPhysics              ) ;
-  DECLARE_TOOL     (    HadronPhysicsLHEP         ) ;
-  DECLARE_TOOL     (    HadronPhysicsLHEP_BERT_HP ) ;
-  DECLARE_TOOL     (    HadronPhysicsQGSP         ) ;
-  DECLARE_TOOL     (    HadronPhysicsQGSP_HP      ) ;
-  DECLARE_TOOL     (    HadronPhysicsQGSP_BERT_HP ) ;
+
+// Declaration of the External Physics list Factories
+typedef GiGaExtPhysics< G4DecayPhysics > DecayFactory;
+DECLARE_TOOL_FACTORY( DecayFactory );
+
+typedef GiGaExtPhysics< G4EmStandardPhysics71 > EmStd71PhysFactory;
+DECLARE_TOOL_FACTORY( EmStd71PhysFactory );
+typedef GiGaExtPhysics< G4EmStandardPhysics72 > EmStd72PhysFactory;
+DECLARE_TOOL_FACTORY( EmStd72PhysFactory );
+typedef GiGaExtPhysics< G4EmStandardPhysics > EmStdPhysFactory;
+DECLARE_TOOL_FACTORY( EmStdPhysFactory );
+
+typedef GiGaExtPhysics< G4EmExtraPhysics > EmExtraPhysFactory;
+DECLARE_TOOL_FACTORY( EmExtraPhysFactory );
+
+typedef GiGaExtPhysics< G4IonPhysics > IonPhysFactory;
+DECLARE_TOOL_FACTORY( IonPhysFactory );
+typedef GiGaExtPhysics< G4QStoppingPhysics > QStopPhysFactory;
+DECLARE_TOOL_FACTORY( QStopPhysFactory );
+typedef GiGaExtPhysics< G4HadronElasticPhysics > HadElPhysFactory;
+DECLARE_TOOL_FACTORY( HadElPhysFactory );
+typedef GiGaExtPhysics< G4NeutronTrackingCut > NeuTrkCutFactory;
+DECLARE_TOOL_FACTORY( NeuTrkCutFactory );
+
+typedef GiGaExtPhysics< HadronPhysicsLHEP > HadPhysLHEPFactory;
+DECLARE_TOOL_FACTORY( HadPhysLHEPFactory );
+typedef GiGaExtPhysics< HadronPhysicsLHEP_BERT_HP > HadPhysLHEP_BERT_HPFactory;
+DECLARE_TOOL_FACTORY( HadPhysLHEP_BERT_HPFactory );
+typedef GiGaExtPhysics< HadronPhysicsLHEP_EMV > HadPhysLHEP_EMVFactory;
+DECLARE_TOOL_FACTORY( HadPhysLHEP_EMVFactory );
+
+typedef GiGaExtPhysics< HadronPhysicsQGSP > HadPhysQGSPFactory;
+DECLARE_TOOL_FACTORY( HadPhysQGSPFactory );
+typedef GiGaExtPhysics< HadronPhysicsQGSP_BERT_HP > HadPhysQGSP_BERT_HPFactory;
+DECLARE_TOOL_FACTORY( HadPhysQGSP_BERT_HPFactory );
+typedef GiGaExtPhysics< HadronPhysicsQGSP_EMV > HadPhysQGSP_EMVFactory;
+DECLARE_TOOL_FACTORY( HadPhysQGSP_EMVFactory );
+typedef GiGaExtPhysics< HadronPhysicsQGSP_EMX > HadPhysQGSP_EMXFactory;
+DECLARE_TOOL_FACTORY( HadPhysQGSPFactory_EMX );
+
+DECLARE_FACTORY_ENTRIES(GaussPhysics) { 
 
 };
 
-// ============================================================================
-// The END 
-// ============================================================================
