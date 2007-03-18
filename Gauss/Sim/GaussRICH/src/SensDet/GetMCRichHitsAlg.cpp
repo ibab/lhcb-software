@@ -1,4 +1,4 @@
-// $Id: GetMCRichHitsAlg.cpp,v 1.24 2007-01-12 15:32:12 ranjard Exp $
+// $Id: GetMCRichHitsAlg.cpp,v 1.25 2007-03-18 19:54:57 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -293,9 +293,10 @@ StatusCode GetMCRichHitsAlg::execute()
 //=============================================================================
 StatusCode GetMCRichHitsAlg::finalize()
 {
-  const RichStatDivFunctor occ;
+  const Rich::StatDivFunctor occ;
 
-  info() << "Av. # Invalid RICH flags            = " << occ(m_invalidRichHits,m_nEvts)
+  info() << "Av. # Invalid RICH flags            = " 
+         << occ(m_invalidRichHits,m_nEvts)
          << endmsg;
 
   info() << "Av. # MCRichHits            : Rich1 = "
@@ -349,7 +350,8 @@ StatusCode GetMCRichHitsAlg::finalize()
 
   // number of hits in each aerogel tile
   info() << "Av. # Aero hits per tile   :" << endreq;
-  const int maxTileID = Rich1AgelTile15CkvRadiatorNum-Rich1AgelTile0CkvRadiatorNum;
+  const int maxTileID = 
+    Rich1AgelTile15CkvRadiatorNum-Rich1AgelTile0CkvRadiatorNum;
   for ( int iTile = 0; iTile <= maxTileID; ++iTile )
   {
     info() << "          tile = "; if (iTile<10) { info() << " "; }

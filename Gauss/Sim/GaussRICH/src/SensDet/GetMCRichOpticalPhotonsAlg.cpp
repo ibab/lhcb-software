@@ -1,4 +1,4 @@
-// $Id: GetMCRichOpticalPhotonsAlg.cpp,v 1.10 2007-01-12 15:32:13 ranjard Exp $
+// $Id: GetMCRichOpticalPhotonsAlg.cpp,v 1.11 2007-03-18 19:54:57 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -179,7 +179,7 @@ StatusCode GetMCRichOpticalPhotonsAlg::execute()
 //=============================================================================
 StatusCode GetMCRichOpticalPhotonsAlg::finalize()
 {
-  const RichStatDivFunctor occ;
+  const Rich::StatDivFunctor occ;
 
   for ( RadMap::const_iterator iM = m_hitTally.begin(); iM != m_hitTally.end(); ++iM )
   {

@@ -1,4 +1,4 @@
-// $Id: GetMCRichSegmentsAlg.cpp,v 1.11 2007-01-12 15:32:15 ranjard Exp $
+// $Id: GetMCRichSegmentsAlg.cpp,v 1.12 2007-03-18 19:54:57 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -254,7 +254,7 @@ StatusCode GetMCRichSegmentsAlg::execute()
 //=============================================================================
 StatusCode GetMCRichSegmentsAlg::finalize()
 {
-  const RichStatDivFunctor occ;
+  const Rich::StatDivFunctor occ;
 
   for ( RadMap::const_iterator iM = m_hitTally.begin(); iM != m_hitTally.end(); ++iM )
   {

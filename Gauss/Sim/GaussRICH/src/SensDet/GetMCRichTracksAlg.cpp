@@ -1,4 +1,4 @@
-// $Id: GetMCRichTracksAlg.cpp,v 1.6 2007-01-12 15:32:18 ranjard Exp $
+// $Id: GetMCRichTracksAlg.cpp,v 1.7 2007-03-18 19:54:57 gcorti Exp $
 // Include files
 
 // from Gaudi
@@ -203,7 +203,7 @@ StatusCode GetMCRichTracksAlg::execute()
 //=============================================================================
 StatusCode GetMCRichTracksAlg::finalize()
 {
-  const RichStatDivFunctor occ;
+  const Rich::StatDivFunctor occ;
 
   info() << "Av. # MCRichTracks         : Overall = "
          << occ(m_hitTally,m_nEvts) << endreq;
