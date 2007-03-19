@@ -5,7 +5,7 @@
  *  Implementation file for pixel clustering class Rich::DAQ::PixelCluster
  *
  *  CVS Log :-
- *  $Id: RichPixelCluster.cpp,v 1.2 2007-03-09 17:58:13 jonrob Exp $
+ *  $Id: RichPixelCluster.cpp,v 1.3 2007-03-19 15:03:29 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   02/02/2007
@@ -14,6 +14,9 @@
 
 // local
 #include "RichKernel/RichPixelCluster.h"
+
+// boost
+#include "boost/format.hpp"
 
 using namespace Rich;
 
@@ -63,18 +66,18 @@ MsgStream& HPDPixelClusters::fillStream ( MsgStream & os ) const
   os << " c    |";
   for ( int col = 0; col < nPixelRowsOrCols; ++col )
   {
-    os << format("%3i",col);
+    os << boost::format("%3i") % col ;
   }
   os << endreq;
 
   // print out each row
   for ( int row = 0; row < nPixelRowsOrCols; ++row )
   {
-    os << format( " r %2i | ", row );
+    os << boost::format( " r %2i | " ) % row ;
     for ( int col = 0; col < nPixelRowsOrCols; ++col )
     {
       const Cluster * clus = getCluster(row,col);
-      if ( clus ) { os << format("%2i ",clus->id()); }
+      if ( clus ) { os << boost::format("%2i ") % clus->id(); }
       else        { os << " . "; }
     }
     os << endreq;

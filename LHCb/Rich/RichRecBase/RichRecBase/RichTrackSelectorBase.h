@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool : RichTrackSelectorBase
  *
  *  CVS Log :-
- *  $Id: RichTrackSelectorBase.h,v 1.3 2007-03-09 18:04:34 jonrob Exp $
+ *  $Id: RichTrackSelectorBase.h,v 1.4 2007-03-19 15:03:53 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/08/2006
@@ -36,6 +36,7 @@
 #include "boost/assign/list_of.hpp"
 #include "boost/numeric/conversion/bounds.hpp"
 #include "boost/limits.hpp"
+#include "boost/format.hpp"
 
 namespace Rich
 {

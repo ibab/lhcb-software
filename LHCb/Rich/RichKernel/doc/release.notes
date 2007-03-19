@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.140 2007-03-09 17:58:13 jonrob Exp $
+! $Id: release.notes,v 1.141 2007-03-19 15:03:29 jonrob Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
+
+! 2007-03-19 - Chris Jones
+ - Replace use of Gaudi format with boost::format to fix various issues
 
 ! 2007-03-09 - Chris Jones
  - Remove namespace doxygen comments (now in standalone file)

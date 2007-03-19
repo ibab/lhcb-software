@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ general definitions
  *
  *  CVS Log :-
- *  $Id: RichDAQDefinitions.h,v 1.11 2007-03-09 17:41:35 jonrob Exp $
+ *  $Id: RichDAQDefinitions.h,v 1.12 2007-03-19 15:02:47 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
@@ -28,6 +28,7 @@
 
 // Boost
 #include "boost/lexical_cast.hpp"
+#include "boost/format.hpp"
 
 namespace Rich
 {
@@ -107,7 +108,7 @@ namespace Rich
       { return os << id.data() ; }
       /// Overloaded output to MsgStream
       friend inline MsgStream & operator << ( MsgStream & os, const NumericType<TYPE> & id )
-      { return os << format("%4i",id.data()) ; }
+      { return os << boost::format("%4i") % id.data() ; }
       /// Operator ++   (prefix)
       inline NumericType<TYPE>& operator++()    { ++m_id; return *this; }
       /// Operator ++(int)  (postfix)

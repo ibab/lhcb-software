@@ -4,6 +4,9 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+! 2007-03-19 - Chris Jones
+ - Replace use of Gaudi format with boost::format to fix various issues
+
 ! 2007-03-09 - Chris Jones
  - Remove doxygen comments for namespaces (in separate file)
  - Adapt to use of HPD pixel cluster in reconstruction

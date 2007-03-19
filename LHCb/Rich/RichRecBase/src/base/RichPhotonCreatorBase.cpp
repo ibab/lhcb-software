@@ -5,7 +5,7 @@
  *  Implementation file for tool base class : Rich::Rec::PhotonCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreatorBase.cpp,v 1.17 2007-03-09 18:04:34 jonrob Exp $
+ *  $Id: RichPhotonCreatorBase.cpp,v 1.18 2007-03-19 15:03:53 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/05/2005
@@ -14,6 +14,9 @@
 
 // local
 #include "RichRecBase/RichPhotonCreatorBase.h"
+
+// boost
+#include "boost/format.hpp"
 
 //-----------------------------------------------------------------------------
 
@@ -108,9 +111,9 @@ namespace Rich
       {
         std::string trad = Rich::text((Rich::RadiatorType)rad);
         trad.resize(8,' ');
-        info() << trad << " : CK theta range " << format("%5.3f",m_minCKtheta[rad])
-               << " -> " << format("%5.3f",m_maxCKtheta[rad])
-               << " rad : Tol. " << format("%5.3f",m_CKTol[rad]) << " mrad" << endreq;
+        info() << trad << " : CK theta range " << boost::format("%5.3f") % m_minCKtheta[rad] << endreq;
+        info() << " -> " << boost::format("%5.3f") % m_maxCKtheta[rad] << endreq;
+        info() << " rad : Tol. " << boost::format("%5.3f") % m_CKTol[rad] << " mrad" << endreq;
       }
 
       return sc;
@@ -144,9 +147,9 @@ namespace Rich
     {
 
       if ( nEvents() > 0
-           && !( m_photCount[Rich::Aerogel] == 0 &&
-                 m_photCount[Rich::Rich1Gas]   == 0 &&
-                 m_photCount[Rich::Rich2Gas]     == 0  ) )
+           && !( m_photCount[Rich::Aerogel]  == 0 &&
+                 m_photCount[Rich::Rich1Gas] == 0 &&
+                 m_photCount[Rich::Rich2Gas] == 0  ) )
       {
 
         // statistical tool
@@ -156,11 +159,11 @@ namespace Rich
         info() << "=================================================================" << endreq
                << "  Photon candidate summary : " << nEvents() << " events :-" << endreq
                << "    Aerogel   : "
-               << occ(m_photCount[Rich::Aerogel],nEvents()) << "  photons/event" << endreq
+               << occ(m_photCount[Rich::Aerogel],nEvents())  << "  photons/event" << endreq
                << "    Rich1Gas  : "
-               << occ(m_photCount[Rich::Rich1Gas],nEvents())   << "  photons/event" << endreq
+               << occ(m_photCount[Rich::Rich1Gas],nEvents()) << "  photons/event" << endreq
                << "    Rich2Gas  : "
-               << occ(m_photCount[Rich::Rich2Gas],nEvents())     << "  photons/event" << endreq
+               << occ(m_photCount[Rich::Rich2Gas],nEvents()) << "  photons/event" << endreq
                << "=================================================================" << endreq;
 
       }
