@@ -4,6 +4,10 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+!======================== LHCbAlgs v2r7 2007-03-19 =======================
+! 2007-03-19 - Marco Cattaneo
+ - Fix untested StatusCodes
+
 !======================== LHCbAlgs v2r6 2007-03-07 =======================
 ! 2007-03-07 - Patrick Koppenburg
  - DeterminiticPrescaler: print out event-by-event message in debug only

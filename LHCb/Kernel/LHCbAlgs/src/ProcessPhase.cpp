@@ -1,4 +1,4 @@
-// $Id: ProcessPhase.cpp,v 1.5 2006-09-04 15:25:11 cattanem Exp $
+// $Id: ProcessPhase.cpp,v 1.6 2007-03-19 17:20:57 cattanem Exp $
 
 // Include files
 #include "ProcessPhase.h"
@@ -21,7 +21,7 @@ ProcessPhase::ProcessPhase( const std::string& name, ISvcLocator* pSvcLocator )
  : GaudiSequencer( name, pSvcLocator ) {
 	m_detList.clear();
 	declareProperty( "DetectorList", m_detList );
-  setProperty( "MeasureTime", "true" ); // Overrides GaudiSequencer default
+  setProperty( "MeasureTime", "true" ).ignore(); // Overrides GaudiSequencer default
 }
 
 ProcessPhase::~ProcessPhase() { 
@@ -30,7 +30,7 @@ ProcessPhase::~ProcessPhase() {
 StatusCode ProcessPhase::initialize() {
 
   std::string myMeasureProp;
-  getProperty( "MeasureTime", myMeasureProp );
+  getProperty( "MeasureTime", myMeasureProp ).ignore();
   IJobOptionsSvc* jobSvc = svc<IJobOptionsSvc>("JobOptionsSvc");
 
 	// Declare sequences to the phase
@@ -42,11 +42,11 @@ StatusCode ProcessPhase::initialize() {
     // Sequences are not yet instantiated, so set MeasureTime property directly 
     // in the catalogue. Uses same value as the parent ProcessPhase
     StringProperty p( "MeasureTime", myMeasureProp );
-    jobSvc->addPropertyToCatalogue( algName, p );
+    jobSvc->addPropertyToCatalogue( algName, p ).ignore();
   }
   myMembers += "}";
-  setProperty( "Members", myMembers );
-  release( jobSvc );
+  setProperty( "Members", myMembers ).ignore();
+  release( jobSvc ).ignore();
 
   return GaudiSequencer::initialize();
 }
