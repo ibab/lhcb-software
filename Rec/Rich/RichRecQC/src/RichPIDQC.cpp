@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction monitoring algorithm : Rich::Rec::MC::PIDQC
  *
  *  CVS Log :-
- *  $Id: RichPIDQC.cpp,v 1.59 2007-03-19 15:05:21 jonrob Exp $
+ *  $Id: RichPIDQC.cpp,v 1.60 2007-03-19 15:57:35 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-06-13
@@ -587,13 +587,16 @@ StatusCode PIDQC::finalize()
     info() << "-------------+-------------------------------------------------+------------"
            << endreq;
 
-    info() << boost::format( " % ID eff    |  K->K,Pr   : %6.2f +-%6.2f   pi->e,m,pi : %6.2f +-%6.2f " ) %
+    info() << " % ID eff    |  K->K,Pr   : "
+           << boost::format( "%6.2f +-%6.2f   pi->e,m,pi : %6.2f +-%6.2f " ) %
       kaonIDEff[0] % kaonIDEff[1] % piIDEff[0] % piIDEff[1] << endreq;
-    info() << boost::format( " % MisID eff |  K->e,m,pi : %6.2f +-%6.2f   pi->K,Pr   : %6.2f +-%6.2f " ) %
+    info() << " % MisID eff |  K->e,m,pi : "
+           << boost::format( "%6.2f +-%6.2f   pi->K,Pr   : %6.2f +-%6.2f " ) %
       kaonMisIDEff[0] % kaonMisIDEff[1] % piMisIDEff[0] % piMisIDEff[1] << endreq;
-    info() << boost::format( " % ID rate   |  Events    : %6.2f +-%6.2f   Tracks     : %6.2f +-%6.2f " ) %
+    info() << " % ID rate   |  Events    : "
+           << boost::format( "%6.2f +-%6.2f   Tracks     : %6.2f +-%6.2f " ) %
       evPIDRate[0] % evPIDRate[1] % trPIDRate[0] % trPIDRate[1] << endreq;
-
+    
     for ( RadCount::const_iterator iR = m_radCount.begin(); iR != m_radCount.end(); ++iR )
     {
       const double eff = ( m_nTracks[0]>0 ? 100.*((double)iR->second)/m_nTracks[0] : 100 );
