@@ -1,4 +1,4 @@
-// $Id: MagneticFieldSvc.cpp,v 1.19 2007-02-26 14:50:47 cattanem Exp $
+// $Id: MagneticFieldSvc.cpp,v 1.20 2007-03-19 10:31:10 cattanem Exp $
 
 // Include files
 #include "GaudiKernel/SvcFactory.h"
@@ -82,19 +82,6 @@ StatusCode MagneticFieldSvc::initialize()
     log << MSG::DEBUG << "Magnetic field parse failed" << endreq;
     return StatusCode::FAILURE;
   }
-}
-
-//=============================================================================
-// Finalize
-//=============================================================================
-StatusCode MagneticFieldSvc::finalize()
-{
-  MsgStream log( msgSvc(), name() );
-  StatusCode status = Service::finalize();
-  
-  if ( status.isSuccess() )
-    log << MSG::INFO << "Service finalized successfully" << endreq;
-  return status;
 }
 
 //=============================================================================
@@ -233,37 +220,25 @@ StatusCode MagneticFieldSvc::parseFile() {
 // FieldVector: find the magnetic field value at a given point in space
 //=============================================================================
 StatusCode MagneticFieldSvc::fieldVector(const Gaudi::XYZPoint&  r,
-                                               Gaudi::XYZVector& b ) const
+                                               Gaudi::XYZVector& bf ) const
 {
-  // This routine is now dummy. Was previously converting to/from CLHEP units
-
-  this->fieldGrid( r, b );
-
-  return StatusCode::SUCCESS;
-}
-
-//=============================================================================
-// routine to fill the field vector
-//=============================================================================
-void MagneticFieldSvc::fieldGrid (const Gaudi::XYZPoint&  r, 
-                                        Gaudi::XYZVector& bf ) const {
 
   if( m_useConstField ) {
     bf.SetXYZ( m_constFieldVector[0]*Gaudi::Units::tesla,
                m_constFieldVector[1]*Gaudi::Units::tesla,
                m_constFieldVector[2]*Gaudi::Units::tesla );
-    return;
+    return StatusCode::SUCCESS;
   }
   
   bf.SetXYZ( 0.0, 0.0, 0.0 );
 
   ///  Linear interpolated field
   double z = r.z() - m_zOffSet;
-  if( z < m_min_FL[2] || z >= m_max_FL[2] )  return;
+  if( z < m_min_FL[2] || z >= m_max_FL[2] )  return StatusCode::SUCCESS;
   double x = fabs( r.x() );  
-  if( x < m_min_FL[0] || x >= m_max_FL[0] )  return;
+  if( x < m_min_FL[0] || x >= m_max_FL[0] )  return StatusCode::SUCCESS;
   double y = fabs( r.y() );
-  if( y < m_min_FL[1] || y >= m_max_FL[1] )  return;
+  if( y < m_min_FL[1] || y >= m_max_FL[1] )  return StatusCode::SUCCESS;
   int i = int( x/m_Dxyz[0]);
   int j = int( y/m_Dxyz[1] );
   int k = int( z/m_Dxyz[2] );
@@ -313,35 +288,35 @@ void MagneticFieldSvc::fieldGrid (const Gaudi::XYZPoint&  r,
 
   double h000 = hx0*hy0*hz0;
   if( fabs(h000) > 0.0 &&
-      cx000 > 9.0e5 && cy000 > 9.0e5 && cz000 > 9.0e5) return;
+      cx000 > 9.0e5 && cy000 > 9.0e5 && cz000 > 9.0e5) return StatusCode::SUCCESS;
  
   double h001 = hx0*hy0*hz1;
   if( fabs(h001) > 0.0 && 
-      cx001 > 9.0e5 && cy001 > 9.0e5 && cz001 > 9.0e5) return;
+      cx001 > 9.0e5 && cy001 > 9.0e5 && cz001 > 9.0e5) return StatusCode::SUCCESS;
 
   double h010 = hx0*hy1*hz0;
   if( fabs(h010) > 0.0 && 
-      cx010 > 9.0e5 && cy010 > 9.0e5 && cz010 > 9.0e5) return;
+      cx010 > 9.0e5 && cy010 > 9.0e5 && cz010 > 9.0e5) return StatusCode::SUCCESS;
 
   double h011 = hx0*hy1*hz1;
   if( fabs(h011) > 0.0 && 
-      cx011 > 9.0e5 && cy011 > 9.0e5 && cz011 > 9.0e5) return;
+      cx011 > 9.0e5 && cy011 > 9.0e5 && cz011 > 9.0e5) return StatusCode::SUCCESS;
 
   double h100 = hx1*hy0*hz0;
   if( fabs(h100) > 0.0 && 
-      cx100 > 9.0e5 && cy100 > 9.0e5 && cz100 > 9.0e5) return;
+      cx100 > 9.0e5 && cy100 > 9.0e5 && cz100 > 9.0e5) return StatusCode::SUCCESS;
  
   double h101 = hx1*hy0*hz1;
   if( fabs(h101) > 0.0 && 
-      cx101 > 9.0e5 && cy101 > 9.0e5 && cz101 > 9.0e5) return;
+      cx101 > 9.0e5 && cy101 > 9.0e5 && cz101 > 9.0e5) return StatusCode::SUCCESS;
  
   double h110 = hx1*hy1*hz0;
   if( fabs(h110) > 0.0 && 
-      cx110 > 9.0e5 && cy110 > 9.0e5 && cz110 > 9.0e5) return;
+      cx110 > 9.0e5 && cy110 > 9.0e5 && cz110 > 9.0e5) return StatusCode::SUCCESS;
 
   double h111 = hx1*hy1*hz1;
   if( fabs(h111) > 0.0 && 
-      cx111 > 9.0e5 && cy111 > 9.0e5 && cz111 > 9.0e5) return;
+      cx111 > 9.0e5 && cy111 > 9.0e5 && cz111 > 9.0e5) return StatusCode::SUCCESS;
 
   bf.SetX ( cx000*h000 + cx001*h001 + cx010*h010 + cx011*h011 +
             cx100*h100 + cx101*h101 + cx110*h110 + cx111*h111);
@@ -360,5 +335,5 @@ void MagneticFieldSvc::fieldGrid (const Gaudi::XYZPoint&  r,
     bf.SetX( -bf.x() );
     bf.SetZ( -bf.z() );
   } 
-  return;      
+  return StatusCode::SUCCESS;      
 }

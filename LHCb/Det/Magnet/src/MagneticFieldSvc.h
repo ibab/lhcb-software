@@ -1,4 +1,4 @@
-// $Id: MagneticFieldSvc.h,v 1.12 2007-02-26 14:50:47 cattanem Exp $
+// $Id: MagneticFieldSvc.h,v 1.13 2007-03-19 10:31:10 cattanem Exp $
 #ifndef MAGNETICFIELDSVC_H
 #define MAGNETICFIELDSVC_H 1
 
@@ -39,9 +39,6 @@ public:
   /// Initialise the service (Inherited Service overrides) 
   virtual StatusCode initialize();
   
-  /// Finalise the service.
-  virtual StatusCode finalize();
-  
   /** Query the available interfaces.
    * @param riid Requested interface ID
    * @param ppvInterface Pointer to requested interface
@@ -53,7 +50,7 @@ public:
   /// Service type.
   virtual const InterfaceID& type() const { return IID_IMagneticFieldSvc; };
 
-  /** IMagneticFieldSvc interface.
+  /** Implementation of IMagneticFieldSvc interface.
    * @param[in]  xyz Point at which magnetic field vector will be given
    * @param[out] fvec Magnectic field vector.
    * @return StatusCode SUCCESS if calculation was performed.
@@ -65,9 +62,6 @@ private:
 
   /// Allow SvcFactory to instantiate the service.
   friend class SvcFactory<MagneticFieldSvc>;
-
-  /// Fills Q, the field vector
-  void fieldGrid( const Gaudi::XYZPoint& xyz, Gaudi::XYZVector& fvec ) const;
 
   StatusCode parseFile( );       ///< Reads the field map from file 
   

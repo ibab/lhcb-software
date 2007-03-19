@@ -1,4 +1,4 @@
-// $Id: BIntegrator.cpp,v 1.6 2007-02-26 14:50:47 cattanem Exp $
+// $Id: BIntegrator.cpp,v 1.7 2007-03-19 10:31:09 cattanem Exp $
 // Include files 
 // -------------
 
@@ -53,7 +53,7 @@ StatusCode BIntegrator::initialize()
   // Retrieve a pointer to the magnetic field service
   m_pIMF = svc<IMagneticFieldSvc>( "MagneticFieldSvc", true );
  
-  calculateBdlCenter();
+  sc = calculateBdlCenter();
   info() << "Center of the field is at the z positions "
          << m_centerZ << endreq;
   
@@ -96,6 +96,7 @@ StatusCode BIntegrator::calculateBdlAndCenter(const Gaudi::XYZPoint& beginPoint,
   double angleY = yCen/zCen;
   double stepSize = (endPoint.z()-beginPoint.z())/(double)m_nSteps;
   int iStep;
+  StatusCode sc;
   for(iStep=0;iStep<m_nSteps;iStep++)    {
 
     if(point.z()>zCen)      {
@@ -108,7 +109,8 @@ StatusCode BIntegrator::calculateBdlAndCenter(const Gaudi::XYZPoint& beginPoint,
     point.SetX( point.x()+ dX);
     point.SetY( point.y()+ dY);
     point.SetZ( point.z()+ dZ);
-    m_pIMF->fieldVector(point,bField);
+    sc = m_pIMF->fieldVector(point,bField);
+    if( !sc.isSuccess() ) warning() << "field vector not calculated" << endmsg;
 
     //Cacluate the Bdl 
     Bdl.SetX( Bdl.x() + dY* bField.z()- dZ*bField.y() );
@@ -145,7 +147,8 @@ StatusCode BIntegrator::calculateBdlAndCenter(const Gaudi::XYZPoint& beginPoint,
     point.SetX( point.x()+ dX);
     point.SetY( point.y()+ dY);
     point.SetZ( point.z()+ dZ);
-    m_pIMF->fieldVector(point,bField);
+    sc = m_pIMF->fieldVector(point,bField);
+    if( !sc.isSuccess() ) warning() << "field vector not calculated" << endmsg;
 
     //Cacluate the Bdl 
     Bdl.SetX( Bdl.x() + dY* bField.z()- dZ*bField.y() );
@@ -188,9 +191,12 @@ StatusCode BIntegrator::calculateBdlCenter()
 
   // Get the integral field
   int iStep;
+  StatusCode sc;
+
   for( iStep=0;iStep < m_nSteps;iStep++) {
     position.SetXYZ( 0.1, 0.1, m_firstZ+((double)iStep+0.5)*stepSize );
-    m_pIMF -> fieldVector( position,bField );
+    sc = m_pIMF -> fieldVector( position,bField );
+    if( !sc.isSuccess() ) warning() << "field vector not calculated" << endmsg;
 
     //Calculate the Bdl 
     BdlTotal.SetX( BdlTotal.x() - stepSize*bField.y() );
@@ -212,7 +218,8 @@ StatusCode BIntegrator::calculateBdlCenter()
   for ( iStep=0; iStep < m_nSteps; iStep++ ) {
     double z = m_firstZ+ (iStep+0.5)*stepSize;
     position.SetXYZ( 0.1, 0.1, z );
-    m_pIMF -> fieldVector( position,bField );
+    sc = m_pIMF -> fieldVector( position,bField );
+    if( !sc.isSuccess() ) warning() << "field vector not calculated" << endmsg;
     //Cacluate the Bdl 
     BdlTotal.SetX( BdlTotal.x() - stepSize*bField.y() );
     BdlTotal.SetY( BdlTotal.y() + stepSize*bField.x() );
