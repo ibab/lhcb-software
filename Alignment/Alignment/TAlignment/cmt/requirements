@@ -27,10 +27,8 @@ use           TrackEvent        v*  Event
 use           TrackFitEvent     v*  Tr
 use           TrackInterfaces   v*  Tr
 use           AlignTrTools      v*  Alignment
-# use           AlignSolvTools    v* Alignment
+use           AlignSolvTools    v* Alignment
 # use           Brunel            v*  Rec  
-
-blah
 
 #============================================================================
 # Component library building rule

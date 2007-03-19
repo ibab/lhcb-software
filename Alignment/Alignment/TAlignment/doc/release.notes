@@ -5,6 +5,9 @@
 !---------------------------------------------------------
 
 !========================== TAlignment v2r0 2007-03-05 =========================
+! 2007-03-19 - Jan Amoraal
+ - Remove blah from requirements
+  
 ! 2007-03-09 - Jan Amoraal
  - First version of the (T) Alignment Framework
  - AlignAlgorithm: Generic chi^2 minimisation algorithm
