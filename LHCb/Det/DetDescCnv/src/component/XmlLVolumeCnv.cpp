@@ -1,4 +1,4 @@
-// $Id: XmlLVolumeCnv.cpp,v 1.12 2006-12-14 13:14:10 ranjard Exp $ 
+// $Id: XmlLVolumeCnv.cpp,v 1.13 2007-03-19 11:04:18 cattanem Exp $ 
 // Include files
 #include "GaudiKernel/CnvFactory.h"
 #include "GaudiKernel/ISvcLocator.h"
@@ -1017,8 +1017,13 @@ SolidBoolean* XmlLVolumeCnv::dealWithBoolean (xercesc::DOMElement* element) {
     while (!solids->empty()) {
       placedSolid = solids->front();
       solids->pop_front();
-      unionResult->unite (placedSolid.solid,
-                          placedSolid.transformation);
+      StatusCode sc = unionResult->unite (placedSolid.solid,
+                                          placedSolid.transformation);
+      if( !sc.isSuccess() ) {
+        MsgStream log(msgSvc(), "XmlLVolumeCnv" );
+        log << MSG::WARNING
+            << "unionResult->unite failed. Don't know what to do..." << endmsg;
+      }
       if (placedSolid.transformation != 0) {
         delete (placedSolid.transformation);
         placedSolid.transformation = 0;
@@ -1045,8 +1050,13 @@ SolidBoolean* XmlLVolumeCnv::dealWithBoolean (xercesc::DOMElement* element) {
     while (!solids->empty()) {
       placedSolid = solids->front();
       solids->pop_front();
-      subtractionResult->subtract (placedSolid.solid,
-                                   placedSolid.transformation);
+      StatusCode sc = subtractionResult->subtract (placedSolid.solid,
+                                                   placedSolid.transformation);
+      if( !sc.isSuccess() ) {
+        MsgStream log(msgSvc(), "XmlLVolumeCnv" );
+        log << MSG::WARNING
+            << "unionResult->subtract failed. Don't know what to do.." << endmsg;
+      }
       if (placedSolid.transformation != 0) {
         delete (placedSolid.transformation);
         placedSolid.transformation = 0;
@@ -1073,8 +1083,13 @@ SolidBoolean* XmlLVolumeCnv::dealWithBoolean (xercesc::DOMElement* element) {
     while (!solids->empty()) {
       placedSolid = solids->front();
       solids->pop_front();
-      intersectionResult->intersect (placedSolid.solid,
-                                     placedSolid.transformation);
+      StatusCode sc = intersectionResult->intersect (placedSolid.solid,
+                                                     placedSolid.transformation);
+      if( !sc.isSuccess() ) {
+        MsgStream log(msgSvc(), "XmlLVolumeCnv" );
+        log << MSG::WARNING
+            << "unionResult->intersect failed. Don't know what to do!" << endmsg;
+      }
       if (placedSolid.transformation != 0) {
         delete (placedSolid.transformation);
         placedSolid.transformation = 0;

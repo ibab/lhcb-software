@@ -4,6 +4,11 @@
 ! Purpose     : standard converters for the LHCb Detector Description
 !-----------------------------------------------------------------------------
 
+!================ DetDescCnv v4r3 2007-03-19 ==================================
+! 2007-03-19 - Marco Cattaneo
+ - Check unchecked StatusCodes in XmlLVolumeCnv and XmlMixtureCnv. For the time
+   being, failure just prints a warning
+
 !================ DetDescCnv v4r2 2007-03-05 ==================================
 ! 2007-03-05 - Marco Cattaneo
  - Removed obsolete DetDescCnv_load.cpp file
