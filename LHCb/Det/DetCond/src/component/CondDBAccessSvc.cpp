@@ -1,4 +1,4 @@
-// $Id: CondDBAccessSvc.cpp,v 1.32 2007-03-16 16:49:56 marcocle Exp $
+// $Id: CondDBAccessSvc.cpp,v 1.33 2007-03-19 09:01:23 cattanem Exp $
 // Include files
 #include <sstream>
 //#include <cstdlib>
@@ -313,6 +313,7 @@ StatusCode CondDBAccessSvc::setTag(const std::string &_tag){
 }
 StatusCode CondDBAccessSvc::i_checkTag(const std::string &tag) const {
 
+  MsgStream log(msgSvc(), name() );
   if ( !m_db ) {
     log << MSG::ERROR << "Check tag \"" << tag
         << "\": the database is not opened!" << endmsg;
@@ -321,7 +322,6 @@ StatusCode CondDBAccessSvc::i_checkTag(const std::string &tag) const {
 
   DataBaseOperationLock dbLock(this);
 
-  MsgStream log(msgSvc(), name() );
   log << MSG::VERBOSE << "Check availability of tag \"" << tag << "\"" << endmsg;
   if (m_rootFolderSet) {
     // HEAD tags are always good

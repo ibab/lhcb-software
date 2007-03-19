@@ -1,15 +1,18 @@
-# $Id: release.notes,v 1.93 2007-03-16 16:49:56 marcocle Exp $
+# $Id: release.notes,v 1.94 2007-03-19 09:01:23 cattanem Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Det/DetCond
 ! Responsible : Marco Clemencic
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
+!===================== Det/DetCond v11r1 2007-03-20 ==========================
 ! 2007-03-16 - Marco Clemencic
  - Added an option to enable CORAL LFCReplicaService (off by default).
  - Added an option to enable CORAL automatic connection purge.
  - Added a check on the database in CondDBAccessSvc::i_checkTag to avoid
    segmentation possible faults.
+ - Disable some compiler optimizations in libstdc++ on slc3, because it seems
+   that on SLC3 there are problems with multithreaded applications.
 
 !===================== Det/DetCond v11r0 2007-03-05 ==========================
                             NEEDS LCGCMT >= 50
