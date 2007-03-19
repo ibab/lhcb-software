@@ -4,13 +4,17 @@
 ! Purpose          : collection of physics constructors for Gauss
 !-----------------------------------------------------------------------------
 
-!======================= GaussPhysics v5r0 2007-03-18 ========================
+!====================== GaussPhysics v5r0 2007-03-19 =========================
+! 2007-03-19 - Gloria Corti
+ - Fix mispelling
+   . src/GaussPhysics_load.cpp 
+
 ! 2007-03-18 - Gloria CORTI
-  . Adapt to new factory declarations from Gaudi v19r1 having removed 
-    special GiGaFactories and IMPLEMENT_ExtPhysics macro (GiGa v19r0).
-    Add new physics list from Geant4 8.2.
-    . src/GaussPhysics_load.cpp
-    The physics lists that can be instanciated from options are:
+ - Adapt to new factory declarations from Gaudi v19r1 having removed 
+   special GiGaFactories and IMPLEMENT_ExtPhysics macro (GiGa v19r0).
+   Add new physics list from Geant4 8.2.
+   . src/GaussPhysics_load.cpp
+   The physics lists that can be instanciated from options are:
      - For general processes (i.e. Decays)
        GiGaExtPhysics< G4DecayPhysics > 
      - For EM physics

@@ -1,4 +1,4 @@
-// $Id: GaussPhysics_load.cpp,v 1.10 2007-03-18 21:15:51 gcorti Exp $
+// $Id: GaussPhysics_load.cpp,v 1.11 2007-03-19 12:09:37 gcorti Exp $
 // Include files 
 
 #include "GaudiKernel/DeclareFactoryEntries.h" 
@@ -77,7 +77,7 @@ DECLARE_TOOL_FACTORY( HadPhysQGSP_BERT_HPFactory );
 typedef GiGaExtPhysics< HadronPhysicsQGSP_EMV > HadPhysQGSP_EMVFactory;
 DECLARE_TOOL_FACTORY( HadPhysQGSP_EMVFactory );
 typedef GiGaExtPhysics< HadronPhysicsQGSP_EMX > HadPhysQGSP_EMXFactory;
-DECLARE_TOOL_FACTORY( HadPhysQGSPFactory_EMX );
+DECLARE_TOOL_FACTORY( HadPhysQGSP_EMXFactory );
 
 DECLARE_FACTORY_ENTRIES(GaussPhysics) { 
 
