@@ -5,7 +5,7 @@
  *  Implementation file for class : Rich::RawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.cpp,v 1.44 2007-03-08 18:14:28 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.cpp,v 1.45 2007-03-19 15:02:04 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2004-12-18
@@ -173,7 +173,9 @@ RawDataFormatTool::printL1Stats( const L1TypeCount & count,
         info() << "----------------------------------------------------------------------------------------------------------" << endreq;
       }
 
-      info() << " " << rich << " L1 " << format("%3i",L1ID.data()) << " V" << format("%3i",version) << " | L1 size ="
+      info() << " " << rich << " L1 " << boost::format("%3i") % L1ID.data() << endreq;
+      info() << " V" << boost::format("%3i") % version << endreq;
+      info() << " | L1 size ="
              << occ1(nBanks,m_evtCount) << " hpds :"
              << occ2(words,m_evtCount) << " words :"
              << occ2(hits,m_evtCount) << " hits / event" << endreq;
@@ -588,9 +590,11 @@ void RawDataFormatTool::fillRawEvent( const LHCb::RichSmartID::Vector & smartIDs
 
     if ( msgLevel(MSG::DEBUG) )
     {
-      debug() << "Encoded " << format("%2i",(*iL1).second.size()) << " HPDs into Level1 Bank "
-              << format("%2i",(*iL1).first.data()) << " : Size "
-              << format("%4i",nL1HeaderWords+dataBank.size())
+      debug() << "Encoded " << boost::format("%2i") % (*iL1).second.size() << endreq;
+      debug() << " HPDs into Level1 Bank "
+              << boost::format("%2i") % (*iL1).first.data() << endreq;
+      debug() << " : Size "
+              << boost::format("%4i") % (nL1HeaderWords+dataBank.size())
               << " words : Version " << version << endreq;
     }
 
@@ -836,9 +840,10 @@ void RawDataFormatTool::decodeToSmartIDs_2007( const LHCb::RawBank & bank,
   // debug printout
   if ( msgLevel(MSG::DEBUG) )
   {
-    debug() << "Decoded " << format("%2i",nHPDbanks) << " HPDs from Level1 Bank ID = "
-            << format("%2i",L1ID.data())
-            << " : Size " << format("%4i",nL1HeaderWords+(bank.size()/4)) << " words : Version "
+    debug() << "Decoded " << boost::format("%2i") % nHPDbanks << endreq;
+    debug() << " HPDs from Level1 Bank ID = "
+            << boost::format("%2i") % L1ID.data() << endreq;
+    debug() << " : Size " << boost::format("%4i") % (nL1HeaderWords+(bank.size()/4)) << " words : Version "
             << version << endreq;
   }
 
@@ -955,9 +960,10 @@ void RawDataFormatTool::decodeToSmartIDs_2006TB( const LHCb::RawBank & bank,
   // debug printout
   if ( msgLevel(MSG::DEBUG) )
   {
-    debug() << "Decoded " << format("%2i",nHPDbanks) << " HPDs from Level1 Bank "
-            << format("%2i",L1ID.data())
-            << " : Size " << format("%4i",nL1HeaderWords+(bank.size()/4)) << " words : Version "
+    debug() << "Decoded " << boost::format("%2i") % nHPDbanks << endreq;
+    debug() << " HPDs from Level1 Bank "
+            << boost::format("%2i") % L1ID.data() << endreq;
+    debug() << " : Size " << boost::format("%4i") % (nL1HeaderWords+(bank.size()/4)) << " words : Version "
             << version << endreq;
   }
 
@@ -1111,9 +1117,10 @@ void RawDataFormatTool::decodeToSmartIDs_DC0406( const LHCb::RawBank & bank,
   // debug printout
   if ( msgLevel(MSG::DEBUG) )
   {
-    debug() << "Decoded " << format("%2i",nHPDbanks) << " HPDs from Level1 Bank "
-            << format("%2i",L1ID.data())
-            << " : Size " << format("%4i",nL1HeaderWords+(bank.size()/4)) << " words : Version "
+    debug() << "Decoded " << boost::format("%2i") % nHPDbanks << endreq;
+    debug() << " HPDs from Level1 Bank "
+            << boost::format("%2i") % L1ID.data() << endreq;
+    debug() << " : Size " << boost::format("%4i") % (nL1HeaderWords+(bank.size()/4)) << " words : Version "
             << version << endreq;
   }
 
@@ -1207,7 +1214,7 @@ void RawDataFormatTool::dumpRawBank( const LHCb::RawBank & bank,
     os << "          bit |";
     for ( int iCol = 31; iCol >= 0; --iCol )
     {
-      os << format("%3i",iCol);
+      os << boost::format("%3i") % iCol;
     }
     os << endreq;
     os << LINES << endreq;

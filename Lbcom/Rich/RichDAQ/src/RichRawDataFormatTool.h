@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::DAQ::RawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.h,v 1.22 2007-03-08 18:14:28 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.h,v 1.23 2007-03-19 15:02:04 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-18
@@ -21,6 +21,7 @@
 
 // Boost
 #include "boost/lexical_cast.hpp"
+#include "boost/format.hpp"
 
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"

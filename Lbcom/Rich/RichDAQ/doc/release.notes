@@ -4,6 +4,9 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
+! 2007-03-19 - Chris Jones
+ - Replace use of Gaudi format with boost::format to fix various issues
+
 ! 2007-03-08 - Chris Jones
  - Add support for ALICE zero-suppressed mode data in the LHCb5 version
 
