@@ -3,9 +3,7 @@
 
 #include "DetDesc/ParamValidDataObject.h"
 
-/** @function ConditionParser
- *  
- *  Wrapper around the parser to convert strings to condition objects.
+/** Wrapper around the parser to convert strings to condition objects.
  *  (written with boost::spirit, http://boost.org/libs/spirit/index.html).
  *
  *  @author Marco Clemencic

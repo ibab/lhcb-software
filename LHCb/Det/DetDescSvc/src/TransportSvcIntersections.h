@@ -1,4 +1,4 @@
-// $Id: TransportSvcIntersections.h,v 1.2 2005-12-07 17:15:50 cattanem Exp $ 
+// $Id: TransportSvcIntersections.h,v 1.3 2007-03-19 15:15:32 cattanem Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -114,9 +114,13 @@ unsigned long TransportSvc::intersections
       standardGeometry()  : 0 ;  
     
     ///
-    Assert( 0 != giLocal , "TransportSvc::(1) unable to locate points" ) ; 
-    Assert( 0 != gi      , "TransportSvc::(2) unable to locate points" ) ; 
-    
+    if( 0 == giLocal )
+      throw TransportSvcException( "TransportSvc::(1) unable to locate points",
+                                   StatusCode::FAILURE );
+    if( 0 == gi )
+      throw TransportSvcException( "TransportSvc::(2) unable to locate points",
+                                   StatusCode::FAILURE );
+
     /// redefine previous geometry
     setPreviousGeometry( giLocal ); 
     

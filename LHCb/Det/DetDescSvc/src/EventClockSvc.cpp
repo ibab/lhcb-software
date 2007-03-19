@@ -1,4 +1,4 @@
-// $Id: EventClockSvc.cpp,v 1.5 2006-09-26 10:45:48 marcocle Exp $
+// $Id: EventClockSvc.cpp,v 1.6 2007-03-19 15:15:32 cattanem Exp $
 // Include files 
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/MsgStream.h"
@@ -116,7 +116,8 @@ StatusCode EventClockSvc::finalize ( ) {
 
 	// release the interfaces used
   if (m_toolSvc         != NULL) {
-    if ( m_eventTimeDecoder != NULL ) m_toolSvc->releaseTool(m_eventTimeDecoder);
+    if ( m_eventTimeDecoder != NULL )
+      m_toolSvc->releaseTool(m_eventTimeDecoder).ignore();
     m_toolSvc->release();
   }
 	if (m_detDataSvc      != NULL) m_detDataSvc->release();

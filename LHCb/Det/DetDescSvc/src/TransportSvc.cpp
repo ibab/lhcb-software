@@ -1,4 +1,4 @@
-// $Id: TransportSvc.cpp,v 1.3 2006-07-26 09:46:58 cattanem Exp $
+// $Id: TransportSvc.cpp,v 1.4 2007-03-19 15:15:32 cattanem Exp $
 // ============================================================================
 
 /// from GaudiKernel 
@@ -101,9 +101,12 @@ StatusCode TransportSvc::initialize()
       return statusCode ; }              /// RETURN !!!
   }
   /// Set my own properties
-  setProperties();  
-
-
+  StatusCode sc = setProperties();
+  if( !sc.isSuccess() ) {
+    log << MSG::ERROR << "Unable to set own properties" << endmsg;
+    return sc;
+  }
+  
   /// locate services to be used:
   { 
     /// 1) locate Chrono & Stat Service: 
@@ -203,8 +206,10 @@ IGeometryInfo*       TransportSvc::findGeometry
     { Assert( false , 
               "TransportSvc::findGeometry(), unknown exception caught!" ); }  
   ///
-  Assert( 0 != gi , 
-          "TransportSvc::unable to locate geometry address="+address );
+  if( 0 == gi )
+    throw TransportSvcException(
+          "TransportSvc::unable to locate geometry address="+address,
+          StatusCode::FAILURE );
   ///
   return gi;
 };

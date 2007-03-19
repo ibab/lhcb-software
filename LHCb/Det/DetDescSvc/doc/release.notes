@@ -1,10 +1,15 @@
 ! =============================================================================
-! $Id: release.notes,v 1.27 2007-03-05 10:36:49 cattanem Exp $ 
+! $Id: release.notes,v 1.28 2007-03-19 15:15:32 cattanem Exp $ 
 ! =============================================================================
 ! package DetDescSvc
 ! package manager : Marco Clemencic, Juan Palacios ?
 ! purpose:          Component library for Detector Description Services
 ! =============================================================================
+
+!========================= DetDescSvc v1r11 2007-03-19 ========================
+! 2007-03-19 - Marco Cattaneo
+ - Fix unchecked StatusCodes
+ - Fix a doxygen warning
 
 !========================= DetDescSvc v1r10p1 2007-03-05 ======================
 ! 2007-03-05 - Marco Cattaneo
