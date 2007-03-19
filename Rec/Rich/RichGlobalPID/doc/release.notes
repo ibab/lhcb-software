@@ -4,6 +4,9 @@
 ! Purpose     : The Rich Global PID algorithm
 !-----------------------------------------------------------------------------
 
+! 2007-03-19 - Chris Jones
+ - Replace use of Gaudi format with boost::format to fix various issues
+
 ! 2007-03-09 - Chris Jones
  - Move namespace doxygen comments to single standalone header file
 

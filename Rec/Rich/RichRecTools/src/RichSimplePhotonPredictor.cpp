@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::SimplePhotonPredictor
  *
  *  CVS Log :-
- *  $Id: RichSimplePhotonPredictor.cpp,v 1.7 2007-02-02 10:10:41 jonrob Exp $
+ *  $Id: RichSimplePhotonPredictor.cpp,v 1.8 2007-03-19 15:05:42 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -69,9 +69,9 @@ StatusCode SimplePhotonPredictor::initialize()
     // printout for this rad
     std::string trad = Rich::text((Rich::RadiatorType)rad);
     trad.resize(8,' ');
-    info() << trad << " : Sep. range     " << format("%5.1f",m_minROI[rad]) << " -> "
-           << format("%5.1f",m_maxROI[rad]) << " mm" << endreq;
-
+    info() << trad << " : Sep. range     " 
+           << boost::format("%5.1f") % m_minROI[rad] << " -> "
+           << boost::format("%5.1f") % m_maxROI[rad] << " mm" << endreq;
   }
 
   return sc;
@@ -80,9 +80,9 @@ StatusCode SimplePhotonPredictor::initialize()
 StatusCode SimplePhotonPredictor::finalize()
 {
 
-  if ( m_Nselected[Rich::Aerogel] > 0 ||
-       m_Nselected[Rich::Rich1Gas]   > 0 ||
-       m_Nselected[Rich::Rich2Gas]     > 0 )
+  if ( m_Nselected[Rich::Aerogel]  > 0 ||
+       m_Nselected[Rich::Rich1Gas] > 0 ||
+       m_Nselected[Rich::Rich2Gas] > 0 )
   {
 
     // statistical tool

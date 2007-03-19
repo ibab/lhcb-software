@@ -5,7 +5,7 @@
  *  Implementation file for RICH Global PID algorithm class : Rich::Rec::GlobalPID::Likelihood
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDLikelihood.cpp,v 1.1 2007-02-02 10:03:58 jonrob Exp $
+ *  $Id: RichGlobalPIDLikelihood.cpp,v 1.2 2007-03-19 15:04:21 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -335,7 +335,7 @@ unsigned int Likelihood::initBestLogLikelihood()
     if ( msgLevel(MSG::DEBUG) )
     {
       debug() << " -> Track "
-              << format("%4i",(*iT).pidTrack->key())
+              << boost::format("%4i") % (*iT).pidTrack->key()
               << " prefers hypothesis " << (*iT).hypo << " to "
               << (*iT).pidTrack->richRecTrack()->currentHypothesis()
               << ". DLL = " << (*iT).minDLL << endreq ;
@@ -424,7 +424,7 @@ void Likelihood::findBestLogLikelihood( MinTrList & minTracks )
           if ( msgLevel(MSG::DEBUG) )
           {
             debug() << "    -> Track "
-                    << format("%4i",gTrack->key()) << " prefers hypothesis "
+                    << boost::format("%4i") % gTrack->key() << " prefers hypothesis "
                     << hypothesis << " to " << rRTrack->currentHypothesis()
                     << ". DLL = " << deltaLogL << endreq ;
           }

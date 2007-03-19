@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::Rec::SimplePhotonPredictor
  *
  *  CVS Log :-
- *  $Id: RichSimplePhotonPredictor.h,v 1.6 2007-03-10 13:19:20 jonrob Exp $
+ *  $Id: RichSimplePhotonPredictor.h,v 1.7 2007-03-19 15:05:42 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -28,6 +28,9 @@
 
 // RichKernel
 #include "RichKernel/RichPoissonEffFunctor.h"
+
+// boost
+#include "boost/format.hpp"
 
 namespace Rich
 {

@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction monitoring algorithm : Rich::Rec::MC::PIDQC
  *
  *  CVS Log :-
- *  $Id: RichPIDQC.h,v 1.28 2007-03-09 23:14:27 jonrob Exp $
+ *  $Id: RichPIDQC.h,v 1.29 2007-03-19 15:05:21 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-06-13
@@ -46,6 +46,7 @@
 
 // Boost
 #include "boost/lexical_cast.hpp"
+#include "boost/format.hpp"
 
 namespace Rich
 {

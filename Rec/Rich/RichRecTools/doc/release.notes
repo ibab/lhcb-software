@@ -4,6 +4,9 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2007-03-19 - Chris Jones
+ - Replace use of Gaudi format with boost::format to fix various issues
+
 ! 2007-03-10 - Chris Jones
  - Remove doxygen comments for namespaces
  - StatusCode warnings

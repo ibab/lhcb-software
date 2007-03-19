@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::Rec::SepVCKthetaPhotonPredictor
  *
  *  CVS Log :-
- *  $Id: RichSepVCKthetaPhotonPredictor.h,v 1.6 2007-03-10 13:19:20 jonrob Exp $
+ *  $Id: RichSepVCKthetaPhotonPredictor.h,v 1.7 2007-03-19 15:05:42 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   01/06/2005
@@ -33,6 +33,9 @@
 
 // GSL
 #include "gsl/gsl_math.h"
+
+// boost
+#include "boost/format.hpp"
 
 namespace Rich
 {

@@ -5,7 +5,7 @@
  *  Header file for RICH Global PID algorithm class : Rich::Rec::GlobalPID::Likelihood
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDLikelihood.h,v 1.2 2007-03-09 22:10:41 jonrob Exp $
+ *  $Id: RichGlobalPIDLikelihood.h,v 1.3 2007-03-19 15:04:21 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/12/2002
@@ -30,6 +30,9 @@
 // interfaces
 #include "RichRecBase/IRichPhotonSignal.h"
 #include "RichRecBase/IRichExpectedTrackSignal.h"
+
+// boost
+#include "boost/format.hpp"
 
 namespace Rich
 {

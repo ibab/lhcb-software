@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction monitoring algorithm : Rich::Rec::MC::PIDQC
  *
  *  CVS Log :-
- *  $Id: RichPIDQC.cpp,v 1.58 2007-02-02 10:08:36 jonrob Exp $
+ *  $Id: RichPIDQC.cpp,v 1.59 2007-03-19 15:05:21 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-06-13
@@ -571,34 +571,35 @@ StatusCode PIDQC::finalize()
                                   " Kaon        |", " Proton      |", " X           |" };
     for ( iRec = 0; iRec < 6; ++iRec )
     {
-      info() << type[iRec] << format( " %7.2f%7.2f%7.2f%7.2f%7.2f%7.2f      | %7.2f",
-                                      m_sumTab[0][iRec], m_sumTab[1][iRec],
-                                      m_sumTab[2][iRec], m_sumTab[3][iRec],
-                                      m_sumTab[4][iRec], m_sumTab[5][iRec],
-                                      purity[iRec] ) << endreq;
+      info() << type[iRec]
+             << boost::format( " %7.2f%7.2f%7.2f%7.2f%7.2f%7.2f      | %7.2f" ) %
+        m_sumTab[0][iRec] % m_sumTab[1][iRec] %
+        m_sumTab[2][iRec] % m_sumTab[3][iRec] %
+        m_sumTab[4][iRec] % m_sumTab[5][iRec] %
+        purity[iRec] << endreq;
     }
     info() << "   (reco)    |                                                 |" << endreq
            << "-------------+-------------------------------------------------+------------"
-           << endreq
-           << "   %Eff.     |" << format( " %7.2f%7.2f%7.2f%7.2f%7.2f%7.2f ",
-                                          eff[0],eff[1],eff[2],eff[3],eff[4],eff[5] )
-           << "     |" << endreq
-           << "-------------+-------------------------------------------------+------------"
+           << endreq;
+    info() << "   %Eff.     |" << boost::format( " %7.2f%7.2f%7.2f%7.2f%7.2f%7.2f " ) %
+      eff[0] % eff[1] % eff[2] % eff[3] % eff[4] % eff[5]
+           << "     |" << endreq;
+    info() << "-------------+-------------------------------------------------+------------"
            << endreq;
 
-    info() << format( " % ID eff    |  K->K,Pr   : %6.2f +-%6.2f   pi->e,m,pi : %6.2f +-%6.2f ",
-                      kaonIDEff[0], kaonIDEff[1], piIDEff[0], piIDEff[1] ) << endreq;
-    info() << format( " % MisID eff |  K->e,m,pi : %6.2f +-%6.2f   pi->K,Pr   : %6.2f +-%6.2f ",
-                      kaonMisIDEff[0], kaonMisIDEff[1], piMisIDEff[0], piMisIDEff[1] ) << endreq;
-    info() << format( " % ID rate   |  Events    : %6.2f +-%6.2f   Tracks     : %6.2f +-%6.2f ",
-                      evPIDRate[0], evPIDRate[1], trPIDRate[0], trPIDRate[1] ) << endreq;
+    info() << boost::format( " % ID eff    |  K->K,Pr   : %6.2f +-%6.2f   pi->e,m,pi : %6.2f +-%6.2f " ) %
+      kaonIDEff[0] % kaonIDEff[1] % piIDEff[0] % piIDEff[1] << endreq;
+    info() << boost::format( " % MisID eff |  K->e,m,pi : %6.2f +-%6.2f   pi->K,Pr   : %6.2f +-%6.2f " ) %
+      kaonMisIDEff[0] % kaonMisIDEff[1] % piMisIDEff[0] % piMisIDEff[1] << endreq;
+    info() << boost::format( " % ID rate   |  Events    : %6.2f +-%6.2f   Tracks     : %6.2f +-%6.2f " ) %
+      evPIDRate[0] % evPIDRate[1] % trPIDRate[0] % trPIDRate[1] << endreq;
 
     for ( RadCount::const_iterator iR = m_radCount.begin(); iR != m_radCount.end(); ++iR )
     {
       const double eff = ( m_nTracks[0]>0 ? 100.*((double)iR->second)/m_nTracks[0] : 100 );
       const double err = ( m_nTracks[0]>0 ? sqrt(eff*(100.-eff)/m_nTracks[0]) : 100 );
       info() << "             |  -> With "
-             << (*iR).first.radiators() << format( "   : %6.2f +-%6.2f", eff, err ) << endreq;
+             << (*iR).first.radiators() << boost::format( "   : %6.2f +-%6.2f" ) % eff % err << endreq;
     }
 
     info() << "-------------+-------------------------------------------------+------------"

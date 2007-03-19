@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::SepVCKthetaPhotonPredictor
  *
  *  CVS Log :-
- *  $Id: RichSepVCKthetaPhotonPredictor.cpp,v 1.9 2007-02-02 10:10:41 jonrob Exp $
+ *  $Id: RichSepVCKthetaPhotonPredictor.cpp,v 1.10 2007-03-19 15:05:42 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   01/06/2005
@@ -97,9 +97,10 @@ StatusCode SepVCKthetaPhotonPredictor::initialize()
     // printout for this rad
     std::string trad = Rich::text((Rich::RadiatorType)rad);
     trad.resize(8,' ');
-    info() << trad << " : Sep. range     " << format("%5.1f",m_minROI[rad]) << " -> "
-           << format("%5.1f",m_maxROI[rad]) << " mm  : Tol. "
-           << format("%5.1f",m_tolF[rad]) << " mm" << endreq;
+    info() << trad << " : Sep. range     " 
+           << boost::format("%5.1f") % m_minROI[rad] << " -> "
+           << boost::format("%5.1f") % m_maxROI[rad] << " mm  : Tol. "
+           << boost::format("%5.1f") % m_tolF[rad] << " mm" << endreq;
   }
 
   return sc;
