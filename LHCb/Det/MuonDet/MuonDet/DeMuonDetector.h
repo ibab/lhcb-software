@@ -1,4 +1,4 @@
-// $Id: DeMuonDetector.h,v 1.19 2007-02-28 18:33:17 marcocle Exp $
+// $Id: DeMuonDetector.h,v 1.20 2007-03-19 08:53:51 cattanem Exp $
 // ============================================================================
 #ifndef MUONDET_DEMUONDETECTOR_H
 #define MUONDET_DEMUONDETECTOR_H 1
@@ -140,8 +140,8 @@ public:
   void fillChmbPtr();
 
   //Fills various geometry related info
-  StatusCode fillGeoInfo();
-  StatusCode fillGeoArray();
+  void fillGeoInfo();
+  void fillGeoArray();
   StatusCode Tile2XYZ(LHCb::MuonTileID tile, 
 		      double & x, double & dx,
 		      double & y, double & dy, 

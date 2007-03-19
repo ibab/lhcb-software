@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.88 2007-03-16 16:33:28 cattanem Exp $
+! $Id: release.notes,v 1.89 2007-03-19 08:53:51 cattanem Exp $
 ! Package     : MuonDet
 ! Responsible : Alessia Satta
 !----------------------------------------------------------------------------
 
-!========================= MuonDet v6r2 2007-03-16 ========================
+!========================= MuonDet v6r2 2007-03-19 ========================
+! 2007-03-19 - Marco Cattaneo
+ - Clean up some StatusCodes
+
 ! 2007-03-16 - Marco Clemencic
  - Replaced calls to std::string::data() with std::string::c_str() or removed
    where not needed.
