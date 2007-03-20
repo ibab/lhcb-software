@@ -1,8 +1,10 @@
-! $Id: release.notes,v 1.141 2007-03-19 15:03:29 jonrob Exp $
+! $Id: release.notes,v 1.142 2007-03-20 13:45:22 cattanem Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
+!----------------------------------------------------------------------
 
+!====================== RichKernel v7r3 2007-03-20 ====================
 ! 2007-03-19 - Chris Jones
  - Replace use of Gaudi format with boost::format to fix various issues
 
