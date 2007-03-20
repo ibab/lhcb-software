@@ -5,7 +5,7 @@
  *  Implementation file for RICH digitisation algorithm : RichDetailedFrontEndResponse
  *
  *  CVS Log :-
- *  $Id: RichDetailedFrontEndResponse.cpp,v 1.11 2007-02-02 10:13:42 jonrob Exp $
+ *  $Id: RichDetailedFrontEndResponse.cpp,v 1.12 2007-03-20 11:49:39 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @author Alex Howard   a.s.howard@ic.ac.uk
@@ -53,11 +53,11 @@ DetailedFrontEndResponse::~DetailedFrontEndResponse() {}
 StatusCode DetailedFrontEndResponse::initialize()
 {
   // Initialize base class
-  const StatusCode sc = RichAlgBase::initialize();
+  StatusCode sc = RichAlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // create a collection of all pixels
-  const Rich::ISmartIDTool * smartIDs;
+  const Rich::ISmartIDTool * smartIDs(NULL);
   acquireTool( "RichSmartIDTool" , smartIDs, 0, true );
   const LHCb::RichSmartID::Vector & pixels = smartIDs->readoutChannelList();
   debug() << "Retrieved " << pixels.size() << " pixels in active list" << endreq;
@@ -68,8 +68,9 @@ StatusCode DetailedFrontEndResponse::initialize()
   }
 
   // initialise random number generators
-  m_gaussNoise.initialize     ( randSvc(), Rndm::Gauss(0., m_Noise)                  );
-  m_gaussThreshold.initialize ( randSvc(), Rndm::Gauss(m_Threshold,m_ThresholdSigma) );
+  sc = ( m_gaussNoise.initialize     ( randSvc(), Rndm::Gauss(0., m_Noise)                  ) &&
+         m_gaussThreshold.initialize ( randSvc(), Rndm::Gauss(m_Threshold,m_ThresholdSigma) ) );
+  if ( sc.isFailure() ) { return Error( "Failed to initialise random number generators", sc ); }
 
   releaseTool( smartIDs );
 
@@ -78,12 +79,12 @@ StatusCode DetailedFrontEndResponse::initialize()
 
 StatusCode DetailedFrontEndResponse::finalize()
 {
-  // finalise random number generators
-  m_gaussNoise.finalize();
-  m_gaussThreshold.finalize();
-
   // clean up
   if ( actual_base ) delete actual_base;
+
+  // finalise random number generators
+  const StatusCode sc = ( m_gaussNoise.finalize() && m_gaussThreshold.finalize() );
+  if ( sc.isFailure() ) { Warning( "Failed to finalise random number generators" ); }
 
   // finalize base class
   return RichAlgBase::finalize();

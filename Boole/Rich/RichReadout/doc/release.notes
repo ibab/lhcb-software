@@ -4,6 +4,10 @@
 ! Purpose     : Rich Digitisation
 !-----------------------------------------------------------------------------
 
+! 2007-03-20 - Chris Jones
+ - Clean up some unchecked StatusCodes
+ - Remove doxygen namespace comments (now in standalone file)
+
 !======================== RichReadout v2r4 2007-02-06 ========================
 ! 2007-02-06 - Marco Cattaneo
  - Clean up includes

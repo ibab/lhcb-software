@@ -5,7 +5,7 @@
  *  Implementation file for RICH digitisation algorithm : RichSignal
  *
  *  CVS Log :-
- *  $Id: RichSignal.cpp,v 1.15 2007-02-02 10:13:42 jonrob Exp $
+ *  $Id: RichSignal.cpp,v 1.16 2007-03-20 11:49:39 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @author Alex Howard   a.s.howard@ic.ac.uk
@@ -58,13 +58,14 @@ Signal::~Signal() {};
 StatusCode Signal::initialize()
 {
   // Initialize base class
-  const StatusCode sc = RichAlgBase::initialize();
+  StatusCode sc = RichAlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // randomn number generator
-  if ( !m_rndm.initialize( randSvc(), Rndm::Flat(0.,1.) ) )
+  sc = m_rndm.initialize( randSvc(), Rndm::Flat(0.,1.) );
+  if ( sc.isFailure() )
   {
-    return Error( "Unable to create Random generator" );
+    return Error( "Unable to initialise random number generator" );
   }
 
   // tools
@@ -190,7 +191,8 @@ StatusCode Signal::ProcessEvent( const std::string & hitLoc,
 StatusCode Signal::finalize()
 {
   // finalize random number generator
-  m_rndm.finalize();
+  const StatusCode sc = m_rndm.finalize();
+  if ( sc.isFailure() ) Warning( "Failed to finalise random number generator" );
 
   // finalize base class
   return RichAlgBase::finalize();

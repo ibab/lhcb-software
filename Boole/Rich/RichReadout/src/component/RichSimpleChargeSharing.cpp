@@ -5,7 +5,7 @@
  *  Implementation file for RICH digitisation algorithm : RichSimpleChargeSharing
  *
  *  CVS Log :-
- *  $Id: RichSimpleChargeSharing.cpp,v 1.10 2007-02-02 10:13:42 jonrob Exp $
+ *  $Id: RichSimpleChargeSharing.cpp,v 1.11 2007-03-20 11:49:39 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   23/01/2006
@@ -123,7 +123,7 @@ StatusCode SimpleChargeSharing::execute()
 
   } // loop over segments
 
-  // Loop over new deposit and add to main container
+  // Loop over new deposits and add to main container
   for ( LHCb::MCRichDeposit::Vector::iterator iDep = depsToAdd.begin();
         iDep != depsToAdd.end(); ++iDep )
   {
@@ -140,7 +140,8 @@ StatusCode SimpleChargeSharing::execute()
 StatusCode SimpleChargeSharing::finalize()
 {
   // finalize random number generator
-  m_rndm.finalize();
+  const StatusCode sc = m_rndm.finalize();
+  if ( sc.isFailure() ) Warning( "Failed to finalise random number generator" );
 
   // finalize base class
   return RichAlgBase::finalize();
