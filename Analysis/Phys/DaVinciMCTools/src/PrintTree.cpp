@@ -1,4 +1,4 @@
-// $Id: PrintTree.cpp,v 1.5 2007-01-12 14:03:53 ranjard Exp $
+// $Id: PrintTree.cpp,v 1.6 2007-03-20 16:26:46 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -59,6 +59,8 @@ StatusCode PrintTree::execute() {
   LHCb::Particle::ConstVector parts = desktop()->particles();
   LHCb::Particle::ConstVector::iterator iL;
   for ( iL = parts.begin() ; iL != parts.end() ; iL++ ) {
+    debug() << "Will print a " << (*iL)->particleID().pid() << endmsg ;
+    
     m_debug->printTree( (*iL) );
   }// - loop
   if (!parts.empty()) setFilterPassed(true); 

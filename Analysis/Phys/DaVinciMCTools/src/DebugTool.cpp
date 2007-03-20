@@ -1,4 +1,4 @@
-// $Id: DebugTool.cpp,v 1.13 2007-01-12 14:03:52 ranjard Exp $
+// $Id: DebugTool.cpp,v 1.14 2007-03-20 16:26:45 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -802,9 +802,9 @@ void DebugTool::printDecayTree( const LHCb::Particle *mother,
     if( !mother->endVertex() )
       return;
     SmartRefVector<LHCb::Particle>::const_iterator iprod;
-    for ( iprod = mother->endVertex()->outgoingParticles().begin();
-          iprod != mother->endVertex()->outgoingParticles().end(); iprod++ ) {
-      if ( (*iprod) != mother->endVertex()->outgoingParticles().back() )
+    for ( iprod = mother->daughters().begin();
+          iprod != mother->daughters().end(); iprod++ ) {
+      if ( (*iprod) != mother->daughters().back() )
         printDecayTree( *iprod, assoc, prefix+'|', depth-1, log );
       else
         printDecayTree( *iprod, assoc, prefix+' ', depth-1, log );
