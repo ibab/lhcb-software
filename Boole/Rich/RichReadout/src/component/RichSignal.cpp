@@ -5,7 +5,7 @@
  *  Implementation file for RICH digitisation algorithm : RichSignal
  *
  *  CVS Log :-
- *  $Id: RichSignal.cpp,v 1.16 2007-03-20 11:49:39 jonrob Exp $
+ *  $Id: RichSignal.cpp,v 1.17 2007-03-20 15:57:02 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @author Alex Howard   a.s.howard@ic.ac.uk
@@ -85,19 +85,19 @@ StatusCode Signal::execute()
 
   // Process main event
   // must be done first (so that first associated hit is signal)
-  ProcessEvent( m_RichHitLocation, 0, 0 );
+  StatusCode sc = ProcessEvent( m_RichHitLocation, 0, 0 );
 
   // if requested, process spillover events
   if ( m_doSpillover )
   {
-    ProcessEvent( m_RichPrevPrevLocation, -50, -2 );
-    ProcessEvent( m_RichPrevLocation,     -25, -1 );
-    ProcessEvent( m_RichNextLocation,      25,  1 );
-    ProcessEvent( m_RichNextNextLocation,  50,  2 );
+    sc = sc && ProcessEvent( m_RichPrevPrevLocation, -50, -2 )
+    sc = sc && ProcessEvent( m_RichPrevLocation,     -25, -1 );
+    sc = sc && ProcessEvent( m_RichNextLocation,      25,  1 );
+    sc = sc && ProcessEvent( m_RichNextNextLocation,  50,  2 );
   }
 
   // if requested, process LHC background
-  if ( m_doLHCBkg ) { ProcessEvent( m_lhcBkgLocation, 0, 0 ); }
+  if ( m_doLHCBkg ) { sc = sc && ProcessEvent( m_lhcBkgLocation, 0, 0 ); }
 
   // Debug Printout
   if ( msgLevel(MSG::DEBUG) )
@@ -106,7 +106,7 @@ StatusCode Signal::execute()
             << " MCRichDeposits at " << m_RichDepositLocation << endreq;
   }
 
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 StatusCode Signal::ProcessEvent( const std::string & hitLoc,
