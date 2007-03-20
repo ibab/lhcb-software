@@ -12,5 +12,5 @@ ToolSvc.RichToolRegistry.Tools += { "Rich::DAQ::RawBufferToSmartIDsTool/RichSmar
 ToolSvc.RichToolRegistry.Tools += { "OdinTimeDecoder/OdinTimeDecoder" };
 
 // Uncomment to perform test decoding straight after encoding. Useful for debugging.
-DigiRICHSeq.Members += { "Rich::DAQ::RawBufferToRichDigitsAlg/TestDecodeRawRich" };
-TestDecodeRawRich.DecodeBufferOnly = true;
+//DigiRICHSeq.Members += { "Rich::DAQ::RawBufferToRichDigitsAlg/TestDecodeRawRich" };
+//TestDecodeRawRich.DecodeBufferOnly = true;
