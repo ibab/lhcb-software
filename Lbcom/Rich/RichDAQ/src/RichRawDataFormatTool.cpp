@@ -5,7 +5,7 @@
  *  Implementation file for class : Rich::RawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.cpp,v 1.45 2007-03-19 15:02:04 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.cpp,v 1.46 2007-03-20 12:10:24 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2004-12-18
@@ -173,8 +173,8 @@ RawDataFormatTool::printL1Stats( const L1TypeCount & count,
         info() << "----------------------------------------------------------------------------------------------------------" << endreq;
       }
 
-      info() << " " << rich << " L1 " << boost::format("%3i") % L1ID.data() << endreq;
-      info() << " V" << boost::format("%3i") % version << endreq;
+      info() << " " << rich << " L1 " << boost::format("%3i") % L1ID.data();
+      info() << " V" << boost::format("%3i") % version;
       info() << " | L1 size ="
              << occ1(nBanks,m_evtCount) << " hpds :"
              << occ2(words,m_evtCount) << " words :"
