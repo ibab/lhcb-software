@@ -4,6 +4,10 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH digitisation
 !-----------------------------------------------------------------------------
 
+!======================== RichDigiQC v3r5 2007-03-20 ========================
+! 2007-03-20 - Marco Cattaneo
+ - Remove obsolete RichDigiQC_load.cpp file
+
 ! 2007-03-01 - Chris Jones
  - Tidy update doxygen namespace documentation
 
