@@ -9,6 +9,8 @@
 #include "HltBase/IPrepareMuonTSeed.h"
 #include "HltBase/ITrackConfirmTool.h"
 #include "HltBase/ITrackL0CaloMatchTool.h"
+#include "HltBase/ITrackL0CaloMatchTool.h"
+#include "HltBase/IMatchTVeloTracks.h"
 
 #endif // DICT_HLTBASEDICT_H
 
