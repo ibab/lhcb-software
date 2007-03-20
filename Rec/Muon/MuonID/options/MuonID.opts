@@ -1,8 +1,11 @@
 #pragma print on
 //-----------------------------------------------------------------
-// Configure MuonID v4r4
+// Configure MuonID v4r6
+// February 2007 new DLL binning for pions
+//               fixed the number of Landau parameters for muons
+// February 2007 changed the muonPID key (Chris Jones)
 //  October 2006 new FOI tuning for DC06
-//               new DLL tuning for DC06
+//               new DLL tuning for DC06 - same binning
 //           Erica, Miriam
 //  April 2006
 //  New version for DC06 (MuonIDFOI and MuonIDDLL options merged) 
@@ -11,7 +14,6 @@
 //  4 parameters per region/station
 //            jtmn,massafferri 
 //-----------------------------------------------------------------
-
 
 // MuonID depth in stations for the momentum bin, below means:
 // 3GeV -> 6GeV : station M2.and.M3, 6->10 GeV M2.and.M3.and.M4.or.M5
@@ -65,5 +67,5 @@ MuonID.YFOIParameter3 = {0.03, 0.02, 0.00, 0.09,
 //-----------------------------------------------------------------
 MuonID.distMuon  = {0.311, 1.349, 0.524, 0.0020, 17., 10.6, 0.04, 4.1, 1.64};
 
-MuonID.distPion  = {0.092, 7.3, 2.6, 0.133, -16., 39.3, -0.0042, 480., 113.};
+MuonID.distPion  = {11., -12., 0.2029, -0.026, 0.06, 0.59, 0.008, -29., 41.};
 #pragma print off

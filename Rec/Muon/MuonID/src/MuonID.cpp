@@ -21,11 +21,15 @@
 // 09/04/2003 : jtmn, miriam
 //
 // new Event Model version: calculates de muon LL for muons and non muons
-// and the number of tracks that share hits, which are the new members of
-// the muonPID object.
-// 14/12/2005 : Erica Polycarpo, Miriam Gandelman
+// and the number of tracks that share hits, which are the new members of 
+// the muonPID object. 
+// 14/12/2005 : Erica Polycarpo, Miriam Gandelman 
+//
 // new FOI uses 3 parameters
 // 16/10/2006 : Erica Polycarpo, Miriam Gandelman
+//
+// small fixes (DLL binning for pions, Landau with 9 parameters, muonPID key)
+// 08/02/2007 : Erica Polycarpo, Miriam Gandelman 
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
@@ -82,7 +86,7 @@ StatusCode MuonID::initialize() {
   const StatusCode sc = GaudiAlgorithm::initialize();
   if ( sc.isFailure() ) { return sc; }
 
-  debug()   << "MuonID v4r4 - DC06" << endmsg;
+  info()   << " MuonID v4r6 - DC06" << endmsg;
 
   debug()  << "==> Initialise" << endreq;
   debug()  << "Input tracks in: " << m_TracksPath << endreq;
@@ -350,10 +354,10 @@ StatusCode MuonID::doID(LHCb::MuonPID *pMuid){
   // it can be 0, 1 or 2
   int momentumBin = 0;
 
-  // here  m_PreSelMomentum is hardwired = 3000 MeV
-  if (m_Momentum> m_PreSelMomentum && m_Momentum < m_MomentumCuts[0]) {momentumBin = 0;}
-  if (m_Momentum >= m_MomentumCuts[0] && m_Momentum < m_MomentumCuts[1]) {momentumBin = 1;}
-  if (m_Momentum >= m_MomentumCuts[1]) {momentumBin = 2;}
+  // m_PreSelMomentum = 3000 MeV
+  if (m_MomentumPre> m_PreSelMomentum && m_MomentumPre < m_MomentumCuts[0]) {momentumBin = 0;}
+  if (m_MomentumPre >= m_MomentumCuts[0] && m_MomentumPre < m_MomentumCuts[1]) {momentumBin = 1;}
+  if (m_MomentumPre >= m_MomentumCuts[1]) {momentumBin = 2;}
 
   // now: implement original algorithm:
   // bin 0 M1.and.M2.and.M3
@@ -389,11 +393,11 @@ StatusCode MuonID::doID(LHCb::MuonPID *pMuid){
   //increment number of IsMuon=true tracks for monitoring
   if(pMuid->IsMuon()) m_nmu++;
 
-  debug()  << "IsMuon = " << pMuid->IsMuon()
-           << " bin = "   << momentumBin <<" " << " p = " << m_Momentum << endreq;
-  debug()  << " coord in FOI (";
-  for(station = 0; station < m_NStation ; station++ ){
-    debug() << m_occupancy[station] << "," ;
+  debug()  << "IsMuon = " << pMuid->IsMuon() 
+	<< " bin = "   << momentumBin <<" " << " p = " << m_MomentumPre << endreq; 
+  debug()  << " coord in FOI ("; 
+       for(station = 0; station < m_NStation ; station++ ){
+  debug() << m_occupancy[station] << "," ;
   }
   debug() << ")" << endreq;
 
@@ -476,11 +480,12 @@ StatusCode MuonID::calcMuonLL(LHCb::MuonPID * muonid){
     }
   }
 
-  dist = dist / nhits;
-
-  double LklhMu = m_distMuon[0] * (TMath::Landau (dist,m_distMuon[1],m_distMuon[2])) +
-    m_distMuon[3] * (TMath::Landau (dist,m_distMuon[4],m_distMuon[5]));
-  double LklhPi = m_distPion[0] * (TMath::Landau (dist,m_distPion[1],m_distPion[2])) +
+  dist = dist / nhits; 
+     
+  double LklhMu = m_distMuon[0] * (TMath::Landau (dist,m_distMuon[1],m_distMuon[2])) + 
+    m_distMuon[3] * (TMath::Landau (dist,m_distMuon[4],m_distMuon[5])) +
+    m_distMuon[6] * (TMath::Landau (dist,m_distMuon[7],m_distMuon[8]));
+  double LklhPi = m_distPion[0] * (TMath::Landau (dist,m_distPion[1],m_distPion[2])) + 
     m_distPion[3] * (TMath::Landau (dist,m_distPion[4],m_distPion[5])) +
     m_distPion[6] * (TMath::Landau (dist,m_distPion[7],m_distPion[8]));
 
@@ -648,8 +653,8 @@ StatusCode MuonID::preSelection(LHCb::MuonPID * pMuid, bool &passed){
   passed = true;
 
   // compare momentum and position to acceptance
-  // here  m_PreSelMomentum is hardwired = 3000 MeV
-  if (m_Momentum < 3000.0 ){
+  // use the first state on track for the preSel
+  if (m_MomentumPre < m_PreSelMomentum ){ 
     // failed preselection momentum cut
     pMuid->setPreSelMomentum(0);
     passed = false;
@@ -714,10 +719,10 @@ StatusCode MuonID::setCoords(LHCb::MuonPID *pMuid){
           double dy = itPos->m_dy;
 
 
-          // not optimal this should be called only once per station, region
-          double foiXDim = foiX( station, region, m_Momentum, dx);
-          double foiYDim = foiY( station, region, m_Momentum, dy);
-
+	  // not optimal this should be called only once per station, region	 
+          double foiXDim = foiX( station, region, m_MomentumPre, dx);
+          double foiYDim = foiY( station, region, m_MomentumPre, dy);      
+	  
           // check if the hit is in the window
           if(  ( fabs( x - m_trackX[station] ) < foiXDim ) &&
                ( fabs( y - m_trackY[station] ) < foiYDim )  ) {
@@ -759,8 +764,15 @@ StatusCode MuonID::trackExtrapolate(const LHCb::Track *pTrack){
 
   resetTrackLocals();
 
-  // get state closest to M1
+  // get first state for the preSel cut
+  const LHCb::State * state1 = &(pTrack->firstState());
+  // get state closest to M1 for extrapolation
   const LHCb::State * state = &(pTrack->closestState(m_stationZ[0]));
+
+  if(!state1){
+    err() << " Failed to get 1st state from track " << endreq;
+    return StatusCode::FAILURE;
+  }
   if(!state){
     err() << " Failed to get state from track " << endreq;
     return StatusCode::FAILURE;
@@ -768,6 +780,7 @@ StatusCode MuonID::trackExtrapolate(const LHCb::Track *pTrack){
 
   // get the momentum (MeV/c)
   m_Momentum = state->p();
+  m_MomentumPre = state1->p();
 
   // get the track slope
   m_trackSlopeX = state->tx();
@@ -815,6 +828,7 @@ double MuonID::foiY(const int &station, const int &region, const double &p,
 //=============================================================================
 void MuonID::resetTrackLocals(){
   m_Momentum = -1.;
+  m_MomentumPre = -1.;
   m_trackSlopeX = 0.;
   m_trackX.clear();
   m_trackY.clear();

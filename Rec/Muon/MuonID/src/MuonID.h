@@ -150,6 +150,7 @@ private:
   // local track parameters: momentum and linear extrapolation to each station
   double m_dist;
   double m_Momentum; // in MeV/c
+  double m_MomentumPre; // in MeV/c
   double m_trackSlopeX;
   std::vector<double> m_trackX; // position of track in x(mm) in each station
   std::vector<double> m_trackY; // position of track in y(mm) in each station  
