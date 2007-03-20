@@ -4,6 +4,10 @@
 ! Purpose     : Provides basic tools for RICH MC information
 !-----------------------------------------------------------------------------
 
+!========================== RichMCTools v3r5 2007-03-20 =====================
+! 2007-03-20 - Marco Cattaneo
+ - remove obsolete RichMCTools_load.cpp file
+
 ! 2007-03-01 - Chris Jones
  - Tidy update doxygen namespace documentation
  - Some fixes for missing StatusCode tests
