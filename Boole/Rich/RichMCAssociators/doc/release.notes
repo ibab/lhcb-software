@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!======================= RichMCAssociators v2r4 2007-03-20 ===================
+! 2007-03-20 - Marco Cattaneo
+ - Remove obsolete RichMCAssocitors_load.cpp file
+
 ! 2007-03-01 - Chris Jones
  - Tidy update doxygen namespace documentation
 
