@@ -4,6 +4,7 @@
 ! Purpose     : interface to the xml description
 !-----------------------------------------------------------------------------
 
+!======================== RichDet v10r3 2007-03-20 ========================
 ! 2007-03-19 - Chris Jones
  - Replace use of Gaudi format with boost::format to fix various issues
 
