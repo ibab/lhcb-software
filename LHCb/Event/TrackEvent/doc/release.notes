@@ -4,6 +4,15 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+!======================= TrackEvent v4r1 2007-03-20 ==========================
+! 2007-03-20 - Marco Cattaneo
+ - Use GaudiObjDesc to document enums in the generated header file
+ - Clarify documentation of Track::addInfo method
+ - Fix some doxygen warnings
+
+! 2007-03-20 - Stephanie Hansmann-Menzemer 
+ - Add PatQuality value to Track::AdditionalInfo enum
+
 !======================= TrackEvent v4r0p1 2007-02-02 ========================
 ! 2007-02-02 - Marco Cattaneo
  - Remove unneccessary rootmap for dictionary

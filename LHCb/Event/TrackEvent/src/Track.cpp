@@ -1,4 +1,4 @@
-// $Id: Track.cpp,v 1.34 2006-09-22 12:25:51 mneedham Exp $ // Include files
+// $Id: Track.cpp,v 1.35 2007-03-20 16:28:50 cattanem Exp $ // Include files
 
 // local
 #include "Event/Track.h"
@@ -20,9 +20,9 @@ using namespace LHCb;
 // Retrieve the position and momentum vectors and the corresponding
 // 6D covariance matrix (pos:1->3,mom:4-6) at the physics state
 //=============================================================================
-void Track::positionAndMomentum( XYZPoint &pos,
-                                 XYZVector &mom,
-                                 SymMatrix6x6& cov6D ) const
+void Track::positionAndMomentum( Gaudi::XYZPoint &pos,
+                                 Gaudi::XYZVector &mom,
+                                 Gaudi::SymMatrix6x6& cov6D ) const
 {
   firstState().positionAndMomentum( pos, mom, cov6D );
 };
@@ -30,8 +30,8 @@ void Track::positionAndMomentum( XYZPoint &pos,
 //=============================================================================
 // Retrieve the position and momentum vectors at the physics state
 //=============================================================================
-void Track::positionAndMomentum( XYZPoint& pos,
-                                 XYZVector& mom ) const
+void Track::positionAndMomentum( Gaudi::XYZPoint& pos,
+                                 Gaudi::XYZVector& mom ) const
 {
   firstState().positionAndMomentum( pos, mom );
 };
@@ -39,8 +39,8 @@ void Track::positionAndMomentum( XYZPoint& pos,
 //=============================================================================
 // Retrieve the 3D-position (+ errors) at the physics state
 //=============================================================================
-void Track::position( XYZPoint &pos,
-                      SymMatrix3x3 &errPos ) const
+void Track::position( Gaudi::XYZPoint &pos,
+                      Gaudi::SymMatrix3x3 &errPos ) const
 {
   pos    = firstState().position();
   errPos = firstState().errPosition();
@@ -49,8 +49,8 @@ void Track::position( XYZPoint &pos,
 //=============================================================================
 // Retrieve the slopes (dx/dz,dy/dz,1) at the physics state
 //=============================================================================
-void Track::slopes( XYZVector& slopes,
-                    SymMatrix3x3& errSlopes ) const
+void Track::slopes( Gaudi::XYZVector& slopes,
+                    Gaudi::SymMatrix3x3& errSlopes ) const
 {
   slopes    = firstState().slopes();
   errSlopes = firstState().errSlopes();
@@ -75,8 +75,8 @@ double Track::pt() const
 //=============================================================================
 // Retrieve the momentum vector (+ errors) at the physics state
 //=============================================================================
-void Track::momentum( XYZVector &mom,
-                      SymMatrix3x3 &errMom ) const
+void Track::momentum( Gaudi::XYZVector &mom,
+                      Gaudi::SymMatrix3x3 &errMom ) const
 {
   mom    = firstState().momentum();
   errMom = firstState().errMomentum();
@@ -85,7 +85,7 @@ void Track::momentum( XYZVector &mom,
 //=============================================================================
 // Retrieve the 6D covariance matrix (x,y,z,px,py,pz) at the physics state
 //=============================================================================
-void Track::posMomCovariance( SymMatrix6x6& cov6D ) const
+void Track::posMomCovariance( Gaudi::SymMatrix6x6& cov6D ) const
 {
   cov6D = firstState().posMomCovariance();
 };
@@ -141,7 +141,7 @@ const State & Track::closestState( double z ) const
 //=============================================================================
 // Retrieve the reference to the state closest to the given plane
 //=============================================================================
-State & Track::closestState( const Plane3D& plane )
+State & Track::closestState( const Gaudi::Plane3D& plane )
 {
   if ( !m_nodes.empty() ) {
     std::vector<Node*>::iterator iter = 
@@ -165,7 +165,7 @@ State & Track::closestState( const Plane3D& plane )
 //=============================================================================
 // Retrieve the (const) reference to the state closest to the given plane
 //=============================================================================
-const State & Track::closestState( const Plane3D& plane ) const
+const State & Track::closestState( const Gaudi::Plane3D& plane ) const
 {
   if ( !m_nodes.empty() ) {
     std::vector<Node*>::const_iterator iter = 
@@ -499,7 +499,7 @@ bool LHCb::Track::hasInfo ( const int key ) const
  * 
  *  @param key key for the information
  *  @param info information to be associated with the key
- *  @param 'true' if informaiton is inserted, 
+ *  @return 'true' if informaiton is inserted, 
  *         'false' if the previous information has been replaced 
  */
 //=============================================================================

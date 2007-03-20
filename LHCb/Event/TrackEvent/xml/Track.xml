@@ -47,162 +47,84 @@
       <import name='GaudiKernel/GenericMatrixTypes' />
       <import name="GaudiKernel/VectorMap"/>
 
-<!--
-  /** Track history enumerations:
-   *  each entry corresponds to the name of the pattern recognition
-   *  algorithm that produced the Track
-   *
-   *   HistoryUnknown   : unkown history (i.e. history not set)
-   *   TrackIdealPR     : track produced with the ideal pattern recognition
-   *   TrackSeeding     : track produced with the seeding pattern recognition 
-   *   PatVelo          : track produced with the VELO pattern recognition 
-   *   PatVeloTT        : track produced with the online Velo-TT pattern recognition
-   *   TrackVeloTT      : track produced with the offline Velo-TT pattern recognition
-   *   PatForward       : track produced with the forward pattern recognition
-   *   TrackMatching
-   *   PatKShort
-   *   TsaTrack
-   */
--->
       <enum
         name   = 'History'
-        desc   = 'Track history enumerations'
-        value  = 'HistoryUnknown=0,
-                  TrackIdealPR = 1 ,
-                  TrackSeeding = 2,
-                  PatVelo = 3,
-                  PatVeloTT = 4,
-                  TrackVeloTT = 5,
-                  PatForward = 6,
-                  TrackMatching = 7,
-                  PatKShort = 8,
-                  TsaTrack = 9'
-        access = 'PUBLIC' />
+        desc   = 'Track history enumerations: each entry corresponds to the name of the pattern recognition algorithm that produced the Track'
+        access = 'PUBLIC' >
+        <enumval name = "HistoryUnknown" value="0" desc="unknown history (i.e. history not set)"/>
+        <enumval name = "TrackIdealPR"   value="1" desc="track produced with the ideal pattern recognition"/>
+        <enumval name = "TrackSeeding"   value="2" desc="track produced with the seeding pattern recognition"/>
+        <enumval name = "PatVelo"        value="3" desc="track produced with the VELO pattern recognition"/>
+        <enumval name = "PatVeloTT"      value="4" desc="track produced with the online Velo-TT pattern recognition"/>
+        <enumval name = "TrackVeloTT"    value="5" desc="track produced with the offline Velo-TT pattern recognition"/>
+        <enumval name = "PatForward"     value="6" desc="track produced with the forward pattern recognition"/>
+        <enumval name = "TrackMatching"  value="7" desc=""/>
+        <enumval name = "PatKShort"      value="8" desc=""/>
+        <enumval name = "TsaTrack"       value="9" desc=""/>
+      </enum>
 
-<!--
-  /** Track fit history enumerations
-   *
-   *   FitUnknown  : track not fitted yet (fit history not set)
-   *   StdKalman   : track fitted with the standard Kalman fitter
-   *   BiKalman    : track fitted with the bi-directional Kalman fitter
-   *
-   */
--->
       <enum
         name   = 'FitHistory'
         desc   = 'Track fit history enumerations'
-        value  = 'FitUnknown=0,
-                  StdKalman,
-                  BiKalman'
-        access = 'PUBLIC' />
+        access = 'PUBLIC' >
+        <enumval name = "FitUnknown" value="0" desc="track not fitted yet (fit history not set)"/>
+        <enumval name = "StdKalman"            desc="track fitted with the standard Kalman fitter"/>
+        <enumval name = "BiKalman"             desc="track fitted with the bi-directional Kalman fitter"/>
+      </enum>
 
-<!--
-  /** Track type enumerations
-   *
-   *   TypeUnknown   : track of undefined type (not to be used!)
-   *   Velo          : VELO track
-   *   VeloR         : 2D VELO track
-   *   Long          : forward track
-   *   Upstream      : upstream track
-   *   Downstream    : downstream track
-   *   Ttrack        : seed track
-   *
-   */
--->
       <enum
         name   = 'Types'
         desc   = 'Track type enumerations'
-        value  = 'TypeUnknown=0,
-                  Velo,
-                  VeloR,
-                  Long,
-                  Upstream,
-                  Downstream,
-                  Ttrack'
-        access = 'PUBLIC' />
+        access = 'PUBLIC' >
+        <enumval name = "TypeUnknown" value="0" desc="track of undefined type (not to be used!)"/>
+        <enumval name = "Velo"                  desc="VELO track"/>
+        <enumval name = "VeloR"                 desc="2D VELO track"/>
+        <enumval name = "Long"                  desc="forward track"/>
+        <enumval name = "Upstream"              desc="upstream track"/>
+        <enumval name = "Downstream"            desc="downstream track"/>
+        <enumval name = "Ttrack"                desc="seed track"/>
+      </enum>
 
-<!--
-  /** Track pattern recognition status flag enumerations:
-   *  The flag specifies in which state of the pattern recognition phase the
-   *  track is. The status flag is set by the relevant algorithms
-   *
-   *   PatRecStatusUnknown   : track in an undefined PR status
-   *   PatRecIDs             : pattern recognition track with LHCbIDs
-   *   PatRecMeas            : pattern recognition track with Measurements added
-   *   Fitted                : fitted track
-   *   FitFailed             : track for which the track fit failed
-   *
-   */
--->
       <enum
         name   = 'PatRecStatus'
-        desc   = 'Track pattern recognition status flag enumerations'
-        value  = 'PatRecStatusUnknown=0,
-                  PatRecIDs,
-                  PatRecMeas'
-        access = 'PUBLIC' />
+        desc   = 'Track pattern recognition status flag enumerations: The flag specifies in which state of the pattern recognition phase the track is. The status flag is set by the relevant algorithms'
+        access = 'PUBLIC' >
+        <enumval name = "PatRecStatusUnknown" value="0" desc="track in an undefined PR status"/>
+        <enumval name = "PatRecIDs"                     desc="pattern recognition track with LHCbIDs"/>
+        <enumval name = "PatRecMeas"                    desc="pattern recognition track with Measurements added"/>
+      </enum>
 
-<!--
-  /** Track fit status flag enumerations:
-   *  The flag specifies in which state of the fitting phase the
-   *  track is. The status flag is set by the relevant algorithms
-   *
-   *   FitStatusUnknown   : track in an undefined fitting status
-   *   Fitted             : fitted track
-   *   FitFailed          : track for which the track fit failed
-   *
-   */
--->
       <enum
         name   = 'FitStatus'
-        desc   = 'Track fitting status flag enumerations'
-        value  = 'FitStatusUnknown=0,
-                  Fitted,
-                  FitFailed'
-        access = 'PUBLIC' />
+        desc   = 'Track fitting status flag enumerations: The flag specifies in which state of the fitting phase the track is. The status flag is set by the relevant algorithms'
+        access = 'PUBLIC' >
+        <enumval name = "FitStatusUnknown" value="0" desc="track in an undefined fitting status"/>
+        <enumval name = "Fitted"                     desc="fitted track"/>
+        <enumval name = "FitFailed"                  desc="track for which the track fit failed"/>
+      </enum>
 
-
-<!--
-  /** Track general flags enumerations
-   *
-   *   Backward      : VELO track in the backward direction
-   *   Invalid       : invalid track for physics
-   *   Clone         : clone track (of a corresponding unique track)
-   *   IPSelected    :
-   *   PIDSelected   : 
-   *
-   */
--->
       <enum
         name   = 'Flags'
         desc   = 'Track general flags enumerations'
-        value  = 'Backward=1,
-                  Invalid=2,
-                  Clone=4,
-                  Used=8,
-                  IPSelected=16,
-                  PIDSelected=32,
-                  Selected=64,
-                  L0Candidate=128'
-        access = 'PUBLIC' />
-      
-<!--
-  /** Track enumerations for extra information from the pattern recognition
-   *
-   *  For now:
-   *   Likelihood   : 
-   *   MatchChi2    : Chi2 from the velo-seed matching (TrackMatching)
-   *   PatQuality   : Quality variable from PatForward Tracking 
-   */
--->
-   <enum
+        access = 'PUBLIC' >
+        <enumval name = "Backward"    value=  "1" desc="VELO track in the backward direction"/>
+        <enumval name = "Invalid"     value=  "2" desc="invalid track for physics"/>
+        <enumval name = "Clone"       value=  "4" desc="clone track (of a corresponding unique track)"/>
+        <enumval name = "Used"        value=  "8" desc=""/>
+        <enumval name = "IPSelected"  value= "16" desc=""/>
+        <enumval name = "PIDSelected" value= "32" desc=""/>
+        <enumval name = "Selected"    value= "64" desc=""/>
+        <enumval name = "L0Candidate" value="128" desc=""/>
+      </enum>
+  
+      <enum
         desc   = "Additional information assigned to this Track by pattern recognition"
         name   = "AdditionalInfo"
-        value  = "Likelihood = 1, 
-                  MatchChi2 = 16,
-		  PatQuality = 2"
-        access = "PUBLIC"
-   />
+        access = "PUBLIC" >
+        <enumval name = "Likelihood" value = " 1" desc=""/>
+        <enumval name = "PatQuality" value = " 2" desc="Quality variable from PatForward Tracking"/>
+        <enumval name = "MatchChi2"  value = "16" desc="Chi2 from the velo-seed matching (TrackMatching)"/>
+       </enum>
 
    <typedef
         type   = "GaudiUtils::VectorMap&lt;int,double&gt;"
@@ -817,7 +739,7 @@
 
        <method
         name    = "addInfo"
-        desc    = "Add or replace new information, associated with the specified key"
+        desc    = "Add new information, associated with the specified key. This method cannot be used to modify information for an already existing key"
         argList = "const int key, const double info"
         type    = "bool"
        />
