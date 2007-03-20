@@ -5,7 +5,7 @@
  * Implementation file for class : Rich::Rec::PhotonRecoUsingQuarticSoln
  *
  * CVS Log :-
- * $Id: RichPhotonRecoUsingQuarticSoln.cpp,v 1.16 2007-03-10 13:19:20 jonrob Exp $
+ * $Id: RichPhotonRecoUsingQuarticSoln.cpp,v 1.17 2007-03-20 12:05:37 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @author Antonis Papanestis
@@ -376,10 +376,11 @@ reconstructPhoton ( const LHCb::RichTrackSegment& trSeg,
     if ( m_useSecMirs )
     {
       // Get secondary mirror reflection point
-      m_rayTracing->intersectPlane( sphReflPoint,
-                                    virtDetPoint - sphReflPoint,
-                                    m_rich[rich]->nominalPlane(side),
-                                    secReflPoint);
+      const StatusCode sc = m_rayTracing->intersectPlane( sphReflPoint,
+                                                          virtDetPoint - sphReflPoint,
+                                                          m_rich[rich]->nominalPlane(side),
+                                                          secReflPoint);
+      if ( sc.isFailure() ) { return StatusCode::FAILURE; }
       // Get pointers to the secondary mirror detector objects
       secSegment = m_mirrorSegFinder->findSecMirror ( rich, side, secReflPoint );
     }
@@ -426,10 +427,11 @@ reconstructPhoton ( const LHCb::RichTrackSegment& trSeg,
 
         // Get secondary mirror reflection point,
         // using the best actual secondary mirror segment
-        m_rayTracing->intersectPlane( sphReflPoint,
-                                      virtDetPoint - sphReflPoint,
-                                      secSegment->centreNormalPlane(),
-                                      secReflPoint );
+        const StatusCode sc = m_rayTracing->intersectPlane( sphReflPoint,
+                                                            virtDetPoint - sphReflPoint,
+                                                            secSegment->centreNormalPlane(),
+                                                            secReflPoint );
+        if ( sc.isFailure() ) { return StatusCode::FAILURE; }
 
         // Construct plane tangential to secondary mirror passing through reflection point
         // CRJ : Unit() method may not be needed here ...
@@ -499,10 +501,11 @@ reconstructPhoton ( const LHCb::RichTrackSegment& trSeg,
   // --------------------------------------------------------------------------------------
   if ( m_useSecMirs && m_useAlignedMirrSegs[radiator] )
   {
-    m_rayTracing->intersectPlane( sphReflPoint,
-                                  virtDetPoint - sphReflPoint,
-                                  secSegment->centreNormalPlane(),
-                                  secReflPoint );
+    const StatusCode sc = m_rayTracing->intersectPlane( sphReflPoint,
+                                                        virtDetPoint - sphReflPoint,
+                                                        secSegment->centreNormalPlane(),
+                                                        secReflPoint );
+    if ( sc.isFailure() ) { return StatusCode::FAILURE; }
   }
   // --------------------------------------------------------------------------------------
 
