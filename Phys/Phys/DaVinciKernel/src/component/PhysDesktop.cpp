@@ -654,6 +654,7 @@ StatusCode PhysDesktop::getParticles(){
     if ( !exist<LHCb::Particles>( location ) ){ 
       //            return Error("No particles at location "+location); 
       Warning("No particles at location "+location);
+      continue ;
     }
     LHCb::Particles* parts = get<LHCb::Particles>( location );
     // Msg number of Particles retrieved
