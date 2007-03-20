@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : PhotonSignalMonitor
  *
  *  CVS Log :-
- *  $Id: RichPhotonSignalMonitor.cpp,v 1.7 2007-02-02 10:07:12 jonrob Exp $
+ *  $Id: RichPhotonSignalMonitor.cpp,v 1.8 2007-03-20 11:44:26 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -105,6 +105,13 @@ StatusCode PhotonSignalMonitor::execute()
       // Geometrical Efficiency
       const double geomEff = m_geomEffic->geomEfficiency(segment,hypo);
       plot1D( geomEff, hid(rad,hypo,"geomEff"), "Geom. Eff.", 0, 1 );
+
+      // Scattered Geometrical Efficiency
+      if ( Rich::Aerogel == rad )
+      {
+        const double geomEffScat = m_geomEffic->geomEfficiencyScat(segment,hypo);
+        plot1D( geomEffScat, hid(rad,hypo,"geomEffScat"), "Scattered Geom. Eff.", 0, 1 );
+      }
 
     }
 

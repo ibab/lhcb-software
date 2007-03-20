@@ -14,7 +14,6 @@ ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::MC::MCTruthTool/RichMCTruthTo
 //CheckRICHSeq.Members += { "Rich::Rec::TrackRayTraceTest" };
 
 // track monitor sequences
-/*
 CheckRICHSeq.Members += {
     "GaudiSequencer/RichTkGeom" // general track geometry plots
       //,"GaudiSequencer/RichGhostTks"  // Ghost track monitors
@@ -32,16 +31,14 @@ RichPhotSig.MeasureTime  = true;
 RichTkGeom.MeasureTime   = true;
 RichCKRes.MeasureTime    = true;
 RichTkRes.MeasureTime    = true;
-*/
 
 // Reco track monitors
-//#include "$RICHRECMONITORSOPTS/RecoMoni_Brunel_Tracks.opts"
+#include "$RICHRECMONITORSOPTS/RecoMoni_Brunel_Tracks.opts"
 
 // MCRichTracks
-//#include "$RICHRECMONITORSOPTS/RecoMoni_Brunel_MCRichTracks.opts"
+#include "$RICHRECMONITORSOPTS/RecoMoni_Brunel_MCRichTracks.opts"
 
 // Options for photon reco eff monitors
-/*
 ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::PhotonCreator/ForcedRichPhotonCreator" };
 ToolSvc.Offline.ForcedRichPhotonCreator.MinAllowedCherenkovTheta = {  0.0,     0.0,     0.0    };
 ToolSvc.Offline.ForcedRichPhotonCreator.MaxAllowedCherenkovTheta = {  999,     999,     999    };
@@ -53,7 +50,6 @@ ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::PhotonRecoUsingQuarticSo
 ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::SimplePhotonPredictor/ForcedRichPhotonPredictor" };
 ToolSvc.Offline.ForcedRichPhotonPredictor.MinTrackROI        = {   0.0,   0.0,    0.0  };
 ToolSvc.Offline.ForcedRichPhotonPredictor.MaxTrackROI        = {  9999,  9999,   9999  };
-*/
 
 // Turn on histos in CK resolution tool
 //ToolSvc.Offline.RichCherenkovResolution.HistoProduce = true;
