@@ -1,4 +1,4 @@
-// $Id: TrackKiselExtrapolator.cpp,v 1.4 2007-03-20 13:10:10 mneedham Exp $
+// $Id: TrackKiselExtrapolator.cpp,v 1.5 2007-03-20 13:22:03 mneedham Exp $
 
 // from Gaudi
 #include "GaudiKernel/IMagneticFieldSvc.h"
@@ -46,7 +46,7 @@ StatusCode TrackKiselExtrapolator::initialize() {
   debug() << "Load field map" << endreq;
   XYZPoint P( 0., 0., 0. );
   XYZVector vec;
-  m_pIMF->fieldVector( P, vec );
+  m_pIMF->fieldVector( P, vec ).ignore();
 
   return StatusCode::SUCCESS;
 }
@@ -280,10 +280,9 @@ void TrackKiselExtrapolator::integrateField( const XYZPoint& p0, const XYZPoint&
                                                  double siii[3][3][3], double Siii[3][3][3]){
   double dz = p2.z() - p0.z();
 
-  m_pIMF->fieldVector( p0, m_B[0] );
-  m_pIMF->fieldVector( p1, m_B[1] );
-  m_pIMF->fieldVector( p2, m_B[2] );
-    
+  m_pIMF->fieldVector( p0, m_B[0] ).ignore();
+  m_pIMF->fieldVector( p1, m_B[1] ).ignore();
+  m_pIMF->fieldVector( p2, m_B[2] ).ignore();    
 
   // no other way...
   double B[3][3];
@@ -384,9 +383,9 @@ void TrackKiselExtrapolator::extrapolateAnalytic(
   XYZPoint r2 = XYZPoint( T_in[0] + T_in[2]*dz,T_in[1] + T_in[3]*dz, z_out );
   XYZPoint r1 = r0 + 0.5*(r2-r0);
 
-  m_pIMF->fieldVector( r0, m_B[0] );
-  m_pIMF->fieldVector( r1, m_B[1] );
-  m_pIMF->fieldVector( r2, m_B[2] );
+  m_pIMF->fieldVector( r0, m_B[0] ).ignore();
+  m_pIMF->fieldVector( r1, m_B[1] ).ignore();
+  m_pIMF->fieldVector( r2, m_B[2] ).ignore();
 
   double Sy = (7*m_B[0].y() + 6*m_B[1].y()-m_B[2].y() )*dz*dz/96.;
   r1.SetX(T_in[0] + 0.5*tx*dz + ht*Sy*A1[0][1]);
