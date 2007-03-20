@@ -1,4 +1,4 @@
-// $Id: AddTTClusterTool.cpp,v 1.9 2006-11-30 14:48:39 ebos Exp $
+// $Id: AddTTClusterTool.cpp,v 1.10 2007-03-20 13:11:11 mneedham Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -199,7 +199,7 @@ StatusCode AddTTClusterTool::addTTClusters( Track& track,
 
     // Get the state trajectory
     XYZVector bfield(0,0,0);
-    m_pIMF -> fieldVector( ttState.position(), bfield );
+    m_pIMF -> fieldVector( ttState.position(), bfield ).ignore();
     StateTraj stateTraj = StateTraj( ttState.stateVector(), zLayer, bfield );
 
     // Loop over the clusters      

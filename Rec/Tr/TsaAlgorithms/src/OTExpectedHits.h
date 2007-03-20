@@ -1,4 +1,4 @@
-// $Id: OTExpectedHits.h,v 1.6 2007-02-02 16:31:12 cattanem Exp $
+// $Id: OTExpectedHits.h,v 1.7 2007-03-20 13:12:05 mneedham Exp $
 #ifndef _OTExpectedHits_H
 #define _OTExpectedHits_H
 
@@ -13,8 +13,6 @@
 #include "GaudiKernel/Point3DTypes.h"
 #include "TsaKernel/Line3D.h"
 #include "GaudiKernel/Plane3DTypes.h"
-
-#include "GaudiKernel/VectorMap.h"
 
 
 class DeOTDetector;
@@ -45,10 +43,6 @@ public:
                              const unsigned int iSector ) const;
 
 private:
-
-  
-  typedef GaudiUtils::VectorMap<unsigned int,DeOTModule*> ModuleMap;
-  ModuleMap m_modMap;
 
   bool insideModule(const DeOTModule* layer,
                     const Tsa::Line3D& line) const;

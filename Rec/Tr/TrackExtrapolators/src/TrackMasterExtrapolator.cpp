@@ -102,13 +102,13 @@ StatusCode TrackMasterExtrapolator::propagate( State& state,
                                                double zNew,
                                                ParticleID partId )
 {
-  StatusCode sc;
+  StatusCode sc = StatusCode::SUCCESS;
 
   // reset transport matrix
   m_F = TrackMatrix( ROOT::Math::SMatrixIdentity() );
 
   //check if not already at required z position
-  double zStart = state.z();
+  const double zStart = state.z();
   if (fabs(zNew-zStart) < TrackParameters::hiTolerance) {
     debug() << "already at required z position" << endreq;
     return StatusCode::SUCCESS;
@@ -252,7 +252,7 @@ StatusCode TrackMasterExtrapolator::propagate( State& state,
 
   if ( m_debugLevel ) debug() << "State extrapolated succesfully" << endreq;
   
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 //=============================================================================

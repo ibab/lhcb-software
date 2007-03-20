@@ -1,4 +1,4 @@
-// $Id: OTExpectedHits.cpp,v 1.9 2007-02-02 16:31:12 cattanem Exp $
+// $Id: OTExpectedHits.cpp,v 1.10 2007-03-20 13:12:05 mneedham Exp $
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
 
@@ -47,12 +47,6 @@ StatusCode OTExpectedHits::initialize(){
   // get geometry
   m_tracker = getDet<DeOTDetector>( DeOTDetectorLocation::Default);
 
-  // get the modules
-  const DeOTDetector::Modules& modVector = m_tracker->modules();
-  m_modMap.reserve(modVector.size());
-  for (DeOTDetector::Modules::const_iterator iterM = modVector.begin(); iterM != modVector.end(); ++iterM){
-     m_modMap.insert((*iterM)->elementID().uniqueModule(),*iterM);
-  }  // iterM
   return StatusCode::SUCCESS;
 }
 
@@ -71,8 +65,7 @@ StatusCode OTExpectedHits::collect(const Tsa::Parabola& parab,
     aModule = findModule(parab,line,aChan, iSector);
   }
   else {
-    ModuleMap::iterator iter = m_modMap.find(aChan.uniqueModule());
-    if (iter != m_modMap.end()) aModule = iter->second;
+    aModule = m_tracker->findModule(aChan);
   }
 
   if (aModule != 0){

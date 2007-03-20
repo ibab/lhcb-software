@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.cpp,v 1.27 2006-11-28 11:26:34 erodrigu Exp $
+// $Id: TrackMasterFitter.cpp,v 1.28 2007-03-20 13:10:48 mneedham Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -493,8 +493,12 @@ StatusCode TrackMasterFitter::makeNodes( Track& track )
             << ", " << track.nMeasurements() << endreq;
   }
 
-  if ( m_setRefInfo ) m_refInfoTool -> execute( track );
-
+  if ( m_setRefInfo ) { 
+    StatusCode sc = m_refInfoTool -> execute( track );
+    if (sc.isFailure()) {
+      Warning("Problems setting reference info", StatusCode::SUCCESS, 1);
+    }
+  }
   // reserve some space in node vector
   const std::vector<Measurement*>& measures = track.measurements();
   nodes.reserve( measures.size() + m_zPositions.size() );

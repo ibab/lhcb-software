@@ -113,6 +113,8 @@ StatusCode TsaSeed::execute(){
 
   if (nHit > m_maxNumHits) return StatusCode::SUCCESS;
 
+  StatusCode sc = StatusCode::SUCCESS;
+
   // Loop over sectors of tracker (0-2 are IT, 3-4 are OT)
   for ( int sector = 0; sector < 5; ++sector ) {
 
@@ -121,29 +123,64 @@ StatusCode TsaSeed::execute(){
     std::vector<SeedTrack*> seeds;            //  Seed candidates within the sector
     seeds.reserve(1000);
 
-    m_xSearchStep[sector]->execute(seeds,hits);  // x search
+    sc = m_xSearchStep[sector]->execute(seeds,hits);  // x search
+    if (sc.isFailure()) {
+      return Error("x search failed", StatusCode::FAILURE,1);
+    }
 
-    if (sector >2 ) m_xSelection->execute(seeds); // x selection
+    if (sector >2 ) {
+      sc = m_xSelection->execute(seeds); // x selection
+      if (sc.isFailure()) {
+        return Error("x selection failed", StatusCode::FAILURE,1);
+      }
+    }
 
-    m_stereoStep[sector]->execute(seeds,sHits); // add stereo
+    sc = m_stereoStep[sector]->execute(seeds,sHits); // add stereo
+    if (sc.isFailure()) {
+      return Error("stereo search failed", StatusCode::FAILURE,1);
+    }
 
-    if (m_calcLikelihood == true) m_likelihood->execute(seeds); // likelihood
+    if (m_calcLikelihood == true) {
+      sc = m_likelihood->execute(seeds); // likelihood
+      if (sc.isFailure()) {
+       return Error("likelihood failed", StatusCode::FAILURE,1);
+      }
+    }
 
-    m_finalSelection->execute(seeds); // final selection
-   
+    sc = m_finalSelection->execute(seeds); // final selection
+    if (sc.isFailure()) {
+      return Error("selection failed", StatusCode::FAILURE,1);
+    }
+
     //Delete the temporary objects that have been created
     for ( std::vector<SeedTrack*>::iterator it = seeds.begin(); seeds.end() != it; ++it ) {
         seedSel->insert( *it);
     }
 
-    if ( sector <= 2 ) m_stubFind->execute( hits, sHits, stubs );
+    if ( sector <= 2 ) {
+      sc = m_stubFind->execute( hits, sHits, stubs );
+      if (sc.isFailure()) {
+        return Error("stub finding failed", StatusCode::FAILURE,1);
+      }
+    }
     
     //  After the IT stub finding is finished, try to link the stubs to make seed candidates
     if ( sector == 2 ) {
       std::vector<SeedTrack*> linkedSeeds; linkedSeeds.reserve(50);
-      m_stubLinker->execute( stubs, linkedSeeds );
-      if (m_calcLikelihood == true) m_likelihood->execute(linkedSeeds);
-      m_finalSelection->execute(linkedSeeds);
+      sc = m_stubLinker->execute( stubs, linkedSeeds );
+      if (sc.isFailure()) {
+        return Error("stub linking failed", StatusCode::FAILURE,1);
+      }
+      if (m_calcLikelihood == true) { 
+        sc = m_likelihood->execute(linkedSeeds);
+        if (sc.isFailure()) {
+         return Error("stub likelihood failed", StatusCode::FAILURE,1);
+        }
+      }
+      sc = m_finalSelection->execute(linkedSeeds);
+      if (sc.isFailure()) {
+        return Error("stub selection failed", StatusCode::FAILURE,1);
+      }
       for ( std::vector<SeedTrack*>::iterator itLinked = linkedSeeds.begin(); linkedSeeds.end() != itLinked; ++itLinked ) {
         seedSel->insert( *itLinked);
       }  // it
@@ -152,9 +189,20 @@ StatusCode TsaSeed::execute(){
     //  For those IT stubs that remain, try to extend them into the OT
     if ( sector > 2 ) {
       std::vector<SeedTrack*> extendedSeeds; extendedSeeds.reserve(50);
-      m_extendStubs->execute( sector, stubs, hits, sHits, extendedSeeds );
-      if (m_calcLikelihood == true) m_likelihood->execute(extendedSeeds);
-      m_finalSelection->execute(extendedSeeds);
+      sc = m_extendStubs->execute( sector, stubs, hits, sHits, extendedSeeds );
+      if (sc.isFailure()) {
+        return Error("stub extension", StatusCode::FAILURE,1);
+      }
+      if (m_calcLikelihood == true) {
+        sc = m_likelihood->execute(extendedSeeds);
+        if (sc.isFailure()) {
+          return Error("extended stub likelihood failed", StatusCode::FAILURE,1);
+        }
+      }
+      sc = m_finalSelection->execute(extendedSeeds);
+      if (sc.isFailure()) {
+        return Error("extended stub selection failed", StatusCode::FAILURE,1);
+      }
       for ( std::vector<SeedTrack*>::iterator itEx = extendedSeeds.begin(); extendedSeeds.end() != itEx; ++itEx ) {
         seedSel->insert( *itEx);
       }
@@ -174,8 +222,12 @@ StatusCode TsaSeed::execute(){
   }
 
   // add hits in IT overlap region
-  if (m_addHitsInITOverlap == true) m_addHits->execute(seedSel, hitsCont);
-
+  if (m_addHitsInITOverlap == true) {
+    sc = m_addHits->execute(seedSel, hitsCont);
+    if (sc.isFailure()) {
+      return Error("failed to add hits", StatusCode::FAILURE,1);
+    }
+  }
   //stopTimer();
 
   //plot(timer().lasttime()/1000 , "timer", 0., 10., 200  );

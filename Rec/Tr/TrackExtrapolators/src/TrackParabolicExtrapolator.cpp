@@ -66,7 +66,7 @@ StatusCode TrackParabolicExtrapolator::propagate( State& state,
   m_F = TrackMatrix( ROOT::Math::SMatrixIdentity() );
   
   // check current z-position
-  double dz = zNew - state.z();
+  const double dz = zNew - state.z();
   if (fabs(dz) < TrackParameters::hiTolerance) { 
     // already at required z position
     debug() << "already at required z position" << endreq;
@@ -74,17 +74,17 @@ StatusCode TrackParabolicExtrapolator::propagate( State& state,
   }
 
   //get the B field at midpoint
-  double xMid = state.x() + (0.5*state.tx()*dz);
-  double yMid = state.y() + (0.5*state.ty()*dz);
+  const double xMid = state.x() + (0.5*state.tx()*dz);
+  const double yMid = state.y() + (0.5*state.ty()*dz);
   XYZPoint P( xMid, yMid, state.z()+(0.5*dz) );
-  m_pIMF -> fieldVector( P, m_B );
+  m_pIMF -> fieldVector( P, m_B ).ignore();
 
   // to save some typing...
-  double Tx   = state.tx();
-  double Ty   = state.ty();
-  double nTx  = sqrt( 1.0+gsl_pow_2(Tx) );
-  double nTy  = sqrt( 1.0+gsl_pow_2(Ty) );
-  double norm = sqrt( 1.0+gsl_pow_2(Tx)+gsl_pow_2(Ty) );
+  const double Tx   = state.tx();
+  const double Ty   = state.ty();
+  const double nTx  = sqrt( 1.0+gsl_pow_2(Tx) );
+  const double nTy  = sqrt( 1.0+gsl_pow_2(Ty) );
+  const double norm = sqrt( 1.0+gsl_pow_2(Tx)+gsl_pow_2(Ty) );
  
   // calculate the A factors 
   m_ax = norm*( Ty*(Tx*m_B.x()+m_B.z())-(gsl_pow_2(nTx)*m_B.y()));

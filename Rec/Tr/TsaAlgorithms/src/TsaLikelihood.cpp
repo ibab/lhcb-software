@@ -1,4 +1,4 @@
-// $Id: TsaLikelihood.cpp,v 1.2 2007-01-16 08:06:38 mneedham Exp $
+// $Id: TsaLikelihood.cpp,v 1.3 2007-03-20 13:12:05 mneedham Exp $
 
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -201,7 +201,10 @@ void TsaLikelihood::expectationOT(const Tsa::Line& aLine, const Tsa::Parabola& a
       LHCb::OTChannelID testChan = channelHint(station,layers[iL]-1,pnts);
       typedef std::vector<IOTExpectedHits::OTPair> OTPairs;
       OTPairs output;
-      m_expectedHits->collect(aParab,aLine,testChan,output, sect);   
+      StatusCode sc = m_expectedHits->collect(aParab,aLine,testChan,output, sect); 
+      if (sc.isFailure()){
+        Warning("Failed to calculate expected hits",StatusCode::SUCCESS,1);
+      } 
       for (OTPairs::iterator iter = output.begin() ;iter != output.end(); ++iter ){
         std::vector<SeedPnt>::iterator pntIter  = std::find_if(pnts.begin(),
                                                             pnts.end(), 
@@ -233,7 +236,10 @@ void TsaLikelihood::expectationIT(const Tsa::Line& aLine, const Tsa::Parabola& a
       LHCb::STChannelID testChan(LHCb::STChannelID::typeIT, station,layers[iL],0,0,0);
       typedef std::vector<IITExpectedHits::ITPair> ITPairs;
       ITPairs output;
-      m_expectedITHits->collect(aParab,aLine,testChan,output,sect);   
+      StatusCode sc = m_expectedITHits->collect(aParab,aLine,testChan,output,sect);   
+      if (sc.isFailure()){
+        Warning("Failed to calculate expected hits",StatusCode::SUCCESS,1);
+      }
       int old = -1;
       for (ITPairs::iterator iter = output.begin(); iter != output.end(); ++iter ){ 
         if ( int(iter->second) != old) {

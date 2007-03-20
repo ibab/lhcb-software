@@ -1,4 +1,4 @@
-// $Id: TsaOTClusterCreator.cpp,v 1.10 2007-01-16 08:06:38 mneedham Exp $
+// $Id: TsaOTClusterCreator.cpp,v 1.11 2007-03-20 13:12:05 mneedham Exp $
 
 //GaudiKernel
 #include "GaudiKernel/AlgFactory.h"
@@ -74,13 +74,6 @@ StatusCode TsaOTClusterCreator::initialize()
   
   // get geometry
   m_tracker = getDet<DeOTDetector>(DeOTDetectorLocation::Default);
-  
-  // get the modules
-  const DeOTDetector::Modules& modVector = m_tracker->modules();
-  m_modMap.reserve(modVector.size());
-  for (DeOTDetector::Modules::const_iterator iterM = modVector.begin(); iterM != modVector.end(); ++iterM){
-     m_modMap.insert((*iterM)->elementID().uniqueModule(),*iterM);
-  }  // iterM
 
   m_usedClusterTool = tool<IUsedLHCbID>(m_clusterFilterName , "TsaClusterFilter" );
 
@@ -117,8 +110,8 @@ StatusCode TsaOTClusterCreator::finalize(){
  
 }
 
-StatusCode TsaOTClusterCreator::convert(LHCb::OTTimes* clusCont, 
-           Tsa::OTClusters* pattClusCont) {
+void TsaOTClusterCreator::convert(LHCb::OTTimes* clusCont, 
+                                  Tsa::OTClusters* pattClusCont) {
 
  // first hit in first seeding station
  LHCb::OTTimes::iterator startModule = clusCont->begin();
@@ -144,8 +137,6 @@ StatusCode TsaOTClusterCreator::convert(LHCb::OTTimes* clusCont,
    startModule = endModule;
  } // clusIter
 
- return StatusCode::SUCCESS;
-
 }
 
 bool TsaOTClusterCreator::processModule(LHCb::OTTimes::iterator start, 
@@ -160,10 +151,10 @@ bool TsaOTClusterCreator::processModule(LHCb::OTTimes::iterator start,
    ++iCount;
  }
 
- ModuleMap::iterator iter = m_modMap.find(startMod);
- iter != m_modMap.end() ? m_cachedModule = iter->second : 0;
 
- double occ = (double)iCount/(double)m_cachedModule->nChannels();
+ m_cachedModule = m_tracker->findModule((*start)->channel());
+
+ const double occ = (double)iCount/(double)m_cachedModule->nChannels();
  m_distFudgeFactor = m_distVector[m_cachedModule->elementID().module()-1];
 
  return (occ > m_maxOcc ? false : true);
@@ -204,16 +195,9 @@ void  TsaOTClusterCreator::createHits(LHCb::OTTimes::iterator start,
     if (m_filterClusters == true) take = !m_usedClusterTool->used(id);
 
     if (take == true) {
-
-      //std::auto_ptr<LHCb::Trajectory> traj = m_cachedModule->trajectory((*iterC)->channel());
-      //double wirelength = traj->length();
-	   //
-	   //            Tsa::OTCluster* aCluster = new Tsa::OTCluster(traj , error, driftRadius(*iterC, wirelength),
-	   //						    m_tracker, *iterC, isHot);
-  
       Tsa::OTCluster* aCluster = new Tsa::OTCluster(m_cachedModule , error,
-	    					    m_tracker, *iterC, m_distFudgeFactor, isHot);
-
+	    					    m_tracker, *iterC, 
+                                                    m_distFudgeFactor, isHot);
       patClusCont->add(aCluster);
     }
 

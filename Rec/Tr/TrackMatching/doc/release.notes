@@ -4,6 +4,9 @@
 ! Purpose     : Package for the track matching algorithms
 !-----------------------------------------------------------------------------
 
+! 2007-03-20 M. Needham
+ - Make sure StatusCodes are tested
+
 !======================= TrackMatching v2r11 2007-03-02 ======================
 ! 2007-03-02 - Marco Cattaneo
  - Remove an LHCbDefinitions include

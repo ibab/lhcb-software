@@ -1,4 +1,4 @@
-// $Id: TsaOTClusterCreator.h,v 1.6 2007-01-16 08:06:38 mneedham Exp $
+// $Id: TsaOTClusterCreator.h,v 1.7 2007-03-20 13:12:05 mneedham Exp $
 #ifndef _TSAOTCLUSTERCREATOR_H_
 #define _TSAOTCLUSTERCREATOR_H_
 
@@ -14,7 +14,6 @@
 #include "Event/OTTime.h"
 #include "TsaKernel/OTCluster.h"
 
-#include "GaudiKernel/VectorMap.h"
 
 namespace LHCb{
   class OTChannelID;
@@ -43,11 +42,10 @@ public:
 private:
 
 
-  typedef GaudiUtils::VectorMap<unsigned int,DeOTModule*> ModuleMap;
-  ModuleMap m_modMap;
   
-  StatusCode convert(LHCb::OTTimes* clusCont, 
-                        Tsa::OTClusters* pattClusCont);
+  
+  void convert(LHCb::OTTimes* clusCont, 
+               Tsa::OTClusters* pattClusCont);
  
 
   bool processModule(LHCb::OTTimes::iterator start, 

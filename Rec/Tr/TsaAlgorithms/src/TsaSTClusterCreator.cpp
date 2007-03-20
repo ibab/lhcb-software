@@ -1,4 +1,4 @@
-// $Id: TsaSTClusterCreator.cpp,v 1.7 2007-01-16 08:06:39 mneedham Exp $
+// $Id: TsaSTClusterCreator.cpp,v 1.8 2007-03-20 13:12:05 mneedham Exp $
 
 //GaudiKernel
 #include "GaudiKernel/AlgFactory.h"
@@ -113,7 +113,7 @@ StatusCode TsaSTClusterCreator::finalize(){
 }
 
 
-StatusCode TsaSTClusterCreator::convert(FastContainer*   liteCont, 
+void TsaSTClusterCreator::convert(FastContainer*   liteCont, 
                                         Tsa::STClusters* clusCont) {
  
  // convert to patt rec clusters
@@ -145,8 +145,6 @@ StatusCode TsaSTClusterCreator::convert(FastContainer*   liteCont,
    clusIter = endBeetle;
    
  } // clusIter
-
- return StatusCode::SUCCESS;
 
 }
 

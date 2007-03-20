@@ -1,4 +1,4 @@
-// $Id: LongTrackReferenceCreator.cpp,v 1.12 2006-11-30 14:50:09 ebos Exp $
+// $Id: LongTrackReferenceCreator.cpp,v 1.13 2007-03-20 13:11:42 mneedham Exp $
 
 // from GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -127,7 +127,10 @@ void LongTrackReferenceCreator::addReference( LHCb::Measurement* meas,
                                               LHCb::State& aState ) const
 {
   // Get the measurement trajectory representing the centre of gravity
-  m_extrapolator->propagate(aState,meas->z());
+  StatusCode sc = m_extrapolator->propagate(aState,meas->z());
+  if( sc.isFailure() ) {
+    Warning("Extrapolation failed ", StatusCode::FAILURE, 1);
+  }
   meas->setRefVector(aState.stateVector());
 
   // Add the L/R ambiguity
@@ -138,8 +141,8 @@ void LongTrackReferenceCreator::addReference( LHCb::Measurement* meas,
     StateTraj stateTraj = StateTraj( aState, bfield );
     double s1 = 0.0;
     double s2 = (meas->trajectory()).arclength( stateTraj.position(s1) );
-    StatusCode sc = m_poca->minimize(stateTraj, s1, meas->trajectory(),
-                                     s2, distance, 20*Gaudi::Units::mm);
+    sc = m_poca->minimize(stateTraj, s1, meas->trajectory(),
+                          s2, distance, 20*Gaudi::Units::mm);
     if( sc.isFailure() ) {
       warning() << "TrajPoca minimize failed in addReference." << endreq;
     }

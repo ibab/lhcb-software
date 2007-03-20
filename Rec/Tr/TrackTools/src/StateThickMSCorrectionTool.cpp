@@ -1,4 +1,4 @@
-// $Id: StateThickMSCorrectionTool.cpp,v 1.2 2007-02-06 13:15:36 cattanem Exp $
+// $Id: StateThickMSCorrectionTool.cpp,v 1.3 2007-03-20 13:11:42 mneedham Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -48,9 +48,9 @@ void StateThickMSCorrectionTool::correctState( LHCb::State& state,
                                                double wallThickness,
                                                bool upstream )
 {
-  double tx2        = gsl_pow_2( state.tx() );
-  double ty2        = gsl_pow_2( state.ty() );
-  double norm2      = 1. + tx2 + ty2;
+  const double tx2        = gsl_pow_2( state.tx() );
+  const double ty2        = gsl_pow_2( state.ty() );
+  const double norm2      = 1. + tx2 + ty2;
   double scatLength = 0.;
   double t          = wallThickness / material -> radiationLength();
   if ( t > TrackParameters::lowTolerance ) {
@@ -60,20 +60,20 @@ void StateThickMSCorrectionTool::correctState( LHCb::State& state,
   }
 
   // protect zero momentum
-  double p = GSL_MAX( state.p(), 1.0 * MeV );
-  double norm2cnoise = norm2 * m_msff2 * scatLength / (p*p);
+  const double p = GSL_MAX( state.p(), 1.0 * MeV );
+  const double norm2cnoise = norm2 * m_msff2 * scatLength / (p*p);
 
   // slope covariances
-  double covTxTx = norm2cnoise * ( 1. + tx2 );
-  double covTyTy = norm2cnoise * ( 1. + ty2 );
-  double covTxTy = norm2cnoise * state.tx() * state.ty();
+  const double covTxTx = norm2cnoise * ( 1. + tx2 );
+  const double covTyTy = norm2cnoise * ( 1. + ty2 );
+  const double covTxTy = norm2cnoise * state.tx() * state.ty();
 
   // D - depends on whether up or downstream
-  double D = (upstream) ? -1. : 1. ;
+  const double D = (upstream) ? -1. : 1. ;
 
   Gaudi::TrackSymMatrix Q = Gaudi::TrackSymMatrix();
   
-  double wallThickness2 = gsl_pow_2(wallThickness);
+  const double wallThickness2 = gsl_pow_2(wallThickness);
 
   Q(0,0) = covTxTx * wallThickness2 / 3.;
   Q(1,0) = covTxTy * wallThickness2 / 3.;

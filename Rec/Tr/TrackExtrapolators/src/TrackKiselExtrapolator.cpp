@@ -1,4 +1,4 @@
-// $Id: TrackKiselExtrapolator.cpp,v 1.3 2007-03-02 16:02:32 cattanem Exp $
+// $Id: TrackKiselExtrapolator.cpp,v 1.4 2007-03-20 13:10:10 mneedham Exp $
 
 // from Gaudi
 #include "GaudiKernel/IMagneticFieldSvc.h"
@@ -20,7 +20,6 @@ DECLARE_TOOL_FACTORY( TrackKiselExtrapolator );
  *  @author M Needham
  *  @date   02-06-2006
  */
-
 /// TrackKiselExtrapolator constructor.
 TrackKiselExtrapolator::TrackKiselExtrapolator(const std::string& type,
                                                const std::string& name,
@@ -109,31 +108,31 @@ void TrackKiselExtrapolator::getCoefficients( const double x, const double y,
                                                  double Xi  [3][3]      , double Yi  [3][3],
                                                  double Xii [3][3][3]   , double Yii [3][3][3], 
                                                  double Xiii[3][3][3][3], double Yiii[3][3][3][3]){
-  double xx = x*x;
-  double xy = x*y;
-  double yy = y*y;
+  const double xx = x*x;
+  const double xy = x*y;
+  const double yy = y*y;
 
-  double x2 = x*2;
-  double x4 = x*4;
-  double xx31 = xx*3+1;
-  double xx33 = xx*3+3;
-  double xx82 = xx*8+2;
-  double xx86 = xx*8+6;
-  double xx153 = xx*15+3;
-  double xx159 = xx*15+9;
+  const double x2 = x*2;
+  const double x4 = x*4;
+  const double xx31 = xx*3+1;
+  const double xx33 = xx*3+3;
+  const double xx82 = xx*8+2;
+  const double xx86 = xx*8+6;
+  const double xx153 = xx*15+3;
+  const double xx159 = xx*15+9;
 
-  double y2 = y*2;
-  double y4 = y*4;
-  double yy31 = yy*3+1;
-  double yy33 = yy*3+3;
-  double yy82 = yy*8+2;
-  double yy86 = yy*8+6;
-  double yy153 = yy*15+3;
-  double yy159 = yy*15+9;
-  double xxyy2 = 2*(xx-yy);
+  const double y2 = y*2;
+  const double y4 = y*4;
+  const double yy31 = yy*3+1;
+  const double yy33 = yy*3+3;
+  const double yy82 = yy*8+2;
+  const double yy86 = yy*8+6;
+  const double yy153 = yy*15+3;
+  const double yy159 = yy*15+9;
+  const double xxyy2 = 2*(xx-yy);
 
-  double xx1053 = y*(30*xx+xx159);
-  double yy1053 = x*(30*yy+yy159);
+  const double xx1053 = y*(30*xx+xx159);
+  const double yy1053 = x*(30*yy+yy159);
 
 
   double  X1[3]      = { xy, -xx-1, y };
@@ -226,7 +225,7 @@ void TrackKiselExtrapolator::getCoefficients( const double x, const double y,
 		      {  -6*xy,  xx31,   0 },
 			    {    -x2,   -y2,  -1 } };
 
- double  Y3y[3][3][3] = { { {    y4*yy159,      -yy1053, -16*xy },
+  double  Y3y[3][3][3] = { { {    y4*yy159,      -yy1053, -16*xy },
 		      {     -yy1053,     y2*xx153,   xx82 },
 		      {      -16*xy, 4*xx-12*yy-2,   -6*y } },
 		    { {     -yy1053,     y2*xx153,   xx82 },
@@ -237,48 +236,42 @@ void TrackKiselExtrapolator::getCoefficients( const double x, const double y,
 		      {         -y4,           x4,      0 } 
 		    }};
 
-  if( Xi ){ 
-      for( int i=0;i<3; ++i ){
-	  Xi[0][i] = X1 [i];
-	  Xi[1][i] = X1x[i];
-	  Xi[2][i] = X1y[i];
-	}
-    }
-  if( Yi ){ 
-      for( int i=0;i<3; ++i ){
-	  Yi[0][i] = Y1 [i];
-	  Yi[1][i] = Y1x[i];
-	  Yi[2][i] = Y1y[i];
-	}
-    }
-  if( Xii ){ 
-      for( int i=0;i<3; ++i ) for( int j=0;j<3; ++j ){
-	  Xii[0][i][j] = X2 [i][j];
-	  Xii[1][i][j] = X2x[i][j];
-	  Xii[2][i][j] = X2y[i][j];
-	}
-    }
-  if( Yii ){ 
-      for( int i=0;i<3; ++i ) for( int j=0;j<3; ++j ){
-	  Yii[0][i][j] = Y2 [i][j];
-	  Yii[1][i][j] = Y2x[i][j];
-	  Yii[2][i][j] = Y2y[i][j];
-	}
-    }
-  if( Xiii ){ 
-      for( int i=0;i<3; ++i ) for( int j=0;j<3; ++j )for( int k=0;k<3; ++k ){
-	  Xiii[0][i][j][k] = X3 [i][j][k];
-	  Xiii[1][i][j][k] = X3x[i][j][k];
-	  Xiii[2][i][j][k] = X3y[i][j][k];
-	}
-    }
-  if( Yiii ){ 
-      for( int i=0;i<3; ++i ) for( int j=0;j<3; ++j )for( int k=0;k<3; ++k ){
-	  Yiii[0][i][j][k] = Y3 [i][j][k];
-	  Yiii[1][i][j][k] = Y3x[i][j][k];
-	  Yiii[2][i][j][k] = Y3y[i][j][k];
-	}
-    }
+     
+  for( int i=0;i<3; ++i ){
+    Xi[0][i] = X1 [i];
+    Xi[1][i] = X1x[i];
+    Xi[2][i] = X1y[i];
+  }
+
+  for( int i=0;i<3; ++i ){
+    Yi[0][i] = Y1 [i];
+    Yi[1][i] = Y1x[i];
+    Yi[2][i] = Y1y[i];
+  }
+
+  for( int i=0;i<3; ++i ) for( int j=0;j<3; ++j ){
+     Xii[0][i][j] = X2 [i][j];
+     Xii[1][i][j] = X2x[i][j];
+     Xii[2][i][j] = X2y[i][j];
+  }
+
+  for( int i=0;i<3; ++i ) for( int j=0;j<3; ++j ){
+     Yii[0][i][j] = Y2 [i][j];
+     Yii[1][i][j] = Y2x[i][j];
+     Yii[2][i][j] = Y2y[i][j];
+  }
+ 
+  for( int i=0;i<3; ++i ) for( int j=0;j<3; ++j )for( int k=0;k<3; ++k ){
+     Xiii[0][i][j][k] = X3 [i][j][k];
+     Xiii[1][i][j][k] = X3x[i][j][k];
+     Xiii[2][i][j][k] = X3y[i][j][k];
+  }
+
+  for( int i=0;i<3; ++i ) for( int j=0;j<3; ++j )for( int k=0;k<3; ++k ){
+     Yiii[0][i][j][k] = Y3 [i][j][k];
+     Yiii[1][i][j][k] = Y3x[i][j][k];
+     Yiii[2][i][j][k] = Y3y[i][j][k];
+  }
 }
 
 void TrackKiselExtrapolator::integrateField( const XYZPoint& p0, const XYZPoint& p1, const XYZPoint& p2,
@@ -302,75 +295,55 @@ void TrackKiselExtrapolator::integrateField( const XYZPoint& p0, const XYZPoint&
   } //iter
 
   // coefficients
-  double c1[3] = {  1,  4,  1}; // /=6.
-  double c2[3][3]    =   { {  5, -4, -1},{  44,  80,  -4},{ 11, 44, 5} }; // /=360.
-  double c3[3][3][3] = { { { 35, 20, -1},{-124,-256,  20},{-19,-52,-1} }, 
+  static double c1[3] = {  1,  4,  1}; // /=6.
+  static double c2[3][3]    =   { {  5, -4, -1},{  44,  80,  -4},{ 11, 44, 5} }; // /=360.
+  static double c3[3][3][3] = { { { 35, 20, -1},{-124,-256,  20},{-19,-52,-1} }, 
 		    { {524,176,-52},{1760,2240,-256},{-52,176,20} }, 
 		    { {125,-52,-19},{1028,1760,-124},{125,524,35} } };  // /=45360.
     
-  double C1[3]       =     {  1,  2,  0}; // /=6.
-  double C2[3][3]    =   { { 38,  8, -4},{ 148, 208, -20},{  3, 36, 3} }; // /=2520.
-  double C3[3][3][3] = { { { 85, 28, -5},{   4, -80,   4},{-17,-20, 1} }, 
+  static double C1[3]       =     {  1,  2,  0}; // /=6.
+  static double C2[3][3]    =   { { 38,  8, -4},{ 148, 208, -20},{  3, 36, 3} }; // /=2520.
+  static double C3[3][3][3] = { { { 85, 28, -5},{   4, -80,   4},{-17,-20, 1} }, 
 		    { {494,200,-46},{1256,1376,-184},{-94,  8,14} }, 
 		    { { 15,-12, -3},{ 252, 432, -36},{ 21, 84, 3} } }; // /=90720.
     
   // integrate field
   
-  for( int x=0; x<3; ++x)
-    {
-      if( si )
-	{
-	  si[x]=0;
-	  for( int n=0; n<3; ++n ) si[x] += c1[n]*B[n][x];	  
-	  si[x] *= dz/6.;
-	}
-      
-      if( Si )
-	{
-	  Si[x]=0;
-	  for(int n=0; n<3; ++n ) Si[x] += C1[n]*B[n][x];
-	  Si[x] *= dz*dz/6.;
-	}
-
-      for( int y=0; y<3; ++y )
-	{
-	  if( sii )
-	    {
-	      sii[x][y] = 0;
-	      for(int n=0; n<3; ++n)
-		for(int m=0; m<3; ++m) sii[x][y] += c2[n][m]*B[n][x]*B[m][y];
+  for( int x=0; x<3; ++x){	
+     si[x]=0;
+     for( int n=0; n<3; ++n ) si[x] += c1[n]*B[n][x];	  
+     si[x] *= dz/6.;
+	 
+     Si[x]=0;
+     for(int n=0; n<3; ++n ) Si[x] += C1[n]*B[n][x];
+     Si[x] *= dz*dz/6.;
+	
+     for( int y=0; y<3; ++y ){    
+        sii[x][y] = 0;
+	for(int n=0; n<3; ++n)
+	   for(int m=0; m<3; ++m) sii[x][y] += c2[n][m]*B[n][x]*B[m][y];
 	      sii[x][y] *= dz*dz/360.;
-	    }
+	   
+	    Sii[x][y] = 0;
+	    for(int n=0; n<3; ++n)
+	      for(int m=0; m<3; m++) Sii[x][y] += C2[n][m]*B[n][x]*B[m][y];	       
+	        Sii[x][y] *= dz*dz*dz/2520.;
 
-	  if( Sii )
-	    {
-	      Sii[x][y] = 0;
+             for( int z=0; z<3; ++z ){
+	      siii[x][y][z] = 0;
 	      for(int n=0; n<3; ++n)
-		for(int m=0; m<3; m++) Sii[x][y] += C2[n][m]*B[n][x]*B[m][y];	       
-	      Sii[x][y] *= dz*dz*dz/2520.;
-	    }
-
-	  for( int z=0; z<3; ++z )
-	    {
-	      if ( siii )
-		{
-		  siii[x][y][z] = 0;
-		  for(int n=0; n<3; ++n)
-		    for(int m=0; m<3; ++m)
-		      for(int k=0; k<3; ++k)
-			siii[x][y][z] += c3[n][m][k]*B[n][x]*B[m][y]*B[k][z];
+		 for(int m=0; m<3; ++m)
+		    for(int k=0; k<3; ++k)
+		      siii[x][y][z] += c3[n][m][k]*B[n][x]*B[m][y]*B[k][z];
 		  siii[x][y][z] *= dz*dz*dz/45360.;
-		}
-
-	      if ( Siii )
-		{
-		  Siii[x][y][z] = 0;
-		  for(int n=0; n<3; ++n)
-		    for(int m=0; m<3; ++m)
-		      for(int k=0; k<3; ++k)
-			Siii[x][y][z] += C3[n][m][k]*B[n][x]*B[m][y]*B[k][z];	       
-		  Siii[x][y][z] *= dz*dz*dz*dz/90720.;
-		}
+	   
+	      Siii[x][y][z] = 0;
+	      for(int n=0; n<3; ++n)
+	        for(int m=0; m<3; ++m)
+	          for(int k=0; k<3; ++k)
+	            Siii[x][y][z] += C3[n][m][k]*B[n][x]*B[m][y]*B[k][z];	       
+	      Siii[x][y][z] *= dz*dz*dz*dz/90720.;
+	       
 	    }
 	}
     }
@@ -416,8 +389,8 @@ void TrackKiselExtrapolator::extrapolateAnalytic(
   m_pIMF->fieldVector( r2, m_B[2] );
 
   double Sy = (7*m_B[0].y() + 6*m_B[1].y()-m_B[2].y() )*dz*dz/96.;
-  r1.SetX(T_in[0] + tx*dz/2 + ht*Sy*A1[0][1]);
-  r1.SetY(T_in[1] + ty*dz/2 + ht*Sy*B1[0][1]);
+  r1.SetX(T_in[0] + 0.5*tx*dz + ht*Sy*A1[0][1]);
+  r1.SetY(T_in[1] + 0.5*ty*dz + ht*Sy*B1[0][1]);
 
   Sy = (m_B[0].y() + 2*m_B[1].y() )*dz*dz/6.;
   r2.SetX(T_in[0] + tx*dz + ht*Sy*A1[0][1]);
@@ -525,4 +498,6 @@ void TrackKiselExtrapolator::extrapolateAnalytic(
   J[24] = 1;
     
 }
+
+
 

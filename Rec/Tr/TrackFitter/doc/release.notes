@@ -3,6 +3,10 @@
 ! Responsible : Eduardo Rodrigues, Jose A. Hernando
 !----------------------------------------------------------------------------
 
+! 2007-03-20 M. Needham
+ - Make sure StatusCodes are tested
+ - Remove TrackFitter_load.cpp
+
 !=========================== TrackFitter v2r12 2006-12-18 ===================
 ! 2006-12-15 - Gerhard Raven
  - use the projector selector tool to obtain the relevant projector

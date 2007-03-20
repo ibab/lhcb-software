@@ -1,4 +1,4 @@
-// $Id: TsaSTClusterCreator.h,v 1.3 2006-12-06 14:35:01 mneedham Exp $
+// $Id: TsaSTClusterCreator.h,v 1.4 2007-03-20 13:12:05 mneedham Exp $
 #ifndef _TSASTCLUSTERCREATOR_H_
 #define _TSASTCLUSTERCREATOR_H_
 
@@ -41,10 +41,9 @@ private:
 
   typedef LHCb::STLiteCluster::FastContainer FastContainer;
 
-  StatusCode convert(FastContainer* clusCont, 
-                     Tsa::STClusters* pattClusCont);
+  void convert(FastContainer* clusCont, 
+               Tsa::STClusters* pattClusCont);
 
- 
   void findSector(const LHCb::STChannelID aChan);
 
   bool processBeetle(FastContainer::iterator start, 

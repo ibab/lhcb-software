@@ -1,4 +1,4 @@
-// $Id: TrackPtKick.h,v 1.3 2006-02-07 11:32:02 erodrigu Exp $
+// $Id: TrackPtKick.h,v 1.4 2007-03-20 13:11:42 mneedham Exp $
 #ifndef TRACKTOOLS_TRACKPTKICK_H 
 #define TRACKTOOLS_TRACKPTKICK_H 1
 
@@ -35,7 +35,7 @@ public:
 protected:
 
 private:
-  void determineFieldPolarity();
+  StatusCode determineFieldPolarity();
 
   IBIntegrator* m_bIntegrator;
 
@@ -44,6 +44,7 @@ private:
   double m_MomentumError;
   /// Define the parameters of the Z dependance
   std::vector<double> m_ParabolicCorrection;
+  std::vector<double> m_resParams;
   double m_Constant;
 
 };

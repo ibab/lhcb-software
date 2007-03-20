@@ -1,4 +1,4 @@
-// $Id: TrackPtKick.cpp,v 1.10 2007-02-06 13:15:36 cattanem Exp $
+// $Id: TrackPtKick.cpp,v 1.11 2007-03-20 13:11:42 mneedham Exp $
 // Include files
 // -------------
 
@@ -8,6 +8,9 @@
 
 // from GSL
 #include "gsl/gsl_math.h"
+
+// Boost
+#include <boost/assign/list_of.hpp>
 
 // from TrackEvent
 #include "Event/TrackParameters.h"
@@ -40,13 +43,12 @@ TrackPtKick::TrackPtKick( const std::string& type,
 {
   declareInterface<ITrackPtKick>(this);
 
-  declareProperty( "MomentumError",       m_MomentumError = 0.017 );
-  declareProperty( "ParabolicCorrection", m_ParabolicCorrection  );
-  declareProperty( "ConstantCorrection",  m_Constant = 0.*Gaudi::Units::MeV );
+ declareProperty( "resParams",  
+                  m_resParams =  boost::assign::list_of(0.015)(0.29) );
 
-  m_ParabolicCorrection.push_back( 1.04);
-  m_ParabolicCorrection.push_back( 0.14 );
-
+ declareProperty( "ParabolicCorrection", 
+                  m_ParabolicCorrection =   boost::assign::list_of(1.04)(0.14));
+ declareProperty( "ConstantCorrection",  m_Constant = 0.*Gaudi::Units::MeV );
 };
 
 //=============================================================================
@@ -68,7 +70,10 @@ StatusCode TrackPtKick::initialize()
          << ") ==" <<m_ParabolicCorrection[0] << " + " 
          << m_ParabolicCorrection[1] <<" tx^2 " <<endreq;
 
-  determineFieldPolarity();
+  sc = determineFieldPolarity();
+  if (sc.isFailure()){
+    return sc;
+  }
 
   return StatusCode::SUCCESS;
 };
@@ -81,16 +86,18 @@ StatusCode TrackPtKick::calculate( LHCb::State* state ) const
   // calculate intial estimate of track momentum assuming it came from
   // the primary vertex
 
-  StatusCode sc = StatusCode::SUCCESS;
-
   // scan in cm steps  
   Gaudi::XYZPoint  begin( 0., 0., 0. );
   Gaudi::XYZPoint  end( state->x(), state->y(), state->z() );
   Gaudi::XYZVector bdl;
   double zCenter;
 
-  m_bIntegrator -> calculateBdlAndCenter( begin, end, state->tx(), 
-                                          state->ty(), zCenter, bdl );
+  StatusCode sc = m_bIntegrator -> calculateBdlAndCenter(begin, end, state->tx(), 
+                                                         state->ty(), zCenter, bdl );
+  if (sc.isFailure()){
+    return Warning("Failed to integrate field", StatusCode::FAILURE, 1);
+  }
+
   double q = 0.;
   double p = 1e6 * Gaudi::Units::MeV;
 
@@ -98,15 +105,15 @@ StatusCode TrackPtKick::calculate( LHCb::State* state ) const
     //can estimate momentum and charge
 
     //Rotate to the  0-0-z axis and do the ptkick 
-    double tX = state -> tx();
-    double xCenter = state -> x() + tX * ( zCenter - state->z() );
+    const double tX = state -> tx();
+    const double xCenter = state -> x() + tX * ( zCenter - state->z() );
 
-    double zeta_trk = -tX / sqrt( 1.0 + tX*tX );
-    double tx_vtx   = xCenter / zCenter;
-    double zeta_vtx = -tx_vtx/ sqrt( 1.0 + tx_vtx*tx_vtx );
+    const double zeta_trk = -tX / sqrt( 1.0 + tX*tX );
+    const double tx_vtx   = xCenter / zCenter;
+    const double zeta_vtx = -tx_vtx/ sqrt( 1.0 + tx_vtx*tx_vtx );
   
     // curvature
-    double curv = ( zeta_trk - zeta_vtx );
+    const double curv = ( zeta_trk - zeta_vtx );
 
     // charge
     int sign = 1;
@@ -125,10 +132,9 @@ StatusCode TrackPtKick::calculate( LHCb::State* state ) const
 
     //   Addition Correction factor for the angle of the track!
     if ( m_ParabolicCorrection.size() == 2u ) {
-      const double tx = state->tx();
       //p*= (a + b*tx*tx ) 
       p+= m_Constant;
-      p*= ( m_ParabolicCorrection[0] + (m_ParabolicCorrection[1] * tx * tx ));
+      p*= ( m_ParabolicCorrection[0] + (m_ParabolicCorrection[1] * tX * tX ));
     }
 
   }  
@@ -140,18 +146,16 @@ StatusCode TrackPtKick::calculate( LHCb::State* state ) const
 
   // set the state parameters
   state -> setQOverP( q / p );
-  state -> setErrQOverP2( gsl_pow_2(m_MomentumError/p) );
-  Gaudi::TrackSymMatrix& cov = state -> covariance();
-  double errQOverP = m_MomentumError / p;
-   cov(4,4) = errQOverP * errQOverP;
+  const double err2 = gsl_pow_2(m_resParams[0]) + gsl_pow_2(m_resParams[1]/p) ;
+  state -> setErrQOverP2(err2*gsl_pow_2(1.0/p) );
 
-   return sc;
+  return sc;
 }
 
 //=============================================================================
 // Determination of the field polarity
 //=============================================================================
-void TrackPtKick::determineFieldPolarity()
+StatusCode TrackPtKick::determineFieldPolarity()
 {
  // determine the field polarity by sending out a test particle
  Gaudi::XYZPoint  begin( 0., 0., 0. );
@@ -159,8 +163,11 @@ void TrackPtKick::determineFieldPolarity()
  Gaudi::XYZVector bdl;
  double z;
 
- m_bIntegrator -> calculateBdlAndCenter( begin, end, 0., 0., z, bdl );
- 
+ StatusCode sc = m_bIntegrator -> calculateBdlAndCenter( begin, end, 0., 0., z, bdl );
+ if (sc.isFailure()){
+   return Error("Failed to find field centre !", StatusCode::FAILURE);
+ } 
+
  if ( bdl.x() > 0.0 ) {
    m_FieldPolarity =  1;
  } 
@@ -168,6 +175,7 @@ void TrackPtKick::determineFieldPolarity()
    m_FieldPolarity = -1; 
  }
 
+ return StatusCode::SUCCESS;
 };
 
 //=============================================================================

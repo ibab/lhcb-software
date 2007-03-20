@@ -1,4 +1,4 @@
-// $Id: StateThinMSCorrectionTool.cpp,v 1.3 2007-02-06 13:15:36 cattanem Exp $
+// $Id: StateThinMSCorrectionTool.cpp,v 1.4 2007-03-20 13:11:42 mneedham Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -49,19 +49,19 @@ void StateThinMSCorrectionTool::correctState( LHCb::State& state,
                                               double wallThickness,
                                               bool )
 {
-  double t          = wallThickness / material -> radiationLength();
-  double norm2      = 1.0 + gsl_pow_2(state.tx()) + gsl_pow_2(state.ty());
+  const double t          = wallThickness / material -> radiationLength();
+  const double norm2      = 1.0 + gsl_pow_2(state.tx()) + gsl_pow_2(state.ty());
   double scatLength = 0.;
   if ( t > TrackParameters::lowTolerance ) {
-    double radThick = sqrt(norm2) * t;
+    const double radThick = sqrt(norm2) * t;
     scatLength = radThick*gsl_pow_2( TrackParameters::moliereFactor *
                                      (1.+0.038*log(radThick)) );
   }
 
   // protect 0 momentum
-  double p = GSL_MAX( state.p(), 1.0*MeV );
+  const double p = GSL_MAX( state.p(), 1.0*MeV );
 
-  double norm2cnoise = norm2 * m_msff2 * scatLength / gsl_pow_2(p);
+  const double norm2cnoise = norm2 * m_msff2 * scatLength / gsl_pow_2(p);
 
   // multiple scattering covariance matrix - initialized to 0
   Gaudi::TrackSymMatrix Q = Gaudi::TrackSymMatrix();
