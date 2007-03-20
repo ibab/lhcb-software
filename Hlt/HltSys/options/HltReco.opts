@@ -38,6 +38,7 @@ HltRecoVeloTT.HistogramUpdatePeriod = 0;
 HltRecoVeloTT.OutputLevel = 3;
 
 // Use online Pat-Conditions
+PatHltRecoVeloTT.suppressSmallAngles = false;
 PatHltRecoVeloTT.triggerQuality = true;
 // Use global reduction factor and max chi2 cut to vary the track quality
 PatHltRecoVeloTT.globalReductionFactor = 1.;
@@ -93,6 +94,7 @@ createITLiteClusters.detType = "IT";
 
 //TODO: should be this be here or in the sequencer?
 
+PatHltHadRecoIPVeloTT.suppressSmallAngles = false;
 PatHltHadRecoIPVeloTT.triggerQuality = true;
 // Use global reduction factor and max chi2 cut to vary the track quality
 PatHltHadRecoIPVeloTT.globalReductionFactor = 1.;

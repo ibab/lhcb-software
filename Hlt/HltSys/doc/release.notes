@@ -8,6 +8,9 @@ Purpose: LHCb High Level Trigger packages.
 </PRE><H1><A NAME=v1r3>2007-03-08 HltSys v1r3</A></H1><PRE>
 This version uses Gaudi v19r2 and LHCb v22r2
 
+- Hernando, JA. 20/3/07:
+   added options PatVeloTT.suppressSmallAngles = false; in HltReco.opts
+
 Packages removed: HltPython          - dictionary moved to HltBase v2r2
 Packages added  : HltSelections v5r0 - High-Level Trigger Exclusive Selections
 
