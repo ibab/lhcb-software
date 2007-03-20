@@ -5,7 +5,7 @@
  *  Implementation file for RICH digitisation algorithm : RichSignal
  *
  *  CVS Log :-
- *  $Id: RichSignal.cpp,v 1.17 2007-03-20 15:57:02 jonrob Exp $
+ *  $Id: RichSignal.cpp,v 1.18 2007-03-20 15:58:36 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @author Alex Howard   a.s.howard@ic.ac.uk
@@ -90,7 +90,7 @@ StatusCode Signal::execute()
   // if requested, process spillover events
   if ( m_doSpillover )
   {
-    sc = sc && ProcessEvent( m_RichPrevPrevLocation, -50, -2 )
+    sc = sc && ProcessEvent( m_RichPrevPrevLocation, -50, -2 );
     sc = sc && ProcessEvent( m_RichPrevLocation,     -25, -1 );
     sc = sc && ProcessEvent( m_RichNextLocation,      25,  1 );
     sc = sc && ProcessEvent( m_RichNextNextLocation,  50,  2 );
