@@ -7,7 +7,6 @@
 #include <list>
 
 #include "GaudiKernel/MsgStream.h"
-
 #include "Writer/failover_structs.h"
 
 namespace LHCb {
@@ -21,6 +20,7 @@ namespace LHCb {
 	class NodeState {
 		public:
 			struct nodestate state;
+			struct sockaddr_in addr;
 
 			/**
 			 * Overloaded for sorting based on minimum loads.
@@ -81,7 +81,7 @@ namespace LHCb {
 			/**
 			 * Get initial address list from the service.
 			 */
-			void getInitialAddressList();
+			void getAddressList();
 
 			/**
 			 * Cleans up all the node information.

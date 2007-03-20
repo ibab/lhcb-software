@@ -1,3 +1,9 @@
+|----------------------------------------------------
+| 2007-03-20 : Suman
+|    Broke up three threads into three classes, 
+|    fixed a lot of the failover class problems.
+|    Clean compile, but not tested.
+|
 -----------------------------------------------------
 | 2007-03-06 : Suman
 |    Added #ifndefs to comment out all code for Windows.

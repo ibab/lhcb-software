@@ -21,27 +21,12 @@ extern "C" {
 #include "Writer/Connection.h"
 #include "Writer/MM.h"
 #include "Writer/Utils.h"
+#include "Writer/SendThread.h"
 
 #include "GaudiKernel/MsgStream.h"
 
 #define POLL_INTERVAL         5000   /*<< The interval for poll() calls in millis.*/
 #define FAILOVER_RETRY_SLEEP  20     /*<< Number of seconds between  retries.*/
-
-#define STOP_URGENT				0x01	/**<< Tells a thread to stop immediately.*/
-#define STOP_AFTER_PURGE	0x02	/**<< Tells a thread to stop after purging queue.*/
-
-
-#define MDFWRITER_THREAD  0x01   /**<< MDF Writer GaudiAlgorithm thread identifier.*/
-#define ACK_THREAD   			0x02   /**<< Acknowledgement thread identifier.*/
-#define SEND_THREAD       0x03   /**<< Sender thread identifier.*/
-#define FAILOVER_THREAD   0x04	 /**<< Failover thread identifier.*/
-
-/**
- * Returned by Connection::failover() to tell a thread that failover is already done,
- * and that it must die to be respawned.
- */
-#define KILL_THREAD		(-1)
-#define RESUME_THREAD	0
 
 /**
  * A thread local variable to keep track of which thread we're in.
@@ -76,26 +61,33 @@ Connection::Connection(std::string serverAddr, int serverPort, int sndRcvSizes,
 void Connection::initialize(void) {
 	m_failoverMonitor = new FailoverMonitor(m_serverAddr, m_serverPort + 1, this, m_log);
 	connect();
-	startAckThread();
-	startSendThread();
+
+	m_ackThread = new AckThread(this, m_sockfd, &m_mmObj, m_log);
+	m_ackThread->start();
+	m_sendThread = new SendThread(this, m_sockfd, &m_mmObj, m_log);
+	m_sendThread->start();
 }
 
 /** Connects to a storage cluster node.
  */
 void Connection::connect() {
   struct sockaddr_in destAddr;
-  m_sockfd = 0;
+  m_sockfd = -1;
 
   m_state = Connection::STATE_CONN_CLOSED;
 
   while(1) {
     m_failoverMonitor->getNextAddress(&destAddr);
+	/*Need to change port to the storage service port.*/
+	destAddr.sin_port = htons(m_serverPort);
   	m_sockfd = Utils::connectToAddress(&destAddr, m_sndRcvSizes, m_sndRcvSizes, m_log);
   	if(m_sockfd >= 0)
   		break;
  		*m_log << MSG::WARNING << "Could not connect, next server..." << endmsg;
  		sleep(1);
   }
+
+  *m_log << MSG::DEBUG << "Connected to a storage server. " << endmsg;
   m_state = Connection::STATE_CONN_OPEN;
 }
 
@@ -106,8 +98,10 @@ void Connection::connect() {
  */
 void Connection::closeConnection()
 {
-  stopSendThread(STOP_AFTER_PURGE);	/*Stop after all messages are sent.*/
-  stopAckThread(STOP_AFTER_PURGE);	/*Stop after all acks have been received.*/
+  m_sendThread->stop(STOP_AFTER_PURGE);	/*Stop after all messages are sent.*/
+  m_ackThread->stop(STOP_AFTER_PURGE);	/*Stop after all acks have been received.*/
+  delete m_sendThread;
+  delete m_ackThread;
   Utils::closeSocket(&m_sockfd, m_log);
 }
 
@@ -128,20 +122,20 @@ int Connection::failover()
 		return KILL_THREAD;
 
 	/*m_stopSending could be STOP_PURGE or 0, we must save and restore. */
-	int oldSendStopLevel = m_stopSending;
-	int oldAckStopLevel = m_stopAcking;
+	int oldSendStopLevel = m_sendThread->getState();
+	int oldAckStopLevel = m_ackThread->getState();
 
 	/*
 	 * This is called only by the sender thread or the
 	 * ack thread. Either way, the other guy must be stopped.
 	 */
 	if(currThread == ACK_THREAD)
-		stopSendThread(STOP_URGENT);
+		m_sendThread->stop(STOP_URGENT);
 	else if(currThread == SEND_THREAD)
-		stopAckThread(STOP_URGENT);
+		m_ackThread->stop(STOP_URGENT);
 
-  reInitAckThread();	/*Reinit ack thread's data.*/
-	reInitSendThread();	/*Reinit send thread's data.*/
+  m_ackThread->reInit();	/*Reinit ack thread's data.*/
+	m_sendThread->reInit();	/*Reinit send thread's data.*/
 
 	Utils::closeSocket(&m_sockfd, m_log);
 
@@ -152,128 +146,22 @@ int Connection::failover()
    * revive that one.
    */
   if(currThread == SEND_THREAD)
-  	startAckThread();
+  	m_ackThread->start();
   else if(currThread == ACK_THREAD)
-  	startSendThread();
+  	m_sendThread->start();
 
   /* It could be possible that the failover is taking place
    * during a finalize()/Connection::closeConnection(), where the
    * threads were in STOP_AFTER_PURGE state. So for consistency,
    * we just restore them to whatever state they were in.
    */
-  m_stopAcking = oldAckStopLevel;
-  m_stopSending = oldSendStopLevel;
+  m_ackThread->restoreState(oldAckStopLevel);
+  m_sendThread->restoreState(oldSendStopLevel);
 
   *m_log << MSG::INFO << "Successfully failed over. " << endmsg;
   pthread_mutex_unlock(&m_failoverLock);
 
   return 0;
-}
-
-/** Processes elements from the send queue.
- * The elements from this queue are sent over a socket, one by one.
- */
-int Connection::processSends(void)
-{
-  int ret;
-  char *ptr;
-  int totalSize = 0;
-
-start:
-  struct cmd_header *cmd_to_send = NULL;
-
-  *m_log << MSG::INFO << "Started send thread." << endmsg;
-
-	/*While either you don't need to stop, or you need to stop after purging entries.*/
-  while((!m_stopSending) || (m_stopSending == STOP_AFTER_PURGE && cmd_to_send)) {
-
-		cmd_to_send = m_mmObj.moveSendPointer();
-    if(!cmd_to_send)
-      continue;
-
-    totalSize = sizeof(struct cmd_header);
-    if(cmd_to_send->cmd == CMD_WRITE_CHUNK)
-    	totalSize += cmd_to_send->data.chunk_data.size;
-
-    ptr = (char *)cmd_to_send;
-		ret = Utils::send(m_sockfd, ptr, totalSize, m_log);
-		if(ret != totalSize) {
-        if(failover() == KILL_THREAD)
-        	return 0;
-        else
-        	goto start;
-    }
-    cmd_to_send = m_mmObj.moveSendPointer();
-  }
-
-  return 0;
-}
-
-/** Processes acknowledgements received from the server.
- * All received acknowledgements are removed from the command
- * cache. Acknowledgements are read nonblocking from the
- * server as long as there are acks to be read.
- */
-int Connection::processAcks(void)
-{
-  int ret;
-  struct ack_header ackHeaderBuf;
-
-start:
-	memset(&ackHeaderBuf, 0, sizeof(struct ack_header));
-
-	/*While either you don't need to stop, or you need to stop after purging entries.*/
-  while((!m_stopAcking) ||
-  	(m_stopAcking == STOP_AFTER_PURGE && m_mmObj.getQueueLength() != 0))
-  {
-
-    ret = Utils::brecv(m_sockfd, &ackHeaderBuf, sizeof(struct ack_header), m_log);
-    if(ret != sizeof(struct ack_header)) {
-      *m_log << MSG::WARNING << "Disconnected, should fail over." << endmsg;
-      if(failover() == KILL_THREAD)
-      	return 0;
-      else
-      	goto start;
-    }
-
-    unsigned int totalNumAcked = 0;
-    if(ackHeaderBuf.min_seq_num > ackHeaderBuf.max_seq_num) { /*Sequence wraparound?*/
-      totalNumAcked = 0xffffffff - ackHeaderBuf.min_seq_num + 1;
-      totalNumAcked += ackHeaderBuf.max_seq_num;
-    } else {
-      totalNumAcked = ackHeaderBuf.max_seq_num - ackHeaderBuf.min_seq_num + 1;
-    }
-
-    for(unsigned int i=0, seqNum=ackHeaderBuf.min_seq_num;
-        i<totalNumAcked;
-        i++,seqNum++) {
-
-      struct cmd_header *cmd;
-      if((cmd = m_mmObj.dequeueCommand(seqNum)) == NULL) {
-        *m_log << MSG::ERROR << "FATAL, Received an unsolicited ack." << endmsg;
-      } else {
-      	notify(cmd);
-        m_mmObj.freeCommand(cmd);
-      }
-    }
-  }
-  return 0;
-}
-
-inline void Connection::notify(struct cmd_header *cmd)
-{
-  if(!m_notifyClient)
-  	return;
-  switch(cmd->cmd) {
-    case CMD_CLOSE_FILE:
-      m_notifyClient->notifyClose(cmd);
-      break;
-    case CMD_OPEN_FILE:
-      m_notifyClient->notifyOpen(cmd);
-      break;
-    default:
-      break;
-  }
 }
 
 
@@ -318,117 +206,6 @@ void Connection::sendCommand(struct cmd_header *header, void *data)
   newHeader = MM::allocAndCopyCommand(header, data);	/* Will always succeed. */
 
   m_mmObj.enqueueCommand(newHeader);
-}
-
-/**
- * The ack thread body.
- * This thread just starts the processAcks() method of the
- * specified connection object in a separate thread.
- */
-static void *ack_thread(void *args)
-{
-
-  Connection *conn;
-  conn = (Connection*)args;
-  currThread = ACK_THREAD;
-  conn->processAcks();
-  return NULL;
-}
-
-/**
- * The sender thread body.
- * This thread just starts the startSending() method of
- * the specified connection object in a separate thread.
- */
-static void *send_thread(void *args)
-{
-  Connection *conn;
-  conn = (Connection*)args;
-  currThread = SEND_THREAD;
-  conn->processSends();
-  return NULL;
-}
-
-/**
- * Starts up the send thread.
- */
-void Connection::startSendThread()
-{
-  int ret;
-  *m_log << MSG::INFO << "Starting send thread. . .";
-  m_stopSending = 0;
-  ret = pthread_create(&m_sendThread, NULL, send_thread, this);
-  if(ret != 0) {
-    *m_log << MSG::FATAL << "Could not create send thread " << errno << endmsg;
-    return;
-  }
-  *m_log << MSG::INFO << "Done." << endmsg;
-}
-
-/**
- * Reinits the structures that the send thread uses,
- */
-void Connection::reInitSendThread(void) {
-	m_mmObj.resetSendPointer();
-	*m_log << MSG::INFO << "Reset send thread data." << endmsg;
-}
-
-
-/**
- * Stops the send thread (blocking).
- */
-void Connection::stopSendThread(int stopLevel)
-{
-  int ret;
-  *m_log << MSG::INFO << "Stopping send thread. . .";
-  m_stopSending = stopLevel;
-  ret = pthread_join(m_sendThread, NULL);
-  if(ret != 0) {
-    *m_log << MSG::ERROR << "Could not stop send thread " << errno << endmsg;
-    return;
-  }
-  *m_log << MSG::INFO << "Done." << endmsg;
-}
-
-
-/**
- * Starts up the ack thread.
- */
-void Connection::startAckThread()
-{
-  int ret;
-  m_stopAcking = 0;
-  *m_log << MSG::INFO << "Starting ack thread . . .";
-  ret = pthread_create(&m_ackThread, NULL, ack_thread, this);
-  if(ret != 0) {
-    *m_log << MSG::FATAL << "Could not create ack thread " << errno << endmsg;
-    throw std::runtime_error("Could not start ack thread.");
-  }
-  *m_log << MSG::INFO << "Done." << endmsg;
-}
-
-/**
- * Reinits the structures that the ack thread uses.
- */
-void Connection::reInitAckThread(void) {
-  *m_log << MSG::INFO << "Reinited ack thread data." << endmsg;
-}
-
-/**
- * Stops the ack thread (blocking).
- */
-void Connection::stopAckThread(int stopLevel)
-{
-  int ret;
-  *m_log << MSG::INFO << "Stopping ack thread . . .";
-  m_stopAcking = stopLevel;
-  ret = pthread_join(m_ackThread, NULL);
-  if(ret != 0) {
-    *m_log << MSG::ERROR << "Could not stop ack thread " << errno << endmsg;
-    return;
-  }
-  *m_log << MSG::INFO << "Done." << endmsg;
-
 }
 
 #endif /* _WIN32 */

@@ -10,8 +10,31 @@ extern "C" {
 }
 
 #include "Writer/MM.h"
+#include "Writer/SendThread.h"
+#include "Writer/AckThread.h"
 #include "GaudiKernel/IMessageSvc.h"
 #include "GaudiKernel/MsgStream.h"
+
+#define MDFWRITER_THREAD  0x01   /**<< MDF Writer GaudiAlgorithm thread identifier.*/
+#define ACK_THREAD   			0x02   /**<< Acknowledgement thread identifier.*/
+#define SEND_THREAD       0x03   /**<< Sender thread identifier.*/
+#define FAILOVER_THREAD   0x04	 /**<< Failover thread identifier.*/
+
+#define STOP_URGENT				0x01	/**<< Tells a thread to stop immediately.*/
+#define STOP_AFTER_PURGE	0x02	/**<< Tells a thread to stop after purging queue.*/
+
+/**
+ * Returned by Connection::failover() to tell a thread that failover is already done,
+ * and that it must die to be respawned.
+ */
+#define KILL_THREAD		(-1)
+#define RESUME_THREAD	0
+
+/**
+ * A thread local variable to keep track of which thread we're in.
+ */
+extern __thread int currThread;
+
 
 /*
  * LHCb Namespace
@@ -30,6 +53,12 @@ namespace LHCb {
   {
     private:
 
+    	/// A handle to the sender thread.
+    	SendThread *m_sendThread;
+
+    	/// A handle to the ack thread.
+    	AckThread *m_ackThread;
+
     	/// A failover monitor object.
     	FailoverMonitor *m_failoverMonitor;
 
@@ -38,12 +67,6 @@ namespace LHCb {
 
       /// Flag to tell the sending thread to shut down.
       volatile int m_stopSending;
-
-      /// A handle to the ack thread.
-      pthread_t m_ackThread;
-
-      /// A handle to the send thread.
-      pthread_t m_sendThread;
 
       /// A lock to be held by a thread that goes into failover.
       /// This is to prevent both threads from initiating failover.
@@ -79,9 +102,6 @@ namespace LHCb {
       /// A MessageSvc object to log messages to.
       MsgStream *m_log;
 
-      /// Fails over onto an alternative storage cluster node.
-      int failover(void);
-
       /// Starts the acknowledgement thread.
       void startAckThread();
 
@@ -110,11 +130,11 @@ namespace LHCb {
       /// The connection is open, but no file is open.
       static const int STATE_CONN_OPEN  =  0x03;
 
+      /// Fails over onto an alternative storage cluster node.
+      int failover(void);
+
       /// Processes acknowledgements and dequeues the acknowledged commands.
       int processAcks(void);
-
-      /// Processes messages put in the queue, and sends them over the socket.
-      int processSends(void);
 
       /// Conencts to a storage cluster node, and starts threads.
       void initialize();
@@ -135,7 +155,9 @@ namespace LHCb {
       int getState() { return m_state; }
 
       /// Sets a notification listener for events on this connection.
-      void setNotifyClient(INotifyClient *nClient) { m_notifyClient = nClient; }
+      void setNotifyClient(INotifyClient *nClient) {
+      	m_ackThread->setNotifyClient(nClient);
+      }
 
       /// Notifies the notification listener.
       void notify(struct cmd_header *cmd);
