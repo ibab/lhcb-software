@@ -4,6 +4,10 @@
 ! Purpose     : Monitor algorithms that exclusively use MCEvent data objects
 !-----------------------------------------------------------------------------
 
+!========================== RichMCMonitors v1r2 2007-03-20 ===================
+! 2007-03-20 - Marco Cattaneo
+ - Remove obsolete RichMCMonitors_load.cpp file
+
 ! 2007-03-01 - Chris Jones
  - Tidy update doxygen namespace documentation
 

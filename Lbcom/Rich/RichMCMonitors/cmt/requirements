@@ -3,7 +3,7 @@
 # Maintainer : Chris Jones
 #============================================================================
 package           RichMCMonitors
-version           v1r1
+version           v1r2
 
 #============================================================================
 # Structure, i.e. directories to process. 
@@ -16,7 +16,6 @@ branches          cmt doc src
 use   GSL          v*    LCG_Interfaces
 use   RichKernel   v*    Rich
 use   MCEvent      v*    Event
-use   GSL          v*    LCG_Interfaces
 
 include_path      none
 
