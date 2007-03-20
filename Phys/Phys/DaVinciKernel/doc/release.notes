@@ -3,6 +3,12 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+! 2007-03-20 - Patrick Koppenburg
+ - src/component/PhysDeskop.cpp
+   Bug fix in getParticles: was exiting loop over locations if one of the 
+   locations was not present.
+ - increment to v6r2
+
 !========================= DaVinciKernel v6r1 2007-03-07 ===================
 ! 2007-03-07 - Chris Jones
  - Update definition of "RequiresDet='CALO'" to ECAL||PRS (previously just ECAL)

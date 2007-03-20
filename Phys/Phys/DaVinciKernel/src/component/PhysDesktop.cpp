@@ -642,6 +642,10 @@ StatusCode PhysDesktop::makeParticles(){
 //=============================================================================
 StatusCode PhysDesktop::getParticles(){
 
+  debug() << "Looking for particles in " << m_inputLocn.size() 
+          << " places" << endmsg ;
+  
+
   for( std::vector<std::string>::iterator iloc = m_inputLocn.begin();
        iloc != m_inputLocn.end(); iloc++ ) {
 
@@ -650,7 +654,6 @@ StatusCode PhysDesktop::getParticles(){
     if ( !exist<LHCb::Particles>( location ) ){ 
       //            return Error("No particles at location "+location); 
       Warning("No particles at location "+location);
-      return StatusCode::SUCCESS ;
     }
     LHCb::Particles* parts = get<LHCb::Particles>( location );
     // Msg number of Particles retrieved
