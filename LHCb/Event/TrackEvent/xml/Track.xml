@@ -192,14 +192,15 @@
    *  For now:
    *   Likelihood   : 
    *   MatchChi2    : Chi2 from the velo-seed matching (TrackMatching)
-   *
+   *   PatQuality   : Quality variable from PatForward Tracking 
    */
 -->
    <enum
         desc   = "Additional information assigned to this Track by pattern recognition"
         name   = "AdditionalInfo"
         value  = "Likelihood = 1, 
-                  MatchChi2 = 16"
+                  MatchChi2 = 16,
+		  PatQuality = 2"
         access = "PUBLIC"
    />
 
