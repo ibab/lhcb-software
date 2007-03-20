@@ -1,4 +1,4 @@
-// $Id: STOnlinePosition.cpp,v 1.9 2007-01-09 15:02:24 jvantilb Exp $
+// $Id: STOnlinePosition.cpp,v 1.10 2007-03-20 17:36:56 jvantilb Exp $
  
 // Kernel
 #include "GaudiKernel/ToolFactory.h"
@@ -6,6 +6,9 @@
 
 // Boost
 #include <boost/assign/std/vector.hpp>
+
+// Mathematical tools
+#include <math.h> 
  
 // Event
 #include "Event/STDigit.h"
@@ -26,8 +29,8 @@ STOnlinePosition::STOnlinePosition( const std::string& type,
   GaudiTool(type, name, parent)
 {
   m_errorVec += 0.22, 0.14, 0.25;
-  declareProperty("errorVec",m_errorVec);
-  declareProperty("nBits",m_nBits = 2);
+  declareProperty("ErrorVec",m_errorVec);
+  declareProperty("NBits",m_nBits = 2);
 
   declareInterface<ISTClusterPosition>(this);
 }

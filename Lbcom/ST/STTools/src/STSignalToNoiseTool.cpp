@@ -1,4 +1,4 @@
-// $Id: STSignalToNoiseTool.cpp,v 1.6 2007-01-09 15:02:24 jvantilb Exp $
+// $Id: STSignalToNoiseTool.cpp,v 1.7 2007-03-20 17:36:56 jvantilb Exp $
 
 // Gaudi files
 #include "GaudiKernel/ToolFactory.h"
@@ -29,9 +29,9 @@ STSignalToNoiseTool::STSignalToNoiseTool( const std::string& type,
   GaudiTool( type, name, parent ),
   m_tracker(0) 
 { 
-  declareProperty("noiseParams",     m_paramsInElectron         ); 
-  declareProperty("conversionToADC", m_conversionToADC = 0.0009 );
-  declareProperty("detType",         m_detType         = "TT"   );
+  declareProperty("NoiseParams",     m_paramsInElectron         ); 
+  declareProperty("ConversionToADC", m_conversionToADC = 0.0009 );
+  declareProperty("DetType",         m_detType         = "TT"   );
 
   m_paramsInElectron.push_back(776);
   m_paramsInElectron.push_back(47.9/Gaudi::Units::picofarad);

@@ -2,6 +2,10 @@ Package         : ST/STTools
 Package manager : Matt Needham
 !------------------------------------------------------------------------------
 
+! 2007-03-20 - Jeroen Van Tilburg
+ - Add missing include file.
+ - Names of joboptions start with a capital.
+
 ! 2007-01-04 - Jeroen VAN TILBURG
  - Minor cosmetic changes. Removal of obsolete code.
 

@@ -1,1 +1,1 @@
-ToolSvc.ITClusterPosition.errorVec ={ 0.20, 0.10, 0.22, 0.18};
+ToolSvc.ITClusterPosition.ErrorVec ={ 0.20, 0.10, 0.22, 0.18};

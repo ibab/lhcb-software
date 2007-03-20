@@ -1,4 +1,4 @@
-// $Id: STOfflinePosition.cpp,v 1.9 2007-01-09 15:02:24 jvantilb Exp $
+// $Id: STOfflinePosition.cpp,v 1.10 2007-03-20 17:36:56 jvantilb Exp $
  
 // Kernel
 #include "GaudiKernel/ToolFactory.h"
@@ -9,6 +9,9 @@
 
 // Boost
 #include <boost/assign/std/vector.hpp>
+
+// Mathematical tools
+#include <math.h> 
 
 // local
 #include "STFun.h"
@@ -25,9 +28,9 @@ STOfflinePosition::STOfflinePosition(const std::string& type,
   GaudiTool(type, name, parent)
 {
   m_errorVec += 0.22, 0.12, 0.24, 0.21;
-  declareProperty("errorVec",m_errorVec);
-  declareProperty("sharingCorr",m_sharingCorr = 112.);
-  declareProperty("maxNtoCorr",m_maxNtoCorr = 4);
+  declareProperty("ErrorVec",m_errorVec);
+  declareProperty("SharingCorr",m_sharingCorr = 112.);
+  declareProperty("MaxNtoCorr",m_maxNtoCorr = 4);
 
   declareInterface<ISTClusterPosition>(this);
 }
