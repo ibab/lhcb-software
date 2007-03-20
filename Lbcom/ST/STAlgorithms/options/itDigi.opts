@@ -73,5 +73,5 @@ MCITDigitCreator.DetType = "IT";
 ITDigitCreator.DetType = "IT";
 ITClusterCreator.DetType = "IT";
 
-ToolSvc.STSignalToNoiseToolIT.detType = "IT";
-ToolSvc.STSignalToNoiseToolIT.conversionToADC = 0.0015;
+ToolSvc.STSignalToNoiseToolIT.DetType = "IT";
+ToolSvc.STSignalToNoiseToolIT.ConversionToADC = 0.0015;
