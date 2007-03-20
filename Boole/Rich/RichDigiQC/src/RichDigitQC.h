@@ -5,7 +5,7 @@
  *  Header file for RICH Digitisation Quality Control algorithm : Rich::MC::Digi::DigitQC
  *
  *  CVS Log :-
- *  $Id: RichDigitQC.h,v 1.24 2007-03-01 19:36:11 jonrob Exp $
+ *  $Id: RichDigitQC.h,v 1.25 2007-03-20 15:56:21 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-09-08
@@ -41,6 +41,9 @@
 // RICH Interfaces
 #include "RichKernel/IRichSmartIDTool.h"
 #include "RichKernel/IRichMCTruthTool.h"
+
+// Boost
+#include "boost/format.hpp"
 
 namespace Rich
 {

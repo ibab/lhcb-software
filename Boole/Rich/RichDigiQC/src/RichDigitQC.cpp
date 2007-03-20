@@ -5,7 +5,7 @@
  *  Implementation file for RICH Digitisation Quality Control algorithm : RichDigitQC
  *
  *  CVS Log :-
- *  $Id: RichDigitQC.cpp,v 1.32 2007-02-02 10:12:44 jonrob Exp $
+ *  $Id: RichDigitQC.cpp,v 1.33 2007-03-20 15:56:21 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2003-09-08
@@ -258,8 +258,10 @@ StatusCode DigitQC::finalize()
         plot2D( hpdLoc.x(), hpdLoc.y(), RICH+" : SmartID Col layout", -800, 800, -600, 600, 100, 100, (*iHPD).first.hpdCol() );
       }
       debug() << "    HPD " << (*iHPD).first << " hardID "
-              << format("%3i",hID.data()) << " : L1 board" << format("%3i",l1ID.data()) << endreq
-              << "      Global position : " << hpdGlo << endreq
+              << boost::format("%3i") % hID.data() 
+              << " : L1 board";
+      debug() << boost::format("%3i") % l1ID.data() << endreq;
+      debug() << "      Global position : " << hpdGlo << endreq
               << "      Local position  : " << hpdLoc << endreq
               << "      Hit occupancy   : " << occ((*iHPD).second,m_evtC) << " hits/event" << endreq;
     }
@@ -295,13 +297,13 @@ StatusCode DigitQC::finalize()
     int iC = 0;
     for ( L1Counter::const_iterator iL1 = totL1.begin(); iL1 != totL1.end(); ++iL1, ++iC )
     {
-      debug() << "       : Av. L1 board" << format("%3i",(*iL1).first.data())
+      debug() << "       : Av. L1 board" << boost::format("%3i") % (*iL1).first.data()
               << " hit occupancy   = " << occ((*iL1).second,m_evtC) << endreq;
     }
 
-    info() << "       : Min Av. HPD occupancy hID=" << format("%3i",minHPD.data())
+    info() << "       : Min Av. HPD occupancy hID=" << boost::format("%3i") % minHPD.data()
            << occ(minOcc,m_evtC) << " hits/event" << endreq
-           << "       : Max Av. HPD occupancy hID=" << format("%3i",maxHPD.data())
+           << "       : Max Av. HPD occupancy hID=" << boost::format("%3i") % maxHPD.data()
            << occ(maxOcc,m_evtC) << " hits/event" << endreq;
 
   }
