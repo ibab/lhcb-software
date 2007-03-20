@@ -4,6 +4,10 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+!=========================== RichTools v2r10 2007-03-20 ======================
+! 2007-03-20 - Marco Cattaneo
+ - Remove obsolete RichTools_load.cpp file
+
 ! 2007-03-09 - Chris Jones
  - Remove doxygen comments for namespaces (now in standalone file)
 
