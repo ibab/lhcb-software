@@ -3,6 +3,7 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+!========================= DaVinciKernel v6r2 2007-03-20 ====================
 ! 2007-03-20 - Patrick Koppenburg
  - src/component/PhysDeskop.cpp
    Bug fix in getParticles: was exiting loop over locations if one of the 
