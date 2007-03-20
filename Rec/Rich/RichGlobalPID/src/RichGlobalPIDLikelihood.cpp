@@ -5,7 +5,7 @@
  *  Implementation file for RICH Global PID algorithm class : Rich::Rec::GlobalPID::Likelihood
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDLikelihood.cpp,v 1.2 2007-03-19 15:04:21 jonrob Exp $
+ *  $Id: RichGlobalPIDLikelihood.cpp,v 1.3 2007-03-20 11:06:25 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -257,7 +257,7 @@ unsigned int Likelihood::doIterations()
 unsigned int Likelihood::initBestLogLikelihood()
 {
   if ( msgLevel(MSG::DEBUG) )
-    debug() << "Running Initial log likelihood maximisation" << endreq;
+    debug() << "Running initial log likelihood maximisation" << endreq;
 
   InitTrackInfo::Vector minTrackData;
   minTrackData.reserve(30); // average number of tracks that change DLL
@@ -267,66 +267,66 @@ unsigned int Likelihood::initBestLogLikelihood()
   {for ( RichGlobalPIDTracks::iterator track = m_GPIDtracks->begin();
          track != m_GPIDtracks->end();
          ++track )
+  {
+    RichRecTrack * rRTrack = (*track)->richRecTrack();
+
+    // Initialise starting values
+    double mindeltaLL = 99999.;
+    Rich::ParticleIDType minHypo = rRTrack->currentHypothesis();
+
+    // Loop over all particle codes
+    for ( int iHypo = 0; iHypo < Rich::NParticleTypes; ++iHypo )
     {
-      RichRecTrack * rRTrack = (*track)->richRecTrack();
+      Rich::ParticleIDType hypo = static_cast<Rich::ParticleIDType>(iHypo);
 
-      // Initialise starting values
-      double mindeltaLL = 99999.;
-      Rich::ParticleIDType minHypo = rRTrack->currentHypothesis();
+      // Skip analysing starting hypothesis
+      if ( hypo == rRTrack->currentHypothesis() ) continue;
 
-      // Loop over all particle codes
-      for ( int iHypo = 0; iHypo < Rich::NParticleTypes; ++iHypo )
+      // calculate delta logLikelihood for event with new track hypothesis
+      const double deltaLogL = deltaLogLikelihood( rRTrack, hypo );
+
+      // Set the value for deltaLL for this hypothesis
+      (*track)->globalPID()->setParticleDeltaLL( hypo, deltaLogL );
+
+      // Set new minimum if lower logLikelihood is achieved
+      if ( deltaLogL < mindeltaLL )
       {
-        Rich::ParticleIDType hypo = static_cast<Rich::ParticleIDType>(iHypo);
-
-        // Skip analysing starting hypothesis
-        if ( hypo == rRTrack->currentHypothesis() ) continue;
-
-        // calculate delta logLikelihood for event with new track hypothesis
-        const double deltaLogL = deltaLogLikelihood( rRTrack, hypo );
-
-        // Set the value for deltaLL for this hypothesis
-        (*track)->globalPID()->setParticleDeltaLL( hypo, deltaLogL );
-
-        // Set new minimum if lower logLikelihood is achieved
-        if ( deltaLogL < mindeltaLL )
-        {
-          if ( 0 != deltaLogL ) mindeltaLL = deltaLogL;
-          if ( deltaLogL < m_epsilon ) minHypo = hypo;
-        }
-
-        // In case the threshold is reached, skip other hypotheses
-        bool threshold = true;
-        for ( int ihypo = iHypo; ihypo < Rich::NParticleTypes; ++ihypo )
-        {
-          if ( m_tkSignal->nDetectablePhotons( rRTrack,
-                                               static_cast<Rich::ParticleIDType>(ihypo) ) > 0 )
-          {
-            threshold = false; break;
-          }
-        }
-        if ( threshold )
-        {
-          for ( int ihypo = iHypo; ihypo < Rich::NParticleTypes; ++ihypo )
-          {
-            (*track)->globalPID()->setParticleDeltaLL( static_cast<Rich::ParticleIDType>(ihypo),
-                                                       deltaLogL );
-          }
-          break;
-        }
-
-      } // end particle for loop
-
-      // Save info on tracks that have a better minimum hypothesis
-      if ( minHypo != rRTrack->currentHypothesis() )
-      {
-        minTrackData.push_back( InitTrackInfo(*track,minHypo,mindeltaLL) );
+        if ( 0 != deltaLogL ) mindeltaLL = deltaLogL;
+        if ( deltaLogL < m_epsilon ) minHypo = hypo;
       }
 
-      // Add this track / deltaLL to the track list
-      m_trackList.push_back( TrackPair(mindeltaLL, *track) );
+      // In case the threshold is reached, skip other hypotheses
+      bool threshold = true;
+      for ( int ihypo = iHypo; ihypo < Rich::NParticleTypes; ++ihypo )
+      {
+        if ( m_tkSignal->nDetectablePhotons( rRTrack,
+                                             static_cast<Rich::ParticleIDType>(ihypo) ) > 0 )
+        {
+          threshold = false; break;
+        }
+      }
+      if ( threshold )
+      {
+        for ( int ihypo = iHypo; ihypo < Rich::NParticleTypes; ++ihypo )
+        {
+          (*track)->globalPID()->setParticleDeltaLL( static_cast<Rich::ParticleIDType>(ihypo),
+                                                     deltaLogL );
+        }
+        break;
+      }
 
-    }} // end track for loop
+    } // end particle for loop
+
+      // Save info on tracks that have a better minimum hypothesis
+    if ( minHypo != rRTrack->currentHypothesis() )
+    {
+      minTrackData.push_back( InitTrackInfo(*track,minHypo,mindeltaLL) );
+    }
+
+    // Add this track / deltaLL to the track list
+    m_trackList.push_back( TrackPair(mindeltaLL, *track) );
+
+  }} // end track for loop
 
   // Finally, set all track hypotheses to their minimum
   for ( InitTrackInfo::Vector::const_iterator iT = minTrackData.begin();
@@ -351,6 +351,8 @@ unsigned int Likelihood::initBestLogLikelihood()
 
 void Likelihood::findBestLogLikelihood( MinTrList & minTracks )
 {
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << "Finding best overall log likelihood" << endreq;
 
   // update RICH flags
   if (m_richCheck) updateRichFlags(minTracks);
@@ -553,9 +555,10 @@ Likelihood::deltaLogLikelihood( RichRecTrack * track,
 {
 
   // Change due to track expectation
-  double deltaLL = m_tkSignal->nTotalObservablePhotons( track, newHypo ) -
-    ( track->nObservableSignalPhotons(track->currentHypothesis()) +
-      track->nObservableScatteredPhotons(track->currentHypothesis()) );
+  double deltaLL = ( m_tkSignal->nTotalObservablePhotons( track, newHypo ) -
+                     m_tkSignal->nTotalObservablePhotons( track, track->currentHypothesis() ) );
+  //  ( track->nObservableSignalPhotons(track->currentHypothesis()) +
+  //    track->nObservableScatteredPhotons(track->currentHypothesis()) );
 
   // Photon part
   RichRecTrack::Pixels & pixels = track->richRecPixels();
@@ -573,7 +576,7 @@ Likelihood::deltaLogLikelihood( RichRecTrack * track,
       double newSig = oldSig;
 
       // Loop over photons for this pixel
-      const RichRecPixel::Photons::iterator iPhotonEnd = photons.end();
+      const RichRecPixel::Photons::iterator iPhotonEnd    = photons.end();
       for ( RichRecPixel::Photons::const_iterator iPhoton = photons.begin();
             iPhoton != iPhotonEnd; ++iPhoton )
       {
@@ -600,6 +603,8 @@ Likelihood::deltaLogLikelihood( RichRecTrack * track,
 
 double Likelihood::logLikelihood()
 {
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << "Computing event log likelihood" << endreq;
 
   // Loop over tracks to form total expected hits part of LL
   double trackLL = 0.0;
@@ -609,9 +614,8 @@ double Likelihood::logLikelihood()
   {
     // Sum expected photons from each track with current assumed hypotheses
     RichRecTrack * rRTrack = (*track)->richRecTrack();
-    trackLL +=
-      m_tkSignal->nTotalObservablePhotons( rRTrack,
-                                           rRTrack->currentHypothesis() );
+    trackLL += m_tkSignal->nTotalObservablePhotons( rRTrack,
+                                                    rRTrack->currentHypothesis() );
   } // end track loop
 
   // Add background terms for expectation
@@ -631,8 +635,7 @@ double Likelihood::logLikelihood()
     RichRecPixel::Photons & photons = pixel->richRecPhotons();
     const RichRecPixel::Photons::iterator iPhotonEnd = photons.end();
     for ( RichRecPixel::Photons::iterator iPhoton = photons.begin();
-          iPhoton != iPhotonEnd;
-          ++iPhoton )
+          iPhoton != iPhotonEnd; ++iPhoton )
     {
       RichRecTrack * rRTrack = (*iPhoton)->richRecTrack();
       if ( !rRTrack->inUse() ) continue;
