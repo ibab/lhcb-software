@@ -2,11 +2,11 @@
 # Created    : 11/05/2003
 # Maintainer : Christopher Rob Jones
 #============================================================================
-# $Id: requirements,v 1.38 2007-02-06 15:44:36 cattanem Exp $
+# $Id: requirements,v 1.39 2007-03-20 15:13:00 cattanem Exp $
 #============================================================================
 
 package RichReadout
-version v2r4
+version v2r5
 
 # ================ structure =================================================
 branches cmt doc src Event xml

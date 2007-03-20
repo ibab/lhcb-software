@@ -4,6 +4,10 @@
 ! Purpose     : Rich Digitisation
 !-----------------------------------------------------------------------------
 
+!======================== RichReadout v2r5 2007-03-20 ========================
+! 2007-03-20 - Marco Cattaneo
+ - Remove obsolete RichReadout_load.cpp file
+
 ! 2007-03-20 - Chris Jones
  - Clean up some unchecked StatusCodes
  - Remove doxygen namespace comments (now in standalone file)
