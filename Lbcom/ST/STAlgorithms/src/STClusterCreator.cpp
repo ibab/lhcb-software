@@ -1,4 +1,4 @@
-// $Id: STClusterCreator.cpp,v 1.14 2007-01-09 15:34:34 jvantilb Exp $
+// $Id: STClusterCreator.cpp,v 1.15 2007-03-20 16:56:17 jvantilb Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -28,18 +28,18 @@ STClusterCreator::STClusterCreator( const std::string& name,
   m_sigNoiseTool(0),
   m_positionTool(0)
 {
-  declareProperty("digitSignal2Noise",m_digitSig2NoiseThreshold = 3.0);
-  declareProperty("clusterSignal2Noise",m_clusterSig2NoiseThreshold = 4.0);
-  declareProperty("highSignal2Noise",m_highThreshold = 10.0);
-  declareProperty("sigNoiseTool",m_sigNoiseToolName = "STSignalToNoiseTool");
-  declareProperty("positionTool",m_positionToolName = "STOnlinePosition");
-  declareProperty("inputLocation",m_inputLocation= STDigitLocation::TTDigits);
-  declareProperty("outputLocation",
+  declareProperty("DigitSignal2Noise",m_digitSig2NoiseThreshold = 3.0);
+  declareProperty("ClusterSignal2Noise",m_clusterSig2NoiseThreshold = 4.0);
+  declareProperty("HighSignal2Noise",m_highThreshold = 10.0);
+  declareProperty("SigNoiseTool",m_sigNoiseToolName = "STSignalToNoiseTool");
+  declareProperty("PositionTool",m_positionToolName = "STOnlinePosition");
+  declareProperty("InputLocation",m_inputLocation= STDigitLocation::TTDigits);
+  declareProperty("OutputLocation",
                   m_outputLocation = STClusterLocation::TTClusters);
-  declareProperty("outputVersion", m_outputVersion = 1);
-  declareProperty("size", m_maxSize = 4);
-  declareProperty("detType", m_detType = "TT");
-  declareProperty("byBeetle", m_byBeetle = true);  
+  declareProperty("OutputVersion", m_outputVersion = 1);
+  declareProperty("Size", m_maxSize = 4);
+  declareProperty("DetType", m_detType = "TT");
+  declareProperty("ByBeetle", m_byBeetle = true);  
 }
 
 STClusterCreator::~STClusterCreator()

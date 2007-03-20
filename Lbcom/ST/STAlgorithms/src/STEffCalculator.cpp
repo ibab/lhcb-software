@@ -1,4 +1,4 @@
-// $Id: STEffCalculator.cpp,v 1.4 2007-01-09 15:34:37 jvantilb Exp $
+// $Id: STEffCalculator.cpp,v 1.5 2007-03-20 16:56:17 jvantilb Exp $
 
 // Gaudi files
 #include "GaudiKernel/ToolFactory.h"
@@ -20,7 +20,7 @@ STEffCalculator::STEffCalculator(const std::string& type,
   GaudiTool( type, name, parent ),  
   m_GenEff(0)
 { 
-  declareProperty("efficiency", m_eff = 0.99); 
+  declareProperty("Efficiency", m_eff = 0.99); 
  
   // to get correct interface
   declareInterface<ISTEffCalculator>(this);
@@ -40,8 +40,9 @@ StatusCode STEffCalculator::initialize()
   /// initialize, flat generator...
   IRndmGenSvc* tRandNumSvc = svc<IRndmGenSvc>("RndmGenSvc", true);
   sc = tRandNumSvc->generator( Rndm::Flat(0.,1.0), m_GenEff.pRef() );
-  if (sc.isFailure()) return Error( "failed to init generator ", sc);
-  release(tRandNumSvc);
+  if (sc.isFailure()) return Error( "Failed to init generator ", sc);
+  sc = release(tRandNumSvc);
+  if (sc.isFailure()) return Error( "Failed to release RndmGenSvc ", sc);
   
   return sc;
 }

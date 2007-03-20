@@ -1,4 +1,4 @@
-// $Id: MCSTDepositCreator.cpp,v 1.15 2007-01-09 15:34:31 jvantilb Exp $
+// $Id: MCSTDepositCreator.cpp,v 1.16 2007-03-20 16:56:17 jvantilb Exp $
 
 // GSL 
 #include "gsl/gsl_math.h"
@@ -35,27 +35,27 @@ MCSTDepositCreator::MCSTDepositCreator( const std::string& name,
   m_spillNames.push_back("/");
   m_spillTimes.push_back(0.*Gaudi::Units::ns);
 
-  declareProperty("tofVector", m_tofVector);
-  declareProperty("spillVector", m_spillNames);
-  declareProperty("spillTimes", m_spillTimes);
-  declareProperty("minDist", m_minDistance = 10.0e-3*Gaudi::Units::mm);
+  declareProperty("TofVector", m_tofVector);
+  declareProperty("SpillVector", m_spillNames);
+  declareProperty("SpillTimes", m_spillTimes);
+  declareProperty("MinDist", m_minDistance = 10.0e-3*Gaudi::Units::mm);
 
-  declareProperty("chargeSharerName",m_chargeSharerName ="STChargeSharingTool");
-  declareProperty("depChargeTool", m_depChargeToolName = "SiDepositedCharge");
+  declareProperty("ChargeSharerName",m_chargeSharerName ="STChargeSharingTool");
+  declareProperty("DepChargeTool", m_depChargeToolName = "SiDepositedCharge");
 
-  declareProperty("siteSize", m_siteSize = 0.02*Gaudi::Units::mm);
-  declareProperty("maxNumSites", m_maxNumSites = 150);
+  declareProperty("SiteSize", m_siteSize = 0.02*Gaudi::Units::mm);
+  declareProperty("MaxNumSites", m_maxNumSites = 150);
 
-  declareProperty("xTalkParams", m_xTalkParams);
+  declareProperty("XTalkParams", m_xTalkParams);
 
   m_xTalkParams.push_back(0.08);
   m_xTalkParams.push_back(0.092/(55*Gaudi::Units::picofarad));
 
-  declareProperty("detType", m_detType = "TT"); 
+  declareProperty("DetType", m_detType = "TT"); 
 
-  declareProperty("sigNoiseTool", m_sigNoiseToolName = "STSignalToNoiseTool");
-  declareProperty("scaling", m_scaling = 1.0);
-  declareProperty("responseTypes", m_beetleResponseTypes);
+  declareProperty("SigNoiseTool", m_sigNoiseToolName = "STSignalToNoiseTool");
+  declareProperty("Scaling", m_scaling = 1.0);
+  declareProperty("ResponseTypes", m_beetleResponseTypes);
 
   m_inputLocation = MCHitLocation::TT; 
   m_outputLocation = MCSTDepositLocation::TTDeposits;
@@ -86,13 +86,13 @@ StatusCode MCSTDepositCreator::initialize()
 
   // deposited charge 
   m_depositedCharge = tool<ISiDepositedCharge>(m_depChargeToolName,
-                                               "depCharge",this);
+                                               "DepCharge",this);
   
   // make beetle response functions
   std::vector<std::string>::const_iterator iterType = 
     m_beetleResponseTypes.begin();
   for (; iterType != m_beetleResponseTypes.end() ; ++iterType ){
-    std::string name = "response"+(*iterType);
+    std::string name = "Response"+(*iterType);
     ISiAmplifierResponse* aResponse = 
       tool<ISiAmplifierResponse>("SiAmplifierResponse",name,this);
     m_amplifierResponse.push_back(aResponse); 
@@ -140,9 +140,9 @@ StatusCode MCSTDepositCreator::execute()
 }
  
 
-StatusCode MCSTDepositCreator::createDeposits( const MCHits* mcHitsCont, 
-                                               const double spillTime, 
-                                               MCSTDeposits* depositCont )
+void MCSTDepositCreator::createDeposits( const MCHits* mcHitsCont, 
+                                         const double spillTime, 
+                                         MCSTDeposits* depositCont )
 {
   // loop over MChits
   MCHits::const_iterator iterHit = mcHitsCont->begin();
@@ -229,7 +229,6 @@ StatusCode MCSTDepositCreator::createDeposits( const MCHits* mcHitsCont,
     } // hitToDigitize
   } // iterHit
 
-  return StatusCode::SUCCESS;
 }
 
 

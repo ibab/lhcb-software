@@ -1,4 +1,4 @@
-// $Id: STDigitCreator.cpp,v 1.13 2007-01-09 15:34:35 jvantilb Exp $
+// $Id: STDigitCreator.cpp,v 1.14 2007-03-20 16:56:17 jvantilb Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -33,13 +33,13 @@ STDigitCreator::STDigitCreator( const std::string& name,
   m_tracker(0)
 {
   //constructer
-  declareProperty("effToolName", m_effToolName="STEffCalculator");
-  declareProperty("sigNoiseTool",m_sigNoiseToolName = "STSignalToNoiseTool");
-  declareProperty("inputLocation", m_inputLocation=MCSTDigitLocation::TTDigits);
-  declareProperty("outputLocation", m_outputLocation=STDigitLocation::TTDigits);
-  declareProperty("tailStart", m_tailStart = 3.0);
-  declareProperty("saturation", m_saturation = 127.);
-  declareProperty("detType", m_detType = "TT");
+  declareProperty("EffToolName", m_effToolName="STEffCalculator");
+  declareProperty("SigNoiseTool",m_sigNoiseToolName = "STSignalToNoiseTool");
+  declareProperty("InputLocation", m_inputLocation=MCSTDigitLocation::TTDigits);
+  declareProperty("OutputLocation", m_outputLocation=STDigitLocation::TTDigits);
+  declareProperty("TailStart", m_tailStart = 3.0);
+  declareProperty("Saturation", m_saturation = 127.);
+  declareProperty("DetType", m_detType = "TT");
 }
 
 STDigitCreator::~STDigitCreator()
@@ -81,13 +81,13 @@ StatusCode STDigitCreator::execute()
   // Retrieve MCSTDigits
   MCSTDigits* mcDigitCont = get<MCSTDigits>(m_inputLocation);
 
-  // cache first and last mcdigit
-  m_lastIter = mcDigitCont->end();
-  m_cachedIter = mcDigitCont->begin();
-
   // create STDigits
   STDigits* digitsCont = new STDigits();
   createDigits(mcDigitCont,digitsCont);
+
+  // cache first and last digit
+  m_lastIter = digitsCont->end();
+  m_cachedIter = digitsCont->begin();
 
   // generate random noise
   std::vector<digitPair> noiseCont;
@@ -191,19 +191,19 @@ void STDigitCreator::mergeContainers( const std::vector<digitPair>& noiseCont,
   } //iterNoise
 }
 
-MCSTDigit* STDigitCreator::findDigit(const STChannelID& aChan)
+STDigit* STDigitCreator::findDigit(const STChannelID& aChan)
 {
-  MCSTDigit* mcDigit = 0;
+  STDigit* digit = 0;
 
   while ((m_cachedIter != m_lastIter)&&((*m_cachedIter)->channelID() < aChan)){
     ++m_cachedIter;
   } // m_cachedIter
 
   if ((m_cachedIter != m_lastIter)&&((*m_cachedIter)->channelID() == aChan)){
-    mcDigit = *m_cachedIter;
+    digit = *m_cachedIter;
   }
 
-  return mcDigit;
+  return digit;
 }
 
 void STDigitCreator::addNeighbours(STDigits* digitsCont) const
@@ -211,22 +211,33 @@ void STDigitCreator::addNeighbours(STDigits* digitsCont) const
   STDigits::iterator curDigit = digitsCont->begin();
   std::vector<digitPair> tmpCont;
   for( ; curDigit != digitsCont->end(); ++curDigit ) {
+
+    // Get left neighbour
+    STChannelID leftChan = m_tracker->nextLeft((*curDigit)->channelID());
+
+    // Don't add left neighbour if this neighbour is already hit
+    STChannelID prevDigitChan = 0u;
     if (curDigit != digitsCont->begin()){
       STDigits::iterator prevDigit = curDigit;
       --prevDigit;
-      STChannelID leftChan = m_tracker->nextLeft((*curDigit)->channelID());
-      if (( (*prevDigit)->channelID() != leftChan) && (leftChan != 0u) ){
-        tmpCont.push_back(std::make_pair(genInverseTail(),leftChan));
-      } // prev test
+      prevDigitChan = (*prevDigit)->channelID();
     }
+    if ( (leftChan != prevDigitChan) && (leftChan != 0u) ) {
+      tmpCont.push_back(std::make_pair(genInverseTail(),leftChan));
+    }
+  
+    // Get right neighbour
+    STChannelID rightChan = m_tracker->nextRight((*curDigit)->channelID());
 
+    // Don't add right neighbour if this neighbour is already hit
+    STChannelID nextDigitChan = 0u;
     STDigits::iterator nextDigit = curDigit;
     ++nextDigit;
     if ((nextDigit != digitsCont->end())){
-      STChannelID rightChan = m_tracker->nextRight((*curDigit)->channelID());
-      if ( ((*nextDigit)->channelID() != rightChan) && (rightChan != 0u) ){
-        tmpCont.push_back(std::make_pair(genInverseTail(),rightChan));
-      } // prev test
+      nextDigitChan = (*nextDigit)->channelID();
+    }
+    if ( (rightChan != nextDigitChan) && (rightChan != 0u) ){
+      tmpCont.push_back(std::make_pair(genInverseTail(),rightChan));
     }
     
   } //iterDigit

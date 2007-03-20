@@ -1,4 +1,4 @@
-// $Id: STDigitCreator.h,v 1.5 2007-01-09 15:34:36 jvantilb Exp $
+// $Id: STDigitCreator.h,v 1.6 2007-03-20 16:56:17 jvantilb Exp $
 #ifndef STDigitCreator_H
 #define STDigitCreator_H 1
 
@@ -58,7 +58,7 @@ private:
                        LHCb::STDigits* digitsCont);
   void addNeighbours(LHCb::STDigits* digitsCont) const;
   double genInverseTail() const;
-  LHCb::MCSTDigit* findDigit(const LHCb::STChannelID& aChan);
+  LHCb::STDigit* findDigit(const LHCb::STChannelID& aChan);
   double adcValue( double value ) const;
  
   // smart interface to generators
@@ -70,8 +70,8 @@ private:
   ISTSignalToNoiseTool* m_sigNoiseTool;  
   ISTEffCalculator* m_effTool;
 
-  LHCb::MCSTDigits::iterator m_cachedIter;
-  LHCb::MCSTDigits::iterator m_lastIter;
+  LHCb::STDigits::iterator m_cachedIter;
+  LHCb::STDigits::iterator m_lastIter;
   unsigned int m_numNoiseStrips;  
 
   // job options

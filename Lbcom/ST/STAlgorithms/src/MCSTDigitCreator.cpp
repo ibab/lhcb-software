@@ -1,4 +1,4 @@
-// $Id: MCSTDigitCreator.cpp,v 1.3 2007-01-09 15:34:31 jvantilb Exp $
+// $Id: MCSTDigitCreator.cpp,v 1.4 2007-03-20 16:56:17 jvantilb Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -20,7 +20,7 @@ MCSTDigitCreator::MCSTDigitCreator(const std::string& name,
   GaudiAlgorithm(name, pSvcLocator)
 {
   // MCSTDigitCreator constructor
-  declareProperty("detType", m_detType = "TT"); 
+  declareProperty("DetType", m_detType = "TT"); 
 
   m_inputLocation = MCSTDepositLocation::TTDeposits;
   m_outputLocation = MCSTDigitLocation::TTDigits; 

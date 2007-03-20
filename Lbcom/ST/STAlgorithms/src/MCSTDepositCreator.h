@@ -1,4 +1,4 @@
-// $Id: MCSTDepositCreator.h,v 1.4 2007-01-09 15:34:31 jvantilb Exp $
+// $Id: MCSTDepositCreator.h,v 1.5 2007-03-20 16:56:17 jvantilb Exp $
 #ifndef MCSTDEPOSITCREATOR_H
 #define MCSTDEPOSITCREATOR_H 1
 
@@ -52,9 +52,8 @@ public:
 private:
 
   /// create the deposits
-  StatusCode createDeposits(const LHCb::MCHits* mcHitsCont,
-                            const double spillTime, 
-                            LHCb::MCSTDeposits* depositCont);
+  void createDeposits(const LHCb::MCHits* mcHitsCont, const double spillTime, 
+                      LHCb::MCSTDeposits* depositCont);
 
   /// check can digitize this tracking hit
   bool hitToDigitize(const LHCb::MCHit* aHit) const;

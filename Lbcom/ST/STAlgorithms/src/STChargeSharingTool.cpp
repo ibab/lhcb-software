@@ -1,4 +1,4 @@
-// $Id: STChargeSharingTool.cpp,v 1.6 2007-01-09 15:34:33 jvantilb Exp $
+// $Id: STChargeSharingTool.cpp,v 1.7 2007-03-20 16:56:17 jvantilb Exp $
 
 // Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -18,7 +18,7 @@ STChargeSharingTool::STChargeSharingTool( const std::string& type,
   m_responseSpline(0)
 {
   // constructer
-  declareProperty("sharingFunction", m_sharingFunction );
+  declareProperty("SharingFunction", m_sharingFunction );
   declareInterface<ISTChargeSharingTool>(this);
 }
 

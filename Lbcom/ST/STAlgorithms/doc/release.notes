@@ -2,6 +2,12 @@
 ! Package manager : Matt Needham
 !-----------------------------------------------------------------------------
 
+! 2007-03-20 - Jeroen Van Tilburg
+ - Remove untested StatusCode.
+ - STDepositCreator: findDigit returns STDigit instead of MCSTDigit.
+ - STDepositCreator: addNeighbours correct for 1st and last digit.
+ - Changed names of joboptions to start with a capital.
+
 ! 2007-01-09 - Jeroen VAN TILBURG
  - Cosmetic changes. Clean up of obsolete code.
 
