@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::Rec::GeomEffPhotonTracing
  *
  *  CVS Log :-
- *  $Id: RichGeomEffPhotonTracing.h,v 1.21 2007-03-10 13:19:20 jonrob Exp $
+ *  $Id: RichGeomEffPhotonTracing.h,v 1.22 2007-03-20 11:45:15 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -16,12 +16,10 @@
 #define RICHRECTOOLS_RICHGEOMEFFPHOTONTRACING_H 1
 
 // STL
-#include <algorithm>
+//#include <algorithm>
 
 // from Gaudi
-#include "GaudiKernel/RndmGenerators.h"
-#include "GaudiKernel/IRndmGenSvc.h"
-#include "GaudiKernel/ParticleProperty.h"
+//#include "GaudiKernel/ParticleProperty.h"
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/PhysicalConstants.h"
 
@@ -80,9 +78,6 @@ namespace Rich
       // Initialize method
       StatusCode initialize();
 
-      // Finalize method
-      StatusCode finalize();
-
     public: // methods (and doxygen comments) inherited from public interface
 
       // Obtain geometrical efficiency for this track and hypothesis
@@ -111,14 +106,12 @@ namespace Rich
       /// Increment parameter for PD efficiencies
       double m_pdInc;
 
-      /// Flat random distribution between 0 and 1
-      mutable Rndm::Numbers m_uniDist;
-
       /// Ray-tracing configuration object
       LHCb::RichTraceMode m_traceMode;
 
       /// Vector of sampling phi values around the Cherekov ring
-      std::vector<double> m_phiValues;
+      typedef std::list<double> PhiList;
+      PhiList m_phiValues;
 
       /// Flag to turn on or off the explicit checking of the HPD status
       bool m_hpdCheck;

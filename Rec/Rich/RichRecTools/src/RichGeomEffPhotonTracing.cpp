@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::GeomEffPhotonTracing
  *
  *  CVS Log :-
- *  $Id: RichGeomEffPhotonTracing.cpp,v 1.26 2007-03-10 13:19:20 jonrob Exp $
+ *  $Id: RichGeomEffPhotonTracing.cpp,v 1.27 2007-03-20 11:45:15 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -41,8 +41,8 @@ GeomEffPhotonTracing::GeomEffPhotonTracing ( const std::string& type,
   declareInterface<IGeomEff>(this);
 
   // Define job option parameters
-  declareProperty( "NPhotonsGeomEffCalc",    m_nGeomEff        = 100 );
-  declareProperty( "NPhotonsGeomEffBailout", m_nGeomEffBailout = 20  );
+  declareProperty( "NPhotonsGeomEffCalc",    m_nGeomEff        = 100   );
+  declareProperty( "NPhotonsGeomEffBailout", m_nGeomEffBailout = 20    );
   declareProperty( "CheckHPDsAreActive",     m_hpdCheck        = false );
   declareProperty( "CheckBeamPipe", m_checkBeamPipe            = false );
 
@@ -50,6 +50,7 @@ GeomEffPhotonTracing::GeomEffPhotonTracing ( const std::string& type,
 
 StatusCode GeomEffPhotonTracing::initialize()
 {
+  using namespace Gaudi::Units;
 
   // Sets up various tools and services
   const StatusCode sc = RichRecToolBase::initialize();
@@ -65,24 +66,15 @@ StatusCode GeomEffPhotonTracing::initialize()
              StatusCode::SUCCESS );
   }
 
-  // random number service
-  IRndmGenSvc * randSvc = svc<IRndmGenSvc>( "RndmGenSvc", true );
-  if ( !m_uniDist.initialize( randSvc, Rndm::Flat(0,1) ) )
-  {
-    return Error( "Unable to initialise random numbers" );
-  }
-
   // Set up cached parameters for geometrical efficiency calculation
-  m_pdInc             = 1.0                 / static_cast<double>(m_nGeomEff);
-  const double incPhi = Gaudi::Units::twopi / static_cast<double>(m_nGeomEff);
+  m_pdInc             = 1.0   / static_cast<double>(m_nGeomEff);
+  const double incPhi = twopi / static_cast<double>(m_nGeomEff);
   double ckPhi = 0;
   m_phiValues.clear();
-  m_phiValues.reserve(m_nGeomEff);
   for ( int iPhot = 0; iPhot < m_nGeomEff; ++iPhot, ckPhi+=incPhi )
   {
     m_phiValues.push_back(ckPhi);
   }
-  std::random_shuffle( m_phiValues.begin(), m_phiValues.end() );
 
   if ( m_checkBeamPipe )
   {
@@ -93,15 +85,6 @@ StatusCode GeomEffPhotonTracing::initialize()
   info() << "Sampling Mode : " << m_traceMode << endreq;
 
   return sc;
-}
-
-StatusCode GeomEffPhotonTracing::finalize()
-{
-  // Release things
-  const StatusCode sc = m_uniDist.finalize();
-
-  // Execute base class method
-  return RichRecToolBase::finalize() && sc;
 }
 
 double
@@ -120,19 +103,17 @@ GeomEffPhotonTracing::geomEfficiency ( LHCb::RichRecSegment * segment,
 
       if ( msgLevel(MSG::VERBOSE) )
       {
-        verbose() << "Trying segment " << segment->key() << " CK theta = " << ckTheta
+        verbose() << "geomEfficiency : Trying segment " << segment->key() << " CK theta = " << ckTheta
                   << " track Dir "
                   << segment->trackSegment().bestMomentum().Unit()
                   << endreq;
       }
 
       int nDetect(0), iPhot(0);
-      for ( std::vector<double>::const_iterator ckPhi = m_phiValues.begin();
+      for ( PhiList::const_iterator ckPhi = m_phiValues.begin();
             ckPhi != m_phiValues.end(); ++iPhot, ++ckPhi )
       {
 
-        // Photon emission point is random between segment start and end points
-        // const Gaudi::XYZPoint emissionPt = trackSeg.bestPoint( m_uniDist() );
         // Photon emission point is half-way between segment start and end points
         const Gaudi::XYZPoint & emissionPt = segment->trackSegment().bestPoint();
 
@@ -200,13 +181,13 @@ GeomEffPhotonTracing::geomEfficiency ( LHCb::RichRecSegment * segment,
       eff = static_cast<double>(nDetect)/static_cast<double>(m_nGeomEff);
 
     }
-    //else
-    //{
-    //  Warning( "RichRecSegment expected CK theta <= 0" );
-    //}
 
     // store result
     segment->setGeomEfficiency( id, eff );
+    if ( msgLevel(MSG::VERBOSE) )
+    {
+      verbose() << "Segment " << segment->key() << " has " << id << " geom. eff. " << eff << endreq;
+    }
 
   }
 
@@ -221,67 +202,11 @@ GeomEffPhotonTracing::geomEfficiencyScat ( LHCb::RichRecSegment * segment,
 
   if ( !segment->geomEfficiencyScat().dataIsValid(id) )
   {
-    double eff = 0;
-
-    // only for aerogel
-    const double ckTheta = m_ckAngle->avgCherenkovTheta( segment, id );
-    if ( ckTheta > 0 && segment->trackSegment().radiator() == Rich::Aerogel )
-    {
-
-      // Photon emission point is end of aerogel
-      const Gaudi::XYZPoint emissionPt = segment->trackSegment().exitPoint();
-
-      // Cos of CK theta - cached for speed
-      const double cosCkTheta = cos(ckTheta);
-
-      int nDetect = 0;
-      LHCb::RichGeomPhoton photon;
-      int iPhot = 0;
-      for ( std::vector<double>::const_iterator ckPhi = m_phiValues.begin();
-            ckPhi != m_phiValues.end(); ++iPhot, ++ckPhi )
-      {
-
-        // generate randomn cos(theta)**2 distribution for thetaCk
-        double ckTheta(0);
-        do
-        {
-          ckTheta = m_uniDist()*M_PI_2;
-        }
-        while ( m_uniDist() > gsl_pow_2(cosCkTheta) );
-
-        // Photon direction around loop
-        const Gaudi::XYZVector photDir = segment->trackSegment().vectorAtThetaPhi( ckTheta, *ckPhi );
-
-        // Ray trace through detector
-        if ( 0 != m_rayTrace->traceToDetector( segment->trackSegment().rich(),
-                                               emissionPt,
-                                               photDir,
-                                               photon,
-                                               m_traceMode ) )
-        {
-          // Check HPD status
-          if ( m_hpdCheck && !m_richSys->hpdIsActive(photon.pixelCluster().hpd()) ) continue;
-          // count detected
-          ++nDetect;
-        }
-
-        // Bail out if tried m_geomEffBailout times and all have failed
-        if ( 0 == nDetect && iPhot >= m_nGeomEffBailout ) break;
-
-      } // fake photon loop
-
-      // compute eff
-      eff = static_cast<double>(nDetect)/static_cast<double>(m_nGeomEff);
-
-    } // radiator
-
-    // Assign this efficiency to all hypotheses
-    segment->setGeomEfficiencyScat( Rich::Electron, eff );
-    segment->setGeomEfficiencyScat( Rich::Muon,     eff );
-    segment->setGeomEfficiencyScat( Rich::Pion,     eff );
-    segment->setGeomEfficiencyScat( Rich::Kaon,     eff );
-    segment->setGeomEfficiencyScat( Rich::Proton,   eff );
-
+    /** use same value as for normal Geom Eff.
+     *  @todo Look to improving this by taking into account the cos^2 scattering
+     *        probability. Need to do this though without using random numbers ...
+     */
+    segment->setGeomEfficiencyScat( id, geomEfficiency(segment,id) );
   }
 
   // return result fo this id type
