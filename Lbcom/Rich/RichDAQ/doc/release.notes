@@ -4,6 +4,10 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
+!========================== RichDAQ v3r9 2007-03-20 ==========================
+! 2007-03-20 - Marco Cattaneo
+ - Remove obsolete RichDAQ_load.cpp file
+
 ! 2007-03-19 - Chris Jones
  - Replace use of Gaudi format with boost::format to fix various issues
 
