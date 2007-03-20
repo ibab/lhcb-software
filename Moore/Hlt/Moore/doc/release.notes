@@ -2,6 +2,9 @@ Package     : Hlt/Moore
 Package Coordinator : Patrick Koppenburg and Marco Cattaneo
 Purpose     : LHCb HLT application
 
+ - Hernando,J. 20/03/07
+   Moore.opts run L0.opts, Hlt.opts, HltSelections.opts
+
 </PRE><H1><A NAME=v2r2>2007-03-09 Moore v2r2</A></H1><PRE>
  - Based on split Phys v6r0 only
  - HltSelections restored, but not yet fully functional

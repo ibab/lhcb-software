@@ -19,8 +19,8 @@
 #include "$HLTSYSROOT/options/HltSelections.opts"
 
 // For DAQ studies replace the includes above for these ones:
-#include "$HLTSYSROOT/options/L0DAQ.opts"
-#include "$HLTSYSROOT/options/HltDAQ.opts"
+// #include "$HLTSYSROOT/options/L0DAQ.opts"
+// #include "$HLTSYSROOT/options/HltDAQ.opts"
 
 // include this options to get time or histogram information of alleys
 // #include "$HLTSYSROOT/options/HltAlleysTime.opts"
@@ -35,7 +35,7 @@
 //---------------------------------------------------------------------------
 // Number of events to process, optionally skipping some events
 //---------------------------------------------------------------------------
-ApplicationMgr.EvtMax =  2000;
+ApplicationMgr.EvtMax =  10000;
 EventSelector.PrintFreq = 100;
 ApplicationMgr.OutputLevel = 10;
 //EventSelector.FirstEvent = 7;  // To skip some events 
