@@ -3,6 +3,10 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+! 2007-03-21 - Patrick Koppenburg
+ - Moved PhysDesktop and Particle2VertexAsct implementations to DaVinciTools.
+ - Removed component library compile and link statements in requirements
+
 !========================= DaVinciKernel v6r2 2007-03-20 ====================
 ! 2007-03-20 - Patrick Koppenburg
  - src/component/PhysDeskop.cpp
