@@ -1,4 +1,4 @@
-// $Id: TrackKalmanFilter.cpp,v 1.37 2006-12-15 19:13:14 graven Exp $
+// $Id: TrackKalmanFilter.cpp,v 1.38 2007-03-21 14:41:40 cattanem Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -212,7 +212,7 @@ StatusCode TrackKalmanFilter::fit( Track& track )
 // Predict the state to this node
 //=========================================================================
 StatusCode TrackKalmanFilter::predict( FitNode& aNode, State& aState,
-                                       const TrackVector& refVec )
+                                       const Gaudi::TrackVector& refVec )
 {
   TrackVector prevStateVec = aState.stateVector();
   TrackSymMatrix prevStateCov = aState.covariance();
@@ -534,7 +534,7 @@ void TrackKalmanFilter::computeChi2( Track& track )
 //=========================================================================
 // 
 //=========================================================================
-StatusCode TrackKalmanFilter::checkInvertMatrix( const TrackSymMatrix& mat ) 
+StatusCode TrackKalmanFilter::checkInvertMatrix( const Gaudi::TrackSymMatrix& mat ) 
 {
   unsigned int nParams = TrackSymMatrix::kRows;
   for ( unsigned int i = 0; i < nParams; ++i ) {
@@ -550,7 +550,7 @@ StatusCode TrackKalmanFilter::checkInvertMatrix( const TrackSymMatrix& mat )
 //=========================================================================
 // 
 //=========================================================================
-StatusCode TrackKalmanFilter::checkPositiveMatrix( const TrackSymMatrix& mat ) 
+StatusCode TrackKalmanFilter::checkPositiveMatrix( const Gaudi::TrackSymMatrix& mat ) 
 {
   for ( unsigned int i=0; i < TrackSymMatrix::kRows; ++i ) {
     if ( mat(i,i) <= 0. )
@@ -570,7 +570,7 @@ StatusCode TrackKalmanFilter::checkPositiveMatrix( const TrackSymMatrix& mat )
 // M. Needham 13/6/2000
 // J.A. Hernando (we trust you) 15/05/05
 //=========================================================================
-StatusCode TrackKalmanFilter::invertMatrix( TrackSymMatrix& m )
+StatusCode TrackKalmanFilter::invertMatrix( Gaudi::TrackSymMatrix& m )
 {
   // check that the elements are not too large else dsinv will crash
   StatusCode sc = checkInvertMatrix( m );

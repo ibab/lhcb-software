@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.cpp,v 1.28 2007-03-20 13:10:48 mneedham Exp $
+// $Id: TrackMasterFitter.cpp,v 1.29 2007-03-21 14:41:40 cattanem Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -464,7 +464,8 @@ const State& TrackMasterFitter::seedState( Track& track )
 //=========================================================================
 // Fill the covariance matrix of the first node with the original ones
 //=========================================================================
-void TrackMasterFitter::reSeed( Track& track, const TrackSymMatrix& seedCov )
+void TrackMasterFitter::reSeed( Track& track, 
+                                const Gaudi::TrackSymMatrix& seedCov )
 {
   std::vector<Node*>& nodes = track.nodes();
   std::vector<Node*>::iterator firstNode = nodes.begin();
