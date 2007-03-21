@@ -4,9 +4,6 @@
 ! Purpose     : Rich Digitisation
 !-----------------------------------------------------------------------------
 
-! 2007-03-20 - Chris Jones
- - Fixes for un-tested StatusCodes
-
 !======================== RichReadout v2r5 2007-03-20 ========================
 ! 2007-03-20 - Marco Cattaneo
  - Remove obsolete RichReadout_load.cpp file
