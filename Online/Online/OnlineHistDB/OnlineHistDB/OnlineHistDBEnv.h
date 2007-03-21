@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDBEnv.h,v 1.3 2007-03-21 15:21:03 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDBEnv.h,v 1.4 2007-03-21 15:33:04 ggiacomo Exp $
 #ifndef ONLINEHISTDBENV_H
 #define ONLINEHISTDBENV_H 1
 /** @class  OnlineHistDBEnv OnlineHistDBEnv.h OnlineHistDB/OnlineHistDBEnv.h
@@ -10,6 +10,7 @@
 
 #include <iostream>
 #include <sstream>
+#include <cctype>
 #include <occi.h>
 using namespace oracle::occi;
 using namespace std;
@@ -45,11 +46,13 @@ class OnlineHistDBEnv {
   virtual ~OnlineHistDBEnv() {};
   Connection* conn() const {return m_conn;}
   void dumpError(SQLException& ex,std::string MethodName) const {
-    cout << ( (ex.getErrorCode() < -20500) ? "------- FATAL ERROR: ----------" :
-	      "------- WARNING: ----------" ) <<endl;
-    cout<<"Exception thrown from "<< MethodName <<endl;
-    cout<<"Error number: "<<  ex.getErrorCode() << endl;
-    cout<<ex.getMessage() << endl;
+    if (m_debug > -1) {
+      cout << ( (ex.getErrorCode() < -20500) ? "------- FATAL ERROR: ----------" :
+		"------- WARNING: ----------" ) <<endl;
+      cout<<"Exception thrown from "<< MethodName <<endl;
+      cout<<"Error number: "<<  ex.getErrorCode() << endl;
+      cout<<ex.getMessage() << endl;
+    }     
     if(m_excLevel >1  || (m_excLevel == 1 && ex.getErrorCode() < -20500))
       throw(ex.getErrorCode());
   }
@@ -58,9 +61,9 @@ class OnlineHistDBEnv {
   std::string m_user;
  private:
   std::string toUpper(string str) {
-   for(unsigned int i=0;i<str.length();i++)
+    for(unsigned int i=0;i<str.length();i++)
       str[i] = toupper(str[i]);
-   return str;
+    return str;
   }
   int m_debug;
   int m_excLevel;
