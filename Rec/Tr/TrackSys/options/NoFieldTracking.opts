@@ -73,6 +73,10 @@ TrackMatch.ptCut = 0;
 TrackMatch.ExtrapolatorSeed = "TrackLinearExtrapolator";
 TrackMatch.TTClusterTool.Extrapolator =  "TrackLinearExtrapolator";
 
+// Forward pattern
+PatForward.WithoutBField         = true;
+ToolSvc.PatFwdTool.WithoutBField = true;
+
 
 // ====================================================================
 // Add pre-fit algorithms
