@@ -1,4 +1,4 @@
-// $Id: DaVinciTools_load.cpp,v 1.74 2007-03-05 09:05:35 pkoppenb Exp $
+// $Id: DaVinciTools_load.cpp,v 1.75 2007-03-21 13:02:40 pkoppenb Exp $
 // Include files 
 
 #include "GaudiKernel/DeclareFactoryEntries.h"
@@ -26,6 +26,8 @@ DECLARE_FACTORY_ENTRIES( DaVinciTools ) {
   DECLARE_TOOL( OnOfflineTool ) ;
   DECLARE_TOOL( ParticleDescendants ) ;
   DECLARE_TOOL( Particle2State ) ;
+  DECLARE_TOOL( Particle2VertexIPSAsct ) ;
+  DECLARE_TOOL( PhysDesktop );
   DECLARE_TOOL( RecursivePlotTool ) ;
   DECLARE_TOOL( RelatedPV ) ;
   DECLARE_TOOL( RelatedPVFinder ) ;

@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.257 2007-03-09 10:31:28 pkoppenb Exp $
+! $Id: release.notes,v 1.258 2007-03-21 13:02:40 pkoppenb Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2007-03-21 - Patrick Koppenburg
+ - Moved PhysDesktop and Particle2VertexIPSAsct from DaVinciKernel component
+ - Increment to v15r3
 
 !========================== DaVinciTools v15r2 2007-03-09 ===================
 ! 2007-03-07 - Patrick Koppenburg
