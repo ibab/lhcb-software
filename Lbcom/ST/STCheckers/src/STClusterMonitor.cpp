@@ -1,4 +1,4 @@
-// $Id: STClusterMonitor.cpp,v 1.1 2007-01-04 11:08:49 jvantilb Exp $
+// $Id: STClusterMonitor.cpp,v 1.2 2007-03-21 14:24:44 jvantilb Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -77,7 +77,7 @@ StatusCode STClusterMonitor::execute()
 //=========================================================================
 // Fill histograms for a given cluster
 //=========================================================================
-StatusCode STClusterMonitor::fillHistograms(const STCluster* aCluster)
+void STClusterMonitor::fillHistograms(const STCluster* aCluster)
 {
   // cluster Size 
   plot((double)aCluster->size(),"Size of cluster",-0.5,6.5,7);
@@ -123,5 +123,5 @@ StatusCode STClusterMonitor::fillHistograms(const STCluster* aCluster)
   }
 
   // end
-  return StatusCode::SUCCESS;
+  return;
 }

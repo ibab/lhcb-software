@@ -1,4 +1,4 @@
-// $Id: STClusterMonitor.h,v 1.1 2007-01-04 11:08:51 jvantilb Exp $
+// $Id: STClusterMonitor.h,v 1.2 2007-03-21 14:24:44 jvantilb Exp $
 #ifndef STClusterMonitor_H
 #define STClusterMonitor_H 1
 
@@ -39,7 +39,7 @@ public:
 
 private:
 
-  virtual StatusCode fillHistograms(const LHCb::STCluster* aCluster);
+  virtual void fillHistograms(const LHCb::STCluster* aCluster);
 
   // histograms
   DeSTDetector* m_tracker;

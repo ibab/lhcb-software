@@ -1,4 +1,4 @@
-// $Id: TTOccupancy.h,v 1.4 2007-01-04 10:37:37 jvantilb Exp $
+// $Id: TTOccupancy.h,v 1.5 2007-03-21 14:24:45 jvantilb Exp $
 #ifndef TTOccupancy_H
 #define TTOccupancy_H 1
 
@@ -39,7 +39,7 @@ public:
 
 private:
 
-  virtual StatusCode fillHistograms(const LHCb::STDigit* aDigit);
+  virtual void fillHistograms(const LHCb::STDigit* aDigit);
   
   ISTSignalToNoiseTool* m_sigNoiseTool;
   DeSTDetector* m_tracker;

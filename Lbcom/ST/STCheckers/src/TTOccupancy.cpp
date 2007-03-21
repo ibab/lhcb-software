@@ -1,4 +1,4 @@
-// $Id: TTOccupancy.cpp,v 1.10 2007-01-04 10:37:37 jvantilb Exp $
+// $Id: TTOccupancy.cpp,v 1.11 2007-03-21 14:24:45 jvantilb Exp $
 
 // BOOST
 #include "boost/lexical_cast.hpp"
@@ -89,7 +89,7 @@ StatusCode TTOccupancy::execute()
   return StatusCode::SUCCESS;
 }
 
-StatusCode TTOccupancy::fillHistograms(const STDigit* aDigit)
+void TTOccupancy::fillHistograms(const STDigit* aDigit)
 {
   // retrieve geom info
   if ( m_sigNoiseTool->signalToNoise(aDigit) >
@@ -122,12 +122,13 @@ StatusCode TTOccupancy::fillHistograms(const STDigit* aDigit)
         offset = ttSector->column() - 10: offset = ttSector->column() - 11;
     }
     else {
-      return Warning( "unknown row " );
+      warning() << "Unknown row " << aChan.detRegion() << endmsg;
+      return;
     } 
   
     plot((double)aChan.strip()-1.+(nstrips*offset),histo, 0.,m_hMax,m_nBins);
 
   } // if above threshold
 
-  return StatusCode::SUCCESS;
+  return;
 }

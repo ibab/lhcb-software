@@ -1,4 +1,4 @@
-// $Id: STEffChecker.cpp,v 1.2 2007-01-10 16:02:23 cattanem Exp $
+// $Id: STEffChecker.cpp,v 1.3 2007-03-21 14:24:44 jvantilb Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -24,6 +24,7 @@
 #include "boost/lexical_cast.hpp"
 
 // local
+#include "HistFun.h"
 #include "STEffChecker.h"
 
 using namespace LHCb;
@@ -78,15 +79,12 @@ StatusCode STEffChecker::initialize()
   // init histos
   initHistograms();
 
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 void STEffChecker::initHistograms()
 {
-  // Intialize histograms
-
   std::string tDirPath = this->histoPath()+"/";
-  
   int numInVector = 0;
   int histID;  
 
@@ -166,14 +164,15 @@ StatusCode STEffChecker::execute()
   if (!m_hitTable) return Error("Failed to find hit table at " 
                                 + m_hitTableLocation, StatusCode::FAILURE);
 
+  StatusCode sc = StatusCode::SUCCESS;
   MCParticles::const_iterator iterPart = particles->begin(); 
   for ( ; iterPart != particles->end(); ++iterPart){
     if ( m_selector->accept(*iterPart) ){
-      this->layerEff(*iterPart);
+      layerEff(*iterPart);
     }
   } // loop iterPart
 
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 StatusCode STEffChecker::finalize()
@@ -219,15 +218,21 @@ StatusCode STEffChecker::finalize()
 
   info() << " -----------------------" << endreq;
 
+  // unbook if not full detail mode: histograms are not saved
+  if (fullDetail() == false){
+    unBookHistos();
+    eraseHistos();
+  }
+
   return  GaudiHistoAlg::finalize();
 }
 
 
-StatusCode STEffChecker::layerEff(const MCParticle* aParticle)
+void STEffChecker::layerEff(const MCParticle* aParticle)
 {
   // find all MC hits for this particle
   HitTable::InverseType::Range hits = m_hitTable->relations( aParticle ) ;
-  if (hits.empty()) return StatusCode::FAILURE;
+  if (hits.empty()) return;
   
   std::vector<DeSTLayer*>::const_iterator iterLayer=m_tracker->layers().begin();
   for ( ; iterLayer != m_tracker->layers().end(); ++iterLayer){
@@ -286,7 +291,7 @@ StatusCode STEffChecker::layerEff(const MCParticle* aParticle)
     } //if
   } // iterLayer
   
-  return StatusCode::SUCCESS;
+  return;
 }
 
 
@@ -316,3 +321,26 @@ bool STEffChecker::isInside(const DeSTLayer* aLayer, const MCHit* aHit) const
   }
   return isFound;
 }
+
+void STEffChecker::unBookHistos(){
+
+  // give ownership back to vector - histos no longer in store
+  HistFun::unBookVector(m_xLayerHistos,     histoSvc());
+  HistFun::unBookVector(m_yLayerHistos,     histoSvc());
+  HistFun::unBookVector(m_xyLayerHistos,    histoSvc());
+  HistFun::unBookVector(m_effXLayerHistos,  histoSvc());
+  HistFun::unBookVector(m_effYLayerHistos,  histoSvc());
+  HistFun::unBookVector(m_effXYLayerHistos, histoSvc());  
+}
+
+void STEffChecker::eraseHistos(){
+
+  // clear everything
+  HistFun::eraseVector(m_xLayerHistos);
+  HistFun::eraseVector(m_yLayerHistos);
+  HistFun::eraseVector(m_xyLayerHistos);
+  HistFun::eraseVector(m_effXLayerHistos);
+  HistFun::eraseVector(m_effYLayerHistos);
+  HistFun::eraseVector(m_effXYLayerHistos);
+}
+

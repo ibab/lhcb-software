@@ -1,4 +1,4 @@
-// $Id: STEffChecker.h,v 1.2 2007-01-10 16:02:23 cattanem Exp $
+// $Id: STEffChecker.h,v 1.3 2007-03-21 14:24:44 jvantilb Exp $
 #ifndef STEffChecker_H
 #define STEffChecker_H 1
 
@@ -66,13 +66,15 @@ private:
 
   virtual void initHistograms();
   
-  virtual StatusCode layerEff(const LHCb::MCParticle* aParticle);
+  virtual void layerEff(const LHCb::MCParticle* aParticle);
 
   bool isInside(const DeSTLayer* aLayer, const LHCb::MCHit* aHit) const;
 
   int findHistoId(unsigned int aLayerId);
   int uniqueHistoID(const LHCb::STChannelID aChannel) const;
-
+ 
+  void unBookHistos();
+  void eraseHistos(); 
 
   Table* m_table;
   

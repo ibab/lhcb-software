@@ -2,6 +2,10 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
+! 2007-03-21 - Jeroen Van Tilburg
+ - Remove untested StatusCodes.
+ - Put back the HistFun.h file and unbook the histograms in STEffChecker.
+
 !=========================== STCheckers v2r0 2007-01-09 =======================
 ! 2007-01-10 - Marco Cattaneo
  - Remove unnecessary unchecked return StatusCodes

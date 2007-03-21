@@ -1,4 +1,4 @@
-// $Id: ITOccupancy.h,v 1.3 2007-01-04 10:37:36 jvantilb Exp $
+// $Id: ITOccupancy.h,v 1.4 2007-03-21 14:24:44 jvantilb Exp $
 #ifndef ITOccupancy_H
 #define ITOccupancy_H 1
 
@@ -43,8 +43,8 @@ public:
 
 private:
 
-  virtual StatusCode initHistograms();
-  virtual StatusCode fillHistograms(const LHCb::STDigit* aDigit);
+  virtual void initHistograms();
+  virtual void fillHistograms(const LHCb::STDigit* aDigit);
 
   int uniqueInt(const LHCb::STChannelID aChan) const;
 

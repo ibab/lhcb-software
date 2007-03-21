@@ -1,4 +1,4 @@
-// $Id: ITOccupancy.cpp,v 1.8 2007-01-04 10:37:36 jvantilb Exp $
+// $Id: ITOccupancy.cpp,v 1.9 2007-03-21 14:24:44 jvantilb Exp $
 
 // BOOST
 #include "boost/lexical_cast.hpp"
@@ -77,7 +77,7 @@ StatusCode ITOccupancy::initialize()
   return StatusCode::SUCCESS;
 }
 
-StatusCode ITOccupancy::initHistograms()
+void ITOccupancy::initHistograms()
 {
   int numInVector = 0;
   unsigned int nstrip = m_tracker->sectors().front()->nStrip();
@@ -115,7 +115,7 @@ StatusCode ITOccupancy::initHistograms()
     ++numInVector;
   } // iterLayer
 
-  return StatusCode::SUCCESS;
+  return;
 }
 
 StatusCode ITOccupancy::execute()
@@ -132,7 +132,7 @@ StatusCode ITOccupancy::execute()
     this->fillHistograms(*iterDigit);
   } // loop iterDigit
 
-  // av occupancy in each layer
+  // average occupancy in each layer
   int iCount = 0;
   for (iter=m_layerOccVector.begin();iter!=m_layerOccVector.end();++iter){
     if ( m_nStripsVector[iCount] != 0 ) { 
@@ -145,7 +145,7 @@ StatusCode ITOccupancy::execute()
   return StatusCode::SUCCESS;
 }
 
-StatusCode ITOccupancy::fillHistograms(const STDigit* aDigit)
+void ITOccupancy::fillHistograms(const STDigit* aDigit)
 {
   // retrieve geom info
   if (m_sigNoiseTool->signalToNoise(aDigit) >
@@ -165,7 +165,7 @@ StatusCode ITOccupancy::fillHistograms(const STDigit* aDigit)
 
   } // if above threshold
 
-  return StatusCode::SUCCESS;
+  return;
 }
 
 int ITOccupancy::uniqueInt(const STChannelID aChan) const 

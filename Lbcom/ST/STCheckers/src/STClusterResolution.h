@@ -1,4 +1,4 @@
-// $Id: STClusterResolution.h,v 1.4 2006-12-21 17:54:48 jvantilb Exp $
+// $Id: STClusterResolution.h,v 1.5 2007-03-21 14:24:44 jvantilb Exp $
 #ifndef STClusterResolution_H
 #define STClusterResolution_H 1
 
@@ -57,8 +57,8 @@ private:
   typedef Table::Range Range;
   typedef Table::iterator iterator;
 
-  virtual StatusCode fillHistograms(const LHCb::STCluster* aCluster,
-                                    const LHCb::MCHit* aHit) const;
+  virtual void fillHistograms(const LHCb::STCluster* aCluster,
+                              const LHCb::MCHit* aHit) const;
   int histoId(const int clusterSize) const;
 
   double calculateUTrue( const LHCb::MCHit* aHit, 

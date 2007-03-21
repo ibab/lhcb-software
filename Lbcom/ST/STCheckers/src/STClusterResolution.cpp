@@ -1,4 +1,4 @@
-// $Id: STClusterResolution.cpp,v 1.10 2006-12-22 12:23:01 jvantilb Exp $
+// $Id: STClusterResolution.cpp,v 1.11 2007-03-21 14:24:44 jvantilb Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -81,7 +81,7 @@ StatusCode STClusterResolution::initialize()
   STDetSwitch::flip(m_detType,m_clusterLocation);
   m_asctLocation = m_clusterLocation+"2MCHits";
 
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 StatusCode STClusterResolution::execute()
@@ -108,8 +108,8 @@ StatusCode STClusterResolution::execute()
 }
 
 
-StatusCode STClusterResolution::fillHistograms( const STCluster* aCluster,
-                                                const MCHit* aHit ) const
+void STClusterResolution::fillHistograms( const STCluster* aCluster,
+                                          const MCHit* aHit ) const
 {
   // fill histograms
   if ( (0 != aHit) && (m_selector->accept(aHit->mcParticle())) ){
@@ -172,7 +172,7 @@ StatusCode STClusterResolution::fillHistograms( const STCluster* aCluster,
   } // aHit
   
   // end
-  return StatusCode::SUCCESS;
+  return;
 }
 
 int STClusterResolution::histoId( const int clusterSize ) const
