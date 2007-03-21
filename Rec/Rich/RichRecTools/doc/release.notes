@@ -4,6 +4,10 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+!===================== RichRecTools v3r9 2007-03-21 =======================
+! 2007-03-21 - Marco Cattaneo
+ - Remove obsolete file RichRecTools_load.cpp
+
 ! 2007-03-20 - Chris Jones
  - Remove the use of random numbers in GeomEffPhotonTracing
 
