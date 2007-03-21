@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking projectors
 !-----------------------------------------------------------------------------
 
+!====================== TrackProjectors v2r11 2007-03-21 ======================
+! 2007-03-21 - Marco Cattaneo
+ - Fix doxygen warnings
 
 ! 2007-03-20 M. Needham
  - Make sure StatusCodes are tested

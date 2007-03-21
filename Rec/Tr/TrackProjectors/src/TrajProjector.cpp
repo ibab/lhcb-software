@@ -1,4 +1,4 @@
-// $Id: TrajProjector.cpp,v 1.3 2007-03-21 08:48:48 mneedham Exp $
+// $Id: TrajProjector.cpp,v 1.4 2007-03-21 15:04:59 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -93,11 +93,12 @@ StatusCode TrajProjector<T>::project( const State& state,
 
 
 //-----------------------------------------------------------------------------
-/// Derivatives wrt. the measurement's aligment...
+/// Derivatives wrt. the measurement's alignment...
 //-----------------------------------------------------------------------------
 template <typename T>
 typename TrajProjector<T>::Derivatives
-TrajProjector<T>::alignmentDerivatives(const Measurement& meas, const XYZPoint& pivot) const
+TrajProjector<T>::alignmentDerivatives(const Measurement& meas, 
+                                       const Gaudi::XYZPoint& pivot ) const
 {
   // create the track trajectory...
   const TrackVector& refVec = meas.refVector();
