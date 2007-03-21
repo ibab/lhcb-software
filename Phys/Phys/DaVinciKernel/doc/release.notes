@@ -3,11 +3,11 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+!========================= DaVinciKernel v6r2 2007-03-21 ====================
 ! 2007-03-21 - Patrick Koppenburg
  - Moved PhysDesktop and Particle2VertexAsct implementations to DaVinciTools.
  - Removed component library compile and link statements in requirements
 
-!========================= DaVinciKernel v6r2 2007-03-20 ====================
 ! 2007-03-20 - Patrick Koppenburg
  - src/component/PhysDeskop.cpp
    Bug fix in getParticles: was exiting loop over locations if one of the 
