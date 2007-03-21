@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!====================== RichRecMonitors v2r8 2007-03-21 ======================
+! 2007-03-21 - Marco Cattaneo
+ - Remove obsolete file RichRecMonitors_load.cpp
+
 ! 2007-03-09 - Chris Jones
  - Adapt to new HPD pixel clusters
  - Remove doxygen namespace comments
