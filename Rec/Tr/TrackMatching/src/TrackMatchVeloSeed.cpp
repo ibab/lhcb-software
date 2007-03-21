@@ -1,4 +1,4 @@
-// $Id: TrackMatchVeloSeed.cpp,v 1.29 2006-10-17 12:02:02 mneedham Exp $
+// $Id: TrackMatchVeloSeed.cpp,v 1.30 2007-03-21 09:29:45 cattanem Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -458,8 +458,8 @@ StatusCode TrackMatchVeloSeed::storeTracks( Tracks* matchCont )
 StatusCode TrackMatchVeloSeed::extrapolate( Track* track,
                                             ITrackExtrapolator* extrapolator,
                                             double zpos,
-                                            TrackVector& trackVector,
-                                            TrackSymMatrix& trackCov )
+                                            Gaudi::TrackVector& trackVector,
+                                            Gaudi::TrackSymMatrix& trackCov )
 {
   State tmpState;
   StatusCode sc = extrapolator -> propagate( *track, zpos, tmpState );
