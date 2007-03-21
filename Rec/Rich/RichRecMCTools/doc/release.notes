@@ -4,6 +4,10 @@
 ! Purpose     : Monte Carlo Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+!====================== RichRecMCTools v2r9 2007-03-21 ======================
+! 2007-03-21 - Marco Cattaneo
+ - Remove obsolete file RichRecMCTools_load.cpp
+
 ! 2007-03-09 - Chris Jones
  - Remove doxygen namespace comments (now in standalone file)
  - Adapt to new HPD pixel clusters

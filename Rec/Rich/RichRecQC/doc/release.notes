@@ -4,6 +4,10 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+!======================= RichRecQC v2r9 2007-03-21 =========================
+! 2007-03-21 - Marco Cattaneo
+ - Remove obsolete file RichRecQC_load.cpp 
+
 ! 2007-03-19 - Chris Jones
  - Replace use of Gaudi format with boost::format to fix various issues
 
