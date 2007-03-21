@@ -1,7 +1,9 @@
 ! Package     : MuonID
 ! Responsible : Erica Polycarpo, Miriam Gandelman
-!========================== MuonID v4r6 2007-02-08 ===================
-! 2007-02-08 - Miriam Gandelman
+!---------------------------------------------------------------------
+
+!========================== MuonID v4r6 2007-03-20 ===================
+! 2007-03-08 - Miriam Gandelman
  - fixed the number of Landau parameters for the muon 
  - changed the binning of the pion DLL to be the same as the muon
 
