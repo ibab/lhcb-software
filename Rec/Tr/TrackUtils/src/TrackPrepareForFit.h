@@ -1,8 +1,8 @@
-// $Id: TrackPrepareForFit.h,v 1.1 2007-01-16 08:09:18 mneedham Exp $
+// $Id: TrackPrepareForFit.h,v 1.2 2007-03-21 09:25:14 cattanem Exp $
 #ifndef _TrackPrepareForFit_H_
 #define _TrackPrepareForFit_H_
 
-/** @class TrackPrepareForFit TrackPrepareForFit Tr/TrackPrepareForFit.h
+/** @class TrackPrepareForFit TrackPrepareForFit.h
  *
  *  Add p (from somewhere...) to a track...
  *

@@ -1,8 +1,8 @@
-// $Id: TrackPrepareVelo.h,v 1.3 2006-10-23 12:20:48 erodrigu Exp $
+// $Id: TrackPrepareVelo.h,v 1.4 2007-03-21 09:25:14 cattanem Exp $
 #ifndef _TrackPrepareVelo_H_
 #define _TrackPrepareVelo_H_
 
-/** @class TrackPrepareVelo TrackPrepareVelo Tr/TrackPrepareVelo.h
+/** @class TrackPrepareVelo TrackPrepareVelo.h
  *
  *  Fake a T seed from a long track 
  *

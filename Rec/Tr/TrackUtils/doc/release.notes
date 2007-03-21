@@ -4,6 +4,14 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+!========================== TrackUtils v1r11 2007-03-21 ======================
+! 2007-03-21 - Marco Cattaneo
+ - Remove obsolete file TrackUtils_load.cpp
+ - Fix doxygen warnings
+
+! 2007-03-21 - Steve Blusk
+ - Fix bug in PrepareVelo track selection in case when Best container is ignored
+
 !========================== TrackUtils v1r10 2007-01-16 ======================
 ! 2007-01-16 M. Needham
  - Add new TrackPrepareForFit algorithm

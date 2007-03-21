@@ -1,8 +1,8 @@
-// $Id: TrackContainerCopy.h,v 1.2 2006-07-27 12:01:54 cattanem Exp $
+// $Id: TrackContainerCopy.h,v 1.3 2007-03-21 09:25:14 cattanem Exp $
 #ifndef _TrackContainerCopy_H_
 #define _TrackContainerCopy_H_
 
-/** @class TrackContainerCopy TrackContainerCopy Tr/TrackContainerCopy.h
+/** @class TrackContainerCopy TrackContainerCopy.h
  *
  *  Copy a container of tracks. By default do not copy tracks that failed the fit
  *

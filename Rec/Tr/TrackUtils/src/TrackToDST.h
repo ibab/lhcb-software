@@ -1,8 +1,8 @@
-// $Id: TrackToDST.h,v 1.3 2006-07-12 14:41:40 mneedham Exp $
+// $Id: TrackToDST.h,v 1.4 2007-03-21 09:25:15 cattanem Exp $
 #ifndef _TrackToDST_H_
 #define _TrackToDST_H_
 
-/** @class TrackToDST TrackToDST Tr/TrackToDST.h
+/** @class TrackToDST TrackToDST.h
  *
  *  Fake a T seed from a long track 
  *

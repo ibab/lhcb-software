@@ -1,8 +1,8 @@
-// $Id: TTrackFromLong.h,v 1.1 2006-06-08 16:07:14 mneedham Exp $
+// $Id: TTrackFromLong.h,v 1.2 2007-03-21 09:25:14 cattanem Exp $
 #ifndef _TTrackFromLong_H_
 #define _TTrackFromLong_H_
 
-/** @class TTrackFromLong TTrackFromLong Tr/TTrackFromLong.h
+/** @class TTrackFromLong TTrackFromLong.h
  *
  *  Fake a T seed from a long track 
  *

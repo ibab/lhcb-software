@@ -1,8 +1,8 @@
-// $Id: TrackContainerCleaner.h,v 1.1 2006-05-24 15:04:38 mneedham Exp $
+// $Id: TrackContainerCleaner.h,v 1.2 2007-03-21 09:25:14 cattanem Exp $
 #ifndef _TrackContainerCleaner_H_
 #define _TrackContainerCleaner_H_
 
-/** @class TrackContainerCleaner TrackContainerCleaner Tr/TrackContainerCleaner.h
+/** @class TrackContainerCleaner TrackContainerCleaner.h
  *
  *  Clean out tracks with some criteria from the container
  *
