@@ -4,6 +4,10 @@
 ! Purpose     : Package for tracking projectors
 !-----------------------------------------------------------------------------
 
+
+! 2007-03-20 M. Needham
+ - Make sure StatusCodes are tested
+
 !====================== TrackProjectors v2r10 2007-03-02 ======================
 ! 2007-03-02 - Marco Cattaneo
  - Remove LHCbDefinitions includes

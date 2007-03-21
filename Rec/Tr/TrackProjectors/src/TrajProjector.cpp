@@ -1,4 +1,4 @@
-// $Id: TrajProjector.cpp,v 1.2 2006-12-15 19:18:51 graven Exp $
+// $Id: TrajProjector.cpp,v 1.3 2007-03-21 08:48:48 mneedham Exp $
 // Include files 
 
 // from Gaudi
@@ -50,7 +50,7 @@ StatusCode TrajProjector<T>::project( const State& state,
 
   static XYZVector bfield; // avoid constructing this every call to project...
   const TrackVector& refVec = meas.refVector();
-  m_pIMF -> fieldVector( XYZPoint(refVec[0],refVec[1],meas.z()), bfield );
+  m_pIMF -> fieldVector( XYZPoint(refVec[0],refVec[1],meas.z()), bfield ).ignore();
 
   // Get the reference state trajectory
   const StateTraj refTraj( refVec, meas.z(), bfield ) ; 
