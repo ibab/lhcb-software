@@ -1,10 +1,10 @@
-// $Id: TsaAlgorithms_dll.cpp,v 1.1.1.1 2006-07-24 14:56:45 mneedham Exp $
+// $Id: TsaAlgorithms_dll.cpp,v 1.2 2007-03-21 14:35:01 cattanem Exp $
 // ============================================================================
 // Include files
 #include "GaudiKernel/LoadFactoryEntries.h"
 
 // ============================================================================
-/** @file Tsa_dll.cpp
+/** @file TsaAlgorithms_dll.cpp
  *  
  *
  *  @author M. Needham

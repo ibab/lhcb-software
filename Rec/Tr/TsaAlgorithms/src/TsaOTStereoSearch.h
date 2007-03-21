@@ -2,7 +2,7 @@
 #ifndef _TsaOTStereoSearch_H
 #define _TsaOTStereoSearch_H
 
-/** @class TsaXSearchBase TsaXSearchBase Tsa/TsaXSearchBase
+/** @class TsaOTStereoSearch TsaOTStereoSearch.h
 * Follow track and pick up hits
 * @author M. Needham
 **/

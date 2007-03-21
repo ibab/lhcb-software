@@ -1,8 +1,8 @@
-// $Id: TTDataSvc.h,v 1.6 2007-01-17 17:47:55 cattanem Exp $
+// $Id: TTDataSvc.h,v 1.7 2007-03-21 14:35:01 cattanem Exp $
 #ifndef _TTDataSvc_H
 #define _TTDataSvc_H
 
-/** @class TTDataSvc TTDataSvc Tsa/TTDataSvc.h
+/** @class TTDataSvc TTDataSvc.h
  *
  *  Interface to data svc
  *

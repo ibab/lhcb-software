@@ -2,7 +2,7 @@
 #ifndef _TsaSeedSimpleSelector_H
 #define _TsaSeedSimpleSelector_H
 
-/** @class TsaXSearchBase TsaXSearchBase Tsa/TsaXSearchBase
+/** @class TsaSeedSimpleSelector TsaSeedSimpleSelector.h
 * Follow track and pick up hits
 * @author M. Needham
 **/

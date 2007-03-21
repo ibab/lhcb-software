@@ -1,8 +1,8 @@
-// $Id: ITsaSeedAddHits.h,v 1.1 2006-12-06 14:35:00 mneedham Exp $
+// $Id: ITsaSeedAddHits.h,v 1.2 2007-03-21 14:35:01 cattanem Exp $
 #ifndef _ITsaSeedAddHits_H
 #define _ITsaSeedAddHits_H
 
-/** @class ITsaStep TsaKernel/ITsaStep
+/** @class ITsaSeedAddHits ITsaSeedAddHits.h
  *
  *  Interface to data svc
  *

@@ -2,7 +2,7 @@
 #ifndef _TsaStubFind_H
 #define _TsaStubFind_H
 
-/** @class TsaStubFind TsaStubFind Tsa/TsaStubFind
+/** @class TsaStubFind TsaStubFind.h
 * Make stubs in an IT sector
 * @author M. Needham
 **/

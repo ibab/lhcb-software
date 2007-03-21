@@ -1,8 +1,8 @@
-// $Id: TsaSeedReferenceCreator.h,v 1.5 2006-12-06 14:35:01 mneedham Exp $
+// $Id: TsaSeedReferenceCreator.h,v 1.6 2007-03-21 14:35:02 cattanem Exp $
 #ifndef _TsaSeedReferenceCreator_H
 #define _TsaSeedReferenceCreator_H
 
-/** @class TsaSeedReferenceCreator TrackTools/TsaSeedReferenceCreator.h
+/** @class TsaSeedReferenceCreator TsaSeedReferenceCreator.h
  *
  * Implementation of TrackCaloMatch tool
  * see interface header for description

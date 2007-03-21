@@ -2,7 +2,7 @@
 #ifndef _TsaStereoBase_H
 #define _TsaStereoBase_H
 
-/** @class TsaStereoBase TsaStereoBase Tsa/TsaStereoBase
+/** @class TsaStereoBase TsaStereoBase.h
 * Follow track and pick up hits
 * @author M. Needham
 **/

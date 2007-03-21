@@ -2,7 +2,7 @@
 #ifndef _TsaStubExtender_H
 #define _TsaStubExtender_H
 
-/** @class TsaStubExtender TsaStubExtender Tsa/TsaStubExtender
+/** @class TsaStubExtender TsaStubExtender.h
 * Extend the IT stubs into the OT
 * @author M. Needham
 **/

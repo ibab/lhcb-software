@@ -2,7 +2,7 @@
 #ifndef _TsaXSearchBase_H
 #define _TsaXSearchBase_H
 
-/** @class TsaXSearchBase TsaXSearchBase Tsa/TsaXSearchBase
+/** @class TsaXSearchBase TsaXSearchBase.h
 * Follow track and pick up hits
 * @author M. Needham
 **/

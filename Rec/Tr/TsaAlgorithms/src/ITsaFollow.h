@@ -1,10 +1,10 @@
-// $Id: ITsaFollow.h,v 1.1.1.1 2006-07-24 14:56:45 mneedham Exp $
+// $Id: ITsaFollow.h,v 1.2 2007-03-21 14:35:01 cattanem Exp $
 #ifndef _ITsaFollow_H
 #define _ITsaFollow_H
 
 #include "GaudiKernel/IAlgTool.h"
 
-/** @class ITsaFollow ITsaFollow Tsa/ITsaFollow
+/** @class ITsaFollow ITsaFollow.h
  *
  *  Fast follower to pick up hits not on space points
  *

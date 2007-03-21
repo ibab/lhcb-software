@@ -2,7 +2,7 @@
 #ifndef _TsaStubLinker_H
 #define _TsaStubLinker_H
 
-/** @class TsaStubLinker TsaStubLinker Tsa/TsaStubLinker
+/** @class TsaStubLinker TsaStubLinker.h
 * Link stubs in the IT
 * @author M. Needham
 **/

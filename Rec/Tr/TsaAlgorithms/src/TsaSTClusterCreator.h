@@ -1,8 +1,8 @@
-// $Id: TsaSTClusterCreator.h,v 1.4 2007-03-20 13:12:05 mneedham Exp $
+// $Id: TsaSTClusterCreator.h,v 1.5 2007-03-21 14:35:01 cattanem Exp $
 #ifndef _TSASTCLUSTERCREATOR_H_
 #define _TSASTCLUSTERCREATOR_H_
 
-/** @class TsaITCluster TsaITCluster.h 
+/** @class TsaSTClusterCreator TsaSTClusterCreator.h
  *
  *  Makes the pattern rec clusters
  *

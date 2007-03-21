@@ -2,7 +2,7 @@
 #ifndef _TsaXProjSelector_H
 #define _TsaXProjSelector_H
 
-/** @class TsaXSearchBase TsaXSearchBase Tsa/TsaXSearchBase
+/** @class TsaXProjSelector TsaXProjSelector.h
 * Follow track and pick up hits
 * @author M. Needham
 **/

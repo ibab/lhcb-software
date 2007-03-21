@@ -2,7 +2,7 @@
 #ifndef _TsaLikelihood_H
 #define _TsaLikelihood_H
 
-/** @class TsaXSearchBase TsaXSearchBase Tsa/TsaXSearchBase
+/** @class TsaLikelihood TsaLikelihood.h
 * Follow track and pick up hits
 * @author M. Needham
 **/

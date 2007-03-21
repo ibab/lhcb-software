@@ -1,10 +1,10 @@
-// $Id: TsaSeedTrackCnv.h,v 1.3 2006-12-06 14:35:02 mneedham Exp $
+// $Id: TsaSeedTrackCnv.h,v 1.4 2007-03-21 14:35:02 cattanem Exp $
 #ifndef _TsaSeedTrackCnv_H_
 #define _TsaSeedTrackCnv_H_
 
-/** @class TsaSeedTrackCnv TsaSeedTrackCnv Tsa/TsatoTrackCnv.h
+/** @class TsaSeedTrackCnv TsaSeedTrackCnv.h
  *
- * Convertor to fit tracks
+ * Converter to fit tracks
  *
  *  @author M.Needham
  *  @date   30/04/2004

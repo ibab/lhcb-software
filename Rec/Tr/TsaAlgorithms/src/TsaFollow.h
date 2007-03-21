@@ -1,8 +1,8 @@
-// $Id: TsaFollow.h,v 1.1.1.1 2006-07-24 14:56:45 mneedham Exp $
+// $Id: TsaFollow.h,v 1.2 2007-03-21 14:35:01 cattanem Exp $
 #ifndef _TsaFollow_H
 #define _TsaFollow_H
 
-/** @class TsaFollow TsaFollow Tsa/TsaFollow
+/** @class TsaFollow TsaFollow.h
 * Follow track and pick up hits
 * @author M. Needham
 **/

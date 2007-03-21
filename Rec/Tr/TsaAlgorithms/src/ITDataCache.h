@@ -1,8 +1,8 @@
-// $Id: ITDataCache.h,v 1.1.1.1 2006-07-24 14:56:45 mneedham Exp $ 
+// $Id: ITDataCache.h,v 1.2 2007-03-21 14:35:01 cattanem Exp $ 
 #ifndef _ITDataCache_H
 #define _ITDataCache_H
 
-/** @class ITDataCache IDataCache.h 
+/** @class ITDataCache ITDataCache.h 
 * Helper class to ITBoxProcessor
 * Essentially it acts as a cache, making data access faster
 * @author M. Needham

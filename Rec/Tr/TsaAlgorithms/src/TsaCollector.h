@@ -1,8 +1,8 @@
-// $Id: TsaCollector.h,v 1.7 2006-12-06 14:35:01 mneedham Exp $
+// $Id: TsaCollector.h,v 1.8 2007-03-21 14:35:01 cattanem Exp $
 #ifndef _TsaCollector_H
 #define _TsaCollector_H
 
-/** @class TsaTsaCollector TsaCollector Tsa/TsaCollector.h
+/** @class TsaCollector TsaCollector.h
  *
  *  Interface to isolation tool
  *
