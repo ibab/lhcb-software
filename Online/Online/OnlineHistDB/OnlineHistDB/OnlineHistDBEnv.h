@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDBEnv.h,v 1.2 2007-03-21 13:15:14 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDBEnv.h,v 1.3 2007-03-21 15:21:03 ggiacomo Exp $
 #ifndef ONLINEHISTDBENV_H
 #define ONLINEHISTDBENV_H 1
 /** @class  OnlineHistDBEnv OnlineHistDBEnv.h OnlineHistDB/OnlineHistDBEnv.h
@@ -37,11 +37,11 @@ class OnlineHistDBEnv {
   void setExcLevel(int ExceptionLevel) {m_excLevel=ExceptionLevel;}
  protected:
   OnlineHistDBEnv(std::string User) 
-    : m_user(User), m_debug(0), m_excLevel(1) {}
+    : m_user(toUpper(User)), m_debug(0), m_excLevel(1) {}
   OnlineHistDBEnv(Connection* Conn, 
 		  std::string User, 
 		  int ExcLevel) 
-    : m_conn(Conn), m_user(User), m_debug(0), m_excLevel(ExcLevel) {}
+    : m_conn(Conn), m_user(toUpper(User)), m_debug(0), m_excLevel(ExcLevel) {}
   virtual ~OnlineHistDBEnv() {};
   Connection* conn() const {return m_conn;}
   void dumpError(SQLException& ex,std::string MethodName) const {
@@ -57,6 +57,11 @@ class OnlineHistDBEnv {
   Connection* m_conn;
   std::string m_user;
  private:
+  std::string toUpper(string str) {
+   for(unsigned int i=0;i<str.length();i++)
+      str[i] = toupper(str[i]);
+   return str;
+  }
   int m_debug;
   int m_excLevel;
 };
