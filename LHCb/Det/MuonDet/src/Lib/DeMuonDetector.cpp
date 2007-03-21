@@ -1,4 +1,4 @@
-// $Id: DeMuonDetector.cpp,v 1.33 2007-03-19 08:53:51 cattanem Exp $
+// $Id: DeMuonDetector.cpp,v 1.34 2007-03-21 15:50:04 marcocle Exp $
 
 // Include files
 #include "MuonDet/DeMuonDetector.h"
@@ -28,14 +28,15 @@ DeMuonDetector::DeMuonDetector() {
   m_detSvc = 0;
   m_stations = 0;
   m_regions = 0;
+  m_chamberLayout = 0;
 }
 
 /// Standard Destructor
 DeMuonDetector::~DeMuonDetector()
 {
-  delete m_chamberLayout; 
+  if (m_chamberLayout) delete m_chamberLayout; 
 }
-  
+
 const CLID& DeMuonDetector::clID () const 
 { 
   return DeMuonDetector::classID() ; 

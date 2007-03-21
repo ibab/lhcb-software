@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.89 2007-03-19 08:53:51 cattanem Exp $
+! $Id: release.notes,v 1.90 2007-03-21 15:50:04 marcocle Exp $
 ! Package     : MuonDet
 ! Responsible : Alessia Satta
 !----------------------------------------------------------------------------
+
+! 2007-03-21 - Marco Clemencic
+ - Fix in DeMuonDetector::~DeMuonDetector: m_chamberLayout was deleted, but
+   neither initialized to 0 nor checked.
 
 !========================= MuonDet v6r2 2007-03-19 ========================
 ! 2007-03-19 - Marco Cattaneo
