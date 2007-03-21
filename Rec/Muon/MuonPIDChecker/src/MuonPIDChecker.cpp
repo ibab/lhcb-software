@@ -93,6 +93,9 @@ StatusCode MuonPIDChecker::initialize() {
     m_cDLL[i] = 0;
     m_cnShared[i] = 0;
   }
+    m_cmisID = 0;
+    m_cmisIDDLL = 0;
+    m_cmisIDnShared = 0;
 
   info() << " Z used to define decays = " << m_zOriginCut << " cm"<< endreq;
   
@@ -238,6 +241,13 @@ StatusCode MuonPIDChecker::FillTrHistos(const int Level){
 
   if (Level==1) {
     m_cisMuon[m_TrType]++;
+
+    if ( m_TrType ==  0 || m_TrType == 2 || m_TrType == 3 ) m_cmisID++ ;
+    if ( (m_TrType ==  0 || m_TrType == 2 || m_TrType == 3) && 
+         (m_TrMuonLhd - m_TrNMuonLhd) > m_DLLCut ) m_cmisIDDLL++ ;
+    if ( (m_TrType ==  0 || m_TrType == 2 || m_TrType == 3) && 
+         m_TrNShared < m_NSHCut ) m_cmisIDnShared++ ;
+
     if ( (m_TrMuonLhd - m_TrNMuonLhd) > m_DLLCut) m_cDLL[m_TrType]++;
     if ( m_TrNShared < m_NSHCut) m_cnShared[m_TrType]++;
 
@@ -356,12 +366,16 @@ StatusCode MuonPIDChecker::finalize() {
   double Ef1[4];
   double Ef2[4];
   double Ef3[4];
+  double misID, misIDDLL, misIDnShared;
 
   for (int ityp = 0; ityp < 4; ityp++){
     Ef1[ityp] = 100.*m_cisMuon[ityp]/m_cpresel[ityp];
     Ef2[ityp] = 100.*m_cDLL[ityp]/m_cpresel[ityp];
     Ef3[ityp] = 100.*m_cnShared[ityp]/m_cpresel[ityp];
   }
+    misID = 100.*m_cmisID/(m_cpresel[0]+m_cpresel[1]+m_cpresel[2]+m_cpresel[3]);
+    misIDDLL = 100.*m_cmisIDDLL/(m_cpresel[0]+m_cpresel[1]+m_cpresel[2]+m_cpresel[3]);
+    misIDnShared = 100.*m_cmisIDnShared/(m_cpresel[0]+m_cpresel[1]+m_cpresel[2]+m_cpresel[3]);
 
 
   info()<<"------------------Total MuonPID Efficiencies (%)------------------"
@@ -384,6 +398,8 @@ StatusCode MuonPIDChecker::finalize() {
                       "    :    (2.48 +-0.01) - (1.78+- 0.01)" << endreq;
   info()<<" Ghosts     :   "<<  format( " %7.2f ", Ef1[0] ) << 
                       "    :    (6.08 +-0.03) - (4.81+- 0.02)" << endreq;
+  info()<<" Total MisID:   "<<  format( " %7.2f ", misID ) <<
+                      "    :    (4.85 +-0.01) - (3.91+- 0.01)" << endreq;
   info()<<"------------------------------------------------------------------"
         <<  endreq;
   info()<<"-------------------        DLL performance      ------------------"
@@ -398,6 +414,8 @@ StatusCode MuonPIDChecker::finalize() {
                       "    :    (0.52+-0.01) - (0.33+- 0.01)" << endreq;
   info()<<" Ghosts     :   "<<  format( " %7.2f ", Ef2[0] ) << 
                       "    :    (2.07+-0.01) - (1.66+- 0.01)" << endreq;
+  info()<<" Total MisID:   "<<  format( " %7.2f ", misIDDLL ) <<
+                      "    :    (1.69+-0.01) - (1.37+- 0.01)" << endreq;
   info()<<"------------------------------------------------------------------"
         <<  endreq;
   info()<<"-------------------      nShared performance    ------------------"
@@ -412,6 +430,8 @@ StatusCode MuonPIDChecker::finalize() {
                       "    :    (0.76+-0.01) - (0.91 +-0.01)" << endreq;
   info()<<" Ghosts     :   "<<  format( " %7.2f ", Ef3[0] ) << 
                       "    :    (2.33+-0.02) - (2.37 +-0.01)" << endreq;
+  info()<<" Total MisID:   "<<  format( " %7.2f ", misIDnShared) << 
+                      "    :    (2.15+-0.01) - (2.30 +-0.01)" << endreq;
   info()<<"------------------------------------------------------------------"
         <<  endreq;
 

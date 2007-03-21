@@ -1,3 +1,5 @@
 //Check.DetectorList += { "MUON" }; // included in BrunelCheck.opts
 CheckMUONSeq.Members += { "MuonPIDChecker" };
 MuonPIDChecker.HistoTopDir = "Muon/MuonPID";
+MuonPIDChecker.DLLCut = -1.0;
+MuonPIDChecker.NSHCut = 1.;

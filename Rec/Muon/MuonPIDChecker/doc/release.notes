@@ -2,6 +2,12 @@
 ! Responsible : E. Polycarpo, M. Gandelman
 !----------------------------------------------------------------------------
 
+!====================== MuonPIDChecker v2r0 2007-03-20 ====================
+! 2007-03-20 - Erica Polycarpo, Miriam Gandelman
+             Add Total Misid to monitoring table 
+             DLL Cut changed to -1 in the options 
+             (to be used with MuonID v4r6)
+
 !====================== MuonPIDChecker v1r0p1 2007-03-05 ====================
 ! 2007-03-05 - Marco Cattaneo
  - Remove obsolete MuonPIDChecker_load.cpp file
@@ -17,6 +23,6 @@
  - Some minor tweeks for gaudi v19r1
  - Remove some temporary files not needed in CVS
 
-! 20070116 - MuonPIDChecker v1
+! 20070116 - MuonPIDChecker v1r0
              First Checker algorithm for the MuonID package
  

@@ -1,5 +1,5 @@
 package MuonPIDChecker
-version v1r0p1
+version v2r0
 
 branches src cmt doc options
 include_path none

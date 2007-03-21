@@ -1,4 +1,4 @@
-// $Id: MuonPIDChecker.h,v 1.1.1.1 2007-01-19 16:54:47 polye Exp $
+// $Id: MuonPIDChecker.h,v 1.2 2007-03-21 12:57:17 polye Exp $
 #ifndef TUNEMUONID_H 
 #define TUNEMUONID_H 1
 
@@ -79,6 +79,7 @@ private:
 
   long           m_eventNumber,m_runNumber;
   long           m_cpresel[4],m_cisMuon[4], m_cDLL[4], m_cnShared[4];
+  long           m_cmisID, m_cmisIDDLL, m_cmisIDnShared;
   long           m_nTr, m_nPSTr, m_nPSGhosts, m_nHit;     // counters 
   long           m_TrIsMuon,m_TrNShared;
   double         m_TrMuonLhd,m_TrNMuonLhd,m_TrzDecay,m_TrzOrigin; 
