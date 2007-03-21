@@ -5,6 +5,10 @@
 !-----------------------------------------------------------------------------
 
 !====================== RichRecSys v3r2 2007-03-21 =====================
+
+! 2007-03-21 - Chris Jones
+ - Add default Raw buffer decoding options from RichDAQ to RecoToolPara.opts
+
 ! 2007-03-09 - Chris Jones
  - Update background estimation algorithm name
  - Add options for clustering

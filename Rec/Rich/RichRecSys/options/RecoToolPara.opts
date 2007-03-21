@@ -181,3 +181,6 @@ ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::RadiatorTool/RichRadiatorTool
 
 // raw buffer tool
 ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::DAQ::RawDataFormatTool/RichRawDataFormatTool" };
+
+// default raw buffer decoding options
+#include "$RICHDAQROOT/options/Brunel_DecodeRawEvent.opts"
