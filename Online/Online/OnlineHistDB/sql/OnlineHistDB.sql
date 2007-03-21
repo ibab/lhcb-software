@@ -1081,6 +1081,7 @@ procedure mycommit(dbschema int := 0) is
  begin
  SELECT version,apiversion into curschema,curapi  from ERGOSUM;
  if (dbschema != curschema) then
+   rollback;
    raise_application_error(-20999,'
 -----------------------------------------------------------------------------
 You are using an HistDB API version incompatible with the current DB schema. 
