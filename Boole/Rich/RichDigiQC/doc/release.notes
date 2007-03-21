@@ -4,10 +4,10 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH digitisation
 !-----------------------------------------------------------------------------
 
+!======================== RichDigiQC v3r5 2007-03-20 ========================
 ! 2007-03-20 - Chris Jones
  - Switch to use of boost::format instead of Gaudi format
 
-!======================== RichDigiQC v3r5 2007-03-20 ========================
 ! 2007-03-20 - Marco Cattaneo
  - Remove obsolete RichDigiQC_load.cpp file
 
