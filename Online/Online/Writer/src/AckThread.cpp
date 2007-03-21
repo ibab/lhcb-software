@@ -60,7 +60,8 @@ void AckThread::start()
 /**
  * Reinits the structures that the ack thread uses,
  */
-void AckThread::reInit(void) {
+void AckThread::reInit(int sockfd) {
+	m_sockfd = sockfd;
 	*m_log << MSG::INFO << "Reset ack thread data." << endmsg;
 }
 

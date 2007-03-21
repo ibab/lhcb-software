@@ -49,8 +49,8 @@ namespace LHCb {
 
 		private:
 
-			std::list<NodeState*> nodeStates;		/**<< A list of all the nodes discovered.*/
-			std::list<NodeState*>::iterator currState; /**<< Marks current position.*/
+			std::list<NodeState*> m_nodeStates;		/**<< A list of all the nodes discovered.*/
+			std::list<NodeState*>::iterator m_currState; /**<< Marks current position.*/
 			pthread_mutex_t m_monitorLock;	/**<< A lock to protect the node states above.*/
 			pthread_t m_monitorThread;			/**<< The thread handle.*/
 			int m_stopThread;								/**<< Tells the thread to start or stop.*/
@@ -58,6 +58,7 @@ namespace LHCb {
 			int m_sockfd;										/**<< A socket to connect to the service.*/
 			MsgStream *m_log;								/**<< For logging.*/
 			struct sockaddr_in m_initAddr;	/**<< The address of the initial server.*/
+			struct sockaddr_in m_currAddr;	/**<< The current address connected to.*/
 
 		public:
 			/**
@@ -76,17 +77,44 @@ namespace LHCb {
 			/**
 			 * Returns the most preferred address to connect to.
 			 */
-			void getNextAddress(struct sockaddr_in *saddr_in);
+			void getAddress(struct sockaddr_in *saddr_in);
+
+			/**
+			 * Connects to the currently selected address and
+			 * obtains a list of alternative addresses.
+			 */
+			int connect(std::list<NodeState*> &nodeStates);
+
+			/**
+			 * Connects to one of the alternative servers.
+			 */
+			void connectToAlternative(void);
+
+			/**
+			 * Updates the status of nodes.
+			 */
+			void update(struct failover_msg *fmsg, struct nodestate *nstate);
 
 			/**
 			 * Get initial address list from the service.
 			 */
-			void getAddressList();
+			int getAddressList(std::list<NodeState*> &nodeStates);
+
+			/**
+			 * Listen for changes of servers coming up and down.
+			 */
+			void listenForUpdates();
 
 			/**
 			 * Cleans up all the node information.
 			 */
 			void cleanAllNodeStates();
+
+			/**
+			 * Repositions the iterator at the location of the currently
+			 * connected address in the list.
+			 */
+			void restoreIterator();
 
 			/**
 			 * Stops the failover thread.

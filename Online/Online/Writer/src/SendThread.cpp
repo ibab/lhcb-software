@@ -60,7 +60,8 @@ void SendThread::start()
 /**
  * Reinits the structures that the send thread uses,
  */
-void SendThread::reInit(void) {
+void SendThread::reInit(int sockfd) {
+	m_sockfd = sockfd;
 	m_mmObj->resetSendPointer();
 	*m_log << MSG::INFO << "Reset send thread data." << endmsg;
 }

@@ -59,17 +59,17 @@ int Utils::connectToAddress(struct sockaddr_in *destAddr,
 	if(sock < 0)
 		return -1;
 
-	*log << MSG::INFO << "Addr: port = " <<
+	*log << MSG::INFO << "Connecting. . .Addr: port = " <<
 		((destAddr->sin_addr.s_addr & 0xff)) << "." <<
 		((destAddr->sin_addr.s_addr & 0xff00) >> 8) << "." <<
 		((destAddr->sin_addr.s_addr & 0xff0000) >> 16) << "." <<
-		((destAddr->sin_addr.s_addr & 0xff000000) >> 24) << ":" << 
+		((destAddr->sin_addr.s_addr & 0xff000000) >> 24) << ":" <<
 		ntohs(destAddr->sin_port) << endmsg;
 
-	*log << MSG::DEBUG << endmsg;
- 
 	ret = connect(sock, (struct sockaddr*)destAddr,
       (socklen_t)sizeof(struct sockaddr_in));
+
+  *log << MSG::INFO << "Connected" << endmsg;
 
 
 	if(ret != 0) {
@@ -109,7 +109,7 @@ int Utils::send(int sock, void *data, size_t datalen, MsgStream * /*log*/) {
  */
 int Utils::brecv(int sock, void *data, size_t datalen, MsgStream * /*log*/) {
 	int ret;
-	
+
 	while(1) {
 		ret = recv(sock, data, datalen, MSG_WAITALL);
 		if(ret < 0 && (errno == EAGAIN || errno == EINTR))

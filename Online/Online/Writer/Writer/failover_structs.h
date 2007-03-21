@@ -16,7 +16,7 @@
  */
 struct failover_msg {
 	unsigned int msg_type;	/**< One of the NODE_XXX values.*/
-	unsigned int num_nodes;	/**< The number of nodestates that will be sent.*/
+	unsigned int num_nodes; /**< The number of node states that will be sent.*/
 } __attribute__((__packed__));
 
 /**

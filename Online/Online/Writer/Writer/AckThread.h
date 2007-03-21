@@ -39,7 +39,7 @@ namespace LHCb {
 			void restoreState(int state) { m_stopAcking = state; }
 			void start(void);
 			void stop(int stopLevel);
-			void reInit(void);
+			void reInit(int sockfd);
 			int processAcks(void);
 			void notify(struct cmd_header *cmd);
 			void setNotifyClient(INotifyClient *nl) {

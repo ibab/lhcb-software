@@ -35,7 +35,7 @@ namespace LHCb {
 			void restoreState(int state) { m_stopSending = state; }
 			void start(void);
 			void stop(int stopLevel);
-			void reInit(void);
+			void reInit(int sockfd);
 			int processSends(void);
 	};
 
