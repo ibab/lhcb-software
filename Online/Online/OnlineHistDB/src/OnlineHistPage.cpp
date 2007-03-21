@@ -1,11 +1,12 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistPage.cpp,v 1.4 2007-01-29 17:52:23 ggiacomo Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistPage.cpp,v 1.5 2007-03-21 13:15:15 ggiacomo Exp $
 
 #include "OnlineHistDB/OnlineHistPage.h"
 
 OnlineHistPage::OnlineHistPage(std::string Name, 
 			       std::string Folder,
-			       Connection* Conn) :
-  OnlineHistDBEnv(Conn), m_name(Name), m_folder(Folder)
+			       Connection* Conn,
+			       std::string User) :
+  OnlineHistDBEnv(Conn,User,1), m_name(Name), m_folder(Folder)
 {
   // check if page exists already in DB
   int out=0;
@@ -46,8 +47,11 @@ OnlineHistPage::OnlineHistPage(std::string Name,
       //cout << "found histogram " << rset->getString(1) <<" on page "<<Name <<endl;
       OnlineHistogram* newh= new OnlineHistogram(rset->getString(1),
 						 m_conn,
+						 m_user,
 						 Name,
 						 rset->getInt(6));
+      newh->setDebug(debug());
+      newh->setExcLevel(excLevel());
       m_h.push_back(newh);
       m_privh.push_back(newh);
       m_cx.push_back(rset->getFloat(2));
@@ -71,12 +75,13 @@ OnlineHistPage::~OnlineHistPage(){
 }
 
 
-void OnlineHistPage::declareHistogram(OnlineHistogram* h,
+bool OnlineHistPage::declareHistogram(OnlineHistogram* h,
 				  float Cx,
 				  float Cy,
 				  float Sx,
 				  float Sy,
 				  unsigned int instance) {
+  bool out=false;
   if (h->isAbort() == false) {
     int ih=findHistogram(h,instance);
     
@@ -93,25 +98,12 @@ void OnlineHistPage::declareHistogram(OnlineHistogram* h,
       m_sx[ih] = Sx;
       m_sy[ih] = Sy;
     }
-    save();
+    out = save();
     h->setPage(m_name,instance);
   }
+  return out;
 }
 
-int OnlineHistPage::findHistogram(OnlineHistogram* h,
-				  unsigned int instance) const {
-  int ih=-1;
-  unsigned int ii=0;
-  for (unsigned int jh=0; jh<m_h.size() ; jh++) {
-    if ((m_h[jh])->hid() == h->hid()) { 
-      if (++ii == instance) {
-	ih=jh;
-	break;
-      }
-    }
-  }
-  return ih;
-}
 
 bool OnlineHistPage::getHistLayout(OnlineHistogram* h,
 				   float &Cx,
@@ -146,6 +138,20 @@ bool OnlineHistPage::removeHistogram(OnlineHistogram* h,
   return out;
 }
 
+int OnlineHistPage::findHistogram(OnlineHistogram* h,
+				  unsigned int instance) const {
+  int ih=-1;
+  unsigned int ii=0;
+  for (unsigned int jh=0; jh<m_h.size() ; jh++) {
+    if ((m_h[jh])->hid() == h->hid()) { 
+      if (++ii == instance) {
+	ih=jh;
+	break;
+      }
+    }
+  }
+  return ih;
+}
 
 
 
@@ -191,7 +197,7 @@ bool OnlineHistPage::save() {
     astmt->execute();
   }catch(SQLException ex)
     {
-      dumpError(ex,"OnlineHistPage::save");
+      dumpError(ex,"OnlineHistPage::save for page "+m_name);
       out=false;
     }
   return out;

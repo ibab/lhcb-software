@@ -6,12 +6,14 @@ create or replace package OnlineHistDB as
  procedure DeclareSubSystem(subsys varchar2);	
  procedure DeclareTask (Name varchar2, ss1 varchar2:='NONE', ss2 varchar2:='NONE', ss3 varchar2:='NONE',
 	KRunOnPhysics number :=1, KRunOnCalib number :=0, KRunOnEmpty number :=0);
- procedure DeclareHistogram(tk IN varchar2,algo IN  varchar2 := '_NULL_', title IN  varchar2:= '_NULL_', dimension IN int:= 0);
+ procedure DeclareHistogram(tk IN varchar2,algo IN  varchar2 := '', title IN  varchar2:= '_BYSN_', mytype IN varchar2:= '');
  procedure DeclareHistByServiceName(ServiceName IN varchar2);
- function DeclareHistByAttributes(tk IN varchar2,algo IN  varchar2, title IN  varchar2, dimension IN int) 
+ function DeclareHistByAttributes(tk IN varchar2,algo IN  varchar2, title IN  varchar2,  mytype IN varchar2 ) 
    return varchar2 ;
+ function SetDimServiceName(theHID IN  HISTOGRAM.HID%TYPE, theDSN IN DIMSERVICENAME.SN%TYPE) return number;
  procedure DeclareCheckAlgorithm(Name varchar2,pars parameters,doc varchar2:=NULL);
- procedure DeclareCreatorAlgorithm(Name varchar2,Ninp number:=0,doc varchar2:=NULL);
+ procedure DeclareCreatorAlgorithm(Name IN varchar2,Ninp IN number:=0,pars IN parameters,
+			thetype IN varchar2 := 'H1D', doc IN varchar2:=NULL);
 
  function DeclareAnalysis(theSet IN HISTOGRAMSET.HSID%TYPE, Algo IN varchar2, warn IN thresholds, alr IN thresholds, instance IN integer:=1)
 	return number;
@@ -40,11 +42,13 @@ create or replace package OnlineHistDB as
  function GetBestDO(theHID IN HISTOGRAM.HID%TYPE, thePage IN PAGE.PAGENAME%TYPE := NULL,TheInstance IN int := 1) return number;
 
  function GetHID(theHistoName IN varchar2,Subindex OUT HISTOGRAM.IHS%TYPE) return number;
- procedure GetAlgoNpar(theAlg IN varchar2, Npar OUT integer);
+ procedure GetAlgoNpar(theAlg IN varchar2, Npar OUT integer, Ninp OUT integer);
  procedure GetAlgoParname(theAlg IN varchar2, Ipar IN integer, name OUT varchar2);
  procedure GetAnaSettings(theAna IN integer, theHisto IN varchar2, Ipar IN integer, warn OUT float, alr OUT float);
+ procedure GetHCSettings(theHID IN HISTOGRAM.HID%TYPE, Ipar IN integer, value OUT float);
  function GetHistoAnalysis(theHistoSet IN int, anaids OUT intlist, ananames OUT analist) return number;
- procedure DeclareAnalysisHistogram(theAlg IN varchar2,theTitle IN varchar2,theSet IN HISTOGRAMSET.HSID%TYPE := 0,theSources sourceh := NULL);
+ procedure DeclareAnalysisHistogram(theAlg IN varchar2,theTitle IN varchar2,theSet IN HISTOGRAMSET.HSID%TYPE := 0,
+                                  theSources sourceh := NULL, thePars IN thresholds := thresholds());
  procedure DeclarePageFolder(theFolder IN varchar2);
  procedure DeclarePage(theName IN varchar2,theFolder IN varchar2,theDoc IN varchar2,hlist IN histotlist,
 			Cx IN floattlist,Cy IN floattlist,Sx IN floattlist,Sy IN floattlist);
@@ -58,7 +62,8 @@ create or replace package OnlineHistDB as
         theObsolete OUT int, theDisplay out int, theHSDisplay out int, theSHDisplay out int,
 	theDIMServiceName OUT varchar2)
 	return number;
-
+ function DeleteHistogramSet(theSet IN HISTOGRAMSET.HSID%TYPE) return number;
+ function DeleteHistogram(theHID IN HISTOGRAM.HID%TYPE) return number;
  procedure mycommit(dbschema int := 0);
 end OnlineHistDB;
 /
@@ -108,7 +113,7 @@ end DeclareDisplayOptions;
 ---------------------------------------------------------------------
 
 
-function GetHID(theHistoSetName IN varchar2,theSubtitle IN varchar2 := NULL,Subindex OUT HISTOGRAM.IHS%TYPE) return number is
+function myGetHID(theHistoSetName IN varchar2,theSubtitle IN varchar2 := NULL,Subindex OUT HISTOGRAM.IHS%TYPE) return number is
  tk TASK.TASKNAME%TYPE;
  algo HISTOGRAMSET.HSALGO%TYPE;
  title varchar2(300);
@@ -143,7 +148,7 @@ begin
    return myhsid;
   end if;
  end if;
-end GetHID;
+end myGetHID;
 
 procedure CheckNullValueS( value IN OUT varchar2 ) is
 begin
@@ -165,6 +170,14 @@ if (value is null) then
  value := -99999;
 end if;
 end CheckNullValueI;
+
+procedure UpdateDimServiceName(theHID IN  HISTOGRAM.HID%TYPE, ServiceName IN DIMSERVICENAME.SN%TYPE) is
+begin
+ DELETE FROM DIMSERVICENAME WHERE PUBHISTO=theHID;
+ INSERT INTO DIMSERVICENAME(SN,PUBHISTO) VALUES(ServiceName,theHID);
+end UpdateDimServiceName;
+
+-----------------------
 
 --------------------------
 --PUBLIC FUNCTIONS:
@@ -198,6 +211,9 @@ end GetHID;
  if cs%NOTFOUND then
    insert into SUBSYSTEM(SSNAME) VALUES(subsys);
  end if;
+exception
+ when OTHERS then 
+  raise_application_error(-20050,SQLERRM);
  end DeclareSubSystem;
 
 -----------------------
@@ -246,20 +262,21 @@ exception
 -----------------------
  
 
-procedure DeclareHistogram(tk IN varchar2,algo IN  varchar2 := '_NULL_', title IN  varchar2:= '_NULL_', dimension IN int:= 0) is
- out int;
+procedure DeclareHistogram(tk IN varchar2,algo IN  varchar2 := '', title IN  varchar2:= '_BYSN_', 
+                           mytype IN varchar2:= '') is
+ out HISTOGRAM.HID%TYPE;
  begin
- if (dimension = 0) then
+ if (title = '_BYSN_') then
    DeclareHistByServiceName(tk);
  else
-   out := DeclareHistByAttributes(tk,algo,title,dimension);
+   out := DeclareHistByAttributes(tk,algo,title,mytype);
  end if;
 end DeclareHistogram;
 	  
 -----------------------
 
 procedure DeclareHistByServiceName(ServiceName IN varchar2) is
- dimension int; -- still missing a convention for profile histograms
+ mytype HISTOGRAMSET.HSTYPE%TYPE; 
  tk TASK.TASKNAME%TYPE;
  algo HISTOGRAMSET.HSALGO%TYPE;
  title varchar2(300);
@@ -271,72 +288,97 @@ procedure DeclareHistByServiceName(ServiceName IN varchar2) is
  open mysn(ServiceName);
  fetch mysn into myfsn;
  if mysn%NOTFOUND then -- if service name is known, do nothing
-  savepoint beforeDHwrite;
   -- decode service name
-  dimension := REGEXP_REPLACE(ServiceName,'^H(.)D/.*$','\1');
-  tk := REGEXP_REPLACE(ServiceName,'^H.D/.*_(.*)_.*/.*/.*$','\1');
-  algo := REGEXP_REPLACE(ServiceName,'^H.D/.*/(.*)/.*$','\1');
-  title := REGEXP_REPLACE(ServiceName,'^H.D/.*/.*/(.*)$','\1');
-  hid := DeclareHistByAttributes(tk,algo,title,dimension);
-  if (hid != '') then 
+  mytype := REGEXP_SUBSTR(ServiceName,'^.{3}');
+  tk := REGEXP_REPLACE(ServiceName,'^.{3}/[^/]*_(.+)_[^/]*/.+$','\1');
+  if (tk = ServiceName) then
+     raise_application_error(-20051,'syntax error in Service Name '||ServiceName);
+  end if;
+  if (tk = 'Adder') then -- expect one more field for the taskname
+     tk := REGEXP_REPLACE(ServiceName,'^.{3}/[^/]*_Adder_[^/]*/([^/]+)/[^/]+/[^/]+$','\1');
+     if (tk = ServiceName) then
+       raise_application_error(-20051,'syntax error in Service Name '||ServiceName);
+     end if;
+     algo := REGEXP_REPLACE(ServiceName,'^.{3}/[^/]+/[^/]+/([^/]+)/[^/]+$','\1');
+     title := REGEXP_REPLACE(ServiceName,'^.{3}/[^/]+/[^/]+/[^/]+/([^/]+)$','\1');
+  else	
+     algo := REGEXP_REPLACE(ServiceName,'^.{3}/[^/]+/([^/]+)/[^/]+$','\1'); 
+     title := REGEXP_REPLACE(ServiceName,'^.{3}/[^/]+/[^/]+/([^/]+)$','\1');
+  end if;
+  if (algo = ServiceName) then
+    raise_application_error(-20051,'syntax error in Service Name '||ServiceName);
+  end if;
+  if (title = ServiceName) then
+    raise_application_error(-20051,'syntax error in Service Name '||ServiceName);
+  end if;
+  hid := DeclareHistByAttributes(tk,algo,title,mytype);
+  if (hid != '_none_') then 
    -- update service name (the dimension or the node or the task serial number could have changed)
-   DELETE FROM DIMSERVICENAME WHERE PUBHISTO=hid;
-   INSERT INTO DIMSERVICENAME VALUES(ServiceName,hid);
+   UpdateDimServiceName(hid,ServiceName);
   end if;
  end if;
 end  DeclareHistByServiceName;
 -----------------------
 
-function DeclareHistByAttributes(tk IN varchar2,algo IN  varchar2, title IN  varchar2, dimension IN int) 
+
+function DeclareHistByAttributes(tk IN varchar2,algo IN  varchar2, title IN  varchar2, mytype IN varchar2 ) 
   return varchar2 is
  hstitle HISTOGRAMSET.HSTITLE%TYPE;
  subtitle  HISTOGRAM.SUBTITLE%TYPE;
  cursor myh(Xsubtit HISTOGRAM.SUBTITLE%TYPE, Xtit HISTOGRAMSET.HSTITLE%TYPE, Xalg HISTOGRAMSET.HSALGO%TYPE, Xtask TASK.TASKNAME%TYPE) is 
 	select HID,HSID,HSTYPE from VIEWHISTOGRAM where (SUBTITLE=Xsubtit or (Xsubtit is NULL and SUBTITLE is NULL)) 
 	AND TITLE=Xtit AND ALGO=Xalg and TASK=Xtask;
- myhstype VIEWHISTOGRAM.HSTYPE%TYPE;
  cursor myhs(Xtit HISTOGRAMSET.HSTITLE%TYPE, Xalg HISTOGRAMSET.HSALGO%TYPE, Xtask HISTOGRAMSET.HSTASK%TYPE) is 
 	select HSID,NHS,NANALYSIS from HISTOGRAMSET where HSTITLE=Xtit AND HSALGO=Xalg and HSTASK=Xtask;
- myhid HISTOGRAM.HID%TYPE := '';
+ cursor myhinset(Xhsid HISTOGRAMSET.HSID%TYPE) is select MAX(IHS) from HISTOGRAM WHERE HSET=Xhsid;
+ myhid HISTOGRAM.HID%TYPE := '_none_';
  myhsid HISTOGRAMSET.HSID%TYPE;
  mynhs HISTOGRAMSET.NHS%TYPE;
  mynana HISTOGRAMSET.NANALYSIS%TYPE;
+ myihs HISTOGRAM.IHS%TYPE;
  cursor myans(Xhisto HISTOGRAM.HID%TYPE) is select ANA,WARNINGS,ALARMS from ANASETTINGS where HISTO=Xhisto;
  myana ANASETTINGS.ANA%TYPE;
  mywn thresholds;
  myal thresholds;
- newdim  VIEWHISTOGRAM.HSTYPE%TYPE;
+ oldtype  VIEWHISTOGRAM.HSTYPE%TYPE := 'NON'; 
 
  begin
- if (INSTR(title,'_$$_') != 0) then
-   hstitle :=  REGEXP_REPLACE(title,'^(.*)_\$\$_.*$','\1');
-   subtitle :=  REGEXP_REPLACE(title,'^.*_\$\$_(.*)$','\1');
+ savepoint beforeDHwrite;
+ if (INSTR(title,'_$') != 0) then
+   hstitle :=  REGEXP_REPLACE(title,'^(.*)_\$.*$','\1');
+   subtitle :=  REGEXP_REPLACE(title,'^.*_\$(.*)$','\1');
  else
    hstitle := title;
    subtitle := NULL;
  end if;
 
   -- see if histogram exists
-  --  DBMS_OUTPUT.PUT_LINE('histo e'' ___'||tk||'/'||algo||'/'||hstitle||'_$$_'||subtitle||'___');
+  --  DBMS_OUTPUT.PUT_LINE('histo e'' ___'||tk||'/'||algo||'/'||hstitle||'_$'||subtitle||'___');
  open myh(subtitle,hstitle,algo,tk);
- fetch myh into myhid,myhsid,myhstype;
+ fetch myh into myhid,myhsid,oldtype;
  if myh%NOTFOUND then -- see if histogram set exists
   open myhs(hstitle,algo,tk);
   fetch myhs into myhsid,mynhs,mynana;
-  if myhs%NOTFOUND then -- check that task exists
+  if myhs%NOTFOUND then -- check that task exists and declare set
     DeclareTask(tk);
     -- create histogram set and histogram
     INSERT INTO HISTOGRAMSET(HSID,NHS,HSTASK,HSALGO,HSTITLE,HSTYPE) 
-       VALUES(HistogramSet_ID.NEXTVAL,1,tk,algo,hstitle,dimension||'D');
+       VALUES(HistogramSet_ID.NEXTVAL,1,tk,algo,hstitle,mytype);
     INSERT INTO HISTOGRAM(HID,HSET,IHS,SUBTITLE,CREATION) 
        VALUES(HistogramSet_ID.CURRVAL||'/1',HistogramSet_ID.CURRVAL,1,subtitle,SYSTIMESTAMP);
     SELECT HistogramSet_ID.CURRVAL||'/1' INTO myhid from ERGOSUM;
   else -- histogram set exists, create histogram object and update number in set
+    open myhinset(myhsid);
+    fetch myhinset into myihs;
+    if myhinset%NOTFOUND then
+     raise_application_error(-20910,'Fatal DB inconsistency when creating histogram: contact DB manager');
+    end if;
     mynhs := mynhs+1;
-    myhid := myhsid||'/'||mynhs;
-    INSERT INTO HISTOGRAM(HID,HSET,IHS,SUBTITLE,CREATION) VALUES(myhid,myhsid,mynhs,subtitle,SYSTIMESTAMP);
+    myihs := myihs+1;
+    myhid := myhsid||'/'||myihs;
+    INSERT INTO HISTOGRAM(HID,HSET,IHS,SUBTITLE,CREATION) VALUES(myhid,myhsid,myihs,subtitle,SYSTIMESTAMP);
     UPDATE HISTOGRAMSET SET NHS=mynhs where HSID=myhsid;
-    -- if analysis exist for set, create it for this histogram, masked by default, with same parameters than first histogram in set
+    -- if analysis exists for set, create it for this histogram, masked by default, with same parameters than first histogram in set
     if (mynana >0) then
       for aset in myans(myhsid||'/1') LOOP
        INSERT INTO ANASETTINGS(ANA,HISTO,MASK,WARNINGS,ALARMS) VALUES(aset.ANA,myhid,1,aset.WARNINGS,aset.ALARMS);
@@ -344,9 +386,8 @@ function DeclareHistByAttributes(tk IN varchar2,algo IN  varchar2, title IN  var
     end if;
   end if;	
  else -- histogram exists, only check dimension 
-  newdim:=dimension||'D'; -- convention for profile histogram ?? 
-  if (newdim != myhstype) then
-   UPDATE HISTOGRAMSET SET HSTYPE=newdim where HSID=myhsid;
+  if (mytype != oldtype) then
+   UPDATE HISTOGRAMSET SET HSTYPE=mytype where HSID=myhsid;
   end if;
  end if;
  return myhid;
@@ -354,52 +395,86 @@ exception
  when OTHERS then 
   ROLLBACK TO beforeDHwrite;
   raise_application_error(-20050,SQLERRM);
- end DeclareHistByAttributes;
-
+end DeclareHistByAttributes;
 -----------------------
-procedure DeclareCheckAlgorithm(Name varchar2,pars parameters,doc varchar2) is
+
+function SetDimServiceName(theHID IN  HISTOGRAM.HID%TYPE, theDSN IN DIMSERVICENAME.SN%TYPE) return number is
+out int :=1;
+cursor myh is select HID from HISTOGRAM where HID=theHID;
+myhid HISTOGRAM.HID%TYPE;
+begin
+ open myh;
+ fetch myh into myhid;
+ if myh%NOTFOUND then
+  out := 0;
+ else
+   UpdateDimServiceName(theHID,theDSN);
+ end if;
+ return out;
+end SetDimServiceName;
+-----------------------
+
+procedure DeclareCheckAlgorithm(Name varchar2,pars parameters,doc varchar2:=NULL) is
  cursor al is  select ALGNAME from ALGORITHM where ALGNAME=Name;	
  algo ALGORITHM.ALGNAME%TYPE;
  nin integer := pars.COUNT;
 begin
+ savepoint beforeCKAwrite;
  open al;
  fetch al into  algo;
  if al%NOTFOUND then
-   insert into ALGORITHM(ALGNAME,ALGTYPE,NINPUT,ALGPARS) VALUES(Name,'CHECK',nin,pars);
+   insert into ALGORITHM(ALGNAME,ALGTYPE,NPARS,ALGPARS) VALUES(Name,'CHECK',nin,pars);
  else
-   update ALGORITHM set ALGTYPE='CHECK',NINPUT=nin,ALGPARS=pars where ALGNAME=Name;
+   update ALGORITHM set ALGTYPE='CHECK',NPARS=nin,ALGPARS=pars where ALGNAME=Name;
  end if;
  if (LENGTH(doc) > 0 ) then
     update ALGORITHM set ALGDOC=doc where ALGNAME=Name;
  end if;
+EXCEPTION
+ when OTHERS then 
+  rollback to beforeCKAwrite;
+  raise_application_error(-20050,SQLERRM);
 end DeclareCheckAlgorithm;
 
 -----------------------
-procedure DeclareCreatorAlgorithm(Name varchar2,Ninp number,doc varchar2) is
+procedure DeclareCreatorAlgorithm(Name IN varchar2,Ninp IN number:=0,pars IN parameters,
+		thetype IN varchar2 := 'H1D', doc IN varchar2:=NULL) is
  cursor al is  select ALGNAME from ALGORITHM where ALGNAME=Name;	
  algo ALGORITHM.ALGNAME%TYPE;
+ nin integer := pars.COUNT;
+ myhctype HISTOGRAMSET.HSTYPE%TYPE;
 begin
+ savepoint beforeCRAwrite;
+ myhctype := thetype;  -- generates exception if thetype is not a correct HSTYPE
  open al;
  fetch al into  algo;
  if al%NOTFOUND then
-   insert into ALGORITHM(ALGNAME,ALGTYPE,NINPUT) VALUES(Name,'HCREATOR',Ninp);
+   insert into ALGORITHM(ALGNAME,ALGTYPE,NINPUT,HCTYPE) VALUES(Name,'HCREATOR',Ninp,thetype);
  else
-   update ALGORITHM set ALGTYPE='HCREATOR',NINPUT=Ninp where ALGNAME=Name;
+   update ALGORITHM set ALGTYPE='HCREATOR',NINPUT=Ninp,HCTYPE=thetype where ALGNAME=Name;
+ end if;
+ if (nin > 0) then
+    update ALGORITHM set NPARS=nin,ALGPARS=pars where ALGNAME=Name;
  end if;
  if (LENGTH(doc) > 0 ) then
     update ALGORITHM set ALGDOC=doc where ALGNAME=Name;
  end if;
+EXCEPTION
+ when OTHERS then 
+  rollback to beforeCRAwrite;
+  raise_application_error(-20050,SQLERRM);
 end DeclareCreatorAlgorithm;
 
 -----------------------
 
-function DeclareAnalysis(theSet IN HISTOGRAMSET.HSID%TYPE, Algo IN varchar2, warn IN thresholds, alr IN thresholds, instance IN integer :=1) 
+function DeclareAnalysis(theSet IN HISTOGRAMSET.HSID%TYPE, Algo IN varchar2, warn IN thresholds, alr IN thresholds, 
+                         instance IN integer :=1) 
 	return number is
  cursor hs is  select NHS from HISTOGRAMSET where HSID=theSet;
  mynh HISTOGRAMSET.NHS%TYPE :=0;
- cursor al is  select ALGTYPE,NINPUT from ALGORITHM where ALGNAME=Algo;	
+ cursor al is  select ALGTYPE,NPARS from ALGORITHM where ALGNAME=Algo;	
  algotype ALGORITHM.ALGTYPE%TYPE;
- algon ALGORITHM.NINPUT%TYPE;
+ algon ALGORITHM.NPARS%TYPE;
  cursor ana is select AID from ANALYSIS where HSET=theSet and ALGORITHM=Algo order by AID;
  myid ANALYSIS.AID%TYPE;
  hid HISTOGRAM.HID%TYPE;
@@ -448,8 +523,7 @@ begin
 exception
  when OTHERS then 
   ROLLBACK TO beforeDAwrite;
-  DBMS_OUTPUT.PUT_LINE(SQLERRM);
-  return 0;
+  raise_application_error(-20050,SQLERRM);
 end DeclareAnalysis;
 
 -----------------------
@@ -634,13 +708,14 @@ end SetSpecialAnalysis;
 
 -----------------------
 
-procedure GetAlgoNpar(theAlg IN varchar2, Npar OUT integer) is
- cursor np is select NINPUT from ALGORITHM where ALGNAME=theAlg;
+procedure GetAlgoNpar(theAlg IN varchar2, Npar OUT integer, Ninp OUT integer) is
+ cursor np is select NPARS,NINPUT from ALGORITHM where ALGNAME=theAlg;
 begin
  open np;
- fetch np into Npar;
+ fetch np into Npar,Ninp;
  if (np%NOTFOUND) then
      Npar:=-1;
+     Ninp:=-1;
      raise_application_error(-20006,'Cannot find Algorithm '||theAlg);
  end if;
 end GetAlgoNpar;
@@ -662,13 +737,20 @@ end GetAlgoParname;
 
 -----------------------
 function GetHistoAnalysis(theHistoSet IN int, anaids OUT intlist, ananames OUT analist) return number is
+ cursor myhs is select NANALYSIS from HISTOGRAMSET where HSID=theHistoSet;
  cursor mya is select AID,ALGORITHM from ANALYSIS where HSET=theHistoSet order by AID;
+ myna HISTOGRAMSET.NANALYSIS%TYPE;
  na int := 0;
  myaid ANALYSIS.AID%TYPE;
  myalg ANALYSIS.ALGORITHM%TYPE;
 begin
  anaids := intlist();
  ananames := analist();
+ open myhs;
+ fetch myhs into myna;
+ if (myhs%NOTFOUND) then
+  raise_application_error(-20010,'Histogram Set '||theHistoSet||' not found');
+ end if;
  open mya;
  LOOP	
   fetch mya into myaid,myalg;
@@ -679,6 +761,9 @@ begin
   ananames.EXTEND;
   ananames(na) := myalg;
  end LOOP;
+ if (na != myna) then
+  raise_application_error(-20910,'Fatal DB inconsistency for Histogram Set '||theHistoSet||': contact DB manager');
+ end if;
  return na;
 end GetHistoAnalysis;
 
@@ -697,56 +782,87 @@ begin
  end if;
  warn := myw(Ipar);
  alr := mya(Ipar);
+EXCEPTION
+ when others then
+  raise_application_error(-20050,SQLERRM);
 end GetAnaSettings;
 -----------------------
 
-procedure DeclareAnalysisHistogram(theAlg IN varchar2,theTitle IN varchar2,theSet IN HISTOGRAMSET.HSID%TYPE,theSources sourceh) is
+procedure GetHCSettings(theHID IN HISTOGRAM.HID%TYPE, Ipar IN integer, value OUT float) is
+ cursor hcp is  select HCPARS FROM HCREATOR WHERE HCID=theHID;
+ myp thresholds;
+begin
+ open hcp;
+ fetch hcp into myp;
+ if(hcp%NOTFOUND) then
+     value := -999;
+     raise_application_error(-20005,'Cannot find Histogram Creator '||theHID);
+ end if;
+ value := myp(Ipar);
+EXCEPTION
+ when others then
+  raise_application_error(-20050,SQLERRM);
+end GetHCSettings;
+-------------------------
+
+procedure DeclareAnalysisHistogram(theAlg IN varchar2,theTitle IN varchar2,theSet IN HISTOGRAMSET.HSID%TYPE,
+			           theSources sourceh, thePars IN thresholds := thresholds()) is
  cursor histo is select HSID from HISTOGRAMSET where HSTITLE=theTitle AND HSTASK='ANALYSIS' AND HSALGO=theAlg;
  myhsid HISTOGRAMSET.HSID%TYPE;
- cursor al is  select ALGTYPE,NINPUT from ALGORITHM where ALGNAME=TheAlg;	
+ cursor al(xAlg ALGORITHM.ALGNAME%TYPE) is  select ALGTYPE,NINPUT,NPARS,HCTYPE from ALGORITHM where ALGNAME=xAlg;	
  algotype ALGORITHM.ALGTYPE%TYPE;
- algon ALGORITHM.NINPUT%TYPE;
+ algonh ALGORITHM.NINPUT%TYPE;
+ algonp ALGORITHM.NPARS%TYPE;
  command varchar2(500);
  value varchar2(500);
+ myhctype HISTOGRAMSET.HSTYPE%TYPE := 'H1D';
+ myhcid HCREATOR.HCID%TYPE;
 begin
  SAVEPOINT beforeHCwrite;
+  -- check algorithm
+  open al(theAlg);
+  fetch al into algotype,algonh,algonp,myhctype;
+  if (al%NOTFOUND or algotype!='HCREATOR') then
+    raise_application_error(-20002,'Algorithm '||TheAlg||' does not exist or is not a creator histogram');
+  end if;
  -- CHECK IF THE HISTOGRAM IS ALREADY DEFINED
  open histo;
  fetch histo into myhsid;
  if (histo%NOTFOUND) then
-  open al;
-  fetch al into algotype,algon;
-  -- check algorithm
-  if (al%NOTFOUND or algotype!='HCREATOR') then
-    raise_application_error(-20002,'Algorithm '||TheAlg||' does not exist or is not a creator histogram');
-  end if;
-  -- check input parameters are correct
-  if (algon = 0) then
+  -- check that input histograms and parameters are correct
+  if (algonh = 0) then
     if (theSet = 0) then
       raise_application_error(-20012,'Algorithm '||TheAlg||' requires an Histogram Set as input');
     end if;
   else
-    if (theSources.COUNT != algon) then
-       raise_application_error(-20003,'Algorithm '||TheAlg||' requires '||algon||' input histograms');
+    if (theSources.COUNT != algonh) then
+       raise_application_error(-20003,'Algorithm '||TheAlg||' requires '||algonh||' input histograms and you provided '||theSources.COUNT);
     end if;
   end if;
-  -- create histogram entry
-  INSERT INTO HISTOGRAMSET(HSID,NHS,HSTASK,HSALGO,HSTITLE,HSTYPE) VALUES(HistogramSet_ID.NEXTVAL,1,'ANALYSIS',theAlg,theTitle,'1D');
-  INSERT INTO HISTOGRAM(HID,HSET,IHS,SUBTITLE,CREATION,ISANALYSISHIST) VALUES(HistogramSet_ID.CURRVAL||'/1',HistogramSet_ID.CURRVAL,1,'',SYSTIMESTAMP,1);
-  -- create HCREATOR entry
-  if (algon = 0) then
-   INSERT INTO HCREATOR(HCID,ALGORITHM,SOURCESET) VALUES(HistogramSet_ID.CURRVAL||'/1',theAlg,theSet); 
-  else
-   command := 'INSERT INTO HCREATOR(HCID,ALGORITHM';
-   value := 'VALUES(HistogramSet_ID.CURRVAL||''/1'','''||theAlg||'''';
-   for i IN 1..algon LOOP
-    command := command||',SOURCEH'||i;
-    value := value||','''||theSources(i)||'''';
-   end LOOP;
-   EXECUTE IMMEDIATE command||') '||value||')';
+  if (algonp != thePars.COUNT) then
+    raise_application_error(-20003,'Algorithm '||TheAlg||' requires '||algonp||' parameters');
   end if;
+  -- create histogram entry
+  INSERT INTO HISTOGRAMSET(HSID,NHS,HSTASK,HSALGO,HSTITLE,HSTYPE) VALUES(HistogramSet_ID.NEXTVAL,1,'ANALYSIS',theAlg,theTitle,myhctype);
+  INSERT INTO HISTOGRAM(HID,HSET,IHS,SUBTITLE,CREATION,ISANALYSISHIST) VALUES(HistogramSet_ID.CURRVAL||'/1',HistogramSet_ID.CURRVAL,1,'',SYSTIMESTAMP,1);
+  -- create HCREATOR entry  
+  INSERT INTO HCREATOR(HCID,ALGORITHM) VALUES(HistogramSet_ID.CURRVAL||'/1',theAlg); 
+  select HistogramSet_ID.CURRVAL into myhsid from ERGOSUM;
+ end if; -- end of new histogram creation
+ -- update sources and parameters
+ myhcid := myhsid||'/1';
+ UPDATE HCREATOR set HCPARS=thePars where HCID=myhcid;
+ if (algonh = 0) then
+  UPDATE HCREATOR set SOURCESET=theSet where HCID=myhcid;
+ else
+  command := 'UPDATE HCREATOR SET ALGORITHM='''||theAlg||'''';
+  for i IN 1..algonh LOOP
+   command := command||',SOURCEH'||i||'='''||theSources(i)||'''';
+  end LOOP;
+  command := command||' where HCID='''||myhcid||'''';
+  EXECUTE IMMEDIATE command;
  end if;
- exception
+exception
  when OTHERS then  
   ROLLBACK TO beforeHCwrite;
   raise_application_error(-20050,SQLERRM);
@@ -754,15 +870,35 @@ end DeclareAnalysisHistogram;
 
 -----------------------
 
-procedure DeclarePageFolder(theFolder IN varchar2) is
-cursor mypf is select PAGEFOLDERNAME from PAGEFOLDER where PAGEFOLDERNAME=theFolder;
-mypfname PAGEFOLDER.PAGEFOLDERNAME%TYPE;
+procedure DeclarePageFolder(theFolder IN varchar2) is 
+cursor mypf(xFolder PAGEFOLDER.PAGEFOLDERNAME%TYPE) is select PAGEFOLDERNAME from PAGEFOLDER where PAGEFOLDERNAME=xFolder;
+theSon PAGEFOLDER.PAGEFOLDERNAME%TYPE;
+theFather PAGEFOLDER.PAGEFOLDERNAME%TYPE;
+conti int := 1;
 begin
-open mypf;
-fetch mypf into mypfname;
-if (mypf%NOTFOUND) then
- insert into PAGEFOLDER(PAGEFOLDERNAME) VALUES(theFolder);
-end if;
+savepoint beforePFOwrite;
+theSon := theFolder;
+while ( conti = 1 ) LOOP -- there is a parent
+ open mypf(theSon);
+ fetch mypf into theFather;
+ if (mypf%NOTFOUND) then
+  insert into PAGEFOLDER(PAGEFOLDERNAME) VALUES(theSon);
+  theFather := REGEXP_REPLACE(theSon,'^([^/]+)/.*$','\1');
+  if (theFather != theSon) then
+    update PAGEFOLDER set Parent=theFather where PAGEFOLDERNAME=theSon;
+    theSon := theFather;
+  else
+   conti := 0;
+  end if;
+ else
+  conti := 0;
+ end if;
+ close mypf;
+end LOOP;
+EXCEPTION
+ when others then
+  ROLLBACK TO beforePFOwrite;
+  raise_application_error(-20050,SQLERRM);
 end DeclarePageFolder;
 
 
@@ -892,7 +1028,51 @@ if (thePage != '_NONE_') then
 end if;
 return 1;
 end GetHistogramData;
+-----------------------
 
+function DeleteHistogramSet(theSet IN HISTOGRAMSET.HSID%TYPE) return number is
+begin
+ savepoint beforeDHSdelete;
+ delete from DISPLAYOPTIONS where DOID in (select HSDISPLAY from histogramset where hsid=theSet);
+ delete from DISPLAYOPTIONS where DOID in (select DISPLAY from histogram where HSET=theSet);
+ delete from DISPLAYOPTIONS where DOID in (select SDISPLAY from showhisto,histogram 
+                       where showhisto.HISTO = histogram.HID and histogram.HSET=theSet);
+ delete from histogramset where hsid=theSet;
+ return SQL%ROWCOUNT; -- returns the number of deleted objects (0 or 1)
+EXCEPTION
+ when OTHERS then
+  ROLLBACK TO beforeDHSdelete;
+  raise_application_error(-20050,SQLERRM); 
+end DeleteHistogramSet;
+-----------------------
+
+function DeleteHistogram(theHID IN HISTOGRAM.HID%TYPE) return number is
+ cursor vh is SELECT HSID,NHS,IHS from VIEWHISTOGRAM WHERE HID=theHID;
+ myhsid HISTOGRAMSET.HSID%TYPE;
+ mynhs HISTOGRAMSET.NHS%TYPE;
+ myihs HISTOGRAM.IHS%TYPE;
+begin
+ savepoint beforeDHdelete;
+ open vh;
+ fetch vh into myhsid,mynhs,myihs;
+ if (vh%NOTFOUND) then
+  return 0;
+ else
+  delete from DISPLAYOPTIONS where DOID in (select DISPLAY from histogram where HID=theHID);
+  delete from DISPLAYOPTIONS where DOID in (select SDISPLAY from showhisto where showhisto.HISTO =theHID);
+  if (mynhs = 1) then
+   return DeleteHistogramSet(myhsid);
+  else
+   update HISTOGRAMSET set NHS=NHS-1 where HSID=myhsid;
+   delete from histogram where HID=theHID;
+   return SQL%ROWCOUNT; -- returns the number of deleted objects (0 or 1)
+  end if;
+ end if;
+EXCEPTION
+ when OTHERS then
+  ROLLBACK TO beforeDHdelete;
+  raise_application_error(-20050,SQLERRM); 
+end DeleteHistogram;
 
 -----------------------
 procedure mycommit(dbschema int := 0) is

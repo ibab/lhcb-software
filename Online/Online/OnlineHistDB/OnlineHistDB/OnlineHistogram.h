@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistogram.h,v 1.2 2007-01-22 17:07:32 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistogram.h,v 1.3 2007-03-21 13:15:14 ggiacomo Exp $
 #ifndef ONLINEHISTOGRAM_H
 #define ONLINEHISTOGRAM_H 1
 /** @class  OnlineHistogram OnlineHistogram.h OnlineHistDB/OnlineHistogram.h
@@ -13,15 +13,17 @@
 class  OnlineHistogram : public OnlineHistDBEnv
 {
  public:
-  typedef enum { NONE, SET, HIST, HISTPAGE } DisplayOptionMode;
-  OnlineHistogram(std::string Name,
-		  Connection* conn,
+  OnlineHistogram(std::string Identifier,
+		  Connection* Conn,
+		  std::string User,
 		  std::string Page="_NONE_",
 		  int Instance=1);
   virtual ~OnlineHistogram();
+  typedef enum { NONE, SET, HIST, HISTPAGE } DisplayOptionMode;
   void update();
   void setPage(std::string Page,
 	       int Instance=1);
+  bool setDimServiceName(std::string DimServiceName);
   // DISPLAY OPTIONS
   bool initDisplayOptionsFromSet(); 
   bool initHistoPageDisplayOptionsFromSet(std::string PageName = "_DEFAULT_",
@@ -44,18 +46,18 @@ class  OnlineHistogram : public OnlineHistDBEnv
 		      std::vector<float>* warningThr=NULL, 
 		      std::vector<float>* alarmThr=NULL, 
 		      int instance=1); 
-  void setAnalysis(int AnaID, 
+  bool setAnalysis(int AnaID, 
 		   std::vector<float>* warningThr=NULL, 
 		   std::vector<float>* alarmThr=NULL);
-  void getAnaSettings(int AnaID,
+  bool getAnaSettings(int AnaID,
 		      std::vector<float>* warn, 
 		      std::vector<float>* alarm) const; 
-  void maskAnalysis(int AnaID,
+  bool maskAnalysis(int AnaID,
 		    bool Mask=true); 
 
   // access methods 
   bool isAbort() const {return m_isAbort;}
-  std::string name() const {return m_name;}
+  std::string identifier() const {return m_identifier;}
   std::string page() const {return m_page;}
   int instance() const {return m_instance;}
   std::string hid() const {return m_hid;}
@@ -64,8 +66,8 @@ class  OnlineHistogram : public OnlineHistDBEnv
   int ihs() const {return m_ihs;}
   int nhs() const {return m_nhs;}
   std::string hstype() const {return m_hstype;}
-  std::string hstitle() const {return m_hstitle;}
-  std::string subtitle() const {return m_subtitle;}
+  std::string hsname() const {return m_hsname;}
+  std::string subname() const {return m_subname;}
   std::string task() const {return m_task;}
   std::string algorithm() const {return m_algorithm;}
   int nanalysis() const {return m_nanalysis;}
@@ -81,7 +83,7 @@ class  OnlineHistogram : public OnlineHistDBEnv
   
  private:
   // private dummy copy constructor and assignment operator 
-  OnlineHistogram(const OnlineHistogram&) : OnlineHistDBEnv() {}
+  OnlineHistogram(const OnlineHistogram&) : OnlineHistDBEnv("dummy") {}
   OnlineHistogram & operator= (const OnlineHistogram&) {return *this;}
   // private OnlineDisplayOption class
   class OnlineDisplayOption {
@@ -105,7 +107,7 @@ class  OnlineHistogram : public OnlineHistDBEnv
   };
 
   bool m_isAbort;
-  std::string m_name;
+  std::string m_identifier;
   std::string m_page;
   int m_instance;
   std::string m_hid;
@@ -114,8 +116,8 @@ class  OnlineHistogram : public OnlineHistDBEnv
   int m_ihs;
   int m_nhs;
   std::string m_hstype;
-  std::string m_hstitle;
-  std::string m_subtitle;
+  std::string m_hsname;
+  std::string m_subname;
   std::string m_task;
   std::string m_algorithm;
   int m_nanalysis;
@@ -139,8 +141,8 @@ class  OnlineHistogram : public OnlineHistDBEnv
 			    Statement *st, 
 			    int pos,
 			    void* value);
-  int algNinput(std::string* Algorithm,
-		int* anaid) const;
+  int algNpars(std::string* Algorithm,
+	       int* anaid) const;
   int formatThresholds(std::string* Algorithm,
 		       int* anaid,
 		       std::vector<float>* warningThr, 

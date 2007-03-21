@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistogram.cpp,v 1.3 2007-01-22 17:08:03 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistogram.cpp,v 1.4 2007-03-21 13:15:15 ggiacomo Exp $
 /*
    C++ interface to the Online Monitoring Histogram DB
    G. Graziani (INFN Firenze)
@@ -8,11 +8,12 @@
 #include <math.h>
 #include "OnlineHistDB/OnlineHistogram.h"
 
-OnlineHistogram::OnlineHistogram(std::string Name,
+OnlineHistogram::OnlineHistogram(std::string Identifier,
 				 Connection* Conn,
+				 std::string User,
 				 std::string Page,
 				 int Instance) :
-  OnlineHistDBEnv(Conn), m_isAbort(false), m_name(Name), 
+  OnlineHistDBEnv(Conn,User,1), m_isAbort(false), m_identifier(Identifier), 
   m_page(Page), m_instance(Instance),
   m_domode(NONE), m_hsdisp(0), m_hdisp(0), m_shdisp(0) {
     load();
@@ -37,13 +38,33 @@ void OnlineHistogram::setPage(std::string Page,
   load();
 }
 
+bool OnlineHistogram::setDimServiceName(std::string DimServiceName) {
+  bool out=true;
+  Statement *astmt = m_conn->createStatement("begin :out := OnlineHistDB.SetDimServiceName(:2,:3); end;");
+  try{
+    astmt->registerOutParam(1,OCCIINT);
+    astmt->setString(2, m_hid);
+    astmt->setString(3, DimServiceName);
+    astmt->execute();
+    out=astmt->getInt(1);
+  }catch(SQLException ex)
+    {
+      dumpError(ex,"OnlineHistogram::setdimServiceName");
+      out=false;
+    }
+  m_conn->terminateStatement (astmt);  
+  return out;
+}
+
+
+
 void OnlineHistogram::load() {
   std::string com="begin :out := OnlineHistDB.GetHistogramData(:2,:3,:4,:5,:6,:7,:8,:9,:10,:11,:12,:13,:14,:15,:16,:17,:18,:19,:20,:21,:22, :23); end;";
   Statement *query = m_conn->createStatement(com);
   try{
     int ip=1;
     query->registerOutParam(ip++,OCCIINT);
-    query->setString(ip++, m_name);
+    query->setString(ip++, m_identifier);
     query->setString(ip++, m_page);
     query->setInt(ip++, m_instance);
     query->registerOutParam(ip++,OCCISTRING,12);
@@ -80,8 +101,8 @@ void OnlineHistogram::load() {
     m_ihs=query->getInt(ip++);
     m_nhs=query->getInt(ip++);
     m_hstype=query->getString(ip++);
-    m_hstitle=query->getString(ip++);
-    m_subtitle=query->getString(ip++);
+    m_hsname=query->getString(ip++);
+    m_subname=query->getString(ip++);
     m_task=query->getString(ip++);
     m_algorithm=query->getString(ip++);
     m_nanalysis=query->getInt(ip++);
@@ -102,23 +123,16 @@ void OnlineHistogram::load() {
       try{
 	query->registerOutParam(1,OCCIINT);
 	query->setInt(2, m_hsid);
-	query->registerOutParam(3, OCCIVECTOR, 0,"LHCB_MON_GIACOMO.INTLIST");
-	query->registerOutParam(4, OCCIVECTOR, 0,"LHCB_MON_GIACOMO.ANALIST");
+	query->registerOutParam(3, OCCIVECTOR, 0,m_user+".INTLIST");
+	query->registerOutParam(4, OCCIVECTOR, 0,m_user+".ANALIST");
 	query->execute();
       }catch(SQLException ex)
 	{
-	  dumpError(ex,"OnlineHistogram::OnlineHistogram calling GetHistoAnalysis");
+	  dumpError(ex,"OnlineHistogram::load calling GetHistoAnalysis");
 	  m_isAbort=true;
 	}
-      if (query->getInt(1) != m_nanalysis) {
-	cout<<"Severe incompatibility ("<<query->getInt(1)<<" != "<<m_nanalysis 
-	    <<")for Histogram record "<< m_name <<endl;
-	m_isAbort=true;
-      }
-      else {
-	getVector(query, 3, m_anaId);
-	getVector(query, 4, m_anaName);
-      }
+      getVector(query, 3, m_anaId);
+      getVector(query, 4, m_anaName);
     } // end of analysis part
     
     // display options
@@ -239,7 +253,7 @@ int OnlineHistogram::setDisplayOptions(std::string function) {
     out=fstmt->getInt(1);
   } catch(SQLException ex)
     {
-      dumpError(ex,"OnlineHistogram::setDisplayOptions");
+      dumpError(ex,"OnlineHistogram::"+function);
       out=false;
     }
   m_conn->terminateStatement (fstmt); 
@@ -406,7 +420,8 @@ bool OnlineHistogram::setHistoSetDisplayOption(std::string ParameterName,
     }
   }catch(SQLException ex)
     {
-      dumpError(ex,"OnlineHistogram::setHistoSetDisplayOption");
+      dumpError(ex,"OnlineHistogram::setHistoSetDisplayOption for parameter "
+		+ParameterName);
       out=false;
     }
   m_conn->terminateStatement (fstmt); 
@@ -444,7 +459,7 @@ bool OnlineHistogram::setDisplayOption(std::string ParameterName,
       }
     }catch(SQLException ex)
       {
-	dumpError(ex,"OnlineHistogram::setDisplayOption");
+	dumpError(ex,"OnlineHistogram::setDisplayOption for parameter"+ParameterName);
 	out = false;
       }
     m_conn->terminateStatement (fstmt); 
@@ -489,7 +504,7 @@ bool OnlineHistogram::setHistoPageDisplayOption(std::string ParameterName,
       }
     }catch(SQLException ex)
       {
-	dumpError(ex,"OnlineHistogram::setHistoPageDisplayOption");
+	dumpError(ex,"OnlineHistogram::setHistoPageDisplayOption for parameter "+ParameterName);
 	out = false;
       }
     m_conn->terminateStatement (fstmt); 
@@ -579,15 +594,15 @@ OnlineHistogram::OnlineDisplayOption* OnlineHistogram::getDO(std::string Paramet
 
 // analysys methods
 
-int OnlineHistogram::algNinput(std::string* Algorithm,
-			       int* anaid) const {
+int OnlineHistogram::algNpars(std::string* Algorithm,
+			      int* anaid) const {
   int Np=0;
   ResultSet *rset=0;
   std::string sqlStmt;
   if (Algorithm) 
-    sqlStmt = "SELECT ninput FROM algorithm where algname=:n";
+    sqlStmt = "SELECT npars FROM algorithm where algname=:n";
   else
-    sqlStmt = "SELECT ninput FROM algorithm al,analysis an where al.algname=an.algorithm and an.aid=:n";
+    sqlStmt = "SELECT npars FROM algorithm al,analysis an where al.algname=an.algorithm and an.aid=:n";
   Statement *query = m_conn->createStatement(sqlStmt);
   if (Algorithm)
     query->setString(1, *Algorithm);
@@ -598,7 +613,7 @@ int OnlineHistogram::algNinput(std::string* Algorithm,
     if (rset->next ()) 
       Np=rset->getInt (1);
     else {
-      cout<<"Error in OnlineHistogram::algNinput :";
+      cout<<"Error in OnlineHistogram::algNpars :";
       if (Algorithm) cout << " Algorithm "<<Algorithm;
       else cout << " Analysis " << anaid;
       cout <<" unknown to DB"<<endl;
@@ -606,7 +621,7 @@ int OnlineHistogram::algNinput(std::string* Algorithm,
     }
   } catch(SQLException ex)
     {
-      dumpError(ex,"OnlineHistogram::algNinput");
+      dumpError(ex,"OnlineHistogram::algNpars");
       Np=-1;
     }
   query->closeResultSet (rset);
@@ -624,7 +639,7 @@ int OnlineHistogram::formatThresholds(std::string* Algorithm,
 				      std::string * warnString, 
 				      std::string* alarmString) const {
   bool badinput = false;
-  int Np=algNinput(Algorithm,anaid);
+  int Np=algNpars(Algorithm,anaid);
   if (Np<0) badinput = true;
   if (Np>0) { 
     if (0 == warningThr || 0 == alarmThr || 
@@ -689,7 +704,8 @@ int OnlineHistogram::declareAnalysis(std::string Algorithm,
       out=astmt->getInt(1);
     }catch(SQLException ex)
       {
-	dumpError(ex,"OnlineHistogram::DeclareAnalysis");
+	dumpError(ex,"OnlineHistogram::DeclareAnalysis for Algorithm "+Algorithm);
+	out=0;
       }
     m_conn->terminateStatement (astmt);  
     for (int ia=0;ia<m_nanalysis;ia++) {
@@ -707,10 +723,11 @@ int OnlineHistogram::declareAnalysis(std::string Algorithm,
   return out;
 }
 
-void OnlineHistogram::setAnalysis(int AnaID, 
+bool OnlineHistogram::setAnalysis(int AnaID, 
 				  std::vector<float>* warningThr, 
 				  std::vector<float>* alarmThr)
 {
+  bool out=true;
   std::string warnString,alarmString;
   int Np=formatThresholds(0,&AnaID,warningThr,alarmThr,&warnString,&alarmString);
   if (Np>=0) {
@@ -728,17 +745,18 @@ void OnlineHistogram::setAnalysis(int AnaID,
       astmt->execute();
     }catch(SQLException ex) {
       dumpError(ex,"OnlineHistogram::setAnalysis");
+      out = false;
     }
     m_conn->terminateStatement (astmt);  
   }
-  return;
+  return out;
 }
 
-void OnlineHistogram::getAnaSettings(int AnaID,
+bool OnlineHistogram::getAnaSettings(int AnaID,
 				     std::vector<float>* warn, 
 				     std::vector<float>* alarm) const {
-  
-  int Np=algNinput(0,&AnaID);
+  bool out=true;
+  int Np=algNpars(0,&AnaID);
   if (Np>0) { 
     if (0 == warn || 0 == alarm || 
 	warn->size() != (unsigned int)Np || 
@@ -746,31 +764,36 @@ void OnlineHistogram::getAnaSettings(int AnaID,
       cout<<"Error in OnlineHistogram::getAnaSettings : Analysis " << AnaID;
       cout << " requires "<<Np<<" parameters"<<endl;
       Np=-1;
+      out=false;
     }
   }
-  stringstream statement;
-  statement << "begin OnlineHistDB.GetAnaSettings("<<AnaID << ",'" <<
-    m_hid << "',:1,:2,:3); end;";
-  Statement *astmt=m_conn->createStatement (statement.str());
-  for (int jp=0 ; jp<Np ; jp++) {
-    try{
-      astmt->setInt(1,jp+1);
-      astmt->registerOutParam(2, OCCIFLOAT); 
-      astmt->registerOutParam(3, OCCIFLOAT); 
-      astmt->execute();
-      warn->at(jp)=astmt->getFloat(2);
-      alarm->at(jp)=astmt->getFloat(3);
-    }catch(SQLException ex)
-      {
-	dumpError(ex,"OnlineHistogram::getAnaSettings");
-      }
+  if (out) {
+    stringstream statement;
+    statement << "begin OnlineHistDB.GetAnaSettings("<<AnaID << ",'" <<
+      m_hid << "',:1,:2,:3); end;";
+    Statement *astmt=m_conn->createStatement (statement.str());
+    for (int jp=0 ; jp<Np ; jp++) {
+      try{
+	astmt->setInt(1,jp+1);
+	astmt->registerOutParam(2, OCCIFLOAT); 
+	astmt->registerOutParam(3, OCCIFLOAT); 
+	astmt->execute();
+	warn->at(jp)=astmt->getFloat(2);
+	alarm->at(jp)=astmt->getFloat(3);
+      }catch(SQLException ex)
+	{
+	  dumpError(ex,"OnlineHistogram::getAnaSettings");
+	  out=false;
+	}
+    }
+    m_conn->terminateStatement (astmt);  
   }
-  m_conn->terminateStatement (astmt);  
-  return;
+  return out;
 }
 
 
-void OnlineHistogram::maskAnalysis(int AnaID,bool Mask) {
+bool OnlineHistogram::maskAnalysis(int AnaID,bool Mask) {
+  bool out=true;
   Statement *astmt=m_conn->createStatement 
     ("update ANASETTINGS set MASK=:1 where ANA=:2 and HISTO=:3");
   astmt->setInt(1,(int)Mask);
@@ -781,7 +804,9 @@ void OnlineHistogram::maskAnalysis(int AnaID,bool Mask) {
   }catch(SQLException ex)
     {
       dumpError(ex,"OnlineHistogram::maskAnalysis");
+      out=false;
     }
+  return out;
 }
 
 

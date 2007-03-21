@@ -1,8 +1,23 @@
-! $Id: release.notes,v 1.4 2007-01-29 17:09:52 frankb Exp $
+! $Id: release.notes,v 1.5 2007-03-21 13:15:14 ggiacomo Exp $
 ! Package     : OnlineHistDB
 ! Responsible : Giacomo Graziani
 
-! 20070129 - Markus Frank
+
+! 20070321 - OnlineHistDB v2r0
+        - old histogram title is now the histogram name
+	- support for counters and profile histograms following the new 
+		naming convention for DIM services (dimension -> type(string))
+	- accept servicenames from the adder
+	- hierarchical structure for page folders
+        - add setServiceName method
+	- allow pages to have 0 histograms 
+	- several void methods changed to bool to ease error handling 
+	- improved exception handling, new sendHistBuffer method
+	- new methods to browse tasks, subsystems, algortihms
+	- temporary method to delete histograms
+	- some bug fixing
+
+! 20070129 - Markus Frank v1r3
         - Modify requirements to link library on WIN32 platforms
         - Modify release notes according to LHCb standard with latest changes on top.
 

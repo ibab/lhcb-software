@@ -3,8 +3,8 @@
 # Maintainer : Giacomo Graziani 
 # =============================================================================
 package             OnlineHistDB
-version             v1r2
-#
+version             v2r0
+
 branches            cmt doc src OnlineHistDB sql www
 use GaudiKernel    v*
 use oracle         v*  LCG_Interfaces

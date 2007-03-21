@@ -12,4 +12,4 @@ insert into SUBSYSTEM(SSName) VALUES('HCAL');
 insert into SUBSYSTEM(SSName) VALUES('MUON');
 
 insert into TASK(TASKName) VALUES('ANALYSIS');
-insert into ERGOSUM(version,apiversion) VALUES(2,'v1r2');
+insert into ERGOSUM(version,apiversion) VALUES(3,'v2r0');

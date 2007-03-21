@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistPage.h,v 1.3 2007-01-29 17:25:55 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistPage.h,v 1.4 2007-03-21 13:15:14 ggiacomo Exp $
 #ifndef ONLINEHISTPAGE_H
 #define ONLINEHISTPAGE_H 1
 /** @class  OnlineHistPage OnlineHistPage.h OnlineHistDB/OnlineHistPage.h
@@ -17,11 +17,12 @@ class OnlineHistPage : public OnlineHistDBEnv
  public:
   OnlineHistPage(std::string Name, 
 		 std::string Folder,
-		 Connection* Conn);
+		 Connection* Conn,
+		 std::string User);
   virtual ~OnlineHistPage();
-  void setDoc(std::string Doc) {m_doc=Doc;}
-  void setFolder(std::string Folder) {m_folder=Folder;}
-  void declareHistogram(OnlineHistogram* h,
+  bool setDoc(std::string Doc) {m_doc=Doc;return save();}
+  bool setFolder(std::string Folder) {m_folder=Folder;return save();}
+  bool declareHistogram(OnlineHistogram* h,
 		    float Cx,
 		    float Cy,
 		    float Sx,
