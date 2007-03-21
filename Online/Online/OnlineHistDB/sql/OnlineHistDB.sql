@@ -883,7 +883,7 @@ while ( conti = 1 ) LOOP -- there is a parent
  fetch mypf into theFather;
  if (mypf%NOTFOUND) then
   insert into PAGEFOLDER(PAGEFOLDERNAME) VALUES(theSon);
-  theFather := REGEXP_REPLACE(theSon,'^([^/]+)/.*$','\1');
+  theFather := REGEXP_REPLACE(theSon,'^(.+)/[^/]+$','\1');
   if (theFather != theSon) then
     update PAGEFOLDER set Parent=theFather where PAGEFOLDERNAME=theSon;
     theSon := theFather;

@@ -1,4 +1,33 @@
 <?
+
+function show_anahist($id) {
+ global $conn;
+ $stid = OCIParse($conn,"SELECT HCID,ALGORITHM,SOURCEH1,SOURCEH2,SOURCEH3,SOURCEH4,SOURCEH5,SOURCEH6,SOURCEH7,SOURCEH8,SOURCESET from HCREATOR where HCID='".SingleHist($id)."'");
+ OCIExecute($stid, OCI_DEFAULT);
+ OCIFetchInto($stid, $hcreator, OCI_ASSOC );
+ echo "<p>This is a <B> Display Histogram </B> obtained automatically by Analysis Task<br>
+  through Algorithm <span class=normal>".$hcreator["ALGORITHM"]."</span>\n ";
+ if ($shsid=$hcreator["SOURCESET"]) 
+   echo " from histogram set <a href='Histogram.php?hsid=${shsid}'> ${shsid} </a><br>\n";
+ else {
+   $ih=0;
+   echo " from histograms<br><center>\n"; 
+   while($ih++<8) 
+     if($shid=$hcreator["SOURCEH".$ih]) echo "<a href='Histogram.php?hid=${shid}'> ${shid} </a><br>\n";
+   echo "</center>";
+ }
+ get_ana_parameters($hcreator["ALGORITHM"],0,1,$id."/1",0,1,0,1);
+ if(($np=$_POST["a1_np"])>0) {
+   $ip=0;
+   echo " with parameters <br><center>\n"; 
+   while($ip++<$np) 
+     echo $_POST["a1_p${ip}_name"]." &nbsp&nbsp = &nbsp&nbsp ".$_POST["a1_p${ip}"]."<br>\n";
+   echo "</center>";
+ }
+ 
+
+}
+
 function histo_header($id,$htype,$mode)
 {
   global $canwrite;
@@ -10,16 +39,18 @@ function histo_header($id,$htype,$mode)
   $script=$PHP_SELF;
   if($mode == "display") {
     $script='write/histo_header.php';
-    foreach (array("DESCR","DOC","TASKNAME","HSALGO","HSTYPE","HSTITLE","SUBTITLE","NHS") 
+    foreach (array("DESCR","DOC","TASKNAME","HSALGO","HSTYPE","HSTITLE","SUBTITLE","NHS","NAME") 
 	     as $field)
       $_POST[$field]=$histo[$field];
   }
+  $identifier= ($htype == "HID") ? $_POST["NAME"] : $_POST["TASKNAME"]."/".$_POST["HSALGO"]."/".$_POST["HSTITLE"];
   echo "<form action='${script}' method='POST'>\n"; 
   echo " ID <span class=normal>$id</span> &nbsp&nbsp&nbsp Task <span class=normal>".$_POST["TASKNAME"]."</span>".
     " &nbsp&nbsp&nbsp Algorithm <span class=normal>".$_POST["HSALGO"]."</span>".
     " &nbsp&nbsp&nbsp Type <span class=normal>".$_POST["HSTYPE"]."</span><br>\n".    
-    " Title <span class=normal>".$_POST["HSTITLE"].
+    " Name <span class=normal>".$_POST["HSTITLE"].
     (($htype == "HID" || $_POST["NHS"] == 1) ? " ".$_POST["SUBTITLE"] : "").
+    " </span><br>Identifier   <span class=normal>".$identifier.
     "</span><br><br>\n";
   foreach (array("TASKNAME","HSALGO","HSTYPE","HSTITLE","SUBTITLE","NHS") as $field)
     echo "<input type='hidden' name='${field}' value='".$_POST[$field]."'>\n";
@@ -41,20 +72,7 @@ function histo_header($id,$htype,$mode)
       echo "Obsolete from <span class=normal>".$histo["OBSOLETENESS"]."</span><br>\n";
 
     if($histo["ISANALYSISHIST"]) {
-      $stid = OCIParse($conn,"SELECT * from HCREATOR HC where HCID='".SingleHist($id)."'");
-      OCIExecute($stid, OCI_DEFAULT);
-      OCIFetchInto($stid, $hcreator, OCI_ASSOC );
-      echo "<p>This is a <B> Display Histogram </B> obtained automatically by Analysis Task<br>
- through Algorithm <span class=normal>".$hcreator["ALGORITHM"]."</span>\n ";
-      if ($shsid=$hcreator["SOURCESET"]) 
-	echo " from histogram set <a href='Histogram.php?hsid=${shsid}'> ${shsid} </a><br>\n";
-      else {
-	$ih=0;
-	echo " from histograms<br><center>\n"; 
-	while($ih++<8) 
-	  if($shid=$hcreator["SOURCEH".$ih]) echo "<a href='Histogram.php?hid=${shid}'> ${shid} </a><br>\n";
-	echo "</center>";
-      }
+      show_anahist($id);
     }
     $nhs=$histo["NHS"];
     if ($htype == "HID") {
@@ -199,7 +217,7 @@ function histo_display($id,$htype,$mode)
     ($canwrite ? "" : "readonly"));
   printf("Y Label <input name='LABEL_Y' size=15 value='%s' %s><br>\n",$_POST["LABEL_Y"],
     ($canwrite ? "" : "readonly"));
-  if ($_POST["HSTYPE"]=='2D')
+  if ($_POST["HSTYPE"]=='H2D' || $_POST["HSTYPE"]=='P2D')
     printf("Z Label <input name='LABEL_Z' size=15 value='%s' %s><br>\n",$_POST["LABEL_Z"],
       ($canwrite ? "" : "readonly"));
    printf("Y miminum <input name='YMIN' size=7 value='%s' %s> &nbsp&nbsp ",$_POST["YMIN"], 
@@ -238,7 +256,7 @@ function histo_display($id,$htype,$mode)
   }
 }
 
-function get_ana_parameters($alg,$aid,$ia,$hhid,$mask=1,$names=1,$values=1) {
+function get_ana_parameters($alg,$aid,$ia,$hhid,$mask=1,$names=1,$values=1,$hcvalues=0) {
   global $conn;
   
   if($mask) {
@@ -248,11 +266,13 @@ function get_ana_parameters($alg,$aid,$ia,$hhid,$mask=1,$names=1,$values=1) {
     $_POST["a${ia}_mask"]=$myanas["MASK"];
     ocifreestatement($stid);
   }
-  if($names || $values) {
-    $dstid = OCIParse($conn,"begin OnlineHistDB.GetAlgoNpar('$alg',:np); end;");
+  if($names || $values || $hcvalues) {
+    $dstid = OCIParse($conn,"begin OnlineHistDB.GetAlgoNpar('$alg',:np,:ni); end;");
     ocibindbyname($dstid,":np",$np);
+    ocibindbyname($dstid,":ni",$ni);
     OCIExecute($dstid);
     $_POST["a${ia}_np"]=$np;
+    $_POST["a${ia}_ni"]=$ni;
     ocifreestatement($dstid);
   }
   else {
@@ -276,8 +296,13 @@ function get_ana_parameters($alg,$aid,$ia,$hhid,$mask=1,$names=1,$values=1) {
       $_POST["a${ia}_p${ip}_a"]=$alr;
       ocifreestatement($dstid);
     }
-    //	  echo "Analysis $ia Alg ".$_POST["a${ia}_alg"]." Par ".$_POST["a${ia}_p${ip}_name"].
-    //" w=".$_POST["a${ia}_p${ip}_w"]." a=".$_POST["a${ia}_p${ip}_a"]." <br>\n";
+    if($hcvalues) {
+      $dstid = OCIParse($conn,"begin OnlineHistDB.GetHCSettings('${hhid}',$ip,:value); end;");
+      ocibindbyname($dstid,":value",$warn,50);
+      OCIExecute($dstid);
+      $_POST["a${ia}_p${ip}"]=$warn;
+      ocifreestatement($dstid);
+    }
   }
 }
 

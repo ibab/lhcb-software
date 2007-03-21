@@ -103,6 +103,35 @@ function page_form($page) {
   } 
 } 
 
+function show_pagefolder($sel='') {
+  global $conn;
+  $stid = OCIParse($conn,"SELECT PAGEFOLDERNAME FROM PAGEFOLDER $sel");
+  OCIExecute($stid);
+  $first=0;
+  while (OCIFetchInto($stid, $pagef, OCI_ASSOC )) {
+    if ($first == 0) {
+      echo "<table rule=cols border=1 cellpadding=6><thead><tr><td><B>Folder</B></td><td><B>Page</B></td></tr></thead>";
+      $first=1;
+    }
+    echo "<tr><TD><span class='normal'>".$pagef["PAGEFOLDERNAME"],"</td> <td>\n";
+    $pstid = OCIParse($conn,"SELECT PAGENAME FROM PAGE where FOLDER='".$pagef["PAGEFOLDERNAME"]."'");
+    OCIExecute($pstid);
+    while (OCIFetchInto($pstid, $page, OCI_ASSOC )) {
+      $p=$page["PAGENAME"];
+      $getp=toGet($p);
+      echo "<a class=normal href=$PHP_SELF?page=${getp}> $p</a><br>\n";
+    }  
+    ocifreestatement($pstid);
+    show_pagefolder("WHERE PARENT='".$pagef["PAGEFOLDERNAME"]."'");
+    echo "</td></tr>";
+  }
+  if ($first == 1) {
+    echo "</table>";
+  }
+  ocifreestatement($stid);
+}
+
+
 
 $conn=HistDBconnect(1);
 
@@ -134,23 +163,7 @@ if (array_key_exists("page",$_GET)) {
     page_form($page);
 }
 else {
-  $stid = OCIParse($conn,"SELECT PAGEFOLDERNAME FROM PAGEFOLDER");
-  OCIExecute($stid);
-  echo "<table rule=cols border=1 cellpadding=6><thead><tr><td><B>Folder</B></td><td><B>Page</B></td></tr></thead>";
-  while (OCIFetchInto($stid, $pagef, OCI_ASSOC )) {
-    echo "<tr><TD><span class='normal'>".$pagef["PAGEFOLDERNAME"],"</td> <td>\n";
-    $pstid = OCIParse($conn,"SELECT PAGENAME FROM PAGE where FOLDER='".$pagef["PAGEFOLDERNAME"]."'");
-    OCIExecute($pstid);
-    while (OCIFetchInto($pstid, $page, OCI_ASSOC )) {
-      $p=$page["PAGENAME"];
-      $getp=toGet($p);
-      echo "<a class=normal href=$PHP_SELF?page=${getp}> $p</a><br>\n";
-    }  
-    ocifreestatement($pstid);
-    echo "</td></tr>";
-  }
-  echo "</table>";
-  ocifreestatement($stid);
+  show_pagefolder('WHERE PARENT IS NULL');
 }
 ocilogoff($conn);
 

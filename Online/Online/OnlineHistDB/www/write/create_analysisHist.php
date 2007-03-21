@@ -7,17 +7,23 @@
 include '../util.php';
 $conn=HistDBconnect(1);
 $nin=$_POST["nin"];
+$np=$_POST["np"];
+$mypars=array();
 if ($nin ==0) {
-  $sourceh=$_POST["SOURCESET"];
+  $sourceh="theSet=>".$_POST["SOURCESET"].",theSources=>OnlineHistDB.sourceh()";
 }
 else {
   $sh=array();
   for ($ih=1;$ih<=$nin;$ih++) 
     $sh[$ih]=SingleHist($_POST["SOURCEH${ih}"]);
-  $sourceh="0,OnlineHistDB.sourceh('".implode("','",$sh)."')";
+  $sourceh="theSet=>0,theSources=>OnlineHistDB.sourceh('".implode("','",$sh)."')";
 }
-$command="begin OnlineHistDB.DeclareAnalysisHistogram('".$_POST["alg"].
-  "','".sqlstring($_POST["hctitle"])."',${sourceh}); end;";
+for ($ip=1;$ip<=$np;$ip++) {
+ $mypars[$ip]=$_POST["a1_p${ip}"];
+}
+$parameters="thresholds(".implode(",",$mypars).")";
+$command="begin OnlineHistDB.DeclareAnalysisHistogram(theAlg=>'".$_POST["alg"].
+  "',theTitle=>'".sqlstring($_POST["hctitle"])."',${sourceh},thePars=>${parameters}); end;";
 // echo "command is $command <br>";
 $stid = OCIParse($conn,$command);
 $r=OCIExecute($stid,OCI_DEFAULT);
