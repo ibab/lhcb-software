@@ -33,6 +33,7 @@ namespace LHCb {
 				m_log = log;
 				m_mmObj = mmObj;
 				m_sockfd = sockfd;
+				m_notifyClient = NULL;
 			}
 			int getState(void) { return m_stopAcking; }
 			void restoreState(int state) { m_stopAcking = state; }

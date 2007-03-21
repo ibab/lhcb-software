@@ -63,6 +63,7 @@ void Connection::initialize(void) {
 	connect();
 
 	m_ackThread = new AckThread(this, m_sockfd, &m_mmObj, m_log);
+	m_ackThread->setNotifyClient(m_notifyClient);	
 	m_ackThread->start();
 	m_sendThread = new SendThread(this, m_sockfd, &m_mmObj, m_log);
 	m_sendThread->start();
