@@ -1,4 +1,4 @@
-// $Id: DeVelo.cpp,v 1.78 2006-12-20 15:34:30 cattanem Exp $
+// $Id: DeVelo.cpp,v 1.79 2007-03-21 17:04:43 mtobin Exp $
 //
 // ============================================================================
 #define  VELODET_DEVELO_CPP 1
@@ -177,6 +177,9 @@ StatusCode DeVelo::initialize() {
     return sc;
   }
 
+  // Get the value of the sensitiveVolumeCut from the XML.
+  m_sensVolCut=param<double>("sensitiveVolumeCut");
+
   return StatusCode::SUCCESS;
 }
 
@@ -189,13 +192,10 @@ const DeVeloSensor* DeVelo::sensor(const Gaudi::XYZPoint& point) const {
 const int DeVelo::sensitiveVolumeID(const Gaudi::XYZPoint& point) const {
   std::vector<DeVeloSensor*>::const_iterator iDeVeloSensor;
   for(iDeVeloSensor=m_vpSensors.begin(); iDeVeloSensor!=m_vpSensors.end(); ++iDeVeloSensor){
-    Gaudi::XYZPoint localPoint;
-    StatusCode sc=(*iDeVeloSensor)->globalToLocal(point,localPoint);
-    if(sc.isSuccess()) {
-      double z = localPoint.z();
-      if(0.20*Gaudi::Units::mm > fabs(z)) {
-        return ((*iDeVeloSensor)->sensorNumber());
-      }
+    Gaudi::XYZPoint localPoint=(*iDeVeloSensor)->globalToLocal(point);
+    double z = localPoint.z();
+    if(m_sensVolCut > fabs(z)) {
+      return ((*iDeVeloSensor)->sensorNumber());
     }
   }
   MsgStream msg(msgSvc(), "DeVelo");

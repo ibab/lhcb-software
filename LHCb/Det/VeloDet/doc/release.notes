@@ -1,6 +1,13 @@
-! $Id: release.notes,v 1.161 2007-03-01 14:38:37 cattanem Exp $
+! $Id: release.notes,v 1.162 2007-03-21 17:04:42 mtobin Exp $
 package VeloDet
 package manager : Velo Group
+
+! 2007-03-21 - Mark TOBIN
+ - Changed type of localToGlobal type transformations from StatusCodes to return 
+ Gaudi::XYZPoint.  This is OK as StatusCode return was always SUCCESS.
+ - Read the cut related to the sensitive volume ID from a file.  This was
+ previously hard coded in the function.  The value is in structure.xml for the
+ Velo.
 
 !======================== VeloDet v11r1 2007-03-01 ===========================
 ! 2007-03-01 - Marco Cattaneo

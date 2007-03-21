@@ -1,4 +1,4 @@
-// $Id: DeVeloRType.cpp,v 1.39 2007-02-19 09:37:26 cattanem Exp $
+// $Id: DeVeloRType.cpp,v 1.40 2007-03-21 17:04:43 mtobin Exp $
 //==============================================================================
 #define VELODET_DEVELORTYPE_CPP 1
 //==============================================================================
@@ -193,13 +193,10 @@ StatusCode DeVeloRType::pointToChannel(const Gaudi::XYZPoint& point,
                                        double& pitch) const
 {
   MsgStream msg(msgSvc(), "DeVeloRType");
-  Gaudi::XYZPoint localPoint(0,0,0);
-  StatusCode sc = globalToLocal(point,localPoint);
-
-  if(!sc.isSuccess()) return sc;
+  Gaudi::XYZPoint localPoint = globalToLocal(point);
 
   // Check boundaries...
-  sc = isInActiveArea(localPoint);
+  StatusCode sc = isInActiveArea(localPoint);
   if(!sc.isSuccess()) return sc;
 
   // work out closet channel....
@@ -374,13 +371,10 @@ StatusCode DeVeloRType::residual(const Gaudi::XYZPoint& point,
   MsgStream msg(msgSvc(), "DeVeloRType");
 
 
-  Gaudi::XYZPoint localPoint(0,0,0);
-  StatusCode sc = DeVeloSensor::globalToLocal(point,localPoint);
-  
-  if(!sc.isSuccess()) return sc;
+  Gaudi::XYZPoint localPoint = DeVeloSensor::globalToLocal(point);
   
   // Check boundaries...
-  sc = isInActiveArea(localPoint);
+  StatusCode sc = isInActiveArea(localPoint);
   if(!sc.isSuccess()) return sc;
   
   unsigned int strip=channel.strip();
@@ -667,10 +661,9 @@ std::auto_ptr<LHCb::Trajectory> DeVeloRType::trajectory(const LHCb::VeloChannelI
     Gaudi::XYZPoint lEnd(radius*cos(phiMax),radius*sin(phiMax),z);
 
     // move to global frame
-    Gaudi::XYZPoint gOrigin, gBegin, gEnd;
-    localToGlobal(lOrigin, gOrigin);
-    localToGlobal(lBegin, gBegin);
-    localToGlobal(lEnd, gEnd);
+    Gaudi::XYZPoint gOrigin = localToGlobal(lOrigin);
+    Gaudi::XYZPoint gBegin = localToGlobal(lBegin);
+    Gaudi::XYZPoint gEnd = localToGlobal(lEnd);
     /* Covert phi range to 0-360 to make sure trajectories run in right direction
        and protect against crossing boundaries */
     double phiBeginTmp=gBegin.phi();

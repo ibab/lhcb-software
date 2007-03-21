@@ -1,4 +1,4 @@
-// $Id: DeVelo.h,v 1.52 2007-02-28 18:32:28 marcocle Exp $
+// $Id: DeVelo.h,v 1.53 2007-03-21 17:04:41 mtobin Exp $
 #ifndef       VELODET_DEVELO_H
 #define       VELODET_DEVELO_H 1
 // ============================================================================
@@ -656,6 +656,7 @@ private:
   bool m_debug;
   bool m_verbose;
 
+  double m_sensVolCut;
 };
 
 // ============================================================================

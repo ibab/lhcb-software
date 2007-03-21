@@ -1,4 +1,4 @@
-// $Id: DeVeloSensor.h,v 1.31 2007-02-28 18:32:28 marcocle Exp $
+// $Id: DeVeloSensor.h,v 1.32 2007-03-21 17:04:42 mtobin Exp $
 #ifndef VELODET_DEVELOSENSOR_H 
 #define VELODET_DEVELOSENSOR_H 1
 
@@ -107,31 +107,39 @@ public:
 
   /// Convert local position to global position
   /// Local from is +ve x (and Upstream for phi sensors)
-  StatusCode localToGlobal(const Gaudi::XYZPoint& local, 
-                           Gaudi::XYZPoint& global) const;
+  inline Gaudi::XYZPoint localToGlobal(const Gaudi::XYZPoint& localPos) const {
+    return m_geometry->toGlobal(localPos);
+  }
 
   /// Convert global position to local position 
-  StatusCode globalToLocal(const Gaudi::XYZPoint& global, 
-                           Gaudi::XYZPoint& local) const;
-
+  inline Gaudi::XYZPoint globalToLocal(const Gaudi::XYZPoint& globalPos) const {
+    return m_geometry->toLocal(globalPos);
+  }
+  
   /// Convert local position to position inside Velo half Box (one per side)
   /// Local from is +ve x and Upstream 
-  StatusCode localToVeloHalfBox(const Gaudi::XYZPoint& local, 
-                                Gaudi::XYZPoint& box) const;
+  inline Gaudi::XYZPoint localToVeloHalfBox(const Gaudi::XYZPoint& localPos) const {
+    Gaudi::XYZPoint globalPos = m_geometry->toGlobal(localPos);
+    return m_halfBoxGeom->toLocal(globalPos);
+  }
 
   /// Convert position inside Velo half Box (one per side) into local position
   /// Local from is +ve x and Upstream 
-  StatusCode veloHalfBoxToLocal(const Gaudi::XYZPoint& box, 
-                                Gaudi::XYZPoint& local) const;
+  inline Gaudi::XYZPoint veloHalfBoxToLocal(const Gaudi::XYZPoint& boxPos) const {
+    Gaudi::XYZPoint globalPos = m_halfBoxGeom->toGlobal(boxPos);
+    return m_geometry->toLocal(globalPos);
+  }
 
   /// Convert position inside Velo half Box (one per side) to global
-  StatusCode veloHalfBoxToGlobal(const Gaudi::XYZPoint& box, 
-                                 Gaudi::XYZPoint& global) const;
+  inline Gaudi::XYZPoint veloHalfBoxToGlobal(const Gaudi::XYZPoint& boxPos) const {
+    return m_halfBoxGeom->toGlobal(boxPos);
+  }
 
-  /// Convert global position to  inside Velo half Box (one per side) 
-  StatusCode globalToVeloHalfBox(const Gaudi::XYZPoint& global, 
-                                 Gaudi::XYZPoint& box) const;
-
+  /// Convert global position to inside Velo half Box (one per side) 
+  inline Gaudi::XYZPoint globalToVeloHalfBox(const Gaudi::XYZPoint& globalPos) const {
+    return m_halfBoxGeom->toLocal(globalPos);
+  }
+  
   /// Returns a pair of points which define the begin and end points of a strip in the local frame
   inline std::pair<Gaudi::XYZPoint,Gaudi::XYZPoint> localStripLimits(unsigned int strip) const {
     return m_stripLimits[strip];
