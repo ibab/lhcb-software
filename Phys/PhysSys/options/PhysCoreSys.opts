@@ -3,7 +3,6 @@ ApplicationMgr.DLLs += { "DaVinciTransporter" };
 ApplicationMgr.DLLs += { "ProtoParticleFilter" };
 ApplicationMgr.DLLs += { "DaVinciFilter" };
 ApplicationMgr.DLLs += { "ParticleMaker" };
-ApplicationMgr.DLLs += { "DaVinciKernel" };
 ApplicationMgr.DLLs += { "VertexFit" };
 ApplicationMgr.DLLs += { "TrackTools" };
 
