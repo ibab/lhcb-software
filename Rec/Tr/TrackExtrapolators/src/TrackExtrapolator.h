@@ -60,6 +60,7 @@ public:
       @param[out] cov6D   the full position-momentum covariance matrix
       @param[in]  track   the input track
       @param[in]  z       the z-position at which to extrapolate
+      @param[in]  pid     pid of the particle to extrapolate (default is pion)
   */
   virtual StatusCode positionAndMomentum( const LHCb::Track& track,
                                           double z,

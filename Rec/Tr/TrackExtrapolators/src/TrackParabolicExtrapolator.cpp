@@ -112,7 +112,7 @@ StatusCode TrackParabolicExtrapolator::propagate( State& state,
 // Propagate a state to the closest position to the specified point
 //=============================================================================
 StatusCode TrackParabolicExtrapolator::propagate( State& state,
-                                                  const XYZPoint& point,
+                                                  const Gaudi::XYZPoint& point,
                                                   ParticleID pid )
 {
   StatusCode sc = StatusCode::SUCCESS;

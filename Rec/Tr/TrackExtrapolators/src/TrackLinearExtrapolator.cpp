@@ -53,7 +53,7 @@ StatusCode TrackLinearExtrapolator::propagate( State& state,
 // Propagate a State to the closest position to the specified point
 //=============================================================================
 StatusCode TrackLinearExtrapolator::propagate( State& state,
-                                               const XYZPoint& point,
+                                               const Gaudi::XYZPoint& point,
                                                ParticleID pid )
 {
   // Distance = sqrt((x'-x0-Tx*dz)^2+(y'-y0-Ty*dz)^2+(z'-z0-dz)^2)

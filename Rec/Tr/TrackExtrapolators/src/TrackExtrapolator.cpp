@@ -55,7 +55,7 @@ StatusCode TrackExtrapolator::propagate( State& state,
 // Propagate a state to the closest point to the specified point
 //=============================================================================
 StatusCode TrackExtrapolator::propagate( State& state,
-                                         const XYZPoint& point,
+                                         const Gaudi::XYZPoint& point,
                                          ParticleID  pid )
 {
   StatusCode sc = StatusCode::FAILURE;
@@ -74,7 +74,7 @@ StatusCode TrackExtrapolator::propagate( State& state,
 // Propagate a state to within tolerance of a plane (default = 10 microns)
 //=============================================================================
 StatusCode TrackExtrapolator::propagate( State& state,
-                                         Plane3D& plane,
+                                         Gaudi::Plane3D& plane,
                                          double tolerance,
                                          ParticleID pid )
 {
@@ -114,9 +114,9 @@ StatusCode TrackExtrapolator::propagate( State& state,
 //=============================================================================
 StatusCode TrackExtrapolator::positionAndMomentum( const Track& track,
                                                    double z,
-                                                   XYZPoint& pos,
-                                                   XYZVector& mom,
-                                                   SymMatrix6x6& cov6D,
+                                                   Gaudi::XYZPoint& pos,
+                                                   Gaudi::XYZVector& mom,
+                                                   Gaudi::SymMatrix6x6& cov6D,
                                                    ParticleID pid )
 {
   State tmpState;
@@ -133,8 +133,8 @@ StatusCode TrackExtrapolator::positionAndMomentum( const Track& track,
 //=============================================================================
 StatusCode TrackExtrapolator::positionAndMomentum( const Track& track,
                                                    double z,
-                                                   XYZPoint& pos,
-                                                   XYZVector& mom,
+                                                   Gaudi::XYZPoint& pos,
+                                                   Gaudi::XYZVector& mom,
                                                    ParticleID pid )
 {
   State tmpState;
@@ -156,8 +156,8 @@ StatusCode TrackExtrapolator::positionAndMomentum( const Track& track,
 //=============================================================================
 StatusCode TrackExtrapolator::position( const Track& track,
                                         double z,
-                                        XYZPoint& pos,
-                                        SymMatrix3x3& errPos,
+                                        Gaudi::XYZPoint& pos,
+                                        Gaudi::SymMatrix3x3& errPos,
                                         ParticleID pid )
   
 {
@@ -178,7 +178,7 @@ StatusCode TrackExtrapolator::position( const Track& track,
 //=============================================================================
 StatusCode TrackExtrapolator::position( const Track& track,
                                         double z,
-                                        XYZPoint& pos,
+                                        Gaudi::XYZPoint& pos,
                                         ParticleID pid )
 
 {
@@ -197,8 +197,8 @@ StatusCode TrackExtrapolator::position( const Track& track,
 //=============================================================================
 StatusCode TrackExtrapolator::slopes( const Track& track,
                                       double z,
-                                      XYZVector& slopes,
-                                      SymMatrix3x3& errSlopes,
+                                      Gaudi::XYZVector& slopes,
+                                      Gaudi::SymMatrix3x3& errSlopes,
                                       ParticleID pid )
 {
   State tmpState;
@@ -218,7 +218,7 @@ StatusCode TrackExtrapolator::slopes( const Track& track,
 //=============================================================================
 StatusCode TrackExtrapolator::slopes( const Track& track,
                                       double z,
-                                      XYZVector& slopes,
+                                      Gaudi::XYZVector& slopes,
                                       ParticleID pid )
 {
   State tmpState;
@@ -270,8 +270,8 @@ StatusCode TrackExtrapolator::pt( const Track& track,
 //=============================================================================
 StatusCode TrackExtrapolator::momentum( const Track& track,
                                         double z,
-                                        XYZVector& mom,
-                                        SymMatrix3x3& errMom,
+                                        Gaudi::XYZVector& mom,
+                                        Gaudi::SymMatrix3x3& errMom,
                                         ParticleID pid )
 {
   State tmpState;
@@ -290,7 +290,7 @@ StatusCode TrackExtrapolator::momentum( const Track& track,
 //=============================================================================
 StatusCode TrackExtrapolator::momentum( const Track& track,
                                         double z,
-                                        XYZVector& mom,
+                                        Gaudi::XYZVector& mom,
                                         ParticleID pid )
 {
   State tmpState;
