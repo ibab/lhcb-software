@@ -6,6 +6,5 @@
   <class name = "IPrepareMuonSeed"      />
   <class name = "IPrepareMuonTSeed"     />
   <class name = "ITrackConfirmTool"     />
-  <class name = "IMatchTVeloTracks"     />
   <class name = "ITrackL0CaloMatchTool" />
 </lcgdict>
