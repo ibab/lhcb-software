@@ -188,9 +188,9 @@ EventSelector.Input   = {
 };
 //-- End of Data cards 
 //
-EventSelector.Input   = {
-  "DATAFILE='PFN:/afs/cern.ch/user/i/ibelyaev/vol10/DATA/00001395_00000005_5.dst' TYP='POOL_ROOTTREE' OPT='READ'" ,
-  "DATAFILE='PFN:/afs/cern.ch/user/i/ibelyaev/vol10/DATA/00001395_00000007_5.dst' TYP='POOL_ROOTTREE' OPT='READ'" ,
-  "DATAFILE='PFN:/afs/cern.ch/user/i/ibelyaev/vol10/DATA/00001395_00000008_5.dst' TYP='POOL_ROOTTREE' OPT='READ'" ,
-  "DATAFILE='PFN:/afs/cern.ch/user/i/ibelyaev/vol10/DATA/00001395_00000010_5.dst' TYP='POOL_ROOTTREE' OPT='READ'" 
-};
+//EventSelector.Input   = {
+//  "DATAFILE='PFN:/afs/cern.ch/user/i/ibelyaev/vol10/DATA/00001395_00000005_5.dst' TYP='POOL_ROOTTREE' OPT='READ'" ,
+//  "DATAFILE='PFN:/afs/cern.ch/user/i/ibelyaev/vol10/DATA/00001395_00000007_5.dst' TYP='POOL_ROOTTREE' OPT='READ'" ,
+//  "DATAFILE='PFN:/afs/cern.ch/user/i/ibelyaev/vol10/DATA/00001395_00000008_5.dst' TYP='POOL_ROOTTREE' OPT='READ'" ,
+//  "DATAFILE='PFN:/afs/cern.ch/user/i/ibelyaev/vol10/DATA/00001395_00000010_5.dst' TYP='POOL_ROOTTREE' OPT='READ'" 
+//};

@@ -1,0 +1,59 @@
+// $Id: LoKi_Phi.opts,v 1.1 2007-03-22 18:33:37 ibelyaev Exp $
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
+// ============================================================================
+// $Log: not supported by cvs2svn $
+//
+// ============================================================================
+/** @file
+ *  Configuration file to run LoKi-based algorithm LoKi_Phi
+ *  @see LoKi_Phi.cpp
+ *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+ *  @date  2007-03-22
+ */
+// ============================================================================
+// Include files 
+// ============================================================================
+// Phys/DaVinci & Phys/CommonParticles
+// ============================================================================
+#pragma print OFF 
+#include "$DAVINCIROOT/options/DaVinciCommon.opts"
+#include "$COMMONPARTICLESROOT/options/StandardKaons.opts"
+#pragma print ON
+// ============================================================================
+// Needed Services 
+// ============================================================================
+ApplicationMgr.ExtSvc += { "LoKiSvc"   } ;   ///<  MANDATORY!!!
+// ============================================================================
+ApplicationMgr.ExtSvc += { "StagerSvc" } ;
+StagerSvc.BlockSize    = 20 ;
+StagerSvc.InitialStage = 5 ;
+// ============================================================================
+// Histograms & NTuples 
+// ============================================================================
+ApplicationMgr.HistogramPersistency = "HBOOK" ;
+HistogramPersistencySvc.OutputFile = "phihistos.hbook" ;
+HbookHistSvc.PrintHistos = true ;
+// ============================================================================
+// Input Data
+// ============================================================================
+#pragma print OFF 
+#include "$LOKIEXAMPLEOPTS/Bs2Jpsiphi_mm.opts"  
+#pragma print ON
+PoolDbCacheSvc.Catalog = {
+  "xmlcatalog_file:NewCatalog.xml" ,
+  "xmlcatalog_file:$LOKIEXAMPLEOPTS/Bs2Jpsiphi_mm_CERN.xml"  
+} ;
+// ============================================================================
+
+
+ApplicationMgr.TopAlg         += { "LoKi_Phi/Phi" } ;
+Phi.PhysDesktop.InputLocations = { "Phys/StdLooseKaons" } ;
+
+ApplicationMgr.EvtMax   = 5000 ;
+EventSelector.PrintFreq =  100 ;
+
+// ============================================================================
+// The END 
+// ============================================================================
+

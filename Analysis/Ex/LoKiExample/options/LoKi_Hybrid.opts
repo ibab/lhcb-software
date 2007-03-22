@@ -1,0 +1,69 @@
+// $Id: LoKi_Hybrid.opts,v 1.1 2007-03-22 18:33:37 ibelyaev Exp $
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
+// ============================================================================
+// $Log: not supported by cvs2svn $
+//
+// ============================================================================
+/** @file
+ *  Configuration file to run LoKi-based algorithm LoKi_Hybrid
+ *  @see LoKi_Hybrid.cpp
+ *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+ *  @date  2007-03-22
+ */
+// ============================================================================
+// Include files 
+// ============================================================================
+// Phys/DaVinci & Phys/CommonParticles
+// ============================================================================
+#pragma print OFF 
+#include "$DAVINCIROOT/options/DaVinciCommon.opts"
+#include "$COMMONPARTICLESROOT/options/StandardPions.opts"
+#include "$COMMONPARTICLESROOT/options/StandardKaons.opts"
+#include "$COMMONPARTICLESROOT/options/StandardMuons.opts"
+#pragma print ON
+// ============================================================================
+// Needed Services 
+// ============================================================================
+ApplicationMgr.ExtSvc += { "LoKiSvc"   } ;   ///<  MANDATORY!!!
+// ============================================================================
+ApplicationMgr.ExtSvc += { "StagerSvc" } ;
+StagerSvc.BlockSize    = 20 ;
+StagerSvc.InitialStage = 5 ;
+// ============================================================================
+// Input Data
+// ============================================================================
+#pragma print OFF 
+#include "$LOKIEXAMPLEOPTS/Bs2Jpsiphi_mm.opts"  
+#pragma print ON
+PoolDbCacheSvc.Catalog = {
+  "xmlcatalog_file:NewCatalog.xml" ,
+  "xmlcatalog_file:$LOKIEXAMPLEOPTS/Bs2Jpsiphi_mm_CERN.xml"  
+} ;
+// ============================================================================
+
+
+ApplicationMgr.TopAlg           += { "LoKi_Hybrid/Hybrid"   } ;
+Hybrid.PhysDesktop.InputLocations = { 
+  "Phys/StdLooseMuons" , 
+  "Phys/StdLooseKaons" , 
+  "Phys/StdLoosePions"   
+} ;
+Hybrid.FilterCriteria = {
+  "All"    : "HybridFilterCriterion/ALL"    ,
+  "First"  : "HybridFilterCriterion/FIRST"  ,
+  "Second" : "HybridFilterCriterion/SECOND" ,
+  "Third"  : "HybridFilterCriterion/THIRD" 
+};
+Hybrid.ALL.Code    = " ALL "            ;
+Hybrid.FIRST.Code  = " ('mu+' == ABSID) & ( P > 10000 ) " ;
+Hybrid.SECOND.Code = " 'pi+' == ABSID " ;
+Hybrid.THIRD.Code  = " 'K+'  == ABSID " ;
+
+ApplicationMgr.EvtMax   =  100 ;
+EventSelector.PrintFreq =   10 ;
+
+// ============================================================================
+// The END 
+// ============================================================================
+

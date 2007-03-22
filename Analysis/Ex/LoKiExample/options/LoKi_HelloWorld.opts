@@ -1,0 +1,47 @@
+// $Id: LoKi_HelloWorld.opts,v 1.1 2007-03-22 18:33:37 ibelyaev Exp $
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
+// ============================================================================
+// $Log: not supported by cvs2svn $
+//
+// ============================================================================
+/** @file
+ *  Configuration file to run LoKi-based algorithm LoKi_HelloWorld
+ *  @see LoKi_HelloWorld.cpp
+ *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+ *  @date  2007-03-22
+ */
+// ============================================================================
+// Include files 
+// ============================================================================
+// Phys/DaVinci & Phys/CommonParticles
+// ============================================================================
+#pragma print OFF 
+#include "$DAVINCIROOT/options/DaVinciCommon.opts"
+#pragma print ON
+// ============================================================================
+// Needed Services 
+// ============================================================================
+ApplicationMgr.ExtSvc += { "LoKiSvc"   } ;   ///<  MANDATORY!!!
+// ============================================================================
+// Input Data
+// ============================================================================
+#pragma print OFF 
+#include "$LOKIEXAMPLEOPTS/Bs2Jpsiphi_mm.opts"  
+#pragma print ON
+PoolDbCacheSvc.Catalog = {
+  "xmlcatalog_file:NewCatalog.xml" ,
+  "xmlcatalog_file:$LOKIEXAMPLEOPTS/Bs2Jpsiphi_mm_CERN.xml"  
+} ;
+// ============================================================================
+
+
+ApplicationMgr.TopAlg  = { "LoKi_HelloWorld/Hello"   } ;
+
+ApplicationMgr.EvtMax   = 20 ;
+EventSelector.PrintFreq =  1 ;
+
+// ============================================================================
+// The END 
+// ============================================================================
+
