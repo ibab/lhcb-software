@@ -1,8 +1,9 @@
-// $Id: TsaConfirmTool.cpp,v 1.3 2007-02-13 09:19:41 albrecht Exp $
+// $Id: TsaConfirmTool.cpp,v 1.4 2007-03-22 18:56:03 albrecht Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
+#include "GaudiKernel/ChronoEntity.h"
 
 // event
 #include "Event/Track.h"
@@ -13,6 +14,8 @@
 #include "TsaKernel/IOTDataSvc.h"
 
 // from Tsa
+#include "TsaKernel/TsaConstants.h"
+#include "TsaKernel/TsaFun.h"
 #include "TsaKernel/ITsaCollector.h"
 #include "TsaKernel/STCluster.h"
 #include "TsaKernel/OTCluster.h"
@@ -144,6 +147,10 @@ StatusCode TsaConfirmTool::initialize(){
 //=============================================================================
 StatusCode TsaConfirmTool::tracks(const LHCb::State& seedState, std::vector<Track*>& outputTracks ) 
 {
+
+  ChronoEntity tCollect, tInit, tTracking, tConvert;
+  tCollect.start();
+
   Tsa::OTClusters* otClusters = new Tsa::OTClusters();
   Tsa::STClusters* itClusters = new Tsa::STClusters();
   
@@ -164,6 +171,8 @@ StatusCode TsaConfirmTool::tracks(const LHCb::State& seedState, std::vector<Trac
    m_tsacollector->collect( seedState , otClusters , m_nsigma );
    m_tsacollector->collect( seedState , itClusters , m_nsigma );
   
+   tCollect.stop();
+
    if(m_debugInfo){
     debug() <<"In Tool:"<<endmsg;
     debug() << " n tsa IT clusters p (" << m_nsigma << " sigma)   = " << itClusters->size() << endmsg;
@@ -171,13 +180,15 @@ StatusCode TsaConfirmTool::tracks(const LHCb::State& seedState, std::vector<Trac
     
    }
 
-  
+   m_stClsuters = itClusters->size();
+   m_otClusters = otClusters->size();
+   
   //***************************************************************************************
   // initialization of Tsa seeding
- 
+  tInit.start();
   if (m_initIT == true) m_itDataSvc->initializeEvent(itClusters);
   if (m_initOT == true) m_otDataSvc->initializeEvent(otClusters);
-  
+  tInit.stop();
   //***************************************************************************************
   //-------------------------------------------------------------------------
   //  Steering routine for track seeding
@@ -185,11 +196,13 @@ StatusCode TsaConfirmTool::tracks(const LHCb::State& seedState, std::vector<Trac
   
   //@ja: it and ot hits only for nHits cut?
   //@ja weg?
+  tTracking.start();
   typedef LHCb::STLiteCluster::FastContainer FastContainer;
   LHCb::OTTimes* otCont = get<LHCb::OTTimes>(LHCb::OTTimeLocation::Default);
   FastContainer* liteCont = get<FastContainer>( LHCb::STLiteClusterLocation::ITClusters);
   double nHit = liteCont->size() + otCont->size();
-  
+  m_nTHits = int(nHit);
+
    if(m_debugInfo) debug()<<"number of hits (OT + IT) = "<<nHit <<endmsg;
   
    SeedTracks* seedSel = new SeedTracks();    //  Selected seed candidates
@@ -265,6 +278,9 @@ StatusCode TsaConfirmTool::tracks(const LHCb::State& seedState, std::vector<Trac
     }
   }
 
+  tTracking.stop();
+  
+  tConvert.start();
   //******************************************************************
   //from TsaSeedTrackConvertor
 
@@ -279,8 +295,13 @@ StatusCode TsaConfirmTool::tracks(const LHCb::State& seedState, std::vector<Trac
     }
   }
 
+  tConvert.stop();
+  
   if( m_debugInfo ) debug()<<"tracks found sofar in TsaSearch Tool: "<<outputTracks.size()<<endmsg;
 
+  m_collectTime = int( tCollect.eTotalTime());
+  m_trackingTime = int( tInit.eTotalTime() + tTracking.eTotalTime() + tConvert.eTotalTime() );
+  m_nModules = -1;//moduleList.size();
 
   delete otClusters;
   delete itClusters;
@@ -354,19 +375,19 @@ void TsaConfirmTool::addState(const SeedTrack* aTrack, LHCb::Track* lTrack, cons
   aState.setTx(aTrack->xSlope(z,0.));
   aState.setTy(aTrack->sy());
  
-  // p estimate can come from the curvature or the pt kick
-  // if (m_pFromCurvature == true) {
-  //     aState.setQOverP(Tsa::estimateCurvature(aTrack->tx(), m_curvFactor));
-  //     if (m_largeErrors == true) {
-  //       aState.setErrQOverP2( m_EQdivP2*gsl_pow_2(stateVec(4)));
-  //     }
-  //     else {
-  //       aState.setErrQOverP2(aTrack->xErr(5)*gsl_pow_2(m_curvFactor));
-  //     }
-  //   }
-  //   else {
+  //p estimate can come from the curvature or the pt kick
+  if (m_pFromCurvature == true) {
+      aState.setQOverP(Tsa::estimateCurvature(aTrack->tx(), m_curvFactor));
+      if (m_largeErrors == true) {
+        aState.setErrQOverP2( m_EQdivP2*gsl_pow_2(stateVec(4)));
+      }
+      else {
+        aState.setErrQOverP2(aTrack->xErr(5)*gsl_pow_2(m_curvFactor));
+      }
+    }
+    else {
   m_ptKickTool->calculate(&aState);
-  // }
+  }
 
   // add to states
   lTrack->addToStates(aState);
@@ -374,3 +395,19 @@ void TsaConfirmTool::addState(const SeedTrack* aTrack, LHCb::Track* lTrack, cons
 }
 
 
+void TsaConfirmTool::getDebugInfo( int& nHits, 
+                                   int& stClusters, int& otClusters,
+                                   int& collectTime, int& trackingTime, 
+                                   int& nModules )
+{
+  
+  nHits =  m_nTHits;
+  stClusters = m_stClsuters;
+  otClusters = m_otClusters;
+  collectTime = m_collectTime;
+  trackingTime = m_trackingTime;
+  nModules = m_nModules;
+  
+  
+  return;
+}
