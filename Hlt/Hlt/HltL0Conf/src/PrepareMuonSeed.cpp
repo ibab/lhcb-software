@@ -9,7 +9,7 @@
 
 #include "Event/L0MuonCandidate.h"
 #include "MuonDet/IMuonPosTool.h"
-#include "TrackInterfaces/ITrackPtKick.h"
+//#include "TrackInterfaces/ITrackPtKick.h"
 
 //local
 #include "PrepareMuonSeed.h"
@@ -47,12 +47,23 @@ StatusCode PrepareMuonSeed::initialize()
   if (sc.isFailure()){
     return sc;
   }
-  //  always() << " Initialize PrepareMuonSeed" << endmsg;
-
+  
   m_iPosTool=tool<IMuonPosTool>( "MuonPosTool" );
-  m_fCalcPtKick = tool<ITrackPtKick>("TrackPtKick");
+  //  m_fCalcPtKick = tool<ITrackPtKick>("TrackPtKick");
   
   m_debugInfo = false; //@ja put in job options
+
+  /*
+   *  Resolution of the L0Cand at T3, tune JA 2007-03-22
+   *  4 regions:  sigmaX:  8 / 15 / 29 / 54 mm
+   *              sigmaY:  6 / 10 / 20 / 40 mm
+   *              sigmaTx: 2 /  4 /  7 / 12 mrad
+   *              sigmaTy: 1 / 2.5/ 3.5/  6 mrad
+   */
+  sigmaX2[0]=64.; sigmaX2[1]=225.; sigmaX2[2]=841.; sigmaX2[3]=2916.;
+  sigmaY2[0]=36.; sigmaY2[1]=100.; sigmaY2[2]=400.; sigmaY2[3]=1600.;
+  sigmaTx2[0]=4.e-6; sigmaTx2[1]=16.e-6; sigmaTx2[2]=49.e-6;   sigmaTx2[3]=144.e-6;
+  sigmaTy2[0]=1.e-6; sigmaTy2[1]=6.5e-6; sigmaTy2[2]=12.25e-6; sigmaTy2[3]=36.e-6;
   
   return StatusCode::SUCCESS;
 }
@@ -60,29 +71,21 @@ StatusCode PrepareMuonSeed::initialize()
 StatusCode PrepareMuonSeed::prepareSeed( const LHCb::L0MuonCandidate& muonL0Cand,
                                          LHCb::State& seedState )
 {
-  //always()<<"PrepareMuonSeed::execute!"<<endmsg;
-
   seedState.setState(0,0,0,0,0,0);
 
-  // JAH 12--2-07 temporally fix
   std::vector<MuonTileID> mpads1 = muonL0Cand.muonTileIDs(0); 
   std::vector<MuonTileID> mpads2 = muonL0Cand.muonTileIDs(1); 
   
-  //MuonTileID mpad1 = *(mpads1.begin());
   MuonTileID mpad2 = *(mpads2.begin());
-  //MuonTileID mpad3 = muonL0Cand.pad(2);
-
-    int regionL0Cand;
-    if (mpad2){
-      regionL0Cand = mpad2.region();
-    }
-    // else if( mpad3 ){
-    //       regionL0Cand = mpad3.region();
-    //     }
-    else{
-      err()<<"No valid Muon Tile in M2, quit loop"<<endmsg;
-      return StatusCode::SUCCESS;
-    }
+  
+  int regionL0Cand;
+  if (mpad2){
+    regionL0Cand = mpad2.region();
+  }
+  else{
+    err()<<"No valid Muon Tile in M2, quit loop"<<endmsg;
+    return StatusCode::SUCCESS;
+  }
 
     double x , y, z;
     double dxTileM1, dyTileM1, dzTileM1;
@@ -105,7 +108,10 @@ StatusCode PrepareMuonSeed::prepareSeed( const LHCb::L0MuonCandidate& muonL0Cand
                                     y, dyTileM1,
                                     z, dzTileM1);
       
-      if (!sc)  return StatusCode::SUCCESS;
+      if (!sc) {
+        err()<<"Unable to get Position for M1"<<endmsg;
+        return StatusCode::SUCCESS;
+      }
       
       xTileM1 += x;
       yTileM1 += y;
@@ -124,8 +130,10 @@ StatusCode PrepareMuonSeed::prepareSeed( const LHCb::L0MuonCandidate& muonL0Cand
                                  xTileM2, dxTileM2,
                                  yTileM2, dyTileM2,
                                  zTileM2, dzTileM2);
-    
-    if (!sc)  return StatusCode::SUCCESS;
+    if (!sc) {
+      err()<<"Unable to get Position for M2"<<endmsg;
+      return StatusCode::SUCCESS;
+    }
 
     double zT3 = 9315.;//middle T3
     double dxdz   = (xTileM2 - xTileM1)/ ( zTileM2 - zTileM1);
@@ -134,21 +142,10 @@ StatusCode PrepareMuonSeed::prepareSeed( const LHCb::L0MuonCandidate& muonL0Cand
     double xT3 = xTileM2 - dxdz * (zTileM2 - zT3);
     double yT3 = yTileM2 - dydz * (zTileM2 - zT3);
 
-    double sigmaX = 0.;
-    double sigmaY = 0.;
-    if (regionL0Cand == 0) sigmaX = 8. ; sigmaY = 6.;
-    if (regionL0Cand == 1) sigmaX = 15.; sigmaY = 11.;
-    if (regionL0Cand == 2) sigmaX = 30.; sigmaY = 22.;
-    if (regionL0Cand == 3) sigmaX = 57.; sigmaY = 44.;
-
-    //double L0p = muonL0Cand.pt();//first estimate
-    
-    //@ja do i need q/p info?
     seedState.setState( xT3 , yT3 , zT3 , dxdz , dydz , 0 );
-    m_fCalcPtKick->calculate(&seedState);
+    //m_fCalcPtKick->calculate(&seedState);
     
-    
-    double L0p = seedState.p(); //this p is more accurate
+    double L0p = fabs( muonL0Cand.pt()/sin(muonL0Cand.theta()) ) ;
     double L0pt = muonL0Cand.pt();//get pt with sign!
     double L0q    = (L0pt == 0) ? 0.0 : -1.*L0pt/fabs(L0pt);
     double qOverP = L0q / L0p;
@@ -157,10 +154,10 @@ StatusCode PrepareMuonSeed::prepareSeed( const LHCb::L0MuonCandidate& muonL0Cand
         
     Gaudi::TrackSymMatrix stateCov = Gaudi::TrackSymMatrix();
     
-    stateCov(0,0) = sigmaX*sigmaX;
-    stateCov(1,1) = sigmaY*sigmaY; 
-    stateCov(2,2) = 2.8e-3; //not used
-    stateCov(3,3) = 1.5e-3;
+    stateCov(0,0) = sigmaX2[regionL0Cand];
+    stateCov(1,1) = sigmaY2[regionL0Cand];
+    stateCov(2,2) = sigmaTx2[regionL0Cand];
+    stateCov(3,3) = sigmaTy2[regionL0Cand];
     stateCov(4,4) = 8.41e-6;
 
     seedState.setCovariance(stateCov);

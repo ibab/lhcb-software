@@ -19,7 +19,7 @@
  */
 //forward declarations
 class IMuonPosTool;
-class ITrackPtKick;
+//class ITrackPtKick;
 class L0MuonCandidate;
 
 
@@ -40,10 +40,11 @@ public:
                                   LHCb::State& seedState );
                                  
 private:
-
   bool m_debugInfo;
+  double sigmaX2[4], sigmaY2[4], sigmaTx2[4], sigmaTy2[4];
+  
   IMuonPosTool      *m_iPosTool;
-  ITrackPtKick* m_fCalcPtKick; 
+  //  ITrackPtKick* m_fCalcPtKick; 
 
 };
 
