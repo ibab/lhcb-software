@@ -1,11 +1,22 @@
-! $Id: release.notes,v 1.16 2005-06-02 10:02:55 ibelyaev Exp $ 
+! $Id: release.notes,v 1.17 2007-03-22 18:33:35 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.16 $
+! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.17 $
 ! -----------------------------------------------------------------------------
 ! Package     :  LoKiExamples
-! Responsible :  Vanya BELYAEV  belyaev@lapp.in2p3.fr 
+! Responsible :  Vanya BELYAEV  ibelyaev@physics.syr.edu
 ! Purpose     :  Collection of examples for LoKi package 
 ! -----------------------------------------------------------------------------
+
+! ========================== LoKiExample v5r2 2007-03-22 ===================
+
+! 2007-03-22 - Vanya BELYAEV
+
+ - remove almost all algorithms and configuration files 
+   prepare the examples for DC06-compatible versions, 
+   includind the exmaples with hybrid C++/Python solutions 
+ - cmt/requirements 
+   version increment to v5r2 
+
 
 ! 2005-06-02 - Vanya BELYAEV
 
@@ -192,7 +203,7 @@ Please credit this data as "generated using 'SLOCCount' by David A. Wheeler."
  - the first import 
 
 
-! -----------------------------------------------------------------------------
+! =============================================================================
 ! The End 
-! -----------------------------------------------------------------------------
+! =============================================================================
 

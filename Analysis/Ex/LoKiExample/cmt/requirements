@@ -1,9 +1,9 @@
-# $Id: requirements,v 1.30 2006-06-07 14:04:56 ibelyaev Exp $ 
+# $Id: requirements,v 1.31 2007-03-22 18:33:35 ibelyaev Exp $ 
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.30 $
+# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.31 $
 # =============================================================================
 package         LoKiExample
-version         v3r14p1
+version         v5r2
 
 # ============= structure =====================================================
 branches        cmt doc src options 
@@ -14,9 +14,7 @@ set LOKIEXAMPLEOPTS   $(LOKIEXAMPLEROOT)/options
 
 # ============= dependencies  =================================================
 use             Python   v* LCG_Interfaces -no_auto_imports 
-use             LoKi     v* Tools
-use             LoKiJets v* Tools
-use             LoKiGen  v* Tools
+use             LoKi     v* Phys
 use             HbookCnv v* 
   
 # ============= constituents ==================================================
@@ -27,8 +25,6 @@ apply_pattern component_library library=LoKiExample
 
 # =============================================================================
 # $Log: not supported by cvs2svn $
-# Revision 1.29  2006/06/07 13:53:31  ibelyaev
-#  update for DaVinci v12r18
 #
 # =============================================================================
 # The END 
