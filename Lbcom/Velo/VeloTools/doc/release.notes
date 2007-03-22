@@ -4,6 +4,9 @@
 ! Purpose     : Velo Tools for reconstruction
 !-----------------------------------------------------------------------------
 
+! 2007-03-22 - David Hutchcroft
+ - Ignored the StatusCode returned from sens->channelDistance
+
 !! 2007-03-02 - Marco Cattaneo
  - Remove LHCbDefinitions includes
  - Remove obsolete VeloTools_load.cpp file

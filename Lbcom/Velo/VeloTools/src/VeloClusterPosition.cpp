@@ -1,4 +1,4 @@
-// $Id: VeloClusterPosition.cpp,v 1.6 2007-03-02 17:50:14 cattanem Exp $
+// $Id: VeloClusterPosition.cpp,v 1.7 2007-03-22 10:34:54 dhcroft Exp $
 // Include files
 
 // stl
@@ -215,11 +215,11 @@ Pair VeloClusterPosition::fractionalPosMean(
   int intDistance=0;
   int stripNumber=cluster->size();
   std::vector<LHCb::VeloChannelID> chanCont=cluster->channels();
-  StatusCode sc;
   //
   const DeVeloSensor* sens=m_veloDet->sensor(chanCont[0].sensor());
   for(int i=0; i<stripNumber; i++){
-    sc=sens->channelDistance(chanCont[0],chanCont[i],intDistance);
+    StatusCode sc=sens->channelDistance(chanCont[0],chanCont[i],intDistance);
+    sc.ignore(); // channels in a cluster are always in same sensor!
     centre+=static_cast<double>(intDistance)*cluster->adcValue(i);
     sum+=cluster->adcValue(i);
   }
