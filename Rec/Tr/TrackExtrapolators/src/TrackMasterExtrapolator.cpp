@@ -102,8 +102,6 @@ StatusCode TrackMasterExtrapolator::propagate( State& state,
                                                double zNew,
                                                ParticleID partId )
 {
-  StatusCode sc = StatusCode::SUCCESS;
-
   // reset transport matrix
   m_F = TrackMatrix( ROOT::Math::SMatrixIdentity() );
 
@@ -129,32 +127,25 @@ StatusCode TrackMasterExtrapolator::propagate( State& state,
 
     // protect against vertical or looping tracks
     if ( fabs(start.x()) > m_maxTransverse ) {
-      Warning( "Protect against absurd tracks. See debug for details",
-               StatusCode::FAILURE, 1 );
       debug() << "Protect against absurd tracks: x=" << start.x() 
               << " (max " << m_maxTransverse << " allowed)." << endreq;
-      return StatusCode::FAILURE;
+      return Warning( "Protect against absurd tracks. See debug for details" );
     }
     if ( fabs(start.y()) > m_maxTransverse ) {
-      Warning( "Protect against absurd tracks. See debug for details",
-               StatusCode::FAILURE, 1 );
+               //          StatusCode::FAILURE, 1 );
       debug() << "Protect against absurd tracks: y=" << start.y() 
               << " (max " << m_maxTransverse << " allowed)." << endreq;
-      return StatusCode::FAILURE;
+      return Warning( "Protect against absurd tracks. See debug for details" );
     }
     if (fabs(state.tx()) > m_maxSlope) {
-      Warning( "Protect against looping tracks. See debug for details",
-               StatusCode::FAILURE, 1 );
       debug() << "Protect against looping tracks: tx=" << state.tx() 
               << " (max " << m_maxSlope << " allowed)." << endreq;
-      return StatusCode::FAILURE;
+      return Warning( "Protect against looping tracks. See debug for details" );
     }    
     if (fabs(state.ty()) > m_maxSlope) {
-      Warning( "Protect against looping tracks. See debug for details",
-               StatusCode::FAILURE, 1 );
       debug() << "Protect against looping tracks: ty=" << state.ty() 
               << " (max " << m_maxSlope << " allowed). " << endreq;
-      return StatusCode::FAILURE;
+      return Warning( "Protect against looping tracks. See debug for details" );
     }
 
     // check if transport is within LHCb
@@ -185,6 +176,7 @@ StatusCode TrackMasterExtrapolator::propagate( State& state,
     nWall = intersept.size();      
  
     // loop over the walls - last wall is `virtual one at target z'
+    StatusCode sc;
     for ( int iStep = 0; iStep < nWall; ++iStep ) {
       double zWall = zScatter( intersept[iStep].first.first,
                                intersept[iStep].first.second );
@@ -194,11 +186,9 @@ StatusCode TrackMasterExtrapolator::propagate( State& state,
      
       // check for success
       if ( sc.isFailure() ) {
-        Warning( "Transport to wall using "+thisExtrapolator->name()+ "FAILED",
-                 StatusCode::FAILURE, 1 );
-      
         debug() << "Transport to " << zWall
                 << "using "+thisExtrapolator->name() << " FAILED" << endreq;
+        return Warning( "Transport to wall using "+thisExtrapolator->name()+ "FAILED", sc );
       }
       
       //update f
@@ -206,18 +196,14 @@ StatusCode TrackMasterExtrapolator::propagate( State& state,
       
       // protect against vertical or looping tracks
       if (fabs(state.tx()) > m_maxSlope) {
-        Warning( "Protect against looping tracks. See debug for details",
-                 StatusCode::FAILURE, 1 );
         debug() << "Protect against looping tracks: tx=" << state.tx() 
                 << " (max " << m_maxSlope << " allowed)." << endreq;
-        return StatusCode::FAILURE;
+        return Warning("Protect against looping tracks. See debug for details");
       }    
       if (fabs(state.ty()) > m_maxSlope) {
-        Warning( "Protect against looping tracks. See debug for details",
-                 StatusCode::FAILURE, 1 );
         debug() << "Protect against looping tracks: ty=" << state.ty() 
                 << " (max " << m_maxSlope << " allowed). " << endreq;
-        return StatusCode::FAILURE;
+        return Warning("Protect against looping tracks. See debug for details");
       }
       
       // The thickness of the wall
@@ -252,7 +238,7 @@ StatusCode TrackMasterExtrapolator::propagate( State& state,
 
   if ( m_debugLevel ) debug() << "State extrapolated succesfully" << endreq;
   
-  return sc;
+  return StatusCode::SUCCESS;
 }
 
 //=============================================================================
