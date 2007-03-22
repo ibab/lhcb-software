@@ -1,4 +1,4 @@
-// $Id: CondDBAccessSvc.h,v 1.25 2007-03-16 16:49:56 marcocle Exp $
+// $Id: CondDBAccessSvc.h,v 1.26 2007-03-22 16:04:12 marcocle Exp $
 #ifndef COMPONENT_CONDDBACCESSSVC_H 
 #define COMPONENT_CONDDBACCESSSVC_H 1
 
@@ -319,7 +319,8 @@ private:
         if ( last_access.sec == m_owner->lastAccess().sec ) { // no further accesses
 
           if ( m_owner->database()->isOpen() ) { // close the database
-            log << MSG::INFO << "Disconnect from database" << endmsg;
+            log << MSG::INFO << "Disconnect from database after being idle for "
+                << m_owner->m_connectionTimeOut << "s (will reconnect if needed)"<< endmsg;
             m_owner->database()->closeDatabase();
           }
 
