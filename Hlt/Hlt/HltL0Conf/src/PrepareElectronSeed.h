@@ -44,6 +44,10 @@ public:
 private:
 
   bool m_debugInfo; 
+  double sigmaX2[3], sigmaY2[3], sigmaTx2[3], sigmaTy2[3];
+  double parIP[2], parMP[2], parOP[2];
+  double cellSize[3];
+  double sParIP[2], sParMP[2], sParOP[2];
   
 
   // electron cand pos, energy

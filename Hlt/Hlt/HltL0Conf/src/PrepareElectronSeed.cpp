@@ -51,6 +51,36 @@ StatusCode PrepareElectronSeed::initialize()
 
   m_debugInfo = false;//@ja put in job options
   
+ /*
+   *  Resolution of the L0Cand at T3, tune JA 2007-03-22
+   *  3 regions:  sigmaX:  3 / 5.5 / 15 mm
+   *              sigmaY:  2 / 3.5 /  8 mm
+   *              sigmaTx: 1.5 / 2 / 3 mrad
+   *              sigmaTy: 1.5 / 2.5 / 3 mrad
+   */
+  sigmaX2[0]=9.; sigmaX2[1]=30.25; sigmaX2[2]=225.; 
+  sigmaY2[0]=4.; sigmaY2[1]=12.25; sigmaY2[2]=64.; 
+  sigmaTx2[0]=2.25e-6; sigmaTx2[1]=4.e-6; sigmaTx2[2]=9.e-6;  
+  sigmaTy2[0]=2.25e-6; sigmaTy2[1]=6.25e-6; sigmaTy2[2]=9.e-6; 
+  
+  // cell sizes for ECal IP / MP / OP
+  cellSize[0]=40.5567; cellSize[1]=60.85; cellSize[2]=121.7; 
+  
+  //set parameters for S-shape correction
+  parIP[0]=14.;  parIP[1]=5.75;
+  parMP[0]=20.9; parMP[1]=7.;
+  parOP[0]=42.4; parOP[1]=11.3;
+  
+  //double sParIP[2], sParMP[2], sParOP[2];
+  //calculate these once ..
+  sParIP[0] = tan(  cellSize[0]/2. / parIP[0] );
+  sParIP[1] = tan( -cellSize[0]/2. / parIP[0] );
+  sParMP[0] = tan(  cellSize[1]/2. / parMP[0] );
+  sParMP[1] = tan( -cellSize[1]/2. / parMP[0] );
+  sParOP[0] = tan(  cellSize[2]/2. / parOP[0] );
+  sParOP[1] = tan( -cellSize[2]/2. / parOP[0] );
+
+
 
   return StatusCode::SUCCESS;
 }
@@ -61,6 +91,9 @@ StatusCode PrepareElectronSeed::prepareSeed( const LHCb::L0CaloCandidate& eL0Can
 {
 
   if(m_debugInfo) debug()<<"PrepareElectronSeed::execute!"<<endmsg;
+
+    int ecalRegion = 0;
+  
   
   //===================================================================================================
   // electrons items
@@ -106,16 +139,16 @@ StatusCode PrepareElectronSeed::prepareSeed( const LHCb::L0CaloCandidate& eL0Can
 //========================================================================================================
   // now correct barycenter position 
   double candx = 0.;
-  if( e_s1!=0 && e_s2!=0 )      candx=(e_x1+e_x2)/2;
-  else if( e_s1!=0 && e_s4!=0 ) candx=(e_x1+e_x4)/2;
-  else if( e_s3!=0 && e_s2!=0 ) candx=(e_x3+e_x2)/2;
-  else if( e_s3!=0 && e_s4!=0 ) candx=(e_x3+e_x4)/2;
+  if( e_s1!=0 && e_s2!=0 )      candx=(e_x1+e_x2)/2.;
+  else if( e_s1!=0 && e_s4!=0 ) candx=(e_x1+e_x4)/2.;
+  else if( e_s3!=0 && e_s2!=0 ) candx=(e_x3+e_x2)/2.;
+  else if( e_s3!=0 && e_s4!=0 ) candx=(e_x3+e_x4)/2.;
 
   double candy = 0.;
-  if( e_s1!=0 && e_s3!=0 )      candy=(e_y1+e_y3)/2;
-  else if( e_s1!=0 && e_s4!=0 ) candy=(e_y1+e_y4)/2;
-  else if( e_s2!=0 && e_s3!=0 ) candy=(e_y2+e_y3)/2;
-  else if( e_s2!=0 && e_s4!=0 ) candy=(e_y2+e_y4)/2;
+  if( e_s1!=0 && e_s3!=0 )      candy=(e_y1+e_y3)/2.;
+  else if( e_s1!=0 && e_s4!=0 ) candy=(e_y1+e_y4)/2.;
+  else if( e_s2!=0 && e_s3!=0 ) candy=(e_y2+e_y3)/2.;
+  else if( e_s2!=0 && e_s4!=0 ) candy=(e_y2+e_y4)/2.;
   
   
   double barx = (e_x1*e_e1+e_x2*e_e2+e_x3*e_e3+e_x4*e_e4)/(e_e1+e_e2+e_e3+e_e4);
@@ -124,60 +157,42 @@ StatusCode PrepareElectronSeed::prepareSeed( const LHCb::L0CaloCandidate& eL0Can
   double barx_cor = 0.;
   double bary_cor = 0.;
   
- //  X : IP A = 14.0865  B = 5.7185 
-//  X : MP A = 20.9507  B = 7.1310 
-//  X : OP A = 42.9022  B = 12.0481 
-
-//  Y : IP A = 14.2897  B = 6.0943 
-//  Y : MP A = 20.8994  B = 6.8889 
-//  Y : OP A = 42.0349  B = 10.6772
-  
-  double par0_IP = 14.00;double par1_IP =  5.75;
-  double par0_MP = 20.90;double par1_MP =  7.00;
-  double par0_OP = 42.40;double par1_OP = 11.30;
-
-
- 
-  // cell sizes
-  double csIP = 40.5567;
-  double csMP = 60.85;
-  double csOP = 121.7;
-  
-  double candEcalPart = 0.;
-
   // apply corrections
-  if( fabs(csIP-e_s1) < 1 ){
-    candEcalPart=1.;
-    if     ( barx-candx >  csIP/2 ) barx_cor = candx + par1_IP*tan(  csIP/2 / par0_IP );     
-    else if( barx-candx < -csIP/2 ) barx_cor = candx + par1_IP*tan( -csIP/2 / par0_IP );     
-    else                            barx_cor = candx + par1_IP*tan( (barx-candx) / par0_IP );     
-    if     ( bary-candy >  csIP/2 ) bary_cor = candy + par1_IP*tan(  csIP/2 / par0_IP );     
-    else if( bary-candy < -csIP/2 ) bary_cor = candy + par1_IP*tan( -csIP/2 / par0_IP );     
-    else                            bary_cor = candy + par1_IP*tan( (bary-candy) / par0_IP );     
+  if( fabs(cellSize[0]-e_s1) < 1 ){
+    ecalRegion=0;
+    if     ( barx-candx >  cellSize[0]/2. ) barx_cor = candx + parIP[1] * sParIP[0];
+    else if( barx-candx < -cellSize[0]/2. ) barx_cor = candx + parIP[1] * sParIP[1];
+    else                            barx_cor = candx + parIP[1]*tan( (barx-candx) / parIP[0] );     
+    
+    if     ( bary-candy >  cellSize[0]/2. ) bary_cor = candy + parIP[1] * sParIP[0]; 
+    else if( bary-candy < -cellSize[0]/2. ) bary_cor = candy + parIP[1] * sParIP[1]; 
+    else                            bary_cor = candy + parIP[1]*tan( (bary-candy) / parIP[0] );     
   }
   
-  if( fabs(csMP-e_s1) < 1 ){
-    candEcalPart=2.;
-    if     ( barx-candx >  csMP/2 ) barx_cor = candx + par1_MP*tan(  csMP/2 / par0_MP );     
-    else if( barx-candx < -csMP/2 ) barx_cor = candx + par1_MP*tan( -csMP/2 / par0_MP );     
-    else                            barx_cor = candx + par1_MP*tan( (barx-candx) / par0_MP );     
-    if     ( bary-candy >  csMP/2 ) bary_cor = candy + par1_MP*tan(  csMP/2 / par0_MP );     
-    else if( bary-candy < -csMP/2 ) bary_cor = candy + par1_MP*tan( -csMP/2 / par0_MP );     
-    else                            bary_cor = candy + par1_MP*tan( (bary-candy) / par0_MP ); 
+  if( fabs(cellSize[1]-e_s1) < 1 ){
+    ecalRegion=1;
+    if     ( barx-candx >  cellSize[1]/2. ) barx_cor = candx + parMP[1] * sParMP[0]; 
+    else if( barx-candx < -cellSize[1]/2. ) barx_cor = candx + parMP[1] * sParMP[1]; 
+    else                            barx_cor = candx + parMP[1]*tan( (barx-candx) / parMP[0] );     
+  
+    if     ( bary-candy >  cellSize[1]/2. ) bary_cor = candy + parMP[1] * sParMP[0]; 
+    else if( bary-candy < -cellSize[1]/2. ) bary_cor = candy + parMP[1] * sParMP[1]; 
+    else                            bary_cor = candy + parMP[1]*tan( (bary-candy) / parMP[0] ); 
   }
   
-  if( fabs(csOP-e_s1) < 1 ){
-    candEcalPart=3.;
-    if     ( barx-candx >  csOP/2 ) barx_cor = candx + par1_OP*tan(  csOP/2 / par0_OP );     
-    else if( barx-candx < -csOP/2 ) barx_cor = candx + par1_OP*tan( -csOP/2 / par0_OP );     
-    else                            barx_cor = candx + par1_OP*tan( (barx-candx) / par0_OP );     
-    if     ( bary-candy >  csOP/2 ) bary_cor = candy + par1_OP*tan(  csOP/2 / par0_OP );     
-    else if( bary-candy < -csOP/2 ) bary_cor = candy + par1_OP*tan( -csOP/2 / par0_OP );     
-    else                            bary_cor = candy + par1_OP*tan( (bary-candy) / par0_OP ); 
+  if( fabs(cellSize[2]-e_s1) < 1 ){
+    ecalRegion=2;
+    if     ( barx-candx >  cellSize[2]/2. ) barx_cor = candx + parOP[1] * sParOP[0]; 
+    else if( barx-candx < -cellSize[2]/2. ) barx_cor = candx + parOP[1] * sParOP[1]; 
+    else                            barx_cor = candx + parOP[1]*tan( (barx-candx) / parOP[0] );     
+    if     ( bary-candy >  cellSize[2]/2. ) bary_cor = candy + parOP[1] * sParOP[0]; 
+    else if( bary-candy < -cellSize[2]/2. ) bary_cor = candy + parOP[1] * sParOP[1]; 
+    else                            bary_cor = candy + parOP[1]*tan( (bary-candy) / parOP[0] ); 
   }
+  
   if(m_debugInfo){
     verbose() << endmsg;
-    verbose() << format(" cluster part  = %1i",candEcalPart) << endmsg;
+    verbose() << format(" cluster part  = %1i",ecalRegion) << endmsg;
     verbose() << format(" electron cand x    = %4.2f         cand y = %4.2f",candx,candy) << endmsg;
     verbose() << format(" electron bar  x    = %4.2f         bar  y = %4.2f",barx,bary) << endmsg;
     verbose() << format("    barx-candx      = %4.2f     bary-candy = %4.2f",barx-candx,bary-candy) << endmsg;
@@ -191,63 +206,48 @@ StatusCode PrepareElectronSeed::prepareSeed( const LHCb::L0CaloCandidate& eL0Can
 
 
   double zT3 = 9315.;
+  double zcluster = 12700.;
   double alpha = 1536443.236032;
     
   double ecluster = e_e1+e_e2+e_e3+e_e4;
-  double zcluster = 12700.;
+
     
-  double elec_state_p_x  = barx_cor * zT3 / zcluster - alpha/ecluster;
-  double elec_state_p_y  = bary_cor * zT3 / zcluster;
-  double elec_state_p_tx = (barx_cor-elec_state_p_x)/(zcluster-zT3);
-  double elec_state_p_ty = (bary_cor-elec_state_p_y)/(zcluster-zT3);
-  double elec_state_p_qp = 1/ecluster;
+  double statePos_x  = barx_cor * zT3 / zcluster - alpha/ecluster;
+  double statePos_y  = bary_cor * zT3 / zcluster;
+  double statePos_tx = (barx_cor-statePos_x)/(zcluster-zT3);
+  double statePos_ty = (bary_cor-statePos_y)/(zcluster-zT3);
+  double statePos_qOverp = 1./ecluster;
   
-  double elec_state_m_x  = barx_cor * zT3 / zcluster + alpha/ecluster;
-  double elec_state_m_tx = (barx_cor-elec_state_m_x)/(zcluster-zT3);
+  double stateNeg_x  = barx_cor * zT3 / zcluster + alpha/ecluster;
+  double stateNeg_tx = (barx_cor-stateNeg_x)/(zcluster-zT3);
 
   if(m_debugInfo){
     verbose() << endmsg;
     verbose() << format(" ecluster = %4.1f GeV",ecluster)  << endmsg;
     verbose() << format(" State p : X = %4.1f  Y = %4.1f  TX = %4.3f  TY = %4.3f  Q/P = %4.3f",
-                    elec_state_p_x,elec_state_p_y,elec_state_p_tx,elec_state_p_ty,elec_state_p_qp )
+                    statePos_x,statePos_y,statePos_tx,statePos_ty,statePos_qOverp )
               << endmsg;
     verbose() << format(" State m : X = %4.1f  Y = %4.1f  TX = %4.3f  TY = %4.3f  Q/P = %4.3f",
-                        elec_state_m_x,elec_state_p_y,elec_state_m_tx,elec_state_p_ty,-elec_state_p_qp )
+                        stateNeg_x,statePos_y,stateNeg_tx,statePos_ty,-statePos_qOverp )
               << endmsg; 
     verbose() << endmsg;
   }
   
   // set the states
-  seedStatePos.setState(elec_state_p_x,elec_state_p_y,zT3,elec_state_p_tx,elec_state_p_ty, elec_state_p_qp);
-  seedStateNeg.setState(elec_state_m_x,elec_state_p_y,zT3,elec_state_m_tx,elec_state_p_ty,-elec_state_p_qp);
+  seedStatePos.setState( statePos_x , statePos_y , zT3 ,
+                         statePos_tx , statePos_ty , statePos_qOverp );
+  seedStateNeg.setState( stateNeg_x , statePos_y , zT3 , 
+                         stateNeg_tx , statePos_ty , -statePos_qOverp );
   
   // set the covariance matrix
   Gaudi::TrackSymMatrix stateCov = Gaudi::TrackSymMatrix();
-  if( fabs(csIP-e_s1) < 1 ){
-    stateCov(0,0) = 15.21; //3.9*3.9    // old value == 12 // sqrt = 3.46
-    stateCov(1,1) =  5.29; //2.3*2.3    // 5.5             // sqrt = 2.34
-    stateCov(2,2) = 2.8e-3;  
-    stateCov(3,3) = 1.5e-3;
-    stateCov(4,4) = 8.41e-6;
-  }
-  
-  if( fabs(csMP-e_s1) < 1 ){
-    stateCov(0,0) = 28.1;   //5.3*5.3     // 31    // sqrt = 5.57
-    stateCov(1,1) = 12.25;  //3.5*3.5     // 12.7  // sqrt = 3.56
-    stateCov(2,2) = 2.8e-3;
-    stateCov(3,3) = 1.5e-3;
-    stateCov(4,4) = 8.41e-6;
-  }
-  
-  if( fabs(csOP-e_s1) < 1 ){
-    stateCov(0,0) = 201.6; // 14.2*14.2   // 161  // sqrt = 12.69
-    stateCov(1,1) =  86.5; // 9.3*9.3     // 71.5 // sqrt =  8.46
-    stateCov(2,2) = 2.8e-3;
-    stateCov(3,3) = 1.5e-3;
-    stateCov(4,4) = 8.41e-6;
-  }
-  
-  // set state covariance matrix
+  stateCov(0,0) = sigmaX2[ecalRegion]; 
+  stateCov(1,1) = sigmaY2[ecalRegion];
+  stateCov(2,2) = sigmaTx2[ecalRegion];
+  stateCov(3,3) = sigmaTy2[ecalRegion];
+  stateCov(4,4) = 8.41e-6;
+
+
   seedStatePos.setCovariance(stateCov);
   seedStateNeg.setCovariance(stateCov);
   
