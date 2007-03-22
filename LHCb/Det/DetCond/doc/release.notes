@@ -1,14 +1,14 @@
-# $Id: release.notes,v 1.95 2007-03-22 16:04:12 marcocle Exp $
+# $Id: release.notes,v 1.96 2007-03-22 17:35:34 cattanem Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Det/DetCond
 ! Responsible : Marco Clemencic
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
+!===================== Det/DetCond v11r1 2007-03-22 ==========================
 ! 2007-03-22 - Marco Clemencic
  - Small improvement to the database disconnect message.
 
-!===================== Det/DetCond v11r1 2007-03-20 ==========================
 ! 2007-03-16 - Marco Clemencic
  - Added an option to enable CORAL LFCReplicaService (off by default).
  - Added an option to enable CORAL automatic connection purge.
