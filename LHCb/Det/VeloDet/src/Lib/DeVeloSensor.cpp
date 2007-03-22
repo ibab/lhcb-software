@@ -1,4 +1,4 @@
-// $Id: DeVeloSensor.cpp,v 1.27 2007-03-21 17:04:43 mtobin Exp $
+// $Id: DeVeloSensor.cpp,v 1.28 2007-03-22 10:27:50 dhcroft Exp $
 //==============================================================================
 #define VELODET_DEVELOSENSOR_CPP 1
 //==============================================================================
@@ -60,7 +60,8 @@ StatusCode DeVeloSensor::initialize()
   IJobOptionsSvc* jobSvc;
   ISvcLocator* svcLoc = Gaudi::svcLocator();
   StatusCode sc = svcLoc->service("JobOptionsSvc", jobSvc);
-  if( sc.isSuccess() ) jobSvc->setMyProperties("DeVeloSensor", pmgr);
+  if( sc.isSuccess() ) sc = jobSvc->setMyProperties("DeVeloSensor", pmgr);
+  if( !sc ) return sc;
   if ( 0 < outputLevel ) {
     msgSvc()->setOutputLevel("DeVeloSensor", outputLevel);
   }

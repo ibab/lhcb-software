@@ -1,4 +1,4 @@
-// $Id: DeVeloRType.cpp,v 1.40 2007-03-21 17:04:43 mtobin Exp $
+// $Id: DeVeloRType.cpp,v 1.41 2007-03-22 10:27:50 dhcroft Exp $
 //==============================================================================
 #define VELODET_DEVELORTYPE_CPP 1
 //==============================================================================
@@ -149,7 +149,8 @@ StatusCode DeVeloRType::initialize()
   IJobOptionsSvc* jobSvc;
   ISvcLocator* svcLoc = Gaudi::svcLocator();
   StatusCode sc = svcLoc->service("JobOptionsSvc", jobSvc);
-  if( sc.isSuccess() ) jobSvc->setMyProperties("DeVeloRType", pmgr);
+  if( sc.isSuccess() ) sc = jobSvc->setMyProperties("DeVeloRType", pmgr);
+  if( !sc ) return sc;
   if ( 0 < outputLevel ) {
     msgSvc()->setOutputLevel("DeVeloRType", outputLevel);
   }

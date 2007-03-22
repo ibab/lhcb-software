@@ -1,6 +1,9 @@
-! $Id: release.notes,v 1.162 2007-03-21 17:04:42 mtobin Exp $
+! $Id: release.notes,v 1.163 2007-03-22 10:27:50 dhcroft Exp $
 package VeloDet
 package manager : Velo Group
+
+! 2007-03-22 - David Hutchcroft
+ - Added tests to the StatusCode returns from jobSvc->setMyProperties
 
 ! 2007-03-21 - Mark TOBIN
  - Changed type of localToGlobal type transformations from StatusCodes to return 

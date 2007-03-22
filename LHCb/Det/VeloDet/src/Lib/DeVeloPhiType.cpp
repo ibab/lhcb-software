@@ -1,4 +1,4 @@
-// $Id: DeVeloPhiType.cpp,v 1.33 2007-03-21 17:04:43 mtobin Exp $
+// $Id: DeVeloPhiType.cpp,v 1.34 2007-03-22 10:27:50 dhcroft Exp $
 //==============================================================================
 #define VELODET_DEVELOPHITYPE_CPP 1
 //==============================================================================
@@ -57,7 +57,8 @@ StatusCode DeVeloPhiType::initialize()
   IJobOptionsSvc* jobSvc;
   ISvcLocator* svcLoc = Gaudi::svcLocator();
   StatusCode sc = svcLoc->service("JobOptionsSvc", jobSvc);
-  if( sc.isSuccess() ) jobSvc->setMyProperties("DeVeloPhiType", pmgr);
+  if( sc.isSuccess() ) sc = jobSvc->setMyProperties("DeVeloPhiType", pmgr);
+  if( !sc ) return sc;
   if ( 0 < outputLevel ) {
     msgSvc()->setOutputLevel("DeVeloPhiType", outputLevel);
   }
