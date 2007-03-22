@@ -60,6 +60,33 @@ StatusCode PrepareHadronSeed::initialize()
   m_neighbour_hcal.setDet ( m_hcal );
   
   m_debugInfo = false;//@ja make this to job option
+
+  /*
+   *  Resolution of the L0Cand at T3, 
+   *  Preliminary numbers! (RMS)
+   * if enough energy in ECal use this
+   *  ECal 3 regions:  sigmaX:  32 / 23 / 41 mm
+   *                   sigmaY:  27 / 17 / 22 mm
+   *                   sigmaTx: 22 / 27 / 50 mrad 
+   *                   sigmaTy:  8 / 17 / 48 mrad
+   */
+  sigmaX2[0]=1024.; sigmaX2[1]=529.; sigmaX2[2]=1681.; 
+  sigmaY2[0]=729.; sigmaY2[1]=289.; sigmaY2[2]=484.; 
+  sigmaTx2[0]=484.e-6; sigmaTx2[1]=729.e-6; sigmaTx2[2]=2500.e-6;  
+  sigmaTy2[0]=64.e-6; sigmaTy2[1]=289.e-6; sigmaTy2[2]=2304.e-6; 
+
+  /*
+   *  if not enough energy in ECal only HCal 
+   *  2 regions: sigmaX: 32 / 86 mm
+   *             sigmaY: 25 / 47 mm
+   *             sigmaTx: 29 / 70 mrad
+   *             sigmaTy: 11 / 69 mrad
+   */
+  sigmaX2[3]=1024.; sigmaX2[4]=7396.; 
+  sigmaY2[3]=625.;  sigmaY2[4]=2209.; 
+  sigmaTx2[3]=841.e-6; sigmaTx2[4]=4900.e-6; 
+  sigmaTy2[3]=121.e-6; sigmaTy2[4]=4761.e-6; 
+
   
   return StatusCode::SUCCESS;
 }
@@ -140,10 +167,10 @@ StatusCode PrepareHadronSeed::prepareSeed(const LHCb::L0CaloCandidate& hadL0Cand
   float YHCALBAR = (had_y1*had_e1+had_y2*had_e2+had_y3*had_e3+had_y4*had_e4)/EHCALCLU;
   float XHCALCLU = 0.;
   float YHCALCLU = 0.;
-  if     ( 0!=had_s1 ){ XHCALCLU = had_x1+had_s1/2; YHCALCLU = had_y1+had_s1/2; }
-  else if( 0!=had_s2 ){ XHCALCLU = had_x2-had_s2/2; YHCALCLU = had_y2+had_s2/2; }
-  else if( 0!=had_s3 ){ XHCALCLU = had_x3+had_s3/2; YHCALCLU = had_y3-had_s3/2; }
-  else if( 0!=had_s4 ){ XHCALCLU = had_x4-had_s4/2; YHCALCLU = had_y4-had_s4/2; }
+  if     ( 0!=had_s1 ){ XHCALCLU = had_x1+had_s1/2.; YHCALCLU = had_y1+had_s1/2.; }
+  else if( 0!=had_s2 ){ XHCALCLU = had_x2-had_s2/2.; YHCALCLU = had_y2+had_s2/2.; }
+  else if( 0!=had_s3 ){ XHCALCLU = had_x3+had_s3/2.; YHCALCLU = had_y3-had_s3/2.; }
+  else if( 0!=had_s4 ){ XHCALCLU = had_x4-had_s4/2.; YHCALCLU = had_y4-had_s4/2.; }
   
   double Hpar0_IP = 66.56;double Hpar1_IP = 51.01;
   double Hpar0_OP = 141.6;double Hpar1_OP = 96.76;
@@ -236,36 +263,36 @@ StatusCode PrepareHadronSeed::prepareSeed(const LHCb::L0CaloCandidate& hadL0Cand
     ecalpart = ECALpart( XECALBAR , YECALBAR );
       
     if( XECALMAX!=XECALMIN ){
-      XECALCLU=(XECALMAX+XECALMIN)/2;
+      XECALCLU=(XECALMAX+XECALMIN)/2.;
     }
     else{
       if     ( 1==ecalpart ){
-        if     ( XECALMIN>XECAL ) XECALCLU=XECALMIN-csIPE/2;
-        else if( XECALMIN<XECAL ) XECALCLU=XECALMIN+csIPE/2;
+        if     ( XECALMIN>XECAL ) XECALCLU=XECALMIN-csIPE/2.;
+        else if( XECALMIN<XECAL ) XECALCLU=XECALMIN+csIPE/2.;
       }
       else if( 2==ecalpart ){
-        if     ( XECALMIN>XECAL ) XECALCLU=XECALMIN-csMPE/2;
-        else if( XECALMIN<XECAL ) XECALCLU=XECALMIN+csMPE/2;
+        if     ( XECALMIN>XECAL ) XECALCLU=XECALMIN-csMPE/2.;
+        else if( XECALMIN<XECAL ) XECALCLU=XECALMIN+csMPE/2.;
       }
       else if( 3==ecalpart ){
-        if     ( XECALMIN>XECAL ) XECALCLU=XECALMIN-csOPE/2;
-        else if( XECALMIN<XECAL ) XECALCLU=XECALMIN+csOPE/2;
+        if     ( XECALMIN>XECAL ) XECALCLU=XECALMIN-csOPE/2.;
+        else if( XECALMIN<XECAL ) XECALCLU=XECALMIN+csOPE/2.;
       }
     }// else
 
-    if( YECALMAX!=YECALMIN ) YECALCLU=(YECALMAX+YECALMIN)/2;
+    if( YECALMAX!=YECALMIN ) YECALCLU=(YECALMAX+YECALMIN)/2.;
     else{
       if     ( 1==ecalpart ){
-        if     ( YECALMIN>YECAL ) YECALCLU=YECALMIN-csIPE/2;
-        else if( YECALMIN<YECAL ) YECALCLU=YECALMIN+csIPE/2;
+        if     ( YECALMIN>YECAL ) YECALCLU=YECALMIN-csIPE/2.;
+        else if( YECALMIN<YECAL ) YECALCLU=YECALMIN+csIPE/2.;
       }
       else if( 2==ecalpart ){
-        if     ( YECALMIN>YECAL ) YECALCLU=YECALMIN-csMPE/2;
-        else if( YECALMIN<YECAL ) YECALCLU=YECALMIN+csMPE/2;
+        if     ( YECALMIN>YECAL ) YECALCLU=YECALMIN-csMPE/2.;
+        else if( YECALMIN<YECAL ) YECALCLU=YECALMIN+csMPE/2.;
       }
       else if( 3==ecalpart ){
-        if     ( YECALMIN>YECAL ) YECALCLU=YECALMIN-csOPE/2;
-        else if( YECALMIN<YECAL ) YECALCLU=YECALMIN+csOPE/2;
+        if     ( YECALMIN>YECAL ) YECALCLU=YECALMIN-csOPE/2.;
+        else if( YECALMIN<YECAL ) YECALCLU=YECALMIN+csOPE/2.;
       }
     }
     
@@ -325,48 +352,26 @@ StatusCode PrepareHadronSeed::prepareSeed(const LHCb::L0CaloCandidate& hadL0Cand
     seedStateNeg.setState(had_state_m_x,had_state_p_y,zT3,had_state_m_tx,had_state_p_ty,-had_state_p_qp);
   }
   
-  // set the covariance matrix
-  Gaudi::TrackSymMatrix stateCov = Gaudi::TrackSymMatrix();
+  int region = 0;
   if( 2 < necalcellused ){
-    if( 1==ecalpart ){
-      stateCov(0,0) = 289; 
-      stateCov(1,1) = 144;
-      stateCov(2,2) = 2.8e-3;  
-      stateCov(3,3) = 1.5e-3;
-      stateCov(4,4) = 8.41e-6;
-    }
-    if( 2==ecalpart ){
-      stateCov(0,0) = 529;
-      stateCov(1,1) = 177;
-      stateCov(2,2) = 2.8e-3;
-      stateCov(3,3) = 1.5e-3;
-      stateCov(4,4) = 8.41e-6;
-    }
-    if( 3==ecalpart ){
-      stateCov(0,0) = 2430;
-      stateCov(1,1) = 566;
-      stateCov(2,2) = 2.8e-3;
-      stateCov(3,3) = 1.5e-3;
-      stateCov(4,4) = 8.41e-6;
-    }
+    if( 1==ecalpart ) region = 0;
+    if( 2==ecalpart ) region = 1;
+    if( 3==ecalpart ) region = 2;
   }
   else{
-    if( 1==hcalpart ){
-      stateCov(0,0) = 729; 
-      stateCov(1,1) = 289;
-      stateCov(2,2) = 2.8e-3;  
-      stateCov(3,3) = 1.5e-3;
-      stateCov(4,4) = 8.41e-6;
-    }
-    if( 2==hcalpart ){
-      stateCov(0,0) = 7056;
-      stateCov(1,1) = 1636;
-      stateCov(2,2) = 2.8e-3;
-      stateCov(3,3) = 1.5e-3;
-      stateCov(4,4) = 8.41e-6;
-    }
+    if( 1==hcalpart ) region = 3;
+    if( 2==hcalpart ) region = 4;
   }
   
+  // set the covariance matrix
+  Gaudi::TrackSymMatrix stateCov = Gaudi::TrackSymMatrix();
+  stateCov(0,0) = sigmaX2[region];
+  stateCov(1,1) = sigmaY2[region];
+  stateCov(2,2) = sigmaTx2[region];
+  stateCov(3,3) = sigmaTy2[region];
+  stateCov(4,4) = 8.41e-6;
+      
+
   // set state covariance matrix
   seedStatePos.setCovariance(stateCov);
   seedStateNeg.setCovariance(stateCov);

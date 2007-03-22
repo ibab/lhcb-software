@@ -47,6 +47,8 @@ private:
   double had_s1,had_s2,had_s3,had_s4;
   double had_e1,had_e2,had_e3,had_e4;
 
+  double sigmaX2[5], sigmaY2[5], sigmaTx2[5], sigmaTy2[5];
+
   // some methods
   StatusCode SetCandPosAndE( const LHCb::L0CaloCandidate& cand, 
                              const LHCb::CaloDigits* hcaldig,
