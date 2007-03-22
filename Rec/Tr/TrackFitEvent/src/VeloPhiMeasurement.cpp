@@ -1,4 +1,4 @@
-// $Id: VeloPhiMeasurement.cpp,v 1.17 2006-11-30 14:29:36 dhcroft Exp $
+// $Id: VeloPhiMeasurement.cpp,v 1.18 2007-03-22 10:36:48 dhcroft Exp $
 // Include files 
 
 // local
@@ -53,13 +53,7 @@ void VeloPhiMeasurement::init( const VeloCluster& cluster,
 
   const DeVeloPhiType* phiDet = det.phiSensor( m_cluster->channelID() );
   m_z = phiDet->z();
-
-  // TODO: Get this from the VeloDet
-  StatusCode sc = phiDet -> globalOrigin( m_origin );
-  if(!sc){
-    throw GaudiException( "The origin of the phi sensor was bad",
-                          "VeloPhiMeasurement.cpp",StatusCode::FAILURE );
-  }
+  m_origin = phiDet -> globalOrigin();
   
   // Store only the 'position', which is the signed distance from strip to
   // the origin.
