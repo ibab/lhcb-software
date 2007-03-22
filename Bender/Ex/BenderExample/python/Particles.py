@@ -1,6 +1,6 @@
 #!/usr/bin/env python2.4
 # =============================================================================
-# $Id: Particles.py,v 1.3 2006-11-28 18:26:45 ibelyaev Exp $
+# $Id: Particles.py,v 1.4 2007-03-22 18:53:00 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ , version $Revison:$
 # =============================================================================
@@ -29,14 +29,17 @@
 __author__ = "Vanya BELYAEV ibelyaev@physics.syr.edu"
 # =============================================================================
 
+# =============================================================================
 ## import everything form bender 
 from bendermodule import * 
+# =============================================================================
 
+# =============================================================================
 ## Simple class to deal with jets 
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
 #  @date 2006-10-13
 class Particles(Algo) :
-    """ simple class to deal with jets """
+    """ simple class to count particles """
     
     ## standard constructor
     def __init__ ( self , name = 'Particles' ) :
@@ -46,7 +49,6 @@ class Particles(Algo) :
     ## standard mehtod for analyses
     def analyse( self ) :
         """ standard mehtod for analyses """
-
         
         ## select all pions 
         pions = self.select( 'pions'  , 'pi+' == ABSID )
@@ -70,9 +72,10 @@ class Particles(Algo) :
         nMuons += muons.size()
         
         self.setFilterPassed( True ) 
-        return SUCCESS
+        return SUCCESS                              # RETURN 
     
     
+# =============================================================================
 ## configure the job
 def configure ( **args ) :
     """ Configure the job """
@@ -86,21 +89,18 @@ def configure ( **args ) :
         ] )
     
     ## StagerSvc at CERN
-    if 'CERN' == os.environ.get('CMTPATH',None) and \
-           os.environ.has_key('GaudiSiteSvcShr') :
-        stager = gaudi.service('GaudiSiteSvc')
-        stager.BlockSize    = 20
-        stager.InitialStage =  5 
+    if 'CERN' == os.environ.get('CMTSITE',None) and \
+           os.environ.has_key('GAUDISITESVCROOT') :
+        stager = gaudi.service('StagerSvc')
+        stager.BlockSize    =  20
+        stager.InitialStage =   5 
         if not 'GaudiSiteSvc' in gaudi.DLLs   : gaudi.DLLs   += [ 'GaudiSiteSvc']
-        if not 'StagerSvc'    in gaudi.ExtSvc : gaudi.ExtSvc += [ 'StagerSvc'   ]
+        if not 'StagerSvc'    in gaudi.ExtSvc : gaudi.ExtSvc += [ 'StagerSvc'   ]    
         
     ## create local algorithm:
     alg = Particles()
 
     gaudi.addAlgorithm ( alg ) 
-    ## add to main sequence in Davinci
-    #davinci = gaudi.algorithm('DaVinciMainSeq')
-    #davinci.Members += ['Particles']
 
     ## configure the desktop
     desktop = gaudi.tool ( 'Particles.PhysDesktop' )
@@ -117,17 +117,20 @@ def configure ( **args ) :
     evtSel.open ( input.PFNs ) 
     evtSel.PrintFreq = 1
     
-    return SUCCESS 
+    return SUCCESS                                # RETURN 
 
-## run the job 
+# =============================================================================
+## job steering 
 if __name__ == '__main__' :
+
+    ## print own documentation
+    print __doc__
     
     ## configure the job:
     configure()
     
     ## run the job
     gaudi.run(50)
-
     
 # =============================================================================
 # $Log: not supported by cvs2svn $

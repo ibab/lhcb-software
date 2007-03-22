@@ -1,31 +1,30 @@
-# $Id: requirements,v 1.85 2007-01-16 16:00:51 ibelyaev Exp $ 
+# $Id: requirements,v 1.86 2007-03-22 18:57:13 ibelyaev Exp $ 
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.85 $	
+# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.86 $	
 # =============================================================================
 # The management of the content of BENDER project:
 #                 LHCb Physics Analysis with Python  
 # =============================================================================
 package       BenderSys
-version       v6r2
+version       v7r0
 author        Vanya BELYAEV
 
 # =========== Bender Libraries ================================================
 use           BenderLibs     v1r2   Phys 
 
 # =========== dictionaries for Bender classes =================================
-use           BenderDict     v1r1   Phys
+use           BenderDict     v1r2   Phys
 
 # =========== Bender Application itself =======================================
-use           Bender         v6r2   Phys 
+use           Bender         v7r0   Phys 
   
 # =========== examples of usage of Bender "in practice" =======================
-use           BenderExample  v6r2   Ex
+use           BenderExample  v7r0   Ex
+use           LoKiExample    v5r2   Ex
+use           LoKiHybrid     v1r1   Phys 
 
 # =============================================================================
 # $Log: not supported by cvs2svn $
-# Revision 1.84  2006/11/28 18:27:45  ibelyaev
-#  prepare for v6r0
-#
 #
 # =============================================================================
 # The END 

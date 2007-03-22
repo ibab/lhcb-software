@@ -1,6 +1,6 @@
 #!/usr/bin/env python2.4
 # =============================================================================
-# $Id: HelloWorld.py,v 1.3 2006-12-14 09:15:03 ibelyaev Exp $
+# $Id: HelloWorld.py,v 1.4 2007-03-22 18:53:00 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ , version $Revison:$
 # =============================================================================
@@ -29,9 +29,12 @@
 __author__ = "Vanya BELYAEV ibelyaev@physics.syr.edu"
 # =============================================================================
 
+# =============================================================================
 ## import everything form bender 
 from bendermodule import * 
+# =============================================================================
 
+# =============================================================================
 ## the most primitive algorithm 
 class HelloWorld(Algo) :
     """ The most primirive algorithm """
@@ -39,9 +42,10 @@ class HelloWorld(Algo) :
         print 'PYTHON: Hello world!'
         self.Print('Hello, World!')
         self.setFilterPassed( True ) 
-        return SUCCESS
+        return SUCCESS                                     # RETURN 
     
 
+# =============================================================================
 ## configure the job
 def configure ( **args ) :
     """ Configure the job """
@@ -67,11 +71,15 @@ def configure ( **args ) :
     evtSel.PrintFreq = 1
     
 
-    return SUCCESS 
+    return SUCCESS                                          # RETURN 
     
-## report about what is imported
+# =============================================================================
+## job steering 
 if __name__ == '__main__' :
 
+    ## print own documentation string
+    print __doc__
+    
     ## configure the job:
     configure()
 
@@ -81,8 +89,6 @@ if __name__ == '__main__' :
 
 # =============================================================================
 # $Log: not supported by cvs2svn $
-# Revision 1.2  2006/11/28 18:26:45  ibelyaev
-#  prepare for v6r1
 #
 # =============================================================================
 # The END 

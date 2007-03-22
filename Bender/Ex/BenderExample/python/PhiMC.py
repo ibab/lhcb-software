@@ -1,6 +1,6 @@
 #!/usr/bin/env python2.4
 # =============================================================================
-# $Id: PhiMC.py,v 1.3 2006-11-28 18:26:45 ibelyaev Exp $
+# $Id: PhiMC.py,v 1.4 2007-03-22 18:53:00 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ , version $Revison:$
 # =============================================================================
@@ -29,8 +29,10 @@
 __author__ = "Vanya BELYAEV ibelyaev@physics.syr.edu"
 # =============================================================================
 
+# =============================================================================
 ## import everything form bender 
 from bendermodule import * 
+# =============================================================================
 
 ## Simple class for access MC-truth 
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -97,20 +99,18 @@ def configure ( **args ) :
     hps.OutputFile = args.get('histos','PhiMC.hbook')
     
     ## StagerSvc at CERN
-    if 'CERN' == os.environ.get('CMTPATH',None) and os.environ.has_key('GaudiSiteSvcShr') :
-        stager = gaudi.service('GaudiSiteSvc')
+    if 'CERN' == os.environ.get('CMTSITE',None) and \
+           os.environ.has_key('GAUDISITESVCROOT') :
+        stager = gaudi.service('StagerSvc')
         stager.BlockSize    = 20
         stager.InitialStage =  5 
         if not 'GaudiSiteSvc' in gaudi.DLLs   : gaudi.DLLs   += [ 'GaudiSiteSvc']
         if not 'StagerSvc'    in gaudi.ExtSvc : gaudi.ExtSvc += [ 'StagerSvc'   ]
         
-   ## create local algorithm:
+    ## create local algorithm:
     alg = PhiMC()
     
     gaudi.addAlgorithm( alg )
-    ## add to main sequence in Davinci
-    #davinci = gaudi.algorithm('DaVinciMainSeq')
-    #davinci.Members += ['Phi']
 
     alg=gaudi.algorithm('PhiMC')
     alg.PP2MCs = [ 'Relations/Rec/ProtoP/Charged' ]
@@ -118,7 +118,6 @@ def configure ( **args ) :
     ## configure the desktop
     desktop = gaudi.tool ( 'PhiMC.PhysDesktop' )
     desktop.InputLocations = [ '/Event/Phys/StdLooseKaons' ]
-
     desktop.PropertiesPrint = True
     
     # add the printout of the histograms
@@ -135,19 +134,23 @@ def configure ( **args ) :
     
     return SUCCESS 
     
-## report about what is imported
+# =============================================================================
+## job steering 
 if __name__ == '__main__' :
 
+    ## make printout of the own documentations 
+    print __doc__
+    
     ## configure the job:
     configure()
 
     ## run the job
-    gaudi.run(100)
+    gaudi.run(1000)
     
 
 # =============================================================================
 # $Log: not supported by cvs2svn $
-# 
+#
 # =============================================================================
 # The END 
 # =============================================================================

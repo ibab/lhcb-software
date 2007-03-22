@@ -1,6 +1,6 @@
 #!/usr/bin/env python2.4
 # =============================================================================
-# $Id: Phi.py,v 1.18 2006-11-28 18:26:45 ibelyaev Exp $
+# $Id: Phi.py,v 1.19 2007-03-22 18:53:00 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ , version $Revison:$
 # =============================================================================
@@ -21,21 +21,20 @@
 #  with the campain of Dr.O.Callot et al.: 
 #  "No Vanya's lines are allowed in LHCb/Gaudi software."
 #
-#  @date 2006-10-12
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+#  @date 2006-10-12
 # =============================================================================
 """ The simple Bender-based example plot dikaon mass peak """
 # =============================================================================
 __author__ = "Vanya BELYAEV ibelyaev@physics.syr.edu"
 # =============================================================================
 
+# =============================================================================
 ## import everything form bender 
 from bendermodule import * 
+# =============================================================================
 
-#gaudi.config()
-#import gaudimodule
-#gaudimodule.loaddict('EventAssocDict')
-
+# =============================================================================
 ## Simple class to plot dikaon mass peak
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
 #  @date 2006-10-13
@@ -69,38 +68,37 @@ class Phi(Algo) :
         self.setFilterPassed( True ) 
         return SUCCESS
     
+# =============================================================================
 ## configure the job
 def configure ( **args ) :
     """ Configure the job """
     
-    ## read external configruation files
+    ## read external configuration files
     gaudi.config ( files = [ 
         '$DAVINCIROOT/options/DaVinciCommon.opts'         ,
         '$COMMONPARTICLESROOT/options/StandardKaons.opts'
         ] )
     
-    ## I am old-fashioned person - I like HBOOK 
-    if not 'HbookCnv' in gaudi.DLls : gaudi.DLLs += ['HbookCnv']
-    gaudi.HistogramPersistency = "HBOOK"
-    hps = gaudi.service('HistogramPersistencySvc')
-    hps.OutputFile = args.get('histos','PhiMC.hbook')
-
+    ## I am very old-fashioned person - I like HBOOK
+    if os.environ.has_key('HBOOKROOT') :
+        if not 'HbookCnv' in gaudi.DLls : gaudi.DLLs += ['HbookCnv']
+        gaudi.HistogramPersistency = "HBOOK"
+        hps = gaudi.service('HistogramPersistencySvc')
+        hps.OutputFile = args.get('histos','PhiMC.hbook')
+        
     ## StagerSvc at CERN
-    if 'CERN' == os.environ.get('CMTPATH',None) and \
-           os.environ.has_key('GaudiSiteSvcShr') :
-        stager = gaudi.service('GaudiSiteSvc')
-        stager.BlockSize    = 20
-        stager.InitialStage =  5 
+    if 'CERN' == os.environ.get('CMTSITE',None) and \
+           os.environ.has_key('GAUDISITESVCROOT') :
+        stager = gaudi.service('StagerSvc')
+        stager.BlockSize    =  20
+        stager.InitialStage =   5 
         if not 'GaudiSiteSvc' in gaudi.DLLs   : gaudi.DLLs   += [ 'GaudiSiteSvc']
-        if not 'StagerSvc'    in gaudi.ExtSvc : gaudi.ExtSvc += [ 'StagerSvc'   ]
+        if not 'StagerSvc'    in gaudi.ExtSvc : gaudi.ExtSvc += [ 'StagerSvc'   ]    
         
     ## create local algorithm:
     alg = Phi()
 
     gaudi.addAlgorithm( alg )
-    ## add to main sequence in Davinci
-    #davinci = gaudi.algorithm('GaudiSequencer/DaVinciMainSeq')
-    #davinci.Members += ['Phi']
     
     ## configure the desktop
     desktop = gaudi.tool ( 'Phi.PhysDesktop' )
@@ -120,12 +118,16 @@ def configure ( **args ) :
     
     return SUCCESS 
     
-## report about what is imported
+# =============================================================================
+## job steering 
 if __name__ == '__main__' :
-
+    
+    ## make printout of the own documentations 
+    print __doc__
+    
     ## configure the job:
-    configure()
-
+    configure( histos = 'histos.hbook' )
+    
     ## run the job
     gaudi.run(5000)
     

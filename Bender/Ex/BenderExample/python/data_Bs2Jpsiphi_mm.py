@@ -185,6 +185,10 @@ PFNs = [ 'PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/v1-lumi2/00001395
 	 'PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/v1-lumi2/00001438/DST/0000/00001438_00000063_5.dst'  ,
 	 'PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/v1-lumi2/00001438/DST/0000/00001438_00000065_5.dst'  ] 
 
+## just for tests:
+import glob
+PFNs = [ 'PFN:'+i for i in glob.glob('/afs/cern.ch/user/i/ibelyaev/vol10/DATA/*.dst') ]
+
 import os
 if os.environ.has_key('SITEROOT') :
 	if 'C:\\Projects' == os.environ['SITEROOT'] :

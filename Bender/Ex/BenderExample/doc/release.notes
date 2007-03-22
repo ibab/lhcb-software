@@ -1,12 +1,19 @@
-! $Id: release.notes,v 1.14 2007-01-16 15:57:05 ibelyaev Exp $
+! $Id: release.notes,v 1.15 2007-03-22 18:53:00 ibelyaev Exp $
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $; version $Revision: 1.14 $
+! CVS tag $Name: not supported by cvs2svn $; version $Revision: 1.15 $
 ! -----------------------------------------------------------------------------
 ! Package     : Ex/BenderExample
 ! Responsible : Vanya  BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : collection of examples to run Bender - 
 !             :                    -Python based physic sanalysis 
 ! -----------------------------------------------------------------------------
+
+! ====================== Ex/BenderExample v7r0 2007-02-22 ====================
+
+! 2007-03-22 - Vanya BELYAEV
+ - upgrade to Bender v7r0 
+ - cmt/requirements 
+    version increment to v7r0 
 
 ! ====================== Ex/BenderExample v6r1 2007-01-16 ====================
 

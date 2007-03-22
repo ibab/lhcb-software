@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.8 2007-01-16 16:00:51 ibelyaev Exp $ 
+! $Id: release.notes,v 1.9 2007-03-22 18:57:13 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! -----------------------------------------------------------------------------
@@ -6,6 +6,19 @@
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@itep.ru
 ! Purpose     : Easy/interactive python-based LHCb physics analysis
 ! -----------------------------------------------------------------------------
+
+! ==================== BenderSys v7r0 2007-03-22 ===========================
+
+! 2007-03-22 - Vanya BELYAEV
+
+ - New version v7r0 
+   It is based on DaVinci v19r0 
+   It is the first version with resurrected and tested LoKiHybrid package, 
+   which provided hybrid C++/Python solution for physics analysis.
+   All exmaples (both for LoKi and Bender)  are updated. many obsolete 
+   lines are removed.
+   Temporary patch for ROOT_native_version is used.
+
 
 ! ==================== BenderSys v6r2 2007-01-16 ===========================
 

@@ -1,13 +1,13 @@
-# $Id: requirements,v 1.32 2007-01-16 15:57:05 ibelyaev Exp $ 
+# $Id: requirements,v 1.33 2007-03-22 18:53:00 ibelyaev Exp $ 
 # ============================================================================
-# CVS tag $Name: not supported by cvs2svn $; version $Revision: 1.32 $
+# CVS tag $Name: not supported by cvs2svn $; version $Revision: 1.33 $
 # ============================================================================
 # Created    : 2003-09-10
 # Maintainer : Vanya BELYAEV Ivan.Belyaev@itep.ru
 # ============================================================================
 package          BenderExample
 author           Vanya BELYAEV
-version          v6r2
+version          v7r0
 
 # ============== structure ===================================================
 branches         cmt doc src python options 
@@ -21,6 +21,10 @@ set              BENDEREXAMPLEJOBS    $(BENDEREXAMPLEROOT)/jobs
 use              Bender       v* Phys 
 use              HbookCnv     v* 
 use              GaudiSiteSvc v*  
+use              LoKiExample  v* Ex 
+
+macro ROOT_config_version "5.14.00d"
+macro ROOT_native_version "5.14.00d" 
 
 # ============== nesessary paths =============================================
 path_remove      PYTHONPATH "BenderExample" 
@@ -34,6 +38,9 @@ apply_pattern    application_path
 
 # ============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.32  2007/01/16 15:57:05  ibelyaev
+#  add DIRA example
+#
 #
 # ============================================================================
 # The END 
