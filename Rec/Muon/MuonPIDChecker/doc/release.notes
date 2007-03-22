@@ -2,11 +2,15 @@
 ! Responsible : E. Polycarpo, M. Gandelman
 !----------------------------------------------------------------------------
 
-!====================== MuonPIDChecker v2r0 2007-03-20 ====================
+!====================== MuonPIDChecker v2r0 2007-03-22 ====================
+! 2007-03-22 - Marco Cattaneo
+ - Changed name of FillTrHistos and CheckMCAss to start with lower case
+   (coding convention)
+ - resetTrInfo and fillTrHistos now return void, to avoid untested StatusCode
+
 ! 2007-03-20 - Erica Polycarpo, Miriam Gandelman
-             Add Total Misid to monitoring table 
-             DLL Cut changed to -1 in the options 
-             (to be used with MuonID v4r6)
+ - Add Total Misid to monitoring table (to be used with MuonID v4r6)
+ - DLL Cut changed to -1 in the options
 
 !====================== MuonPIDChecker v1r0p1 2007-03-05 ====================
 ! 2007-03-05 - Marco Cattaneo

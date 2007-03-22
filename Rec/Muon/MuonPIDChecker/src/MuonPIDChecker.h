@@ -1,4 +1,4 @@
-// $Id: MuonPIDChecker.h,v 1.2 2007-03-21 12:57:17 polye Exp $
+// $Id: MuonPIDChecker.h,v 1.3 2007-03-22 09:05:51 cattanem Exp $
 #ifndef TUNEMUONID_H 
 #define TUNEMUONID_H 1
 
@@ -56,13 +56,13 @@ protected:
 private:
 
   // Fill Histos
-  StatusCode FillTrHistos(const int Level);
+  void fillTrHistos(const int Level);
 
   // Check MC association 
-  StatusCode CheckMCAss(const LHCb::Track *pTrack, const LHCb::MCParticle* mcP);
+  StatusCode checkMCAss(const LHCb::Track *pTrack, const LHCb::MCParticle* mcP);
   
   // Reset values of track info
-  StatusCode resetTrInfo();
+  void resetTrInfo();
 
   // get Track type according to MC info
   int getTrType( const LHCb::Track *pTrack, const LHCb::MCParticle* mcP);

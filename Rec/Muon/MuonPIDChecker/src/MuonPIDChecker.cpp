@@ -187,9 +187,9 @@ StatusCode MuonPIDChecker::execute() {
 	   if (m_TrType == 0 ) m_nPSGhosts++;
 
 	   // Fill Track Info
-	   StatusCode sc = FillTrHistos(0);
+	   fillTrHistos(0);
 	   m_cpresel[m_TrType]++;
-	   if (m_TrIsMuon == 1) sc = FillTrHistos(1);
+	   if (m_TrIsMuon == 1) fillTrHistos(1);
 
 	 } // Pre-selection
        } // Association to Track
@@ -228,7 +228,7 @@ StatusCode MuonPIDChecker::execute() {
 //=====================================================================
 //  MC association and info
 //====================================================================
-StatusCode MuonPIDChecker::FillTrHistos(const int Level){ 
+void MuonPIDChecker::fillTrHistos(const int Level){ 
   // Level 0 => preselection
   // Level 1 => IsMuon = 1  
   char hname[10];
@@ -258,12 +258,12 @@ StatusCode MuonPIDChecker::FillTrHistos(const int Level){
     plot1D( (m_TrMuonLhd - m_TrNMuonLhd) ,hname, "DLL", -10., 10., 200 ); 
   }
 
-  return StatusCode::SUCCESS;
+  return;
 }
 //=====================================================================
 //  MC association and info
 //====================================================================
-StatusCode MuonPIDChecker::CheckMCAss(const LHCb::Track *pTrack, 
+StatusCode MuonPIDChecker::checkMCAss(const LHCb::Track *pTrack, 
                                       const LHCb::MCParticle* mcP){ 
 
   if (!mcP){
@@ -298,7 +298,7 @@ StatusCode MuonPIDChecker::CheckMCAss(const LHCb::Track *pTrack,
 //=====================================================================
 //  Reset Track Variables  
 //====================================================================
-StatusCode MuonPIDChecker::resetTrInfo() {
+void MuonPIDChecker::resetTrInfo() {
     m_TrNShared= -1;
     m_TrMuonLhd= -100.;
     m_TrNMuonLhd = -100.;
@@ -309,7 +309,7 @@ StatusCode MuonPIDChecker::resetTrInfo() {
     m_TrType = -1;
     m_Trp0 = 0.;
     m_TrMCp0 = 0;
-    return StatusCode::SUCCESS;
+    return;
 }
 //=====================================================================
 //  Return Track Type     
@@ -321,7 +321,7 @@ StatusCode MuonPIDChecker::resetTrInfo() {
 int MuonPIDChecker::getTrType( const LHCb::Track *pTrack, 
                                const  LHCb::MCParticle* mcP ) {
   // MCParticle Association 
-  StatusCode sc = CheckMCAss( pTrack , mcP);
+  StatusCode sc = checkMCAss( pTrack , mcP);
   int type = -1;
 
   // Fill Histograms
