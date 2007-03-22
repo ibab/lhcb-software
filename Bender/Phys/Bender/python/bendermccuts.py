@@ -1,7 +1,7 @@
 # =============================================================================
-# $Id: bendermccuts.py,v 1.4 2006-11-28 18:24:17 ibelyaev Exp $ 
+# $Id: bendermccuts.py,v 1.5 2007-03-22 18:50:47 ibelyaev Exp $ 
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $
+# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.5 $
 # =============================================================================
 ## This is helper module for decoration of LoKi particle functions/cuts 
 #
@@ -105,13 +105,17 @@ MCCTAU     = MCTIME
 ## @see LoKi::Cuts::MCQUARK
 MCQUARK    = _LoKi.MCParticles.HasQuark
 ## @see LoKi::Cuts::MCCHARM
-MCCHARM    =  MCQUARK( _LHCb.ParticleID.charm   ) 
+##MCCHARM    =  MCQUARK( _LHCb.ParticleID.charm   ) 
+MCCHARM    =  MCQUARK( 4  ) 
 ## @see LoKi::Cuts::MCBEAUTY
-MCBEAUTY   =  MCQUARK( _LHCb.ParticleID.bottom  ) 
+## MCBEAUTY   =  MCQUARK( _LHCb.ParticleID.bottom  ) 
+MCBEAUTY   =  MCQUARK( 5  ) 
 ## @see LoKi::Cuts::MCTOP
-MCTOP      =  MCQUARK( _LHCb.ParticleID.top     ) 
+##MCTOP      =  MCQUARK( _LHCb.ParticleID.top     ) 
+MCTOP      =  MCQUARK( 6  ) 
 ## @see LoKi::Cuts::MCSTRANGE 
-MCSTRANGE  =  MCQUARK( _LHCb.ParticleID.strange ) 
+##MCSTRANGE  =  MCQUARK( _LHCb.ParticleID.strange ) 
+MCSTRANGE  =  MCQUARK( 3  ) 
 ## @see LoKi::Cuts::MCCHARGED
 MCCHARGED  = _LoKi.MCParticles.IsCharged () 
 ## @see LoKi::Cuts::MCNEUTRAL
@@ -185,6 +189,9 @@ if __name__ == '__main__' :
 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.4  2006/11/28 18:24:17  ibelyaev
+#  prepare for v6r1
+#
 # =============================================================================
 # The END 
 # =============================================================================

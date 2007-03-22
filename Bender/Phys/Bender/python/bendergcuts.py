@@ -1,7 +1,7 @@
 # =============================================================================
-# $Id: bendergcuts.py,v 1.4 2006-11-28 18:24:17 ibelyaev Exp $ 
+# $Id: bendergcuts.py,v 1.5 2007-03-22 18:50:47 ibelyaev Exp $ 
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $
+# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.5 $
 # =============================================================================
 ## This is helper module for decoration of LoKi Gen particle functions/cuts 
 #
@@ -95,13 +95,17 @@ GANCESTOR = _LoKi.GenParticles.IsAnAncestor
 ## @see LoKi::Cuts::GQUARK
 GQUARK    = _LoKi.GenParticles.HasQuark
 ## @see LoKi::Cuts::GBEAUTY
-GBEAUTY   = GQUARK( _LHCb.ParticleID.bottom  )
+##GBEAUTY   = GQUARK( _LHCb.ParticleID.bottom  )
+GBEAUTY   = GQUARK( 5 )
 ## @see LoKi::Cuts::GCHARM
-GCHARM    = GQUARK( _LHCb.ParticleID.charm   )
+##GCHARM    = GQUARK( _LHCb.ParticleID.charm   )
+GCHARM    = GQUARK( 4 )
 ## @see LoKi::Cuts::GSTRANGE
-GSTRANGE  = GQUARK( _LHCb.ParticleID.strange )
+## GSTRANGE  = GQUARK( _LHCb.ParticleID.strange )
+GSTRANGE  = GQUARK( 3 )
 ## @see LoKi::Cuts::GTOP
-GTOP      = GQUARK( _LHCb.ParticleID.top     )
+##GTOP      = GQUARK( _LHCb.ParticleID.top     )
+GTOP      = GQUARK( 6 )
 ## @see LoKi::Cuts::GNEUTRAL
 GNEUTRAL  = _LoKi.GenParticles.IsNeutral() 
 ## @see LoKi::Cuts::GLEPTON
@@ -151,6 +155,9 @@ if __name__ == '__main__' :
 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.4  2006/11/28 18:24:17  ibelyaev
+#  prepare for v6r1
+#
 # =============================================================================
 # The END 
 # =============================================================================

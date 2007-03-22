@@ -1,7 +1,7 @@
 # =============================================================================
-# $Id: bendermodule.py,v 1.34 2006-11-28 18:24:17 ibelyaev Exp $ 
+# $Id: bendermodule.py,v 1.35 2007-03-22 18:50:47 ibelyaev Exp $ 
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.34 $ 
+# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.35 $ 
 # =============================================================================
 ## The major Python module for Bender application 
 #
@@ -47,7 +47,11 @@ import gaudimodule
 import benderaux
 
 ## load all defined dictionary libraries
-benderaux._loadDict_( [ 'HepMCRflx' , 'MathRflx' ] )
+benderaux._loadDict_( [ 'HepMCRflx'      ,
+                        'CLHEPRflx'      ,
+                        'STLRflx'        ,
+                        'MathRflx'       ,
+                        'TrackEventDict' ] )
 
 ## keep the application maner  
 AppMgr = gaudimodule.AppMgr 
@@ -64,19 +68,19 @@ g      = gaudi     # for 'backward compatibility'
 theApp = gaudi     # ATLAS style
 
 ## load some important DLLs for Bender/LoKi 
-benderaux._loadDll_ ( [ 'LoKiCore'            ,
-                        'LoKiGenMC'           , 
-                        'LoKiPhysMC'          ,  
-                        'LoKiJets'            ,
-                        'DaVinciKernel'       ,
-                        'DaVinciTools'        ,      
-                        'DaVinciMCTools'      ,      
-                        'DaVinciTransporter'  ,      
-                        'VertexFit'           ,      
-                        'ParticleMaker'       ,      
-                        'ProtoParticleFilter' ,      
-                        'DaVinciFilter'       ,      
-                        'DaVinciAssociators'  ]  , gaudi ) 
+## benderaux._loadDll_ ( [ 'LoKiCore'            ,
+##                         'LoKiGenMC'           , 
+##                         'LoKiPhysMC'          ,  
+##                         'LoKiJets'            ,
+##                         'DaVinciKernel'       ,
+##                         'DaVinciTools'        ,      
+##                         'DaVinciMCTools'      ,      
+##                         'DaVinciTransporter'  ,      
+##                         'VertexFit'           ,      
+##                         'ParticleMaker'       ,      
+##                         'ProtoParticleFilter' ,      
+##                         'DaVinciFilter'       ,      
+##                         'DaVinciAssociators'  ]  , gaudi ) 
 
 ## declare LoKi-service ( needed for many algorithms and functions) 
 if not "LoKiSvc" in gaudi.ExtSvc : gaudi.ExtSvc += [ "LoKiSvc" ]
@@ -131,6 +135,9 @@ if __name__ == '__main__' :
 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.34  2006/11/28 18:24:17  ibelyaev
+#  prepare for v6r1
+#
 # =============================================================================
 # The END 
 # =============================================================================

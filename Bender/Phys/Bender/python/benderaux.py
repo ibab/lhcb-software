@@ -1,7 +1,7 @@
 # =============================================================================
-# $Id: benderaux.py,v 1.23 2006-12-14 10:40:43 ibelyaev Exp $ 
+# $Id: benderaux.py,v 1.24 2007-03-22 18:50:47 ibelyaev Exp $ 
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.23 $
+# CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.24 $
 # =============================================================================
 ## Auxillary module  to keep some helper fuctions for Bender
 #
@@ -31,6 +31,7 @@ __author__ = "Vanya BELYAEV ibelyaev@physics.syr.edu"
 import os,sys,sets
 import gaudimodule
 
+# =============================================================================
 ## Load all defined dictionary libraries
 #  @param  lst list of additional dictionaries to be load
 #  @param  verbose flag for verbose execution 
@@ -50,36 +51,36 @@ def _loadDict_ ( lst = [] , verbose = True ) :
     _libs_ = sets.Set( lst )
     
     ## get the patterns form the environment 
-    for k in os.environ :
-        i = k.find('DictShr')
-        if 0 < i : _libs_.add( k[0:k.find('Shr')] )
-    _libs_.add ( 'LHCbKernelDict')
-    _libs_.add ( 'RelationsDict')
-    _libs_.add ( 'GenEventDict')
-    _libs_.add ( 'DAQEventDict')
-    _libs_.add ( 'DigiEventDict')
-    _libs_.add ( 'TrackFitEventDict')
-    _libs_.add ( 'TrackEventDict')
-    _libs_.add ( 'PackedEventDict')
-    _libs_.add ( 'MCEventDict')
-    _libs_.add ( 'RecEventDict')
-    _libs_.add ( 'PhysEventDict')
-    _libs_.add ( 'HltEventDict')
-    _libs_.add ( 'EventAssocDict')
-    _libs_.add ( 'LinkerEventDict')
-    _libs_.add ( 'DetDict')
-    _libs_.add ( 'PhysDict')
-    _libs_.add ( 'LoKiDict')
-    _libs_.add ( 'LoKiCutsDict')
-    _libs_.add ( 'BenderDict')
+##     for k in os.environ :
+##         i = k.find('DictShr')
+##         if 0 < i : _libs_.add( k[0:k.find('Shr')] )
+    
+##     _libs_.add ( 'LHCbKernelDict'    )
+##     _libs_.add ( 'RelationsDict'     )
+##     _libs_.add ( 'GenEventDict'      )
+##     _libs_.add ( 'DAQEventDict'      )
+##     _libs_.add ( 'DigiEventDict'     )
+##     _libs_.add ( 'TrackFitEventDict' )
+##     _libs_.add ( 'TrackEventDict'    )
+##     _libs_.add ( 'PackedEventDict'   )
+##     _libs_.add ( 'MCEventDict'       )
+##     _libs_.add ( 'RecEventDict'      )
+##     _libs_.add ( 'PhysEventDict'     )
+##     _libs_.add ( 'HltEventDict'      )
+##     _libs_.add ( 'EventAssocDict'    )
+##     _libs_.add ( 'LinkerEventDict'   )
+##     _libs_.add ( 'DetDict'           )
+##     _libs_.add ( 'LoKiDict'          )
+##     _libs_.add ( 'LoKiCutsDict'      )
+##     _libs_.add ( 'BenderDict'        )
     
     if verbose : print ' Libraries to be loaded: %s' % list(_libs_)
+    
+    ## list of properly loaded dictionaries 
     good = sets.Set()
-    # for ROOT < 5.13.04c EventAssocLoad must be loaded AFTER 
-    if 'EventAssocDict' in _libs_ :
-        _libs_.remove ( 'EventAssocDict' )
     for _lib_ in _libs_ :
         try    :
+            ## load dictionary:
             gaudimodule.loaddict( _lib_ )
             good.add(_lib_)
         except :
@@ -89,6 +90,7 @@ def _loadDict_ ( lst = [] , verbose = True ) :
     if verbose: print ' Successfully loaded dictionaries: %s' % good
     return good 
 
+# =============================================================================
 ## Load list of DLLs
 #  @param lst list of DLLs to be loaded or library name 
 #  @param appMgr application manager
@@ -120,20 +122,6 @@ def _loadDll_ ( lst , appMgr = None ) :
 
 # =============================================================================
 # $Log: not supported by cvs2svn $
-# Revision 1.22  2006/11/28 18:24:17  ibelyaev
-#  prepare for v6r1
-#
-# Revision 1.21  2006/11/16 13:50:14  ibelyaev
-#  v6r0
-#
-# Revision 1.20  2006/11/16 13:42:13  ibelyaev
-#  fic fpr DC06
-#
-# Revision 1.19  2006/11/13 10:33:03  ibelyaev
-#  add python/benderfunctions.py
-#
-# Revision 1.18  2006/11/09 19:04:23  ibelyaev
-#  fix
 #
 # =============================================================================
 # The END 

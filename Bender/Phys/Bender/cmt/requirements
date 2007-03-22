@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.44 2007-01-16 15:56:37 ibelyaev Exp $ 
+# $Id: requirements,v 1.45 2007-03-22 18:50:47 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $     
 # =============================================================================
@@ -6,7 +6,7 @@
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu
 # =============================================================================
 package           Bender
-version           v6r2
+version           v7r0
 
 # ============================================================================
 branches          cmt doc src python
@@ -18,12 +18,12 @@ use               GaudiPython v*
 use               GaudiSvc    v* 
 
 # =============== dependencies ================================================
-use               HbookCnv    v* 
-use               BenderDict  v*  Phys 
-use               PhysDict    v*  Phys 
-use               LoKiDict    v*  Phys 
-use               LoKi        v*  Phys
-use               DaVinci     v*  Phys 	
+use               HbookCnv     v* 
+use               BenderDict   v*  Phys 
+use               LoKiDict     v*  Phys 
+use               LoKiCutsDict v*  Phys 
+use               LoKi         v*  Phys
+use               DaVinci      v*  Phys 	
 
 # =============== consituents =================================================
 
@@ -43,6 +43,9 @@ apply_pattern     application_path
 
 # ============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.44  2007/01/16 15:56:37  ibelyaev
+#  add DIRA/DANG functions
+#
 # Revision 1.43  2006/11/28 18:26:14  ibelyaev
 #   remove ROOTFIX
 #
