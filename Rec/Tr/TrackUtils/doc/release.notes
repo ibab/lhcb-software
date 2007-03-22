@@ -4,6 +4,9 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+! 2007-03-22 - David Hutchcroft
+ - Made TrackPrepareVelo set q/p for all VELO states (if more than one)
+
 !========================== TrackUtils v1r11 2007-03-21 ======================
 ! 2007-03-21 - Marco Cattaneo
  - Remove obsolete file TrackUtils_load.cpp
