@@ -4,7 +4,7 @@
 ! Purpose     : interface package to GENSER
 !-----------------------------------------------------------------------------
 
-!========================== GENSER v2r0 2007-03-23 ===========================
+!========================== GENSER v3r0 2007-03-23 ===========================
 ! 2007-03-23 - Gloria Corti
  - requirements - Introduce here the setting of native versions for all
                   generators used
