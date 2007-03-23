@@ -5,7 +5,7 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v22r3>2007-03-21 LHCbSys v22r3</A></H1><PRE>
+</PRE><H1><A NAME=v22r3>2007-03-23 LHCbSys v22r3</A></H1><PRE>
 This version uses Gaudi v19r3 and LCG_50b. Fully compatible with DC06 data
 
 - Packages added:    Det/DDDB v1r0 - Interface package to (SQL)DDDB  
@@ -14,7 +14,7 @@ This version uses Gaudi v19r3 and LCG_50b. Fully compatible with DC06 data
     DetSys v9r3, DetDesc v17r2, MuonDet v6r2, Magnet v3r6, DetDescCnv v4r3, 
     RichDet v10r3, DetDescSvc v1r11, DetCond v11r1, HltBase v2r3, LHCbAlgs v2r7,
     EventSys v22r3, TrackEvent v4r1, LinkerInstances v3r2p3, DetDescChecks v4r3,
-    DetDescExample v7r5, CondDBUI v2r1
+    DetDescExample v7r5, CondDBUI v2r1, EventAssoc v4r1, Relations v5r1
 
 - In GaudiConf v10r3
   . Move geometry related options to new DDDB package
@@ -75,8 +75,14 @@ This version uses Gaudi v19r3 and LCG_50b. Fully compatible with DC06 data
 - In LinkerInstances v3r2p3
   . Add dictionary for std::vector<std::pair<int,unsigned int> >
 
+- In EventAssoc v4r1
+  . Add dictionary for RelationWeighted1D<MCParticle,CaloCluster,float>
+
 - In RichKernel v7r3, RichRecBase v3r2, RichDet v10r3
   . Replace use of Gaudi format with boost::format to fix various issues
+
+- In Relations v5r1
+  . Fix requirements for rootmap generation
 
 - In DetDescChecks v4r3, DetDescExample v7r5
   . Remove explicit dependency on SQLDDDB, use DDDB instead
@@ -91,7 +97,8 @@ This version uses Gaudi v19r3 and LCG_50b. Fully compatible with DC06 data
   . Fixed a small bug when trying to find the tags of a folder.
 
 - In TsaKernel v2r3, HltBase v2r3, DetDesc v17r2, DetDescSvc v1r11,
-     RichKernel v7r3, RichRecBase v3r2, RichDet v10r3, TrackEvent v4r1
+     RichKernel v7r3, RichRecBase v3r2, RichDet v10r3, TrackEvent v4r1,
+     Relations v5r1
   . Fix doxygen comments
 
 - In MuonDet v6r2, DetDesc v17r2, Magnet v3r6, DetDescCnv v4r3, DetDescSvc v1r11,

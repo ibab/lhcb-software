@@ -15,7 +15,7 @@ use GaudiObjDesc         v9r9
 use KernelSys             v6r3    Kernel  # Marco Cattaneo
 use LHCbKernel            v7r2    Kernel  # Marco Cattaneo
 use LHCbMath              v2r1    Kernel  # Juan Palacios
-use Relations             v5r0    Kernel  # Ivan Belyaev
+use Relations             v5r1    Kernel  # Ivan Belyaev
 use CaloKernel            v5r0    Calo    # Olivier Deschamps
 use MuonKernel            v4r0    Muon    # Andrei Tsaregorodtsev
 use RichKernel            v7r3    Rich    # Chris Jones
@@ -47,7 +47,7 @@ use L0Event               v16r2   Event   # Julien Cogan
 use PhysEvent             v11r1   Event   # Patrick Koppenburg, Juan Palacios
 use DAQEvent              v7r2    Event   # Marco Cattaneo, Markus Frank
 use GenEvent              v5r0p1  Event   # Gloria Corti
-use EventAssoc            v4r0    Event   # Ivan Belyaev
+use EventAssoc            v4r1    Event   # Ivan Belyaev
 use LinkerEvent           v3r0p1  Event   # Olivier Callot
 use PackedEvent           v3r1    Event   # Marco Cattaneo, Olivier Callot
 use TrackEvent            v4r1    Event   # Eduardo Rodrigues, Jose Hernando
