@@ -5,7 +5,7 @@ branches doc cmt
 
 use LHCbKernel       v7r2   Kernel
 use LHCbMath         v2r1   Kernel
-use Relations        v5r0   Kernel
+use Relations        v5r1   Kernel
 use CaloKernel       v5r0   Calo
 use MuonKernel       v4r0   Muon
 use RichKernel       v7r3   Rich
