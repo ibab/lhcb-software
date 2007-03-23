@@ -74,8 +74,8 @@ TrackMatch.ExtrapolatorSeed = "TrackLinearExtrapolator";
 TrackMatch.TTClusterTool.Extrapolator =  "TrackLinearExtrapolator";
 
 // Forward pattern
-PatForward.WithoutBField         = true;
-ToolSvc.PatFwdTool.WithoutBField = true;
+ToolSvc.PatForwardTool.WithoutBField = true;
+ToolSvc.PatFwdTool.WithoutBField     = true;
 
 
 // ====================================================================
