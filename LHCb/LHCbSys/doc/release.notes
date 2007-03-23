@@ -5,15 +5,35 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v22r3>2007-03-16 LHCbSys v22r3</A></H1><PRE>
+</PRE><H1><A NAME=v22r3>2007-03-21 LHCbSys v22r3</A></H1><PRE>
 This version uses Gaudi v19r3 and LCG_50b. Fully compatible with DC06 data
 
 - Packages added:    Det/DDDB v1r0 - Interface package to (SQL)DDDB  
-- Packages modified: GaudiConf v10r3, TsaKernel v2r3, TrackInterfaces v3r2
-    DetSys v9r3, LinkerInstances v3r2p3, DetDescChecks v4r3, DetDescExample v7r5
+- Packages modified: GaudiConf v10r3, KernelSys v6r3, RichKernel v7r3, 
+    DaVinciKernel v6r2, TsaKernel v2r3, TrackInterfaces v3r2, RichRecBase v3r2,
+    DetSys v9r3, DetDesc v17r2, MuonDet v6r2, Magnet v3r6, DetDescCnv v4r3, 
+    RichDet v10r3, DetDescSvc v1r11, DetCond v11r1, HltBase v2r3, LHCbAlgs v2r7,
+    EventSys v22r3, TrackEvent v4r1, LinkerInstances v3r2p3, DetDescChecks v4r3,
+    DetDescExample v7r5, CondDBUI v2r1
 
 - In GaudiConf v10r3
   . Move geometry related options to new DDDB package
+
+- In RichKernel v7r3
+  . Add new pixel cluster class Rich::HPDPixelCluster to represent a group of 
+    channels (RichSmartIDs)
+  . Update RichGeomPhoton to use Rich::HPDPixelCluster
+  . Update RichSmartIDTool interface to add new method to return the global 
+    position of an HPD pixel cluster
+
+- In RichRecBase v3r2
+  . Adapt to use of HPD pixel cluster in reconstruction
+  . Update MC truth interface for new HPD pixel clusters
+  . Update pixel creators to be able to include clustering information
+
+- In DaVinciKernel v6r2
+  . Removed PhysDesktop and Particle2VertexAsct implementations (to DaVinciTools)
+  . Removed component library compile and link statements in requirements
 
 - In TsaKernel v2r3
   . Add constructor to Line class
@@ -21,11 +41,42 @@ This version uses Gaudi v19r3 and LCG_50b. Fully compatible with DC06 data
 - In TrackInterfaces v6r2
   . Add IVeloExpectation interface
 
+- in HltBase v2r3
+  . Add IPrepareMuonTSeed and IMatchTVeloTracks interfaces
+
+- In MuonDet v6r2
+  . Replaced calls to std::string::data() with std::string::c_str() or removed
+    where not needed.
+  . Fix in DeMuonDetector::~DeMuonDetector: m_chamberLayout was deleted, but
+    neither initialized to 0 nor checked.
+
+- In RichDet v10r3
+ - Add some new DAQ definitions
+
+- In Magnet v3r6
+  . Remove unnecessary MagneticFieldSvc::fieldGrid internal function, implement
+    directly in FieldVector
+
+- In DetCond v11r1
+  . Added an option to enable CORAL LFCReplicaService (off by default).
+  . Added an option to enable CORAL automatic connection purge.
+  . Added a check on the database in CondDBAccessSvc::i_checkTag to avoid
+    segmentation possible faults.
+  . Disabled some compiler optimizations in libstdc++ on slc3, because it seems
+    that on SLC3 there are problems with multithreaded applications.
+  . Small improvement to the database disconnect message
+ 
 - In DetSys v9r3
   . Add dictionary for std::vector<IDetectorElement*>
 
+- In TrackEvent v4r1
+  . Add PatQuality value to Track::AdditionalInfo enum
+
 - In LinkerInstances v3r2p3
   . Add dictionary for std::vector<std::pair<int,unsigned int> >
+
+- In RichKernel v7r3, RichRecBase v3r2, RichDet v10r3
+  . Replace use of Gaudi format with boost::format to fix various issues
 
 - In DetDescChecks v4r3, DetDescExample v7r5
   . Remove explicit dependency on SQLDDDB, use DDDB instead
@@ -36,8 +87,16 @@ This version uses Gaudi v19r3 and LCG_50b. Fully compatible with DC06 data
 - In DetDescExample v7r5
   . Update Gaudi.job
 
-- In TsaKernel v2r3
+- In CondDBUI v2r1
+  . Fixed a small bug when trying to find the tags of a folder.
+
+- In TsaKernel v2r3, HltBase v2r3, DetDesc v17r2, DetDescSvc v1r11,
+     RichKernel v7r3, RichRecBase v3r2, RichDet v10r3, TrackEvent v4r1
   . Fix doxygen comments
+
+- In MuonDet v6r2, DetDesc v17r2, Magnet v3r6, DetDescCnv v4r3, DetDescSvc v1r11,
+     LHCbAlgs v2r7
+  . Clean up some untested StatusCodes
 
 </PRE><H1><A NAME=v22r2>2007-03-05 LHCbSys v22r2</A></H1><PRE>
 This version uses Gaudi v19r2 and LCGCMT 50. Fully compatible with DC06 data
