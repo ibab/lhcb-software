@@ -159,6 +159,8 @@ void HistRPC::rpcHandler()
   void *p;
   int siz;
   RPCComm *comm;
+  Comm  = RPCCIllegal;
+  what  = 0;
   int len;
   int status;
   clid  = DimServer::getClientId();
