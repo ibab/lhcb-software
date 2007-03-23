@@ -1,4 +1,4 @@
-// $Id: Track.cpp,v 1.35 2007-03-20 16:28:50 cattanem Exp $ // Include files
+// $Id: Track.cpp,v 1.36 2007-03-23 08:44:28 cattanem Exp $ // Include files
 
 // local
 #include "Event/Track.h"
@@ -499,8 +499,8 @@ bool LHCb::Track::hasInfo ( const int key ) const
  * 
  *  @param key key for the information
  *  @param info information to be associated with the key
- *  @return 'true' if informaiton is inserted, 
- *         'false' if the previous information has been replaced 
+ *  @return 'true' if information is inserted, 
+ *         'false' if information was not inserted, due to already existing key
  */
 //=============================================================================
 bool  LHCb::Track::addInfo ( const int key, const double info )
