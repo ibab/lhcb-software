@@ -1,4 +1,4 @@
-// $Id: STCluster2MCParticleLinker.h,v 1.7 2007-03-23 08:59:13 jvantilb Exp $
+// $Id: STCluster2MCParticleLinker.h,v 1.8 2007-03-23 14:30:45 cattanem Exp $
 #ifndef STCLUSTER2MCPARTICLELINKER_H
 #define STCLUSTER2MCPARTICLELINKER_H 1
 
@@ -8,7 +8,7 @@ namespace LHCb{
   class MCParticle;
 };
 
-/** @class STCluster2MCParticleAlg STCluster2MCParticleAlg.h
+/** @class STCluster2MCParticleAlg STCluster2MCParticleLinker.h
  *  
  *
  *  @author Matt Needham
