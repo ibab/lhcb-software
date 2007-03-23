@@ -1,4 +1,4 @@
-// $Id: STClustersToRawBankAlg.cpp,v 1.5 2006-12-18 10:49:46 cattanem Exp $
+// $Id: STClustersToRawBankAlg.cpp,v 1.6 2007-03-23 08:59:57 jvantilb Exp $
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -238,7 +238,7 @@ unsigned int STClustersToRawBankAlg::bankSize(STClustersOnBoard::ClusterVector& 
  return (unsigned int)ceil(nByte/(double)sizeof(int)); 
 }
  
-StatusCode STClustersToRawBankAlg::writeBank(STClustersOnBoard::ClusterVector& clusCont, LHCb::BankWriter& bWriter){
+void STClustersToRawBankAlg::writeBank(STClustersOnBoard::ClusterVector& clusCont, LHCb::BankWriter& bWriter){
 
   unsigned int nClus = clusCont.size();
 
@@ -280,7 +280,7 @@ StatusCode STClustersToRawBankAlg::writeBank(STClustersOnBoard::ClusterVector& c
 
   } // iCluster
 
-  return StatusCode::SUCCESS;
+  return;
 }
 
 

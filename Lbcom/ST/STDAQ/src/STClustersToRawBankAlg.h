@@ -1,4 +1,4 @@
-// $Id: STClustersToRawBankAlg.h,v 1.1 2006-02-10 08:59:31 mneedham Exp $
+// $Id: STClustersToRawBankAlg.h,v 1.2 2007-03-23 08:59:57 jvantilb Exp $
 #ifndef STClustersToRawBankAlg_H
 #define STClustersToRawBankAlg_H 1
 
@@ -66,7 +66,7 @@ private:
 
 
   // create a new bank
-  StatusCode writeBank(STClustersOnBoard::ClusterVector& clusCont , LHCb::BankWriter& bWriter);
+  void writeBank(STClustersOnBoard::ClusterVector& clusCont , LHCb::BankWriter& bWriter);
  
   ISTReadoutTool* m_readoutTool; 
   std::string m_readoutToolName;
