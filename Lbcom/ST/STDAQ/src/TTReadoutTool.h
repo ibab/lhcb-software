@@ -1,4 +1,4 @@
-// $Id: TTReadoutTool.h,v 1.1 2006-02-10 08:59:32 mneedham Exp $
+// $Id: TTReadoutTool.h,v 1.2 2007-03-23 14:36:53 cattanem Exp $
 #ifndef _TTReadoutTool_H
 #define _TTReadoutTool_H
 
@@ -8,9 +8,9 @@
 #include "STReadoutTool.h"
 #include "Kernel/STChannelID.h"
 
-/** @class STReadoutTool STReadoutTool.h  STDAQ/STReadoutTool
+/** @class TTReadoutTool TTReadoutTool.h
  *
- *  Concret Class for things related to the Readout - Tell1 Board
+ *  Concrete class for things related to the Readout - Tell1 Board
  *
  *  @author M.Needham
  *  @date   13/3/2002

@@ -1,8 +1,13 @@
 !-----------------------------------------------------------------------------
 ! Package     : ST/STDAQ
-! Responsible : Matt Needham
+! Responsible : Jeroen Van Tilburg
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
+
+!=============================== STDAQ v2r9 2007-03-23 =======================
+! 2007-03-23 - Marco Cattaneo
+ - Remove obsolete file STDAQ_load.cpp
+ - Fix doxygen warnings
 
 ! 2007-03-22 - Jeroen VAN TILBURG
  - Fix untested StatusCode in STClustersToRawBankAlg.cpp.
