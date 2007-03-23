@@ -1,4 +1,4 @@
-// $Id: STFun.h,v 1.3 2007-01-09 15:02:24 jvantilb Exp $
+// $Id: STFun.h,v 1.4 2007-03-23 14:18:21 cattanem Exp $
 #ifndef STFun_H
 #define STFun_H 1
 
@@ -10,7 +10,7 @@ namespace STFun{
 
   /**
   * calculate mean strip
-  * @param vector of digits
+  * @param  digits vector of digits
   * @return mean strip
   */
   double position(const SmartRefVector<LHCb::STDigit>& digits);
@@ -18,7 +18,7 @@ namespace STFun{
 
   /**
   * calculate mean strip
-  * @param vector of strip values
+  * @param  stripts vector of strip values
   * @return mean strip
   */
   double position(const LHCb::STCluster::ADCVector& strips);

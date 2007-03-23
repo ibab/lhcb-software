@@ -1,9 +1,9 @@
 #============================================================================
 # Created    : 2005-04-22
-# Maintainer : Matt Needham
+# Maintainer : Jeroen van Tilburg
 #============================================================================
 package           STTools
-version           v3r0
+version           v3r1
 
 branches          cmt doc src options
 include_path      none

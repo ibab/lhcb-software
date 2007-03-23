@@ -1,6 +1,11 @@
-Package         : ST/STTools
-Package manager : Matt Needham
+! Package         : ST/STTools
+! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
+
+!=========================== STTools v3r1 2007-03-23 ==========================
+! 2007-03-23 - Marco Cattaneo
+ - Remove obsolete file STTools_load.cpp
+ - Fix doxygen warnings
 
 ! 2007-03-20 - Jeroen Van Tilburg
  - Add missing include file.
