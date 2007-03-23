@@ -1,6 +1,6 @@
-// $Id: selection.h,v 1.9 2006-11-27 17:01:02 ibelyaev Exp $
+// $Id: selection.h,v 1.10 2007-03-23 16:32:23 ibelyaev Exp $
 // ====================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.9 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.10 $ 
 // ====================================================================
 // Incldue files
 // ====================================================================
@@ -38,7 +38,7 @@
   *       
   * Helper file for building Reflex dictionaries for Relations 
    * @author ibelyaev 
-  * @date  2006-11-27 17:50:34.699791 
+  * @date  2007-03-23 17:26:22.683216 
   *       
   */      
 
@@ -56,19 +56,20 @@ GaudiDict::Relation2DDict<LHCb::Particle,HepMC::GenParticle*>	_7 ;
 GaudiDict::Relation2DDict<LHCb::Particle,LHCb::MCParticle>	_8 ;
 GaudiDict::RelationWeighted1DDict<LHCb::CaloCluster,LHCb::MCParticle,float>	_9 ;
 GaudiDict::RelationWeighted1DDict<LHCb::CaloDigit,LHCb::MCParticle,float>	_10 ;
-GaudiDict::RelationWeighted1DDict<LHCb::ProtoParticle,LHCb::MCParticle,double>	_11 ;
-GaudiDict::RelationWeighted2DDict<LHCb::CaloCluster,LHCb::Track,float>	_12 ;
-GaudiDict::RelationWeighted2DDict<LHCb::CaloHypo,LHCb::Track,float>	_13 ;
-GaudiDict::RelationWeighted2DDict<LHCb::GenCollision,LHCb::RecVertex,std::pair<unsigned int,float> >	_14 ;
-GaudiDict::RelationWeighted2DDict<LHCb::MCParticle,LHCb::Particle,double>	_15 ;
-GaudiDict::RelationWeighted2DDict<LHCb::MCParticle,LHCb::Track,double>	_16 ;
-GaudiDict::RelationWeighted2DDict<LHCb::MCVertex,LHCb::RecVertex,std::pair<unsigned int,float> >	_17 ;
-GaudiDict::RelationWeighted2DDict<LHCb::Particle,LHCb::MCParticle,double>	_18 ;
-GaudiDict::RelationWeighted2DDict<LHCb::RecVertex,LHCb::GenCollision,std::pair<unsigned int,float> >	_19 ;
-GaudiDict::RelationWeighted2DDict<LHCb::RecVertex,LHCb::MCVertex,std::pair<unsigned int,float> >	_20 ;
-GaudiDict::RelationWeighted2DDict<LHCb::Track,LHCb::CaloCluster,float>	_21 ;
-GaudiDict::RelationWeighted2DDict<LHCb::Track,LHCb::CaloHypo,float>	_22 ;
-GaudiDict::RelationWeighted2DDict<LHCb::Track,LHCb::MCParticle,double>	_23 ;
+GaudiDict::RelationWeighted1DDict<LHCb::MCParticle,LHCb::CaloCluster,float>	_11 ;
+GaudiDict::RelationWeighted1DDict<LHCb::ProtoParticle,LHCb::MCParticle,double>	_12 ;
+GaudiDict::RelationWeighted2DDict<LHCb::CaloCluster,LHCb::Track,float>	_13 ;
+GaudiDict::RelationWeighted2DDict<LHCb::CaloHypo,LHCb::Track,float>	_14 ;
+GaudiDict::RelationWeighted2DDict<LHCb::GenCollision,LHCb::RecVertex,std::pair<unsigned int,float> >	_15 ;
+GaudiDict::RelationWeighted2DDict<LHCb::MCParticle,LHCb::Particle,double>	_16 ;
+GaudiDict::RelationWeighted2DDict<LHCb::MCParticle,LHCb::Track,double>	_17 ;
+GaudiDict::RelationWeighted2DDict<LHCb::MCVertex,LHCb::RecVertex,std::pair<unsigned int,float> >	_18 ;
+GaudiDict::RelationWeighted2DDict<LHCb::Particle,LHCb::MCParticle,double>	_19 ;
+GaudiDict::RelationWeighted2DDict<LHCb::RecVertex,LHCb::GenCollision,std::pair<unsigned int,float> >	_20 ;
+GaudiDict::RelationWeighted2DDict<LHCb::RecVertex,LHCb::MCVertex,std::pair<unsigned int,float> >	_21 ;
+GaudiDict::RelationWeighted2DDict<LHCb::Track,LHCb::CaloCluster,float>	_22 ;
+GaudiDict::RelationWeighted2DDict<LHCb::Track,LHCb::CaloHypo,float>	_23 ;
+GaudiDict::RelationWeighted2DDict<LHCb::Track,LHCb::MCParticle,double>	_24 ;
   };
 };
 

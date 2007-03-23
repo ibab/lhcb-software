@@ -4,6 +4,15 @@
 ! Purpose     : Define and build the POOL dictionaries for the relations
 !-----------------------------------------------------------------------------
 
+! 2007-03-23 - Vanya BELYAEV
+ - dict/selection.py 
+     add a dictionary for class 
+      LHCb::RelationWeighted1D<LHCb::MCParticle,LHCb::CaloCluster,float>
+     Formally it is not needed for persistenc, but it drastically 
+     simplify the interactive manipulation with the relation tables
+     (e.g. see the examples in the latest Bender v7r0)
+ 
+
 !======================= EventAssoc v4r0 2007-01-31 ==========================
 ! 2007-01-31 - Marco Cattaneo
  - Fix reflex dict link for Windows and retag requirements
