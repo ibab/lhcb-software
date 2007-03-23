@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MDFIO.cpp,v 1.14 2007-01-29 14:59:45 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MDFIO.cpp,v 1.15 2007-03-23 18:54:45 frankb Exp $
 //	====================================================================
 //  MDFIO.cpp
 //	--------------------------------------------------------------------
@@ -425,7 +425,7 @@ LHCb::MDFIO::readBanks(const MDFHeader& h, void* const ioDesc, bool dbg)  {
       else if ( checksum && checksum != genChecksum(1,bptr+4*sizeof(int),chkSize) )  {
         return std::pair<char*,int>(0,-1);
       }
-      return std::pair<char*, int>(data, sizeof(RawBank)+h.size());
+      return std::pair<char*, int>(data, bnkSize+h.size());
     }
     MsgStream log2(m_msgSvc, m_parent);
     log2 << MSG::ERROR << "Cannot allocate buffer to read:" << readSize << " bytes "  << endmsg;
