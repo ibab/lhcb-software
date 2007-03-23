@@ -4,6 +4,10 @@
 ! Purpose     : CMT Interface to DIM 
 !-----------------------------------------------------------------------------
 
+
+! 2007-03-24 Markus Frank
+ - Add dependency to librt when building libdim for linux
+
 !=========================== DIM v16r6 2007-01-25 ============================
 ! 2007-01-25 Markus Frank
  - import latest sources from Clara
