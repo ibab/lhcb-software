@@ -1,4 +1,4 @@
-// $Id: HistFun.h,v 1.3 2007-03-21 14:24:44 jvantilb Exp $
+// $Id: HistFun.h,v 1.4 2007-03-23 15:21:10 cattanem Exp $
 #ifndef HISTFUN_H 
 #define HISTFUN_H 1
 
@@ -15,7 +15,7 @@ inline void unBookVector(std::vector<TYPE >& histoVector, IHistogramSvc* hSvc ){
   // helper for unbooking histos from store
   typename std::vector<TYPE >::iterator iterHisto = histoVector.begin(); 
   while (iterHisto != histoVector.end()) {
-    hSvc->unregisterObject(*iterHisto);
+    hSvc->unregisterObject(*iterHisto).ignore();
     ++iterHisto;
   } // iterHisto
 }
