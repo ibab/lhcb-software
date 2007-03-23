@@ -1,4 +1,4 @@
-// $Id: SiDepositedCharge.cpp,v 1.3 2007-01-09 14:57:21 jvantilb Exp $
+// $Id: SiDepositedCharge.cpp,v 1.4 2007-03-23 09:00:24 jvantilb Exp $
 
 // Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -45,13 +45,14 @@ StatusCode SiDepositedCharge::initialize()
   /// initialize generators .
   IRndmGenSvc* tRandNumSvc = svc<IRndmGenSvc>("RndmGenSvc", true);
   sc = tRandNumSvc->generator(Rndm::Gauss(0.,1.0),m_GaussDist.pRef());
-  if (sc.isFailure()) return Error( "failed to init generator ", sc);
+  if (sc.isFailure()) return Error( "Failed to init generator ", sc);
 
   sc = tRandNumSvc->generator(Rndm::Landau(0.2226,1.0),m_LandauDist.pRef());
-  if (sc.isFailure()) return Error( "failed to init generator ", sc);
+  if (sc.isFailure()) return Error( "Failed to init generator ", sc);
 
-  release(tRandNumSvc);
-  
+  sc = release(tRandNumSvc);
+  if (sc.isFailure()) return Error( "Failed to release RndmSvc ", sc);
+ 
   return sc;
 }
 
