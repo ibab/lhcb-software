@@ -1,4 +1,4 @@
-// $Id: STCluster2MCHitLinker.h,v 1.5 2007-01-09 15:04:59 jvantilb Exp $
+// $Id: STCluster2MCHitLinker.h,v 1.6 2007-03-23 08:59:12 jvantilb Exp $
 #ifndef STCLUSTER2MCHITLINKER_H
 #define STCLUSTER2MCHITLINKER_H 1
 
@@ -22,7 +22,8 @@ class STCluster2MCHitLinker : public GaudiAlgorithm {
   
 public:
 
-  typedef std::pair<const LHCb::MCHit*,double> hitPair;
+  typedef std::pair<const LHCb::MCHit*,double> HitPair;
+  typedef std::map<const LHCb::MCHit*,double> HitMap;
 
   /// Standard constructor
   STCluster2MCHitLinker( const std::string& name, ISvcLocator* pSvcLocator );
@@ -43,12 +44,10 @@ protected:
 
 private:
 
-  StatusCode refsToRelate(std::vector<hitPair>& selectedRefs,
-                          const std::map<const LHCb::MCHit*,double>& hitMap,
-                          LHCb::MCHits* hits) const;
+  void refsToRelate(std::vector<HitPair>& selectedRefs, const HitMap& hitMap,
+                    LHCb::MCHits* hits) const;
 
-  StatusCode associateToTruth(const LHCb::STCluster* aCluster,
-                              std::map<const LHCb::MCHit*,double>& hitMap);
+  StatusCode associateToTruth(const LHCb::STCluster* aCluster, HitMap& hitMap);
  
   LHCb::STDigits* m_digitCont;
 

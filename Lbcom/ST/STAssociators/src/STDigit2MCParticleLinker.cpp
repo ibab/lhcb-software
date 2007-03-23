@@ -1,4 +1,4 @@
-// $Id: STDigit2MCParticleLinker.cpp,v 1.5 2007-01-09 15:05:00 jvantilb Exp $
+// $Id: STDigit2MCParticleLinker.cpp,v 1.6 2007-03-23 08:59:13 jvantilb Exp $
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -25,10 +25,10 @@ STDigit2MCParticleLinker::STDigit2MCParticleLinker( const std::string& name,
 {
   declareProperty("OutputData", m_outputData = STDigitLocation::TTDigits);
   declareProperty("InputData",  m_inputData  = STDigitLocation::TTDigits);
-  declareProperty("addSpillOverHits",m_addSpillOverHits = false); 
-  declareProperty("minfrac", m_minFrac = 0.3);
-  declareProperty("oneRef",m_oneRef = false);
-  declareProperty("detType", m_detType = "TT");
+  declareProperty("AddSpillOverHits", m_addSpillOverHits = false); 
+  declareProperty("Minfrac", m_minFrac = 0.05);
+  declareProperty("OneRef", m_oneRef = false);
+  declareProperty("DetType", m_detType = "TT");
 }
 
 StatusCode STDigit2MCParticleLinker::initialize()
@@ -64,25 +64,25 @@ StatusCode STDigit2MCParticleLinker::execute()
   for( ; iterDigit != digitCont->end(); ++iterDigit){
 
     // find all particles
-    std::map<const MCParticle*,double> partMap;
+    ParticleMap partMap;
     STTruthTool::associateToTruth(*iterDigit,partMap);
      
     // select references to add to table
-    std::vector<partPair> selectedRefs;
+    std::vector<PartPair> selectedRefs;
     double tCharge = this->totalCharge(partMap);
     refsToRelate(selectedRefs,partMap,tCharge,mcParts);
 
     if (selectedRefs.empty() == false){
 
       if (m_oneRef == false){
-        std::vector<partPair>::iterator iterPair = selectedRefs.begin();
+        std::vector<PartPair>::iterator iterPair = selectedRefs.begin();
         while (iterPair != selectedRefs.end()){
           myLink.link(*iterDigit,iterPair->first,iterPair->second);
           ++iterPair;
         } //iterPair
       }
       else {
-        partPair bestPair = selectedRefs.back();
+        PartPair bestPair = selectedRefs.back();
         myLink.link(*iterDigit,bestPair.first,bestPair.second);
       } 
     } // refsToRelate != empty
@@ -92,11 +92,10 @@ StatusCode STDigit2MCParticleLinker::execute()
 };
 
 
-double STDigit2MCParticleLinker::totalCharge(const std::map<const MCParticle*,
-                                             double>& partMap) const
+double STDigit2MCParticleLinker::totalCharge(const ParticleMap& partMap) const
 {
   double totCharge = 0.0;
-  std::map<const MCParticle*,double>::const_iterator iterMap = partMap.begin();
+  ParticleMap::const_iterator iterMap = partMap.begin();
   while (iterMap != partMap.end()){
     totCharge += fabs((*iterMap).second);
     ++iterMap;
@@ -105,14 +104,13 @@ double STDigit2MCParticleLinker::totalCharge(const std::map<const MCParticle*,
   return totCharge;
 }
 
-StatusCode
-STDigit2MCParticleLinker::refsToRelate(std::vector<partPair>& selRefs,
-                              const std::map<const MCParticle*,double>& partMap,
-                                       const double totCharge,
-                                       MCParticles* particles) const
+void STDigit2MCParticleLinker::refsToRelate(std::vector<PartPair>& selRefs,
+                                            const ParticleMap& partMap,
+                                            const double totCharge,
+                                            MCParticles* particles) const
 {
   // iterate over map
-  std::map<const MCParticle*,double>::const_iterator iterMap = partMap.begin();
+  ParticleMap::const_iterator iterMap = partMap.begin();
   while (iterMap != partMap.end()){
     const MCParticle* aParticle = iterMap->first;
     double frac = -1.0;
@@ -127,5 +125,5 @@ STDigit2MCParticleLinker::refsToRelate(std::vector<partPair>& selRefs,
     ++iterMap;
   } // iterMap
   
-  return StatusCode::SUCCESS;
+  return;
 }

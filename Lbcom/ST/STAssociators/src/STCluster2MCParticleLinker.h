@@ -1,4 +1,4 @@
-// $Id: STCluster2MCParticleLinker.h,v 1.6 2007-01-09 15:04:59 jvantilb Exp $
+// $Id: STCluster2MCParticleLinker.h,v 1.7 2007-03-23 08:59:13 jvantilb Exp $
 #ifndef STCLUSTER2MCPARTICLELINKER_H
 #define STCLUSTER2MCPARTICLELINKER_H 1
 
@@ -20,7 +20,8 @@ class STCluster2MCParticleLinker : public GaudiAlgorithm {
   
 public:
 
-  typedef std::pair<const LHCb::MCParticle*,double> partPair;
+  typedef std::pair<const LHCb::MCParticle*,double> PartPair;
+  typedef std::map<const LHCb::MCParticle*,double> ParticleMap;
 
   /// Standard constructor
   STCluster2MCParticleLinker(const std::string& name, ISvcLocator* pSvcLocator);
@@ -41,12 +42,12 @@ protected:
 
 private:
 
-  StatusCode refsToRelate(std::vector<partPair>& selectedRefs,
-                        const std::map<const LHCb::MCParticle*,double>& hitMap,
-                        LHCb::MCParticles* particles) const;
+  void refsToRelate(std::vector<PartPair>& selectedRefs,
+                    const ParticleMap& partMap, 
+                    LHCb::MCParticles* particles) const;
 
   StatusCode associateToTruth(const LHCb::STCluster* aCluster,
-			      std::map<const LHCb::MCParticle*,double>& particleMap);
+                              ParticleMap& partMap);
 
   /// Linker table location path
   std::string m_asctLocation;

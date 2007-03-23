@@ -1,4 +1,4 @@
-// $Id: STDigit2MCParticleLinker.h,v 1.3 2007-01-09 15:05:00 jvantilb Exp $
+// $Id: STDigit2MCParticleLinker.h,v 1.4 2007-03-23 08:59:13 jvantilb Exp $
 #ifndef STDigit2MCPARTICLELINKER_H
 #define STDigit2MCPARTICLELINKER_H 1
 
@@ -19,7 +19,8 @@ class STDigit2MCParticleLinker : public GaudiAlgorithm {
   
 public:
 
-  typedef std::pair<const LHCb::MCParticle*,double> partPair;
+  typedef std::pair<const LHCb::MCParticle*,double> PartPair;
+  typedef std::map<const LHCb::MCParticle*,double> ParticleMap;
 
   /// Standard constructor
   STDigit2MCParticleLinker( const std::string& name, ISvcLocator* pSvcLocator );
@@ -39,12 +40,11 @@ public:
 
 private:
 
-  double totalCharge(const std::map<const LHCb::MCParticle*,double>& partMap)
-    const;
-  StatusCode refsToRelate(std::vector<partPair>& selectedRefs,
-                         const std::map<const LHCb::MCParticle*,double>& hitMap,
-                          const double totCharge,
-                          LHCb::MCParticles* particles) const;
+  double totalCharge(const ParticleMap& partMap) const;
+
+  void refsToRelate(std::vector<PartPair>& selectedRefs,
+                    const ParticleMap& hitMap, const double totCharge,
+                    LHCb::MCParticles* particles) const;
 
   // job options
   std::string m_outputData;   ///< Location of the STDigits linker table

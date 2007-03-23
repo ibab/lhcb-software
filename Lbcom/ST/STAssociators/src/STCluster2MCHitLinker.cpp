@@ -1,4 +1,4 @@
-// $Id: STCluster2MCHitLinker.cpp,v 1.9 2007-01-09 15:04:59 jvantilb Exp $
+// $Id: STCluster2MCHitLinker.cpp,v 1.10 2007-03-23 08:59:12 jvantilb Exp $
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -23,11 +23,11 @@ STCluster2MCHitLinker::STCluster2MCHitLinker( const std::string& name,
 {
   declareProperty("OutputData", m_outputData = STClusterLocation::TTClusters 
                   + "2MCHits" );
-  declareProperty("addSpillOverHits",m_addSpillOverHits = false); 
-  declareProperty("minfrac", m_minFrac = 0.1);
-  declareProperty("oneRef",m_oneRef = false);
-  declareProperty("digitLocation", m_digitLocation = STDigitLocation::TTDigits);
-  declareProperty("detType", m_detType = "TT");
+  declareProperty("AddSpillOverHits",m_addSpillOverHits = false); 
+  declareProperty("Minfrac", m_minFrac = 0.2);
+  declareProperty("OneRef",m_oneRef = false);
+  declareProperty("DigitLocation", m_digitLocation = STDigitLocation::TTDigits);
+  declareProperty("DetType", m_detType = "TT");
 }
 
 STCluster2MCHitLinker::~STCluster2MCHitLinker() 
@@ -73,24 +73,24 @@ StatusCode STCluster2MCHitLinker::execute()
   for( ; iterClus != clusterCont->end(); ++iterClus){
 
     // find all hits
-    std::map<const MCHit*,double> hitMap;
+    HitMap hitMap;
     StatusCode sc = associateToTruth(*iterClus,hitMap);
     if( sc.isFailure() ) return sc;  // error message printed in failed method
 
     // select references to add to table
-    std::vector<hitPair> selectedRefs;
+    std::vector<HitPair> selectedRefs;
     refsToRelate(selectedRefs,hitMap,mcHits);
 
     if (selectedRefs.empty() == false){
       if (m_oneRef == false ){
-        std::vector<hitPair>::iterator iterPair = selectedRefs.begin();
+        std::vector<HitPair>::iterator iterPair = selectedRefs.begin();
         while (iterPair != selectedRefs.end()){ 
           myLink.link(*iterClus,iterPair->first,iterPair->second);
           ++iterPair;
         } //iterPair
       }
       else{
-        hitPair bestPair = selectedRefs.back();
+        HitPair bestPair = selectedRefs.back();
         myLink.link(*iterClus,bestPair.first,bestPair.second);
       }
     } // refsToRelate ! empty
@@ -99,27 +99,26 @@ StatusCode STCluster2MCHitLinker::execute()
   return StatusCode::SUCCESS;
 };
 
-StatusCode STCluster2MCHitLinker::refsToRelate(std::vector<hitPair>& selRefs,
-                                 const std::map<const MCHit*,double>& hitMap,
-                                               MCHits* hits) const
+void STCluster2MCHitLinker::refsToRelate( std::vector<HitPair>& selRefs,
+                                          const HitMap& hitMap,
+                                          MCHits* hits ) const
 {
   // iterate over map
-  std::map<const MCHit*,double>::const_iterator iterMap = hitMap.begin();
+  HitMap::const_iterator iterMap = hitMap.begin();
   while (iterMap != hitMap.end()){
     const MCHit* aHit = iterMap->first;
-    if ((0 != aHit)&&(iterMap->second>m_minFrac)){
+    if ( (0 != aHit) && (iterMap->second > m_minFrac) ) {
       if ((m_addSpillOverHits == true)||(hits == aHit->parent())){
-	selRefs.push_back(std::make_pair(aHit,iterMap->second));
+        selRefs.push_back(std::make_pair(aHit,iterMap->second));
       }
     }
     ++iterMap;
   } // iterMap
-  
-  return StatusCode::SUCCESS;
+  return;
 }
 
 StatusCode STCluster2MCHitLinker::associateToTruth(const STCluster* aCluster,
-                                         std::map<const MCHit*,double>& hitMap)
+                                                   HitMap& hitMap)
 {
   // make link to truth  to MCHit from cluster
   typedef LinkerTool<STDigit, MCHit> AsctTool;
@@ -127,6 +126,7 @@ StatusCode STCluster2MCHitLinker::associateToTruth(const STCluster* aCluster,
   typedef Table::Range Range;
   typedef Table::iterator iterator;
 
+  // Use the STDigit to MCHit association
   AsctTool associator(evtSvc(), m_asctLocation);
   const Table* aTable = associator.direct();
   if (!aTable) return Error( "Failed to find " + m_asctLocation + " table", 
@@ -151,7 +151,7 @@ StatusCode STCluster2MCHitLinker::associateToTruth(const STCluster* aCluster,
   } // Digit
 
   // renormalize to 1
-  std::map<const MCHit*,double>::iterator iterMap = hitMap.begin();
+  HitMap::iterator iterMap = hitMap.begin();
   for ( ; iterMap != hitMap.end() ; ++iterMap){
     iterMap->second /= aCluster->totalCharge();   
   }

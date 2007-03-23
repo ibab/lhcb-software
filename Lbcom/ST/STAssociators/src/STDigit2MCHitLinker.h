@@ -1,4 +1,4 @@
-// $Id: STDigit2MCHitLinker.h,v 1.3 2007-01-09 15:05:00 jvantilb Exp $
+// $Id: STDigit2MCHitLinker.h,v 1.4 2007-03-23 08:59:13 jvantilb Exp $
 #ifndef STDIGIT2MCHITLINKER_H
 #define STDIGIT2MCHITLINKER_H 1
 
@@ -17,7 +17,8 @@ class STDigit2MCHitLinker : public GaudiAlgorithm {
   
 public:
 
-  typedef std::pair<const LHCb::MCHit*,double> hitPair;
+  typedef std::pair<const LHCb::MCHit*,double> HitPair;
+  typedef std::map<const LHCb::MCHit*,double> HitMap;
 
   /// Standard constructor
   STDigit2MCHitLinker( const std::string& name, ISvcLocator* pSvcLocator );
@@ -38,11 +39,9 @@ protected:
 
 private:
 
-  double totalCharge(const std::map<const LHCb::MCHit*,double>& hitMap) const;
-  StatusCode refsToRelate(std::vector<hitPair>& selectedRefs,
-                          const std::map<const LHCb::MCHit*,double>& hitMap,
-                          const double& totCharge,
-                          LHCb::MCHits* hits) const;
+  double totalCharge( const HitMap& hitMap ) const;
+  void refsToRelate( std::vector<HitPair>& selectedRefs, const HitMap& hitMap,
+                     const double& totCharge, LHCb::MCHits* hits ) const;
 
   std::string m_hitLocation;
 

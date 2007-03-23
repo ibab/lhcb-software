@@ -1,4 +1,4 @@
-// $Id: STCluster2MCParticleLinker.cpp,v 1.9 2007-01-09 15:04:59 jvantilb Exp $
+// $Id: STCluster2MCParticleLinker.cpp,v 1.10 2007-03-23 08:59:13 jvantilb Exp $
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -25,10 +25,10 @@ STCluster2MCParticleLinker::STCluster2MCParticleLinker(const std::string& name,
 {
   declareProperty("InputData" , m_inputData  = STClusterLocation::TTClusters);
   declareProperty("OutputData", m_outputData = STClusterLocation::TTClusters);
-  declareProperty("addSpillOverHits",m_addSpillOverHits = false); 
-  declareProperty("minfrac", m_minFrac = 0.2);
-  declareProperty("oneRef",m_oneRef = false);
-  declareProperty("detType", m_detType = "TT");
+  declareProperty("AddSpillOverHits", m_addSpillOverHits = false); 
+  declareProperty("Minfrac", m_minFrac = 0.2);
+  declareProperty("OneRef", m_oneRef = false);
+  declareProperty("DetType", m_detType = "TT");
 }
 
 STCluster2MCParticleLinker::~STCluster2MCParticleLinker()
@@ -66,18 +66,19 @@ StatusCode STCluster2MCParticleLinker::execute()
   for( ; iterClus != clusterCont->end(); ++iterClus){
 
     // find all particles
-    std::map<const MCParticle*,double> partMap;
-    associateToTruth(*iterClus,partMap);
-     
+    ParticleMap partMap;
+    StatusCode sc = associateToTruth(*iterClus,partMap);
+    if (sc.isFailure()) return sc;
+
     // select references to add to table
-    std::vector<partPair> selectedRefs;
+    std::vector<PartPair> selectedRefs;
     refsToRelate(selectedRefs,partMap,mcParts);
 
     if (selectedRefs.empty() == false){
 
       if (m_oneRef == false){
         double tWeight = 0;
-        std::vector<partPair>::iterator iterPair = selectedRefs.begin();
+        std::vector<PartPair>::iterator iterPair = selectedRefs.begin();
         while (iterPair != selectedRefs.end()){
           aLinker.link(*iterClus,iterPair->first,iterPair->second);
           if (iterPair->first != 0) tWeight += iterPair->second;
@@ -85,7 +86,7 @@ StatusCode STCluster2MCParticleLinker::execute()
         } //iterPair
       }
       else {
-        partPair bestPair = selectedRefs.back();
+        PartPair bestPair = selectedRefs.back();
         aLinker.link(*iterClus,bestPair.first,bestPair.second);
       } 
     } // refsToRelate != empty
@@ -94,30 +95,28 @@ StatusCode STCluster2MCParticleLinker::execute()
   return StatusCode::SUCCESS;
 };
 
-StatusCode 
-STCluster2MCParticleLinker::refsToRelate(std::vector<partPair>& selectedRefs,
-                                         const std::map<const MCParticle*,
-                                         double>& partMap,
-                                         MCParticles* particles ) const
+void STCluster2MCParticleLinker::refsToRelate(std::vector<PartPair>& selRefs,
+                                              const ParticleMap& partMap,
+                                              MCParticles* particles ) const
 {
   // iterate over map
-  std::map<const MCParticle*,double>::const_iterator iterMap = partMap.begin();
+  ParticleMap::const_iterator iterMap = partMap.begin();
   while (iterMap != partMap.end()){
     const MCParticle* aParticle = iterMap->first;
     if ((0 != aParticle)&&(iterMap->second>m_minFrac)){
       if ((m_addSpillOverHits == true)||(particles == aParticle->parent())){
-        selectedRefs.push_back(std::make_pair(aParticle,iterMap->second));
+        selRefs.push_back(std::make_pair(aParticle,iterMap->second));
       }
     }
     ++iterMap;
   } // iterMap
   
-  return StatusCode::SUCCESS;
+  return;
 }
 
 StatusCode STCluster2MCParticleLinker::associateToTruth(const STCluster* 
                                                         aCluster,
-                                std::map<const MCParticle*,double>& particleMap)
+                                                        ParticleMap& partMap)
 {
   // make link to truth  to MCHit from cluster
   typedef LinkerTool<STCluster, MCHit> AsctTool;
@@ -125,6 +124,7 @@ StatusCode STCluster2MCParticleLinker::associateToTruth(const STCluster*
   typedef Table::Range Range;
   typedef Table::iterator iterator;
 
+  // Use the STCluster to MCHit association
   AsctTool associator(evtSvc(), m_asctLocation);
   const Table* aTable = associator.direct();
   if (!aTable) return Error("Failed to find table", StatusCode::FAILURE);
@@ -134,12 +134,12 @@ StatusCode STCluster2MCParticleLinker::associateToTruth(const STCluster*
   iterator iterHit = hitsCont.begin();   
   for ( ; iterHit != hitsCont.end(); ++iterHit){
     const MCParticle* aParticle = iterHit->to()->mcParticle();
-    particleMap[aParticle] += iterHit->weight();
+    partMap[aParticle] += iterHit->weight();
     foundCharge += iterHit->weight();
   } // iterHit
 
   // difference between depEnergy and total cluster charge = noise (due to norm)
-  particleMap[0] += 1.0 - foundCharge;
+  partMap[0] += 1.0 - foundCharge;
  
   return StatusCode::SUCCESS;
 }

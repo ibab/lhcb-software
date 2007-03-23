@@ -1,4 +1,4 @@
-// $Id: STDigit2MCHitLinker.cpp,v 1.5 2007-01-09 15:05:00 jvantilb Exp $
+// $Id: STDigit2MCHitLinker.cpp,v 1.6 2007-03-23 08:59:13 jvantilb Exp $
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -26,10 +26,10 @@ STDigit2MCHitLinker::STDigit2MCHitLinker( const std::string& name,
   declareProperty("OutputData", m_outputData = STDigitLocation::TTDigits 
                   + "2MCHits" );
   declareProperty("InputData", m_inputData  = STDigitLocation::TTDigits);
-  declareProperty("addSpillOverHits",m_addSpillOverHits = false); 
-  declareProperty("minfrac", m_minFrac = 0.05);
-  declareProperty("oneRef",m_oneRef = false);
-  declareProperty("detType", m_detType = "TT");
+  declareProperty("AddSpillOverHits",m_addSpillOverHits = false); 
+  declareProperty("Minfrac", m_minFrac = 0.05);
+  declareProperty("OneRef",m_oneRef = false);
+  declareProperty("DetType", m_detType = "TT");
 }
 
 STDigit2MCHitLinker::~STDigit2MCHitLinker()
@@ -63,31 +63,30 @@ StatusCode STDigit2MCHitLinker::execute()
   LinkerWithKey<MCHit,STDigit> myLink( evtSvc(), msgSvc(), outputData() );
 
   // loop and link STDigits to MC truth
-  STDigits::const_iterator iterDigit;
-  for(iterDigit = digitCont->begin(); 
-      iterDigit != digitCont->end(); ++iterDigit){
+  STDigits::const_iterator iterDigit = digitCont->begin();
+  for( ; iterDigit != digitCont->end(); ++iterDigit){
 
     // find all hits
-    std::map<const MCHit*,double> hitMap;
+    HitMap hitMap;
     double foundCharge = 0.0;
     STTruthTool::associateToTruth(*iterDigit,hitMap,foundCharge);
     hitMap[0] += ((*iterDigit)->depositedCharge()-foundCharge);
  
     // select references to add to table
-    std::vector<hitPair> selectedRefs;
+    std::vector<HitPair> selectedRefs;
     double tCharge = this->totalCharge(hitMap);
     refsToRelate(selectedRefs,hitMap,tCharge,mcHits);
 
     if ((selectedRefs.empty() == false)){
       if (m_oneRef == false ){
-        std::vector<hitPair>::iterator iterPair = selectedRefs.begin();
+        std::vector<HitPair>::iterator iterPair = selectedRefs.begin();
         while (iterPair != selectedRefs.end()){
           myLink.link(*iterDigit,iterPair->first,iterPair->second);
           ++iterPair;
         } //iterPair
       }
       else{
-        hitPair bestPair = selectedRefs.back();
+        HitPair bestPair = selectedRefs.back();
         myLink.link(*iterDigit,bestPair.first,bestPair.second);
       }
     } // refsToRelate ! empty
@@ -96,11 +95,10 @@ StatusCode STDigit2MCHitLinker::execute()
   return StatusCode::SUCCESS;
 }
 
-double STDigit2MCHitLinker::totalCharge(const std::map<const MCHit*,double>&
-                                        hitMap) const
+double STDigit2MCHitLinker::totalCharge(const HitMap& hitMap) const
 {
   double totCharge = 0.;
-  std::map<const MCHit*,double>::const_iterator iterMap = hitMap.begin();
+  HitMap::const_iterator iterMap = hitMap.begin();
   while (iterMap != hitMap.end()){
     totCharge += fabs((*iterMap).second);
     ++iterMap;
@@ -109,13 +107,13 @@ double STDigit2MCHitLinker::totalCharge(const std::map<const MCHit*,double>&
   return totCharge;
 }
 
-StatusCode STDigit2MCHitLinker::refsToRelate(std::vector<hitPair>& selectedRefs,
-                                    const std::map<const MCHit*,double>& hitMap,
-                                             const double& totCharge,
-                                             MCHits* hits) const
+void STDigit2MCHitLinker::refsToRelate(std::vector<HitPair>& selectedRefs,
+                                       const HitMap& hitMap,
+                                       const double& totCharge,
+                                       MCHits* hits) const
 {
   // iterate over map
-  std::map<const MCHit*,double>::const_iterator iterMap = hitMap.begin();
+  HitMap::const_iterator iterMap = hitMap.begin();
   while (iterMap != hitMap.end()){
     const MCHit* aHit = iterMap->first;
     double frac = -1.0;
@@ -129,6 +127,5 @@ StatusCode STDigit2MCHitLinker::refsToRelate(std::vector<hitPair>& selectedRefs,
     }
     ++iterMap;
   } // iterMap
-  
-  return StatusCode::SUCCESS;
+  return;
 }

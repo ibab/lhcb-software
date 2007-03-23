@@ -2,6 +2,11 @@ Package         : S/STAssociators
 Package manager : J. van Tilburg
 !------------------------------------------------------------------------------
 
+! 2007-03-22 - Jeroen VAN TILBURG
+ - Fixed untested StatusCodes.
+ - Make joboptions start with a capital.
+ - Make minimum fraction of charge (m_minFrac) consistent.
+
 ! 2007-01-04 - Jeroen VAN TILBURG
  - Minor cosmetic changes. Removal of obsolete code.
 
