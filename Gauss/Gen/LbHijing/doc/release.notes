@@ -4,6 +4,16 @@
 ! Purpose     : "Interface" to Hijing 
 !-----------------------------------------------------------------------------
 
+!========================= LbHijing v3r0 2007-03-23 ==========================
+! 2007-03-23 - Gloria Corti
+ - Make package compatible with use of LCGCMT/MCGenerators, using
+   hijing interface package provided. Adapt linkopts.
+   The use of Generators has to follow that of herwig, otherwise the
+   executable complains about process with vanishing cross section and
+   stops
+ - Fix compilation warning for unused variables as argumnets of methods
+   . HijingProduction.cpp
+ 
 !========================= LbHijing v2r0 2007-03-09 =======================
 ! 2007-03-09 - Gloria CORTI
  - Adapt to changes in IProduction interface. Implementation of new method

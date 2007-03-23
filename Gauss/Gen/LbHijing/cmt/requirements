@@ -1,33 +1,38 @@
-# $Id: requirements,v 1.6 2007-03-09 12:47:31 gcorti Exp $ 
-# =============================================================================
+# $Id: requirements,v 1.7 2007-03-23 11:19:48 gcorti Exp $ 
+#============================================================================
+# Created    : 2006-07-03
+# Maintainer : Daniele Gregori, Vincenzo Vagnoni
+#============================================================================
 package       LbHijing
-version       v2r0
+version       v3r0
 
-# =========== structure =======================================================
+#============================================================================
+# Structure, i.e. directories to process. 
+#============================================================================
 branches      LbHijing doc cmt src
 
-# =========== own includes ====================================================
+#============================================================================
+# Used packages. 
+#============================================================================
 include_dirs  $(LBHIJINGROOT)
 
-# =========== dependencies ====================================================
-use           Generators        v*          Gen
+### NOTE: the order of these use is important, for the wrong order
+###       GaussHijing.exe complains about vanishing process and stops
+use  hijing      v*  LCG_GeneratorsInterfaces    
+use  Generators  v*  Gen
 
-# =========== constituents ====================================================
+#============================================================================
+# Component and linker library building rule
+#============================================================================
 library       LbHijingLib       Lib/*.cpp Lib/*.F
 library       LbHijing          component/*.cpp
 
-# =========== standard patterns (the order is essential!) =====================
+#============================================================================
+# define component and linker library link options
+#============================================================================
 apply_pattern component_library library=LbHijing 
 apply_pattern linker_library    library=LbHijingLib 
 
 macro LbHijing_fflags " -fno-second-underscore " \
       WIN32 ""
  
-macro hijing_native_version "1_383bs.2"
-include_dirs $(GENSER_path)/include/hijing/$(hijing_native_version)/include 
-
-macro hijing_linkopts "-L$(GENSER_home) -lhijing$(hijing_native_version) -ldummy_hijing$(hijing_native_version)"\
-        WIN32         "/libpath:$(GENSER_home) hijing$(hijing_native_version) dummy_hijing$(hijing_native_version)"
-
-macro_append GENSER_linkopts " $(hijing_linkopts)"
-

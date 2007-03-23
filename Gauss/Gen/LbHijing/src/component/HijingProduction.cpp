@@ -101,7 +101,7 @@ StatusCode HijingProduction::initialize() {
 //   Function called to generate one event with Hijing
 //=============================================================================
 StatusCode HijingProduction::generateEvent( HepMC::GenEvent * theEvent , 
-                                            LHCb::GenCollision * theCollision ) {
+                                            LHCb::GenCollision* /*theCollision*/ ) {
   debug() << "HijingProduction::generateEvent called" << endreq;
   Hijing::HijingEvnt(m_frame, m_bmin, m_bmax);
   
@@ -139,15 +139,15 @@ StatusCode HijingProduction::generateEvent( HepMC::GenEvent * theEvent ,
 //=============================================================================
 // Set stable the given particle in Hijing
 //=============================================================================
-void HijingProduction::setStable( const ParticleProperty * thePP ) {
+void HijingProduction::setStable( const ParticleProperty* /*thePP*/ ) {
   debug() << "HijingProduction::setStable called" << endreq;
 }
 
 //=============================================================================
 // Update particle properties
 //=============================================================================
-void HijingProduction::updateParticleProperties( const ParticleProperty * 
-                                                 thePP ) {
+void HijingProduction::updateParticleProperties( const ParticleProperty* 
+                                                 /*thePP*/ ) {
   debug() << "HijingProduction::updateParticleProperties called" << endreq;
 }
 
@@ -182,8 +182,8 @@ void HijingProduction::retrievePartonEvent( HepMC::GenEvent * /* theEvent */ ) {
 //=============================================================================
 // Hadronize Hijing event
 //=============================================================================
-StatusCode HijingProduction::hadronize( HepMC::GenEvent * theEvent , 
-                                        LHCb::GenCollision * theCollision) {
+StatusCode HijingProduction::hadronize( HepMC::GenEvent* /*theEvent*/ , 
+                                        LHCb::GenCollision* /*theCollision*/) {
   debug() << "HijingProduction::hadronize called" << endreq;
   return StatusCode::SUCCESS;
 }
@@ -293,7 +293,7 @@ bool HijingProduction::isSpecialParticle( const ParticleProperty * thePP ) const
 //=============================================================================
 // Setup for forced fragmentation 
 //=============================================================================
-StatusCode HijingProduction::setupForcedFragmentation( const int thePdgId ) {
+StatusCode HijingProduction::setupForcedFragmentation( const int /*thePdgId*/ ) {
   debug() << "HijingProduction::setupForcedFragmentation called" << endreq;
   return StatusCode::SUCCESS;
 }
