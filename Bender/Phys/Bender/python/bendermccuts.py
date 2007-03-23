@@ -1,7 +1,7 @@
 # =============================================================================
-# $Id: bendermccuts.py,v 1.5 2007-03-22 18:50:47 ibelyaev Exp $ 
+# $Id: bendermccuts.py,v 1.6 2007-03-23 15:25:03 ibelyaev Exp $ 
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.5 $
+# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.6 $
 # =============================================================================
 ## This is helper module for decoration of LoKi particle functions/cuts 
 #
@@ -149,7 +149,7 @@ MCDETA     = _LoKi.MCParticles.DeltaEta
 ## @see LoKi::Cuts::MCOVALID 
 MCOVALID   = _LoKi.MCParticles.ValidOrigin ()
 ## @see LoKi::Cuts::MCVFASPF 
-MCCFASPF   = _LoKi.MCParticles.MCVertexFunAdapter
+MCVFASPF   = _LoKi.MCParticles.MCVertexFunAdapter
 ## @see LoKi::Cuts::MCDECAY
 MCDECAY    = _LoKi.MCParticles.MCDecayPattern
 ## @see LoKi::Cuts::FROMGTREE
@@ -189,6 +189,9 @@ if __name__ == '__main__' :
 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.5  2007/03/22 18:50:47  ibelyaev
+#  v7r0 : update for DaVinci v19r0
+#
 # Revision 1.4  2006/11/28 18:24:17  ibelyaev
 #  prepare for v6r1
 #
