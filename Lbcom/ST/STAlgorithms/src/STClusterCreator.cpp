@@ -1,4 +1,4 @@
-// $Id: STClusterCreator.cpp,v 1.15 2007-03-20 16:56:17 jvantilb Exp $
+// $Id: STClusterCreator.cpp,v 1.16 2007-03-23 14:13:39 cattanem Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -206,9 +206,9 @@ bool STClusterCreator::sameBeetle( const STChannelID firstChan,
   return (firstBeetle == secondBeetle);
 }
 
-double STClusterCreator::neighbourSum( STDigits::const_iterator start, 
-                                       STDigits::const_iterator stop, 
-                                       const STDigits* digits ) const
+double STClusterCreator::neighbourSum( LHCb::STDigits::const_iterator start, 
+                                       LHCb::STDigits::const_iterator stop, 
+                                       const LHCb::STDigits* digits ) const
 {  
   double nSum = 0;
   
