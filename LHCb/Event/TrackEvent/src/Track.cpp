@@ -1,4 +1,4 @@
-// $Id: Track.cpp,v 1.36 2007-03-23 08:44:28 cattanem Exp $ // Include files
+// $Id: Track.cpp,v 1.37 2007-03-23 08:47:44 cattanem Exp $ // Include files
 
 // local
 #include "Event/Track.h"
@@ -484,7 +484,8 @@ bool LHCb::Track::hasInfo ( const int key ) const
 { return m_extraInfo.end() != m_extraInfo.find( key ) ; }
 
 //=============================================================================
-/** add/replace new information , associated with the key
+/** Add new information, associated with the specified key.
+ *  This method cannot be used to modify information for an already existing key
  *  
  *  @code
  * 
