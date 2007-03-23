@@ -1,5 +1,5 @@
 package GENSER
-version v2r49p0
+version v2r0
 
 branches doc cmt src
 
@@ -8,17 +8,25 @@ use GaudiPolicy  v*
 
 include_path none
 
-macro pythia6_native_version "408.2"
+macro pythia6_native_version "409.2"
 use pythia6  v* LCG_GeneratorsInterfaces
 macro_remove pythia6_linkopts " -lpythia6_pdfdummy "
+
 
 macro photos_native_version "215.2"
 use photos v* LCG_GeneratorsInterfaces
 
+
 macro lhapdf_native_version "5.2.3"
 use lhapdf v* LCG_GeneratorsInterfaces
+set LHAPATH $(lhapdf_home)/../share/PDFsets
+macro lhapdf_linkopts "-L$(lhapdf_home)/lib \
+                       -llhapdf -llhapdf_dummy "
 
-library GENSER  ../src/*.f
-apply_pattern package_Flinkopts
 
-macro_append GENSER_linkopts "$(pythia6_linkopts) $(lhapdf_linkopts) $(photos_linkopts) -lnsl -lcrypt -ldl -lg2c"
+macro herwig_native_version "6.510.2"
+macro jimmy_native_version "4.2"
+
+macro hijing_native_version "1.383bs.2"
+
+macro GENSER_linkopts "-lnsl -lcrypt -ldl -lg2c"

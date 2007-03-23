@@ -4,6 +4,19 @@
 ! Purpose     : interface package to GENSER
 !-----------------------------------------------------------------------------
 
+!========================== GENSER v2r0 2007-03-23 ===========================
+! 2007-03-23 - Gloria Corti
+ - requirements - Introduce here the setting of native versions for all
+                  generators used
+                  Redefine macro lhapdf_linkopts to add lhapdf_dummy missing
+                  from LCGCMT_49 generators interface
+                  Set LHAPATH variable also missing in LCGCMT_49 generators 
+                  interface
+                  Remove cernlib.f since now all LHCb generators package
+                  define the necessary subroutines
+                  Remove packages linkopts from GENSER_linkopts otherwise
+                  present twice (already used via interface packages)
+
 !======================= GENSER v2r49p0 2007-01-17 ===========================
 ! 2007-01-17 - Florence Ranjard
  - requirements - use the interface packages from LCGCMT/LCG_GeneratorsInterfaces
