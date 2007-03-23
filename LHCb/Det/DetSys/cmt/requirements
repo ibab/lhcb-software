@@ -3,17 +3,17 @@ version v9r3
 
 branches cmt doc dict
 
-use DetDesc             v17r1   Det
-use DetDescCnv          v4r2    Det
-use DetDescSvc          v1r10p1 Det
+use DetDesc             v17r2   Det
+use DetDescCnv          v4r3    Det
+use DetDescSvc          v1r11   Det
 use XmlTools            v5r1    Tools
 use VeloDet             v11r1   Det
 use OTDet               v7r2    Det
 use CaloDet             v8r1    Det
 use CaloDetXmlCnv       v3r1    Det
-use MuonDet             v6r1    Det
-use Magnet              v3r5    Det
-use RichDet             v10r2   Det
+use MuonDet             v6r2    Det
+use Magnet              v3r6    Det
+use RichDet             v10r3   Det
 use STDet               v3r2    Det
 
 # =============== LCG Dictionaries ============================================
