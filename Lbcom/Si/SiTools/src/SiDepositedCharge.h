@@ -1,4 +1,4 @@
-// $Id: SiDepositedCharge.h,v 1.3 2007-01-09 14:57:21 jvantilb Exp $
+// $Id: SiDepositedCharge.h,v 1.4 2007-03-23 14:49:53 cattanem Exp $
 #ifndef SiDepositedCharge_H
 #define SiDepositedCharge_H 1
 
@@ -16,7 +16,7 @@
 
 /** @class SiDepositedCharge SiDepositedCharge.h
  *
- *  Landau convolved with a Gaussian - see LHCb 2003-160  
+ *  Landau convolved with a Gaussian - see <a href="http://cdsweb.cern.ch/record/690291">LHCb 2003-160</a>  
  *
  *  @author M.Needham
  *  @date   13/3/2002
@@ -26,18 +26,18 @@ class SiDepositedCharge : public GaudiTool, virtual public ISiDepositedCharge {
 
 public: 
 
-  /** Constructer */
+  /** Constructor */
   SiDepositedCharge( const std::string& type, const std::string& name,
                      const IInterface* parent );
 
-  /** destructer */
+  /** destructor */
   virtual ~SiDepositedCharge();
 
   /** initialize */
   virtual StatusCode initialize();
      
   /** calculate deposited charge (in electrons)
-  * @param hit 
+  * @param  aHit hit 
   * @return deposited charge 
   */
   double charge(const LHCb::MCHit* aHit) const;

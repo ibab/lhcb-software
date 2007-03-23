@@ -1,4 +1,4 @@
-// $Id: SiGeantDepositedCharge.h,v 1.2 2007-01-09 14:57:21 jvantilb Exp $
+// $Id: SiGeantDepositedCharge.h,v 1.3 2007-03-23 14:49:53 cattanem Exp $
 #ifndef SiGeantDepositedCharge_H
 #define SiGeantDepositedCharge_H 1
 
@@ -21,15 +21,15 @@ class SiGeantDepositedCharge : public GaudiTool,
 
 public: 
 
-  /** Constructer */
+  /** Constructor */
   SiGeantDepositedCharge(const std::string& type, const std::string& name,
                          const IInterface* parent);
 
-  /** destructer */
+  /** destructor */
   virtual ~SiGeantDepositedCharge();
 
   /** calculate deposited charge (in electrons)
-  * @param hit 
+  * @param  aHit hit 
   * @return deposited charge 
   */
   double charge(const LHCb::MCHit* aHit) const;

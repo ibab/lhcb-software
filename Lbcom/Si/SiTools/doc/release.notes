@@ -2,6 +2,11 @@ Package         : Si/SiTools
 Package manager : Matt Needham
 !------------------------------------------------------------------------------
 
+!============================ SiTools v1r2 2007-03-23 =========================
+! 2007-03-23 - Marco Cattaneo
+ - Remove obsolete fie SiTools_load.cpp
+ - Fix doxygen warnings
+
 ! 2007-03-23 - Jeroen VAN TILBURG
  - Fixed untested StatusCode in SiDepositedCharge::initialize().
 
