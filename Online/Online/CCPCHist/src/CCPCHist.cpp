@@ -1,5 +1,5 @@
-#include "CCPCHist/iCCPCHist.h"
-#include "CCPCHist/CCPCHist.h"
+#include "iCCPCHist.h"
+#include "CCPCHist.h"
 Histo::Histo(char *name, char *title, int nx, float xmin, float xmax )
   {
     m_h = new CCPCHisto(this, name, title, nx,xmin,xmax);

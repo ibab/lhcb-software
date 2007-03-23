@@ -1,6 +1,6 @@
 #ifndef DIMHIST_DEF
 #define DIMHIST_DEF
-#include "CCPCHist/iCCPCHist.h"
+#include "iCCPCHist.h"
 #include "dim/dis.hxx"
 #define dimtype float
 //#define L_TITLE 80

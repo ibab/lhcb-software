@@ -1,6 +1,6 @@
 #ifndef HBOOK_CCPC
 #define HBOOK_CCPC
-#include "CCPCHist/hist_types.h"
+#include "hist_types.h"
 #include <vector>
 enum HTYPE
 {

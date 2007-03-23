@@ -1,7 +1,7 @@
-#include <cstring>
-#include <cstdlib>
-#include "CCPCHist/dimhist.h"
-#include "CCPCHist/CCPCHist.h"
+#include <string.h>
+#include <stdlib.h>
+#include "dimhist.h"
+#include "CCPCHist.h"
 
 #include <math.h>
 #include <iterator>

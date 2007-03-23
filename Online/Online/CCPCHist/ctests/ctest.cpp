@@ -1,4 +1,4 @@
-#include "CCPCHist/CCPCHist.h"
+#include "CCPCHist.h"
 #include <stdlib.h>
 #ifdef WIN32
 #include <Windows.h>
