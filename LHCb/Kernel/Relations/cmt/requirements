@@ -1,6 +1,6 @@
-# $Id: requirements,v 1.20 2006-12-14 15:17:15 ranjard Exp $
+# $Id: requirements,v 1.21 2007-03-23 16:40:17 cattanem Exp $
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.20 $  
+# CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.21 $  
 # =============================================================================
 package Relations
 author  I.Belyaev
@@ -35,7 +35,7 @@ apply_pattern    linker_library    library=RelationsLib
 # ============== find memory leaks ============================================
 macro_append     Relations_pp_cppflags '  -DCOUNT_INSTANCES  ' \
                  WIN32                 ' /D"COUNT_INSTANCES" '
-macro RelationsDict_use_linkopts $(Reflex_linkopts)
+macro RelationsDict_use_linkopts $(use_linkopts)
 
 path_remove  PYTHONPATH "Relations"
 path_prepend PYTHONPATH "$(RELATIONSROOT)/python"

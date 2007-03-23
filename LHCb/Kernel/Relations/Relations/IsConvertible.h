@@ -1,6 +1,6 @@
-// $Id: IsConvertible.h,v 1.2 2006-06-11 17:46:05 ibelyaev Exp $
+// $Id: IsConvertible.h,v 1.3 2007-03-23 16:40:17 cattanem Exp $
 // ==========================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $
 // ==========================================================================
 #ifndef RELATIONS_ISCONVERTIBLE_H 
 #define RELATIONS_ISCONVERTIBLE_H 1
@@ -40,7 +40,7 @@ namespace Relations
 
 namespace Relations 
 {
-  /** @class IsConvertible InConvertible.h Relations/InConvertible.h
+  /** @class IsConvertible IsConvertible.h Relations/IsConvertible.h
    *
    *  @todo need to use is_convertible from Boost!
    *

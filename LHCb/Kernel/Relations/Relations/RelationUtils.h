@@ -1,6 +1,6 @@
-// $Id: RelationUtils.h,v 1.6 2006-06-12 15:27:28 ibelyaev Exp $
+// $Id: RelationUtils.h,v 1.7 2007-03-23 16:40:17 cattanem Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $
 // ============================================================================
 #ifndef RELATIONS_RELATIONUTILS_H 
 #define RELATIONS_RELATIONUTILS_H 1
@@ -20,9 +20,7 @@
 
 namespace Relations
 {
-  /** @fn interfaceID 
-   * 
-   *  funtion to create the uniqie relation 
+  /** Function to create the uniqie relation 
    *  interfaceID from interface name, CLIDs and types 
    *  
    *  @code
@@ -39,10 +37,7 @@ namespace Relations
    */
   InterfaceID interfaceID ( const std::string& name ) ;
   
-  /** @fn clid 
-   *
-   *  function to create the uniqie relation 
-   *  clid from the object name
+  /** Function to create the unique relation clid from the object name
    *  
    *  @code
    * 
@@ -58,8 +53,7 @@ namespace Relations
    */
   CLID        clid   ( const std::string&  name  ) ;
   
-  /** @fn guid 
-   *  simple funtion to convers CLID (Gaudi unique class identifier) 
+  /** Simple function to convers CLID (Gaudi unique class identifier) 
    *  to GUID (POOL unique class identifier)
    *
    *  The actual code is stollen from Markus Frank's lines 
@@ -72,8 +66,7 @@ namespace Relations
    */
   std::string guid ( const CLID& clID ) ;
 
-  /** @fn guid 
-   *  simple funtion to convers CLID (Gaudi unique class identifier) 
+  /** Simple funtion to convers CLID (Gaudi unique class identifier) 
    *  to GUID (POOL unique class identifier)
    *
    *  The actual code is stollen from Markus Frank's lines 

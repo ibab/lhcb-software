@@ -1,8 +1,11 @@
-// $Id: Get.h,v 1.3 2006-06-11 15:23:45 ibelyaev Exp $
+// $Id: Get.h,v 1.4 2007-03-23 16:40:17 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2006/06/11 15:23:45  ibelyaev
+//  The major  upgrade: see doc/release.notes
+//
 // ============================================================================
 #ifndef RELATIONS_GET_H 
 #define RELATIONS_GET_H 1
@@ -33,8 +36,7 @@
 
 namespace Relations 
 {  
-  /** @fn getTo
-   *  simple function to extract all values of "TO" 
+  /** simple function to extract all values of "TO" 
    *  from relation Ranges into the plain container
    *  
    *  @code 
@@ -83,8 +85,7 @@ namespace Relations
     return output ;
   } ;
   
-  /** @fn getTo
-   *  simple function to extract all values of "TO" 
+  /** simple function to extract all values of "TO" 
    *  from relation Ranges into the plain container
    *  
    *  @code 
@@ -119,9 +120,7 @@ namespace Relations
     OUTPUT output )
   { return getTo ( links.begin() , links.end() , output ) ; } ;
   
-  /** @fn getWeight
-   *
-   *  simple function to extract all values of "WEIGHT" 
+  /** simple function to extract all values of "WEIGHT" 
    *  from relation Ranges into the plain container
    *  
    *  @code 
@@ -167,9 +166,7 @@ namespace Relations
     return output ;
   } ;
   
-  /** @fn getWeight
-   *
-   *  simple function to extract all values of "WEIGHT" 
+  /** Simple function to extract all values of "WEIGHT" 
    *  from relation Ranges into the plain container
    *  
    *  @code 
@@ -204,9 +201,7 @@ namespace Relations
     OUTPUT output )
   { return getWeight ( links.begin() , links.end() , output ) ; } ;
 
-  /** @fn sumWeight 
-   *
-   *  Trivial algorithm whcih allow to accumulate the
+  /** Trivial algorithm whcih allow to accumulate the
    *  "WEIGHT" from the relations ranges 
    * 
    *  @code 
@@ -239,9 +234,7 @@ namespace Relations
     return weight ;
   } ;
 
-  /** @fn getUniqueTo
-   *
-   *  simple function to extract all *UNIQUE* values of "TO" 
+  /** Simple function to extract all *UNIQUE* values of "TO" 
    *  from relation Ranges into the plain container
    *  
    *  @code 
@@ -305,9 +298,7 @@ namespace Relations
     // return the new container size 
     return cont.size() - size ;
   } ;
-  /** @fn getUniqueTo
-   *
-   *  simple function to extract all *UNIQUE* values of "TO" 
+  /** Simple function to extract all *UNIQUE* values of "TO" 
    *  from relation Ranges into the "std::set" container 
    *  (It is a partial specialization of gfeneric getUniqueTo function)
    *  
@@ -355,9 +346,7 @@ namespace Relations
     // return number of newly added elements 
     return cont.size() - size ;
   } ;
-  /** @fn getUniqueTo
-   *
-   *  simple function to extract all *UNIQUE* values of "TO" 
+  /** Simple function to extract all *UNIQUE* values of "TO" 
    *  from relation Ranges into the "std::set" container 
    *  (It is a partial specialization of gfeneric getUniqueTo function)
    *  
@@ -396,9 +385,8 @@ namespace Relations
   ( LINKS      links  , 
     CONTAINER& cont   ) 
   { return getUniqueTo ( links.begin() , links.end() , cont ) ; } ;
-  /** @fn sumWeight 
-   *
-   *  Trivial algorithm whcih allow to accumulate the
+
+  /** Trivial algorithm whcih allow to accumulate the
    *  "WEIGHT" form relations ranges 
    * 
    *  @code 

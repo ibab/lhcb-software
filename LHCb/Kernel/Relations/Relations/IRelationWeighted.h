@@ -1,11 +1,6 @@
-// $Id: IRelationWeighted.h,v 1.5 2006-06-11 19:37:02 ibelyaev Exp $
+// $Id: IRelationWeighted.h,v 1.6 2007-03-23 16:40:17 cattanem Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.5 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.4  2006/06/11 15:23:45  ibelyaev
-//  The major  upgrade: see doc/release.notes
-//
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.6 $
 // ============================================================================
 #ifndef RELATIONS_IRELATIONWeighted_H
 #define RELATIONS_IRELATIONWeighted_H 1
@@ -160,8 +155,8 @@ public:
    *  @endcode 
    *  Here the obtained @p weight will always be larger that @p threshold 
    *  @param  object    the object
-   *  @param  threshold threshold value for the weight
-   *  @param  flag      flag for larger/smaller
+   *  @param  low       lower limit of range
+   *  @param  high      upper limit of range
    *  @return pair of iterators for output relations
    */
   virtual Range inRange ( From_ object , Weight_ low , Weight_ high ) const = 0 ;

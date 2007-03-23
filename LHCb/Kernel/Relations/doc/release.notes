@@ -1,11 +1,16 @@
-! $Id: release.notes,v 1.45 2006-12-14 15:17:16 ranjard Exp $ 
+! $Id: release.notes,v 1.46 2007-03-23 16:40:18 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.45 $
+! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.46 $
 ! -----------------------------------------------------------------------------
 ! Package     : Kernel/Relations
 ! Responsible : Vanya BELYAEV   ibelyaev@physics.syr.edu
 ! Purpose     : General purposes templated relations between classes
 !-----------------------------------------------------------------------------
+
+!====================== Relations v5r1 2007-03-23 ============================
+! 2007-03-23 - Marco Cattaneo
+ - Fix to dict linkopts to correctly make the rootmap
+ - Fix doxygen warnings
 
 !====================== Relations v5r0 2006-12-14 ============================
 ! 2006-12-06 - Florence RANJARD
