@@ -4,7 +4,7 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
-!======================== Gauss v30r1 2007-03-26 =============================
+!======================== Gauss v30r2 2007-03-26 =============================
 ! 2007-03-26 - Gloria Corti
  - DEVELOPMENT VERSION INCOMPATIBLE WITH DC06 
      based on LHCb v22r1, Gaudi v19r1, Install Area, new MCGenerators, 
