@@ -19,6 +19,9 @@ This version uses projects Gaudi v19r3, LHCb v22r3, Lbcom v6r3
   . Many fixes to doxygen documentation
   . Disabled some compiler optimizations in libstdc++ on slc3, was causing
     crashes on SLC3 after disconnection from database (DetCond v1r11)
+  . Fix to setting of random seeds on ia64 platform. Now initialisation of 
+    random engine works also on ia64, but generated sequense is different on
+    ia32 and ia64 (GaudiSvc v15r3)
 
 </PRE><H1><A NAME=v13r2>2007-03-05 Boole v13r2</A></H1><PRE>
 This version uses projects Gaudi v19r2, LHCb v22r2, Lbcom v6r2
