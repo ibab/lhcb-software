@@ -1,29 +1,69 @@
+#============================================================================
+# Created    : 2006-07-21
+# Maintainer : Gloria Corti, Florence Ranjard
+#============================================================================
 package Gauss
-version v25r9
+version v30r1
 
-#=========================================================================
+#============================================================================
 #-- Structure
 branches src doc options cmt job
 
 #-- tags: Vis, GDML, Herwig, Hijing, BcVegPy, HidValley
 
-#=========================================================================
+#============================================================================
+
 #-- Databases
-use XmlDDDB             v30r14  Det   -no_auto_imports
-use XmlConditions       v2r4    Det   -no_auto_imports
+use XmlDDDB             v40r0   Det   -no_auto_imports
+use XmlConditions       v2r5    Det   -no_auto_imports
 use FieldMap            v4r7          -no_auto_imports
 use DecFiles            v13r9   Gen   -no_auto_imports
-use ParamFiles          v5r0          -no_auto_imports
-use Geant4Files		v71r0	      -no_auto_imports
+use ParamFiles          v6r0          -no_auto_imports
+use Geant4Files		v82r0	      -no_auto_imports
 
-#========================================================================
+#===========================================================================
+
+#-- CMT and GaudiPolicy
+use GaudiPolicy      v6r3
+ 
+#-- External libraries taken from LCG, version defined by GaudiEnv
+use RELAX v* LCG_Interfaces    -no_auto_imports
+use HepMC v* LCG_Interfaces    -no_auto_imports
+ 
+#-- Gaudi libraries (from GAUDI_v19r1)
+use GaudiKernel      v22r0
+use GaudiSvc         v15r1     -no_auto_imports
+use GaudiAlg         v9r11     -no_auto_imports
+use GaudiAud         v8r0      -no_auto_imports
+use GaudiPoolDb      v2r10     -no_auto_imports
+use RootHistCnv      v9r11     -no_auto_imports
+ 
+ 
+#-- LHCb libraries (from LHCB_v22r1)
+#-- Explicitly use EventSys packages to avoid dependency on unnessary packages
+use GaudiConf        v10r1          -no_auto_imports
+use GaudiObjDesc     v9r8p1         -no_auto_imports
+use KernelSys        v6r1    Kernel -no_auto_imports
+use DetSys           v9r1    Det    -no_auto_imports
+ 
+use EventBase        v2r0p1  Event  -no_auto_imports
+use MCEvent          v2r0p1  Event  -no_auto_imports
+use GenEvent         v5r0p1  Event  -no_auto_imports
+use PackedEvent      v3r0    Event  -no_auto_imports
+ 
+use LHCbAlgs         v2r5    Kernel -no_auto_imports
+use SimComponents    v2r0    Sim    -no_auto_imports
+ 
+#===========================================================================
+
+#== Gauss libraries
 
 #-- Optional Hijing
-macro LbHijing_use "" Linux&Hijing "LbHijing v2r0 Gen"
+macro LbHijing_use "" Linux&Hijing "LbHijing v3r0 Gen"
 use $(LbHijing_use)
 
 #-- Optional Herwig
-macro LbHerwig_use "" Linux&Herwig "LbHerwig v4r0 Gen"
+macro LbHerwig_use "" Linux&Herwig "LbHerwig v5r0 Gen"
 use $(LbHerwig_use)
 
 #-- Optional BcVegPy
@@ -40,18 +80,18 @@ use LbPythia             v5r0    Gen
 use Generators           v7r0    Gen
 
 #-- Simulation
-use GiGa                 v18r3   Sim
-use GiGaCnv              v17r1   Sim
-use GaussTools           v12r5   Sim
+use GiGa                 v19r0   Sim
+use GiGaCnv              v18r0   Sim
+use GaussTools           v13r0   Sim
 use GaussAlgs		 v2r4    Sim
 use GaussKine            v1r5    Sim
-use GaussPhysics         v3r2    Sim
-use GaussTracker         v5r6    Sim
-use GaussRICH            v6r8    Sim
-use GaussCalo            v8r4    Sim
+use GaussPhysics         v5r0    Sim
+use GaussTracker         v6r0    Sim
+use GaussRICH            v7r0    Sim
+use GaussCalo            v9r0    Sim
 
 #-- Optional visualisation and UI
-macro GiGaVisUI_use "" Linux&Vis "GiGaVisUI v3r1 Sim"
+macro GiGaVisUI_use "" Linux&Vis "GiGaVisUI v4r0 Sim"
 use $(GiGaVisUI_use)
 
 #-- Optional GDML
@@ -64,33 +104,7 @@ use CaloMoniSim         v3r1    Calo
 use VeloGauss           v2r1    Velo
 use MuonMoniSim         v2r2    Muon
 
-#=========================================================================
-#-- LHCb
-use GaudiConf           v*     
-use LHCbAlgs            v*    Kernel
-use Magnet              v*    Det
-use DetDescSvc          v*    Det
-use VeloDet             v*    Det
-use STDet               v*    Det
-use OTDet               v*    Det
-use MuonDet             v*    Det
-use PackedEvent         v*    Event
-
-#-- GAUDI framework
-use GaudiAlg            v*
-use GaudiAud            v*
-use GaudiSvc            v*
-
-#-- Event persistency
-use GaudiPoolDb         v*
-use RELAX               v*    LCG_Interfaces  
-
-#-- Histogram persistency 
-#use HbookCnv            v*
-use RootHistCnv         v*
-
-
-#========================================================================
+#===========================================================================
 #== Necessary enviroment variables
 #-- Set the default path for Gauss options
 set  GAUSSOPTS "${GAUSSROOT}/options"
@@ -98,25 +112,22 @@ set  GAUSSOPTS "${GAUSSROOT}/options"
 #-- Set behaviour of inelastic scattering
 set AlwaysKillLeadingHadron 1
 
-#-- Set NeutronCrossSections file for low-energy Neutron background
-set NeutronHPCrossSections $(GEANT4FILESROOT)/data/G4NDL
-
-#========================================================================
-
+#===========================================================================
 #-- Build Main Program 
 
-application Gauss "GaussMain.cpp"
+application Gauss $(GAUDICONFROOT)/src/GaudiMain.cpp
 
-application GaussHijing "GaussMain.cpp"
-application GaussHerwig "GaussMain.cpp"
-application GaussBcVegPy "GaussMain.cpp"
-application GaussHidValley "GaussMain.cpp"
+application GaussHijing    $(GAUDICONFROOT)/src/GaudiMain.cpp
+application GaussHerwig    $(GAUDICONFROOT)/src/GaudiMain.cpp
+application GaussBcVegPy   $(GAUDICONFROOT)/src/GaudiMain.cpp
+application GaussHidValley $(GAUDICONFROOT)/src/GaudiMain.cpp
 
 macro_remove constituents "GaussHijing" Linux&Hijing "Gauss"
 macro_remove constituents "GaussHerwig" Linux&Herwig "Gauss"
 macro_remove constituents "GaussBcVegPy" Linux&BcVegPy "Gauss"
 macro_remove constituents "GaussHidValley" Linux&HidValley "Gauss"
-#========================================================================
+
+#===========================================================================
 #-- Set macros
 apply_pattern application_path 
 macro Gauss_linkopts  "$(application_linkopts)"
@@ -132,10 +143,10 @@ path_remove    PATH  "/Gauss/"
 path_append    PATH  "${GAUSSROOT}/${BINDIR}"
 
 #-- For visualization make appropriate engine visible (DAWN)
-path_remove	PATH  "" Linux&Vis "/DAWN/"
-path_append	PATH  "" Linux&Vis "${OSC_release_area}/DAWN/bin/Linux"
+path_remove    PATH  "" Linux&Vis "/DAWN/"
+path_append    PATH  "" Linux&Vis "${OSC_release_area}/DAWN/bin/Linux"
 
-#========================================================================
+#===========================================================================
 #-- Set usefull alias : for tests only - use vXXXXXX.opts for geometry
 #                       dependent options
 alias gauss " ${GAUSSROOT}/${BINDIR}/Gauss.exe ${GAUSSOPTS}/Gauss.opts "

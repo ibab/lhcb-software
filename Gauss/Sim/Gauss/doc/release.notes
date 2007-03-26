@@ -4,6 +4,36 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+!======================== Gauss v30r1 2007-03-26 =============================
+! 2007-03-26 - Gloria Corti
+ - DEVELOPMENT VERSION INCOMPATIBLE WITH DC06 
+     based on LHCb v22r1, Gaudi v19r1, Install Area, new MCGenerators, 
+     Geant4 8.2.p01
+ - Use GaudiMain.cpp from $GAUDICONF and no longer special GaussMain
+   . requirements
+   . GaussMain.cpp (for the moment = to GaudiMain.cpp)
+ - Remove loading of DLLs not necessary with Gaudi v19rX
+   . Common.opts
+   . GaussVis.opts
+   . SimGeometry.opts
+   . Monitor.opts
+   . Simulation.opts
+ - Adapt options to physics lists of Geant4 8.2.p01 as declared in 
+   GaussPhysics v5r0
+   . Simulation.opts
+   . PhysList-LHPP.opts  - NEW
+   . PhysList-QGSP.opts  - NEW
+ - New version of packages adapted to both Gaudi and Geant4 8.2.p01:
+   GiGa v19r0, GiGaCnv v18r0, GaussTools v13r0, GaussPhysics v5r0,
+   GaussTracker v6r0, GaussRICh v7r0, GaussCalo v9r0, GiGaVisUI v4r0
+ - New version of packages to adapt to new MCGenerators distribution:
+   LbHijing v3r0, LbHerwig v5r0. Note the other generator packages are
+   identical to Gauss v25r9 and all difference are handled by GENSER v3r0.
+ - Use new version of ParamFiles v6r0 with new ParticleData
+ - Use new version of Geant4Files v82r0 for new version of Geant4 8.2.p01
+ - Use new XmlDDDB v40r0 and XmlConditions v2r5 to adapt to changes in 
+   LHCb v22r1
+
 !======================== Gauss v25r9 2007-03-13 =============================
 ! 2007-03-13 - Gloria Corti
  - Introduce new algorithm for detailed generator studies (GaussMonitor v4r4).
