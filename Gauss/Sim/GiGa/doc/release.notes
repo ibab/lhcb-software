@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.118 2007-03-18 18:51:05 gcorti Exp $
+! $Id: release.notes,v 1.119 2007-03-26 09:02:33 gcorti Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Sim/GiGa
 ! Responsible : Gloria CORTI, Vanya BELYAEV
@@ -6,7 +6,15 @@
 !               for G4 <-> Gaudi applications 
 !-----------------------------------------------------------------------------
 
-!======================= GiGa v19r0 2007-03-18 ===============================
+!======================= GiGa v19r0 2007-03-26 ===============================
+! 2007-03-26 - Gloria Corti
+ - Remove use of GiGaFactory no longer existing, and macros using it.
+   Since these templated classes do not seem to be used they are candidate
+   for removal in next release
+   . GiGa/GiGaExternalPhC.h
+   . GiGa/GiGaExternalPhysList.h
+   . GiGa/GiGaExternalPhysicsList.h
+
 ! 2007-03-18 - Gloria Corti
  - Remove GiGaFactory no longer existing and special macro for implementation
    of GiGaExtPhysics that are done with new Gauss factory implemenations in

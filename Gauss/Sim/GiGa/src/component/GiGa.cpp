@@ -1,4 +1,4 @@
-// $Id: GiGa.cpp,v 1.13 2007-01-12 15:45:04 ranjard Exp $ 
+// $Id: GiGa.cpp,v 1.14 2007-03-26 09:02:22 gcorti Exp $ 
 #define GIGA_GIGASVC_CPP 1 
 
 // Include files 
@@ -12,7 +12,6 @@
 #include    "GaudiKernel/ISvcLocator.h"
 #include    "GaudiKernel/IMessageSvc.h"
 #include    "GaudiKernel/IChronoStatSvc.h"
-//#include    "GaudiKernel/IObjManager.h"
 #include    "GaudiKernel/IToolSvc.h"
 #include    "GaudiKernel/SvcFactory.h"
 #include    "GaudiKernel/MsgStream.h"
