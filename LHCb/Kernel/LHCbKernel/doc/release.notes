@@ -4,6 +4,9 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2007-03-26 - Chris Jones
+ - Add typedef to RichSmartID for boost pool allocated vector
+
 !===================== LHCbKernel v7r2 2007-03-05 ========================
 ! 2007-03-05 - Marco Cattaneo
  - Remove obsolete LHCbKernel_load.cpp file

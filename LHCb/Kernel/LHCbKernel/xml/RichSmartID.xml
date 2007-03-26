@@ -3,7 +3,7 @@
 <gdd>
 
 <!-- **************************************************************************
-  * $Id: RichSmartID.xml,v 1.30 2006-08-09 14:03:56 jonrob Exp $
+  * $Id: RichSmartID.xml,v 1.31 2007-03-26 11:18:48 jonrob Exp $
   *****************************************************************************
   * XML-description of RichSmartID class                                      *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -14,18 +14,20 @@
      <class 
         name             = "RichSmartID"
         author           = "Chris Jones   Christopher.Rob.Jones@cern.ch" 
-        desc             = "Identifier for RICH detector objects"
-        virtual          = "FALSE"                                       >
+        desc             = "Identifier for RICH detector objects (RICH Detector, HPD panel, HPD or HPD pixel)"
+        virtual          = "FALSE" >
 
         &StlVector;
 
-        <import name = "Kernel/RichDetectorType"                  />
-        <import name = "Kernel/RichSide"                          />
+        <import name = "Kernel/RichDetectorType"           />
+        <import name = "Kernel/RichSide"                   />
+        <import name = "boost/pool/pool_alloc.hpp"         />
 
         <template name = "VectorDict" t1="THIS"/>
 
-        <typedef access="PUBLIC" def="KeyType"    desc="Type for internal key"     type="unsigned long"/>
-        <typedef access="PUBLIC" def="Vector"     desc="Vector of RichSmartIDs" type="std::vector&lt;LHCb::RichSmartID&gt;"/>
+        <typedef access="PUBLIC" def="KeyType"    desc="Type for internal key"  type="unsigned int"/>
+        <typedef access="PUBLIC" def="Vector"     desc="Vector of RichSmartIDs" type="std::vector&lt; LHCb::RichSmartID &gt;"/>
+        <typedef access="PUBLIC" def="PoolVector" desc="Vector of RichSmartIDs with boost pool allocator" type="std::vector&lt; LHCb::RichSmartID, boost::pool_allocator&lt; LHCb::RichSmartID &gt; &gt;"/>
 
         <attribute 
             desc = "The bit-packed internal data word" 
