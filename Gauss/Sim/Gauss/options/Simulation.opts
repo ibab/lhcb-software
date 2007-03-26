@@ -1,18 +1,13 @@
-// $Id: Simulation.opts,v 1.87 2007-02-09 09:13:19 gcorti Exp $ 
+// $Id: Simulation.opts,v 1.88 2007-03-26 11:44:53 gcorti Exp $ 
 
 /** @file 
  * 
  *  File containing all the steps in the simulation phase of
- *  a Gauss job. The general Dlls and services are defined here.
+ *  a Gauss job. 
  *
  *  @author G.Corti
  *  @date 2004-11-18
  */
-
-// DLLs necessary for any simulation phase
-ApplicationMgr.DLLs  += { "SimSvc" };
-ApplicationMgr.DLLs  += { "GiGa", "GiGaCnv" };
-ApplicationMgr.DLLs  += { "GaussKine" };
 
 // Services necessary for any simulation phase
 ApplicationMgr.ExtSvc += { 
@@ -59,31 +54,23 @@ DetectorsHits.Members += { "GetMCRichHitsAlg" };                // RICHes
 #include "$GAUSSTRACKERROOT/options/TrackersHits.opts" 
 DetectorsHits.MeasureTime = true;
 
-
 // Simulation configuration: Geant4 control
 //---------------------------------------------------------------------------
-// Physics list and the production cuts  
-ApplicationMgr.DLLs += { "GaussPhysics" }; 
+// Production cuts  
 GiGa.PhysicsList              = "GiGaPhysListModular/ModularPL";
 GiGa.ModularPL.CutForElectron = 10000.0 * m;
 GiGa.ModularPL.CutForPositron = 5.0 * mm; 
 GiGa.ModularPL.CutForGamma    = 10.0 * mm;
 //GiGa.ModularPL.DumpCutsTable = true;
 
-GiGa.ModularPL.PhysicsConstructors += 
-  { "GiGaExtPhysics<GeneralPhysics>/GeneralPhysics" } ;
-GiGa.ModularPL.PhysicsConstructors += 
-  { "GiGaExtPhysics<EMPhysics>/EMPhysics"           } ;
-GiGa.ModularPL.PhysicsConstructors += 
-  { "GiGaExtPhysics<MuonPhysics>/MuonPhysics"       } ;
-GiGa.ModularPL.PhysicsConstructors += 
-  { "GiGaExtPhysics<HadronPhysicsLHEP>/LHEPPhysics" } ;
-GiGa.ModularPL.PhysicsConstructors += 
-  { "GiGaExtPhysics<IonPhysics>/IonPhysics"         } ;
-GiGa.ModularPL.PhysicsConstructors += 
-  { "GiGaPhysConstructorOp"                         } ;
-GiGa.ModularPL.PhysicsConstructors += 
-  { "GiGaPhysConstructorHpd"                        } ;
+// Physics lists: the files below give the default configuration
+// for LHEP and QGSP with EM physics tuned without step limitations,
+// i.e. to have CPU performance similar to G4 7.1, but not as good
+// physics performance as the default in G4 8.2.p01
+// Instructions are given in the files on how to use other EM physics
+// tuning and other low/intermediate energy hadronic processes
+#include "$GAUSSOPTS/PhysList-LHEP.opts"
+//#include "$GAUSSOPTS/PhysList-QGSP.opts"
 
 // Mandatory run action  
 GiGa.RunAction                 =   "GiGaRunActionSequence/RunSeq";
