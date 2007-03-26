@@ -4,7 +4,13 @@
 ! Purpose          : collection of physics constructors for Gauss
 !-----------------------------------------------------------------------------
 
-!====================== GaussPhysics v5r0 2007-03-19 =========================
+!====================== GaussPhysics v5r0 2007-03-26 =========================
+! 2007-03-26 - Gloria Corti
+ - Remove special hadronic physics (EMV and EMX) not necessary for use of
+   LHEP/QGSP with Em71 and Em72.
+   Remove LHEP_QGSP_BERT that is listed as obolete from G4
+   Introduce QGSC_EFLOW that has the CHIPs model for nuclear interactions.
+
 ! 2007-03-19 - Gloria Corti
  - Fix mispelling
    . src/GaussPhysics_load.cpp 

@@ -1,4 +1,4 @@
-// $Id: GaussPhysics_load.cpp,v 1.11 2007-03-19 12:09:37 gcorti Exp $
+// $Id: GaussPhysics_load.cpp,v 1.12 2007-03-26 10:07:08 gcorti Exp $
 // Include files 
 
 #include "GaudiKernel/DeclareFactoryEntries.h" 
@@ -30,14 +30,14 @@
 
 // LHEP hadrons
 #include "HadronPhysicsLHEP.hh"
-#include "HadronPhysicsLHEP_BERT_HP.hh"
-#include "HadronPhysicsLHEP_EMV.hh"  // with Em 7.1
 
 // QGSP hadrons
 #include "HadronPhysicsQGSP.hh"
 #include "HadronPhysicsQGSP_BERT_HP.hh"
-#include "HadronPhysicsQGSP_EMV.hh"  // with Em 7.1 
-#include "HadronPhysicsQGSP_EMX.hh"  // with Em 7.2 
+
+// QGSC hadrons
+#include "HadronPhysicsQGSC.hh"
+#include "HadronPhysicsQGSC_EFLOW.hh"
 
 
 // Declaration of the External Physics list Factories
@@ -65,19 +65,16 @@ DECLARE_TOOL_FACTORY( NeuTrkCutFactory );
 
 typedef GiGaExtPhysics< HadronPhysicsLHEP > HadPhysLHEPFactory;
 DECLARE_TOOL_FACTORY( HadPhysLHEPFactory );
-typedef GiGaExtPhysics< HadronPhysicsLHEP_BERT_HP > HadPhysLHEP_BERT_HPFactory;
-DECLARE_TOOL_FACTORY( HadPhysLHEP_BERT_HPFactory );
-typedef GiGaExtPhysics< HadronPhysicsLHEP_EMV > HadPhysLHEP_EMVFactory;
-DECLARE_TOOL_FACTORY( HadPhysLHEP_EMVFactory );
 
 typedef GiGaExtPhysics< HadronPhysicsQGSP > HadPhysQGSPFactory;
 DECLARE_TOOL_FACTORY( HadPhysQGSPFactory );
 typedef GiGaExtPhysics< HadronPhysicsQGSP_BERT_HP > HadPhysQGSP_BERT_HPFactory;
 DECLARE_TOOL_FACTORY( HadPhysQGSP_BERT_HPFactory );
-typedef GiGaExtPhysics< HadronPhysicsQGSP_EMV > HadPhysQGSP_EMVFactory;
-DECLARE_TOOL_FACTORY( HadPhysQGSP_EMVFactory );
-typedef GiGaExtPhysics< HadronPhysicsQGSP_EMX > HadPhysQGSP_EMXFactory;
-DECLARE_TOOL_FACTORY( HadPhysQGSP_EMXFactory );
+
+typedef GiGaExtPhysics< HadronPhysicsQGSC > HadPhysQGSCFactory;
+DECLARE_TOOL_FACTORY( HadPhysQGSCFactory );
+typedef GiGaExtPhysics< HadronPhysicsQGSC_EFLOW > HadPhysQGSC_EFLOWFactory;
+DECLARE_TOOL_FACTORY( HadPhysQGSC_EFLOWFactory );
 
 DECLARE_FACTORY_ENTRIES(GaussPhysics) { 
 
