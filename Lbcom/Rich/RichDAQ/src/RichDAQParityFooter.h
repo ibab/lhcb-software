@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ utility class : Rich::DAQ::ParityFooter
  *
  *  CVS Log :-
- *  $Id: RichDAQParityFooter.h,v 1.4 2007-03-01 19:39:07 jonrob Exp $
+ *  $Id: RichDAQParityFooter.h,v 1.5 2007-03-26 11:21:40 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   05/09/2006
@@ -34,13 +34,17 @@ namespace Rich
      */
     //=============================================================================================
 
-    class ParityFooter : public FooterPDBase
+    class ParityFooter : public FooterPDBase,
+                         public Rich::BoostMemPoolAlloc<ParityFooter>
     {
 
     public:
 
-      /// Standard Constructor
-      ParityFooter( const ShortType nWords   = 0,
+      /// Default Constructor
+      ParityFooter( ) { }
+
+      /// Constructor with given size
+      ParityFooter( const ShortType nWords,
                     const LongType  wordInit = 0 ) 
         : FooterPDBase(nWords,wordInit) { }
 

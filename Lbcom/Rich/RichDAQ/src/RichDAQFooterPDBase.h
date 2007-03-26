@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ utility class : Rich::DAQ::FooterPDBase
  *
  *  CVS Log :-
- *  $Id: RichDAQFooterPDBase.h,v 1.4 2007-03-01 19:39:07 jonrob Exp $
+ *  $Id: RichDAQFooterPDBase.h,v 1.5 2007-03-26 11:21:40 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   05/09/2006
@@ -21,6 +21,9 @@
 
 // numberings
 #include "RichDet/RichDAQDefinitions.h"
+
+// boost
+//#include "boost/pool/pool_alloc.hpp"
 
 namespace Rich
 {
@@ -42,12 +45,16 @@ namespace Rich
     public:
 
       /// Type for header words
-      typedef std::vector<LongType> FooterWords;
+      typedef std::vector<LongType > FooterWords;
+      //typedef std::vector<LongType, boost::pool_allocator<LongType> > FooterWords;
 
     public:
 
+      /// Default Constructor (0 words)
+      FooterPDBase() { }
+
       /// Constructor with number of header words
-      explicit FooterPDBase ( const ShortType nWords   = 0,
+      explicit FooterPDBase ( const ShortType nWords,
                               const LongType  wordInit = 0 )
         : m_footerWords(nWords,wordInit) { }
 
@@ -64,14 +71,14 @@ namespace Rich
 
     public: // methods
 
+      /// Read only access to footer words
+      inline const FooterWords & footerWords() const { return m_footerWords; }
+
       /// Returns the number of data words in the footer
       inline unsigned int nFooterWords() const
       {
         return footerWords().size();
       }
-
-      /// Read only access to footer words
-      inline const FooterWords & footerWords() const { return m_footerWords; }
 
     public: // reading and writing
 

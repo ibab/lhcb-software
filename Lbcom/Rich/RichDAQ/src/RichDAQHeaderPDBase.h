@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ utility class : Rich::DAQ::HeaderPDBase
  *
  *  CVS Log :-
- *  $Id: RichDAQHeaderPDBase.h,v 1.6 2007-03-01 19:39:07 jonrob Exp $
+ *  $Id: RichDAQHeaderPDBase.h,v 1.7 2007-03-26 11:21:40 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
@@ -21,6 +21,12 @@
 
 // numberings
 #include "RichDet/RichDAQDefinitions.h"
+
+// RichKernel
+#include "RichKernel/BoostMemPoolAlloc.h"
+
+// boost
+//#include "boost/pool/pool_alloc.hpp"
 
 namespace Rich
 {
@@ -40,13 +46,15 @@ namespace Rich
     public:
 
       /// Type for header words
-      typedef std::vector<LongType> HeaderWords;
+      typedef std::vector<LongType > HeaderWords;
+      //typedef std::vector<LongType, boost::pool_allocator<LongType> > HeaderWords;
 
     public:
 
       /// Constructor with number of header words
-      explicit HeaderPDBase ( const ShortType nWords = 1 )
-        : m_headerWords(nWords,0) { }
+      explicit HeaderPDBase ( const ShortType nWords   = 1,
+                              const LongType  wordInit = 0 )
+        : m_headerWords(nWords,wordInit) { }
 
       /// Copy constructor
       HeaderPDBase ( const HeaderPDBase & header )

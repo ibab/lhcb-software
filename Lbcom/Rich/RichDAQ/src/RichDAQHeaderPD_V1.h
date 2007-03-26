@@ -4,7 +4,7 @@
  *
  *  Header file for RICH DAQ class : RichDAQHeaderV1::RichDAQHeaderPD
  *
- *  $Id: RichDAQHeaderPD_V1.h,v 1.3 2007-03-01 19:39:07 jonrob Exp $
+ *  $Id: RichDAQHeaderPD_V1.h,v 1.4 2007-03-26 11:21:40 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
@@ -85,7 +85,8 @@ namespace Rich
        *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
        *  @date   2003-11-06
        */
-      class RichDAQHeaderPD : public HeaderPDBase
+      class RichDAQHeaderPD : public HeaderPDBase,
+                              public Rich::BoostMemPoolAlloc<RichDAQHeaderPD>
       {
 
       public: // methods
@@ -95,7 +96,7 @@ namespace Rich
 
         /// Copy constructor
         RichDAQHeaderPD ( const RichDAQHeaderPD & header )
-          : HeaderPDBase(header) { }
+          : HeaderPDBase(header.headerWords()) { }
 
         /// Constructor from a pointer to a data stream
         explicit RichDAQHeaderPD ( const LongType * data )

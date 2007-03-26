@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ utility class : RichNonZeroSuppALICEData
  *
  *  CVS Log :-
- *  $Id: RichNonZeroSuppALICEData_V2.h,v 1.3 2007-03-08 18:14:27 jonrob Exp $
+ *  $Id: RichNonZeroSuppALICEData_V2.h,v 1.4 2007-03-26 11:21:41 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-07
@@ -55,10 +55,7 @@ namespace Rich
 
         /// Default constructor
         RichNonZeroSuppALICEData() :
-          HPDDataBankImp<Version,Header,Footer> ( 0,
-                                                  Header(),
-                                                  Footer(),
-                                                  MaxDataSizeALICE ),
+          HPDDataBankImp<Version,Header,Footer> ( MaxDataSizeALICE ),
           m_nHits(-1)
         { }
 
@@ -92,8 +89,6 @@ namespace Rich
          */
         explicit RichNonZeroSuppALICEData( const LongType * data )
           : HPDDataBankImp<Version,Header,Footer> ( data, // start of data
-                                                    Header(),
-                                                    Footer(),
                                                     MaxDataSizeALICE,
                                                     MaxDataSizeALICE ),
             m_nHits( -1 )

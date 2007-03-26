@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ utility class : Rich::DAQ::NullFooter
  *
  *  CVS Log :-
- *  $Id: RichDAQNullFooter.h,v 1.4 2007-03-01 19:39:07 jonrob Exp $
+ *  $Id: RichDAQNullFooter.h,v 1.5 2007-03-26 11:21:40 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   05/09/2006
@@ -32,13 +32,14 @@ namespace Rich
      */
     //=============================================================================================
 
-    class NullFooter : public FooterPDBase
+    class NullFooter : public FooterPDBase,
+                       public Rich::BoostMemPoolAlloc<NullFooter>
     {
 
     public:
 
       /// Standard constructor
-      NullFooter( ) : FooterPDBase(0) {}
+      NullFooter( ) { }
 
       /// Destructor
       ~NullFooter( ) { }

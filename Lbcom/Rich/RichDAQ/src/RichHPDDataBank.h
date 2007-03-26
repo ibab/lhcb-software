@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ utility class : Rich::DAQ::HPDDataBank
  *
  *  CVS Log :-
- *  $Id: RichHPDDataBank.h,v 1.21 2007-03-08 18:14:27 jonrob Exp $
+ *  $Id: RichHPDDataBank.h,v 1.22 2007-03-26 11:21:40 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-17
@@ -129,14 +129,23 @@ namespace Rich
 
     public:
 
-      /** Constructor with internal data representation
+      /** Default Constructor
+       */
+      HPDDataBankImp( const ShortType maxDataSize = 1 )
+        : m_data         ( new LongType[maxDataSize] ),
+          m_internalData ( true ) 
+      { 
+        for ( ShortType i = 0; i < maxDataSize; ++i ) m_data[i] = 0;
+      }
 
-      *  @param header   Header word for this HPD data bank
-      *  @param footer   Footer word for this HPD data bank
-      *  @param dataSize Initialisation size for data bank
-      *  @param dataInit Initialisation value for each word in the data bank
-      *  @param maxDataSize Max possible data size
-      */
+      /** Constructor with internal data representation
+       *
+       *  @param header   Header word for this HPD data bank
+       *  @param footer   Footer word for this HPD data bank
+       *  @param dataInit Initialisation value for each word in the data bank
+       *  @param maxDataSize Max possible data size
+       *  @param dataSize Initialisation size for data bank
+       */
       HPDDataBankImp( const Header &        header,
                       const Footer &        footer,
                       const LongType        dataInit,
@@ -155,14 +164,10 @@ namespace Rich
       /** Constructor from external data (RawBuffer)
        *
        *  @param data        Pointer to start of data block (including header)
-       *  @param headerSize  Number of words in the header
-       *  @param footerSize  Number of words in the footer
-       *  @param dataSize    Initialisation size for data bank (excluding header)
        *  @param maxDataSize Max possible data size
+       *  @param dataSize    Initialisation size for data bank (excluding header)
        */
       HPDDataBankImp( const LongType * data,
-                      const Header &   header,
-                      const Footer &   footer,
                       const ShortType  maxDataSize,
                       const ShortType  dataSize = 0 );
 

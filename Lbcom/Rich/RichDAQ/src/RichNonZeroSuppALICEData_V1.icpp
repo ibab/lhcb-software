@@ -4,7 +4,7 @@
  *
  *  Implementation file for RICH DAQ helper class : RichNonZeroSuppALICEData
  *
- *  $Id: RichNonZeroSuppALICEData_V1.icpp,v 1.5 2007-03-08 18:14:27 jonrob Exp $
+ *  $Id: RichNonZeroSuppALICEData_V1.icpp,v 1.6 2007-03-26 11:21:41 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-17
@@ -90,6 +90,9 @@ namespace Rich {
                                                                          const LHCb::RichSmartID hpdID ) const
       {
         m_nHits = 0; // reset number of hits to zero
+
+        // reserve size in hit vector ( guess )
+        ids.reserve( 96 );
 
         // Fill with active channels
         for ( Rich::DAQ::ShortType iRow = 0; iRow < Rich::DAQ::MaxDataSizeALICE; ++iRow )

@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ utility class : RichNonZeroSuppData
  *
  *  CVS Log :-
- *  $Id: RichNonZeroSuppData_V3.h,v 1.3 2007-03-08 18:14:28 jonrob Exp $
+ *  $Id: RichNonZeroSuppData_V3.h,v 1.4 2007-03-26 11:21:41 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-07
@@ -62,10 +62,7 @@ namespace Rich
 
         /// Default constructor
         RichNonZeroSuppData()
-          : HPDDataBankImp<Version,Header,Footer>( 0,
-                                                   Header(),
-                                                   Footer(),
-                                                   MaxDataSize ),
+          : HPDDataBankImp<Version,Header,Footer>( MaxDataSize ),
             m_nHits ( -1 )
         { }
 
@@ -99,8 +96,6 @@ namespace Rich
          */
         explicit RichNonZeroSuppData( const LongType * data )
           : HPDDataBankImp<Version,Header,Footer> ( data, // start of data
-                                                    Header(),
-                                                    Footer(),
                                                     MaxDataSize // max data bloxk size
                                                     ),
             m_nHits ( -1 )

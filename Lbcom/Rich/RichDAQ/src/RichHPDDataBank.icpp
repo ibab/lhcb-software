@@ -5,7 +5,7 @@
  *  Implementation file for RICH DAQ helper class : RichHPDDataBank
  *
  *  CVS Log :-
- *  $Id: RichHPDDataBank.icpp,v 1.12 2007-03-21 18:32:45 jonrob Exp $
+ *  $Id: RichHPDDataBank.icpp,v 1.13 2007-03-26 11:21:40 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-17
@@ -28,13 +28,9 @@ namespace Rich
     template< class Version, class Header, class Footer >
     HPDDataBankImp<Version,Header,Footer>::
     HPDDataBankImp<Version,Header,Footer>( const LongType * data,
-                                           const Header &   header,
-                                           const Footer &   footer,
                                            const ShortType  maxDataSize,
                                            const ShortType  dataSize )
-      : m_header       ( header         ),
-        m_footer       ( footer         ),
-        m_maxDataSize  ( maxDataSize    ),
+      : m_maxDataSize  ( maxDataSize    ),
         m_internalData ( false          )
     {
       // initialise header words
@@ -95,15 +91,15 @@ namespace Rich
           os << MSG::ERROR << "Parity word indicates an error :-" << endreq;
           os <<   " -> decoded from data | " << asHex(decodedfoot) << " |";
           {for ( int iCol = 31; iCol >= 0; --iCol )
-          {
-            os << " " << isBitOn( decodedfoot, iCol );
-          }}
+            {
+              os << " " << isBitOn( decodedfoot, iCol );
+            }}
           os << endreq;
           os <<   " -> from footer word  | " << asHex(this->footer().parityWord()) << " |";
           {for ( int iCol = 31; iCol >= 0; --iCol )
-          {
-            os << " " << isBitOn( this->footer().parityWord(), iCol );
-          }}
+            {
+              os << " " << isBitOn( this->footer().parityWord(), iCol );
+            }}
           os << endreq;
 
           // set flag to bad
