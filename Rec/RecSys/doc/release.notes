@@ -8,12 +8,78 @@ Purpose: LHCb reconstruction packages.
 </PRE><H1><A NAME=v4r3>2007-03-13 RecSys v4r3</A></H1><PRE>
 This version uses Gaudi v19r3 and LHCb v22r3.
 
-- Packages updated: TrackTools v2r12
+- Packages updated: TrackSys v4r3, TrackExtrapolators v2r10, TrackUtils v1r11, 
+    TrackMatching v2r12, TsaAlgorithms v2r2, TrackFitter v2r13, TrackTools v2r12,
+    TrackProjectors v2r11, PatForward v2r13, RichRecSys v3r2, RichRecQC v2r9,
+    RichTrgGlobalPID v3r5, RichRecMCTools v2r9, RichRecMonitors v2r8, 
+    RichLocalPID v3r2, RichGlobalPID v3r2, RichPIDMerge v2r4, RichRecTools v3r9,
+    RichRecAlgorithms v2r6, MuonID v4r6, MuonPIDChecker v2r0
+
+- In PatForward v2r13, TrackSys v4r3
+  . Add switch for running on B field off data
+    (default false, switched on in $TRACKSYSROOT/options/NoFieldTracking.opts)
+
+- In PatForward v2r13
+  . Use explicitly EndVelo state and set q/p if more than one state
+
+- In TrackExtrapolators v2r10
+  . Clean up Kisel extrapolator
+
+- In TrackUtils v1r11
+  . Fix bug in PrepareVelo track selection in case when Best container is ignored
+
+- In TsaAlgorithms v2r2
+  . Use findModule method from OT detector element 
 
 - In TrackTools v2r12
   . Add VeloExpectation tool
-  . Fix doxygen warnings
-  . Remove obsolete TrackTools_load.cpp file
+  . Minor modifications to TrackPtKick, to calculate error as function of p
+
+- In RichRecSys v3r2
+  . Update background estimation algorithm name
+  . Add options for clustering
+  . Add default Raw buffer decoding options from RichDAQ to RecoToolPara.opts
+
+- In RichRecTools v3r9
+  . Remove the use of random numbers in GeomEffPhotonTracing
+
+- In RichRecMCTools v2r9, RichRecMonitors v2r8, RichRecTools v3r9, 
+     RichRecAlgorithms v2r6
+  . Adapt to new HPD pixel clusters
+
+- In RichRecAlgorithms v2r6
+  . Rename RichRecBackgroundEsti RichRecBackgroundEstiAvHPD
+  . Add new (prototype) background algorithm RichRecBackgroundEstiClustering
+
+- In MuonID v4r6
+  . fixed the number of Landau parameters for the muon 
+  . changed the binning of the pion DLL to be the same as the muon
+
+- In MuonPIDChecker v2r0
+  . Add Total Misid to monitoring table 
+  . DLL Cut changed to -1 in the options 
+  . fillTrHistos and checkMCAss name starts with lower case (coding convention)
+
+- In RichRecQC v2r9, RichLocalPID v3r2, RichGlobalPID v3r2, RichRecTools v3r9
+  . Replace use of Gaudi format with boost::format to fix various issues
+
+- In TrackExtrapolators v2r10, TrackUtils v1r11, TrackMatching v2r12,
+     TsaAlgorithms v2r2, TrackFitter v2r13, TrackTools v2r12,
+     TrackProjectors v2r11, RichRecQC v2r9, RichTrgGlobalPID v3r5,
+     RichRecMCTools v2r9, RichRecMonitors v2r8, RichLocalPID v3r2,
+     RichGlobalPID v3r2, RichPIDMerge v2r4, RichRecTools v3r9
+  . Fix doxygen comments
+ 
+- In TrackUtils v1r11, TsaAlgorithms v2r2, TrackFitter v2r13, TrackTools v2r12,
+     RichRecQC v2r9, RichTrgGlobalPID v3r5, RichRecMCTools v2r9,
+     RichRecMonitors v2r8, RichLocalPID v3r2, RichGlobalPID v3r2,
+     RichPIDMerge v2r4, RichRecTools v3r9, RichRecAlgorithms v2r6
+  . Remove obsolete file xxx_load.cpp
+ 
+- In TrackExtrapolators v2r10, TrackMatching v2r12, TsaAlgorithms v2r2,
+     TrackFitter v2r13, TrackTools v2r12, TrackProjectors v2r11,
+     PatForward v2r13, RichRecTools v3r9, MuonPIDChecker v2r0
+  . Fix unchecked StatusCodes
 
 </PRE><H1><A NAME=v4r2>2007-03-05 RecSys v4r2</A></H1><PRE>
 This version uses Gaudi v19r2 and LHCb v22r2.
