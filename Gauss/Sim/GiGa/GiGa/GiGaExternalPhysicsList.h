@@ -1,15 +1,9 @@
-// $Id: GiGaExternalPhysicsList.h,v 1.1 2003-04-06 18:49:45 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $
-// ============================================================================
-// $Log: not supported by cvs2svn $ 
-// ============================================================================
+// $Id: GiGaExternalPhysicsList.h,v 1.2 2007-03-26 09:01:39 gcorti Exp $
 #ifndef GIGA_GIGAEXTERNALPHYSICSLIST_H 
 #define GIGA_GIGAEXTERNALPHYSICSLIST_H 1
-// ============================================================================
+
 // Include files
 #include "GiGa/GiGaPhysicsListBase.h"
-#include "GiGa/GiGaFactory.h"
 
 /** @class GiGaExternalPhysicsList GiGaExternalPhysicsList.h
  *  
@@ -28,8 +22,6 @@ class GiGaExternalPhysicsList : public  GiGaPhysicsListBase
   typedef PHYSLIST                           PhysList ;
   /// own type 
   typedef GiGaExternalPhysicsList<PhysList>  OwnType  ;
-  /// friend factory for instantion
-  friend class GiGaFactory<OwnType>  ;
   
 public:
   
@@ -75,24 +67,5 @@ private:
   mutable G4VUserPhysicsList* m_physList ;
   
 };
-// ============================================================================
 
-// ============================================================================
-/** @def IMPLEMENT_ExternalPhysList
- *  useful macro to implement a static factory for
- *  instantiation of external("imported") physics list
- *  @see IMPLEMENT_GiGaPhysList
- *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
- *  @date   2003-04-06
- */
-// ============================================================================
-#define IMPLEMENT_ExternalPhysicsList( PL )                                   \
- static const GiGaFactory<GiGaExternalPhysicsList<##PL##> > s_##PL##Factory ; \
- const           IFactory&##PL##Factory                   = s_##PL##Factory ;
-// ============================================================================
-
-// ============================================================================
-// The END 
-// ============================================================================
 #endif // GIGA_GIGAEXTERNALPHYSICSLIST_H
-// ============================================================================

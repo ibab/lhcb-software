@@ -1,19 +1,11 @@
-// $Id: GiGaExternalPhC.h,v 1.2 2003-04-06 18:49:45 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.1  2002/12/03 18:43:37  ibelyaev
-//  add new templated class for import of external Physics Constructors
-//
-// ============================================================================
+// $Id: GiGaExternalPhC.h,v 1.3 2007-03-26 09:01:39 gcorti Exp $
 #ifndef GIGA_GIGAEXTERNALPHC_H 
 #define GIGA_GIGAEXTERNALPHC_H 1
+
 // Include files
 #include "GiGa/IGiGaPhysConstructor.h"
 #include "GiGa/GiGaPhysConstructorBase.h"
-// forward declarations 
-template <class TYPE> class GiGaFactory;
+
 
 /** @class GiGaExternalPhC GiGaExternalPhC.h GiGa/GiGaExternalPhC.h
  *  
@@ -40,8 +32,6 @@ class GiGaExternalPhC :
 {
   /// own type 
   typedef GiGaExternalPhC<PHYSICSCONSTRUCTOR> MyType ;
-  /// friend factory for instantiation 
-  friend class GiGaFactory<MyType>                   ;
 
 protected:
   
@@ -87,25 +77,6 @@ private:
   GiGaExternalPhC& operator=( const MyType& );
   
 };
-// ============================================================================
 
-// ============================================================================
-/** @def IMPLEMENT_ExternalPhC
- *  useful macro to implement a static factory for
- *  instantiation of external("imported") physics list
- *  @see IMPLEMENT_GiGaPhysList
- *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
- *  @date   25/04/2002
- */
-// ============================================================================
-#define IMPLEMENT_ExternalPhC( PC )                                     \
- static const GiGaFactory<GiGaExternalPhC<##PC##> >   s_##PC##Factory ; \
- const           IFactory&##PC##Factory             = s_##PC##Factory ;
-// ============================================================================
-
-
-// ============================================================================
-// The END 
-// ============================================================================
 #endif // GIGA_GIGAEXTERNALPHC_H
-// ============================================================================
+

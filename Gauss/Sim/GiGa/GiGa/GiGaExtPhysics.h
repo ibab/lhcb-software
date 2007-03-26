@@ -1,11 +1,11 @@
-// $Id: GiGaExtPhysics.h,v 1.3 2007-03-18 18:06:39 gcorti Exp $
+// $Id: GiGaExtPhysics.h,v 1.4 2007-03-26 09:01:39 gcorti Exp $
 #ifndef GIGA_GIGAEXTERNALPHYSICSCONSTRUCTOR_H 
 #define GIGA_GIGAEXTERNALPHYSICSCONSTRUCTOR_H 1
 
 // Include files
 #include "GiGa/GiGaPhysicsConstructorBase.h"
 
-/** @class GiGaExternalPhysicsConstructor GiGaExternalPhysicsConstructor.h
+/** @class GiGaExtPhysics GiGaExtPhysics.h
  *  
  *
  *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
