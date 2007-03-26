@@ -3,13 +3,22 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-</PRE><H1><A NAME=v13r3>2007-03-12 Boole v13r3</A></H1><PRE>
+</PRE><H1><A NAME=v13r3>2007-03-26 Boole v13r3</A></H1><PRE>
 This version uses projects Gaudi v19r3, LHCb v22r3, Lbcom v6r3
- and databases SQLDDDB v1r*, ParamFiles v5r0, FieldMap v4r7
+ and databases DDDB v1r*, ParamFiles v5r0, FieldMap v4r7
+
+- Packaging changes
+  . Database now accessed via DDDB interface package, no longer SQLDDDB directly
 
 - Bug fixes
   . Fix access to uninitialised pointer (was causing crash on v13r2 on Windows)
     (MuonAlgs v6r3)
+  . Use boost::format instead of Gaudi format (gave wrong output when used more
+    than once in same stream) (various Rich packages) 
+  . Fix many unchecked StatusCodes
+  . Many fixes to doxygen documentation
+  . Disabled some compiler optimizations in libstdc++ on slc3, was causing
+    crashes on SLC3 after disconnection from database (DetCond v1r11)
 
 </PRE><H1><A NAME=v13r2>2007-03-05 Boole v13r2</A></H1><PRE>
 This version uses projects Gaudi v19r2, LHCb v22r2, Lbcom v6r2
