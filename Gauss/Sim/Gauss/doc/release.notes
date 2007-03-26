@@ -9,6 +9,10 @@
  - DEVELOPMENT VERSION INCOMPATIBLE WITH DC06 
      based on LHCb v22r1, Gaudi v19r1, Install Area, new MCGenerators, 
      Geant4 8.2.p01
+ - Replace MeV with mm in cuts since that is the unit used internally
+   in the code. Since MeV = 1 and mm = 1, there is no effect but the
+   xml is consistent with the code.
+   . Simulation.xml 
  - Use GaudiMain.cpp from $GAUDICONF and no longer special GaussMain
    . requirements
    . GaussMain.cpp (for the moment = to GaudiMain.cpp)
