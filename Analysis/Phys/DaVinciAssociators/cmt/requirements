@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.49 2007-02-28 17:46:37 pkoppenb Exp $
+# $Id: requirements,v 1.50 2007-03-26 20:54:17 pkoppenb Exp $
 # Created    : 24/04/2002
 # Maintainer : Philippe Charpentier
 #
@@ -12,7 +12,7 @@ version           v9r0
 #
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          cmt doc src DaVinciAssociators
+branches          cmt doc src
 
 # Used packages. 
 #============================================================================
