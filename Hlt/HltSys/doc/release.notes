@@ -5,11 +5,21 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
 
+</PRE><H1><A NAME=v1r4>2007-03-26 HltSys v1r4</A></H1><PRE>
+This version uses Gaudi v19r3 and LHCb v22r3
+
+Packages modified: HltCommon v1r4
+
+- In HltSys options
+  . added options PatVeloTT.suppressSmallAngles = false; in HltReco.opts
+
+- In HltCommon v1r4
+ - Add class MatchTVeloTracks
+ - Remove obsolete HltCommon_load.cpp file
+ - Fix doxygen warnings
+
 </PRE><H1><A NAME=v1r3>2007-03-08 HltSys v1r3</A></H1><PRE>
 This version uses Gaudi v19r2 and LHCb v22r2
-
-- Hernando, JA. 20/3/07:
-   added options PatVeloTT.suppressSmallAngles = false; in HltReco.opts
 
 Packages removed: HltPython          - dictionary moved to HltBase v2r2
 Packages added  : HltSelections v5r0 - High-Level Trigger Exclusive Selections
