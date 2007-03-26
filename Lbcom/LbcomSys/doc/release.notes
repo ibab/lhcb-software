@@ -6,8 +6,52 @@
 !             : Contains packages shared by Boole and other applications   
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v6r3>2007-03-16 LbcomSys v6r3</A></H1><PRE>
-This version is identical to v6r2 but uses Gaudi v19r3 and LHCb v22r3
+</PRE><H1><A NAME=v6r3>2007-03-23 LbcomSys v6r3</A></H1><PRE>
+This version uses Gaudi v19r3 and LHCb v22r3
+
+Packages modified: RichDAQ v3r9, RichTools v2r11, RichMCTools v3r5,
+  RichMCMonitors v1r2, STAlgorithms v2r1, STTools v3r1, STCheckers v2r1,
+  STAssociators v1r4, STDAQ v2r9, SiTools v1r2
+
+- In RichDAQ v3r9
+  . Add support for ALICE zero-suppressed mode data in the LHCb5 version
+  . Replace use of Gaudi format with boost::format to fix various issues
+
+- In RichTools v2r11
+  . Add new method to compute the global position of a cluster of RichSmartIDs
+
+- In RichMCTools v3r5
+  . New methods for HPD Pixel clusters
+
+- In STAlgorithms v2r1
+  . STDepositCreator: findDigit returns STDigit instead of MCSTDigit
+  . STDepositCreator: addNeighbours correct for 1st and last digit
+
+- In STTools v3r1
+  . Add missing include file.
+
+- In STCheckers v2r1
+  . Put back the HistFun.h file and unbook the histograms in STEffChecker.
+
+- In STAssociators v1r4
+  . Make minimum fraction of charge (m_minFrac) consistent.
+
+- In STAlgorithms v2r1, STTools v3r1, STAssociators v1r4
+  . Make joboptions start with a capital.
+  . Minor cosmetic changes. Removal of obsolete code.
+
+- In RichMCTools v3r5, STAlgorithms v2r1, STTools v3r1, STCheckers v2r1,
+     STAssociators v1r4, STDAQ v2r9, SiTools v1r2
+  . Some fixes for missing StatusCode tests
+
+- In RichDAQ v3r9, RichTools v2r11, RichMCMonitors v1r2, RichMCTools v3r5, 
+     STAlgorithms v2r1, STTools v3r1, STCheckers v2r1, STAssociators v1r4,
+     STDAQ v2r9, SiTools v1r2
+  . Remove obsolete xxx_load.cpp file
+
+- In RichDAQ v3r9, RichTools v2r11, RichMCMonitors v1r2, RichMCTools v3r5, 
+     STAlgorithms v2r1, STTools v3r1, STAssociators v1r4,STDAQ v2r9, SiTools v1r2
+  . Fix doxygen warnings
 
 </PRE><H1><A NAME=v6r2>2007-03-05 LbcomSys v6r2</A></H1><PRE>
 This version uses Gaudi v19r2 and LHCb v22r2
