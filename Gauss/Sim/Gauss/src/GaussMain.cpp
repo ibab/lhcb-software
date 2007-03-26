@@ -1,4 +1,4 @@
-// $Id: GaussMain.cpp,v 1.2 2005-04-22 15:00:03 gcorti Exp $
+// $Id: GaussMain.cpp,v 1.3 2007-03-26 11:36:16 gcorti Exp $
 //------------------------------------------------------------------------------
 //
 //  Package    : GaudiConf
@@ -12,9 +12,8 @@
 #include "GaudiKernel/Bootstrap.h"
 #include "GaudiKernel/IAppMgrUI.h"
 #include "GaudiKernel/IProperty.h"
+#include "GaudiKernel/StatusCode.h"
 #include <iostream>
-
-#include "GiGa/IGiGaRunManager.h"
 
 //--- Example main program
 int main ( int argc, char** argv ) {
@@ -49,14 +48,11 @@ int main ( int argc, char** argv ) {
   }
 
   // Run the application manager and process events
-  appMgr->run();
+  StatusCode sc=appMgr->run();
 
   // Release Application Manager
   iface->release();
 
-  // destroy Geant4 
-  IGiGaRunManager::destroy() ;
-  
   // All done - exit
-  return 0;
+  return (sc==StatusCode::SUCCESS)?0:1;
 }
