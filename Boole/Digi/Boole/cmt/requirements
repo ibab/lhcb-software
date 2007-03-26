@@ -7,19 +7,19 @@ branches doc cmt job options
 set BOOLEOPTS  $(BOOLEROOT)/options
 
 #-- CMT and GaudiPolicy
-use GaudiPolicy v6r4
+use GaudiPolicy v6r5
 
-#-- External libraries taken from LCG, version defined by GaudiEnv
+#-- External libraries taken from LCG, version defined by LCGCMT
 use RELAX v* LCG_Interfaces    -no_auto_imports
 use HepMC v* LCG_Interfaces    -no_auto_imports
 
 #-- Gaudi libraries (from GAUDI_v19r3)
-use GaudiKernel      v22r1
-use GaudiSvc         v15r2     -no_auto_imports
-use GaudiAlg         v9r12     -no_auto_imports
+use GaudiKernel      v22r2
+use GaudiSvc         v15r3     -no_auto_imports
+use GaudiAlg         v9r13     -no_auto_imports
 use GaudiAud         v8r1      -no_auto_imports
-use GaudiPoolDb      v2r11     -no_auto_imports
-use RootHistCnv      v9r12     -no_auto_imports
+use GaudiPoolDb      v2r12     -no_auto_imports
+use RootHistCnv      v9r13     -no_auto_imports
 
 #-- Databases
 use DDDB             v1r*    Det  -no_auto_imports
@@ -30,14 +30,14 @@ use FieldMap         v4r7         -no_auto_imports
 #-- Explicitly use EventSys packages to avoid dependency on PhysEvent
 use GaudiConf        v10r3          -no_auto_imports
 use GaudiObjDesc     v9r9           -no_auto_imports
-use KernelSys        v6r2    Kernel -no_auto_imports
+use KernelSys        v6r3    Kernel -no_auto_imports
 use DetSys           v9r3    Det    -no_auto_imports
 
 use EventBase        v2r1    Event  -no_auto_imports
 use MCEvent          v2r1    Event  -no_auto_imports
 use DigiEvent        v2r1    Event  -no_auto_imports
 use RecEvent         v2r2    Event  -no_auto_imports  # used by MuonDAQ, Calo
-use TrackEvent       v4r0p1  Event  -no_auto_imports  # used by RecEvent
+use TrackEvent       v4r1    Event  -no_auto_imports  # used by RecEvent
 use L0Event          v16r2   Event  -no_auto_imports
 use DAQEvent         v7r2    Event  -no_auto_imports
 use GenEvent         v5r0p1  Event  -no_auto_imports
@@ -45,7 +45,7 @@ use PackedEvent      v3r1    Event  -no_auto_imports
 use VeloEvent        v15r0   Event  -no_auto_imports
 
 use DAQSys           v3r1    DAQ    -no_auto_imports
-use LHCbAlgs         v2r6    Kernel -no_auto_imports
+use LHCbAlgs         v2r7    Kernel -no_auto_imports
 use SimComponents    v2r1    Sim    -no_auto_imports
 
 #-- Lbcom packages (from LBCOM_v6r3)
@@ -67,9 +67,9 @@ use MuonBackground       v2r3   Muon -no_auto_imports
 use MuonMoniDigi         v2r1   Muon -no_auto_imports
 
 # Rich
-use RichDigiQC	         v3r4  	Rich -no_auto_imports
-use RichReadout          v2r4   Rich -no_auto_imports
-use RichMCAssociators    v2r3   Rich -no_auto_imports
+use RichDigiQC	         v3r5  	Rich -no_auto_imports
+use RichReadout          v2r5   Rich -no_auto_imports
+use RichMCAssociators    v2r4   Rich -no_auto_imports
 
 #===== build Boole =========================
 application Boole $(GAUDICONFROOT)/src/GaudiMain.cpp

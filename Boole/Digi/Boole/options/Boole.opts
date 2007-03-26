@@ -161,9 +161,9 @@ DecodeVeloRawBuffer.DecodeToVeloLiteClusters = false;
 RelationsVELOSeq.Members += { "VeloCluster2MCHitLinker" };
 RelationsVELOSeq.Members += { "VeloCluster2MCParticleLinker" };
 
-ITDigitLinker.detType   = "IT";
-ITClusterLinker.detType = "IT";
-ITTruthLinker.detType   = "IT";
+ITDigitLinker.DetType   = "IT";
+ITClusterLinker.DetType = "IT";
+ITTruthLinker.DetType   = "IT";
 RelationsITSeq.Members += { "STDigit2MCHitLinker/ITDigitLinker" };
 RelationsITSeq.Members += { "STCluster2MCHitLinker/ITClusterLinker" };
 RelationsITSeq.Members += { "STCluster2MCParticleLinker/ITTruthLinker" };
