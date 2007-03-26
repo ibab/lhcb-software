@@ -101,4 +101,11 @@
     <logical/>
   </File>
 
+  <File ID="B8EE9830-56D9-DB11-AC45-003048836626">
+    <physical>
+      <pfn filetype="ROOT_All" name="FieldOff.dst"/>
+    </physical>
+    <logical/>
+  </File>
+
 </POOLFILECATALOG>

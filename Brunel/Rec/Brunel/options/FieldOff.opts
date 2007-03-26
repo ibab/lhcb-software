@@ -48,5 +48,5 @@ EventSelector.Input = {
 //---------------------------------------------------------------------------
 // Event output
 //---------------------------------------------------------------------------
-DstWriter.Output = "DATAFILE='PFN:FiledOff.dst' TYP='POOL_ROOTTREE' OPT='REC'";
+DstWriter.Output = "DATAFILE='PFN:FieldOff.dst' TYP='POOL_ROOTTREE' OPT='REC'";
 //////////////////////////////////////////////////////////////////////////////
