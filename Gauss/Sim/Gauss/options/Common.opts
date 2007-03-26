@@ -1,14 +1,13 @@
-// $Id: Common.opts,v 1.22 2006-10-10 18:26:57 gcorti Exp $ 
+// $Id: Common.opts,v 1.23 2007-03-26 11:37:52 gcorti Exp $ 
 
 /** @file 
  * 
- *  File containing options to all Gauss jobs (setting of DLLs and options
- *  for persistency.
- *  It must be included in Gauss.opts
+ *  File containing options to all Gauss jobs
+ *  It must be included in Gauss.opts before all others
  *
  *  @author F.Ranjard
  *  @author G.Corti
- *  @date: modified 21 Feb 2001
+ *  @date: modified 26 Mar 2007
  */
 
 #units "$STDOPTS/units.opts"
@@ -25,18 +24,8 @@ ApplicationMgr.ExtSvc = { "ToolSvc" ,
 RndmGenSvc.Engine.SetSingleton   = true;
 ParticlePropertySvc.ParticlePropertiesFile = "$PARAMFILESROOT/data/ParticleTable.txt" ;
 
-// Load necessary DLLs
-ApplicationMgr.DLLs  = { "GaudiAud"};
-ApplicationMgr.DLLs += { "GaudiAlg" } ;
-ApplicationMgr.DLLs += { "LHCbAlgs" } ;
-ApplicationMgr.DLLs += { "GaussTools"} ;
-ApplicationMgr.DLLs += { "GaussAlgs"  } ;
-ApplicationMgr.DLLs += { "ParticleGuns" };
-ApplicationMgr.DLLs += { "LbPythia", "Generators" } ;
-ApplicationMgr.DLLs += { "SimComponents", "GaussMonitor" };
-
-ApplicationMgr.DLLs += { "RootHistCnv" };
-RootHistSvc.ForceAlphaIds = true;        // Prepend histograms with "h" 
+// Prepend histograms with "h" 
+RootHistSvc.ForceAlphaIds = true;
 
 // No events are read as input
 ApplicationMgr.EvtSel  = "NONE" ;
@@ -50,15 +39,6 @@ MessageSvc.Format = "% F%24W%S%7W%R%T %0W%M";  // Longer "algorithm" identifier 
 
 // Geometry setup always necessary
 #include "$STDOPTS/DetDesc.opts"
-ApplicationMgr.DLLs += { "VeloDet" };
-ApplicationMgr.DLLs += { "STDet" };
-ApplicationMgr.DLLs += { "OTDet" };
-// ApplicationMgr.DLLs += { "RichDet", "RichCondition" }; // RichConditions in 
-// Rich.opts
-ApplicationMgr.DLLs += { "RichDet" };
-ApplicationMgr.DLLs += { "MuonDet" };
-ApplicationMgr.DLLs += { "CaloDetXmlCnv" };
-ApplicationMgr.Dlls += { "CaloDet" };
 
 // "Default" geometry version: the latest
 DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200601.xml";

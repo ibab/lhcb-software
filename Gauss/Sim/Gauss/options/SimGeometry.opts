@@ -1,4 +1,4 @@
-// $Id: SimGeometry.opts,v 1.23 2006-11-13 16:08:03 gcorti Exp $
+// $Id: SimGeometry.opts,v 1.24 2007-03-26 11:38:58 gcorti Exp $
 
 /** @file
  *
@@ -22,14 +22,12 @@ Geo.ConversionSvcName    = "GiGaGeo"  ;
 //Geo.OutputLevel          = 1;
 //GiGaGeo.OutputLevel      = 2;
 Geo.DataProviderSvcName  = "DetectorDataSvc" ;
+//----------------------------------------------------------------------------
 // Geometry to be converted in execute method,
 // This items will be loaded by the DetectorDataSvc and then
 // the convertion service will be asked to make a Geant4 representation
 // that will triggers the corresponding converter for each one
-ApplicationMgr.DLLs += { "GaussTracker" };
-ApplicationMgr.DLLs += { "GaussRICH"    };
-ApplicationMgr.DLLs += { "GaussCalo"    };
-
+//
 // Geometry to be simulated
 //----------------------------------------------------------------------------
 // To set size of World/Universe i.e. the main mother volume (made of Air
@@ -89,6 +87,5 @@ GiGaGeo.FieldMgr.LHCbField.MagneticFieldService = "MagneticFieldSvc";
 //GiGaGeo.FieldMgr.GiGaMagFieldUniform.MagneticFieldService = "";
 
 // Declare external services needed MAGNETIC FIELD
-ApplicationMgr.DLLs   += { "Magnet" };
 ApplicationMgr.ExtSvc += { "MagneticFieldSvc"  };
 MagneticFieldSvc.FieldMapFile = "$FIELDMAP";

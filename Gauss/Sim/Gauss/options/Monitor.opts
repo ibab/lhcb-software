@@ -1,4 +1,4 @@
-// $Id: Monitor.opts,v 1.23 2007-02-09 09:12:40 gcorti Exp $ 
+// $Id: Monitor.opts,v 1.24 2007-03-26 11:41:05 gcorti Exp $ 
 
 /** @file 
  * 
@@ -39,7 +39,6 @@ SimMonitor.Members   += { "GiGaGetHitsAlg" };
 SimMonitor.Members   += { "GaudiSequencer/DetectorsMonitor" };
 
 // VELO
-ApplicationMgr.DLLs      += { "VeloGauss" };
 DetectorsMonitor.Members += { "VeloGaussMoni" };
 
 // Silicon tracker
@@ -64,7 +63,6 @@ OTHitMonitor.zStations    = { 7938.0, 8625.0, 9315.0 };
 #include "$GAUSSRICHROOT/options/RichAnalysis.opts"
 
 // Calorimeters
-ApplicationMgr.DLLs       += { "CaloMoniSim" } ;
 DetectorsMonitor.Members  += { "MCCaloMonitor/SpdMonitor" };
 DetectorsMonitor.Members  += { "MCCaloMonitor/PrsMonitor" }; 
 DetectorsMonitor.Members  += { "MCCaloMonitor/EcalMonitor" };
@@ -76,7 +74,6 @@ EcalMonitor.OutputLevel = 4;
 HcalMonitor.OutputLevel = 4;
 
 // Muon system
-ApplicationMgr.DLLs      += { "MuonMoniSim" };
 DetectorsMonitor.Members += { "MuonHitChecker" };
 MuonHitChecker.FullDetail = true;
 
