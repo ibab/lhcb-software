@@ -4,7 +4,7 @@
  *
  *  Header file for detector description class : DeRichHPDPanel
  *
- *  $Id: DeRichHPDPanel.h,v 1.41 2007-02-06 15:01:53 cattanem Exp $
+ *  $Id: DeRichHPDPanel.h,v 1.42 2007-03-26 14:34:40 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -388,8 +388,8 @@ private:
   double Delta_Phi(double, const double);
   double mag(double , double);
   double demag(double, double );
-  StatusCode fillHpdDemagTableSim( std::string , std::vector<double>& , int& );
-  StatusCode fillHpdDemagTableRec( std::string , std::vector<double>& , int& );
+  StatusCode fillHpdDemagTableSim( const std::string &, std::vector<double>& , int& );
+  StatusCode fillHpdDemagTableRec( const std::string &, std::vector<double>& , int& );
   Gaudi::XYZPoint demagToCathode_new( int , double , double ) const;
   Gaudi::XYZPoint demagToCathode_old( double , double ) const;
   Gaudi::XYZPoint demagToAnode_test ( int , double , double );

@@ -4,6 +4,10 @@
 ! Purpose     : interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2007-03-26 - Chris Jones
+ - Some speed improvements for HLT
+ - Additions to DAQ definitions
+
 !======================== RichDet v10r3 2007-03-20 ========================
 ! 2007-03-19 - Chris Jones
  - Replace use of Gaudi format with boost::format to fix various issues

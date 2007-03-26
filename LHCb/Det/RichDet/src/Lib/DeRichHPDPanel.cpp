@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRichHPDPanel
  *
- *  $Id: DeRichHPDPanel.cpp,v 1.53 2007-02-28 18:31:07 marcocle Exp $
+ *  $Id: DeRichHPDPanel.cpp,v 1.54 2007-03-26 14:34:40 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -416,15 +416,17 @@ StatusCode DeRichHPDPanel::initialize()
 //=================================================================================
 // Demagnification Tables for simulation and reconstruction (Marco Musy 07/09/2006)
 //=================================================================================
-StatusCode DeRichHPDPanel::updateDemagProperties() {
+StatusCode DeRichHPDPanel::updateDemagProperties() 
+{
 
   MsgStream msg ( msgSvc(), myName() );
   StatusCode sc = StatusCode::SUCCESS;
+  
+  msg << MSG::INFO << "Updating properties for HPDs from "
+      << m_nstart << " to " << m_nstop-1 << endmsg;
 
-  msg << MSG::INFO << "Updating properties for  hpds from nr."
-      << m_nstart << " to nr." << m_nstop-1<<endmsg;
-
-  for ( int ihpd = m_nstart; ihpd < m_nstop; ++ihpd ) {
+  for ( int ihpd = m_nstart; ihpd < m_nstop; ++ihpd ) 
+  {
 
     std::string numb = boost::lexical_cast<std::string>(ihpd);
     std::vector<double> coeff_sim = m_demagCond->paramVect<double>("hpd"+numb+"_sim");
@@ -447,9 +449,10 @@ StatusCode DeRichHPDPanel::updateDemagProperties() {
 }
 
 //=========================================================================
-StatusCode DeRichHPDPanel::fillHpdDemagTableSim( std::string mypath,
+StatusCode DeRichHPDPanel::fillHpdDemagTableSim( const std::string & mypath,
                                                  std::vector<double>& coeff_sim,
-                                                 int& ihpd ) {
+                                                 int& ihpd ) 
+{
   const int totbins = 50; //do not change
   MsgStream msg ( msgSvc(), myName() );
 
@@ -515,7 +518,7 @@ StatusCode DeRichHPDPanel::fillHpdDemagTableSim( std::string mypath,
 }
 
 //=========================================================================
-StatusCode DeRichHPDPanel::fillHpdDemagTableRec( std::string mypath,
+StatusCode DeRichHPDPanel::fillHpdDemagTableRec( const std::string & mypath,
                                                  std::vector<double>& coeff_rec,
                                                  int& ihpd ) {
   const int totbins = 50; //do not change
@@ -686,18 +689,18 @@ Gaudi::XYZPoint DeRichHPDPanel::demagToCathode_new( int HPDNumber,
                                                     double inSiliconX,
                                                     double inSiliconY ) const
 {
-  MsgStream msg ( msgSvc(), myName() );
-
   //load demagnification table
   SmartDataPtr<TabulatedProperty> dem(dataSvc(),m_XmlHpdDemagPath+"Rec_"+
                                       boost::lexical_cast<std::string>(HPDNumber));
   if (!dem) {
+    MsgStream msg ( msgSvc(), myName() );
     msg<<MSG::ERROR<<"Could not load "<<(m_XmlHpdDemagPath+"Rec_")<<HPDNumber<<endmsg;
     return Gaudi::XYZPoint(0,0,0);
   }
   TabulatedProperty::Table demag = dem->table();
   int lenght = demag.size()-1;
   if(lenght<2) {
+    MsgStream msg ( msgSvc(), myName() );
     msg<<MSG::ERROR<<"Demag Table too short or empty. "<<endmsg;
     return Gaudi::XYZPoint(0,0,0);
   }
@@ -721,6 +724,7 @@ Gaudi::XYZPoint DeRichHPDPanel::demagToCathode_new( int HPDNumber,
   else new_phi= anodePhi+result_phi + 3.1416;
 
   if(result_r > m_activeRadius) {
+    MsgStream msg ( msgSvc(), myName() );
     msg<<MSG::WARNING<<"Demagnification for Hpd" << HPDNumber
        << " goes beyond active photocathode" << " r= "
        << inSiliconR << " -> " << result_r <<" Forced to "<< m_activeRadius <<endmsg;
@@ -740,8 +744,6 @@ Gaudi::XYZPoint DeRichHPDPanel::demagToCathode_new( int HPDNumber,
 Gaudi::XYZPoint DeRichHPDPanel::demagToCathode_old( double inSiliconX,
                                                     double inSiliconY ) const
 {
-  MsgStream msg ( msgSvc(), myName() );
-
   const double inSiliconR = sqrt(inSiliconX*inSiliconX + inSiliconY*inSiliconY);
 
   // Now calculate the radius at the cathode.

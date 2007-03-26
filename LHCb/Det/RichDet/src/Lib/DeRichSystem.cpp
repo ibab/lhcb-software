@@ -4,7 +4,7 @@
  *
  * Implementation file for class : DeRichSystem
  *
- * $Id: DeRichSystem.cpp,v 1.10 2007-03-19 15:02:47 jonrob Exp $
+ * $Id: DeRichSystem.cpp,v 1.11 2007-03-26 14:34:40 jonrob Exp $
  *
  * @author Antonis Papanestis a.papanestis@rl.ac.uk
  * @date   2006-01-27
@@ -212,6 +212,14 @@ StatusCode DeRichSystem::fillMaps( const Rich::DetectorType rich )
     m_hardid2L1[hardID] = L1ID;
     m_smartid2L1In[hpdID] = L1IN;
     m_hardid2L1In[hardID] = L1IN;
+    /*
+    { // CRJ : Work arounds for case when vector has pool allocator
+      if ( m_l12smartids.find(L1ID) == m_l12smartids.end() )
+      { m_l12smartids.insert( Rich::DAQ::L1ToSmartIDsPair(L1ID,LHCb::RichSmartID::Vector()) ); }
+      if ( m_l12hardids.find(L1ID) == m_l12hardids.end() )
+      { m_l12hardids.insert( Rich::DAQ::L1ToHardIDsPair(L1ID,Rich::DAQ::HPDHardwareIDs()) ); }
+    }
+    */
     m_l12smartids[L1ID].push_back( hpdID );
     m_l12hardids[L1ID].push_back( hardID );
     if ( std::find( m_l1IDs.rbegin(), m_l1IDs.rend(), L1ID ) == m_l1IDs.rend() )

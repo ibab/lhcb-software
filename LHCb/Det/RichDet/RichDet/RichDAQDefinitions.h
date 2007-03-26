@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ general definitions
  *
  *  CVS Log :-
- *  $Id: RichDAQDefinitions.h,v 1.12 2007-03-19 15:02:47 jonrob Exp $
+ *  $Id: RichDAQDefinitions.h,v 1.13 2007-03-26 14:34:40 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
@@ -29,6 +29,7 @@
 // Boost
 #include "boost/lexical_cast.hpp"
 #include "boost/format.hpp"
+//#include "boost/pool/pool_alloc.hpp"
 
 namespace Rich
 {
@@ -428,19 +429,23 @@ namespace Rich
     //---------------------------------------------------------------------------------
 
     /// Local definition of a RawBank constructed from 32bit ints
-    typedef std::vector< LongType >                           RAWBank;
+    typedef std::vector< LongType >                                            RAWBank;
 
     /// Vector of HPD Hardware IDs
-    typedef std::vector< HPDHardwareID >                      HPDHardwareIDs;
+    typedef std::vector< HPDHardwareID >                                       HPDHardwareIDs;
+    //typedef std::vector< HPDHardwareID, boost::pool_allocator<HPDHardwareID> > HPDHardwareIDs;
+
+    /// Vector of Level 0 IDs
+    typedef std::vector< Level0ID >                                            Level0IDs;
+    //typedef std::vector< Level0ID, boost::pool_allocator<Level0ID> >           Level0IDs;
 
     /// Vector of Level 1 IDs
-    typedef std::vector< Level0ID >                           Level0IDs;
-
-    /// Vector of Level 1 IDs
-    typedef std::vector< Level1ID >                           Level1IDs;
+    typedef std::vector< Level1ID >                                            Level1IDs;
+    //typedef std::vector< Level1ID, boost::pool_allocator<Level1ID> >           Level1IDs;
 
     /// Vector of L1InputWithinIngress
-    typedef std::vector< L1InputWithinIngress >               L1IngressInputs;
+    typedef std::vector< L1InputWithinIngress >                                L1IngressInputs;
+    //typedef std::vector< L1InputWithinIngress, boost::pool_allocator<L1InputWithinIngress> > L1IngressInputs;
 
     //---------------------------------------------------------------------------------
 
@@ -697,9 +702,13 @@ namespace Rich
 
     /// Mapping from Level1 ID to list of HPD RichSmartIDs
     typedef GaudiUtils::HashMap< const Level1ID, LHCb::RichSmartID::Vector >          L1ToSmartIDs;
+    /// Pair type in a L1ToSmartIDs
+    typedef std::pair< const Level1ID, LHCb::RichSmartID::Vector >                    L1ToSmartIDsPair;
 
     /// Mapping from Level1 ID to list of HPD RichSmartIDs
     typedef GaudiUtils::HashMap< const Level1ID, HPDHardwareIDs >                     L1ToHardIDs;
+    /// Pair type in a L1ToHardIDs
+    typedef std::pair< const Level1ID, HPDHardwareIDs >                               L1ToHardIDsPair;
 
   }
 }
