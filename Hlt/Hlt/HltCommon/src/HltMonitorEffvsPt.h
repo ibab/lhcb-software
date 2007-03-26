@@ -1,4 +1,4 @@
-// $Id: HltMonitorEffvsPt.h,v 1.1 2007-02-08 17:38:06 hernando Exp $
+// $Id: HltMonitorEffvsPt.h,v 1.2 2007-03-26 16:37:18 cattanem Exp $
 #ifndef HLTMONITOREFFVSPT_H 
 #define HLTMONITOREFFVSPT_H 1
 
@@ -9,7 +9,7 @@
 
 #include "Event/L0DUReport.h"
 
-/** @class HltMonitorOfflineEff HltMonitorOfflineEff.h
+/** @class HltMonitorEffvsPt HltMonitorEffvsPt.h
  *  
  *  functionality (TODO):
  *         select a track from a list of track container

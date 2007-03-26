@@ -4,10 +4,15 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !-----------------------------------------------------------------------------
 
-! ======================== HltCommon v1r3 2007-02-12 =========================
+! ======================== HltCommon v1r4 2007-03-26 =========================
+! 2007-03-26 - Marco Cattaneo
+ - Remove obsolete HltCommon_load.cpp file
+ - Fix doxygen warnings
+
 ! 2007-03-08 - Alessia Satta
  - add class MatchTVeloTracks
 
+! ======================== HltCommon v1r3 2007-02-12 =========================
 ! 2007-02-08 - Jose A. Hernando
  - src/HltSummaryTool 
        tool to simplify the current access to hltsummary info

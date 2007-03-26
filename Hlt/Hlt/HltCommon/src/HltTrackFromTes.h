@@ -1,4 +1,4 @@
-// $Id: HltTrackFromTes.h,v 1.1 2007-02-08 17:38:06 hernando Exp $
+// $Id: HltTrackFromTes.h,v 1.2 2007-03-26 16:37:18 cattanem Exp $
 #ifndef HLTTRACKFROMTES_H 
 #define HLTTRACKFROMTES_H 1
 
@@ -9,9 +9,7 @@
 
 #include "Event/L0DUReport.h"
 
-//typedef HltAlgorithm HltAlgorithm
-
-/** @class HltMonitorOfflineEff HltMonitorOfflineEff.h
+/** @class HltTrackFromTes HltTrackFromTes.h
  *  
  *  functionality (TODO):
  *         select a track from a list of track container
