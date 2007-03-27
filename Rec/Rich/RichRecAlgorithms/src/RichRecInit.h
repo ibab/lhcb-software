@@ -5,7 +5,7 @@
  *  Header file for algorithm class : Rich::Rec::Initialise
  *
  *  CVS Log :-
- *  $Id: RichRecInit.h,v 1.4 2007-03-09 22:48:41 jonrob Exp $
+ *  $Id: RichRecInit.h,v 1.5 2007-03-27 12:44:30 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   10/01/2003
@@ -53,6 +53,20 @@ namespace Rich
       virtual ~Initialise();   ///< Destructor
 
       virtual StatusCode execute(); /// Algorithm execution
+
+    private:
+
+      /// Flag to turn on check for ProcStatus object
+      bool m_checkProcStatus;
+
+      /// Flag to turn on creation of RichRecPixels
+      bool m_makePixels;
+
+      /// Flag to turn on creation of RichRecTracks
+      bool m_makeTracks;
+
+      /// Flag to turn on creation of RichRecPhotons
+      bool m_makePhotons;
 
     };
 

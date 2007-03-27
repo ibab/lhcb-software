@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichRecInit
  *
  *  CVS Log :-
- *  $Id: RichRecInit.cpp,v 1.3 2007-02-02 10:05:51 jonrob Exp $
+ *  $Id: RichRecInit.cpp,v 1.4 2007-03-27 12:44:30 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -28,6 +28,10 @@ Initialise::Initialise( const std::string& name,
                         ISvcLocator* pSvcLocator )
   : RichRecAlgBase ( name, pSvcLocator )
 {
+  declareProperty( "CheckProcStatus", m_checkProcStatus = true  );
+  declareProperty( "CreatePixels",    m_makePixels      = false );
+  declareProperty( "CreateTracks",    m_makeTracks      = false );
+  declareProperty( "CreatePhotons",   m_makePhotons     = false );
 }
 
 // Destructor
@@ -39,13 +43,34 @@ StatusCode Initialise::execute()
   if ( !richStatus()->eventOK() ) return StatusCode::SUCCESS;
 
   // check for a ProcStat object
-  // needed when running special modes where it is not available
-  if ( !exist<LHCb::ProcStatus>(LHCb::ProcStatusLocation::Default) )
+  if ( m_checkProcStatus )
   {
-    Warning( "No ProcStatus at " + LHCb::ProcStatusLocation::Default + " : Creating one",
-             StatusCode::SUCCESS );
-    LHCb::ProcStatus * procS = new LHCb::ProcStatus();
-    put( procS, LHCb::ProcStatusLocation::Default );
+    // needed when running special modes where it is not available
+    if ( !exist<LHCb::ProcStatus>(LHCb::ProcStatusLocation::Default) )
+    {
+      Warning( "No ProcStatus at " + LHCb::ProcStatusLocation::Default + " : Creating one",
+               StatusCode::SUCCESS );
+      LHCb::ProcStatus * procS = new LHCb::ProcStatus();
+      put( procS, LHCb::ProcStatusLocation::Default );
+    }
+  }
+
+  // Pixels
+  if ( m_makePixels )
+  {
+    if ( !pixelCreator()->newPixels() ) return StatusCode::FAILURE;
+  }
+
+  // Tracks
+  if ( m_makeTracks )
+  {
+    if ( !trackCreator()->newTracks() ) return StatusCode::FAILURE;
+  }
+
+  // Photons
+  if ( m_makePhotons )
+  {
+    if ( !photonCreator()->reconstructPhotons() ) return StatusCode::FAILURE;
   }
 
   return StatusCode::SUCCESS;
