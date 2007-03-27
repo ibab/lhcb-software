@@ -4,7 +4,10 @@
 ! Purpose     : L0-Tsa Confirmation algorithms
 !-----------------------------------------------------------------------------
 
-!=========================== HltL0Conf v1r0 2007-03-27 =======================
+!=========================== HltL0Conf v1r1 2007-03-27 =======================
+! 2007-03-27 - Marco Cattaneo
+ - Add missing HltL0Conf_dll.cpp file
+
 ! 2007-03-27 Johannes Albrecht
 	- src/PrepareMuonSeed
 			- real use of new L0MuonCandidate class
@@ -20,6 +23,7 @@
 			- restore option to get mometum from curvature
 			  (faster, but worse resolution than pt-kick)
 
+!=========================== HltL0Conf v1r0 2007-02-12 =======================
 ! 2007-02-12 Jose A. Hernando 
    - src/PrepareMuonSeed
        quick fix to use L0MuonCandidate updated class
