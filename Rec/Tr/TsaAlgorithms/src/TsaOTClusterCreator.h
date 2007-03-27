@@ -1,4 +1,4 @@
-// $Id: TsaOTClusterCreator.h,v 1.7 2007-03-20 13:12:05 mneedham Exp $
+// $Id: TsaOTClusterCreator.h,v 1.8 2007-03-27 16:45:28 albrecht Exp $
 #ifndef _TSAOTCLUSTERCREATOR_H_
 #define _TSAOTCLUSTERCREATOR_H_
 
@@ -78,6 +78,7 @@ private:
   
   double m_sqrt12;
 
+  std::string m_inputLocation;
   std::string m_outputLocation;
 
 };

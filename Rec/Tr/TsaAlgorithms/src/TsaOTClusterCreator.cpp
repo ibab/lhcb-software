@@ -1,4 +1,4 @@
-// $Id: TsaOTClusterCreator.cpp,v 1.11 2007-03-20 13:12:05 mneedham Exp $
+// $Id: TsaOTClusterCreator.cpp,v 1.12 2007-03-27 16:46:07 albrecht Exp $
 
 //GaudiKernel
 #include "GaudiKernel/AlgFactory.h"
@@ -53,6 +53,7 @@ TsaOTClusterCreator::TsaOTClusterCreator(const std::string& name,
                   list_of(773.)(773.)(773.)(773.)(773.)(773.)(773.)(773.)(773.));
   declareProperty("filterClusters", m_filterClusters = false );
   declareProperty("clusterFilterName", m_clusterFilterName = "TrackUsedLHCbID");
+  declareProperty("inputLocation", m_inputLocation = LHCb::OTTimeLocation::Default);
   declareProperty("outputLocation", m_outputLocation = Tsa::OTClusterLocation::Default);
 
   m_sqrt12 = sqrt(12.0);
@@ -87,7 +88,7 @@ StatusCode TsaOTClusterCreator::execute(){
   m_hotModule = 0u;  
  
   // retrieve clusters
-  LHCb::OTTimes* clustCont = get<LHCb::OTTimes>(LHCb::OTTimeLocation::Default);
+  LHCb::OTTimes* clustCont = get<LHCb::OTTimes>(m_inputLocation);
 
   // clusterize
   Tsa::OTClusters* pattClusCont = new Tsa::OTClusters();
