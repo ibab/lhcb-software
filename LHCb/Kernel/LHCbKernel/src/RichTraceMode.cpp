@@ -5,7 +5,7 @@
  *  Implementation file for utility class : RichTraceMode
  *
  *  CVS History :-
- *  $Id: RichTraceMode.cpp,v 1.2 2006-11-30 14:26:46 jonrob Exp $
+ *  $Id: RichTraceMode.cpp,v 1.3 2007-03-27 12:38:33 jonrob Exp $
  *
  *  @author Chris Jones Christopher.Rob.Jones@cern.ch
  *  @date   05/08/2006
@@ -25,8 +25,8 @@ std::ostream& LHCb::RichTraceMode::fillStream(std::ostream& os) const
   if ( outMirrorBoundary() )  { os << " [Will Respect Outside Mirror Boundaries]"; }
   if ( mirrorSegBoundary() )  { os << " [Will Respect Mirror Seg Boundaries]"; }
   if ( beamPipeIntersects() ) { os << " [Will Test for intersections with beampipe]"; }
+  if ( hpdKaptonShadowing() ) { os << " [Will check for intersections with HPD kapton]"; }
   return os << " ]";
 }
 
 //-----------------------------------------------------------------------------
-

@@ -3,7 +3,7 @@
 <gdd>
 
 <!-- **************************************************************************
-  * $Id: RichTraceMode.xml,v 1.3 2006-11-30 14:26:46 jonrob Exp $
+  * $Id: RichTraceMode.xml,v 1.4 2007-03-27 12:38:33 jonrob Exp $
   *****************************************************************************
   * XML-description of RichTraceMode class                                      *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -47,6 +47,7 @@
                 <arg const="TRUE" name="respectOuter = false"                      inout="BYVALUE" type="bool" />
                 <arg const="TRUE" name="respectMirrSegs = false"                   inout="BYVALUE" type="bool" />
                 <arg const="TRUE" name="checkBeamPipeIntersects = false"           inout="BYVALUE" type="bool" />
+                <arg const="TRUE" name="checkHPDKaptonShadowing = false"           inout="BYVALUE" type="bool" />
                 <code>
                   setDetPlaneBound      ( bound           );
                   setDetPrecision       ( detPrec         );
@@ -54,6 +55,7 @@
                   setOutMirrorBoundary  ( respectOuter    );
                   setMirrorSegBoundary  ( respectMirrSegs );
                   setBeamPipeIntersects ( checkBeamPipeIntersects );
+                  setHpdKaptonShadowing ( checkHPDKaptonShadowing );
                 </code>
         </constructor>
 
@@ -67,7 +69,8 @@
            <bitfield desc="Flag to force the side to use in the ray-tracing"            length="1" name="forcedSide" />
            <bitfield desc="Flag to respect the overall outer boundaries of the mirrors" length="1" name="outMirrorBoundary" />
            <bitfield desc="Flag to respect the individual mirror segment boundaries (i.e. the small gaps between them)" length="1" name="mirrorSegBoundary" />
-           <bitfield desc="Flag to turn on rejection of trajectories which intersect the beam pipe inside the RICH detectors" length="1" name="beamPipeIntersects" />
+           <bitfield desc="Flag to turn on rejection of trajectories which intersect the beam pipe inside the RICH detectors" length="1" name="beamPipeIntersects" /> 
+           <bitfield desc="Flag to turn on the checking for shadowing by the HPD kapton" length="1" name="hpdKaptonShadowing" />
         </attribute>
 
         <method 

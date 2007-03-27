@@ -4,6 +4,9 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2007-03-27 - Chris Jones
+ - Add new flag to RichTraceMode to control kapton intersection checks
+
 ! 2007-03-26 - Chris Jones
  - Add typedef to RichSmartID for boost pool allocated vector
 
