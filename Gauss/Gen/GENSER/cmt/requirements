@@ -8,7 +8,7 @@ use GaudiPolicy  v*
 
 include_path none
 
-macro pythia6_native_version "409.2"
+macro pythia6_native_version "410.2"
 use pythia6  v* LCG_GeneratorsInterfaces
 macro_remove pythia6_linkopts " -lpythia6_pdfdummy "
 
