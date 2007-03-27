@@ -1,4 +1,4 @@
-// $Id: TsaConfirmTool.cpp,v 1.4 2007-03-22 18:56:03 albrecht Exp $
+// $Id: TsaConfirmTool.cpp,v 1.5 2007-03-27 08:17:27 albrecht Exp $
 // Include files 
 
 // from Gaudi
@@ -148,8 +148,8 @@ StatusCode TsaConfirmTool::initialize(){
 StatusCode TsaConfirmTool::tracks(const LHCb::State& seedState, std::vector<Track*>& outputTracks ) 
 {
 
-  ChronoEntity tCollect, tInit, tTracking, tConvert;
-  tCollect.start();
+  //  ChronoEntity tCollect, tInit, tTracking, tConvert;
+  //tCollect.start();
 
   Tsa::OTClusters* otClusters = new Tsa::OTClusters();
   Tsa::STClusters* itClusters = new Tsa::STClusters();
@@ -171,7 +171,7 @@ StatusCode TsaConfirmTool::tracks(const LHCb::State& seedState, std::vector<Trac
    m_tsacollector->collect( seedState , otClusters , m_nsigma );
    m_tsacollector->collect( seedState , itClusters , m_nsigma );
   
-   tCollect.stop();
+   //tCollect.stop();
 
    if(m_debugInfo){
     debug() <<"In Tool:"<<endmsg;
@@ -180,15 +180,15 @@ StatusCode TsaConfirmTool::tracks(const LHCb::State& seedState, std::vector<Trac
     
    }
 
-   m_stClsuters = itClusters->size();
-   m_otClusters = otClusters->size();
+   //m_stClsuters = itClusters->size();
+   //m_otClusters = otClusters->size();
    
   //***************************************************************************************
   // initialization of Tsa seeding
-  tInit.start();
+  //tInit.start();
   if (m_initIT == true) m_itDataSvc->initializeEvent(itClusters);
   if (m_initOT == true) m_otDataSvc->initializeEvent(otClusters);
-  tInit.stop();
+  //tInit.stop();
   //***************************************************************************************
   //-------------------------------------------------------------------------
   //  Steering routine for track seeding
@@ -196,12 +196,12 @@ StatusCode TsaConfirmTool::tracks(const LHCb::State& seedState, std::vector<Trac
   
   //@ja: it and ot hits only for nHits cut?
   //@ja weg?
-  tTracking.start();
+  //tTracking.start();
   typedef LHCb::STLiteCluster::FastContainer FastContainer;
   LHCb::OTTimes* otCont = get<LHCb::OTTimes>(LHCb::OTTimeLocation::Default);
   FastContainer* liteCont = get<FastContainer>( LHCb::STLiteClusterLocation::ITClusters);
   double nHit = liteCont->size() + otCont->size();
-  m_nTHits = int(nHit);
+  //m_nTHits = int(nHit);
 
    if(m_debugInfo) debug()<<"number of hits (OT + IT) = "<<nHit <<endmsg;
   
@@ -278,9 +278,9 @@ StatusCode TsaConfirmTool::tracks(const LHCb::State& seedState, std::vector<Trac
     }
   }
 
-  tTracking.stop();
+  //  tTracking.stop();
   
-  tConvert.start();
+  //tConvert.start();
   //******************************************************************
   //from TsaSeedTrackConvertor
 
@@ -295,13 +295,13 @@ StatusCode TsaConfirmTool::tracks(const LHCb::State& seedState, std::vector<Trac
     }
   }
 
-  tConvert.stop();
+  //tConvert.stop();
   
   if( m_debugInfo ) debug()<<"tracks found sofar in TsaSearch Tool: "<<outputTracks.size()<<endmsg;
 
-  m_collectTime = int( tCollect.eTotalTime());
-  m_trackingTime = int( tInit.eTotalTime() + tTracking.eTotalTime() + tConvert.eTotalTime() );
-  m_nModules = -1;//moduleList.size();
+  //m_collectTime = int( tCollect.eTotalTime());
+  //m_trackingTime = int( tInit.eTotalTime() + tTracking.eTotalTime() + tConvert.eTotalTime() );
+  //m_nModules = -1;//moduleList.size();
 
   delete otClusters;
   delete itClusters;
@@ -395,19 +395,19 @@ void TsaConfirmTool::addState(const SeedTrack* aTrack, LHCb::Track* lTrack, cons
 }
 
 
-void TsaConfirmTool::getDebugInfo( int& nHits, 
-                                   int& stClusters, int& otClusters,
-                                   int& collectTime, int& trackingTime, 
-                                   int& nModules )
-{
+// void TsaConfirmTool::getDebugInfo( int& nHits, 
+//                                    int& stClusters, int& otClusters,
+//                                    int& collectTime, int& trackingTime, 
+//                                    int& nModules )
+// {
   
-  nHits =  m_nTHits;
-  stClusters = m_stClsuters;
-  otClusters = m_otClusters;
-  collectTime = m_collectTime;
-  trackingTime = m_trackingTime;
-  nModules = m_nModules;
+//   nHits =  m_nTHits;
+//   stClusters = m_stClsuters;
+//   otClusters = m_otClusters;
+//   collectTime = m_collectTime;
+//   trackingTime = m_trackingTime;
+//   nModules = m_nModules;
   
   
-  return;
-}
+//   return;
+// }
