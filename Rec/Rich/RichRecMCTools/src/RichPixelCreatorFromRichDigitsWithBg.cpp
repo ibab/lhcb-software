@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : Rich::Rec::PixelCreatorFromRichDigitsWithBg
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromRichDigitsWithBg.cpp,v 1.19 2007-03-09 22:57:42 jonrob Exp $
+ *  $Id: RichPixelCreatorFromRichDigitsWithBg.cpp,v 1.20 2007-03-27 12:50:07 jonrob Exp $
  *
  *  @author Andy Buckley  buckley@hep.phy.cam.ac.uk
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -235,8 +235,8 @@ StatusCode PixelCreatorFromRichDigitsWithBg::newPixels() const
     {
 
       // Add hits for this particle
-      std::vector<LHCb::RichSmartID> & bgdigits = m_digitsForTrackBg[Rich::Rich1].begin()->second;
-      for ( std::vector<LHCb::RichSmartID>::const_iterator digit = bgdigits.begin();
+      LHCb::RichSmartID::Vector & bgdigits = m_digitsForTrackBg[Rich::Rich1].begin()->second;
+      for ( LHCb::RichSmartID::Vector::const_iterator digit = bgdigits.begin();
             digit != bgdigits.end(); ++digit )
       {
         LHCb::RichRecPixel * newPix = newPixel( *digit );
@@ -255,8 +255,8 @@ StatusCode PixelCreatorFromRichDigitsWithBg::newPixels() const
     {
 
       // Add hits for this particle
-      std::vector<LHCb::RichSmartID> & bgdigits = m_digitsForTrackBg[Rich::Rich2].begin()->second;
-      for ( std::vector<LHCb::RichSmartID>::const_iterator digit = bgdigits.begin();
+      LHCb::RichSmartID::Vector & bgdigits = m_digitsForTrackBg[Rich::Rich2].begin()->second;
+      for ( LHCb::RichSmartID::Vector::const_iterator digit = bgdigits.begin();
             digit != bgdigits.end(); ++digit )
       {
         LHCb::RichRecPixel * newPix = newPixel( *digit );
