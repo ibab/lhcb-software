@@ -4,7 +4,22 @@
 ! Purpose     : L0-Tsa Confirmation algorithms
 !-----------------------------------------------------------------------------
 
-!=========================== HltL0Conf v1r0 2007-02-12 =======================
+!=========================== HltL0Conf v1r0 2007-03-27 =======================
+! 2007-03-27 Johannes Albrecht
+	- src/PrepareMuonSeed
+			- real use of new L0MuonCandidate class
+			- switch off use of pt-kick (not needed)
+			- clean up code
+			- include resolutions for y, tx, ty
+	- src/PrepareElectronSeed
+			- include resolutions for y, tx, ty
+			- some cleanup of the code (cleanup not finished)
+	- src/PrepareHadronSeed
+			- include resolutions for y, tx, ty
+	- src/TsaConfirmTool
+			- restore option to get mometum from curvature
+			  (faster, but worse resolution than pt-kick)
+
 ! 2007-02-12 Jose A. Hernando 
    - src/PrepareMuonSeed
        quick fix to use L0MuonCandidate updated class
