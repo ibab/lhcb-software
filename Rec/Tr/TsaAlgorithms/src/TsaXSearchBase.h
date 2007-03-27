@@ -94,6 +94,7 @@ private:
   double dx(const double x, const double z, const double sx, const SeedHit* hit ) const;
   
   int m_sector;
+  double m_nSigmaTx;
   std::string m_seedHitLocation;
 
 };
