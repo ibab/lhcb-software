@@ -1,5 +1,5 @@
 package GaussSys
-version v25r9
+version v30r2
 
 branches cmt doc
 
@@ -8,36 +8,36 @@ branches cmt doc
 #==================================================================
 
 # Gauss application
-use Gauss		v25r9	  Sim
+use Gauss		v30r2	  Sim
 
 # Generator stuff ...
-use GENSER              v1r141p2  Gen
+use GENSER              v3r0      Gen
 use EvtGen              v8r15     Gen
 use Generators          v7r0      Gen
 use LbPythia            v5r0      Gen
-use LbHerwig            v4r0      Gen
-use LbHijing            v2r0      Gen
+use LbHerwig            v5r0      Gen
+use LbHijing            v3r0      Gen
 use BcVegPy             v1r0p1    Gen
 use LbBcVegPy           v1r4      Gen
 use LbHidValley         v2r0      Gen
 use ParticleGuns	v3r2      Gen
 
 # GiGa stuff...
-use GiGa        	v18r3	  Sim        
-use GiGaCnv     	v17r1	  Sim
-use SimSvc              v4r2      Sim
-use GiGaVisUI		v3r1	  Sim
-use VisSvc              v3r3      Vis
-use ClhepTools          v1r0      Tools
+use GiGa        	v19r0	  Sim        
+use GiGaCnv     	v18r0	  Sim
+use SimSvc              v5r0      Sim
+use GiGaVisUI		v4r0	  Sim
+use VisSvc              v5r0      Vis
+use ClhepTools          v2r0      Tools
 
 # Gauss stuff...
 use GaussKine           v1r5      Sim
 use GaussAlgs		v2r4      Sim
-use GaussTools          v12r5     Sim
-use GaussRICH		v6r8	  Sim
-use GaussTracker	v5r6	  Sim
-use GaussCalo		v8r4	  Sim
-use GaussPhysics	v3r2	  Sim
+use GaussTools          v13r0     Sim
+use GaussRICH		v7r0	  Sim
+use GaussTracker	v6r0	  Sim
+use GaussCalo		v9r0	  Sim
+use GaussPhysics	v5r0	  Sim
 use GaussMonitor	v4r4	  Sim
 use CaloMoniSim         v3r1      Calo
 use VeloGauss           v2r1      Velo

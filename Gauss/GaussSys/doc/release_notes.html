@@ -3,7 +3,431 @@ Package : GaussSys
 Package manager : Gloria Corti
 Purpose: LHCb Simulation program
 
-</PRE><H1><A NAME="v25r9">2007-03-13 - GaussSys v25r9</A></H1><PRE>
+</PRE><H1><A NAME="v30r2">2007-03-27 - GaussSys v30r2</A></H1><PRE>
+<H2><A NAME="Note">DEVELOPEMENT version. Incompatible with DC06.</A></H2>
+<H3><A NAME="Use">This version uses:
+   LHCb v22r1 (and Gaudi v19r1)
+   Pythia6 410.2, photos 215.2, lhapdf 5.2.3 (via LCG_GeneratorsInterfaces)
+   HepMC 1.26 (via LCG external)
+   Geant4 v82r1 (based on geant4.8.2.p01)
+   DecFiles v13r9, ParamFiles v6r0 
+   XmlDDDB v40r1, XmlConditions v2r5, FieldMap v4r7</A></H3>
+<H3><A NAME="Exe">Used by GaussXXX executables:
+   Herwig 6_510.2, Jimmy 4_2.2
+   Hijing 1_383bs.2 (via LCG_GeneratorsInterfaces)</A></H3>
+<H3><A NAME="Details">
+   This version is the basis for post-DC06. 
+   Everything is new: Gaudi, Install area, new distribution and versions
+   of generators, latest version of Geant4.
+</A></H3>
+
+!======================== Gauss v30r2 2007-03-26 =============================
+! 2007-03-26 - Gloria Corti
+ - DEVELOPMENT VERSION INCOMPATIBLE WITH DC06
+     based on LHCb v22r1, Gaudi v19r1, Install Area, new MCGenerators,
+     Geant4 8.2.p01
+ - Replace MeV with mm in cuts since that is the unit used internally
+   in the code. Since MeV = 1 and mm = 1, there is no effect but the
+   xml is consistent with the code.
+   . Simulation.xml
+ - Use GaudiMain.cpp from $GAUDICONF and no longer special GaussMain
+   . requirements
+   . GaussMain.cpp (for the moment = to GaudiMain.cpp)
+ - Remove loading of DLLs not necessary with Gaudi v19rX
+   . Common.opts
+   . GaussVis.opts
+   . SimGeometry.opts
+   . Monitor.opts
+   . Simulation.opts
+ - Adapt options to physics lists of Geant4 8.2.p01 as declared in
+   GaussPhysics v5r0
+   . Simulation.opts
+   . PhysList-LHPP.opts  - NEW
+   . PhysList-QGSP.opts  - NEW
+ - New version of packages adapted to both Gaudi and Geant4 8.2.p01:
+   GiGa v19r0, GiGaCnv v18r0, GaussTools v13r0, GaussPhysics v5r0,
+   GaussTracker v6r0, GaussRICh v7r0, GaussCalo v9r0, GiGaVisUI v4r0
+ - New version of packages to adapt to new MCGenerators distribution:
+   LbHijing v3r0, LbHerwig v5r0. Note the other generator packages are
+   identical to Gauss v25r9 and all difference are handled by GENSER v3r0.
+ - Use new version of ParamFiles v6r0 with new ParticleData
+ - Use new version of Geant4Files v82r0 for new version of Geant4 8.2.p01
+ - Use new XmlDDDB v40r0 and XmlConditions v2r5 to adapt to changes in
+   LHCb v22r1
+ 
+!====================== GaussPhysics v5r0 2007-03-26 =========================
+! 2007-03-26 - Gloria Corti
+ - Remove special hadronic physics (EMV and EMX) not necessary for use of
+   LHEP/QGSP with Em71 and Em72.
+   Remove LHEP_QGSP_BERT that is listed as obolete from G4
+   Introduce QGSC_EFLOW that has the CHIPs model for nuclear interactions.
+ 
+! 2007-03-19 - Gloria Corti
+ - Fix mispelling
+   . src/GaussPhysics_load.cpp
+ 
+! 2007-03-18 - Gloria CORTI
+ - Adapt to new factory declarations from Gaudi v19r1 having removed
+   special GiGaFactories and IMPLEMENT_ExtPhysics macro (GiGa v19r0).
+   Add new physics list from Geant4 8.2.
+   . src/GaussPhysics_load.cpp
+   The physics lists that can be instanciated from options are:
+     - For general processes (i.e. Decays)
+       GiGaExtPhysics< G4DecayPhysics >
+     - For EM physics
+       GiGaExtPhysics< G4EmStandardPhysics >     - 8.2
+       GiGaExtPhysics< G4EmStandardPhysics72 >   - similar to that of G4 7.2
+       GiGaExtPhysics< G4EmStandardPhysics71 >   - similar to that of G4 7.1
+       GiGaExtPhysics< G4EmExtraPhysics >        - synchroton radiation &
+                                                   gamma-nuclear physics
+     - For hadronic physics
+       GiGaExtPhysics< HadronPhysicsLHEP >   - Low High Energy Parametrized
+       GiGaExtPhysics< HadronPhysicsQGSP >   - Quark Gluon String Precompound
+       GiGaExtPhysics< HadronPhysicsQGSP_BERT_HP > - and Bertini cascade in
+                                                     intermediate E range and
+                                                     High precision (low energy
+                                                     neutrons, < 1 keV)
+       GiGaExtPhysics< HadronPhysicsLHEP_BERT_HP > - similar but for LHEP
+       GiGaExtPhysics< G4HadronElasticPhysics >    - hadron elactic scattering
+       GiGaExtPhysics< G4QStoppingPhysics >        - stopping physics
+       GiGaExtPhysics< G4NeutronTrackingCut >      - neutron tracking cuts
+       GiGaExtPhysics< HadronPhysicsLHEP_EMV >  - To be used with EM 7.1
+       GiGaExtPhysics< HadronPhysicsQGSP_EMV >  - To be used with EM 7.1
+       GiGaExtPhysics< HadronPhysicsQGSP_EMX >  - To be used with EM 7.2
+     - For ion physics
+       GiGaExtPhysics< G4IonPhysics >
+ 
+! 2007-01-17 - Florence RANJARD
+ - Use new internal physics lists of Geant4 8.2 (G4physics_lists instead
+   of G4hadlists)
+ 
+!======================= GaussPhysics v4r0 2006-01-09 ========================
+! 2006-01-09 - Patrick Robbe
+ - Adapt particle definitions to Geant4 8.1
+ - Use new physics lists from Geant4 8.1 (has to be checked !)
+ 
+!===================== GaussCalo v9r0 2007-03-18 ============================
+! 2007-03-18 - Gloria Corti
+ - Modify requirements to put back creation of rootmap
+ - Remove commented lines of code
+   . CaloSensDet.h
+   . EHCalSensDet.h
+   . EcalSensDet.h
+   . GaussSensPlaneDet.h
+ 
+! 2007-01-18 - Florence RANJARD for Gloria CORTI
+ - Remove GiGaCaloHitCnv.{h,cpp} that is obsolete and prevents creation of
+   rootmap.
+ 
+! 2007-01-12 - Gloria CORTI
+ - Update code to cope with Gaudi v19r0. Replace GiGaFactory with ToolFactory
+    and use Gaudi macros for factory declarations. Remove friend declaration
+    of GiGaFactory no longer in use and make public the standard LHCb
+    constructor and destructor
+    . CaloSensDet.h
+    . EcalSensDet.{h,cpp}
+    . EHCalSensDet.h
+    . GaussSensPlaneDet.{h,cpp}
+    . HcalSensDet.{h,cpp}
+    . SpdPrsSensDet.{h,cpp}
+    . GaussCalo_load.cpp
+    . GetCaloHitsAlg.cpp
+ 
+!======================== GaussTracker v6r0 2007-03-18 =======================
+! 2007-03-18 - Gloria Corti
+ - Clean up, removing commented lines of code
+   . GiGaSensDetTracker.{h,cpp}
+ 
+! 2007-01-12 - Gloria Corti
+ - Update code to cope with Gaudi v19r0. Replace GiGaFactory with Tool factory
+   and use Gaudi macros for factory declarations. Remove GiGaMACROs.h no
+   longer existing.
+   . GaussTracker_load.cpp
+   . GetTrackerHitsAlg.cpp
+   . GiGaSensDetTracker.{h,cpp}
+ - Make standard constructor and destructor public
+   . GiGaSensDetTracker.h
+ 
+! 2007-01-12 - Florence RANJARD
+ - Introduce pattern packageOpts
+ 
+!======================== GaussRICH v7r0 2007-03-18 ========================
+! 2007-03-18 - Gloria Corti
+ - Adapt to changes in RichStatDivFunctor.h with introduction of "Rich"
+   namespace (RichKernel v7r1 in LHCb v22r1)
+   . src/SensDet/GetMCRichHitsAlg.cpp
+   .             GetMCRichOpticalPhotonsAlg.cpp
+   .             GetMCRichSegmentsAlg.cpp
+   .             GetMCRichTracksAlg.cpp
+ 
+! 2007-01-12 - Florence RANJARD
+ - Use pattern packageOpts
+ - Replace obsolete "CLHEP/Units/PhysicalConstants.h" with
+   "Kernel/SystemOfUnits.h" (Gaudi v19r0)
+   . src/RichAnalysis/RichG4HistoDefineSet1.cpp
+   .                  RichG4HistoDefineSet2.cpp
+   .                  RichG4HistoDefineSet3.cpp
+   .                  RichG4HistoDefineSet4.cpp
+   .                  RichG4HistoDefineTimer.cpp
+   .                  RichG4ReconFlatMirr.cpp
+                                                                                      
+! 2007-01-12 - Gloria CORTI, Florence RANJARD
+ - Adapt code to Gaudi v19r0
+   Remove GiGaFactory and use ToolFactory instead. Use Gaudi macros for
+   factory declarations. Remove GiGaMACROs.h no longer existing.
+   . src/GaussRICH_load.cpp
+   . src/PhysProcess/GiGaPhysConstructorHpd.cpp
+   .                 GiGaPhysConstructorOp.cpp
+   . src/RichAction/Rich1G4TrackActionUpstrPhoton.{h,cpp}
+   .                RichG4EventAction.{h,cpp}
+   .                RichG4RunAction.{h,cpp}
+   .                RichG4TrackActionAerogelPhoton.{h,cpp}
+   .                RichG4TrackAction.{h,cpp}
+   .                RichG4TrackActionPhotOpt.{h,cpp}
+   . src/RichAnalysis/RichG4StepAnalysis3.cpp
+   .                  RichG4StepAnalysis4.cpp
+   .                  RichG4StepAnalysis5.cpp
+   . src/SensDet/GetMCRichHitsAlg.cpp
+   .             GetMCRichOpticalPhotonsAlg.cpp
+   .             GetMCRichSegmentsAlg.cpp
+   .             GetMCRichTracksAlg.cpp
+   .             RichG4GeomProp.cpp
+   .             RichSensDet.{h,cpp}
+ - Make standard constructor and destructor public.
+   . src/RichAction/Rich1G4TrackActionUpstrPhoton.h
+   .                RichG4EventAction.h
+   .                RichG4RunAction.h
+   .                RichG4TrackActionAerogelPhoton.h
+   .                RichG4TrackAction.{h,cpp}
+   . src/SensDet/RichSensDet.{h,cpp}
+ - Remove no longer existing include GiGaMACROs.h
+   . src/RichAnalysis/RichG4EventHitCount.cpp
+   .                  RichG4HistoFillSet1.cpp
+   .                  RichG4HistoFillSet2.cpp
+   .                  RichG4HistoFillSet3.cpp
+   .                  RichG4HistoFillSet4.cpp
+ 
+!======================== GaussTools v13r0 2007-03-18 ========================
+! 2007-03-18 - Gloria Corti
+ - Clean up of left over commented lines of code
+   . GaussTrackActionBase.h
+   . GaussTrackActionZ.h
+ 
+! 2007-01-12 - Gloria CORTI
+ - Use install area for public include files
+   . requirements
+ - Update code to cope with Gaudi v19r0
+   Remove GiGaFactory and use ToolFactory instead. Use Gaudi macros for
+   factory declarations. Remove GiGaMACROs.h no longer existing. Make
+   standard constructor and destructor public . Also remove CVS Log and Name
+   . GaussTrackActionBase.h - Constructor still protected
+   . GaussTrackActionZ.h - Constructor still protected
+   . CommandTrackAction.{h,cpp}
+   . CutsStepAction.{h,cpp}
+   . GaussEventActionHepMC.{h,cpp}
+   . GaussPostTrackAction.{h,cpp}
+   . GaussPreTrackAction.{h,cpp}
+   . GaussStepAction.{h,cpp}
+   . GaussTools_load.cpp
+   . GaussTrackActionByEnergy.{h,cpp}
+   . GaussTrackActionByEnergyProcess.{h,cpp}
+   . GaussTrackActionByEnergyType.{h,cpp}
+   . GaussTrackActionByProcess.{h,cpp}
+   . GaussTrackActionByType.{h,cpp}
+   . GaussTrackActionFinal.{h,cpp}
+   . GaussTrackActionGeneral.{h,cpp}
+   . GaussTrackActionHepMC.{h,cpp}
+   . GaussTrackActionStart.{h,cpp}
+   . GiGaEventActionCommand.{h,cpp}
+   . GiGaEventActionDraw.{h,cpp}
+   . GiGaEventActionSequence.{h,cpp}
+   . GiGaFieldMgr.{h,cpp}
+   . GiGaInputStream.{h,cpp}
+   . GiGaMagFieldGlobal.{h,cpp}
+   . GiGaMagFieldUniform.{h,cpp}
+   . GiGaOutputStream.{h,cpp}
+   . GiGaPhysListGeantino.{h,cpp}
+   . GiGaPhysListModular.{h,cpp}
+   . GiGaRegionsTool.{h,cpp}
+   . GiGaRegionTool.{h,cpp}
+   . GiGaRunActionCommand.{h,cpp}
+   . GiGaRunActionSequence.{h,cpp}
+   . GiGaSensDetBudget.{h,cpp}
+   . GiGaSensDetSequence.{h,cpp}
+   . GiGaSetSimAttributes.{h,cpp}
+   . GiGaStepActionDraw.{h,cpp}
+   . GiGaStepActionSequence.{h,cpp}
+   . GiGaTrackActionSequence.{h,cpp}
+   . TrCutsRunAction.{h,cpp}
+   . ZeroFieldMgr.{h,cpp}
+ 
+!======================= GiGaVisUI v4r0 2007-03-16 ===========================
+! 2007-01-12 - Gloria Corti
+ - Remove making public includes directory that does not exist
+   . requirements
+ - Replace GiGaFactory with ToolFactory and use Gaudi macros, also make
+   contructor public
+   . GiGaSetVisAttributes.{h,cpp}
+   . GiGaUISession.cpp.{h,cpp}
+   . GiGaVisManager.{h,cpp}
+   . GiGaVisUI_load.cpp
+ 
+!====================== VisSvc v5r0 2007-03-05 =============================
+! 2007-03-05 - Marco Clemencic
+ - Updated following the changes in LHCb v22r1 XmlTools
+ 
+!====================== VisSvc v4r0 2007-01-12 =============================
+! 2007-01-12 - Florence RANJARD
+ - install include files on InstallArea
+ 
+! 2006-12-21 - Guy Barrand
+ - VisSvc_load.cpp : use standard Gaudi cpp macros.
+ - Det_[dll,load].cpp -> VisSvc_[dll,load].cpp.
+ 
+ 
+!==================== SimSvc v5r0 2007-03-16 =================================
+! 2007-03-16 - Gloria Corti
+ - Modified to follow the changes in LHCb v22r1 XmlTools
+   . SimulationSvc.cpp
+ 
+! 2007-01-12 - Gloria Corti
+ - Use install area for includes for Gaudi v19r0
+   . requirements
+ - Use Gaudi macros for factory declarations (Gaudi v19r0)
+   . SimSvc_load.cpp
+   . SimulationSvc.cpp
+ 
+!========================= GiGaCnv v18r0 2007-03-16 ==========================
+! 2007-03-16 - Gloria Corti
+ - Remove left-over commented lines related to remove method
+   . GiGaCnvSvcBase.cpp
+ 
+! 2007-01-12 - Gloria CORTI
+ - update *.cpp to cope with GAUDI_v19r0
+ - Remove method locateOwnCnv() from base class since check not necessary
+   and preventing compilation with Gaudi v19r0
+   . GiGaCnvSvcBase.{h,cpp}
+ - Use Gaudi macros for factory declaration
+   . GiGaCatalogCnv.cpp
+   . GiGaDataStoreAlgorithm.cpp
+   . GiGaDetectorElementCnv.cpp
+   . GiGaElementCnv.cpp
+   . GiGaGeo.cpp
+   . GiGaIsotopeCnv.cpp
+   . GiGaKine.cpp
+   . GiGaLAssemblyCnv.cpp
+   . GiGaLVolumeCnv.cpp
+   . GiGaMixture.cpp
+   . GiGaSurfaceCnv.cpp
+ 
+! 2007-01-12 - Florence RANJARD
+ - install include files on InstallArea
+ 
+! 2006-07-10 - Florence RANJARD
+ - GiGaElementCnv.cpp, GiGaMixtureCnv.cpp, GiGaGeo.cpp, GiGaIsotopeCnv.cpp -
+   call G4Material::GetMaterial and G4Element::GetElement with warning=false
+   to avoid printout as possible with Geant4 8.1
+ 
+!======================= GiGa v19r0 2007-03-26 ===============================
+! 2007-03-26 - Gloria Corti
+ - Remove use of GiGaFactory no longer existing, and macros using it.
+   Since these templated classes do not seem to be used they are candidate
+   for removal in next release
+   . GiGa/GiGaExternalPhC.h
+   . GiGa/GiGaExternalPhysList.h
+   . GiGa/GiGaExternalPhysicsList.h
+ 
+! 2007-03-18 - Gloria Corti
+ - Remove GiGaFactory no longer existing and special macro for implementation
+   of GiGaExtPhysics that are done with new Gauss factory implemenations in
+   package GaussPhysics v4r0
+ - Remove commented include of GiGaFactory or GiGaMACROs, clean CVS $Name
+   and $Log, commented "protected" or "private" declarations
+   . GiGa/GiGaBase.h
+   . GiGa/GiGaFieldMgrBase.h
+   . GiGa/GiGaPhysicsListBase.h
+   . GiGa/GiGaSensDetBase.h
+   . GiGa/GiGaStepActionBase.h
+   . GiGa/GiGaTrackActionBase.h
+   . src/component/GiGaRunManager.{h,cpp}
+ 
+! 2007-01-12 - Gloria CORTI
+ - Remove header of GiGaFactory no longer necessary since replaced by
+   ToolFactory and remove its include from files that were using it.
+   Remove also GiGaMACROs.h with macros for implementation and declaration
+   of GiGa-factories. Use Gaudi macros for ToolFactory declarations.
+   . GiGa/GiGaFactory.h - REMOVED
+   . GiGa/GiGaMACROs.h  - REMOVED
+   . GiGa/GiGaBase.h
+   . GiGa/GiGaFieldMgrBase.h
+   . GiGa/GiGaPhysicsListBase.h
+   . src/component/GiGa.cpp
+   . src/component/GiGa_load.cpp
+   . src/component/GiGaRunManager.{h,cpp}
+ - Make standard contructor and destructor public
+   . GiGa/GiGaBase.h
+   . GiGa/GiGaSensDetBase.h
+   . GiGa/GiGaStepActionBase.h
+   . GiGa/GiGaTrackActionBase.h
+   . src/component/GiGaRunManager.h
+ - Remove include of IObjManager.h (from GaudiKernel) no longer existing
+   . src/component/GiGa.cpp
+   . src/component/GiGaIGiGaSvc.cpp
+   . src/Lib/GiGaUtil.cpp (remove also ISvcLocator.h}
+ - Clean up of CVS Name and Log
+   . src/component/GiGa_dll.cpp
+   . src/component/GiGaIGiGaSvc.cpp
+   . src/component/GiGa_load.cpp
+   . src/component/GiGaRunManager.cpp
+ - Remove loading of dll from example options no longer necessary with
+   Gaudi v19r1
+   . GiGaOptions.txt
+ 
+! 2007-01-12 - Florence RANJARD
+ - update for Gaudi v19r0 and InstallArea
+ 
+!============================ ClhepTools v2r0 ===============================
+! 2007-01-12 - Florence Ranjard
+ - install include files on InstallArea
+ 
+!========================= LbHijing v3r0 2007-03-23 ==========================
+! 2007-03-23 - Gloria Corti
+ - Make package compatible with use of LCGCMT/MCGenerators, using
+   hijing interface package provided. Adapt linkopts.
+   The use of Generators has to follow that of herwig, otherwise the
+   executable complains about process with vanishing cross section and
+   stops
+ - Fix compilation warning for unused variables as argumnets of methods
+   . HijingProduction.cpp
+  
+!======================== LbHerwig v5r0 2007-03-23 ==========================
+! 2007-03-23 - Gloria Corti
+ - Make package compatible with use of LCGCMT/MCGenerators, using
+   herwig and jimmy interface package provides. Adapt linkopts.
+   The use of Generators has to precede that of herwig, otherwise the
+   executable complains about PHOINI and stops at initialization
+ 
+!========================== GENSER v3r0 2007-03-23 ===========================
+! 2007-03-23 - Gloria Corti
+ - requirements - Introduce here the setting of native versions for all
+                  generators used
+                  Redefine macro lhapdf_linkopts to add lhapdf_dummy missing
+                  from LCGCMT_49 generators interface
+                  Set LHAPATH variable also missing in LCGCMT_49 generators
+                  interface
+                  Remove cernlib.f since now all LHCb generators package
+                  define the necessary subroutines
+                  Remove packages linkopts from GENSER_linkopts otherwise
+                  present twice (already used via interface packages)
+ 
+!======================= GENSER v2r49p0 2007-01-17 ===========================
+! 2007-01-17 - Florence Ranjard
+ - requirements - use the interface packages from 
+                  LCGCMT/LCG_GeneratorsInterfaces
+                  fix the native versions beforehand
+ 
+!=============================================================================
+!</PRE><H1><A NAME="v25r9">2007-03-13 - GaussSys v25r9</A></H1><PRE>
 <H2><A NAME="Note">DC06 version</A></H2>
 <H3><A NAME="Use">This version uses:
    LHCb v21r12 (and Gaudi v18r11)
