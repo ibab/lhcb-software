@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::Rec::GeomEffPhotonTracing
  *
  *  CVS Log :-
- *  $Id: RichGeomEffPhotonTracing.h,v 1.22 2007-03-20 11:45:15 jonrob Exp $
+ *  $Id: RichGeomEffPhotonTracing.h,v 1.23 2007-03-27 12:59:49 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -15,11 +15,7 @@
 #ifndef RICHRECTOOLS_RICHGEOMEFFPHOTONTRACING_H
 #define RICHRECTOOLS_RICHGEOMEFFPHOTONTRACING_H 1
 
-// STL
-//#include <algorithm>
-
 // from Gaudi
-//#include "GaudiKernel/ParticleProperty.h"
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/PhysicalConstants.h"
 

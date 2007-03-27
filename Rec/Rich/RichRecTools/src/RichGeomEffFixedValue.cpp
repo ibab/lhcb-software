@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::GeomEffFixedValue
  *
  *  CVS Log :-
- *  $Id: RichGeomEffFixedValue.cpp,v 1.16 2007-02-02 10:10:40 jonrob Exp $
+ *  $Id: RichGeomEffFixedValue.cpp,v 1.17 2007-03-27 12:59:49 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -29,12 +29,13 @@ DECLARE_TOOL_FACTORY( GeomEffFixedValue );
 GeomEffFixedValue::GeomEffFixedValue ( const std::string& type,
                                        const std::string& name,
                                        const IInterface* parent )
-  : RichRecToolBase   ( type, name, parent ),
-    m_ckAngle         ( NULL ),
-    m_geomTool        ( NULL ),
-    m_fixedValue      ( Rich::NRadiatorTypes, 0.7 ),
-    m_fixedScatValue  ( 0.7 ),
-    m_checkBoundaries ( false )
+  : RichRecToolBase      ( type, name, parent ),
+    m_ckAngle            ( NULL ),
+    m_geomTool           ( NULL ),
+    m_fixedValue         ( Rich::NRadiatorTypes, 0.7 ),
+    m_fixedScatValue     ( 0.7 ),
+    m_checkBoundaries    ( false ),
+    m_checkPhotonRegions ( false )
 {
 
   // interface
@@ -44,6 +45,7 @@ GeomEffFixedValue::GeomEffFixedValue ( const std::string& type,
   declareProperty( "FixedSignalEfficiency",  m_fixedValue       );
   declareProperty( "FixedScatterEfficiency", m_fixedScatValue   );
   declareProperty( "CheckHPDPanelBoundaries", m_checkBoundaries );
+  declareProperty( "CheckPhotonRegions", m_checkPhotonRegions   );
 
 }
 
@@ -71,12 +73,6 @@ StatusCode GeomEffFixedValue::initialize()
   return sc;
 }
 
-StatusCode GeomEffFixedValue::finalize()
-{
-  // Execute base class method
-  return RichRecToolBase::finalize();
-}
-
 double
 GeomEffFixedValue::geomEfficiency ( LHCb::RichRecSegment * segment,
                                     const Rich::ParticleIDType id ) const
@@ -101,21 +97,32 @@ GeomEffFixedValue::geomEfficiency ( LHCb::RichRecSegment * segment,
     // Set the geom eff
     segment->setGeomEfficiency( id, eff );
 
-    // Track impact point on HPD panel
-    const Gaudi::XYZPoint & tkPoint = segment->pdPanelHitPointLocal();
+    if ( m_checkPhotonRegions )
+    {
 
-    // radius of ring for given hypothesis
-    const double rSig = m_ckAngle->avCKRingRadiusLocal(segment,id);
+      // Track impact point on HPD panel
+      const Gaudi::XYZPoint & tkPoint = segment->pdPanelHitPointLocal();
 
-    // flag where hits could be
-    //segment->setPhotonsInYPlus(true);
-    //segment->setPhotonsInYMinus(true);
-    //segment->setPhotonsInXPlus(true);
-    //segment->setPhotonsInXMinus(true);
-    if ( tkPoint.y()+rSig > 0 ) segment->setPhotonsInYPlus(true);
-    if ( tkPoint.y()-rSig < 0 ) segment->setPhotonsInYMinus(true);
-    if ( tkPoint.x()+rSig > 0 ) segment->setPhotonsInXPlus(true);
-    if ( tkPoint.x()-rSig < 0 ) segment->setPhotonsInXMinus(true);
+      // radius of ring for given hypothesis
+      const double rSig = m_ckAngle->avCKRingRadiusLocal(segment,id);
+
+      // flag where hits could be
+      if ( tkPoint.y()+rSig > 0 ) segment->setPhotonsInYPlus(true);
+      if ( tkPoint.y()-rSig < 0 ) segment->setPhotonsInYMinus(true);
+      if ( tkPoint.x()+rSig > 0 ) segment->setPhotonsInXPlus(true);
+      if ( tkPoint.x()-rSig < 0 ) segment->setPhotonsInXMinus(true);
+
+    }
+    else
+    {
+
+      // assume hits in all regions
+      segment->setPhotonsInYPlus(true);
+      segment->setPhotonsInYMinus(true);
+      segment->setPhotonsInXPlus(true);
+      segment->setPhotonsInXMinus(true);
+
+    }
 
   }
 
@@ -131,7 +138,8 @@ GeomEffFixedValue::geomEfficiencyScat ( LHCb::RichRecSegment * segment,
   {
 
     double eff = 0;
-    if ( segment->trackSegment().radiator() == Rich::Aerogel ) {
+    if ( segment->trackSegment().radiator() == Rich::Aerogel ) 
+    {
       eff = ( m_ckAngle->avgCherenkovTheta(segment,id) > 0 ? m_fixedScatValue : 0 );
     }
 

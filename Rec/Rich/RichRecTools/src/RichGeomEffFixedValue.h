@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::Rec::GeomEffFixedValue
  *
  *  CVS Log :-
- *  $Id: RichGeomEffFixedValue.h,v 1.11 2007-03-10 13:19:20 jonrob Exp $
+ *  $Id: RichGeomEffFixedValue.h,v 1.12 2007-03-27 12:59:49 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -59,11 +59,8 @@ namespace Rich
       /// Destructor
       virtual ~GeomEffFixedValue() {};
 
-      // Initialize method
+      /// Initialize method
       StatusCode initialize();
-
-      // Finalize method
-      StatusCode finalize();
 
     public: // methods (and doxygen comments) inherited from public interface
 
@@ -86,6 +83,9 @@ namespace Rich
 
       /// Flag to turn on checking of HPD panel boundaries
       bool m_checkBoundaries;
+
+      /// Flag to turn on/off checking of which regions photons can be in
+      bool m_checkPhotonRegions;
 
     };
 
