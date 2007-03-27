@@ -5,7 +5,7 @@
  *  Header file for tool base class : Rich::Rec::PixelCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorBase.h,v 1.15 2007-03-09 18:04:33 jonrob Exp $
+ *  $Id: RichPixelCreatorBase.h,v 1.16 2007-03-27 12:42:14 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/04/2005
@@ -246,8 +246,18 @@ namespace Rich
       /// Flag to turn on or off the explicit checking of the HPD status
       bool m_hpdCheck;
 
-      /// Flag to turn on/off clustering in HPDs
+      /** @brief Flag to turn on/off use of clusters in pixel reconstruction.
+       *
+       *  If set to true cluster finding will be run, and a single RichRecPixel will be created for each cluster.
+       *  If false, cluster finding will STILL be run but each hit will be made into a single RichRecPixel.
+       *  In both cases, the associated cluster for each RichRecPixel is still set.
+       */
       std::vector<bool> m_clusterHits;
+
+      /** @brief Flag to suppress the finding of clusters entirely (for speed)
+       *  If set to true, no clusters will be found and the associated cluster pointers are not set.
+       */
+      bool m_noClusterFinding;
 
       /// Flags for which RICH detectors to create pixels for
       std::vector<bool> m_usedDets;

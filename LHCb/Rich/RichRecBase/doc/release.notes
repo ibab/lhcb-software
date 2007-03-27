@@ -4,6 +4,10 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+! 2007-03-27 - Chris Jones
+ - Add new options to RichPixelCreatorbase to turn off entirely the 
+   clustering for reconstruction (HLT).
+
 !===================== RichRecBase v3r2 2007-03-20 =======================
 ! 2007-03-19 - Chris Jones
  - Replace use of Gaudi format with boost::format to fix various issues
