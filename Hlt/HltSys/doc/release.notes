@@ -5,18 +5,25 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
 
-</PRE><H1><A NAME=v1r4>2007-03-26 HltSys v1r4</A></H1><PRE>
+</PRE><H1><A NAME=v1r4>2007-03-27 HltSys v1r4</A></H1><PRE>
 This version uses Gaudi v19r3 and LHCb v22r3
 
-Packages modified: HltCommon v1r4
+Packages modified: HltCommon v1r4, HltL0Conf v1r1
 
 - In HltSys options
   . added options PatVeloTT.suppressSmallAngles = false; in HltReco.opts
 
 - In HltCommon v1r4
- - Add class MatchTVeloTracks
- - Remove obsolete HltCommon_load.cpp file
- - Fix doxygen warnings
+  . Add class MatchTVeloTracks
+  . Remove obsolete HltCommon_load.cpp file
+  . Fix doxygen warnings
+
+- In HltL0Conf v1r1
+  . Add missing HltL0Conf_dll.cpp file
+  . In PrepareXXXSeed: include resolutions for y, tx, ty
+  . In PrepareMuonSeed: real use of new L0MuonCandidate class,
+                        switch off use of pt-kick (not needed)
+  . In TsaConfirmTool: restore option to get momentum from curvature
 
 </PRE><H1><A NAME=v1r3>2007-03-08 HltSys v1r3</A></H1><PRE>
 This version uses Gaudi v19r2 and LHCb v22r2
