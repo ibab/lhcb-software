@@ -1,9 +1,15 @@
-! $Id: release.notes,v 1.9 2007-02-23 09:03:16 ibelyaev Exp $ 
+! $Id: release.notes,v 1.10 2007-03-27 13:24:01 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKi
 ! Responsible : Vanya BELYAEV
 ! Purpose     : The suit for the whole  LoKi project 
 ! -----------------------------------------------------------------------------
+
+!=========================== LoKi v5r2 2007-03-26 =================
+
+! 2007-03-27 - Vanya BELYAEV
+ - cmt/requirements 
+     version increment to v5r2 
 
 !=========================== LoKi v5r1 2007-02-23 =================
 
@@ -53,6 +59,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.9  2007/02/23 09:03:16  ibelyaev
+!  prepare v5r1
+!
 ! Revision 1.8  2007/01/18 16:48:32  ibelyaev
 !  v5r0: add Phys/LoKiHybrid
 !
