@@ -139,7 +139,7 @@ bool TsaCollector::inWindow(const Tsa::Parabola& parab,
   if (cluster->isInsideY(line.value(zMid), win.second) == false) return false;
 
   // check x - saves some time ? but not exact - hence big window
-  if (cluster->isInsideX(parab.value(zMid), 20.0*Gaudi::Units::cm) == false) return false;
+  if (cluster->isInsideX(parab.value(zMid), win.first+0.5*Gaudi::Units::cm) == false) return false;
 
   // now look at 3-d intersection --> need two lines
   Tsa::Line tanLine = parab.tangent(zMid);
