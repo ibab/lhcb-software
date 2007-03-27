@@ -1,8 +1,11 @@
-// $Id: LoKiKtJetMaker.cpp,v 1.4 2007-03-04 16:50:53 ibelyaev Exp $
+// $Id: LoKiKtJetMaker.cpp,v 1.5 2007-03-27 11:21:18 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2007/03/04 16:50:53  ibelyaev
+//  v2r2: improve selection of particles
+//
 // Revision 1.3  2006/11/12 15:13:36  ibelyaev
 //  fix many bugs + add configuration files for 'standard jets'
 //
@@ -210,16 +213,16 @@ namespace
   {
   public:
     // constructor 
-    CompareByEuclidianNorm2 ( const Jet& v ) : m_norm () , m_v ( v ) {}
+    CompareByEuclidianNorm2 ( const Jet* v ) : m_norm () , m_v ( v ) {}
     // evaluator 
     inline double operator() ( const Jet& v1 , const Jet& v2 ) const 
-    { return m_norm ( v1 - m_v ) < m_norm ( v2 - m_v ) ; }
+    { return m_norm ( v1 - (*m_v) ) < m_norm ( v2 - (*m_v) ) ; }
   private:
     // default constructor is disabled 
     CompareByEuclidianNorm2() ;
   private:
     EuclidianNorm2 m_norm ;
-    Jet            m_v    ;
+    const Jet*     m_v    ;
   } ;
   
 }
@@ -331,7 +334,7 @@ StatusCode LoKiKtJetMaker::analyse   ()
       if ( 0 == c ) { continue ; }
       // find an appropriate input particle 
       Jets::const_iterator input = 
-        std::min_element ( inputs.begin() , inputs.end() , CMP ( *c ) ) ;
+        std::min_element ( inputs.begin() , inputs.end() , CMP ( c ) ) ;
       if ( inputs.end() == input ) 
       { Warning ( "Constituent is not found (1)" ) ; continue ; } ;
       if ( !ok ( *input , *c ) ) 
@@ -343,6 +346,11 @@ StatusCode LoKiKtJetMaker::analyse   ()
       const LHCb::Particle* p = all[index] ;
       // add the particle into the vertex 
       daughters.push_back ( p ) ;
+    }
+    if ( daughters.empty() ) 
+    {
+      Warning("Empty list of of daughter particles, skip it") ;
+      continue ;
     }
     // use the tool 
     StatusCode sc = m_combiner->combine ( daughters , pJet , vJet ) ;
