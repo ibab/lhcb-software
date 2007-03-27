@@ -5,8 +5,11 @@
 
 // ================================== Track Creators ==========================================
 
-// RichTrackCreator using full reconstructed information : New track model (Default)
+// RichTrackCreator using full reconstructed information : Use full detailed information
 #include "$RICHRECSYSOPTS/tools/RichTracksFromRecoTracks.opts"
+
+// RichTrackCreator using full reconstructed information : Fast treatment
+//#include "$RICHRECSYSOPTS/tools/RichTracksFromRecoTracks-Fast.opts"
 
 // RichTrackCreator using TrStoredTracks but cheating the tracking information by
 // using the associated MCRichTrack. In the include file below the cheating can be tuned
@@ -109,7 +112,7 @@ ToolSvc.Offline.RichGeomEff.CheckBeamPipe                = true;
 
 // Fixed value
 //ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::GeomEffFixedValue/RichGeomEff" };
-//                                                        Aerogel  C4F10   CF4
+//                                                                          Aerogel  C4F10   CF4
 //ToolSvc.Offline.RichToolRegistry.RichGeomEff.FixedSignalEfficiency   =  { 0.55,    0.62,   0.55  };
 //ToolSvc.Offline.RichToolRegistry.RichGeomEff.FixedScatterEfficiency  =  0.55;
 

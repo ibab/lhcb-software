@@ -4,6 +4,11 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+! 2007-03-27 - Chris Jones
+ - Minor reorganisation of the algorithm sequence. Primarily to get timing
+   information for the seperate stages (track treatment, pixel reconstruction,
+   photon reconstruction, DAQ decoding).
+
 !====================== RichRecSys v3r2 2007-03-21 =====================
 
 ! 2007-03-21 - Chris Jones

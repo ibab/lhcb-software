@@ -7,46 +7,70 @@
 // Set offline mode
 RecoRICHSeq.Context = "Offline";
 
-// Decode RICH data
-// Technically not needed, since done "on-demand" but useful for timing studies
-//RecoRICHSeq.Members += { "RichLoadRawEvent" };
-RecoRICHSeq.Members += { "Rich::DAQ::RawBufferToRichDigitsAlg/DecodeRawRich" };
+//-----------------------------------------------------------------------------
+// Initialisation (Technically not needed, but nuseful for timing studies)
+//-----------------------------------------------------------------------------
+RecoRICHSeq.Members += { "GaudiSequencer/RichRecInitSeq" };
+RichRecInitSeq.MeasureTime       = true;
+//RichRecInitSeq.Members += { "RichLoadRawEvent" };
+RichRecInitSeq.Members += { "Rich::DAQ::RawBufferToRichDigitsAlg/DecodeRawRich" };
 DecodeRawRich.DecodeBufferOnly = true;
+RichRecInitSeq.Members += { "Rich::Rec::Initialise/CheckProcStatus" };
+RichRecInitSeq.Members += { "Rich::Rec::Initialise/CreatePixels" };
+CreatePixels.CheckProcStatus  = false;
+CreatePixels.CreatePixels     = true;
+RichRecInitSeq.Members += { "Rich::Rec::Initialise/CreateTracks" };
+CreateTracks.CheckProcStatus  = false;
+CreateTracks.CreateTracks     = true;
+RichRecInitSeq.Members += { "Rich::Rec::Initialise/CreatePhotons" };
+CreatePhotons.CheckProcStatus = false;
+CreatePhotons.CreatePhotons   = true;
+//-----------------------------------------------------------------------------
 
-// Initialisation
-RecoRICHSeq.Members += { "Rich::Rec::Initialise/RichRecInit" };
+//-----------------------------------------------------------------------------
+// Local PID algorithm
+//-----------------------------------------------------------------------------
+RecoRICHSeq.Members += { "GaudiSequencer/RichLocalPIDSeq" };
+RichLocalPIDSeq.MeasureTime   = true;
+RichLocalPIDSeq.Members += { "Rich::Rec::LocalPID::PIDAlg/RichLocPID" };
+//-----------------------------------------------------------------------------
 
-// Run the Local PID algorithm first
-RecoRICHSeq.Members += { "Rich::Rec::LocalPID::PIDAlg/RichLocPID" };
+//-----------------------------------------------------------------------------
+// Global PID algorithm
+//-----------------------------------------------------------------------------
 
 // Initialise Global PID algorithm for each event
-RecoRICHSeq.Members += { "Rich::Rec::GlobalPID::Initialize/RichGloPIDInit",
-                         "Rich::Rec::GlobalPID::DigitSel/RichGloPIDDigSel",
-                         "Rich::Rec::GlobalPID::TrackSel/RichGloPIDTrSel" };
+RecoRICHSeq.Members += { "GaudiSequencer/RichGlobalPIDSeq" };
+RichGlobalPIDSeq.MeasureTime   = true;
+RichGlobalPIDSeq.Members += { "Rich::Rec::GlobalPID::Initialize/RichGloPIDInit",
+                              "Rich::Rec::GlobalPID::DigitSel/RichGloPIDDigSel",
+                              "Rich::Rec::GlobalPID::TrackSel/RichGloPIDTrSel" };
 
 // First iteration of background estimation then Global PID iteration
-RecoRICHSeq.Members += { "Rich::Rec::BackgroundEstiAvHPD/RichBckEst1" };
+RichGlobalPIDSeq.Members += { "Rich::Rec::BackgroundEstiAvHPD/RichBckEst1" };
 //RecoRICHSeq.Members += { "Rich::Rec::BackgroundEstiClustering/RichBckEst1" };
-RecoRICHSeq.Members += { "Rich::Rec::GlobalPID::Likelihood/RichGloPIDIt1" };
+RichGlobalPIDSeq.Members += { "Rich::Rec::GlobalPID::Likelihood/RichGloPIDIt1" };
 
 // Second iteration of background estimation then Global PID iteration
-RecoRICHSeq.Members += { "Rich::Rec::BackgroundEstiAvHPD/RichBckEst2" };
+RichGlobalPIDSeq.Members += { "Rich::Rec::BackgroundEstiAvHPD/RichBckEst2" };
 //RecoRICHSeq.Members += { "Rich::Rec::BackgroundEstiClustering/RichBckEst2" };
-RecoRICHSeq.Members += { "Rich::Rec::GlobalPID::Likelihood/RichGloPIDIt2" };
+RichGlobalPIDSeq.Members += { "Rich::Rec::GlobalPID::Likelihood/RichGloPIDIt2" };
 
 // Third iteration of background estimation then Global PID iteration
-//RecoRICHSeq.Members += { "Rich::Rec::BackgroundEstiAvHPD/RichBckEst3",
+//RichGlobalPIDSeq.Members += { "Rich::Rec::BackgroundEstiAvHPD/RichBckEst3",
 //                         "Rich::Rec::GlobalPID::Likelihood/RichGloPIDIt3" };
 
 // Ring refit - uses working PIDs to identify good photons and refit angles
 // Results as yet not used in formation of final PID
-//RecoRICHSeq.Members += { "RichRingRefitAlg/RichRingRefit" };
+//RichGlobalPIDSeq.Members += { "RichRingRefitAlg/RichRingRefit" };
 
 // Finalise Global PID algorithm each event
-RecoRICHSeq.Members += { "Rich::Rec::GlobalPID::Finalize/RichGloPIDFin" };
+RichGlobalPIDSeq.Members += { "Rich::Rec::GlobalPID::Finalize/RichGloPIDFin" };
+
+//-----------------------------------------------------------------------------
 
 // Make final output PID results
-// Current uses for each track Global PID if it exists, 
+// Current uses for each track Global PID if it exists,
 // otherwise local if that exists
 RecoRICHSeq.Members += { "Rich::Rec::HierarchicalPIDMerge/MergeRichPIDs" };
 
@@ -108,19 +132,19 @@ RichGloPIDIt2.FinalDLLCheck = true;
 
 // Ring Refit
 /*
-RichRingRefit.TrackSelector.TrackAlgs = { "Seed","Match","Forward","KsTrack" };
-//                                             Aero   C4F10   CF4
-RichRingRefit.MinSignalPhotonProb         = {  999,   1e-2,  1.50e-3  };
-RichRingRefit.MinRefitPhotons             = {  999,    999,      7    };
-RichRingRefit.MaxBackgroundProb           = {  999,    999,    999    };
-RichRingRefit.MaxCandsPerPixel            = {    1,      1,      10   };
-RichRingRefit.MinFitProbability           = {  0.5,    0.5,   0.0005  };
-RichRingRefit.nDist          = 2.00;
-RichRingRefit.nDistFrwrd     = 2.00;
-RichRingRefit.nDistMatch     = 2.00;
-RichRingRefit.nDistSeed      = 2.20;
-RichRingRefit.nDistKshort    = 2.20;
-RichRingRefit.NSigmaCut      = 3.00;
+  RichRingRefit.TrackSelector.TrackAlgs = { "Seed","Match","Forward","KsTrack" };
+  //                                             Aero   C4F10   CF4
+  RichRingRefit.MinSignalPhotonProb         = {  999,   1e-2,  1.50e-3  };
+  RichRingRefit.MinRefitPhotons             = {  999,    999,      7    };
+  RichRingRefit.MaxBackgroundProb           = {  999,    999,    999    };
+  RichRingRefit.MaxCandsPerPixel            = {    1,      1,      10   };
+  RichRingRefit.MinFitProbability           = {  0.5,    0.5,   0.0005  };
+  RichRingRefit.nDist          = 2.00;
+  RichRingRefit.nDistFrwrd     = 2.00;
+  RichRingRefit.nDistMatch     = 2.00;
+  RichRingRefit.nDistSeed      = 2.20;
+  RichRingRefit.nDistKshort    = 2.20;
+  RichRingRefit.NSigmaCut      = 3.00;
 */
 
 // PID merging
@@ -131,10 +155,3 @@ MergeRichPIDs.UseGlobalPIDs    = true;
 
 // summary maker parameters
 RichRecSummary.PhotonNSigma = { 1.0, 1.5, 1.5 };
-
-// Test stuff
-// ---------------------------------------------------------------------------------
-/*
-RecoRICHSeq.Members += { "Rich2RightPanelMarkovRingFinderAlg/Rich2RingFindRight" };
-RecoRICHSeq.Members += { "Rich2LeftPanelMarkovRingFinderAlg/Rich2RingFindLeft" };
-*/
