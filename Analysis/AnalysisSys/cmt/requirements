@@ -1,5 +1,5 @@
 package AnalysisSys
-version v1r0
+version v1r1
 
 branches doc cmt
 
@@ -10,7 +10,7 @@ use  CommonParticles            v3r8     Phys   # Juan Palacios, WGs
 use  FlavourTagging             v7r2     Phys   # Marco Musy
 
 ####################################################################
-use  DaVinciMCTools     	v9r1     Phys   # Juan Palacios
+use  DaVinciMCTools     	v9r2     Phys   # Juan Palacios
 use  DaVinciAssociators         v9r0     Phys   # Philippe Charpentier
 use  MCStandardParticles        v1r2     Phys   # Juan Palacios
 use  FlavourTaggingChecker      v2r2     Phys   # Marco Musy
@@ -23,8 +23,8 @@ use Ccbar	        v1r4    PhysSel # Jan Amoraal, Miriam Calvo
 use B2Dilepton		v1r3	PhysSel # Rare Decays Working Group
 use B2D0X		v1r8	PhysSel # WGs
 use B2DplusX		v1r0	PhysSel # WGs
-use B2DsX		v1r4	PhysSel # WGs
-use B2DstarX		v1r4	PhysSel # WGs
+use B2DsX		v1r5	PhysSel # WGs
+use B2DstarX		v1r5	PhysSel # WGs
 use B2uds	        v2r3    PhysSel # Juan Palacios, Gabriel Guerrer, Eric Conte
 use JetsSel	        v1r3    PhysSel # Jest WG
 use Radiative           v2r1    PhysSel # Vanya BELYAEV
@@ -43,7 +43,7 @@ use               LoKiPhysMC       v4r0   Phys  # I. Belyaev
 use               LoKiAlgo         v3r2   Phys  # I. Belyaev
 use               LoKiAlgoMC       v3r0   Phys  # I. Belyaev
 use               LoKiJets         v2r2   Phys  # I. Belyaev
-use               LoKiHybrid       v1r0   Phys  # I. Belyaev
+use               LoKiHybrid       v1r1   Phys  # I. Belyaev
 use               LoKiDict         v5r1   Phys  # I. Belyaev
 use               LoKiCutsDict     v5r1   Phys  # I. Belyaev
 use               LoKi             v5r1   Phys  # I. Belyaev
