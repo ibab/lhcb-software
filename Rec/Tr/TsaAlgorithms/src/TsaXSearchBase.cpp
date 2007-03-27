@@ -1,4 +1,4 @@
-// $Id: TsaXSearchBase.cpp,v 1.1 2006-12-06 14:35:03 mneedham Exp $
+// $Id: TsaXSearchBase.cpp,v 1.2 2007-03-27 15:58:48 albrecht Exp $
 
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -22,7 +22,8 @@ TsaXSearchBase::TsaXSearchBase(const std::string& type,
  declareProperty("arrow", m_arrow = 0.0022);
  declareProperty("seedHitLocation",  m_seedHitLocation = SeedHitLocation::Default);
  declareProperty("sector", m_sector = 0); 
-
+ declareProperty("nSigmaTx", m_nSigmaTx = 5.0 );
+ 
  declareInterface<ITsaSeedStep>(this);
 };
 
@@ -54,8 +55,8 @@ StatusCode TsaXSearchBase::execute(LHCb::State& aState, std::vector<SeedTrack*>&
 
   // pick up the errors
   const double errTx = sqrt(aState.errTx2()); 
-  m_sxMin = aState.tx() - 5.0*errTx;
-  m_sxMax = aState.tx() - 5.0*errTx;
+  m_sxMin = aState.tx() - m_nSigmaTx * errTx;
+  m_sxMax = aState.tx() + m_nSigmaTx * errTx;
 
   // call the method
   StatusCode sc = execute(seeds, hits);
