@@ -20,7 +20,7 @@ Reco.DetectorList = {
 RecoTrSeq.Members   += { "PatPVOffline" };
 
 // Rich
-#include "$RICHRECSYSOPTS/RecoToolPara.opts"
+#include "$RICHRECSYSOPTS/RecoOfflineToolPara.opts"
 #include "$RICHRECSYSOPTS/RecoOfflineAlgs.opts"
 
 // Calorimeter reconstruction
