@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.346 2007-03-27 07:10:03 pkoppenb Exp $
+# $Id: requirements,v 1.347 2007-03-27 11:42:18 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : J. Palacios
 #
@@ -33,7 +33,7 @@ use GaudiSvc 		v*
 use RootHistCnv         v*         
 
 #-- Database
-use SQLDDDB             v1r*    Det  -no_auto_imports
+use DDDB                v1r*    Det  -no_auto_imports
 use FieldMap            v4r7         
 use ParamFiles          v5r0         
 

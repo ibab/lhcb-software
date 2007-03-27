@@ -30,7 +30,7 @@
  */
 EventClocksvc.EventTimeDecoder = "FakeEventTime";
 ApplicationMgr.EvtMax = 5000 ;
-EventSelector.PrintFreq  = 10;
+EventSelector.PrintFreq  = 1;
 //EventSelector.FirstEvent = 1090 ;
 
 MessageSvc.OutputLevel = 3 ;
