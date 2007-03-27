@@ -4,7 +4,7 @@
 <package name="RichRecBase">
 
 <!-- **************************************************************************
-  * $Id: RichRecPixel.xml,v 1.18 2007-03-09 18:04:34 jonrob Exp $
+  * $Id: RichRecPixel.xml,v 1.19 2007-03-27 16:21:42 jonrob Exp $
   *****************************************************************************
   * XML-description of RichRecPixel class                                     *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -48,7 +48,7 @@
         <constructor 
                 desc     = "Constructor with arguments" 
                 initList = "m_hpdPixelCluster(hpdPixelCluster), m_globalPosition(gPos), m_localPosition(lPos), m_radCorrLocalPositions(Rich::NRadiatorTypes,lPos), m_currentBackground(0), m_parentType(parentType), m_richRecTracks(), m_richRecPhotons(), m_parentPixel(parent)">
-                <arg inout="BYVALUE"  const="TRUE" name="hpdPixelCluster" type="Rich::HPDPixelCluster"  />
+                <arg                  const="TRUE" name="hpdPixelCluster" type="Rich::HPDPixelCluster"  />
                 <arg                  const="TRUE" name="gPos"       type="Gaudi::XYZPoint"            />
                 <arg                  const="TRUE" name="lPos"       type="Gaudi::XYZPoint"            />
                 <arg inout="BYVALUE"  const="TRUE" name="parentType" type="Rich::Rec::PixelParent::Type"   />
@@ -59,7 +59,7 @@
         <constructor 
                 desc     = "Constructor with arguments" 
                 initList = "m_hpdPixelCluster(smartID), m_globalPosition(gPos), m_localPosition(lPos), m_radCorrLocalPositions(Rich::NRadiatorTypes,lPos), m_currentBackground(0), m_parentType(parentType), m_richRecTracks(), m_richRecPhotons(), m_parentPixel(parent)">
-                <arg inout="BYVALUE"  const="TRUE" name="smartID"    type="LHCb::RichSmartID"          />
+                <arg                  const="TRUE" name="smartID"    type="LHCb::RichSmartID"          />
                 <arg                  const="TRUE" name="gPos"       type="Gaudi::XYZPoint"            />
                 <arg                  const="TRUE" name="lPos"       type="Gaudi::XYZPoint"            />
                 <arg inout="BYVALUE"  const="TRUE" name="parentType" type="Rich::Rec::PixelParent::Type"   />

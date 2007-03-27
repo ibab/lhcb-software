@@ -5,7 +5,7 @@
  *  Header file for tool base class : Rich::Rec::PixelCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorBase.h,v 1.16 2007-03-27 12:42:14 jonrob Exp $
+ *  $Id: RichPixelCreatorBase.h,v 1.17 2007-03-27 16:21:42 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/04/2005
@@ -189,7 +189,7 @@ namespace Rich
       bool applyPixelSuppression( const LHCb::RichSmartID hpdID,
                                   LHCb::RichSmartID::Vector & smartIDs ) const;
 
-      /// Build a new RichRecPixel
+      /// Build a new RichRecPixel from an Rich::HPDPixelCluster
       virtual LHCb::RichRecPixel * buildPixel ( const Rich::HPDPixelCluster& cluster ) const;
 
       /// Access the RichSmartIDTool
@@ -310,6 +310,12 @@ namespace Rich
 
       /// returns a pointer to the HPD clustering tool for the given RICH
       const Rich::DAQ::IPixelClusteringTool * hpdClusTool( const Rich::DetectorType rich ) const;
+
+      /** @brief Build a new RichRecPixel from a single LHCb::RichSmartID
+       *  Essentially replicated functionality from buildPixel(Rich::HPDPixelCluster) version...
+       *  Provided mainly for speed for HLT
+       */
+      LHCb::RichRecPixel * buildPixel_ID ( const LHCb::RichSmartID & id ) const;
 
     private: // helper classes
 

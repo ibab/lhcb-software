@@ -7,6 +7,9 @@
 ! 2007-03-27 - Chris Jones
  - Add new options to RichPixelCreatorbase to turn off entirely the 
    clustering for reconstruction (HLT).
+ - Some speed optimisations
+  + Pass clusters and smartIDs by reference to RichRecPixel constructor
+  + Dedicated stream in RichPixelCreatorBase for single cluster pixels
 
 !===================== RichRecBase v3r2 2007-03-20 =======================
 ! 2007-03-19 - Chris Jones
