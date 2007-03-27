@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRichHPDPanel
  *
- *  $Id: DeRichHPDPanel.cpp,v 1.54 2007-03-26 14:34:40 jonrob Exp $
+ *  $Id: DeRichHPDPanel.cpp,v 1.55 2007-03-27 12:37:22 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -383,8 +383,8 @@ StatusCode DeRichHPDPanel::initialize()
 
     m_demagCond = condition( "DemagParameters" );
     if ( m_demagCond ) updMgrSvc()->
-                         registerCondition(this, m_demagCond.path(),
-                                           &DeRichHPDPanel::updateDemagProperties );
+      registerCondition(this, m_demagCond.path(),
+                        &DeRichHPDPanel::updateDemagProperties );
     StatusCode sc = updMgrSvc()->update(this);
     if( !sc ) {
       msg << MSG::FATAL << "Demagnification ums update failure."<<endmsg;
@@ -416,16 +416,16 @@ StatusCode DeRichHPDPanel::initialize()
 //=================================================================================
 // Demagnification Tables for simulation and reconstruction (Marco Musy 07/09/2006)
 //=================================================================================
-StatusCode DeRichHPDPanel::updateDemagProperties() 
+StatusCode DeRichHPDPanel::updateDemagProperties()
 {
 
   MsgStream msg ( msgSvc(), myName() );
   StatusCode sc = StatusCode::SUCCESS;
-  
+
   msg << MSG::INFO << "Updating properties for HPDs from "
       << m_nstart << " to " << m_nstop-1 << endmsg;
 
-  for ( int ihpd = m_nstart; ihpd < m_nstop; ++ihpd ) 
+  for ( int ihpd = m_nstart; ihpd < m_nstop; ++ihpd )
   {
 
     std::string numb = boost::lexical_cast<std::string>(ihpd);
@@ -451,7 +451,7 @@ StatusCode DeRichHPDPanel::updateDemagProperties()
 //=========================================================================
 StatusCode DeRichHPDPanel::fillHpdDemagTableSim( const std::string & mypath,
                                                  std::vector<double>& coeff_sim,
-                                                 int& ihpd ) 
+                                                 int& ihpd )
 {
   const int totbins = 50; //do not change
   MsgStream msg ( msgSvc(), myName() );
@@ -697,7 +697,7 @@ Gaudi::XYZPoint DeRichHPDPanel::demagToCathode_new( int HPDNumber,
     msg<<MSG::ERROR<<"Could not load "<<(m_XmlHpdDemagPath+"Rec_")<<HPDNumber<<endmsg;
     return Gaudi::XYZPoint(0,0,0);
   }
-  TabulatedProperty::Table demag = dem->table();
+  const TabulatedProperty::Table & demag = dem->table();
   int lenght = demag.size()-1;
   if(lenght<2) {
     MsgStream msg ( msgSvc(), myName() );
@@ -873,26 +873,20 @@ Gaudi::XYZPoint DeRichHPDPanel::demagToAnode_test( int HPDNumber,
 //=========================================================================
 Gaudi::XYZPoint DeRichHPDPanel::detectionPoint ( const LHCb::RichSmartID& smartID ) const
 {
-  unsigned int HPDNumber = smartID.hpdCol() * m_HPDNumInCol + smartID.hpdNumInCol();
+  // HPD number
+  const unsigned int HPDNumber = hpdNumber(smartID);
 
   // convert pixel number to silicon coordinates
-  double inSiliconX =
+  const double inSiliconX =
     smartID.pixelCol()*m_pixelSize + m_pixelSize/2.0 - m_siliconHalfLengthX;
-  double inSiliconY =
+  const double inSiliconY =
     m_siliconHalfLengthY - smartID.pixelRow()*m_pixelSize - m_pixelSize/2.0;
 
-  Gaudi::XYZPoint pointOnWin(0,0,0);
-
-  if(m_UseHpdMagDistortions) { //M.Musy 07/09/2006
-
-    pointOnWin = demagToCathode_new(copyNumber(HPDNumber), inSiliconX, inSiliconY);
-
-  } else { //old demag parameters//
-
-    pointOnWin = demagToCathode_old( inSiliconX, inSiliconY);
-
-  }
-  return (m_HPDWindowToGlobal[HPDNumber] * pointOnWin);
+  return ( m_HPDWindowToGlobal[HPDNumber] *
+           ( m_UseHpdMagDistortions ?
+             demagToCathode_new(copyNumber(HPDNumber), inSiliconX, inSiliconY) : // New scheme from Marco
+             demagToCathode_old( inSiliconX, inSiliconY)                         // old scheme 
+             ) );
 }
 
 //=========================================================================
@@ -912,7 +906,7 @@ StatusCode DeRichHPDPanel::smartID ( const Gaudi::XYZPoint& globalPoint,
   // check if the HPD is active or dead
   if ( !m_deRichS->hpdIsActive( id ) ) return StatusCode::FAILURE;
 
-  const unsigned int HPDNumber = id.hpdCol() * m_HPDNumInCol + id.hpdNumInCol();
+  const unsigned int HPDNumber = hpdNumber(id);
 
   const Gaudi::XYZPoint inSilicon = m_panelToSilicon[HPDNumber] * inPanel;
 
@@ -933,7 +927,7 @@ StatusCode DeRichHPDPanel::smartID ( const Gaudi::XYZPoint& globalPoint,
        (fabs(inSiliconY) - m_siliconHalfLengthY > 1E-3*Gaudi::Units::mm)   ) {
     MsgStream msg ( msgSvc(), myName() );
     msg << MSG::ERROR << "Point " << inSilicon << " is outside the silicon box "
-        << m_pvHPDMaster[HPDNumber]->name() << endmsg;
+        << HPDMaster(HPDNumber)->name() << endmsg;
     return StatusCode::FAILURE;
   }
 
@@ -959,7 +953,7 @@ StatusCode DeRichHPDPanel::smartID ( const Gaudi::XYZPoint& globalPoint,
 Gaudi::XYZPoint DeRichHPDPanel::detPointOnAnode( const LHCb::RichSmartID& smartID ) const
 {
 
-  const unsigned int HPDNumber = smartID.hpdCol() * m_HPDNumInCol + smartID.hpdNumInCol();
+  const unsigned int HPDNumber = hpdNumber(smartID);
 
   // convert pixel number to silicon coordinates
   const double inSiliconX =
@@ -969,7 +963,7 @@ Gaudi::XYZPoint DeRichHPDPanel::detPointOnAnode( const LHCb::RichSmartID& smartI
 
   Gaudi::XYZPoint inSilicon( inSiliconX, inSiliconY, 0.0 );
 
-  return(geometry()->toGlobal(m_pvHPDMaster[HPDNumber]->
+  return(geometry()->toGlobal(HPDMaster(HPDNumber)->
                               toMother(m_pvHPDSMaster[HPDNumber]->
                                        toMother(m_pvSilicon[HPDNumber]->
                                                 toMother(inSilicon )))));
@@ -996,93 +990,99 @@ StatusCode DeRichHPDPanel::PDWindowPoint( const Gaudi::XYZVector& vGlobal,
 {
 
   // transform point and vector to the HPDPanel coordsystem.
-  const Gaudi::XYZPoint pInPanel( geometry()->toLocal(pGlobal) );
-  Gaudi::XYZVector vInPanel( m_vectorTransf*vGlobal );
+  const Gaudi::XYZPoint  pInPanel( geometry()->toLocal(pGlobal) );
+  const Gaudi::XYZVector vInPanel( m_vectorTransf*vGlobal );
 
   // find the intersection with the detection plane (localPlane2)
   const double scalar = vInPanel.Dot(m_localPlaneNormal2);
-  if ( scalar == 0.0 ) return StatusCode::FAILURE;
+  if ( fabs(scalar) < 1e-50 ) return StatusCode::FAILURE;
 
   const double distance = -m_localPlane2.Distance( pInPanel )/scalar;
   const Gaudi::XYZPoint panelIntersection( pInPanel + distance*vInPanel );
 
-  unsigned int  HPDNumber(0);
-  LHCb::RichSmartID id( smartID );
+  // Get HPD column and row numbers
+  if ( !findHPDColAndPos(panelIntersection, smartID) ) return StatusCode::FAILURE;
 
-  if ( !findHPDColAndPos(panelIntersection, id) ) return StatusCode::FAILURE;
-  // check if the HPD is active or dead
-  if ( !m_deRichS->hpdIsActive( id ) ) return StatusCode::FAILURE;
+  // HPD number
+  const unsigned int HPDNumber = hpdNumber(smartID);
 
-  HPDNumber = id.hpdCol() * m_HPDNumInCol + id.hpdNumInCol();
+  if ( mode.detPrecision() == LHCb::RichTraceMode::SimpleHPDs )
+  {
+    // do it quickly
 
-  if ( mode.detPrecision() == LHCb::RichTraceMode::SimpleHPDs ) {  // do it quickly
-
-    const double x = panelIntersection.x() - m_HPDCentres[HPDNumber].x();
-    const double y = panelIntersection.y() - m_HPDCentres[HPDNumber].y();
+    const Gaudi::XYZPoint & centre = m_HPDCentres[HPDNumber];
+    const double x = panelIntersection.x() - centre.x();
+    const double y = panelIntersection.y() - centre.y();
     if ( ( x*x + y*y ) > m_activeRadiusSq ) return StatusCode::FAILURE;
 
-    Gaudi::XYZPoint pInHPD( m_pvHPDMaster[HPDNumber]->toLocal( pInPanel ));
-    Gaudi::XYZVector vInHPD( m_pvHPDMaster[HPDNumber]->matrix()*vInPanel );
-    ISolid::Ticks kaptonTicks;
-    if ( 0 != m_kaptonSolid->intersectionTicks(pInHPD, vInHPD, kaptonTicks) )
-      return StatusCode::FAILURE;
+    // check if the HPD is active or dead
+    if ( !m_deRichS->hpdIsActive( smartID ) ) return StatusCode::FAILURE;
 
+    // Check for shadowing effects by HPD kapton shields
+    if ( mode.hpdKaptonShadowing() )
+    {
+      const IPVolume* pvHPDMaster = HPDMaster(HPDNumber);
+      const Gaudi::XYZPoint  pInHPD( pvHPDMaster->toLocal(pInPanel) );
+      const Gaudi::XYZVector vInHPD( pvHPDMaster->matrix()*vInPanel );
+      ISolid::Ticks kaptonTicks;
+      if ( 0 != m_kaptonSolid->intersectionTicks(pInHPD, vInHPD, kaptonTicks) )
+        return StatusCode::FAILURE;
+    }
+
+    // finally, set the window point
     windowPointGlobal = geometry()->toGlobal( panelIntersection );
 
-    smartID = id;
-
-    return StatusCode::SUCCESS;
   }
+  else
+  {
+    // Overwise slower but fully detailed checks
 
-  // Overwise slow
+    // find the correct HPD and quartz window inside it
+    const IPVolume* pvHPDMaster = HPDMaster(HPDNumber);
 
-  // find the correct HPD and quartz window inside it
-  const IPVolume* pvHPDMaster = m_pvHPDMaster[HPDNumber];
+    // Check for shadowing effects by HPD kapton shields
+    if ( mode.hpdKaptonShadowing() )
+    {
+      const Gaudi::XYZPoint  pInHPD( pvHPDMaster->toLocal(pInPanel) );
+      const Gaudi::XYZVector vInHPD( pvHPDMaster->matrix()*vInPanel );
+      ISolid::Ticks kaptonTicks;
+      if ( 0 != m_kaptonSolid->intersectionTicks(pInHPD, vInHPD, kaptonTicks) )
+        return StatusCode::FAILURE;
+    }
 
-  // just in case
-  if ( !pvHPDMaster ) {
-    MsgStream msg(msgSvc(), myName() );
-    msg << MSG::ERROR << "Inappropriate HPDNumber:" << HPDNumber
-        << " from HPDRow:" << id.hpdNumInCol() << " and HPDColumn:" << id.hpdCol() << endreq
-        << " x:" << panelIntersection.x()
-        << " y:" << panelIntersection.y() <<  endreq;
-    return StatusCode::FAILURE;
+    const IPVolume* pvHPDSMaster = m_pvHPDSMaster[HPDNumber];
+    const IPVolume* pvWindow     = m_pvWindow[HPDNumber];
+    const ISolid* windowSolid    = pvWindow->lvolume()->solid();
+
+    // convert point to local coordinate systems
+    const Gaudi::XYZPoint pInWindow( pvWindow->toLocal(pvHPDSMaster->
+                                                       toLocal(pvHPDMaster->toLocal(pInPanel))) );
+
+    // convert local vector assuming that only the HPD can be rotated
+    const Gaudi::XYZVector vInHPDMaster( pvHPDMaster->matrix()*vInPanel );
+
+    ISolid::Ticks HPDWindowTicks;
+    const unsigned int noTicks = windowSolid->intersectionTicks( pInWindow, 
+                                                                 vInHPDMaster,
+                                                                 HPDWindowTicks );
+    if ( 0 == noTicks ) return StatusCode::FAILURE;
+
+    const Gaudi::XYZPoint windowPoint( pInWindow + HPDWindowTicks[1]*vInHPDMaster );
+    const Gaudi::XYZPoint windowPointInHPD( pvHPDSMaster->
+                                            toMother(pvWindow->toMother(windowPoint)) );
+    // check the active radius.
+    const double hitRadius2 = ( windowPointInHPD.x()*windowPointInHPD.x() +
+                                windowPointInHPD.y()*windowPointInHPD.y() );
+    if ( hitRadius2 > m_activeRadiusSq ) return StatusCode::FAILURE;
+
+    // check if the HPD is active or dead
+    if ( !m_deRichS->hpdIsActive( smartID ) ) return StatusCode::FAILURE;
+
+    // finally, set the window point
+    windowPointGlobal =
+      geometry()->toGlobal( pvHPDMaster->toMother(windowPointInHPD) );
+
   }
-
-  Gaudi::XYZPoint pInHPD( m_pvHPDMaster[HPDNumber]->toLocal( pInPanel ));
-  Gaudi::XYZVector vInHPD( m_pvHPDMaster[HPDNumber]->matrix()*vInPanel );
-  ISolid::Ticks kaptonTicks;
-  if ( 0 != m_kaptonSolid->intersectionTicks(pInHPD, vInHPD, kaptonTicks) )
-    return StatusCode::FAILURE;
-
-  const IPVolume* pvHPDSMaster = m_pvHPDSMaster[HPDNumber];
-  const IPVolume* pvWindow     = m_pvWindow[HPDNumber];
-  const ISolid* windowSolid  = pvWindow->lvolume()->solid();
-
-  // convert point to local coordinate systems
-  Gaudi::XYZPoint pInWindow( pvWindow->toLocal(pvHPDSMaster->
-                                               toLocal(pvHPDMaster->toLocal(pInPanel))) );
-
-  // convert local vector assuming that only the HPD can be rotated
-  Gaudi::XYZVector vInHPDMaster( pvHPDMaster->matrix()*vInPanel );
-
-  ISolid::Ticks HPDWindowTicks;
-  unsigned int noTicks = windowSolid->intersectionTicks(pInWindow, vInHPDMaster,
-                                                        HPDWindowTicks );
-  if ( 0 == noTicks ) return StatusCode::FAILURE;
-
-  Gaudi::XYZPoint windowPoint( pInWindow + HPDWindowTicks[1]*vInHPDMaster );
-  Gaudi::XYZPoint windowPointInHPD( pvHPDSMaster->
-                                    toMother(pvWindow->toMother(windowPoint)) );
-  // check the active radius.
-  const double hitRadius2 = ( windowPointInHPD.x()*windowPointInHPD.x() +
-                              windowPointInHPD.y()*windowPointInHPD.y() );
-  if ( hitRadius2 > m_activeRadiusSq ) return StatusCode::FAILURE;
-
-  windowPointGlobal =
-    geometry()->toGlobal( pvHPDMaster->toMother(windowPointInHPD) );
-
-  smartID = id;
 
   return StatusCode::SUCCESS;
 }
@@ -1250,11 +1250,11 @@ const int DeRichHPDPanel::sensitiveVolumeID(const Gaudi::XYZPoint& globalPoint) 
 int DeRichHPDPanel::copyNumber( unsigned int HPDNumber ) const
 {
   // extract the copy number from physical volume name
-  const std::string::size_type pos = m_pvHPDMaster[HPDNumber]->name().find(':');
+  const std::string::size_type pos = HPDMaster(HPDNumber)->name().find(':');
   if ( std::string::npos == pos ) {
     MsgStream msg ( msgSvc(), myName() );
-    msg << MSG::FATAL << "An HPD  without a number!" << endmsg;
+    msg << MSG::FATAL << "An HPD without a number!" << endmsg;
     return -1;
   }
-  return (atoi( m_pvHPDMaster[HPDNumber]->name().substr(pos+1).c_str() ) );
+  return (atoi( HPDMaster(HPDNumber)->name().substr(pos+1).c_str() ) );
 }

@@ -4,7 +4,7 @@
  *
  *  Header file for detector description class : DeRichHPDPanel
  *
- *  $Id: DeRichHPDPanel.h,v 1.42 2007-03-26 14:34:40 jonrob Exp $
+ *  $Id: DeRichHPDPanel.h,v 1.43 2007-03-27 12:37:22 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -14,10 +14,14 @@
 #ifndef RICHDET_DERICHHPDPANEL_H
 #define RICHDET_DERICHHPDPANEL_H 1
 
-// Math typedefs
+// STL
+#include <sstream>
+
+// Gaudi
 #include "GaudiKernel/Point3DTypes.h"
 #include "GaudiKernel/Vector3DTypes.h"
 #include "GaudiKernel/Plane3DTypes.h"
+#include "GaudiKernel/GaudiException.h"
 
 // LHCbKernel
 #include "Kernel/RichSmartID.h"
@@ -43,23 +47,23 @@
  *  @todo Find a proper way to deal with RichSmartIDs that cannot be mapped to the
  *        entrance window in the method DeRichHPDPanel::detectionPoint
  */
-namespace DeRichHPDPanelLocation 
+namespace DeRichHPDPanelLocation
 {
   /// Location of Rich1 top panel
   static const std::string& Rich1Panel0 =
-  "/dd/Structure/LHCb/BeforeMagnetRegion/Rich1/PDPanel0";
+    "/dd/Structure/LHCb/BeforeMagnetRegion/Rich1/PDPanel0";
 
   /// Location of Rich1 bottom panel
   static const std::string& Rich1Panel1 =
-  "/dd/Structure/LHCb/BeforeMagnetRegion/Rich1/PDPanel1";
+    "/dd/Structure/LHCb/BeforeMagnetRegion/Rich1/PDPanel1";
 
   /// Location of Rich2 left panel
   static const std::string& Rich2Panel0 =
-  "/dd/Structure/LHCb/AfterMagnetRegion/Rich2/RichSystem/HPDPanel0";
+    "/dd/Structure/LHCb/AfterMagnetRegion/Rich2/RichSystem/HPDPanel0";
 
   /// Location of Rich2 right panel
   static const std::string& Rich2Panel1 =
-  "/dd/Structure/LHCb/AfterMagnetRegion/Rich2/RichSystem/HPDPanel1";
+    "/dd/Structure/LHCb/AfterMagnetRegion/Rich2/RichSystem/HPDPanel1";
 }
 
 /** @class DeRichHPDPanel DeRichHPDPanel.h
@@ -142,8 +146,8 @@ public:
    * @return Status of conversion
    * @retval StatusCode::FAILURE Point outside silicon pixel sensor
    */
-  virtual StatusCode smartID( const Gaudi::XYZPoint& globalPoint,
-                              LHCb::RichSmartID& id ) const;
+  StatusCode smartID( const Gaudi::XYZPoint& globalPoint,
+                      LHCb::RichSmartID& id ) const;
 
   /**
    * Converts a RichSmartID to a point in global coordinates. The point is
@@ -151,14 +155,14 @@ public:
    *
    * @return The detection point in global coordinates
    */
-  virtual Gaudi::XYZPoint detectionPoint( const LHCb::RichSmartID& smartID ) const;
+  Gaudi::XYZPoint detectionPoint( const LHCb::RichSmartID& smartID ) const;
 
   /**
    * Converts a RichSmartID to a point on the anode in global coordinates.
    *
    * @return The detection anode point in global coordinates
    */
-  virtual Gaudi::XYZPoint detPointOnAnode( const LHCb::RichSmartID& smartID ) const;
+  Gaudi::XYZPoint detPointOnAnode( const LHCb::RichSmartID& smartID ) const;
 
   /**
    * Returns the intersection point with an HPD window given a vector
@@ -174,11 +178,11 @@ public:
    *
    * @return Status of intersection
    */
-  virtual StatusCode PDWindowPoint( const Gaudi::XYZVector& vGlobal,
-                                    const Gaudi::XYZPoint& pGlobal,
-                                    Gaudi::XYZPoint& windowPointGlobal, // return
-                                    LHCb::RichSmartID& smartID,          // return
-                                    const LHCb::RichTraceMode mode ) const;
+  StatusCode PDWindowPoint( const Gaudi::XYZVector& vGlobal,
+                            const Gaudi::XYZPoint& pGlobal,
+                            Gaudi::XYZPoint& windowPointGlobal, // return
+                            LHCb::RichSmartID& smartID,          // return
+                            const LHCb::RichTraceMode mode ) const;
 
   /**
    * Returns the intersection point with the detector plane given a vector
@@ -193,10 +197,10 @@ public:
    * @return Intersection status
    * @retval false Intersection fell outside acceptance, as defined by mode
    */
-  virtual bool detPlanePoint( const Gaudi::XYZPoint& pGlobal,
-                              const Gaudi::XYZVector& vGlobal,
-                              Gaudi::XYZPoint& hitPosition,
-                              const LHCb::RichTraceMode mode ) const;
+  bool detPlanePoint( const Gaudi::XYZPoint& pGlobal,
+                      const Gaudi::XYZVector& vGlobal,
+                      Gaudi::XYZPoint& hitPosition,
+                      const LHCb::RichTraceMode mode ) const;
 
   /**
    * Converts a global position to the coordinate system of the
@@ -207,7 +211,7 @@ public:
    *
    * @return Local (panel) point
    */
-  virtual Gaudi::XYZPoint globalToPDPanel( const Gaudi::XYZPoint& globalPoint ) const;
+  Gaudi::XYZPoint globalToPDPanel( const Gaudi::XYZPoint& globalPoint ) const;
 
 
   /**
@@ -219,9 +223,8 @@ public:
    *
    * @return Global point.
    */
-  virtual Gaudi::XYZPoint globalPosition( const Gaudi::XYZPoint& localPoint,
-                                          const Rich::Side side) const;
-
+  Gaudi::XYZPoint globalPosition( const Gaudi::XYZPoint& localPoint,
+                                  const Rich::Side side) const;
 
   /**
    * Adds to the given vector all the available readout channels in this HPD panel
@@ -241,7 +244,7 @@ public:
   /// sensitive volume identifier
   virtual const int sensitiveVolumeID(const Gaudi::XYZPoint& globalPoint) const;
 
-protected:
+private:
 
   /**
    * Finds the HPD row and column that corresponds to the x,y coordinates
@@ -251,7 +254,7 @@ protected:
    * @retval true   HPD is found
    * @retval false  The point is outside the coverage of the HPDs.
    */
-  virtual bool findHPDColAndPos(const Gaudi::XYZPoint& inPanel, LHCb::RichSmartID& id) const;
+  bool findHPDColAndPos(const Gaudi::XYZPoint& inPanel, LHCb::RichSmartID& id) const;
 
   /** Returns the name of this particular HPD panel
    *  @return HPD panel name
@@ -264,8 +267,26 @@ protected:
    */
   int copyNumber( unsigned int HPDNumber ) const;
 
+  /// Returns the HPD number for the given RichSmartID
+  inline unsigned int hpdNumber( const LHCb::RichSmartID smartID ) const
+  {
+    return smartID.hpdCol() * m_HPDNumInCol + smartID.hpdNumInCol();
+  }
 
-  // data
+  /// Returns the IPVolume master volume for the given HPD number
+  inline const IPVolume* HPDMaster( const unsigned int HPDNumber ) const
+  {
+    const IPVolume* pvHPDMaster = m_pvHPDMaster[HPDNumber];
+    if ( HPDNumber>m_HPDMax || !pvHPDMaster )
+    {
+      std::ostringstream mess;
+      mess << "HPDMaster:: Inappropriate HPDNumber : " << HPDNumber;
+      throw GaudiException( mess.str(), "*DeRichHPDPanel*", StatusCode::FAILURE );
+    }
+    return pvHPDMaster;
+  }
+
+private: // data
 
   std::string m_name;           ///< The name of this HPD panel
   unsigned int m_HPDColumns;    ///< Number of HPD columns in the panel
@@ -334,19 +355,29 @@ protected:
   /// abs max of even and odd start points used as the edge across columns
   double m_panelStartColPos;
   double m_localOffset;           ///< offset applied in the global to panel coordinates
-  
+
 public:
-  /**
-   * Prints coordinates on anode and cathode: for test only porposes.
-   *
-   * @param HPDNumber x y z Bfield
-   *
-   * @return void
+
+  /** Prints coordinates on anode and cathode: for test only porposes.
    */
-  void testdemagnification( int HPDNumber, double,double,double, double B );
+  void testdemagnification( int HPDNumber, double x, double y, double z, double B );
 
+private: // methods
 
-private:
+  StatusCode updateDemagProperties();
+  void init_mm( );
+  int number_range( int from, int to );
+  int number_mm( void );
+  double Delta_Phi(double, const double);
+  double mag(double , double);
+  double demag(double, double );
+  StatusCode fillHpdDemagTableSim( const std::string &, std::vector<double>& , int& );
+  StatusCode fillHpdDemagTableRec( const std::string &, std::vector<double>& , int& );
+  Gaudi::XYZPoint demagToCathode_new( int , double , double ) const;
+  Gaudi::XYZPoint demagToCathode_old( double , double ) const;
+  Gaudi::XYZPoint demagToAnode_test ( int , double , double );
+
+private: // more data ...
 
   Rich::DetectorType m_rich;
   Rich::Side m_side;
@@ -366,7 +397,6 @@ private:
 
   std::vector<double>  m_refactParams;
 
-  StatusCode updateDemagProperties();
   int m_nstart, m_nstop;
 
   int    rgiState[2+55];
@@ -379,20 +409,9 @@ private:
   double m_RichHpdQWToSiMaxDist;
   int m_Rich1TotNumHpd ;
   int m_Rich2TotNumHpd ;
-  void init_mm( );
-  int number_range( int from, int to );
-  int number_mm( void );
 
   std::string m_XmlHpdDemagPath;
   SmartRef<Condition> m_demagCond;
-  double Delta_Phi(double, const double);
-  double mag(double , double);
-  double demag(double, double );
-  StatusCode fillHpdDemagTableSim( const std::string &, std::vector<double>& , int& );
-  StatusCode fillHpdDemagTableRec( const std::string &, std::vector<double>& , int& );
-  Gaudi::XYZPoint demagToCathode_new( int , double , double ) const;
-  Gaudi::XYZPoint demagToCathode_old( double , double ) const;
-  Gaudi::XYZPoint demagToAnode_test ( int , double , double );
 
 };
 

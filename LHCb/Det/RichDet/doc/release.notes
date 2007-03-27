@@ -6,6 +6,11 @@
 
 ! 2007-03-26 - Chris Jones
  - Some speed improvements for HLT
+  + Remove MsgStream object
+  + Make some methods non virtual (not needed to be virtual)
+  + Use new flag in RichTraceMode to control checking for intersections
+    with kapton HPD shields
+  + Various small tidy ups
  - Additions to DAQ definitions
 
 !======================== RichDet v10r3 2007-03-20 ========================
