@@ -8,17 +8,11 @@ gaudimodule.loaddict("HltBaseDict")
 
 from eventassoc import linkedTo
 
-import climbing as mctools
-import probavector as myvector
-import alyabar
+import mctools
 from ParticleTranslator import PTranslate
 
-HOME= "/afs/cern.ch/user/h/hernando/w0/DC06/Moore_v2r1"
-# JOBOPTS = HOME+"/Hlt/Moore/v2r1/options/Moore.opts"
-# JOBOPTS = HOME+"/Hlt/Moore/v2r1/options/Moore_HadL0Conf_BsPiPi.opts"
-JOBOPTS = HOME+"/Hlt/Moore/v2r1/options/Moore_HadL0Conf_rawmb.opts"
-# JOBOPTS = HOME+"/Hlt/Moore/v2r1/options/Moore_HadL0Conf_BsDsPi.opts"
-# DATAOPTS = HOME+"/options/mydata.opts"
+HOME= "../options"
+JOBOPTS = HOME+"/Moore_HadL0Conf_rawmb.opts"
 
 gaudi = gaudimodule.AppMgr(outputlevel=3)
 gaudi.config( files = [JOBOPTS,])
@@ -38,12 +32,13 @@ State = gaudimodule.gbl.LHCb.State
 Track = gaudimodule.gbl.LHCb.Track
 MCParticle = gaudimodule.gbl.LHCb.MCParticle
 VectorTracks = gaudimodule.gbl.std.vector("LHCb::Track *")
-__DOCA = None
-if (not DO_MC):
-    DOCA = gaudimodule.gbl.Hlt.DOCA
-    __DOCA = DOCA()
-    print " creating DOCA func ",__DOCA
-    FC = gaudimodule.gbl.Hlt.FC
+
+## __DOCA = None
+## if (not DO_MC):
+##     DOCA = gaudimodule.gbl.Hlt.DOCA
+##     __DOCA = DOCA()
+##     print " creating DOCA func ",__DOCA
+##     FC = gaudimodule.gbl.Hlt.FC
 
 LODU_CALOELE   = 0
 L0DU_CALOGAMMA = 1
@@ -102,8 +97,9 @@ HISTOS = {}
 TOOLS  = {}
 
 def _DOCA(x,y):
-    if (DO_MC): return 0.1
-    return __DOCA(x,y)
+    return 0.1
+    # if (DO_MC): return 0.1
+    # return __DOCA(x,y)
 
 # _DOCA = DOCA()
 # _FC   = FC()
