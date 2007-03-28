@@ -1,7 +1,9 @@
-! $Id: release.notes,v 1.163 2007-03-22 10:27:50 dhcroft Exp $
-package VeloDet
-package manager : Velo Group
+! $Id: release.notes,v 1.164 2007-03-28 16:26:15 cattanem Exp $
+! package VeloDet
+! package manager : Velo Group
+!-----------------------------------------------------------------------------
 
+!======================== VeloDet v11r2 2007-03-28 ===========================
 ! 2007-03-22 - David Hutchcroft
  - Added tests to the StatusCode returns from jobSvc->setMyProperties
 
