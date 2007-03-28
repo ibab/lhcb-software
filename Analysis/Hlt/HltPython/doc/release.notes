@@ -4,7 +4,15 @@
 ! Purpose     : Exposing Hlt tools to Python
 !-----------------------------------------------------------------------------
 
-!============================= HltPython v1r1 2007-02-12 =====================
+! 2007-03-28 - Jose A. Hernando
+ - Reuse of the package: store python code to study and monitor the HLT
+ - python/hadalley_velol0conf.py : study the had alley using the velo-l0calo confirmation  
+ - python/hadalley_baseline.py : study the baseline had alley
+ - python/mctools.py some mc tools from D. Martinez, JA. Hernando 
+ - python/ParticleTranslator.py : pid <-> particle translator by D. Martinez
+ - options/Moore_HadL0Conf_rawmb.opts : opts to run the online reconstruction, used bu hadalley_baseline.py and hadalley_velol0conf.py scripts
+
+!============================= HltPython Lv1r1 2007-02-12 =====================
 ! 2007-02-12 - Marco Cattaneo
  - Remove/rename obsolete interfaces....
 

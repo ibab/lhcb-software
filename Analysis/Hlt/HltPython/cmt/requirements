@@ -8,37 +8,14 @@ version           v1r1
 #============================================================================
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          cmt doc src python examples
+branches          cmt doc src python examples options
 
 #============================================================================
 # Used packages.
 #============================================================================
 
 use     GaudiPython 	v*	 
-use     ROOT        v* LCG_Interfaces -no_auto_imports
-
 #------------------------------------------------------------------------------
-use	TrackEvent 	v*    Event
-use     TrackInterfaces v*    Tr
-
-use	L0Event		v*    Event
-use     HltEvent        v*    Event
-use     HltBase         v*    Hlt
-
-#------------------------------------------------------------------------------
-
-# =============== LCG Dictionaries ============================================
-apply_pattern    reflex_dictionary                                     \ 
-                 dictionary=HltPython                                  \
-                 headerfiles=$(HLTPYTHONROOT)/src/HltPythonDict.h     \
-                 selectionfile=$(HLTPYTHONROOT)/src/HltPythonDict.xml \
-                 options="-U__MINGW32__"
-
-# Hack for cmt v1r19 bug to link dictionary on windows
-macro HltPythonDict_use_linkopts $(use_linkopts)
-
-# =============== patterns ====================================================
-apply_pattern    library_path    library=HltPythonDict
 
 # =============== running options =============================================
 path_remove  PYTHONPATH "/GaudiPython/" WIN32 "\GaudiPython\"

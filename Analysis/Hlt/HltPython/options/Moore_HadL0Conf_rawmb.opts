@@ -1,0 +1,71 @@
+//-----------------------------------------------------------------
+// Main Opts to run the Moore or HLTAPP application 
+//-----------------------------------------------------------------
+
+#pragma print off
+// Standard LHCb application setup
+#include "$STDOPTS/LHCbApplication.opts"
+
+// POOL Persistency
+#include "$STDOPTS/DstDicts.opts"
+
+//-----------------------------------------------------------------
+// Rerun L0 and HLT - Alleys
+//-----------------------------------------------------------------
+
+
+// Default options to rerun L0 and run Hlt 
+// #include "$HLTSYSROOT/options/L0.opts"
+// #include "$HLTSYSROOT/options/Hlt.opts"
+// For DAQ studies replace the includes above for these ones:
+#include "$HLTSYSROOT/options/L0.opts"
+#include "$HLTSYSROOT/options/HltAlleysSequence.opts"
+
+// #include "$HLTSYSROOT/options/HltReco.opts"
+ApplicationMgr.TopAlg += {"GaudiSequencer/MyHlt"}; 
+MyHlt.Members += {"PatInitEvent",
+                "HltInit",
+                "GaudiSequencer/HltReco",
+                "HltTrackIPSelection/HltTrack2DIPSelection",
+                "HltTrackIPSelection/HltTrack3DIPSelection",
+                "HltEnd"
+};
+PatHltRecoVeloTT.suppressSmallAngles = false;
+
+// include this options to get time or histogram information of alleys
+// #include "$HLTSYSROOT/options/HltAlleysTime.opts"
+// #include "$HLTSYSROOT/options/HltAlleysHistos.opts"
+// #include "$HLTSYSROOT/options/HltAlleysPass.opts"
+
+//---------------------------------------------------------------------------
+// Geometry specific options
+//---------------------------------------------------------------------------
+#include "$STDOPTS/DC06Conditions.opts"
+#pragma print on
+
+//---------------------------------------------------------------------------
+// Number of events to process, optionally skipping some events
+//---------------------------------------------------------------------------
+ApplicationMgr.EvtMax =  100;
+EventSelector.FirstEvent = 1;  // To skip some events 
+EventSelector.PrintFreq = 5;
+MessageSvc.OutputLevel = 3;
+
+//---------------------------------------------------------------------------
+// Histogram output
+//---------------------------------------------------------------------------
+ApplicationMgr.HistogramPersistency = "ROOT";
+HistogramPersistencySvc.OutputFile = "Moore_HadL0Conf_rawmb.root";  
+
+//---------------------------------------------------------------------------
+// POOL file catalogs. First one is read-write, others are read only
+//---------------------------------------------------------------------------
+// PoolDbCacheSvc.Catalog = {
+//  "xmlcatalog_file:$HLTAPPROOT/job/NewCatalog.xml"
+// };
+
+//---------------------------------------------------------------------------
+// Event input
+//---------------------------------------------------------------------------
+#include "$MOOREROOT/options/raw06_minbias_1.opts"
+
