@@ -152,8 +152,8 @@ def tools():
     tool2 = gaudi.toolsvc().create("PrepareHadronSeed",interface="IPrepareCaloSeed")
     TOOLS["PrepareCaloSeed"] = tool2
 
-    tool3 = gaudi.toolsvc().create("TsaConfirmTool",interface="ITrackConfirmTool")
-    TOOLS["TsaL0Conf"] = tool3
+  ##   tool3 = gaudi.toolsvc().create("TsaConfirmTool",interface="ITrackConfirmTool")
+##     TOOLS["TsaL0Conf"] = tool3
 
     tool4 = gaudi.toolsvc().create("HltVeloRZL0HadCaloMatchTool",interface="ITrackL0CaloMatchTool")
     TOOLS["RZVeloL0Conf"] = tool4

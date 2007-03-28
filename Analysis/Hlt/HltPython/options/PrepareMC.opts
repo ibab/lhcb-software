@@ -1,0 +1,28 @@
+
+// Define additional DST content for MC data
+#include "$STDOPTS/MCDstContent.opts"
+#include "$ASSOCIATORSROOT/options/Brunel.opts"
+#include "$CALOASSOCIATORSROOT/options/Brunel.opts"
+
+//------------------------------------------------------------------------
+// Prepare MC
+//------------------------------------------------------------------------
+
+
+ApplicationMgr.TopAlg += {"GaudiSequencer/CaloDigits",
+                          "GaudiSequencer/PrepareMC"}; 
+
+CaloDigits.Members  += { "CaloZSupAlg/EcalZSup",
+                         "CaloZSupAlg/HcalZSup",
+                         "CaloDigitsFromRaw/PrsFromRaw",
+                         "CaloDigitsFromRaw/SpdFromRaw" };
+
+PrepareMC.Members = { "UnpackMCParticle",
+                      "UnpackMCVertex", 
+                      // "L0CaloToMCParticleAsct/L0CaloFullTruth",
+                      "PatLHCbID2MCParticle",
+                      "PatTrack2MCParticle",
+                      "PatChecker"
+};
+L0CaloFullTruth.InputContainer = "Trig/L0/FullCalo";
+

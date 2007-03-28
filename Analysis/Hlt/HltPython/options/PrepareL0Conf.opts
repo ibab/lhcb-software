@@ -1,0 +1,78 @@
+// Data on Demand for MCParticle to MCHit association
+ApplicationMgr.ExtSvc += { "DataOnDemandSvc" };
+
+#include "$ASSOCIATORSROOT/options/Brunel.opts"
+
+ApplicationMgr.TopAlg += {"GaudiSequencer/PrepareL0"};
+PrepareL0.Members += { "GaudiSequencer/CaloDigits",
+                       //  "UnpackMCParticle",
+                       // "UnpackMCVertex",
+                       "RawBankToSTLiteClusterAlg/createITLiteClusters",
+                       "OTTimeCreator",
+                       "TsaOTClusterCreator", 
+                       "TsaSTClusterCreator" 
+                       // ,"MuonCollectTsaCluster/CollectTsaCluster" 
+};
+
+createITLiteClusters.detType = "IT";
+#include "$STTOOLSROOT/options/Brunel.opts"
+
+CaloDigits.MeasureTime = true ;
+CaloDigits.Members  += { "CaloZSupAlg/EcalZSup",
+                         "CaloZSupAlg/HcalZSup",
+                         "CaloDigitsFromRaw/PrsFromRaw",
+                         "CaloDigitsFromRaw/SpdFromRaw" };
+
+TsaOTClusterCreator.maxOcc = 1.0; // 1.0 = 100% occupancy
+TsaOTClusterCreator.clusterSize = 128;
+TsaSTClusterCreator.maxOcc = 128;//channels per Beetle
+
+
+// CollectTsaCluster.OutputLevel       = 4;
+ToolSvc.TsaConfirmTool.OutputLevel  = 4;
+
+ToolSvc.TsaConfirmTool.nSigma = 5;
+ToolSvc.TsaConfirmTool.debugInfo = false;
+
+ToolSvc.TsaConfirmTool.otDataSvcName     = "L0ConfToolOTDataSvc";
+ToolSvc.TsaConfirmTool.itDataSvcName     = "L0ConfToolITDataSvc"; 
+ToolSvc.L0ConfToolITDataSvc.sortData = true;
+ToolSvc.L0ConfToolOTDataSvc.sortData = true;
+
+//from TsaSeed
+ToolSvc.TsaConfirmTool.xSearchS0.sector = 0;
+ToolSvc.TsaConfirmTool.xSearchS1.sector = 1;
+ToolSvc.TsaConfirmTool.xSearchS2.sector = 2;
+ToolSvc.TsaConfirmTool.xSearchS3.sector = 3;
+ToolSvc.TsaConfirmTool.xSearchS4.sector = 4;
+
+ToolSvc.TsaConfirmTool.stereoS0.sector = 0;
+ToolSvc.TsaConfirmTool.stereoS1.sector = 1;
+ToolSvc.TsaConfirmTool.stereoS2.sector = 2;
+ToolSvc.TsaConfirmTool.stereoS3.sector = 3;
+ToolSvc.TsaConfirmTool.stereoS4.sector = 4;
+
+
+ToolSvc.TsaConfirmTool.xSearchS3.otDataSvcName = "L0ConfToolOTDataSvc";
+ToolSvc.TsaConfirmTool.xSearchS4.otDataSvcName = "L0ConfToolOTDataSvc";
+ToolSvc.TsaConfirmTool.stereoS3.otDataSvcName = "L0ConfToolOTDataSvc";
+ToolSvc.TsaConfirmTool.stereoS4.otDataSvcName = "L0ConfToolOTDataSvc";
+
+ToolSvc.TsaConfirmTool.xSearchS0.itDataSvcName = "L0ConfToolITDataSvc";
+ToolSvc.TsaConfirmTool.xSearchS1.itDataSvcName = "L0ConfToolITDataSvc";
+ToolSvc.TsaConfirmTool.xSearchS2.itDataSvcName = "L0ConfToolITDataSvc";
+ToolSvc.TsaConfirmTool.stereoS0.itDataSvcName = "L0ConfToolITDataSvc";
+ToolSvc.TsaConfirmTool.stereoS1.itDataSvcName = "L0ConfToolITDataSvc";
+ToolSvc.TsaConfirmTool.stereoS2.itDataSvcName = "L0ConfToolITDataSvc";
+
+ToolSvc.TsaConfirmTool.xSearchS0.itDataSvcName = "L0ConfToolITDataSvc";
+ToolSvc.TsaConfirmTool.xSearchS1.itDataSvcName = "L0ConfToolITDataSvc";
+ToolSvc.TsaConfirmTool.xSearchS2.itDataSvcName = "L0ConfToolITDataSvc";
+ToolSvc.TsaConfirmTool.xSearchS3.otDataSvcName = "L0ConfToolOTDataSvc";
+ToolSvc.TsaConfirmTool.xSearchS4.otDataSvcName = "L0ConfToolOTDataSvc";
+ToolSvc.TsaConfirmTool.stereoS0.itDataSvcName = "L0ConfToolITDataSvc";
+ToolSvc.TsaConfirmTool.stereoS1.itDataSvcName = "L0ConfToolITDataSvc";
+ToolSvc.TsaConfirmTool.stereoS2.itDataSvcName = "L0ConfToolITDataSvc";
+ToolSvc.TsaConfirmTool.stereoS3.otDataSvcName = "L0ConfToolOTDataSvc";
+ToolSvc.TsaConfirmTool.stereoS4.otDataSvcName = "L0ConfToolOTDataSvc";
+
