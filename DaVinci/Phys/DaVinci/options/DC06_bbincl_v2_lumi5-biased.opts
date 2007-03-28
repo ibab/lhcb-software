@@ -1,37 +1,16 @@
-//-- GAUDI data cards generated on 3/16/07 12:17 PM
-//-- For Event Type = 10000000 / Data type = RDST 1
-//--     Configuration = DC06 - phys-lumi5
+//-- GAUDI data cards generated on 3/28/07 7:26 PM
+//-- For Event Type = 10000010 / Data type = RDST 1
+//--     Configuration = DC06 - phys-v2-lumi5
 //--     RDST 1 datasets produced by Brunel - v30r14
-//--     From DIGI 1 datasets produced by ANY
-//--     From SIM 1 datasets produced by Gauss - v25r2
+//--     From DIGI 1 datasets produced by Boole - v12r6
+//--     From SIM 1 datasets produced by Gauss - v25r4
 //--     Database version = Default
 //--     Cards content = physical
 //--     
 //-- Datasets replicated at CERN
-//-- 40 dataset(s) - NbEvents = 198422
+//-- 1 dataset(s) - NbEvents = 9925
 //-- 
 
 EventSelector.Input   = {
-  "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-lumi5/00001649/RDST/0000/00001649_00004606_1.rdst' TYP='POOL_ROOTTREE' OPT='READ'",
-  "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-lumi5/00001649/RDST/0000/00001649_00004638_1.rdst' TYP='POOL_ROOTTREE' OPT='READ'",
-  "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-lumi5/00001649/RDST/0000/00001649_00004664_1.rdst' TYP='POOL_ROOTTREE' OPT='READ'",
-  "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-lumi5/00001649/RDST/0000/00001649_00004678_1.rdst' TYP='POOL_ROOTTREE' OPT='READ'",
-  "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-lumi5/00001649/RDST/0000/00001649_00004689_1.rdst' TYP='POOL_ROOTTREE' OPT='READ'",
-  "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-lumi5/00001649/RDST/0000/00001649_00004690_1.rdst' TYP='POOL_ROOTTREE' OPT='READ'",
-  "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-lumi5/00001649/RDST/0000/00001649_00004705_1.rdst' TYP='POOL_ROOTTREE' OPT='READ'",
-  "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-lumi5/00001649/RDST/0000/00001649_00004729_1.rdst' TYP='POOL_ROOTTREE' OPT='READ'",
-  "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-lumi5/00001649/RDST/0000/00001649_00004731_1.rdst' TYP='POOL_ROOTTREE' OPT='READ'",
-  "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-lumi5/00001649/RDST/0000/00001649_00004753_1.rdst' TYP='POOL_ROOTTREE' OPT='READ'",
-  "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-lumi5/00001649/RDST/0000/00001649_00004775_1.rdst' TYP='POOL_ROOTTREE' OPT='READ'",
-  "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-lumi5/00001649/RDST/0000/00001649_00004820_1.rdst' TYP='POOL_ROOTTREE' OPT='READ'",
-  "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-lumi5/00001649/RDST/0000/00001649_00004821_1.rdst' TYP='POOL_ROOTTREE' OPT='READ'",
-  "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-lumi5/00001649/RDST/0000/00001649_00004822_1.rdst' TYP='POOL_ROOTTREE' OPT='READ'",
-  "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-lumi5/00001649/RDST/0000/00001649_00004824_1.rdst' TYP='POOL_ROOTTREE' OPT='READ'",
-  "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-lumi5/00001649/RDST/0000/00001649_00004829_1.rdst' TYP='POOL_ROOTTREE' OPT='READ'",
-  "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-lumi5/00001649/RDST/0000/00001649_00004832_1.rdst' TYP='POOL_ROOTTREE' OPT='READ'",
-  "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-lumi5/00001649/RDST/0000/00001649_00004834_1.rdst' TYP='POOL_ROOTTREE' OPT='READ'",
-  "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-lumi5/00001649/RDST/0000/00001649_00004846_1.rdst' TYP='POOL_ROOTTREE' OPT='READ'",
-  "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-lumi5/00001649/RDST/0000/00001649_00004847_1.rdst' TYP='POOL_ROOTTREE' OPT='READ'",
-  "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-lumi5/00001649/RDST/0000/00001649_00004851_1.rdst' TYP='POOL_ROOTTREE' OPT='READ'",
-  "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-lumi5/00001649/RDST/0000/00001649_00004858_1.rdst' TYP='POOL_ROOTTREE' OPT='READ'",
-  "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-lumi5/00001649/RDST/0000/00001649_00004860_1.rdst' TYP='POOL_ROOTTREE' OPT='READ'"};
+"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi5/00001687/RDST/0000/00001687_00000001_1.rdst' TYP='POOL_ROOTTREE' OPT='READ'" 
+};
