@@ -337,13 +337,6 @@ def test_alessiastool():
     scs = filter(lambda sc: sc.isSuccess(),scs)
     print "good matched ",len(scs)
     
-... 
-Traceback (most recent call last):
-  File "<stdin>", line 1, in ?
-AttributeError: 'IMatchTVeloTracks' object has no attribute 'match'
->>> for vt in vtracks: match.match2dVelo(vt,ftracks[0])
-... 
-
 class L0Conf(gaudimodule.PyAlgorithm):
     def execute ( self ) :
         conf_algo()
