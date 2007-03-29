@@ -1,8 +1,11 @@
-// $Id: ICaloLikelihood.h,v 1.5 2006-06-27 16:42:30 odescham Exp $
+// $Id: ICaloLikelihood.h,v 1.6 2007-03-29 16:55:34 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2006/06/27 16:42:30  odescham
+// adapt to enum change in RecEvent
+//
 // Revision 1.4  2006/03/22 18:21:51  odescham
 // Migration to new Event Model
 //
@@ -27,7 +30,7 @@
 namespace LHCb{
   class  CaloCluster     ;     
 };
-
+static const InterfaceID IID_ICaloLikelihood( "ICaloLikelihood" , 1 , 0 );
 
 /** @class ICaloLikelihood ICaloLikelihood.h CaloInterfaces/ICaloLikelihood.h
  *  
@@ -47,7 +50,7 @@ public:
    *  @see IID_ICaloLikelyhood
    *  @return the unique interface identifier
    */
-  static const InterfaceID& interfaceID()  ;
+  static const InterfaceID& interfaceID() { return IID_ICaloLikelihood; } 
   
   /** calorimeter hypothesis to be evaluated
    *  @see CaloHypotheses 
@@ -68,10 +71,6 @@ public:
    */
   virtual double operator() ( const LHCb::CaloCluster* cluster ) const = 0 ;
   
-protected:
-  
-  /// dectructor (virtual and protected)
-  virtual ~ICaloLikelihood();
   
 };
 

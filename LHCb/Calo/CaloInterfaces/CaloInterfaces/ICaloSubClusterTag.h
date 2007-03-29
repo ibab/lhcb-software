@@ -1,8 +1,11 @@
-// $Id: ICaloSubClusterTag.h,v 1.5 2006-03-22 18:21:51 odescham Exp $
+// $Id: ICaloSubClusterTag.h,v 1.6 2007-03-29 16:55:34 odescham Exp $
 // ============================================================================
 // CVS  tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2006/03/22 18:21:51  odescham
+// Migration to new Event Model
+//
 // Revision 1.4  2005/11/07 12:08:25  odescham
 // v5r0 - Adapt to the new Track Event Model
 //
@@ -20,7 +23,7 @@
 #define CALOINTERFACES_ICALOSUBCLUSTERTAG_H 1
 // Include files
 // GaudiKernel
-#include "GaudiKernel/IInterface.h"
+#include "GaudiKernel/IAlgTool.h"
 // CaloInterafces 
 #include "CaloInterfaces/ICaloClusterTool.h"
 
@@ -30,6 +33,8 @@
  *  @author Ivan Belyaev
  *  @date   01/04/2002
  */
+static const InterfaceID IID_ICaloSubClusterTag( "ICaloSubClusterTag" , 1 , 0 );
+
 class ICaloSubClusterTag :
   public virtual ICaloClusterTool 
 {
@@ -40,7 +45,7 @@ public:
    *  @see IInterface 
    *  @return unique interface identifier
    */
-  static const InterfaceID& interfaceID() ;
+  static const InterfaceID& interfaceID()  { return IID_ICaloSubClusterTag;};
   
   /** The main method 
    *  @param cluster pointer to ClaoCluster object to be selected/tagged 
@@ -54,10 +59,6 @@ public:
    */
   virtual StatusCode untag ( LHCb::CaloCluster* cluster ) const = 0 ;
   
-protected:
-  
-  /// destructor (virtual and protected)
-  virtual ~ICaloSubClusterTag();
   
 };
 

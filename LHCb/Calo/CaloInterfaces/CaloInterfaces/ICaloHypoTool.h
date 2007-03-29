@@ -1,8 +1,11 @@
-// $Id: ICaloHypoTool.h,v 1.7 2006-03-22 18:21:51 odescham Exp $
+// $Id: ICaloHypoTool.h,v 1.8 2007-03-29 16:55:34 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2006/03/22 18:21:51  odescham
+// Migration to new Event Model
+//
 // Revision 1.6  2005/11/07 12:08:25  odescham
 // v5r0 - Adapt to the new Track Event Model
 //
@@ -32,7 +35,7 @@
 namespace LHCb{
   class    CaloHypo                ;  
 };
-
+static const InterfaceID IID_ICaloHypoTool( "ICaloHypoTool" , 2 , 0 );
 /** @class ICaloHypoTool ICaloHypoTool.h CaloInterfaces/ICaloHypoTool.h
  *
  *  The generic interface for "Calorimeter tools" , which deals with 
@@ -57,7 +60,7 @@ class ICaloHypoTool:
    *  @see IInterface
    *  @return unique interface identifier
    */
-  static const InterfaceID& interfaceID() ;
+  static const InterfaceID& interfaceID() { return IID_ICaloHypoTool; };
   
   /** The main processing method 
    *  @param  hypo  pointer to CaloHypo object to be processed
@@ -71,10 +74,6 @@ class ICaloHypoTool:
    */  
   virtual StatusCode operator() ( LHCb::CaloHypo* hypo  ) const = 0 ;
   
- protected: 
-  
-  /// destructor, virtual 
-  virtual ~ICaloHypoTool();
   
 };
 

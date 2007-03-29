@@ -1,8 +1,17 @@
-! $Id: release.notes,v 1.33 2007-02-26 14:02:41 cattanem Exp $
+! $Id: release.notes,v 1.34 2007-03-29 16:55:35 odescham Exp $
 ! =============================================================================
 ! Package     : CaloInterfaces
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
+
+
+! 2007-03-27 - Olivier Deschamps 
+ - Remove const qualifiers in ICaloMomentum
+ - add new virtual method : bremstrahlung() & bremCaloMomentum() to ICaloMomentum
+ - ICaloElectron moved to CaloUtils
+ - Standardize the package : interfaceID() inlined, virtual desctructor removed --> src/ removed
+ - add dict/  and adapt cmt/requirements
+
 
 !========================== CaloInterfaces v7r1 2007-02-26  ===================
 ! 2007-02-26 - Marco Cattaneo

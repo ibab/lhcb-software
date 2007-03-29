@@ -1,8 +1,11 @@
-// $Id: ICaloClusterTool.h,v 1.8 2006-03-22 18:21:51 odescham Exp $
+// $Id: ICaloClusterTool.h,v 1.9 2007-03-29 16:55:34 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2006/03/22 18:21:51  odescham
+// Migration to new Event Model
+//
 // Revision 1.7  2005/11/07 12:08:25  odescham
 // v5r0 - Adapt to the new Track Event Model
 //
@@ -24,7 +27,7 @@
 namespace LHCb{
   class     CaloCluster                ; 
 };
-
+const InterfaceID IID_ICaloClusterTool( "ICaloClusterTool" , 3 , 0 );
 
 /** @class ICaloClusterTool ICaloClusterTool.h 
  *           CaloInterfaces/ICaloClusterTool.h
@@ -52,7 +55,7 @@ class ICaloClusterTool:
    *  @see IInterface 
    *  @return unique interface identifier
    */
-  static const InterfaceID& interfaceID() ;
+  static const InterfaceID& interfaceID() { return IID_ICaloClusterTool; };
   
   /** The main processing method 
    *  @param cluster pointer to CaloCluster object to be processed
@@ -68,8 +71,6 @@ class ICaloClusterTool:
   
  protected:
   
-  /// destructor, protected and virtual
-  virtual ~ICaloClusterTool();
   
 };
 

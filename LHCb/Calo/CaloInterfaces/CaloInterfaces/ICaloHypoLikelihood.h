@@ -1,8 +1,11 @@
-// $Id: ICaloHypoLikelihood.h,v 1.6 2006-06-27 16:42:30 odescham Exp $ 
+// $Id: ICaloHypoLikelihood.h,v 1.7 2007-03-29 16:55:34 odescham Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2006/06/27 16:42:30  odescham
+// adapt to enum change in RecEvent
+//
 // Revision 1.5  2006/03/22 18:21:51  odescham
 // Migration to new Event Model
 //
@@ -28,6 +31,7 @@
 #include "GaudiKernel/IAlgTool.h"
 #include "Event/CaloHypo.h"
 
+static const InterfaceID IID_ICaloHypoLikelihood( "ICaloHypoLikelihood" , 1 , 0 );
 
 class ICaloHypoLikelihood:
   public  virtual IAlgTool                               ,
@@ -40,7 +44,7 @@ public:
    *  @see IID_ICaloHypoLikelihood
    *  @return the unique interface identifier
    */
-  static const InterfaceID& interfaceID() ;
+  static const InterfaceID& interfaceID(){ return IID_ICaloHypoLikelihood;};
   
   /** calorimeter hypothesis to be evaluated
    *  @see CaloHypotheses 
@@ -61,10 +65,6 @@ public:
    */
   virtual double operator() ( const LHCb::CaloHypo* cluster ) const = 0 ;
   
-protected:
-  
-  /// dectructor (virtual and protected)
-  virtual ~ICaloHypoLikelihood();
   
 };
 

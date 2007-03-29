@@ -1,8 +1,11 @@
-// $Id: ICaloSplitTool.h,v 1.6 2006-03-22 18:21:51 odescham Exp $
+// $Id: ICaloSplitTool.h,v 1.7 2007-03-29 16:55:34 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2006/03/22 18:21:51  odescham
+// Migration to new Event Model
+//
 // Revision 1.5  2005/11/07 12:08:25  odescham
 // v5r0 - Adapt to the new Track Event Model
 //
@@ -36,9 +39,12 @@
  *  @author Frederic Machefert machefer@in2p3.fr
  *  @date   19/03/2002
  */
+
+
 namespace LHCb{
   class     CaloHypo     ;     
 };
+static const InterfaceID IID_ICaloSplitTool( "ICaloSplitTool" , 2 , 0 );
 
 class ICaloSplitTool: 
   public virtual IAlgTool ,
@@ -57,7 +63,7 @@ public:
   /** static interface identification
    *  @return unique interface identifier
    */
-  static const InterfaceID& interfaceID() ;
+  static const InterfaceID& interfaceID()  { return IID_ICaloSplitTool;};
   
   /** The main processing method 
    *  @param  hypo   pointer to CaloHypo object to be processed
@@ -76,11 +82,6 @@ public:
   virtual StatusCode 
   operator() ( LHCb::CaloHypo*  hypo  ,
                LHCb::CaloHypos& hypos ) const = 0 ;
-  
-protected:
-  
-  /// destructor, virtual 
-  virtual ~ICaloSplitTool();
   
 };
 

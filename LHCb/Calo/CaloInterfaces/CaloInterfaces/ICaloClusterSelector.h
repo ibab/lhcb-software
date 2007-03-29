@@ -1,8 +1,11 @@
-// $Id: ICaloClusterSelector.h,v 1.6 2006-03-22 18:21:50 odescham Exp $
+// $Id: ICaloClusterSelector.h,v 1.7 2007-03-29 16:55:34 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2006/03/22 18:21:50  odescham
+// Migration to new Event Model
+//
 // Revision 1.5  2005/11/07 12:08:25  odescham
 // v5r0 - Adapt to the new Track Event Model
 //
@@ -30,7 +33,7 @@
 namespace LHCb{
   class  CaloCluster     ;    
 };
-
+static const InterfaceID IID_ICaloClusterSelector ( "ICaloClusterSelector" , 1 , 0 );
 
 /** @class ICaloClusterSelector ICaloClusterSelector.h
  *  
@@ -46,7 +49,7 @@ namespace LHCb{
  */
 
 class ICaloClusterSelector :
-  public virtual   IAlgTool                           ,
+  virtual public IAlgTool                           ,
   public std::unary_function<const LHCb::CaloCluster*,bool> 
 {
 public:
@@ -56,7 +59,8 @@ public:
    *  @see IID_ICaloClusterSelector
    *  @return the unique interface identifier
    */
-  static const InterfaceID& interfaceID() ;
+  static const InterfaceID& interfaceID() { return IID_ICaloClusterSelector; }
+  
   
   /** "select"/"preselect" method 
    *  @param  cluster pointer to calo cluster object to be selected 
@@ -72,8 +76,6 @@ public:
   
 protected:
   
-  /// destructor (virtual and protected)
-  virtual ~ICaloClusterSelector(); 
   
 };
   

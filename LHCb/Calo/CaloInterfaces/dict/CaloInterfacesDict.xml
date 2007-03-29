@@ -1,0 +1,17 @@
+<lcgdict>
+
+  <class name    = "ICaloClusterSelector"     />
+  <class name    = "ICaloClusterTool"         />
+  <class name    = "ICaloCorrection"          />
+  <class name    = "ICaloDigitTool"           />
+  <class name    = "ICaloHypoLikelihood"      /> 
+  <class name    = "ICaloHypoTool"            />
+  <class name    = "ICaloLikelihood"          />
+  <class name    = "ICaloSplitTool"           />
+  <class name    = "ICaloSubClusterTag"       />
+  <class name    = "ICaloTrackIdEval"         />
+  <class name    = "ICaloTrackMatch"          />
+
+</lcgdict>
+
+

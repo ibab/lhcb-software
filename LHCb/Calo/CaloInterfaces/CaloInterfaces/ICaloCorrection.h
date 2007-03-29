@@ -1,4 +1,4 @@
-// $Id: ICaloCorrection.h,v 1.7 2007-02-26 14:02:41 cattanem Exp $
+// $Id: ICaloCorrection.h,v 1.8 2007-03-29 16:55:34 odescham Exp $
 // ============================================================================
 #ifndef CALOINTERFACES_ICALOCORRECTION_H 
 #define CALOINTERFACES_ICALOCORRECTION_H 1
@@ -17,6 +17,10 @@
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
  *  @date   22/03/2002
  */
+
+static const InterfaceID IID_ICaloCorrection( "ICaloCorrection" , 1 , 0 );
+
+
 class ICaloCorrection :
   public virtual IAlgTool , 
   public std::binary_function<const LHCb::CaloPosition, const  LHCb::CaloPosition::Center , LHCb::CaloPosition*>
@@ -26,7 +30,7 @@ public:
   /** static interface identification
    *  @return unique interface identifier
    */
-  static const InterfaceID& interfaceID() ;
+  static const InterfaceID& interfaceID() { return IID_ICaloCorrection; };
   
   /** The main processing method 
    *  @param  position  uncorrected position
@@ -59,8 +63,6 @@ public:
 
 protected:
   
-  /// destructor, virtual
-  virtual ~ICaloCorrection();
   
 };
 

@@ -1,8 +1,11 @@
-// $Id: ICaloTrackIdEval.h,v 1.7 2006-03-22 18:21:51 odescham Exp $
+// $Id: ICaloTrackIdEval.h,v 1.8 2007-03-29 16:55:34 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2006/03/22 18:21:51  odescham
+// Migration to new Event Model
+//
 // Revision 1.6  2005/11/07 12:08:25  odescham
 // v5r0 - Adapt to the new Track Event Model
 //
@@ -28,7 +31,7 @@
 namespace LHCb{
   class Track      ;
 };
-
+static const InterfaceID IID_ICaloTrackIdEval( "ICaloTrackIdEval" , 2 , 0 );
 
 /** @class ICaloTrackIdEval ICaloTrackIdEval.h CaloInterfaces/ICaloTrackIdEval.h
  *  
@@ -56,7 +59,7 @@ public:
    *  @see IInterface
    *  @return unique interface identifier
    */
-  static const InterfaceID& interfaceID() ;
+  static const InterfaceID& interfaceID()  { return IID_ICaloTrackIdEval;};
   
   /** The main processing method 
    *  It evaluated the Track ID estimators using the calorimeter information  
@@ -76,10 +79,6 @@ public:
     ( const LHCb::Track* track ) const = 0 ;
   
   
-protected:
-  
-  /// protected destructor 
-  virtual ~ICaloTrackIdEval();
   
 };
 
