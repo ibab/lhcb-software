@@ -4,16 +4,21 @@
 ! Purpose     : Velo Tools for reconstruction
 !-----------------------------------------------------------------------------
 
+!========================== VeloTools v1r2 2007-03-28 ========================
 ! 2007-03-22 - David Hutchcroft
  - Ignored the StatusCode returned from sens->channelDistance
 
-!! 2007-03-02 - Marco Cattaneo
+! 2006-12-19 - Tomasz Szumlak
+ - Modification determined by new real data format for the TELL1. This changes
+   the returned value of the fractional strip position to the range (0., 1.)
+   instead of (-0.5, 0.5)
+
+!========================== VeloTools v1r1p1 2007-03-02 ======================
+ (merged from v1r1b branch)
+! 2007-03-02 - Marco Cattaneo
  - Remove LHCbDefinitions includes
  - Remove obsolete VeloTools_load.cpp file
  - Fix a doxygen warning
-
- 2006-12-19 - Tomasz Szumlak
- - modification determined by new real data format for the TELL1
 
 !========================== VeloTools v1r1 2006-12-19 ========================
 ! 2006-12-19 - Marco Cattaneo
