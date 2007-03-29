@@ -1,1 +1,22 @@
-.
+Placeholder for the prototype release.notes.
+
+...but for the time being:
+
+- Unix version can be built using standard CMT procedure.
+
+- Under w32, after config and setup, qmake needs to be invoked from project
+root and then nmake can be run: the CMT script uses nmake which in turn I
+suspect hates dots in filenames.
+TODO: fix the above by making CMT scripts generate moc_ instead of .moc.
+  (and detection of modified files is somewhat broken).
+
+- actually both can be built running qmake from the root folder containing
+  the Presenter.pro file, and then make/nmake can be issued (this is the
+  way to build any Qt application)
+
+When launching, don't forget the following:
+- this is just a protoype, so it is messy/unreliable
+- set DIM_DNS_NODE environment variable
+- DIM services added to the database are currently filed in the folder
+  "unsorted" under the pagename "yPage"
+- do not try to modify page once update has been started

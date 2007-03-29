@@ -1,0 +1,2 @@
+$(tmp)/${NAME}.moc.cpp :: ${FULLNAME}
+	moc ${FULLNAME} -o $(tmp)/${NAME}.moc.cpp
