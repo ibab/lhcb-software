@@ -922,8 +922,11 @@ void DecayChainNTuple::HandleNTuple::FillNTuple(const LHCb::Particle& part, LHCb
       m_lifetimefitter->fit(*sIPSPV, part, ct, ctErr, ctChi2);
     
       // tau in ps
-      m_taufit[m_n] = 1000 * (((ct/mm) /c_light)/ns);
-      m_taufitErr[m_n] = 1000 * (((ctErr/mm) /c_light)/ns) ;
+      // Obsolete old conversion
+      //     m_taufit[m_n] = 1000 * (((ct/mm) /c_light)/ns);
+      //    m_taufitErr[m_n] = 1000 * (((ctErr/mm) /c_light)/ns) ;
+      m_taufit[m_n] = ct/picosecond;
+      m_taufitErr[m_n] = ctErr/picosecond;
       m_ctfitChi2[m_n] = ctChi2;
     }
   }
