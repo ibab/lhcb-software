@@ -261,9 +261,9 @@ void LHCb::CaloMomentum::evaluate(int param){
     if( 0 != ( LHCb::CaloMomentum::Covariance & param )){
       
       //  vector of "old" parameters 
-      //    vold( 1 ) = pos   -> e () ;   // energy     in Calorimeter
-      //    vold( 2 ) = pos   -> x () ;   // x-position in Calorimiter 
-      //    vold( 3 ) = pos   -> y () ;   // y-position in Calorimeter 
+      //    vold( 1 ) = pos   -> x () ;   // x-position in Calorimeter 
+      //    vold( 2 ) = pos   -> y () ;   // y-position in Calorimeter 
+      //    vold( 3 ) = pos   -> e () ;   // energy     in Calorimeter
       //    vold( 4 ) = point .  x () ;   // x-position at production vertex  
       //    vold( 5 ) = point .  y () ;   // y-position at production vertex 
       //    vold( 6 ) = point .  z () ;   // z-position at production vertex
@@ -278,8 +278,8 @@ void LHCb::CaloMomentum::evaluate(int param){
       //   and S22 is 3x3 covariance matrix of xv , yv and zv 
       //   matrices S12 and S21 both are equal to null matrix 
       //   
-      LHCb::CaloPosition::Covariance      S11 = calo.covariance();  
-      LHCb::CaloMomentum::PointCovariance S22 =  C22;
+      LHCb::CaloPosition::Covariance      S11 = calo.covariance();  // (X,Y,E)
+      LHCb::CaloMomentum::PointCovariance S22 =  C22;               // (x,y,z)
       
       
       const double dx_dxc  =  1.0 ; // d( dx ) / d( xc ) 
@@ -337,11 +337,13 @@ void LHCb::CaloMomentum::evaluate(int param){
       LHCb::CaloMomentum::MomPointCovariance F12  ;
       //   px =     e * dx * gz  
       //   d(px)/d(e) 
-      F11 ( 0 , 0 ) = dx * gz ;
+      F11 ( 0 , 2 ) = dx * gz ;
       //   d(px)/d(xc) 
-      F11 ( 0 , 1 ) =  e * ( dx_dxc * gz + dx * dgz_dxc ) ;
+      F11 ( 0 , 0 ) =  e * ( dx_dxc * gz + dx * dgz_dxc ) ;
       //   d(px)/d(yc) 
-      F11 ( 0 , 2 ) =  e * ( dx_dyc * gz + dx * dgz_dyc ) ;
+      F11 ( 0 , 1 ) =  e * ( dx_dyc * gz + dx * dgz_dyc ) ;
+
+
       //   d(px)/d(xv) 
       F12 ( 0 , 0 ) =  e * ( dx_dxv * gz + dx * dgz_dxv ) ;
       //   d(px)/d(yv) 
@@ -351,11 +353,12 @@ void LHCb::CaloMomentum::evaluate(int param){
       
       //   py = e * dy * gz  
       //   d(py)/d(e) 
-      F11 ( 1 , 0 ) = dy * gz;
+      F11 ( 1 , 2 ) = dy * gz;
       //   d(py)/d(xc) 
-      F11 ( 1 , 1 ) =  e * ( dy_dxc * gz + dy * dgz_dxc ) ;
+      F11 ( 1 , 0 ) =  e * ( dy_dxc * gz + dy * dgz_dxc ) ;
       //   d(py)/d(yc) 
-      F11 ( 1 , 2 ) =  e * ( dy_dyc * gz + dy * dgz_dyc ) ;
+      F11 ( 1 , 1 ) =  e * ( dy_dyc * gz + dy * dgz_dyc ) ;
+
       //   d(py)/d(xv) 
       F12 ( 1 , 0 ) =  e * ( dy_dxv * gz + dy * dgz_dxv ) ;
       //   d(py)/d(yv) 
@@ -365,11 +368,12 @@ void LHCb::CaloMomentum::evaluate(int param){
       
       //   pz = e * dz * gz   
       //   d(pz)/d(e) 
-      F11 ( 2 , 0 ) = dz * gz ;
+      F11 ( 2 , 2 ) = dz * gz ;
       //   d(pz)/d(xc) 
-      F11 ( 2 , 1 ) =  e * ( dz_dxc * gz + dz * dgz_dxc ) ;
+      F11 ( 2 , 0 ) =  e * ( dz_dxc * gz + dz * dgz_dxc ) ;
       //   d(pz)/d(yc) 
-      F11 ( 2 , 2 ) =  e * ( dz_dyc * gz + dz * dgz_dyc ) ;
+      F11 ( 2 , 1 ) =  e * ( dz_dyc * gz + dz * dgz_dyc ) ;
+
       //   d(pz)/d(xv) 
       F12 ( 2 , 0 ) =  e * ( dz_dxv * gz + dz * dgz_dxv ) ;
       //   d(pz)/d(yv) 
@@ -379,11 +383,12 @@ void LHCb::CaloMomentum::evaluate(int param){
       
       //   e (new) = e (old)          
       //   d(e)/d(e) 
-      F11 ( 3 , 0 ) =  1.0 ;
+      F11 ( 3 , 2 ) =  1.0 ;
       //   d(e)/d(xc) 
-      F11 ( 3 , 1 ) =  0.0 ;
+      F11 ( 3 , 0 ) =  0.0 ;
       //   d(e)/d(yc) 
-      F11 ( 3 , 2 ) =  0.0 ;
+      F11 ( 3 , 1 ) =  0.0 ;
+
       //   d(e)/d(xv) 
       F12 ( 3 , 0 ) =  0.0 ;
       //   d(e)/d(yv) 

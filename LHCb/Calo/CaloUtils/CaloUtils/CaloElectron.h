@@ -1,4 +1,4 @@
-// $Id: CaloElectron.h,v 1.2 2007-01-12 16:39:52 odescham Exp $
+// $Id: CaloElectron.h,v 1.3 2007-03-29 16:34:11 odescham Exp $
 #ifndef CALOELECTRON_H 
 #define CALOELECTRON_H 1
 
@@ -10,7 +10,7 @@
 #include "Event/Track.h"
 //
 #include "TrackInterfaces/ITrackExtrapolator.h"
-#include "CaloInterfaces/ICaloElectron.h"            
+#include "CaloUtils/ICaloElectron.h"            
 #include "CaloUtils/CaloMomentum.h"
 
 
@@ -33,8 +33,9 @@ public:
   
   bool  set(const  LHCb::Particle* particle);
   bool  set(const  LHCb::ProtoParticle* proto);
-  const LHCb::CaloHypo*    electron();
-  const LHCb::CaloMomentum bremstrahlung();
+  LHCb::CaloHypo*    electron();
+  LHCb::CaloHypo*    bremstrahlung();
+  LHCb::CaloMomentum bremCaloMomentum();
   double ecalE();
   double eOverP();
   LHCb::State caloState(CaloPlane::Plane plane = CaloPlane::ShowerMax , double deltaShower = 0. );
@@ -56,8 +57,8 @@ private:
   const LHCb::Particle*      m_particle;
   const LHCb::ProtoParticle* m_proto;
   const LHCb::Track*         m_track;
-  const LHCb::CaloHypo*      m_electron;
-  const LHCb::CaloHypo*      m_bremstrahlung;
+  LHCb::CaloHypo*      m_electron;
+  LHCb::CaloHypo*      m_bremstrahlung;
   const LHCb::CaloPosition*  m_calopos;
   DeCalorimeter*       m_calo;
   std::string m_det;

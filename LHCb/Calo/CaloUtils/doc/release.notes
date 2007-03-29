@@ -1,7 +1,13 @@
-! $Id: release.notes,v 1.80 2007-02-07 16:17:22 cattanem Exp $
+! $Id: release.notes,v 1.81 2007-03-29 16:34:12 odescham Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !------------------------------------------------------------------------------
+
+
+! 2007-03-29 - Olivier Deschamps
+ - Fix bug in CaloMomenum definition of the transport matrix (indices swap) 
+ - add new method : bremstrahlung() & bremCaloMomentum() in CaloElectron
+ - implement ICaloMomentum interface (moved from CaloInterfaces)
 
 !========================== CaloUtils v7r1 2007-02-07 =========================
 ! 2007-02-07 - Olivier Deschamps

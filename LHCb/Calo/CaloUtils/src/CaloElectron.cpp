@@ -1,4 +1,4 @@
-// $Id: CaloElectron.cpp,v 1.4 2007-02-07 15:37:58 odescham Exp $
+// $Id: CaloElectron.cpp,v 1.5 2007-03-29 16:34:12 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -71,29 +71,32 @@ bool CaloElectron::set(const LHCb::ProtoParticle* proto){
   return m_status;
 }
 //=============================================================================
-const LHCb::CaloHypo* CaloElectron::electron(){
+LHCb::CaloHypo* CaloElectron::electron(){
   return m_electron;
 }
 //=============================================================================
-const LHCb::CaloMomentum CaloElectron::bremstrahlung(){
+LHCb::CaloHypo* CaloElectron::bremstrahlung(){
+  return m_bremstrahlung;
+}
+//=============================================================================
+LHCb::CaloMomentum CaloElectron::bremCaloMomentum(){
   if(!m_status || NULL == m_bremstrahlung )return LHCb::CaloMomentum();
   Gaudi::XYZPoint point;
   Gaudi::SymMatrix3x3 matrix;
   m_track->position(point,matrix);  
-  const LHCb::CaloMomentum bremPhoton( m_bremstrahlung ,
-                                       point,
-                                       matrix);
+  LHCb::CaloMomentum bremPhoton( m_bremstrahlung ,point, matrix);
   return bremPhoton;
 }
+
 //=============================================================================
 double CaloElectron::ecalE(){
   if( !m_status )return 0.;
-  return m_electron->e() ;
+  return (double) m_electron->e() ;
 }
 //=============================================================================
 double CaloElectron::eOverP(){
   if( !m_status )return 0.;
-  return m_electron->e()/m_track->p();
+  return (double) m_electron->e()/m_track->p();
 }
 //=============================================================================
 LHCb::State CaloElectron::caloState(CaloPlane::Plane plane , double deltaShower ){
