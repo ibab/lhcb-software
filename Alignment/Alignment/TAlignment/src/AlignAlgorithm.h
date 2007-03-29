@@ -1,4 +1,4 @@
-// $Id: AlignAlgorithm.h,v 1.1 2007-03-09 17:08:56 janos Exp $
+// $Id: AlignAlgorithm.h,v 1.2 2007-03-29 01:42:51 janos Exp $
 #ifndef ALIGNALGORITHM_H 
 #define ALIGNALGORITHM_H 1
 
@@ -9,7 +9,7 @@
 
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
-#include "Kernel/GenericMatrixTypes.h"
+#include "GaudiKernel/GenericMatrixTypes.h"
 #include "GaudiKernel/Point3DTypes.h"
 
 // forward declarations
