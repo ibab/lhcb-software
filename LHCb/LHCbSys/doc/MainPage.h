@@ -1,7 +1,7 @@
 /** \mainpage notitle
  *  \anchor lhcbdoxygenmain
  *
- * This is the code reference manual for the LHCb core classes (See
+ * This is the code reference manual for the %LHCb core classes (See
  * <a href="requirements-source.html"><b>LHCb constituent packages</b></a>).
  * These include:
  * \li common interfaces

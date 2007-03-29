@@ -1,5 +1,5 @@
 package LHCbSys
-version v22r3
+version v22r4
 
 branches doc cmt
 
@@ -23,8 +23,8 @@ use L0MuonKernel          v6r0    L0      # Andrei Tsaregorodtsev, Julien Cogan
 use ProcessorKernel       v4r0    L0      # Andrei Tsaregorodtsev, Julien Cogan
 
 # Detector description
-use DetSys                v9r3    Det     # Marco Cattaneo
-use VeloDet               v11r1   Det     # Mark Tobin
+use DetSys                v9r4    Det     # Marco Cattaneo
+use VeloDet               v11r2   Det     # Mark Tobin
 use DetDesc               v17r2   Det     # Marco Clemencic, Juan Palacios
 use DetDescCnv            v4r3    Det     # Marco Clemencic, Juan Palacios
 use DetDescSvc            v1r11   Det     # Marco Clemencic, Matt Needham

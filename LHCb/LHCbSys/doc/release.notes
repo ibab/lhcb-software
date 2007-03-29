@@ -5,6 +5,15 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v22r4>2007-03-28 LHCbSys v22r4</A></H1><PRE>
+This version uses Gaudi v19r3 and LCG_50b. Fully compatible with DC06 data
+
+- Packages modified: VeloDet v11r2
+
+- In VeloDet v11r2
+  . Fix untested StatusCodes
+  . Read the cut related to the sensitive volume ID from existing value in DDDB
+
 </PRE><H1><A NAME=v22r3>2007-03-23 LHCbSys v22r3</A></H1><PRE>
 This version uses Gaudi v19r3 and LCG_50b. Fully compatible with DC06 data
 
