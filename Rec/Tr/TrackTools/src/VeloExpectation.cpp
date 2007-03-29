@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : VeloExpectation
  *
  *  CVS Log :-
- *  $Id: VeloExpectation.cpp,v 1.1 2007-03-12 16:17:32 mneedham Exp $
+ *  $Id: VeloExpectation.cpp,v 1.2 2007-03-29 08:40:08 cattanem Exp $
  *
  *  @author M.Needham Matt.Needham@cern.ch
  *  @date   11/03/2007
@@ -181,7 +181,7 @@ bool VeloExpectation::isInside(const DeVeloSensor* sensor, const Tsa::Line& xLin
   // check inside active area of velo sensor
   Gaudi::XYZPoint global(xLine.value(z),yLine.value(z),z);  
   Gaudi::XYZPoint local;
-  sensor->globalToLocal(global,local);   
+  local = sensor->globalToLocal(global);   
   return sensor->isInActiveArea(local);
 }
 
