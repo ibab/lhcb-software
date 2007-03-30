@@ -1,5 +1,5 @@
 ! =============================================================================
-! $Id: release.notes,v 1.52 2007-03-30 16:20:26 marcocle Exp $
+! $Id: release.notes,v 1.53 2007-03-30 18:33:29 marcocle Exp $
 ! =============================================================================
 ! package Tools/CondDBUI
 ! package manager : Marco Clemencic / Nicolas Gilardi
@@ -8,6 +8,8 @@
 ! 2007-03-30 - Marco Clemencic
  - Fixed a bug in the requirements: it was still depending on SQLDDDB v*.
    (now it should be DDDB)
+ - Made it possible to pass to copy_files_to_db.py files with system ids
+   starting with "conddb:" without breaking them.
 
 !===================== Tools/CondDBUI v2r1 2007-03-20 =========================
 ! 2007-03-12 - Marco Clemencic

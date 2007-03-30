@@ -1394,9 +1394,11 @@ def _fix_xml(xml_data,folderset_path):
             pos = m.start()
             s = m.start(1)+1
             e = m.end(1)-1
-            p = os.path.join(path,data[s:e])
-            p = os.path.normpath(p)
-            data = data[0:s] + p + data[e:] 
+            if not data[s:e].startswith("conddb:"):
+                # replace the system id only if needed
+                p = os.path.join(path,data[s:e])
+                p = os.path.normpath(p)
+                data = data[0:s] + p + data[e:]
             m = sysIdRE.search(data,pos+1)
         return data
     
