@@ -1,7 +1,7 @@
 /** \mainpage notitle
  *  \anchor lbcomdoxygenmain
  *
- * This is the code reference manual for LHCb component libraries that are
+ * This is the code reference manual for %LHCb component libraries that are
  * shared by several applications. See:
  * <a href="requirements-source.html"><b>Lbcom constituent packages</b></a>
  * <p><b>See also:</b> 

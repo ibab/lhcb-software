@@ -41,6 +41,7 @@ use VeloDAQ           v3r5  Velo        # Kurt Rinnert
 use VeloAssociators   v2r2  Velo        # Tomasz Szumlak
 use VeloAlgorithms    v4r6  Velo        # Tomasz Szumlak
 use VeloSimulation    v2r5  Velo        # Tomasz Szumlak
+use VeloTools         v1r2  Velo        # Tomasz Szumlak
 
 # Muon
 use MuonAssociators   v3r0  Muon        # Alessia Satta
