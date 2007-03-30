@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Presenter/gui/presenter/PageEditorMainWindow.ui.h,v 1.4 2007-03-30 13:24:57 psomogyi Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Presenter/gui/presenter/PageEditorMainWindow.ui.h,v 1.5 2007-03-30 13:38:41 psomogyi Exp $
 
 /****************************************************************************
  ** ui.h extension file, included from the uic-generated form implementation.
@@ -1427,7 +1427,7 @@ void PageEditorMainWindow::addSelectedHistogramsFromDIMToPage()
   QListViewItemIterator it(dimServicesView);  
   while (it.current()) {
     QListViewItem *item = it.current();
-    if (item->isSelected() && ("gauchocomment" != item->text(5).right(14)) ) {
+    if (item->isSelected() && !(item->text(5).contains("gauchocomment", FALSE)) ) {
 
 //      OnlineHistogram *h1 = histogramDB->getHistogram(item->text(5));
       
