@@ -1,4 +1,4 @@
-// $Id: CaloMCTools1.h,v 1.2 2006-06-14 14:21:55 cattanem Exp $
+// $Id: CaloMCTools1.h,v 1.3 2007-03-30 06:55:54 cattanem Exp $
 // ============================================================================
 #ifndef EVENT_CALOMCTOOLS1_H 
 #define EVENT_CALOMCTOOLS1_H 1
@@ -43,7 +43,7 @@ namespace GaudiUtils
 namespace CaloMCTools 
 { 
   
-  /** @class AllEnergyFromLHCb::MCParticle CaloMCTools1.h Event/CaloMCTools1.h 
+  /** @class AllEnergyFromMCParticle CaloMCTools1.h Event/CaloMCTools1.h 
    *  
    * generic class/functor  to extract 
    * the ALL (active) energy deposition from given LHCb::MCParticle
