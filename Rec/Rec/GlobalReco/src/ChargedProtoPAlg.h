@@ -1,11 +1,10 @@
-
 //-----------------------------------------------------------------------------
 /** @file ChargedProtoPAlg.h
  *
  * Header file for algorithm ChargedProtoPAlg
  *
  * CVS Log :-
- * $Id: ChargedProtoPAlg.h,v 1.24 2006-12-22 10:50:45 odescham Exp $
+ * $Id: ChargedProtoPAlg.h,v 1.25 2007-03-30 07:16:55 cattanem Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 29/03/2006
@@ -22,9 +21,9 @@
 // interfaces
 #include "TrackInterfaces/ITrackSelector.h"
 #include "TrackInterfaces/ITrackVelodEdxCharge.h"
-#include "CaloInterfaces/ICaloElectron.h"
 
 // from CaloUtils
+#include "CaloUtils/ICaloElectron.h"
 #include "CaloUtils/Calo2Track.h"
 #include "Event/CaloDataFunctor.h"
 #include "CaloDet/DeCalorimeter.h"

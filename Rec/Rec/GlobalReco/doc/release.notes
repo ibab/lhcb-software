@@ -4,6 +4,13 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+!========================== GlobalReco v6r9 2007-03-30 =======================
+! 2007-03-30 - Marco Cattaneo
+ - Pick up ICaloElectron.h from new CaloUtils location
+
+! 2007-03-30 - Chris Jones
+ - Remove some verbose() messages
+
 !========================== GlobalReco v6r8 2007-03-02 =======================
 ! 2007-03-02 - Marco Cattaneo
  - Remove obsolete GlobalReco_load.cpp file
