@@ -1299,7 +1299,7 @@
     <slot>savePage()</slot>
     <slot>deleteSelectedFolderFromDB()</slot>
     <slot>switchLayoutMode()</slot>
-    <slot>addSelectedHistogramsToPage()</slot>
+    <slot>addSelectedHistogramsFromDatabaseToPage()</slot>
     <slot>addHistogramsToDatabase()</slot>
     <slot>refreshPageToggle()</slot>
     <slot>refreshPage()</slot>
@@ -1307,6 +1307,7 @@
     <slot>clearIntegrateToggle()</slot>
     <slot>connectToDatabase( const QString &amp; dbPassword, const QString &amp; dbUsername, const QString &amp; dbName )</slot>
     <slot>clearCanvas()</slot>
+    <slot>addSelectedHistogramsFromDIMToPage()</slot>
 </slots>
 <functions>
     <function returnType="QPixmap">uicLoadPixmap( const QString &amp; name )</function>

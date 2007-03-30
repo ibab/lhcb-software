@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Presenter/gui/presenter/PageEditorMainWindow.ui.h,v 1.1 2007-03-29 08:56:10 psomogyi Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Presenter/gui/presenter/PageEditorMainWindow.ui.h,v 1.2 2007-03-30 12:51:28 psomogyi Exp $
 
 /****************************************************************************
  ** ui.h extension file, included from the uic-generated form implementation.
@@ -96,6 +96,9 @@ void PageEditorMainWindow::dimContextMenu()
     dimContextMenu->insertItem(tr("&Add selection to Database"), this,
                                SLOT(addHistogramsToDatabase()));
   }
+    dimContextMenu->insertItem(tr("&Add selection to page"), this,
+                             SLOT(addSelectedHistogramsFromDIMToPage()));                               
+
 //  dimContextMenu->insertSeparator();
   dimContextMenu->exec(QCursor::pos());
   delete dimContextMenu;
@@ -460,7 +463,7 @@ void PageEditorMainWindow::histoDBHistogramsViewContexMenu()
   Q_CHECK_PTR( dimContextMenu );
 //  dimContextMenu->insertTearOffHandle();
   dimContextMenu->insertItem(tr("&Add selection to page"), this,
-                             SLOT(addSelectedHistogramsToPage()));
+                             SLOT(addSelectedHistogramsFromDatabaseToPage()));
     //  dimContextMenu->insertSeparator(); 
   dimContextMenu->exec(QCursor::pos());
   delete dimContextMenu;
@@ -572,7 +575,7 @@ void PageEditorMainWindow::switchLayoutMode()
   }
 }
 
-void PageEditorMainWindow::addSelectedHistogramsToPage()
+void PageEditorMainWindow::addSelectedHistogramsFromDatabaseToPage()
 {
   int    nBinsX = 0;
   int    nBinsY = 0;
@@ -1354,7 +1357,6 @@ void PageEditorMainWindow::connectToDatabase(const QString &dbPassword, const QS
   }
 }
 
-
 // TODO: merge the following 2 into 1 function...
 void PageEditorMainWindow::hideHistogramDatabaseTools()
 {
@@ -1390,3 +1392,272 @@ void PageEditorMainWindow::clearCanvas()
 //  m_mainPageRootCanvas->GetCanvas()->Divide(1,1);
 //  m_mainPageRootCanvas->Clear();
   }
+
+void PageEditorMainWindow::addSelectedHistogramsFromDIMToPage()
+{
+  int    nBinsX = 0;
+  int    nBinsY = 0;
+  double xMin   = 0;
+  double xMax   = 0;
+  double yMin   = 0;
+  double yMax   = 0;
+  
+  double value  = 0;
+  
+  int m_refreshTimeHisto = 1;
+  int m_verbose = 1;
+  
+  int iHisto = 1;
+
+  m_mainPageRootCanvas->GetCanvas()->SetEditable(true);
+  m_mainPageRootCanvas->GetCanvas()->Divide(1,1);
+  m_mainPageRootCanvas->Clear();
+  
+  
+//  QPtrList<QListViewItem> lst;
+//  QListViewItemIterator itS(histoDBHistogramsView);
+//  while (itS.current()) {
+//    if (itS.current()->isSelected()) {
+//      lst.append(itS.current());
+//  ++itS;
+//  }
+     
+  
+  QListViewItemIterator it(dimServicesView);  
+  while (it.current()) {
+    QListViewItem *item = it.current();
+    if (item->isSelected()) {
+
+//      OnlineHistogram *h1 = histogramDB->getHistogram(item->text(5));
+      
+      std::string serviceNameFQ = item->text(5);
+
+      std::cout << serviceNameFQ << std::endl;                         
+      
+      new QListViewItem(pageHistogramsView, item->text(0), item->text(3));
+
+      std::string serviceType = item->text(3);   
+//    if (m_verbose > 1)
+        std::cout << "Reconstructing DIM SVC name: " << serviceNameFQ <<
+                     std::endl;
+                     
+      iHisto++;
+      std::string histoID = "histo_" +
+                            boost::lexical_cast<std::string>(iHisto);                     
+                                   
+      if ("H1D" == serviceType.substr(0,3)) {
+        HistogramH1D histogramH1D;
+        // TODO: sharedptr: place delete...
+        histogramH1D.dimProxy = new DimProxy(serviceNameFQ,
+                                             m_refreshTimeHisto,
+                                             m_verbose);        
+
+        if (histogramH1D.dimProxy->serviceOK()) {    
+          TH1 *tmp_h1D = histogramH1D.dimProxy->rootH1D();
+          if (tmp_h1D) {
+            nBinsX             = tmp_h1D->GetNbinsX();
+            xMin               = tmp_h1D->GetXaxis()->GetXmin();
+            xMax               = tmp_h1D->GetXaxis()->GetXmax();
+            std::string hTitle = item->text(0);
+//            tmp_h1D->GetTitle();
+//            if (m_verbose > 3) {
+              std::cout << " nBinsX " << nBinsX <<
+                           " xMin "   << xMin   <<
+                           " xMax "   << xMax   << std::endl;
+//            }
+
+            // book the 1D histo which is to be displayed
+            // TODO: sharedptr - place delete
+            histogramH1D.rootH1D = new TH1F(histoID.c_str(), hTitle.c_str(),
+                                            nBinsX, xMin, xMax);
+            histogramH1D.rootOffsetH1D = new TH1F("", "",
+                                                  nBinsX, xMin, xMax);
+            histogramH1D.rootH1D->SetMarkerStyle(22);
+            histogramH1D.rootH1D->SetMarkerSize(0.9);
+            displayedH1DHistograms.push_back(histogramH1D);
+            
+            // Fill w some data:
+            nBinsX = histogramH1D.rootH1D->GetNbinsX();      
+            value  = 0;
+
+            double nEntries = histogramH1D.dimProxy->rootH1D()->GetEntries();
+            
+            for (int i=0; i< nBinsX+1; ++i) {
+              value = histogramH1D.dimProxy->rootH1D()->GetBinContent(i);
+              histogramH1D.rootH1D->SetBinContent(i, value);
+              
+              value = histogramH1D.dimProxy->rootH1D()->GetBinError(i);
+              histogramH1D.rootH1D->SetBinError(i, value);
+            }
+  
+            histogramH1D.rootH1D->SetEntries(nEntries);
+            
+            if (m_verbose > 0)
+              std::cout << "DIM histo entries " << nEntries
+                        << " histo entries "    <<
+                           histogramH1D.rootH1D->GetEntries() << std::endl;            
+          }
+        }
+      } else if ("HPD" == serviceType.substr(0,3)) {
+        HistogramH1D histoProfile;
+        // TODO: sharedptr - place delete     
+        histoProfile.dimProxy = new DimProxy(serviceNameFQ,
+                                             m_refreshTimeHisto,
+                                             m_verbose);
+        if (histoProfile.dimProxy->serviceOK()) {    
+          TH1 *tmp_h1D = histoProfile.dimProxy->rootHPD();
+          if (tmp_h1D) {
+            nBinsX             = tmp_h1D->GetNbinsX();
+            xMin               = tmp_h1D->GetXaxis()->GetXmin();
+            xMax               = tmp_h1D->GetXaxis()->GetXmax();
+            std::string hTitle = item->text(0);
+//             tmp_h1D->GetTitle();
+//          if (m_verbose > 3)
+              std::cout << " nBinsX " << nBinsX << 
+                           " xMin "   << xMin   <<
+                           " xMax "   << xMax   << std::endl;
+
+            // book the 1D histo which is to be displayed
+            // TODO: sharedptr - place delete    
+            histoProfile.rootH1D = new TH1F(histoID.c_str(),
+                                            hTitle.c_str(),
+                                            nBinsX, xMin, xMax);
+            histoProfile.rootOffsetH1D = new TH1F("",
+                                                  "",
+                                                  nBinsX, xMin, xMax);
+            histoProfile.rootH1D->SetMarkerStyle(22);
+            histoProfile.rootH1D->SetMarkerSize(0.9);
+            displayedHPDHistograms.push_back(histoProfile);
+          }
+        }
+        
+      } else if ("H2D" == serviceType.substr(0,3)) {              
+        HistogramH2D histogramH2D;
+        // TODO: sharedptr - place delete 
+        histogramH2D.dimProxy = new DimProxy(serviceNameFQ,
+                                             m_refreshTimeHisto,
+                                             m_verbose);
+        if (histogramH2D.dimProxy->serviceOK()) {
+          TH2 *tmp_h2D = histogramH2D.dimProxy->rootH2D();
+          if (tmp_h2D) {
+            // dimProxy gives back a NULL pointer if something went wrong
+            nBinsX             = tmp_h2D->GetNbinsX();
+            nBinsY             = tmp_h2D->GetNbinsY();
+            xMin               = tmp_h2D->GetXaxis()->GetXmin();
+            xMax               = tmp_h2D->GetXaxis()->GetXmax();
+            yMin               = tmp_h2D->GetYaxis()->GetXmin();
+            yMax               = tmp_h2D->GetYaxis()->GetXmax();
+            std::string hTitle = item->text(0);
+//             tmp_h2D->GetTitle();            
+//          if (m_verbose > 3)
+            std::cout << " nBinsX " << nBinsX <<
+                         " xMin "   << xMin   << " xMax " << xMax << 
+                         " nBinsY " << nBinsY << " yMin " << yMin <<
+                         " yMax "   << yMax   << std::endl;
+            
+            // book new TH2F - the one which is to be displayed
+            // TODO: sharedptr - place delete       
+            histogramH2D.rootH2D = new TH2F(histoID.c_str(), hTitle.c_str(), 
+                                            nBinsX, xMin, xMax,
+                                            nBinsY, yMin, yMax);
+            histogramH2D.rootOffsetH2D = new TH2F("", "", 
+                                            nBinsX, xMin, xMax,
+                                            nBinsY, yMin, yMax);            
+            displayedH2DHistograms.push_back(histogramH2D);
+            
+            // Fill with some data
+            double nEntries = histogramH2D.dimProxy->rootH2D()->GetEntries();
+                    
+            nBinsX   = histogramH2D.rootH2D->GetNbinsX();
+            nBinsY   = histogramH2D.rootH2D->GetNbinsY();      
+            value    = 0.0;
+                
+            for (int i=0; i<= nBinsX+1; ++i) {
+              for (int j=0; j<= nBinsY+1; ++j) {
+                value = histogramH2D.dimProxy->rootH2D()->GetBinContent(i,j);
+                if (0.0 == value) value = 0.00001; // to show in nice colour
+                histogramH2D.rootH2D->SetBinContent(i, j, value);                
+                value = histogramH2D.dimProxy->rootH2D()->GetBinError(i, j);
+                histogramH2D.rootH2D->SetBinError(i, j, value);
+              } 
+            }
+            
+            histogramH2D.rootH2D->SetEntries(nEntries);
+            
+            if (m_verbose > 0)
+              std::cout << "DIM histo entries " << nEntries
+                        << " histo entries "    <<
+                           histogramH2D.rootH2D->GetEntries() << std::endl;            
+          }
+        }
+      }        
+    }
+    ++it;
+  }
+             
+// setup the Canvas and draw the (empty) histograms
+// choose a setup where #rows = #columns
+// may lead to some unsused parts of the canvas, but 
+// probably the easiest/best setup if no further
+// knowledge about the contents displayed
+              
+  // #pads needed to display all information
+  int nPads            = pageHistogramsView->childCount();  
+  int m_nCanvasRows    = (int) ceil(sqrt((double)nPads));
+  int m_nCanvasColumns = m_nCanvasRows;  
+
+  m_mainPageRootCanvas->GetCanvas()->Divide(m_nCanvasColumns,m_nCanvasRows);
+  int padCounter = 1;
+  // now loop over all pads to set basic properties
+  for (int i = 1; i<= m_nCanvasRows; ++i) {
+    for (int j = 1; j <= m_nCanvasColumns; ++j) {
+      m_mainPageRootCanvas->GetCanvas()->GetPad(padCounter)->
+          SetFillColor(10);
+      m_mainPageRootCanvas->GetCanvas()->GetPad(padCounter)->Draw();      
+      // m_mainPageRootCanvas->GetPad(padCounter)->SetTopMargin(0.5);
+      // m_mainPageRootCanvas->GetPad(padCounter)->SetBottomMargin(0.5);
+      m_mainPageRootCanvas->GetCanvas()->GetPad(padCounter)->
+          SetLeftMargin(0.15);
+      m_mainPageRootCanvas->GetCanvas()->GetPad(padCounter)->
+          SetRightMargin(0.15);
+      ++padCounter;      
+    } 
+  }
+  
+  // now loop over all histograms and draw them: 
+  // order: 2D - 1D - Counters
+
+  padCounter = 1;
+  BOOST_FOREACH(HistogramH2D displayedH2DHistogram, displayedH2DHistograms) {
+    m_mainPageRootCanvas->GetCanvas()->GetPad(padCounter)->cd();
+//    m_mainPageRootCanvas->GetCanvas()->GetPad(padCounter)->
+//        SetFillColor(10);
+//    displayedH2DHistogram.rootH2D->SetStats(kFALSE);
+//    (*h2DIter).rootH2D -> Draw(m_2DDrawOption.c_str());
+    displayedH2DHistogram.rootH2D->Draw("lego");
+    ++padCounter;
+  }
+
+  BOOST_FOREACH(HistogramH1D displayedH1DHistogram, displayedH1DHistograms) {
+    m_mainPageRootCanvas->GetCanvas()->GetPad(padCounter)->cd();
+//    m_mainPageRootCanvas->GetCanvas()->GetPad(padCounter)->
+//        SetFillColor(10);    
+//    displayedH1DHistogram.rootH1D->SetStats(kFALSE);
+//    (*h1DIter).rootH1D -> Draw(m_1DDrawOption.c_str());      
+    displayedH1DHistogram.rootH1D->Draw();
+    ++padCounter;      
+  }
+
+  BOOST_FOREACH(HistogramH1D displayedHPDHistogram, displayedHPDHistograms) {
+    m_mainPageRootCanvas->GetCanvas()->GetPad(padCounter)->cd();
+//    m_mainPageRootCanvas->GetCanvas()->GetPad(padCounter)->
+//        SetFillColor(10);    
+//    displayedHPDHistogram.rootH1D->SetStats(kFALSE);
+//    (*hProfIter).rootH1D -> Draw(m_1DDrawOption.c_str());
+    displayedHPDHistogram.rootH1D->Draw();      
+    ++padCounter;      
+  } 
+  m_mainPageRootCanvas->Update();
+  m_mainPageRootCanvas->GetCanvas()->SetEditable(false);
+  statusBar()->message(tr("Canvas ready."));
+}
