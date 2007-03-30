@@ -5,14 +5,28 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v22r4>2007-03-28 LHCbSys v22r4</A></H1><PRE>
+</PRE><H1><A NAME=v22r4>2007-03-30 LHCbSys v22r4</A></H1><PRE>
 This version uses Gaudi v19r3 and LCG_50b. Fully compatible with DC06 data
 
-- Packages modified: VeloDet v11r2
+- Packages modified: VeloDet v11r2, CaloInterfaces v7r2, CaloUtils v7r2
 
 - In VeloDet v11r2
   . Fix untested StatusCodes
   . Read the cut related to the sensitive volume ID from existing value in DDDB
+
+- In CaloInterfaces v7r2
+  . Remove const qualifiers in ICaloMomentum
+  . Add new virtual methods bremstrahlung() & bremCaloMomentum() to ICaloMomentum
+  . ICaloElectron moved to CaloUtils
+  . Standardize the package : interfaceID() inlined, virtual destructor removed
+     --> src/ removed
+  . Generate dictionary for all interfaces
+
+- In CaloUtils v7r2
+  . Fix a doxygen warning
+  . Fix bug in CaloMomenum definition of the transport matrix (indices swap) 
+  . Add new methods bremstrahlung() & bremCaloMomentum() in CaloElectron
+  . Implement ICaloMomentum interface (moved from CaloInterfaces)
 
 </PRE><H1><A NAME=v22r3>2007-03-23 LHCbSys v22r3</A></H1><PRE>
 This version uses Gaudi v19r3 and LCG_50b. Fully compatible with DC06 data
