@@ -5,6 +5,38 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
+</PRE><H1><A NAME=v4r4>2007-03-30 RecSys v4r4</A></H1><PRE>
+This version uses Gaudi v19r3 and LHCb v22r4.
+
+- Packages removed: VeloTools (moved to LBCOM)
+- Packages updated: TrackFitEvent v3r3, TrackUtils v1r12, PatVeloTT v2r10,
+                    PatVelo v2r13, TrackTools v2r13, PatPV v2r7, GlobalReco v6r9
+
+- In TrackUtils v1r12
+  . TrackPrepareVelo sets q/p for all VELO states (if more than one)
+
+- In PatVeloTT v2r10
+  . PatVeloTT uses all VELO track states (if more than one)
+
+- In PatVelo v2r13
+ - A few small code speed ups and name corrections/improvements
+ - Improved angular comparisons
+ - Also make outward track fit for VELO tracks: write two states to Track
+ - Merge clone tracks by comparisons on angles and z position
+
+- In PatVelo v2r13, PatVeloTT v2r10, PatPV v2r7
+  . Fixed all unchecked StatusCodes
+
+- In TrackFitEvent v3r3, PatVelo v2r13, TrackTools v2r13
+  . Updated to work with new DeVelo interface
+
+- In GlobalReco v6r9
+  . Pick up ICaloElectron.h from new CaloUtils location
+  . Remove some verbose() messages
+
+- In TrackFitEvent v3r3
+  . Fix doxygen warnings
+
 </PRE><H1><A NAME=v4r3>2007-03-13 RecSys v4r3</A></H1><PRE>
 This version uses Gaudi v19r3 and LHCb v22r3.
 

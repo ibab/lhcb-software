@@ -1,7 +1,7 @@
 /** \mainpage notitle
  *  \anchor recsysdoxygenmain
  *
- * This is the code reference manual for the LHCb reconstruction classes. See:
+ * This is the code reference manual for the %LHCb reconstruction classes. See:
  * <a href="requirements-source.html"><b>RecSys constituent packages</b></a>
  * <p><b>See also:</b>
  * \li \ref lhcbdoxygenmain  "LHCbSys documentation (LHCb core classes)"

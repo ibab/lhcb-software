@@ -1,5 +1,5 @@
 package RecSys
-version v4r3
+version v4r4
 
 branches cmt doc
  
@@ -16,19 +16,16 @@ use RecUtils            v1r1    Rec   # Juan Palacios, Patrick Koppenburg
 use CaloPIDs            v4r6    Calo  # Victor Egorychev, Vanya Belyaev
 use CaloReco            v4r7    Calo  # Olivier Deschamps
 
-# Velo
-use VeloTools           v1r1p1  Velo  # Tomasz Szumlak
-
 # Track Fit
 use TrackSys            v4r3    Tr    # Eduardo Rodrigues
 use TrackExtrapolators  v2r10   Tr    # Eduardo Rodrigues
 use TrackMCTools        v2r9    Tr    # Eduardo Rodrigues
-use TrackFitEvent       v3r2    Tr    # Eduardo Rodrigues
-use TrackTools          v2r12   Tr    # Eduardo Rodrigues
+use TrackFitEvent       v3r3    Tr    # Eduardo Rodrigues
+use TrackTools          v2r13   Tr    # Eduardo Rodrigues
 use TrackFitter         v2r13   Tr    # Eduardo Rodrigues
 use TrackProjectors     v2r11   Tr    # Eduardo Rodrigues, Edwin Bos
 use TrackIdealPR        v2r9    Tr    # Eduardo Rodrigues
-use TrackUtils          v1r11   Tr    # Eduardo Rodrigues
+use TrackUtils          v1r12   Tr    # Eduardo Rodrigues
 use TrackMatching       v2r12   Tr    # Eduardo Rodrigues
 use TrackAssociators    v2r3    Tr    # Eduardo Rodrigues, Edwin Bos
 use TrackPython         v3r0    Tr    # Eduardo Rodrigues
@@ -37,10 +34,10 @@ use TrackSeeding        v1r1    Tr    # Eduardo Rodrigues, Henk Jan Bulten
 
 # Track Pattern Recognition
 use PatUtils            v1r3    Pat   # Olivier Callot
-use PatVelo             v2r12   Pat   # David Hutchcroft
-use PatVeloTT           v2r9    Pat   # Mariusz Witek
+use PatVelo             v2r13   Pat   # David Hutchcroft
+use PatVeloTT           v2r10   Pat   # Mariusz Witek
 use PatForward          v2r13   Pat   # Stephanie Hansmann-Menzemer
-use PatPV               v2r6    Pat   # Mariusz Witek
+use PatPV               v2r7    Pat   # Mariusz Witek
 use PatChecker          v2r12   Pat   # Olivier Callot, David Hutchcroft
 use PatFitParams        v2r5    Pat   # Olivier Callot
 use TsaAlgorithms       v2r2    Tr    # Matt Needham
@@ -68,4 +65,4 @@ use RichTrgGlobalPID    v3r5    Rich  # Chris Jones
 #use RichTrgTools        v1r2    Rich  # Chris Jones
 
 # Global reco
-use GlobalReco          v6r8    Rec   # Chris Jones
+use GlobalReco          v6r9    Rec   # Chris Jones
