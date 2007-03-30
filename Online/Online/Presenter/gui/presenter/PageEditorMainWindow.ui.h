@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Presenter/gui/presenter/PageEditorMainWindow.ui.h,v 1.2 2007-03-30 12:51:28 psomogyi Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Presenter/gui/presenter/PageEditorMainWindow.ui.h,v 1.3 2007-03-30 13:09:03 psomogyi Exp $
 
 /****************************************************************************
  ** ui.h extension file, included from the uic-generated form implementation.
@@ -1393,6 +1393,7 @@ void PageEditorMainWindow::clearCanvas()
 //  m_mainPageRootCanvas->Clear();
   }
 
+//TODO: refactor this quick hack to have common trunk with DBtoPage
 void PageEditorMainWindow::addSelectedHistogramsFromDIMToPage()
 {
   int    nBinsX = 0;
@@ -1426,7 +1427,7 @@ void PageEditorMainWindow::addSelectedHistogramsFromDIMToPage()
   QListViewItemIterator it(dimServicesView);  
   while (it.current()) {
     QListViewItem *item = it.current();
-    if (item->isSelected()) {
+    if (item->isSelected() && "gauchocomment" != item->text(5).left(13)) {
 
 //      OnlineHistogram *h1 = histogramDB->getHistogram(item->text(5));
       
