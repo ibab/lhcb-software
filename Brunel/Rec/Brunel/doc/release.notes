@@ -3,6 +3,9 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v31r4>2007-03-28 Brunel v31r4</A></H1><PRE>
+ - Adapt requirements to Rec v4r4, Lbcom v6r4, LHCb v22r4, Gaudi v19r3
+
 </PRE><H1><A NAME=v31r3>2007-03-26 Brunel v31r3</A></H1><PRE>
  - Adapt requirements to Rec v4r3, Lbcom v6r3, LHCb v22r3, Gaudi v19r3
  - Use DDDB v1r* instead of SQLDDDB directly

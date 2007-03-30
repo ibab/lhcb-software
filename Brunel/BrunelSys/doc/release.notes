@@ -3,6 +3,30 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+</PRE><H1><A NAME=v31r4>2007-03-30 Brunel v31r4</A></H1><PRE>
+This version uses projects Gaudi v19r3, LHCb v22r4, Lbcom v6r4, Rec v4r4
+ and databases DDDB v1r*, ParamFiles v5r0, FieldMap v4r7
+
+Compatible with DC06 data
+
+- New tuning
+  . Improvements to PatVelo: 
+    + Now produces two states per track, by doing also outward fit
+    + Improved angular comparisons
+    + Merge clone tracks by comparisons on angles and z position
+    (PatVelo v2r13, see also </PRE><A HREF="http://indico.cern.ch/getFile.py/access?contribId=3&amp;resId=0&amp;materialId=slides&amp;confId=10146">DH talk at T-Rec on 2007-03-26</A><PRE>)
+  . TrackPrepareVelo sets q/p for all VELO states (TrackUtils v1r12)
+  . PatVeloTT uses all Velo tracks states (PatVeloTT v2r10)
+  . Value of the fractional strip position returned by VeloClusterPositionTool is
+    now in the range (0., 1.) instead of (-0.5, 0.5), for consistency with real
+    TELL1 data format (VeloTools v1r2)
+
+- Bug fixes
+  . Fix unchecked StatusCodes
+    (VeloDet v11r2, PatVelo v2r13, VeloTools v1r2, PatVeloTT v2r10, PatPV v2r7)
+  . Fix bug in CaloMomenum definition of the transport matrix (indices swap)
+    (CaloUtils v7r2)
+
 </PRE><H1><A NAME=v31r3>2007-03-26 Brunel v31r3</A></H1><PRE>
 This version uses projects Gaudi v19r3, LHCb v22r3, Lbcom v6r3, Rec v4r3
  and databases DDDB v1r*, ParamFiles v5r0, FieldMap v4r7
