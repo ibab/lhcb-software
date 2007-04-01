@@ -1,4 +1,4 @@
-// $Id: Generators_load.cpp,v 1.9 2007-03-08 19:56:40 robbep Exp $
+// $Id: Generators_load.cpp,v 1.10 2007-04-01 21:27:45 robbep Exp $
 // Include files 
 
 //
@@ -44,6 +44,7 @@ DECLARE_FACTORY_ENTRIES(Generators) {
   DECLARE_TOOL( SignalForcedFragmentation ) ;
   DECLARE_TOOL( Special ) ;
   DECLARE_TOOL( StandAloneDecayTool ) ;
+  DECLARE_TOOL( RepeatDecay ) ;
                                                                                                                  
   // Beam Tools
   DECLARE_TOOL( CollidingBeams ) ;

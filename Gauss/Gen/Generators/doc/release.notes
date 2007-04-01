@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.96 2007-03-13 13:55:43 gcorti Exp $
+! $Id: release.notes,v 1.97 2007-04-01 21:27:45 robbep Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Gen/Generators
 ! Responsible : Patrick ROBBE
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
+
+! 2007-04-01 - Patrick Robbe
+ - Add new tool (RepeatDecay) to re-use the same event several times,
+   calling only the decay phase.
 
 !====================== Generators v7r0 2007-03-13 ===========================
 ! 2007-03-08 - Patrick Robbe
