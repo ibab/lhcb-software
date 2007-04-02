@@ -1,4 +1,4 @@
-// $Id: TestDST.cpp,v 1.4 2007-02-23 09:43:52 ukerzel Exp $
+// $Id: TestDST.cpp,v 1.5 2007-04-02 08:45:04 ukerzel Exp $
 // Include files 
 
 // from Gaudi
@@ -438,7 +438,7 @@ std::vector<const LHCb::MCParticle*> TestDST::GetMCParticle (const LHCb::Particl
   // check direct association for composite particles
   //
   std::string locTES = TestDST::objectLocation(particle->parent() );
-  verbose() << "try to get direct link for particle on TES" << locTES << endmsg;
+  verbose() << "try to get direct link for particle on TES " << locTES << endmsg;
   Part2MCPart p2pAssociator(eventSvc(), locTES);
   const Part2MCPartTable *p2pTable = p2pAssociator.direct();
   if (p2pTable) {
@@ -460,42 +460,42 @@ std::vector<const LHCb::MCParticle*> TestDST::GetMCParticle (const LHCb::Particl
   // check direct association for track to MC link
   //
 
-  if (particle->proto() ) {
-    verbose() << "found proto-particle " << endmsg;
-    if (particle->proto()->track()) {
-      verbose() << "found track with key " << particle->proto()->track()->key() << endmsg;
-      std::string linksLocation = rootOnTES() + LHCb::TrackLocation::Default;
-      verbose() << " get associator from " << linksLocation << endmsg;
-      Track2MCPart associator(eventSvc(), linksLocation  );
-      const Track2MCPartTable *table = associator.direct();
-      if (table) {
-        Track2MCPartRange range =  table->relations(particle->proto()->track());
-        verbose() << "found #relations " << range.size() << endmsg;
-        for (Track2MCPartIterator iRel = range.begin(); iRel != range.end(); iRel++){
-          const LHCb::MCParticle *mcPart = iRel->to();
-          double                  weight = iRel->weight();
-          verbose() << "track related to MCPart with pid " << mcPart->particleID().pid() 
-                    << " weight " << weight 
-                    << " on TES " <<  TestDST::objectLocation(mcPart->parent())
-                    << endmsg;
-        } //for iRed
-      } else {
-        verbose() << "table not found" << endmsg;
-      }// if table
- //     verbose() << "read linker Table from " << LHCb::TrackLocation::Default << endmsg;
- //     Object2MCLinker< LHCb::Track > track2MCLink( this, "", "", 
- //                                                  LHCb::TrackLocation::Default);
- //     double weight = 0.;
- //     const LHCb::MCParticle* mcPart = track2MCLink.first(particle->proto()->track(), weight);
-//      if (mcPart) {
-//        verbose() << "track associated to MC part with PID " << mcPart->particleID().pid() << endmsg;
+//  if (particle->proto() ) {
+//    verbose() << "found proto-particle " << endmsg;
+//    if (particle->proto()->track()) {
+//      verbose() << "found track with key " << particle->proto()->track()->key() << endmsg;
+//      std::string linksLocation = rootOnTES() + LHCb::TrackLocation::Default;
+//      verbose() << " get associator from " << linksLocation << endmsg;
+//      Track2MCPart associator(eventSvc(), linksLocation  );
+//      const Track2MCPartTable *table = associator.direct();
+//      if (table) {
+//        Track2MCPartRange range =  table->relations(particle->proto()->track());
+//        verbose() << "found #relations " << range.size() << endmsg;
+//        for (Track2MCPartIterator iRel = range.begin(); iRel != range.end(); iRel++){
+//          const LHCb::MCParticle *mcPart = iRel->to();
+//          double                  weight = iRel->weight();
+//          verbose() << "track related to MCPart with pid " << mcPart->particleID().pid() 
+//                    << " weight " << weight 
+//                    << " on TES " <<  TestDST::objectLocation(mcPart->parent())
+//                    << endmsg;
+//        } //for iRed
 //      } else {
-//        verbose() << "track not associated to MC particle " << endmsg;
-//      } // if mcpart
-    }// if track
-  } else {
-    verbose() << "no proto-particle associated" << endmsg;
-  } // if proto
+//        verbose() << "table not found" << endmsg;
+//      }// if table
+// //     verbose() << "read linker Table from " << LHCb::TrackLocation::Default << endmsg;
+// //     Object2MCLinker< LHCb::Track > track2MCLink( this, "", "", 
+// //                                                  LHCb::TrackLocation::Default);
+// //     double weight = 0.;
+// //     const LHCb::MCParticle* mcPart = track2MCLink.first(particle->proto()->track(), weight);
+////      if (mcPart) {
+////        verbose() << "track associated to MC part with PID " << mcPart->particleID().pid() << endmsg;
+////      } else {
+////        verbose() << "track not associated to MC particle " << endmsg;
+////      } // if mcpart
+//    }// if track
+//  } else {
+//    verbose() << "no proto-particle associated" << endmsg;
+//  } // if proto
   
 
   //
