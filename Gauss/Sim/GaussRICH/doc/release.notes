@@ -4,6 +4,9 @@
 ! Purpose     : collection of sensitive detectors, G4 actions, etc for RICH
 !-----------------------------------------------------------------------------
 
+! 2007-04-02 - Chris Jones
+ - Minor compilation fix for Gauss v30r3
+
 !======================== GaussRICH v7r0 2007-03-18 ========================
 ! 2007-03-18 - Gloria Corti
  - Adapt to changes in RichStatDivFunctor.h with introduction of "Rich" 

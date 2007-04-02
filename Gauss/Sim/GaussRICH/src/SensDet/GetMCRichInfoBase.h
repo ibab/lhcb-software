@@ -1,4 +1,4 @@
-// $Id: GetMCRichInfoBase.h,v 1.2 2006-03-01 09:31:26 jonrob Exp $
+// $Id: GetMCRichInfoBase.h,v 1.3 2007-04-02 19:01:42 jonrob Exp $
 #ifndef SENSDET_GetMCRichInfoBase_H
 #define SENSDET_GetMCRichInfoBase_H 1
 
@@ -54,7 +54,7 @@ public:
   /// Standard constructor
   GetMCRichInfoBase( const std::string& name, ISvcLocator* pSvcLocator );
 
-  virtual ~GetMCRichInfoBase( ) = 0;  ///< Destructor
+  virtual ~GetMCRichInfoBase( ) {}   ///< Destructor
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode finalize  ();    ///< Algorithm finalization
