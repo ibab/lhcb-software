@@ -1,8 +1,15 @@
-! $Id: release.notes,v 1.72 2007-03-05 13:10:55 cattanem Exp $
+! $Id: release.notes,v 1.73 2007-04-03 11:22:47 ibelyaev Exp $
 ! Package     : Event/MCEvent
 ! Responsible : Marco Cattaneo, Gloria Corti
 ! Purpose     : LHCb Event model. MC truth classes (Gauss and Boole output) 
 !-----------------------------------------------------------------------------
+
+! 2007-04-03 - Vanya BELYAEV
+ - Event/MCCaloDataFunctor.h
+    new file with couple of generic useful funtions to deal with 
+    MC-calorimeter data objects. These functions are particulartly 
+    very useful for Yasmine's & Kirill's studies of timing and time 
+    alignement in Calorimeter
 
 !======================== MCEvent v2r1 2007-03-05 ============================
 ! 2007-03-05 - Chris Jones
