@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRichMultiSolidRadiator
  *
- *  $Id: DeRichMultiSolidRadiator.cpp,v 1.17 2007-02-28 18:31:07 marcocle Exp $
+ *  $Id: DeRichMultiSolidRadiator.cpp,v 1.18 2007-04-03 15:42:32 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -96,7 +96,7 @@ StatusCode DeRichMultiSolidRadiator::addVolumes (const ILVolume* lv,
       }
       // get a pointer to DeRichRadiator
       std::string tileNumStr = (*pviter)->name().substr(numPos+1);
-      std::string radLoc = DeRichRadiatorLocation::Aerogel+"T"+tileNumStr+":"+tileNumStr;
+      std::string radLoc = DeRichLocations::Aerogel+"T"+tileNumStr+":"+tileNumStr;
       SmartDataPtr<DeRichRadiator> deRad( dataSvc(), radLoc );
       if ( !deRad ) {
         log << MSG::ERROR << "Cannot find DeRichRadiator " << radLoc

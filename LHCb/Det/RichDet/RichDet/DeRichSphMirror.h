@@ -4,7 +4,7 @@
  *  Header file for detector description class : DeRichSphMirror
  *
  *  CVS Log :-
- *  $Id: DeRichSphMirror.h,v 1.16 2007-02-28 18:31:07 marcocle Exp $
+ *  $Id: DeRichSphMirror.h,v 1.17 2007-04-03 15:42:32 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -34,7 +34,7 @@ extern const CLID CLID_DeRichSphMirror;
  * @author Antonis Papanestis a.papanestis@rl.ac.uk
  * @date   2004-06-18
  */
-class DeRichSphMirror : public DetectorElement 
+class DeRichSphMirror : public DetectorElement
 {
 
 public:
@@ -165,7 +165,7 @@ public:
    * @return SUCCESS if everything OK
    */
   StatusCode updateGeometry();
-  
+
 
 private:
 
@@ -192,9 +192,9 @@ private:
   std::string m_name; ///< The name of this mirror
 
   ///< The normal vector at the centre of the mirror
-  Gaudi::XYZVector m_centreNormal; 
+  Gaudi::XYZVector m_centreNormal;
   /// The normal vector at the centre of the mirror
-  Gaudi::Plane3D m_centreNormalPlane; 
+  Gaudi::Plane3D m_centreNormalPlane;
 
 };
 

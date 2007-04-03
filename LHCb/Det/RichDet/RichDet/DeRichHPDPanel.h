@@ -4,7 +4,7 @@
  *
  *  Header file for detector description class : DeRichHPDPanel
  *
- *  $Id: DeRichHPDPanel.h,v 1.43 2007-03-27 12:37:22 jonrob Exp $
+ *  $Id: DeRichHPDPanel.h,v 1.44 2007-04-03 15:42:32 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -34,42 +34,16 @@
 
 // RichDet
 #include "RichDet/DeRich.h"
-#include "RichDet/DeRichSystem.h"
 #include "RichDet/DeRichHPD.h"
+#include "RichDet/DeRichLocations.h"
 
-/** @namespace DeRichHPDPanelLocation
- *
- *  Namespace for the location of HPD panels in xml
- *
- *  @author Antonis Papanestis a.papanestis@rl.ac.uk
- *  @date   2004-06-18
- *
- *  @todo Find a proper way to deal with RichSmartIDs that cannot be mapped to the
- *        entrance window in the method DeRichHPDPanel::detectionPoint
- */
-namespace DeRichHPDPanelLocation
-{
-  /// Location of Rich1 top panel
-  static const std::string& Rich1Panel0 =
-    "/dd/Structure/LHCb/BeforeMagnetRegion/Rich1/PDPanel0";
+class DeRichSystem;
 
-  /// Location of Rich1 bottom panel
-  static const std::string& Rich1Panel1 =
-    "/dd/Structure/LHCb/BeforeMagnetRegion/Rich1/PDPanel1";
-
-  /// Location of Rich2 left panel
-  static const std::string& Rich2Panel0 =
-    "/dd/Structure/LHCb/AfterMagnetRegion/Rich2/RichSystem/HPDPanel0";
-
-  /// Location of Rich2 right panel
-  static const std::string& Rich2Panel1 =
-    "/dd/Structure/LHCb/AfterMagnetRegion/Rich2/RichSystem/HPDPanel1";
-}
 
 /** @class DeRichHPDPanel DeRichHPDPanel.h
  *
- * DeRichHPDPanel provides geometry information for the HPD panels, converts RichSmartIDs
- * to space points and finds intersections with the HPDs
+ * DeRichHPDPanel provides geometry information for the HPD panels, converts
+ * RichSmartIDs to space points and finds intersections with the HPDs
  *
  * @author Antonis Papanestis a.papanestis@rl.ac.uk
  */
@@ -153,9 +127,11 @@ public:
    * Converts a RichSmartID to a point in global coordinates. The point is
    * given on the inside of the HPD window, on the photocathode.
    *
-   * @return The detection point in global coordinates
+   * @return Status of connersion
+   * @retval StatusCode::FAILURE Imposible conversion to photocathode
    */
-  Gaudi::XYZPoint detectionPoint( const LHCb::RichSmartID& smartID ) const;
+  StatusCode detectionPoint( const LHCb::RichSmartID& smartID,
+                             Gaudi::XYZPoint& detectPoint ) const;
 
   /**
    * Converts a RichSmartID to a point on the anode in global coordinates.
@@ -322,11 +298,6 @@ private: // data
   double m_siliconHalfLengthX;     ///< Half size (x) of silicon sensor
   double m_siliconHalfLengthY;     ///< Half size (y) of silicon sensor
 
-  /// The demagnification factor of the HPD.  Element [0] is the linear
-  /// term, and element[1] the non-linear term for small corrections.
-  double m_deMagFactor[2];
-
-  /// The following points are used to get the row and column pitch
   /// Centre of HPD 0
   Gaudi::XYZPoint m_HPD0Centre;
 
@@ -346,7 +317,6 @@ private: // data
   Gaudi::Plane3D m_localPlane2;
   Gaudi::XYZVector m_localPlaneNormal2;  ///< Normal vector of plane2
 
-
   Gaudi::Transform3D m_vectorTransf;  ///< Transform from global to panel coordinates
 
   double m_panelColumnSideEdge;    ///< Edge of the panel along the columns
@@ -356,33 +326,11 @@ private: // data
   double m_panelStartColPos;
   double m_localOffset;           ///< offset applied in the global to panel coordinates
 
-public:
-
-  /** Prints coordinates on anode and cathode: for test only porposes.
-   */
-  void testdemagnification( int HPDNumber, double x, double y, double z, double B );
-
-private: // methods
-
-  StatusCode updateDemagProperties();
-  void init_mm( );
-  int number_range( int from, int to );
-  int number_mm( void );
-  double Delta_Phi(double, const double);
-  double mag(double , double);
-  double demag(double, double );
-  StatusCode fillHpdDemagTableSim( const std::string &, std::vector<double>& , int& );
-  StatusCode fillHpdDemagTableRec( const std::string &, std::vector<double>& , int& );
-  Gaudi::XYZPoint demagToCathode_new( int , double , double ) const;
-  Gaudi::XYZPoint demagToCathode_old( double , double ) const;
-  Gaudi::XYZPoint demagToAnode_test ( int , double , double );
-
-private: // more data ...
+  DeRichSystem* m_deRichS;
 
   Rich::DetectorType m_rich;
   Rich::Side m_side;
   LHCb::RichSmartID m_panelRichID;
-  DeRichSystem* m_deRichS;
   const ISolid* m_kaptonSolid;
 
   std::vector<const IPVolume*> m_pvHPDMaster;
@@ -394,25 +342,6 @@ private: // more data ...
   std::vector<Gaudi::Transform3D> m_panelToSilicon;
 
   std::vector<DeRichHPD*> m_DeHPDs; ///< Container for the HPDs as Det Elem
-
-  std::vector<double>  m_refactParams;
-
-  int m_nstart, m_nstop;
-
-  int    rgiState[2+55];
-  bool   m_UseHpdMagDistortions;
-  bool   m_UseBFieldTestMap ;
-  bool   m_UseRandomBField  ;
-  double m_LongitudinalBField ;
-  double m_RandomBFieldMinimum ;
-  double m_RandomBFieldMaximum ;
-  double m_RichHpdQWToSiMaxDist;
-  int m_Rich1TotNumHpd ;
-  int m_Rich2TotNumHpd ;
-
-  std::string m_XmlHpdDemagPath;
-  SmartRef<Condition> m_demagCond;
-
 };
 
 #endif    // RICHDET_DERICHHPDPANEL_H

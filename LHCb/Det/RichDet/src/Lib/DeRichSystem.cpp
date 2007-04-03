@@ -4,7 +4,7 @@
  *
  * Implementation file for class : DeRichSystem
  *
- * $Id: DeRichSystem.cpp,v 1.11 2007-03-26 14:34:40 jonrob Exp $
+ * $Id: DeRichSystem.cpp,v 1.12 2007-04-03 15:42:33 papanest Exp $
  *
  * @author Antonis Papanestis a.papanestis@rl.ac.uk
  * @date   2006-01-27
@@ -60,6 +60,20 @@ StatusCode DeRichSystem::initialize ( )
   m_condBDLocs[Rich::Rich2] = "Rich2DetectorNumbers";
   SmartRef<Condition> rich1numbers = condition( m_condBDLocs[Rich::Rich1] );
   SmartRef<Condition> rich2numbers = condition( m_condBDLocs[Rich::Rich2] );
+
+  SmartDataPtr<DetectorElement> deRich1(dataSvc(),DeRichLocations::Rich1 );
+  if ( !deRich1 ) {
+    msg << MSG::ERROR << "Could not load DeRich1" << endmsg;
+    return StatusCode::FAILURE;
+  }
+  m_rich1NumberHpds = deRich1->param<int>("Rich1TotNumHpd");
+
+
+  SmartDataPtr<DetectorElement> deR0P0(dataSvc(),DeRichLocations::Rich1Panel0 );
+  if ( !deR0P0 ) {
+    msg << MSG::ERROR << "Could not load DeRichPanel R1 P0" << endmsg;
+    return StatusCode::FAILURE;
+  }
 
   // register condition for updates
   updMgrSvc()->registerCondition(this,rich1numbers.path(),&DeRichSystem::buildHPDMappings);
@@ -213,12 +227,12 @@ StatusCode DeRichSystem::fillMaps( const Rich::DetectorType rich )
     m_smartid2L1In[hpdID] = L1IN;
     m_hardid2L1In[hardID] = L1IN;
     /*
-    { // CRJ : Work arounds for case when vector has pool allocator
+      { // CRJ : Work arounds for case when vector has pool allocator
       if ( m_l12smartids.find(L1ID) == m_l12smartids.end() )
       { m_l12smartids.insert( Rich::DAQ::L1ToSmartIDsPair(L1ID,LHCb::RichSmartID::Vector()) ); }
       if ( m_l12hardids.find(L1ID) == m_l12hardids.end() )
       { m_l12hardids.insert( Rich::DAQ::L1ToHardIDsPair(L1ID,Rich::DAQ::HPDHardwareIDs()) ); }
-    }
+      }
     */
     m_l12smartids[L1ID].push_back( hpdID );
     m_l12hardids[L1ID].push_back( hardID );
@@ -580,4 +594,27 @@ const Rich::DAQ::Level1IDs& DeRichSystem::level1IDs() const
   return m_l1IDs;
 }
 
+//=========================================================================
+//  getDeHPDLocation
+//=========================================================================
+std::string DeRichSystem::getDeHPDLocation (LHCb::RichSmartID smartID ) const
+{
+  const unsigned int cNumber = copyNumber( smartID );
+  std::string loc;
+
+  if( smartID.rich() == Rich::Rich1 )
+    if( smartID.panel() == Rich::top )
+      loc = DeRichLocations::Rich1Panel0;
+    else
+      loc = DeRichLocations::Rich1Panel1;
+  else
+    if( smartID.panel() == Rich::left )
+      loc = DeRichLocations::Rich2Panel0;
+    else
+      loc = DeRichLocations::Rich2Panel1;
+
+  loc = loc + "/HPD:"+boost::lexical_cast<std::string>(cNumber);
+  return loc;
+
+}
 //===========================================================================

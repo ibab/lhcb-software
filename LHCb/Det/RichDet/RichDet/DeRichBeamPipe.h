@@ -4,7 +4,7 @@
  *  Header file for detector description class : DeRichBeamPipe
  *
  *  CVS Log :-
- *  $Id: DeRichBeamPipe.h,v 1.6 2007-02-28 18:31:07 marcocle Exp $
+ *  $Id: DeRichBeamPipe.h,v 1.7 2007-04-03 15:42:32 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2006-11-27
@@ -19,26 +19,12 @@
 #include "DetDesc/ISolid.h"
 #include "DetDesc/SolidCons.h"
 
+#include "RichDet/DeRichLocations.h"
+
 // LHCbKernel
 
 // External declarations
 extern const CLID CLID_DERichBeamPipe;
-
-
-/** @namespace DeRichBeamPipeLocation
- *
- *  Namespace for the xml location of the detector elements DeRichBeamPipe
- *
- *  @author Antonis Papanestis a.papanestis@rl.ac.uk
- *  @date   2004-06-18
- */
-namespace DeRichBeamPipeLocation 
-{
-  /// Rich1 Beampipe location in TDS
-  static const std::string& Rich1BeamPipe = "/dd/Structure/LHCb/BeforeMagnetRegion/Rich1/Rich1BeamPipe";
-  /// Rich2 Beampipe location in TDS
-  static const std::string& Rich2BeamPipe = "/dd/Structure/LHCb/AfterMagnetRegion/Rich2/Rich2BeamPipe";
-}
 
 /** @class DeRichBeamPipe DeRichBeamPipe.h
  *
@@ -47,7 +33,7 @@ namespace DeRichBeamPipeLocation
  * @author Antonis Papanestis a.papanestis@rl.ac.uk
  * @date   2006-11-27
  */
-class DeRichBeamPipe : public DetectorElement 
+class DeRichBeamPipe : public DetectorElement
 {
 
 public:
@@ -123,8 +109,8 @@ public:
                                    const Gaudi::XYZVector& direction ) const
   {
     ISolid::Ticks ticks;
-    return ( 0 != m_localCone->intersectionTicks ( geometry()->toLocal(position), 
-                                                   geometry()->matrix()*direction, 
+    return ( 0 != m_localCone->intersectionTicks ( geometry()->toLocal(position),
+                                                   geometry()->matrix()*direction,
                                                    ticks ) );
   }
 

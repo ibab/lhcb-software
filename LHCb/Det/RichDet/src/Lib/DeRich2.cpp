@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRich2
  *
- *  $Id: DeRich2.cpp,v 1.31 2007-02-28 18:31:07 marcocle Exp $
+ *  $Id: DeRich2.cpp,v 1.32 2007-04-03 15:42:32 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -156,15 +156,15 @@ StatusCode DeRich2::initialize()
   }
 
   // get pointers to HPD panels
-  SmartDataPtr<DeRichHPDPanel> panel0(dataSvc(),DeRichHPDPanelLocation::Rich2Panel0);
+  SmartDataPtr<DeRichHPDPanel> panel0(dataSvc(),DeRichLocations::Rich2Panel0);
   if ( !panel0 ) {
-    msg << MSG::FATAL << "Cannot load " << DeRichHPDPanelLocation::Rich2Panel0
+    msg << MSG::FATAL << "Cannot load " << DeRichLocations::Rich2Panel0
         << endmsg;
     return StatusCode::FAILURE;
   }
-  SmartDataPtr<DeRichHPDPanel> panel1(dataSvc(),DeRichHPDPanelLocation::Rich2Panel1);
+  SmartDataPtr<DeRichHPDPanel> panel1(dataSvc(),DeRichLocations::Rich2Panel1);
   if ( !panel1 ) {
-    msg << MSG::FATAL << "Cannot load " << DeRichHPDPanelLocation::Rich2Panel1
+    msg << MSG::FATAL << "Cannot load " << DeRichLocations::Rich2Panel1
         << endmsg;
     return StatusCode::FAILURE;
   }
@@ -172,7 +172,7 @@ StatusCode DeRich2::initialize()
   m_HPDPanels[panel1->side()] = panel1;
 
   // initialize Rich2Gas
-  SmartDataPtr<DeRichRadiator> rich2Gas(dataSvc(), DeRichRadiatorLocation::Rich2Gas);
+  SmartDataPtr<DeRichRadiator> rich2Gas(dataSvc(), DeRichLocations::Rich2Gas);
   if ( !rich2Gas )
     msg << MSG::ERROR << "Cannot initialize Rich2Gas" << endmsg;
 

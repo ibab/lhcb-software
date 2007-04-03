@@ -5,7 +5,7 @@
  *  Implementation file for detector description class : DeRichAerogelRadiator
  *
  *  CVS Log :-
- *  $Id: DeRichAerogelRadiator.cpp,v 1.8 2007-02-28 18:31:07 marcocle Exp $
+ *  $Id: DeRichAerogelRadiator.cpp,v 1.9 2007-04-03 15:42:32 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2006-03-02
@@ -69,7 +69,7 @@ StatusCode DeRichAerogelRadiator::initialize ( )
 
   m_photMomWaveConv = 1243.125*Gaudi::Units::nanometer*Gaudi::Units::eV;
 
-  SmartDataPtr<DetectorElement> deRich1( dataSvc(), DeRichLocation::Rich1 );
+  SmartDataPtr<DetectorElement> deRich1( dataSvc(), DeRichLocations::Rich1 );
   m_deRich1 = deRich1;
 
   // configure refractive index updates

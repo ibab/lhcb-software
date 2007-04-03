@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRichSphMirror
  *
- *  $Id: DeRichSphMirror.cpp,v 1.27 2007-02-28 18:31:07 marcocle Exp $
+ *  $Id: DeRichSphMirror.cpp,v 1.28 2007-04-03 15:42:33 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -95,8 +95,8 @@ StatusCode DeRichSphMirror::initialize()
 
   const std::string & rich1GeomLoc = "BeforeMagnetRegion/Rich1";
   const std::string & rich2GeomLoc = "AfterMagnetRegion/Rich2";
-  const std::string & rich2Location = DeRichLocation::Rich2;
-  const std::string & rich1Location = DeRichLocation::Rich1;
+  const std::string & rich2Location = DeRichLocations::Rich2;
+  const std::string & rich1Location = DeRichLocations::Rich1;
 
   // get DeRich1 and 2
   SmartDataPtr<DeRich> deRich1(dataSvc(), rich1Location);

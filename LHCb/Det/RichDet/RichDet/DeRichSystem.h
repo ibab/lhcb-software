@@ -4,7 +4,7 @@
  *  Header file for detector description class : DeRichSystem
  *
  *  CVS Log :-
- *  $Id: DeRichSystem.h,v 1.6 2007-03-02 14:26:56 jonrob Exp $
+ *  $Id: DeRichSystem.h,v 1.7 2007-04-03 15:42:32 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2006-01-26
@@ -26,22 +26,10 @@
 
 //local
 #include "RichDet/RichDAQDefinitions.h"
+#include "RichDet/DeRichLocations.h"
 
 // External declarations
 extern const CLID CLID_DERichSystem;
-
-/** @namespace DeRichLocation
- *
- *  Namespace for the xml location of the detector elements RichSystem
- *
- *  @author Antonis Papanestis a.papanestis@rl.ac.uk
- *  @date   2004-06-18
- */
-namespace DeRichLocation 
-{                                                                                
-  /// RichSystem location in transient detector store
-  static const std::string& RichSystem = "/dd/Structure/LHCb/AfterMagnetRegion/Rich2/RichSystem";
-}
 
 /** @class DeRichSystem DeRichSystem.h
  *
@@ -53,8 +41,10 @@ namespace DeRichLocation
  * @author Antonis Papanestis a.papanestis@rl.ac.uk
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date   27/01/2006
+ *
+ * @todo Remove the hardcoded numbers in the copyNumber function
  */
-class DeRichSystem: public DetectorElement 
+class DeRichSystem: public DetectorElement
 {
 
 public:
@@ -139,6 +129,22 @@ public:
   /// Returns a list of all valid Level1 ids
   const Rich::DAQ::Level1IDs & level1IDs() const;
 
+  /// Return the copy number for a given smartID
+  inline unsigned int copyNumber( const LHCb::RichSmartID smartID ) const
+  {
+    return( smartID.rich() == Rich::Rich1 ?
+            smartID.panel()*98 + smartID.hpdCol()*14 + smartID.hpdNumInCol() :
+            m_rich1NumberHpds + smartID.panel()*144 + smartID.hpdCol()*16 + smartID.hpdNumInCol() );
+  }
+
+  /**
+   * Retrieves the location of the HPD in the detector store, so it can be
+   * loaded using the getDet<DeRichHPD> method.
+   * @return The location of the HPD in the detector store
+   */
+  std::string getDeHPDLocation(LHCb::RichSmartID smartID) const;
+
+
 private: // methods
 
   /// Update methods for HPD mappings
@@ -209,6 +215,10 @@ private: // data
 
   /// Location of RICH Numbering schemes in Conditions DB
   boost::array<std::string, Rich::NRiches> m_condBDLocs;
+
+  /// The total number of HPDs in Rich1.
+  int m_rich1NumberHpds;
+
 };
 
 #endif    // RICHDET_DERICHSYSTEM_H

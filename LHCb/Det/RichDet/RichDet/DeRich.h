@@ -4,7 +4,7 @@
  *  Header file for detector description class : DeRich
  *
  *  CVS Log :-
- *  $Id: DeRich.h,v 1.23 2007-03-02 14:26:56 jonrob Exp $
+ *  $Id: DeRich.h,v 1.24 2007-04-03 15:42:32 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -26,27 +26,13 @@
 #include "Kernel/RichSide.h"
 
 #include "RichDet/RichMirrorSegPosition.h"
+#include "RichDet/DeRichLocations.h"
 
 // boost
 #include "boost/array.hpp"
 
 class DeRichHPDPanel;
 
-/** @namespace DeRichLocation
- *
- *  Namespace for the xml location of the detector elements
- *
- *  @author Antonis Papanestis a.papanestis@rl.ac.uk
- *  @date   2004-06-18
- */
-namespace DeRichLocation 
-{
-  /// Rich1 location in transient detector store
-  static const std::string& Rich1 = "/dd/Structure/LHCb/BeforeMagnetRegion/Rich1";
-
-  /// Rich2 location in transient detector store
-  static const std::string& Rich2 = "/dd/Structure/LHCb/AfterMagnetRegion/Rich2";
-}
 
 /** @class DeRich DeRich.h
  *

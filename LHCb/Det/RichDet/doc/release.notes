@@ -4,6 +4,13 @@
 ! Purpose     : interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2007-04-02 - "Antonis Papanestis"
+ - move the detectionPoint functionality from DeRichHPDPanel to DeRichHPD
+   to be able to use individual properties of HPDs.
+ - Added DeRichLocations.h to hold all the locations of DeRich objects
+ - Added methods in DeRichSystem to return the copy number and xml 
+   location of an HPD in smartID form.
+
 ! 2007-03-26 - Chris Jones
  - Some speed improvements for HLT
   + Remove MsgStream object

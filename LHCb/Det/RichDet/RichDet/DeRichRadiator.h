@@ -5,7 +5,7 @@
  *  Header file for detector description class : DeRichRadiator
  *
  *  CVS Log :-
- *  $Id: DeRichRadiator.h,v 1.22 2007-02-06 15:01:53 cattanem Exp $
+ *  $Id: DeRichRadiator.h,v 1.23 2007-04-03 15:42:32 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -32,27 +32,7 @@
 
 // RichDet
 #include "RichDet/Rich1DTabProperty.h"
-
-/** @namespace DeRichRadiatorLocation
- *
- *  Namespace for the location of radiators in xml
- *
- *  @author Antonis Papanestis a.papanestis@rl.ac.uk
- *  @date   2004-06-18
- */
-namespace DeRichRadiatorLocation 
-{
-  /// Multi solid aerogel location
-  static const std::string& Aerogel = "/dd/Structure/LHCb/BeforeMagnetRegion/Rich1/Aerogel";
-
-  /// Rich1 gas (C4F10) location
-  static const std::string& Rich1Gas = "/dd/Structure/LHCb/BeforeMagnetRegion/Rich1/Rich1Gas";
-  static const std::string& C4F10    = Rich1Gas;
-
-  /// Rich2 gas (CF4) location
-  static const std::string& Rich2Gas  = "/dd/Structure/LHCb/AfterMagnetRegion/Rich2/Rich2Gas";
-  static const std::string& CF4       = Rich2Gas;
-}
+#include "RichDet/DeRichLocations.h"
 
 //----------------------------------------------------------------------------
 /** @class DeRichRadiator DeRichRadiator.h
@@ -65,7 +45,7 @@ namespace DeRichRadiatorLocation
  */
 //----------------------------------------------------------------------------
 
-class DeRichRadiator: public DetectorElement 
+class DeRichRadiator: public DetectorElement
 {
 
 public:

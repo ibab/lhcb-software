@@ -4,7 +4,7 @@
  *  Header file for detector description class : DeRichHPD
  *
  *  CVS Log :-
- *  $Id: DeRichHPD.h,v 1.5 2007-03-02 14:26:56 jonrob Exp $
+ *  $Id: DeRichHPD.h,v 1.6 2007-04-03 15:42:32 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2006-09-19
@@ -21,21 +21,12 @@
 // LHCbKernel
 #include "Kernel/RichSmartID.h"
 
+// RichDet
+#include "RichDet/Rich1DTabProperty.h"
+
+
 // External declarations
 extern const CLID CLID_DERichHPD;
-
-/** @namespace DeRichLocation
- *
- *  Namespace for the xml location of the detector elements
- *
- *  @author Antonis Papanestis a.papanestis@rl.ac.uk
- *  @date   2006-09-19
- */
-namespace DeRichLocation 
-{
-  /// RichHPD location in transient detector store
-  static const std::string& RichHPD = "HPD:";
-}
 
 
 /** @class DeRichHPD DeRichHPD.h
@@ -78,6 +69,7 @@ public:
    * @retval StatusCode::FAILURE Initialisation failed, program should
    * terminate
    */
+
   virtual StatusCode initialize();
 
   /**
@@ -113,9 +105,8 @@ public:
    * given on the inside of the HPD window, on the photocathode.
    *
    */
-  StatusCode detectionPoint ( const LHCb::RichSmartID& smartID,
-                              Gaudi::XYZPoint& detectPoint       );
-  
+  StatusCode detectionPoint ( Gaudi::XYZPoint& detectPoint ) const;
+
 
   /**
    * Converts a RichSmartID to a point on the anode in global coordinates.
@@ -123,6 +114,26 @@ public:
    * @return The detection anode point in global coordinates
    */
   Gaudi::XYZPoint detPointOnAnode( const LHCb::RichSmartID& smartID ) const;
+
+  /**
+   * Retrieves the demagnification map of the HPD for the R coordinate
+   * to be used in simulation.
+   * @return A pointer to the demag map R
+   */
+  inline const RichTabulatedProperty1D* demagnificationMapR() const
+  {
+    return m_simDemagMapR;
+  }
+
+  /**
+   * Retrieves the demagnification map of the HPD for the phi coordinate
+   * to be used in simulation.
+   * @return A pointer to the demag map phi
+   */
+  inline const RichTabulatedProperty1D* demagnificationMapPhi() const
+  {
+    return m_simDemagMapPhi;
+  }
 
 private: // functions
 
@@ -135,6 +146,9 @@ private: // functions
 
   StatusCode updateDemagProperties();
 
+  StatusCode magnifyToGlobal_old( Gaudi::XYZPoint& detectPoint ) const;
+  StatusCode magnifyToGlobal_new( Gaudi::XYZPoint& detectPoint ) const;
+
   void init_mm( );
   int number_range( int from, int to );
   int number_mm( void );
@@ -143,17 +157,15 @@ private: // functions
   double demag(double, double );
   StatusCode fillHpdDemagTableSim( const std::vector<double>& );
   StatusCode fillHpdDemagTableRec( const std::vector<double>& );
-  bool demagToCathode_new( Gaudi::XYZPoint& localDetectPoint );
-  bool demagToCathode_old( Gaudi::XYZPoint& localDetectPoint );
 
 
 private: // data
 
-  IDetectorElement* deSiSensor;
+  IDetectorElement* deSiSensor; ///< the silicon sensor detector element
 
   std::string m_name;           ///< The name of this HPD panel
   int m_number;                 ///< HPD number (copy number)
-  
+
   Gaudi::XYZPoint m_HPDTopIn;     ///< The centre of the window on the inner side (local)
   Gaudi::XYZPoint m_HPDTopOut;    ///< The centre of the window on the outter side (local)
   Gaudi::XYZPoint m_HPDTopInIdeal; ///< The centre of the window on the inner side (global)
@@ -171,7 +183,9 @@ private: // data
   /// The active HPD window radius Squared
   double m_activeRadiusSq;
 
+
   Gaudi::Transform3D m_fromWindowToHPD; ///< window to HPD coord system transform
+  Gaudi::Transform3D m_fromWindowToGlobal; ///< window to global coord system transform
 
   double m_pixelSize;      ///< The pixel size on the silicon sensor
   double m_subPixelSize;   ///< The size of the subpixel (Alice mode)
@@ -182,14 +196,26 @@ private: // data
   /// term, and element[1] the non-linear term for small corrections.
   double m_deMagFactor[2];
 
-  TabulatedProperty m_simDemag;
-  TabulatedProperty m_recDemag;
-  
-  SmartRef<Condition> m_demagCond; 
+  std::string m_XmlHpdDemagPath;
+
+  TabulatedProperty m_simDemagMapRTabProp;
+  TabulatedProperty m_simDemagMapPhiTabProp;
+  TabulatedProperty* m_simDemagMapTabProp;
+  TabulatedProperty m_recMagMapRTabProp;
+  TabulatedProperty m_recMagMapPhiTabProp;
+
+  const RichTabulatedProperty1D* m_simDemagMapR;
+  const RichTabulatedProperty1D* m_simDemagMapPhi;
+  const RichTabulatedProperty1D* m_recMagMapR;
+  const RichTabulatedProperty1D* m_recMagMapPhi;
+
+  SmartRef<Condition> m_demagCond;
 
   bool m_firstUpdate;
-  
-  int    rgiState[2+55]; 
+
+  std::vector<double>  m_refactParams; ///< refraction parameters for quartz window
+
+  int    rgiState[2+55];
   bool   m_UseHpdMagDistortions;
   bool   m_UseBFieldTestMap ;
   bool   m_UseRandomBField  ;
