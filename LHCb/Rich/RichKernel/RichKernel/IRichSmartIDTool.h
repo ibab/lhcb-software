@@ -4,7 +4,7 @@
  *
  *  Header file for tool interface : Rich::ISmartIDTool
  *
- *  $Id: IRichSmartIDTool.h,v 1.18 2007-03-09 17:58:13 jonrob Exp $
+ *  $Id: IRichSmartIDTool.h,v 1.19 2007-04-03 15:53:24 papanest Exp $
  *
  *  @author Antonis Papanestis  a.papanestis@rl.ac.uk
  *  @date   2003-10-28
@@ -66,7 +66,8 @@ namespace Rich
      *
      *  @return The channel position in global LHCb coordinates
      */
-    virtual Gaudi::XYZPoint globalPosition ( const LHCb::RichSmartID smartid ) const = 0;
+    virtual StatusCode globalPosition ( const LHCb::RichSmartID smartid,
+                                        Gaudi::XYZPoint& detectPoint  ) const = 0;
 
     /** Finds the average position of a cluster of RichSmartIDs, in global LHCb coordinates
      *
