@@ -5,7 +5,7 @@
  * Implementation file for class : RichSmartIDTool
  *
  * CVS Log :-
- * $Id: RichSmartIDTool.cpp,v 1.28 2007-03-09 17:40:29 jonrob Exp $
+ * $Id: RichSmartIDTool.cpp,v 1.29 2007-04-03 15:53:02 papanest Exp $
  *
  * @author Antonis Papanestis
  * @date 2003-10-28
@@ -94,10 +94,13 @@ Rich::SmartIDTool::globalPosition ( const Rich::HPDPixelCluster& cluster ) const
 //=============================================================================
 // Returns the position of a RichSmartID in global coordinates
 //=============================================================================
-Gaudi::XYZPoint
-Rich::SmartIDTool::globalPosition ( const LHCb::RichSmartID smartID ) const
+StatusCode
+Rich::SmartIDTool::globalPosition ( const LHCb::RichSmartID smartID,
+                                    Gaudi::XYZPoint& detectPoint  ) const
 {
-  return m_photoDetPanels[smartID.rich()][smartID.panel()]->detectionPoint(smartID);
+  return( m_photoDetPanels[smartID.rich()][smartID.panel()]->
+    detectionPoint(smartID, detectPoint) );
+  
 }
 
 //=============================================================================

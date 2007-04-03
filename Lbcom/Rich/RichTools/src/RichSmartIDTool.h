@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::SmartIDTool
  *
  *  CVS Log :-
- *  $Id: RichSmartIDTool.h,v 1.19 2007-03-09 17:40:29 jonrob Exp $
+ *  $Id: RichSmartIDTool.h,v 1.20 2007-04-03 15:53:02 papanest Exp $
  *
  *  @author Antonis Papanestis
  *  @date   2003-10-28
@@ -69,7 +69,8 @@ namespace Rich
   public: // methods (and doxygen comments) inherited from interface
 
     // Converts a RichSmartID channel identification into a position in global LHCb coordinates.
-    virtual Gaudi::XYZPoint globalPosition ( const LHCb::RichSmartID smartid ) const;
+    virtual StatusCode globalPosition ( const LHCb::RichSmartID smartid,
+                                        Gaudi::XYZPoint& detectPoint  ) const;
 
     // Finds the average position of a cluster of RichSmartIDs, in global LHCb coordinates
     virtual Gaudi::XYZPoint globalPosition ( const Rich::HPDPixelCluster& cluster ) const;
