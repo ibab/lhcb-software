@@ -1,13 +1,29 @@
-! $Id: release.notes,v 1.17 2007-03-22 18:33:35 ibelyaev Exp $ 
+! $Id: release.notes,v 1.18 2007-04-04 12:16:38 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.17 $
+! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.18 $
 ! -----------------------------------------------------------------------------
 ! Package     :  LoKiExamples
 ! Responsible :  Vanya BELYAEV  ibelyaev@physics.syr.edu
 ! Purpose     :  Collection of examples for LoKi package 
 ! -----------------------------------------------------------------------------
 
-! ========================== LoKiExample v5r2 2007-03-22 ===================
+! ========================== LoKiExample v5r2 2007-04-03 ===================
+
+! 2007-04-03 - Vanya BELYAEV
+
+  - src/LoKi_Phi_Makers.cpp, options/LoKi_Phi_Makers.opts
+    the trivial aglorithm LoKi_Phi_Makers to be able to compare the various 
+    particle makers 
+ 
+  - src/LoKi_PhiK_Dalitz.cpp, options/LoKi_PhiK_Dalitz.opts
+    the simple algorithm to make a dalitz-plot for B-> phi K gamma decay
+    (useful for study of photon polarization).
+    The exmaple illustrate the usage of 
+    THE SAME code for "real" particles
+    and for generator HepMC-particles...
+
+ - retag as v5r2 
+
 
 ! 2007-03-22 - Vanya BELYAEV
 

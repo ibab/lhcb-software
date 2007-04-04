@@ -1,6 +1,6 @@
-// $Id: LoKiExample_load.cpp,v 1.10 2007-03-22 18:33:37 ibelyaev Exp $
+// $Id: LoKiExample_load.cpp,v 1.11 2007-04-04 12:16:39 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.10 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.11 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
 //

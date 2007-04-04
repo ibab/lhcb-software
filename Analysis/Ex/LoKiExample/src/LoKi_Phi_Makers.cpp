@@ -1,18 +1,19 @@
-// $Id: LoKi_HelloWorld.cpp,v 1.2 2007-04-04 12:16:39 ibelyaev Exp $
+// $Id: LoKi_Phi_Makers.cpp,v 1.1 2007-04-04 12:16:40 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
 // ============================================================================
-// $Log: not supported by cvs2svn $
-//
+// $Log: not supported by cvs2svn $ 
 // ============================================================================
-// Include files 
+// Include files
 // ============================================================================
 // LoKi
 // ============================================================================
 #include "LoKi/LoKi.h"
 // ============================================================================
 /** @file
- *
+ *  
+ *  Simple exmaple to show various particle makers 
+ *  
  *  This file is a part of LoKi project - 
  *    "C++ ToolKit  for Smart and Friendly Physics Analysis"
  *
@@ -24,18 +25,35 @@
  *  By usage of this code one clearly states the disagreement 
  *  with the campain of Dr.O.Callot et al.: 
  *  "No Vanya's lines are allowed in LHCb/Gaudi software."
- *
- *  The most trivial LoKi-based algorithm: "Hello,World!"
+ * 
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
- *  @date 2007-03-22
+ *  @date 2007-03-26
  */
 // ============================================================================
-LOKI_ALGORITHM(LoKi_HelloWorld)
+LOKI_ALGORITHM(LoKi_Phi_Makers)
 {
-  info() << "Hello,World!" << endreq ;
+  using namespace LoKi ;
+  using namespace LoKi::Types ;
+  using namespace LoKi::Cuts  ;
+  //
+  const StatusCode SUCCESS = StatusCode::SUCCESS ;
   
-  return StatusCode::SUCCESS ;
-};
+  Range kaons  = select ( "kaons" , "K+" == ABSID ) ;
+  Range kplus  = select ( "k+"    , kaons , 0 < Q ) ;
+  Range kminus = select ( "k-"    , kaons , 0 > Q ) ;
+  
+  for ( Loop phi = loop ( "k+ k-" , "phi(1020)") ; phi ; ++phi ) 
+  {
+    const double mass = phi->mass(1,2) / Gaudi::Units::GeV ;
+    plot ( mass , "k+ k- mass" , 1 , 1.1 ) ;
+  }
+  
+  return  SUCCESS ;                                          // RETURN
+  
+} ;
+
+
+
 // ============================================================================
-// The END 
+/// The END 
 // ============================================================================

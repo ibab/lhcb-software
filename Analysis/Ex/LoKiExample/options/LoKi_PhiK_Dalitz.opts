@@ -1,0 +1,114 @@
+// $Id: LoKi_PhiK_Dalitz.opts,v 1.1 2007-04-04 12:16:39 ibelyaev Exp $
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
+// ============================================================================
+// $Log: not supported by cvs2svn $
+//
+// ============================================================================
+/** @file
+ *  Configuration file to run LoKi-based algorithm LoKi_Phi
+ *
+ *  This file is a part of LoKi project - 
+ *    "C++ ToolKit  for Smart and Friendly Physics Analysis"
+ *
+ *  The package has been designed with the kind help from
+ *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
+ *  contributions and advices from G.Raven, J.van Tilburg, 
+ *  A.Golutvin, P.Koppenburg have been used in the design.
+ *
+ *  By usage of this code one clearly states the disagreement 
+ *  with the campain of Dr.O.Callot et al.: 
+ *  "No Vanya's lines are allowed in LHCb/Gaudi software."
+ *
+ *  @see LoKi_Phi.cpp
+ *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+ *  @date  2007-03-22
+ */
+// ============================================================================
+// Include files 
+// ============================================================================
+// Phys/DaVinci & Phys/CommonParticles
+// ============================================================================
+#pragma print OFF 
+#include "$DAVINCIROOT/options/DaVinciCommon.opts"
+#include "$COMMONPARTICLESROOT/options/StandardKaons.opts"
+#include "$COMMONPARTICLESROOT/options/StandardPhotons.opts"
+#pragma print ON
+// ============================================================================
+// Needed Services 
+// ============================================================================
+ApplicationMgr.ExtSvc += { "LoKiSvc"   } ;   ///<  MANDATORY!!!
+// ============================================================================
+ApplicationMgr.ExtSvc += { "StagerSvc" } ;
+StagerSvc.BlockSize    = 20 ;
+StagerSvc.InitialStage = 5 ;
+// ============================================================================
+// Histograms & NTuples 
+// ============================================================================
+ApplicationMgr.HistogramPersistency = "HBOOK" ;
+HistogramPersistencySvc.OutputFile  = "dalitzhistos.hbook" ;
+NTupleSvc.Output += {"PHIKRC  DATAFILE='dalitzRC.hbook'  TYP='HBOOK' OPT='NEW'"} ;
+NTupleSvc.Output += {"PHIKMC1 DATAFILE='dalitzMC1.hbook' TYP='HBOOK' OPT='NEW'"} ;
+NTupleSvc.Output += {"PHIKMC2 DATAFILE='dalitzMC2.hbook' TYP='HBOOK' OPT='NEW'"} ;
+HbookHistSvc.PrintHistos = true ;
+// ============================================================================
+// Input Data
+// ============================================================================
+#pragma print OFF 
+#include "$LOKIEXAMPLEOPTS/Bs2Jpsiphi_mm.opts"  
+#include "$LOKIEXAMPLEOPTS/Bu_PhiKGamma_LFN.opts"
+#pragma print ON
+PoolDbCacheSvc.Catalog = {
+  "xmlcatalog_file:NewCatalog.xml" ,
+  "xmlcatalog_file:$LOKIEXAMPLEOPTS/Bu_PhiKGamma_CERN.xml"
+} ;
+// ============================================================================
+
+
+// Use Generator Particles with no cuts:
+DaVinciMainSeq.Members            += { "LoKi_PhiK_Dalitz/DalitzMC1" } ;
+DalitzMC1.PhysDesktop.ParticleMakerType =  "LoKi_HepMCParticleMaker/HepMCMaker" ;
+DalitzMC1.PhysDesktop.HepMCMaker.Particles = {"K+","gamma"} ; // only true HepMC kaons and photons
+DalitzMC1.PhysDesktop.HepMCMaker.From = {"phi(1020)","B+","B-"} ;  // only from B+/- or phi decays
+DalitzMC1.PhysDesktop.HepMCMaker.SmearParticle   =  false ;   // get true 4-momenta
+DalitzMC1.PhysDesktop.HepMCMaker.MinPCharged     = -1 * GeV ; // NO cut 
+DalitzMC1.PhysDesktop.HepMCMaker.MinPtCharged    = -1 * GeV ; // NO cut 
+DalitzMC1.PhysDesktop.HepMCMaker.MinThetaCharged = -1       ; // NO cut 
+DalitzMC1.PhysDesktop.HepMCMaker.MaxThetaCharged = 100000   ; // NO cut 
+DalitzMC1.PhysDesktop.HepMCMaker.MinPtGamma      = -1 * GeV ; // NO cut 
+DalitzMC1.PhysDesktop.HepMCMaker.MinThetaGamma   = -1       ; // NO cut 
+DalitzMC1.PhysDesktop.HepMCMaker.MaxThetaXGamma  = 100000   ; // NO cut 
+DalitzMC1.PhysDesktop.HepMCMaker.MaxThetaYGamma  = 100000   ; // NO cut 
+DalitzMC1.NTupleLUN = "PHIKMC1" ;
+
+// Use Generator Particles with some "aceptance" cuts and 4-momenta smeared:
+DaVinciMainSeq.Members            += { "LoKi_PhiK_Dalitz/DalitzMC2" } ;
+DalitzMC2.PhysDesktop.ParticleMakerType =  "LoKi_HepMCParticleMaker/HepMCMaker" ;
+DalitzMC2.PhysDesktop.HepMCMaker.Particles = {"K+","gamma"} ; // only true HepMC kaons and photons
+DalitzMC2.PhysDesktop.HepMCMaker.From = {"phi(1020)","B+","B-"} ;  // only from B+/- or phi decays
+DalitzMC2.NTupleLUN = "PHIKMC2" ;
+DalitzMC2.PhysDesktop.HepMCMaker.MinPtGamma      = -1 * GeV ; // NO cut 
+DalitzMC2.PhysDesktop.HepMCMaker.MinThetaGamma   = -1       ; // NO cut 
+//DalitzMC2.PhysDesktop.HepMCMaker.MaxThetaXGamma  = 100000   ; // NO cut 
+//DalitzMC2.PhysDesktop.HepMCMaker.MaxThetaYGamma  = 100000   ; // NO cut 
+
+
+// The same with reconstructed particles 
+// DaVinciMainSeq.Members   += { "LoKi_PhiK_Dalitz/DalitzRC" } ;
+DalitzRC.PhysDesktop.InputLocations = {
+  "Phys/StdTightKaons"      ,
+  "Phys/StdLooseAllPhotons"
+} ;
+DalitzRC.NTupleLUN = "PHIKRC" ;
+
+
+ApplicationMgr.EvtMax   =  500 ;
+EventSelector.PrintFreq =   100 ;
+
+DalitzMC2.PhysDesktop.HepMCMaker.PropertiesPrint = True ;
+DalitzMC1.PhysDesktop.HepMCMaker.PropertiesPrint = True ;
+
+// ============================================================================
+// The END 
+// ============================================================================
+

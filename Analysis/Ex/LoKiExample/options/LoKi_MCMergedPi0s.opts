@@ -1,12 +1,12 @@
-// $Id: LoKi_Bs2PsiPhi.opts,v 1.2 2007-04-04 12:16:39 ibelyaev Exp $
+// $Id: LoKi_MCMergedPi0s.opts,v 1.1 2007-04-04 12:16:39 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
 //
 // ============================================================================
 /** @file
- *  Configuration file to run LoKi-based algorithm LoKi_Bs2PsiPhi
+ *  Configuration file to run LoKi-based algorithm LoKi_MCMergedPi0s
  *
  *  This file is a part of LoKi project - 
  *    "C++ ToolKit  for Smart and Friendly Physics Analysis"
@@ -20,7 +20,7 @@
  *  with the campain of Dr.O.Callot et al.: 
  *  "No Vanya's lines are allowed in LHCb/Gaudi software."
  *
- *  @see LoKi_Bs2PsiPhi.cpp
+ *  @see LoKi_MCMergedPi0s.cpp
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date  2007-03-22
  */
@@ -31,8 +31,6 @@
 // ============================================================================
 #pragma print OFF 
 #include "$DAVINCIROOT/options/DaVinciCommon.opts"
-#include "$COMMONPARTICLESROOT/options/StandardKaons.opts"
-#include "$COMMONPARTICLESROOT/options/StandardMuons.opts"
 #pragma print ON
 // ============================================================================
 // Needed Services 
@@ -46,7 +44,7 @@ StagerSvc.InitialStage = 5 ;
 // Histograms & NTuples 
 // ============================================================================
 ApplicationMgr.HistogramPersistency = "HBOOK" ;
-HistogramPersistencySvc.OutputFile = "bs2psiphihistos.hbook" ;
+HistogramPersistencySvc.OutputFile = "mcmergedpi0s.hbook" ;
 HbookHistSvc.PrintHistos = true ;
 // ============================================================================
 // Input Data
@@ -61,12 +59,8 @@ PoolDbCacheSvc.Catalog = {
 // ============================================================================
 
 
-ApplicationMgr.TopAlg += { "LoKi_Bs2PsiPhi/PsiPhi" } ;
-PsiPhi.PhysDesktop.InputLocations =  { 
-  "Phys/StdLooseMuons" , 
-  "Phys/StdLooseKaons" 
-} ;
-PsiPhi.PP2MCs = { "Relations/Rec/ProtoP/Charged" } ;
+ApplicationMgr.TopAlg = { "LoKi_MCMergedPi0s/MCPi0s" } ;
+MCPi0s.PP2MCs = {} ;
 
 ApplicationMgr.EvtMax   = 5000 ;
 EventSelector.PrintFreq =  100 ;

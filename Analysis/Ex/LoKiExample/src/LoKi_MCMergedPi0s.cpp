@@ -1,8 +1,11 @@
-// $Id: LoKi_MCMergedPi0s.cpp,v 1.1 2007-04-01 15:28:56 ibelyaev Exp $
+// $Id: LoKi_MCMergedPi0s.cpp,v 1.2 2007-04-04 12:16:39 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2007/04/01 15:28:56  ibelyaev
+//  add LoKi_MCMergedPi0s.cpp
+// 
 //
 // ============================================================================
 // Include files 
@@ -57,7 +60,7 @@ LOKI_MCALGORITHM(LoKi_MCMergedPi0s)
   MCRange mcpi0 = finder->findDecays("pi0 -> gamma gamma") ;
   if ( mcpi0.empty() )  { return Warning("No MC-pi0 are found!", SUCCESS ) ; }
   
-  // get ony pi0s, which:
+  // get only pi0s, which satisfy teh criteria:
   // 1) large Pt
   MCCut mc1 = MCPT > 500 * Gaudi::Units::MeV  ;
   // 2) valid origin vertex 
@@ -74,50 +77,73 @@ LOKI_MCALGORITHM(LoKi_MCMergedPi0s)
   const LHCb::Calo2MC::IClusterTable* table = 
     get<LHCb::Calo2MC::IClusterTable>( "Relations/" + LHCb::CaloClusterLocation::Default ) ;
   
-  // invert the table
+  // invert the table(create the inverse table) for local usage 
   typedef Relations::RelationWeighted<LHCb::MCParticle,LHCb::CaloCluster,float> iTable;
   iTable itable = iTable( *table , 1 ) ;
   
-  always() << " Sizes "
-           << " Direct  " << table->relations().size() 
-           << " Inverse " << itable.relations().size() << endreq ;
+  MCFun mcpt = MCPT / Gaudi::Units::GeV ;
   
-  const LHCb::CaloCluster::Container* clusters = 
-    get<LHCb::CaloCluster::Container>( LHCb::CaloClusterLocation::Ecal ) ;
-  
-  typedef std::vector<const ContainedObject*> COBJECTS ;
-  const COBJECTS* cobjects = clusters->containedObjects() ;
-  
-  if ( 0 != cobjects ) 
+  // loop over mcpi0:
+  for ( MCRange::iterator imcpi = mcpi.begin() ; mcpi.end() != imcpi ; ++imcpi ) 
   {
-    for ( COBJECTS::const_iterator ico = cobjects->begin() ; 
-          cobjects->end() != ico ; ++ico ) 
+    const LHCb::MCParticle* pi0 = *imcpi ;
+    if ( 0 == pi0 )                                 { continue ; }  // CONTINUE 
+    // only 1 end vertex 
+    if ( pi0->endVertices().empty()     )           { continue ; }  // CONTINUE 
+    if ( 1 != pi0->endVertices().size() )           { continue ; }  // CONTINUE 
+    // get daughter photons 
+    const LHCb::MCVertex* mcv = pi0->endVertices().front() ;
+    if ( 0 == mcv )                                 { continue ; }  // CONTINUE 
+    const SmartRefVector<LHCb::MCParticle>& products = mcv->products() ;    
+    // only 2 daughter particles 
+    if ( 2 != products.size() )                     { continue ; }  // CONITNUE 
+    const LHCb::MCParticle* gamma1 = products[0] ;
+    const LHCb::MCParticle* gamma2 = products[1] ;
+    if ( 0 == gamma1 || 0 == gamma2 )               { continue ; }  // CONTINUE
+    
+    const double pt   = mcpt ( pi0 ) ;
+    const double mnpt = std::min( mcpt ( gamma1 ) , mcpt ( gamma2 ) ) ;
+    
+    plot (   pt , "ALL pi0->gamma gamma                    " , 0 , 10 ) ;
+    plot ( mnpt , "ALL pi0->gamma gamma : min pt of photon " , 0 ,  5 ) ;
+    
+    iTable::Range clus1 = itable.i_relations ( gamma1 ) ;
+    iTable::Range clus2 = itable.i_relations ( gamma1 ) ;
+    // each photon have some associated clusters in ECAL 
+    if ( clus1.empty() && clus2.empty() )         { continue ; }  // CONTINUE
+    
+    plot (   pt , "ECAL pi0->gamma gamma                    " , 0 , 10 ) ;
+    plot ( mnpt , "ECAL pi0->gamma gamma : min pt of photon " , 0 ,  5 ) ;
+    
+    // select only 1 or 2-cluster pi0s 
+    iTable::Range clus0 = itable.i_relations ( pi0 ) ;
+    if ( 1 != clus0.size() && 2 != clus0.size() ) { continue ; }  // CONTINUE 
+    //
+    
+    plot (   pt , "1||2 pi0->gamma gamma                    " , 0 , 10 ) ;
+    plot ( mnpt , "1||2 pi0->gamma gamma : min pt of photon " , 0 ,  5 ) ;
+    
+    // select only true 2 cluster pi0 
+    if      ( 2 == clus0.size() && 
+              1 == clus1.size() && 
+              1 == clus2.size() &&
+              clus1.front().to() != clus2.front().to() )
     {
-      const ContainedObject* co = *ico;
-      if ( 0 == co ) { continue ; }
-      const LHCb::CaloCluster* cl = 
-        dynamic_cast<const LHCb::CaloCluster*>( co ) ;
-      if ( 0 == cl ) { continue ; }
-      always() << " COBJECT " << (cl) 
-             << " \t#="     << table->relations(cl).size()
-               << " \tfrom "  << cobjects->size()
-               << " \tkey "   << cl->key()  << endreq ;
+      plot (   pt , "2 pi0->gamma gamma                    " , 0 , 10 ) ;
+      plot ( mnpt , "2 pi0->gamma gamma : min pt of photon " , 0 ,  5 ) ;
     }
-  }
-  
-  for ( LHCb::CaloCluster::Container::const_iterator icl = 
-          clusters->begin() ; clusters->end() != icl ; ++icl )
-  {
-    const LHCb::CaloCluster* cl = *icl ;
-    if ( 0 == cl ) { continue ; }
-    always() << " Custers " << (cl) 
-             << " \t#="    << table->relations(cl).size()
-             << " \tfrom "  << clusters->size()
-             << " \tkey "   << cl->key()  << endreq ;
+    else if ( 1 == clus0.size() && 
+              1 == clus1.size() && 
+              1 == clus2.size() && 
+              clus1.front().to() == clus2.front().to() )              
+    {
+      plot (   pt , "1 pi0->gamma gamma                    " , 0 , 10 ) ;
+      plot ( mnpt , "1 pi0->gamma gamma : min pt of photon " , 0 ,  5 ) ;
+    }          
     
   }
-    
   
+    
   return SUCCESS ;                                                   // RETURN
 };
 // ============================================================================
