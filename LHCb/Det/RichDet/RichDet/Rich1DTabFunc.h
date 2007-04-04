@@ -5,7 +5,7 @@
  *  Header file for utility class : Rich::TabulatedFunction1D
  *
  *  CVS Log :-
- *  $Id: Rich1DTabFunc.h,v 1.6 2007-03-02 14:26:57 jonrob Exp $
+ *  $Id: Rich1DTabFunc.h,v 1.7 2007-04-04 10:56:28 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-08-13
@@ -28,7 +28,7 @@ namespace Rich
 {
 
   //============================================================================
-  /** @class TabulatedFunction1D Rich1DTabFunc.h RichKernel/Rich1DTabFunc.h
+  /** @class Rich::TabulatedFunction1D Rich1DTabFunc.h RichKernel/Rich1DTabFunc.h
    *
    *  A class describing a function based on the interpolation of data points.
    *
