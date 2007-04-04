@@ -1,11 +1,19 @@
-! $Id: release.notes,v 1.24 2007-02-24 18:28:03 ibelyaev Exp $ 
+! $Id: release.notes,v 1.25 2007-04-04 12:09:05 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhysMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : RC <--> MC part of LoKi 
 ! -----------------------------------------------------------------------------
 
+!========================== LoKiPhysMC v4r1 2007-04-04 =======================
 
+! 2007-04-04 - Vanya BELYAEV
+
+ - src/Components/LoKi_HepMCPArticleMaker.cpp
+    fix a stupid bug with the defauld cuts for photons 
+ - cmt/requirements 
+    version increment to v4r1 
+  
 !========================== LoKiPhysMC v4r0 2007-02-25 =======================
 
 ! 2007-02-24 - Vanya BELYAEV

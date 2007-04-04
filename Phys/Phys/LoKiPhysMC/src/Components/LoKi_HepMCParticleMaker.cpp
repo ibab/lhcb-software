@@ -1,19 +1,8 @@
-// $Id: LoKi_HepMCParticleMaker.cpp,v 1.9 2006-12-16 11:42:38 ibelyaev Exp $
+// $Id: LoKi_HepMCParticleMaker.cpp,v 1.10 2007-04-04 12:09:05 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.9 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.10 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.8  2006/12/15 13:06:55  ibelyaev
-//  more fixes
-//
-// Revision 1.7  2006/12/15 13:03:25  ibelyaev
-//  more fixes
-//
-// Revision 1.6  2006/12/15 12:01:05  ibelyaev
-//  fix bugs
-//
-// Revision 1.5  2006/11/12 14:58:51  ibelyaev
-//  add phtons and disable smearing
 //
 // ============================================================================
 // Include files 
@@ -71,6 +60,19 @@
  *  @attention for default configuration, 
  *    the smearing of 4-momentum and position is disabled 
  *
+ *  This file is a part of LoKi project - 
+ *    "C++ ToolKit  for Smart and Friendly Physics Analysis"
+ *
+ *  The package has been designed with the kind help from
+ *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
+ *  contributions and advices from G.Raven, J.van Tilburg, 
+ *  A.Golutvin, P.Koppenburg have been used in the design.
+ *
+ *  By usage of this code one clearly states the disagreement 
+ *  with the campain of Dr.O.Callot et al.: 
+ *  "No Vanya's lines are allowed in LHCb/Gaudi software."
+ *
+ *
  *  @author Vanya BELYAEV ibelyaev@physcis.syr.edu
  *  @date 2006-09-25
  */
@@ -112,10 +114,13 @@ protected:
     , m_chargedcut ( LoKi::Cuts::GALL ) 
     , m_gammacut   ( LoKi::Cuts::GALL ) 
     //
-    , m_minPtGamma      ( 150.0 * Gaudi::Units::MeV ) 
-    , m_minThetaGamma   (  32.0 * Gaudi::Units::cm     / 12.4 * Gaudi::Units::meter )  
-    , m_maxThetaXGamma  (   4.0 * Gaudi::Units::meter  / 12.4 * Gaudi::Units::meter ) 
-    , m_maxThetaYGamma  (   3.0 * Gaudi::Units::meter  / 12.4 * Gaudi::Units::meter ) 
+    , m_minPtGamma (  150.0 * Gaudi::Units::MeV ) 
+    , m_minThetaGamma  ( ( 32.0 * Gaudi::Units::cm    ) / 
+                         ( 12.4 * Gaudi::Units::meter ) ) 
+    , m_maxThetaXGamma ( (  4.0 * Gaudi::Units::meter ) / 
+                         ( 12.4 * Gaudi::Units::meter ) ) 
+    , m_maxThetaYGamma ( (  3.0 * Gaudi::Units::meter ) / 
+                         ( 12.4 * Gaudi::Units::meter ) )
     //
     , m_minPCharged     (   3 * Gaudi::Units::GeV  )
     , m_minPtCharged    (  10 * Gaudi::Units::MeV  )
@@ -155,6 +160,7 @@ protected:
     declareProperty ( "MinZend"          , m_minZend          ) ;
     // 
     setProperty     ( "SmearParticle"    , "False"            ) ;
+
   } ;
   /// virtual protected destructor 
   virtual ~LoKi_HepMCParticleMaker() {} ;
@@ -212,6 +218,7 @@ DECLARE_TOOL_FACTORY(LoKi_HepMCParticleMaker);
 StatusCode LoKi_HepMCParticleMaker::initialize() 
 {
   StatusCode sc = MCParticleMakerBase::initialize() ;
+
   if ( sc.isFailure() ) { return sc ; }
   // locate LoKi service (needed for some functions) 
   LoKi::ILoKiSvc* loki = svc<LoKi::ILoKiSvc>( "LoKiSvc" , true ) ;
