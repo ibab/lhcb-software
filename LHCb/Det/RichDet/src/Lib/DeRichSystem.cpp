@@ -4,7 +4,7 @@
  *
  * Implementation file for class : DeRichSystem
  *
- * $Id: DeRichSystem.cpp,v 1.12 2007-04-03 15:42:33 papanest Exp $
+ * $Id: DeRichSystem.cpp,v 1.13 2007-04-04 10:56:44 jonrob Exp $
  *
  * @author Antonis Papanestis a.papanestis@rl.ac.uk
  * @date   2006-01-27
@@ -226,14 +226,6 @@ StatusCode DeRichSystem::fillMaps( const Rich::DetectorType rich )
     m_hardid2L1[hardID] = L1ID;
     m_smartid2L1In[hpdID] = L1IN;
     m_hardid2L1In[hardID] = L1IN;
-    /*
-      { // CRJ : Work arounds for case when vector has pool allocator
-      if ( m_l12smartids.find(L1ID) == m_l12smartids.end() )
-      { m_l12smartids.insert( Rich::DAQ::L1ToSmartIDsPair(L1ID,LHCb::RichSmartID::Vector()) ); }
-      if ( m_l12hardids.find(L1ID) == m_l12hardids.end() )
-      { m_l12hardids.insert( Rich::DAQ::L1ToHardIDsPair(L1ID,Rich::DAQ::HPDHardwareIDs()) ); }
-      }
-    */
     m_l12smartids[L1ID].push_back( hpdID );
     m_l12hardids[L1ID].push_back( hardID );
     if ( std::find( m_l1IDs.rbegin(), m_l1IDs.rend(), L1ID ) == m_l1IDs.rend() )
@@ -322,74 +314,6 @@ DeRichSystem::richSmartID( const Rich::DAQ::Level0ID l0ID ) const
 
   // Found, so return RichSmartID
   return (*id).second;
-}
-
-//=========================================================================
-//  activeHPDRichSmartIDs
-//=========================================================================
-const LHCb::RichSmartID::Vector& DeRichSystem::activeHPDRichSmartIDs() const
-{
-  return m_smartIDs;
-}
-
-//=========================================================================
-//  activeHPDHardwareIDs
-//=========================================================================
-const Rich::DAQ::HPDHardwareIDs& DeRichSystem::activeHPDHardwareIDs() const
-{
-  return m_hardIDs;
-}
-
-//=========================================================================
-//  hpdIsActive
-//=========================================================================
-bool DeRichSystem::hpdIsActive( const LHCb::RichSmartID id ) const
-{
-  // is this id in the inactive list
-  const bool isActive =
-    ( std::find( m_inactiveSmartIDs.begin(),
-                 m_inactiveSmartIDs.end(),
-                 id.hpdID() ) == m_inactiveSmartIDs.end() );
-
-  // Double check id is valid
-  // could make this check optional if it proves too costly in cpu
-  SoftToHard::const_iterator iid = m_soft2hard.find( id.hpdID() );
-  if ( m_soft2hard.end() == iid )
-  {
-    std::ostringstream mess;
-    mess << "Unknown HPD RichSmartID " << id.hpdID();
-    throw GaudiException( mess.str(),
-                          "DeRichSystem::hpdIsActive",
-                          StatusCode::FAILURE );
-  }
-
-  if (!isActive) std::cout << "DeRichSystem::hpdIsActive : inactive HPD" << std::endl;
-  return isActive;
-}
-
-//=========================================================================
-//  hpdIsActive
-//=========================================================================
-bool DeRichSystem::hpdIsActive( const Rich::DAQ::HPDHardwareID id ) const
-{
-  // is this id in the inactive list
-  const bool isActive =
-    ( std::find( m_inactiveHardIDs.begin(),
-                 m_inactiveHardIDs.end(),
-                 id ) == m_inactiveHardIDs.end() );
-
-  // Double check id is valid
-  // could make this check optional if it proves too costly in cpu
-  HardToSoft::const_iterator iid = m_hard2soft.find( id );
-  if ( m_hard2soft.end() == iid )
-  {
-    throw GaudiException( "Unknown HPD hardware ID " + (std::string)id,
-                          "DeRichSystem::hpdIsActive",
-                          StatusCode::FAILURE );
-  }
-
-  if (!isActive) std::cout << "DeRichSystem::hpdIsActive : inactive HPD" << std::endl;
-  return isActive;
 }
 
 //=========================================================================
@@ -551,24 +475,6 @@ DeRichSystem::l1HPDHardIDs( const Rich::DAQ::Level1ID l1ID ) const
 }
 
 //=========================================================================
-// l1HPDSmartIDs
-// Access mapping between Level 1 IDs and HPD RichSmartIDs
-//=========================================================================
-const Rich::DAQ::L1ToSmartIDs& DeRichSystem::l1HPDSmartIDs() const
-{
-  return m_l12smartids;
-}
-
-//=========================================================================
-//  l1HPDHardIDs
-// Access mapping between Level 1 IDs and HPD RichSmartIDs
-//=========================================================================
-const Rich::DAQ::L1ToHardIDs& DeRichSystem::l1HPDHardIDs() const
-{
-  return m_l12hardids;
-}
-
-//=========================================================================
 // richDetector
 //=========================================================================
 const Rich::DetectorType
@@ -584,14 +490,6 @@ DeRichSystem::richDetector( const Rich::DAQ::Level1ID l1ID ) const
 
   // Found, so return RICH
   return (*rich).second;
-}
-
-//=========================================================================
-//  level1IDs
-//=========================================================================
-const Rich::DAQ::Level1IDs& DeRichSystem::level1IDs() const
-{
-  return m_l1IDs;
 }
 
 //=========================================================================

@@ -4,6 +4,10 @@
 ! Purpose     : interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2007-04-04 - Chris Jones
+ - Improve doxygen comments in DeRichSystem
+ - Some more optimisation in DeRichSystem, by making some methods inline
+
 ! 2007-04-02 - "Antonis Papanestis"
  - move the detectionPoint functionality from DeRichHPDPanel to DeRichHPD
    to be able to use individual properties of HPDs.
