@@ -72,6 +72,12 @@ StatusCode CaloDataProviderPatched::initialize ( ) {
   m_adcs.reserve( nCells + nPins  );
   m_digits.reserve( nCells );
   clear();
+
+  info() << "*******" << endreq;  
+  info() << " ** PATCHED VERSION FOR DAQ TEST APRIL 2007 ** " << endreq;
+  info() << "*******" << endreq;  
+  
+
   debug() << " Initialisation OK" << endreq;
   return StatusCode::SUCCESS;
 }
@@ -264,6 +270,7 @@ StatusCode CaloDataProviderPatched::decodeBank( LHCb::RawBank* bank ){
         nSkip = (lenAdc+3)/4;   //== is in bytes, with padding
         data     += (nSkip+1);
         size     -= (nSkip+1);
+        warning() << " SKIP FE-CARD READOUT WHEN CODE = 0 (**PATCH**)" << endreq;
         continue;        
       }
       // -----------------------------------------------------
