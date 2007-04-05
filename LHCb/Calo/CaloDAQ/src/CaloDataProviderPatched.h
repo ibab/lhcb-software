@@ -45,4 +45,4 @@ private:
   CaloVector<LHCb::CaloDigit> m_digits;
   unsigned int m_tell1s;
 };
-#endif // CALODATAPROVIDER_H
+#endif // CALODATAPROVIDERPATCHED_H
