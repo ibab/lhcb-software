@@ -2,6 +2,9 @@
 ! Package manager : Jan Amoraal
 !--------------------------------------------------------------------------
 
+! 2007-04-08 - Jan Amoraal
+ - Fix unchecked status codes
+
 !====================== OTSimulation v3r9 2007-02-05 ======================
 ! 2007-02-05 - Marco Cattaneo
  - Remove LHCbDefinitions includes

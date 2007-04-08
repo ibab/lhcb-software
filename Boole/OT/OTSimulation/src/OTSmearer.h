@@ -1,4 +1,4 @@
-// $Id: OTSmearer.h,v 1.6 2007-02-05 09:46:40 cattanem Exp $
+// $Id: OTSmearer.h,v 1.7 2007-04-08 16:54:51 janos Exp $
 #ifndef OTSIMULATION_OTSMEARER_H
 #define OTSIMULATION_OTSMEARER_H 1
 
@@ -43,7 +43,7 @@ public:
   virtual StatusCode initialize();
 
   /// tool 'operation' - returns smeared distance + sigma used
-  StatusCode smear(LHCb::MCOTDeposit* aDeposit);
+  void smear(LHCb::MCOTDeposit* aDeposit);
 
   /// Get the resolution (without magnetic field correction)
   double resolution();
@@ -53,8 +53,6 @@ public:
   
 private:
 
-  /// parameterization of resolution as function of field
-  double sigmaParamFunc(const double By);
   /// pointer to magnetic field service
   IMagneticFieldSvc* m_magFieldSvc;
   /// pointer to XML geometry:

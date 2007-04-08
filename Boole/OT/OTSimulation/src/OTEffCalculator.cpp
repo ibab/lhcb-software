@@ -1,4 +1,4 @@
-// $Id: OTEffCalculator.cpp,v 1.10 2006-06-21 14:36:29 janos Exp $
+// $Id: OTEffCalculator.cpp,v 1.11 2007-04-08 16:54:51 janos Exp $
 
 // Gaudi files
 #include "GaudiKernel/SmartIF.h"
@@ -75,18 +75,6 @@ StatusCode OTEffCalculator::initialize()
 OTEffCalculator::~OTEffCalculator()
 {
   //destructor
-  // release interface
-  //  m_genEff->release();
-}
-
-StatusCode OTEffCalculator::calculate(MCOTDeposit* aDeposit, bool& iAccept)
-{
-  // get a random number
-  double testVal = m_genEff->shoot();
-  // to accpet or not to accept
-  iAccept = (testVal < effParamFunc(aDeposit->driftDistance()));
-  
-  return StatusCode::SUCCESS;
 }
 
 double OTEffCalculator::effParamFunc(const double driftDistance)
@@ -97,4 +85,12 @@ double OTEffCalculator::effParamFunc(const double driftDistance)
 
   // if pathLength2 > 0.0 return eff parm else 0 (driftdistance > cell radius)
   return (pathLength2 > 0.0?m_etaZero*(1.0-gsl_sf_exp(-2.0*m_rho*std::sqrt(pathLength2))):0.0);
+}
+
+void OTEffCalculator::calculate(MCOTDeposit* aDeposit, bool& accept)
+{
+  // get a random number
+  double testVal = m_genEff->shoot();
+  // to accpet or not to accept
+  accept = (testVal < effParamFunc(aDeposit->driftDistance()));
 }

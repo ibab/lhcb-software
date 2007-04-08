@@ -1,4 +1,4 @@
-// $Id: MCOTDepositCreator.cpp,v 1.21 2007-02-05 09:46:40 cattanem Exp $
+// $Id: MCOTDepositCreator.cpp,v 1.22 2007-04-08 16:54:51 janos Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -177,30 +177,25 @@ StatusCode MCOTDepositCreator::initialize()
 StatusCode MCOTDepositCreator::execute(){
 
   // execute once per event
-  StatusCode sc;
 
   // make initial list of deposits
   debug() << "make digitizations from MCHits" << endmsg;
   makeDigitizations();
-  //if (sc.isFailure()) return Error("failed to make digitizations", sc);
   
   // single cell eff
   debug() << "deposits size before applying efficiency = "
           << m_tempDeposits->size() << endmsg;
-  sc = singleCellEff();
-  if (sc.isFailure()) return Error("problems applying single cell eff", sc);
+  singleCellEff();
   debug() << "deposits size after applying efficiency = " 
           << m_tempDeposits->size() << endmsg;
 
   // smear
   debug() << "apply single cell smearing" << endmsg;
-  sc = applySmear();
-  if (sc.isFailure()) return Error("problems applying single cell res smear", sc);
-
+  applySmear();
+  
   // r-to-t
   debug() <<"convert r-to t" << endmsg;
-  sc = applyRTrelation();
-  if (sc.isFailure()) return Error("problems applying single cell rt relation", sc );  
+  applyRTrelation();
 
   // add crosstalk
   if (m_addCrossTalk) {
@@ -217,7 +212,6 @@ StatusCode MCOTDepositCreator::execute(){
     debug() << "deposits size before adding noise = "
             << m_tempDeposits->size() << endmsg;
     m_noiseTool->createDeposits(m_tempDeposits);
-    //if (sc.isFailure()) return Error("problems applying noise", sc);
     debug() << "deposits size after adding noise = " 
             << m_tempDeposits->size() << endmsg;
   }
@@ -227,7 +221,6 @@ StatusCode MCOTDepositCreator::execute(){
     debug() << "deposits size before adding Double Pulse Reflection = "
             << m_tempDeposits->size() << endmsg;
     addPulseReflect();
-    //if (sc.isFailure()) return Error("problems applying  pulse reflect", sc);
     debug() << "deposits size after adding  Double Pulse Reflection = "
             << m_tempDeposits->size() << endmsg;    
   }
@@ -277,9 +270,7 @@ void MCOTDepositCreator::makeDigitizations()
           aModule->calculateHits(aMCHit->entry(), aMCHit->exit(), chanAndDist);
         } else continue;
                 
-        if (chanAndDist.empty()) {
-          continue;
-        } else {
+        if (!chanAndDist.empty()) {
           // OK got some hits
           std::vector<std::pair<OTChannelID,double> >::const_iterator iT = chanAndDist.begin();
           for ( ; iT != chanAndDist.end(); ++iT) {
@@ -293,11 +284,9 @@ void MCOTDepositCreator::makeDigitizations()
   } // loop spills
 }
 
-StatusCode MCOTDepositCreator::singleCellEff() 
+void MCOTDepositCreator::singleCellEff() 
 {
   // apply single cell efficiency
-  StatusCode sc = StatusCode::SUCCESS;
-
   MCOTDepositVec::iterator iterDeposit = m_tempDeposits->begin();
   while (iterDeposit != m_tempDeposits->end()) {
     MCOTDeposit* aDeposit = (*iterDeposit);
@@ -305,10 +294,9 @@ StatusCode MCOTDepositCreator::singleCellEff()
     // number of tool - want 0,1,2 and not 1,2,3
     int iEffTool = (aDeposit->channel()).station() - m_firstStation;
 
-    bool iAccept = false;
-    sc = m_singleCellEffVector[iEffTool]->calculate(aDeposit, iAccept);
-    if (sc.isFailure()) return sc;
-    if (!iAccept) {
+    bool accept = false;
+    m_singleCellEffVector[iEffTool]->calculate(aDeposit, accept);
+    if (!accept) {
       /// delete MCOTDeposit*
       delete *iterDeposit;
       /// set to 0
@@ -319,26 +307,22 @@ StatusCode MCOTDepositCreator::singleCellEff()
   /// remove zero deposits
   m_tempDeposits->erase(std::remove(m_tempDeposits->begin(), m_tempDeposits->end(), 
                                     (MCOTDeposit*)0), m_tempDeposits->end());
-  return sc;
 }
 
-StatusCode MCOTDepositCreator::applySmear()
+void MCOTDepositCreator::applySmear()
 {
-  // smear m_tempDeposits to simulate single cell resolution
-  StatusCode sc = StatusCode::SUCCESS;
-
+  // smear tmp deposits to simulate single cell resolution
   MCOTDepositVec::iterator iterDeposit = m_tempDeposits->begin();
   while (iterDeposit != m_tempDeposits->end()) {    
     MCOTDeposit* aDeposit = (*iterDeposit);
     
     // number of tool - want 0,1,2 and not 1,2,3
     int iSmearTool = (aDeposit->channel()).station() - m_firstStation;
-
     // smear      
-    sc = m_smearerVector[iSmearTool]->smear(aDeposit);
-    if (sc.isFailure()) return sc;
+    m_smearerVector[iSmearTool]->smear(aDeposit);
 
-    // hack as drift dist can < 0 due to smearing
+    /// hack as drift dist can be < 0 due to smearing
+    /// If < 0 then flip ambiguity
     double driftDist = aDeposit->driftDistance();
     if (driftDist < 0.0) {
       aDeposit->setDriftDistance( std::abs(driftDist) );
@@ -347,31 +331,23 @@ StatusCode MCOTDepositCreator::applySmear()
     }
 
     ++iterDeposit;
-  } // loop m_tempDeposits  
-
-  return sc;
+  } // loop m_tempDeposits
 }
 
-StatusCode MCOTDepositCreator::applyRTrelation()
+void MCOTDepositCreator::applyRTrelation()
 {
   // apply r-t relation
-  StatusCode sc = StatusCode::SUCCESS;
-
   MCOTDepositVec::iterator iterDeposit = m_tempDeposits->begin();
   while (iterDeposit != m_tempDeposits->end()) {
     MCOTDeposit* aDeposit = (*iterDeposit);
 
     // number of tool - want 0,1,2 and not 1,2,3
     int iRTTool = (aDeposit->channel()).station() - m_firstStation;
-
     // convert      
-    sc = m_rtRelationVector[iRTTool]->convertRtoT(aDeposit);
-    if (sc.isFailure()) return sc;
-
+    m_rtRelationVector[iRTTool]->convertRtoT(aDeposit);
+    
     ++iterDeposit;
-  } // loop m_tempDeposits  
-
-  return sc;
+  } // loop m_tempDeposits
 }
 
 void MCOTDepositCreator::addCrossTalk()
@@ -412,12 +388,6 @@ void MCOTDepositCreator::addCrossTalk()
   m_tempDeposits->insert(m_tempDeposits->end(), crossTalkList.begin(), 
                          crossTalkList.end());
 }
-
-// Add random noise deposits. 
-// void MCOTDepositCreator::addNoise()
-// {
-//   m_noiseTool->createDeposits(m_tempDeposits);
-// }
 
 // Add Pulse Reflection
 void MCOTDepositCreator::addPulseReflect()

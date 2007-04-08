@@ -1,4 +1,4 @@
-// $Id: IOTEffCalculator.h,v 1.1 2006-01-20 15:44:45 cattanem Exp $
+// $Id: IOTEffCalculator.h,v 1.2 2007-04-08 16:54:51 janos Exp $
 #ifndef OTSIMULATION_IOTEFFCALCULATOR_H 
 #define OTSIMULATION_IOTEFFCALCULATOR_H 1
 
@@ -20,12 +20,14 @@ static const InterfaceID IID_IOTEffCalculator( "IOTEffCalculator", 1, 0 );
  *  @author Marco Cattaneo
  *  @date   08/01/2002
  */
+
 class IOTEffCalculator : virtual public IAlgTool {
 public:
   /// Retrieve interface ID
   static const InterfaceID& interfaceID() { return IID_IOTEffCalculator; }
   /// Actual operator function
-  virtual StatusCode calculate( LHCb::MCOTDeposit* aDeposit, bool& iAccept) = 0;
+  virtual void calculate( LHCb::MCOTDeposit* aDeposit, bool& accept) = 0;
 };
+
 #endif // OTSIMULATION_IOTEFFCALCULATOR_H
 

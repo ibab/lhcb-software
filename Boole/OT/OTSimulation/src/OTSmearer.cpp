@@ -1,4 +1,4 @@
-// $Id: OTSmearer.cpp,v 1.11 2007-02-05 09:46:40 cattanem Exp $
+// $Id: OTSmearer.cpp,v 1.12 2007-04-08 16:54:51 janos Exp $
 
 // Gaudi files
 #include "GaudiKernel/ToolFactory.h"
@@ -81,8 +81,7 @@ StatusCode OTSmearer::initialize()
   return StatusCode::SUCCESS;  
 }
 
-
-StatusCode OTSmearer::smear(MCOTDeposit* aDeposit)
+void OTSmearer::smear(MCOTDeposit* aDeposit)
 {
   // retrieve MC info
   const MCHit* aMCHit = aDeposit->mcHit();
@@ -93,9 +92,6 @@ StatusCode OTSmearer::smear(MCOTDeposit* aDeposit)
   // get sigma (error on drift distance) for this point 
   double driftDistError = resolution(aPoint);
 
-  // set error on drift distance
-  //aDigit->setDriftDistanceErr(driftDistError);
-
   // get a random number (from Gaussian)
   double smearVal = m_genDist->shoot();
  
@@ -105,17 +101,7 @@ StatusCode OTSmearer::smear(MCOTDeposit* aDeposit)
 
   // update digitization 
   aDeposit->setDriftDistance(driftDist);
-
-  return StatusCode::SUCCESS;
 }
-
-
-double OTSmearer::sigmaParamFunc(const double By)
-{
-  // Calculate sigma of smear 
-  return m_tracker->resolution(By);
-}
-
 
 double OTSmearer::resolution()
 {
@@ -123,11 +109,12 @@ double OTSmearer::resolution()
   return m_tracker->resolution();
 }
 
-
 double OTSmearer::resolution(Gaudi::XYZPoint& aPoint)
 {
   // return sigma (error on drift distance) for this point 
   Gaudi::XYZVector bField;
-  m_magFieldSvc->fieldVector( aPoint, bField );
-  return sigmaParamFunc(bField.y());
+  /// fieldVector always returns success. Save to ignore
+  m_magFieldSvc->fieldVector( aPoint, bField ).ignore();
+  /// return sigma with magnetic field correction
+  return m_tracker->resolution(bField.y());
 }

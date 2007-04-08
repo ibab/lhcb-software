@@ -1,4 +1,4 @@
-// $Id: OTrtRelation.cpp,v 1.13 2007-02-05 09:46:40 cattanem Exp $
+// $Id: OTrtRelation.cpp,v 1.14 2007-04-08 16:54:51 janos Exp $
 
 // Gaudi files
 #include "GaudiKernel/ToolFactory.h"
@@ -59,7 +59,7 @@ OTrtRelation::~OTrtRelation()
   //destructor
 }
 
-StatusCode OTrtRelation::convertRtoT(MCOTDeposit* aDeposit)
+void OTrtRelation::convertRtoT(MCOTDeposit* aDeposit)
 {
   // r-t relation
   // retrieve MC info
@@ -75,8 +75,6 @@ StatusCode OTrtRelation::convertRtoT(MCOTDeposit* aDeposit)
   
   // store the time in deposit
   aDeposit->addTime(time);
-
-  return StatusCode::SUCCESS;
 }
 
 double OTrtRelation::driftTime(const double driftDist, const Gaudi::XYZPoint& aPoint)
@@ -85,7 +83,8 @@ double OTrtRelation::driftTime(const double driftDist, const Gaudi::XYZPoint& aP
 
   // get magnetic field
   Gaudi::XYZVector bField;
-  m_magFieldSvc->fieldVector( aPoint, bField );
+  /// fieldVector always returns success. Save to ignore
+  m_magFieldSvc->fieldVector( aPoint, bField ).ignore();
 
   return m_tracker->driftTime(driftDist, bField.y());  
 }
@@ -95,6 +94,7 @@ double OTrtRelation::driftDistance( const double driftTime,
 {
   // inverse r-t relation with correction for the magnetic field
   Gaudi::XYZVector bField;
-  m_magFieldSvc->fieldVector( aPoint, bField );
+  /// fieldVector always returns success. Save to ignore
+  m_magFieldSvc->fieldVector( aPoint, bField ).ignore();
   return m_tracker->driftDistance(driftTime, bField.y());
 }

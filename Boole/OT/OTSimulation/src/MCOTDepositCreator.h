@@ -1,4 +1,4 @@
-// $Id: MCOTDepositCreator.h,v 1.11 2007-02-02 09:28:44 janos Exp $
+// $Id: MCOTDepositCreator.h,v 1.12 2007-04-08 16:54:51 janos Exp $
 #ifndef OTSIMULATION_MCOTDEPOSITCREATOR_H
 #define OTSIMULATION_MCOTDEPOSITCREATOR_H 1
 
@@ -62,13 +62,13 @@ private:
   void makeDigitizations();
 
   /// apply single cell effiency
-  StatusCode singleCellEff();
+  void singleCellEff();
 
   /// apply resolution smearing
-  StatusCode applySmear();
+  void applySmear();
 
   /// apply r-t relation
-  StatusCode applyRTrelation();
+  void applyRTrelation();
 
   /// apply cross talk
   void addCrossTalk();
@@ -82,7 +82,6 @@ private:
   /// make unique name
   std::string toolName(const std::string& aName, 
                        const int id) const;
-
   /// pointer to XML geometry:
   DeOTDetector* m_tracker;
 

@@ -53,16 +53,16 @@ StatusCode OTFillRawEvent::initialize() {
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   // create the map of OT vectors, m_numberOfGols entries
-  for (int k = 1; k <= m_numberOfGols; ++k) {
-    vmcOTime* currentMCTime = new vmcOTime();
-    mGol::value_type numGol(k, currentMCTime);
+  for (int i = 1; i <= m_numberOfGols; ++i) {
+    VecMCOTTimes* currentMCOTTimes = new VecMCOTTimes();
+    OTGol::value_type numGol(i, currentMCOTTimes);
     m_goldatacontainer.insert( m_goldatacontainer.end(), numGol );
   }
 
   // create the map of OTMcTime vectors, m_numberOfBanks entries
   for (int i = 1; i <= m_numberOfBanks; ++i) {
-    vmcOTime* currentMCOTTime = new vmcOTime();
-    mBank::value_type numBank(i, currentMCOTTime);
+    VecMCOTTimes* currentMCOTTimes = new VecMCOTTimes();
+    OTBank::value_type numBank(i, currentMCOTTimes);
     m_dataContainer.insert( m_dataContainer.end(), numBank );
   }
 
@@ -79,17 +79,17 @@ StatusCode OTFillRawEvent::execute()
   // Sorting MCTimes into Banks
   sortMcTimesIntoBanks();
   
-  typedef mBank::iterator Iter;
+  typedef OTBank::iterator Iter;
   // Loop the map bank structure
   for (Iter iBank = m_dataContainer.begin(); iBank != m_dataContainer.end(); ++iBank) {
     //(*ibank).first gives you the BankID
     debug() << "Bank Nr " <<  iBank->first << endmsg; 
     
-    vmcOTime* amcTime = iBank->second;
+    VecMCOTTimes* times = iBank->second;
         
-    dataBank aBank;
+    DataBank aBank;
     // Empty Bank -- Still sending all the Headers :feed vMCOTime vectors to converter routine
-    (amcTime->empty())?convertToRAWEmptyBank(&aBank):convertToRAWDataBank(amcTime, &aBank);
+    (times->empty())?convertToRAWEmptyBank(&aBank):convertToRAWDataBank(times, &aBank);
     
     /* 
      *  Generate bank ID and push bank into raw buffer
@@ -97,15 +97,15 @@ StatusCode OTFillRawEvent::execute()
      *  The bank ID corresponds to the source ID
      */
 
-    dataBank& bBank = aBank;
+    DataBank& bBank = aBank;
     rawEvent->addBank(iBank->first, RawBank::OT, 2, bBank);
     aBank.clear();
   }
   
   // Finally, clear the data container and the vectors it contains 
   for (Iter iBank = m_dataContainer.begin(); iBank != m_dataContainer.end(); ++iBank) {
-    vmcOTime* amcTime = iBank->second;
-    amcTime->clear();
+    VecMCOTTimes* times = iBank->second;
+    times->clear();
   }
   
   return StatusCode::SUCCESS;
@@ -117,7 +117,7 @@ StatusCode OTFillRawEvent::execute()
 StatusCode OTFillRawEvent::finalize() 
 {      
   // clear all containers used in the process and delete all new objects:
-  typedef mBank::iterator Iter;
+  typedef OTBank::iterator Iter;
   for (Iter iBank = m_dataContainer.begin(); iBank != m_dataContainer.end(); ++iBank) {
     delete iBank->second;
   }
@@ -132,45 +132,40 @@ StatusCode OTFillRawEvent::finalize()
 }
 
 //-----------------------------------------------------------------------------
-StatusCode OTFillRawEvent::sortMcTimesIntoBanks()
+void OTFillRawEvent::sortMcTimesIntoBanks()
 {
   // Retrieve MCOTTime and sort them into banks
-  MCOTTimes* mcTime = get<MCOTTimes>( MCOTTimeLocation::Default ); 
+  MCOTTimes* times = get<MCOTTimes>( MCOTTimeLocation::Default ); 
   
-  vmcOTime::iterator iTime  = mcTime->begin();
-  for ( ; iTime != mcTime->end(); ++iTime) {
-    mBank::iterator iBank = m_dataContainer.find(chID2int((*iTime)->channel()));
-    if (iBank != m_dataContainer.end()) iBank->second->push_back((*iTime));
+  if (times) {
+    VecMCOTTimes::iterator iTime  = times->begin();
+    for ( ; iTime != times->end(); ++iTime) {
+      OTBank::iterator iBank = m_dataContainer.find(chID2int((*iTime)->channel()));
+      if (iBank != m_dataContainer.end()) iBank->second->push_back((*iTime));
+    }
   }
-  
-  return StatusCode::SUCCESS;
 }
 
 //-------------------------------------------------------------------------
-StatusCode OTFillRawEvent::sortMcTimesIntoGol( vmcOTime* BankmcOTime )
+void OTFillRawEvent::sortMcTimesIntoGol(VecMCOTTimes* mcOTTimes)
 {
-  vmcOTime::iterator iTime = BankmcOTime->begin();
-  for ( ; iTime != BankmcOTime->end(); ++iTime) {
-    mGol::iterator iGol = m_goldatacontainer.find(((*iTime)->channel()).module());
+  VecMCOTTimes::iterator iTime = mcOTTimes->begin();
+  for ( ; iTime != mcOTTimes->end(); ++iTime) {
+    OTGol::iterator iGol = m_goldatacontainer.find(((*iTime)->channel()).module());
     if (iGol != m_goldatacontainer.end()) iGol->second->push_back((*iTime));
   }
-  
-  return StatusCode::SUCCESS;
 }  
 
 //-----------------------------------------------------------------
-StatusCode OTFillRawEvent::convertToRAWEmptyBank(dataBank* aBank)
+void OTFillRawEvent::convertToRAWEmptyBank(DataBank* aBank)
 {
   // Creating the Tell1 Headers - 1 word of 32 bits - I do not fill them...
   // 1 Tell header and 9 Gol headers
   aBank->insert(aBank->end(), 1+9, 0u);
-  
-  return StatusCode::SUCCESS;
 }
 
 //-----------------------------------------------------------------
-StatusCode OTFillRawEvent::convertToRAWDataBank(vmcOTime* vToConvert, 
-                                                 dataBank* aBank)
+void OTFillRawEvent::convertToRAWDataBank(VecMCOTTimes* mcOTTimes, DataBank* aBank)
 {
   // Creating the Tell1 Headers - 1 word of 32 bits - I do not fill them...
   aBank->push_back(0u);
@@ -183,19 +178,19 @@ StatusCode OTFillRawEvent::convertToRAWDataBank(vmcOTime* vToConvert,
   unsigned int size = 0u;
       
   // For each Bank Data we sort the MCOTTimes into Gol
-  sortMcTimesIntoGol(vToConvert);
+  sortMcTimesIntoGol(mcOTTimes);
 
   // loop the map GOL structure, retrieve the vmcOTime vectors 
-  mGol::iterator iGol = m_goldatacontainer.begin();
+  OTGol::iterator iGol = m_goldatacontainer.begin();
   for ( ; iGol != m_goldatacontainer.end(); ++iGol) {
     
-    vmcOTime* aGolMCTime = iGol->second;
+    VecMCOTTimes* times = iGol->second;
     // Valid gol
-    if (!(aGolMCTime->empty())) {
+    if (!(times->empty())) {
       // We need to get the location
       // One gol header per module
       // Get location of module; stored in header
-      MCOTTime* firstMCTime = aGolMCTime->front();
+      MCOTTime* firstMCTime = times->front();
       station = (firstMCTime->channel()).station();
       layer = (firstMCTime->channel()).layer();
       quarter = (firstMCTime->channel()).quarter();
@@ -208,7 +203,7 @@ StatusCode OTFillRawEvent::convertToRAWDataBank(vmcOTime* vToConvert,
       
       // Set gol size
       // If aGolMCTime->size is odd add 1, for padding!
-      size = (GSL_IS_EVEN(aGolMCTime->size())?(aGolMCTime->size()/2):((aGolMCTime->size()+1)/2));
+      size = (GSL_IS_EVEN(times->size())?(times->size()/2):((times->size()+1)/2));
 			 
       // format statement is always evaluated so check msg level
       if (msgLevel(MSG::DEBUG)) {
@@ -222,10 +217,10 @@ StatusCode OTFillRawEvent::convertToRAWDataBank(vmcOTime* vToConvert,
       aBank->push_back(golHeader.returnInt(golHeader));
       
       // The Hits -- Some useful definitions
-      vmcOTime* pCurrent = aGolMCTime;
-      vmcOTime::iterator iHitGolBegin = pCurrent->begin();
-      vmcOTime::iterator iHitGolEnd = pCurrent->end();
-      vmcOTime::iterator iTimeCurrent = iHitGolBegin;
+      VecMCOTTimes* pCurrent = times;
+      VecMCOTTimes::iterator iHitGolBegin = pCurrent->begin();
+      VecMCOTTimes::iterator iHitGolEnd = pCurrent->end();
+      VecMCOTTimes::iterator iTimeCurrent = iHitGolBegin;
       
       /* 
        * Now the hits
@@ -242,14 +237,14 @@ StatusCode OTFillRawEvent::convertToRAWDataBank(vmcOTime* vToConvert,
         unsigned int firstStrawID = ((firstTime->channel()).straw());
         int firstTdcTime = ((firstTime->channel()).tdcTime());
         
-	// Straw Number Conversion
-	// if first Otis id == 0 or 1
+        // Straw Number Conversion
+        // if first Otis id == 0 or 1
         firstStrawID = ( firstStrawID - 1 ) % 32;
-	// else
-	if ((firstOtisID == 2) || (firstOtisID == 3)) firstStrawID = 31 - firstStrawID;
+        // else
+        if ((firstOtisID == 2) || (firstOtisID == 3)) firstStrawID = 31 - firstStrawID;
 	
-	//Next 
-        vmcOTime::iterator iTimeNext = ++iTimeCurrent;
+        //Next 
+        VecMCOTTimes::iterator iTimeNext = ++iTimeCurrent;
         
         //First we get Otis and Straw Number
         unsigned int nextOtisID = 0u;
@@ -270,46 +265,43 @@ StatusCode OTFillRawEvent::convertToRAWDataBank(vmcOTime* vToConvert,
            */
 	  
           // If otis id == 0 or 1
-	  nextStrawID = ( nextStrawID - 1 ) % 32;
-	  // else 
-	  if ((nextOtisID == 2) || (nextOtisID == 3)) nextStrawID = 31 - nextStrawID;
-    	}// nextotisid
+          nextStrawID = ( nextStrawID - 1 ) % 32;
+          // else 
+          if ((nextOtisID == 2) || (nextOtisID == 3)) nextStrawID = 31 - nextStrawID;
+        }// nextotisid
 
         // format statement is always evaluated so check msg level
         if (msgLevel(MSG::DEBUG)) {
-        debug() << " We Get " << format("firstOtisID %d, firstStrawID %d, firstTime %d," 
-					" nextOtisID %d, nextStrawID %d, nextTime %d",
-					firstOtisID, firstStrawID, firstTdcTime,
-					nextOtisID, nextStrawID, nextTdcTime) << endmsg;
+          debug() << " We Get " << format("firstOtisID %d, firstStrawID %d, firstTime %d," 
+                                          " nextOtisID %d, nextStrawID %d, nextTime %d",
+                                          firstOtisID, firstStrawID, firstTdcTime,
+                                          nextOtisID, nextStrawID, nextTdcTime) << endmsg;
         }
         
-        DataWord dataWord (1, firstOtisID, firstStrawID, firstTdcTime, 
-                           0, nextOtisID, nextStrawID, nextTdcTime);
-	
-	/// insert dataword
-	aBank->push_back(dataWord.returnInt(dataWord));
+        DataWord dataWord(1, firstOtisID, firstStrawID, firstTdcTime, 0, nextOtisID, nextStrawID, nextTdcTime);
+        
+        /// insert dataword
+        aBank->push_back(dataWord.returnInt(dataWord));
         
         if (iTimeNext != iHitGolEnd) ++iTimeCurrent;
         
       } //while loop over MCOTTimes
       
-      aGolMCTime->clear();
+      times->clear();
 			   
     } else {
       // zero hits in module
       if (msgLevel(MSG::DEBUG)) {
         module = iGol->first;
-        debug() << " NO HIT IN MODULE " << module <<endmsg;
+        debug() << " NO HIT IN MODULE " << module << endmsg;
       }
     }
   } // GOL Loop
-
-  return StatusCode::SUCCESS;
 }
 
-int OTFillRawEvent::chID2Otis(OTChannelID otChannel)
+int OTFillRawEvent::chID2Otis(const OTChannelID& aChannel)
 {    
-  unsigned int nStraw = otChannel.straw();
+  unsigned int nStraw = aChannel.straw();
   
   //We get the OtisID from the Straw Number
   // left to right
@@ -330,8 +322,8 @@ int OTFillRawEvent::chID2Otis(OTChannelID otChannel)
   return OtisID;
 }
 
-int OTFillRawEvent::chID2int(OTChannelID otChannel) {    
+int OTFillRawEvent::chID2int(const OTChannelID& aChannel) {    
   /// Tell1 numbering starts from 1 to 48
-  return ((otChannel.station() - 1)*16 + otChannel.layer()*4 + (otChannel.quarter()+1));
+  return ((aChannel.station() - 1)*16 + aChannel.layer()*4 + (aChannel.quarter()+1));
 }
 

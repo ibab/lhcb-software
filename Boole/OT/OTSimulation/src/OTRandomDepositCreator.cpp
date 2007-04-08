@@ -1,4 +1,4 @@
-// $Id: OTRandomDepositCreator.cpp,v 1.14 2006-06-21 14:36:29 janos Exp $
+// $Id: OTRandomDepositCreator.cpp,v 1.15 2007-04-08 16:54:51 janos Exp $
 
 // Gaudi files
 #include "GaudiKernel/ToolFactory.h"
@@ -99,8 +99,7 @@ StatusCode OTRandomDepositCreator::initialize()
   return StatusCode::SUCCESS;  
 }
 
-StatusCode OTRandomDepositCreator::createDeposits(MCOTDepositVec* depVector)
-  const 
+void OTRandomDepositCreator::createDeposits(MCOTDepositVec* depVector) const 
 {
   // get number of modules 
   std::vector<DeOTModule*> otModules =  m_tracker->modules();
@@ -122,8 +121,6 @@ StatusCode OTRandomDepositCreator::createDeposits(MCOTDepositVec* depVector)
       depVector->push_back(newDeposit);
     }
   } // iDep
-
-  return StatusCode::SUCCESS;  
 }
 
 unsigned int OTRandomDepositCreator::nNoiseHits() const

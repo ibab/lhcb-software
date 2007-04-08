@@ -1,4 +1,4 @@
-// $Id: OTEffCalculator.h,v 1.5 2006-02-03 16:44:23 janos Exp $
+// $Id: OTEffCalculator.h,v 1.6 2007-04-08 16:54:51 janos Exp $
 #ifndef OTSIMULATION_OTEFFCALCULATOR_H
 #define OTSIMULATION_OTEFFCALCULATOR_H 1
 
@@ -46,7 +46,7 @@ public:
   virtual StatusCode initialize();
 
   /// tool 'operation' - returns false if hit is to be killed 
-  StatusCode calculate(LHCb::MCOTDeposit* aDeposit, bool& iAccept);
+  void calculate(LHCb::MCOTDeposit* aDeposit, bool& accept);
   
 private:
 

@@ -1,4 +1,4 @@
-// $Id: IOTrtRelation.h,v 1.1 2006-01-20 15:44:45 cattanem Exp $
+// $Id: IOTrtRelation.h,v 1.2 2007-04-08 16:54:51 janos Exp $
 #ifndef OTSIMULATION_IOTRTRELATION_H 
 #define OTSIMULATION_IOTRTRELATION_H 1
 
@@ -20,13 +20,14 @@ static const InterfaceID IID_IOTrtRelation( "IOTrtRelation", 1, 0 );
  *  @author Marco Cattaneo
  *  @date   08/01/2002
  */
+
 class IOTrtRelation : virtual public IAlgTool {
 public:
   /// Retrieve interface ID
   static const InterfaceID& interfaceID() { return IID_IOTrtRelation; }
 
   /// tool 'operation'. Fills the deposit time entry.
-  virtual StatusCode convertRtoT(LHCb::MCOTDeposit* aDeposit) = 0;
+  virtual void convertRtoT(LHCb::MCOTDeposit* aDeposit) = 0;
   
   /// r-t relation with correction for the magnetic field
   virtual double driftTime(const double driftDist,const Gaudi::XYZPoint& aPoint) = 0;

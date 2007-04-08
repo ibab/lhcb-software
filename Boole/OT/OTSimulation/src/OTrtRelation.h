@@ -1,4 +1,4 @@
-// $Id: OTrtRelation.h,v 1.6 2006-02-03 16:44:24 janos Exp $
+// $Id: OTrtRelation.h,v 1.7 2007-04-08 16:54:52 janos Exp $
 #ifndef OTSIMULATION_OTRTRELATION_H
 #define OTSIMULATION_OTRTRELATION_H 1
 
@@ -46,7 +46,7 @@ public:
   virtual StatusCode initialize();
 
   /// tool 'operation'. Fills the deposit time entry.
-  StatusCode convertRtoT(LHCb::MCOTDeposit* aDeposit);
+  void convertRtoT(LHCb::MCOTDeposit* aDeposit);
   
   /// r-t relation with correction for the magnetic field
   double driftTime(const double driftDist, const Gaudi::XYZPoint& aPoint);
