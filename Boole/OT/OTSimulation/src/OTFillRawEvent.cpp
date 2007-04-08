@@ -137,12 +137,10 @@ void OTFillRawEvent::sortMcTimesIntoBanks()
   // Retrieve MCOTTime and sort them into banks
   MCOTTimes* times = get<MCOTTimes>( MCOTTimeLocation::Default ); 
   
-  if (times) {
-    VecMCOTTimes::iterator iTime  = times->begin();
-    for ( ; iTime != times->end(); ++iTime) {
-      OTBank::iterator iBank = m_dataContainer.find(chID2int((*iTime)->channel()));
-      if (iBank != m_dataContainer.end()) iBank->second->push_back((*iTime));
-    }
+  VecMCOTTimes::iterator iTime  = times->begin();
+  for ( ; iTime != times->end(); ++iTime) {
+    OTBank::iterator iBank = m_dataContainer.find(chID2int((*iTime)->channel()));
+    if (iBank != m_dataContainer.end()) iBank->second->push_back((*iTime));
   }
 }
 
