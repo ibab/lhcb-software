@@ -1,4 +1,4 @@
-// $Id: MCOTDepositMonitor.h,v 1.6 2007-02-26 15:46:08 cattanem Exp $
+// $Id: MCOTDepositMonitor.h,v 1.7 2007-04-08 17:00:48 janos Exp $
 #ifndef OTMONITOR_MCOTDEPOSITMONITOR_H
 #define OTMONITOR_MCOTDEPOSITMONITOR_H 1
 
@@ -49,10 +49,10 @@ public:
 private:
 
   /// book the histograms
-  StatusCode initHistograms();
+  void initHistograms();
 
   /// fill the histograms
-  StatusCode fillHistograms( LHCb::MCOTDeposit* aDeposit );
+  void fillHistograms( LHCb::MCOTDeposit* aDeposit );
 
   int m_nCrossTalkHits;  ///< count the number of XTalk hits
   int m_nStations;       ///< number of stations (from geometry)

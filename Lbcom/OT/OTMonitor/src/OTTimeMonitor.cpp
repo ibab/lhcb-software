@@ -1,4 +1,4 @@
-// $Id: OTTimeMonitor.cpp,v 1.8 2006-07-21 08:06:07 janos Exp $
+// $Id: OTTimeMonitor.cpp,v 1.9 2007-04-08 17:00:48 janos Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -63,7 +63,7 @@ StatusCode OTTimeMonitor::initialize() {
   m_firstStation = m_tracker->firstStation();
 
   // intialize histos
-  this->initHistograms();
+  initHistograms();
 
   // Store number of channels (per station, layer etc)
   m_nChannelsTopModule.resize(40, 0);
@@ -123,7 +123,7 @@ StatusCode OTTimeMonitor::finalize()
 }
 
   
-StatusCode OTTimeMonitor::initHistograms() {
+void OTTimeMonitor::initHistograms() {
  
   // Intialize histograms
   // number of Times in container
@@ -169,11 +169,9 @@ StatusCode OTTimeMonitor::initHistograms() {
     // occupancy versus x coordinate in T3 layer 1  
     m_occVsxHisto = book(31, "Hit occupancy in T3 layer 1 vs x", 0.0, 2984.625/Gaudi::Units::cm, 50);
   }
-  
-  return StatusCode::SUCCESS;
 }
 
-StatusCode OTTimeMonitor::fillHistograms(OTTime* aTime) {
+void OTTimeMonitor::fillHistograms(OTTime* aTime) {
   
   // Times and occupancy per station
   OTChannelID channel = aTime->channel();
@@ -221,7 +219,4 @@ StatusCode OTTimeMonitor::fillHistograms(OTTime* aTime) {
   
   // calibrated time for every station
   m_calTimeHistos[iStation-m_firstStation]->fill(aTime->calibratedTime());
-
-  // end
-  return StatusCode::SUCCESS;
 }

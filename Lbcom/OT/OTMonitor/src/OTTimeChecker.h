@@ -1,4 +1,4 @@
-// $Id: OTTimeChecker.h,v 1.5 2006-04-11 19:23:16 janos Exp $
+// $Id: OTTimeChecker.h,v 1.6 2007-04-08 17:00:48 janos Exp $
 #ifndef OTMONITOR_OTTIMECHECKER_H
 #define OTMONITOR_OTTIMECHECKER_H 1
 
@@ -59,11 +59,11 @@ public:
 private:
  
   /// book the histograms
-  StatusCode initHistograms();
+  void initHistograms();
 
   /// fill the resolution histograms
-  StatusCode fillResolutionHistos( LHCb::OTTime* time,
-				   const LHCb::MCHit* aHit );
+  void fillResolutionHistos( LHCb::OTTime* time,
+                             const LHCb::MCHit* aHit );
 
   /// Struct for storing the time multiplicity of a MCHit
   struct HitMultiplicity{int mult ; const LHCb::MCHit* mcHit; };

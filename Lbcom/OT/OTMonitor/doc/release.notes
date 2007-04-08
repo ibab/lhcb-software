@@ -1,6 +1,9 @@
 Package         : OTMonitor
 Package manager : J. Nardulli
 
+! 2007-04-08 - Jan Amoraal
+ - Fix unchecked status codes
+
 !==================== OTMonitor v2r4 2006-03-05 =====================
 ! 2007-03-05 - Marco Cattaneo
  - Remove obsolete OTMonitor_load.cpp file

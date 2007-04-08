@@ -1,4 +1,4 @@
-// $Id: OTTimeMonitor.h,v 1.6 2006-07-21 08:06:07 janos Exp $
+// $Id: OTTimeMonitor.h,v 1.7 2007-04-08 17:00:49 janos Exp $
 #ifndef OTMONITOR_OTTIMEMONITOR_H
 #define OTMONITOR_OTTIMEMONITOR_H 1
 
@@ -50,10 +50,10 @@ class OTTimeMonitor : public GaudiHistoAlg {
  private:
 
   /// book the histograms
-  StatusCode initHistograms();
+  void initHistograms();
 
   /// fill the histograms
-  StatusCode fillHistograms(LHCb::OTTime* aTime);
+  void fillHistograms(LHCb::OTTime* aTime);
  
   /// Geometry
   DeOTDetector* m_tracker;

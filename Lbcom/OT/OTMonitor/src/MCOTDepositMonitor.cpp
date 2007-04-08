@@ -1,4 +1,4 @@
-// $Id: MCOTDepositMonitor.cpp,v 1.11 2007-02-26 15:46:08 cattanem Exp $
+// $Id: MCOTDepositMonitor.cpp,v 1.12 2007-04-08 17:00:48 janos Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -69,7 +69,7 @@ StatusCode MCOTDepositMonitor::initialize() {
   m_firstStation = tracker->firstStation();  
 
   // intialize histos
-  this->initHistograms();
+  initHistograms();
 
   return StatusCode::SUCCESS;
 }
@@ -93,7 +93,7 @@ StatusCode MCOTDepositMonitor::execute() {
   return StatusCode::SUCCESS;
 }
 
-StatusCode MCOTDepositMonitor::initHistograms() {
+void MCOTDepositMonitor::initHistograms() {
  
   // number of deposits in container
   m_nDepositsHisto = book(1, "Number of deposits",0., 20000., 200);
@@ -128,11 +128,9 @@ StatusCode MCOTDepositMonitor::initHistograms() {
       m_yvsxHistos.push_back(aHisto2D);
     }
   }
-
-  return StatusCode::SUCCESS;
 }
 
-StatusCode MCOTDepositMonitor::fillHistograms( LHCb::MCOTDeposit* aDeposit ) {
+void MCOTDepositMonitor::fillHistograms( LHCb::MCOTDeposit* aDeposit ) {
   
   // per layer
   int iStation = (aDeposit->channel()).station();
@@ -146,15 +144,6 @@ StatusCode MCOTDepositMonitor::fillHistograms( LHCb::MCOTDeposit* aDeposit ) {
   
   aHit?m_driftDistHisto->fill(aDeposit->driftDistance()):++m_nCrossTalkHits;
   
-  // if (0 != aHit) {
-//     // drift distance
-//     m_driftDistHisto->fill(aDeposit->driftDistance());
-//     // aHit valid 
-//   } else {
-//     // crosstalk hit
-//     ++m_nCrossTalkHits;
-//   }
-  
   if ( fullDetail() ) {
      // histogram per station
     m_nHitsPerStationHisto->fill(double(iStation));
@@ -166,6 +155,4 @@ StatusCode MCOTDepositMonitor::fillHistograms( LHCb::MCOTDeposit* aDeposit ) {
       m_yvsxHistos[iStation-m_firstStation]->fill(mcHitPoint.x()/Gaudi::Units::cm, mcHitPoint.y()/Gaudi::Units::cm);
     }
   }
- 
-  return StatusCode::SUCCESS;
 }

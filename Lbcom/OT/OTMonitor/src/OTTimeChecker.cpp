@@ -1,4 +1,4 @@
-// $Id: OTTimeChecker.cpp,v 1.11 2006-07-21 08:06:07 janos Exp $
+// $Id: OTTimeChecker.cpp,v 1.12 2007-04-08 17:00:48 janos Exp $
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/SystemOfUnits.h"
@@ -241,7 +241,7 @@ StatusCode OTTimeChecker::execute() {
   return StatusCode::SUCCESS;
 }
 
-StatusCode OTTimeChecker::initHistograms() {
+void OTTimeChecker::initHistograms() {
   
   // Intialize histograms
   m_effHisto = book(100, "Efficiency for 1 hits or more", -0.005, 1.005, 101);
@@ -260,11 +260,9 @@ StatusCode OTTimeChecker::initHistograms() {
 			     -5.0, 405., 41);
     m_partMultHisto = book(204, "Number of times per MCParticle", -0.5, 100.5, 101);
   }
-  
-  return StatusCode::SUCCESS;
 }
 
-StatusCode OTTimeChecker::fillResolutionHistos(OTTime* time, const MCHit* aHit) {
+void OTTimeChecker::fillResolutionHistos(OTTime* time, const MCHit* aHit) {
   // get the distance to the wire from MCHit
   const OTChannelID channel = time->channel();
   DeOTModule* module = m_tracker->findModule( channel );
@@ -274,20 +272,19 @@ StatusCode OTTimeChecker::fillResolutionHistos(OTTime* time, const MCHit* aHit) 
   
   double deltaZ = (exitP - entryP).z();
   // 2.45 == cell radius
-  if (deltaZ < 2.45) return StatusCode::SUCCESS; // curling track inside layer
-  const double tx = (exitP - entryP).x() / deltaZ;
-  const double ty = (exitP - entryP).y() / deltaZ;
-  double mcDist = module->distanceToWire(channel.straw(), entryP, tx, ty);
+  if (!(deltaZ < 2.45)) {
+    const double tx = (exitP - entryP).x() / deltaZ;
+    const double ty = (exitP - entryP).y() / deltaZ;
+    double mcDist = module->distanceToWire(channel.straw(), entryP, tx, ty);
 
-  // get the distance to the wire from the measurement
-  double driftTime = time->calibratedTime() - 
-    m_tracker->propagationTime(channel, middleP.x(), middleP.y() );
-  double measDist = m_tracker->driftDistance( driftTime );  
+    // get the distance to the wire from the measurement
+    double driftTime = time->calibratedTime() - 
+      m_tracker->propagationTime(channel, middleP.x(), middleP.y() );
+    double measDist = m_tracker->driftDistance( driftTime );  
   
-  // Get the cheated ambiguity
-  int ambiguity = ((mcDist < 0.0) ? -1 : 1);
+    // Get the cheated ambiguity
+    int ambiguity = ((mcDist < 0.0) ? -1 : 1);
 
-  m_resHisto->fill( ambiguity*measDist - mcDist );
-
-  return StatusCode::SUCCESS;
+    m_resHisto->fill( ambiguity*measDist - mcDist );
+  }
 }
