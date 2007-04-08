@@ -2,6 +2,9 @@ Package         : OTDAQ
 Package manager : J. Nardulli
 !---------------------------------------------------------------------
 
+! 2007-04-08 - Jan Amoraal
+ - Fix unchecked status codes
+
 !======================= OTDAQ v5r1 2007-03-05 ======================
 ! 2007-03-05 - Marco Cattaneo
  - Remove obsolete OTDAQ_load.cpp file

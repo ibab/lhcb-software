@@ -1,4 +1,4 @@
-// $Id: OTTimeCreator.cpp,v 1.16 2006-11-07 09:01:21 mneedham Exp $
+// $Id: OTTimeCreator.cpp,v 1.17 2007-04-08 16:58:03 janos Exp $
 // Include files
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -96,22 +96,19 @@ StatusCode OTTimeCreator::execute() {
   for ( ibank = OTBanks.begin(); ibank != OTBanks.end(); ++ibank) {
     // get bank version
     int bVersion = (*ibank)->version();
-    // Check the bank version
-    if  (!(bVersion == OTBankVersion::v1) && !(bVersion == OTBankVersion::v2)) {
+    // Check bank version
+    if (bVersion == OTBankVersion::v1) {
+      //set up decoding with one header word
+      nTell1 = 3;
+    } else if (bVersion == OTBankVersion::v2 ) {
+      //set up decoding with one header word
+      nTell1 = 1;
+    } else {
       error() << "Cannot decode OT raw buffer bank version "
               << bVersion << " with this version of OTDAQ" << endmsg;
       return StatusCode::FAILURE;
     }
-    
-    if (bVersion == OTBankVersion::v1) {
-      //set up decoding with one header word
-      nTell1 = 3;
-    } 
-    else if (bVersion == OTBankVersion::v2 ) {
-      //set up decoding with one header word
-      nTell1 = 1;
-    } 
-        
+            
     // get number of banks 
     unsigned int bankSize = (*ibank)->size();
 
@@ -167,9 +164,9 @@ StatusCode OTTimeCreator::execute() {
 };
 
 //=============================================================================
-StatusCode OTTimeCreator::raw2OTTime(const int station, const int layer, const int quarter,
-                                     const int module, const DataWord dataWord,
-                                     OTTimes& times) const
+void OTTimeCreator::raw2OTTime(const int station, const int layer, const int quarter,
+                               const int module, const DataWord dataWord,
+                               OTTimes& times) const
 {
   //getting data word information using the mask
   int nextTime = dataWord.nextTime();
@@ -182,14 +179,14 @@ StatusCode OTTimeCreator::raw2OTTime(const int station, const int layer, const i
   //Get Straw numbers
   int Fstraw  = getStrawID(firstOtisID, firstChannelID);  
   int Nstraw = ((nextTime==0 && nextOtisID==0 && nextChannelID==0)?0
-		:getStrawID(nextOtisID, nextChannelID));
+                :getStrawID(nextOtisID, nextChannelID));
   
   // format statement is always evaluated so check msg level
   if (msgLevel(MSG::DEBUG)) {
-  debug() << " OTTIME " << format("firstOtisID %d, firstStrawID %d, firstTime %d, " 
-				  "nextOtisID %d, nextStrawID %d, nextTime %d",
-				  firstOtisID, firstChannelID, firstTime,
-				  nextOtisID, nextChannelID, nextTime) << endmsg;  
+    debug() << " OTTIME " << format("firstOtisID %d, firstStrawID %d, firstTime %d, " 
+                                    "nextOtisID %d, nextStrawID %d, nextTime %d",
+                                    firstOtisID, firstChannelID, firstTime,
+                                    nextOtisID, nextChannelID, nextTime) << endmsg;  
   }
   
   //Get First ChannelID  
@@ -207,19 +204,15 @@ StatusCode OTTimeCreator::raw2OTTime(const int station, const int layer, const i
     // make times
     createTimes(nchannelID, times);
   }
-  
-  return StatusCode::SUCCESS;
 }
 
 //==========================================================================
-StatusCode OTTimeCreator::createTimes(const OTChannelID aChan, OTTimes& times) const
+void OTTimeCreator::createTimes(const OTChannelID aChan, OTTimes& times) const
 {
   /// conversion from tdc counts to seconds
   double unCorrectedTime = aChan.tdcTime()*m_tdcConversion;
   double correctTime = (m_tofCorrection?correctedTime(aChan,unCorrectedTime):unCorrectedTime); 
   times.insert(new OTTime(aChan, correctTime));
-  
-  return StatusCode::SUCCESS;
 }
 
 //==========================================================================
@@ -248,20 +241,10 @@ int OTTimeCreator::getStrawID(const int otisID, const int channel) const{
    * form 0 to 31. The second numberig scheme is the Eletronic Numberig Scheme.
    */
   
-  int straw = 0;
-  if ((otisID == 0) || (otisID == 1)) {
-    straw = (channel + 1) + otisID * 32;
-  }  
-  else if ((otisID == 3) || (otisID == 2)) {
-    int tempstraw = (31 - channel) ;
-    int tempOtis = 0;
-    if (otisID == 2) {
-      tempOtis =  3 * 32;
-    }
-    else {
-      tempOtis =  2 * 32;
-    }
-    straw = tempstraw + tempOtis + 1;
-  }
+  /// If otisID == 0 or otisID == 1
+  int straw = (channel + 1) + 32 * otisID;  
+  /// If otisID == 2 or otisID == 3
+  if (2 == otisID || 3 == otisID) straw = (32 - channel) + 32 * (5-otisID);
+
   return (straw);
 }

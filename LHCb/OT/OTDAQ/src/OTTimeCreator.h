@@ -1,4 +1,4 @@
-// $Id: OTTimeCreator.h,v 1.9 2006-11-07 09:01:21 mneedham Exp $
+// $Id: OTTimeCreator.h,v 1.10 2007-04-08 16:58:03 janos Exp $
 #ifndef OTDAQ_OTTIMECREATOR_H 
 #define OTDAQ_OTTIMECREATOR_H 1
 
@@ -45,11 +45,11 @@ protected:
 private:
   
   // From Raw to OTTime
-  StatusCode raw2OTTime(const int station, const int layer, const int quarter, const int module, 
-                        const LHCb::DataWord dataWord, LHCb::OTTimes& times) const;
+  void raw2OTTime(const int station, const int layer, const int quarter, const int module, 
+                  const LHCb::DataWord dataWord, LHCb::OTTimes& times) const;
 
   /// Make the OTTimes
-  StatusCode createTimes(const LHCb::OTChannelID aChan, LHCb::OTTimes& time) const;
+  void createTimes(const LHCb::OTChannelID aChan, LHCb::OTTimes& time) const;
 
   /// t0 calibration
   double correctedTime(const LHCb::OTChannelID aChan, 
