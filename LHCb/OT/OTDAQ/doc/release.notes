@@ -2,6 +2,7 @@ Package         : OTDAQ
 Package manager : J. Nardulli
 !---------------------------------------------------------------------
 
+!======================= OTDAQ v5r2 2007-04-10 ======================
 ! 2007-04-08 - Jan Amoraal
  - Fix unchecked status codes
 

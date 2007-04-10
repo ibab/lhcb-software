@@ -1,4 +1,4 @@
-// $Id: OTTimeCreator.cpp,v 1.17 2007-04-08 16:58:03 janos Exp $
+// $Id: OTTimeCreator.cpp,v 1.18 2007-04-10 15:21:51 cattanem Exp $
 // Include files
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -98,7 +98,7 @@ StatusCode OTTimeCreator::execute() {
     int bVersion = (*ibank)->version();
     // Check bank version
     if (bVersion == OTBankVersion::v1) {
-      //set up decoding with one header word
+      //set up decoding with three header words
       nTell1 = 3;
     } else if (bVersion == OTBankVersion::v2 ) {
       //set up decoding with one header word
