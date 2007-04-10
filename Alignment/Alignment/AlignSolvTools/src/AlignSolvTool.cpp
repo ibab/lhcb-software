@@ -1,4 +1,4 @@
-// $Id: AlignSolvTool.cpp,v 1.2 2007-03-07 13:09:15 ahicheur Exp $
+// $Id: AlignSolvTool.cpp,v 1.3 2007-04-10 06:46:12 ahicheur Exp $
 // Include files 
 
 #include <stdio.h>
@@ -132,7 +132,7 @@ int AlignSolvTool::SolvSpmInv(AlSymMat& M, AlVec& B)
              
     if (k >= 0)    // pivot found
     {      
-      std::cout << "Pivot value :" << vkk << std::endl;
+      debug() << "Pivot value :" << vkk << endmsg;
       nrank++;
       flag[k] = false; // This value is used
       vkk = 1.0/vkk;

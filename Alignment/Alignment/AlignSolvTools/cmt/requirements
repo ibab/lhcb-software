@@ -9,7 +9,7 @@ use cernlib v* LCG_Interfaces
 use GSL v* LCG_Interfaces 
 use GaudiKernel    v*
 use GaudiAlg       v*
-use GaudiGSL            v6r4         -no_auto_imports
+use GaudiGSL            v*         -no_auto_imports
 
 use MCEvent        v* Event
 use HbookCnv v*

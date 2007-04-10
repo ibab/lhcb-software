@@ -1,4 +1,4 @@
-// $Id: AlignSolvTools_load.cpp,v 1.2 2007-03-07 13:09:15 ahicheur Exp $
+// $Id: AlignSolvTools_load.cpp,v 1.3 2007-04-10 06:46:12 ahicheur Exp $
 // Include files 
 
 
@@ -15,6 +15,5 @@
 
 DECLARE_FACTORY_ENTRIES(AlignSolvTools) {
   DECLARE_TOOL(AlignSolvTool);
-  //  DECLARE_ALGORITHM( SolvExample );
-  
+  DECLARE_ALGORITHM( SolvExample );  
 }
