@@ -43,12 +43,6 @@
   
   <class pattern="Solid*" />
 
-  <class name="DeVelo"        />
-  <class name="DeVeloSensor"  />
-  <class name="DeVeloPhiType" />
-  <class name="DeVeloRType"   />
-
-
   <class name="DeCalorimeter"    />
   <class name="DeSubCalorimeter" />
   <class name="CellParam"        />
@@ -59,22 +53,6 @@
   <class name="DeOTLayer"        />
   <class name="DeOTModule"       />
   <class name="DeOTQuarter"      />
-
-  <class name="DeSTDetector"      />
-  <class name="DeITDetector"      />
-  <class name="DeTTDetector"      />
-  <class name="DeSTStation"       />
-  <class name="DeITStation"       />
-  <class name="DeTTStation"       />
-  <class name="DeSTBaseElement" />
-  <class name="DeSTLayer"         />
-  <class name="DeITLayer"         />
-  <class name="DeTTLayer"         />
-  <class name="DeSTSector"        />
-  <class name="DeITSector"        />
-  <class name="DeTTSector"        />
-  <class name="DeITBox"           />
-  <class name="DeTTHalfModule"    />
 
   <class name="DeRich"                    />
   <class name="DeRich1"                   />

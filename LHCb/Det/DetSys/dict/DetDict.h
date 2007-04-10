@@ -1,4 +1,4 @@
-// $Id: DetDict.h,v 1.19 2007-01-19 15:43:45 jpalac Exp $
+// $Id: DetDict.h,v 1.20 2007-04-10 15:43:40 cattanem Exp $
 // ============================================================================
 #ifndef DETSYS_DETDICT_H 
 #define DETSYS_DETDICT_H 1
@@ -73,14 +73,6 @@
 #include "DetDesc/SlowControlInfo.h"
 #include "DetDesc/SimpleValidity.h"
 // ============================================================================
-// VeloDet
-// ============================================================================
-#include "Kernel/VeloChannelID.h"
-#include "VeloDet/DeVelo.h"
-#include "VeloDet/DeVeloSensor.h"
-#include "VeloDet/DeVeloPhiType.h"
-#include "VeloDet/DeVeloRType.h"
-// ============================================================================
 // CaloDet 
 // ============================================================================
 #include "CaloDet/DeCalorimeter.h"
@@ -93,25 +85,6 @@
 #include "OTDet/DeOTLayer.h"
 #include "OTDet/DeOTQuarter.h"
 #include "OTDet/DeOTStation.h"
-// ============================================================================
-// STDet
-// ============================================================================
-#include "Kernel/STChannelID.h"
-#include "STDet/DeSTDetector.h"
-#include "STDet/DeTTDetector.h"
-#include "STDet/DeITDetector.h"
-#include "STDet/DeSTBaseElement.h"
-#include "STDet/DeSTStation.h"
-#include "STDet/DeTTStation.h"
-#include "STDet/DeITStation.h"
-#include "STDet/DeSTLayer.h"
-#include "STDet/DeTTLayer.h"
-#include "STDet/DeITLayer.h"
-#include "STDet/DeSTSector.h"
-#include "STDet/DeTTSector.h"
-#include "STDet/DeITSector.h"
-#include "STDet/DeITBox.h"
-#include "STDet/DeTTHalfModule.h"
 
 // ============================================================================
 // RichDet 

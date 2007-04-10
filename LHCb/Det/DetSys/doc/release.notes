@@ -4,9 +4,13 @@
 ! Purpose     : collect Det packages and build corresponding dictionaries
 !-----------------------------------------------------------------------------
 
-!========================= DetSys v9r4 2007-03-28 ============================
+!========================= DetSys v9r4 2007-04-10 ============================
+! 2007-04-10 - Marco Cattaneo
+ - Generation of dictionaries for STDet and VeloDet classes moved to STDet and 
+   VeloDet packages respectively
+
 ! 2007-03-28 - Marco Cattaneo
- - Use VeloDet v11r2
+ - Use STDet v3r3, VeloDet v11r2
 
 !========================= DetSys v9r3 2007-03-20 ============================
 ! 2007-03-20 - Marco Cattaneo
