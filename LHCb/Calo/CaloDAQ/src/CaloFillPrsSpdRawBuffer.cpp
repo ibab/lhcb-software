@@ -1,4 +1,4 @@
-// $Id: CaloFillPrsSpdRawBuffer.cpp,v 1.13 2007-02-28 22:44:34 odescham Exp $
+// $Id: CaloFillPrsSpdRawBuffer.cpp,v 1.14 2007-04-10 22:47:33 odescham Exp $
 // Include files 
 #include "Event/RawEvent.h"
 
@@ -262,6 +262,7 @@ void CaloFillPrsSpdRawBuffer::fillTriggerBankShort ( ) {
 
   LHCb::L0PrsSpdHits* prs = get<LHCb::L0PrsSpdHits>( m_prsBank );
   LHCb::L0PrsSpdHits* spd = get<LHCb::L0PrsSpdHits>( m_spdBank );
+
   std::vector<int> tag( 3*4096, 0 );  //== 3 area, 4096 max per area
 
   LHCb::L0PrsSpdHits::const_iterator itT;
@@ -278,6 +279,7 @@ void CaloFillPrsSpdRawBuffer::fillTriggerBankShort ( ) {
   }
 
   unsigned int word = 0;
+
   for ( std::vector<int>::const_iterator itW = tag.begin() ; 
         tag.end() != itW ; ++itW ) {
     if ( 0 == (*itW) ) continue;
@@ -290,6 +292,7 @@ void CaloFillPrsSpdRawBuffer::fillTriggerBankShort ( ) {
       word = 0;
     }
   }
+  if( 0 != word )m_trigBanks[0].push_back( word );  // OD : add last word when incomplete
 }
 
 //=========================================================================

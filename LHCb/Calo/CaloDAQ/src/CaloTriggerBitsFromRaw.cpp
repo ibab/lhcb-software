@@ -1,4 +1,4 @@
-// $Id: CaloTriggerBitsFromRaw.cpp,v 1.13 2007-02-28 22:44:34 odescham Exp $
+// $Id: CaloTriggerBitsFromRaw.cpp,v 1.14 2007-04-10 22:47:33 odescham Exp $
 // Include files
 
 // from Gaudi
@@ -127,10 +127,6 @@ LHCb::Calo::PrsSpdFiredCells& CaloTriggerBitsFromRaw::prsSpdCells (  LHCb::RawBa
 //  Main decoding method fill both m_prsCells and m_spdCells containers.
 //=========================================================================
 StatusCode CaloTriggerBitsFromRaw::getData(  LHCb::RawBank* bank ) {
-
-  LHCb::Calo::FiredCells  prsCells;
-  LHCb::Calo::FiredCells  spdCells;
-
   unsigned int* data = bank->data();
   int size           = bank->size()/4;  // size in byte
   int version        = bank->version();
@@ -157,8 +153,8 @@ StatusCode CaloTriggerBitsFromRaw::getData(  LHCb::RawBank* bank ) {
           LHCb::CaloCellID id( lastID+kk );
           LHCb::CaloCellID spdId( (lastID+kk) & 0x3FFF );
 
-          if ( spdData & 1 ) spdCells.push_back( spdId);
-          if ( prsData & 1 ) prsCells.push_back( id ); 
+          if ( spdData & 1 ) m_data.second.push_back( spdId);
+          if ( prsData & 1 ) m_data.first.push_back( id ); 
  
 
           //event dump
@@ -196,10 +192,10 @@ StatusCode CaloTriggerBitsFromRaw::getData(  LHCb::RawBank* bank ) {
         
         if ( 0 != (item & 2) ) {
           LHCb::CaloCellID id ( spdId );   // SPD
-          spdCells.push_back( id );
+          m_data.second.push_back( id );
         }
         if ( 0 != (item & 1) ) {
-          prsCells.push_back( prsId );
+          m_data.first.push_back( prsId );
         }
       }
       ++data;
@@ -262,10 +258,10 @@ StatusCode CaloTriggerBitsFromRaw::getData(  LHCb::RawBank* bank ) {
         }
 
 
-        if ( 0 != isPrs ) prsCells.push_back( id );
+        if ( 0 != isPrs ) m_data.first.push_back( id );
         if ( 0 != isSpd ) {
           LHCb::CaloCellID spdId( 0, id.area(), id.row(), id.col() );
-          spdCells.push_back( spdId );
+          m_data.second.push_back( spdId );
         }
       }
       int nSkip = (lenAdc+1 ) / 2;  // Length in number of words
@@ -276,7 +272,6 @@ StatusCode CaloTriggerBitsFromRaw::getData(  LHCb::RawBank* bank ) {
     checkCards(nCards,feCards);
   } //== versions
   
-  m_data = std::make_pair(prsCells,spdCells);
   
   return StatusCode::SUCCESS;
 }

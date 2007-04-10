@@ -30,6 +30,8 @@ CaloDataProviderPatched::CaloDataProviderPatched( const std::string& type,
   m_detectorName = name.substr( index, 4 ); 
   if ( name.substr(index,3) == "Prs" ) m_detectorName = "Prs";
   if ( name.substr(index,3) == "Spd" ) m_detectorName = "Spd";
+
+  declareProperty("OPGData" , m_opg = false);
 }
 //=============================================================================
 // Destructor
@@ -186,11 +188,11 @@ StatusCode CaloDataProviderPatched::decodeBank( LHCb::RawBank* bank ){
           << " version " << version << " size " << size << endreq;
 
 
-  // ---------------------------------------------
-  // skip detector specific header line  PATCH ??
+  // -----------------------------------------------
+  // skip detector specific header line  ***PATCH***
   ++data ; 
   --size;
-  // ---------------------------------------------
+  // -----------------------------------------------
 
 
   // Get the FE-Cards associated to that bank (via condDB)
@@ -244,10 +246,10 @@ StatusCode CaloDataProviderPatched::decodeBank( LHCb::RawBank* bank ){
 
       // ---------------------------------------------
       // ---------------------------------------------
+      // --------------------------------------------- REMOVE PATCH : corrected in Calo TELL1 firmware
       // ---------------------------------------------
-      // ---------------------------------------------
-      if(lenTrig  != 0 ) lenTrig += 4;  // PATCH 
-      if(lenAdc   != 0 ) lenAdc  += 4;  // PATCH 
+      // if(lenTrig  != 0 ) lenTrig += 4;  // PATCH 
+      // if(lenAdc   != 0 ) lenAdc  += 4;  // PATCH 
       // ---------------------------------------------
       // ---------------------------------------------
       // ---------------------------------------------
@@ -283,7 +285,7 @@ StatusCode CaloDataProviderPatched::decodeBank( LHCb::RawBank* bank ){
         chanID = m_calo->cardChannels( feCards[card] );
         
         // PATCH --------------------------------- remove test for OPG data
-        //feCards.erase(feCards.begin()+card);
+        if(!m_opg)feCards.erase(feCards.begin()+card);
         // ---------------------------------------
         
       }else{
@@ -364,7 +366,7 @@ StatusCode CaloDataProviderPatched::decodeBank( LHCb::RawBank* bank ){
         chanID = m_calo->cardChannels( feCards[card] );
 
         // PATCH --------------------------------- remove test for OPG data
-        //feCards.erase(feCards.begin()+card);
+        if(!m_opg)feCards.erase(feCards.begin()+card);
         //----------------------------------------
       }else{
         error() << " FE-Card w/ [code : " << code << "] not associated with TELL1 bank " << sourceID

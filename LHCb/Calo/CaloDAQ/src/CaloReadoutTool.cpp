@@ -1,4 +1,4 @@
-// $Id: CaloReadoutTool.cpp,v 1.7 2007-02-22 23:40:49 odescham Exp $
+// $Id: CaloReadoutTool.cpp,v 1.8 2007-04-10 22:47:33 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -32,6 +32,7 @@ CaloReadoutTool::CaloReadoutTool( const std::string& type,
 
   declareProperty( "DetectorName"   , m_detectorName );
   declareProperty( "PackedIsDefault", m_packedIsDefault = false);
+  declareProperty( "RawLocation"    , m_rawLocation =  rootOnTES() + LHCb::RawEventLocation::Default );
   m_getRaw = true;
 }
 //=============================================================================
@@ -46,7 +47,7 @@ CaloReadoutTool::~CaloReadoutTool() {}
 //=========================================================================
 StatusCode CaloReadoutTool::getCaloBanksFromRaw( ) {
 
-  LHCb::RawEvent* rawEvt = get<LHCb::RawEvent>( rootOnTES() + LHCb::RawEventLocation::Default );
+  LHCb::RawEvent* rawEvt = get<LHCb::RawEvent>( m_rawLocation );
   m_banks = 0;
   if( !m_packedIsDefault){
     debug() << "Banks of short type are requested as default" << endreq;

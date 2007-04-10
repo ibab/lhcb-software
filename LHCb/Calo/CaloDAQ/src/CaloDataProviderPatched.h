@@ -44,5 +44,6 @@ private:
   CaloVector<LHCb::CaloAdc>    m_adcs;
   CaloVector<LHCb::CaloDigit> m_digits;
   unsigned int m_tell1s;
+  bool m_opg;
 };
 #endif // CALODATAPROVIDERPATCHED_H

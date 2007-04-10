@@ -1,4 +1,4 @@
-// $Id: CaloTriggerBitsFromRawAlg.cpp,v 1.5 2007-02-22 23:39:52 odescham Exp $
+// $Id: CaloTriggerBitsFromRawAlg.cpp,v 1.6 2007-04-10 22:47:33 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -63,11 +63,9 @@ StatusCode CaloTriggerBitsFromRawAlg::initialize() {
 StatusCode CaloTriggerBitsFromRawAlg::execute() {
 
   debug() << "==> Execute"  <<endmsg;
-
   //*** create the output container
   LHCb::L0PrsSpdHits* newL0Bits = new LHCb::L0PrsSpdHits();
   put( newL0Bits , m_outputData );
-
   //*** get the input data from Raw and fill the output container
   LHCb::Calo::FiredCells l0Cells ;
   if( m_isPrs){    
@@ -75,17 +73,13 @@ StatusCode CaloTriggerBitsFromRawAlg::execute() {
   }
   else {
     l0Cells = m_l0BitTool->spdCells();
-  }  
-  
+  }
   std::vector<LHCb::CaloCellID>::const_iterator iCell;
-  
   for( iCell = l0Cells.begin(); l0Cells.end() != iCell ; ++iCell ) {
     LHCb::L0PrsSpdHit* l0Bit = new LHCb::L0PrsSpdHit( *iCell );
     newL0Bits->insert( l0Bit ) ;
   };
-  
   debug() << " L0PrsSpdHits container size " << newL0Bits->size() << endreq;
-
   return StatusCode::SUCCESS;
 }
 
