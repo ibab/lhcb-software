@@ -1,12 +1,12 @@
 package EventSys
-version v23r3
+version v23r4
 
 branches doc cmt
 
 # LHCb Event libraries
 
 use EventBase   v2r1    Event
-use MCEvent     v2r1    Event
+use MCEvent     v2r2    Event
 use DigiEvent   v2r1    Event
 use RecEvent    v2r2    Event
 use L0Event     v16r2   Event
