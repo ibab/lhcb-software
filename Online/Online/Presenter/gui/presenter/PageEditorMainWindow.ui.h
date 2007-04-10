@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Presenter/gui/presenter/PageEditorMainWindow.ui.h,v 1.5 2007-03-30 13:38:41 psomogyi Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Presenter/gui/presenter/PageEditorMainWindow.ui.h,v 1.6 2007-04-10 16:18:29 psomogyi Exp $
 
 /****************************************************************************
  ** ui.h extension file, included from the uic-generated form implementation.
@@ -612,8 +612,8 @@ void PageEditorMainWindow::addSelectedHistogramsFromDatabaseToPage()
 
       OnlineHistogram *h1 = histogramDB->getHistogram(item->text(0));
       
-      std::string serviceNameFQ = h1->hstype() + "/nodeMF001_" + 
-                                  h1->task() + "_01/" + h1->algorithm() +
+      std::string serviceNameFQ = h1->hstype() + "/node_" + 
+                                  h1->task() + "_1/Adder/" + h1->algorithm() +
                                   "/" + h1->hsname();
 
       std::cout << serviceNameFQ << std::endl;                         
