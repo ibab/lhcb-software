@@ -1,7 +1,7 @@
 // test.cpp : Defines the entry point for the console application.
 //
 
-#include "stdafx.h"
+//#include "stdafx.h"
 #include "oci.h"
 
 #include "confdb.h"
@@ -389,7 +389,7 @@ int followPath(eConnectivityCache *ecache, iConnectivityCache *icache, int elnki
 }
 
 
-int _tmain(int argc, _TCHAR* argv[])
+int main(int argc, char* argv[])
 {
   CONFDB *cdb;
   int status;
