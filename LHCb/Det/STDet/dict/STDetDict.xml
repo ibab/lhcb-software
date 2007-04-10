@@ -1,0 +1,19 @@
+<lcgdict>
+  <class name="DeITBox"           />
+  <class name="DeITDetector"      />
+  <class name="DeITLadder"        />
+  <class name="DeITLayer"         />
+  <class name="DeITSector"        />
+  <class name="DeITStation"       />
+  <class name="DeSTBaseElement"   />
+  <class name="DeSTDetector"      />
+  <class name="DeSTLayer"         />
+  <class name="DeSTSector"        />
+  <class name="DeSTStation"       />
+  <class name="DeTTDetector"      />
+  <class name="DeTTHalfModule"    />
+  <class name="DeTTLayer"         />
+  <class name="DeTTSector"        />
+  <class name="DeTTStation"       />
+  <class name="std::pair<unsigned int, DeSTSector*>" />
+</lcgdict>

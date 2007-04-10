@@ -1,4 +1,4 @@
-// $Id: DeSTSector.h,v 1.16 2007-03-01 11:08:00 cattanem Exp $
+// $Id: DeSTSector.h,v 1.17 2007-04-10 14:35:37 cattanem Exp $
 #ifndef _DeSTSector_H_
 #define _DeSTSector_H_
 
@@ -82,6 +82,7 @@ public:
 
   /** convert strip to local U
   * @param strip
+  * @param offset
   * @return local u
   */
   double localU(const unsigned int strip, double offset = 0.) const;
@@ -117,7 +118,7 @@ public:
   */
   Gaudi::Plane3D exitPlane() const; 
 
-  /** 
+  /** localInActive
   * @param  point point in local frame
   * @param  tol   tolerance
   * @return bool in active region 
@@ -125,14 +126,14 @@ public:
   bool localInActive(const Gaudi::XYZPoint& point, 
                      Gaudi::XYZPoint tol = Gaudi::XYZPoint(0.,0.,0.)) const;
    
-  /** 
+  /** localInBondGap
   * @param  v   v in local frame
   * @param  tol tolerance
   * @return bool in a bond gap - ie dead region
   */
   bool localInBondGap( const double v ,double tol = 0) const;
   
-  /** 
+  /** localInBox
   * @param u    u in local frame
   * @param v    v in local frame
   * @param uTol
@@ -143,7 +144,7 @@ public:
 		  double uTol = 0, double vTol = 0) const;
 
 
-  /** 
+  /** globalInActive
   * @param  point point in global frame
   * @param  tol   tolerance
   * @return bool in active region 
@@ -151,14 +152,14 @@ public:
   bool globalInActive(const Gaudi::XYZPoint& point, 
                      Gaudi::XYZPoint tol = Gaudi::XYZPoint(0.,0.,0.)) const;
    
-  /** 
+  /** globalInBondGap
   * @param  gpoint point in global frame
   * @param  tol    tolerance
   * @return bool in a bond gap - ie dead region
   */
   bool globalInBondGap(const Gaudi::XYZPoint& gpoint ,double tol = 0) const;
   
-  /** 
+  /** globalInBox
   * @param  gpoint point in global frame
   * @param  tol    vTol
   * @return bool in active region of box 
