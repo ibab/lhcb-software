@@ -4,23 +4,22 @@
 ! Purpose     : Convert Calo Digit and Trigger information to RawEvent banks.
 !-----------------------------------------------------------------------------
 
+!========================== CaloDAQ v3r2 2007-04-10 ==========================
 ! 2007-04-10 Olivier Deschamps
 - CaloDataProviderPatched : 
-        - remove the patch related to adcLength and trigLength (corrected in TELL1 firmware)
-        - remains : patch for OPG data (can be activated via options)
-                    patch for the non-documented TELL1 'header' word in the data body
+  . remove the patch related to adcLength and trigLength
+   (corrected in TELL1 firmware)
+  . remains : patch for OPG data (can be activated via options)
+              patch for the non-documented TELL1 'header' word in the data body
 - CaloReadoutTool : rawEvent location can be changed by option
 - Fix bug in CaloTriggerBitFromRaw : tool returned only the last TELL1 data.
-- Fix an old bug in CaloFillPrsSpdRawBuffer : last Prs/Spd L0bits were missing for 50% of events.
-
-
+- Fix an old bug in CaloFillPrsSpdRawBuffer : last Prs/Spd L0bits were missing
+  for 50% of events.
 
 ! 2007-04-05 Olivier Deschamps
  - Add a patched implementation of CaloDataProvider : CaloDataProviderPatched
  - The patches allow to deal with the current Calo TELL1 firmware (April 2007)
  - Temporary implementation will be removed 
-
-
 
 !========================== CaloDAQ v3r1 2007-03-05 ==========================
 ! 2007-03-05 - Marco Cattaneo
