@@ -58,7 +58,7 @@ use HltEvent              v8r0p1  Event   # Jose Angel Hernando-Morata
 use DAQSys                v3r2    DAQ     # Marco Cattaneo
 use MuonDAQ               v3r1    Muon    # Alessia Satta
 use OTDAQ                 v5r2    OT      # Jan Amoraal
-use CaloDAQ               v3r1    Calo    # Olivier Deschamps
+use CaloDAQ               v3r2    Calo    # Olivier Deschamps
 use SiDAQ                 v2r0    Si      # Matt Needham
 
 # Other stuff

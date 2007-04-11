@@ -9,7 +9,8 @@
 This version uses Gaudi v19r3 and LCG_50b. Fully compatible with DC06 data
 
 - Packages modified: EventSys v23r4, MCEvent v2r2, DetSys v9r4, STDet v3r3, 
-    VeloDet v11r2, CaloInterfaces v7r2, CaloUtils v7r2, DAQSys v3r2, OTDAQ v5r2
+    VeloDet v11r2, CaloInterfaces v7r2, CaloUtils v7r2, DAQSys v3r2, OTDAQ v5r2,
+    CaloDAQ v3r2
 
 - In MCEvent v2r2
   . Add MCCaloDataFunctor.h
@@ -35,6 +36,15 @@ This version uses Gaudi v19r3 and LCG_50b. Fully compatible with DC06 data
   . Fix bug in CaloMomenum definition of the transport matrix (indices swap) 
   . Add new methods bremstrahlung() & bremCaloMomentum() in CaloElectron
   . Implement ICaloMomentum interface (moved from CaloInterfaces)
+
+- In CaloDAQ v3r2:
+  . Add a patched implementation of CaloDataProvider : CaloDataProviderPatched
+    with temporary patches allow to deal with the current Calo TELL1 firmware.
+    Will be merged with CaloDataProvider once firmware is frozen.
+  . CaloReadoutTool : rawEvent location can be changed by option
+  . Fix bug in CaloTriggerBitFromRaw : tool returned only the last TELL1 data.
+  . Fix an old bug in CaloFillPrsSpdRawBuffer : last Prs/Spd L0bits were missing
+    for 50% of events.
 
 - In VeloDet v11r2, OTDAQ v5r2
   . Fix untested StatusCodes
