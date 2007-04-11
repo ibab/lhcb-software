@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/PythonCallback.cpp,v 1.1 2007-03-12 10:07:24 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/PythonCallback.cpp,v 1.2 2007-04-11 17:45:47 frankb Exp $
 //  ====================================================================
 //  PythonCallback.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: PythonCallback.cpp,v 1.1 2007-03-12 10:07:24 frankb Exp $
+// $Id: PythonCallback.cpp,v 1.2 2007-04-11 17:45:47 frankb Exp $
 
 #include "PVSS/PythonCallback.h"
 namespace PVSS  {
@@ -127,15 +127,48 @@ void PythonCall::print(const char* attr)  {
 }
 
 /// Standard constructor: Argument self: instance to python object implementation
-PyDeviceListener::PyDeviceListener(PyObject* self, ControlsManager* m) 
-: PVSS::DeviceListener(m), m_call(new PythonCall(self)) 
+PyCallbackTest::PyCallbackTest(PyObject* self) 
+: m_call(new PythonCall(self)) 
 { 
+  if ( 0 == self )  {
+    std::cout << "PVSS::PyCallbackTest> Warning: SELF==NULL" << std::endl;
+  }
   m_call->m_type = &typeid(*this); 
+}
+
+/// Default destructor
+PyCallbackTest::~PyCallbackTest()       {
+  delete m_call;
+}
+
+/// DIM overloaded callback calling python itself.
+void PyCallbackTest::handle()   { 
+  (*m_call)("handle");  
+}
+
+/// Standard constructor: Argument self: instance to python object implementation
+PyDeviceListener::PyDeviceListener(PyObject* self, ControlsManager* m) 
+: PVSS::DeviceListener(m), m_call(0) 
+{ 
+  setSelf(self);
 }
 
 /// Default destructor
 PyDeviceListener::~PyDeviceListener()       {
   delete m_call;
+}
+
+/// Hack!
+void PyDeviceListener::setSelf(PyObject* self)  {
+  if ( m_call ) delete m_call;
+  m_call = new PythonCall(self);
+  if ( 0 == self )  {
+    std::cout << "PVSS::PyDeviceListener> Warning: SELF==NULL" << std::endl;
+  }
+  else  {
+    std::cout << "PVSS::PyDeviceListener> SUCCESS: SELF:" << (void*)self << std::endl;
+  }
+  m_call->m_type = &typeid(*this); 
 }
 
 /// DIM overloaded callback calling python itself.

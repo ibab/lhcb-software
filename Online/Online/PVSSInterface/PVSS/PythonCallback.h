@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/PVSS/PythonCallback.h,v 1.1 2007-03-12 10:07:24 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/PVSS/PythonCallback.h,v 1.2 2007-04-11 17:45:46 frankb Exp $
 //  ====================================================================
 //  PythonCallback.h
 //  --------------------------------------------------------------------
@@ -12,7 +12,8 @@
 // Framework include files
 #include "PVSS/DeviceListener.h"
 #if defined(__GCCXML) && !defined(__REAL_COMP)
-typedef struct _PyObject { void* bla; } PyObject;
+struct _object;
+typedef _object PyObject;
 #else
 #include "Python.h"
 #endif
@@ -40,10 +41,25 @@ namespace PVSS {
     PyDeviceListener(PyObject* self, ControlsManager* m);
     /// Default destructor
     virtual ~PyDeviceListener();
+    /// Hack!
+    void setSelf(PyObject* self);
     /// DIM overloaded callback calling python itself.
     virtual void handleDevices();
     /// DIM overloaded callback calling python itself.
     virtual void handleDevice();
+  };
+
+  class PyCallbackTest  {
+  protected:
+    /// Dressed python callback
+    PythonCall* m_call;
+  public:
+    /// Standard constructor: Argument self: instance to python object implementation
+    PyCallbackTest(PyObject* self);
+    /// Default destructor
+    virtual ~PyCallbackTest();
+    /// overloaded callback calling python itself.
+    virtual void handle();
   };
 }      // End namespace PVSS
 #endif // ONLINE_PVSS_PYTHONCALLBACK_H

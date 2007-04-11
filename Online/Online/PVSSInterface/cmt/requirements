@@ -11,7 +11,6 @@ apply_pattern install_more_includes more=PVSSInterface offset=PVSS
 
 library PVSSInterface *.cpp -import=Python
 apply_pattern linker_library library=PVSSInterface
-apply_pattern generate_rootmap library=PVSSInterface
 apply_pattern ld_library_path
 
 path_remove  PYTHONPATH "/PVSSInterface/" WIN32 "\PVSSInterface\"
@@ -23,6 +22,8 @@ apply_pattern reflex_dictionary dictionary=PVSSInterface \
                                 headerfiles=$(PVSSINTERFACEROOT)/dict/dictionary.h \
                                 selectionfile=$(PVSSINTERFACEROOT)/dict/dictionary.xml \
                                 imports=Python
+# Gnerate dictionary rootmap file
+apply_pattern generate_rootmap library=PVSSInterfaceDict
 
 private
 use RELAX        v* LCG_Interfaces -no_auto_imports

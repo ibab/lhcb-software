@@ -104,7 +104,7 @@ struct USER : public qentry_t  {
   int  c_state;                  // consumer state (Active,Pause)   
   int  p_state;                  // producer state (Active,Wspace)  
   int  partid;                   // user partition ID       
-  char name[24];                 // user name         
+  char name[64];                 // user name         
   int pid;                       // process id         
   RTL_ast_t c_astadd;            // consumer signal to be send     
   RTL_ast_t p_astadd;            // producer signal to be send     

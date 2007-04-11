@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/PVSS/Internals.h,v 1.5 2007-03-12 09:04:13 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/PVSS/Internals.h,v 1.6 2007-04-11 17:45:47 frankb Exp $
 //  ====================================================================
 //  Internals.h
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: Internals.h,v 1.5 2007-03-12 09:04:13 frankb Exp $
+// $Id: Internals.h,v 1.6 2007-04-11 17:45:47 frankb Exp $
 #ifndef PVSSMANAGER_PVSS_INTERNALS_H
 #define PVSSMANAGER_PVSS_INTERNALS_H
 
@@ -66,7 +66,13 @@ namespace PVSS  {
   int defaultSystemID();
   /// Access default system name
   const char* defaultSystemName();
-  
+  /// Access type name by DpElement type identifier
+  const char* pvss_type_name(int typ);
+  /// Set debug flag
+  void pvss_set_debug(int value);
+  /// Access debug flag
+  int pvss_debug();
+
   /** OS dependent wrappers: Platform.cpp                                  */
 
   /// Sleep a specified amount of time

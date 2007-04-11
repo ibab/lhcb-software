@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/src/DpIdValueList.cpp,v 1.5 2007-03-12 09:04:13 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/src/DpIdValueList.cpp,v 1.6 2007-04-11 17:45:47 frankb Exp $
 //  ====================================================================
 //  DpIdValueList.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: DpIdValueList.cpp,v 1.5 2007-03-12 09:04:13 frankb Exp $
+// $Id: DpIdValueList.cpp,v 1.6 2007-04-11 17:45:47 frankb Exp $
 #include <memory>
 #include <iostream.h>
 
@@ -81,19 +81,22 @@ std::auto_ptr<DynVar> get_dyn_var_time(const PVSS::Array* arr)  {
   return var;
 }
 std::auto_ptr<DynVar> get_dyn_var_text(const PVSS::Array* arr)  {
-  std::auto_ptr<DynVar> var(new DynVar);
+  std::auto_ptr<DynVar> var(new DynVar(TEXT_VAR));
   if ( !arr->load )  {
     throw "String variables require an explicit load function when passed from VC6 to VC7 vv.";
   }
   for(int i=0; i<arr->size; ++i)  {
-    var->append(TextVar((const char*)arr->load(arr,i)));
+    TextVar* v = new TextVar((const char*)arr->load(arr,i));
+    if ( !(var->append(v) == PVSS_TRUE) )  {
+      printf("Variables do not match type TextVar!\n");
+    }
   }
   return var;
 }
 std::auto_ptr<DynVar> get_dyn_var_bool(const PVSS::Array* arr)  {
   std::auto_ptr<DynVar> var(new DynVar);
   if ( !arr->load )  {
-    throw "String variables require an explicit load function when passed from VC6 to VC7 vv.";
+    throw "BOOL array variables require an explicit load function when passed from VC6 to VC7 vv.";
   }
   for(int i=0; i<arr->size; ++i)  {
     var->append(BitVar(arr->load(arr,i) ? 1 : 0));

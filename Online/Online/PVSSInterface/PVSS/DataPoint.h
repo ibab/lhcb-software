@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/PVSS/DataPoint.h,v 1.5 2007-03-12 18:56:03 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/PVSS/DataPoint.h,v 1.6 2007-04-11 17:45:46 frankb Exp $
 //  ====================================================================
 //  DataPoint.h
 //  --------------------------------------------------------------------
@@ -252,6 +252,8 @@ namespace PVSS {
     static std::string sysname(const std::string& dp);
     /// Extract name of datapoint from online/original name
     static std::string dpname(const DpID& dpid);
+    /// Check datapoint existencs
+    static bool exists(const std::string& name);
     /// Exception function
     static void invalidValue(const std::type_info& tid);
     /// Exception function

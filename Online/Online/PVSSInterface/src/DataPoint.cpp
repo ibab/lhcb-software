@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DataPoint.cpp,v 1.20 2007-03-12 18:56:03 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DataPoint.cpp,v 1.21 2007-04-11 17:45:47 frankb Exp $
 //  ====================================================================
 //  DataPoint.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: DataPoint.cpp,v 1.20 2007-03-12 18:56:03 frankb Exp $
+// $Id: DataPoint.cpp,v 1.21 2007-04-11 17:45:47 frankb Exp $
 #ifdef _WIN32
   // Disable warning C4250: 'const float' : forcing value to bool 'true' or 'false' (performance warning)
   #pragma warning ( disable : 4800 )
@@ -17,6 +17,8 @@
 #include "PVSS/DataPoint.h"
 #include "PVSS/Internals.h"
 #include "PVSS/PVSSIO.h"
+#include "PVSS/ControlsManager.h"
+#include "PVSS/DevTypeManager.h"
 #include <algorithm>
 #include <sstream>
 #include <stdexcept>
@@ -277,8 +279,14 @@ std::string DataPoint::sysname(const std::string& dp)   {
     return dp.substr(0,id1);
   return dp.substr(0,id1);
 }
-#if 0
-template <typename T> T PVSS::DataPoint::data()  {
+
+/// Check datapoint existencs
+bool DataPoint::exists(const std::string& name)   {
+  DpID id(0);
+  return pvss_lookup_dpid(name.c_str(),id);
+}
+
+template <typename T> T DataPoint::data()  {
   if ( m_val )  {
     switch(m_val->type())  {
       case DevTypeElement::FLOAT: return convertValue<float,T>(m_val);
@@ -377,7 +385,7 @@ template <> std::string PVSS::DataPoint::data<std::string>()  {
   invalidValue(typeid(std::string));
   return "";
 }
-#endif
+
 template <class T> T& DataPoint::reference()  {
   checkTypeCompatibility(m_val,(DataValue<T>*)m_val);
   return ((DataValue<T>*)m_val)->data();
@@ -468,6 +476,11 @@ void DataPoint::setValue(int typ, const Variable* variable)  {
   try {
     if ( !m_val ) m_val = createValue(typ);
     genReadIO(variable,typ,m_val->ptr());
+    if ( pvss_debug() > 0 )  {
+      const char* val_typ = pvss_type_name(m_val->type());
+      const char* true_typ = pvss_type_name(typ);
+      std::cout << "DataPoint::setValue> " << name() << " Typ:" << val_typ << " - " << true_typ << std::endl;
+    }
   }
   catch(const std::exception& e)  {
     throw e;
@@ -482,17 +495,58 @@ void DataPoint::setValue(int typ, const Variable* variable)  {
 
 /// Set value data (for publishing data to PVSS
 template <typename T> void DataPoint::set(const T& val)  {
+  int dbg = pvss_debug();
   try  {
-    if ( !m_val ) m_val = createValue(DataValue<T>::type_id());
+    if ( !m_val )  {
+      if ( !m_valid ) load();
+      const DevType* typ = manager()->typeMgr()->type(m_id.type());
+      const DevType::Elements& elts = typ->elements();
+      for(DevType::Elements::const_iterator i=elts.begin(); i!= elts.end(); ++i) {
+        const DevTypeElement* e = *i;
+        if ( e->id() == m_id.element() )  {
+          m_val = createValue(e->content());
+          break;
+        }
+      }
+      if ( !m_val )  {
+        invalidValue(typeid(T));
+      }
+    }
+    if ( dbg > 0 )  {
+      const char* val_typ = pvss_type_name(m_val->type());
+      const char* true_typ = pvss_type_name(DataValue<T>::type_id());
+      std::cout << "DataPoint::set> " << name() << " Typ:" << val_typ << " - " << true_typ << std::endl;
+      if ( m_val->type() != DataValue<T>::type_id() )  {
+        std::cout << "                " << name() << " Typ:" << typeid(T).name() << std::endl;
+        invalidConversion(typeid(T));
+      }
+    }
     reference<T>() = val;
     return;
   }
-  catch(const std::exception& e)  {
+  catch(const char* msg)  {
+    if ( dbg > 0 )  {
+      std::cout << "Exception in DataPoint::set(" << typeid(T).name() << "): "
+        << (const char*)(msg ? msg : "(Unknwon message)") << std::endl;
+    }
     if ( m_val ) delete m_val;
     m_val = 0;
-    throw e;
+    throw std::runtime_error(msg);
+  }
+  catch(const std::exception& e)  {
+    if ( dbg > 0 )  {
+      std::cout << "Exception in DataPoint::set(" << typeid(T).name() << "): " 
+                << e.what() << std::endl;
+    }
+    if ( m_val ) delete m_val;
+    m_val = 0;
+    throw std::runtime_error(e.what());
   }
   catch(...)  {
+    if ( dbg > 0 )  {
+      std::cout << "Exception in DataPoint::set(" << typeid(T).name() << "): "
+                << "[Unknown exception]" << std::endl;
+    }
     if ( m_val ) delete m_val;
     m_val = 0;
     invalidConversion(typeid(T));

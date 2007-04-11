@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/src/DpConnect.cpp,v 1.3 2007-03-12 09:04:13 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/src/DpConnect.cpp,v 1.4 2007-04-11 17:45:47 frankb Exp $
 //  ====================================================================
 //  DpConnect.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: DpConnect.cpp,v 1.3 2007-03-12 09:04:13 frankb Exp $
+// $Id: DpConnect.cpp,v 1.4 2007-04-11 17:45:47 frankb Exp $
 #include "PVSSManager/SyncWaitForAnswer.h"
 #include "PVSS/HotLinkCallback.h"
 #include "PVSS/Environment.h"
@@ -37,7 +37,7 @@ namespace PVSS {
     /// Access to callback
     HotLinkCallback* callback()  const         {  return m_cb;        }
     /// Hotlink callback
-    virtual void hotLinkCallBack(DpHLGroup & /* g */ );
+    virtual void hotLinkCallBack(DpHLGroup& g);
   };
 }
 

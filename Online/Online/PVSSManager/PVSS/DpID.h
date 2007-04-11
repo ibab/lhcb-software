@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/PVSS/DpID.h,v 1.3 2007-03-12 18:56:09 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/PVSS/DpID.h,v 1.4 2007-04-11 17:45:47 frankb Exp $
 //  ====================================================================
 //  DpID.h
 //  --------------------------------------------------------------------
@@ -42,10 +42,14 @@ namespace PVSS {
     signed long      attrNo;
     signed short     dpTypeID;
   public:
-    unsigned long system() const { return systemID; }
-    unsigned long id() const { return dpID; }
-    signed short int elemnt() const { return elmentID; }
-    unsigned short type() const { return dpTypeID; }
+
+    unsigned long    system() const { return systemID;  }
+    unsigned long    id() const     { return dpID;      }
+    signed short int element() const{ return elmentID;  }
+    ConfigNo         config() const { return configNo;  }
+    signed short int detail() const { return detailNo;  }
+    signed long      attr() const   { return attrNo;    }
+    signed short     type() const   { return dpTypeID;  }
 
     /// Standard constructor
   #ifdef __GCCXML

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/src/DpHelpers.cpp,v 1.4 2007-03-12 09:04:13 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/src/DpHelpers.cpp,v 1.5 2007-04-11 17:45:47 frankb Exp $
 //  ====================================================================
 //  DpHelpers.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: DpHelpers.cpp,v 1.4 2007-03-12 09:04:13 frankb Exp $
+// $Id: DpHelpers.cpp,v 1.5 2007-04-11 17:45:47 frankb Exp $
 
 // PVSS include files
 #include "Manager.hxx"
@@ -24,6 +24,7 @@
 #include <string>
 #include <stdexcept>
 
+static int s_debug = 0;
 static SystemNumType s_system = 0;
 static PVSS::DevTypeManager* s_devTypeMgr = 0;
 static PVSS::DevType* (*s_addDevType)(PVSS::DevTypeManager* m,int id, const char* n) = 0;
@@ -61,6 +62,16 @@ static int visitDpType(const DpType& p)  {
   delete [] name;
   visitDpElement(s_devTypeMgr,t,p,n,"");
   return 1;
+}
+
+/// Set debug flag
+void PVSS::pvss_set_debug(int value)  {
+  s_debug = value;
+}
+
+/// Access debug flag
+int PVSS::pvss_debug()  {
+  return s_debug;
 }
 
 int PVSS::pvss_load_configurations(CfgManager* m, int id, 
@@ -144,3 +155,63 @@ bool PVSS::pvss_delete_device(const DpID& dpid, int /* systemId */, DevAnswer* a
   return (PVSS_TRUE == res) ? a ? PVSS::Environment::instance().waitForAnswer(a) : true : false;
 }
 
+/// Access type name by DpElement type identifier
+const char* PVSS::pvss_type_name(int typ)  {
+  switch(typ)  {
+#define _PRT(x)   case DPELEMENT_##x:  return "DPELEMENT_"#x
+     _PRT(NOELEMENT);
+     _PRT(RECORD);
+     _PRT(ARRAY);
+     _PRT(DYNCHAR);
+     _PRT(DYNUINT);
+     _PRT(DYNINT);
+     _PRT(DYNFLOAT);
+     _PRT(DYNBIT);
+     _PRT(DYN32BIT);
+     _PRT(DYNTEXT);
+     _PRT(DYNTIME);
+     _PRT(CHARARRAY);
+     _PRT(UINTARRAY);
+     _PRT(INTARRAY);
+     _PRT(FLOATARRAY);
+     _PRT(BITARRAY);
+     _PRT(32BITARRAY);
+     _PRT(TEXTARRAY);
+     _PRT(TIMEARRAY);
+     _PRT(CHAR);
+     _PRT(UINT);
+     _PRT(INT);
+     _PRT(FLOAT);
+     _PRT(BIT);
+     _PRT(32BIT);
+     _PRT(TEXT);
+     _PRT(TIME);
+     _PRT(DPID);
+     _PRT(NOVALUE);
+     _PRT(DYNDPID);
+     _PRT(DYNCHARARRAY);
+     _PRT(DYNUINTARRAY);
+     _PRT(DYNINTARRAY);
+     _PRT(DYNFLOATARRAY);
+     _PRT(DYNBITARRAY);
+     _PRT(DYN32BITARRAY);
+     _PRT(DYNTEXTARRAY);
+     _PRT(DYNTIMEARRAY);
+     _PRT(DYNDPIDARRAY);
+     _PRT(DPIDARRAY);
+     _PRT(NOVALUEARRAY);
+     _PRT(TYPEREFERENCE);
+     _PRT(LANGTEXT);
+     _PRT(LANGTEXTARRAY);
+     _PRT(DYNLANGTEXT);
+     _PRT(DYNLANGTEXTARRAY);
+     _PRT(BLOB);
+     _PRT(BLOBARRAY);
+     _PRT(DYNBLOB);
+     _PRT(DYNBLOBARRAY);
+#undef _PRT
+  default:
+    return "DPELEMENT_NOELEMENT";
+  }
+  return "Unknwon Type";
+}
