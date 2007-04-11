@@ -1,43 +1,12 @@
-import os, sys, string
+import os, sys, time, string
 import PyCintex as PyLCGDict
+
 #PyLCGDict.gbl.Cintex.SetDebug(1)
 #PyLCGDict.loadDict('PVSSInterfaceDict')
 PVSS = PyLCGDict.makeNamespace('PVSS')
 gbl  = PyLCGDict.makeNamespace('')
 PyLCGDict.loadDict('STLRflx')
 
-logPrefix     = ''
-logHeader     = '+----------------------------------------------------------------------------------------------------'
-logTrailer    = logHeader
-
-#----enable tab completion---------------------------------------------------------------
-try:
-  import rlcompleter,readline    
-  readline.parse_and_bind("tab: complete")
-except:
-  pass
-# =============================================================================
-def timeStamp():
-  import time
-  return time.ctime(time.time())
-# =============================================================================
-def log(msg, with_header=0, with_trailer=0):
-  if ( with_header != 0 ):
-    print logPrefix + ' ' + timeStamp() + ' ' + logHeader
-  if msg.__class__ == str().__class__:
-    print logPrefix + ' ' + timeStamp() + ' |  ' + msg
-  else:
-    for line in msg:
-      print logPrefix + ' ' + timeStamp() + ' |  ' + line
-  if ( with_trailer != 0 ):
-    print logPrefix + ' ' + timeStamp() + ' ' + logTrailer
-# =============================================================================
-def error(msg):
-  log('Error:   '+msg)
-# =============================================================================
-def warning(msg):
-  log('Warning: '+msg)
-  
 # == External class definitions ===============================================
 Sensor            = gbl.Sensor
 Event             = gbl.Event
@@ -57,7 +26,54 @@ BasicAlarm        = PVSS.BasicAlarm
 ArchiveSetting    = PVSS.ArchiveSetting
 CfgSetting        = PVSS.CfgSetting
 WriteTransaction  = PVSS.WriteTransaction
+DpID              = PVSS.DpID
 DataPoint         = PVSS.DataPoint
+def DataPoint_get(self):
+  return self.value().data()
+def DataPoint_set(self,value):
+  import traceback
+  #print 'DataPoint_set:',value.__class__
+  if isinstance(value,list) or isinstance(value,tuple):
+    if len(value) > 0:
+      traceback.print_stack()
+      print 'DataPoint_set_item:',value.__class__,value[0].__class__
+      if isinstance(value[0],int):
+        v = gbl.std.vector('int')()
+        for i in value: v.push_back(i)
+        self.set(v)
+        return self
+      elif isinstance(value[0],float):
+        v = gbl.std.vector('float')()
+        for i in value: v.push_back(i)
+        self.set(v)
+        return self
+      elif isinstance(value[0],str):
+        v = gbl.std.vector('std::string')()
+        for i in value: v.push_back(i)
+        self.set(v)
+        return self
+      elif isinstance(value[0],DataPoint):
+        v = gbl.std.vector('PVSS::DataPoint')()
+        for i in value: v.push_back(i)
+        self.set(v)
+        return self
+      elif isinstance(value[0],DpID):
+        v = gbl.std.vector('PVSS::DpID')()
+        for i in value: v.push_back(i)
+        self.set(v)
+        return self
+    else:
+      try:
+        self.value().data().clear()
+      except:
+        pass
+  self.set(value)
+  return self
+DataPoint.data = property(DataPoint_get,DataPoint_set)
+def debug():
+  return PVSS.pvss_debug()
+def setDebug(val):
+  PVSS.pvss_set_debug(val)
 DPTime            = PVSS.DPTime
 DPRef             = PVSS.DPRef
 Value             = PVSS.Value
@@ -70,9 +86,13 @@ DevType           = PVSS.DevType
 DevTypeManager    = PVSS.DevTypeManager
 DeviceManager     = PVSS.DeviceManager
 HotLinkCallback   = PVSS.HotLinkCallback
+PyDeviceListener  = PVSS.PyDeviceListener
 DpVectorActor     = PVSS.DataPointContainerActor('std::vector<PVSS::DataPoint>')
 DpListActor       = PVSS.DataPointContainerActor('std::list<PVSS::DataPoint>')
-
+# == External function definitions =============================================
+defaultSystemID   = PVSS.defaultSystemID
+defaultSystemName = PVSS.defaultSystemName
+# == STL container definitions =================================================
 DpIDVector        = gbl.std.vector('PVSS::DpID')
 DataPointVector   = gbl.std.vector('PVSS::DataPoint')
 DataPointVectorP  = gbl.std.vector('PVSS::DataPoint*')
@@ -83,14 +103,23 @@ StringVector      = gbl.std.vector('std::string')
 IntVector         = gbl.std.vector('int')
 
 # =============================================================================
-def createAPIMgr(dll='',function=''):
-  "Create PVSS API manager for python."
-  return PVSS.pvss_create_manager(dll, function)
-
+def defaultSystem():
+  return (PVSS.defaultSystemID(),PVSS.defaultSystemName())
 # =============================================================================
-def startAPIMgr(mgr):
-  "Start PVSS API manager for python."
-  return mgr.start()
+class APIManager:
+  """
+      Wrapper around PVSS APIManager instance.
+      Should never be directly instantiated by the user
+      
+      @author M.Frank
+  """
+  # ===========================================================================
+  def __init__(self,dll='',function=''):
+    "Create PVSS API manager for python."
+    apiManager = PVSS.pvss_create_manager(dll, function)
+    return apiManager.start()
+# Instantiate API manager. Should never be called by user directly
+apiManager = APIManager()
 
 # =============================================================================
 def controlsMgr(systemID=None,systemName=None):
@@ -100,151 +129,47 @@ def controlsMgr(systemID=None,systemName=None):
   return PVSS.ControlsManager(systemID, systemName)
 
 # =============================================================================
-class DeviceListener(PVSS.PyDeviceListener):
+class DeviceListener(PyDeviceListener):
   """ 
       Standard Python PVSS DeviceListener
       
       @author M.Frank
   """
+  # ===========================================================================
   def __init__(self, manager):
     "Standard constructor: needs ControlsManager as argument "
     self.manager = manager
-    PVSS.PyDeviceListener.__init__(self, self, self.manager)
-
+    PyDeviceListener.__init__(self, self, self.manager)
+  # ===========================================================================
   def handleDevices(self):
     "Callback once per device sensor list on datapoint change."
     pass
-
+  # ===========================================================================
   def handleDevice(self):
     "Callback once per item in the device sensor list on datapoint change."
     pass
   
 # =============================================================================
-class DevicePrintListener(DeviceListener):
+class DevicePrintListener(PyDeviceListener):
   """ 
       Python PVSS DeviceListener, which prints the content of the 
       sensor's datapoint list
       
       @author M.Frank
   """
+  # ===========================================================================
   def __init__(self, manager):
     "Standard constructor: needs ControlsManager as argument "
-    PVSS.PyDeviceListener.__init__(self,self, manager)
-   
+    PyDeviceListener.__init__(self,self, manager)
+  # ===========================================================================
   def handleDevices(self):
     "Callback once per device sensor list on datapoint change."
     d = self.devArray()
     print 'Devices changed:',d.size()
     for i in d:
       print '  ->',i.name(), '=', i.value().data()
-
+  # ===========================================================================
   def handleDevice(self):
     "Callback once per item in the device sensor list on datapoint change."
     print 'Device changed:', self.dp().name(), '=', self.dp().value().data()
   
-"""
-
-import time, PVSS
-DP=PVSS.DataPoint
-m=PVSS.createAPIMgr()
-m.start()
-c=PVSS.ControlsManager(1,'dist_1')
-rdr=c.devReader()
-dp=DP(c,DP.online('JobOptionsPartition_LHCb.Command'))
-dp.name()
-rdr.add(dp)
-rdr.execute()
-print 'Got value:',dp.value().data()
-
-dm=c.deviceMgr()
-dtm=c.typeMgr()
-t=dtm.type('TestType')
-print t.id()
-
-dps = PVSS.DataPointVector()
-for i in xrange(100):
-  s='test_dev_'+str(i)+'.value'
-  if dm.exists(s):
-    d = DP(c,DP.original(s))
-    d.setFlag(1,'a')
-    dps.push_back(d)
-
-
-
-print 'Found ',len(dps), ' valid devices.'
-
-# Device sensor tests:
-sensor = PVSS.DeviceSensor(c,dps)
-listener = PVSS.DeviceListener(c)
-sensor.addListener(listener)
-sensor.run(1)
-
-
-wr=c.devWriter()
-for i in dps:
-  i.set('ddddd')
-  wr.add(i)
-
-
-rdr.clear()
-for i in dps:
-  i.set('---------------------')
-  rdr.add(i)
-
-rdr.execute(1,1)
-
-wr.execute(1,1)
-
-wr=c.writeTransaction()
-wr.start()
-for i in dps:
-  s='Hello darling:'+i.name()
-  wr.setValue(i,s)
-
-
-
-print 'Execute transaction:',wr.execute(1,1)
-
-wrt=c.devWriter()
-for i in dps:
-  i.set('471896454674396574365784Hello darling:'+i.name())
-  wrt.add(i)
-
-
-
-wrt.execute()
-
-
-
-"""
-
-def createDevs(dm,t):
-  d = 0
-  for i in xrange(10000):
-    s='test_dev_'+str(i)
-    if ( not dm.exists(s) ):
-      d=dm.createDevice(s,t,1)
-    if i%100==0: print 'created ',i
-
-def delDevs(dm):
-  d = 0
-  for i in xrange(10000):
-    s='test_dev_'+str(i)
-    if dm.exists(s):
-      d=dm.deleteDevice(s,1)
-    if i%100==0: print 'Deleted ',i
-
-def setVals(many,c,dm,wr):
-  DP=PVSS.DataPoint
-  dps = []
-  for i in xrange(many):
-    s='test_dev_'+str(i)+'.value'
-    if dm.exists(s): 
-      dps.append(DP(c,DP.original(s)))
-  print 'Found ',len(dps), ' valid devices.'
-  wr.start()
-  for i in dps:
-    s='Hello darling:'+i.name()
-    wr.setValue(i,s)
-  print 'Execute transaction:',wr.execute(1)
-
