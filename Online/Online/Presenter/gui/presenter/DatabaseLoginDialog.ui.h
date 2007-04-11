@@ -12,7 +12,7 @@
 #include "TSystem.h"
 #include "OnlineHistDB/OnlineHistDBEnv.h"
 
-  std::string defaultUserPassword = "xxx";
+  std::string defaultUserPassword = "histeggia194";
 
 void DatabaseLoginDialog::init()
 {
