@@ -64,6 +64,8 @@ private:
 
   Gaudi::XYZPoint           m_point;  ///< to compute the field
   std::vector<Gaudi::XYZVector>  m_B;      ///< returned field
+
+  std::string m_fieldSvc; /// field service name
   IMagneticFieldSvc* m_pIMF;   ///< Pointer to the magnetic field service
 
 };

@@ -1,4 +1,4 @@
-// $Id: TrackHerabExtrapolator.cpp,v 1.15 2007-03-20 13:10:10 mneedham Exp $
+// $Id: TrackHerabExtrapolator.cpp,v 1.16 2007-04-12 12:58:10 mneedham Exp $
 
 // from Gaudi
 #include "GaudiKernel/IMagneticFieldSvc.h"
@@ -40,7 +40,7 @@ TrackHerabExtrapolator::TrackHerabExtrapolator(const std::string& type,
 
   declareProperty( "extrapolatorID"    , m_extrapolatorID = 5);
   declareProperty( "requiredPrecision" , m_error =  0.005*Gaudi::Units::mm );
-
+  declareProperty("FieldSvc", m_fieldSvc = "MagneticFieldSvc");
 }
 
 StatusCode TrackHerabExtrapolator::initialize() {
@@ -50,7 +50,7 @@ StatusCode TrackHerabExtrapolator::initialize() {
     return Error("Failed to initialize", sc);
   }
 
-  m_pIMF = svc<IMagneticFieldSvc>( "MagneticFieldSvc",true);
+  m_pIMF = svc<IMagneticFieldSvc>( m_fieldSvc,true);
 
  
   // First query, to load the field map

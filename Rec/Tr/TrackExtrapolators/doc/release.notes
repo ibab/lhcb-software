@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking extrapolators
 !-----------------------------------------------------------------------------
 
+! 2007-04-12 - M. Needham
+ - Make magnetic field service string a property
+
 !======================= TrackExtrapolators v2r10 2007-03-21 =================
 ! 2007-03-21 - Marco Cattaneo
  - Fix doxygen warnings

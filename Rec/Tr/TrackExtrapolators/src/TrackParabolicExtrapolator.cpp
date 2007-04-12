@@ -32,7 +32,10 @@ TrackParabolicExtrapolator::TrackParabolicExtrapolator
 ( const std::string& type,
   const std::string& name,
   const IInterface* parent )
-  : TrackExtrapolator(type, name, parent) {}
+  : TrackExtrapolator(type, name, parent) {
+
+  declareProperty("FieldSvc", m_fieldSvc = "MagneticFieldSvc");
+}
 
 //=============================================================================
 // TrackParabolicExtrapolator destructor.
@@ -50,7 +53,7 @@ StatusCode TrackParabolicExtrapolator::initialize()
       return Error("Failed to initialize", sc);
     }
   
-  m_pIMF = svc<IMagneticFieldSvc>("MagneticFieldSvc", true);
+  m_pIMF = svc<IMagneticFieldSvc>(m_fieldSvc, true);
  
   return StatusCode::SUCCESS;
 }

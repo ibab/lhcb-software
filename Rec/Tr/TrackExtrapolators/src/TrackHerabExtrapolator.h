@@ -8,6 +8,7 @@
 class IMagneticFieldSvc;
 
 
+#include <string>
 
 /** @class TrackHerabExtrapolator TrackHerabExtrapolator.h "TrackHerabExtrapolator.h"
  *
@@ -115,12 +116,15 @@ private:
   double             m_error;  ///< Error
   Gaudi::XYZPoint           m_point;  ///< to compute the field
   Gaudi::XYZVector          m_B;      ///< returned field
-  IMagneticFieldSvc* m_pIMF;   ///< Pointer to the magnetic field service
-
+ 
   // Parameters for Runge-Kutta
   double             m_qpCurls;    ///< Maximum curvature
   double             m_stepMin;    ///<
   double             m_stepMinRK5; ///<
+
+
+  std::string m_fieldSvc; // field service name
+  IMagneticFieldSvc* m_pIMF;   ///< Pointer to the magnetic field service
 
 };
 

@@ -1,4 +1,4 @@
-// $Id: TrackKiselExtrapolator.cpp,v 1.5 2007-03-20 13:22:03 mneedham Exp $
+// $Id: TrackKiselExtrapolator.cpp,v 1.6 2007-04-12 12:58:10 mneedham Exp $
 
 // from Gaudi
 #include "GaudiKernel/IMagneticFieldSvc.h"
@@ -28,6 +28,7 @@ TrackKiselExtrapolator::TrackKiselExtrapolator(const std::string& type,
 {
 
   declareProperty("order", m_order = 3);
+  declareProperty("FieldSvc", m_fieldSvc = "MagneticFieldSvc");
   m_B.resize(3);
   
   declareInterface<ITrackExtrapolator>( this );
@@ -40,7 +41,7 @@ StatusCode TrackKiselExtrapolator::initialize() {
     return Error("Failed to initialize", sc);
   }
 
-  m_pIMF = svc<IMagneticFieldSvc>( "MagneticFieldSvc",true);
+  m_pIMF = svc<IMagneticFieldSvc>(m_fieldSvc,true);
 
   // First query, to load the field map
   debug() << "Load field map" << endreq;

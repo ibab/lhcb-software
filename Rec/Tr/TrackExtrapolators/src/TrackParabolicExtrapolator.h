@@ -4,6 +4,8 @@
 // Include files
 #include "TrackExtrapolator.h"
 
+#include <string>
+
 // Forward declaration
 class IMagneticFieldSvc;
 
@@ -59,6 +61,8 @@ protected:
   double             m_ax;
   double             m_ay;
   Gaudi::XYZVector   m_B;
+
+  std::string m_fieldSvc;
   IMagneticFieldSvc* m_pIMF; ///< Pointer to the magnetic field service
 
 };
