@@ -1,6 +1,13 @@
-! $Id: release.notes,v 1.9 2007-04-12 15:20:54 ukerzel Exp $
+! $Id: release.notes,v 1.10 2007-04-12 15:48:02 ukerzel Exp $
 ! Package     : MicroDST
 ! Responsible : Ulrich Kerzel
+
+! 2007-04-12 - Ulrich Kerzel
+ - change in accordance with DaVinci v19r0:
+      DaVinciAssociators/Particle2MCLinker.h
+   moved to
+      Kernel/Particle2MCLinker.h
+  for TestDST.h, CreateMicroDstMCAlg.h
 
 ! 2007-04-12 - Ulrich Kerzel
  - change Warning() into debug() if storing user-created

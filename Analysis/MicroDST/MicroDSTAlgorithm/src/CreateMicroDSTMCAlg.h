@@ -1,4 +1,4 @@
-// $Id: CreateMicroDSTMCAlg.h,v 1.4 2007-02-23 09:22:59 ukerzel Exp $
+// $Id: CreateMicroDSTMCAlg.h,v 1.5 2007-04-12 15:48:02 ukerzel Exp $
 #ifndef CREATEMICRODSTALG_H 
 #define CREATEMICRODSTALG_H 1
 
@@ -14,7 +14,7 @@
 #include <GaudiKernel/KeyedContainer.h>
 #include <GaudiKernel/IRegistry.h>
 
-#include "DaVinciAssociators/Particle2MCLinker.h"
+#include "Kernel/Particle2MCLinker.h"
 
 /** @class CreateMicroDSTMCAlg CreateMicroDSTMCAlg.h
  *   

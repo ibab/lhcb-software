@@ -1,4 +1,4 @@
-// $Id: TestDST.h,v 1.3 2007-02-23 09:43:52 ukerzel Exp $
+// $Id: TestDST.h,v 1.4 2007-04-12 15:48:02 ukerzel Exp $
 #ifndef TESTDST_H 
 #define TESTDST_H 1
 
@@ -10,7 +10,7 @@
 
 #include "Linker/LinkerTool.h"
 
-#include "DaVinciAssociators/Particle2MCLinker.h"
+#include "Kernel/Particle2MCLinker.h"
 
 
 /** @class TestDST TestDST.h
