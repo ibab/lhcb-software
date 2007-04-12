@@ -1,6 +1,12 @@
-! $Id: release.notes,v 1.10 2007-04-12 15:48:02 ukerzel Exp $
+! $Id: release.notes,v 1.11 2007-04-12 17:57:14 ukerzel Exp $
 ! Package     : MicroDST
 ! Responsible : Ulrich Kerzel
+
+! 2007-04-12 - Ulrich Kerzel
+ - treat endVertex()->outgoingParticles() and daughters() 
+   separately in CreateMicroDstAlg.cpp
+
+
 
 ! 2007-04-12 - Ulrich Kerzel
  - change in accordance with DaVinci v19r0:

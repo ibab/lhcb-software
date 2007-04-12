@@ -1,4 +1,4 @@
-// $Id: CreateMicroDSTAlg.cpp,v 1.5 2007-04-12 15:20:54 ukerzel Exp $
+// $Id: CreateMicroDSTAlg.cpp,v 1.6 2007-04-12 17:57:14 ukerzel Exp $
 // Include files 
 
 // from Gaudi
@@ -282,13 +282,13 @@ LHCb::Particle *CreateMicroDSTAlg::StoreParticle(const LHCb::Particle * particle
   //
   LHCb::Vertex *endVertexClone = NULL;
   if (particle->endVertex()) {
-    verbose() << "now consider endVertex of particle" << endmsg;
+    verbose() << "now consider endVertex of particle with PID " << particle->particleID().pid() << endmsg;
 
     locTES = CreateMicroDSTAlg::objectLocation(particle->endVertex()->parent());
-    verbose() << "location of endVertes on TES " << locTES << endmsg;
+    verbose() << "location of endVertex on TES " << locTES << endmsg;
     LHCb::Vertices* vertexContainer = CreateMicroDSTAlg::getContainer<LHCb::Vertices>(locTES);
     if (vertexContainer) {
-      LHCb::Vertex *endVertexClone = vertexContainer->object(particle->endVertex()->key());
+      endVertexClone = vertexContainer->object(particle->endVertex()->key());
       if (endVertexClone) {
 
         verbose() << "end vertex clone already exists in TES store" << endmsg;
@@ -299,6 +299,34 @@ LHCb::Particle *CreateMicroDSTAlg::StoreParticle(const LHCb::Particle * particle
         endVertexClone = particle->endVertex()->clone();
         vertexContainer->insert(endVertexClone, particle->endVertex()->key());
         endVertexClone->clearOutgoingParticles();  // remove SmartRefs and put in links to daughters
+
+        //
+        // check outgoing particles and store
+        //
+        const SmartRefVector< LHCb::Particle > &outgoingParticles = particle->endVertex()->outgoingParticles();
+        verbose() << "particle with PID " << particle->particleID().pid()
+                  << " has #outgoing particles at the end-vertex " << outgoingParticles.size() << endmsg;
+        
+        SmartRefVector< LHCb::Particle >::const_iterator iOutPart;
+        SmartRefVector< LHCb::Particle >::const_iterator iOutPartBegin = outgoingParticles.begin();
+        SmartRefVector< LHCb::Particle >::const_iterator iOutPartEnd   = outgoingParticles.end();
+        if ( msgLevel(MSG::VERBOSE) ) {
+          for (iOutPart = iOutPartBegin; iOutPart != iOutPartEnd; iOutPart++){
+            verbose() << "outgoing particle has PID " << (*iOutPart)->particleID().pid()  << endmsg;
+          }// for iOutPart
+        }// if verbose
+
+        for (iOutPart = iOutPartBegin; iOutPart != iOutPartEnd; iOutPart++){
+          locTES = CreateMicroDSTAlg::objectLocation((*iOutPart)->parent());
+          verbose() << " consider next outgoing particle with PID " << (*iOutPart)->particleID().pid() 
+                    << " and key " << (*iOutPart)->key() 
+                    << " and TES location " << locTES
+                    << endmsg;
+          LHCb::Particle *outPartClone =  CreateMicroDSTAlg::StoreParticle(*iOutPart);
+          if (outPartClone) {
+            endVertexClone->addToOutgoingParticles(outPartClone);
+          }// if outPartClone
+        }// for iOutPart
 
       } // if vertexContainer
 
@@ -315,12 +343,18 @@ LHCb::Particle *CreateMicroDSTAlg::StoreParticle(const LHCb::Particle * particle
     
     // remove all daughters from clone before re-adding them on different DST location
     particleClone->clearDaughters();
-    const SmartRefVector< LHCb::Particle > &daughters = particle->endVertex()->outgoingParticles();
-    verbose() << "number of daughters " << daughters.size() << endmsg;
+    const SmartRefVector< LHCb::Particle > &daughters = particle->daughters();
+    verbose() << "particle with PID " << particle->particleID().pid()
+              << " has #daughters " << daughters.size() << endmsg;
     
     SmartRefVector< LHCb::Particle >::const_iterator iDaughter;
     SmartRefVector< LHCb::Particle >::const_iterator iDaughterBegin = daughters.begin();
     SmartRefVector< LHCb::Particle >::const_iterator iDaughterEnd   = daughters.end();
+    if ( msgLevel(MSG::VERBOSE) ) {
+      for (iDaughter = iDaughterBegin; iDaughter != iDaughterEnd; iDaughter++) {
+        verbose() << "daughter has PID " << (*iDaughter)->particleID().pid()  << endmsg;
+      }// for iDaughter
+    }// if verbose
     for (iDaughter = iDaughterBegin; iDaughter != iDaughterEnd; iDaughter++) {
       locTES = CreateMicroDSTAlg::objectLocation((*iDaughter)->parent());
       verbose() << " consider next daughter particle with PID " << (*iDaughter)->particleID().pid() 
@@ -331,9 +365,6 @@ LHCb::Particle *CreateMicroDSTAlg::StoreParticle(const LHCb::Particle * particle
        LHCb::Particle *daughterClone = CreateMicroDSTAlg::StoreParticle((*iDaughter));
        if (daughterClone) {
          particleClone->addToDaughters(daughterClone);  //set relations
-         if (endVertexClone) {
-           endVertexClone->addToOutgoingParticles(daughterClone);
-         }// if endVertex
        } // if daugtherClone
     } //for iDaughter
   }// if endVertex
@@ -429,7 +460,8 @@ LHCb::Particle *CreateMicroDSTAlg::StoreParticle(const LHCb::Particle * particle
 
   }//if proto
   
-  verbose() << " --> end of StoreParticle, return clone <<--" << endmsg;
+  verbose() << " --> end of StoreParticle with PID "  << particle->particleID().pid()
+            << " , return clone <<--" << endmsg;
   return particleClone;
 }//sc StoreParticle
 
