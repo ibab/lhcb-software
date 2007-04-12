@@ -1,4 +1,4 @@
-// $Id: TestDST.cpp,v 1.5 2007-04-02 08:45:04 ukerzel Exp $
+// $Id: TestDST.cpp,v 1.6 2007-04-12 13:58:38 ukerzel Exp $
 // Include files 
 
 // from Gaudi
@@ -169,7 +169,6 @@ StatusCode  TestDST::PrintDefaultPV(){
      SmartRefVector< LHCb::Track >::const_iterator iTrackEnd   = tracks.end();
      for (iTrack = iTrackBegin; iTrack != iTrackEnd; iTrack++) {
        const SmartRef< LHCb::Track > trackRef = *iTrack;
-       const LHCb::Track *track = *iTrack;
        verbose() << " smartRef " << trackRef 
                  << " hintID " << iTrack->hintID()  << " linkID " << iTrack->linkID()  << endmsg;
        if (trackRef) {
@@ -207,7 +206,8 @@ StatusCode TestDST::PrintParticles() {
   LHCb::Particle::ConstVector::const_iterator iParticleEnd   = particleVector.end();
   for (iParticle = iParticleBegin; iParticle != iParticleEnd; iParticle++) {
 
-    verbose() << " ----> consider new particle <-----" << endmsg;
+    verbose() << " ----> consider new particle with PID " << (*iParticle)->particleID().pid() 
+              << " <-----" << endmsg;
 
     //
     // print some generic particle information
@@ -233,27 +233,6 @@ StatusCode TestDST::PrintParticles() {
 
     TestDST::PrintParticleInfo(*iParticle);
     TestDST::PrintMCParticle(*iParticle);
-
-    //
-    // print information about daughers  
-    //
-    if ((*iParticle)->endVertex()){
-      verbose() << "  position of decay vertex " << (*iParticle)->endVertex()->position() << endmsg;
-    }//ifEndVertex
-    
-    verbose() << "  number of daughters " << (*iParticle)->daughters().size() << endmsg;    
-    if ((*iParticle)->daughters().size() > 0) {
-
-      const SmartRefVector< LHCb::Particle > &daughters = (*iParticle)->daughters();    
-      SmartRefVector< LHCb::Particle >::const_iterator iDaughter;
-      SmartRefVector< LHCb::Particle >::const_iterator iDaughterBegin = daughters.begin();
-      SmartRefVector< LHCb::Particle >::const_iterator iDaughterEnd   = daughters.end();
-      for (iDaughter = iDaughterBegin; iDaughter != iDaughterEnd; iDaughter++) {    
-        verbose() << "--> print information about next daughter" << endmsg;
-        TestDST::PrintParticleInfo(*iDaughter);
-        TestDST::PrintMCParticle(*iDaughter);
-      } //for iDaughter
-    }// if #daughter
 
   }//for iParticle
   verbose() << "--> end of PrintParticles <-- " << endmsg;
@@ -349,9 +328,36 @@ StatusCode TestDST::PrintParticleInfo(const LHCb::Particle *particle) {
 
       }//for calo
 
+      // track information
+      if (particle->proto()->track()){
+        verbose() << " got track " << endmsg;
+        verbose() << "  1st state at " << particle->proto()->track()->position() << endmsg;
+      } // if track
+      
     }//if Proto
 
-    verbose() << "--> end of PrintParticleInfo <-- " << endmsg;
+    //
+    // print information about daughers  
+    //
+    if (particle->endVertex()){
+      verbose() << "  position of decay vertex " << particle->endVertex()->position() << endmsg;
+    }//ifEndVertex
+    
+    verbose() << "  number of daughters " << particle->daughters().size() << endmsg;    
+    if (particle->daughters().size() > 0) {
+
+      const SmartRefVector< LHCb::Particle > &daughters = particle->daughters();    
+      SmartRefVector< LHCb::Particle >::const_iterator iDaughter;
+      SmartRefVector< LHCb::Particle >::const_iterator iDaughterBegin = daughters.begin();
+      SmartRefVector< LHCb::Particle >::const_iterator iDaughterEnd   = daughters.end();
+      for (iDaughter = iDaughterBegin; iDaughter != iDaughterEnd; iDaughter++) {    
+        verbose() << "--> print information about next daughter" << endmsg;
+        TestDST::PrintParticleInfo(*iDaughter);
+        TestDST::PrintMCParticle(*iDaughter);
+      } //for iDaughter
+    }// if #daughter
+
+    verbose() << "--> end of PrintParticleInfo PID: " <<  (particle)->particleID().pid() << " <-- " << endmsg;
     
   return StatusCode::SUCCESS;
 } // sc PrintParticleInfo
@@ -378,7 +384,27 @@ StatusCode TestDST::PrintMCParticles() {
                   << " p " << (*iMCPart)->mother()->momentum()
                   << endmsg;
       } // if mother
-    }//for
+
+      //
+      // print daughter (end-vertex) information
+      //
+      const SmartRefVector< LHCb::MCVertex > &endVertices = (*iMCPart)->endVertices();
+      verbose() << " found #end-vertices " << endVertices.size() << endmsg;
+      SmartRefVector< LHCb::MCVertex >::const_iterator iEndVertex;
+      SmartRefVector< LHCb::MCVertex >::const_iterator iEndVertexBegin = endVertices.begin();
+      SmartRefVector< LHCb::MCVertex >::const_iterator iEndVertexEnd   = endVertices.end();
+      for (iEndVertex = iEndVertexBegin; iEndVertex != iEndVertexEnd; iEndVertex++) {
+        verbose() << "found new end-vertex at " << (*iEndVertex)->position() << endmsg;
+        const SmartRefVector< LHCb::MCParticle > & products = (*iEndVertex)->products();
+        verbose() << "found #products " << products.size();
+        SmartRefVector< LHCb::MCParticle >::const_iterator iProduct;
+        SmartRefVector< LHCb::MCParticle >::const_iterator iProductBegin = products.begin();
+        SmartRefVector< LHCb::MCParticle >::const_iterator iProductEnd   = products.end();
+        for (iProduct = iProductBegin; iProduct != iProductEnd; iProduct++) {
+          verbose() << "new product" << endmsg;
+        }//for iProduct
+      }//for iEndVertx
+    }//for iMCPart
 
   }//if exist
 

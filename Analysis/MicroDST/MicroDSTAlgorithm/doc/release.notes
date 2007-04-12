@@ -1,6 +1,11 @@
-! $Id: release.notes,v 1.7 2007-02-21 17:43:28 ukerzel Exp $
+! $Id: release.notes,v 1.8 2007-04-12 13:58:38 ukerzel Exp $
 ! Package     : MicroDST
 ! Responsible : Ulrich Kerzel
+
+! 2007-04-12 - Ulrich Kerzel
+ - in TestDST: print some track-related information,
+   move information about daughter into 'PrintParticleInfo'
+   to descent the whole chain
 
 ! 2007-02-21 - Ulrich Kerzel
  - assume rootOnTes() ends with a "/", edit TestDST accordingly
