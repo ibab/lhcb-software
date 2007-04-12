@@ -1,6 +1,12 @@
-! $Id: release.notes,v 1.8 2007-04-12 13:58:38 ukerzel Exp $
+! $Id: release.notes,v 1.9 2007-04-12 15:20:54 ukerzel Exp $
 ! Package     : MicroDST
 ! Responsible : Ulrich Kerzel
+
+! 2007-04-12 - Ulrich Kerzel
+ - change Warning() into debug() if storing user-created
+   primary vertex failed - most likely, it hadn't been created
+   by the user
+
 
 ! 2007-04-12 - Ulrich Kerzel
  - in TestDST: print some track-related information,

@@ -1,4 +1,4 @@
-// $Id: CreateMicroDSTAlg.cpp,v 1.4 2007-02-21 15:43:36 ukerzel Exp $
+// $Id: CreateMicroDSTAlg.cpp,v 1.5 2007-04-12 15:20:54 ukerzel Exp $
 // Include files 
 
 // from Gaudi
@@ -147,7 +147,7 @@ StatusCode CreateMicroDSTAlg::execute() {
       verbose() << "store user primary vertices for this location" << endmsg;      
       sc = CreateMicroDSTAlg::StorePV(locTES+"/PrimaryVertices");
       if (sc != StatusCode::SUCCESS) {
-        Warning("storing primary vertices into microDST failed");
+        debug() << "storing user primary vertices into microDST failed" << endmsg;
       }//if
       locations[locTES] = true;  // mark this location done
     }// if iLoc
@@ -197,11 +197,14 @@ StatusCode CreateMicroDSTAlg::StorePV(std::string location) {
   LHCb::RecVertices *primaryVertices = NULL;
   if (exist<LHCb::RecVertices>(location)) {
     primaryVertices = get<LHCb::RecVertices>(location);
-  } // if exist
+  } else {
+    debug() << "Primary vertex location does not exist" << endmsg;
+    return StatusCode::FAILURE;
+  }// if exist
 
   if (!primaryVertices) {
-    Warning("Could not get input primary vertices",  StatusCode::SUCCESS);
-    return StatusCode::SUCCESS;
+    debug() <<"Could not get input primary vertices" << endmsg;
+    return StatusCode::FAILURE;
   }
   verbose() << "got #input PV " << primaryVertices->size() << endmsg;
 
