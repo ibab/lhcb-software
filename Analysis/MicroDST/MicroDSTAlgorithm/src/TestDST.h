@@ -1,4 +1,4 @@
-// $Id: TestDST.h,v 1.4 2007-04-12 15:48:02 ukerzel Exp $
+// $Id: TestDST.h,v 1.5 2007-04-13 15:46:29 ukerzel Exp $
 #ifndef TESTDST_H 
 #define TESTDST_H 1
 
@@ -58,6 +58,7 @@ private:
   StatusCode PrintMCParticles();        ///< print all MC particles found in container
   StatusCode PrintMCVertices();         ///<              vertices
   StatusCode PrintMCParticle(const LHCb::Particle* particle);
+  StatusCode PrintMCParticle(const LHCb::MCParticle* mcParticle);
 
   std::vector<const LHCb::MCParticle*> GetMCParticle (const LHCb::Particle* particle,
                                                       Particle2MCLinker* particleLinker);

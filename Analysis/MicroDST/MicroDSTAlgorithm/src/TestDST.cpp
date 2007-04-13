@@ -1,4 +1,4 @@
-// $Id: TestDST.cpp,v 1.8 2007-04-13 15:13:35 ukerzel Exp $
+// $Id: TestDST.cpp,v 1.9 2007-04-13 15:46:29 ukerzel Exp $
 // Include files 
 
 // from Gaudi
@@ -571,38 +571,53 @@ StatusCode TestDST::PrintMCParticle(const LHCb::Particle* particle) {
                   << (particle)->particleID().pid()
                   << " true PID " << (*iMCPart)->particleID().pid()
                   << endmsg;
-        if ( (*iMCPart)->mother() ) {
-          verbose() << "  mother PID " << (*iMCPart)->mother()->particleID().pid() << endmsg;
-        }// if mother
-
-        //
-        // print daughter (end-vertex) information
-        //
-        const SmartRefVector< LHCb::MCVertex > &endVertices = (*iMCPart)->endVertices();
-        verbose() << " found #end-vertices " << endVertices.size() << endmsg;
-        // tries to access /Event/MC - not yet working w/o access to full DST catalogue
-        // some incident is thrown which causes Gaudi to exit
-
-//        SmartRefVector< LHCb::MCVertex >::const_iterator iEndVertex;
-//        SmartRefVector< LHCb::MCVertex >::const_iterator iEndVertexBegin = endVertices.begin();
-//        SmartRefVector< LHCb::MCVertex >::const_iterator iEndVertexEnd   = endVertices.end();
-//        for (iEndVertex = iEndVertexBegin; iEndVertex != iEndVertexEnd; iEndVertex++) {
-//          verbose() << "found new end-vertex at " << (*iEndVertex)->position() << endmsg;
-//          const SmartRefVector< LHCb::MCParticle > & products = (*iEndVertex)->products();
-//          verbose() << "found #products " << products.size();
-//          SmartRefVector< LHCb::MCParticle >::const_iterator iProduct;
-//          SmartRefVector< LHCb::MCParticle >::const_iterator iProductBegin = products.begin();
-//          SmartRefVector< LHCb::MCParticle >::const_iterator iProductEnd   = products.end();
-//          for (iProduct = iProductBegin; iProduct != iProductEnd; iProduct++) {
-//            verbose() << "new product" << endmsg;
-//          }//for iProduct
-//        }//for iEndVertx
-        
+        TestDST::PrintMCParticle(*iMCPart);        
       } // for iMCPart
     }// if # >0
 
    return StatusCode::SUCCESS;
  }// sc PrintMCParticle
 //=============================================================================
+StatusCode TestDST::PrintMCParticle(const LHCb::MCParticle* mcParticle) {
+
+  verbose() << "print information about true particle with PID " << mcParticle->particleID().pid()
+            << endmsg;
+
+  verbose() << "   pt " << mcParticle->pt() << " p " << mcParticle->p() << endmsg;
+
+  //
+  // print daughter (end-vertex) information
+  //
+  const SmartRefVector< LHCb::MCVertex > &endVertices = mcParticle->endVertices();
+  verbose() << " found #end-vertices " << endVertices.size() << endmsg;
+  // tries to access /Event/MC - not yet working w/o access to full DST catalogue
+  // some incident is thrown which causes Gaudi to exit
+  
+  //        SmartRefVector< LHCb::MCVertex >::const_iterator iEndVertex;
+  //        SmartRefVector< LHCb::MCVertex >::const_iterator iEndVertexBegin = endVertices.begin();
+  //        SmartRefVector< LHCb::MCVertex >::const_iterator iEndVertexEnd   = endVertices.end();
+  //        for (iEndVertex = iEndVertexBegin; iEndVertex != iEndVertexEnd; iEndVertex++) {
+  //          verbose() << "found new end-vertex at " << (*iEndVertex)->position() << endmsg;
+  //          const SmartRefVector< LHCb::MCParticle > & products = (*iEndVertex)->products();
+  //          verbose() << "found #products " << products.size();
+  //          SmartRefVector< LHCb::MCParticle >::const_iterator iProduct;
+  //          SmartRefVector< LHCb::MCParticle >::const_iterator iProductBegin = products.begin();
+  //          SmartRefVector< LHCb::MCParticle >::const_iterator iProductEnd   = products.end();
+  //          for (iProduct = iProductBegin; iProduct != iProductEnd; iProduct++) {
+  //            verbose() << "new product" << endmsg;
+  //          }//for iProduct
+  //        }//for iEndVertx
+  
+  //
+  // mother information
+  //
+
+  if (mcParticle->mother() ) {
+    verbose() << "   true mother PID " << mcParticle->mother()->particleID().pid() << endmsg;
+    TestDST::PrintMCParticle(mcParticle->mother());
+  } // if mother
+
+   return StatusCode::SUCCESS;
+ }// sc PrintMCParticle
 //=============================================================================
 //=============================================================================
