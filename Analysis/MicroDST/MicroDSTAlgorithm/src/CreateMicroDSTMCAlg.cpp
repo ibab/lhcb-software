@@ -1,4 +1,4 @@
-// $Id: CreateMicroDSTMCAlg.cpp,v 1.6 2007-03-15 11:41:44 ukerzel Exp $
+// $Id: CreateMicroDSTMCAlg.cpp,v 1.7 2007-04-13 15:13:34 ukerzel Exp $
 // Include files 
 
 // from Gaudi
@@ -416,11 +416,15 @@ LHCb::MCParticle* CreateMicroDSTMCAlg::StoreMCParticle(const LHCb::MCParticle *m
   //
   // store mother particle
   // 
+
+  verbose() << "store mother particle for particle with PID " 
+            << mcParticle->particleID().pid() << " ? "
+            << endmsg;
   const LHCb::MCParticle *mother      = mcParticle->mother();
   LHCb::MCParticle       *motherClone = NULL;
   if (storeOriginVertex && mother) {
     verbose() << "mother has PID " << mother->particleID().pid() << endmsg;
-     motherClone = CreateMicroDSTMCAlg::StoreMCParticle(mother, false); 
+     motherClone = CreateMicroDSTMCAlg::StoreMCParticle(mother, true); 
     if (motherClone) {
       verbose() << "got clone of mother" << endmsg;
     } else {

@@ -1,4 +1,4 @@
-// $Id: TestDST.cpp,v 1.7 2007-04-12 15:34:49 ukerzel Exp $
+// $Id: TestDST.cpp,v 1.8 2007-04-13 15:13:35 ukerzel Exp $
 // Include files 
 
 // from Gaudi
@@ -91,13 +91,15 @@ StatusCode TestDST::execute() {
   //
   StatusCode sc;
 
-  sc = TestDST::PrintDefaultPV();
-  sc = TestDST::PrintParticles();
-
   if (m_printMCContainer) {
+    verbose() << "now print content of MC containers" << endmsg;
     sc = TestDST::PrintMCParticles();
     sc = TestDST::PrintMCVertices();
   }//if
+
+  sc = TestDST::PrintDefaultPV();
+  sc = TestDST::PrintParticles();
+
 
 //  LHCb::CaloHypo::Container* caloE = get<LHCb::CaloHypo::Container>("/Event/Rec/Calo/Electrons");  
 //  if (m_printCaloElectrons) {
@@ -365,6 +367,8 @@ StatusCode TestDST::PrintParticleInfo(const LHCb::Particle *particle) {
 StatusCode TestDST::PrintMCParticles() {
 
   std::string locTES = rootOnTES()+  LHCb::MCParticleLocation::Default;
+  verbose() << "print all MC particles at TES location " << locTES << endmsg;
+
   if (exist<LHCb::MCParticles>(locTES)) {
     LHCb::MCParticles *MCParticles = get<LHCb::MCParticles>(locTES);
     verbose() << " got #MC Particles " << MCParticles->size() << endmsg;
@@ -507,37 +511,39 @@ std::vector<const LHCb::MCParticle*> TestDST::GetMCParticle (const LHCb::Particl
   //
   // check if associated to MC truth
   //
-  bool isAssociatedLinks     = particleLinker-> isAssociated(particle);
-  verbose() << "Associated to MC truth ? "   << isAssociatedLinks     << endmsg;
-  if (!isAssociatedLinks) {
-    debug() << " true particle " << particle->particleID().pid () 
-            << " not found" << endmsg;
-    associatedParticles.clear();
-    return associatedParticles;
-  } // if 
-  
-  
-
-
-  // loop over all associations
-  const LHCb::MCParticle* mcParticle = particleLinker->firstMCP( particle );    
-  if (mcParticle) {      
-    verbose() << "Found MC particle " << endmsg;
-    // loop over all possible assignments
-    while (mcParticle) {
-      verbose() << "particle is associated  to MC particle with key "  
-                << mcParticle->key() << endmsg;
-      verbose() << " particle ID " << particle   -> particleID().pid () 
-                << " true pid    " << mcParticle -> particleID().pid ()
-                << endmsg;
-      associatedParticles.push_back(mcParticle);
-      mcParticle = particleLinker->next();
-    } // while
-  } else {
-    verbose() << "MC particle not found" << endmsg;
-  } // if mcParticle
-
-
+  try {
+    bool isAssociatedLinks     = particleLinker-> isAssociated(particle);
+    verbose() << "Associated to MC truth ? "   << isAssociatedLinks     << endmsg;
+    if (!isAssociatedLinks) {
+      debug() << " true particle " << particle->particleID().pid () 
+              << " not found" << endmsg;
+      associatedParticles.clear();
+      return associatedParticles;
+    } // if 
+    
+    // loop over all associations
+    const LHCb::MCParticle* mcParticle = particleLinker->firstMCP( particle );    
+    if (mcParticle) {      
+      verbose() << "Found MC particle " << endmsg;
+      // loop over all possible assignments
+      while (mcParticle) {
+        verbose() << "particle is associated  to MC particle with key "  
+                  << mcParticle->key() << endmsg;
+        verbose() << " particle ID "            << particle   -> particleID().pid () 
+                  << " true pid "               << mcParticle -> particleID().pid ()
+                  << " true particle on TES  "  << TestDST::objectLocation(mcParticle->parent() )
+                  << endmsg;
+        associatedParticles.push_back(mcParticle);
+        mcParticle = particleLinker->next();
+      } // while
+    } else {
+      verbose() << "MC particle not found" << endmsg;
+    } // if mcParticle
+  } //try
+  catch(...) {
+    debug() << "caught exception when associating MC particles" << endmsg;
+  }//catch
+    
   verbose() << "return #associated particles " << associatedParticles.size() << endmsg;  
   return associatedParticles;
 

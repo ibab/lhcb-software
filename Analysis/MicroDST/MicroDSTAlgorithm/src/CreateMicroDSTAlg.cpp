@@ -1,4 +1,4 @@
-// $Id: CreateMicroDSTAlg.cpp,v 1.6 2007-04-12 17:57:14 ukerzel Exp $
+// $Id: CreateMicroDSTAlg.cpp,v 1.7 2007-04-13 15:13:34 ukerzel Exp $
 // Include files 
 
 // from Gaudi
@@ -190,7 +190,7 @@ StatusCode CreateMicroDSTAlg::finalize() {
 //=============================================================================
 StatusCode CreateMicroDSTAlg::StorePV(std::string location) {
 
-  debug() << "now store primary vertices " << endmsg;
+  debug() << "now store primary vertices for location " << location << endmsg;
 
 
   // get primary vertices to store from TES

@@ -1,6 +1,13 @@
-! $Id: release.notes,v 1.11 2007-04-12 17:57:14 ukerzel Exp $
+! $Id: release.notes,v 1.12 2007-04-13 15:13:34 ukerzel Exp $
 ! Package     : MicroDST
 ! Responsible : Ulrich Kerzel
+
+! 2007-04-13 - Ulrich Kerzel
+ - also write mother of MC particle to microDST
+ - encapsulate execution of composite associator 
+   in try{} catch(...){} to avoid incident manager
+   ending the algorithm in TestDST.cpp 
+   (not a bug!)
 
 ! 2007-04-12 - Ulrich Kerzel
  - treat endVertex()->outgoingParticles() and daughters() 
