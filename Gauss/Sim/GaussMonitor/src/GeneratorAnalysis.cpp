@@ -1,4 +1,4 @@
-// $Id: GeneratorAnalysis.cpp,v 1.3 2007-03-13 19:13:26 gcorti Exp $
+// $Id: GeneratorAnalysis.cpp,v 1.4 2007-04-13 16:30:11 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -151,8 +151,13 @@ StatusCode GeneratorAnalysis::execute() {
              ++pParticle ) {   
 
           //Get Mother Particle ID
-          LHCb::ParticleID m_mPID( (*(*pParticle)->production_vertex()
-                                    -> particles_in_const_begin())-> pdg_id() );
+          LHCb::ParticleID m_mPID(0);
+          if( (*pParticle)->production_vertex() ) {
+            
+            m_mPID.setPid( (*(*pParticle)->production_vertex()
+                            -> particles_in_const_begin())->pdg_id() );
+          }
+          
           //Get current Particle ID
           LHCb::ParticleID m_dPID((*pParticle) -> pdg_id ( ));
           

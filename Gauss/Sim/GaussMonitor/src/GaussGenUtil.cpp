@@ -1,4 +1,4 @@
-// $Id: GaussGenUtil.cpp,v 1.3 2007-03-13 19:13:26 gcorti Exp $
+// $Id: GaussGenUtil.cpp,v 1.4 2007-04-13 16:29:59 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -27,7 +27,7 @@ namespace GaussGenUtil {
     // Exit for off-shell particles
     if ( thePart -> momentum().restMass2() < 0 ) return -1.0 ;
     
-    if ( thePart->end_vertex() ) {   
+    if ( thePart->end_vertex() && thePart->production_vertex() ) {   
       HepLorentzVector thePosition = thePart->end_vertex()->position() -
         thePart->production_vertex()->position() ;
       HepLorentzVector theNewPosition ;
