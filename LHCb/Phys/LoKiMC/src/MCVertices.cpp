@@ -1,8 +1,11 @@
-// $Id: MCVertices.cpp,v 1.5 2006-10-27 13:35:46 ibelyaev Exp $
+// $Id: MCVertices.cpp,v 1.6 2007-04-16 16:16:08 pkoppenb Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.5 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.6 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2006/10/27 13:35:46  ibelyaev
+//  fix for SLC4 platform
+//
 // Revision 1.4  2006/05/17 16:23:24  jpalac
 // *** empty log message ***
 //
@@ -41,10 +44,6 @@
  *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design.
- *
- *  By usage of this code one clearly states the disagreement 
- *  with the campain of Dr.O.Callot et al.: 
- *  "No Vanya's lines are allowed in LHCb/Gaudi software."
  *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2001-01-23 

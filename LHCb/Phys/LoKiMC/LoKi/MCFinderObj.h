@@ -1,8 +1,11 @@
-// $Id: MCFinderObj.h,v 1.5 2006-11-27 11:58:37 ibelyaev Exp $
+// $Id: MCFinderObj.h,v 1.6 2007-04-16 16:16:08 pkoppenb Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2006/11/27 11:58:37  ibelyaev
+//  prepare for LoKi v4r3
+//
 // Revision 1.4  2006/10/26 11:57:41  ibelyaev
 //  SLC4: fix error and many warnings
 //
@@ -48,10 +51,6 @@ class GaudiAlgorithm  ;
  *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design.
- *
- *  By usage of this code one clearly states the disagreement 
- *  with the campain of Dr.O.Callot et al.: 
- *  "No Vanya's lines are allowed in LHCb/Gaudi software."
  *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2006-03-11 
