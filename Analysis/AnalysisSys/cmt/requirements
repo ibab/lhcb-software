@@ -37,7 +37,7 @@ use Bd2PiPiPi0          v4r2    PhysSel # Olivier Deschamps
 use               LoKiMC           v2r2   Phys
 use               LoKiGenMC        v2r1   Phys
 use               LoKiPhys         v3r2   Phys
-use               LoKiPhysMC       v4r0   Phys
+use               LoKiPhysMC       v4r1   Phys
 use               LoKiAlgo         v3r2   Phys
 use               LoKiAlgoMC       v3r0   Phys
 use               LoKiJets         v2r3   Phys
