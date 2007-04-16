@@ -1,8 +1,11 @@
-// $Id: Particles0.h,v 1.9 2007-03-01 16:14:39 ibelyaev Exp $
+// $Id: Particles0.h,v 1.10 2007-04-16 16:16:26 pkoppenb Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.9 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.10 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.9  2007/03/01 16:14:39  ibelyaev
+//  add PTREL and PTDIR functions
+//
 // ============================================================================
 #ifndef LOKI_PARTICLES0_H 
 #define LOKI_PARTICLES0_H 1
@@ -33,10 +36,6 @@ class  ParticleProperty    ;
  *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design.
- *
- *  By usage of this code one clearly states the disagreement 
- *  with the campain of Dr.O.Callot et al.: 
- *  "No Vanya's lines are allowed in LHCb/Gaudi software."
  *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2006-01-28 

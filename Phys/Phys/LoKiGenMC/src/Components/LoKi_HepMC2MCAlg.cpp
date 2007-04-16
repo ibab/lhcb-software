@@ -1,8 +1,11 @@
-// $Id: LoKi_HepMC2MCAlg.cpp,v 1.14 2007-03-04 16:33:27 ibelyaev Exp $
+// $Id: LoKi_HepMC2MCAlg.cpp,v 1.15 2007-04-16 16:16:45 pkoppenb Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.14 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.15 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.14  2007/03/04 16:33:27  ibelyaev
+//  v2r1: fix a bug .. need to think about the problme
+//
 // Revision 1.13  2006/10/27 13:38:22  ibelyaev
 //  fix for SLC4 platform
 //
@@ -61,10 +64,6 @@
  *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design.
- *
- *  By usage of this code one clearly states the disagreement 
- *  with the campain of Dr.O.Callot et al.: 
- *  "No Vanya's lines are allowed in LHCb/Gaudi software."
  *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2006-01-23 

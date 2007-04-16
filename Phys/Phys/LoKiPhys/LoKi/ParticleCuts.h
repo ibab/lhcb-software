@@ -1,8 +1,11 @@
-// $Id: ParticleCuts.h,v 1.18 2007-03-04 16:54:19 ibelyaev Exp $
+// $Id: ParticleCuts.h,v 1.19 2007-04-16 16:16:26 pkoppenb Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.18 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.19 $
 // ============================================================================
 //  $Log: not supported by cvs2svn $
+//  Revision 1.18  2007/03/04 16:54:19  ibelyaev
+//   add DeltaPhi/DelatEta/DeltaR2 for jet studies
+//
 //
 // ============================================================================
 #ifndef LOKI_PHYSPARTICLECUTS_H 
@@ -29,10 +32,6 @@
  *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design.
- *
- *  By usage of this code one clearly states the disagreement 
- *  with the campain of Dr.O.Callot et al.: 
- *  "No Vanya's lines are allowed in LHCb/Gaudi software."
  *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2006-01-28 

@@ -1,8 +1,11 @@
-// $Id: Particles2.cpp,v 1.4 2007-01-22 11:18:31 ibelyaev Exp $
+// $Id: Particles2.cpp,v 1.5 2007-04-16 16:16:27 pkoppenb Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2007/01/22 11:18:31  ibelyaev
+//  fix for LoKiExample
+//
 // Revision 1.3  2006/10/27 13:39:32  ibelyaev
 //  fix for SLC4 platform
 //
@@ -41,10 +44,6 @@
  *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design.
- *
- *  By usage of this code one clearly states the disagreement 
- *  with the campain of Dr.O.Callot et al.: 
- *  "No Vanya's lines are allowed in LHCb/Gaudi software."
  *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2006-02-10 

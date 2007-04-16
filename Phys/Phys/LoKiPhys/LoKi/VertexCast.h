@@ -1,6 +1,6 @@
-// $Id: VertexCast.h,v 1.2 2006-11-27 12:01:32 ibelyaev Exp $
+// $Id: VertexCast.h,v 1.3 2007-04-16 16:16:27 pkoppenb Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version  $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $, version  $Revision: 1.3 $
 // ============================================================================
 #ifndef LOKI_VERTEXCAST_H 
 #define LOKI_VERTEXCAST_H 1
@@ -24,10 +24,6 @@
  *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design.
- *
- *  By usage of this code one clearly states the disagreement 
- *  with the campain of Dr.O.Callot et al.: 
- *  "No Vanya's lines are allowed in LHCb/Gaudi software."
  *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2006-02-16 

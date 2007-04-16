@@ -1,8 +1,11 @@
-// $Id: PhysRangeTypes.h,v 1.5 2006-11-27 12:01:32 ibelyaev Exp $
+// $Id: PhysRangeTypes.h,v 1.6 2007-04-16 16:16:26 pkoppenb Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2006/11/27 12:01:32  ibelyaev
+//  prepare for LoKi v4r3
+//
 // Revision 1.4  2006/08/15 15:13:25  ibelyaev
 //  update for new inheritance scheme Vertex<--VertexBase-->RecVertex
 //
@@ -33,10 +36,6 @@
  *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design.
- *
- *  By usage of this code one clearly states the disagreement 
- *  with the campain of Dr.O.Callot et al.: 
- *  "No Vanya's lines are allowed in LHCb/Gaudi software."
  *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2006-02-16 

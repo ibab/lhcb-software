@@ -1,8 +1,11 @@
-// $Id: Particles15.h,v 1.2 2006-11-27 12:01:31 ibelyaev Exp $
+// $Id: Particles15.h,v 1.3 2007-04-16 16:16:26 pkoppenb Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/11/27 12:01:31  ibelyaev
+//  prepare for LoKi v4r3
+//
 // Revision 1.1  2006/03/20 20:36:16  ibelyaev
 //  LoKi::Particles::Filter (LoKi::Cuts::FILTER) is added
 // 
@@ -39,10 +42,6 @@ class IFilterCriterion ;
  *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design.
- *
- *  By usage of this code one clearly states the disagreement 
- *  with the campain of Dr.O.Callot et al.: 
- *  "No Vanya's lines are allowed in LHCb/Gaudi software."
  *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2006-03-20 

@@ -1,8 +1,11 @@
-// $Id: LoKi_PV2MCAlg.cpp,v 1.6 2006-08-29 11:40:48 ibelyaev Exp $
+// $Id: LoKi_PV2MCAlg.cpp,v 1.7 2007-04-16 16:16:48 pkoppenb Exp $
 // ============================================================================
-// CVS tag $NAame:$, version $Revision: 1.6 $
+// CVS tag $NAame:$, version $Revision: 1.7 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2006/08/29 11:40:48  ibelyaev
+//  many fixed to simplify MC-match
+//
 // Revision 1.5  2006/08/15 15:27:43  ibelyaev
 //  adaptation to new inheritance scheme for Vertices
 //
@@ -57,10 +60,6 @@
  *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design.
- *
- *  By usage of this code one clearly states the disagreement 
- *  with the campain of Dr.O.Callot et al.: 
- *  "No Vanya's lines are allowed in LHCb/Gaudi software."
  *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2006-03-19 
