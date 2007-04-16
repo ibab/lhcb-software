@@ -1,8 +1,11 @@
-// $Id: LoKiExample_dll.cpp,v 1.2 2007-04-04 12:16:39 ibelyaev Exp $
+// $Id: LoKiExample_dll.cpp,v 1.3 2007-04-16 16:16:53 pkoppenb Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2007/04/04 12:16:39  ibelyaev
+//  v5r2: update
+//
 //
 // ============================================================================
 // Include files
@@ -21,10 +24,6 @@
  *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design.
- *
- *  By usage of this code one clearly states the disagreement 
- *  with the campain of Dr.O.Callot et al.: 
- *  "No Vanya's lines are allowed in LHCb/Gaudi software."
  *
  *   @date 2003-02-24
  *   @author Vanya BELYAEV Ivan.Belyaev@itep.ru
