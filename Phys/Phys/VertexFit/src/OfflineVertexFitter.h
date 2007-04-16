@@ -153,6 +153,11 @@ protected:
                                 double& zg,
                                 Gaudi::Vector3& para , 
                                 Gaudi::SymMatrix3x3& cov ) const;
+
+  void addToDaughters( LHCb::Particle&, const LHCb::Particle::ConstVector& ) const ; // add to particle daughters
+  void addToOutgoingParticles( LHCb::Vertex&, const LHCb::Particle::ConstVector& ) const ; // add to vertex particles
+  void addToOutgoingParticles( LHCb::Vertex&, const LHCb::Particle* ) const ; // add to vertex particles
+  
  
 private:
       

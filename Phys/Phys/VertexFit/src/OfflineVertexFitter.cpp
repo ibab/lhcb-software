@@ -1,4 +1,4 @@
-// $Id: OfflineVertexFitter.cpp,v 1.19 2007-02-06 10:07:30 pkoppenb Exp $
+// $Id: OfflineVertexFitter.cpp,v 1.20 2007-04-16 13:38:28 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -99,8 +99,8 @@ StatusCode OfflineVertexFitter::fit( const LHCb::Particle::ConstVector& parts,
                                  LHCb::Particle& P, LHCb::Vertex& V) const
 {
   // xieyh
-  debug() << "start fit " <<endreq;
-  debug() << "using " << parts.size() <<" particles" <<endreq;
+  debug() << "start fit " <<endmsg;
+  debug() << "using " << parts.size() <<" particles" <<endmsg;
  
   P.clearDaughters();
   V.clearOutgoingParticles();
@@ -108,39 +108,48 @@ StatusCode OfflineVertexFitter::fit( const LHCb::Particle::ConstVector& parts,
   V.setNDoF(0);
   P.setEndVertex( &V );
 
-
   LHCb::Particle::ConstVector FlyingParticles;
-  LHCb::Particle::ConstVector VertexedParticles;
+  LHCb::Particle::ConstVector VertexedParticles; // they are the ones with a vertex.
   LHCb::Particle::ConstVector Photons;
   LHCb::Particle::ConstVector PhotonPairs;
 
-  FlyingParticles.clear();
-  VertexedParticles.clear();
-  Photons.clear();
-  PhotonPairs.clear();
+  //  FlyingParticles.clear();
+  //  VertexedParticles.clear();
+  //  Photons.clear();
+  //  PhotonPairs.clear();
 
   StatusCode sc = StatusCode::SUCCESS;
 
-  debug() << "starting classfying partilces to fit " <<endreq;
+  debug() << "starting classfying partilces to fit " <<endmsg;
 
   for ( Particle::ConstVector::const_iterator iPart=parts.begin(); iPart!=parts.end(); ++iPart ) {
     const Particle* parPointer = *iPart;
     sc= classify(parPointer, FlyingParticles, VertexedParticles, Photons, PhotonPairs);
     if(sc.isFailure()) {
-      debug() << "Fail to classify a particle" << endreq;
+      debug() << "Fail to classify a particle" << endmsg;
       return StatusCode::FAILURE;
     }
   }
   
-  debug() << "classfication result " <<endreq;
-  debug() << "flying particles " << FlyingParticles.size() <<endreq;
-  debug() << "vertexed particles " << VertexedParticles.size() <<endreq;
-  debug() << "photons " << Photons.size() <<endreq;
-  debug() << "photon pairs " << PhotonPairs.size() <<endreq;
-
+  if ( msgLevel(MSG::DEBUG )){  
+    debug() << "classfication result " <<endmsg;
+    debug() << "flying particles " << FlyingParticles.size() <<endmsg;
+    debug() << "vertexed particles " << VertexedParticles.size() <<endmsg;
+    debug() << "photons " << Photons.size() <<endmsg;
+    debug() << "photon pairs " << PhotonPairs.size() <<endmsg;
+  }
+    
+  // add to particle and vertex
+  addToDaughters( P, parts );
+  /* Done when each one is used
+  addToOutgoingParticles( V, FlyingParticles );
+  addToOutgoingParticles( V, VertexedParticles );  
+  addToOutgoingParticles( V, Photons );  
+  addToOutgoingParticles( V, PhotonPairs );  
+  */
   sc = seeding(P, FlyingParticles, VertexedParticles);
   if(sc.isFailure()) {
-    debug() << "Fail to seed the vertex" << endreq;
+    debug() << "Fail to seed the vertex" << endmsg;
     return StatusCode::FAILURE;
   }
 
@@ -148,7 +157,7 @@ StatusCode OfflineVertexFitter::fit( const LHCb::Particle::ConstVector& parts,
     const Particle* daughter = *iterP;
     sc = addVertexed(P, daughter);
     if(sc.isFailure()) {
-      debug() << "Fail to add a vertexed particle" << endreq;
+      debug() << "Fail to add a vertexed particle" << endmsg;
       return StatusCode::FAILURE;
     }
   }
@@ -158,7 +167,7 @@ StatusCode OfflineVertexFitter::fit( const LHCb::Particle::ConstVector& parts,
     const Particle* daughter = *iterP;
     sc = addFlying(P, daughter);
     if(sc.isFailure()) {
-      debug() << "Fail to add a flying particle" << endreq;
+      debug() << "Fail to add a flying particle" << endmsg;
       return StatusCode::FAILURE;
     }
   }
@@ -167,7 +176,7 @@ StatusCode OfflineVertexFitter::fit( const LHCb::Particle::ConstVector& parts,
     const Particle* daughter = *iterP;
     addPhoton(P, daughter);
     if(sc.isFailure()) {
-      debug() << "Fail to add a photon" << endreq;
+      debug() << "Fail to add a photon" << endmsg;
       return StatusCode::FAILURE;
     }
   }
@@ -176,22 +185,32 @@ StatusCode OfflineVertexFitter::fit( const LHCb::Particle::ConstVector& parts,
     const Particle* daughter = *iterP;
     addPhotonPair(P, daughter);
     if(sc.isFailure()) {
-      debug() << "Fail to add a photon pair" << endreq;
+      debug() << "Fail to add a photon pair" << endmsg;
       return StatusCode::FAILURE;
     }
   }
 
-  for(Particle::ConstVector::const_iterator iterP = parts.begin(); iterP != parts.end(); iterP++) {
-    P.addToDaughters(*iterP);
-  }
+  if ( P.daughters().size() !=  P.endVertex()->outgoingParticles().size()) 
+    Warning("Did not use exactly particle daughters to fit vertex. Probably nothing to worry about.",
+            StatusCode::SUCCESS,2);
 
-  for(Particle::ConstVector::const_iterator iterP = VertexedParticles.begin(); iterP != VertexedParticles.end(); iterP++) {
-    V.addToOutgoingParticles(*iterP);
+  if ( msgLevel( MSG::DEBUG )){
+    debug() << "############## Fitted a vertex for a " << P.particleID().pid() ;
+    if ( P.daughters().size() !=  P.endVertex()->outgoingParticles().size()) debug() << " and got different sizes !";
+    debug() << endmsg ;
+    debug() <<  P.daughters().size() << " Particle daughters        are :" ;
+    for ( SmartRefVector< LHCb::Particle >::const_iterator iterP = P.daughters().begin() ; 
+          iterP!=P.daughters().end() ; ++iterP){
+      debug() << " " << (*iterP)->particleID().pid() ;
+    }
+    debug() << endmsg << P.endVertex()->outgoingParticles().size() << " Vertex outgoing particles are :" ; 
+    for ( SmartRefVector< LHCb::Particle >::const_iterator iterP = P.endVertex()->outgoingParticles().begin() ; 
+          iterP!=P.endVertex()->outgoingParticles().end() ; ++iterP){
+      debug() << " " << (*iterP)->particleID().pid() ;
+    }
+    debug() << endmsg ;
   }
-
-  for(Particle::ConstVector::const_iterator iterP = FlyingParticles.begin(); iterP != FlyingParticles.end(); iterP++) {
-    V.addToOutgoingParticles(*iterP);
-  }
+  
 
   return StatusCode::SUCCESS;  
 }
@@ -283,11 +302,11 @@ StatusCode OfflineVertexFitter::classify(const LHCb::Particle* part,
   } else {
     if(!isResonance(part)) {
        FlyingParticles.push_back(part);
-    }  else {
+    } else {
       if(isVertexed(part)) {
         if(m_useResonanceVertex) VertexedParticles.push_back(part);
         else {
-          Particle::ConstVector Prods =part->daughtersVector();
+          Particle::ConstVector Prods = part->daughtersVector();
           for ( Particle::ConstVector::const_iterator iProd=Prods.begin(); iProd!=Prods.end(); ++iProd ) {
             const Particle* daughter = *iProd;
             sc = classify(daughter, FlyingParticles, VertexedParticles, Photons, PhotonPairs);
@@ -326,6 +345,7 @@ StatusCode OfflineVertexFitter::seeding(LHCb::Particle& part,
   if(VertexedParticles.size()>0) {
     const LHCb::Particle* vertpart = VertexedParticles.back();
     VertexedParticles.pop_back();
+    addToOutgoingParticles(*(part.endVertex()),vertpart);
 
     Gaudi::Vector7 V7;
     Gaudi::SymMatrix7x7 C7;
@@ -344,8 +364,10 @@ StatusCode OfflineVertexFitter::seeding(LHCb::Particle& part,
 
     const LHCb::Particle* flypart1 = FlyingParticles.back();
     FlyingParticles.pop_back();  
+    addToOutgoingParticles(*(part.endVertex()),flypart1);
     const LHCb::Particle* flypart2 = FlyingParticles.back();
     FlyingParticles.pop_back();
+    addToOutgoingParticles(*(part.endVertex()),flypart2);
 
     Gaudi::Vector7 V7;
     Gaudi::SymMatrix7x7 C7;
@@ -387,7 +409,7 @@ StatusCode OfflineVertexFitter::addFlying(LHCb::Particle& part,
   LHCb::Particle transParticleDau;
   sc = m_transporter->transport(dau, z2, transParticleDau);
   if( sc.isFailure ()) {
-    debug() << "transport of dau failed in addFlying(" << endreq;
+    debug() << "transport of dau failed in addFlying(" << endmsg;
     return sc;
   }
 
@@ -465,7 +487,7 @@ StatusCode OfflineVertexFitter::addFlying(LHCb::Particle& part,
 
   while(!converged && iter< m_maxIter)  {
     iter++;
-    verbose() << ":-) Iteration   " << iter << endreq;
+    verbose() << ":-) Iteration   " << iter << endmsg;
 
     //f(0)=(x2-x1)*pz2-(z2-z1)*px2
     //f(1)=(y2-y1)*pz2-(z2-z1)*py2
@@ -507,7 +529,7 @@ StatusCode OfflineVertexFitter::addFlying(LHCb::Particle& part,
 
     Gaudi::SymMatrix2x2 VD=ROOT::Math::Similarity<double,2,13>(D, Cx);
     if(!VD.Invert()) {
-      debug() << "could not invert matrix VD in addFlying! " <<endreq;
+      debug() << "could not invert matrix VD in addFlying! " <<endmsg;
       return StatusCode::FAILURE;
     }
 
@@ -576,6 +598,7 @@ StatusCode OfflineVertexFitter::addFlying(LHCb::Particle& part,
   C7new=ROOT::Math::Similarity<double,7,13>(JA, cfit);
 
   sc = updateParticle(part, V7new, C7new, chi2new, NDoFnew);
+  addToOutgoingParticles(*(part.endVertex()),dau);
 
   return sc;
 
@@ -646,7 +669,7 @@ StatusCode OfflineVertexFitter::addVertexed(LHCb::Particle& part,
 
   while(!converged && iter< m_maxIter)  {
     iter++;
-    verbose() << ":-) Iteration   " << iter << endreq;
+    verbose() << ":-) Iteration   " << iter << endmsg;
 
     //f(0)=x2-x1;
     //f(1)=y2-y1;
@@ -671,7 +694,7 @@ StatusCode OfflineVertexFitter::addVertexed(LHCb::Particle& part,
 
     Gaudi::SymMatrix3x3 VD=ROOT::Math::Similarity<double,3,14>(D, Cx);
     if(!VD.Invert()) {
-      debug() << "could not invert matrix VD in addVertexed! " <<endreq;
+      debug() << "could not invert matrix VD in addVertexed! " <<endmsg;
       return StatusCode::FAILURE;
     }
 
@@ -739,6 +762,7 @@ StatusCode OfflineVertexFitter::addVertexed(LHCb::Particle& part,
 
   C7new=ROOT::Math::Similarity<double,7,14>(JA, cfit);
 
+  addToOutgoingParticles(*(part.endVertex()),dau);
   sc = updateParticle(part, V7new, C7new, chi2new, NDoFnew);
 
   return sc;
@@ -763,7 +787,7 @@ StatusCode OfflineVertexFitter::addPhoton(LHCb::Particle& part,
 
   sc=getPhotonParameter(*dau, zg, gammapara, gammacov);
   if(sc.isFailure()) {
-    debug() << "Fail to getPhotonParameter in  addPhoton" << endreq;
+    debug() << "Fail to getPhotonParameter in  addPhoton" << endmsg;
     return StatusCode::FAILURE;
   }
 
@@ -828,6 +852,7 @@ StatusCode OfflineVertexFitter::addPhoton(LHCb::Particle& part,
 
   C7new=ROOT::Math::Similarity<double,7,10>(JA, Cold);
 
+  addToOutgoingParticles(*(part.endVertex()),dau);
   sc = updateParticle(part, V7new, C7new, chi2new, NDoFnew);
 
   return sc;
@@ -866,7 +891,7 @@ StatusCode OfflineVertexFitter::addPhotonPair(LHCb::Particle& part,
 
   sc=getPhotonParameter(*gamma1, zg1, gamma1para, gamma1cov);
   if(sc.isFailure()) {
-    debug() << "Fail to getPhotonParameter in  addPhotonPair" << endreq;
+    debug() << "Fail to getPhotonParameter in  addPhotonPair" << endmsg;
     return StatusCode::FAILURE;
   }
 
@@ -876,7 +901,7 @@ StatusCode OfflineVertexFitter::addPhotonPair(LHCb::Particle& part,
 
   sc=getPhotonParameter(*gamma2, zg2, gamma2para, gamma2cov);
   if(sc.isFailure()) {
-    debug() << "Fail to getPhotonParameter in  addPhotonPair" << endreq;
+    debug() << "Fail to getPhotonParameter in  addPhotonPair" << endmsg;
     return StatusCode::FAILURE;
   }
 
@@ -1065,6 +1090,8 @@ StatusCode OfflineVertexFitter::addPhotonPair(LHCb::Particle& part,
   for(int l1=0; l1<7; l1++)
     for(int l2=0; l2<=l1; l2++) C7final(l1,l2) = Cnew(l1,l2);
 
+  addToOutgoingParticles(*(part.endVertex()),gamma1);
+  addToOutgoingParticles(*(part.endVertex()),gamma2);
   sc = updateParticle(part, V7final, C7final, chi2final, NDoFfinal);
 
   return sc;
@@ -1102,14 +1129,14 @@ StatusCode OfflineVertexFitter::fitTwo(const LHCb::Particle* dau1,
     LHCb::Particle transParticle1;
     sc = m_transporter->transport(dau1, zPreviousFit, transParticle1);
      if( sc.isFailure ()) {
-       debug() << "transport of dau1 failed in fitTwo!" << endreq;
+       debug() << "transport of dau1 failed in fitTwo!" << endmsg;
        return sc;
      }
 
     LHCb::Particle transParticle2;
     sc = m_transporter->transport(dau2, zPreviousFit, transParticle2);
      if( sc.isFailure ()) {
-       debug() << "transport of dau2 failed in fitTwo!" << endreq;
+       debug() << "transport of dau2 failed in fitTwo!" << endmsg;
        return sc;
      }
 
@@ -1201,14 +1228,14 @@ StatusCode OfflineVertexFitter::fitTwo(const LHCb::Particle* dau1,
 
     while(!converged && iter< m_maxIter)  {
       iter++;
-      verbose() << ":-) Iteration   " << iter << endreq;
+      verbose() << ":-) Iteration   " << iter << endmsg;
 
       //f=(x2-x1)*(py2*pz1-py1*pz2)-(y2-y1)*(px2*pz1-px1*pz2)
       ROOT::Math::SVector<double, 1> f;
       f(0)=(vfit(6)-vfit(0))*(vfit(9)*vfit(4)-vfit(3)*vfit(10))-
            (vfit(7)-vfit(1))*(vfit(8)*vfit(4)-vfit(2)*vfit(10));
 
-      verbose() << "constraint values   " << f << endreq;
+      verbose() << "constraint values   " << f << endmsg ;
 
       //D is the derivative matrix
       ROOT::Math::SMatrix<double, 1, 12> D;
@@ -1230,7 +1257,7 @@ StatusCode OfflineVertexFitter::fitTwo(const LHCb::Particle* dau1,
       Gaudi::SymMatrix1x1 VD=ROOT::Math::Similarity<double,1,12>(D, Cx);
 
       if(!VD.Invert()) {
-        debug() << "could not invert matrix VD in fitTwo! " <<endreq;
+        debug() << "could not invert matrix VD in fitTwo! " <<endmsg;
         return StatusCode::FAILURE;
       } 
 
@@ -1638,7 +1665,7 @@ double OfflineVertexFitter::getZEstimate(const LHCb::Particle* part1,
                         - sumCrossedProduct) /det;
   }
   else {
-    err() << "Unable to make z estimate " << endreq;
+    err() << "Unable to make z estimate " << endmsg;
     if(z1<z2) return z1-.001;
     else return z2-0.001;
   }
@@ -1660,18 +1687,18 @@ StatusCode OfflineVertexFitter::getPhotonParameter(const LHCb::Particle& photon,
 
   int pid=photon.particleID().pid();
   if(pid!=22) {
-    err() <<"Particle is not a photon!"<<endreq;
+    err() <<"Particle is not a photon!"<<endmsg;
     return StatusCode::FAILURE;
   }
 
   const LHCb::ProtoParticle*   proto  = photon.proto() ;
   if( 0 == proto  ) {
-    err() <<"ProtoParticle points to NULL!"<<endreq;
+    err() <<"ProtoParticle points to NULL!"<<endmsg;
     return StatusCode::FAILURE;
   }
 
   if( proto->calo().empty() ) {
-    err() <<"ProtoParticle has no CaloHypos "<<endreq;
+    err() <<"ProtoParticle has no CaloHypos "<<endmsg;
     return StatusCode::FAILURE;
   }
 
@@ -1689,7 +1716,7 @@ StatusCode OfflineVertexFitter::getPhotonParameter(const LHCb::Particle& photon,
   // get the position
   const CaloPosition* pos = hypo->position() ;
   if( 0 == pos    ) {
-    err() <<"CaloPosition* points to NULL! "<<endreq;
+    err() <<"CaloPosition* points to NULL! "<<endmsg;
     return StatusCode::FAILURE;
   }
 
@@ -1698,8 +1725,48 @@ StatusCode OfflineVertexFitter::getPhotonParameter(const LHCb::Particle& photon,
   para(1)=pos->y();
   para(2)=pos->e();
   cov=pos -> covariance();
-  verbose() <<"Photon parameters: " <<para<<endreq;
-  verbose() <<"Photon cov : " <<cov<<endreq;
+  verbose() <<"Photon parameters: " <<para<<endmsg;
+  verbose() <<"Photon cov : " <<cov<<endmsg;
 
   return sc;
+}
+//=============================================================================
+//add To particle Daughters
+//=============================================================================
+void OfflineVertexFitter::addToDaughters( LHCb::Particle& P, const LHCb::Particle::ConstVector& Parts) const{
+  for(Particle::ConstVector::const_iterator iterP = Parts.begin(); iterP != Parts.end(); iterP++) {
+    P.addToDaughters(*iterP);
+    if ( msgLevel(MSG::VERBOSE )){ 
+      verbose() << "Added a  " << (*iterP)->particleID().pid() << " to particle. Size now " 
+                << P.daughters().size() << endmsg ;
+    }
+  }
+  return ;
+}
+
+//=============================================================================
+//add To vertex outgoing particles
+//=============================================================================
+void OfflineVertexFitter::addToOutgoingParticles( LHCb::Vertex& V, 
+                                                  const LHCb::Particle::ConstVector& Parts) const{
+  
+  for(Particle::ConstVector::const_iterator iterP = Parts.begin(); iterP != Parts.end(); iterP++) {
+    addToOutgoingParticles(V,*iterP);
+  }
+  return ;
+  
+}
+//=============================================================================
+//add To vertex outgoing particles
+//=============================================================================
+void OfflineVertexFitter::addToOutgoingParticles( LHCb::Vertex& V, 
+                                                  const LHCb::Particle* P) const{
+  
+  V.addToOutgoingParticles(P);
+  if ( msgLevel(MSG::VERBOSE )){ 
+    verbose() << "Added a  " << P->particleID().pid() << " to vertex. Size now " 
+              << V.outgoingParticles().size() << endmsg ;
+  }
+  return ;
+  
 }

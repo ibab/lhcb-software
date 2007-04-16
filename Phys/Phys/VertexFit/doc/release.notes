@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.93 2007-04-16 13:38:28 pkoppenb Exp $
+! $Id: release.notes,v 1.94 2007-04-16 13:39:10 pkoppenb Exp $
 !===========================================================================
 ! Package     : VertexFit
 ! Responsible : Yuehong Xie
@@ -13,6 +13,7 @@
    . Issue a harmless warning when the number of daughters is not
      the same as the number of outgoingParticles .
    . Replace all endreq by endmsg
+ - incement to v4r2
 
 !========================== VertexFit v4r1 2007-03-09 ===================
 ! 2007-03-05 - Patrick Koppenburg
