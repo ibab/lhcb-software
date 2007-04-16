@@ -1,4 +1,4 @@
-// $Id: DecodeRawBankToClusters.cpp,v 1.9 2006-11-29 16:54:36 mjohn Exp $
+// $Id: DecodeRawBankToClusters.cpp,v 1.10 2007-04-16 12:27:34 mjohn Exp $
 
 #include <vector>
 #include <algorithm>
@@ -46,7 +46,7 @@ unsigned int VeloDAQ::decodeRawBankToClusters(
     // if we have more than two strips on the cluster we have to
     // find the offset of the cluster centre by computing
     // the weighted mean
-    if (adcWords.size() > 2) {
+    if (adcWords.size() > 1) {
       double adcValue;
       double sumADC         = 0.0;
       double sumWeightedPos = 0.0;
@@ -55,7 +55,7 @@ unsigned int VeloDAQ::decodeRawBankToClusters(
         sumWeightedPos += adci*adcValue;
         sumADC         += adcValue;
       }
-      firstStrip -= static_cast<unsigned int>(sumWeightedPos/sumADC);
+      firstStrip -= static_cast<int>(sumWeightedPos*static_cast<int>(65536./sumADC+0.5)/65536+1/16.);
     }
 
     LHCb::VeloCluster::ADCVector adcs;
