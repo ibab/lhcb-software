@@ -1,8 +1,18 @@
-! $Id: release.notes,v 1.92 2007-03-09 10:30:04 pkoppenb Exp $
+! $Id: release.notes,v 1.93 2007-04-16 13:38:28 pkoppenb Exp $
 !===========================================================================
 ! Package     : VertexFit
 ! Responsible : Yuehong Xie
 !===========================================================================
+
+! 2007-04-16 - Patrick Koppenburg
+ - OfflineVertexFitter:
+   . Add particles to vertex outgoingParticles whenever they are actually 
+     used in the vertex fit.
+   . Remove adding of particles to outgoingParticles at end of fit.
+     This should solve a bug reported by Ulrich Kerzel.
+   . Issue a harmless warning when the number of daughters is not
+     the same as the number of outgoingParticles .
+   . Replace all endreq by endmsg
 
 !========================== VertexFit v4r1 2007-03-09 ===================
 ! 2007-03-05 - Patrick Koppenburg
