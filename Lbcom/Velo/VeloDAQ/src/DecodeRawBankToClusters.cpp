@@ -1,4 +1,4 @@
-// $Id: DecodeRawBankToClusters.cpp,v 1.11 2007-04-16 12:39:09 mjohn Exp $
+// $Id: DecodeRawBankToClusters.cpp,v 1.12 2007-04-16 12:43:28 mjohn Exp $
 
 #include <vector>
 #include <algorithm>
@@ -27,25 +27,10 @@ unsigned int VeloDAQ::decodeRawBankToClusters(
   unsigned int sensorNumber = sensor->sensorNumber();
   unsigned int stripNumber;
   VeloRawBankDecoder::posadc_iterator padci = decoder.posAdcBegin();
-
-  //-------- PROTECTION --------
-  std::vector<bool> used;
-  used.resize(2050);
-  //----------------------------
-
   for ( ; padci != decoder.posAdcEnd(); ++padci) {
 
     stripNumber = padci->first.channelID();
     if (assumeChipChannels) stripNumber = sensor->ChipChannelToStrip(stripNumber);
-
-    //-------- PROTECTION --------
-    if(used[stripNumber]){
-      std::cout<<"       CLASH OF KEYS. Sensor "<<sensorNumber<<" strip " << stripNumber << " !!!"<<std::endl;
-      continue;
-    }
-    used[stripNumber]=true;
-    //----------------------------
-
     LHCb::VeloChannelID vcid(sensorNumber,stripNumber);
     LHCb::VeloLiteCluster lc(
         padci->first.fracStripBits(),
@@ -61,7 +46,7 @@ unsigned int VeloDAQ::decodeRawBankToClusters(
     // if we have more than two strips on the cluster we have to
     // find the offset of the cluster centre by computing
     // the weighted mean
-    if (adcWords.size() > 1) {
+    if (adcWords.size() > 2) {
       double adcValue;
       double sumADC         = 0.0;
       double sumWeightedPos = 0.0;
@@ -70,7 +55,7 @@ unsigned int VeloDAQ::decodeRawBankToClusters(
         sumWeightedPos += adci*adcValue;
         sumADC         += adcValue;
       }
-      firstStrip -= static_cast<int>(sumWeightedPos*static_cast<int>(65536./sumADC+0.5)/65536+1/16.);
+      firstStrip -= static_cast<unsigned int>(sumWeightedPos/sumADC);
     }
 
     LHCb::VeloCluster::ADCVector adcs;
