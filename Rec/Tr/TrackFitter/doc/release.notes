@@ -2,6 +2,12 @@
 ! Package     : Tr/TrackFitter
 ! Responsible : Eduardo Rodrigues, Jose A. Hernando
 !----------------------------------------------------------------------------
+! 2007-04-17 - Gerhard Raven
+ - Add TrajFitter, an implementation of the ITrajFitter interface
+   which allows one to fit any DifTraj<N> implementation to a set
+   of LHCb::Measurement
+ - Add ITrackTrajFitter, an example implementation of the ITrackFitter interface
+   using the above ITrajFitter
 
 !=========================== TrackFitter v2r14 2007-04-17 ===================
 ! 2007-04-17 - Jeroen VAN TILBURG
