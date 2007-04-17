@@ -1,16 +1,17 @@
-package AlignSolvTools
 #Author: Adlene Hicheur, EPFL, Adlene.Hicheur@cern.ch
+
+package AlignSolvTools
+version           v2r0
 
 branches AlignSolvTools src cmt doc
 
 # add "use" statements
 
-use cernlib v* LCG_Interfaces
-use GSL v* LCG_Interfaces 
+use cernlib        v*  LCG_Interfaces
+use GSL            v* LCG_Interfaces 
 use GaudiKernel    v*
 use GaudiAlg       v*
-use GaudiGSL            v*         -no_auto_imports
-
+use GaudiGSL       v*
 use MCEvent        v* Event
 use HbookCnv v*
 

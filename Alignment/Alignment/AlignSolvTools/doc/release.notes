@@ -1,8 +1,12 @@
 ! Package     : AlignSolvTools
 ! Responsible : Adlene Hicheur (Adlene.Hicheur@cern.ch)
 
-! 20060918 - AlignSolvTools: package creation
- 
+!========================== TAlignment v1r0 29/09/2006 ==========================
+! 2007-04-17 - Jan Amoraal
+ - Make includes global
 
-! ====================================================================
+!========================== TAlignment v1r0 29/09/2006 ==========================
+! 2006-09-18 - Adlene Hicheur
+ - AlignSolvTools: package creation
+
  

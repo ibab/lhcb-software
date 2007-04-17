@@ -1,4 +1,4 @@
-// $Id: SolvExample.cpp,v 1.1 2007-04-10 06:46:12 ahicheur Exp $
+// $Id: SolvExample.cpp,v 1.2 2007-04-17 16:57:27 janos Exp $
 // Include files 
 
 // from Gaudi
@@ -8,9 +8,9 @@
 #include "SolvExample.h"
 
 //Matrix, vector classes
-#include "AlMat.h"
-#include "AlSymMat.h"
-#include "AlVec.h"
+#include "AlignSolvTools/AlMat.h"
+#include "AlignSolvTools/AlSymMat.h"
+#include "AlignSolvTools/AlVec.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : SolvExample

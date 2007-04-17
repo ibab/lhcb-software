@@ -1,4 +1,4 @@
-// $Id: AlignSolvTool.cpp,v 1.3 2007-04-10 06:46:12 ahicheur Exp $
+// $Id: AlignSolvTool.cpp,v 1.4 2007-04-17 16:57:27 janos Exp $
 // Include files 
 
 #include <stdio.h>
@@ -12,9 +12,9 @@
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h" 
 
-#include "AlSymMat.h"
-#include "AlMat.h"
-#include "AlVec.h"
+#include "AlignSolvTools/AlSymMat.h"
+#include "AlignSolvTools/AlMat.h"
+#include "AlignSolvTools/AlVec.h"
  
 // local
 #include "AlignSolvTool.h"
