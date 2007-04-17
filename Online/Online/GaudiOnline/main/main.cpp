@@ -1,3 +1,9 @@
+#include "GaudiKernel/Algorithm.h"
+
+static std::string never(Algorithm* p) {
+   return p ? p->name() : "";
+}   
+
 #ifndef LOAD_LIBRARY
 #define THE_LOAD_LIBRARY argv[1]
 #else
@@ -44,6 +50,7 @@ typedef long (*func)(int, char**);
 #include <iostream>
 
 int main (int argc, char** argv)  {
+  never(0);
   void* handle = LOAD_LIB( THE_LOAD_LIBRARY );
   if ( 0 != handle )  {
     func fun = (func)GETPROC(handle, THE_EXEC_FUNCTION );
