@@ -1,4 +1,4 @@
-// $Id: TrackKalmanFilter.cpp,v 1.38 2007-03-21 14:41:40 cattanem Exp $
+// $Id: TrackKalmanFilter.cpp,v 1.39 2007-04-17 07:51:52 jvantilb Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -151,7 +151,8 @@ StatusCode TrackKalmanFilter::fit( Track& track )
       if ( irPrevNode != irNode ) { // No prediction needed for 1st node
         if ( m_storeTransport ) {
           sc = predictReverseFit( prevNode, node, state );
-          if ( sc.isFailure() ) return failure( "unable to predict (reverse fit) node" );
+          if ( sc.isFailure() ) 
+            return failure( "unable to predict (reverse fit) node" );
         } else {
           sc = predict( node, state, refVec );
           if ( sc.isFailure() ) return failure( "unable to predict node" );
@@ -178,7 +179,7 @@ StatusCode TrackKalmanFilter::fit( Track& track )
       if ( !m_upstream ) node.setState( state );
 
       // Smoother step
-      if ( irPrevNode != irNode ) sc = biSmooth( node );
+      sc = biSmooth( node );
       if ( sc.isFailure() ) return failure( "unable to biSmooth node!" );
 
       irPrevNode = irNode;
