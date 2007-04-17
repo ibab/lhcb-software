@@ -1,4 +1,4 @@
-// $Id: StateTraj.h,v 1.11 2006-12-06 15:34:22 graven Exp $
+// $Id: StateTraj.h,v 1.12 2007-04-17 06:35:06 graven Exp $
 #ifndef TRACKFITEVENT_STATETRAJ_H
 #define TRACKFITEVENT_STATETRAJ_H 1
 
@@ -67,6 +67,9 @@ namespace LHCb
     /// Retrieve the parameters of this traj...
     virtual Parameters parameters( ) const;
     
+    /// Update the parameters of this traj...
+    virtual StateTraj& operator+=(const Parameters& delta);
+
     /// Retrieve the derivative of the parabolic approximation to the
     /// trajectory with respect to the state parameters
     virtual Derivative derivative( double arclength ) const;

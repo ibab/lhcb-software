@@ -3,6 +3,9 @@
 ! Responsible : Jose Hernando, Eduardo Rodrigues
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
+! 2007-04-10 - Gerhard Raven
+ - Add an operator+= to StateTraj because of an extension of the DifTraj
+   interface
 
 !========================== TrackFitEvent v3r3 2007-03-29 ====================
 ! 2007-03-29 - Marco Cattaneo

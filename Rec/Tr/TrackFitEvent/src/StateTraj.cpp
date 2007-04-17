@@ -1,4 +1,4 @@
-// $Id: StateTraj.cpp,v 1.11 2007-03-29 06:52:40 cattanem Exp $
+// $Id: StateTraj.cpp,v 1.12 2007-04-17 06:35:06 graven Exp $
 // Include files
 
 // Units
@@ -72,6 +72,16 @@ StateTraj::parameters( ) const
   return Parameters(m_pos.X(),m_pos.Y(),
                     m_dir.X()/m_dir.Z(),m_dir.Y()/m_dir.Z(),
                     m_qOverP );
+}
+
+StateTraj&
+StateTraj::operator+=(const Parameters& delta) 
+{
+ m_pos += XYZVector(delta(0),delta(1),0);
+ m_dir += m_dir.Z()*XYZVector(delta(2),delta(3),0);
+ m_dir = m_dir.unit(); // renormalize slopes to direction
+ m_qOverP += delta(4);
+ return *this;
 }
 
 StateTraj::Derivative
