@@ -4,12 +4,11 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
-!========================== TrackFitEvent v3r4 2007-04-10 ====================
+!========================== TrackFitEvent v3r3 2007-04-10 ====================
 ! 2007-04-10 - Gerhard Raven
  - Add an operator+= to StateTraj because of an extension of the DifTraj
    interface
 
-!========================== TrackFitEvent v3r3 2007-03-29 ====================
 ! 2007-03-29 - Marco Cattaneo
  - Fix doxygen warnings
 
