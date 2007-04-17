@@ -5,15 +5,25 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v22r4>2007-04-11 LHCbSys v22r4</A></H1><PRE>
+</PRE><H1><A NAME=v22r4>2007-04-17 LHCbSys v22r4</A></H1><PRE>
 This version uses Gaudi v19r3 and LCG_50b. Fully compatible with DC06 data
 
-- Packages modified: EventSys v23r4, MCEvent v2r2, DetSys v9r4, STDet v3r3, 
-    VeloDet v11r2, CaloInterfaces v7r2, CaloUtils v7r2, DAQSys v3r2, OTDAQ v5r2,
-    CaloDAQ v3r2
+- Packages modified: KernelSys v6r4, LHCbKernel v7r3, EventSys v23r4, 
+    MCEvent v2r2, TrackEvent v4r2, DetSys v9r4, STDet v3r3, VeloDet v11r2,
+    CaloInterfaces v7r2, CaloUtils v7r2, DAQSys v3r2, OTDAQ v5r2, CaloDAQ v3r2
+
+- In LHCbKernel v7r3
+  . Extend the DifTraj interface with an operator+= which allows one to
+    update the parameters of a DifTraj when fitting for them
+  . Implement operator+= in AlignTraj to follow the above
+  . Add new flag to RichTraceMode to control kapton intersection checks
+  . Add typedef to RichSmartID for boost pool allocated vector
 
 - In MCEvent v2r2
   . Add MCCaloDataFunctor.h
+
+- In TrackEvent v4r2
+  . Add stdVectorTypeDef="TRUE" to Measurement.xml
 
 - In DetSys v9r4, STDet v3r3, VeloDet v11r2
   . Move generation of dictionaries to package where classes are defined
@@ -49,7 +59,7 @@ This version uses Gaudi v19r3 and LCG_50b. Fully compatible with DC06 data
 - In VeloDet v11r2, OTDAQ v5r2
   . Fix untested StatusCodes
 
-- In STDet v3r3, CaloUtils v7r2
+- In STDet v3r3, CaloUtils v7r2, LHCbKernel v7r3
   . Fix a doxygen warning
 
 </PRE><H1><A NAME=v22r3>2007-03-23 LHCbSys v22r3</A></H1><PRE>
