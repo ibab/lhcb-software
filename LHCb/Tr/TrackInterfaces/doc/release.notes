@@ -3,6 +3,8 @@
 ! Responsible : Jose Hernando, Eduardo Rodrigues
 ! Purpose     : package for tracking tools interfaces
 !-----------------------------------------------------------------------------
+! 2007-04-17 G. Raven
+ - Add ITrajFitter interface
 
 !====================== TrackInterfaces v3r2 2007-03-13 =====================
 ! 2007-03-13 - Marco Cattaneo
