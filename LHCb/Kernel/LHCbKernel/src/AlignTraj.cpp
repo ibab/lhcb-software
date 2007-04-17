@@ -1,4 +1,4 @@
-// $Id: AlignTraj.cpp,v 1.2 2007-02-02 07:58:07 cattanem Exp $
+// $Id: AlignTraj.cpp,v 1.3 2007-04-17 06:30:13 graven Exp $
 
 #include "Kernel/AlignTraj.h"
 #include "GaudiKernel/GenericMatrixTypes.h"
@@ -50,6 +50,16 @@ AlignTraj::parameters() const
 {
     return Parameters(m_trans.X(), m_trans.Y(), m_trans.Z(),
                       m_rx.Angle(),m_ry.Angle(),m_rz.Angle());
+}
+
+AlignTraj&
+AlignTraj::operator+=(const Parameters& delta)
+{
+    m_trans += Vector(delta(0),delta(1),delta(2));
+    m_rx *= ROOT::Math::RotationX(delta(3));
+    m_ry *= ROOT::Math::RotationY(delta(4));
+    m_rz *= ROOT::Math::RotationZ(delta(5));
+    return *this;
 }
 
 AlignTraj::Derivative 

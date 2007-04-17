@@ -1,4 +1,4 @@
-// $Id: DifTraj.h,v 1.8 2006-12-06 15:35:21 graven Exp $
+// $Id: DifTraj.h,v 1.9 2007-04-17 06:30:13 graven Exp $
 #ifndef KERNEL_DIFTRAJ_H 
 #define KERNEL_DIFTRAJ_H 1
 
@@ -48,7 +48,10 @@ namespace LHCb
     /// the values of the parameters with respect to which 'derivative' 
     /// provides the derivatives...
     virtual Parameters parameters() const = 0;
-    
+
+    // update the parameters i.e.
+    //   parameters += delta...
+    virtual DifTraj<N>& operator+=(const Parameters& delta) = 0;
   };
   
 } // namespace LHCb

@@ -3,6 +3,10 @@
 ! Package manager: M.Cattaneo
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
+! 2007-04-16 - Gerhard Raven
+ - Extend the DifTraj interface with an operator+= which allows one to
+   update the parameters of a DifTraj when fitting for them
+ - Implement operator+= in AlignTraj to follow the above
 
 ! 2007-03-27 - Chris Jones
  - Add new flag to RichTraceMode to control kapton intersection checks

@@ -1,4 +1,4 @@
-// $Id: AlignTraj.h,v 1.1 2007-01-15 10:56:34 graven Exp $
+// $Id: AlignTraj.h,v 1.2 2007-04-17 06:30:13 graven Exp $
 #ifndef KERNEL_ALIGNTRAJ_H 
 #define KERNEL_ALIGNTRAJ_H 1
 
@@ -79,6 +79,10 @@ namespace LHCb
     
     /// Retrieve the alignment parameters
     virtual Parameters parameters() const ;
+
+    /// update the parameters
+    virtual AlignTraj& operator+=(const Parameters& delta) ;
+
 
     virtual Point  position(  double arclength ) const ;
     virtual Vector direction( double arclength ) const;
