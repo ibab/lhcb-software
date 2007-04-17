@@ -9,6 +9,7 @@
       name        = 'Measurement'
       author      = 'Jose Hernando, Eduardo Rodrigues'
       desc        = 'Measurement is the base class for offline and online measurements.'
+      stdVectorTypeDef = "TRUE"
       serializers = 'FALSE' >
 
       <import name='Event/TrackTypes.h' />
