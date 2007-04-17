@@ -1,4 +1,4 @@
-// $Id: ITrajFitter.h,v 1.2 2007-04-17 15:56:39 graven Exp $
+// $Id: ITrajFitter.h,v 1.3 2007-04-17 16:04:32 graven Exp $
 #ifndef _ITrajFitter_H
 #define _ITrajFitter_H
  
@@ -42,20 +42,20 @@ public:
   /// Retrieve interface ID
   static const InterfaceID& interfaceID() { return IID_ITrajFitter ; }
                                                                                                    
-  /// Fit a DifTraj to a set of measurements.
-  /// INPUT: the initial guess for the DifTraj<N>, 
-  //         range of iterators over Measurement
-  /// OUTPUT: the updated DifTraj<N>
+/** Fit a DifTraj to a set of measurements.
+  * @param on input: initial guess for DifTraj<N>; on output: updated to reflect the fit
+  * @param range of iterators over Measurements used to fit the DifTraj<N>
+  */
   template <unsigned N, typename MeasIter> 
   StatusCode fit(typename LHCb::DifTraj<N>& traj, 
                  MeasIter& begin, MeasIter& end) const {
       return fit(traj,LHCb::Measurement::Vector(begin,end));
   }
 
-  /// Fit a DifTraj to a set of measurements.
-  /// INPUT: the initial guess for the DifTraj<N>, 
-  //         a vector of Measurement
-  /// OUTPUT: the updated DifTraj<N>
+/** Fit a DifTraj to a set of measurements.
+  * @param on input: initial guess for DifTraj<N>; on output: updated to reflect the fit
+  * @param vector Measurements used to fit the DifTraj<N>
+  */
   template <unsigned N>
   StatusCode fit(LHCb::DifTraj<N>& traj, 
                  const LHCb::Measurement::Vector& measurements) const {
@@ -63,12 +63,13 @@ public:
       return Nfit(NDifTraj(&traj),NResiduals((R*)0),measurements);
   }
 
-  /// Fit a DifTraj to a set of measurements.
-  /// INPUT: the initial guess for the DifTraj<N>, 
-  //         range of iterators over Measurement
-  /// OUTPUT: the updated DifTraj<N>,
-  ///         a vector of pairs (residual, derivatives), 
-  ///            one for each Measurement.
+/** Fit a DifTraj to a set of measurements.
+  * @param on input: initial guess for DifTraj<N>; on output: updated to reflect the fit
+  * @param on input: an empty vector; 
+  *        on output: containes for each measurement, a pair with the (normalized)
+  *                   residual, and its derivativ wrt the N parameters of the DifTraj<N>
+  * @param range of iterators over Measurements used to fit the DifTraj<N>
+  */
   template <unsigned N, typename MeasIter>
   StatusCode fit(LHCb::DifTraj<N>& traj, 
                  std::vector<std::pair<double,ROOT::Math::SMatrix<double,1,N> > >& residuals,
@@ -77,12 +78,13 @@ public:
 
   }
 
-  /// Fit a DifTraj to a set of measurements.
-  /// INPUT: the initial guess for the DifTraj<N>, 
-  ///        a vector of Measurement
-  /// OUTPUT: the updated DifTraj<N>,
-  ///         a vector of pairs (residual, derivatives), 
-  ///            one for each measurement.
+/** Fit a DifTraj to a set of measurements.
+  * @param on input: initial guess for DifTraj<N>; on output: updated to reflect the fit
+  * @param on input: an empty vector; 
+  *        on output: containes for each measurement, a pair with the (normalized)
+  *                   residual, and its derivativ wrt the N parameters of the DifTraj<N>
+  * @param on input: vector of Measurements used to fit the DifTraj<N>
+  */
   template <unsigned N>
   StatusCode fit(LHCb::DifTraj<N>& traj, 
                  std::vector<std::pair<double,ROOT::Math::SMatrix<double,1,N> > >& residuals,
