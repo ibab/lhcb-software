@@ -1,4 +1,4 @@
-// $Id: StateTraj.h,v 1.12 2007-04-17 06:35:06 graven Exp $
+// $Id: StateTraj.h,v 1.13 2007-04-17 14:50:39 cattanem Exp $
 #ifndef TRACKFITEVENT_STATETRAJ_H
 #define TRACKFITEVENT_STATETRAJ_H 1
 
@@ -39,7 +39,7 @@ namespace LHCb
     virtual ~StateTraj() {};
     
     /// Constructor from a State and the magnetic field at the State position
-    StateTraj( const State& state,
+    StateTraj( const LHCb::State& state,
                const Gaudi::XYZVector& bField );
     
     /// Constructor from a StateVector and the magnetic field at State position
