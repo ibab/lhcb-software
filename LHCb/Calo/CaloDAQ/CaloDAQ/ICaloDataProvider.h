@@ -36,6 +36,8 @@ public:
   virtual unsigned int nTell1s()=0;
   virtual CaloVector<LHCb::CaloAdc>& adcs(int source=-1)=0;
   virtual CaloVector<LHCb::CaloDigit>& digits(int source=-1)=0;
+  virtual std::string rawRoot()=0;
+
 protected:
 
 private:

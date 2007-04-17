@@ -1,4 +1,4 @@
-// $Id: CaloReadoutTool.cpp,v 1.8 2007-04-10 22:47:33 odescham Exp $
+// $Id: CaloReadoutTool.cpp,v 1.9 2007-04-17 22:26:18 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -32,22 +32,29 @@ CaloReadoutTool::CaloReadoutTool( const std::string& type,
 
   declareProperty( "DetectorName"   , m_detectorName );
   declareProperty( "PackedIsDefault", m_packedIsDefault = false);
-  declareProperty( "RawLocation"    , m_rawLocation =  rootOnTES() + LHCb::RawEventLocation::Default );
   m_getRaw = true;
 }
 //=============================================================================
 // Destructor
 //=============================================================================
-CaloReadoutTool::~CaloReadoutTool() {} 
-
-
+CaloReadoutTool::~CaloReadoutTool() {}
 
 //=========================================================================
 //  Get required CaloBanks (short or packed format) - Fill m_banks
 //=========================================================================
 StatusCode CaloReadoutTool::getCaloBanksFromRaw( ) {
 
-  LHCb::RawEvent* rawEvt = get<LHCb::RawEvent>( m_rawLocation );
+  LHCb::RawEvent* rawEvt = NULL ;
+  m_raw = rootOnTES() + LHCb::RawEventLocation::Default;
+  warning() << "raw location :: " << m_raw << endreq;  
+  if( exist<LHCb::RawEvent>( m_raw ) ){
+    rawEvt= get<LHCb::RawEvent>( m_raw );
+  }else  {
+    warning() << "rawEvent not found at location '" << m_raw << "'"<< endreq;
+    return StatusCode::FAILURE;
+  }
+      
+
   m_banks = 0;
   if( !m_packedIsDefault){
     debug() << "Banks of short type are requested as default" << endreq;

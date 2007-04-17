@@ -30,8 +30,9 @@ public:
   virtual double digit(LHCb::CaloCellID id);
   virtual unsigned int nTell1s(){return m_tell1s;};
   virtual CaloVector<LHCb::CaloAdc>& adcs(int source=-1);
-  virtual CaloVector<LHCb::CaloDigit>& digits(int source=-1);
-  
+  virtual CaloVector<LHCb::CaloDigit>& digits(int source=-1); 
+  virtual std::string rawRoot();
+
 protected:
   StatusCode decodeCell(LHCb::CaloCellID id);
   StatusCode decodeTell1(int tell1);

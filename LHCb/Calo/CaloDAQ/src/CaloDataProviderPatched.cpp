@@ -84,6 +84,7 @@ StatusCode CaloDataProviderPatched::initialize ( ) {
   return StatusCode::SUCCESS;
 }
 
+std::string CaloDataProviderPatched::rawRoot(){return rootOnTES();}
 //-------------------------------------
 StatusCode CaloDataProviderPatched::setBank( ) {
   debug() << "==> Reset " << name() << endmsg;
