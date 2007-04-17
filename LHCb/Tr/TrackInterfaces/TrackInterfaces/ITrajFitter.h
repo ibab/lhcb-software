@@ -1,21 +1,24 @@
-// $Id: ITrajFitter.h,v 1.1 2007-04-17 15:15:39 graven Exp $
+// $Id: ITrajFitter.h,v 1.2 2007-04-17 15:56:39 graven Exp $
 #ifndef _ITrajFitter_H
 #define _ITrajFitter_H
  
+// Include files
+// -------------
 #include "GaudiKernel/IAlgTool.h"
 #include "Event/Measurement.h"
 #include <vector>
 
 static const InterfaceID IID_ITrajFitter( "ITrajFitter", 0, 0 );
  
-/** @class ITrajFitter
- *
- *  interface for fitting a DifTraj
+/** @class ITrajFitter ITrajFitter.h TrackInterfaces/ITrajFitter.h
+ *  
+ *  Interface for fitting a 'DifTraj' to a set of Measrements.
  *
  *  @author G.Raven  
- *  @date   15/07/2006
+ *  @date   2007-04-17
  */
 
+// Forward declarations
 namespace LHCb {
    template <unsigned N> class DifTraj;
 }
@@ -39,13 +42,20 @@ public:
   /// Retrieve interface ID
   static const InterfaceID& interfaceID() { return IID_ITrajFitter ; }
                                                                                                    
-  /// Fit a DifTraj to a set of measurements
+  /// Fit a DifTraj to a set of measurements.
+  /// INPUT: the initial guess for the DifTraj<N>, 
+  //         range of iterators over Measurement
+  /// OUTPUT: the updated DifTraj<N>
   template <unsigned N, typename MeasIter> 
   StatusCode fit(typename LHCb::DifTraj<N>& traj, 
                  MeasIter& begin, MeasIter& end) const {
       return fit(traj,LHCb::Measurement::Vector(begin,end));
   }
 
+  /// Fit a DifTraj to a set of measurements.
+  /// INPUT: the initial guess for the DifTraj<N>, 
+  //         a vector of Measurement
+  /// OUTPUT: the updated DifTraj<N>
   template <unsigned N>
   StatusCode fit(LHCb::DifTraj<N>& traj, 
                  const LHCb::Measurement::Vector& measurements) const {
@@ -53,9 +63,12 @@ public:
       return Nfit(NDifTraj(&traj),NResiduals((R*)0),measurements);
   }
 
-  // Fit the DifTraj to the Measurements, and
-  // return the vector of pairs of 
-  // (residuals,derivatives wrt. the DifTraj parameters)
+  /// Fit a DifTraj to a set of measurements.
+  /// INPUT: the initial guess for the DifTraj<N>, 
+  //         range of iterators over Measurement
+  /// OUTPUT: the updated DifTraj<N>,
+  ///         a vector of pairs (residual, derivatives), 
+  ///            one for each Measurement.
   template <unsigned N, typename MeasIter>
   StatusCode fit(LHCb::DifTraj<N>& traj, 
                  std::vector<std::pair<double,ROOT::Math::SMatrix<double,1,N> > >& residuals,
@@ -64,6 +77,12 @@ public:
 
   }
 
+  /// Fit a DifTraj to a set of measurements.
+  /// INPUT: the initial guess for the DifTraj<N>, 
+  ///        a vector of Measurement
+  /// OUTPUT: the updated DifTraj<N>,
+  ///         a vector of pairs (residual, derivatives), 
+  ///            one for each measurement.
   template <unsigned N>
   StatusCode fit(LHCb::DifTraj<N>& traj, 
                  std::vector<std::pair<double,ROOT::Math::SMatrix<double,1,N> > >& residuals,
@@ -72,6 +91,12 @@ public:
   }
 
 protected:
+  /// Helper classes to go from templated to non-templated in such 
+  /// a way that one can retrieve the templated input back later,
+  /// without loss of type-safety. Needed because we need to dispatch
+  /// to the actual implementation through a (non-templated!) virtual function.
+  /// (cannot have templated virtual functions: since they are not a bound
+  ///  set, that would imply a (potentially) infinite v-table)
   class NDifTraj{
       public:
           template <unsigned N> explicit NDifTraj(LHCb::DifTraj<N>* obj) :  m_obj(obj), m_N(N){}
@@ -92,7 +117,8 @@ protected:
           unsigned int m_N;
   };
 
-  // dispatch to implementation through a non-templated pure virtual fcn
+  /// dispatch to actual implementation through 
+  /// a non-templated pure virtual fcn
   virtual StatusCode Nfit(NDifTraj traj,  NResiduals resids, const LHCb::Measurement::Vector& measurements) const = 0;
                                                                                 
 };
