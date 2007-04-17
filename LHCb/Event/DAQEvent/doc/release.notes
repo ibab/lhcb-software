@@ -4,6 +4,9 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !----------------------------------------------------------------------
 
+! 2007-04-17 - Marco Cattaneo
+ - Remove unused DAQ entry in bank types enum
+
 !================ DAQEvent v7r2 2007-03-05 ============================
 ! 2007-03-05 - Marco Cattaneo
  - Remove obsolete DAQEvent_load.cpp file

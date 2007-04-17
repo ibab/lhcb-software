@@ -1,4 +1,4 @@
-// $Id: OdinTimeDecoder.cpp,v 1.1 2006-09-26 10:55:58 marcocle Exp $
+// $Id: OdinTimeDecoder.cpp,v 1.2 2007-04-17 15:39:59 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -30,8 +30,8 @@ OdinTimeDecoder::OdinTimeDecoder( const std::string& type,
                                   const IInterface* parent )
   : GaudiTool ( type, name , parent )
 {
+  declareProperty( "ForceRawEvent", m_forceRawEvent = false );
   declareInterface<IEventTimeDecoder>(this);
-
 }
 //=============================================================================
 // Destructor
@@ -43,7 +43,7 @@ OdinTimeDecoder::~OdinTimeDecoder() {}
 //=========================================================================
 LHCb::ODIN *OdinTimeDecoder::getODIN() const 
 {
-  if ( ! exist<LHCb::ODIN>(LHCb::ODINLocation::Default) ){
+  if ( m_forceRawEvent || ! exist<LHCb::ODIN>(LHCb::ODINLocation::Default) ){
 
     debug() << "Get LHCb::RawEvent at " << LHCb::RawEventLocation::Default << endmsg;
     LHCb::RawEvent * rawEvent = get<LHCb::RawEvent>(LHCb::RawEventLocation::Default);

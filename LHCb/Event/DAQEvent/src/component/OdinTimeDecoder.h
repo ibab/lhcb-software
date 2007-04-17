@@ -1,4 +1,4 @@
-// $Id: OdinTimeDecoder.h,v 1.1 2006-09-26 10:55:58 marcocle Exp $
+// $Id: OdinTimeDecoder.h,v 1.2 2007-04-17 15:39:59 cattanem Exp $
 #ifndef ODINTIMEDECODER_H 
 #define ODINTIMEDECODER_H 1
 
@@ -46,6 +46,9 @@ private:
   /// Get the ODIN object from the T.E.S. or create it.
   /// @return Pointer to the ODIN object or NULL if it cannot be found.
   LHCb::ODIN *getODIN() const;
+
+  // --- properties ---
+  bool m_forceRawEvent; ///< Flag to force unconditional decoding from RawEvent
   
 };
 #endif // ODINTIMEDECODER_H
