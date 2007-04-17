@@ -3,6 +3,11 @@
 ! Package manager: M.Cattaneo
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
+
+!===================== LHCbKernel v7r3 2007-04-17 ========================
+! 2007-04-17 - Marco Cattaneo
+ - Fix a doxygen warning
+
 ! 2007-04-16 - Gerhard Raven
  - Extend the DifTraj interface with an operator+= which allows one to
    update the parameters of a DifTraj when fitting for them

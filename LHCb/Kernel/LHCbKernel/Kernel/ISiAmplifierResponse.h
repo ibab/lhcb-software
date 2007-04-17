@@ -1,4 +1,4 @@
-// $Id: ISiAmplifierResponse.h,v 1.2 2007-02-20 16:42:02 cattanem Exp $
+// $Id: ISiAmplifierResponse.h,v 1.3 2007-04-17 12:22:24 cattanem Exp $
 #ifndef _ISiAMPLIFIERRESPONSE_H
 #define _ISiAMPLIFIERRESPONSE_H
 
@@ -35,12 +35,12 @@ public:
   static const InterfaceID& interfaceID() { return IID_ISiAmplifierResponse; }
 
  /** calculate Beetle response
- * @param time in ns 
+ * @param  time time in ns 
  * @return response 
  */
  virtual double response(const double time) const=0;
 
- /** The response is only valid for a certain capacitance, Vfs, ..
+ /** The response is only valid for a certain capacitance, Vfs, etc.
  * This method allows you to find out when the curve is valid
  *
  * @return validity info
