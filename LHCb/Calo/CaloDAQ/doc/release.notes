@@ -4,12 +4,11 @@
 ! Purpose     : Convert Calo Digit and Trigger information to RawEvent banks.
 !-----------------------------------------------------------------------------
 
+!========================== CaloDAQ v3r2 2007-04-17 ==========================
 ! 2007-04-17 Olivier Deschamps
   - add new feature to deal with consecutive bunch crossings in CaloReadoutTool
   - protect from non-existent rawEvent in CaloReadoutTool
 
-
-!========================== CaloDAQ v3r2 2007-04-10 ==========================
 ! 2007-04-10 Olivier Deschamps
 - CaloDataProviderPatched : 
   . remove the patch related to adcLength and trigLength

@@ -1,4 +1,4 @@
-// $Id: CaloReadoutTool.h,v 1.7 2007-04-17 22:26:17 odescham Exp $
+// $Id: CaloReadoutTool.h,v 1.8 2007-04-18 07:03:27 cattanem Exp $
 #ifndef CALODAQ_CALOREADOUTTOOL_H 
 #define CALODAQ_CALOREADOUTTOOL_H 1
 
@@ -40,7 +40,6 @@ protected:
   void checkCards(int nCards, std::vector<int> feCards );
   std::string  m_detectorName;
   bool m_packedIsDefault; 
-  std::string m_rawLocation;
   const std::vector<LHCb::RawBank*>* m_banks;
   DeCalorimeter*   m_calo;
   LHCb::RawBank::BankType m_packedType;
@@ -50,6 +49,3 @@ protected:
 private:
 };
 #endif // CALODAQ_CALOREADOUTTOOL_H
-
-
-
