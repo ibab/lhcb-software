@@ -1,4 +1,4 @@
-// $Id: RawBankToSTClusterAlg.cpp,v 1.13 2006-12-18 10:49:45 cattanem Exp $
+// $Id: RawBankToSTClusterAlg.cpp,v 1.14 2007-04-18 12:10:06 csalzman Exp $
 
 #include <algorithm>
 
@@ -108,6 +108,8 @@ StatusCode RawBankToSTClusterAlg::decodeBanks(RawEvent* rawEvt,
     STTell1Board* aBoard =  readoutTool()->findByBoardID(STTell1ID((*iterBank)->sourceID())); 
     // make a decoder
     STDecoder decoder((*iterBank)->data());    
+    // get verion of the bank
+    unsigned int version = (*iterBank)->version();
     
     if (decoder.hasError() == true){
       warning() << "bank has errors - skip event" << endmsg;
@@ -117,7 +119,8 @@ StatusCode RawBankToSTClusterAlg::decodeBanks(RawEvent* rawEvt,
     // iterator over the data....
     STDecoder::posadc_iterator iterDecoder = decoder.posAdcBegin();
     for ( ;iterDecoder != decoder.posAdcEnd(); ++iterDecoder){
-      StatusCode sc = createCluster(iterDecoder->first,aBoard,iterDecoder->second,clusCont);
+      StatusCode sc = createCluster(iterDecoder->first,aBoard,
+                                    iterDecoder->second,clusCont,version);
       if (sc.isFailure()) {
         return StatusCode::FAILURE;
       }
@@ -137,18 +140,23 @@ StatusCode RawBankToSTClusterAlg::decodeBanks(RawEvent* rawEvt,
 
 StatusCode RawBankToSTClusterAlg::createCluster(const STClusterWord& aWord,
                                                 const STTell1Board* aBoard,
-                                                const std::vector<SiADCWord>& adcValues,
-                                                STClusters* clusCont) const{
+                                                const std::vector<SiADCWord>& 
+                                                adcValues,
+                                                STClusters* clusCont,
+                                                const unsigned int version) const{
   // stream the neighbour sum
   std::vector<SiADCWord>::const_iterator iterADC = adcValues.begin();
   char neighbour = *iterADC;  
   ++iterADC;
 
+  unsigned int fracStrip = aWord.fracStripBits();
+    
   // make some consistancy checks
   if ((adcValues.size() - 1u  < aWord.pseudoSize())) {
     warning() << "adc values do not match ! " << adcValues.size()-1 << " "
-              <<  aWord.pseudoSize() << " chan "
-              << aBoard->DAQToOffline(aWord.channelID()) << endmsg ;
+              << aWord.pseudoSize() << " chan "
+              << aBoard->DAQToOffline(aWord.channelID(),fracStrip,version) 
+              << endmsg ;
     return StatusCode::FAILURE;
   }
 
@@ -163,20 +171,24 @@ StatusCode RawBankToSTClusterAlg::createCluster(const STClusterWord& aWord,
   if (interStripPos > 0.99) stripNum +=1; 
   unsigned int offset = (unsigned int)stripNum; 
 
-  // decode the channel
-  STChannelID nearestChan = aBoard->DAQToOffline(aWord.channelID());
-  if (!tracker()->isValid(nearestChan)){
-    warning() << "invalid channel " << endmsg;
-    return StatusCode::FAILURE;
-  }
-
   STCluster::ADCVector adcs ; 
   for (unsigned int i = 0; i < tWords.size() ; ++i){
     adcs.push_back(std::make_pair(i-offset,(int)tWords[i].adc()));
   } // iDigit
 
+  // decode the channel
+  STChannelID nearestChan = aBoard->DAQToOffline(aWord.channelID(),fracStrip,
+                                                 version);
+  if (!tracker()->isValid(nearestChan)){
+    warning() << "invalid channel " << endmsg;
+    return StatusCode::FAILURE;
+  }
+  aBoard->ADCToOffline(aWord.channelID(),adcs,version,offset,interStripPos);
+
   // make cluster +set things
-  STCluster* newCluster = new STCluster(this->word2LiteCluster(aWord, nearestChan),
+  STCluster* newCluster = new STCluster(this->word2LiteCluster(aWord, 
+                                                               nearestChan,
+                                                               fracStrip),
                                         adcs,neighbour);
 
   // add to container
@@ -201,9 +213,12 @@ double RawBankToSTClusterAlg::mean(const std::vector<SiADCWord>& adcValues) cons
 
 
 STLiteCluster RawBankToSTClusterAlg::word2LiteCluster(STClusterWord aWord,
-                                                      STChannelID chan) const{
-  return STLiteCluster(aWord.fracStripBits(),aWord.pseudoSizeBits(),
-                       aWord.hasHighThreshold() ,chan);
+                                                      STChannelID chan,
+                                                      const unsigned int 
+                                                      fracStrip) const
+{
+  return STLiteCluster(fracStrip,aWord.pseudoSizeBits(),
+                       aWord.hasHighThreshold(), chan);
 }
 
 

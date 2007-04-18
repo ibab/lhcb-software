@@ -1,6 +1,8 @@
-// $Id: STTell1Board.cpp,v 1.3 2006-03-17 15:08:29 mneedham Exp $
+// $Id: STTell1Board.cpp,v 1.4 2007-04-18 12:10:07 csalzman Exp $
 #include "STTell1Board.h"
+#include "STDAQDefinitions.h"
 
+#include "Event/STCluster.h"
 
 using namespace LHCb;
 
@@ -38,18 +40,26 @@ bool STTell1Board::isInside(const STChannelID aOfflineChan,
 }
 
 
-STChannelID STTell1Board::DAQToOffline(const unsigned int aDAQChan) const{
+STChannelID STTell1Board::DAQToOffline(const unsigned int aDAQChan,
+                                       unsigned int& fracStrip,
+                                       const int version) const{
 
   // convert a DAQ channel to offline !
   unsigned int index = aDAQChan/m_nStripsPerHybrid;
   unsigned int strip =  aDAQChan - (index*m_nStripsPerHybrid);
-  if (m_orientation[index] == 0){
+
+  if (m_orientation[index] == 0) {
+    // reverse direction of strip numbering
     strip = m_nStripsPerHybrid - strip;
-  }
-  else {
+    // shift channel by one, because interstrip fraction cannot be negative
+    if (fracStrip != 0 && version >= STDAQ::v4 ) {
+      fracStrip = 4 - fracStrip;
+      --strip;
+    }
+  } else { // Add one because offline strips start at one.
     ++strip;
   }
-
+  
   return STChannelID(m_sectorsVector[index].type(),
                      m_sectorsVector[index].station(), 
                      m_sectorsVector[index].layer(),
@@ -58,18 +68,57 @@ STChannelID STTell1Board::DAQToOffline(const unsigned int aDAQChan) const{
                      strip);
 }
 
-unsigned int STTell1Board::offlineToDAQ(const STChannelID aOfflineChan,
-                                        const unsigned int waferIndex) const{
 
+void STTell1Board::ADCToOffline(const unsigned int aDAQChan,
+                                STCluster::ADCVector& adcs,
+                                const int version,
+                                const unsigned int offset,
+                                const double interStripPos) const
+{
+  unsigned int index = aDAQChan/m_nStripsPerHybrid;
+  int size = adcs.size();
+  int newoffset;
+
+  // flip sequence of adc vector
+  if (m_orientation[index] == 0 && version >= STDAQ::v4){
+    // calculate the new offset
+    newoffset = size - 1 - offset;
+    // Correct for interstrip fraction when not equal to zero
+    if( interStripPos > 0.01 && interStripPos < 0.99 ) {
+      --newoffset;
+    }
+    if (newoffset < 0) newoffset = 0;
+
+    // Do the actual flipping
+    STCluster::ADCVector adcsflip = adcs;
+    for(unsigned int i = 0; i < size; ++i) {
+      adcsflip[size -i -1] = adcs[i];
+      adcsflip[size -i -1].first = size -i -1 -newoffset;
+    }    
+    
+    adcs = adcsflip;
+  }
+}
+
+
+unsigned int STTell1Board::offlineToDAQ(const STChannelID aOfflineChan,
+                                        const unsigned int waferIndex,
+                                        double isf) const
+{
   // convert an offline channel to DAQ channel
   unsigned int strip = aOfflineChan.strip();
   if (m_orientation[waferIndex] == 0){
+    // change the direction of numbering
     strip = m_nStripsPerHybrid - strip;
+    // shift channel by one, because interstrip fraction cannot be negative
+    if (isf > 0.01) --strip;
   }
   else {
+    // subtract one because offline strips start at one.
     --strip;
   }
-  return (waferIndex*m_nStripsPerHybrid)+ strip;
+
+  return (waferIndex*m_nStripsPerHybrid) + strip;
 }
 
 std::ostream& STTell1Board::fillStream( std::ostream& os ) const{

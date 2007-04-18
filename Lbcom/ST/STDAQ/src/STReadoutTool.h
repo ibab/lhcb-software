@@ -1,4 +1,4 @@
-// $Id: STReadoutTool.h,v 1.1 2006-02-10 08:59:31 mneedham Exp $
+// $Id: STReadoutTool.h,v 1.2 2007-04-18 12:10:07 csalzman Exp $
 #ifndef _STReadoutTool_H
 #define _STReadoutTool_H
 
@@ -44,8 +44,18 @@ public:
   virtual unsigned int nBoard() const;
 
   /// convert ITChannelID to DAQ ChannelID
-  virtual STDAQ::chanPair offlineChanToDAQ(const LHCb::STChannelID aOfflineChan) const;
- 
+  virtual STDAQ::chanPair offlineChanToDAQ(const LHCb::STChannelID aOfflineChan,					   double isf) const;
+
+/// convert offline interStripFraction to DAQ interStripFraction
+  virtual double interStripToDAQ(const LHCb::STChannelID aOfflineChan,
+                                 const STTell1ID aBoardID,
+                                 const double isf) const;
+
+  bool STReadoutTool::ADCOfflineToDAQ(const LHCb::STChannelID aOfflineChan,
+				      const STTell1ID aBoardID,
+				      LHCb::STCluster::ADCVector& adcs) const;
+
+
   /// find the Tell1 board given a board ID
   virtual STTell1Board* findByBoardID(const STTell1ID aBoardID) const;
 

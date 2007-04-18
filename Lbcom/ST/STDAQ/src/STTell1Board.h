@@ -1,4 +1,4 @@
-// $Id: STTell1Board.h,v 1.2 2006-03-15 16:38:51 mneedham Exp $
+// $Id: STTell1Board.h,v 1.3 2007-04-18 12:10:07 csalzman Exp $
 #ifndef _STTell1Board_H
 #define _STTell1Board_H 1
 
@@ -6,6 +6,8 @@
 #include "Kernel/STChannelID.h"
 #include <vector>
 #include <iostream>
+
+#include "Event/STCluster.h"
 
 /** @class STTell1Board STTell1Board.h "STDAQ/STTell1Board.h"
  *
@@ -38,11 +40,22 @@ public:
                 unsigned int& sectorIndex) const;
 
   /// construct LHCb::STChannelID from DAQ Channel
-  LHCb::STChannelID DAQToOffline(const unsigned int aDAQChan) const;
+  LHCb::STChannelID DAQToOffline(const unsigned int aDAQChan, 
+				 unsigned int& fracStrip,
+				 const int version) const;
+
+  /// fill adc values offline 
+    void ADCToOffline(const unsigned int aDAQChan,
+		      LHCb::STCluster::ADCVector& adcs,
+		      const int version,
+		      const unsigned int offset,
+		      const double interStripPos) const;
+  
 
   /// construct DAQChannel from LHCb::STChannelID
   unsigned int offlineToDAQ(const LHCb::STChannelID aOfflineChan,
-                            const unsigned int sectorIndex) const;
+                            const unsigned int sectorIndex,
+			    double isf) const;
 
 
   /// Operator overloading for stringoutput
@@ -58,13 +71,13 @@ public:
 
   //std::ostream& STTell1Board::printOut( std::ostream& os ) const;
 
+  std::vector<int> m_orientation;
+
 private:
 
   STTell1ID m_boardID;
   unsigned int m_nStripsPerHybrid;
   std::vector<LHCb::STChannelID> m_sectorsVector;
-  std::vector<int> m_orientation;
-
 };
 
 inline STTell1ID STTell1Board::boardID() const{

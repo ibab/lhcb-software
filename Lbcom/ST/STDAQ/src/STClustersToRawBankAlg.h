@@ -1,4 +1,4 @@
-// $Id: STClustersToRawBankAlg.h,v 1.2 2007-03-23 08:59:57 jvantilb Exp $
+// $Id: STClustersToRawBankAlg.h,v 1.3 2007-04-18 12:10:07 csalzman Exp $
 #ifndef STClustersToRawBankAlg_H
 #define STClustersToRawBankAlg_H 1
 
@@ -45,10 +45,10 @@ public:
   virtual ~STClustersToRawBankAlg( ); ///< Destructor
 
   virtual StatusCode initialize();    ///< Algorithm initialization
-  virtual StatusCode execute();    ///< Algorithm execution
+  virtual StatusCode execute();       ///< Algorithm execution
+  virtual StatusCode finalize();      ///< Algorithm finalization
 
 private: 
-
    
   typedef std::map<STTell1ID,STClustersOnBoard* > ClusterMap;
 
@@ -66,7 +66,9 @@ private:
 
 
   // create a new bank
-  void writeBank(STClustersOnBoard::ClusterVector& clusCont , LHCb::BankWriter& bWriter);
+  void writeBank(STClustersOnBoard::ClusterVector& clusCont , 
+                 LHCb::BankWriter& bWriter,
+                 const STTell1ID aBoardID);
  
   ISTReadoutTool* m_readoutTool; 
   std::string m_readoutToolName;

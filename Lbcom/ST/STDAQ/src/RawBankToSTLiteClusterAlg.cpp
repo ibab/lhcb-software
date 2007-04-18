@@ -1,4 +1,4 @@
-// $Id: RawBankToSTLiteClusterAlg.cpp,v 1.7 2006-12-18 10:49:46 cattanem Exp $
+// $Id: RawBankToSTLiteClusterAlg.cpp,v 1.8 2007-04-18 12:10:07 csalzman Exp $
 
 
 #include <algorithm>
@@ -19,6 +19,8 @@
 #include "STTell1Board.h"
 #include "STTell1ID.h"
 #include "STDAQGeneral.h"
+
+#include "STDAQDefinitions.h"
 
 #include "STDecoder.h"
 
@@ -105,16 +107,26 @@ StatusCode RawBankToSTLiteClusterAlg::decodeBanks(RawEvent* rawEvt) const{
       warning() << "bank has errors - skip event" << endmsg;
       return StatusCode::FAILURE;
     }
-				     
+
+    int version = (*iterBank)->version();
+
     // read in the first half of the bank
     STDecoder::pos_iterator iterDecoder = decoder.posBegin();
     for ( ;iterDecoder != decoder.posEnd(); ++iterDecoder){
-     
-      STClusterWord aWord = *iterDecoder; 
-      STLiteCluster liteCluster(aWord.fracStripBits(),
+      
+      STClusterWord aWord = *iterDecoder;
+      unsigned int fracStrip = aWord.fracStripBits();
+      
+      //      unsigned int pseudoSize = aWord.pseudoSizeBits(); //no change
+      //      bool secondThres = aWord.hasHighThreshold(); //no change
+      STChannelID chan =  aBoard->DAQToOffline(aWord.channelID(),fracStrip,
+                                               version);
+
+      STLiteCluster liteCluster(fracStrip,
                                 aWord.pseudoSizeBits(),
                                 aWord.hasHighThreshold(),
-                                aBoard->DAQToOffline(aWord.channelID()));
+                                chan);
+
       fCont->push_back(liteCluster); 
     } //decoder
       
@@ -128,5 +140,7 @@ StatusCode RawBankToSTLiteClusterAlg::decodeBanks(RawEvent* rawEvt) const{
   return StatusCode::SUCCESS;
 
 }
+
+
 
 

@@ -1,4 +1,4 @@
-// $Id: STReadoutTool.cpp,v 1.1 2006-02-10 08:59:31 mneedham Exp $
+// $Id: STReadoutTool.cpp,v 1.2 2007-04-18 12:10:07 csalzman Exp $
 
 // Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -10,6 +10,7 @@
 #include "STTell1Board.h"
 #include "STTell1ID.h"
 #include "STDAQDefinitions.h"
+#include "Event/STCluster.h"
 
 // IT
 #include "Kernel/STChannelID.h"
@@ -65,8 +66,9 @@ unsigned int STReadoutTool::nBoard() const {
   return m_nBoard;
 }
 
-STDAQ::chanPair STReadoutTool::offlineChanToDAQ(const STChannelID aOfflineChan) const{
-
+STDAQ::chanPair STReadoutTool::offlineChanToDAQ(const STChannelID aOfflineChan,
+                                                double isf) const
+{
   // look up region start.....
   unsigned int iBoard = m_firstBoardInRegion[region(aOfflineChan)];
   bool isFound = false;
@@ -85,9 +87,61 @@ STDAQ::chanPair STReadoutTool::offlineChanToDAQ(const STChannelID aOfflineChan) 
     return(std::make_pair(STTell1ID(STTell1ID::nullBoard),0));
   }
   else {
-    return (std::make_pair(m_boards[iBoard]->boardID(),m_boards[iBoard]->offlineToDAQ(aOfflineChan,waferIndex))); 
+    return (std::make_pair(m_boards[iBoard]->boardID(),
+                           m_boards[iBoard]->offlineToDAQ(aOfflineChan,
+                                                          waferIndex,isf))); 
   }
 }
+
+
+double STReadoutTool::interStripToDAQ(const STChannelID aOfflineChan,
+                                      const STTell1ID aBoardID,
+                                      const double isf) const
+{
+  unsigned int waferIndex = 999u;
+
+  STTell1Board* aBoard = this->findByBoardID(aBoardID);
+  double newisf = 0;
+  
+  if(aBoard->isInside(aOfflineChan,waferIndex)){
+    unsigned int orientation = aBoard->m_orientation[waferIndex];
+    if(orientation == 0 && isf > 0.01){
+      newisf = 1 - isf;
+    } else {
+      newisf = isf;
+    }
+  } else { // Can not find board!
+    newisf = -1;
+  }  
+  
+  return newisf;
+}
+
+
+bool STReadoutTool::ADCOfflineToDAQ(const STChannelID aOfflineChan,
+                                    const STTell1ID aBoardID,
+                                    STCluster::ADCVector& adcs) const
+{
+  unsigned int waferIndex = 999u;
+  STTell1Board* aBoard = this->findByBoardID(aBoardID);
+    
+  if( aBoard->isInside(aOfflineChan,waferIndex) ) {
+    unsigned int orientation = aBoard->m_orientation[waferIndex];
+    if( orientation == 0 ){
+      STCluster::ADCVector adcsflip = adcs;
+      for (unsigned int i = 0; i < adcs.size(); ++i) {
+        adcsflip[adcs.size()-1-i] = adcs[i];
+      }
+      adcs = adcsflip;
+    }
+  }
+  else{ // can not find board!
+    return false;
+  }  
+  
+  return true;
+}
+
 
 STTell1Board* STReadoutTool::findByBoardID(const STTell1ID aBoardID) const{
   // find by board id
@@ -111,3 +165,5 @@ void STReadoutTool::printMapping() const{
   std::cout << " ----------------" << std::endl; 
  
 }
+
+

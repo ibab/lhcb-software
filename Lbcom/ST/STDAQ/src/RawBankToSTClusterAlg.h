@@ -1,4 +1,4 @@
-// $Id: RawBankToSTClusterAlg.h,v 1.3 2006-05-09 14:02:17 mneedham Exp $
+// $Id: RawBankToSTClusterAlg.h,v 1.4 2007-04-18 12:10:06 csalzman Exp $
 #ifndef RAWBANKTOSTCLUSTERALG_H 
 #define RAWBANKTOSTCLUSTERALG_H 1
 
@@ -49,11 +49,14 @@ private:
   StatusCode createCluster(const STClusterWord& aWord,
                            const STTell1Board* aBoard,
                            const std::vector<SiADCWord>& adcValues,
-		 	   LHCb::STClusters* clusCont) const;
+		 	   LHCb::STClusters* clusCont,
+			   const unsigned int version) const;
  
   double mean(const std::vector<SiADCWord>& adcValues) const;
    
-  LHCb::STLiteCluster word2LiteCluster(STClusterWord aWord, LHCb::STChannelID chan) const;
+  LHCb::STLiteCluster word2LiteCluster(STClusterWord aWord, 
+				       LHCb::STChannelID chan,
+				       const unsigned int fracStrip) const;
 
   double stripFraction(const double interStripPos) const;
 

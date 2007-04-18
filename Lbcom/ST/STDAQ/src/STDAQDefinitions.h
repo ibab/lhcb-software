@@ -1,4 +1,4 @@
-// $Id: STDAQDefinitions.h,v 1.1 2006-02-10 08:59:31 mneedham Exp $
+// $Id: STDAQDefinitions.h,v 1.2 2007-04-18 12:10:07 csalzman Exp $
 #ifndef _STDAQDefinitions_H
 #define _STDAQDefinitions_H
 
@@ -32,7 +32,7 @@ namespace STDAQ{
   // and a mask
   const unsigned int adcMask = 0xff;
 
-  enum version { v1 = 0, v2 = 1 , v3 = 2};
+  enum version { v1 = 0, v2 = 1 , v3 = 2 , v4 = 3};
 
   // n strips per ppx
   const unsigned int nStripPerPPx = 768;

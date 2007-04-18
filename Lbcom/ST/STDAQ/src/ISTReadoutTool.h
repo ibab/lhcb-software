@@ -1,4 +1,4 @@
-// $Id: ISTReadoutTool.h,v 1.1 2006-02-10 08:59:31 mneedham Exp $
+// $Id: ISTReadoutTool.h,v 1.2 2007-04-18 12:10:06 csalzman Exp $
 #ifndef _ISTReadoutTool_H
 #define _ISTReadoutTool_H
 
@@ -6,6 +6,7 @@
 
 #include <string>
 #include "STDAQDefinitions.h"
+#include "Event/STCluster.h"
 
 class STTell1Board;
 
@@ -37,8 +38,18 @@ public:
   virtual unsigned int nBoard() const = 0;
 
   /// convert STChannelID to DAQ ChannelID
-  virtual STDAQ::chanPair offlineChanToDAQ(const LHCb::STChannelID aOfflineChan) const = 0;
+  virtual STDAQ::chanPair offlineChanToDAQ(const LHCb::STChannelID aOfflineChan,
+                                           double isf) const = 0 ;
 
+  /// convert offline interStripFraction to DAQ interStripFraction
+  virtual double interStripToDAQ(const LHCb::STChannelID aOfflineChan, 
+                                 const STTell1ID aBoardID,
+                                 const double isf) const = 0 ;
+
+  virtual bool ADCOfflineToDAQ(const LHCb::STChannelID aOfflineChan,
+			       const STTell1ID aBoardID,
+			       LHCb::STCluster::ADCVector& adcs) const = 0;
+  
   /// find the Tell1 board given a board ID
   virtual STTell1Board* findByBoardID(const STTell1ID aBoardID) const = 0;
 

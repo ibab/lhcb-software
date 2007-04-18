@@ -1,4 +1,4 @@
-// $Id: STClustersToRawBankAlg.cpp,v 1.6 2007-03-23 08:59:57 jvantilb Exp $
+// $Id: STClustersToRawBankAlg.cpp,v 1.7 2007-04-18 12:10:07 csalzman Exp $
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -62,7 +62,12 @@ STClustersToRawBankAlg::STClustersToRawBankAlg( const std::string& name,
 // Destructor
 STClustersToRawBankAlg::~STClustersToRawBankAlg() {
   // Destructor
-  
+  delete m_bankMapping;
+}
+ 
+// Finalisation.
+StatusCode STClustersToRawBankAlg::finalize() {
+ 
   std::vector<STClustersOnBoard*>::iterator iClusVector = m_clusVectors.begin();
   while (iClusVector != m_clusVectors.end()) {
     STClustersOnBoard* tmpCont = *iClusVector;
@@ -70,7 +75,7 @@ STClustersToRawBankAlg::~STClustersToRawBankAlg() {
     m_clusVectors.erase(iClusVector);
   } // iClusVector
 
-  delete m_bankMapping;
+  return StatusCode::SUCCESS;
 };
 
 // Initialisation.
@@ -150,10 +155,12 @@ StatusCode STClustersToRawBankAlg::execute() {
     // make the a bankwriter....
     BankWriter bWriter(bankSize(clusCont)); 
 
-    writeBank(clusCont,bWriter);
+    writeBank(clusCont,bWriter,aBoardID);
 
-    RawBank* tBank = tEvent->createBank(STDAQ::rawInt(aBoardID.id()),m_bankType ,STDAQ::v3, 
-                                        bWriter.byteSize(), &(bWriter.dataBank()[0]));
+    RawBank* tBank = tEvent->createBank(STDAQ::rawInt(aBoardID.id()),
+                                        m_bankType ,STDAQ::v4, 
+                                        bWriter.byteSize(),
+                                        &(bWriter.dataBank()[0]));
 
     tEvent->adoptBank(tBank,true);
 
@@ -172,6 +179,7 @@ void STClustersToRawBankAlg::initEvent(){
 
   // intialize temp bank structure each event
   for (std::vector<STClustersOnBoard*>::iterator iter = m_clusVectors.begin(); iter != m_clusVectors.end(); ++iter){
+
     (*iter)->clear();
   } // iter
  
@@ -186,7 +194,8 @@ StatusCode STClustersToRawBankAlg::groupByBoard(const STClusters* clusCont){
 
     // find the online channel and board
     STChannelID chan = (*iterClus)->channelID();
-    STDAQ::chanPair aPair = m_readoutTool->offlineChanToDAQ(chan);
+    double isf = (*iterClus)->interStripFraction();
+    STDAQ::chanPair aPair = m_readoutTool->offlineChanToDAQ(chan,isf);
 
     if (aPair.first.id() == STTell1ID::nullBoard) {
       // screwed
@@ -203,14 +212,16 @@ StatusCode STClustersToRawBankAlg::groupByBoard(const STClusters* clusCont){
       if (iterMap != m_clusMap.end() ){
         STClustersOnBoard* tVec = iterMap->second;
         tVec->addCluster(*iterClus,aPair.second);
+
         // look for consistancy...
         //STTell1Board* board =  m_readoutTool->findByBoardID(aPair.first);
         //STChannelID chan2 = board->DAQToOffline(aPair.second);
       }
       else {
-	 warning() << "Failed to find board in map " << endreq;
+        warning() << "Failed to find board in map " << endreq;
       }
     }
+    
      
   } // iterClus
 
@@ -238,8 +249,11 @@ unsigned int STClustersToRawBankAlg::bankSize(STClustersOnBoard::ClusterVector& 
  return (unsigned int)ceil(nByte/(double)sizeof(int)); 
 }
  
-void STClustersToRawBankAlg::writeBank(STClustersOnBoard::ClusterVector& clusCont, LHCb::BankWriter& bWriter){
-
+void STClustersToRawBankAlg::writeBank(STClustersOnBoard::ClusterVector& 
+                                       clusCont,
+                                       LHCb::BankWriter& bWriter,
+                                       const STTell1ID aBoardID)
+{
   unsigned int nClus = clusCont.size();
 
   // make a bank header
@@ -249,10 +263,16 @@ void STClustersToRawBankAlg::writeBank(STClustersOnBoard::ClusterVector& clusCon
 
   // pick up the data and write first half of the bank into temp container...
   for (unsigned int iCluster = 0; iCluster < nClus; ++iCluster){
-    STCluster* aCluster = clusCont[iCluster].first;
-    STChannelID aChan = aCluster->channelID();
-    STClusterWord  aWord = STClusterWord(clusCont[iCluster].second,aCluster->interStripFraction() ,aCluster->size(),aCluster->highThreshold());
+    STCluster* aClus = clusCont[iCluster].first;
+    STChannelID aChan = aClus->channelID();
 
+    double isf = m_readoutTool->interStripToDAQ(aChan,
+                                                aBoardID,
+                                                aClus->interStripFraction());
+    STClusterWord aWord = STClusterWord(clusCont[iCluster].second,
+                                        isf,
+                                        aClus->size(),
+                                        aClus->highThreshold());
     bWriter << aWord;
   } // iCluster
 
@@ -269,18 +289,20 @@ void STClustersToRawBankAlg::writeBank(STClustersOnBoard::ClusterVector& clusCon
     char neighbourSum = (char)tADC;
     bWriter << neighbourSum;
     STCluster::ADCVector adcs = aCluster->stripValues();
-    unsigned int nToWrite = GSL_MIN(aCluster->size(), 
-                                    m_maxClusterSize);
+    unsigned int nToWrite = GSL_MIN(aCluster->size(), m_maxClusterSize);
+
+    //flip ADC values for rotated modules
+    STChannelID channelID = aCluster->channelID();
+    m_readoutTool->ADCOfflineToDAQ(channelID,aBoardID,adcs);
+    
     for (unsigned int i = 0; i < nToWrite; ++i){
       bool last;
       i == nToWrite-1 ? last = true: last = false;
       SiADCWord adcWord = SiADCWord(adcs[i].second, last);
       bWriter << adcWord;  
     } //iter   
-
+    
   } // iCluster
 
   return;
 }
-
-

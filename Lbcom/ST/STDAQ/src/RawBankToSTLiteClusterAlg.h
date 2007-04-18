@@ -1,4 +1,4 @@
-// $Id: RawBankToSTLiteClusterAlg.h,v 1.3 2006-10-25 11:41:11 mneedham Exp $
+// $Id: RawBankToSTLiteClusterAlg.h,v 1.4 2007-04-18 12:10:07 csalzman Exp $
 #ifndef RAWBANKTOSTLITECLUSTERALG_H 
 #define RAWBANKTOSTLITECLUSTERALG_H 1
 
@@ -54,8 +54,9 @@ private:
   /// Output location for STClusters
   std::string m_clusterLocation;
 
-
-class Less_by_Channel : public std::binary_function<LHCb::STLiteCluster,LHCb::STLiteCluster ,bool>{
+  
+  
+  class Less_by_Channel : public std::binary_function<LHCb::STLiteCluster,LHCb::STLiteCluster ,bool>{
   public:
 
     /** compare the channel of one object with the
@@ -64,6 +65,7 @@ class Less_by_Channel : public std::binary_function<LHCb::STLiteCluster,LHCb::ST
      *  @param obj2   second object
      *  @return  result of the comparision
      */
+    //
     inline bool operator() ( LHCb::STLiteCluster obj1 , LHCb::STLiteCluster obj2 ) const
     {
       return obj1.channelID() < obj2.channelID() ;
