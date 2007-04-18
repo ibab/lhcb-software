@@ -1,4 +1,4 @@
-// $Id: ITrajFitter.h,v 1.3 2007-04-17 16:04:32 graven Exp $
+// $Id: ITrajFitter.h,v 1.4 2007-04-18 07:13:55 cattanem Exp $
 #ifndef _ITrajFitter_H
 #define _ITrajFitter_H
  
@@ -43,8 +43,9 @@ public:
   static const InterfaceID& interfaceID() { return IID_ITrajFitter ; }
                                                                                                    
 /** Fit a DifTraj to a set of measurements.
-  * @param on input: initial guess for DifTraj<N>; on output: updated to reflect the fit
-  * @param range of iterators over Measurements used to fit the DifTraj<N>
+  * @param traj  on input: initial guess for DifTraj<N>; on output: updated to reflect the fit
+  * @param begin begin iterator over Measurements used to fit the DifTraj<N>
+  * @param end   end   iterator over Measurements used to fit the DifTraj<N>
   */
   template <unsigned N, typename MeasIter> 
   StatusCode fit(typename LHCb::DifTraj<N>& traj, 
@@ -53,8 +54,8 @@ public:
   }
 
 /** Fit a DifTraj to a set of measurements.
-  * @param on input: initial guess for DifTraj<N>; on output: updated to reflect the fit
-  * @param vector Measurements used to fit the DifTraj<N>
+  * @param traj         on input: initial guess for DifTraj<N>; on output: updated to reflect the fit
+  * @param measurements vector Measurements used to fit the DifTraj<N>
   */
   template <unsigned N>
   StatusCode fit(LHCb::DifTraj<N>& traj, 
@@ -64,11 +65,12 @@ public:
   }
 
 /** Fit a DifTraj to a set of measurements.
-  * @param on input: initial guess for DifTraj<N>; on output: updated to reflect the fit
-  * @param on input: an empty vector; 
-  *        on output: containes for each measurement, a pair with the (normalized)
-  *                   residual, and its derivativ wrt the N parameters of the DifTraj<N>
-  * @param range of iterators over Measurements used to fit the DifTraj<N>
+  * @param traj on input: initial guess for DifTraj<N>; on output: updated to reflect the fit
+  * @param residuals on input: an empty vector; 
+  *                  on output: contains, for each measurement, a pair with the (normalized)
+  *                   residual, and its derivative wrt the N parameters of the DifTraj<N>
+  * @param begin begin iterator over Measurements used to fit the DifTraj<N>
+  * @param end   end   iterator over Measurements used to fit the DifTraj<N>
   */
   template <unsigned N, typename MeasIter>
   StatusCode fit(LHCb::DifTraj<N>& traj, 
