@@ -5,12 +5,13 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v22r4>2007-04-17 LHCbSys v22r4</A></H1><PRE>
+</PRE><H1><A NAME=v22r4>2007-04-18 LHCbSys v22r4</A></H1><PRE>
 This version uses Gaudi v19r3 and LCG_50b. Fully compatible with DC06 data
 
 - Packages modified: KernelSys v6r4, LHCbKernel v7r3, EventSys v23r4, 
     MCEvent v2r2, TrackEvent v4r2, DetSys v9r4, STDet v3r3, VeloDet v11r2,
-    CaloInterfaces v7r2, CaloUtils v7r2, DAQSys v3r2, OTDAQ v5r2, CaloDAQ v3r2
+    CaloInterfaces v7r2, CaloUtils v7r2, DAQSys v3r2, OTDAQ v5r2, CaloDAQ v3r2,
+    DAQEvent v7r3, TrackInterfaces v3r3
 
 - In LHCbKernel v7r3
   . Extend the DifTraj interface with an operator+= which allows one to
@@ -24,6 +25,10 @@ This version uses Gaudi v19r3 and LCG_50b. Fully compatible with DC06 data
 
 - In TrackEvent v4r2
   . Add stdVectorTypeDef="TRUE" to Measurement.xml
+
+- In DAQEvent v7r3
+  . Add "ForceRawEvent" property to OdinTimeDecoder tool, to force it to decode
+    ODIN bank even if DAQ/ODIN object already exists in TES.
 
 - In DetSys v9r4, STDet v3r3, VeloDet v11r2
   . Move generation of dictionaries to package where classes are defined
@@ -47,7 +52,7 @@ This version uses Gaudi v19r3 and LCG_50b. Fully compatible with DC06 data
   . Add new methods bremstrahlung() & bremCaloMomentum() in CaloElectron
   . Implement ICaloMomentum interface (moved from CaloInterfaces)
 
-- In CaloDAQ v3r2:
+- In CaloDAQ v3r2
   . Add a patched implementation of CaloDataProvider : CaloDataProviderPatched
     with temporary patches allow to deal with the current Calo TELL1 firmware.
     Will be merged with CaloDataProvider once firmware is frozen.
@@ -55,6 +60,10 @@ This version uses Gaudi v19r3 and LCG_50b. Fully compatible with DC06 data
   . Fix bug in CaloTriggerBitFromRaw : tool returned only the last TELL1 data.
   . Fix an old bug in CaloFillPrsSpdRawBuffer : last Prs/Spd L0bits were missing
     for 50% of events.
+  . Adapt CaloReadoutTool for consecutive bunch crossings readout
+
+- In TrackInterfaces v3r3
+  . Add ITrajFitter interface
 
 - In VeloDet v11r2, OTDAQ v5r2
   . Fix untested StatusCodes
