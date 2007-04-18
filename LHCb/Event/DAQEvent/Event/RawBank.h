@@ -63,7 +63,7 @@ namespace LHCb
                    OT,
                    Muon,
                    L0PU,
-                   unused_15,  ///< was DAQ in 2005 RTTC 
+                   DAQ,
                    ODIN,
                    HLT,
                    VeloFull,

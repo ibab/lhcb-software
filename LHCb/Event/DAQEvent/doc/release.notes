@@ -6,7 +6,6 @@
 
 !================ DAQEvent v7r3 2007-04-17 ============================
 ! 2007-04-17 - Marco Cattaneo
- - Remove unused DAQ entry in bank types enum
  - Add "ForceRawEvent" property to OdinTimeDecoder tool, to force it to decode
    ODIN bank even if DAQ/ODIN object already exists in TES. Useful when 
    processing raw data using as input an ETC produced from .rdst or .dst 
