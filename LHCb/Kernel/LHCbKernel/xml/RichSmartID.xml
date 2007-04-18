@@ -3,7 +3,7 @@
 <gdd>
 
 <!-- **************************************************************************
-  * $Id: RichSmartID.xml,v 1.31 2007-03-26 11:18:48 jonrob Exp $
+  * $Id: RichSmartID.xml,v 1.32 2007-04-18 14:03:27 jonrob Exp $
   *****************************************************************************
   * XML-description of RichSmartID class                                      *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -21,13 +21,13 @@
 
         <import name = "Kernel/RichDetectorType"           />
         <import name = "Kernel/RichSide"                   />
-        <import name = "boost/pool/pool_alloc.hpp"         />
+        <!--import name = "Kernel/FastAllocVector"            /-->
 
         <template name = "VectorDict" t1="THIS"/>
 
         <typedef access="PUBLIC" def="KeyType"    desc="Type for internal key"  type="unsigned int"/>
         <typedef access="PUBLIC" def="Vector"     desc="Vector of RichSmartIDs" type="std::vector&lt; LHCb::RichSmartID &gt;"/>
-        <typedef access="PUBLIC" def="PoolVector" desc="Vector of RichSmartIDs with boost pool allocator" type="std::vector&lt; LHCb::RichSmartID, boost::pool_allocator&lt; LHCb::RichSmartID &gt; &gt;"/>
+        <!--typedef access="PUBLIC" def="Vector"     desc="Vector of RichSmartIDs" type="LHCb::FastAllocVector&lt; LHCb::RichSmartID &gt;"/-->
 
         <attribute 
             desc = "The bit-packed internal data word" 
