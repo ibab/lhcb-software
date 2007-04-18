@@ -8,22 +8,20 @@ branches AlignSolvTools src cmt doc
 # add "use" statements
 
 use cernlib        v*  LCG_Interfaces
-use GSL            v* LCG_Interfaces 
+use GSL            v*  LCG_Interfaces 
 use GaudiKernel    v*
 use GaudiAlg       v*
 use GaudiGSL       v*
-use MCEvent        v* Event
-use HbookCnv v*
 
 include_dirs  $(ALIGNSOLVTOOLSROOT)
 
 macro cernlib_linkopts " -L$(cernlib_home)/lib  -llapack3 -lblas -lpacklib -lphtools -lkernlib" 
 #macro cernlib_linkopts " -L$(cernlib_home)/lib -lpdflib804 -lmathlib -llapack3 -lblas -lpacklib -lphtools -lkernlib" 
 
-# build a component library
+# build link library
 library AlignSolvTools ../src/*.cpp ../src/minres/*.f
 
-apply_pattern component_library library=AlignSolvTools
+apply_pattern linker_library library=AlignSolvTools
 
 #===============================================================
 
