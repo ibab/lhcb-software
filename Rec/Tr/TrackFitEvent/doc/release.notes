@@ -3,11 +3,12 @@
 ! Responsible : Jose Hernando, Eduardo Rodrigues
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
+
+!========================== TrackFitEvent v3r3 2007-04-17 ====================
 ! 2007-04-17 - Gerhard Raven
   - Add LineDifTraj class to parameterize lines which are roughly parallel to
     the z-axis
 
-!========================== TrackFitEvent v3r3 2007-04-10 ====================
 ! 2007-04-10 - Gerhard Raven
  - Add an operator+= to StateTraj because of an extension of the DifTraj
    interface
