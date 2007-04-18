@@ -5,7 +5,7 @@
  *  Header file for class Rich::BoostMemPoolAlloc
  *
  *  CVS Log :-
- *  $Id: BoostMemPoolAlloc.h,v 1.5 2006-06-15 14:29:58 jonrob Exp $
+ *  $Id: BoostMemPoolAlloc.h,v 1.6 2007-04-18 10:04:08 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-07-31
@@ -50,50 +50,50 @@ namespace Rich
   public:
 
     // on windows, do nothing
-#ifndef _WIN32 
+#ifndef _WIN32
 
     /// operator new
-    static void* operator new ( size_t size )
+    inline static void* operator new ( size_t size )
     {
-      return ( sizeof(T) == size ? 
-               boost::singleton_pool<T, sizeof(T)>::malloc() : 
-               ::operator new(size) );
+      return ( sizeof(T) == size ?
+               boost::singleton_pool<T, sizeof(T)>::malloc() :
+               ::operator new ( size ) );
     }
 
     /// placement operator new
-    static void* operator new ( size_t size, void*& pObj )
+    inline static void* operator new ( size_t size, void*& pObj )
     {
-      return ::operator new (size,pObj);
+      return ::operator new ( size, pObj );
     }
 
     /// placement operator new[]
-    static void* operator new[] ( size_t size, void*& pObj )
+    inline static void* operator new[] ( size_t size, void*& pObj )
     {
-      return ::operator new[] (size,pObj);
+      return ::operator new[] ( size, pObj );
     }
 
     /// Operator delete
-    static void operator delete ( void* pObj )
+    inline static void operator delete ( void* pObj )
     {
       if ( boost::singleton_pool<T, sizeof(T)>::is_from(pObj) )
       { boost::singleton_pool<T, sizeof(T)>::free(pObj); }
       else
-      { ::operator delete(pObj); }
+      { ::operator delete ( pObj ); }
     }
 
     /// operator delete
-    static void operator delete ( void* pObj, size_t size )
+    inline static void operator delete ( void* pObj, size_t size )
     {
-      if ( sizeof(T) == size ) 
+      if ( sizeof(T) == size )
       { boost::singleton_pool<T, sizeof(T)>::free(pObj); }
-      else                     
-      { ::operator delete(pObj); }
+      else
+      { ::operator delete ( pObj ); }
     }
 
     /// placement operator delete (needed to avoid a warning on win32)
-    static void operator delete ( void* p, void* pObj )
+    inline static void operator delete ( void* p, void* pObj )
     {
-      ::operator delete (p, pObj);
+      ::operator delete ( p, pObj );
     }
 
 #endif
