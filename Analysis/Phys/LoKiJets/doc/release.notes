@@ -1,11 +1,15 @@
-! $Id: release.notes,v 1.5 2007-03-27 11:21:18 ibelyaev Exp $ 
+! $Id: release.notes,v 1.6 2007-04-19 13:49:52 pkoppenb Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.5 $ 
+! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.6 $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Tools/LoKiJets
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : Jet finding algorithm (KtJet) embedded into LoKi 
 ! -----------------------------------------------------------------------------
+
+!========================== LoKiJets v2r3p1 2007-04-19 ===================
+! 2007-04-19 -  P. Koppenburg
+  Remove controversial doxygen comment
 
 !========================== LoKiJets v2r3 2007-03-26 ===================
 
@@ -124,6 +128,9 @@ Please credit this data as "generated using 'SLOCCount' by David A. Wheeler."
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.5  2007/03/27 11:21:18  ibelyaev
+!  v2r3:  ugly patch to solve the proplem with copy constructor
+!
 ! Revision 1.4  2007/03/04 16:50:53  ibelyaev
 !  v2r2: improve selection of particles
 !

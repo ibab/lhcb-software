@@ -1,12 +1,12 @@
-# $Id: requirements,v 1.4 2007-03-27 11:21:18 ibelyaev Exp $ 
+# $Id: requirements,v 1.5 2007-04-19 13:49:52 pkoppenb Exp $ 
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $
+# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.5 $
 # =============================================================================
 # Created    : 2006-09-06
 # Maintainer : Vanya BELYAEV
 # =============================================================================
 package           LoKiJets
-version           v2r3
+version           v2r3p1
 
 # =============== structure ===================================================
 branches          cmt doc options src
@@ -26,6 +26,9 @@ apply_pattern     component_library library=LoKiJets
 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.4  2007/03/27 11:21:18  ibelyaev
+#  v2r3:  ugly patch to solve the proplem with copy constructor
+#
 # 
 # =============================================================================
 # The END 
