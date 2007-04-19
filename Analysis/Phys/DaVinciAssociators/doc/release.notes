@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.105 2007-03-09 11:19:59 pkoppenb Exp $
+! $Id: release.notes,v 1.106 2007-04-19 13:50:29 pkoppenb Exp $
 !==============================================================================
 ! Package     : DaVinciAssociators
 ! Responsible : Philippe Charpentier
 !==============================================================================
+
+!========================== DaVinciAssociators v9r0p1 2007-04-19 ===================
+! 2007-04-19 -  P. Koppenburg
+  remove DaVinciAssociators branch in requirements
 
 !======================== DaVinciAssociators v9r0 2007-03-09 =================
 ! 2007-03-05 - Patrick Koppenburg
