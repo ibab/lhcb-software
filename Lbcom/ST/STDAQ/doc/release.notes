@@ -4,12 +4,17 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
+!=============================== STDAQ v3r0 2007-04-19 =======================
+! 2007-04-19 - Marco Cattaneo
+ - Removed obsolete STDAQ_load.cpp file
+
 ! 2007-04-18 - Christophe Salzmann
  - Corrected interstrip fraction in the online format for rotated modules. Also
    the strip number for isf!=0 was corrected. The online format was not
    simulated correctly. 
  - Corrected order of the ADC-values in the online format. The online format
    was not simulated correctly. 
+ - RawBank version number incremented. Decoding for DC06 still available
  - STClustersToRawBankAlg: Moved the deletion of the STClustersOnBoard to the
    finalize method.
 
