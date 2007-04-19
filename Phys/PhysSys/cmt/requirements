@@ -11,6 +11,6 @@ use  ProtoParticleFilter        v1r2     Phys   # Chris Jones
 use  DaVinciTools       	v15r3    Phys   # Juan Palacios
 use  DaVinciTransporter 	v3r6     Phys   # Juan Palacios
 use  ParticleMaker      	v3r1     Phys   # Chris Jones
-use  VertexFit			v4r1     Phys   # Yuehong Xie
+use  VertexFit			v4r2     Phys   # Yuehong Xie
 
 
