@@ -37,6 +37,12 @@
         name="primaryVertices"
         type="LHCb::MCVertex"
        />
+	<constructor 
+          desc     = "Copy constructor. Creates a new MCHeader with the same information" 
+	  initList = "ProcessHeader(head), m_evtNumber(head.evtNumber()), m_evtTime(head.evtTime()), m_primaryVertices(head.primaryVertices())">
+          <arg const="TRUE" name="head" type="LHCb::MCHeader"/>
+          <code/>
+      	</constructor>
      </class>
   </package>
 </gdd>

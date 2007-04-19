@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.75 2007-04-10 12:53:04 cattanem Exp $
+! $Id: release.notes,v 1.76 2007-04-19 15:22:34 jonrob Exp $
 ! Package     : Event/MCEvent
 ! Responsible : Marco Cattaneo, Gloria Corti
 ! Purpose     : LHCb Event model. MC truth classes (Gauss and Boole output) 
 !-----------------------------------------------------------------------------
+
+! 2007-04-19 - Chris Jones
+ - Add complete copy constructor for MCHeader. 
+   NB : Please remember to update this constructor if the data members of 
+   the class are ever extended in the future.
 
 !======================== MCEvent v2r2 2007-04-11 ============================
 ! 2007-04-03 - Vanya BELYAEV
