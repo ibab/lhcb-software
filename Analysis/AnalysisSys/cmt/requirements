@@ -1,3 +1,4 @@
+
 package AnalysisSys
 version v1r1
 
@@ -11,17 +12,17 @@ use  FlavourTagging             v7r2     Phys   # Marco Musy
 
 ####################################################################
 use  DaVinciMCTools     	v9r2     Phys   # Juan Palacios
-use  DaVinciAssociators         v9r0     Phys   # Philippe Charpentier
+use  DaVinciAssociators         v9r0p1   Phys   # Philippe Charpentier
 use  MCStandardParticles        v1r2     Phys   # Juan Palacios
 use  FlavourTaggingChecker      v2r2     Phys   # Marco Musy
 use  DaVinciUser      	        v8r1     Phys   # Juan Palacios
 use  ParticleMakerChecker       v1r0     Phys   # Chris Jones
 ####################################################################
-use  PhysSelSys      	v10r1   PhysSel
+use  PhysSelSys      	v10r2   PhysSel
 #===================================================================
 use Ccbar	        v1r4    PhysSel # Jan Amoraal, Miriam Calvo
 use B2Dilepton		v1r3	PhysSel # Rare Decays Working Group
-use B2D0X		v1r8	PhysSel # WGs
+use B2D0X		v1r9	PhysSel # WGs
 use B2DplusX		v1r0	PhysSel # WGs
 use B2DsX		v1r5	PhysSel # WGs
 use B2DstarX		v1r5	PhysSel # WGs
@@ -34,28 +35,28 @@ use Bs2JpsiPhi          v3r3    PhysSel # Gerhard Raven, Jan Amoraal
 use Bd2PiPiPi0          v4r2    PhysSel # Olivier Deschamps
 
 ####################################################################
-use               LoKiMC           v2r2   Phys
-use               LoKiGenMC        v2r1   Phys
-use               LoKiPhys         v3r2   Phys
-use               LoKiPhysMC       v4r1   Phys
-use               LoKiAlgo         v3r2   Phys
-use               LoKiAlgoMC       v3r0   Phys
-use               LoKiJets         v2r3   Phys
-use               LoKiHybrid       v1r1   Phys 
-use               LoKiDict         v5r2   Phys 
-use               LoKiCutsDict     v5r2   Phys 
-use               LoKi             v5r2   Phys
-use               LoKiAll          v5r2   Phys
+use               LoKiMC           v2r2p1   Phys
+use               LoKiGenMC        v2r1p1   Phys
+use               LoKiPhys         v3r2p1   Phys
+use               LoKiPhysMC       v4r1p1   Phys
+use               LoKiAlgo         v3r2p1   Phys
+use               LoKiAlgoMC       v3r0p1   Phys
+use               LoKiJets         v2r3p1   Phys
+use               LoKiHybrid       v1r1p1   Phys 
+use               LoKiDict         v5r2p1   Phys 
+use               LoKiCutsDict     v5r2p1   Phys 
+use               LoKi             v5r2p1   Phys
+use               LoKiAll          v5r2     Phys
 
-use               LoKiExample      v5r2   Ex 
+use               LoKiExample      v5r2p1   Ex 
 
-use               LoKiCoreTest     v1r2   Tests 
-use               LoKiMCTest       v1r0   Tests 
-use               LoKiGenTest      v1r2   Tests 
-use               LoKiPhysTest     v1r0   Tests 
-use               LoKiAlgoTest     v1r1   Tests 
-use               LoKiAlgoMCTest   v1r0   Tests 
-use               LoKiTests        v1r2   Tests
+use               LoKiCoreTest     v1r2p1   Tests 
+use               LoKiMCTest       v1r0p1   Tests 
+use               LoKiGenTest      v1r2p1   Tests 
+use               LoKiPhysTest     v1r0     Tests 
+use               LoKiAlgoTest     v1r1p1   Tests 
+use               LoKiAlgoMCTest   v1r0p1   Tests 
+use               LoKiTests        v1r2     Tests
 
 ####################################################################
 use  Stripping          v6r1    Tools             # Juan Palacios

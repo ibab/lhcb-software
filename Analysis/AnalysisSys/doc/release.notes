@@ -3,6 +3,282 @@ Package     : AnalysisSys
 Package Coordinator : Juan Palacios
 Purpose     : LHCb analysis packages
 
+</PRE><H1><A NAME=v1r1>2007-04-19 Analysis v1r1 - Potential DC06 Stripping version</A></H1><PRE>
+ - Some updates in delections
+ - Some updates in LoKi
+ - Bug fixes in DaVinciMCTools
+
+#######################################MM#######################################
+#                                  ANALYSIS v1r1                                   #
+################################################################################
+#################################### EXTERNAL ##################################
+##################################### PHYS #####################################
+!========================== LoKiHybrid v1r1p1 2007-04-19 ===================
+! 2007-03-22 - Vanya BELYAEV
+ - src/HybridTool.cpp
+    fix a problem with non-empty "atexit"-handlers, which causes the 
+    finalization of applictaion manager.
+    Now, "atexit._exithandlers" are explilictely empties BEFORE
+    finalization the python
+ - cmt/requirements 
+   version increment to v1r1 
+
+!========================== LoKiDict v5r2p1 2007-04-19 ===================
+! 2007-03-27 - Vanya BELYAEV
+ - cmt/requirments 
+     version incrmeent to v5r2 
+
+!========================== LoKiCutsDict v5r2p1 2007-04-19 ===================
+! 2007-03-27 - Vanya BELYAEV
+ - cmt/requirements 
+     version increment to v5r2 
+
+!========================== LoKiJets v2r3p1 2007-04-19 ===================
+! 2007-03-27 - Vanya BELYAEV
+ - src/LoKiKtJetMaker.cpp
+     use pointer instead of copy... 
+      [somethng is definitely wrong inside KtJet and/or KtLorentzVector]
+ - cmt/requirements 
+    version increment to v2r3 
+
+!========================== DaVinciAssociators v9r0p1 2007-04-19 ===================
+! 2007-04-19 -  P. Koppenburg
+  remove DaVinciAssociators branch in requirements
+
+!========================== DaVinciMCTools v9r2 2007-04-19 ===================
+ 2007-04-16 - A Hicheur
+ - DecayChainNtuple: changed old convertion factor for fitted proper time
+
+! 2007-03-20 - Patrick Koppenburg
+ - DebugTool: Did not print correctly particle trees. Bug reported by Mitesh.
+ - Increment to v9r2
+
+#################################### PHYSSEL ###################################
+!========================== B2DsX v1r5 2007-04-19 ===================
+! 2007-03-15 - Yasmine Amhis
+ - options/DoPreselBs2DsRho.opts
+  . Comment PreselBs2DsRho.MotherFilter.DaughterVertexFilterCriterion.MinDeltaZ
+
+!========================== B2DstarX v1r5 2007-04-19 ===================
+! 2007-03-15 - Patrick Koppenburg for Raluca Muresan
+ - Presel D* No PID:
+   . Tightened D0 Pi/K IP cut and loosened Pt cut.
+   . Widened all mass windows by factor 2. 
+
+##################################### TOOLS ####################################
+###################################### EX ######################################
+
+!========================== LoKiExample v5r2p1 2007-04-19 ===================
+! 2007-04-03 - Vanya BELYAEV
+
+  - src/LoKi_Phi_Makers.cpp, options/LoKi_Phi_Makers.opts
+    the trivial aglorithm LoKi_Phi_Makers to be able to compare the various 
+    particle makers 
+ 
+  - src/LoKi_PhiK_Dalitz.cpp, options/LoKi_PhiK_Dalitz.opts
+    the simple algorithm to make a dalitz-plot for B-> phi K gamma decay
+    (useful for study of photon polarization).
+    The exmaple illustrate the usage of 
+    THE SAME code for "real" particles
+    and for generator HepMC-particles...
+
+ - retag as v5r2 
+
+
+! 2007-03-22 - Vanya BELYAEV
+
+ - remove almost all algorithms and configuration files 
+   prepare the examples for DC06-compatible versions, 
+   includind the exmaples with hybrid C++/Python solutions 
+ - cmt/requirements 
+   version increment to v5r2 
+
+
+! 2005-06-02 - Vanya BELYAEV
+
+ - src/LoKi_BtoPV.cpp
+   options/DV_LoKi_BtoPV.opts
+
+     new example for usage of relations 
+     between B-candidate and its primary vertex
+
+
+ - cmt/requirements 
+   version increment to v3r12p1 
+ 
+! 2005-05-08 - Vanya BELYAEV
+
+  - src/LoKi_VeloCLusterMC.cpp,
+    src/LoKi_Higgs1.cpp 
+
+     fix compilation errors for Windows platform 
+
+  - cmt/requirements
+     version increment to v3r12 (to be synchronized with Tools/LoKi) 
+
+! 2005-03-29 - Vanya BELYAEV
+
+ - no new code, just add code metrics report from SLOCCount 
+
+Categorizing files.
+Computing results.
+
+SLOC    Directory       SLOC-by-Language (Sorted)
+1435    src_top_dir     cpp=1435
+229     jobs            python=210,sh=19
+36      cmt             csh=20,sh=16
+0       CVS             (none)
+0       doc             (none)
+0       options         (none)
+0       src_CVS         (none)
+
+Totals grouped by language (dominant language first):
+cpp:           1435 (84.41%)
+python:         210 (12.35%)
+sh:              35 (2.06%)
+csh:             20 (1.18%)
+
+Total Physical Source Lines of Code (SLOC)                = 1,700
+Development Effort Estimate, Person-Years (Person-Months) = 0.35 (4.19)
+ (Basic COCOMO model, Person-Months = 2.4 * (KSLOC**1.05))
+Schedule Estimate, Years (Months)                         = 0.36 (4.31)
+ (Basic COCOMO model, Months = 2.5 * (person-months**0.38))
+Estimated Average Number of Developers (Effort/Schedule)  = 0.97
+Total Estimated Cost to Develop                           = $ 47,164
+ (average salary = $56,286/year, overhead = 2.40).
+SLOCCount is Open Source Software/Free Software, licensed under the FSF GPL.
+Please credit this data as "generated using 'SLOCCount' by David A. Wheeler."
+
+
+! 2005-03-24 - Vanya BELYAEV
+ - src/LoKi_Higgs1.cpp 
+   add N-Tuples for Jets 
+ - options/DV_LoKi_Higgs1.cpp 
+   add Jets from KtJet algorithm 
+ - cmt/requirements 
+   1) add Tools/LoKiJets 
+   2) increment the version to v3r10 
+
+! 2005-03-05 - Vanya BELYAEV
+ - src/LoKi_Higgs1.cpp
+   make a new structure for N-Tuples:
+    - add trigger information, 
+    - eliminate explicit loops, 
+    - make N-Tuples much more compact 
+ - cmt/requiremnts 
+    version increment to v3r9p2 
+
+! 2005-02-18 - Vanya Belyaev
+
+ - few minor and stupid fixes
+
+! 2005-02-16 - Vanya BELYAEV
+ - new examples: 
+
+   src/LoKi_Bs2PhiMM.cpp 
+      simple algorithm to study the kinematical property of Bs-> phi mu+ mu- decay 
+
+   src/LoKi_Higgs1.cpp  
+      simple algorithm to study the energy flows , suitable for 
+       Higgs->bb analysis with tagging muon from W or Z 
+
+
+! 2005-02-12 - Vanya BELYAEV
+
+ - technical update for LoKi v3r9 
+ - cmt/requirements 
+
+   version increment to v3r9 
+
+
+! 2005-02-08 - Vanya BELYAEV
+  
+ -resurrect the example LoKi_VeloClusterMC
+      - update DV_LoKi_VeloClusterMC.opts file 
+      - eliminate all ugly "associators" 
+
+! 2005-02-08 - Vanya BELYAEV
+ - add new example LoKi_Pi0.cpp 
+
+
+! 2004-10-21 - Vanya BELYAEV 
+   - src/K0S_Creator.cpp 
+    fix compiler ambuguity for Windows 
+   - cmt/requirements 
+    increment the version to v3r3p2 
+
+! 2004-08-17 - Vanya BELYAEV
+
+ - options/DV_LoKi_Bs2PhiGamma_DecayChain.opts
+     new example to run LoKiDecayTruth algorithm from recent LoKi version
+ - cmt/requirements 
+     increment the version to v3r3 (the same as LoKi) 
+
+
+! 2004-08-15 - Vanya BELYAEV
+	update for usage with DaVinci v11r12 
+ - jobs/LoKiExJob.py 
+   new script to run examples and to submit them as batch jobs 
+
+    Usage:
+   interactive work:
+        LoKiExJob.py -o MyOptions.opts -n 1000
+   submit in batch:
+   bsub LoKiExJob.py -o MyOptions.opts -n 1000
+
+    Important: This script DOES not require all CMT/LHCB/DAVINCI/etc to be set. 
+
+ - jobs/jobpy
+   trivial script to submit all bartch jobs using LoKiExJob.py script 
+ 
+ - cmt/requirements  increment version to v3r2
+
+
+! 2004-08-11 - Vanya BELYAEV
+
+ - options/DV_LoKi_Bd2KStarGamma.opts
+   fix a typo (problem has been originally reported by Andreas Wenger)
+
+ - cmt/requiremens 
+   increment the version to v3r1 
+
+! 2004-04-09 - Vanya Belyaev
+ - 3 new exampels are added 
+
+  src/LoKi_MCEvent.cpp 
+    which fills N-tuple to determine the event type and 
+    presence of beauty/charmed particles in the event (e.g. the presence of 
+    charmed particled in min-bias event)
+
+  src/LoKi_MCMuon.cpp 
+    example  with MC matching 
+
+  src/LoKi_VeloCLusterMC.cpp 
+    try to use LoKi not only for Physics analysis :-)
+
+    
+
+! 2003-03-27 - Vanya BELYAEV
+ - src/LoKi_Bs2PhiPhi.cpp      new algorithm 
+
+! 2003-03-26 - Vanya BELYAEV
+ - src/LoKi_Bd2KStarGamma.cpp  new "realistic" algorithms 
+                               (based on Galina Pakhlova's code) with 
+                               "analysis" N-Tuple and Event Tag Collection.
+ - src/LoKiExamples_load.cpp   add new algorithm
+ - cmt/requirements            increase the version 
+
+
+! 2003-03-21 - Vanya BELYAEV
+    new examples 
+ - src/LoKi_EventTagTuple.cpp   
+ - src/LoKi_Histos.cpp
+ - src/LoKi_Tuple.cpp
+[
+! 2003-03-12 - Vanya BELYAEV
+ - the first import 
+
+
 </PRE><H1><A NAME=v1r0>2007-03-09 Analysis v1r0 </A></H1><PRE>
 Phys split into Phys and Analysis. Phys contains everything 
 needed by the HLT and by DaVinci and nothing else. 
