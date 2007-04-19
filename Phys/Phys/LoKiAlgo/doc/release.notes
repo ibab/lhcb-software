@@ -1,11 +1,15 @@
-! $Id: release.notes,v 1.12 2007-03-09 13:18:52 pkoppenb Exp $ 
+! $Id: release.notes,v 1.13 2007-04-19 16:17:45 pkoppenb Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.12 $
+! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.13 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiAlgo
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : LoKi-algorthm related stuff 
 ! -----------------------------------------------------------------------------
+
+!========================== LoKiAlgo v3r2p1 2007-04-19 ===================
+! 2007-04-19 -  P. Koppenburg
+  Remove controversial doxygen comment
 
 !========================= LoKiAlgo v3r2 2007-03-09 ====================
 ! 2007-03-05 - Patrick Koppenburg

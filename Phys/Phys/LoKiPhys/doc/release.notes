@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.22 2007-03-09 11:27:05 pkoppenb Exp $ 
+! $Id: release.notes,v 1.23 2007-04-19 16:18:49 pkoppenb Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhys
 ! Responsible : Vanya Belyaev
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
+
+! 2007-04-19 -  P. Koppenburg
+  Remove controversial doxygen comment
 
 !========================== LoKiPhys v3r2 2007-03-07 ==================
 
@@ -154,6 +157,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.22  2007/03/09 11:27:05  pkoppenb
+! tagged as v3r2
+!
 ! Revision 1.21  2007/03/07 09:19:52  ibelyaev
 !  fix a stupud bug in LoKi::PhysAlgs::accumulate ; retag
 !
