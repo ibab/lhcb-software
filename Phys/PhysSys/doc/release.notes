@@ -3,6 +3,38 @@ Package     : PhysSys
 Package Coordinator : Juan Palacios
 Purpose     : LHCb physics packages
 
+</PRE><H1><A NAME=v6r1>2007-04-19 Phys v6r1 - potential DC06 stripping version</A></H1><PRE>
+Minor changes:
+ - Based on LHCb v22r3
+ - bug fix in OfflineVertexFitter: outgoingParticles was set incorrectly
+ - PhysDesktop and Particle2VertexIPSAsct moved from DaVinciKernel to 
+   DaVinciTools. 
+
+#######################################MM#######################################
+#                                  PHYS v6r1                                   #
+################################################################################
+!========================== DaVinciFilter v6r3 2007-04-19 ===================
+! 2007-03-20 - Patrick Koppenburg
+ - Doxygen typo fix in MomentumMotherDirectionFilterCriterion
+
+!========================== VertexFit v4r2 2007-04-19 ===================
+! 2007-04-16 - Patrick Koppenburg
+ - OfflineVertexFitter:
+   . Add particles to vertex outgoingParticles whenever they are actually 
+     used in the vertex fit.
+   . Remove adding of particles to outgoingParticles at end of fit.
+     This should solve a bug reported by Ulrich Kerzel.
+   . Issue a harmless warning when the number of daughters is not
+     the same as the number of outgoingParticles .
+   . Replace all endreq by endmsg
+ - incement to v4r2
+
+!========================== DaVinciTools v15r3 2007-04-19 ===================
+! 2007-03-21 - Patrick Koppenburg
+ - Moved PhysDesktop and Particle2VertexIPSAsct from DaVinciKernel component
+ - Increment to v15r3
+
+
 </PRE><H1><A NAME=v6r0>2007-03-03 Phys v6r0 </A></H1><PRE>
 Phys split into Phys and Analysis. Phys contains everything 
 needed by the HLT and by DaVinci and nothing else. 
