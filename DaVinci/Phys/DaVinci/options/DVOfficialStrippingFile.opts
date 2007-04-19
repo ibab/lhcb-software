@@ -25,7 +25,7 @@ GlobalOR.Algorithms = @TagCreator.ToLookAt;
 ApplicationMgr.OutStream -=  { "DstWriter" } ;                          
 DSTOR.ItemList = @DstWriter.ItemList;                                   
 
-ApplicationMgr.EvtMax = -1;                                             
+ApplicationMgr.EvtMax = 5000 ;
 PoolDbCacheSvc.Catalog =  { "xmlcatalog_file:pool_xml_catalog.xml" } ;  
 
 //SeqWriteTag.OutputLevel = 1 ;

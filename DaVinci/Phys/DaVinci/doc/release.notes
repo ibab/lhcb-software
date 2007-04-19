@@ -9,6 +9,7 @@
  - options/DVOfficialStrippingFile.opts
    . new official stripping file with some tweaks to get Brunel running
      on the ETC later on
+ - DVL0Strip.opts : L0 stripping options from Thomas.
 
 ! 2007-03-14 - Patrick Koppenburg for Marco Cattaneo
  - Added EventClockSvc.EventTimeDecoder = "OdinTimeDecoder"; to DaVinciCommon.opts
