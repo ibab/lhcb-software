@@ -19,6 +19,13 @@
 	desc = "Indicate if the processing should be aborted" 
         init = "false" />
 
+	<constructor 
+		desc     = "Copy constructor. Creates a new ProcStatus with the same information" 
+		initList = "DataObject(), m_aborted(proc.aborted()), m_algs(proc.algs())">
+                <arg const="TRUE" name="proc" type="LHCb::ProcStatus"/>
+                <code/>
+      	</constructor>
+
       <method
 	name = "addAlgorithmStatus"
 	type = "void"
@@ -55,7 +62,7 @@
 	type = "std::vector&lt;std::pair&lt;std::string,int&gt; &gt;"
 	desc = "List of algorithms with status"
 	setMeth = "FALSE"
-        getMeth = "FALSE" />
+        getMeth = "TRUE" />
 	
     </class>
   </package>

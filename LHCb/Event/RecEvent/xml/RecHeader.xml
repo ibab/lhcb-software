@@ -41,6 +41,12 @@
        >
          <code> return (m_evtNumber > 0) ? true:false; </code>
        </method>
+       <constructor 
+		desc     = "Copy constructor. Creates a new RecHeader with the same information." 
+		initList = "ProcessHeader(head), m_evtNumber(head.evtNumber())">
+                <arg const="TRUE" name="head" type="LHCb::RecHeader"/>
+                <code/>
+       </constructor>
      </class>
   </package>
 </gdd>
