@@ -12,6 +12,7 @@
  * <b>The classes used by DaVinci are documented in the following reference manuals:</b>
  *
  * \li \ref physsysdoxygenmain "PhysSys documentation (LHCb physics classes)"
+ * \li \ref analysissysdoxygenmain "AnalysisSys documentation (LHCb analysis classes)"
  * \li \ref recsysdoxygenmain "RecSys documentation (LHCb reconstruction classes)"
  * \li \ref lbcomdoxygenmain "LbcomSys documentation (LHCb shared components)"
  * \li \ref lhcbdoxygenmain  "LHCbSys documentation"
