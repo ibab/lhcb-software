@@ -1,4 +1,4 @@
-// $Id: TestDST.cpp,v 1.9 2007-04-13 15:46:29 ukerzel Exp $
+// $Id: TestDST.cpp,v 1.10 2007-04-19 14:50:09 ukerzel Exp $
 // Include files 
 
 // from Gaudi
@@ -6,8 +6,9 @@
 
 #include "Event/MCParticle.h"
 
-// ODIN
+// Event header
 #include "Event/ODIN.h"
+#include "Event/RecHeader.h"
 
 // local
 #include "TestDST.h"
@@ -76,15 +77,39 @@ StatusCode TestDST::execute() {
   // code goes here  
   debug()<< " rootOnTES is " << rootOnTES () << endmsg;
 
+  //
+  // test ODIN
+  //
   LHCb::ODIN * odin = get<LHCb::ODIN>( rootOnTES()+ LHCb::ODINLocation::Default );
   
-  verbose() << " ODIN event time " << odin->eventTime() 
-            << " runNr "           << odin->runNumber ()
-            << " orbit Nr "        << odin->orbitNumber()
-            << " event type "      << odin->eventType()
-            << " event number "    << odin->eventNumber()
-            << " detector status " << odin->detectorStatus () 
-            << endmsg;
+  if (odin) {
+    verbose() << " ODIN event time " << odin->eventTime() 
+              << " runNr "           << odin->runNumber ()
+              << " orbit Nr "        << odin->orbitNumber()
+              << " event type "      << odin->eventType()
+              << " event number "    << odin->eventNumber()
+              << " detector status " << odin->detectorStatus () 
+              << endmsg;
+  } else {
+    verbose() << "ODIN Bank not found" << endmsg;
+  }//if
+
+
+  //  
+  // test RecHeader
+  //
+  LHCb::RecHeader *recHeader = get<LHCb::RecHeader>(rootOnTES()+ LHCb::RecHeaderLocation::Default );
+  if (recHeader) {
+    verbose() << " RecHeader run# "    << recHeader->runNumber() 
+              << " event# "            << recHeader -> evtNumber()  
+              << " ApplicationName "   << recHeader -> applicationName()
+              << " ApplicationVersion" << recHeader -> applicationVersion()
+              << endmsg;
+    
+  } else {
+    verbose() << "RecHeader not found " << endmsg;
+  }//if
+
 
   //
   // print information about default primary vertices
@@ -511,7 +536,7 @@ std::vector<const LHCb::MCParticle*> TestDST::GetMCParticle (const LHCb::Particl
   //
   // check if associated to MC truth
   //
-  try {
+  //   try {
     bool isAssociatedLinks     = particleLinker-> isAssociated(particle);
     verbose() << "Associated to MC truth ? "   << isAssociatedLinks     << endmsg;
     if (!isAssociatedLinks) {
@@ -539,10 +564,10 @@ std::vector<const LHCb::MCParticle*> TestDST::GetMCParticle (const LHCb::Particl
     } else {
       verbose() << "MC particle not found" << endmsg;
     } // if mcParticle
-  } //try
-  catch(...) {
-    debug() << "caught exception when associating MC particles" << endmsg;
-  }//catch
+//  } //try
+//  catch(...) {
+//    debug() << "caught exception when associating MC particles" << endmsg;
+//  }//catch
     
   verbose() << "return #associated particles " << associatedParticles.size() << endmsg;  
   return associatedParticles;

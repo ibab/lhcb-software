@@ -1,4 +1,4 @@
-// $Id: CreateMicroDSTAlg.h,v 1.4 2007-02-23 09:21:48 ukerzel Exp $
+// $Id: CreateMicroDSTAlg.h,v 1.5 2007-04-19 14:50:09 ukerzel Exp $
 #ifndef CREATEMICRODSTALG_H 
 #define CREATEMICRODSTALG_H 1
 
@@ -58,6 +58,7 @@ private:
   LHCb::Particle* StoreParticle(const LHCb::Particle * particle);
   StatusCode StoreLink2PV(const LHCb::Particle * particle);
   StatusCode StoreOdin();
+  StatusCode StoreRecEventHeader();
 
   template<class T>
   T *getContainer(std::string containerID);

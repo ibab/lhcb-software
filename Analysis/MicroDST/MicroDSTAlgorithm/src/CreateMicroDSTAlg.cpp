@@ -1,4 +1,4 @@
-// $Id: CreateMicroDSTAlg.cpp,v 1.7 2007-04-13 15:13:34 ukerzel Exp $
+// $Id: CreateMicroDSTAlg.cpp,v 1.8 2007-04-19 14:50:09 ukerzel Exp $
 // Include files 
 
 // from Gaudi
@@ -6,6 +6,7 @@
 
 // event
 #include "Event/ODIN.h"
+#include "Event/RecHeader.h"
 
 // local
 #include "CreateMicroDSTAlg.h"
@@ -88,6 +89,14 @@ StatusCode CreateMicroDSTAlg::execute() {
   if (sc != StatusCode::SUCCESS) {
     Warning("storing of ODIN bank failed", StatusCode::SUCCESS);
   }// if sc
+
+  //
+  // store RecEvent header
+  //
+  sc = CreateMicroDSTAlg::StoreRecEventHeader();
+  if (sc != StatusCode::SUCCESS) {
+    Warning("storing of RecEvent header failed", StatusCode::SUCCESS);
+  }//if sc
 
   //
   // loop over all input locations and store the particles found there
@@ -632,4 +641,32 @@ StatusCode CreateMicroDSTAlg::StoreOdin() {
 
   return StatusCode::SUCCESS;
 } // sc StoreOdin
+//=============================================================================
+StatusCode CreateMicroDSTAlg::StoreRecEventHeader(){
+
+
+  verbose() << "store header from location " << LHCb::RecHeaderLocation::Default  << endmsg;
+
+  LHCb::RecHeader *recHeader = NULL;
+  if (exist<LHCb::RecHeader>(LHCb::RecHeaderLocation::Default )) {
+    recHeader = get<LHCb::RecHeader>(LHCb::RecHeaderLocation::Default );
+  } else {
+    Warning(LHCb::RecHeaderLocation::Default +" does not exist", StatusCode::SUCCESS);
+    return StatusCode::SUCCESS;
+  } // if exist
+
+  verbose() << "now store header information" << endmsg;
+
+  LHCb::RecHeader* newRecHeader = new LHCb::RecHeader();
+  newRecHeader->setApplicationName   ( recHeader -> applicationName()    );
+  newRecHeader->setApplicationVersion( recHeader -> applicationVersion() );
+  newRecHeader->setRunNumber         ( recHeader -> runNumber()          );
+  newRecHeader->setEvtNumber         ( recHeader -> evtNumber()          );
+  newRecHeader->setRandomSeeds       ( recHeader -> randomSeeds()        );
+  put( newRecHeader, "/Event/"+ m_OutputPrefix + "/" + LHCb::RecHeaderLocation::Default );
+
+  verbose() << "successfully stored RedHeader" << endmsg;
+  
+  return StatusCode::SUCCESS;
+} // StoreRecEventHeader
 //=============================================================================
