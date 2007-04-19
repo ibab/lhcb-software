@@ -1,5 +1,5 @@
 #!/bin/bash
 
 . ./setupOnline.sh
-${gaudi_exe} ${gaudi_exe_args} -opt=../options/ErrorSrv.opts
-#    -msgsvc=${MSGSVC} &
+${gaudi_exe}  -main=${GAUDIONLINEROOT}/options/ErrorSrv.opts -opt=${GAUDIONLINEROOT}/options/Daemon.opts &
+

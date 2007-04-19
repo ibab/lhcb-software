@@ -5,7 +5,7 @@
 # Requires CMTPROJECTPATH set and setup.sh sourced in $ONLINETASKSROOT/cmt
 # 
 #
-
+export DIM_DNS_NODE=hltdev001
 # Cleanup any running jobs
 killall -q Gaudi.exe
 killall -q test.exe

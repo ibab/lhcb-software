@@ -1,8 +1,7 @@
 #!/bin/bash
 
 . ./setupOnline.sh
-export MSGSVC=MessageSvc
-${gaudi_exe} ${gaudi_exe_args} -opt=../options/MEPHolder.opts\
-    -msgsvc=${MSGSVC} &
+
+${gaudi_exe}  -opt=${GAUDIONLINEROOT}/options/MEPHolder.opts -main=${GAUDIONLINEROOT}/options/Main.opts &
 
 
