@@ -197,6 +197,13 @@
         type="unsigned int"
         init="0" />
 
+	<constructor 
+		desc     = "Copy constructor. Creates a new ODIN object with the same information" 
+		initList = "DataObject(), m_runNumber(odin.runNumber()), m_eventType(odin.eventType()), m_orbitNumber(odin.orbitNumber()), m_eventNumber(odin.eventNumber()), m_gpsTime(odin.gpsTime()), m_detectorStatus(odin.detectorStatus()), m_errorBits(odin.errorBits()), m_bunchId(odin.bunchId()), m_triggerType(odin.triggerType()), m_readoutType(odin.readoutType()), m_forceBit(odin.forceBit()), m_bunchCrossingType(odin.bunchCrossingType()), m_bunchCurrent(odin.bunchCurrent())">
+                <arg const="TRUE" name="odin" type="LHCb::ODIN"/>
+                <code/>
+      	</constructor>
+
       <method name="set" desc="Fill data fields from the ODIN bank"
         argList="const LHCb::RawBank* bank" type="StatusCode">
         <code>

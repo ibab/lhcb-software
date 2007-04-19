@@ -4,6 +4,11 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !----------------------------------------------------------------------
 
+! 2007-04-19 - Chris Jones
+ - Add complete copy constructor for ODIN. 
+   NB : Please remember to update this constructor if the data members of 
+   the class are ever extended in the future.
+
 !================ DAQEvent v7r3 2007-04-19 ============================
 ! 2007-04-19 - Marco Cattaneo
  - Add "ForceRawEvent" property to OdinTimeDecoder tool, to force it to decode
