@@ -1,6 +1,6 @@
-! $Id: release.notes,v 1.14 2007-03-04 16:33:27 ibelyaev Exp $ 
+! $Id: release.notes,v 1.15 2007-04-19 13:51:36 pkoppenb Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.14 $
+! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.15 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiGenMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -16,6 +16,10 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! 
 ! -----------------------------------------------------------------------------
+
+!========================== LoKiGenMC v2r1p1 2007-04-19 ===================
+! 2007-04-19 -  P. Koppenburg
+  Remove controversial doxygen comment
 
 !========================= LoKiGenMC v2r1 2007-03-04 ======================
 
@@ -331,6 +335,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.14  2007/03/04 16:33:27  ibelyaev
+!  v2r1: fix a bug .. need to think about the problme
+!
 ! Revision 1.13  2007/01/23 13:29:18  ibelyaev
 !  fix for Ex/LoKiExample
 !
