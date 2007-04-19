@@ -29,11 +29,14 @@
  * Job steering
  */
 EventClocksvc.EventTimeDecoder = "FakeEventTime";
-ApplicationMgr.EvtMax = 5000 ;
+ApplicationMgr.EvtMax = 1000 ;
 EventSelector.PrintFreq  = 1;
-//EventSelector.FirstEvent = 1090 ;
 
 MessageSvc.OutputLevel = 3 ;
 
 ApplicationMgr.HistogramPersistency = "ROOT";
-HistogramPersistencySvc.OutputFile = "DVHistos.root";
+//HistogramPersistencySvc.OutputFile = "DVHistos.root";
+
+// no output 
+EvtTupleSvc.Output = {} ;
+ApplicationMgr.OutStream = {};

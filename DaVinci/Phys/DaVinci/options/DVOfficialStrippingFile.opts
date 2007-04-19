@@ -1,0 +1,33 @@
+#include "$DAVINCIROOT/options/DVDC06TestStripping.opts"
+
+/*
+ * tag writing sequence overwritten
+ */
+SeqWriteTag.Members =  { "StripETC/TagCreator" , 
+                     //  "EventNodeKiller" , // commented out as it crashes the stripping
+                         "TagCollectionStream/WR" } ;//GP: (53,1)
+EventNodeKiller.Nodes =  { "Rec" , "DAQ/ODIN" } ;                 
+/*
+ * Collection writer options
+ */
+WR.Output = "Collection='EVTTAGS/TagCreator/1' ADDRESS='/Event' DATAFILE='somefile.root' TYP='POOL_ROOTTREE' OPT='RECREATE'";//GP: (45,1)
+WR.TagCollectionSvc = "TagCollectionSvc/EvtTupleSvc";
+WR.ItemList =  { "/Event#1" } ; 
+WR.ItemList += { "DAQ/ODIN#1" };
+EvtTupleSvc.Output =  {  } ;                                            
+/*
+ * Tag creator options
+ */
+GlobalOR.Algorithms = @TagCreator.ToLookAt;                            
+/*
+ * Remove DST writer
+ */
+ApplicationMgr.OutStream -=  { "DstWriter" } ;                          
+DSTOR.ItemList = @DstWriter.ItemList;                                   
+
+ApplicationMgr.EvtMax = -1;                                             
+PoolDbCacheSvc.Catalog =  { "xmlcatalog_file:pool_xml_catalog.xml" } ;  
+
+//SeqWriteTag.OutputLevel = 1 ;
+//WR.OutputLevel = 1 ;
+
