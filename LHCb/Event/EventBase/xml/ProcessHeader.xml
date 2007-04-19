@@ -43,6 +43,12 @@
         type="unsigned int"
         init="0"
        />
+       <constructor 
+	 desc     = "Copy constructor. Creates a new ProcessHeader with the same information." 
+	 initList = "DataObject(), m_randomSeeds(head.randomSeeds()), m_applicationName(head.applicationName()), m_applicationVersion(head.applicationVersion()), m_runNumber(head.runNumber())">
+         <arg const="TRUE" name="head" type="LHCb::ProcessHeader"/>
+         <code/>
+       </constructor>
      </class>
   </package>
 
