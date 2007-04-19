@@ -1,4 +1,4 @@
-// $Id: CreateMicroDSTMCAlg.h,v 1.5 2007-04-12 15:48:02 ukerzel Exp $
+// $Id: CreateMicroDSTMCAlg.h,v 1.6 2007-04-19 16:50:18 ukerzel Exp $
 #ifndef CREATEMICRODSTALG_H 
 #define CREATEMICRODSTALG_H 1
 
@@ -77,6 +77,8 @@ private:
             (pObject->registry() ? pObject->registry()->identifier() : "UnRegistered"));
   }
 
+  StatusCode StoreMCHeader();
+  
   //
   // data members
   //

@@ -1,6 +1,9 @@
-! $Id: release.notes,v 1.13 2007-04-19 14:50:09 ukerzel Exp $
+! $Id: release.notes,v 1.14 2007-04-19 16:50:18 ukerzel Exp $
 ! Package     : MicroDST
 ! Responsible : Ulrich Kerzel
+
+! 2007-04-19 - Ulrich Kerzel
+ - add /Event/MC header to microDST
 
 ! 2007-04-19 - Ulrich Kerzel
  - add /Event/Rec header to microDST

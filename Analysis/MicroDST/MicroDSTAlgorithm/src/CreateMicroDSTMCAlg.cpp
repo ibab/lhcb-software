@@ -1,4 +1,4 @@
-// $Id: CreateMicroDSTMCAlg.cpp,v 1.7 2007-04-13 15:13:34 ukerzel Exp $
+// $Id: CreateMicroDSTMCAlg.cpp,v 1.8 2007-04-19 16:50:18 ukerzel Exp $
 // Include files 
 
 // from Gaudi
@@ -6,6 +6,8 @@
 
 // local
 #include "CreateMicroDSTMCAlg.h"
+
+#include <Event/MCHeader.h>
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : CreateMicroDSTMCAlg
@@ -72,6 +74,15 @@ StatusCode CreateMicroDSTMCAlg::execute() {
   debug() << "==> Execute" << endmsg;
 
   StatusCode sc;
+
+  //
+  // store MC Header
+  //
+  sc = StoreMCHeader();
+  if (sc != StatusCode::SUCCESS) {
+    Warning("Failed to store MC Header", StatusCode::SUCCESS);
+  } // if sc
+
 
   //
   // get particles in input-location(s) from PhysDesktop
@@ -644,5 +655,43 @@ template<class S, class T> StatusCode CreateMicroDSTMCAlg::StoreLink(const S* s,
 
   return StatusCode::SUCCESS;
 }// sc StoreLink  
+//=============================================================================
+//=============================================================================
+StatusCode CreateMicroDSTMCAlg::StoreMCHeader() {
+
+  verbose() << "Now store MC Header from location " << LHCb::MCHeaderLocation::Default
+            << endmsg;
+
+  LHCb::MCHeader *mcHeader = NULL;
+  if (exist<LHCb::MCHeader>(LHCb::MCHeaderLocation::Default)) {
+    mcHeader = get<LHCb::MCHeader>(LHCb::MCHeaderLocation::Default);
+  } else { 
+    Warning(LHCb::MCHeaderLocation::Default+" does not exist", StatusCode::SUCCESS);
+  }// if exist
+
+  LHCb::MCHeader *newMCHeader = new LHCb::MCHeader();
+  verbose() << "clone event number " <<  mcHeader -> evtNumber()
+            << " event time " << mcHeader -> evtTime()
+            << " in MC Header" << endmsg;
+  newMCHeader -> setEvtNumber (mcHeader -> evtNumber());
+  newMCHeader -> setEvtTime   (mcHeader -> evtTime());
+  newMCHeader -> clearPrimaryVertices (); // reset
+
+  //get SmartRefs to true Primary Vertices and set them accordingly
+  const SmartRefVector< LHCb::MCVertex > & 	primaryVertices = mcHeader->primaryVertices();
+  verbose() << "#PV attached to this MC header " << primaryVertices.size() << endmsg;
+
+  SmartRefVector< LHCb::MCVertex >::const_iterator iPV;
+  SmartRefVector< LHCb::MCVertex >::const_iterator iPVBegin = primaryVertices.begin();
+  SmartRefVector< LHCb::MCVertex >::const_iterator iPVEnd   = primaryVertices.end();
+  for (iPV = iPVBegin; iPV != iPVEnd; iPV++){
+    verbose() << "now add SmartRef to next PV to MC header" << endmsg;
+    newMCHeader ->addToPrimaryVertices(*iPV);
+  }//for iPV
+
+  put(newMCHeader, "/Event/"+ m_OutputPrefix + "/" + LHCb::MCHeaderLocation::Default);
+
+  return StatusCode::SUCCESS;
+} // sc StoreMCHeader
 //=============================================================================
 //=============================================================================
