@@ -1,9 +1,13 @@
 !-----------------------------------------------------------------------------
-! $Id: release.notes,v 1.58 2007-04-19 15:14:49 jonrob Exp $
+! $Id: release.notes,v 1.59 2007-04-19 15:52:40 cattanem Exp $
 ! Package     : Event/RecEvent
 ! Responsible : Marco Cattaneo
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
 !-----------------------------------------------------------------------------
+
+!========================= RecEvent v2r3 2007-04-19 ==========================
+! 2007-04-19 - Marco Cattaneo
+ - Fix a doxygen warning
 
 ! 2007-04-19 - Chris Jones
  - Add complete copy constructors for RecHeader and ProcStatus. 

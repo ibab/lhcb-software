@@ -1,4 +1,4 @@
-// $Id: ProtoParticle.cpp,v 1.3 2006-06-13 13:13:50 jonrob Exp $
+// $Id: ProtoParticle.cpp,v 1.4 2007-04-19 15:52:40 cattanem Exp $
 
 // local
 #include "Event/ProtoParticle.h"
@@ -84,7 +84,7 @@ bool LHCb::ProtoParticle::hasInfo ( const int key ) const
  * 
  *  @param key key for the information
  *  @param info information to be associated with the key
- *  @param 'true' if informaiton is inserted, 
+ *  @return 'true' if information is inserted, 
  *         'false' if the previous information has been replaced 
  */
 bool  LHCb::ProtoParticle::addInfo ( const int key, const double info )
