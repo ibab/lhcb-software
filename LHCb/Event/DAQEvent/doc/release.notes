@@ -4,11 +4,10 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !----------------------------------------------------------------------
 
-!================ DAQEvent v7r3 2007-04-17 ============================
-! 2007-04-17 - Marco Cattaneo
+!================ DAQEvent v7r3 2007-04-19 ============================
+! 2007-04-19 - Marco Cattaneo
  - Add "ForceRawEvent" property to OdinTimeDecoder tool, to force it to decode
-   ODIN bank even if DAQ/ODIN object already exists in TES. Useful when 
-   processing raw data using as input an ETC produced from .rdst or .dst 
+   the ODIN RawBank even if DAQ/ODIN object already exists in TES.
 
 !================ DAQEvent v7r2 2007-03-05 ============================
 ! 2007-03-05 - Marco Cattaneo
