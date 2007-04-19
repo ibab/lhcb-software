@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.25 2007-04-04 12:09:05 ibelyaev Exp $ 
+! $Id: release.notes,v 1.26 2007-04-19 16:20:03 pkoppenb Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhysMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : RC <--> MC part of LoKi 
 ! -----------------------------------------------------------------------------
+
+!========================== LoKiPhysMC v4r1p1 2007-04-19 ===================
+! 2007-04-19 -  P. Koppenburg
+  Remove controversial doxygen comment
 
 !========================== LoKiPhysMC v4r1 2007-04-04 =======================
 
