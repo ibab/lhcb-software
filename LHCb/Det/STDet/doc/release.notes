@@ -2,7 +2,10 @@
 !Package manager : M. Needham
 !-------------------------------------------------------------------------
 
-!======================== STDet v3r3 2007-04-10 ==========================
+!======================== STDet v3r3 2007-04-20 ==========================
+! 2007-04-20 - Marco Cattaneo
+ - Add dictionaries also for return types in public interface
+
 ! 2007-04-10 - Marco Cattaneo
  - Make lcg dictionaries for public classes (moved from DetSys)
  - Add missing dictionary for DeITLadder

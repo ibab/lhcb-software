@@ -15,5 +15,8 @@
   <class name="DeTTLayer"         />
   <class name="DeTTSector"        />
   <class name="DeTTStation"       />
-  <class name="std::pair<unsigned int, DeSTSector*>" />
+  <class name="std::vector<DeSTSector*>"             /> <!-- STSectors   typedef -->
+  <class name="std::vector<DeSTLayer*>"              /> <!-- STLayers    typedef -->
+  <class name="std::vector<DeSTStation*>"            /> <!-- STStations  typedef -->
+  <class name="std::pair<unsigned int, DeSTSector*>" /> <!-- STSectorMap typedef -->
 </lcgdict>
