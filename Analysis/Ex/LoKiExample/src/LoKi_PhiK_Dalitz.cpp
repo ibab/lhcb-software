@@ -1,8 +1,11 @@
-// $Id: LoKi_PhiK_Dalitz.cpp,v 1.2 2007-04-16 16:16:53 pkoppenb Exp $
+// $Id: LoKi_PhiK_Dalitz.cpp,v 1.3 2007-04-20 11:20:33 cattanem Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2007/04/16 16:16:53  pkoppenb
+// removed polemic comment
+//
 // Revision 1.1  2007/04/04 12:16:40  ibelyaev
 //  v5r2: update
 // 
@@ -12,6 +15,7 @@
 // LoKi
 // ============================================================================
 #include "LoKi/LoKi.h"
+#include "GaudiAlg/GaudiTool.h" // Needed on windows
 // ============================================================================
 /** @file
  *  Siple algoroithm to make dalits plots from B+ -> pphi K+ gamma decays

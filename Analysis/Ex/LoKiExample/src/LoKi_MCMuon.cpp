@@ -1,8 +1,11 @@
-// $Id: LoKi_MCMuon.cpp,v 1.5 2007-04-16 16:16:53 pkoppenb Exp $
+// $Id: LoKi_MCMuon.cpp,v 1.6 2007-04-20 11:20:33 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2007/04/16 16:16:53  pkoppenb
+// removed polemic comment
+//
 // Revision 1.4  2007/03/22 18:33:38  ibelyaev
 //  v5r2
 //
@@ -13,6 +16,7 @@
 // LoKi
 // ============================================================================
 #include "LoKi/LoKi.h"
+#include "GaudiAlg/GaudiTool.h" // Needed on windows
 // ============================================================================
 /** @file
  *

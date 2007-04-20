@@ -1,13 +1,17 @@
-! $Id: release.notes,v 1.19 2007-04-19 13:43:31 pkoppenb Exp $ 
+! $Id: release.notes,v 1.20 2007-04-20 11:20:33 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.19 $
+! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.20 $
 ! -----------------------------------------------------------------------------
 ! Package     :  LoKiExamples
 ! Responsible :  Vanya BELYAEV  ibelyaev@physics.syr.edu
 ! Purpose     :  Collection of examples for LoKi package 
 ! -----------------------------------------------------------------------------
 
-!========================== LoKiExample v5r2p1 2007-04-19 ===================
+!========================== LoKiExample v5r2p1 2007-04-20 ===================
+! 2007-04-20 - Marco Cattaneo
+ - Add a missing include "GaudiAlg/GaudiTool.h" to all .cpp files, for 
+   compilation on Windows. Should be removed when LoKi.h has been fixed
+
 ! 2007-04-19 -  P. Koppenburg
   Remove controversial doxygen comment
 

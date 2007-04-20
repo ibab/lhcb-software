@@ -1,8 +1,11 @@
-// $Id: LoKi_Bs2PsiPhi.cpp,v 1.3 2007-04-16 16:16:53 pkoppenb Exp $
+// $Id: LoKi_Bs2PsiPhi.cpp,v 1.4 2007-04-20 11:20:33 cattanem Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2007/04/16 16:16:53  pkoppenb
+// removed polemic comment
+//
 // Revision 1.2  2007/04/04 12:16:39  ibelyaev
 //  v5r2: update
 //
@@ -16,6 +19,7 @@
 // LoKi
 // ============================================================================
 #include "LoKi/LoKi.h"
+#include "GaudiAlg/GaudiTool.h" // Needed on windows
 // ============================================================================
 /** @file
  *  Simple LoKi-based algoritm for Bs->phi psi selection 
