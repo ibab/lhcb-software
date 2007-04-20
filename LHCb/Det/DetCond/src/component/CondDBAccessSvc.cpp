@@ -1,4 +1,4 @@
-// $Id: CondDBAccessSvc.cpp,v 1.33 2007-03-19 09:01:23 cattanem Exp $
+// $Id: CondDBAccessSvc.cpp,v 1.34 2007-04-20 14:40:39 marcocle Exp $
 // Include files
 #include <sstream>
 //#include <cstdlib>
@@ -51,9 +51,7 @@ DECLARE_SERVICE_FACTORY(CondDBAccessSvc)
 //-----------------------------------------------------------------------------
 
 // ==== Static data members
-cool::RecordSpecification *CondDBAccessSvc::s_XMLstorageSpec = NULL;
-unsigned long long CondDBAccessSvc::s_instances = 0;
-
+std::auto_ptr<cool::RecordSpecification> CondDBAccessSvc::s_XMLstorageSpec(NULL);
 std::auto_ptr<cool::Application> CondDBAccessSvc::s_coolApplication(NULL);
 
 //=============================================================================
@@ -80,24 +78,16 @@ CondDBAccessSvc::CondDBAccessSvc(const std::string& name, ISvcLocator* svcloc):
   
   declareProperty("ConnectionTimeOut", m_connectionTimeOut = 600 );
   
-  if (s_XMLstorageSpec == NULL){
+  if ( s_XMLstorageSpec.get() == NULL){
     // attribute list spec template
-    s_XMLstorageSpec = new cool::RecordSpecification();
+    s_XMLstorageSpec = std::auto_ptr<cool::RecordSpecification>(new cool::RecordSpecification());
     s_XMLstorageSpec->extend("data", cool::StorageType::String16M);
   }
-  ++s_instances;
 }
 //=============================================================================
 // Destructor
 //=============================================================================
-CondDBAccessSvc::~CondDBAccessSvc() {
-  // check how many instances are still around.
-  // if it is the last one, delete the attribute list (if still there).
-  if (--s_instances == 0 && s_XMLstorageSpec != NULL) {
-    delete s_XMLstorageSpec;
-    s_XMLstorageSpec = NULL;
-  }
-}
+CondDBAccessSvc::~CondDBAccessSvc() {}
 
 //=============================================================================
 // queryInterface
@@ -138,17 +128,17 @@ StatusCode CondDBAccessSvc::initialize(){
   }
 
   if ( !m_noDB ) {
-    if ( m_connectionString == "" ) {
+    if ( connectionString() == "" ) {
       // we need a connection string to connect to the DB
       log << MSG::ERROR << "Connection to database requested and no connection string provided." << endmsg;
       log << MSG::ERROR << "Set the option \"" << name() << ".ConnectionString\"." << endmsg;
       return StatusCode::FAILURE;
     }
-    log << MSG::DEBUG << "Connection string = \"" << m_connectionString << "\"" << endmsg;
+    log << MSG::DEBUG << "Connection string = \"" << connectionString() << "\"" << endmsg;
     
     sc = i_openConnection();
     if (!sc.isSuccess()) return sc;
-    log << MSG::INFO << "Connected to database \"" << m_connectionString << "\"" << endmsg;
+    log << MSG::INFO << "Connected to database \"" << connectionString() << "\"" << endmsg;
 
     // Check the existence of the provided tag.
     sc = i_checkTag();
@@ -268,7 +258,7 @@ StatusCode CondDBAccessSvc::i_openConnection(){
       log << MSG::DEBUG << "cool::DatabaseSvc got" << endmsg;
 
       log << MSG::DEBUG << "Opening connection" << endmsg;
-      m_db = dbSvc.openDatabase(m_connectionString,m_readonly);
+      m_db = dbSvc.openDatabase(connectionString(),m_readonly);
     
     }
     else {
@@ -352,6 +342,13 @@ StatusCode CondDBAccessSvc::i_checkTag(const std::string &tag) const {
   return StatusCode::FAILURE;
 }
 
+
+//=============================================================================
+// Return the connection string used to connect to the database.
+//=============================================================================
+const std::string &CondDBAccessSvc::connectionString() const{
+  return m_connectionString;
+}
 
 //=============================================================================
 // Utilities

@@ -1,4 +1,4 @@
-// $Id: CondDBAccessSvc.h,v 1.26 2007-03-22 16:04:12 marcocle Exp $
+// $Id: CondDBAccessSvc.h,v 1.27 2007-04-20 14:40:39 marcocle Exp $
 #ifndef COMPONENT_CONDDBACCESSSVC_H 
 #define COMPONENT_CONDDBACCESSSVC_H 1
 
@@ -32,11 +32,11 @@ namespace cool {
  *  Class used as interface to LCG COOL library API. It should expose as less as
  *  possible COOL internal details.
  *
- *  @author Marco CLEMENCIC
+ *  @author Marco Clemencic
  *  @date   2005-01-11
  */
 
-class CondDBAccessSvc: public virtual Service,
+class CondDBAccessSvc: public Service,
                        public virtual ICondDBAccessSvc,
                        public virtual ICondDBReader,
                        public virtual ICondDBEditor {
@@ -115,6 +115,9 @@ public:
   /// Set the TAG to use.
   virtual StatusCode setTag(const std::string &_tag);
 
+  /// Return the connection string used to connect to the database.
+  virtual const std::string &connectionString() const;
+
   /// Add a folder to the cache (bypass the DB)
   virtual StatusCode cacheAddFolder(const std::string &path, const std::string &descr,
                                     const cool::IRecordSpecification& spec);
@@ -152,7 +155,7 @@ protected:
 
   virtual ~CondDBAccessSvc( ); ///< Destructor
 
-private:
+protected:
   // Properties
 
   /// Property CondDBAccessSvc.ConnectionString: full connection string to open database access.
@@ -160,6 +163,7 @@ private:
   /// or "<HostAlias>/<Database>".
   std::string m_connectionString;
 
+private:
   /// Property CondDBAccessSvc.DefaultTAG: which tag to use if none is specified
   std::string m_dbTAG;
 
@@ -224,11 +228,7 @@ private:
   friend class SvcFactory<CondDBAccessSvc>;
 
   /// AttributeListSpecification used to sore XML strings
-  static cool::RecordSpecification *s_XMLstorageSpec;
-
-  /// Counter used to know how many instances of CondDBAccessSvc are around
-  /// (and needing the AttributeListSpecification pointers).
-  static unsigned long long s_instances;
+  static std::auto_ptr<cool::RecordSpecification> s_XMLstorageSpec;
 
   /// Pointer to a shared instance of the COOL Application
   static std::auto_ptr<cool::Application> s_coolApplication;
