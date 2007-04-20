@@ -1,9 +1,17 @@
-# $Id: release.notes,v 1.96 2007-03-22 17:35:34 cattanem Exp $
+# $Id: release.notes,v 1.97 2007-04-20 14:41:44 marcocle Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Det/DetCond
 ! Responsible : Marco Clemencic
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
+
+! 2007-04-20 - Marco Clemencic
+ - Added ICondDBAccessSvc::connectionString() to be able to find the
+   connection string that was used without looking in the options.
+ - Use a static std::auto_ptr instead of a basic pointer and a counter of 
+   instances (for CondDBAccessSvc::s_XMLstorageSpec).
+ - Added class CondDBSQLiteCopyAccSvc to copy an SQLite file and connect to
+   the copy.
 
 !===================== Det/DetCond v11r1 2007-03-22 ==========================
 ! 2007-03-22 - Marco Clemencic
