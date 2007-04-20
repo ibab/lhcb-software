@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/PVSSIO.cpp,v 1.4 2007-03-12 18:56:03 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/PVSSIO.cpp,v 1.5 2007-04-20 17:47:10 frankb Exp $
 //  ====================================================================
 //  PVSSIO.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: PVSSIO.cpp,v 1.4 2007-03-12 18:56:03 frankb Exp $
+// $Id: PVSSIO.cpp,v 1.5 2007-04-20 17:47:10 frankb Exp $
 
 // Framework include files
 #include "PVSS/Kernel.h"
@@ -208,7 +208,7 @@ namespace PVSS {
     };
   }
 #else
-  #define __T(x) template <> void addWriteIO(void* context,int typ,const DpID& dp,const std::vector< x >& v);
+  #define __T(x) template void addWriteIO(void* context,int typ,const DpID& dp,const std::vector< x >& v);
 
 #endif
   #define INSTANTIATE_FUNCTIONS(x) \

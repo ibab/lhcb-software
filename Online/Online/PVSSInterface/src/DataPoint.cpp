@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DataPoint.cpp,v 1.22 2007-04-20 09:34:19 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DataPoint.cpp,v 1.23 2007-04-20 17:47:10 frankb Exp $
 //  ====================================================================
 //  DataPoint.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: DataPoint.cpp,v 1.22 2007-04-20 09:34:19 frankb Exp $
+// $Id: DataPoint.cpp,v 1.23 2007-04-20 17:47:10 frankb Exp $
 #ifdef _WIN32
   // Disable warning C4250: 'const float' : forcing value to bool 'true' or 'false' (performance warning)
   #pragma warning ( disable : 4800 )
@@ -449,17 +449,18 @@ template <typename T> struct GetRef   {
 #define DATA_SPECIALIZATIONS(x)  namespace PVSS { template GetRef< x >;}
 
 #else
+#define __TEMPLATE template
 #define REF_SPECIALIZATIONS(x) namespace PVSS { \
-  template <> void DataPoint::set< x >(const x&);         \
-  template <> x& DataPoint::reference< x >();             \
-  template <> const x& DataPoint::reference< x >() const; }
+  __TEMPLATE void DataPoint::set< x >(const x&);         \
+  __TEMPLATE x& DataPoint::reference< x >();             \
+  __TEMPLATE const x& DataPoint::reference< x >() const; }
 
 #define DATA_SPECIALIZATIONS(x) namespace PVSS {                \
-  template <> x DataPoint::data< x >(); \
-  template <> const x DataPoint::data< x >() const; }
-DATA_SPECIALIZATIONS(short)
-DATA_SPECIALIZATIONS(unsigned short)
-DATA_SPECIALIZATIONS(unsigned char)
+  __TEMPLATE x DataPoint::data< x >(); \
+  __TEMPLATE const x DataPoint::data< x >() const; }
+//DATA_SPECIALIZATIONS(short)
+//DATA_SPECIALIZATIONS(unsigned short)
+//DATA_SPECIALIZATIONS(unsigned char)
 #endif
 
 
@@ -479,6 +480,11 @@ DATA_SPECIALIZATIONS(unsigned char)
                                     EXPLICIT_DATA_SPECIALIZATIONS(std::vector< x >)
 #define EXPLICIT_SPECIALIZATIONS(x) BASIC_SPECIALIZATIONS(x) \
                                     EXPLICIT_DATA_SPECIALIZATIONS(x)
+
+#ifndef _WIN32
+    // REF_SPECIALIZATIONS(DpID)
+#endif
+
 
 BASIC_SPECIALIZATIONS(bool)
 BASIC_SPECIALIZATIONS(char)

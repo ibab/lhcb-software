@@ -1,12 +1,17 @@
-import os, sys, time, string
+import os, sys, time, string, platform
 import PyCintex as PyLCGDict
 
 #PyLCGDict.gbl.Cintex.SetDebug(1)
-#PyLCGDict.loadDict('PVSSInterfaceDict')
-PVSS = PyLCGDict.makeNamespace('PVSS')
 gbl  = PyLCGDict.makeNamespace('')
-PyLCGDict.loadDict('STLRflx')
+PVSS = PyLCGDict.makeNamespace('PVSS')
+if platform.system()=='Linux':
+  PyLCGDict.loadDict('libSTLRflx')
+  PyLCGDict.loadDict('libPVSSInterfaceDict')
+else:
+  PyLCGDict.loadDict('STLRflx')
 
+#  PyLCGDict.loadDict('PVSSInterfaceDict')
+  
 # == External class definitions ===============================================
 Sensor            = gbl.Sensor
 Event             = gbl.Event
@@ -120,7 +125,10 @@ class APIManager:
     apiManager = PVSS.pvss_create_manager(dll, function)
     return apiManager.start()
 # Instantiate API manager. Should never be called by user directly
-apiManager = APIManager()
+if platform.system()=='Linux':
+  pass
+else:
+  apiManager = APIManager()
 
 # =============================================================================
 def controlsMgr(systemID=None,systemName=None):
