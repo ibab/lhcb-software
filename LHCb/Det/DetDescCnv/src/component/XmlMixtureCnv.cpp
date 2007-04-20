@@ -1,4 +1,4 @@
-// $Id: XmlMixtureCnv.cpp,v 1.7 2007-03-19 11:04:18 cattanem Exp $
+// $Id: XmlMixtureCnv.cpp,v 1.8 2007-04-20 14:20:31 marcocle Exp $
 // Include files
 #include "GaudiKernel/CnvFactory.h"
 #include "GaudiKernel/IOpaqueAddress.h"
@@ -292,7 +292,9 @@ StatusCode XmlMixtureCnv::i_processObj (DataObject* refpObject,
     if( !sc.isSuccess() ) {
       MsgStream log(msgSvc(), "XmlMixtureCnv" );
       log << MSG::WARNING
-          << "dataObj->compute failed. Don't know what to do!" << endmsg;
+          << "computation of mixture '"
+          << address->registry()->identifier()
+          << "' not successful. Please check XML." << endmsg;
     }
     m_mixMode = MM_undefined;
   }

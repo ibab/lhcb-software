@@ -4,6 +4,9 @@
 ! Purpose     : standard converters for the LHCb Detector Description
 !-----------------------------------------------------------------------------
 
+! 2007-04-20 - Marco Clemencic
+ - Improved the warning for failing computation in XmlMixtureCnv.
+
 !================ DetDescCnv v4r3 2007-03-19 ==================================
 ! 2007-03-19 - Marco Cattaneo
  - Check unchecked StatusCodes in XmlLVolumeCnv and XmlMixtureCnv. For the time
