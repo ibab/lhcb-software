@@ -1,4 +1,4 @@
-// $Id: RawEventCopy.cpp,v 1.3 2006-10-05 16:38:02 frankb Exp $
+// $Id: RawEventCopy.cpp,v 1.4 2007-04-20 12:40:25 cattanem Exp $
 // Include files from Gaudi
 #include "GaudiKernel/Algorithm.h" 
 #include "GaudiKernel/IDataProviderSvc.h" 
@@ -11,7 +11,7 @@
 namespace LHCb  {
 class RawEvent;
 
-  /** @class RawEventCopy RawEventCopy.h tests/RawEventCopy.h
+  /** @class RawEventCopy RawEventCopy.cpp
     *
     *  Creates and copies RawEvent data structure to new location
     *  in the data store.
@@ -30,14 +30,14 @@ class RawEvent;
     RawEventCopy(const std::string& nam, ISvcLocator* pSvc) 
     : Algorithm(nam,pSvc) {
       declareProperty("Destination",m_destination="/Event/DAQ/RawCopy");
-      declareProperty("Source",     m_source="/Event/DAQ/RawEvent");
+      declareProperty("Source",     m_source=RawEventLocation::Default);
     }
     /// Destructor
     virtual ~RawEventCopy()  {} 
     /// Main execution
     virtual StatusCode execute()  {
       RawEvent *org = 0, *res = 0;
-      StatusCode sc = eventSvc()->retrieveObject("/Event/DAQ/RawEvent",(DataObject*&)org);
+      StatusCode sc = eventSvc()->retrieveObject(m_source,(DataObject*&)org);
       if ( sc.isSuccess() )  {
         sc = cloneRawEvent(org, res);
         if ( sc.isSuccess() )  {

@@ -1,4 +1,4 @@
-// $Id: MEPTester.cpp,v 1.1 2006-10-05 16:38:01 frankb Exp $
+// $Id: MEPTester.cpp,v 1.2 2007-04-20 12:40:25 cattanem Exp $
 // Include files from Gaudi
 #include "GaudiKernel/SmartIF.h" 
 #include "GaudiKernel/Algorithm.h" 
@@ -16,7 +16,7 @@
  *    LHCb namespace declaration
  */
 namespace LHCb  {
-  /** @class MEPTester MEPTester.h tests/MEPTester.h
+  /** @class MEPTester MEPTester.cpp
   *  Creates and fills dummy RawEvent  
   *
   *  @author Markus Frank

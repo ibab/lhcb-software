@@ -1,4 +1,4 @@
-// $Id: MEPFragment.h,v 1.3 2006-10-23 09:19:40 frankb Exp $
+// $Id: MEPFragment.h,v 1.4 2007-04-20 12:40:25 cattanem Exp $
 //====================================================================
 //	MEPFragment.h
 //--------------------------------------------------------------------
@@ -6,7 +6,6 @@
 //====================================================================
 #ifndef MDF_MEPFRAGMENT_H
 #define MDF_MEPFRAGMENT_H
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/MEPFragment.h,v 1.3 2006-10-23 09:19:40 frankb Exp $
 
 // Framework include files
 #include "Event/RawBank.h"

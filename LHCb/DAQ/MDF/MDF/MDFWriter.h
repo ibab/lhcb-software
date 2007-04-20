@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/MDFWriter.h,v 1.3 2006-06-29 16:39:48 frankb Exp $
+// $Id: MDFWriter.h,v 1.4 2007-04-20 12:40:24 cattanem Exp $
 //	====================================================================
 //  MDFWriter.h
 //	--------------------------------------------------------------------
@@ -55,9 +55,9 @@ namespace LHCb    {
     /// Internal setup (may not be called from sub-classes!
     void construct();
 
-    /// Allocate space for IO buffer
-    /** @param ioDesc [IN]    Output IO descriptor       
-      * @param len    [IN]    Total length of the data buffer
+    /** Allocate space for IO buffer
+      * @param[in] ioDesc Output IO descriptor       
+      * @param[in] len    Total length of the data buffer
       *
       * @return  Pointer to allocated memory space
       */
@@ -66,10 +66,10 @@ namespace LHCb    {
       return std::pair<char*,int>(m_data.data(), m_data.size());
     }
 
-    /// Write byte buffer to output stream
-    /** @param ioDesc [IN]    Output IO descriptor       
-      * @param data   [IN]    Data buffer to be streamed
-      * @param len    [IN]    Length of the data buffer
+    /** Write byte buffer to output stream
+      * @param[in] ioDesc Output IO descriptor       
+      * @param[in] data   Data buffer to be streamed
+      * @param[in] len    Length of the data buffer
       *
       * @return  Status code indicating success or failure.
       */

@@ -1,4 +1,4 @@
-// $Id: RawEventTestCreator.cpp,v 1.8 2006-11-14 20:14:57 frankb Exp $
+// $Id: RawEventTestCreator.cpp,v 1.9 2007-04-20 12:40:25 cattanem Exp $
 // Include files from Gaudi
 #include "GaudiKernel/Algorithm.h" 
 #include "GaudiKernel/IDataProviderSvc.h" 
@@ -13,7 +13,7 @@
  */
 namespace LHCb  {
 
-  /** @class RawEventTestCreator RawEventTestCreator.h tests/RawEventTestCreator.h
+ /** @class RawEventTestCreator RawEventTestCreator.cpp
   *  Creates and fills dummy RawEvent  
   *
   *  @author Markus Frank

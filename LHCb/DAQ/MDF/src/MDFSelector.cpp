@@ -1,4 +1,4 @@
-// $Id: MDFSelector.cpp,v 1.10 2006-10-16 11:40:06 frankb Exp $
+// $Id: MDFSelector.cpp,v 1.11 2007-04-20 12:40:25 cattanem Exp $
 //====================================================================
 //	MDFSelector.cpp
 //--------------------------------------------------------------------
@@ -88,8 +88,8 @@ namespace LHCb  {
     std::string m_ignoreChecksum;
 
   public:
-    /// Create a new event loop context
-    /** @param refpCtxt   [IN/OUT]  Reference to pointer to store the context
+    /** Create a new event loop context
+      * @param[in,out] refpCtxt   Reference to pointer to store the context
       * 
       * @return StatusCode indicating success or failure
       */

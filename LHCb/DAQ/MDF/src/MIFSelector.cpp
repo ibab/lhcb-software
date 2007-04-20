@@ -1,4 +1,4 @@
-// $Id: MIFSelector.cpp,v 1.6 2007-01-24 20:42:24 frankb Exp $
+// $Id: MIFSelector.cpp,v 1.7 2007-04-20 12:40:25 cattanem Exp $
 //====================================================================
 //	MIFSelector.cpp
 //--------------------------------------------------------------------
@@ -24,8 +24,8 @@ namespace LHCb  {
     */
   class MIFSelector : public RawDataSelector  {
   public:
-    /// Create a new event loop context
-    /** @param refpCtxt   [IN/OUT]  Reference to pointer to store the context
+    /** Create a new event loop context
+      * @param[in,out] refpCtxt  Reference to pointer to store the context
       * 
       * @return StatusCode indicating success or failure
       */

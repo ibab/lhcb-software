@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/RawDataCnvSvc.h,v 1.6 2006-10-05 16:38:01 frankb Exp $
+// $Id: RawDataCnvSvc.h,v 1.7 2007-04-20 12:40:25 cattanem Exp $
 //	====================================================================
 //  RawDataCnvSvc.h
 //	--------------------------------------------------------------------
@@ -88,17 +88,17 @@ namespace LHCb  {
     StatusCode adoptRawBanks(CSTR path, const Banks& banks);
 
   public:
-    /// Initializing constructor
-    /**  @param   nam         [IN]  Name of the service
-      *  @param   typ         [IN]  Storage type if different from MDF_StorageType
-      *  @param   loc         [IN]  Pointer to the service locator object
+    /** Initializing constructor
+      *  @param[in]   nam   Name of the service
+      *  @param[in]   typ   Storage type if different from MDF_StorageType
+      *  @param[in]   loc   Pointer to the service locator object
       *  @return Initialized reference to service object
       */
     RawDataCnvSvc(CSTR nam, ISvcLocator* loc, long typ);
 
-    /// Initializing constructor
-    /**  @param   nam         [IN]  Name of the service
-      *  @param   loc         [IN]  Pointer to the service locator object
+    /** Initializing constructor
+      *  @param[in]   nam   Name of the service
+      *  @param[in]   loc   Pointer to the service locator object
       *  @return Initialized reference to service object
       */
     RawDataCnvSvc(CSTR nam, ISvcLocator* loc);
@@ -115,17 +115,17 @@ namespace LHCb  {
     /// Concrete class type
     virtual const CLID& objType() const;
 
-    /// Object creation callback
-    /**  @param   pAddr      [IN]  Reference to opaque object address
-      *  @param   refpObj   [OUT]  Reference to store pointer to created object
+    /** Object creation callback
+      *  @param[in]   pAddr     Reference to opaque object address
+      *  @param[out]  refpObj   Reference to store pointer to created object
       *
       *  @return Status code indicating success or failure
       */
     virtual StatusCode createObj(IOpaqueAddress* pAddr, DataObject*& refpObj);
 
-    /// Callback for reference processing (misused to attach leaves)
-    /**  @param   pAddr      [IN]  Reference to opaque object address
-      *  @param   refpObj   [OUT]  Reference to store pointer to created object
+    /** Callback for reference processing (misused to attach leaves)
+      *  @param[in]   pAddr     Reference to opaque object address
+      *  @param[out]  refpObj   Reference to store pointer to created object
       *
       *  @return Status code indicating success or failure
       */

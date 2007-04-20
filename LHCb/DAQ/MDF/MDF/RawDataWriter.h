@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/RawDataWriter.h,v 1.3 2006-06-29 15:58:34 frankb Exp $
+// $Id: RawDataWriter.h,v 1.4 2007-04-20 12:40:25 cattanem Exp $
 //	====================================================================
 //  RawDataWriter.h
 //	--------------------------------------------------------------------
@@ -19,7 +19,7 @@ namespace LHCb    {
 
   class MDFHeader;
 
-  /** @class RawDataWriter 
+  /** @class RawDataFile
     *
     *
     * @author:  M.Frank
@@ -50,8 +50,8 @@ namespace LHCb    {
     StatusCode open();
     /// Close file
     StatusCode close();
-    /// Allocate space for IO buffer
-    /** @param len    [IN]    Total length of the data buffer
+    /** Allocate space for IO buffer
+      * @param[in] len    Total length of the data buffer
       *
       * @return  Pointer to allocated memory space, length
       */
@@ -115,17 +115,17 @@ namespace LHCb    {
     /// Finalize
     virtual StatusCode finalize();
 
-    /// Allocate space for IO buffer
-    /** @param ioDesc [IN]    Output IO descriptor       
-      * @param len    [IN]    Total length of the data buffer
+    /** Allocate space for IO buffer
+      * @param[in] ioDesc    Output IO descriptor       
+      * @param[in] len       Total length of the data buffer
       *
       * @return  Pointer to allocated memory space
       */
     virtual std::pair<char*,int> getDataSpace(void* const ioDesc, size_t len);
 
-    /// Write byte buffer to output stream
-    /** @param data   [IN]    Data buffer to be streamed
-      * @param len    [IN]    Length of the data buffer
+    /** Write byte buffer to output stream
+      * @param[in] data    Data buffer to be streamed
+      * @param[in] len     Length of the data buffer
       *
       * @return  Status code indicating success or failure.
       */

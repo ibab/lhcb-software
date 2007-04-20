@@ -1,4 +1,4 @@
-// $Id: RawEventTestDump.cpp,v 1.6 2007-01-24 19:21:50 frankb Exp $
+// $Id: RawEventTestDump.cpp,v 1.7 2007-04-20 12:40:25 cattanem Exp $
 // Include files from Gaudi
 #include "GaudiKernel/Algorithm.h" 
 #include "GaudiKernel/IDataProviderSvc.h" 
@@ -12,7 +12,7 @@
  */
 namespace LHCb  {
 
-  /** @class RawEventTestDump RawEventTestDump.h tests/RawEventTestDump.h
+/** @class RawEventTestDump RawEventTestDump.cpp
   *  Creates and fills dummy RawEvent  
   *
   *  @author Markus Frank
@@ -50,7 +50,7 @@ namespace LHCb  {
     }
     /// Main execution
     virtual StatusCode execute()  {
-      SmartDataPtr<RawEvent> raw(eventSvc(),"/Event/DAQ/RawEvent");
+      SmartDataPtr<RawEvent> raw(eventSvc(),RawEventLocation::Default);
       MsgStream info(msgSvc(),name());
       bool dmp = m_numEvent<m_debug || m_dump;
       bool chk = m_numEvent<m_debug || m_check;

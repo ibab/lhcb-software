@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/MDFIO.h,v 1.10 2006-10-27 16:11:18 frankb Exp $
+// $Id: MDFIO.h,v 1.11 2007-04-20 12:40:24 cattanem Exp $
 //	====================================================================
 //  MDFIO.h
 //	--------------------------------------------------------------------
@@ -63,9 +63,9 @@ namespace LHCb {
     std::pair<const char*,int> getDataFromAddress();
     /// Helper to access header information
     MDFHeader* getHeader();
-    /// Setup IO object: set service pointers
-    /** @param msg        [IN]    Reference to message service for error logging
-      * @param svc        [IN]    Reference to data provider service to locate RawEvent
+    /** Setup IO object: set service pointers
+      * @param[in] msg Reference to message service for error logging
+      * @param[in] svc Reference to data provider service to locate RawEvent
       */
     void setupMDFIO(IMessageSvc* msg, IDataProviderSvc* svc)  {
       m_msgSvc = msg;
@@ -102,30 +102,30 @@ namespace LHCb {
     /// Transform file name in presence of catalogs
     virtual std::string getConnection(const std::string& org_conn);
 
-    /// Allocate space
-    /** @param ioDesc     [IN]    Output IO descriptor       
-      * @param len        [IN]    Total length of the data buffer
+    /** Allocate space
+      * @param[in] ioDesc Output IO descriptor       
+      * @param[in] len    Total length of the data buffer
       *
       * @return  Pointer to allocated memory space
       */
     virtual std::pair<char*,int> getDataSpace(void* const ioDesc, size_t len) = 0;
 
-    /// Write raw char buffer to output stream
-    /** @param ioDesc     [IN]    Output IO descriptor       
-      * @param data       [IN]    Data buffer to be streamed
-      * @param len        [IN]    Total length of the data buffer
+    /** Write raw char buffer to output stream
+      * @param[in] ioDesc Output IO descriptor       
+      * @param[in] data   Data buffer to be streamed
+      * @param[in] len    Total length of the data buffer
       *
       * @return  Status code indicating success or failure.
       */
     virtual StatusCode writeBuffer(void* const ioDesc, const void* data, size_t len);
 
-    /// Write char buffer to output stream
-    /** @param compTyp    [IN]    Compression type
-      * @param chksumTyp  [IN]    Checksum type
-      * @param ioDesc     [IN]    Output IO descriptor       
-      * @param hdr        [IN]    Bank with MDF header structure as payload
-      * @param data       [IN]    Data buffer to be streamed
-      * @param len        [IN]    Total length of the data buffer
+    /** Write char buffer to output stream
+      * @param[in] compTyp   Compression type
+      * @param[in] chksumTyp Checksum type
+      * @param[in] ioDesc    Output IO descriptor       
+      * @param[in] hdr       Bank with MDF header structure as payload
+      * @param[in] data      Data buffer to be streamed
+      * @param[in] len       Total length of the data buffer
       *
       * Note:
       *     on writing, data contains empty space in front 
@@ -144,10 +144,10 @@ namespace LHCb {
                                       char* const data,
                                       size_t      len);
 
-    /// Commit raw banks to IO stream. -- Main entry point --
-    /** @param compTyp    [IN]    Compression type
-      * @param chksumTyp  [IN]    Checksum type
-      * @param ioDesc     [IN]    Output IO descriptor       
+    /** Commit raw banks to IO stream. -- Main entry point --
+      * @param[in] compTyp   Compression type
+      * @param[in] chksumTyp Checksum type
+      * @param[in] ioDesc    Output IO descriptor       
       *
       * @return  Status code indicating success or failure.
       */
@@ -155,12 +155,12 @@ namespace LHCb {
                                       int               chksumTyp,
                                       void* const       ioDesc);
 
-    /// Commit raw banks to IO stream. -- Main entry point --
-    /** @param raw        [IN]    Pointer to RawEvent
-      * @param hdr_bank   [IN]    Pointer to MDF header bank
-      * @param compTyp    [IN]    Compression type
-      * @param chksumTyp  [IN]    Checksum type
-      * @param ioDesc     [IN]    Output IO descriptor       
+    /** Commit raw banks to IO stream. -- Main entry point --
+      * @param[in] raw       Pointer to RawEvent
+      * @param[in] hdr_bank  Pointer to MDF header bank
+      * @param[in] compTyp   Compression type
+      * @param[in] chksumTyp Checksum type
+      * @param[in] ioDesc    Output IO descriptor       
       *
       * @return  Status code indicating success or failure.
       */
@@ -170,11 +170,11 @@ namespace LHCb {
                                       int               chksumTyp,
                                       void* const       ioDesc);
 
-    /// Direct I/O with valid existing raw buffers
-    /** @param type       [IN]    raw buffer type (MDF_RECORDS, MDF_BANKS)
-      * @param compTyp    [IN]    Compression type
-      * @param chksumTyp  [IN]    Checksum type
-      * @param ioDesc     [IN]    Output IO descriptor       
+    /** Direct I/O with valid existing raw buffers
+      * @param[in] type      raw buffer type (MDF_RECORDS, MDF_BANKS)
+      * @param[in] compTyp   Compression type
+      * @param[in] chksumTyp Checksum type
+      * @param[in] ioDesc    Output IO descriptor       
       *
       * @return  Status code indicating success or failure.
       */
@@ -183,13 +183,13 @@ namespace LHCb {
                                        int               chksumTyp,
                                        void* const       ioDesc);
 
-    /// Direct I/O with valid existing raw buffers
-    /** @param data       [IN]    Reference to data location
-      * @param len        [IN]    length of data block
-      * @param type       [IN]    raw buffer type (MDF_RECORDS, MDF_BANKS)
-      * @param compTyp    [IN]    Compression type
-      * @param chksumTyp  [IN]    Checksum type
-      * @param ioDesc     [IN]    Output IO descriptor       
+    /** Direct I/O with valid existing raw buffers
+      * @param[in] data      Reference to data location
+      * @param[in] len       length of data block
+      * @param[in] type      raw buffer type (MDF_RECORDS, MDF_BANKS)
+      * @param[in] compTyp   Compression type
+      * @param[in] chksumTyp Checksum type
+      * @param[in] ioDesc    Output IO descriptor       
       *
       * @return  Status code indicating success or failure.
       */
@@ -200,18 +200,18 @@ namespace LHCb {
                                        int               chksumTyp,
                                        void* const       ioDesc);
 
-    /// Read raw banks from IO stream
-    /** @param data       [IN]    Reference to StreamBuffer for storing data
-      * @param ioDesc     [IN]    Input IO descriptor       
+    /** Read raw banks from IO stream
+      * @param[in] data   Reference to StreamBuffer for storing data
+      * @param[in] ioDesc Input IO descriptor       
       *
       * @return  Number of valid bytes in stream buffer (-1 on failure).
       */
     virtual std::pair<char*,int> readBanks(void* const ioDesc, bool dbg=false);
 
-    /// Read raw char buffer from input stream
-    /** @param ioDesc     [IN]    Input IO descriptor       
-      * @param data       [IN]    Data buffer to reseive data
-      * @param len        [IN]    Total length of data buffer to receive
+    /** Read raw char buffer from input stream
+      * @param[in] ioDesc Input IO descriptor       
+      * @param[in] data   Data buffer to reseive data
+      * @param[in] len    Total length of data buffer to receive
       *
       * @return  Status code indicating success or failure.
       */
@@ -220,10 +220,10 @@ namespace LHCb {
                                       size_t            len);
                                       
 
-    /// Pass raw banks to RawEvent object
-    /** @param evt        [IN]    Pointer to raw event receiving banks
-      * @param bnks       [IN]    Vector of banks to be assigned to evt
-      * @param copy_banks [IN]    Deep copy banks rather than pure assignment
+    /** Pass raw banks to RawEvent object
+      * @param[in] evt        Pointer to raw event receiving banks
+      * @param[in] bnks       Vector of banks to be assigned to evt
+      * @param[in] copy_banks Deep copy banks rather than pure assignment
       *
       * @return  Status code indicating success or failure.
       */

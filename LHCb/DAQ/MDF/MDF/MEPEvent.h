@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/MEPEvent.h,v 1.5 2006-10-23 09:19:40 frankb Exp $
+// $Id: MEPEvent.h,v 1.6 2007-04-20 12:40:24 cattanem Exp $
 //	====================================================================
 //  MBMEvent.h
 //	--------------------------------------------------------------------
@@ -17,7 +17,7 @@
  */
 namespace LHCb  {
 
-  /** @class MEPFragment MEPFragment.h Event/MEPFragment.h
+  /** @class MEPEvent MEPEvent.h MDF/MEPEvent.h
     *
     * Structure to describe the data content originating from
     * one tell1 board.

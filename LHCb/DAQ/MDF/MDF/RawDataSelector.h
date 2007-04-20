@@ -1,4 +1,4 @@
-// $Id: RawDataSelector.h,v 1.12 2006-10-16 11:39:57 frankb Exp $
+// $Id: RawDataSelector.h,v 1.13 2007-04-20 12:40:25 cattanem Exp $
 //====================================================================
 //	RawDataSelector.h
 //--------------------------------------------------------------------
@@ -10,7 +10,6 @@
 //  Created    : 12/12/2005
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/RawDataSelector.h,v 1.12 2006-10-16 11:39:57 frankb Exp $
 
 #ifndef MDF_RAWDATASELECTOR_H
 #define MDF_RAWDATASELECTOR_H 1
@@ -82,52 +81,52 @@ namespace LHCb  {
     // IInterface implementation: query interfaces
     virtual StatusCode queryInterface(const InterfaceID& riid, void** ppvInterface);
 
-    /// Create a new event loop context
-    /** @param refpCtxt   [IN/OUT]  Reference to pointer to store the context
+    /** Create a new event loop context
+      * @param[in,out] refpCtxt  Reference to pointer to store the context
       * 
       * @return StatusCode indicating success or failure
       */
     virtual StatusCode createContext(Context*& refpCtxt) const = 0;
 
     /** Access last item in the iteration
-      * @param refContext [IN/OUT] Reference to the Context object.
+      * @param[in.out] refContext Reference to the Context object.
       */
     virtual StatusCode last(Context& /* refContext */ ) const    {
       return StatusCode::FAILURE;
     }
 
-    /// Get next iteration item from the event loop context
-    /** @param refCtxt   [IN/OUT]  Reference to the context
+    /** Get next iteration item from the event loop context
+      * @param[in,out] refCtxt   Reference to the context
       * 
       * @return StatusCode indicating success or failure
       */
     virtual StatusCode next(Context& refCtxt) const;
 
-    /// Get next iteration item from the event loop context, but skip jump elements
-    /** @param refCtxt   [IN/OUT]  Reference to the context
+    /** Get next iteration item from the event loop context, but skip jump elements
+      * @param[in,out] refCtxt   Reference to the context
       * 
       * @return StatusCode indicating success or failure
       */
     virtual StatusCode next(Context& refCtxt,int jump) const;
 
-    /// Get previous iteration item from the event loop context
-    /** @param refCtxt   [IN/OUT]  Reference to the context
-      * @param jump      [IN]      Number of events to be skipped
+    /** Get previous iteration item from the event loop context
+      * @param[in,out] refCtxt   Reference to the context
+      * @param[in]     jump      Number of events to be skipped
       * 
       * @return StatusCode indicating success or failure
       */
     virtual StatusCode previous(Context& refCtxt) const;
 
-    /// Get previous iteration item from the event loop context, but skip jump elements
-    /** @param refCtxt   [IN/OUT]  Reference to the context
-      * @param jump      [IN]      Number of events to be skipped
+    /** Get previous iteration item from the event loop context, but skip jump elements
+      * @param[in,out] refCtxt   Reference to the context
+      * @param[in]     jump      Number of events to be skipped
       * 
       * @return StatusCode indicating success or failure
       */
     virtual StatusCode previous(Context& refCtxt,int jump) const;
 
-    /// Rewind the dataset
-    /** @param refCtxt   [IN/OUT]  Reference to the context
+    /** Rewind the dataset
+      * @param[in,out] refCtxt   Reference to the context
       * 
       * @return StatusCode indicating success or failure
       */
@@ -135,15 +134,15 @@ namespace LHCb  {
       return StatusCode::FAILURE;
     }
 
-    /// Create new Opaque address corresponding to the current record
-    /** @param refCtxt   [IN/OUT]  Reference to the context
+    /** Create new Opaque address corresponding to the current record
+      * @param[in,out] refCtxt   Reference to the context
       * 
       * @return StatusCode indicating success or failure
       */
     virtual StatusCode createAddress(const Context& refCtxt, IOpaqueAddress*&) const;
 
-    /// Release existing event iteration context
-    /** @param refCtxt   [IN/OUT]  Reference to the context
+    /** Release existing event iteration context
+      * @param[in,out] refCtxt   Reference to the context
       * 
       * @return StatusCode indicating success or failure
       */
