@@ -5,11 +5,14 @@
 # Requires CMTPROJECTPATH set and setup.sh sourced in $ONLINETASKSROOT/cmt
 # 
 #
-export DIM_DNS_NODE=hltdev001
+if [ -z DIM_DNS_NODE ]; then
+	echo "Please define DIM_DNS_NODE"
+	exit 1
+fi
 # Cleanup any running jobs
-killall -q Gaudi.exe
-killall -q test.exe
-killall -q gentest.exe
+pkill Gaudi.exe
+pkill test.exe
+pkill gentest.exe
 rm -f /dev/shm/bm_*  /dev/shm/sem.bm_* /dev/shm/TAN* /dev/shm/sem.TAN*
 
 # message are send via the DIM Messageservice
@@ -62,7 +65,7 @@ $MINITERM Moore_1@${HOST}   -e "export UTGID=Moore_1  ; ${gaudi_exe} -opt=$GAUDI
 #
 # Optional if you want write the data
 #
-$MINITERM DiskWR@${HOST}    -e "export UTGID=DiskWR   ; ${gaudi_exe} -opt=$GAUDIONLINEROOT/options/DiskWR.opts -main=$GAUDIONLINEROOT/options/Main.opts "&
+$MINITERM DiskWR@${HOST}    -e "export UTGID=DiskWR   ; ${gaudi_exe} -opt=$ONLINETASKSROOT/options/DiskWR.opts -main=$GAUDIONLINEROOT/options/Main.opts "&
 #
 # Last not least the event-builder
 #
