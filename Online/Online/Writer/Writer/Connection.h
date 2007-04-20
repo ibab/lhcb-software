@@ -33,7 +33,7 @@ extern "C" {
 /**
  * A thread local variable to keep track of which thread we're in.
  */
-extern __thread int currThread;
+//extern __thread int currThread;
 
 
 /*
@@ -131,7 +131,7 @@ namespace LHCb {
       static const int STATE_CONN_OPEN  =  0x03;
 
       /// Fails over onto an alternative storage cluster node.
-      int failover(void);
+      int failover(int currThread);
 
       /// Processes acknowledgements and dequeues the acknowledged commands.
       int processAcks(void);

@@ -31,7 +31,7 @@ extern "C" {
 /**
  * A thread local variable to keep track of which thread we're in.
  */
-__thread int currThread;
+//__thread int currThread;
 
 using namespace LHCb;
 
@@ -52,7 +52,7 @@ Connection::Connection(std::string serverAddr, int serverPort, int sndRcvSizes,
   m_failoverMonitor = NULL;
 
   pthread_mutex_init(&m_failoverLock, NULL);
-  currThread = MDFWRITER_THREAD;
+  //currThread = MDFWRITER_THREAD;
 }
 
 /**
@@ -118,7 +118,7 @@ void Connection::closeConnection()
  * is being called by the ack thread, and the thread
  * will stop on its own after function returns.
  */
-int Connection::failover()
+int Connection::failover(int currThread)
 {
 	int ret = 0;
 

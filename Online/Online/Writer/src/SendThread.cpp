@@ -36,7 +36,7 @@ static void *send_thread(void *args)
 {
   SendThread *st;
   st = (SendThread*)args;
-  currThread = SEND_THREAD;
+  //currThread = SEND_THREAD;
   st->processSends();
   return NULL;
 }
@@ -111,7 +111,7 @@ start:
     ptr = (char *)cmd_to_send;
 		ret = Utils::send(m_sockfd, ptr, totalSize, m_log);
 		if(ret != totalSize) {
-        if(m_conn->failover() == KILL_THREAD)
+        if(m_conn->failover(SEND_THREAD) == KILL_THREAD)
         	return 0;
         else
         	goto start;

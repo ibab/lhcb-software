@@ -184,7 +184,7 @@ int FailoverMonitor::getAddressList(std::list<NodeState*> &nodeStates)
  */
 static void *failover_thread(void *args)
 {
-	currThread = FAILOVER_THREAD;
+	//currThread = FAILOVER_THREAD;
 	FailoverMonitor *fm = (FailoverMonitor*)args;
 	fm->listenForUpdates();
 	return NULL;
@@ -226,7 +226,7 @@ void FailoverMonitor::listenForUpdates(void)
 
 		ret = Utils::brecv(m_sockfd, &fmsg, sizeof(struct failover_msg), m_log);
 		if(ret < 0) {
-			if(m_conn->failover() == KILL_THREAD)
+			if(m_conn->failover(FAILOVER_THREAD) == KILL_THREAD)
 				break;
 			else
 				continue;
@@ -240,7 +240,7 @@ void FailoverMonitor::listenForUpdates(void)
 		for(unsigned int i=0;i<fmsg.num_nodes;i++) {
 			ret = Utils::brecv(m_sockfd, &nstate, sizeof(struct nodestate), m_log);
 			if(ret < 0) {
-				if(m_conn->failover() == KILL_THREAD)
+				if(m_conn->failover(FAILOVER_THREAD) == KILL_THREAD)
 					die = 1;
 				break;
 			}

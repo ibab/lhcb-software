@@ -36,7 +36,7 @@ static void *ack_thread(void *args)
 {
   AckThread *st;
   st = (AckThread*)args;
-  currThread = ACK_THREAD;
+  //currThread = ACK_THREAD;
   st->processAcks();
   return NULL;
 }
@@ -120,7 +120,7 @@ start:
     ret = Utils::brecv(m_sockfd, &ackHeaderBuf, sizeof(struct ack_header), m_log);
     if(ret != sizeof(struct ack_header)) {
       *m_log << MSG::WARNING << "Disconnected, should fail over." << errno << endmsg;
-      if(m_conn->failover() == KILL_THREAD)
+      if(m_conn->failover(ACK_THREAD) == KILL_THREAD)
       	return 0;
       else
       	goto start;

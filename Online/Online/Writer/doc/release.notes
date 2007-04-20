@@ -1,4 +1,8 @@
 |----------------------------------------------------
+| 2007-04-20 : Suman
+|    Removed thread local storage to fix link problem.
+|
+|----------------------------------------------------
 | 2007-03-20 : Suman
 |    Broke up three threads into three classes, 
 |    fixed a lot of the failover class problems.
