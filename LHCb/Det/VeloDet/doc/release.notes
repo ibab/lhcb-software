@@ -1,11 +1,12 @@
-! $Id: release.notes,v 1.165 2007-04-10 13:55:55 cattanem Exp $
+! $Id: release.notes,v 1.166 2007-04-20 14:27:19 cattanem Exp $
 ! package VeloDet
 ! package manager : Velo Group
 !-----------------------------------------------------------------------------
 
 !======================== VeloDet v11r2 2007-04-10 ===========================
 ! 2007-04-10 - Marco Cattaneo
- - Add generation of dictionaries for VeloDet public classes (moved from DetSys)
+ - Add generation of dictionaries for VeloDet public classes (moved from DetSys),
+   including also types in public methods
 
 ! 2007-03-22 - David Hutchcroft
  - Added tests to the StatusCode returns from jobSvc->setMyProperties

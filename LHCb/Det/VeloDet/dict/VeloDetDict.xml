@@ -3,7 +3,7 @@
   <class name="DeVeloSensor"  />
   <class name="DeVeloPhiType" />
   <class name="DeVeloRType"   />
-<!-- Not sure if next two are needed, they were selected by std::pair<*> -->
-  <class name="std::pair<Gaudi::XYZPoint,Gaudi::XYZPoint>" />
-  <class name="std::pair<std::_Rb_tree_iterator<std::pair<const unsigned int,unsigned int> >,bool>" />
+  <class name="std::vector<DeVeloSensor*>"  />
+  <class name="std::vector<DeVeloPhiType*>"  />
+  <class name="std::vector<DeVeloRType*>"  />
 </lcgdict>
