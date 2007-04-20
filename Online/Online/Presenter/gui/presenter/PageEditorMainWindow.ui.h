@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Presenter/gui/presenter/PageEditorMainWindow.ui.h,v 1.6 2007-04-10 16:18:29 psomogyi Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Presenter/gui/presenter/PageEditorMainWindow.ui.h,v 1.7 2007-04-20 08:08:07 psomogyi Exp $
 
 /****************************************************************************
  ** ui.h extension file, included from the uic-generated form implementation.
@@ -20,6 +20,7 @@
 #include "dic.hxx"
 
 #include "DimProxy.h"
+#include "Presenter.h"
 #include "DatabaseLoginDialog.h"
 
 //#include "algorithm"
@@ -96,7 +97,7 @@ void PageEditorMainWindow::dimContextMenu()
     dimContextMenu->insertItem(tr("&Add selection to Database"), this,
                                SLOT(addHistogramsToDatabase()));
   }
-    dimContextMenu->insertItem(tr("&Add selection to page"), this,
+    dimContextMenu->insertItem(tr("&Add selection to Page"), this,
                              SLOT(addSelectedHistogramsFromDIMToPage()));                               
 
 //  dimContextMenu->insertSeparator();
@@ -150,6 +151,10 @@ void PageEditorMainWindow::init()
   // get msg logging     
   refreshDIMSVCListView();
   
+  
+  histoDBHistogramsView->hideColumn(Presenter::DIM); 
+  histoDBPagesView->hideColumn(Presenter::DIM);
+  
   pageHistogramsView->hide();
   
   // TODO: work w/o HistoDB...
@@ -175,60 +180,10 @@ void PageEditorMainWindow::destroy()
 
 void PageEditorMainWindow::refreshHistogramListView()
 {
-  std::vector<std::string>      localDatabaseFolders;
-  std::vector<std::string>      localDatabasePages;
-  std::vector<OnlineHistogram*> localDatabaseHistograms;
-  
-  histoDBHistogramsView->clear();
-  
-  try {
-    if (m_connectedToHistogramDatabase) {
-      localDatabaseFolders.clear();
-      histogramDB->getPageFolderNames(localDatabaseFolders);
-      BOOST_FOREACH(string folder, localDatabaseFolders) {
-        QListViewItem *folderItem = new QListViewItem(histoDBHistogramsView,
-                                                      folder,
-                                                      tr("Folder"));
-        localDatabasePages.clear();
-        histogramDB->getPageNamesByFolder(folder, localDatabasePages);
-        BOOST_FOREACH(string page, localDatabasePages) {
-          QListViewItem *pageItem = new QListViewItem(folderItem,
-                                                      page,
-                                                      tr("Page"));
-          localDatabaseHistograms.clear();
-          histogramDB->getHistogramsByPage(page, localDatabaseHistograms);
-          BOOST_FOREACH(OnlineHistogram *histogram, localDatabaseHistograms)
-          {
-            QListViewItem *item1 = new QListViewItem(pageItem,
-                                         histogram->identifier(),
-                                         tr("Histogram"));
-            if("H2D" == histogram->hstype()) {
-              item1->setPixmap(0, uicLoadPixmap("h2_t.png"));
-            } else if ("H1D" == histogram->hstype()) {
-              item1->setPixmap(0, uicLoadPixmap("h1_t.png"));
-            }   
-          }
-        }
-      }
-    }
-  } catch (SQLException sqlException) {
-    // TODO: add error logging backend
-//  if (m_verbose > 1) e.getErrorCode()
-    std::cout << sqlException.getMessage() << std::endl;
-//    qDebug(sqlException.getMessage().);
-    switch(QMessageBox::warning(this, tr("LHCb Presenter Page Editor"),
-                            tr("Could get histograms from database:\n\n%1\n"
-                               "\n\n").arg(sqlException.getMessage()),
-                            QMessageBox::Ok, QMessageBox::NoButton)) {
-      case QMessageBox::Ok: // The user clicked the Ok/pressed Enter
-        // try again
-        break;
-      default:
-        break;
-    }
-  }
+  readFoldersFromHistoDatabase(*histoDBHistogramsView,
+                               Presenter::WithHistogram);
 }
-
+//.
 void PageEditorMainWindow::refreshDIMSVCListView()
 {
   // See what we can do about DIM services...
@@ -252,7 +207,7 @@ void PageEditorMainWindow::refreshDIMSVCListView()
     statusBar()->message(statusMessage);
       
     char  *dimFormat;
-    char  *dimServer;    
+    char  *dimServer;
     char  *dimServerNode;
     char  *dimService;  
     int   dimType;
@@ -261,7 +216,9 @@ void PageEditorMainWindow::refreshDIMSVCListView()
     std::string utgidElement;
     std::string taskName;
     std::string algorithmName;
-    std::string entityName; 
+    std::string entityName;
+    
+    QListViewItem *dimSvcListViewItem; 
 
     while (dimBrowser.getNextServer(dimServer, dimServerNode)) {
     
@@ -269,17 +226,17 @@ void PageEditorMainWindow::refreshDIMSVCListView()
       dimServerName     =  boost::lexical_cast<std::string>(dimServer);
       dimServerNodeName =  boost::lexical_cast<std::string>(dimServerNode);
       
-      if (dimServerName.find("DIS_DNS",0) != std::string::npos) {
+      if (dimServerName.find("DIS_DNS") != std::string::npos) {
+        dimSvcListViewItem = new QListViewItem(dimServicesView,
+                                               "DIM Services");
   //    if (m_verbose > 1)
         std::cout << "\tfound DIS_DNS server at node \"" <<
                      dimServerNodeName << "\" skipping..." << std::endl;
       } else {
         std::cout << "\tfound interesting DIM server \"" <<
                    dimServerName << "\" providing the following services:" <<
-                   std::endl;    
-        QListViewItem *item = new QListViewItem(dimServicesView,
-                                                "DIM Services");  
-        QListViewItem *thisDimServer = new QListViewItem(item,
+                   std::endl;       
+        QListViewItem *thisDimServer = new QListViewItem(dimSvcListViewItem,
                                                        dimServerName.c_str(),
                                                        "");
         
@@ -290,44 +247,53 @@ void PageEditorMainWindow::refreshDIMSVCListView()
           dimServiceName = boost::lexical_cast<std::string>(dimService);
           dimServiceFormat  = boost::lexical_cast<std::string>(dimFormat);
           
-          // only want DIM services
-          if (dimType != DimSERVICE) continue;
+          // only want useful DIM services
+          if (dimType != DimSERVICE ||
+              dimServiceName.find("gauchocomment") != std::string::npos)
+              continue;
   
           // thisDimServer ListView cols: Task, Algo, Name, Type, UTGID, DIM
           // replace this with an enum...
           // we tokenize the DIM SVC name and fill in the list...
           // H1D/node_Adder_1/Adder/Algorithmname/Mass
+          // wach the "_" in UTGID and the "new" /Adder/ element...
           Tokens tokenedDIMSVC(dimServiceName, slashSeparator);
           Tokens::iterator dimSVCNameElements = tokenedDIMSVC.begin();
           svcType = *dimSVCNameElements;
           // The first DIM SVC element is type, so checking against token:
           // TODO: Ask Giacomo to support HPD in HistoDB
-          if ("H1D" == svcType ||
-              "H2D" == svcType) { //||
-  //          "HPD" == svcType) {
+          if (Presenter::H1D == svcType ||
+              Presenter::H2D == svcType) { //||
+  //          Presenter::HPD == svcType) {
   //        if (m_verbose > 1)          
             std::cout << "\t->\tSVC: " << dimServiceName <<
                          " format "    << dimServiceFormat  << std::endl;
   
             // Parse Taskname:
-            utgidElement  = *++dimSVCNameElements;
-            Tokens tokenedUTGID(utgidElement, underscoreSeparator);
-            Tokens::iterator utgidElements = tokenedUTGID.begin();          
-            taskName      = *++utgidElements;          
+            utgidElement  = *++dimSVCNameElements;   
+                     
+            if(string::npos == utgidElement.find("_")) {                          
+              taskName = utgidElement;
+            } else {
+              Tokens tokenedUTGID(utgidElement, underscoreSeparator);
+              Tokens::iterator utgidElements = tokenedUTGID.begin();          
+              taskName = *++utgidElements;
+            }
+                     
             algorithmName = *++dimSVCNameElements;
             entityName    = *++dimSVCNameElements;
 
             // TODO: do a "GROUP BY" at some point, add ++ bounds checking...
             QListViewItem *item1 = new QListViewItem(thisDimServer,
+                                                     dimServiceName.c_str(),
                                                      entityName,
+                                                     svcType,
                                                      algorithmName,
                                                      taskName,
-                                                     svcType,
-                                                     utgidElement,
-                                                     dimServiceName.c_str());
-            if("H2D" == svcType) {
+                                                     utgidElement);
+            if(Presenter::H2D == svcType) {
               item1->setPixmap(0, uicLoadPixmap("h2_t.png"));
-            } else if ("H1D" == svcType) {
+            } else if (Presenter::H1D == svcType) {
               item1->setPixmap(0, uicLoadPixmap("h1_t.png"));
             }          
           } else  {
@@ -356,39 +322,8 @@ void PageEditorMainWindow::refreshDIMSVCListView()
 
 void PageEditorMainWindow::refreshPagesListView()
 {
-  std::vector<std::string> localDatabaseFolders;
-  std::vector<std::string> localDatabasePages;
-  histoDBPagesView->clear();
-  try {
-    if (m_connectedToHistogramDatabase) {
-      localDatabaseFolders.clear();
-      histogramDB->getPageFolderNames(localDatabaseFolders);
-      BOOST_FOREACH(string folder, localDatabaseFolders) {
-        QListViewItem *folderItem = new QListViewItem(histoDBPagesView,
-                                                      folder,
-                                                      "Folder");
-        localDatabasePages.clear();
-        histogramDB->getPageNamesByFolder(folder, localDatabasePages);
-        BOOST_FOREACH(string page, localDatabasePages) {
-        new QListViewItem(folderItem, page, "Page");
-        }
-      }
-    }
-  } catch (SQLException sqlException) {
-// TODO: add error logging backend
-// if (m_verbose > 1)      
-    cout << sqlException.getMessage() << endl;
-    switch (QMessageBox::warning(this, "LHCb Presenter Page Editor",
-                            tr("Could get histograms from database:\n\n%1\n"
-                               "\n\n").arg(sqlException.getMessage()),
-                            QMessageBox::Ok, QMessageBox::NoButton)) {
-      case QMessageBox::Ok: // The user clicked the Ok/pressed Enter
-        // try again
-        break;
-      default:
-        break;        
-    }
-  }
+    readFoldersFromHistoDatabase(*histoDBPagesView,
+                                 Presenter::WithoutHistogram);
 }
 
 void PageEditorMainWindow::refreshFolderNameComboBox()
@@ -605,23 +540,26 @@ void PageEditorMainWindow::addSelectedHistogramsFromDatabaseToPage()
 //  }
      
   
-  QListViewItemIterator it(histoDBHistogramsView);  
+  QListViewItemIterator it(histoDBHistogramsView,
+                           QListViewItemIterator::Selected);
   while (it.current()) {
     QListViewItem *item = it.current();
-    if (item->isSelected() && "Histogram" == item->text(1)) {
+    if ("Histogram" == item->text(Presenter::Type)) {
 
-      OnlineHistogram *h1 = histogramDB->getHistogram(item->text(0));
-      
+      OnlineHistogram *h1 = histogramDB->getHistogram(item->text(Presenter::Name));
+
+
+// TODO!!!      
       std::string serviceNameFQ = h1->hstype() + "/node_" + 
                                   h1->task() + "_1/Adder/" + h1->algorithm() +
                                   "/" + h1->hsname();
 
       std::cout << serviceNameFQ << std::endl;                         
       
-      new QListViewItem(pageHistogramsView, item->text(0), h1->hstype());
+      new QListViewItem(pageHistogramsView, item->text(Presenter::Name), h1->hstype());
 
       std::string serviceType = h1->hstype();   
-//    if (m_verbose > 1)
+    if (m_verbose > 1)
         std::cout << "Reconstructing DIM SVC name: " << serviceNameFQ <<
                      std::endl;
                      
@@ -629,7 +567,7 @@ void PageEditorMainWindow::addSelectedHistogramsFromDatabaseToPage()
       std::string histoID = "histo_" +
                             boost::lexical_cast<std::string>(iHisto);                     
                                    
-      if ("H1D" == serviceType.substr(0,3)) {
+      if (Presenter::H1D == serviceType.substr(0,3)) {
         HistogramH1D histogramH1D;
         // TODO: sharedptr: place delete...
         histogramH1D.dimProxy = new DimProxy(serviceNameFQ,
@@ -642,7 +580,7 @@ void PageEditorMainWindow::addSelectedHistogramsFromDatabaseToPage()
             nBinsX             = tmp_h1D->GetNbinsX();
             xMin               = tmp_h1D->GetXaxis()->GetXmin();
             xMax               = tmp_h1D->GetXaxis()->GetXmax();
-            std::string hTitle = item->text(0);
+            std::string hTitle = item->text(Presenter::Name);
 //            tmp_h1D->GetTitle();
 //            if (m_verbose > 3) {
               std::cout << " nBinsX " << nBinsX <<
@@ -694,7 +632,7 @@ void PageEditorMainWindow::addSelectedHistogramsFromDatabaseToPage()
             nBinsX             = tmp_h1D->GetNbinsX();
             xMin               = tmp_h1D->GetXaxis()->GetXmin();
             xMax               = tmp_h1D->GetXaxis()->GetXmax();
-            std::string hTitle = item->text(0);
+            std::string hTitle = item->text(Presenter::Name);
 //             tmp_h1D->GetTitle();
 //          if (m_verbose > 3)
               std::cout << " nBinsX " << nBinsX << 
@@ -715,7 +653,7 @@ void PageEditorMainWindow::addSelectedHistogramsFromDatabaseToPage()
           }
         }
         
-      } else if ("H2D" == serviceType.substr(0,3)) {              
+      } else if (Presenter::H2D == serviceType.substr(0,3)) {              
         HistogramH2D histogramH2D;
         // TODO: sharedptr - place delete 
         histogramH2D.dimProxy = new DimProxy(serviceNameFQ,
@@ -731,7 +669,7 @@ void PageEditorMainWindow::addSelectedHistogramsFromDatabaseToPage()
             xMax               = tmp_h2D->GetXaxis()->GetXmax();
             yMin               = tmp_h2D->GetYaxis()->GetXmin();
             yMax               = tmp_h2D->GetYaxis()->GetXmax();
-            std::string hTitle = item->text(0);
+            std::string hTitle = item->text(Presenter::Name);
 //             tmp_h2D->GetTitle();            
 //          if (m_verbose > 3)
             std::cout << " nBinsX " << nBinsX <<
@@ -849,43 +787,43 @@ void PageEditorMainWindow::addSelectedHistogramsFromDatabaseToPage()
 void PageEditorMainWindow::addHistogramsToDatabase()
 {
   QString dimURL;
-  QListViewItemIterator it(dimServicesView);
+  QListViewItemIterator it(dimServicesView, QListViewItemIterator::Selected);
   while (it.current()) {
     QListViewItem *item = it.current();
     // if item is selected and is a leaf, then add to DB
     // TODO: traversal in case of non-leaf nodes...
-    if (item->isSelected() && 0 == item->childCount() ) {
+    if (0 == item->childCount() ) {
       // Ask Giacomo for HPD DIM SVC name patching on DB side
       try {
         if (m_connectedToHistogramDatabase) {
 //        if (m_verbose > 1) {
-//          std::cout <<  "Histogram: " << item->text(5) <<
-//                        " Task: " << item->text(0) << std::endl;
+//          std::cout <<  "Histogram: " << item->text(Presenter::DIM) <<
+//                        " Task: " << item->text(Presenter::Name) << std::endl;
 //        }
           // Declare task...      
-//          histogramDB->declareTask(item->text(0),"","","",true,true,false);
+//          histogramDB->declareTask(item->text(Presenter::Name),"","","",true,true,false);
           // Declare Histogram
           // TODO: comment magic column numbers...
-          histogramDB->declareHistByServiceName(item->text(5));
+          histogramDB->declareHistByServiceName(item->text(Presenter::DIM));
           histogramDB->commit();
-          std::string histoName = item->text(2) + "/" + item->text(1) +
-                                  "/" + item->text(0);
+          std::string histoName = item->text(Presenter::Task) + "/" + item->text(Presenter::Type) +
+                                  "/" + item->text(Presenter::Name);
 
-          OnlineHistogram* h3=histogramDB->getHistogram(histoName);
-          OnlineHistPage* pg=histogramDB->getPage("yPage", "unsorted");
-          pg->setFolder("unsorted");
-          pg->declareHistogram(h3, 0.0, 0.0, 0.5, 1.0);
+//          OnlineHistogram* h3=histogramDB->getHistogram(histoName);
+//          OnlineHistPage* pg=histogramDB->getPage("yPage", "unsorted");
+//          pg->setFolder("unsorted");
+//          pg->declareHistogram(h3, 0.0, 0.0, 0.5, 1.0);
 //           histogramDB->commit();  
           // TODO: col-enum
           // This should also work ...find out why it doesn't.
-//          histogramDB->declareHistogram(item->text(2), // taskName
-//                                   item->text(1), // algorithmName
-//                                   item->text(0), // entityName
+//          histogramDB->declareHistogram(item->text(Presenter::Task), // taskName
+//                                   item->text(Presenter::Type), // algorithmName
+//                                   item->text(Presenter::Name), // entityName
 //                                   0);            // Dimension
 //
-//          std::cout <<  "Task: "  << item->text(2) <<
-//                        " Algo: " << item->text(1) <<
-//                        " Name: " << item->text(0) << std::endl;
+//          std::cout <<  "Task: "  << item->text(Presenter::Task) <<
+//                        " Algo: " << item->text(Presenter::Type) <<
+//                        " Name: " << item->text(Presenter::Name) << std::endl;
                                
           statusBar()->message(tr("Successfully added selected histogram(s)"
                                 "to queue for declaration."));
@@ -1172,9 +1110,9 @@ void PageEditorMainWindow::refreshPage()
             Add(displayedH2DHistogram.rootOffsetH2D, -1.);
        }  
         displayedH2DHistogram.rootH2D->Draw("lego");
-        ++padCounter;
         m_mainPageRootCanvas->GetCanvas()->GetPad(padCounter)->
             SetEditable(false);
+        ++padCounter;
       }
     
       BOOST_FOREACH(HistogramH1D displayedH1DHistogram,
@@ -1204,7 +1142,7 @@ void PageEditorMainWindow::refreshPage()
   //      m_mainPageRootCanvas->GetCanvas()->GetPad(padCounter)->
   //          SetFillColor(10);;          
   //      displayedHPDHistogram.rootH1D->SetStats(kFALSE);
-    //    (*hProfIter).rootH1D -> Draw(m_1DDrawOption.c_str());
+  //      (*hProfIter).rootH1D -> Draw(m_1DDrawOption.c_str());
        if (offsetData) {
          displayedHPDHistogram.rootH1D->
              Add(displayedHPDHistogram.rootOffsetH1D, -1.);
@@ -1240,7 +1178,7 @@ void PageEditorMainWindow::clearIntegrateToggle()
     int    nBinsX   = 0;
     int    nBinsY   = 0;
     double value    = 0;
- 
+
    BOOST_FOREACH(HistogramH1D displayedH1DHistogram,
                  displayedH1DHistograms) {
 //      if (displayedH1DHistogram.dimProxy->serviceOK()) {      
@@ -1274,7 +1212,6 @@ void PageEditorMainWindow::clearIntegrateToggle()
           displayedHPDHistogram.rootOffsetH1D = dynamic_cast<TH1F*>(
             displayedHPDHistogram.rootH1D->Clone());
     }
-
 
 //  if (m_verbose > 2)
 //    std::cout << "loop over 2D histograms and update if necessary" << std::endl;
@@ -1357,7 +1294,6 @@ void PageEditorMainWindow::connectToDatabase(const QString &dbPassword, const QS
   }
 }
 
-// TODO: merge the following 2 into 1 function...
 void PageEditorMainWindow::hideHistogramDatabaseTools()
 {
   histoDBHistogramsView->hide();
@@ -1414,39 +1350,26 @@ void PageEditorMainWindow::addSelectedHistogramsFromDIMToPage()
   m_mainPageRootCanvas->GetCanvas()->Divide(1,1);
   m_mainPageRootCanvas->Clear();
   
-  
-//  QPtrList<QListViewItem> lst;
-//  QListViewItemIterator itS(histoDBHistogramsView);
-//  while (itS.current()) {
-//    if (itS.current()->isSelected()) {
-//      lst.append(itS.current());
-//  ++itS;
-//  }
-     
-  
-  QListViewItemIterator it(dimServicesView);  
+  QListViewItemIterator it(dimServicesView, QListViewItemIterator::Selected);  
   while (it.current()) {
     QListViewItem *item = it.current();
-    if (item->isSelected() && !(item->text(5).contains("gauchocomment", FALSE)) ) {
 
-//      OnlineHistogram *h1 = histogramDB->getHistogram(item->text(5));
-      
-      std::string serviceNameFQ = item->text(5);
-
+      std::string serviceNameFQ = item->text(Presenter::DIM);
       std::cout << serviceNameFQ << std::endl;                         
       
-      new QListViewItem(pageHistogramsView, item->text(0), item->text(3));
+      new QListViewItem(pageHistogramsView, item->text(Presenter::Name), item->text(Presenter::Type));
 
-      std::string serviceType = item->text(3);   
+      std::string serviceType = item->text(Presenter::Type);   
 //    if (m_verbose > 1)
         std::cout << "Reconstructing DIM SVC name: " << serviceNameFQ <<
                      std::endl;
-                     
+                 
       iHisto++;
+      // gauchocomment stuff for histoID      
       std::string histoID = "histo_" +
                             boost::lexical_cast<std::string>(iHisto);                     
                                    
-      if ("H1D" == serviceType.substr(0,3)) {
+      if (Presenter::H1D == serviceType.substr(0,3)) {
         HistogramH1D histogramH1D;
         // TODO: sharedptr: place delete...
         histogramH1D.dimProxy = new DimProxy(serviceNameFQ,
@@ -1459,7 +1382,7 @@ void PageEditorMainWindow::addSelectedHistogramsFromDIMToPage()
             nBinsX             = tmp_h1D->GetNbinsX();
             xMin               = tmp_h1D->GetXaxis()->GetXmin();
             xMax               = tmp_h1D->GetXaxis()->GetXmax();
-            std::string hTitle = item->text(0);
+            std::string hTitle = item->text(Presenter::Name);
 //            tmp_h1D->GetTitle();
 //            if (m_verbose > 3) {
               std::cout << " nBinsX " << nBinsX <<
@@ -1511,7 +1434,7 @@ void PageEditorMainWindow::addSelectedHistogramsFromDIMToPage()
             nBinsX             = tmp_h1D->GetNbinsX();
             xMin               = tmp_h1D->GetXaxis()->GetXmin();
             xMax               = tmp_h1D->GetXaxis()->GetXmax();
-            std::string hTitle = item->text(0);
+            std::string hTitle = item->text(Presenter::Name);
 //             tmp_h1D->GetTitle();
 //          if (m_verbose > 3)
               std::cout << " nBinsX " << nBinsX << 
@@ -1532,7 +1455,7 @@ void PageEditorMainWindow::addSelectedHistogramsFromDIMToPage()
           }
         }
         
-      } else if ("H2D" == serviceType.substr(0,3)) {              
+      } else if (Presenter::H2D == serviceType.substr(0,3)) {              
         HistogramH2D histogramH2D;
         // TODO: sharedptr - place delete 
         histogramH2D.dimProxy = new DimProxy(serviceNameFQ,
@@ -1548,7 +1471,7 @@ void PageEditorMainWindow::addSelectedHistogramsFromDIMToPage()
             xMax               = tmp_h2D->GetXaxis()->GetXmax();
             yMin               = tmp_h2D->GetYaxis()->GetXmin();
             yMax               = tmp_h2D->GetYaxis()->GetXmax();
-            std::string hTitle = item->text(0);
+            std::string hTitle = item->text(Presenter::Name);
 //             tmp_h2D->GetTitle();            
 //          if (m_verbose > 3)
             std::cout << " nBinsX " << nBinsX <<
@@ -1591,8 +1514,7 @@ void PageEditorMainWindow::addSelectedHistogramsFromDIMToPage()
                            histogramH2D.rootH2D->GetEntries() << std::endl;            
           }
         }
-      }        
-    }
+      }
     ++it;
   }
              
@@ -1646,7 +1568,7 @@ void PageEditorMainWindow::addSelectedHistogramsFromDIMToPage()
 //    displayedH1DHistogram.rootH1D->SetStats(kFALSE);
 //    (*h1DIter).rootH1D -> Draw(m_1DDrawOption.c_str());      
     displayedH1DHistogram.rootH1D->Draw();
-    ++padCounter;      
+    ++padCounter;
   }
 
   BOOST_FOREACH(HistogramH1D displayedHPDHistogram, displayedHPDHistograms) {
@@ -1661,4 +1583,118 @@ void PageEditorMainWindow::addSelectedHistogramsFromDIMToPage()
   m_mainPageRootCanvas->Update();
   m_mainPageRootCanvas->GetCanvas()->SetEditable(false);
   statusBar()->message(tr("Canvas ready."));
+}
+
+void PageEditorMainWindow::readFoldersFromHistoDatabase(QListView &listView,bool histograms = Presenter::WithoutHistogram)
+{
+  
+  std::vector<std::string>      localDatabaseFolders;
+  std::vector<std::string>      localDatabasePages;
+  std::vector<OnlineHistogram*> localDatabaseHistograms;
+  bool folderExists = false;
+  
+  listView.clear();
+  
+  try {
+    if (m_connectedToHistogramDatabase) {// working
+      // Make tree hierarchy from /folder1/folder2/... flat string      
+      
+      // Get ROOT folder for listView: quirkiness due to parent type:
+      // QListViewItem is incompatible with QListView (listView)
+      // at root node insertion...
+      // TODO: should be done properly with DOM
+      
+      localDatabaseFolders.clear(); 
+      histogramDB->getPageFolderNames(localDatabaseFolders, "ROOT");
+      QListViewItem *parentFolder;
+      QListViewItem *folderChild;
+      BOOST_FOREACH(string folder, localDatabaseFolders) {
+        QStringList folderItems = QStringList::split( "/", folder);         
+        for (QStringList::Iterator it = folderItems.begin();
+             it != folderItems.end(); ++it ) {
+          folderExists = false;
+          folderChild = listView.firstChild();
+          while(folderChild) {
+            if (folderChild->text(0) == *it) {
+              folderExists = true;
+              break;
+            }
+            folderChild = folderChild->nextSibling();
+          }
+          if (!folderExists) {
+              parentFolder = new QListViewItem(&listView, *it,
+                                               tr("Folder"));
+          }          
+        }                                                     
+      } // get rest as QListViewItems...
+      localDatabaseFolders.clear(); 
+      histogramDB->getPageFolderNames(localDatabaseFolders, "_ALL_");
+      BOOST_FOREACH(string folder, localDatabaseFolders) {
+        QStringList folderItems = QStringList::split( "/", folder);
+        folderChild = listView.firstChild();         
+        for (QStringList::Iterator it = folderItems.begin();
+             it != folderItems.end(); ++it ) {
+          folderExists = false;
+          while(folderChild) {
+            if (folderChild->text(0) == *it) {
+              folderExists = true;
+              parentFolder = folderChild;
+              break;
+            }
+            folderChild = folderChild->nextSibling();
+          }
+          if (!folderExists) {
+              parentFolder = new QListViewItem(parentFolder, *it,
+                                               tr("Folder"));                                               
+          }          
+           // if last folder element, get contents
+          if (--folderItems.end() == it) {
+            localDatabasePages.clear();
+            histogramDB->getPageNamesByFolder(folder, localDatabasePages);
+            BOOST_FOREACH(string page, localDatabasePages) {
+            QListViewItem *pageItem = new QListViewItem(parentFolder,
+                                                        page,
+                                                        tr("Page"));
+            if(histograms) {                                                        
+              localDatabaseHistograms.clear();
+              histogramDB->getHistogramsByPage(page, localDatabaseHistograms);
+              BOOST_FOREACH(OnlineHistogram *histogram, localDatabaseHistograms)
+              {
+                QListViewItem *item1 = new QListViewItem(pageItem,
+                                             histogram->identifier(),
+                                             tr("Histogram"));
+                if(Presenter::H2D == histogram->hstype()) {
+                  item1->setPixmap(0, uicLoadPixmap("h2_t.png"));
+                  } else if (Presenter::H1D == histogram->hstype()) {
+                    item1->setPixmap(0, uicLoadPixmap("h1_t.png"));
+                  }   
+                }
+              }
+            }
+          }
+          folderChild = parentFolder->firstChild();
+        }                                                     
+      }      
+    }
+  } catch (SQLException sqlException) {
+    // TODO: add error logging backend
+//  if (m_verbose > 1) e.getErrorCode()
+    std::cout << sqlException.getMessage() << std::endl;
+//    qDebug(sqlException.getMessage().);
+    switch(QMessageBox::warning(this, tr("LHCb Presenter Page Editor"),
+                            tr("Could get histograms from database:\n\n%1\n"
+                               "\n\n").arg(sqlException.getMessage()),
+                            QMessageBox::Ok, QMessageBox::NoButton)) {
+      case QMessageBox::Ok: // The user clicked the Ok/pressed Enter
+        // try again
+        break;
+      default:
+        break;
+    }
+  }
+}
+
+void PageEditorMainWindow::fillPageWithHistograms(QListView &listView)
+{
+
 }

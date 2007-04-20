@@ -231,6 +231,17 @@
                                     <bool>true</bool>
                                 </property>
                             </column>
+                            <column>
+                                <property name="text">
+                                    <string>DIM</string>
+                                </property>
+                                <property name="clickable">
+                                    <bool>true</bool>
+                                </property>
+                                <property name="resizable">
+                                    <bool>true</bool>
+                                </property>
+                            </column>
                             <property name="name">
                                 <cstring>histoDBHistogramsView</cstring>
                             </property>
@@ -614,7 +625,29 @@
                 <widget class="QListView">
                     <column>
                         <property name="text">
+                            <string>DIM</string>
+                        </property>
+                        <property name="clickable">
+                            <bool>true</bool>
+                        </property>
+                        <property name="resizable">
+                            <bool>true</bool>
+                        </property>
+                    </column>
+                    <column>
+                        <property name="text">
                             <string>Name</string>
+                        </property>
+                        <property name="clickable">
+                            <bool>true</bool>
+                        </property>
+                        <property name="resizable">
+                            <bool>true</bool>
+                        </property>
+                    </column>
+                    <column>
+                        <property name="text">
+                            <string>Type</string>
                         </property>
                         <property name="clickable">
                             <bool>true</bool>
@@ -647,29 +680,7 @@
                     </column>
                     <column>
                         <property name="text">
-                            <string>Type</string>
-                        </property>
-                        <property name="clickable">
-                            <bool>true</bool>
-                        </property>
-                        <property name="resizable">
-                            <bool>true</bool>
-                        </property>
-                    </column>
-                    <column>
-                        <property name="text">
                             <string>UTGID</string>
-                        </property>
-                        <property name="clickable">
-                            <bool>true</bool>
-                        </property>
-                        <property name="resizable">
-                            <bool>true</bool>
-                        </property>
-                    </column>
-                    <column>
-                        <property name="text">
-                            <string>DIM</string>
                         </property>
                         <property name="clickable">
                             <bool>true</bool>
@@ -723,6 +734,17 @@
                     <column>
                         <property name="text">
                             <string>Type</string>
+                        </property>
+                        <property name="clickable">
+                            <bool>true</bool>
+                        </property>
+                        <property name="resizable">
+                            <bool>true</bool>
+                        </property>
+                    </column>
+                    <column>
+                        <property name="text">
+                            <string>DIM</string>
                         </property>
                         <property name="clickable">
                             <bool>true</bool>
@@ -1308,6 +1330,8 @@
     <slot>connectToDatabase( const QString &amp; dbPassword, const QString &amp; dbUsername, const QString &amp; dbName )</slot>
     <slot>clearCanvas()</slot>
     <slot>addSelectedHistogramsFromDIMToPage()</slot>
+    <slot>readFoldersFromHistoDatabase(QListView &amp;listView, bool histograms)</slot>
+    <slot>fillPageWithHistograms(QListView &amp;listView)</slot>
 </slots>
 <functions>
     <function returnType="QPixmap">uicLoadPixmap( const QString &amp; name )</function>

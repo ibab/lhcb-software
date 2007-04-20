@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Presenter/src/main.cpp,v 1.1 2007-03-29 08:56:11 psomogyi Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Presenter/src/main.cpp,v 1.2 2007-04-20 08:08:08 psomogyi Exp $
 
 #include <TQApplication.h>  // QtGSI
 #include <TQRootApplication.h>
@@ -16,11 +16,12 @@
 //#include <boost/tokenizer.hpp>
 //#include <boost/lexical_cast.hpp>
 // This is the BOOST foreach macro: vc71+ and gcc34+ are compliant enough.
-// Qt4 ships with one too. Qt3 uic doesn't like it nested in ui.-s 
+// Qt4 ships with one too.
 #include "foreach.hpp"
 
 #include "OnlineHistDB/OnlineHistDB.h"  // LHCb
 #include "PageEditorMainWindow.h"
+#include "Presenter.h"
 
 //using std::string;
 //using std::exception;
