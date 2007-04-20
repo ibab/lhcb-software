@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.66 2007-03-19 09:01:23 cattanem Exp $
+# $Id: requirements,v 1.67 2007-04-20 14:41:23 marcocle Exp $
 # =============================================================================
 package       DetCond
 version       v11r1
@@ -50,7 +50,14 @@ set GLIBCPP_FORCE_NEW "" \
 	slc3 "1"
 
 private
+
 macro_append DetCond_use_linkopts $(Boost_linkopts_thread)
 
-#macro_append componentshr_linkopts ' -Wl,--as-needed -Wl,--no-undefined'
-#macro_append libraryshr_linkopts ' -Wl,--as-needed -Wl,--no-undefined'
+
+#macro_append DetCond_use_linkopts $(Boost_linkopts_filesystem)
+# This is needed because the library used with $(Boost_linkopts_filesystem)
+# is the non multithread one.
+macro_append DetCond_use_linkopts ' -lboost_filesystem-gcc-mt ' \
+                           Darwin ' -lboost_filesystem-$(Boost_file_version) ' \
+                           WIN32  ' boost_filesystem-vc71-mt-$(Boost_file_version).lib '
+
