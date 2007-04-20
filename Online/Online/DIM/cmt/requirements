@@ -24,8 +24,8 @@ macro_append dim_shlibflags " -lpthread -lrt " WIN32 " "
 
 apply_pattern dim_exe name=DNS files=dns.c 
 apply_pattern dim_exe name=did files=did/make_did.c
-macro_append  didlinkopts " -L/usr/X11R6/lib   -lXt -lXm -lX11 " \
- slc4-amd64               " -L/usr/X11R6/lib64 -lXt -lXm -lX11 " \
+macro_append  didlinkopts " -L/usr/X11R6/lib  -lMrm "\
+ slc4-amd64               " -L/usr/X11R6/lib64 -lMrm " \
  WIN32                    " "
 apply_pattern dim_exe name=test_server       files=examples/test_server.c
 apply_pattern dim_exe name=test_client       files=examples/test_client.c
