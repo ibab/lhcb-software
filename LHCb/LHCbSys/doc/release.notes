@@ -5,13 +5,13 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v22r4>2007-04-18 LHCbSys v22r4</A></H1><PRE>
+</PRE><H1><A NAME=v22r4>2007-04-19 LHCbSys v22r4</A></H1><PRE>
 This version uses Gaudi v19r3 and LCG_50b. Fully compatible with DC06 data
 
 - Packages modified: KernelSys v6r4, LHCbKernel v7r3, EventSys v23r4, 
-    MCEvent v2r2, TrackEvent v4r2, DetSys v9r4, STDet v3r3, VeloDet v11r2,
-    CaloInterfaces v7r2, CaloUtils v7r2, DAQSys v3r2, OTDAQ v5r2, CaloDAQ v3r2,
-    DAQEvent v7r3, TrackInterfaces v3r3
+    EventBase v2r2, MCEvent v2r2, TrackEvent v4r2, RecEvent v2r3, DAQEvent v7r3, 
+    DetSys v9r4, STDet v3r3, VeloDet v11r2,DAQSys v3r2, OTDAQ v5r2, CaloDAQ v3r2,
+    CaloInterfaces v7r2, CaloUtils v7r2, TrackInterfaces v3r3
 
 - In LHCbKernel v7r3
   . Extend the DifTraj interface with an operator+= which allows one to
@@ -29,6 +29,9 @@ This version uses Gaudi v19r3 and LCG_50b. Fully compatible with DC06 data
 - In DAQEvent v7r3
   . Add "ForceRawEvent" property to OdinTimeDecoder tool, to force it to decode
     ODIN bank even if DAQ/ODIN object already exists in TES.
+
+- In EventBase v2r2, DAQEvent v7r3, MCEvent v2r2, RecEvent v2r3
+  . Add copy constructors to ProcessHeader, RecHeader, ODIN, MCHeader, ProcStatus
 
 - In DetSys v9r4, STDet v3r3, VeloDet v11r2
   . Move generation of dictionaries to package where classes are defined
@@ -68,7 +71,7 @@ This version uses Gaudi v19r3 and LCG_50b. Fully compatible with DC06 data
 - In VeloDet v11r2, OTDAQ v5r2
   . Fix untested StatusCodes
 
-- In STDet v3r3, CaloUtils v7r2, LHCbKernel v7r3
+- In STDet v3r3, CaloUtils v7r2, LHCbKernel v7r3, RecEvent v2r3
   . Fix a doxygen warning
 
 </PRE><H1><A NAME=v22r3>2007-03-23 LHCbSys v22r3</A></H1><PRE>
