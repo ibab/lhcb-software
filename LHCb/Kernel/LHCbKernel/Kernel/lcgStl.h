@@ -1,4 +1,4 @@
-// $Id: lcgStl.h,v 1.27 2007-03-01 16:49:38 cattanem Exp $
+// $Id: lcgStl.h,v 1.28 2007-04-20 14:23:56 cattanem Exp $
 #ifndef KERNEL_LCGSTL_H 
 #define KERNEL_LCGSTL_H 1
 
@@ -56,6 +56,7 @@ namespace {
     std::auto_ptr<LHCb::Trajectory>                  m_auto_ptr_Trajectory;
     LHCb::SiPositionInfo<LHCb::STChannelID>          m_SiPositionInfo_STChannelID;
     LHCb::SiPositionInfo<LHCb::VeloChannelID>        m_SiPositionInfo_VeloChannelID;
+    std::pair<Gaudi::XYZPoint,Gaudi::XYZPoint>       m_std_pair_XYZPoint_XYZPoint;
     // end instantiations
   };
 }

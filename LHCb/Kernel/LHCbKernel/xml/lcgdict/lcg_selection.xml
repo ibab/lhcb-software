@@ -14,9 +14,9 @@
   <class name="LHCb::LineTraj"/>
   <class name="LHCb::ParabolaTraj"/>
   <class name="std::auto_ptr<LHCb::Trajectory>"/>
-  <class pattern ="GaudiUtils::VectorMap<*>"/>
   <class pattern ="LHCb::DifTraj<*"/>
   <class pattern ="LHCb::SiPositionInfo<*>"/>
+  <class pattern ="GaudiUtils::VectorMap<*>"/>
 <!--- Add here all interfaces from Kernel directory --> 
   <class name = "IAlgorithmCorrelations" />
   <class name = "IBdlTool"             />
@@ -35,5 +35,7 @@
   <class name = "ITrajPoca"            />
   <class name = "IUsedLHCbID"          />
   <class name = "IVeloClusterPosition" />
+<!--- These should really be moved to GaudiKernel or Reflex --> 
+  <class name="std::pair<Gaudi::XYZPoint,Gaudi::XYZPoint>" />
 </lcgdict>
 
