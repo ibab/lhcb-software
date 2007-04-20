@@ -7,3 +7,13 @@
 !*************** AlignmentInterfaces v1r0 ***********************
 ! 29/09/2006 Johan Blouw
  - interface to a track selector
+!**************
+!*************** AlignmentInterfaces v2r0 ***********************
+ - added interfaces to the following tools:
+   - Millepede
+   - AlignDetectorSelector
+   - AlignSelTool
+   - AlignSolvTool
+   - ATrackSelectorTool
+   - Derivatives
+   - TAConfigTool
