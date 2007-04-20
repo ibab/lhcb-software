@@ -70,6 +70,7 @@ def DataPoint_set(self,value):
   self.set(value)
   return self
 DataPoint.data = property(DataPoint_get,DataPoint_set)
+
 def debug():
   return PVSS.pvss_debug()
 def setDebug(val):
@@ -140,14 +141,16 @@ class DeviceListener(PyDeviceListener):
     "Standard constructor: needs ControlsManager as argument "
     self.manager = manager
     PyDeviceListener.__init__(self, self, self.manager)
+
   # ===========================================================================
   def handleDevices(self):
     "Callback once per device sensor list on datapoint change."
-    pass
+    return 1
+
   # ===========================================================================
   def handleDevice(self):
     "Callback once per item in the device sensor list on datapoint change."
-    pass
+    return 1
   
 # =============================================================================
 class DevicePrintListener(PyDeviceListener):
@@ -161,6 +164,7 @@ class DevicePrintListener(PyDeviceListener):
   def __init__(self, manager):
     "Standard constructor: needs ControlsManager as argument "
     PyDeviceListener.__init__(self,self, manager)
+
   # ===========================================================================
   def handleDevices(self):
     "Callback once per device sensor list on datapoint change."
@@ -168,8 +172,101 @@ class DevicePrintListener(PyDeviceListener):
     print 'Devices changed:',d.size()
     for i in d:
       print '  ->',i.name(), '=', i.value().data()
+    return 1
+  
   # ===========================================================================
   def handleDevice(self):
     "Callback once per item in the device sensor list on datapoint change."
     print 'Device changed:', self.dp().name(), '=', self.dp().value().data()
+    return 1
   
+# =============================================================================
+class CommandListener(PyDeviceListener):
+  """ 
+      Python PVSS DeviceListener, which prints the content of the 
+      sensor's datapoint list
+      
+      @author M.Frank
+  """
+  # ===========================================================================
+  def __init__(self, manager, sysname, datapoint, npar, cmd='Command', state='State'):
+    "Standard constructor: needs ControlsManager as argument "
+    PyDeviceListener.__init__(self,self, manager)
+    self.manager  = manager
+    self.sysname  = sysname
+    self.numParam = npar
+    self.writer   = self.manager.devWriter()
+    self.control  = DataPoint(self.manager,DataPoint.original(datapoint+'.'+cmd))
+    self.state    = DataPoint(self.manager,DataPoint.original(datapoint+'.'+state))
+    self.sensor   = DeviceSensor(self.manager,self.control)
+
+  # ===========================================================================
+  def run(self):
+    "Run the instance and listen to commands."
+    self.sensor.addListener(self)
+    self.sensor.run(1)
+    
+  # ===========================================================================
+  def makeAnswer(self,status,msg):
+    "Create answer object from status."
+    self.state.data = status + msg
+    self.writer.add(self.state)
+    if self.writer.execute(0,1):
+      return 1
+    return 0
+  
+  # ===========================================================================
+  def handleDevices(self):
+    "Callback once per device sensor list on datapoint change."
+    return 1
+
+  # ===========================================================================
+  def handle(self,items):
+    "Dummy routine to be overloaded by clients."
+    pass
+  
+  # ===========================================================================
+  def handleDevice(self):
+    "Callback once per item in the device sensor list on datapoint change."
+    import traceback
+    from Online.Utils import log, error
+    cmd = ''
+    try:
+      nam = self.dp().name()
+      cmd = self.dp().value().data()
+      log('Command received:'+nam[:nam.find(':')]+' -> '+cmd,timestamp=1)
+      itms = cmd.split('/')
+      if len(itms) == self.numParam:
+        command   = itms[0]
+        sysName   = itms[1]
+        answer = ''
+        for i in xrange(len(itms)):
+          if i > 0: answer = answer + '/' + itms[i]
+        result = None
+        if sysName == self.sysname:
+          try:
+            result = self.handle(itms, answer)
+            if result is None:
+              error('The command:"'+cmd+'" failed. [Internal Error] ',timestamp=1)
+              return self.makeAnswer('ERROR',answer)
+            return result
+          except Exception,X:
+            error('The command:"'+cmd+'" failed:'+str(X),timestamp=1)
+            traceback.print_exc()
+            return self.makeAnswer('ERROR',answer)
+          except:
+            error('The command:"'+cmd+'" failed (Unknown exception)',timestamp=1)
+            traceback.print_exc()
+            return self.makeAnswer('ERROR',answer)
+        error('The command:"'+cmd+'" failed. [Bad System] '+sysName,timestamp=1)
+        return self.makeAnswer('ERROR',answer)
+      error('The command:"'+cmd+'" failed. [Insufficient parameters] ',timestamp=1)
+      return 0
+    except Exception,X:
+      error('The command:"'+cmd+'" failed:'+str(X),timestamp=1)
+      traceback.print_exc()
+      return 0
+    except:
+      error('The command:"'+cmd+'" failed (Unknown exception)',timestamp=1)
+      traceback.print_exc()
+    return 0

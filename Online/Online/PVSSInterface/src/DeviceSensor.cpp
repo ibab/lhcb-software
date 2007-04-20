@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DeviceSensor.cpp,v 1.4 2007-03-12 09:04:13 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DeviceSensor.cpp,v 1.5 2007-04-20 09:34:19 frankb Exp $
 //  ====================================================================
 //  DevType.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: DeviceSensor.cpp,v 1.4 2007-03-12 09:04:13 frankb Exp $
+// $Id: DeviceSensor.cpp,v 1.5 2007-04-20 09:34:19 frankb Exp $
 
 // Framework include files
 #include "PVSS/DeviceSensor.h"
@@ -106,7 +106,13 @@ DeviceSensor::~DeviceSensor()  {
 
 /// Disconnect from data points
 void DeviceSensor::disconnect()  {
-  pvss_list_disconnect(m_context,m_hotlink);
+  bool res = pvss_list_disconnect(m_context,m_hotlink);
+  if ( res )  {
+    // std::cout << "Successfully disconnected from device list." << std::endl;
+  }
+  else  {
+    std::cout << "Failed to disconnected from device list." << std::endl;
+  }
   m_hotlink = 0;
 }
 

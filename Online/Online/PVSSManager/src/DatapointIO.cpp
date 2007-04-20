@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/src/DatapointIO.cpp,v 1.6 2007-03-12 09:04:13 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/src/DatapointIO.cpp,v 1.7 2007-04-20 09:32:44 frankb Exp $
 //  ====================================================================
 //  DatapointIO.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: DatapointIO.cpp,v 1.6 2007-03-12 09:04:13 frankb Exp $
+// $Id: DatapointIO.cpp,v 1.7 2007-04-20 09:32:44 frankb Exp $
 #include "DpIdentifierVar.hxx"
 #include "DpIdValueList.hxx"
 #include "DpIdentifier.hxx"
@@ -25,11 +25,11 @@ using namespace PVSS;
 
 template <class T> static void simple_conversion(const Variable* var, T& val)  {
   switch(var->isA())  {
-  case BIT_VAR:      val = T(((BitVar*)var)->getValue()==PVSS_TRUE ? 0 :1); return;
-  case CHAR_VAR:     val = T(((CharVar*)var)->getValue());                  return;
-  case INTEGER_VAR:  val = T(((IntegerVar*)var)->getValue());               return;
-  case UINTEGER_VAR: val = T(((UIntegerVar*)var)->getValue());              return;
-  case FLOAT_VAR:    val = T(((FloatVar*)var)->getValue());                 return;
+  case BIT_VAR:      val = T(((BitVar*)var)->getValue()==PVSS_TRUE ? 1 : 0); return;
+  case CHAR_VAR:     val = T(((CharVar*)var)->getValue());                   return;
+  case INTEGER_VAR:  val = T(((IntegerVar*)var)->getValue());                return;
+  case UINTEGER_VAR: val = T(((UIntegerVar*)var)->getValue());               return;
+  case FLOAT_VAR:    val = T(((FloatVar*)var)->getValue());                  return;
   default: break;
   }
   throw "Invalid variable type for data conversion";

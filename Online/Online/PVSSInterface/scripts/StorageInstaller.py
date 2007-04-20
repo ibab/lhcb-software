@@ -1,6 +1,7 @@
 import time
-import Online.PVSS as PVSS
+import Online.PVSS    as PVSS
 import Online.Utils   as Utils
+import Online.RunInfo as RunInfo
 std = PVSS.gbl.std
 PVSS.logPrefix = 'PVSS Control '
 log            = Utils.log
@@ -23,9 +24,10 @@ class Installer:
     self.numSubFarm  = 50
     self.numPartition = 16
     self.numStreamPerNode = 10
-    self.recvNodes = ['lbstorcv1', 'lbstorcv2', 'lbstorcv3', 'lbstorcv4', 'lbstorcv5']
-    self.strmNodes = ['lbstostr1', 'lbstostr2', 'lbstostr3', 'lbstostr4']
+    self.recvNodes = ['storerecv01', 'storerecv02', 'storerecv03', 'storerecv04', 'storerecv05']
+    self.strmNodes = ['storestrm01', 'storestrm02', 'storestrm03', 'storestrm04']
     self.name = dev
+    self.partID = 1
     self.manager = mgr
     self.dps = PVSS.DataPointVector()
 
@@ -131,6 +133,8 @@ class Installer:
 
   # ===========================================================================
   def createRunInfo(self, name, stream_creator,nf):
+    import random
+    self.partID = self.partID*10
     dm     = self.manager.deviceMgr()
     typ    = self.manager.typeMgr().type('RunInfo')
     device = dm.createDevice(name+'_RunInfo',typ,1)
@@ -139,6 +143,11 @@ class Installer:
     sv = std.vector('std::string')()
     sf = std.vector('std::string')()
     dw = std.vector('std::string')()
+    self.setRunInfo(name,'general.partId',self.partID)
+    self.setRunInfo(name,'general.runType','PHYSICS')
+    self.setRunInfo(name,'general.runNumber',random.randint(0,100000))
+    self.setRunInfo(name,'general.runNTriggers',0)
+    
     self.setRunInfo(name,'Storage.storeFlag',1)
     for i in xrange(nf):
       sf.push_back('lbhlt%02d'%i)
@@ -153,13 +162,14 @@ class Installer:
     emptymult = std.vector('int')()
     infrastructure = std.vector('std::string')()
     infrastructure.push_back('ErrSrv')
-    infrastructure.push_back('MBM')
+    infrastructure.push_back('StoreStream_MBM')
     self.setRunInfo(name,'Storage.streamTypes',dw)
     self.setRunInfo(name,'Storage.streamWriters',empty)
     self.setRunInfo(name,'Storage.streamMultiplicity',dwmult)
     self.setRunInfo(name,'Storage.streamInfrastructure',infrastructure)
     self.setRunInfo(name,'Storage.streamInfrastructureTasks',empty)
     self.setRunInfo(name,'Storage.recvSenders',empty)
+    infrastructure[infrastructure.size()-1] = 'StoreRecv_MBM'
     self.setRunInfo(name,'Storage.recvInfrastructure',infrastructure)
     self.setRunInfo(name,'Storage.recvInfrastructureTasks',empty)
     return self.write(prefix='Runinfo('+name+'): ')

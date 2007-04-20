@@ -1,5 +1,7 @@
 import Online.PVSS as PVSS
 import Online.Utils as Utils
+from   Online.RunInfo import RunInfo as RunInfo
+
 log        = Utils.log
 error      = Utils.error
 std        = PVSS.gbl.std
@@ -67,16 +69,16 @@ class PartitionInfo:
       log('   Receiving layer slices allocated:%d'%len(p[4].data))
       if run:
         for i in xrange(len(run.receivers.data)):
-          farm,node,task,type = run.receivers.data[i].split('/')
+          farm,node,task,nick,type = run.receivers.data[i].split('/')
           slot = p[4].data[i]
           log('     Farm:%-8s sends to %-14s using slot:%s'%(farm,task,slot))
         log('   Receiving layer senders:')
         for i in run.rcvSenders.data:
-          node,task,type,tnode,target = i.split('/')
+          node,task,nick,type,tnode,target = i.split('/')
           log('     %-36s on %-10s sends %-12s to %-36s on %s'%(task,node,type,target,tnode))
         log('   Infrastructure Tasks:')
         for i in run.rcvInfraTasks.data:
-          node,task,type = i.split('/')
+          node,task,nick,type = i.split('/')
           log('     %-32s on %-12s as %s'%(task,node,type))
       else:
         printSlots(p[4].data,'           ',5)
@@ -86,16 +88,16 @@ class PartitionInfo:
       if run:
         log('   Receiver Tasks:')
         for i in run.strReceivers.data:
-          node,task,type = i.split('/')
+          node,task,nick,type = i.split('/')
           log('     %-36s on %8s of type:%s'%(task,node,type))
         log('   Streaming Tasks:')
         for i in run.streamers.data:
-          node,task,type = i.split('/')
+          node,task,nick,type = i.split('/')
           log('     %-36s on %8s streams:%s'%(task,node,type))
         printSlots(run.streamers.data,'  ',1)
         log('   Infrastructure Tasks:')
         for i in run.strInfraTasks.data:
-          node,task,type = i.split('/')
+          node,task,nick,type = i.split('/')
           log('     %-32s on %-12s as %s'%(task,node,type))
       else:
         printSlots(p[6].data,'           ',5)

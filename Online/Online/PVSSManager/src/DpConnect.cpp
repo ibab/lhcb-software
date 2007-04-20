@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/src/DpConnect.cpp,v 1.4 2007-04-11 17:45:47 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/src/DpConnect.cpp,v 1.5 2007-04-20 09:32:45 frankb Exp $
 //  ====================================================================
 //  DpConnect.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: DpConnect.cpp,v 1.4 2007-04-11 17:45:47 frankb Exp $
+// $Id: DpConnect.cpp,v 1.5 2007-04-20 09:32:45 frankb Exp $
 #include "PVSSManager/SyncWaitForAnswer.h"
 #include "PVSS/HotLinkCallback.h"
 #include "PVSS/Environment.h"
@@ -75,11 +75,11 @@ bool PVSS::pvss_list_disconnect(void* ctxt,void* link)  {
   Lock lock(pvss_global_lock());
   DpIdentList*       l = (DpIdentList*)ctxt;
   SyncWaitForAnswer* h = (DpConnectSync*)link;
-  if ( !l || !h )  {
-    DevAnswer*         a = h->waitContext();
+  if ( l && h )  {
+    DevAnswer* a = h->waitContext();
     h->setAnswerState(DevAnswer::WAITING);
     if ( PVSS_TRUE == Manager::dpDisconnect(*l,h) )  {
-      bool res = PVSS::Environment::instance().waitForAnswer(a);
+      bool res = true; // never returns: PVSS::Environment::instance().waitForAnswer(a);
       if ( h ) delete h;
       if ( a ) delete a;
       return res;

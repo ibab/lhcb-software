@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/PVSS/DataPoint.h,v 1.6 2007-04-11 17:45:46 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/PVSS/DataPoint.h,v 1.7 2007-04-20 09:34:16 frankb Exp $
 //  ====================================================================
 //  DataPoint.h
 //  --------------------------------------------------------------------
@@ -242,16 +242,28 @@ namespace PVSS {
     template <class T> T& reference();
     /// Template access to reference of data - overloaded for concrete types
     template <class T> const T& reference() const;
+    /// Extract element name of datapoint from online/original name
+    std::string elementName() const;
+    /// Extract system name of datapoint from online/original name
+    std::string sysname() const;
+    /// Extract name of datapoint from online/original name
+    std::string dpname()  const;
     /// Construct online value
     static std::string online(const std::string& dp);
     /// Construct name of online value
     static std::string original(const std::string& dp);
     /// Extract name of datapoint from online/original name
     static std::string dpname(const std::string& dp);
-    /// Extract system name of datapoint from online/original name
-    static std::string sysname(const std::string& dp);
     /// Extract name of datapoint from online/original name
     static std::string dpname(const DpID& dpid);
+    /// Extract system name of datapoint from online/original name
+    static std::string sysname(const std::string& dp);
+    /// Extract system name of datapoint from online/original name
+    static std::string sysname(const DpID& dp);
+    /// Extract element name of datapoint from online/original name
+    static std::string elementName(const std::string& dp);
+    /// Extract element name of datapoint from online/original name
+    static std::string elementName(const DpID& dpid);
     /// Check datapoint existencs
     static bool exists(const std::string& name);
     /// Exception function

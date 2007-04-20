@@ -29,11 +29,11 @@ def log(msg, with_header=0, with_trailer=0,timestamp=0):
   if ( with_trailer != 0 ):
     print logPrefix + stamp + ' ' + logTrailer
 # =============================================================================
-def error(msg):
-  log('Error:   '+msg)
+def error(msg, with_header=0, with_trailer=0, timestamp=0):
+  log('Error:   '+msg, with_header, with_trailer, timestamp)
 # =============================================================================
-def warning(msg):
-  log('Warning: '+msg)
+def warning(msg, with_header=0, with_trailer=0, timestamp=0):
+  log('Warning: '+msg, with_header, with_trailer, timestamp)
 
 # =============================================================================
 def printSlots(slots,prefix,mx,width=14):

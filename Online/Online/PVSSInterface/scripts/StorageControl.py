@@ -1,10 +1,10 @@
-import time
+import copy, time
 import Online.PVSS    as PVSS
 import Online.Utils   as Utils
 from   Online.RunInfo import RunInfo as RunInfo
-from Online.Storage.SlotPolicy import SlotPolicy as SlotPolicy
-from Online.Storage.PartitionInfo import PartitionInfo as PartitionInfo
-from Online.Storage.StorageDescriptor import StorageDescriptor as StorageDescriptor
+from   Online.Storage.SlotPolicy import SlotPolicy as SlotPolicy
+from   Online.Storage.PartitionInfo import PartitionInfo as PartitionInfo
+from   Online.Storage.StorageDescriptor import StorageDescriptor as StorageDescriptor
 
 sum            = Utils.sum
 log            = Utils.log
@@ -18,12 +18,223 @@ PVSS.logPrefix = 'PVSS Control '
 
 DataPoint = PVSS.DataPoint
 debug = 0
+NUM_INFRASTRUCTURE_TASKS = 5
 
 def getNodesFromSlots(slots):
   nodes = {}
   for i in slots:
     nodes[i[:i.find(':')]] = 1
   return nodes.keys()
+# =============================================================================
+class FSMmanip:
+  """
+
+    fwTree_getNodeUserData(node, udata, exInfo);
+    udata[1] = visi;
+    udata[2] = 1;
+    udata[3] = label;
+    udata[4] = panel;
+
+    Nodes:  
+    dist_2:TestStorage_Slice00|TestStorage_Slice00_lbstorcv1.mode.enabled  1
+    dist_2:TestStorage_Slice00|FSM_Node_FWDM.fsm.sendCommand:_original.._value
+    ENABLE/DEVICE(S)=TESTSTORAGE_SLICE00_LBSTORCV1
+
+    Class 0:
+    dist_2:TestStorage_Slice00|TestStorage_Slice00_lbstorcv1_Class0.mode.enabled  0  
+    dist_2:TestStorage_Slice00|TestStorage_Slice00_lbstorcv1FSM_Class0_FWDM.fsm.sendCommand:_original.._value
+    DISABLE/DEVICE(S)=TESTSTORAGE_SLICE00_LBSTORCV1_CLASS0
+    
+    Tasks:
+    dist_2:TestStorage_Slice00|TestStorage_Slice00_lbstorcv1_000.mode.enabled  0
+    dist_2:TestStorage_Slice00|TestStorage_Slice00_lbstorcv1_Class0FSM_DimTask_FWDM.fsm.sendCommand:_original.._value
+    DISABLE/DEVICE(S)=TESTSTORAGE_SLICE00_LBSTORCV1_000
+
+  """
+  # ===========================================================================
+  def __init__(self,name,manager,type):
+    self.name    = name
+    self.manager = manager
+    self.reader  = self.manager.devReader()
+    self.writer  = self.manager.devWriter()
+    typ          = self.manager.typeMgr().type(type)
+    self.enabled       = self._fsmLookup('mode.enabled',typ)
+    self.labels        = self._fsmLookup('ui.label',typ)
+    self.visible       = self._fsmLookup('ui.visible',typ)
+    self.types         = self._fsmLookup('type',typ)
+    self.tnode         = self._fsmLookup('tnode',typ)
+    self.class0Tasks = {}
+    self.class1Tasks = {}
+    self.class0Parents = {}
+    self.class1Parents = {}
+    self.nodeParents = {}
+    
+  # ===========================================================================
+  def _fsmLookup(self,dp,type):
+    obj = PVSS.DpVectorActor(self.manager)
+    obj.lookup(DataPoint.original(self.name+'|'+self.name+'_*.'+dp),type)
+    return obj
+  
+  # ===========================================================================
+  def _makeTaskMap(self):
+    m = {}
+    nam = self.name+'_'
+    tag = self.name+'|'+nam
+    for i in self.class0Tasks.keys():
+      dpn = self.name+'|FSM_Node_FWDM.fsm.sendCommand'
+      if not m.has_key(dpn): m[dpn] = []
+      m[dpn].append(str(nam+i).upper())
+      dp0 = tag+i+'FSM_Class0_FWDM.fsm.sendCommand'
+      if not m.has_key(dp0): m[dp0] = []
+      m[dp0].append(str(nam+i).upper()+'_CLASS0')
+      dp1 = tag+i+'FSM_Class1_FWDM.fsm.sendCommand'
+      if not m.has_key(dp1): m[dp1] = []
+      m[dp1].append(str(nam+i).upper()+'_CLASS1')
+    for i in self.class0Tasks.keys():
+      for j in self.class0Tasks[i]:
+        dp = tag+i+'_Class0FSM_DimTask_FWDM.fsm.sendCommand'
+        if not m.has_key(dp): m[dp] = []
+        val = self.enabled.container[j].name()
+        val = val[val.find('|')+1:val.find('.')]
+        m[dp].append(val.upper())
+    for i in self.class1Tasks.keys():
+      for j in self.class1Tasks[i]:
+        dp = tag+i+'_Class1FSM_DimTask_FWDM.fsm.sendCommand'
+        if not m.has_key(dp): m[dp] = []
+        val = self.enabled.container[j].name()
+        val = val[val.find('|')+1:val.find('.')]
+        m[dp].append(val.upper())
+    return m
+  
+  # ===========================================================================
+  def _commitFSM(self, dpMap, action):
+    dpv = PVSS.DataPointVector()
+    count = 0
+    commit = 0
+    while(len(dpMap)>0):
+      for i in dpMap.keys():
+        dpv.push_back(DataPoint(self.manager,DataPoint.original(i)))
+        dpv.back().data = action+'/DEVICE(S)='+dpMap[i][0].upper()
+        count = count + 1
+        if debug: log('%3d %3d %s'%(commit, count, dpv.back().data))
+        del dpMap[i][0]
+        if len(dpMap[i])==0: del dpMap[i]
+      self.writer.add(dpv)
+      if not self.writer.execute(0,1):
+        log(self.name+'> PVSS commit failed!',timestamp=1)
+        return None
+      commit = commit + 1
+      dpv.clear()
+    return self
+  
+  # ===========================================================================
+  def addNodeObject(self,name):
+    self.enabled.container.push_back(DataPoint(self.manager,DataPoint.original(name+'.mode.enabled')))
+    self.visible.container.push_back(DataPoint(self.manager,DataPoint.original(name+'.ui.visible')))
+    self.labels.container.push_back(DataPoint(self.manager,DataPoint.original(name+'.ui.label')))
+                                     
+  # ===========================================================================
+  def collectTaskSlots(self):
+    self.class0Tasks = {}
+    self.class1Tasks = {}
+    self.class0Parents = {}
+    self.class1Parents = {}
+    self.nodeParents = {}
+    nam = self.name+'|'+self.name+'_'
+    num = self.enabled.container.size()
+    tag = self.name+'_FWDM.mode.enabled'
+    lag_len = len(tag)
+    for i in xrange(num):
+      node0 = self.enabled.container[i].name()
+      key = self.name+'|'+self.name
+      node1 = node0[node0.find(key)+len(key)+1:]
+      node2 = node1[:node1.find('_')]
+      if debug: log('node2:'+node2+' '+node0)
+      if node0.find(tag) > 0: continue
+      item = node1[node1.find('_')+1:]
+      task_id = int(item[:3])
+      if task_id <= NUM_INFRASTRUCTURE_TASKS:
+        if not self.class0Tasks.has_key(node2):
+          self.class0Tasks[node2] = []
+        self.class0Tasks[node2].append(i)
+      else:
+        if not self.class1Tasks.has_key(node2):
+          self.class1Tasks[node2] = []
+        self.class1Tasks[node2].append(i)
+      if not self.nodeParents.has_key(node2):
+        self.nodeParents[node2] = self.enabled.container.size()
+        self.addNodeObject(nam+node2)
+        self.class0Parents[node2] = self.enabled.container.size()
+        self.addNodeObject(nam+node2+'_Class0')
+        self.class1Parents[node2] = self.enabled.container.size()
+        self.addNodeObject(nam+node2+'_Class1')
+      
+  # ===========================================================================
+  def enableObject(self, i, node, enabled, visible, label):
+    if debug:
+      print 'Enable slot for:', i, enabled, visible, label
+      print 'Enable:', self.enabled.container[i].name()
+    self.enabled.container[i].data = int(enabled)
+    self.writer.add(self.enabled.container[i])
+    self.labels.container[i].data = label
+    self.writer.add(self.labels.container[i])
+    self.visible.container[i].data = int(visible)
+    self.writer.add(self.visible.container[i])
+    
+  # ===========================================================================
+  def reset(self):
+    for i in self.nodeParents.keys():
+      self.enableObject(self.nodeParents[i],i,-1,0,'Disabled')
+    for i in self.class0Parents.keys():
+      self.enableObject(self.class0Parents[i],i,-1,0,'Disabled')
+    for i in self.class1Parents.keys():
+      self.enableObject(self.class1Parents[i],i,-1,0,'Disabled')
+    for i in self.class0Tasks.keys():
+      for j in self.class0Tasks[i]:
+        self.enableObject(j,i,-1,0,'Disabled')
+    for i in self.class1Tasks.keys():
+      for j in self.class1Tasks[i]:
+        self.enableObject(j,i,-1,0,'Disabled')
+    res = self.writer.execute(0,1)
+    return self._commitFSM(self._makeTaskMap(),'DISABLE')
+
+  # ===========================================================================
+  def allocateInfrastructure(self,infra):
+    cl0 = copy.deepcopy(self.class0Tasks)
+    self.class0Tasks = {}
+    for (n,task_list) in infra.items():
+      if debug: print n,self.nodeParents
+      self.class0Tasks[n] = []
+      if self.nodeParents.has_key(n):
+        self.enableObject(self.nodeParents[n],n,1,1,n)
+        self.enableObject(self.class0Parents[n],n,1,1,'Class0')
+        self.enableObject(self.class1Parents[n],n,1,1,'Class1')
+      for task in task_list:
+        i = cl0[n][0]
+        self.enableObject(i,n,1,1,task[2])
+        self.class0Tasks[n].append(i)
+        del cl0[n][0]
+    return self
+
+  # ===========================================================================
+  def allocateProcesses(self,processes):
+    cl1 = copy.deepcopy(self.class1Tasks)
+    self.class1Tasks = {}
+    for (n,task_list) in processes.items():
+      self.class1Tasks[n] = []
+      for task in task_list:
+        i = cl1[n][0]
+        self.enableObject(i,n,1,1,task[2])
+        self.class1Tasks[n].append(i)
+        del cl1[n][0]
+    return self
+
+  # ===========================================================================
+  def commit(self):
+    if not self.writer.execute(0,1):
+      log(self.name+'> PVSS commit failed!',timestamp=1)
+      return None
+    return self._commitFSM(self._makeTaskMap(),'ENABLE')
 
 # =============================================================================
 class BlockSlotPolicy(SlotPolicy):
@@ -254,7 +465,7 @@ class Control(StorageDescriptor,DeviceListener):
       self.writer.add(info.datapoints[5])
       self.writer.add(info.datapoints[6])
       if self.writer.execute(0,1):
-        return (all_recv_slots,all_strm_slots)
+        return (dp,all_recv_nodes,all_recv_slots,all_strm_nodes,all_strm_slots)
     return None
   
   # ===========================================================================
@@ -269,6 +480,8 @@ class Control(StorageDescriptor,DeviceListener):
 
     @return None on failure, on Succes tuple (all_recv_slots,all_strm_slots) with allocated slots
     """
+    start = time.time()
+    if debug: print 'Starting action:',start
     existing = self.getPartition(partition)
     if existing is not None:
       error('[Partition already allocated] Cannot allocate partition for:'+partition)
@@ -282,11 +495,42 @@ class Control(StorageDescriptor,DeviceListener):
     res = self.allocateSlots(partition,nSubFarm,recv_slots_per_node,nStreams,strm_slots_per_node)
     if res is not None:
       # Allocation was successful: Now update RunInfo table
-      recv_slots,strm_slots = res
+      dp,recv_nodes,recv_slots,strm_nodes,strm_slots = res
       if runInfo.defineTasks(recv_slots,strm_slots):
+        slice = '_Slice'+dp[len(self.name+'_Partition_'):]
+        #print '1-Ending action:',time.time(),time.time()-start
+        self.allocateFSM(slice,runInfo)
+        if debug: print '2-Ending action:',time.time(),time.time()-start
         return (recv_slots,strm_slots)
-    return None  
-    
+    return None
+  
+  def _collectTasks(self,tasks,data):
+    if debug: print '_collectTasks: ',data.name(),data.data.size()
+    for i in data.data:
+      items = i.split('/')
+      if len(items) > 0:
+        if not tasks.has_key(items[0]):
+          tasks[items[0]] = []
+        tasks[items[0]].append(items)
+    return tasks
+  
+  def allocateFSM(self,slice,info):
+    slice_name = self.name+slice
+    fsm_manip = FSMmanip(slice_name,self.manager,'_FwFsmDevice')
+    infra = self._collectTasks({},info.rcvInfraTasks)
+    infra = self._collectTasks(infra, info.strInfraTasks)
+    tasks = self._collectTasks({},info.receivers)
+    tasks = self._collectTasks(tasks,info.rcvSenders)
+    tasks = self._collectTasks(tasks,info.strReceivers)
+    tasks = self._collectTasks(tasks,info.streamers)
+    if debug: print 'Infrastructure:',infra
+    if debug: print 'Tasks:        ',tasks
+    fsm_manip.collectTaskSlots()
+    fsm_manip.reset()
+    fsm_manip.allocateInfrastructure(infra)
+    fsm_manip.allocateProcesses(tasks)
+    return fsm_manip.commit()
+
   # ===========================================================================
   def free(self, partition):
     "Free partition and all related content."
@@ -346,11 +590,6 @@ class Control(StorageDescriptor,DeviceListener):
     for i in partitions: i.show(extended=extended)
     
   # ===========================================================================
-  def handleDevices(self):
-    "Callback once per device sensor list on datapoint change."
-    return 1
-  
-  # ===========================================================================
   def makeAnswer(self,status,msg):
     "Create answer object from status."
     self.state.data = status + msg
@@ -358,6 +597,11 @@ class Control(StorageDescriptor,DeviceListener):
     if self.writer.execute(0,1):
       return 1
     return 0
+  
+  # ===========================================================================
+  def handleDevices(self):
+    "Callback once per device sensor list on datapoint change."
+    return 1
   
   # ===========================================================================
   def handleDevice(self):
@@ -420,6 +664,16 @@ def runTest():
   return (c,s)
 
 # =============================================================================
+def run(manager=None,name='TestStorage'):
+  mgr = manager
+  if mgr is None: mgr = PVSS.controlsMgr()
+  ctrl = Control(mgr,name)
+  sensor=PVSS.DeviceSensor(mgr,ctrl.point)
+  sensor.addListener(ctrl)
+  sensor.run(1)
+  return (mgr,ctrl,sensor)
+
+# =============================================================================
 if __name__ == "__main__":
   mgr,ctrl = runTest()
   ctrl.show()
@@ -431,11 +685,10 @@ StorageInstaller.install()
 import Online.PVSS as PVSS
 from   Online.RunInfo import RunInfo as RunInfo
 import StorageControl, StorageInstaller
-PVSS.setDebug(2)
+#PVSS.setDebug(2)
 
 mgr = PVSS.controlsMgr()
 ctrl = StorageControl.Control(mgr,'TestStorage')
-PVSS.setDebug(2)
 sensor=PVSS.DeviceSensor(mgr,ctrl.point)
 sensor.addListener(ctrl)
 sensor.run(1)

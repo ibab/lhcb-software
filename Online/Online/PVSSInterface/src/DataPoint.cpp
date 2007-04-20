@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DataPoint.cpp,v 1.21 2007-04-11 17:45:47 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DataPoint.cpp,v 1.22 2007-04-20 09:34:19 frankb Exp $
 //  ====================================================================
 //  DataPoint.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: DataPoint.cpp,v 1.21 2007-04-11 17:45:47 frankb Exp $
+// $Id: DataPoint.cpp,v 1.22 2007-04-20 09:34:19 frankb Exp $
 #ifdef _WIN32
   // Disable warning C4250: 'const float' : forcing value to bool 'true' or 'false' (performance warning)
   #pragma warning ( disable : 4800 )
@@ -245,15 +245,6 @@ std::string DataPoint::original(const std::string& dp)  {
 }
 
 /// Extract name of datapoint from online/original name
-std::string DataPoint::dpname(const DpID& dpid)    {
-  char* nam = "";
-  if ( !pvss_lookup_name(*(DpID*)&dpid,nam) )  {
-    return "";
-  }
-  return nam;
-}
-
-/// Extract name of datapoint from online/original name
 std::string DataPoint::dpname(const std::string& dp)    {
   std::string::size_type id1 = dp.find(":");
   std::string::size_type id2 = dp.rfind(":");
@@ -269,6 +260,20 @@ std::string DataPoint::dpname(const std::string& dp)    {
   return dp;
 }
 
+/// Extract name of datapoint from online/original name
+std::string DataPoint::dpname(const DpID& dpid)    {
+  char* nam = "";
+  if ( !pvss_lookup_name(*(DpID*)&dpid,nam) )  {
+    return "";
+  }
+  return nam;
+}
+
+/// Extract name of datapoint from online/original name
+std::string DataPoint::dpname()  const {
+  return dpname(id());
+}
+
 /// Extract system name of datapoint from online/original name
 std::string DataPoint::sysname(const std::string& dp)   {
   std::string::size_type id1 = dp.find(":");
@@ -278,6 +283,43 @@ std::string DataPoint::sysname(const std::string& dp)   {
   else if ( id2 == std::string::npos )
     return dp.substr(0,id1);
   return dp.substr(0,id1);
+}
+
+/// Extract system name of datapoint from online/original name
+std::string DataPoint::sysname(const DpID& dp)   {
+  char* nam = 0;
+  if ( !pvss_lookup_name(dp,nam) )
+    return "";
+  return sysname(nam);
+}
+
+/// Extract system name of datapoint from online/original name
+std::string DataPoint::sysname()  const {
+  return sysname(name());
+}
+
+/// Extract system name of datapoint from online/original name
+std::string DataPoint::elementName(const std::string& dp)   {
+  std::string::size_type id1 = dp.find(":");
+  std::string::size_type id2 = dp.rfind(":",id1+1);
+  if ( id1 == std::string::npos && id2 == std::string::npos )
+    return dp;
+  else if ( id2 == id1 )
+    return dp.substr(id1+1);
+  return dp.substr(id1+1,id2-id1);
+}
+
+/// Extract system name of datapoint from online/original name
+std::string DataPoint::elementName(const DpID& dp)   {
+  char* nam = 0;
+  if ( !pvss_lookup_name(dp,nam) )
+    return "";
+  return elementName(nam);
+}
+
+/// Extract name of datapoint from online/original name
+std::string DataPoint::elementName()  const {
+  return elementName(name());
 }
 
 /// Check datapoint existencs

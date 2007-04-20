@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/PVSS/DeviceIO.h,v 1.4 2007-03-12 09:04:12 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/PVSS/DeviceIO.h,v 1.5 2007-04-20 09:34:16 frankb Exp $
 //  ====================================================================
 //  DeviceIO.h
 //  --------------------------------------------------------------------
@@ -149,7 +149,7 @@ namespace PVSS {
     /// Device IO handler
     std::auto_ptr<IDevIO>   m_devIO;
     /// Device datapoints
-    DataPoints       m_points;
+    DataPoints              m_points;
     /// Initializing constructor for reading
     DeviceIO(ControlsManager* mgr, const Read& );
     /// Initializing constructor for writing
