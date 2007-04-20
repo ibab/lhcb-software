@@ -1,4 +1,4 @@
-// $Id: ICondDBAccessSvc.h,v 1.15 2007-02-14 16:13:30 marcocle Exp $
+// $Id: ICondDBAccessSvc.h,v 1.16 2007-04-20 14:39:53 marcocle Exp $
 #ifndef DETCOND_ICONDDBACCESSSVC_H 
 #define DETCOND_ICONDDBACCESSSVC_H 1
 
@@ -63,6 +63,9 @@ public:
   
   /// Set the TAG to use.
   virtual StatusCode setTag(const std::string &_tag) = 0;
+  
+  /// Return the connection string used to connect to the database.
+  virtual const std::string &connectionString() const = 0;
 
   /// Add a folder to the cache (bypass the DB)
   virtual StatusCode cacheAddFolder(const std::string &path, const std::string &descr,
