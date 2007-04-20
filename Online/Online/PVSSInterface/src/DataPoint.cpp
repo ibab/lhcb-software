@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DataPoint.cpp,v 1.23 2007-04-20 17:47:10 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DataPoint.cpp,v 1.24 2007-04-20 18:12:25 frankb Exp $
 //  ====================================================================
 //  DataPoint.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: DataPoint.cpp,v 1.23 2007-04-20 17:47:10 frankb Exp $
+// $Id: DataPoint.cpp,v 1.24 2007-04-20 18:12:25 frankb Exp $
 #ifdef _WIN32
   // Disable warning C4250: 'const float' : forcing value to bool 'true' or 'false' (performance warning)
   #pragma warning ( disable : 4800 )
@@ -86,7 +86,7 @@ namespace PVSS {
   inline void checkBasicTypeCompatibility(const Value* v1, int v2)  {
     _checkBasicTypeCompatibility(v1 ? v1->type() : DevTypeElement::NOELEMENT,v2);
   }
-  template <typename T> inline void checkBasicTypeCompatibility(const Value* v1, const DataValue<T>* v2)  {
+  template <typename T> inline void checkBasicTypeCompatibility(const Value* v1, const DataValue<T>* )  {
     checkBasicTypeCompatibility(v1,DataValue<T>::type_id());
   }
   template <typename T> void checkTypeCompatibility(const Value* v1, const DataValue<T>* v2)  
@@ -149,6 +149,47 @@ namespace PVSS {
     return 0;
   }
 }
+
+// Some hacks due to comipler hickup!
+#ifdef _WIN32
+template <typename T> struct GetRef   {   
+  bool b1(const DataPoint& d) { return d.reference<T>()==d.data<T>(); } 
+  void set(DataPoint& d)      { d.set(d.reference<T>()=d.data<T>());  }
+};
+
+#define REF_SPECIALIZATIONS(x)   namespace PVSS { template GetRef< x >; }
+#define DATA_SPECIALIZATIONS(x)  namespace PVSS { template GetRef< x >;}
+
+#else
+#define __TEMPLATE template
+#define REF_SPECIALIZATIONS(x) namespace PVSS {          \
+  __TEMPLATE void DataPoint::set< x >(const x&);         \
+  __TEMPLATE x& DataPoint::reference< x >();             \
+  __TEMPLATE const x& DataPoint::reference< x >() const; }
+
+#define DATA_SPECIALIZATIONS(x) namespace PVSS {         \
+  __TEMPLATE x DataPoint::data< x >();                   \
+  __TEMPLATE const x DataPoint::data< x >() const; }
+#endif
+
+
+#define EXPLICIT_DATA_SPECIALIZATIONS(x) namespace PVSS {\
+  template <> x DataPoint::data< x >()             { return this->reference< x >();} \
+  template <> const x DataPoint::data< x >() const { return this->reference< x >();} }
+
+#define BASIC_SPECIALIZATIONS(x)   namespace PVSS {             \
+  template <> int Value::type_id< x > (const x&);               \
+  template <> int DataValue< x >::type_id();                    \
+  template <> DataValue< x > createDataValue< x >(const x& o);} \
+  REF_SPECIALIZATIONS(x)
+
+#define SPECIALIZATIONS(x)          BASIC_SPECIALIZATIONS(x) DATA_SPECIALIZATIONS(x)
+
+#define VECTOR_SPECIALIZATIONS(x)   BASIC_SPECIALIZATIONS(std::vector< x >) \
+                                    EXPLICIT_DATA_SPECIALIZATIONS(std::vector< x >)
+#define EXPLICIT_SPECIALIZATIONS(x) BASIC_SPECIALIZATIONS(x) \
+                                    EXPLICIT_DATA_SPECIALIZATIONS(x)
+
 
 // Default constructor
 DataPoint::DataPoint(ControlsManager* m) 
@@ -328,7 +369,7 @@ bool DataPoint::exists(const std::string& name)   {
   return pvss_lookup_dpid(name.c_str(),id);
 }
 
-template <typename T> T DataPoint::data()  {
+template <class T> T PVSS::DataPoint::data()  {
   if ( m_val )  {
     switch(m_val->type())  {
       case DevTypeElement::FLOAT: return convertValue<float,T>(m_val);
@@ -345,7 +386,7 @@ template <typename T> T DataPoint::data()  {
   return default_value<T>();
 }
 
-template <typename T> const T DataPoint::data()  const {
+template <class T> const T PVSS::DataPoint::data() const {
   if ( m_val )  {
     switch(m_val->type())  {
       case DevTypeElement::FLOAT: return convertValue<float,T>(m_val);
@@ -361,8 +402,8 @@ template <typename T> const T DataPoint::data()  const {
   invalidValue(typeid(T));
   return default_value<T>();
 }
-
-template <> const std::string PVSS::DataPoint::data<std::string>() const  {
+namespace PVSS {
+template <> const std::string DataPoint::data<std::string>() const  {
   if ( m_val )  {
     std::stringstream os;
     switch(m_val->type())  {
@@ -395,7 +436,7 @@ template <> const std::string PVSS::DataPoint::data<std::string>() const  {
   return "";
 }
 
-template <> std::string PVSS::DataPoint::data<std::string>()  {
+template <> std::string DataPoint::data<std::string>()  {
   if ( m_val )  {
     std::stringstream os;
     switch(m_val->type())  {
@@ -426,6 +467,7 @@ template <> std::string PVSS::DataPoint::data<std::string>()  {
   }
   invalidValue(typeid(std::string));
   return "";
+}
 }
 
 template <class T> T& DataPoint::reference()  {
@@ -437,53 +479,6 @@ template <class T> const T& DataPoint::reference()  const  {
   checkTypeCompatibility(m_val,(DataValue<T>*)m_val);
   return ((DataValue<T>*)m_val)->data();
 }
-
-// Some hacks due to comipler hickup!
-#ifdef _WIN32
-template <typename T> struct GetRef   {   
-  bool b1(const DataPoint& d) { return d.reference<T>()==d.data<T>(); } 
-  void set(DataPoint& d)      { d.set(d.reference<T>()=d.data<T>());  }
-};
-
-#define REF_SPECIALIZATIONS(x)   namespace PVSS { template GetRef< x >; }
-#define DATA_SPECIALIZATIONS(x)  namespace PVSS { template GetRef< x >;}
-
-#else
-#define __TEMPLATE template
-#define REF_SPECIALIZATIONS(x) namespace PVSS { \
-  __TEMPLATE void DataPoint::set< x >(const x&);         \
-  __TEMPLATE x& DataPoint::reference< x >();             \
-  __TEMPLATE const x& DataPoint::reference< x >() const; }
-
-#define DATA_SPECIALIZATIONS(x) namespace PVSS {                \
-  __TEMPLATE x DataPoint::data< x >(); \
-  __TEMPLATE const x DataPoint::data< x >() const; }
-//DATA_SPECIALIZATIONS(short)
-//DATA_SPECIALIZATIONS(unsigned short)
-//DATA_SPECIALIZATIONS(unsigned char)
-#endif
-
-
-#define EXPLICIT_DATA_SPECIALIZATIONS(x) namespace PVSS {                \
-  template <> x DataPoint::data< x >()             { return this->reference< x >();} \
-  template <> const x DataPoint::data< x >() const { return this->reference< x >();} }
-
-#define BASIC_SPECIALIZATIONS(x)   namespace PVSS {             \
-  template <> int Value::type_id< x > (const x&);               \
-  template <> int DataValue< x >::type_id();                    \
-  template <> DataValue< x > createDataValue< x >(const x& o);} \
-  REF_SPECIALIZATIONS(x)
-
-#define SPECIALIZATIONS(x)          BASIC_SPECIALIZATIONS(x) DATA_SPECIALIZATIONS(x)
-
-#define VECTOR_SPECIALIZATIONS(x)   BASIC_SPECIALIZATIONS(std::vector< x >) \
-                                    EXPLICIT_DATA_SPECIALIZATIONS(std::vector< x >)
-#define EXPLICIT_SPECIALIZATIONS(x) BASIC_SPECIALIZATIONS(x) \
-                                    EXPLICIT_DATA_SPECIALIZATIONS(x)
-
-#ifndef _WIN32
-    // REF_SPECIALIZATIONS(DpID)
-#endif
 
 
 BASIC_SPECIALIZATIONS(bool)
