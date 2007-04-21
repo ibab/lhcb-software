@@ -110,13 +110,13 @@ start:
 
     ptr = (char *)cmd_to_send;
 		ret = Utils::send(m_sockfd, ptr, totalSize, m_log);
+
 		if(ret != totalSize) {
         if(m_conn->failover(SEND_THREAD) == KILL_THREAD)
         	return 0;
         else
         	goto start;
     }
-    cmd_to_send = m_mmObj->moveSendPointer();
   }
 
   return 0;
