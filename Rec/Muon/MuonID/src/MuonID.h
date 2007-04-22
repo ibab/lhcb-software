@@ -92,6 +92,8 @@ private:
   /// clear track based local variables
   void resetTrackLocals();
 
+  LHCb::Track* makeMuonTrack(const LHCb::MuonPID& pMuid);
+
   // Properties
 
   /// TES path of the tracks to analyse
@@ -99,6 +101,9 @@ private:
 
   /// TES path to output the MuonPIDs to
   std::string m_MuonPIDsPath;
+
+  /// TES path to output the Track PIDs to
+  std::string m_MuonTracksPath;
 
   /// Preselection momentum (no attempt to ID below this)
   double m_PreSelMomentum;

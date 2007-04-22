@@ -50,6 +50,10 @@ MuonID::MuonID( const std::string& name,
   declareProperty("MuonIDLocation",
                   m_MuonPIDsPath = LHCb::MuonPIDLocation::Default);
 
+  // Destination of MuonPID
+  declareProperty("MuonTrackLocation",
+                  m_MuonTracksPath = "Rec/Track/Muon");
+
   // Pre-selection momentum
   declareProperty( "PreSelMomentum", m_PreSelMomentum = 3000.0);
 
@@ -210,7 +214,9 @@ StatusCode MuonID::execute() {
   }
   debug()  << "Number of input tracks for MuonID: " << trTracks->size() << endreq;
 
-  LHCb::MuonPIDs * pMuids = new LHCb::MuonPIDs;
+  LHCb::MuonPIDs * pMuids = new LHCb::MuonPIDs();
+  LHCb::Tracks * mutracks = new LHCb::Tracks();
+
   LHCb::Tracks::const_iterator iTrack;
   for( iTrack = trTracks->begin() ; iTrack != trTracks->end() ; iTrack++){
     // in the clone killed output we want only
@@ -235,6 +241,12 @@ StatusCode MuonID::execute() {
       }
 
       pMuids->insert( pMuid, (*iTrack)->key() );
+
+      if (pMuid->IsMuon()) {
+	LHCb::Track* mutrack = makeMuonTrack(*pMuid);
+	mutracks->insert( mutrack, (*iTrack)->key() );  
+      }
+
       sc = calcSharedHits(pMuid, pMuids);
       if (sc.isFailure()){
         warning() << " calcSharedHits failed for track " << *iTrack << endreq;
@@ -252,6 +264,8 @@ StatusCode MuonID::execute() {
 
   // Register the MuonIDs container to the TES
   put(pMuids,m_MuonPIDsPath);
+  // Register the PIDTracks container to the TES
+  put(mutracks,m_MuonTracksPath);
 
   clearCoordVectors();
 
@@ -836,4 +850,27 @@ void MuonID::resetTrackLocals(){
   m_CoordX.clear();
   m_occupancy.resize(m_NStation,0);
   m_CoordX.resize(m_NStation,0.);
+}
+
+//=============================================================================
+// make the muon-pid segments
+//=============================================================================
+LHCb::Track* MuonID::makeMuonTrack(const LHCb::MuonPID& mupid){
+
+  LHCb::Track* mtrack = new LHCb::Track( mupid.key() );
+
+  const LHCb::Track* mother = mupid.idTrack();
+  mtrack->addToStates( mother->closestState(m_stationZ[0]) );
+
+  std::vector<LHCb::MuonCoord*> & mcoord = m_muonMap[(LHCb::MuonPID*) &mupid];
+  std::vector<LHCb::MuonCoord*>::const_iterator iCoord;
+
+  for(iCoord = mcoord.begin(); iCoord != mcoord.end(); ++iCoord ) {
+    LHCb::MuonTileID tile= (*iCoord)->key();
+    LHCb::LHCbID id(tile);
+    mtrack->addToLhcbIDs(id);
+  }
+
+ return mtrack; 
+
 }
