@@ -4,6 +4,9 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2007-04-23 - David Hutchcroft
+ - Added VeloBeamGas.opts for reconstructing beam gas events
+
 !============================ TrackSys v4r3 2007-03-21 ======================
 ! 2007-03-21 - Marco Cattaneo for Stephanie Hansmann-Menzemer
  - Add PatForward WithoutBField options to NoFieldTracking.opts
