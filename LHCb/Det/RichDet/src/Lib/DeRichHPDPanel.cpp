@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRichHPDPanel
  *
- *  $Id: DeRichHPDPanel.cpp,v 1.56 2007-04-03 15:42:32 papanest Exp $
+ *  $Id: DeRichHPDPanel.cpp,v 1.57 2007-04-23 12:28:13 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -119,14 +119,14 @@ StatusCode DeRichHPDPanel::initialize()
 
   m_pixelSize      = deRich1->param<double>("RichHpdPixelXsize");
   m_subPixelSize   = m_pixelSize/8;
-  m_activeRadius   = deRich1->param<double>("RichHpdActiveInpRad");
-  m_activeRadiusSq = m_activeRadius*m_activeRadius;
+  const double activeRadius = deRich1->param<double>("RichHpdActiveInpRad");
+  m_activeRadiusSq = activeRadius*activeRadius;
 
   m_pixelColumns = deRich1->param<int>("RichHpdNumPixelCol");
   m_pixelRows    = deRich1->param<int>("RichHpdNumPixelRow");
 
-  msg << MSG::DEBUG << "RichHpdPixelsize:" << m_pixelSize << " ActiveRadius:"
-      << m_activeRadius << " pixelRows:" << m_pixelRows << " pixelColumns:"
+  msg << MSG::DEBUG << "RichHpdPixelsize: " << m_pixelSize << " ActiveRadius: "
+      << activeRadius << " pixelRows: " << m_pixelRows << " pixelColumns: "
       << m_pixelColumns << endreq;
 
   m_HPDColumns = param<int>("HPDColumns");
@@ -138,9 +138,9 @@ StatusCode DeRichHPDPanel::initialize()
   msg << MSG::DEBUG << "HPDColumns:" << m_HPDColumns << " HPDNumberInColumns:"
       << m_HPDNumInCol << endmsg;
 
-  if ( m_HPDColPitch  < m_activeRadius*2) {
+  if ( m_HPDColPitch  < activeRadius*2) {
     msg << MSG::WARNING << "The active area is bigger by:"
-        << (m_activeRadius*2 - fabs(m_HPDColPitch))/Gaudi::Units::mm
+        << (activeRadius*2 - fabs(m_HPDColPitch))/Gaudi::Units::mm
         << " mm than the column pitch.  There could be loss of photons"
         << endmsg;
   }
@@ -196,22 +196,16 @@ StatusCode DeRichHPDPanel::initialize()
   m_siliconHalfLengthX = siliconBox->xHalfLength();
   m_siliconHalfLengthY = siliconBox->yHalfLength();
 
-  // HPD #0 coordinates
-  m_HPD0Centre = pvHPDMaster0->toMother(zero);
-  msg << MSG::DEBUG << "Centre of HPDPanel:" << geometry()->toGlobal(zero)
-      <<endmsg;
-  msg << MSG::DEBUG<< "Centre of HPD#0:" << geometry()->toGlobal(m_HPD0Centre)
-      <<endmsg;
-
+  msg << MSG::DEBUG << "Centre of HPDPanel : " << geometry()->toGlobal(zero)
+      << endmsg;
   msg << MSG::VERBOSE << "Centre of HPD#0 " << geometry()->lvolume()->
     pvolume(0)->toMother( zero ) << endmsg;
-  msg << MSG::VERBOSE << "Centre of HPD#" << m_HPDNumInCol-1 << geometry()->lvolume()->
+  msg << MSG::VERBOSE << "Centre of HPD#" << m_HPDNumInCol-1 << " " << geometry()->lvolume()->
     pvolume(m_HPDNumInCol-1)->toMother( zero ) << endmsg;
-  msg << MSG::VERBOSE << "Centre of HPD#" << m_HPDNumInCol << geometry()->lvolume()->
+  msg << MSG::VERBOSE << "Centre of HPD#" << m_HPDNumInCol << " " << geometry()->lvolume()->
     pvolume(m_HPDNumInCol)->toMother( zero ) << endmsg;
-  msg << MSG::VERBOSE << "Centre of HPD#" << 2*m_HPDNumInCol-1 << geometry()->lvolume()->
+  msg << MSG::VERBOSE << "Centre of HPD#" << 2*m_HPDNumInCol-1 << " " << geometry()->lvolume()->
     pvolume(2*m_HPDNumInCol-1)->toMother( zero ) << endmsg;
-
 
   // get the pv and the solid for the HPD quartz window
   const IPVolume* pvWindow0 = pvHPDSMaster0->lvolume()->
@@ -226,17 +220,12 @@ StatusCode DeRichHPDPanel::initialize()
     msg << MSG::FATAL << "Problem getting window radius" << endreq;
     return StatusCode::FAILURE;
   }
-  m_winR = windowTicks[0];
-  m_winRsq = m_winR*m_winR;
-  m_winOutR = windowTicks[1];
-  m_winOutRsq = m_winOutR*m_winOutR;
+  const double winR = windowTicks[0];
 
   // get the coordinate of the centre of the HPD quarz window
-  Gaudi::XYZPoint HPDTop1(0.0, 0.0, m_winR);
+  Gaudi::XYZPoint HPDTop1(0.0, 0.0, winR);
   // convert this to HPDS master  coordinates
   Gaudi::XYZPoint HPDTop2 = pvWindow0->toMother(HPDTop1);
-  // and to silicon
-  m_HPDTop = pvSilicon0->toLocal(HPDTop2);
 
   // find the top of 3 HPDs to create a detection plane.  We already have the
   // first in HPDSMaster coordinates.
@@ -266,15 +255,14 @@ StatusCode DeRichHPDPanel::initialize()
 
   // localPlane2 is used when trying to locate the HPD row/column from
   // a point in the panel.
-  m_detPlaneZdiff = m_winR - sqrt( m_winRsq - m_activeRadiusSq );
-  m_localPlane2 = Gaudi::Transform3D(Gaudi::XYZVector(0.0,0.0,m_detPlaneZdiff))(m_localPlane);
+  const double detPlaneZdiff = winR - sqrt( winR*winR - m_activeRadiusSq );
+  m_localPlane2 = Gaudi::Transform3D(Gaudi::XYZVector(0.0,0.0,detPlaneZdiff))(m_localPlane);
   m_localPlaneNormal2 = m_localPlane2.Normal();
 
   // Cache information for PDWindowPoint method
   m_vectorTransf = geometry()->matrix();
-  m_HPDPanelSolid = geometry()->lvolume()->solid();
-  m_kaptonSolid = pvHPDSMaster0->lvolume()->pvolume("pvRichHPDKaptonShield")->
-    lvolume()->solid();
+  m_kaptonSolid = 
+    pvHPDSMaster0->lvolume()->pvolume("pvRichHPDKaptonShield")->lvolume()->solid();
 
   // Cache HPD information
   m_pvHPDMaster.clear();
@@ -346,27 +334,6 @@ StatusCode DeRichHPDPanel::initialize()
 }
 
 //=========================================================================
-//  convert a smartID to a point on the inside of the HPD window
-//=========================================================================
-StatusCode DeRichHPDPanel::detectionPoint ( const LHCb::RichSmartID& smartID,
-                                            Gaudi::XYZPoint& detectPoint ) const
-{
-  // HPD number
-  const unsigned int HPDNumber = hpdNumber(smartID);
-
-  // convert pixel number to silicon coordinates
-  const double inSiliconX =
-    smartID.pixelCol()*m_pixelSize + m_pixelSize/2.0 - m_siliconHalfLengthX;
-  const double inSiliconY =
-    m_siliconHalfLengthY - smartID.pixelRow()*m_pixelSize - m_pixelSize/2.0;
-
-  detectPoint = Gaudi::XYZPoint(inSiliconX, inSiliconY, 0.0);
-
-  return( m_DeHPDs[HPDNumber]->detectionPoint( detectPoint ) );
-
-}
-
-//=========================================================================
 // convert a point on the silicon sensor to smartID
 //=========================================================================
 StatusCode DeRichHPDPanel::smartID ( const Gaudi::XYZPoint& globalPoint,
@@ -422,26 +389,6 @@ StatusCode DeRichHPDPanel::smartID ( const Gaudi::XYZPoint& globalPoint,
   id.setPixelSubRow( subPixel );
 
   return StatusCode::SUCCESS;
-}
-
-//=========================================================================
-//  convert a SmartID to a point on the anode (global coord system)
-//=========================================================================
-Gaudi::XYZPoint DeRichHPDPanel::detPointOnAnode( const LHCb::RichSmartID& smartID ) const
-{
-
-  const unsigned int HPDNumber = hpdNumber(smartID);
-
-  return( m_DeHPDs[HPDNumber]->detPointOnAnode( smartID ) );
-}
-
-//=========================================================================
-//  convert a point from the global to the panel coodinate system
-//=========================================================================
-Gaudi::XYZPoint DeRichHPDPanel::globalToPDPanel( const Gaudi::XYZPoint& globalPoint ) const
-{
-  const Gaudi::XYZPoint localPoint( geometry()->toLocal( globalPoint ) );
-  return Gaudi::XYZPoint( localPoint.x(), localPoint.y(), localPoint.z()-m_detPlaneZ );
 }
 
 //=========================================================================
@@ -638,8 +585,8 @@ bool DeRichHPDPanel::detPlanePoint( const Gaudi::XYZPoint& pGlobal,
 //=========================================================================
 //  findHPDColAndPos
 //=========================================================================
-bool DeRichHPDPanel::findHPDColAndPos (const Gaudi::XYZPoint& inPanel,
-                                       LHCb::RichSmartID& id) const
+bool DeRichHPDPanel::findHPDColAndPos ( const Gaudi::XYZPoint& inPanel,
+                                        LHCb::RichSmartID& id ) const
 {
   double u(0.0);
   double v(0.0);
@@ -680,7 +627,7 @@ Gaudi::XYZPoint
 DeRichHPDPanel::globalPosition( const Gaudi::XYZPoint& localPoint,
                                 const Rich::Side side) const
 {
-  double z = localPoint.z() + m_detPlaneZ;
+  const double z = localPoint.z() + m_detPlaneZ;
   double x( 0.0 );
   double y( 0.0 );
 
@@ -695,7 +642,7 @@ DeRichHPDPanel::globalPosition( const Gaudi::XYZPoint& localPoint,
     y = localPoint.y();
   }
 
-  return (geometry()->toGlobal(Gaudi::XYZPoint(x, y, z) ) );
+  return ( geometry()->toGlobal(Gaudi::XYZPoint(x, y, z) ) );
 }
 
 //=========================================================================
@@ -719,5 +666,5 @@ int DeRichHPDPanel::copyNumber( unsigned int HPDNumber ) const
     msg << MSG::FATAL << "An HPD without a number!" << endmsg;
     return -1;
   }
-  return (atoi( HPDMaster(HPDNumber)->name().substr(pos+1).c_str() ) );
+  return ( atoi( HPDMaster(HPDNumber)->name().substr(pos+1).c_str() ) );
 }

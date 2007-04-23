@@ -3,7 +3,7 @@
  *
  * Implementation file for class : DeRichHPD
  *
- * $Id: DeRichHPD.cpp,v 1.4 2007-04-03 15:42:32 papanest Exp $
+ * $Id: DeRichHPD.cpp,v 1.5 2007-04-23 12:28:13 jonrob Exp $
  *
  * @author Antonis Papanestis a.papanestis@rl.ac.uk
  * @date   2006-09-19
@@ -11,12 +11,13 @@
 //=============================================================================
 
 // Include files
-#include <time.h>
+//#include <time.h>
 
 // Gaudi
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/IUpdateManagerSvc.h"
+#include "GaudiKernel/PhysicalConstants.h"
 
 // DetDesc
 #include "DetDesc/Condition.h"
@@ -28,6 +29,7 @@
 
 // GSL
 #include "gsl/gsl_math.h"
+
 // Boost
 #include "boost/lexical_cast.hpp"
 
@@ -35,14 +37,23 @@
 
 const CLID CLID_DERichHPD = 12015;  // User defined
 
+// anon namespace
+namespace
+{
+  static const std::string& XmlHpdDemagPath = "/dd/Materials/RichMaterialTabProperties/RichHpdDemag";
+  static const int totbins = 50; //do not change
+}
+
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
 DeRichHPD::DeRichHPD():
-  m_simDemagMapR  ( 0 ),
-  m_simDemagMapPhi( 0 ),
-  m_recMagMapR    ( 0 ),
-  m_recMagMapPhi  ( 0 ),
+  m_deSiSensor    ( NULL ),
+  m_pvWindow      ( NULL ),
+  m_demagMapR     ( NULL ),
+  m_demagMapPhi   ( NULL ),
+  m_magMapR       ( NULL ),
+  m_magMapPhi     ( NULL ),
   m_firstUpdate   ( true ),
   m_refactParams  ( 4, 0)
 { }
@@ -52,14 +63,23 @@ DeRichHPD::DeRichHPD():
 //=============================================================================
 DeRichHPD::~DeRichHPD()
 {
-  if ( m_simDemagMapR )   delete m_simDemagMapR;
-  if ( m_simDemagMapPhi ) delete m_simDemagMapPhi;
-  if ( m_recMagMapR )     delete m_recMagMapR;
-  if ( m_recMagMapPhi )   delete m_recMagMapPhi;
+  cleanUpInterps();
 }
 
+//=============================================================================
+// Clean up interpolators
+//=============================================================================
+void DeRichHPD::cleanUpInterps()
+{
+  if ( m_demagMapR )   { delete m_demagMapR;   m_demagMapR   = NULL; }
+  if ( m_demagMapPhi ) { delete m_demagMapPhi; m_demagMapPhi = NULL; }
+  if ( m_magMapR )     { delete m_magMapR;     m_magMapR     = NULL; }
+  if ( m_magMapPhi )   { delete m_magMapPhi;   m_magMapPhi   = NULL; }
+}
 
-// Retrieve Pointer to class defininition structure
+//=============================================================================
+// Retrieve reference to class defininition structure
+//=============================================================================
 const CLID& DeRichHPD::classID()
 {
   return CLID_DERichHPD;
@@ -73,8 +93,8 @@ StatusCode DeRichHPD::initialize ( )
   MsgStream msg( msgSvc(), "DeRichHPD" );
   msg << MSG::DEBUG << "Initialize " << name() << endmsg;
 
-  // store the name of the panel, without the /dd/Structure part
-  const std::string::size_type pos = name().find("HPD");
+  // store the name of the HPD, without the /dd/Structure part
+  const std::string::size_type pos = name().find("PDPanel");
   m_name = ( std::string::npos != pos ? name().substr(pos) : "DeRichHPD_NO_NAME" );
 
   // extract HPD number from detector element name
@@ -86,169 +106,155 @@ StatusCode DeRichHPD::initialize ( )
   m_number = atoi( name().substr(pos2+1).c_str() );
 
   StatusCode sc = getParameters();
-  if ( sc == StatusCode::FAILURE ) return sc;
+  if ( sc.isFailure() ) return sc;
 
   msg << MSG::DEBUG << "RichHpdPixelsize:" << m_pixelSize << " ActiveRadius:"
-      << m_activeRadius << " pixelRows:" << m_pixelRows << " pixelColumns:"
-      << m_pixelColumns << endmsg;
+      << m_activeRadius << endreq;
+  msg << MSG::DEBUG << "DeMagFactor(0): " << m_deMagFactor[0]
+      << " DeMagFactor(1): " << m_deMagFactor[1] << endmsg;
 
-  const IPVolume* pvHPDSMaster = geometry()->lvolume()->pvolume(0);
-  const IPVolume* pvSilicon = pvHPDSMaster->lvolume()->pvolume("pvRichHPDSiDet");
+  const IPVolume * pvHPDSMaster = geometry()->lvolume()->pvolume(0);
+  const IPVolume * pvSilicon = pvHPDSMaster->lvolume()->pvolume("pvRichHPDSiDet");
 
   const ISolid* siliconSolid = pvSilicon->lvolume()->solid();
   msg << MSG::VERBOSE << "About to do a dynamic cast SolidBox "
       << siliconSolid->name() << endmsg;
   const SolidBox* siliconBox = dynamic_cast<const SolidBox*>(siliconSolid);
+  if ( !siliconBox )
+  {
+    msg << MSG::FATAL << " Failed to get SolidBox for silicon" << endreq;
+    return StatusCode::FAILURE;
+  }
 
+  // Get sizes of silicon box
   m_siliconHalfLengthX = siliconBox->xHalfLength();
   m_siliconHalfLengthY = siliconBox->yHalfLength();
 
   // get the pv and the solid for the HPD quartz window
-  const IPVolume* pvWindow = pvHPDSMaster->lvolume()->
-    pvolume("pvRichHPDQuartzWindow");
-  const ISolid* windowSolid = pvWindow->lvolume()->solid();
+  m_pvWindow  = pvHPDSMaster->lvolume()->pvolume("pvRichHPDQuartzWindow");
+  const ISolid* windowSolid = m_pvWindow->lvolume()->solid();
   // get the inside radius of the window
   ISolid::Ticks windowTicks;
-  unsigned int windowTicksSize = windowSolid->
-    intersectionTicks(Gaudi::XYZPoint(0.0, 0.0, 0.0),Gaudi::XYZVector(0.0, 0.0, 1.0),
-                      windowTicks);
-  if (windowTicksSize != 2) {
+  const unsigned int windowTicksSize = 
+    windowSolid->intersectionTicks( Gaudi::XYZPoint(0.0, 0.0, 0.0),
+                                    Gaudi::XYZVector(0.0, 0.0, 1.0),
+                                    windowTicks );
+  if ( windowTicksSize != 2 ) 
+  {
     msg << MSG::FATAL << "Problem getting window radius" << endmsg;
     return StatusCode::FAILURE;
   }
-  m_winInR = windowTicks[0];
-  m_winInRsq = m_winInR*m_winInR;
 
-  m_winOutR = windowTicks[1];
-  m_winOutRsq = m_winOutR*m_winOutR;
+  // Get inner and out window radii
+  const double winInR = windowTicks[0];
+  m_winInRsq = winInR*winInR;
+  const double winOutR = windowTicks[1];
+  m_winOutRsq = winOutR*winOutR;
+  msg << MSG::DEBUG << "winInR = " << winInR << " winOutR = " << winOutR << endmsg;
 
-  msg << MSG::DEBUG << "winInR:" << m_winInR << " winOutR:" << m_winOutR
-      << endmsg;
+  // Transformation for HPD window to global ccord system
+  m_fromWindowToGlobal = 
+    geometry()->matrixInv() * pvHPDSMaster->matrixInv() * m_pvWindow->matrixInv();
 
-  // store the tranformation to the HPDwindow
-  m_fromWindowToHPD = pvWindow->matrixInv();
+  // get the pointer to the silicon sensor detector element
+  m_deSiSensor = childIDetectorElements().front();
 
-  //for HPD window to global ccord system
-  m_fromWindowToGlobal = geometry()->matrixInv() * pvHPDSMaster->matrixInv() *
-    pvWindow->matrixInv();
+  if (m_UseHpdMagDistortions) 
+  {
 
-  // get the coordinate of the centre of the inside of HPD quarz window
-  Gaudi::XYZPoint HPDTopIn_dummy(0.0, 0.0, m_winInR);
-  // convert this to HPDS master  coordinates
-  m_HPDTopIn = pvWindow->toMother(HPDTopIn_dummy);
-  //m_HPDTopInIdeal = geometry()->IdealMatrixInv() * HPDTopInTemp;
-
-  // get the coordinate of the centre of the outside of HPD quarz window
-  Gaudi::XYZPoint HPDTopOut_dummy(0.0, 0.0, m_winOutR);
-  // convert this to HPDS master  coordinates
-  m_HPDTopOut = pvWindow->toMother(HPDTopOut_dummy);
-
-  deSiSensor = childIDetectorElements().front();
-
-  if(m_UseHpdMagDistortions) {
-
-    if(m_UseRandomBField) init_mm();
+    //if(m_UseRandomBField) init_mm();
     msg << MSG::DEBUG<< "Current set is UseBFieldTestMap="<<m_UseBFieldTestMap
         << " LongitudinalBField="<<m_LongitudinalBField
-        << " UseRandomBField="<<m_UseRandomBField
-        << " within:"<<m_RandomBFieldMinimum<<"-"<<m_RandomBFieldMaximum<<endmsg;
+      //<< " UseRandomBField="<<m_UseRandomBField
+      //<< " within:"<<m_RandomBFieldMinimum<<"-"<<m_RandomBFieldMaximum
+        << endmsg;
 
     m_demagCond = condition( "DemagParameters" );
     if ( m_demagCond ) updMgrSvc()->
                          registerCondition(this, m_demagCond.path(),
                                            &DeRichHPD::updateDemagProperties );
-    StatusCode sc = updMgrSvc()->update(this);
-    if( !sc ) {
+    sc = updMgrSvc()->update(this);
+    if ( sc.isFailure() ) {
       msg << MSG::FATAL << "Demagnification ums update failure."<<endmsg;
       return sc;
     }
 
-    m_simDemagMapR = new RichTabulatedProperty1D( &m_simDemagMapRTabProp );
-    m_simDemagMapPhi = new RichTabulatedProperty1D( &m_simDemagMapPhiTabProp );
-    m_recMagMapR = new RichTabulatedProperty1D( &m_recMagMapRTabProp );
-    m_recMagMapPhi = new RichTabulatedProperty1D( &m_recMagMapPhiTabProp );
-
   }
-  return StatusCode::SUCCESS;
+
+  return sc;
 }
 
 //=========================================================================
 //  getParameters
 //=========================================================================
-StatusCode DeRichHPD::getParameters ( ) {
-
-  MsgStream msg( msgSvc(), myName() );
+StatusCode DeRichHPD::getParameters ( ) 
+{
 
   SmartDataPtr<DetectorElement> deRich1(dataSvc(),DeRichLocations::Rich1 );
-  if ( !deRich1 ) {
+  if ( !deRich1 )
+  {
+    MsgStream msg( msgSvc(), myName() );
     msg << MSG::ERROR << "Could not load DeRich1" << endmsg;
     return StatusCode::FAILURE;
   }
 
-  m_XmlHpdDemagPath = "/dd/Materials/RichMaterialTabProperties/RichHpdDemag";
-
   m_pixelSize = deRich1->param<double>("RichHpdPixelXsize");
-  m_subPixelSize = m_pixelSize/8;
   m_activeRadius = deRich1->param<double>("RichHpdActiveInpRad");
-  m_activeRadiusSq = m_activeRadius*m_activeRadius;
 
   if (deRich1->exists("RefractHPDQrtzWin") )
     m_refactParams = deRich1->param<std::vector<double> >("RefractHPDQrtzWin");
 
-
-  m_pixelColumns = deRich1->param<int>("RichHpdNumPixelCol");
-  m_pixelRows = deRich1->param<int>("RichHpdNumPixelRow");
-
   m_UseHpdMagDistortions= deRich1->param<int>("UseHpdMagDistortions");
   m_UseBFieldTestMap    = deRich1->param<int>("UseBFieldTestMap");
   m_LongitudinalBField  = deRich1->param<double>("LongitudinalBField");
-  m_UseRandomBField     = deRich1->param<int>("UseRandomBField");
-  m_RandomBFieldMinimum = deRich1->param<double>("RandomBFieldMinimum");
-  m_RandomBFieldMaximum = deRich1->param<double>("RandomBFieldMaximum");
-  m_RichHpdQWToSiMaxDist= deRich1->param<double>("RichHpdQWToSiMaxDist");
+  //m_UseRandomBField     = deRich1->param<int>("UseRandomBField");
+  //m_RandomBFieldMinimum = deRich1->param<double>("RandomBFieldMinimum");
+  //m_RandomBFieldMaximum = deRich1->param<double>("RandomBFieldMaximum");
 
-  //load old demagnification factors//
+  // load old demagnification factors
   SmartDataPtr<TabulatedProperty> HPDdeMag
     (dataSvc(),"/dd/Materials/RichMaterialTabProperties/HpdDemagnification");
-  if (!HPDdeMag) {
+  if (!HPDdeMag) 
+  {
+    MsgStream msg( msgSvc(), myName() );
     msg << MSG::FATAL << "Could not load HpdDemagnification" << endmsg;
     return StatusCode::FAILURE;
   }
-  TabulatedProperty::Table DeMagTable = HPDdeMag->table();
+  const TabulatedProperty::Table & DeMagTable = HPDdeMag->table();
   m_deMagFactor[0] = DeMagTable[0].second;
   m_deMagFactor[1] = DeMagTable[1].second;
-  msg << MSG::DEBUG << "DeMagFactor(0):" << m_deMagFactor[0]
-      << " DeMagFactor(1):" << m_deMagFactor[1] << endmsg;
-
+ 
   return StatusCode::SUCCESS;
 }
-
 
 //=================================================================================
 // Demagnification Tables for simulation and reconstruction (Marco Musy 07/09/2006)
 //=================================================================================
-StatusCode DeRichHPD::updateDemagProperties() {
-
-  MsgStream msg ( msgSvc(), myName() );
-  StatusCode sc = StatusCode::SUCCESS;
+StatusCode DeRichHPD::updateDemagProperties() 
+{
 
   if ( !m_firstUpdate ) {
+    MsgStream msg ( msgSvc(), myName() );
     msg << MSG::INFO << "Updating properties for HPD:" << m_number <<endmsg;
     m_firstUpdate = false;
   }
 
-  std::string numb = boost::lexical_cast<std::string>(m_number);
-  std::vector<double> coeff_sim = m_demagCond->paramVect<double>("hpd"+numb+"_sim");
+  // delete the current interpolators
+  cleanUpInterps();
 
-  sc = fillHpdDemagTableSim( coeff_sim );
+  // Initialise the demagnifcation
+  StatusCode sc = fillHpdDemagTable();
   if (!sc) {
-    msg<<MSG::FATAL<< "Could not fill simulation table for HPD:" << m_number <<endmsg;
+    MsgStream msg ( msgSvc(), myName() );
+    msg<<MSG::FATAL<< "Could not initialise demagnification table for HPD:" << m_number <<endmsg;
     return sc;
   }
-  std::vector<double> coeff_rec = m_demagCond->paramVect<double>("hpd"+numb+"_rec");
-  sc = fillHpdDemagTableRec( coeff_rec );
+
+  // Initialise the magnification
+  sc = fillHpdMagTable();
   if (!sc) {
-    msg<<MSG::FATAL<< "Could not fill reconstruction table for HPD:" << m_number <<endmsg;
+    MsgStream msg ( msgSvc(), myName() );
+    msg<<MSG::FATAL<< "Could not initialise magnification table for HPD:" << m_number <<endmsg;
     return sc;
   }
 
@@ -256,57 +262,53 @@ StatusCode DeRichHPD::updateDemagProperties() {
 }
 
 //=========================================================================
-StatusCode DeRichHPD::
-fillHpdDemagTableSim(const std::vector<double>& coeff_sim)
+StatusCode DeRichHPD::fillHpdDemagTable()
 {
-  const int totbins = 50; //do not change
-  MsgStream msg ( msgSvc(), myName() );
+  const std::string paraLoc = "hpd"+boost::lexical_cast<std::string>(m_number)+"_sim";
+  const std::vector<double> & coeff_sim = m_demagCond->paramVect<double>(paraLoc);
 
-  //reset table
-  TabulatedProperty::Table& simTableR = m_simDemagMapRTabProp.table();
-  simTableR.clear();
-  simTableR.reserve(totbins+1);
-  TabulatedProperty::Table& simTablePhi = m_simDemagMapPhiTabProp.table();
-  simTablePhi.clear();
-  simTablePhi.reserve(totbins+1);
-
-  SmartDataPtr<TabulatedProperty> dem(dataSvc(), m_XmlHpdDemagPath+"Sim_"+
+  SmartDataPtr<TabulatedProperty> dem(dataSvc(), XmlHpdDemagPath+"Sim_"+
                                       boost::lexical_cast<std::string>(m_number));
   if (!dem) {
     MsgStream msg ( msgSvc(), myName() );
-    msg<<MSG::ERROR<<"Could not load "<<(m_XmlHpdDemagPath+"Sim_")<<m_number<<endmsg;
+    msg<<MSG::ERROR<<"Could not load "<<(XmlHpdDemagPath+"Sim_")<<m_number<<endmsg;
     return StatusCode::FAILURE;
   }
-  TabulatedProperty::Table simTable = dem->table();
+  TabulatedProperty::Table & simTable = dem->table();
   simTable.clear();
   simTable.reserve(totbins+1);
 
-  if (coeff_sim.size() < 8)  msg<<MSG::ERROR<< "coeff_sim.size()<8"<<endmsg;
-  double r_a0 = coeff_sim.at(0);
-  double r_a1 = coeff_sim.at(1);
-  double r_a2 = coeff_sim.at(2);
-  double r_a3 = coeff_sim.at(3);
-  double phi_a0 = coeff_sim.at(4);
-  double phi_a1 = coeff_sim.at(5);
-  double phi_a2 = coeff_sim.at(6);
-  double phi_a3 = coeff_sim.at(7);
-  double BLong = 0;
-  if (m_UseRandomBField && m_UseBFieldTestMap)
+  // working data tables, used to initialise the interpolators
+  std::map<double,double> tableR, tablePhi;
+  tableR.clear();
+  tablePhi.clear();
+
+  if (coeff_sim.size() < 8) 
   {
-    BLong = m_RandomBFieldMinimum + number_range( 0, 100 )/100.0
-      * (m_RandomBFieldMaximum-m_RandomBFieldMinimum);
-    msg << MSG::INFO<<"Random B field for Hpd" << m_number
-        << " set to "<<BLong<<" gauss"<<endmsg;
+    MsgStream msg ( msgSvc(), myName() );
+    msg<<MSG::ERROR<< "coeff_sim.size()<8"<<endmsg;
+    return StatusCode::FAILURE;
   }
-  else
-    BLong = m_LongitudinalBField;
+  const double r_a0 = coeff_sim.at(0);
+  const double r_a1 = coeff_sim.at(1);
+  const double r_a2 = coeff_sim.at(2);
+  const double r_a3 = coeff_sim.at(3);
+  const double phi_a0 = coeff_sim.at(4);
+  const double phi_a1 = coeff_sim.at(5);
+  const double phi_a2 = coeff_sim.at(6);
+  const double phi_a3 = coeff_sim.at(7);
+  double BLong = 0;
+  //if (m_UseRandomBField && m_UseBFieldTestMap)
+  //{
+  //  BLong = m_RandomBFieldMinimum + number_range( 0, 100 )/100.0
+  //    * (m_RandomBFieldMaximum-m_RandomBFieldMinimum);
+  //  msg << MSG::INFO<<"Random B field for Hpd" << m_number
+  //      << " set to "<<BLong<<" gauss"<<endmsg;
+  //}
+  //else
+  BLong = m_LongitudinalBField;
 
-  msg << MSG::DEBUG<<"Using sim parameters r  : " <<r_a0<<" "<<r_a1<<" "
-      <<r_a2<<" "<<r_a3<<endreq;
-  msg << MSG::DEBUG<<"                 phi: "<<phi_a0<<" "<<phi_a1<<" "
-      <<phi_a2<<" "<<phi_a3<<endreq;
-
-  //Simulation from cathode->anode////////////////////
+  // Simulation from cathode->anode
   for ( int i = 0; i < totbins+1; ++i ) {
 
     double r_anode = 0, phi_anode = 0;
@@ -330,43 +332,45 @@ fillHpdDemagTableSim(const std::vector<double>& coeff_sim)
         + phi_a3 * r_cathode * r_cathode * r_cathode;
     }
 
-    simTableR.push_back( TabulatedProperty::Entry( r_cathode, r_anode ) );
-    simTablePhi.push_back( TabulatedProperty::Entry( r_cathode, phi_anode ) );
     simTable.push_back( TabulatedProperty::Entry( r_anode, phi_anode ) );
+    tableR[ r_cathode ]   = r_anode;
+    tablePhi[ r_cathode ] = phi_anode;
+
   }
+
+  m_demagMapR   = new Rich::TabulatedFunction1D( tableR );
+  m_demagMapPhi = new Rich::TabulatedFunction1D( tablePhi );
+
   return StatusCode::SUCCESS;
 }
 
 //=========================================================================
-StatusCode DeRichHPD::
-fillHpdDemagTableRec(const std::vector<double>& coeff_rec )
+StatusCode DeRichHPD::fillHpdMagTable( )
 {
-  const int totbins = 50; //do not change
-  MsgStream msg ( msgSvc(), myName() );
+  const std::string paraLoc = "hpd"+boost::lexical_cast<std::string>(m_number)+"_rec";
+  const std::vector<double> & coeff_rec = m_demagCond->paramVect<double>(paraLoc);
 
-  //reset table
-  TabulatedProperty::Table& recTableR = m_recMagMapRTabProp.table();
-  recTableR.clear();
-  recTableR.reserve(totbins+1);
-  TabulatedProperty::Table& recTablePhi = m_recMagMapPhiTabProp.table();
-  recTablePhi.clear();
-  recTablePhi.reserve(totbins+1);
+  // working data tables, used to initialise the interpolators
+  std::map<double,double> tableR, tablePhi;
+  tableR.clear();
+  tablePhi.clear();
 
-  if(coeff_rec.size() < 8)  msg<<MSG::ERROR<< "coeff_rec.size()<8"<<endmsg;
-  double r_a0 = coeff_rec.at(0);
-  double r_a1 = coeff_rec.at(1);
-  double r_a2 = coeff_rec.at(2);
-  double r_a3 = coeff_rec.at(3);
-  double phi_a0 = coeff_rec.at(4);
-  double phi_a1 = coeff_rec.at(5);
-  double phi_a2 = coeff_rec.at(6);
-  double phi_a3 = coeff_rec.at(7);
+  if(coeff_rec.size() < 8) 
+  {
+    MsgStream msg ( msgSvc(), myName() );
+    msg<<MSG::ERROR<< "coeff_rec.size()<8"<<endmsg;
+    return StatusCode::FAILURE;
+  }
+  const double r_a0 = coeff_rec.at(0);
+  const double r_a1 = coeff_rec.at(1);
+  const double r_a2 = coeff_rec.at(2);
+  const double r_a3 = coeff_rec.at(3);
+  const double phi_a0 = coeff_rec.at(4);
+  const double phi_a1 = coeff_rec.at(5);
+  const double phi_a2 = coeff_rec.at(6);
+  const double phi_a3 = coeff_rec.at(7);
 
-  msg<< MSG::DEBUG<<"Hpd"<<m_number<<": using rec parameters r: "
-     <<r_a0<<" "<<r_a1<<" "<<r_a2<<" "<<r_a3
-     <<" phi: "<<phi_a0<<" "<<phi_a1<<" "<<phi_a2<<" "<<phi_a3<<endreq;
-
-  //Reconstruction from anode->cathode////////////////////
+  // Reconstruction from anode->cathode
   for ( int i = 0; i < totbins+1; ++i ) {
 
     double r_anode = std::min(m_siliconHalfLengthX,m_siliconHalfLengthY)/totbins*i;
@@ -389,25 +393,15 @@ fillHpdDemagTableRec(const std::vector<double>& coeff_rec )
         + phi_a3 * r_anode * r_anode * r_anode;
     }
 
-    recTableR.push_back( TabulatedProperty::Entry( r_anode, r_cathode ) );
-    recTablePhi.push_back( TabulatedProperty::Entry( r_anode, phi_cathode ) );
+    tableR[ r_anode ]   = r_cathode;
+    tablePhi[ r_anode ] = phi_cathode;
+
   }
+
+  m_magMapR     = new Rich::TabulatedFunction1D( tableR );
+  m_magMapPhi   = new Rich::TabulatedFunction1D( tablePhi );
+
   return StatusCode::SUCCESS;
-}
-
-//=========================================================================
-//  convert a smartID to a point on the inside of the HPD window
-//=========================================================================
-StatusCode DeRichHPD::detectionPoint ( Gaudi::XYZPoint& detectPoint ) const
-{
-
-  // somehow transform the point to get the misalignmet.
-
-
-  return( m_UseHpdMagDistortions ?
-          magnifyToGlobal_new( detectPoint ) : //M.Musy 07/09/2006
-          magnifyToGlobal_old( detectPoint ) ); //old demag parameters
-
 }
 
 //=========================================================================
@@ -423,9 +417,9 @@ StatusCode DeRichHPD::magnifyToGlobal_old( Gaudi::XYZPoint& detectPoint ) const
   // To go from the anode to the cathode solve: d1*Rc^2 - d0*Rc - Ra = 0
   // The difference is that Ra is now positive.
   // Chose the solution with the minus sign
-  double rInWindow = ( m_deMagFactor[0] -
-                       sqrt(gsl_pow_2( m_deMagFactor[0] ) -
-                            4*m_deMagFactor[1]*inSiliconR))/(2*m_deMagFactor[1]);
+  const double rInWindow = ( m_deMagFactor[0] -
+                             sqrt(gsl_pow_2( m_deMagFactor[0] ) -
+                                  4*m_deMagFactor[1]*inSiliconR))/(2*m_deMagFactor[1]);
 
   // for the refraction on the HPD window
   const double rOutWin = rInWindow + m_refactParams[3]*gsl_pow_3(rInWindow)+
@@ -433,7 +427,7 @@ StatusCode DeRichHPD::magnifyToGlobal_old( Gaudi::XYZPoint& detectPoint ) const
     m_refactParams[0];
 
   // the minus sign is for the cross-focussing
-  const double scaleUp = (inSiliconR>0 ? -rOutWin/inSiliconR : 0 );
+  const double scaleUp = ( inSiliconR>0 ? -rOutWin/inSiliconR : 0 );
 
   const double inWindowX = scaleUp*detectPoint.x();
   const double inWindowY = scaleUp*detectPoint.y();
@@ -444,8 +438,8 @@ StatusCode DeRichHPD::magnifyToGlobal_old( Gaudi::XYZPoint& detectPoint ) const
   const double inWindowZ = sqrt(m_winOutRsq - XsqPlusYsq);
 
   detectPoint = m_fromWindowToGlobal * Gaudi::XYZPoint(inWindowX,inWindowY,inWindowZ);
-  return StatusCode::SUCCESS;
 
+  return StatusCode::SUCCESS;
 }
 
 //=========================================================================
@@ -454,21 +448,19 @@ StatusCode DeRichHPD::magnifyToGlobal_old( Gaudi::XYZPoint& detectPoint ) const
 StatusCode DeRichHPD::magnifyToGlobal_new( Gaudi::XYZPoint& detectPoint ) const
 {
 
-  double inSiliconR = detectPoint.R();
+  const double inSiliconR = detectPoint.R();
 
-  double result_r = m_recMagMapR->value( inSiliconR );
-  double result_phi = m_recMagMapPhi->value( inSiliconR );
+  const double result_r   = magnification_RtoR()->value( inSiliconR );
+  const double result_phi = magnification_RtoPhi()->value( inSiliconR );
 
   double anodePhi = std::atan2( detectPoint.Y(), detectPoint.X() );
-  if( detectPoint.Y()< 0) anodePhi += 6.2832;
-  double new_phi=0;
-  if( anodePhi+result_phi+ 3.1416 >  6.2832 )
-    new_phi= anodePhi+result_phi-3.1416;
-  else
-    new_phi= anodePhi+result_phi + 3.1416;
+  if ( detectPoint.Y() < 0 ) anodePhi += Gaudi::Units::twopi;
+  
+  double new_phi = anodePhi + result_phi + Gaudi::Units::pi;
+  if ( new_phi > Gaudi::Units::twopi ) new_phi -= Gaudi::Units::twopi;
 
-  double inWindowX = result_r * cos(new_phi);
-  double inWindowY = result_r * sin(new_phi);
+  const double inWindowX = result_r * cos(new_phi);
+  const double inWindowY = result_r * sin(new_phi);
   const double XsqPlusYsq = inWindowX*inWindowX+inWindowY*inWindowY;
 
   if ( m_winInRsq < XsqPlusYsq ) return StatusCode::FAILURE;
@@ -477,30 +469,10 @@ StatusCode DeRichHPD::magnifyToGlobal_new( Gaudi::XYZPoint& detectPoint ) const
   detectPoint = m_fromWindowToGlobal * Gaudi::XYZPoint(inWindowX,inWindowY,inWindowZ);
 
   return StatusCode::SUCCESS;
-
-}
-
-
-//=========================================================================
-//  convert a SmartID to a point on the anode (global coord system)
-//=========================================================================
-Gaudi::XYZPoint DeRichHPD::detPointOnAnode( const LHCb::RichSmartID& smartID ) const
-{
-
-  // convert pixel number to silicon coordinates
-  const double inSiliconX =
-    smartID.pixelCol()*m_pixelSize + m_pixelSize/2.0 - m_siliconHalfLengthX;
-  const double inSiliconY =
-    m_siliconHalfLengthY - smartID.pixelRow()*m_pixelSize - m_pixelSize/2.0;
-
-  Gaudi::XYZPoint inSilicon( inSiliconX, inSiliconY, 0.0 );
-
-  return ( deSiSensor->geometry()->toGlobal( inSilicon ) );
-
 }
 
 //***********************************************************************
-double DeRichHPD::demag(double r, double B) {
+double DeRichHPD::demag(const double r, const double B) {
 
   // Radial mapping function and rotation function
   // from Gianluca Aglieri Rinella and Ann Van Lysebetten
@@ -521,15 +493,15 @@ double DeRichHPD::demag(double r, double B) {
   const double b0=-4.713E-4, b1=8.613E-6, b2=-1.2794E-6, b3=+1.3596E-8;
 
   // a and b calculated from the field
-  double a= a0 + a1*B+a2*B*B;
-  double b=b0 + b1*B + b2*B*B + b3*B*B*B;
+  const double a= a0 + a1*B+a2*B*B;
+  const double b=b0 + b1*B + b2*B*B + b3*B*B*B;
 
   // rho calculated from r, a and b, second order, 0 constant term polynomial
   return (a*r + b*r*r);
 
 }
 //***********************************************************************
-double DeRichHPD::mag(double rho, double B) {
+double DeRichHPD::mag(const double rho, const double B) {
 
   // function mag returns the r coordinate given rho and B as arguments
   // coefficients of the fits for the dependence of the mag law
@@ -538,14 +510,14 @@ double DeRichHPD::mag(double rho, double B) {
   const double d0=0.10377, d1=-1.052e-3, d2=1.995e-4, d3=-2.734e-6;
 
   // calculate c and d from the field
-  double c = c0 + c1*B+c2*B*B;
-  double d = d0 + d1*B + d2*B*B + d3*B*B*B;
+  const double c = c0 + c1*B+c2*B*B;
+  const double d = d0 + d1*B + d2*B*B + d3*B*B*B;
 
   // r calculated from rho, c and d, second order, 0 constant term polynomial
   return (c*rho + d*rho*rho);
 }
 //***********************************************************************
-double DeRichHPD::Delta_Phi(double r, const double B) {
+double DeRichHPD::Delta_Phi(const double r, const double B) {
 
   // It returns the rotation angle \Delta\phi [rad ]as a function of the
   // radial entrance
@@ -558,24 +530,27 @@ double DeRichHPD::Delta_Phi(double r, const double B) {
   // calculate a
   const double a1 = 0.0255208;
   const double a2 = -4.78963E-5;
-  double a = a1*B + a2*B*B;
+  const double a = a1*B + a2*B*B;
 
   // calculate b
   const double b1 = -6.93056E-6;
   const double b2 = -8.31286E-7;
   const double b3 = 1.23044E-8;
-  double b =  b1*B + b2*B*B + b3*B*B*B;
+  const double b =  b1*B + b2*B*B + b3*B*B*B;
 
   // calculate c
   const double c1 = 3.38129E-8;
   const double c2 = 1.6186E-8;
   const double c3 = -2.24814E-10;
-  double c = c1*B + c2*B*B + c3*B*B*B;
+  const double c = c1*B + c2*B*B + c3*B*B*B;
 
   // this calculates and returns \Delta\phi from a, b, c and r
   return ( a + b*r*r + c*r*r*r ) ;
 }
 
+// CRJ Comment out by default since having a 57 element array in each HPD just for this is 
+// wasteful, and this random stuff should go anyway IMHO ...
+/*
 //===========================================================================
 int DeRichHPD::number_mm( void ) {
   int *piState= &rgiState[2];
@@ -594,7 +569,7 @@ int DeRichHPD::number_range( int from, int to ) {
   int power, number;
   if ( ( to = to - from + 1 ) <= 1 )  return from;
   for ( power = 2; power < to; power <<= 1 );
-  while ( ( number = number_mm( ) & ( power - 1 ) ) >= to );
+  while ( ( number = number_mm() & ( power - 1 ) ) >= to );
   return from + number;
 }
 //===========================================================================
@@ -611,3 +586,4 @@ void DeRichHPD::init_mm( ) {
       & ( ( 1 << 30 ) - 1 );
   return;
 }
+*/

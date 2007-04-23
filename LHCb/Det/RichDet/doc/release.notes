@@ -4,6 +4,9 @@
 ! Purpose     : interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2007-04-23 - Chris Jones
+ - Move RichDAQDefinitions.h into RichKernel
+
 ! 2007-04-04 - Chris Jones
  - Improve doxygen comments in DeRichSystem
  - Some more optimisation in DeRichSystem, by making some methods inline

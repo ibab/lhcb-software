@@ -3,7 +3,7 @@ version v10r3
 
 branches src RichDet doc cmt
 
-use LHCbKernel  v*   Kernel
+use RichKernel  v*   Rich
 use DetDescCnv  v*   Det
 use Boost       v*   LCG_Interfaces
 use GSL         v*   LCG_Interfaces

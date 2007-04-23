@@ -4,7 +4,7 @@
  *  Header file for detector description class : DeRichSystem
  *
  *  CVS Log :-
- *  $Id: DeRichSystem.h,v 1.8 2007-04-04 10:56:38 jonrob Exp $
+ *  $Id: DeRichSystem.h,v 1.9 2007-04-23 12:28:13 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2006-01-26
@@ -24,8 +24,10 @@
 // boost
 #include "boost/array.hpp"
 
+// RichKernel
+#include "RichKernel/RichDAQDefinitions.h"
+
 //local
-#include "RichDet/RichDAQDefinitions.h"
 #include "RichDet/DeRichLocations.h"
 
 // External declarations
@@ -178,12 +180,7 @@ public:
   const Rich::DAQ::Level1IDs & level1IDs() const;
 
   /// Return the copy number for a given smartID
-  inline unsigned int copyNumber( const LHCb::RichSmartID smartID ) const
-  {
-    return( smartID.rich() == Rich::Rich1 ?
-            smartID.panel()*98 + smartID.hpdCol()*14 + smartID.hpdNumInCol() :
-            m_rich1NumberHpds + smartID.panel()*144 + smartID.hpdCol()*16 + smartID.hpdNumInCol() );
-  }
+  unsigned int copyNumber( const LHCb::RichSmartID smartID ) const;
 
   /**
    * Retrieves the location of the HPD in the detector store, so it can be
@@ -268,6 +265,16 @@ private: // data
   int m_rich1NumberHpds;
 
 };
+
+//=========================================================================
+// Return the copy number for a given smartID
+//=========================================================================
+inline unsigned int DeRichSystem::copyNumber( const LHCb::RichSmartID smartID ) const
+{
+  return( smartID.rich() == Rich::Rich1 ?
+          smartID.panel()*98 + smartID.hpdCol()*14 + smartID.hpdNumInCol() :
+          m_rich1NumberHpds + smartID.panel()*144 + smartID.hpdCol()*16 + smartID.hpdNumInCol() );
+}
 
 //=========================================================================
 // activeHPDRichSmartIDs

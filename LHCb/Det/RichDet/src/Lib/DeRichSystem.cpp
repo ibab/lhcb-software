@@ -4,7 +4,7 @@
  *
  * Implementation file for class : DeRichSystem
  *
- * $Id: DeRichSystem.cpp,v 1.13 2007-04-04 10:56:44 jonrob Exp $
+ * $Id: DeRichSystem.cpp,v 1.14 2007-04-23 12:28:13 jonrob Exp $
  *
  * @author Antonis Papanestis a.papanestis@rl.ac.uk
  * @date   2006-01-27
@@ -513,6 +513,5 @@ std::string DeRichSystem::getDeHPDLocation (LHCb::RichSmartID smartID ) const
 
   loc = loc + "/HPD:"+boost::lexical_cast<std::string>(cNumber);
   return loc;
-
 }
 //===========================================================================
