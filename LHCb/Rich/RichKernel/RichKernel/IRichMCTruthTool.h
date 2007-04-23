@@ -5,7 +5,7 @@
  *  Header file for tool interface : Rich::IMCTruthTool
  *
  *  CVS Log :-
- *  $Id: IRichMCTruthTool.h,v 1.23 2007-03-09 17:58:13 jonrob Exp $
+ *  $Id: IRichMCTruthTool.h,v 1.24 2007-04-23 12:44:03 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-07-31
@@ -97,7 +97,8 @@ namespace Rich
 
       /** Get a vector of MCParticles associated to given RichSmartID
        *
-       *  @param id RichSmartID identifying the RICH readout channel
+       *  @param id      RichSmartID identifying the RICH readout channel
+       *  @param mcParts Vector of associated MCParticles
        *
        *  @return boolean indicating if any associated MCParticles where found
        */
@@ -107,6 +108,7 @@ namespace Rich
       /** Get a vector of MCParticles associated to given RichSmartID cluster
        *
        *  @param cluster RichSmartID cluster
+       *  @param mcParts Vector of associated MCParticles
        *
        *  @return boolean indicating if any associated MCParticles where found
        */
@@ -221,8 +223,8 @@ namespace Rich
        *  radiation from the given radiator. I.e. At least of of the associated
        *  hits came from a true Cherenkov hit in the correct radiator.
        *
-       *  @param id  cluster Cluster of RichSmartIDs
-       *  @param rad Radiator medium
+       *  @param cluster Cluster of RichSmartIDs
+       *  @param rad     Radiator medium
        *
        *  @return Boolean indicating if the hit is Cherenkov radiation
        *          in given radiator

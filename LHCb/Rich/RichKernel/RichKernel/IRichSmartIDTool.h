@@ -4,7 +4,7 @@
  *
  *  Header file for tool interface : Rich::ISmartIDTool
  *
- *  $Id: IRichSmartIDTool.h,v 1.19 2007-04-03 15:53:24 papanest Exp $
+ *  $Id: IRichSmartIDTool.h,v 1.20 2007-04-23 12:44:04 jonrob Exp $
  *
  *  @author Antonis Papanestis  a.papanestis@rl.ac.uk
  *  @date   2003-10-28
@@ -62,40 +62,51 @@ namespace Rich
     /** Converts a RichSmartID channel identification into a position in
      *  global LHCb coordinates
      *
-     *  @param smartid   The RichSmartID channel identifier
+     *  @param[IN]  smartid      The RichSmartID channel identifier
+     *  @param[OUT] detectPoint  The detection point in global coordinates
      *
-     *  @return The channel position in global LHCb coordinates
+     *  @return The status of the conversion
+     *  @retval StatusCode::SUCCESS The conversion to a global coordinate was successful
+     *  @retval StatusCode::FAILURE The conversion to a global coordinate failed
      */
     virtual StatusCode globalPosition ( const LHCb::RichSmartID smartid,
-                                        Gaudi::XYZPoint& detectPoint  ) const = 0;
+                                        Gaudi::XYZPoint& detectPoint ) const = 0;
 
     /** Finds the average position of a cluster of RichSmartIDs, in global LHCb coordinates
      *
-     *  @param cluster   The RichSmartID cluster
+     *  @param[IN]  cluster      The RichSmartID cluster
+     *  @param[OUT] detectPoint  The detection point in global coordinates
      *
-     *  @return The cluster position in global LHCb coordinates
+     *  @return The status of the conversion
+     *  @retval StatusCode::SUCCESS The conversion to a global coordinate was successful
+     *  @retval StatusCode::FAILURE The conversion to a global coordinate failed
      */
-    virtual Gaudi::XYZPoint globalPosition ( const Rich::HPDPixelCluster& cluster ) const = 0;
+    virtual StatusCode globalPosition ( const Rich::HPDPixelCluster& cluster,
+                                        Gaudi::XYZPoint& detectPoint ) const = 0;
 
-    /** Converts an HPD RichSmartID identification into a position in
+    /** @brief Converts an HPD RichSmartID identification into a position in
      *  global LHCb coordinates.
      *
      *  Return coordinate is the centre of the HPD wafer in global LHCb coordinates.
      *
-     *  @param hpdid   The RichSmartID HPD identifier
+     *  @param[IN] hpdid       The RichSmartID HPD identifier
+     *  @param[OUT] hpdPoint   The HPD position in global coordinates
      *
-     *  @return The HPD position in global LHCb coordinates
+     *  @return The status of the conversion
+     *  @retval StatusCode::SUCCESS The conversion to a global coordinate was successful
+     *  @retval StatusCode::FAILURE The conversion to a global coordinate failed
      */
-    virtual Gaudi::XYZPoint hpdPosition ( const LHCb::RichSmartID hpdid ) const = 0;
+    virtual StatusCode hpdPosition ( const LHCb::RichSmartID hpdid,
+                                     Gaudi::XYZPoint& hpdPoint ) const = 0;
 
     /** Computes the global position coordinate for a given position in local
      *  HPD panel coordinates and RICH detector and panel identifiers.
      *
-     *  @param localPoint  The local coordinate position
-     *  @param rich        The RICH detector
-     *  @param side        The RICH HPD panel
+     *  @param[IN] localPoint   The local coordinate position
+     *  @param[IN] rich         The RICH detector
+     *  @param[IN] side         The RICH HPD panel
      *
-     *  @return The global coordinate
+     *  @return The position in global coordinates
      */
     virtual Gaudi::XYZPoint globalPosition ( const Gaudi::XYZPoint& localPoint,
                                              const Rich::DetectorType rich,
@@ -125,9 +136,13 @@ namespace Rich
     /** Converts a position in global coordinates to the local coordinate system
      *  of the appropriate HPD panel
      *
-     *  @param globalPoint The global coordinate to convert
+     *  The panel Rich::Left has positive x and panel Rich::Right has negative
+     *  x coordinates. Only the x and y coordinates are valid. z coordinate
+     *  is set to 0.
      *
-     *  @return The coordinate in local HPD panel coordinates
+     *  @param[IN] globalPoint  The global coordinate to convert
+     *
+     *  @return The local position on the HPD panel
      */
     virtual Gaudi::XYZPoint globalToPDPanel ( const Gaudi::XYZPoint& globalPoint ) const = 0;
 

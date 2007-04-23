@@ -5,7 +5,7 @@
  *  Implementation file for pixel clustering class Rich::DAQ::PixelCluster
  *
  *  CVS Log :-
- *  $Id: RichPixelCluster.cpp,v 1.3 2007-03-19 15:03:29 jonrob Exp $
+ *  $Id: RichPixelCluster.cpp,v 1.4 2007-04-23 12:44:04 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   02/02/2007
@@ -20,7 +20,7 @@
 
 using namespace Rich;
 
-HPDPixelClusters::HPDPixelClusters( const LHCb::RichSmartID::Vector & smartIDs )
+HPDPixelClusters::HPDPixelClusters( const HPDPixelCluster::SmartIDVector & smartIDs )
   : m_lastID ( 0 )
 {
   // initialise the c arrays
@@ -30,12 +30,13 @@ HPDPixelClusters::HPDPixelClusters( const LHCb::RichSmartID::Vector & smartIDs )
   if ( !smartIDs.empty() )
   {
     // set the hit pixels as "on"
-    for ( LHCb::RichSmartID::Vector::const_iterator iS = smartIDs.begin();
+    for ( HPDPixelCluster::SmartIDVector::const_iterator iS = smartIDs.begin();
           iS != smartIDs.end(); ++iS )
     {
       setOn( (*iS).pixelRow(), (*iS).pixelCol() );
     }
     m_hpdID = smartIDs.front().hpdID();
+    //m_allclus.reserve(5); // reserve size for 5 pixels in cluster
   }
 }
 
@@ -43,7 +44,7 @@ HPDPixelClusters::Cluster *
 HPDPixelClusters::mergeClusters( Cluster * clus1, Cluster * clus2 )
 {
   // add pixels to clus1
-  for ( LHCb::RichSmartID::Vector::const_iterator i = clus2->pixels().smartIDs().begin();
+  for ( HPDPixelCluster::SmartIDVector::const_iterator i = clus2->pixels().smartIDs().begin();
         i != clus2->pixels().smartIDs().end(); ++i )
   {
     setCluster( (*i).pixelRow(), (*i).pixelCol(), clus1 );
@@ -52,12 +53,6 @@ HPDPixelClusters::mergeClusters( Cluster * clus1, Cluster * clus2 )
   removeCluster( clus2 );
   // return clus1 as merged cluster
   return clus1;
-}
-
-HPDPixelClusters::~HPDPixelClusters()
-{
-  for ( Cluster::PtnVector::iterator i = m_allclus.begin();
-        i != m_allclus.end(); ++i ) { delete *i; }
 }
 
 MsgStream& HPDPixelClusters::fillStream ( MsgStream & os ) const
@@ -86,12 +81,12 @@ MsgStream& HPDPixelClusters::fillStream ( MsgStream & os ) const
   return os;
 }
 
-void HPDPixelClusters::suppressIDs( LHCb::RichSmartID::Vector & smartIDs,
+void HPDPixelClusters::suppressIDs( HPDPixelCluster::SmartIDVector & smartIDs,
                                     const unsigned int maxSize ) const
 {
-  LHCb::RichSmartID::Vector newSmartIDs;
+  HPDPixelCluster::SmartIDVector newSmartIDs;
   newSmartIDs.reserve(smartIDs.size());
-  for ( LHCb::RichSmartID::Vector::const_iterator iS = smartIDs.begin();
+  for ( HPDPixelCluster::SmartIDVector::const_iterator iS = smartIDs.begin();
         iS != smartIDs.end(); ++iS )
   {
     if ( getCluster((*iS).pixelRow(),(*iS).pixelCol())->size() <= maxSize )
@@ -109,7 +104,7 @@ void HPDPixelClusters::splitClusters( const Cluster::PtnVector & clusters )
         iC != clusters.end(); ++iC )
   {
     // loop over the smartIDs for this cluster
-    for ( LHCb::RichSmartID::Vector::const_iterator iS = (*iC)->pixels().smartIDs().begin();
+    for ( HPDPixelCluster::SmartIDVector::const_iterator iS = (*iC)->pixels().smartIDs().begin();
           iS != (*iC)->pixels().smartIDs().end(); ++iS )
     {
       // for each ID, make a single channel new cluster

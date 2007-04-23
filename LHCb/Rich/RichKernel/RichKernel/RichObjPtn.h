@@ -5,7 +5,7 @@
  *  Header file for RICH utility class : Rich::ObjPtn
  *
  *  CVS Log :-
- *  $Id: RichObjPtn.h,v 1.5 2007-03-09 17:58:13 jonrob Exp $
+ *  $Id: RichObjPtn.h,v 1.6 2007-04-23 12:44:04 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   13/11/2005
@@ -50,6 +50,15 @@ namespace Rich
      */
     explicit ObjPtn( TYPE * obj ) : m_obj(obj) {}
 
+    /** Copy Constructor from another object of type TYPE
+     *
+     *  @param obj Reference to object to use as underlying data object
+     *
+     *  This method requires the underlying object to have a valid copy constructor
+     *  with syntax TYPE( TYPE& obj )
+     */
+    explicit ObjPtn( const TYPE & obj ) : m_obj( new TYPE(obj) ) {}
+
     /// Destructor
     ~ObjPtn() { delete m_obj; }
 
@@ -78,6 +87,15 @@ namespace Rich
 
     /// Simple access method
     inline TYPE* object()                 { return checkObj(); }
+
+    /// Inherit a new object
+    inline void inherit( TYPE * obj ) { delete m_obj; m_obj = obj; }
+
+    /// Clone method
+    inline TYPE* clone() const
+    {
+      return ( NULL == m_obj ? NULL : new TYPE(*m_obj) );
+    }
 
     /// Overload output to ostream
     friend inline std::ostream& operator << ( std::ostream& s,

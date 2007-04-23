@@ -2,15 +2,14 @@
 # Created    : 2003-11-06
 # Maintainer : Christopher Rob Jones
 #============================================================================
-# $Id: requirements,v 1.59 2007-03-20 13:45:22 cattanem Exp $
+# $Id: requirements,v 1.60 2007-04-23 12:44:04 jonrob Exp $
 #============================================================================
 
 package RichKernel
 version v7r3
 
 # ================ structure =================================================
-branches RichKernel RichEvent cmt doc src
-
+branches RichKernel cmt doc src
 
 # ================ dependencies ==============================================
 use DetDesc            v*   Det
@@ -19,7 +18,8 @@ use GaudiAlg           v*
 use Boost              v*   LCG_Interfaces
 
 # ================ environment ===============================================
-apply_pattern install_more_includes more=RichKernel offset=RichEvent
+#apply_pattern install_more_includes more=RichKernel offset=RichEvent
+apply_pattern install_more_includes more=RichKernel
 
 # ================ linker library ============================================
 library RichKernel ../src/*.cpp

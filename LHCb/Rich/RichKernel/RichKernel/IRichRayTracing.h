@@ -4,7 +4,7 @@
  *
  *  Header file for tool interface : Rich::IRayTracing
  *
- *  $Id: IRichRayTracing.h,v 1.28 2007-03-09 17:58:13 jonrob Exp $
+ *  $Id: IRichRayTracing.h,v 1.29 2007-04-23 12:44:03 jonrob Exp $
  *
  *  @author Antonis Papanestis
  *  @date   2003-10-28
@@ -163,6 +163,7 @@ namespace Rich
      *
      *  @param[in,out] position  On input the start point. On output the reflection point
      *  @param[in,out] direction On input the starting direction. On output the reflected direction.
+     *  @param         plane     The plane to refect off
      *
      *  @return StatusCode indicating if the ray tracing was succesful
      *  @retval StatusCode::SUCCESS Ray tracing was successful

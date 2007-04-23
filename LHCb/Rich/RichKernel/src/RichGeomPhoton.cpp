@@ -5,7 +5,7 @@
  *  Implementation file for class : RichGeomPhoton
  *
  *  CVS Log :-
- *  $Id: RichGeomPhoton.cpp,v 1.2 2007-03-09 17:58:13 jonrob Exp $
+ *  $Id: RichGeomPhoton.cpp,v 1.3 2007-04-23 12:44:04 jonrob Exp $
  *
  *  @author  Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @author  Antonis Papanestis
@@ -14,7 +14,7 @@
 //-----------------------------------------------------------------------------
 
 // local
-#include "RichEvent/RichGeomPhoton.h"
+#include "RichKernel/RichGeomPhoton.h"
 
 std::ostream & LHCb::RichGeomPhoton::fillStream ( std::ostream& s ) const
 {

@@ -5,7 +5,7 @@
  *  Header file for tool interface : Rich::DAQ::IRawBufferToSmartIDsTool
  *
  *  CVS Log :-
- *  $Id: IRichRawBufferToSmartIDsTool.h,v 1.8 2007-03-09 17:58:13 jonrob Exp $
+ *  $Id: IRichRawBufferToSmartIDsTool.h,v 1.9 2007-04-23 12:44:03 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-07-31
@@ -21,8 +21,8 @@
 // Kernel
 #include "Kernel/RichSmartID.h"
 
-// numberings
-#include "RichDet/RichDAQDefinitions.h"
+// RichKernel
+#include "RichKernel/RichDecodedData.h"
 
 /// Static Interface Identification
 static const InterfaceID IID_IRichRawBufferToSmartIDsTool( "Rich::DAQ::IRawBufferToSmartIDsTool", 1, 0 );
@@ -53,9 +53,9 @@ namespace Rich
       static const InterfaceID& interfaceID() { return IID_IRichRawBufferToSmartIDsTool; }
 
       /** Access all RichSmartIDs for the current Event
-       *  @return Reference to the container of RichSmartIDs
+       *  @return Reference to the decoded RICH data structure
        */
-      virtual const Rich::DAQ::PDMap & allRichSmartIDs() const = 0;
+      virtual const Rich::DAQ::L1Map & allRichSmartIDs() const = 0;
 
     };
 

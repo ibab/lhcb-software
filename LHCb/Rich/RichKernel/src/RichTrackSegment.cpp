@@ -5,7 +5,7 @@
  *  Implementation file for class : RichTrackSegment
  *
  *  CVS Log :-
- *  $Id: RichTrackSegment.cpp,v 1.4 2007-02-01 17:24:55 jonrob Exp $
+ *  $Id: RichTrackSegment.cpp,v 1.5 2007-04-23 12:44:04 jonrob Exp $
  *
  *  @author  Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @author  Antonis Papanestis
@@ -14,7 +14,7 @@
 //-----------------------------------------------------------------------------
 
 // local
-#include "RichEvent/RichTrackSegment.h"
+#include "RichKernel/RichTrackSegment.h"
 
 void LHCb::RichTrackSegment::updateState( const Gaudi::XYZPoint & rotPnt,
                                           const Gaudi::Transform3D & trans )
