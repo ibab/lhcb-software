@@ -5,7 +5,7 @@
  * Implementation file for class : RichSmartIDTool
  *
  * CVS Log :-
- * $Id: RichSmartIDTool.cpp,v 1.29 2007-04-03 15:53:02 papanest Exp $
+ * $Id: RichSmartIDTool.cpp,v 1.30 2007-04-23 13:08:01 jonrob Exp $
  *
  * @author Antonis Papanestis
  * @date 2003-10-28
@@ -69,26 +69,34 @@ StatusCode Rich::SmartIDTool::initialize()
 
   return sc;
 }
-
 //=============================================================================
-StatusCode Rich::SmartIDTool::finalize()
-{
-  return RichToolBase::finalize();
-}
 
 //=============================================================================
 // Returns the position of a RichSmartID cluster in global coordinates
 //=============================================================================
-Gaudi::XYZPoint 
-Rich::SmartIDTool::globalPosition ( const Rich::HPDPixelCluster& cluster ) const
+StatusCode
+Rich::SmartIDTool::globalPosition ( const Rich::HPDPixelCluster& cluster,
+                                    Gaudi::XYZPoint& detectPoint ) const
 {
-  Gaudi::XYZPoint clusterPos(0,0,0);
-  for ( LHCb::RichSmartID::Vector::const_iterator iS = cluster.smartIDs().begin();
-        iS != cluster.smartIDs().end(); ++iS )
+  // Default return status is OK
+  StatusCode sc = StatusCode::SUCCESS;
+  // reset global coordinate to zero
+  detectPoint = Gaudi::XYZPoint(0,0,0);
+  // does cluster have any hits !!
+  if ( !cluster.smartIDs().empty() )
   {
-    clusterPos += (Gaudi::XYZVector)globalPosition(*iS);
+    // get position for each point in cluster
+    for ( LHCb::RichSmartID::Vector::const_iterator iS = cluster.smartIDs().begin();
+          iS != cluster.smartIDs().end(); ++iS )
+    {
+      Gaudi::XYZPoint tmpP;
+      sc = sc && globalPosition(*iS,tmpP);
+      detectPoint += (Gaudi::XYZVector)tmpP;
+    }
+    // normalise
+    detectPoint /= (double)cluster.size();
   }
-  return ( cluster.smartIDs().empty() ? clusterPos : clusterPos/((double)cluster.size()) );
+  return sc;
 }
 
 //=============================================================================
@@ -96,11 +104,9 @@ Rich::SmartIDTool::globalPosition ( const Rich::HPDPixelCluster& cluster ) const
 //=============================================================================
 StatusCode
 Rich::SmartIDTool::globalPosition ( const LHCb::RichSmartID smartID,
-                                    Gaudi::XYZPoint& detectPoint  ) const
+                                    Gaudi::XYZPoint& detectPoint ) const
 {
-  return( m_photoDetPanels[smartID.rich()][smartID.panel()]->
-    detectionPoint(smartID, detectPoint) );
-  
+  return m_photoDetPanels[smartID.rich()][smartID.panel()]->detectionPoint(smartID, detectPoint);
 }
 
 //=============================================================================
@@ -117,8 +123,9 @@ Rich::SmartIDTool::globalPosition ( const Gaudi::XYZPoint& localPoint,
 //=============================================================================
 // Returns the HPD position (center of the silicon wafer)
 //=============================================================================
-Gaudi::XYZPoint
-Rich::SmartIDTool::hpdPosition ( const LHCb::RichSmartID hpdid ) const
+StatusCode
+Rich::SmartIDTool::hpdPosition ( const LHCb::RichSmartID hpdid,
+                                 Gaudi::XYZPoint& hpdPoint ) const
 {
   // Create temporary RichSmartIDs for two corners of the HPD wafer
   LHCb::RichSmartID id1(hpdid), id0(hpdid);
@@ -128,13 +135,15 @@ Rich::SmartIDTool::hpdPosition ( const LHCb::RichSmartID hpdid ) const
   id1.setPixelCol(21);
 
   // get position of each of these pixels
-  const Gaudi::XYZPoint a( globalPosition(id0) );
-  const Gaudi::XYZPoint b( globalPosition(id1) );
+  Gaudi::XYZPoint a,b;
+  const StatusCode sc = globalPosition(id0,a) && globalPosition(id1,b);
 
   // return average position (i.e. HPD centre)
-  return Gaudi::XYZPoint( 0.5*(a.x()+b.x()) ,
-                          0.5*(a.y()+b.y()),
-                          0.5*(a.z()+b.z()) );
+  hpdPoint = Gaudi::XYZPoint( 0.5*(a.x()+b.x()) ,
+                              0.5*(a.y()+b.y()),
+                              0.5*(a.z()+b.z()) );
+
+  return sc;
 }
 
 //=============================================================================
@@ -292,7 +301,9 @@ const LHCb::RichSmartID::Vector& Rich::SmartIDTool::readoutChannelList( ) const
       for ( LHCb::RichSmartID::Vector::const_iterator iID = m_readoutChannels.begin();
             iID != m_readoutChannels.end(); ++iID )
       {
-        const Gaudi::XYZPoint gPos = globalPosition(*iID);
+        Gaudi::XYZPoint gPos;
+        sc = globalPosition(*iID,gPos);
+        if ( sc.isFailure() ) Exception( "Problem converting RichSmartID to global coordinate" );
         verbose() << " RichSmartID " << *iID << " " << (*iID).dataBitsOnly().key() << endreq
                   << "     -> global Position : " << gPos << endreq
                   << "     -> local Position  : " << globalToPDPanel(gPos) << endreq;

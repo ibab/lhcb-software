@@ -4,6 +4,12 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+! 2007-04-23 - Chris Jones
+ - Update RichSmartIDTool to return StatusCodes for SmartID -> position 
+   methods
+ - Add explicit constructor for Rich::HPDPixelCluster
+ - Adapt to changes in RichKernel
+
 !=========================== RichTools v2r10 2007-03-20 ======================
 ! 2007-03-20 - Marco Cattaneo
  - Remove obsolete RichTools_load.cpp file

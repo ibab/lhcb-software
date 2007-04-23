@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::SmartIDTool
  *
  *  CVS Log :-
- *  $Id: RichSmartIDTool.h,v 1.20 2007-04-03 15:53:02 papanest Exp $
+ *  $Id: RichSmartIDTool.h,v 1.21 2007-04-23 13:08:01 jonrob Exp $
  *
  *  @author Antonis Papanestis
  *  @date   2003-10-28
@@ -63,9 +63,6 @@ namespace Rich
     // Initialization of the tool after creation
     virtual StatusCode initialize();
 
-    // Finalization of the tool before deletion
-    virtual StatusCode finalize  ();
-
   public: // methods (and doxygen comments) inherited from interface
 
     // Converts a RichSmartID channel identification into a position in global LHCb coordinates.
@@ -73,10 +70,12 @@ namespace Rich
                                         Gaudi::XYZPoint& detectPoint  ) const;
 
     // Finds the average position of a cluster of RichSmartIDs, in global LHCb coordinates
-    virtual Gaudi::XYZPoint globalPosition ( const Rich::HPDPixelCluster& cluster ) const;
+    virtual StatusCode globalPosition ( const Rich::HPDPixelCluster& cluster,
+                                        Gaudi::XYZPoint& detectPoint ) const;
 
     // Converts an HPD RichSmartID identification into a position in global LHCb coordinates.
-    virtual Gaudi::XYZPoint hpdPosition ( const LHCb::RichSmartID hpdid ) const;
+    virtual StatusCode hpdPosition ( const LHCb::RichSmartID hpdid,
+                                     Gaudi::XYZPoint& hpdPoint ) const;
 
     // Computes the global position coordinate for a given position in local
     virtual Gaudi::XYZPoint globalPosition ( const Gaudi::XYZPoint& localPoint,
@@ -90,11 +89,7 @@ namespace Rich
     // Supplies a vector of all currently active and valid channels in the RICH detectors
     virtual const LHCb::RichSmartID::Vector& readoutChannelList( ) const;
 
-    /** Converts a position in global coordinates to the local coordinate system.
-     *  The panel Rich::Left has positive x and panel Rich::Right has negative
-     *  x coordinates. Only the x and y coordinates are valid. z coordinate
-     *  is set to 0.
-     */
+    // Converts a position in global coordinates to the local coordinate system.
     virtual Gaudi::XYZPoint globalToPDPanel ( const Gaudi::XYZPoint& globalPoint ) const;
 
   private:
