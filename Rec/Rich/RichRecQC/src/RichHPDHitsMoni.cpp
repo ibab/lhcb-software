@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : Rich::Rec::MC::HPDHitsMoni
  *
- *  $Id: RichHPDHitsMoni.cpp,v 1.3 2007-02-02 10:08:36 jonrob Exp $
+ *  $Id: RichHPDHitsMoni.cpp,v 1.4 2007-04-23 13:26:04 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -63,45 +63,54 @@ StatusCode HPDHitsMoni::execute()
   const Rich::HistoID hid;
 
   // Obtain RichSmartIDs from raw decoding
-  const DAQ::PDMap & smartIDs = m_decoder->allRichSmartIDs();
+  const DAQ::L1Map & data = m_decoder->allRichSmartIDs();
 
-  debug() << "Found data for " << smartIDs.size() << " HPDs" << endreq;
-
-  // Loop over HPDs and RichSmartIDs
-  for ( DAQ::PDMap::const_iterator iHPD = smartIDs.begin();
-        iHPD != smartIDs.end(); ++iHPD )
+  // Loop over L1 boards
+  for ( Rich::DAQ::L1Map::const_iterator iL1 = data.begin();
+        iL1 != data.end(); ++iL1 )
   {
-    // HPD info
-    const LHCb::RichSmartID hpd     = (*iHPD).first;
-    const DAQ::HPDHardwareID hardID = m_richSys->hardwareID(hpd);
-    const DAQ::Level0ID l0ID        = m_richSys->level0ID(hpd);
-    const Rich::DetectorType rich   = hpd.rich();
-
-    // Vector of SmartIDs
-    const LHCb::RichSmartID::Vector & rawIDs = (*iHPD).second;
-
-    // create histo title
-    std::ostringstream HPD1,HPD2;
-    HPD1 << "Number hits in HPD " << hpd << " L0ID=" << l0ID << " hardID=" << hardID;
-    HPD2 << "Hit Map for HPD " << hpd << " L0ID=" << l0ID << " hardID=" << hardID;
-
-    plot1D( rawIDs.size(),
-            hid(rich,"NumHits/"+(std::string)l0ID), HPD1.str(),
-            -0.5,100.5,101 );
-
-    // Loop over raw RichSmartIDs
-    for ( LHCb::RichSmartID::Vector::const_iterator iR = rawIDs.begin();
-          iR != rawIDs.end(); ++iR )
+    // loop over ingresses for this L1 board
+    for ( Rich::DAQ::IngressMap::const_iterator iIn = (*iL1).second.begin();
+          iIn != (*iL1).second.end(); ++iIn )
     {
+      // Loop over HPDs in this ingress
+      for ( Rich::DAQ::HPDMap::const_iterator iHPD = (*iIn).second.hpdData().begin();
+            iHPD != (*iIn).second.hpdData().end(); ++iHPD )
+      {
 
-      // fill plot
-      plot2D( (*iR).pixelCol(), (*iR).pixelRow(),
-              hid(rich,"HitMaps/"+(std::string)l0ID), HPD2.str(),
-              -0.5,31.5,-0.5,31.5,32,32 );
+        // HPD info
+        const LHCb::RichSmartID hpd     = (*iHPD).first;
+        const DAQ::HPDHardwareID hardID = m_richSys->hardwareID(hpd);
+        const DAQ::Level0ID l0ID        = m_richSys->level0ID(hpd);
+        const Rich::DetectorType rich   = hpd.rich();
 
-    } // raw channel ids
+        // Vector of SmartIDs
+        const LHCb::RichSmartID::Vector & rawIDs = (*iHPD).second.smartIDs();
 
-  } // loop over HPDs
+        // create histo title
+        std::ostringstream HPD1,HPD2;
+        HPD1 << "Number hits in HPD " << hpd << " L0ID=" << l0ID << " hardID=" << hardID;
+        HPD2 << "Hit Map for HPD " << hpd << " L0ID=" << l0ID << " hardID=" << hardID;
+
+        plot1D( rawIDs.size(),
+                hid(rich,"NumHits/"+(std::string)l0ID), HPD1.str(),
+                -0.5,100.5,101 );
+
+        // Loop over raw RichSmartIDs
+        for ( LHCb::RichSmartID::Vector::const_iterator iR = rawIDs.begin();
+              iR != rawIDs.end(); ++iR )
+        {
+
+          // fill plot
+          plot2D( (*iR).pixelCol(), (*iR).pixelRow(),
+                  hid(rich,"HitMaps/"+(std::string)l0ID), HPD2.str(),
+                  -0.5,31.5,-0.5,31.5,32,32 );
+
+        } // raw channel ids
+
+      } // loop over HPDs
+    } // ingresses
+  } // L1 boards
 
   return StatusCode::SUCCESS;
 }

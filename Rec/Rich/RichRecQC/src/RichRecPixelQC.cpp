@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : Rich::Rec::MC::PixelQC
  *
- *  $Id: RichRecPixelQC.cpp,v 1.13 2007-03-09 23:14:27 jonrob Exp $
+ *  $Id: RichRecPixelQC.cpp,v 1.14 2007-04-23 13:26:04 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -83,76 +83,87 @@ StatusCode PixelQC::execute()
   std::vector<unsigned int> pixels ( Rich::NRiches, 0 );
   std::vector<unsigned int> signal ( Rich::NRiches, 0 );
 
-  // Obtain RichSmartIDs from raw decoding
-  const DAQ::PDMap & smartIDs = m_decoder->allRichSmartIDs();
+  // Obtain data from raw decoding
+  const DAQ::L1Map & data = m_decoder->allRichSmartIDs();
 
-  // Loop over HPDs and RichSmartIDs
-  for ( DAQ::PDMap::const_iterator iHPD = smartIDs.begin();
-        iHPD != smartIDs.end(); ++iHPD )
+  // Loop over L1 boards
+  for ( Rich::DAQ::L1Map::const_iterator iL1 = data.begin();
+        iL1 != data.end(); ++iL1 )
   {
-    // HPD ID
-    const LHCb::RichSmartID hpd = (*iHPD).first;
-    // Vector of SmartIDs
-    const LHCb::RichSmartID::Vector & rawIDs = (*iHPD).second;
-    // RICH
-    const Rich::DetectorType rich = hpd.rich();
-
-    // Loop over raw RichSmartIDs
-    for ( LHCb::RichSmartID::Vector::const_iterator iR = rawIDs.begin();
-          iR != rawIDs.end(); ++iR )
+    // loop over ingresses for this L1 board
+    for ( Rich::DAQ::IngressMap::const_iterator iIn = (*iL1).second.begin();
+          iIn != (*iL1).second.end(); ++iIn )
     {
-      // flags
-      const MCFlags flags = getHistories( *iR );
-      // count
-      ++m_rawTally.pixels[rich];
-      if ( flags.isBkg        ) { ++m_rawTally.bkgs[rich]; }
-      if ( flags.isHPDQCK     ) { ++m_rawTally.npdqcks[rich]; }
-      if ( flags.isGasCK      ) { ++m_rawTally.ngasck[rich]; }
-      if ( flags.isN2CK       ) { ++m_rawTally.n2ck[rich]; }
-      if ( flags.isChargedTk  ) { ++m_rawTally.ntrack[rich]; }
-      if ( flags.isChargeShare) { ++m_rawTally.nchargeshare[rich]; }
-      if ( flags.isAeroFiltCK ) { ++m_rawTally.naerofilter[rich]; }
-      if ( flags.isSignal     ) { ++m_rawTally.signal[rich]; }
-      if ( flags.isAerogelCK  ) { ++m_rawTally.radHits[Rich::Aerogel]; }
-      if ( flags.isRich1GasCK ) { ++m_rawTally.radHits[Rich::Rich1Gas]; }
-      if ( flags.isRich2GasCK ) { ++m_rawTally.radHits[Rich::Rich2Gas]; }
-    } // raw channel ids
-
-      // Get the reconstructed pixels for this HPD
-    LHCb::RichRecPixels::const_iterator iPixel = pixelCreator()->begin ( hpd );
-    LHCb::RichRecPixels::const_iterator endPix = pixelCreator()->end   ( hpd );
-    unsigned int nHPDHits(0), nHPDSignalHits(0);
-    // loop over reconstructed pixels
-    for ( ; iPixel != endPix; ++iPixel )
-    {
-      // for each pixel loop over the smartIDs
-      for ( LHCb::RichSmartID::Vector::const_iterator iS = (*iPixel)->hpdPixelCluster().smartIDs().begin();
-            iS != (*iPixel)->hpdPixelCluster().smartIDs().end(); ++iS )
+      // Loop over HPDs in this ingress
+      for ( Rich::DAQ::HPDMap::const_iterator iHPD = (*iIn).second.hpdData().begin();
+            iHPD != (*iIn).second.hpdData().end(); ++iHPD )
       {
-        // flags
-        const MCFlags flags = getHistories( *iS );
-        // count
-        ++nHPDHits;
-        ++pixels[rich];
-        ++m_recoTally.pixels[rich];
-        if ( flags.isBkg        ) { ++m_recoTally.bkgs[rich]; }
-        if ( flags.isHPDQCK     ) { ++m_recoTally.npdqcks[rich]; }
-        if ( flags.isGasCK      ) { ++m_recoTally.ngasck[rich]; }
-        if ( flags.isN2CK       ) { ++m_recoTally.n2ck[rich]; }
-        if ( flags.isChargedTk  ) { ++m_recoTally.ntrack[rich]; }
-        if ( flags.isChargeShare) { ++m_recoTally.nchargeshare[rich]; }
-        if ( flags.isAeroFiltCK ) { ++m_recoTally.naerofilter[rich]; }
-        if ( flags.isSignal     ) { ++nHPDSignalHits; ++signal[rich]; ++m_recoTally.signal[rich]; }
-        if ( flags.isAerogelCK  ) { ++m_recoTally.radHits[Rich::Aerogel]; }
-        if ( flags.isRich1GasCK ) { ++m_recoTally.radHits[Rich::Rich1Gas]; }
-        if ( flags.isRich2GasCK ) { ++m_recoTally.radHits[Rich::Rich2Gas]; }
-      }
-    }
 
-    plot1D( nHPDHits,       hid(rich,"nTotalPixsPerHPD"),  "Average overall HPD occupancy (nHits>0)", 0, 150, 75 );
-    plot1D( nHPDSignalHits, hid(rich,"nSignalPixsPerHPD"), "Average signal HPD occupancy (nHits>0)", 0, 150, 75 );
+        // HPD ID
+        const LHCb::RichSmartID hpd = (*iHPD).first;
+        // Vector of SmartIDs
+        const LHCb::RichSmartID::Vector & rawIDs = (*iHPD).second.smartIDs();
+        // RICH
+        const Rich::DetectorType rich = hpd.rich();
 
-  } // loop over HPDs
+        // Loop over raw RichSmartIDs
+        for ( LHCb::RichSmartID::Vector::const_iterator iR = rawIDs.begin();
+              iR != rawIDs.end(); ++iR )
+        {
+          // flags
+          const MCFlags flags = getHistories( *iR );
+          // count
+          ++m_rawTally.pixels[rich];
+          if ( flags.isBkg        ) { ++m_rawTally.bkgs[rich]; }
+          if ( flags.isHPDQCK     ) { ++m_rawTally.npdqcks[rich]; }
+          if ( flags.isGasCK      ) { ++m_rawTally.ngasck[rich]; }
+          if ( flags.isN2CK       ) { ++m_rawTally.n2ck[rich]; }
+          if ( flags.isChargedTk  ) { ++m_rawTally.ntrack[rich]; }
+          if ( flags.isChargeShare) { ++m_rawTally.nchargeshare[rich]; }
+          if ( flags.isAeroFiltCK ) { ++m_rawTally.naerofilter[rich]; }
+          if ( flags.isSignal     ) { ++m_rawTally.signal[rich]; }
+          if ( flags.isAerogelCK  ) { ++m_rawTally.radHits[Rich::Aerogel]; }
+          if ( flags.isRich1GasCK ) { ++m_rawTally.radHits[Rich::Rich1Gas]; }
+          if ( flags.isRich2GasCK ) { ++m_rawTally.radHits[Rich::Rich2Gas]; }
+        } // raw channel ids
+
+        // Get the reconstructed pixels for this HPD
+        LHCb::RichRecPixels::const_iterator iPixel = pixelCreator()->begin ( hpd );
+        LHCb::RichRecPixels::const_iterator endPix = pixelCreator()->end   ( hpd );
+        unsigned int nHPDHits(0), nHPDSignalHits(0);
+        // loop over reconstructed pixels
+        for ( ; iPixel != endPix; ++iPixel )
+        {
+          // for each pixel loop over the smartIDs
+          for ( LHCb::RichSmartID::Vector::const_iterator iS = (*iPixel)->hpdPixelCluster().smartIDs().begin();
+                iS != (*iPixel)->hpdPixelCluster().smartIDs().end(); ++iS )
+          {
+            // flags
+            const MCFlags flags = getHistories( *iS );
+            // count
+            ++nHPDHits;
+            ++pixels[rich];
+            ++m_recoTally.pixels[rich];
+            if ( flags.isBkg        ) { ++m_recoTally.bkgs[rich]; }
+            if ( flags.isHPDQCK     ) { ++m_recoTally.npdqcks[rich]; }
+            if ( flags.isGasCK      ) { ++m_recoTally.ngasck[rich]; }
+            if ( flags.isN2CK       ) { ++m_recoTally.n2ck[rich]; }
+            if ( flags.isChargedTk  ) { ++m_recoTally.ntrack[rich]; }
+            if ( flags.isChargeShare) { ++m_recoTally.nchargeshare[rich]; }
+            if ( flags.isAeroFiltCK ) { ++m_recoTally.naerofilter[rich]; }
+            if ( flags.isSignal     ) { ++nHPDSignalHits; ++signal[rich]; ++m_recoTally.signal[rich]; }
+            if ( flags.isAerogelCK  ) { ++m_recoTally.radHits[Rich::Aerogel]; }
+            if ( flags.isRich1GasCK ) { ++m_recoTally.radHits[Rich::Rich1Gas]; }
+            if ( flags.isRich2GasCK ) { ++m_recoTally.radHits[Rich::Rich2Gas]; }
+          }
+        }
+
+        plot1D( nHPDHits,       hid(rich,"nTotalPixsPerHPD"),  "Average overall HPD occupancy (nHits>0)", 0, 150, 75 );
+        plot1D( nHPDSignalHits, hid(rich,"nSignalPixsPerHPD"), "Average signal HPD occupancy (nHits>0)", 0, 150, 75 );
+
+      } // loop over HPDs
+    } // ingresses
+  } // L1 boards
 
   plot1D( pixels[Rich::Rich1], hid(Rich::Rich1,"nTotalPixs"), "Overall occupancy (nHits>0)", 0, 5000, 100 );
   plot1D( pixels[Rich::Rich2], hid(Rich::Rich2,"nTotalPixs"), "Overall occupancy (nHits>0)", 0, 2000, 100 );
