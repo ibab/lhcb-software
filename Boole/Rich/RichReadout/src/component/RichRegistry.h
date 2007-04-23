@@ -30,7 +30,7 @@ namespace Rich
 
         ~RichRegistry() { cleanUp(); }
 
-        static const RichBase* GetNewBase( const std::vector<LHCb::RichSmartID> & pixels );
+        static const RichBase* GetNewBase( const LHCb::RichSmartID::Vector & pixels );
 
         static const RichBase* GetBase();
 
@@ -47,7 +47,7 @@ namespace Rich
 
       };
 
-      inline const RichBase * RichRegistry::GetNewBase( const std::vector<LHCb::RichSmartID> & pixels )
+      inline const RichBase * RichRegistry::GetNewBase( const LHCb::RichSmartID::Vector & pixels )
       {
         RichBase * theBase = new RichBase();
         theBase->upDate(pixels);

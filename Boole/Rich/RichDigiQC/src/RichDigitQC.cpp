@@ -5,7 +5,7 @@
  *  Implementation file for RICH Digitisation Quality Control algorithm : RichDigitQC
  *
  *  CVS Log :-
- *  $Id: RichDigitQC.cpp,v 1.33 2007-03-20 15:56:21 jonrob Exp $
+ *  $Id: RichDigitQC.cpp,v 1.34 2007-04-23 12:24:32 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2003-09-08
@@ -244,7 +244,9 @@ StatusCode DigitQC::finalize()
     {
       const Rich::DAQ::HPDHardwareID hID ( m_richSys->hardwareID( (*iHPD).first ) );
       const Rich::DAQ::Level1ID l1ID     ( m_richSys->level1ID( (*iHPD).first ) );
-      const Gaudi::XYZPoint hpdGlo       ( m_smartIDs->hpdPosition( (*iHPD).first ) );
+      Gaudi::XYZPoint hpdGlo;
+      const StatusCode sc = m_smartIDs->hpdPosition( (*iHPD).first, hpdGlo );
+      if (sc.isFailure()) continue;
       const Gaudi::XYZPoint hpdLoc       ( m_smartIDs->globalToPDPanel( hpdGlo ) );
       totL1[l1ID] += (*iHPD).second;
       totDet      += (*iHPD).second;

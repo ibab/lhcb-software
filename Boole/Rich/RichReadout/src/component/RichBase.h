@@ -85,7 +85,7 @@ namespace Rich
 
         RichBase& operator=( const RichBase& );
 
-        void upDate( const std::vector<LHCb::RichSmartID> & pixelList );
+        void upDate( const LHCb::RichSmartID::Vector & pixelList );
 
         void cleanUp();
 

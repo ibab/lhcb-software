@@ -4,6 +4,9 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH digitisation
 !-----------------------------------------------------------------------------
 
+! 2007-04-23 - Chris Jones
+ - Adapt to new RichSmartIDTool interface
+
 !======================== RichDigiQC v3r5 2007-03-20 ========================
 ! 2007-03-20 - Chris Jones
  - Switch to use of boost::format instead of Gaudi format

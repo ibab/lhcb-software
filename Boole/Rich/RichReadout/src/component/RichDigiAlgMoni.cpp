@@ -1,4 +1,4 @@
-// $Id: RichDigiAlgMoni.cpp,v 1.14 2007-02-06 15:44:36 cattanem Exp $
+// $Id: RichDigiAlgMoni.cpp,v 1.15 2007-04-23 12:26:04 jonrob Exp $
 
 // Units
 #include "GaudiKernel/SystemOfUnits.h"
@@ -108,8 +108,12 @@ StatusCode AlgMoni::execute()
 
     // Smart ID
     const LHCb::RichSmartID id    = (*iMcDigit)->key();
+
     // position for this ID
-    const Gaudi::XYZPoint point   = m_smartIDTool->globalPosition( id );
+    Gaudi::XYZPoint point;
+    const StatusCode sc = m_smartIDTool->globalPosition( id, point );
+    if ( sc.isFailure() ) { continue; }
+
     // RICH
     const Rich::DetectorType rich = id.rich();
 
@@ -416,7 +420,9 @@ void AlgMoni::fillHPDPlots( const PartMap & pmap,
     // increment count for RICH
     ++nHPDs[hpdID.rich()];
     // Centre point of HPD in local coords
-    const Gaudi::XYZPoint hpdGlo = m_smartIDTool->hpdPosition(hpdID);
+    Gaudi::XYZPoint hpdGlo;
+    const StatusCode sc = m_smartIDTool->hpdPosition(hpdID,hpdGlo);
+    if ( sc.isFailure() ) continue;
     const Gaudi::XYZPoint hpdLoc = m_smartIDTool->globalToPDPanel(hpdGlo);
     // create histo title
     std::ostringstream HPD;

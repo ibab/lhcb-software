@@ -4,6 +4,9 @@
 ! Purpose     : Rich Digitisation
 !-----------------------------------------------------------------------------
 
+! 2007-04-23 - Chris Jones
+ - Adapt to new interface for RichSmartID tool
+
 !======================== RichReadout v2r5 2007-03-20 ========================
 ! 2007-03-20 - Marco Cattaneo
  - Remove obsolete RichReadout_load.cpp file
