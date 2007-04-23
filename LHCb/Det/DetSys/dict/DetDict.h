@@ -1,4 +1,4 @@
-// $Id: DetDict.h,v 1.20 2007-04-10 15:43:40 cattanem Exp $
+// $Id: DetDict.h,v 1.21 2007-04-23 16:23:02 cattanem Exp $
 // ============================================================================
 #ifndef DETSYS_DETDICT_H 
 #define DETSYS_DETDICT_H 1
@@ -85,19 +85,6 @@
 #include "OTDet/DeOTLayer.h"
 #include "OTDet/DeOTQuarter.h"
 #include "OTDet/DeOTStation.h"
-
-// ============================================================================
-// RichDet 
-// ============================================================================
-#include "RichDet/DeRich1.h"
-#include "RichDet/DeRich2.h"
-#include "RichDet/DeRich.h"
-#include "RichDet/DeRichHPDPanel.h"
-#include "RichDet/DeRichMultiSolidRadiator.h"
-#include "RichDet/DeRichRadiator.h"
-#include "RichDet/DeRichSingleSolidRadiator.h"
-#include "RichDet/DeRichSphMirror.h"
-#include "RichDet/RichMirrorSegPosition.h"
 
 // ============================================================================
 // MuonDet

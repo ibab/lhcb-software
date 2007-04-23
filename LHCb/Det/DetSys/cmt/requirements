@@ -13,7 +13,7 @@ use CaloDet             v8r1    Det
 use CaloDetXmlCnv       v3r1    Det
 use MuonDet             v6r2    Det
 use Magnet              v3r6    Det
-use RichDet             v10r3   Det
+use RichDet             v10r4   Det
 use STDet               v3r3    Det
 
 # =============== LCG Dictionaries ============================================

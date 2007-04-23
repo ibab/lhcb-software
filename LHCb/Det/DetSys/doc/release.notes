@@ -6,11 +6,9 @@
 
 !========================= DetSys v9r4 2007-04-23 ============================
 ! 2007-04-23 - Marco Cattaneo
- - Use STDet v3r3, VeloDet v11r2, DetDescCnv v4r3p1
-
-! 2007-04-10 - Marco Cattaneo
- - Generation of dictionaries for STDet and VeloDet classes moved to STDet and 
-   VeloDet packages respectively
+ - Use STDet v3r3, VeloDet v11r2, DetDescCnv v4r3p1, RichDet v10r4
+ - Generation of dictionaries for RichDet, STDet and VeloDet classes moved to
+   RichDet, STDet and VeloDet packages respectively
 
 !========================= DetSys v9r3 2007-03-20 ============================
 ! 2007-03-20 - Marco Cattaneo
