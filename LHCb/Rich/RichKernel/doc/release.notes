@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.144 2007-04-23 15:07:59 cattanem Exp $
+! $Id: release.notes,v 1.145 2007-04-23 15:42:28 jonrob Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
@@ -9,6 +9,7 @@
  - Add lcg dictionary generation for all public interfaces
 
 ! 2007-04-23 - Chris Jones
+ - First bug in postfix ++ and -- operators in RichDAQDefinitions.h
  - Import various DAQ related class from RichDAQ and RichDet
    Needed to allow access to headers/footers etc outside RichDAQ
  - Move content of RichEvent directory into RichKernel and 
