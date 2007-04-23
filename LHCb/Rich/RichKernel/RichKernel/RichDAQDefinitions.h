@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ general definitions
  *
  *  CVS Log :-
- *  $Id: RichDAQDefinitions.h,v 1.12 2007-04-23 12:44:04 jonrob Exp $
+ *  $Id: RichDAQDefinitions.h,v 1.13 2007-04-23 15:33:15 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
@@ -113,11 +113,11 @@ namespace Rich
       /// Operator ++   (prefix)
       inline NumericType<TYPE>& operator++()    { ++m_id; return *this; }
       /// Operator ++(int)  (postfix)
-      inline NumericType<TYPE>& operator++(int) { NumericType<TYPE> tmp = *this; ++m_id; return tmp; }
+      inline NumericType<TYPE>  operator++(int) { NumericType<TYPE> tmp = *this; ++m_id; return tmp; }
       /// Operator --   (prefix)
       inline NumericType<TYPE>& operator--()    { --m_id; return *this; }
       /// Operator --(int)  (postfix)
-      inline NumericType<TYPE>& operator--(int) { NumericType<TYPE> tmp = *this; --m_id; return tmp; }
+      inline NumericType<TYPE>  operator--(int) { NumericType<TYPE> tmp = *this; --m_id; return tmp; }
     protected:
       /// Update the internal data
       inline void setData( const TYPE id ) { m_id = id; }
