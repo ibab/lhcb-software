@@ -5,12 +5,13 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v22r4>2007-04-19 LHCbSys v22r4</A></H1><PRE>
+</PRE><H1><A NAME=v22r4>2007-04-23 LHCbSys v22r4</A></H1><PRE>
 This version uses Gaudi v19r3 and LCG_50b. Fully compatible with DC06 data
 
 - Packages modified: KernelSys v6r4, LHCbKernel v7r3, EventSys v23r4, 
     EventBase v2r2, MCEvent v2r2, TrackEvent v4r2, RecEvent v2r3, DAQEvent v7r3, 
-    DetSys v9r4, STDet v3r3, VeloDet v11r2,DAQSys v3r2, OTDAQ v5r2, CaloDAQ v3r2,
+    DetSys v9r4, STDet v3r3, VeloDet v11r2, DetDescCnv v4r3p1, DetCond v11r2,
+    CondDBUI v2r2, DAQSys v3r2, OTDAQ v5r2, CaloDAQ v3r2, MDF v2r4p2,
     CaloInterfaces v7r2, CaloUtils v7r2, TrackInterfaces v3r3
 
 - In LHCbKernel v7r3
@@ -19,12 +20,19 @@ This version uses Gaudi v19r3 and LCG_50b. Fully compatible with DC06 data
   . Implement operator+= in AlignTraj to follow the above
   . Add new flag to RichTraceMode to control kapton intersection checks
   . Add typedef to RichSmartID for boost pool allocated vector
+  . Add dict for std::pair<Gaudi::XYZPoint,Gaudi::XYZPoint>, previously in DetSys
 
 - In MCEvent v2r2
   . Add MCCaloDataFunctor.h
 
 - In TrackEvent v4r2
   . Add stdVectorTypeDef="TRUE" to Measurement.xml
+  . Add Muon track type and location
+
+- In RecEvent v2r3
+  . RecHeader no longer distinguishes between positive and negative event numbers
+    + evtNumber() accessor is now longlong (was ulonglong)
+    + realData() function removed 
 
 - In DAQEvent v7r3
   . Add "ForceRawEvent" property to OdinTimeDecoder tool, to force it to decode
@@ -34,13 +42,28 @@ This version uses Gaudi v19r3 and LCG_50b. Fully compatible with DC06 data
   . Add copy constructors to ProcessHeader, RecHeader, ODIN, MCHeader, ProcStatus
 
 - In DetSys v9r4, STDet v3r3, VeloDet v11r2
-  . Move generation of dictionaries to package where classes are defined
-
-- In STDet v3r3
-  . Add missing dictionary for DeITLadder
+  . Move generation of dictionaries to package where classes are defined, add
+    missing dictionaries for all public classes and return types
 
 - In VeloDet v11r2
   . Read the cut related to the sensitive volume ID from existing value in DDDB
+
+- In DetDescCnv v4r3p1
+  . Improved the warning for failing computation in XmlMixtureCnv.
+
+- In DetCond v11r2
+  . Added ICondDBAccessSvc::connectionString() to be able to find the
+    connection string that was used without looking in the options.
+  . Use a static std::auto_ptr instead of a basic pointer and a counter of 
+    instances (for CondDBAccessSvc::s_XMLstorageSpec).
+  . Added class CondDBSQLiteCopyAccSvc to copy an SQLite file and connect to
+    the copy.
+
+- In CondDBUI v2r2
+  . Fixed a bug in the requirements: it was still depending on SQLDDDB v*.
+    (now it should be DDDB)
+  . Made it possible to pass to copy_files_to_db.py files with system ids
+    starting with "conddb:" without breaking them.
 
 - In CaloInterfaces v7r2
   . Remove const qualifiers in ICaloMomentum
@@ -68,11 +91,15 @@ This version uses Gaudi v19r3 and LCG_50b. Fully compatible with DC06 data
 - In TrackInterfaces v3r3
   . Add ITrajFitter interface
 
+- In MDF v2r4p2
+  . Fix bug in MDFIO discovered during the RICH commissioning
+  . Use RawEventLocation::Default instead of hardwired string
+
 - In VeloDet v11r2, OTDAQ v5r2
   . Fix untested StatusCodes
 
-- In STDet v3r3, CaloUtils v7r2, LHCbKernel v7r3, RecEvent v2r3
-  . Fix a doxygen warning
+- In STDet v3r3, CaloUtils v7r2, LHCbKernel v7r3, RecEvent v2r3, MDF v2r4p2
+  . Fix doxygen warnings
 
 </PRE><H1><A NAME=v22r3>2007-03-23 LHCbSys v22r3</A></H1><PRE>
 This version uses Gaudi v19r3 and LCG_50b. Fully compatible with DC06 data
