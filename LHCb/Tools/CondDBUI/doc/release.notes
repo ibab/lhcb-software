@@ -1,10 +1,11 @@
 ! =============================================================================
-! $Id: release.notes,v 1.53 2007-03-30 18:33:29 marcocle Exp $
+! $Id: release.notes,v 1.54 2007-04-23 08:26:13 cattanem Exp $
 ! =============================================================================
 ! package Tools/CondDBUI
 ! package manager : Marco Clemencic / Nicolas Gilardi
 ! =============================================================================
 
+!===================== Tools/CondDBUI v2r2 2007-04-23 =========================
 ! 2007-03-30 - Marco Clemencic
  - Fixed a bug in the requirements: it was still depending on SQLDDDB v*.
    (now it should be DDDB)
