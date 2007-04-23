@@ -3,7 +3,7 @@
  *
  *  Header file for RICH utility class : RichGeomPhoton
  *
- *  $Id: RichGeomPhoton.h,v 1.1 2007-04-23 12:44:04 jonrob Exp $
+ *  $Id: RichGeomPhoton.h,v 1.2 2007-04-23 15:07:58 cattanem Exp $
  *
  *  @author Antonis Papanestis
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
@@ -23,7 +23,7 @@
 #include "RichKernel/RichPixelCluster.h"
 #include "RichKernel/BoostMemPoolAlloc.h"
 
-/// General LHCb namespace
+// General LHCb namespace
 namespace LHCb
 {
 

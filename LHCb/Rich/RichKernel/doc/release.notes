@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.143 2007-04-23 12:44:04 jonrob Exp $
+! $Id: release.notes,v 1.144 2007-04-23 15:07:59 cattanem Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 !----------------------------------------------------------------------
+
+!====================== RichKernel v7r4 2007-04-23 ====================
+! 2007-04-23 - Marco Cattaneo
+ - Add lcg dictionary generation for all public interfaces
 
 ! 2007-04-23 - Chris Jones
  - Import various DAQ related class from RichDAQ and RichDet

@@ -4,7 +4,7 @@
  *  Header file for tool interface : Rich::IMCTrackInfoTool
  *
  *  CVS Log :-
- *  $Id: IRichMCTrackInfoTool.h,v 1.9 2007-03-09 17:58:13 jonrob Exp $
+ *  $Id: IRichMCTrackInfoTool.h,v 1.10 2007-04-23 15:07:58 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -15,6 +15,7 @@
 
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
+#include "GaudiKernel/Point3DTypes.h"
 
 // Event Model
 namespace LHCb

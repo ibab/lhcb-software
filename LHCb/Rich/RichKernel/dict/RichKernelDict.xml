@@ -1,0 +1,16 @@
+<lcgdict>
+  <class name    = "Rich::IDetParameters"                />
+  <class name    = "Rich::MC::IMCTrackInfoTool"          />
+  <class name    = "Rich::MC::IMCTruthTool"              />
+  <class name    = "Rich::IMirrorSegFinder"              />
+  <class name    = "Rich::IParticleProperties"           />
+  <class name    = "Rich::DAQ::IPixelClusteringTool"     />
+  <class name    = "Rich::DAQ::IPixelSuppressionTool"    />
+  <class name    = "Rich::IRadiatorTool"                 />
+  <class name    = "Rich::DAQ::IRawBufferToSmartIDsTool" />
+  <class name    = "Rich::DAQ::IRawDataFormatTool"       />
+  <class name    = "Rich::IRayTracing"                   />
+  <class name    = "Rich::IRefractiveIndex"              />
+  <class name    = "Rich::ISmartIDTool"                  />
+  <class name    = "Rich::IToolRegistry"                 />
+</lcgdict>

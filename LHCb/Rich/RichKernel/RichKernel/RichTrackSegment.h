@@ -5,7 +5,7 @@
  *  Header file for tool interface : RichTrackSegment
  *
  *  CVS Log :-
- *  $Id: RichTrackSegment.h,v 1.1 2007-04-23 12:44:04 jonrob Exp $
+ *  $Id: RichTrackSegment.h,v 1.2 2007-04-23 15:07:58 cattanem Exp $
  *
  *  @author Antonis Papanestis   Antonis.Papanestis@cern.ch
  *  @author Chris Jones          Christopher.Rob.Jones@cern.ch
@@ -34,7 +34,7 @@
 #include "RichKernel/RichException.h"
 
 
-/// General LHCb namespace
+// General LHCb namespace
 namespace LHCb
 {
 
