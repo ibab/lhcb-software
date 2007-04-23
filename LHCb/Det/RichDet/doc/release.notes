@@ -4,8 +4,12 @@
 ! Purpose     : interface to the xml description
 !-----------------------------------------------------------------------------
 
+!======================== RichDet v10r4 2007-04-23 ========================
+! 2007-04-23 - Marco Cattaneo
+ - Make LCG dictionaries for public classes (previously in DetSys)
+
 ! 2007-04-23 - Chris Jones
- - Move RichDAQDefinitions.h into RichKernel -> Introdude dependency on 
+ - Move RichDAQDefinitions.h into RichKernel -> Introduce dependency on 
 	 RichKernel
 
 ! 2007-04-04 - Chris Jones
