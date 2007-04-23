@@ -4,6 +4,12 @@
 ! Purpose     : Monte Carlo Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2007-04-23 - Chris Jones
+ - Adapt to changes in RichPixelCreatorBase in RichRecBase
+ - Adapt to changes in RichSmartIDTool interface
+ - Make MC truth tool check context() to determine input track locations
+ - Adapt to removal of RichEvent directory in RichKernel
+
 !====================== RichRecMCTools v2r9 2007-03-21 ======================
 ! 2007-03-21 - Marco Cattaneo
  - Remove obsolete file RichRecMCTools_load.cpp

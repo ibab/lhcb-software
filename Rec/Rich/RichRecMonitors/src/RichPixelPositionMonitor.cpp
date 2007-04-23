@@ -4,14 +4,14 @@
  *
  *  Implementation file for algorithm class : RichPixelPositionMonitor
  *
- *  $Id: RichPixelPositionMonitor.cpp,v 1.10 2007-03-09 22:59:34 jonrob Exp $
+ *  $Id: RichPixelPositionMonitor.cpp,v 1.11 2007-04-23 13:25:15 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
  */
 //-----------------------------------------------------------------------------
 
-#include <fstream>
+#include <sstream>
 
 // local
 #include "RichPixelPositionMonitor.h"
@@ -33,7 +33,8 @@ PixelPositionMonitor::PixelPositionMonitor( const std::string& name,
     m_richRecMCTruth ( NULL ),
     m_mcTool         ( NULL ),
     m_idTool         ( NULL ),
-    m_richSys        ( NULL ) { }
+    m_richSys        ( NULL ),
+    m_geomTool       ( NULL ) { }
 
 // Destructor
 PixelPositionMonitor::~PixelPositionMonitor() { }
@@ -49,6 +50,7 @@ StatusCode PixelPositionMonitor::initialize()
   acquireTool( "RichRecMCTruthTool", m_richRecMCTruth );
   acquireTool( "RichMCTruthTool", m_mcTool,   0, true );
   acquireTool( "RichSmartIDTool", m_idTool,   0, true );
+  acquireTool( "RichRecGeometry",       m_geomTool    );
 
   // RichDet
   m_richSys = getDet<DeRichSystem>( DeRichLocation::RichSystem );
@@ -102,7 +104,9 @@ StatusCode PixelPositionMonitor::execute()
     const LHCb::RichSmartID pdID = pixel->hpdPixelCluster().hpd();
 
     // Centre point of HPD
-    const Gaudi::XYZPoint hpdGlo = m_idTool->hpdPosition(pdID);
+    Gaudi::XYZPoint hpdGlo;
+    const StatusCode sc = m_idTool->hpdPosition(pdID,hpdGlo);
+    if ( sc.isFailure() ) { Warning( "Problem with get HPD position" ); continue; }
     const Gaudi::XYZPoint hpdLoc = m_idTool->globalToPDPanel(hpdGlo);
 
     if ( msgLevel(MSG::VERBOSE) )
@@ -112,12 +116,12 @@ StatusCode PixelPositionMonitor::execute()
                 << "     local            " << lPos << endreq;
       if ( rich == Rich::Rich1)
       {
-        verbose() << "     local Aerogel    " << pixel->localPosition(Rich::Aerogel) << endreq
-                  << "     local Rich1Gas   " << pixel->localPosition(Rich::Rich1Gas) << endreq;
+        verbose() << "     local Aerogel    " << m_geomTool->radCorrLocalPos(pixel,Rich::Aerogel) << endreq
+                  << "     local Rich1Gas   " << m_geomTool->radCorrLocalPos(pixel,Rich::Rich1Gas) << endreq;
       }
       else
       {
-        verbose() << "     local Rich2Gas   " << pixel->localPosition(Rich::Rich2Gas) << endreq;
+        verbose() << "     local Rich2Gas   " << m_geomTool->radCorrLocalPos(pixel,Rich::Rich2Gas) << endreq;
       }
       verbose() << "     HPD centre       " << hpdGlo << endreq
                 << "     local HPD centre " << hpdLoc << endreq;
@@ -297,7 +301,9 @@ StatusCode PixelPositionMonitor::execute()
     const DAQ::HPDHardwareID hardID = m_richSys->hardwareID(hpdID);
     const DAQ::Level0ID l0ID        = m_richSys->level0ID(hpdID);
     // Centre point of HPD in local coords
-    const Gaudi::XYZPoint hpdGlo = m_idTool->hpdPosition(hpdID);
+    Gaudi::XYZPoint hpdGlo;
+    const StatusCode sc = m_idTool->hpdPosition(hpdID,hpdGlo);
+    if ( sc.isFailure() ) { Warning( "Problem getting HPD position" ); continue; }
     const Gaudi::XYZPoint hpdLoc = m_idTool->globalToPDPanel(hpdGlo);
     // create histo title
     std::ostringstream HPD;
@@ -308,8 +314,9 @@ StatusCode PixelPositionMonitor::execute()
           iS != (*iPD).second.end(); ++iS )
     {
       // hit point on silicon in local coords
-      const Gaudi::XYZVector hitP
-        = m_idTool->globalToPDPanel( m_idTool->globalPosition(*iS) ) - hpdLoc;
+      Gaudi::XYZPoint tmpP;
+      if ( !m_idTool->globalPosition(*iS,tmpP) ) continue;
+      const Gaudi::XYZVector hitP = m_idTool->globalToPDPanel(tmpP) - hpdLoc;
       verbose() << "Hit " << (*iS) << " " << hitP << endreq;
       plot2D( hitP.X(), hitP.Y(), Hid, HPD.str(), -40*Gaudi::Units::mm,
               40*Gaudi::Units::mm, -40*Gaudi::Units::mm, 40*Gaudi::Units::mm, 32, 32 );

@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : RichPixelRecoEffMonitor
  *
- *  $Id: RichPixelRecoEffMonitor.cpp,v 1.3 2007-02-02 10:07:12 jonrob Exp $
+ *  $Id: RichPixelRecoEffMonitor.cpp,v 1.4 2007-04-23 13:25:15 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -85,80 +85,90 @@ StatusCode PixelRecoEffMonitor::execute()
 
   typedef std::vector<const LHCb::MCRichDigitSummary*> Summaries;
 
-  // Obtain RichSmartIDs from raw decoding
-  const Rich::DAQ::PDMap & smartIDs = m_decoder->allRichSmartIDs();
+  // Obtain data from raw decoding
+  const Rich::DAQ::L1Map & data = m_decoder->allRichSmartIDs();
 
-  // Loop over HPDs and RichSmartIDs
-  for ( Rich::DAQ::PDMap::const_iterator iHPD = smartIDs.begin();
-        iHPD != smartIDs.end(); ++iHPD )
+  // Loop over L1 boards
+  for ( Rich::DAQ::L1Map::const_iterator iL1 = data.begin();
+        iL1 != data.end(); ++iL1 )
   {
-    // HPD ID
-    const LHCb::RichSmartID hpd = (*iHPD).first;
-    // Vector of SmartIDs
-    const LHCb::RichSmartID::Vector & rawIDs = (*iHPD).second;
-    // Hardware ID
-    const Rich::DAQ::HPDHardwareID hardID = m_richSys->hardwareID(hpd);
-    // HPD as a string
-    std::ostringstream HPD; HPD << hpd;
-
-    // HPD backgrounds
-    bool isBkg(false), isHPDQCK(false);
-
-    // Loop over raw RichSmartIDs
-    for ( LHCb::RichSmartID::Vector::const_iterator iR = rawIDs.begin();
-          iR != rawIDs.end(); ++iR )
+    // loop over ingresses for this L1 board
+    for ( Rich::DAQ::IngressMap::const_iterator iIn = (*iL1).second.begin();
+          iIn != (*iL1).second.end(); ++iIn )
     {
-      // get MC histories for this RichSmartID
-      Summaries summaries;
-      m_truth->getMcHistories( *iR, summaries );
-      // loop over summaries and see if this HPD has any background
-      for ( Summaries::const_iterator iS = summaries.begin();
-            iS != summaries.end(); ++iS )
+      // Loop over HPDs in this ingress
+      for ( Rich::DAQ::HPDMap::const_iterator iHPD = (*iIn).second.hpdData().begin();
+            iHPD != (*iIn).second.hpdData().end(); ++iHPD )
       {
-        if ( (*iS)->history().isBackground() ) { isBkg = true;    }
-        if ( (*iS)->history().hpdQuartzCK()  ) { isHPDQCK = true; }
-        if ( isBkg && isHPDQCK ) break;
-      }
-    }
+        // HPD ID
+        const LHCb::RichSmartID hpd = (*iHPD).first;
+        // Vector of SmartIDs
+        const LHCb::RichSmartID::Vector & rawIDs = (*iHPD).second.smartIDs();
+        // Hardware ID
+        const Rich::DAQ::HPDHardwareID hardID = m_richSys->hardwareID(hpd);
+        // HPD as a string
+        std::ostringstream HPD; HPD << hpd;
 
-    // Get the reconstructed pixels for this HPD
-    LHCb::RichRecPixels::const_iterator iPixel = pixelCreator()->begin ( hpd );
-    LHCb::RichRecPixels::const_iterator endPix = pixelCreator()->end   ( hpd );
-    // loop over reconstructed pixels
-    unsigned int nHPDs(0);
-    for ( ; iPixel != endPix; ++iPixel )
-    {
-      ++nHPDs;
-    }
+        // HPD backgrounds
+        bool isBkg(false), isHPDQCK(false);
 
-    // pixel reco efficiency
-    const double pixEff = ( rawIDs.size()>0 ? 100 * nHPDs/rawIDs.size() : 0 );
+        // Loop over raw RichSmartIDs
+        for ( LHCb::RichSmartID::Vector::const_iterator iR = rawIDs.begin();
+              iR != rawIDs.end(); ++iR )
+        {
+          // get MC histories for this RichSmartID
+          Summaries summaries;
+          m_truth->getMcHistories( *iR, summaries );
+          // loop over summaries and see if this HPD has any background
+          for ( Summaries::const_iterator iS = summaries.begin();
+                iS != summaries.end(); ++iS )
+          {
+            if ( (*iS)->history().isBackground() ) { isBkg = true;    }
+            if ( (*iS)->history().hpdQuartzCK()  ) { isHPDQCK = true; }
+            if ( isBkg && isHPDQCK ) break;
+          }
+        }
 
-    // plots
-    plot1D( nHPDs, hid(hpd.rich(),"allhpdOcc"), "Overall : HPD Occupancy (nDigits>0)", -0.5, 200.5, 201 );
-    plot1D( pixEff, hid(hpd.rich(),"allEff"), "Overall : Pixel Reco Eff", -0.5, 100.5, 101 );
-    if ( isBkg )
-      plot1D( pixEff, hid(hpd.rich(),"bkgEff"), "Background : Pixel Reco Eff", -0.5, 100.5, 101 );
-    if ( isHPDQCK )
-      plot1D( pixEff, hid(hpd.rich(),"qckEff"), "HPD Quartz CK : Pixel Reco Eff", -0.5, 100.5, 101 );
+        // Get the reconstructed pixels for this HPD
+        LHCb::RichRecPixels::const_iterator iPixel = pixelCreator()->begin ( hpd );
+        LHCb::RichRecPixels::const_iterator endPix = pixelCreator()->end   ( hpd );
+        // loop over reconstructed pixels
+        unsigned int nHPDs(0);
+        for ( ; iPixel != endPix; ++iPixel )
+        {
+          ++nHPDs;
+        }
 
-    // individual HPD plots
-    plot1D( nHPDs, hid(hpd.rich(),"hpdOcc/"+(std::string)hardID), "HPD Occupancy (nDigits>0)", -0.5, 200.5, 201 );
-    plot1D( pixEff, hid(hpd.rich(),"hpdOverallEff/"+(std::string)hardID),
-            "Pixel Reco Eff : "+HPD.str(), -0.5, 100.5, 101 );
-    if ( isBkg )
-      plot1D( pixEff, hid(hpd.rich(),"hpdBkgEff/"+(std::string)hardID),
-              "Pixel Reco Eff : "+HPD.str(), -0.5, 100.5, 101 );
-    if ( isHPDQCK )
-      plot1D( pixEff, hid(hpd.rich(),"hpdQckEff/"+(std::string)hardID),
-              "HPD Quartz CK Eff : "+HPD.str(), -0.5, 100.5, 101 );
+        // pixel reco efficiency
+        const double pixEff = ( rawIDs.size()>0 ? 100 * nHPDs/rawIDs.size() : 0 );
 
-    if ( msgLevel(MSG::VERBOSE) )
-    {
-      verbose() << hpd << " Raw pixels " << rawIDs.size() << " reco " << nHPDs << endreq;
-    }
+        // plots
+        plot1D( nHPDs, hid(hpd.rich(),"allhpdOcc"), "Overall : HPD Occupancy (nDigits>0)", -0.5, 200.5, 201 );
+        plot1D( pixEff, hid(hpd.rich(),"allEff"), "Overall : Pixel Reco Eff", -0.5, 100.5, 101 );
+        if ( isBkg )
+          plot1D( pixEff, hid(hpd.rich(),"bkgEff"), "Background : Pixel Reco Eff", -0.5, 100.5, 101 );
+        if ( isHPDQCK )
+          plot1D( pixEff, hid(hpd.rich(),"qckEff"), "HPD Quartz CK : Pixel Reco Eff", -0.5, 100.5, 101 );
 
-  }
+        // individual HPD plots
+        plot1D( nHPDs, hid(hpd.rich(),"hpdOcc/"+(std::string)hardID), "HPD Occupancy (nDigits>0)", -0.5, 200.5, 201 );
+        plot1D( pixEff, hid(hpd.rich(),"hpdOverallEff/"+(std::string)hardID),
+                "Pixel Reco Eff : "+HPD.str(), -0.5, 100.5, 101 );
+        if ( isBkg )
+          plot1D( pixEff, hid(hpd.rich(),"hpdBkgEff/"+(std::string)hardID),
+                  "Pixel Reco Eff : "+HPD.str(), -0.5, 100.5, 101 );
+        if ( isHPDQCK )
+          plot1D( pixEff, hid(hpd.rich(),"hpdQckEff/"+(std::string)hardID),
+                  "HPD Quartz CK Eff : "+HPD.str(), -0.5, 100.5, 101 );
+
+        if ( msgLevel(MSG::VERBOSE) )
+        {
+          verbose() << hpd << " Raw pixels " << rawIDs.size() << " reco " << nHPDs << endreq;
+        }
+
+      } // HPDs
+    } // ingresses
+  } // L1 boards
 
   return StatusCode::SUCCESS;
 }

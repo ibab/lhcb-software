@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : RichMCTrueTrackSelector
  *
  *  CVS Log :-
- *  $Id: RichMCTrueTrackSelector.cpp,v 1.2 2007-02-02 10:06:27 jonrob Exp $
+ *  $Id: RichMCTrueTrackSelector.cpp,v 1.3 2007-04-23 13:23:54 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/08/2006
@@ -34,7 +34,7 @@ MCTrueTrackSelector::MCTrueTrackSelector( const std::string& type,
                                           const IInterface* parent )
   : TrackSelectorBase ( type, name, parent )
 {
-  declareProperty( "MinMCAssocWeight", m_weight = 0.9 );
+  declareProperty( "MinMCAssocWeight", m_weight = Rich::Rec::MC::DefMinWeightTrToMCP );
 }
 
 //=============================================================================

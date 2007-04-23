@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : Rich::Rec::PixelCreatorFromRichDigitsWithBg
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromRichDigitsWithBg.cpp,v 1.20 2007-03-27 12:50:07 jonrob Exp $
+ *  $Id: RichPixelCreatorFromRichDigitsWithBg.cpp,v 1.21 2007-04-23 13:23:54 jonrob Exp $
  *
  *  @author Andy Buckley  buckley@hep.phy.cam.ac.uk
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -169,17 +169,20 @@ PixelCreatorFromRichDigitsWithBg::newPixel( const LHCb::RichSmartID id ) const
     {
 
       // Make a new RichRecPixel
-      const Gaudi::XYZPoint gPos = smartIDTool()->globalPosition( id );
-      newPix = new LHCb::RichRecPixel( id, gPos,
-                                       smartIDTool()->globalToPDPanel(gPos),
-                                       Rich::Rec::PixelParent::RawBuffer, NULL  
-                                       );
+      Gaudi::XYZPoint gPos;
+      const StatusCode sc = smartIDTool()->globalPosition( id, gPos );
+      if ( sc.isSuccess() )
+      {
 
-      // compute corrected local coordinates
-      computeRadCorrLocalPositions( newPix );
+        newPix = new LHCb::RichRecPixel( id, gPos,
+                                         smartIDTool()->globalToPDPanel(gPos),
+                                         Rich::Rec::PixelParent::RawBuffer, NULL
+                                         );
 
-      // save this pixel
-      savePixel( newPix );
+        // save this pixel
+        savePixel( newPix );
+
+      }
 
     }
 

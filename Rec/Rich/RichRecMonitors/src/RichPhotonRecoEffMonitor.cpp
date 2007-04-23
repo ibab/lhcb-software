@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : PhotonRecoEffMonitor
  *
  *  CVS Log :-
- *  $Id: RichPhotonRecoEffMonitor.cpp,v 1.10 2007-02-02 10:07:12 jonrob Exp $
+ *  $Id: RichPhotonRecoEffMonitor.cpp,v 1.11 2007-04-23 13:25:15 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -116,6 +116,7 @@ StatusCode PhotonRecoEffMonitor::execute()
           iPix != pixelCreator()->end(rich); ++iPix )
     {
       LHCb::RichRecPixel * pixel = *iPix;
+      const Gaudi::XYZPoint & locPos = m_geomTool->radCorrLocalPos(pixel,rad);
 
       // Is this a true Cherenkov Photon
       const LHCb::MCParticle * trueCKPhotonMCP = m_richRecMCTruth->trueCherenkovPhoton(segment,pixel);
@@ -144,13 +145,13 @@ StatusCode PhotonRecoEffMonitor::execute()
             // expect CK theta
             const double thetaExp = m_ckAngle->avgCherenkovTheta(segment,mcType);
             const double sepAngle =
-              ( atan2( pixel->localPosition(rad).x() - segment->pdPanelHitPointLocal().x(),
-                       pixel->localPosition(rad).y() - segment->pdPanelHitPointLocal().y() ) );
+              ( atan2( locPos.x() - segment->pdPanelHitPointLocal().x(),
+                       locPos.y() - segment->pdPanelHitPointLocal().y() ) );
 
             plot1D( sep, hid(rad,"CannotReco/nonRecoSep"), "Non-reco. pixel/segment sep",
                     tkHitSepMin[rad],tkHitSepMax[rad] );
 
-            plot2D( pixel->localPosition(rad).x(), pixel->localPosition(rad).y(),
+            plot2D( locPos.x(), locPos.y(),
                     hid(rad,"CannotReco/nonRecoXvY"), "Non-reco. pixel XvY",
                     xMinPDLoc[rich],xMaxPDLoc[rich],yMinPDLoc[rich],yMaxPDLoc[rich] );
 
@@ -178,13 +179,13 @@ StatusCode PhotonRecoEffMonitor::execute()
             // expect CK theta
             const double thetaExp = m_ckAngle->avgCherenkovTheta(segment,mcType);
             const double sepAngle =
-              ( atan2( pixel->localPosition(rad).x() - segment->pdPanelHitPointLocal().x(),
-                       pixel->localPosition(rad).y() - segment->pdPanelHitPointLocal().y() ) );
+              ( atan2( locPos.x() - segment->pdPanelHitPointLocal().x(),
+                       locPos.y() - segment->pdPanelHitPointLocal().y() ) );
 
             plot1D( sep, hid(rad,"CanReco/nonRecoSep"), "Non-reco. pixel/segment sep",
                     tkHitSepMin[rad],tkHitSepMax[rad] );
 
-            plot2D( pixel->localPosition(rad).x(), pixel->localPosition(rad).y(),
+            plot2D( locPos.x(), locPos.y(),
                     hid(rad,"CanReco/nonRecoXvY"), "Non-reco. pixel XvY",
                     xMinPDLoc[rich],xMaxPDLoc[rich],yMinPDLoc[rich],yMaxPDLoc[rich] );
 

@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : Rich::Rec::PixelCreatorFromCheatedRawBuffer
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromCheatedRawBuffer.cpp,v 1.4 2007-03-09 22:57:42 jonrob Exp $
+ *  $Id: RichPixelCreatorFromCheatedRawBuffer.cpp,v 1.5 2007-04-23 13:23:54 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/09/2003
@@ -75,9 +75,6 @@ PixelCreatorFromCheatedRawBuffer::buildPixel( const Rich::HPDPixelCluster& clust
       }
     }
   }
-
-  // re-compute corrected local coordinates
-  computeRadCorrLocalPositions( pixel );
 
   return pixel;
 }

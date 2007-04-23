@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : RichRecMCTruthTool
  *
  *  CVS Log :-
- *  $Id: RichRecMCTruthTool.cpp,v 1.26 2007-03-09 22:57:42 jonrob Exp $
+ *  $Id: RichRecMCTruthTool.cpp,v 1.27 2007-04-23 13:23:54 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -35,6 +35,13 @@ MCTruthTool::MCTruthTool( const std::string& type,
 {
   // interface
   declareInterface<Rich::Rec::MC::IMCTruthTool>(this);
+
+  // Context specific track locations
+  if ( context() == "HLT" )
+  {
+    m_trLoc = LHCb::TrackLocation::HltForward;
+  }
+
   // job options
   declareProperty( "TrackLocation", m_trLoc );
 }

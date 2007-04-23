@@ -1,15 +1,15 @@
 
 // Options need to build the Cherenkov Rings from MCRichSegments
 
-ApplicationMgr.TopAlg += { "RichMCMassHypoRingsAlg/BuildMCRichRings" };
+ApplicationMgr.TopAlg += { "Rich::Rec::MC::MCMassHypoRingsAlg/BuildMCRichRings" };
 BuildMCRichRings.Context = "Offline";
 
-ToolSvc.Offline.RichToolRegistry.Tools += { "RichMassHypothesisRingCreator/MCCherenkovRings" };
-ToolSvc.Offline.RichToolRegistry.Tools += { "RichMassHypothesisRingCreator/MCCherenkovRingsPrev" };
-ToolSvc.Offline.RichToolRegistry.Tools += { "RichMassHypothesisRingCreator/MCCherenkovRingsPrevPrev" };
-ToolSvc.Offline.RichToolRegistry.Tools += { "RichMassHypothesisRingCreator/MCCherenkovRingsNext" };
-ToolSvc.Offline.RichToolRegistry.Tools += { "RichMassHypothesisRingCreator/MCCherenkovRingsNextNext" };
-ToolSvc.Offline.RichToolRegistry.Tools += { "RichMassHypothesisRingCreator/MCCherenkovRingsLHCBackground" };
+ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::MassHypothesisRingCreator/MCCherenkovRings" };
+ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::MassHypothesisRingCreator/MCCherenkovRingsPrev" };
+ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::MassHypothesisRingCreator/MCCherenkovRingsPrevPrev" };
+ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::MassHypothesisRingCreator/MCCherenkovRingsNext" };
+ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::MassHypothesisRingCreator/MCCherenkovRingsNextNext" };
+ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::MassHypothesisRingCreator/MCCherenkovRingsLHCBackground" };
 
 ToolSvc.Offline.MCCherenkovRings.RingsLocation              = "MC/Rich/CherenkovRings";
 ToolSvc.Offline.MCCherenkovRingsPrev.RingsLocation          = "Prev/MC/Rich/CherenkovRings";
@@ -17,3 +17,8 @@ ToolSvc.Offline.MCCherenkovRingsPrevPrev.RingsLocation      = "PrevPrev/MC/Rich/
 ToolSvc.Offline.MCCherenkovRingsNext.RingsLocation          = "Next/MC/Rich/CherenkovRings";
 ToolSvc.Offline.MCCherenkovRingsNextNext.RingsLocation      = "NextNext/MC/Rich/CherenkovRings";
 ToolSvc.Offline.MCCherenkovRingsLHCBackground.RingsLocation = "LHCBackground/MC/Rich/CherenkovRings";
+
+// MC tools
+ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::MC::MCTrackInfoTool/RichMCTrackInfoTool" };
+ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::MC::MCTruthTool/RichRecMCTruthTool" };
+ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::MC::MCTruthTool/RichMCTruthTool" };
