@@ -9,7 +9,6 @@ DataOnDemandSvc.Algorithms +=
 // utility tools
 ToolSvc.RichToolRegistry.Tools += { "Rich::SmartIDTool/RichSmartIDTool" };
 ToolSvc.RichToolRegistry.Tools += { "Rich::DAQ::RawBufferToSmartIDsTool/RichSmartIDDecoder" };
-//ToolSvc.RichToolRegistry.Tools += { "RichDetNumberingTool/RichDetNumberingTool" };
 ToolSvc.RichToolRegistry.Tools += { "Rich::DAQ::RawDataFormatTool/RichRawDataFormatTool" };
 ToolSvc.RichToolRegistry.Tools += { "OdinTimeDecoder/OdinTimeDecoder" };
 

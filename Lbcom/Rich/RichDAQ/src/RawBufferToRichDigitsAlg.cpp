@@ -5,7 +5,7 @@
  *  Implementation file for RICH DAQ algorithm : RawBufferToRichDigitsAlg
  *
  *  CVS Log :-
- *  $Id: RawBufferToRichDigitsAlg.cpp,v 1.20 2007-03-01 19:39:06 jonrob Exp $
+ *  $Id: RawBufferToRichDigitsAlg.cpp,v 1.21 2007-04-23 12:58:44 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-09
@@ -59,7 +59,7 @@ StatusCode RawBufferToRichDigitsAlg::execute()
 {
 
   // Get RichSmartIDs decoded from RawEvent
-  const Rich::DAQ::PDMap & smartIDs = m_decoder->allRichSmartIDs();
+  const Rich::DAQ::L1Map & data = m_decoder->allRichSmartIDs();
 
   if ( !m_decodeOnly )
   {
@@ -67,14 +67,26 @@ StatusCode RawBufferToRichDigitsAlg::execute()
     LHCb::RichDigits * digits = new LHCb::RichDigits();
     put( digits, m_richDigitsLoc );
 
-    // Create a RichDigit for each SmartID
-    for ( Rich::DAQ::PDMap::const_iterator iPD = smartIDs.begin();
-          iPD != smartIDs.end(); ++iPD )
+    // Loop over L1 boards
+    for ( Rich::DAQ::L1Map::const_iterator iL1 = data.begin();
+          iL1 != data.end(); ++iL1 )
     {
-      for ( LHCb::RichSmartID::Vector::const_iterator iID = (*iPD).second.begin();
-            iID != (*iPD).second.end(); ++iID )
+      debug() << "L1 board " << (*iL1).first << endreq;
+      // loop over ingresses for this L1 board
+      for ( Rich::DAQ::IngressMap::const_iterator iIn = (*iL1).second.begin();
+            iIn != (*iL1).second.end(); ++iIn )
       {
-        digits->insert( new LHCb::RichDigit(), *iID );
+        // Loop over HPDs in this ingress
+        for ( Rich::DAQ::HPDMap::const_iterator iHPD = (*iIn).second.hpdData().begin();
+              iHPD != (*iIn).second.hpdData().end(); ++iHPD )
+        {
+          // Loop over RichSmartIDs in this HPD
+          for ( LHCb::RichSmartID::Vector::const_iterator iID = (*iHPD).second.smartIDs().begin();
+                iID != (*iHPD).second.smartIDs().end(); ++iID )
+          {
+            digits->insert( new LHCb::RichDigit(), *iID );
+          }
+        }
       }
     }
 
@@ -84,7 +96,8 @@ StatusCode RawBufferToRichDigitsAlg::execute()
       debug() << "Successfully registered " << digits->size()
               << " RichDigits at " << m_richDigitsLoc << endreq;
     }
-  }
+
+  } // make digits
 
   return StatusCode::SUCCESS;
 }

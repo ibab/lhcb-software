@@ -4,6 +4,10 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
+! 2007-04-23 - Chris Jones
+ - Move various header classes to RichKernel, to allow access to the decoded
+   information outside RichDAQ
+
 ! 2007-03-26 - Chris Jones
  - Various speed optimisation updates
 

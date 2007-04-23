@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::DAQ::RawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.h,v 1.23 2007-03-19 15:02:04 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.h,v 1.24 2007-04-23 12:58:44 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-18
@@ -106,7 +106,7 @@ namespace Rich
                          const Rich::DAQ::BankVersion version = Rich::DAQ::LHCb2 ) const;
 
       /// Decode all RICH RawBanks into RichSmartID identifiers
-      void decodeToSmartIDs( Rich::DAQ::PDMap & smartIDs ) const;
+      void decodeToSmartIDs( Rich::DAQ::L1Map & decodedData ) const;
 
     private: // definitions
 
@@ -119,7 +119,7 @@ namespace Rich
 
       /// Decode a RawBank into RichSmartID identifiers
       void decodeToSmartIDs( const LHCb::RawBank & bank,
-                             Rich::DAQ::PDMap & smartIDs ) const;
+                             Rich::DAQ::L1Map & decodedData ) const;
 
       /** Creates a bank data of a given version from the given RichSmartID vector
        *
@@ -186,17 +186,17 @@ namespace Rich
       /// Decode a RawBank into RichSmartID identifiers
       /// Version with DC06 and DC04 compatibility
       void decodeToSmartIDs_DC0406( const LHCb::RawBank & bank,
-                                    Rich::DAQ::PDMap & smartIDs ) const;
+                                    Rich::DAQ::L1Map & decodedData ) const;
 
       /// Decode a RawBank into RichSmartID identifiers
       /// Version compatible with 2006 testbeam
       void decodeToSmartIDs_2006TB( const LHCb::RawBank & bank,
-                                    Rich::DAQ::PDMap & smartIDs ) const;
+                                    Rich::DAQ::L1Map & decodedData ) const;
 
       /// Decode a RawBank into RichSmartID identifiers
       /// Version compatible with first 2007 "final" L1 firmware
       void decodeToSmartIDs_2007( const LHCb::RawBank & bank,
-                                  Rich::DAQ::PDMap & smartIDs ) const;
+                                  Rich::DAQ::L1Map & decodedData ) const;
 
       /// Compare Event/BX IDs, to within a given number of bits
       template<class ID>
@@ -270,8 +270,10 @@ namespace Rich
       /// Turn on/off data integrity checks
       bool m_checkDataIntegrity;
 
-      /** Option for deep debugging. Turns on the use of a fake HPD RichSmartID for each HPD data
-       *  data block. Useful for cases when the HPD L0 ID is missing in the database.
+      /** @brief Turns on the use of a fake HPD RichSmartID for each HPD data data block. 
+       *
+       *  Useful for deep debugging cases when the HPD L0 ID is missing in the database.
+       *
        *  @attention If set to true, decoded data is not complete (RICH,HPD panel and HPD info is missing).
        *             Consequently, this option should only be used to test the data decoding and not if the
        *             RichSmartIDs are needed for analysis downstream.

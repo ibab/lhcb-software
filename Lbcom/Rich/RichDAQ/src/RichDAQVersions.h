@@ -4,7 +4,7 @@
  *
  *  Contains simple typedefs for the types to use for each LHCb L1 version
  *
- *  $Id: RichDAQVersions.h,v 1.5 2007-03-08 18:14:27 jonrob Exp $
+ *  $Id: RichDAQVersions.h,v 1.6 2007-04-23 12:58:44 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   06/09/2006
@@ -14,12 +14,12 @@
 #ifndef RICHDAQ_RICHDAQVERSIONS_H
 #define RICHDAQ_RICHDAQVERSIONS_H 1
 
-// headers and footers
-#include "RichDAQHeaderPD.h"
-#include "RichDAQNullFooter.h"
-#include "RichDAQParityFooter.h"
-#include "RichDAQParityFooterTB2006.h"
-#include "RichDAQL1IngressHeader.h"
+// From RichKernel
+#include "RichKernel/RichDAQHeaderPD.h"
+#include "RichKernel/RichDAQNullFooter.h"
+#include "RichKernel/RichDAQParityFooter.h"
+#include "RichKernel/RichDAQParityFooterTB2006.h"
+#include "RichKernel/RichDAQL1IngressHeader.h"
 
 // data blocks
 #include "RichNonZeroSuppData.h"

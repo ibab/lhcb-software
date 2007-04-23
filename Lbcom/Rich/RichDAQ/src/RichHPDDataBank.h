@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ utility class : Rich::DAQ::HPDDataBank
  *
  *  CVS Log :-
- *  $Id: RichHPDDataBank.h,v 1.22 2007-03-26 11:21:40 jonrob Exp $
+ *  $Id: RichHPDDataBank.h,v 1.23 2007-04-23 12:58:44 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-17
@@ -23,7 +23,9 @@
 #include "GaudiKernel/GaudiException.h"
 
 // Kernel
-#include "RichDet/RichDAQDefinitions.h"
+#include "RichKernel/RichDAQDefinitions.h"
+#include "RichKernel/RichDAQHeaderPDBase.h"
+#include "RichKernel/RichDAQFooterPDBase.h"
 
 namespace Rich
 {
@@ -88,6 +90,12 @@ namespace Rich
       {
         return nHeaderWords() + nFooterWords() + nDataWords();
       }
+
+      /// Read access to header
+      virtual const HeaderPDBase::HeaderWords & headerWords() const = 0;
+      
+      /// Read access to footer
+      virtual const FooterPDBase::FooterWords & footerWords() const = 0;
 
       /// Is the data from this HPD suppressed
       virtual bool suppressed() const = 0;
@@ -200,6 +208,12 @@ namespace Rich
       {
         m_footer = footer;
       }
+
+      /// Read access to header
+      virtual const HeaderPDBase::HeaderWords & headerWords() const;
+      
+      /// Read access to footer
+      virtual const FooterPDBase::FooterWords & footerWords() const;
 
       /** Decode the data bank to a RichSmartID vector
        *

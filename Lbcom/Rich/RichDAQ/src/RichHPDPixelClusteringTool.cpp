@@ -5,7 +5,7 @@
  * Implementation file for class : RichHPDPixelClusteringTool
  *
  * CVS Log :-
- * $Id: RichHPDPixelClusteringTool.cpp,v 1.5 2007-03-01 19:39:07 jonrob Exp $
+ * $Id: RichHPDPixelClusteringTool.cpp,v 1.6 2007-04-23 12:58:44 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date   21/03/2006
@@ -124,7 +124,7 @@ HPDPixelClusteringTool::findClusters( LHCb::RichSmartID::Vector & smartIDs ) con
       clustersToSplit.push_back( *iC );
     }
   }
-  pixelData->splitClusters(clustersToSplit);
+  if ( !clustersToSplit.empty() ) pixelData->splitClusters(clustersToSplit);
 
   // print the final cluster
   if ( msgLevel(MSG::VERBOSE) )

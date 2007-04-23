@@ -4,7 +4,7 @@
  *  Header file for RICH DAQ utility class : RichZSPacked_V2::RichZSPacked
  *
  *  CVS Log :-
- *  $Id: RichZSPacked_V2.h,v 1.5 2007-03-08 18:14:28 jonrob Exp $
+ *  $Id: RichZSPacked_V2.h,v 1.6 2007-04-23 12:58:44 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
@@ -18,7 +18,7 @@
 #include "GaudiKernel/GaudiException.h"
 
 // numberings
-#include "RichDet/RichDAQDefinitions.h"
+#include "RichKernel/RichDAQDefinitions.h"
 
 namespace Rich
 {

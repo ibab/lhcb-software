@@ -5,7 +5,7 @@
  *  Implementation file for RICH DAQ helper class : RichHPDDataBank
  *
  *  CVS Log :-
- *  $Id: RichHPDDataBank.icpp,v 1.13 2007-03-26 11:21:40 jonrob Exp $
+ *  $Id: RichHPDDataBank.icpp,v 1.14 2007-04-23 12:58:44 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-17
@@ -239,6 +239,18 @@ namespace Rich
     bool HPDDataBankImp<Version,Header,Footer>::suppressed() const
     {
       return this->header().l1Suppressed();
+    }
+    
+    template< class Version, class Header, class Footer >
+    const HeaderPDBase::HeaderWords & HPDDataBankImp<Version,Header,Footer>::headerWords() const
+    {
+      return header().headerWords();
+    }
+      
+    template< class Version, class Header, class Footer >
+    const FooterPDBase::FooterWords & HPDDataBankImp<Version,Header,Footer>::footerWords() const
+    {
+      return footer().footerWords();
     }
 
   }

@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::DAQ::RawBufferToSmartIDsTool
  *
  *  CVS Log :-
- *  $Id: RichRawBufferToSmartIDsTool.h,v 1.14 2007-03-01 19:39:07 jonrob Exp $
+ *  $Id: RichRawBufferToSmartIDsTool.h,v 1.15 2007-04-23 12:58:44 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -62,9 +62,6 @@ namespace Rich
       // Initialization of the tool after creation
       StatusCode initialize();
 
-      // Finalization of the tool before deletion
-      StatusCode finalize();
-
       /** Implement the handle method for the Incident service.
        *  This is used to inform the tool of software incidents.
        *
@@ -75,7 +72,7 @@ namespace Rich
     public: // methods (and doxygen comments) inherited from interface
 
       // Access all RichSmartIDs for the current Event
-      const Rich::DAQ::PDMap & allRichSmartIDs() const;
+      const Rich::DAQ::L1Map & allRichSmartIDs() const;
 
     private: // private methods
 
@@ -90,8 +87,8 @@ namespace Rich
       /// Pointer to RICH raw data format tool
       const IRawDataFormatTool * m_rawFormatT;
 
-      /// RichSmartIDs
-      mutable Rich::DAQ::PDMap m_smartIDs;
+      /// The decoded data
+      mutable Rich::DAQ::L1Map m_richData;
 
       /// New event flag
       mutable bool m_newEvent;

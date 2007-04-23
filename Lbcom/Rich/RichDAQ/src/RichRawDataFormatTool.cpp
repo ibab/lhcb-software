@@ -5,7 +5,7 @@
  *  Implementation file for class : Rich::RawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.cpp,v 1.47 2007-03-26 11:21:41 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.cpp,v 1.48 2007-04-23 12:58:44 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2004-12-18
@@ -16,6 +16,8 @@
 
 // local
 #include "RichRawDataFormatTool.h"
+
+// Kernel
 #include "Kernel/SerializeStl.h"
 
 // Rich DAQ software
@@ -476,7 +478,7 @@ RawDataFormatTool::createDataBank( const LongType * dataStart,
   // Printout this bank
   if ( msgLevel(MSG::VERBOSE) )
   {
-    verbose() << endreq 
+    verbose() << endreq
               << "Created HPD Data Bank for Decoding :-" << endreq;
     verbose() << *dataBank << endreq;
   }
@@ -504,11 +506,11 @@ void RawDataFormatTool::fillRawEvent( const LHCb::RichSmartID::Vector & smartIDs
     const Level1Input L1Input = m_richSys->level1InputNum ( *iDigit );
 
     // Get reference to correct data group
-    IngressMap & Ingress   = L1Data  [ L1ID                ];
-    HPDHashMap & hpdMap    = Ingress [ L1Input.ingressID() ];
+    IngressMap & ingress   = L1Data  [ L1ID                ];
+    IngressInfo & hpds     = ingress [ L1Input.ingressID() ];
 
     // Finally, insert this pixel into correct place
-    hpdMap[ HPDInfo(hpdID,L1Input) ].push_back( *iDigit );
+    (hpds.hpdData())[hpdID].smartIDs().push_back( *iDigit );
 
   }
 
@@ -543,26 +545,35 @@ void RawDataFormatTool::fillRawEvent( const LHCb::RichSmartID::Vector & smartIDs
       if ( version != LHCb0 && version != LHCb1 &&
            version != LHCb2 && version != LHCb3 && version != LHCb4 )
       {
-        const L1IngressHeader ingressWord( (*iIngress).second, odin() );
+        // create ingress header word
+        L1IngressHeader ingressWord;
+        ingressWord.readFromODIN( odin() );
+        // fill with HPDs with data
+        for ( Rich::DAQ::HPDMap::const_iterator iHPD = (*iIngress).second.hpdData().begin();
+              iHPD != (*iIngress).second.hpdData().end(); ++iHPD )
+        {
+          ingressWord.setHPDActive( (*iHPD).second.inputNum().l1InputWithinIngress() );
+        }
+        // fill header into raw data
         ingressWord.fillRAWBank(dataBank);
         if ( msgLevel(MSG::DEBUG) )
           debug() << " Ingress : " << ingressWord << endreq;
       }
 
       if ( msgLevel(MSG::DEBUG) )
-        debug() << "  Found " << (*iIngress).second.size() << " HPD(s) with data" << endreq;
+        debug() << "  Found " << (*iIngress).second.hpdData().size() << " HPD(s) with data" << endreq;
 
       // Loop over each active HPD for this Level1 board ingress and fill RAWBank
-      for ( HPDHashMap::const_iterator iHPD = (*iIngress).second.begin();
-            iHPD != (*iIngress).second.end(); ++iHPD )
+      for ( HPDMap::const_iterator iHPD = (*iIngress).second.hpdData().begin();
+            iHPD != (*iIngress).second.hpdData().end(); ++iHPD )
       {
         // Get raw data bank for this HPD, and fill into RAWBank
-        const HPDDataBank * hpdData = createDataBank( (*iHPD).second, version, odin() );
+        const HPDDataBank * hpdData = createDataBank( (*iHPD).second.smartIDs(), version, odin() );
         if ( hpdData )
         {
           hpdData->fillRAWBank( dataBank );
           delete hpdData;
-          nHits += (*iHPD).second.size();
+          nHits += (*iHPD).second.smartIDs().size();
           ++nHPDs;
         }
         else
@@ -604,7 +615,7 @@ void RawDataFormatTool::fillRawEvent( const LHCb::RichSmartID::Vector & smartIDs
 }
 
 void RawDataFormatTool::decodeToSmartIDs( const LHCb::RawBank & bank,
-                                          PDMap & smartIDs ) const
+                                          L1Map & decodedData ) const
 {
 
   // Check this is a RICH bank
@@ -628,17 +639,17 @@ void RawDataFormatTool::decodeToSmartIDs( const LHCb::RawBank & bank,
 
   if ( version == LHCb5 ) // latest version
   {
-    decodeToSmartIDs_2007(bank,smartIDs);
+    decodeToSmartIDs_2007(bank,decodedData);
   }
   else if ( version == LHCb3 || version == LHCb4 ) // RICH 2006 Testbeam
   {
-    decodeToSmartIDs_2006TB(bank,smartIDs);
+    decodeToSmartIDs_2006TB(bank,decodedData);
   }
   else if ( version == LHCb0 ||
             version == LHCb1 ||
             version == LHCb2 )  // DC04 or DC06
   {
-    decodeToSmartIDs_DC0406(bank,smartIDs);
+    decodeToSmartIDs_DC0406(bank,decodedData);
   }
   else // Some problem ...
   {
@@ -650,13 +661,13 @@ void RawDataFormatTool::decodeToSmartIDs( const LHCb::RawBank & bank,
 }
 
 void RawDataFormatTool::decodeToSmartIDs_2007( const LHCb::RawBank & bank,
-                                               Rich::DAQ::PDMap & smartIDs ) const
+                                               L1Map & decodedData ) const
 {
   // Get L1 ID
   const Level1ID L1ID ( bank.sourceID() );
 
   // HPD count
-  unsigned int nHPDbanks(0), decodedHits(0);
+  unsigned int nHPDbanks(0), decodedHits(0), nTotalHPDs(0);
 
   // Data bank size in words
   const int bankSize = bank.size() / 4;
@@ -673,9 +684,13 @@ void RawDataFormatTool::decodeToSmartIDs_2007( const LHCb::RawBank & bank,
       Exception( "Non-empty RICH Bank size is less than 2 !" );
     }
 
+    // Get Ingress map to decode into for this L1 board
+    IngressMap & ingressMap = decodedData[L1ID];
+
     // Loop over bank, find headers and produce a data bank for each
     // Fill data into RichSmartIDs
-    long lineC(0), ingressNum(0);
+    long lineC(0);
+    L1IngressID ingressNum(0);
     while ( lineC < bankSize )
     {
 
@@ -687,10 +702,14 @@ void RawDataFormatTool::decodeToSmartIDs_2007( const LHCb::RawBank & bank,
                 << ingressWord << endreq;
       }
 
+      // Get data for this ingress
+      IngressInfo & ingressInfo = ingressMap[ingressNum];
+
       // Compare Ingress header to the ODIN
-      const bool odinOK = ( !m_decodeUseOdin ? true :
-                            ( !m_checkEventsIDs || compareIDs( ingressWord.eventID(), EventID(odin()->eventNumber()) ) ) &&
-                            ( !m_checkBxIDs     || compareIDs( ingressWord.bxID(),    BXID   (odin()->orbitNumber()) ) ) );
+      const bool odinOK
+        = ( !m_decodeUseOdin ? true :
+            ( !m_checkEventsIDs || compareIDs( ingressWord.eventID(), EventID(odin()->eventNumber()) ) ) &&
+            ( !m_checkBxIDs     || compareIDs( ingressWord.bxID(),    BXID   (odin()->orbitNumber()) ) ) );
       if ( !odinOK )
       {
         std::ostringstream mess;
@@ -730,23 +749,30 @@ void RawDataFormatTool::decodeToSmartIDs_2007( const LHCb::RawBank & bank,
           if ( hpdIsSuppressed )
           {
             std::ostringstream mess;
-            mess << "L1 board " << L1ID << " : Ingress " << ingressNum << " HPD " << iHPD << " is suppressed"; 
+            mess << "L1 board " << L1ID << " : Ingress " << ingressNum << " HPD " << iHPD << " is suppressed";
             Warning( mess.str(), StatusCode::SUCCESS );
           }
+
+          // get HPD RichSmartID
+          const LHCb::RichSmartID hpdID = ( m_useFakeHPDID ? 
+                                            LHCb::RichSmartID(Rich::Rich1,Rich::left,0,0) :
+                                            m_richSys->richSmartID( hpdBank->level0ID() ) );
+
+          // HPD info
+          HPDInfo & hpdInfo = (ingressInfo.hpdData())[hpdID];
+          hpdInfo.setInputNum( Rich::DAQ::Level1Input(nTotalHPDs++) );
+          hpdInfo.setHeader( HPDInfo::Header(hpdBank->headerWords()) );
+          hpdInfo.setFooter( HPDInfo::Footer(hpdBank->footerWords()) );
 
           // Only try and decode this HPD if ODIN test was OK
           if ( odinOK && !hpdIsSuppressed )
           {
 
-            // get HPD RichSmartID
-            const LHCb::RichSmartID hpdID = ( m_useFakeHPDID ? LHCb::RichSmartID(Rich::Rich1,Rich::left,0,0) :
-                                              m_richSys->richSmartID( hpdBank->level0ID() ) );
-
             // local hit count
             unsigned int hpdHitCount(0);
 
-            // Vector to decode into
-            LHCb::RichSmartID::Vector & newids = smartIDs[hpdID];
+            // smartIDs
+            LHCb::RichSmartID::Vector & newids = hpdInfo.smartIDs();
 
             // Compare Event IDs for errors
             bool OK = ( hpdIsSuppressed ? true :
@@ -851,7 +877,7 @@ void RawDataFormatTool::decodeToSmartIDs_2007( const LHCb::RawBank & bank,
 }
 
 void RawDataFormatTool::decodeToSmartIDs_2006TB( const LHCb::RawBank & bank,
-                                                 Rich::DAQ::PDMap & smartIDs ) const
+                                                 L1Map & decodedData ) const
 {
 
   // Get L1 ID
@@ -875,6 +901,15 @@ void RawDataFormatTool::decodeToSmartIDs_2006TB( const LHCb::RawBank & bank,
       Exception( "Non-empty RICH Bank size is less than 2 !" );
     }
 
+    // Get Ingress map to decode into for this L1 board
+    IngressMap & ingressMap = decodedData[L1ID];
+
+    // This data version does not have ingress info, so just put all data into ingress 0
+    const L1IngressID ingressNum(0);
+
+    // Get data for this ingress
+    IngressInfo & ingressInfo = ingressMap[ingressNum];
+
     // Loop over bank, find headers and produce a data bank for each
     // Fill data into RichSmartIDs
     long lineC(0);
@@ -891,7 +926,7 @@ void RawDataFormatTool::decodeToSmartIDs_2006TB( const LHCb::RawBank & bank,
                                         m_richSys->richSmartID( hpdBank->level0ID() ) );
 
       // decode to smartIDs
-      LHCb::RichSmartID::Vector & newids = smartIDs[hpdID];
+      LHCb::RichSmartID::Vector & newids = (ingressInfo.hpdData())[hpdID].smartIDs();
       const unsigned int hpdHitCount = hpdBank->fillRichSmartIDs( newids, hpdID );
 
       // Do data integrity checks
@@ -971,7 +1006,7 @@ void RawDataFormatTool::decodeToSmartIDs_2006TB( const LHCb::RawBank & bank,
 }
 
 void RawDataFormatTool::decodeToSmartIDs_DC0406( const LHCb::RawBank & bank,
-                                                 PDMap & smartIDs ) const
+                                                 L1Map & decodedData ) const
 {
 
   // Get L1 ID
@@ -1002,6 +1037,14 @@ void RawDataFormatTool::decodeToSmartIDs_DC0406( const LHCb::RawBank & bank,
       Exception( "Non-empty RICH Bank size is less than 2 !" );
     }
 
+    // Get Ingress map to decode into for this L1 board
+    IngressMap & ingressMap = decodedData[L1ID];
+
+    // This data version does not have ingress info, so just put all data into ingress 0
+    const L1IngressID ingressNum(0);
+
+    // Get data for this ingress
+    IngressInfo & ingressInfo = ingressMap[ingressNum];
 
     // Loop over bank, find headers and produce a data bank for each
     // Fill data into RichSmartIDs
@@ -1073,11 +1116,11 @@ void RawDataFormatTool::decodeToSmartIDs_DC0406( const LHCb::RawBank & bank,
                                           m_richSys->richSmartID( hpdBank->level0ID() ) );
 
         // Vector to decode into
-        LHCb::RichSmartID::Vector & newids = smartIDs[hpdID];
+        LHCb::RichSmartID::Vector & newids = (ingressInfo.hpdData())[hpdID].smartIDs();
 
         // get hit count
         const unsigned int hpdHitCount = hpdBank->fillRichSmartIDs( newids, hpdID );
-        
+
         // apply suppression of high occupancy HPDs
         if ( hpdHitCount < m_maxHPDOc )
         {
@@ -1128,15 +1171,15 @@ void RawDataFormatTool::decodeToSmartIDs_DC0406( const LHCb::RawBank & bank,
 }
 
 void
-RawDataFormatTool::decodeToSmartIDs( PDMap & smartIDs ) const
+RawDataFormatTool::decodeToSmartIDs( L1Map & decodedData ) const
 {
   m_hasBeenCalled = true;
 
   // Get the banks for the Rich
   const LHCb::RawBank::Vector & richBanks = rawEvent()->banks( LHCb::RawBank::Rich );
 
-  // Purge SmartID container
-  smartIDs.clear();
+  // Purge data container
+  decodedData.clear();
 
   // clear the L1 ID map
   m_l1IdsDecoded.clear();
@@ -1149,10 +1192,10 @@ RawDataFormatTool::decodeToSmartIDs( PDMap & smartIDs ) const
     LHCb::RawBank * bank = *iBank;
     // test bank is OK
     if ( !bank ) Exception( "Retrieved null pointer to RawBank" );
-    // Decode this bank to RichSmartIDs
+    // Decode this bank
     try
     {
-      decodeToSmartIDs( *bank, smartIDs );
+      decodeToSmartIDs( *bank, decodedData );
     }
     catch ( const GaudiException & expt )
     {
@@ -1170,7 +1213,7 @@ RawDataFormatTool::decodeToSmartIDs( PDMap & smartIDs ) const
   for ( Rich::Map<Rich::DAQ::Level1ID,unsigned int>::const_iterator iL1 = m_l1IdsDecoded.begin();
         iL1 != m_l1IdsDecoded.end(); ++iL1 )
   {
-    if ( iL1->second > 1 ) 
+    if ( iL1->second > 1 )
     {
       std::ostringstream mess;
       mess << "Found multiple RawBanks (" << iL1->second << ") for L1 ID " << iL1->first;
@@ -1181,8 +1224,7 @@ RawDataFormatTool::decodeToSmartIDs( PDMap & smartIDs ) const
   // do not print if faking HPDID, since smartIDs.size() then has no meaning
   if ( !m_useFakeHPDID && msgLevel(MSG::DEBUG) )
   {
-    debug() << "Decoded in total " << smartIDs.size()
-            << " HPDs from " << richBanks.size() << " RICH Level1 bank(s)" << endreq;
+    debug() << "Decoded in total " << richBanks.size() << " RICH Level1 bank(s)" << endreq;
   }
 
 }

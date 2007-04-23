@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::DAQ::HighOccHPDSuppressionTool
  *
  *  CVS Log :-
- *  $Id: RichHighOccHPDSuppressionTool.h,v 1.11 2007-03-01 19:39:07 jonrob Exp $
+ *  $Id: RichHighOccHPDSuppressionTool.h,v 1.12 2007-04-23 12:58:44 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -28,7 +28,7 @@
 #include "RichKernel/IRichPixelSuppressionTool.h"
 
 // numberings
-#include "RichDet/RichDAQDefinitions.h"
+#include "RichKernel/RichDAQDefinitions.h"
 
 // Kernel
 #include "RichKernel/RichMap.h"

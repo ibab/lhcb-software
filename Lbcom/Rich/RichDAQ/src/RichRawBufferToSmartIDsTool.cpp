@@ -5,7 +5,7 @@
  * Implementation file for class : Rich::DAQ::RawBufferToSmartIDsTool
  *
  * CVS Log :-
- * $Id: RichRawBufferToSmartIDsTool.cpp,v 1.17 2007-03-01 19:39:07 jonrob Exp $
+ * $Id: RichRawBufferToSmartIDsTool.cpp,v 1.18 2007-04-23 12:58:44 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -51,39 +51,34 @@ StatusCode RawBufferToSmartIDsTool::initialize()
   return sc;
 }
 
-StatusCode RawBufferToSmartIDsTool::finalize()
-{
-  // Execute base class method
-  return ToolBase::finalize();
-}
-
 // Method that handles various Gaudi "software events"
 void RawBufferToSmartIDsTool::handle ( const Incident& incident )
 {
   if ( IncidentType::BeginEvent == incident.type() ) { InitNewEvent(); }
 }
 
-const Rich::DAQ::PDMap & RawBufferToSmartIDsTool::allRichSmartIDs() const
+const Rich::DAQ::L1Map & RawBufferToSmartIDsTool::allRichSmartIDs() const
 {
   if ( m_newEvent )
   {
     fillRichSmartIDs(); // Fill for this event
     m_newEvent = false; // Set this event processed
   }
-  return m_smartIDs;
+  return m_richData;
 }
 
 void RawBufferToSmartIDsTool::fillRichSmartIDs() const
 {
   // clear current data
-  m_smartIDs.clear();
+  m_richData.clear();
 
   // Use raw format tool to decode event
-  m_rawFormatT->decodeToSmartIDs( m_smartIDs );
+  m_rawFormatT->decodeToSmartIDs( m_richData );
 
   // Printout the RichSmartIDs...
   if ( msgLevel(MSG::VERBOSE) )
   {
+    /*
     verbose() << "RichSmartIDs :-" << endreq;
     for ( Rich::DAQ::PDMap::const_iterator iPD = m_smartIDs.begin();
           iPD != m_smartIDs.end(); ++iPD )
@@ -95,6 +90,7 @@ void RawBufferToSmartIDsTool::fillRichSmartIDs() const
         verbose() << "   " << *iID << " " << (*iID).key() << endreq;
       }
     }
+    */
   }
 
 }
