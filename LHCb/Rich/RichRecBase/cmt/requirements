@@ -2,16 +2,16 @@
 # Created    : 2002-11-19
 # Maintainer : Chris Jones   Christopher.Rob.Jones@cern.ch 
 #============================================================================
-# $Id: requirements,v 1.55 2007-03-20 14:00:49 cattanem Exp $
+# $Id: requirements,v 1.56 2007-04-23 16:50:23 cattanem Exp $
 #============================================================================
 
 package   RichRecBase
-version   v3r2
+version   v3r3
 
 #============================================================================
 # Structure
 #============================================================================
-branches xml doc src cmt Event RichRecBase
+branches xml dict doc src cmt Event RichRecBase
 
 #============================================================================
 # Used packages.
@@ -31,10 +31,20 @@ document obj2doth RichRecBase_CommonObj2Doth   ../xml/*.xml
 apply_pattern install_more_includes more=RichRecBase offset=Event
 
 #============================================================================
-# Build libraries (including dictionary)
+# Build library
 #============================================================================
 library RichRecBase           ../src/event/*.cpp ../src/base/*.cpp
 apply_pattern linker_library    library=RichRecBase
+
+# =============== LCG Dictionaries ============================================
+apply_pattern reflex_dictionary                                         \
+              dictionary=RichRecBase                                    \
+              headerfiles=$(RICHRECBASEROOT)/dict/RichRecBaseDict.h     \
+              selectionfile=$(RICHRECBASEROOT)/dict/RichRecBaseDict.xml \
+              options="-U__MINGW32__"
+
+# Hack for cmt v1r19 bug to link dictionary on windows
+macro RichRecBaseDict_use_linkopts $(use_linkopts)
 
 #============================================================================
 private

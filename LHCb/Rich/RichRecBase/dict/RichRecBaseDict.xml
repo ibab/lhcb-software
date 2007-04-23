@@ -1,0 +1,25 @@
+<lcgdict>
+  <class name = "Rich::Rec::IBaseTrackSelector" />
+  <class name = "Rich::Rec::ICherenkovAngle" />
+  <class name = "Rich::Rec::ICherenkovResolution" />
+  <class name = "Rich::Rec::IExpectedTrackSignal" />
+  <class name = "Rich::Rec::IGasQuartzWindowAbs" />
+  <class name = "Rich::Rec::IGeomEff" />
+  <class name = "Rich::Rec::IMassHypothesisRingCreator" />
+  <class name = "Rich::Rec::IPhotonCreator" />
+  <class name = "Rich::Rec::IPhotonPredictor" />
+  <class name = "Rich::Rec::IPhotonReconstruction" />
+  <class name = "Rich::Rec::IPhotonSignal" />
+  <class name = "Rich::Rec::IPixelCreator" />
+  <class name = "Rich::Rec::IRayTraceCherenkovCone" />
+  <class name = "Rich::Rec::IRayleighScatter" />
+  <class name = "Rich::Rec::IGeomTool" />
+  <class name = "Rich::Rec::MC::IMCTruthTool" />
+  <class name = "Rich::Rec::ISegmentCreator" />
+  <class name = "Rich::Rec::ISellmeirFunc" />
+  <class name = "Rich::Rec::ISignalDetectionEff" />
+  <class name = "Rich::Rec::IStatusCreator" />
+  <class name = "Rich::Rec::ITrSegMaker" />
+  <class name = "Rich::Rec::ITrackCreator" />
+  <class name = "Rich::Rec::ITrackSelector" />
+</lcgdict>
