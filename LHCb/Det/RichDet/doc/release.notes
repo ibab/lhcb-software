@@ -5,7 +5,8 @@
 !-----------------------------------------------------------------------------
 
 ! 2007-04-23 - Chris Jones
- - Move RichDAQDefinitions.h into RichKernel
+ - Move RichDAQDefinitions.h into RichKernel -> Introdude dependency on 
+	 RichKernel
 
 ! 2007-04-04 - Chris Jones
  - Improve doxygen comments in DeRichSystem
