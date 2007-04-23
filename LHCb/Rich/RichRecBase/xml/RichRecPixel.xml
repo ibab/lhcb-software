@@ -4,7 +4,7 @@
 <package name="RichRecBase">
 
 <!-- **************************************************************************
-  * $Id: RichRecPixel.xml,v 1.19 2007-03-27 16:21:42 jonrob Exp $
+  * $Id: RichRecPixel.xml,v 1.20 2007-04-23 12:56:12 jonrob Exp $
   *****************************************************************************
   * XML-description of RichRecPixel class                                     *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -34,6 +34,8 @@
         <import name="Event/RichRecPhoton"  soft="TRUE" />
         <import name="Kernel/RichSmartID"/>
         <import name="RichKernel/RichPixelCluster"/>
+        <import name="RichKernel/RichObjPtn"/>
+        <import name="RichRecBase/RichRadCorrLocalPositions"/>
 
         <location name="Offline" place="Rec/Rich/OfflineEvent/Pixels"/>
         <location name="HLT"     place="Rec/Rich/HLTEvent/Pixels"/>
@@ -47,29 +49,29 @@
 
         <constructor 
                 desc     = "Constructor with arguments" 
-                initList = "m_hpdPixelCluster(hpdPixelCluster), m_globalPosition(gPos), m_localPosition(lPos), m_radCorrLocalPositions(Rich::NRadiatorTypes,lPos), m_currentBackground(0), m_parentType(parentType), m_richRecTracks(), m_richRecPhotons(), m_parentPixel(parent)">
-                <arg                  const="TRUE" name="hpdPixelCluster" type="Rich::HPDPixelCluster"  />
-                <arg                  const="TRUE" name="gPos"       type="Gaudi::XYZPoint"            />
-                <arg                  const="TRUE" name="lPos"       type="Gaudi::XYZPoint"            />
-                <arg inout="BYVALUE"  const="TRUE" name="parentType" type="Rich::Rec::PixelParent::Type"   />
-                <arg                  const="TRUE" name="parent"     type="ContainedObject*"           />
+                initList = "m_hpdPixelCluster(hpdPixelCluster), m_globalPosition(gPos), m_localPosition(lPos), m_currentBackground(0), m_parentType(parentType), m_parentPixel(parent)">
+                <arg                  const="TRUE"  name="hpdPixelCluster" type="Rich::HPDPixelCluster" />
+                <arg                  const="TRUE"  name="gPos"       type="Gaudi::XYZPoint"            />
+                <arg                  const="TRUE"  name="lPos"       type="Gaudi::XYZPoint"            />
+                <arg inout="BYVALUE"  const="TRUE"  name="parentType" type="Rich::Rec::PixelParent::Type"   />
+                <arg                  const="TRUE"  name="parent"     type="ContainedObject*"           />
                 <code/>
         </constructor>
 
         <constructor 
                 desc     = "Constructor with arguments" 
-                initList = "m_hpdPixelCluster(smartID), m_globalPosition(gPos), m_localPosition(lPos), m_radCorrLocalPositions(Rich::NRadiatorTypes,lPos), m_currentBackground(0), m_parentType(parentType), m_richRecTracks(), m_richRecPhotons(), m_parentPixel(parent)">
-                <arg                  const="TRUE" name="smartID"    type="LHCb::RichSmartID"          />
-                <arg                  const="TRUE" name="gPos"       type="Gaudi::XYZPoint"            />
-                <arg                  const="TRUE" name="lPos"       type="Gaudi::XYZPoint"            />
-                <arg inout="BYVALUE"  const="TRUE" name="parentType" type="Rich::Rec::PixelParent::Type"   />
-                <arg                  const="TRUE" name="parent"     type="ContainedObject*"           />
+                initList = "m_hpdPixelCluster(smartID), m_globalPosition(gPos), m_localPosition(lPos), m_currentBackground(0), m_parentType(parentType), m_parentPixel(parent)">
+                <arg                  const="TRUE"  name="smartID"    type="LHCb::RichSmartID"          />
+                <arg                  const="TRUE"  name="gPos"       type="Gaudi::XYZPoint"            />
+                <arg                  const="TRUE"  name="lPos"       type="Gaudi::XYZPoint"            />
+                <arg inout="BYVALUE"  const="TRUE"  name="parentType" type="Rich::Rec::PixelParent::Type"   />
+                <arg                  const="TRUE"  name="parent"     type="ContainedObject*"           />
                 <code/>
         </constructor>
 
         <constructor 
-                desc     = "Copy Constructor. Creates a new RichRecPixel with the same physics content" 
-                initList = "KeyedObject&lt;int&gt;(), m_hpdPixelCluster(pixel.hpdPixelCluster()), m_globalPosition(pixel.globalPosition()), m_localPosition(pixel.localPosition()), m_radCorrLocalPositions(pixel.radCorrLocalPositions()), m_currentBackground(pixel.currentBackground()), m_parentType(pixel.parentType()), m_richRecTracks(pixel.richRecTracks()), m_richRecPhotons(pixel.richRecPhotons()), m_parentPixel(pixel.parentPixel())">
+                desc     = "Copy Constructor. Creates a new RichRecPixel with the same physics content." 
+                initList = "KeyedObject&lt;int&gt;(), m_hpdPixelCluster(pixel.hpdPixelCluster()), m_globalPosition(pixel.globalPosition()), m_localPosition(pixel.localPosition()), m_radCorrLocalPositions(pixel.radCorrLocalPositions()), m_currentBackground(pixel.currentBackground()), m_parentType(pixel.parentType()), m_parentPixel(pixel.parentPixel()), m_richRecTracks(pixel.richRecTracks()), m_richRecPhotons(pixel.richRecPhotons())">
                 <arg  const="TRUE" name="pixel" type="LHCb::RichRecPixel" />
                 <code/>
         </constructor>
@@ -110,7 +112,7 @@
                 name   = "addToRichRecTracks" >
                 <arg const="FALSE" name="track" type="LHCb::RichRecTrack*"/>
                 <code>
-                        m_richRecTracks.push_back(track);
+                        m_richRecTracks->push_back(track);
                 </code>
         </method>
 
@@ -120,30 +122,7 @@
                 name      = "addToRichRecPhotons" >
                 <arg const="FALSE" name="photon" type="LHCb::RichRecPhoton*"/>
                 <code>
-                        m_richRecPhotons.push_back(photon);
-                </code>
-        </method>
-
-        <method 
-                desc   = "Set the radiator corrected local HPD panel coordinate position for given radiator"
-                inline = "TRUE"
-                name   = "setRadCorrLocalPosition" >
-                <arg const="TRUE" name="localPos" type="Gaudi::XYZPoint" />
-                <arg const="TRUE" name="rad"      type="Rich::RadiatorType" inout="BYVALUE" />
-                <code>
-                        m_radCorrLocalPositions[rad] = localPos;
-                </code>
-        </method>
-
-        <method 
-                const  = "TRUE" 
-                desc   = "Get the radiator corrected local HPD panel coordinate position for given radiator"
-                inline = "TRUE"
-                name   = "localPosition" 
-                type   = "const Gaudi::XYZPoint&amp;" >
-                <arg const="TRUE" name="rad" type="Rich::RadiatorType" inout="BYVALUE" />
-                <code>
-                        return m_radCorrLocalPositions[rad];
+                        m_richRecPhotons->push_back(photon);
                 </code>
         </method>
 
@@ -167,14 +146,35 @@
                 init = "0,0,0" 
         />
 
+        <method 
+                desc  = "Position in local HPD panel coordinate system, corrected for the average optical distortion for each radiator" 
+                name  = "radCorrLocalPositions" 
+                const = "TRUE" 
+                type  = "const Rich::Rec::RadCorrLocalPositions &amp;" >
+                <code> return *m_radCorrLocalPositions.object(); </code>
+        </method>
+        <method 
+                desc  = "Position in local HPD panel coordinate system, corrected for the average optical distortion for each radiator" 
+                name  = "radCorrLocalPositions" 
+                const = "FALSE" 
+                type  = "Rich::Rec::RadCorrLocalPositions &amp;" >
+                <code> return *m_radCorrLocalPositions.object(); </code>
+        </method>
         <attribute 
-                desc    = "Position in local HPD panel coordinate system, corrected for the average optical distortion for each radiator" 
-                name    = "radCorrLocalPositions"
-                type    = "std::vector&lt;Gaudi::XYZPoint&gt;"
-                init    = "Rich::NRadiatorTypes,Gaudi::XYZPoint(0,0,0)"
-                setMeth = "FALSE" 
-                getMeth = "TRUE" 
-        />
+                setMeth     = "FALSE"
+                getMeth     = "FALSE"
+                desc        = "Position in local HPD panel coordinate system, corrected for the average optical distortion for each radiator" 
+                name        = "radCorrLocalPositions" 
+                type        = "Rich::ObjPtn&lt;Rich::Rec::RadCorrLocalPositions&gt;"
+        />   
+
+        <method 
+                desc  = "Returns if the Rich::Rec::RadCorrLocalPositions object has been defined or not" 
+                name  = "radCorrLocalPositionsOK" 
+                const = "TRUE" 
+                type  = "bool" >
+                <code> return m_radCorrLocalPositions.objectExists(); </code>
+        </method>
 
         <attribute 
                 desc = "Current value for a working estimate of the background in this pixel" 
@@ -190,10 +190,19 @@
                 init = "Rich::Rec::PixelParent::Unknown" 
         />
             
-        <relation 
+        <method 
+                desc  = "Parent Object this pixel was produced from" 
+                name  = "parentPixel" 
+                const = "TRUE" 
+                type  = "const ContainedObject*" >
+                <code> return m_parentPixel; </code>
+        </method>
+        <attribute 
+                getMeth = "FALSE"
                 desc = "Parent Object this pixel was produced from" 
                 name = "parentPixel" 
-                type = "ContainedObject"
+                type = "const ContainedObject*"
+                init = "NULL"
         />
             
         <typedef 
@@ -203,12 +212,36 @@
                 type   = "std::vector&lt;LHCb::RichRecTrack*&gt;"
         />
             
+        <method 
+                desc  = "Associated RichRecTracks with which this pixel has RichRecPhoton candidates" 
+                name  = "richRecTracks" 
+                const = "TRUE" 
+                type  = "const LHCb::RichRecPixel::Tracks &amp;" >
+                <code> return *m_richRecTracks.object(); </code>
+        </method>
+        <method 
+                desc  = "Associated RichRecTracks with which this pixel has RichRecPhoton candidates" 
+                name  = "richRecTracks" 
+                const = "FALSE" 
+                type  = "LHCb::RichRecPixel::Tracks &amp;" >
+                <code> return *m_richRecTracks.object(); </code>
+        </method>
         <attribute 
-                access = "PRIVATE" 
-                desc   = "Associated RichRecTracks with which this pixel has RichRecPhoton candidates" 
-                name   = "richRecTracks" 
-                type   = "Tracks"
+                setMeth = "FALSE"
+                getMeth = "FALSE"
+                access  = "PRIVATE" 
+                desc    = "Associated RichRecTracks with which this pixel has RichRecPhoton candidates" 
+                name    = "richRecTracks" 
+                type    = "Rich::ObjPtn&lt;Tracks&gt;"
         />
+        <!--attribute 
+                setMeth = "FALSE"
+                getMeth = "TRUE"
+                access  = "PRIVATE" 
+                desc    = "Associated RichRecTracks with which this pixel has RichRecPhoton candidates" 
+                name    = "richRecTracks" 
+                type    = "Tracks"
+        /-->
             
         <typedef 
                 access = "PUBLIC" 
@@ -217,26 +250,93 @@
                 type   = "std::vector&lt;LHCb::RichRecPhoton*&gt;"
         />
             
+        <method 
+                desc  = "Associated RichRecPhotons" 
+                name  = "richRecPhotons" 
+                const = "TRUE" 
+                type  = "const LHCb::RichRecPixel::Photons &amp;" >
+                <code> return *m_richRecPhotons.object(); </code>
+        </method>
+        <method 
+                desc  = "Associated RichRecPhotons" 
+                name  = "richRecPhotons" 
+                const = "FALSE" 
+                type  = "LHCb::RichRecPixel::Photons &amp;" >
+                <code> return *m_richRecPhotons.object(); </code>
+        </method>
         <attribute 
+                setMeth = "FALSE"
+                getMeth = "FALSE"
+                access  = "PRIVATE" 
+                desc    = "Associated RichRecPhotons" 
+                name    = "richRecPhotons" 
+                type    = "Rich::ObjPtn&lt;Photons&gt;"
+        />
+        <!--attribute 
+                setMeth   = "FALSE"
+                getMeth   = "TRUE"
                 access    = "PRIVATE" 
                 desc      = "Associated RichRecPhotons" 
                 name      = "richRecPhotons" 
                 type      = "Photons"
                 nonconstaccessor = "TRUE"
+        /-->
+
+        <typedef 
+                access = "PUBLIC" 
+                def    = "RingsOnPixel" 
+                desc   = "Container type for RichRecRingOnPixel" 
+                type   = "std::vector&lt;LHCb::RichRecRingOnPixel&gt;"
         />
 
-        <attribute
+        <method 
+                desc  = "The RichRecRings associated to this pixel" 
+                name  = "richRecRings" 
+                const = "TRUE" 
+                type  = "const LHCb::RichRecPixel::RingsOnPixel &amp;" >
+                <code> return *m_richRecRings.object(); </code>
+        </method>
+        <attribute   
+                setMeth = "FALSE"
+                getMeth = "FALSE"
                 desc         = "The RichRecRings associated to this pixel" 
                 name         = "richRecRings" 
-                type         = "std::vector&lt;LHCb::RichRecRingOnPixel&gt;"
+                type         = "Rich::ObjPtn&lt;LHCb::RichRecPixel::RingsOnPixel&gt;"
                 nonconstaccessor = "TRUE"
         />
+        <!--attribute
+                desc         = "The RichRecRings associated to this pixel" 
+                name         = "richRecRings" 
+                type         = "LHCb::RichRecPixel::RingsOnPixel"
+                nonconstaccessor = "TRUE"
+        /-->
 
+        <method 
+                desc  = "The HPD channel cluster this pixel is associated to" 
+                name  = "associatedCluster" 
+                const = "TRUE" 
+                type  = "const Rich::HPDPixelCluster &amp;" >
+                <code> return *m_associatedCluster.object(); </code>
+        </method>
+        <method 
+                desc  = "Set the HPD channel cluster this pixel is associated to" 
+                name  = "setAssociatedCluster" 
+                type  = "void" >
+                <arg const="TRUE" name="clus" type="Rich::HPDPixelCluster"/>
+                <code> m_associatedCluster.inherit( new Rich::HPDPixelCluster(clus) ); </code>
+        </method>
         <attribute 
+                setMeth = "FALSE"
+                getMeth = "FALSE"
+                desc    = "The HPD channel cluster this pixel is associated to" 
+                name    = "associatedCluster"
+                type    = "Rich::ObjPtn&lt;Rich::HPDPixelCluster&gt;"
+        />
+        <!--attribute 
                 desc    = "The HPD channel cluster this pixel is associated to" 
                 name    = "associatedCluster"
                 type    = "Rich::HPDPixelCluster"
-        />
+        /-->
 
 </class>
 

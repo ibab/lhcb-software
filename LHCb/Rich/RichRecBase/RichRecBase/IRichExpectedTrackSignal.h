@@ -5,12 +5,10 @@
  *  Header file for RICH reconstruction tool interface : Rich::Rec::IExpectedTrackSignal
  *
  *  CVS Log :-
- *  $Id: IRichExpectedTrackSignal.h,v 1.11 2007-03-09 18:04:33 jonrob Exp $
+ *  $Id: IRichExpectedTrackSignal.h,v 1.12 2007-04-23 12:56:12 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
- *
- *  @todo Turn back to forward declaration for RichPID once hack in RichEvent is removed
  */
 //-----------------------------------------------------------------------------
 

@@ -5,7 +5,7 @@
  *  Header file for tool base class : Rich::Rec::PixelCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorBase.h,v 1.17 2007-03-27 16:21:42 jonrob Exp $
+ *  $Id: RichPixelCreatorBase.h,v 1.18 2007-04-23 12:56:12 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/04/2005
@@ -27,7 +27,6 @@
 
 // interfaces
 #include "RichRecBase/IRichPixelCreator.h"
-#include "RichRecBase/IRichRecGeomTool.h"
 #include "RichKernel/IRichPixelSuppressionTool.h"
 #include "RichKernel/IRichPixelClusteringTool.h"
 #include "RichKernel/IRichSmartIDTool.h"
@@ -170,12 +169,6 @@ namespace Rich
        */
       void savePixel( LHCb::RichRecPixel * pix ) const;
 
-      /** Compute the average radiator distortion corrected positions
-       *  in local HPD panel coordinate system,
-       *  for each valid radiator for the given pixel
-       */
-      void computeRadCorrLocalPositions( LHCb::RichRecPixel * pixel ) const;
-
       /** Apply HPD pixel suppression, if configured to do so
        *
        *  @param hpdID    RichSmartID for HPD
@@ -221,9 +214,6 @@ namespace Rich
 
       /// Pointer to RICH system detector element
       const DeRichSystem * m_richSys;
-
-      /// Reconstruction geometry tool
-      const IGeomTool * m_recGeom;
 
       /// HPD occupancy tools
       mutable std::vector<const Rich::DAQ::IPixelSuppressionTool *> m_hpdOcc;
@@ -315,7 +305,7 @@ namespace Rich
        *  Essentially replicated functionality from buildPixel(Rich::HPDPixelCluster) version...
        *  Provided mainly for speed for HLT
        */
-      LHCb::RichRecPixel * buildPixel_ID ( const LHCb::RichSmartID & id ) const;
+      LHCb::RichRecPixel * buildPixel( const LHCb::RichSmartID & id ) const;
 
     private: // helper classes
 
@@ -329,7 +319,7 @@ namespace Rich
                                  const LHCb::RichRecPixel * p2 ) const
         {
           // only using the first smartID here. what else can we do ?
-          return ( p1->hpdPixelCluster().primaryID().dataBitsOnly().key() < 
+          return ( p1->hpdPixelCluster().primaryID().dataBitsOnly().key() <
                    p2->hpdPixelCluster().primaryID().dataBitsOnly().key() );
         }
       };
@@ -358,11 +348,9 @@ namespace Rich
 
     inline bool PixelCreatorBase::pixelIsOK( const LHCb::RichSmartID id ) const
     {
-      return (
-              //validID &&                 // RichSmartID is valid
-              useDetector(id.rich()) &&  // This RICH is in use
-              ( !m_hpdCheck || m_richSys->hpdIsActive(id) ) // If required, check HPD is alive
-              );
+      return ( useDetector(id.rich()) &&  // This RICH is in use
+               ( !m_hpdCheck || m_richSys->hpdIsActive(id) ) // If required, check HPD is alive
+               );
     }
 
     inline void PixelCreatorBase::savePixel( LHCb::RichRecPixel * pix ) const
@@ -397,20 +385,6 @@ namespace Rich
 
     }
 
-    inline void
-    PixelCreatorBase::computeRadCorrLocalPositions( LHCb::RichRecPixel * pixel ) const
-    {
-      if ( Rich::Rich1 == pixel->detector() )
-      {
-        pixel->setRadCorrLocalPosition(m_recGeom->correctAvRadiatorDistortion(pixel->localPosition(),Rich::Aerogel),Rich::Aerogel);
-        pixel->setRadCorrLocalPosition(m_recGeom->correctAvRadiatorDistortion(pixel->localPosition(),Rich::Rich1Gas),Rich::Rich1Gas);
-      }
-      else
-      {
-        pixel->setRadCorrLocalPosition(m_recGeom->correctAvRadiatorDistortion(pixel->localPosition(),Rich::Rich2Gas),Rich::Rich2Gas);
-      }
-    }
-
     inline const Rich::DAQ::IPixelSuppressionTool *
     PixelCreatorBase::hpdSuppTool( const Rich::DetectorType rich ) const
     {
@@ -421,7 +395,7 @@ namespace Rich
       return m_hpdOcc[rich];
     }
 
-    inline const Rich::DAQ::IPixelClusteringTool * 
+    inline const Rich::DAQ::IPixelClusteringTool *
     PixelCreatorBase::hpdClusTool( const Rich::DetectorType rich ) const
     {
       if ( !m_hpdClus[rich] )

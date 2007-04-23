@@ -4,8 +4,12 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+! 2007-04-23 - Chris Jones
+ - Some doxygen fixes
+ - Add class to store radiator corrected positions
+
 ! 2007-03-27 - Chris Jones
- - Add new options to RichPixelCreatorbase to turn off entirely the 
+ - Add new options to RichPixelCreatorBase to turn off entirely the 
    clustering for reconstruction (HLT).
  - Some speed optimisations
   + Pass clusters and smartIDs by reference to RichRecPixel constructor

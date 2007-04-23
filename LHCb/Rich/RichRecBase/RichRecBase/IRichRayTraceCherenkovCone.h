@@ -4,7 +4,7 @@
  *
  *  Header file for RICH reconstruction tool interface : Rich::Rec::IRayTraceCherenkovCone
  *
- *  $Id: IRichRayTraceCherenkovCone.h,v 1.12 2007-03-09 18:04:33 jonrob Exp $
+ *  $Id: IRichRayTraceCherenkovCone.h,v 1.13 2007-04-23 12:56:12 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -129,8 +129,9 @@ namespace Rich
        *  in Global coordinates.
        *
        *  @param ring Point to the Ring object to use as the basis of the ray tracing
-       *  @param mode          The ray-tracing mode configuration object
        *  @param nPoints       Number of points to ray trace around the ring
+       *  @param mode          The ray-tracing mode configuration object
+       *  @param forceTracing  Force the ray tracing
        *
        *  @return StatusCode for the ray tracing
        *  @retval StatusCode::SUCCESS Ray tracing was successful, vector points is valid
@@ -152,6 +153,7 @@ namespace Rich
        *  @param ring          Pointer to the Ring object to use as the basis of the ray tracing
        *  @param nPoints       Number of points to ray trace around the ring
        *  @param mode          The ray-tracing mode configuration object
+       *  @param forceTracing  Force the ray tracing
        *
        *  @return StatusCode for the ray tracing
        *  @retval StatusCode::SUCCESS Ray tracing was successful, vector points is valid

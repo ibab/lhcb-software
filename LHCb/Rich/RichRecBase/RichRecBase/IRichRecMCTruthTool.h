@@ -4,7 +4,7 @@
  *
  *  Header file for RICH reconstruction tool interface : Rich::Rec::IMCTruthTool
  *
- *  $Id: IRichRecMCTruthTool.h,v 1.19 2007-03-09 18:04:33 jonrob Exp $
+ *  $Id: IRichRecMCTruthTool.h,v 1.20 2007-04-23 12:56:12 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -56,7 +56,7 @@ namespace Rich
     {
 
       /// Default minimum weight for track to MCParticle associations
-      static const double DefMinWeightTrToMCP = 0.5;
+      static const double DefMinWeightTrToMCP = 0.95;
 
       //-----------------------------------------------------------------------------
       /** @class IMCTruthTool IRichRecMCTruthTool.h
@@ -71,9 +71,6 @@ namespace Rich
 
       class IMCTruthTool : public virtual IAlgTool
       {
-
-      protected:
-
 
       public:
 
