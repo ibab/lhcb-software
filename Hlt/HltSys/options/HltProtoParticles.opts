@@ -13,9 +13,11 @@ SeqHltCharged.Members += { "ChargedProtoPAlg/HltChargedProtoPAlg" } ;
 SeqHltCharged.MeasureTime = true ;
 HltChargedProtoPAlg.InputTrackLocation = "Hlt/Track/Forward" ; // what about match?
 HltChargedProtoPAlg.OutputProtoParticleLocation = "Hlt/ProtoP/Charged" ;
+SeqHltCharged.Members += { "ChargedProtoCombineDLLsAlg/HltChargedProtoCombDLL" };
+HltChargedProtoCombDLL.ProtoParticleLocation = "Hlt/ProtoP/Charged" ;
 
-// no RICH
-// ChargedProtoPAlg.InputRichPIDLocation = "" ;
+// RICH
+HltChargedProtoPAlg.InputRichPIDLocation = "Rec/Rich/HltPIDs";
 // no calo yet
 HltChargedProtoPAlg.CaloSpdPID = false ;
 HltChargedProtoPAlg.CaloPrsPID = false ;
@@ -23,13 +25,11 @@ HltChargedProtoPAlg.CaloEcalPID = false ;
 HltChargedProtoPAlg.CaloHcalPID = false ;
 HltChargedProtoPAlg.CaloBremPID = false ;
 
-HltChargedProtoPAlg.OutputLevel = 3 ;
-
 //---------------------------------------------------------------------
-// Charged Particles - so far make all to Pi and K
+// Charged Particles - Here make all to Pi and K
 //---------------------------------------------------------------------
 SeqHltCharged.Members += { "PreLoadParticles/HltNoPIDsPions",
-	                 "PreLoadParticles/HltNoPIDsKaons" }; 
+	                         "PreLoadParticles/HltNoPIDsKaons" }; 
 
 HltNoPIDsPions.PhysDesktop.ParticleMakerType = "NoPIDsParticleMaker" ;
 HltNoPIDsPions.PhysDesktop.NoPIDsParticleMaker.Inputs =  {"Hlt/ProtoP/Charged"} ;
@@ -40,6 +40,19 @@ HltNoPIDsKaons.PhysDesktop.ParticleMakerType = "NoPIDsParticleMaker" ;
 HltNoPIDsKaons.PhysDesktop.NoPIDsParticleMaker.Inputs =  {"Hlt/ProtoP/Charged"} ;
 HltNoPIDsKaons.PhysDesktop.NoPIDsParticleMaker.Particle =  "kaon" ;
 HltNoPIDsKaons.DecayDescriptor = "Kaon" ;
+
+//---------------------------------------------------------------------
+// Kaons using RICH HLT reco results
+//---------------------------------------------------------------------
+SeqHltCharged.Members += { "PreLoadParticles/HltRichPIDsKaons" }; 
+
+HltRichPIDsKaons.PhysDesktop.ParticleMakerType = "CombinedParticleMaker" ;
+HltRichPIDsKaons.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = false ;
+HltRichPIDsKaons.PhysDesktop.CombinedParticleMaker.InputProtoParticles = "Hlt/ProtoP/Charged";
+HltRichPIDsKaons.PhysDesktop.CombinedParticleMaker.Particles = {"kaon"} ;
+HltRichPIDsKaons.PhysDesktop.CombinedParticleMaker.TrackSelector.TrackTypes = {"Long"};
+HltRichPIDsKaons.PhysDesktop.CombinedParticleMaker.Kaon.Selection = {"RequiresDet='RICH' CombDLL(k-pi)>'-5.0'"} ;
+HltRichPIDsKaons.DecayDescriptor = "Kaon" ;
 
 //---------------------------------------------------------------------
 // Special case for muons

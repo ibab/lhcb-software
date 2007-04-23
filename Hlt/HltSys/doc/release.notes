@@ -5,6 +5,9 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
 
+! 2007-04-23 - Chris Jones
+ - Additions for RICH HLT Reconstruction (by default disabled at the moment)
+
 </PRE><H1><A NAME=v1r4>2007-03-27 HltSys v1r4</A></H1><PRE>
 This version uses Gaudi v19r3 and LHCb v22r3
 

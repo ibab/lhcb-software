@@ -24,6 +24,18 @@ HltFullReco.Members+={
   "HltTracking/HltRecoForward"
 };
 
+//------------------------------------------------------------------------
+// C.Jones : RICH options
+// Disabled by default. To enable uncomment the lines below
+//------------------------------------------------------------------------
+//#include "$RICHHLTSYSOPTS/RecoHLTToolPara.opts"
+//#include "$RICHHLTSYSOPTS/RecoHLTAlgs.opts"
+// Explicitly run the RICH reco sequence after tracking
+//HltFullReco.Members += { "GaudiSequencer/HltRICHReco" };
+// ... or on-demand
+//DataOnDemandSvc.Algorithms += {"DATA='/Event/Rec/Rich/HltPIDs' TYPE='GaudiSequencer/HltRICHReco'"};
+//------------------------------------------------------------------------
+
 // HltRecoVelo.InputTracksName = "Rec/Track/RZVelo";
 HltRecoVelo.OutputTracksName = "Hlt/Track/Velo";
 HltRecoVelo.RecoName = "Velo";

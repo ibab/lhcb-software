@@ -1,4 +1,10 @@
 
+//--------------------------
+// L0
+//--------------------------
+
+L0.MeasureTime = true;
+
 //---------------------------
 // HLT
 //--------------------------
@@ -27,7 +33,6 @@ HltHadPreTrigger.MeasureTime = true;
 //----------------------------
 
 HltMuonAlley.MeasureTime = true;
-
 HltMuonPreTrigger.MeasureTime = true;
 HltMuonPreTriggerSingleMuon.MeasureTime = true;
 HltMuonTrigger.MeasureTime = true;
@@ -36,6 +41,13 @@ HltMuonTriggerSingleMuon.MeasureTime = true;
 //----------------------------
 //  HLT Calo Alley
 //----------------------------
-HltCaloAlley.MeasureTime = true;
 
+HltCaloAlley.MeasureTime = true;
 HltCaloPreTrigger.MeasureTime = true;
+
+//----------------------------
+// RICH Reco
+//----------------------------
+
+HltRICHReco.MeasureTime     = true;
+RichHltInitSeq.MeasureTime  = true;

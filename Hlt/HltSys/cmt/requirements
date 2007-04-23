@@ -21,3 +21,5 @@ use HltHadL0Conf        v1r0    Hlt   # Jose Angel Hernando-Morata
 use HltL0Conf           v1r1    Hlt   # Johannes Albrecht
 
 use HltSelections       v5r0    Hlt   # Patrick Koppenburg
+
+use RichHLTSys          v*      Rich  # C. Jones + C. Buszello
