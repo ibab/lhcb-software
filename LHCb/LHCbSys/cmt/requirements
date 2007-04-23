@@ -18,7 +18,7 @@ use LHCbMath              v2r1    Kernel  # Juan Palacios
 use Relations             v5r1    Kernel  # Ivan Belyaev
 use CaloKernel            v5r0    Calo    # Olivier Deschamps
 use MuonKernel            v4r0    Muon    # Andrei Tsaregorodtsev
-use RichKernel            v7r3    Rich    # Chris Jones
+use RichKernel            v7r4    Rich    # Chris Jones
 use L0MuonKernel          v6r0    L0      # Andrei Tsaregorodtsev, Julien Cogan
 use ProcessorKernel       v4r0    L0      # Andrei Tsaregorodtsev, Julien Cogan
 
@@ -34,7 +34,7 @@ use CaloDet               v8r1    Det     # Olivier Deschamps
 use CaloDetXmlCnv         v3r1    Det     # Olivier Deschamps
 use MuonDet               v6r2    Det     # Alessia Satta, Alessio Sarti
 use Magnet                v3r6    Det     # N.N.
-use RichDet               v10r3   Det     # Chris Jones
+use RichDet               v10r4   Det     # Chris Jones
 use STDet                 v3r3    Det     # Jeroen van Tilburg, Matt Needham
 
 # Event data model
@@ -65,7 +65,7 @@ use SiDAQ                 v2r0    Si      # Matt Needham
 use LHCbAlgs              v2r7   Kernel  # Marco Cattaneo
 use CaloInterfaces        v7r2   Calo    # Olivier Deschamps
 use CaloUtils             v7r2   Calo    # Olivier Deschamps
-use RichRecBase           v3r2   Rich    # Chris Jones
+use RichRecBase           v3r3   Rich    # Chris Jones
 use PatTools              v3r1   Pat     # Olivier Callot
 use TrackInterfaces       v3r3   Tr      # Eduardo Rodrigues, Jose Hernando
 use TrackMCInterfaces     v3r0   Tr      # Eduardo Rodrigues
