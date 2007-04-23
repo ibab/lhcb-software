@@ -4,7 +4,7 @@
  *  Header file for RICH DAQ utility class : RichZSPacked_V1::RichZSPacked
  *
  *  CVS Log :-
- *  $Id: RichZSPacked_V1.h,v 1.5 2007-04-23 12:58:44 jonrob Exp $
+ *  $Id: RichZSPacked_V1.h,v 1.6 2007-04-23 17:23:42 cattanem Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
@@ -68,7 +68,7 @@ namespace Rich
 
       }
 
-      /** @class RichZSPacked RichZSPacked.h
+      /** @class RichZSPacked RichZSPacked_V1.h
        *
        *  Utility class representing 2 groups of address and
        *  bit-field packed into a single word for LHCb mode readout ONLY

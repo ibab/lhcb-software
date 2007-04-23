@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::DAQ::RawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.h,v 1.24 2007-04-23 12:58:44 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.h,v 1.25 2007-04-23 17:23:42 cattanem Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-18
@@ -142,7 +142,6 @@ namespace Rich
        *  @param dataStart Pointer to the start of the raw data
        *  @param dataSize  The length of the data block (excluding header HPD word)
        *  @param version   The RICH DAQ data bank version
-       *  @param l1IngressHeader The L1 ingress header word
        */
       const HPDDataBank * createDataBank( const Rich::DAQ::LongType * dataStart,
                                           const unsigned int dataSize,
