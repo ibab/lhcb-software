@@ -19,28 +19,11 @@
        <base name="ProcessHeader"/>
        <import name="Event/ProcessHeader"/>
        <attribute
-        desc="Event number. Negative if simulated data"
+        desc="Event number (same as in ODIN)"
         name="evtNumber"
         type="longlong"
-	getMeth="FALSE"
         init="0"
        />
-       <method
-        const="TRUE"
-        desc="Return event number (L0 event number for real data)"
-        name="evtNumber"
-        type="ulonglong"
-       >
-         <code> return (m_evtNumber > 0) ? m_evtNumber:-m_evtNumber; </code>
-       </method>
-       <method
-        const="TRUE"
-        desc="Return true for real data, false for simulated data"
-        name="realData"
-        type="bool"
-       >
-         <code> return (m_evtNumber > 0) ? true:false; </code>
-       </method>
        <constructor 
 		desc     = "Copy constructor. Creates a new RecHeader with the same information." 
 		initList = "ProcessHeader(head), m_evtNumber(head.evtNumber())">

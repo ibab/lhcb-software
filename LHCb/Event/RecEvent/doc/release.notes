@@ -1,11 +1,16 @@
 !-----------------------------------------------------------------------------
-! $Id: release.notes,v 1.59 2007-04-19 15:52:40 cattanem Exp $
+! $Id: release.notes,v 1.60 2007-04-23 08:14:12 cattanem Exp $
 ! Package     : Event/RecEvent
 ! Responsible : Marco Cattaneo
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
 !-----------------------------------------------------------------------------
 
-!========================= RecEvent v2r3 2007-04-19 ==========================
+!========================= RecEvent v2r3 2007-04-20 ==========================
+! 2007-04-20 - Marco Cattaneo
+ - RecHeader no longer distinguishes between positive and negative event numbers
+   . evtNumber() accessor is now longlong (was ulonglong)
+   . realData() function removed 
+
 ! 2007-04-19 - Marco Cattaneo
  - Fix a doxygen warning
 
