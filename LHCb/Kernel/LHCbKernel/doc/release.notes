@@ -6,7 +6,7 @@
 
 !===================== LHCbKernel v7r3 2007-04-20 ========================
 ! 2007-04-20 - Marco Cattaneo
- - Add dictionary for std::pair<Gaudi::XYZPoint,GaudiXYZPoint>, previously 
+ - Add dictionary for std::pair<Gaudi::XYZPoint,Gaudi::XYZPoint>, previously 
    in DetSys
 
 ! 2007-04-17 - Marco Cattaneo
