@@ -5,7 +5,7 @@
  *  Implementation file for class : Rich::RawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.cpp,v 1.48 2007-04-23 12:58:44 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.cpp,v 1.49 2007-04-23 14:41:47 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2004-12-18
@@ -489,6 +489,7 @@ RawDataFormatTool::createDataBank( const LongType * dataStart,
 void RawDataFormatTool::fillRawEvent( const LHCb::RichSmartID::Vector & smartIDs,
                                       const BankVersion version ) const
 {
+  m_hasBeenCalled = true;
 
   // new rich data map
   L1Map L1Data = m_dummyMap;
@@ -534,8 +535,9 @@ void RawDataFormatTool::fillRawEvent( const LHCb::RichSmartID::Vector & smartIDs
     ShortType nHits(0), nHPDs(0);
 
     // Loop over ingresses for this L1 board
+    int ingress(0);
     for ( IngressMap::const_iterator iIngress = (*iL1).second.begin();
-          iIngress != (*iL1).second.end(); ++iIngress )
+          iIngress != (*iL1).second.end(); ++iIngress, ++ingress )
     {
 
       // If 2007 data format, add Ingress header word to the raw bank
@@ -557,7 +559,7 @@ void RawDataFormatTool::fillRawEvent( const LHCb::RichSmartID::Vector & smartIDs
         // fill header into raw data
         ingressWord.fillRAWBank(dataBank);
         if ( msgLevel(MSG::DEBUG) )
-          debug() << " Ingress : " << ingressWord << endreq;
+          debug() << " Ingress " << ingress << " : " << ingressWord << endreq;
       }
 
       if ( msgLevel(MSG::DEBUG) )
@@ -567,6 +569,8 @@ void RawDataFormatTool::fillRawEvent( const LHCb::RichSmartID::Vector & smartIDs
       for ( HPDMap::const_iterator iHPD = (*iIngress).second.hpdData().begin();
             iHPD != (*iIngress).second.hpdData().end(); ++iHPD )
       {
+        debug() << "   HPD " << (*iHPD).first << " creating HPD data block for "
+                << (*iHPD).second.smartIDs().size() << " hits" << endreq;
         // Get raw data bank for this HPD, and fill into RAWBank
         const HPDDataBank * hpdData = createDataBank( (*iHPD).second.smartIDs(), version, odin() );
         if ( hpdData )
@@ -602,9 +606,9 @@ void RawDataFormatTool::fillRawEvent( const LHCb::RichSmartID::Vector & smartIDs
 
     if ( msgLevel(MSG::DEBUG) )
     {
-      debug() << "Encoded " << boost::format("%2i") % (*iL1).second.size() << endreq;
-      debug() << " HPDs into Level1 Bank "
-              << boost::format("%2i") % (*iL1).first.data() << endreq;
+      debug() << "Encoded " << boost::format("%2i") % (*iL1).second.size();
+      debug() << " ingresses for Level1 Bank "
+              << boost::format("%2i") % (*iL1).first.data();
       debug() << " : Size "
               << boost::format("%4i") % (nL1HeaderWords+dataBank.size())
               << " words : Version " << version << endreq;
