@@ -5,7 +5,7 @@
  * Implementation file for class : Rich::Rec::PhotonRecoUsingQuarticSoln
  *
  * CVS Log :-
- * $Id: RichPhotonRecoUsingQuarticSoln.cpp,v 1.17 2007-03-20 12:05:37 jonrob Exp $
+ * $Id: RichPhotonRecoUsingQuarticSoln.cpp,v 1.18 2007-04-23 13:32:51 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @author Antonis Papanestis
@@ -178,10 +178,10 @@ reconstructPhoton ( const LHCb::RichTrackSegment& trSeg,
                     const Rich::HPDPixelCluster& smartIDs,
                     LHCb::RichGeomPhoton& gPhoton ) const
 {
-  return reconstructPhoton( trSeg,
-                            m_idTool->globalPosition(smartIDs),
-                            gPhoton,
-                            smartIDs );
+  Gaudi::XYZPoint tmpP;
+  StatusCode sc = m_idTool->globalPosition(smartIDs,tmpP);
+  sc = sc && reconstructPhoton( trSeg, tmpP, gPhoton, smartIDs );
+  return sc;
 }
 
 //-------------------------------------------------------------------------

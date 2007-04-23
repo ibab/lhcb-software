@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::BinnedCKResVthetaForRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichBinnedCKResVthetaForRecoTracks.cpp,v 1.7 2007-02-02 10:10:40 jonrob Exp $
+ *  $Id: RichBinnedCKResVthetaForRecoTracks.cpp,v 1.8 2007-04-23 13:32:51 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -40,19 +40,23 @@ BinnedCKResVthetaForRecoTracks ( const std::string& type,
   declareProperty( "MatchAerogelRes",   m_theerr[Rich::Aerogel][Rich::Rec::Track::Match] );
   declareProperty( "KsTrackAerogelRes", m_theerr[Rich::Aerogel][Rich::Rec::Track::KsTrack] );
   declareProperty( "VeloTTAerogelRes",  m_theerr[Rich::Aerogel][Rich::Rec::Track::VeloTT] );
+  declareProperty( "SeedAerogelRes",    m_theerr[Rich::Aerogel][Rich::Rec::Track::Seed] );
 
   declareProperty( "NRich1GasResBins",   m_binEdges[Rich::Rich1Gas] );
   declareProperty( "ForwardRich1GasRes", m_theerr[Rich::Rich1Gas][Rich::Rec::Track::Forward] );
   declareProperty( "MatchRich1GasRes",   m_theerr[Rich::Rich1Gas][Rich::Rec::Track::Match] );
   declareProperty( "KsTrackRich1GasRes", m_theerr[Rich::Rich1Gas][Rich::Rec::Track::KsTrack] );
   declareProperty( "VeloTTRich1GasRes",  m_theerr[Rich::Rich1Gas][Rich::Rec::Track::VeloTT] );
+  declareProperty( "SeedRich1GasRes",    m_theerr[Rich::Rich1Gas][Rich::Rec::Track::Seed] );
 
   declareProperty( "NRich2GasResBins",   m_binEdges[Rich::Rich2Gas] );
   declareProperty( "ForwardRich2GasRes", m_theerr[Rich::Rich2Gas][Rich::Rec::Track::Forward] );
   declareProperty( "MatchRich2GasRes",   m_theerr[Rich::Rich2Gas][Rich::Rec::Track::Match] );
   declareProperty( "KsTrackRich2GasRes", m_theerr[Rich::Rich2Gas][Rich::Rec::Track::KsTrack] );
+  declareProperty( "VeloTTRich2GasRes",  m_theerr[Rich::Rich2Gas][Rich::Rec::Track::VeloTT] );
   declareProperty( "SeedRich2GasRes",    m_theerr[Rich::Rich2Gas][Rich::Rec::Track::Seed] );
 
+  // Normalise the resolutions
   declareProperty( "NormaliseRes", m_normalise = true );
 
 }

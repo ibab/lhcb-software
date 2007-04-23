@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::Rec::DelegatedTrackCreatorFromRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichDelegatedTrackCreatorFromRecoTracks.h,v 1.5 2007-03-10 13:19:19 jonrob Exp $
+ *  $Id: RichDelegatedTrackCreatorFromRecoTracks.h,v 1.6 2007-04-23 13:32:51 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -18,6 +18,7 @@
 // Gaudi
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/ContainedObject.h"
+#include "GaudiKernel/IJobOptionsSvc.h"
 
 // base class
 #include "RichRecBase/RichTrackCreatorBase.h"
@@ -103,6 +104,9 @@ namespace Rich
       /// mapping type between track type and  RichTrackCreator tool pointer
       typedef std::vector< const ITrackCreator* > TrackToPnt;
       TrackToPnt m_tkToPtn;
+
+      /// Flag to turn on the creation of the RichRecRings for the segment mass hypotheses
+      bool m_buildHypoRings;
 
     };
 

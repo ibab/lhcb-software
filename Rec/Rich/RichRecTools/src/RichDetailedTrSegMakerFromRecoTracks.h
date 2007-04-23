@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::Rec::DetailedTrSegMakerFromRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichDetailedTrSegMakerFromRecoTracks.h,v 1.15 2007-03-10 13:19:20 jonrob Exp $
+ *  $Id: RichDetailedTrSegMakerFromRecoTracks.h,v 1.16 2007-04-23 13:32:51 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   14/01/2002
@@ -28,9 +28,6 @@
 #include "Event/Track.h"
 #include "Event/State.h"
 
-// RichEvent
-#include "RichEvent/RichTrackSegment.h"
-
 // LHCbKernel
 #include "Kernel/RichSmartID.h"
 
@@ -39,6 +36,7 @@
 #include "RichKernel/IRichRayTracing.h"
 #include "RichKernel/IRichParticleProperties.h"
 #include "RichKernel/IRichRadiatorTool.h"
+#include "RichKernel/RichTrackSegment.h"
 
 // RichDet
 #include "RichDet/DeRich.h"

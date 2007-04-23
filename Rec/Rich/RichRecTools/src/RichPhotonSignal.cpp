@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::PhotonSignal
  *
  *  CVS Log :-
- *  $Id: RichPhotonSignal.cpp,v 1.22 2007-02-02 10:10:41 jonrob Exp $
+ *  $Id: RichPhotonSignal.cpp,v 1.23 2007-04-23 13:32:51 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -90,6 +90,7 @@ PhotonSignal::predictedPixelSignal( LHCb::RichRecPhoton * photon,
     const double thetaReco = photon->geomPhoton().CherenkovTheta();
 
     // Compute the expected pixel contribution
+    // See note LHCB/98-040 page 10 equation 16 for the details of where this comes from
     const double pixelSignal = photon->geomPhoton().activeSegmentFraction() *
       ( ( signalProb(photon, id) *
           m_signal->nSignalPhotons(photon->richRecSegment(),id) ) +

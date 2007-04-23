@@ -5,7 +5,7 @@
  * Implementation file for class : Rich::Rec::FastTrSegMakerFromRecoTracks
  *
  * CVS Log :-
- * $Id: RichFastTrSegMakerFromRecoTracks.cpp,v 1.8 2007-02-02 10:10:40 jonrob Exp $
+ * $Id: RichFastTrSegMakerFromRecoTracks.cpp,v 1.9 2007-04-23 13:32:51 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 23/08/2004
@@ -190,16 +190,7 @@ StatusCode FastTrSegMakerFromRecoTracks::initialize()
 }
 
 //=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode FastTrSegMakerFromRecoTracks::finalize()
-{
-  // Execute base class method
-  return Rich::Rec::ToolBase::finalize();
-}
-
-//=============================================================================
-// Constructs the track segments for a given TrStoredTrack
+// Constructs the track segments for a given Track
 //=============================================================================
 int
 FastTrSegMakerFromRecoTracks::constructSegments( const ContainedObject * obj,
@@ -430,4 +421,19 @@ FastTrSegMakerFromRecoTracks::stateInfo( const LHCb::Track * track,
   }
 
   return true;
+}
+
+const LHCb::State *
+FastTrSegMakerFromRecoTracks::stateAt( const LHCb::Track * track,
+                                       const Rich::RadiatorType rad ) const
+{
+  // First, set found state to NULL
+  const LHCb::State * pS = 0;
+  // search for best state
+  for ( std::vector<LHCb::State*>::const_iterator iS = track->states().begin();
+        iS != track->states().end(); ++iS )
+  {
+    if ( fabs( (*iS)->z() - m_nomZstates[rad]) < m_zTolerance[rad] ) { pS = (*iS); break; }
+  }
+  return pS;
 }

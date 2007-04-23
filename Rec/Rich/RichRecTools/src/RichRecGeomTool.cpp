@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::GeomTool
  *
  *  CVS Log :-
- *  $Id: RichRecGeomTool.cpp,v 1.15 2007-03-10 13:19:20 jonrob Exp $
+ *  $Id: RichRecGeomTool.cpp,v 1.16 2007-04-23 13:32:51 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -82,7 +82,7 @@ double GeomTool::trackPixelHitSep2( const LHCb::RichRecSegment * segment,
   const Rich::RadiatorType rad = segment->trackSegment().radiator();
 
   // Pixel position, in local HPD coords corrected for average radiator distortion
-  const Gaudi::XYZPoint & pixP = pixel->localPosition(rad);
+  const Gaudi::XYZPoint & pixP = radCorrLocalPos(pixel,rad);
 
   // Which detector side is the hit on
   const Rich::Side side = pixel->hpdPixelCluster().panel().panel();
@@ -225,11 +225,25 @@ double GeomTool::hpdPanelAcceptance( LHCb::RichRecSegment * segment,
   return acc;
 }
 
-Gaudi::XYZPoint
-GeomTool::correctAvRadiatorDistortion( const Gaudi::XYZPoint & point,
-                                       const Rich::RadiatorType rad ) const
+const Gaudi::XYZPoint& GeomTool::radCorrLocalPos( const LHCb::RichRecPixel * pixel,
+                                                  const Rich::RadiatorType rad ) const
 {
-  return Gaudi::XYZPoint( (1-m_radScale[rad]) * point.x(),
-                          (1+m_radScale[rad]) * point.y(),
-                          point.z() );
+  if ( !pixel->radCorrLocalPositionsOK() )
+  {
+    LHCb::RichRecPixel * pix = const_cast<LHCb::RichRecPixel*>(pixel);
+    RadCorrLocalPositions & pos = pix->radCorrLocalPositions();
+    if ( Rich::Rich1 == pixel->detector() )
+    {
+      pos.setPosition(Rich::Aerogel, getCorrPos(pixel->localPosition(),Rich::Aerogel));
+      pos.setPosition(Rich::Rich1Gas,getCorrPos(pixel->localPosition(),Rich::Rich1Gas));
+      pos.setPosition(Rich::Rich2Gas,pixel->localPosition());
+    }
+    else
+    {
+      pos.setPosition(Rich::Aerogel,pixel->localPosition());
+      pos.setPosition(Rich::Rich1Gas,pixel->localPosition());
+      pos.setPosition(Rich::Rich2Gas,getCorrPos(pixel->localPosition(),Rich::Rich2Gas));
+    }
+  }
+  return pixel->radCorrLocalPositions().position(rad);
 }

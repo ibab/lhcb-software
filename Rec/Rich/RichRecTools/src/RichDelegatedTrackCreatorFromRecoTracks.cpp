@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::DelegatedTrackCreatorFromRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichDelegatedTrackCreatorFromRecoTracks.cpp,v 1.4 2007-02-02 10:10:40 jonrob Exp $
+ *  $Id: RichDelegatedTrackCreatorFromRecoTracks.cpp,v 1.5 2007-04-23 13:32:51 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -41,12 +41,15 @@ DelegatedTrackCreatorFromRecoTracks( const std::string& type,
   // the real track tools to delegate the work to
   declareProperty( "ToolsByTrackType", m_names );
 
+  // make hypo rings
+  declareProperty( "BuildMassHypothesisRings", m_buildHypoRings = false );
+
 }
 
 StatusCode DelegatedTrackCreatorFromRecoTracks::initialize()
 {
   // Sets up various tools and services
-  const StatusCode sc = TrackCreatorBase::initialize();
+  StatusCode sc = TrackCreatorBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // setup mapping between track type and tool pointer
@@ -60,9 +63,16 @@ StatusCode DelegatedTrackCreatorFromRecoTracks::initialize()
     info() << "Track type '" << trackType
            << "' will use RichTrackCreator '" << toolType << "'" << endreq;
     const Rich::Rec::Track::Type tkType = Rich::Rec::Track::type(trackType);
-    if ( 0 == tmpMap[toolType] )
+    if ( NULL == tmpMap[toolType] )
     {
-      if ( !m_tkToPtn[tkType] ) acquireTool( toolType, m_tkToPtn[tkType] );
+      if ( !m_tkToPtn[tkType] )
+      {
+        const std::string fullToolName = name()+"."+toolType;
+        sc = joSvc()->addPropertyToCatalogue( fullToolName,
+                                              getProperty("BuildMassHypothesisRings") );
+        if ( sc.isFailure() ) return Error( "Failed to propagate JobOptions to '"+fullToolName+"'", sc );
+        acquireTool( toolType, m_tkToPtn[tkType], this );
+      }
       tmpMap[toolType] = m_tkToPtn[tkType];
     }
     else

@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::Rec::FastTrSegMakerFromRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichFastTrSegMakerFromRecoTracks.h,v 1.9 2007-03-10 13:19:20 jonrob Exp $
+ *  $Id: RichFastTrSegMakerFromRecoTracks.h,v 1.10 2007-04-23 13:32:51 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   23/08/2004
@@ -27,13 +27,11 @@
 // Event model
 #include "Event/Track.h"
 
-// RichEvent
-#include "RichEvent/RichTrackSegment.h"
-
 // LHCbKernel
 #include "Kernel/RichSmartID.h"
 
 // RichKernel
+#include "RichKernel/RichTrackSegment.h"
 #include "RichKernel/IRichRayTracing.h"
 
 // RichDet
@@ -75,9 +73,6 @@ namespace Rich
 
       // Initialization of the tool after creation
       virtual StatusCode initialize();
-
-      // Finalization of the tool before deletion
-      virtual StatusCode finalize  ();
 
     public: // methods (and doxygen comments) inherited from interface
 
@@ -167,21 +162,6 @@ namespace Rich
       LHCb::RichTrackSegment::SegmentType m_trSegType;
 
     };
-
-    inline const LHCb::State *
-    FastTrSegMakerFromRecoTracks::stateAt( const LHCb::Track * track,
-                                           const Rich::RadiatorType rad ) const
-    {
-      // First, set found state to vertex state
-      const LHCb::State * pS = 0;
-      // search for best state
-      for ( std::vector<LHCb::State*>::const_iterator iS = track->states().begin();
-            iS != track->states().end(); ++iS )
-      {
-        if ( fabs( (*iS)->z() - m_nomZstates[rad]) < m_zTolerance[rad] ) { pS = (*iS); break; }
-      }
-      return pS;
-    }
 
     inline bool
     FastTrSegMakerFromRecoTracks::checkBoundaries( const Gaudi::XYZPoint & point,

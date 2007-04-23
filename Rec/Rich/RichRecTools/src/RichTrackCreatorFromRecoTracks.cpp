@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::TrackCreatorFromRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorFromRecoTracks.cpp,v 1.16 2007-02-02 10:10:42 jonrob Exp $
+ *  $Id: RichTrackCreatorFromRecoTracks.cpp,v 1.17 2007-04-23 13:32:52 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -41,6 +41,12 @@ TrackCreatorFromRecoTracks( const std::string& type,
   // declare interface for this tool
   declareInterface<ITrackCreator>(this);
 
+  // Context specific track locations
+  if ( context() == "HLT" )
+  {
+    m_trTracksLocation = LHCb::TrackLocation::HltForward;
+  }
+  
   // job options
   declareProperty( "TracksLocation",           m_trTracksLocation   );
   declareProperty( "BuildMassHypothesisRings", m_buildHypoRings     );
