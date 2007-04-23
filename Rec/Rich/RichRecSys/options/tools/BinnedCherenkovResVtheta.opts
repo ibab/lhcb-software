@@ -29,3 +29,10 @@ ToolSvc.Offline.RichCherenkovResolution.SeedRich2GasRes = { 0.00233702, 0.001113
 
 ToolSvc.Offline.RichCherenkovResolution.VeloTTAerogelRes = { 0.0172506, 0.0378092, 0.00961744, 0.00272289 };
 ToolSvc.Offline.RichCherenkovResolution.VeloTTRich1GasRes = { 0.00245855, 0.00339135, 0.00169416 };
+
+// Following are needed for MC data, when it is possible that a reco track type is
+// different to its MC type (i.e. a reco seed track is in fact a long MC track and thus has info in RICH1)
+
+ToolSvc.Offline.RichCherenkovResolution.SeedAerogelRes    = { 0.00233702, 0.00111318, 0.000935434, 0.000935434 };
+ToolSvc.Offline.RichCherenkovResolution.SeedRich1GasRes   = { 0.00233702, 0.00111318, 0.000935434 };
+ToolSvc.Offline.RichCherenkovResolution.VeloTTRich2GasRes = { 0.00245855, 0.00339135, 0.00169416  };

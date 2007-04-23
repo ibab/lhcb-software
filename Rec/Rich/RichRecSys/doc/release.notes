@@ -8,6 +8,7 @@
  - Minor reorganisation of the algorithm sequence. Primarily to get timing
    information for the seperate stages (track treatment, pixel reconstruction,
    photon reconstruction, DAQ decoding).
+ - Some fixes for MC cheating reconstruction modes
 
 !====================== RichRecSys v3r2 2007-03-21 =====================
 

@@ -18,12 +18,12 @@ ToolSvc.Offline.RichTrackCreator.ToolsByTrackType = { "Forward/RichTrackCreatorM
 
 
 // The delegated RichTrackCreator that uses full reco information
-ToolSvc.Offline.Tools += { "Rich::Rec::TrackCreatorFromRecoTracks/RichTrackCreatorReco" };
-ToolSvc.Offline.RichTrackCreatorReco.TrackSelector.TrackAlgs = { "Seed","Match","Forward","KsTrack","VeloTT" };
+ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::TrackCreatorFromRecoTracks/RichTrackCreatorReco" };
+ToolSvc.Offline.RichTrackCreator.RichTrackCreatorReco.TrackSelector.TrackAlgs = { "Seed","Match","Forward","KsTrack","VeloTT" };
 
-ToolSvc.Offline.RichTrackCreatorReco.TrackSegmentTool = "RichDetTrSegMakerReco";
+ToolSvc.Offline.RichTrackCreator.RichTrackCreatorReco.TrackSegmentTool = "RichDetTrSegMakerReco";
 // Momentum cuts
-ToolSvc.Offline.RichTrackCreatorReco.TrackSelector.VeloTT.MinPCut = 1;
+ToolSvc.Offline.RichTrackCreator.RichTrackCreatorReco.TrackSelector.VeloTT.MinPCut = 1;
 
 // Configure the RichTrackSegment maker for reconstructed tracks
 ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::DetailedTrSegMakerFromRecoTracks/RichDetTrSegMakerReco" };
@@ -37,10 +37,10 @@ ToolSvc.Offline.RichDetTrSegMakerReco.UseRadiators = { true,     true,    true }
 
 // The delegated RichTrackCreator that uses MC information
 ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::TrackCreatorFromRecoTracks/RichTrackCreatorMC" };
-ToolSvc.Offline.RichTrackCreatorMC.TrackSelectior.TrackAlgs = { "Seed","Match","Forward","KsTrack","VeloTT" };
-ToolSvc.Offline.RichTrackCreatorMC.TrackSegmentTool = "RichDetTrSegMakerMC";
+ToolSvc.Offline.RichTrackCreator.RichTrackCreatorMC.TrackSelectior.TrackAlgs = { "Seed","Match","Forward","KsTrack","VeloTT" };
+ToolSvc.Offline.RichTrackCreator.RichTrackCreatorMC.TrackSegmentTool = "RichDetTrSegMakerMC";
 // Momentum cuts
-ToolSvc.Offline.RichTrackCreatorMC.TrackSelector.VeloTT.MinPCut = 1;
+ToolSvc.Offline.RichTrackCreator.RichTrackCreatorMC.TrackSelector.VeloTT.MinPCut = 1;
 
 // Configure the RichTrackSegment maker for MC tracks
 ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::MC::TrSegMakerFromMCRichTracks/RichDetTrSegMakerMC" };

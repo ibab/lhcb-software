@@ -20,8 +20,10 @@
 //#include "$RICHRECSYSOPTS/tools/RichTracksFromMCRichTracks.opts"
 
 //---------------------------------------------------------------------------------------------
-// Track selector
+// Track selector (Default)
 ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::TrackSelector/TrackSelector" };
+// Same as above, but rejects tracks without MC associations (ghosts)
+//ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::MC::MCTrueTrackSelector/TrackSelector" };
 
 // ================================== Pixel Creators ==========================================
 
