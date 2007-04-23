@@ -63,7 +63,7 @@
         <enumval name = "TrackMatching"  value="7" desc=""/>
         <enumval name = "PatKShort"      value="8" desc=""/>
         <enumval name = "TsaTrack"       value="9" desc=""/>
-        <enumval name = "MuonID"         value="10" desc="track produced with the Muon recognition"/>
+        <enumval name = "MuonID"         value="10" desc="track produced with the Muon pattern recognition"/>
       </enum>
 
       <enum
