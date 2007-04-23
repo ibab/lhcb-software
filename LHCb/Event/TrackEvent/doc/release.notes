@@ -4,9 +4,10 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+!======================= TrackEvent v4r2 2007-04-20 ==========================
 ! 2007-04-20 - Erica Polycarpo
  - add Muon Track type and location 
-!======================= TrackEvent v4r2 2007-04-17 ==========================
+
 ! 2007-04-17 - Gerhard Raven
  - add stdVectorTypeDef="TRUE" to Measurement.xml
 
