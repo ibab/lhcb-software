@@ -6,7 +6,8 @@
 
 !===================== RichRecBase v3r3 2007-04-23 =======================
 ! 2007-04-23 - Marco Cattaneo
- - Add lcg dictionary for public interface classes
+ - Add lcg dictionary for public interface classes. Some dictionaries are
+   disabled on Windows because gccxml cannot compile RichRecSegment.h
 
 ! 2007-04-23 - Chris Jones
  - Some doxygen fixes
