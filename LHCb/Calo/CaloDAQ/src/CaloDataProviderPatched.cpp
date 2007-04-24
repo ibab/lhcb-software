@@ -173,6 +173,7 @@ StatusCode  CaloDataProviderPatched::decodeTell1 (int source) {
   } 
   if( !sc.isSuccess() ){
     error() << " Error when decoding bank " << sourceID  << endreq;
+    clear();
   }
   return sc;
 }
@@ -196,11 +197,6 @@ StatusCode CaloDataProviderPatched::decodeBank( LHCb::RawBank* bank ){
   // -----------------------------------------------
 
 
-  // Get the FE-Cards associated to that bank (via condDB)
-  std::vector<int> feCards = m_calo->tell1ToCards( sourceID );
-  int nCards = feCards.size();
-  debug() << nCards << " FE-Cards are expected to be readout : " 
-          << feCards << " in Tell1 bank " << sourceID << endreq;
   
 
   if ( 1 > version || 3 < version ) {
@@ -219,8 +215,8 @@ StatusCode CaloDataProviderPatched::decodeBank( LHCb::RawBank* bank ){
       LHCb::CaloCellID cellId( id );
 
       //event dump
-      verbose() << " |  Tell1 : " << sourceID
-                << " |  FeBoard : " << m_calo->cardNumber(cellId)
+      verbose() << " |  SourceID : " << sourceID
+                << " |  FeBoard  : " << m_calo->cardNumber(cellId)
                 << " |  CaloCell " << cellId
                 << " |  valid ? " << m_calo->valid(cellId)
                 << " |  ADC value = " << adc << endreq;
@@ -236,6 +232,12 @@ StatusCode CaloDataProviderPatched::decodeBank( LHCb::RawBank* bank ){
     //******************************************************************
     //**** 1 MHz compression format, Ecal and Hcal  - TELL1 output
     //******************************************************************
+    // Get the FE-Cards associated to that bank (via condDB)
+    std::vector<int> feCards = m_calo->tell1ToCards( sourceID );
+    int nCards = feCards.size();
+    debug() << nCards << " FE-Cards are expected to be readout : " 
+            << feCards << " in Tell1 bank " << sourceID << endreq;
+
     while( 0 != size ) {
       // Skip 
       unsigned int word = *data++;
@@ -329,7 +331,7 @@ StatusCode CaloDataProviderPatched::decodeBank( LHCb::RawBank* bank ){
         LHCb::CaloCellID id = chanID[ bitNum ];
         
         // event dump
-        verbose() << " |  Tell1 : " << sourceID
+        verbose() << " |  SourceID : " << sourceID
                   << " |  FeBoard : " << m_calo->cardNumber(id)
                   << " |  Channel : " << bitNum
                   << " |  CaloCell " << id
@@ -350,6 +352,13 @@ StatusCode CaloDataProviderPatched::decodeBank( LHCb::RawBank* bank ){
     //******************************************************************
     //**** 1 MHz compression format, Preshower + SPD
     //******************************************************************
+
+    // Get the FE-Cards associated to that bank (via condDB)
+    std::vector<int> feCards = m_calo->tell1ToCards( sourceID );
+    int nCards = feCards.size();
+    debug() << nCards << " FE-Cards are expected to be readout : " 
+            << feCards << " in Tell1 bank " << sourceID << endreq;
+
     while( 0 != size ) {
       // Skip
       unsigned int word = *data++;
@@ -397,7 +406,7 @@ StatusCode CaloDataProviderPatched::decodeBank( LHCb::RawBank* bank ){
         LHCb::CaloCellID id = chanID[ num ];
 
         // event dump
-        verbose() << " |  Tell1 : " << sourceID
+        verbose() << " |  sourceID : " << sourceID
                 << " |  FeBoard : " << m_calo->cardNumber(id)
           //<< " |  Channel : " << bitNum
                 << " |  CaloCell " << id
@@ -430,11 +439,6 @@ StatusCode CaloDataProviderPatched::decodePrsTriggerBank( LHCb::RawBank* bank ) 
   int lastData       = 0;
   debug() << "Decode Prs bank " << bank << " source " << sourceID 
           << " version " << version << " size " << size << endreq;
-  // Get the FE-Cards associated to that bank (via condDB)
-  std::vector<int> feCards = m_calo->tell1ToCards( sourceID );
-  int nCards = feCards.size();
-  debug() << nCards << " FE-Cards are expected to be readout : " 
-          << feCards << " in Tell1 bank " << sourceID << endreq;
 
   //=== Offline coding: a CellID, 8 SPD bits, 8 Prs bits
   if ( 1 == version ) {
@@ -457,7 +461,7 @@ StatusCode CaloDataProviderPatched::decodePrsTriggerBank( LHCb::RawBank* bank ) 
           
 
           //event dump
-          verbose() << " |  Tell1 : " << sourceID
+          verbose() << " |  sourceID : " << sourceID
                     << " |  FeBoard : " << m_calo->cardNumber(id)
                     << " |  CaloCell " << id
                     << " |  valid ? " << m_calo->valid(id)
@@ -479,7 +483,7 @@ StatusCode CaloDataProviderPatched::decodePrsTriggerBank( LHCb::RawBank* bank ) 
 
         //event dump
         LHCb::CaloCellID prsId( spdId + 0x4000 );   // Prs
-        verbose() << " |  Tell1 : " << sourceID
+        verbose() << " |  SourceID : " << sourceID
                   << " |  FeBoard : " << m_calo->cardNumber( prsId )
                   << " |  CaloCell " << prsId
                   << " |  valid ? " << m_calo->valid( prsId )
@@ -497,6 +501,12 @@ StatusCode CaloDataProviderPatched::decodePrsTriggerBank( LHCb::RawBank* bank ) 
     }
     //==== Codage for 1 MHz
   } else if ( 3 == version ) {
+    // Get the FE-Cards associated to that bank (via condDB)
+    std::vector<int> feCards = m_calo->tell1ToCards( sourceID );
+    int nCards = feCards.size();
+    debug() << nCards << " FE-Cards are expected to be readout : " 
+            << feCards << " in Tell1 bank " << sourceID << endreq;
+
     int offset   = 0;
     int lenAdc   = 0;
     int lenTrig  = 0;
@@ -542,7 +552,7 @@ StatusCode CaloDataProviderPatched::decodePrsTriggerBank( LHCb::RawBank* bank ) 
 
 
         // event dump
-        verbose() << " |  Tell1 : " << sourceID
+        verbose() << " |  SourceID : " << sourceID
                   << " |  FeBoard : " << code 
           //<< " |  Channel : " << bitNum
                   << " |  CaloCell " << id

@@ -1,4 +1,4 @@
-// $Id: CaloEnergyFromRaw.cpp,v 1.15 2007-02-28 22:44:34 odescham Exp $
+// $Id: CaloEnergyFromRaw.cpp,v 1.16 2007-04-24 10:21:14 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -178,14 +178,7 @@ StatusCode CaloEnergyFromRaw::getData ( LHCb::RawBank* bank ){
   int version        = bank->version();
   int sourceID       = bank->sourceID();
   debug() << "Decode bank " << bank << " source " << sourceID 
-          << " version " << version << " size " << size << endreq;
-
-  // Get the FE-Cards associated to that bank (via condDB)
-  std::vector<int> feCards = m_calo->tell1ToCards( sourceID );
-  int nCards = feCards.size();
-  debug() << nCards << " FE-Cards are expected to be readout : " 
-          << feCards << " in Tell1 bank " << sourceID << endreq;
-  
+          << " version " << version << " size " << size << endreq;  
 
   if ( 1 > version || 3 < version ) {
     warning() << "Bank type " << bank->type() << " sourceID " << sourceID 
@@ -205,7 +198,7 @@ StatusCode CaloEnergyFromRaw::getData ( LHCb::RawBank* bank ){
 
       //event dump
       if ( msgLevel( MSG::DEBUG) ) {
-        debug() << " |  Tell1 : " << sourceID
+        debug() << " |  SourceID : " << sourceID
                 << " |  FeBoard : " << m_calo->cardNumber(cellId)
                 << " |  CaloCell " << cellId
                 << " |  valid ? " << m_calo->valid(cellId)
@@ -225,6 +218,12 @@ StatusCode CaloEnergyFromRaw::getData ( LHCb::RawBank* bank ){
     //******************************************************************
     //**** 1 MHz compression format, Ecal and Hcal
     //******************************************************************
+    // Get the FE-Cards associated to that bank (via condDB)
+    std::vector<int> feCards = m_calo->tell1ToCards( sourceID );
+    int nCards = feCards.size();
+    debug() << nCards << " FE-Cards are expected to be readout : " 
+            << feCards << " in Tell1 bank " << sourceID << endreq;
+
     while( 0 != size ) {
       // Skip 
       unsigned int word = *data++;
@@ -282,7 +281,7 @@ StatusCode CaloEnergyFromRaw::getData ( LHCb::RawBank* bank ){
 
         // event dump
         if ( msgLevel( MSG::DEBUG) ) {
-          debug() << " |  Tell1 : " << sourceID
+          debug() << " |  SourceID : " << sourceID
                   << " |  FeBoard : " << m_calo->cardNumber(id)
                   << " |  Channel : " << bitNum
                   << " |  CaloCell " << id
@@ -308,6 +307,13 @@ StatusCode CaloEnergyFromRaw::getData ( LHCb::RawBank* bank ){
     //******************************************************************
     //**** 1 MHz compression format, Preshower + SPD
     //******************************************************************
+
+    // Get the FE-Cards associated to that bank (via condDB)
+    std::vector<int> feCards = m_calo->tell1ToCards( sourceID );
+    int nCards = feCards.size();
+    debug() << nCards << " FE-Cards are expected to be readout : " 
+            << feCards << " in Tell1 bank " << sourceID << endreq;
+    
     while( 0 != size ) {
       // Skip
       unsigned int word = *data++;
@@ -353,7 +359,7 @@ StatusCode CaloEnergyFromRaw::getData ( LHCb::RawBank* bank ){
 
         // event dump
         if ( msgLevel( MSG::DEBUG) ) {
-          debug() << " |  Tell1 : " << sourceID
+          debug() << " |  SourceID : " << sourceID
                   << " |  FeBoard : " << m_calo->cardNumber(id)
             //<< " |  Channel : " << bitNum
                   << " |  CaloCell " << id

@@ -1,4 +1,4 @@
-// $Id: CaloTriggerBitsFromRaw.cpp,v 1.14 2007-04-10 22:47:33 odescham Exp $
+// $Id: CaloTriggerBitsFromRaw.cpp,v 1.15 2007-04-24 10:21:14 odescham Exp $
 // Include files
 
 // from Gaudi
@@ -134,11 +134,7 @@ StatusCode CaloTriggerBitsFromRaw::getData(  LHCb::RawBank* bank ) {
   int lastData       = 0;
   debug() << "Decode bank " << bank << " source " << sourceID 
           << " version " << version << " size " << size << endreq;
-  // Get the FE-Cards associated to that bank (via condDB)
-  std::vector<int> feCards = m_calo->tell1ToCards( sourceID );
-  int nCards = feCards.size();
-  debug() << nCards << " FE-Cards are expected to be readout : " 
-          << feCards << " in Tell1 bank " << sourceID << endreq;
+  
 
   //=== Offline coding: a CellID, 8 SPD bits, 8 Prs bits
   if ( 1 == version ) {
@@ -159,7 +155,7 @@ StatusCode CaloTriggerBitsFromRaw::getData(  LHCb::RawBank* bank ) {
 
           //event dump
           if ( msgLevel( MSG::DEBUG) ) {
-            debug() << " |  Tell1 : " << sourceID
+            debug() << " |  SourceID : " << sourceID
                     << " |  FeBoard : " << m_calo->cardNumber(id)
                     << " |  CaloCell " << id
                     << " |  valid ? " << m_calo->valid(id)
@@ -182,7 +178,7 @@ StatusCode CaloTriggerBitsFromRaw::getData(  LHCb::RawBank* bank ) {
         //event dump
         LHCb::CaloCellID prsId( spdId + 0x4000 );   // Prs
         if ( msgLevel( MSG::DEBUG) ) {
-          debug() << " |  Tell1 : " << sourceID
+          debug() << " |  SourceID : " << sourceID
                   << " |  FeBoard : " << m_calo->cardNumber( prsId )
                   << " |  CaloCell " << prsId
                   << " |  valid ? " << m_calo->valid( prsId )
@@ -203,6 +199,13 @@ StatusCode CaloTriggerBitsFromRaw::getData(  LHCb::RawBank* bank ) {
     }
     //==== Codage for 1 MHz
   } else if ( 3 == version ) {
+
+    // Get the FE-Cards associated to that bank (via condDB)
+    std::vector<int> feCards = m_calo->tell1ToCards( sourceID );
+    int nCards = feCards.size();
+    debug() << nCards << " FE-Cards are expected to be readout : " 
+            << feCards << " in Tell1 bank " << sourceID << endreq;
+    
     int offset   = 0;
     int lenAdc   = 0;
     int lenTrig  = 0;
@@ -249,7 +252,7 @@ StatusCode CaloTriggerBitsFromRaw::getData(  LHCb::RawBank* bank ) {
 
         // event dump
         if ( msgLevel( MSG::DEBUG) ) {
-          debug() << " |  Tell1 : " << sourceID
+          debug() << " |  SourceID : " << sourceID
                   << " |  FeBoard : " << code 
             //<< " |  Channel : " << bitNum
                   << " |  CaloCell " << id

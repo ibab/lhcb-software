@@ -1,4 +1,4 @@
-// $Id: CaloTriggerAdcsFromRaw.cpp,v 1.10 2007-02-28 22:44:34 odescham Exp $
+// $Id: CaloTriggerAdcsFromRaw.cpp,v 1.11 2007-04-24 10:21:14 odescham Exp $
 // Include files
 
 // from Gaudi
@@ -139,11 +139,6 @@ StatusCode CaloTriggerAdcsFromRaw::getData ( LHCb::RawBank* bank ){
   int lastData = 0;
   debug() << "Decode bank " << bank << " source " << sourceID 
           << "version " << version << " size " << size << endreq;
-  // Get the FE-Cards associated to that bank (via condDB)
-  std::vector<int> feCards = m_calo->tell1ToCards( sourceID );
-  int nCards = feCards.size();
-  debug() << nCards << " FE-Cards are expected to be readout : " 
-          << feCards << " in Tell1 bank " << sourceID << endreq;
   
   
   //=== Offline coding
@@ -167,7 +162,7 @@ StatusCode CaloTriggerAdcsFromRaw::getData ( LHCb::RawBank* bank ){
 
       //event dump
       if ( msgLevel( MSG::DEBUG) ) {
-        debug() << " |  Tell1 : " << sourceID
+        debug() << " |  SourceID : " << sourceID
                 << " |  FeBoard : " << m_calo->cardNumber(id1)
                 << " |  CaloCell " << id1
                 << " |  valid ? " << m_calo->valid(id1)
@@ -186,7 +181,7 @@ StatusCode CaloTriggerAdcsFromRaw::getData ( LHCb::RawBank* bank ){
  
       //event dump
       if ( msgLevel( MSG::DEBUG) ) {
-        debug() << " |  Tell1 : " << sourceID
+        debug() << " |  SourceID : " << sourceID
                 << " |  FeBoard : " << m_calo->cardNumber(id2)
                 << " |  CaloCell " << id2
                 << " |  valid ? " << m_calo->valid(id2)
@@ -196,6 +191,11 @@ StatusCode CaloTriggerAdcsFromRaw::getData ( LHCb::RawBank* bank ){
     }
   } else if ( 2 == version ) {
     //==== Codage for 1 MHz
+    // Get the FE-Cards associated to that bank (via condDB)
+    std::vector<int> feCards = m_calo->tell1ToCards( sourceID );
+    int nCards = feCards.size();
+    debug() << nCards << " FE-Cards are expected to be readout : " 
+          << feCards << " in Tell1 bank " << sourceID << endreq;
     int lenAdc   = 0;
     int lenTrig  = 0;
     while ( 0 < size ) {
@@ -235,7 +235,7 @@ StatusCode CaloTriggerAdcsFromRaw::getData ( LHCb::RawBank* bank ){
 
             // event dump
             if ( msgLevel( MSG::DEBUG) ) {
-              debug() << " |  Tell1 : " << sourceID
+              debug() << " |  SourceID : " << sourceID
                       << " |  FeBoard : " << code 
                       << " |  Channel : " << bitNum
                       << " |  CaloCell " << id
