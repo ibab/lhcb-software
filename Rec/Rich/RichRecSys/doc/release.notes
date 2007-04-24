@@ -4,6 +4,7 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+!====================== RichRecSys v3r3 2007-04-24 =====================
 ! 2007-03-27 - Chris Jones
  - Minor reorganisation of the algorithm sequence. Primarily to get timing
    information for the seperate stages (track treatment, pixel reconstruction,
@@ -11,7 +12,6 @@
  - Some fixes for MC cheating reconstruction modes
 
 !====================== RichRecSys v3r2 2007-03-21 =====================
-
 ! 2007-03-21 - Chris Jones
  - Add default Raw buffer decoding options from RichDAQ to RecoToolPara.opts
 
