@@ -1,6 +1,11 @@
 Package: GaudiOnline
 Author:  Markus Frank
 
+
+!================== GaudiOnline v2r7 2007-04-12 ==========================
+! 2007-04-24 Eric van Herwijnen
+ - Fix to main.cpp for failing dynamic_cast in shared libraries
+
 ! 2006-12-18 Markus Frank
  - Added classes for network data transfer between HLT farm ans storage layer.
    Concrete implementations go along using AMS and DIM.
