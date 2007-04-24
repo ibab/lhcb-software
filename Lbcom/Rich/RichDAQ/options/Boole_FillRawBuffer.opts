@@ -3,8 +3,8 @@
 DigiRICHSeq.Members += { "Rich::MC::Digi::MCRichDigitsToRawBufferAlg/RichFillRawBuffer" };
 
 // Bank version to write
-RichFillRawBuffer.DataVersion = 2;   // DC06 version
-//RichFillRawBuffer.DataVersion = 129; // 2007 final L1 firmware version
+//RichFillRawBuffer.DataVersion = 2;   // DC06 version
+RichFillRawBuffer.DataVersion = 129; // 2007 final L1 firmware version
 
 // utility tools
 ToolSvc.RichToolRegistry.Tools += { "Rich::DAQ::RawDataFormatTool/RichRawDataFormatTool" };
