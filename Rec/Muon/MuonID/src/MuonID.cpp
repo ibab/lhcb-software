@@ -52,7 +52,7 @@ MuonID::MuonID( const std::string& name,
 
   // Destination of MuonPID
   declareProperty("MuonTrackLocation",
-                  m_MuonTracksPath = "Rec/Track/Muon");
+                  m_MuonTracksPath = LHCb::TrackLocation::Muon);
 
   // Pre-selection momentum
   declareProperty( "PreSelMomentum", m_PreSelMomentum = 3000.0);
@@ -853,7 +853,7 @@ void MuonID::resetTrackLocals(){
 }
 
 //=============================================================================
-// make the muon-pid segments
+// make the muon segments
 //=============================================================================
 LHCb::Track* MuonID::makeMuonTrack(const LHCb::MuonPID& mupid){
 
