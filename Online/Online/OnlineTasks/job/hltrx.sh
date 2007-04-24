@@ -5,10 +5,14 @@
 # Requires CMTPROJECTPATH set and setup.sh sourced in $ONLINETASKSROOT/cmt
 # 
 #
+<<<<<<< hltrx.sh
+export DIM_DNS_NODE=hltdev001
+=======
 if [ -z DIM_DNS_NODE ]; then
 	echo "Please define DIM_DNS_NODE"
 	exit 1
 fi
+>>>>>>> 1.6
 # Cleanup any running jobs
 pkill Gaudi.exe
 pkill test.exe

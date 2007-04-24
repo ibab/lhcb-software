@@ -1,5 +1,8 @@
 Package: OnlineTasks
 Author:  Markus Frank
 
+! 2007-04-24 Eric van Herwijnen 
+  Updated scripts in job to work with InstallAreas
+
 ! 2006-09-21 Markus Frank
   New package

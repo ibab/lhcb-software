@@ -11,7 +11,7 @@ echo Running as $(/usr/bin/whoami)
 export MYSITEROOT=/lhcb/software/releases
 export LHCBHOME=/lhcb/software/releases
 export CMTCONFIG=slc4_ia32_gcc34
-export CMTDEB=${CMTCONFIG}_dbg
+#export CMTDEB=${CMTCONFIG}_dbg
 export PATH=/bin:/usr/bin:/usr/local/bin
 #export CMTCONFIG=$CMTDEB
 
