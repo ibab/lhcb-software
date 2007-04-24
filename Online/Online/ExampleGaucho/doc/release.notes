@@ -1,6 +1,9 @@
 package ExampleGaucho
 ! Example code to run and test Gaucho  online publishing services
 
+! 20070424 = ExampleGaucho v2r3 - Eric van Herwijnen
+  - corrected requirements file
+
 ! 20061226 - ExampleGaucho v2r2 - Jose Helder Lopes
   - Extended to test general c-structures and Profile1D histograms monitoring
 

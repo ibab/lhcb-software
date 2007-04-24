@@ -1,6 +1,6 @@
 #============================================================================
 package           ExampleGaucho
-version           v2r2
+version           v2r3
 
 #============================================================================
 # Structure, i.e. directories to process
@@ -13,6 +13,10 @@ include_path      none
 #============================================================================
 
 use GaudiKernel v*
+use OnlineKernel v* Online
+use GaudiSvc v*
+use Gaucho   v* Online
+use GaudiAlg v*
 
 #============================================================================
 # Component library building rule
