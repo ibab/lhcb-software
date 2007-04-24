@@ -4,6 +4,7 @@
 ! Purpose     : Monte Carlo Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+!====================== RichRecMCTools v2r10 2007-04-24 =======================
 ! 2007-04-23 - Chris Jones
  - Adapt to changes in RichPixelCreatorBase in RichRecBase
  - Adapt to changes in RichSmartIDTool interface
