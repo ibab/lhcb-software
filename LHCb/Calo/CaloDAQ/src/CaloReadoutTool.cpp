@@ -1,4 +1,4 @@
-// $Id: CaloReadoutTool.cpp,v 1.10 2007-04-18 08:14:11 cattanem Exp $
+// $Id: CaloReadoutTool.cpp,v 1.11 2007-04-24 20:59:53 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -121,12 +121,14 @@ void CaloReadoutTool::checkCards(int nCards, std::vector<int> feCards ){
 int CaloReadoutTool::findCardbyCode(std::vector<int> feCards , int code){
   for(unsigned int iFe = 0 ; iFe <  feCards.size();++iFe){ 
     if( code == m_calo->cardCode( feCards[iFe] ) ){
-      debug() <<" FE-Card [code : " << code 
+      int crate  = m_calo->cardParam( feCards[ iFe ] ).crate();
+      int slot   = m_calo->cardParam( feCards[ iFe ] ).slot();
+      debug() <<" FE-Card [code : " << code << " | crate : " << crate << " slot : " << slot 
               << "] has been found with (num : " << feCards[iFe] <<")  in condDB" << endreq;
       return iFe;
       break;
     }        
   }
-  error() << " FE-Card [code : " << code << "] has not been found" << endreq;
+  error() << "  FE-Card [code : " << code << "] does not match the condDB cabling scheme  " << endreq;
   return -1;
 }    

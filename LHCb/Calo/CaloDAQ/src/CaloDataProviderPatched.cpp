@@ -156,11 +156,6 @@ StatusCode  CaloDataProviderPatched::decodeTell1 (int source) {
   for( std::vector<LHCb::RawBank*>::const_iterator itB = m_banks->begin(); 
        itB != m_banks->end() ; ++itB ) {
     sourceID       = (*itB)->sourceID();
-      verbose() << "decoding bank " << *itB 
-                << " source/source " << (*itB)->sourceID() <<"/"<<source
-                << " version " << (*itB)->version()
-                << endreq;
-
     if( source >= 0 && source != sourceID )continue;
     if( "Spd" == m_detectorName ){
       sc = decodePrsTriggerBank( *itB);
@@ -292,7 +287,8 @@ StatusCode CaloDataProviderPatched::decodeBank( LHCb::RawBank* bank ){
         // ---------------------------------------
         
       }else{
-        error() << " FE-Card w/ [code : " << code << "] not associated with TELL1 bank " << sourceID
+        error() << " FE-Card w/ [code : " << code 
+                << " ] is not associated with TELL1 bank " << sourceID
                 << " in condDB :  Cannot read that bank" << endreq;
         return StatusCode::FAILURE;
       }
@@ -379,7 +375,8 @@ StatusCode CaloDataProviderPatched::decodeBank( LHCb::RawBank* bank ){
         if(!m_opg)feCards.erase(feCards.begin()+card);
         //----------------------------------------
       }else{
-        error() << " FE-Card w/ [code : " << code << "] not associated with TELL1 bank " << sourceID
+        error() << " FE-Card w/ [code : " << code 
+                << " ] is not associated with TELL1 bank " << sourceID
                 << " in condDB :  Cannot read that bank" << endreq;
         return StatusCode::FAILURE;
       }
@@ -530,7 +527,8 @@ StatusCode CaloDataProviderPatched::decodePrsTriggerBank( LHCb::RawBank* bank ) 
         chanID = m_calo->cardChannels( feCards[card] );
         feCards.erase(feCards.begin()+card);
       }else{
-        error() << " FE-Card w/ [code : " << code << "] not associated with TELL1 bank " << sourceID
+        error() << " FE-Card w/ [code : " << code 
+                << " ] is not associated with TELL1 bank " << sourceID
                 << " in condDB :  Cannot read that bank" << endreq;
         return StatusCode::FAILURE;
       }

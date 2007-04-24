@@ -233,7 +233,8 @@ StatusCode CaloDataProvider::decodeBank( LHCb::RawBank* bank ){
         chanID = m_calo->cardChannels( feCards[card] );
         feCards.erase(feCards.begin()+card);
       }else{
-        error() << " FE-Card w/ [code : " << code << "] not associated with TELL1 bank " << sourceID
+        error() << " FE-Card w/ [code : " << code 
+                << " ] not associated with TELL1 bank " << sourceID
                 << " in condDB :  Cannot read that bank" << endreq;
         return StatusCode::FAILURE;
       }
@@ -318,7 +319,8 @@ StatusCode CaloDataProvider::decodeBank( LHCb::RawBank* bank ){
         chanID = m_calo->cardChannels( feCards[card] );
         feCards.erase(feCards.begin()+card);
       }else{
-        error() << " FE-Card w/ [code : " << code << "] not associated with TELL1 bank " << sourceID
+        error() << " FE-Card w/ [code : " << code 
+                << " ] is not associated with TELL1 bank " << sourceID
                 << " in condDB :  Cannot read that bank" << endreq;
         return StatusCode::FAILURE;
       }
@@ -467,7 +469,8 @@ StatusCode CaloDataProvider::decodePrsTriggerBank( LHCb::RawBank* bank ) {
         chanID = m_calo->cardChannels( feCards[card] );
         feCards.erase(feCards.begin()+card);
       }else{
-        error() << " FE-Card w/ [code : " << code << "] not associated with TELL1 bank " << sourceID
+        error() << " FE-Card w/ [code : " << code 
+                << " ] is not associated with TELL1 bank " << sourceID
                 << " in condDB :  Cannot read that bank" << endreq;
         return StatusCode::FAILURE;
       }
