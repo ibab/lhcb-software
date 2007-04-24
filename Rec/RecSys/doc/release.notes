@@ -5,39 +5,87 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
-! 2007-04-23 - Chris Jones
- - Adapt to option file name changes in RichRecSys
-
-</PRE><H1><A NAME=v4r4>2007-03-30 RecSys v4r4</A></H1><PRE>
+</PRE><H1><A NAME=v4r4>2007-04-24 RecSys v4r4</A></H1><PRE>
 This version uses Gaudi v19r3 and LHCb v22r4.
 
 - Packages removed: VeloTools (moved to LBCOM)
-- Packages updated: TrackFitEvent v3r3, TrackUtils v1r12, PatVeloTT v2r10,
-                    PatVelo v2r13, TrackTools v2r13, PatPV v2r7, GlobalReco v6r9
+- Packages updated: PatVelo v2r13, PatVeloTT v2r10, PatPV v2r7, TrackSys v4r4,
+   TrackFitEvent v3r3, TrackUtils v1r12, TrackFitter v2r14, TrackTools v2r13,
+   RichRecSys v3r3, RichRecMCTools v2r10, RichRecMonitors v2r9, RichRecQC v2r10,
+   RichRecAlgorithms v2r7, RichRecTools v3r10, MuonID v5r0, GlobalReco v6r9
 
-- In TrackUtils v1r12
-  . TrackPrepareVelo sets q/p for all VELO states (if more than one)
+- In PatVelo v2r13
+  . A few small code speed ups and name corrections/improvements
+  . Improved angular comparisons
+  . Also make outward track fit for VELO tracks: write two states to Track
+  . Add option to merge clone tracks by comparisons on angles and z position,
+    off by default
+  . Added the concept of a station to PatVeloSector. Means events with 
+    significant missing sensors in the readout are reconstructed properly in
+    PatVeloRTracking and PatVeloSpaceTool
+  . Various updates to open tracking for ACDC analysis
+  . Automatically determine range of sensors to scan from options [for beam gas]
 
 - In PatVeloTT v2r10
   . PatVeloTT uses all VELO track states (if more than one)
 
-- In PatVelo v2r13
- - A few small code speed ups and name corrections/improvements
- - Improved angular comparisons
- - Also make outward track fit for VELO tracks: write two states to Track
- - Merge clone tracks by comparisons on angles and z position
+- In TrackSys v4r4
+  . Added VeloBeamGas.opts for reconstructing beam gas events
 
-- In PatVelo v2r13, PatVeloTT v2r10, PatPV v2r7
-  . Fixed all unchecked StatusCodes
+- In TrackFitEvent v3r3
+  . Add operator+= to StateTraj because of extension of DifTraj interface
+  . Add LineDifTraj class to parameterize lines which are roughly parallel to
+    the z-axis
 
-- In TrackFitEvent v3r3, PatVelo v2r13, TrackTools v2r13
-  . Updated to work with new DeVelo interface
+- In TrackUtils v1r12
+  . TrackPrepareVelo sets q/p for all VELO states (if more than one)
+
+- In TrackFitter v2r14
+  . Bug fix in TrackKalmanFilter: residuals from last measurement were not
+    calculated
+  . Add TrajFitter, an implementation of the ITrajFitter interface which allows
+    one to fit any DifTraj<N> implementation to a set of LHCb::Measurement
+  . Add TrackTrajFitter, an example implementation of the ITrackFitter interface
+    using the above ITrajFitter
+
+- In RichRecSys v3r3
+  . Minor reorganisation of the algorithm sequence
+  . Some fixes for MC cheating reconstruction modes
+
+- In RichRecMCTools v2r10
+  . Adapt to changes in RichPixelCreatorBase in RichRecBase
+  . Make MC truth tool check context() to determine input track locations
+
+- In RichRecAlgorithms v2r7
+  . Add options to RichRecInit to trigger creation of pixels, tracks and photons
+
+- In RichRecTools v3r10
+  . Some additions to the fixed geom eff. tool and CK res tools (for HLT)
+  . Propagate options from delegated track creator to underlying creators
+
+- In MuonID v5r0
+  . Make a Muon Track with the Muon hits LHCbIDs 
 
 - In GlobalReco v6r9
   . Pick up ICaloElectron.h from new CaloUtils location
   . Remove some verbose() messages
 
-- In TrackFitEvent v3r3
+- In TrackFitEvent v3r3, PatVelo v2r13, TrackTools v2r13
+  . Updated to work with new DeVelo interface
+
+- In RichRecMCTools v2r10, RichRecMonitors v2r9, RichRecTools v3r10
+  . Adapt to changes in RichSmartIDTool interface
+
+- In RichRecMonitors v2r9, RichRecQC v2r10, RichRecTools v3r10
+  . Adapt to changes in decoded RICH data format
+
+- In RichRecTools v3r10, RichRecMCTools v2r10
+  . Adapt to changes in RichKernel
+
+- In PatVelo v2r13, PatVeloTT v2r10, PatPV v2r7
+  . Fixed all unchecked StatusCodes
+
+- In TrackFitEvent v3r3, RichRecTools v3r10
   . Fix doxygen warnings
 
 </PRE><H1><A NAME=v4r3>2007-03-13 RecSys v4r3</A></H1><PRE>
