@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 !========================== RichDAQ v3r10 2007-04-23 =========================
+! 2007-04-24 - Chris Jones
+ - RichFillRawBuffer produces bank version 129 by default (2007 L1 firmware)
+
 ! 2007-04-23 - Marco Cattaneo
  - Fix a few doxygen warnings
 
