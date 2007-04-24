@@ -4,6 +4,10 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+!===================== RichRecTools v3r10 2007-04-24 ==========================
+! 2007-04-24 - Marco Cattaneo
+ - Fix a doxygen warning
+
 ! 2007-03-27 - Chris Jones
  - Some additions to the fixed geom eff. tool and CK res tools (for HLT)
  - Propagate options from delegated track creator to underlying creators

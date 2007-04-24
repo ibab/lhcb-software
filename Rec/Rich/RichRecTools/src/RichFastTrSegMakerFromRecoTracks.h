@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::Rec::FastTrSegMakerFromRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichFastTrSegMakerFromRecoTracks.h,v 1.10 2007-04-23 13:32:51 jonrob Exp $
+ *  $Id: RichFastTrSegMakerFromRecoTracks.h,v 1.11 2007-04-24 13:42:19 cattanem Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   23/08/2004
@@ -90,7 +90,6 @@ namespace Rich
        *
        *  @param track   Pointer to a TrgTrack object
        *  @param rad     The radiator type
-       *  @param momVect The momentum vector to fill
        *  @param states  Vector for the entry and exit states
        *
        *  @return If appropriate states where found
