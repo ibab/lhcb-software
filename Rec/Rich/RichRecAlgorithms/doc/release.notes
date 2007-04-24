@@ -4,6 +4,7 @@
 ! Purpose     : Common reconstruction algorithms for the RICH
 !-----------------------------------------------------------------------------
 
+!===================== RichRecAlgorithms v2r7 2007-04-24 =====================
 ! 2007-03-27 - Chris Jones
  - Add options to RichRecInit to trigger creation of pixels, tracks and
    photons. Useful for timing studies.
