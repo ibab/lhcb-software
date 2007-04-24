@@ -5,7 +5,7 @@
 !-----------------------------------------------------------------------------
 
 ! 2007-04-19 - Patrick Koppenburg
- - Minor ipdates in Stripping options. Run on 1000 events.
+ - Minor updates in Stripping options. Run on 1000 events.
  - options/DVOfficialStrippingFile.opts
    . new official stripping file with some tweaks to get Brunel running
      on the ETC later on
