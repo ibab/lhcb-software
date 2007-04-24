@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ general definitions
  *
  *  CVS Log :-
- *  $Id: RichDAQDefinitions.h,v 1.13 2007-04-23 15:33:15 jonrob Exp $
+ *  $Id: RichDAQDefinitions.h,v 1.14 2007-04-24 12:38:36 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
@@ -685,7 +685,7 @@ namespace Rich
   {
 
     /// Map for RICH HPD data, sorted by HPD number
-    //typedef std::map< const LHCb::RichSmartID, LHCb::RichSmartID::Vector >            PDMap;
+    typedef std::map< const LHCb::RichSmartID, LHCb::RichSmartID::Vector >            PDMap;
 
     /// Mapping from Level1 ID to list of HPD RichSmartIDs
     typedef GaudiUtils::HashMap< const Level1ID, LHCb::RichSmartID::Vector >          L1ToSmartIDs;
