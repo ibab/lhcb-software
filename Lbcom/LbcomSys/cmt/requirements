@@ -18,8 +18,8 @@ use OTMonitor         v2r5  OT          # Jan Amoraal
 use OTAssociators     v4r1  OT          # Jan Amoraal
 
 # Rich
-use RichDAQ           v3r9  Rich        # Chris Jones
-use RichTools         v2r11 Rich        # Chris Jones
+use RichDAQ           v3r10 Rich        # Chris Jones
+use RichTools         v2r12 Rich        # Chris Jones
 use RichMCTools       v3r5  Rich        # Chris Jones
 use RichMCMonitors    v1r2  Rich        # Chris Jones
 
@@ -27,7 +27,7 @@ use RichMCMonitors    v1r2  Rich        # Chris Jones
 use SiTools           v1r2  Si          # Matt Needham
 
 # Silicon Tracker
-use STDAQ             v2r9  ST          # Jeroen van Tilburg
+use STDAQ             v3r0  ST          # Jeroen van Tilburg
 use STTools           v3r1  ST          # Jeroen van Tilburg
 use STAlgorithms      v2r1  ST          # Jeroen van Tilburg
 use STAssociators     v1r4  ST          # Jeroen van Tilburg

@@ -6,11 +6,12 @@
 !             : Contains packages shared by Boole and other applications   
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v6r4>2007-04-11 LbcomSys v6r4</A></H1><PRE>
+</PRE><H1><A NAME=v6r4>2007-04-23 LbcomSys v6r4</A></H1><PRE>
 This version uses Gaudi v19r3 and LHCb v22r4
 
 - Packages added:    VeloTools (moved from REC)
-- Packages modified: VeloTools v1r2, OTMonitor v2r5
+- Packages modified: VeloTools v1r2, OTMonitor v2r5, STDAQ v3r0, RichDAQ v3r10,
+                     RichTools v2r12
 
 - In VeloTools v1r2
   . Returned value of the fractional strip position changed to the range (0., 1.)
@@ -18,6 +19,25 @@ This version uses Gaudi v19r3 and LHCb v22r4
 
 - In VeloTools v1r2, OTMonitor v2r5
   . Fixed all unchecked StatusCodes
+
+- In STDAQ v3r0
+  . Fixes to Raw bank format to correspond to real data:
+    + Corrected interstrip fraction for rotated modules
+    + The strip number for isf!=0 was corrected
+    + Corrected order of the ADC-values
+    + RawBank version number incremented. Decoding for DC06 is still available
+  . STClustersToRawBankAlg: Moved the deletion STClustersOnBoard to finalize.
+
+- In RichDAQ v3r10
+  . RichFillRawBuffer produces bank version 129 by default (2007 L1 firmware)
+  . Move various header classes to RichKernel, to allow access to the decoded
+    information outside RichDAQ
+  . Various speed optimisation updates
+
+- In RichTools v2r12
+  . Update RichSmartIDTool to return StatusCodes for SmartID -> position methods
+  . Add explicit constructor for Rich::HPDPixelCluster
+  . Adapt to changes in RichKernel
 
 </PRE><H1><A NAME=v6r3>2007-03-23 LbcomSys v6r3</A></H1><PRE>
 This version uses Gaudi v19r3 and LHCb v22r3
