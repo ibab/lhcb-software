@@ -3,29 +3,50 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
-</PRE><H1><A NAME=v31r4>2007-03-30 Brunel v31r4</A></H1><PRE>
+</PRE><H1><A NAME=v31r4>2007-04-19 Brunel v31r4</A></H1><PRE>
 This version uses projects Gaudi v19r3, LHCb v22r4, Lbcom v6r4, Rec v4r4
  and databases DDDB v1r*, ParamFiles v5r0, FieldMap v4r7
 
-Compatible with DC06 data
+Compatible with DC06 data.
+
+- New features
+  . Can also process new online compatible ST and Rich RawBank format produced by
+    Boole v14r* (STDAQ v3r0, RichKernel v7r4, RichDAQ v3r10)
+  . Makes Muon tracks with the LHCbIDs of Muon hits (MuonID v5r0)
+  . Minor reorganisation of the Rich algorithm sequence to simplify timing
+    studies (RichRecSys v3r3)
+  . Possibility to reconstruct beam-gas tracks in Velo
+    (PatVelo v2r13, TrackSys v4r4)
 
 - New tuning
   . Improvements to PatVelo: 
     + Now produces two states per track, by doing also outward fit
     + Improved angular comparisons
-    + Merge clone tracks by comparisons on angles and z position
-    (PatVelo v2r13, see also </PRE><A HREF="http://indico.cern.ch/getFile.py/access?contribId=3&amp;resId=0&amp;materialId=slides&amp;confId=10146">DH talk at T-Rec on 2007-03-26</A><PRE>)
+    + New option (off by default) to merge clone tracks by comparisons on angles
+      and z position
+    + Properly reconstruct also geometries with significant missing sensors
+    + Automatically determine from options range of sensors to scan
+    (PatVelo v2r13, see also talks by at T-Rec meetings on </PRE><A HREF="http://indico.cern.ch/conferenceDisplay.py/confId=10146">2007-03-26</A><PRE> and </PRE><A HREF="http://indico.cern.ch/conferenceDisplay.py?confId=10150">2007-04-23</A><PRE>)
   . TrackPrepareVelo sets q/p for all VELO states (TrackUtils v1r12)
   . PatVeloTT uses all Velo tracks states (PatVeloTT v2r10)
   . Value of the fractional strip position returned by VeloClusterPositionTool is
     now in the range (0., 1.) instead of (-0.5, 0.5), for consistency with real
     TELL1 data format (VeloTools v1r2)
+  . Various speed optimisations
+    (RichKernel v7r4, RichDet v10r4, RichDAQ v3r10, RichRecBase v3r3) 
 
 - Bug fixes
-  . Fix unchecked StatusCodes
-    (VeloDet v11r2, PatVelo v2r13, VeloTools v1r2, PatVeloTT v2r10, PatPV v2r7)
-  . Fix bug in CaloMomenum definition of the transport matrix (indices swap)
+  . Fix unchecked StatusCodes (VeloDet v11r2, PatVelo v2r13, VeloTools v1r2,
+    PatVeloTT v2r10, PatPV v2r7, OTDAQ v5r2)
+  . Fix bug in CaloMomentum definition of the transport matrix (indices swap)
     (CaloUtils v7r2)
+  . Since Brunel v31r2, CaloTriggerBitFromRaw was returning only the data of the 
+    last TELL1, reducing number of electron clusters by a factor 4 (CaloDAQ v3r2)
+  . Since Brunel v30r10, CaloFillPrsSpdRawBuffer was dropping last Prs/Spd L0bit
+    for 50% of events when converting to 'short' Calo banks (CaloDAQ v3r2)
+  . Fix in TrackKalmanFilter: residuals from last measurement were not calculated
+    Has small effect on VeloTT and Match efficiencies (TrackFitter v2r14)
+  . Fix for crash seen in DC06 productions (RichLocalPID v3r3)
 
 </PRE><H1><A NAME=v31r3>2007-03-26 Brunel v31r3</A></H1><PRE>
 This version uses projects Gaudi v19r3, LHCb v22r3, Lbcom v6r3, Rec v4r3
