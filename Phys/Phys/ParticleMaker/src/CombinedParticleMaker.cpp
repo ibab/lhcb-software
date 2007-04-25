@@ -1,11 +1,10 @@
-
 //-----------------------------------------------------------------------------
 /** @file CombinedParticleMaker.cpp
  *
  * Implmentation file for Particle maker CombinedParticleMaker
  *
  * CVS Log :-
- * $Id: CombinedParticleMaker.cpp,v 1.22 2007-03-06 12:29:28 jonrob Exp $
+ * $Id: CombinedParticleMaker.cpp,v 1.23 2007-04-25 16:18:58 pkoppenb Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-05-03
@@ -99,8 +98,8 @@ StatusCode CombinedParticleMaker::initialize()
   // BremStrahlung added
   m_brem = tool<IBremAdder>("BremAdder","BremAdder", this);
 
-  info() << "Will produce : " << m_particleList << endreq;
-  if ( m_exclusive ) info() << "Using exclusive selection policy" << endreq;
+  info() << "Will produce : " << m_particleList << endmsg;
+  if ( m_exclusive ) info() << "Using exclusive selection policy" << endmsg;
 
   // loop over selection and load ProtoParticle selectors
   m_protoMap.clear();
@@ -146,7 +145,7 @@ StatusCode CombinedParticleMaker::initialize()
 
     // load tool into map
     info() << "Particle type " << name << " using ProtoParticle Filter '"
-           << toolType << "'" << endreq;
+           << toolType << "'" << endmsg;
     const IProtoParticleFilter * t = tool<IProtoParticleFilter>( toolType, name, this );
     m_protoMap.push_back( ProtoPair(partProp,t) );
 
@@ -177,22 +176,22 @@ StatusCode CombinedParticleMaker::finalize()
     const double tkSel = 100 * ( tally.totProtos>0 ? (double)tally.selProtos/(double)tally.totProtos : 0 );
     if ( tkSel > m_minPercForPrint )
     {
-      info() << "Selected " << tkSel << "% of '" << (*iT).first << "' ProtoParticles" << endreq;
+      info() << "Selected " << tkSel << "% of '" << (*iT).first << "' ProtoParticles" << endmsg;
       const double elEff = 100 * (double)tally.el/(double)tally.selProtos;
       const double muEff = 100 * (double)tally.mu/(double)tally.selProtos;
       const double piEff = 100 * (double)tally.pi/(double)tally.selProtos;
       const double kaEff = 100 * (double)tally.ka/(double)tally.selProtos;
       const double prEff = 100 * (double)tally.pr/(double)tally.selProtos;
       if ( elEff>m_minPercForPrint )
-        info() << "  -> Electrons " << elEff << "% of selected ProtoParticles" << endreq;
+        info() << "  -> Electrons " << elEff << "% of selected ProtoParticles" << endmsg;
       if ( muEff>m_minPercForPrint )
-        info() << "  -> Muons     " << muEff << "% of selected ProtoParticles" << endreq;
+        info() << "  -> Muons     " << muEff << "% of selected ProtoParticles" << endmsg;
       if ( piEff>m_minPercForPrint )
-        info() << "  -> Pions     " << piEff << "% of selected ProtoParticles" << endreq;
+        info() << "  -> Pions     " << piEff << "% of selected ProtoParticles" << endmsg;
       if ( kaEff>m_minPercForPrint )
-        info() << "  -> Kaons     " << kaEff << "% of selected ProtoParticles" << endreq;
+        info() << "  -> Kaons     " << kaEff << "% of selected ProtoParticles" << endmsg;
       if ( prEff>m_minPercForPrint )
-        info() << "  -> Protons   " << prEff << "% of selected ProtoParticles" << endreq;
+        info() << "  -> Protons   " << prEff << "% of selected ProtoParticles" << endmsg;
     }
   }
 
@@ -216,7 +215,7 @@ StatusCode CombinedParticleMaker::makeParticles( Particle::ConstVector & parts )
   else if ( msgLevel(MSG::DEBUG) )
   {
     debug() << "Making Particles from " << protos->size() << " ProtoParticles at "
-            << m_input << endreq;
+            << m_input << endmsg;
   }
 
   // loop over ProtoParticles
@@ -231,9 +230,12 @@ StatusCode CombinedParticleMaker::makeParticles( Particle::ConstVector & parts )
     ++tally.totProtos;
 
     // Select tracks
-    verbose() << "Trying Track " << track->key() << endreq;
+    verbose() << "Trying Track " << track->key() << endmsg;
     if ( !m_trSel->accept(*track) ) continue;
-    verbose() << " -> Track selected" << track->key() << endreq;
+    verbose() << " -> Track selected" << track->key() ;
+    if ( track->hasStateAt( LHCb::State::FirstMeasurement )) 
+      verbose() << " " << track->stateAt( LHCb::State::FirstMeasurement ).momentum() ;
+    verbose() << endmsg;
     ++tally.selProtos;
 
     // Do PID checks ?
@@ -245,7 +247,7 @@ StatusCode CombinedParticleMaker::makeParticles( Particle::ConstVector & parts )
     {
       const bool selected = (*iP).second->isSatisfied( *iProto );
       verbose() << " -> Particle type " << (*iP).first->particle()
-                << " selected=" << selected << endreq;
+                << " selected=" << selected << endmsg;
       bool madeP(false);
       if ( selected )
       {
@@ -324,13 +326,33 @@ StatusCode CombinedParticleMaker::fillParticle( const ProtoParticle* proto,
   particle->setMeasuredMass(pprop->mass());
   particle->setMeasuredMassErr(0); // Should really put PDG value here
 
+  /*
+  for ( std::vector< LHCb::State*>::const_iterator s = proto->track()->states().begin() ;
+        s != proto->track()->states().end() ; ++s){
+    verbose() << " A   State is at " << (*s)->position() << " and has slopes " << (*s)->slopes() << endmsg  ;  
+  }
+  */
+
+  LHCb::State& usedState = proto->track()->firstState() ; // backup
+  if ( proto->track()->hasStateAt( LHCb::State::ClosestToBeam )){ // default: closest to beam
+    usedState = proto->track()->stateAt( LHCb::State::ClosestToBeam );
+    verbose() << "Using state at " << usedState.position() << endmsg ;
+  } else if ( proto->track()->hasStateAt( LHCb::State::FirstMeasurement )){ // if not available: first measurement
+    usedState = proto->track()->stateAt( LHCb::State::FirstMeasurement );
+    verbose() << "Using state at " << usedState.position() << endmsg ;
+  } else Warning("No state closest to beam or at first measurement for track. Using first state instead") ;
+  
+
   // finally, set Particle infor from State using tool
-  StatusCode sc = m_p2s->state2Particle( proto->track()->firstState(), *particle );
+  verbose() << "Making Particle " << pprop->particle() << " from Track with P= " 
+            << usedState.momentum() << endmsg ;
+  StatusCode sc = m_p2s->state2Particle( usedState, *particle );
+  verbose() << "Made   Particle " << pprop->particle() << " with            P= " << particle->momentum() << endmsg ;
 
   // Add BremmStrahlung for electrons
   if (sc.isSuccess() && "e+" == pprop->particle() && m_addBremPhoton ){
     if( m_brem->addBrem( particle ) )
-      debug() << " ------- BremStrahlung has been added to the particle" << endreq;
+      debug() << " ------- BremStrahlung has been added to the particle" << endmsg;
   }
   return sc;
 }

@@ -1,7 +1,16 @@
-! $Id: release.notes,v 1.61 2007-03-09 10:29:38 pkoppenb Exp $ 
+! $Id: release.notes,v 1.62 2007-04-25 16:18:57 pkoppenb Exp $ 
 ! Package     : ParticleMaker
 ! Responsible : P. Koppenburg, J. Palacios
 !==============================================================================
+
+! 2007-04-25 - Patrick Koppenburg
+ - Use in this order
+   . stateAt( LHCb::State::ClosestToBeam ) 
+   . stateAt( LHCb::State::FirstMeasurement )
+   . firstState()
+   to make Particles. This ensures that the particle maker uses the same
+   state on rdst and dst files.
+ - Increment to v3r2
 
 !========================== ParticleMaker v3r1 2007-03-09 ===================
 ! 2007-03-06 - Chris Jones

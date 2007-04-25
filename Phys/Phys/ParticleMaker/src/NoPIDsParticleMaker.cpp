@@ -1,4 +1,4 @@
-// $Id: NoPIDsParticleMaker.cpp,v 1.9 2007-02-21 19:43:33 pkoppenb Exp $
+// $Id: NoPIDsParticleMaker.cpp,v 1.10 2007-04-25 16:18:58 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -247,7 +247,15 @@ StatusCode NoPIDsParticleMaker::fillParticle( const LHCb::ProtoParticle* proto  
   particle -> setMeasuredMass( mass ) ;
   
   particle -> setProto( proto ) ;
-  const LHCb::State& state = proto->track()->firstState() ;
+  LHCb::State& state = proto->track()->firstState() ;
+  if ( proto->track()->hasStateAt( LHCb::State::ClosestToBeam )){ // default: closest to beam
+    state = proto->track()->stateAt( LHCb::State::ClosestToBeam );
+    verbose() << "Using state at " << state.position() << endmsg ;
+  } else if ( proto->track()->hasStateAt( LHCb::State::FirstMeasurement )){ // if not available: first measurement
+    state = proto->track()->stateAt( LHCb::State::FirstMeasurement );
+    verbose() << "Using state at " << state.position() << endmsg ;
+  } else Warning("No state closest to beam or at first measurement for track. Using first state instead") ;
+  
   return m_p2s->state2Particle(state,*particle);
 };
 // ============================================================================
