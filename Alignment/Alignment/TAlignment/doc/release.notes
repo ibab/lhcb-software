@@ -4,6 +4,15 @@
 ! Purpose	:	algorithm to align T stations
 !---------------------------------------------------------
 
+!========================== TAlignment v3r0 2007-04-25 =========================
+! 2007-04-25 - Johan Blouw
+ - moved tool parts to AlignTrTools
+ - moved interface to AlignmentInterfaces
+ Contains now 3 algorithms:
+  - AlignAlgorithm: Generic chi^2 minimisation algorithm
+  - GAlign: performs alignment using Millepede for TT,OT & IT
+  - TStation: algorithm to select tracks and store them in a dst
+
 !========================== TAlignment v2r0 2007-03-05 =========================
 ! 2007-03-29 - Jan Amoraal
  - Fix includes

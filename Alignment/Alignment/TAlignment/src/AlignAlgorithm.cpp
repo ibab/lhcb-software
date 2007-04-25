@@ -1,4 +1,4 @@
-// $Id: AlignAlgorithm.cpp,v 1.1 2007-03-09 17:08:56 janos Exp $
+// $Id: AlignAlgorithm.cpp,v 1.2 2007-04-25 14:35:45 jblouw Exp $
 // Include files
 // from std
 #include <utility>
@@ -26,14 +26,14 @@
 #include "TrackInterfaces/ITrackProjector.h"
 
 // from AlignTrTools
-#include "AlignTrTools/IAlignSelTool.h"
+#include "AlignmentInterfaces/IAlignSelTool.h"
 
 // from AlignSolvTools
 // #include "AlignSolvTools/IAlignSolvTool.h"
 
 // local
 #include "AlignAlgorithm.h"
-#include "IAlignDetectorSelector.h" 
+#include "AlignmentInterfaces/IAlignDetectorSelector.h" 
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : AlignAlgorithm
