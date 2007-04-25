@@ -126,6 +126,8 @@ start:
       	goto start;
     }
 
+    *m_log << MSG::INFO << "Acked command no:" << ackHeaderBuf.min_seq_num  << " to " << ackHeaderBuf.max_seq_num << endmsg;
+
     unsigned int totalNumAcked = 0;
     if(ackHeaderBuf.min_seq_num > ackHeaderBuf.max_seq_num) { /*Sequence wraparound?*/
       totalNumAcked = 0xffffffff - ackHeaderBuf.min_seq_num + 1;

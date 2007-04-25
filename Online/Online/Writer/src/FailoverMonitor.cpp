@@ -1,3 +1,5 @@
+#ifdef BUILD_WRITER
+
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <sys/poll.h>
@@ -326,3 +328,5 @@ void FailoverMonitor::stop(void)
 	m_stopThread = 1;
 	pthread_join(m_monitorThread, NULL);
 }
+
+#endif

@@ -1,3 +1,5 @@
+#ifdef BUILD_WRITER
+
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <sys/socket.h>
@@ -120,3 +122,5 @@ int Utils::brecv(int sock, void *data, size_t datalen, MsgStream * /*log*/) {
 			return ret;
 	}
 }
+
+#endif

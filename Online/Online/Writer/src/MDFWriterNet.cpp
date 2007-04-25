@@ -164,6 +164,8 @@ StatusCode MDFWriterNet::writeBuffer(void *const /*fd*/, const void *data, size_
     m_md5 = new TMD5();
     m_adler32 = adler32(0, NULL, 0);
 
+    *m_log << MSG::INFO << "Opening a file." << endmsg;
+
   }
 
   INIT_WRITE_COMMAND(&header, len, m_bytesWritten, m_fileName.c_str());
@@ -178,6 +180,8 @@ StatusCode MDFWriterNet::writeBuffer(void *const /*fd*/, const void *data, size_
     //Write out close command; runDB record created upon receiving ack.
     struct cmd_header header;
     INIT_CLOSE_COMMAND(&header, m_fileName.c_str(), m_adler32, m_md5);
+
+    *m_log << MSG::INFO << "Closing a file." << endmsg;
 
     delete m_md5;
     m_connection->sendCommand(&header);
@@ -238,7 +242,7 @@ MDFWriterNet::~MDFWriterNet()
 void MDFWriterNet::notifyOpen(struct cmd_header *cmd)
 {
   try {
-
+  	*m_log << MSG::INFO << "Received open notify. . ." << cmd->file_name;
     m_rpcObj->createFile(cmd->file_name, cmd->data.start_data.run_num);
 
   } catch(std::exception& e) {
@@ -247,6 +251,7 @@ void MDFWriterNet::notifyOpen(struct cmd_header *cmd)
     *m_log << "Record is: FileName=" << cmd->file_name;
     *m_log << " Run Number=" << cmd->data.start_data.run_num << endmsg;
   }
+  *m_log << "Done." << endmsg;
 }
 
 /** A notify listener callback, which is executed  when a close command is acked.
@@ -254,6 +259,8 @@ void MDFWriterNet::notifyOpen(struct cmd_header *cmd)
 void MDFWriterNet::notifyClose(struct cmd_header *cmd)
 {
   try {
+
+  	*m_log << MSG::INFO << "Received close notify. . ." << cmd->file_name;
 
     m_rpcObj->confirmFile(cmd->file_name,
         cmd->data.stop_data.adler32_sum,
@@ -273,6 +280,9 @@ void MDFWriterNet::notifyClose(struct cmd_header *cmd)
     *m_log << " Adler32 Sum=" << cmd->data.stop_data.adler32_sum;
     *m_log << " MD5 Sum=" << md5buf << endmsg;
   }
+
+  *m_log << "Done." << endmsg;
+
 }
 
 /** A notify listener callback, which is executed  when an error occurs.

@@ -27,7 +27,6 @@ RPCComm::RPCComm(std::string serverURL)
  */
 void RPCComm::confirmFile(char *fileName, unsigned int adlerSum, const unsigned char *md5CSum)
 {
-  xmlrpc_c::value result;
   int ret;
 
   char adler32String[9];
@@ -38,16 +37,16 @@ void RPCComm::confirmFile(char *fileName, unsigned int adlerSum, const unsigned 
    */
 
   sprintf(md5CharString, "%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X",
-      md5CSum[0], md5CSum[1], md5CSum[2], md5CSum[3], 
-      md5CSum[4], md5CSum[5], md5CSum[6], md5CSum[7], 
-      md5CSum[8], md5CSum[9], md5CSum[10], md5CSum[11], 
+      md5CSum[0], md5CSum[1], md5CSum[2], md5CSum[3],
+      md5CSum[4], md5CSum[5], md5CSum[6], md5CSum[7],
+      md5CSum[8], md5CSum[9], md5CSum[10], md5CSum[11],
       md5CSum[12], md5CSum[13], md5CSum[14], md5CSum[15]);
 
   sprintf(adler32String, "%08X", adlerSum);
 
   pthread_mutex_lock(&m_rpcLock);
 
-  try {
+/*  try {
     m_clientInstance.call(m_serverURL, confirmString, "sss", &result,
         fileName, adler32String, md5CharString);
     ret = xmlrpc_c::value_int(result);
@@ -56,14 +55,13 @@ void RPCComm::confirmFile(char *fileName, unsigned int adlerSum, const unsigned 
     pthread_mutex_unlock(&m_rpcLock);
     throw std::runtime_error(err.what());
   }
-
+*/
   pthread_mutex_unlock(&m_rpcLock);
 
-  ret = xmlrpc_c::value_int(result);
-  if(ret == RUNDB_SERVICE_FAIL) {
+ /* if(ret == RUNDB_SERVICE_FAIL) {
     throw std::runtime_error(
         "Could not call RunDB service for confirm(). Check RunDB logs.");
-  }
+  }*/
   return;
 }
 
@@ -77,12 +75,11 @@ void RPCComm::confirmFile(char *fileName, unsigned int adlerSum, const unsigned 
  */
 void RPCComm::createFile(char *fileName, unsigned int runNumber)
 {
-  xmlrpc_c::value result;
   int ret;
 
   pthread_mutex_lock(&m_rpcLock);
 
-  try {
+/*  try {
     char runNumberString[20];
     ::sprintf(runNumberString, "%u", runNumber);
     m_clientInstance.call(m_serverURL, createString, "ss", &result,
@@ -93,14 +90,14 @@ void RPCComm::createFile(char *fileName, unsigned int runNumber)
     pthread_mutex_unlock(&m_rpcLock);
     throw std::runtime_error(err.what());
   }
-
+*/
   pthread_mutex_unlock(&m_rpcLock);
 
-  ret = xmlrpc_c::value_int(result);
-  if(ret == RUNDB_SERVICE_FAIL) {
+/*  if(ret == RUNDB_SERVICE_FAIL) {
     throw std::runtime_error(
         "Could not call RunDB service for create(). Check RunDB logs.");
   }
+  */
   return;
 }
 
