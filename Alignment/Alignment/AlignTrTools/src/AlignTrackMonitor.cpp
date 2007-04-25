@@ -1,4 +1,4 @@
-// $Id: AlignTrackMonitor.cpp,v 1.1 2007-01-08 15:51:42 lnicolas Exp $
+// $Id: AlignTrackMonitor.cpp,v 1.2 2007-04-25 14:07:06 jblouw Exp $
 //
 
 //-----------------------------------------------------------------------------
@@ -11,6 +11,7 @@
 //===========================================================================
 // Includes
 //===========================================================================
+#include "GaudiKernel/ToolFactory.h"
 // Local
 #include "AlignTrackMonitor.h"
 //===========================================================================
@@ -20,8 +21,9 @@
 // Global Variables
 //===========================================================================
 // Declaration of the algorithm factory
-static const AlgFactory<AlignTrackMonitor> s_factory;
-const IAlgFactory& AlignTrackMonitorFactory = s_factory;
+//static const AlgFactory<AlignTrackMonitor> s_factory;
+//const IAlgFactory& AlignTrackMonitorFactory = s_factory;
+DECLARE_ALGORITHM_FACTORY(AlignTrackMonitor);
 //===========================================================================
 
 

@@ -6,7 +6,7 @@
  *  Header file for Tstation alignment : ATrackSelector
  *
  *  CVS Log :-
- *  $Id: ATrackSelector.h,v 1.1 2006-09-29 10:48:31 jblouw Exp $
+ *  $Id: ATrackSelector.h,v 1.2 2007-04-25 14:07:06 jblouw Exp $
  *
  *  @author J. Blouw johan.blouw@cern.ch
  *  @date   31/09/2006
@@ -16,6 +16,7 @@
 
 #include "GaudiAlg/GaudiTool.h"
 #include "AlignmentInterfaces/IATrackSelectorTool.h"
+#include "TrackInterfaces/IMeasurementProvider.h"
 #include <string>
 
 // GaudiKernel
@@ -28,41 +29,41 @@
 #include "boost/numeric/conversion/bounds.hpp"
 #include "boost/limits.hpp"
 
-class ATrackSelector : public GaudiTool, virtual public IATrackSelectorTool {
-
-public:
+class ATrackSelector : public GaudiTool, 
+  virtual public IATrackSelectorTool {
+  
+ public:
 
   /// constructer
-  ATrackSelector( const std::string& type,
-                 const std::string& name,
-                 const IInterface* parent);
-
-  virtual ~ATrackSelector(); ///< Destructor
-
-  /** Returns if the given track is selected or not
-   *
-   *  @param aTrack Reference to the Track to test
-   *
-   *  @return boolean indicating if the track is selected or not
-   *  @retval true  Track is selected
-   *  @retval false Track is rejected
-   */
-
-  bool accept ( const LHCb::Track& aTrack ) const;
-  int traversesIT( const LHCb::Track & aTrack, int& nOThits, int& nIThits ) const;
-//  int traversesIT( int& nOThits, int& nIThits ) const;
-
-private:
-
-
+   ATrackSelector( const std::string& type,
+		   const std::string& name,
+		   const IInterface* parent);
+   
+   virtual ~ATrackSelector(); // Destructor
+     
+   /** Returns if the given track is selected or not
+    *
+    *  @param aTrack Reference to the Track to test
+    *
+    *  @return boolean indicating if the track is selected or not
+    *  @retval true  Track is selected
+    *  @retval false Track is rejected
+    */
+   StatusCode initialize();
+   bool accept ( const LHCb::Track& aTrack ) const;
+   int traversesIT( LHCb::Track & aTrack, 
+		    int& nOThits, 
+		    int& nIThits ) const;
+     
  private:
-
-  
-
+     
+     
+     
   double m_minChi2Cut; ///< Min chi^2 cut
   double m_minPCut;    ///< Min p cut
   double m_minPtCut;   ///< Min pt cut
-  double m_minHitCut;  ///< Min hit cut
+    
+  int m_charge; ///< select particles with certain charge only
 
   double m_maxChi2Cut; ///< Max chi^2 cut
   double m_maxPCut;    ///< Max p cut

@@ -1,4 +1,4 @@
-// $Id: AlignSelTool.h,v 1.1 2007-01-08 15:51:40 lnicolas Exp $
+// $Id: AlignSelTool.h,v 1.2 2007-04-25 14:07:06 jblouw Exp $
 #ifndef ALIGNTRTOOLS_ALIGNSELTOOL_H 
 #define ALIGNTRTOOLS_ALIGNSELTOOL_H 1
 
@@ -7,7 +7,7 @@
 #include "GaudiAlg/GaudiTool.h"
 
 // Interface
-#include "AlignTrTools/IAlignSelTool.h"
+#include "AlignmentInterfaces/IAlignSelTool.h"
 
 #include "TrackInterfaces/ITrackExtrapolator.h"
 

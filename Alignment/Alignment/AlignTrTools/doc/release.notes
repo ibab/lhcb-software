@@ -1,26 +1,35 @@
-! Package     : AlignTrTools
-! Responsible : L.Nicolas, A.Hicheur
+<PRE>
+Package: Alignment/AlignTrTools
+Package Coordinator Johan Blouw
+Responsibles : J. Amoraal, J. Blouw, A. Hicheur, L. Nicolas
+Purpose: LHCb Alignment Tools
 
+</PRE><H1><A NAME=v3r0>2007-04-25 AlignTrTools v3r0 </A></H1><PRE>
+- J. Blouw added/modified/aligned
+  - new tool for TT/IT/OT alignment using M'pede:
+    - Derivatives.cpp,h : class describing derivaties needed by Millepede
+    - TAConfig.cpp,h : tool used to configure alignment problem for M'pede
+    - StringConvert.h: simple string conversion tool
+    - debugoptions.h: header file for configuring debug options for Millepede.cpp,h
+  - added J. Amoraal's code for OT alignment:
+    - AlignOTDetector.cpp,h
+
+
+
+</PRE><H1><A NAME=v1r0>2006-09-06 AlignTrTools v1r0 </A></H1><PRE>
 ! 20060906 - AlignTrTools v1
   this package builds two libraries: a component and a link library
 
-! 29/09/2006 AlignTrTools v1r0
 !  -J. Blouw: - added a simple TrackSelectorTool
               - modified the requirements file to reflect this
 
 ! ====================================================================
 ! L. Nicols/A. Hicheur: added source code for Louis' track selection
 !
-! Johan Blouw, October 4th, 2006 AlignTrTools v1r1
-  Johan Blouw : - added source code for a simple track selector
-                - modified requirements file to reflect Louis' code dependencies
-<<<<<<< release.notes
+</PRE><H1><A NAME=v1r0>2006-10-04 AlignTrTools v1r1 </A></H1><PRE>
+  Johan Blouw, October 4th, 2006 AlignTrTools v1r1
+  - added source code for a simple track selector
+  - modified requirements file to reflect Louis' code dependencies
 
-! Johan Blouw, 05/02/2007
-  -update requirements file etc 
-=======
+</PRE>
 
-! J.Blouw 05/02/2007
-  - added the simple track selector tool
-  - updated factory accordingly
->>>>>>> 1.4
