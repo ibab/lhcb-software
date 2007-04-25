@@ -36,7 +36,7 @@ DECLARE_ALGORITHM_FACTORY(Adder)
 //------------------------------------------------------------------------------
 Adder::Adder(const std::string& name, ISvcLocator* ploc)
   : Algorithm(name, ploc), m_nodename ("node00101"), m_histogramname(),
-  m_refreshtime(10),m_dimclientdns(){
+  m_refreshtime(10),m_dimclientdns(),m_servername("node00101"){
   declareProperty("nodename",m_nodename);
   declareProperty("histogramname",m_histogramname);
   declareProperty("algorithmname",m_algorithmname);
@@ -95,10 +95,10 @@ StatusCode Adder::execute() {
      hSvcnames="H1D/"+m_nodename+"*"+m_algorithmname[j]+"/"+m_histogramname[j];
      hSvcnames2d="H2D/"+m_nodename+"*"+m_algorithmname[j]+"/"+m_histogramname[j];
      pSvcnames="HPD/"+m_nodename+"*"+m_algorithmname[j]+"/"+m_histogramname[j];    
-     adderhSvcnames="H1D/"+m_nodename+"_Adder_1/"+m_taskname[j]+"/"+m_algorithmname[j]+"/"+m_histogramname[j];
-     adderhSvcnames2d="H2D/"+m_nodename+"_Adder_1/"+m_taskname[j]+"/"+m_algorithmname[j]+"/"+m_histogramname[j];
-     adderpSvcnames="HPD/"+m_nodename+"_Adder_1/"+m_taskname[j]+"/"+m_algorithmname[j]+"/"+m_histogramname[j];
-     addercommentSvcnames=m_nodename+"_Adder_1/"+m_taskname[j]+"/"+m_algorithmname[j]+"/"+m_histogramname[j]+"/gauchocomment";  
+     adderhSvcnames="H1D/"+m_servername+"_Adder_1/"+m_taskname[j]+"/"+m_algorithmname[j]+"/"+m_histogramname[j];
+     adderhSvcnames2d="H2D/"+m_servername+"_Adder_1/"+m_taskname[j]+"/"+m_algorithmname[j]+"/"+m_histogramname[j];
+     adderpSvcnames="HPD/"+m_servername+"_Adder_1/"+m_taskname[j]+"/"+m_algorithmname[j]+"/"+m_histogramname[j];
+     addercommentSvcnames=m_servername+"_Adder_1/"+m_taskname[j]+"/"+m_algorithmname[j]+"/"+m_histogramname[j]+"/gauchocomment";  
      std::vector<std::string> tmphSvcnames;	    
      std::vector<std::string> tmphSvcnames2d;	
      std::vector<std::string> tmppSvcnames;

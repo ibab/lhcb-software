@@ -30,7 +30,8 @@ private:
   std::vector<std::string> m_algorithmname; 
   std::vector<std::string> m_taskname; 
   int m_refreshtime;
-  std::string m_dimclientdns;   
+  std::string m_dimclientdns;
+  std::string m_servername;    
   int counter;
   int icount;
   int icount2d;

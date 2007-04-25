@@ -1,6 +1,9 @@
 ! Package     : Adder
 ! Responsible : Eric van Herwijnen/Monica Pepe-Altarelli
 
+! 20070209 - Eric vH       ==================== Adder v4r2 ==========================
+Added servername option to allow more flexibility in the hierarchy of adders. 
+
 ! 20070209 - Eric vH       ==================== Adder v4r0 ==========================
 major rewrite. no root, no aida. service names include taskname, algorithmname,
 histogramname.
@@ -67,6 +70,9 @@ are running. For example, node00101. If the adder is supposed to add the summed 
 tasks on the nodes running in a subfarm, e.g. subfarm001, the nodename joboption should be set to
 "node001" (and the UTGID to node001_Adder_1). To add the sums of subfarms, set the nodename 
 to "node" (and the UTGID to node_Adder_1).
+
+- servername : This string can be used to modify the servername in the UTGID of
+the published (summed) histograms.
 
 - histogramname : This is a vector of strings containing the names of the
 histograms that have to be added. Constraint: if a name is already used for a 1D histogram,
