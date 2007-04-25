@@ -28,7 +28,7 @@ branches cmt doc
  use PyDIM             v1r2     Online
 #use RunDatabase       v1r2     Online
  use Saver             v1r2     Online
- use UPI               v1r3     Online
+ use UPI               v1r4     Online
  use Viewer            v1r3     Online
  use Writer            v1r1     Online
  use XMLRPC            v1r6     Online
