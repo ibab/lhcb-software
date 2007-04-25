@@ -5,6 +5,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v3r1>2007-05-01 OnlineSys v3r3</A></H1><PRE>
+This version uses Gaudi LHCb v22r4
+
 </PRE><H1><A NAME=v3r1>2007-03-09 OnlineSys v3r1</A></H1><PRE>
 This version uses Gaudi v19r2, LHCb v22r2
  - fixes in OnlineKernel, OnlineTasks, GaudiOnline, UPI, DIM, Gaucho
