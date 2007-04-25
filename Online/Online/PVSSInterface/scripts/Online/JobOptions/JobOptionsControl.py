@@ -15,21 +15,22 @@ CommandListener = Online.PVSS.CommandListener
 # =============================================================================
 class OptionsWriter(CommandListener):
   # ===========================================================================
-  def __init__(self, manager, hosttype, cluster):
+  def __init__(self, manager, hosttype, cluster, name):
     "Object constructor."
     self.hostType = hosttype
     self.cluster  = cluster
-    CommandListener.__init__(self,manager,'JobOptions','JobOptionsControl',4)
+    CommandListener.__init__(self,manager,name,name,4)
     devMgr = self.manager.deviceMgr()
-    if not devMgr.exists('JobOptionsControl'):
+    if not devMgr.exists(name):
       typ = self.manager.typeMgr().type('JobOptionsControl')
-      if not devMgr.createDevice('JobOptionsControl',typ,1).release():
-        error('Failed to create the datapoint:"JobOptionsControl"',timestamp=1)
+      if not devMgr.createDevice(name,typ,1).release():
+        error('Failed to create the datapoint:"'+name+'"',timestamp=1)
       else:
-        log('Created the datapoint:"JobOptionsControl"',timestamp=1)
+        log('Created the datapoint:"'+name+'"',timestamp=1)
 
   # ===========================================================================
   def activityName(self, run):
+    print 'Activity name:',run.name, self.hostType+'_'+run.runType()
     return self.hostType+'_'+run.runType()
 
   # ===========================================================================
@@ -126,10 +127,18 @@ class OptionsWriter(CommandListener):
     partition = items[2]
     partID    = items[3]
     result = None
-    if command == "CONFIGURE":
+    print command, sysName, partition, partID
+    if command == "CONFIGURE" or command == "ALLOCATE":
       result = self.write(partition)
       if result is not None:
         return self.makeAnswer('READY',answer)
+    elif command == "RESET" or command == "DEALLOCATE":
+      return self.makeAnswer('READY',answer)
+    elif command == "RECOVER":
+      result = self.write(partition)
+      if result is not None:
+        return self.makeAnswer('READY',answer)
+      
     return None
 
 # =============================================================================
@@ -140,12 +149,12 @@ class HLTOptionsWriter(OptionsWriter):
       @version 1.0
   """
   # ===========================================================================
-  def __init__(self, manager):
+  def __init__(self, manager, name):
     "Object constructor."
     node = socket.gethostbyaddr(socket.gethostname())[0]
     cluster = node[:node.find('.')]
     cluster = 'lbhlt04'
-    OptionsWriter.__init__(self,manager,'HLT',cluster)
+    OptionsWriter.__init__(self,manager,'HLT',cluster, name)
   # ===========================================================================
   def configureAdditionalOptions(self, run, activity, tasks):
     opts = {}
@@ -166,10 +175,10 @@ class StorageOptionsWriter(OptionsWriter):
       @version 1.0
   """
   # ===========================================================================
-  def __init__(self, manager):
+  def __init__(self, manager, name):
     "Object constructor."
     cluster = 'storage'
-    OptionsWriter.__init__(self,manager,'RECV',cluster)
+    OptionsWriter.__init__(self,manager,'RECV',cluster, name)
   # ===========================================================================
   def additionalOptions(self, context, run, activity, task):
     return {'DataSink':'@DataSink@'}
@@ -180,37 +189,51 @@ class StorageOptionsWriter(OptionsWriter):
       #print task.name,items
       if task.name == items[3]:
         done = 1
+  def printTasks(self,data):
+    for i in data:
+      print 'Task:',i
         if item<0:
           options = opts.replace('@DataSink@','"NONE"')
         else:
           options = opts.replace('@DataSink@','"'+items[item]+'"')
         print '###\n###   Writing options for task: '+items[1]+'\n###'
-        #print options
+        print options
     if done: return self
     return None
+  def printTasks(self,data):
+    for i in data:
+      self.printTasks(run.strReceivers.data)
+      print i
   # ===========================================================================
   def writeOptions(self, opts, run, activity, task):
     if self.hostType == 'RECV':
       if self.checkTasks(opts,run.rcvSenders.data,5,task):      return self
+      if self.checkTasks(opts,run.receivers.data,-1,task):      return self
       if self.checkTasks(opts,run.rcvInfraTasks.data,-1,task):  return self
+      self.printTasks(run.receivers.data)
     elif self.hostType == 'STREAM':
       if self.checkTasks(opts,run.strReceivers.data,3,task):    return self
       if self.checkTasks(opts,run.streamers.data,3,task):       return self
       if self.checkTasks(opts,run.strInfraTasks.data,3,task):   return self
-      print '###\n###   Writing options for UNKNOWN tasks: '+task.name+'\n###'
+      self.printTasks(run.strInfraTasks.data)
+    print '###\n###   Writing options for UNKNOWN tasks: '+task.name+' type:'+self.hostType+'\n###'
     return None
   # ===========================================================================
   def write(self, partition):
     self.hostType = 'RECV'
-    OptionsWriter.write(self,partition)
+    res1 = OptionsWriter.write(self,partition)
     self.hostType = 'STREAM'
-    OptionsWriter.write(self,partition)
+    res2 = OptionsWriter.write(self,partition)
+    if res1 is None or res2 is None: return None
+    return self
 """
-import Online.JobOptions.JobOptionsControl as WR
 import Online.PVSS as PVSS
+import Online.JobOptions.JobOptionsControl as WR
 mgr = PVSS.controlsMgr()
-w = WR.HLTOptionsWriter(mgr)
-w = WR.StorageOptionsWriter(mgr)
-w.write('LHCb')
+# w = WR.HLTOptionsWriter(mgr,'JobOptions')
+
+w = WR.StorageOptionsWriter(mgr,'JobOptions')
+# w.write('LHCb')
+
 w.run()
 """

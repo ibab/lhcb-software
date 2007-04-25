@@ -2,19 +2,24 @@ import os, sys, time, string, platform
 import PyCintex as PyLCGDict
 
 #PyLCGDict.gbl.Cintex.SetDebug(1)
-gbl  = PyLCGDict.makeNamespace('')
-PVSS = PyLCGDict.makeNamespace('PVSS')
+#print platform.system()
 if platform.system()=='Linux':
+  # print 'Loading libSTLRFLX'
   PyLCGDict.loadDict('libSTLRflx')
+  # print 'Loading libPVSSInterfaceDict'
   PyLCGDict.loadDict('libPVSSInterfaceDict')
 else:
   PyLCGDict.loadDict('STLRflx')
+  PyLCGDict.loadDict('PVSSInterfaceDict')
 
-#  PyLCGDict.loadDict('PVSSInterfaceDict')
+gbl  = PyLCGDict.makeNamespace('')
+PVSS = PyLCGDict.makeNamespace('PVSS')
   
 # == External class definitions ===============================================
 Sensor            = gbl.Sensor
 Event             = gbl.Event
+gbl  = PyLCGDict.makeNamespace('')
+PVSS = PyLCGDict.makeNamespace('PVSS')
 Interactor        = gbl.Interactor
 IAPIManager       = PVSS.IAPIManager
 Printer           = PVSS.Printer
@@ -122,13 +127,24 @@ class APIManager:
   # ===========================================================================
   def __init__(self,dll='',function=''):
     "Create PVSS API manager for python."
+    atty = os.isatty(sys.stdout.fileno())
+    if atty and platform.system()=='Linux':
+      name_stdout = os.ttyname(sys.stdout.fileno())
+      name_stderr = os.ttyname(sys.stdout.fileno())
     apiManager = PVSS.pvss_create_manager(dll, function)
-    return apiManager.start()
+    result = apiManager.start()
+    if atty and platform.system()=='Linux':
+      print 'Online.PVSS> Running in interactive mode....'
+      fd_stdout = os.open(name_stdout,os.O_WRONLY)
+      fd_stderr = os.open(name_stderr,os.O_WRONLY)
+      os.dup2(fd_stdout,sys.stdout.fileno())
+      os.dup2(sys.stderr.fileno(),fd_stderr)
+    elif platform.system()=='Linux':
+      print 'Online.PVSS> Running in batch mode....'
+    return result
+
 # Instantiate API manager. Should never be called by user directly
-if platform.system()=='Linux':
-  pass
-else:
-  apiManager = APIManager()
+apiManager = APIManager()
 
 # =============================================================================
 def controlsMgr(systemID=None,systemName=None):
@@ -266,7 +282,7 @@ class CommandListener(PyDeviceListener):
             error('The command:"'+cmd+'" failed (Unknown exception)',timestamp=1)
             traceback.print_exc()
             return self.makeAnswer('ERROR',answer)
-        error('The command:"'+cmd+'" failed. [Bad System] '+sysName,timestamp=1)
+        error('The command:"'+cmd+'" failed. [Bad System] '+sysName+' <> '+self.sysname,timestamp=1)
         return self.makeAnswer('ERROR',answer)
       error('The command:"'+cmd+'" failed. [Insufficient parameters] ',timestamp=1)
       return 0

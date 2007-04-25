@@ -213,7 +213,7 @@ class RunInfo:
       node = slot[:slot.find(':')]
       short_name = self.subFarms.data[i]+'_HLT'
       task = self.name+'_'+node+'_'+short_name
-      self.receivers.data.push_back(node+'/'+task+'/'+short_name+'/HLTReceiver/'+self.subFarms.data[i])
+      self.receivers.data.push_back(node+'/'+task+'/'+short_name+'/HLT_Receiver/'+self.subFarms.data[i])
     for j in recvNodes:
       for i in xrange(len(streamers)):
         part,node,slot,ident,type = streamers[i]

@@ -16,9 +16,9 @@ class Task(JobOptions.TaskType):
     self.options.data = opts
     self.defaults.data = defs
     self.tell1s.data = tell1
-    print name,self.defaults.data,self.tell1s.data 
+    print name,self.defaults.data,self.tell1s.data
     self.save()
-      
+
 class RunType(JobOptions.Activity):
   def __init__(self, name, tasks):
     JobOptions.Activity.__init__(self,mgr,name)
@@ -109,9 +109,26 @@ def installPartitions():
     p.Tell1.data     = run.tell1Boards.id()
     p.save()
 
-def install():
-  installPartitions()
-  installTasks()
+def installSDData():
+  task_set = [tasks['EventBuilder'],
+              tasks['ErrSrv'],
+              tasks['HLT_MBM'],
+              tasks['HLT_Moore'],
+              tasks['HLT_Sender']]
+  hlt_physics = RunType('HLT_SDET',task_set)
+  task_set = [tasks['StoreRecv_MBM'],
+              tasks['ErrSrv'],
+              tasks['HLT_Receiver']]
+  for s in sd_streams: task_set.append(tasks['SND_'+s])
+  storage_recv = RunType('RECV_SDET',task_set)
+  task_set = [tasks['StoreStream_MBM'],
+              tasks['ErrSrv']]
+  for s in sd_streams:
+    task_set.append(tasks['RCV_'+s])
+    task_set.append(tasks['WRT_'+s])
+  storage_stream = RunType('STREAM_SDET',task_set)
+
+def installPhysics():
   task_set = [tasks['EventBuilder'],
               tasks['ErrSrv'],
               tasks['HLT_MBM'],
@@ -130,8 +147,19 @@ def install():
     task_set.append(tasks['WRT_'+s])
   storage_stream = RunType('STREAM_PHYSICS',task_set)
 
+def install():
+  installPartitions()
+  installTasks()
+  installPhysics()
+  installSDData()
+
 def uninstall():
   deleteDevices(JobOptions.Partition_t,'')
   deleteDevices(JobOptions.Activity_t,'')
   deleteDevices(JobOptions.TaskType_t,'')
 
+CMDS = """
+import Online.JobOptions.Installer as JOI
+JOI.install()
+JOI.uninstall()
+"""

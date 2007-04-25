@@ -1,6 +1,9 @@
 Package: OnlineKernel
 Author:  Markus Frank
 
+! 2007-04-25 Markus Frank
+  Increase size of name field in bmstruct.h
+
 ! 2007-01-17 Markus Frank
   Adopt for AMD 64 bit machines.
   Fix bug in releasing locks and events in the exit handler.

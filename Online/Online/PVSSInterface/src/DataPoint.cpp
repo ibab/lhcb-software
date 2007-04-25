@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DataPoint.cpp,v 1.24 2007-04-20 18:12:25 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/DataPoint.cpp,v 1.25 2007-04-25 17:11:54 frankb Exp $
 //  ====================================================================
 //  DataPoint.cpp
 //  --------------------------------------------------------------------
@@ -6,11 +6,12 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: DataPoint.cpp,v 1.24 2007-04-20 18:12:25 frankb Exp $
+// $Id: DataPoint.cpp,v 1.25 2007-04-25 17:11:54 frankb Exp $
 #ifdef _WIN32
   // Disable warning C4250: 'const float' : forcing value to bool 'true' or 'false' (performance warning)
   #pragma warning ( disable : 4800 )
 #endif
+
 
 // Framework include files
 #include "PVSS/DevType.h"
@@ -555,14 +556,16 @@ template <typename T> void DataPoint::set(const T& val)  {
         invalidValue(typeid(T));
       }
     }
+    const char* val_typ = pvss_type_name(m_val->type());
+    const char* true_typ = pvss_type_name(DataValue<T>::type_id());
     if ( dbg > 0 )  {
-      const char* val_typ = pvss_type_name(m_val->type());
-      const char* true_typ = pvss_type_name(DataValue<T>::type_id());
       std::cout << "DataPoint::set> " << name() << " Typ:" << val_typ << " - " << true_typ << std::endl;
-      if ( m_val->type() != DataValue<T>::type_id() )  {
+    }
+    if ( m_val->type() != DataValue<T>::type_id() )  {
+      if ( dbg > 0 )  {
         std::cout << "                " << name() << " Typ:" << typeid(T).name() << std::endl;
-        invalidConversion(typeid(T));
       }
+      invalidConversion(typeid(T));
     }
     reference<T>() = val;
     return;

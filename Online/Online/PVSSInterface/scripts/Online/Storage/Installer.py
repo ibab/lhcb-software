@@ -218,8 +218,8 @@ def install(name='TestStorage'):
   return c
 
 createTestCmds = """
-import StorageInstaller
-mgr=StorageInstaller.install()
+import Online.Storage.Installer as StorageInstaller
+mgr=StorageInstaller.install('Storage')
 """
 
 if __name__ == "__main__":

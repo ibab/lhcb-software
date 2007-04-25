@@ -19,6 +19,7 @@
     <class pattern="std::auto_ptr<PVSS::*>"/>
 
     <class name="std::vector<char>"/>
+    <class name="std::vector<int>"/>
     <class name="std::vector<float>"/>
 
     <class name="Event"/>

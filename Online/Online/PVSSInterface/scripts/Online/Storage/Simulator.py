@@ -110,12 +110,12 @@ class Simulator(DeviceListener):
       self.tasks[cmd] = item
   
 runInfoCmds = """
+import Online.Storage.Simulator as StorageSimulator
 reload(StorageSimulator)
 import Online.PVSS as PVSS
-from StorageSimulator import Simulator as Simulator
 
 mgr = PVSS.controlsMgr()
-sim = Simulator(mgr,'TestStorage_Slice00')
+sim = StorageSimulator.Simulator(mgr,'TestStorage_Slice00')
 sim.run()
 
 """

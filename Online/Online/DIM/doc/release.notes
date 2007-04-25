@@ -7,6 +7,7 @@
 
 ! 2007-03-24 Markus Frank
  - Add dependency to librt when building libdim for linux
+ - Fix link problem for did.exe
 
 !=========================== DIM v16r6 2007-01-25 ============================
 ! 2007-01-25 Markus Frank
