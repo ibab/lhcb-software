@@ -1,5 +1,5 @@
 package Boole
-version v13r3
+version v14r0
 
 branches doc cmt job options
 
@@ -26,32 +26,32 @@ use DDDB             v1r*    Det  -no_auto_imports
 use ParamFiles       v5r0         -no_auto_imports
 use FieldMap         v4r7         -no_auto_imports
 
-#-- LHCb libraries (from LHCB_v22r3)
+#-- LHCb libraries (from LHCB_v22r4)
 #-- Explicitly use EventSys packages to avoid dependency on PhysEvent
 use GaudiConf        v10r3          -no_auto_imports
 use GaudiObjDesc     v9r9           -no_auto_imports
-use KernelSys        v6r3    Kernel -no_auto_imports
-use DetSys           v9r3    Det    -no_auto_imports
+use KernelSys        v6r4    Kernel -no_auto_imports
+use DetSys           v9r4    Det    -no_auto_imports
 
-use EventBase        v2r1    Event  -no_auto_imports
-use MCEvent          v2r1    Event  -no_auto_imports
+use EventBase        v2r2    Event  -no_auto_imports
+use MCEvent          v2r2    Event  -no_auto_imports
 use DigiEvent        v2r1    Event  -no_auto_imports
-use RecEvent         v2r2    Event  -no_auto_imports  # used by MuonDAQ, Calo
-use TrackEvent       v4r1    Event  -no_auto_imports  # used by RecEvent
+use RecEvent         v2r3    Event  -no_auto_imports  # used by MuonDAQ, Calo
+use TrackEvent       v4r2    Event  -no_auto_imports  # used by RecEvent
 use L0Event          v16r2   Event  -no_auto_imports
-use DAQEvent         v7r2    Event  -no_auto_imports
+use DAQEvent         v7r3    Event  -no_auto_imports
 use GenEvent         v5r0p1  Event  -no_auto_imports
 use PackedEvent      v3r1    Event  -no_auto_imports
 use VeloEvent        v15r0   Event  -no_auto_imports
 
-use DAQSys           v3r1    DAQ    -no_auto_imports
+use DAQSys           v3r2    DAQ    -no_auto_imports
 use LHCbAlgs         v2r7    Kernel -no_auto_imports
 use SimComponents    v2r1    Sim    -no_auto_imports
 
-#-- Lbcom packages (from LBCOM_v6r3)
-use LbcomSys         v6r3           -no_auto_imports
+#-- Lbcom packages (from LBCOM_v6r4)
+use LbcomSys         v6r4           -no_auto_imports
 
-#-- BooleSys v13r2 packages
+#-- BooleSys v14r0 packages
 use DigiAlg              v4r6p1 Digi -no_auto_imports
 
 # Calorimeter
@@ -59,7 +59,7 @@ use CaloMoniDigi         v2r2   Calo -no_auto_imports
 use CaloDigit            v2r3   Calo -no_auto_imports
 
 # Outer Tracker
-use OTSimulation         v3r9   OT   -no_auto_imports
+use OTSimulation         v3r10   OT   -no_auto_imports
 
 # Muon
 use MuonAlgs             v6r3   Muon -no_auto_imports
@@ -67,8 +67,8 @@ use MuonBackground       v2r3   Muon -no_auto_imports
 use MuonMoniDigi         v2r1   Muon -no_auto_imports
 
 # Rich
-use RichDigiQC	         v3r5  	Rich -no_auto_imports
-use RichReadout          v2r5   Rich -no_auto_imports
+use RichDigiQC           v3r6   Rich -no_auto_imports
+use RichReadout          v2r6   Rich -no_auto_imports
 use RichMCAssociators    v2r4   Rich -no_auto_imports
 
 #===== build Boole =========================

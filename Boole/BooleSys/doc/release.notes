@@ -3,6 +3,29 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v14r0>2007-04-24 Boole v14r0</A></H1><PRE>
+This version uses projects Gaudi v19r3, LHCb v22r4, Lbcom v6r4
+ and databases DDDB v1r*, ParamFiles v5r0, FieldMap v4r7
+
+It can process DC06 data, but output format is different from DC06, requires
+Brunel v31r4 or greater
+
+- Persistency changes
+  . Changes to ST and Rich RawBank formats to correspond to online format. Bank
+    version numbers updated, needs LHCb v22r4/Lbcom v6r4 or greater to decode
+    (STDAQ v3r0, RichKernel v7r4, RichDAQ v3r10)
+
+- New tuning
+  . Speed improvements to Rich encoding
+    (RichKernel v7r4, RichDAQ v3r10, RichDet v10r4)
+
+- Bug fixes
+  . Fix unchecked StatusCodes 
+    (VeloDet v11r2, OTDAQ v5r2, OTSimulation v3r10, OTMonitor v2r5)
+  . Since Boole v13r2, CaloTriggerBitFromRaw was returning only the data of the 
+    last TELL1, with drastic effect on L0Calo (CaloDAQ v3r2)
+  . Fix printout of Rich L1 summary table (RichKernel v7r4)
+
 </PRE><H1><A NAME=v13r3>2007-03-26 Boole v13r3</A></H1><PRE>
 This version uses projects Gaudi v19r3, LHCb v22r3, Lbcom v6r3
  and databases DDDB v1r*, ParamFiles v5r0, FieldMap v4r7
