@@ -4,11 +4,9 @@
 ! Purpose     : Convert Calo Digit and Trigger information to RawEvent banks.
 !-----------------------------------------------------------------------------
 
-
+!========================== CaloDAQ v3r2 2007-04-25 ==========================
 ! 2004-04-25 Olivier Deschamps
   - improve printout in CaloReadoutTool
-
-!========================== CaloDAQ v3r2 2007-04-24 ==========================
 
 ! 2004-04-24 Olivier Deschamps
   - printout cleaning in decoding tools
