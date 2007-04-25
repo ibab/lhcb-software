@@ -30,5 +30,5 @@ branches cmt doc
  use Saver             v1r2     Online
  use UPI               v1r4     Online
  use Viewer            v1r3     Online
- use Writer            v1r0     Online
+ use Writer            v1r1     Online
  use XMLRPC            v1r6     Online
