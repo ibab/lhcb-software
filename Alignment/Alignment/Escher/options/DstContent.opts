@@ -12,8 +12,8 @@ Output.DetectorList += { "DST" };
 
 DstWriter.ItemList += {
 	"/Event#1"
-, "/Event/Alignment/OTTracks#1"
-, "/Event/Alignment/ITTracks#1"
-, "/Event/Alignment/XTracks#1"
+, "Alignment/OTTracks#1"
+, "Alignment/ITTracks#1"
+, "Alignment/XTracks#1"
 };
 

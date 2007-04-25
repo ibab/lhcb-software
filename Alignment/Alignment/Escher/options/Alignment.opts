@@ -1,24 +1,42 @@
 Init.DetectorList += {
+       "VELO",
+       "TT",
+       "IT",
+       "OT"
 };
 
 Selection.DetectorList += {
 	"TStation"
+        , "Fit"
 };
+
+// There are 2 alignment algorithms
+// one developed at Nikhef in Amsterdam and
+// one developed at the PI in Heidelberg
+// The Amsterdam algorithm uses some results from
+// the LHCb trackfit, hence the "FitSequence"
 
 Alignment.DetectorList += {
-       "IT"
+//      "Amsterdam"
+      "Heidelberg"
 };
 
 ApplicationMgr.DLLs += { 
-			"AlignTrTools"
-			, "AlignmentTools"
-			, "TrackTools"
+                         "TrackExtrapolators"
+                        , "TrackFitter"
+                        , "TrackProjectors"
+                        , "TrackTools"
+                        , "TrackUtils"
+			, "STTools"
 };
 ApplicationMgr.DLLs += { 
-			"VeloTools"
-			,"STTools"
-			,"TAlignment"
+			 "AlignTrTools"
+			, "TAlignment"
+			, "VeloTools"
 };
+
+// Start TransportSvc, needed by track fit
+ApplicationMgr.ExtSvc += { "TransportSvc" };
 
 
 // Data on demand service for decoding RawBuffer
@@ -26,13 +44,63 @@ ApplicationMgr.ExtSvc += { "DataOnDemandSvc" };
 #include "$STDOPTS/DecodeRawEvent.opts"
 
 
-#include "$VELOTOOLSROOT/options/VeloClusterPosition.opts"
+//#include "$VELOTOOLSROOT/options/VeloClusterPosition.opts"
+
+InitVELOSeq.Members += {"DecodeVeloRawBuffer"};
+InitVELOSeq.Members += {"DecodeVeloRawBuffer/DecodeVeloClusters"};
+DecodeVeloClusters.DecodeToVeloLiteClusters = false;
+DecodeVeloClusters.DecodeToVeloClusters     = true;
+
+InitITSeq.Members += {"RawBankToSTClusterAlg/createITClusters"
+			,"RawBankToSTLiteClusterAlg/createITLiteClusters"
+};
+createITClusters.detType     = "IT";
+createITLiteClusters.detType = "IT";
 #include "$STTOOLSROOT/options/Brunel.opts"
 
-SelectionTStationSeq.Members += { "TStation/OT" };
-OT.OTTrackContainer = "Alignment/OTTracks";
+// OTTimes 
+InitOTSeq.Members += { "OTTimeCreator" };
+
+//**************************
+// Track Selection
+//**************************
+SelectionTStationSeq.Members += { "TStation" };
+//ToolSvc.ATrackSelector.MinPCut = 1000.0; // value is in MeV...
+//ToolSvc.ATrackSelector.MinPtCut = 0.0;
+ToolSvc.ATrackSelector.charge = 0;
+//TStation.MinPCut = 20000.0; // value is in MeV...
+TStation.MinITHitCut = 8; 
+TStation.MinOTHitCut = 20; 
+TStation.MinTTHitCut = 8; 
+TStation.InputContainer = "Rec/Track/Best";
+TStation.OTTrackContainer = "Alignment/OTTracks";
+TStation.ITTrackContainer = "Alignment/ITTracks";
+TStation.CrossedTrackContainer = "Alignment/XTracks";
+TStation.OutputLevel = 3;
 
 
-//SelectionTStationSeq.Members += { "TStation/IT" };
-//IT.ITTrackContainer = "Alignment/ITTracks";
 
+
+//**************************
+// Track fit:
+//**************************
+SelectionFitSeq.Members += {"TrackEventFitter/Fit"};
+Fit.TracksInContainer = "Alignment/OTTracks";
+Fit.Fitter.NumberFitIterations = 3;
+
+//**************************
+// Alignment options (Amsterdam Framework)
+//**************************
+AlignmentAmsterdamSeq.Members += {"AlignAlgorithm/AlignOTStations",
+                         "AlignAlgorithm/AlignOTLayers",
+                         "AlignAlgorithm/AlignOTModules"};
+#include "$ESCHERROOT/options/OTAlignment.opts"
+
+
+//**************************
+// Alignment options (Heidelberg Framework)
+//**************************
+AlignmentHeidelbergSeq.Members += {"GAlign/Align"};
+Align.Detectors = {"OT"};
+Align.InputContainer = "Alignment/OTTracks";
+#include "$ESCHERROOT/options/TAlignment.opts"

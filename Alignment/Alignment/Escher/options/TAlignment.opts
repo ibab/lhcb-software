@@ -1,0 +1,42 @@
+ToolSvc.TAConfig.OutputLevel = 3;
+ToolSvc.TAConfig.Velo_left_modules  = {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
+ToolSvc.TAConfig.Velo_right_modules = {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
+
+ToolSvc.TAConfig.PenaltyTerms       = {0.01,0.01,0.01,0.0004,0.0004,0.0002};
+ToolSvc.TAConfig.Degrees_of_Freedom = {1,0,0,0,0,0};
+ToolSvc.TAConfig.nTrackModelParameters = 4;
+ToolSvc.TAConfig.Fix_alignable_objects = true;
+ToolSvc.TAConfig.Fix_first_object = true;
+ToolSvc.TAConfig.Fix_last_object = true;
+ToolSvc.TAConfig.Fix_x_position = true;
+ToolSvc.TAConfig.Fix_y_position = false;
+ToolSvc.TAConfig.Fix_z_position = false;
+ToolSvc.TAConfig.Fix_alpha_rotation = false;
+ToolSvc.TAConfig.Fix_beta_rotation = false;
+ToolSvc.TAConfig.Fix_gamma_rotation = false;
+ToolSvc.TAConfig.MillepedeTool = "Millepede";
+// Millepede configuration:
+ToolSvc.TAConfig.Chi_sq_factor = 500.0;
+ToolSvc.TAConfig.residual_cut = 100.0;
+ToolSvc.TAConfig.initial_residual_cut = 10.0;
+ToolSvc.TAConfig.n_l_stdev = 3.0;
+
+ToolSvc.TAConfig.DerivativeTool = "Derivatives";
+ToolSvc.Millepede.OutputLevel = 2;
+//ToolSvc.Millepede.Iteration = true;
+//ToolSvc.Millepede.ModuleFixed = 1;
+
+// Outer Tracker
+ToolSvc.TAConfig.OT_system = false;
+ToolSvc.TAConfig.OT_layer = true;
+ToolSvc.TAConfig.OT_quadrant = false;
+ToolSvc.TAConfig.OT_module = false;
+// Inner Tracker
+ToolSvc.TAConfig.IT_system = false;
+ToolSvc.TAConfig.IT_layer = true;
+ToolSvc.TAConfig.IT_box = false;
+ToolSvc.TAConfig.IT_ladder = false;
+// TT
+ToolSvc.TAConfig.TT_system = false;
+ToolSvc.TAConfig.TT_station = false;
+ToolSvc.TAConfig.TT_layer = true;

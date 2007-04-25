@@ -9,22 +9,37 @@
 
 ApplicationMgr.OutStream += {"DstWriter"};	
 
+//for histos
+#include "$STDOPTS/RootHist.opts"
+
+
 //---------------------------------------------------------------------------
 // Geometry specific options
 //---------------------------------------------------------------------------
-DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200601.xml";
-MagneticFieldSvc.FieldMapFile = "$FIELDMAPROOT/cdf/field047.cdf";
+// Uncomment the line below to read the xml version of the dbase
+//DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb.xml";
+//---------------------------------------------------------------------------
+// Use sqlite dbase
+//---------------------------------------------------------------------------
+// DC06 database tags
+// Comment the two lines below to switch back to the xml dbase
+DDDB.DefaultTAG = "DC06";
+LHCBCOND.DefaultTAG = "DC06";
 
+// DC06 magnetic field
+MagneticFieldSvc.FieldMapFile = "$FIELDMAPROOT/cdf/field047.cdf";
+//
 #pragma print on
 //---------------------------------------------------------------------------
 // Number of events to process, optionally skipping some events
 //---------------------------------------------------------------------------
-ApplicationMgr.EvtMax = 1;
+//ApplicationMgr.EvtMax = 5000;
+ApplicationMgr.EvtMax = -1;
 //EventSelector.FirstEvent = 187;  // To skip some events
 //---------------------------------------------------------------------------
 // Histogram output
 //---------------------------------------------------------------------------
-HistogramPersistencySvc.OutputFile = "Escher_0601-11144100.root";  // Monitoring histos
+HistogramPersistencySvc.OutputFile = "Escher.root";  // Monitoring histos
 
 //---------------------------------------------------------------------------
 // POOL file catalogs. First one is read-write, others are read only
@@ -34,12 +49,12 @@ HistogramPersistencySvc.OutputFile = "Escher_0601-11144100.root";  // Monitoring
   // ,"xmlcatalog_http://cattanem.home.cern.ch/cattanem/POOL/MyCatalog.xml"
 //};
 EventSelector.Input   = {
-  "DATAFILE='PFN:/afs/cern.ch/user/j/jblouw/scratch0/00001395_00000110_5.dst' TYP='POOL_ROOTTREE' OPT='READ'"
+  "DATAFILE='PFN:rfio:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001768/DST/0000/00001768_00000001_5.dst' TYP='POOL_ROOTTREE' OPT='READ'"
 };
 //---------------------------------------------------------------------------
 // Event output
 //---------------------------------------------------------------------------
-DstWriter.Output = "DATAFILE='PFN:0601-11144100.rdst' TYP='POOL_ROOTTREE' OPT='REC'";
+DstWriter.Output = "DATAFILE='PFN:Escher.rdst' TYP='POOL_ROOTTREE' OPT='REC'";
 //////////////////////////////////////////////////////////////////////////////
 
 
