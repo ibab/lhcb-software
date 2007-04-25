@@ -3,6 +3,15 @@
 ! Resposible:	Johan Blouw
 ! Purpose:	Groups the T-station related alignment packages.
 !***************************
+!===========     v2r0     ========================
+- April 25th, 2007 Johan Blouw
+  - Update of the Alignment packages
+  - reorganizing tools/interfaces/algorithms:
+    - AlignmentInterfaces v2r0 
+    - AlignTrTools        v3r0
+    - TAlignment          v3r0
+    - Escher              v2r0
+
 !===========     v1r1     ========================
 - October 4th, 2006 Johan Blouw
 - This version is an update reflecting a change in name of
