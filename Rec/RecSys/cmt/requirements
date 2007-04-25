@@ -52,7 +52,7 @@ use MuonPIDChecker      v2r0    Muon  # Erica Polycarpo, Miriam Gandelman
 # Rich
 use RichRecSys          v3r3    Rich  # Chris Jones
 #use RichRingRefit       v1r11   Rich  # Chris Jones
-use RichLocalPID        v3r2    Rich  # Chris Jones
+use RichLocalPID        v3r3    Rich  # Chris Jones
 use RichGlobalPID	v3r2    Rich  # Chris Jones
 use RichPIDMerge	v2r4    Rich  # Chris Jones
 use RichRecAlgorithms   v2r7    Rich  # Chris Jones

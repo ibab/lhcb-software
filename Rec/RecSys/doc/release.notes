@@ -12,7 +12,8 @@ This version uses Gaudi v19r3 and LHCb v22r4.
 - Packages updated: PatVelo v2r13, PatVeloTT v2r10, PatPV v2r7, TrackSys v4r4,
    TrackFitEvent v3r3, TrackUtils v1r12, TrackFitter v2r14, TrackTools v2r13,
    RichRecSys v3r3, RichRecMCTools v2r10, RichRecMonitors v2r9, RichRecQC v2r10,
-   RichRecAlgorithms v2r7, RichRecTools v3r10, MuonID v5r0, GlobalReco v6r9
+   RichRecAlgorithms v2r7, RichRecTools v3r10, RichLocalPID v3r3, MuonID v5r0,
+   GlobalReco v6r9
 
 - In PatVelo v2r13
   . A few small code speed ups and name corrections/improvements
@@ -62,6 +63,9 @@ This version uses Gaudi v19r3 and LHCb v22r4.
 - In RichRecTools v3r10
   . Some additions to the fixed geom eff. tool and CK res tools (for HLT)
   . Propagate options from delegated track creator to underlying creators
+
+- In RichLocalPID v3r3
+  . Add bug fix for crash seen in DC06 productions
 
 - In MuonID v5r0
   . Make a Muon Track with the Muon hits LHCbIDs 
