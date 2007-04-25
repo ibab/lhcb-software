@@ -26,10 +26,10 @@ use ParamFiles          v5r0         -no_auto_imports
 #-- LHCb libraries (from LHCB_v22r4)
 use GaudiConf           v10r3          -no_auto_imports
 use GaudiObjDesc        v9r9           -no_auto_imports
-use KernelSys           v6r3    Kernel -no_auto_imports
+use KernelSys           v6r4    Kernel -no_auto_imports
 use DetSys              v9r4    Det    -no_auto_imports
-use EventSys            v23r3   Event  -no_auto_imports
-use DAQSys              v3r1    DAQ    -no_auto_imports
+use EventSys            v23r4   Event  -no_auto_imports
+use DAQSys              v3r2    DAQ    -no_auto_imports
 use LHCbAlgs            v2r7    Kernel -no_auto_imports
 use SimComponents       v2r1    Sim    -no_auto_imports
 use PatTools            v3r1    Pat    -no_auto_imports
