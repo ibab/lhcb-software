@@ -1,7 +1,11 @@
-!  $Id: release.notes,v 1.32 2006-10-20 14:48:55 cattanem Exp $
+!  $Id: release.notes,v 1.33 2007-04-25 08:06:42 jucogan Exp $
 Package L0Muon
 Package manager: A.Tsaregorodtsev
 
+!========================= L0Muon v7r1 2007-04-25 ========================
+! 2007-04-25 - Julien Cogan
+ - Bug fix in L0MuonCandidateFromRaw; correct the size of the loop over
+   the bank data.
 !========================= L0Muon v7r0 2006-10-20 ========================
 ! 2006-10-20 - Marco Cattaneo
  - Use DECLARE_xxx_FACTORY macros, remove unnecessary MsgStream
