@@ -4,7 +4,7 @@
  *  Implementation file for RICH reconstruction tool : GAlign
  *
  *  CVS Log :-
- *  $Id: GAlign.cpp,v 1.1 2007-04-25 14:35:45 jblouw Exp $
+ *  $Id: GAlign.cpp,v 1.2 2007-04-25 15:44:20 jblouw Exp $
  *
  *  @author M.Needham Matt.Needham@cern.ch
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -18,7 +18,6 @@
 
 #include "Kernel/LHCbID.h"
 
-#include "StringConvert.h"
 // Event
 #include "Event/StateTraj.h"
 #include "Event/Track.h"

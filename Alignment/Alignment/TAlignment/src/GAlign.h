@@ -6,7 +6,7 @@
  *  Header file for Tstation alignment algorithm: TAlignment
  *
  *  CVS Log :-
- *  $Id: GAlign.h,v 1.1 2007-04-25 14:35:45 jblouw Exp $
+ *  $Id: GAlign.h,v 1.2 2007-04-25 15:44:21 jblouw Exp $
  *
  *  @author J. Blouw  Johan.Blouw@cern.ch
  *  @author M.Needham Matt.Needham@cern.ch
@@ -14,6 +14,7 @@
  *  @date   30/12/2005
  */
 //-----------------------------------------------------------------------------
+
 
 
 
@@ -28,6 +29,8 @@
 #include "GaudiKernel/HashMap.h"
 #include "GaudiAlg/GaudiTupleAlg.h"
 #include "GaudiAlg/Tuple.h"
+
+using namespace std;
 
 namespace LHCb {
   class Track;
