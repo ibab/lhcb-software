@@ -1,4 +1,4 @@
-// $Id: L0MuonCandidatesFromRaw.cpp,v 1.2 2006-10-20 14:48:55 cattanem Exp $
+// $Id: L0MuonCandidatesFromRaw.cpp,v 1.3 2007-04-25 08:03:37 jucogan Exp $
 // Include files 
 #include <boost/dynamic_bitset.hpp>
 
@@ -47,6 +47,7 @@ L0MuonCandidatesFromRaw::~L0MuonCandidatesFromRaw() {};
 //=============================================================================
 StatusCode L0MuonCandidatesFromRaw::initialize() {
 
+  StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   debug() << "==> Initialize" << endmsg;;
 
   // Init counters for final report
@@ -97,7 +98,7 @@ StatusCode L0MuonCandidatesFromRaw::execute() {
   }
     
   const unsigned int* ptData = (*itBnk)->data();
-  int bankSize = (*itBnk)->size();
+  int bankSize = (*itBnk)->size()/4;
 
   // Fill a bit set with the bank content
   boost::dynamic_bitset<> rawbufbitset(bankSize*32);
@@ -213,7 +214,7 @@ StatusCode L0MuonCandidatesFromRaw::finalize() {
   }
   info() << "- -------------------------------------------------------------------"<<endmsg;
 
-  return StatusCode::SUCCESS;
+  return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 
 //=============================================================================
