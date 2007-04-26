@@ -5,6 +5,7 @@ DataOnDemandSvc.Algorithms +=
 { 
   "DATA='/Event/Raw/Rich/Digits' TYPE='Rich::DAQ::RawBufferToRichDigitsAlg/RichRawEventToDigits'" 
 };
+RichRawEventToDigits.DecodeBufferOnly = false; // make sure digits are actually produced
 
 // utility tools
 ToolSvc.RichToolRegistry.Tools += { "Rich::SmartIDTool/RichSmartIDTool" };
