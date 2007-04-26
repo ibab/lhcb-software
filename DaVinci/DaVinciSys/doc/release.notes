@@ -4,11 +4,13 @@ Package Coordinator : Juan Palacios
 Purpose     : LHCb analysis program 
 
 </PRE><H1><A NAME=v19r1>2007-04-25 DaVinci v19r1. DC06 stripping version (hopefully)</A></H1><PRE>
-Based on Phys v6r1, Analysis v1r1, Rec v4r3, HLT v1r4, Lbcom v6r3 LHCb v22r3, Gaudi v19r3, LCGCMT 50b.
+Based on Phys v6r2, Analysis v1r2, Rec v4r4, HLT v1r5, Lbcom v6r4, LHCb v22r4, Gaudi v19r3, LCGCMT 50b.
 
 Highlights:
  - Minor changes in code
  - Stripping options updated
+
+Note that there is no DaVinci based on hys v6r1, Analysis v1r1, Hlt v1r4, LHCb v22r3.
 
 </PRE><H1><A NAME=v19r0>2007-03-09 DaVinci v19r0. Updated DaVinci based on slit Phys and Analysis</A></H1><PRE>
 Based on Phys v6r0, Analysis v1r0, Rec v4r2, HLT v1r3, Lbcom v6r2 LHCb v22r2, Gaudi v19r2, LCGCMT 50a.

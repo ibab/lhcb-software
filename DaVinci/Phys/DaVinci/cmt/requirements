@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.347 2007-03-27 11:42:18 pkoppenb Exp $
+# $Id: requirements,v 1.348 2007-04-26 14:59:58 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : J. Palacios
 #
@@ -58,19 +58,19 @@ use SimComponents       v*    Sim
 use LinkerInstances     v*    Event
 
 #-- Lbcom
-use LbcomSys    v6r3
+use LbcomSys    v6r4
 
 #-- Rec
-use RecSys      v4r3
+use RecSys      v4r4
 
 #-- Hlt
-use HltSys      v1r4
+use HltSys      v1r5
 
 #-- Phys
-use PhysSys     v6r1
+use PhysSys     v6r2
 
 #-- Analysis
-use AnalysisSys v1r1
+use AnalysisSys v1r2
 
 # Build DaVinci Application with standard executable
 # Note that user code is located in a component library (see details
