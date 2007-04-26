@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/Printer.cpp,v 1.3 2007-04-26 18:22:26 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/Printer.cpp,v 1.4 2007-04-26 18:24:24 frankb Exp $
 //  ====================================================================
 //  Printer.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: Printer.cpp,v 1.3 2007-04-26 18:22:26 frankb Exp $
+// $Id: Printer.cpp,v 1.4 2007-04-26 18:24:24 frankb Exp $
 
 // Framework include files
 #include "PVSS/Printer.h"

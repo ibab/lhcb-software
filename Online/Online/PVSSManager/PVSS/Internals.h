@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/PVSS/Internals.h,v 1.6 2007-04-11 17:45:47 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/PVSS/Internals.h,v 1.7 2007-04-26 18:24:30 frankb Exp $
 //  ====================================================================
 //  Internals.h
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: Internals.h,v 1.6 2007-04-11 17:45:47 frankb Exp $
+// $Id: Internals.h,v 1.7 2007-04-26 18:24:30 frankb Exp $
 #ifndef PVSSMANAGER_PVSS_INTERNALS_H
 #define PVSSMANAGER_PVSS_INTERNALS_H
 
@@ -28,6 +28,46 @@ namespace PVSS  {
   class DevAnswer;
   class Array;
   class DpID;
+
+  /**@enum ErrorType Internals.h PVSS/Internals.h
+    *
+    *  Enumeration of error conditions for printout to the
+    *  PVSS logger window.
+    *
+    *  @author  M.Frank
+    *  @version 1.0
+    */
+  enum ErrorType   {
+    /// implementation error
+    ERR_IMPLEMENTATION,
+    /// parametrisation error
+    ERR_PARAM,
+    /// system error
+    ERR_SYSTEM,
+    /// control runtime error
+    ERR_CONTROL,
+    /// redundancy error
+    ERR_REDUNDANCY
+  };
+
+  /**@enum ErrorSeverity Internals.h PVSS/Internals.h
+    *
+    *  Enumeration of error conditions for printout to the
+    *  PVSS logger window.
+    *
+    *  @author  M.Frank
+    *  @version 1.0
+    */
+  enum ErrorSeverity   {
+    /// fatal error. kill the program instance!
+    PRIO_FATAL,
+    /// sever error, but we can continue
+    PRIO_SEVERE,
+    /// warning message, something is not as it should be
+    PRIO_WARNING,
+    /// info message - hello, here I am!
+    PRIO_INFO
+  };
 
   /**@union Values Internals.h PVSS/Internals.h
     *
@@ -72,6 +112,8 @@ namespace PVSS  {
   void pvss_set_debug(int value);
   /// Access debug flag
   int pvss_debug();
+  /// Issue error messages to the PVSS logger window
+  int pvss_print(int severity, int type, const char* message);
 
   /** OS dependent wrappers: Platform.cpp                                  */
 
