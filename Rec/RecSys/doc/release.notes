@@ -5,10 +5,11 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
-</PRE><H1><A NAME=v4r4>2007-04-24 RecSys v4r4</A></H1><PRE>
+</PRE><H1><A NAME=v4r4>2007-04-26 RecSys v4r4</A></H1><PRE>
 This version uses Gaudi v19r3 and LHCb v22r4.
 
 - Packages removed: VeloTools (moved to LBCOM)
+- Packages added:   RichHLTSys v3r0 - job options for Rich HLT reconstruction 
 - Packages updated: PatVelo v2r13, PatVeloTT v2r10, PatPV v2r7, TrackSys v4r4,
    TrackFitEvent v3r3, TrackUtils v1r12, TrackFitter v2r14, TrackTools v2r13,
    RichRecSys v3r3, RichRecMCTools v2r10, RichRecMonitors v2r9, RichRecQC v2r10,
