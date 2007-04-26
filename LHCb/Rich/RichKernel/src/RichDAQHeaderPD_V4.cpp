@@ -4,7 +4,7 @@
  *
  *  Implementation file for RICH DAQ class : RichDAQHeaderV4::RichDAQHeaderPD
  *
- *  $Id: RichDAQHeaderPD_4.cpp,v 1.2 2007-04-24 07:29:37 jonrob Exp $
+ *  $Id: RichDAQHeaderPD_V4.cpp,v 1.1 2007-04-26 20:14:08 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   23/04/2007
@@ -14,8 +14,6 @@
 // local
 #include "RichKernel/RichDAQHeaderPD_V4.h"
 #include "GaudiKernel/GaudiException.h"
-
-//using namespace Rich::DAQ::RichDAQHeaderV4;
 
 namespace Rich
 {

@@ -5,7 +5,7 @@
  *  Header file for class Rich::BoostMemPoolAlloc
  *
  *  CVS Log :-
- *  $Id: BoostMemPoolAlloc.h,v 1.6 2007-04-18 10:04:08 jonrob Exp $
+ *  $Id: BoostMemPoolAlloc.h,v 1.7 2007-04-26 20:14:08 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-07-31
@@ -66,30 +66,14 @@ namespace Rich
       return ::operator new ( size, pObj );
     }
 
-    /// placement operator new[]
-    inline static void* operator new[] ( size_t size, void*& pObj )
-    {
-      return ::operator new[] ( size, pObj );
-    }
-
     /// Operator delete
     inline static void operator delete ( void* pObj )
     {
-      if ( boost::singleton_pool<T, sizeof(T)>::is_from(pObj) )
-      { boost::singleton_pool<T, sizeof(T)>::free(pObj); }
-      else
-      { ::operator delete ( pObj ); }
+      boost::singleton_pool<T, sizeof(T)>::is_from(pObj)
+        ? boost::singleton_pool<T, sizeof(T)>::free(pObj) 
+        : ::operator delete ( pObj );
     }
-
-    /// operator delete
-    inline static void operator delete ( void* pObj, size_t size )
-    {
-      if ( sizeof(T) == size )
-      { boost::singleton_pool<T, sizeof(T)>::free(pObj); }
-      else
-      { ::operator delete ( pObj ); }
-    }
-
+    
     /// placement operator delete (needed to avoid a warning on win32)
     inline static void operator delete ( void* p, void* pObj )
     {

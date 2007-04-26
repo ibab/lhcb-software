@@ -1,4 +1,5 @@
 <lcgdict>
+
   <class name    = "Rich::IDetParameters"                />
   <class name    = "Rich::MC::IMCTrackInfoTool"          />
   <class name    = "Rich::MC::IMCTruthTool"              />
@@ -13,4 +14,36 @@
   <class name    = "Rich::IRefractiveIndex"              />
   <class name    = "Rich::ISmartIDTool"                  />
   <class name    = "Rich::IToolRegistry"                 />
+
+  <class name    = "Rich::IDetParameters::RadLimits"     />
+
+  <class name    = "Rich::HPDPixelCluster"               />
+  <class name    = "Rich::HPDPixelClusters"               />
+  <class name    = "Rich::HPDPixelClusters::ConstSharedPtn" />
+
+  <class name    = "LHCb::RichGeomPhoton"                />
+  <class name    = "LHCb::RichTrackSegment"              />
+
+  <class name    = "Rich::DAQ::Level0ID"                 />
+  <class name    = "Rich::DAQ::Level1ID"                 />
+  <class name    = "Rich::DAQ::EventID"                  />
+  <class name    = "Rich::DAQ::BXID"                     />
+  <class name    = "Rich::DAQ::L1IngressID"              />
+  <class name    = "Rich::DAQ::L1IngressHeader"          />
+  <class name    = "Rich::DAQ::L1InputWithinIngress"     />
+  <class name    = "Rich::DAQ::Level1Input"              />
+  <class name    = "Rich::DAQ::HPDHardwareID"            />
+  <class name    = "Rich::DAQ::HPDL1InputID"             />
+  <class name    = "Rich::DAQ::HPDHardwareIDs"           />
+  <class name    = "Rich::DAQ::Level0IDs"                />
+  <class name    = "Rich::DAQ::Level1IDs"                />
+  <class name    = "Rich::DAQ::L1IngressInputs"          />
+  <class name    = "Rich::DAQ::HPDInfo"                  />
+  <class name    = "Rich::DAQ::HPDInfo::Header"          />
+  <class name    = "Rich::DAQ::HPDInfo::Footer"          />
+  <class name    = "Rich::DAQ::HPDMap"                   />
+  <class name    = "Rich::DAQ::IngressInfo"              />
+  <class name    = "Rich::DAQ::IngressMap"               />
+  <class name    = "Rich::DAQ::L1Map"                    />
+
 </lcgdict>

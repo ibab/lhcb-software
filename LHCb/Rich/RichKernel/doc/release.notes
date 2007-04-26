@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.145 2007-04-23 15:42:28 jonrob Exp $
+! $Id: release.notes,v 1.146 2007-04-26 20:14:08 jonrob Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 !----------------------------------------------------------------------
+
+! 2007-04-26 - Chris Jones
+ - Add to lcg dictionary some public classes
 
 !====================== RichKernel v7r4 2007-04-23 ====================
 ! 2007-04-23 - Marco Cattaneo

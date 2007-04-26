@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ general definitions
  *
  *  CVS Log :-
- *  $Id: RichDAQDefinitions.h,v 1.14 2007-04-24 12:38:36 jonrob Exp $
+ *  $Id: RichDAQDefinitions.h,v 1.15 2007-04-26 20:14:08 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
@@ -216,9 +216,11 @@ namespace Rich
     class EventID : public NumericType<ulonglong>
     {
     public:
-      /// Constructor
+      /// Default constructor
+      EventID( ) : NumericType<ulonglong>(0), m_nActiveBits(8*sizeof(ulonglong)) { }
+      /// Constructor from information
       template<class NUMTYPE>
-      explicit EventID ( const NUMTYPE   id    = 0,
+      explicit EventID ( const NUMTYPE   id,
                          const ShortType aBits = 8*sizeof(NUMTYPE) )
         : NumericType<ulonglong> ( (ulonglong)id ),
           m_nActiveBits          ( aBits         ) { }
@@ -241,9 +243,11 @@ namespace Rich
     class BXID : public NumericType<LongType>
     {
     public:
-      /// Constructor
+      /// Default constructor
+      BXID( ) : NumericType<LongType>(0), m_nActiveBits(8*sizeof(LongType)) { }
+      /// Constructor from information
       template<class NUMTYPE>
-      explicit BXID ( const NUMTYPE   id    = 0,
+      explicit BXID ( const NUMTYPE   id,
                       const ShortType aBits = 8*sizeof(NUMTYPE) )
         : NumericType<LongType> ( (LongType)id ),
           m_nActiveBits         ( aBits        ) { }
