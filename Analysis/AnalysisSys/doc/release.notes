@@ -3,6 +3,28 @@ Package     : AnalysisSys
 Package Coordinator : Juan Palacios
 Purpose     : LHCb analysis packages
 
+</PRE><H1><A NAME=v1r2>2007-04-26 Analysis v1r2 - Potential DC06 Stripping version</A></H1><PRE>
+ - Same as v1r1 but adapted to LHCB_v22r4
+
+#######################################MM#######################################
+#                                  ANALYSIS v1r2                               #
+################################################################################
+#################################### EXTERNAL ##################################
+##################################### PHYS #####################################
+!======================== FlavourTagging v7r2p1 2007-04-26 ===================
+! 2007-04-26 - Marco Cattaneo
+ - Get ICaloElectron.h from CaloUtils (moved from CaloInterfaces in LHCb v22r4)
+ - Remove obsolete file FlavourTagging_load.cpp
+
+!===================== FlavourTaggingChecker v2r2p1 2007-04-26 ===============
+! 2007-04-26 - Marco Cattaneo
+ - Get ICaloElectron.h from CaloUtils (moved from CaloInterfaces in LHCb v22r4)
+ - Remove obsolete file FlavourTaggingChecker_load.cpp
+#################################### PHYSSEL ###################################
+##################################### TOOLS ####################################
+###################################### EX ######################################
+
+
 </PRE><H1><A NAME=v1r1>2007-04-19 Analysis v1r1 - Potential DC06 Stripping version</A></H1><PRE>
  - Some updates in delections
  - Some updates in LoKi
