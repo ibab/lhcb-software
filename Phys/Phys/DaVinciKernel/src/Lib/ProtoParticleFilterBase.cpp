@@ -5,7 +5,7 @@
  * Implementation file for tool ProtoParticleFilterBase
  *
  * CVS Log :-
- * $Id: ProtoParticleFilterBase.cpp,v 1.5 2007-03-07 18:32:53 jonrob Exp $
+ * $Id: ProtoParticleFilterBase.cpp,v 1.6 2007-04-26 09:27:39 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-05-03
@@ -234,7 +234,10 @@ ProtoParticleFilterBase::isSatisfied( const ProtoParticle* const & proto ) const
   if ( !proto ) { Warning( "Null ProtoParticle pointer" ); return false; }
 
   if ( msgLevel(MSG::VERBOSE) )
-    verbose() << " -> Applying all cuts to ProtoParticle" << endreq;
+  {
+    verbose() << " -> Applying all cuts to ProtoParticle " << proto->key() << " : "
+              << *proto << endreq;
+  }
 
   bool selected = false;
 

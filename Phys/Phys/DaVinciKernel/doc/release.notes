@@ -3,6 +3,9 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+! 2007-04-26 - Chris Jones
+ - Improve verbose printout of ProtoParticles in the ProtoParticleSelection
+
 !========================= DaVinciKernel v6r2 2007-03-21 ====================
 ! 2007-03-21 - Patrick Koppenburg
  - Moved PhysDesktop and Particle2VertexAsct implementations to DaVinciTools.
