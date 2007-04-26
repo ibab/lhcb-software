@@ -5,7 +5,7 @@
  *  Implementation file for class : Rich::RawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.cpp,v 1.50 2007-04-23 15:35:44 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.cpp,v 1.51 2007-04-26 19:08:11 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2004-12-18
@@ -759,7 +759,7 @@ void RawDataFormatTool::decodeToSmartIDs_2007( const LHCb::RawBank & bank,
 
           // get HPD RichSmartID
           const LHCb::RichSmartID hpdID = ( m_useFakeHPDID ? 
-                                            LHCb::RichSmartID(Rich::Rich1,Rich::left,0,0) :
+                                            LHCb::RichSmartID(Rich::Rich1,Rich::top,0,0) :
                                             m_richSys->richSmartID( hpdBank->level0ID() ) );
           if ( msgLevel(MSG::DEBUG) )
             debug() << "   Decoding HPD " << hpdID << endreq;
@@ -772,12 +772,6 @@ void RawDataFormatTool::decodeToSmartIDs_2007( const LHCb::RawBank & bank,
             mess << "L1 board " << L1ID << " : Ingress " << ingressNum << " HPD " << iHPD << " is suppressed";
             Warning( mess.str(), StatusCode::SUCCESS );
           }
-
-          // HPD info
-          //HPDInfo & hpdInfo = (ingressInfo.hpdData())[hpdID];
-          //hpdInfo.setInputNum( Level1Input(nTotalHPDs++) );
-          //hpdInfo.setHeader( HPDInfo::Header(hpdBank->headerWords()) );
-          //hpdInfo.setFooter( HPDInfo::Footer(hpdBank->footerWords()) );
 
           // Try to add a new HPDInfo to map
           std::pair<HPDMap::iterator,bool> p 
