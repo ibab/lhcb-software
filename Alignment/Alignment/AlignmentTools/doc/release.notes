@@ -2,6 +2,14 @@
 ! Responsible : Sebastien Viret
 
 !=============================================================================
+! 25/04/2007 - Sebastien Viret  ** v2r5 **
+
+-> Correction of a memory allocation problem. It only affects the method InitMille()
+which now has to have the number of fits as last argument in input. This number is 
+then used to resize the vectors that will contains the infos for iterations: storeare,
+storeind,... 
+
+!=============================================================================
 ! 07/03/2007 - Sebastien Viret  ** v2r4 **
 
 -> Final modifications of the code in order to handle non-linear derivatives. The process

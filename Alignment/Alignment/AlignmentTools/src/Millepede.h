@@ -29,7 +29,7 @@ public:
 
   virtual StatusCode InitMille(bool DOF[], double Sigm[], int nglo
 			       , int nloc, double startfact, int nstd 
-			       , double res_cut, double res_cut_init);
+			       , double res_cut, double res_cut_init, int n_fits);
   virtual StatusCode MakeGlobalFit(double par[], double error[], double pull[]);
   virtual StatusCode GetAlignmentConstants(double par[]);
   virtual StatusCode ParGlo(int index, double param);
@@ -54,6 +54,9 @@ private:
   static const int nonlin_param		= 1000000; // For non-linear terms treatment
                                                    // See how it works in EquLoc() and MakeGlobalFit() 
                                                    // , Should be much larger than any of the derivatives
+
+
+  static const int mobjects		= 100000; // Max. number of objects to align
 
 // Private methods 
 

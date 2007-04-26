@@ -26,7 +26,7 @@ public:
 
   virtual StatusCode InitMille(bool DOF[], double Sigm[], int nglo
 			       , int nloc, double startfact, int nstd 
-			       , double res_cut, double res_cut_init) = 0;
+			       , double res_cut, double res_cut_init, int n_fits) = 0;
   virtual StatusCode MakeGlobalFit(double par[], double error[], double pull[]) = 0;
   virtual StatusCode GetAlignmentConstants(double par[]) = 0;
   virtual StatusCode ParGlo(int index, double param) = 0;

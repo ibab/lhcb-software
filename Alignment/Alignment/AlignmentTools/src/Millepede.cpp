@@ -77,7 +77,7 @@ StatusCode Millepede::initialize()
 
 StatusCode Millepede::InitMille(bool DOF[], double Sigm[], int nglo
 				, int nloc, double startfact, int nstd 
-				, double res_cut, double res_cut_init)
+				, double res_cut, double res_cut_init, int n_fits)
 {
 
   debug() << "" << endmsg;
@@ -194,6 +194,15 @@ StatusCode Millepede::InitMille(bool DOF[], double Sigm[], int nglo
   storeare.clear();
   storenl.clear();
   storeplace.clear();
+
+  // Memory allocation for the stores
+
+  debug() << "Store size is " << n_fits*(nagb+nalc+3) << endmsg;
+
+  storeind.reserve(2*n_fits*(nagb+nalc+3));
+  storeare.reserve(2*n_fits*(nagb+nalc+3));
+  storenl.reserve(2*n_fits*(nagb+nalc+3));
+  storeplace.reserve(2*n_fits);
 
   debug() << "" << endmsg;
   debug() << "----------------------------------------------------" << endmsg;
