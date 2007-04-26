@@ -5,8 +5,18 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
 
-! 2007-04-23 - Chris Jones
- - Additions for RICH HLT Reconstruction (by default disabled at the moment)
+</PRE><H1><A NAME=v1r5>2007-04-26 HltSys v1r5</A></H1><PRE>
+This version uses Gaudi v19r3 and LHCb v22r4
+
+Packages modified: HltSelections v5r1
+
+- In HltSys options
+  . Changed some options to get HltSelections running
+  . Add options to run Rich HLT reconstruction (disabled by default)
+
+- In HltSelections v5r1
+  . Remove obsolete file HltSelections_load.cpp
+  . Commit of skeleton for HltSelectionDecision
 
 </PRE><H1><A NAME=v1r4>2007-03-27 HltSys v1r4</A></H1><PRE>
 This version uses Gaudi v19r3 and LHCb v22r3
