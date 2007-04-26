@@ -4,6 +4,9 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+! 2007-04-26 - 
+ - Fixes for lcg dictionaries on windows
+
 !===================== RichRecBase v3r3 2007-04-23 =======================
 ! 2007-04-23 - Marco Cattaneo
  - Add lcg dictionary for public interface classes. Some dictionaries are

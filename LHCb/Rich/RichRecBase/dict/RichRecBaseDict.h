@@ -1,6 +1,8 @@
 #ifndef DICT_RICHRECBASEDICT_H 
 #define DICT_RICHRECBASEDICT_H 1
 
+#include "RichRecBase/RichRadCorrLocalPositions.h"
+
 #include "RichRecBase/IRichBaseTrackSelector.h"
 #include "RichRecBase/IRichCherenkovAngle.h"
 #include "RichRecBase/IRichCherenkovResolution.h"
@@ -14,7 +16,6 @@
 #include "RichRecBase/IRichSignalDetectionEff.h"
 #include "RichRecBase/IRichTrSegMaker.h"
 #include "RichRecBase/IRichTrackSelector.h"
-#ifndef WIN32 // These include RichRecSegment.h, which breaks gccxml compilation on Windows
 #include "RichRecBase/IRichMassHypothesisRingCreator.h"
 #include "RichRecBase/IRichPhotonCreator.h"
 #include "RichRecBase/IRichPhotonReconstruction.h"
@@ -25,7 +26,7 @@
 #include "RichRecBase/IRichSegmentCreator.h"
 #include "RichRecBase/IRichStatusCreator.h"
 #include "RichRecBase/IRichTrackCreator.h"
-#endif // WIN32
+
 
 #endif // DICT_RICHRECBASEDICT_H
 

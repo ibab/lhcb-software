@@ -1,4 +1,7 @@
 <lcgdict>
+
+  <class name = "Rich::Rec::RadCorrLocalPositions" />
+
   <class name = "Rich::Rec::IBaseTrackSelector" />
   <class name = "Rich::Rec::ICherenkovAngle" />
   <class name = "Rich::Rec::ICherenkovResolution" />
@@ -22,4 +25,5 @@
   <class name = "Rich::Rec::ITrSegMaker" />
   <class name = "Rich::Rec::ITrackCreator" />
   <class name = "Rich::Rec::ITrackSelector" />
+
 </lcgdict>

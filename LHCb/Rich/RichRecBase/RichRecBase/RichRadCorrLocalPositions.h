@@ -1,4 +1,4 @@
-// $Id: RichRadCorrLocalPositions.h,v 1.1 2007-04-23 12:56:12 jonrob Exp $
+// $Id: RichRadCorrLocalPositions.h,v 1.2 2007-04-26 21:23:43 jonrob Exp $
 #ifndef RICHRECBASE_RICHRADCORRLOCALPOSITIONS_H
 #define RICHRECBASE_RICHRADCORRLOCALPOSITIONS_H 1
 
@@ -19,7 +19,7 @@ namespace Rich
   namespace Rec
   {
 
-    /** @class RichRadCorrLocalPositions RichRecBase/RichRadCorrLocalPositions.h
+    /** @class RadCorrLocalPositions RichRecBase/RichRadCorrLocalPositions.h
      *
      *  Simple class to store three local coordinate positions, the corrected positions for each radiator
      *

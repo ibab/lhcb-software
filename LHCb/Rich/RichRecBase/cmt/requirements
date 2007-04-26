@@ -2,7 +2,7 @@
 # Created    : 2002-11-19
 # Maintainer : Chris Jones   Christopher.Rob.Jones@cern.ch 
 #============================================================================
-# $Id: requirements,v 1.56 2007-04-23 16:50:23 cattanem Exp $
+# $Id: requirements,v 1.57 2007-04-26 21:23:43 jonrob Exp $
 #============================================================================
 
 package   RichRecBase
@@ -41,7 +41,7 @@ apply_pattern reflex_dictionary                                         \
               dictionary=RichRecBase                                    \
               headerfiles=$(RICHRECBASEROOT)/dict/RichRecBaseDict.h     \
               selectionfile=$(RICHRECBASEROOT)/dict/RichRecBaseDict.xml \
-              options="-U__MINGW32__"
+              options="-U__MINGW32__ -DBOOST_DISABLE_ASSERTS"
 
 # Hack for cmt v1r19 bug to link dictionary on windows
 macro RichRecBaseDict_use_linkopts $(use_linkopts)
