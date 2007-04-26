@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/Printer.cpp,v 1.2 2007-03-01 15:47:56 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/Printer.cpp,v 1.3 2007-04-26 18:22:26 frankb Exp $
 //  ====================================================================
 //  Printer.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: Printer.cpp,v 1.2 2007-03-01 15:47:56 frankb Exp $
+// $Id: Printer.cpp,v 1.3 2007-04-26 18:22:26 frankb Exp $
 
 // Framework include files
 #include "PVSS/Printer.h"
@@ -19,6 +19,8 @@
 #include "PVSS/DevTypeElement.h"
 #include "PVSS/DevTypeManager.h"
 #include "PVSS/ControlsManager.h"
+
+#include "PVSS/Internals.h"
 
 #include <iostream>
 #include <algorithm>
@@ -68,7 +70,19 @@ namespace PVSS {
     virtual void print(const CfgManager& obj);
     /// Controls manager type printer
     virtual void print(const ControlsManager& obj);
+
+    /// Printout to logger window
+    virtual void log(int severity, int type, const std::string& message);
+    /// Informational printout to logger window
+    virtual void info(int type, const std::string& message);
+    /// Warning printout to logger window
+    virtual void warning(int type, const std::string& message);
+    /// Sever error printout to logger window
+    virtual void error(int type, const std::string& message);
+    /// Fatal printout to logger window. kill the program instance!
+    virtual void fatal(int type, const std::string& message);
   };
+
   template <typename T> struct ObjectPrint {
     /// Reference to output stream
     std::ostream&      m_stream;
@@ -176,6 +190,10 @@ std::auto_ptr<Printer> PVSS::createAsciiPrinter(std::ostream& os)    {
   return std::auto_ptr<Printer>(new PrinterImp(os));
 }
 
+std::auto_ptr<Printer> PVSS::createLogger()    {
+  return std::auto_ptr<Printer>(new PrinterImp(std::cout));
+}
+
 /// Initializing constructor
 PrinterImp::PrinterImp(std::ostream& os)
 : m_stream(os)
@@ -240,4 +258,29 @@ void PrinterImp::print(const ControlsManager& obj)    {
   //print(*(obj.configMgr()));
   //print(*(obj.typeMgr()));
   m_stream << std::flush;
+}
+
+/// Printout to logger window
+void PrinterImp::log(int severity, int type, const std::string& message)  {
+  pvss_print(severity,type,message.c_str());
+}
+
+/// Informational printout to logger window
+void PrinterImp::info(int type, const std::string& message)  {
+  log(PRIO_INFO,type,message.c_str());
+}
+
+/// Warning printout to logger window
+void PrinterImp::warning(int type, const std::string& message)  {
+  log(PRIO_WARNING,type,message.c_str());
+}
+
+/// Sever error printout to logger window
+void PrinterImp::error(int type, const std::string& message)  {
+  log(PRIO_SEVERE,type,message.c_str());
+}
+
+/// Fatal printout to logger window. kill the program instance!
+void PrinterImp::fatal(int type, const std::string& message)  {
+  log(PRIO_FATAL,type,message.c_str());
 }

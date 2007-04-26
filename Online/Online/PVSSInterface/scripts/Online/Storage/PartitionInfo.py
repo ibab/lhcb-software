@@ -2,11 +2,19 @@ import Online.PVSS as PVSS
 import Online.Utils as Utils
 from   Online.RunInfo import RunInfo as RunInfo
 
-log        = Utils.log
-error      = Utils.error
-std        = PVSS.gbl.std
-DataPoint  = PVSS.DataPoint
-printSlots = Utils.printSlots
+log         = Utils.log
+error       = Utils.error
+std         = PVSS.gbl.std
+DataPoint   = PVSS.DataPoint
+printSlots  = Utils.printSlots
+
+NAME        = 0
+INUSE       = 1
+FSM_SLICE   = 2
+RECVNODES   = 3
+RECVSLICES  = 4
+STRMNODES   = 5
+STRMSLICES  = 6
 
 # =============================================================================
 class PartitionInfo:
@@ -52,6 +60,10 @@ class PartitionInfo:
     "Access internal datapoint of the datapoint structure."
     return DataPoint(self.manager,DataPoint.online(self.name+'.'+name))
 
+  # ===========================================================================
+  def fsmSlice(self):
+    return self.datapoints[FSM_SLICE].data
+  
   # ===========================================================================
   def show(self, extended=None):
     "Show all information from the Storage Partition structure."

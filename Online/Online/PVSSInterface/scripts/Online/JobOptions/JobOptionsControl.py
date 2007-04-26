@@ -5,7 +5,7 @@ import Online.RunInfo
 import Online.JobOptions.JobOptions as JobOptions
 
 log            = Online.Utils.log
-error          = Online.Utils.error
+error          = Online.PVSS.error
 warning        = Online.Utils.warning
 RunInfo        = Online.RunInfo.RunInfo
 DataPoint      = Online.PVSS.DataPoint
@@ -19,18 +19,19 @@ class OptionsWriter(CommandListener):
     "Object constructor."
     self.hostType = hosttype
     self.cluster  = cluster
+    self.optionsDir = None
     CommandListener.__init__(self,manager,name,name,4)
     devMgr = self.manager.deviceMgr()
     if not devMgr.exists(name):
       typ = self.manager.typeMgr().type('JobOptionsControl')
       if not devMgr.createDevice(name,typ,1).release():
-        error('Failed to create the datapoint:"'+name+'"',timestamp=1)
+        error('Failed to create the datapoint:"'+name+'"',timestamp=1,type=PVSS.DP_NOT_EXISTENT)
       else:
         log('Created the datapoint:"'+name+'"',timestamp=1)
 
   # ===========================================================================
   def activityName(self, run):
-    print 'Activity name:',run.name, self.hostType+'_'+run.runType()
+    log('Activity name:'+run.name+' '+self.hostType+'_'+run.runType(),timestamp=1)
     return self.hostType+'_'+run.runType()
 
   # ===========================================================================
@@ -46,18 +47,30 @@ class OptionsWriter(CommandListener):
           if task.exists():
             tasks.append(task)
           else:
-            error('The task '+name+' does not exist!',timestamp=1)
+            error('The task '+name+' does not exist!',timestamp=1,type=PVSS.ILLEGAL_VALUE)
             return None
         return (run,activity,tasks)
       else:
-        error('The activity '+self.activityName(run)+' does not exist!',timestamp=1)
+        error('The activity '+self.activityName(run)+' does not exist!',timestamp=1,type=PVSS.ILLEGAL_VALUE)
         return None
-    error('The RunInfo for partition '+partition+' does not exist!',timestamp=1)
+    error('The RunInfo for partition '+partition+' does not exist!',timestamp=1,type=PVSS.ILLEGAL_VALUE)
     return None
 
   # ===========================================================================
   def writeOptions(self, opts, run, activity, task):
-    print '###\n###   Writing options for task: '+task.name+'\n###\n'+opts
+    return self.writeOptionsFile(opts, task.name)
+
+  # ===========================================================================
+  def writeOptionsFile(self, name, opts):
+    log('###   Writing options for task: '+name,timestamp=1)
+    if self.optionsDir is not None:
+      try:
+        desc = open(self.optionsDir+'/'+name+'.opts','w')
+        print >>desc, opts
+        desc.close()
+      except Exception,X:
+        error('Failed to write options for task:'+name+' '+str(X),timestamp=1,type=PVSS.FILEOPEN)
+        return None
     return self
   
   # ===========================================================================
@@ -112,11 +125,10 @@ class OptionsWriter(CommandListener):
         else:
           opts = opts + '// ---------------- NO task specific information\n'
         if not self.writeOptions(opts,run,activity,task):
-          log('Failed to write options for task:'+task.name,timestamp=1)
           return None
       return self
     else:
-      log('The partition '+partition+' does not exist!',timestamp=1)
+      error('The partition '+partition+' does not exist!',timestamp=1,type=PVSS.ILLEGAL_VALUE)
     return None
 
   # ===========================================================================
@@ -135,9 +147,10 @@ class OptionsWriter(CommandListener):
     elif command == "RESET" or command == "DEALLOCATE":
       return self.makeAnswer('READY',answer)
     elif command == "RECOVER":
-      result = self.write(partition)
-      if result is not None:
-        return self.makeAnswer('READY',answer)
+      return self.makeAnswer('READY',answer)
+      #result = self.write(partition)
+      #if result is not None:
+      #  return self.makeAnswer('READY',answer)
       
     return None
 
@@ -182,41 +195,43 @@ class StorageOptionsWriter(OptionsWriter):
   # ===========================================================================
   def additionalOptions(self, context, run, activity, task):
     return {'DataSink':'@DataSink@'}
-  def checkTasks(self,opts,data,item,task):
+  def checkTasks(self, opts, run, activity, task, data, item):
     done = 0
     for i in data:
       items = i.split('/')
       #print task.name,items
       if task.name == items[3]:
         done = 1
-  def printTasks(self,data):
-    for i in data:
-      print 'Task:',i
         if item<0:
           options = opts.replace('@DataSink@','"NONE"')
         else:
           options = opts.replace('@DataSink@','"'+items[item]+'"')
-        print '###\n###   Writing options for task: '+items[1]+'\n###'
-        print options
+        if self.writeOptionsFile(items[1], options) is None:
+          return None
     if done: return self
     return None
   def printTasks(self,data):
     for i in data:
-      self.printTasks(run.strReceivers.data)
-      print i
+      print 'Task:',i
   # ===========================================================================
   def writeOptions(self, opts, run, activity, task):
     if self.hostType == 'RECV':
-      if self.checkTasks(opts,run.rcvSenders.data,5,task):      return self
-      if self.checkTasks(opts,run.receivers.data,-1,task):      return self
-      if self.checkTasks(opts,run.rcvInfraTasks.data,-1,task):  return self
+      if self.checkTasks(opts,run,activity,task,run.rcvSenders.data,5):
+        return self
+      if self.checkTasks(opts,run,activity,task,run.receivers.data,-1):
+        return self
+      if self.checkTasks(opts,run,activity,task,run.rcvInfraTasks.data,-1):
+        return self
       self.printTasks(run.receivers.data)
     elif self.hostType == 'STREAM':
-      if self.checkTasks(opts,run.strReceivers.data,3,task):    return self
-      if self.checkTasks(opts,run.streamers.data,3,task):       return self
-      if self.checkTasks(opts,run.strInfraTasks.data,3,task):   return self
+      if self.checkTasks(opts,run,activity,task,run.strReceivers.data,3):
+        return self
+      if self.checkTasks(opts,run,activity,task,run.streamers.data,3):
+        return self
+      if self.checkTasks(opts,run,activity,task,run.strInfraTasks.data,3):
+        return self
       self.printTasks(run.strInfraTasks.data)
-    print '###\n###   Writing options for UNKNOWN tasks: '+task.name+' type:'+self.hostType+'\n###'
+    error('###\n###   UNKNOWN task requires options: '+task.name+' type:'+self.hostType+'\n###',timestamp=1,type=PVSS.ILLEGAL_VALUE)
     return None
   # ===========================================================================
   def write(self, partition):

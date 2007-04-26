@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/ControlsManager.cpp,v 1.3 2007-03-02 12:19:02 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/ControlsManager.cpp,v 1.4 2007-04-26 18:22:26 frankb Exp $
 //  ====================================================================
 //  ControlsManager.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: ControlsManager.cpp,v 1.3 2007-03-02 12:19:02 frankb Exp $
+// $Id: ControlsManager.cpp,v 1.4 2007-04-26 18:22:26 frankb Exp $
 //#define _UseSpecializedManip
 
 // Framework include files
@@ -83,7 +83,7 @@ namespace PVSS {
 
 /// Initializing constructor
 ControlsManager::ControlsManager(int i, const std::string nam)
-: NamedIdentified(i,nam), m_cfgMgr(0), m_devMgr(0), m_devTypeMgr(0)
+: NamedIdentified(i,nam), m_cfgMgr(0), m_devMgr(0), m_devTypeMgr(0), m_logger(0)
 {
   ::printf("PVSS> Create controls manager for system[%d] %s\n",i,nam.c_str());
   m_cfgMgr = CfgManip<CfgManager>::create(this,i,nam);
@@ -94,6 +94,7 @@ ControlsManager::ControlsManager(int i, const std::string nam)
   m_devMgr = DevManip<DeviceManager>::create(this,i,nam);
   m_devTypeMgr = DevManip<DevTypeManager>::create(this,m_devMgr,i,nam);
   pvss_load_device_types(m_devTypeMgr,i,DevManip<DevType>::add,DevManip<DevTypeElement>::add);
+  m_logger = std::auto_ptr<Printer>(createLogger());
 }
 
 /// Standard destructor

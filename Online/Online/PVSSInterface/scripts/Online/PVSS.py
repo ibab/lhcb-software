@@ -10,7 +10,7 @@ if platform.system()=='Linux':
   PyLCGDict.loadDict('libPVSSInterfaceDict')
 else:
   PyLCGDict.loadDict('STLRflx')
-  PyLCGDict.loadDict('PVSSInterfaceDict')
+  #PyLCGDict.loadDict('PVSSInterfaceDict')
 
 gbl  = PyLCGDict.makeNamespace('')
 PVSS = PyLCGDict.makeNamespace('PVSS')
@@ -145,6 +145,64 @@ class APIManager:
 
 # Instantiate API manager. Should never be called by user directly
 apiManager = APIManager()
+logger     = PVSS.createLogger()
+
+CONNECTED           =  4        # Connected to
+CANT_CONNECT        =  5        # Connection not possible
+DPNOTEXISTENT       =  7        # Datapoint does not exist
+ELNOTEXISTENT       =  8        # Element does not exist
+OUTOFUSERRANGE      = 30        # value out of user range
+DM                  = 33        # common error in data manager
+SYNTAX              = 36        # DM: Incorrect name syntax
+NOTEXISTINGADDRESS  = 49        # Error when writing! Wrong address?
+PARAMETERERROR      = 51        # Parameter incorrect
+ILLEGALFUNCALL      = 53        # Illegal function call
+UNEXPECTEDSTATE     = 54        # Unexpected state
+TYPENOTEXISTENT     = 57        # unknown datapoint type
+ELEMENTNOTEXISTENT  = 59        # unknoen datapoint element
+FILEOPEN            = 61        # cannot open file
+DP_NOT_EXISTENT     = 71        # DP does not exist
+UNDEFD_FUNC         = 72        # Function not defined
+ARG_MISSING         = 75        # Argument missing in function
+ILLEGAL_ARG         = 76        # Invalid argument in function
+SYNTAX_ERROR        = 81        # Syntax error
+FILE_NOT_OPEN       = 82        # File not open
+ILLEGAL_VALUE       = 86        # Invalid value
+ILLEGAL_OP          = 88        # Operation not permitted with these arguments
+ILLEGAL_KEYWORD     = 95        # Unknown keyword in resource
+default_error_type  = ILLEGAL_VALUE
+
+def printErrorCodes():
+  for i in xrange(110):
+    logger.info(i, 'Test message')
+
+# Printout to logger window
+def log(severity, type, message):
+  logger.log(severity, type, message)
+
+# Informational printout to logger window
+def info(message,timestamp=None,type=default_error_type):
+  import Online.Utils
+  Online.Utils.log(message,timestamp=timestamp)
+  logger.info(type, message)
+
+# Warning printout to logger window
+def warning(message,timestamp=None,type=default_error_type):
+  import Online.Utils
+  Online.Utils.warning(message,timestamp=timestamp)
+  logger.warning(type, message)
+
+# Sever error printout to logger window
+def error(message,timestamp=None,type=default_error_type):
+  import Online.Utils
+  Online.Utils.error(message,timestamp=timestamp)
+  logger.error(type, message)
+
+# Fatal printout to logger window. kill the program instance!
+def fatal(message,timestamp=None,type=default_error_type):
+  import Online.Utils
+  Online.Utils.error(message,timestamp=timestamp)
+  logger.fatal(type, message)
 
 # =============================================================================
 def controlsMgr(systemID=None,systemName=None):

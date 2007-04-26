@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/PVSS/ControlsManager.h,v 1.1 2007-03-01 10:39:49 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/PVSS/ControlsManager.h,v 1.2 2007-04-26 18:22:26 frankb Exp $
 //  ====================================================================
 //  ControlsManager.h
 //  --------------------------------------------------------------------
@@ -10,6 +10,7 @@
 #define ONLINE_PVSS_CONTROLSMANAGER_H
 
 // Framework include files
+#include "PVSS/Printer.h"
 #include "PVSS/NamedIdentified.h"
 #include "PVSS/DeviceIO.h"
 #include "PVSS/ReadTransaction.h"
@@ -24,6 +25,7 @@
 namespace PVSS {
 
   // Forward declarations
+  class Printer;
   class CfgManager;
   class DeviceIO;
   class DeviceManager;
@@ -44,17 +46,21 @@ namespace PVSS {
 
   protected:
     /// Access to configuration manager
-    CfgManager      *m_cfgMgr;
+    CfgManager            *m_cfgMgr;
     /// Access to device manager
-    DeviceManager   *m_devMgr;
+    DeviceManager         *m_devMgr;
     /// Device type manager
-    DevTypeManager  *m_devTypeMgr;
+    DevTypeManager        *m_devTypeMgr;
+    /// Error logger instance
+    std::auto_ptr<Printer> m_logger;
 
   public:
     /// Initializing constructor
     ControlsManager(int i, const std::string nam);
     /// Standard destructor
     virtual ~ControlsManager();
+    /// Access to error logger
+    Printer* logger() const                {  return m_logger.get();}
     /// Access to controls manager
     CfgManager* configMgr() const          {  return m_cfgMgr;      }
     /// Access to device manager 

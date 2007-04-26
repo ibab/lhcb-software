@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/PVSS/Printer.h,v 1.1 2007-03-01 10:39:49 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/PVSS/Printer.h,v 1.2 2007-04-26 18:22:26 frankb Exp $
 //  ====================================================================
 //  Printer.h
 //  --------------------------------------------------------------------
@@ -37,6 +37,11 @@ namespace PVSS {
     *   @version 1.0
     */
   class Printer {
+    /// Friend class declaration
+    friend class std::auto_ptr<Printer>;
+  protected:
+    /// Nobody except implementing class is allowed to delete
+    virtual ~Printer() {}
   public:
     /// Printing named identified type printer
     virtual void print(const NamedIdentified& obj) = 0;
@@ -59,8 +64,19 @@ namespace PVSS {
     virtual void print(const CfgManager& obj) = 0;
     /// Controls manager type printer
     virtual void print(const ControlsManager& obj) = 0;
+
+    /// Informational printout to logger window
+    virtual void info(int type, const std::string& message) = 0;
+    /// Warning printout to logger window
+    virtual void warning(int type, const std::string& message) = 0;
+    /// Sever error printout to logger window
+    virtual void error(int type, const std::string& message) = 0;
+    /// Fatal printout to logger window. kill the program instance!
+    virtual void fatal(int type, const std::string& message) = 0;
   };
   /// Create standard ASCII print formatter
   std::auto_ptr<Printer> createAsciiPrinter(std::ostream& os);
+  /// Create standard PVSS logger print formatter
+  std::auto_ptr<Printer> createLogger();
 }      // End namespace PVSS
 #endif // ONLINE_PVSS_PRINTER_H

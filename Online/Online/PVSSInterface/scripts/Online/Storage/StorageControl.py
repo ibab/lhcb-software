@@ -8,7 +8,7 @@ from   Online.Storage.StorageDescriptor import StorageDescriptor as StorageDescr
 
 sum            = Utils.sum
 log            = Utils.log
-error          = Utils.error
+error          = PVSS.error
 warning        = Utils.warning
 printSlots     = Utils.printSlots
 std            = PVSS.gbl.std
@@ -249,6 +249,7 @@ class FSMmanip:
   def allocateInfrastructure(self,infra):
     cl0 = copy.deepcopy(self.class0Tasks)
     self.class0Tasks = {}
+    #print cl0
     for (n,task_list) in infra.items():
       if debug: print n,self.nodeParents
       self.class0Tasks[n] = []
@@ -257,13 +258,17 @@ class FSMmanip:
         self.enableObject(self.class0Parents[n],n,1,1,'Class0')
         self.enableObject(self.class1Parents[n],n,1,1,'Class1')
       for task in task_list:
-        i = cl0[n][0]
-        if debug: print 'Task:',i,task
-        self.enableObject(i,n,1,1,task[2])
-        self.setupTask(i,node=n,name=task[1],type=task[3],inUse=1,prio=111)
-        self.class0Tasks[n].append(i)
-        del cl0[n][0]
-
+        if cl0.has_key(n) and len(cl0[n]) > 0:
+          i = cl0[n][0]
+          if debug: print 'Task:',i,task
+          self.enableObject(i,n,1,1,task[2])
+          self.setupTask(i,node=n,name=task[1],type=task[3],inUse=1,prio=111)
+          self.class0Tasks[n].append(i)
+          del cl0[n][0]
+        else:
+          error(self.name+'> No task slots for Class 0 present!',timestamp=1)
+          return None
+          
     return self
 
   # ===========================================================================
@@ -273,12 +278,16 @@ class FSMmanip:
     for (n,task_list) in processes.items():
       self.class1Tasks[n] = []
       for task in task_list:
-        i = cl1[n][0]
-        if debug: print 'Task:',task
-        self.enableObject(i,n,1,1,task[2])
-        self.setupTask(i,node=n,name=task[1],type=task[3],inUse=1,prio=111)
-        self.class1Tasks[n].append(i)
-        del cl1[n][0]
+        if cl1.has_key(n) and len(cl1[n]) > 0:
+          i = cl1[n][0]
+          if debug: print 'Task:',task
+          self.enableObject(i,n,1,1,task[2])
+          self.setupTask(i,node=n,name=task[1],type=task[3],inUse=1,prio=111)
+          self.class1Tasks[n].append(i)
+          del cl1[n][0]
+        else:
+          error(self.name+'> No task slots for Class 1 present!',timestamp=1)
+          return None
     return self
 
   # ===========================================================================
@@ -489,7 +498,7 @@ class Control(StorageDescriptor,DeviceListener):
     recvSlices = self.recvSlices.data
     num,slices = policy.allocateSlices(num_recv_slots,recv_slots_per_node,recvSlices)
     if num < num_recv_slots:
-      error('Failed to allocate sufficient RECEIVE slots. Got only %s slots, but requested %d.'%(num,num_recv_slots))
+      error('Failed to allocate sufficient RECEIVE slots. Got only %s slots, but requested %d.'%(num,num_recv_slots),timestamp=1,type=PVSS.OUTOFUSERRANGE)
       return None
     all_recv_slots,all_recv_nodes,rem_recv_slices = self._selectSlices(slices,recvSlices)
 
@@ -497,7 +506,7 @@ class Control(StorageDescriptor,DeviceListener):
     strmSlices = self.strmSlices.data
     num,slices = policy.allocateSlices(num_strm_slots,strm_slots_per_node,strmSlices)
     if num < num_strm_slots:
-      error('Failed to allocate sufficient STREAMER slots. Got only %s slots, but requested %d.'%(num,num_strm_slots))
+      error('Failed to allocate sufficient STREAMER slots. Got only %s slots, but requested %d.'%(num,num_strm_slots),timestamp=1,type=PVSS.OUTOFUSERRANGE)
       return None
     all_strm_slots,all_strm_nodes,rem_strm_slices = self._selectSlices(slices,strmSlices)
 
@@ -549,11 +558,12 @@ class Control(StorageDescriptor,DeviceListener):
       # Allocation was successful: Now update RunInfo table
       dp,recv_nodes,recv_slots,strm_nodes,strm_slots = res
       if runInfo.defineTasks(recv_slots,strm_slots):
-        slice = '_Slice'+dp[len(self.name+'_Partition_'):]
+        slice = 'Slice'+dp[len(self.name+'_Partition_'):]
         #print '1-Ending action:',time.time(),time.time()-start
-        self.allocateFSM(slice,runInfo)
+        if self.allocateFSM(slice,runInfo) is None:
+          return None
         if debug: print '2-Ending action:',time.time(),time.time()-start
-        return (recv_slots,strm_slots)
+        return (self.name+'_'+slice,recv_slots,strm_slots)
     return None
   
   def _collectTasks(self,tasks,data):
@@ -567,7 +577,7 @@ class Control(StorageDescriptor,DeviceListener):
     return tasks
   
   def allocateFSM(self,slice,info):
-    slice_name = self.name+slice
+    slice_name = self.name+'_'+slice
     fsm_manip = FSMmanip(slice_name,self.manager,'_FwFsmDevice')
     infra = self._collectTasks({},info.rcvInfraTasks)
     infra = self._collectTasks(infra, info.strInfraTasks)
@@ -579,8 +589,10 @@ class Control(StorageDescriptor,DeviceListener):
     if debug: print 'Tasks:        ',tasks
     fsm_manip.collectTaskSlots()
     fsm_manip.reset()
-    fsm_manip.allocateInfrastructure(infra)
-    fsm_manip.allocateProcesses(tasks)
+    if fsm_manip.allocateInfrastructure(infra) is None:
+      return None
+    if fsm_manip.allocateProcesses(tasks) is None:
+      return None
     return fsm_manip.commit()
 
   # ===========================================================================
@@ -591,6 +603,8 @@ class Control(StorageDescriptor,DeviceListener):
       dp, nam, id = res
       info = PartitionInfo(self.manager,nam)
       if info.load(self.reader):
+        slice = info.fsmSlice()
+        #print 'Partition name:',nam, slice
         for i in info.datapoints[4].data:
           self.recvSlices.data.push_back(i)
         for i in info.datapoints[6].data:
@@ -614,10 +628,10 @@ class Control(StorageDescriptor,DeviceListener):
         runInfo = RunInfo(self.manager,partition)
         runInfo.clearTasks(self.writer)
         if self.freePartition(res):
-          return 1
-        return 0
-    error('[Partition not allocated] Cannot free partition for '+partition)
-    return 2
+          return (1,slice)
+        return (0,None)
+    error('[Partition not allocated] Cannot free partition for '+partition,timestamp=1,type=PVSS.UNEXPECTEDSTATE)
+    return (2,None)
 
   # ===========================================================================
   def showSummary(self, extended=None):
@@ -664,7 +678,6 @@ class Control(StorageDescriptor,DeviceListener):
     try:
       nam = self.dp().name()
       cmd = self.dp().value().data()
-      log('Command received:'+nam[:nam.find(':')]+' -> '+cmd,timestamp=1)
       itms = cmd.split('/')
       if len(itms) == 4:
         command   = itms[0]
@@ -677,37 +690,42 @@ class Control(StorageDescriptor,DeviceListener):
           try:
             if command == "ALLOCATE":
               result = self.allocate(partition,5,2)
+              if result is not None: result = result[0]
             elif command == "DEALLOCATE":
               result = self.free(partition)
-              if result == 2: # partition was not allocated!
-                return self.makeAnswer('ERROR',answer)
+              if result[0] == 1: result = result[1]
+              else: result = None                   # partition was not allocated!
             elif command == "RECOVER":
               result = self.free(partition)
-              #if result == 2: # partition was not allocated!
+              if result[0] == 1: result = result[1]
+              elif result[0] == 2: result = "WAS_NOT_ALLOCATED"
+              else: result = None                   # partition was not allocated!
+              #if result[2] == 2: # partition was not allocated!
               #  return self.makeAnswer('ERROR',answer)
-              result = self.allocate(partition,5,2)
+              #result = self.allocate(partition,5,2)
             if result is not None:
-              return self.makeAnswer('READY',answer)
-            log('The command:"'+cmd+'" failed. [Internal Error] ',timestamp=1)
+              print answer+'/'+result
+              return self.makeAnswer('READY',answer+'/'+result)
+            error('The command:"'+cmd+'" failed. [Internal Error] ',timestamp=1,type=PVSS.UNEXPECTEDSTATE)
             return self.makeAnswer('ERROR',answer)
           except Exception,X:
-            log('The command:"'+cmd+'" failed:'+str(X),timestamp=1)
+            error('The command:"'+cmd+'" failed:'+str(X),timestamp=1,type=PVSS.ILLEGAL_ARG)
             traceback.print_exc()
             return self.makeAnswer('ERROR',answer)
           except:
-            log('The command:"'+cmd+'" failed (Unknown exception)',timestamp=1)
+            error('The command:"'+cmd+'" failed (Unknown exception)',timestamp=1,type=PVSS.ILLEGAL_ARG)
             traceback.print_exc()
             return self.makeAnswer('ERROR',answer)
-        log('The command:"'+cmd+'" failed. [Bad StorageSystem] '+storage,timestamp=1)
+        error('The command:"'+cmd+'" failed. [Bad StorageSystem] '+storage,timestamp=1,type=PVSS.ILLEGAL_ARG)
         return self.makeAnswer('ERROR',answer)
-      log('The command:"'+cmd+'" failed. [Insufficient parameters] ',timestamp=1)
+      error('The command:"'+cmd+'" failed. [Insufficient parameters] ',timestamp=1,type=PVSS.ARG_MISSING)
       return 0
     except Exception,X:
-      log('The command:"'+cmd+'" failed:'+str(X),timestamp=1)
+      error('The command:"'+cmd+'" failed:'+str(X),timestamp=1,type=PVSS.UNDEFD_FUNC)
       traceback.print_exc()
       return 0
     except:
-      log('The command:"'+cmd+'" failed (Unknown exception)',timestamp=1)
+      error('The command:"'+cmd+'" failed (Unknown exception)',timestamp=1,type=PVSS.UNDEFD_FUNC)
       traceback.print_exc()
     return 0
  
