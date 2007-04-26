@@ -65,6 +65,15 @@ HltMuonPAlg.InputTrackLocation = "Hlt/Track/ForwardMuonRefined" ;
 //HltMuonPAlg.InputTrackLocation = "Hlt/Track/MuonsForward" ; 
 HltMuonPAlg.OutputProtoParticleLocation = "Hlt/ProtoP/Muons" ;
 
+HltMuonPAlg.CaloSpdPID = false ;
+HltMuonPAlg.CaloPrsPID = false ;
+HltMuonPAlg.CaloEcalPID = false ;
+HltMuonPAlg.CaloHcalPID = false ;
+HltMuonPAlg.CaloBremPID = false ;
+
+
+
+
 HltFullReco.Members += { "PreLoadParticles/HltMuons" };
 HltMuons.PhysDesktop.ParticleMakerType = "NoPIDsParticleMaker" ;
 HltMuons.PhysDesktop.NoPIDsParticleMaker.Inputs =  { "Hlt/ProtoP/Muons"} ;

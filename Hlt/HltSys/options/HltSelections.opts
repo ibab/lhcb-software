@@ -19,6 +19,7 @@ HltSelections.Context = "HLT" ;
 // Full reconstruction of all tracks
 //---------------------------------------------------------------------
 #include "$HLTSYSROOT/options/HltFullReco.opts"
+HltEnd.OnTES = true; // store all on TES
 //---------------------------------------------------------------------
 // ProtoParticles and Particles
 //---------------------------------------------------------------------
