@@ -3,6 +3,33 @@ Package     : PhysSys
 Package Coordinator : Juan Palacios
 Purpose     : LHCb physics packages
 
+</PRE><H1><A NAME=v6r2>2007-04-27 Phys v6r2 - updated DC06 stripping version</A></H1><PRE>
+Minor changes:
+ - Based on LHCb v22r3
+ - Change in the prioritization of track states to be used when making 
+   Particles. This reduces the differences between running on DST and rDST 
+   (with fewer states available).
+
+#######################################MM#######################################
+#                                  PHYS v6r2                                   #
+################################################################################
+!========================== ParticleMaker v3r2 2007-04-26 ===================
+! 2007-04-25 - Patrick Koppenburg
+ - Use in this order
+   . stateAt( LHCb::State::ClosestToBeam ) 
+   . stateAt( LHCb::State::FirstMeasurement )
+   . firstState()
+   to make Particles. This ensures that the particle maker uses the same
+   state on rdst and dst files.
+ - Increment to v3r2
+
+!========================== VertexFit v4r2p1 2007-04-26 ===================
+! 2007-04-26 - Patrick Koppenburg
+ - OfflineVertexFitter.cpp: More verbose() statements
+ - Incement to v4r2p1
+
+
+
 </PRE><H1><A NAME=v6r1>2007-04-19 Phys v6r1 - potential DC06 stripping version</A></H1><PRE>
 Minor changes:
  - Based on LHCb v22r3
