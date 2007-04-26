@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.63 2007-04-26 10:17:39 pkoppenb Exp $ 
+! $Id: release.notes,v 1.64 2007-04-26 10:18:14 pkoppenb Exp $ 
 ! Package     : ParticleMaker
 ! Responsible : Chris Jones, J. Palacios
 !==============================================================================
 
+!========================== ParticleMaker v3r2 2007-04-26 ===================
 ! 2007-04-25 - Patrick Koppenburg
  - Use in this order
    . stateAt( LHCb::State::ClosestToBeam ) 
