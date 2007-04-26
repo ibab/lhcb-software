@@ -27,7 +27,7 @@
 ////////////////////////////////////////////////////
 
 
-Align.Internal_alignment    = true;   // Turn this step on
+Align.Internal_alignment    = false;   // Turn this step on
 
 // Modules to be aligned (1=ON, 0=OFF)
 
@@ -39,7 +39,7 @@ Align.Internal_PTerms       = {0.01,0.01,0.005,0.0005,0.0005,0.0002}; // ParSig 
 Align.Internal_EQs          = {1,1,1,1,1,1,1,1,1};                   // Constraint equations
 Align.Internal_Residual_Cut = {0.3,0.06};                            // Cuts on track residuals (in mm)
 Align.General_StartFactor   = 100.0;                                  // Localfit chisquare initial cut
-Align.General_Maxtracks     = 60;                                     // Max. number of track per event
+Align.General_Maxtracks     = 100;                                     // Max. number of track per event
 
 // Option files for pattern recognition tuning and track selection
 #include "$VELOALIGNMENTOPTS/TRGtune.opts"
@@ -54,18 +54,20 @@ Align.General_Maxtracks     = 60;                                     // Max. nu
 
 
 Align.Box_alignment        = true;
+Align.Box_VELOopen         = true;
+Align.Box_TrackperPV       = 2;
 Align.Box_DOF              = {1,1,1,1,1,1};                         
-Align.Box_PTerms           = {0.2,0.2,0.1,0.001,0.001,0.001}; 
-Align.Box_EQs              = {1,1,1,1,1,0}; 
+Align.Box_PTerms           = {10.0,10.0,10.0,0.03,0.03,0.03}; 
+Align.Box_EQs              = {0,0,0,0,0,0}; 
 Align.Box_Residual_Cut     = {1.5,0.4};
 
 // Specific options for primary vertices
                             
-Align.Box_Z_window         = 350.;    // Where to look for PV seeds (in mm)
-Align.Box_MinTracks_perPV  = 5;      // Minimal number of tracks per PV
+Align.Box_Z_window         = 1000.;    // Where to look for PV seeds (in mm) (350 for closed, 1000 for open)
+Align.Box_MinTracks_perPV  = 4;      // Minimal number of tracks per PV (10 for m-bias events)
 Align.Box_PV_Z_window      = 1.;      // Zclos range for all PV candidate tracks
 Align.Box_PV_IPmax         = 0.8;      // Max IP for PV candidate
-Align.Box_PV_Track_IPmax   = 0.5;     // Max track IP (w.r.t. PV candidate)
+Align.Box_PV_Track_IPmax   = 0.8;     // Max track IP (w.r.t. PV candidate)
 
 
 ////////////////////////////////////////////////////

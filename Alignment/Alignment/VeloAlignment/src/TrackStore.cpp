@@ -91,7 +91,7 @@ StatusCode TrackStore::initialize()
 //
 //------------------------------------------------------------------
 
-StatusCode TrackStore::TransformTrack(LHCb::Track* ftrack, LHCb::AlignTrack* atrack, double Map_VELO[])
+StatusCode TrackStore::TransformTrack(LHCb::Track* ftrack, VeloTrack& atrack, double Map_VELO[])
 {
 
   debug() << "Entering TransformTrack" << endmsg;
@@ -99,8 +99,8 @@ StatusCode TrackStore::TransformTrack(LHCb::Track* ftrack, LHCb::AlignTrack* atr
 
   // Start with an a priori good track of undefined type
     
-  atrack->setNIsGood(true);
-  atrack->setNType(-1);
+  atrack.setNIsGood(true);
+  atrack.setNType(-1);
 
   m_veloClusters = get<LHCb::VeloClusters>( LHCb::VeloClusterLocation::Default );
 
@@ -153,7 +153,7 @@ StatusCode TrackStore::TransformTrack(LHCb::Track* ftrack, LHCb::AlignTrack* atr
       if ( !(state.x()==state.x()) ) // Because of PatVeloGeneric bug.
       {
 	verbose() << "Wow, that's bad NAN stuff!!!!" << endmsg;
-	atrack->setNIsGood(false);
+	atrack.setNIsGood(false);
 	return StatusCode::SUCCESS;
       }
 
@@ -220,7 +220,7 @@ StatusCode TrackStore::TransformTrack(LHCb::Track* ftrack, LHCb::AlignTrack* atr
 	{	    
 	  if (r_s[2*station+1] != 0. && fabs(r_s[2*station+1]-rstate) >= m_RDiffCut)
 	  {
-	    atrack->setNIsGood(false);
+	    atrack.setNIsGood(false);
 	    return StatusCode::SUCCESS;
 	  }	    
 	    
@@ -237,7 +237,7 @@ StatusCode TrackStore::TransformTrack(LHCb::Track* ftrack, LHCb::AlignTrack* atr
 	  
 	  if (r_s[2*station] != 0. && fabs(r_s[2*station]-rstate) >= m_RDiffCut)
 	  {
-	    atrack->setNIsGood(false);
+	    atrack.setNIsGood(false);
 	    return StatusCode::SUCCESS;
 	  }
 	  else if (r[station] == 0.)
@@ -305,7 +305,7 @@ StatusCode TrackStore::TransformTrack(LHCb::Track* ftrack, LHCb::AlignTrack* atr
 
   if (!m_OverlapCut && nonzer_right != 0 && nonzer_left != 0) // Overlap track
   {
-    atrack->setNIsGood(false); // Missed hits
+    atrack.setNIsGood(false); // Missed hits
     return StatusCode::SUCCESS; // Reject overlap tracks if requested
   }
 
@@ -317,35 +317,35 @@ StatusCode TrackStore::TransformTrack(LHCb::Track* ftrack, LHCb::AlignTrack* atr
   {
     if (nonzer_right < m_NonzerCut || (nonzer_right != nonzer_right_max && !m_MissedHits))
     {
-      atrack->setNIsGood(false); // Reject track if don't want missed hits or if not enough coord
+      atrack.setNIsGood(false); // Reject track if don't want missed hits or if not enough coord
       return StatusCode::SUCCESS; 
     }
 
-    atrack->setNGoodCoordinates(nonzer_right);
-    atrack->setNFirstStation(ialc_right);
-    atrack->setNType(1); 
+    atrack.setNGoodCoordinates(nonzer_right);
+    atrack.setNFirstStation(ialc_right);
+    atrack.setNType(1); 
   }
   else if (nonzer_right == 0 && nonzer_left != 0) // Left track
   {
     if (nonzer_left < m_NonzerCut || (nonzer_left != nonzer_left_max && !m_MissedHits))
     {
-      atrack->setNIsGood(false); // Reject track if don't want missed hits or if not enough coord
+      atrack.setNIsGood(false); // Reject track if don't want missed hits or if not enough coord
       return StatusCode::SUCCESS; 
     }
 
-    atrack->setNGoodCoordinates(nonzer_left);
-    atrack->setNFirstStation(ialc_left);
-    atrack->setNType(0);  // Left track
+    atrack.setNGoodCoordinates(nonzer_left);
+    atrack.setNFirstStation(ialc_left);
+    atrack.setNType(0);  // Left track
   }
   else if (nonzer_right >= m_NonzerOver && nonzer_left >= m_NonzerOver
 	   && (nonzer_right >= m_NonzerCut || nonzer_left >= m_NonzerCut)) // Overlap track
   {
     debug() << "<<<<<<<<<<<<< OVERLAP TRACK >>>>>>>>>>>>>>>" << endmsg;
     TrackStore::AnalyzeOverlap(&hits[0]);
-    atrack->setNType(2);  // Overlap track
+    atrack.setNType(2);  // Overlap track
   }
 
-  if (atrack->nIsGood() == false) return StatusCode::SUCCESS; // Stop here if the track is rejected
+  if (atrack.nIsGood() == false) return StatusCode::SUCCESS; // Stop here if the track is rejected
 
   verbose() << "Loop 2 is finished" << endmsg;
 
@@ -366,10 +366,10 @@ StatusCode TrackStore::TransformTrack(LHCb::Track* ftrack, LHCb::AlignTrack* atr
 
   double error_x, error_y, error_r, error_p;
 
-  if (atrack->nType() == 0 || atrack->nType() == 1) // Storage for Non-Overlap track
+  if (atrack.nType() == 0 || atrack.nType() == 1) // Storage for Non-Overlap track
   {
 
-    verbose() << "First Station  = " << atrack->nFirstStation() << endmsg;
+    verbose() << "First Station  = " << atrack.nFirstStation() << endmsg;
 
     for (int jj=0; jj<21; jj++) 
     {  
@@ -382,10 +382,10 @@ StatusCode TrackStore::TransformTrack(LHCb::Track* ftrack, LHCb::AlignTrack* atr
 
       // Left sensor have even number, right have odd ones
 
-      if (hits[2*jj+atrack->nType()] == 11 && Map_VELO[jj+21*atrack->nType()] != 0.)   // Hit in the detector plane
+      if (hits[2*jj+atrack.nType()] == 11 && Map_VELO[jj+21*atrack.nType()] != 0.)   // Hit in the detector plane
       {
 
-	int n_stat = 2*jj+atrack->nType();	
+	int n_stat = 2*jj+atrack.nType();	
 
 	// The space-point (local frame so be careful with the phi's)
 	// In fact it appears that local Phi of R sensor is inverted (ACDC geom)
@@ -433,7 +433,7 @@ StatusCode TrackStore::TransformTrack(LHCb::Track* ftrack, LHCb::AlignTrack* atr
 	trackcoord  = Gaudi::XYZPoint(x_glo,y_glo,z_glo);
 	trackerrors = Gaudi::XYZPoint(error_x,error_y,float(jj));  
 
-	atrack->addCoord(trackcoord,trackerrors);
+	atrack.addCoord(trackcoord,trackerrors);
 
 	verbose() << "After addcoord" << endmsg;
       }
@@ -512,7 +512,7 @@ StatusCode TrackStore::TransformTrack(LHCb::Track* ftrack, LHCb::AlignTrack* atr
       
       if (fabs(x) >= m_xOverlapCut)  // Not in the overlap region!!! 
       {
-	atrack->setNIsGood(false); 
+	atrack.setNIsGood(false); 
 	return StatusCode::SUCCESS; // Bad overlap
       }
       
@@ -535,20 +535,20 @@ StatusCode TrackStore::TransformTrack(LHCb::Track* ftrack, LHCb::AlignTrack* atr
       trackerrors = Gaudi::XYZPoint(error_x,error_y,100.*float(jj)+float(hits[jj]));  //
 
       n_valid_coord++;
-      atrack->addCoord(trackcoord,trackerrors);
+      atrack.addCoord(trackcoord,trackerrors);
       
       verbose() << "After addcoord" << endmsg;
     }
 
     if (n_valid_coord < m_NonzerCut)
     {
-      atrack->setNIsGood(false); // Reject track if not enough coord
+      atrack.setNIsGood(false); // Reject track if not enough coord
       return StatusCode::SUCCESS; 
     }
 
     TrackStore::GetTrackSlope(atrack);
     debug() << "n_valid_coord : " << n_valid_coord << endmsg;
-    atrack->setNGoodCoordinates(n_valid_coord);
+    atrack.setNGoodCoordinates(n_valid_coord);
   }
 
   debug() << "Leaving TransformTrack without any trouble" << endmsg;
@@ -566,9 +566,9 @@ StatusCode TrackStore::TransformTrack(LHCb::Track* ftrack, LHCb::AlignTrack* atr
 //------------------------------------------------------------------
 
 
-StatusCode TrackStore::GetTrackSlope(LHCb::AlignTrack* atrack)
+StatusCode TrackStore::GetTrackSlope(VeloTrack& atrack)
 {
-  int Ncoords      = atrack->nGoodCoordinates();
+  int Ncoords      = atrack.nGoodCoordinates();
 
   double local_vecx[2];
   double local_matx[2][2];
@@ -593,11 +593,11 @@ StatusCode TrackStore::GetTrackSlope(LHCb::AlignTrack* atrack)
 
   for (int k=0; k<Ncoords; k++)
   {
-    z_cor = ((atrack->Coords()[k]).first).z();
-    wghtx = ((atrack->Coords()[k]).second).x();
-    rmeasx = ((atrack->Coords()[k]).first).x();
-    wghty = ((atrack->Coords()[k]).second).y();
-    rmeasy = ((atrack->Coords()[k]).first).y();
+    z_cor = ((atrack.Coords()[k]).first).z();
+    wghtx = ((atrack.Coords()[k]).second).x();
+    rmeasx = ((atrack.Coords()[k]).first).x();
+    wghty = ((atrack.Coords()[k]).second).y();
+    rmeasy = ((atrack.Coords()[k]).first).y();
 
     local_vecx[0] += wghtx*rmeasx;
     local_vecx[1] += wghtx*rmeasx*z_cor;
@@ -620,11 +620,11 @@ StatusCode TrackStore::GetTrackSlope(LHCb::AlignTrack* atrack)
 
   if (detx == 0. || dety == 0.) return StatusCode::FAILURE;
 
-  atrack->setNSlope_x((local_vecx[1]*local_matx[0][0]-local_vecx[0]*local_matx[1][0])/detx);
-  atrack->setNSlope_y((local_vecy[1]*local_maty[0][0]-local_vecy[0]*local_maty[1][0])/dety);
+  atrack.setNSlope_x((local_vecx[1]*local_matx[0][0]-local_vecx[0]*local_matx[1][0])/detx);
+  atrack.setNSlope_y((local_vecy[1]*local_maty[0][0]-local_vecy[0]*local_maty[1][0])/dety);
 
-  atrack->setNXo_x((local_vecx[0]*local_matx[1][1]-local_vecx[1]*local_matx[1][0])/detx);
-  atrack->setNYo_y((local_vecy[0]*local_maty[1][1]-local_vecy[1]*local_maty[1][0])/dety);
+  atrack.setNXo_x((local_vecx[0]*local_matx[1][1]-local_vecx[1]*local_matx[1][0])/detx);
+  atrack.setNYo_y((local_vecy[0]*local_maty[1][1]-local_vecy[1]*local_maty[1][0])/dety);
 
   return StatusCode::SUCCESS; 
 }

@@ -15,7 +15,6 @@
 
 // Event
 #include "Event/Track.h"
-#include "Event/AlignTrack.h"
 
 // local
 #include "Align.h"
@@ -23,6 +22,7 @@
 #include "AlignmentTools/IMillepede.h"
 #include "MilleConfig.h"
 #include "PVHisto.h"
+#include "VeloTrack.h"
 #include "math.h"
 
 //-----------------------------------------------------------------------------
@@ -52,6 +52,8 @@ Align::Align( const std::string& name,
   declareProperty("Internal_EQs"              , m_constrain);
   declareProperty("Internal_Residual_Cut"     , m_residual_cut);
   declareProperty("Box_Alignment"             , m_step2);
+  declareProperty("Box_VELOopen"              , m_VELOopen);
+  declareProperty("Box_TrackperPV"            , m_trackmin);
   declareProperty("Box_DOF"                   , m_alignb);
   declareProperty("Box_PTerms"                , m_sigmab);
   declareProperty("Box_EQs"                   , m_constrainb);
@@ -86,31 +88,36 @@ StatusCode Align::initialize() {
   debug() << "==> Initialize" << endmsg;
 
   nEvents = 0;          // Total number of events (event tag is necessary for box alignment)
-
   nTrackSample = 0;     // Number of track in the blind control sample
-    
+
+  nLeft_tracks  = 0;    // Number of left tracks
+  nRight_tracks = 0;    // Number of right tracks
+
   sc = bookNTuple();
   if(sc.isFailure()){
     error() << "Could not book ntuples" << endmsg;
     return sc;
   }
-
+  
   Align::DefineVeloMap();         // Define the stations to be aligned
   Align::GetAlignmentConstants(); // Get the previous constants from the CondDB  
+
 
 //  The TrackStore TOOL is performing the track selection before MILLEPEDE feeding
 //  it transforms Tracks into AlignTracks objects which are formatted for MILLEPEDE
 //
 //  Selection cuts are set externally via the Joboption ($VELOALIGNOPTS/TrackStore.opts)  
+//  Selection cuts for Pattern Recognition are set in $VELOALIGNOPTS/TRGtune.opts  
+
   
   my_tracks = tool<ITrackStore>(my_TrackStore);
 
-  selected_tracks = new LHCb::AlignTracks(); // Containers of align tracks 
-  control_tracks  = new LHCb::AlignTracks(); // Control sample (tracks not used for align)
-  overlap_tracks  = new LHCb::AlignTracks(); // Containers of overlap tracks 
+  selected_tracks.clear(); // Containers of align tracks 
+  control_tracks.clear();  // Control sample (tracks not used for alignment)
+  overlap_tracks.clear();  // Containers of overlap tracks 
 
-  PV_tracks       = new LHCb::AlignTracks(); // (needed for STEP2: PV tracks)
-  my_PV_finder    = new PVHisto();           // The PV tool
+  PV_tracks.clear();                   // (needed for STEP2: PV tracks)
+  my_PV_finder    = new PVHisto();     // The PV tool
 
   return StatusCode::SUCCESS;
 };
@@ -128,6 +135,7 @@ StatusCode Align::execute() {
   // Get the Tracks
  
   LHCb::Tracks* tracks = get<LHCb::Tracks>( LHCb::TrackLocation::Velo );
+  //  LHCb::Tracks* tracks = get<LHCb::Tracks>( LHCb::TrackLocation::Default );
 
   debug() << "Retrieved Tracks       : " << tracks->size() << endmsg;
      
@@ -152,36 +160,39 @@ StatusCode Align::execute() {
     //	my_fitted_track->type() == LHCb::Track::Upstream)
     {
 
-      LHCb::AlignTrack* my_align_track  = new LHCb::AlignTrack();  // create AlignTrack 
+      VeloTrack my_align_track  = VeloTrack();  // create AlignTrack 
 
-      my_align_track->setNEvent(nEvents);
-      my_align_track->setNTrack(nTracks);
+      my_align_track.setNEvent(nEvents);
+      my_align_track.setNTrack(nTracks);
       
       //   Select the track according to the cuts defined in $VELOALIGNOPTS/TrackStore.opts	  
       //   and the geometry defined in $VELOALIGNOPTS/VeloAlign.opts  
 
       my_tracks->TransformTrack(my_fitted_track,my_align_track,&VELOmap[0]); 
 
-      if (my_align_track->nIsGood())  
+      if (my_align_track.nIsGood())  
       {
-	if (my_align_track->nType() == 0 || my_align_track->nType() == 1)
+	if (my_align_track.nType() == 0 || my_align_track.nType() == 1)
 	{
 	  if (m_moni_tracks && (nTrackSample < m_nTrackSample)) // Request control sample
 	  {
 	    nTrackSample++;
-	    control_tracks->insert(my_align_track); 	    
+	    control_tracks.push_back(my_align_track); 	    
 	    Align::fill_params(my_align_track,0);	 
 	  }
 	  else
 	  {
-	    selected_tracks->insert(my_align_track); 
+	    if (my_align_track.nType() == 0) nLeft_tracks++; 
+	    if (my_align_track.nType() == 1) nRight_tracks++; 
+
+	    selected_tracks.push_back(my_align_track); 
 	  }
 	}
 
-	if (my_align_track->nType() == 2 && m_step2) // Overlap tracks (monitored by default)
+	if (my_align_track.nType() == 2 && m_step2) // Overlap tracks (monitored by default)
 	{
 	  if (m_moni_overlaps) Align::fill_overlaps(my_align_track,0);	  
-	  overlap_tracks->insert(my_align_track); 
+	  overlap_tracks.push_back(my_align_track); 
 	}	
       }
     }
@@ -208,6 +219,14 @@ StatusCode Align::finalize() {
   misal_box.resize(24);  
   error_box.resize(24);  
   pulls_box.resize(24); 
+
+  for (int j=0; j<126; j++)
+  {
+    misal_right[j] = 0.;
+    misal_left[j] = 0.;
+  }
+
+
   
   //  Millepede TOOL configuration is contained in a MilleConfig object 
   //  which is defined externally via the Joboption ($VELOALIGNOPTS/Millepede.opts)
@@ -215,87 +234,94 @@ StatusCode Align::finalize() {
   my_align  = tool<IMillepede>(my_Millepede);
   my_Config = new MilleConfig();  
 
-  // Set the configuration for the left box internal alignment
-
-  my_Config->InitMilleTool(my_align,true,0, m_align, m_sigma, m_constrain, 
-			   4, m_starfactr, 3, m_residual_cut, &VELOmap[0]);
-
-  Align::FindAlignment(my_Config);           // Make the global fit 
-  
-  int n_stat  = my_Config->GetNstations();   // The total number of stations to align
-  
-  for (int i=0;i<21;i++) 
+  if (m_step1)
   {
-    if (m_VELOmap_l[i])  // Useless otherwise
-    {
-      for (int jj=0; jj<6; jj++)
-      {
-	misal_left[i+jj*21] = mis_const[my_Config->Get_CorrectStation(i)+jj*n_stat];
-	error_left[i+jj*21] = mis_error[my_Config->Get_CorrectStation(i)+jj*n_stat];
-	pulls_left[i+jj*21] = mis_pull[my_Config->Get_CorrectStation(i)+jj*n_stat];
-      }
-    }
-    else
-    {
-      for (int jj=0; jj<6; jj++)
-      {
-	misal_left[i+jj*21] = -999.;
-	error_left[i+jj*21] = -999.;
-	pulls_left[i+jj*21] = -999.;
-      }
-    }
-  }
 
-  if (m_moni_constants) Align::fill_misalignments(misal_left, error_left, pulls_left, 2);
+    // Set the configuration for the left box internal alignment
+
+    my_Config->InitMilleTool(my_align,true,0, m_align, m_sigma, m_constrain, 
+			     4, m_starfactr, 3, m_residual_cut, &VELOmap[0],nLeft_tracks);
+
+    Align::FindAlignment(my_Config);           // Make the global fit 
   
-  // Now set the configuration for the right box internal alignment
-
-  my_Config->InitMilleTool(my_align,true,1, m_align, m_sigma, m_constrain, 
-			   4, m_starfactr, 3, m_residual_cut, &VELOmap[0]);
-
-  Align::FindAlignment(my_Config);           // Make the global fit
-
-  n_stat  = my_Config->GetNstations();   // The total number of stations to align
-
-  for (int i=0;i<21;i++) 
-  {
-    if (m_VELOmap_r[i])  // Useless otherwise
+    int n_stat  = my_Config->GetNstations();   // The total number of stations to align
+  
+    for (int i=0;i<21;i++) 
     {
-      for (int jj=0; jj<6; jj++)
+      if (m_VELOmap_l[i])  // Useless otherwise
       {
-	misal_right[i+jj*21] = mis_const[my_Config->Get_CorrectStation(i)+jj*n_stat];
-	error_right[i+jj*21] = mis_error[my_Config->Get_CorrectStation(i)+jj*n_stat];
-	pulls_right[i+jj*21] = mis_pull[my_Config->Get_CorrectStation(i)+jj*n_stat];
+	for (int jj=0; jj<6; jj++)
+	{
+	  misal_left[i+jj*21] = mis_const[my_Config->Get_CorrectStation(i)+jj*n_stat];
+	  error_left[i+jj*21] = mis_error[my_Config->Get_CorrectStation(i)+jj*n_stat];
+	  pulls_left[i+jj*21] = mis_pull[my_Config->Get_CorrectStation(i)+jj*n_stat];
+	}
+      }
+      else
+      {
+	for (int jj=0; jj<6; jj++)
+	{
+	  misal_left[i+jj*21] = -999.;
+	  error_left[i+jj*21] = -999.;
+	  pulls_left[i+jj*21] = -999.;
+	}
       }
     }
-    else
+    
+    if (m_moni_constants) Align::fill_misalignments(misal_left, error_left, pulls_left, 2);
+    
+    // Now set the configuration for the right box internal alignment
+    
+    my_Config->InitMilleTool(my_align,true,1, m_align, m_sigma, m_constrain, 
+			     4, m_starfactr, 3, m_residual_cut, &VELOmap[0],nRight_tracks);
+
+    Align::FindAlignment(my_Config);           // Make the global fit
+
+    n_stat  = my_Config->GetNstations();   // The total number of stations to align
+
+    for (int i=0;i<21;i++) 
     {
-      for (int jj=0; jj<6; jj++)
+      if (m_VELOmap_r[i])  // Useless otherwise
       {
-	misal_right[i+jj*21] = -999.;
-	error_right[i+jj*21] = -999.;
-	pulls_right[i+jj*21] = -999.;
+	for (int jj=0; jj<6; jj++)
+	{
+	  misal_right[i+jj*21] = mis_const[my_Config->Get_CorrectStation(i)+jj*n_stat];
+	  error_right[i+jj*21] = mis_error[my_Config->Get_CorrectStation(i)+jj*n_stat];
+	  pulls_right[i+jj*21] = mis_pull[my_Config->Get_CorrectStation(i)+jj*n_stat];
+	}
+      }
+      else
+      {
+	for (int jj=0; jj<6; jj++)
+	{
+	  misal_right[i+jj*21] = -999.;
+	  error_right[i+jj*21] = -999.;
+	  pulls_right[i+jj*21] = -999.;
+	}
       }
     }
-  }
-
-  if (m_moni_constants) Align::fill_misalignments(misal_right, error_right, pulls_right, 3);
-
+    
+    if (m_moni_constants) Align::fill_misalignments(misal_right, error_right, pulls_right, 3);
+  }  
+  
   if (m_moni_tracks)  // Monitor the residuals of the control sample AFTER alignment
   {
-    LHCb::AlignTracks::const_iterator itrack;
+    VeloTracks::const_iterator itrack;
+    int iteration = 0;
 
-    for (itrack = control_tracks->begin(); itrack != control_tracks->end(); ++itrack ) 
+    for (itrack = control_tracks.begin(); itrack != control_tracks.end(); ++itrack ) 
     {
-      LHCb::AlignTrack* my_corrected_track  = new LHCb::AlignTrack();  // create AlignTrack 
+      VeloTrack my_corrected_track  = VeloTrack();  // create AlignTrack 
 	
-      my_corrected_track->setNEvent((*itrack)->nEvent());
+      my_corrected_track.setNEvent(control_tracks[iteration].nEvent());
 	
-      my_Config->correcTrack(*itrack,my_corrected_track,
+      my_Config->correcTrack(control_tracks[iteration],my_corrected_track,
 			     misal_left,misal_right,misal_box,
 			     &VELOmap[0]);
 
       Align::fill_params(my_corrected_track,1);	 
+
+      iteration++;
     }
   }
 
@@ -305,9 +331,14 @@ StatusCode Align::finalize() {
   if (m_step2)
   {
     for (int i=0;i<24;i++) misal_box[i] = 0.;
-    
+
+    if (m_VELOopen) // Just a quick check
+    {
+      for (int i=0;i<6;i++) m_constrainb[i] = false;
+    }    
+
     my_Config->InitBox(my_align,m_alignb, m_sigmab, m_constrainb, 
-    		       4.*m_starfactr, m_residual_cutb, (zmoy_R+zmoy_L)/2);
+    		       4.*m_starfactr, m_residual_cutb, (zmoy_R+zmoy_L)/2,2*nEvents);
   
     Align::FindAlignment(my_Config);  // Make the global fit  
 
@@ -360,13 +391,17 @@ StatusCode Align::FindAlignment(MilleConfig *my_config)
 
   // First we perform loop on tracks or vertices, depending which alignment step we are considering
 
-  LHCb::AlignTracks::const_iterator itrack;
+  VeloTracks::const_iterator itrack;
 
   if (my_config->isInternal())   // Internal Alignment 
   {
-    for (itrack = selected_tracks->begin(); itrack != selected_tracks->end(); ++itrack ) 
-      {if ((*itrack)->nType() == my_config->isLeft())
-	my_config->PutTrack(*itrack,my_align);
+    int iteration = 0;
+
+    for (itrack = selected_tracks.begin(); itrack != selected_tracks.end(); ++itrack ) 
+      {if (selected_tracks[iteration].nType() == my_config->isLeft())
+	my_config->PutTrack(selected_tracks[iteration],my_align);
+
+       iteration++;
       }
   }
   else // Box alignment
@@ -374,41 +409,52 @@ StatusCode Align::FindAlignment(MilleConfig *my_config)
 
     // Start by putting in the overlap tracks 
 
-    for (itrack = overlap_tracks->begin(); itrack != overlap_tracks->end(); ++itrack ) 
+    if (!m_VELOopen) // Don't use overlap in VELO open mode
     {
-      LHCb::AlignTrack* my_corrected_track  = new LHCb::AlignTrack();  // create AlignTrack 
+      int iteration = 0;
 
-      my_corrected_track->setNEvent((*itrack)->nEvent());
+      for (itrack = overlap_tracks.begin(); itrack != overlap_tracks.end(); ++itrack ) 
+      {
+	VeloTrack my_corrected_track = VeloTrack();  // create AlignTrack 
+	
+	my_corrected_track.setNEvent(overlap_tracks[iteration].nEvent());
+	
+	my_config->correcTrack(overlap_tracks[iteration],my_corrected_track,
+			       misal_left,misal_right,misal_box,
+			       &VELOmap[0]);
+	
+	if (my_corrected_track.nIsGood()) 
+	  my_config->PutOverlapTrack(my_corrected_track,my_align);
 
-      my_config->correcTrack(*itrack,my_corrected_track,
-			     misal_left,misal_right,misal_box,
-			     &VELOmap[0]);
-
-      if (my_corrected_track->nIsGood()) 
-	my_config->PutOverlapTrack(my_corrected_track,my_align);
-    }
-      
+	iteration++;
+      }
+    }      
 
     // Then put the primary vertices
 
     for (int j=1; j<=nEvents; j++)
     { 
-      PV_tracks->clear();
-	
-      for (itrack = selected_tracks->begin(); itrack != selected_tracks->end(); ++itrack ) 
+      PV_tracks.clear();
+      int iteration = 0;
+
+      for (itrack = selected_tracks.begin(); itrack != selected_tracks.end(); ++itrack ) 
       {
-	if((*itrack)->nEvent() == j && (*itrack)->nIsGood() == true && (*itrack)->nType() < 2)
+	if(selected_tracks[iteration].nEvent() == j 
+	   && selected_tracks[iteration].nIsGood() == true 
+	   && selected_tracks[iteration].nType() < 2)
 	{ 
-	  LHCb::AlignTrack* my_corrected_track  = new LHCb::AlignTrack();  // create AlignTrack 
+	  VeloTrack my_corrected_track  = VeloTrack();  // create AlignTrack 
 	  
-	  my_corrected_track->setNEvent(j);
-	  my_config->correcTrack(*itrack,my_corrected_track,
+	  my_corrected_track.setNEvent(j);
+	  my_config->correcTrack(selected_tracks[iteration],my_corrected_track,
 				 misal_left,misal_right,misal_box,
 				 &VELOmap[0]);
 	  
-	  if (my_corrected_track->nIsGood())
-	    PV_tracks->insert(my_corrected_track);
+	  if (my_corrected_track.nIsGood())
+	    PV_tracks.push_back(my_corrected_track);
 	}
+	
+	iteration++;
       }
 
       int nPV = -1;  // Total number of PV
@@ -419,7 +465,8 @@ StatusCode Align::FindAlignment(MilleConfig *my_config)
       if (nPV >= 0) // Found at least one
 	//if (nPV == 0) // Found only one
       {
-	for (int k=0; k<=nPV; k++) my_config->PutPVTrack(PV_tracks,my_align,k,zmoy_L,zmoy_R);
+	for (int k=0; k<=nPV; k++) 
+	  my_config->PutPVTrack(PV_tracks,my_align,k,zmoy_L,zmoy_R,m_VELOopen,m_trackmin);
 
 	if (m_moni_PV) Align::fill_primary(PV_tracks,nPV);
       }
@@ -752,18 +799,18 @@ StatusCode Align::bookNTuple() {
 
 
 /////////////////////////////////////////////////////
-StatusCode Align::fill_params(LHCb::AlignTrack* my_track, int my_step) 
+StatusCode Align::fill_params(VeloTrack& my_track, int my_step) 
 {
 
   double slx, sly, x0, y0;
   n_step = my_step;
   
-  slx  = my_track->nSlope_x();
-  x0   = my_track->nXo_x();
-  sly  = my_track->nSlope_y();
-  y0   = my_track->nYo_y();
+  slx  = my_track.nSlope_x();
+  x0   = my_track.nXo_x();
+  sly  = my_track.nSlope_y();
+  y0   = my_track.nYo_y();
 
-  int Ncoords = my_track->nGoodCoordinates();
+  int Ncoords = my_track.nGoodCoordinates();
 
   for (int k=0; k<Ncoords; k++)
   {
@@ -773,15 +820,15 @@ StatusCode Align::fill_params(LHCb::AlignTrack* my_track, int my_step)
     n_vy = sly*n_vz+y0;
     n_vx = slx*n_vz+x0;
   
-    (my_track->nType() == 0)      
+    (my_track.nType() == 0)      
       ? n_side =0
       : n_side =1;
 
-    n_stationB = ((my_track->Coords()[k]).first).z();
+    n_stationB = ((my_track.Coords()[k]).first).z();
     //    wghtx = ((my_track->Coords()[k]).second).x();
-    n_X = ((my_track->Coords()[k]).first).x();
+    n_X = ((my_track.Coords()[k]).first).x();
     //    wghty = ((my_track->Coords()[k]).second).y();
-    n_Y = ((my_track->Coords()[k]).first).y();
+    n_Y = ((my_track.Coords()[k]).first).y();
   
     n_resX = n_X-(slx*n_stationB+x0);
     n_resY = n_Y-(sly*n_stationB+y0);
@@ -794,20 +841,20 @@ StatusCode Align::fill_params(LHCb::AlignTrack* my_track, int my_step)
 }
 
 /////////////////////////////////////////////////////
-StatusCode Align::fill_overlaps(LHCb::AlignTrack* my_track, int my_step)
+StatusCode Align::fill_overlaps(VeloTrack& my_track, int my_step)
 {
 
-  debug() << "Overlap track on event : " << my_track->nEvent() << endmsg;
+  debug() << "Overlap track on event : " << my_track.nEvent() << endmsg;
 
-  for (unsigned int j=0; j<my_track->Coords().size(); j++)
+  for (unsigned int j=0; j<my_track.Coords().size(); j++)
   {
-    n_event = my_track->nEvent();
-    n_track = my_track->nTrack();
-    n_type  = my_track->nType()+my_step;
-    n_x = ((my_track->Coords()[j]).first).x();
-    n_y = ((my_track->Coords()[j]).first).y();
-    n_z = ((my_track->Coords()[j]).first).z();
-    n_station = ((my_track->Coords()[j]).second).z();
+    n_event = my_track.nEvent();
+    n_track = my_track.nTrack();
+    n_type  = my_track.nType()+my_step;
+    n_x = ((my_track.Coords()[j]).first).x();
+    n_y = ((my_track.Coords()[j]).first).y();
+    n_z = ((my_track.Coords()[j]).first).z();
+    n_station = ((my_track.Coords()[j]).second).z();
     Align::writeNtuple("ALIGN/overlaps");
   }
 
@@ -841,30 +888,33 @@ StatusCode Align::fill_misalignments(std::vector<double> constants, std::vector<
 
 
 /////////////////////////////////////////////////////
-StatusCode Align::fill_primary(LHCb::AlignTracks* aPV, int PV_numb)
+StatusCode Align::fill_primary(VeloTracks& aPV, int PV_numb)
 {
 
-  LHCb::AlignTracks::const_iterator itrack;
+  VeloTracks::const_iterator itrack;
 
   debug() << PV_numb+1 << " primary vertices found "<< endmsg;
 
   for (int k=0; k<=PV_numb; k++) 
   {  
     int compteur = 0;
+    int iteration = 0;
 
-    for (itrack = aPV->begin(); itrack != aPV->end(); ++itrack ) 
+    for (itrack = aPV.begin(); itrack != aPV.end(); ++itrack ) 
     {
-      if ((*itrack)->nPVnumber() == k && compteur == 0)  
+      if (aPV[iteration].nPVnumber() == k && compteur == 0)  
       {      
-	n_eventV = (*itrack)->nEvent();
+	n_eventV = aPV[iteration].nEvent();
 	n_vertex = k;
-	n_PVtracks = (*itrack)->nTrack();
-	n_PVx = (*itrack)->nPV_x();
-	n_PVy = (*itrack)->nPV_y();
-	n_PVz = (*itrack)->nPV_z();
+	n_PVtracks = aPV[iteration].nTrack();
+	n_PVx = aPV[iteration].nPV_x();
+	n_PVy = aPV[iteration].nPV_y();
+	n_PVz = aPV[iteration].nPV_z();
 	compteur = 1;
 	Align::writeNtuple("ALIGN/PV");
       }
+
+      iteration++;
     }
   }
 

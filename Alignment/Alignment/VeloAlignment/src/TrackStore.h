@@ -9,7 +9,7 @@
 
 #include "ITrackStore.h"            // Interface
 
-#include "Event/AlignTrack.h"
+#include "VeloTrack.h"
 
 #include "Kernel/LHCbID.h"
 #include "Kernel/ParticleID.h"
@@ -46,8 +46,8 @@ public:
 
   /// Initialization
   virtual StatusCode initialize();
-  virtual StatusCode TransformTrack(LHCb::Track* ftrack, LHCb::AlignTrack* atrack, double Map_VELO[]);
-  virtual StatusCode GetTrackSlope(LHCb::AlignTrack* atrack);
+  virtual StatusCode TransformTrack(LHCb::Track* ftrack, VeloTrack& atrack, double Map_VELO[]);
+  virtual StatusCode GetTrackSlope(VeloTrack& atrack);
 
 protected:
 

@@ -76,7 +76,7 @@ void PVHisto::reset()
 -----------------------------------------------------------
 */
 
-StatusCode PVHisto::FindPVTracks(LHCb::AlignTracks* aPV, double m_z_min,
+StatusCode PVHisto::FindPVTracks(VeloTracks& aPV, double m_z_min,
 				 double m_z_max, int m_PV_trackmin, double m_z_sigma, 
 				 double m_IPmax, double m_TrIPmax, int& nPV) 
 {
@@ -84,7 +84,7 @@ StatusCode PVHisto::FindPVTracks(LHCb::AlignTracks* aPV, double m_z_min,
   //cout << "Try to find PV " << endl;
   //cout << "" << endl; 
 
-  LHCb::AlignTracks::const_iterator itrack;
+  VeloTracks::const_iterator itrack;
 
   double m_Sigma = m_z_sigma;
   double m_Gran = 1.;
@@ -97,12 +97,17 @@ StatusCode PVHisto::FindPVTracks(LHCb::AlignTracks* aPV, double m_z_min,
 
   bool keepgoing = true;
 
+  int iteration = 0;
+
   PVHisto::iterator start, end, maxBin;
  
-  for (itrack = aPV->begin(); itrack != aPV->end(); ++itrack ) 
+  for (itrack = aPV.begin(); itrack != aPV.end(); ++itrack ) 
   {
-    (*itrack)->setNPVnumber(-99);  
+    aPV[iteration].setNPVnumber(-99);  
+    iteration++;
   }
+
+  iteration = 0;
 
   // Histogram for peak finding and parallel vector to pvTracks for caching track info
   PVHisto zCloseHisto( m_z_min, m_z_max, m_Gran);
@@ -112,15 +117,19 @@ StatusCode PVHisto::FindPVTracks(LHCb::AlignTracks* aPV, double m_z_min,
     n_sel_tracks = 0;
     zCloseHisto.reset();
 
-    for (itrack = aPV->begin(); itrack != aPV->end(); ++itrack ) 
+    for (itrack = aPV.begin(); itrack != aPV.end(); ++itrack ) 
     {
-      if((*itrack)->nPVnumber() == -99 && (*itrack)->nZclos() > m_z_min && (*itrack)->nZclos() < m_z_max)  
+      if(aPV[iteration].nPVnumber() == -99 && aPV[iteration].nZclos() > m_z_min && aPV[iteration].nZclos() < m_z_max)  
       {
 	//cout << "n_sel_tracks is " << n_sel_tracks << endl;
         n_sel_tracks++;
-	zCloseHisto.fill((*itrack)->nZclos());
+	zCloseHisto.fill(aPV[iteration].nZclos());
       }
+
+      iteration++;
     }
+
+    iteration = 0;
 
     // Don't need to find a maximum if there is not enough tracks 
 
@@ -157,31 +166,39 @@ StatusCode PVHisto::FindPVTracks(LHCb::AlignTracks* aPV, double m_z_min,
 
       // First loop just to count the number of tracks in the window
 
-      for (itrack = aPV->begin(); itrack != aPV->end(); ++itrack ) 
+      for (itrack = aPV.begin(); itrack != aPV.end(); ++itrack ) 
       {
-       	if((*itrack)->nPVnumber() == -99)  
+       	if(aPV[iteration].nPVnumber() == -99)  
 	{
-	  zclos_bin = zCloseHisto.getbin((*itrack)->nZclos());      
+	  zclos_bin = zCloseHisto.getbin(aPV[iteration].nZclos());      
 	  //
-	  //	  cout << (*itrack)->nZclos() << endl;
+	  //	  cout << aPV[iteration].nZclos() << endl;
 	  //
 	  if (zclos_bin <= end && zclos_bin >= start)
 	  {
 	    n_v_tracks++;
-	    (*itrack)->setNPVnumber(nPV);      
+	    aPV[iteration].setNPVnumber(nPV);      
 	  }
 	}
+
+	iteration++;
       }
+
+      iteration=0;
 
       if (n_v_tracks < m_PV_trackmin) // Not enough tracks
       {
-	for (itrack = aPV->begin(); itrack != aPV->end(); ++itrack ) 
+	for (itrack = aPV.begin(); itrack != aPV.end(); ++itrack ) 
 	{
-	  if ((*itrack)->nPVnumber() == nPV) // Throw the track 
+	  if (aPV[iteration].nPVnumber() == nPV) // Throw the track 
 	  {
-	    (*itrack)->setNPVnumber(-1);      
+	    aPV[iteration].setNPVnumber(-1);      
 	  }
+
+	  iteration++;
 	}
+
+	iteration=0;
 
  	nPV--;
       }
@@ -194,19 +211,19 @@ StatusCode PVHisto::FindPVTracks(LHCb::AlignTracks* aPV, double m_z_min,
 
 	int n_v_tracks_total = n_v_tracks;
 
-	for (itrack = aPV->begin(); itrack != aPV->end(); ++itrack ) 
+	for (itrack = aPV.begin(); itrack != aPV.end(); ++itrack ) 
 	{
-	  if ((*itrack)->nPVnumber() == nPV) 
+	  if (aPV[iteration].nPVnumber() == nPV) 
 	  {
-	    double vp_x = (*itrack)->nPV_x();
-	    double vp_y = (*itrack)->nPV_y();
-	    double vp_z = (*itrack)->nPV_z();
-	    double chisq = (*itrack)->nPV_chi();
+	    double vp_x = aPV[iteration].nPV_x();
+	    double vp_y = aPV[iteration].nPV_y();
+	    double vp_z = aPV[iteration].nPV_z();
+	    double chisq = aPV[iteration].nPV_chi();
 
-	    double x0 = (*itrack)->nXo_x()+(*itrack)->nSlope_x()*vp_z;
-	    double y0 = (*itrack)->nYo_y()+(*itrack)->nSlope_y()*vp_z;
-	    double sig_x = (*itrack)->nErrX_x();
-	    double sig_y = (*itrack)->nErrY_y();
+	    double x0 = aPV[iteration].nXo_x()+aPV[iteration].nSlope_x()*vp_z;
+	    double y0 = aPV[iteration].nYo_y()+aPV[iteration].nSlope_y()*vp_z;
+	    double sig_x = aPV[iteration].nErrX_x();
+	    double sig_y = aPV[iteration].nErrY_y();
 
 	    double IParam = sqrt((x0-vp_x)*(x0-vp_x)+(y0-vp_y)*(y0-vp_y));
 	    double chiprop = (((x0-vp_x)*(x0-vp_x))/(sig_x*sig_x)+((y0-vp_y)*(y0-vp_y))/(sig_y*sig_y))/chisq;
@@ -214,21 +231,29 @@ StatusCode PVHisto::FindPVTracks(LHCb::AlignTracks* aPV, double m_z_min,
 	    
 	    if (chiprop >= 5./float(n_v_tracks_total) || IParam >= m_TrIPmax || IP_PV >= m_IPmax)
 	    {
-	      (*itrack)->setNPVnumber(-1);      
+	      aPV[iteration].setNPVnumber(-1);      
 	      n_v_tracks--;
 	    }
 	  }
+
+	  iteration++;
 	}
+
+	iteration = 0;
       
 	if (n_v_tracks < m_PV_trackmin) // Not enough tracks after rejection
 	{
-	  for (itrack = aPV->begin(); itrack != aPV->end(); ++itrack ) 
+	  for (itrack = aPV.begin(); itrack != aPV.end(); ++itrack ) 
 	  {
-	    if ((*itrack)->nPVnumber() == nPV) // Make the track non re-usable (!!perfectible!!)  
+	    if (aPV[iteration].nPVnumber() == nPV) // Make the track non re-usable (!!perfectible!!)  
 	    {
-	      (*itrack)->setNPVnumber(-1);      
+	      aPV[iteration].setNPVnumber(-1);      
 	    }
+	    
+	    iteration++;
 	  }
+
+	  iteration = 0;
 
 	  nPV--;
 	}
@@ -246,9 +271,9 @@ StatusCode PVHisto::FindPVTracks(LHCb::AlignTracks* aPV, double m_z_min,
 }
 
 
-StatusCode PVHisto::FitPV(LHCb::AlignTracks* aPV, int PV_number)
+StatusCode PVHisto::FitPV(VeloTracks& aPV, int PV_number)
 {
-  LHCb::AlignTracks::const_iterator itrack;
+  VeloTracks::const_iterator itrack;
 
   double sum_zclos = 0.0;
 
@@ -264,18 +289,20 @@ StatusCode PVHisto::FitPV(LHCb::AlignTracks* aPV, int PV_number)
   double d_y = 0.0;
   double e_y = 0.0;
 
-  for (itrack = aPV->begin(); itrack != aPV->end(); ++itrack ) 
+  int iteration = 0;
+
+  for (itrack = aPV.begin(); itrack != aPV.end(); ++itrack ) 
   {
-    if ((*itrack)->nPVnumber() == PV_number) 
+    if (aPV[iteration].nPVnumber() == PV_number) 
     {
-      sum_zclos += (*itrack)->nZclos();
+      sum_zclos += aPV[iteration].nZclos();
 	      
-      double sX = (*itrack)->nSlope_x();
-      double sY = (*itrack)->nSlope_y();
-      double x0 = (*itrack)->nXo_x();
-      double y0 = (*itrack)->nYo_y();
-      double sig_x = (*itrack)->nErrX_x();
-      double sig_y = (*itrack)->nErrY_y();
+      double sX = aPV[iteration].nSlope_x();
+      double sY = aPV[iteration].nSlope_y();
+      double x0 = aPV[iteration].nXo_x();
+      double y0 = aPV[iteration].nYo_y();
+      double sig_x = aPV[iteration].nErrX_x();
+      double sig_y = aPV[iteration].nErrY_y();
 
       a_x += x0/(sig_x*sig_x);
       b_x += 1/(sig_x*sig_x);
@@ -289,7 +316,12 @@ StatusCode PVHisto::FitPV(LHCb::AlignTracks* aPV, int PV_number)
       d_y += (sY*sY)/(sig_y*sig_y);
       e_y += (sY*y0)/(sig_y*sig_y); 	    
     }
+
+    iteration++;
+
   }
+
+  iteration = 0;
 	
   double vp_z = ((c_x*a_x)/b_x+(c_y*a_y)/b_y-e_x-e_y)/(d_x+d_y-(c_x*c_x)/b_x-(c_y*c_y)/b_y); 
   double vp_y = c_y*vp_z/b_y+a_y/b_y;
@@ -300,32 +332,40 @@ StatusCode PVHisto::FitPV(LHCb::AlignTracks* aPV, int PV_number)
   double chisq = 0.;
   int n_dof = 0;
 
-  for (itrack = aPV->begin(); itrack != aPV->end(); ++itrack ) 
+  for (itrack = aPV.begin(); itrack != aPV.end(); ++itrack ) 
   {
-    if ((*itrack)->nPVnumber() == PV_number) // Track into the vertex
+    if (aPV[iteration].nPVnumber() == PV_number) // Track into the vertex
     {
-      double x0 = (*itrack)->nXo_x()+(*itrack)->nSlope_x()*vp_z;
-      double y0 = (*itrack)->nYo_y()+(*itrack)->nSlope_y()*vp_z;
-      double sig_x = (*itrack)->nErrX_x();
-      double sig_y = (*itrack)->nErrY_y();
+      double x0 = aPV[iteration].nXo_x()+aPV[iteration].nSlope_x()*vp_z;
+      double y0 = aPV[iteration].nYo_y()+aPV[iteration].nSlope_y()*vp_z;
+      double sig_x = aPV[iteration].nErrX_x();
+      double sig_y = aPV[iteration].nErrY_y();
 
       chisq += ((x0-vp_x)/sig_x)*((x0-vp_x)/sig_x);
       chisq += ((y0-vp_y)/sig_y)*((y0-vp_y)/sig_y);
       n_dof += 2;
     }
+
+    iteration++;
   }
 
+  iteration=0;
 
-  for (itrack = aPV->begin(); itrack != aPV->end(); ++itrack ) 
+  for (itrack = aPV.begin(); itrack != aPV.end(); ++itrack ) 
   {
-    if ((*itrack)->nPVnumber() == PV_number) // Track into the vertex
+    if (aPV[iteration].nPVnumber() == PV_number) // Track into the vertex
     {
-      (*itrack)->setNPV_x(vp_x); 
-      (*itrack)->setNPV_y(vp_y); 
-      (*itrack)->setNPV_z(vp_z); 
-      (*itrack)->setNPV_chi(chisq); 
+      aPV[iteration].setNPV_x(vp_x); 
+      aPV[iteration].setNPV_y(vp_y); 
+      aPV[iteration].setNPV_z(vp_z); 
+      aPV[iteration].setNPV_chi(chisq); 
     }
+
+    iteration++;
   }
+
+  iteration=0;
+
   /*
   cout << " " << endl;
   cout << "Primary vertex coordinates (in mm): " << endl;

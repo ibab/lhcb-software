@@ -11,7 +11,7 @@
 
 #include "MilleConfig.h"
 #include "PVHisto.h"
-
+#include "VeloTrack.h"
 
 /** @class Align Align.h Align/Align.h
  *  
@@ -37,17 +37,16 @@ public:
   StatusCode FindAlignment(MilleConfig* my_config); 
 
   StatusCode DefineVeloMap();   
+  StatusCode GetAlignmentConstants();
+
 
   StatusCode bookNTuple();
   StatusCode writeNtuple(std::string ntupleName); 
-
-  StatusCode fill_params(LHCb::AlignTrack* my_track, int my_step);
-  StatusCode fill_overlaps(LHCb::AlignTrack* my_track, int my_step);
+  StatusCode fill_params(VeloTrack& my_track, int my_step);
+  StatusCode fill_overlaps(VeloTrack& my_track, int my_step);
   StatusCode fill_misalignments(std::vector<double> constants, std::vector<double> errors, 
 				std::vector<double> pulls, int my_step);
-  StatusCode fill_primary(LHCb::AlignTracks* aPV, int PV_numb);
-
-  StatusCode GetAlignmentConstants();
+  StatusCode fill_primary(VeloTracks& aPV, int PV_numb);
 
   inline std::string itos(int i)	// convert int to string
   {
@@ -65,14 +64,13 @@ private:
   MilleConfig       *my_Config;
   ITrackStore       *my_tracks;
   IMillepede        *my_align;
-
   PVHisto           *my_PV_finder;
 
-  LHCb::AlignTracks    *selected_tracks;
-  LHCb::AlignTracks    *stored_tracks;
-  LHCb::AlignTracks    *control_tracks;
-  LHCb::AlignTracks    *overlap_tracks;
-  LHCb::AlignTracks    *PV_tracks;
+
+  VeloTracks    selected_tracks;   // Used for step one
+  VeloTracks    control_tracks;    // Used for the control sample
+  VeloTracks    overlap_tracks;    // Used for the overlap tracks
+  VeloTracks    PV_tracks;         // Temporary container for tracks coming from a same vertex
 
   std::vector<double> misal_left;
   std::vector<double> misal_right;
@@ -100,6 +98,8 @@ private:
   std::vector<double> m_residual_cut;
 
   bool                m_step2;
+  bool                m_VELOopen;
+  int                 m_trackmin;
   std::vector<bool>   m_alignb;
   std::vector<double> m_sigmab;
   std::vector<bool>   m_constrainb;
@@ -109,11 +109,6 @@ private:
   double              m_z_sigma;
   double              m_IPmax;
   double              m_TrIPmax;
-
-  bool                m_step3;
-  std::vector<bool>   m_aligno;
-  std::vector<double> m_sigmao;
-  std::vector<double> m_residual_cuto;
 
   double              m_starfactr;
   int                 m_maxtrack;
@@ -145,6 +140,9 @@ private:
   //track info
   int nEvents;
   int nTrackSample;
+
+  int nLeft_tracks;
+  int nRight_tracks;
 
  /// Pointer to N-tuple
 

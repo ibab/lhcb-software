@@ -5,7 +5,7 @@
 //#include "GaudiKernel/MsgStream.h"
 
 #include "AlignmentTools/IMillepede.h"
-#include "Event/AlignTrack.h"
+#include "VeloTrack.h"
 
 /** @class MilleConfig MilleConfig.h VeloAlignment/MilleConfig.h
  *  
@@ -25,28 +25,30 @@ public:
   void InitMilleTool(IMillepede *my_millepede, bool i_align, int right,
 		     std::vector<bool> DOF, std::vector<double> Sigm,
 		     std::vector<bool> Cons, int nloc, double starfact, 
-		     int nstd, std::vector<double> res_cut, double VELOmap[]); 
+		     int nstd, std::vector<double> res_cut, double VELOmap[],
+		     int n_objects); 
 
   void InitBox(IMillepede *my_millepede,
 	       std::vector<bool> DOF, std::vector<double> Sigm,
 	       std::vector<bool> Cons, double starfact, 
-	       std::vector<double> res_cut, double zmoy); 
+	       std::vector<double> res_cut, double zmoy,
+	       int n_objects); 
 
-  StatusCode PutTrack(LHCb::AlignTrack* atrack, IMillepede *my_millepede);
+  StatusCode PutTrack(VeloTrack& atrack, IMillepede *my_millepede);
 
-  StatusCode PutOverlapTrack(LHCb::AlignTrack* atrack, IMillepede *my_millepede);
+  StatusCode PutOverlapTrack(VeloTrack& atrack, IMillepede *my_millepede);
 
-  StatusCode PutPVTrack(LHCb::AlignTracks* aPV, IMillepede* my_millepede, int nPV,
-			double zmoyl, double zmoyr);    
+  StatusCode PutPVTrack(VeloTracks& aPV, IMillepede* my_millepede, int nPV,
+			double zmoyl, double zmoyr, double VELO_open, int n_min);
 
-  StatusCode correcTrack(LHCb::AlignTrack* mistrack, 
-			 LHCb::AlignTrack* correctrack, 
+  StatusCode correcTrack(VeloTrack& mistrack, 
+			 VeloTrack& correctrack, 
 			 std::vector<double> left_constants, 
 			 std::vector<double> right_constants,
 			 std::vector<double> box_constants,  
 			 double VELOmap[]);
 
-  StatusCode GetTrackSlope(LHCb::AlignTrack* atrack);
+  StatusCode GetTrackSlope(VeloTrack& atrack);
 
 // Is it internal or box alignment ?
 

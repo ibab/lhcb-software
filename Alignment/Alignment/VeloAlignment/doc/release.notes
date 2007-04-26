@@ -1,6 +1,17 @@
 ! Package     : VeloAlignment
 ! Responsible : Sebastien Viret
 
+
+!=============================================================================
+! 26/04/2007 - Sebastien Viret  ** v2r4 **
+
+  New optimisation of the code. In particular, the AlignTrack.xml file has been
+  replaced by a simpler VeloTrack.h class, now sitting in /src/ directory.
+
+  This version NEEDS 'AlignmentTools v2r5' or higher to work. A new memory 
+  allocation technique has been setup. 
+
+
 !=============================================================================
 ! 07/03/2007 - Sebastien Viret  ** v2r3 **
 

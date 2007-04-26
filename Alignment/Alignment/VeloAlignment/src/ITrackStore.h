@@ -7,7 +7,7 @@
 
 // from Event
 #include "Event/Track.h"
-#include "Event/AlignTrack.h"
+#include "VeloTrack.h"
 
 //from DetDesc
 #include "VeloDet/DeVelo.h"
@@ -32,7 +32,7 @@ public:
   /// Retrieve interface ID
   static const InterfaceID& interfaceID() { return IID_ITrackStore; }
 
-  virtual StatusCode TransformTrack(LHCb::Track* ftrack, LHCb::AlignTrack* atrack, double Map_VELO[]) = 0;
-  virtual StatusCode GetTrackSlope(LHCb::AlignTrack* atrack) = 0;
+  virtual StatusCode TransformTrack(LHCb::Track* ftrack, VeloTrack& atrack, double Map_VELO[]) = 0;
+  virtual StatusCode GetTrackSlope(VeloTrack& atrack) = 0;
 };
 #endif // VELOALIGNMENT_ITRACKSTORE_H

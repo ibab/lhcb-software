@@ -30,9 +30,9 @@ PatVeloSpaceTracking.CleanOverlaps     = true;
 //
 
 
-PatVeloGeneric.FullAlignment        = true;
-PatVeloGeneric.MinModules           = 5;
-PatVeloGeneric.ClusterCut           = 20;
+PatVeloGeneric.FullAlignment        = false;
+PatVeloGeneric.MinModules           = 4;  // 5 for closed VELO, 3 for Open
+PatVeloGeneric.ClusterCut           = 40;
 PatVeloGeneric.KalmanState          = 4;
 PatVeloGeneric.ForwardProp          = true;
 PatVeloGeneric.MaxSkip              = 3;

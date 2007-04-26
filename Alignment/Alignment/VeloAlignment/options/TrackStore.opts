@@ -4,7 +4,7 @@
 //
 
 ToolSvc.TrackStore.RDiffMax      = 3.;
-ToolSvc.TrackStore.NonzerMin     = 4;
+ToolSvc.TrackStore.NonzerMin     = 4;   // 4 for Closed Velo, 3 for Open
 ToolSvc.TrackStore.NonzerOverlap = 2;
 ToolSvc.TrackStore.XOverlapCut	 = 5.; 
 ToolSvc.TrackStore.MissedHits    = true;
