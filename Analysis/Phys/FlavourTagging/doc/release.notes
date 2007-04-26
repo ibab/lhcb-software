@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.106 2007-03-09 11:22:20 pkoppenb Exp $
+! $Id: release.notes,v 1.107 2007-04-26 13:00:22 cattanem Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTagging
 ! Responsible : Marco Musy (marco.musy@cern.ch)
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
+
+!======================== FlavourTagging v7r2p1 2007-04-26 ===================
+! 2007-04-26 - Marco Cattaneo
+ - Get ICaloElectron.h from CaloUtils (moved from CaloInterfaces in LHCb v22r4)
+ - Remove obsolete file FlavourTagging_load.cpp
 
 !========================== FlavourTagging v7r2 2007-03-09 ===================
 ! 2007-03-02 - Patrick Koppenburg
