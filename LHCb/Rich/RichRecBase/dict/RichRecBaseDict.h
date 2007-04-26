@@ -1,6 +1,14 @@
 #ifndef DICT_RICHRECBASEDICT_H 
 #define DICT_RICHRECBASEDICT_H 1
 
+#include "Event/RichRecSegment.h"
+#include "Event/RichRecPixel.h"
+#include "Event/RichRecTrack.h"
+#include "Event/RichRecRing.h"
+#include "Event/RichRecPhoton.h"
+#include "Event/RichRecStatus.h"
+
+#include "RichRecBase/RichRecPhotonKey.h"
 #include "RichRecBase/RichRadCorrLocalPositions.h"
 
 #include "RichRecBase/IRichBaseTrackSelector.h"
@@ -26,6 +34,8 @@
 #include "RichRecBase/IRichSegmentCreator.h"
 #include "RichRecBase/IRichStatusCreator.h"
 #include "RichRecBase/IRichTrackCreator.h"
+
+
 
 
 #endif // DICT_RICHRECBASEDICT_H

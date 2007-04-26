@@ -1,27 +1,11 @@
 <lcgdict>
 
-  <class name    = "Rich::IDetParameters"                />
-  <class name    = "Rich::MC::IMCTrackInfoTool"          />
-  <class name    = "Rich::MC::IMCTruthTool"              />
-  <class name    = "Rich::IMirrorSegFinder"              />
-  <class name    = "Rich::IParticleProperties"           />
-  <class name    = "Rich::DAQ::IPixelClusteringTool"     />
-  <class name    = "Rich::DAQ::IPixelSuppressionTool"    />
-  <class name    = "Rich::IRadiatorTool"                 />
-  <class name    = "Rich::DAQ::IRawBufferToSmartIDsTool" />
-  <class name    = "Rich::DAQ::IRawDataFormatTool"       />
-  <class name    = "Rich::IRayTracing"                   />
-  <class name    = "Rich::IRefractiveIndex"              />
-  <class name    = "Rich::ISmartIDTool"                  />
-  <class name    = "Rich::IToolRegistry"                 />
-
-  <class name    = "Rich::IDetParameters::RadLimits"     />
-
   <class name    = "Rich::HPDPixelCluster"               />
   <class name    = "Rich::HPDPixelClusters"               />
   <class name    = "Rich::HPDPixelClusters::ConstSharedPtn" />
 
   <class name    = "LHCb::RichGeomPhoton"                />
+
   <class name    = "LHCb::RichTrackSegment"              />
 
   <class name    = "Rich::DAQ::Level0ID"                 />
@@ -45,5 +29,22 @@
   <class name    = "Rich::DAQ::IngressInfo"              />
   <class name    = "Rich::DAQ::IngressMap"               />
   <class name    = "Rich::DAQ::L1Map"                    />
+
+  <class name    = "Rich::IDetParameters"                />
+  <class name    = "Rich::MC::IMCTrackInfoTool"          />
+  <class name    = "Rich::MC::IMCTruthTool"              />
+  <class name    = "Rich::IMirrorSegFinder"              />
+  <class name    = "Rich::IParticleProperties"           />
+  <class name    = "Rich::DAQ::IPixelClusteringTool"     />
+  <class name    = "Rich::DAQ::IPixelSuppressionTool"    />
+  <class name    = "Rich::IRadiatorTool"                 />
+  <class name    = "Rich::DAQ::IRawBufferToSmartIDsTool" />
+  <class name    = "Rich::DAQ::IRawDataFormatTool"       />
+  <class name    = "Rich::IRayTracing"                   />
+  <class name    = "Rich::IRefractiveIndex"              />
+  <class name    = "Rich::ISmartIDTool"                  />
+  <class name    = "Rich::IToolRegistry"                 />
+
+  <class name    = "Rich::IDetParameters::RadLimits"     />
 
 </lcgdict>

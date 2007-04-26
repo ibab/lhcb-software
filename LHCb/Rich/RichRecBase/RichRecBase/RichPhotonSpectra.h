@@ -4,7 +4,7 @@
  *
  *  Header file for utility class : Rich::PhotonSpectra
  *
- *  $Id: RichPhotonSpectra.h,v 1.16 2007-03-09 18:04:33 jonrob Exp $
+ *  $Id: RichPhotonSpectra.h,v 1.17 2007-04-26 22:07:29 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-07-12
@@ -309,6 +309,26 @@ namespace Rich
   PhotonSpectra<TYPE>::hypoData() const
   {
     return m_photdata;
+  }
+
+  template <class TYPE>
+  inline TYPE PhotonSpectra<TYPE>::integral( const Rich::ParticleIDType id ) const
+  {
+    TYPE sum = 0;
+    for ( typename PhotonSpectra<TYPE>::PhotonData::const_iterator i = energyDist(id).begin();
+          i != energyDist(id).end(); ++i ) { sum += *i; }
+    return sum;
+  }
+
+  template <class TYPE>
+  inline bool PhotonSpectra<TYPE>::multiply( const Rich::ParticleIDType id,
+                                             const typename PhotonSpectra<TYPE>::PhotonData & data )
+  {
+    if ( this->energyBins() != data.size() ) return false;
+    typename PhotonSpectra<TYPE>::PhotonData::const_iterator j = data.begin();
+    for ( typename PhotonSpectra<TYPE>::PhotonData::iterator i = energyDist(id).begin();
+          i != energyDist(id).end(); ++i ) { *i *= *j; ++j; }
+    return true;
   }
 
   template <class TYPE>

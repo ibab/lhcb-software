@@ -1,6 +1,44 @@
 <lcgdict>
 
+  <class name = "LHCb::RichRecSegment" />
+  <class name = "LHCb::RichRecTrack" />
+  <class name = "LHCb::RichRecPixel" />
+  <class name = "LHCb::RichRecPhoton" />
+  <class name = "LHCb::RichRecRing" />
+  <class name = "LHCb::RichRecStatus" />
+
   <class name = "Rich::Rec::RadCorrLocalPositions" />
+  <class name = "Rich::ObjPtn&lt;Rich::Rec::RadCorrLocalPositions&gt;" />
+
+  <class name = "LHCb::RichRecPixel::Tracks" />
+  <class name = "Rich::ObjPtn&lt;LHCb::RichRecPixel::Tracks&gt;" />
+  <class name = "LHCb::RichRecPixel::Photons" />
+  <class name = "Rich::ObjPtn&lt;LHCb::RichRecPixel::Photons&gt;" />
+  <class name = "LHCb::RichRecPixel::RingsOnPixel" />
+  <class name = "Rich::ObjPtn&lt;LHCb::RichRecPixel::RingsOnPixel&gt;" />
+  <class name = "Rich::ObjPtn&lt;Rich::HPDPixelCluster&gt;" />
+
+  <class name = "Rich::HypoData&lt;LHCb::RichRecSegment::FloatType&gt;" />
+  <class name = "Rich::ObjPtn&lt;Rich::HypoData&lt;LHCb::RichRecSegment::FloatType&gt; &gt;" />
+  <class name = "Rich::PhotonSpectra&lt;LHCb::RichRecSegment::FloatType&gt;" />
+  <class name = "Rich::HypoData&lt;LHCb::RichRecRing*&gt;" />
+  <class name = "Rich::ObjPtn&lt;Rich::HypoData&lt;LHCb::RichRecRing*&gt; &gt;" />
+
+  <class name = "Rich::HypoData&lt;LHCb::RichRecTrack::FloatType&gt;" />
+  <class name = "LHCb::RichRecTrack::Segments" />
+  <class name = "LHCb::RichRecTrack::Pixels" />
+  <class name = "LHCb::RichRecTrack::Photons" />
+
+  <class name = "Rich::Rec::TrackID" />
+
+  <class name = "Rich::Rec::PhotonKey" />
+
+  <class name = "LHCb::RichRecPointOnRing" />
+  <class name = "LHCb::RichRecPointOnRing::Vector" />
+  <class name = "std::vector&lt;LHCb::RichRecPixelOnRing&gt;" />
+
+  <class name = "Rich::ObjPtn&lt;LHCb::RichGeomPhoton&gt;" />
+  <class name = "Rich::ObjPtn&lt;LHCb::RichTrackSegment&gt;" />
 
   <class name = "Rich::Rec::IBaseTrackSelector" />
   <class name = "Rich::Rec::ICherenkovAngle" />

@@ -5,7 +5,8 @@
 !-----------------------------------------------------------------------------
 
 ! 2007-04-26 - 
- - Fixes for lcg dictionaries on windows
+ - Fixes for lcg dictionaries on windows + add dictionaries for various 
+   utility classes
 
 !===================== RichRecBase v3r3 2007-04-23 =======================
 ! 2007-04-23 - Marco Cattaneo
