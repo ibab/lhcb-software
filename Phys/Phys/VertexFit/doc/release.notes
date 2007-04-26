@@ -1,9 +1,10 @@
-! $Id: release.notes,v 1.96 2007-04-26 09:29:00 pkoppenb Exp $
+! $Id: release.notes,v 1.97 2007-04-26 10:18:51 pkoppenb Exp $
 !===========================================================================
 ! Package     : VertexFit
 ! Responsible : Yuehong Xie
 !===========================================================================
 
+!========================== VertexFit v4r2p1 2007-04-26 ===================
 ! 2007-04-26 - Patrick Koppenburg
  - OfflineVertexFitter.cpp: More verbose() statements
  - Incement to v4r2p1
