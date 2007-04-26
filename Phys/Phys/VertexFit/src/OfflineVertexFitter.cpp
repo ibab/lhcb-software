@@ -1,4 +1,4 @@
-// $Id: OfflineVertexFitter.cpp,v 1.20 2007-04-16 13:38:28 pkoppenb Exp $
+// $Id: OfflineVertexFitter.cpp,v 1.21 2007-04-26 09:29:00 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -120,10 +120,13 @@ StatusCode OfflineVertexFitter::fit( const LHCb::Particle::ConstVector& parts,
 
   StatusCode sc = StatusCode::SUCCESS;
 
-  debug() << "starting classfying partilces to fit " <<endmsg;
+  debug() << "starting classifying particles to fit " <<endmsg;
 
   for ( Particle::ConstVector::const_iterator iPart=parts.begin(); iPart!=parts.end(); ++iPart ) {
     const Particle* parPointer = *iPart;
+    verbose() << parPointer->particleID().pid() << " at " 
+              << parPointer->referencePoint() 
+              << " with " << parPointer->momentum() << endmsg ;
     sc= classify(parPointer, FlyingParticles, VertexedParticles, Photons, PhotonPairs);
     if(sc.isFailure()) {
       debug() << "Fail to classify a particle" << endmsg;
@@ -147,6 +150,7 @@ StatusCode OfflineVertexFitter::fit( const LHCb::Particle::ConstVector& parts,
   addToOutgoingParticles( V, Photons );  
   addToOutgoingParticles( V, PhotonPairs );  
   */
+
   sc = seeding(P, FlyingParticles, VertexedParticles);
   if(sc.isFailure()) {
     debug() << "Fail to seed the vertex" << endmsg;
@@ -1123,6 +1127,7 @@ StatusCode OfflineVertexFitter::fitTwo(const LHCb::Particle* dau1,
 
   while(fabs(zPreviousFit-zfit)>m_maxDeltaZ && iterTransport< m_maxIter)
   {
+    verbose() << "Fit z position is now " << zfit << endmsg;
     zPreviousFit=zfit;
     iterTransport++;
 
@@ -1193,6 +1198,8 @@ StatusCode OfflineVertexFitter::fitTwo(const LHCb::Particle* dau1,
     X[10]=dau2mpara[5];
     X[11]=dau2mpara[6];
 
+    verbose() << "X vector is " << X << endmsg ;
+
     Gaudi::SymMatrix6x6 newcov1;
     Gaudi::SymMatrix6x6 newcov2;
     for(int l1=0;l1<6;l1++) {
@@ -1235,7 +1242,7 @@ StatusCode OfflineVertexFitter::fitTwo(const LHCb::Particle* dau1,
       f(0)=(vfit(6)-vfit(0))*(vfit(9)*vfit(4)-vfit(3)*vfit(10))-
            (vfit(7)-vfit(1))*(vfit(8)*vfit(4)-vfit(2)*vfit(10));
 
-      verbose() << "constraint values   " << f << endmsg ;
+      verbose() << "constraint values   " << f << endmsg;
 
       //D is the derivative matrix
       ROOT::Math::SMatrix<double, 1, 12> D;
@@ -1468,6 +1475,8 @@ void OfflineVertexFitter::getParticleInfo(const LHCb::Particle& part,
   V7(5)=lmom.Z();
   V7(6)=lmom.T();
 
+  verbose() << "A " << part.particleID().pid() << " has V " << V7 << endmsg ;
+
   C7 = part.covMatrix();
 
   if(tmpvert!=NULL) {
@@ -1633,20 +1642,17 @@ double OfflineVertexFitter::getZEstimate(const LHCb::Particle* part1,
   double tx1=part1->slopes().X();
   double ty1=part1->slopes().Y();
   double tx2=part2->slopes().X();
-  double ty2=part2->slopes().Y();
-                                                                                                           
+  double ty2=part2->slopes().Y();                 
   const Gaudi::XYZPoint pos1=part1->referencePoint();
   double x1= pos1.x();
   double y1= pos1.y();
-  double z1= pos1.z();
-                                                                                                           
+  double z1= pos1.z();                                                                      
   const Gaudi::XYZPoint pos2=part2->referencePoint();
   double x2= pos2.x();
   double y2= pos2.y();
   double z2= pos2.z();
 
   //return (y2-y1+ty1*z1-ty2*z2)/(ty1-ty2);
-                                                                                                           
   double  sumSquaredSlopes = tx1*tx1 + ty1*ty1+ tx2*tx2 + ty2*ty2;
   double  sumCrossedProduct = tx1*(x1-tx1*z1) + ty1*(y1-ty1*z1) +
                               tx2*(x2-tx2*z2) + ty2*(y2-ty2*z2);
@@ -1656,9 +1662,7 @@ double OfflineVertexFitter::getZEstimate(const LHCb::Particle* part1,
 
   double sumSlopeX= tx1+tx2;
   double sumSlopeY= ty1+ty2;
-                                                                                                           
   double det = sumSquaredSlopes - ((sumSlopeX*sumSlopeX + sumSlopeY*sumSlopeY))/2.;
-                                                                                                           
   double zEstimate = 0;
   if (det != 0) {
     return zEstimate = (((sumX*sumSlopeX + sumY*sumSlopeY)/2.)
@@ -1669,7 +1673,6 @@ double OfflineVertexFitter::getZEstimate(const LHCb::Particle* part1,
     if(z1<z2) return z1-.001;
     else return z2-0.001;
   }
-                                                                                                           
 }
 
 //=============================================================================
