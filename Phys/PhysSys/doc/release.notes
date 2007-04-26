@@ -5,7 +5,7 @@ Purpose     : LHCb physics packages
 
 </PRE><H1><A NAME=v6r2>2007-04-27 Phys v6r2 - updated DC06 stripping version</A></H1><PRE>
 Minor changes:
- - Based on LHCb v22r3
+ - Based on LHCb v22r4
  - Change in the prioritization of track states to be used when making 
    Particles. This reduces the differences between running on DST and rDST 
    (with fewer states available).
