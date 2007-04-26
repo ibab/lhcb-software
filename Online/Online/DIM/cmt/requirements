@@ -1,6 +1,6 @@
 #============================================================================
 package           DIM
-version           v16r7
+version           v16r8
 #============================================================================
 use GaudiPolicy   v*
 branches          cmt src
@@ -24,7 +24,8 @@ macro_append dim_shlibflags " -lpthread -lrt " WIN32 " "
 
 apply_pattern dim_exe name=DNS files=dns.c 
 apply_pattern dim_exe name=did files=did/make_did.c
-macro_append  didlinkopts " -L/usr/X11R6/lib  -lMrm "\
+# The link below is ugly, but the linking is not proper on lxplus
+macro_append  didlinkopts " -L/usr/X11R6/lib/libMrm.so.3 "\
  slc4-amd64               " -L/usr/X11R6/lib64 -lMrm " \
  WIN32                    " "
 apply_pattern dim_exe name=test_server       files=examples/test_server.c
