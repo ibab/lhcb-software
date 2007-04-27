@@ -124,6 +124,6 @@ macro_append includes " -I$(tmp)/ -I$(PRESENTERROOT)/inc"
 #macro_append libraryshr_linkopts '-locci -lclntsh'
 
 #qt_embedimages	proj=Gui images=../gui/images/*
-application Presenter " $(qtrootmocs_src)  \
-			../gui/presenter/*.ui ../gui/presenter/PresenterImageCollection.cpp ../src/DimProxy.cpp ../src/main.cpp"
+#application Presenter " $(qtrootmocs_src)  \
+#			../gui/presenter/*.ui ../gui/presenter/PresenterImageCollection.cpp ../src/DimProxy.cpp ../src/main.cpp"
 
