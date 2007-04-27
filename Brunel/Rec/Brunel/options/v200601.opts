@@ -52,3 +52,9 @@ EventSelector.Input = {
 //---------------------------------------------------------------------------
 DstWriter.Output = "DATAFILE='PFN:0601-11144100.dst' TYP='POOL_ROOTTREE' OPT='REC'";
 //////////////////////////////////////////////////////////////////////////////
+// Uncomment next lines to use latest Boole .digi as input
+//////////////////////////////////////////////////////////////////////////////
+//HistogramPersistencySvc.OutputFile = "0601-11144100-Boole-v14r0.root";
+//EventSelector.Input = { "DATAFILE='PFN:rfio:/castor/cern.ch/user/c/cattanem/Boole/v14r0/00001330_00000103_4.digi' TYP='POOL_ROOT' OPT='READ'" }; // B->J/Psi(mumu)Ks events with Boole v14r0, Gauss v25r0, XmlDDDB v30r8
+//DstWriter.Output = "DATAFILE='PFN:0601-11144100-Boole-v14r0.dst' TYP='POOL_ROOTTREE' OPT='REC'";
+//////////////////////////////////////////////////////////////////////////////
