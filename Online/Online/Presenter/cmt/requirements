@@ -16,7 +16,7 @@ use   Boost					v*	 LCG_Interfaces
 use   GaudiPolicy		v*
 
 # Go for the latest and greatest ROOT:
-macro ROOT_config_version "5.15.02"
+#macro ROOT_config_version "5.15.02"
 #macro ROOT_config_version "5.15.04"
 #macro ROOT_config_version "5.12.00f"
 
@@ -118,9 +118,10 @@ macro_append ROOT_linkopts " -lQtGSI " WIN32 " libQtGSI.lib"
 
 macro_append includes " -I$(tmp)/ -I$(PRESENTERROOT)/inc"
 
-macro_remove cpplinkflags '-Wl,--as-needed'
-macro_remove componentshr_linkopts '-Wl,--as-needed'
-macro_remove libraryshr_linkopts '-Wl,--as-needed'
+#macro_remove cpplinkflags '-Wl,--as-needed'
+#macro_remove componentshr_linkopts '-Wl,--as-needed'
+#macro_remove libraryshr_linkopts '-Wl,--as-needed'
+#macro_append libraryshr_linkopts '-locci -lclntsh'
 
 #qt_embedimages	proj=Gui images=../gui/images/*
 application Presenter " $(qtrootmocs_src)  \

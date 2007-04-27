@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Presenter/gui/presenter/PageEditorMainWindow.ui.h,v 1.7 2007-04-20 08:08:07 psomogyi Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Presenter/gui/presenter/PageEditorMainWindow.ui.h,v 1.8 2007-04-27 11:58:44 psomogyi Exp $
 
 /****************************************************************************
  ** ui.h extension file, included from the uic-generated form implementation.
@@ -198,7 +198,6 @@ void PageEditorMainWindow::refreshDIMSVCListView()
   const int nDimServers = dimBrowser.getServers();
 
   // if some servers found, discover which services are there
-  // - otherwise return "fail"
   if (nDimServers > 0) {
     const char *dimDnsServerNode = DimClient::getDnsNode();
     statusMessage = "Successfully connected to DIM via DIM_DNS_NODE \"" + 
@@ -218,7 +217,7 @@ void PageEditorMainWindow::refreshDIMSVCListView()
     std::string algorithmName;
     std::string entityName;
     
-    QListViewItem *dimSvcListViewItem; 
+    QListViewItem *dimSvcListViewItem = NULL; 
 
     while (dimBrowser.getNextServer(dimServer, dimServerNode)) {
     
@@ -229,6 +228,7 @@ void PageEditorMainWindow::refreshDIMSVCListView()
       if (dimServerName.find("DIS_DNS") != std::string::npos) {
         dimSvcListViewItem = new QListViewItem(dimServicesView,
                                                "DIM Services");
+        dimSvcListViewItem->setSelectable(false);                                               
   //    if (m_verbose > 1)
         std::cout << "\tfound DIS_DNS server at node \"" <<
                      dimServerNodeName << "\" skipping..." << std::endl;
@@ -239,6 +239,7 @@ void PageEditorMainWindow::refreshDIMSVCListView()
         QListViewItem *thisDimServer = new QListViewItem(dimSvcListViewItem,
                                                        dimServerName.c_str(),
                                                        "");
+        thisDimServer->setSelectable(false);
         
         // now loop get a list of all services offered by this server
         dimBrowser.getServerServices(dimServerName.c_str());        
@@ -483,7 +484,7 @@ void PageEditorMainWindow::savePage()
     cout << sqlException.getMessage() << endl;
     statusBar()->message(tr("Could not save page to OnlineHistDB."));
     switch(QMessageBox::warning(this, tr("LHCb Presenter Page Editor"),
-                                  tr("Could save page to database:\n\n%1\n"
+                                  tr("Could not save page to database:\n\n%1\n"
                                      "\n\n").arg(sqlException.getMessage()),
                                   QMessageBox::Ok, QMessageBox::NoButton)) {
       case QMessageBox::Ok: // The user clicked the Ok/pressed Enter
@@ -791,7 +792,7 @@ void PageEditorMainWindow::addHistogramsToDatabase()
   while (it.current()) {
     QListViewItem *item = it.current();
     // if item is selected and is a leaf, then add to DB
-    // TODO: traversal in case of non-leaf nodes...
+    // TODO: traversal in case of non-leaf nodes?...
     if (0 == item->childCount() ) {
       // Ask Giacomo for HPD DIM SVC name patching on DB side
       try {
@@ -1354,167 +1355,167 @@ void PageEditorMainWindow::addSelectedHistogramsFromDIMToPage()
   while (it.current()) {
     QListViewItem *item = it.current();
 
-      std::string serviceNameFQ = item->text(Presenter::DIM);
-      std::cout << serviceNameFQ << std::endl;                         
-      
-      new QListViewItem(pageHistogramsView, item->text(Presenter::Name), item->text(Presenter::Type));
+    std::string serviceNameFQ = item->text(Presenter::DIM);
+    std::cout << serviceNameFQ << std::endl;                         
+    
+    new QListViewItem(pageHistogramsView, item->text(Presenter::Name), item->text(Presenter::Type));
 
-      std::string serviceType = item->text(Presenter::Type);   
+    std::string serviceType = item->text(Presenter::Type);   
 //    if (m_verbose > 1)
-        std::cout << "Reconstructing DIM SVC name: " << serviceNameFQ <<
-                     std::endl;
-                 
-      iHisto++;
-      // gauchocomment stuff for histoID      
-      std::string histoID = "histo_" +
-                            boost::lexical_cast<std::string>(iHisto);                     
-                                   
-      if (Presenter::H1D == serviceType.substr(0,3)) {
-        HistogramH1D histogramH1D;
-        // TODO: sharedptr: place delete...
-        histogramH1D.dimProxy = new DimProxy(serviceNameFQ,
-                                             m_refreshTimeHisto,
-                                             m_verbose);        
+      std::cout << "Reconstructing DIM SVC name: " << serviceNameFQ <<
+                   std::endl;
+               
+    iHisto++;
+    // gauchocomment stuff for histoID      
+    std::string histoID = "histo_" +
+                          boost::lexical_cast<std::string>(iHisto);                     
+                                 
+    if (Presenter::H1D == serviceType.substr(0,3)) {
+      HistogramH1D histogramH1D;
+      // TODO: sharedptr: place delete...
+      histogramH1D.dimProxy = new DimProxy(serviceNameFQ,
+                                           m_refreshTimeHisto,
+                                           m_verbose);        
 
-        if (histogramH1D.dimProxy->serviceOK()) {    
-          TH1 *tmp_h1D = histogramH1D.dimProxy->rootH1D();
-          if (tmp_h1D) {
-            nBinsX             = tmp_h1D->GetNbinsX();
-            xMin               = tmp_h1D->GetXaxis()->GetXmin();
-            xMax               = tmp_h1D->GetXaxis()->GetXmax();
-            std::string hTitle = item->text(Presenter::Name);
+      if (histogramH1D.dimProxy->serviceOK()) {    
+        TH1 *tmp_h1D = histogramH1D.dimProxy->rootH1D();
+        if (tmp_h1D) {
+          nBinsX             = tmp_h1D->GetNbinsX();
+          xMin               = tmp_h1D->GetXaxis()->GetXmin();
+          xMax               = tmp_h1D->GetXaxis()->GetXmax();
+          std::string hTitle = item->text(Presenter::Name);
 //            tmp_h1D->GetTitle();
 //            if (m_verbose > 3) {
-              std::cout << " nBinsX " << nBinsX <<
-                           " xMin "   << xMin   <<
-                           " xMax "   << xMax   << std::endl;
+            std::cout << " nBinsX " << nBinsX <<
+                         " xMin "   << xMin   <<
+                         " xMax "   << xMax   << std::endl;
 //            }
 
-            // book the 1D histo which is to be displayed
-            // TODO: sharedptr - place delete
-            histogramH1D.rootH1D = new TH1F(histoID.c_str(), hTitle.c_str(),
-                                            nBinsX, xMin, xMax);
-            histogramH1D.rootOffsetH1D = new TH1F("", "",
-                                                  nBinsX, xMin, xMax);
-            histogramH1D.rootH1D->SetMarkerStyle(22);
-            histogramH1D.rootH1D->SetMarkerSize(0.9);
-            displayedH1DHistograms.push_back(histogramH1D);
-            
-            // Fill w some data:
-            nBinsX = histogramH1D.rootH1D->GetNbinsX();      
-            value  = 0;
+          // book the 1D histo which is to be displayed
+          // TODO: sharedptr - place delete
+          histogramH1D.rootH1D = new TH1F(histoID.c_str(), hTitle.c_str(),
+                                          nBinsX, xMin, xMax);
+          histogramH1D.rootOffsetH1D = new TH1F("", "",
+                                                nBinsX, xMin, xMax);
+          histogramH1D.rootH1D->SetMarkerStyle(22);
+          histogramH1D.rootH1D->SetMarkerSize(0.9);
+          displayedH1DHistograms.push_back(histogramH1D);
+          
+          // Fill w some data:
+          nBinsX = histogramH1D.rootH1D->GetNbinsX();      
+          value  = 0;
 
-            double nEntries = histogramH1D.dimProxy->rootH1D()->GetEntries();
+          double nEntries = histogramH1D.dimProxy->rootH1D()->GetEntries();
+          
+          for (int i=0; i< nBinsX+1; ++i) {
+            value = histogramH1D.dimProxy->rootH1D()->GetBinContent(i);
+            histogramH1D.rootH1D->SetBinContent(i, value);
             
-            for (int i=0; i< nBinsX+1; ++i) {
-              value = histogramH1D.dimProxy->rootH1D()->GetBinContent(i);
-              histogramH1D.rootH1D->SetBinContent(i, value);
-              
-              value = histogramH1D.dimProxy->rootH1D()->GetBinError(i);
-              histogramH1D.rootH1D->SetBinError(i, value);
-            }
-  
-            histogramH1D.rootH1D->SetEntries(nEntries);
-            
-            if (m_verbose > 0)
-              std::cout << "DIM histo entries " << nEntries
-                        << " histo entries "    <<
-                           histogramH1D.rootH1D->GetEntries() << std::endl;            
+            value = histogramH1D.dimProxy->rootH1D()->GetBinError(i);
+            histogramH1D.rootH1D->SetBinError(i, value);
           }
-        }
-      } else if ("HPD" == serviceType.substr(0,3)) {
-        HistogramH1D histoProfile;
-        // TODO: sharedptr - place delete     
-        histoProfile.dimProxy = new DimProxy(serviceNameFQ,
-                                             m_refreshTimeHisto,
-                                             m_verbose);
-        if (histoProfile.dimProxy->serviceOK()) {    
-          TH1 *tmp_h1D = histoProfile.dimProxy->rootHPD();
-          if (tmp_h1D) {
-            nBinsX             = tmp_h1D->GetNbinsX();
-            xMin               = tmp_h1D->GetXaxis()->GetXmin();
-            xMax               = tmp_h1D->GetXaxis()->GetXmax();
-            std::string hTitle = item->text(Presenter::Name);
-//             tmp_h1D->GetTitle();
-//          if (m_verbose > 3)
-              std::cout << " nBinsX " << nBinsX << 
-                           " xMin "   << xMin   <<
-                           " xMax "   << xMax   << std::endl;
 
-            // book the 1D histo which is to be displayed
-            // TODO: sharedptr - place delete    
-            histoProfile.rootH1D = new TH1F(histoID.c_str(),
-                                            hTitle.c_str(),
-                                            nBinsX, xMin, xMax);
-            histoProfile.rootOffsetH1D = new TH1F("",
-                                                  "",
-                                                  nBinsX, xMin, xMax);
-            histoProfile.rootH1D->SetMarkerStyle(22);
-            histoProfile.rootH1D->SetMarkerSize(0.9);
-            displayedHPDHistograms.push_back(histoProfile);
-          }
-        }
-        
-      } else if (Presenter::H2D == serviceType.substr(0,3)) {              
-        HistogramH2D histogramH2D;
-        // TODO: sharedptr - place delete 
-        histogramH2D.dimProxy = new DimProxy(serviceNameFQ,
-                                             m_refreshTimeHisto,
-                                             m_verbose);
-        if (histogramH2D.dimProxy->serviceOK()) {
-          TH2 *tmp_h2D = histogramH2D.dimProxy->rootH2D();
-          if (tmp_h2D) {
-            // dimProxy gives back a NULL pointer if something went wrong
-            nBinsX             = tmp_h2D->GetNbinsX();
-            nBinsY             = tmp_h2D->GetNbinsY();
-            xMin               = tmp_h2D->GetXaxis()->GetXmin();
-            xMax               = tmp_h2D->GetXaxis()->GetXmax();
-            yMin               = tmp_h2D->GetYaxis()->GetXmin();
-            yMax               = tmp_h2D->GetYaxis()->GetXmax();
-            std::string hTitle = item->text(Presenter::Name);
-//             tmp_h2D->GetTitle();            
-//          if (m_verbose > 3)
-            std::cout << " nBinsX " << nBinsX <<
-                         " xMin "   << xMin   << " xMax " << xMax << 
-                         " nBinsY " << nBinsY << " yMin " << yMin <<
-                         " yMax "   << yMax   << std::endl;
-            
-            // book new TH2F - the one which is to be displayed
-            // TODO: sharedptr - place delete       
-            histogramH2D.rootH2D = new TH2F(histoID.c_str(), hTitle.c_str(), 
-                                            nBinsX, xMin, xMax,
-                                            nBinsY, yMin, yMax);
-            histogramH2D.rootOffsetH2D = new TH2F("", "", 
-                                            nBinsX, xMin, xMax,
-                                            nBinsY, yMin, yMax);            
-            displayedH2DHistograms.push_back(histogramH2D);
-            
-            // Fill with some data
-            double nEntries = histogramH2D.dimProxy->rootH2D()->GetEntries();
-                    
-            nBinsX   = histogramH2D.rootH2D->GetNbinsX();
-            nBinsY   = histogramH2D.rootH2D->GetNbinsY();      
-            value    = 0.0;
-                
-            for (int i=0; i<= nBinsX+1; ++i) {
-              for (int j=0; j<= nBinsY+1; ++j) {
-                value = histogramH2D.dimProxy->rootH2D()->GetBinContent(i,j);
-                if (0.0 == value) value = 0.00001; // to show in nice colour
-                histogramH2D.rootH2D->SetBinContent(i, j, value);                
-                value = histogramH2D.dimProxy->rootH2D()->GetBinError(i, j);
-                histogramH2D.rootH2D->SetBinError(i, j, value);
-              } 
-            }
-            
-            histogramH2D.rootH2D->SetEntries(nEntries);
-            
-            if (m_verbose > 0)
-              std::cout << "DIM histo entries " << nEntries
-                        << " histo entries "    <<
-                           histogramH2D.rootH2D->GetEntries() << std::endl;            
-          }
+          histogramH1D.rootH1D->SetEntries(nEntries);
+          
+          if (m_verbose > 0)
+            std::cout << "DIM histo entries " << nEntries
+                      << " histo entries "    <<
+                         histogramH1D.rootH1D->GetEntries() << std::endl;            
         }
       }
+    } else if ("HPD" == serviceType.substr(0,3)) {
+      HistogramH1D histoProfile;
+      // TODO: sharedptr - place delete     
+      histoProfile.dimProxy = new DimProxy(serviceNameFQ,
+                                           m_refreshTimeHisto,
+                                           m_verbose);
+      if (histoProfile.dimProxy->serviceOK()) {    
+        TH1 *tmp_h1D = histoProfile.dimProxy->rootHPD();
+        if (tmp_h1D) {
+          nBinsX             = tmp_h1D->GetNbinsX();
+          xMin               = tmp_h1D->GetXaxis()->GetXmin();
+          xMax               = tmp_h1D->GetXaxis()->GetXmax();
+          std::string hTitle = item->text(Presenter::Name);
+//             tmp_h1D->GetTitle();
+//          if (m_verbose > 3)
+            std::cout << " nBinsX " << nBinsX << 
+                         " xMin "   << xMin   <<
+                         " xMax "   << xMax   << std::endl;
+
+          // book the 1D histo which is to be displayed
+          // TODO: sharedptr - place delete    
+          histoProfile.rootH1D = new TH1F(histoID.c_str(),
+                                          hTitle.c_str(),
+                                          nBinsX, xMin, xMax);
+          histoProfile.rootOffsetH1D = new TH1F("",
+                                                "",
+                                                nBinsX, xMin, xMax);
+          histoProfile.rootH1D->SetMarkerStyle(22);
+          histoProfile.rootH1D->SetMarkerSize(0.9);
+          displayedHPDHistograms.push_back(histoProfile);
+        }
+      }
+      
+    } else if (Presenter::H2D == serviceType.substr(0,3)) {              
+      HistogramH2D histogramH2D;
+      // TODO: sharedptr - place delete 
+      histogramH2D.dimProxy = new DimProxy(serviceNameFQ,
+                                           m_refreshTimeHisto,
+                                           m_verbose);
+      if (histogramH2D.dimProxy->serviceOK()) {
+        TH2 *tmp_h2D = histogramH2D.dimProxy->rootH2D();
+        if (tmp_h2D) {
+          // dimProxy gives back a NULL pointer if something went wrong
+          nBinsX             = tmp_h2D->GetNbinsX();
+          nBinsY             = tmp_h2D->GetNbinsY();
+          xMin               = tmp_h2D->GetXaxis()->GetXmin();
+          xMax               = tmp_h2D->GetXaxis()->GetXmax();
+          yMin               = tmp_h2D->GetYaxis()->GetXmin();
+          yMax               = tmp_h2D->GetYaxis()->GetXmax();
+          std::string hTitle = item->text(Presenter::Name);
+//             tmp_h2D->GetTitle();            
+//          if (m_verbose > 3)
+          std::cout << " nBinsX " << nBinsX <<
+                       " xMin "   << xMin   << " xMax " << xMax << 
+                       " nBinsY " << nBinsY << " yMin " << yMin <<
+                       " yMax "   << yMax   << std::endl;
+          
+          // book new TH2F - the one which is to be displayed
+          // TODO: sharedptr - place delete       
+          histogramH2D.rootH2D = new TH2F(histoID.c_str(), hTitle.c_str(), 
+                                          nBinsX, xMin, xMax,
+                                          nBinsY, yMin, yMax);
+          histogramH2D.rootOffsetH2D = new TH2F("", "", 
+                                          nBinsX, xMin, xMax,
+                                          nBinsY, yMin, yMax);            
+          displayedH2DHistograms.push_back(histogramH2D);
+          
+          // Fill with some data
+          double nEntries = histogramH2D.dimProxy->rootH2D()->GetEntries();
+                  
+          nBinsX   = histogramH2D.rootH2D->GetNbinsX();
+          nBinsY   = histogramH2D.rootH2D->GetNbinsY();      
+          value    = 0.0;
+              
+          for (int i=0; i<= nBinsX+1; ++i) {
+            for (int j=0; j<= nBinsY+1; ++j) {
+              value = histogramH2D.dimProxy->rootH2D()->GetBinContent(i,j);
+              if (0.0 == value) value = 0.00001; // to show in nice colour
+              histogramH2D.rootH2D->SetBinContent(i, j, value);                
+              value = histogramH2D.dimProxy->rootH2D()->GetBinError(i, j);
+              histogramH2D.rootH2D->SetBinError(i, j, value);
+            } 
+          }
+          
+          histogramH2D.rootH2D->SetEntries(nEntries);
+          
+          if (m_verbose > 0)
+            std::cout << "DIM histo entries " << nEntries
+                      << " histo entries "    <<
+                         histogramH2D.rootH2D->GetEntries() << std::endl;            
+        }
+      }
+    }
     ++it;
   }
              
@@ -1585,7 +1586,7 @@ void PageEditorMainWindow::addSelectedHistogramsFromDIMToPage()
   statusBar()->message(tr("Canvas ready."));
 }
 
-void PageEditorMainWindow::readFoldersFromHistoDatabase(QListView &listView,bool histograms = Presenter::WithoutHistogram)
+void PageEditorMainWindow::readFoldersFromHistoDatabase(QListView &listView, bool histograms = Presenter::WithoutHistogram)
 {
   
   std::vector<std::string>      localDatabaseFolders;
@@ -1606,7 +1607,7 @@ void PageEditorMainWindow::readFoldersFromHistoDatabase(QListView &listView,bool
       
       localDatabaseFolders.clear(); 
       histogramDB->getPageFolderNames(localDatabaseFolders, "ROOT");
-      QListViewItem *parentFolder;
+      QListViewItem *parentFolder = NULL;
       QListViewItem *folderChild;
       BOOST_FOREACH(string folder, localDatabaseFolders) {
         QStringList folderItems = QStringList::split( "/", folder);         
@@ -1674,7 +1675,7 @@ void PageEditorMainWindow::readFoldersFromHistoDatabase(QListView &listView,bool
           }
           folderChild = parentFolder->firstChild();
         }                                                     
-      }      
+      }
     }
   } catch (SQLException sqlException) {
     // TODO: add error logging backend
@@ -1682,7 +1683,7 @@ void PageEditorMainWindow::readFoldersFromHistoDatabase(QListView &listView,bool
     std::cout << sqlException.getMessage() << std::endl;
 //    qDebug(sqlException.getMessage().);
     switch(QMessageBox::warning(this, tr("LHCb Presenter Page Editor"),
-                            tr("Could get histograms from database:\n\n%1\n"
+                            tr("Could not get histograms from database:\n\n%1\n"
                                "\n\n").arg(sqlException.getMessage()),
                             QMessageBox::Ok, QMessageBox::NoButton)) {
       case QMessageBox::Ok: // The user clicked the Ok/pressed Enter
