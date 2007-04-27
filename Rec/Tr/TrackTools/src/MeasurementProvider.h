@@ -1,4 +1,4 @@
-// $Id: MeasurementProvider.h,v 1.12 2006-08-15 15:51:55 erodrigu Exp $
+// $Id: MeasurementProvider.h,v 1.13 2007-04-27 20:41:26 polye Exp $
 #ifndef TRACKTOOLS_MEASUREMENTPROVIDER_H 
 #define TRACKTOOLS_MEASUREMENTPROVIDER_H 1
 
@@ -27,6 +27,7 @@
 #include "VeloDet/DeVelo.h"
 #include "OTDet/DeOTDetector.h"
 #include "STDet/DeSTDetector.h"
+#include "MuonDet/DeMuonDetector.h"
 
 static const InterfaceID IID_MeasurementProvider ( "MeasurementProvider", 1, 0 );
 
@@ -88,11 +89,13 @@ protected:
   DeSTDetector* m_ttDet;
   DeSTDetector* m_itDet;
   DeOTDetector* m_otDet;
+  DeMuonDetector* m_muDet;
 
   std::string   m_veloDetPath;        ///< Name of the Velo XML geom path
   std::string   m_ttDetPath;          ///< Name of the TT XML geom path
   std::string   m_itDetPath;          ///< Name of the IT XML geom path
   std::string   m_otDetPath;          ///< Name of the OT XML geom path
+  std::string   m_muDetPath;          ///< Name of the Muon XML geom path
   
   LHCb::VeloClusters* m_veloClusters;
   LHCb::STClusters*   m_ttClusters;
@@ -103,6 +106,7 @@ protected:
   bool m_ignoreTT;      ///< Ignore TT information
   bool m_ignoreIT;      ///< Ignore IT information
   bool m_ignoreOT;      ///< Ignore OT information
+  bool m_ignoreMuon;      ///< Ignore Muon information
 
 };
 #endif // TRACKTOOLS_MEASUREMENTPROVIDER_H

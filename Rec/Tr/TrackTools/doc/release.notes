@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2007-04-27 - Jose Hernando, Miriam Gandelman, Erica Polycarpo
+ - Add MuonMeasurements to MeasurementProvider
+
 !======================== TrackTools v2r13 2007-03-29 ========================
 ! 2007-03-29 - Marco Cattaneo
  - Adapt to change in VeloDet interface

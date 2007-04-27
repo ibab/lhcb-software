@@ -1,4 +1,4 @@
-// $Id: MeasurementProvider.cpp,v 1.27 2006-08-15 15:51:55 erodrigu Exp $
+// $Id: MeasurementProvider.cpp,v 1.28 2007-04-27 20:41:26 polye Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -9,6 +9,7 @@
 #include "Event/VeloPhiMeasurement.h"
 #include "Event/STMeasurement.h"
 #include "Event/OTMeasurement.h"
+#include "Event/MuonMeasurement.h"
 
 // local
 #include "MeasurementProvider.h"
@@ -52,10 +53,15 @@ MeasurementProvider::MeasurementProvider( const std::string& type,
   declareProperty( "OTGeometryPath",
                    m_otDetPath = DeOTDetectorLocation::Default );
 
+  declareProperty( "MuonGeometryPath",
+                   m_muDetPath = "/dd/Structure/LHCb/DownstreamRegion/Muon");
+  
+
   declareProperty( "IgnoreVelo", m_ignoreVelo = false );
   declareProperty( "IgnoreTT",   m_ignoreTT   = false );
   declareProperty( "IgnoreIT",   m_ignoreIT   = false );
   declareProperty( "IgnoreOT",   m_ignoreOT   = false );
+  declareProperty( "IgnoreMuon",   m_ignoreMuon   = false );
 
 }
 
@@ -86,6 +92,8 @@ StatusCode MeasurementProvider::initialize() {
   if ( !m_ignoreIT ) m_itDet   = getDet<DeSTDetector>( m_itDetPath );
 
   if ( !m_ignoreOT ) m_otDet   = getDet<DeOTDetector>( m_otDetPath );
+
+  if ( !m_ignoreMuon ) m_muDet   = getDet<DeMuonDetector>( m_muDetPath );
   
 
   return StatusCode::SUCCESS;
@@ -224,11 +232,23 @@ Measurement* MeasurementProvider::measurement ( const LHCbID& id,
     if ( meas == NULL )
       error() << "Unable to create OT measurement!" << endreq;
   }
-  else {
+  else if ( id.isMuon() && !m_ignoreMuon ) {
+    MuonTileID muid = id.muonID();
+    double x,y,z,dx,dy,dz;
+    StatusCode sc = m_muDet->Tile2XYZ(muid,x,dx,y,dy,z,dz);
+    if (sc.isFailure()){
+      warning() << "Failed to get x,y,z of tile " << muid << endreq;
+    } else {
+      meas = new MuonMeasurement(id,Gaudi::XYZPoint(x,y,z),dx,dy);
+      debug() << " Created muon measurement! " << muid << endreq; 
+    }
+    
+  } else {
     error() << "LHCbID is not of type Velo, OT, or ST"
             << " (type is " << id.detectorType() << ")" << endreq
             << " -> do not know how to create a Measurement!" << endreq;
   }
+
 
   if ( meas != NULL )
     debug() << "Creating measurement of type " << meas -> type()

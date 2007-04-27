@@ -27,6 +27,7 @@ use   Relations       v*     Kernel
 use   STDet           v*     Det
 use   OTDet           v*     Det
 use   VeloDet         v*     Det
+use   MuonDet         v*     Det
 
 # Component library building rule
 #============================================================================
