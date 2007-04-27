@@ -191,6 +191,9 @@ StatusCode MuonID::initialize() {
     return StatusCode::FAILURE;
   }
 
+  //  Load MeasurementProvider Tool
+  m_measProvider = tool<IMeasurementProvider>("MeasurementProvider");
+
   return StatusCode::SUCCESS;
 }
 
@@ -869,6 +872,10 @@ LHCb::Track* MuonID::makeMuonTrack(const LHCb::MuonPID& mupid){
     LHCb::MuonTileID tile= (*iCoord)->key();
     LHCb::LHCbID id(tile);
     mtrack->addToLhcbIDs(id);
+    mtrack->setType(LHCb::Track::Muon);
+    mtrack->setHistory(LHCb::Track::MuonID);
+    LHCb::Measurement* muMeas= m_measProvider->measurement(id);
+    mtrack->addToMeasurements( *muMeas );
   }
 
  return mtrack; 

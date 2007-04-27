@@ -17,6 +17,7 @@
 #include "Event/MuonCoord.h"
 
 #include "MuonDet/DeMuonDetector.h"
+#include "TrackInterfaces/IMeasurementProvider.h"
 #include "TMath.h"
 
 class MuonPID;
@@ -135,6 +136,9 @@ private:
   std::vector<std::string> m_stationNames;
   // fill local arrays of pad sizes and region sizes
   DeMuonDetector*  m_mudet;
+
+  // Tool to provide measurement from LHCbID
+  IMeasurementProvider* m_measProvider;
     
   // local array of pad sizes in mm
   // all std::vectors here are indexed: [station * m_NRegion + region]

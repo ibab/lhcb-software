@@ -2,9 +2,13 @@
 ! Responsible : Erica Polycarpo, Miriam Gandelman
 !---------------------------------------------------------------------
 
+! 2007-04-27 - Jose Hernando, Miriam Gandelman, Erica Polycarpo 
+ - add measurements to the MuonTrack 
+
 !========================== MuonID v5r0 2007-04-20 ===================
 ! 2007-04-19 - Erica Polycarpo 
  - make a Muon Track with the Muon hits LHCbIDs 
+
 !========================== MuonID v4r6 2007-03-20 ===================
 ! 2007-03-08 - Miriam Gandelman
  - fixed the number of Landau parameters for the muon 
