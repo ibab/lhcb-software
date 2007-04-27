@@ -5,11 +5,12 @@
 // Include files for service retrieval
 #include "GaudiAlg/GaudiTool.h"
 
-//#include "IPrepareElectronSeed.h"            // Interface
-#include "HltBase/IPrepareCaloSeed.h"  
+#include "HltBase/IPrepareCaloSeed.h"    // Interface
 
 #include "Event/L0CaloCandidate.h"
 #include "Event/State.h"
+
+#include "L0ConfDataStore.h"
 
 /** @class PrepareElectronSeed PrepareElectronSeed.h
  *  
@@ -33,17 +34,14 @@ public:
   /// Initialize method
   virtual StatusCode initialize();
 
-//   /// Finalize method
-//   virtual StatusCode finalize();
-
   virtual StatusCode prepareSeed( const LHCb::L0CaloCandidate& eL0Cand,
                                   LHCb::State& seedStatePos,
                                   LHCb::State& seedStateNeg );
   
 
 private:
-
-  bool m_debugInfo; 
+  bool m_debugMode;
+  
   double sigmaX2[3], sigmaY2[3], sigmaTx2[3], sigmaTy2[3];
   double parIP[2], parMP[2], parOP[2];
   double cellSize[3];
@@ -59,19 +57,19 @@ private:
 
   // ECAL
   DeCalorimeter* m_ecal;
-  CellNeighbour m_neighbour;
 
   StatusCode SetCandPosAndE(const LHCb::L0CaloCandidate& cand,
-                            const LHCb::CaloDigits* calodig,
                             double& x1, double& x2, double& x3, double& x4,
                             double& y1, double& y2, double& y3, double& y4,
                             double& e1, double& e2, double& e3, double& e4,
                             double& s1, double& s2, double& s3, double& s4 );
   
-
-
   
- 
+  ICaloDataProvider* m_caloDaq;
+  
+  //debug information
+  L0ConfDataStore* m_DataStore;
+
 };
 
 

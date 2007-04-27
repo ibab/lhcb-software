@@ -9,8 +9,7 @@
 // from Det
 #include "CaloDet/DeCalorimeter.h"
 
-// from CaloUtils
-#include "CaloUtils/CellNeighbour.h"
+#include "CaloDAQ/ICaloDataProvider.h"
 
 //local
 #include "PrepareElectronSeed.h"
@@ -26,8 +25,8 @@ PrepareElectronSeed::PrepareElectronSeed(const std::string& type,
     
 {
   // Declare the algorithm's properties which can be set at run time
-    declareInterface<IPrepareCaloSeed>(this);
-
+  declareInterface<IPrepareCaloSeed>(this);
+  declareProperty("debugMode",m_debugMode = false);
   
 }
 
@@ -41,17 +40,20 @@ StatusCode PrepareElectronSeed::initialize()
   if (sc.isFailure()){
     return sc;
   }
-  // always() << " Initialize PrepareElectronSeed" << endmsg;
+  debug() << " Initialize PrepareElectronSeed" << endmsg;
 
-// Retrieve the ECAL detector element
+  // Retrieve the ECAL detector element
   m_ecal = getDet<DeCalorimeter>( DeCalorimeterLocation::Ecal );
-  
-  // set det for calo tool
-  m_neighbour.setDet ( m_ecal );
 
-  m_debugInfo = false;//@ja put in job options
+  //Retrieve tool for Ecal decoding on demand
+  m_caloDaq=tool<ICaloDataProvider>("CaloDataProvider","EcalDataProvider",this);
   
- /*
+  if(m_debugMode){
+    //tool for debug information
+    m_DataStore = tool<L0ConfDataStore>("L0ConfDataStore");
+  }
+  
+  /*
    *  Resolution of the L0Cand at T3, tune JA 2007-03-22
    *  3 regions:  sigmaX:  3 / 5.5 / 15 mm
    *              sigmaY:  2 / 3.5 /  8 mm
@@ -80,8 +82,6 @@ StatusCode PrepareElectronSeed::initialize()
   sParOP[0] = tan(  cellSize[2]/2. / parOP[0] );
   sParOP[1] = tan( -cellSize[2]/2. / parOP[0] );
 
-
-
   return StatusCode::SUCCESS;
 }
 
@@ -90,10 +90,12 @@ StatusCode PrepareElectronSeed::prepareSeed( const LHCb::L0CaloCandidate& eL0Can
                                              LHCb::State& seedStateNeg )
 {
 
-  if(m_debugInfo) debug()<<"PrepareElectronSeed::execute!"<<endmsg;
+  if(m_debugMode) debug()<<"execute!"<<endmsg;
 
-    int ecalRegion = 0;
+  //initialize Calo decoding for this event
+  m_caloDaq->setBank();
   
+  int ecalRegion = 0;
   
   //===================================================================================================
   // electrons items
@@ -104,39 +106,30 @@ StatusCode PrepareElectronSeed::prepareSeed( const LHCb::L0CaloCandidate& eL0Can
   e_s1=0.;e_s2=0.;e_s3=0.;e_s4=0.;
   //===================================================================================================
 
-//===================================================================================================
-  // get the calodigits 
-  const LHCb::CaloDigits* calodigits =get<LHCb::CaloDigits>(LHCb::CaloDigitLocation::Ecal);
-  if(m_debugInfo){
-    verbose() << endmsg;
-    verbose() << " n digits ( ECAL) = " << calodigits->size() << endmsg;
-    verbose() << endmsg;
-  }
-  
   // get candidates cells x, y, energy and size for electron candidate
-  StatusCode sc = SetCandPosAndE( eL0Cand , calodigits ,
+  StatusCode sc = SetCandPosAndE( eL0Cand , 
                                   e_x1, e_x2, e_x3, e_x4,
                                   e_y1, e_y2, e_y3, e_y4,
                                   e_e1, e_e2, e_e3, e_e4,
                                   e_s1, e_s2, e_s3, e_s4 );
   
-  if( sc.isFailure() ) verbose() << " didn't manage to set cand positions and energy..." << endmsg;
+  if( sc.isFailure() ) warning()<< " didn't manage to set cand positions and energy..." << endmsg;
   
-  if(m_debugInfo) {
+  if(m_debugMode) {
     verbose() << endmsg;
     verbose() << format(" electron s1 = %8.1f  s2 = %8.1f  s3 = %8.1f  s4 = %8.1f ",e_s1,e_s2,
-                    e_s3,e_s4 )  << endmsg;
+                        e_s3,e_s4 )  << endmsg;
     verbose() << format(" electron e1 = %8.1f  e2 = %8.1f  e3 = %8.1f  e4 = %8.1f ",e_e1,e_e2,
                         e_e3,e_e4 )  << endmsg;
     verbose() << format(" electron x1 = %8.1f  x2 = %8.1f  x3 = %8.1f  x4 = %8.1f ",e_x1,e_x2,
-                    e_x3,e_x4 )  << endmsg;
+                        e_x3,e_x4 )  << endmsg;
     verbose() << format(" electron y1 = %8.1f  y2 = %8.1f  y3 = %8.1f  y4 = %8.1f ",e_y1,e_y2,
                         e_y3,e_y4 )  << endmsg;
     verbose() << endmsg;
   }
   
 
-//========================================================================================================
+  //========================================================================================================
   // now correct barycenter position 
   double candx = 0.;
   if( e_s1!=0 && e_s2!=0 )      candx=(e_x1+e_x2)/2.;
@@ -190,7 +183,7 @@ StatusCode PrepareElectronSeed::prepareSeed( const LHCb::L0CaloCandidate& eL0Can
     else                            bary_cor = candy + parOP[1]*tan( (bary-candy) / parOP[0] ); 
   }
   
-  if(m_debugInfo){
+  if(m_debugMode){
     verbose() << endmsg;
     verbose() << format(" cluster part  = %1i",ecalRegion) << endmsg;
     verbose() << format(" electron cand x    = %4.2f         cand y = %4.2f",candx,candy) << endmsg;
@@ -221,11 +214,11 @@ StatusCode PrepareElectronSeed::prepareSeed( const LHCb::L0CaloCandidate& eL0Can
   double stateNeg_x  = barx_cor * zT3 / zcluster + alpha/ecluster;
   double stateNeg_tx = (barx_cor-stateNeg_x)/(zcluster-zT3);
 
-  if(m_debugInfo){
+  if(m_debugMode){
     verbose() << endmsg;
     verbose() << format(" ecluster = %4.1f GeV",ecluster)  << endmsg;
     verbose() << format(" State p : X = %4.1f  Y = %4.1f  TX = %4.3f  TY = %4.3f  Q/P = %4.3f",
-                    statePos_x,statePos_y,statePos_tx,statePos_ty,statePos_qOverp )
+                        statePos_x,statePos_y,statePos_tx,statePos_ty,statePos_qOverp )
               << endmsg;
     verbose() << format(" State m : X = %4.1f  Y = %4.1f  TX = %4.3f  TY = %4.3f  Q/P = %4.3f",
                         stateNeg_x,statePos_y,stateNeg_tx,statePos_ty,-statePos_qOverp )
@@ -247,11 +240,10 @@ StatusCode PrepareElectronSeed::prepareSeed( const LHCb::L0CaloCandidate& eL0Can
   stateCov(3,3) = sigmaTy2[ecalRegion];
   stateCov(4,4) = 8.41e-6;
 
-
   seedStatePos.setCovariance(stateCov);
   seedStateNeg.setCovariance(stateCov);
   
-
+   if(m_debugMode) m_DataStore->region = ecalRegion;
 
 
   return StatusCode::SUCCESS;
@@ -260,17 +252,15 @@ StatusCode PrepareElectronSeed::prepareSeed( const LHCb::L0CaloCandidate& eL0Can
 
 
 //=============================================================================================
-//  This method returns the L0CaloCand cells pos and energy given the cand and the calodigits
+//  This method returns the L0CaloCand cells pos and energy given the cand 
 //=============================================================================================
 StatusCode PrepareElectronSeed::SetCandPosAndE(const LHCb::L0CaloCandidate& cand,
-                                               const LHCb::CaloDigits* calodig,
                                                double& x1, double& x2, double& x3, double& x4,
                                                double& y1, double& y2, double& y3, double& y4,
                                                double& e1, double& e2, double& e3, double& e4,
                                                double& s1, double& s2, double& s3, double& s4 ){
-  if(m_debugInfo)
-    verbose() << " ElectronCollectTsaCluster::SetCandPosAndE is running" << endmsg;
-  
+  if(m_debugMode)
+    verbose() << " SetCandPosAndE is running" << endmsg;
   
   // get the candcell ID
   const LHCb::CaloCellID& candcellid = cand.id();
@@ -278,66 +268,35 @@ StatusCode PrepareElectronSeed::SetCandPosAndE(const LHCb::L0CaloCandidate& cand
   // first test that the candidate cell id is valid...
   if( m_ecal->valid(candcellid) ){
     
-    // loop on calodigits
-    LHCb::CaloDigits::const_iterator id;
-    for( id=calodig->begin(); calodig->end()!=id; ++id ){
-      
-      // get cell ID for this digit
-      const LHCb::CaloCellID& cellid = (*id)->cellID();
-      
-      // test cellID is valid and set s,x,y and e for the candidate
-      if( m_ecal->valid(cellid) ){
-        
-        if( candcellid.area() == cellid.area() && 
-            candcellid.col()  == cellid.col() && 
-            candcellid.row()  == cellid.row() ){
-          //  verbose() << " cell1 = " << cellid << endmsg;
-          x1 = m_ecal->cellX(candcellid);
-          y1 = m_ecal->cellY(candcellid);
-          e1 = (*id)->e();
-          s1 = m_ecal->cellSize(candcellid);
-        }
-        
-        
-        // test if this digit is a neighbour of the cand one with calo tool
-        if( m_neighbour(candcellid,cellid) ){
+    x1 = m_ecal->cellX(candcellid);
+    y1 = m_ecal->cellY(candcellid);
+    e1 = m_caloDaq->digit( candcellid );
+    s1 = m_ecal->cellSize(candcellid);
+
+    int cellArea = candcellid.area();
+    int cellRow = candcellid.row();
+    int cellCol = candcellid.col();
+
+    LHCb::CaloCellID tmpId2(2 , cellArea , cellRow  , cellCol+1 ); 
+    x2 = m_ecal->cellX(tmpId2);
+    y2 = m_ecal->cellY(tmpId2);
+    e2 = m_caloDaq->digit( tmpId2 );
+    s2 = m_ecal->cellSize(tmpId2);
           
-          if( candcellid.area()  == cellid.area() && 
-              candcellid.col()+1 == cellid.col()  && 
-              candcellid.row()   == cellid.row() ){
-            //            verbose() << " cell2 = " << cellid << endmsg;
-            x2 = m_ecal->cellX(cellid);
-            y2 = m_ecal->cellY(cellid);
-            e2 = (*id)->e();
-            s2 = m_ecal->cellSize(cellid);
-          }
-          
-          if( candcellid.area()  == cellid.area() && 
-              candcellid.col()   == cellid.col()  && 
-              candcellid.row()+1 == cellid.row() ){
-            //  verbose() << " cell3 = " << cellid << endmsg;
-            x3 = m_ecal->cellX(cellid);
-            y3 = m_ecal->cellY(cellid);
-            e3 = (*id)->e();
-            s3 = m_ecal->cellSize(cellid);
-          }
-          
-          if( candcellid.area()  == cellid.area() && 
-              candcellid.col()+1 == cellid.col()  && 
-              candcellid.row()+1 == cellid.row() ){
-            //  verbose() << " cell4 = " << cellid << endmsg;
-            x4 = m_ecal->cellX(cellid);
-            y4 = m_ecal->cellY(cellid);
-            e4 = (*id)->e();
-            s4 = m_ecal->cellSize(cellid);
-          }
-          
-        }// if cells are neighbors    
-      }// valid cell id
-    }// loop over digits
+    LHCb::CaloCellID tmpId3(2 , cellArea , cellRow+1  , cellCol ); 
+    x3 = m_ecal->cellX(tmpId3);
+    y3 = m_ecal->cellY(tmpId3);
+    e3 = m_caloDaq->digit( tmpId3 );
+    s3 = m_ecal->cellSize(tmpId3);
+
+    LHCb::CaloCellID tmpId4(2 , cellArea , cellRow+1  , cellCol+1 ); 
+    x4 = m_ecal->cellX(tmpId4);
+    y4 = m_ecal->cellY(tmpId4);
+    e4 = m_caloDaq->digit( tmpId4 );
+    s4 = m_ecal->cellSize(tmpId4);
+
   }// cand cell id is valid
 
-      
   return StatusCode::SUCCESS;
   
 }
