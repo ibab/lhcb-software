@@ -1,4 +1,4 @@
-// $Id: L0ConfDataStore.h,v 1.1 2007-04-27 09:47:51 albrecht Exp $
+// $Id: L0ConfDataStore.h,v 1.2 2007-04-27 13:26:01 albrecht Exp $
 #ifndef L0CONFDATASTORE_H 
 #define L0CONFDATASTORE_H 1
 
@@ -39,12 +39,14 @@ public:
   
   void clearStore();  
 
-  double test;
   int region;
   double decodingTime;
   
-
   int nModulesToDecode;
+  
+  //variables for TsaCollect tool
+  double collectTime, trackingTime;
+  int nStClusters, nOtClusters, nTHits;
   
 
 protected:
