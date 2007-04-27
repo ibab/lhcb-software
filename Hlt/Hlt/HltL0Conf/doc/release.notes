@@ -5,6 +5,25 @@
 !-----------------------------------------------------------------------------
 
 !=========================== HltL0Conf v1r1 2007-03-27 =======================
+! 2007-04-27 - Johannes Albrecht
+	- src/L0ConfDataStore
+			- tool added for debugging purposes: 
+				public instance included in L0Conf algorithms if 
+				debugMode is set to true
+	- src/PrepareElectronSeed
+			- include calo decoding on demand - all Ecal decoding is now
+				done directly in this tool
+			- include L0ConfDataStore tool
+	- src/TsaConfirmTool
+			- adapt to current release of TsaAlgorithms
+			- add slope restriction in x-search
+			- adapt reserve for vectors according to limited search windows
+			- include L0ConfDataStore tool and debugging lines
+				(optional via the debugMode job option)
+			- tidy up the code
+  		
+
+
 ! 2007-03-27 - Marco Cattaneo
  - Add missing HltL0Conf_dll.cpp file
 
