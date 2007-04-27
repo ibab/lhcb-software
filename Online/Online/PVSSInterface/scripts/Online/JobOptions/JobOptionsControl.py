@@ -1,16 +1,16 @@
 import socket
-import Online.PVSS
+import Online.PVSS as PVSS
 import Online.Utils
 import Online.RunInfo
 import Online.JobOptions.JobOptions as JobOptions
 
-log            = Online.Utils.log
-error          = Online.PVSS.error
-warning        = Online.Utils.warning
-RunInfo        = Online.RunInfo.RunInfo
-DataPoint      = Online.PVSS.DataPoint
-DeviceSensor   = Online.PVSS.DeviceSensor
-CommandListener = Online.PVSS.CommandListener
+log             = Online.Utils.log
+error           = PVSS.error
+warning         = Online.Utils.warning
+RunInfo         = Online.RunInfo.RunInfo
+DataPoint       = PVSS.DataPoint
+DeviceSensor    = PVSS.DeviceSensor
+CommandListener = PVSS.CommandListener
 
 # =============================================================================
 class OptionsWriter(CommandListener):
