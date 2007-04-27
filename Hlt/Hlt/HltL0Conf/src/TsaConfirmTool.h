@@ -1,4 +1,4 @@
-// $Id: TsaConfirmTool.h,v 1.1.1.1 2007-02-08 17:17:48 hernando Exp $
+// $Id: TsaConfirmTool.h,v 1.2 2007-04-27 12:36:52 albrecht Exp $
 #ifndef TSACONFIRMTOOL_H 
 #define TSACONFIRMTOOL_H 1
 
@@ -10,6 +10,7 @@
 #include "GaudiAlg/GaudiTool.h"
 #include "HltBase/ITrackConfirmTool.h"            // Interface
 
+#include "L0ConfDataStore.h"
 
 /** @class TsaConfirmTool TsaConfirmTool.h
  *  
@@ -19,13 +20,12 @@
  */
 
 // forward declaration
-//from initialization
 class IITDataSvc;
 class IOTDataSvc;
-//from collector
+
 class ITsaCollector;
 class ITsaSeedStep;
-//class ITsaSeedAddHits;
+
 class ITsaStubFind;
 class ITsaStubLinker;
 class ITsaStubExtender;
@@ -51,15 +51,14 @@ public:
   virtual StatusCode initialize();
 
   StatusCode tracks(const LHCb::State& seedState, std::vector<LHCb::Track*>& outputTracks );
-                                 
-  
+     
 protected:
 
 private:
   //variables declared in job options
   int m_nsigma;
-  bool m_debugInfo;
-  
+  bool m_debugMode;
+   
   //from initialization
   std::string m_otDataSvcType;
   std::string m_itDataSvcType;
@@ -101,12 +100,15 @@ private:
   double m_curvFactor;
   bool m_pFromCurvature;
   bool m_largeErrors;
-  //  std::string m_inputLocation;
-  //std::string m_outputLocation;
+
   LHCb::Track* convert(const SeedTrack* aTrack) const;
   void addState(const SeedTrack* aTrack, 
                 LHCb::Track* lTrack, const double z) const;
+
   ITrackPtKick* m_ptKickTool;
+
+  //debug information
+  L0ConfDataStore* m_DataStore;
 
   };
 #endif // TSACONFIRMTOOL_H
