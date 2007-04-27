@@ -43,7 +43,8 @@ Adder::Adder(const std::string& name, ISvcLocator* ploc)
   declareProperty("taskname",m_taskname);
   declareProperty("refreshtime",m_refreshtime);
   declareProperty("dimclientdns",m_dimclientdns);
-  }
+  declareProperty("servername",m_servername);
+}
 
 //------------------------------------------------------------------------------
 StatusCode Adder::initialize() {
