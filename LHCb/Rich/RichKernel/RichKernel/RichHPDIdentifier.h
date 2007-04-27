@@ -5,7 +5,7 @@
  *  Header file for Rich::DAQ::HPDIdentifier
  *
  *  CVS Log :-
- *  $Id: RichHPDIdentifier.h,v 1.1 2007-04-27 14:09:11 jonrob Exp $
+ *  $Id: RichHPDIdentifier.h,v 1.2 2007-04-27 14:11:33 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   27/04/2007
@@ -46,10 +46,9 @@ namespace Rich
 
       /// Constructor from a RichSmartID
       explicit HPDIdentifier( const LHCb::RichSmartID id )
-      {
-        m_data = ( 100000*(int)id.rich() + 10000*(int)id.panel()
-                   100*id.hpdCol() + id.hpdNumInCol() );
-      }
+        : m_data  ( 100000*(1+(int)id.rich()) + 10000*((int)id.panel()) +
+                    100*id.hpdCol() + id.hpdNumInCol() )
+      { }
 
     public:
 
