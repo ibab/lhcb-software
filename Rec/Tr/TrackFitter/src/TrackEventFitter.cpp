@@ -1,4 +1,4 @@
-// $Id: TrackEventFitter.cpp,v 1.10 2006-07-27 06:35:47 cattanem Exp $
+// $Id: TrackEventFitter.cpp,v 1.11 2007-04-27 14:38:41 mneedham Exp $
 // Include files
 // -------------
 // from Gaudi
@@ -74,8 +74,8 @@ StatusCode TrackEventFitter::initialize() {
 
   // Initialize global counters
   // --------------------------
-  m_nTracks       = 0;
-  m_nFittedTracks = 0;
+  // m_nTracks       = 0;
+  // m_nFittedTracks = 0;
 
   return StatusCode::SUCCESS;
 };
@@ -146,8 +146,8 @@ StatusCode TrackEventFitter::execute() {
   // Update counters
   // ---------------
   unsigned int nTracks = tracksCont -> size();
-  m_nTracks       += nTracks;
-  m_nFittedTracks += ( nTracks - nFitFail );
+  counter("nTracks") += nTracks;
+  counter("nFitted") += ( nTracks - nFitFail );
 
   if ( msgLevel( MSG::DEBUG ) ) {
     if ( nFitFail == 0 )
@@ -173,8 +173,9 @@ StatusCode TrackEventFitter::finalize() {
   debug() << "==> Finalize" << endmsg;
 
   float perf = 0.;
-  if ( m_nTracks > 0 )
-    perf = float(m_nFittedTracks) / float(m_nTracks) * 100.;
+  unsigned int nTracks = counter("nTracks").nEntries();
+  if ( nTracks > 0 )
+    perf = float(counter("nFitted").nEntries()) / float(nTracks) * 100.;
 
   info()
     << " " << endmsg
@@ -184,7 +185,7 @@ StatusCode TrackEventFitter::finalize() {
     << format( " %7.2f %%", perf ) << endmsg
     << "                            ("
     << format( "%7d / %6d tracks )",
-               m_nFittedTracks, m_nTracks ) << endmsg
+               counter("nFitted").nEntries(), nTracks ) << endmsg
     << "======================================================================"
     << endmsg;
 

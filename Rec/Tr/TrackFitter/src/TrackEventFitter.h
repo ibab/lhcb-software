@@ -1,4 +1,4 @@
-// $Id: TrackEventFitter.h,v 1.3 2005-11-21 11:20:57 jvantilb Exp $
+// $Id: TrackEventFitter.h,v 1.4 2007-04-27 14:38:41 mneedham Exp $
 #ifndef TRACKFITTER_TRACKEVENTFITTER_H 
 #define TRACKFITTER_TRACKEVENTFITTER_H 1
 
@@ -49,8 +49,8 @@ private:
   bool m_makeNewContainer;
 
   // counters
-  unsigned int m_nTracks;
-  unsigned int m_nFittedTracks;
+  // unsigned int m_nTracks;
+  // unsigned int m_nFittedTracks;
 
 };
 #endif // TRACKFITTER_TRACKEVENTFITTER_H

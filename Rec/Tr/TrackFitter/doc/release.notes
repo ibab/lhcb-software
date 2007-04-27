@@ -3,6 +3,9 @@
 ! Responsible : Eduardo Rodrigues, Jose A. Hernando
 !----------------------------------------------------------------------------
 
+! 2007-04-27 M .Needham
+ - Use counter service for monitoring fit success rate.
+
 !=========================== TrackFitter v2r14 2007-04-17 ===================
 ! 2007-04-17 - Gerhard Raven
  - Add TrajFitter, an implementation of the ITrajFitter interface
