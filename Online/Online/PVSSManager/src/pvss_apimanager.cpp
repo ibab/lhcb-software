@@ -11,8 +11,8 @@ PVSS::IAPIManager* PVSS::pvss_create_manager(const char* dll, const char* fun)  
 
   //_asm int 3
   int argc = 1;
-  const char* argv1[] = {"pvss_create_apimanager"};
-  const char* argv3[] = {"pvss_create_apimanager",dll,fun};
+  const char* argv1[] = {"PVSS00interactive"};
+  const char* argv3[] = {"PVSS00interactive",dll,fun};
   char** argv = (char**)argv1;
   if ( dll && strlen(dll)>0 ) {
     if ( fun && strlen(fun)>0 )  {
@@ -21,6 +21,7 @@ PVSS::IAPIManager* PVSS::pvss_create_manager(const char* dll, const char* fun)  
     }
   }
   int argcc = argc;
+
   // Initialize Resources, i.e. 
   //  - interpret commandline arguments
   //  - interpret config file
@@ -46,6 +47,9 @@ PVSS::IAPIManager* PVSS::pvss_create_manager(const char* dll, const char* fun)  
 extern "C" int pvss_run_apimanager(int argc, char *argv[])   {
   // Now run our demo manager
   PVSS::IAPIManager *mgr = 0;
+  for(int i=0; i<argc; ++i) {
+    std::cout << "Argument [" << i << "]: " << argv[i] << std::endl;
+  }
   if ( argc >= 3 ) mgr = PVSS::pvss_create_manager(argv[1],argv[2]);
   else             mgr = PVSS::pvss_create_manager("","");
 
@@ -57,9 +61,9 @@ extern "C" int pvss_run_apimanager(int argc, char *argv[])   {
   mgr->run();
   // Exit gracefully :) 
   // Call Manager::exit instead of ::exit, so we can clean up
-	mgr->exit(0);	
+  mgr->exit(0);	
   // Just make the compilers happy...
-	return 0;
+  return 0;
 }
 
 
