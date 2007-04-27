@@ -1,5 +1,7 @@
+
+
 ToolSvc.TsaConfirmTool.nSigma = 5;
-ToolSvc.TsaConfirmTool.debugInfo = false;
+ToolSvc.TsaConfirmTool.debugMode = false;
 
 ToolSvc.TsaConfirmTool.otDataSvcName     = "L0ConfToolOTDataSvc";
 ToolSvc.TsaConfirmTool.itDataSvcName     = "L0ConfToolITDataSvc"; 
@@ -19,6 +21,11 @@ ToolSvc.TsaConfirmTool.stereoS2.sector = 2;
 ToolSvc.TsaConfirmTool.stereoS3.sector = 3;
 ToolSvc.TsaConfirmTool.stereoS4.sector = 4;
 
+ToolSvc.TsaConfirmTool.xSearchS0.nSigmaTx = 5;
+ToolSvc.TsaConfirmTool.xSearchS1.nSigmaTx = 5;
+ToolSvc.TsaConfirmTool.xSearchS2.nSigmaTx = 5;
+ToolSvc.TsaConfirmTool.xSearchS3.nSigmaTx = 5;
+ToolSvc.TsaConfirmTool.xSearchS4.nSigmaTx = 5;
 
 ToolSvc.TsaConfirmTool.xSearchS3.otDataSvcName = "L0ConfToolOTDataSvc";
 ToolSvc.TsaConfirmTool.xSearchS4.otDataSvcName = "L0ConfToolOTDataSvc";
