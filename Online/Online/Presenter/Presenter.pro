@@ -20,7 +20,7 @@ DEPENDPATH +=  src gui/presenter
 win32: INCLUDEPATH += inc/ gui/presenter $(ROOTSYS)/include \
 Z:/cern.ch/sw/lcg/external/Boost/1.33.1/win32_vc71/include/boost-1_33_1 \
 Z:/cern.ch/sw/lcg/external/oracle/10.2.0.2/win32_vc71/include/ \
-../../DIM/v16r7/dim \
+Z:\cern.ch\lhcb\software\releases\ONLINE\ONLINE_v3r1\Online\DIM\v16r7/dim \
 ../../OnlineHistDB/v2r0/
 unix: INCLUDEPATH += inc/ gui/presenter $(ROOTSYS)/include \
 /afs/cern.ch/sw/lcg/external/Boost/1.33.1/$(CMTCONFIG)/include/boost-1_33_1 \
@@ -33,7 +33,7 @@ libGpad.lib libTree.lib libRint.lib libGui.lib libQtGSI.lib libCore.lib libCint.
 -LZ:/cern.ch/sw/lcg/external/Boost/1.33.1/win32_vc71/lib \
 boost_date_time-vc71-mt-1_33_1.lib \
 -LZ:/cern.ch/sw/lcg/external/oracle/10.2.0.2/win32_vc71/lib oraocci10.lib \
--L../../DIM/v16r7/$(CMTCONFIG) -ldim \  
+-LZ:\cern.ch\lhcb\software\releases\ONLINE\ONLINE_v3r1\Online\DIM\v16r7/$(CMTCONFIG) -ldim \  
 -L../../OnlineHistDB/v2r0/$(CMTCONFIG) OnlineHistDB.lib  
 
 unix: LIBS  +=  -L$(ROOTSYS)/lib -lHist -lGraf -lGraf3d -lGpad -lTree -lRint \
