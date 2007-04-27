@@ -25,7 +25,7 @@ Z:\cern.ch\lhcb\software\releases\ONLINE\ONLINE_v3r1\Online\DIM\v16r7/dim \
 unix: INCLUDEPATH += inc/ gui/presenter $(ROOTSYS)/include \
 /afs/cern.ch/sw/lcg/external/Boost/1.33.1/$(CMTCONFIG)/include/boost-1_33_1 \
 /afs/cern.ch/sw/lcg/external/oracle/10.2.0.2/$(CMTCONFIG)/include \
-../../DIM/v16r7/dim \
+$(DIMROOT)/dim \
 ../../OnlineHistDB/v2r0/
 
 win32: LIBS  +=  -L$(ROOTSYS)/lib libHist.lib libGraf.lib libGraf3d.lib \
@@ -40,7 +40,7 @@ unix: LIBS  +=  -L$(ROOTSYS)/lib -lHist -lGraf -lGraf3d -lGpad -lTree -lRint \
 -lGui -lQtGSI -lCore -lCint \
 -L/afs/cern.ch/sw/lcg/external/Boost/1.33.1/slc4_ia32_gcc34/lib -lboost_date_time-gcc-mt \
 -L/afs/cern.ch/sw/lcg/external/oracle/10.2.0.2/slc4_ia32_gcc34/lib -lclntsh \
--L../../DIM/v16r7/$(CMTCONFIG) -ldim \
+-L$(DIMROOT)/$(CMTCONFIG) -ldim \
 -L../../OnlineHistDB/v2r0/$(CMTCONFIG) -lOnlineHistDB
 
 CONFIG  += qt warn_on thread debug
