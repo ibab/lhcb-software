@@ -33,7 +33,9 @@ namespace PVSS {
     virtual void stop();
     /// Graceful exit with manager cleanup
     virtual void exit(int exit_code);
-    
+    /// Optional execution through loaded library
+    virtual int exec(bool threaded=true);
+ 
     /// handle incoming hotlinks by group
     void handleHotLink(const DpHLGroup &group);
     

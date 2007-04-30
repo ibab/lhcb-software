@@ -2,6 +2,7 @@ package PVSSInterface
 version v1r0
 
 branches  cmt doc
+use PVSS v* Online
 use PVSSManager  v* Online
 use OnlineKernel v* Online
 use Reflex       v* LCG_Interfaces -no_auto_imports

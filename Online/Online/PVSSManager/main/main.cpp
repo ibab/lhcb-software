@@ -1,4 +1,7 @@
-extern "C" int pvss_run_apimanager(int argc, char *argv[]);
+#include "unistd.h"
+namespace PVSS {
+  int pvss_exec_manager(int argc, char **argv);
+}
 int main (int argc, char** argv)  {
-  return pvss_run_apimanager(argc,argv);
+  return PVSS::pvss_exec_manager(argc,argv);
 }

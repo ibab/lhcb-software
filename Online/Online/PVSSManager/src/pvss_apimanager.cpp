@@ -3,70 +3,90 @@
 #include "PVSS/Internals.h"
 #include <signal.h>
 
-PVSS::IAPIManager* PVSS::pvss_create_manager(const char* dll, const char* fun)  {
-  // Let Manager handle SIGINT and SIGTERM (Ctrl+C, kill)
-  // Manager::sigHdl will call virtual function Manager::signalHandler 
-	signal(SIGINT,  Manager::sigHdl);
-	signal(SIGTERM, Manager::sigHdl);
-
-  //_asm int 3
-  int argc = 1;
-  const char* argv1[] = {"PVSS00interactive"};
-  const char* argv3[] = {"PVSS00interactive",dll,fun};
-  char** argv = (char**)argv1;
-  if ( dll && strlen(dll)>0 ) {
-    if ( fun && strlen(fun)>0 )  {
-      argc = 3;
-      argv = (char**)argv3;
+static PVSS::IAPIManager* s_mgr = 0;
+static void get_args(int argc, char** argv, const char*& dll, const char*& fun) {
+  for(int i=0; i<argc; ++i) {
+    // std::cout << "Argument [" << i << "]: " << argv[i] << std::endl;
+    if ( strncmp(argv[i],"-DLL",4)==0 ) dll = argv[++i];
+    if ( strncmp(argv[i],"-FUN",4)==0 ) fun = argv[++i];
+  }
+}
+static PVSS::IAPIManager* create_manager(const char* dll, const char* fun)  {
+  if ( 0 == s_mgr )  {
+    s_mgr = new PVSS::APIManager(dll,fun);
+    if ( 0 == s_mgr->initialize() )  {
+      ::printf("Failed to initialize API manager.\n");
+      return 0;
     }
   }
-  int argcc = argc;
+  return s_mgr;
+}
 
-  // Initialize Resources, i.e. 
-  //  - interpret commandline arguments
-  //  - interpret config file
-	MgrResources::init(argcc, argv);
+int PVSS::pvss_initialize(int argc, char** argv)  {
+  static bool inited = false;
+  if ( !inited ) {
+    inited = true;
+    // Let Manager handle SIGINT and SIGTERM (Ctrl+C, kill)
+    // Manager::sigHdl will call virtual function Manager::signalHandler 
+    signal(SIGINT,  Manager::sigHdl);
+    signal(SIGTERM, Manager::sigHdl);
 
-  // Are we called with -helpDbg or -help ?
-  if (MgrResources::getHelpDbgFlag())  {
-    MgrResources::printHelpDbg();
+    // Initialize Resources, i.e. 
+    //  - interpret commandline arguments
+    //  - interpret config file
+    MgrResources::init(argc, argv);
+
+    // Are we called with -helpDbg or -help ?
+    if (MgrResources::getHelpDbgFlag())  {
+      MgrResources::printHelpDbg();
+      return 0;
+    }
+    if (MgrResources::getHelpFlag())  {
+      MgrResources::printHelp();
+      return 0;
+    }
+  }
+  return 1;
+}
+
+
+PVSS::IAPIManager* PVSS::pvss_create_manager(const char* name, const char* dll, const char* fun)  {
+  const char* argv[] = {name,dll,fun};
+  if ( !pvss_initialize(3,(char**)argv) ) {
     return 0;
   }
+  return create_manager(dll,fun);
+}
 
-  if (MgrResources::getHelpFlag())  {
-    MgrResources::printHelp();
+int PVSS::pvss_exec_manager(int argc, char** argv)  {
+  const char *dll = "", *fun = "";
+  get_args(argc,argv,dll,fun);
+  if ( !PVSS::pvss_initialize(argc,argv) ) {
     return 0;
   }
-
-  PVSS::IAPIManager *mgr = 0;
-  if ( argcc >= 3 ) mgr = new PVSS::APIManager(argv[1],argv[2]);
-  else              mgr = new PVSS::APIManager("","");
-  return mgr;
+  PVSS::IAPIManager *mgr = create_manager(dll,fun);
+  if ( mgr )   {
+    int result = mgr->exec(false);
+    if ( !result ) {
+      mgr->exit(0);	
+      return 0;
+    }
+    mgr->run();
+  }
+  return 1;
 }
 
 extern "C" int pvss_run_apimanager(int argc, char *argv[])   {
-  // Now run our demo manager
-  PVSS::IAPIManager *mgr = 0;
-  for(int i=0; i<argc; ++i) {
-    std::cout << "Argument [" << i << "]: " << argv[i] << std::endl;
-  }
-  if ( argc >= 3 ) mgr = PVSS::pvss_create_manager(argv[1],argv[2]);
-  else             mgr = PVSS::pvss_create_manager("","");
-
-  if ( 0 == mgr->initialize() )  {
-    ::printf("Failed to initialize API manager.\n");
+  PVSS::pvss_exec_manager(argc,argv);
+  PVSS::IAPIManager *mgr = s_mgr;
+  if ( mgr ) {
+    /// Run the manager
+    mgr->run();
+    // Exit gracefully :) 
+    // Call Manager::exit instead of ::exit, so we can clean up
+    mgr->exit(0);	
+    // Just make the compilers happy...
     return 1;
   }
-  /// Run the manager
-  mgr->run();
-  // Exit gracefully :) 
-  // Call Manager::exit instead of ::exit, so we can clean up
-  mgr->exit(0);	
-  // Just make the compilers happy...
   return 0;
 }
-
-
-//int main(int argc, char* argv[])  {
-//  return pvss_apimanager(argc,argv);
-//}

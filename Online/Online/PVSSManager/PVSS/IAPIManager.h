@@ -26,6 +26,8 @@ namespace PVSS {
     virtual void stop() = 0;
     /// Graceful exit with manager cleanup
     virtual void exit(int exit_code) = 0;
+    /// Optional execution through loaded library
+    virtual int exec(bool threaded=true) = 0;
   };
 }
 #endif  /* PVSSMANAGER_IAPIMANAGER_H    */

@@ -131,7 +131,8 @@ class APIManager:
     if atty and platform.system()=='Linux':
       name_stdout = os.ttyname(sys.stdout.fileno())
       name_stderr = os.ttyname(sys.stdout.fileno())
-    apiManager = PVSS.pvss_create_manager(dll, function)
+    
+    apiManager = PVSS.pvss_create_manager('Python'+str(os.getpid()),dll, function)
     result = apiManager.start()
     if atty and platform.system()=='Linux':
       print 'Online.PVSS> Running in interactive mode....'
