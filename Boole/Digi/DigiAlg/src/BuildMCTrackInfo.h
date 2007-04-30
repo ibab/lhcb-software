@@ -1,4 +1,4 @@
-// $Id: BuildMCTrackInfo.h,v 1.3 2006-03-30 21:53:53 janos Exp $
+// $Id: BuildMCTrackInfo.h,v 1.4 2007-04-30 08:27:10 mneedham Exp $
 #ifndef BUILDMCTRACKINFO_H 
 #define BUILDMCTRACKINFO_H 1
 
@@ -6,7 +6,7 @@
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
 
-#include "Event/MCTrackInfoBits.h"
+#include "Event/MCTrackInfo.h"
 
 class DeVelo;
 class DeSTDetector;
@@ -33,36 +33,36 @@ protected:
 
   void updateBit( int& result, int sta, bool isX ) {
     if ( 0 == sta ) {
-      result |= MCTrackInfoBits::maskTT1;
+      result |= MCTrackInfo::maskTT1;
     } else if ( 1 == sta ) {
-      result |= MCTrackInfoBits::maskTT2;
+      result |= MCTrackInfo::maskTT2;
     } else if ( 2 == sta ) {
-      if ( isX ) result |= MCTrackInfoBits::maskT1X;
-      else       result |= MCTrackInfoBits::maskT1S;
+      if ( isX ) result |= MCTrackInfo::maskT1X;
+      else       result |= MCTrackInfo::maskT1S;
     } else if ( 3 == sta ) {
-      if ( isX ) result |= MCTrackInfoBits::maskT2X;
-      else       result |= MCTrackInfoBits::maskT2S;
+      if ( isX ) result |= MCTrackInfo::maskT2X;
+      else       result |= MCTrackInfo::maskT2S;
     } else if ( 4 == sta ) {
-      if ( isX ) result |= MCTrackInfoBits::maskT3X;
-      else       result |= MCTrackInfoBits::maskT3S;
+      if ( isX ) result |= MCTrackInfo::maskT3X;
+      else       result |= MCTrackInfo::maskT3S;
     }
   }
   
 
   void updateAccBit( int& result, int sta, bool isX ) {
     if ( 0 == sta ) {
-      result |= MCTrackInfoBits::maskAccTT1;
+      result |= MCTrackInfo::maskAccTT1;
     } else if ( 1 == sta ) {
-      result |= MCTrackInfoBits::maskAccTT2;
+      result |= MCTrackInfo::maskAccTT2;
     } else if ( 2 == sta ) {
-      if ( isX ) result |= MCTrackInfoBits::maskAccT1X;
-      else       result |= MCTrackInfoBits::maskAccT1S;
+      if ( isX ) result |= MCTrackInfo::maskAccT1X;
+      else       result |= MCTrackInfo::maskAccT1S;
     } else if ( 3 == sta ) {
-      if ( isX ) result |= MCTrackInfoBits::maskAccT2X;
-      else       result |= MCTrackInfoBits::maskAccT2S;
+      if ( isX ) result |= MCTrackInfo::maskAccT2X;
+      else       result |= MCTrackInfo::maskAccT2S;
     } else if ( 4 == sta ) {
-      if ( isX ) result |= MCTrackInfoBits::maskAccT3X;
-      else       result |= MCTrackInfoBits::maskAccT3S;
+      if ( isX ) result |= MCTrackInfo::maskAccT3X;
+      else       result |= MCTrackInfo::maskAccT3S;
     }
   }
   

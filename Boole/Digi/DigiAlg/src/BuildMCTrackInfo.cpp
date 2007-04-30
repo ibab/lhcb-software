@@ -1,4 +1,4 @@
-// $Id: BuildMCTrackInfo.cpp,v 1.6 2006-03-30 21:53:53 janos Exp $
+// $Id: BuildMCTrackInfo.cpp,v 1.7 2007-04-30 08:27:10 mneedham Exp $
 // Include files 
 
 // from Gaudi
@@ -216,24 +216,24 @@ StatusCode BuildMCTrackInfo::execute() {
         mcParts->end() != itP; itP++ ) {
     MCNum = (*itP)->key();
     int mask = station[MCNum];
-    if ( 2 < veloR[MCNum] )    mask |= MCTrackInfoBits::maskVeloR;
-    if ( 2 < veloPhi[MCNum] )  mask |= MCTrackInfoBits::maskVeloPhi;
+    if ( 2 < veloR[MCNum] )    mask |= MCTrackInfo::maskVeloR;
+    if ( 2 < veloPhi[MCNum] )  mask |= MCTrackInfo::maskVeloPhi;
     if ( 15 < veloR[MCNum]   ) veloR[MCNum]   = 15;
     if ( 15 < veloPhi[MCNum] ) veloPhi[MCNum] = 15;
     
-    mask |= (veloR[MCNum]  <<MCTrackInfoBits::multVeloR );
-    mask |= (veloPhi[MCNum]<<MCTrackInfoBits::multVeloPhi );
+    mask |= (veloR[MCNum]  <<MCTrackInfo::multVeloR );
+    mask |= (veloPhi[MCNum]<<MCTrackInfo::multVeloPhi );
     
 
     if ( 0 != mask ) {
       trackInfo->setProperty( *itP, mask );
       debug() << format( "Track %4d mask %8x nR %2d nPhi %2d ", 
                          MCNum, mask, veloR[MCNum], veloPhi[MCNum] );
-      if ( MCTrackInfoBits::maskHasVelo == (mask & MCTrackInfoBits::maskHasVelo ) )
+      if ( MCTrackInfo::maskHasVelo == (mask & MCTrackInfo::maskHasVelo ) )
         debug() << " hasVelo ";
-      if ( MCTrackInfoBits::maskHasTT   == (mask & MCTrackInfoBits::maskHasTT ) )
+      if ( MCTrackInfo::maskHasTT   == (mask & MCTrackInfo::maskHasTT ) )
         debug() << " hasTT ";
-      if ( MCTrackInfoBits::maskHasT    == (mask & MCTrackInfoBits::maskHasT   ) )
+      if ( MCTrackInfo::maskHasT    == (mask & MCTrackInfo::maskHasT   ) )
         debug() << " hasT ";
       debug() << endreq;
     }
@@ -283,8 +283,8 @@ void BuildMCTrackInfo::computeAcceptance ( std::vector<int>& station ) {
     }
   }
   for ( unsigned int MCNum = 0; station.size() > MCNum; MCNum++ ){
-    if ( 2 < nVeloR[MCNum] ) station[MCNum] |= MCTrackInfoBits::maskAccVeloR;
-    if ( 2 < nVeloP[MCNum] ) station[MCNum] |= MCTrackInfoBits::maskAccVeloPhi;
+    if ( 2 < nVeloR[MCNum] ) station[MCNum] |= MCTrackInfo::maskAccVeloR;
+    if ( 2 < nVeloP[MCNum] ) station[MCNum] |= MCTrackInfo::maskAccVeloPhi;
   }
   //== TT
   

@@ -4,6 +4,9 @@
 ! Purpose     : Holds generic digitization algorithms
 !-----------------------------------------------------------------------------
 
+! 2007-04-30 M Needham
+  - Follow changes in MCTrackInfo 
+
 !========================== DigiAlg v4r6p1 2007-03-01 ========================
 ! 2007-03-01 - Marco Cattaneo
  - Remove use LHCbDefinitions
