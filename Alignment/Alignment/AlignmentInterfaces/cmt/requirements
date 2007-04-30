@@ -13,5 +13,4 @@ branches          cmt doc AlignmentInterfaces
 include_dirs      $(ALIGNMENTINTERFACESROOT)
 
 # =============== dependencies ==============================================
-use LHCbDefinitions  v* Kernel
 use GaudiKernel      v*

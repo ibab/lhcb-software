@@ -4,9 +4,9 @@
 ! Purpose	:	Collection of interfaces needed for the T-station alignment
 !================================================================
 
-!*************** AlignmentInterfaces v1r0 ***********************
-! 29/09/2006 Johan Blouw
- - interface to a track selector
+! 2007-04-30 - Jan Amoraal
+ - Remove obsolete LHCbDefinitions
+
 !*************** AlignmentInterfaces v2r0 ***********************
  - added interfaces to the following tools:
    - Millepede
@@ -16,3 +16,7 @@
    - ATrackSelectorTool
    - Derivatives
    - TAConfigTool
+
+!*************** AlignmentInterfaces v1r0 ***********************
+! 29/09/2006 Johan Blouw
+ - interface to a track selector

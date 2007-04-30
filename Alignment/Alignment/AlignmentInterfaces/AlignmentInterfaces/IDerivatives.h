@@ -4,8 +4,8 @@
 #include "GaudiKernel/IAlgTool.h"
 
 // from LHCb/Kernel:
-#include "Kernel/Transform3DTypes.h"
-#include "Kernel/Vector3DTypes.h"
+#include "GaudiKernel/Transform3DTypes.h"
+#include "GaudiKernel/Vector3DTypes.h"
 
 /** @class Derivatives 
  *
@@ -27,8 +27,9 @@ public:
   virtual StatusCode initialize( const int &, const int &, const std::vector<bool>& ) = 0;
 
   virtual StatusCode SetGlobal( const Gaudi::XYZVector &, /// slope of track 
-				const Gaudi::Transform3D &, /// matrix representing shifts & rotations
-				std::vector<double> &, const int &, const double &, const double & ) = 0;
+                                const Gaudi::Transform3D &, /// matrix representing shifts & rotations
+                                std::vector<double> &, const int &, const double &, const double & ) = 0;
+ 
   virtual StatusCode SetLocal( std::vector<double> &, const int &, const double &, const double & ) = 0;
 
   virtual double GetGlobalDerivative_X() = 0;
