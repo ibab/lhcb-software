@@ -115,5 +115,5 @@ TestDST.Particle2MCLinks.ChargedPPLocation        = {"/Event/microDST/Rec/ProtoP
 // for MC truth association
 //TestDST.Particle2MCLinks.ChargedPP2MC.OutputLevel  = 1;
 TestDST.CompositeParticle2MCLinks.OutputLevel      = 1;
-//TestDST.CompositeParticle2MCLinks.RootOnTES        = "microDST/";
+TestDST.CompositeParticle2MCLinks.RootOnTES        = "microDST/";
 
