@@ -5,8 +5,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v3r1>2007-05-01 OnlineSys v3r3</A></H1><PRE>
+</PRE><H1><A NAME=v3r2>2007-04-30 OnlineSys v3r2</A></H1><PRE>
 This version uses Gaudi LHCb v22r4
+ - Changes in Adder, CCPCHist, DIM, ExampleGaucho, GaudiOnline, OnlineHistDB,
+   OnlineKernel, OnlineTasks, UPI, Writer
 
 </PRE><H1><A NAME=v3r1>2007-03-09 OnlineSys v3r1</A></H1><PRE>
 This version uses Gaudi v19r2, LHCb v22r2
