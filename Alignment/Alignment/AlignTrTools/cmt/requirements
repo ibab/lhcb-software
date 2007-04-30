@@ -22,7 +22,6 @@ use   GSL             v*     LCG_Interfaces
 
 use   GaudiAlg        v*
 use   LHCbKernel      v*     Kernel
-use   LHCbDefinitions v*     Kernel
 use   LHCbMath        v*     Kernel
 use   Relations       v*     Kernel
 
