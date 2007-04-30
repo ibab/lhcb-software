@@ -5,18 +5,10 @@
 # Requires CMTPROJECTPATH set and setup.sh sourced in $ONLINETASKSROOT/cmt
 # 
 #
-<<<<<<< hltrx.sh
-export DIM_DNS_NODE=hltdev001
-=======
-<<<<<<< hltrx.sh
-export DIM_DNS_NODE=hltdev001
-=======
 if [ -z DIM_DNS_NODE ]; then
 	echo "Please define DIM_DNS_NODE"
 	exit 1
 fi
->>>>>>> 1.6
->>>>>>> 1.7
 # Cleanup any running jobs
 pkill Gaudi.exe
 pkill test.exe
@@ -78,5 +70,3 @@ $MINITERM DiskWR@${HOST}    -e "export UTGID=DiskWR   ; ${gaudi_exe} -opt=$ONLIN
 # Last not least the event-builder
 #
 $BIGTERM MEPRx@${HOST} -e "export UTGID=MEPRx ; ${gaudi_exe} -opt=$ONLINETASKSROOT/options/MEPRxSvc.opts -main=$GAUDIONLINEROOT/options/Main.opts "&
-
-#$MINITERM MDFWriter@${HOST} -e "export UTGID=MDFWriter ; ${gaudi_exe} -opt=$ONLINETASKSROOT/options/MDFWriterLite.opts -main=$GAUDIONLINEROOT/options/Main.opts " &

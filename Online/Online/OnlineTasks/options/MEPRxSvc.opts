@@ -1,6 +1,6 @@
 // 
 // MEPRxSvc.opts
-// $Id: MEPRxSvc.opts,v 1.5 2007-01-31 18:41:12 frankb Exp $
+// $Id: MEPRxSvc.opts,v 1.6 2007-04-30 07:16:58 frankb Exp $
 // Sample options for the eventbuilder service MEPRxSvc
 // niko.neufeld@cern.ch
 #include "$ONLINETASKSROOT/options/OnlineEnvironment.opts"
@@ -25,4 +25,4 @@ Runable.partitionID      = 333;
 Runable.MEPBufSize       = 1500000;
 Runable.refCount         = 2;
 Runable.RTTCCompat       = false;       // for RTTC backward compatibility
-#include "$ONLINETASKSROOT/options/EBRich2.opts"
+#include "$ONLINETASKSROOT/options/EBSetup.opts"

@@ -1,6 +1,9 @@
 Package: OnlineTasks
 Author:  Markus Frank
 
+! 2007-04-31 Niko
+  Fix minor bugs in options files
+
 ! 2007-04-24 Eric van Herwijnen 
   Updated scripts in job to work with InstallAreas
 
