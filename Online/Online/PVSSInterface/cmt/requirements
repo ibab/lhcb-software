@@ -26,5 +26,9 @@ apply_pattern reflex_dictionary dictionary=PVSSInterface \
 # Gnerate dictionary rootmap file
 apply_pattern generate_rootmap library=PVSSInterfaceDict
 
+application  PVSS00python  ../main/*.cpp
+macro_append PVSS00python " -m32 " WIN32 ""
+macro_append PVSS00pythonlinkopts " -m32  $(PVSS_linkopts) " WIN32 ""
+
 private
 use RELAX        v* LCG_Interfaces -no_auto_imports

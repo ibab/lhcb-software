@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/PythonCallback.cpp,v 1.2 2007-04-11 17:45:47 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/PythonCallback.cpp,v 1.3 2007-04-30 12:52:22 frankb Exp $
 //  ====================================================================
 //  PythonCallback.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: PythonCallback.cpp,v 1.2 2007-04-11 17:45:47 frankb Exp $
+// $Id: PythonCallback.cpp,v 1.3 2007-04-30 12:52:22 frankb Exp $
 
 #include "PVSS/PythonCallback.h"
 namespace PVSS  {
@@ -179,4 +179,9 @@ void PyDeviceListener::handleDevices()   {
 /// DIM overloaded callback calling python itself.
 void PyDeviceListener::handleDevice()   { 
   (*m_call)("handleDevice");
+}
+
+/// Execute python main program
+extern "C" int pvss_pymain(int argc, char** argv)  {
+  return Py_Main(argc,argv);
 }
