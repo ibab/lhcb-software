@@ -63,23 +63,29 @@ TestSeq.Members                                 += {"RichPIDsFromProtoParticlesA
 //
 // TEST DST
 //
-DaVinciMainSeq.RootOnTES                         = "microDST/";
-ProtoPRecalibration.RootOnTES                    = "microDST/";
-TestSeq.RootOnTES                                = "microDST/";
+DaVinciMainSeq.RootOnTES                         = "/Event/microDST/";
+// ProtoPRecalibration.RootOnTES                    = "/Event/microDST/";
+TestSeq.RootOnTES                                = "/Event/microDST/";
+// ChargedProtoCombineDLLsAlg.OutputLevel           = 1;
+
+
 
 TestSeq.Members                                    += {"TestDST/TestDST"};
 TestDST.PhysDesktop.OutputLevel                     = 1;
 TestDST.PhysDesktop.InputPrimaryVertices            = "microDST/Rec/Vertex/Primary";
 TestDST.PhysDesktop.OnOfflineTool.OfflinePVLocation = "/Event/microDST/Rec/Vertex/Primary";
-TestDST.PhysDesktop.InputLocations                  = {"/Event/microDST/Phys/PreSelBsKK"};
+
+// TestDST.PhysDesktop.InputLocations                  = {"/Event/microDST/Phys/PreSelBsKK"};
+TestDST.PhysDesktop.InputLocations                  = {"/Event/microDST/Phys/DC06selBs2Jpsi2MuMu_Phi2KK"};
+
 TestDST.OutputLevel                                 = 1;
+TestDST.PrintMCContainer                            = true;
+
+// ToolSvc.RelatedPVFinder.OutputLevel              = 1;
+// ToolSvc.RelatedPVFinder.ContextTool.OnOfflineTool.OfflinePVLocation = "/Event/microDST/Rec/Vertex/Primary";
 
 
-ToolSvc.RelatedPVFinder.OutputLevel              = 1;
-ToolSvc.RelatedPVFinder.ContextTool.OnOfflineTool.OfflinePVLocation = "/Event/microDST/Rec/Vertex/Primary";
-
-
-TestDST.Particle2MCLinks.OutputLevel              = 1;
+// TestDST.Particle2MCLinks.OutputLevel              = 1;
 // TestDST.Particle2MCLinks.NeutralPPLocation        = "/Event/microDST/Rec/ProtoP/Neutrals";
 TestDST.Particle2MCLinks.ChargedPPLocation        = {"/Event/microDST/Rec/ProtoP/Charged",
                                                      "/Event/microDST/Rec/ProtoP/Upstream"};
@@ -107,7 +113,7 @@ TestDST.Particle2MCLinks.ChargedPPLocation        = {"/Event/microDST/Rec/ProtoP
 //HcalZSup.OutputLevel                             = 1;
 
 // for MC truth association
-TestDST.Particle2MCLinks.ChargedPP2MC.OutputLevel  = 1;
+//TestDST.Particle2MCLinks.ChargedPP2MC.OutputLevel  = 1;
 TestDST.CompositeParticle2MCLinks.OutputLevel      = 1;
-TestDST.CompositeParticle2MCLinks.RootOnTES        = "microDST/";
+//TestDST.CompositeParticle2MCLinks.RootOnTES        = "microDST/";
 
