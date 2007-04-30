@@ -1,4 +1,4 @@
-// $Id: SolvExample.cpp,v 1.2 2007-04-17 16:57:27 janos Exp $
+// $Id: SolvExample.cpp,v 1.3 2007-04-30 17:29:49 janos Exp $
 // Include files 
 
 // from Gaudi
@@ -66,7 +66,7 @@ StatusCode SolvExample::execute() {
   AlVec b(Nvec);
   AlVec c(Nvec);
 
-  for (int i=0;i<b.n_elem();i++) { 
+  for (unsigned(i) = 0; i < b.size(); ++i) { 
     b[i]=i+2;
     c[i]=i*3;
     debug()<<"AlVec b value, line "<<i<<" - " <<b[i]<<endmsg;
@@ -80,9 +80,9 @@ StatusCode SolvExample::execute() {
   AlSymMat md(Nvec);
   AlSymMat ma(Nvec);
 
-  for (int i=0;i<md.size();i++) {
+  for (unsigned(i) = 0; i < md.size(); ++i) {
     debug()<<"AlSymMat md values line "<<i<<" -- ";
-    for (int j=0;j<=i;j++) {
+    for (unsigned(j) = 0; j <= i; ++j) {
       md[i][j]= i-j;
       if (i==j) ma[i][j]=3;
       debug()<<md[i][j]<<" - ";    
@@ -97,9 +97,9 @@ StatusCode SolvExample::execute() {
   mdT = (md+ma);
   debug()<<"AlSymMat md+ma Size "<< mdT.size()<<endmsg;
 
-  for (int i=0;i<mdT.size();i++) {
+  for (unsigned(i) = 0; i < mdT.size(); ++i) {
     debug()<<"AlSymMat mdT values line "<<i<<" -- ";
-    for (int j=0;j<mdT.size();j++) {
+    for (unsigned(j) = 0; j < mdT.size(); ++j) {
       debug()<<mdT[i][j]<<" - ";
      }
     debug()<<endmsg;
@@ -107,9 +107,9 @@ StatusCode SolvExample::execute() {
 
   AlVec e;
   e = md*c;
-  debug()<<"md*c Nelem..."<<e.n_elem()<<endmsg;
+  debug()<<"md*c Nelem..."<<e.size()<<endmsg;
   debug()<<"md*c values..."<<endmsg; 
-  for (int i=0;i<e.n_elem();i++) debug()<< e[i]<<" - ";
+  for (unsigned(i) = 0; i <e.size(); ++i) debug()<< e[i]<<" - ";
   debug()<<endmsg;  
 
   AlMat me = md*md;
@@ -173,9 +173,9 @@ StatusCode SolvExample::execute() {
 
   debug()<<"AlSymMat me^-1 values line "<< endmsg;
 
-  for (int i=0;i<mf.size();i++) {
+  for (unsigned(i) = 0; i <mf.size(); ++i) {
     debug()<<"AlSymMat mf values line "<<i<<" -- ";
-    for (int j=0;j<mf.size();j++) {
+    for (unsigned(j) =0; j < mf.size(); ++j) {
       debug()<<mf[i][j]<<" - ";
     }
     debug()<<endmsg;
@@ -209,39 +209,32 @@ StatusCode SolvExample::execute() {
   info = mfi.diagonalize(jobz,w,z);
 
   if (info==0) {
-
     debug()<< "*** successful diagonalization ***" << endmsg;
     AlSymMat invmat(dim);
     debug()<<"print eigenvalues: "<<endmsg;
-    
+    for (unsigned(i) = 0; i < invmat.size(); ++i) {
+      debug()<<w[i]<< "  " <<endmsg;
+      for (unsigned(j) = 0; j <= i; ++j) {
+        for (int k=0;k<dim;k++) invmat[i][j]=invmat[i][j]+(z[k][i]*z[k][j]/w[k]);
+      }
+    } 
 
-     for (int i=0;i<invmat.size();i++) {
-       debug()<<w[i]<< "  " <<endmsg;
-    for (int j=0;j<=i;j++) {
-      for (int k=0;k<dim;k++) invmat[i][j]=invmat[i][j]+(z[k][i]*z[k][j]/w[k]);
-      
-    }
+    debug()<<"end print eigenvalues: "<<endmsg;
 
-  } 
-
-debug()<<"end print eigenvalues: "<<endmsg;
-
-for (int i=0;i<invmat.size();i++) {
-       //    debug()<<"AlSymMat me*me^-1 values line "<<i<<" -- ";
-    for (int j=0;j<invmat.size();j++) {
-        
-      debug()<<(me*invmat)[i][j]<<"   ";
-    }
-    debug()<<endmsg;
-  } 
-    
+    for (unsigned(i) = 0; i < invmat.size(); ++i) {
+      //    debug()<<"AlSymMat me*me^-1 values line "<<i<<" -- ";
+      for (unsigned(j) = 0; j < invmat.size(); ++j) {
+        debug()<<(me*invmat)[i][j]<<"   ";
+      }
+      debug()<<endmsg;
+    } 
   }
 
   //Calling the solver
 
   m_solver->compute(mf,e);
-    debug()<<"Printing solution of mf*X = e..."<<endmsg; 
-  for (int i=0;i<e.n_elem();i++) debug()<< e[i]<<" - ";
+  debug()<<"Printing solution of mf*X = e..."<<endmsg; 
+  for (unsigned(i) = 0; i <e.size(); ++i) debug()<< e[i]<<" - ";
   debug()<<endmsg;  
 
   return StatusCode::SUCCESS;

@@ -1,6 +1,9 @@
 ! Package     : AlignSolvTools
 ! Responsible : Adlene Hicheur (Adlene.Hicheur@cern.ch)
 
+! 2007-04-30 - Jan Amoraal
+ - Minor changes: Added iostream operators
+
 !========================== TAlignment v1r0 29/09/2006 ==========================
 ! 2007-04-17 - Jan Amoraal
  - Make includes global
