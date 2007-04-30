@@ -1,8 +1,18 @@
-! $Id: release.notes,v 1.77 2007-04-19 15:47:26 cattanem Exp $
+! $Id: release.notes,v 1.78 2007-04-30 08:24:54 mneedham Exp $
 ! Package     : Event/MCEvent
 ! Responsible : Marco Cattaneo, Gloria Corti
 ! Purpose     : LHCb Event model. MC truth classes (Gauss and Boole output) 
 !-----------------------------------------------------------------------------
+
+
+! 2007-04-30 M Needham
+ - Tidy up MCTrackInfo + make it a bit faster
+     * Move MCTrackInfoBits to MCTrackInfo
+     * const correctness
+     * Move implementations out of direct part of header
+     * add functionality to enums (hasT1 etc...)
+     * No multiple return statements
+
 
 !======================== MCEvent v2r2 2007-04-19 ============================
 ! 2007-04-19 - Chris Jones
@@ -39,6 +49,7 @@
       
      const double e4 = activeEnergyInTime ( digit   , 0 ) ;
   
+
 !======================== MCEvent v2r1 2007-03-05 ============================
 ! 2007-03-05 - Chris Jones
  - Add new 'Outside Acceptance' category to MC reconstructibility
