@@ -4,6 +4,9 @@
 ! Purpose	:	algorithm to align T stations
 !---------------------------------------------------------
 
+! 2007-04-30 - Jan Amoraal
+ - Solve system of linear eq. Ha=x using AlignSolvTools
+
 !========================== TAlignment v3r0 2007-04-25 =========================
 ! 2007-04-25 - Johan Blouw
  - moved tool parts to AlignTrTools

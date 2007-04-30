@@ -7,7 +7,7 @@ version           v3r0
 #============================================================================
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          cmt doc src
+branches          cmt doc src options
 include_path      none
 #============================================================================
 # Used packages. Specify the version, * at the end specifies 'any revision'
@@ -15,6 +15,7 @@ include_path      none
 #============================================================================
 use 	GSL               	v*	LCG_Interfaces
 use   	GaudiAlg          	v*
+use     AlignSolvTools          v*      Alignment
 use 	AlignTrTools		v3r0	Alignment
 use 	AlignmentInterfaces	v2r0	Alignment
 use 	DigiEvent		v*	Event

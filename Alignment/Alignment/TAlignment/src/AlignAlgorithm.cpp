@@ -1,4 +1,4 @@
-// $Id: AlignAlgorithm.cpp,v 1.2 2007-04-25 14:35:45 jblouw Exp $
+// $Id: AlignAlgorithm.cpp,v 1.3 2007-04-30 18:07:53 janos Exp $
 // Include files
 // from std
 #include <utility>
@@ -29,7 +29,7 @@
 #include "AlignmentInterfaces/IAlignSelTool.h"
 
 // from AlignSolvTools
-// #include "AlignSolvTools/IAlignSolvTool.h"
+#include "AlignmentInterfaces/IAlignSolvTool.h"
 
 // local
 #include "AlignAlgorithm.h"
@@ -58,7 +58,7 @@ AlignAlgorithm::AlignAlgorithm( const std::string& name,
   declareProperty("TracksLocation", m_tracksLocation = "Rec/Track/Best");
   declareProperty("TracksSelector", m_trackSelectorName  = "AlignSelTool");
   declareProperty("ProjectorSelector", m_projSelectorName = "TrackProjectorSelector");
-  //declareProperty("MatrixSolverTool", m_matrixSolverToolName = "AlignSolvTool");
+  declareProperty("MatrixSolverTool", m_matrixSolverToolName = "AlignSolvTool"); 
 } 
 //=============================================================================
 // Destructor
@@ -79,15 +79,27 @@ StatusCode AlignAlgorithm::initialize() {
   if (!m_alignDetector) {
     return Error("==> Failed to retrieve detector selector tool!", StatusCode::FAILURE);
   }
+ 
   /// Get detector elements
   const Elements& elements = m_alignDetector->getDetectorElements();
   debug() << "Got " << elements.size() << " elements" << endmsg;
   /// Get number of elements
-  unsigned int nElements = m_alignDetector->nElements();
-  debug() << "Number of elements to align = " << nElements << endmsg;
+  m_nDetElements = m_alignDetector->nElements();
+  m_nAlignConstants = Derivatives::kCols;
+  /// 1x6 vector
+  m_derivatives.reSize(m_nAlignConstants*m_nDetElements);
+  /// 6x6 matrix
+  m_hMatrix.reSize(m_nAlignConstants*m_nDetElements);
+  m_derivatives = 0;
+  m_hMatrix = 0;
+
+  debug() << "Number of elements to align = " << m_nDetElements << endmsg;
 
   /// Get pivot points
   sc = getPivotPoints(elements, m_pivotPoints);
+  if (sc.isFailure()) {
+    return Error("==> Failed to get pivot points or not defined", StatusCode::FAILURE);
+  }
 
   /// Get alignment constants
   debug() << "==> Retrieving alignment paramterers" << endmsg;
@@ -97,7 +109,8 @@ StatusCode AlignAlgorithm::initialize() {
     return Error("==> Failed to retrieve initial alignment constants", StatusCode::FAILURE);
   }
   debug() << "==> Got " << m_initAlignConstants.size() << " station alignment constants" << endmsg;
-
+  debug() << "==> Initial alignment constants are: " <<   m_initAlignConstants << endmsg;
+  
   /// Get track selector tool
   m_trackSelector = tool<IAlignSelTool>(m_trackSelectorName, "Selector", this);
   if (!m_trackSelector) {
@@ -110,12 +123,12 @@ StatusCode AlignAlgorithm::initialize() {
     return Error("==> Failed to retrieve projector selector tool", StatusCode::FAILURE);
   }
   
-  /// Get matrix solver tool
-  //  m_matrixSolverTool = tool<IAlignSolvTool>(m_matrixSolverToolName, "MatrixSolver", this);
-  // if (!m_matrixSolverTool) {
-  //  return Error("==> Failed to retrieve matrix solver tool", StatusCode::FAILURE);
-  //}
-  
+  ///Get matrix solver tool
+  m_matrixSolverTool = tool<IAlignSolvTool>(m_matrixSolverToolName, "MatrixSolver", this);
+  if (!m_matrixSolverTool) {
+    return Error("==> Failed to retrieve matrix solver tool", StatusCode::FAILURE);
+  }
+
   return StatusCode::SUCCESS;
 }
 
@@ -128,12 +141,14 @@ StatusCode AlignAlgorithm::execute() {
 
   // Get tracks 
   Tracks* tracks = get<Tracks>(m_tracksLocation);
+  m_nTracks += tracks->size();
   debug() << "Number of tracks in container " + m_tracksLocation + " " << tracks->size() << endmsg;
   Tracks::const_iterator iT = tracks->begin();
   for ( ; iT != tracks->end(); ++iT) {
     // Check track
     // Maybe track selector tool should provide a container of "good" tracks?
     if ((m_trackSelector->selectTrack((*iT)))) {
+      ++m_nGoodTracks;
       debug() << "==> Good track" << endmsg;
       // Get nodes. Need them for measurements, residuals and errors
       const Nodes& nodes = (*iT)->nodes();
@@ -184,6 +199,55 @@ StatusCode AlignAlgorithm::execute() {
 //=============================================================================
 StatusCode AlignAlgorithm::finalize() {
   debug() << "==> Finalize" << endmsg;
+  
+  info() << "==> Found " << m_nTracks << " tracks of which " << m_nGoodTracks << " were good." << endmsg;
+
+  typedef MapDerivatives::const_iterator IterDiv;
+  typedef MapHMatrix::const_iterator IterM;
+  
+  for (IterDiv iD = m_mapDerivatives.begin(); iD != m_mapDerivatives.end(); ++iD) {
+    info() << "==> Element: " << iD->first << endmsg;
+    info() << "==> rho = " << iD->second << endmsg;
+  }  
+  
+  for (IterM iH = m_mapHMatrix.begin(); iH != m_mapHMatrix.end(); ++iH) {
+    info() << "==> Element: " << iH->first << endmsg;
+    info() << "==> H = " << iH->second << endmsg;
+  }  
+  
+  info() << "AlSymMat size = " << m_derivatives.size() << endmsg;
+  info() << "AlSymMat size = " << m_hMatrix.size() << endmsg;
+  
+  for (unsigned(i) = 0u; i < m_mapDerivatives.size(); ++i) {
+    for (unsigned(j) = 0u; j < m_nAlignConstants; ++j) {
+      m_derivatives[i*m_nAlignConstants+j] = m_mapDerivatives[i](0,j);  
+    }
+  }
+
+  for (unsigned(i) = 0u; i < m_mapHMatrix.size(); ++i) {                                           
+    for (unsigned(j) = 0u; j < m_nAlignConstants; ++j) {
+      for (unsigned(k) = 0u; k < m_nAlignConstants; ++k) {
+        m_hMatrix[i*m_nAlignConstants+j][i*m_nAlignConstants+k] = m_mapHMatrix[i](j,k);
+      }
+    }
+  }
+  
+  info() << "AlVec Vector = " << m_derivatives << endmsg;
+  info() << "AlSymMat Matrix = " << m_hMatrix << endmsg;
+  
+  bool solved = m_matrixSolverTool->compute(m_hMatrix, m_derivatives);
+  if (solved) {
+    info() << "solved it" << endmsg;
+    info() << "Constants Element = " << m_derivatives << endmsg;
+    info() << "H^-1 Matrix = "  << m_hMatrix << endmsg;
+    for (unsigned(i) = 0u; i < m_hMatrix.size(); ++i) {
+      info() << "AlignConstant/sqrt(" << "[" << i << "]" << "[" << i << "]" << ") = " << m_derivatives[i]/std::sqrt(m_hMatrix[i][i]) << endmsg; 
+    }
+  } else {
+    info() << "Failed to solve system" << endmsg;
+  }
+
+
   MapDerivatives::const_iterator iD = m_mapDerivatives.begin();
   for ( ; iD != m_mapDerivatives.end(); ++iD) {
     info() << "==> Element: " << iD->first << endmsg;
@@ -196,8 +260,8 @@ StatusCode AlignAlgorithm::finalize() {
     info() << "==> H = " << iH->second << endmsg;
   }  
 
-  /// Need to solve Ha=rho
   /// Update alignement constants
+
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 
