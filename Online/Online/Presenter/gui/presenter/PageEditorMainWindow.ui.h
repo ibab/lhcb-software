@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Presenter/gui/presenter/PageEditorMainWindow.ui.h,v 1.8 2007-04-27 11:58:44 psomogyi Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Presenter/gui/presenter/PageEditorMainWindow.ui.h,v 1.9 2007-05-01 09:06:15 psomogyi Exp $
 
 /****************************************************************************
  ** ui.h extension file, included from the uic-generated form implementation.
@@ -171,6 +171,16 @@ void PageEditorMainWindow::init()
   loginDialog->show();
 //  loginDialog->raise();
 //  loginDialog->setActiveWindow();
+
+   histogramFilterComboBox->clear();
+   //TODO: list by task, subsys  - partial: perf. problems.
+   histogramFilterComboBox->insertItem("By Folder/Page");   
+   histogramFilterComboBox->insertItem("By some tasks");
+   histogramFilterComboBox->insertItem("By some subsystems");
+// histogramFilterComboBox->insertItem("By Analysis Features");
+// histogramFilterComboBox->insertItem("All");
+// histogramFilterComboBox->insertItem("Full list");
+// histogramFilterComboBox->insertItem("Alphabetically");   
 }
 
 void PageEditorMainWindow::destroy()
@@ -179,11 +189,25 @@ void PageEditorMainWindow::destroy()
 }
 
 void PageEditorMainWindow::refreshHistogramListView()
-{
-  readFoldersFromHistoDatabase(*histoDBHistogramsView,
-                               Presenter::WithHistogram);
+{  
+  if ("By Folder/Page" == histogramFilterComboBox->currentText()) {  
+    readFoldersFromHistoDatabase(*histoDBHistogramsView, Presenter::Folder,
+                                 Presenter::WithHistogram);
+  } else if ("By some tasks" == histogramFilterComboBox->currentText()) {
+    readFoldersFromHistoDatabase(*histoDBHistogramsView, Presenter::Task,
+                                 Presenter::WithHistogram);
+  } else if ("By some subsystems" == histogramFilterComboBox->currentText()) {
+    readFoldersFromHistoDatabase(*histoDBHistogramsView, Presenter::Subsystem,
+                                 Presenter::WithHistogram);
+  } else if ("By Analysis Features" == histogramFilterComboBox->currentText()) {
+    readFoldersFromHistoDatabase(*histoDBHistogramsView, Presenter::Analysis,
+                                 Presenter::WithHistogram);
+  } else if ("All" == histogramFilterComboBox->currentText()) {
+    readFoldersFromHistoDatabase(*histoDBHistogramsView, Presenter::AllHistos,
+                                 Presenter::WithHistogram);                                                                                                                                  
+  }
 }
-//.
+
 void PageEditorMainWindow::refreshDIMSVCListView()
 {
   // See what we can do about DIM services...
@@ -257,7 +281,7 @@ void PageEditorMainWindow::refreshDIMSVCListView()
           // replace this with an enum...
           // we tokenize the DIM SVC name and fill in the list...
           // H1D/node_Adder_1/Adder/Algorithmname/Mass
-          // wach the "_" in UTGID and the "new" /Adder/ element...
+          // watch the "_" in UTGID and the "new" /Adder/ element...
           Tokens tokenedDIMSVC(dimServiceName, slashSeparator);
           Tokens::iterator dimSVCNameElements = tokenedDIMSVC.begin();
           svcType = *dimSVCNameElements;
@@ -296,7 +320,7 @@ void PageEditorMainWindow::refreshDIMSVCListView()
               item1->setPixmap(0, uicLoadPixmap("h2_t.png"));
             } else if (Presenter::H1D == svcType) {
               item1->setPixmap(0, uicLoadPixmap("h1_t.png"));
-            }          
+            }
           } else  {
   //      if (m_verbose > 1)          
             std::cout << "\t\tSVC: " << dimServiceName <<
@@ -323,7 +347,7 @@ void PageEditorMainWindow::refreshDIMSVCListView()
 
 void PageEditorMainWindow::refreshPagesListView()
 {
-    readFoldersFromHistoDatabase(*histoDBPagesView,
+    readFoldersFromHistoDatabase(*histoDBPagesView, Presenter::Folder,
                                  Presenter::WithoutHistogram);
 }
 
@@ -400,7 +424,9 @@ void PageEditorMainWindow::histoDBHistogramsViewContexMenu()
 //  dimContextMenu->insertTearOffHandle();
   dimContextMenu->insertItem(tr("&Add selection to page"), this,
                              SLOT(addSelectedHistogramsFromDatabaseToPage()));
-    //  dimContextMenu->insertSeparator(); 
+    //  dimContextMenu->insertSeparator();
+  dimContextMenu->insertItem(tr("&Delete selection"), this,
+                             SLOT(deleteSelectedHistogramsFromDatabase()));
   dimContextMenu->exec(QCursor::pos());
   delete dimContextMenu;
 }
@@ -805,10 +831,17 @@ void PageEditorMainWindow::addHistogramsToDatabase()
 //          histogramDB->declareTask(item->text(Presenter::Name),"","","",true,true,false);
           // Declare Histogram
           // TODO: comment magic column numbers...
+          
           histogramDB->declareHistByServiceName(item->text(Presenter::DIM));
+          std::cout << "Hist SVC name: " << item->text(Presenter::DIM) << endl;
+         
+         
+//         string ServiceName="H1D/nodeMF001_EXAMPLE_01/SafetyCheck/Trips";
+//         histogramDB->declareHistByServiceName(ServiceName);
+         
           histogramDB->commit();
-          std::string histoName = item->text(Presenter::Task) + "/" + item->text(Presenter::Type) +
-                                  "/" + item->text(Presenter::Name);
+//          std::string histoName = item->text(Presenter::Task) + "/" + item->text(Presenter::Type) +
+//                                  "/" + item->text(Presenter::Name);
 
 //          OnlineHistogram* h3=histogramDB->getHistogram(histoName);
 //          OnlineHistPage* pg=histogramDB->getPage("yPage", "unsorted");
@@ -825,7 +858,7 @@ void PageEditorMainWindow::addHistogramsToDatabase()
 //          std::cout <<  "Task: "  << item->text(Presenter::Task) <<
 //                        " Algo: " << item->text(Presenter::Type) <<
 //                        " Name: " << item->text(Presenter::Name) << std::endl;
-                               
+          refreshHistogramListView();                               
           statusBar()->message(tr("Successfully added selected histogram(s)"
                                 "to queue for declaration."));
         } else {
@@ -1265,7 +1298,10 @@ void PageEditorMainWindow::connectToDatabase(const QString &dbPassword, const QS
 
     showHistogramDatabaseTools();
     statusBar()->message(tr("Successfully connected to OnlineHistDB."));
-    m_connectedToHistogramDatabase = true;    
+    m_connectedToHistogramDatabase = true;
+    
+    histogramDB->setExcLevel(2);
+    histogramDB->setDebug(0);
  
     //TODO: refactor refresh* methods to use only 1 DB readout...
     refreshPagesListView();
@@ -1586,13 +1622,19 @@ void PageEditorMainWindow::addSelectedHistogramsFromDIMToPage()
   statusBar()->message(tr("Canvas ready."));
 }
 
-void PageEditorMainWindow::readFoldersFromHistoDatabase(QListView &listView, bool histograms = Presenter::WithoutHistogram)
+void PageEditorMainWindow::fillPageWithHistograms(QListView &listView)
+{
+
+}
+
+void PageEditorMainWindow::readFoldersFromHistoDatabase( QListView &listView, int filterCriteria, bool histograms )
 {
   
   std::vector<std::string>      localDatabaseFolders;
   std::vector<std::string>      localDatabasePages;
   std::vector<OnlineHistogram*> localDatabaseHistograms;
   bool folderExists = false;
+  QString listLabel = "";
   
   listView.clear();
   
@@ -1605,76 +1647,179 @@ void PageEditorMainWindow::readFoldersFromHistoDatabase(QListView &listView, boo
       // at root node insertion...
       // TODO: should be done properly with DOM
       
-      localDatabaseFolders.clear(); 
-      histogramDB->getPageFolderNames(localDatabaseFolders, "ROOT");
+      localDatabaseFolders.clear();
       QListViewItem *parentFolder = NULL;
-      QListViewItem *folderChild;
-      BOOST_FOREACH(string folder, localDatabaseFolders) {
-        QStringList folderItems = QStringList::split( "/", folder);         
-        for (QStringList::Iterator it = folderItems.begin();
-             it != folderItems.end(); ++it ) {
-          folderExists = false;
-          folderChild = listView.firstChild();
-          while(folderChild) {
-            if (folderChild->text(0) == *it) {
-              folderExists = true;
-              break;
-            }
-            folderChild = folderChild->nextSibling();
-          }
-          if (!folderExists) {
-              parentFolder = new QListViewItem(&listView, *it,
-                                               tr("Folder"));
-          }          
-        }                                                     
-      } // get rest as QListViewItems...
-      localDatabaseFolders.clear(); 
-      histogramDB->getPageFolderNames(localDatabaseFolders, "_ALL_");
-      BOOST_FOREACH(string folder, localDatabaseFolders) {
-        QStringList folderItems = QStringList::split( "/", folder);
-        folderChild = listView.firstChild();         
-        for (QStringList::Iterator it = folderItems.begin();
-             it != folderItems.end(); ++it ) {
-          folderExists = false;
-          while(folderChild) {
-            if (folderChild->text(0) == *it) {
-              folderExists = true;
-              parentFolder = folderChild;
-              break;
-            }
-            folderChild = folderChild->nextSibling();
-          }
-          if (!folderExists) {
-              parentFolder = new QListViewItem(parentFolder, *it,
-                                               tr("Folder"));                                               
-          }          
-           // if last folder element, get contents
-          if (--folderItems.end() == it) {
-            localDatabasePages.clear();
-            histogramDB->getPageNamesByFolder(folder, localDatabasePages);
-            BOOST_FOREACH(string page, localDatabasePages) {
-            QListViewItem *pageItem = new QListViewItem(parentFolder,
-                                                        page,
-                                                        tr("Page"));
-            if(histograms) {                                                        
-              localDatabaseHistograms.clear();
-              histogramDB->getHistogramsByPage(page, localDatabaseHistograms);
-              BOOST_FOREACH(OnlineHistogram *histogram, localDatabaseHistograms)
-              {
-                QListViewItem *item1 = new QListViewItem(pageItem,
-                                             histogram->identifier(),
-                                             tr("Histogram"));
-                if(Presenter::H2D == histogram->hstype()) {
-                  item1->setPixmap(0, uicLoadPixmap("h2_t.png"));
-                  } else if (Presenter::H1D == histogram->hstype()) {
-                    item1->setPixmap(0, uicLoadPixmap("h1_t.png"));
-                  }   
+      QListViewItem *folderChild = NULL;
+                
+      switch (filterCriteria) {
+        case Presenter::Folder:
+          histogramDB->getPageFolderNames(localDatabaseFolders, "ROOT");
+          BOOST_FOREACH(string folder, localDatabaseFolders) {
+            QStringList folderItems = QStringList::split( "/", folder);         
+            for (QStringList::Iterator it = folderItems.begin();
+                 it != folderItems.end(); ++it ) {
+              folderExists = false;
+              folderChild = listView.firstChild();
+              while (folderChild) {
+                if (folderChild->text(0) == *it) {
+                  folderExists = true;
+                  break;
+                }
+                folderChild = folderChild->nextSibling();
+              }
+              if (!folderExists) {
+                parentFolder = new QListViewItem(&listView, *it,
+                                                 tr("Folder"));
+                parentFolder->setSelectable(false);                                               
+              }          
+            }                                                     
+          } // get rest as QListViewItems...
+          localDatabaseFolders.clear(); 
+          histogramDB->getPageFolderNames(localDatabaseFolders, "_ALL_");
+          BOOST_FOREACH(string folder, localDatabaseFolders) {
+            QStringList folderItems = QStringList::split( "/", folder);
+            folderChild = listView.firstChild();         
+            for (QStringList::Iterator it = folderItems.begin();
+                 it != folderItems.end(); ++it ) {
+              folderExists = false;
+              while (folderChild) {
+                if (folderChild->text(0) == *it) {
+                  folderExists = true;
+                  parentFolder = folderChild;
+                  break;
+                }
+                folderChild = folderChild->nextSibling();
+              }
+              if (!folderExists) {
+                parentFolder = new QListViewItem(parentFolder, *it,
+                                                 tr("Folder"));
+                parentFolder->setSelectable(false);                                                                                             
+              }          
+               // if last folder element, get contents
+              if (--folderItems.end() == it) {
+                localDatabasePages.clear();
+                histogramDB->getPageNamesByFolder(folder, localDatabasePages);
+                BOOST_FOREACH(string page, localDatabasePages) {
+                QListViewItem *pageItem = new QListViewItem(parentFolder,
+                                                            page,
+                                                            tr("Page"));
+                pageItem->setSelectable(false);                                                        
+                if (histograms) {                                                        
+                  localDatabaseHistograms.clear();
+                  histogramDB->getHistogramsByPage(page, localDatabaseHistograms);
+                  BOOST_FOREACH(OnlineHistogram *histogram, localDatabaseHistograms)
+                  {
+                    QListViewItem *item1 = new QListViewItem(pageItem,
+                                                 histogram->identifier(),
+                                                 tr("Histogram"));
+                    if (Presenter::H2D == histogram->hstype()) {
+                      item1->setPixmap(0, uicLoadPixmap("h2_t.png"));
+                      } else if (Presenter::H1D == histogram->hstype()) {
+                        item1->setPixmap(0, uicLoadPixmap("h1_t.png"));
+                      }   
+                    }
+                  }
+                }
+              }
+              folderChild = parentFolder->firstChild();
+            }                                                     
+          }      
+          break;
+          
+          
+        case Presenter::Subsystem:
+          histogramDB->getSubsystems(localDatabaseFolders);          
+          QListViewItem *folderChild;
+          BOOST_FOREACH(string folder, localDatabaseFolders) {
+              folderExists = false;
+              folderChild = listView.firstChild();
+              while (folderChild) {
+                if (folderChild->text(0) == folder) {
+                  folderExists = true;
+                  break;
+                }
+                folderChild = folderChild->nextSibling();
+              }
+              if (!folderExists) {
+                parentFolder = new QListViewItem(&listView, folder,
+                                                 tr("Subsystem"));
+                parentFolder->setSelectable(false);                     
+              }                        
+              if (histograms) {                                                        
+                localDatabaseHistograms.clear();
+                // TODO: ease load
+                if (folder != "ECAL" &&
+                    folder != "EXAMPLE" && // char string buffer 2 small
+                    folder != "L0" &&
+                    folder != "RICH1" &&
+                    folder != "IT") {
+                  histogramDB->getHistogramsBySubsystem(folder, localDatabaseHistograms);
+                  BOOST_FOREACH(OnlineHistogram *histogram, localDatabaseHistograms)
+                  {
+                    QListViewItem *item1 = new QListViewItem(parentFolder,
+                                                 histogram->identifier(),
+                                                 tr("Histogram"));
+                    if (Presenter::H2D == histogram->hstype()) {
+                      item1->setPixmap(0, uicLoadPixmap("h2_t.png"));
+                    } else if (Presenter::H1D == histogram->hstype()) {
+                      item1->setPixmap(0, uicLoadPixmap("h1_t.png"));
+                    }   
+                  }
+                }
+              }
+            }                                        
+          break;
+          
+        case Presenter::Task:
+          histogramDB->getTasks(localDatabaseFolders);         
+          BOOST_FOREACH(string folder, localDatabaseFolders) {
+              folderExists = false;
+              folderChild = listView.firstChild();
+              while (folderChild) {
+                if (folderChild->text(0) == folder) {
+                  folderExists = true;                  
+                  break;
+                }
+                folderChild = folderChild->nextSibling();
+              }
+              if (!folderExists) {
+                parentFolder = new QListViewItem(&listView, folder,
+                                                 tr("Task"));
+                parentFolder->setSelectable(false);                                                               
+              }                        
+              if (histograms) {                                                        
+                localDatabaseHistograms.clear();
+                // TODO: ease load
+                if (folder != "ECAL" &&
+                    folder != "MonA" &&
+                    folder != "MonB" &&
+                    folder != "MonC" &&
+                    folder != "EXAMPLE" && // char string buffer 2 small                    
+                    folder != "MyExampleMeyrin" && // char string buffer 2 small
+                    folder != "chr" && // char string buffer 2 small
+                    folder != "TEST") {
+                  histogramDB->getHistogramsByTask(folder, localDatabaseHistograms);
+
+                  BOOST_FOREACH(OnlineHistogram *histogram, localDatabaseHistograms)
+                  {
+                    QListViewItem *item1 = new QListViewItem(parentFolder,
+                                                 histogram->identifier(),
+                                                 tr("Histogram"));
+                    if (Presenter::H2D == histogram->hstype()) {
+                      item1->setPixmap(0, uicLoadPixmap("h2_t.png"));
+                    } else if (Presenter::H1D == histogram->hstype()) {
+                      item1->setPixmap(0, uicLoadPixmap("h1_t.png"));
+                    }   
+                  }
                 }
               }
             }
-          }
-          folderChild = parentFolder->firstChild();
-        }                                                     
+          break;
+// TODO: getAll()?          
+        case Presenter::AllHistos:                            
+          break;                    
+        default:
+          break;
       }
     }
   } catch (SQLException sqlException) {
@@ -1695,7 +1840,22 @@ void PageEditorMainWindow::readFoldersFromHistoDatabase(QListView &listView, boo
   }
 }
 
-void PageEditorMainWindow::fillPageWithHistograms(QListView &listView)
+void PageEditorMainWindow::deleteSelectedHistogramsFromDatabase()
 {
-
+  bool ok = true;
+  QListViewItemIterator it(histoDBHistogramsView, QListViewItemIterator::Selected);
+  while (it.current()) {
+    QListViewItem *item = it.current();
+    if ("Histogram" == item->text(1)) {
+      OnlineHistogram *histoToDelete = histogramDB->getHistogram(item->text(0));
+      std::cout << "Histo to remove: " << histoToDelete->identifier() << std::endl;      
+      histogramDB->removeHistogram(histoToDelete, false);
+    }
+    ++it;
+  }  
+  if (!histogramDB->sendHistBuffer())  ok = false;
+  if (ok) histogramDB->commit();
+  else cout << "commit aborted because of previous errors" <<endl;
+  
+  refreshHistogramListView();
 }

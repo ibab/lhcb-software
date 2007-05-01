@@ -1291,6 +1291,12 @@
         <receiver>PageEditorMainWindow</receiver>
         <slot>clearCanvas()</slot>
     </connection>
+    <connection>
+        <sender>histogramFilterComboBox</sender>
+        <signal>textChanged(const QString&amp;)</signal>
+        <receiver>PageEditorMainWindow</receiver>
+        <slot>refreshHistogramListView()</slot>
+    </connection>
 </connections>
 <includes>
     <include location="local" impldecl="in declaration">OnlineHistDB/OnlineHistDB.h" // LHC</include>
@@ -1330,8 +1336,9 @@
     <slot>connectToDatabase( const QString &amp; dbPassword, const QString &amp; dbUsername, const QString &amp; dbName )</slot>
     <slot>clearCanvas()</slot>
     <slot>addSelectedHistogramsFromDIMToPage()</slot>
-    <slot>readFoldersFromHistoDatabase(QListView &amp;listView, bool histograms)</slot>
-    <slot>fillPageWithHistograms(QListView &amp;listView)</slot>
+    <slot>fillPageWithHistograms( QListView &amp; listView )</slot>
+    <slot>readFoldersFromHistoDatabase( QListView &amp; listView, int filterCriteria, bool histograms )</slot>
+    <slot>deleteSelectedHistogramsFromDatabase()</slot>
 </slots>
 <functions>
     <function returnType="QPixmap">uicLoadPixmap( const QString &amp; name )</function>
