@@ -1,4 +1,4 @@
-// $Id: CaloTriggerBitsFromRaw.cpp,v 1.15 2007-04-24 10:21:14 odescham Exp $
+// $Id: CaloTriggerBitsFromRaw.cpp,v 1.16 2007-05-01 22:24:27 odescham Exp $
 // Include files
 
 // from Gaudi
@@ -135,6 +135,15 @@ StatusCode CaloTriggerBitsFromRaw::getData(  LHCb::RawBank* bank ) {
   debug() << "Decode bank " << bank << " source " << sourceID 
           << " version " << version << " size " << size << endreq;
   
+
+
+  // -----------------------------------------------
+  // skip detector specific header line 
+  if(m_extraHeader){
+    ++data ; 
+    --size;
+  }
+  // -----------------------------------------------
 
   //=== Offline coding: a CellID, 8 SPD bits, 8 Prs bits
   if ( 1 == version ) {

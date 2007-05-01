@@ -186,9 +186,11 @@ StatusCode CaloDataProviderPatched::decodeBank( LHCb::RawBank* bank ){
 
 
   // -----------------------------------------------
-  // skip detector specific header line  ***PATCH***
-  ++data ; 
-  --size;
+  // skip detector specific header line 
+  if(m_extraHeader){
+    ++data ; 
+    --size;
+  }
   // -----------------------------------------------
 
 
@@ -436,6 +438,17 @@ StatusCode CaloDataProviderPatched::decodePrsTriggerBank( LHCb::RawBank* bank ) 
   int lastData       = 0;
   debug() << "Decode Prs bank " << bank << " source " << sourceID 
           << " version " << version << " size " << size << endreq;
+
+
+
+  // -----------------------------------------------
+  // skip detector specific header line 
+  if(m_extraHeader){
+    ++data ; 
+    --size;
+  }
+  // -----------------------------------------------
+
 
   //=== Offline coding: a CellID, 8 SPD bits, 8 Prs bits
   if ( 1 == version ) {

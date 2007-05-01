@@ -1,4 +1,4 @@
-// $Id: CaloReadoutTool.cpp,v 1.11 2007-04-24 20:59:53 odescham Exp $
+// $Id: CaloReadoutTool.cpp,v 1.12 2007-05-01 22:24:27 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -32,6 +32,7 @@ CaloReadoutTool::CaloReadoutTool( const std::string& type,
 
   declareProperty( "DetectorName"   , m_detectorName );
   declareProperty( "PackedIsDefault", m_packedIsDefault = false);
+  declareProperty( "DetectorSpecificHeader", m_extraHeader = false);
   m_getRaw = true;
 }
 //=============================================================================

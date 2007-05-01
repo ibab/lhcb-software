@@ -1,4 +1,4 @@
-// $Id: CaloEnergyFromRaw.cpp,v 1.16 2007-04-24 10:21:14 odescham Exp $
+// $Id: CaloEnergyFromRaw.cpp,v 1.17 2007-05-01 22:24:27 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -179,6 +179,17 @@ StatusCode CaloEnergyFromRaw::getData ( LHCb::RawBank* bank ){
   int sourceID       = bank->sourceID();
   debug() << "Decode bank " << bank << " source " << sourceID 
           << " version " << version << " size " << size << endreq;  
+
+
+
+  // -----------------------------------------------
+  // skip detector specific header line 
+  if(m_extraHeader){
+    ++data ; 
+    --size;
+  }
+  // -----------------------------------------------
+
 
   if ( 1 > version || 3 < version ) {
     warning() << "Bank type " << bank->type() << " sourceID " << sourceID 

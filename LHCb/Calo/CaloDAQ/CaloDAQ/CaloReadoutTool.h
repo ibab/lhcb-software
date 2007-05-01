@@ -1,4 +1,4 @@
-// $Id: CaloReadoutTool.h,v 1.8 2007-04-18 07:03:27 cattanem Exp $
+// $Id: CaloReadoutTool.h,v 1.9 2007-05-01 22:24:27 odescham Exp $
 #ifndef CALODAQ_CALOREADOUTTOOL_H 
 #define CALODAQ_CALOREADOUTTOOL_H 1
 
@@ -46,6 +46,7 @@ protected:
   LHCb::RawBank::BankType m_shortType;
   bool m_getRaw;
   std::string m_raw;
+  bool m_extraHeader;
 private:
 };
 #endif // CALODAQ_CALOREADOUTTOOL_H

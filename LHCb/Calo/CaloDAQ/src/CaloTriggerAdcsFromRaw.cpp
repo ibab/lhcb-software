@@ -1,4 +1,4 @@
-// $Id: CaloTriggerAdcsFromRaw.cpp,v 1.11 2007-04-24 10:21:14 odescham Exp $
+// $Id: CaloTriggerAdcsFromRaw.cpp,v 1.12 2007-05-01 22:24:27 odescham Exp $
 // Include files
 
 // from Gaudi
@@ -140,6 +140,13 @@ StatusCode CaloTriggerAdcsFromRaw::getData ( LHCb::RawBank* bank ){
   debug() << "Decode bank " << bank << " source " << sourceID 
           << "version " << version << " size " << size << endreq;
   
+  // -----------------------------------------------
+  // skip detector specific header line 
+  if(m_extraHeader){
+    ++data ; 
+    --size;
+  }
+  // -----------------------------------------------
   
   //=== Offline coding
   if ( 2 > version ) {
