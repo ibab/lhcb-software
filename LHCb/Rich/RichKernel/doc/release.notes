@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.147 2007-04-27 14:09:11 jonrob Exp $
+! $Id: release.notes,v 1.148 2007-05-02 13:29:46 cattanem Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 !----------------------------------------------------------------------
+
+!====================== RichKernel v7r5 2007-05-02 ====================
+! 2007-05-02 - Marco Cattaneo
+ - Fix some doxygen warnings
 
 ! 2007-04-27 - Chris Jones
  - Add new helper class RichHPDIdentifier to convert 'human friendly'

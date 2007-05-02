@@ -4,7 +4,7 @@
  *
  *  Header file for tool interface : Rich::ISmartIDTool
  *
- *  $Id: IRichSmartIDTool.h,v 1.20 2007-04-23 12:44:04 jonrob Exp $
+ *  $Id: IRichSmartIDTool.h,v 1.21 2007-05-02 13:29:46 cattanem Exp $
  *
  *  @author Antonis Papanestis  a.papanestis@rl.ac.uk
  *  @date   2003-10-28
@@ -62,8 +62,8 @@ namespace Rich
     /** Converts a RichSmartID channel identification into a position in
      *  global LHCb coordinates
      *
-     *  @param[IN]  smartid      The RichSmartID channel identifier
-     *  @param[OUT] detectPoint  The detection point in global coordinates
+     *  @param[in]  smartid      The RichSmartID channel identifier
+     *  @param[out] detectPoint  The detection point in global coordinates
      *
      *  @return The status of the conversion
      *  @retval StatusCode::SUCCESS The conversion to a global coordinate was successful
@@ -74,8 +74,8 @@ namespace Rich
 
     /** Finds the average position of a cluster of RichSmartIDs, in global LHCb coordinates
      *
-     *  @param[IN]  cluster      The RichSmartID cluster
-     *  @param[OUT] detectPoint  The detection point in global coordinates
+     *  @param[in]  cluster      The RichSmartID cluster
+     *  @param[out] detectPoint  The detection point in global coordinates
      *
      *  @return The status of the conversion
      *  @retval StatusCode::SUCCESS The conversion to a global coordinate was successful
@@ -89,8 +89,8 @@ namespace Rich
      *
      *  Return coordinate is the centre of the HPD wafer in global LHCb coordinates.
      *
-     *  @param[IN] hpdid       The RichSmartID HPD identifier
-     *  @param[OUT] hpdPoint   The HPD position in global coordinates
+     *  @param[in]  hpdid      The RichSmartID HPD identifier
+     *  @param[out] hpdPoint   The HPD position in global coordinates
      *
      *  @return The status of the conversion
      *  @retval StatusCode::SUCCESS The conversion to a global coordinate was successful
@@ -102,9 +102,9 @@ namespace Rich
     /** Computes the global position coordinate for a given position in local
      *  HPD panel coordinates and RICH detector and panel identifiers.
      *
-     *  @param[IN] localPoint   The local coordinate position
-     *  @param[IN] rich         The RICH detector
-     *  @param[IN] side         The RICH HPD panel
+     *  @param[in] localPoint   The local coordinate position
+     *  @param[in] rich         The RICH detector
+     *  @param[in] side         The RICH HPD panel
      *
      *  @return The position in global coordinates
      */
@@ -140,7 +140,7 @@ namespace Rich
      *  x coordinates. Only the x and y coordinates are valid. z coordinate
      *  is set to 0.
      *
-     *  @param[IN] globalPoint  The global coordinate to convert
+     *  @param[in] globalPoint  The global coordinate to convert
      *
      *  @return The local position on the HPD panel
      */

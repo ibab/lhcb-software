@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ utility class : Rich::DAQ::L1IngressHeader
  *
  *  CVS Log :-
- *  $Id: RichDAQL1IngressHeader.h,v 1.1 2007-04-23 12:44:04 jonrob Exp $
+ *  $Id: RichDAQL1IngressHeader.h,v 1.2 2007-05-02 13:29:46 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   19/01/2007
@@ -180,8 +180,7 @@ namespace Rich
     public:
 
       /** For a given set of HPD Ids, set each of them as active
-       *  @param hpds HPD data
-       *  @param richSys Pointer to the DeRichSystem object (needed for DAQ mappings)
+       *  @param inputs  HPD Ids
        */
       void setHPDsActive( const L1IngressInputs & inputs );
 
