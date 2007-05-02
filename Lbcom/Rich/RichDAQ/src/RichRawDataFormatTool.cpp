@@ -5,7 +5,7 @@
  *  Implementation file for class : Rich::RawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.cpp,v 1.51 2007-04-26 19:08:11 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.cpp,v 1.52 2007-05-02 10:49:20 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2004-12-18
@@ -717,14 +717,13 @@ void RawDataFormatTool::decodeToSmartIDs_2007( const LHCb::RawBank & bank,
       const bool odinOK
         = ( !m_decodeUseOdin ? true :
             ( !m_checkEventsIDs || compareIDs( ingressWord.eventID(), EventID(odin()->eventNumber()) ) ) &&
-            ( !m_checkBxIDs     || compareIDs( ingressWord.bxID(),    BXID   (odin()->orbitNumber()) ) ) );
+            ( !m_checkBxIDs     || compareIDs( ingressWord.bxID(),    BXID   (odin()->bunchId()) ) ) );
       if ( !odinOK )
       {
         std::ostringstream mess;
         mess << "ODIN Mismatch : L1ID " << L1ID
-             << " : ODIN EvID=" << odin()->eventNumber() << " BxID=" << odin()->orbitNumber()
+             << " : ODIN EvID=" << odin()->eventNumber() << " BxID=" << odin()->bunchId()
              << " : L1IngressHeader " << ingressWord
-             << " EvID= " << ingressWord.eventID() << " BxID=" << ingressWord.bxID()
              << " -> Data Suppressed";
         Error( mess.str(), 999999 );
       }
