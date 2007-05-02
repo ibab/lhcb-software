@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDB.cpp,v 1.3 2007-03-21 13:15:15 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDB.cpp,v 1.4 2007-05-02 09:34:41 ggiacomo Exp $
 /*
    C++ interface to the Online Monitoring Histogram DB
    G. Graziani (INFN Firenze)
@@ -470,68 +470,82 @@ int OnlineHistDB::genericStringQuery(std::string command, std::vector<string>& l
   return nout;
 }
 
-int OnlineHistDB::getHistograms(std::string query,std::vector<OnlineHistogram*>& list)
+int OnlineHistDB::getHistograms(std::string query,
+				std::vector<OnlineHistogram*>* list, 
+				std::vector<string>* names)
 {
   int nout=0;
   string command="select NAME from VIEWHISTOGRAM VH "+query;
   Statement *qst=m_conn->createStatement(command);
   ResultSet *rset = qst->executeQuery ();
   while(rset->next ()) {
-    list.push_back(getHistogram(rset->getString(1)));
+    if(list) list->push_back(getHistogram(rset->getString(1)));
+    if(names) names->push_back(rset->getString(1));
     nout++;
   }
   return nout;
 }
 
-
-
-int OnlineHistDB::getHistogramsWithAnalysis(std::vector<OnlineHistogram*>& list)
-{
-  return getHistograms(",HISTOGRAMSET HS WHERE VH.HSID=HS.HSID AND HS.NANALYSIS>0",list);
+int OnlineHistDB::getAllHistograms(std::vector<OnlineHistogram*>* list ,
+				   std::vector<string>* ids) {
+  return getHistograms("",list,ids);
 }
 
-int OnlineHistDB::getAnalysisHistograms(std::vector<OnlineHistogram*>& list)
+
+int OnlineHistDB::getHistogramsWithAnalysis(std::vector<OnlineHistogram*>* list ,
+				   std::vector<string>* ids)
 {
-  return getHistograms(",HISTOGRAM H WHERE VH.HID=H.HID AND H.ISANALYSISHIST=1",list);
+  return getHistograms(",HISTOGRAMSET HS WHERE VH.HSID=HS.HSID AND HS.NANALYSIS>0",list,ids);
+}
+
+int OnlineHistDB::getAnalysisHistograms(std::vector<OnlineHistogram*>* list ,
+				   std::vector<string>* ids)
+{
+  return getHistograms(",HISTOGRAM H WHERE VH.HID=H.HID AND H.ISANALYSISHIST=1",list,ids);
 }
 
 int OnlineHistDB::getHistogramsBySubsystem(std::string SubSys,
-					    std::vector<OnlineHistogram*>& list)
+					   std::vector<OnlineHistogram*>* list ,
+					   std::vector<string>* ids)
 {  
   stringstream ss;
   ss << ", TASK T WHERE VH.TASK=T.TASKNAME AND (T.SUBSYS1 ='" << SubSys <<
     "' OR  T.SUBSYS2 ='"  << SubSys << "' OR  T.SUBSYS3 ='" << SubSys <<
     "')";
-  return getHistograms( ss.str() , list);
+  return getHistograms( ss.str() , list, ids);
 }
 
 int OnlineHistDB::getHistogramsByTask(std::string Task,
-				       std::vector<OnlineHistogram*>& list)
+				      std::vector<OnlineHistogram*>* list ,
+				      std::vector<string>* ids)
 {  
   stringstream ss;
   ss << " WHERE VH.TASK='" << Task << "'";
-  return getHistograms( ss.str() , list);
+  return getHistograms( ss.str() , list, ids);
 }
 
 int OnlineHistDB::getHistogramsByPage(std::string Page,
-				       std::vector<OnlineHistogram*>& list)
+				      std::vector<OnlineHistogram*>* list ,
+				      std::vector<string>* ids)
 {  
   stringstream ss;
   ss << " , SHOWHISTO SH WHERE SH.HISTO = VH.HID AND SH.PAGE='" << Page << "' ORDER BY SH.INSTANCE";
-  return getHistograms( ss.str() , list);
+  return getHistograms( ss.str() , list, ids);
 }
-int OnlineHistDB::getHistogramsBySet(std::string SetName,std::vector<OnlineHistogram*>& list)
+int OnlineHistDB::getHistogramsBySet(std::string SetName,std::vector<OnlineHistogram*>* list ,
+				     std::vector<string>* ids)
 {
   stringstream ss;
   ss << " WHERE VH.TASK||'/'||VH.ALGO||'/'||VH.TITLE='" << SetName << "'";
-  return getHistograms( ss.str() , list);
+  return getHistograms( ss.str() , list, ids);
 }
 
-int OnlineHistDB::getHistogramsBySet(const OnlineHistogram& Set,std::vector<OnlineHistogram*>& list)
+int OnlineHistDB::getHistogramsBySet(const OnlineHistogram& Set,std::vector<OnlineHistogram*>* list ,
+				   std::vector<string>* ids)
 {
   stringstream ss;
   ss << " WHERE VH.HSID=" << Set.hsid() ;
-  return getHistograms( ss.str() , list);
+  return getHistograms( ss.str() , list, ids);
 }
 
 int OnlineHistDB::getPageFolderNames(std::vector<string>& list, std::string Parent )
