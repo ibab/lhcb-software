@@ -25,8 +25,7 @@ Compatible with DC06 data.
     + New option (off by default) to merge clone tracks by comparisons on angles
       and z position
     + Properly reconstruct also geometries with significant missing sensors
-    + Automatically determine from options range of sensors to scan
-    (PatVelo v2r13, see also talks by at T-Rec meetings on </PRE><A HREF="http://indico.cern.ch/conferenceDisplay.py/confId=10146">2007-03-26</A><PRE> and </PRE><A HREF="http://indico.cern.ch/conferenceDisplay.py?confId=10150">2007-04-23</A><PRE>)
+    + Automatically determine from options range of sensors to scan </PRE><CODE>&nbsp;&nbsp;(PatVelo v2r13, see also talks by at T-Rec meetings on <A HREF="http://indico.cern.ch/conferenceDisplay.py/confId=10146">2007-03-26</A> and <A HREF="http://indico.cern.ch/conferenceDisplay.py?confId=10150">2007-04-23</A>)</CODE><PRE>
   . TrackPrepareVelo sets q/p for all VELO states (TrackUtils v1r12)
   . PatVeloTT uses all Velo tracks states (PatVeloTT v2r10)
   . Value of the fractional strip position returned by VeloClusterPositionTool is
