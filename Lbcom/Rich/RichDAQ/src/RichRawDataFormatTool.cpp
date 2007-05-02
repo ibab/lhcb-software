@@ -5,7 +5,7 @@
  *  Implementation file for class : Rich::RawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.cpp,v 1.52 2007-05-02 10:49:20 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.cpp,v 1.53 2007-05-02 17:00:03 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2004-12-18
@@ -756,13 +756,6 @@ void RawDataFormatTool::decodeToSmartIDs_2007( const LHCb::RawBank & bank,
                                                                      0, // Not needed here (to be removed). Must be 0 though
                                                                      version ) );
 
-          // get HPD RichSmartID
-          const LHCb::RichSmartID hpdID = ( m_useFakeHPDID ? 
-                                            LHCb::RichSmartID(Rich::Rich1,Rich::top,0,0) :
-                                            m_richSys->richSmartID( hpdBank->level0ID() ) );
-          if ( msgLevel(MSG::DEBUG) )
-            debug() << "   Decoding HPD " << hpdID << endreq;
-
           // is this HPD suppressed ?
           const bool hpdIsSuppressed = hpdBank->suppressed();
           if ( hpdIsSuppressed )
@@ -772,23 +765,30 @@ void RawDataFormatTool::decodeToSmartIDs_2007( const LHCb::RawBank & bank,
             Warning( mess.str(), StatusCode::SUCCESS );
           }
 
-          // Try to add a new HPDInfo to map
-          std::pair<HPDMap::iterator,bool> p 
-            = ingressInfo.hpdData().insert( HPDMap::value_type(hpdID,
-                                                               HPDInfo(Level1Input(nTotalHPDs++),
-                                                                       HPDInfo::Header(hpdBank->headerWords()),
-                                                                       HPDInfo::Footer(hpdBank->footerWords()) ) ) );
-          if ( !p.second )
-          {
-            std::ostringstream mess;
-            mess << "Found multiple data blocks for HPD " << hpdID;
-            Warning( mess.str() );
-          }
-          HPDInfo & hpdInfo = p.first->second;
-
           // Only try and decode this HPD if ODIN test was OK
           if ( odinOK && !hpdIsSuppressed )
           {
+
+            // get HPD RichSmartID
+            const LHCb::RichSmartID hpdID = ( m_useFakeHPDID ?
+                                              LHCb::RichSmartID(Rich::Rich1,Rich::top,0,0) :
+                                              m_richSys->richSmartID( hpdBank->level0ID() ) );
+            if ( msgLevel(MSG::DEBUG) )
+              debug() << "   Decoding HPD " << hpdID << endreq;
+
+            // Try to add a new HPDInfo to map
+            std::pair<HPDMap::iterator,bool> p
+              = ingressInfo.hpdData().insert( HPDMap::value_type(hpdID,
+                                                                 HPDInfo(Level1Input(nTotalHPDs++),
+                                                                         HPDInfo::Header(hpdBank->headerWords()),
+                                                                         HPDInfo::Footer(hpdBank->footerWords()) ) ) );
+            if ( !p.second && !m_useFakeHPDID )
+            {
+              std::ostringstream mess;
+              mess << "Found multiple data blocks for HPD " << hpdID;
+              Warning( mess.str() );
+            }
+            HPDInfo & hpdInfo = p.first->second;
 
             // local hit count
             unsigned int hpdHitCount(0);

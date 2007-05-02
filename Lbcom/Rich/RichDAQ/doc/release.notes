@@ -7,6 +7,7 @@
 ! 2007-05-02 - Chris Jones
  - Change ODIN orbitNumber() to buchId() in BXID comparision between ODIN and 
    RICH decoded data
+ - Fix bug accidentally introduced in last release when HPDs are suppressed
 
 !========================== RichDAQ v3r10 2007-04-23 =========================
 ! 2007-04-24 - Chris Jones
