@@ -1,18 +1,13 @@
 import os, sys, string, platform
+import Online.Utils as Utils
 import PyCintex as PyLCGDict
 
 lib_prefix = ''
-if platform.system()=='Linux':
-  lib_prefix = 'lib'
-PyLCGDict.loadDict(lib_prefix+'STLRflx')
-PyLCGDict.loadDict(lib_prefix+'PyDIMDict')
+if platform.system()=='Linux': lib_prefix = 'lib'
+PyLCGDict.loadDict(lib_prefix+'DIMDict')
   
 DIM = PyLCGDict.makeNamespace('DIM')
 gbl = PyLCGDict.makeNamespace('')
-
-logPrefix     = ''
-logHeader     = '+----------------------------------------------------------------------------------------------------'
-logTrailer    = logHeader
 
 #----enable tab completion---------------------------------------------------------------
 try:
@@ -21,23 +16,11 @@ try:
 except:
   pass
 
+log = Utils.log
+error = Utils.error
+
 def void_call(self): 
   return 1
-
-def timeStamp():
-  import time
-  return time.ctime(time.time())
-
-def log(msg, with_header=0, with_trailer=0):
-  if ( with_header != 0 ):
-    print logPrefix + ' ' + timeStamp() + ' ' + logHeader
-  if msg.__class__ == str().__class__:
-    print logPrefix + ' ' + timeStamp() + ' |  ' + msg
-  else:
-    for line in msg:
-      print logPrefix + ' ' + timeStamp() + ' |  ' + line
-  if ( with_trailer != 0 ):
-    print logPrefix + ' ' + timeStamp() + ' ' + logTrailer
 
 #CmdInfo    = gbl.CmndInfo
 Info        = gbl.DimInfo

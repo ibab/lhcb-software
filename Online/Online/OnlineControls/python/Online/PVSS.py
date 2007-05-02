@@ -5,7 +5,7 @@ import PyCintex as PyLCGDict
 lib_prefix = ''
 if platform.system()=='Linux':
   lib_prefix = 'lib'
-  PyLCGDict.loadDict(lib_prefix+'PVSSInterfaceDict')
+  PyLCGDict.loadDict(lib_prefix+'PVSSDict')
 PyLCGDict.loadDict(lib_prefix+'STLRflx')
 
 gbl  = PyLCGDict.makeNamespace('')

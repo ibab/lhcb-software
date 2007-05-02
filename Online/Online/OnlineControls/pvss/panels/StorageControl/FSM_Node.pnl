@@ -1,0 +1,130 @@
+V 10
+1
+LANG:1 16 StorageNodePanel
+PANEL,-1 -1 570 255 N "_3DFace" 2
+"$1"
+"$2"
+"#uses \"StorageControlPanel.cpp\"
+main()  {
+  string dunit = $1;
+  int pos = strpos(dunit,\"_Slice\");
+  string storage = substr(dunit,0,pos);
+  string storage_partition = storage + \"_Partition_\" + substr(dunit,pos+strlen(\"_Slice\"),2);
+  string partition = StorageControlPanel_getPartitionNameFromSlice(storage,dunit);
+  string node      = substr($2,strlen(dunit)+1);
+  DebugN(storage ,storage_partition ,partition,node,$1,$2 );
+  StorageControlPanel_initXXXX(storage,partition,storage_partition,node);
+}
+" 0
+ E E E E 1 -1 -1 0  0 0
+""0  1
+E E 2
+"CBRef""1"
+"EClose"E
+""
+DISPLAY_LAYER, 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0
+LAYER, 0 
+1
+LANG:1 0 
+30 16
+"m_class0TasksFrame"
+""
+1 10 13 E E E 1 E 1 E N "_WindowText" E N {0,0,0} E E
+ E E
+25 0 0 0 0 0
+E E E
+1
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 0 1 0 1 E 1 0 1.19402985074627 0 -15.5223880597015 0 E 10 13 561 81
+1
+LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
+0 ""
+1
+LANG:1 13 Class 0 Tasks
+30 17
+"m_class1TasksFrame"
+""
+1 10 13 E E E 1 E 1 E N "_WindowText" E N {0,0,0} E E
+ E E
+27 0 0 0 0 0
+E E E
+1
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 0 1 0 1 E 1 0 2.38805970149254 0 58.955223880597 0 E 10 13 561 81
+1
+LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
+0 ""
+1
+LANG:1 13 Class 1 Tasks
+29 22
+"m_class1Tasks"
+""
+1 20 110 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+31 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+ 20 110 551 241
+15 PVSS.TextEdit.1
+1
+0 "TextChanged" "()"
+""
+E29 23
+"m_class0Tasks"
+""
+1 20 20 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+32 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+ 20 20 551 71
+15 PVSS.TextEdit.1
+1
+0 "TextChanged" "()"
+""
+E0
+LAYER, 1 
+1
+LANG:1 0 
+0
+LAYER, 2 
+1
+LANG:1 0 
+0
+LAYER, 3 
+1
+LANG:1 0 
+0
+LAYER, 4 
+1
+LANG:1 0 
+0
+LAYER, 5 
+1
+LANG:1 0 
+0
+LAYER, 6 
+1
+LANG:1 0 
+0
+LAYER, 7 
+1
+LANG:1 0 
+0
+0

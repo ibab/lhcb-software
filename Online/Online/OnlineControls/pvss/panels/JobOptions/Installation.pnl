@@ -1,0 +1,115 @@
+V 10
+1
+LANG:1 20 Job Options Executor
+PANEL,-1 -1 325 401 N "_3DFace" 0
+E E E E E 1 0 0 0  160 180
+""0  1
+E "#uses \"JobOptions.cpp\"" 0
+ 2
+"CBRef""1"
+"EClose"E
+""
+DISPLAY_LAYER, 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0
+LAYER, 0 
+1
+LANG:1 6 Layer1
+13 1
+"m_runJobOptions"
+""
+1 20 350 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+2 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-13-*-100-100-*-*-iso8859-1|-13,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
+0 ""
+ 18 348 142 375
+
+T 
+1
+LANG:1 3 Run
+"#uses \"JobOptions.cpp\"
+main()   {
+	JobOptions_config(\"LHCb\");	
+	JobOptions_listen();	
+}" 0
+ E E E
+13 3
+"m_installJobOptions"
+""
+1 20 20 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+5 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
+0 ""
+ 18 18 152 42
+
+T 
+1
+LANG:1 23 Install Datapoint types
+"main()    {  JobOptions_install();    }" 0
+ E E E
+13 4
+"m_uninstallJobOptions"
+""
+1 180 20 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+7 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
+0 ""
+ 178 18 312 42
+
+T 
+1
+LANG:1 25 Uninstall Datapoint types
+"main()    {  JobOptions_uninstall();    }" 0
+ E E E
+0
+LAYER, 1 
+1
+LANG:1 6 Layer2
+0
+LAYER, 2 
+1
+LANG:1 6 Layer3
+0
+LAYER, 3 
+1
+LANG:1 6 Layer4
+0
+LAYER, 4 
+1
+LANG:1 6 Layer5
+0
+LAYER, 5 
+1
+LANG:1 6 Layer6
+0
+LAYER, 6 
+1
+LANG:1 6 Layer7
+0
+LAYER, 7 
+1
+LANG:1 6 Layer8
+0
+0

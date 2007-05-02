@@ -1,0 +1,573 @@
+V 10
+1
+LANG:1 16 StorageInstaller
+PANEL,-1 -1 407 490 N "_3DFace" 0
+"main()  {
+  m_storageSelect.appendItem(\"TestStorage\");
+  m_storageSelect.appendItem(\"Storage\");
+  m_storageSelect.selectedPos(1);
+  for(int i=0; i<16;++i)  {
+    string name;
+    sprintf(name,\"Slice%02X\",i);
+    m_storageTaskMgrTreeName.appendItem(name);
+  }
+  m_storageTaskMgrTreeName.selectedPos(1);
+}" 0
+ E E E E 1 -1 -1 0  20 13
+""0  1
+E "#uses \"StorageControlPanel.cpp\"
+#uses \"StorageTaskMgr.cpp\"
+" 0
+ 2
+"CBRef""1"
+"EClose"E
+""
+DISPLAY_LAYER, 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0
+LAYER, 0 
+1
+LANG:1 0 
+30 0
+"FRAME1"
+""
+1 20 13 E E E 1 E 1 E N "_WindowText" E N {0,0,0} E E
+ E E
+0 0 0 0 0 0
+E E E
+1
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 0 1 0 1 E 0.666666666666667 0 0.793814432989691 -3.33333333333291 49.680412371134 0 E 20 13 351 111
+1
+LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
+0 ""
+1
+LANG:1 25 StorageControl Data Types
+13 1
+"m_installStorageControlTypes"
+""
+1 20 80 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+1 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
+0 ""
+ 18 78 172 102
+
+T 
+1
+LANG:1 23 Install datapoint types
+"main()  {  StorageControlPanel_install();  }" 0
+ E E E
+13 2
+"m_uninstallStorageControlTypes"
+""
+1 20 110 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+3 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
+0 ""
+ 18 108 172 132
+
+T 
+1
+LANG:1 22 Delete datapoint types
+"main()  {  StorageControlPanel_uninstall();    }" 0
+ E E E
+30 9
+"FRAME2"
+""
+1 20 13 E E E 1 E 1 E N "_WindowText" E N {0,0,0} E E
+ E E
+13 0 0 0 0 0
+E E E
+1
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 0 1 0 1 E 1.03030303030303 0 3.09278350515463 -10.6060606060606 109.79381443299 0 E 20 13 351 111
+1
+LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
+0 ""
+1
+LANG:1 30 StorageTask Manager Data Types
+13 10
+"m_installStorageTaskMgrTypes"
+""
+1 19.9999999999997 170 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+15 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
+0 ""
+ 17.9999999999997 168 172 192
+
+T 
+1
+LANG:1 23 Install datapoint types
+"main()  {  StorageTaskMgr_install();  }" 0
+ E E E
+13 11
+"m_uninstallStorageTaskMgrTypes"
+""
+1 19.9999999999997 200 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+17 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
+0 ""
+ 17.9999999999997 198 172 222
+
+T 
+1
+LANG:1 22 Delete datapoint types
+"main()  {  StorageTaskMgr_uninstall();    }" 0
+ E E E
+13 12
+"m_storageTaskMgrDeleteTree"
+""
+1 20 260 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+18 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
+0 ""
+ 18 258 172 282
+
+T 
+1
+LANG:1 11 Delete Tree
+"main() {  StorageTaskMgr_deleteTree(m_storageSelect.selectedText,m_storageTaskMgrTreeName.text);  }" 0
+ E E E
+13 14
+"PUSH_BUTTON4"
+""
+1 20 290 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+21 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
+0 ""
+ 18 288 172 312
+
+T 
+1
+LANG:1 11 Create Tree
+"main() {  StorageTaskMgr_createTree(m_storageSelect.selectedText,m_storageTaskMgrTreeName.text);  }" 0
+ E E E
+13 15
+"PUSH_BUTTON5"
+""
+1 180 290 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+23 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
+0 ""
+ 178 288 332 312
+
+T 
+1
+LANG:1 15 Manipulate Tree
+"main() {  StorageTaskMgr_manipTree(m_storageSelect.selectedText,m_storageTaskMgrTreeName.text);  }" 0
+ E E E
+30 16
+"FRAME3"
+""
+1 20 13 E E E 1 E 1 E N "_WindowText" E N {0,0,0} E E
+ E E
+25 0 0 0 0 0
+E E E
+1
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 0 1 0 1 E 0.666666666666667 0 0.515463917525773 -3.33333333333334 -6.70103092783506 0 E 20 13 351 111
+1
+LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
+0 ""
+1
+LANG:1 19 Select Storage Name
+22 17
+"m_storageSelect"
+""
+1 100 20 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+26 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
+0 ""
+ 98 18 222 42
+0
+
+E
+E
+E
+ 1 0
+2 18
+"PRIMITIVE_TEXT1"
+""
+1 20 20 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
+ E E
+27 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 1 1 2 1 E U  1 E 20 20 100 40
+0 2 2 "0s" 0 0 0 64 0 0  20 20 1
+1
+LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
+0 ""
+1
+LANG:1 13 Storage Name:
+22 19
+"m_storageTaskMgrTreeName"
+""
+1 180 260 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+29 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
+0 ""
+ 178 258 332 282
+0
+
+E
+E
+E
+ 1 0
+2 20
+"PRIMITIVE_TEXT2"
+""
+1 20 220 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
+ E E
+30 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 1 1 2 1 E U  1 E 20 240 170 260
+0 2 2 "0s" 0 0 0 64 0 0  20 240 1
+1
+LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
+0 ""
+1
+LANG:1 18 FSM Tree creation:
+13 21
+"PUSH_BUTTON6"
+""
+1 20 320 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+31 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
+0 ""
+ 18 318 172 342
+
+T 
+1
+LANG:1 12 Generate FSM
+"main() {  StorageTaskMgr_genFSM(m_storageSelect.selectedText,m_storageTaskMgrTreeName.text);  }" 0
+ E E E
+13 22
+"PUSH_BUTTON7"
+""
+1 180 320 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+33 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
+0 ""
+ 178 318 252 342
+
+T 
+1
+LANG:1 10 Start Tree
+"main() {  StorageTaskMgr_startTree(m_storageSelect.selectedText,m_storageTaskMgrTreeName.text);  }" 0
+ E E E
+13 23
+"PUSH_BUTTON8"
+""
+1 260 320 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+35 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
+0 ""
+ 258 318 332 342
+
+T 
+1
+LANG:1 9 Stop Tree
+"main() {  StorageTaskMgr_stopTree(m_storageSelect.selectedText,m_storageTaskMgrTreeName.text);  }" 0
+ E E E
+13 24
+"PUSH_BUTTON9"
+""
+1 20 390 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+37 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
+0 ""
+ 18 388 172 412
+
+T 
+1
+LANG:1 17 Create All Slices
+"main() {  StorageTaskMgr_createAllTree(m_storageSelect.selectedText);  }" 0
+ E E E
+13 25
+"PUSH_BUTTON10"
+""
+1 20 420 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+39 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
+0 ""
+ 18 418 172 442
+
+T 
+1
+LANG:1 16 Generate All FSM
+"main() {  StorageTaskMgr_genAllFSM(m_storageSelect.selectedText);  }" 0
+ E E E
+13 26
+"PUSH_BUTTON11"
+""
+1 180 420 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+41 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
+0 ""
+ 178 418 252 442
+
+T 
+1
+LANG:1 12 Start Slices
+"main() {  StorageTaskMgr_startAllTree(m_storageSelect.selectedText);  }" 0
+ E E E
+13 27
+"PUSH_BUTTON12"
+""
+1 260 420 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+43 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
+0 ""
+ 258 418 332 442
+
+T 
+1
+LANG:1 11 Stop Slices
+"main() {  StorageTaskMgr_stopAllTree(m_storageSelect.selectedText);  }" 0
+ E E E
+13 28
+"PUSH_BUTTON13"
+""
+1 180 170 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+45 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
+0 ""
+ 178 168 332 192
+
+T 
+1
+LANG:1 15 Install Storage
+"main() {  StorageTaskMgr_installStorage(m_storageSelect.selectedText);  }" 0
+ E E E
+13 29
+"PUSH_BUTTON14"
+""
+1 180 200 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+47 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
+0 ""
+ 178 198 332 222
+
+T 
+1
+LANG:1 17 Uninstall Storage
+"main() {  StorageTaskMgr_uninstallStorage(m_storageSelect.selectedText);  }" 0
+ E E E
+13 30
+"PUSH_BUTTON15"
+""
+1 20 360 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+49 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
+0 ""
+ 18 358 172 382
+
+T 
+1
+LANG:1 17 Delete All Slices
+"main() {  StorageTaskMgr_deleteAllTree(m_storageSelect.selectedText);  }" 0
+ E E E
+0
+LAYER, 1 
+1
+LANG:1 0 
+0
+LAYER, 2 
+1
+LANG:1 0 
+0
+LAYER, 3 
+1
+LANG:1 0 
+0
+LAYER, 4 
+1
+LANG:1 0 
+0
+LAYER, 5 
+1
+LANG:1 0 
+0
+LAYER, 6 
+1
+LANG:1 0 
+0
+LAYER, 7 
+1
+LANG:1 0 
+0
+0

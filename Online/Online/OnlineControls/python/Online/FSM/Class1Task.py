@@ -1,4 +1,6 @@
-import DIM, FSM, gaudimodule, time, threading
+import Online.DIM as DIM
+import Online.FSM.FSM as FSM
+import gaudimodule, time, threading
 
 log_enabled = 1
 def log_transition(action_type, transition):

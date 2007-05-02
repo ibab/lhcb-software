@@ -1,0 +1,587 @@
+V 10
+1
+LANG:1 11 Job Options
+PANEL,-1 -1 635 357 N "_3DFace" 0
+"main() {  jo_edit1=jo_editType=JobOptionsEditor_init();                        }" 0
+ E E E E 1 0 0 0  140 10
+""0  1
+E "#uses \"JobOptions.cpp\"
+int jo_editType = 0;
+int jo_edit1 = 0;
+void _p0()  {}// DebugN(\"Panel EditType before call:\"+jo_editType);            }
+void _p1()  {}// DebugN(\"Panel EditType after call:\"+jo_editType);             }
+void __t() {}
+" 0
+ 2
+"CBRef""1"
+"EClose"E
+""
+DISPLAY_LAYER, 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0
+LAYER, 0 
+1
+LANG:1 6 Layer1
+17 10
+"m_list"
+""
+1 160 30 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ "main() {  JobOptionsEditor_listPopup(jo_edit1);	                               }" 0
+ "main() { _p0(); jo_editType=JobOptionsEditor_showInfo(jo_edit1);        _p1(); }" 0
+
+4 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 84 -*-Arial-*-r-normal-*-13-*-100-100-*-*-iso8859-1|-13,0,0,0,404,0,0,0,0,0,0,0,0,Arial
+0 ""
+ 158 28 622 342
+0
+
+E
+E
+E
+
+0 0
+17 12
+"m_listEditor"
+""
+1 160 120 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E "main() { _p0(); jo_editType=JobOptionsEditor_showInfo(jo_editType);     _p1(); }" 0
+
+5 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 84 -*-Arial-*-r-normal-*-13-*-100-100-*-*-iso8859-1|-13,0,0,0,404,0,0,0,0,0,0,0,0,Arial
+0 ""
+ 158 118 622 342
+0
+
+E
+E
+E
+
+0 0
+2 0
+"m_activity"
+""
+1 20 170 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
+ E E
+12 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 3 1 0 1 E U  0 E 22 172 138 188
+0 2 0 "0s" 0 0 0 64 0 0  22 172 1
+1
+LANG:1 84 -*-Arial-*-r-normal-*-13-*-100-100-*-*-iso8859-1|-13,0,0,0,404,0,0,0,0,0,0,0,0,Arial
+0 ""
+1
+LANG:1 9 Activity:
+2 1
+"m_partitionID"
+""
+1 20 150 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
+ E E
+13 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 3 1 0 1 E U  0 E 22 152 138 168
+0 2 0 "0s" 0 0 0 64 0 0  22 152 1
+1
+LANG:1 84 -*-Arial-*-r-normal-*-13-*-100-100-*-*-iso8859-1|-13,0,0,0,404,0,0,0,0,0,0,0,0,Arial
+0 ""
+1
+LANG:1 13 Partition ID:
+2 2
+"m_state"
+""
+1 20 190 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
+ E E
+14 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 3 1 0 1 E U  0 E 22 192 138 208
+0 2 0 "0s" 0 0 0 64 0 0  22 192 1
+1
+LANG:1 84 -*-Arial-*-r-normal-*-13-*-100-100-*-*-iso8859-1|-13,0,0,0,404,0,0,0,0,0,0,0,0,Arial
+0 ""
+1
+LANG:1 5 State
+2 3
+"m_partitionName"
+""
+1 20 130 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
+ E E
+15 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 3 1 0 1 E U  0 E 22 132 138 148
+0 2 0 "0s" 0 0 0 64 0 0  22 132 1
+1
+LANG:1 84 -*-Arial-*-r-normal-*-13-*-100-100-*-*-iso8859-1|-13,0,0,0,404,0,0,0,0,0,0,0,0,Arial
+0 ""
+1
+LANG:1 10 Partition:
+30 4
+"m_partitionInfo"
+""
+1 10 220 E E E 1 E 1 E N "_3DText" E N "_Transparent" E E
+ E E
+16 0 0 0 0 0
+E E E
+1
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 1 1 0 1 E U  0 E 10 110 152 220
+1
+LANG:1 84 -*-Arial-*-r-normal-*-13-*-100-100-*-*-iso8859-1|-13,0,0,0,404,0,0,0,0,0,0,0,0,Arial
+0 ""
+1
+LANG:1 6 Frame1
+30 6
+"m_resultFrame"
+""
+1 150 350 E E E 1 E 1 E N "_3DText" E N "_Transparent" E E
+ E E
+17 0 0 0 0 0
+E E E
+1
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 1 1 0 1 E U  0 E 150 10 630 350
+1
+LANG:1 84 -*-Arial-*-r-normal-*-13-*-100-100-*-*-iso8859-1|-13,0,0,0,404,0,0,0,0,0,0,0,0,Arial
+0 ""
+1
+LANG:1 12 Result Frame
+2 7
+"m_logo"
+""
+1 10 160 E E E 1 E 1 E N {0,0,255} E N "_Transparent" E E
+ E E
+19 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 3 1 0 1 E U  0 E 12 162 112 214
+0 2 0 "0s" 0 0 0 192 0 0  12 162 1
+1
+LANG:1 96 -*-Arial Black-*-i-normal-*-37-*-100-100-*-*-iso8859-1|-37,0,0,0,404,1,0,0,0,0,0,0,0,Arial Black
+0 ""
+1
+LANG:1 4 Logo
+2 8
+"m_logo2"
+""
+1 10 210 E E E 1 E 1 E N {255,255,255} E N {255,0,51} E E
+ E E
+20 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 3 1 0 1 E U  1 E 12 212 60 231
+0 2 0 "0s" 0 0 0 192 0 0  12 212 1
+1
+LANG:1 103 -*-MS Sans Serif-bold-i-normal-*-16-*-100-100-*-*-iso8859-1|-16,0,0,0,697,1,0,0,0,0,0,0,0,MS Sans Serif
+0 ""
+1
+LANG:1 5 Logo2
+30 9
+"m_logoFrame"
+""
+1 10 236 E E E 1 E 1 E N "_3DText" E N "_Transparent" E E
+ E E
+21 0 0 0 0 0
+E E E
+1
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 1 1 0 1 E U  0 E 10 160 130 236
+1
+LANG:1 84 -*-Arial-*-r-normal-*-13-*-100-100-*-*-iso8859-1|-13,0,0,0,404,0,0,0,0,0,0,0,0,Arial
+0 ""
+1
+LANG:1 6 Frame1
+13 13
+"m_showTasksTypes"
+""
+1 10 10 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+1 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 84 -*-Arial-*-r-normal-*-13-*-100-100-*-*-iso8859-1|-13,0,0,0,404,0,0,0,0,0,0,0,0,Arial
+0 ""
+ 8 8 132 35
+
+T 
+1
+LANG:1 16 Show Tasks Types
+"main() { _p0(); jo_edit1=jo_editType=JobOptionsEditor_showTaskTypes();  _p1(); }" 0
+ E E E
+13 14
+"m_showNodeTypes"
+""
+1 10 40 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+2 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 84 -*-Arial-*-r-normal-*-13-*-100-100-*-*-iso8859-1|-13,0,0,0,404,0,0,0,0,0,0,0,0,Arial
+0 ""
+ 8 38 132 65
+
+T 
+1
+LANG:1 15 Show Node Types
+"main() { _p0(); jo_edit1=jo_editType=JobOptionsEditor_showNodes();      _p1(); }" 0
+ E E E
+13 15
+"m_showPartitions"
+""
+1 10 70 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+3 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 84 -*-Arial-*-r-normal-*-13-*-100-100-*-*-iso8859-1|-13,0,0,0,404,0,0,0,0,0,0,0,0,Arial
+0 ""
+ 8 68 132 95
+
+T 
+1
+LANG:1 15 Show Partitions
+"main() { _p0(); jo_edit1=jo_editType=JobOptionsEditor_showPartitions(); _p1(); }" 0
+ E E E
+13 16
+"m_close"
+""
+1 11 294 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+9 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 84 -*-Arial-*-r-normal-*-13-*-100-100-*-*-iso8859-1|-13,0,0,0,404,0,0,0,0,0,0,0,0,Arial
+0 ""
+ 9 292 133 319
+
+T 
+1
+LANG:1 5 Close
+"main() { _p0(); jo_editType=JobOptionsEditor_close(jo_editType);        _p1(); }" 0
+ E E E
+13 17
+"m_save"
+""
+1 11 264 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+10 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 84 -*-Arial-*-r-normal-*-13-*-100-100-*-*-iso8859-1|-13,0,0,0,404,0,0,0,0,0,0,0,0,Arial
+0 ""
+ 9 262 133 289
+
+T 
+1
+LANG:1 4 Save
+"main() { _p0(); jo_editType=JobOptionsEditor_save(jo_editType);         _p1(); }" 0
+ E E E
+13 18
+"m_OK"
+""
+1 11 324 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+11 0 0 0 0 0
+E E E
+0
+1
+LANG:1 20 what\r\n\0ever\r\n\0
+
+0
+1
+LANG:1 84 -*-Arial-*-r-normal-*-13-*-100-100-*-*-iso8859-1|-13,0,0,0,404,0,0,0,0,0,0,0,0,Arial
+0 ""
+ 9 322 133 349
+
+T 
+1
+LANG:1 2 Ok
+"main()  {	PanelOff(); /* Closes the panel */                                   }" 0
+ E E E
+0
+LAYER, 1 
+1
+LANG:1 6 Layer2
+29 11
+"m_textEditor"
+""
+1 160 120 E E E 1 E 0 E N "_WindowText" E N {255,255,255} E E
+ E E
+6 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+ 160 120 620 321
+23 RICHTEXT.RichtextCtrl.1
+24
+1 "Change" "()"
+""
+-600 "Click" "()"
+""
+-601 "DblClick" "()"
+""
+-602 "KeyDown" "(int KeyCode, int Shift)"
+""
+-604 "KeyUp" "(int KeyCode, int Shift)"
+""
+-603 "KeyPress" "(int KeyAscii)"
+""
+-605 "MouseDown" "(int Button, int Shift, long x, long y)"
+""
+-606 "MouseMove" "(int Button, int Shift, long x, long y)"
+""
+-607 "MouseUp" "(int Button, int Shift, long x, long y)"
+""
+2 "SelChange" "()"
+""
+1550 "OLEStartDrag" "(anytype Data, long AllowedEffects)"
+""
+1551 "OLEGiveFeedback" "(long Effect, bool DefaultCursors)"
+""
+1552 "OLESetData" "(anytype Data, int DataFormat)"
+""
+1553 "OLECompleteDrag" "(long Effect)"
+""
+1554 "OLEDragOver" "(anytype Data, long Effect, int Button, int Shift, float x, float y, int State)"
+""
+1555 "OLEDragDrop" "(anytype Data, long Effect, int Button, int Shift, float x, float y)"
+""
+0 "destroyed" "()"
+""
+0 "signal" "(string name, int argc, void argv)"
+""
+0 "propertyChanged" "(string name)"
+""
+0 "exception" "(int code, string source, string description, string help)"
+""
+0 "EnabledChanged" "(bool value)"
+""
+0 "BackColorChanged" "(string value)"
+""
+0 "FontChanged" "(string value)"
+""
+0 "TextRTFChanged" "(string value)"
+""
+E20 21
+"m_needTell1Setup"
+""
+1 190 320 E E E 1 E 1 E N "_3DText" E N "_3DFace" E E
+ E E
+21 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 84 -*-Arial-*-r-normal-*-13-*-100-100-*-*-iso8859-1|-13,0,0,0,404,0,0,0,0,0,0,0,0,Arial
+0 ""
+ 188 318 402 342
+1
+T 
+1
+LANG:1 19 Require Tell1 Setup
+
+1 
+1
+LANG:1 0 
+E E
+0 0 0 0 0
+1
+E E
+EE20 22
+"m_needDefaults"
+""
+1 400 320 E E E 1 E 1 E N "_3DText" E N "_3DFace" E E
+ E E
+22 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 84 -*-Arial-*-r-normal-*-13-*-100-100-*-*-iso8859-1|-13,0,0,0,404,0,0,0,0,0,0,0,0,Arial
+0 ""
+ 398 318 602 342
+1
+T 
+1
+LANG:1 22 Require partition info
+
+1 
+1
+LANG:1 0 
+E E
+0 0 0 0 0
+1
+E E
+EE0
+LAYER, 2 
+1
+LANG:1 6 Layer3
+14 20
+"m_newName"
+""
+1 290 320 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+7 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 84 -*-Arial-*-r-normal-*-13-*-100-100-*-*-iso8859-1|-13,0,0,0,404,0,0,0,0,0,0,0,0,Arial
+0 ""
+ 288 318 622 345
+3 "0s" 0 0 0 0 0 -1  E E E
+13 19
+"m_create"
+""
+1 160 320 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+8 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 84 -*-Arial-*-r-normal-*-13-*-100-100-*-*-iso8859-1|-13,0,0,0,404,0,0,0,0,0,0,0,0,Arial
+0 ""
+ 158 318 282 345
+
+T 
+1
+LANG:1 6 Create
+"main()  {  JobOptionsEditor_create(jo_edit1,m_newName.text);                          }" 0
+ E E E
+30 5
+"m_createFrame"
+""
+1 150 350 E E E 1 E 1 E N "_3DText" E N "_Transparent" E E
+ E E
+18 0 0 0 0 0
+E E E
+1
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 1 1 0 1 E U  0 E 150 300 630 350
+1
+LANG:1 84 -*-Arial-*-r-normal-*-13-*-100-100-*-*-iso8859-1|-13,0,0,0,404,0,0,0,0,0,0,0,0,Arial
+0 ""
+1
+LANG:1 6 Frame1
+0
+LAYER, 3 
+1
+LANG:1 6 Layer4
+0
+LAYER, 4 
+1
+LANG:1 6 Layer5
+0
+LAYER, 5 
+1
+LANG:1 6 Layer6
+0
+LAYER, 6 
+1
+LANG:1 6 Layer7
+0
+LAYER, 7 
+1
+LANG:1 6 Layer8
+0
+0

@@ -1,0 +1,200 @@
+V 10
+1
+LANG:1 19 StorageControlPanel
+PANEL,-1 -1 570 267 N "_3DFace" 1
+"$1"
+"#uses \"StorageControlPanel.cpp\"
+main()  {
+  string dunit = $1;
+  int pos = strpos(dunit,\"_Slice\");
+  string storage = substr(dunit,0,pos);
+  string storage_partition = storage + \"_Partition_\" + substr(dunit,pos+strlen(\"_Slice\"),2);
+  string partition = StorageControlPanel_getPartitionNameFromSlice(storage,dunit);
+  StorageControlPanel_initStoragePartitionDisplay(storage, partition,storage_partition);
+}
+" 0
+ E E E E 1 -1 -1 0  0 0
+""0  1
+E E 2
+"CBRef""1"
+"EClose"E
+""
+DISPLAY_LAYER, 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0
+LAYER, 0 
+1
+LANG:1 0 
+17 8
+"m_recvSlots"
+""
+1 10 50 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+12 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-15-*-100-100-*-*-iso8859-1|-15,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
+0 ""
+ 8 48 282 142
+0
+
+E
+E
+E
+
+0 0
+17 9
+"m_strmSlots"
+""
+1 290 50 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+14 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-15-*-100-100-*-*-iso8859-1|-15,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
+0 ""
+ 288 48 562 142
+0
+
+E
+E
+E
+
+0 0
+30 10
+"m_frame"
+""
+1 10 43 E E E 1 E 1 E N "_WindowText" E N {0,0,0} E E
+ E E
+16 0 0 0 0 0
+E E E
+1
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 0 1 0 1 E 0.999999999999999 0 2.68041237113405 -10 -115.257731958764 0 E 10 43 581 141
+1
+LANG:1 101 -*-MS Shell Dlg-bold-r-normal-*-15-*-100-100-*-*-iso8859-1|-15,0,0,0,758,0,0,0,0,0,0,0,0,MS Shell Dlg
+0 ""
+1
+LANG:1 16 Input Parameters
+2 11
+"m_allRecvSlotText"
+""
+1 20 160 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
+ E E
+18 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 1 1 2 1 E U  1 E 10 30 110 40
+0 2 2 "0s" 0 0 0 64 0 0  10 30 1
+1
+LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
+0 ""
+1
+LANG:1 16 Receiving Layer:
+2 12
+"m_allStrmSlotText"
+""
+1 20 160 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
+ E E
+20 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 1 1 2 1 E U  1 E 290 30 390 40
+0 2 2 "0s" 0 0 0 64 0 0  290 30 1
+1
+LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
+0 ""
+1
+LANG:1 16 Streaming Layer:
+2 13
+"m_desc"
+""
+1 240 30 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+22 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 1 1 2 1 E U  1 E 10 150 160 250
+0 2 2 "0s" 0 0 0 64 0 0  10 150 1
+1
+LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
+0 ""
+1
+LANG:1 0 
+2 14
+"m_params"
+""
+1 400 30 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+24 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 1 1 2 1 E U  1 E 170 150 560 250
+0 2 2 "0s" 0 0 0 64 0 0  170 150 1
+1
+LANG:1 98 -*-MS Shell Dlg-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,MS Shell Dlg
+0 ""
+1
+LANG:1 0 
+0
+LAYER, 1 
+1
+LANG:1 0 
+0
+LAYER, 2 
+1
+LANG:1 0 
+0
+LAYER, 3 
+1
+LANG:1 0 
+0
+LAYER, 4 
+1
+LANG:1 0 
+0
+LAYER, 5 
+1
+LANG:1 0 
+0
+LAYER, 6 
+1
+LANG:1 0 
+0
+LAYER, 7 
+1
+LANG:1 0 
+0
+0

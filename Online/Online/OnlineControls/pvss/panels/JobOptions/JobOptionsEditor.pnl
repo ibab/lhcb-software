@@ -1,0 +1,166 @@
+V 10
+1
+LANG:1 18 Job Options Editor
+PANEL,-1 -1 901 511 N "_3DFace" 2
+"$1"
+"$2"
+"main()  {
+  string text = $1;
+  DebugN(\"Initializing Panel....\"+text);
+  CheckButton1.visible = 0;
+  dp_filter.visible	= 0;
+  interneDp.visible = 0;
+  Text1.visible	= 0;
+  Frame2.visible = 0;
+  m_logo.text	= \"LHCb  \";
+  m_logo.toolTipText = \"YES! That's us....Click to close panel\";
+  m_logo.visible = 1;
+  m_logo2.visible = 1;
+  m_logo2.text	= \"    O n l i n e    \";
+  m_logoFrame.visible = 1;
+  m_logoFrame.text = \"\";
+
+  activeX.SetRootElement(text,0);
+  activeX.ExpandElements($2+\"*\",1);
+  activeX.SelectElement(text,1);
+  activeX.UpdateElement(text,1);
+  activeX.EndEdit();  
+  activeX.SelectElement(text,1);
+  activeX.EndEdit();  
+}" 0
+ E E E E 1 0 0 0  -1 -1
+""0  1
+E E 2
+"CBRef""1"
+"EClose"E
+""
+NC
+DISPLAY_LAYER, 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0
+LAYER, 0 
+1
+LANG:1 6 Layer1
+1 17 0 "" 2
+16 "fill" 0 0 0
+0
+1 18 0 "" 3
+16 "fill" 0 0 0
+0
+1 19 0 "" 7
+16 "fill" 0 0 0
+2 "bordered" 0 0 0
+0
+1 20 0 "" 13
+16 "fill" 0 0 1
+2 "bordered" 0 0 0
+0
+1 21 0 "" 14
+16 "fill" 0 0 0
+2 "bordered" 0 0 0
+0
+1 22 0 "" 16
+0
+1 23 0 "" 0
+0
+1 24 0 "" 4
+0
+1 25 0 "" 6
+0
+1 26 0 "" 10
+0
+1 27 0 "" 12
+0
+30 13
+"m_logoFrame"
+""
+1 10 88 E E E 1 E 1 E N "_3DText" E N "_Transparent" E E
+ E E
+2 0 0 0 0 0
+E E E
+1
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E "main()  {  PanelOff();  }" 0
+ 0 1 1 0 1 E U  0 E 10 10 136 88
+1
+LANG:1 84 -*-Arial-*-r-normal-*-13-*-100-100-*-*-iso8859-1|-13,0,0,0,404,0,0,0,0,0,0,0,0,Arial
+0 ""
+1
+LANG:1 6 Frame1
+2 14
+"m_logo"
+""
+1 10 10 E E E 1 E 1 E N {0,0,255} E N "_Transparent" E E
+ E E
+3 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E "main()		{  PanelOff(); }" 0
+ 0 3 1 0 1 E U  0 E 12 12 112 64
+0 2 0 "0s" 0 0 0 192 0 0  12 12 1
+1
+LANG:1 96 -*-Arial Black-*-i-normal-*-37-*-100-100-*-*-iso8859-1|-37,0,0,0,404,1,0,0,0,0,0,0,0,Arial Black
+0 ""
+1
+LANG:1 4 Logo
+2 16
+"m_logo2"
+""
+1 12 60 E E E 1 E 1 E N {255,255,255} E N {255,0,51} E E
+ E E
+5 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E "main() {  PanelOff();  }" 0
+ 0 3 1 0 1 E U  1 E 14 62 62 81
+0 2 0 "0s" 0 0 0 192 0 0  14 62 1
+1
+LANG:1 103 -*-MS Sans Serif-bold-i-normal-*-16-*-100-100-*-*-iso8859-1|-16,0,0,0,697,1,0,0,0,0,0,0,0,MS Sans Serif
+0 ""
+1
+LANG:1 5 Logo2
+0
+LAYER, 1 
+1
+LANG:1 6 Layer2
+0
+LAYER, 2 
+1
+LANG:1 6 Layer3
+0
+LAYER, 3 
+1
+LANG:1 6 Layer4
+0
+LAYER, 4 
+1
+LANG:1 6 Layer5
+0
+LAYER, 5 
+1
+LANG:1 6 Layer6
+0
+LAYER, 6 
+1
+LANG:1 6 Layer7
+0
+LAYER, 7 
+1
+LANG:1 6 Layer8
+0
+3 0 "m_para"
+"para.pnl" 10 10 T 1 1 0 1 60 70
+0
+0
