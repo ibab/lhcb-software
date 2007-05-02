@@ -187,7 +187,7 @@ end UpdateDimServiceName;
 function GetHID(theHistoName IN varchar2,Subindex OUT HISTOGRAM.IHS%TYPE) return number is
  cursor myh
 	is select HSID,IHS from VIEWHISTOGRAM where NAME=theHistoName;
- myhsid VIEWHISTOGRAM.HSTYPE%TYPE;
+ myhsid VIEWHISTOGRAM.HSID%TYPE;
  myihs VIEWHISTOGRAM.IHS%TYPE;
 begin
  open myh;
