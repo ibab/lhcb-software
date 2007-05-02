@@ -1,4 +1,4 @@
-// $Id: CondDBAccessSvc.cpp,v 1.34 2007-04-20 14:40:39 marcocle Exp $
+// $Id: CondDBAccessSvc.cpp,v 1.35 2007-05-02 10:49:29 marcocle Exp $
 // Include files
 #include <sstream>
 //#include <cstdlib>
@@ -12,6 +12,8 @@
 
 #include "RelationalAccess/IConnectionService.h"
 #include "RelationalAccess/IConnectionServiceConfiguration.h"
+#include "RelationalAccess/IReplicaSortingAlgorithm.h"
+#include "RelationalAccess/IDatabaseServiceDescription.h"
 
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/MsgStream.h"
@@ -40,6 +42,104 @@
 // local
 #include "CondDBAccessSvc.h"
 #include "CondDBCache.h"
+
+namespace 
+{
+
+  /** @class ReplicaSortAlg
+   *
+   * Small class implementing coral::IReplicaSortingAlgorithm interface to allow dynamic sorting of
+   * database replicas obtained from LFC.
+   *
+   * @author Marco Clemencic
+   * @date   2007-05-02
+   */
+  class ReplicaSortAlg: virtual public coral::IReplicaSortingAlgorithm 
+  {
+    typedef coral::IDatabaseServiceDescription dbDesc_t;
+    typedef std::vector< const dbDesc_t * > replicaSet_t;
+    
+    /** @class  ReplicaSortAlg::Comparator
+     *
+     * Comparison function defining which replica comes before another.
+     *
+     * @author Marco Clemencic
+     * @date   2007-05-02
+     */
+    class Comparator: public std::binary_function<const dbDesc_t*,const dbDesc_t*,bool>
+    {
+
+      std::string site;
+
+    public:
+      
+      /// Constructor.
+      /// @param theSite the local LHCb Prod. Site (LCG.<i>SITE</i>.<i>country</i>)
+      Comparator(const std::string &theSite): site(theSite) {}
+
+      /// Main function
+      result_type operator() (first_argument_type a, second_argument_type b) const
+      {
+        std::string serverA =  a->serviceParameter(a->serverNameParam());
+        std::string serverB =  b->serviceParameter(b->serverNameParam());
+        
+        if ( serverA == serverB )       return false; // equality                   => false
+        if ( serverA == site )          return true;  // "SITE" < "anything"        => true
+        if ( serverB == site )          return false; // "anything" < "SITE"        => false
+        if ( serverA == "LCG.CERN.ch" ) return true;  // "LCG.CERN.ch" < "anything" => true
+        if ( serverB == "LCG.CERN.ch" ) return false; // "anything" < "LCG.CERN.ch" => false
+        return serverA < serverB;  // for any other case use, alphabetical order
+      }
+
+    };
+
+
+    std::string localSite;
+    MsgStream log;
+
+  public:
+
+    /// Constructor.
+    /// @param theSite the local LHCb Prod. Site (LCG.<i>SITE</i>.<i>country</i>)
+    ReplicaSortAlg(const std::string &theSite, IMessageSvc *msgSvc):
+      localSite(theSite),
+      log(msgSvc,"ReplicaSortAlg")
+    {
+      log << MSG::VERBOSE << "Constructor" << endmsg;
+    }
+    
+    /// Destructor.
+    virtual ~ReplicaSortAlg()
+    {
+      // log << MSG::VERBOSE << "ReplicaSortAlg --> destructor" <<std::endl;
+    }
+
+    /// Main function
+    virtual void 	sort (std::vector< const coral::IDatabaseServiceDescription * > &replicaSet) 
+    {
+      if ( log.level() <= MSG::VERBOSE ) {
+        log << MSG::VERBOSE << "Original list" << endmsg;
+        replicaSet_t::iterator i;
+        for ( i = replicaSet.begin(); i != replicaSet.end(); ++i ) {
+          log << MSG::VERBOSE << " " << (*i)->serviceParameter((*i)->serverNameParam()) << endmsg;
+        }
+      }
+      
+      log << MSG::VERBOSE << "Sorting..." << endmsg;
+      std::sort(replicaSet.begin(),replicaSet.end(),Comparator(localSite));
+
+      if ( log.level() <= MSG::VERBOSE ) {
+        log << MSG::VERBOSE << "Sorted list" << endmsg;
+        replicaSet_t::iterator i;
+        for ( i = replicaSet.begin(); i != replicaSet.end(); ++i ) {
+          log << MSG::VERBOSE << " " << (*i)->serviceParameter((*i)->serverNameParam()) << endmsg;
+        }
+      }
+    }
+    
+  };
+  
+}
 
 // Factory implementation
 DECLARE_SERVICE_FACTORY(CondDBAccessSvc)
@@ -230,26 +330,39 @@ StatusCode CondDBAccessSvc::i_openConnection(){
         log << MSG::DEBUG << "Initializing COOL Application" << endmsg;
         s_coolApplication = std::auto_ptr<cool::Application>(new cool::Application());
 
+
+        seal::Handle<seal::ComponentLoader> loader = 
+          s_coolApplication->context()->component<seal::ComponentLoader>();
+
+        log << MSG::DEBUG << "Getting CORAL Connection Service configurator" << endmsg;
+
+        loader->load( "CORAL/Services/ConnectionService" );
+        std::vector< seal::IHandle< coral::IConnectionService > > loadedServices;
+        s_coolApplication->context()->query( loadedServices );
+        coral::IConnectionServiceConfiguration &connSvcConf = loadedServices.front()->configuration();
+
         if ( m_useLFCReplicaSvc ) {
 
           log << MSG::INFO << "Loading CORAL LFCReplicaService" << endmsg;
-          seal::Handle<seal::ComponentLoader> loader = 
-            s_coolApplication->context()->component<seal::ComponentLoader>();
           loader->load( "CORAL/Services/LFCReplicaService" );
+          
+          std::string theSite = System::getEnv("LHCBPRODSITE");
+          if ( theSite.empty() || theSite == "UNKNOWN" ) {
+            theSite = "LCG.CERN.ch";
+          }
+
+          // msgSvc()->setOutputLevel("ReplicaSortAlg",MSG::VERBOSE);
+          connSvcConf.setReplicaSortingAlgorithm(new ReplicaSortAlg(theSite,msgSvc()));
 
         }
-
+        
         if ( ! m_coralConnCleanUp ) {
-          seal::Handle<seal::ComponentLoader> loader = 
-            s_coolApplication->context()->component<seal::ComponentLoader>();
-          loader->load( "CORAL/Services/ConnectionService" );
 
-          std::vector< seal::IHandle< coral::IConnectionService > > loadedServices;
-          s_coolApplication->context()->query( loadedServices );
+          log << MSG::DEBUG << "Disabling CORAL connection automatic clean up" << endmsg;
+          connSvcConf.disablePoolAutomaticCleanUp();
+          connSvcConf.setConnectionTimeOut( 0 );
 
-          loadedServices.front()->configuration().disablePoolAutomaticCleanUp();
-          loadedServices.front()->configuration().setConnectionTimeOut( 0 );
-        }
+        }        
         
       }
 
