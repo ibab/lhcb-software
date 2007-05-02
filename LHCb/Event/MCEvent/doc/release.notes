@@ -1,10 +1,10 @@
-! $Id: release.notes,v 1.78 2007-04-30 08:24:54 mneedham Exp $
+! $Id: release.notes,v 1.79 2007-05-02 14:43:55 cattanem Exp $
 ! Package     : Event/MCEvent
 ! Responsible : Marco Cattaneo, Gloria Corti
 ! Purpose     : LHCb Event model. MC truth classes (Gauss and Boole output) 
 !-----------------------------------------------------------------------------
 
-
+!======================== MCEvent v2r3 2007-05-02 ============================
 ! 2007-04-30 M Needham
  - Tidy up MCTrackInfo + make it a bit faster
      * Move MCTrackInfoBits to MCTrackInfo
@@ -12,7 +12,6 @@
      * Move implementations out of direct part of header
      * add functionality to enums (hasT1 etc...)
      * No multiple return statements
-
 
 !======================== MCEvent v2r2 2007-04-19 ============================
 ! 2007-04-19 - Chris Jones
