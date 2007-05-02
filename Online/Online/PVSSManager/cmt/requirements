@@ -10,7 +10,7 @@ library PVSSManager *.cpp -import=PVSS
 apply_pattern linker_library library=PVSSManager
 macro_append PVSSManager_shlibflags $(PVSS_linkopts)
 
-private
 application  PVSS00api  ../main/*.cpp
 macro_append PVSS00api_cppflags " -m32 " WIN32 ""
 macro_append PVSS00apilinkopts " -m32  $(PVSS_linkopts) " WIN32 ""
+set PVSS00api "$(PVSSMANAGERROOT)/$(CMTCONFIG)/PVSS00api.exe"

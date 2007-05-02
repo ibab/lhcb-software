@@ -1,4 +1,4 @@
-import time, PVSS
+import sys, time, PVSS
 std = PVSS.gbl.std
 DataPoint = PVSS.DataPoint
 
@@ -28,6 +28,7 @@ def log(msg, with_header=0, with_trailer=0,timestamp=0):
       print logPrefix + stamp + ' |  ' + line
   if ( with_trailer != 0 ):
     print logPrefix + stamp + ' ' + logTrailer
+  sys.stdout.flush()
 # =============================================================================
 def error(msg, with_header=0, with_trailer=0, timestamp=0):
   log('Error:   '+msg, with_header, with_trailer, timestamp)

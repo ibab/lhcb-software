@@ -4,16 +4,10 @@
 #include <signal.h>
 
 static PVSS::IAPIManager* s_mgr = 0;
-static void get_args(int argc, char** argv, const char*& dll, const char*& fun) {
-  for(int i=0; i<argc; ++i) {
-    // std::cout << "Argument [" << i << "]: " << argv[i] << std::endl;
-    if ( strncmp(argv[i],"-DLL",4)==0 ) dll = argv[++i];
-    if ( strncmp(argv[i],"-FUN",4)==0 ) fun = argv[++i];
-  }
-}
-static PVSS::IAPIManager* create_manager(const char* dll, const char* fun)  {
+static PVSS::IAPIManager* create_manager(int argc,const char** argv)
+{
   if ( 0 == s_mgr )  {
-    s_mgr = new PVSS::APIManager(dll,fun);
+    s_mgr = new PVSS::APIManager(argc, argv);
     if ( 0 == s_mgr->initialize() )  {
       ::printf("Failed to initialize API manager.\n");
       return 0;
@@ -22,7 +16,8 @@ static PVSS::IAPIManager* create_manager(const char* dll, const char* fun)  {
   return s_mgr;
 }
 
-int PVSS::pvss_initialize(int argc, char** argv)  {
+int PVSS::pvss_initialize(int& argc,const char** argv)
+{
   static bool inited = false;
   if ( !inited ) {
     inited = true;
@@ -34,7 +29,7 @@ int PVSS::pvss_initialize(int argc, char** argv)  {
     // Initialize Resources, i.e. 
     //  - interpret commandline arguments
     //  - interpret config file
-    MgrResources::init(argc, argv);
+    MgrResources::init(argc, (char**)argv);
 
     // Are we called with -helpDbg or -help ?
     if (MgrResources::getHelpDbgFlag())  {
@@ -50,21 +45,22 @@ int PVSS::pvss_initialize(int argc, char** argv)  {
 }
 
 
-PVSS::IAPIManager* PVSS::pvss_create_manager(const char* name, const char* dll, const char* fun)  {
+PVSS::IAPIManager* 
+PVSS::pvss_create_manager(const char* name, const char* dll, const char* fun)
+{
   const char* argv[] = {name,dll,fun};
-  if ( !pvss_initialize(3,(char**)argv) ) {
+  int argc = 3;
+  if ( !pvss_initialize(argc,argv) ) {
     return 0;
   }
-  return create_manager(dll,fun);
+  return create_manager(argc,argv);
 }
 
-int PVSS::pvss_exec_manager(int argc, char** argv)  {
-  const char *dll = "", *fun = "";
-  get_args(argc,argv,dll,fun);
+int PVSS::pvss_exec_manager(int argc,const char** argv)  {
   if ( !PVSS::pvss_initialize(argc,argv) ) {
     return 0;
   }
-  PVSS::IAPIManager *mgr = create_manager(dll,fun);
+  PVSS::IAPIManager *mgr = create_manager(argc, argv);
   if ( mgr )   {
     int result = mgr->exec(false);
     if ( !result ) {
@@ -76,7 +72,8 @@ int PVSS::pvss_exec_manager(int argc, char** argv)  {
   return 1;
 }
 
-extern "C" int pvss_run_apimanager(int argc, char *argv[])   {
+extern "C" int pvss_run_apimanager(int argc,const char *argv[])
+{
   PVSS::pvss_exec_manager(argc,argv);
   PVSS::IAPIManager *mgr = s_mgr;
   if ( mgr ) {

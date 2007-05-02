@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/PVSS/Internals.h,v 1.8 2007-04-30 12:49:23 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/PVSS/Internals.h,v 1.9 2007-05-02 14:46:27 frankm Exp $
 //  ====================================================================
 //  Internals.h
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: Internals.h,v 1.8 2007-04-30 12:49:23 frankm Exp $
+// $Id: Internals.h,v 1.9 2007-05-02 14:46:27 frankm Exp $
 #ifndef PVSSMANAGER_PVSS_INTERNALS_H
 #define PVSSMANAGER_PVSS_INTERNALS_H
 
@@ -96,11 +96,11 @@ namespace PVSS  {
   typedef void (*pvss_function_t)(void*);
 
   /// Initialize PVSS interface
-  int pvss_initialize(int argc, char** argv);
+  int pvss_initialize(int& argc,const char** argv);
   /// Create API manager
   IAPIManager* pvss_create_manager(const char* name="PVSSinteractive", const char* dll="", const char* fun="");
   /// Create API manager
-  int pvss_exec_manager(int argc, char** argv);
+  int pvss_exec_manager(int argc,const char** argv);
 
   /** Access to general information about the PVSS system: System.cpp      */
   

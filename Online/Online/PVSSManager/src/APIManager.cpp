@@ -4,13 +4,14 @@
 #include "StartDpInitSysMsg.hxx"
 #include "ConfigTypes.hxx"
 #include <signal.h>
+#include <string>
 
 using namespace PVSS;
 static int  g_doDebug = 1;
 static bool g_doExit = false;
 static bool g_isReady = false;
 
-typedef long (*interface_function)(void (*exit_call)(int));
+typedef long (*interface_function)(void (*exit_call)(int),int argc,const char** argv);
 
 static void pvss_exit_manager(int)  {
   g_doExit = true;
@@ -24,10 +25,20 @@ static void log(const std::string& msg) {
 #endif
 }
 
+static void get_args(int argc,const char** argv,std::string& dll,std::string& fun) {
+  for(int i=0; i<argc; ++i) {
+    // std::cout << "Argument [" << i << "]: " << argv[i] << std::endl;
+    if ( strncmp(argv[i],"-DLL",4)==0    ) dll = argv[++i];
+    if ( strncmp(argv[i],"-FUN",4)==0    ) fun = argv[++i];
+  }
+}
+
 static void pvss_interface_run(void* arg)  {
+  std::pair<interface_function,APIManager*>* a = 
+    (std::pair<interface_function,APIManager*>*)arg;
+  APIManager* m = (APIManager*)a->second;
   pvss_sleep(100);
-  interface_function fun = interface_function(arg);
-  int ret = (*fun)(pvss_exit_manager);
+  int ret = (*a->first)(pvss_exit_manager,m->argc(),m->argv());
   pvss_end_thread(ret);
 }
 
@@ -48,10 +59,17 @@ static void s_pvss_manager_run(void* arg)  {
 }
 
 /// The constructor defines Manager type (API_MAN) and Manager number
-APIManager::APIManager(const std::string& dll, const std::string& call)
+APIManager::APIManager(int argc,const char** argv)
 : Manager(ManagerIdentifier(API_MAN, Resources::getManNum())),
-  m_dll(dll), m_call(call)
+  m_argc(argc)
 {
+  m_argv = new const char*[argc+1];
+  m_argv[argc] = 0;
+  for(int i=0; i<argc; ++i) {
+    char* c = new char[strlen(argv[i])+1];
+    strcpy(c,argv[i]);
+    m_argv[i] = c;
+  }
 }
 
 /// Handle incoming hotlinks. This function is called from our hotlink object
@@ -92,18 +110,22 @@ int APIManager::initialize()   {
 /// Optional execution through loaded library
 int APIManager::exec(bool threaded) {
   // We are now in STATE_RUNNING.
-  if ( !m_dll.empty() )  {
-    interface_function fun = (interface_function)pvss_load_function(m_dll.c_str(),m_call.c_str());
+  std::string dll = "", ent = "";
+  get_args(m_argc, m_argv, dll, ent);
+  if ( !dll.empty() )  {
+    typedef interface_function if_t;
+    if_t fun = (if_t)pvss_load_function(dll.c_str(),ent.c_str());
     if ( !fun ) {
-      log("Failed to access procedure:"+m_call+" id library:"+m_dll);
+      log("Failed to access procedure:"+dll+" in library:"+ent);
       return 0;
     }
-    if ( g_doDebug > -1 ) log("Executing function "+m_call+" from "+m_dll);
+    if ( g_doDebug > -1 ) log("Executing function "+ent+" from "+dll);
     if ( threaded )  {
-      pvss_start_thread(pvss_interface_run,(void*)fun);
+      std::pair<if_t,APIManager*>* args = new std::pair<if_t,APIManager*>(fun,this);
+      pvss_start_thread(pvss_interface_run,args);
     }
     else {
-      pvss_interface_run((void*)fun);
+      (*fun)(pvss_exit_manager,argc(),argv());
     }
   }
   else {

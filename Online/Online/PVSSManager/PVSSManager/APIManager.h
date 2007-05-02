@@ -22,7 +22,7 @@ namespace PVSS {
   class APIManager : public Manager, virtual public IAPIManager    {
   public:
     /// Default constructor
-    APIManager(const std::string& dll, const std::string& call);
+    APIManager(int argc,const char** argv);
     /// Initialize manager
     virtual int initialize();
     /// Run the Manager: Execute PVSS dispatch loop
@@ -39,14 +39,15 @@ namespace PVSS {
     /// handle incoming hotlinks by group
     void handleHotLink(const DpHLGroup &group);
     
-    
+    int argc() const { return m_argc; }
+    const char** argv() const { return m_argv; }    
   private:
     /// callback from signal handler
     virtual void signalHandler(int sig);
-    /// Bootstrap execution by loading external DLL
-    std::string m_dll;
-    /// Bootstrap execution by calling function in above DLL
-    std::string m_call;
+    /// Bootstrap execution with arguments
+    int m_argc;
+    /// Bootstrap execution with arguments
+    const char** m_argv;
   };
 }
 #endif  // PVSSMANAGER_APIMANAGER_H

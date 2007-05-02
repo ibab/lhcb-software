@@ -2,15 +2,11 @@ import os, sys, time, string, platform
 import PyCintex as PyLCGDict
 
 #PyLCGDict.gbl.Cintex.SetDebug(1)
-#print platform.system()
+lib_prefix = ''
 if platform.system()=='Linux':
-  # print 'Loading libSTLRFLX'
-  PyLCGDict.loadDict('libSTLRflx')
-  # print 'Loading libPVSSInterfaceDict'
-  PyLCGDict.loadDict('libPVSSInterfaceDict')
-else:
-  PyLCGDict.loadDict('STLRflx')
-  #PyLCGDict.loadDict('PVSSInterfaceDict')
+  lib_prefix = 'lib'
+  PyLCGDict.loadDict(lib_prefix+'PVSSInterfaceDict')
+PyLCGDict.loadDict(lib_prefix+'STLRflx')
 
 gbl  = PyLCGDict.makeNamespace('')
 PVSS = PyLCGDict.makeNamespace('PVSS')

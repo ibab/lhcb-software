@@ -1,11 +1,14 @@
-import os, sys, string
+import os, sys, string, platform
 import PyCintex as PyLCGDict
-# PyLCGDict.gbl.Cintex.SetDebug(1)
 
-PyLCGDict.loadDict('PyDIMDict')
+lib_prefix = ''
+if platform.system()=='Linux':
+  lib_prefix = 'lib'
+PyLCGDict.loadDict(lib_prefix+'STLRflx')
+PyLCGDict.loadDict(lib_prefix+'PyDIMDict')
+  
 DIM = PyLCGDict.makeNamespace('DIM')
 gbl = PyLCGDict.makeNamespace('')
-PyLCGDict.loadDict('STLRflx')
 
 logPrefix     = ''
 logHeader     = '+----------------------------------------------------------------------------------------------------'

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/PythonCallback.cpp,v 1.3 2007-04-30 12:52:22 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/PythonCallback.cpp,v 1.4 2007-05-02 14:46:19 frankm Exp $
 //  ====================================================================
 //  PythonCallback.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: PythonCallback.cpp,v 1.3 2007-04-30 12:52:22 frankb Exp $
+// $Id: PythonCallback.cpp,v 1.4 2007-05-02 14:46:19 frankm Exp $
 
 #include "PVSS/PythonCallback.h"
 namespace PVSS  {
@@ -166,7 +166,7 @@ void PyDeviceListener::setSelf(PyObject* self)  {
     std::cout << "PVSS::PyDeviceListener> Warning: SELF==NULL" << std::endl;
   }
   else  {
-    std::cout << "PVSS::PyDeviceListener> SUCCESS: SELF:" << (void*)self << std::endl;
+    // std::cout << "PVSS::PyDeviceListener> SUCCESS: SELF:" << (void*)self << std::endl;
   }
   m_call->m_type = &typeid(*this); 
 }
@@ -182,6 +182,26 @@ void PyDeviceListener::handleDevice()   {
 }
 
 /// Execute python main program
-extern "C" int pvss_pymain(int argc, char** argv)  {
-  return Py_Main(argc,argv);
+extern "C" int pvss_pymain(void (*exit_call)(int), int argc, char** argv)  {
+  Py_Initialize();
+  for(int i = 0; i < argc; ++i) {
+    if ( strcmp(argv[i],"-SCRIPT")==0 ) {
+      ++i;
+      std::cout << "Executing python file:" << argv[i] << std::endl;
+      PyRun_AnyFile(fopen(argv[i],"r"),argv[i]);
+    }
+    else if ( strcmp(argv[i],"-CMD")==0 ) {
+      ++i;
+      std::cout << "Executing python string:" << argv[i] << std::endl;
+      PyRun_SimpleString(argv[i]);
+    }
+    else if ( strcmp(argv[i],"-PROMPT")==0 ) {
+      ++i;
+      std::cout << "Executing python command prompt..." << std::endl;
+      Py_Main(argc, argv);
+    }
+  }
+  Py_Finalize();
+  if ( exit_call ) (*exit_call)(1);
+  return 1;
 }

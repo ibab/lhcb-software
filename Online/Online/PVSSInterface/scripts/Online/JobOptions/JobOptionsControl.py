@@ -62,7 +62,7 @@ class OptionsWriter(CommandListener):
 
   # ===========================================================================
   def writeOptionsFile(self, name, opts):
-    log('###   Writing options for task: '+name,timestamp=1)
+    log('###   Writing options for task: '+self.optionsDir+'/'+name,timestamp=1)
     if self.optionsDir is not None:
       try:
         desc = open(self.optionsDir+'/'+name+'.opts','w')

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/src/Platform.cpp,v 1.3 2007-03-01 20:09:09 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSManager/src/Platform.cpp,v 1.4 2007-05-02 14:46:28 frankm Exp $
 //  ====================================================================
 //  Platform.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: Platform.cpp,v 1.3 2007-03-01 20:09:09 frankb Exp $
+// $Id: Platform.cpp,v 1.4 2007-05-02 14:46:28 frankm Exp $
 
 #include "PVSS/Internals.h"
 #include <string>
@@ -49,7 +49,7 @@ int PVSS::pvss_sleep(int millisecs)  {
 PVSS::pvss_function_t PVSS::pvss_load_function(const char* lib, const char* fun)  {
   std::string dll = lib;
   dll += ".dll";
-  printf("--------> Loading DLL:%s\n",dll.c_str());
+  // printf("--------> Loading DLL:%s\n",dll.c_str());
   void* handle = ::LoadLibrary(dll.c_str());
   if ( 0 == handle )  {
     ::printf("Failed to load library:%s\n",dll.c_str());
@@ -140,8 +140,9 @@ const char* PVSS::pvss_load_error()  {
 
 /// Load function from DLL
 PVSS::pvss_function_t PVSS::pvss_load_function(const char* lib, const char* fun)  {
-  std::string dll = lib;
-  dll += ".dll";
+  std::string dll = "lib";
+  dll += lib;
+  dll += ".so";
   printf("--------> Loading DLL:%s\n",dll.c_str());
   void* handle = ::dlopen(dll.c_str(),RTLD_NOW);
   if ( 0 == handle )  {

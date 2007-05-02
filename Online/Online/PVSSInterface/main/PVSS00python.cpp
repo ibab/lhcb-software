@@ -1,4 +1,4 @@
-// $Id: PVSS00python.cpp,v 1.1 2007-04-30 12:52:22 frankb Exp $
+// $Id: PVSS00python.cpp,v 1.2 2007-05-02 14:46:19 frankm Exp $
 //  ====================================================================
 //  PVSS00python.cpp
 //  --------------------------------------------------------------------
@@ -6,6 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
+
 
 // C++ include files
 typedef long (*func)(int, char**);
@@ -31,114 +32,108 @@ typedef long (*func)(int, char**);
     ::LocalFree( lpMessageBuffer ); 
     return s;
   }
+  #define strncasecmp strnicmp  
+
 #else
   #include <dlfcn.h>
   #include <unistd.h>
   #define LOAD_LIB(x)  ::dlopen( x , RTLD_NOW)
   inline void* GETPROC(void* h, const char* x) {  return ::dlsym(h,x); }
-  #define DLERROR      ::dlerror()
+  inline const char* __DLERROR()  {
+    const char* err=::dlerror(); 
+    return err ? err : "Unknown DLL error"; 
+  }
+  #define DLERROR __DLERROR()
 #endif
 
-#include <vector>
-#include <string>
 #include <iostream>
-#include <fstream>
 #include <cstdlib>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 
-static void loadEnv(const char* fname)  {
-  typedef std::vector<std::string> EnvV;
-  std::ifstream in(fname,std::ifstream::in);
-  std::string line;
-  if ( in.is_open() )  {
-    do {
-      line="";
-      std::getline(in,line,'\n');
-      for(size_t idx=line.find("  "); idx!=std::string::npos; idx = line.find("  "))
-        line.replace(idx,2," ");
-      if (strnicmp(line.c_str(),"set ",4)==0)  {
-        if ( ::putenv(line.c_str()+4) != 0 )  {
-          std::string err = "Failed to set environment:"+line;
-          throw std::runtime_error(line);
-        }
-        std::cout << "Env:" << line.c_str()+4 << std::endl;
+
+static int loadEnv(const char* fname)  {
+  FILE* fd = fopen(fname,"r");
+  if ( fd ) {
+    char* line = 0;
+    ssize_t rd;
+    size_t  len = 0;
+    while((rd=::getline(&line,&len,fd)) != -1) {
+      if (strncasecmp(line,"set ",4)==0)  {
+        line[rd-1] = 0;
+        ::printf("Env: %s\n",line+4);
+	/*
+	if ( ::putenv(line+4) != 0 )  {
+	  printf("Failed to set environment:%s",line+4);
+	  free(line);
+	  return 0;
+	}
+	*/
       }
     }
-    while(in.good());
-    return;
+    if ( line ) ::free(line);
+    fclose(fd);
+    return 1;
   }
-  line = "Failed to open environment file.";
-  line += fname;
-  throw std::runtime_error(line);
+  ::printf("Failed to open environment file:%s\n",fname);
+  return 0;
 }
 
 int main(int argc, char** argv)  {
-  typedef std::vector<char*> ArgV;
-  ArgV args;
-  char *env = 0, *env_val = 0;
-  char *exe = 0, *exe_val = 0;
-  char *dll = 0, *dll_val = 0;
-  char *fun = 0, *fun_val = 0;
+  char *env = 0, *exe = 0, *dll = 0, *fun = 0;
+  char** args = new char*[argc+2];
+  bool run = false;
+  size_t narg = 0;
   for(int i=0; i<argc;++i)  {
-    if (strncmp("-ENV",argv[i],4)==0) {
+    args[i] = 0;
+    ::printf(" Arg[%2d] = %s\n",i,argv[i]);
+    if (strncasecmp("-BLA",argv[i],4)==0) {
       env = argv[i];
-      env_val = argv[++i];
     }
-    else if (strncmp("-EXE",argv[i],4)==0) {
+    else if (strncasecmp("-exe",argv[i],4)==0) {
       exe = argv[i];
-      exe_val = argv[++i];
     }
-    else if (strncmp("-DLL",argv[i],4)==0) {
+    else if (strncasecmp("-dll",argv[i],4)==0) {
       dll = argv[i];
-      dll_val = argv[++i];
     }
-    else if (strncmp("-FUN",argv[i],4)==0) {
+    else if (strncasecmp("-fun",argv[i],4)==0) {
       fun = argv[i];
-      fun_val = argv[++i];
     }
-    else  {
-      args.push_back(argv[i]);
+    else if (strncasecmp("-run",argv[i],4)==0) {
+      run = true;
     }
+    args[narg++]=argv[i];
   }
-  if ( env && env_val )  {
-    try  {
-      if ( dll ) {
-        args.push_back(dll);
-        args.push_back(dll_val);
-      }
-      if ( fun ) {
-        args.push_back(fun);
-        args.push_back(fun_val);
-      }
-      args.push_back(0);
-      char** new_args = &args.front();
-      char*  new_exe = exe ? exe_val : argv[0];
-      if ( exe ) new_args[0] = new_exe;
-      loadEnv(env_val);
-      std::cout << "execv...." << _getpid() << std::endl;
-      intptr_t p = execv(new_exe,new_args);
+  printf("Environment:%s\n",env ? env : "None");
+  if ( !run && env )  {
+    if ( dll ) args[narg++] = dll;
+    if ( fun ) args[narg++] = fun;
+    args[narg++] = "-run";
+    args[narg] = 0;
+    args[0] = exe ? exe+5 : argv[0];
+    ::printf("Loading environment:%s\n",env+5);
+    if ( 1 == loadEnv(env+5) ) {
+      ::printf("Switching executable ....\n");
+      intptr_t p = execv(args[0],args);
       if ( p == (intptr_t)-1 )  {
-        printf("Failed to start process:%s\n",new_args[0]);
-        return -1;
+	::printf("Failed to start process:%s\n",args[0]);
+	return -1;
       }
-    }
-    catch(const std::exception& e)  {
-      std::cout << "Failed to execute:" << e.what() << std::endl;
-      return -1;
     }
   }
-  else  {
-    _asm int 3
-    std::cout << "Executing...." << _getpid() << std::endl;
-    void* handle = LOAD_LIB( dll );
+  else if ( dll && fun ) {
+    ::printf("Running DLL %s Narg:%d\n",dll+5,narg);
+    void* handle = LOAD_LIB( dll+5 );
     if ( 0 != handle )  {
-      func function = (func)GETPROC(handle, fun );
+      func function = (func)GETPROC(handle, fun+5 );
       if ( function ) {
-        return (*function)(args.size(), &args.front());
+        return (*function)(narg, args);
       }
-      std::cout << "Failed to access test procedure!" << std::endl;
+      ::printf("Failed to access procedure:%s\n",fun+5);
     }
-    std::cout << "Failed to load test library!" << std::endl;
-    std::cout << "Error: " << DLERROR << std::endl;
+    ::printf("Failed to load library:%s\n",dll+5);
+    ::printf("Error: %s\n",DLERROR);
     return 0;
   }
   return -1;
