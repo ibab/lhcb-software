@@ -1,4 +1,4 @@
-// $Id: FlatZSmearVertex.cpp,v 1.7 2007-02-22 14:38:14 gcorti Exp $
+// $Id: FlatZSmearVertex.cpp,v 1.8 2007-05-03 14:21:32 gcorti Exp $
 // Include files 
 
 // local
@@ -64,16 +64,23 @@ StatusCode FlatZSmearVertex::initialize( ) {
   if ( ! sc.isSuccess() ) 
     return Error( "Could not initialize flat random number generator" ) ;
 
-  debug() << "Vertex smearing activated : " << endmsg ;
-  debug() << "Smearing of interaction point with transverse Gaussian "
-          << " distribution " << endmsg ;
-  debug() << "and flat longitudinal z distribution" << endmsg ;
-  debug() << " with sigma(X) = " << m_sigmaX / Gaudi::Units::mm << " mm troncated at " 
-          << m_xcut << " sigma(X)" << endmsg ;
-  debug() << " with sigma(Y) = " << m_sigmaY / Gaudi::Units::mm << " mm troncated at " 
-          << m_ycut << " sigma(Y)" << endmsg ;
-  debug() << " with z between " << m_zmin / Gaudi::Units::mm << " mm and " 
-          << m_zmax / Gaudi::Units::mm << " mm." << endmsg ;
+  info() << "Smearing of interaction point with transverse Gaussian "
+         << " distribution " << endmsg;
+  info() << "and flat longitudinal z distribution" << endmsg;
+  if( msgLevel(MSG::DEBUG) ) {
+ 
+    debug() << " with sigma(X) = " << m_sigmaX / Gaudi::Units::mm 
+            << " mm troncated at " << m_xcut << " sigma(X)" << endmsg ;
+    debug() << " with sigma(Y) = " << m_sigmaY / Gaudi::Units::mm 
+            << " mm troncated at " << m_ycut << " sigma(Y)" << endmsg ;
+    debug() << " with z between " << m_zmin / Gaudi::Units::mm 
+            << " mm and " << m_zmax / Gaudi::Units::mm << " mm." << endmsg ;
+  } else {
+    info() << " with sigma(X,Y) = " << m_sigmaX / Gaudi::Units::mm << " mm, "
+           << m_sigmaY / Gaudi::Units::mm << " mm, and "
+           << m_zmin / Gaudi::Units::mm << " mm <= z <= " 
+           << m_zmax / Gaudi::Units::mm << " mm." << endmsg;
+  }
 
   release( randSvc ) ;
  
