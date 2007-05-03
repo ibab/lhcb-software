@@ -1,4 +1,4 @@
-// $Id: TrackEventFitter.cpp,v 1.11 2007-04-27 14:38:41 mneedham Exp $
+// $Id: TrackEventFitter.cpp,v 1.12 2007-05-03 09:20:20 mneedham Exp $
 // Include files
 // -------------
 // from Gaudi
@@ -173,23 +173,18 @@ StatusCode TrackEventFitter::finalize() {
   debug() << "==> Finalize" << endmsg;
 
   float perf = 0.;
-  unsigned int nTracks = counter("nTracks").nEntries();
-  if ( nTracks > 0 )
-    perf = float(counter("nFitted").nEntries()) / float(nTracks) * 100.;
+  double nTracks = counter("nTracks").flag();
+  if ( nTracks > 1e-3 )
+    perf = 100.0*counter("nFitted").flag() / nTracks;
 
   info()
     << " " << endmsg
     << "====================== TrackEventFitter Summary ======================"
     << endmsg
     << "  Fitting performance   : "
-    << format( " %7.2f %%", perf ) << endmsg
-    << "                            ("
-    << format( "%7d / %6d tracks )",
-               counter("nFitted").nEntries(), nTracks ) << endmsg
-    << "======================================================================"
-    << endmsg;
+    << format( " %7.2f %%", perf ) << endmsg;
 
-  return GaudiAlgorithm::finalize();  // must be called after all other actions
+    return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 
 //=============================================================================
