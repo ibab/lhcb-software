@@ -1,4 +1,4 @@
-// $Id: ITrackExtrapolator.h,v 1.13 2007-01-12 14:51:47 cattanem Exp $
+// $Id: ITrackExtrapolator.h,v 1.14 2007-05-03 11:51:51 ebos Exp $
 #ifndef TRACKINTERFACES_ITRACKEXTRAPOLATOR_H
 #define TRACKINTERFACES_ITRACKEXTRAPOLATOR_H 1
 
@@ -49,6 +49,20 @@ public:
   /// Return the interface ID
   static const InterfaceID& interfaceID() { return IID_ITrackExtrapolator; }
 
+  /// Propagate a state vector from zOld to zNew
+  virtual StatusCode propagate( Gaudi::TrackVector& stateVec,
+                                double zOld,
+                                double zNew,
+                                LHCb::ParticleID pid = LHCb::ParticleID(211) ) = 0;
+
+  /// Propagate a state vector from zOld to zNew
+  /// Transport matrix is calulated when transMat pointer is not NULL
+  virtual StatusCode propagate( Gaudi::TrackVector& stateVec,
+                                double zOld,
+                                double zNew,
+                                Gaudi::TrackMatrix* transMat,
+                                LHCb::ParticleID pid = LHCb::ParticleID(211) ) = 0;
+
   /// Propagate a track to a given z-position
   virtual StatusCode propagate( const LHCb::Track& track,
                                 double z,
@@ -60,11 +74,22 @@ public:
                                 double z,
                                 LHCb::ParticleID pid = LHCb::ParticleID(211) ) = 0;
 
+  /// Propagate a track to the closest point to the specified point
+  virtual StatusCode propagate( const LHCb::Track& track,
+                                const Gaudi::XYZPoint& point,
+                                LHCb::ParticleID pid = LHCb::ParticleID(211) ) = 0;
+
   /// Propagate a state to the closest point to the specified point
   virtual StatusCode propagate( LHCb::State& state,
                                 const Gaudi::XYZPoint& point,
                                 LHCb::ParticleID pid = LHCb::ParticleID(211) ) = 0;
   
+  /// Propagate a track to within tolerance of a plane (default = 10 microns)
+  virtual StatusCode propagate( const LHCb::Track& track,
+                                Gaudi::Plane3D& plane,
+                                double tolerance = 0.01,
+                                LHCb::ParticleID pid = LHCb::ParticleID(211) ) = 0;
+
   /// Propagate a state to within tolerance of a plane (default = 10 microns)
   virtual StatusCode propagate( LHCb::State& state,
                                 Gaudi::Plane3D& plane,
