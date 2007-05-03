@@ -37,13 +37,20 @@ public:
   virtual ~TrackParabolicExtrapolator();
   
   /// initialize
-  virtual StatusCode initialize();
+  StatusCode initialize();
+
+  /// Propagate a state vector from zOld to zNew
+  /// Transport matrix is calulated when transMat pointer is not NULL
+  StatusCode propagate( Gaudi::TrackVector& stateVec,
+                        double zOld,
+                        double zNew,
+                        Gaudi::TrackMatrix* transMat,
+                        LHCb::ParticleID pid = LHCb::ParticleID(211) );
   
   /// Propagate a state to a given z-position
-  virtual StatusCode propagate( LHCb::State& state,
-                                double z,
-                                LHCb::ParticleID pid = LHCb::ParticleID(211) );
-
+  StatusCode propagate( LHCb::State& state,
+                        double z,
+                        LHCb::ParticleID pid = LHCb::ParticleID(211) );
   
   /// Propagate a state to the closest position to the specified point
   StatusCode propagate( LHCb::State& state,
@@ -54,7 +61,8 @@ protected:
 
   /// update transport matrix
   virtual void updateTransportMatrix( const double dz,
-                                      LHCb::State& State );
+                                      Gaudi::TrackVector& stateVec,
+                                      Gaudi::TrackMatrix* transMat );
 
 protected:
 

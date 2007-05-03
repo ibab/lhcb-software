@@ -1,4 +1,4 @@
-// $Id: TrackKiselExtrapolator.cpp,v 1.6 2007-04-12 12:58:10 mneedham Exp $
+// $Id: TrackKiselExtrapolator.cpp,v 1.7 2007-05-03 11:55:29 ebos Exp $
 
 // from Gaudi
 #include "GaudiKernel/IMagneticFieldSvc.h"
@@ -58,9 +58,54 @@ TrackKiselExtrapolator::~TrackKiselExtrapolator()
 {
 }
 
+// Propagate a state vector from zOld to zNew
+// Transport matrix is calulated when transMat pointer is not NULL
+StatusCode TrackKiselExtrapolator::propagate( TrackVector& stateVec,
+                                              double zOld,
+                                              double zNew,
+                                              TrackMatrix* transMat,
+                                              ParticleID pid)
+{
+  const double dz = zNew - zOld;
+  if( fabs(dz) < TrackParameters::hiTolerance ) { 
+    // already at required z position
+    debug() << "already at required z position" << endreq;
+    return StatusCode::SUCCESS; 
+  }
+
+  // prepare Q/p transport - note Kisel expects zStart as 1st argument
+  double pIn[5];
+  int i;
+  for ( i = 0; i < 5; ++i ) { pIn[i] = stateVec[i]; }
+
+  // return parameters
+  double fQp[25];
+
+  for( i = 0; i < 25; ++i ) { fQp[i] = 0.; }
+
+  double pOut[5] = {0.,0.,0.,0.,0.};
+
+  extrapolateAnalytic( pIn,pOut,fQp,zOld,zNew );
+
+  // update the transport matrix
+  if( transMat != NULL ) {
+    (*transMat) = ROOT::Math::SMatrixIdentity();    
+    for ( i = 0; i < 5; ++i ) {
+      for ( int j = 0; j < 5; ++j ) {
+        (*transMat)(i,j) = fQp[(5*j)+i];
+      }
+    }
+  }
+
+  for( i = 0; i < 5; ++i ) { stateVec[i] = pOut[i]; }
+  
+  return StatusCode::SUCCESS;
+}
+
+
 StatusCode TrackKiselExtrapolator::propagate( State& state, 
                                               double zNew,
-                                              ParticleID )
+                                              ParticleID pid)
 {
   // create transport matrix
   m_F = TrackMatrix( ROOT::Math::SMatrixIdentity() );

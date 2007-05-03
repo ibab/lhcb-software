@@ -38,6 +38,13 @@ public:
   /// initialize
   virtual StatusCode initialize();
 
+  /// Propagate a state vector from zOld to zNew
+  /// Transport matrix is calulated when transMat pointer is not NULL
+  virtual StatusCode propagate( Gaudi::TrackVector& stateVec,
+                                double zOld,
+                                double zNew,
+                                Gaudi::TrackMatrix* transMat,
+                                LHCb::ParticleID pid = LHCb::ParticleID(211) );
 
   /// Propagate a state to a given z-position
   virtual StatusCode propagate( LHCb::State& pState, 

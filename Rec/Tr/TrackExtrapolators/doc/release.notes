@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking extrapolators
 !-----------------------------------------------------------------------------
 
+! 2007-05-03 - Edwin Bos
+ - Added several propagate methods
+
 ! 2007-04-12 - M. Needham
  - Make magnetic field service string a property
 

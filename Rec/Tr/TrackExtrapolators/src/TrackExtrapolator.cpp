@@ -15,6 +15,43 @@ using namespace Gaudi;
 DECLARE_TOOL_FACTORY( TrackExtrapolator );
 
 //=============================================================================
+// Propagate a state vector from zOld to zNew
+//=============================================================================
+StatusCode TrackExtrapolator::propagate( TrackVector& stateVec,
+                                         double zOld,
+                                         double zNew,
+                                         ParticleID pid )
+{
+  TrackMatrix* transMat = NULL;
+  StatusCode sc = propagate( stateVec, zOld, zNew, transMat, pid );
+
+  return sc;
+}
+
+
+//=============================================================================
+// Propagate a state vector from zOld to zNew
+// Transport matrix is calulated when transMat pointer is not NULL
+//=============================================================================
+StatusCode TrackExtrapolator::propagate( TrackVector& stateVec,
+                                         double zOld,
+                                         double zNew,
+                                         TrackMatrix* transMat,
+                                         ParticleID pid )
+{
+  StatusCode sc = StatusCode::FAILURE;
+
+  Warning( "Cannot propagate state vector to given Z position, see debug.",
+           StatusCode::SUCCESS, 1 );
+  
+  debug() << " can not propagate state vector at z" << zOld
+          << " to the z position " << zNew
+          << " of pid " << pid.pid() << endmsg;
+
+  return sc;
+}
+
+//=============================================================================
 // Propagate a track to a given z-position
 //=============================================================================
 StatusCode TrackExtrapolator::propagate( const Track& track,
@@ -52,6 +89,23 @@ StatusCode TrackExtrapolator::propagate( State& state,
 }
 
 //=============================================================================
+// Propagate a track to the closest point to the specified point
+//=============================================================================
+StatusCode TrackExtrapolator::propagate( const Track& track,
+                                         const Gaudi::XYZPoint& point,
+                                         ParticleID  pid )
+{
+  // get state closest to z of point
+  const State& closest = track.closestState( point.z() );
+  State& state = const_cast<State&>(closest);
+  
+  // propagate the closest state
+  StatusCode sc = propagate( state, point.z(), pid );
+
+  return sc;
+}
+
+//=============================================================================
 // Propagate a state to the closest point to the specified point
 //=============================================================================
 StatusCode TrackExtrapolator::propagate( State& state,
@@ -66,6 +120,24 @@ StatusCode TrackExtrapolator::propagate( State& state,
   debug() << " can not propagate state at " << state.z()
           << " to point at z " << point.z()
           << " of pid " << pid.pid() << endmsg;
+
+  return sc;
+}
+
+//=============================================================================
+// Propagate a track to within tolerance of a plane (default = 10 microns)
+//=============================================================================
+StatusCode TrackExtrapolator::propagate( const Track& track,
+                                         Gaudi::Plane3D& plane,
+                                         double tolerance,
+                                         ParticleID pid )
+{
+  // get state closest to the plane
+  const State& closest = track.closestState( plane );
+  State& state = const_cast<State&>(closest);
+  
+  // propagate the closest state
+  StatusCode sc = propagate( state, plane, tolerance, pid );
 
   return sc;
 }
@@ -314,8 +386,8 @@ const TrackMatrix& TrackExtrapolator::transportMatrix() const
 // Standard constructor, initializes variables
 //=============================================================================
 TrackExtrapolator::TrackExtrapolator( const std::string& type,
-				      const std::string& name,
-				      const IInterface* parent )
+                                      const std::string& name,
+                                      const IInterface* parent )
   : GaudiTool ( type, name , parent )
   , m_F()
 {

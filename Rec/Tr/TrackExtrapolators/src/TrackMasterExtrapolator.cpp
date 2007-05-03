@@ -96,6 +96,131 @@ StatusCode TrackMasterExtrapolator::initialize()
 }
 
 //=========================================================================
+// Propagate a state vector from zOld to zNew
+// Transport matrix is calulated when transMat pointer is not NULL
+//=========================================================================
+StatusCode TrackMasterExtrapolator::propagate( TrackVector& stateVec,
+                                               double zOld,
+                                               double zNew,
+                                               TrackMatrix* transMat,
+                                               ParticleID pid )
+{
+  //check if not already at required z position
+  const double zStart = zOld;
+  if( fabs( zNew-zStart ) < TrackParameters::hiTolerance ) {
+    debug() << "already at required z position" << endreq;
+    return StatusCode::SUCCESS;
+  }
+
+  if( transMat != NULL ) {
+    (*transMat) = TrackMatrix( ROOT::Math::SMatrixIdentity() );
+  }
+  
+  // check whether upstream or downstream
+  zStart > zNew ? m_upStream = true : m_upStream = false; 
+
+  int    nbStep = (int)( fabs( zNew-zStart ) / m_maxStepSize ) + 1;
+  double zStep  = ( zNew - zStart ) / nbStep;
+  int    nWall;
+  
+  for( int step=0 ; nbStep > step ; ++step ) {
+    ILVolume::Intersections intersept;
+    XYZPoint start( stateVec[0], stateVec[1], zOld );  // Initial position
+    XYZVector vect( stateVec[2]*zStep, stateVec[3]*zStep, zStep );
+    
+    // protect against vertical or looping tracks
+    if( fabs(start.x()) > m_maxTransverse ) {
+      debug() << "Protect against absurd tracks: x=" << start.x() 
+              << " (max " << m_maxTransverse << " allowed)." << endreq;
+      return Warning( "Protect against absurd tracks. See debug for details" );
+    }
+    if( fabs(start.y()) > m_maxTransverse ) {
+               //          StatusCode::FAILURE, 1 );
+      debug() << "Protect against absurd tracks: y=" << start.y() 
+              << " (max " << m_maxTransverse << " allowed)." << endreq;
+      return Warning( "Protect against absurd tracks. See debug for details" );
+    }
+    if( fabs(stateVec[2]) > m_maxSlope ) {
+      debug() << "Protect against looping tracks: tx=" << stateVec[2] 
+              << " (max " << m_maxSlope << " allowed)." << endreq;
+      return Warning( "Protect against looping tracks. See debug for details" );
+    }    
+    if( fabs(stateVec[3]) > m_maxSlope ) {
+      debug() << "Protect against looping tracks: ty=" << stateVec[3] 
+              << " (max " << m_maxSlope << " allowed). " << endreq;
+      return Warning( "Protect against looping tracks. See debug for details" );
+    }
+
+    // check if transport is within LHCb
+    if(fabs( start.x() ) > m_25m || fabs( start.y() ) > m_25m ||
+       fabs( start.z() ) > m_25m ||
+       fabs( start.x()+vect.x() ) > m_25m ||
+       fabs( start.y()+vect.y() ) > m_25m ||
+       fabs( start.z()+vect.z() ) > m_25m ) {
+      nWall = 0;
+      if( m_debugLevel ) {
+        debug() << "No transport between z= " << start.z() << " and " 
+                << start.z() + vect.z() 
+                << ", since it reaches outside LHCb" << endreq;
+      }
+    } else {
+      chronoSvc()->chronoStart("TransportSvcT");
+      nWall = m_transportSvc->intersections( start, vect, 0., 1., 
+                                             intersept, m_minRadThreshold );
+      chronoSvc()->chronoStop("TransportSvcT");  
+    }
+  
+    // local to global transformation of intersections
+    transformToGlobal( zStep, start.z(), intersept );
+ 
+    // add virtual wall at target
+    ILVolume::Interval inter(start.z() + vect.z(), start.z() + vect.z());
+    const Material* dummyMat = 0;
+    intersept.push_back( std::make_pair(inter,dummyMat) );
+    nWall = intersept.size();      
+ 
+    // loop over the walls - last wall is `virtual one at target z'
+    StatusCode sc;
+    double zPrev = zOld;
+    for( int iStep = 0; iStep < nWall; ++iStep ) {
+      double zWall = zScatter( intersept[iStep].first.first,
+                               intersept[iStep].first.second );
+      ITrackExtrapolator* thisExtrapolator = 
+        m_extraSelector->select( zPrev, zWall );
+      sc = thisExtrapolator->propagate( stateVec, zPrev, zWall );
+      zPrev = zWall;
+      
+      // check for success
+      if( sc.isFailure() ) {
+        debug() << "Transport to " << zWall
+                << "using "+thisExtrapolator->name() << " FAILED" << endreq;
+        return Warning( "Transport to wall using "+thisExtrapolator->name()+ "FAILED", sc );
+      }
+      
+      // update f
+      if( transMat != NULL ) {
+        (*transMat) *= thisExtrapolator->transportMatrix();  
+      }
+
+      // protect against vertical or looping tracks
+      if( fabs(stateVec[2]) > m_maxSlope ) {
+        debug() << "Protect against looping tracks: tx=" << stateVec[2] 
+                << " (max " << m_maxSlope << " allowed)." << endreq;
+        return Warning("Protect against looping tracks. See debug for details");
+      }    
+      if( fabs(stateVec[3]) > m_maxSlope) {
+        debug() << "Protect against looping tracks: ty=" << stateVec[3] 
+                << " (max " << m_maxSlope << " allowed). " << endreq;
+        return Warning("Protect against looping tracks. See debug for details");
+      }
+      
+    } // loop over walls
+  } // loop over steps
+
+  return StatusCode::SUCCESS; 
+}
+
+//=========================================================================
 //  Main method: Extrapolate a State
 //=========================================================================
 StatusCode TrackMasterExtrapolator::propagate( State& state, 

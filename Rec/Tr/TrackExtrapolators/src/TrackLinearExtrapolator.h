@@ -33,6 +33,14 @@ public:
   /// destructor
   virtual ~TrackLinearExtrapolator();
 
+  /// Propagate a state vector from zOld to zNew
+  /// Transport matrix is calulated when transMat pointer is not NULL
+  StatusCode propagate( Gaudi::TrackVector& stateVec,
+                        double zOld,
+                        double zNew,
+                        Gaudi::TrackMatrix* transMat,
+                        LHCb::ParticleID pid = LHCb::ParticleID(211) );
+  
   /// Propagate a state to a given z-position
   StatusCode propagate( LHCb::State& state,
                         double z,
@@ -42,7 +50,7 @@ public:
   StatusCode propagate( LHCb::State& state,
                         const Gaudi::XYZPoint& point,
                         LHCb::ParticleID pid = LHCb::ParticleID(211) );
-
+  
 };
 
 #endif // TRACKEXTRAPOLATORS_TRLINEAREXTRAPOLATOR_H

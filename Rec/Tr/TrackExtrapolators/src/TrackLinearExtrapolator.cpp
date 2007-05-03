@@ -15,6 +15,30 @@ using namespace Gaudi;
 DECLARE_TOOL_FACTORY( TrackLinearExtrapolator );
 
 //=============================================================================
+// Propagate a state vector from zOld to zNew
+// Transport matrix is calulated when transMat pointer is not NULL
+//=============================================================================
+StatusCode TrackLinearExtrapolator::propagate( TrackVector& stateVec,
+                                               double zOld,
+                                               double zNew,
+                                               TrackMatrix* transMat,
+                                               ParticleID pid )
+{
+  const double dz = zNew - zOld;
+
+  if( transMat != NULL ) {
+    (*transMat) = ROOT::Math::SMatrixIdentity();
+    (*transMat)(0,2) = dz;
+    (*transMat)(1,3) = dz;
+  }
+
+  stateVec[0] += stateVec[2]*dz;
+  stateVec[1] += stateVec[3]*dz;
+
+  return StatusCode::SUCCESS;
+}
+
+//=============================================================================
 // Propagate a State to a given z-position
 //=============================================================================
 StatusCode TrackLinearExtrapolator::propagate( State& state,

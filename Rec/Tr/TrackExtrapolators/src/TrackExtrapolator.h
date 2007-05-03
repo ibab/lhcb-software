@@ -28,6 +28,20 @@ class TrackExtrapolator : public GaudiTool,
                           virtual public ITrackExtrapolator {
 public:
 
+  /// Propagate a state vector from zOld to zNew
+  virtual StatusCode propagate( Gaudi::TrackVector& stateVec,
+                                double zOld,
+                                double zNew,
+                                LHCb::ParticleID pid = LHCb::ParticleID(211) );
+
+  /// Propagate a state vector from zOld to zNew
+  /// Transport matrix is calulated when transMat pointer is not NULL
+  virtual StatusCode propagate( Gaudi::TrackVector& stateVec,
+                                double zOld,
+                                double zNew,
+                                Gaudi::TrackMatrix* transMat,
+                                LHCb::ParticleID pid = LHCb::ParticleID(211) );
+
   /// Propagate a track to a given z-position
   virtual StatusCode propagate( const LHCb::Track& track,
                                 double z,
@@ -39,9 +53,20 @@ public:
                                 double z,
                                 LHCb::ParticleID pid = LHCb::ParticleID(211) );
 
+  /// Propagate a track to the closest point to the specified point
+  virtual StatusCode propagate( const LHCb::Track& track,
+                                const Gaudi::XYZPoint& point,
+                                LHCb::ParticleID pid = LHCb::ParticleID(211) );
+
   /// Propagate a state to the closest point to the specified point
   virtual StatusCode propagate( LHCb::State& state,
                                 const Gaudi::XYZPoint& point,
+                                LHCb::ParticleID pid = LHCb::ParticleID(211) );
+
+  /// Propagate a track to within tolerance of a plane (default = 10 microns)
+  virtual StatusCode propagate( const LHCb::Track& track,
+                                Gaudi::Plane3D& plane,
+                                double tolerance = 0.01,
                                 LHCb::ParticleID pid = LHCb::ParticleID(211) );
 
   /// Propagate a state to within tolerance of a plane (default = 10 microns)
