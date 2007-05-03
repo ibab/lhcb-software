@@ -4,6 +4,10 @@
 ! Purpose     : Associators to MC truth for Tracks
 !----------------------------------------------------------------------------
 
+!===================== TrackAssociators v2r4 2007-05-03 ====================
+! 2007-05-03 - Marco Cattaneo
+ - Remove obsolete file TrackAssociators_load.cpp
+
 ! 2007-05-03 - Edwin Bos
  - Association through LHCbIDs rather than Measurments.
 
