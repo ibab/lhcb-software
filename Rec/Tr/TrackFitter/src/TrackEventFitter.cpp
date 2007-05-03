@@ -1,4 +1,4 @@
-// $Id: TrackEventFitter.cpp,v 1.12 2007-05-03 09:20:20 mneedham Exp $
+// $Id: TrackEventFitter.cpp,v 1.13 2007-05-03 11:12:07 cattanem Exp $
 // Include files
 // -------------
 // from Gaudi
@@ -62,7 +62,7 @@ StatusCode TrackEventFitter::initialize() {
   // -----------------------------------
   info()
     << " " << endmsg
-    << "=========== TrackEventFitter Settings ============"
+    << "=========== " << name() << " Settings ============"
     << endmsg
     << "  Tracks input container   : " << m_tracksInContainer << endmsg
     << "  Tracks output container  : " << m_tracksOutContainer << endmsg
@@ -70,12 +70,6 @@ StatusCode TrackEventFitter::initialize() {
     << "=================================================="
     << endmsg
     << " " << endmsg;
-
-
-  // Initialize global counters
-  // --------------------------
-  // m_nTracks       = 0;
-  // m_nFittedTracks = 0;
 
   return StatusCode::SUCCESS;
 };
@@ -86,8 +80,6 @@ StatusCode TrackEventFitter::initialize() {
 StatusCode TrackEventFitter::execute() {
 
   debug() << "==> Execute" << endmsg;
-
-  StatusCode sc = StatusCode::SUCCESS;
 
   // Retrieve the Tracks container
   // -----------------------------
@@ -122,7 +114,7 @@ StatusCode TrackEventFitter::execute() {
       }
     }
 
-    sc = m_tracksFitter -> fit( track );
+    StatusCode sc = m_tracksFitter -> fit( track );
 
     if ( sc.isSuccess() ) {
       track.setFitStatus( Track::Fitted );
@@ -177,14 +169,10 @@ StatusCode TrackEventFitter::finalize() {
   if ( nTracks > 1e-3 )
     perf = 100.0*counter("nFitted").flag() / nTracks;
 
-  info()
-    << " " << endmsg
-    << "====================== TrackEventFitter Summary ======================"
-    << endmsg
-    << "  Fitting performance   : "
-    << format( " %7.2f %%", perf ) << endmsg;
+  info() << "  Fitting performance   : "
+         << format( " %7.2f %%", perf ) << endmsg;
 
-    return GaudiAlgorithm::finalize();  // must be called after all other actions
+  return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 
 //=============================================================================
