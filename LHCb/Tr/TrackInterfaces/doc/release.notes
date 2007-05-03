@@ -4,6 +4,9 @@
 ! Purpose     : package for tracking tools interfaces
 !-----------------------------------------------------------------------------
 
+! 2007-05-03 - Edwin Bos
+ - Added several propagate methods
+
 !====================== TrackInterfaces v3r3 2007-04-17 =====================
 ! 2007-04-17 G. Raven
  - Add ITrajFitter interface
