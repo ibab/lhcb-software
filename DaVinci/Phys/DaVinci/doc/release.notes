@@ -22,7 +22,8 @@
  - DVL0Strip.opts : L0 stripping options from Thomas.
 
 ! 2007-03-14 - Patrick Koppenburg for Marco Cattaneo
- - Added EventClockSvc.EventTimeDecoder = "OdinTimeDecoder"; to DaVinciCommon.opts
+ - Added EventClockSvc.EventTimeDecoder = "OdinTimeDecoder"; to 
+   DaVinciCommon.opts
 
 !========================== DaVinci v19r0 2007-03-09 ===================
 ! 2007-03-06 - Patrick Koppenburg

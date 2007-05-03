@@ -26,7 +26,7 @@
 #-------------------------------------------------------------------------------
 # Define the version of DaVinci to use
 #-------------------------------------------------------------------------------
-DaVinciVersion = 'v18r0'
+DaVinciVersion = 'v19r1'
 #-------------------------------------------------------------------------------
 
 #-------------------------------------------------------------------------------
@@ -44,8 +44,9 @@ myApplication.version = DaVinciVersion
 # Define the options file to use.
 # Note, if you want you can replace the PFNs in this file with LFNs directly,
 # since ganga takes care of the book-keeping for you :)
-myApplication.optsfile = File ( myApplication.cmt_user_path
-   + '/Phys/DaVinci/' + DaVinciVersion + '/options/DaVinci.opts' )
+myApplication.optsfile = File ( myApplication.cmt_user_path +
+                                '/DaVinci_' + DaVinciVersion + '/Phys/DaVinci/'
+                                + DaVinciVersion + '/options/DaVinci.opts' )
 # Extra options
 # Appended to the end of the main options to override default settings
 #myApplication.extraopts = ''
