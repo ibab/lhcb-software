@@ -1,4 +1,4 @@
-# $Id: release.notes,v 1.99 2007-05-02 10:49:28 marcocle Exp $
+# $Id: release.notes,v 1.100 2007-05-03 17:28:26 marcocle Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Det/DetCond
 ! Responsible : Marco Clemencic
@@ -6,6 +6,10 @@
 !-----------------------------------------------------------------------------
 
                             NEEDS LCGCMT >= 51 (CORAL 1.8.0)
+! 2007-05-03 - Marco Clemencic
+ - Added service OnlineDBValidatorSvc to check if the Online CondDB replica
+   is recent enough. (see doxygen documentation)
+
 ! 2007-05-02 - Marco Clemencic
  - First implementation of the algorithm to sort DB replicas extracted from
    LFC.
