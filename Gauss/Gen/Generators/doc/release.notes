@@ -1,9 +1,16 @@
-! $Id: release.notes,v 1.97 2007-04-01 21:27:45 robbep Exp $
+! $Id: release.notes,v 1.98 2007-05-03 14:21:57 gcorti Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Gen/Generators
 ! Responsible : Patrick ROBBE
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
+
+!====================== Generators v7r1 2007-05-03 ===========================
+! 2007-05-03 - Gloria CORTI
+ - Slighlty change message levels at initialization to see in info() 
+   primary interation vertex for flat vertex ( FlatZSmearVertex.cpp )
+ - Explicitely use LHCbDefinitions so that package is compatible with 
+   Gauss version using latest Gaudi v19r3 as well as DC06 version.
 
 ! 2007-04-01 - Patrick Robbe
  - Add new tool (RepeatDecay) to re-use the same event several times,
