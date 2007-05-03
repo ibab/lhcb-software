@@ -1,47 +1,4 @@
 <lcgdict>
-  
-  <class name="IDetectorElement"  />
-  <class name="std::vector<IDetectorElement*>"  />
-  <class name="IGeometryInfo"     />
-  <class name="ILVolume"          />
-  <class name="IPVolume"          />
-  <class name="ISolid"            />
-  <class name="ITransportSvc"     />
-
-  <class name="IAlignment"        />
-  <class name="ICalibration"      />
-  <class name="IConditionInfo"    />
-  <class name="IFastControl"      />
-  <class name="ISlowControl"      />
-  <class name="IReadOut"          />
-
-  <class name="Material"         />
-  <class name="Mixture"          />
-  <class name="Element"          />
-  <class name="Isotope"          />
-
-  <class name="LogVolBase"       />
-  <class name="LVolume"          />
-  <class name="LAssembly"        />
-
-  <class pattern="*Condition"        />
-  <class name="Surface"              />
-  <class name="DetectorElement"      />
-  <class name="TabulatedProperty"    />
-  <class name="ValidDataObject"      />
-  <class name="ParamValidDataObject" />
-
-  <class name="PVolume"              />
-  <class name="GeometryInfoPlus"     />
-  <class name="AlignmentInfo"        />
-  <class name="CalibrationInfo"      />
-  <class name="ConditionInfo"        />
-  <class name="FastControlInfo"      />
-  <class name="ReadOutInfo"          />
-  <class name="SlowControlInfo"      />
-  <class name="SimpleValidity"       />
-  
-  <class pattern="Solid*" />
 
   <class name="DeCalorimeter"    />
   <class name="DeSubCalorimeter" />
@@ -65,17 +22,4 @@
   <class name="MuonStationCabling" />
   <class name="IMuonPosTool"       />
 
-  <class pattern="std::pair<*>"    />
-
-  <exclusion>
-    <class name="SolidPolycone::CmpZ" />
-    <class name="std::pair<const std::basic_string<char>,std::basic_string<char> >" />
-    <class name="std::pair<const std::basic_string<char>,SmartRef<Condition> >" />
-    <class name="std::pair<const std::basic_string<char>,BasicParam*>" />
-    <class name="std::pair<const unsigned int,unsigned int>" />
-    <class name="std::pair<const unsigned int,bool>" />
-    <class name="std::pair<const double,double>" />
-    <class name="std::swap<const unsigned int,const unsigned int>" />
-    <class name="std::swap<const std::basic_string<char>,const std::basic_string<char> >" />
- </exclusion>
 </lcgdict>

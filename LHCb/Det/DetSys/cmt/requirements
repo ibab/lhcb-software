@@ -1,9 +1,9 @@
 package DetSys
-version v9r4
+version v9r5
 
 branches cmt doc dict
 
-use DetDesc             v17r2   Det
+use DetDesc             v17r3   Det
 use DetDescCnv          v4r3p1  Det
 use DetDescSvc          v1r11   Det
 use XmlTools            v5r1    Tools

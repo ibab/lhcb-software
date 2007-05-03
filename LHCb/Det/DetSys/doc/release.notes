@@ -4,6 +4,11 @@
 ! Purpose     : collect Det packages and build corresponding dictionaries
 !-----------------------------------------------------------------------------
 
+!========================= DetSys v9r5 2007-05-03 ============================
+! 2007-05-03 - Marco Cattaneo
+ - Use DetDesc v7r3
+ - Generation of dictionaries for DetDesc classes moved to DetDesc package
+
 !========================= DetSys v9r4 2007-04-23 ============================
 ! 2007-04-23 - Marco Cattaneo
  - Use STDet v3r3, VeloDet v11r2, DetDescCnv v4r3p1, RichDet v10r4
