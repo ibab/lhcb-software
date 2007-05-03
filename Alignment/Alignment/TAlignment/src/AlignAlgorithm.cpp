@@ -1,4 +1,4 @@
-// $Id: AlignAlgorithm.cpp,v 1.3 2007-04-30 18:07:53 janos Exp $
+// $Id: AlignAlgorithm.cpp,v 1.4 2007-05-03 07:57:11 janos Exp $
 // Include files
 // from std
 #include <utility>
@@ -52,7 +52,8 @@ DECLARE_ALGORITHM_FACTORY( AlignAlgorithm );
 //=============================================================================
 AlignAlgorithm::AlignAlgorithm( const std::string& name,
                                 ISvcLocator* pSvcLocator)
-                                : GaudiAlgorithm ( name , pSvcLocator )
+                                : GaudiAlgorithm ( name , pSvcLocator ),
+                                m_elements()
 {
   declareProperty("AlignDetectorSelector", m_alignDetectorName  = "AlignOTDetector");
   declareProperty("TracksLocation", m_tracksLocation = "Rec/Track/Best");
@@ -81,34 +82,38 @@ StatusCode AlignAlgorithm::initialize() {
   }
  
   /// Get detector elements
-  const Elements& elements = m_alignDetector->getDetectorElements();
-  debug() << "Got " << elements.size() << " elements" << endmsg;
+  m_elements = m_alignDetector->getDetectorElements();
+  debug() << "Got " << m_elements.size() << " elements" << endmsg;
   /// Get number of elements
   m_nDetElements = m_alignDetector->nElements();
   m_nAlignConstants = Derivatives::kCols;
   /// 1x6 vector
+  debug() << "==> Resizing Alvec" << endmsg;
   m_derivatives.reSize(m_nAlignConstants*m_nDetElements);
+  debug() << "==> Done resizing Alvec" << endmsg;  
   /// 6x6 matrix
+  debug() << "==> Resizing AlSymMat" << endmsg;
   m_hMatrix.reSize(m_nAlignConstants*m_nDetElements);
+  debug() << "==> Done resizing AlSymMat" << endmsg;
   m_derivatives = 0;
   m_hMatrix = 0;
 
   debug() << "Number of elements to align = " << m_nDetElements << endmsg;
 
   /// Get pivot points
-  sc = getPivotPoints(elements, m_pivotPoints);
+  sc = getPivotPoints(m_elements, m_pivotPoints);
   if (sc.isFailure()) {
     return Error("==> Failed to get pivot points or not defined", StatusCode::FAILURE);
   }
 
   /// Get alignment constants
   debug() << "==> Retrieving alignment paramterers" << endmsg;
-  debug() << "==> Expect " << 9*elements.size() << " station alignment constants" << endmsg;
-  sc = getAlignmentConstants(elements, m_initAlignConstants);
+  debug() << "==> Expect " << m_nAlignConstants*m_elements.size() << " station alignment constants" << endmsg;
+  sc = getAlignmentConstants(m_elements, m_initAlignConstants);
   if (sc.isFailure()) {
     return Error("==> Failed to retrieve initial alignment constants", StatusCode::FAILURE);
   }
-  debug() << "==> Got " << m_initAlignConstants.size() << " station alignment constants" << endmsg;
+  debug() << "==> Got " << m_initAlignConstants.size() << " detector elements alignment constants" << endmsg;
   debug() << "==> Initial alignment constants are: " <<   m_initAlignConstants << endmsg;
   
   /// Get track selector tool
@@ -235,6 +240,7 @@ StatusCode AlignAlgorithm::finalize() {
   info() << "AlVec Vector = " << m_derivatives << endmsg;
   info() << "AlSymMat Matrix = " << m_hMatrix << endmsg;
   
+  /// Tool returns H^-1 and  and alignment constants 
   bool solved = m_matrixSolverTool->compute(m_hMatrix, m_derivatives);
   if (solved) {
     info() << "solved it" << endmsg;
@@ -247,20 +253,21 @@ StatusCode AlignAlgorithm::finalize() {
     info() << "Failed to solve system" << endmsg;
   }
 
-
-  MapDerivatives::const_iterator iD = m_mapDerivatives.begin();
-  for ( ; iD != m_mapDerivatives.end(); ++iD) {
-    info() << "==> Element: " << iD->first << endmsg;
-    info() << "==> rho = " << iD->second << endmsg;
-  }  
+  /// Update alignement constants (in memory)
+  debug() << "==> Putting alignment constants" << endmsg;
+  StatusCode sc = putAlignmentConstants(m_elements, m_derivatives);
+  if (sc.isFailure()) return Error("Failed to put alignment constants", StatusCode::FAILURE);
   
-  MapHMatrix::const_iterator iH = m_mapHMatrix.begin();
-  for ( ; iH != m_mapHMatrix.end(); ++iH) {
-    info() << "==> Element: " << iH->first << endmsg;
-    info() << "==> H = " << iH->second << endmsg;
-  }  
+  std::vector<double> finalAlignConstants;
+  debug() << "==> Retrieving alignment paramterers" << endmsg;
+  debug() << "==> Expect " << m_nAlignConstants*m_elements.size() << " station alignment constants" << endmsg;
+  sc = getAlignmentConstants(m_elements, finalAlignConstants);
+  if (sc.isFailure()) {
+    return Error("==> Failed to retrieve initial alignment constants", StatusCode::FAILURE);
+  }
+  debug() << "==> Got " << finalAlignConstants.size() << " detector elements alignment constants" << endmsg;
+  debug() << "==> Final alignment constants are: " << finalAlignConstants << endmsg;
 
-  /// Update alignement constants
 
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
@@ -275,7 +282,7 @@ StatusCode AlignAlgorithm::getPivotPoints(const Elements& elements, PivotPoints&
     debug() << (*iE)->name() << endmsg;
     alignCond = (*iE)->geometry()->alignmentCondition();
     if (!alignCond) {
-      return StatusCode::FAILURE;
+      return Error("Failed to get pivot points", StatusCode::FAILURE);
     }
     std::vector<double> pivotPoint = alignCond->paramVect<double>("pivotXYZ");
     debug() << "Pivot point = " << pivotPoint << endmsg;
@@ -294,13 +301,42 @@ StatusCode AlignAlgorithm::getAlignmentConstants(const Elements& elements, Align
     debug() << (*iE)->name() << endmsg;
     alignCond = (*iE)->geometry()->alignmentCondition();
     if (!alignCond) {
-      return StatusCode::FAILURE;
+      return Error("Failed to get alignment conditions", StatusCode::FAILURE);
     }
     std::vector<double> translations = alignCond->paramVect<double>("dPosXYZ");
     std::vector<double> rotations = alignCond->paramVect<double>("dRotXYZ");
     /// Insert intitial constants (per element)
     alignConstants.insert(alignConstants.end(), translations.begin(), translations.end());
     alignConstants.insert(alignConstants.end(), rotations.begin(), rotations.end());
+  }
+  return StatusCode::SUCCESS;
+}
+
+StatusCode AlignAlgorithm::putAlignmentConstants(const Elements& elements, const AlVec& alignConstants) const
+{
+  debug() << "Size of alignment constants vector is " << alignConstants.size() << endmsg;
+  unsigned(nE)= 0u; // counter for the number of elements
+  Elements::const_iterator iE = elements.begin();
+  for ( ; iE != elements.end(); ++iE) {
+    debug() << (*iE)->name() << endmsg;
+    std::vector<double> translations;
+    std::vector<double> rotations;
+    for (unsigned(i) = 0u; i < 3u; ++i) { // 3 translations 
+      translations.push_back(alignConstants[nE*m_nAlignConstants + i]);
+    }  
+    for (unsigned(i) = 3u; i < 6u; ++i) { // 3 rotations
+      rotations.push_back(alignConstants[nE*m_nAlignConstants + i]);
+    }
+    /// set delta params
+    StatusCode sc = (*iE)->geometry()->localDeltaParams(translations, rotations);
+    if (sc.isFailure()) {
+      return Error("Failed to set alignment conditions", StatusCode::FAILURE);
+    }
+    /// clear translations and rotations for next detector element
+    debug() << "Alignment parameters for " << (*iE)->name() << " is: Translations = " << translations << " and Rotations = " << rotations << endmsg;  
+    translations.clear();
+    rotations.clear();
+    ++nE;
   }
   return StatusCode::SUCCESS;
 }

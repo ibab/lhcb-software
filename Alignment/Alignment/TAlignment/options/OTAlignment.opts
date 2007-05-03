@@ -1,6 +1,7 @@
-RecoTrSeq.Members   += { "AlignAlgorithm/AlignOTStations", 
-                         "AlignAlgorithm/AlignOTLayers", 
-                         "AlignAlgorithm/AlignOTModules"};
+RecoTrSeq.Members   += { "AlignAlgorithm/AlignOTStations"//, 
+                         //"AlignAlgorithm/AlignOTLayers", 
+                         //"AlignAlgorithm/AlignOTModules"
+};
 AlignOTStations.AlignDetectorSelector = "AlignOTDetector";
 AlignOTStations.Detector.Align = "Stations";
 AlignOTStations.TracksLocation = "Rec/Track/Best";

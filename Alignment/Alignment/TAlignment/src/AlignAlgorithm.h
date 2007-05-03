@@ -1,4 +1,4 @@
-// $Id: AlignAlgorithm.h,v 1.4 2007-04-30 18:07:53 janos Exp $
+// $Id: AlignAlgorithm.h,v 1.5 2007-05-03 07:57:11 janos Exp $
 #ifndef ALIGNALGORITHM_H 
 #define ALIGNALGORITHM_H 1
 
@@ -68,12 +68,19 @@ public:
   * of detector elements
   * @param flat vector of detector elements, i.e. std::vector<DetectorElements>
   * @param reference to a flat vector of alignment constants, i.e. std::vector<double>
+  * @returns StatusCode
   */
   StatusCode getAlignmentConstants(const Elements& elements, AlignConstants& alignConstants) const;
 
+  /** Method to put alignment constants
+  * @param alignment vector of parameters
+  */
+  StatusCode putAlignmentConstants(const Elements& elements, const AlVec& alignConstants) const;
+ 
 protected:
 
 private:
+  Elements m_elements;                        ///< Detector elements
   unsigned int m_nDetElements;                       ///< Number of detector elements
   unsigned int m_nAlignConstants;                    ///< Number of align parameters
   unsigned int m_nTracks;                            ///< Number of tracks

@@ -4,6 +4,9 @@
 ! Purpose	:	algorithm to align T stations
 !---------------------------------------------------------
 
+! 2007-05-03 - Jan Amoraal
+ - Update alignment constants (in memory)
+
 ! 2007-04-30 - Jan Amoraal
  - Solve system of linear eq. Ha=x using AlignSolvTools
 
