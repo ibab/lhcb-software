@@ -1,4 +1,4 @@
-// $Id: IGeometryInfo.h,v 1.24 2007-01-17 12:10:09 cattanem Exp $ 
+// $Id: IGeometryInfo.h,v 1.25 2007-05-03 09:45:13 jpalac Exp $ 
 // ===========================================================================
 #ifndef  DETDESC_IGEOMETRYINFO_H
 #define  DETDESC_IGEOMETRYINFO_H 1
@@ -112,6 +112,12 @@ public:
   virtual const Gaudi::Transform3D&  localIdealMatrix() const = 0;  
 
   virtual const Gaudi::Transform3D&  localDeltaMatrix() const = 0;
+
+  /**
+   * Transformation relating this frame to frame of the parent.
+   * Includes local misalignment.
+   */
+  virtual const Gaudi::Transform3D  localMatrix() const = 0;
 
   /// Upate the DELTA transformation matrix of this IGeometryInfo.
   virtual StatusCode  localDeltaMatrix(const Gaudi::Transform3D&) = 0;

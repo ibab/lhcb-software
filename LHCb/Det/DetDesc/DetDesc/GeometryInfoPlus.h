@@ -1,4 +1,4 @@
-// $Id: GeometryInfoPlus.h,v 1.4 2007-01-17 12:10:08 cattanem Exp $
+// $Id: GeometryInfoPlus.h,v 1.5 2007-05-03 09:45:13 jpalac Exp $
 #ifndef LIB_GEOMETRYINFOPLUS_H 
 #define LIB_GEOMETRYINFOPLUS_H 1
 
@@ -153,6 +153,17 @@ public:
   const Gaudi::Transform3D& localIdealMatrix() const;
 
   const Gaudi::Transform3D& localDeltaMatrix() const;
+
+  /**
+   * Transformation relating this frame to frame of the parent.
+   * Includes local misalignment.
+   */
+  const Gaudi::Transform3D  localMatrix() const 
+  {
+    return Gaudi::Transform3D(this->localDeltaMatrix() * this->localIdealMatrix() );
+    
+  }
+  
   
   /// Upate the DELTA transformation matrix of this IGeometryInfo.
   /// Will re-do calculation of all matrices.

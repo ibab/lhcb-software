@@ -1,9 +1,17 @@
 ! =============================================================================
-! $Id: release.notes,v 1.292 2007-03-16 15:57:23 cattanem Exp $ 
+! $Id: release.notes,v 1.293 2007-05-03 09:45:13 jpalac Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
+
+! 2007-05-05 - Juan PALACIOS
+  - DetDesc/IGeometryInfo.h
+    . Add virtual const Gaudi::Transform3D IGeometryInfo::localMatrix() const. 
+      Returns full transformation (incl. misalignment) relating it's frame to 
+      that is it's detector element parent.
+  - DetDesc/GeometryInfoPlus.h
+    . inline implementasion of const Gaudi::Transform3D IGeometryInfo::localMatrix() const.
 
 !====================== DetDesc v17r2 2007-03-16 ============================
 ! 2007-03-16 - Marco Cattaneo
