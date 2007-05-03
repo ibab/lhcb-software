@@ -4,6 +4,12 @@
 ! Purpose     : Analysis program for LHCb
 !-----------------------------------------------------------------------------
 
+! 2007-05-03 - Patrick Koppenburg
+ - Remove DaVinci.job and Stripping.job. Don't use LSF directly. Use ganga 
+   instead.
+ - Fixed job/DaVinci_Ganga.py for install area. Remember to always
+   update the version in job/DaVinci_Ganga.py
+
 !========================== DaVinci v19r1 2007-04-27 ===================
 ! 2007-04-26 - Patrick Koppenburg
  - Use LHCb v22r4, Phys v6r2, Analysis v1r2, Hlt v1r5...
