@@ -1,7 +1,7 @@
-# $Id: requirements,v 1.90 2007-03-16 15:57:23 cattanem Exp $ 
+# $Id: requirements,v 1.91 2007-05-03 12:06:30 cattanem Exp $ 
 # =============================================================================
 package       DetDesc
-version       v17r2
+version       v17r3
 
 # =========== structure =======================================================
 branches      DetDesc doc cmt src
@@ -18,5 +18,5 @@ library       DetDescLib        Lib/*.cpp
 
 # =========== standard patterns (the order is essential!) =====================
 apply_pattern linker_library    library=DetDescLib 
-macro_append ROOT_linkopts " -L$(ROOT_home)/lib -lMathCore " \
-             WIN32 " /LIBPATH:$(ROOT_home)/lib libMathCore.lib "
+macro_append ROOT_linkopts " -lMathCore " \
+             WIN32 " libMathCore.lib "

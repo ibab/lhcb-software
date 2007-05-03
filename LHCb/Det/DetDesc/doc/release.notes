@@ -1,9 +1,14 @@
 ! =============================================================================
-! $Id: release.notes,v 1.293 2007-05-03 09:45:13 jpalac Exp $ 
+! $Id: release.notes,v 1.294 2007-05-03 12:06:30 cattanem Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
+
+!====================== DetDesc v17r3 2007-05-03 ==============================
+! 2007-05-03 - Marco Cattaneo
+ - Fix some doxygen warnings
+ - Simplify ROOT_linkopts
 
 ! 2007-05-05 - Juan PALACIOS
   - DetDesc/IGeometryInfo.h

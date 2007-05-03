@@ -1,4 +1,4 @@
-// $Id: DetectorElement.h,v 1.35 2006-06-15 14:32:47 ibelyaev Exp $
+// $Id: DetectorElement.h,v 1.36 2007-05-03 12:06:29 cattanem Exp $
 #ifndef  DETDESC_DETECTORELEMENT_H
 #define  DETDESC_DETECTORELEMENT_H 1
 
@@ -305,8 +305,9 @@ public:
   // Implementation of IInterface
   virtual unsigned long addRef();
   virtual unsigned long release();
-  virtual StatusCode queryInterface( const InterfaceID& , void** );
-  
+  virtual StatusCode queryInterface( const InterfaceID& riid,
+                                     void** ppvInterface );
+
 protected:
   
   /// specific 

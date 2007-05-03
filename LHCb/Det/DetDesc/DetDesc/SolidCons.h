@@ -1,4 +1,4 @@
-// $Id: SolidCons.h,v 1.18 2007-03-16 15:57:09 cattanem Exp $ 
+// $Id: SolidCons.h,v 1.19 2007-05-03 12:06:30 cattanem Exp $ 
 // ===========================================================================
 #ifndef     DETDESC_SOLIDCONS_H
 #define     DETDESC_SOLIDCONS_H 1   
@@ -303,7 +303,7 @@ private:
 
   /**
    * implementation of isInside
-   * @param reference to any kind of point with x(), y(), z()
+   * @param  point reference to any kind of point with x(), y(), z()
    * @return bool
    */
   template<class aPoint>
