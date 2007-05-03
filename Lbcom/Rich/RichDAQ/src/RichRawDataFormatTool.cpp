@@ -5,7 +5,7 @@
  *  Implementation file for class : Rich::RawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.cpp,v 1.53 2007-05-02 17:00:03 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.cpp,v 1.54 2007-05-03 13:58:49 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2004-12-18
@@ -712,6 +712,9 @@ void RawDataFormatTool::decodeToSmartIDs_2007( const LHCb::RawBank & bank,
 
       // Get data for this ingress
       IngressInfo & ingressInfo = ingressMap[ingressNum];
+
+      // Set ingress header
+      ingressInfo.setIngressHeader( ingressWord );
 
       // Compare Ingress header to the ODIN
       const bool odinOK
