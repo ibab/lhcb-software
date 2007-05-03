@@ -1,4 +1,4 @@
-// $Id: TrackKiselExtrapolator.cpp,v 1.7 2007-05-03 11:55:29 ebos Exp $
+// $Id: TrackKiselExtrapolator.cpp,v 1.8 2007-05-03 14:31:37 cattanem Exp $
 
 // from Gaudi
 #include "GaudiKernel/IMagneticFieldSvc.h"
@@ -320,10 +320,12 @@ void TrackKiselExtrapolator::getCoefficients( const double x, const double y,
   }
 }
 
-void TrackKiselExtrapolator::integrateField( const XYZPoint& p0, const XYZPoint& p1, const XYZPoint& p2,
-                                                 double si  [3]      , double Si  [3],
-                                                 double sii [3][3]   , double Sii [3][3], 
-                                                 double siii[3][3][3], double Siii[3][3][3]){
+void TrackKiselExtrapolator::integrateField( const Gaudi::XYZPoint& p0,
+                                             const Gaudi::XYZPoint& p1,
+                                             const Gaudi::XYZPoint& p2,
+                                             double si  [3]      , double Si  [3],
+                                             double sii [3][3]   , double Sii [3][3], 
+                                             double siii[3][3][3], double Siii[3][3][3]){
   double dz = p2.z() - p0.z();
 
   m_pIMF->fieldVector( p0, m_B[0] ).ignore();
