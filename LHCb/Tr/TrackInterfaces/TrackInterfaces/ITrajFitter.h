@@ -1,4 +1,4 @@
-// $Id: ITrajFitter.h,v 1.4 2007-04-18 07:13:55 cattanem Exp $
+// $Id: ITrajFitter.h,v 1.5 2007-05-03 13:20:53 cattanem Exp $
 #ifndef _ITrajFitter_H
 #define _ITrajFitter_H
  
@@ -81,11 +81,11 @@ public:
   }
 
 /** Fit a DifTraj to a set of measurements.
-  * @param on input: initial guess for DifTraj<N>; on output: updated to reflect the fit
-  * @param on input: an empty vector; 
-  *        on output: containes for each measurement, a pair with the (normalized)
+  * @param traj on input: initial guess for DifTraj<N>; on output: updated to reflect the fit
+  * @param residuals on input: an empty vector; 
+  *                  on output: contains for each measurement, a pair with the (normalized)
   *                   residual, and its derivativ wrt the N parameters of the DifTraj<N>
-  * @param on input: vector of Measurements used to fit the DifTraj<N>
+  * @param[in] measurements vector of Measurements used to fit the DifTraj<N>
   */
   template <unsigned N>
   StatusCode fit(LHCb::DifTraj<N>& traj, 
