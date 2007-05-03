@@ -4,6 +4,9 @@
 ! Purpose     : Associators to MC truth for Tracks
 !----------------------------------------------------------------------------
 
+! 2007-05-03 - Edwin Bos
+ - Association through LHCbIDs rather than Measurments.
+
 !===================== TrackAssociators v2r3 2006-12-19 ====================
 ! 2006-12-19 - Marco Cattaneo
  - Use DECLARE_ALGORITHM_FACTORY macro

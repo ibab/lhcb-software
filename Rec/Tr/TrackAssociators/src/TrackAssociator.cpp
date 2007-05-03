@@ -1,4 +1,4 @@
-// $Id: TrackAssociator.cpp,v 1.11 2006-12-19 08:24:14 cattanem Exp $
+// $Id: TrackAssociator.cpp,v 1.12 2007-05-03 11:56:47 ebos Exp $
 // Include files
 
 // local
@@ -7,12 +7,12 @@
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
 
+// from Event/TrackEvent
+#include "Event/Track.h"
+
 // from Event/LinkerEvent
 #include "Linker/LinkerWithKey.h"
 #include "Linker/LinkedTo.h"
-
-// from Event/TrackEvent
-#include "Event/Track.h"
 
 // from Event/Event
 #include "Event/MCParticle.h"
@@ -25,12 +25,6 @@
 
 // from Event/OTEvent
 #include "Event/OTTime.h"
-
-// from Tr/TrackFitEvent
-#include "Event/OTMeasurement.h"
-#include "Event/STMeasurement.h"
-#include "Event/VeloRMeasurement.h"
-#include "Event/VeloPhiMeasurement.h"
 
 // from Event/Event
 #include "Event/MCVertex.h"
@@ -114,7 +108,8 @@ StatusCode TrackAssociator::execute() {
   }
 
   // Get the linker table ITCluster => MCParticle
-  LinkedTo<MCParticle,STCluster> itLink(evtSvc(),msgSvc(),LHCb::STClusterLocation::ITClusters);
+  LinkedTo<MCParticle,STCluster>
+    itLink(evtSvc(),msgSvc(),LHCb::STClusterLocation::ITClusters);
   if( itLink.notFound() ) {
     error() << "Unable to retrieve ITCluster to MCParticle linker table."
             << endreq;
@@ -122,7 +117,8 @@ StatusCode TrackAssociator::execute() {
   }
 
   // Get the linker table OTCluster => MCParticle
-  LinkedTo<MCParticle,OTTime> otLink(evtSvc(),msgSvc(),LHCb::OTTimeLocation::Default);
+  LinkedTo<MCParticle,OTTime>
+    otLink(evtSvc(),msgSvc(),LHCb::OTTimeLocation::Default);
   if( otLink.notFound() ) {
     error() << "Unable to retrieve OTCluster to MCParticle linker table."
             << endreq;
@@ -140,96 +136,99 @@ StatusCode TrackAssociator::execute() {
     m_nVelo.clear();
     m_nTT1.clear();
     m_nSeed.clear();
-
-    const VeloCluster* clu;
     
-    // Loop over the Measurements of the Track
-    std::vector<Measurement*>::const_iterator itm;
-    for( itm = tr->measurements().begin();
-         tr->measurements().end() != itm; ++itm ) {
+    static bool measRemoved;
 
-      clu = 0;
-      VeloPhiMeasurement* meas = dynamic_cast<VeloPhiMeasurement*> ( *itm );
-      if( 0 != meas ) { clu = meas->cluster(); }
+    // Distinguish between Pat and Fit tracks
+    if( tr->checkPatRecStatus(Track::PatRecMeas) ) {
+      // Fit track, check whether any measurements have been removed
+      if( tr->nMeasurementsRemoved() != 0 ) {
+        // Measurements removed, loop over subset of LHCbIDs
+        measRemoved = true;
+      }
+      // No removed measurements, loop over all LHCbIDs
       else {
-        VeloRMeasurement* meas = dynamic_cast<VeloRMeasurement*> ( *itm );
-        if( 0 != meas ) { clu = meas->cluster(); }
+        measRemoved = false;
       }
-      if( 0 != clu ) {
-        // Count number of Velo hits
-        m_nTotVelo += 1.;
-        // Loop over the MCparticles linked to the VeloMeasurement
-        MCParticle* mcParticle = veloLink.first( clu );
-        if( m_debugLevel && 0 == mcParticle ) {
-          debug() << "No MCParticle linked with VeloCluster " 
-                  << clu -> key() << endreq;
-        }
-        while( 0 != mcParticle ) {
-          if( mcParts != mcParticle->parent() ) {
-            debug() << " (other BX " <<  mcParticle->key() << ")" << endreq;
-          }
-          else { countMCPart( mcParticle, 1., 0., 0. ); }
-          mcParticle = veloLink.next();
-        }
-        // In case it was a Velo Measurement, go to the end of the for-loop
-        continue;
-      }
+    }
+    else {
+      // Pat track, loop over all LHCbIDs
+      measRemoved = false;
+    }
 
-      else {
-        bool inTT1 = (*itm) -> lhcbID().isTT();
-        // Note that both IT and TT hits are STMeasurements!
-        STMeasurement* itc = dynamic_cast<STMeasurement*> ( *itm );
-        if( 0 != itc ) {
-          const STCluster* itCl = itc->cluster();
-          // Count number of TT hits
-          if( inTT1 ) {
-            m_nTotTT1 += 1.;
-            // Loop over the MCparticles associated to the TT STMeasurement
-            MCParticle* mcParticle = ttLink.first( itCl );
-            if( m_debugLevel && 0 == mcParticle ) {
-              debug() << "No MCParticle linked with TT STCluster "
-                      << itCl -> key() << endreq;
-            }
-            while( 0 != mcParticle ) {
-              if( mcParts != mcParticle->parent() ) {
-                debug() << " (other BX " <<  mcParticle->key() << ")" << endreq;
-              }
-              else { countMCPart( mcParticle, 0., 1., 0. ); }
-              mcParticle = ttLink.next();
-            }
+    // Loop over the LHCbIDs of the Track
+    static bool accept;
+    static int nMeas;
+    nMeas = 0;
+    for( std::vector<LHCbID>::const_iterator iId = tr->lhcbIDs().begin();
+         tr->lhcbIDs().end() != iId; ++iId ) {
+      accept = true;
+      // Skip if LHCbID corresponds to a removed Measurement
+      if( measRemoved ) {
+        accept = tr->isMeasurementOnTrack( *iId );
+      }
+      if( accept ) {
+        if( (*iId).isVelo() ) {
+          ++nMeas;
+          VeloChannelID vID = (*iId).veloID();
+          // Count number of Velo hits
+          m_nTotVelo += 1.;
+          MCParticle* mcParticle = veloLink.first( vID );
+          if( m_debugLevel && 0 == mcParticle ) {
+            debug() << "No MCParticle linked with VeloCluster " << vID << endreq;
           }
-          // Count number of IT+OT hits
-          else {
-            m_nTotSeed += 1.;
-            // Loop over the MCparticles associated to the IT STMeasurement
-            MCParticle* mcParticle = itLink.first( itCl );
-            if( m_debugLevel && 0 == mcParticle ) {
-              debug() << "No MCParticle linked with IT STCluster "
-                      << itCl -> key() << endreq;
+          while( 0 != mcParticle ) {
+            if( mcParts != mcParticle->parent() ) {
+              debug() << " (other BX " <<  mcParticle->key() << ")" << endreq;
             }
-            while( 0 != mcParticle ) {
-              if( mcParts != mcParticle->parent() ) {
-                debug() << " (other BX " <<  mcParticle->key() << ")" << endreq;
-              }
-              else { countMCPart( mcParticle, 0., 0., 1. ); }
-              mcParticle = itLink.next();
-            }
+            else { countMCPart( mcParticle, 1., 0., 0. ); }
+            mcParticle = veloLink.next();
           }
-          // In case it was a TT/IT Measurement, go to the end of the for-loop
           continue;
         }
-        
-
-        OTMeasurement* otc = dynamic_cast<OTMeasurement*>(*itm);
-        if( 0 != otc ) {
-          const OTTime* otTim = otc->time();
+        if( (*iId).isTT() ) {
+          ++nMeas;
+          m_nTotTT1 += 1.;
+          STChannelID ttID = (*iId).stID();
+          MCParticle* mcParticle = ttLink.first( ttID );
+          if( m_debugLevel && 0 == mcParticle ) {
+            debug() << "No MCParticle linked with TTCluster " << ttID << endreq;
+          }
+          while( 0 != mcParticle ) {
+            if( mcParts != mcParticle->parent() ) {
+              debug() << " (other BX " <<  mcParticle->key() << ")" << endreq;
+            }
+            else { countMCPart( mcParticle, 0., 1., 0. ); }
+            mcParticle = ttLink.next();
+          }
+          continue;
+        }
+        if( (*iId).isIT() ) {
+          ++nMeas;
           // Count number of IT+OT hits
           m_nTotSeed += 1.;
-          // Loop over the MCparticles associated to the STMeasurement
-          MCParticle* mcParticle = otLink.first( otTim );
+          STChannelID itID = (*iId).stID();
+          MCParticle* mcParticle = itLink.first( itID );
           if( m_debugLevel && 0 == mcParticle ) {
-            debug() << "No MCParticle linked with OTTime "
-                    << otTim -> key() << endreq;
+            debug() << "No MCParticle linked with ITCluster " << itID << endreq;
+          }
+          while( 0 != mcParticle ) {
+            if( mcParts != mcParticle->parent() ) {
+              debug() << " (other BX " <<  mcParticle->key() << ")" << endreq;
+            }
+            else { countMCPart( mcParticle, 0., 0., 1. ); }
+            mcParticle = itLink.next();
+          }
+          continue;
+        }
+        if( (*iId).isOT() ) {
+          ++nMeas;
+          // Count number of IT+OT hits
+          m_nTotSeed += 1.;
+          OTChannelID otID = (*iId).otID();
+          MCParticle* mcParticle = otLink.first( otID );
+          if( m_debugLevel && 0 == mcParticle ) {
+            debug() << "No MCParticle linked with OTTime " << otID << endreq;
           }
           while( 0 != mcParticle ) {
             if( mcParts != mcParticle->parent() ) {
@@ -239,9 +238,8 @@ StatusCode TrackAssociator::execute() {
             mcParticle = otLink.next();
           }
         }
-      } // end else
-
-    } // end for
+      }
+    }
 
     //== For ST match, count also parents hits if in VELO !
     // If the Track has total # Velo hits > 2 AND total # IT+OT hits > 2
@@ -336,7 +334,7 @@ StatusCode TrackAssociator::execute() {
 
       //=== Decision. Use TT1. Fill Linker
       if( veloOK && seedOK && TT1OK ) {
-        ratio = ( m_nVelo[jj] + m_nSeed[jj] + m_nTT1[jj] ) / tr->nMeasurements();
+        ratio = ( m_nVelo[jj] + m_nSeed[jj] + m_nTT1[jj] ) / nMeas;
         myLinker.link( tr, m_parts[jj], ratio );
       }
     }
