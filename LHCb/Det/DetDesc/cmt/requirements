@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.91 2007-05-03 12:06:30 cattanem Exp $ 
+# $Id: requirements,v 1.92 2007-05-03 13:04:00 cattanem Exp $ 
 # =============================================================================
 package       DetDesc
 version       v17r3
@@ -20,3 +20,13 @@ library       DetDescLib        Lib/*.cpp
 apply_pattern linker_library    library=DetDescLib 
 macro_append ROOT_linkopts " -lMathCore " \
              WIN32 " libMathCore.lib "
+
+# =============== LCG Dictionaries ============================================
+apply_pattern     reflex_dictionary                                 \
+                  dictionary=DetDesc                                \
+                  headerfiles=$(DETDESCROOT)/dict/DetDescDict.h     \
+                  selectionfile=$(DETDESCROOT)/dict/DetDescDict.xml \
+                  options="-U__MINGW32__"
+
+# Hack for cmt v1r19 bug to link dictionary on windows
+macro DetDescDict_use_linkopts $(use_linkopts)

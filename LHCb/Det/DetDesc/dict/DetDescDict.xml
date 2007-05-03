@@ -1,0 +1,53 @@
+<lcgdict>
+  
+  <class name="IDetectorElement"  />
+  <class name="std::vector<IDetectorElement*>"  />
+  <class name="IGeometryInfo"     />
+  <class name="ILVolume"          />
+  <class name="IPVolume"          />
+  <class name="ISolid"            />
+  <class name="ITransportSvc"     />
+
+  <class name="IAlignment"        />
+  <class name="ICalibration"      />
+  <class name="IConditionInfo"    />
+  <class name="IFastControl"      />
+  <class name="ISlowControl"      />
+  <class name="IReadOut"          />
+
+  <class name="Material"         />
+  <class name="Mixture"          />
+  <class name="Element"          />
+  <class name="Isotope"          />
+
+  <class name="LogVolBase"       />
+  <class name="LVolume"          />
+  <class name="LAssembly"        />
+
+  <class pattern="*Condition"        />
+  <class name="Surface"              />
+  <class name="DetectorElement"      />
+  <class name="TabulatedProperty"    />
+  <class name="ValidDataObject"      />
+  <class name="ParamValidDataObject" />
+
+  <class name="PVolume"              />
+  <class name="GeometryInfoPlus"     />
+  <class name="AlignmentInfo"        />
+  <class name="CalibrationInfo"      />
+  <class name="ConditionInfo"        />
+  <class name="FastControlInfo"      />
+  <class name="ReadOutInfo"          />
+  <class name="SlowControlInfo"      />
+  <class name="SimpleValidity"       />
+  
+  <class pattern="Solid*" />
+
+  <class name="std::pair<double,SmartRef<Element> >" />
+  <class name="std::pair<double,SmartRef<Isotope> >" />
+  <class name="std::pair<std::pair<double,double>,const Material*>" />
+
+  <exclusion>
+    <class name="SolidPolycone::CmpZ" />
+  </exclusion>
+</lcgdict>

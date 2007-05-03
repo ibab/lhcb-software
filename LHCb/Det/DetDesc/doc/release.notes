@@ -1,5 +1,5 @@
 ! =============================================================================
-! $Id: release.notes,v 1.294 2007-05-03 12:06:30 cattanem Exp $ 
+! $Id: release.notes,v 1.295 2007-05-03 13:04:00 cattanem Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
@@ -7,6 +7,7 @@
 
 !====================== DetDesc v17r3 2007-05-03 ==============================
 ! 2007-05-03 - Marco Cattaneo
+ - Added generation of dictionaries for public classes, previously in DetSys
  - Fix some doxygen warnings
  - Simplify ROOT_linkopts
 
