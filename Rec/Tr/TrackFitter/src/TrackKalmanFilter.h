@@ -1,4 +1,4 @@
-// $Id: TrackKalmanFilter.h,v 1.16 2006-12-15 19:13:14 graven Exp $
+// $Id: TrackKalmanFilter.h,v 1.17 2007-05-04 15:11:34 wouter Exp $
 #ifndef TRACKFITTER_TRACKKALMANFILTER_H 
 #define TRACKFITTER_TRACKKALMANFILTER_H 1
 
@@ -63,9 +63,6 @@ public:
   //! smoother for bidirectional fit nodes
   StatusCode biSmooth( LHCb::FitNode& node0 );
 
-  //! compute the chi2
-  void computeChi2( LHCb::Track& track );
-
 private:
 
   // ! check that the contents of the cov matrix are fine
@@ -89,7 +86,6 @@ private:
   std::string m_projectorSelectorName;      ///< name of the projector selector in Gaudi
   bool m_storeTransport;            ///< store the transport of the extrapolator
   bool m_biDirectionalFit;          ///< Flag for bidirectional fit
-  bool m_unbiasedResiduals;         ///< Flag to calculate unbiased residuals
   bool m_upstream;                  ///< Flag to set upstream fit
 
   //! helper to print a failure comment
