@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDB.h,v 1.5 2007-05-02 09:34:41 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDB.h,v 1.6 2007-05-04 13:20:34 ggiacomo Exp $
 #ifndef ONLINEHISTDB_H
 #define ONLINEHISTDB_H 1
 /** @class  OnlineHistDB OnlineHistDB.h OnlineHistDB/OnlineHistDB.h
@@ -83,32 +83,40 @@ class  OnlineHistDB : public OnlineHistDBEnv
   // query functions
   /// get the full list of histograms
   int getAllHistograms(std::vector<OnlineHistogram*>* list = NULL,
-				std::vector<string>* ids = NULL);
+		       std::vector<string>* ids = NULL,
+		       std::vector<string>* types = NULL);
   /// get the list of histograms on which some check analysis has to be performed 
   int getHistogramsWithAnalysis(std::vector<OnlineHistogram*>* list = NULL,
-				std::vector<string>* ids = NULL);
+				std::vector<string>* ids = NULL,
+		       std::vector<string>* types = NULL);
   /// get the list of histograms that have to be produced by analysis task
   int getAnalysisHistograms(std::vector<OnlineHistogram*>* list = NULL,
-			    std::vector<string>* ids = NULL);
+			    std::vector<string>* ids = NULL,
+		       std::vector<string>* types = NULL);
   /// get the list of histograms related to subsystem SubSys
   int getHistogramsBySubsystem(std::string SubSys,
 			       std::vector<OnlineHistogram*>* list = NULL,
-			       std::vector<string>* ids = NULL);
+			       std::vector<string>* ids = NULL,
+		       std::vector<string>* types = NULL);
   /// get the list of histograms related to task Task
   int getHistogramsByTask(std::string Task,
 			  std::vector<OnlineHistogram*>* list = NULL,
-			  std::vector<string>* ids = NULL);
+			  std::vector<string>* ids = NULL,
+		       std::vector<string>* types = NULL);
   /// get the list of histograms displayed on page Page
   int getHistogramsByPage(std::string Page,
 			  std::vector<OnlineHistogram*>* list = NULL,
-			  std::vector<string>* ids = NULL);
+			  std::vector<string>* ids = NULL,
+		       std::vector<string>* types = NULL);
   /// get the list of histograms in a Set
   int getHistogramsBySet(std::string SetName,
 			 std::vector<OnlineHistogram*>* list = NULL,
-			 std::vector<string>* ids = NULL);
+			 std::vector<string>* ids = NULL,
+		       std::vector<string>* types = NULL);
   int getHistogramsBySet(const OnlineHistogram& Set,
 			 std::vector<OnlineHistogram*>* list,
-			 std::vector<string>* ids = NULL);
+			 std::vector<string>* ids = NULL,
+		       std::vector<string>* types = NULL);
   /// get the list of page folders, Parent can be "ROOT", a page folder name or "_ALL_" for all folders  
   int getPageFolderNames(std::vector<string>& list, std::string Parent="_ALL_");
   /// get the list of pages in a folder
@@ -135,7 +143,8 @@ class  OnlineHistDB : public OnlineHistDBEnv
   int genericStringQuery(std::string command,std::vector<string>& list);
   int getHistograms(std::string query,
 		    std::vector<OnlineHistogram*>* list=NULL,
-		    std::vector<string>* ids = NULL);
+		    std::vector<string>* ids = NULL,
+		    std::vector<string>* types = NULL);
 };
 
 #endif // ONLINEHISTDB_H

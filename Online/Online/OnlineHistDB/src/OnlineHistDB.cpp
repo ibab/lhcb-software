@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDB.cpp,v 1.4 2007-05-02 09:34:41 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDB.cpp,v 1.5 2007-05-04 13:20:34 ggiacomo Exp $
 /*
    C++ interface to the Online Monitoring Histogram DB
    G. Graziani (INFN Firenze)
@@ -472,80 +472,90 @@ int OnlineHistDB::genericStringQuery(std::string command, std::vector<string>& l
 
 int OnlineHistDB::getHistograms(std::string query,
 				std::vector<OnlineHistogram*>* list, 
-				std::vector<string>* names)
+				std::vector<string>* names,
+				std::vector<string>* types)
 {
   int nout=0;
-  string command="select NAME from VIEWHISTOGRAM VH "+query;
+  string command="select NAME,HSTYPE from VIEWHISTOGRAM VH "+query;
   Statement *qst=m_conn->createStatement(command);
   ResultSet *rset = qst->executeQuery ();
   while(rset->next ()) {
     if(list) list->push_back(getHistogram(rset->getString(1)));
     if(names) names->push_back(rset->getString(1));
+    if(types) types->push_back(rset->getString(2));
     nout++;
   }
   return nout;
 }
 
 int OnlineHistDB::getAllHistograms(std::vector<OnlineHistogram*>* list ,
-				   std::vector<string>* ids) {
-  return getHistograms("",list,ids);
+				   std::vector<string>* ids,
+				   std::vector<string>* types) {
+  return getHistograms("",list,ids,types);
 }
 
 
 int OnlineHistDB::getHistogramsWithAnalysis(std::vector<OnlineHistogram*>* list ,
-				   std::vector<string>* ids)
+					    std::vector<string>* ids,
+					    std::vector<string>* types)
 {
-  return getHistograms(",HISTOGRAMSET HS WHERE VH.HSID=HS.HSID AND HS.NANALYSIS>0",list,ids);
+  return getHistograms(",HISTOGRAMSET HS WHERE VH.HSID=HS.HSID AND HS.NANALYSIS>0",list,ids,types);
 }
 
 int OnlineHistDB::getAnalysisHistograms(std::vector<OnlineHistogram*>* list ,
-				   std::vector<string>* ids)
+					std::vector<string>* ids,
+					std::vector<string>* types)
 {
-  return getHistograms(",HISTOGRAM H WHERE VH.HID=H.HID AND H.ISANALYSISHIST=1",list,ids);
+  return getHistograms(",HISTOGRAM H WHERE VH.HID=H.HID AND H.ISANALYSISHIST=1",list,ids,types);
 }
 
 int OnlineHistDB::getHistogramsBySubsystem(std::string SubSys,
 					   std::vector<OnlineHistogram*>* list ,
-					   std::vector<string>* ids)
+					   std::vector<string>* ids,
+					   std::vector<string>* types)
 {  
   stringstream ss;
   ss << ", TASK T WHERE VH.TASK=T.TASKNAME AND (T.SUBSYS1 ='" << SubSys <<
     "' OR  T.SUBSYS2 ='"  << SubSys << "' OR  T.SUBSYS3 ='" << SubSys <<
     "')";
-  return getHistograms( ss.str() , list, ids);
+  return getHistograms( ss.str() , list, ids,types);
 }
 
 int OnlineHistDB::getHistogramsByTask(std::string Task,
 				      std::vector<OnlineHistogram*>* list ,
-				      std::vector<string>* ids)
+				      std::vector<string>* ids,
+				      std::vector<string>* types)
 {  
   stringstream ss;
   ss << " WHERE VH.TASK='" << Task << "'";
-  return getHistograms( ss.str() , list, ids);
+  return getHistograms( ss.str() , list, ids,types);
 }
 
 int OnlineHistDB::getHistogramsByPage(std::string Page,
 				      std::vector<OnlineHistogram*>* list ,
-				      std::vector<string>* ids)
+				      std::vector<string>* ids,
+				      std::vector<string>* types)
 {  
   stringstream ss;
   ss << " , SHOWHISTO SH WHERE SH.HISTO = VH.HID AND SH.PAGE='" << Page << "' ORDER BY SH.INSTANCE";
-  return getHistograms( ss.str() , list, ids);
+  return getHistograms( ss.str() , list, ids,types);
 }
 int OnlineHistDB::getHistogramsBySet(std::string SetName,std::vector<OnlineHistogram*>* list ,
-				     std::vector<string>* ids)
+				     std::vector<string>* ids,
+				     std::vector<string>* types)
 {
   stringstream ss;
   ss << " WHERE VH.TASK||'/'||VH.ALGO||'/'||VH.TITLE='" << SetName << "'";
-  return getHistograms( ss.str() , list, ids);
+  return getHistograms( ss.str() , list, ids,types);
 }
 
 int OnlineHistDB::getHistogramsBySet(const OnlineHistogram& Set,std::vector<OnlineHistogram*>* list ,
-				   std::vector<string>* ids)
+				     std::vector<string>* ids,
+				     std::vector<string>* types)
 {
   stringstream ss;
   ss << " WHERE VH.HSID=" << Set.hsid() ;
-  return getHistograms( ss.str() , list, ids);
+  return getHistograms( ss.str() , list, ids, types);
 }
 
 int OnlineHistDB::getPageFolderNames(std::vector<string>& list, std::string Parent )
