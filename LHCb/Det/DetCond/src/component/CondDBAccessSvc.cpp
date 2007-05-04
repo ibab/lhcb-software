@@ -1,4 +1,4 @@
-// $Id: CondDBAccessSvc.cpp,v 1.35 2007-05-02 10:49:29 marcocle Exp $
+// $Id: CondDBAccessSvc.cpp,v 1.36 2007-05-04 09:52:21 marcocle Exp $
 // Include files
 #include <sstream>
 //#include <cstdlib>
@@ -50,6 +50,12 @@ namespace
    *
    * Small class implementing coral::IReplicaSortingAlgorithm interface to allow dynamic sorting of
    * database replicas obtained from LFC.
+   * 
+   * When retrieving the list of DB replicas, LFCReplicaService obtains a list in an arbitrary order.
+   * We have to provide to CORAL a class to be used to sort the list of replicas according to our
+   * needs. First we want the closest DB, identified by the environment variable LHCBPRODSITE, then
+   * the CERN server (LCG.CERN.ch), while the remaining one can be in any order (this implementation
+   * uses the natural string ordering).
    *
    * @author Marco Clemencic
    * @date   2007-05-02
@@ -63,6 +69,8 @@ namespace
      *
      * Comparison function defining which replica comes before another.
      *
+     * This class is used via the STL algorithm "sort" to order the list the way we need it.
+     *
      * @author Marco Clemencic
      * @date   2007-05-02
      */
@@ -74,7 +82,7 @@ namespace
     public:
       
       /// Constructor.
-      /// @param theSite the local LHCb Prod. Site (LCG.<i>SITE</i>.<i>country</i>)
+      /// @param theSite the local LHCb Production Site (LCG.<i>SITE</i>.<i>country</i>)
       Comparator(const std::string &theSite): site(theSite) {}
 
       /// Main function
@@ -93,14 +101,13 @@ namespace
 
     };
 
-
     std::string localSite;
     MsgStream log;
 
   public:
 
     /// Constructor.
-    /// @param theSite the local LHCb Prod. Site (LCG.<i>SITE</i>.<i>country</i>)
+    /// @param theSite the local LHCb Production Site (LCG.<i>SITE</i>.<i>country</i>)
     ReplicaSortAlg(const std::string &theSite, IMessageSvc *msgSvc):
       localSite(theSite),
       log(msgSvc,"ReplicaSortAlg")
@@ -351,7 +358,6 @@ StatusCode CondDBAccessSvc::i_openConnection(){
             theSite = "LCG.CERN.ch";
           }
 
-          // msgSvc()->setOutputLevel("ReplicaSortAlg",MSG::VERBOSE);
           connSvcConf.setReplicaSortingAlgorithm(new ReplicaSortAlg(theSite,msgSvc()));
 
         }
