@@ -69,6 +69,7 @@ class FSMmanip:
     self.nodes         = self._tskLookup('Node',tsk_typ)
     self.prio          = self._tskLookup('Priority',tsk_typ)
     self.types         = self._tskLookup('Type',tsk_typ)
+    self.cmds          = self._tskLookup('FMC_Start',tsk_typ)
     self.slots = {}
     obj = PVSS.DpVectorActor(self.manager)
     obj.lookup(DataPoint.original(self.name+'_*'),tsk_typ)
@@ -90,7 +91,6 @@ class FSMmanip:
     obj.lookup(DataPoint.original(self.name+'|'+self.name+'_*.'+dp),type)
     return obj
   
-    
   # ===========================================================================
   def _tskLookup(self,dp,type):
     obj = PVSS.DpVectorActor(self.manager)
@@ -103,7 +103,11 @@ class FSMmanip:
     nam = self.name+'_'
     tag = self.name+'|'+nam
     for i in self.class0Tasks.keys():
-      dpn = self.name+'|FSM_Node_FWDM.fsm.sendCommand'
+      if debug: log(self.name+'> Task map:'+tag+' '+i+' '+i[5:9],timestamp=1)
+      if i[5:9]=="strm":
+        dpn = self.name+'|FSM_StrmNode_FWDM.fsm.sendCommand'
+      else:
+        dpn = self.name+'|FSM_RecvNode_FWDM.fsm.sendCommand'
       if not m.has_key(dpn): m[dpn] = []
       m[dpn].append(str(nam+i).upper())
       dp0 = tag+i+'FSM_Class0_FWDM.fsm.sendCommand'
@@ -210,20 +214,22 @@ class FSMmanip:
     self.writer.add(self.visible.container[i])
         
   # ===========================================================================
-  def setupTask(self,which,node,name,type,inUse,prio):
+  def setupTask(self,which,node,name,type,inUse,prio,cmd):
     if debug:
-      print 'setupTask>',which, node,name,type,inUse,prio
+      print 'setupTask>',which,node,name,type,inUse,prio
     i = self.taskSlots[node][which]
     self.names.container[i].data = name
     self.inUse.container[i].data = inUse
     self.nodes.container[i].data = node
     self.prio.container[i].data  = prio
     self.types.container[i].data = type
+    self.cmds.container[i].data  = cmd
     self.writer.add(self.names.container[i])
     self.writer.add(self.inUse.container[i])
     self.writer.add(self.nodes.container[i])
     self.writer.add(self.prio.container[i])
     self.writer.add(self.types.container[i])
+    self.writer.add(self.cmds.container[i])
         
     
   # ===========================================================================
@@ -237,11 +243,11 @@ class FSMmanip:
     for i in self.class0Tasks.keys():
       for j in self.class0Tasks[i]:
         self.enableObject(j,i,-1,0,'Disabled')
-        self.setupTask(j,node=i,name="NONE",type="NONE",inUse=0,prio=0)
+        self.setupTask(j,node=i,name="NONE",type="NONE",inUse=0,prio=0,cmd="NONE")
     for i in self.class1Tasks.keys():
       for j in self.class1Tasks[i]:
         self.enableObject(j,i,-1,0,'Disabled')
-        self.setupTask(j,node=i,name="NONE",type="NONE",inUse=0,prio=0)
+        self.setupTask(j,node=i,name="NONE",type="NONE",inUse=0,prio=0,cmd="NONE")
     res = self.writer.execute(0,1)
     return self._commitFSM(self._makeTaskMap(),'DISABLE')
 
@@ -262,7 +268,8 @@ class FSMmanip:
           i = cl0[n][0]
           if debug: print 'Task:',i,task
           self.enableObject(i,n,1,1,task[2])
-          self.setupTask(i,node=n,name=task[1],type=task[3],inUse=1,prio=111)
+          cmd = '-e -o -u '+task[1]+' /home/frankm/runGaudi.sh '+task[1]+'.opts'
+          self.setupTask(i,node=n,name=task[1],type=task[3],inUse=1,prio=0,cmd=cmd)
           self.class0Tasks[n].append(i)
           del cl0[n][0]
         else:
@@ -282,7 +289,8 @@ class FSMmanip:
           i = cl1[n][0]
           if debug: print 'Task:',task
           self.enableObject(i,n,1,1,task[2])
-          self.setupTask(i,node=n,name=task[1],type=task[3],inUse=1,prio=111)
+          cmd = '-e -o -u '+task[1]+' /home/frankm/runGaudi.sh '+task[1]+'.opts'
+          self.setupTask(i,node=n,name=task[1],type=task[3],inUse=1,prio=0,cmd=cmd)
           self.class1Tasks[n].append(i)
           del cl1[n][0]
         else:
@@ -690,11 +698,14 @@ class Control(StorageDescriptor,DeviceListener):
           try:
             if command == "ALLOCATE":
               result = self.allocate(partition,5,2)
-              if result is not None: result = result[0]
+              if result is not None:
+                return self.makeAnswer(command,answer+'/'+result[0])
             elif command == "DEALLOCATE":
               result = self.free(partition)
               if result[0] == 1: result = result[1]
               else: result = None                   # partition was not allocated!
+              if result is not None:
+                return self.makeAnswer(command,answer+'/'+result)
             elif command == "RECOVER":
               result = self.free(partition)
               if result[0] == 1: result = result[1]

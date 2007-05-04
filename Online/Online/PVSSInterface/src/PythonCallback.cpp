@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/PythonCallback.cpp,v 1.4 2007-05-02 14:46:19 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/PVSSInterface/src/PythonCallback.cpp,v 1.5 2007-05-04 19:22:20 frankm Exp $
 //  ====================================================================
 //  PythonCallback.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: PythonCallback.cpp,v 1.4 2007-05-02 14:46:19 frankm Exp $
+// $Id: PythonCallback.cpp,v 1.5 2007-05-04 19:22:20 frankm Exp $
 
 #include "PVSS/PythonCallback.h"
 namespace PVSS  {
@@ -44,14 +44,18 @@ namespace PVSS  {
 
 using namespace PVSS;
 
-/// Constructor
-PythonCall::PythonCall(PyObject* obj) : m_call(obj), m_type(&typeid(Unknown)) {
+static void s_init() {
   static bool first = true;
   if ( first )  {
     first = false;
     PyEval_InitThreads();
     s_mainThreadState = PyThreadState_Get();
   }
+}
+
+/// Constructor
+PythonCall::PythonCall(PyObject* obj) : m_call(obj), m_type(&typeid(Unknown)) {
+  s_init();
 }
 
 /// Cleanup and handler of pyuthon errors
@@ -75,19 +79,25 @@ void PythonCall::operator()(const char* attr)  {
     st = PyThreadState_New(s_mainThreadState->interp);
     PyEval_AcquireThread(st);
     r = PyObject_CallMethod(m_call, (char*)attr, "");
-    PyEval_ReleaseThread(st);
-    PyThreadState_Clear(st);
-    PyThreadState_Delete(st);
     if ( r == 0 )  {
       PyErr_Print(); 
       PyErr_Clear();
+      PyEval_ReleaseThread(st);
+      // PyThreadState_Clear(st);
+      PyThreadState_Delete(st);
       return;
     }
     if( r == Py_None )  {
+      PyEval_ReleaseThread(st);
+      // PyThreadState_Clear(st);
+      PyThreadState_Delete(st);
       return;
     }
     else if(r)  {
       Py_XDECREF( r ) ;
+      PyEval_ReleaseThread(st);
+      // PyThreadState_Clear(st);
+      PyThreadState_Delete(st);
       return;
     }
   }
@@ -184,6 +194,7 @@ void PyDeviceListener::handleDevice()   {
 /// Execute python main program
 extern "C" int pvss_pymain(void (*exit_call)(int), int argc, char** argv)  {
   Py_Initialize();
+  s_init();
   for(int i = 0; i < argc; ++i) {
     if ( strcmp(argv[i],"-SCRIPT")==0 ) {
       ++i;

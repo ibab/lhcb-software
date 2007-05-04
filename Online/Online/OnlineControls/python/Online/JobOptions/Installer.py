@@ -51,7 +51,7 @@ class TaskMap(dict):
     self[task.name] = task
 
 tasks = TaskMap()
-lhcb_streams = ['Higgs','B2JPsi','B2Dstar','B2Charm','BBinclusive']
+lhcb_streams = ['Higgs','B2JPsi','B2Dstar','B2Charm','BBinc']
 sd_streams = ['Events']
 def installTasks():
   streams = []
@@ -64,30 +64,30 @@ def installTasks():
   # HLT Farm tasks
   opts = '#include "$ONLINETASKS/options/EbSetup.opts"'
   tasks.add(Task('EventBuilder',opts,1,1))
-  opts = '#include "$ONLINETASKS/options/HLT_MBM.opts"'
-  tasks.add(Task('HLT_MBM',opts,1,0))
+  opts = '#include "$ONLINETASKS/options/HLTMBM.opts"'
+  tasks.add(Task('HLTMBM',opts,1,0))
   opts = '#include "$ONLINETASKS/options/Moore.opts"'
-  tasks.add(Task('HLT_Moore',opts,1,0))
-  opts = '#include "$ONLINETASKS/options/HLT_Sender.opts"'
-  tasks.add(Task('HLT_Sender',opts,1,0))
+  tasks.add(Task('HLTMoore',opts,1,0))
+  opts = '#include "$ONLINETASKS/options/HLTSend.opts"'
+  tasks.add(Task('HLTSend',opts,1,0))
 
   # Storage receiving layer
-  opts = '#include "$ONLINETASKS/options/StoreRecv_MBM.opts"'
-  tasks.add(Task('StoreRecv_MBM',opts,1,0))
-  opts = '#include "$ONLINETASKS/options/HLT_Receiver.opts"'
-  tasks.add(Task('HLT_Receiver',opts,1,0))
+  opts = '#include "$ONLINETASKS/options/RecvMBM.opts"'
+  tasks.add(Task('RecvMBM',opts,1,0))
+  opts = '#include "$ONLINETASKS/options/HLTRec.opts"'
+  tasks.add(Task('HLTRec',opts,1,0))
   for s in streams:
-    opts = '#include "$ONLINETASKS/options/SND_'+s+'.opts"'
-    tasks.add(Task('SND_'+s,opts,1,0))
+    opts = '#include "$ONLINETASKS/options/SND'+s+'.opts"'
+    tasks.add(Task('SND'+s,opts,1,0))
 
   # Storage streaming layer
-  opts = '#include "$ONLINETASKS/options/StoreStream_MBM.opts"'
-  tasks.add(Task('StoreStream_MBM',opts,1,0))
+  opts = '#include "$ONLINETASKS/options/StrmMBM.opts"'
+  tasks.add(Task('StrmMBM',opts,1,0))
   for s in streams:
-    opts = '#include "$ONLINETASKS/options/RCV_'+s+'.opts"'
-    tasks.add(Task('RCV_'+s,opts,1,0))
-    opts = '#include "$ONLINETASKS/options/WRT_'+s+'.opts"'
-    tasks.add(Task('WRT_'+s,opts,1,0))
+    opts = '#include "$ONLINETASKS/options/RCV'+s+'.opts"'
+    tasks.add(Task('RCV'+s,opts,1,0))
+    opts = '#include "$ONLINETASKS/options/WRT'+s+'.opts"'
+    tasks.add(Task('WRT'+s,opts,1,0))
 
 def installPartitions():
   actor = PVSS.DpVectorActor(mgr)
@@ -112,39 +112,39 @@ def installPartitions():
 def installSDData():
   task_set = [tasks['EventBuilder'],
               tasks['ErrSrv'],
-              tasks['HLT_MBM'],
-              tasks['HLT_Moore'],
-              tasks['HLT_Sender']]
+              tasks['HLTMBM'],
+              tasks['HLTMoore'],
+              tasks['HLTSend']]
   hlt_physics = RunType('HLT_SDET',task_set)
-  task_set = [tasks['StoreRecv_MBM'],
+  task_set = [tasks['RecvMBM'],
               tasks['ErrSrv'],
-              tasks['HLT_Receiver']]
-  for s in sd_streams: task_set.append(tasks['SND_'+s])
+              tasks['HLTRec']]
+  for s in sd_streams: task_set.append(tasks['SND'+s])
   storage_recv = RunType('RECV_SDET',task_set)
-  task_set = [tasks['StoreStream_MBM'],
+  task_set = [tasks['StrmMBM'],
               tasks['ErrSrv']]
   for s in sd_streams:
-    task_set.append(tasks['RCV_'+s])
-    task_set.append(tasks['WRT_'+s])
+    task_set.append(tasks['RCV'+s])
+    task_set.append(tasks['WRT'+s])
   storage_stream = RunType('STREAM_SDET',task_set)
 
 def installPhysics():
   task_set = [tasks['EventBuilder'],
               tasks['ErrSrv'],
-              tasks['HLT_MBM'],
-              tasks['HLT_Moore'],
-              tasks['HLT_Sender']]
+              tasks['HLTMBM'],
+              tasks['HLTMoore'],
+              tasks['HLTSend']]
   hlt_physics = RunType('HLT_PHYSICS',task_set)
-  task_set = [tasks['StoreRecv_MBM'],
+  task_set = [tasks['RecvMBM'],
               tasks['ErrSrv'],
-              tasks['HLT_Receiver']]
-  for s in lhcb_streams: task_set.append(tasks['SND_'+s])
+              tasks['HLTRec']]
+  for s in lhcb_streams: task_set.append(tasks['SND'+s])
   storage_recv = RunType('RECV_PHYSICS',task_set)
-  task_set = [tasks['StoreStream_MBM'],
+  task_set = [tasks['StrmMBM'],
               tasks['ErrSrv']]
   for s in lhcb_streams:
-    task_set.append(tasks['RCV_'+s])
-    task_set.append(tasks['WRT_'+s])
+    task_set.append(tasks['RCV'+s])
+    task_set.append(tasks['WRT'+s])
   storage_stream = RunType('STREAM_PHYSICS',task_set)
 
 def install():

@@ -23,9 +23,9 @@ class Installer:
     "Default constructor"
     self.numSubFarm  = 50
     self.numPartition = 16
-    self.numStreamPerNode = 10
-    self.recvNodes = ['storerecv01', 'storerecv02', 'storerecv03', 'storerecv04', 'storerecv05']
-    self.strmNodes = ['storestrm01', 'storestrm02', 'storestrm03', 'storestrm04']
+    self.numStreamPerNode = 15
+    self.recvNodes = ['storerecv01', 'storerecv02'] # , 'storerecv03', 'storerecv04', 'storerecv05']
+    self.strmNodes = ['storestrm01', 'storestrm02'] # , 'storestrm03', 'storestrm04']
     self.name = dev
     self.partID = 1
     self.manager = mgr
@@ -162,14 +162,14 @@ class Installer:
     emptymult = std.vector('int')()
     infrastructure = std.vector('std::string')()
     infrastructure.push_back('ErrSrv')
-    infrastructure.push_back('StoreStream_MBM')
+    infrastructure.push_back('StrmMBM')
     self.setRunInfo(name,'Storage.streamTypes',dw)
     self.setRunInfo(name,'Storage.streamWriters',empty)
     self.setRunInfo(name,'Storage.streamMultiplicity',dwmult)
     self.setRunInfo(name,'Storage.streamInfrastructure',infrastructure)
     self.setRunInfo(name,'Storage.streamInfrastructureTasks',empty)
     self.setRunInfo(name,'Storage.recvSenders',empty)
-    infrastructure[infrastructure.size()-1] = 'StoreRecv_MBM'
+    infrastructure[infrastructure.size()-1] = 'RecvMBM'
     self.setRunInfo(name,'Storage.recvInfrastructure',infrastructure)
     self.setRunInfo(name,'Storage.recvInfrastructureTasks',empty)
     return self.write(prefix='Runinfo('+name+'): ')
@@ -181,7 +181,7 @@ def LHCb_streams():
   dw.push_back('B2JPsi')
   dw.push_back('B2Dstar')
   dw.push_back('B2Charm')
-  dw.push_back('BBinclusive')
+  dw.push_back('BBinc')
   dwmult = std.vector('int')()
   for i in xrange(len(dw)):
     if i==3:   dwmult.push_back(2)

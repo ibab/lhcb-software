@@ -189,20 +189,15 @@ class RunInfo:
       slot = strm_slots[i]
       node = slot[:slot.find(':')]
       item = streams[i][0]+('_%02d'%streams[i][1])
-      short_name = 'WRT_'+item
-      task = self.name+'_WRT_'+node+'_'+item
-      self.streamers.data.push_back(node+'/'+task+'/'+short_name+'/WRT_'+streams[i][0])
-      short_name = 'RCV_'+item
-      task = self.name+'_RCV_'+node+'_'+item
-      self.strReceivers.data.push_back(node+'/'+task+'/'+short_name+'/RCV_'+streams[i][0])
+      short_name = 'WRT'+item
+      task = self.name+'_'+node+'_WRT'+item
+      self.streamers.data.push_back(node+'/'+task+'/'+short_name+'/WRT'+streams[i][0])
+      short_name = 'RCV'+item
+      task = self.name+'_'+node+'_RCV'+item
+      self.strReceivers.data.push_back(node+'/'+task+'/'+short_name+'/RCV'+streams[i][0])
       streamers.append([self.name,node,slot,'%02d'%streams[i][1],streams[i][0]])
       
     for j in strmNodes:
-      #for i in xrange(len(self.streamers.data)):
-      #  part,node,slot,ident,type = streamers[i]
-      #  short_name = 'RCV_'+type+'_'+ident
-      #  task = part+'_RCV_'+j+'_'+type+'_'+ident
-      #  self.strReceivers.data.push_back(j+'/'+task+'/'+short_name+'/'+type)
       for i in self.strInfra.data:
         self.strInfraTasks.data.push_back(j+'/'+self.name+'_'+j+'_'+i+'/'+i+'/'+i)
     self.receivers.data.clear()
@@ -213,14 +208,14 @@ class RunInfo:
       node = slot[:slot.find(':')]
       short_name = self.subFarms.data[i]+'_HLT'
       task = self.name+'_'+node+'_'+short_name
-      self.receivers.data.push_back(node+'/'+task+'/'+short_name+'/HLT_Receiver/'+self.subFarms.data[i])
+      self.receivers.data.push_back(node+'/'+task+'/'+short_name+'/HLTRec/'+self.subFarms.data[i])
     for j in recvNodes:
       for i in xrange(len(streamers)):
         part,node,slot,ident,type = streamers[i]
-        short_name = 'SND_'+type+'_'+ident
-        sender = part+'_SND_'+j+'_'+type+'_'+ident
-        target = part+'_RCV_'+node+'_'+type+'_'+ident
-        self.rcvSenders.data.push_back(j+'/'+sender+'/'+short_name+'/SND_'+type+'/'+node+'/'+target)
+        short_name = type+'_'+ident
+        sender = part+'_'+j+'_SND'+short_name
+        target = part+'_'+node+'_RCV'+short_name
+        self.rcvSenders.data.push_back(j+'/'+sender+'/SND'+short_name+'/SND'+type+'/'+node+'/'+target)
       for i in self.rcvInfra.data:
         self.rcvInfraTasks.data.push_back(j+'/'+self.name+'_'+j+'_'+i+'/'+i+'/'+i)
     wr = self.manager.devWriter()

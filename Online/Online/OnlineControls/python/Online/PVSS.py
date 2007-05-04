@@ -1,21 +1,16 @@
 import os, sys, time, string, platform
-import PyCintex as PyLCGDict
+import Online.Utils as Utils
+PyLCGDict = Utils.Dictionary
 
-#PyLCGDict.gbl.Cintex.SetDebug(1)
-lib_prefix = ''
 if platform.system()=='Linux':
-  lib_prefix = 'lib'
-  PyLCGDict.loadDict(lib_prefix+'PVSSDict')
-PyLCGDict.loadDict(lib_prefix+'STLRflx')
+  PyLCGDict.loadDict(Utils.lib_prefix+'PVSSDict')
 
-gbl  = PyLCGDict.makeNamespace('')
+gbl  = Utils.gbl
 PVSS = PyLCGDict.makeNamespace('PVSS')
   
 # == External class definitions ===============================================
 Sensor            = gbl.Sensor
 Event             = gbl.Event
-gbl  = PyLCGDict.makeNamespace('')
-PVSS = PyLCGDict.makeNamespace('PVSS')
 Interactor        = gbl.Interactor
 IAPIManager       = PVSS.IAPIManager
 Printer           = PVSS.Printer
@@ -33,7 +28,37 @@ ArchiveSetting    = PVSS.ArchiveSetting
 CfgSetting        = PVSS.CfgSetting
 WriteTransaction  = PVSS.WriteTransaction
 DpID              = PVSS.DpID
+DPTime            = PVSS.DPTime
+DPRef             = PVSS.DPRef
+Value             = PVSS.Value
+ControlsManager   = PVSS.ControlsManager
+Environment       = PVSS.Environment
+DevAnswer         = PVSS.DevAnswer
+CfgType           = PVSS.CfgType
+CfgManager        = PVSS.CfgManager
+DevType           = PVSS.DevType
+DevTypeManager    = PVSS.DevTypeManager
+DeviceManager     = PVSS.DeviceManager
+HotLinkCallback   = PVSS.HotLinkCallback
+PyDeviceListener  = PVSS.PyDeviceListener
+DpVectorActor     = PVSS.DataPointContainerActor('std::vector<PVSS::DataPoint>')
+DpListActor       = PVSS.DataPointContainerActor('std::list<PVSS::DataPoint>')
+# == External function definitions =============================================
+defaultSystemID   = PVSS.defaultSystemID
+defaultSystemName = PVSS.defaultSystemName
+# == STL container definitions =================================================
+DpIDVector        = gbl.std.vector('PVSS::DpID')
+DataPointVector   = gbl.std.vector('PVSS::DataPoint')
+DataPointVectorP  = gbl.std.vector('PVSS::DataPoint*')
+DataPointList     = gbl.std.list('PVSS::DataPoint')
+DataPointIdMap    = gbl.std.map('PVSS::DpID','PVSS::DataPoint*')
+DataPointStringMap= gbl.std.map('std::string','PVSS::DataPoint*')
+StringVector      = gbl.std.vector('std::string')
+IntVector         = gbl.std.vector('int')
+#
+#
 DataPoint         = PVSS.DataPoint
+#
 def DataPoint_get(self):
   return self.value().data()
 def DataPoint_set(self,value):
@@ -81,33 +106,6 @@ def debug():
   return PVSS.pvss_debug()
 def setDebug(val):
   PVSS.pvss_set_debug(val)
-DPTime            = PVSS.DPTime
-DPRef             = PVSS.DPRef
-Value             = PVSS.Value
-ControlsManager   = PVSS.ControlsManager
-Environment       = PVSS.Environment
-DevAnswer         = PVSS.DevAnswer
-CfgType           = PVSS.CfgType
-CfgManager        = PVSS.CfgManager
-DevType           = PVSS.DevType
-DevTypeManager    = PVSS.DevTypeManager
-DeviceManager     = PVSS.DeviceManager
-HotLinkCallback   = PVSS.HotLinkCallback
-PyDeviceListener  = PVSS.PyDeviceListener
-DpVectorActor     = PVSS.DataPointContainerActor('std::vector<PVSS::DataPoint>')
-DpListActor       = PVSS.DataPointContainerActor('std::list<PVSS::DataPoint>')
-# == External function definitions =============================================
-defaultSystemID   = PVSS.defaultSystemID
-defaultSystemName = PVSS.defaultSystemName
-# == STL container definitions =================================================
-DpIDVector        = gbl.std.vector('PVSS::DpID')
-DataPointVector   = gbl.std.vector('PVSS::DataPoint')
-DataPointVectorP  = gbl.std.vector('PVSS::DataPoint*')
-DataPointList     = gbl.std.list('PVSS::DataPoint')
-DataPointIdMap    = gbl.std.map('PVSS::DpID','PVSS::DataPoint*')
-DataPointStringMap= gbl.std.map('std::string','PVSS::DataPoint*')
-StringVector      = gbl.std.vector('std::string')
-IntVector         = gbl.std.vector('int')
 
 # =============================================================================
 def defaultSystem():
@@ -179,26 +177,22 @@ def log(severity, type, message):
 
 # Informational printout to logger window
 def info(message,timestamp=None,type=default_error_type):
-  import Online.Utils
-  Online.Utils.log(message,timestamp=timestamp)
+  Utils.log(message,timestamp=timestamp)
   logger.info(type, message)
 
 # Warning printout to logger window
 def warning(message,timestamp=None,type=default_error_type):
-  import Online.Utils
-  Online.Utils.warning(message,timestamp=timestamp)
+  Utils.warning(message,timestamp=timestamp)
   logger.warning(type, message)
 
 # Sever error printout to logger window
 def error(message,timestamp=None,type=default_error_type):
-  import Online.Utils
-  Online.Utils.error(message,timestamp=timestamp)
+  Utils.error(message,timestamp=timestamp)
   logger.error(type, message)
 
 # Fatal printout to logger window. kill the program instance!
 def fatal(message,timestamp=None,type=default_error_type):
-  import Online.Utils
-  Online.Utils.error(message,timestamp=timestamp)
+  Utils.error(message,timestamp=timestamp)
   logger.fatal(type, message)
 
 # =============================================================================
@@ -308,12 +302,11 @@ class CommandListener(PyDeviceListener):
   def handleDevice(self):
     "Callback once per item in the device sensor list on datapoint change."
     import traceback
-    from Online.Utils import log, error
     cmd = ''
     try:
       nam = self.dp().name()
       cmd = self.dp().value().data()
-      log('Command received:'+nam[:nam.find(':')]+' -> '+cmd,timestamp=1)
+      Utils.log('Command received:'+nam[:nam.find(':')]+' -> '+cmd,timestamp=1)
       itms = cmd.split('/')
       if len(itms) == self.numParam:
         command   = itms[0]

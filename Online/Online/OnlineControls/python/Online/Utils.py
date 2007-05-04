@@ -1,6 +1,15 @@
-import sys, time, PVSS
-std = PVSS.gbl.std
-DataPoint = PVSS.DataPoint
+import sys, time, platform
+import PyCintex as Dictionary
+#Dictionary.gbl.Cintex.SetDebug(1)
+lib_prefix = ''
+if platform.system()=='Linux':
+  lib_prefix = 'lib'
+
+Dictionary.loadDict(lib_prefix+'STLRflx')
+
+gbl  = Dictionary.makeNamespace('')
+std  = gbl.std
+
 
 logPrefix     = ''
 logHeader     = '+----------------------------------------------------------------------------------------------------'
