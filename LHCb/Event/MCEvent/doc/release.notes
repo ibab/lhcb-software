@@ -1,16 +1,16 @@
-! $Id: release.notes,v 1.80 2007-05-03 15:01:37 mneedham Exp $
+! $Id: release.notes,v 1.81 2007-05-04 07:06:23 cattanem Exp $
 ! Package     : Event/MCEvent
 ! Responsible : Marco Cattaneo, Gloria Corti
 ! Purpose     : LHCb Event model. MC truth classes (Gauss and Boole output) 
 !-----------------------------------------------------------------------------
 
+!======================== MCEvent v2r3 2007-05-03 ============================
 ! 2007-05-03 M. Needham
  - Add MCTrackGeomCriteria.h/.cpp (wrapper to 
    allow runtime composition of acceptance criteria )
  - Add MCFun.h/cpp functions to note if there is an interaction 
-   or not on the track 
+   or not on the MCParticle
 
-!======================== MCEvent v2r3 2007-05-02 ============================
 ! 2007-04-30 M Needham
  - Tidy up MCTrackInfo + make it a bit faster
      * Move MCTrackInfoBits to MCTrackInfo
