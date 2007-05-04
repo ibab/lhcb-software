@@ -20,6 +20,7 @@
 /*
  * Stripping options
  */
+#pragma print on
 #include "$STRIPPINGROOT/options/Presel.opts"
 /*
  * Correlation options
@@ -38,5 +39,5 @@ ApplicationMgr.HistogramPersistency = "ROOT";
 //HistogramPersistencySvc.OutputFile = "DVHistos.root";
 
 // no output 
-EvtTupleSvc.Output = {} ;
-ApplicationMgr.OutStream = {};
+// EvtTupleSvc.Output = {} ;
+// ApplicationMgr.OutStream = {};

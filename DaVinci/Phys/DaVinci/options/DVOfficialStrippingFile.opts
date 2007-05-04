@@ -19,15 +19,21 @@ EvtTupleSvc.Output =  {  } ;
  * Tag creator options
  */
 GlobalOR.Algorithms = @TagCreator.ToLookAt;                            
-/*
- * Remove DST writer
- */
-ApplicationMgr.OutStream -=  { "DstWriter" } ;                          
 DSTOR.ItemList = @DstWriter.ItemList;                                   
 
-ApplicationMgr.EvtMax = 5000 ;
+ApplicationMgr.EvtMax = 500 ;
 PoolDbCacheSvc.Catalog =  { "xmlcatalog_file:pool_xml_catalog.xml" } ;  
 
 //SeqWriteTag.OutputLevel = 1 ;
 //WR.OutputLevel = 1 ;
 
+EvtTupleSvc.Output +=  { "EVTTAGS DATAFILE='DVPresel_ETC.root' TYP='POOL_ROOTTREE' OPT='RECREATE' " } ;
+
+/*
+ *  Write out ETC. No dst.
+ */
+ApplicationMgr.OutStream = { "Sequencer/SeqWriteTag" } ;  
+/*
+ *  One could also write a DST
+ */
+// ApplicationMgr.OutStream += { "DstWriter" } ;                          
