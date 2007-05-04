@@ -127,6 +127,7 @@ StatusCode LHCb::GaudiTask::setInstanceProperties(IAppMgrUI* inst)  {
 
 StatusCode LHCb::GaudiTask::configure()  {
   if ( 0 == m_subMgr )  {
+    StatusCode sc = StatusCode::FAILURE;
     m_subMgr = Gaudi::createApplicationMgrEx("GaudiSvc", "ApplicationMgr");
     if ( m_subMgr )  {
       Gaudi::setInstance(m_subMgr);
@@ -138,10 +139,9 @@ StatusCode LHCb::GaudiTask::configure()  {
         }
         m_subMgr->terminate();
       }
-      return sc;
     }
     declareState(NOT_READY);
-    return StatusCode::FAILURE;
+    return sc;
   }
   MsgStream log(msgSvc(), name());
   log << MSG::INFO << "2nd. layer is already present." << endmsg;
@@ -184,7 +184,11 @@ StatusCode LHCb::GaudiTask::initialize()  {
                 m_incidentSvc->addListener(this,"DAQ_ERROR");
                 DimTaskFSM::initialize();
                 sc = startRunable(runable);
-                return sc;
+                if ( sc.isSuccess() )  {
+                  return sc;
+                }
+                log << MSG::ERROR << "Failed to start runable." << endmsg;
+                goto Failed;
               }
               log << MSG::ERROR << "Failed to access incident service." << endmsg;
               goto Failed;
@@ -267,11 +271,11 @@ StatusCode LHCb::GaudiTask::finalize()  {
   if ( m_incidentSvc ) m_incidentSvc->release();
   m_incidentSvc= 0;
   StatusCode sc = m_subMgr->finalize();
-  if ( sc.isSuccess() )   {
-    return DimTaskFSM::finalize();
+  if ( !sc.isSuccess() )   {
+    declareState(RUNNING);
+    return sc;
   }
-  declareState(RUNNING);
-  return sc;
+  return DimTaskFSM::finalize();
 }
 
 StatusCode LHCb::GaudiTask::terminate()  {
