@@ -4,6 +4,7 @@
 ! Purpose     : Perfect pattern recognition
 !-----------------------------------------------------------------------------
 
+!======================= TrackIdealPR v2r10 2007-05-07 =======================
 ! 2007-05-06 M Needham
  - Follow changes in IIdealStateCreator interface
 

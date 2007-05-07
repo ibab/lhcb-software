@@ -3,7 +3,7 @@
 # Maintainer : Eduardo Rodrigues
 #============================================================================
 package           TrackIdealPR
-version           v2r9
+version           v2r10
 
 #============================================================================
 # Structure, i.e. directories to process. 
@@ -14,17 +14,20 @@ include_path      none
 # Used packages
 #============================================================================
 use   GaudiAlg          v*
+use   GaudiKernel       v*
 
 use   RecEvent          v*    Event
 use   MCEvent           v*    Event
-
 use   TrackEvent        v*    Event
 use   TrackFitEvent     v*    Tr
-
 use   LinkerEvent       v*    Event
 
-use   TrackInterfaces   v*    Tr
 use   TrackMCInterfaces v*    Tr
+use   LHCbKernel        v*    Kernel
+
+use   OTDet             v*    Det
+use   STDet             v*    Det
+use   VeloDet           v*    Det
 
 #============================================================================
 # Component library building rule
