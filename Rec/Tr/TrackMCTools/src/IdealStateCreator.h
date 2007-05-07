@@ -1,4 +1,4 @@
-// $Id: IdealStateCreator.h,v 1.9 2006-11-02 15:43:48 jvantilb Exp $
+// $Id: IdealStateCreator.h,v 1.10 2007-05-07 08:06:33 mneedham Exp $
 #ifndef TRACKMCTOOLS_IDEALSTATECREATOR_H
 #define TRACKMCTOOLS_IDEALSTATECREATOR_H 1
 
@@ -12,6 +12,15 @@
 
 // from TrackInterfacces
 #include "TrackInterfaces/ITrackExtrapolator.h"
+
+// incident service
+#include "GaudiKernel/IIncidentListener.h"
+
+// from Event/LinkerEvent
+#include "Linker/LinkedFrom.h"
+
+#include <string>
+#include <vector>
 
 namespace LHCb
 { 
@@ -45,7 +54,8 @@ class IMagneticFieldSvc;
  */
 
 class IdealStateCreator: public GaudiTool,
-                         virtual public IIdealStateCreator {
+                         virtual public IIdealStateCreator,  
+                         virtual public IIncidentListener {
 public:
 
   /// Standard constructor
@@ -68,7 +78,19 @@ public:
    */
   virtual StatusCode createState( const LHCb::MCParticle* mcPart,
                                   double zRec,
-                                  LHCb::State*& pState ) const;
+                                  LHCb::State& pState ) const;
+
+
+  /** This method creates a state at z position from a MCHit
+   *  using the entry/exit points of the MCHit.
+   *  @return StatusCode
+   *  @param  mcHit The MCHit from which the state will be created
+   *  @param  zRec   The z-position at which the state will be created
+   *  @param  pState The pointer to the State which is created.
+   */
+  virtual StatusCode createState( const LHCb::MCHit* mcHit,
+                                  double zRec,
+                                  LHCb::State& pState ) const;
 
   /** This method creates a state at the origin vertex from a MCParticle
    *  using the entry/exit points of the MCHits.
@@ -77,43 +99,52 @@ public:
    *  @param  pState The pointer to the State which is created.
    */
   virtual StatusCode createStateVertex( const LHCb::MCParticle* mcPart,
-                                        LHCb::State*& pState ) const;
+                                        LHCb::State& pState ) const;
+  
+  /** Implement the handle method for the Incident service.
+  *  This is used to inform the tool of software incidents.
+  *
+  *  @param incident The incident identifier
+  */
+  void handle( const Incident& incident );
 
 private:
+
+  void initEvent() const;
+
+  typedef LinkedFrom<LHCb::MCHit,LHCb::MCParticle> HitLinks;
+
   /** Find the z-closest MCHit associated to an MCParticle
       looping over the hits in all the tracking detectors
   */
-  void findClosestHit( const LHCb::MCParticle* mcPart,
-                       const double zRec,
-                       LHCb::MCHit*& closestHit ) const;
-  
-  // Find the z-closest MCHit of type Xxx associated to an MCParticle
-  void findClosestXxxHit( const LHCb::MCParticle* mcPart,
-                          const double zRec,
-                          const std::string& linkPath,
-                          LHCb::MCHit*& closestHit ) const;
+  LHCb::MCHit* findClosestHit(const LHCb::MCParticle* mcPart,
+                              const double zRec ) const;
+ 
+  double  qOverP(const LHCb::MCHit* mcHit) const;
 
-  /// Determine Q/P for a MCParticle using the P from the MCHit if available
-  double qOverP( const LHCb::MCParticle* mcPart,
-                 const LHCb::MCHit* mcHit = NULL ) const;
-  
+  double  qOverP(const LHCb::MCParticle* mcPart) const;
+
   /// Correct slopes for magnetic field given an MCHit and a MCParticle
-  void correctSlopes( const LHCb::MCParticle* mcPart, const LHCb::MCHit* mcHit,
+  void correctSlopes( const LHCb::MCHit* mcHit,
                       double& tx, double& ty ) const;
 
-private:
-  ITrackExtrapolator*      m_extrapolator;///< Extrapolator Tool
   IMagneticFieldSvc*      m_magSvc;       ///< Pointer to magnetic field service
-  std::vector<std::string> m_dets;
 
-  // Job options:
-  std::string m_extrapolatorName;  ///< Name of track state extrapolator.
-  bool m_correctSlopes;            ///< Correct for the magnetic field effect
+  ITrackExtrapolator*      m_extrapolator; ///< Extrapolator Tool
+  std::string m_extrapolatorName;  ///< Name of track state extrapolator
+
+  std::vector<std::string> m_dets;
+  mutable std::vector<HitLinks> m_links;
+
   double m_eX2;                    ///< Error^2 on x
   double m_eY2;                    ///< Error^2 on y
   double m_eTx2;                   ///< Error^2 on slope x
   double m_eTy2;                   ///< Error^2 on slope y
   double m_eP;                     ///< dp/p
+
+  bool m_correctSlopes;            ///< Correct for the magnetic field effect
+  mutable bool m_configured;
+
 };
 
 #endif // TRACKMCTOOLS_IDEALSTATECREATOR_H

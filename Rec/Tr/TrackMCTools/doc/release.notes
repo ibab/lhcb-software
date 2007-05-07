@@ -4,6 +4,13 @@
 ! Purpose     : package for tracking tools accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2007-05-06 M Needham
+ - Changes in IdealStateCreator
+   * Follow extension of interface to MCHits
+   * Follow change of interface to take a reference to a State (not pointer)
+   * Clean up code (more consts, remove duplicate lines)
+   * Use IncidentSvc to avoid repeated slow getting of Linker tables
+
 !======================= TrackMCTools v2r9 2007-03-05 ========================
 ! 2007-03-05 - Marco Cattaneo
  - Remove obsolete TrackMCTools_load.cpp file
