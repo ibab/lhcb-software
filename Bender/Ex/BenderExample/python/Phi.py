@@ -1,6 +1,6 @@
 #!/usr/bin/env python2.4
 # =============================================================================
-# $Id: Phi.py,v 1.19 2007-03-22 18:53:00 ibelyaev Exp $
+# $Id: Phi.py,v 1.20 2007-05-07 13:58:09 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ , version $Revison:$
 # =============================================================================
@@ -80,11 +80,14 @@ def configure ( **args ) :
         ] )
     
     ## I am very old-fashioned person - I like HBOOK
-    if os.environ.has_key('HBOOKROOT') :
+    if os.environ.has_key('HBOOKCNVROOT') :
         if not 'HbookCnv' in gaudi.DLls : gaudi.DLLs += ['HbookCnv']
         gaudi.HistogramPersistency = "HBOOK"
         hps = gaudi.service('HistogramPersistencySvc')
         hps.OutputFile = args.get('histos','PhiMC.hbook')
+        ## add the printout of the histograms
+        hsvc = gaudi.service( 'HbookHistSvc' )
+        hsvc.PrintHistos = True
         
     ## StagerSvc at CERN
     if 'CERN' == os.environ.get('CMTSITE',None) and \
@@ -104,9 +107,6 @@ def configure ( **args ) :
     desktop = gaudi.tool ( 'Phi.PhysDesktop' )
     desktop.InputLocations = [ '/Event/Phys/StdLooseKaons' ]
     
-    ## add the printout of the histograms
-    hsvc = gaudi.service( 'HbookHistSvc' )
-    hsvc.PrintHistos = True
     
     ## get the input data
     import data_Bs2Jpsiphi_mm as input 
@@ -133,6 +133,9 @@ if __name__ == '__main__' :
     
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.19  2007/03/22 18:53:00  ibelyaev
+#  v7r0
+#
 # 
 # =============================================================================
 # The END 

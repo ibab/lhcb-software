@@ -186,22 +186,22 @@ PFNs = [ 'PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/v1-lumi2/00001395
 	 'PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/v1-lumi2/00001438/DST/0000/00001438_00000065_5.dst'  ] 
 
 ## just for tests:
-import glob
-PFNs = [ 'PFN:'+i for i in glob.glob('/afs/cern.ch/user/i/ibelyaev/vol10/DATA/*.dst') ]
-
 import os
-if os.environ.has_key('SITEROOT') :
-	if 'C:\\Projects' == os.environ['SITEROOT'] :
-		PFNs = PFNs[0:4]
-		files=[]
-		for f in PFNs :
-			f = f.replace('PFN:castor:','')
-			f = f.replace('/castor/cern.ch/grid/lhcb/production/DC06/','')
-			f = f.replace('v1-lumi2/00001395/DST/0000/','C:\\data\\JpsiPhi\\')
-			files.append(f)	
-		PFNs = files 
-	        
-
+import glob
+AFSs = [ 'PFN:'+i for i in glob.glob('/afs/cern.ch/user/i/ibelyaev/vol10/DATA/*.dst') ]
+if 0 < len(AFSs) :
+	PFNs  =  AFSs 
+	print "Use local data form AFS :%s" % PFNs  
+elif os.environ.has_key('SITEROOT') and 'C:\\Projects' == os.environ['SITEROOT'] :
+	PFNs = PFNs[0:4]
+	files=[]
+	for f in PFNs :
+		f = f.replace('PFN:castor:','')
+		f = f.replace('/castor/cern.ch/grid/lhcb/production/DC06/','')
+		f = f.replace('v1-lumi2/00001395/DST/0000/','C:\\data\\JpsiPhi\\')
+		files.append(f)	
+		PFNs = files
+		
 # =============================================================================
 # The END 
 # =============================================================================

@@ -1,6 +1,6 @@
-# $Id: requirements,v 1.33 2007-03-22 18:53:00 ibelyaev Exp $ 
+# $Id: requirements,v 1.34 2007-05-07 13:58:08 ibelyaev Exp $ 
 # ============================================================================
-# CVS tag $Name: not supported by cvs2svn $; version $Revision: 1.33 $
+# CVS tag $Name: not supported by cvs2svn $; version $Revision: 1.34 $
 # ============================================================================
 # Created    : 2003-09-10
 # Maintainer : Vanya BELYAEV Ivan.Belyaev@itep.ru
@@ -27,20 +27,18 @@ macro ROOT_config_version "5.14.00d"
 macro ROOT_native_version "5.14.00d" 
 
 # ============== nesessary paths =============================================
-path_remove      PYTHONPATH "BenderExample" 
-path_prepend     PYTHONPATH "$(BENDEREXAMPLEROOT)/python"
-path_remove      PATH        "BenderExample" 
-path_prepend     PATH        "$(BENDEREXAMPLEPYTHON)"
-path_prepend     PATH        "$(BENDEREXAMPLEJOBS)"
+path_remove      PYTHONPATH       "BenderExample" 
+path_prepend     PYTHONPATH       "$(BENDEREXAMPLEROOT)/python"
+path_remove      PATH             "BenderExample" 
+path_prepend     PATH             "$(BENDEREXAMPLEPYTHON)"
+path_prepend     PATH             "$(BENDEREXAMPLEJOBS)"
+path_prepend     JOBOPTSEARCHPATH "$(BENDEREXAMPLEOPTS)"
 
 # ============== patterns =====================================================
 apply_pattern    application_path 
 
 # ============================================================================
 # $Log: not supported by cvs2svn $
-# Revision 1.32  2007/01/16 15:57:05  ibelyaev
-#  add DIRA example
-#
 #
 # ============================================================================
 # The END 
