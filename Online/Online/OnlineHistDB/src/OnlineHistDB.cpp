@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDB.cpp,v 1.5 2007-05-04 13:20:34 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDB.cpp,v 1.6 2007-05-07 08:32:02 ggiacomo Exp $
 /*
    C++ interface to the Online Monitoring Histogram DB
    G. Graziani (INFN Firenze)
@@ -476,7 +476,7 @@ int OnlineHistDB::getHistograms(std::string query,
 				std::vector<string>* types)
 {
   int nout=0;
-  string command="select NAME,HSTYPE from VIEWHISTOGRAM VH "+query;
+  string command="select VH.NAME,VH.HSTYPE from VIEWHISTOGRAM VH "+query;
   Statement *qst=m_conn->createStatement(command);
   ResultSet *rset = qst->executeQuery ();
   while(rset->next ()) {
