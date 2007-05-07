@@ -1,4 +1,4 @@
-// $Id: TrackCheckerNT.cpp,v 1.3 2007-02-08 10:06:09 cattanem Exp $
+// $Id: TrackCheckerNT.cpp,v 1.4 2007-05-07 08:07:13 mneedham Exp $
 // Include files 
 
 // local
@@ -735,7 +735,7 @@ void TrackCheckerNT::fillDetTrackParametersAtMeasurements(
       // skip them...
       if (0 == m) continue;
       // ok, check that we look at the correct type of measurement
-      if (m->type() != type) continue;
+      if ((unsigned int)m->type() != type) continue;
 
       // figure out the column in which to save this measurement in our
       // matrices
@@ -854,7 +854,7 @@ void TrackCheckerNT::fillDetTrackParametersAtMeasurements(
       // this can only work for real measurements, but not for true vertex
       // info or states at fixed z
       do {
-        State *trueState = 0;
+        State trueState;
         if ((FixedZ == type) || (0 == mcPartResponsibleForHit))
 	  break;
 	sc = m_stateCreator->createState(mcPartResponsibleForHit, zz, trueState);
@@ -863,7 +863,7 @@ void TrackCheckerNT::fillDetTrackParametersAtMeasurements(
 		  "caused a hit in " << pfx << "." << endmsg;
 	  break;
 	}
-	sc = m_projector->project(*trueState, *m);
+	sc = m_projector->project(trueState, *m);
 	if (sc.isFailure()) {
 	  warning() << "Can't project true state onto measurement in " <<
 		  pfx << "." << endmsg;
@@ -873,7 +873,6 @@ void TrackCheckerNT::fillDetTrackParametersAtMeasurements(
 	// unbiased measurement residuals/errors
 	measres[nTrack][i] = (float) (m_projector->residual() / mm);
 	measerr[nTrack][i] = (float) (m_projector->errMeasure() / mm);
-        if (trueState) delete trueState;
       } while (false);
       
       // check if we have an mcPart (if not, we can't gather more
@@ -883,7 +882,7 @@ void TrackCheckerNT::fillDetTrackParametersAtMeasurements(
       if (0 == mcPart)
 	continue;
       // make entries for true state
-      State *trueState = 0;
+      State trueState;
       // make sure we create a state at the vertex if that is what we are
       // supposed to do, otherwise we extrapolate to the given z
       if ((FixedZ == type) && (0 == i))
@@ -894,16 +893,14 @@ void TrackCheckerNT::fillDetTrackParametersAtMeasurements(
       if (sc.isFailure()) {
 	warning() << "Can't create (true) state for MCParticle in " <<
 		pfx << "." << endmsg;
-	if (trueState) delete trueState;
 	continue;
       }
-      State &truestate = *trueState;
+      //     State &truestate = *trueState;
       // set a flag indicating that we have the true state
       // copy true state parameters to our array
-      copyState(T, truestate); // true state variables begin with a 'T'
+      copyState(T, trueState); // true state variables begin with a 'T'
       // we don't need the copyState macro any longer, so we get rid of it
 #undef copyState
-      if (trueState) delete trueState;
     }		// End loop Measurements
     
     // in case of FixedZ measurements, we need to delete the stuff we

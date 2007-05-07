@@ -4,6 +4,9 @@
 ! Purpose     : Package for track checking algorithms
 !-----------------------------------------------------------------------------
 
+! 2007-05-06 M Needham
+ - Follow changes in IIdealStateCreator interface
+
 !======================= TrackCheckers v2r12 2007-02-08 ======================
 ! 2007-02-08 - Marco Cattaneo (for Manuel Schiller)
  - Fix bug in TrackCheckerNT algorithm which could cause Brunel to crash under

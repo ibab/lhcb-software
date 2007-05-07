@@ -4,6 +4,9 @@
 ! Purpose     : Perfect pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2007-05-06 M Needham
+ - Follow changes in IIdealStateCreator interface
+
 !======================= TrackIdealPR v2r9 2007-03-02 ========================
 ! 2007-03-02 - Marco Cattaneo
  - Remove LHCbDefinitions dependency

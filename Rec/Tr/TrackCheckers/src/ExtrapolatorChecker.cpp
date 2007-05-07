@@ -1,4 +1,4 @@
-// $Id: ExtrapolatorChecker.cpp,v 1.2 2006-11-02 15:34:45 jvantilb Exp $
+// $Id: ExtrapolatorChecker.cpp,v 1.3 2007-05-07 08:07:13 mneedham Exp $
 // Include files 
 
 // local
@@ -80,21 +80,21 @@ StatusCode ExtrapolatorChecker::execute()
     if ( m_trackSelector->select( mcPart ) ) {
 
       // Get the state at the vertex
-      State* stateVtx;
+      State stateVtx;
       m_stateCreator -> createStateVertex( mcPart, stateVtx );
 
       // Find first MCHit
       std::string detName;
       MCHit* mcHit;
-      int detID = findNextHit( mcPart, stateVtx->z(), mcHit, detName );
+      int detID = findNextHit( mcPart, stateVtx.z(), mcHit, detName );
       
       // Get the entry point of the MCHit
       XYZPoint entryP = mcHit -> entry();
 
       // Extrapolate through RF foil
-      m_extrapolator -> propagate( *stateVtx, entryP.z() );
-      TrackVector vec    = stateVtx -> stateVector();
-      TrackSymMatrix cov = stateVtx -> covariance();
+      m_extrapolator -> propagate( stateVtx, entryP.z() );
+      TrackVector vec    = stateVtx.stateVector();
+      TrackSymMatrix cov = stateVtx.covariance();
 
       // Correct tx and ty from the MCHit for the magnetic field
       double tx,ty;
@@ -112,7 +112,7 @@ StatusCode ExtrapolatorChecker::execute()
       plot1D( dy, 2, "Y resolution at 1st meas", -0.5, 0.5, 100 );
       plot1D( dtx, 3, "Tx resolution at 1st meas", -0.01, 0.01, 100 );
       plot1D( dty, 4, "Ty resolution at 1st meas", -0.01, 0.01, 100 );
-      plot1D( stateVtx->p() - mcHit->p(), 5,"dp at 1st meas", 
+      plot1D( stateVtx.p() - mcHit->p(), 5,"dp at 1st meas", 
               -0.3, 0.3, 100 );
       if ( cov(0,0) != 0 && cov(1,1) != 0 && cov(2,2) != 0 && cov(3,3) != 0){
         plot1D( dx / sqrt(cov(0,0)), 11,"X pull at 1st meas", -5., 5., 100 );
@@ -123,8 +123,7 @@ StatusCode ExtrapolatorChecker::execute()
       if ( cov(4,4) != 0 )
         plot1D( dqp / sqrt(cov(4,4)), 15,"q/p pull at 1st meas", -5., 5., 100);
 
-      delete stateVtx;
-
+     
       const Gaudi::TrackSymMatrix zeroCov;
       State state;
       state.setState( entryP.x(),  entryP.y(), entryP.z(),

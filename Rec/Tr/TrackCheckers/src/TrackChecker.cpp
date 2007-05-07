@@ -1,4 +1,4 @@
-// $Id: TrackChecker.cpp,v 1.21 2007-02-08 10:06:08 cattanem Exp $
+// $Id: TrackChecker.cpp,v 1.22 2007-05-07 08:07:13 mneedham Exp $
 // Include files 
 
 // local
@@ -353,19 +353,19 @@ StatusCode TrackChecker::resolutionHistos( Track* track, MCParticle* mcPart )
   StatusCode sc = m_extrapolator -> propagate( *track, zAt1stMeas,
                                                stateAt1stMeas );
   // get the true state at same z-position
-  State* trueState;
+  State trueState;
   sc = m_stateCreator -> createState( mcPart, stateAt1stMeas.z(), trueState );
   if ( sc.isSuccess() ) {
     TrackVector    vec     = stateAt1stMeas.stateVector();
-    TrackVector    trueVec = trueState -> stateVector();
+    TrackVector    trueVec = trueState.stateVector();
     TrackSymMatrix cov     = stateAt1stMeas.covariance();
-    TrackSymMatrix trueCov = trueState -> covariance();
+    TrackSymMatrix trueCov = trueState.covariance();
     double dx   = vec(0) - trueVec(0);
     double dy   = vec(1) - trueVec(1);
     double dtx  = vec(2) - trueVec(2);
     double dty  = vec(3) - trueVec(3);
     double trkP = stateAt1stMeas.p();
-    double mcP  = trueState -> p();
+    double mcP  = trueState.p();
     // fill the histograms
     plot1D( dx, 201, "X resolution at 1st measurement", -0.5, 0.5, 100 );
     plot1D( dy, 202, "Y resolution at 1st measurement", -0.5, 0.5, 100 );
@@ -383,11 +383,11 @@ StatusCode TrackChecker::resolutionHistos( Track* track, MCParticle* mcPart )
             214, "Ty pull at 1st measurement", -5., 5., 100 );
     plot1D( ( fabs(vec(4)) - 1.0/mcP ) / sqrt(cov(4,4)+trueCov(4,4)),
             215, "Q/P pull at 1st measurement", -5., 5., 100 );
-    plot1D( ( trkP - mcP ) / sqrt(stateAt1stMeas.errP2()+trueState->errP2()),
+    plot1D( ( trkP - mcP ) / sqrt(stateAt1stMeas.errP2()+trueState.errP2()),
             216, "P pull at 1st measurement", -5., 5., 100 );
     plot1D( sqrt(stateAt1stMeas.errP2()) / trkP,
             220, "Delta(P)/P at 1st measurement", 0., 0.01, 100 );
-    delete trueState;
+  
   }
 
   // Resolutions and pulls at defined z-positions
@@ -401,20 +401,20 @@ StatusCode TrackChecker::resolutionHistos( Track* track, MCParticle* mcPart )
       StatusCode sc = m_extrapolator -> propagate( *track, *iZpos, state );
       if ( sc.isSuccess() ) {
         // get the true state
-        State* trueState;
+        State trueState;
         StatusCode sc =
           m_stateCreator -> createState( mcPart, state.z(), trueState );
         if ( sc.isSuccess() ) {
           TrackVector    vec     = state.stateVector();
-          TrackVector    trueVec = trueState -> stateVector();
+          TrackVector    trueVec = trueState.stateVector();
           TrackSymMatrix cov     = state.covariance();
-          TrackSymMatrix trueCov = trueState -> covariance();
+          TrackSymMatrix trueCov = trueState.covariance();
           double dx   = vec(0) - trueVec(0);
           double dy   = vec(1) - trueVec(1);
           double dtx  = vec(2) - trueVec(2);
           double dty  = vec(3) - trueVec(3);
           double trkP = state.p();
-          double mcP  = trueState -> p();
+          double mcP  = trueState.p();
           // fill the histograms
           int ID = 300 + 100 * numPos;
           std::string title = format( " at z=%d mm", int( *iZpos ) );
@@ -434,12 +434,12 @@ StatusCode TrackChecker::resolutionHistos( Track* track, MCParticle* mcPart )
                   ID+14,"Ty pull"+title, -5., 5., 100 );
           plot1D( ( fabs(vec(4)) - 1.0/mcP ) / sqrt(cov(4,4)+trueCov(4,4)),
                   ID+15, "Q/P pull"+title, -5., 5., 100 );
-          plot1D( ( trkP - mcP ) / sqrt(state.errP2()+trueState->errP2()),
+          plot1D( ( trkP - mcP ) / sqrt(state.errP2()+trueState.errP2()),
                   ID+16, "P pull"+title, -5., 5., 100 );
           plot1D( sqrt(state.errP2()) / trkP,
                   ID+20, "Delta(P)/P"+title, 0., 0.01, 100 );
         } // if ( sc.isSuccess() )
-        delete trueState;
+      
       } // if ( sc.isSuccess() )
     } // loop pos
   } // m_plotsByMeasType
@@ -455,20 +455,20 @@ StatusCode TrackChecker::resolutionHistos( Track* track, MCParticle* mcPart )
       StatusCode sc = m_extrapolator -> propagate( *track, (*it) -> z(), state );
       if ( sc.isSuccess() ) {
         // get the true state
-        State* trueState;
+        State trueState;
         StatusCode sc =
           m_stateCreator -> createState( mcPart, state.z(), trueState );
         if ( sc.isSuccess() ) {
           TrackVector    vec     = state.stateVector();
-          TrackVector    trueVec = trueState -> stateVector();
+          TrackVector    trueVec = trueState.stateVector();
           TrackSymMatrix cov     = state.covariance();
-          TrackSymMatrix trueCov = trueState -> covariance();
+          TrackSymMatrix trueCov = trueState.covariance();
           double dx   = vec(0) - trueVec(0);
           double dy   = vec(1) - trueVec(1);
           double dtx  = vec(2) - trueVec(2);
           double dty  = vec(3) - trueVec(3);
           double trkP = state.p();
-          double mcP  = trueState -> p();
+          double mcP  = trueState.p();
           // fill the histograms
           int ID = 10000 + 100 * (*it) -> type(); // offset given by Meas. type
           std::string title =
@@ -489,7 +489,7 @@ StatusCode TrackChecker::resolutionHistos( Track* track, MCParticle* mcPart )
                   ID+14,"Ty pull"+title, -5., 5., 100 );
           plot1D( ( fabs(vec(4)) - 1.0/mcP ) / sqrt(cov(4,4)+trueCov(4,4)),
                   ID+15, "Q/P pull"+title, -5., 5., 100 );
-          plot1D( ( trkP - mcP ) / sqrt(state.errP2()+trueState->errP2()),
+          plot1D( ( trkP - mcP ) / sqrt(state.errP2()+trueState.errP2()),
                   ID+16, "P pull"+title, -5., 5., 100 );
           plot1D( sqrt(state.errP2()) / trkP,
                   ID+20, "Delta(P)/P"+title, 0., 0.01, 100 );
@@ -498,7 +498,7 @@ StatusCode TrackChecker::resolutionHistos( Track* track, MCParticle* mcPart )
           ITrackProjector* proj = m_projectorSelector -> projector( *(*it) );
           if ( proj==0 )
             return Error( "could not get projector for measurement" );
-          StatusCode sc = proj -> project( *trueState, *(*it) );
+          StatusCode sc = proj -> project( trueState, *(*it) );
           if ( sc.isFailure() )
             return Error( "not able to project a state into a measurement" );
           double res       = proj -> residual();
@@ -511,7 +511,7 @@ StatusCode TrackChecker::resolutionHistos( Track* track, MCParticle* mcPart )
           plot1D( chi2, ID+32, measType( (*it)->type() ) + 
                   " Measurement chi2", 0., 10., 200 );
         } // if ( sc.isSuccess() )
-        delete trueState;
+      
       } // if ( sc.isSuccess() )
     } // loop over Measurements
   } // m_plotsByMeasType
@@ -767,14 +767,14 @@ StatusCode TrackChecker::checkAmbiguity( Track* track, MCParticle* mcPart )
 bool TrackChecker::checkAmbiguity(MCParticle* mcPart, OTMeasurement* otMeas )
 {
   // create true state...
-  State* trueState;
+  State trueState;
   m_stateCreator->createState( mcPart, otMeas->z(), trueState );
 
   // Get the ambiguity using the Poca tool
   XYZVector distance;
   XYZVector bfield;
-  m_pIMF -> fieldVector( trueState->position(), bfield );
-  StateTraj stateTraj = StateTraj( trueState->stateVector(), trueState->z(), bfield );
+  m_pIMF -> fieldVector( trueState.position(), bfield );
+  StateTraj stateTraj = StateTraj( trueState.stateVector(), trueState.z(), bfield );
 
   double s1 = 0.0;
   double s2 = (otMeas->trajectory()).arclength( stateTraj.position(s1) );
@@ -785,7 +785,6 @@ bool TrackChecker::checkAmbiguity(MCParticle* mcPart, OTMeasurement* otMeas )
   }
   int ambiguity = ( distance.x() > 0.0 ) ? 1 : -1 ;
 
-  delete trueState;
 
   return (otMeas->ambiguity() == ambiguity);
 }

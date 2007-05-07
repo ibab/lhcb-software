@@ -1,4 +1,4 @@
-// $Id: IdealTracksCreator.cpp,v 1.34 2007-03-02 17:07:18 cattanem Exp $
+// $Id: IdealTracksCreator.cpp,v 1.35 2007-05-07 08:06:53 mneedham Exp $
 // Include files
 // -------------
 // from Gaudi
@@ -294,12 +294,11 @@ StatusCode IdealTracksCreator::execute()
         std::vector<Measurement*>::const_iterator endM =
           track -> measurements().end();
         while ( sc.isSuccess() && iMeas != endM ) {
-          State* tempState;
+          State tempState;
           sc = m_stateCreator -> createState( mcParticle,
                                               (*iMeas)->z(),
                                               tempState );
-          if ( sc.isSuccess() ) track -> addToStates( *tempState );
-          else delete tempState;
+          if ( sc.isSuccess() ) track -> addToStates( tempState );
           ++iMeas;
         }
         if ( sc.isFailure() ) {
@@ -404,15 +403,15 @@ StatusCode IdealTracksCreator::addOTTimes( const MCParticle* mcPart,
       StatusCode sc;
       if ( m_addMeasurements ) { // Add the measurement to the track
         // Set the reference vector
-        State* tempState;
+        State tempState;
         sc = m_stateCreator -> createState( mcPart, meas.z(), tempState );
         if ( sc.isSuccess() ) {
-          meas.setRefVector( tempState -> stateVector() );
+          meas.setRefVector( tempState.stateVector() );
           
           // Get the ambiguity using the Poca tool
           XYZVector distance;
           XYZVector bfield;
-          m_pIMF -> fieldVector( tempState->position(), bfield );
+          m_pIMF -> fieldVector( tempState.position(), bfield );
           StateTraj stateTraj = StateTraj( meas.refVector(), meas.z(), bfield );
           double s1 = 0.0;
           double s2 = (meas.trajectory()).arclength( stateTraj.position(s1) );
@@ -428,18 +427,18 @@ StatusCode IdealTracksCreator::addOTTimes( const MCParticle* mcPart,
           meas.setZ( stateTraj.position(s1).z() );
           
           // Reset using the updated z-position
-          State* myTempState;
+          State myTempState;
           sc = m_stateCreator->createState(mcPart, meas.z(), myTempState);
-          if ( sc.isSuccess() ) meas.setRefVector( myTempState -> stateVector() );
+          if ( sc.isSuccess() ) meas.setRefVector( myTempState.stateVector() );
           
           track -> addToMeasurements( meas );
           
-          delete myTempState;
+          
         }
         if ( sc.isFailure() )
           Warning( "Failed to calculate ref. info. and ambiguity for OTMeasurement" );
         
-        delete tempState;
+        
       } // if ( m_addMeasurements ) 
       
       ++nOTMeas;      
@@ -473,16 +472,16 @@ StatusCode IdealTracksCreator::addTTClusters( const MCParticle* mcPart,
       track -> addToLhcbIDs( meas.lhcbID() );
       if ( m_addMeasurements ) { // Add the measurement to the track
         // Set the reference vector
-        State* tempState;
+        State tempState;
         StatusCode sc = m_stateCreator->createState(mcPart,meas.z(),tempState);
         if ( sc.isSuccess() ) {
-          meas.setRefVector( tempState -> stateVector() ); 
+          meas.setRefVector( tempState.stateVector() ); 
           track -> addToMeasurements( meas );
         }
         else {
           Warning( "Failed to calculate ref. info. for STMeasurement in TT" );
         }
-        delete tempState;
+        
       }
       ++nTTMeas;      
       aCluster = ttLink.next();
@@ -518,15 +517,15 @@ StatusCode IdealTracksCreator::addITClusters( const MCParticle* mcPart,
       StatusCode sc;
       if ( m_addMeasurements ) { // Add the measurement to the track
         // Set the reference vector
-        State* tempState;
+        State tempState;
         sc = m_stateCreator->createState(mcPart,meas.z(),tempState);
         if ( sc.isSuccess() ) {
-          meas.setRefVector( tempState -> stateVector() );
+          meas.setRefVector( tempState.stateVector() );
           
           // Set the z-position of the measurement
           XYZVector distance;
           XYZVector bfield;
-          m_pIMF -> fieldVector( tempState->position(), bfield );
+          m_pIMF -> fieldVector( tempState.position(), bfield );
           StateTraj stateTraj = StateTraj( meas.refVector(), meas.z(), bfield );
           double s1 = 0.0;
           double s2 = (meas.trajectory()).arclength( stateTraj.position(s1) );
@@ -538,18 +537,18 @@ StatusCode IdealTracksCreator::addITClusters( const MCParticle* mcPart,
           meas.setZ( stateTraj.position(s1).z() );
           
           // Reset using the updated z-position
-          State* myTempState;
+          State myTempState;
           sc = m_stateCreator->createState(mcPart, meas.z(), myTempState);
-          if ( sc.isSuccess() ) meas.setRefVector( myTempState -> stateVector() );
+          if ( sc.isSuccess() ) meas.setRefVector( myTempState.stateVector() );
 
           track -> addToMeasurements( meas );
           
-          delete myTempState;
+          
         }
         if ( sc.isFailure() )
           Warning( "Failed to calculate ref. info. for STMeasurement in IT" );
         
-        delete tempState;
+        
       } // if ( m_addMeasurements ) 
       
       ++nITMeas;      
@@ -589,12 +588,12 @@ StatusCode IdealTracksCreator::addVeloClusters( const MCParticle* mcPart,
                                                   *m_veloPositionTool );
         track -> addToLhcbIDs( meas.lhcbID() );
         if ( m_addMeasurements ) { // Add the measurement to the track
-          State* tempState;
+          State tempState;
           StatusCode sc = m_stateCreator -> createState( mcPart, z, tempState);
-          if ( sc.isSuccess() ) meas.setRefVector( tempState->stateVector()); 
+          if ( sc.isSuccess() ) meas.setRefVector( tempState.stateVector()); 
           else Warning( "Failed to calculate ref. info. for VeloMeasurement" );
           track -> addToMeasurements( meas );
-          delete tempState;
+         
         }
         ++nVeloRMeas;
       } else {
@@ -602,12 +601,12 @@ StatusCode IdealTracksCreator::addVeloClusters( const MCParticle* mcPart,
                                                       *m_veloPositionTool );
         track -> addToLhcbIDs( meas.lhcbID() );
         if ( m_addMeasurements ) { // Add the measurement to the track
-          State* tempState;
+          State tempState;
           StatusCode sc = m_stateCreator -> createState( mcPart, z, tempState);
-          if ( sc.isSuccess() ) meas.setRefVector( tempState->stateVector() );
+          if ( sc.isSuccess() ) meas.setRefVector( tempState.stateVector() );
           else Warning( "Failed to calculate ref. info. for VeloMeasurement" );
           track -> addToMeasurements( meas );
-          delete tempState;
+         
         }
         
         ++nVeloPhiMeas;
@@ -639,21 +638,21 @@ StatusCode IdealTracksCreator::initializeState( const MCParticle* mcPart,
     }
   }
   
-  State* state(0);
+  State state;
   StatusCode sc = m_stateCreator -> createState( mcPart, zseed, state );
   if ( sc.isSuccess() ) {
-    track -> addToStates( *state );
-    double qP = state -> qOverP();
+    track -> addToStates( state );
+    double qP = state.qOverP();
 
     debug() << "- State added:" << endreq
-            << "  - position = " << state -> position() << " mm" <<endreq
-            << "  - momentum = " << state -> momentum() << " MeV" <<endreq
-            << "  - P        = " << state -> p() << " MeV" <<endreq
+            << "  - position = " << state.position() << " mm" <<endreq
+            << "  - momentum = " << state.momentum() << " MeV" <<endreq
+            << "  - P        = " << state.p() << " MeV" <<endreq
             << "  - charge   = " << ( qP != 0. ? int(fabs(qP)/qP) : 0  ) 
             << endreq;
   }
   else {
-    delete state;
+   
     debug() << "-> unable to add a State!" << endreq;
   }
   

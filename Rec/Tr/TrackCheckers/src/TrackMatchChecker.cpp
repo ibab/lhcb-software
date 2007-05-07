@@ -1,4 +1,4 @@
-// $Id: TrackMatchChecker.cpp,v 1.3 2006-11-17 10:57:29 cattanem Exp $
+// $Id: TrackMatchChecker.cpp,v 1.4 2007-05-07 08:07:13 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -458,10 +458,10 @@ StatusCode TrackMatchChecker::monitor( )
       m_electron.push_back( mcpartSeed->particleID().isLepton() );
 
       // Get the true state
-      State* trueState;
+      State trueState;
       StatusCode sc = m_stateCreator->createState(mcpartSeed,matchZ,trueState);
       if ( sc.isSuccess() ) {
-        TrackVector trueVec = trueState->stateVector();
+        TrackVector trueVec = trueState.stateVector();
         m_xTrue.push_back( trueVec[0] );
         m_yTrue.push_back( trueVec[1] );
         m_txTrue.push_back( trueVec[2] );
@@ -474,7 +474,6 @@ StatusCode TrackMatchChecker::monitor( )
         m_tyTrue.push_back( 0.0 );
         m_pTrue.push_back( 0.0 );
       }
-      delete trueState;
     }
     if ( goodMatch ) m_numGood++;
 
