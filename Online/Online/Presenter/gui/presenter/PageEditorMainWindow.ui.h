@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Presenter/gui/presenter/PageEditorMainWindow.ui.h,v 1.9 2007-05-01 09:06:15 psomogyi Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Presenter/gui/presenter/PageEditorMainWindow.ui.h,v 1.10 2007-05-07 14:06:45 psomogyi Exp $
 
 /****************************************************************************
  ** ui.h extension file, included from the uic-generated form implementation.
@@ -31,6 +31,7 @@
 #include <qapplication.h>
 #include <qlistview.h>
 #include <qtimer.h>
+#include <qregexp.h> 
 //#include <qfont.h>
 #include <qguardedptr.h> // for QObjects
 
@@ -53,6 +54,8 @@ OnlineHistDB *histogramDB = NULL; // deleted in a.destructor()
 QTimer       *autoUpdate  = NULL; // Qt will get rid of this upon exit.
 bool         offsetData   = false;
 bool         startStop    = false;
+
+int          iHisto = 0;
 
 DatabaseLoginDialog *loginDialog = NULL;
 
@@ -96,9 +99,10 @@ void PageEditorMainWindow::dimContextMenu()
   if(m_connectedToHistogramDatabase){
     dimContextMenu->insertItem(tr("&Add selection to Database"), this,
                                SLOT(addHistogramsToDatabase()));
-  }
+  } else {
     dimContextMenu->insertItem(tr("&Add selection to Page"), this,
-                             SLOT(addSelectedHistogramsFromDIMToPage()));                               
+                             SLOT(addSelectedHistogramsFromDIMToPage()));
+  }                               
 
 //  dimContextMenu->insertSeparator();
   dimContextMenu->exec(QCursor::pos());
@@ -155,7 +159,7 @@ void PageEditorMainWindow::init()
   histoDBHistogramsView->hideColumn(Presenter::DIM); 
   histoDBPagesView->hideColumn(Presenter::DIM);
   
-  pageHistogramsView->hide();
+  //pageHistogramsView->hide();
   
   // TODO: work w/o HistoDB...
   if (!loginDialog) {
@@ -175,16 +179,17 @@ void PageEditorMainWindow::init()
    histogramFilterComboBox->clear();
    //TODO: list by task, subsys  - partial: perf. problems.
    histogramFilterComboBox->insertItem("By Folder/Page");   
-   histogramFilterComboBox->insertItem("By some tasks");
-   histogramFilterComboBox->insertItem("By some subsystems");
-// histogramFilterComboBox->insertItem("By Analysis Features");
-// histogramFilterComboBox->insertItem("All");
-// histogramFilterComboBox->insertItem("Full list");
+   histogramFilterComboBox->insertItem("By Tasks/Algorithm");
+   histogramFilterComboBox->insertItem("By Subsystems");
+   histogramFilterComboBox->insertItem("With auto analysis");
+   histogramFilterComboBox->insertItem("Produced by analysis");
+   histogramFilterComboBox->insertItem("Full list");
 // histogramFilterComboBox->insertItem("Alphabetically");   
 }
 
 void PageEditorMainWindow::destroy()
 {
+  clearDisplayedPage();
   if (histogramDB) delete histogramDB;
 }
 
@@ -193,16 +198,19 @@ void PageEditorMainWindow::refreshHistogramListView()
   if ("By Folder/Page" == histogramFilterComboBox->currentText()) {  
     readFoldersFromHistoDatabase(*histoDBHistogramsView, Presenter::Folder,
                                  Presenter::WithHistogram);
-  } else if ("By some tasks" == histogramFilterComboBox->currentText()) {
+  } else if ("By Tasks/Algorithm" == histogramFilterComboBox->currentText()) {
     readFoldersFromHistoDatabase(*histoDBHistogramsView, Presenter::Task,
                                  Presenter::WithHistogram);
-  } else if ("By some subsystems" == histogramFilterComboBox->currentText()) {
+  } else if ("By Subsystems" == histogramFilterComboBox->currentText()) {
     readFoldersFromHistoDatabase(*histoDBHistogramsView, Presenter::Subsystem,
                                  Presenter::WithHistogram);
-  } else if ("By Analysis Features" == histogramFilterComboBox->currentText()) {
-    readFoldersFromHistoDatabase(*histoDBHistogramsView, Presenter::Analysis,
+  } else if ("Produced by analysis" == histogramFilterComboBox->currentText()) {
+    readFoldersFromHistoDatabase(*histoDBHistogramsView, Presenter::AnalysisHistograms,
                                  Presenter::WithHistogram);
-  } else if ("All" == histogramFilterComboBox->currentText()) {
+  } else if ("With auto analysis" == histogramFilterComboBox->currentText()) {
+    readFoldersFromHistoDatabase(*histoDBHistogramsView, Presenter::HistogramsWithAnalysis,
+                                 Presenter::WithHistogram);                                 
+  } else if ("Full list" == histogramFilterComboBox->currentText()) {
     readFoldersFromHistoDatabase(*histoDBHistogramsView, Presenter::AllHistos,
                                  Presenter::WithHistogram);                                                                                                                                  
   }
@@ -397,38 +405,35 @@ void PageEditorMainWindow::refreshPageNameComboBox()
 
 void PageEditorMainWindow::histoDBPagesViewContextMenu()
 {
-  QPopupMenu *dimContextMenu = new QPopupMenu(this);
-  Q_CHECK_PTR(dimContextMenu);
-  // if item is selected and is a leaf, then handle given page
-  // TODO: traversal in case of non-leaf nodes...
-  QListViewItem *item = histoDBPagesView->selectedItem();
-  if ( 0 == item->childCount()) {    
+  QPopupMenu *dbPagesContextMenu = new QPopupMenu(this);
+  Q_CHECK_PTR(dbPagesContextMenu);
 //  dimContextMenu->insertTearOffHandle();
-  dimContextMenu->insertItem(tr("&Load selected page"), this,
+  QListViewItemIterator it(histoDBPagesView, QListViewItemIterator::Selected);
+  while (it.current()) {
+    QListViewItem *item = it.current();
+    if ( "Page" == item->text(1)) {
+      dbPagesContextMenu->insertItem(tr("&Load selected page"), this,
                              SLOT(loadSelectedPageFromDB()));
-//  dimContextMenu->insertSeparator();
-//  dimContextMenu->insertItem("&Delete selected page", this,
-//                             SLOT(deleteSelectedPageFromDB()));
-  dimContextMenu->exec(QCursor::pos());
-  } else {
-//    dimContextMenu->insertItem("&Delete selected folder", this,
-//                               SLOT(deleteFolderFromDB()));  
+    }
+  ++it;
   }
-  delete dimContextMenu;
+//  dimContextMenu->insertSeparator();
+  dbPagesContextMenu->exec(QCursor::pos());
+  delete dbPagesContextMenu; 
 }
 
 void PageEditorMainWindow::histoDBHistogramsViewContexMenu()
 {
-  QPopupMenu *dimContextMenu = new QPopupMenu(this);
-  Q_CHECK_PTR( dimContextMenu );
+  QPopupMenu *histoDBContextMenu = new QPopupMenu(this);
+  Q_CHECK_PTR( histoDBContextMenu );
 //  dimContextMenu->insertTearOffHandle();
-  dimContextMenu->insertItem(tr("&Add selection to page"), this,
+  histoDBContextMenu->insertItem(tr("&Add selection to page"), this,
                              SLOT(addSelectedHistogramsFromDatabaseToPage()));
     //  dimContextMenu->insertSeparator();
-  dimContextMenu->insertItem(tr("&Delete selection"), this,
+  histoDBContextMenu->insertItem(tr("&Delete selection"), this,
                              SLOT(deleteSelectedHistogramsFromDatabase()));
-  dimContextMenu->exec(QCursor::pos());
-  delete dimContextMenu;
+  histoDBContextMenu->exec(QCursor::pos());
+  delete histoDBContextMenu;
 }
 
 void PageEditorMainWindow::deleteSelectedPageFromDB()
@@ -438,7 +443,278 @@ void PageEditorMainWindow::deleteSelectedPageFromDB()
 
 void PageEditorMainWindow::loadSelectedPageFromDB()
 {
-// OnlineHistPage* pg=histogramDB->getPage("Example Page","Examples")
+  //clear canvas
+  clearDisplayedPage();
+
+  std::vector<OnlineHistogram*> localPageHistograms;
+  
+  QListViewItemIterator it(histoDBPagesView, QListViewItemIterator::Selected);
+  QListViewItem *item = it.current();
+  if (item) {
+    QString pageName = item->text(0);
+    QString folderPATH = item->text(2);
+  
+   OnlineHistPage* pg=histogramDB->getPage(pageName, folderPATH);
+   if(pg) {
+    localPageHistograms = pg->hlist();
+    if (localPageHistograms.empty()) {
+    } else {
+      //iHisto = 1;
+      BOOST_FOREACH(OnlineHistogram *histogram, localPageHistograms) {
+ 
+// TODO: refactor this for addHistos*ToPage
+        
+        int    nBinsX = 0;
+        int    nBinsY = 0;
+        double xMin   = 0;
+        double xMax   = 0;
+        double yMin   = 0;
+        double yMax   = 0;
+        
+        double value  = 0;
+        
+        int m_refreshTimeHisto = 1;
+        int m_verbose = 1;
+              
+        m_mainPageRootCanvas->GetCanvas()->SetEditable(true);
+        m_mainPageRootCanvas->GetCanvas()->Divide(1,1);
+        m_mainPageRootCanvas->Clear();
+        
+        
+
+            std::string serviceNameFQ = histogram->dimServiceName();
+            std::cout << "serviceNameFQ" << serviceNameFQ << std::endl;                         
+            
+            new QListViewItem(pageHistogramsView, QString(histogram->dimServiceName()),      
+                                                  QString(histogram->hstype()),
+                                                  QString(histogram->hsname()),
+                                                  QString(histogram->subname()),
+                                                  QString(histogram->task()),
+                                                  QString(histogram->algorithm()),
+                                                  QString(histogram->descr()),
+                                                  QString(histogram->doc()));
+
+          std::string serviceType = histogram->hstype();   
+           iHisto++;
+            std::string histoID = "histo_" +
+                                  boost::lexical_cast<std::string>(iHisto);                     
+                                         
+            if (Presenter::H1D == serviceType.substr(0,3)) {
+              HistogramH1D histogramH1D;
+              histogramH1D.dimProxy = new DimProxy(serviceNameFQ,
+                                                   m_refreshTimeHisto,
+                                                   m_verbose);        
+      
+              if (histogramH1D.dimProxy->serviceOK()) {    
+                TH1 *tmp_h1D = histogramH1D.dimProxy->rootH1D();
+                if (tmp_h1D) {
+                  nBinsX             = tmp_h1D->GetNbinsX();
+                  xMin               = tmp_h1D->GetXaxis()->GetXmin();
+                  xMax               = tmp_h1D->GetXaxis()->GetXmax();
+                  std::string hTitle = item->text(Presenter::Name);
+      //            tmp_h1D->GetTitle();
+      //            if (m_verbose > 3) {
+                    std::cout << " nBinsX " << nBinsX <<
+                                 " xMin "   << xMin   <<
+                                 " xMax "   << xMax   << std::endl;
+      //            }
+      
+                  // book the 1D histo which is to be displayed
+                  histogramH1D.rootH1D = new TH1F(histoID.c_str(), hTitle.c_str(),
+                                                  nBinsX, xMin, xMax);
+                  histogramH1D.rootOffsetH1D = new TH1F("", "",
+                                                        nBinsX, xMin, xMax);
+                  histogramH1D.rootOffsetH1D->Reset();                                                        
+                  histogramH1D.rootH1D->SetMarkerStyle(22);
+                  histogramH1D.rootH1D->SetMarkerSize(0.9);
+                  displayedH1DHistograms.push_back(histogramH1D);
+                  
+                  // Fill w some data:
+                  nBinsX = histogramH1D.rootH1D->GetNbinsX();      
+                  value  = 0;
+      
+                  double nEntries = histogramH1D.dimProxy->rootH1D()->GetEntries();
+                  
+                  for (int i=0; i< nBinsX+1; ++i) {
+                    value = histogramH1D.dimProxy->rootH1D()->GetBinContent(i);
+                    histogramH1D.rootH1D->SetBinContent(i, value);
+                    
+                    value = histogramH1D.dimProxy->rootH1D()->GetBinError(i);
+                    histogramH1D.rootH1D->SetBinError(i, value);
+                  }
+        
+                  histogramH1D.rootH1D->SetEntries(nEntries);
+                  
+                  if (m_verbose > 0)
+                    std::cout << "DIM histo entries " << nEntries
+                              << " histo entries "    <<
+                                 histogramH1D.rootH1D->GetEntries() << std::endl;            
+                }
+              }
+            } else if ("HPD" == serviceType.substr(0,3)) {
+              HistogramH1D histoProfile;
+              // TODO: sharedptr - place delete     
+              histoProfile.dimProxy = new DimProxy(serviceNameFQ,
+                                                   m_refreshTimeHisto,
+                                                   m_verbose);
+              if (histoProfile.dimProxy->serviceOK()) {    
+                TH1 *tmp_h1D = histoProfile.dimProxy->rootHPD();
+                if (tmp_h1D) {
+                  nBinsX             = tmp_h1D->GetNbinsX();
+                  xMin               = tmp_h1D->GetXaxis()->GetXmin();
+                  xMax               = tmp_h1D->GetXaxis()->GetXmax();
+                  std::string hTitle = item->text(Presenter::Name);
+      //             tmp_h1D->GetTitle();
+      //          if (m_verbose > 3)
+                    std::cout << " nBinsX " << nBinsX << 
+                                 " xMin "   << xMin   <<
+                                 " xMax "   << xMax   << std::endl;
+      
+                  // book the 1D histo which is to be displayed
+                  histoProfile.rootH1D = new TH1F(histoID.c_str(),
+                                                  hTitle.c_str(),
+                                                  nBinsX, xMin, xMax);
+                  histoProfile.rootOffsetH1D = new TH1F("",
+                                                        "",
+                                                        nBinsX, xMin, xMax);
+                  histoProfile.rootOffsetH1D->Reset();                                                        
+                  histoProfile.rootH1D->SetMarkerStyle(22);
+                  histoProfile.rootH1D->SetMarkerSize(0.9);
+                  displayedHPDHistograms.push_back(histoProfile);
+                }
+              }
+              
+            } else if (Presenter::H2D == serviceType.substr(0,3)) {              
+              HistogramH2D histogramH2D; 
+              histogramH2D.dimProxy = new DimProxy(serviceNameFQ,
+                                                   m_refreshTimeHisto,
+                                                   m_verbose);
+              if (histogramH2D.dimProxy->serviceOK()) {
+                TH2 *tmp_h2D = histogramH2D.dimProxy->rootH2D();
+                if (tmp_h2D) {
+                  // dimProxy gives back a NULL pointer if something went wrong
+                  nBinsX             = tmp_h2D->GetNbinsX();
+                  nBinsY             = tmp_h2D->GetNbinsY();
+                  xMin               = tmp_h2D->GetXaxis()->GetXmin();
+                  xMax               = tmp_h2D->GetXaxis()->GetXmax();
+                  yMin               = tmp_h2D->GetYaxis()->GetXmin();
+                  yMax               = tmp_h2D->GetYaxis()->GetXmax();
+                  std::string hTitle = item->text(Presenter::Name);
+      //             tmp_h2D->GetTitle();            
+      //          if (m_verbose > 3)
+                  std::cout << " nBinsX " << nBinsX <<
+                               " xMin "   << xMin   << " xMax " << xMax << 
+                               " nBinsY " << nBinsY << " yMin " << yMin <<
+                               " yMax "   << yMax   << std::endl;
+                  
+                  // book new TH2F - the one which is to be displayed
+                  // TODO: sharedptr - place delete       
+                  histogramH2D.rootH2D = new TH2F(histoID.c_str(), hTitle.c_str(), 
+                                                  nBinsX, xMin, xMax,
+                                                  nBinsY, yMin, yMax);
+                  histogramH2D.rootOffsetH2D = new TH2F("", "", 
+                                                  nBinsX, xMin, xMax,
+                                                  nBinsY, yMin, yMax);
+                  histogramH2D.rootOffsetH2D->Reset();                                           
+                  displayedH2DHistograms.push_back(histogramH2D);
+                  
+                  // Fill with some data
+                  double nEntries = histogramH2D.dimProxy->rootH2D()->GetEntries();
+                          
+                  nBinsX   = histogramH2D.rootH2D->GetNbinsX();
+                  nBinsY   = histogramH2D.rootH2D->GetNbinsY();      
+                  value    = 0.0;
+                      
+                  for (int i=0; i<= nBinsX+1; ++i) {
+                    for (int j=0; j<= nBinsY+1; ++j) {
+                      value = histogramH2D.dimProxy->rootH2D()->GetBinContent(i,j);
+                      if (0.0 == value) value = 0.00001; // to show in nice colour
+                      histogramH2D.rootH2D->SetBinContent(i, j, value);                
+                      value = histogramH2D.dimProxy->rootH2D()->GetBinError(i, j);
+                      histogramH2D.rootH2D->SetBinError(i, j, value);
+                    } 
+                  }
+                  
+                  histogramH2D.rootH2D->SetEntries(nEntries);
+                  
+                  if (m_verbose > 0)
+                    std::cout << "DIM histo entries " << nEntries
+                              << " histo entries "    <<
+                                 histogramH2D.rootH2D->GetEntries() << std::endl;            
+                }
+              }
+            }        
+          }
+          ++it;
+        }
+                   
+      // setup the Canvas and draw the (empty) histograms
+      // choose a setup where #rows = #columns
+      // may lead to some unsused parts of the canvas, but 
+      // probably the easiest/best setup if no further
+      // knowledge about the contents displayed
+                    
+        // #pads needed to display all information
+        int nPads            = pageHistogramsView->childCount();  
+        int m_nCanvasRows    = (int) ceil(sqrt((double)nPads));
+        int m_nCanvasColumns = m_nCanvasRows;  
+      
+        m_mainPageRootCanvas->GetCanvas()->Divide(m_nCanvasColumns,m_nCanvasRows);
+        int padCounter = 1;
+        // now loop over all pads to set basic properties
+        for (int i = 1; i<= m_nCanvasRows; ++i) {
+          for (int j = 1; j <= m_nCanvasColumns; ++j) {
+            m_mainPageRootCanvas->GetCanvas()->GetPad(padCounter)->
+                SetFillColor(10);
+            m_mainPageRootCanvas->GetCanvas()->GetPad(padCounter)->Draw();      
+            // m_mainPageRootCanvas->GetPad(padCounter)->SetTopMargin(0.5);
+            // m_mainPageRootCanvas->GetPad(padCounter)->SetBottomMargin(0.5);
+            m_mainPageRootCanvas->GetCanvas()->GetPad(padCounter)->
+                SetLeftMargin(0.15);
+            m_mainPageRootCanvas->GetCanvas()->GetPad(padCounter)->
+                SetRightMargin(0.15);
+            ++padCounter;      
+          } 
+        }
+        
+        // now loop over all histograms and draw them: 
+        // order: 2D - 1D - Counters
+      
+        padCounter = 1;
+        BOOST_FOREACH(HistogramH2D displayedH2DHistogram, displayedH2DHistograms) {
+          m_mainPageRootCanvas->GetCanvas()->GetPad(padCounter)->cd();
+      //    m_mainPageRootCanvas->GetCanvas()->GetPad(padCounter)->
+      //        SetFillColor(10);
+      //    displayedH2DHistogram.rootH2D->SetStats(kFALSE);
+      //    (*h2DIter).rootH2D -> Draw(m_2DDrawOption.c_str());
+          displayedH2DHistogram.rootH2D->Draw("lego");
+          ++padCounter;
+        }
+      
+        BOOST_FOREACH(HistogramH1D displayedH1DHistogram, displayedH1DHistograms) {
+          m_mainPageRootCanvas->GetCanvas()->GetPad(padCounter)->cd();
+      //    m_mainPageRootCanvas->GetCanvas()->GetPad(padCounter)->
+      //        SetFillColor(10);    
+      //    displayedH1DHistogram.rootH1D->SetStats(kFALSE);
+      //    (*h1DIter).rootH1D -> Draw(m_1DDrawOption.c_str());      
+          displayedH1DHistogram.rootH1D->Draw();
+          ++padCounter;      
+        }
+      
+        BOOST_FOREACH(HistogramH1D displayedHPDHistogram, displayedHPDHistograms) {
+          m_mainPageRootCanvas->GetCanvas()->GetPad(padCounter)->cd();
+      //    m_mainPageRootCanvas->GetCanvas()->GetPad(padCounter)->
+      //        SetFillColor(10);    
+      //    displayedHPDHistogram.rootH1D->SetStats(kFALSE);
+      //    (*hProfIter).rootH1D -> Draw(m_1DDrawOption.c_str());
+          displayedHPDHistogram.rootH1D->Draw();      
+          ++padCounter;      
+        } 
+        m_mainPageRootCanvas->Update();
+        m_mainPageRootCanvas->GetCanvas()->SetEditable(false);
+        statusBar()->message(tr("Canvas ready."));
+      }
+    }          
 }
 
 void PageEditorMainWindow::savePage()
@@ -461,7 +737,7 @@ void PageEditorMainWindow::savePage()
   
       statusBar()->message(tr("Saving page to OnlineHistDB..."));
       
-            // TODO: Sanity check, dialog - add length check too...
+      // TODO: Sanity check, dialog - add length check too...
       if (tr("Type foldername here...") == folderNameComboBox->currentText() ||
           tr("Type pagename here...") == pageNameComboBox->currentText()) return;
       
@@ -470,30 +746,15 @@ void PageEditorMainWindow::savePage()
             folderNameComboBox->currentText());
           page->setFolder(folderNameComboBox->currentText());            
       
-      BOOST_FOREACH(HistogramH1D displayedH1DHistogram,
-                    displayedH1DHistograms) {
-        std::cout << "Title: " << displayedH1DHistogram.rootH1D->GetTitle()
-                  << std::endl;
-        OnlineHistogram *h1 = histogramDB->
-              getHistogram(displayedH1DHistogram.rootH1D->GetTitle());
-        page->declareHistogram(h1,0. ,0. ,0.5,0.5);   
-      }
-      BOOST_FOREACH(HistogramH1D displayedHPDHistogram,
-                    displayedHPDHistograms) {
-        std::cout << "Title: " << displayedHPDHistogram.rootH1D->GetTitle()
-                  << std::endl;
-        OnlineHistogram *h1 = histogramDB->
-              getHistogram(displayedHPDHistogram.rootH1D->GetTitle());
-        page->declareHistogram(h1,0. ,0. ,0.5,0.5);        
-      }
-      BOOST_FOREACH(HistogramH2D displayedH2DHistogram,
-                    displayedH2DHistograms) {
-        std::cout << "Title: " << displayedH2DHistogram.rootH2D->
-                                      GetTitle() << std::endl;
-        OnlineHistogram *h1 = histogramDB->
-              getHistogram(displayedH2DHistogram.rootH2D->GetTitle());
-        page->declareHistogram(h1,0. ,0. ,0.5,0.5);        
-      }
+  
+      QListViewItemIterator it(pageHistogramsView);
+      while (it.current()) {
+        QListViewItem *item = it.current();        
+        std::string hid = item->text(4) +"/"+ item->text(5) +"/"+ item->text(2);
+        OnlineHistogram *h1 = histogramDB->getHistogram(hid);
+        page->declareHistogram(h1,0. ,0. ,0.5,0.5);
+        ++it;
+      }  
       
       histogramDB->commit();
       
@@ -551,52 +812,46 @@ void PageEditorMainWindow::addSelectedHistogramsFromDatabaseToPage()
   int m_refreshTimeHisto = 1;
   int m_verbose = 1;
   
-  int iHisto = 1;
+  //iHisto = 1;
 
   m_mainPageRootCanvas->GetCanvas()->SetEditable(true);
   m_mainPageRootCanvas->GetCanvas()->Divide(1,1);
   m_mainPageRootCanvas->Clear();
-  
-  
-//  QPtrList<QListViewItem> lst;
-//  QListViewItemIterator itS(histoDBHistogramsView);
-//  while (itS.current()) {
-//    if (itS.current()->isSelected()) {
-//      lst.append(itS.current());
-//  ++itS;
-//  }
-     
-  
+
   QListViewItemIterator it(histoDBHistogramsView,
                            QListViewItemIterator::Selected);
   while (it.current()) {
     QListViewItem *item = it.current();
-    if ("Histogram" == item->text(Presenter::Type)) {
+    if ("Histogram" == item->text(1)) {
 
-      OnlineHistogram *h1 = histogramDB->getHistogram(item->text(Presenter::Name));
+      OnlineHistogram *h1 = histogramDB->getHistogram(item->text(0));
 
 
 // TODO!!!      
-      std::string serviceNameFQ = h1->hstype() + "/node_" + 
-                                  h1->task() + "_1/Adder/" + h1->algorithm() +
-                                  "/" + h1->hsname();
+//      std::string serviceNameFQ = h1->hstype() + "/node_" + 
+//                                  h1->task() + "_1/Adder/" + h1->algorithm() +
+//                                  "/" + h1->hsname();
 
-      std::cout << serviceNameFQ << std::endl;                         
+      std::string serviceNameFQ = h1->dimServiceName();
+      std::cout << "serviceNameFQ" << serviceNameFQ << std::endl;                         
       
-      new QListViewItem(pageHistogramsView, item->text(Presenter::Name), h1->hstype());
+      new QListViewItem(pageHistogramsView, QString(h1->dimServiceName()),      
+                                            QString(h1->hstype()),
+                                            QString(h1->hsname()),
+                                            QString(h1->subname()),
+                                            QString(h1->task()),
+                                            QString(h1->algorithm()),
+                                            QString(h1->descr()),
+                                            QString(h1->doc()));
 
-      std::string serviceType = h1->hstype();   
-    if (m_verbose > 1)
-        std::cout << "Reconstructing DIM SVC name: " << serviceNameFQ <<
-                     std::endl;
-                     
-      iHisto++;
-      std::string histoID = "histo_" +
-                            boost::lexical_cast<std::string>(iHisto);                     
+    std::string serviceType = h1->hstype();   
+                
+    iHisto++;
+    std::string histoID = "histo_" +
+                          boost::lexical_cast<std::string>(iHisto);                     
                                    
       if (Presenter::H1D == serviceType.substr(0,3)) {
         HistogramH1D histogramH1D;
-        // TODO: sharedptr: place delete...
         histogramH1D.dimProxy = new DimProxy(serviceNameFQ,
                                              m_refreshTimeHisto,
                                              m_verbose);        
@@ -616,11 +871,11 @@ void PageEditorMainWindow::addSelectedHistogramsFromDatabaseToPage()
 //            }
 
             // book the 1D histo which is to be displayed
-            // TODO: sharedptr - place delete
             histogramH1D.rootH1D = new TH1F(histoID.c_str(), hTitle.c_str(),
                                             nBinsX, xMin, xMax);
             histogramH1D.rootOffsetH1D = new TH1F("", "",
                                                   nBinsX, xMin, xMax);
+            histogramH1D.rootOffsetH1D->Reset();                                        
             histogramH1D.rootH1D->SetMarkerStyle(22);
             histogramH1D.rootH1D->SetMarkerSize(0.9);
             displayedH1DHistograms.push_back(histogramH1D);
@@ -667,13 +922,13 @@ void PageEditorMainWindow::addSelectedHistogramsFromDatabaseToPage()
                            " xMax "   << xMax   << std::endl;
 
             // book the 1D histo which is to be displayed
-            // TODO: sharedptr - place delete    
             histoProfile.rootH1D = new TH1F(histoID.c_str(),
                                             hTitle.c_str(),
                                             nBinsX, xMin, xMax);
             histoProfile.rootOffsetH1D = new TH1F("",
                                                   "",
                                                   nBinsX, xMin, xMax);
+            histoProfile.rootOffsetH1D->Reset();                                      
             histoProfile.rootH1D->SetMarkerStyle(22);
             histoProfile.rootH1D->SetMarkerSize(0.9);
             displayedHPDHistograms.push_back(histoProfile);
@@ -682,7 +937,6 @@ void PageEditorMainWindow::addSelectedHistogramsFromDatabaseToPage()
         
       } else if (Presenter::H2D == serviceType.substr(0,3)) {              
         HistogramH2D histogramH2D;
-        // TODO: sharedptr - place delete 
         histogramH2D.dimProxy = new DimProxy(serviceNameFQ,
                                              m_refreshTimeHisto,
                                              m_verbose);
@@ -705,13 +959,13 @@ void PageEditorMainWindow::addSelectedHistogramsFromDatabaseToPage()
                          " yMax "   << yMax   << std::endl;
             
             // book new TH2F - the one which is to be displayed
-            // TODO: sharedptr - place delete       
             histogramH2D.rootH2D = new TH2F(histoID.c_str(), hTitle.c_str(), 
                                             nBinsX, xMin, xMax,
                                             nBinsY, yMin, yMax);
             histogramH2D.rootOffsetH2D = new TH2F("", "", 
                                             nBinsX, xMin, xMax,
-                                            nBinsY, yMin, yMax);            
+                                            nBinsY, yMin, yMax);
+            histogramH2D.rootOffsetH2D->Reset();
             displayedH2DHistograms.push_back(histogramH2D);
             
             // Fill with some data
@@ -823,41 +1077,9 @@ void PageEditorMainWindow::addHistogramsToDatabase()
       // Ask Giacomo for HPD DIM SVC name patching on DB side
       try {
         if (m_connectedToHistogramDatabase) {
-//        if (m_verbose > 1) {
-//          std::cout <<  "Histogram: " << item->text(Presenter::DIM) <<
-//                        " Task: " << item->text(Presenter::Name) << std::endl;
-//        }
-          // Declare task...      
-//          histogramDB->declareTask(item->text(Presenter::Name),"","","",true,true,false);
-          // Declare Histogram
-          // TODO: comment magic column numbers...
-          
           histogramDB->declareHistByServiceName(item->text(Presenter::DIM));
           std::cout << "Hist SVC name: " << item->text(Presenter::DIM) << endl;
-         
-         
-//         string ServiceName="H1D/nodeMF001_EXAMPLE_01/SafetyCheck/Trips";
-//         histogramDB->declareHistByServiceName(ServiceName);
-         
           histogramDB->commit();
-//          std::string histoName = item->text(Presenter::Task) + "/" + item->text(Presenter::Type) +
-//                                  "/" + item->text(Presenter::Name);
-
-//          OnlineHistogram* h3=histogramDB->getHistogram(histoName);
-//          OnlineHistPage* pg=histogramDB->getPage("yPage", "unsorted");
-//          pg->setFolder("unsorted");
-//          pg->declareHistogram(h3, 0.0, 0.0, 0.5, 1.0);
-//           histogramDB->commit();  
-          // TODO: col-enum
-          // This should also work ...find out why it doesn't.
-//          histogramDB->declareHistogram(item->text(Presenter::Task), // taskName
-//                                   item->text(Presenter::Type), // algorithmName
-//                                   item->text(Presenter::Name), // entityName
-//                                   0);            // Dimension
-//
-//          std::cout <<  "Task: "  << item->text(Presenter::Task) <<
-//                        " Algo: " << item->text(Presenter::Type) <<
-//                        " Name: " << item->text(Presenter::Name) << std::endl;
           refreshHistogramListView();                               
           statusBar()->message(tr("Successfully added selected histogram(s)"
                                 "to queue for declaration."));
@@ -900,7 +1122,6 @@ void PageEditorMainWindow::addHistogramsToDatabase()
 //        if (m_verbose > 1) std::cout << "declared: " <<  std::endl;                                  
         } catch (SQLException sqlException) {
         // TODO: add error logging backend - MsgStream?
-        // TODO: Ask Giacomo to add clear statement queue to API.
           switch(QMessageBox::warning(this, tr("LHCb Presenter Page Editor"),
               tr("Could not declare selected histograms in OnlineHistDB:\n\n"
                  "%1\nSorry.\n\n").arg(sqlException.getMessage()),
@@ -1308,7 +1529,7 @@ void PageEditorMainWindow::connectToDatabase(const QString &dbPassword, const QS
     refreshHistogramListView();
     refreshFolderNameComboBox();
     refreshPageNameComboBox();
-    
+ 
   } catch (SQLException sqlException) {
     // TODO: add error logging backend - MsgStream?
 //  if (m_verbose > 1)
@@ -1359,13 +1580,6 @@ void PageEditorMainWindow::showHistogramDatabaseTools()
   pageNameTextLabel->show();
 }
 
-void PageEditorMainWindow::clearCanvas()
-{
-//  m_mainPageRootCanvas->GetCanvas()->SetEditable(true);
-//  m_mainPageRootCanvas->GetCanvas()->Divide(1,1);
-//  m_mainPageRootCanvas->Clear();
-  }
-
 //TODO: refactor this quick hack to have common trunk with DBtoPage
 void PageEditorMainWindow::addSelectedHistogramsFromDIMToPage()
 {
@@ -1381,7 +1595,7 @@ void PageEditorMainWindow::addSelectedHistogramsFromDIMToPage()
   int m_refreshTimeHisto = 1;
   int m_verbose = 1;
   
-  int iHisto = 1;
+//  iHisto = 1;
 
   m_mainPageRootCanvas->GetCanvas()->SetEditable(true);
   m_mainPageRootCanvas->GetCanvas()->Divide(1,1);
@@ -1408,7 +1622,6 @@ void PageEditorMainWindow::addSelectedHistogramsFromDIMToPage()
                                  
     if (Presenter::H1D == serviceType.substr(0,3)) {
       HistogramH1D histogramH1D;
-      // TODO: sharedptr: place delete...
       histogramH1D.dimProxy = new DimProxy(serviceNameFQ,
                                            m_refreshTimeHisto,
                                            m_verbose);        
@@ -1428,7 +1641,6 @@ void PageEditorMainWindow::addSelectedHistogramsFromDIMToPage()
 //            }
 
           // book the 1D histo which is to be displayed
-          // TODO: sharedptr - place delete
           histogramH1D.rootH1D = new TH1F(histoID.c_str(), hTitle.c_str(),
                                           nBinsX, xMin, xMax);
           histogramH1D.rootOffsetH1D = new TH1F("", "",
@@ -1478,8 +1690,7 @@ void PageEditorMainWindow::addSelectedHistogramsFromDIMToPage()
                          " xMin "   << xMin   <<
                          " xMax "   << xMax   << std::endl;
 
-          // book the 1D histo which is to be displayed
-          // TODO: sharedptr - place delete    
+          // book the 1D histo which is to be displayed    
           histoProfile.rootH1D = new TH1F(histoID.c_str(),
                                           hTitle.c_str(),
                                           nBinsX, xMin, xMax);
@@ -1517,7 +1728,6 @@ void PageEditorMainWindow::addSelectedHistogramsFromDIMToPage()
                        " yMax "   << yMax   << std::endl;
           
           // book new TH2F - the one which is to be displayed
-          // TODO: sharedptr - place delete       
           histogramH2D.rootH2D = new TH2F(histoID.c_str(), hTitle.c_str(), 
                                           nBinsX, xMin, xMax,
                                           nBinsY, yMin, yMax);
@@ -1622,17 +1832,17 @@ void PageEditorMainWindow::addSelectedHistogramsFromDIMToPage()
   statusBar()->message(tr("Canvas ready."));
 }
 
-void PageEditorMainWindow::fillPageWithHistograms(QListView &listView)
-{
-
-}
-
 void PageEditorMainWindow::readFoldersFromHistoDatabase( QListView &listView, int filterCriteria, bool histograms )
 {
   
   std::vector<std::string>      localDatabaseFolders;
   std::vector<std::string>      localDatabasePages;
+  std::vector<std::string>      localDatabaseIDS;
   std::vector<OnlineHistogram*> localDatabaseHistograms;
+  // hxD type:
+  std::vector<std::string>      histogramTypes;
+  std::vector<std::string>::const_iterator histogramType;  
+  
   bool folderExists = false;
   QString listLabel = "";
   
@@ -1650,7 +1860,9 @@ void PageEditorMainWindow::readFoldersFromHistoDatabase( QListView &listView, in
       localDatabaseFolders.clear();
       QListViewItem *parentFolder = NULL;
       QListViewItem *folderChild = NULL;
-                
+
+
+      //TODO: cleanup this cp monster                
       switch (filterCriteria) {
         case Presenter::Folder:
           histogramDB->getPageFolderNames(localDatabaseFolders, "ROOT");
@@ -1702,22 +1914,28 @@ void PageEditorMainWindow::readFoldersFromHistoDatabase( QListView &listView, in
                 BOOST_FOREACH(string page, localDatabasePages) {
                 QListViewItem *pageItem = new QListViewItem(parentFolder,
                                                             page,
-                                                            tr("Page"));
-                pageItem->setSelectable(false);                                                        
-                if (histograms) {                                                        
-                  localDatabaseHistograms.clear();
-                  histogramDB->getHistogramsByPage(page, localDatabaseHistograms);
-                  BOOST_FOREACH(OnlineHistogram *histogram, localDatabaseHistograms)
-                  {
+                                                            tr("Page"),
+                                                            folder);
+                if(histograms) {
+                pageItem->setSelectable(false);
+                }
+                                                                      
+                if (histograms) {
+                  localDatabaseIDS.clear();
+                  histogramTypes.clear();
+                  histogramDB->getHistogramsByPage(page, NULL, &localDatabaseIDS, &histogramTypes);
+                  histogramType = histogramTypes.begin();
+                  BOOST_FOREACH(string id,localDatabaseIDS) {
                     QListViewItem *item1 = new QListViewItem(pageItem,
-                                                 histogram->identifier(),
-                                                 tr("Histogram"));
-                    if (Presenter::H2D == histogram->hstype()) {
+                                                 id,
+                                                 tr("Histogram"));                                      
+                    if (Presenter::H2D == *histogramType) {
                       item1->setPixmap(0, uicLoadPixmap("h2_t.png"));
-                      } else if (Presenter::H1D == histogram->hstype()) {
+                      } else if (Presenter::H1D == *histogramType) {
                         item1->setPixmap(0, uicLoadPixmap("h1_t.png"));
                       }   
                     }
+                    ++histogramType;
                   }
                 }
               }
@@ -1746,25 +1964,20 @@ void PageEditorMainWindow::readFoldersFromHistoDatabase( QListView &listView, in
                 parentFolder->setSelectable(false);                     
               }                        
               if (histograms) {                                                        
-                localDatabaseHistograms.clear();
-                // TODO: ease load
-                if (folder != "ECAL" &&
-                    folder != "EXAMPLE" && // char string buffer 2 small
-                    folder != "L0" &&
-                    folder != "RICH1" &&
-                    folder != "IT") {
-                  histogramDB->getHistogramsBySubsystem(folder, localDatabaseHistograms);
-                  BOOST_FOREACH(OnlineHistogram *histogram, localDatabaseHistograms)
-                  {
-                    QListViewItem *item1 = new QListViewItem(parentFolder,
-                                                 histogram->identifier(),
-                                                 tr("Histogram"));
-                    if (Presenter::H2D == histogram->hstype()) {
-                      item1->setPixmap(0, uicLoadPixmap("h2_t.png"));
-                    } else if (Presenter::H1D == histogram->hstype()) {
-                      item1->setPixmap(0, uicLoadPixmap("h1_t.png"));
-                    }   
+                localDatabaseIDS.clear();
+                histogramTypes.clear();
+                histogramDB->getHistogramsBySubsystem(folder, NULL, &localDatabaseIDS, &histogramTypes);
+                histogramType = histogramTypes.begin();
+                BOOST_FOREACH(string id,localDatabaseIDS) {
+                  QListViewItem *item1 = new QListViewItem(parentFolder,
+                                               id,
+                                               tr("Histogram"));
+                  if (Presenter::H2D == *histogramType) {
+                    item1->setPixmap(0, uicLoadPixmap("h2_t.png"));
+                  } else if (Presenter::H1D == *histogramType) {
+                    item1->setPixmap(0, uicLoadPixmap("h1_t.png"));
                   }
+                  ++histogramType;   
                 }
               }
             }                                        
@@ -1773,51 +1986,96 @@ void PageEditorMainWindow::readFoldersFromHistoDatabase( QListView &listView, in
         case Presenter::Task:
           histogramDB->getTasks(localDatabaseFolders);         
           BOOST_FOREACH(string folder, localDatabaseFolders) {
-              folderExists = false;
-              folderChild = listView.firstChild();
-              while (folderChild) {
-                if (folderChild->text(0) == folder) {
-                  folderExists = true;                  
-                  break;
-                }
-                folderChild = folderChild->nextSibling();
+            folderExists = false;
+            folderChild = listView.firstChild();
+            while (folderChild) {
+              if (folderChild->text(0) == folder) {
+                folderExists = true;                  
+                break;
               }
-              if (!folderExists) {
-                parentFolder = new QListViewItem(&listView, folder,
-                                                 tr("Task"));
-                parentFolder->setSelectable(false);                                                               
-              }                        
-              if (histograms) {                                                        
-                localDatabaseHistograms.clear();
-                // TODO: ease load
-                if (folder != "ECAL" &&
-                    folder != "MonA" &&
-                    folder != "MonB" &&
-                    folder != "MonC" &&
-                    folder != "EXAMPLE" && // char string buffer 2 small                    
-                    folder != "MyExampleMeyrin" && // char string buffer 2 small
-                    folder != "chr" && // char string buffer 2 small
-                    folder != "TEST") {
-                  histogramDB->getHistogramsByTask(folder, localDatabaseHistograms);
-
-                  BOOST_FOREACH(OnlineHistogram *histogram, localDatabaseHistograms)
-                  {
-                    QListViewItem *item1 = new QListViewItem(parentFolder,
-                                                 histogram->identifier(),
-                                                 tr("Histogram"));
-                    if (Presenter::H2D == histogram->hstype()) {
-                      item1->setPixmap(0, uicLoadPixmap("h2_t.png"));
-                    } else if (Presenter::H1D == histogram->hstype()) {
-                      item1->setPixmap(0, uicLoadPixmap("h1_t.png"));
-                    }   
-                  }
+              folderChild = folderChild->nextSibling();
+            }
+            if (!folderExists) {
+              parentFolder = new QListViewItem(&listView, folder,
+                                               tr("Task"));
+              parentFolder->setSelectable(false);                                                               
+            }                        
+            if (histograms) {                                                        
+              localDatabaseIDS.clear();
+              histogramTypes.clear();
+              histogramDB->getHistogramsByTask(folder, NULL, &localDatabaseIDS, &histogramTypes);
+              histogramType = histogramTypes.begin();
+              BOOST_FOREACH(string id,localDatabaseIDS) {
+                QListViewItem *item1 = new QListViewItem(parentFolder,
+                                             id,
+                                             tr("Histogram"));
+                if (Presenter::H2D == *histogramType) {
+                  item1->setPixmap(0, uicLoadPixmap("h2_t.png"));
+                } else if (Presenter::H1D == *histogramType) {
+                  item1->setPixmap(0, uicLoadPixmap("h1_t.png"));
                 }
+                ++histogramType;  
               }
             }
+          }
+          break;         
+        case Presenter::HistogramsWithAnalysis:
+          if (histograms) {                                                        
+            localDatabaseIDS.clear();
+            histogramTypes.clear();
+            histogramDB->getHistogramsWithAnalysis( NULL, &localDatabaseIDS, &histogramTypes);
+            histogramType = histogramTypes.begin();
+            BOOST_FOREACH(string id,localDatabaseIDS) {
+              QListViewItem *item1 = new QListViewItem(&listView,
+                                           id,
+                                           tr("Histogram"));
+              if (Presenter::H2D == *histogramType) {
+                item1->setPixmap(0, uicLoadPixmap("h2_t.png"));
+              } else if (Presenter::H1D == *histogramType) {
+                item1->setPixmap(0, uicLoadPixmap("h1_t.png"));
+              }
+              ++histogramType;    
+            }
+          }                                  
           break;
-// TODO: getAll()?          
-        case Presenter::AllHistos:                            
-          break;                    
+        case Presenter::AnalysisHistograms:
+          if (histograms) {                                                        
+            localDatabaseIDS.clear();
+            histogramTypes.clear();
+            histogramDB->getAnalysisHistograms(NULL, &localDatabaseIDS, &histogramTypes);
+            histogramType = histogramTypes.begin();
+            BOOST_FOREACH(string id,localDatabaseIDS) {
+              QListViewItem *item1 = new QListViewItem(&listView,
+                                           id,
+                                           tr("Histogram"));
+              if (Presenter::H2D == *histogramType) {
+                item1->setPixmap(0, uicLoadPixmap("h2_t.png"));
+              } else if (Presenter::H1D == *histogramType) {
+                item1->setPixmap(0, uicLoadPixmap("h1_t.png"));
+              }
+              ++histogramType;   
+            }
+          }                         
+          break;          
+        case Presenter::AllHistos:
+          if (histograms) {                                                        
+            localDatabaseIDS.clear();
+            histogramTypes.clear();
+            histogramDB->getAllHistograms(NULL, &localDatabaseIDS, &histogramTypes);
+            histogramType = histogramTypes.begin();
+            BOOST_FOREACH(string id,localDatabaseIDS) {
+              QListViewItem *item1 = new QListViewItem(&listView,
+                                           id,
+                                           tr("Histogram"));
+              if (Presenter::H2D == *histogramType) {
+                item1->setPixmap(0, uicLoadPixmap("h2_t.png"));
+              } else if (Presenter::H1D == *histogramType) {
+                item1->setPixmap(0, uicLoadPixmap("h1_t.png"));
+              }
+              ++histogramType;   
+            }
+          }                                 
+          break;          
         default:
           break;
       }
@@ -1858,4 +2116,41 @@ void PageEditorMainWindow::deleteSelectedHistogramsFromDatabase()
   else cout << "commit aborted because of previous errors" <<endl;
   
   refreshHistogramListView();
+}
+
+void PageEditorMainWindow::clearDisplayedPage()
+{
+  startStop = false;
+  startStopButton->setText(tr("Start"));
+    
+  m_mainPageRootCanvas->GetCanvas()->SetEditable(true);
+  m_mainPageRootCanvas->GetCanvas()->Divide(1,1);
+  m_mainPageRootCanvas->GetCanvas()->Clear();
+  m_mainPageRootCanvas->GetCanvas()->Update();
+  
+  pageHistogramsView->clear();
+  
+  BOOST_FOREACH(HistogramH2D displayedH2DHistogram, displayedH2DHistograms) {
+    if(displayedH2DHistogram.rootH2D) delete displayedH2DHistogram.rootH2D;
+    if(displayedH2DHistogram.rootH2D) delete displayedH2DHistogram.dimProxy;
+    if(displayedH2DHistogram.rootOffsetH2D) delete displayedH2DHistogram.rootOffsetH2D;    
+  }
+  
+  BOOST_FOREACH(HistogramH1D displayedH1DHistogram, displayedH1DHistograms) {
+    if(displayedH1DHistogram.rootH1D) delete displayedH1DHistogram.rootH1D;
+    if(displayedH1DHistogram.rootH1D) delete displayedH1DHistogram.dimProxy;
+    if(displayedH1DHistogram.rootOffsetH1D) delete displayedH1DHistogram.rootOffsetH1D;    
+  }
+
+  BOOST_FOREACH(HistogramH1D displayedHPDHistogram, displayedHPDHistograms) {
+    if(displayedHPDHistogram.rootH1D) delete displayedHPDHistogram.rootH1D;
+    if(displayedHPDHistogram.dimProxy) delete displayedHPDHistogram.dimProxy;
+    if(displayedHPDHistogram.rootOffsetH1D) delete displayedHPDHistogram.rootOffsetH1D;
+  }
+
+  
+  displayedH2DHistograms.clear();
+  displayedH1DHistograms.clear();
+  displayedHPDHistograms.clear();
+  iHisto = 0;
 }

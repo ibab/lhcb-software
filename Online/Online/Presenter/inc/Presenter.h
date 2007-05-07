@@ -15,8 +15,9 @@ namespace Presenter {
   
   static const int  Folder = 6;
   static const int  Subsystem = 7;
-  static const int  Analysis = 8;
-  static const int  AllHistos = 8;
+  static const int  HistogramsWithAnalysis = 8;
+  static const int  AllHistos = 9;
+  static const int  AnalysisHistograms = 10;  
   
   static const std::string Unknown = "Unknown";
   static const std::string H1D = "H1D";
