@@ -1,4 +1,4 @@
-// $Id: TrackCriteriaSelector.h,v 1.9 2007-03-05 15:24:43 cattanem Exp $
+// $Id: TrackCriteriaSelector.h,v 1.10 2007-05-07 09:22:37 cattanem Exp $
 #ifndef TRACKMCTOOLS_TRACKCRITERIASELECTOR_H 
 #define TRACKMCTOOLS_TRACKCRITERIASELECTOR_H 1
 
@@ -85,7 +85,7 @@ public:
 
   /** Get the track type identifier of the MCParticle.
    *  @return           Track type identifier as defined in Track.h
-   *  @param mcParticle Input MCParticle.
+   *  @param mcPart     Input MCParticle.
    */
   virtual unsigned int trackType( const LHCb::MCParticle* mcPart ) const ;
 

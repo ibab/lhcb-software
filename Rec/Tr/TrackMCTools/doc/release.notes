@@ -4,6 +4,10 @@
 ! Purpose     : package for tracking tools accessing MC information
 !-----------------------------------------------------------------------------
 
+!======================= TrackMCTools v2r10 2007-05-07 =======================
+! 2007-05-07 - Marco Cattaneo
+ - Fix a doxygen warning
+
 ! 2007-05-06 M Needham
  - Changes in IdealStateCreator
    * Follow extension of interface to MCHits
