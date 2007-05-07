@@ -11,13 +11,15 @@
  *
  * <b>The classes used by Bender are documented in the following reference manuals:</b>
  *
- * \li \ref davincisysdoxygenmain "DaVinciSys documentation (DaVinci application/configuration)"
- * \li \ref physsysdoxygenmain    "PhysSys documentation  (LHCb physics classes)"
- * \li \ref recsysdoxygenmain     "RecSys documentation   (LHCb reconstruction classes)"
- * \li \ref lbcomdoxygenmain      "LbcomSys documentation (LHCb shared components)"
- * \li \ref lhcbdoxygenmain       "LHCbSys documentation" (LHCb event and detector model classes)
- * \li \ref gaudidoxygenmain      "Gaudi documentation"   
- * \li \ref externaldocs          "Related external libraries"
+ * \li \ref davincisysdoxygenmain   "DaVinciSys documentation  (DaVinci application/configuration)"
+ * \li \ref analysissysdoxygenmain  "AnalysisSys documentation (LHCb Physics Analysis classes)"
+ * \li \ref hltsysdoxygenmain       "HltSys documentation      (LHCb High Level Trigger classes)"
+ * \li \ref physsysdoxygenmain      "PhysSys documentation    (LHCb Basic Physics Analysis classes)"
+ * \li \ref recsysdoxygenmain       "RecSys documentation   (LHCb Reconstruction classes)"
+ * \li \ref lbcomdoxygenmain        "LbcomSys documentation (LHCb Shared components)"
+ * \li \ref lhcbdoxygenmain         "LHCbSys documentation" (LHCb Event and Detector Model classes)
+ * \li \ref gaudidoxygenmain        "Gaudi documentation"   
+ * \li \ref externaldocs            "Related external libraries"
  *
  * \sa
  * <a href="../release.notes"><b>Bender release notes history</b></a>
