@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Presenter/gui/presenter/PageEditorMainWindow.ui.h,v 1.10 2007-05-07 14:06:45 psomogyi Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Presenter/gui/presenter/PageEditorMainWindow.ui.h,v 1.11 2007-05-07 16:19:56 psomogyi Exp $
 
 /****************************************************************************
  ** ui.h extension file, included from the uic-generated form implementation.
@@ -1275,8 +1275,8 @@ void PageEditorMainWindow::refreshPage()
             std::cout << "DIM histo entries " << nEntries << 
                          " histo entries "    << 
                          displayedHPDHistogram.rootH1D->GetEntries() <<
-                         std::endl;  
-        }        
+                         std::endl;
+        }
       } else  {
         m_histoOK = false;
         std::string hTitle = displayedHPDHistogram.rootH1D->GetTitle();      
@@ -1286,8 +1286,8 @@ void PageEditorMainWindow::refreshPage()
         std::string message = "1D histogram " + hTitle +
                               " not OK, stopping update";      
         statusBar()->message(message.c_str());
-        return;      
-      }  
+        return;
+      }
     }
 
 //  if (m_verbose > 2)
@@ -2132,13 +2132,13 @@ void PageEditorMainWindow::clearDisplayedPage()
   
   BOOST_FOREACH(HistogramH2D displayedH2DHistogram, displayedH2DHistograms) {
     if(displayedH2DHistogram.rootH2D) delete displayedH2DHistogram.rootH2D;
-    if(displayedH2DHistogram.rootH2D) delete displayedH2DHistogram.dimProxy;
+    if(displayedH2DHistogram.dimProxy) delete displayedH2DHistogram.dimProxy;
     if(displayedH2DHistogram.rootOffsetH2D) delete displayedH2DHistogram.rootOffsetH2D;    
   }
   
   BOOST_FOREACH(HistogramH1D displayedH1DHistogram, displayedH1DHistograms) {
     if(displayedH1DHistogram.rootH1D) delete displayedH1DHistogram.rootH1D;
-    if(displayedH1DHistogram.rootH1D) delete displayedH1DHistogram.dimProxy;
+    if(displayedH1DHistogram.dimProxy) delete displayedH1DHistogram.dimProxy;
     if(displayedH1DHistogram.rootOffsetH1D) delete displayedH1DHistogram.rootOffsetH1D;    
   }
 
