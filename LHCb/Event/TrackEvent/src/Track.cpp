@@ -1,10 +1,15 @@
-// $Id: Track.cpp,v 1.37 2007-03-23 08:47:44 cattanem Exp $ // Include files
+// $Id: Track.cpp,v 1.38 2007-05-07 14:50:17 mneedham Exp $ // Include files
 
 // local
 #include "Event/Track.h"
 #include "Event/TrackFunctor.h"
 #include <functional>
 #include <string>
+
+// from gsl
+#include "gsl/gsl_math.h"
+#include "gsl/gsl_cdf.h"
+
 
 using namespace Gaudi;
 using namespace LHCb;
@@ -70,6 +75,33 @@ double Track::p() const
 double Track::pt() const
 {
   return firstState().pt();
+};
+
+
+//=============================================================================
+// Pseudorapidity of the track at the first state
+//=============================================================================
+double Track::pseudoRapidity() const{
+  Gaudi::XYZVector slopes = this->slopes();
+  const double tanTheta = sqrt((gsl_pow_2(slopes.x()) + gsl_pow_2(slopes.y()))/
+                    (1 +gsl_pow_2(slopes.x()) + gsl_pow_2(slopes.y() )));
+  return -log(0.5*atan(tanTheta));
+}
+
+//=============================================================================
+// Phi of the track at the first state
+//=============================================================================
+double Track::phi() const{
+  Gaudi::XYZVector slopes = this->slopes();
+  return slopes.y()/slopes.x();
+}
+
+//=============================================================================
+// Retrieve the probability of chi^2 
+//=============================================================================
+double Track::probChi2() const
+{
+  return gsl_cdf_chisq_Q(chi2(),nDoF());
 };
 
 //=============================================================================

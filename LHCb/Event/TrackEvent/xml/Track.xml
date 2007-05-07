@@ -351,6 +351,18 @@
         const   = 'TRUE' />
 
       <method
+        type    = 'double'
+        name    = 'pseudoRapidity'
+        desc    = 'Retrieve the pseudorapidity at the first state'
+        const   = 'TRUE' />
+
+      <method
+        type    = 'double'
+        name    = 'phi'
+        desc    = 'Retrieve the phi at the first state'
+        const   = 'TRUE' />
+
+      <method
         type    = 'void'
         name    = 'momentum'
         desc    = 'Retrieve the momentum vector (and errors) at the first state'
@@ -413,6 +425,13 @@
   m_chi2PerDoF = ( ndof != 0 ) ? chi2/((double) (ndof)) : 0.0;
   m_nDoF = ndof;
         </code>
+      </method>
+
+      <method
+        type    = 'double'
+        name    = 'probChi2'
+        desc    = 'Probability of chi2^2 of the track'
+        const   = 'TRUE'>
       </method>
 
       <method

@@ -4,6 +4,12 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+! 2007-05-06 M. Needham
+ - Add functionality to track 
+   * Function to return phi
+   * Function to return pseudoRapidity()
+   * Function to return probChi2()
+
 !======================= TrackEvent v4r2 2007-04-20 ==========================
 ! 2007-04-20 - Erica Polycarpo
  - add Muon Track type and location 
