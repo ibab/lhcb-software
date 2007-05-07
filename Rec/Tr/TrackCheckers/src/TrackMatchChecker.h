@@ -1,4 +1,4 @@
-// $Id: TrackMatchChecker.h,v 1.2 2006-09-01 09:34:54 erodrigu Exp $
+// $Id: TrackMatchChecker.h,v 1.3 2007-05-07 09:38:40 cattanem Exp $
 #ifndef TRACKMATCHING_TRACKMATCHCHECKER_H 
 #define TRACKMATCHING_TRACKMATCHCHECKER_H 1
 
@@ -7,9 +7,6 @@
 
 // Event
 #include "Event/Track.h"
-
-// from LHCbKernel
-#include "Kernel/ISTClusterPosition.h"
 
 // from TrackInterfaces
 #include "TrackInterfaces/ITrackExtrapolator.h"
@@ -26,8 +23,7 @@
  *  cheated matching. The results are stored in an ntuple.
  *
  *  @author:   Jeroen van Tilburg Jeroen.van.Tilburg@cern.ch
- *  @date:     21-06-2002
- *  @modified: 15-05-2006
+ *  @date:     21-06-2002 modified: 15-05-2006
  */
 
 class TrackMatchChecker: public GaudiTupleAlg {

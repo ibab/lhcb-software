@@ -4,6 +4,11 @@
 ! Purpose     : Package for track checking algorithms
 !-----------------------------------------------------------------------------
 
+!======================= TrackCheckers v2r13 2007-05-07 ======================
+! 2007-05-07 - Marco Cattaneo
+ - Fix doxygen warnings
+ - Remove obsolete file TrackCheckers_load.cpp
+
 ! 2007-05-06 M Needham
  - Follow changes in IIdealStateCreator interface
 

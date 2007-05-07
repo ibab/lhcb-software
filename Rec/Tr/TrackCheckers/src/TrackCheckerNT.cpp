@@ -1,4 +1,4 @@
-// $Id: TrackCheckerNT.cpp,v 1.4 2007-05-07 08:07:13 mneedham Exp $
+// $Id: TrackCheckerNT.cpp,v 1.5 2007-05-07 09:38:40 cattanem Exp $
 // Include files 
 
 // local
@@ -284,7 +284,7 @@ StatusCode TrackCheckerNT::finalize()
 // simplifies quick cuts on e.g. momentum quite a bit)
 void TrackCheckerNT::fillTrackState(
     Array& statevec,
-    State &st)
+    LHCb::State &st)
 {
   // base units used to save data are mm and GeV, respectively
   // ok, save track state

@@ -1,4 +1,4 @@
-// $Id: TrackMatchChecker.cpp,v 1.4 2007-05-07 08:07:13 mneedham Exp $
+// $Id: TrackMatchChecker.cpp,v 1.5 2007-05-07 09:38:40 cattanem Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -584,11 +584,11 @@ StatusCode TrackMatchChecker::monitor( )
 //=============================================================================
 // Extrapolate a Track to a z-position starting with the closest State
 //=============================================================================
-StatusCode TrackMatchChecker::extrapolate( const Track* track,
+StatusCode TrackMatchChecker::extrapolate( const LHCb::Track* track,
                                            ITrackExtrapolator* extrapolator,
                                            double zpos,
-                                           TrackVector& trackVector,
-                                           TrackSymMatrix& trackCov )
+                                           Gaudi::TrackVector& trackVector,
+                                           Gaudi::TrackSymMatrix& trackCov )
 {
   State tmpState;
   StatusCode sc = extrapolator -> propagate( *track, zpos, tmpState );
