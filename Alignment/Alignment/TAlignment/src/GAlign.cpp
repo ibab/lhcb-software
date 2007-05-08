@@ -4,7 +4,7 @@
  *  Implementation file for RICH reconstruction tool : GAlign
  *
  *  CVS Log :-
- *  $Id: GAlign.cpp,v 1.2 2007-04-25 15:44:20 jblouw Exp $
+ *  $Id: GAlign.cpp,v 1.3 2007-05-08 15:49:29 jblouw Exp $
  *
  *  @author M.Needham Matt.Needham@cern.ch
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -213,7 +213,11 @@ StatusCode GAlign::execute() {
 	double chi2 = 0;
 	//local track fit
 	double residual = -99999.9;
-	m_taConfig->LocalTrackFit(tr_cnt,trpar,0,estimated, chi2, residual);
+	StatusCode sc = m_taConfig->LocalTrackFit(tr_cnt,trpar,0,estimated, chi2, residual);
+	if ( sc != StatusCode::SUCCESS ) {
+	  error() << "Error in LocalTrackFit: bailing out..." << endreq;
+	  return StatusCode::FAILURE;
+	}
 	double z = 7853.42; // at T1
 	State &state = atrack->closestState( z );
 	Gaudi::XYZVector slope = state.slopes();
@@ -347,6 +351,7 @@ StatusCode GAlign::finalize(){
   m_align_err.resize( m_taConfig->NumAlignPars() );
   m_pull.resize( m_taConfig->NumAlignPars() );
   m_taConfig->GlobalFit( m_align, m_align_err, m_pull );
+  //  info() << "Alignment parameters = " << m_align << endreq;
   //  m_Millepede->MakeGlobalFit(align,align_err,pull);
   return GaudiAlgorithm::finalize();
 }
