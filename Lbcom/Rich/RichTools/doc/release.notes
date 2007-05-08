@@ -4,6 +4,7 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+!=========================== RichTools v2r13 2007-05-08 ======================
 ! 2007-05-08 - Chris Jones
  - Fix how the 'default' tool mappings are handled in RichToolRegistry
    (previously was not working) + Add a more complete list of default tools
