@@ -125,6 +125,9 @@ private:
   std::vector< double >     m_yfoiParam2;
   std::vector< double >     m_yfoiParam3;
 
+  // foifactor for MuonID calibration (in opts file, default = 1.)
+  double m_foifactor;
+
   // Number of tracks with IsMuon = True (monitoring)
   int m_nmu;
   int m_ntotmu;

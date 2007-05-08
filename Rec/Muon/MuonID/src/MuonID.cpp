@@ -30,6 +30,10 @@
 //
 // small fixes (DLL binning for pions, Landau with 9 parameters, muonPID key)
 // 08/02/2007 : Erica Polycarpo, Miriam Gandelman 
+//
+// added the method makeMuonTrack to create a track object for each MuonPID
+// added a foifactor to enlarge the foi if needed. default = 1.
+// 07/05/2007 : Erica Polycarpo, Miriam Gandelman
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
@@ -71,6 +75,8 @@ MuonID::MuonID( const std::string& name,
   declareProperty( "YFOIParameter2", m_yfoiParam2 );
   declareProperty( "YFOIParameter3", m_yfoiParam3 );
 
+  declareProperty("FOIfactor",m_foifactor = 1.);
+
   declareProperty("distMuon",m_distMuon);
   declareProperty("distPion",m_distPion);
 
@@ -90,7 +96,7 @@ StatusCode MuonID::initialize() {
   const StatusCode sc = GaudiAlgorithm::initialize();
   if ( sc.isFailure() ) { return sc; }
 
-  info()   << " MuonID v4r6 - DC06" << endmsg;
+  info()   << " MuonID v5r1 - DC06" << endmsg;
 
   debug()  << "==> Initialise" << endreq;
   debug()  << "Input tracks in: " << m_TracksPath << endreq;
@@ -737,12 +743,14 @@ StatusCode MuonID::setCoords(LHCb::MuonPID *pMuid){
 
 
 	  // not optimal this should be called only once per station, region	 
-          double foiXDim = foiX( station, region, m_MomentumPre, dx);
-          double foiYDim = foiY( station, region, m_MomentumPre, dy);      
+          double foiXDim = m_foifactor*foiX( station, region, m_MomentumPre, dx);
+          double foiYDim = m_foifactor*foiY( station, region, m_MomentumPre, dy);      
 	  
           // check if the hit is in the window
           if(  ( fabs( x - m_trackX[station] ) < foiXDim ) &&
                ( fabs( y - m_trackY[station] ) < foiYDim )  ) {
+
+            debug()  << "FOIfactor : " << m_foifactor << endreq;
 
             debug()  << "ratioX = " << fabs( x - m_trackX[station])
                      << "ratioY = " << fabs( y - m_trackY[station]) << " foiXDim = "
