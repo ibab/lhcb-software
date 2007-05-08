@@ -2,7 +2,12 @@
 ! Responsible : Matt Needham
 !---------------------------------------------------------------------------
 
-! 2006-05-07 M. Needham
+! 2007-05-07 M. Needham
+ - Add new algorithm that merges the four sub-detector relations tables
+   into one. This works. But. I cannot get it to run via DataOnDemand
+   hence these options are commented. 
+
+! 2007-05-07 M. Needham
  - Remove load file
 
 !====================== Associators v3r4 2006-09-21 ========================

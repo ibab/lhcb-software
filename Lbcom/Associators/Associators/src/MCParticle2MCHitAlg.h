@@ -24,7 +24,6 @@ public:
 
   virtual StatusCode execute   ();    ///< Algorithm execution
 
-protected:
 
 private:
   std::string m_inputData;  ///< location of Particles to associate
