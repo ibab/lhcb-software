@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::ToolRegistry
  *
  *  CVS Log :-
- *  $Id: RichToolRegistry.h,v 1.14 2007-03-09 17:40:29 jonrob Exp $
+ *  $Id: RichToolRegistry.h,v 1.15 2007-05-08 12:01:33 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -43,6 +43,14 @@ namespace Rich
                        virtual public IToolRegistry
   {
 
+  private: // definitions
+
+    /// typedef of container of strings for job options
+    typedef std::vector<std::string> ToolList;
+
+    /// typedef for the mapping between nicknames and class names
+    typedef Rich::HashMap< std::string, std::string > RichToolMap;
+
   public: // for Gaudi framework
 
     /// Standard constructor
@@ -55,9 +63,6 @@ namespace Rich
 
     // Initialization of the tool after creation
     StatusCode initialize();
-
-    // Finalization of the tool before deletion
-    //StatusCode finalize();
 
   public: // methods (and doxygen comments) inherited from interface
 
@@ -72,6 +77,9 @@ namespace Rich
 
   private: // methods
 
+    /// Set up the tool mappings
+    void setUpTools( const ToolList & toolList );
+
     /// Adds a entry to the map between nicknames and class names
     void addEntry( const std::string & nickname, ///< tool nickname
                    const std::string & type      ///< tool class name
@@ -79,13 +87,9 @@ namespace Rich
 
   private: // data
 
-    /// typedef of container of strings for job options
-    typedef std::vector<std::string> ToolList;
     /// Tool data from job options
     ToolList m_names;
 
-    /// typedef for the mapping between nicknames and class names
-    typedef Rich::HashMap< std::string, std::string > RichToolMap;
     /// The mapping between the tool name and type
     mutable RichToolMap m_myTools;
 

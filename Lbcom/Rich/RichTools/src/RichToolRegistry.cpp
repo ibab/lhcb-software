@@ -5,7 +5,7 @@
  * Implementation file for class : RichToolRegistry
  *
  * CVS Log :-
- * $Id: RichToolRegistry.cpp,v 1.13 2007-02-01 17:51:11 jonrob Exp $
+ * $Id: RichToolRegistry.cpp,v 1.14 2007-05-08 12:01:33 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -30,15 +30,6 @@ Rich::ToolRegistry::ToolRegistry( const std::string& type,
   // declare interface
   declareInterface<IToolRegistry>(this);
 
-  // initialise
-  m_names.clear();
-
-  // define some default tool mappings
-
-  // MC truth tools
-  m_names.push_back ( "Rich::MC::MCTruthTool/RichMCTruthTool"         );
-  m_names.push_back ( "Rich::Rec::MC::MCTruthTool/RichRecMCTruthTool" );
-
   // job option for mapping between nickname and class name
   declareProperty( "Tools", m_names );
 }
@@ -49,16 +40,56 @@ StatusCode Rich::ToolRegistry::initialize()
   const StatusCode sc = GaudiTool::initialize();
   if ( sc.isFailure() ) return sc;
 
+  // define some default tool mappings
+  ToolList defaultTools;
+  // MC
+  defaultTools.push_back ( "Rich::MC::MCTruthTool/RichMCTruthTool"         );
+  defaultTools.push_back ( "Rich::Rec::MC::MCTruthTool/RichRecMCTruthTool" );
+  // Common RICH tools
+  defaultTools.push_back ( "Rich::MirrorSegFinder/RichMirrorSegFinder"     );
+  defaultTools.push_back ( "Rich::DAQ::RawBufferToSmartIDsTool/RichSmartIDDecoder" );
+  defaultTools.push_back ( "Rich::RadiatorTool/RichRadiatorTool" );
+  defaultTools.push_back ( "Rich::DAQ::RawDataFormatTool/RichRawDataFormatTool" );
+  defaultTools.push_back ( "Rich::ParticleProperties/RichParticleProperties" );
+  defaultTools.push_back ( "Rich::RayTracing/RichRayTracing" );
+  defaultTools.push_back ( "Rich::SmartIDTool/RichSmartIDTool" );
+  defaultTools.push_back ( "Rich::DetParameters/RichDetParameters" );
+  defaultTools.push_back ( "Rich::TabulatedRefractiveIndex/RichRefractiveIndex" );
+  // Reco Tools
+  defaultTools.push_back ( "Rich::Rec::MassHypothesisRingCreator/RichMassHypoRings" );
+  defaultTools.push_back ( "Rich::Rec::RayTraceCherenkovCone/RichRayTraceCKCone" );
+  defaultTools.push_back ( "Rich::Rec::SegmentCreator/RichSegmentCreator" );
+  defaultTools.push_back ( "Rich::Rec::StatusCreator/RichStatusCreator" );
+  defaultTools.push_back ( "Rich::Rec::ExpectedTrackSignal/RichExpectedTrackSignal" );
+  defaultTools.push_back ( "Rich::Rec::GeomEffPhotonTracing/RichGeomEff" );
+  defaultTools.push_back ( "Rich::Rec::PhotonSignal/RichPhotonSignal" );
+  defaultTools.push_back ( "Rich::Rec::CherenkovAngle/RichCherenkovAngle" );
+  defaultTools.push_back ( "Rich::Rec::GeomTool/RichRecGeometry" );
+  defaultTools.push_back ( "Rich::Rec::TabulatedRayleighScatter/RichRayleighScatter" );
+  defaultTools.push_back ( "Rich::Rec::SellmeirFunc/RichSellmeirFunc" );
+  defaultTools.push_back ( "Rich::Rec::TabulatedSignalDetectionEff/RichSignalDetectionEff" );
+  defaultTools.push_back ( "Rich::Rec::TabulatedGasQuartzWindowAbs/RichGasQuartzWindow" );
+  // other tools
+  defaultTools.push_back ( "OdinTimeDecoder/OdinTimeDecoder" );
+
+  // configure the default tools first
+  setUpTools( defaultTools );
+  // then the ones from the job options
+  setUpTools( m_names );
+
+  return sc;
+}
+
+void Rich::ToolRegistry::setUpTools( const ToolList & toolList )
+{
   // setup tool registry
-  for ( ToolList::const_iterator it = m_names.begin();
-        it != m_names.end(); ++it )
+  for ( ToolList::const_iterator it = toolList.begin();
+        it != toolList.end(); ++it )
   {
     const int slash = (*it).find_first_of( "/" );
     addEntry( ( slash>0 ? (*it).substr(slash+1) : *it ),
               ( slash>0 ? (*it).substr(0,slash) : *it ) );
   }
-
-  return sc;
 }
 
 const std::string &
@@ -98,7 +129,7 @@ void Rich::ToolRegistry::addEntry( const std::string & nickname,
   if ( !m_myTools[nickname].empty() && type != m_myTools[nickname] )
   {
     Warning( "Nickname '" + nickname + "' mapping changed : '"
-             + m_myTools[nickname] + "' to '" + type + "'", StatusCode::SUCCESS );
+             + m_myTools[nickname] + "' to '" + type + "'", 0, StatusCode::SUCCESS );
   }
   if ( msgLevel(MSG::DEBUG) )
   {

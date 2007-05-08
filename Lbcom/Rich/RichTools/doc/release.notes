@@ -4,6 +4,10 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+! 2007-05-08 - Chris Jones
+ - Fix how the 'default' tool mappings are handled in RichToolRegistry
+   (previously was not working) + Add a more complete list of default tools
+
 !=========================== RichTools v2r12 2007-04-23 ======================
 ! 2007-04-23 - Chris Jones
  - Update RichSmartIDTool to return StatusCodes for SmartID -> position 
