@@ -8,12 +8,12 @@ version v0r1
 
 branches cmt doc src gui inc tmp test
 
-use   DIM						v*	 Online
-use	  OnlineHistDB	v2r1 Online
-use   ROOT					v*   LCG_Interfaces
-use   Qt						v*	 LCG_Interfaces
-use   Boost					v*	 LCG_Interfaces
-use   GaudiPolicy		v*
+use   DIM           v*   Online
+use   OnlineHistDB  v2r1 Online
+use   ROOT          v*   LCG_Interfaces
+use   Qt            v*   LCG_Interfaces
+use   Boost         v*   LCG_Interfaces
+use   GaudiPolicy   v*
 
 # Go for the latest and greatest ROOT:
 #macro ROOT_config_version "5.15.02"
@@ -35,7 +35,7 @@ set QMAKESPEC "$(QTDIR)/mkspecs/linux-g++" WIN32 "%QTDIR%\mkspecs\win32-msvc.net
 #    containing the emebedded code for images in ../images/
 # You need to make your application depending on MyProj and add the line:
 # $(tmp)/MyProj_images.cpp to the list of sources of your application
-pattern	qt_embedimages action \
+pattern  qt_embedimages action \
 "$(QTDIR)/bin/uic -embed <proj> <images> -o $(tmp)/<proj>_images.cpp"
 
 # Generation of mocs
@@ -51,7 +51,7 @@ pattern	qt_embedimages action \
 make_fragment moc_header
 make_fragment moc -header=moc_header -suffix=moc.cpp
 pattern qt_mocgen \
-	document moc <name> -s=<dir> <files>
+  document moc <name> -s=<dir> <files>
 
 # Compilation of ui files.
 # Just add your .ui (xml files) as sources of your application.
@@ -59,7 +59,7 @@ pattern qt_mocgen \
 # to add this file among application's sources since it is 
 # already included in qt generated code
 # Example:
-#    application	qtApp	$(lib_opts)	../somedir/*.ui
+#    application  qtApp  $(lib_opts)  ../somedir/*.ui
 #    Will create the qt application qtApp using ../somedir/*.ui files
 #    As it was from C/C++. Of course you can mix .ui and .cpp:
 #    "../somedir/*.ui ../src/main.cpp ../src/anothercpp.cpp"
@@ -69,10 +69,10 @@ pattern qt_mocgen \
 #         3- running moc over the .h generating .moc.cpp
 #         4- compiling the .cpp and .moc.cpp in .o and .moc.o
 #         5- doing the rest...
-make_fragment 	uic 		
-#make_fragment 	uic_library 	
-language	uic	-suffix=ui -fragment=uic -linker=$(cpplink) \
-						 -extra_output_suffix=.moc
+make_fragment   uic     
+#make_fragment   uic_library   
+language  uic  -suffix=ui -fragment=uic -linker=$(cpplink) \
+             -extra_output_suffix=.moc
 
 # To be done: compiler parameters and linking...
 # To be understood: Qt compiler definitions usually
@@ -82,32 +82,32 @@ language	uic	-suffix=ui -fragment=uic -linker=$(cpplink) \
 
 # QtROOT generated mocs - to put % instead of list....
 
-macro qtrootmocs_src	"$(tmp)/TQCanvasMenu.moc.cpp  \
-		$(tmp)/TQRootDialog.moc.cpp  \
-		$(tmp)/TQRootApplication.moc.cpp \
-		$(tmp)/TQRootCanvas.moc.cpp  "
-#		$(tmp)/TQApplication.moc.cpp \
-#		$(tmp)/TQRootGuiFactory.moc.cpp \
-#		$(tmp)/TQCanvasImp.moc.cpp"  
+macro qtrootmocs_src  "$(tmp)/TQCanvasMenu.moc.cpp  \
+    $(tmp)/TQRootDialog.moc.cpp  \
+    $(tmp)/TQRootApplication.moc.cpp \
+    $(tmp)/TQRootCanvas.moc.cpp  "
+#    $(tmp)/TQApplication.moc.cpp \
+#    $(tmp)/TQRootGuiFactory.moc.cpp \
+#    $(tmp)/TQCanvasImp.moc.cpp"  
 
 action qtrootmocsclean "rm -f $(tmp)/*" WIN32 "del /Q $(tmp)\*"
 #action Presenterclean  "rm -rf $(bin)*" WIN32 "del $(bin)*"
 
 
 #==========================================================================#
-#Auto generate some qt code												   #
+#Auto generate some qt code                           #
 #==========================================================================#
 # PROJECT embedded images example
-# qt_embedimages	proj=PROJECT images=../PROJECT/images/*
+# qt_embedimages  proj=PROJECT images=../PROJECT/images/*
 
 #QtROOT
-qt_mocgen	name=qtrootmocs dir=$(ROOTSYS)/include files= "TQCanvasMenu.h	\
-					TQRootDialog.h	\
-					TQRootApplication.h \
-					TQRootCanvas.h	"
-#					TQApplication.h \
-#					TQRootGuiFactory.h \
-#					TQCanvasImp.h"
+qt_mocgen  name=qtrootmocs dir=$(ROOTSYS)/include files= "TQCanvasMenu.h  \
+          TQRootDialog.h  \
+          TQRootApplication.h \
+          TQRootCanvas.h  "
+#          TQApplication.h \
+#          TQRootGuiFactory.h \
+#          TQCanvasImp.h"
 
 
 #macro_append ROOT_linkopts  " -lm -ldl -rdynamic -lHist -lGraf -lGraf3d -lGpad -lTree -lRint -lGui -lQtGSI" \
@@ -123,7 +123,7 @@ macro_append includes " -I$(tmp)/ -I$(PRESENTERROOT)/inc"
 #macro_remove libraryshr_linkopts '-Wl,--as-needed'
 #macro_append libraryshr_linkopts '-locci -lclntsh'
 
-#qt_embedimages	proj=Gui images=../gui/images/*
+#qt_embedimages  proj=Gui images=../gui/images/*
 application Presenter " $(qtrootmocs_src)  \
-			../gui/presenter/*.ui ../gui/presenter/PresenterImageCollection.cpp ../src/DimProxy.cpp ../src/main.cpp"
+      ../gui/presenter/*.ui ../gui/presenter/PresenterImageCollection.cpp ../src/DimProxy.cpp ../src/main.cpp"
 
