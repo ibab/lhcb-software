@@ -1,4 +1,4 @@
-// $Id: DaughtersInLHCb.h,v 1.2 2007-02-22 13:30:24 robbep Exp $
+// $Id: DaughtersInLHCb.h,v 1.3 2007-05-08 13:42:00 robbep Exp $
 #ifndef GENERATORS_DAUGHTERSINLHCB_H 
 #define GENERATORS_DAUGHTERSINLHCB_H 1
 
@@ -60,11 +60,5 @@ class DaughtersInLHCb : public GaudiTool, virtual public IGenCutTool {
    * (set by options) 
    */
   double m_neutralThetaMax ;
-
-  /// boost a particle 
-  StatusCode boostTree( HepMC::GenParticle * theSignal ,
-                        const HepMC::GenParticle * theSignalAtRest ,
-                        const ROOT::Math::Boost& theBoost ) const ;
-
 };
 #endif // GENERATORS_DAUGHTERSINLHCB_H

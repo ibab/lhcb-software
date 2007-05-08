@@ -1,9 +1,18 @@
-! $Id: release.notes,v 1.98 2007-05-03 14:21:57 gcorti Exp $
+! $Id: release.notes,v 1.99 2007-05-08 13:42:00 robbep Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Gen/Generators
 ! Responsible : Patrick ROBBE
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
+
+! 2007-05-08 - Patrick Robbe
+ - Clean cut tools to remove unused functions: 
+    . src/component/DaughtersInLHCb.cpp
+    . src/component/DaughtersInLHCb.h
+    . src/component/ListOfDaughtersInLHCb.cpp
+    . src/component/ListOfDaughtersInLHCb.h
+    . src/component/SelectedDaughterInLHCb.cpp
+    . src/component/SelectedDaughterInLHCb.h
 
 !====================== Generators v7r1 2007-05-03 ===========================
 ! 2007-05-03 - Gloria CORTI

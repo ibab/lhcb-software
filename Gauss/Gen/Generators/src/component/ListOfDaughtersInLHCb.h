@@ -1,4 +1,4 @@
-// $Id: ListOfDaughtersInLHCb.h,v 1.2 2007-02-22 13:30:24 robbep Exp $
+// $Id: ListOfDaughtersInLHCb.h,v 1.3 2007-05-08 13:42:00 robbep Exp $
 #ifndef GENERATORS_LISTOFDAUGHTERSINLHCB_H 
 #define GENERATORS_LISTOFDAUGHTERSINLHCB_H 1
 
@@ -72,11 +72,5 @@ class ListOfDaughtersInLHCb : public GaudiTool, virtual public IGenCutTool {
 
   /// temporary vector to read PIDs from options
   std::vector< int > m_pidVector ;
-
-  /// boost a particle 
-  StatusCode boostTree( HepMC::GenParticle * theSignal ,
-                        const HepMC::GenParticle * theSignalAtRest ,
-                        const ROOT::Math::Boost& theBoost ) const ;
-
 };
 #endif // GENERATORS_LISTOFDAUGHTERSINLHCB_H
