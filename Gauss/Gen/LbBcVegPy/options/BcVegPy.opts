@@ -1,21 +1,20 @@
-// $Id: BcVegPy.opts,v 1.1 2006-10-06 15:50:26 gcorti Exp $ 
+// $Id: BcVegPy.opts,v 1.2 2007-05-08 13:45:03 robbep Exp $ 
 
 /** @file 
  * 
  *  Options to be (re-)set when running with BcVegPy for production of 
  *  Bc mesons
  *
- *  @author P.Robbe, G.Corti
+ *  @author P.Robbe, G.Corti, J. He
  *  @date 2006-06-16
  *
  */
 
 ApplicationMgr.DLLs += { "LbBcVegPy" };
 
-Generation.SampleGenerationTool       = "SignalPlain";
-Generation.SignalPlain.ProductionTool = "BcVegPyProduction";
-Generation.SignalPlain.SignalPIDList  = { 541 , -541 };
-Generation.SignalPlain.BcVegPyProduction.BcVegPyCommands = {
+Generation.SampleGenerationTool       = "Special";
+Generation.Special.ProductionTool = "BcVegPyProduction";
+Generation.Special.BcVegPyProduction.BcVegPyCommands = {
   "mixevnt imix 1" ,
   "mixevnt imixtype 1" ,
   "counter ibcstate 1",
@@ -24,5 +23,5 @@ Generation.SignalPlain.BcVegPyProduction.BcVegPyCommands = {
   "loggrade ivegasopen 0",
   "loggrade igrade 1"
  } ;
-Generation.PileUpTool = "FixedNInteractions";
+Generation.PileUpTool = "FixedLuminosityForRareProcess";
 

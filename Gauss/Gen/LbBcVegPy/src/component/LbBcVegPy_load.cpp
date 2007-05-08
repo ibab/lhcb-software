@@ -1,4 +1,4 @@
-// $Id: LbBcVegPy_load.cpp,v 1.2 2006-07-04 11:59:40 gcorti Exp $
+// $Id: LbBcVegPy_load.cpp,v 1.3 2007-05-08 13:45:03 robbep Exp $
 // Include files 
 
 
@@ -19,4 +19,6 @@ DECLARE_FACTORY_ENTRIES(LbBcVegPy) {
   // Production tools
   DECLARE_TOOL( BcVegPyProduction ) ;
  
+  // Cut Tools
+  DECLARE_TOOL( BcDaughtersInLHCb ) ;
 }
