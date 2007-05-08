@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::RayTraceCherenkovCone
  *
  *  CVS Log :-
- *  $Id: RichRayTraceCherenkovCone.cpp,v 1.19 2007-04-27 11:17:56 jonrob Exp $
+ *  $Id: RichRayTraceCherenkovCone.cpp,v 1.20 2007-05-08 12:17:44 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -171,6 +171,12 @@ RayTraceCherenkovCone::rayTrace ( const Rich::DetectorType rich,
       if ( point )
       {
 
+        // set position and SmartID data in the ring point
+        const Gaudi::XYZPoint & gP = photon.detectionPoint();
+        point->setGlobalPosition(gP);
+        point->setLocalPosition(m_smartIDTool->globalToPDPanel(gP));
+        point->setSmartID( photon.pixelCluster().primaryID() );
+
         // next, if configured to do so test acceptance of this point
         if ( mode.detPlaneBound() == LHCb::RichTraceMode::RespectHPDPanel ||
              mode.detPlaneBound() == LHCb::RichTraceMode::RespectHPDTubes )
@@ -194,21 +200,17 @@ RayTraceCherenkovCone::rayTrace ( const Rich::DetectorType rich,
               }
             }
           }
-        } // final tests
-
-        const Gaudi::XYZPoint & gP = photon.detectionPoint();
-        point->setGlobalPosition(gP);
-        point->setLocalPosition(m_smartIDTool->globalToPDPanel(gP));
-        point->setSmartID( photon.pixelCluster().primaryID() );
+        }
     
       }
       else
       {
-        Warning( "Failed to ray trace to the infinite HPD panel" );
+        Warning( "Failed to ray trace to the 'infinite' HPD panel" );
       }
 
     }
 
+    // All was OK
     return StatusCode::SUCCESS;
 
   }

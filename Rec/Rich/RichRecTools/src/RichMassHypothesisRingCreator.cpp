@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::MassHypothesisRingCreator
  *
  *  CVS Log :-
- *  $Id: RichMassHypothesisRingCreator.cpp,v 1.16 2007-02-02 10:10:41 jonrob Exp $
+ *  $Id: RichMassHypothesisRingCreator.cpp,v 1.17 2007-05-08 12:17:44 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -138,7 +138,9 @@ MassHypothesisRingCreator::buildRing( LHCb::RichRecSegment * segment,
     newRing->setRich( segment->trackSegment().rich() );
 
     // ray tracing
-    m_coneTrace->rayTrace( newRing, 100, m_traceMode );
+    int nPoints = static_cast<int>( 1500 * ckTheta );
+    if ( nPoints<30 ) nPoints = 30;
+    m_coneTrace->rayTrace( newRing, nPoints, m_traceMode );
 
     // save to container
     saveMassHypoRing(newRing);

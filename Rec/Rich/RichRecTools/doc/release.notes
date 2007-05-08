@@ -7,6 +7,8 @@
 ! 2007-04-27 - Chris Jones
  - Fix bug in Cherenkov Cone raytracing tool, which causes an infrequent
    crash in Panoramix
+ - Update CK ring tool to determine the number of ring points to use based
+   on the size of the ring
 
 !===================== RichRecTools v3r10 2007-04-24 ==========================
 ! 2007-04-24 - Marco Cattaneo
