@@ -21,12 +21,12 @@ win32: INCLUDEPATH += inc/ gui/presenter $(ROOTSYS)/include \
 Z:/cern.ch/sw/lcg/external/Boost/1.33.1/win32_vc71/include/boost-1_33_1 \
 Z:/cern.ch/sw/lcg/external/oracle/10.2.0.2/win32_vc71/include/ \
 $(DIMROOT)/dim/ \
-../../OnlineHistDB/v2r0/
+$(ONLINEHISTDBROOT)/
 unix: INCLUDEPATH += inc/ gui/presenter $(ROOTSYS)/include \
 /afs/cern.ch/sw/lcg/external/Boost/1.33.1/$(CMTCONFIG)/include/boost-1_33_1 \
 /afs/cern.ch/sw/lcg/external/oracle/10.2.0.2/$(CMTCONFIG)/include \
 $(DIMROOT)/dim \
-../../OnlineHistDB/v2r0/
+$(ONLINEHISTDBROOT)/
 
 win32: LIBS  +=  -L$(ROOTSYS)/lib libHist.lib libGraf.lib libGraf3d.lib \
 libGpad.lib libTree.lib libRint.lib libGui.lib libQtGSI.lib libCore.lib libCint.lib \
@@ -34,14 +34,14 @@ libGpad.lib libTree.lib libRint.lib libGui.lib libQtGSI.lib libCore.lib libCint.
 boost_date_time-vc71-mt-1_33_1.lib \
 -LZ:/cern.ch/sw/lcg/external/oracle/10.2.0.2/win32_vc71/lib oraocci10.lib \
 -L$(DIMROOT)/$(CMTCONFIG) dim.lib \  
--L../../OnlineHistDB/v2r0/$(CMTCONFIG) OnlineHistDB.lib  
+-L$(ONLINEHISTDBROOT)/$(CMTCONFIG) OnlineHistDB.lib  
 
 unix: LIBS  +=  -L$(ROOTSYS)/lib -lHist -lGraf -lGraf3d -lGpad -lTree -lRint \
 -lGui -lQtGSI -lCore -lCint \
 -L/afs/cern.ch/sw/lcg/external/Boost/1.33.1/slc4_ia32_gcc34/lib -lboost_date_time-gcc-mt \
 -L/afs/cern.ch/sw/lcg/external/oracle/10.2.0.2/slc4_ia32_gcc34/lib -lclntsh \
 -L$(DIMROOT)/$(CMTCONFIG) -ldim \
--L../../OnlineHistDB/v2r0/$(CMTCONFIG) -lOnlineHistDB
+-L$(ONLINEHISTDBROOT)/OnlineHistDB/v2r0/$(CMTCONFIG) -lOnlineHistDB
 
 CONFIG  += qt warn_on thread debug
 MOC_DIR = $(PRESENTERROOT)/tmp/
