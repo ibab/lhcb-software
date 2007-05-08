@@ -4,6 +4,9 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+! 2007-05-08 - Chris Jones
+ - Remove default options from tool settings (RichToolRegistry)
+
 !====================== RichRecSys v3r3 2007-04-24 =====================
 ! 2007-03-27 - Chris Jones
  - Minor reorganisation of the algorithm sequence. Primarily to get timing

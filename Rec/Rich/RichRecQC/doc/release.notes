@@ -4,6 +4,9 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2007-05-08 - Chris Jones
+ - Remove now obsolete settings for RichToolRegistry from options files
+
 !======================= RichRecQC v2r10 2007-04-23 ==========================
 ! 2007-04-23 - Chris Jones
  - Adapt to changes in decoded RICH data format

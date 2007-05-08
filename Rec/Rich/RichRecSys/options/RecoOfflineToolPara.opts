@@ -93,18 +93,18 @@ ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::TrackSelector/TrackSelec
 ToolSvc.Offline.RichToolRegistry.Context = "Offline";
 
 // RichRecRing creator for mass hypothesis rings
-ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::MassHypothesisRingCreator/RichMassHypoRings" };
+//ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::MassHypothesisRingCreator/RichMassHypoRings" };
 
 // Cherenkov Cone ray tracing
-ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::RayTraceCherenkovCone/RichRayTraceCKCone" };
+//ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::RayTraceCherenkovCone/RichRayTraceCKCone" };
 
 // Segment creator
-ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::SegmentCreator/RichSegmentCreator" };
+//ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::SegmentCreator/RichSegmentCreator" };
 //                                                Aerogel  C4F10   CF4
 ToolSvc.Offline.RichSegmentCreator.EnergyBins = { 5,       5,      5   };
 
 // Status Creator
-ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::StatusCreator/RichStatusCreator" };
+//ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::StatusCreator/RichStatusCreator" };
 
 // Geometrical efficiency from full ray tracing
 ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::GeomEffPhotonTracing/RichGeomEff" };
@@ -119,10 +119,10 @@ ToolSvc.Offline.RichGeomEff.CheckBeamPipe                = true;
 //ToolSvc.Offline.RichToolRegistry.RichGeomEff.FixedScatterEfficiency  =  0.55;
 
 // Track signals
-ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::ExpectedTrackSignal/RichExpectedTrackSignal" };
+//ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::ExpectedTrackSignal/RichExpectedTrackSignal" };
 
 // Photon signals
-ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::PhotonSignal/RichPhotonSignal" };
+//ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::PhotonSignal/RichPhotonSignal" };
 
 // Cherenkov resolution - fixed binned implementation as a function of cherenkov angle
 #include "$RICHRECSYSOPTS/tools/BinnedCherenkovResVtheta.opts"
@@ -134,58 +134,58 @@ ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::PhotonSignal/RichPhotonS
 //#include "$RICHRECSYSOPTS/tools/FunctionalCherenkovRes.opts"
 
 // Expected Cherenkov angles
-ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::CherenkovAngle/RichCherenkovAngle" };
+//ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::CherenkovAngle/RichCherenkovAngle" };
 
 // Reco geometry tool
-ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::GeomTool/RichRecGeometry" };
+//ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::GeomTool/RichRecGeometry" };
 //ToolSvc.RichRecGeometry.RadOpticalCorrections = { 0.037, 0.0105, -0.014 };
 
 // Refractive index using XML tabulation
-ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::TabulatedRefractiveIndex/RichRefractiveIndex" };
+//ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::TabulatedRefractiveIndex/RichRefractiveIndex" };
 
 // Rayleigh scattering using XML tabulation
-ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::TabulatedRayleighScatter/RichRayleighScatter" };
+//ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::TabulatedRayleighScatter/RichRayleighScatter" };
 // Rayleigh scattering using analytic function
 //ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::FunctionalRayleighScatter/RichRayleighScatter" };
 
 // Sellmeir function
-ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::SellmeirFunc/RichSellmeirFunc" };
+//ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::SellmeirFunc/RichSellmeirFunc" };
 ToolSvc.Offline.RichSellmeirFunc.WaveIndpTrans = 1.0;
 //ToolSvc.Offline.RichSellmeirFunc.WaveIndpTrans = 0.9368;
 
 // Photon detection efficiency using XML tabulation
-ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::TabulatedSignalDetectionEff/RichSignalDetectionEff" };
+//ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::TabulatedSignalDetectionEff/RichSignalDetectionEff" };
 
 // Rich particle properties
-ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::ParticleProperties/RichParticleProperties" };
+//ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::ParticleProperties/RichParticleProperties" };
 
 // Gas Quartz window transmission
-ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::TabulatedGasQuartzWindowAbs/RichGasQuartzWindow" };
+//ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::TabulatedGasQuartzWindowAbs/RichGasQuartzWindow" };
 
 // Detector Parameters
-ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::DetParameters/RichDetParameters" };
+//ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::DetParameters/RichDetParameters" };
 //                                                    Aerogel  C4F10   CF4
 ToolSvc.Offline.RichDetParameters.MinPhotonEnergy = { 1.75,    1.75,   1.75 };
 ToolSvc.Offline.RichDetParameters.MaxPhotonEnergy = { 4.00,    7.00,   7.00 };
 
 // SmartID manipulation
-ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::SmartIDTool/RichSmartIDTool" };
+//ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::SmartIDTool/RichSmartIDTool" };
 
 // Detector ray-tracing
-ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::RayTracing/RichRayTracing" };
+//ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::RayTracing/RichRayTracing" };
 ToolSvc.Offline.RichRayTracing.HistoProduce = false;
 
 // mirror segment finder
-ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::MirrorSegFinder/RichMirrorSegFinder" };
+//ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::MirrorSegFinder/RichMirrorSegFinder" };
 
 // Raw Buffer decoding
-ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::DAQ::RawBufferToSmartIDsTool/RichSmartIDDecoder" };
+//ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::DAQ::RawBufferToSmartIDsTool/RichSmartIDDecoder" };
 
 // radiator tool
-ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::RadiatorTool/RichRadiatorTool" };
+//ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::RadiatorTool/RichRadiatorTool" };
 
 // raw buffer tool
-ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::DAQ::RawDataFormatTool/RichRawDataFormatTool" };
+//ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::DAQ::RawDataFormatTool/RichRawDataFormatTool" };
 
 // default raw buffer decoding options
 #include "$RICHDAQROOT/options/Brunel_DecodeRawEvent.opts"

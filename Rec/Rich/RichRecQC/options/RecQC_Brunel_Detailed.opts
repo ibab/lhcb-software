@@ -1,8 +1,8 @@
 // Extensions to standard monitoring for experts
 
 // MC tools
-ToolSvc.RichToolRegistry.Tools += { "Rich::MC::MCTruthTool/RichMCTruthTool" };
-ToolSvc.RichToolRegistry.Tools += { "Rich::Rec::MC::MCTruthTool/RichRecMCTruthTool" };
+//ToolSvc.RichToolRegistry.Tools += { "Rich::MC::MCTruthTool/RichMCTruthTool" };
+//ToolSvc.RichToolRegistry.Tools += { "Rich::Rec::MC::MCTruthTool/RichRecMCTruthTool" };
 
 // Monitors for different track types
 #include "$RICHRECQCOPTS/pid/BrunelMoni_LongTracks.opts"
