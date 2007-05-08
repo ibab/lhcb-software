@@ -2,6 +2,9 @@
 ! Responsible : Matt Needham
 !---------------------------------------------------------------------------
 
+! 2006-05-07 M. Needham
+ - Remove load file
+
 !====================== Associators v3r4 2006-09-21 ========================
 ! 2006-09-21 - Olivier Callot
  - Remove the production of the Relation table. Only the Linker table is
