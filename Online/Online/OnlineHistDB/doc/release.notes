@@ -1,7 +1,9 @@
-! $Id: release.notes,v 1.5 2007-03-21 13:15:14 ggiacomo Exp $
+! $Id: release.notes,v 1.6 2007-05-08 09:41:49 ggiacomo Exp $
 ! Package     : OnlineHistDB
 ! Responsible : Giacomo Graziani
 
+! 20070508 - OnlineHistDB v2r1
+	- improved query methods, some bug fixes
 
 ! 20070321 - OnlineHistDB v2r0
         - old histogram title is now the histogram name
