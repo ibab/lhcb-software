@@ -4,7 +4,7 @@
  *  Header file for algorithm class : Rich::Rec::MC::MCMassHypoRingsAlg
  *
  *  CVS Log :-
- *  $Id: RichMCMassHypoRingsAlg.h,v 1.8 2007-03-09 22:59:34 jonrob Exp $
+ *  $Id: RichMCMassHypoRingsAlg.h,v 1.9 2007-05-08 12:12:57 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   10/01/2003
@@ -29,6 +29,11 @@
 #include "RichRecBase/IRichMassHypothesisRingCreator.h"
 #include "RichRecBase/IRichRayTraceCherenkovCone.h"
 
+// Linker
+#include "Linker/LinkerWithKey.h"
+#include "Linker/LinkerTool.h"
+#include "Linker/LinkedTo.h"
+
 namespace Rich
 {
   namespace Rec
@@ -45,8 +50,13 @@ namespace Rich
        *  @date   10/01/2003
        */
 
-      class MCMassHypoRingsAlg : public RichRecAlgBase 
+      class MCMassHypoRingsAlg : public RichRecAlgBase
       {
+
+      private: // definitions
+
+        /// typedef for building linker
+        typedef LinkerWithKey<LHCb::RichRecRing,LHCb::MCRichSegment> MCRichSegmentToMCCKRing;
 
       public:
 
@@ -68,6 +78,12 @@ namespace Rich
 
         /// Returns the cherenkov angle for a given MCRichSegment
         double ckTheta( const LHCb::MCRichSegment * segment ) const;
+
+        /// Reset linker object for new event
+        void resetLinker();
+
+        /// Return a pointer to the linker for this event
+        MCRichSegmentToMCCKRing * linker() const;
 
       private: // Private data members
 
@@ -100,6 +116,9 @@ namespace Rich
         /// Ray-tracing configuration object
         LHCb::RichTraceMode m_traceMode;
 
+        /// Pointer to linker object
+        mutable MCRichSegmentToMCCKRing * m_linker;
+
       };
 
       inline const IMassHypothesisRingCreator *
@@ -114,6 +133,11 @@ namespace Rich
           acquireTool( toolName, tool );
         }
         return tool;
+      }
+
+      inline void MCMassHypoRingsAlg::resetLinker()
+      {
+        if ( m_linker ) { delete m_linker; m_linker = NULL; }
       }
 
     }

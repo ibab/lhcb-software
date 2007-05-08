@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichMCMassHypoRingsAlg
  *
  *  CVS Log :-
- *  $Id: RichMCMassHypoRingsAlg.cpp,v 1.12 2007-02-02 10:07:11 jonrob Exp $
+ *  $Id: RichMCMassHypoRingsAlg.cpp,v 1.13 2007-05-08 12:12:57 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -34,8 +34,9 @@ MCMassHypoRingsAlg::MCMassHypoRingsAlg( const std::string& name,
     m_rayTrace     ( 0 ),
     m_maxCKtheta   ( Rich::NRadiatorTypes, 999 ),
     m_minCKtheta   ( Rich::NRadiatorTypes, 0   ),
-    m_traceMode    ( LHCb::RichTraceMode::RespectHPDTubes, 
-                     LHCb::RichTraceMode::SimpleHPDs )
+    m_traceMode    ( LHCb::RichTraceMode::RespectHPDTubes,
+                     LHCb::RichTraceMode::SimpleHPDs ),
+    m_linker       ( NULL )
 {
 
   // Event locations to process
@@ -91,14 +92,18 @@ StatusCode MCMassHypoRingsAlg::execute()
   debug() << "Execute" << endreq;
 
   // loop over data locations
+  StatusCode sc = StatusCode::SUCCESS;
   for ( EventList::const_iterator iEvt = m_evtLocs.begin();
         iEvt != m_evtLocs.end(); ++iEvt )
   {
-    const StatusCode sc = buildRings( *iEvt );
-    if ( sc.isFailure() ) { return sc; }
+    sc = buildRings( *iEvt );
+    if ( sc.isFailure() ) { break; }
   }
 
-  return StatusCode::SUCCESS;
+  // force a new linker for next event
+  resetLinker();
+
+  return sc;
 }
 
 StatusCode
@@ -106,7 +111,7 @@ MCMassHypoRingsAlg::buildRings( const std::string & evtLoc ) const
 {
   // Try to locate MCRichSegments
   SmartDataPtr<LHCb::MCRichSegments> mcSegs( eventSvc(),
-                                       evtLoc+LHCb::MCRichSegmentLocation::Default );
+                                             evtLoc+LHCb::MCRichSegmentLocation::Default );
   if ( !mcSegs ) { return StatusCode::SUCCESS; }
   debug() << "Successfully located " << mcSegs->size()
           << " MCRichSegments at " << evtLoc << LHCb::MCRichSegmentLocation::Default << endreq;
@@ -148,6 +153,9 @@ MCMassHypoRingsAlg::buildRings( const std::string & evtLoc ) const
     }
     verbose() << " -> CK theta = " << theta << endreq;
 
+    int nPoints = static_cast<int>( 1500 * theta );
+    if ( nPoints<30 ) nPoints = 30;
+
     // Emission point and direction
     const Gaudi::XYZPoint  bestPtn = segment->bestPoint(0.5);
     const Gaudi::XYZVector bestDir = segment->bestMomentum(0.5);
@@ -162,7 +170,7 @@ MCMassHypoRingsAlg::buildRings( const std::string & evtLoc ) const
     mode.setOutMirrorBoundary ( false                 );
     mode.setMirrorSegBoundary ( false                 );
     m_rayTrace->rayTrace( segment->rich(), bestPtn, bestDir,
-                          theta, points, 100, mode );
+                          theta, points, nPoints, mode );
     // if no points in acceptance, delete this ring and continue
     if ( points.empty() )
     {
@@ -198,10 +206,13 @@ MCMassHypoRingsAlg::buildRings( const std::string & evtLoc ) const
 
     // ray-trace again using loose mode to get the full ring.
     m_rayTrace->rayTrace( segment->rich(), bestPtn, bestDir,
-                          theta, ring, 100, m_traceMode );
+                          theta, ring, nPoints, m_traceMode );
 
     // save the new ring
     ringCr->saveMassHypoRing(ring);
+
+    // create link between MCRichSegment and the ring
+    linker()->link( segment, ring );
 
     verbose() << " -> All OK -> new ring created : CKtheta=" << ring->radius()
               << endreq;
@@ -238,3 +249,19 @@ double MCMassHypoRingsAlg::ckTheta( const LHCb::MCRichSegment * segment ) const
   return ( nPhots>0 ? angle / static_cast<double>(nPhots) : 0 );
 }
 
+//===============================================================================
+// Create linker object
+//===============================================================================
+MCMassHypoRingsAlg::MCRichSegmentToMCCKRing * MCMassHypoRingsAlg::linker() const
+{
+  if ( !m_linker )
+  {
+    // New linker object
+    m_linker =
+      new MCRichSegmentToMCCKRing( evtSvc(), msgSvc(),
+                                   LHCb::MCRichSegmentLocation::Default+"2MCCKRings" );
+    // set the ordering
+    m_linker->setDecreasingWeight();
+  }
+  return m_linker;
+}

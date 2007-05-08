@@ -3,7 +3,7 @@
 # Maintainer : Christopher Rob Jones
 #            : Expert monitor algorithms for RICH reconstruction
 #============================================================================
-# $Id: requirements,v 1.15 2007-04-24 13:35:41 cattanem Exp $
+# $Id: requirements,v 1.16 2007-05-08 12:12:57 jonrob Exp $
 #============================================================================
 
 package RichRecMonitors
@@ -19,6 +19,7 @@ set RICHRECMONITORSOPTS $(RICHRECMONITORSROOT)/options
 # ================ dependencies =============================================
 use RichRecBase       v*    Rich
 use MCEvent           v*    Event
+use LinkerEvent       v*    Event
 
 # ================ component library=========================================
 library           RichRecMonitors   ../src/*.cpp   -import=AIDA

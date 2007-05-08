@@ -1,7 +1,21 @@
 
 // Options need to build the Cherenkov Rings from MCRichSegments
 
-ApplicationMgr.TopAlg += { "Rich::Rec::MC::MCMassHypoRingsAlg/BuildMCRichRings" };
+// Run explicitly as a top algorithm
+//ApplicationMgr.TopAlg += { "Rich::Rec::MC::MCMassHypoRingsAlg/BuildMCRichRings" };
+
+// Use data-on-demand service to run as and when needed
+DataOnDemandSvc.Algorithms += 
+{ 
+  "DATA='/Event/MC/Rich/CherenkovRings'               TYPE='Rich::Rec::MC::MCMassHypoRingsAlg/BuildMCRichRings'",
+  "DATA='/Event/Prev/MC/Rich/CherenkovRings'          TYPE='Rich::Rec::MC::MCMassHypoRingsAlg/BuildMCRichRings'",
+  "DATA='/Event/PrevPrev/MC/Rich/CherenkovRings'      TYPE='Rich::Rec::MC::MCMassHypoRingsAlg/BuildMCRichRings'",
+  "DATA='/Event/Next/MC/Rich/CherenkovRings'          TYPE='Rich::Rec::MC::MCMassHypoRingsAlg/BuildMCRichRings'",
+  "DATA='/Event/NextNext/MC/Rich/CherenkovRings'      TYPE='Rich::Rec::MC::MCMassHypoRingsAlg/BuildMCRichRings'",
+  "DATA='/Event/LHCBackground/MC/Rich/CherenkovRings' TYPE='Rich::Rec::MC::MCMassHypoRingsAlg/BuildMCRichRings'",
+  "DATA='/Event/Link/MC/Rich/Segments2MCCKRings'      TYPE='Rich::Rec::MC::MCMassHypoRingsAlg/BuildMCRichRings'"
+};
+
 BuildMCRichRings.Context = "Offline";
 
 ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::MassHypothesisRingCreator/MCCherenkovRings" };

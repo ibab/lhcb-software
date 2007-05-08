@@ -4,6 +4,12 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2007-05-08 - Chris Jones
+ - Update MC CK ring building algorithm to create a linker object to link
+   MCRichSegments to MC CK ring objects
+ - Update BuildMCCherenkovRings.opts to run on demand
+ - Remove now obsolete RichToolRegistry settings in options (default values)
+
 !====================== RichRecMonitors v2r9 2007-04-24 ======================
 ! 2007-04-23 - Chris Jones
  - Adapt to changes in decoded RICH data format
