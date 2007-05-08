@@ -2,6 +2,11 @@
 ! Responsible : Sebastien Viret
 
 !=============================================================================
+! 08/05/2007 - Johan Blouw     same version
+-> Made Millepede tool compliant to new way of declaring tools
+   Small changes to print a bit more output
+
+!=============================================================================
 ! 25/04/2007 - Sebastien Viret  ** v2r5 **
 
 -> Correction of a memory allocation problem. It only affects the method InitMille()
