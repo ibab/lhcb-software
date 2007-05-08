@@ -41,7 +41,7 @@ unix: LIBS  +=  -L$(ROOTSYS)/lib -lHist -lGraf -lGraf3d -lGpad -lTree -lRint \
 -L/afs/cern.ch/sw/lcg/external/Boost/1.33.1/slc4_ia32_gcc34/lib -lboost_date_time-gcc-mt \
 -L/afs/cern.ch/sw/lcg/external/oracle/10.2.0.2/slc4_ia32_gcc34/lib -lclntsh \
 -L$(DIMROOT)/$(CMTCONFIG) -ldim \
--L$(ONLINEHISTDBROOT)/OnlineHistDB/v2r0/$(CMTCONFIG) -lOnlineHistDB
+-L$(ONLINEHISTDBROOT)/$(CMTCONFIG) -lOnlineHistDB
 
 CONFIG  += qt warn_on thread debug
 MOC_DIR = $(PRESENTERROOT)/tmp/
