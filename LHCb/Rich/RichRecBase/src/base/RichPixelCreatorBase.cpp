@@ -5,7 +5,7 @@
  *  Implementation file for tool base class : RichPixelCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorBase.cpp,v 1.21 2007-04-23 12:56:12 jonrob Exp $
+ *  $Id: RichPixelCreatorBase.cpp,v 1.22 2007-05-08 16:06:03 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/04/2005
@@ -343,7 +343,7 @@ namespace Rich
                     {
                       // make a single pixel for this cluster
                       LHCb::RichRecPixel * pixel = buildPixel( (*iC)->pixels() );
-                      pixel->setAssociatedCluster( (*iC)->pixels() );
+                      if (pixel) pixel->setAssociatedCluster( (*iC)->pixels() );
                     }
                     else
                     {
@@ -352,7 +352,7 @@ namespace Rich
                             iID != (*iC)->pixels().smartIDs().end(); ++iID )
                       {
                         LHCb::RichRecPixel * pixel = buildPixel( *iID );
-                        pixel->setAssociatedCluster( (*iC)->pixels() );
+                        if (pixel) pixel->setAssociatedCluster( (*iC)->pixels() );
                       }
                     }
 
