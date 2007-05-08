@@ -11,7 +11,7 @@
 ! 2007-05-06 M. Needham
  - Add TrackMonitor, TrackMonitorBase (MC independent monitoring)
 
-=======
+
 !======================= TrackCheckers v2r13 2007-05-07 ======================
 ! 2007-05-07 - Marco Cattaneo
  - Fix doxygen warnings
