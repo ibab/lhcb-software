@@ -4,7 +4,7 @@
  *  Implementation file for Millepede configuration tool : TAConfig
  *
  *  CVS Log :-
- *  $Id: TAConfig.cpp,v 1.2 2007-05-08 15:46:46 jblouw Exp $
+ *  $Id: TAConfig.cpp,v 1.3 2007-05-08 17:09:00 jblouw Exp $
  *
  *  @author J. Blouw (johan.blouw@mpi-hd.mpg.de)
  *  @date   12/04/2007
@@ -608,8 +608,8 @@ StatusCode TAConfig::ConstrainPositions( const int &rank, const std::string & de
       return sc;
     }
     info() << "Fixing x-position of object " << de_name << " at rank " << rank << " using ParSig(" << rank << ", 0) "<< endreq;
+    dof_cnt++;
   }
-  dof_cnt++;
   if ( m_dof[1] && m_fix_y) {
     sc = m_Millepede->ParSig(rank+dof_cnt*rs, 0.0); // fix y-position
     if ( sc.isFailure() ) {
@@ -617,8 +617,8 @@ StatusCode TAConfig::ConstrainPositions( const int &rank, const std::string & de
       return sc;
     }
     info() << "Fixing y-position of object " << de_name << " at rank " << rank+rs << " using ParSig(" << rank+dof_cnt*rs << ", 0) "<< endreq;
+    dof_cnt++;
   }
-  dof_cnt++;
   if ( m_dof[2] && m_fix_z) {
     sc = m_Millepede->ParSig(rank+dof_cnt*rs, 0.0); // fix z-position
     if ( sc.isFailure() ) {
@@ -626,8 +626,8 @@ StatusCode TAConfig::ConstrainPositions( const int &rank, const std::string & de
       return sc;
     }
     info() << "Fixing z-position of object " << de_name << " at rank " << rank+dof_cnt*rs << " using ParSig(" << rank+dof_cnt*rs << ", 0) " << endreq;
+    dof_cnt++;
   }
-  dof_cnt++;
   if ( m_dof[3] && m_fix_a) {
     sc = m_Millepede->ParSig(rank+dof_cnt*rs, 0.0); // fix alpha rotation
     if ( sc.isFailure() ) {
@@ -635,8 +635,8 @@ StatusCode TAConfig::ConstrainPositions( const int &rank, const std::string & de
       return sc;
     }
     info() << "Fixing angle alpha of object " << de_name << " at rank " << rank+dof_cnt*rs << " using ParSig(" << rank+dof_cnt*rs << ", 0) " << endreq;
+    dof_cnt++;
   }
-  dof_cnt++;
   if ( m_dof[4] && m_fix_b) {
     sc = m_Millepede->ParSig(rank+dof_cnt*rs, 0.0); // fix beta rotation
     if ( sc.isFailure() ) {
@@ -644,8 +644,8 @@ StatusCode TAConfig::ConstrainPositions( const int &rank, const std::string & de
       return sc;
     }
     info() << "Fixing angle beta of object " << de_name << " at rank " << rank+dof_cnt*rs << " using ParSig(" << rank+dof_cnt*rs << ", 0) " << endreq;
+    dof_cnt++;
   }
-  dof_cnt++;
   if ( m_dof[5] && m_fix_g) {
     sc = m_Millepede->ParSig(rank+dof_cnt*rs, 0.0); // fix gamma rotation
     if ( sc.isFailure() ) {
