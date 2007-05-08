@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool : Rich::Rec::MCTruthTool
  *
  *  CVS Log :-
- *  $Id: RichRecMCTruthTool.h,v 1.23 2007-03-09 22:57:42 jonrob Exp $
+ *  $Id: RichRecMCTruthTool.h,v 1.24 2007-05-08 12:02:56 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -203,6 +203,9 @@ namespace Rich
         // Returns pointer to vector of MCRichSegments associated to a given RichRecTrack
         const SmartRefVector<LHCb::MCRichSegment> * mcRichSegments( const LHCb::RichRecTrack * track ) const;
 
+        // Access the RichRecRing representing the MC CK ring for te given RichRecSegment
+        const LHCb::RichRecRing * mcCKRing( const LHCb::RichRecSegment * segment ) const;
+
         // Is this RichRecPixel background ?
         bool isBackground( const LHCb::RichRecPixel * pixel ) const;
 
@@ -223,11 +226,17 @@ namespace Rich
         // track linker stuff
         typedef LinkerTool<LHCb::Track,LHCb::MCParticle> TrackToMCP;
         typedef TrackToMCP::DirectType                   TrToMCTable;
+        // ring linker stuff
+        typedef LinkerTool<LHCb::MCRichSegment,LHCb::RichRecRing> MCRichSegToMCCKRing;
+        typedef MCRichSegToMCCKRing::DirectType                   MCRichSegToMCCKRTable;
 
       private: // methods
 
         /// Returns the linker object for Tracks to MCParticles
         TrackToMCP * trackToMCPLinks() const;
+
+        /// Returns the linker object for MCRichTracks to MCCK rings
+        MCRichSegToMCCKRing * mcSegToRingLinks() const;
 
         /// Clean up current linker objects
         void cleanUpLinkers();
@@ -243,6 +252,9 @@ namespace Rich
         /// Linker for Tracks to MCParticles
         mutable TrackToMCP * m_trToMCPLinks;
 
+        /// Linker for MCRichTracks to MCCK rings
+        mutable MCRichSegToMCCKRing * m_mcSegToRingLinks;
+
         /// Location of Tracks in TES
         std::string m_trLoc;
 
@@ -250,7 +262,8 @@ namespace Rich
 
       inline void MCTruthTool::cleanUpLinkers()
       {
-        if ( m_trToMCPLinks ) { delete m_trToMCPLinks; m_trToMCPLinks = 0; }
+        if ( m_trToMCPLinks     ) { delete m_trToMCPLinks;     m_trToMCPLinks     = NULL; }
+        if ( m_mcSegToRingLinks ) { delete m_mcSegToRingLinks; m_mcSegToRingLinks = NULL; }
       }
 
       inline void MCTruthTool::InitNewEvent()

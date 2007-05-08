@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : RichRecMCTruthTool
  *
  *  CVS Log :-
- *  $Id: RichRecMCTruthTool.cpp,v 1.27 2007-04-23 13:23:54 jonrob Exp $
+ *  $Id: RichRecMCTruthTool.cpp,v 1.28 2007-05-08 12:02:55 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -31,6 +31,7 @@ MCTruthTool::MCTruthTool( const std::string& type,
   : RichRecToolBase ( type, name, parent ),
     m_truth         ( NULL ),
     m_trToMCPLinks  ( NULL ),
+    m_mcSegToRingLinks ( NULL ),
     m_trLoc         ( LHCb::TrackLocation::Default )
 {
   // interface
@@ -94,6 +95,33 @@ MCTruthTool::trackToMCPLinks() const
     }
   }
   return m_trToMCPLinks;
+}
+
+MCTruthTool::MCRichSegToMCCKRing *
+MCTruthTool::mcSegToRingLinks() const
+{
+  if ( !m_mcSegToRingLinks )
+  {
+    const std::string & loc = LHCb::MCRichSegmentLocation::Default+"2MCCKRings";
+    debug() << "Attempting to load MCRichSegToMCCKRing Linker for '"
+            << loc << "'" << endreq;
+    m_mcSegToRingLinks = new MCRichSegToMCCKRing( evtSvc(), loc );
+    if ( !m_mcSegToRingLinks->direct() )
+    {
+      if ( msgLevel(MSG::DEBUG) )
+        debug() << "Linker for MCRichTracks to MCCKRings not found for '"
+                << loc << "'" << endreq;
+      // delete object and set to NULL, to force retrying next time this method is called.
+      delete m_mcSegToRingLinks;
+      m_mcSegToRingLinks = NULL;
+    }
+    else
+    {
+      debug() << "Found " << m_mcSegToRingLinks->direct()->relations().size()
+              << " Track to MCRichTrack->MCCKRings associations" << endreq;
+    }
+  }
+  return m_mcSegToRingLinks;
 }
 
 const LHCb::MCParticle *
@@ -175,62 +203,6 @@ MCTruthTool::mcRichHits( const LHCb::RichRecPixel * richPixel,
 {
   m_truth->mcRichHits( richPixel->hpdPixelCluster(), hits );
 }
-
-/*
-  const LHCb::MCRichDigit *
-  MCTruthTool::mcRichDigit( const LHCb::RichRecPixel * richPixel ) const
-  {
-  // protect against bad pixels
-  if ( !richPixel ) return NULL;
-
-  const LHCb::MCRichDigit * mcDigit = 0;
-  if ( Rich::Rec::PixelParent::RawBuffer == richPixel->parentType() )
-  {
-
-  // use RichSmartID to locate MC information
-  mcDigit = m_truth->mcRichDigit( richPixel->smartID() );
-
-  }
-  else if ( Rich::Rec::PixelParent::Digit == richPixel->parentType() )
-  {
-
-  // try to get parent RichDigit
-  const LHCb::RichDigit * digit = dynamic_cast<const LHCb::RichDigit*>( richPixel->parentPixel() );
-  if ( !digit && msgLevel(MSG::DEBUG) )
-  {
-  debug() << "RichRecPixel " << richPixel->key()
-  << " has no associated RichDigit" << endreq;
-  }
-
-  // All OK, so find and return MCRichDigit for this RichDigit
-  mcDigit = m_truth->mcRichDigit( digit->richSmartID() );
-
-  }
-  else if ( Rich::Rec::PixelParent::NoParent == richPixel->parentType() )
-  {
-
-  // Pixel has no parent, so MC association cannot be done
-  if ( msgLevel(MSG::DEBUG) )
-  {
-  debug() << "Parentless RichRecPixel -> MC association impossible" << endreq;
-  }
-  return NULL;
-
-  }
-  else
-  {
-  Warning( "Do not know how to access MC for RichRecPixel type " +
-  Rich::text(richPixel->parentType()) );
-  }
-
-  if ( !mcDigit && msgLevel(MSG::DEBUG) )
-  {
-  debug() << "Failed to find MCRichDigit for RichRecPixel "
-  << richPixel->key() << endreq;
-  }
-  return mcDigit;
-  }
-*/
 
 bool
 MCTruthTool::mcParticle( const LHCb::RichRecPixel * richPixel,
@@ -523,6 +495,40 @@ MCTruthTool::trueOpticalPhoton( const LHCb::RichRecSegment * segment,
   }
 
   return ( photons.empty() ? NULL : photons.front() );
+}
+
+const LHCb::RichRecRing *
+MCTruthTool::mcCKRing( const LHCb::RichRecSegment * segment ) const
+{
+  const LHCb::MCRichSegment * mcSeg = mcRichSegment(segment);
+  if ( !mcSeg ) return NULL;
+
+  if ( mcSegToRingLinks() )
+  {
+    MCRichSegToMCCKRTable::Range range = mcSegToRingLinks()->direct()->relations(mcSeg);
+    if ( msgLevel(MSG::DEBUG) )
+    {
+      debug() << "Found " << range.size() << " MCCKRing association(s) for MCRichTrack " << mcSeg->key()
+              << endreq;
+    }
+    const LHCb::RichRecRing * ring(NULL);
+    double bestWeight = -999999;
+    for ( MCRichSegToMCCKRTable::Range::iterator iMC = range.begin(); iMC != range.end(); ++iMC )
+    {
+      if ( msgLevel(MSG::DEBUG) )
+        debug() << " Found " << iMC->to() << " weight=" << iMC->weight() << endreq;
+      if ( iMC->weight() > bestWeight )
+      {
+        bestWeight = iMC->weight();
+        ring = iMC->to();
+      }
+    }
+    return ring;
+  }
+  // If get here MC association failed
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << "No MC association available for MCRichSegment -> MCCKRings" << endreq;
+  return NULL;
 }
 
 bool MCTruthTool::trackToMCPAvailable() const

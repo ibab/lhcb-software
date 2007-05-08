@@ -4,6 +4,9 @@
 ! Purpose     : Monte Carlo Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2007-05-08 - Chris Jones
+ - Add new method for MC CK rings
+
 !====================== RichRecMCTools v2r10 2007-04-24 =======================
 ! 2007-04-23 - Chris Jones
  - Adapt to changes in RichPixelCreatorBase in RichRecBase
