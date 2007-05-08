@@ -20,9 +20,11 @@ MCP2ITMCHitAlg.MCHitPath  = "MC/IT/Hits"; // MCHitLocation::IT
 MCP2ITMCHitAlg.OutputData  = "/Event/MC/Particles2MCITHits";
 
 // MCParticle to all MCHits association
-//DataOnDemandSvc.Algorithms += { "DATA = '/Event/Link/MC/Particles2MCTrackerHits' 
-// TYPE = 'TrackerMCParticle2MCHitAlg/MCP2TrackerHitAlg' " };
-//MCP2TrackerHitAlg.OutputData = "/Event/MC/Particles2MCTrackerHits";
+DataOnDemandSvc.Algorithms += { "DATA = '/Event/Link/MC/Particles2MCTrackerHits' TYPE = 'TrackerMCParticle2MCHitAlg/MCP2TrackerHitAlg' " };
+MCP2TrackerHitAlg.OutputData = "/Event/MC/Particles2MCTrackerHits";
+
+DataOnDemandSvc.Nodes += { "DATA='/Event/Link' TYPE='DataObject'" };
+DataOnDemandSvc.Nodes += { "DATA='/Event/Link/MC' TYPE='DataObject'" };
 
 
 
