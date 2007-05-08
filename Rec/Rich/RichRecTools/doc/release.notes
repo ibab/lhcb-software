@@ -9,6 +9,8 @@
    crash in Panoramix
  - Update CK ring tool to determine the number of ring points to use based
    on the size of the ring
+ - Fixes to CK ring ray tracing to fix the 'wobbly ring' issue observed by Guy
+   in Panoramix
 
 !===================== RichRecTools v3r10 2007-04-24 ==========================
 ! 2007-04-24 - Marco Cattaneo
