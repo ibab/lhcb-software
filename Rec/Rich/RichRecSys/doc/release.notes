@@ -4,6 +4,7 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+!====================== RichRecSys v3r4 2007-05-08 =====================
 ! 2007-05-08 - Chris Jones
  - Remove default options from tool settings (RichToolRegistry)
 
