@@ -4,7 +4,7 @@
  *
  *  Header file for RICH reconstruction tool interface : Rich::Rec::IMCTruthTool
  *
- *  $Id: IRichRecMCTruthTool.h,v 1.20 2007-04-23 12:56:12 jonrob Exp $
+ *  $Id: IRichRecMCTruthTool.h,v 1.21 2007-05-08 11:57:54 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -56,7 +56,7 @@ namespace Rich
     {
 
       /// Default minimum weight for track to MCParticle associations
-      static const double DefMinWeightTrToMCP = 0.95;
+      static const double DefMinWeightTrToMCP = 0.50;
 
       //-----------------------------------------------------------------------------
       /** @class IMCTruthTool IRichRecMCTruthTool.h
@@ -426,6 +426,15 @@ namespace Rich
          */
         virtual const SmartRefVector<LHCb::MCRichSegment> *
         mcRichSegments( const LHCb::RichRecTrack * track ) const = 0;
+
+        /** Access the RichRecRing representing the MC CK ring for te given RichRecSegment
+         *
+         *  @param track Pointer to a RichRecSegment
+         *
+         *  @return Pointer to the RichRecRing
+         */
+        virtual const LHCb::RichRecRing *
+        mcCKRing( const LHCb::RichRecSegment * segment ) const = 0;
 
         /** Is this RichRecPixel background ?
          *
