@@ -7,10 +7,8 @@ Purpose: LHCb Alignment Tools
 </PRE><H1><A NAME=v3r0>2007-04-25 AlignTrTools v3r0 </A></H1><PRE>
 - J. Blouw added/modified/aligned
   - new tool for TT/IT/OT alignment using M'pede:
-    - Derivatives.cpp,h : class describing derivaties needed by Millepede
+    - Derivatives.cpp,h : class describing derivates used by Millepede
     - TAConfig.cpp,h : tool used to configure alignment problem for M'pede
-    - StringConvert.h: simple string conversion tool
-    - debugoptions.h: header file for configuring debug options for Millepede.cpp,h
   - added J. Amoraal's code for OT alignment:
     - AlignOTDetector.cpp,h
 

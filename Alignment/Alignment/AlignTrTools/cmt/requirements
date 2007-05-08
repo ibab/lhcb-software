@@ -26,6 +26,7 @@ use   LHCbMath        v*     Kernel
 use   Relations       v*     Kernel
 
 use AlignmentInterfaces v2r0 Alignment
+use AlignmentTools    v2r5   Alignment
 
 use   MCEvent         v*     Event
 use   RecEvent        v*     Event

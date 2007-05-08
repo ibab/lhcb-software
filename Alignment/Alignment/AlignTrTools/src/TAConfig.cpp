@@ -4,7 +4,7 @@
  *  Implementation file for Millepede configuration tool : TAConfig
  *
  *  CVS Log :-
- *  $Id: TAConfig.cpp,v 1.1 2007-04-25 14:07:06 jblouw Exp $
+ *  $Id: TAConfig.cpp,v 1.2 2007-05-08 15:46:46 jblouw Exp $
  *
  *  @author J. Blouw (johan.blouw@mpi-hd.mpg.de)
  *  @date   12/04/2007
@@ -16,7 +16,7 @@
 
 #include "Kernel/LHCbID.h"
 
-#include "StringConvert.h"
+//#include "StringConvert.h"
 // Event
 #include "Event/StateTraj.h"
 #include "Event/Track.h"
@@ -110,9 +110,10 @@ TAConfig::TAConfig( const std::string& type,
   debug() << "Derivative tool " << m_derivativTool << endreq;
   debug() << "nTrackModelParameters " << m_ntrack_pars << endreq;
   debug() << "Degrees_of_Freedom " << m_dof << endreq;
+  m_DOF = new bool[m_dof.size()];
 }
 
-TAConfig::~TAConfig() {};
+TAConfig::~TAConfig() {delete m_DOF;};
 
 StatusCode TAConfig::Initialize( std::vector<std::string> &m_dets ) {
   m_detectors = m_dets;
@@ -212,6 +213,7 @@ StatusCode TAConfig::CacheDetElements() {
   info() << "Printing ranking vector..." << endreq;
   info() << "Rank = " << m_rank << endreq;
   info() << "Finished initialization!" << endreq;
+  info() << "Configuring Millepede..." << endreq;
   sc = ConfigMillepede();
   if ( sc.isFailure() ) {
     error() << "Error configuring Millepede" << endreq;
@@ -234,6 +236,16 @@ StatusCode TAConfig::ConstrainPositions( std::map<std::string,int> &map ) {
   std::string name;
   int rank;
   std::map<std::string,int>::iterator it = map.begin();
+  // SV uses Millepede's ParSig function a little strange.
+  // we now have to explicitly set the range within which the
+  // alignment parameters may vary.
+  for ( ; it != map.end(); it++ ) {
+    rank = it->second;
+    for ( int i = 0; i < m_dof.size(); i++ ) {
+      m_Millepede->ParSig(rank+i*m_DETmap.size(), 20.0 );
+    }
+  }
+  it = map.begin();
   for ( ; it != map.end(); it++ ) {
     name = it->first;
     rank = it->second;
@@ -548,54 +560,99 @@ StatusCode TAConfig::ConfigMillepede() {
   int rs = m_rank.size();
   int num_objects = m_n_dof * rs;
   int nlocal = m_ntrack_pars;
-  for (int j = 0; j < 6; j++) {m_DOF[j] = m_dof[j];}   // What are the parameter to align ?
+  for ( int i = 0; i < m_ntrack_pars; i++ )
+    m_derLC.push_back(0.0);
+  for ( int i = 0; i < m_n_dof*m_DETmap.size(); i++ )
+    m_derGB.push_back(0.0);
+  for (int j = 0; j < 6; j++) {m_DOF[j] = m_dof[j];}   // What are the parameters to align ?
   //  for (int j = 0; j < 9; j++) {m_CONSTRAINT[j] = m_sigma[j];}
-  //MD weg damit!  for (int j = 0; j < 6; j++) {m_SIGMA[j] = m_sigma[j];}
-
-  m_Millepede->InitMille( m_DOF,  
+  // Needed for Sebastien's Millepede initialization
+  for ( int i = 0; i < m_dof.size(); i++ ) {// loop over degrees of freedom per detector
+    m_SIGMA[i] = m_sigma[i];
+    info() << "m_SIGMA[" << i << "] = " << m_SIGMA[i] << endreq;
+  }
+  int m_nfits = 1;
+  info() << "Calling InitMille with m_sigma = " << m_sigma << "..." << endreq;
+  m_Millepede->InitMille( m_DOF,
+			  m_SIGMA,
+			  num_objects, nlocal,  
+			  m_l_chimax, m_nstd, 
+			  m_residual_cut, m_ini_residual_cut,
+			  m_nfits); 
+  
+  /* HD Millepede initialization call
+  m_Millepede->InitMille( m_DOF,
 			  num_objects, nlocal,  
 			  m_l_chimax, m_nstd, 
 			  m_residual_cut, m_ini_residual_cut);
-
+  */
 
   return StatusCode::SUCCESS;
 }
-
-StatusCode TAConfig::ConstrainPositions( const int &rank, const string & de_name, const int &rs ) {
+/************************
+ * Constrain positions of elements
+ * rank: rank number in detector elements vector
+ * de_name: detector element name 
+ * rs: size of detector map
+ ************************************/
+StatusCode TAConfig::ConstrainPositions( const int &rank, const std::string & de_name, const int &rs ) {
   // ok we want to constrain the first detector layers
   // it is the first element in the detector map (m_DETmap) 
   //
+  StatusCode sc;
   int dof_cnt = 0; // counts the number of degrees of freedom
-  //    info() << "Constraining object " << de_name << " at rank " << rank << " off-set = " << rs << endreq;
   if ( m_dof[0] && m_fix_x) {
-    m_Millepede->ParSig(rank, 0.0); // fix x-position
-    dof_cnt++;
-    info() << "Fixing x-position of object " << de_name << " at rank " << rank << endreq;
+    sc = m_Millepede->ParSig(rank, 0.0); // fix x-position
+    if ( sc.isFailure() ) {
+      error() << "Failure in fixing x-position of object " << de_name << " at rank " << rank << endreq;
+      return sc;
+    }
+    info() << "Fixing x-position of object " << de_name << " at rank " << rank << " using ParSig(" << rank << ", 0) "<< endreq;
   }
+  dof_cnt++;
   if ( m_dof[1] && m_fix_y) {
-    m_Millepede->ParSig(rank+dof_cnt*rs, 0.0); // fix y-position
-    dof_cnt++;
-    info() << "Fixing y-position of object " << de_name << " at rank " << rank+rs << endreq;
+    sc = m_Millepede->ParSig(rank+dof_cnt*rs, 0.0); // fix y-position
+    if ( sc.isFailure() ) {
+      error() << "Failure in fixing y-position of object " << de_name << " at rank " << rank << endreq;
+      return sc;
+    }
+    info() << "Fixing y-position of object " << de_name << " at rank " << rank+rs << " using ParSig(" << rank+dof_cnt*rs << ", 0) "<< endreq;
   }
+  dof_cnt++;
   if ( m_dof[2] && m_fix_z) {
-    m_Millepede->ParSig(rank+dof_cnt*rs, 0.0); // fix z-position
-    dof_cnt++;
-    info() << "Fixing z-position of object " << de_name << " at rank " << rank+2*rs << endreq;
+    sc = m_Millepede->ParSig(rank+dof_cnt*rs, 0.0); // fix z-position
+    if ( sc.isFailure() ) {
+      error() << "Failure in fixing z-position of object " << de_name << " at rank " << rank << endreq;
+      return sc;
+    }
+    info() << "Fixing z-position of object " << de_name << " at rank " << rank+dof_cnt*rs << " using ParSig(" << rank+dof_cnt*rs << ", 0) " << endreq;
   }
+  dof_cnt++;
   if ( m_dof[3] && m_fix_a) {
-    m_Millepede->ParSig(rank+dof_cnt*rs, 0.0); // fix alpha rotation
-    dof_cnt++;
-    info() << "Fixing angle alpha of object " << de_name << " at rank " << rank+3*rs << endreq;
+    sc = m_Millepede->ParSig(rank+dof_cnt*rs, 0.0); // fix alpha rotation
+    if ( sc.isFailure() ) {
+      error() << "Failure in fixing alpha rotation of object " << de_name << " at rank " << rank << endreq;
+      return sc;
+    }
+    info() << "Fixing angle alpha of object " << de_name << " at rank " << rank+dof_cnt*rs << " using ParSig(" << rank+dof_cnt*rs << ", 0) " << endreq;
   }
+  dof_cnt++;
   if ( m_dof[4] && m_fix_b) {
-    m_Millepede->ParSig(rank+dof_cnt*rs, 0.0); // fix beta rotation
-    dof_cnt++;
-    info() << "Fixing angle beta of object " << de_name << " at rank " << rank+4*rs << endreq;
+    sc = m_Millepede->ParSig(rank+dof_cnt*rs, 0.0); // fix beta rotation
+    if ( sc.isFailure() ) {
+      error() << "Failure in fixing beta rotation of object " << de_name << " at rank " << rank << endreq;
+      return sc;
+    }
+    info() << "Fixing angle beta of object " << de_name << " at rank " << rank+dof_cnt*rs << " using ParSig(" << rank+dof_cnt*rs << ", 0) " << endreq;
   }
+  dof_cnt++;
   if ( m_dof[5] && m_fix_g) {
-    m_Millepede->ParSig(rank+dof_cnt*rs, 0.0); // fix gamma rotation
-    dof_cnt++;
-    info() << "Fixing angle gamma of object " << de_name << " at rank " << rank+5*rs << endreq;
+    sc = m_Millepede->ParSig(rank+dof_cnt*rs, 0.0); // fix gamma rotation
+    if ( sc.isFailure() ) {
+      error() << "Failure in fixing gamma rotation of object " << de_name << " at rank " << rank << endreq;
+      return sc;
+    }
+    info() << "Fixing angle gamma of object " << de_name << " at rank " << rank+dof_cnt*rs << " using ParSig(" << rank+dof_cnt*rs << ", 0) " << endreq;
   }
   return StatusCode::SUCCESS;
 }
@@ -692,21 +749,21 @@ StatusCode TAConfig::FillMatrix( LHCb::Track &t, LHCb::LHCbID &id, const int &ra
     else if ( id.stID().isIT() && it_detector )
       stereo_angle = m_it->findLayer( id.stID() )->angle();
   }
-  m_derLC.resize( m_ntrack_pars ,0.);
-  m_derGB.resize( m_n_dof*m_DETmap.size() ,0.);
   double derLC[m_derLC.size()];
   double derGB[m_derGB.size()];
   // Convert derivative vectors to array(so desired by millepede tool)
-  VectortoArray(m_derLC,&derLC[0]);
-  VectortoArray(m_derGB,&derGB[0]);
+  VectortoArray(m_derLC, derLC);
+  VectortoArray(m_derGB, derGB);
   //MD zero out array - do not use ZerLoc! Necessary??
-  m_Millepede->ZerLoc( derGB, derLC );
+  // need 2 dummy variable to be consistent with Sebastien's Millepede
+  double dernl[m_derGB.size()], dernl_i[m_derGB.size()];
+  m_Millepede->ZerLoc( derGB, derLC, dernl, dernl_i );
   // configure the local (= track model) and global (= geometry) models:
   m_derivatives->SetLocal( m_derLC, rank, z, stereo_angle );
   m_derivatives->SetGlobal( slope, m_DETmap[rank], m_derGB, rank, z, stereo_angle );
 
-  VectortoArray(m_derLC,&derLC[0]);
-  VectortoArray(m_derGB,&derGB[0]);
+  VectortoArray(m_derLC, derLC);
+  VectortoArray(m_derGB, derGB);
   
   double si = 1.0;
   double px,py,pz;
@@ -723,7 +780,9 @@ StatusCode TAConfig::FillMatrix( LHCb::Track &t, LHCb::LHCbID &id, const int &ra
   
 //  info() << "EquLoc with derLC = " << m_derLC << endreq;
 //  info() << "EquLoc with hit: " << si*sqrt(distance.Mag2()) << " error " << hit.errMeasure()/weight << endreq;
-  m_Millepede->EquLoc( derGB, derLC, si*sqrt(distance.Mag2()), hit.errMeasure()/weight );
+  // Need additional dummy variable to be consistent with Sebastien's Millepede
+  //  m_Millepede->EquLoc( derGB, derLC, si*sqrt(distance.Mag2()), hit.errMeasure()/weight );
+  m_Millepede->EquLoc( derGB, derLC, dernl, dernl_i, si*sqrt(distance.Mag2()), hit.errMeasure()/weight );
   ArraytoVector( &derLC[0], m_derLC );
   ArraytoVector( &derGB[0], m_derGB );
   
@@ -732,7 +791,7 @@ StatusCode TAConfig::FillMatrix( LHCb::Track &t, LHCb::LHCbID &id, const int &ra
 }
 
 StatusCode TAConfig::Rank( LHCb::LHCbID &id, int & r ) {
-  string name;
+  std::string name;
   if ( ot_detector && id.isOT() ) {
     // Check where this hit was:
     if ( m_otModule ) {
@@ -769,7 +828,7 @@ StatusCode TAConfig::Rank( LHCb::LHCbID &id, int & r ) {
   } else if ( velo_detector && id.isVelo() ) {
     // not yet done...
   }
-  map<string,int>::iterator t = m_C_pos.find( name );
+  std::map<std::string,int>::iterator t = m_C_pos.find( name );
   if ( t != m_C_pos.end() ) {
     debug() << "key of map = " << (*t).first << endreq;
     debug() << "value of map = Rank nr. = " << (*t).second << endreq;
@@ -786,11 +845,12 @@ StatusCode TAConfig::Rank( LHCb::LHCbID &id, int & r ) {
  * converting vectors to arrays              *
  *                                           *
  *********************************************/
-void TAConfig::VectortoArray(const std::vector<double> &the_vector, double the_array[]){
+void TAConfig::VectortoArray(const std::vector<double> &the_vector, double the_array[] ){
   std::vector<double>::const_iterator the_iterator = the_vector.begin();
   unsigned int counter = 0;
-  while( the_iterator != the_vector.end() ){
-    the_array[counter] =  the_vector[counter];
+  while( the_iterator < the_vector.end() ){
+    the_array[counter] = *the_iterator;
+    //    the_array[counter] = the_vector[counter];
     the_iterator++;
     counter++;
   }
