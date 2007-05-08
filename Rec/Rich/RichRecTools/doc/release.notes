@@ -4,6 +4,7 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+!===================== RichRecTools v3r11 2007-05-08 ==========================
 ! 2007-04-27 - Chris Jones
  - Fix bug in Cherenkov Cone raytracing tool, which causes an infrequent
    crash in Panoramix
