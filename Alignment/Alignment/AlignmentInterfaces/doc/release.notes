@@ -4,6 +4,11 @@
 ! Purpose	:	Collection of interfaces needed for the T-station alignment
 !================================================================
 
+! 2007-05-08 - Johan Blouw
+  - removed interfaces to 
+        - Millepede (still in AlignmentTools/AlignmentTools)
+        - AlignSolvTool (still in AlignSolvTools)
+        
 ! 2007-04-30 - Jan Amoraal
  - Remove obsolete LHCbDefinitions
 
