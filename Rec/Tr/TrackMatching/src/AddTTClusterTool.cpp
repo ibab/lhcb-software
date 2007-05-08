@@ -1,4 +1,4 @@
-// $Id: AddTTClusterTool.cpp,v 1.10 2007-03-20 13:11:11 mneedham Exp $
+// $Id: AddTTClusterTool.cpp,v 1.11 2007-05-08 11:24:35 mneedham Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -58,7 +58,7 @@ AddTTClusterTool::AddTTClusterTool( const std::string& type,
 {
   declareInterface<IAddTTClusterTool>( this );
 
-  declareProperty( "TTClusterCut",     m_ttClusterCut = 3.0 );
+  declareProperty( "TTClusterCut",     m_ttClusterCut = 7.0 );
   declareProperty( "MinTTHits",        m_minTTHits = 3 );
   declareProperty( "InterStationCut",  m_interStationCut = 2.0 );
   declareProperty( "IntraStationCut",  m_intraStationCut = 1.0 );
