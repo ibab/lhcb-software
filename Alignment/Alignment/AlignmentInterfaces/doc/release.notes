@@ -8,6 +8,7 @@
   - removed interfaces to 
         - Millepede (still in AlignmentTools/AlignmentTools)
         - AlignSolvTool (still in AlignSolvTools)
+        - small changes to requirements file
         
 ! 2007-04-30 - Jan Amoraal
  - Remove obsolete LHCbDefinitions
