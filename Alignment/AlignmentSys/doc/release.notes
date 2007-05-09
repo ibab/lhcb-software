@@ -3,6 +3,10 @@
 ! Resposible:	Johan Blouw
 ! Purpose:	Groups the T-station related alignment packages.
 !***************************
+!================================
+! 09/05/2007 Johan Blouw
+  - small change to requirements file, to include AlignmentTools v2r5
+
 !===========     v2r0     ========================
 - April 25th, 2007 Johan Blouw
   - Update of the Alignment packages
