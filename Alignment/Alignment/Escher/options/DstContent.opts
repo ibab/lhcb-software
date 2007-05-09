@@ -11,9 +11,12 @@ Output.DetectorList += { "DST" };
 //#include "$STDOPTS/rDstContent.opts"
 
 DstWriter.ItemList += {
-	"/Event#1"
-, "Alignment/OTTracks#1"
-, "Alignment/ITTracks#1"
-, "Alignment/XTracks#1"
+  "/Event#1"
+, "/Event/DAQ/RawEvent#1"
+, "/Event/Rec/Header#1"
+, "/Event/Rec/Status#1"
+, "/Event/Alignment/OTTracks#1"
+, "/Event/Alignment/ITTracks#1"
+, "/Event/Alignment/XTracks#1"
 };
 

@@ -7,7 +7,7 @@ Init.DetectorList += {
 
 Selection.DetectorList += {
 	"TStation"
-        , "Fit"
+//        , "Fit"
 };
 
 // There are 2 alignment algorithms
@@ -32,7 +32,7 @@ ApplicationMgr.DLLs += {
 ApplicationMgr.DLLs += { 
 			 "AlignTrTools"
 			, "TAlignment"
-			, "VeloTools"
+//			, "VeloTools"
 };
 
 // Start TransportSvc, needed by track fit
@@ -65,13 +65,13 @@ InitOTSeq.Members += { "OTTimeCreator" };
 // Track Selection
 //**************************
 SelectionTStationSeq.Members += { "TStation" };
-//ToolSvc.ATrackSelector.MinPCut = 1000.0; // value is in MeV...
-//ToolSvc.ATrackSelector.MinPtCut = 0.0;
+ToolSvc.ATrackSelector.MinPCut = 10000.0; // value is in MeV...
+ToolSvc.ATrackSelector.MinPtCut = 2000.0;
 ToolSvc.ATrackSelector.charge = 0;
 //TStation.MinPCut = 20000.0; // value is in MeV...
 TStation.MinITHitCut = 8; 
 TStation.MinOTHitCut = 20; 
-TStation.MinTTHitCut = 8; 
+TStation.MinTTHitCut = 4; 
 TStation.InputContainer = "Rec/Track/Best";
 TStation.OTTrackContainer = "Alignment/OTTracks";
 TStation.ITTrackContainer = "Alignment/ITTracks";

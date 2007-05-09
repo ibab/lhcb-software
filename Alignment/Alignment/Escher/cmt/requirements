@@ -1,5 +1,5 @@
 package Escher
-version v1r3
+version v2r0
 
 branches doc cmt job options
 
@@ -19,14 +19,18 @@ use GaudiPoolDb	        v*         -no_auto_imports
 use RootHistCnv         v*         -no_auto_imports
 
 #-- Database
-use XmlDDDB             v*   Det  -no_auto_imports
-use XmlConditions       v*    Det  -no_auto_imports
+# Comment the line with SQLDDDB and uncomment
+# the 2 lines below to enable reading the xml versions of the dbase
+# Note that in the options file (v200601.opts) some changes are needed as well.
+use SQLDDDB 		v*	Det -no_auto_imports
+#use XmlDDDB             v40r0   Det  -no_auto_imports
+#use XmlConditions       v2r5    Det  -no_auto_imports
 use FieldMap		v*         -no_auto_imports
 use ParamFiles          v*         -no_auto_imports
 #use BrunelDQ           v*    DQ   -no_auto_imports
 
 #-- LHCb libraries (from LHCB_v21r11)
-use LHCb                v*        -no_auto_imports
+use LHCbSys             v*        -no_auto_imports
 
 #-- Lbcom packages (from LBCOM_v5r8)
 use LbcomSys            v*       -no_auto_imports
@@ -35,7 +39,7 @@ use LbcomSys            v*       -no_auto_imports
 use RecSys              v*         -no_auto_imports
 
 #-- Alignment packages
-use AlignmentSys        v1r2         -no_auto_imports
+use AlignmentSys        v2r0         -no_auto_imports
 
 #
 #===== build Escher =========================
