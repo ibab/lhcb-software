@@ -1,4 +1,4 @@
-// $Id: ISiAmplifierResponse.h,v 1.3 2007-04-17 12:22:24 cattanem Exp $
+// $Id: ISiAmplifierResponse.h,v 1.4 2007-05-09 11:43:22 cattanem Exp $
 #ifndef _ISiAMPLIFIERRESPONSE_H
 #define _ISiAMPLIFIERRESPONSE_H
 
@@ -14,7 +14,7 @@ namespace SiAmpliferResponseType{
   static const std::string& capCoupling = "capCoupling";
 };
 
-/** @class ISiAmpliferResponse ISiAmplifierResponse.h Kernel/ISiAmplifierResponse.h
+/** @class ISiAmplifierResponse ISiAmplifierResponse.h Kernel/ISiAmplifierResponse.h
  *
  *  Interface Class for estimating response of amplifier in Si Channel
  *
