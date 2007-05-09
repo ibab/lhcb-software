@@ -182,10 +182,10 @@ StatusCode Millepede::InitMille(bool DOF[], double Sigm[], int nglo
   int compteur = 0;
 
   for (int i=0; i<6; i++) {
-    info() << "GetDOF(" << i << ")= " << DOF[i] << " Sigm " << Sigm[i] << endmsg;
+    debug() << "GetDOF(" << i << ")= " << DOF[i] << " Sigm " << Sigm[i] << endmsg;
     if (DOF[i]) {
       for (int j=compteur*n_stations; j<(compteur+1)*n_stations; j++) {
-	info() << "Calling ParSig with j = " << j << " Sigm[" << i << "] = " << Sigm[i] << " m_fixed = " << m_fixed << endreq;
+	debug() << "Calling ParSig with j = " << j << " Sigm[" << i << "] = " << Sigm[i] << " m_fixed = " << m_fixed << endreq;
 	if ((j-compteur*n_stations) != m_fixed) {
 	  ParSig(j,Sigm[i]); // Check that module is not fixed
 	}
