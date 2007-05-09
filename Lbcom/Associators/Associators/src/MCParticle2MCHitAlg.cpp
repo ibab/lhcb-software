@@ -62,7 +62,7 @@ StatusCode MCParticle2MCHitAlg::execute()
     myLink.link( mcHit, mcHit->mcParticle() );
   }
   
-  info() << "Linker table stored at " << m_outputData << endreq;
+  debug() << "Linker table stored at " << m_outputData << endmsg;
 
   return StatusCode::SUCCESS;
 };
