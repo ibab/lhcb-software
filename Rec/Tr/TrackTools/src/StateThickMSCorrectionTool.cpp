@@ -1,6 +1,6 @@
-// $Id: StateThickMSCorrectionTool.cpp,v 1.3 2007-03-20 13:11:42 mneedham Exp $
+// $Id: StateThickMSCorrectionTool.cpp,v 1.4 2007-05-09 13:20:20 hmdegaud Exp $
 // Include files 
-// -------------
+// ------------
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
 
