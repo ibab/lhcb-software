@@ -1,11 +1,11 @@
-# $Id: requirements,v 1.348 2007-04-26 14:59:58 pkoppenb Exp $
+# $Id: requirements,v 1.349 2007-05-09 12:13:39 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : J. Palacios
 #
 
 #============================================================================
 package           DaVinci
-version           v19r1
+version           v19r2
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -67,7 +67,7 @@ use RecSys      v4r4
 use HltSys      v1r5
 
 #-- Phys
-use PhysSys     v6r2
+use PhysSys     v6r3
 
 #-- Analysis
 use AnalysisSys v1r2
