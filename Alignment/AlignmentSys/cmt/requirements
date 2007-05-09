@@ -12,4 +12,5 @@ use AlignmentTools      v2r5    Alignment # Sebastien Viret
 use Escher		v2r0	Alignment # Johan Blouw
 use AlignmentInterfaces	v2r0	Alignment # Johan Blouw
 use AlignTrTools	v3r0	Alignment # Johan Blouw, Adlene Hicheur, Louis Nicolas
+use AlignSolvTools      v2r0    Alignment # Adlene Hicheur
 use TAlignment		v3r0	Alignment # Jan Amoraal, Johan Blouw, Marc Deissenroth, Florin Maciuc
