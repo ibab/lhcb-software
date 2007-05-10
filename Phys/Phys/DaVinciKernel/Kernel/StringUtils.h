@@ -1,4 +1,4 @@
-// $Id: StringUtils.h,v 1.1 2006-06-20 05:55:52 jpalac Exp $
+// $Id: StringUtils.h,v 1.2 2007-05-10 14:52:57 cattanem Exp $
 #ifndef KERNEL_STRINGUTILS_H 
 #define KERNEL_STRINGUTILS_H 1
 
@@ -6,8 +6,7 @@
 
 #include <string>
 
-/** @file StringUtils StringUtils.h Kernel/StringUtils.h
- *  
+/** @file StringUtils.h
  *
  *  @author Juan PALACIOS
  *  @date   2006-06-19

@@ -3,6 +3,10 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+!========================= DaVinciKernel v6r3 2007-05-10 ====================
+! 2007-05-10 - Marco Cattaneo
+ - Fix a doxygen warning
+
 ! 2007-05-10 - Patrick Koppenburg
  - Fix untested StatusCodes
 
