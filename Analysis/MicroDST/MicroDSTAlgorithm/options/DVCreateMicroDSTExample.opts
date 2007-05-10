@@ -1,0 +1,97 @@
+#include "$DAVINCIROOT/options/DaVinciCommon.opts"
+#include "$DAVINCIROOT/options/DaVinciReco.opts"
+
+#include "$STDOPTS/DC06Conditions.opts"
+
+#include "$BS2JPSIPHIROOT/options/DoDC06selBs2Jpsi2MuMu_Phi2KK.opts"
+
+ApplicationMgr.DLLs    += { "TrackTools",
+                            "ProtoParticleFilter",
+                            "ParticleMaker"};
+ApplicationMgr.DLLs    += { "DaVinciAssociators" };
+ApplicationMgr.DLLs    += { "DaVinciUser" };
+
+
+// ========================================================================
+// =================  Number of events to process
+// =======================================================================
+ApplicationMgr.EvtMax            = -1;
+//ApplicationMgr.EvtMax            = 50;
+
+
+// Modify printout defaults
+EventSelector.PrintFreq = 10;
+//MessageSvc.OutputLevel = 1;
+MessageSvc.Format = "% F%40W%S%7W%R%T %0W%M";
+
+
+// Unpack MCParticles and MCVertices if not existing on input file
+// ApplicationMgr.ExtSvc += { "DataOnDemandSvc" };
+// DataOnDemandSvc.Nodes += { "DATA='/Event/MC' TYPE='DataObject'" };
+// DataOnDemandSvc.Algorithms += {
+//    , "DATA='/Event/MC/Particles'       TYPE='UnpackMCParticle'"
+//    , "DATA='/Event/MC/Vertices'        TYPE='UnpackMCVertex'"
+// };
+
+EventSelector.Input   = {"DATAFILE='PFN:/afs/cern.ch/lhcb/group/tracking/vol1/Bsjpsiphi_00001620_00000004_5.dst'  TYP='POOL_ROOTTREE' OPT='READ'"};
+
+// ================================================================================
+// ==================  ROOT persistency
+// =================================================================================
+#include "$STDOPTS/RootHist.opts"
+RootHistCnv.ForceAlphaIds = true;
+ApplicationMgr.HistogramPersistency = "ROOT";
+HistogramPersistencySvc.OutputFile = "Histos.root";
+
+PoolDbCacheSvc.DLLs       += { "PhysEventDict"};
+
+PoolDbCacheSvc.Catalog = {
+  "xmlcatalog_file:DSTCatalog.xml",
+  "xmlcatalog_file:/lhcb/XmlFileDB/Brunel-v30r14-eType13102000.xml"
+};
+
+//------------------------------------------------------------------------------------------
+//-----  Particle creation and selection
+//------------------------------------------------------------------------------------------
+                                
+ApplicationMgr.TopAlg += { "GaudiSequencer/ProtoPRecalibration" };
+ApplicationMgr.TopAlg += { "GaudiSequencer/MakeSomeResonances" };
+
+// Fills the combined DLL values in the charged Proto Particles
+ProtoPRecalibration.Members += { "ChargedProtoCombineDLLsAlg" };
+ProtoPRecalibration.Members += { "MuonPIDsFromProtoParticlesAlg/MuonPIDsFromProtos" };
+ProtoPRecalibration.Members += { "RichPIDsFromProtoParticlesAlg/RichPIDsFromProtos" };
+
+#include "$COMMONPARTICLESROOT/options/StandardOptions.opts"
+MakeSomeResonances.Members += {"MakeResonances/StdLooseKsLL"};
+MakeSomeResonances.Members += {"MakeResonances/StdLooseKsDD"};
+MakeSomeResonances.Members += {"MakeResonances/StdLooseLambda1115_LL"};
+MakeSomeResonances.Members += {"MakeResonances/StdLooseLambda1115_DD"};
+MakeSomeResonances.Members += {"MakeResonances/StdLooseDstarWithD02KPi"};
+MakeSomeResonances.Members += {"MakeResonances/StdLooseDstarWithD02PiPi"};
+MakeSomeResonances.Members += {"MakeResonances/StdLooseDstarWithD02KK"};
+MakeSomeResonances.Members += {"MakeResonances/StdLoosePhi2KK"};
+MakeSomeResonances.Members += {"PreLoadParticles/StdTightMuons"};
+
+// ==================================================================================
+// ====================== microDST
+// =================================================================================
+#include "$MICRODSTALGORITHMROOT/options/microDST.opt"
+
+SeqDC06selBs2Jpsi2MuMu_Phi2KK.Members   += {"CreateMicroDSTAlg/microDST"};
+SeqDC06selBs2Jpsi2MuMu_Phi2KK.Members   += {"CreateMicroDSTMCAlg/microDSTMC"};
+
+microDST.PhysDesktop.InputLocations      = {"/Event/Phys/DC06selBs2Jpsi2MuMu_Phi2KK"};
+microDST.OutputLevel                     = 1;
+
+microDSTMC.PhysDesktop.InputLocations    = {"/Event/Phys/DC06selBs2Jpsi2MuMu_Phi2KK"};
+microDSTMC.OutputLevel                   = 1;
+
+// ==================================================================================
+// ====================== print structure/content of TES
+// =================================================================================
+
+//ApplicationMgr.TopAlg                += { "StoreExplorerAlg" };
+//StoreExplorerAlg.Load                = 1;
+//StoreExplorerAlg.PrintFreq           = 1.0;
+//StoreExplorerAlg.Outputlevel         = 1;

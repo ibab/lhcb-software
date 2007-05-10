@@ -1,7 +1,12 @@
-! $Id: release.notes,v 1.15 2007-05-10 06:44:52 pkoppenb Exp $
+! $Id: release.notes,v 1.16 2007-05-10 08:37:27 ukerzel Exp $
 ! Package     : MicroDST
 ! Responsible : Ulrich Kerzel
 !============================================================
+
+! 2007-05-10 - Ulrich Kerzel
+ - add options file DVCreateMicroDSTExample.opts
+   creating a microDST for Bs->J/psi Phi using one
+   file from the tracking group
 
 
 ! 2007-05-10 - Patrick Koppenburg
