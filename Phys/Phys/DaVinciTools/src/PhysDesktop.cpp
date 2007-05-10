@@ -208,12 +208,14 @@ const LHCb::Particle::ConstVector& PhysDesktop::particles() const{
 //=============================================================================
 const LHCb::RecVertex::ConstVector& PhysDesktop::primaryVertices(){
   // @todo Find a smarter way of checking this is done only once...
-  if ( m_primVerts.empty()) getPrimaryVertices();
   if ( m_primVerts.empty()) {
+    StatusCode sc = getPrimaryVertices();
+    if (!sc) Exception("Cannot get PVs").ignore();
+  } if ( m_primVerts.empty()) {
     if ( m_primVtxLocn == "" ){
-      Warning("Empty primary vertex container at "+m_OnOffline->getPVLocation()) ;      
+      Warning("Empty primary vertex container at "+m_OnOffline->getPVLocation()).ignore() ;      
     } else {
-      Warning("Empty primary vertex container at "+m_primVtxLocn);
+      Warning("Empty primary vertex container at "+m_primVtxLocn).ignore();
     } 
   }
   return m_primVerts;
