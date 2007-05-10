@@ -1,0 +1,119 @@
+#include "$DAVINCIROOT/options/DaVinciCommon.opts"
+
+ApplicationMgr.DLLs    += { "DaVinciAssociators" };
+ApplicationMgr.DLLs    += { "DaVinciUser" };
+ApplicationMgr.DLLs    += { "MicroDST"};
+ApplicationMgr.TopAlg  += { "GaudiSequencer/TestSeq" };
+
+// ========================================================================
+// =================  Number of events to process
+// =======================================================================
+ApplicationMgr.EvtMax            = -1;
+
+// Modify printout defaults
+EventSelector.PrintFreq = 10;
+//MessageSvc.OutputLevel = 1;
+MessageSvc.Format = "% F%40W%S%7W%R%T %0W%M";
+
+// ========================================================================
+// =================  dictionary for event model
+// =======================================================================
+
+PoolDbCacheSvc.DLLs       += { "PhysEventDict"};
+
+// ========================================================================
+// =================  Input file
+// =======================================================================
+EventSelector.Input   = {
+        "DATAFILE='PFN:microDST.dst'  TYP='POOL_ROOTTREE' OPT='READ'"    
+};
+
+//
+// Catalogue to the original DST files if SmartRefs should
+// be followed
+//
+//PoolDbCacheSvc.Catalog = {
+//  "xmlcatalog_file:DSTCatalog.xml",
+//  "xmlcatalog_file:/lhcb/XmlFileDB/Brunel-v30r14-eType13102000.xml"
+//};
+
+// ================================================================================
+// ==================  ROOT persistency
+// =================================================================================
+#include "$STDOPTS/RootHist.opts"
+RootHistCnv.ForceAlphaIds           = true;
+ApplicationMgr.HistogramPersistency = "ROOT";
+HistogramPersistencySvc.OutputFile  = "Histos.root";
+
+//
+// print structure/content of TES
+//
+ApplicationMgr.TopAlg                += { "StoreExplorerAlg" };
+StoreExplorerAlg.Load                = 1;
+StoreExplorerAlg.PrintFreq           = 1.0;
+StoreExplorerAlg.Outputlevel         = 1;
+
+
+//
+// don't use Data-on-Demand for these
+//
+TestSeq.Members                                 += {"MuonPIDsFromProtoParticlesAlg/CreateMuonPIDs"};
+TestSeq.Members                                 += {"RichPIDsFromProtoParticlesAlg/CreateRichPIDs"};
+
+//
+// TEST DST
+//
+DaVinciMainSeq.RootOnTES                         = "/Event/microDST/";
+// ProtoPRecalibration.RootOnTES                    = "/Event/microDST/";
+TestSeq.RootOnTES                                = "/Event/microDST/";
+// ChargedProtoCombineDLLsAlg.OutputLevel           = 1;
+
+
+
+TestSeq.Members                                    += {"TestDST/TestDST"};
+TestDST.PhysDesktop.OutputLevel                     = 1;
+TestDST.PhysDesktop.InputPrimaryVertices            = "microDST/Rec/Vertex/Primary";
+TestDST.PhysDesktop.OnOfflineTool.OfflinePVLocation = "/Event/microDST/Rec/Vertex/Primary";
+
+// TestDST.PhysDesktop.InputLocations                  = {"/Event/microDST/Phys/PreSelBsKK"};
+TestDST.PhysDesktop.InputLocations                  = {"/Event/microDST/Phys/DC06selBs2Jpsi2MuMu_Phi2KK"};
+
+TestDST.OutputLevel                                 = 1;
+TestDST.PrintMCContainer                            = true;
+
+// ToolSvc.RelatedPVFinder.OutputLevel              = 1;
+// ToolSvc.RelatedPVFinder.ContextTool.OnOfflineTool.OfflinePVLocation = "/Event/microDST/Rec/Vertex/Primary";
+
+
+// TestDST.Particle2MCLinks.OutputLevel              = 1;
+// TestDST.Particle2MCLinks.NeutralPPLocation        = "/Event/microDST/Rec/ProtoP/Neutrals";
+TestDST.Particle2MCLinks.ChargedPPLocation        = {"/Event/microDST/Rec/ProtoP/Charged",
+                                                     "/Event/microDST/Rec/ProtoP/Upstream"};
+
+
+
+
+//
+// VERBOSITY for some needed algorithms/tools
+//
+
+// for ProtoParticle related algorithms
+// ChargedProtoCombineDLLsAlg.OutputLevel           = 1;
+// CreateRichPIDs.OutputLevel                       = 1;
+// CreateMuonPIDs.OutputLevel                       = 1;
+
+// for calorimeter
+//EcalClust.OutputLevel                            = 1;
+//EcalShare.OutputLevel                            = 1;
+//EcalCovar.OutputLevel                            = 1;
+//CaloClusterCorrect3x3Position.OutputLevel        = 1;
+//SpdFromRaw.OutputLevel                           = 1;
+//PrsFromRaw.OutputLevel                           = 1;
+//EcalZSup.OutputLevel                             = 1;
+//HcalZSup.OutputLevel                             = 1;
+
+// for MC truth association
+//TestDST.Particle2MCLinks.ChargedPP2MC.OutputLevel  = 1;
+TestDST.CompositeParticle2MCLinks.OutputLevel      = 1;
+TestDST.CompositeParticle2MCLinks.RootOnTES        = "microDST/";
+
