@@ -51,7 +51,7 @@ DeterministicPrescaler::execute()
   ulonglong evtNumber = odin->eventNumber();
 
   bool accept = m_prescale.empty() || m_prescale[evtNumber%m_prescale.size()];
-  setFilterPassed(accept);
+  setFilterPassed(accept).ignore();
   debug() << " event # " << evtNumber << " : " << (accept?"Accepted":"Rejected") << endmsg ;
   return StatusCode::SUCCESS;
 }

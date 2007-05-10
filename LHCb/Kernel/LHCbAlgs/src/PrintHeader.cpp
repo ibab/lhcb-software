@@ -1,4 +1,4 @@
-// $Id: PrintHeader.cpp,v 1.1 2007-03-02 08:49:27 cattanem Exp $
+// $Id: PrintHeader.cpp,v 1.2 2007-05-10 13:02:12 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -50,9 +50,9 @@ StatusCode PrintHeader::execute() {
     LHCb::ODIN* odin = get<LHCb::ODIN> ( LHCb::ODINLocation::Default );
     debug() << "Run "     << odin->runNumber()
             << ", Event " << odin->eventNumber() << endmsg;
-  } else Warning("No ODIN Header");
+  } else Warning("No ODIN Header").ignore();
        
-  setFilterPassed(true);
+  setFilterPassed(true).ignore();
   
   return StatusCode::SUCCESS;
 };
