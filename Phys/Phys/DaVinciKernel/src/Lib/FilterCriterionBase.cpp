@@ -1,4 +1,4 @@
-// $Id: FilterCriterionBase.cpp,v 1.5 2007-02-17 12:53:09 pkoppenb Exp $
+// $Id: FilterCriterionBase.cpp,v 1.6 2007-05-10 13:03:56 pkoppenb Exp $
 // Include files 
 
 // local
@@ -58,7 +58,7 @@ bool FilterCriterionBase::isSatisfied( const LHCb::Particle* const & part )
 {
   
   if (isInactive()) {
-    Warning("Filter is inactive. Will always return true.",StatusCode::SUCCESS,1);
+    Warning("Filter is inactive. Will always return true.",StatusCode::SUCCESS,1).ignore();
     return true ;
   }
 
