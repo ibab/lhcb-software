@@ -1,4 +1,4 @@
-// $Id: MakeResonances.cpp,v 1.26 2007-05-10 10:01:16 pkoppenb Exp $
+// $Id: MakeResonances.cpp,v 1.27 2007-05-10 13:10:32 pkoppenb Exp $
 
 #include <algorithm>
 
@@ -255,7 +255,6 @@ StatusCode MakeResonances::createDecay(const std::string& mother,
     err() << "Cannot initialize Decay object with " << pid << " " << dpid << endmsg ;
     return sc;
   }
-  return StatusCode::SUCCESS;
   
   m_decays.push_back(dk);
   info() << "Initialized decay # " << m_decays.size() << endmsg ;
