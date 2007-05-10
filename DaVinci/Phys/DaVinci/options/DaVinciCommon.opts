@@ -1,9 +1,6 @@
 /** @file 
  *  Configuration options for the execution of any DaVinci application.
  *  Standard services and DLLs.
- *  Algorithms for reprocessing, primary vertex and production of 
- *  ProtoParticles.
- *  Default properties for common use algorithms and tools.
  * 
  *  @author G.Corti
  *  @date 2003-03-14
