@@ -1,4 +1,4 @@
-// $Id: OnOfflineTool.cpp,v 1.10 2007-02-06 10:17:30 pkoppenb Exp $
+// $Id: OnOfflineTool.cpp,v 1.11 2007-05-10 10:01:17 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -76,7 +76,7 @@ StatusCode OnOfflineTool::initialize(){
   } else {
     m_pvRelator = tool<IRelatedPVFinder>(m_offlinePVRelatorName); // not private    
   }
-  m_pvRelator->setDefaults(getPVLocation(),dispCalculator());
+  sc = m_pvRelator->setDefaults(getPVLocation(),dispCalculator());
 
   return sc;
    

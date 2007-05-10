@@ -192,7 +192,9 @@ StatusCode PhysDesktop::initialize()
 // Implementation of Listener interface
 //=============================================================================
 void PhysDesktop::handle(const Incident&){
-  cleanDesktop();
+  StatusCode sc = cleanDesktop();
+  if (!sc) Exception("Could not clean Desktop");
+  return ;
 }
 
 //=============================================================================
@@ -276,8 +278,8 @@ StatusCode PhysDesktop::cleanDesktop(){
 // Finalize
 //=============================================================================
 StatusCode PhysDesktop::finalize(){
-  cleanDesktop();
-  //if( m_pMaker ) toolSvc()->releaseTool( m_pMaker ); // CRJ : Done automatically by GaudiTool
+  StatusCode sc = cleanDesktop();
+  if (!sc) return sc ;
   return GaudiTool::finalize() ;
 }
 //=============================================================================
@@ -568,7 +570,7 @@ StatusCode PhysDesktop::getEventInput(){
   if ( !m_secVerts.empty()) m_secVerts.clear(); // to make sure it is clean in this event
 
   // Make particles with particle maker
-  if ( m_pMaker ) {
+  if ( m_pMaker ) { 
     StatusCode sc = makeParticles();
     if (!sc) return sc;
   }
@@ -644,7 +646,6 @@ StatusCode PhysDesktop::getParticles(){
 
   debug() << "Looking for particles in " << m_inputLocn.size() 
           << " places" << endmsg ;
-  
 
   for( std::vector<std::string>::iterator iloc = m_inputLocn.begin();
        iloc != m_inputLocn.end(); iloc++ ) {
@@ -653,7 +654,7 @@ StatusCode PhysDesktop::getParticles(){
     std::string location = (*iloc)+"/Particles";
     if ( !exist<LHCb::Particles>( location ) ){ 
       //            return Error("No particles at location "+location); 
-      Warning("No particles at location "+location);
+      Warning("No particles at location "+location).ignore();
       continue ;
     }
     LHCb::Particles* parts = get<LHCb::Particles>( location );
@@ -661,7 +662,8 @@ StatusCode PhysDesktop::getParticles(){
     verbose() << "    Number of Particles retrieved from "
               << location << " = " << parts->size() << endmsg;
     
-    for( LHCb::Particles::iterator icand = parts->begin(); icand != parts->end(); icand++ ) {
+    for( LHCb::Particles::iterator icand = parts->begin(); 
+         icand != parts->end(); icand++ ) {
       setInDesktop(*icand);
       m_parts.push_back(*icand);
     }
@@ -707,18 +709,18 @@ StatusCode PhysDesktop::getRelations(){
     // Retrieve the particles to PV relations
     std::string location = (*iloc)+"/Particle2VertexRelations";
     if (!exist<Particle2Vertex::Table>(location)){
-      Warning("No relations table at "+location);
+      Warning("No relations table at "+location).ignore();
       continue ;
     } else debug() << "Reading table from " << location << endmsg ;
     Particle2Vertex::Table* table = get<Particle2Vertex::Table>(location);
     Particle2Vertex::Range all = table->relations();
     for ( Particle2Vertex::Range::const_iterator i = all.begin() ; i!= all.end() ; ++i){
-      m_p2VtxTable.relate(i->from(),i->to(),i->weight());
+      (m_p2VtxTable.relate(i->from(),i->to(),i->weight())).ignore() ;
       verbose() << "Reading a " << i->from()->particleID().pid() << " related to " 
                <<  i->to()->position() << " at " << i->weight() << endmsg ;
     }
   }
-  return StatusCode::SUCCESS ;
+  return StatusCode::SUCCESS ; // could be sc
 }
 //=============================================================================
 // Get PV

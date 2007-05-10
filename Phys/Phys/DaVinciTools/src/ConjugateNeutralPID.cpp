@@ -1,4 +1,4 @@
-// $Id: ConjugateNeutralPID.cpp,v 1.1 2006-12-18 11:17:00 jpalac Exp $
+// $Id: ConjugateNeutralPID.cpp,v 1.2 2007-05-10 10:01:16 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -60,7 +60,7 @@ StatusCode ConjugateNeutralPID::execute()
   debug() << "==> Execute" << endmsg;
   ++m_nEvents;		// Increment event counter
 
-  setFilterPassed( false );
+  StatusCode sc = setFilterPassed( false );
   
   LHCb::Particle::ConstVector inparts = desktop()->particles();
   verbose() << "Retrieved " << inparts.size() << " particles from desktop" << endmsg;
@@ -81,7 +81,7 @@ StatusCode ConjugateNeutralPID::execute()
   }
 
   // Save the desktop to the TES
-  StatusCode sc = desktop()->saveDesktop();
+  sc = desktop()->saveDesktop();
   if( !sc )
   {
     err() << " Unable to save desktop" << endmsg;
@@ -90,7 +90,7 @@ StatusCode ConjugateNeutralPID::execute()
 
   if( !outparts.empty() )
   {
-    setFilterPassed( true );
+    sc = setFilterPassed( true );
     ++m_nAccepted;			// Increment accepted event counter
     m_nCandidates += outparts.size();		// Increment candidate counter
 
@@ -101,7 +101,7 @@ StatusCode ConjugateNeutralPID::execute()
     debug() << "Writing nothing to output" << endmsg;
 
 
-  return StatusCode::SUCCESS;
+  return sc ;
 }
 
 //=============================================================================

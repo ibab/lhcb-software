@@ -1,4 +1,4 @@
-// $Id: SelResultCorrelations.cpp,v 1.1 2007-03-05 09:05:35 pkoppenb Exp $
+// $Id: SelResultCorrelations.cpp,v 1.2 2007-05-10 10:01:17 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -62,14 +62,16 @@ StatusCode SelResultCorrelations::initialize() {
     return StatusCode::FAILURE ;
   } else {
     info() << "Algorithms to check correlations:" << m_algorithmsColumn << endmsg ;
-    m_algoCorr->algorithms(m_algorithmsColumn);
+    sc =  m_algoCorr->algorithms(m_algorithmsColumn);
+    if (!sc) return sc ;
   }
   
   if (m_algorithmsRow.empty()){
     info() << "No algorithms row defined." << endmsg;
   } else {
     info() << "Algorithms to check correlations against:" << m_algorithmsRow << endmsg ;
-    m_algoCorr->algorithmsRow(m_algorithmsRow); // resets stuff
+    sc = m_algoCorr->algorithmsRow(m_algorithmsRow); // resets stuff
+    if (!sc) return sc ;
   }  
 
   return StatusCode::SUCCESS;
@@ -83,26 +85,25 @@ StatusCode SelResultCorrelations::execute() {
   debug() << "==> Execute" << endmsg;
 
   if (!exist<SelResults>(m_selResults)){
-    setFilterPassed(false);
+    setFilterPassed(false).ignore();
     Warning("SelResult container not found at "+m_selResults) ;
     return StatusCode::SUCCESS;   
   }
   SelResults* SelResCtr = get<SelResults>(m_selResults);
   if (!SelResCtr ) {
     err() << "No valid data at " << m_selResults << endreq;
-    setFilterPassed(false);
+    setFilterPassed(false).ignore();
     return StatusCode::FAILURE; 
   }
 
   for ( SelResults::const_iterator iselRes  = SelResCtr->begin() ; 
         iselRes != SelResCtr->end(); ++iselRes ) { 
     debug() << "Filling result for " << (*iselRes)->location() << endmsg ;
-    m_algoCorr->fillResult((*iselRes)->location(),(*iselRes)->found()) ;
+    StatusCode sc = m_algoCorr->fillResult((*iselRes)->location(),(*iselRes)->found()) ;
+    if (!sc) return sc;
   }
 
-  m_algoCorr->endEvent();
-
-  return StatusCode::SUCCESS;
+  return m_algoCorr->endEvent();
 };
 
 //=============================================================================
@@ -112,8 +113,10 @@ StatusCode SelResultCorrelations::finalize() {
 
   debug() << "==> Finalize" << endmsg;
 
-  if (m_printTable) m_algoCorr->printTable() ;
-  if (m_printList)  m_algoCorr->printList() ;
+  StatusCode sc = StatusCode::SUCCESS ;
 
-  return GaudiAlgorithm::finalize();  // must be called after all other actions
+  if (m_printTable) sc = m_algoCorr->printTable() ;
+  if (m_printList && sc)  sc = m_algoCorr->printList() ;
+
+  return (sc && GaudiAlgorithm::finalize());  // must be called after all other actions
 }

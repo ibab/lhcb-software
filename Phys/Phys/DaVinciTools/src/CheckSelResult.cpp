@@ -1,4 +1,4 @@
-// $Id: CheckSelResult.cpp,v 1.1 2007-03-05 09:05:35 pkoppenb Exp $
+// $Id: CheckSelResult.cpp,v 1.2 2007-05-10 10:01:16 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -79,15 +79,15 @@ StatusCode CheckSelResult::execute() {
   m_totEvents++ ;
 
   if ( !exist<SelResults>(m_selResults)){
-    Warning("SelResults container not found!") ;
-    setFilterPassed(false);
+    Warning("SelResults container not found!").ignore();
+    setFilterPassed(false).ignore();
     return StatusCode::SUCCESS; // ?
   }
   
   SelResults* m_SelResCtr = get<SelResults>(m_selResults);
   if(!m_SelResCtr ) {
     warning() << "SelResult container not found at " << m_selResults << endreq;
-    setFilterPassed(false);
+    setFilterPassed(false).ignore();
     return StatusCode::FAILURE;
   } else verbose() << "SelResult container found at " << m_selResults << endreq;
 
@@ -119,8 +119,8 @@ StatusCode CheckSelResult::execute() {
       m_allpassed = false ;
     }    
   }
-  if (m_ANDmode) setFilterPassed(m_allpassed);
-  else setFilterPassed(m_onepassed);
+  if (m_ANDmode) setFilterPassed(m_allpassed).ignore();
+  else setFilterPassed(m_onepassed).ignore();
   verbose() << "Result is: " << filterPassed() << endreq ;
   if ( filterPassed() ){
     m_nEvents++;
@@ -131,9 +131,8 @@ StatusCode CheckSelResult::execute() {
     }
   }
   
-  if ( !m_avoidSelResult ) writeSelResult(m_SelResCtr) ;
-
-  return StatusCode::SUCCESS;
+  if ( !m_avoidSelResult ) return writeSelResult(m_SelResCtr) ;
+  else return StatusCode::SUCCESS;
 };
 
 //=============================================================================

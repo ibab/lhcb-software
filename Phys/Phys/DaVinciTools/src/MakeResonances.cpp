@@ -1,4 +1,4 @@
-// $Id: MakeResonances.cpp,v 1.25 2007-03-07 17:27:20 pkoppenb Exp $
+// $Id: MakeResonances.cpp,v 1.26 2007-05-10 10:01:16 pkoppenb Exp $
 
 #include <algorithm>
 
@@ -61,7 +61,8 @@ MakeResonances::MakeResonances( const std::string& name,
   declareProperty( "MotherToNGammas" , m_motherToNGammas = false) ;
   declareProperty( "OutputLocation" , m_outputLocation = "" ) ;
   declareProperty( "PrintStats", m_printStats = false ) ;
-  setProperty ( "HistoProduce", "0" ) ; // overwrites GaudiHistoAlg.cpp
+  StatusCode sc = setProperty ( "HistoProduce", "0" ) ; // overwrites GaudiHistoAlg.cpp
+  if (!sc) Exception("Could not reset property HistoProduce");
 }
 //=============================================================================
 // Destructor
@@ -153,7 +154,8 @@ StatusCode MakeResonances::createDecays(){
   if ( !dsds ) return StatusCode::FAILURE ;
   
   if ( m_decayDescriptors.empty() ){
-    debug() << "No decay descriptors array defined. Pushing back " << getDecayDescriptor() << endmsg ;
+    debug() << "No decay descriptors array defined. Pushing back " 
+            << getDecayDescriptor() << endmsg ;
     m_decayDescriptors.push_back(getDecayDescriptor());
   }
   debug() << "Decay descriptors are " << m_decayDescriptors << endmsg ;
@@ -193,7 +195,8 @@ StatusCode MakeResonances::createDecays(){
       if(daughtersBeforecc == daughters){
         warning() << "You have chosen two charged-conjugated modes with identical final states: " 
                   << m_decayDescriptors << endmsg ;
-        warning() << "All final state particle will be duplicated as " << motherBeforecc << " and " << mother << endmsg ;
+        warning() << "All final state particle will be duplicated as " 
+                  << motherBeforecc << " and " << mother << endmsg ;
       }
       sc = createDecay(mother, daughters);
       if (sc.isFailure()) return sc;
@@ -216,7 +219,7 @@ StatusCode MakeResonances::createDecay(const std::string& mother,
   if (NULL==pmother){
     err() << "Cannot find particle property for mother " << mother << endmsg ;
     return StatusCode::FAILURE;
-  } else verbose() << "Found ParticleProperty " << pmother << endmsg ;
+  } else verbose() << "Found ParticleProperty " << pmother->pdgID() << endmsg ;
   int pid = pmother->pdgID() ;
   verbose() << "Found pid of " << mother << " = " << pid << endmsg ;
   if (!consideredPID(pid)) m_allPids.push_back(pid) ;
@@ -237,6 +240,7 @@ StatusCode MakeResonances::createDecay(const std::string& mother,
     if (!consideredPID(pd->pdgID())) m_allPids.push_back(pd->pdgID()) ;
   }
   verbose() << "Pushed back " << dpid.size() << " daughters" << endmsg ;
+  //  OK
 
   double mass = pmother->mass();
   double minmass = mass - std::min(m_massWindow,m_lowerMassWindow);
@@ -245,11 +249,14 @@ StatusCode MakeResonances::createDecay(const std::string& mother,
 
   // decay container
   Decay dk;
-  StatusCode sc = dk.initialize(pid,dpid,minmass,maxmass,m_minMomentum,m_minPt,m_checkOverlap, m_particleDescendants);
+  StatusCode sc = dk.initialize(pid,dpid,minmass,maxmass,m_minMomentum,
+                                m_minPt,m_checkOverlap, m_particleDescendants);
   if (!sc) {
     err() << "Cannot initialize Decay object with " << pid << " " << dpid << endmsg ;
     return sc;
   }
+  return StatusCode::SUCCESS;
+  
   m_decays.push_back(dk);
   info() << "Initialized decay # " << m_decays.size() << endmsg ;
   
@@ -262,9 +269,9 @@ StatusCode MakeResonances::execute() {
 
   ++m_nEvents ;
 
-  setFilterPassed(false);   // Mandatory. Set to true if event is accepted.
+  StatusCode sc = setFilterPassed(false);   // Mandatory. Set to true if event is accepted.
   LHCb::Particle::ConstVector Daughters, Resonances ;
-  StatusCode sc = applyFilter(desktop()->particles(),Daughters,m_daughterFilter);
+  sc = applyFilter(desktop()->particles(),Daughters,m_daughterFilter);
   if (!sc) {
     err() << "Unable to filter daughters" << endmsg;
     return StatusCode::FAILURE ;  
@@ -307,14 +314,14 @@ StatusCode MakeResonances::execute() {
     return StatusCode::FAILURE ;  
   }  
   if ( !Final.empty()){
-    setFilterPassed(true);   // Mandatory. Set to true if event is accepted.
     ++m_nAccepted;
     m_nCandidates+=Final.size();
+    sc = setFilterPassed(true);   // Mandatory. Set to true if event is accepted.
   }
   if ( msgLevel(MSG::DEBUG) || m_printStats )
     always() << "Found " << Final.size() << " candidates " << endmsg ;
   
-  return StatusCode::SUCCESS;
+  return sc;
 };
 //=============================================================================
 // Filter particles
@@ -357,24 +364,10 @@ StatusCode MakeResonances::applyFilter(const LHCb::Particle::ConstVector& vIn,
   return StatusCode::SUCCESS;
 }
 //=============================================================================
-// Check if Particle needs to be considered
-//=============================================================================
-inline bool MakeResonances::consideredPID(const int& pid)const{
-  verbose() << "consideredPID " << pid << endmsg ;
-  bool out = false ;// not in list
-  for ( std::vector<int>::const_iterator ap = m_allPids.begin() ; ap != m_allPids.end() ; ++ap ){
-    if ( *ap == pid ) {
-      out = true; // in list
-      break ;
-    }
-  }
-  verbose() << "consideredPID " << pid << " " << out << endmsg ;
-  return out ; 
-}
-//=============================================================================
 // Apply one decay
 //=============================================================================
 StatusCode MakeResonances::applyDecay(Decay& d, LHCb::Particle::ConstVector& Resonances){
+  StatusCode sc = StatusCode::SUCCESS ;
   verbose() << "In applyDecay" << endmsg ;
   LHCb::Particle::ConstVector DaughterVector ;
   bool inloop = d.getFirstCandidates(DaughterVector); // get first daughter vector
@@ -394,11 +387,10 @@ StatusCode MakeResonances::applyDecay(Decay& d, LHCb::Particle::ConstVector& Res
       verbose() << "Found a candidate with mass " << sum4.M() << endmsg ;
       // LF
       // vertex fit or make mother to n gammas!
-      const LHCb::Particle* Mother = 
-        makeMother(DaughterVector,d.getMotherPid());
+      const LHCb::Particle* Mother = makeMother(DaughterVector,d.getMotherPid());
       if (0==Mother){
-        if(m_motherToNGammas) Warning("Something failed making mother to n gammas",StatusCode::SUCCESS,1);
-        else Warning("Something failed in vertex fitting",StatusCode::SUCCESS,1);
+        if(m_motherToNGammas) sc = Warning("Something failed making mother to n gammas",StatusCode::SUCCESS,1);
+        else sc = Warning("Something failed in vertex fitting",StatusCode::SUCCESS,1);
       }
       else {
         verbose() << "Getting mother " << Mother->particleID().pid()
@@ -410,13 +402,13 @@ StatusCode MakeResonances::applyDecay(Decay& d, LHCb::Particle::ConstVector& Res
   }
   debug() << "Found " << Resonances.size() << " candidates with PID " 
           << d.getMotherPid().pid() << endmsg ;
-  return StatusCode::SUCCESS ;  
+  return sc ;  
 }
-
 //=============================================================================
 //  Make Mother Vertex fit
 //=============================================================================
-const LHCb::Particle* MakeResonances::makeMother(const LHCb::Particle::ConstVector& Daughters,
+const LHCb::Particle* MakeResonances::makeMother(const LHCb::Particle::ConstVector& 
+                                                 Daughters,
                                                  const LHCb::ParticleID& motherPid){
   verbose() << "Will make particle with PID " << motherPid.pid() << endmsg ;
 
@@ -430,13 +422,14 @@ const LHCb::Particle* MakeResonances::makeMother(const LHCb::Particle::ConstVect
  } else{
     sc = vertexFitter()->fit(Daughters,Candidate,CandidateVertex);
     if (!sc){
-      Warning("Failed to fit vertex",StatusCode::SUCCESS,1);
-      return 0;
+      Warning("Failed to fit vertex",StatusCode::SUCCESS,1).ignore();
+      return NULL;
     }
     debug() << "Fit vertex at " << CandidateVertex.position()
             << " with chi^2 " << CandidateVertex.chi2() << endmsg;
     // may add a chi^2 cut here
-  } 
+  }
+  if (!sc) return NULL;
   
   verbose() << "Calling desktop()->save(const LHCb::Particle*)" << endmsg ;
   return desktop()->save(&Candidate);

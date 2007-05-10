@@ -1,4 +1,4 @@
-// $Id: RelatedPVFinder.cpp,v 1.3 2007-02-06 10:17:30 pkoppenb Exp $
+// $Id: RelatedPVFinder.cpp,v 1.4 2007-05-10 10:01:17 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -107,6 +107,7 @@ StatusCode RelatedPVFinder::relatedPVs(const LHCb::Particle* p,
 
   double fom = 0;
   double err = 0 ;
+  StatusCode sc = StatusCode::SUCCESS ;
   verbose() << "Looping over " << pvs->size() << " PVs" << endmsg ;
   for ( rv_iter i = pvs->begin() ; i!=pvs->end() ; ++i){
     if ( m_closestZ ) {
@@ -115,21 +116,22 @@ StatusCode RelatedPVFinder::relatedPVs(const LHCb::Particle* p,
                                            + v->covMatrix()(2,2)*v->covMatrix()(2,2));
       verbose() << "Closest Z PV at " << (*i)->position() << " fom " << fom << endmsg ;
     } else if ( m_closest ) {
-      m_geom->calcVertexDis(*v,*(*i),fom,err);
+      sc = m_geom->calcVertexDis(*v,*(*i),fom,err);
       if ( m_significance ) fom = fom/err ;
       verbose() << "Closest PV at " << (*i)->position() << " fom " << fom << endmsg ;
     } else if ( m_smallestIP ) {
-      m_geom->calcImpactPar(*p,*(*i),fom,err);
+      sc = m_geom->calcImpactPar(*p,*(*i),fom,err);
       if ( m_significance ) fom = fom/err ;
       verbose() << "Smallest IP PV at " << (*i)->position() << " fom " << fom << endmsg ;
     } else {
       Exception("None of all options") ;
     }
-    table->relate(p,*i,1./fom) ;
+    if (sc) sc = table->relate(p,*i,1./fom) ;
+    if (!sc) return sc;
 
     debug() << "... PV at " << (*i)->position() << " gets weight 1/" << fom << endmsg ;
   }
   verbose() << "Done relations for " << pvs->size() << " PVs" << endmsg ;
-  return StatusCode::SUCCESS ;
+  return sc ;
 }
 

@@ -1,4 +1,4 @@
-// $Id: DecodeSimpleDecayString.cpp,v 1.6 2007-01-15 10:32:29 jpalac Exp $
+// $Id: DecodeSimpleDecayString.cpp,v 1.7 2007-05-10 10:01:16 pkoppenb Exp $
 // Include files 
 
 // from ANSI C++
@@ -201,8 +201,8 @@ DecodeSimpleDecayString::splitDescriptor(const std::string& descriptor,
 StatusCode DecodeSimpleDecayString::do_cc(void) {
   
   std::string descriptor_cc = this->conjugate(m_descriptor);
-  this->splitDescriptor(descriptor_cc, m_mother_cc, m_daughters_cc);
-  return StatusCode::SUCCESS;  
+  StatusCode sc = this->splitDescriptor(descriptor_cc, m_mother_cc, m_daughters_cc);
+  return sc;  
 }
 //=============================================================================
 // Conjugator from Gerhard

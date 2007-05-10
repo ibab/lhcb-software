@@ -1,4 +1,4 @@
-// $Id: MakeResonances.h,v 1.13 2007-03-07 17:27:20 pkoppenb Exp $
+// $Id: MakeResonances.h,v 1.14 2007-05-10 10:01:17 pkoppenb Exp $
 #ifndef MAKERESONANCES_H 
 #define MAKERESONANCES_H 1
 
@@ -47,8 +47,19 @@ protected:
   const LHCb::Particle* makeMother(const LHCb::Particle::ConstVector&,
                                    const LHCb::ParticleID&);
   StatusCode makePlots(const LHCb::Particle::ConstVector&,IPlotTool*); ///< make plots
-  inline bool consideredPID(const int& pid)const ; ///< make plots
-
+  inline bool consideredPID(const int& pid)const{
+    verbose() << "consideredPID " << pid << endmsg ;
+    bool out = false ;// not in list
+    for ( std::vector<int>::const_iterator ap = m_allPids.begin() ; ap != m_allPids.end() ; ++ap ){
+      if ( *ap == pid ) {
+        out = true; // in list
+        break ;
+      }
+    }
+    verbose() << "consideredPID " << pid << " " << out << endmsg ;
+    return out ; 
+  }
+  
 private:
   // globals
 
@@ -106,7 +117,7 @@ private:
     Decay(){
       std::vector<int> a;
       m_checkOrder = false ;
-      initialize(0,a,0.,100000.,-1.,-1.,NULL, NULL);
+      initialize(0,a,0.,100000.,-1.,-1.,NULL, NULL).ignore();
     };
     ~Decay(){};
     bool fillPidParticles(const LHCb::Particle::ConstVector&); ///< fill maps at each even
