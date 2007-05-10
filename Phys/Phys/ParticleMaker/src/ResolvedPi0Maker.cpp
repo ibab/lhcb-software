@@ -1,5 +1,5 @@
 // $Id
-// $Id: ResolvedPi0Maker.cpp,v 1.4 2007-01-12 14:14:30 ranjard Exp $
+// $Id: ResolvedPi0Maker.cpp,v 1.5 2007-05-10 12:36:20 pkoppenb Exp $
 // ============================================================================
 // Include files
 #include "GaudiKernel/DeclareFactoryEntries.h"
@@ -128,7 +128,7 @@ StatusCode ResolvedPi0Maker::makeParticles (LHCb::Particle::Vector & pi0s )
 {
   // avoid some long names
   if( !pi0s.empty() ){
-    Warning( "makeParticles(): extend non-empty vector of Particles" ) ; 
+    Warning( "makeParticles(): extend non-empty vector of Particles" ).ignore() ; 
   }
   
   // make photon data
@@ -136,9 +136,10 @@ StatusCode ResolvedPi0Maker::makeParticles (LHCb::Particle::Vector & pi0s )
   m_photonMaker->setPoint(m_point, m_pointErr);
   
   LHCb::Particle::Vector photons;
-  m_photonMaker->makeParticles(photons);
+  StatusCode sc = m_photonMaker->makeParticles(photons);
+  if (!sc) return sc;
   if( 0 == photons.size() ) { 
-    warning() << "PhotonMaker return empty container - No resolved pi0 to be created" << endreq;
+    Warning("PhotonMaker return empty container - No resolved pi0 to be created").ignore();
     return StatusCode::SUCCESS; 
   }
 
@@ -167,7 +168,7 @@ StatusCode ResolvedPi0Maker::makeParticles (LHCb::Particle::Vector & pi0s )
     photons.erase(part);
   }
   if ( 0 != photons.size() ) {
-    warning() <<"Photon candidate sorting was wrong..."<<endreq;
+    err() <<"Photon candidate sorting was wrong..."<<endreq;
     return StatusCode::FAILURE;
   }
   

@@ -1,4 +1,4 @@
-// $Id: PreLoadParticles.cpp,v 1.6 2007-01-12 14:14:29 ranjard Exp $
+// $Id: PreLoadParticles.cpp,v 1.7 2007-05-10 12:36:20 pkoppenb Exp $
 // Include files
 
 #include "GaudiKernel/DeclareFactoryEntries.h"
@@ -27,8 +27,8 @@ PreLoadParticles::PreLoadParticles( const std::string& name,
                                     ISvcLocator* pSvcLocator)
   : DVAlgorithm ( name , pSvcLocator ) 
 {
-  setProperty( "AvoidSelResult", "true");
-  setProperty( "DecayDescriptor", "\"null\"");
+  setProperty( "AvoidSelResult", "true").ignore();
+  setProperty( "DecayDescriptor", "\"null\"").ignore();
 }
 
 //=============================================================================
@@ -59,7 +59,7 @@ StatusCode PreLoadParticles::execute()
             <<desktop()->secondaryVertices().size() << endmsg;
   }
 
-  setFilterPassed(true);
+  setFilterPassed(true).ignore();
 
   return scDesktop;
 }

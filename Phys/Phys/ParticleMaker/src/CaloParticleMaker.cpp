@@ -1,4 +1,4 @@
-// $Id: CaloParticleMaker.cpp,v 1.1 2006-09-06 15:21:47 odescham Exp $
+// $Id: CaloParticleMaker.cpp,v 1.2 2007-05-10 12:36:20 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -70,7 +70,8 @@ StatusCode CaloParticleMaker::finalize      ()
 StatusCode CaloParticleMaker::makeParticles (LHCb::Particle::ConstVector & particles )
 {
   LHCb::Particle::Vector parts;
-  m_Maker->makeParticles(parts);
+  StatusCode sc = m_Maker->makeParticles(parts);
+  if (!sc) return sc;
   for(LHCb::Particle::Vector::iterator ipart = parts.begin(); ipart !=parts.end(); ++ipart){
     particles.push_back( *ipart );
   }
