@@ -1,4 +1,4 @@
-// $Id: TrackMatchVeloSeed.cpp,v 1.30 2007-03-21 09:29:45 cattanem Exp $
+// $Id: TrackMatchVeloSeed.cpp,v 1.31 2007-05-10 14:56:24 mneedham Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -399,13 +399,7 @@ StatusCode TrackMatchVeloSeed::storeTracks( Tracks* matchCont )
        }
     }
 
-    // Now make all the remaining Measurements "in one go"
-    if ( m_addMeasurements && aTrack->nMeasurements() < aTrack->nLHCbIDs() ) {
-      sc = m_measProvider -> load( *aTrack );
-      if ( sc.isFailure() )
-        return Error( "Unable to load measurements!", StatusCode::FAILURE );
-    }
-
+   
     // Add state at T
     State aState = seedTrack -> closestState( StateParameters::ZAtT );
     //State aState = tState;
@@ -418,9 +412,22 @@ StatusCode TrackMatchVeloSeed::storeTracks( Tracks* matchCont )
     if (veloTrack->hasStateAt(LHCb::State::EndVelo) == false) {
       return Warning("No State at Velo", StatusCode::FAILURE);
     }
-    const State vState = veloTrack->stateAt( LHCb::State::EndVelo );
+    State vState = veloTrack->stateAt( LHCb::State::EndVelo );
     //State aState2 = vState;
     aTrack -> addToStates( vState );
+
+    // Now make all the velo measurements
+    if ( m_addMeasurements) {
+      const std::vector<LHCb::LHCbID>& ids = veloTrack->lhcbIDs();
+      for (std::vector<LHCb::LHCbID>::const_iterator iter = ids.begin(); iter != ids.end(); ++iter){
+        LHCb::Measurement* meas = m_measProvider->measurement(*iter);
+	// extrapolate to refz and set the reference
+        vState.setQOverP(aState.qOverP()); 
+        m_extrapolatorVelo->propagate(vState,meas->z());
+        meas->setRefVector( vState.stateVector() );
+        aTrack->addToMeasurements( *meas );
+      } // for
+    }// if
 
     // Set various flags
     aTrack -> setType( Track::Long );
