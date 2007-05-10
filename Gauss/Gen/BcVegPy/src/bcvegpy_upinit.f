@@ -1,5 +1,6 @@
 C...*************************************************************************
 C...To do the initialization
+C...Messages commented; XSECUP(1) value corrected; 2007-05-09
 C...Modified by hejb, 2006-03-14
 C...*************************************************************************
 
@@ -134,31 +135,33 @@ C The following from main
 C**************************************************************************************
       CALL GETENV( 'BCVEGPYDATAROOT' , BASENAME )
 
-      IF(IMIX.EQ.1) THEN
 
-C..Commented by hejb, not wanted for this version
+CC...Commented 09/05/2007, initializations done sereral times, messages unwanted
+CC      IF(IMIX.EQ.1) THEN
+
+C...Commented by hejb, not wanted for this version
 C     OPEN(UNIT=3,FILE
 C     &   =BASENAME(1:len_trim(BASENAME))//'/data/mix.dat'
 C     &   ,STATUS='UNKNOWN')
-         WRITE(*,'(A)') 'GET THE MIXING RESULTS FOR GLUON-GLUON FUSION.'
+CC         WRITE(*,'(A)') 'GET THE MIXING RESULTS FOR GLUON-GLUON FUSION.'
 C	WRITE(3,'(A)') 'GET THE MIXING RESULTS FOR GLUON-GLUON FUSION.'
-         IF(IMIXTYPE.EQ.1) THEN
-            WRITE(*,'(A)') 
-     &   'STATES TO BE MIXED: 1S0,3S1,1P1,3P0,3P1,3P2,(1S0)_8,(3S1)_8.'
+CC         IF(IMIXTYPE.EQ.1) THEN
+CC            WRITE(*,'(A)') 
+CC     &   'STATES TO BE MIXED: 1S0,3S1,1P1,3P0,3P1,3P2,(1S0)_8,(3S1)_8.'
 C	 WRITE(3,'(A)')
 C     &	 'STATES TO BE MIXED: 1S0,3S1,1P1,3P0,3P1,3P2,(1S0)_8,(3S1)_8.'
-         END IF
-         IF(IMIXTYPE.EQ.2) THEN
-            WRITE(*,'(A)') 'STATES TO BE MIXED: 1S0,3S1'
+CC         END IF
+CC         IF(IMIXTYPE.EQ.2) THEN
+CC            WRITE(*,'(A)') 'STATES TO BE MIXED: 1S0,3S1'
 C	  WRITE(3,'(A)') 'STATES TO BE MIXED: 1S0,3S1'
-         END IF
-         IF(IMIXTYPE.EQ.3) THEN
-            WRITE(*,'(A)') 
-     &	  'STATES TO BE MIXED: 1P1,3P0,3P1,3P2,(1S0)_8,(3S1)_8.'
+CC         END IF
+CC         IF(IMIXTYPE.EQ.3) THEN
+CC            WRITE(*,'(A)') 
+CC     &	  'STATES TO BE MIXED: 1P1,3P0,3P1,3P2,(1S0)_8,(3S1)_8.'
 C	  WRITE(3,'(A)') 
 C     &	  'STATES TO BE MIXED: 1P1,3P0,3P1,3P2,(1S0)_8,(3S1)_8.'
-         END IF
-      END IF                    !IF IMIX=1
+CC         END IF
+CC      END IF                    !IF IMIX=1
 
 C************************************************
 
@@ -329,12 +332,12 @@ C...--used only for s-wave.
 C--------------------------------------------
 
 C...output.
-      WRITE(*,'(A)') 
-     &     '......................................................'
-      WRITE(*,'(A)')
-     &     '.............. INITIAL PARAMETERS ....................'
-      WRITE(*,'(A)') 
-     &     '......................................................'
+CC      WRITE(*,'(A)') 
+CC     &     '......................................................'
+CC      WRITE(*,'(A)')
+CC     &     '.............. INITIAL PARAMETERS ....................'
+CC      WRITE(*,'(A)') 
+CC     &     '......................................................'
 C      WRITE(3,'(A)') 
 C     &	'......................................................'
 C	WRITE(3,'(A)') 
@@ -347,127 +350,127 @@ C     &	'......................................................'
 C...To print the information of the state generated
       IF(IMIX.EQ.1) GO TO 111
       
-      IF(IBCSTATE.EQ.3) THEN
-         WRITE(*,*)
-         WRITE(*,'(A)') 'GET THE RESULT FOR Bc IN 1^P_1.'
-         WRITE(*,*)
+CC      IF(IBCSTATE.EQ.3) THEN
+CC         WRITE(*,*)
+CC         WRITE(*,'(A)') 'GET THE RESULT FOR Bc IN 1^P_1.'
+CC         WRITE(*,*)
 C	  WRITE(3,'(A)') 'GET THE RESULT FOR Bc IN 1^P_1.'
-      END IF        
+CC      END IF        
 
-      IF(IBCSTATE.EQ.4) THEN
-         WRITE(*,*)
-         WRITE(*,'(A)') 'GET THE RESULT FOR Bc IN 3^P_0.'
-         WRITE(*,*)
+CC      IF(IBCSTATE.EQ.4) THEN
+CC         WRITE(*,*)
+CC         WRITE(*,'(A)') 'GET THE RESULT FOR Bc IN 3^P_0.'
+CC         WRITE(*,*)
 C	  WRITE(3,'(A)') 'GET THE RESULT FOR Bc IN 3^P_0.'
-      END IF
+CC      END IF
 
-      IF(IBCSTATE.EQ.5) THEN
-         WRITE(*,*)
-         WRITE(*,'(A)') 'GET THE RESULT FOR Bc IN 3^P_1.'
-         WRITE(*,*)
+CC      IF(IBCSTATE.EQ.5) THEN
+CC         WRITE(*,*)
+CC         WRITE(*,'(A)') 'GET THE RESULT FOR Bc IN 3^P_1.'
+CC         WRITE(*,*)
 C	  WRITE(3,'(A)') 'GET THE RESULT FOR Bc IN 3^P_1.'
-      END IF
+CC      END IF
 
-      IF(IBCSTATE.EQ.6) THEN
-         WRITE(*,*)
-         WRITE(*,'(A)') 'GET THE RESULT FOR Bc IN 3^P_2.'
-         WRITE(*,*)
+CC      IF(IBCSTATE.EQ.6) THEN
+CC         WRITE(*,*)
+CC         WRITE(*,'(A)') 'GET THE RESULT FOR Bc IN 3^P_2.'
+CC         WRITE(*,*)
 C         WRITE(3,'(A)') 'GET THE RESULT FOR Bc IN 3^P_2.'
-      END IF
+CC      END IF
       
-      IF (IBCSTATE.EQ.1) THEN
-         WRITE(*,*)
-         WRITE(*,'(A)') 'GET THE RESULT FOR Bc IN 1^S_0.'
-         WRITE(*,*)
+CC      IF (IBCSTATE.EQ.1) THEN
+CC         WRITE(*,*)
+CC         WRITE(*,'(A)') 'GET THE RESULT FOR Bc IN 1^S_0.'
+CC         WRITE(*,*)
 C	  WRITE(3,'(A)') 'GET THE RESULT FOR Bc IN 1^S_0.'
-      END IF
+CC      END IF
 
-      IF (IBCSTATE.EQ.2) THEN
-         WRITE(*,*)
-         WRITE(*,'(A)') 'GET THE RESULT FOR Bc IN 3^S_1.'
-         WRITE(*,*)
+CC      IF (IBCSTATE.EQ.2) THEN
+CC         WRITE(*,*)
+CC         WRITE(*,'(A)') 'GET THE RESULT FOR Bc IN 3^S_1.'
+CC         WRITE(*,*)
 C	  WRITE(3,'(A)') 'GET THE RESULT FOR Bc IN 3^S_1.'
-      END IF
+CC      END IF
 
-      IF(IOCTET.EQ.0) THEN
-         WRITE(*,'(A)') 'Bc IN COLOR-SINGLET STATE.'
+CC      IF(IOCTET.EQ.0) THEN
+CC         WRITE(*,'(A)') 'Bc IN COLOR-SINGLET STATE.'
 C	  WRITE(3,'(A)') 'Bc IN COLOR-SINGLET STATE.'
-      END IF
-      IF(IOCTET.EQ.1) THEN 
-         WRITE(*,'(A)') 'Bc IN COLOR-OCTET STATE.'
+CC      END IF
+CC      IF(IOCTET.EQ.1) THEN 
+CC         WRITE(*,'(A)') 'Bc IN COLOR-OCTET STATE.'
 C	  WRITE(3,'(A)') 'Bc IN COLOR-OCTET STATE.'
-      END IF
+CC      END IF
 
 111   CONTINUE
 
-      IF(NPDFU.EQ.1) THEN
+CC      IF(NPDFU.EQ.1) THEN
 C	  WRITE(3,41)'GENERATE EVNTS', NEV,'TEVA ENERGY(GEV)',ECM
-         WRITE(*,41)'GENERATE EVNTS', NEV,'TEVA ENERGY(GEV)',ECM
-      ELSE                      !NPDFU=2
+CC         WRITE(*,41)'GENERATE EVNTS', NEV,'TEVA ENERGY(GEV)',ECM
+CC      ELSE                      !NPDFU=2
 C	  WRITE(3,41) 'GENERATE EVNTS', NEV,'LHC ENERGY(GEV)',ECM
-         WRITE(*,41) 'GENERATE EVNTS',NEV,'LHC ENERGY(GEV)',ECM
-      END IF
+CC         WRITE(*,41) 'GENERATE EVNTS',NEV,'LHC ENERGY(GEV)',ECM
+CC      END IF
 
-      WRITE(*,'(A)') '*************************************************'
+CC      WRITE(*,'(A)') '*************************************************'
 C      WRITE(3,'(A)') '*************************************************'
-      IF(IQQBAR.EQ.0) THEN
-	 WRITE(*,'(A)')'*   USING SUBPROCESS: 
-     &    g+g->Bc+b+bar{c}      *'
+CC      IF(IQQBAR.EQ.0) THEN
+CC	 WRITE(*,'(A)')'*   USING SUBPROCESS: 
+CC     &    g+g->Bc+b+bar{c}      *'
 C	 WRITE(3,'(A)')'*   USING SUBPROCESS: g+g->Bc+b+\bar{c}         *'
-      ELSE
-	 IF(IQCODE.EQ.1) THEN
-            IF(IOUTPDF.EQ.1) THEN
+CC      ELSE
+CC	 IF(IQCODE.EQ.1) THEN
+CC            IF(IOUTPDF.EQ.1) THEN
 C...FOR OUTER PDF, CODE FOR u IS 1 , d IS 2 AND s IS 3.
-               WRITE(*,'(A)')'*   USING SUBPROCESS: 
-     &          u+~u->Bc+b+\bar{c}   *'
+CC               WRITE(*,'(A)')'*   USING SUBPROCESS: 
+CC     &          u+~u->Bc+b+\bar{c}   *'
 C	   WRITE(3,'(A)')'*   USING SUBPROCESS: u+~u->Bc+b+\bar{c}   *'
-            END IF
+CC            END IF
 C...IN PYTHIA, CODE FOR d IS 1, u IS 2 AND s IS 3.
-            IF(IOUTPDF.EQ.0) THEN
-               WRITE(*,'(A)')'*   USING SUBPROCESS:
-     &          d+~d->Bc+b+\bar{c}   *'
+CC            IF(IOUTPDF.EQ.0) THEN
+CC               WRITE(*,'(A)')'*   USING SUBPROCESS:
+CC     &          d+~d->Bc+b+\bar{c}   *'
 C	   WRITE(3,'(A)')'*   USING SUBPROCESS: d+~d->Bc+b+\bar{c}   *'
-            END IF
-         END IF                 ! IQCODE=1
+CC            END IF
+CC         END IF                 ! IQCODE=1
          
-	 IF(IQCODE.EQ.2) THEN
+CC	 IF(IQCODE.EQ.2) THEN
 C...FOR OUTER PDF, CODE FOR u IS 1, d IS 2 AND s IS 3.
-            IF(IOUTPDF.EQ.1) THEN
-               WRITE(*,'(A)')'*   USING SUBPROCESS:
-     &          d+~d->Bc+b+\bar{c}   *'
+CC            IF(IOUTPDF.EQ.1) THEN
+CC               WRITE(*,'(A)')'*   USING SUBPROCESS:
+CC     &          d+~d->Bc+b+\bar{c}   *'
 C	   WRITE(3,'(A)')'*   USING SUBPROCESS: d+~d->Bc+b+\bar{c}   *'
-            END IF
+CC            END IF
 C...IN PYTHIA, CODE FOR d IS 1, u IS 2 AND s IS 3.
-            IF(IOUTPDF.EQ.0) THEN
-               WRITE(*,'(A)')'*   USING SUBPROCESS:
-     &          u+~u->Bc+b+\bar{c}   *'
+CC            IF(IOUTPDF.EQ.0) THEN
+CC               WRITE(*,'(A)')'*   USING SUBPROCESS:
+CC     &          u+~u->Bc+b+\bar{c}   *'
 C	   WRITE(3,'(A)')'*   USING SUBPROCESS: u+~u->Bc+b+\bar{c}   *'
-            END IF
-	 END IF                 !IQCODE=2
+CC            END IF
+CC	 END IF                 !IQCODE=2
 
-	 IF(IQCODE.EQ.3) THEN
-            WRITE(*,'(A)')'*   USING SUBPROCESS:
-     &       s+~s->Bc+b+\bar{c}   *'
+CC	 IF(IQCODE.EQ.3) THEN
+CC            WRITE(*,'(A)')'*   USING SUBPROCESS:
+CC     &       s+~s->Bc+b+\bar{c}   *'
 C	  WRITE(3,'(A)')'*   USING SUBPROCESS: s+~s->Bc+b+\bar{c}   *'
-         END IF                 !IQCODE=3
-      END IF                    !IQQBAR=0
-      WRITE(*,'(A)') '*************************************************'
+CC         END IF                 !IQCODE=3
+CC      END IF                    !IQQBAR=0
+CC      WRITE(*,'(A)') '*************************************************'
 C      WRITE(3,'(A)') '*************************************************'
 
 	
-      IF(IMIX.EQ.0) THEN
+CC      IF(IMIX.EQ.0) THEN
 C	 WRITE(3,32) PMBC,PMB,PMC,FBC
-	 WRITE(*,32) PMBC,PMB,PMC,FBC
-      ELSE
+CC	 WRITE(*,32) PMBC,PMB,PMC,FBC
+CC      ELSE
 C	 WRITE(3,31) PMBC,PMB,PMC
-	 WRITE(*,31) PMBC,PMB,PMC
-      END IF
+CC	 WRITE(*,31) PMBC,PMB,PMC
+CC      END IF
 
       IF(ISUBONLY.EQ.0) THEN
 	 IF(MSTU(111).EQ.0) ALPORDER='CONST'
 	 IF(MSTU(111).EQ.1) ALPORDER='LO'
 	 IF(MSTU(111).EQ.2) ALPORDER='NLO'
-	 WRITE(*,'(A,I2,3X,A,A)')'Q2 TYPE=',NQ2, 'ALPH ORDER=',ALPORDER
+CC	 WRITE(*,'(A,I2,3X,A,A)')'Q2 TYPE=',NQ2, 'ALPH ORDER=',ALPORDER
 C         WRITE(3,'(A,I2,3X,A,A)')'Q2 TYPE=',NQ2, 'ALPH ORDER=',ALPORDER
 
 
@@ -520,23 +523,23 @@ C	 END IF                 !IOUTPDF=1
 
       END IF                    !ISUBONLY=0
 
-      IF(ISUBONLY.EQ.1) THEN
-         WRITE(*,'(A)') 'ALPHA_S TAKE CONSTANT VALUE: 0.20'
-      END IF
+CC      IF(ISUBONLY.EQ.1) THEN
+CC         WRITE(*,'(A)') 'ALPHA_S TAKE CONSTANT VALUE: 0.20'
+CC      END IF
 
-      WRITE(*,'(A,I3)') 'USING PYTHIA IDWTUP=',IDPP
+CC      WRITE(*,'(A,I3)') 'USING PYTHIA IDWTUP=',IDPP
 C	WRITE(3,'(A,I3)') 'USING PYTHIA IDWTUP=',IDPP
 
-      WRITE(*,'(A,G10.4,A)') 'PTCUT=',PTCUT,'GeV'
+CC      WRITE(*,'(A,G10.4,A)') 'PTCUT=',PTCUT,'GeV'
 C	WRITE(3,'(A,G10.4,A)') 'PTCUT=',PTCUT,'GeV'
 
-      IF(ETACUT.GT.1.0D+5) THEN
-         WRITE(*,'(A)') 'NO RAPIDITY CUT'
+CC      IF(ETACUT.GT.1.0D+5) THEN
+CC         WRITE(*,'(A)') 'NO RAPIDITY CUT'
 C	   WRITE(3,'(A)') 'NO RAPIDITY CUT'
-      ELSE
-         WRITE(*,'(A,G10.4)') 'RAPIDITY CUT=',ETACUT
+CC      ELSE
+CC         WRITE(*,'(A,G10.4)') 'RAPIDITY CUT=',ETACUT
 C	   WRITE(3,'(A,G10.4)') 'RAPIDITY CUT=',ETACUT
-      END IF
+CC      END IF
 
 
 C...Commented by hejb, taken care by Gauss Pythia interface 2006/03/17
@@ -905,17 +908,17 @@ C	     WRITE(3,'(A)')'OK, TO GET THE EVNT NUMBER DISTRIBUTIONS'
 C	     WRITE(3,'(A)')'OK, TO GET THE DIFFERENTIAL DISTRIBUTIONS'
          END IF
       ELSE                      !VEGASOPEN=true
-         WRITE(*,'(A)')'(EXISTED) GRADE HAS NOT BEEN FURTHER IMPROVED'
+CC         WRITE(*,'(A)')'(EXISTED) GRADE HAS NOT BEEN FURTHER IMPROVED'
 C	   WRITE(3,'(A)')'(EXISTED) GRADE HAS NOT BEEN FURTHER IMPROVED'
          IF(IEVNTDIS.EQ.1) THEN
-            WRITE(*,'(A)')'OK, TO GET THE EVNT NUMBER DISTRIBUTIONS'
+CC            WRITE(*,'(A)')'OK, TO GET THE EVNT NUMBER DISTRIBUTIONS'
 C	     WRITE(3,'(A)')'OK, TO GET THE EVNT NUMBER DISTRIBUTIONS'
          ELSE
-            WRITE(*,'(A)')'OK, TO GET THE DIFFERENTIAL DISTRIBUTIONS'
+CC            WRITE(*,'(A)')'OK, TO GET THE DIFFERENTIAL DISTRIBUTIONS'
 C	     WRITE(3,'(A)')'OK, TO GET THE DIFFERENTIAL DISTRIBUTIONS'
          END IF
-         WRITE(*,'(A)') 
-     &        '.............. END OF INITIALIZATION ...............'
+CC         WRITE(*,'(A)') 
+CC     &        '.............. END OF INITIALIZATION ...............'
 C	   WRITE(3,'(A)') 
 C     &	   '.............. END OF INITIALIZATION ...............'
          IF(ISUBONLY.EQ.0) THEN
@@ -942,7 +945,7 @@ C...USING THE EXISTED GRADE. ONE THING SHOULD BE CARE HERE IS THAT
 C...THE EXISTED GRADE SHOULD BE FORMED UNDER THE SAME PARAMETERS.
       IF(IMIX.EQ.0) THEN
          IF(USEGRADE) THEN
-            WRITE(*,'(A)') 'USING THE EXISTED VEGAS GRADE.'
+CC            WRITE(*,'(A)') 'USING THE EXISTED VEGAS GRADE.'
 C            WRITE(3,'(A)') 'USING THE EXISTED VEGAS GRADE.'
 
             IF(IBCSTATE.EQ.1)THEN
@@ -1060,7 +1063,8 @@ C...To caluculate the average cross section and give it to XSECUP(1),added by he
             DO I=1,8
                XBCSSQ=XBCSSQ+XBCSEC(I)*XBCSEC(I)
             END DO
-            XSECUP(1)=XBCSSQ/XBCSUM
+CC            XSECUP(1)=XBCSSQ/XBCSUM
+            XSECUP(1)=XBCSUM
 	 END IF
 C....******************************************************************************
 	 IF(IMIXTYPE.EQ.2) THEN 
@@ -1074,7 +1078,8 @@ C...To caluculate the average cross section and give it to XSECUP(1)
             DO I=1,2
                XBCSSQ=XBCSSQ+XBCSEC(I)*XBCSEC(I)
             END DO
-            XSECUP(1)=XBCSSQ/XBCSUM
+CC            XSECUP(1)=XBCSSQ/XBCSUM
+            XSECUP(1)=XBCSUM
 	 END IF
 C...******************************************************************************
 	 IF(IMIXTYPE.EQ.3) THEN 
@@ -1088,7 +1093,8 @@ C...To caluculate the average cross section and give it to XSECUP(1)
             DO I=3,8
                XBCSSQ=XBCSSQ+XBCSEC(I)*XBCSEC(I)
             END DO 
-            XSECUP(1)=XBCSSQ/XBCSUM  
+CC            XSECUP(1)=XBCSSQ/XBCSUM
+            XSECUP(1)=XBCSUM  
 	 END IF
       END IF
               
