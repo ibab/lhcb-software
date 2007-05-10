@@ -1,4 +1,4 @@
-// $Id: ParticleTransporter.cpp,v 1.16 2007-03-05 10:09:19 pkoppenb Exp $
+// $Id: ParticleTransporter.cpp,v 1.17 2007-05-10 12:28:08 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -111,25 +111,30 @@ StatusCode ParticleTransporter::transport(const LHCb::Particle* P,
   if ( ! (P->isBasicParticle()) ) {
     verbose() << "Using DaVinciTransporter::transportComposite" << endmsg;
     sc = DaVinciTransporter::transportComposite(P, znew, transParticle);
+    if (!sc) return sc;
   } else if (P->charge()==0. ) {
     verbose() << "Using DaVinciTransporter::transportNeutralBasic" << endmsg;
     sc = DaVinciTransporter::transportNeutralBasic(P, znew, transParticle);
+    if (!sc) return sc;
   } else {
     if (msgLevel(MSG::VERBOSE)){
       sc = m_p2s->test(*P);
+      if (!sc) return sc;
     }
 
     LHCb::State s ; // state to extrapolate
     sc = state(P,znew,s);
     if (!sc) return sc;
     ITrackExtrapolator* extra = extrapolator(P);
-    if (NULL!=extra) extra->propagate(s,znew,P->particleID());
-    else Warning("No extrapolator defined");
+    if (NULL!=extra) sc = extra->propagate(s,znew,P->particleID());
+    else Warning("No extrapolator defined").ignore();
+    if (!sc) return sc;
 
     verbose() << "Extrapolated state is" << endmsg;
     verbose() << s << endmsg ;
 
     sc = m_p2s->state2Particle(s,transParticle);
+    if (!sc) return sc;
   }
   verbose() << "Obtained Particle " << transParticle.particleID().pid() << endmsg;
   verbose() << transParticle << endmsg ;
