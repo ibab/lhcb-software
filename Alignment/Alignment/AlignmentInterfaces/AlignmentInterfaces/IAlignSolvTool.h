@@ -1,4 +1,4 @@
-// $Id: IAlignSolvTool.h,v 1.1 2007-04-20 09:46:50 jblouw Exp $
+// $Id: IAlignSolvTool.h,v 1.2 2007-05-10 13:27:17 jblouw Exp $
 #ifndef ALIGNSOLVTOOLS_IALIGNSOLVTOOL_H 
 #define ALIGNSOLVTOOLS_IALIGNSOLVTOOL_H 1
 
@@ -28,9 +28,10 @@ public:
 
   // Return the interface ID
   static const InterfaceID& interfaceID() { 
-    return IID_IAlignSolvTool;    
-  }
 
+    return IID_IAlignSolvTool;    
+    
+  }
 virtual bool compute(AlSymMat& ,AlVec&) = 0;
 
 

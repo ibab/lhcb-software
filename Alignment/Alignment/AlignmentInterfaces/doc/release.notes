@@ -4,6 +4,9 @@
 ! Purpose	:	Collection of interfaces needed for the T-station alignment
 !================================================================
 
+! 2007-05-10 - Johan Blouw
+  - put IAlignSolvTools.h back in AlignmentInterfaces
+
 ! 2007-05-08 - Johan Blouw
   - removed interfaces to 
         - Millepede (still in AlignmentTools/AlignmentTools)
