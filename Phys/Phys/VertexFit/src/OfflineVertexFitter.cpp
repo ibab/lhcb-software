@@ -1,4 +1,4 @@
-// $Id: OfflineVertexFitter.cpp,v 1.21 2007-04-26 09:29:00 pkoppenb Exp $
+// $Id: OfflineVertexFitter.cpp,v 1.22 2007-05-10 13:30:24 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -127,7 +127,7 @@ StatusCode OfflineVertexFitter::fit( const LHCb::Particle::ConstVector& parts,
     verbose() << parPointer->particleID().pid() << " at " 
               << parPointer->referencePoint() 
               << " with " << parPointer->momentum() << endmsg ;
-    sc= classify(parPointer, FlyingParticles, VertexedParticles, Photons, PhotonPairs);
+    sc = classify(parPointer, FlyingParticles, VertexedParticles, Photons, PhotonPairs);
     if(sc.isFailure()) {
       debug() << "Fail to classify a particle" << endmsg;
       return StatusCode::FAILURE;
@@ -178,7 +178,7 @@ StatusCode OfflineVertexFitter::fit( const LHCb::Particle::ConstVector& parts,
 
   for(Particle::ConstVector::const_iterator iterP = Photons.begin(); iterP != Photons.end(); iterP++) {
     const Particle* daughter = *iterP;
-    addPhoton(P, daughter);
+    sc = addPhoton(P, daughter);
     if(sc.isFailure()) {
       debug() << "Fail to add a photon" << endmsg;
       return StatusCode::FAILURE;
@@ -187,7 +187,7 @@ StatusCode OfflineVertexFitter::fit( const LHCb::Particle::ConstVector& parts,
 
   for(Particle::ConstVector::const_iterator iterP = PhotonPairs.begin(); iterP != PhotonPairs.end(); iterP++) {
     const Particle* daughter = *iterP;
-    addPhotonPair(P, daughter);
+    sc = addPhotonPair(P, daughter);
     if(sc.isFailure()) {
       debug() << "Fail to add a photon pair" << endmsg;
       return StatusCode::FAILURE;
@@ -196,7 +196,7 @@ StatusCode OfflineVertexFitter::fit( const LHCb::Particle::ConstVector& parts,
 
   if ( P.daughters().size() !=  P.endVertex()->outgoingParticles().size()) 
     Warning("Did not use exactly particle daughters to fit vertex. Probably nothing to worry about.",
-            StatusCode::SUCCESS,2);
+            StatusCode::SUCCESS,2).ignore();
 
   if ( msgLevel( MSG::DEBUG )){
     debug() << "############## Fitted a vertex for a " << P.particleID().pid() ;
