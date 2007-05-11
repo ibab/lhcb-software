@@ -4,6 +4,10 @@
 ! Purpose	:	Collection of interfaces needed for the T-station alignment
 !================================================================
 
+! 2007-05-11 - Johan Blouw
+  - added dict and dictionary files describing the interfaces and classes
+  - added IMillepede to the packages
+
 ! 2007-05-10 - Johan Blouw
   - put IAlignSolvTools.h back in AlignmentInterfaces
 

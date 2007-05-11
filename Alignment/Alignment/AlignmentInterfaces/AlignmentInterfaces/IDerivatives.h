@@ -1,5 +1,5 @@
-#ifndef ALIGNTRTOOLS_IDerivatives_H
-#define ALOGNTRTOOLS_IDerivatives_H 1
+#ifndef IDERIVATIVES_H
+#define IDERIVATIVES_H 1
 
 #include "GaudiKernel/IAlgTool.h"
 
@@ -47,4 +47,4 @@ public:
 
 
 
-#endif // ALIGNTRTOOLS_Derivatives_H
+#endif // IDERIVATIVES_H

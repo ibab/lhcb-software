@@ -1,12 +1,12 @@
-#ifndef Alignment_ITACONFIGTOOL_H
-#define Alignment_ITACONFIGTOOL_H
+#ifndef ITACONFIGTOOL_H
+#define ITACONFIGTOOL_H
 //-----------------------------------------------------------------------------
 /** @file TAConfigTool.h
  *
  *  Header file for Tstation alignment : ITAConfigTool
  *
  *  CVS Log :-
- *  $Id: ITAConfigTool.h,v 1.1 2007-04-20 09:46:50 jblouw Exp $
+ *  $Id: ITAConfigTool.h,v 1.2 2007-05-11 14:41:37 jblouw Exp $
  *
  *  @author J. Blouw johan.blouw@cern.ch
  *  @date   12/04/2007
@@ -59,4 +59,4 @@ class ITAConfigTool : virtual public IAlgTool {
   virtual int NumAlignPars() = 0;
 };
 
-#endif // 
+#endif // ITACONFIGTOOL_H

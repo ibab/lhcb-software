@@ -7,10 +7,23 @@ version           v2r0
 
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          cmt doc AlignmentInterfaces
-
-# =============== include directories =======================================
-include_dirs      $(ALIGNMENTINTERFACESROOT)
+branches          cmt dict doc AlignmentInterfaces
 
 # =============== dependencies ==============================================
-use GaudiKernel      v*
+use TrackEvent	      v*    Event
+
+
+# =============== include directories =======================================
+apply_pattern	install_more_includes	more=AlignmentInterfaces
+#include_dirs      $(ALIGNMENTINTERFACESROOT)
+
+# =============== LCG Dictionaries ============================================
+apply_pattern reflex_dictionary                                                        \
+              dictionary=AlignmentInterfaces                                            \
+              headerfiles=$(ALIGNMENTINTERFACESROOT)/dict/AlignmentInterfacesDict.h     \
+              selectionfile=$(ALIGNMENTINTERFACESROOT)/dict/AlignmentInterfacesDict.xml \
+              options="-U__MINGW32__"
+
+# Hack for cmt v1r19 bug to link dictionary on windows
+macro AlignmentInterfacesDict_use_linkopts $(use_linkopts)
+

@@ -1,5 +1,5 @@
-#ifndef TALIGNMENTINTERFACE_H
-#define TALIGNMENTINTERFACE_H 1
+#ifndef ATRACKSELECTORTOOL_H
+#define ATRACKSELECTORTOOL_H
 
 #include "GaudiKernel/IAlgTool.h"
 
@@ -35,4 +35,4 @@ public:
 			   int& nITHits ) const = 0;
 
 };
-#endif	   
+#endif	  // ATRACKSELECTORTOOL_H 
