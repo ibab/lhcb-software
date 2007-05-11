@@ -1,9 +1,10 @@
-// $Id: CondDBAccessSvc.h,v 1.27 2007-04-20 14:40:39 marcocle Exp $
+// $Id: CondDBAccessSvc.h,v 1.28 2007-05-11 10:04:56 marcocle Exp $
 #ifndef COMPONENT_CONDDBACCESSSVC_H 
 #define COMPONENT_CONDDBACCESSSVC_H 1
 
 // Include files
 #include "GaudiKernel/Service.h"
+#include "Kernel/ICondDBInfo.h"
 #include "DetCond/ICondDBAccessSvc.h"
 #include "DetCond/ICondDBReader.h"
 #include "DetCond/ICondDBEditor.h"
@@ -65,6 +66,12 @@ public:
   /// Retrieve the names of the children nodes of a FolderSet.
   virtual StatusCode getChildNodes (const std::string &path, std::vector<std::string> &node_names);
 
+  // --------- ICondDBInfo implementation
+
+  /** Get the current default database tags
+   *  @param  tags vector of DB name, tag pairs. Empty if DB not available
+   */ 
+  virtual void defaultTags( std::vector<LHCb::CondDBNameTagPair>& tags ) const;
 
   // --------- ICondDBEditor implementation
 

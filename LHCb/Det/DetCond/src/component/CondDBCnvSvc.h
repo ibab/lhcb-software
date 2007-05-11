@@ -1,4 +1,4 @@
-//$Id: CondDBCnvSvc.h,v 1.8 2007-02-14 16:13:31 marcocle Exp $
+//$Id: CondDBCnvSvc.h,v 1.9 2007-05-11 10:04:56 marcocle Exp $
 #ifndef DETCOND_CONDDBCNVSVC_H
 #define DETCOND_CONDDBCNVSVC_H 1
 
@@ -77,6 +77,13 @@ public:
 
   /// Retrieve the names of the children nodes of a FolderSet.
   virtual StatusCode getChildNodes (const std::string &path, std::vector<std::string> &node_names);
+
+  // --------- ICondDBInfo implementation
+
+  /** Get the current default database tags
+   *  @param  tags vector of DB name, tag pairs. Empty if DB not available
+   */ 
+  virtual void defaultTags( std::vector<LHCb::CondDBNameTagPair>& tags) const;
 
 private:
 

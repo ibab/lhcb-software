@@ -1,4 +1,4 @@
-// $Id: CondDBLayeringSvc.cpp,v 1.2 2007-02-14 16:13:31 marcocle Exp $
+// $Id: CondDBLayeringSvc.cpp,v 1.3 2007-05-11 10:04:56 marcocle Exp $
 // Include files 
 
 #include "GaudiKernel/SvcFactory.h"
@@ -38,6 +38,10 @@ StatusCode CondDBLayeringSvc::queryInterface(const InterfaceID& riid,
                                                void** ppvUnknown){
   if ( IID_ICondDBReader.versionMatch(riid) ) {
     *ppvUnknown = (ICondDBReader*)this;
+    addRef();
+    return SUCCESS;
+  } else if ( IID_ICondDBInfo.versionMatch(riid) )   {
+    *ppvUnknown = (ICondDBInfo*)this;
     addRef();
     return SUCCESS;
   }
@@ -116,6 +120,17 @@ StatusCode CondDBLayeringSvc::getChildNodes (const std::string &path, std::vecto
     found_folderset = (*layer)->getChildNodes(path,node_names).isSuccess();
   }
   return (found_folderset) ? StatusCode::SUCCESS : StatusCode::FAILURE;
+}
+
+//=========================================================================
+// Collect the list of used tags and databases
+//=========================================================================
+void CondDBLayeringSvc::defaultTags ( std::vector<LHCb::CondDBNameTagPair>& tags ) const {
+  // loop over layers
+  std::vector<ICondDBReader*>::const_iterator layer;
+  for ( layer = m_layers.begin(); layer != m_layers.end(); ++layer ) {
+    (*layer)->defaultTags(tags);
+  }
 }
 
 //=============================================================================

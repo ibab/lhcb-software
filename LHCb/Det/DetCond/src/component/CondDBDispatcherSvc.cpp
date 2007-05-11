@@ -1,4 +1,4 @@
-// $Id: CondDBDispatcherSvc.cpp,v 1.4 2007-02-14 16:13:31 marcocle Exp $
+// $Id: CondDBDispatcherSvc.cpp,v 1.5 2007-05-11 10:04:56 marcocle Exp $
 // Include files
 
 #include "GaudiKernel/SvcFactory.h"
@@ -41,6 +41,10 @@ StatusCode CondDBDispatcherSvc::queryInterface(const InterfaceID& riid,
                                                void** ppvUnknown){
   if ( IID_ICondDBReader.versionMatch(riid) ) {
     *ppvUnknown = (ICondDBReader*)this;
+    addRef();
+    return SUCCESS;
+  } else if ( IID_ICondDBInfo.versionMatch(riid) )   {
+    *ppvUnknown = (ICondDBInfo*)this;
     addRef();
     return SUCCESS;
   }
@@ -168,6 +172,20 @@ StatusCode CondDBDispatcherSvc::getObject (const std::string &path, const Gaudi:
 //=========================================================================
 StatusCode CondDBDispatcherSvc::getChildNodes (const std::string &path, std::vector<std::string> &node_names) {
   return alternativeFor(path)->getChildNodes(path,node_names);
+}
+
+//=========================================================================
+// Collect the list of used tags and databases
+//=========================================================================
+void CondDBDispatcherSvc::defaultTags ( std::vector<LHCb::CondDBNameTagPair>& tags ) const {
+  // first add the main db
+  m_mainDB->defaultTags(tags);
+
+  // loop over alternatives
+  std::map<std::string,ICondDBReader*>::const_iterator alt;
+  for ( alt = m_alternatives.begin(); alt != m_alternatives.end(); ++alt ) {
+    alt->second->defaultTags(tags);
+  }
 }
 
 

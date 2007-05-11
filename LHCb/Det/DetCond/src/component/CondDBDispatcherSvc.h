@@ -1,4 +1,4 @@
-// $Id: CondDBDispatcherSvc.h,v 1.3 2007-02-14 16:13:31 marcocle Exp $
+// $Id: CondDBDispatcherSvc.h,v 1.4 2007-05-11 10:04:56 marcocle Exp $
 #ifndef COMPONENT_CONDDBDISPATCHERSVC_H 
 #define COMPONENT_CONDDBDISPATCHERSVC_H 1
 
@@ -14,7 +14,7 @@ template <class TYPE> class SvcFactory;
  *  
  *
  *
- *  @author Marco CLEMENCIC
+ *  @author Marco Clemencic
  *  @date   2006-07-10
  */
 class CondDBDispatcherSvc: public virtual Service,
@@ -42,6 +42,13 @@ public:
 
   /// Retrieve the names of the children nodes of a FolderSet.
   virtual StatusCode getChildNodes (const std::string &path, std::vector<std::string> &node_names);
+
+  // --------- ICondDBInfo implementation
+
+  /** Get the current default database tags
+   *  @param  tags vector of DB name, tag pairs. Empty if DB not available
+   */ 
+  virtual void defaultTags( std::vector<LHCb::CondDBNameTagPair>& tags) const;
 
 
 protected:

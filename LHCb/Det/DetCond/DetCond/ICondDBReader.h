@@ -1,4 +1,4 @@
-// $Id: ICondDBReader.h,v 1.2 2007-02-14 16:13:30 marcocle Exp $
+// $Id: ICondDBReader.h,v 1.3 2007-05-11 10:04:56 marcocle Exp $
 #ifndef DETCOND_ICONDDBREADER_H 
 #define DETCOND_ICONDDBREADER_H 1
 
@@ -8,6 +8,9 @@
 
 // from Gaudi
 #include "GaudiKernel/IInterface.h"
+
+// from LHCb
+#include "Kernel/ICondDBInfo.h"
 
 // from COOL
 #include "CoolKernel/types.h"
@@ -27,10 +30,10 @@ static const InterfaceID IID_ICondDBReader ( "ICondDBReader", 1, 0 );
 /** @class ICondDBReader ICondDBReader.h DetCond/ICondDBReader.h
  *  
  *
- *  @author Marco CLEMENCIC
+ *  @author Marco Clemencic
  *  @date   2006-07-10
  */
-class ICondDBReader : virtual public IInterface {
+class ICondDBReader : virtual public ICondDBInfo {
 public: 
 
   typedef boost::shared_ptr<const cool::IRecord> DataPtr;

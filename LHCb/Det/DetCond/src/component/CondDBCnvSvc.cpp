@@ -1,4 +1,4 @@
-//$Id: CondDBCnvSvc.cpp,v 1.12 2007-02-14 16:13:31 marcocle Exp $
+//$Id: CondDBCnvSvc.cpp,v 1.13 2007-05-11 10:04:56 marcocle Exp $
 #include <string>
 
 #include "CondDBCnvSvc.h"
@@ -130,6 +130,10 @@ StatusCode CondDBCnvSvc::queryInterface(const InterfaceID& riid,
     *ppvUnknown = (ICondDBReader*)this;
     addRef();
     return SUCCESS;
+  } else if ( IID_ICondDBInfo.versionMatch(riid) )   {
+    *ppvUnknown = (ICondDBInfo*)this;
+    addRef();
+    return SUCCESS;
   }
   return ConversionSvc::queryInterface(riid,ppvUnknown);
 }
@@ -142,8 +146,15 @@ StatusCode CondDBCnvSvc::getObject (const std::string &path, const Gaudi::Time &
 {
   return m_dbReader->getObject(path,when,data,descr,since,until,channel);
 }
+
 StatusCode CondDBCnvSvc::getChildNodes (const std::string &path, std::vector<std::string> &node_names)
 {
   return m_dbReader->getChildNodes(path,node_names);
+}
+
+void CondDBCnvSvc::defaultTags( std::vector<LHCb::CondDBNameTagPair>& tags) const
+{
+  tags.clear();
+  m_dbReader->defaultTags(tags);
 }
 

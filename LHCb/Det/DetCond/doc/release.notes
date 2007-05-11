@@ -1,11 +1,18 @@
-# $Id: release.notes,v 1.100 2007-05-03 17:28:26 marcocle Exp $
+# $Id: release.notes,v 1.101 2007-05-11 10:04:56 marcocle Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Det/DetCond
 ! Responsible : Marco Clemencic
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
-                            NEEDS LCGCMT >= 51 (CORAL 1.8.0)
+                           NEEDS: LCGCMT >= 51 (CORAL 1.8.0)
+                                  LHCbKernel >= v7r3 (ICondDBInfo)
+! 2007-05-11 - Marco Clemencic
+ - Extended ICondDBReader with the interface ICondDBInfo from LHCbKernel and
+   implemented the new function in all the ICondDBReader's (CondDBCnvSvc,
+   CondDBAccessSvc, CondDBLayeringSvc, CondDBDispatcherSvc).
+   NOTE: this introduce a dependency on LHCbKernel.
+
 ! 2007-05-03 - Marco Clemencic
  - Added service OnlineDBValidatorSvc to check if the Online CondDB replica
    is recent enough. (see doxygen documentation)

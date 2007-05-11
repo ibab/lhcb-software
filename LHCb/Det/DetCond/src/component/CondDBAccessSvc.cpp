@@ -1,4 +1,4 @@
-// $Id: CondDBAccessSvc.cpp,v 1.36 2007-05-04 09:52:21 marcocle Exp $
+// $Id: CondDBAccessSvc.cpp,v 1.37 2007-05-11 10:04:56 marcocle Exp $
 // Include files
 #include <sstream>
 //#include <cstdlib>
@@ -211,6 +211,10 @@ StatusCode CondDBAccessSvc::queryInterface(const InterfaceID& riid,
     return SUCCESS;
   } else if ( IID_ICondDBReader.versionMatch(riid) )   {
     *ppvUnknown = (ICondDBReader*)this;
+    addRef();
+    return SUCCESS;
+  } else if ( IID_ICondDBInfo.versionMatch(riid) )   {
+    *ppvUnknown = (ICondDBInfo*)this;
     addRef();
     return SUCCESS;
   }
@@ -977,6 +981,48 @@ StatusCode CondDBAccessSvc::getChildNodes (const std::string &path, std::vector<
   return StatusCode::SUCCESS;
 
 }
+
+//=========================================================================
+// Add database name and TAG to the passed vector.
+//=========================================================================
+void CondDBAccessSvc::defaultTags ( std::vector<LHCb::CondDBNameTagPair>& tags ) const {
+  /// @todo This shold be something like
+  /// <quote>
+  /// tags.push_back(LHCb::CondDBNameTagPair(database()->dbName(),tag()));
+  /// </quote>
+  /// but COOL API does not provide that function yet.
+
+  std::string dbName;
+  // Parsing of COOL connection string to find database name
+  // - first type: <tech>://<server>;schema=<schema>;dbname=<dbname>
+  std::string::size_type pos = connectionString().find("dbname=");
+  if ( std::string::npos != pos ) {
+    pos += 7;
+    std::string::size_type pos2 = connectionString().find(';',pos);
+    if ( std::string::npos != pos2 )
+      dbName = connectionString().substr(pos,pos2-pos);
+    else
+      dbName = connectionString().substr(pos);
+  } else {
+    // - second type: <alias>/<dbname>
+    pos = connectionString().find_last_of('/');
+    if ( std::string::npos != pos ) {
+      dbName = connectionString().substr(pos+1);
+    } else {
+      throw GaudiException("Cannot understand COOL connection string",
+                           "CondDBAccessSvc::defaultTags",StatusCode::FAILURE);
+    }
+  }
+  // If the tag is a "HEAD" tag, I want to show "HEAD"
+  std::string tagName = tag();
+  if (m_rootFolderSet->isHeadTag(tagName)) {
+    tagName = "HEAD";
+  }
+
+  tags.push_back(LHCb::CondDBNameTagPair(dbName,tagName));
+  
+}
+
 //=========================================================================
 //
 //=========================================================================
