@@ -1,15 +1,16 @@
 ! Package     : AlignSolvTools
 ! Responsible : Adlene Hicheur (Adlene.Hicheur@cern.ch)
 
+! 2007-05-11 - Adlene Hicheur
+  - migrate matrix and vector classes + minres to SolvKernel. Set AlignSolvTools as a component library.
+
 ! 2007-04-30 - Jan Amoraal
  - Minor changes: Added iostream operators
 
-!========================== TAlignment v1r0 29/09/2006 ==========================
+
 ! 2007-04-17 - Jan Amoraal
  - Make includes global
 
-!========================== TAlignment v1r0 29/09/2006 ==========================
+
 ! 2006-09-18 - Adlene Hicheur
  - AlignSolvTools: package creation
-
- 

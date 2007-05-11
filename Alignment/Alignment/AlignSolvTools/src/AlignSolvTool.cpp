@@ -1,4 +1,4 @@
-// $Id: AlignSolvTool.cpp,v 1.4 2007-04-17 16:57:27 janos Exp $
+// $Id: AlignSolvTool.cpp,v 1.5 2007-05-11 10:02:11 ahicheur Exp $
 // Include files 
 
 #include <stdio.h>
@@ -11,10 +11,13 @@
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h" 
-
-#include "AlignSolvTools/AlSymMat.h"
-#include "AlignSolvTools/AlMat.h"
-#include "AlignSolvTools/AlVec.h"
+#include "GaudiKernel/INTupleSvc.h"
+#include "GaudiKernel/SmartDataPtr.h"
+#include "GaudiKernel/NTuple.h"
+//
+#include "SolvKernel/AlSymMat.h"
+#include "SolvKernel/AlMat.h"
+#include "SolvKernel/AlVec.h"
  
 // local
 #include "AlignSolvTool.h"
@@ -209,7 +212,7 @@ int AlignSolvTool::SolvDiag(AlSymMat& m_bigmatrix, AlVec& m_bigvector) {
   int infjob=999;
   char jobz = 'V';
   int N = m_bigmatrix.size();
-  double m_scale = 1.;
+  m_scale = 1.;
   
   //declare transition matrix + vector to store eigenvalues
   AlMat z(N,N);
@@ -381,6 +384,70 @@ delete [] y;
 
 void AlignSolvTool::MonitorDiag(AlMat& z, AlVec& w, AlVec& D) 
 {
+
+  NTuple::Item<float> nteig_tx,nteig_ty,nteig_tz,nteig_rx,nteig_ry,nteig_rz;
+  NTuple::Item<float> nteig_mode,nteig_eigval,nteig_eigmod,nteig_erreigmod;
+  
+  //  NTuple::Array<float> nt_vec;
+  //  NTuple::Matrix<float> nt_mat;
+  
+  
+  std::string m_NtpName = "/NTUPLES/MONITOR";
+  
+  info() <<"Booking Monitoring Ntuple"<< endmsg;
+  NTuplePtr MonNtp(ntupleSvc(),m_NtpName);
+  if (MonNtp) debug() <<"Ntuple already booked"<<endmsg;
+  else {
+    MonNtp = ntupleSvc()->book(m_NtpName,CLID_ColumnWiseTuple,"SolvMonitor");
+
+    if (MonNtp) {
+      StatusCode stat;
+
+      stat = MonNtp->addItem("mode",nteig_mode);
+      stat = MonNtp->addItem("eigenval",nteig_eigval);
+      stat = MonNtp->addItem("eparam",nteig_eigmod);
+      stat = MonNtp->addItem("erreparam",nteig_erreigmod);
+
+
+      /*      stat = MonNtp->addItem("tx",nteig_tx);
+      stat = MonNtp->addItem("ty",nteig_ty);
+      stat = MonNtp->addItem("tz",nteig_tz);
+      stat = MonNtp->addItem("rx",nteig_rx);
+      stat = MonNtp->addItem("ry",nteig_ry);
+      stat = MonNtp->addItem("rz",nteig_rz);*/
+      
+      debug() << "Ntuple "<<m_NtpName<< " is now booked..."<<endmsg;
+      
+      
+    } else error()<<"Error in Ntuple booking"<<endmsg;
+    
+    
+  }
+
+  for (int i=0;i<w.size();i++) {
+    nteig_mode = i;
+    nteig_eigval = w[i];
+    if (w[i]>1e-16) nteig_eigmod = D[i]/w[i]; else nteig_eigmod = 0.0;
+    if (w[i]>1e-16) nteig_erreigmod = sqrt(1.0/(w[i]*m_scale)); else nteig_erreigmod = 0.0;
+    StatusCode sc = MonNtp->writeRecord();
+    
+    if (!sc.isSuccess()) error()<<"Problem filling Monitor ntuple" << endmsg;
+    
+  }
+  
+
+  /*  for(int k=0;k<nweak;k++) {
+  nteig_tx = z[j][i]*(-D[j]/w[j]);
+  nteig_ty = z[j][i+1]*(-D[j]/w[j]);
+  nteig_tz = z[j][i+2]*(-D[j]/w[j]);
+  nteig_rx = z[j][i+3]*(-D[j]/w[j]);
+  nteig_ry = z[j][i+4]*(-D[j]/w[j]);
+  nteig_rz = z[j][i+5]*(-D[j]/w[j]);
+
+  StatusCode sc = MonNtp->writeRecord();
+  }*/
+  
+      
     int nweak = 6;
     
     int nmod = 21;

@@ -1,10 +1,12 @@
-// $Id: AlignSolvTool.h,v 1.3 2007-03-07 13:09:15 ahicheur Exp $
+// $Id: AlignSolvTool.h,v 1.4 2007-05-11 10:02:11 ahicheur Exp $
 #ifndef ALIGNSOLVTOOLS_ALIGNSOLVTOOL_H 
 #define ALIGNSOLVTOOLS_ALIGNSOLVTOOL_H 1
 
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
+
+
 #include "AlignSolvTools/IAlignSolvTool.h"            // Interface
 
 class AlSymMat;
@@ -39,6 +41,7 @@ private:
 
   //parameters
   int m_method;
+  double m_scale;
   
   int SolvSpmInv(AlSymMat& M, AlVec& B);
   
