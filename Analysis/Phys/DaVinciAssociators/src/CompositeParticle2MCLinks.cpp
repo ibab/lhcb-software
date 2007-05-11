@@ -1,4 +1,4 @@
-// $Id: CompositeParticle2MCLinks.cpp,v 1.16 2007-01-12 13:58:53 ranjard Exp $
+// $Id: CompositeParticle2MCLinks.cpp,v 1.17 2007-05-11 12:34:47 ukerzel Exp $
 // Include files 
 
 // from Gaudi
@@ -11,6 +11,8 @@
 #include "Event/MCVertex.h"
 #include "Event/Particle.h"
 #include "Event/Vertex.h"
+
+#include "Linker/LinkerTool.h"
 
 // local
 #include "CompositeParticle2MCLinks.h"
@@ -118,7 +120,7 @@ StatusCode CompositeParticle2MCLinks::execute() {
   }
 
   // get MCParticles
-  MCParticles* mcParts = get<MCParticles>( MCParticleLocation::Default );
+  MCParticles* mcParts = get<MCParticles>( rootOnTES() + MCParticleLocation::Default );
 
   //////////////////////////////////
   // Loop on Particles containers //
@@ -152,6 +154,9 @@ StatusCode CompositeParticle2MCLinks::execute() {
       if( NULL != m_p2MCComp->first( *pIt )) continue;
       
       // Check for direct association
+      bool foundDirectAssociation = false;
+
+
       const MCParticle *mcp =  m_p2MCLink->first( *pIt );
       if ( NULL != mcp) { // copy from underlying associator
         const ParticleID& idP = (*pIt)->particleID();
@@ -179,16 +184,50 @@ StatusCode CompositeParticle2MCLinks::execute() {
           mcp = m_p2MCLink->next();
         }
         _verbose << endreq;
-      } else if( NULL != (*pIt)->endVertex()) {
+      } // if mcp
+
+      //
+      // alternate approach for direct link between LHCb::Particle -> LHCb::MCParticle
+      //
+      if (!mcp) {
+        _verbose << "try alternate approach for direct association for particle with PID "
+                 << (*pIt)->particleID().pid() << endmsg;
+        LinkerTool< LHCb::Particle, LHCb::MCParticle> p2MCPAssociator(eventSvc(), *inp);
+        LinkerTool< LHCb::Particle, LHCb::MCParticle>::DirectType *p2MCPTable = p2MCPAssociator.direct();
+        if (p2MCPTable){
+          LinkerTool< LHCb::Particle, LHCb::MCParticle>::DirectType::Range p2MCPRange = p2MCPTable->relations(*pIt);
+          verbose() << "found #relations " << p2MCPRange.size() << endmsg;
+          LinkerTool< LHCb::Particle, LHCb::MCParticle>::DirectType::iterator iRel;
+          LinkerTool< LHCb::Particle, LHCb::MCParticle>::DirectType::iterator iRelBegin = p2MCPRange.begin();
+          LinkerTool< LHCb::Particle, LHCb::MCParticle>::DirectType::iterator iRelEnd   = p2MCPRange.end();
+          for (iRel = iRelBegin; iRel != iRelEnd; iRel++) {
+            foundDirectAssociation = true;
+            const LHCb::MCParticle *mcPart = iRel->to();
+            double                  weight = iRel->weight();
+            verbose() << "particle related to MCPart with pid " << mcPart->particleID().pid()
+                      << " weight " << weight
+                      << endmsg;
+            if (m_linkerTable ) m_linkerTable->link( *pIt, mcPart);
+            ++m_nrel;
+          }//for iRel
+        }//if Table
+
+      }// if !mcp
+
+
+      if( !foundDirectAssociation && NULL != (*pIt)->endVertex()) {
         // If the particle has no daughters, useless to check matching daughters
         for (MCParticles::iterator m = mcParts->begin(); mcParts->end() != m; ++m) {
           if( associateTree(*pIt,*m)) break;
         }
-      } else {
+      } //if
+
+      if(!foundDirectAssociation && !(*pIt)->endVertex()) {
         _verbose << "Particle " << objectName(*pIt)
                  << " not considered: no direct asct and no endVertex"
                  << endreq;
-      }
+      } //if
+
     }
     _debug << "Out of " << npp << " Particles in " << *inp << ", "
            << m_nass << " are associated, "

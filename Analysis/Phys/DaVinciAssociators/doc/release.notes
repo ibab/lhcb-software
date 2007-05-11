@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.106 2007-04-19 13:50:29 pkoppenb Exp $
+! $Id: release.notes,v 1.107 2007-05-11 12:34:47 ukerzel Exp $
 !==============================================================================
 ! Package     : DaVinciAssociators
 ! Responsible : Philippe Charpentier
 !==============================================================================
+
+! 2007-05-11 - Ulrich Kerzel
+ - DaVinciAssociators/src/CompositeParticle2MCLinks.cpp
+   - extend associator to look for direct link between LHCb::Particle -> LHCb::MCParticle
+     for use with microDST
 
 !========================== DaVinciAssociators v9r0p1 2007-04-19 ===================
 ! 2007-04-19 -  P. Koppenburg
