@@ -1,4 +1,4 @@
-// $Id: SolvExample.h,v 1.1 2007-04-10 06:46:12 ahicheur Exp $
+// $Id: SolvExample.h,v 1.2 2007-05-11 15:41:31 ahicheur Exp $
 #ifndef SOLVEXAMPLE_H 
 #define SOLVEXAMPLE_H 1
 
@@ -15,7 +15,7 @@
 
 
 //Solver
-#include "AlignSolvTools/IAlignSolvTool.h"
+#include "AlignmentInterfaces/IAlignSolvTool.h"
 
 class IAlignSolvTool;
 
