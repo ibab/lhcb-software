@@ -35,6 +35,7 @@
   <class name = "ITrajPoca"            />
   <class name = "IUsedLHCbID"          />
   <class name = "IVeloClusterPosition" />
+  <class name = "ICondDBInfo"          />
 <!--- These should really be moved to GaudiKernel or Reflex --> 
   <class name="std::pair<Gaudi::XYZPoint,Gaudi::XYZPoint>" />
 </lcgdict>

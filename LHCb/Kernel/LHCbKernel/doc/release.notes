@@ -4,6 +4,12 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2007-05-11 - Marco Clemencic
+ - Added the two header files Kernel/CondDBNameTagPair.h and
+   Kernel/ICondDBInfo.h to provide a simplified interface to access the
+   conditions database names and tags without the need to depend on
+   DetCond (and COOL).
+
 ! 2007-05-09 - Marco Cattaneo
  - Fix typo in a doxygen comment
 
