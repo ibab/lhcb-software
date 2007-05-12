@@ -1,62 +1,65 @@
+# /usr/bin/env python
 
-class Enums:
+DEBUG = False
+ROOT = "Event"
+NAMESPACE = "LHCb::HltEnums::"
+DIR = "../Event/"
+HEADERS = [["HltEnums","HltNames"],]
 
-    def __init__(self,names,mode = 0):
-        i = 0
-        if (mode != 0): i = 1
-        self.dict = {}
-        self.names = []
-        for name in names:
-            self.names.append(name)
-            setattr(self,name,i)
-            self.dict[i] = name
-            if (mode == 0): i = i+1
-            else: i = i*2
-
-    def toInt(self,name):
-        return getattr(self,name)
-    
-    def toStr(self,i):
-        return self.dict[i]
-
-def writeHeader(ofname,type):
+def writeHeader(ofname,iheader,oheader):
+    type = oheader
+    if (DEBUG): print " opening... ",ofname
     ofile = open(ofname,"w")
     ss = type.upper()+"_"+type.upper()+"_H"
     s  = "#ifndef "+ss+"\n"
     s += "#define "+ss+" 1 \n"
-    s += '#include "Event/HltEnums.h" \n'
+    s += '#include "'+ROOT+'/'+iheader+'.h" \n'
+    if (DEBUG): print s
+    ofile.write(s)
+    s =  "// Python automatic translation of Enums "+iheader+" <-> strings \n"
+    s += "//                                 J.Hernando 10/5/07\n "
+    if (DEBUG): print s
     ofile.write(s)
     s = "namespace "+type+" {\n"
+    if (DEBUG): print s
     ofile.write(s)
 
 def writeTail(ofname):
+    if (DEBUG): print " opening... ",ofname
     ofile = open(ofname,"a")
     s = "};\n"
     s += "#endif\n"
+    if (DEBUG): print s
     ofile.write(s)
     ofile.close()
 
-def writeCpp(type,names,ofilename):
-    ofile = open(ofilename,"a")
+def writeEnum(ofname,type,names):
+    if (DEBUG): print " opening... ",ofname
+    ofile = open(ofname,"a")
     ie = type.find("t")
     cha = (type[ie+1:ie+2]).lower()
     type = cha+type[ie+2:]
-    ofile.write("\t inline int "+type+"ID(const std::string& e){\n")
+    def mywrite(s):
+        if (DEBUG): print s
+        ofile.write(s)
+    mywrite("\t inline int "+type+"ID(const std::string& e){\n")
     for name in names:
-        ofile.write('\t\t if (e == "'+name+'") return LHCb::HltEnums::'+name+";\n")
-    ofile.write("\t\t return -1; \n")
-    ofile.write("\t}\n")
-    ofile.write("\t inline std::string "+type+"Str(int e){\n")
-    ofile.write("\t\t switch(e) { \n")
+        mywrite('\t\t if (e == "'+name+'") return '+NAMESPACE+name+";\n")
+    mywrite("\t\t return -1; \n")
+    mywrite("\t}\n")
+    mywrite("\t inline std::string "+type+"Str(int e){\n")
+    mywrite("\t\t switch(e) { \n")
     for name in names:
-        ofile.write('\t\t case LHCb::HltEnums::'+name+' : return "'+name+'";\n')
-    ofile.write('\t\t default: return "'+type+'Unknown";\n')
-    ofile.write("\t\t}\n")
-    ofile.write("\t}\n")
+        mywrite('\t\t case '+NAMESPACE+name+' : return "'+name+'";\n')
+    mywrite('\t\t default: return "'+type+'Unknown";\n')
+    mywrite("\t\t}\n")
+    mywrite("\t}\n")
 
 def getEnums(ofilename):
+    if (DEBUG): print " opening... ",ofilename
     ofile = open(ofilename,"r")
     lines = ofile.readlines()
+    ofile.close()
     enums = {}
     enumOpen = False
     for line in lines:
@@ -68,10 +71,10 @@ def getEnums(ofilename):
             ok = words[1][-1]
             if (ok != "{"): break
             varname  = words[2][:-1]
-            print " Enum ",enumName
+            # print " Enum ",enumName
             ie = varname.find("=")
             if (ie>=0): varname = varname[:ie]
-            print " \t ",varname
+            # print " \t ",varname
             enumList.append(varname)                           
         elif (enumOpen):
             if (line.find("};")>=0):
@@ -84,20 +87,27 @@ def getEnums(ofilename):
                 if (ie>=0): varname = varname[:ie]
                 ok = varname[-1]
                 if (ok == ","): varname = varname[:-1]
-                print " \t ",varname
+                # print " \t ",varname
                 enumList.append(varname)
-    print enums
+    if (DEBUG):
+        for key in enums.keys():
+            print key, enums[key]
     return enums
             
-def write(ifname,ofname):
-    writeHeader(ofname,"HltNames")
+def write(dir,iheader,oheader):
+    ifname = dir+iheader+".h"
+    ofname = dir+oheader+".h"
     enums = getEnums(ifname)
-    for key in enums.keys():
-        vars = enums[key]
-        writeCpp(key,vars,ofname)
+    writeHeader(ofname,iheader,oheader)
+    for enum in enums.keys():
+        labels = enums[enum]
+        writeEnum(ofname,enum,labels)
     writeTail(ofname)
-    
-                
-def __main__():
-    write("Hlt.h","HltNames.h")
+
+def go():
+
+    for header in HEADERS:
+        write(DIR,header[0],header[1])
      
+
+go()

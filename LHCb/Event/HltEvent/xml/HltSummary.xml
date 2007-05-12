@@ -23,7 +23,11 @@
 	          DiHadron=128,
 	          Electron=256,
  	          DiElectron=512,
-	          Gamma=1024'
+	          Gamma=1024,
+                  Inclusive=2048,
+	          Selections=4096,
+	          Monitor=8192,
+	          Calibration=16384'
         access = 'PUBLIC' />
 
       <enum
@@ -40,27 +44,27 @@
         name   = 'HltSelectionSummary'
         desc   = 'Hlt selection summary'
         value  = 'HltSelectionSummaryUnknown=0,
-	          MuonEntry,
-	          MuonL0Conf,
-	          MuonPreTriggerSingle,
-	          MuonPreTriggerDiMuon,
-	          MuonPreTriggerIPDiMuon,
-	          MuonTriggerSingle,
-	          MuonTriggerDiMuon,
-	          MuonTriggerIPDiMuon,
-                  MuonHadEntry,
-                  MuonHadL0Conf,
-	          MuonHadPreTrigger,
-                  MuonHadTrigger,
-	          HadEntry,
-                  HadL0Conf,
-                  HadPreTriggerSingle,
-                  HadPreTriggerDiHadron,
-                  HadTrigger,
-                  CalEntry,
-                  CalL0Conf,
-                  CalPreTrigger,
-	          CalTrigger'
+	          MuonEntry=100,
+	          MuonL0Conf=102,
+	          MuonPreTriggerSingle=104,
+	          MuonPreTriggerDiMuon=106,
+	          MuonPreTriggerIPDiMuon=108,
+	          MuonTriggerSingle=110,
+	          MuonTriggerDiMuon=112,
+	          MuonTriggerIPDiMuon=114,
+                  MuonHadEntry=200,
+                  MuonHadL0Conf=202,
+	          MuonHadPreTrigger=204,
+                  MuonHadTrigger=206,
+	          HadEntry=300,
+                  HadL0Conf=302,
+                  HadPreTriggerSingle=304,
+                  HadPreTriggerDiHadron=306,
+                  HadTrigger=308,
+                  CalEntry=400,
+                  CalL0Conf=402,
+                  CalPreTrigger=404,
+	          CalTrigger=406'
         access = 'PUBLIC' />
       
 

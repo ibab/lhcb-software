@@ -19,13 +19,18 @@ use   GaudiKernel     v*
 #============================================================================
 #---- Produce Header-Files from XML description
 document obj2doth HltEventObj2Doth ../xml/*.xml
+action DoHltNames "python ../python/translateEnums.py"
+
 apply_pattern install_more_includes more=Event 
 
 document obj2dict HltEventObj2Dict ../xml/*.xml
 
 library          HltEventDict     ../$(tag)/dict/HltEvent/*.cpp
+
 apply_pattern component_library library=HltEventDict
 macro_remove constituents HltEventDictRootMap
+
+macro HltEventDict_dependencies " DoHltNames "
 
 private
 use GaudiObjDesc v* -no_auto_imports
