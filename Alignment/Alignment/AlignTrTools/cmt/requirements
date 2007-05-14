@@ -10,14 +10,12 @@ version           v3r1
 #============================================================================
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          AlignTrTools cmt doc src
-include_dirs	  $(ALIGNTRTOOLSROOT)
+branches          cmt doc src
 
 #============================================================================
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #    Put as many lines as needed, with all packages, without the '#'
 #============================================================================
-use cernlib v* LCG_Interfaces
 use   GSL             v*     LCG_Interfaces
 
 use   GaudiAlg        v*
@@ -26,7 +24,6 @@ use   LHCbMath        v*     Kernel
 use   Relations       v*     Kernel
 
 use AlignmentInterfaces v* Alignment
-use AlignmentTools    v*   Alignment
 
 use   MCEvent         v*     Event
 use   RecEvent        v*     Event
@@ -41,10 +38,6 @@ use   TsaKernel       v*     Tr
 use   STDet           v*     Det
 use   OTDet           v*     Det
 use   VeloDet         v*     Det
-
-use HbookCnv v*
-
-macro cernlib_linkopts " -L$(cernlib_home)/lib  -llapack3 -lblas -lpacklib -lphtools -lkernlib"
 #============================================================================
 # Component library building rule
 #============================================================================
