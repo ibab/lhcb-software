@@ -7,7 +7,7 @@
 #include "GaudiKernel/MsgStream.h"
 
 // from Alignment
-#include "AlignmentTools/IMillepede.h"    
+#include "AlignmentInterfaces/IMillepede.h"    
 
 /** @class Millepede Millepede.h AlignmentTools/Millepede.h
  *  

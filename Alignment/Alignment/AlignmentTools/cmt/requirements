@@ -25,6 +25,7 @@ include_dirs  $(ALIGNMENTTOOLSROOT)
 use     GaudiAlg        v*
 use     GaudiSvc        v*
 use     GSL             v*     LCG_Interfaces
+use     AlignmentInterfaces	v* 	Alignment
 
 #============================================================================
 # Component library building rule
