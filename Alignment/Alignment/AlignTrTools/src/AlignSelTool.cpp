@@ -1,4 +1,4 @@
-// $Id: AlignSelTool.cpp,v 1.1 2007-01-08 15:51:39 lnicolas Exp $
+// $Id: AlignSelTool.cpp,v 1.2 2007-05-14 17:47:31 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -249,7 +249,7 @@ int AlignSelTool::getAllVariables ( LHCb::Track* aTrack ) {
         //**********************************************************************
         // Two hits in same "sub-layer" of same module
         if ( (theOTID.uniqueModule() == theOTID2.uniqueModule()) &&
-             (abs(theOTID.straw()-theOTID2.straw())<5) ) {
+             (abs(int(theOTID.straw()-theOTID2.straw()))<5) ) {
           if ( msgLevel( MSG::DEBUG ) )
             debug() << "Found OT double hit" << endmsg;
           ++m_nOTDoubleHits;
@@ -409,7 +409,7 @@ int AlignSelTool::nNeighbouringHits ( const LHCb::Track* aTrack ) {
             
             // Same ladder within 2 strips aside
             if ( (nodeSTID.uniqueSector() == clusSTID.uniqueSector()) &&
-                 (abs(nodeSTID.strip()-clusSTID.strip())<=m_nStripsTol) ) {
+                 (abs(int(nodeSTID.strip()-clusSTID.strip()))<=m_nStripsTol) ) {
               ++nNeighbouringHits;
               isClose = true;
               break;
@@ -469,11 +469,11 @@ bool AlignSelTool::isNeighbouringHit ( LHCb::OTChannelID timeID,
   
   // In module 9 of quarters 0 and 2, only 2*32 straws
   if ( !(timeID.quarter()%2) && (int(timeID.module()) == m_nModules) ) {
-    if ( (abs((hitStraw%int(m_nStraws/4))
-              -(timeID.straw()%int(m_nStraws/4)))<=m_nStrawsTol) ) return true;
+    if ( (abs(int((hitStraw%int(m_nStraws/4))
+              -(timeID.straw()%int(m_nStraws/4))))<=m_nStrawsTol) ) return true;
   }
-  else if ( (abs((hitStraw%int(m_nStraws/2))
-                 -(timeID.straw()%int(m_nStraws/2)))<=m_nStrawsTol) ) return true;
+  else if ( (abs(int((hitStraw%int(m_nStraws/2))
+                 -(timeID.straw()%int(m_nStraws/2))))<=m_nStrawsTol) ) return true;
 
   return false;
 }
