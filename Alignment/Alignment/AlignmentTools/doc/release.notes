@@ -2,6 +2,11 @@
 ! Responsible : Sebastien Viret
 
 !=============================================================================
+! 14/05/2007 - Johan Blouw     ** v2r6 **
+-> release for the software project
+   - moved some info statements to debug statements
+
+!=============================================================================
 ! 08/05/2007 - Johan Blouw     same version
 -> Made Millepede tool compliant to new way of declaring tools
    Small changes to print a bit more output

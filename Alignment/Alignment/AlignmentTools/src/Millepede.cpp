@@ -19,11 +19,6 @@
 // Declaration of the Tool Factory
 DECLARE_TOOL_FACTORY( Millepede );
 
-// Declaration of the Tool Factory
-//static const  ToolFactory<Millepede>          s_factory ;
-//const        IToolFactory& MillepedeFactory = s_factory ; 
-
-
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
@@ -928,7 +923,7 @@ StatusCode Millepede::FitLoc(int n, double track_params[], int single_fit,
   int    nsum  = 0;
   nst   = 0; 
   nst   = arest.size(); // number of stored derivatives(loc&glob) & wght(for each glob entry)
-  info() << "Into FitLoc..." << endreq;
+  debug() << "Into FitLoc..." << endreq;
 
   for (int ii=0; ii<nagb; ii++)  // fill estimated parameters
   {
@@ -1306,9 +1301,9 @@ StatusCode Millepede::MakeGlobalFit(double par[], double error[], double pull[])
 	
   if (itert <= 1) itelim=10;    // Max number of iterations
 
-  for (i=0; i<nagb; i++)  info() << "Psigm       = " << std::setprecision(5) << psigm[i] << endmsg;
-  info() << "itelim = " << itelim << endreq;
-  info() << "itert = " << itert << endreq;
+  for (i=0; i<nagb; i++)  debug() << "Psigm       = " << std::setprecision(5) << psigm[i] << endmsg;
+  debug() << "itelim = " << itelim << endreq;
+  debug() << "itert = " << itert << endreq;
   while (itert < itelim)  // Iteration for the final loop
   {
     debug() << "ITERATION --> " << itert << endmsg;
@@ -1373,9 +1368,9 @@ StatusCode Millepede::MakeGlobalFit(double par[], double error[], double pull[])
       for (j=0; j<nagb; j++)
       {
 
-	info() << "Psigm       = " << std::setprecision(5) << psigm[j] << endmsg;
+	debug() << "Psigm       = " << std::setprecision(5) << psigm[j] << endmsg;
 
-	info() << "diag. value : " << j << " = " << std::setprecision(5) << cgmat[j][j] << endmsg;
+	debug() << "diag. value : " << j << " = " << std::setprecision(5) << cgmat[j][j] << endmsg;
 
 	for (i=0; i<nagb; i++)
 	{
@@ -1388,8 +1383,8 @@ StatusCode Millepede::MakeGlobalFit(double par[], double error[], double pull[])
       }
     }
 
-    info() << " Final coeff is " << final_cor << endmsg;		
-    info() << " Final NDOFs =  " << nagb << endmsg;
+    debug() << " Final coeff is " << final_cor << endmsg;		
+    debug() << " Final NDOFs =  " << nagb << endmsg;
 
     //  The final matrix inversion
 
