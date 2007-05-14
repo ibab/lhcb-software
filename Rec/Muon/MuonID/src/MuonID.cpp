@@ -884,6 +884,7 @@ LHCb::Track* MuonID::makeMuonTrack(const LHCb::MuonPID& mupid){
     mtrack->setHistory(LHCb::Track::MuonID);
     LHCb::Measurement* muMeas= m_measProvider->measurement(id);
     mtrack->addToMeasurements( *muMeas );
+    delete muMeas;
   }
 
  return mtrack; 
