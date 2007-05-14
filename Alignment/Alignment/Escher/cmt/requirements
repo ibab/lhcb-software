@@ -38,8 +38,12 @@ use LbcomSys            v*       -no_auto_imports
 use RecSys              v*         -no_auto_imports
 
 #-- Alignment packages
-use AlignmentSys        v2r0         -no_auto_imports
-
+use AlignmentInterfaces	v*    Alignment -no_auto_imports
+use AlignmentTools      v*    Alignment -no_auto_imports
+use AlignTrTools	v*    Alignment -no_auto_imports
+use SolvKernel		v*    Alignment -no_auto_imports
+use AlignSolvTools      v*    Alignment -no_auto_imports
+use TAlignment		v*    Alignment -no_auto_imports
 #
 #===== build Escher =========================
 application Escher $(GAUDICONFROOT)/src/GaudiMain.cpp
