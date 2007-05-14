@@ -13,17 +13,21 @@
 
 using namespace LHCb;
 
-int Utils::nameLookup(std::string &serverAddr,
-	struct sockaddr_in *destAddr, MsgStream * /*log*/) {
+int Utils::nameLookup(const char *serverAddr,
+  struct sockaddr_in *destAddr, MsgStream * /*log*/) {
 
-  //Resolve the name.
 	struct hostent* hostname = NULL;
-  hostname = gethostbyname(serverAddr.c_str());
+  hostname = gethostbyname(serverAddr);
   if(!hostname || hostname->h_length == 0 || hostname->h_addr_list[0] == NULL) {
   	return -1;
   }
   memcpy(&destAddr->sin_addr.s_addr, hostname->h_addr_list[0], hostname->h_length);
   return 0;
+}
+
+int Utils::nameLookup(std::string &serverAddr,
+	struct sockaddr_in *destAddr, MsgStream * log) {
+  return Utils::nameLookup(serverAddr.c_str(), destAddr, log);
 }
 
 int Utils::setupSocket(int sndBufSize, int rcvBufSize, MsgStream *log) {
@@ -40,11 +44,11 @@ int Utils::setupSocket(int sndBufSize, int rcvBufSize, MsgStream *log) {
   //Set options.
   optlen = sizeof(sndBufSize);
   ret = setsockopt(retSocket, SOL_SOCKET, SO_SNDBUF, &sndBufSize, optlen);
-  if(ret < 0) {
+  if(ret < 0 && log) {
     *log << MSG::WARNING << "Could not set SO_SNDBUF size." << endmsg;
   }
   ret = setsockopt(retSocket, SOL_SOCKET, SO_RCVBUF, &rcvBufSize, optlen);
-  if(ret < 0) {
+  if(ret < 0 && log) {
     *log << MSG::WARNING << "Could not set SO_RCVBUF size." << endmsg;
   }
 
@@ -61,21 +65,24 @@ int Utils::connectToAddress(struct sockaddr_in *destAddr,
 	if(sock < 0)
 		return -1;
 
-	*log << MSG::INFO << "Connecting. . .Addr: port = " <<
-		((destAddr->sin_addr.s_addr & 0xff)) << "." <<
-		((destAddr->sin_addr.s_addr & 0xff00) >> 8) << "." <<
-		((destAddr->sin_addr.s_addr & 0xff0000) >> 16) << "." <<
-		((destAddr->sin_addr.s_addr & 0xff000000) >> 24) << ":" <<
-		ntohs(destAddr->sin_port) << endmsg;
+  if(log)
+	  *log << MSG::INFO << "Connecting. . .Addr: port = " <<
+  		((destAddr->sin_addr.s_addr & 0xff)) << "." <<
+		  ((destAddr->sin_addr.s_addr & 0xff00) >> 8) << "." <<
+		  ((destAddr->sin_addr.s_addr & 0xff0000) >> 16) << "." <<
+		  ((destAddr->sin_addr.s_addr & 0xff000000) >> 24) << ":" <<
+  ntohs(destAddr->sin_port) << endmsg;
 
 	ret = connect(sock, (struct sockaddr*)destAddr,
       (socklen_t)sizeof(struct sockaddr_in));
 
-  *log << MSG::INFO << "Connected" << endmsg;
+  if(log)
+    *log << MSG::INFO << "Connected" << endmsg;
 
 
 	if(ret != 0) {
-	   *log << MSG::ERROR << "Could not connect, errno = " << errno << endmsg;
+	   if(log)
+	     *log << MSG::ERROR << "Could not connect, errno = " << errno << endmsg;
 		return -1;
 	}
   return sock;

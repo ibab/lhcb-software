@@ -1,6 +1,5 @@
 #ifdef BUILD_WRITER
 
-
 #include <string>
 #include <cerrno>
 #include <stdexcept>

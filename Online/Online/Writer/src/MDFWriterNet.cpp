@@ -98,7 +98,7 @@ StatusCode MDFWriterNet::initialize(void)
   m_bytesWritten = 0;
   m_connection = new Connection(m_serverAddr, m_serverPort,
   	m_sndRcvSizes, m_log, this);
-  m_rpcObj = new RPCComm(m_runDBURL);
+  m_rpcObj = new RPCComm(m_runDBURL.c_str());
   try {
 
     m_connection->initialize();

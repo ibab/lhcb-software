@@ -1,9 +1,7 @@
 #ifndef RPCCOMM_H
 #define RPCCOMM_H
 
-#include <xmlrpc-c/girmem.hpp>
-#include <xmlrpc-c/base.hpp>
-#include <xmlrpc-c/client_simple.hpp>
+#include <string>
 
 #define RUNDB_SERVICE_FAIL    0
 #define RUNDB_SERVICE_SUCCESS  1
@@ -13,20 +11,48 @@
  */
 namespace LHCb {
 
+  /**
+   * A class for obtaining the host, protocol and path from a formatted URL string.
+   */
+  class URL
+  {
+    private:
+      char host[256];
+      char path[256];
+      char protocol[10];
+      int port;
+    public:
+      const char *getHost(void) { return host; }
+      int getPort(void) { return port; }
+      const char *getPath(void) { return path; }
+      const char *getProtocol(void) { return protocol; }
+      URL(const char *url);
+  };
+
+	/**
+	 * A wrapper over the "confirm" and "create" Run Database RPC calls.
+	 */
   class RPCComm
   {
     private:
+    	/**
+    	 * Host, port, and protocol information in a URL object.
+    	 */
+      URL *m_serverURL;
 
       /**
-       * An instance of an XML-RPC client. This is reused
-       * for all subsequent calls to the run database service.
+       * Connects, writes RPC information to an HTTP server, and reads the result.
+       * Returns 0 on success, -1 on error.
        */
-      xmlrpc_c::clientSimple  m_clientInstance;
-      std::string m_serverURL;
-      pthread_mutex_t m_rpcLock;
+      int requestResponse(char *requestHeader, char *requestData, char *response);
+
+      /**
+       * Checks the XML RPC response string for an error code.
+       * Returns 1 in case of an error, and 0 if not.
+       */
+      int isError(char *response);
 
     public:
-      RPCComm(std::string serverURL);
       /**
        * "Confirms" that the file is completely written to, closed,
        * and ready for migration to tape.
@@ -39,7 +65,55 @@ namespace LHCb {
        */
       void createFile(char *fileName, unsigned int runNumber);
 
+			/**Simple constructor.*/
+      RPCComm(const char *serverURL) { m_serverURL = new URL(serverURL); }
+
+			/**Simple destructor.*/
+      ~RPCComm() { delete m_serverURL; }
   };
 }
+
+/*
+ * This can be done much more elegantly, by having a set
+ * of nested tag objects that can serialize themselves into
+ * XML strings. However, this is the quick and dirty way
+ * out. It's probably alright since we have only two
+ * very specific XML-RPC commands to send.
+ */
+#define CREATE_TEMPLATE  "<?xml version=\"1.0\"?>\n" \
+                         "<methodCall>\n" \
+                         "  <methodName>createFile</methodName>\n" \
+                         "  <params>\n"   \
+                         "    <param><value>\n" \
+                         "      <string>%s</string>\n" \
+                         "    </value</param>\n" \
+                         "    <param><value>\n" \
+                         "      <int>%d</int>\n" \
+                         "    </value</param>\n" \
+                         "  </params>\n"  \
+                         "</methodCall>\n"
+
+#define CONFIRM_TEMPLATE "<?xml version=\"1.0\"?>\n" \
+                         "<methodCall>\n" \
+                         "  <methodName>confirmFile</methodName>\n" \
+                         "  <params>\n"   \
+                         "    <param><value>\n" \
+                         "      <string>%s</string>\n" \
+                         "    </value</param>\n" \
+                         "    <param><value>\n" \
+                         "      <string>%s</string>\n" \
+                         "    </value</param>\n" \
+                         "    <param><value>\n" \
+                         "      <string>%s</string>\n" \
+                         "    </value</param>\n" \
+                         "  </params>\n"  \
+                         "</methodCall>\n"
+
+#define HEADER_TEMPLATE "POST /RPC2 HTTP/1.0\n" \
+                        "User-Agent : MDFWriterNet\n" \
+                        "Host : %s\n" \
+                        "Content-Type : text/xml\n" \
+                        "Content-Length : %d\n\n" \
+
 
 #endif /*RPCCOMM_H*/

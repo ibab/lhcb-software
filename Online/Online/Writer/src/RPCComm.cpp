@@ -3,19 +3,13 @@
 #include <stdexcept>
 #include <iostream>
 #include <pthread.h>
+#include <netinet/in.h>
+#include <sys/socket.h>
+
 #include "Writer/RPCComm.h"
+#include "Writer/Utils.h"
 
 using namespace LHCb;
-
-//Names for the XML-RPC functions.
-std::string confirmString("confirmFile");
-std::string createString("createNewFile");
-
-RPCComm::RPCComm(std::string serverURL)
-{
-  m_serverURL = serverURL;
-  pthread_mutex_init(&m_rpcLock, NULL);
-}
 
 /**
  * "Confirms" that the file is completely written to and closed.
@@ -28,6 +22,9 @@ RPCComm::RPCComm(std::string serverURL)
 void RPCComm::confirmFile(char *fileName, unsigned int adlerSum, const unsigned char *md5CSum)
 {
   int ret;
+  char headerData[1024];
+  char xmlData[1024];
+  char response[1024];
 
   char adler32String[9];
   char md5CharString[33];
@@ -35,7 +32,6 @@ void RPCComm::confirmFile(char *fileName, unsigned int adlerSum, const unsigned 
   /* We need to send this as a string because it's not very clear how the
    * XMLRPC library handles unsigned values.
    */
-
   sprintf(md5CharString, "%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X",
       md5CSum[0], md5CSum[1], md5CSum[2], md5CSum[3],
       md5CSum[4], md5CSum[5], md5CSum[6], md5CSum[7],
@@ -44,24 +40,20 @@ void RPCComm::confirmFile(char *fileName, unsigned int adlerSum, const unsigned 
 
   sprintf(adler32String, "%08X", adlerSum);
 
-  pthread_mutex_lock(&m_rpcLock);
+  /* Now we fill up templates. */
+  snprintf(xmlData, sizeof(xmlData), CONFIRM_TEMPLATE,
+  	fileName, adler32String, md5CharString);
+  snprintf(headerData, sizeof(headerData), HEADER_TEMPLATE,
+  	"WriterHost", strlen(xmlData));
 
-/*  try {
-    m_clientInstance.call(m_serverURL, confirmString, "sss", &result,
-        fileName, adler32String, md5CharString);
-    ret = xmlrpc_c::value_int(result);
-  } catch(girerr::error& err) {
+  memset(response, 0, sizeof(response));
+  ret = requestResponse(headerData, xmlData, response);
 
-    pthread_mutex_unlock(&m_rpcLock);
-    throw std::runtime_error(err.what());
-  }
-*/
-  pthread_mutex_unlock(&m_rpcLock);
+  if(ret < 0)
+    throw std::runtime_error("Could not run RPC call for confirm.");
+  if(isError(response))
+  	throw std::runtime_error(response);
 
- /* if(ret == RUNDB_SERVICE_FAIL) {
-    throw std::runtime_error(
-        "Could not call RunDB service for confirm(). Check RunDB logs.");
-  }*/
   return;
 }
 
@@ -77,28 +69,118 @@ void RPCComm::createFile(char *fileName, unsigned int runNumber)
 {
   int ret;
 
-  pthread_mutex_lock(&m_rpcLock);
+  char headerData[1024];
+  char xmlData[1024];
+  char response[1024];
 
-/*  try {
-    char runNumberString[20];
-    ::sprintf(runNumberString, "%u", runNumber);
-    m_clientInstance.call(m_serverURL, createString, "ss", &result,
-        fileName, runNumberString);
-    ret = xmlrpc_c::value_int(result);
-  } catch(girerr::error& err) {
+  snprintf(xmlData, sizeof(xmlData), CREATE_TEMPLATE,
+    fileName, runNumber);
+  snprintf(headerData, sizeof(headerData), HEADER_TEMPLATE,
+    "WriterHost", strlen(xmlData));
 
-    pthread_mutex_unlock(&m_rpcLock);
-    throw std::runtime_error(err.what());
-  }
-*/
-  pthread_mutex_unlock(&m_rpcLock);
+  memset(response, 0, sizeof(response));
+  ret = requestResponse(headerData, xmlData, response);
 
-/*  if(ret == RUNDB_SERVICE_FAIL) {
-    throw std::runtime_error(
-        "Could not call RunDB service for create(). Check RunDB logs.");
-  }
-  */
+  if(ret < 0)
+    throw std::runtime_error("Could not run RPC call for create.");
+  if(isError(response))
+  	throw std::runtime_error(response);
+
   return;
 }
+
+/**
+ * Connects, writes RPC information to an HTTP server, and reads the result.
+ * Returns 0 on success, -1 on error.
+ */
+int RPCComm::requestResponse(char *requestHeader, char *requestData, char *response)
+{
+	struct sockaddr_in destAddr;
+	int sockFd;
+	int ret;
+
+  if(Utils::nameLookup(m_serverURL->getHost(), &destAddr, NULL) != 0)
+		throw std::runtime_error("Could not resolve name.");
+	destAddr.sin_port = htons(m_serverURL->getPort());
+	destAddr.sin_family = AF_INET;
+
+  sockFd = Utils::connectToAddress(&destAddr,
+    Utils::DEFAULT_BUF_SIZE, Utils::DEFAULT_BUF_SIZE, NULL);
+  if(sockFd < 0)
+    throw std::runtime_error("Could not connect to RPC server.");
+  ret = Utils::send(sockFd, requestHeader, strlen(requestHeader), NULL);
+  if((unsigned)ret != strlen(requestHeader))
+    throw std::runtime_error("Could not send request header.");
+  ret = Utils::send(sockFd, requestData, strlen(requestData), NULL);
+  if((unsigned)ret != strlen(requestData))
+    throw std::runtime_error("Could not send request data.");
+  ret = Utils::brecv(sockFd, response, sizeof(response), NULL);
+  if(ret <= 0)
+    throw std::runtime_error("Could not read response data.");
+
+  close(sockFd);
+  return ret;
+}
+
+/**
+ * Checks the XML RPC response string for an error code.
+ * Returns 1 in case of an error, and 0 if not.
+ */
+int RPCComm::isError(char *response)
+{
+	std::string responseStr(response);
+	std::string::size_type loc;
+
+	/*First check for HTTP response status.*/
+	loc = responseStr.find("200 OK");
+	if(loc == std::string::npos)
+		return 1;
+
+	/*Then check for a fault string.*/
+	loc = responseStr.find("faultCode");
+	if(loc != std::string::npos)
+		return 0;
+	return 1;
+
+	/*Dump the whole response if fault found.*/
+}
+
+URL::URL(const char *url)
+{
+  char *curr, *currw;
+  char portStr[7];
+
+  memset(protocol, 0, sizeof(protocol));
+	memset(host, 0, sizeof(host));
+  memset(path, 0, sizeof(path));
+  memset(portStr, 0, sizeof(portStr));
+  port = 80;
+
+  curr = (char*)url;
+  currw = protocol;
+
+  while(*curr != 0 && *curr != ':') {
+    *currw = *curr;
+    curr++; currw++;
+  }
+  curr+=3; /*Skip "://" */
+  currw = host;
+  while(*curr != 0 && *curr != '/' && *curr != ':') {
+  	*currw = *curr;
+  	curr++; currw++;
+  }
+
+  if(*curr == ':') { /*There's a port.*/
+  	currw = portStr;
+  	curr++;
+  	while(*curr != 0 && *curr != '/') {
+		  *currw = *curr;
+	    currw++; curr++;
+	  }
+    port = atoi(portStr);
+  }
+  snprintf(path, sizeof(path), "%s", curr);
+}
+
 
 #endif /* _WIN32 */
