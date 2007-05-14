@@ -4,7 +4,7 @@
  *  Implementation file for Millepede configuration tool : TAConfig
  *
  *  CVS Log :-
- *  $Id: TAConfig.cpp,v 1.3 2007-05-08 17:09:00 jblouw Exp $
+ *  $Id: TAConfig.cpp,v 1.4 2007-05-14 10:35:51 jblouw Exp $
  *
  *  @author J. Blouw (johan.blouw@mpi-hd.mpg.de)
  *  @date   12/04/2007
@@ -14,7 +14,11 @@
 #include "GaudiKernel/SystemOfUnits.h"
 #include "GaudiKernel/ToolFactory.h"
 
+
+// Kernel
 #include "Kernel/LHCbID.h"
+#include "Kernel/DifTraj.h"
+#include "Kernel/AlignTraj.h"
 
 //#include "StringConvert.h"
 // Event
@@ -241,7 +245,7 @@ StatusCode TAConfig::ConstrainPositions( std::map<std::string,int> &map ) {
   // alignment parameters may vary.
   for ( ; it != map.end(); it++ ) {
     rank = it->second;
-    for ( int i = 0; i < m_dof.size(); i++ ) {
+    for ( unsigned int i = 0; i < m_dof.size(); i++ ) {
       m_Millepede->ParSig(rank+i*m_DETmap.size(), 20.0 );
     }
   }
@@ -562,12 +566,12 @@ StatusCode TAConfig::ConfigMillepede() {
   int nlocal = m_ntrack_pars;
   for ( int i = 0; i < m_ntrack_pars; i++ )
     m_derLC.push_back(0.0);
-  for ( int i = 0; i < m_n_dof*m_DETmap.size(); i++ )
+  for ( unsigned int i = 0; i < m_n_dof*m_DETmap.size(); i++ )
     m_derGB.push_back(0.0);
   for (int j = 0; j < 6; j++) {m_DOF[j] = m_dof[j];}   // What are the parameters to align ?
   //  for (int j = 0; j < 9; j++) {m_CONSTRAINT[j] = m_sigma[j];}
   // Needed for Sebastien's Millepede initialization
-  for ( int i = 0; i < m_dof.size(); i++ ) {// loop over degrees of freedom per detector
+  for ( unsigned int i = 0; i < m_dof.size(); i++ ) {// loop over degrees of freedom per detector
     m_SIGMA[i] = m_sigma[i];
     info() << "m_SIGMA[" << i << "] = " << m_SIGMA[i] << endreq;
   }
@@ -688,19 +692,19 @@ StatusCode TAConfig::FillMatrix( LHCb::Track &t, LHCb::LHCbID &id, const int &ra
   double z = hit.z();
   // Get the measurement trajectory
   const Trajectory& hitTraj = hit.trajectory();
-  // Make a Gaudi::XZYPoint: (should be LHCb co-ordinate system!)
-  // at the z-position of the hit
-  // so that we can calculate the distance wrt (0,0,z)
-  Gaudi::XYZPoint point = Gaudi::XYZPoint(0.,0.,z);
   // Track State close to hit
   State &state = t.closestState( z );
   State trState;
   StatusCode sc = m_extrapolator->propagate( t, z, trState );
-
+  if ( sc.isFailure() ) {
+    error() << "Error in propagating track state to desired z-position" << endreq;
+    return sc;
+  }
   // set the refVector of the hit trajectory. (why I don't know...)
   //  hit.setRefVector( trState.stateVector() );
   //
-  //
+  //  info() << "Hit trajectory's RefVector   " << hit.refVector() << endreq;
+  //  info() << "Track trajectory's RefVector " << trState.stateVector() << endreq;
   Gaudi::XYZVector bfield;
   // TrackVector is a vector with 5 elements.
   // refVec is the 5D vector describing the hit
@@ -719,12 +723,16 @@ StatusCode TAConfig::FillMatrix( LHCb::Track &t, LHCb::LHCbID &id, const int &ra
   Gaudi::XYZVector distance(-999999.9999,-9999.9999,-99999.99999);
   // minimize distance between trajectory describing track
   // and trajectory describing the hit 
-  m_poca->minimize( refTraj, s1, hitTraj, s2, distance, m_tolerance );
+  sc = m_poca->minimize( refTraj, s1, hitTraj, s2, distance, m_tolerance );
+  if ( sc.isFailure() ) {
+    error() << "Error in calculating distance of closest approach between track and hit" << endreq;
+    return StatusCode::FAILURE;
+  }
   // create linetraj from poca vector, that is
   // use point (s1) on refTraj and point s2 on hitTraj:
-  LineTraj pocaTraj( refTraj.position(s1), hitTraj.position(s2) );
+  const Gaudi::XYZPoint hitPoint = refTraj.position(s1);
+  LineTraj pocaTraj( hitPoint, hitTraj.position(s2) );
   const Gaudi::XYZVector slope = state.slopes();
-  //  info() << "Track slopes: " << slope << endreq;
   double stereo_angle;
   if ( id.isOT() ) {
     OTChannelID otid = id.otID();
@@ -740,8 +748,49 @@ StatusCode TAConfig::FillMatrix( LHCb::Track &t, LHCb::LHCbID &id, const int &ra
     plot( drDist, "OT drift distance", -1.0, 5.0, 200 );
     plot( sqrt(distance.Mag2()), "poca distance", -1.0, 5.0, 200 );
     plot( hit_residual, "OT hit residual", -2.0, 2.0, 200 );
-    Gaudi::XYZPoint pocaPoint = pocaTraj.position(drDist);
-    z = pocaPoint.z();
+    Gaudi::XYZPoint chClusterPoint = pocaTraj.position(drDist);
+    z = chClusterPoint.z();
+    // Create translation matrix:
+    const double alpha = 0;
+    const double beta = 0;
+    const double gamma = 0.0;
+    const double t_x = chClusterPoint.x() - refPoint.x();
+    const double t_y = chClusterPoint.y() - refPoint.y();
+    const double t_z = chClusterPoint.z() - refPoint.z();
+    if ( otid.layer() == 0 ) {
+      plot( t_x, "translation in x", -15,15,100);
+      plot( t_y, "translation in y", -1,1,100);
+      plot( t_z, "translation in z", -7,7,100);
+    }
+    Vector6 translation( t_x, t_y, t_z, alpha, beta, gamma);
+    // translate the hit-trajectory in parallel to the pocaPoint
+    AlignTraj chCluster = AlignTraj( hitTraj, translation );
+    // Make a Gaudi::XZYPoint: (should be LHCb co-ordinate system!)
+    // at the z-position of the hit
+    // so that we can calculate the distance wrt (0,0,z)
+    Gaudi::XYZPoint point = Gaudi::XYZPoint(0.,0.,z);
+    // find poca between charge cluster and (0,0,z)
+    s1 = 0;
+    sc = m_poca->minimize( hitTraj, s1, point, distance, m_tolerance);
+    if ( sc.isFailure() ) {
+      error() << "Error in calculating distance of closest approach between hit wire and (0,0,z)" << endreq;
+      return StatusCode::FAILURE;
+    }
+    double si = 1.0;
+    double px,py,pz;
+    distance.GetCoordinates(px,py,pz);
+    if ( px < 0 ) si = -1.0;
+    if ( otid.layer() == 0 ) 
+      plot( si*sqrt(distance.Mag2()), "poca between z-axis and hit-wire", -3000.0,3000.0,100);
+    sc = m_poca->minimize( chCluster, s1, point, distance, m_tolerance);
+    if ( sc.isFailure() ) {
+      error() << "Error in calculating distance of closest approach between cluster and (0,0,z)" << endreq;
+      return StatusCode::FAILURE;
+    }
+    distance.GetCoordinates(px,py,pz);
+    if ( px < 0 ) si = -1.0;
+    if ( otid.layer() == 0 ) 
+      plot( si*sqrt(distance.Mag2()), "poca between z-axis and cluster", -3000.0,3000.0,100);
     stereo_angle = m_ot->findModule( id.otID() )->angle();
   } else if ( id.isST() ) {
     if ( id.stID().isTT() && tt_detector )
@@ -754,7 +803,6 @@ StatusCode TAConfig::FillMatrix( LHCb::Track &t, LHCb::LHCbID &id, const int &ra
   // Convert derivative vectors to array(so desired by millepede tool)
   VectortoArray(m_derLC, derLC);
   VectortoArray(m_derGB, derGB);
-  //MD zero out array - do not use ZerLoc! Necessary??
   // need 2 dummy variable to be consistent with Sebastien's Millepede
   double dernl[m_derGB.size()], dernl_i[m_derGB.size()];
   m_Millepede->ZerLoc( derGB, derLC, dernl, dernl_i );
@@ -770,16 +818,9 @@ StatusCode TAConfig::FillMatrix( LHCb::Track &t, LHCb::LHCbID &id, const int &ra
   distance.GetCoordinates(px,py,pz);
   if ( px < 0 ) si = -1.0;
 
-//  info() << "Measurement z = " << z << endreq;
-//  info() << "Measurement  = " << si*sqrt(distance.Mag2()) << endreq;
-  
-  plot2D(z, si*sqrt(distance.Mag2()),"hits",0,10000,-7000,7000,1000,1400);
+  plot2D(z, si*sqrt(distance.Mag2()),"hits",7000,10000,-7000,7000,1000,1400);
+  plot( si*sqrt(distance.Mag2()),"Measurement co-ordinate",-2500,2500,100);
 
-  //  if ( weight x> 1.0 ) 
-  //    info() << "Error = " << hit.errMeasure()/weight << endreq;
-  
-//  info() << "EquLoc with derLC = " << m_derLC << endreq;
-//  info() << "EquLoc with hit: " << si*sqrt(distance.Mag2()) << " error " << hit.errMeasure()/weight << endreq;
   // Need additional dummy variable to be consistent with Sebastien's Millepede
   //  m_Millepede->EquLoc( derGB, derLC, si*sqrt(distance.Mag2()), hit.errMeasure()/weight );
   m_Millepede->EquLoc( derGB, derLC, dernl, dernl_i, si*sqrt(distance.Mag2()), hit.errMeasure()/weight );

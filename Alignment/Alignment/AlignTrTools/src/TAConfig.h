@@ -6,7 +6,7 @@
  *  Header file for Tstation alignment : TAConfig
  *
  *  CVS Log :-
- *  $Id: TAConfig.h,v 1.2 2007-05-08 15:46:46 jblouw Exp $
+ *  $Id: TAConfig.h,v 1.3 2007-05-14 10:35:51 jblouw Exp $
  *
  *  @author J. Blouw johan.blouw@cern.ch
  *  @date   12/04/2007
@@ -19,7 +19,7 @@
 #include "AlignmentInterfaces/ITAConfigTool.h"
 // Interfaces
 // Alignment
-#include "AlignmentTools/IMillepede.h"
+#include "AlignmentInterfaces/IMillepede.h"
 #include "AlignmentInterfaces/IDerivatives.h"
 // Poca 
 #include "Kernel/ITrajPoca.h"
@@ -97,7 +97,7 @@ class TAConfig : public GaudiTupleTool,
      VectortoArray(pull,pul);
      StatusCode sc = m_Millepede->MakeGlobalFit( par, err, pul );
      if ( sc.isFailure() ) {
-       info() << "Error in Millepede's fitloc!";
+       info() << "Error in Millepede's !";
        return StatusCode::FAILURE;
      }
      ArraytoVector( par, parameter );
@@ -112,7 +112,7 @@ class TAConfig : public GaudiTupleTool,
 			     std::vector<double> & estimated, 
 			     double & chi2, 
 			     double & residual) {
-     double tr_par[trpar.size()+2];
+     double tr_par[trpar.size()+2]; //
      double est[estimated.size()];
      VectortoArray( trpar, tr_par );
      VectortoArray( estimated, est );
