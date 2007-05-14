@@ -8,6 +8,11 @@
         alignment, using either rdst or dst data.
 
 !=============================================
+! 14/05/2007 Johan Blouw v2r1
+  - release for the software project
+    - changes to cmt/requirements file to reflect that fact
+
+!=============================================
 ! 25/04/2007 Johan Blouw v2r0
   - update requirements file to reflect use of sqlite dbase
 
