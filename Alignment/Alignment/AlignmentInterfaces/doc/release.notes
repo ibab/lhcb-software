@@ -4,7 +4,7 @@
 ! Purpose	:	Collection of interfaces needed for the T-station alignment
 !================================================================
 
-!*************** AlignmentInterfaces v2r1 ***********************
+!================= AlignmentInterfaces v2r1 2007-05-14 ==================
 ! 2007-05-14 - Johan Blouw
    - small change to requirments file. 
    - ready for software project release
