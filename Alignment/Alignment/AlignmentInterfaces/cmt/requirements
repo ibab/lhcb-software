@@ -27,8 +27,5 @@ apply_pattern reflex_dictionary                                                 
 # Hack for cmt v1r19 bug to link dictionary on windows
 macro AlignmentInterfacesDict_use_linkopts $(use_linkopts)
 
-<<<<<<< requirements
 # =============== dependencies ==============================================
 use GaudiKernel      v*
-=======
->>>>>>> 1.4
