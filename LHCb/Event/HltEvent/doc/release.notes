@@ -4,11 +4,15 @@
 ! Purpose     : Event model for HLT tracks
 !-----------------------------------------------------------------------------
 
+! 2007-05-14 - Patrick Koppenburg
+ - Added a list of exclusive selections to HltSummary.xml
+
 ! 2007-05-11 - Jose A. Hernando
- - xml/HltSummary.xml adding decision types
-                      offset for the enums of the selections
- - cmt/requirements action trigger python executable to create header file HltNames
-                    with the conversion HltEnums <-> strings
+ - xml/HltSummary.xml 
+	 . adding decision types offset for the enums of the selections
+ - cmt/requirements 
+   . action trigger python executable to create header file HltNames
+     with the conversion HltEnums <-> strings
 
 !======================== HltEvent v8r0p1 2007-02-02 =========================
 ! 2007-02-02 - Marco Cattaneo

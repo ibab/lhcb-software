@@ -64,7 +64,21 @@
                   CalEntry=400,
                   CalL0Conf=402,
                   CalPreTrigger=404,
-	          CalTrigger=406'
+	          CalTrigger=406,
+                  HltSelDstar=1001,
+	          HltSelB2DiElectron=1002,
+                  HltSelBd2MuMuKstar=1003,
+                  HltSelB2DiMuon=1004,
+                  HltSelB2JpsiX_MuMu=1005,
+                  HltSelBu2LLK=1006,
+                  HltSelB2MuMu=1007,
+                  HltSelB2HH=1008,
+                  HltSelBd2DstarPi=1009,
+                  HltSelBd2D0Kstar=1010,
+                  HltSelBs2DsH=1011,
+                  HltSelBs2PhiGamma=1012,
+                  HltSelBs2PhiPhi=1013,
+                  HltSelLastSelection=1014'
         access = 'PUBLIC' />
       
 
