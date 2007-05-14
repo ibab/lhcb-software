@@ -1,4 +1,4 @@
-// $Id: AlignAlgorithm.h,v 1.5 2007-05-03 07:57:11 janos Exp $
+// $Id: AlignAlgorithm.h,v 1.6 2007-05-14 08:31:19 jblouw Exp $
 #ifndef ALIGNALGORITHM_H 
 #define ALIGNALGORITHM_H 1
 
@@ -14,8 +14,8 @@
 #include "GaudiKernel/Point3DTypes.h"
 
 // from AlignSolvTools
-#include "AlignSolvTools/AlVec.h"
-#include "AlignSolvTools/AlSymMat.h"
+#include "SolvKernel/AlVec.h"
+#include "SolvKernel/AlSymMat.h"
 
 // forward declarations
 class DetectorElement;

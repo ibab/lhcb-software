@@ -4,7 +4,7 @@
  *  Implementation file for RICH reconstruction tool : GAlign
  *
  *  CVS Log :-
- *  $Id: GAlign.cpp,v 1.3 2007-05-08 15:49:29 jblouw Exp $
+ *  $Id: GAlign.cpp,v 1.4 2007-05-14 08:31:19 jblouw Exp $
  *
  *  @author M.Needham Matt.Needham@cern.ch
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -110,7 +110,7 @@ StatusCode GAlign::initialize() {
 }
 
 StatusCode GAlign::execute() {
-  info() << "Into GAlign execute (1)" << endreq;
+  debug() << "Into GAlign execute" << endreq;
   if ( exist<Tracks>( m_inputcontainer ) ) {
     Tracks *inCont = get<Tracks>(m_inputcontainer);
     Tracks::const_iterator iterT;
@@ -352,7 +352,6 @@ StatusCode GAlign::finalize(){
   m_pull.resize( m_taConfig->NumAlignPars() );
   m_taConfig->GlobalFit( m_align, m_align_err, m_pull );
   //  info() << "Alignment parameters = " << m_align << endreq;
-  //  m_Millepede->MakeGlobalFit(align,align_err,pull);
   return GaudiAlgorithm::finalize();
 }
 

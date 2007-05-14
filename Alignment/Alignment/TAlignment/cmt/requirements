@@ -24,6 +24,7 @@ use 	TrackEvent		v*	Event
 use 	TrackFitEvent		v*	Tr
 use   	TrackInterfaces   	v*      Tr
 use 	STDet			v*	Det
+use     LHCbKernel              v*      Kernel
 #============================================================================
 # Component library building rule
 #============================================================================
