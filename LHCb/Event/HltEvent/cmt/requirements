@@ -3,7 +3,7 @@
 # Maintainer : Jose Hernando
 #============================================================================
 package           HltEvent
-version           v8r0p1
+version           v8r1
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -19,18 +19,19 @@ use   GaudiKernel     v*
 #============================================================================
 #---- Produce Header-Files from XML description
 document obj2doth HltEventObj2Doth ../xml/*.xml
-action DoHltNames "python ../python/translateEnums.py"
 
-apply_pattern install_more_includes more=Event 
+action DoHltNames "python ../python/translateEnums.py"
+macro_append HltEventObj2Dict_dependencies " DoHltNames "
 
 document obj2dict HltEventObj2Dict ../xml/*.xml
+
+apply_pattern install_more_includes more=Event 
 
 library          HltEventDict     ../$(tag)/dict/HltEvent/*.cpp
 
 apply_pattern component_library library=HltEventDict
 macro_remove constituents HltEventDictRootMap
 
-macro HltEventDict_dependencies " DoHltNames "
 
 private
 use GaudiObjDesc v* -no_auto_imports

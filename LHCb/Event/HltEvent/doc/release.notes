@@ -4,6 +4,10 @@
 ! Purpose     : Event model for HLT tracks
 !-----------------------------------------------------------------------------
 
+!======================== HltEvent v8r1 2007-05-14 ===========================
+! 2007-05-14 - Marco Cattaneo
+ - Fix requirements to copy also generated HltNames.h to InstallArea
+
 ! 2007-05-14 - Patrick Koppenburg
  - Added a list of exclusive selections to HltSummary.xml
 
