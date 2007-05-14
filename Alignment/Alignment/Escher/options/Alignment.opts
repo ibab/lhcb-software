@@ -7,7 +7,7 @@ Init.DetectorList += {
 
 Selection.DetectorList += {
 	"TStation"
-//        , "Fit"
+      , "Fit"
 };
 
 // There are 2 alignment algorithms
@@ -17,8 +17,8 @@ Selection.DetectorList += {
 // the LHCb trackfit, hence the "FitSequence"
 
 Alignment.DetectorList += {
-//      "Amsterdam"
-      "Heidelberg"
+      "Amsterdam"
+//      "Heidelberg"
 };
 
 ApplicationMgr.DLLs += { 
@@ -32,6 +32,7 @@ ApplicationMgr.DLLs += {
 ApplicationMgr.DLLs += { 
 			 "AlignTrTools"
 			, "TAlignment"
+                        , "AlignmentTools"
 //			, "VeloTools"
 };
 

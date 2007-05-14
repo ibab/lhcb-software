@@ -17,7 +17,7 @@
 // Geometry specific options
 //---------------------------------------------------------------------------
 // Uncomment the line below to read the xml version of the dbase
-DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb.xml";
+//DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb.xml";
 //---------------------------------------------------------------------------
 // Use sqlite dbase
 //---------------------------------------------------------------------------
@@ -25,6 +25,7 @@ DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb.xml";
 // Comment the two lines below to switch back to the xml dbase
 //DDDB.DefaultTAG = "DC06";
 //LHCBCOND.DefaultTAG = "DC06";
+#include "$DDDBROOT/options/DC06.opts"
 
 // DC06 magnetic field
 MagneticFieldSvc.FieldMapFile = "$FIELDMAPROOT/cdf/field047.cdf";
