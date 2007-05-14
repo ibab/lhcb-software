@@ -58,3 +58,9 @@ HltExclusive.IgnoreFilterPassed = true ; // We want the all
 #include "$HLTSELECTIONSROOT/options/HltSelBu2LLK.opts"
 #include "$HLTSELECTIONSROOT/options/HltSelDstar.opts"
 
+//--------------------------------------------------------------------
+// Decision
+//--------------------------------------------------------------------
+HltSelections.Members += { "HltSelectionsDecision" } ;
+//HltSelectionsDecision.OutputLevel = 2 ;
+

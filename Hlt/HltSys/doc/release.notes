@@ -5,6 +5,11 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
 
+
+- In HltSys options
+  . Added temporary clone killer in HltProtoParticles
+  . Added HltSelectionsDecision algorithm in selections 
+
 </PRE><H1><A NAME=v1r5>2007-04-26 HltSys v1r5</A></H1><PRE>
 This version uses Gaudi v19r3 and LHCb v22r4
 

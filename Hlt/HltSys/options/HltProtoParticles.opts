@@ -9,9 +9,21 @@
 // Charged ProtoParticles
 //---------------------------------------------------------------------
 HltFullReco.Members += { "GaudiSequencer/SeqHltCharged" } ;
-SeqHltCharged.Members += { "ChargedProtoPAlg/HltChargedProtoPAlg" } ;
 SeqHltCharged.MeasureTime = true ;
-HltChargedProtoPAlg.InputTrackLocation = "Hlt/Track/Forward" ; // what about match?
+
+/*
+ * TEMPORARY clone killer - waiting to understand duplicated tracks
+ */
+SeqHltCharged.Members += {
+  "TrackEventCloneKiller/HltFullRecoTEMPORARYCloneKiller"} ;
+
+HltFullRecoTEMPORARYCloneKiller.TracksInContainers = { "Hlt/Track/Forward" };
+HltFullRecoTEMPORARYCloneKiller.TracksOutContainer = "Hlt/Track/ForwardCLEANED" ;
+/*
+ * ChargedProtoPAlg
+ */
+SeqHltCharged.Members += { "ChargedProtoPAlg/HltChargedProtoPAlg" } ;
+HltChargedProtoPAlg.InputTrackLocation = "Hlt/Track/ForwardCLEANED" ; // Correct this
 HltChargedProtoPAlg.OutputProtoParticleLocation = "Hlt/ProtoP/Charged" ;
 SeqHltCharged.Members += { "ChargedProtoCombineDLLsAlg/HltChargedProtoCombDLL" };
 HltChargedProtoCombDLL.ProtoParticleLocation = "Hlt/ProtoP/Charged" ;
