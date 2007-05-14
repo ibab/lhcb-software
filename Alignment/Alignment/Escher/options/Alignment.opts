@@ -7,7 +7,7 @@ Init.DetectorList += {
 
 Selection.DetectorList += {
 	"TStation"
-      , "Fit"
+//      , "Fit"
 };
 
 // There are 2 alignment algorithms
@@ -66,8 +66,8 @@ InitOTSeq.Members += { "OTTimeCreator" };
 // Track Selection
 //**************************
 SelectionTStationSeq.Members += { "TStation" };
-ToolSvc.ATrackSelector.MinPCut = 10000.0; // value is in MeV...
-ToolSvc.ATrackSelector.MinPtCut = 2000.0;
+//ToolSvc.ATrackSelector.MinPCut = 10000.0; // value is in MeV...
+//ToolSvc.ATrackSelector.MinPtCut = 2000.0;
 ToolSvc.ATrackSelector.charge = 0;
 //TStation.MinPCut = 20000.0; // value is in MeV...
 TStation.MinITHitCut = 8; 
