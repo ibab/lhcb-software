@@ -4,6 +4,10 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+!===================== LHCbKernel v7r4 2007-05-14 ========================
+! 2007-05-14 - Marco Cattaneo
+ - Move Kernel/lcgStl.h selection file to dict/LHCbKernelDict.h
+
 ! 2007-05-11 - Marco Clemencic
  - Added the two header files Kernel/CondDBNameTagPair.h and
    Kernel/ICondDBInfo.h to provide a simplified interface to access the

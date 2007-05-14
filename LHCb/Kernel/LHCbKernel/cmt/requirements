@@ -1,10 +1,10 @@
-# $Id: requirements,v 1.122 2007-04-17 12:22:24 cattanem Exp $
+# $Id: requirements,v 1.123 2007-05-14 07:46:04 cattanem Exp $
 # =============================================================================
 package LHCbKernel
 author  M.Frank    CERN/LHCb
 manager M.Cattaneo CERN/LHCb
 
-version v7r3
+version v7r4
 
 branches cmt doc Event Kernel src xml
 
@@ -26,7 +26,7 @@ make_fragment customdict -header=customdict_header -trailer=customdict_trailer
 
 # Make custom dictionary. Must be before GOD generation
 #============================================================================
-document customdict LHCbKernelCustomDict ../Kernel/lcgStl.h
+document customdict LHCbKernelCustomDict ../dict/LHCbKernelDict.h
 
 # Generate remaining dictionaries with lcgdict via GOD
 #============================================================================
@@ -49,8 +49,8 @@ apply_pattern linker_library    library=LHCbKernel
 apply_pattern component_library library=LHCbKernelDict
 macro_remove constituents LHCbKernelDictRootMap
 
-macro_append ROOT_linkopts " -L$(ROOT_home)/lib -lMathCore " \
-             WIN32 " /LIBPATH:$(ROOT_home)/lib libMathCore.lib "
+macro_append ROOT_linkopts " -lMathCore " \
+             WIN32 " libMathCore.lib "
 
 private
 #============================================================================

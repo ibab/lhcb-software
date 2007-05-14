@@ -1,6 +1,6 @@
-// $Id: lcgStl.h,v 1.28 2007-04-20 14:23:56 cattanem Exp $
-#ifndef KERNEL_LCGSTL_H 
-#define KERNEL_LCGSTL_H 1
+// $Id: LHCbKernelDict.h,v 1.1 2007-05-14 07:46:04 cattanem Exp $
+#ifndef DICT_LHCBKERNELDICT_H 
+#define DICT_LHCBKERNELDICT_H 1
 
 // Additional classes to be added to automatically generated lcgdict
 
@@ -23,6 +23,7 @@
 #include "Kernel/IBdlTool.h"
 #include "Kernel/IBIntegrator.h"
 #include "Kernel/ICheckTool.h"
+#include "Kernel/ICondDBInfo.h"
 #include "Kernel/IDetElemFinder.h"
 #include "Kernel/IEventTimeDecoder.h"
 #include "Kernel/IEvtTypeSvc.h"
@@ -61,4 +62,4 @@ namespace {
   };
 }
 
-#endif // KERNEL_LCGSTL_H
+#endif // DICT_LHCBKERNELDICT_H
