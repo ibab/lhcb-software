@@ -4,6 +4,9 @@
 ! Purpose	:	algorithm to align T stations
 !---------------------------------------------------------
 
+!========================== TAlignment v3r1 2007-05-14 =========================
+ - update requirements file for the software project release (J. Blouw)
+
 ! 2007-05-03 - Jan Amoraal
  - Update alignment constants (in memory)
 
