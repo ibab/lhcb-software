@@ -4,7 +4,7 @@
  *
  *  Header file for RICH reconstruction tool interface : Rich::Rec::IMCTruthTool
  *
- *  $Id: IRichRecMCTruthTool.h,v 1.21 2007-05-08 11:57:54 jonrob Exp $
+ *  $Id: IRichRecMCTruthTool.h,v 1.22 2007-05-14 15:28:21 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -39,6 +39,7 @@ namespace LHCb
   class RichRecSegment;
   class RichRecPhoton;
   class RichRecPixel;
+  class RichRecRing;
 }
 namespace Rich
 {
