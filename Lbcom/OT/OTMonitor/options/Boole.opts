@@ -1,0 +1,9 @@
+/// Turn on full detail
+MCOTDepositMonitor.fullDetail = true;
+OTTimeMonitor.fullDetail = true;
+OTTimeChecker.fullDetail = true;
+
+/// Following is need for OTTimeClassification
+/// Swithc on mc linking for spill over
+OTTime2MCHitLinker.SpillOver = true;
+MoniOTSeq.Members += { "OTTimeClassification" };

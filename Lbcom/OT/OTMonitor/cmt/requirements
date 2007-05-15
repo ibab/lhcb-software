@@ -1,7 +1,7 @@
 package OTMonitor
 version v2r5
 
-branches cmt doc src
+branches cmt doc src options
 
 include_path none
 
