@@ -1,20 +1,21 @@
-!--------------------------------------------------------
-! Package	:	Alignment/TAlignment
-! Responsible	:	Jan Amoraal
-! Purpose	:	algorithm to align T stations
-!---------------------------------------------------------
+<PRE>
+Package	:	Alignment/TAlignment
+Package Coordinator	:	Jan Amoraal, Johan Blouw
+Purpose	: collection of alignment algorithms
 
-!========================== TAlignment v3r1 2007-05-14 =========================
- - update requirements file for the software project release (J. Blouw)
 
-! 2007-05-03 - Jan Amoraal
+</PRE><H1><A NAME=v3r1>2007-05-14 TAlignment v3r1</A></H1><PRE>
+
+- update requirements file for the software project release (J. Blouw)
+
+- 2007-05-03 - Jan Amoraal
  - Update alignment constants (in memory)
 
-! 2007-04-30 - Jan Amoraal
+- 2007-04-30 - Jan Amoraal
  - Solve system of linear eq. Ha=x using AlignSolvTools
 
-!========================== TAlignment v3r0 2007-04-25 =========================
-! 2007-04-25 - Johan Blouw
+</PRE><H1><A NAME=v3r0>2007-04-25 TAlignment v3r0</A></H1><PRE>
+- 2007-04-25 - Johan Blouw
  - moved tool parts to AlignTrTools
  - moved interface to AlignmentInterfaces
  Contains now 3 algorithms:
@@ -22,23 +23,25 @@
   - GAlign: performs alignment using Millepede for TT,OT & IT
   - TStation: algorithm to select tracks and store them in a dst
 
-!========================== TAlignment v2r0 2007-03-05 =========================
-! 2007-03-29 - Jan Amoraal
+</PRE><H1><A NAME=v2r0>2007-03-29 TAlignment v2r0</A></H1><PRE>
+- 2007-03-29 - Jan Amoraal
  - Fix includes
 
-! 2007-03-19 - Jan Amoraal
+- 2007-03-19 - Jan Amoraal
  - Remove blah from requirements
   
-! 2007-03-09 - Jan Amoraal
+- 2007-03-09 - Jan Amoraal
  - First version of the (T) Alignment Framework
  - AlignAlgorithm: Generic chi^2 minimisation algorithm
    IAlignDetectorSelector: Detector selector interface for alignment
    AlignOTDetector: Tool that provides information necessary for aligning the OT.
+
+</PRE><H1><A NAME=v1r1>2007-02-05 TAlignment v1r1</A></H1><PRE>
+- Johan Blouw
+- small changes to requirements file to fullfill Escher requirements
      
-!========================== TAlignment v1r0 29/09/2006 ==========================
-! Johan Blouw
+</PRE><H1><A NAME=v1r0>2006-06-29 TAlignment v1r0</A></H1><PRE>
+- Johan Blouw
 - algorithm to be used for T-station alignment development
 
-!========================== TAlignment v1r1 05/02/2007 ==========================
-! Johan Blouw
-- small changes to requirements file to fullfill Escher requirements
+</PRE>
