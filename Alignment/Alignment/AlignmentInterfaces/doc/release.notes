@@ -1,31 +1,31 @@
-!================================================================
-! Package	:	AlignmentInterfaces
-! Responsible	:	Johan Blouw
-! Purpose	:	Collection of interfaces needed for the T-station alignment
-!================================================================
+<PRE>
+Package : AlignmentInterfaces
+Package Coordinator : Johan Blouw
+Purpose :  Collection of interfaces needed for the T-station alignment
 
-!================= AlignmentInterfaces v2r1 2007-05-14 ==================
-! 2007-05-14 - Johan Blouw
+</PRE><H1><A NAME=v2r1>2007-05-14 AlignmentInterfaces v2r1 </A></H1><PRE>
+- 2007-05-14 - Johan Blouw
    - small change to requirments file. 
    - ready for software project release
 
-! 2007-05-11 - Johan Blouw
+- 2007-05-11 - Johan Blouw
   - added dict and dictionary files describing the interfaces and classes
   - added IMillepede to the packages
 
-! 2007-05-10 - Johan Blouw
+- 2007-05-10 - Johan Blouw
   - put IAlignSolvTools.h back in AlignmentInterfaces
 
-! 2007-05-08 - Johan Blouw
+- 2007-05-08 - Johan Blouw
   - removed interfaces to 
         - Millepede (still in AlignmentTools/AlignmentTools)
         - AlignSolvTool (still in AlignSolvTools)
         - small changes to requirements file
         
-! 2007-04-30 - Jan Amoraal
+- 2007-04-30 - Jan Amoraal
  - Remove obsolete LHCbDefinitions
 
-!*************** AlignmentInterfaces v2r0 ***********************
+</PRE><H1><A NAME=v2r0>2007-04-00 AlignmentInterfaces v2r0 </A></H1><PRE>
+
  - added interfaces to the following tools:
    - Millepede
    - AlignDetectorSelector
@@ -35,6 +35,7 @@
    - Derivatives
    - TAConfigTool
 
-!*************** AlignmentInterfaces v1r0 ***********************
-! 29/09/2006 Johan Blouw
+</PRE><H1><A NAME=v1r0>2006-09-29 AlignmentInterfaces v1r0 </A></H1><PRE>
+- 29/09/2006 Johan Blouw
  - interface to a track selector
+</PRE>
