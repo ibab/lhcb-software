@@ -10,6 +10,7 @@ Purpose: LHCb Alignment packages.
 - Packages added: AlignmentTools v2r6
                   AlignT2Velo    v1r0
                   SolvKernel     v1r1
+                  AlignT2Velo    v1r0
 
 - Packages updated: AlignmentInterfaces v2r1
                     AlignSolvTools      v2r0 

@@ -14,4 +14,5 @@ use AlignTrTools	v3r1	Alignment # Johan Blouw, Adlene Hicheur, Louis Nicolas
 use SolvKernel		v1r1    Alignment # Adlene Hicheur
 use AlignSolvTools      v2r0    Alignment # Adlene Hicheur
 use TAlignment		v3r1	Alignment # Jan Amoraal, Johan Blouw, Marc Deissenroth, Florin Maciuc
+use AlignT2Velo         v1r0    Alignment # Steve Blusk
 use Escher		v2r1	Alignment # Johan Blouw
