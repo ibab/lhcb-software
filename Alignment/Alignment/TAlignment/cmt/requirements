@@ -32,4 +32,4 @@ library		TAlignment	../src/*.cpp -import=AIDA
 #============================================================================
 # define component library link options
 #============================================================================
-apply_pattern    linker_library		library=TAlignment
+apply_pattern    component_library		library=TAlignment

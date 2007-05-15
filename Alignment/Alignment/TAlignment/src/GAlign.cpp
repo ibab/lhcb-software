@@ -4,7 +4,7 @@
  *  Implementation file for RICH reconstruction tool : GAlign
  *
  *  CVS Log :-
- *  $Id: GAlign.cpp,v 1.4 2007-05-14 08:31:19 jblouw Exp $
+ *  $Id: GAlign.cpp,v 1.5 2007-05-15 16:43:30 jblouw Exp $
  *
  *  @author M.Needham Matt.Needham@cern.ch
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -114,7 +114,7 @@ StatusCode GAlign::execute() {
   if ( exist<Tracks>( m_inputcontainer ) ) {
     Tracks *inCont = get<Tracks>(m_inputcontainer);
     Tracks::const_iterator iterT;
-    info() << "Number of tracks = " << " in " << m_inputcontainer << " : " << inCont->numberOfObjects() << endreq;
+    debug() << "Number of tracks = " << " in " << m_inputcontainer << " : " << inCont->numberOfObjects() << endreq;
     int tr_cnt = 0;
     bool crossed = false;
     for ( iterT = inCont->begin(), tr_cnt = 0; iterT != inCont->end(); iterT++, tr_cnt++) {
