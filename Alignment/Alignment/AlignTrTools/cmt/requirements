@@ -11,6 +11,7 @@ version           v3r1
 # Structure, i.e. directories to process. 
 #============================================================================
 branches          cmt doc src
+include_path      none
 
 #============================================================================
 # Used packages. Specify the version, * at the end specifies 'any revision'
