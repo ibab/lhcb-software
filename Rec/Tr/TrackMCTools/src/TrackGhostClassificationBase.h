@@ -8,6 +8,7 @@
 #include "TrackMCInterfaces/ILHCbIDsToMCParticles.h"
 
 #include "Kernel/LHCbID.h"
+#include "Event/GhostTrackInfo.h"
 
 namespace LHCb{
   class Track;
