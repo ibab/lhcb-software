@@ -3,6 +3,8 @@ Package	:	Alignment/TAlignment
 Package Coordinator	:	Jan Amoraal, Johan Blouw
 Purpose	: collection of alignment algorithms
 
+- Johan Blouw (same tag) 15/05/2007
+  - removed *_load.cpp as it is not needed anymore
 
 </PRE><H1><A NAME=v3r1>2007-05-14 TAlignment v3r1</A></H1><PRE>
 
