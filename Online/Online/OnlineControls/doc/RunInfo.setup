@@ -1,0 +1,60 @@
+
+Storage system coupling to RunInfo:
+
+External input from Run controller:
+INT             RunInfo.general.partId	RunInfo 10
+STRING          RunInfo.general.runType	RunInfo	"PHYSICS"
+INT             RunInfo.general.runNumber	RunInfo	28715
+INT             RunInfo.Storage.storeFlag	RunInfo	1
+INT        [IN] RunInfo.HLTFarm.nSubFarms	
+DYN_STRING [IN] RunInfo.HLTFarm.subFarms	
+
+
+"Static input": stays largely constant, Task types are coupled to job option creation
+DYN_STRING RunInfo.Storage.streamTypes                "Higgs", "B2JPsi", "B2Dstar", "B2Charm", "BBinc"
+DYN_INT    RunInfo.Storage.streamMultiplicity         1,       1,        1,         2,         5
+DYN_STRING RunInfo.Storage.recvInfrastructure         "ErrSrv", "RecvMBM"
+DYN_STRING RunInfo.Storage.streamInfrastructure       "ErrSrv", "StrmMBM"
+
+StoraceControl Output: used by the StorageSlice to start/manage tasks
+each DYN_STRING is a tuple containing the task information
+
+DYN_STRING RunInfo.Storage.recvInfrastructureTasks
+DYN_STRING RunInfo.HLTFarm.receiverTasks
+DYN_STRING RunInfo.Storage.recvSenders
+DYN_STRING RunInfo.Storage.streamInfrastructureTasks
+DYN_STRING RunInfo.Storage.streamReceivers
+DYN_STRING RunInfo.Storage.streamWriters
+
+
+StorageControl setup:
+
+Helper datapoints: Storage_Partition_XX of type StoragePartition
+Datapoint: "Storage" of Type StorageControl
+
+StorageControl.StorageControl
+[Internal]         ActivePartitions
+Command datapoint: Command
+[Internal]         InUse
+[Internal]         PartitionDesc
+[Internal]         RecvNodes
+[Internal]         RecvSlices
+Result completion: State
+[Internal]         StreamNodes
+[Internal]         StreamSlices
+
+
+Command format:
+<action>/<storage-name>/<partition-name>/<partition-id>
+action         = ALLOCATE, DEALLOCATE, RECOVER
+storage-name   = Storage
+partition-name = LHCb, VELO, PRS, ECAL, ....
+partition-id   = Integer partition identifier
+
+Result completion format:
+<action>/<storage-name>/<partition-name>/<result-code>
+as above with result-codes:
+If <action> is the same as the input action result is OK.
+Everything else indicates an error.
+The result code contains the name of the storage slice:
+"Storage_Slice00"

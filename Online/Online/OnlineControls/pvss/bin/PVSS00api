@@ -1,0 +1,4 @@
+#!/bin/bash
+. ./PVSS.setup
+export LD_PRELOAD=${PYTHONHOME}/lib/libpython2.4.so
+exec -a $2 $PVSS00api $*

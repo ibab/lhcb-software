@@ -91,13 +91,16 @@ class OptionsWriter(CommandListener):
       for task in tasks:
         opts = '//  Auto generated options for partition:'+partition+\
           ' activity:'+run_type+' task:'+task.name+'\n'
+        opts = opts + '#include "$PREAMBLE_OPTS"\n'
         if task.defaults.data:
+          print 'Task', task
           opts = opts + '//\n' +\
             '// ---------------- General partition information:  \n'+ \
             'OnlineEnv.PartitionID   = '+str(run.partitionID())+';\n'+ \
             'OnlineEnv.PartitionName = "'+partition+'";\n'+ \
             'OnlineEnv.Activity      = "'+run_type+'";\n'+ \
             'OnlineEnv.HostType      = "'+self.hostType+'";\n'+ \
+            'OnlineEnv.HostTypes     ={"'+self.hostType+'"};\n'+ \
             'OnlineEnv.TaskType      = "'+task.name+'";\n'
         else:
           opts = opts + '// ---------------- NO partition information\n'
@@ -106,7 +109,7 @@ class OptionsWriter(CommandListener):
           opts = opts + '//\n' + \
             '// ---------------- Additional specific options:  \n'
           for o in additionalOpts.keys():
-            opts = opts + 'OnlineEnv.'+o+' = '+str(additionalOpts[o])+';\n'
+            opts = opts + 'OnlineEnv.'+o+' = "'+str(additionalOpts[o])+'";\n'
         else:
           opts = opts + '// ---------------- NO additional options\n'
         if task.tell1s.data:
@@ -194,18 +197,23 @@ class StorageOptionsWriter(OptionsWriter):
     OptionsWriter.__init__(self,manager,'RECV',cluster, name)
   # ===========================================================================
   def additionalOptions(self, context, run, activity, task):
-    return {'DataSink':'@DataSink@'}
-  def checkTasks(self, opts, run, activity, task, data, item):
+    return {'DataSink':'@DataSink@', 'HostName':'@HostName@', 'Target':'@Target@::@DataSink@'}
+  def checkTasks(self, opts, run, activity, task, data, item, opt=-1):
     done = 0
     for i in data:
       items = i.split('/')
-      #print task.name,items
+      print task.name,items
       if task.name == items[3]:
         done = 1
         if item<0:
-          options = opts.replace('@DataSink@','"NONE"')
+          options = opts.replace('@DataSink@','NONE')
         else:
-          options = opts.replace('@DataSink@','"'+items[item]+'"')
+          options = opts.replace('@DataSink@',items[item])
+        if opt>=0:
+          options = options.replace('@Target@',items[opt])
+        else:
+          options = opts.replace('@Target@','NONE')
+        options = options.replace('@HostName@',items[0])
         if self.writeOptionsFile(items[1], options) is None:
           return None
     if done: return self
@@ -216,7 +224,7 @@ class StorageOptionsWriter(OptionsWriter):
   # ===========================================================================
   def writeOptions(self, opts, run, activity, task):
     if self.hostType == 'RECV':
-      if self.checkTasks(opts,run,activity,task,run.rcvSenders.data,5):
+      if self.checkTasks(opts,run,activity,task,run.rcvSenders.data,5,4):
         return self
       if self.checkTasks(opts,run,activity,task,run.receivers.data,-1):
         return self

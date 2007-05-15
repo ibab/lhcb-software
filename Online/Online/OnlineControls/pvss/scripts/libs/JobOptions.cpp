@@ -269,6 +269,8 @@ void JobOptions_typeCreate(dyn_dyn_string& names, dyn_dyn_int& types)  {
 }
 void JobOptions_typeDelete(string typ)  {
   if ( dynlen(dpTypes(typ)) == 1 )  {
+    dyn_string objs = dpNames("*",typ);
+    for(int i=1;i<=dynlen(objs);++i)dpDelete(objs[i]);
     int rc = dpTypeDelete(typ);
     if ( rc != 0 )
       JobOptions_error(rc,"Failed to delete datapoint type:"+typ);

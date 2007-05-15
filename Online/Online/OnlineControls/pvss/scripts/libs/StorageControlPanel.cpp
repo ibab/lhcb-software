@@ -692,6 +692,8 @@ void StorageControlPanel_install()  {
 //=============================================================================
 void StorageControlPanel_uninstall()  {
   if ( dynlen(dpTypes("StorageControl")) > 0 ) {
+    dyn_string objs = dpNames("*","StorageControl");
+    for(int i=1; i<=dynlen(objs);++i) dpDelete(objs[i]);
     int result = dpTypeDelete("StorageControl");
     StorageControlPanel_checkErrors(result);
   }  
@@ -699,6 +701,8 @@ void StorageControlPanel_uninstall()  {
     DebugN("Data type StorageControl does not exist....Nothing to do.");
   }
   if ( dynlen(dpTypes("StoragePartition")) > 0 ) {
+    dyn_string objs = dpNames("*","StoragePartition");
+    for(int i=1; i<=dynlen(objs);++i) dpDelete(objs[i]);
     int result = dpTypeDelete("StoragePartition");
     StorageControlPanel_checkErrors(result);
   }

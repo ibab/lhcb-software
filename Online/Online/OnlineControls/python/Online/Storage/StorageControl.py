@@ -268,7 +268,7 @@ class FSMmanip:
           i = cl0[n][0]
           if debug: print 'Task:',i,task
           self.enableObject(i,n,1,1,task[2])
-          cmd = '-e -o -u '+task[1]+' /home/frankm/runGaudi.sh '+task[1]+'.opts'
+          cmd = '-e -o -u '+task[1]+' /home/frankm/runGaudi.sh '+task[1]+'.opts Class0 '+task[3]
           self.setupTask(i,node=n,name=task[1],type=task[3],inUse=1,prio=0,cmd=cmd)
           self.class0Tasks[n].append(i)
           del cl0[n][0]
@@ -289,7 +289,7 @@ class FSMmanip:
           i = cl1[n][0]
           if debug: print 'Task:',task
           self.enableObject(i,n,1,1,task[2])
-          cmd = '-e -o -u '+task[1]+' /home/frankm/runGaudi.sh '+task[1]+'.opts'
+          cmd = '-e -o -u '+task[1]+' /home/frankm/runGaudi.sh '+task[1]+'.opts Class1 '+task[3]
           self.setupTask(i,node=n,name=task[1],type=task[3],inUse=1,prio=0,cmd=cmd)
           self.class1Tasks[n].append(i)
           del cl1[n][0]

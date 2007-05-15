@@ -1,0 +1,85 @@
+# ascii dump of database
+
+# DpType
+TypeName
+RunInfo.RunInfo	1#1
+	general	1#11
+		partId	21#12
+		runNTriggers	21#15
+		runNumber	21#14
+		runType	25#13
+	HLTFarm	1#25
+		nodeList	9#28
+		nSubFarms	21#26
+		receiverTasks	9#29
+		subFarms	9#27
+	MonFarm	1#34
+		monFlag	21#35
+	status	21#4
+	Storage	1#30
+		recvInfrastructure	9#45
+		recvInfrastructureTasks	9#47
+		recvSenders	9#48
+		storeFlag	21#31
+		streamInfrastructure	9#46
+		streamInfrastructureTasks	9#49
+		streamMultiplicity	5#37
+		streamReceivers	9#50
+		streamTypes	9#32
+		streamWriters	9#33
+	SubDeterctors	1#23
+		tell1List	9#24
+	TFC	1#16
+		liveTime	22#21
+		nTriggers	21#18
+		ODIN	25#17
+		runLiveTime	22#22
+		runTriggerRate	22#20
+		triggerRate	22#19
+FSM_DimTask.FSM_DimTask	1#1
+	Name	25#2
+	Type	25#3
+	Node	25#4
+	Command	25#5
+	State	25#6
+	Messages	1#7
+		severity	21#8
+		msg	25#9
+		source	25#10
+	Class	21#11
+	InUse	21#12
+	Priority	21#13
+	FMC_Start	25#14
+StorageControl.StorageControl	1#1
+	ActivePartitions	9#2
+	Command	25#3
+	InUse	5#4
+	PartitionDesc	29#5
+	RecvNodes	9#6
+	RecvSlices	9#7
+	State	25#8
+	StreamNodes	9#9
+	StreamSlices	9#10
+StoragePartition.StoragePartition	1#1
+	FSMSlice	25#2
+	InUse	21#3
+	Name	25#4
+	RecvNodes	9#5
+	RecvSlices	9#6
+	StreamNodes	9#7
+	StreamSlices	9#8
+JobOptionsControl.JobOptionsControl	1#1
+	State	25#2
+	Command	25#3
+JobOptionsPartition.JobOptionsPartition	1#1
+	State	25#2
+	Command	25#3
+	PartitionID	27#4
+	Activity	27#5
+	Tell1Boards	27#6
+	Vars	1#7
+JobOptionsActivity.JobOptionsActivity	29#1
+JobOptionsTaskType.JobOptionsTaskType	1#1
+	Options	25#2
+	NeedTell1s	23#3
+	NeedDefaults	23#4

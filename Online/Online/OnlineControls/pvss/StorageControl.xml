@@ -1,13 +1,14 @@
 <component>
 <name>StorageControl</name>
-<version>1.0.0</version>
-<date>2007/04/23</date>
+<version>1.0.1</version>
+<date>2007/05/14</date>
 <required>fwCore=3.0.0</required>
 <required>fwDIM=14.21.0</required>
-<dplist>./dplist/StorageControl_FSMTypes.dpl</dplist>
+<dplist>./dplist/StorageControl.dpl</dplist>
+<dplist>./dplist/StorageControl.FSM_Types.dpl</dplist>
 <file>./panels/JobOptions/Installation.pnl</file>
-<file>./panels/JobOptions/JobOptions.pnl</file>
 <file>./panels/JobOptions/JobOptionsEditor.pnl</file>
+<file>./panels/JobOptions/JobOptions.pnl</file>
 <file>./panels/StorageControl/Allocate.pnl</file>
 <file>./panels/StorageControl/Control.pnl</file>
 <file>./panels/StorageControl/ControlUnit.pnl</file>
@@ -20,5 +21,8 @@
 <file>./scripts/libs/JobOptions.cpp</file>
 <file>./scripts/libs/StorageControlPanel.cpp</file>
 <file>./scripts/libs/StorageTaskMgr.cpp</file>
+<file>./bin/PVSS00api</file>
+<file>./bin/PVSS00storage</file>
 <file>./StorageControl.xml</file>
+<postInstall>./config/StorageControl.postInstall</postInstall>
 </component>
