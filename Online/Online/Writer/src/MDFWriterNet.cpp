@@ -85,6 +85,7 @@ void MDFWriterNet::constructNet()
   declareProperty("MaxFileSizeMB",      m_maxFileSizeMB=1);
   declareProperty("SndRcvSizes",        m_sndRcvSizes=6553600);
   declareProperty("FilePrefix",         m_filePrefix="MDFWriterNet_File_");
+  declareProperty("Directory",          m_directory=".");
 
   m_log = new MsgStream(msgSvc(), name());
 }
@@ -218,7 +219,8 @@ void MDFWriterNet::getNewFileName(std::string &newFileName,
   char buf[MAX_FILE_NAME];
   static unsigned long random;
   random++;
-  sprintf(buf, "%s.%lu.%lu",
+  sprintf(buf, "%s/%s.%lu.%lu",
+      m_directory.c_str(),
       m_filePrefix.c_str(),
       random,
       time(NULL));

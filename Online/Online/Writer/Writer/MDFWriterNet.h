@@ -37,6 +37,9 @@ namespace LHCb {
       /// A prefix to a apply to all file names that are created.
       std::string m_filePrefix;
 
+      /// Directory name to apply to all file names that are created.
+      std::string m_directory;
+
       /// The maximum file size (in MB) to write before creating a new file.
       size_t m_maxFileSizeMB;
 
