@@ -1,4 +1,4 @@
-// $Id: IdealStateCreator.cpp,v 1.13 2007-05-07 08:06:33 mneedham Exp $
+// $Id: IdealStateCreator.cpp,v 1.14 2007-05-15 08:34:15 mneedham Exp $
 // Include files
 
 // from Gaudi
@@ -45,8 +45,11 @@ IdealStateCreator::IdealStateCreator( const std::string& type,
   declareProperty( "ErrorTy2", m_eTy2 = 0.0                   );
   declareProperty( "ErrorP",   m_eP   = 0.0                   );  // dp/p
   declareProperty( "CorrectSlopes",   m_correctSlopes = false );
-  m_dets = boost::assign::list_of("Velo")("IT")("TT")("OT");
+  //declareProperty( "Detectors" , 
+  //                m_dets = boost::assign::list_of("Velo")("IT")("TT")("OT"));
 
+  declareProperty("Detectors" , 
+                  m_dets = boost::assign::list_of("Tracker"));
 }
 
 //=============================================================================
