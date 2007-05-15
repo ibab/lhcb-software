@@ -1,5 +1,39 @@
-!=============================================
-! 29/09/2006 Johan Blouw v1r0
+<PRE>
+Package : Escher
+Package Coordinator : Johan Blouw
+Purpose : Gaudi application used to perform 
+          alignment of the LHCb detector components
+
+</PRE><H1><A NAME=v2r1>2007-05-14 Escher v2r1</A></H1><PRE>
+- 14/05/2007 Johan Blouw v2r1
+  - release for the software project
+    - changes to cmt/requirements file to reflect that fact
+
+</PRE><H1><A NAME=v2r0>2007-04-25 Escher v2r0</A></H1><PRE>
+
+- 25/04/2007 Johan Blouw v2r0
+  - update requirements file to reflect use of sqlite dbase
+
+</PRE><H1><A NAME=v1r3>2007-02-05 Escher v1r3</A></H1><PRE>
+
+- 05/02/2007 Johan Blouw v1r3
+  - update of requirements file. Now includes S. Viret's stuff
+
+</PRE><H1><A NAME=v1r2>2006-11-28 Escher v1r2</A></H1><PRE>
+
+- 28/11/2006 Johan Blouw v1r2
+  - update of requirements file using Gaudi v18r11
+  - update of requirements file to be equivalent to Brunel v30r14 release
+
+</PRE><H1><A NAME=v1r1>2007-10-06 Escher v1r1</A></H1><PRE>
+
+- 06/10/2006 Johan Blouw v1r1
+  - update of options file, so it will run out-of-the-box at CERN
+  - update of requirements file so that it links to the proper packages
+
+</PRE><H1><A NAME=v1r0>2006-09-29 Escher v1r0</A></H1><PRE>
+
+- 29/09/2006 Johan Blouw v1r0
 
         First release of the Escher meta package
 
@@ -7,24 +41,4 @@
         Escher can be used to perform the t-station
         alignment, using either rdst or dst data.
 
-!=============================================
-! 14/05/2007 Johan Blouw v2r1
-  - release for the software project
-    - changes to cmt/requirements file to reflect that fact
-
-!=============================================
-! 25/04/2007 Johan Blouw v2r0
-  - update requirements file to reflect use of sqlite dbase
-
-! 05/02/2007 Johan Blouw v1r3
-  - update of requirements file. Now includes S. Viret's stuff
-!-------------------------------
-! 28/11/2006 Johan Blouw v1r2
-  - update of requirements file using Gaudi v18r11
-  - update of requirements file to be equivalent to Brunel v30r14 release
-!-------------------------------
-! 06/10/2006 Johan Blouw v1r1
-  - update of options file, so it will run out-of-the-box at CERN
-  - update of requirements file so that it links to the proper packages
-!-------------------------------
-
+</PRE>

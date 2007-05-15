@@ -1,6 +1,6 @@
 <PRE>
 Package: Alignment/AlignTrTools
-Package Coordinator Johan Blouw
+Package Coordinator : Johan Blouw
 Responsibles : J. Amoraal, J. Blouw, A. Hicheur, L. Nicolas
 Purpose: LHCb Alignment Tools
 
@@ -19,15 +19,14 @@ Purpose: LHCb Alignment Tools
 
 
 </PRE><H1><A NAME=v1r0>2006-09-06 AlignTrTools v1r0 </A></H1><PRE>
-! 20060906 - AlignTrTools v1
+- 20060906 - AlignTrTools v1
   this package builds two libraries: a component and a link library
 
-!  -J. Blouw: - added a simple TrackSelectorTool
+-  -J. Blouw: - added a simple TrackSelectorTool
               - modified the requirements file to reflect this
 
-! ====================================================================
-! L. Nicols/A. Hicheur: added source code for Louis' track selection
-!
+- L. Nicols/A. Hicheur: added source code for Louis' track selection
+
 </PRE><H1><A NAME=v1r0>2006-10-04 AlignTrTools v1r1 </A></H1><PRE>
   Johan Blouw, October 4th, 2006 AlignTrTools v1r1
   - added source code for a simple track selector

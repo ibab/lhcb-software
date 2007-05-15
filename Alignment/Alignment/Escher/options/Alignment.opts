@@ -6,8 +6,8 @@ Init.DetectorList += {
 };
 
 Selection.DetectorList += {
-	"TStation"
-//      , "Fit"
+//	"TStation"
+       "Fit"
 };
 
 // There are 2 alignment algorithms

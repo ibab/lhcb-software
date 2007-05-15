@@ -6,7 +6,7 @@
  *  Header file for Tstation alignment : TAConfig
  *
  *  CVS Log :-
- *  $Id: TAConfig.h,v 1.3 2007-05-14 10:35:51 jblouw Exp $
+ *  $Id: TAConfig.h,v 1.4 2007-05-15 10:19:03 jblouw Exp $
  *
  *  @author J. Blouw johan.blouw@cern.ch
  *  @date   12/04/2007
@@ -89,20 +89,26 @@ class TAConfig : public GaudiTupleTool,
    StatusCode GlobalFit( std::vector<double> & parameter, 
 			 std::vector<double> & error, 
 			 std::vector<double> & pull) {
-     double par[parameter.size()];
-     double err[error.size()];
-     double pul[pull.size()];
+     double *par = new double [parameter.size()];
+     double *err = new double [error.size()];
+     double *pul = new double [pull.size()];
      VectortoArray(parameter,par);
      VectortoArray(error,err);
      VectortoArray(pull,pul);
      StatusCode sc = m_Millepede->MakeGlobalFit( par, err, pul );
      if ( sc.isFailure() ) {
        info() << "Error in Millepede's !";
+       delete [] par;
+       delete [] err;
+       delete [] pul;
        return StatusCode::FAILURE;
      }
      ArraytoVector( par, parameter );
      ArraytoVector( err, error );
      ArraytoVector( pul, pull );
+     delete [] par;
+     delete [] err;
+     delete [] pul;
      return StatusCode::SUCCESS;
    };
    
@@ -112,8 +118,8 @@ class TAConfig : public GaudiTupleTool,
 			     std::vector<double> & estimated, 
 			     double & chi2, 
 			     double & residual) {
-     double tr_par[trpar.size()+2]; //
-     double est[estimated.size()];
+     double *tr_par = new double [trpar.size()+2]; //
+     double *est = new double [estimated.size()];
      VectortoArray( trpar, tr_par );
      VectortoArray( estimated, est );
      StatusCode sc = m_Millepede->FitLoc( tr_cnt, tr_par, 0 );
@@ -124,7 +130,9 @@ class TAConfig : public GaudiTupleTool,
      residual = tr_par[trpar.size()+2]; //decode residual
      ArraytoVector( tr_par, trpar);
      ArraytoVector( est, estimated );
-     return StatusCode::SUCCESS;
+     delete [] tr_par;
+     delete [] est;
+     return sc;
    };
    
    
