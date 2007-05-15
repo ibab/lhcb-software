@@ -1,13 +1,52 @@
-!***************************
-! Package:	AlignmentSys
-! Resposible:	Johan Blouw
-! Purpose:	Groups the T-station related alignment packages.
-!***************************
-!================================
-! 09/05/2007 Johan Blouw
+<PRE>
+Package: AlignmentSys
+Package Coordinator: Johan Blouw
+Purpose: LHCb Alignment packages.
+         This project contains 2 different alignment algorithms
+         used by the Gaudi application Escher to align the LHCb detector 
+         components.
+
+</PRE><H1><A NAME=v2r0>2007-05-09 AlignmentSys v2r0</A></H1><PRE>
+- Packages added: AlignmentTools v2r6
+                  AlignT2Velo    v1r0
+                  SolvKernel     v1r1
+
+- Packages updated: AlignmentInterfaces v2r1
+                    AlignSolvTools      v2r0 
+                    AlignTrTools        v3r1
+                    TAlignment          v3r1
+                    Escher              v2r1
+
+- in  AlignmentInterfaces v2r1
+   - added interface to Millepede (from AlignmentTools)    
+     added interface to AlignSolvTools
+     added dict subdirectory which contains description of 
+     interface classes ( *Dict.h and *Dict.xml)
+   - modified requirementsfile to reflect above mentioned changes
+
+- in AlignSolvTools v2r0
+   - migrate matrix and vector classe and minres to SolvKernel
+   - added iostream operators
+   - make includes global
+
+- in AlignTrTools v3r1
+   - removed explicit version dependencies from requirements file
+   - added tool and classes for Millepede style alignment:
+       - class Derivatives (describes local and global derivatives for M'pede)
+       - class TAConfig (configures alignment problem for M'pede)
+
+- in TAlignment v3r1
+  - updates of requirements file
+  - moved interface header file to AlignmentInterfaces
+  - AlignAlgorithm: Update alignment constants (in memory)
+  - AlignAlgorithm: Solve system of linear eq. Ha=x using AlignSolvTools
+
+- in Escher v2r1
+  - update requirements file to reflect use of sqlite dbase
+                
+- 09/05/2007 Johan Blouw
   - small change to requirements file, to include AlignmentTools v2r5
 
-!===========     v2r0     ========================
 - April 25th, 2007 Johan Blouw
   - Update of the Alignment packages
   - reorganizing tools/interfaces/algorithms:
@@ -16,21 +55,15 @@
     - TAlignment          v3r0
     - Escher              v2r0
 
-!===========     v1r1     ========================
+</PRE><H1><A NAME=v1r1>2006-10-04 AlignmentSys v1r1</A></H1><PRE>
+
 - October 4th, 2006 Johan Blouw
 - This version is an update reflecting a change in name of
   the SelectorTools package to AlignTrTools.
   And the fact that there is now code in AlignTrTools v1r1
-! =======
+
 - this version uses :
 		       AlignmentInterfaces v1r0
 	 	       AlignTrTools        v2r1
 		       TAlignment	   v1r1
-! 05/02/2007 Johan Blouw
-
-- this version uses:
-		AlignmentInterfaces v1r0
-		AlignmentTools      v2r3
-	        AlignTrTools        v2r2
-                Escher		    v1r2
-                EscherSys           v1r1
+</PRE>
