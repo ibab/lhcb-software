@@ -2,12 +2,12 @@
 Storage system coupling to RunInfo:
 
 External input from Run controller:
-INT             RunInfo.general.partId	RunInfo 10
-STRING          RunInfo.general.runType	RunInfo	"PHYSICS"
-INT             RunInfo.general.runNumber	RunInfo	28715
-INT             RunInfo.Storage.storeFlag	RunInfo	1
-INT        [IN] RunInfo.HLTFarm.nSubFarms	
-DYN_STRING [IN] RunInfo.HLTFarm.subFarms	
+INT        [IN] RunInfo.general.partId	 10
+STRING     [IN] RunInfo.general.runType	 "PHYSICS"
+INT        [IN] RunInfo.general.runNumber	 28715
+INT        [IN] RunInfo.Storage.storeFlag	 1
+INT        [IN] RunInfo.HLTFarm.nSubFarms	 ...
+DYN_STRING [IN] RunInfo.HLTFarm.subFarms	 "lbhlt00","lbhlt01",...
 
 
 "Static input": stays largely constant, Task types are coupled to job option creation
