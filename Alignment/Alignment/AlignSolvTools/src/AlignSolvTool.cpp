@@ -1,4 +1,4 @@
-// $Id: AlignSolvTool.cpp,v 1.7 2007-05-15 13:02:38 cattanem Exp $
+// $Id: AlignSolvTool.cpp,v 1.8 2007-05-15 13:26:24 jblouw Exp $
 // Include files 
 
 #include <stdio.h>
@@ -204,6 +204,7 @@ int AlignSolvTool::SolvSpmInv(AlSymMat& M, AlVec& B)
   }
 
   for (j=0; j<N; j++) {B[j] = temp[j];} // The final result                         
+  delete [] flag;
   return nrank;
 }
    
