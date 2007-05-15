@@ -1,4 +1,4 @@
-// $Id: Track.cpp,v 1.38 2007-05-07 14:50:17 mneedham Exp $ // Include files
+// $Id: Track.cpp,v 1.39 2007-05-15 06:57:34 wouter Exp $ // Include files
 
 // local
 #include "Event/Track.h"
@@ -81,19 +81,17 @@ double Track::pt() const
 //=============================================================================
 // Pseudorapidity of the track at the first state
 //=============================================================================
-double Track::pseudoRapidity() const{
-  Gaudi::XYZVector slopes = this->slopes();
-  const double tanTheta = sqrt((gsl_pow_2(slopes.x()) + gsl_pow_2(slopes.y()))/
-                    (1 +gsl_pow_2(slopes.x()) + gsl_pow_2(slopes.y() )));
-  return -log(0.5*atan(tanTheta));
+double Track::pseudoRapidity() const
+{
+  return this->slopes().eta() ;
 }
 
 //=============================================================================
 // Phi of the track at the first state
 //=============================================================================
-double Track::phi() const{
-  Gaudi::XYZVector slopes = this->slopes();
-  return slopes.y()/slopes.x();
+double Track::phi() const
+{
+  return this->slopes().phi() ;
 }
 
 //=============================================================================
