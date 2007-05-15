@@ -8,6 +8,10 @@ Purpose: LHCb Alignment Tools
 - J. Blouw modified requirements file to remove explict version dependency
   and ready the package for the software project release
 
+- J. Blouw, 15/05/2007
+  - attempt to resolve a complaint by windows compiler about defining and 
+    declaring variale lenght arrays in TAConfig.h.
+
 </PRE><H1><A NAME=v3r0>2007-04-25 AlignTrTools v3r0 </A></H1><PRE>
 - J. Blouw added/modified/aligned
   - new tool for TT/IT/OT alignment using M'pede:
