@@ -1,4 +1,4 @@
-// $Id: AlignSolvTool.cpp,v 1.5 2007-05-11 10:02:11 ahicheur Exp $
+// $Id: AlignSolvTool.cpp,v 1.6 2007-05-15 12:38:35 jblouw Exp $
 // Include files 
 
 #include <stdio.h>
@@ -73,7 +73,7 @@ int AlignSolvTool::SolvSpmInv(AlSymMat& M, AlVec& B)
   int N = M.size();
   
   AlVec diag(N);
-  bool flag[N];
+  bool *flag = new bool[N];
   
   int i, j, jj, k,nrank;
   double vkk;
