@@ -1,6 +1,8 @@
-Package         : OTMonitor
-Package manager : J. Nardulli
+! Package         : OTMonitor
+! Package manager : J. Amoraal
+!---------------------------------------------------------------------------
 
+!==================== OTMonitor v2r6 2007-05-15 =====================
 ! 2007-05-15 - Jan Amoraal
  - Added OTTime classification tool provided by M. Needham
  - Added expert check options	for Boole
