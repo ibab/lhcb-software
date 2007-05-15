@@ -1,19 +1,24 @@
 ! Package     : AlignSolvTools
 ! Responsible : Adlene Hicheur (Adlene.Hicheur@cern.ch)
+!-----------------------------------------------------------------------------
+
+!=========================== AlignSolvTools v2r0 2007-05-15 ==================
+! 2007-05-15 - Marco Cattaneo
+ - Fix extern "C" calling sequence for Windows
+ - Clean up requirements
 
 ! 2007-05-14 - Johan Blouw
-  - attempt to resolve a small complaint by windows compiler about defining a variable lenght array.
+ - Fix windows compiler problem about defining a variable length array.
 
 ! 2007-05-11 - Adlene Hicheur
-  - migrate matrix and vector classes + minres to SolvKernel. Set AlignSolvTools as a component library.
+ - Migrate matrix and vector classes + minres to SolvKernel. 
+ - Set AlignSolvTools as a component library.
 
 ! 2007-04-30 - Jan Amoraal
  - Minor changes: Added iostream operators
 
-
 ! 2007-04-17 - Jan Amoraal
  - Make includes global
-
 
 ! 2006-09-18 - Adlene Hicheur
  - AlignSolvTools: package creation

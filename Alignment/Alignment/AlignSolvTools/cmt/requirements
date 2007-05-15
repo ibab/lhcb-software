@@ -3,24 +3,18 @@
 package AlignSolvTools
 version           v2r0
 
-branches AlignSolvTools src cmt doc
+branches src cmt doc
+include_path none
 
 # add "use" statements
-
-
 use GaudiKernel    v*
 use GaudiAlg       v*
 use GaudiGSL       v*
 use SolvKernel     v* Alignment
 use AlignmentInterfaces   v* Alignment
 
-#include_dirs  $(ALIGNSOLVTOOLSROOT)
-
-
-
 # build link library
-library AlignSolvTools *.cpp 
-
+library AlignSolvTools *.cpp
 apply_pattern component_library library=AlignSolvTools
 
 #===============================================================

@@ -1,4 +1,4 @@
-// $Id: AlignSolvTool.cpp,v 1.6 2007-05-15 12:38:35 jblouw Exp $
+// $Id: AlignSolvTool.cpp,v 1.7 2007-05-15 13:02:38 cattanem Exp $
 // Include files 
 
 #include <stdio.h>
@@ -32,8 +32,12 @@
 DECLARE_TOOL_FACTORY( AlignSolvTool );
 
 extern "C" {
-
+#ifdef WIN32
+ void MINRES (int*,double*,double*,double*,double*,double*,double*,double*,double*,double*,double*,int*,int*,double*,int*,int*,double*,int*,int*,double*,double*,double*,double*);
+#define minres_ MINRES
+#else
  void minres_ (int*,double*,double*,double*,double*,double*,double*,double*,double*,double*,double*,int*,int*,double*,int*,int*,double*,int*,int*,double*,double*,double*,double*);
+#endif
 }
 
 //=============================================================================
