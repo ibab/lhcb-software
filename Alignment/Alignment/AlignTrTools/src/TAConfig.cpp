@@ -4,7 +4,7 @@
  *  Implementation file for Millepede configuration tool : TAConfig
  *
  *  CVS Log :-
- *  $Id: TAConfig.cpp,v 1.4 2007-05-14 10:35:51 jblouw Exp $
+ *  $Id: TAConfig.cpp,v 1.5 2007-05-15 13:53:08 jblouw Exp $
  *
  *  @author J. Blouw (johan.blouw@mpi-hd.mpg.de)
  *  @date   12/04/2007
@@ -133,7 +133,7 @@ StatusCode TAConfig::Initialize( std::vector<std::string> &m_dets ) {
   m_pIMF = svc<IMagneticFieldSvc>( "MagneticFieldSvc",true );
   // Count number of degrees of freedom
   for( unsigned int i = 0; i < m_dof.size(); i++ ) 
-    if ( m_dof[i] > 0 )
+    if ( m_dof[i] )
       m_n_dof++;
   return StatusCode::SUCCESS;
 }
@@ -739,7 +739,7 @@ StatusCode TAConfig::FillMatrix( LHCb::Track &t, LHCb::LHCbID &id, const int &ra
     //use OTTime !!
     OTTime* time = m_otTimes->object( otid );
     const double caltime = time->calibratedTime();
-    const double rawdrDist = m_ot->driftDistance(caltime); //Tprop+Tdrift
+//    const double rawdrDist = m_ot->driftDistance(caltime); //Tprop+Tdrift
     const double propTime = m_ot->propagationTime( otid, 
 						   hitTraj.position(s1).x(),
 						   hitTraj.position(s1).y() );
@@ -798,13 +798,15 @@ StatusCode TAConfig::FillMatrix( LHCb::Track &t, LHCb::LHCbID &id, const int &ra
     else if ( id.stID().isIT() && it_detector )
       stereo_angle = m_it->findLayer( id.stID() )->angle();
   }
-  double derLC[m_derLC.size()];
-  double derGB[m_derGB.size()];
+  double *derLC = new double[m_derLC.size()];
+  double *derGB = new double[m_derGB.size()];
   // Convert derivative vectors to array(so desired by millepede tool)
   VectortoArray(m_derLC, derLC);
   VectortoArray(m_derGB, derGB);
   // need 2 dummy variable to be consistent with Sebastien's Millepede
-  double dernl[m_derGB.size()], dernl_i[m_derGB.size()];
+  double *dernl = new double [m_derGB.size()]; 
+  double *dernl_i = new double[m_derGB.size()];
+  
   m_Millepede->ZerLoc( derGB, derLC, dernl, dernl_i );
   // configure the local (= track model) and global (= geometry) models:
   m_derivatives->SetLocal( m_derLC, rank, z, stereo_angle );
@@ -827,7 +829,10 @@ StatusCode TAConfig::FillMatrix( LHCb::Track &t, LHCb::LHCbID &id, const int &ra
   ArraytoVector( &derLC[0], m_derLC );
   ArraytoVector( &derGB[0], m_derGB );
   
-
+  delete [] derLC;
+  delete [] derGB;
+  delete [] dernl; 
+  delete [] dernl_i;
   return StatusCode::SUCCESS;
 }
 

@@ -40,8 +40,8 @@ StatusCode Derivatives::initialize( const int &n_tr_pars,
   m_n_elements = n_elements;
   m_tr_pars = n_tr_pars;
   m_dofs = dofs;
-  for ( int i = 0; i < m_dofs.size();i++ ) 
-    if ( m_dofs[i] == 1 )
+  for ( unsigned int i = 0; i < m_dofs.size();i++ ) 
+    if ( m_dofs[i] )
       m_n_dofs++;
   m_derLC.resize( m_tr_pars );
   m_derGB.resize( m_n_elements * m_n_dofs );
