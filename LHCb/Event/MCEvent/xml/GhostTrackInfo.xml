@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd" >
+<gdd>
+  <package name='MCEvent'>
+<!-- ****************************************************************
+     * GhostTrackInfo                                                *
+     ****************************************************************-->
+
+    <class name='GhostTrackInfo' 
+           author='M. Needham' 
+           desc='info on ghost tracks' 
+           id='299' >
+
+  <import name="GaudiKernel/Map"/>
+  <import name="Event/MCParticle"/>
+  <import name="utility" std = "TRUE"/>
+
+   <enum
+        desc   = "Ghost Track classification"
+        name   = "Classification"
+        value  = "None = 0,
+                  Real = 1,
+                  Conversion = 10, 
+                  EM = 11,
+                  FromPhi = 12,
+                  HadronicInteraction = 13,
+                  DecayInFlight = 14,
+                  SpilloverAndNoise = 20,  
+                  GhostParent = 21, 
+                  InconsistentParts = 22,
+                  Combinatoric = 23"
+        access = "PUBLIC"
+   />
+
+   <typedef
+     type   = "GaudiUtils::Map&lt;MCParticle*,unsigned int&gt;"
+     def    = "LinkMap"
+     desc   = "map of linked particles"
+     access = "PUBLIC"
+    />
+
+
+   <typedef
+     type   = "std::pair&lt;MCParticle*,double&gt;"
+     def    = "LinkPair"
+     desc   = "pair of MCParticle and weight"
+     access = "PUBLIC"
+    />
+
+   <constructor argList="LinkMap&amp; lmap,  Classification value" 
+                    initList="m_linkMap(lmap), m_classification(value) "
+                    desc="special constructor">
+   <code></code>
+   </constructor>
+
+   
+    <attribute
+        name="linkMap"
+        desc="mapping of particles"
+        type="LinkMap"
+        setMeth="TRUE"
+        getMeth="TRUE"
+    />
+
+
+   <attribute
+        desc=""
+        name="classification"
+        type="Classification" 
+        setMeth = "TRUE"
+        init="None"
+   />   
+
+   <method
+        name    = "nLinked" 
+        desc    = "number of links"
+        type    = "unsigned int" 
+        virtual = "FALSE" 
+        const   = "TRUE">
+   <code> return m_linkMap.size(); </code>
+   </method>
+
+
+   <method
+        name    = "bestLink" 
+        desc    = "best linked"
+        type    = "LinkPair" 
+        virtual = "FALSE" 
+        const   = "TRUE">
+   </method>
+
+
+   <method 
+        name    = "fillStream" 
+        desc    = "Printin a human readable way"
+        type    = "std::ostream&amp;" 
+        virtual = "FALSE" 
+        const   = "TRUE">
+        <arg 
+          type = "std::ostream" 
+          name = "s"/>
+   </method>
+  </class>
+  </package>
+</gdd>

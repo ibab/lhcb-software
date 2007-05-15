@@ -1,10 +1,16 @@
-! $Id: release.notes,v 1.81 2007-05-04 07:06:23 cattanem Exp $
+! $Id: release.notes,v 1.82 2007-05-15 13:07:51 mneedham Exp $
 ! Package     : Event/MCEvent
 ! Responsible : Marco Cattaneo, Gloria Corti
 ! Purpose     : LHCb Event model. MC truth classes (Gauss and Boole output) 
 !-----------------------------------------------------------------------------
 
+
+! 2007-05-13 M. Needham
+ - Add GhostTrackInfo (needed by ghost track classification tools)
+
+
 !======================== MCEvent v2r3 2007-05-03 ============================
+
 ! 2007-05-03 M. Needham
  - Add MCTrackGeomCriteria.h/.cpp (wrapper to 
    allow runtime composition of acceptance criteria )
