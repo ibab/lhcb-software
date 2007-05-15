@@ -5,7 +5,7 @@
  *  Implementation file for class : MCReconstructible
  *
  *  CVS Log :-
- *  $Id: MCReconstructible.cpp,v 1.6 2007-03-05 13:48:39 jonrob Exp $
+ *  $Id: MCReconstructible.cpp,v 1.7 2007-05-15 07:47:18 mneedham Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 28/02/2007
@@ -20,6 +20,9 @@
 
 // the data
 #include "Event/MCParticle.h"
+#include "Event/MCTrackGeomCriteria.h"
+
+#include <boost/assign/list_of.hpp> // for 'map_list_of()'
 
 //-----------------------------------------------------------------------------
 
@@ -47,6 +50,16 @@ MCReconstructible::MCReconstructible( const std::string& type,
   declareInterface<IMCReconstructible>(this);
   // job options
   declareProperty( "AllowPrimaryParticles", m_allowPrimary = true );
+  declareProperty("ChargedLong", m_chargedLongCriteria = 
+		  boost::assign::list_of("hasVeloAndT"));
+  declareProperty("ChargedUpstream", m_chargedUpstreamCriteria = 
+		  boost::assign::list_of("hasVelo")("hasTT"));
+  declareProperty("ChargedDownstream", m_chargedDownstreamCriteria = 
+		  boost::assign::list_of("hasT")("hasTT"));
+  declareProperty("ChargedVelo", m_chargedVeloCriteria = 
+		  boost::assign::list_of("hasVelo"));
+  declareProperty("ChargedTtrack", m_chargedTCriteria = 
+		  boost::assign::list_of("hasT"));
 }
 
 //=============================================================================
@@ -56,6 +69,7 @@ MCReconstructible::~MCReconstructible()
 {
   // clean up
   delete m_tkInfo;
+  delete m_chargedLong;
 }
 
 //=============================================================================
@@ -71,6 +85,13 @@ StatusCode MCReconstructible::initialize()
 
   // Setup incident services
   incSvc()->addListener( this, IncidentType::BeginEvent );
+
+  using namespace LHCb::MC;
+  m_chargedLong = new MCTrackGeomCriteria(m_chargedLongCriteria);
+  m_chargedDownstream = new MCTrackGeomCriteria(m_chargedDownstreamCriteria);
+  m_chargedUpstream = new MCTrackGeomCriteria(m_chargedUpstreamCriteria);
+  m_chargedT = new MCTrackGeomCriteria(m_chargedTCriteria);
+  m_chargedVelo = new MCTrackGeomCriteria(m_chargedVeloCriteria);
 
   return sc;
 }
@@ -142,9 +163,6 @@ MCReconstructible::reconstructible( const LHCb::MCParticle* mcPart ) const
 {
   if ( !mcPart ) return NoClassification;
 
-  // charged or neutral
-  const bool isCharged = mcPart->particleID().threeCharge() != 0;
-
   // acceptance ?
   if ( !inAcceptance(mcPart) ) return OutsideAcceptance;
 
@@ -155,28 +173,29 @@ MCReconstructible::reconstructible( const LHCb::MCParticle* mcPart ) const
     if ( m_allowPrimary || NULL != mcPart->mother() )
     {
 
-      // Is the MCParticle charged or not
+      // charged or neutral
+      const bool isCharged = mcPart->particleID().threeCharge() != 0;  
       if ( isCharged )
       {
 
         // decide the type
-        if      ( mcTkInfo().hasVeloAndT(mcPart) )
+        if ( m_chargedLong->accepted(mcTkInfo(),mcPart) == true )
         {
           return ChargedLong;
         }
-        else if ( mcTkInfo().hasVelo(mcPart) && mcTkInfo().hasTT(mcPart) )
+        else if (m_chargedUpstream->accepted(mcTkInfo(),mcPart) == true )
         {
           return ChargedUpstream;
         }
-        else if ( mcTkInfo().hasT(mcPart) && mcTkInfo().hasTT(mcPart) )
+        else if (m_chargedDownstream->accepted(mcTkInfo(),mcPart) == true)
         {
           return ChargedDownstream;
         }
-        else if ( mcTkInfo().hasVelo(mcPart) )
+        else if ( m_chargedVelo->accepted(mcTkInfo(),mcPart) == true )
         {
           return ChargedVelo;
         }
-        else if ( mcTkInfo().hasT(mcPart) )
+        else if ( m_chargedT->accepted(mcTkInfo(),mcPart) == true )
         {
           return ChargedTtrack;
         }

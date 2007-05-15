@@ -46,6 +46,8 @@ private:
   bool m_selNeutral;      ///< Select neutral particles
 
   bool m_rejectElectrons; /// Reject electrons
+  bool m_rejectInteractions; /// Reject interactions
+  double m_zInteraction; /// z of the interaction
 
 };
 

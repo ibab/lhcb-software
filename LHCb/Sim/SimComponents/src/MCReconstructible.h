@@ -5,7 +5,7 @@
  *  Header file for class : MCReconstructible
  *
  *  CVS Log :-
- *  $Id: MCReconstructible.h,v 1.4 2007-03-05 13:42:59 jonrob Exp $
+ *  $Id: MCReconstructible.h,v 1.5 2007-05-15 07:47:18 mneedham Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 28/02/2007
@@ -17,6 +17,7 @@
 
 // from STL
 #include <string>
+#include <vector>
 
 // Gaudi
 #include "GaudiKernel/IIncidentListener.h"
@@ -31,6 +32,8 @@
 // Interface
 #include "Kernel/IMCReconstructible.h"
 #include "Kernel/IMCParticleSelector.h"
+
+#include "Event/MCTrackGeomCriteria.h"
 
 //-----------------------------------------------------------------------------
 /** @class MCReconstructible MCReconstructible.h
@@ -108,6 +111,21 @@ private: // data
 
   /// MCParticle selector
   IMCParticleSelector * m_mcSel;
+
+  std::vector<std::string> m_chargedLongCriteria;
+  LHCb::MC::MCTrackGeomCriteria* m_chargedLong;
+
+  std::vector<std::string> m_chargedUpstreamCriteria;
+  LHCb::MC::MCTrackGeomCriteria* m_chargedUpstream;
+
+  std::vector<std::string> m_chargedDownstreamCriteria;
+  LHCb::MC::MCTrackGeomCriteria* m_chargedDownstream;
+
+  std::vector<std::string> m_chargedTCriteria;
+  LHCb::MC::MCTrackGeomCriteria* m_chargedT;
+
+  std::vector<std::string> m_chargedVeloCriteria;
+  LHCb::MC::MCTrackGeomCriteria* m_chargedVelo;
 
 };
 

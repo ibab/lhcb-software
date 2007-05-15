@@ -1,4 +1,4 @@
-// $Id: MCParticleSelector.cpp,v 1.4 2007-03-01 20:24:56 jonrob Exp $
+// $Id: MCParticleSelector.cpp,v 1.5 2007-05-15 07:47:18 mneedham Exp $
 
 #include "Event/MCParticle.h"
 
@@ -6,6 +6,7 @@
 #include "GaudiKernel/ToolFactory.h"
 
 #include "MCParticleSelector.h"
+#include "Event/MCFun.h"
 
 DECLARE_TOOL_FACTORY ( MCParticleSelector );
 
@@ -24,6 +25,8 @@ MCParticleSelector::MCParticleSelector( const std::string& type,
   declareProperty("rejectElectrons", m_rejectElectrons  = false );
   declareProperty("SelectChargedParticles", m_selCharged = true );
   declareProperty("SelectNeutralParticles", m_selNeutral = true );
+  declareProperty("rejectInteractions", m_rejectInteractions = false);
+  declareProperty("zInteraction", m_zInteraction = -9999.0*Gaudi::Units::m);
 
   // need a line here to get the interface correct !!!!
   declareInterface<IMCParticleSelector>(this);
@@ -60,6 +63,9 @@ bool MCParticleSelector::accept(const LHCb::MCParticle* aParticle) const
   // reject electrons ?
   if ( m_rejectElectrons &&
        (aParticle->particleID().abspid() == 11) ) return false;
+
+  if (m_rejectInteractions == true && 
+      LHCb::MC::zInteraction(aParticle) < m_zInteraction) return false;
   
   // all OK
   return true;
