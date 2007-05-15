@@ -6,7 +6,7 @@
  *  Header file for Tstation alignment : TAConfig
  *
  *  CVS Log :-
- *  $Id: TAConfig.h,v 1.4 2007-05-15 10:19:03 jblouw Exp $
+ *  $Id: TAConfig.h,v 1.5 2007-05-15 14:38:08 jblouw Exp $
  *
  *  @author J. Blouw johan.blouw@cern.ch
  *  @date   12/04/2007
@@ -132,7 +132,7 @@ class TAConfig : public GaudiTupleTool,
      ArraytoVector( est, estimated );
      delete [] tr_par;
      delete [] est;
-     return sc;
+     return StatusCode::SUCCESS;
    };
    
    
