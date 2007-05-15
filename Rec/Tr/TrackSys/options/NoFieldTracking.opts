@@ -10,11 +10,6 @@ MagneticFieldSvc.UseConstantField = true;
 // Switch off some track types
 // ====================================================================
 
-// Velo-TT
-Track.DetectorList -= { "VeloTTPat" };
-Track.DetectorList -= { "VeloTTPreFit" };
-Track.DetectorList -= { "VeloTTFit" };
-
 // K Short
 Track.DetectorList -= { "KShortPat" };
 Track.DetectorList -= { "KShortPreFit" };
@@ -22,7 +17,8 @@ Track.DetectorList -= { "KShortFit" };
 
 // Set up clone killer without removed track types
 TrackEventCloneKiller.TracksInContainers  = {
-                                              "Rec/Track/Forward"
+                                              "Rec/Track/VeloTT"
+                                            , "Rec/Track/Forward"
                                             , "Rec/Track/Match"
                                             , "Rec/Track/Tsa" };
 
@@ -77,6 +73,9 @@ TrackMatch.TTClusterTool.Extrapolator =  "TrackLinearExtrapolator";
 ToolSvc.PatForwardTool.WithoutBField = true;
 ToolSvc.PatFwdTool.WithoutBField     = true;
 
+// VeloTT pattern
+#include "$PATVELOTTROOT/options/VeloTT_noB.opts"
+
 
 // ====================================================================
 // Add pre-fit algorithms
@@ -87,6 +86,8 @@ TrackSeedPreFitSeq.Members    += { "TrackPrepareForFit/PrepareFitTsa" };
 PrepareFitTsa.inputLocation     = "Rec/Track/Tsa";
 TrackMatchPreFitSeq.Members   += { "TrackPrepareForFit/PrepareFitMatch" };
 PrepareFitMatch.inputLocation   = "Rec/Track/Match";
+TrackVeloTTPreFitSeq.Members  += { "TrackPrepareForFit/PrepareFitVeloTT" };
+PrepareVeloTT.inputLocation     = "Rec/Track/VeloTT";
 
 
 // ====================================================================
@@ -120,3 +121,10 @@ FitMatch.Fitter.Extrapolator.ExtraSelector = "TrackSimpleExtraSelector";
 FitMatch.Fitter.Extrapolator.ExtraSelector.ExtrapolatorName = "TrackLinearExtrapolator";
 FitMatch.Fitter.NodeFitter.Extrapolator.ExtraSelector = "TrackSimpleExtraSelector";
 FitMatch.Fitter.NodeFitter.Extrapolator.ExtraSelector.ExtrapolatorName = "TrackLinearExtrapolator";
+
+// VeloTT fit
+FitVeloTT.Extrapolator.Fitter.ApplyEnergyLossCorr = false;
+FitVeloTT.Fitter.NodeFitter.Extrapolator.ApplyEnergyLossCorr = false;
+FitVeloTT.Fitter.ErrorP = 1e-3;
+FitVeloTT.Fitter.Extrapolator.ExtraSelector.ExtrapolatorName = "TrackLinearExtrapolator";
+FitVeloTT.Fitter.NodeFitter.Extrapolator.ExtraSelector.ExtrapolatorName = "TrackLinearExtrapolator";
