@@ -1,11 +1,10 @@
-
 //-----------------------------------------------------------------------------
 /** @file MCReconstructible.cpp
  *
  *  Implementation file for class : MCReconstructible
  *
  *  CVS Log :-
- *  $Id: MCReconstructible.cpp,v 1.7 2007-05-15 07:47:18 mneedham Exp $
+ *  $Id: MCReconstructible.cpp,v 1.8 2007-05-16 15:02:18 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 28/02/2007
@@ -70,6 +69,10 @@ MCReconstructible::~MCReconstructible()
   // clean up
   delete m_tkInfo;
   delete m_chargedLong;
+  delete m_chargedDownstream;
+  delete m_chargedUpstream;
+  delete m_chargedT;
+  delete m_chargedVelo;
 }
 
 //=============================================================================
