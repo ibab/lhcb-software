@@ -3,6 +3,10 @@
 ! Responsible : Tomasz Szumlak
 ! Purpose     : Velo Tools for reconstruction
 !-----------------------------------------------------------------------------
+!========================== VeloTools v2r0 2007-05-16 ========================
+! 2007-05-16 - Tomasz Szumlak
+ - new model of the Velo error estimate implemented, now returned error
+   depends both on sensor pitch and projected angle of a track
 
 !========================== VeloTools v1r2 2007-03-28 ========================
 ! 2007-03-22 - David Hutchcroft
