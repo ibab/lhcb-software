@@ -1,7 +1,7 @@
-# $Id: requirements,v 1.69 2007-05-11 10:04:56 marcocle Exp $
+# $Id: requirements,v 1.70 2007-05-16 15:13:51 cattanem Exp $
 # =============================================================================
 package       DetCond
-version       v11r2
+version       v11r3
 
 # =========== structure =======================================================
 branches      DetCond doc cmt src
@@ -13,10 +13,9 @@ use           CORAL             v*      LCG_Interfaces
 use           Boost             v*      LCG_Interfaces
 use           SEAL              v*      LCG_Interfaces
 use           rx                v*      LCG_Interfaces
-#use           PCRE              v*      LCG_Interfaces
 use           DetDesc           v*      Det
 
-# This one it for the interface ICondDBInfo
+# This one is for the interface ICondDBInfo
 use           LHCbKernel        v*      Kernel
 
 # =========== own includes ====================================================
