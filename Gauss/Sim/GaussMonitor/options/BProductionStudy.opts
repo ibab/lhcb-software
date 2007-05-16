@@ -1,0 +1,47 @@
+// $Id: BProductionStudy.opts,v 1.1 2007-05-16 17:36:41 gcorti Exp $ 
+
+/** @file 
+ * 
+ *  Example options to use production analysis gauss monitoring algorithms
+ *  This file add algorithms to be executed in GenMonitor and configures them
+ *
+ *  @author R. Lambert
+ *  @date   2007-04-24
+ */
+
+
+// Algorithm in User monitor
+//GenMonitor.Members     += { "ProductionAnalysis/B0plots" };
+//B0plots.SignalPID = 511;
+//B0plots.Signal = "B0 "; 
+//plots the production of B0.
+
+//GenMonitor.Members     += { "ProductionAnalysis/Bs0plots" };
+//Bs0plots.SignalPID = 531;
+//Bs0plots.Signal = "B_s0 "; 
+//plots the production of B_s0.
+
+GenMonitor.Members     += { "ProductionAnalysis/B0barplots" };
+B0barplots.SignalPID = -511;
+B0barplots.Signal = "B~0 "; 
+//plots the production of B0-bar.
+
+//GenMonitor.Members     += { "ProductionAnalysis/Bs0barplots" };
+//Bs0barplots.SignalPID = -531;
+//Bs0barplots.Signal = "B_s~0 "; 
+//plots the production of B_s0-bar.
+
+
+GenMonitor.Members     += { "ProductionAsymmetry/Deltapsd" };
+Deltapsd.Signal = "B0andBsandBg "; 
+Deltapsd.SignalPIDs += 511;  //B0
+Deltapsd.SignalPIDs += 531;  //Bs0
+Deltapsd.SignalPIDs += 13;   //mu-
+Deltapsd.SignalPIDs += 211;  //pi+
+deltapsd.SignalPIDs += 421;  //D0
+deltapsd.SignalPIDs += 431;  //Ds+
+Deltapsd.SignalPIDs += 321;  //K+
+Deltapsd.SignalPIDs += 521;  //B+
+Deltapsd.SignalPIDs += 11;   //e-
+
+//plots the production plots and asymmetries for many particles
