@@ -49,8 +49,6 @@ StatusCode TrackerMCParticle2MCHitAlg::execute()
 {
   // Main execution
 
-  info() << "execute " << name() << " " << m_outputData << endmsg;
-
   // get the MCParticles
   MCParticles* particles = get<MCParticles>(MCParticleLocation::Default );
 
@@ -81,7 +79,7 @@ StatusCode TrackerMCParticle2MCHitAlg::execute()
     } // iterDet
   } // iterP
   
-  info() << "Linker table stored at " << m_outputData << endreq;
+  debug() << "Linker table stored at " << m_outputData << endreq;
 
   return StatusCode::SUCCESS;
 };
