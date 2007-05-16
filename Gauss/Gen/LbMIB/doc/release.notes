@@ -24,6 +24,8 @@
    . MIB-Shield.opts
    . MIB-StagedShield.opts
    Note that the existing configuration at Point8 is StagedShield.
+ - For more details refer to
+    http://cern.ch/lhcb-background/Machine/CollimatorSources.html
 
 ! 2007-03-28 - Magnus LIENG
  - First version of new package.
