@@ -1,4 +1,4 @@
-// $Id: LbPythia_load.cpp,v 1.5 2007-02-27 22:14:19 robbep Exp $
+// $Id: LbPythia_load.cpp,v 1.6 2007-05-16 16:31:58 gcorti Exp $
 // Include files 
 
 //
@@ -18,6 +18,11 @@
 // DECLARE_OBJECT( DataObject );
 //
 // They should be inside the 'DECLARE_FACTORY_ENTRIES' body.
+
+// Declaration of the PythiaProduction tool factory: here for Gaudi v19r3 and
+// compatibility with Gaudi v18
+#include "LbPythia/PythiaProduction.h"
+DECLARE_TOOL_FACTORY( PythiaProduction );
 
 DECLARE_FACTORY_ENTRIES(LbPythia) {
   // New structure:

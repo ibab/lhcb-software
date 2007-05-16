@@ -1,4 +1,4 @@
-// $Id: PythiaProduction.cpp,v 1.2 2007-03-08 13:51:47 robbep Exp $
+// $Id: PythiaProduction.cpp,v 1.3 2007-05-16 16:31:58 gcorti Exp $
 
 // Include files
 
@@ -32,10 +32,6 @@
  *  @author Patrick Robbe
  */
 //-----------------------------------------------------------------------------
-
-// Declaration of the Tool Factory
-
-DECLARE_TOOL_FACTORY( PythiaProduction );
 
 
 //=============================================================================

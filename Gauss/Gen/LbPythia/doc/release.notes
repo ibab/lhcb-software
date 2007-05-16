@@ -4,7 +4,15 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
-!===================== LbPythia v5r00 2007-03-13 ============================
+!===================== LbPythia v5r1 2007-05-16 ============================
+! 2007-05-16 - Gloria CORTI
+ - Move declaration of factory for PythiaProduction from cpp (in Lib) to
+   LbPythia_load.cpp to have in component library. This was giving problems
+   with Gaudi v19r3
+   . PythiaProduction.cpp
+   . LbPythia_load.cpp
+
+!===================== LbPythia v5r0 2007-03-13 ============================
 ! 2007-03-08 - Patrick Robbe
  - Adapt PythiaProduction to new IProductionTool interface
 
