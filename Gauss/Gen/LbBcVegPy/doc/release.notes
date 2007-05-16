@@ -1,7 +1,8 @@
-! $Id: release.notes,v 1.8 2007-05-08 13:45:03 robbep Exp $
+! $Id: release.notes,v 1.9 2007-05-16 16:38:11 gcorti Exp $
 ! Package     : Gen/LbBcGen
 ! Responsible : Patrick ROBBE
 
+!===================== LbBcVegPy v1r5 2007-05-10 =====================
 ! 2007-05-08 - Patrick Robbe for Jibo He
  - Add new cut tool (BcDaughtersInLHCb) to cut on daughters of Bc
  - Modify options to now use Special method to generate Bc events
