@@ -1,4 +1,4 @@
-// $Id: GenMonitorAlg.h,v 1.4 2005-08-17 16:47:06 gcorti Exp $
+// $Id: GenMonitorAlg.h,v 1.5 2007-05-16 17:33:29 gcorti Exp $
 #ifndef GAUSSMONITOR_GENMONITORALG_H 
 #define GAUSSMONITOR_GENMONITORALG_H 1
 
@@ -43,8 +43,6 @@ private:
   int            m_nEvents;
   
   std::string    m_generatorName;
-
-  double lifetime ( HepMC::GenParticle * ) ;
 
   AIDA::IHistogram1D* m_hNPart;
   AIDA::IHistogram1D* m_hNStable;

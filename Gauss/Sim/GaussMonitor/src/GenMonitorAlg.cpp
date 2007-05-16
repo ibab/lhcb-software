@@ -1,4 +1,4 @@
-// $Id: GenMonitorAlg.cpp,v 1.10 2006-10-31 22:43:07 robbep Exp $
+// $Id: GenMonitorAlg.cpp,v 1.11 2007-05-16 17:33:29 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -13,11 +13,9 @@
 // From LHCb
 #include "Kernel/ParticleID.h"
 
-// From EvtGen
-#include "EvtGenBase/EvtConst.hh"
-
 // local
 #include "GenMonitorAlg.h"
+#include "GaussGenUtil.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : GenMonitorAlg
@@ -154,7 +152,8 @@ StatusCode GenMonitorAlg::execute() {
             m_hProtoP->fill( hepMCpart->momentum().vect().mag()/
                              Gaudi::Units::GeV );
             m_hProtoPDG->fill( hepMCpart->pdg_id() );
-            m_hProtoLTime->fill( lifetime( hepMCpart ) );
+            m_hProtoLTime->fill( GaussGenUtil::lifetime( hepMCpart )/
+                                 Gaudi::Units::mm );
           }
           // Charged stable particles meaning really stable after EvtGen
           LHCb::ParticleID pID( hepMCpart->pdg_id() );
@@ -253,31 +252,6 @@ StatusCode GenMonitorAlg::finalize() {
   
 }
 
-//=============================================================================
-//  Lifetime of a stable particle
-//=============================================================================
-double GenMonitorAlg::lifetime( HepMC::GenParticle* thePart ) 
-{
-  // Exit for off-shell particles
-  if ( thePart -> momentum().restMass2() < 0 ) return -1.e-10 ;
-  
-  if ( thePart->end_vertex() ) {   
-//     LorentzVector thePosition( thePart->end_vertex()->position() );
-//     LorentzVector theMomentum( thePart->momentum() );
-//     XYZVector theBoost = theMomentum.BoostToCM();
-    
-
-//     LorentzVector thePositionBoost = thePosition.boostToCM();
-//     return thePositionBoost.t() / EvtConst::c ;
-    HepLorentzVector thePosition = thePart->end_vertex()->position();
-    Hep3Vector theBoost = thePart->momentum().boostVector() ;
-    HepLorentzVector thePositionBoost = thePosition.boost( -theBoost );
-    return thePositionBoost.t() / EvtConst::c ;
-  } else {
-    return -1.e-10 ;
-  }
-}
-
 //============================================================================
 // Booking of histograms
 //============================================================================
@@ -301,7 +275,7 @@ void GenMonitorAlg::bookHistos()
   m_hPartPDG = book( 22, "PDGid of all particles", -4999., 5000., 10000 );
   m_hProtoP  = book( 31, "Momentum of protostable particles (GeV)", 0., 100., 100);
   m_hProtoPDG = book( 32, "PDGid of protostable particles", -4999., 5000., 10000 );
-  m_hProtoLTime = book( 33, "Lifetime protostable particles", -1.5e-10, 1.5e-10, 100 );
+  m_hProtoLTime = book( 33, "Lifetime protostable particles (mm) ", -1., 20., 105 );
   m_hStableEta = book( 44, "Pseudorapidity stable charged particles", -15., 15., 150 );
   m_hStablePt  = book( 45, "Pt stable charged particles", 0., 20., 100 );
 

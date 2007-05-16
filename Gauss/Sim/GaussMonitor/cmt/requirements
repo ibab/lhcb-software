@@ -1,12 +1,12 @@
 #============================================================================
 # Created    : 2004-01-27
-# Maintainer : Gloria CORTI
+# Maintainer : Gloria CORTI, Patrick ROBBE
 #
 # Documentation on the requirement file can be found at
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           GaussMonitor
-version           v4r4
+version           v4r5
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -14,7 +14,6 @@ branches          cmt doc src options
 
 # Used packages.
 #============================================================================
-use   EvtGen          v*      Gen
 use   GenEvent        v*      Event
 use   SimComponents   v*      Sim
 

@@ -4,6 +4,80 @@
 ! Purpose     : Hold monitoring algorithms for Gauss
 !-----------------------------------------------------------------------------
 
+!=================== GaussMonitor v4r5 2007-05-11 ===========================
+! 2007-05-08 - Gloria CORTI
+ - Use lifetime function from GaussGenUtil and adapt histogram boundaries
+   . GenMonitorAlg.{h,cpp}
+ - Remove dependency from EvtGen no longer necessary
+   . requirements
+ - Introduce code from Robert LAMBERT for production asymmetries studies
+   . GaussMonitor_load.cpp
+
+! 2007-05-08 - Robert LAMBERT
+ - The two algorithms Production Analysis and Production Asymmetry have been
+   written to allow the user to look at individual particles in the generated
+   event or particles of a given PID type.
+   Both algorithms are based on the Generator Analysis algorithm and produce
+   output histograms in a form where the name of the histogram is an indication
+   of its contents.
+   Specifically they may allow the user to examine the produced events 
+   specific to his/her channel of interest and hence provide insight into the
+   expected outcomes of his/her algorithm.
+   These are MCTruth algorithms, dependent on the definition of HepMCEvent
+   and should not be used in data, or included in other algorithms which are 
+   not meant to depend on MCTruth.
+   The default options have been selected to already plot some interesting
+   histograms for B0 particles.
+ - Algorithms:
+   . ProductionAnalysis.{cpp,h}
+     Produces histograms of the production of a particle with _one_ PID.
+   . ProductionAsymmetry.{cpp,h}
+     Produces histograms of particles of given PID types and calculates the 
+     difference in the number of produced antiparticles vs particles
+ - Common Options
+   . MinEta, type double, default 2.0
+     Plot only particles above this Pseudo-Rapidity value.
+     Default is LHCb min acceptance. Same as for Generator Analysis
+   . MaxEta, type double, default 4.9
+     Plot only particles below this Pseudo-Rapidity value.
+     Default is LHCb max acceptance. Same as for Generator Analysis.
+   . Input, type string, default LHCb::HepMCEventLocation::Default
+     Take HEPMC events from this location. 
+     Default is LHCb Default location. Same as for Generator Analysis.
+   . ApplyTo, type string, default ""
+     Take HEPMC events produced by this generator. 
+     Default is all generators. Same as for Generator Analysis
+   . Signal,  type string, default "B0 "
+     Title to add to all plots, Same as for Generator Analysis
+     Should terminate with a space character, this has nothing to do with 
+     the PID and can be any string you like
+ - ProductionAnalysis specific options: single PID to plot.
+   . SignalPID, type integer, default 511
+     Plot only this PID, default is B0.
+ - ProductionAsymmetry specific options: many PID types to plot.
+   . SignalPIDs, type vector of integers, default [ 511 ]
+     Plot histograms and comparisons for PIDs of the type specified, 
+     default is B0 and B0-bar
+ - Output
+   . Both plot histograms of: PseudoRapidity, Energy, momentum (|p|), pt
+   . Production Analysis:  Histograms named according to data plotted, 
+                           Histograms of total number of particles produced 
+                           in bin
+   . Production Asymmetry: Histograms named according to 
+                            - histogram type
+                            - PID plotted
+                            - data plotted
+                           Histograms of total number of particles produced 
+                           in bin
+                           Individual particle histograms begin with I
+                            - I511PsR is the PsR plot for B0
+                           Total of Type histograms begin with a T
+                            - T531pt is the pt plot for all Bs_0 and Bs_0-bar
+                           The difference histograms begin with dp
+                            - dp11E is the E plot for all electrons
+                            - bin contains #particles - #antiparticles
+ - Examples, refer to ProductionAnalysis.opts
+
 ! 2007-04-13 - Gloria Corti
  - Put protection in case of running with Herwig where proton beams are
    present in HepMC event record without status = 3: so not skipped and 
@@ -11,7 +85,7 @@
    . GeneratorAnalysis.cpp - Check that production vertex exists before
                              looking at mother ID
    . GaussGenUtil.cpp      - Check that production vertex exists in
-                             calculation of lifetime and 
+                             calculation of lifetime
 
 !=================== GaussMonitor v4r4 2007-03-13 ===========================
 ! 2007-03-13 - Gloria Corti
