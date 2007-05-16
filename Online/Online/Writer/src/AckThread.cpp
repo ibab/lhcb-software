@@ -115,9 +115,10 @@ start:
   while((!m_stopAcking) ||
   	(m_stopAcking == STOP_AFTER_PURGE && m_mmObj->getQueueLength() != 0))
   {
-
-    ret = Utils::brecv(m_sockfd, &ackHeaderBuf, sizeof(struct ack_header), m_log);
-    if(ret != sizeof(struct ack_header)) {
+		ret = Utils::brecv(m_sockfd, &ackHeaderBuf, sizeof(struct ack_header), m_log);
+		if(ret == 0) {
+			continue;
+		} else if(ret != sizeof(struct ack_header)) {
       *m_log << MSG::WARNING << "Disconnected, should fail over." << errno << endmsg;
       if(m_conn->failover(ACK_THREAD) == KILL_THREAD)
       	return 0;

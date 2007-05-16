@@ -9,13 +9,11 @@
 #include <unistd.h>
 #include "Writer/MM.h"
 
-
 using namespace LHCb;
 
-
 /**
- * A malloc that does not return until it succeeds. 
- * It loops over 1-second sleeps and ensures that an 
+ * A malloc that does not return until it succeeds.
+ * It loops over 1-second sleeps and ensures that an
  * out-of-memory situation does not throw an exception.
  */
 static inline void* malloc_blocking(size_t size)
@@ -43,24 +41,10 @@ MM::MM()
   m_head = NULL;
   m_tail = NULL;
   pthread_mutex_init(&m_listLock, NULL);
+  pthread_mutex_init(&m_emptyLock, NULL);
+  pthread_cond_init(&m_emptyCondition, NULL);
   m_sendPointer = NULL;
-
-  m_queueSem = semget(LIST_SEM_KEY, 1, IPC_CREAT | 0666);
-  if(m_queueSem < 0) {
-  		throw std::runtime_error("Could not create semaphore.");
-  }
-
-  //Let's init the semaphore to zero.
-  union semun {
-  	int val;
-    struct semid_ds *buf;
-    unsigned short  *array;
-	} arg;
-
-	arg.val = 0;
-	if(semctl(m_queueSem, 0, SETVAL, arg) != 0) {
-		throw std::runtime_error("Could not init semaphore to zero.");
-	}
+  m_queueLength = 0;
 }
 
 /**
@@ -160,27 +144,16 @@ void MM::enqueueCommand(struct cmd_header *cmd)
   } else {
     m_tail->next = newElem;
     m_tail = newElem;
-    //In case everything in the queue has already been sent.
+    /*In case everything in the queue has already been sent.*/
     if(m_sendPointer == NULL)
     	m_sendPointer = newElem;
   }
 
-  pthread_mutex_unlock(&m_listLock);
   m_queueLength++;
+  pthread_mutex_unlock(&m_listLock);
 
-  /*
-   * Every time a new element it added to the queue, we up
-   * the semaphore (the sender thread will down it).
-   */
-  struct sembuf sbuf[1];
-  sbuf[0].sem_num = 0;
-  sbuf[0].sem_op = 1;
-  sbuf[0].sem_flg = 0;
-
-  while(semop(m_queueSem, sbuf, 1) != 0) {
-    sleep(1);
-  }
-
+  /*Let the sender thread know that the list isn't empty.*/
+  pthread_cond_broadcast(&m_emptyCondition);
 }
 
 /**
@@ -198,31 +171,48 @@ struct cmd_header* MM::moveSendPointer(void)
   struct list_head *oldSendPointer;
   int ret;
   /*
-   * The queue could possibly even be empty. That's what
-   * the semaphore is for. If you can't down it, just wait.
+   * The queue could possibly even be empty. If this happens, we want
+   * this thread to be put to sleep, waiting for something to come in.
+   * A semaphore would have been great for this, but we don't
+   * use a semaphore here is because semaphores cannot be "upped"
+   * beyond 32768 on i386. So if we have more than those many
+   * elements in the queue, the whole semaphore thing breaks down.
+   * That's why we have this somewhat complicated mix of pthread mutexes
+   * and condwaits. The gist is that there's m_listLock for protecting
+   * the list, and m_emptyCondition for sleeping till something is inserted
+   * in the list. m_emptyLock is just for protecting m_emptyCondition.
    */
-  struct sembuf sbuf[1];
-  sbuf[0].sem_num = 0;
-  sbuf[0].sem_op = -1;
-  sbuf[0].sem_flg = 0;
 
-  struct timespec tspec;
-  tspec.tv_sec = 5;
-  tspec.tv_nsec = 0;
+  struct timespec tSpec;
+  tSpec.tv_nsec = 0;
 
-  ret = semtimedop(m_queueSem, sbuf, 1, &tspec);
-  if(ret != 0 && errno != EINTR && errno != EAGAIN) {
-    throw std::runtime_error("FATAL:Could not down the semaphore to move send ptr.");
-  } else if(ret != 0) {
-    return NULL;
+  while(1) {
+  	/*Let's try to get the list lock and see if the list is empty.*/
+  	pthread_mutex_lock(&m_listLock);
+  	if(m_sendPointer != NULL)
+  		break;	/* We have the list lock, let's move the pointer forward. */
+
+  	/* There's nothing else for us to send, we now sleep and wait. */
+  	pthread_mutex_unlock(&m_listLock);
+  	pthread_mutex_lock(&m_emptyLock);
+  	tSpec.tv_sec = time(NULL) + LOCK_TIMEOUT;
+
+  	ret = pthread_cond_timedwait(&m_emptyCondition, &m_emptyLock, &tSpec);
+  	if(ret != 0) {
+  		/* Timed out. Nothing in the list yet. Just exit.*/
+  		pthread_mutex_unlock(&m_emptyLock);
+  		return NULL;
+  	}
+	  pthread_mutex_unlock(&m_emptyLock);
+
+  	/*
+  	 * Condition changed, meaning we have something in the list.
+  	 * So just go over and get the listLock again, this time the sendpointer
+  	 * will be fine.
+  	 */
   }
 
-  pthread_mutex_lock(&m_listLock);
-  if(m_sendPointer == NULL) {
-    pthread_mutex_unlock(&m_listLock);
-    return NULL;
-  }
-
+  /* At this point we have the list lock. */
   oldSendPointer = m_sendPointer;
   m_sendPointer = m_sendPointer->next;
   pthread_mutex_unlock(&m_listLock);

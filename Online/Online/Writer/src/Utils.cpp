@@ -119,6 +119,11 @@ int Utils::send(int sock, void *data, size_t datalen, MsgStream * /*log*/) {
 int Utils::brecv(int sock, void *data, size_t datalen, MsgStream * /*log*/) {
 	int ret;
 
+	struct pollfd fds[1];
+	fds[0].fd = sock;
+	fds[0].events = POLLIN|POLLERR;
+	fds[0].revents = 0;
+
 	while(1) {
 		ret = recv(sock, data, datalen, MSG_WAITALL);
 		if(ret < 0 && (errno == EAGAIN || errno == EINTR))

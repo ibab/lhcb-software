@@ -144,14 +144,18 @@ int FailoverMonitor::getAddressList(std::list<NodeState*> &nodeStates)
 	int numHosts = 0;
 
 	*m_log << MSG::INFO << "Want to receive num_msgs." << endmsg;
-	ret = Utils::brecv(m_sockfd, &fmsg, sizeof(struct failover_msg), m_log);
+	do {
+		ret = Utils::brecv(m_sockfd, &fmsg, sizeof(struct failover_msg), m_log);
+	}while(ret == 0);
 	if(ret < 0)
 		throw std::runtime_error("Could not receive nodelist count from server.");
 
 	for(i=0;i<fmsg.num_nodes;i++) {
 		NodeState *nState = new NodeState();
 		*m_log << MSG::INFO << "Received " << (i + 1) << " of " << fmsg.num_nodes << endmsg;
-		ret = Utils::brecv(m_sockfd, &nState->state, sizeof(struct nodestate), m_log);
+		do {
+			ret = Utils::brecv(m_sockfd, &nState->state, sizeof(struct nodestate), m_log);
+		}while(ret == 0);
 
 		*m_log << MSG::INFO << " addr = "
 		<< (nState->state.n_ipaddr & 0xff)  << "."
@@ -204,34 +208,22 @@ void FailoverMonitor::start(void)
 
 void FailoverMonitor::listenForUpdates(void)
 {
-	struct pollfd fds[1];
 	int ret;
 	struct failover_msg fmsg;
-	fds[0].events = POLLIN|POLLERR;
 
 	while(!m_stopThread) {
 		/*
 		 * Listen for new discovery message structs, which will
 		 * indicate that a server has either joined or left.
 		 */
-		fds[0].revents = 0;
-		fds[0].fd = m_sockfd;
-		ret = poll(fds, 1, 5000);
-		if(ret < 0 && (errno == EAGAIN || errno == EINTR)) {
-			continue;
-		} else if(ret < 0) {
-			*m_log << MSG::ERROR << "Could not poll properly." << errno << endmsg;
-			continue;
-		} else if(ret == 0) {
-			continue;
-		}
-
 		ret = Utils::brecv(m_sockfd, &fmsg, sizeof(struct failover_msg), m_log);
 		if(ret < 0) {
 			if(m_conn->failover(FAILOVER_THREAD) == KILL_THREAD)
 				break;
 			else
 				continue;
+		} else if(ret == 0) {
+			continue;
 		}
 
 		/*Let's receive each one of the advertised nodes.*/
@@ -240,10 +232,15 @@ void FailoverMonitor::listenForUpdates(void)
 
 		*m_log << MSG::INFO << "Reading info about " << fmsg.num_nodes << "nodes" <<endmsg;
 		for(unsigned int i=0;i<fmsg.num_nodes;i++) {
-			ret = Utils::brecv(m_sockfd, &nstate, sizeof(struct nodestate), m_log);
+			do {
+				ret = Utils::brecv(m_sockfd, &nstate, sizeof(struct nodestate), m_log);
+			} while(ret == 0 && !m_stopThread);
 			if(ret < 0) {
 				if(m_conn->failover(FAILOVER_THREAD) == KILL_THREAD)
 					die = 1;
+				break;
+			} else if(ret == 0 && m_stopThread) {
+				die = 1;
 				break;
 			}
 
