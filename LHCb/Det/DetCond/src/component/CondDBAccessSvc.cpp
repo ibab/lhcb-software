@@ -1,4 +1,4 @@
-// $Id: CondDBAccessSvc.cpp,v 1.37 2007-05-11 10:04:56 marcocle Exp $
+// $Id: CondDBAccessSvc.cpp,v 1.38 2007-05-16 14:50:23 marcocle Exp $
 // Include files
 #include <sstream>
 //#include <cstdlib>
@@ -12,8 +12,10 @@
 
 #include "RelationalAccess/IConnectionService.h"
 #include "RelationalAccess/IConnectionServiceConfiguration.h"
+#ifdef CORAL_1_8_x
 #include "RelationalAccess/IReplicaSortingAlgorithm.h"
 #include "RelationalAccess/IDatabaseServiceDescription.h"
+#endif
 
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/MsgStream.h"
@@ -43,6 +45,7 @@
 #include "CondDBAccessSvc.h"
 #include "CondDBCache.h"
 
+#ifdef CORAL_1_8_x
 namespace 
 {
 
@@ -147,6 +150,7 @@ namespace
   };
   
 }
+#endif
 
 // Factory implementation
 DECLARE_SERVICE_FACTORY(CondDBAccessSvc)
@@ -357,13 +361,14 @@ StatusCode CondDBAccessSvc::i_openConnection(){
           log << MSG::INFO << "Loading CORAL LFCReplicaService" << endmsg;
           loader->load( "CORAL/Services/LFCReplicaService" );
           
+#ifdef CORAL_1_8_x
           std::string theSite = System::getEnv("LHCBPRODSITE");
           if ( theSite.empty() || theSite == "UNKNOWN" ) {
             theSite = "LCG.CERN.ch";
           }
 
           connSvcConf.setReplicaSortingAlgorithm(new ReplicaSortAlg(theSite,msgSvc()));
-
+#endif
         }
         
         if ( ! m_coralConnCleanUp ) {

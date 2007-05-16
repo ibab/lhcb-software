@@ -1,12 +1,18 @@
-# $Id: release.notes,v 1.101 2007-05-11 10:04:56 marcocle Exp $
+# $Id: release.notes,v 1.102 2007-05-16 14:50:23 marcocle Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Det/DetCond
 ! Responsible : Marco Clemencic
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
-                           NEEDS: LCGCMT >= 51 (CORAL 1.8.0)
-                                  LHCbKernel >= v7r3 (ICondDBInfo)
+                           NEEDS: LHCbKernel >= v7r3 (ICondDBInfo)
+																	LCGCMT >= 51 (if macro CORAL_1_8_x is set,
+                                                for CORAL 1.8.0)
+
+! 2007-05-16 - Marco Clemencic
+ - The parts that depend on CORAL 1.8.0 API are now enclosed in #ifdef/#endif
+   directives, so that DetCond can be compiled with the old version of CORAL.
+
 ! 2007-05-11 - Marco Clemencic
  - Extended ICondDBReader with the interface ICondDBInfo from LHCbKernel and
    implemented the new function in all the ICondDBReader's (CondDBCnvSvc,
