@@ -79,14 +79,14 @@
         name   = 'Types'
         desc   = 'Track type enumerations'
         access = 'PUBLIC' >
-        <enumval name = "TypeUnknown" value="0" desc="track of undefined type (not to be used!)"/>
-        <enumval name = "Velo"                  desc="VELO track"/>
-        <enumval name = "VeloR"                 desc="2D VELO track"/>
-        <enumval name = "Long"                  desc="forward track"/>
-        <enumval name = "Upstream"              desc="upstream track"/>
-        <enumval name = "Downstream"            desc="downstream track"/>
-        <enumval name = "Ttrack"                desc="seed track"/>
-        <enumval name = "Muon"                  desc="muon track"/>
+        <enumval name = "TypeUnknown" value="0" desc="track of undefined type"/>
+        <enumval name = "Velo"        desc="VELO track"/>
+        <enumval name = "VeloR"       desc="2D VELO track"/>
+        <enumval name = "Long"        desc="forward track"/>
+        <enumval name = "Upstream"    desc="upstream track"/>
+        <enumval name = "Downstream"  desc="downstream track"/>
+        <enumval name = "Ttrack"      desc="seed track"/>
+        <enumval name = "Muon"        desc="muon track"/>
       </enum>
 
       <enum
@@ -125,8 +125,8 @@
         desc   = "Additional information assigned to this Track by pattern recognition"
         name   = "AdditionalInfo"
         access = "PUBLIC" >
-        <enumval name = "Likelihood" value = " 1" desc=""/>
-        <enumval name = "PatQuality" value = " 2" desc="Quality variable from PatForward Tracking"/>
+        <enumval name = "Likelihood" value = "1" desc=""/>
+        <enumval name = "PatQuality" value = "2" desc="Quality variable from PatForward Tracking"/>
         <enumval name = "MatchChi2"  value = "16" desc="Chi2 from the velo-seed matching (TrackMatching)"/>
        </enum>
 
@@ -735,19 +735,19 @@
       <method
 	name      = "fillStream"
 	desc      = "printOut method to Gaudi message stream"
-	type      = "MsgStream&amp;"
+	type      = "std::ostream&amp;"
 	virtual   = "TRUE"
 	const     = "TRUE" >
-	<arg name = "os" type = "MsgStream" inout = "BOTH"/>
+	<arg name = "os" type = "std::ostream" inout = "BOTH"/>
 	<code>
   os &lt;&lt; "{ "
+     &lt;&lt; "# ids : " &lt;&lt; nLHCbIDs() &lt;&lt; std::endl
+     &lt;&lt; "type : " &lt;&lt; type() &lt;&lt; std::endl
+     &lt;&lt;"history " &lt;&lt; history() &lt;&lt; std::endl
+     &lt;&lt; "p : " &lt;&lt; (float) firstState().p() &lt;&lt;std::endl
+     &lt;&lt; "pt : " &lt;&lt; (float) firstState().pt() &lt;&lt;std::endl
      &lt;&lt; "chi2PerDoF : " &lt;&lt; (float)m_chi2PerDoF &lt;&lt; std::endl
      &lt;&lt; "nDoF : " &lt;&lt; m_nDoF &lt;&lt; std::endl
-     &lt;&lt; "flags : " &lt;&lt; m_flags &lt;&lt; std::endl
-     &lt;&lt; "lhcbIDs : " &lt;&lt; m_lhcbIDs &lt;&lt; std::endl
-     &lt;&lt; "states :	" &lt;&lt; m_states &lt;&lt; std::endl
-     &lt;&lt; "measurements : " &lt;&lt; m_measurements &lt;&lt; std::endl
-     &lt;&lt; "nodes :	" &lt;&lt; m_nodes &lt;&lt; std::endl
      &lt;&lt; " }";
   return os;
 	</code>

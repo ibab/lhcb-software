@@ -75,7 +75,7 @@
         desc    = 'Default constructor' />
 
         <constructor 
-	desc     = "Constructor with assigned key" 
+	desc     = "Constructor with arguments" 
 	argList  = " const Gaudi::TrackVector&amp; stateVec, 
                      const Gaudi::TrackSymMatrix&amp; cov, double z, 
                      const LHCb::State::Location&amp; location"
@@ -84,6 +84,18 @@
        setLocation(location);
       </code>
       </constructor>
+
+      <constructor 
+	desc     = "Constructor without matrix" 
+	argList  = " const Gaudi::TrackVector&amp; stateVec, 
+                     double z, 
+                     const LHCb::State::Location&amp; location"
+	initList = "m_stateVector(stateVec), m_covariance(), m_z(z)">
+       <code>
+       setLocation(location);
+      </code>
+      </constructor>
+
 
      <attribute
        type    = 'bitfield'
