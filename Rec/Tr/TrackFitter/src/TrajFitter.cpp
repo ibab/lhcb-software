@@ -1,4 +1,4 @@
-// $Id: TrajFitter.cpp,v 1.1 2007-04-17 15:22:13 graven Exp $
+// $Id: TrajFitter.cpp,v 1.2 2007-05-16 15:38:40 cattanem Exp $
 // Include files 
 // -------------
 #include <algorithm>
@@ -32,8 +32,8 @@ DECLARE_TOOL_FACTORY( TrajFitter );
 //=========================================================================
 // Standard Constructor, initializes variables
 //=========================================================================
-TrajFitter::TrajFitter( const string& type,
-                        const string& name,
+TrajFitter::TrajFitter( const std::string& type,
+                        const std::string& name,
                         const IInterface* parent)
   : GaudiTool( type, name, parent),
     m_poca(0),m_proj(0)

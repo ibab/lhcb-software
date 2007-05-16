@@ -4,7 +4,13 @@
 !----------------------------------------------------------------------------
 
 !=========================== TrackFitter v2r15 2007-05-03 ===================
-! 2007-04-03 M .Needham
+! 2007-05-16 - Marco Cattaneo
+ - Fix a doxygen warning
+
+! 2007-05-16 - Marco Cattaneo for Wouter
+ - Improvements to matrix handling
+
+! 2007-05-03 M .Needham
  - Correct counter service for monitoring fit success rate.
                                                                             
 ! 2007-04-27 M .Needham
