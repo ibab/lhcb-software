@@ -1,0 +1,114 @@
+!-----------------------------------------------------------------------------
+! Package     : Gen/LbMIB
+! Responsible : Magnus LIENG, Gloria CORTI
+! Purpose     : Package to generate Machine Induce Background from source
+!               obtained with dedicated simulations
+!-----------------------------------------------------------------------------
+
+!=========================== LbMIB v1r0 2007-05-16 ===========================
+! 2007-05-16 - Gloria CORTI
+ - Fix problem with temporary file name in method instead of reset source
+   name, causing error when reading binary and name of binary (not used) 
+   is not set in options.
+ - Minor clean up of the code
+   . modify some print level
+   . print event type
+   . lenght of lines
+ - Prepare example options with explanations from what Magnus provided and
+   options for generating events in a single go from horizontal and tertiary
+   collimator for both muons and hadrons: essentially executing 4 times
+   the algorithm with different configurations, both for the case of staged
+   and full shield. Guidelines on event numbers are provided in the example
+   options that is for a single algorithm.
+   . MIB-Example.opts
+   . MIB-Shield.opts
+   . MIB-StagedShield.opts
+   Note that the existing configuration at Point8 is StagedShield.
+
+! 2007-03-28 - Magnus LIENG
+ - First version of new package.
+   The LbMIB is an generator created to import external particle distribution 
+   files, and recreate the particles in the Gauss simulation.
+
+   The various steps in the procedure are described below.
+
+   Init:            If given a flat file of the format 
+                    "<PID> <Weight> <T> <x> <y> <dx> <dy>", the file is read 
+                    and converted to a temporary LbMIB binary file. If a 
+                    LbMIB binary file is given, this step is ignored. See 
+                    http://lhcb-background.web.cern.ch/lhcb-background/Machine
+                    /Background.html for more information on the flat particle 
+                    file format.
+
+                    The files are normalized so that the sum of the weights of 
+                    the particles in the file give the particle flux at a 
+                    z-position over one second. The weight of an individual 
+                    particle represent a relative likelyhood to be generated.
+
+                    Envelopes are created in memory, i.e. for every X number of
+                    particles, the current sum of weights is kept in memory. 
+                    This is to increase search speed during the random 
+                    particle selection procedure.
+
+   Execute:         The number of particles to generate is calculated from the 
+                    sum of particle weights, frequency and scaling factor. The 
+                    amount of particles is given by a poisson distribution with
+                    Average=SumOfWeights*ScalingFactor/Frequency.
+
+                    For each particle to be generated a random number between 0
+                    and the sum of particle weights is selected. The envelopes 
+                    are searched to locate the envelope containing the random 
+                    particle. When the envelope is found, the LbMIB binary 
+                    file is searched to find the correct particle within the 
+                    envelope. The particle is the generated.
+
+   Finalize:        Temporary LbMIB binary file is deleted.
+
+   The list of options to steer the behaviour of the code and how to use them
+   is given below:
+   HepMCEvents         The TS location of the Event
+   GenHeader           The TS location of the Generation Header
+   GenCollisions       The TS location of the Collision
+
+   ParticleSourceFile  Particle input file to read.
+
+   FileIsBinary        True if the file is a LbMIB binary file. False if flat 
+                       file. If True, the file convertion at init is skipped.
+   SaveTempBinFile     True will keep the temporary LbMIB binary file. False 
+                       will delete it at the end of the run. If given a LbMIB 
+                       binary file, this option is ignored.
+   TempBinFileName     This option gives the name of the LbMIB binary file 
+                       created. If given a LbMIB binary file, this option is 
+                       ignored.
+
+   ScalingFactor       Scaling factor used to modify the number of particles 
+                       created in an event. 
+   BunchFrequency      Scaling factor used to modify the number of particles
+                       created in an event. Indicates the frequency used to 
+                       generate the input file.
+
+   Luminosity          Luminosity to be set in header.
+
+   GenerationHist      True to generate histograms.
+
+   ForcePartPerEvt     -1  : Use random number of particles in event.
+                       >=0 : Force the generation of this amount particles per 
+                             event.
+
+   ReadFileFromOffset  -1  : Choose random particles using weight based  
+                             envelope method.
+                       >=0 : Pick particles sequentially from file starting at 
+                             this particle number. Envelope generation and  
+                             random particle selection is ignored.  
+                             Weight information is saved in vertex.
+
+   EnvelopeSize        Amount of particles contained in one envelope.
+
+   ZParticleOrigin     Z position to generate particles. Regardless of this 
+                       option, the particles are created so that they should 
+                       pass z=0 at t=0.
+   ZDirection          Z direction to generate particles (+1/-1)
+
+   EventType           Event type code.
+
+!=============================================================================

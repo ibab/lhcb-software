@@ -1,0 +1,29 @@
+// $Id: MIB-StagedShield.opts,v 1.1.1.1 2007-05-16 17:14:28 gcorti Exp $
+
+/** @file
+ *
+ *  Options to run Collimator source only without merging it with other
+ *  events
+ *
+ *  @author M.Lieng, G.Corti
+ *  @date 2007-07-03
+ *
+ */
+  
+ApplicationMgr.DLLs += { "LbMIB" };
+
+Generator.Members -= { "GaudiSequencer/GenMonitor" };
+Generator.Members += { "GaudiSequencer/MIBCollimators" };
+Generator.Members += { "GaudiSequencer/GenMonitor"  };
+
+MIBCollimators.Members += { "CollimatorSourceAlg/TCTVStagedShieldMuons" };
+MIBCollimators.Members += { "CollimatorSourceAlg/TCTVStagedShieldHadrons" };
+MIBCollimators.Members += { "CollimatorSourceAlg/TCTHStagedShieldMuons" };
+MIBCollimators.Members += { "CollimatorSourceAlg/TCTHStagedShieldHadrons" };
+
+TCTVStagedShieldMuons.ParticleSourceFile   = "$MIBDATAROOT/data/TCTV.staged_shield.mu.data";
+TCTVStagedShieldHadrons.ParticleSourceFile = "$MIBDATAROOT/data/TCTV.staged_shield.h.data";
+TCTHStagedShieldMuons.ParticleSourceFile   = "$MIBDATAROOT/data/TCTH.staged_shield.mu.data";
+TCTHStagedShieldHadrons.ParticleSourceFile = "$MIBDATAROOT/data/TCTH.staged_shield.h.data";
+
+TCTVStagedShieldMuons.EventType = 60051000;  // For case when all are executed!
