@@ -4,6 +4,9 @@
 ! Purpose     : package for tracking tools interfaces
 !-----------------------------------------------------------------------------
 
+! 2007-05-17 - Wouter Hulsbergen
+ - Added IMaterialLocator interface
+
 !====================== TrackInterfaces v3r4 2007-05-03 ======================
 ! 2007-05-03 - Marco Cattaneo
  - Fixed some doxygen warnings

@@ -2,6 +2,7 @@
 #define DICT_TRACKINTERFACESDICT_H 1
 
 #include "TrackInterfaces/IAddTTClusterTool.h"
+#include "TrackInterfaces/IMaterialLocator.h"
 #include "TrackInterfaces/IMeasurementProvider.h"
 #include "TrackInterfaces/IPatForwardTool.h"
 #include "TrackInterfaces/IStateCorrectionTool.h"
