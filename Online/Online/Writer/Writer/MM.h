@@ -1,6 +1,8 @@
 #ifndef MM_H
 #define MM_H
 
+#define LOCK_TIMEOUT 5
+
 extern "C" {
 #include "Writer/chunk_headers.h"
 #include <sys/types.h>
@@ -12,7 +14,6 @@ extern "C" {
 
 #include <list>
 
-#define LIST_SEM_KEY 0x61243
 struct list_head {
   struct cmd_header *cmd;
   struct list_head *next;
@@ -33,6 +34,9 @@ namespace LHCb {
       /// A lock to protect the list.
       pthread_mutex_t m_listLock;
 
+      /// A lock to protect the condition variable.
+      pthread_mutex_t m_emptyLock;
+
       /// The list head and tail.
       struct list_head *m_head, *m_tail;
 
@@ -42,9 +46,8 @@ namespace LHCb {
       /// The number of elements in the queue.
       unsigned int m_queueLength;
 
-      /// A semaphore to synchronize the enqueueing and the moving of the
-      /// Send pointer.
-      int m_queueSem;
+      /// A condition variable to enable the sender thread to sleep on.
+      pthread_cond_t m_emptyCondition;
 
       /// The total number of bytes allocated so far by all MM objects.
       static size_t m_allocByteCount;

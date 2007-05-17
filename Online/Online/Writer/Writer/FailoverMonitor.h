@@ -55,7 +55,7 @@ namespace LHCb {
 			pthread_t m_monitorThread;			/**<< The thread handle.*/
 			int m_stopThread;								/**<< Tells the thread to start or stop.*/
 			Connection *m_conn;							/**<< The associated connection object.*/
-			int m_sockfd;										/**<< A socket to connect to the service.*/
+			int m_sockFd;										/**<< A socket to connect to the service.*/
 			MsgStream *m_log;								/**<< For logging.*/
 			struct sockaddr_in m_initAddr;	/**<< The address of the initial server.*/
 			struct sockaddr_in m_currAddr;	/**<< The current address connected to.*/

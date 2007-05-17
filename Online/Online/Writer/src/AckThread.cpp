@@ -60,7 +60,7 @@ void AckThread::start()
  * Reinits the structures that the ack thread uses,
  */
 void AckThread::reInit(int sockfd) {
-	m_sockfd = sockfd;
+	m_sockFd = sockfd;
 	*m_log << MSG::INFO << "Reset ack thread data." << endmsg;
 }
 
@@ -115,18 +115,17 @@ start:
   while((!m_stopAcking) ||
   	(m_stopAcking == STOP_AFTER_PURGE && m_mmObj->getQueueLength() != 0))
   {
-		ret = Utils::brecv(m_sockfd, &ackHeaderBuf, sizeof(struct ack_header), m_log);
-		if(ret == 0) {
+  	BIF bif(m_sockFd, &ackHeaderBuf, sizeof(struct ack_header));
+  	ret = bif.nbRecv();
+		if(ret == BIF::AGAIN) {
 			continue;
-		} else if(ret != sizeof(struct ack_header)) {
+		} else if(ret == BIF::DISCONNECTED) {
       *m_log << MSG::WARNING << "Disconnected, should fail over." << errno << endmsg;
       if(m_conn->failover(ACK_THREAD) == KILL_THREAD)
       	return 0;
       else
       	goto start;
     }
-
-    *m_log << MSG::INFO << "Acked command no:" << ackHeaderBuf.min_seq_num  << " to " << ackHeaderBuf.max_seq_num << endmsg;
 
     unsigned int totalNumAcked = 0;
     if(ackHeaderBuf.min_seq_num > ackHeaderBuf.max_seq_num) { /*Sequence wraparound?*/

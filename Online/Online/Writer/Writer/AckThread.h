@@ -23,7 +23,7 @@ namespace LHCb {
 			MsgStream *m_log;
 			MM *m_mmObj;
 			int m_stopAcking;
-			int m_sockfd;
+			int m_sockFd;
 			pthread_t m_ackThread;
 			INotifyClient *m_notifyClient;
 
@@ -32,7 +32,7 @@ namespace LHCb {
 				m_conn = conn;
 				m_log = log;
 				m_mmObj = mmObj;
-				m_sockfd = sockfd;
+				m_sockFd = sockfd;
 				m_notifyClient = NULL;
 			}
 			int getState(void) { return m_stopAcking; }

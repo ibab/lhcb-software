@@ -62,9 +62,9 @@ FailoverMonitor::FailoverMonitor(std::string &serverAddr, int serverPort,
 int FailoverMonitor::connect(std::list<NodeState*> &nodeStates)
 {
 	int ret;
-	m_sockfd = Utils::connectToAddress(&m_currAddr,
+	m_sockFd = Utils::connectToAddress(&m_currAddr,
 		Utils::DEFAULT_BUF_SIZE, Utils::DEFAULT_BUF_SIZE, m_log);
-	if(m_sockfd < 0) {
+	if(m_sockFd < 0) {
 			*m_log << MSG::INFO << "Couldn't connect to " << (m_currAddr.sin_addr.s_addr & 0xff)  <<
 			((m_currAddr.sin_addr.s_addr & 0xff00) >> 8)  <<
 			((m_currAddr.sin_addr.s_addr & 0xff0000) >> 16)
@@ -142,28 +142,26 @@ int FailoverMonitor::getAddressList(std::list<NodeState*> &nodeStates)
 	int ret;
 	unsigned int i;
 	int numHosts = 0;
+	int bRead = 0;
+
+	BIF recvBif(m_sockFd, &fmsg, sizeof(struct failover_msg));
+
 
 	*m_log << MSG::INFO << "Want to receive num_msgs." << endmsg;
-	do {
-		ret = Utils::brecv(m_sockfd, &fmsg, sizeof(struct failover_msg), m_log);
-	}while(ret == 0);
-	if(ret < 0)
+
+	ret = recvBif.nbRecvTimeout();
+	if(ret != sizeof(struct failover_msg))
 		throw std::runtime_error("Could not receive nodelist count from server.");
 
 	for(i=0;i<fmsg.num_nodes;i++) {
 		NodeState *nState = new NodeState();
 		*m_log << MSG::INFO << "Received " << (i + 1) << " of " << fmsg.num_nodes << endmsg;
-		do {
-			ret = Utils::brecv(m_sockfd, &nState->state, sizeof(struct nodestate), m_log);
-		}while(ret == 0);
+		bRead = 0;
 
-		*m_log << MSG::INFO << " addr = "
-		<< (nState->state.n_ipaddr & 0xff)  << "."
-		<< ((nState->state.n_ipaddr & 0xff00) >> 8) << "."
-		<< ((nState->state.n_ipaddr & 0xff0000) >> 16)  << "."
-		<<  ((nState->state.n_ipaddr & 0xff000000) >> 24)  << endmsg;
+		BIF recvBif(m_sockFd, &nState->state, sizeof(struct nodestate));
+		ret = recvBif.nbRecvTimeout();
 
-		if(ret < 0) {
+		if(ret != sizeof(struct nodestate)) {
 			/*Free everything alloced so far, and get out.*/
 			std::list<NodeState*>::iterator ni;
 			for(ni = nodeStates.begin(); ni != nodeStates.end(); ni++) {
@@ -174,6 +172,13 @@ int FailoverMonitor::getAddressList(std::list<NodeState*> &nodeStates)
 			cleanAllNodeStates();
 			return 0;
 		}
+
+		*m_log << MSG::INFO << " addr = "
+		<< (nState->state.n_ipaddr & 0xff)  << "."
+		<< ((nState->state.n_ipaddr & 0xff00) >> 8) << "."
+		<< ((nState->state.n_ipaddr & 0xff0000) >> 16)  << "."
+		<<  ((nState->state.n_ipaddr & 0xff000000) >> 24)  << endmsg;
+
 		//If it's the current host, push it to the top.
 		if(nState->state.n_ipaddr == m_currAddr.sin_addr.s_addr)
 			nodeStates.push_front(nState);
@@ -210,19 +215,22 @@ void FailoverMonitor::listenForUpdates(void)
 {
 	int ret;
 	struct failover_msg fmsg;
+	int bRead = 0;
 
 	while(!m_stopThread) {
 		/*
 		 * Listen for new discovery message structs, which will
 		 * indicate that a server has either joined or left.
 		 */
-		ret = Utils::brecv(m_sockfd, &fmsg, sizeof(struct failover_msg), m_log);
-		if(ret < 0) {
+		BIF recvBif(m_sockFd, &fmsg, sizeof(struct failover_msg));
+		ret = recvBif.nbRecv();
+		if(ret == BIF::DISCONNECTED) {
+			bRead = 0;
 			if(m_conn->failover(FAILOVER_THREAD) == KILL_THREAD)
 				break;
 			else
 				continue;
-		} else if(ret == 0) {
+		} else if(ret == BIF::AGAIN || ret == BIF::TIMEDOUT) {
 			continue;
 		}
 
@@ -230,22 +238,20 @@ void FailoverMonitor::listenForUpdates(void)
 		int die = 0;
 		struct nodestate nstate;
 
-		*m_log << MSG::INFO << "Reading info about " << fmsg.num_nodes << "nodes" <<endmsg;
+		*m_log << MSG::INFO << "Reading info on " << fmsg.num_nodes << "nodes" <<endmsg;
 		for(unsigned int i=0;i<fmsg.num_nodes;i++) {
-			do {
-				ret = Utils::brecv(m_sockfd, &nstate, sizeof(struct nodestate), m_log);
-			} while(ret == 0 && !m_stopThread);
-			if(ret < 0) {
+			bRead = 0;
+			BIF recvBif(m_sockFd, &nstate, sizeof(struct nodestate));
+			ret = recvBif.nbRecvTimeout();
+			if(ret == BIF::DISCONNECTED || ret == BIF::TIMEDOUT) {
 				if(m_conn->failover(FAILOVER_THREAD) == KILL_THREAD)
 					die = 1;
 				break;
-			} else if(ret == 0 && m_stopThread) {
-				die = 1;
-				break;
 			}
-
 			update(&fmsg, &nstate);
 		}
+
+		bRead = 0;
 
 		if(die)
 			break;

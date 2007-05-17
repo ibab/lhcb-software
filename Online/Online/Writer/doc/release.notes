@@ -1,4 +1,10 @@
 |----------------------------------------------------
+| 2007-04-17 : Suman
+|    Solved non-blocking problem
+|    Solved semaphore problem
+|    Need to test new XMLRPC client
+|
+|----------------------------------------------------
 | 2007-05-14 : Suman
 |    Removed XMLRPC-C dependency.
 |

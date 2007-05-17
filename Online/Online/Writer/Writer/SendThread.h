@@ -21,21 +21,21 @@ namespace LHCb {
 			MsgStream *m_log;
 			MM *m_mmObj;
 			int m_stopSending;
-			int m_sockfd;
+			int m_sockFd;
 			pthread_t m_sendThread;
 
 		public:
-			SendThread(Connection *conn, int sockfd, MM *mmObj, MsgStream *log) {
+			SendThread(Connection *conn, int sockFd, MM *mmObj, MsgStream *log) {
 				m_conn = conn;
 				m_log = log;
 				m_mmObj = mmObj;
-				m_sockfd = sockfd;
+				m_sockFd = sockFd;
 			}
 			int getState(void) { return m_stopSending; }
 			void restoreState(int state) { m_stopSending = state; }
 			void start(void);
 			void stop(int stopLevel);
-			void reInit(int sockfd);
+			void reInit(int sockFd);
 			int processSends(void);
 	};
 

@@ -99,6 +99,7 @@ int RPCComm::requestResponse(char *requestHeader, char *requestData, char *respo
 	int sockFd;
 	int ret;
 
+
   if(Utils::nameLookup(m_serverURL->getHost(), &destAddr, NULL) != 0)
 		throw std::runtime_error("Could not resolve name.");
 	destAddr.sin_port = htons(m_serverURL->getPort());
@@ -106,16 +107,21 @@ int RPCComm::requestResponse(char *requestHeader, char *requestData, char *respo
 
   sockFd = Utils::connectToAddress(&destAddr,
     Utils::DEFAULT_BUF_SIZE, Utils::DEFAULT_BUF_SIZE, NULL);
+
+	BIF sendBif1(sockFd, requestHeader, strlen(requestHeader));
+	BIF sendBif2(sockFd, requestData, strlen(requestData));
+	BIF recvBif(sockFd, response, sizeof(response));
+
   if(sockFd < 0)
     throw std::runtime_error("Could not connect to RPC server.");
-  ret = Utils::send(sockFd, requestHeader, strlen(requestHeader), NULL);
-  if((unsigned)ret != strlen(requestHeader))
+  ret = sendBif1.nbSendTimeout();
+  if(ret == BIF::TIMEDOUT || ret == BIF::DISCONNECTED)
     throw std::runtime_error("Could not send request header.");
-  ret = Utils::send(sockFd, requestData, strlen(requestData), NULL);
-  if((unsigned)ret != strlen(requestData))
+  ret = sendBif2.nbSendTimeout();
+  if(ret == BIF::TIMEDOUT || ret == BIF::DISCONNECTED)
     throw std::runtime_error("Could not send request data.");
-  ret = Utils::brecv(sockFd, response, sizeof(response), NULL);
-  if(ret <= 0)
+  ret = recvBif.nbRecvTimeout();
+  if(recvBif.getBytesRead() <= 0)
     throw std::runtime_error("Could not read response data.");
 
   close(sockFd);

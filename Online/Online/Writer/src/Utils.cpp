@@ -4,6 +4,7 @@
 #include <arpa/inet.h>
 #include <sys/socket.h>
 #include <netdb.h>
+#include <sys/poll.h>
 #include <errno.h>
 
 #include <stdexcept>
@@ -95,44 +96,133 @@ int Utils::closeSocket(int *sock, MsgStream * /*log*/) {
   return 0;
 }
 
-int Utils::send(int sock, void *data, size_t datalen, MsgStream * /*log*/) {
-	int ret = 0;
-	while(1) {
-		ret = ::send(sock, data, datalen, MSG_WAITALL);
-		if(ret < 0) {
-			if(errno == EINTR || errno == EAGAIN) {
-				continue;
-			} else {
-				return ret;
-			}
-		} else {
-			return ret;
-		}
-	}
-	return ret;
-}
-
 /**
- * Performs a receive.
- * @return The number of bytes received, or -1 in case of an error.
+ * Receives data into the buffer and sleeps till pol
  */
-int Utils::brecv(int sock, void *data, size_t datalen, MsgStream * /*log*/) {
+int BIF::nbRecv()
+{
 	int ret;
 
 	struct pollfd fds[1];
-	fds[0].fd = sock;
+	fds[0].fd = m_sockFd;
 	fds[0].events = POLLIN|POLLERR;
 	fds[0].revents = 0;
 
+	ret = poll(fds, 1, RECV_TIMEOUT);
+	if(ret == 0)
+		return AGAIN;
+	else if(ret == -1)
+		return DISCONNECTED;
+	else if(fds[0].revents & POLLERR)
+		return DISCONNECTED;
+	else if(fds[0].revents & POLLIN) {
+		ret = ::recv(m_sockFd, m_data+m_bytesRead, m_bufLen-m_bytesRead, MSG_DONTWAIT);
+		if(ret < 0 && (errno == EAGAIN || errno == EINTR))
+			return AGAIN;
+		else if(ret == 0 || ret < 0)
+			return DISCONNECTED;
+		else
+			m_bytesRead += ret;
+	}
+	if(m_bytesRead == m_bufLen)
+		return m_bytesRead;
+	return AGAIN;
+}
+
+/**
+ * Sends data from the buffer and returns only when the data is completely
+ * sent, except in case the thread is stopped.
+ */
+int BIF::nbSend()
+{
 	while(1) {
-		ret = recv(sock, data, datalen, MSG_WAITALL);
+		int ret = ::send(m_sockFd, m_data+m_bytesRead, m_bufLen-m_bytesRead, MSG_DONTWAIT);
 		if(ret < 0 && (errno == EAGAIN || errno == EINTR))
 			continue;
-		else if(ret == 0)
-			return -1;
+		else if(ret == 0 || ret < 0)
+			return DISCONNECTED;
 		else
-			return ret;
+			m_bytesRead += ret;
+
+		if(m_bytesRead == m_bufLen)
+			return m_bytesRead;
 	}
+	return DISCONNECTED;
 }
+
+/**
+ * Sends data from the buffer and returns only when the data is completely
+ * sent, except in case the thread is stopped.
+ */
+int BIF::nbSendTimeout()
+{
+	int ret;
+	struct pollfd fds[1];
+	time_t endTime;
+	fds[0].fd = m_sockFd;
+	fds[0].events = POLLOUT|POLLERR;
+	fds[0].revents = 0;
+
+	endTime = time(NULL) + SEND_TIMEOUT/1000;
+
+	while(time(NULL) < endTime) {
+		ret = ::poll(fds, 1, SEND_TIMEOUT);
+		if((ret < 0 && (errno == EAGAIN || errno == EINTR)) || ret == 0)
+			continue;
+		else if(ret < 0)
+			return DISCONNECTED;
+
+		int ret = ::send(m_sockFd, m_data+m_bytesRead, m_bufLen-m_bytesRead, MSG_DONTWAIT);
+		if(ret < 0 && (errno == EAGAIN || errno == EINTR))
+			continue;
+		else if(ret <= 0)
+			return DISCONNECTED;
+		else
+			m_bytesRead += ret;
+
+		if(m_bytesRead == m_bufLen)
+			return m_bytesRead;
+	}
+	return TIMEDOUT;
+}
+
+/**
+ * Receives data from the buffer and returns only when the data is completely
+ * sent, except in case the thread is stopped.
+ */
+int BIF::nbRecvTimeout()
+{
+	int ret;
+	struct pollfd fds[1];
+	time_t endTime;
+	fds[0].fd = m_sockFd;
+	fds[0].events = POLLIN|POLLERR;
+	fds[0].revents = 0;
+
+	endTime = time(NULL) + RECV_TIMEOUT/1000;
+
+	while(time(NULL) < endTime) {
+		ret = ::poll(fds, 1, SEND_TIMEOUT);
+		if((ret < 0 && (errno == EAGAIN || errno == EINTR)) || ret == 0)
+			continue;
+		else if(ret < 0)
+			return DISCONNECTED;
+
+		int ret = ::recv(m_sockFd, m_data+m_bytesRead, m_bufLen-m_bytesRead, MSG_DONTWAIT);
+		if(ret < 0 && (errno == EAGAIN || errno == EINTR))
+			continue;
+		else if(ret <= 0)
+			return DISCONNECTED;
+		else
+			m_bytesRead += ret;
+
+		if(m_bytesRead == m_bufLen)
+			return m_bytesRead;
+	}
+	return TIMEDOUT;
+
+}
+
+
 
 #endif

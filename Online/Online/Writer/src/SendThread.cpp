@@ -60,8 +60,8 @@ void SendThread::start()
 /**
  * Reinits the structures that the send thread uses,
  */
-void SendThread::reInit(int sockfd) {
-	m_sockfd = sockfd;
+void SendThread::reInit(int sockFd) {
+	m_sockFd = sockFd;
 	m_mmObj->resetSendPointer();
 	*m_log << MSG::INFO << "Reset send thread data." << endmsg;
 }
@@ -109,7 +109,8 @@ start:
     	totalSize += cmd_to_send->data.chunk_data.size;
 
     ptr = (char *)cmd_to_send;
-		ret = Utils::send(m_sockfd, ptr, totalSize, m_log);
+    BIF sendBif(m_sockFd, ptr, totalSize);
+    ret = sendBif.nbSendTimeout();
 
 		if(ret != totalSize) {
         if(m_conn->failover(SEND_THREAD) == KILL_THREAD)
