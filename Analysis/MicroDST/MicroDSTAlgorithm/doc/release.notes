@@ -1,7 +1,13 @@
-! $Id: release.notes,v 1.16 2007-05-10 08:37:27 ukerzel Exp $
+! $Id: release.notes,v 1.17 2007-05-17 16:23:03 ukerzel Exp $
 ! Package     : MicroDST
 ! Responsible : Ulrich Kerzel
 !============================================================
+
+! 2007-05-17 - Ulrich Kerzel
+ - add a counter to CreateMicroDSTAlg how many 
+   particles in the input location (e.g. B cand)
+   were stored (not including the daughters, etc)
+
 
 ! 2007-05-10 - Ulrich Kerzel
  - add options file DVCreateMicroDSTExample.opts

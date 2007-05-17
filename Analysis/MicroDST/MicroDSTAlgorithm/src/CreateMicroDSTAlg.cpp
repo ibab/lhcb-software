@@ -1,4 +1,4 @@
-// $Id: CreateMicroDSTAlg.cpp,v 1.8 2007-04-19 14:50:09 ukerzel Exp $
+// $Id: CreateMicroDSTAlg.cpp,v 1.9 2007-05-17 16:23:03 ukerzel Exp $
 // Include files 
 
 // from Gaudi
@@ -28,7 +28,8 @@ CreateMicroDSTAlg::CreateMicroDSTAlg( const std::string& name,
                                       ISvcLocator* pSvcLocator)
   : DVAlgorithm          ( name , pSvcLocator               ),
     m_OutputPrefix       ( "microDST"                       ),
-    m_StoreCalo2DST      ( false                            )
+    m_StoreCalo2DST      ( false                            ),
+    m_nCand              ( 0                                )
 {
  
   declareProperty( "OutputPrefix"        , m_OutputPrefix        = "microDST" );
@@ -164,6 +165,7 @@ StatusCode CreateMicroDSTAlg::execute() {
     //
     // now store particle
     //
+    m_nCand++;
     verbose() << "now call StoreParticle" << endmsg;
     LHCb::Particle *particleClone =  CreateMicroDSTAlg::StoreParticle(*iParticle); 
     if (!particleClone) {
@@ -192,6 +194,8 @@ StatusCode CreateMicroDSTAlg::execute() {
 StatusCode CreateMicroDSTAlg::finalize() {
 
   debug() << "==> Finalize" << endmsg;
+  
+  info()  << "stored number of candidates " << m_nCand << endmsg;
 
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
