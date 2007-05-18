@@ -4,7 +4,10 @@
 ! Purpose     : Holds generic digitization algorithms
 !-----------------------------------------------------------------------------
 
-!========================== DigiAlg v4r7 2007-05-02 ==========================
+!========================== DigiAlg v4r7 2007-05-18 ==========================
+! 2007-05-18 - Marco Cattaneo
+ - In BooleInit.cpp, fill CondDBTags in Boole ProcessHeader
+
 ! 2007-05-02 - Marco Cattaneo
  - Remove obsolete file DigiAlg_load.cpp
 

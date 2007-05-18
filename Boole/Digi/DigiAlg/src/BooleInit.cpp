@@ -1,12 +1,13 @@
-// $Id: BooleInit.cpp,v 1.22 2007-02-05 16:06:08 cattanem Exp $
+// $Id: BooleInit.cpp,v 1.23 2007-05-18 08:38:02 cattanem Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
 
 // from LHCbKernel
-#include "Kernel/IGenericTool.h"
+//#include "Kernel/ICondDBInfo.h"
 #include "Kernel/IEventTimeDecoder.h"
+#include "Kernel/IGenericTool.h"
 
 // from EventBase
 #include "Event/ProcessHeader.h"
@@ -95,6 +96,7 @@ StatusCode BooleInit::execute() {
     header->setApplicationVersion( this->appVersion() );
     header->setRunNumber( evt->runNumber() );
     header->setRandomSeeds( seeds );
+    header->setCondDBTags( this->condDBTags() );
     put( header, LHCb::ProcessHeaderLocation::Digi );
   }
   
