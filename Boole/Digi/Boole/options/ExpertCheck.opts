@@ -15,6 +15,9 @@ ITClusterMonitor.FullDetail = true;
 TTEffChecker.FullDetail = true;
 ITEffChecker.FullDetail = true;
 
+// OT detailed monitoring
+#include "$OTMONITORROOT/options/Boole.opts"
+
 // Rich detailed monitoring
 #include "$RICHREADOUTOPTS/BooleDigiMoni.opts"
 

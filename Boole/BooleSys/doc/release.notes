@@ -3,6 +3,26 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v14r1>2007-05-18 Boole v14r1</A></H1><PRE>
+This version uses projects Gaudi v19r3, LHCb v22r5, Lbcom v6r5
+ and databases DDDB v1r*, ParamFiles v5r0, FieldMap v4r7
+
+It can process DC06 data, but output format is different from DC06, requires
+Brunel v31r5 or greater
+
+- Persistency changes
+  . DigiHeader has a new field containing CondDB tags used in processing.
+    Can only be read by programs based on LHCb v22r5 or later
+    (EventBase v2r3, LHcbKernel v7r4, DigiAlgs v4r7) 
+
+- Monitoring changes
+  . Add OT detailed monitoring (ExpertCheck.opts, OTMonitor v2r6)
+
+- Documentation changes
+  . The doxygen web generated for Boole now includes in a single index all
+    classes from GAUDI, LHCB, LBCOM, BOOLE projects
+  . Options files are included in the doxygen documentation
+
 </PRE><H1><A NAME=v14r0>2007-04-24 Boole v14r0</A></H1><PRE>
 This version uses projects Gaudi v19r3, LHCb v22r4, Lbcom v6r4
  and databases DDDB v1r*, ParamFiles v5r0, FieldMap v4r7
