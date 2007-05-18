@@ -1,5 +1,10 @@
-package EventSys
-package manager: Marco Cattaneo
+! package EventSys
+! package manager: Marco Cattaneo
+!-------------------------------------------------------------------------
+
+!======================== EventSys v23r5 2007-05-14 ======================
+! 2007-05-14 - Marco Cattaneo
+ - Use EventBase v2r3, MCEvent v2r3, TrackEvent v4r3, HltEvent v8r1
 
 !======================== EventSys v23r4 2007-04-19 ======================
 ! 2007-04-19 - Marco Cattaneo
