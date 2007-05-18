@@ -57,7 +57,11 @@ StatusCode LHCb::GaudiTask::run()  {
         ip->setProperty(StringProperty("JobOptionsPath", m_mainOptions));
       }
       m_appMgr = ui;
-      return m_appMgr->run();
+      StatusCode sc = m_appMgr->run();
+      if ( !sc.isSuccess() ) {
+	declareState(ST_ERROR);
+	return sc;
+      }
     }
   }
   return DimTaskFSM::unload();
@@ -126,26 +130,37 @@ StatusCode LHCb::GaudiTask::setInstanceProperties(IAppMgrUI* inst)  {
 }
 
 StatusCode LHCb::GaudiTask::configure()  {
+  MsgStream log(msgSvc(), name());
+  StatusCode sc = StatusCode::FAILURE;
   if ( 0 == m_subMgr )  {
-    StatusCode sc = StatusCode::FAILURE;
     m_subMgr = Gaudi::createApplicationMgrEx("GaudiSvc", "ApplicationMgr");
-    if ( m_subMgr )  {
-      Gaudi::setInstance(m_subMgr);
-      StatusCode sc = setInstanceProperties(m_subMgr);
+  }
+  else {
+    log << MSG::INFO << "2nd. layer is already present - reusing instance" << endmsg;
+  }
+  if ( m_subMgr )  {
+    Gaudi::setInstance(m_subMgr);
+    StatusCode sc = setInstanceProperties(m_subMgr);
+    if ( sc.isSuccess() )  {
+      sc = m_subMgr->configure();
       if ( sc.isSuccess() )  {
-        sc = m_subMgr->configure();
-        if ( sc.isSuccess() )  {
-          return DimTaskFSM::configure();
-        }
-        m_subMgr->terminate();
+	log << MSG::INFO << "2nd Level successfully configured." << endmsg;	
+	return DimTaskFSM::configure();
       }
+      m_subMgr->terminate();
+      m_subMgr->release();
+      m_subMgr = 0;
+      // This means job options were not found - this is an error
+      declareState(ST_ERROR);
+      log << MSG::ERROR << "Failed to configure 2nd. level. Bad options ?" << endmsg;
+      return sc;
     }
-    declareState(NOT_READY);
+    declareState(ST_ERROR);
+    log << MSG::ERROR << "Failed to configure 2nd. level." << endmsg;
     return sc;
   }
-  MsgStream log(msgSvc(), name());
-  log << MSG::INFO << "2nd. layer is already present." << endmsg;
-  return StatusCode::SUCCESS;
+  declareState(ST_NOT_READY);
+  return sc;
 }
 
 StatusCode LHCb::GaudiTask::startRunable(IRunable* runable)   {
@@ -201,18 +216,20 @@ StatusCode LHCb::GaudiTask::initialize()  {
         goto Failed;
       }
       log << MSG::ERROR << "Failed to initialize application manager" << endmsg;
+      goto Failed;
     }
     else  {
       log << MSG::INFO << "2nd. layer is already executing" << endmsg;
+      declareState(ST_READY);
       return StatusCode::SUCCESS;
     }
   }
   else  {
-    log << MSG::INFO << "2nd. layer is not initialized...did you call configure?" << endmsg;
-    return StatusCode::FAILURE;
+    log << MSG::ERROR << "2nd. layer is not initialized...did you call configure?" << endmsg;
+    goto Failed;
   }
 Failed:
-  declareState(READY);
+  declareState(ST_ERROR);
   return sc;
 }
 
@@ -272,7 +289,7 @@ StatusCode LHCb::GaudiTask::finalize()  {
   m_incidentSvc= 0;
   StatusCode sc = m_subMgr->finalize();
   if ( !sc.isSuccess() )   {
-    declareState(RUNNING);
+    declareState(ST_RUNNING);
     return sc;
   }
   return DimTaskFSM::finalize();
@@ -287,7 +304,7 @@ StatusCode LHCb::GaudiTask::terminate()  {
       Gaudi::setInstance(m_appMgr);
       return DimTaskFSM::terminate();
     }
-    declareState(READY);
+    declareState(ST_READY);
     return sc;
   }
   return DimTaskFSM::terminate();

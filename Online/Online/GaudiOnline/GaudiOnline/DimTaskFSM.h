@@ -70,11 +70,12 @@ namespace LHCb  {
       ERROR
     };
     enum State  {
-      UNKNOWN,
-      LOADED,
-      NOT_READY,
-      READY,
-      RUNNING
+      ST_UNKNOWN,
+      ST_LOADED,
+      ST_NOT_READY,
+      ST_READY,
+      ST_RUNNING,
+      ST_ERROR
     };
     enum SubState  {
       SUCCESS_ACTION,

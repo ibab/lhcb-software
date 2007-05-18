@@ -48,7 +48,7 @@ namespace  {
       m_target->output(MSG::DEBUG,std::string("Received DIM command:"+cmd).c_str());
       if      ( cmd == "configure"  ) IOCSENSOR.send(m_target, LHCb::DimTaskFSM::CONFIGURE);
       else if ( cmd == "start"      ) IOCSENSOR.send(m_target, LHCb::DimTaskFSM::INITIALIZE);
-      else if ( cmd == "stop"       ) IOCSENSOR.send(m_target, LHCb::DimTaskFSM::DISABLE);
+      else if ( cmd == "stop"       ) m_target->disable(); // IOCSENSOR.sendHead(m_target, LHCb::DimTaskFSM::DISABLE);
       else if ( cmd == "reset"      ) IOCSENSOR.send(m_target, LHCb::DimTaskFSM::TERMINATE);
       else if ( cmd == "unload"     ) IOCSENSOR.send(m_target, LHCb::DimTaskFSM::UNLOAD);
       else   {
@@ -89,10 +89,11 @@ LHCb::DimTaskFSM::DimTaskFSM(IInterface*)
   svcname= m_procName+"/fsm_status";
   m_subStateService = new DimService(svcname.c_str(),(char*)m_subStateName.c_str());
   DimServer::start(m_procName.c_str());
-  declareState(ST_NAME_NOT_READY);
+  m_stateName = ST_NAME_NOT_READY;
+  m_service->updateService((char*)m_stateName.c_str());
   propertyMgr().declareProperty("HaveEventLoop",m_haveEventLoop);
   propertyMgr().declareProperty("Name",m_procName);
-  ::lib_rtl_install_printer(printout,this);
+  //::lib_rtl_install_printer(printout,this);
 }
 
 LHCb::DimTaskFSM::~DimTaskFSM()  {
@@ -171,14 +172,15 @@ StatusCode LHCb::DimTaskFSM::declareState(const std::string& new_state)  {
 StatusCode LHCb::DimTaskFSM::declareState(State new_state)  {
   switch(new_state)   {
     case ERROR:
+    case ST_ERROR:
       return declareState(ST_NAME_ERROR);
-    case NOT_READY:
+    case ST_NOT_READY:
       return declareState(ST_NAME_NOT_READY);
-    case READY:
+    case ST_READY:
       return declareState(ST_NAME_READY);
-    case RUNNING:
+    case ST_RUNNING:
       return declareState(ST_NAME_RUNNING);
-    case UNKNOWN:
+    case ST_UNKNOWN:
     default:
       return declareState(ST_NAME_UNKNOWN);
   }

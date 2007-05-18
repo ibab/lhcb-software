@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/NetworkDataHandler.cpp,v 1.4 2006-12-14 21:27:47 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/NetworkDataHandler.cpp,v 1.5 2007-05-18 13:58:55 frankm Exp $
 //  ====================================================================
 //  NetworkDataHandler.cpp
 //  --------------------------------------------------------------------
@@ -8,6 +8,7 @@
 //  ====================================================================
 #include "GaudiOnline/NetworkDataHandler.h"
 #include "GaudiOnline/ISuspendable.h"
+#include "GaudiOnline/MEPManager.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/MsgStream.h"
@@ -32,13 +33,11 @@ NetworkDataHandler::NetworkDataHandler(const std::string& nam, ISvcLocator* pSvc
 :  MDFWriter(MDFIO::MDF_BANKS, nam, pSvc),
   m_sendReq(0), m_sendError(0), m_sendBytes(0),
   m_recvReq(0), m_recvError(0), m_recvBytes(0),
-  m_evtSelector(0)
+  m_mepMgr(0), m_evtSelector(0)
 {
   ::wtc_init();
   declareProperty("DataSources",    m_dataSources);
-  declareProperty("PartitionID",    m_partitionID);
   declareProperty("Buffer",         m_buffer);
-  declareProperty("PartitionBuffer",m_partitionBuffer);
   declareProperty("BufferLength",   m_buffLength=128);  // In kBytes
   declareProperty("AsyncRearm",     m_asynchRearm=true);
   lib_rtl_create_lock(0,&m_lock);
@@ -70,6 +69,12 @@ StatusCode NetworkDataHandler::initialize()   {
   if ( !sc.isSuccess() )  {
     return sc;
   }
+  sc = service("MEPManager",m_mepMgr);
+  if ( !sc.isSuccess() )  {
+    MsgStream info(msgSvc(), name());
+    info << MSG::INFO << "Failed to access buffer manager service." << endmsg;
+    return sc;
+  }  
   sc = isNetEventProducer() ? configureNetProducer() : configureNetConsumer();
   ::wtc_subscribe(WT_FACILITY_DAQ_EVENT,0,rearm_net_request,this);
   return sc;
@@ -90,6 +95,8 @@ StatusCode NetworkDataHandler::finalize()     {
   m_receivers.clear();
   if ( m_evtSelector ) m_evtSelector->release();
   m_evtSelector = 0;
+  if ( m_mepMgr ) m_mepMgr->release();
+  m_mepMgr = 0;
   return sc;
 }
 
@@ -100,18 +107,12 @@ const std::string& NetworkDataHandler::requestMessage() const   {
 
 // Configure access to the buffer manager to declare events
 StatusCode NetworkDataHandler::configureNetConsumer()  {
-  m_bm_name = m_buffer;
-  if ( m_partitionBuffer )  {
-    char txt[32];
-    m_bm_name += "_";
-    m_bm_name += ::_itoa(m_partitionID,txt,16);
-  }
   if ( isNetEventConsumer() )  {
     int cnt = 0;
     for(DataSources::const_iterator i=m_dataSources.begin(); i!=m_dataSources.end();++i,++cnt)  {
       std::string proc = RTL::processName()+"_";
       proc += char('0'+cnt);
-      MBM::Producer* prod = new MBM::Producer(m_bm_name,proc,m_partitionID);
+      MBM::Producer* prod = m_mepMgr->createProducer(m_buffer,proc);
       m_receivers.push_back(RecvEntry(this,*i,prod));
       RecvEntry& e = m_receivers.back();
       if ( !createNetRequest(e).isSuccess() ) {
@@ -247,36 +248,48 @@ StatusCode NetworkDataHandler::handleEventRequest(long clientID,const std::strin
 StatusCode NetworkDataHandler::handleEventData(const std::string& source, size_t len)  {
   const RecvEntry* entry = receiver(source);
   if ( entry )  {
-    MBM::Producer* prod = entry->producer;
-    MBM::EventDesc& e = prod->event();
-    if ( e.data && int(len) <= e.len )  {
-      StatusCode sc = readData(e.data,&len);
-      if ( sc.isSuccess() )   {
-        RawBank*   b = (RawBank*)e.data;
-        MDFHeader* h = (MDFHeader*)b->data();
-        e.type       = EVENT_TYPE_EVENT;
-        e.len        = len;
-        ::memcpy(e.mask,h->subHeader().H1->triggerMask(),sizeof(e.mask));
-        sc = prod->sendEvent()==MBM_NORMAL ? StatusCode::SUCCESS : StatusCode::FAILURE;
+    try {
+      MBM::Producer* prod = entry->producer;
+      MBM::EventDesc& e = prod->event();
+      if ( e.data && int(len) <= e.len )  {
+        StatusCode sc = readData(e.data,&len);
         if ( sc.isSuccess() )   {
-          sc = resetNetRequest(*entry);
-          if ( m_asynchRearm )  {
-            ::wtc_insert(WT_FACILITY_DAQ_EVENT,(void*)entry);
-            return sc;
+          RawBank*   b = (RawBank*)e.data;
+          MDFHeader* h = (MDFHeader*)b->data();
+          e.type       = EVENT_TYPE_EVENT;
+          e.len        = len;
+          ::memcpy(e.mask,h->subHeader().H1->triggerMask(),sizeof(e.mask));
+          sc = prod->sendEvent()==MBM_NORMAL ? StatusCode::SUCCESS : StatusCode::FAILURE;
+          if ( sc.isSuccess() )   {
+            sc = resetNetRequest(*entry);
+            if ( m_asynchRearm )  {
+              ::wtc_insert(WT_FACILITY_DAQ_EVENT,(void*)entry);
+              return sc;
+            }
+            return rearmRequest(*entry);
           }
-          return rearmRequest(*entry);
+          MsgStream log(msgSvc(),name());
+          log << MSG::ERROR << "Cannot declare network event from:" << source << " to MBM." << endmsg;
+	  return rearmRequest(*entry);
         }
         MsgStream log(msgSvc(),name());
-        log << MSG::ERROR << "Cannot declare network event from:" << source << " to MBM." << endmsg;
-        return sc;
+        log << MSG::ERROR << "Failed to retrieve network event data from:" << source << endmsg;
+	return rearmRequest(*entry);
       }
       MsgStream log(msgSvc(),name());
-      log << MSG::ERROR << "Failed to retrieve network event data from:" << source << endmsg;
-      return sc;
+      log << MSG::ERROR << "Not sufficient data space availible to buffer event from:" << source << endmsg;
+      return rearmRequest(*entry);
     }
-    MsgStream log(msgSvc(),name());
-    log << MSG::ERROR << "Not sufficient data space availible to buffer event from:" << source << endmsg;
-    return StatusCode::SUCCESS;
+    catch(std::exception& e)  {
+      MsgStream log(msgSvc(),name());
+      log << MSG::ERROR << "Got exception when declaring event from:" << entry->name << endmsg;
+      log << e.what() << endmsg;
+    }
+    catch(...)  {
+      MsgStream log(msgSvc(),name());
+      log << MSG::ERROR << "Got unknown exception when declaring event from:" << entry->name << endmsg;
+    }
+    return rearmRequest(*entry);
   }
   return StatusCode::SUCCESS;
 }

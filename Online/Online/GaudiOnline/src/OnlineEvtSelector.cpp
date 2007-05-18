@@ -46,7 +46,7 @@ namespace LHCb  {
 }
 #endif // GAUDIONLINE_ONLINECONTEXT_H
 
-// $Id: OnlineEvtSelector.cpp,v 1.26 2007-01-26 20:23:36 frankb Exp $
+// $Id: OnlineEvtSelector.cpp,v 1.27 2007-05-18 13:58:55 frankm Exp $
 //====================================================================
 //  OnlineEvtSelector.cpp
 //--------------------------------------------------------------------
@@ -136,6 +136,7 @@ StatusCode OnlineContext::receiveEvent()  {
   if ( m_consumer )  {
     try  {
       m_sel->increaseReqCount();
+      m_needFree = false;
       if ( m_consumer->getEvent() == MBM_NORMAL )  {
         const MBM::EventDesc& e = m_consumer->event();
         m_evdesc.setPartitionID(m_consumer->partitionID());
@@ -164,11 +165,16 @@ StatusCode OnlineContext::receiveEvent()  {
 }
 
 StatusCode OnlineContext::connect(const std::string& input)  {
-  StatusCode sc = (m_sel->m_mepMgr) ? connectMEP(input) : connectMBM(input);
+  StatusCode sc = StatusCode::SUCCESS;
+  if ( input=="EVENT" || input=="RESULT" || input=="MEP" )
+    sc = connectMEP(input);
+  else 
+    sc = connectMBM(input);
   if ( sc.isSuccess() )  {
     for (int i=0, n=m_sel->m_nreqs; i<n; ++i )  {
       m_consumer->addRequest(m_sel->m_Reqs[i]);
     }
+    return sc;
   }
   return sc;
 }
@@ -197,14 +203,14 @@ StatusCode OnlineContext::connectMEP(const std::string& input)  {
 
 StatusCode OnlineContext::connectMBM(const std::string& input)  {
   if ( m_sel )  {
-    char txt[32];
-    std::string bm_name = input;
-    if ( m_sel->m_partitionBuffer )  {
-      bm_name += "_";
-      bm_name += _itoa(m_sel->m_partID,txt,16);
+    std::map<std::string,BMID>::const_iterator i = m_sel->m_mepMgr->buffers().find(input);
+    if ( i != m_sel->m_mepMgr->buffers().end() ) {
+      m_consumer = new MBM::Consumer((*i).second,RTL::processName(),m_sel->m_mepMgr->partitionID());
+      if ( m_consumer->id() == MBM_INV_DESC ) {
+        return StatusCode::FAILURE;
+      }
+      return StatusCode::SUCCESS;
     }
-    m_consumer = new MBM::Consumer(bm_name,RTL::processName(),m_sel->m_partID);
-    return m_consumer->id() == MBM_INV_DESC ? StatusCode::FAILURE : StatusCode::SUCCESS;
   }
   return StatusCode::FAILURE;
 }
@@ -230,8 +236,8 @@ OnlineEvtSelector::OnlineEvtSelector(const std::string& nam, ISvcLocator* svc)
   declareProperty("Input",m_input  = "EVENT");
   declareProperty("Decode",m_decode = true);
   declareProperty("AllowSuspend",m_allowSuspend = false);
-  declareProperty("PartitionID",m_partID = 0x103);
-  declareProperty("PartitionBuffer",m_partitionBuffer=false);
+  // declareProperty("PartitionID",m_partID = 0x103);
+  // declareProperty("PartitionBuffer",m_partitionBuffer=false);
   declareProperty("REQ1", m_Rqs[0] = "");
   declareProperty("REQ2", m_Rqs[1] = "");
   declareProperty("REQ3", m_Rqs[2] = "");
@@ -270,11 +276,9 @@ StatusCode OnlineEvtSelector::initialize()    {
   if ( !lib_rtl_is_success(lib_rtl_set_event(m_suspendLock)) )  {
     return error("Cannot activate event lock.");
   }
-  if ( m_input == "EVENT" || m_input == "RESULT" || m_input == "MEP" )  {
-    status = service("MEPManager",m_mepMgr);
-    if ( !status.isSuccess() )   {
-      return error("Failed to access service MEPManager.");
-    }
+  status = service("MEPManager",m_mepMgr);
+  if ( !status.isSuccess() )   {
+    return error("Failed to access service MEPManager.");
   }
   for ( m_nreqs=0; m_nreqs<8; ++m_nreqs )  {
     if ( !m_Rqs[m_nreqs].empty() )   {
@@ -303,6 +307,8 @@ StatusCode OnlineEvtSelector::finalize()    {
     m_mepMgr->release();
     m_mepMgr = 0;
   }
+  undeclareInfo("EvtCount");
+  undeclareInfo("ReqCount");
   return OnlineService::finalize();
 }
 

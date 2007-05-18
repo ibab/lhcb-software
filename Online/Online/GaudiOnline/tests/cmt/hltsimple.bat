@@ -10,7 +10,7 @@ set UTGID=MBMInit
 start "%UTGID%" %gaudi_exe% -main=../options/MBMinit.opts -opt=../options/Daemon.opts -msgsvc=%msg_svc% -auto
 rem set UTGID=TANMon
 rem start "%UTGID%"  %test_exe% tanmon -c
-set UTGID=ErrServ
+set UTGID=ErrSrv
 start "%UTGID%" %gaudi_exe% -opt=../options/ErrorSrv.opts     -msgsvc=%msg_svc% -auto
 sleep 4
 set UTGID=EvtProd

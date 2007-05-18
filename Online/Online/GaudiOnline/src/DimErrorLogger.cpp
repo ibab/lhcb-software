@@ -1,4 +1,4 @@
-// $Id: DimErrorLogger.cpp,v 1.11 2007-01-26 20:23:36 frankb Exp $
+// $Id: DimErrorLogger.cpp,v 1.12 2007-05-18 13:58:54 frankm Exp $
 
 #if !(defined(i386) || defined(_WIN32))
 #define GAUDIKERNEL_KERNEL_H    // disable include
@@ -85,7 +85,7 @@ namespace LHCb  {
 
 // Standard Constructor
 LHCb::DimErrorLogger::DimErrorLogger(const std::string& nam, ISvcLocator* svcLoc)   
-: OnlineRunable(nam, svcLoc), m_dns(0), m_lockid(0)
+: OnlineRunable(nam, svcLoc), m_dns(0)
 {
   declareProperty("OutputFormat",          m_outputFmt  = "% F%20W%S%7W%R%T %0W%M");
   declareProperty("AcceptVerboseMessages", m_verboseMsg = false);
@@ -104,16 +104,11 @@ LHCb::DimErrorLogger::DimErrorLogger(const std::string& nam, ISvcLocator* svcLoc
   declareProperty("RefusedMessages",       m_refusedMessages);
   m_acceptedSources.push_back("*");
   m_acceptedClients.push_back("*");
-  int status = ::lib_rtl_create_lock(0, &m_lockid);
-  if ( !lib_rtl_is_success(status) )  {
-    lib_rtl_signal_message(LIB_RTL_OS,"Error deleting AMS lock. Status %d",status);
-  }
 }
 
 // Standard Destructor
 LHCb::DimErrorLogger::~DimErrorLogger()   
 {
-  ::lib_rtl_delete_lock(m_lockid);
 }
 
 // IInterface implementation : queryInterface
@@ -138,7 +133,7 @@ void LHCb::DimErrorLogger::addHandler(const std::string& nam)    {
   std::vector<std::string>::iterator j=m_acceptedClients.begin();
   for(; j != m_acceptedClients.end(); ++j)  {
     if ( ::str_match_wild(nam.c_str(), (*j).c_str()) )  {
-      RTL::Lock lock(m_lockid);
+      dim_lock();
       Clients::iterator i=m_clients.find(nam);
       if ( i == m_clients.end() )  {
         char def[32];
@@ -147,15 +142,17 @@ void LHCb::DimErrorLogger::addHandler(const std::string& nam)    {
         // std::cout << "Create DimInfo:" << (void*)info << std::endl;
         m_clients.insert(std::make_pair(nam, info));
         msgSvc()->reportMessage(name(), MSG::INFO, "Added error handler for:"+nam);
+	dim_unlock();
         return;
       }
+      dim_unlock();
     }
   }
 }
 
 // Remove handler for a given message source
 void LHCb::DimErrorLogger::removeHandler(const std::string& nam)   {
-  RTL::Lock lock(m_lockid);
+  dim_lock();
   Clients::iterator i=m_clients.find(nam);
   if ( i != m_clients.end() ) {
     // std::cout << "Delete DimInfo:" << (void*)(*i).second << std::endl;
@@ -163,6 +160,7 @@ void LHCb::DimErrorLogger::removeHandler(const std::string& nam)   {
     m_clients.erase(i);
     msgSvc()->reportMessage(name(), MSG::INFO, "Removed error handler for:"+nam);
   }
+  dim_unlock();
 }
 
 // IService implementation: initialize the service
@@ -178,15 +176,14 @@ StatusCode LHCb::DimErrorLogger::initialize()   {
 
 // IService implementation: finalize the service
 StatusCode LHCb::DimErrorLogger::finalize()     {
-  {
-    RTL::Lock lock(m_lockid);
-    for (Clients::iterator i=m_clients.begin(); i != m_clients.end(); ++i)  {
-      delete (*i).second;
-    }
-    m_clients.clear();
-    if ( m_dns ) delete m_dns;
-    m_dns = 0;
+  dim_lock();
+  for (Clients::iterator i=m_clients.begin(); i != m_clients.end(); ++i)  {
+    delete (*i).second;
   }
+  m_clients.clear();
+  dim_unlock();
+  if ( m_dns ) delete m_dns;
+  m_dns = 0;
   return OnlineRunable::finalize();
 }
 
@@ -264,7 +261,6 @@ void LHCb::DimErrorLogger::infoHandler() {
       task += "::";
     }
     task += m->src;
-    //RTL::Lock lock(m_lockid);
     report(m->typ, task, m->msg);
   }
 }

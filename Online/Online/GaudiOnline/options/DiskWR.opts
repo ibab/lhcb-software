@@ -1,10 +1,13 @@
 #include "$GAUDIONLINEROOT/options/OnlineEnvironment.opts"
 ApplicationMgr.HistogramPersistency  = "NONE";
-ApplicationMgr.ExtSvc               += {"IncidentSvc", "LHCb::OnlineEvtSelector/EventSelector"};
+ApplicationMgr.ExtSvc               += {"IncidentSvc", "LHCb::MEPManager/MEPManager", "LHCb::OnlineEvtSelector/EventSelector"};
 ApplicationMgr.Runable               = "LHCb::EventRunable/Runable";
-ApplicationMgr.SvcOptMapping        += { "LHCb::EventRunable/Runable"};
+ApplicationMgr.SvcOptMapping        += { "LHCb::EventRunable/Runable", "LHCb::MEPManager/MEPManager", "LHCb::OnlineEvtSelector/EventSelector"};
 ApplicationMgr.TopAlg                = {"StoreExplorerAlg","LHCb::MDFWriter/Writer" };
-Runable.MEPManager                   = "";  // Do not use MEP manager to access MBM buffers
+Runable.MEPManager                   = "LHCb::MEPManager/MEPManager";
+MEPManager.Buffers                   = { "OUT" };
+MEPManager.PartitionID               = @OnlineEnv.PartititonID;
+MEPManager.PartitionBuffers          = true;
 StoreExplorerAlg.Load                = 0;
 StoreExplorerAlg.PrintFreq           = 0.001;
 Writer.Compress                      = 2;
@@ -13,8 +16,6 @@ Writer.GenerateMD5                   = true;
 Writer.Connection                    = "file://mdfOutput.dat";
 EventSelector.Decode                 = false;
 EventSelector.Input                  = "OUT";
-EventSelector.PartitionID            = @OnlineEnv.PartititonID;
-EventSelector.PartitionBuffer        = true;
 EventDataSvc.RootCLID                = 1;
 EventDataSvc.EnableFaultHandler      = true ;
 EventPersistencySvc.CnvServices      = {"LHCb::RawDataCnvSvc/RawDataCnvSvc" };

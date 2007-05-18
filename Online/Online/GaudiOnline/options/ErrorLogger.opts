@@ -1,13 +1,14 @@
 #include "$GAUDIONLINEROOT/options/Main.opts"
+MessageSvc.OutputLevel = 1;
 ApplicationMgr.ExtSvc                = { "LHCb::DimErrorLogger/Display"};
-MessageSvc.Format = "% F%42W%S%7W%R%T %0W%M";
+MessageSvc.Format = "% F%56W%S%7W%R%T %0W%M";
 //MessageSvc.LoggerOnly                = true;
-Display.OutputLevel                  = 2;
+Display.OutputLevel                  = 1;
 Display.OutputMessage                = false;
 Display.PrintService                 = false;
 Display.AcceptVerboseMessages        = true;
 Display.AcceptDebugMessages          = true;
 Display.AcceptInfoMessages           = true;
-Display.AcceptedClients              = { "*ErrServ*" };
+Display.AcceptedClients              = { "*ErrSrv*" };
 Display.RefusedClients               = { "*ErrLog*" };
-Display.OutputFormat                 = "% F%42W%S%7W%R%T %0W%M";
+Display.OutputFormat                 = "% F%56W%S%7W%R%T %0W%M";

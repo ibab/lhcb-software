@@ -1,11 +1,10 @@
-// $Id: DimErrorLogger.h,v 1.5 2006-08-21 16:30:21 frankb Exp $
+// $Id: DimErrorLogger.h,v 1.6 2007-05-18 13:58:54 frankm Exp $
 #ifndef GAUDISVC_DIMERRORLOGGER_H
 #define GAUDISVC_DIMERRORLOGGER_H 1
 
 // Framework includes
 #include "GaudiOnline/OnlineRunable.h"
 #include "GaudiOnline/IErrorLogger.h"
-#include "RTL/rtl.h"
 #include "dic.hxx"
 #include <map>
 
@@ -34,8 +33,6 @@ namespace LHCb  {
     Clients   m_clients;
     /// Pointer to DNS info handler to accept client notifications
     DnsInfo*  m_dns;
-    /// Mutex handle to protect internal structures against thread callbacks
-    lib_rtl_lock_t m_lockid;
 
     /// Output format used by the service to print messages to stdout
     std::string m_outputFmt;

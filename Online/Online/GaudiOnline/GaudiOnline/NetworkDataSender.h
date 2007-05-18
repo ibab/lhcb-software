@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/NetworkDataSender.h,v 1.2 2006-12-14 21:27:46 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/NetworkDataSender.h,v 1.3 2007-05-18 13:58:54 frankm Exp $
 //  ====================================================================
 //  NetworkDataSender.h
 //  --------------------------------------------------------------------
@@ -104,6 +104,8 @@ namespace LHCb  {
     std::string         m_target;
     /// Property: [Producer] Require event request from source before sending
     bool                m_useEventRequests;
+    /// Property: [Producer] Allow suspending Event selector
+    bool                m_allowSuspend;
     /// Monitoring item: Total number of items sent to receiver(s)
     int                 m_sendReq;
     /// Monitoring item: Total number of send errors to receiver(s)

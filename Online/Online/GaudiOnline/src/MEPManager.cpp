@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MEPManager.cpp,v 1.12 2006-12-14 18:59:20 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MEPManager.cpp,v 1.13 2007-05-18 13:58:55 frankm Exp $
 //  ====================================================================
 //  MEPManager.cpp
 //  --------------------------------------------------------------------
@@ -12,6 +12,7 @@
 #include "GaudiOnline/MEPManager.h"
 #include "RTL/rtl.h"
 #include "MBM/bmdef.h"
+#include "MBM/Producer.h"
 #include <stdexcept>
 #include <cctype>
 #include <cstdio>
@@ -93,19 +94,23 @@ StatusCode LHCb::MEPManager::connectBuffer(const std::string& nam)  {
     bm_name += "_";
     bm_name += _itoa(m_partitionID,txt,16);
   }
-  BMID bmid = ::mbm_include(bm_name.c_str(),m_procName.c_str(),m_partitionID);
-  if ( bmid == MBM_INV_DESC )  {
-    return error("Failed to connect to buffer "+bm_name+" as "+m_procName);
+  if( m_buffMap.find(bm_name) == m_buffMap.end() ) {
+    BMID bmid = ::mbm_include(bm_name.c_str(),m_procName.c_str(),m_partitionID);
+    if ( bmid == MBM_INV_DESC )  {
+      return error("Failed to connect to buffer "+bm_name+" as "+m_procName);
+    }
+    m_bmIDs.push_back(bmid);
+    m_buffMap[bm_name] = bmid;
+    m_buffMap[nam] = bmid;
   }
-  m_bmIDs.push_back(bmid);
   return StatusCode::SUCCESS;
 }
 
 /// Connect to specified buffers
 StatusCode LHCb::MEPManager::connectBuffers()  {
-  MsgStream log(msgSvc(), "MEPManager");
-  typedef std::vector<std::string> _V;
   if ( m_buffers.size() > 0 )  {
+    MsgStream log(msgSvc(), "MEPManager");
+    typedef std::vector<std::string> _V;
     int flags = 0;
     for(_V::const_iterator i=m_buffers.begin(); i != m_buffers.end(); ++i )  {
       const std::string& nam = *i;
@@ -137,9 +142,10 @@ StatusCode LHCb::MEPManager::connectBuffers()  {
 StatusCode LHCb::MEPManager::initialize()  {
   StatusCode sc = Service::initialize();
   if ( !sc.isSuccess() )  {
-    return error("Failed to initialize base class RawDataCnvSvc.");
+    return error("Failed to initialize base class Service.");
   }
   m_bmIDs.clear();
+  m_buffMap.clear();
   if ( !initializeBuffers().isSuccess() )  {
     return error("Failed to initialize MEP buffers!");
   }
@@ -150,11 +156,12 @@ StatusCode LHCb::MEPManager::initialize()  {
 }
 
 StatusCode LHCb::MEPManager::finalize()  {
+  m_buffMap.clear();
   if ( m_mepID )  {
     mep_exclude(m_mepID);
   }
   for(std::vector<BMID>::iterator i=m_bmIDs.begin(); i != m_bmIDs.end(); ++i)  {
-    if ( *i != MBM_INV_DESC ) mbm_exclude(*i);
+    if ( *i != MBM_INV_DESC ) ::mbm_exclude(*i);
   }
   m_bmIDs.clear();
   return Service::finalize();
@@ -162,9 +169,24 @@ StatusCode LHCb::MEPManager::finalize()  {
 
 /// Cancel connection to specified buffers
 StatusCode LHCb::MEPManager::cancel()  {
-  mep_cancel_request(m_mepID);
+  if ( m_mepID != MEP_INV_DESC ) {
+    mep_cancel_request(m_mepID);
+  }
+  for(std::vector<BMID>::iterator i=m_bmIDs.begin(); i != m_bmIDs.end(); ++i)  {
+    if ( *i != MBM_INV_DESC ) ::mbm_cancel_request(*i);
+  }
   return StatusCode::SUCCESS;
 }
 
+/// Create producer
+MBM::Producer* 
+LHCb::MEPManager::createProducer(const std::string& buffer,const std::string& instance) {
+  std::map<std::string,BMID>::iterator i=m_buffMap.find(buffer);
+  if ( i != m_buffMap.end() ) {
+    BMID bmid = (*i).second;
+    return new MBM::Producer(bmid,instance,partitionID());
+  }
+  return 0;
+}
 
 DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,MEPManager)

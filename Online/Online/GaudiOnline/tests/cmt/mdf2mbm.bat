@@ -10,7 +10,7 @@ set UTGID=DNS
 start "%UTGID%" dns
 set UTGID=MBMMon
 start "%UTGID%" %test_exe% mbm_mon
-set UTGID=ErrServ
+set UTGID=ErrSrv
 start "%UTGID%" %gaudi_exe% -opt=../options/ErrorSrv.opts     -msgsvc=%msg_svc%
 set UTGID=ErrLog
 start "%UTGID%" %gaudi_exe% -opt=../options/ErrorLogger.opts  -msgsvc=MessageSvc

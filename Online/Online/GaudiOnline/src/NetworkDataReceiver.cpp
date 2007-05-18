@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/NetworkDataReceiver.cpp,v 1.3 2006-12-15 14:42:21 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/NetworkDataReceiver.cpp,v 1.4 2007-05-18 13:58:55 frankm Exp $
 //  ====================================================================
 //  NetworkDataReceiver.cpp
 //  --------------------------------------------------------------------
@@ -7,6 +7,7 @@
 //
 //  ====================================================================
 #include "GaudiOnline/NetworkDataReceiver.h"
+#include "GaudiOnline/MEPManager.h"
 #include "GaudiKernel/strcasecmp.h"
 #include "GaudiKernel/xtoa.h"
 #include "Event/RawBank.h"
@@ -25,13 +26,12 @@ static const std::string s_reqMsg("EVENT_REQUEST");
 
 // Standard algorithm constructor
 NetworkDataReceiver::NetworkDataReceiver(const std::string& nam, ISvcLocator* pSvc)
-: OnlineService(nam,pSvc), m_recvReq(0), m_recvError(0), m_recvBytes(0)
+: OnlineService(nam,pSvc), m_recvReq(0), m_recvError(0), m_recvBytes(0), 
+    m_mepMgr(0), m_prod(0), m_evtSelector(0)
 {
   ::wtc_init();
   ::lib_rtl_create_lock(0,&m_lock);
-  declareProperty("PartitionID",      m_partitionID);
   declareProperty("Buffer",           m_buffer);
-  declareProperty("PartitionBuffer",  m_partitionBuffer=false);
   declareProperty("UseEventRequests", m_useEventRequests=false);
 }
 
@@ -58,19 +58,19 @@ StatusCode NetworkDataReceiver::initialize()   {
   declareInfo("RecvCount",  m_recvReq=0,   "Total number of items received.");
   declareInfo("RecvErrors", m_recvError=0, "Total number of receive errors.");
   declareInfo("RecvBytes",  m_recvBytes=0, "Total number of bytes received from clients.");
+  sc = service("MEPManager",m_mepMgr);
+  if ( !sc.isSuccess() )  {
+    MsgStream info(msgSvc(), name());
+    info << MSG::INFO << "Failed to access buffer manager service." << endmsg;
+    return sc;
+  }  
   sc = subscribeNetwork();
   if ( !sc.isSuccess() )  {
     return sc;
   }
-  err << MSG::DEBUG << "Using partitioned buffers:" << m_partitionBuffer << endmsg;
-  m_bm_name = m_buffer;
-  if ( m_partitionBuffer )  {
-    char txt[32];
-    m_bm_name += "_";
-    m_bm_name += ::_itoa(m_partitionID,txt,16);
-  }
-  m_prod = new MBM::Producer(m_bm_name,RTL::processName(),m_partitionID);
+  m_prod = m_mepMgr->createProducer(m_buffer,RTL::processName());
   ::wtc_subscribe(WT_FACILITY_DAQ_EVENT,0,rearm_net_request,this);
+  incidentSvc()->addListener(this,"DAQ_CANCEL");
   return sc;
 }
 
@@ -84,7 +84,22 @@ StatusCode NetworkDataReceiver::finalize()     {
   m_receivers.clear();
   if ( m_prod ) delete m_prod;
   m_prod = 0;
+  if ( m_mepMgr ) m_mepMgr->release();
+  m_mepMgr = 0;
+  undeclareInfo("RecvCount");
+  undeclareInfo("RecvErrors");
+  undeclareInfo("RecvBytes");
   return OnlineService::finalize();
+}
+
+/// Incident handler implemenentation: Inform that a new incident has occured
+void LHCb::NetworkDataReceiver::handle(const Incident& inc)    {
+  if ( inc.type() == "DAQ_CANCEL" )  {
+    MsgStream info(msgSvc(), name());
+    info << MSG::INFO << "Executing DAQ_CANCEL" << endmsg;
+    ::wtc_flush(WT_FACILITY_DAQ_EVENT);
+    m_mepMgr->cancel();
+  }
 }
 
 // Handle event data source registration
@@ -221,7 +236,8 @@ StatusCode NetworkDataReceiver::declareEventData(RecvEntry& entry)  {
   catch(...)  {
     log << MSG::ERROR << "Got unknown exception when declaring event from:" << entry.name << endmsg;
   }
-  return StatusCode::FAILURE;
+  return rearmRequest(entry);
+  //return StatusCode::FAILURE;
 }
 
 // Issue alarm message to error logger

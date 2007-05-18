@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/MEPManager.h,v 1.4 2006-10-24 11:25:11 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/MEPManager.h,v 1.5 2007-05-18 13:58:54 frankm Exp $
 //	====================================================================
 //  MEPManager.cpp
 //	--------------------------------------------------------------------
@@ -12,6 +12,12 @@
 #include "GaudiKernel/Service.h"
 #include "MBM/mepdef.h"
 #include "MBM/bmdef.h"
+#include <map>
+#include <set>
+
+namespace MBM {
+  class Producer;
+};
 
 // Declaration of the interface ID. 
 static const InterfaceID IID_IMEPManager("IMEPManager", 0, 0); 
@@ -30,13 +36,15 @@ namespace LHCb    {
     * @date    01/01/2005
     */
   class MEPManager : public Service  {
-    MEPID                     m_mepID;
-    std::vector<std::string>  m_buffers;
-    std::string               m_procName;
-    std::string               m_initFlags;
-    int                       m_partitionID;
-    std::vector<BMID>         m_bmIDs;
-    bool                      m_partitionBuffers;
+    MEPID                      m_mepID;
+    std::vector<std::string>   m_buffers;
+    std::string                m_procName;
+    std::string                m_initFlags;
+    int                        m_partitionID;
+    std::vector<BMID>          m_bmIDs;
+    bool                       m_partitionBuffers;
+    std::map<std::string,BMID> m_buffMap;
+
   public:
     /// Retrieve interface ID
     static const InterfaceID& interfaceID() { return IID_IMEPManager; }
@@ -49,6 +57,12 @@ namespace LHCb    {
 
     /// Access to MEP identifier structure
     MEPID  mepID() const  {  return m_mepID;   }
+
+    /// Create producer
+    MBM::Producer* createProducer(const std::string& buffer,const std::string& instance);
+
+    /// Access to optional MBM buffer identifiers
+    const std::map<std::string,BMID>& buffers()  const { return m_buffMap;}
 
     /// Access to optional MBM buffer identifiers
     const std::vector<BMID>& bmIDs()  const  {   return m_bmIDs;        }

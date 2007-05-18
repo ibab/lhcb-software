@@ -1,6 +1,9 @@
 Package: GaudiOnline
 Author:  Markus Frank
 
+! 2007-05-10 Markus Frank
+ - Fix bug to NOT free event on cancel.
+ - Fix bug in DIM command handling to set state to error if initialization fails.
 
 !================== GaudiOnline v2r7 2007-04-12 ==========================
 ! 2007-04-24 Eric van Herwijnen

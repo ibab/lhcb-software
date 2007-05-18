@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/NetworkDataSender.cpp,v 1.3 2006-12-15 14:42:21 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/NetworkDataSender.cpp,v 1.4 2007-05-18 13:58:55 frankm Exp $
 //  ====================================================================
 //  NetworkDataSender.cpp
 //  --------------------------------------------------------------------
@@ -20,6 +20,7 @@ NetworkDataSender::NetworkDataSender(const std::string& nam, ISvcLocator* pSvc)
 {
   declareProperty("DataSink", m_target);
   declareProperty("UseEventRequests", m_useEventRequests=false);
+  declareProperty("AllowSuspend", m_allowSuspend=true);
   lib_rtl_create_lock(0,&m_lock);
 }
 
@@ -30,16 +31,19 @@ NetworkDataSender::~NetworkDataSender()      {
 
 // Initialize the object: allocate all necessary resources
 StatusCode NetworkDataSender::initialize()   {
+  StatusCode sc;
   MsgStream output(msgSvc(),name());
   // Do NOT call base class initialization: we are not writing to file/socket!
   m_recipients.clear();
   declareInfo("SendCount",  m_sendReq=0,   "Total number of items sent to receiver(s).");
   declareInfo("SendErrors", m_sendError=0, "Total number of send errors to receiver(s).");
   declareInfo("SendBytes",  m_sendBytes=0, "Total number of bytes sent to receiver(s).");
-  StatusCode sc = service("EventSelector",m_evtSelector,true);
-  if ( !sc.isSuccess() )  {
-    output << MSG::ERROR << "Failed to access ISuspendable interface from event selector." << endmsg;
-    return sc;
+  if ( m_allowSuspend ) {
+    sc = service("EventSelector",m_evtSelector,true);
+    if ( !sc.isSuccess() )  {
+      output << MSG::ERROR << "Failed to access ISuspendable interface from event selector." << endmsg;
+      return sc;
+    }
   }
   if ( m_target.empty() )  {
     output << MSG::INFO << "No data sink specified. "
@@ -74,24 +78,29 @@ StatusCode NetworkDataSender::finalize()     {
 
 // Producer implementation: Resume event access from MBM
 StatusCode NetworkDataSender::resumeEvents()  {
-  if ( !m_evtSelector->resume().isSuccess() )  {
-    // This always happens if the event selector is still busy
-    // Unclear is how a possible error can be handled. 
-    // Hence return success for now...
-    MsgStream output(msgSvc(),name());
-    output << MSG::WARNING << "Internal error: Cannot resume event selector." << endmsg;
+  if ( m_allowSuspend ) {
+    if ( !m_evtSelector->resume().isSuccess() )  {
+      // This always happens if the event selector is still busy
+      // Unclear is how a possible error can be handled. 
+      // Hence return success for now...
+      MsgStream output(msgSvc(),name());
+      output << MSG::WARNING << "Internal error: Cannot resume event selector." << endmsg;
+    }
   }
   return StatusCode::SUCCESS;
 }
 
 // Producer implementation: Resume event access from MBM
 StatusCode NetworkDataSender::suspendEvents()  {
-  StatusCode sc = m_evtSelector->suspend();
-  if ( !sc.isSuccess() )  {
-    MsgStream log(msgSvc(),name());
-    log << MSG::WARNING << "Failed to suspend event selector until further notice." << endmsg;
+  if ( m_allowSuspend ) {
+    StatusCode sc = m_evtSelector->suspend();
+    if ( !sc.isSuccess() )  {
+      MsgStream log(msgSvc(),name());
+      log << MSG::WARNING << "Failed to suspend event selector until further notice." << endmsg;
+    }
+    return sc;
   }
-  return sc;
+  return StatusCode::SUCCESS;
 }
 
 // Producer implementation: Handle client request to receive event over the network

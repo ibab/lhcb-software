@@ -8,7 +8,7 @@ set UTGID=MBMMon
 start "%UTGID%" %test_exe% mbm_mon
 set UTGID=MBMInit
 start "%UTGID%" %gaudi_exe% -main=../options/MEPinit.opts -opt=../options/Daemon.opts -msgsvc=%msg_svc% -auto
-set UTGID=ErrServ
+set UTGID=ErrSrv
 start "%UTGID%" %gaudi_exe% -opt=../options/ErrorSrv.opts     -msgsvc=%msg_svc%  -auto
 set UTGID=ErrLog
 start "%UTGID%" %gaudi_exe% -opt=../options/ErrorLogger.opts  -msgsvc=MessageSvc -auto

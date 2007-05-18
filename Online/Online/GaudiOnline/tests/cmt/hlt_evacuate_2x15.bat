@@ -8,7 +8,7 @@ set UTGID=OutputBuffer
 start "%UTGID%" %gaudi_exe% -main=%OPTS%/MBMinit.opts -opt=%OPTS%/Daemon.opts -msgsvc=%msg_svc%
 set UTGID=InputBuffer
 start "%UTGID%" %gaudi_exe% -main=%OPTS%/MBMfarm.opts -opt=%OPTS%/Daemon.opts -msgsvc=%msg_svc%
-set UTGID=ErrServ
+set UTGID=ErrSrv
 rem start "%UTGID%" %gaudi_exe% -opt=%OPTS%/ErrorSrv.opts     -msgsvc=%msg_svc%
 set UTGID=ErrLog
 rem start "%UTGID%" %gaudi_exe% -opt=%OPTS%/ErrorLogger.opts  -msgsvc=MessageSvc

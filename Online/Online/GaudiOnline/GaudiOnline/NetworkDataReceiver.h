@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/NetworkDataReceiver.h,v 1.1 2006-12-14 18:59:15 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/NetworkDataReceiver.h,v 1.2 2007-05-18 13:58:54 frankm Exp $
 //  ====================================================================
 //  NetworkDataReceiver.h
 //  --------------------------------------------------------------------
@@ -24,6 +24,7 @@ namespace MBM {  class Producer;  }
 namespace LHCb  {
   // Forward declarations
   class ISuspendable;
+  class MEPManager;
 
   /** @class NetworkDataReceiver NetworkDataReceiver.h GaudiOnline/NetworkDataReceiver.h
     *
@@ -72,12 +73,8 @@ namespace LHCb  {
       }
     };
     typedef std::vector<RecvEntry>                Receivers;
-    /// Property: Partition ID
-    int             m_partitionID;
     /// Property: [Consumer] MBM buffer name
-    std::string     m_buffer, m_bm_name;
-    /// Property: Flag to indicate if a partitioned buffer should be connected
-    bool            m_partitionBuffer;
+    std::string     m_buffer;
     /// Property: Require event request from source before sending
     bool            m_useEventRequests;
     /// Monitoring item: Total number of items received
@@ -86,6 +83,8 @@ namespace LHCb  {
     int             m_recvError;
     /// Monitoring item: Total number of bytes received from clients
     int             m_recvBytes;
+    /// Pointer to buffer manager service
+    MEPManager*     m_mepMgr;
     /// Pointer to MBM producer, where received data should be delivered.
     MBM::Producer*  m_prod;
     /// Reference to suspendable event selector
@@ -112,6 +111,10 @@ namespace LHCb  {
     virtual StatusCode finalize();
     /// Initialize the object: allocate all necessary resources
     virtual StatusCode initialize();
+
+    /// Incident handler implemenentation: Inform that a new incident has occured
+    void handle(const Incident& inc);
+
 
     /// Callback on task dead notification
     virtual StatusCode taskDead(const std::string& task_name);

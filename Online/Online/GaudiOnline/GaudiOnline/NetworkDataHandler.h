@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/NetworkDataHandler.h,v 1.2 2006-12-14 18:59:15 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/NetworkDataHandler.h,v 1.3 2007-05-18 13:58:54 frankm Exp $
 //  ====================================================================
 //  NetworkDataHandler.h
 //  --------------------------------------------------------------------
@@ -24,6 +24,7 @@ namespace MBM {  class Producer;  }
 namespace LHCb  {
   // Forward declarations
   class ISuspendable;
+  class MEPManager;
 
   /** @class NetworkDataHandler NetworkDataHandler.h GaudiOnline/NetworkDataHandler.h
     *
@@ -81,15 +82,10 @@ namespace LHCb  {
     typedef std::list<Recipient>                  Recipients;
     typedef std::vector<std::string>              DataSources;
     typedef std::vector<RecvEntry>                Receivers;
-    /// Property: Partition ID
-    int             m_partitionID;
     /// Property: [Consumer] MBM buffer name
-    std::string     m_buffer, m_bm_name;
+    std::string     m_buffer;
     /// Property: [Consumer] data source names. If empty component is in producer mode
     DataSources     m_dataSources;
-    /// 
-    /// Property: Flag to indicate if a partitioned buffer should be connected
-    bool            m_partitionBuffer;
     /// Property: Buffer space [in kBytes] to be preallocated for event data.
     int             m_buffLength;
     /// Property: Flag to indicate asynchronous request ream mechanism
@@ -107,6 +103,8 @@ namespace LHCb  {
     /// Monitoring item: Total number of bytes received from clients
     int             m_recvBytes;
 
+    /// Reference to MEP Manager
+    MEPManager*     m_mepMgr;
     /// Reference to suspendable event selector
     ISuspendable*   m_evtSelector;
     /// Internal lock to synchronize access to queue of targets with pending event requests
