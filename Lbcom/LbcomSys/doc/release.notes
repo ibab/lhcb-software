@@ -6,6 +6,23 @@
 !             : Contains packages shared by Boole and other applications   
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v6r5>2007-05-15 LbcomSys v6r5</A></H1><PRE>
+This version uses Gaudi v19r3 and LHCb v22r5
+
+- Packages modified: Associators v3r5, RichTools v2r13, OTMonitor v2r6
+
+- In Associators v3r5
+  . Add algorithm that merges the 4 tracking detector relations tables into one
+  . Remove Associators_load.cpp file
+
+- In RichTools v2r13
+  . Fix how the 'default' tool mappings are handled in RichToolRegistry
+    (previously was not working) + Add a more complete list of default tools
+
+- In OTMonitor v2r6
+  . Added OTTime classification tool provided by M. Needham
+  . Added expert check options	for Boole
+
 </PRE><H1><A NAME=v6r4>2007-04-23 LbcomSys v6r4</A></H1><PRE>
 This version uses Gaudi v19r3 and LHCb v22r4
 

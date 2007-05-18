@@ -1,5 +1,5 @@
 package LbcomSys
-version v6r4
+version v6r5
 
 branches doc cmt
 
@@ -14,12 +14,12 @@ use L0Muon            v7r1  L0          # Andrei Tsarogorodtsev, Julien Cogan
 use PuVeto            v7r2  L0          # Marko Zupan
 
 # Outer tracker
-use OTMonitor         v2r5  OT          # Jan Amoraal
+use OTMonitor         v2r6  OT          # Jan Amoraal
 use OTAssociators     v4r1  OT          # Jan Amoraal
 
 # Rich
 use RichDAQ           v3r10 Rich        # Chris Jones
-use RichTools         v2r12 Rich        # Chris Jones
+use RichTools         v2r13 Rich        # Chris Jones
 use RichMCTools       v3r5  Rich        # Chris Jones
 use RichMCMonitors    v1r2  Rich        # Chris Jones
 
@@ -47,4 +47,4 @@ use VeloTools         v1r2  Velo        # Tomasz Szumlak
 use MuonAssociators   v3r0  Muon        # Alessia Satta
 
 # Common
-use Associators       v3r4  Associators # Matt Needham
+use Associators       v3r5  Associators # Matt Needham
