@@ -1,4 +1,4 @@
-// $Id: LbAppInit.cpp,v 1.7 2007-02-26 12:05:23 cattanem Exp $
+// $Id: LbAppInit.cpp,v 1.8 2007-05-18 08:02:02 cattanem Exp $
 // Include files
 #include <string>
 #include <vector>
@@ -13,6 +13,7 @@
 
 // local
 #include "Kernel/LbAppInit.h"
+#include "Kernel/ICondDBInfo.h"
 #include "Kernel/IGenericTool.h"
 
 //-----------------------------------------------------------------------------
@@ -95,6 +96,8 @@ StatusCode LbAppInit::initialize() {
     IGenericTool* preloadTool = tool<IGenericTool>( "PreloadGeometryTool" );
     preloadTool->execute();
   }
+
+  m_condDBInfo = svc<ICondDBInfo>("CondDBCnvSvc");
 
   return StatusCode::SUCCESS;
 };

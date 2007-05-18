@@ -4,7 +4,10 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
-!===================== LHCbKernel v7r4 2007-05-14 ========================
+!===================== LHCbKernel v7r4 2007-05-18 ========================
+! 2007-05-18 - Marco Cattaneo
+ - In LbAppInit, add pointer to ICondDBInfo interface of CondDBSvc
+
 ! 2007-05-14 - Marco Cattaneo
  - Move Kernel/lcgStl.h selection file to dict/LHCbKernelDict.h
 

@@ -1,4 +1,4 @@
-// $Id: LbAppInit.h,v 1.6 2006-11-06 11:38:12 jonrob Exp $
+// $Id: LbAppInit.h,v 1.7 2007-05-18 08:02:01 cattanem Exp $
 #ifndef LBAPPINIT_H 
 #define LBAPPINIT_H 1
 
@@ -10,6 +10,7 @@
 #include "GaudiAlg/GaudiAlgorithm.h"
 
 // Forward declarations
+class ICondDBInfo;
 class IRndmEngine;
 class IRndmGenSvc;
 
@@ -52,6 +53,12 @@ protected:
   const std::string& appVersion() const
   {
     return m_appVersion;
+  }
+
+  /// Return pointer to ICondDBInfo interface of CondDBSvc
+  const ICondDBInfo* condDBInfo() 
+  {
+    return m_condDBInfo;
   }
 
   /** Print the run number, event number and optional vector of seeds
@@ -106,6 +113,7 @@ private:
   // Member data
   IRndmEngine*  m_engine;       ///< Pointer to random number engine
   IRndmGenSvc*  m_randSvc;      ///< Pointer to random number service
+  ICondDBInfo*  m_condDBInfo;   ///< Pointer to Info interface of CondDB service
   int  m_eventCounter;          ///< Number of events processed
   int  m_eventMax;     ///< Number of events requested (ApplicationMgr.EvtMax)
   std::string   m_appName;      ///< Application Name
