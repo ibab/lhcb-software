@@ -1,16 +1,19 @@
-// $Id: VeloGhostClassification.cpp,v 1.1 2007-05-15 13:04:17 mneedham Exp $
+// $Id: VeloGhostClassification.cpp,v 1.2 2007-05-18 09:29:59 cattanem Exp $
+
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
 
-
-
+// LHCbKernel
 #include "Kernel/VeloChannelID.h"
 
-#include "VeloGhostClassification.h"
+// TrackMCInterfaces
+#include "TrackMCInterfaces/ILHCbIDsToMCParticles.h"
 
-#include "TsaKernel/ILHCbIDsToMCParticles.h"
-
+// Event model
 #include "Event/Track.h"
+
+// local
+#include "VeloGhostClassification.h"
 
 
 DECLARE_TOOL_FACTORY(VeloGhostClassification)

@@ -4,7 +4,10 @@
 ! Purpose     : package for tracking tools accessing MC information
 !-----------------------------------------------------------------------------
 
-!======================= TrackMCTools v2r10 2007-05-15 =======================
+!======================= TrackMCTools v2r10 2007-05-18 =======================
+! 2007-05-18 - Marco Cattaneo
+ - Adapt to move of ILHCbIDsToMCParticles.h fromTsaKernel to TrackMCInterfaces
+
 ! 2007-05-13 M. Needham
  - Add Ghost Classification tools
  - Add LHCbIDsToMCParticles, LHCbIDsToMCHits

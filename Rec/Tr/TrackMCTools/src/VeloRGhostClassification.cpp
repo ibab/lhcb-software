@@ -1,14 +1,12 @@
-// $Id: VeloRGhostClassification.cpp,v 1.1 2007-05-15 13:04:18 mneedham Exp $
+// $Id: VeloRGhostClassification.cpp,v 1.2 2007-05-18 09:29:59 cattanem Exp $
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
-
-
 
 #include "Kernel/VeloChannelID.h"
 
 #include "VeloRGhostClassification.h"
 
-#include "TsaKernel/ILHCbIDsToMCParticles.h"
+#include "TrackMCInterfaces/ILHCbIDsToMCParticles.h"
 
 #include "Event/Track.h"
 

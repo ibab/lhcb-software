@@ -1,4 +1,4 @@
-// $Id: TTrackGhostClassification.cpp,v 1.1 2007-05-15 13:04:17 mneedham Exp $
+// $Id: TTrackGhostClassification.cpp,v 1.2 2007-05-18 09:29:58 cattanem Exp $
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
 
@@ -12,7 +12,7 @@
 
 #include "TTrackGhostClassification.h"
 
-#include "TsaKernel/ILHCbIDsToMCParticles.h"
+#include "TrackMCInterfaces/ILHCbIDsToMCParticles.h"
 
 #include "Event/Track.h"
 
