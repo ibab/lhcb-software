@@ -5,6 +5,103 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
+</PRE><H1><A NAME=v4r5>2007-05-08 RecSys v4r5</A></H1><PRE>
+This version uses Gaudi v19r3 and LHCb v22r5.
+
+- Packages modified: PatChecker v2r13, PatVelo v2r14, PatVeloTT v2r11,
+    TrackSys v4r5, TrackFitEvent v3r4, TrackTools v2r14, TrackFitter v2r15,
+    TrackProjectors v2r12, TrackExtrapolators v2r11, TrackMatching v2r13,
+    TrackCheckers v2r13, TrackAssociators v2r4, TrackMCTools v2r10,
+    TrackIdealPR v2r10, RichRecSys v3r4, RichRecTools v3r11, RichRecQC v2r11,
+    RichRecMCTools v2r11, RichRecMonitors v2r10, MuonID v5r1, RecAlgs v1r4
+
+- In PatChecker v2r13
+  . Follow MCTrackInfo change in LHCb v22r5 and cleanup to use new methods
+  . Minor changes to PatChecker to monitor K0 reconstructed by Maurice.
+  . Add dedicated PatVeloTTChecker
+
+- In PatVelo v2r14
+  . Bug fix to 3D track fit with cluster sort direction reversed 
+
+- In PatVeloTT v2r11
+  . Split PatVeloTT into main algo and tool: PatVeloTT and PatVeloTTTool
+  . Modify PatTTMagnetTool for no B field
+  . Modify options, add VeloTT_noB.opts for no B field
+
+- In TrackSys v4r5
+  . Add VeloTT to NoFieldTracking.opts
+
+- In TrackFitter v2r15
+  . Use counter service for monitoring fit success rate.
+  . Improvements to matrix handling
+
+- In TrackMatching v2r13
+  . Set reference vector of velo measurements when adding to track
+  . Minor change to default value of TTClusterCut
+
+- In TrackAssociators v2r4
+  . Association through LHCbIDs rather than Measurments.
+
+- In TrackExtrapolators v2r11
+  . Added several propagate methods
+  . Make magnetic field service string a property
+
+- In TrackMCTools v2r10
+  . Follow extension of interface to MCHits
+  . Clean up code (more consts, remove duplicate lines)
+  . Use IncidentSvc to avoid repeated slow getting of Linker tables
+  . Add Ghost Classification tools
+  . Add LHCbIDsToMCParticles, LHCbIDsToMCHits
+
+- In TrackCheckers v2r13
+  . Put monitoring histos in Track dir
+  . Add TrackMonitor, TrackMonitorBase (MC independent monitoring)
+
+- In TrackMCTools v2r10, TrackIdealPR v2r10, TrackCheckers v2r13
+  . Follow LHCB_v22r5 changes in IIdealStateCreator interface
+
+- In TrackFitEvent v3r4
+  . Add MuonMeasurement.xml
+ 
+- In TrackTools v2r14
+  . Add MuonMeasurements to MeasurementProvider
+
+- In TrackProjectors v2r12
+  . Add MuonProjector class
+
+- In MuonID v5r1
+  . Add a foi factor to enlarge the FOI if needed, default = 1.
+  . Add measurements to the MuonTrack 
+
+- In RichRecMCTools v2r11
+  . Add new method for MC CK rings
+
+- In RichRecSys v3r4, RichRecQC v2r11, RichRecMonitors v2r10
+  . Remove now obsolete RichToolRegistry settings in options (default values)
+
+- In RichRecMonitors v2r10
+  . Update MC CK ring building algorithm to create a linker object to link
+    MCRichSegments to MC CK ring objects
+  . Update BuildMCCherenkovRings.opts to run on demand
+
+- In RichRecTools v3r11
+  . Fix bug in Cherenkov Cone raytracing tool, which causes an infrequent
+    crash in Panoramix
+  . Update CK ring tool to determine the number of ring points to use based
+    on the size of the ring
+  . Fixes to CK ring ray tracing to fix the 'wobbly ring' issue observed by Guy
+    in Panoramix
+
+- In RecAlgs v1r4
+  . In RecInit.cpp, fill CondDBTags in RecHeader
+
+- In TrackAssociators v2r4, TrackCheckers v2r13, RecAlgs v1r4
+  . Remove obsolete file xxx_load.cpp
+
+- In TrackExtrapolators v2r11, TrackMCTools v2r10, TrackCheckers v2r13,
+     TrackFitter v2r15
+  . Fix doxygen warnings
+
 </PRE><H1><A NAME=v4r4>2007-04-26 RecSys v4r4</A></H1><PRE>
 This version uses Gaudi v19r3 and LHCb v22r4.
 
