@@ -1,13 +1,13 @@
 package KernelSys
-version v6r4
+version v6r5
 
 branches doc cmt
 
-use LHCbKernel       v7r3   Kernel
+use LHCbKernel       v7r4   Kernel
 use LHCbMath         v2r1   Kernel
 use Relations        v5r1   Kernel
 use CaloKernel       v5r0   Calo
 use MuonKernel       v4r0   Muon
-use RichKernel       v7r4   Rich
+use RichKernel       v7r5   Rich
 use L0MuonKernel     v6r0   L0
 use ProcessorKernel  v4r0   L0
