@@ -20,6 +20,7 @@
        <location name = "Digi" place = "MC/DigiHeader" />
        <location name = "MC"   place = "MC/Header" />
        <location name = "Rec"  place = "Rec/Header" />
+       <import name="Kernel/CondDBNameTagPair.h" />
        <attribute
         desc="random number seeds for this step"
         name="randomSeeds"
@@ -43,9 +44,14 @@
         type="unsigned int"
         init="0"
        />
+       <attribute
+        desc="Conditions database tags"
+        name="condDBTags"
+        type="std::vector&lt;LHCb::CondDBNameTagPair&gt;"
+       />
        <constructor 
 	 desc     = "Copy constructor. Creates a new ProcessHeader with the same information." 
-	 initList = "DataObject(), m_randomSeeds(head.randomSeeds()), m_applicationName(head.applicationName()), m_applicationVersion(head.applicationVersion()), m_runNumber(head.runNumber())">
+	 initList = "DataObject(), m_randomSeeds(head.randomSeeds()), m_applicationName(head.applicationName()), m_applicationVersion(head.applicationVersion()), m_runNumber(head.runNumber()), m_condDBTags(head.condDBTags())">
          <arg const="TRUE" name="head" type="LHCb::ProcessHeader"/>
          <code/>
        </constructor>

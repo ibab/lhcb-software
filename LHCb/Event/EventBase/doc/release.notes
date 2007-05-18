@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.14 2007-04-19 15:38:30 cattanem Exp $
+! $Id: release.notes,v 1.15 2007-05-18 08:00:38 cattanem Exp $
 ! Package     : Event/EventBase
 ! Responsible : Marco Cattaneo, Gloria Corti
 ! Purpose     : LHCb Event model
 !---------------------------------------------------------------------------
+
+!========================== EventBase v2r3 2007-05-14 ======================
+! 2007-05-14 - Marco Cattaneo
+ - Add condDBTags() member to ProcessHeader
 
 !========================== EventBase v2r2 2007-04-19 ======================
 ! 2007-04-19 - Chris Jones
