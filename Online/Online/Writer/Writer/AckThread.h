@@ -22,7 +22,7 @@ namespace LHCb {
 			Connection *m_conn;
 			MsgStream *m_log;
 			MM *m_mmObj;
-			int m_stopAcking;
+			volatile int m_stopAcking;
 			int m_sockFd;
 			pthread_t m_ackThread;
 			INotifyClient *m_notifyClient;

@@ -101,12 +101,15 @@ void Connection::connect() {
  */
 void Connection::closeConnection()
 {
+	*m_log << MSG::INFO << "Stopping everything ..." << endmsg;
+
   m_sendThread->stop(STOP_AFTER_PURGE);	/*Stop after all messages are sent.*/
   m_ackThread->stop(STOP_AFTER_PURGE);	/*Stop after all acks have been received.*/
   m_failoverMonitor->stop();
   delete m_sendThread;
   delete m_ackThread;
   delete m_failoverMonitor;
+
   Utils::closeSocket(&m_sockfd, m_log);
 }
 

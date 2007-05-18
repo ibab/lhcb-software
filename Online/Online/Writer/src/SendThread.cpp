@@ -101,8 +101,10 @@ start:
   while((!m_stopSending) || (m_stopSending == STOP_AFTER_PURGE && cmd_to_send)) {
 
 		cmd_to_send = m_mmObj->moveSendPointer();
-    if(!cmd_to_send)
+    if(!cmd_to_send) {
+    	*m_log << MSG::INFO << "Received a blank one, stop=" << m_stopSending << " " << endmsg;
       continue;
+    }
 
     totalSize = sizeof(struct cmd_header);
     if(cmd_to_send->cmd == CMD_WRITE_CHUNK)

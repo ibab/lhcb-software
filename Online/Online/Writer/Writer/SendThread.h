@@ -20,7 +20,7 @@ namespace LHCb {
 			Connection *m_conn;
 			MsgStream *m_log;
 			MM *m_mmObj;
-			int m_stopSending;
+			volatile int m_stopSending;
 			int m_sockFd;
 			pthread_t m_sendThread;
 

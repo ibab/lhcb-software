@@ -53,7 +53,7 @@ namespace LHCb {
 			std::list<NodeState*>::iterator m_currState; /**<< Marks current position.*/
 			pthread_mutex_t m_monitorLock;	/**<< A lock to protect the node states above.*/
 			pthread_t m_monitorThread;			/**<< The thread handle.*/
-			int m_stopThread;								/**<< Tells the thread to start or stop.*/
+			volatile int m_stopThread;			/**<< Tells the thread to start or stop.*/
 			Connection *m_conn;							/**<< The associated connection object.*/
 			int m_sockFd;										/**<< A socket to connect to the service.*/
 			MsgStream *m_log;								/**<< For logging.*/
