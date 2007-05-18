@@ -5,6 +5,100 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v22r5>2007-05-16 LHCbSys v22r5</A></H1><PRE>
+This version uses Gaudi v19r3 and LCG_50b. Fully compatible with DC06 data
+
+- Packages modified: KernelSys v6r5, RichKernel v7r5, RichRecBase v3r4,
+    DetSys v9r5, DetDesc v17r3, EventSys v23r5, EventBase v2r3, MCEvent v2r3,
+    TrackEvent v4r3, HltEvent v8r1, TrackInterfaces v3r4, TrackMCInterfaces v3r1,
+    LHCbAlgs v2r6, DaVinciKernel v6r3, TsaKernel v2r4, SimComponents v2r2,
+    DetCond v11r3
+
+- In LHCbSys v22r5
+  . Add DoxyLHCbCommon.cfg file for use by doxygen of LHCb applications
+  . Change colour of doxygen banner for consistency with other online docs.
+
+- In LHCbKernel v7r4
+  . Move Kernel/lcgStl.h selection file to dict/LHCbKernelDict.h
+  . Added the two header files Kernel/CondDBNameTagPair.h and ICondDBInfo.h
+    to provide a simplified interface to access the conditions database names
+    and tags without the need to depend on DetCond (and COOL).
+  . In LbAppInit, add pointer to ICondDBInfo interface of CondDBSvc
+
+- In RichKernel v7r5
+  . Add new helper class RichHPDIdentifier to convert 'human friendly'
+    HPD numbers to and from RichSmartIDs
+  . Add to lcg dictionary some public classes
+
+- In RichRecBase v3r4
+  . Fixes for lcg dictionaries on windows + add dictionaries for various 
+    utility classes
+  . Add new method to MC truth tool to get MC CK rings
+  . Add protection against PixelCreatorBase::buildPixel returning a null pointer
+
+- In DetDesc v17r3
+  . DetDesc/IGeometryInfo.h, GeometryInfoPlus.h:
+    Add const Gaudi::Transform3D IGeometryInfo::localMatrix() const. 
+    Returns full transformation (incl. misalignment) relating its frame to 
+    that of its detector element parent.
+
+- In DetCond v11r3
+  . Extended ICondDBReader with the interface ICondDBInfo from LHCbKernel and
+    implemented the new function in all the ICondDBReader's (CondDBCnvSvc,
+    CondDBAccessSvc, CondDBLayeringSvc, CondDBDispatcherSvc)
+  . Prepare new functionality requiring CORAL 1.8.0 API (not available in this
+    release, new code is protected by #ifdef):
+    + Added service OnlineDBValidatorSvc to check if the Online CondDB replica
+      is recent enough. (see doxygen documentation)
+    + First implementation of algorithm to sort DB replicas extracted from LFC
+
+- In EventBase v2r3
+  . Add condDBTags() member to ProcessHeader
+
+- In MCEvent v2r3
+  . Tidy up MCTrackInfo + make it a bit faster
+  . Add MCTrackGeomCriteria.h/.cpp
+    (wrapper to allow runtime composition of acceptance criteria )
+  . Add MCFun.h/.cpp functions to flag interactions on the MCParticle
+  . Add GhostTrackInfo (needed by ghost track classification tools)
+
+- In TrackEvent v4r3
+  . Add to track functions to return phi(), pseudoRapidity(), probChi2()
+  . Modify fillstream
+
+- In HltEvent v8r1
+  . Added a list of exclusive selections to HltSummary.xml
+	. Added decision types offset for the selection enums in HltSummary.xm
+  . Added action to trigger python executable to create header file HltNames
+    with the conversion HltEnums <-> strings
+
+- In TrackInterfaces v3r4
+  . Added several propagate methods to ITrackExtrapolator
+
+- In TrackMCInterfaces v3r1
+  . Changes in IIdealStateCreator interface (takes State& instead of State*&)
+  . Add ITrackGhostClassification, ILHCbIDsToMCParticles, ILHCbIDsToMCHits
+
+- In TsaKernel vv2r4
+  . Remove ILHCbIDsToMCParticles, ILHCbIDsToMCHits
+
+- In SimComponents v2r2
+  . Add possibility to remove hadronic interactions to MCParticleSelector
+  . Use MCTrackGeomCriteria in MCReconstructible
+
+- In DetSys v9r5, DetDesc v17r3
+  . Move generation of DetDesc dictionaries to DetDesc package
+
+- In DaVinciKernel v6r3
+  . Improve verbose printout of ProtoParticles in the ProtoParticleSelection
+
+- In LHCbAlgs v2r8, DaVinciKernel v6r3
+  . Fix untested StatusCodes
+
+- In RichKernel v7r5, DetDesc v17r3, TrackInterfaces v3r4, DaVinciKernel v6r3,
+     LHCbKernel v7r4
+  . Fix some doxygen warnings
+
 </PRE><H1><A NAME=v22r4>2007-04-23 LHCbSys v22r4</A></H1><PRE>
 This version uses Gaudi v19r3 and LCG_50b. Fully compatible with DC06 data
 
