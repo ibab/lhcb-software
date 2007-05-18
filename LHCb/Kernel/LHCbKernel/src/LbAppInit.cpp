@@ -1,4 +1,4 @@
-// $Id: LbAppInit.cpp,v 1.8 2007-05-18 08:02:02 cattanem Exp $
+// $Id: LbAppInit.cpp,v 1.9 2007-05-18 08:33:45 cattanem Exp $
 // Include files
 #include <string>
 #include <vector>
@@ -13,7 +13,6 @@
 
 // local
 #include "Kernel/LbAppInit.h"
-#include "Kernel/ICondDBInfo.h"
 #include "Kernel/IGenericTool.h"
 
 //-----------------------------------------------------------------------------
@@ -233,3 +232,11 @@ std::vector<long int> LbAppInit::getSeeds( unsigned int seed1, ulonglong seed2 )
   return seeds;
 };
 
+//=============================================================================
+// Return vector of condDB tags used by CondDBSvc
+//=============================================================================
+const std::vector<LHCb::CondDBNameTagPair> LbAppInit::condDBTags() {
+  std::vector<LHCb::CondDBNameTagPair> tmp;
+  m_condDBInfo->defaultTags(tmp);
+  return tmp;
+};

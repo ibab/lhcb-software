@@ -1,4 +1,4 @@
-// $Id: LbAppInit.h,v 1.7 2007-05-18 08:02:01 cattanem Exp $
+// $Id: LbAppInit.h,v 1.8 2007-05-18 08:33:45 cattanem Exp $
 #ifndef LBAPPINIT_H 
 #define LBAPPINIT_H 1
 
@@ -9,8 +9,10 @@
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
 
+// from LHCbKernel
+#include "Kernel/ICondDBInfo.h"
+
 // Forward declarations
-class ICondDBInfo;
 class IRndmEngine;
 class IRndmGenSvc;
 
@@ -55,11 +57,10 @@ protected:
     return m_appVersion;
   }
 
-  /// Return pointer to ICondDBInfo interface of CondDBSvc
-  const ICondDBInfo* condDBInfo() 
-  {
-    return m_condDBInfo;
-  }
+  /** Get the list of active CondDB tags
+   *  @return vector of DB name, tag pairs. Empty if DB not available
+   */
+  const std::vector<LHCb::CondDBNameTagPair> condDBTags();
 
   /** Print the run number, event number and optional vector of seeds
    *  @param[in] evt event number
