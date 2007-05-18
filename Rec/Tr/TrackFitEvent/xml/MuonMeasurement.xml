@@ -28,6 +28,13 @@
         <arg type='LHCb::MuonMeasurement' name='other' const='TRUE'/>
       </constructor>
 
+     <attribute
+        type    = 'std::auto_ptr &lt; LHCb::Trajectory &gt;'
+        name    = 'trajectoryY'
+        desc    = 'the trajectory representing the Y measurement (owner)'
+        access  = 'PROTECTED'
+        setMeth = 'FALSE' />
+
       <attribute
         type = 'Gaudi::XYZPoint'
         name = 'position'
@@ -42,13 +49,6 @@
         type = 'double'
         name = 'dy'
         desc = 'Half of pad length in y'/>
-
-     <attribute
-        type    = 'std::auto_ptr &lt; LHCb::Trajectory &gt;'
-        name    = 'trajectoryY'
-        desc    = 'the trajectory representing the Y measurement (owner)'
-        access  = 'PROTECTED'
-        setMeth = 'FALSE' />
 	
       <method
         type    = 'LHCb::MuonMeasurement*'
