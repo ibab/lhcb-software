@@ -4,6 +4,11 @@
 ! Purpose     : Holds generic reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+!========================== RecAlgs v1r4 2007-05-18 ==========================
+! 2007-05-18 - Marco Cattaneo
+ - In RecInit.cpp, fill CondDBTags in RecHeader
+ - Remove obsolete file RecAlgs_load.cpp
+
 !========================== RecAlgs v1r3 2006-12-19 ==========================
 ! 2006-12-19 - Marco Cattaneo
  - Use DECLARE_ALGORITHM_FACTORY macro

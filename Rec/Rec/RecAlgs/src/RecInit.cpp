@@ -1,4 +1,4 @@
-// $Id: RecInit.cpp,v 1.3 2006-09-28 13:23:00 cattanem Exp $
+// $Id: RecInit.cpp,v 1.4 2007-05-18 09:02:57 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -94,6 +94,7 @@ StatusCode RecInit::execute() {
   header->setRunNumber( runNumber );
   header->setEvtNumber( evtNumber );
   header->setRandomSeeds( seeds );
+  header->setCondDBTags( this->condDBTags() );
   put( header, LHCb::RecHeaderLocation::Default );
 
   // Create a ProcStatus if it does not already exist
