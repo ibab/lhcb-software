@@ -2,10 +2,10 @@
 ! Responsible : Erica Polycarpo, Miriam Gandelman
 !---------------------------------------------------------------------
 
-! 2007-04-27 - Jose Hernando
+!========================== MuonID v5r1 2007-05-18 ===================
+! 2007-05-18 - Jose Hernando
  - deleting the muon measurement
 
-!========================== MuonID v5r1 2007-05-08 ===================
 ! 2007-05-07 - Miriam Gandelman, Erica Polycarpo
  - added a foi factor to enlarge the FOI if needed, default = 1.
 
