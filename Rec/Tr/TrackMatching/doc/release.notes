@@ -4,11 +4,12 @@
 ! Purpose     : Package for the track matching algorithms
 !-----------------------------------------------------------------------------
 
-2007-05-10 M. Needham
+!======================= TrackMatching v2r13 2007-05-18 ======================
+! 2007-05-10 M. Needham
  - Set reference vector of velo measurements when adding to track
 
-2007-05-07 M. Needham
- - Minor change 
+! 2007-05-07 M. Needham
+ - Minor change to default value of TTClusterCut
  
 !======================= TrackMatching v2r12 2007-03-21 ======================
 ! 2007-03-21 - Marco Cattaneo
