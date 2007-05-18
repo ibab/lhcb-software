@@ -1,5 +1,5 @@
 package BrunelSys
-version v31r4
+version v31r5
 
 branches cmt doc
  
@@ -8,4 +8,4 @@ branches cmt doc
 #=======================================================
 
 # Brunel application
-use Brunel v31r4 Rec
+use Brunel v31r5 Rec

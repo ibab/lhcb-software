@@ -3,6 +3,39 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+</PRE><H1><A NAME=v31r5>2007-05-18 Brunel v31r5</A></H1><PRE>
+This version uses projects Gaudi v19r3, LHCb v22r5, Lbcom v6r5, Rec v4r5
+ and databases DDDB v1r*, ParamFiles v5r0, FieldMap v4r7
+
+It can process DC06 data, but output format is different from DC06, requires 
+programs based on LHCb v22r5 or later
+
+- Persistency changes
+  . RecHeader has a new field containing CondDB tags used in processing. Can only
+    be read by programs based on LHCb v22r5 or later
+    (EventBase v2r3, LHCbKernel v7r4, RecAlgs v1r4) 
+
+- Tuning changes
+  . Add measurements to the MuonTrack 
+    (MuonID v5r1, TrackFitEvent v3r4, TrackTools v2r14)
+  . Modifications to PatVeloTT, to be retuned (PatVeloTT v2r11)
+  . Add VeloTT to no field tracking (PatVeloTT v2r11, TrackSys v4r5)
+  . Minor modifications to track matching (TrackMatch v2r13)
+
+- Bug fixes
+  . Minor fixes to Rich CK ring ray tracing (RichRecTools v3r11)
+  . Bug fix to 3D track fit with cluster sort direction reversed (PatVelo v2r14)
+
+- Monitoring changes
+  . Use counter service for monitoring fit success rate (TrackFitter v2r15)
+  . Association through LHCbIDs rather than Measurements (TrackAssociators v2r4)
+  . Minor changes to Rich CK ring monitoring
+    (RichRecMCTools v2r11, RichRecMonitors v2r10)
+
+- Documentation changes
+  . The doxygen web generated for Brunel now includes in a single index all
+    classes from GAUDI, LHCB, LBCOM, REC projects
+
 </PRE><H1><A NAME=v31r4>2007-04-19 Brunel v31r4</A></H1><PRE>
 This version uses projects Gaudi v19r3, LHCb v22r4, Lbcom v6r4, Rec v4r4
  and databases DDDB v1r*, ParamFiles v5r0, FieldMap v4r7

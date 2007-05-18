@@ -1,21 +1,22 @@
 /** \mainpage notitle
  *  \anchor bruneldoxygenmain
  *
- * <b>The classes used by Brunel are documented in the following reference manuals:</b>
- *
- * \li \ref recsysdoxygenmain "RecSys documentation (LHCb reconstruction packages)"
- * \li \ref lbcomdoxygenmain "LbcomSys documentation (LHCb packages shared with Digitization)"
- * \li \ref lhcbdoxygenmain  "LHCbSys documentation (LHCb core packages)"
- * \li \ref gaudidoxygenmain "Gaudi documentation (Framework packages)"
- * \li \ref externaldocs     "Related external libraries"
+ * This reference manual documents all %LHCb and %Gaudi classes accessible from
+ * the Brunel reconstruction program environment. More information on Brunel,
+ * including a list of available releases, can be found in the 
+ * <a href=" http://cern.ch/lhcb-release-area/DOC/brunel/">Brunel project Web pages</a>
  *
  * <hr>
  * \htmlinclude new_release.notes
- * <b>See also: </b><a href="_dst_content_8opts-source.html"><b>Dst content</b></a><p>
- * <hr>
+ * <b>See also: </b>
+ * \li \ref externaldocs     "Related external libraries"
 
- * <b>Additional information:</b>
- * \li <a href="../release.notes"><b>Release notes history</b></a><p>
- * \li <a href=" http://cern.ch/lhcb-release-area/DOC/brunel/"><b>Brunel project Web pages</b></a><p>
+ * <b>Top level options files</b>
+ * \li DC06.opts: DC06 geometry, rDST
+ * \li DC06-ETC.opts: DC06 geometry, full DST+ETC, starting from ETC input
+ * \li v200601.opts: DC06 geometry, full DST
+ * \li FieldOff.opts: DC06 geometry, field off
+ * \li FieldOff-VeloOpen.opts: DC06 geometry, field off, %Velo Open
+ * \li Copy.opts: To make a copy of .dst files
 
  */

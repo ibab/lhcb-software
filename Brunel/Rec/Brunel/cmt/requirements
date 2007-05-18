@@ -1,5 +1,5 @@
 package Brunel
-version v31r4
+version v31r5
 
 branches doc cmt job options
 
@@ -23,24 +23,24 @@ use DDDB                v1r*    Det  -no_auto_imports
 use FieldMap		v4r7         -no_auto_imports
 use ParamFiles          v5r0         -no_auto_imports
 
-#-- LHCb libraries (from LHCB_v22r4)
+#-- LHCb libraries (from LHCB_v22r5)
 use GaudiConf           v10r3          -no_auto_imports
 use GaudiObjDesc        v9r9           -no_auto_imports
-use KernelSys           v6r4    Kernel -no_auto_imports
-use DetSys              v9r4    Det    -no_auto_imports
-use EventSys            v23r4   Event  -no_auto_imports
+use KernelSys           v6r5    Kernel -no_auto_imports
+use DetSys              v9r5    Det    -no_auto_imports
+use EventSys            v23r5   Event  -no_auto_imports
 use DAQSys              v3r2    DAQ    -no_auto_imports
-use LHCbAlgs            v2r7    Kernel -no_auto_imports
-use SimComponents       v2r1    Sim    -no_auto_imports
+use LHCbAlgs            v2r8    Kernel -no_auto_imports
+use SimComponents       v2r2    Sim    -no_auto_imports
 use PatTools            v3r1    Pat    -no_auto_imports
 use CaloInterfaces      v7r2    Calo   -no_auto_imports
 use CaloUtils           v7r2    Calo   -no_auto_imports
 
-#-- Lbcom packages (from LBCOM_v6r4)
-use LbcomSys            v6r4         -no_auto_imports
+#-- Lbcom packages (from LBCOM_v6r5)
+use LbcomSys            v6r5         -no_auto_imports
 
-#-- Rec packages (from REC_v4r4)
-use RecSys              v4r4         -no_auto_imports
+#-- Rec packages (from REC_v4r5)
+use RecSys              v4r5         -no_auto_imports
 
 #
 #===== build Brunel =========================

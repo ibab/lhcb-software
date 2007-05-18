@@ -3,6 +3,9 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v31r5>2007-05-18 Brunel v31r5</A></H1><PRE>
+ - Adapt requirements to Rec v4r5, Lbcom v6r5, LHCb v22r5, Gaudi v19r3
+
 </PRE><H1><A NAME=v31r4>2007-03-28 Brunel v31r4</A></H1><PRE>
  - Adapt requirements to Rec v4r4, Lbcom v6r4, LHCb v22r4, Gaudi v19r3
 
