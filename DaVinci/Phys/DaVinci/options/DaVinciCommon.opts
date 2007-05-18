@@ -65,3 +65,9 @@ ApplicationMgr.AppName = "DaVinci" ;
 
 //--------------------------------------------------------------
 #include "$DAVINCIROOT/options/DaVinciProtoPCalibrate.opts"
+
+
+//-------------------------------------------------------------
+// Check StatusCodes
+//-------------------------------------------------------------
+ApplicationMgr.StatusCodeCheck = true ;

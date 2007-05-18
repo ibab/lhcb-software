@@ -1,1 +1,2 @@
-// Empty options file for backwards compatibility.
+// add this as it is very often missing in options files.
+#include "$COMMONPARTICLESROOT/options/StandardParticles.opts"
