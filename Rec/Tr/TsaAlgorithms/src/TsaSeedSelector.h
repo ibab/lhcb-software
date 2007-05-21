@@ -1,8 +1,8 @@
-// $ Exp $
+// $Id: TsaSeedSelector.h,v 1.3 2007-05-21 06:53:28 cattanem Exp $
 #ifndef _TsaSeedSelector_H
 #define _TsaSeedSelector_H
 
-/** @class TsaSeedSelectorTsaSeedSelector.h 
+/** @class TsaSeedSelector TsaSeedSelector.h 
 * Follow track and pick up hits
 * @author M. Needham
 **/

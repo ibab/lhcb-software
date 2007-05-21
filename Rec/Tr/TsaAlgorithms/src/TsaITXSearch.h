@@ -1,8 +1,8 @@
-// $ Exp $
+// $Id: TsaITXSearch.h,v 1.2 2007-05-21 06:53:28 cattanem Exp $
 #ifndef _TsaITXSearch_H
 #define _TsaITXSearch_H
 
-/** @class TsaXSearchBase TsaXSearchBase Tsa/TsaXSearchBase
+/** @class TsaITXSearch TsaITXSearch.h
 * Follow track and pick up hits
 * @author M. Needham
 **/
