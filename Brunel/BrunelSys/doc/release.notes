@@ -3,7 +3,7 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
-</PRE><H1><A NAME=v31r5>2007-05-18 Brunel v31r5</A></H1><PRE>
+</PRE><H1><A NAME=v31r5>2007-05-21 Brunel v31r5</A></H1><PRE>
 This version uses projects Gaudi v19r3, LHCb v22r5, Lbcom v6r5, Rec v4r5
  and databases DDDB v1r*, ParamFiles v5r0, FieldMap v4r7
 
@@ -31,6 +31,8 @@ programs based on LHCb v22r5 or later
   . Association through LHCbIDs rather than Measurements (TrackAssociators v2r4)
   . Minor changes to Rich CK ring monitoring
     (RichRecMCTools v2r11, RichRecMonitors v2r10)
+  . Use TimingAuditor for timing, suppress printout from SequencerTimerTool
+    (BrunelMoni.opts)
 
 - Documentation changes
   . The doxygen web generated for Brunel now includes in a single index all
