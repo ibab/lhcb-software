@@ -1,2 +1,2 @@
 // add this as it is very often missing in options files.
-#include "$COMMONPARTICLESROOT/options/StandardParticles.opts"
+#include "$COMMONPARTICLESROOT/options/StandardOptions.opts"
