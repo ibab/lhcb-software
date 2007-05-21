@@ -2,6 +2,11 @@ Package: OnlineKernel
 Author:  Markus Frank
 
 
+! 2007-05-25 Markus Frank
+  - Add OnlineKernel/CPP/XMLStream.h to easy the construction of
+    XML formatted files
+  - Add src/MBM/RemoteMon.cpp Remote monitoring based on XML.
+
 ! 2007-05-05 Markus Frank
   - Fix access flags for global sections, locks and events on linux.
   - New entry point to create event flags in shared memory (linux only)

@@ -44,8 +44,11 @@ int lib_rtl_create_section(const char* sec_name, size_t size, lib_rtl_gbl_t* add
 #if defined(__linux)
   int sysprot  = PROT_READ+PROT_WRITE;
   int sysflags = MAP_SHARED;
-  h->fd = ::shm_open(h->name,O_RDWR|O_CREAT|O_EXCL,0644);
+  h->fd = ::shm_open(h->name,O_RDWR|O_CREAT|O_EXCL,0666);
   if ( h->fd ) {
+    char path[1024];
+    sprintf(path,"/dev/shm%s",h->name);
+    chmod(path,0666);
     ::ftruncate(h->fd, h->size);
     h->address = ::mmap (0, h->size, sysprot, sysflags, h->fd, 0);
     if ( h->address != MAP_FAILED && h->address != 0 )  {
@@ -108,7 +111,7 @@ int lib_rtl_map_section(const char* sec_name, size_t size, lib_rtl_gbl_t* addres
 #if defined(__linux)
   int sysprot  = PROT_READ+PROT_WRITE;
   int sysflags = MAP_SHARED;
-  h->fd = ::shm_open(h->name,O_RDWR|O_CREAT|O_EXCL,0644);
+  h->fd = ::shm_open(h->name,O_RDWR|O_CREAT|O_EXCL,0666);
   if ( 0 == h->fd )  {
     ::close(h->fd);
     ::shm_unlink(h->name);
@@ -116,6 +119,9 @@ int lib_rtl_map_section(const char* sec_name, size_t size, lib_rtl_gbl_t* addres
   }
   h->fd = ::shm_open(h->name,O_RDWR|O_CREAT,0644);
   if ( h->fd ) {
+    char path[1024];
+    sprintf(path,"/dev/shm%s",h->name);
+    chmod(path,0666);
     ::ftruncate(h->fd, h->size);
   }
   h->address = ::mmap (0, h->size, sysprot, sysflags, h->fd, 0);

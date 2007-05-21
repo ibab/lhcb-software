@@ -20,16 +20,26 @@ void IocSensor::dispatch( void* arg )  {
 
 //----------------------------------------------------------------------------
 void IocSensor::send( Interactor* it, int type, void* data )  {
-  wtc_insert(WT_FACILITY_SENSOR2, new Message(it, type, data));    
+  ::wtc_insert(WT_FACILITY_SENSOR2, new Message(it, type, data));    
 }
 
 //----------------------------------------------------------------------------
 void IocSensor::send( Interactor* it, int type, unsigned long data )  {
-  wtc_insert(WT_FACILITY_SENSOR2, new Message(it, type, (void*)data));    
+  ::wtc_insert(WT_FACILITY_SENSOR2, new Message(it, type, (void*)data));    
+}
+
+//----------------------------------------------------------------------------
+void IocSensor::sendHead( Interactor* it, int type, void* data )  {
+  ::wtc_insert_head(WT_FACILITY_SENSOR2, new Message(it, type, data));    
+}
+
+//----------------------------------------------------------------------------
+void IocSensor::sendHead( Interactor* it, int type, unsigned long data )  {
+  ::wtc_insert_head(WT_FACILITY_SENSOR2, new Message(it, type, (void*)data));    
 }
 
 //----------------------------------------------------------------------------
 IocSensor& IocSensor::instance()  {
-   static IocSensor sensor;
-   return sensor;
+  static IocSensor sensor;
+  return sensor;
 }

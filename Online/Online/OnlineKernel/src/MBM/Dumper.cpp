@@ -39,7 +39,7 @@ namespace MBM {
   };
 }
 
-int mbm_dump(int argc , char** argv) {
+extern "C" int mbm_dump(int argc , char** argv) {
   MBM::Dumper dmp(argc, argv);
   return dmp.print();
 }

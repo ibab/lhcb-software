@@ -33,11 +33,14 @@
 #include "RTL/DoubleLinkedQueue.h"
 #define MBM_MAX_BUFF  32
 
-#define _mbm_return_err(a)  {  errno = a; return (a); }
+#define _mbm_return_err(err_code)  {  errno = err_code; return err_code; }
 
-int mbm_error()  {  ::lib_rtl_printf("MBM Error:Bad!!!!\n");  return MBM_ERROR;  }
+static inline int mbm_error(const char* fn, int line)  {  
+  ::lib_rtl_printf("MBM Error:Bad!!!! %s Line:%d\n",fn,line);
+  return MBM_ERROR;  
+}
 #undef MBM_ERROR
-#define  MBM_ERROR mbm_error();
+#define  MBM_ERROR mbm_error(__FILE__,__LINE__);
 #define  MBMQueue RTL::DoubleLinkedQueue
 using namespace MBM;
 
@@ -61,10 +64,11 @@ static int disable_rundown=0;
 inline int _mbm_printf(const char* , ...)  {  return 1;   }
 #else
 inline int _mbm_printf(const char* fmt, ...)  {
+  char buff[1024];
   va_list args;
   va_start(args, fmt);
-  int len = vprintf(fmt, args);
-  lib_rtl_printf("\n");
+  int len = vsnprintf(buff, sizeof(buff), fmt, args);
+  ::lib_rtl_printf(buff);
   return len;
 }
 #endif
@@ -207,9 +211,9 @@ public:
 };
 
 BMID mbm_map_memory(const char* bm_name)  {
-  std::auto_ptr<BMDESCRIPT> bm(new BMDESCRIPT);
-  memset(bm.get(),0,sizeof(BMDESCRIPT));
-  strcpy(bm->bm_name,bm_name);
+  std::auto_ptr<BMDESCRIPT> bm(new BMDESCRIPT());
+  ::memset(&bm->ctrl,0,&bm->lastVar-(char*)&bm->ctrl);
+  ::strcpy(bm->bm_name,bm_name);
   bm->owner = -1;
   int sc = _mbm_map_sections(bm.get());
   if ( sc == MBM_NORMAL )  {
@@ -272,7 +276,7 @@ BMID mbm_include (const char* bm_name, const char* name, int partid) {
   us->partid  = partid;
   ::strncpy (us->name, name, sizeof(us->name));
   us->name[sizeof(us->name)-1] = 0;
-  us->pid = lib_rtl_pid ();
+  us->pid = ::lib_rtl_pid ();
   us->space_add     = 0;
   us->space_size    = 0;
   us->ev_produced   = 0;
@@ -291,12 +295,18 @@ BMID mbm_include (const char* bm_name, const char* name, int partid) {
   bm->ctrl->i_users++;
 
   // Activate this user
-  ::sprintf(us->wes_flag, "bm_%s_WES_%d", bm_name, lib_rtl_pid());
+#ifdef _WIN32
+  ::sprintf(us->wes_flag, "bm_%s_WES_%d_%d", bm_name, us->uid, us->pid);
+  ::sprintf(us->wev_flag, "bm_%s_WEV_%d_%d", bm_name, us->uid, us->pid);
+  ::sprintf(us->wsp_flag, "bm_%s_WSP_%d_%d", bm_name, us->uid, us->pid);
   lib_rtl_create_event(us->wes_flag, &bm->WES_event_flag);
-  ::sprintf(us->wev_flag, "bm_%s_WEV_%d", bm_name, lib_rtl_pid());
   lib_rtl_create_event(us->wev_flag, &bm->WEV_event_flag);
-  ::sprintf(us->wsp_flag, "bm_%s_WSP_%d", bm_name, lib_rtl_pid());
   lib_rtl_create_event(us->wsp_flag, &bm->WSP_event_flag);
+#else
+  lib_rtl_create_event2(&us->wes_handle, &bm->WES_event_flag);
+  lib_rtl_create_event2(&us->wev_handle, &bm->WEV_event_flag);
+  lib_rtl_create_event2(&us->wsp_handle, &bm->WSP_event_flag);
+#endif
   lib_rtl_create_event(0, &bm->WSPA_event_flag);
   lib_rtl_create_event(0, &bm->WEVA_event_flag);
 
@@ -310,15 +320,27 @@ BMID mbm_include (const char* bm_name, const char* name, int partid) {
   reference_count++;
   errno = 0;
   _mbm_unlock_tables(bm.get());
+  _mbm_printf("MBM: %s is now included in %s\n",name, bm_name);
   return bm.release();
 }
 
 // Exclude from buffer manager
 int mbm_exclude (BMID bm)  {
+  typedef std::map<long long int,lib_rtl_event_t> event_map;
+  event_map::iterator i;
   int owner = bm->owner;
   if (owner == -1)    {
     _mbm_return_err (MBM_ILL_CONS);
   }
+  for(i=bm->us_wev_flags.begin();i!=bm->us_wev_flags.end();++i)
+    ::lib_rtl_delete_event((*i).second);
+  bm->us_wev_flags.clear();
+  for(i=bm->us_wes_flags.begin();i!=bm->us_wes_flags.end();++i)
+    ::lib_rtl_delete_event((*i).second);
+  bm->us_wes_flags.clear();
+  for(i=bm->us_wsp_flags.begin();i!=bm->us_wsp_flags.end();++i)
+    ::lib_rtl_delete_event((*i).second);
+  bm->us_wsp_flags.clear();
   int sc = _mbm_lock_tables(bm);
   if ( 1==sc )  {
     lib_rtl_delete_event(bm->WES_event_flag);
@@ -811,7 +833,7 @@ int _mbm_check_wev (BMID bm, EVENT* e)  {
       _mbm_del_wev (bm, u);
       u->get_wakeups++;
       _mbm_printf("EVENT: id=%d  %d %08X -> %s\n",e->eid, e->count, e->ev_add, u->name);
-      _mbm_wake_process(BM_K_INT_EVENT, u);
+      _mbm_wake_process(bm, BM_K_INT_EVENT, u);
     }
   }
   return MBM_NORMAL;
@@ -868,7 +890,7 @@ int _mbm_check_wsp (BMID bm)  {
           u->space_size    = ubit << shift;
           u->space_add     = u->ws_ptr;
           _mbm_del_wsp (bm, u);
-          _mbm_wake_process(BM_K_INT_SPACE, u);
+          _mbm_wake_process(bm, BM_K_INT_SPACE, u);
           break;
         }
       }
@@ -1205,7 +1227,7 @@ int _mbm_check_wes (BMID bm)   {
   for(USER* u=que.get(); u; u=que.get() )  {
     if (u->isValid() && u->p_state == S_weslot)    {
       _mbm_del_wes (bm, u);
-      _mbm_wake_process (BM_K_INT_ESLOT, u);
+      _mbm_wake_process (bm, BM_K_INT_ESLOT, u);
       break;
     }
   }
@@ -1423,26 +1445,62 @@ int  mbm_wait_space_a(BMID bm)    {
   return user.status();
 }
 
-// Wakeup process to continue processing
-int _mbm_wake_process (int reason, USER* us) {
-  us->reason = reason;
-  int status = 0;
-  switch(reason)  {
-    case BM_K_INT_EVENT:
-      status = lib_rtl_set_global_event(us->wev_flag);
-      break;
-    case BM_K_INT_ESLOT:
-      status = lib_rtl_set_global_event(us->wes_flag);
-      break;
-    case BM_K_INT_SPACE:
-      status = lib_rtl_set_global_event(us->wsp_flag);
-      break;
+int _mbm_get_user_flag(std::map<long long int,lib_rtl_event_t>& flags, USER* us, const char* name, lib_rtl_event_t* flg)  {
+  typedef std::map<long long int,lib_rtl_event_t> event_map;
+  long long int idx = ((long long int)us->uid)<<32 + (long long int)us->pid;
+  event_map::const_iterator i = flags.find(idx);
+  if ( i == flags.end() ) {
+    int sc = ::lib_rtl_create_event(name, flg);
+    if ( sc == 1 ) {
+      flags.insert(event_map::value_type(idx,*flg));
+      return MBM_NORMAL;
+    }
+    return MBM_ERROR;
   }
-  if (!lib_rtl_is_success(status))  {
-    lib_rtl_start_debugger();
-  }
+  *flg = (*i).second;
   return MBM_NORMAL;
 }
+
+// Wakeup process to continue processing
+#ifdef _WIN32
+int _mbm_wake_process (BMID bm, int reason, USER* us) {
+  us->reason = reason;
+  lib_rtl_event_t flag = 0;
+  int status = MBM_ERROR;
+  switch(reason)  {
+    case BM_K_INT_EVENT:
+      status = _mbm_get_user_flag(bm->us_wev_flags, us, us->wev_flag, &flag);
+      break;
+    case BM_K_INT_ESLOT:
+      status = _mbm_get_user_flag(bm->us_wes_flags, us, us->wes_flag, &flag);
+      break;
+    case BM_K_INT_SPACE:
+      status = _mbm_get_user_flag(bm->us_wsp_flags, us, us->wsp_flag, &flag);
+      break;
+  }
+  if ( status == MBM_NORMAL ) {
+    status = lib_rtl_set_event(flag);
+    if (!lib_rtl_is_success(status))  {
+      lib_rtl_start_debugger();
+    }
+    return MBM_NORMAL;
+  }
+  return MBM_ERROR;
+}
+#else
+int _mbm_wake_process (BMID, int reason, USER* us) {
+  us->reason = reason;
+  switch(reason)  {
+    case BM_K_INT_EVENT:
+      return ::sem_post(&us->wev_handle)==0 ? MBM_NORMAL : MBM_ERROR;
+    case BM_K_INT_ESLOT:
+      return ::sem_post(&us->wes_handle)==0 ? MBM_NORMAL : MBM_ERROR;
+    case BM_K_INT_SPACE:
+      return ::sem_post(&us->wsp_handle)==0 ? MBM_NORMAL : MBM_ERROR;
+  }
+  return MBM_ERROR;
+}
+#endif
 
 int _mbm_fill_offsets() {
   byte_offset(USER,next,USER_next_off);
@@ -1567,6 +1625,11 @@ int _mbm_declare_event (BMID bm, int len, int evtype, TriggerMask& trmask,
         ::lib_rtl_wait_for_event(bm->WES_event_flag);
         _mbm_lock_tables(bm);
       }
+      // This means a mbm_cancel_request came while waiting!
+      if ( us->p_state == S_active )   {
+        ::lib_rtl_printf("MBM[%s]> I got hit by a cancel request!\n",us->name);
+        _mbm_return_err(MBM_REQ_CANCEL);
+      }
       ctrl->spare1 = sp;
       if ( us->p_state == S_weslot_ast_queued )  {
         ::lib_rtl_run_ast(us->p_astadd, us->p_astpar, 3);
@@ -1575,7 +1638,7 @@ int _mbm_declare_event (BMID bm, int len, int evtype, TriggerMask& trmask,
         ::lib_rtl_printf("%s Failed lib_rtl_wait_for_event(bm->WES_event_flag)\n",bm->bm_name);
       }
       if ( us->p_state != S_active )   {
-        _mbm_return_err (MBM_REQ_CANCEL); // other reasons
+        _mbm_return_err(MBM_REQ_CANCEL); // other reasons
       }
     }
   } while ( ev == 0 );

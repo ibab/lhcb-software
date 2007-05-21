@@ -56,7 +56,7 @@ extern "C" {
   int _mbm_check_wev    (BMID bmid,EVENT*);
   int _mbm_del_wev      (BMID bmid,USER*);
   /// Wakeup process to continue processing
-  int _mbm_wake_process (int reason, USER* us);
+  int _mbm_wake_process (BMID bmid, int reason, USER* us);
 
   int _mbm_shutdown     (void* param);
   int _mbm_fill_offsets ();
@@ -77,9 +77,9 @@ extern "C" {
   /// Wait event space AST function
   int _mbm_wes_ast      (void* par);
   /// Map buffer manager memory sections
-  int _mbm_map_sections (BMID bm);
+  int _mbm_map_sections (BMID bmid);
   /// Unmap buffer manager memory sections
-  int _mbm_unmap_sections(BMID bm);
+  int _mbm_unmap_sections(BMID bmid);
 }
 
 #define _CHECK( x )  { int sc = x ; if ( !(sc&1) ) { lib_rtl_printf ( "Error in:%s, status=%d\n", #x , sc ); return sc; } }

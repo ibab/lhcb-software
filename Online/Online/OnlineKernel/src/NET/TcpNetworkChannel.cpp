@@ -110,7 +110,7 @@ int TcpNetworkChannel::connect ( const Address& addr, int tmo )  {
 //  send data to network partner.
 //                                      M.Frank
 // ----------------------------------------------------------------------------
-int TcpNetworkChannel::send  (void* buff, int len, int tmo, int flags, const Address* addr )    {
+int TcpNetworkChannel::send  (const void* buff, int len, int tmo, int flags, const Address* addr )    {
   if ( m_socket > 0 )  {
     int status, addr_len = sizeof(Address);
     startTimer(tmo);
@@ -140,6 +140,15 @@ int TcpNetworkChannel::recv  (void* buff, int len, int tmo, int flags, Address* 
   }
   return status;
 }
+// ----------------------------------------------------------------------------
+//  Set send buffer size
+//                                      M.Frank
+// ----------------------------------------------------------------------------
+int TcpNetworkChannel::setSendBufferSize(int len) {
+  int status = ::setsockopt(m_socket, SOL_SOCKET, SO_SNDBUF,(const char*)&len, sizeof(len));
+  return status;
+}
+
 // ----------------------------------------------------------------------------
 //  Queue Accept request on accept socket
 //                                      M.Frank

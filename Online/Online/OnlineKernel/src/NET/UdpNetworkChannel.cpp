@@ -43,7 +43,7 @@ UdpNetworkChannel::~UdpNetworkChannel()  {
 //  send data to network partner.
 //                                      M.Frank
 // ----------------------------------------------------------------------------
-int UdpNetworkChannel::send  (void* buff, int len, int tmo, int flags, const Address* addr)    {
+int UdpNetworkChannel::send  (const void* buff, int len, int tmo, int flags, const Address* addr)    {
   if ( m_socket > 0 )  {
     int status;
     socklen_t siz = sizeof(Address);

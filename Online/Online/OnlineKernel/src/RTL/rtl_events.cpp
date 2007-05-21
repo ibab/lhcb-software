@@ -42,6 +42,26 @@ extern "C" int lib_rtl_event_exithandler() {
 }
 
 /// Create named event for inter process communication
+#ifndef _WIN32
+int lib_rtl_create_event2 (sem_t* handle, lib_rtl_event_t* event_flag)    {
+  std::auto_ptr<rtl_event> h(new rtl_event);
+  ::memset(h->name,0,sizeof(h->name));
+  h->handle = handle;
+  int sc = h->handle ? ::sem_init(h->handle, 1, 1) : (errno=EBADR); 
+  if ( sc != 0 )  {
+    h->handle = 0;
+  }
+  if ( h->handle == 0 )  {
+    ::lib_rtl_signal_message(LIB_RTL_OS,"Failed to create event flag");
+    *event_flag = 0;
+    return 0;
+  }
+  *event_flag = h.release();
+  return 1;
+}
+#endif
+
+/// Create named event for inter process communication
 int lib_rtl_create_event (const char* name, lib_rtl_event_t* event_flag)    {
   std::auto_ptr<rtl_event> h(new rtl_event);
   ::memset(h->name,0,sizeof(h->name));
@@ -51,9 +71,9 @@ int lib_rtl_create_event (const char* name, lib_rtl_event_t* event_flag)    {
     h->name[sizeof(h->name)-1] = 0;
   }
 #if defined(USE_PTHREADS)
-  h->handle = h->name[0] ? ::sem_open(h->name, O_CREAT|O_EXCL, 0777, 1) : &h->handle2;
+  h->handle = h->name[0] ? ::sem_open(h->name, O_CREAT|O_EXCL, 0666, 1) : &h->handle2;
   if (h->name[0] && !h->handle) {
-    h->handle = ::sem_open(h->name, O_CREAT, 0777, 1);
+    h->handle = ::sem_open(h->name, O_CREAT, 0666, 1);
     if ( !h->handle ) {
       ::perror("SEVERE: sem_open: ");
       return 0;
@@ -61,13 +81,10 @@ int lib_rtl_create_event (const char* name, lib_rtl_event_t* event_flag)    {
   }
   else if ( h->name[0] ) {
     created = true;
-  }
-  if ( h->name[0] ) {
-      std::string nn="/dev/shm/sem.";
-      nn+=name;
-      int scc = ::chmod(nn.c_str(),0666);
-      // ::lib_rtl_printf("Settint protection of %s\n",nn.c_str());
-      if ( 0 != scc ) ::perror("chmod.");
+    std::string nn="/dev/shm/sem.";
+    nn += name;
+    int ret = ::chmod(nn.c_str(),0666);
+    if ( 0 != ret ) ::perror("SEVERE: chmod.");
   }
   int sc = h->handle ? ::sem_init(h->handle, h->name[0] ? 1 : 0, 1) : (errno=EBADR); 
   if ( sc != 0 )  {
@@ -81,7 +98,7 @@ int lib_rtl_create_event (const char* name, lib_rtl_event_t* event_flag)    {
   }
 #endif
   if ( h->handle == 0 )  {
-    ::lib_rtl_signal_message(LIB_RTL_OS,"Failed to create %s event flag [%s]", 
+    ::lib_rtl_signal_message(LIB_RTL_OS,"Failed to create %s event flag.", 
       name ? name : "<unnamed>");
     *event_flag = 0;
     return 0;
@@ -114,6 +131,7 @@ int lib_rtl_delete_event(lib_rtl_event_t handle)   {
       lib_rtl_event_map_t& m = allEventFlags();
       lib_rtl_event_map_t::iterator i = m.find(h->name);
       if ( i != m.end() ) {
+        // ::lib_rtl_printf("Deleting event: %s\n",(*i).first.c_str());
         m.erase(i);
       }
     }
@@ -186,23 +204,6 @@ int lib_rtl_set_event(lib_rtl_event_t h)   {
   return 0;
 }
 
-int lib_rtl_set_global_event(const char* name)   {
-  typedef std::map<std::string,lib_rtl_event_t> event_map;
-  static event_map* events = new event_map;
-  event_map::const_iterator i = events->find(std::string(name));
-  lib_rtl_event_t h;
-  if ( i == events->end() ) {
-    int sc = ::lib_rtl_create_event(name, &h);
-    if ( sc == 1 ) {
-      events->insert(event_map::value_type(name,h));
-    }
-  }
-  else {
-    h = (*i).second;
-  }
-  return lib_rtl_set_event(h);
-}
-
 int lib_rtl_wait_event_a_call(void* param)  {
   lib_rtl_action* pars = (lib_rtl_action*)param;
   while(pars->flag)  {
@@ -258,7 +259,7 @@ extern "C" int rtl_set_event(int argc, char** argv)  {
   if ( !lib_rtl_is_success(sc) )  {
     return sc;
   }
-  sc = ::lib_rtl_set_global_event(name.c_str());
+  sc = ::lib_rtl_set_event(flag);
   if ( !lib_rtl_is_success(sc) )  {
     return sc;
   }
