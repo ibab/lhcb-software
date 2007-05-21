@@ -4,6 +4,7 @@
 // Include files
 
 // local
+#include "GaudiKernel/ToolHandle.h" 
 #include "TrackExtrapolator.h"
 #include "DetDesc/ILVolume.h"
 
@@ -12,6 +13,7 @@ class ITransportSvc;
 class Material;
 class IStateCorrectionTool;
 class ITrackExtraSelector;
+class IMaterialLocator ;
 
 /** @class TrackMasterExtrapolator TrackMasterExtrapolator.h \
  *         "TrackMasterExtrapolator.h"
@@ -66,12 +68,7 @@ class TrackMasterExtrapolator: public TrackExtrapolator
   void updateTransportMatrix( const Gaudi::TrackMatrix& newStepF );
 
   /// z scatter
-  double zScatter(const double z1,
-		  const double z2 ) const;
-
-  /// convert from transport service ticks to mm in the LHCb frame
-  void transformToGlobal( const double zStep, const double zStart,
-                         ILVolume::Intersections& intersept );
+  double zScatter(const double z1, const double z2, bool isUpstream ) const;
 
   // Multiple scattering tools
   IStateCorrectionTool* m_thinmstool;
@@ -85,10 +82,8 @@ class TrackMasterExtrapolator: public TrackExtrapolator
   ITrackExtraSelector* m_extraSelector;
 
   /// Pointer to the transport service
-  ITransportSvc* m_transportSvc;
-
-  bool m_upStream;                 ///< Flag to distinguish between up/downstr.
-
+  ToolHandle<IMaterialLocator> m_materialLocator ;
+  
   // job options
   std::string m_thinmstoolname;    ///< name of thin MS correction tool
   std::string m_thickmstoolname;   ///< name of thick MS correction tool
@@ -99,7 +94,6 @@ class TrackMasterExtrapolator: public TrackExtrapolator
   double m_thickWall;              ///< thick wall
   bool   m_applyEnergyLossCorr;    ///< turn on/off dE/dx correction
   double m_maxStepSize;            ///< maximum length of a step
-  double m_minRadThreshold;        ///< minimal thickness of a wall
   double m_maxSlope;               ///< maximum slope of state vector
   double m_maxTransverse;          ///< maximum x,y position of state vector  
 
@@ -109,7 +103,6 @@ class TrackMasterExtrapolator: public TrackExtrapolator
   double m_stopElectronCorr;    ///< z start for electron energy loss 
 
   bool m_debugLevel;
-  double m_25m;
 };
 
 inline void TrackMasterExtrapolator::updateTransportMatrix
@@ -120,16 +113,5 @@ inline void TrackMasterExtrapolator::updateTransportMatrix
   m_F = newStepF * tempF;
 }
 
-inline void 
-TrackMasterExtrapolator::transformToGlobal( const double zStep,
-                                            const double zStart,
-                                            ILVolume::Intersections& intersept)
-{
-  // convert from transport service ticks to mm in the LHCb frame
-  for (unsigned int iW = 0 ;  intersept.size() > iW ; ++iW ) {
-    intersept[iW].first.first  = (intersept[iW].first.first*zStep)+zStart;
-    intersept[iW].first.second = (intersept[iW].first.second*zStep)+zStart;
-  }
-}
 
 #endif // TRACKEXTRAPOLATORS_TRACKMASTEREXTRAPOLATOR_H

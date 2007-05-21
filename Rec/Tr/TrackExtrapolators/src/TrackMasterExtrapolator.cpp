@@ -16,6 +16,7 @@
 // from TrackInterfaces
 #include "TrackInterfaces/IStateCorrectionTool.h"
 #include "TrackInterfaces/ITrackExtraSelector.h"
+#include "TrackInterfaces/IMaterialLocator.h"
 
 // Local 
 #include "TrackMasterExtrapolator.h"
@@ -32,7 +33,8 @@ DECLARE_TOOL_FACTORY( TrackMasterExtrapolator );
 TrackMasterExtrapolator::TrackMasterExtrapolator( const std::string& type,
                                                   const std::string& name,
                                                   const IInterface* parent )
-  : TrackExtrapolator(type, name, parent)
+  : TrackExtrapolator(type, name, parent),
+    m_materialLocator("DetailedMaterialLocator")
 {
   //job options
   declareProperty( "ExtraSelector",
@@ -41,7 +43,6 @@ TrackMasterExtrapolator::TrackMasterExtrapolator( const std::string& type,
   declareProperty( "ThickWall"           , m_thickWall           = 0.*mm );
   declareProperty( "ApplyEnergyLossCorr" , m_applyEnergyLossCorr = true );
   declareProperty( "MaxStepSize"         , m_maxStepSize         = 1000.*mm );
-  declareProperty( "MinRadThreshold"     , m_minRadThreshold     = 1.0e-4 );
   declareProperty( "MaxSlope"            , m_maxSlope            = 5. );
   declareProperty( "MaxTransverse"       , m_maxTransverse       = 10.*m );
   // State correction tools
@@ -58,6 +59,7 @@ TrackMasterExtrapolator::TrackMasterExtrapolator( const std::string& type,
                    m_applyElectronEnergyLossCorr = true );
   declareProperty( "StartElectronCorr", m_startElectronCorr = 2500.*mm );
   declareProperty( "StopElectronCorr",  m_stopElectronCorr  = 9000.*mm );
+  declareProperty("MaterialLocator",m_materialLocator ) ;
 }
 
 //=============================================================================
@@ -74,8 +76,8 @@ StatusCode TrackMasterExtrapolator::initialize()
   if ( sc.isFailure() ) return Error( "Failed to initialize", sc );
 
   // tools for multiple scattering corrections
-  m_thinmstool  = tool<IStateCorrectionTool>( m_thinmstoolname  );
-  m_thickmstool = tool<IStateCorrectionTool>( m_thickmstoolname );
+  m_thinmstool  = tool<IStateCorrectionTool>( m_thinmstoolname,"ThinMSTool",this  );
+  m_thickmstool = tool<IStateCorrectionTool>( m_thickmstoolname,"ThickMSTool",this  );
 
   // tools for dE/dx corrections
   m_dedxtool     = tool<IStateCorrectionTool>( m_dedxtoolname     );
@@ -86,11 +88,10 @@ StatusCode TrackMasterExtrapolator::initialize()
                                                "ExtraSelector",this );
 
   // initialize transport service
-  m_transportSvc = svc<ITransportSvc>( "TransportSvc", true );
-
+  sc = m_materialLocator.retrieve() ;
+  if( !sc.isSuccess() ) return Error( "Failed to retrieve material intersector", sc ) ;
+  
   m_debugLevel = msgLevel( MSG::DEBUG );
-
-  m_25m = 25. * m;
   
   return StatusCode::SUCCESS;
 }
@@ -98,126 +99,16 @@ StatusCode TrackMasterExtrapolator::initialize()
 //=========================================================================
 // Propagate a state vector from zOld to zNew
 // Transport matrix is calulated when transMat pointer is not NULL
+// Note: energy loss correction is _NOT_ applied.
 //=========================================================================
 StatusCode TrackMasterExtrapolator::propagate( TrackVector& stateVec,
                                                double zOld,
                                                double zNew,
                                                TrackMatrix* transMat,
                                                ParticleID pid )
-{
-  //check if not already at required z position
-  const double zStart = zOld;
-  if( fabs( zNew-zStart ) < TrackParameters::hiTolerance ) {
-    debug() << "already at required z position" << endreq;
-    return StatusCode::SUCCESS;
-  }
-
-  if( transMat != NULL ) {
-    (*transMat) = TrackMatrix( ROOT::Math::SMatrixIdentity() );
-  }
-  
-  // check whether upstream or downstream
-  zStart > zNew ? m_upStream = true : m_upStream = false; 
-
-  int    nbStep = (int)( fabs( zNew-zStart ) / m_maxStepSize ) + 1;
-  double zStep  = ( zNew - zStart ) / nbStep;
-  int    nWall;
-  
-  for( int step=0 ; nbStep > step ; ++step ) {
-    ILVolume::Intersections intersept;
-    XYZPoint start( stateVec[0], stateVec[1], zOld );  // Initial position
-    XYZVector vect( stateVec[2]*zStep, stateVec[3]*zStep, zStep );
-    
-    // protect against vertical or looping tracks
-    if( fabs(start.x()) > m_maxTransverse ) {
-      debug() << "Protect against absurd tracks: x=" << start.x() 
-              << " (max " << m_maxTransverse << " allowed)." << endreq;
-      return Warning( "Protect against absurd tracks. See debug for details" );
-    }
-    if( fabs(start.y()) > m_maxTransverse ) {
-               //          StatusCode::FAILURE, 1 );
-      debug() << "Protect against absurd tracks: y=" << start.y() 
-              << " (max " << m_maxTransverse << " allowed)." << endreq;
-      return Warning( "Protect against absurd tracks. See debug for details" );
-    }
-    if( fabs(stateVec[2]) > m_maxSlope ) {
-      debug() << "Protect against looping tracks: tx=" << stateVec[2] 
-              << " (max " << m_maxSlope << " allowed)." << endreq;
-      return Warning( "Protect against looping tracks. See debug for details" );
-    }    
-    if( fabs(stateVec[3]) > m_maxSlope ) {
-      debug() << "Protect against looping tracks: ty=" << stateVec[3] 
-              << " (max " << m_maxSlope << " allowed). " << endreq;
-      return Warning( "Protect against looping tracks. See debug for details" );
-    }
-
-    // check if transport is within LHCb
-    if(fabs( start.x() ) > m_25m || fabs( start.y() ) > m_25m ||
-       fabs( start.z() ) > m_25m ||
-       fabs( start.x()+vect.x() ) > m_25m ||
-       fabs( start.y()+vect.y() ) > m_25m ||
-       fabs( start.z()+vect.z() ) > m_25m ) {
-      nWall = 0;
-      if( m_debugLevel ) {
-        debug() << "No transport between z= " << start.z() << " and " 
-                << start.z() + vect.z() 
-                << ", since it reaches outside LHCb" << endreq;
-      }
-    } else {
-      chronoSvc()->chronoStart("TransportSvcT");
-      nWall = m_transportSvc->intersections( start, vect, 0., 1., 
-                                             intersept, m_minRadThreshold );
-      chronoSvc()->chronoStop("TransportSvcT");  
-    }
-  
-    // local to global transformation of intersections
-    transformToGlobal( zStep, start.z(), intersept );
- 
-    // add virtual wall at target
-    ILVolume::Interval inter(start.z() + vect.z(), start.z() + vect.z());
-    const Material* dummyMat = 0;
-    intersept.push_back( std::make_pair(inter,dummyMat) );
-    nWall = intersept.size();      
- 
-    // loop over the walls - last wall is `virtual one at target z'
-    StatusCode sc;
-    double zPrev = zOld;
-    for( int iStep = 0; iStep < nWall; ++iStep ) {
-      double zWall = zScatter( intersept[iStep].first.first,
-                               intersept[iStep].first.second );
-      ITrackExtrapolator* thisExtrapolator = 
-        m_extraSelector->select( zPrev, zWall );
-      sc = thisExtrapolator->propagate( stateVec, zPrev, zWall );
-      zPrev = zWall;
-      
-      // check for success
-      if( sc.isFailure() ) {
-        debug() << "Transport to " << zWall
-                << "using "+thisExtrapolator->name() << " FAILED" << endreq;
-        return Warning( "Transport to wall using "+thisExtrapolator->name()+ "FAILED", sc );
-      }
-      
-      // update f
-      if( transMat != NULL ) {
-        (*transMat) *= thisExtrapolator->transportMatrix();  
-      }
-
-      // protect against vertical or looping tracks
-      if( fabs(stateVec[2]) > m_maxSlope ) {
-        debug() << "Protect against looping tracks: tx=" << stateVec[2] 
-                << " (max " << m_maxSlope << " allowed)." << endreq;
-        return Warning("Protect against looping tracks. See debug for details");
-      }    
-      if( fabs(stateVec[3]) > m_maxSlope) {
-        debug() << "Protect against looping tracks: ty=" << stateVec[3] 
-                << " (max " << m_maxSlope << " allowed). " << endreq;
-        return Warning("Protect against looping tracks. See debug for details");
-      }
-      
-    } // loop over walls
-  } // loop over steps
-
-  return StatusCode::SUCCESS; 
+{ 
+  ITrackExtrapolator* thisExtrapolator = m_extraSelector->select( zOld, zNew );
+  return thisExtrapolator->propagate( stateVec, zOld, zNew, transMat, pid );
 }
 
 //=========================================================================
@@ -227,6 +118,7 @@ StatusCode TrackMasterExtrapolator::propagate( State& state,
                                                double zNew,
                                                ParticleID partId )
 {
+  StatusCode sc = StatusCode::SUCCESS ;
   // reset transport matrix
   m_F = TrackMatrix( ROOT::Math::SMatrixIdentity() );
 
@@ -237,19 +129,15 @@ StatusCode TrackMasterExtrapolator::propagate( State& state,
     return StatusCode::SUCCESS;
   }
 
-  // check whether upstream or downstream
-  zStart > zNew ? m_upStream = true : m_upStream = false; 
-
+  bool isUpstream = zStart > zNew ; 
   int    nbStep = (int)( fabs( zNew-zStart ) / m_maxStepSize ) + 1;
   double zStep  = ( zNew - zStart ) / nbStep;
-  int    nWall;
-  
+
   for ( int step=0 ; nbStep > step ; ++step ) {
-    ILVolume::Intersections intersept;
     TrackVector& tX = state.stateVector();
     XYZPoint start( tX[0], tX[1], state.z() );  // Initial position
     XYZVector vect( tX[2]*zStep, tX[3]*zStep, zStep );
-
+    
     // protect against vertical or looping tracks
     if ( fabs(start.x()) > m_maxTransverse ) {
       debug() << "Protect against absurd tracks: x=" << start.x() 
@@ -273,109 +161,90 @@ StatusCode TrackMasterExtrapolator::propagate( State& state,
       return Warning( "Protect against looping tracks. See debug for details" );
     }
 
-    // check if transport is within LHCb
-    if (fabs(start.x()) > m_25m || fabs(start.y()) > m_25m ||
-        fabs(start.z()) > m_25m ||
-        fabs(start.x()+vect.x()) > m_25m ||
-        fabs(start.y()+vect.y()) > m_25m ||
-        fabs(start.z()+vect.z()) > m_25m ) {
-      nWall = 0;
-      if ( m_debugLevel )
-        debug() << "No transport between z= " << start.z() << " and " 
-                << start.z() + vect.z() 
-                << ", since it reaches outside LHCb" << endreq;
-    } else {
-      chronoSvc()->chronoStart("TransportSvcT");
-      nWall = m_transportSvc->intersections( start, vect, 0., 1., 
-                                             intersept, m_minRadThreshold );
-      chronoSvc()->chronoStop("TransportSvcT");  
+    // process walls
+
+    if( m_applyMultScattCorr || m_applyEnergyLossCorr || m_applyElectronEnergyLossCorr ) {
+
+      IMaterialLocator::Intersections intersections;
+      int nWall = 0 ;
+      nWall = m_materialLocator->intersect( start, vect,intersections  );
+
+      for( IMaterialLocator::Intersections::const_iterator it = intersections.begin() ;
+	   it != intersections.end(); ++it ) {
+	double zWall = zScatter( it->z1, it->z2, isUpstream );
+	double tWall = fabs( it->z2 - it->z1 ) ;
+	//for thick scatterers it is always z2. double zWall = it->z2 ;
+	ITrackExtrapolator* thisExtrapolator = m_extraSelector->select(state.z(),zWall);
+	sc = thisExtrapolator->propagate( state, zWall );
+	
+	// check for success
+	if ( sc.isFailure() ) {
+	  debug() << "Transport to " << zWall
+		  << "using "+thisExtrapolator->name() << " FAILED" << endreq;
+	  return Warning( "Transport to wall using "+thisExtrapolator->name()+ "FAILED", sc );
+	}
+	
+	//update f
+	updateTransportMatrix( thisExtrapolator->transportMatrix() );  
+	
+	// multiple scattering
+	if ( m_applyMultScattCorr ) {
+	  if ( tWall >= m_thickWall ) {
+	    m_thickmstool -> correctState( state, it->material, tWall, isUpstream );
+	  } else {
+	    m_thinmstool -> correctState( state, it->material, tWall, isUpstream );
+	  }
+	}
+	
+	// dE/dx energy loss
+	if ( m_applyEnergyLossCorr ) 
+	  m_dedxtool -> correctState( state, it->material, tWall, isUpstream );
+		
+	// electron energy loss
+	if ( ( 11 == partId.abspid() ) && 
+	     m_applyElectronEnergyLossCorr &&
+	     (state.z() > m_startElectronCorr) &&
+	     (state.z() < m_stopElectronCorr) ) {
+	  m_elecdedxtool -> correctState( state, it->material, tWall, isUpstream );
+	}
+      } // loop over walls
     }
-  
-    // local to global transformation of intersections
-    transformToGlobal(zStep,start.z(),intersept);
- 
-    // add virtual wall at target
-    ILVolume::Interval inter(start.z() + vect.z(), start.z() + vect.z());
-    const Material* dummyMat = 0;
-    intersept.push_back(std::make_pair(inter,dummyMat));
-    nWall = intersept.size();      
- 
-    // loop over the walls - last wall is `virtual one at target z'
-    StatusCode sc;
-    for ( int iStep = 0; iStep < nWall; ++iStep ) {
-      double zWall = zScatter( intersept[iStep].first.first,
-                               intersept[iStep].first.second );
-      ITrackExtrapolator* thisExtrapolator = m_extraSelector->select(state.z(),
-                                                                     zWall);
-      sc = thisExtrapolator->propagate( state, zWall );
-     
+
+    // propagate from last wall to target
+    double ztarget = start.z() + vect.z() ;
+    if(state.z() != ztarget) {
+      ITrackExtrapolator* thisExtrapolator = m_extraSelector->select(state.z(),ztarget);
+      sc = thisExtrapolator->propagate( state, ztarget );
+      
       // check for success
       if ( sc.isFailure() ) {
-        debug() << "Transport to " << zWall
+        debug() << "Transport to " << ztarget
                 << "using "+thisExtrapolator->name() << " FAILED" << endreq;
         return Warning( "Transport to wall using "+thisExtrapolator->name()+ "FAILED", sc );
       }
       
       //update f
       updateTransportMatrix( thisExtrapolator->transportMatrix() );  
-      
-      // protect against vertical or looping tracks
-      if (fabs(state.tx()) > m_maxSlope) {
-        debug() << "Protect against looping tracks: tx=" << state.tx() 
-                << " (max " << m_maxSlope << " allowed)." << endreq;
-        return Warning("Protect against looping tracks. See debug for details");
-      }    
-      if (fabs(state.ty()) > m_maxSlope) {
-        debug() << "Protect against looping tracks: ty=" << state.ty() 
-                << " (max " << m_maxSlope << " allowed). " << endreq;
-        return Warning("Protect against looping tracks. See debug for details");
-      }
-      
-      // The thickness of the wall
-      double tWall = fabs( intersept[iStep].first.first - 
-                           intersept[iStep].first.second );
-      const Material* theMaterial = intersept[iStep].second;
+    }
 
-      // multiple scattering
-      if ( ( theMaterial != 0 ) && m_applyMultScattCorr ) {
-        if ( tWall >= m_thickWall ) {
-          m_thickmstool -> correctState( state, theMaterial, tWall, m_upStream );
-        } else {
-          m_thinmstool -> correctState( state, theMaterial, tWall, m_upStream );
-        }
-      }
-      
-      // dE/dx energy loss
-      if ( ( theMaterial != 0 ) && m_applyEnergyLossCorr ) {
-        m_dedxtool -> correctState( state, theMaterial, tWall, m_upStream );
-      }
-      
-      // electron energy loss
-      if ( ( 11 == partId.abspid() ) && 
-           m_applyElectronEnergyLossCorr &&
-           (theMaterial != 0) &&
-           (state.z() > m_startElectronCorr) &&
-           (state.z() < m_stopElectronCorr) ) {
-        m_elecdedxtool -> correctState( state, theMaterial, 0., m_upStream );
-      }
-    } // loop over walls
   } // loop over steps
 
   if ( m_debugLevel ) debug() << "State extrapolated succesfully" << endreq;
   
-  return StatusCode::SUCCESS;
+  return sc ;
 }
 
 //=============================================================================
 //
 //=============================================================================
 double TrackMasterExtrapolator::zScatter( const double z1, 
-                                          const double z2 ) const
+                                          const double z2,
+					  bool isUpstream ) const
 {
   double zS;
   if ( fabs(z1-z2) >= m_thickWall ) {
     // thick scatter
-    zS = (m_upStream ) ? GSL_MIN(z1,z2) : GSL_MAX(z1,z2) ; 
+    zS = (isUpstream ) ? GSL_MIN(z1,z2) : GSL_MAX(z1,z2) ; 
   } else {
     // thin scatter - at centre in z
     zS = 0.5*(z1+z2);
