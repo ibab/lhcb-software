@@ -1,6 +1,12 @@
 Package: OnlineKernel
 Author:  Markus Frank
 
+
+! 2007-05-05 Markus Frank
+  - Fix access flags for global sections, locks and events on linux.
+  - New entry point to create event flags in shared memory (linux only)
+  - Change buffer manager to directly use event semaphores in shared memory.
+
 ! 2007-04-25 Markus Frank
   Increase size of name field in bmstruct.h
 

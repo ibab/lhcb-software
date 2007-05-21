@@ -11,6 +11,9 @@ template <class T, class Q> static inline T* add_ptr(T* a, Q b)  {
 #include <cstdlib>
 #include <cstdarg>
 #include <ctime>
+#ifndef _WIN32
+#include <semaphore.h>
+#endif
 #ifndef __CXX_CONST
 #define __CXX_CONST const
 #endif
@@ -110,12 +113,14 @@ extern "C" {
 
   /// Create named event for local process (name==0: event is unnamed)
   int lib_rtl_create_event (__CXX_CONST char* name, lib_rtl_event_t* event_flag);
+#ifndef _WIN32
+  /// Create named event for local process (name==0: event is unnamed)
+  int lib_rtl_create_event2 (sem_t* handle, lib_rtl_event_t* event_flag);
+#endif
   /// Delete event
   int lib_rtl_delete_event(lib_rtl_event_t event_flag);
   /// Set local event flag
   int lib_rtl_set_event(lib_rtl_event_t event_flag);
-  /// Set global event flag
-  int lib_rtl_set_global_event(__CXX_CONST char* name);
   /// Clear event flag
   int lib_rtl_clear_event(lib_rtl_event_t event_flag);
   /// Wait for event flag

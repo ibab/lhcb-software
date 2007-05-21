@@ -76,7 +76,7 @@ public:
   /// Abstract method to Connect to target
   virtual int connect(const Address& addr, int tmo = 0) = 0;
   /// Abstract method: send data on network
-  virtual int send   (void* buff, int len, int tmo = 0, int flags = 0, const Address* addr = 0) = 0;
+  virtual int send   (const void* buff, int len, int tmo = 0, int flags = 0, const Address* addr = 0) = 0;
   /// Abstract method: receive data from network.
   virtual int recv   (void* buff, int len, int tmo = 0, int flags = 0, Address* addr = 0) = 0;
   ///  Set Select TMO on receive.

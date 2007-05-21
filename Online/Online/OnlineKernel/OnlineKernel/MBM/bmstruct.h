@@ -6,6 +6,10 @@
 #include "RTL/bits.h"
 #include "RTL/que.h"
 #include "RTL/rtl.h"
+#include <map>
+#ifndef _WIN32
+  #include "semaphore.h"
+#endif
 
 typedef Bits::BitMask<4> TriggerMask;
 typedef Bits::BitMask<4> UserMask;
@@ -142,9 +146,18 @@ struct USER : public qentry_t  {
   float stime;
   int spare1;
   REQ req[8];                    // 8 requirement maximum     
+#ifdef _WIN32
   char wes_flag[32];
   char wev_flag[32];
   char wsp_flag[32];
+#else
+  // On linux, we can directly use semaphores in the user table.
+  // This ensures that they are always present. The task calling mbm_include
+  // initializes and destroys them.
+  sem_t wev_handle;
+  sem_t wsp_handle;
+  sem_t wes_handle;
+#endif
   inline bool isValid()   const  {
     if ( block_id == int(MBM::BID_USER) )   {
       return true;
@@ -255,6 +268,12 @@ struct BMDESCRIPT : public qentry_t  {
   lib_rtl_thread_t cThread;
   char             pThreadState;
   char             cThreadState;
+  char             lastVar;
+  std::map<long long int,lib_rtl_event_t> us_wev_flags;
+  std::map<long long int,lib_rtl_event_t> us_wes_flags;
+  std::map<long long int,lib_rtl_event_t> us_wsp_flags;
+  BMDESCRIPT() : qentry_t(0,0) {}
+  ~BMDESCRIPT() {}
   inline USER* _user()  {
     return owner==-1 ? 0 : user + owner;
   }

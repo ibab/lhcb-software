@@ -35,7 +35,7 @@ public:
   /// Connect to target
   int connect( const Address& addr, int tmo = 0);
   /// send data to network partner.
-  int send  (void* buff, int len, int tmo = 0, int flags = 0, const Address* addr = 0);
+  int send  (const void* buff, int len, int tmo = 0, int flags = 0, const Address* addr = 0);
   /// receive data from network partner.
   int recv  (void* buff, int len, int tmo = 0, int flags = 0, Address* addr = 0);
   /// Queue receive call 

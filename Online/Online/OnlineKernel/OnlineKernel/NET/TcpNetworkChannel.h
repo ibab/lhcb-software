@@ -40,8 +40,10 @@ public:
     int bind( const Address& addr, int con_pend = 5 );
     /// Accept connection on socket (Acceptor)
     Channel accept( Address& addr, int tmo = 0 );
+    /// Set send buffer size
+    int setSendBufferSize(int len);
     /// send data to network partner.
-    int send  (void* buff, int len, int tmo = 0, int flags = 0, const Address* addr = 0);
+    int send  (const void* buff, int len, int tmo = 0, int flags = 0, const Address* addr = 0);
     /// receive data from network partner.
     int recv  (void* buff, int len, int tmo = 0, int flags = 0, Address* addr = 0);
     /// Queue Accept call 

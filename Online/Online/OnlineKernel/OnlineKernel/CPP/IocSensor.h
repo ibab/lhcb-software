@@ -27,6 +27,8 @@ public:
   virtual void  rearm() {}
   void send( Interactor*, int, void* = 0);
   void send( Interactor*, int, unsigned long );
+  void sendHead( Interactor*, int, void* = 0);
+  void sendHead( Interactor*, int, unsigned long );
   static IocSensor& instance();
 };
 
