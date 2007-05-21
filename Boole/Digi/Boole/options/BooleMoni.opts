@@ -5,6 +5,12 @@
 #include "$STDOPTS/RootHist.opts"
 RootHistCnv.ForceAlphaIds = true;
 
+// Use TimingAuditor for timing, suppress printout from SequencerTimerTool
+ApplicationMgr.ExtSvc += { "ToolSvc", "AuditorSvc"};
+ApplicationMgr.AuditAlgorithms = True;
+AuditorSvc.Auditors += {"TimingAuditor/TIMER"}; 
+ToolSvc.SequencerTimerTool.OutputLevel = 4;
+
 //--------------------------------------------------------------
 // Detectors to monitor
 //--------------------------------------------------------------

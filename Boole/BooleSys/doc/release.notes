@@ -3,7 +3,7 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-</PRE><H1><A NAME=v14r1>2007-05-18 Boole v14r1</A></H1><PRE>
+</PRE><H1><A NAME=v14r1>2007-05-21 Boole v14r1</A></H1><PRE>
 This version uses projects Gaudi v19r3, LHCb v22r5, Lbcom v6r5
  and databases DDDB v1r*, ParamFiles v5r0, FieldMap v4r7
 
@@ -17,6 +17,8 @@ Brunel v31r5 or greater
 
 - Monitoring changes
   . Add OT detailed monitoring (ExpertCheck.opts, OTMonitor v2r6)
+  . Use TimingAuditor for timing, suppress printout from SequencerTimerTool
+    (BooleMoni.opts)
 
 - Documentation changes
   . The doxygen web generated for Boole now includes in a single index all

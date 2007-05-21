@@ -3,9 +3,10 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-</PRE><H1><A NAME=v14r1>2007-05-15 Boole v14r1</A></H1><PRE>
+</PRE><H1><A NAME=v14r1>2007-05-21 Boole v14r1</A></H1><PRE>
  - Adapt requirements to Lbcom v6r5, LHCb v22r5, Gaudi v19r3
  - Add OT detailed monitoring to ExpertCheck.opts
+ - Use TimingAuditor for timing, suppress printout from SequencerTimerTool
 
 </PRE><H1><A NAME=v14r0>2007-04-19 Boole v14r0</A></H1><PRE>
  - Adapt requirements to Lbcom v6r4, LHCb v22r4, Gaudi v19r3
