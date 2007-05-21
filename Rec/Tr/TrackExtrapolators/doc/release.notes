@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking extrapolators
 !-----------------------------------------------------------------------------
 
+! 2007-05-21 Wouter Hulsbergen
+- introduced MaterialLocator instances and their use in MasterExtrapolator
+
 !======================= TrackExtrapolators v2r11 2007-05-03 =================
 ! 2007-05-03 - Marco Cattaneo
  - Fix a doxygen warning
