@@ -139,13 +139,11 @@ int RPCComm::isError(char *response)
 
 	/*First check for HTTP response status.*/
 	loc = responseStr.find("200 OK");
-	std::cout << "loc1 = " << loc << std::endl;
 	if(loc > responseStr.length())
 		return 1;
 
 	/*Then check for a fault string.*/
 	loc = responseStr.find("faultCode");
-	std::cout << "loc2 = " << loc << std::endl;
 	if(loc > responseStr.length())
 		return 0;
 	return 1;

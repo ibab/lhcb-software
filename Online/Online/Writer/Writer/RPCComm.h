@@ -99,7 +99,7 @@ namespace LHCb {
                          "  <params>\n"   \
                          "    <param><value>\n" \
                          "      <string>%s</string>\n" \
-                         "    </value</param>\n" \
+                         "    </value></param>\n" \
                          "    <param><value>\n" \
                          "      <string>%s</string>\n" \
                          "    </value></param>\n" \
