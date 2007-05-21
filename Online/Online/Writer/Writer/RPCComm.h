@@ -82,14 +82,14 @@ namespace LHCb {
  */
 #define CREATE_TEMPLATE  "<?xml version=\"1.0\"?>\n" \
                          "<methodCall>\n" \
-                         "  <methodName>createFile</methodName>\n" \
+                         "  <methodName>createNewFile</methodName>\n" \
                          "  <params>\n"   \
                          "    <param><value>\n" \
                          "      <string>%s</string>\n" \
-                         "    </value</param>\n" \
+                         "    </value></param>\n" \
                          "    <param><value>\n" \
                          "      <int>%d</int>\n" \
-                         "    </value</param>\n" \
+                         "    </value></param>\n" \
                          "  </params>\n"  \
                          "</methodCall>\n"
 
@@ -102,18 +102,18 @@ namespace LHCb {
                          "    </value</param>\n" \
                          "    <param><value>\n" \
                          "      <string>%s</string>\n" \
-                         "    </value</param>\n" \
+                         "    </value></param>\n" \
                          "    <param><value>\n" \
                          "      <string>%s</string>\n" \
-                         "    </value</param>\n" \
+                         "    </value></param>\n" \
                          "  </params>\n"  \
                          "</methodCall>\n"
 
 #define HEADER_TEMPLATE "POST /RPC2 HTTP/1.0\n" \
-                        "User-Agent : MDFWriterNet\n" \
-                        "Host : %s\n" \
-                        "Content-Type : text/xml\n" \
-                        "Content-Length : %d\n\n" \
+                        "User-Agent: MDFWriterNet\n" \
+                        "Host: %s\n" \
+                        "Content-Type: text/xml\n" \
+                        "Content-Length: %d\n\n" \
 
 
 #endif /*RPCCOMM_H*/

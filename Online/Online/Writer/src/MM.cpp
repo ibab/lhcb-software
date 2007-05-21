@@ -257,18 +257,18 @@ struct cmd_header* MM::dequeueCommand(unsigned int sequenceNum)
       } else {
         prev->next = tmp->next;
       }
+      m_queueLength--;
       pthread_mutex_unlock(&m_listLock);
       retCmd = tmp->cmd;
       free(tmp);
-      m_queueLength--;
       return retCmd;
     }
     prev = tmp;
     tmp = tmp->next;
   }
 
-  pthread_mutex_unlock(&m_listLock);
   m_queueLength--;
+  pthread_mutex_unlock(&m_listLock);
   return NULL;
 }
 

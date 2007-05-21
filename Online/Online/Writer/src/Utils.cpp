@@ -220,7 +220,6 @@ int BIF::nbRecvTimeout()
 			return m_bytesRead;
 	}
 	return TIMEDOUT;
-
 }
 
 
