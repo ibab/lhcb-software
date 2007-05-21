@@ -1,0 +1,245 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE gdd SYSTEM 'gdd.dtd'>
+<gdd>
+  <package name='TrackEvent'>
+
+<!-- ==================== State class definition ==================== -->
+
+    <class
+      name             = 'StateVector'
+      author           = 'Jose Hernando, Eduardo Rodrigues, Wouter Hulsbergen'
+      desc             = 'StateVector is a simple track state vector with z position'
+      virtual          = 'FALSE' >
+
+      <import name ="GaudiKernel/MsgStream"/>
+       <import name="GaudiKernel/Point3DTypes.h"/>
+       <import name="GaudiKernel/Vector3DTypes.h"/>
+       <import name="Event/TrackTypes.h"/>
+      &StlPtrVector;
+      
+      <constructor 
+	desc     = "Constructor with assigned key" 
+	argList  = " const Gaudi::TrackVector&amp; stateVec, double z"
+	initList = "m_parameters(stateVec),m_z(z)">
+      </constructor>
+      
+      <constructor 
+	desc     = "Constructor from a position and direction" 
+	argList  = " const Gaudi::XYZPoint&amp; position, const Gaudi::XYZVector&amp; direction, double qOverP=0">
+      </constructor>
+
+      <attribute
+        type    = 'Gaudi::TrackVector'
+        name    = 'parameters'
+        desc    = 'the parameter vector'
+        setMeth = 'FALSE'
+        access  = 'PRIVATE'
+	nonconstaccessor = 'TRUE' />
+
+      <attribute
+        type    = 'double'
+        name    = 'z'
+        desc    = 'the z-position of the state'
+        setMeth = 'FALSE'
+        access  = 'PRIVATE' />
+
+      <method
+        type    = 'unsigned int'
+        name    = 'nParameters'
+        const   = 'TRUE'
+        desc    = 'Retrieve the number of state parameters'>
+        <code>
+    return (unsigned int) m_parameters.Dim();
+        </code>
+      </method>
+
+      <method
+        name    = 'positionAndMomentum'
+        desc    = 'Retrieve the position and momentum vectors of the state'
+        const   = 'TRUE'>
+        <arg type = 'Gaudi::XYZPoint' name='pos' />
+        <arg type = 'Gaudi::XYZVector' name='mom' />
+        <code>
+    pos   = position();
+    mom   = momentum();
+        </code>
+      </method>
+
+      <method
+        type    = 'Gaudi::XYZPoint'
+        name    = 'position'
+        desc    = 'Retrieve the 3D-position vector (x,y,z) of the state'
+        const   = 'TRUE'>
+        <code>
+    return Gaudi::XYZPoint( m_parameters[0], m_parameters[1], m_z );
+        </code>
+      </method>
+
+      <method
+        type    = 'double'
+        name    = 'x'
+        desc    = 'Retrieve the x-position of the state'
+        const   = 'TRUE'>
+        <code>
+    return m_parameters[0];
+        </code>
+      </method>
+
+      <method
+        type    = 'double'
+        name    = 'y'
+        desc    = 'Retrieve the y-position of the state'
+        const   = 'TRUE'>
+        <code>
+    return m_parameters[1];
+        </code>
+      </method>
+
+       <method
+        type    = 'Gaudi::XYZVector'
+        name    = 'slopes'
+        desc    = 'Retrieve the slopes (Tx=dx/dz,Ty=dy/dz,1.) of the state'
+        const   = 'TRUE'>
+        <code>
+    return Gaudi::XYZVector( m_parameters[2], m_parameters[3], 1.);
+        </code>
+      </method>
+
+      <method
+        type    = 'double'
+        name    = 'tx'
+        desc    = 'Retrieve the Tx=dx/dz slope of the state'
+        const   = 'TRUE'>
+        <code>
+    return m_parameters[2];
+        </code>
+      </method>
+
+      <method
+        type    = 'double'
+        name    = 'ty'
+        desc    = 'Retrieve the Ty=dy/dz slope of the state'
+        const   = 'TRUE'>
+        <code>
+   return m_parameters[3];
+        </code>
+      </method>
+
+      <method
+        type    = 'double'
+        name    = 'qOverP'
+        desc    = 'Retrieve the charge-over-momentum Q/P of the state'
+        const   = 'TRUE'>
+	<code>
+  return m_parameters[4];
+        </code>
+      </method>
+
+      <method
+        type    = 'double'
+        name    = 'p'
+        desc    = 'Retrieve the momentum of the state'
+        const   = 'TRUE' />
+
+      <method
+        type    = 'double'
+        name    = 'pt'
+        desc    = 'Retrieve the transverse momentum of the state'
+        const   = 'TRUE' />
+
+      <method
+        type    = 'Gaudi::XYZVector'
+        name    = 'momentum'
+        desc    = 'Retrieve the momentum vector (px,py,pz) of the state'
+        const   = 'TRUE'>
+        <code>
+  Gaudi::XYZVector mom = slopes();
+  mom *= ( p() / mom.R() );
+  return mom;
+        </code>
+      </method>
+
+      <method
+        type    = 'double'
+        name    = 'qOverPperp'
+        desc    = 'Retrieve the Q/Pperp (ratio of the charge to the component of the momentum transverse to the magnetic field) of the state'
+        const   = 'TRUE'>
+        <code>
+  const double tx2 = tx() * tx();
+  return ( qOverP() * sqrt( (1.+ tx2 + ty()*ty()) / (1. + tx2 ) ) );
+        </code>
+      </method>
+
+      <method
+        name    = 'setX'
+        argList = 'double value'
+        desc    = 'Update the x-position of the state'>
+        <code>
+  m_parameters[0] = value;
+        </code>
+      </method>
+
+      <method
+        name    = 'setY'
+        argList = 'double value'
+        desc    = 'Update the y-position of the state'>
+        <code>
+  m_parameters[1] = value;
+        </code>
+      </method>
+
+      <method
+        name    = 'setZ'
+        argList = 'double value'
+        desc    = 'Update the z-position of the state'>
+        <code>
+  m_z = value;
+        </code>
+      </method>
+
+      <method
+        name    = 'setTx'
+        argList = 'double value'
+        desc    = 'Update the x-slope Tx=dx/dz slope of the state'>
+        <code>
+  m_parameters[2] = value;
+        </code>
+      </method>
+
+      <method
+        name    = 'setTy'
+        argList = 'double value'
+        desc    = 'Update the y-slope Ty=dy/dz slope of the state'>
+        <code>
+  m_parameters[3] = value;
+        </code>
+      </method>
+
+      <method
+        name    = 'setQOverP'
+        argList = 'double value'
+        desc    = 'Update the charge-over-momentum Q/P value of the state' >
+        <code>
+  m_parameters[4] = value;
+        </code>
+      </method>
+
+      <method
+	name      = "fillStream"
+	desc      = "printOut method to Gaudi message stream"
+	type      = "MsgStream&amp;"
+        const     = "TRUE" >
+	<arg name = "os" type = "MsgStream" inout = "BOTH"/>
+	<code>
+  os &lt;&lt; "{ " 
+     &lt;&lt; "parameters :	" &lt;&lt; m_parameters &lt;&lt; std::endl
+     &lt;&lt; "z :	        " &lt;&lt; (float)m_z &lt;&lt; std::endl
+     &lt;&lt; " }";
+  return os;
+	</code>
+      </method>
+
+    </class>
+
+  </package>
+</gdd>

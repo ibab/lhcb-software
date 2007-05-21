@@ -4,6 +4,9 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+!2007-05-21 - Wouter Hulsbergen
+ - Add class StateVector
+
 !======================= TrackEvent v4r3 2007-05-08 ==========================
 ! 2007-05-16 M. Needham
  - Modify fillstream --> request of T Ruf
