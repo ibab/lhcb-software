@@ -1,9 +1,8 @@
-#include "rtl_internal.h"
+#include "rtl_semaphore.h"
 #include <map>
 #include <string>
 #include <memory>
 #include <iostream>
-#include <fcntl.h>
 
 using namespace RTL;
 
@@ -48,9 +47,9 @@ int lib_rtl_create_lock(const char* mutex_name, lib_rtl_lock_t* handle)   {
   h->held = 0;
 #if defined(USE_PTHREADS)
   int sc = 0;
-  h->handle = h->name[0] ? ::sem_open(h->name, O_CREAT|O_EXCL, 0666, 1) : &h->handle2;
+  h->handle = h->name[0] ? ::i_sem_open(h->name, O_CREAT|O_EXCL, 0666, 1) : &h->handle2;
   if (h->name[0] && !h->handle) {
-    h->handle = ::sem_open(h->name, O_CREAT, 0666, 1);
+    h->handle = ::i_sem_open(h->name, O_CREAT, 0666, 1);
     if ( !h->handle ) {
       lib_rtl_signal_message(LIB_RTL_OS,"sem_open: error in creating lock %s %08X.",h->name,h->handle);
       // ::perror("SEVERE: sem_open: ");
@@ -68,7 +67,7 @@ int lib_rtl_create_lock(const char* mutex_name, lib_rtl_lock_t* handle)   {
     sc = ::sem_init(h->handle, h->name[0] ? 0 : 1, 1);
   }
   else if ( h->name[0] ) {
-    h->handle = ::sem_open(h->name, O_CREAT, 0666, 1);
+    h->handle = ::i_sem_open(h->name, O_CREAT, 0666, 1);
   }
   if ( sc != 0 )  {
     h->handle = 0;
@@ -146,7 +145,7 @@ int lib_rtl_cancel_lock(lib_rtl_lock_t h) {
 int lib_rtl_lock(lib_rtl_lock_t h) {
   if ( h )  {
 #if defined(USE_PTHREADS)
-    int sc = ::sem_wait(h->handle);
+    int sc = ::i_sem_wait(h->handle);
     if ( sc != 0 ) {
       int val;
       lib_rtl_lock_value(h, &val);

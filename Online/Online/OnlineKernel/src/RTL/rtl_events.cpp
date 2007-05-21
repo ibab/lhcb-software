@@ -1,10 +1,8 @@
-#include "rtl_internal.h"
+#include "rtl_semaphore.h"
 #include <map>
 #include <string>
 #include <memory>
 #include <vector>
-#include <cerrno>
-#include <fcntl.h>
 #include <cstdio>
 #include <iostream>
 
@@ -71,9 +69,9 @@ int lib_rtl_create_event (const char* name, lib_rtl_event_t* event_flag)    {
     h->name[sizeof(h->name)-1] = 0;
   }
 #if defined(USE_PTHREADS)
-  h->handle = h->name[0] ? ::sem_open(h->name, O_CREAT|O_EXCL, 0666, 1) : &h->handle2;
+  h->handle = h->name[0] ? ::i_sem_open(h->name, O_CREAT|O_EXCL, 0666, 1) : &h->handle2;
   if (h->name[0] && !h->handle) {
-    h->handle = ::sem_open(h->name, O_CREAT, 0666, 1);
+    h->handle = ::i_sem_open(h->name, O_CREAT, 0666, 1);
     if ( !h->handle ) {
       ::perror("SEVERE: sem_open: ");
       return 0;
@@ -160,7 +158,7 @@ int lib_rtl_clear_event(lib_rtl_event_t h) {
 int lib_rtl_wait_for_event(lib_rtl_event_t h)    {
   if ( h )  {
 #if defined(USE_PTHREADS)
-    if ( 0 == ::sem_wait(h->handle) )
+    if ( 0 == ::i_sem_wait(h->handle) )
 #elif defined(_WIN32)
     if ( ::WaitForSingleObjectEx(h->handle,INFINITE, TRUE) == WAIT_OBJECT_0 )  
 #endif
@@ -178,8 +176,8 @@ int lib_rtl_timedwait_for_event(lib_rtl_event_t h, int milliseconds)    {
     sp.tv_sec  += milliseconds/1000;
     sp.tv_nsec  = (milliseconds%1000)*1000000;
     int sc = milliseconds==LIB_RTL_INFINITE 
-      ? ::sem_wait(h->handle) 
-      : ::sem_timedwait(h->handle, &sp);
+      ? ::i_sem_wait(h->handle) 
+      : ::i_sem_timedwait(h->handle, &sp);
     if ( sc != 0 && errno == ETIMEDOUT ) sc = 0;
     if ( sc == 0 )
 #elif defined(_WIN32)
