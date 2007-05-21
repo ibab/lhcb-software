@@ -5,7 +5,7 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
-</PRE><H1><A NAME=v4r5>2007-05-08 RecSys v4r5</A></H1><PRE>
+</PRE><H1><A NAME=v4r5>2007-05-21 RecSys v4r5</A></H1><PRE>
 This version uses Gaudi v19r3 and LHCb v22r5.
 
 - Packages modified: PatChecker v2r13, PatVelo v2r14, PatVeloTT v2r11,
@@ -13,7 +13,8 @@ This version uses Gaudi v19r3 and LHCb v22r5.
     TrackProjectors v2r12, TrackExtrapolators v2r11, TrackMatching v2r13,
     TrackCheckers v2r13, TrackAssociators v2r4, TrackMCTools v2r10,
     TrackIdealPR v2r10, RichRecSys v3r4, RichRecTools v3r11, RichRecQC v2r11,
-    RichRecMCTools v2r11, RichRecMonitors v2r10, MuonID v5r1, RecAlgs v1r4
+    RichRecMCTools v2r11, RichRecMonitors v2r10, MuonID v5r1, RecAlgs v1r4,
+    TsaAlgorithms v2r3
 
 - In PatChecker v2r13
   . Follow MCTrackInfo change in LHCb v22r5 and cleanup to use new methods
@@ -69,6 +70,11 @@ This version uses Gaudi v19r3 and LHCb v22r5.
 - In TrackProjectors v2r12
   . Add MuonProjector class
 
+- In TsaAlgorithms v2r3
+  . TsaCollector: adapt x-search window
+  . TsaXSearchBase: include job option for nSigma of tx, fix small sign bug	 
+  . TsaOTClusterCreator: put OTTimeLocation as job option 
+
 - In MuonID v5r1
   . Add a foi factor to enlarge the FOI if needed, default = 1.
   . Add measurements to the MuonTrack 
@@ -99,7 +105,7 @@ This version uses Gaudi v19r3 and LHCb v22r5.
   . Remove obsolete file xxx_load.cpp
 
 - In TrackExtrapolators v2r11, TrackMCTools v2r10, TrackCheckers v2r13,
-     TrackFitter v2r15
+     TrackFitter v2r15, TsaAlgorithms v2r3
   . Fix doxygen warnings
 
 </PRE><H1><A NAME=v4r4>2007-04-26 RecSys v4r4</A></H1><PRE>

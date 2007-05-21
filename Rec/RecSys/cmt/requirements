@@ -40,7 +40,7 @@ use PatForward          v2r13   Pat   # Stephanie Hansmann-Menzemer
 use PatPV               v2r7    Pat   # Mariusz Witek
 use PatChecker          v2r13   Pat   # Olivier Callot, David Hutchcroft
 use PatFitParams        v2r5    Pat   # Olivier Callot
-use TsaAlgorithms       v2r2    Tr    # Matt Needham
+use TsaAlgorithms       v2r3    Tr    # Matt Needham
 use PatKShort           v1r5    Pat   # Olivier Callot
 
 # Muon
