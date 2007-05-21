@@ -47,7 +47,7 @@ void RPCComm::confirmFile(char *fileName, unsigned int adlerSum, const unsigned 
   	"WriterHost", strlen(xmlData));
 
   memset(response, 0, sizeof(response));
-  ret = requestResponse(headerData, xmlData, response);
+  ret = requestResponse(headerData, xmlData, response, sizeof(response));
 
   if(ret < 0)
     throw std::runtime_error("Could not run RPC call for confirm.");
@@ -79,7 +79,7 @@ void RPCComm::createFile(char *fileName, unsigned int runNumber)
     "WriterHost", strlen(xmlData));
 
   memset(response, 0, sizeof(response));
-  ret = requestResponse(headerData, xmlData, response);
+  ret = requestResponse(headerData, xmlData, response, sizeof(response));
 
   if(ret < 0)
     throw std::runtime_error("Could not run RPC call for create.");
@@ -93,7 +93,7 @@ void RPCComm::createFile(char *fileName, unsigned int runNumber)
  * Connects, writes RPC information to an HTTP server, and reads the result.
  * Returns 0 on success, -1 on error.
  */
-int RPCComm::requestResponse(char *requestHeader, char *requestData, char *response)
+int RPCComm::requestResponse(char *requestHeader, char *requestData, char *response, int responseLen)
 {
 	struct sockaddr_in destAddr;
 	int sockFd;
@@ -110,7 +110,7 @@ int RPCComm::requestResponse(char *requestHeader, char *requestData, char *respo
 
 	BIF sendBif1(sockFd, requestHeader, strlen(requestHeader));
 	BIF sendBif2(sockFd, requestData, strlen(requestData));
-	BIF recvBif(sockFd, response, sizeof(response));
+	BIF recvBif(sockFd, response, responseLen);
 
   if(sockFd < 0)
     throw std::runtime_error("Could not connect to RPC server.");
@@ -125,7 +125,7 @@ int RPCComm::requestResponse(char *requestHeader, char *requestData, char *respo
     throw std::runtime_error("Could not read response data.");
 
   close(sockFd);
-  return ret;
+  return 0;
 }
 
 /**
@@ -139,12 +139,14 @@ int RPCComm::isError(char *response)
 
 	/*First check for HTTP response status.*/
 	loc = responseStr.find("200 OK");
-	if(loc == std::string::npos)
+	std::cout << "loc1 = " << loc << std::endl;
+	if(loc > responseStr.length())
 		return 1;
 
 	/*Then check for a fault string.*/
 	loc = responseStr.find("faultCode");
-	if(loc != std::string::npos)
+	std::cout << "loc2 = " << loc << std::endl;
+	if(loc > responseStr.length())
 		return 0;
 	return 1;
 

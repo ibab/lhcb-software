@@ -172,7 +172,7 @@ int Connection::failover(int currThread)
   	m_sendThread->start();
   } else if(currThread == ACK_THREAD) {
   	m_sendThread->start();
-  } else if(currThread == SEND_THREAD) {
+	} else if(currThread == SEND_THREAD) {
   	m_ackThread->start();
   }
 

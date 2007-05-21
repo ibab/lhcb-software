@@ -109,23 +109,27 @@ int BIF::nbRecv()
 	fds[0].revents = 0;
 
 	ret = poll(fds, 1, RECV_TIMEOUT);
-	if(ret == 0)
+	if(ret == 0) {
 		return AGAIN;
-	else if(ret == -1)
+	} else if(ret < 0 && (errno == EAGAIN || errno == EINTR)) {
+		return AGAIN;
+	}else if(ret < 0) {
 		return DISCONNECTED;
-	else if(fds[0].revents & POLLERR)
+	} else if(fds[0].revents & POLLERR) {
 		return DISCONNECTED;
-	else if(fds[0].revents & POLLIN) {
+	} else if(fds[0].revents & POLLIN) {
 		ret = ::recv(m_sockFd, m_data+m_bytesRead, m_bufLen-m_bytesRead, MSG_DONTWAIT);
-		if(ret < 0 && (errno == EAGAIN || errno == EINTR))
+		if(ret < 0 && (errno == EAGAIN || errno == EINTR)) {
 			return AGAIN;
-		else if(ret == 0 || ret < 0)
+		} else if(ret == 0 || ret < 0) {
 			return DISCONNECTED;
-		else
+		} else {
 			m_bytesRead += ret;
+		}
 	}
-	if(m_bytesRead == m_bufLen)
+	if(m_bytesRead == m_bufLen) {
 		return m_bytesRead;
+	}
 	return AGAIN;
 }
 
@@ -202,7 +206,7 @@ int BIF::nbRecvTimeout()
 	endTime = time(NULL) + RECV_TIMEOUT/1000;
 
 	while(time(NULL) < endTime) {
-		ret = ::poll(fds, 1, SEND_TIMEOUT);
+		ret = ::poll(fds, 1, RECV_TIMEOUT);
 		if((ret < 0 && (errno == EAGAIN || errno == EINTR)) || ret == 0)
 			continue;
 		else if(ret < 0)

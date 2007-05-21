@@ -120,7 +120,7 @@ start:
 		if(ret == BIF::AGAIN) {
 			continue;
 		} else if(ret == BIF::DISCONNECTED) {
-      *m_log << MSG::WARNING << "Disconnected, should fail over." << errno << endmsg;
+      *m_log << MSG::WARNING << "Failing over from the Ack Thread." << errno << endmsg;
       if(m_conn->failover(ACK_THREAD) == KILL_THREAD)
       	return 0;
       else

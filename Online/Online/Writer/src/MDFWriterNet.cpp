@@ -94,6 +94,7 @@ void MDFWriterNet::constructNet()
  */
 StatusCode MDFWriterNet::initialize(void)
 {
+	*m_log << "------------INITIALIZING MDFWriterNet----------------" << endmsg;
 
   m_fileOpen = 0;
   m_bytesWritten = 0;
@@ -109,6 +110,7 @@ StatusCode MDFWriterNet::initialize(void)
     return StatusCode::FAILURE;
   }
 
+	*m_log << "------------INITIALIZED MDFWriterNet----------------" << endmsg;
   return StatusCode::SUCCESS;
 }
 
@@ -118,6 +120,8 @@ StatusCode MDFWriterNet::initialize(void)
  */
 StatusCode MDFWriterNet::finalize(void)
 {
+	*m_log << "------------FINALIZING MDFWriterNet----------------" << endmsg;
+
   if(m_fileOpen) {
     struct cmd_header header;
     INIT_CLOSE_COMMAND(&header, m_fileName.c_str(), m_adler32, m_md5);
@@ -136,6 +140,7 @@ StatusCode MDFWriterNet::finalize(void)
   m_connection = NULL;
   m_rpcObj = NULL;
 
+	*m_log << "------------FINALIZED MDFWriterNet----------------" << endmsg;
   return StatusCode::SUCCESS;
 }
 

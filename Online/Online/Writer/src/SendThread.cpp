@@ -102,7 +102,6 @@ start:
 
 		cmd_to_send = m_mmObj->moveSendPointer();
     if(!cmd_to_send) {
-    	*m_log << MSG::INFO << "Received a blank one, stop=" << m_stopSending << " " << endmsg;
       continue;
     }
 
@@ -115,13 +114,13 @@ start:
     ret = sendBif.nbSendTimeout();
 
 		if(ret != totalSize) {
+				*m_log << MSG::INFO << "Failing over from the Send thread." << errno << endmsg;
         if(m_conn->failover(SEND_THREAD) == KILL_THREAD)
         	return 0;
         else
         	goto start;
     }
   }
-
   return 0;
 }
 

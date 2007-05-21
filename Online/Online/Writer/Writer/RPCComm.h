@@ -44,7 +44,7 @@ namespace LHCb {
        * Connects, writes RPC information to an HTTP server, and reads the result.
        * Returns 0 on success, -1 on error.
        */
-      int requestResponse(char *requestHeader, char *requestData, char *response);
+      int requestResponse(char *requestHeader, char *requestData, char *response, int responseLen);
 
       /**
        * Checks the XML RPC response string for an error code.

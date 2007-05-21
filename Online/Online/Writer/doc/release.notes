@@ -1,3 +1,7 @@
+|---------------------------------------------------
+| 2007-04-21 : Suman
+|    Fixed finalize problem
+|    Tested new XMLRPC Client
 |----------------------------------------------------
 | 2007-04-17 : Suman
 |    Solved non-blocking problem
