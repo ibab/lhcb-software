@@ -436,7 +436,7 @@ HltMuonTConfForwardPartial.RecoName="MuonForward";
 HltMuonTConfForwardPartial.OrderByPt= true;
 HltMuonTConfForwardPartial.InputTracksName="Hlt/Track/MuonAndTVelo";
 HltMuonTConfForwardPartial.OutputTracksName="Hlt/Track/MuonsForwardTest";
-HltMuonTConfForwardPartial.OutputLevel = 2;
+HltMuonTConfForwardPartial.OutputLevel = 3;
 
 
 HltTrackMuonTConfIPSelectionTrigger.InputTracksName = "Hlt/Track/MuonsForwardTest";

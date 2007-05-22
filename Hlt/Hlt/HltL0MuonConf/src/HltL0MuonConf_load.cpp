@@ -1,4 +1,4 @@
-// $Id: HltL0MuonConf_load.cpp,v 1.1.1.1 2007-05-22 10:20:31 asatta Exp $
+// $Id: HltL0MuonConf_load.cpp,v 1.2 2007-05-22 13:44:46 asatta Exp $
 // Include files 
 
 
@@ -17,6 +17,5 @@ DECLARE_FACTORY_ENTRIES(HltL0MuonConf) {
    DECLARE_ALGORITHM( L0MuonConfWithT );
    DECLARE_ALGORITHM( L0MuonAndTConf );
    DECLARE_ALGORITHM( RZMuonMatch );
-   DECLARE_ALGORITHM( L0MuonConfNt );
    DECLARE_ALGORITHM( MuonTConfWithT );
 }
