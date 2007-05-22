@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.350 2007-05-09 13:26:04 pkoppenb Exp $
+# $Id: requirements,v 1.351 2007-05-22 18:07:19 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : J. Palacios
 #
@@ -58,13 +58,13 @@ use SimComponents       v*    Sim
 use LinkerInstances     v*    Event
 
 #-- Lbcom
-use LbcomSys    v6r4
+use LbcomSys    v6r5
 
 #-- Rec
-use RecSys      v4r4
+use RecSys      v4r5
 
 #-- Hlt
-use HltSys      v1r5
+use HltSys      v1r6
 
 #-- Phys
 use PhysSys     v6r3
