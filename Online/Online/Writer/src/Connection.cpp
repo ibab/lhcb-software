@@ -110,7 +110,7 @@ void Connection::closeConnection()
   delete m_ackThread;
   delete m_failoverMonitor;
 
-  Utils::closeSocket(&m_sockfd, m_log);
+  Utils::closeSocket((int*)&m_sockfd, m_log);
 }
 
 /** Fails over onto an alternative storage cluster server.
@@ -147,7 +147,7 @@ int Connection::failover(int currThread)
 		m_ackThread->stop(STOP_URGENT);
 	}
 
-	Utils::closeSocket(&m_sockfd, m_log);
+	Utils::closeSocket((int*)&m_sockfd, m_log);
 
 	while(1) {
   	*m_log << MSG::INFO << "Reconnecting socket now..." << endmsg;

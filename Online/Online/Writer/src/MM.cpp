@@ -39,6 +39,8 @@ MM::MM()
   pthread_cond_init(&m_emptyCondition, NULL);
   m_sendPointer = NULL;
   m_queueLength = 0;
+  m_allocCmdCount = 0;
+  m_allocByteCount = 0;
 }
 
 /**
@@ -265,7 +267,6 @@ struct cmd_header* MM::dequeueCommand(unsigned int sequenceNum)
     tmp = tmp->next;
   }
 
-  m_queueLength--;
   pthread_mutex_unlock(&m_listLock);
   return NULL;
 }

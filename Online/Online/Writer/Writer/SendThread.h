@@ -21,7 +21,7 @@ namespace LHCb {
 			MsgStream *m_log;
 			MM *m_mmObj;
 			volatile int m_stopSending;
-			int m_sockFd;
+			volatile int m_sockFd;
 			pthread_t m_sendThread;
 
 		public:

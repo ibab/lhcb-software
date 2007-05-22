@@ -115,6 +115,10 @@ start:
   while((!m_stopAcking) ||
   	(m_stopAcking == STOP_AFTER_PURGE && m_mmObj->getQueueLength() != 0))
   {
+    *m_log << MSG::INFO << "Backlog = " << m_mmObj->getAllocCmdCount()
+    	<< " : " << m_mmObj->getAllocByteCount() << "QLen = " <<
+    	m_mmObj->getQueueLength() << endmsg;
+
   	BIF bif(m_sockFd, &ackHeaderBuf, sizeof(struct ack_header));
   	ret = bif.nbRecv();
 		if(ret == BIF::AGAIN) {

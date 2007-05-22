@@ -94,7 +94,7 @@ namespace LHCb {
       MM m_mmObj;
 
       /// The currently open socket to the server.
-      int m_sockfd;
+      volatile int m_sockfd;
 
       /// Socket buffer sizes.
       int m_sndRcvSizes;

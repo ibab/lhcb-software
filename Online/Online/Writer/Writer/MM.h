@@ -41,7 +41,7 @@ namespace LHCb {
       struct list_head *m_head, *m_tail;
 
       /// The list send pointer (till where all entries have been sent).
-      struct list_head *m_sendPointer;
+      struct list_head * volatile m_sendPointer;
 
       /// The number of elements in the queue.
       unsigned int m_queueLength;
