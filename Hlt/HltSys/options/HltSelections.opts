@@ -12,7 +12,7 @@
 //---------------------------------------------------------------------
 // HLT exclusive Selections
 //---------------------------------------------------------------------
-Hlt.Members += { "GaudiSequencer/HltSelections" };
+//Hlt.Members += { "GaudiSequencer/HltSelections" };
 HltSelections.MeasureTime = true ;
 HltSelections.Context = "HLT" ;
 //---------------------------------------------------------------------
