@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 !========================= Hlt/HltBase v2r3 2007-03-16 =======================
+! 2007-05-22 - Alessia Satta
+ - Modify interfaces IPrepareMuonTSeed.h 
+
 ! 2007-03-16 - Marco Cattaneo
  - Add dictionaries for the two new interfaces.....
  - Fix some doxygen comments
