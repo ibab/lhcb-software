@@ -5,6 +5,8 @@
 !-----------------------------------------------------------------------------
 
 !=========================== HltL0Conf v1r1 2007-03-27 =======================
+! 2007-05-22 - Alessia Satta 
+- add PrepareMuonTSeed.cpp PrepareMuonTSeed.h for muon segment T seed confirmation
 ! 2007-04-27 - Johannes Albrecht
 	- src/L0ConfDataStore
 			- tool added for debugging purposes: 
