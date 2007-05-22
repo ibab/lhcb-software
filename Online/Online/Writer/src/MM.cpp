@@ -23,13 +23,6 @@ static inline void* malloc_blocking(size_t size)
   return ret;
 }
 
-/*
- * To enable C++ compiler to know which compilation object
- * to place these variables in.
- */
-size_t MM::m_allocByteCount = 0;
-size_t MM::m_allocCmdCount = 0;
-
 /**
  * Constructor.
  * Initialises the list pointers and the semaphore. This
@@ -42,6 +35,7 @@ MM::MM()
   m_tail = NULL;
   pthread_mutex_init(&m_listLock, NULL);
   pthread_mutex_init(&m_emptyLock, NULL);
+  pthread_mutex_init(&m_allocLock, NULL);
   pthread_cond_init(&m_emptyCondition, NULL);
   m_sendPointer = NULL;
   m_queueLength = 0;
@@ -83,8 +77,10 @@ struct cmd_header* MM::allocAndCopyCommand(struct cmd_header *header, void *data
   newHeader = (struct cmd_header*)malloc_blocking(dataSize + sizeof(struct cmd_header));
   newData = ((unsigned char*)newHeader) + sizeof(struct cmd_header);
   if(newHeader) {
+  	pthread_mutex_lock(&m_allocLock);
     MM::m_allocByteCount+=dataSize + sizeof(struct cmd_header);
     MM::m_allocCmdCount++;
+  	pthread_mutex_unlock(&m_allocLock);
     memcpy(newHeader, header, sizeof(struct cmd_header));
     if(dataSize > 0) {
       memcpy(newData, data, dataSize);
@@ -114,9 +110,11 @@ void MM::freeCommand(struct cmd_header *cmd)
       break;
   }
   free(cmd);
-
+  pthread_mutex_lock(&m_allocLock);
   m_allocByteCount -= totLen;
   m_allocCmdCount--;
+  pthread_mutex_unlock(&m_allocLock);
+
 }
 
 /**

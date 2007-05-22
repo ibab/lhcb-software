@@ -229,7 +229,7 @@ void Connection::sendCommand(struct cmd_header *header, void *data)
   }
 
   header->data.chunk_data.seq_num = m_seqCounter++;
-  newHeader = MM::allocAndCopyCommand(header, data);	/* Will always succeed. */
+  newHeader = m_mmObj.allocAndCopyCommand(header, data);	/* Will always succeed. */
 
   m_mmObj.enqueueCommand(newHeader);
 }

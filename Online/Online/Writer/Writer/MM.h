@@ -49,10 +49,13 @@ namespace LHCb {
       /// A condition variable to enable the sender thread to sleep on.
       pthread_cond_t m_emptyCondition;
 
-      /// The total number of bytes allocated so far by all MM objects.
-      static size_t m_allocByteCount;
-      /// The total number of commands allocated so far by all MM objects.
-      static size_t m_allocCmdCount;
+      /// The total number of bytes allocated so far by the MM object.
+      size_t m_allocByteCount;
+      /// The total number of commands allocated so far by the MM object.
+      size_t m_allocCmdCount;
+
+      ///A lock to protect the allocator.
+      pthread_mutex_t m_allocLock;
 
     public:
     	/// Constructor.
@@ -62,16 +65,16 @@ namespace LHCb {
     	~MM();
 
       /// Allocates space for a command and makes a copy of it.
-      static struct cmd_header* allocAndCopyCommand(struct cmd_header *, void *data);
+      struct cmd_header* allocAndCopyCommand(struct cmd_header *, void *data);
 
       /// Frees the data allocated for a command and associated data.
-      static void freeCommand(struct cmd_header *ch);
+      void freeCommand(struct cmd_header *ch);
 
       /// Returns the total number of bytes allocated for all commands.
-      static int getAllocByteCount(void) {return m_allocByteCount;};
+      int getAllocByteCount(void) {return m_allocByteCount;};
 
       /// Returns the total number of commands allocated so far.
-      static int getAllocCmdCount(void) {return m_allocCmdCount;};
+      int getAllocCmdCount(void) {return m_allocCmdCount;};
 
       /// Enqueues a command.
       void enqueueCommand(struct cmd_header *cmd);
