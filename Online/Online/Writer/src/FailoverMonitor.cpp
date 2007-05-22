@@ -40,7 +40,7 @@ FailoverMonitor::FailoverMonitor(std::string &serverAddr, int serverPort,
 		ret = Utils::nameLookup(serverAddr, &m_currAddr, log);
 		if(ret == 0)
 			break;
-		*log << MSG::ERROR << "Name lookup failed for " << serverAddr << endmsg;
+		//*log << MSG::ERROR << "Name lookup failed for " << serverAddr << endmsg;
 	}
 
 	memcpy(&m_initAddr, &m_currAddr, sizeof(struct sockaddr_in));
@@ -147,7 +147,7 @@ int FailoverMonitor::getAddressList(std::list<NodeState*> &nodeStates)
 	BIF recvBif(m_sockFd, &fmsg, sizeof(struct failover_msg));
 
 
-	*m_log << MSG::INFO << "Want to receive num_msgs." << endmsg;
+	//*m_log << MSG::INFO << "Want to receive num_msgs." << endmsg;
 
 	ret = recvBif.nbRecvTimeout();
 	if(ret != sizeof(struct failover_msg))
@@ -155,7 +155,7 @@ int FailoverMonitor::getAddressList(std::list<NodeState*> &nodeStates)
 
 	for(i=0;i<fmsg.num_nodes;i++) {
 		NodeState *nState = new NodeState();
-		*m_log << MSG::INFO << "Received " << (i + 1) << " of " << fmsg.num_nodes << endmsg;
+		//*m_log << MSG::INFO << "Received " << (i + 1) << " of " << fmsg.num_nodes << endmsg;
 		bRead = 0;
 
 		BIF recvBif(m_sockFd, &nState->state, sizeof(struct nodestate));
@@ -173,11 +173,11 @@ int FailoverMonitor::getAddressList(std::list<NodeState*> &nodeStates)
 			return 0;
 		}
 
-		*m_log << MSG::INFO << " addr = "
+		/**m_log << MSG::INFO << " addr = "
 		<< (nState->state.n_ipaddr & 0xff)  << "."
 		<< ((nState->state.n_ipaddr & 0xff00) >> 8) << "."
 		<< ((nState->state.n_ipaddr & 0xff0000) >> 16)  << "."
-		<<  ((nState->state.n_ipaddr & 0xff000000) >> 24)  << endmsg;
+		<<  ((nState->state.n_ipaddr & 0xff000000) >> 24)  << endmsg;*/
 
 		//If it's the current host, push it to the top.
 		if(nState->state.n_ipaddr == m_currAddr.sin_addr.s_addr)
@@ -238,7 +238,7 @@ void FailoverMonitor::listenForUpdates(void)
 		int die = 0;
 		struct nodestate nstate;
 
-		*m_log << MSG::INFO << "Reading info on " << fmsg.num_nodes << "nodes" <<endmsg;
+		//*m_log << MSG::INFO << "Reading info on " << fmsg.num_nodes << "nodes" <<endmsg;
 		for(unsigned int i=0;i<fmsg.num_nodes;i++) {
 			bRead = 0;
 			BIF recvBif(m_sockFd, &nstate, sizeof(struct nodestate));

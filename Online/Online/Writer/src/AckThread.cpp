@@ -46,14 +46,14 @@ static void *ack_thread(void *args)
 void AckThread::start()
 {
   int ret;
-  *m_log << MSG::INFO << "Starting ack thread. . .";
+  //*m_log << MSG::INFO << "Starting ack thread. . .";
   m_stopAcking = 0;
   ret = pthread_create(&m_ackThread, NULL, ack_thread, this);
   if(ret != 0) {
     *m_log << MSG::FATAL << "Could not create ack thread " << errno << endmsg;
     return;
   }
-  *m_log << MSG::INFO << "Done." << endmsg;
+  //*m_log << MSG::INFO << "Done." << endmsg;
 }
 
 /**
@@ -61,7 +61,7 @@ void AckThread::start()
  */
 void AckThread::reInit(int sockfd) {
 	m_sockFd = sockfd;
-	*m_log << MSG::INFO << "Reset ack thread data." << endmsg;
+	//*m_log << MSG::INFO << "Reset ack thread data." << endmsg;
 }
 
 
@@ -71,14 +71,14 @@ void AckThread::reInit(int sockfd) {
 void AckThread::stop(int stopLevel)
 {
   int ret;
-  *m_log << MSG::INFO << "Stopping ack thread. . .";
+  //*m_log << MSG::INFO << "Stopping ack thread. . .";
   m_stopAcking = stopLevel;
   ret = pthread_join(m_ackThread, NULL);
   if(ret != 0) {
-    *m_log << MSG::ERROR << "Could not stop ack thread " << errno << endmsg;
+    //*m_log << MSG::ERROR << "Could not stop ack thread " << errno << endmsg;
     return;
   }
-  *m_log << MSG::INFO << "Done." << endmsg;
+  //*m_log << MSG::INFO << "Done." << endmsg;
 }
 
 
@@ -115,16 +115,16 @@ start:
   while((!m_stopAcking) ||
   	(m_stopAcking == STOP_AFTER_PURGE && m_mmObj->getQueueLength() != 0))
   {
-    *m_log << MSG::INFO << "Backlog = " << m_mmObj->getAllocCmdCount()
-    	<< " : " << m_mmObj->getAllocByteCount() << "QLen = " <<
-    	m_mmObj->getQueueLength() << endmsg;
+    //*m_log << MSG::INFO << "Backlog = " << m_mmObj->getAllocCmdCount()
+    	//<< " : " << m_mmObj->getAllocByteCount() << "QLen = " <<
+    	//m_mmObj->getQueueLength() << endmsg;
 
   	BIF bif(m_sockFd, &ackHeaderBuf, sizeof(struct ack_header));
   	ret = bif.nbRecv();
 		if(ret == BIF::AGAIN) {
 			continue;
 		} else if(ret == BIF::DISCONNECTED) {
-      *m_log << MSG::WARNING << "Failing over from the Ack Thread." << errno << endmsg;
+      //*m_log << MSG::WARNING << "Failing over from the Ack Thread." << errno << endmsg;
       if(m_conn->failover(ACK_THREAD) == KILL_THREAD)
       	return 0;
       else
@@ -145,7 +145,7 @@ start:
 
       struct cmd_header *cmd;
       if((cmd = m_mmObj->dequeueCommand(seqNum)) == NULL) {
-        *m_log << MSG::ERROR << "FATAL, Received an unsolicited ack." << endmsg;
+        //*m_log << MSG::ERROR << "FATAL, Received an unsolicited ack." << endmsg;
       } else {
       	notify(cmd);
         m_mmObj->freeCommand(cmd);

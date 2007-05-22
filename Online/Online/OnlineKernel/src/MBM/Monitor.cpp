@@ -145,6 +145,14 @@ int MBM::Monitor::monitor() {
 
   //signal (SIGINT,handler);
   //signal (SIGABRT,handler);
+  int status = ::mbm_map_global_buffer_info(&m_bm_all);
+  if(!lib_rtl_is_success(status))   {   
+    printf("Cannot map global buffer information....\n");
+    exit(status);
+  }
+  m_buffers = (BUFFERS*)m_bm_all->address;
+  m_bms = new DISP_BMDES[m_buffers->p_bmax];
+
   m_window = initscreen();
   _setcursortype(_NOCURSOR);      // hide the cursor
   textcolor(YELLOW);              // change textcolor to YELLOW
@@ -198,20 +206,17 @@ int MBM::Monitor::put_inf()   {
   int i, j, k;
   time_t nowt;
 #if defined(SHOW_TIMES)
-  const char* fmt_def  = " %-15s%4x%8d%5s          %40s%5s%7s";
   const char* fmt_prod = " %-15s%4x%8d%5s%6s%11d   %3.0f%32s%7s  %7.1e %7.1e %d %d";
   const char* fmt_cons = " %-15s%4x%8d%5s%6s               %12d%11d   %3.0f%5s%7s  %7.1e %7.1e %d %d";
   const char* head=" Name      Partition     Pid Type State   Produced %%prod     #seen     #freed %%seen Reqs Buffer    UTime  STime";
 #elif defined(SHOW_SLEEPS)
-  const char* fmt_def  = " %-15s%4x%8d%5s          %40s%5s%7s";
   const char* fmt_prod = " %-15s%4x%8d%5s%6s%11d   %3.0f%32s%7s %d";
   const char* fmt_cons = " %-15s%4x%8d%5s%6s               %12d%11d   %3.0f%5s%7s %d";
   const char* head=" Name      Partition     Pid Type State   Produced %%prod     #seen     #freed %%seen Reqs Buffer  Sleeps";
 #else
-  const char* fmt_def  = " %-36s%4x%8d%5s          %40s%5s%7s";
-  const char* fmt_prod = " %-36s%4x%8d%5s%6s%11d   %3.0f%32s%7s";
-  const char* fmt_cons = " %-36s%4x%8d%5s%6s               %12d%11d   %3.0f%5s%7s";
-  const char* head=" Name                           Partition     Pid Type State   Produced %%prod     #seen     #freed %%seen Reqs Buffer";
+  const char* fmt_prod = " %-15s%4x%8d%5s%6s%11d   %3.0f%32s%7s";
+  const char* fmt_cons = " %-15s%4x%8d%5s%6s               %12d%11d   %3.0f%5s%7s";
+  const char* head=" Name      Partition     Pid Type State   Produced %%prod     #seen     #freed %%seen Reqs Buffer";
 #endif
   char line[256], tim[64];
   ::time(&nowt);
@@ -273,7 +278,8 @@ int MBM::Monitor::put_inf()   {
             );
         }
         else        {
-          sprintf(line,fmt_def,us->name,us->partid,us->pid,"?","",spy_val,dsc->bm_name);    
+          sprintf(line," %-15s%4x%8d%5s          %40s%5s%7s",us->name,us->partid,us->pid,"?","",
+            spy_val, dsc->bm_name);    
         }
         draw_line(NORMAL,line);
       }
@@ -312,13 +318,6 @@ int MBM::Monitor::optparse (const char* c)  {
 
 int MBM::Monitor::get_bm_list()   {
   m_numBM = 0;
-  int status = ::mbm_map_global_buffer_info(&m_bm_all);
-  if(!lib_rtl_is_success(status))   {   
-    printf("Cannot map global buffer information....\n");
-  }
-  m_buffers = (BUFFERS*)m_bm_all->address;
-  m_bms = new DISP_BMDES[m_buffers->p_bmax];
-
   for (int i = 0; i < m_buffers->p_bmax; ++i)  {
     if ( m_buffers->buffers[i].used == 1 )  {
       if ( m_bmid != 0 && strcmp(m_bmid,m_buffers->buffers[i].name) != 0 )  {
@@ -327,10 +326,7 @@ int MBM::Monitor::get_bm_list()   {
       if ( m_bms[i].m_buff == 0 )  {
         m_bms[i].m_mgr.setup(m_buffers->buffers[i].name);
         int sc = m_bms[i].m_mgr.mapSections();
-        if ( !lib_rtl_is_success(sc) )   {
-          m_bms[i].m_mgr.unmapSections();
-          continue;
-        }
+        if ( !lib_rtl_is_success(sc) ) exit(sc);
         m_bms[i].m_buff = &m_buffers->buffers[i];
       }
       m_numBM++;
@@ -351,10 +347,6 @@ int MBM::Monitor::drop_bm_list()   {
       m_bms[i].m_buff = 0;
     }
   }
-  ::mbm_unmap_global_buffer_info(m_bm_all);
-  m_buffers = 0;
-  delete [] m_bms;
-  m_bms = 0;
   return 1;
 }
 
