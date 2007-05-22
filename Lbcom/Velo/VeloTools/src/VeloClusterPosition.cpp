@@ -1,4 +1,4 @@
-// $Id: VeloClusterPosition.cpp,v 1.8 2007-05-16 07:40:39 szumlat Exp $
+// $Id: VeloClusterPosition.cpp,v 1.9 2007-05-22 11:41:48 szumlat Exp $
 // Include files
 
 // stl
@@ -132,7 +132,8 @@ toolInfo VeloClusterPosition::weightedLAPos(
   if(neighbourStrip.isSuccess()){
     double error=errorEstimate(cluster, intDistanceID, fractionalPos);
     // fill the new wrapper object
-    myInfo.strip=intDistanceID;
+    LHCb::VeloChannelID centreChannel=cluster->channelID();
+    myInfo.strip=centreChannel;
     myInfo.fractionalPosition=fractionalPos;
     myInfo.fractionalError=error;
     return ( myInfo );
