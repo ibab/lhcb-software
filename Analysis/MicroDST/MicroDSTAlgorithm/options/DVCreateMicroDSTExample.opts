@@ -45,10 +45,10 @@ HistogramPersistencySvc.OutputFile = "Histos.root";
 
 PoolDbCacheSvc.DLLs       += { "PhysEventDict"};
 
-PoolDbCacheSvc.Catalog = {
-  "xmlcatalog_file:DSTCatalog.xml",
-  "xmlcatalog_file:/lhcb/XmlFileDB/Brunel-v30r14-eType13102000.xml"
-};
+//PoolDbCacheSvc.Catalog = {
+//  "xmlcatalog_file:DSTCatalog.xml",
+//  "xmlcatalog_file:/lhcb/XmlFileDB/Brunel-v30r14-eType13102000.xml"
+//};
 
 //------------------------------------------------------------------------------------------
 //-----  Particle creation and selection

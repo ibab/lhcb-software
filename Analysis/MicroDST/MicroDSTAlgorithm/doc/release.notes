@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.17 2007-05-17 16:23:03 ukerzel Exp $
+! $Id: release.notes,v 1.18 2007-05-22 16:05:57 ukerzel Exp $
 ! Package     : MicroDST
 ! Responsible : Ulrich Kerzel
 !============================================================
+
+! 2007-05-22 - Ulrich Kerzel
+ - comment out POOL catalogue in example options file to create MicroDST
 
 ! 2007-05-17 - Ulrich Kerzel
  - add a counter to CreateMicroDSTAlg how many 
