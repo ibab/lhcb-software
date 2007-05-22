@@ -1,0 +1,30 @@
+#pragma print off
+#include "$BRUNELOPTS/MyBrunelMC.opts"         // Comment for real data
+#include "$BRUNELOPTS/MyBrunel.opts"           // Set up the processing sequences
+
+// Geometry specific options
+DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200601.xml";
+MagneticFieldSvc.FieldMapFile = "$FIELDMAPROOT/cdf/field047.cdf";
+#pragma print on
+
+
+// include tsa options
+#include "$BRUNELOPTS/RecoL0Conf.opts"
+
+
+ApplicationMgr.EvtMax = 10;
+EventSelector.FirstEvent = 1;
+EventSelector.PrintFreq  =500;
+
+
+Brunel.OutputLevel = 4;
+
+// Allow two input files open at the same time (.digi, and .sim for the MCHits)
+PoolDbCacheSvc.AgeLimit = 1;
+#include "$BRUNELOPTS/Bs2Jpsi_mumu.opts"
+//#include "$BRUNELOPTS/Bs2Jpsi_ee_phi.opts"
+
+
+NTupleSvc.Output = { "FILE1 DATAFILE = 'tuple.root' TYP='ROOT' OPT='NEW'" };
+
+

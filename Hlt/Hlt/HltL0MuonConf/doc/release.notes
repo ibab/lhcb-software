@@ -1,0 +1,9 @@
+!-----------------------------------------------------------------------------
+! Package     : Hlt/HltL0MuonConf
+! Responsible : Alessia Satta
+! Purpose     : Matcing of Muon object ( L0 or Muon segment) to T station
+!-----------------------------------------------------------------------------
+! ======================== HltL0MuonConf v1r0 2007-05-22 ======================
+! 2007-05-22 Alessia Satta
+	- first version of muon T seed matching
+
