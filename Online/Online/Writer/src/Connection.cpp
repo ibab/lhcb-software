@@ -129,6 +129,21 @@ int Connection::failover(int currThread)
 	if(ret == EBUSY) /* Someone else is already in the failover routine. Die.*/
 		return KILL_THREAD;
 
+	switch(currThread) {
+		case ACK_THREAD:
+			*m_log << MSG::INFO << "Failover initiated by ACK thread." <<
+				errno << endmsg;
+			break;
+		case SEND_THREAD:
+			*m_log << MSG::INFO << "Failover initiated by SEND thread." <<
+				errno << endmsg;
+			break;
+		case FAILOVER_THREAD:
+			*m_log << MSG::INFO << "Failover initiated by FAILOVER thread." <<
+				errno << endmsg;
+			break;
+	}
+
 	/*m_stopSending could be STOP_PURGE or 0, we must save and restore. */
 	int oldSendStopLevel = m_sendThread->getState();
 	int oldAckStopLevel = m_ackThread->getState();

@@ -165,11 +165,11 @@ int BIF::nbSendTimeout()
 	time_t endTime;
 	fds[0].fd = m_sockFd;
 	fds[0].events = POLLOUT|POLLERR;
-	fds[0].revents = 0;
 
 	endTime = time(NULL) + SEND_TIMEOUT/1000;
 
 	while(time(NULL) < endTime) {
+		fds[0].revents = 0;
 		ret = ::poll(fds, 1, SEND_TIMEOUT);
 		if((ret < 0 && (errno == EAGAIN || errno == EINTR)) || ret == 0)
 			continue;
