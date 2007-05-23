@@ -1,16 +1,16 @@
 
-//---------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 /** @file RichHPDIdentifier.h
  *
  *  Header file for Rich::DAQ::HPDIdentifier
  *
  *  CVS Log :-
- *  $Id: RichHPDIdentifier.h,v 1.3 2007-05-08 11:56:00 jonrob Exp $
+ *  $Id: RichHPDIdentifier.h,v 1.4 2007-05-23 10:00:31 papanest Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   27/04/2007
  */
-//---------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 
 #ifndef RICHKERNEL_RICHHPDIDENTIFIER_H
 #define RICHKERNEL_RICHHPDIDENTIFIER_H 1
@@ -46,8 +46,8 @@ namespace Rich
 
       /// Constructor from a RichSmartID
       explicit HPDIdentifier( const LHCb::RichSmartID id )
-        : m_data ( id.isValid() ? ( 100000*(1+(int)id.rich()) + 10000*((int)id.panel()) +
-                                    100*id.hpdCol() + id.hpdNumInCol() : -1 ) )
+        : m_data ( id.isValid() ?  (int)(100000*(1+(int)id.rich()) + 10000*((int)id.panel()) +
+                                         100*id.hpdCol() + id.hpdNumInCol()) : -1  )
       { }
 
     public:
@@ -55,17 +55,17 @@ namespace Rich
       /// Implicit conversion into a RichSmartID
       inline operator LHCb::RichSmartID () const
       {
-        return ( m_data == -1 ? 
+        return ( m_data == -1 ?
                  LHCb::RichSmartID() :
-                 LHCb::RichSmartID( (Rich::DetectorType)((m_data/100000)-1), 
-                                    (Rich::Side)((m_data/10000)%10),  
-                                    m_data%100, 
+                 LHCb::RichSmartID( (Rich::DetectorType)((m_data/100000)-1),
+                                    (Rich::Side)((m_data/10000)%10),
+                                    m_data%100,
                                     (m_data/100)%100 ) );
       }
 
       /// Access the human readable HPD number
       inline int number() const { return m_data; }
- 
+
     private:
 
       int m_data; ///< The internal data
