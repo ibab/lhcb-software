@@ -1,6 +1,7 @@
 project ALIGNMENT
 
-use LHCB	LHCB_v22r5
+use LBCOM LBCOM_v6r5
+use REC   REC_v4r5
 
 build_strategy	with_installarea
 setup_strategy	root
