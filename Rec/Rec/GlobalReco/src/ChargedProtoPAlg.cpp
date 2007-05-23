@@ -4,7 +4,7 @@
  * Implementation file for algorithm ChargedProtoPAlg
  *
  * CVS Log :-
- * $Id: ChargedProtoPAlg.cpp,v 1.55 2007-05-23 13:38:20 jonrob Exp $
+ * $Id: ChargedProtoPAlg.cpp,v 1.56 2007-05-23 13:58:10 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 29/03/2006
@@ -422,7 +422,6 @@ bool ChargedProtoPAlg::addBrem( LHCb::ProtoParticle * proto ) const
 {
   LHCb::Calo2Track::ITrAccTable::Range                 aRange;
   LHCb::Calo2Track::ITrHypoTable2D::Range              hRange;
-  LHCb::Calo2Track::IClusTrTable2D::InverseType::Range cRange;
   LHCb::Calo2Track::ITrEvalTable::Range                vRange;
 
   bool hasBremPID = false;
@@ -491,8 +490,6 @@ bool ChargedProtoPAlg::addBrem( LHCb::ProtoParticle * proto ) const
 bool ChargedProtoPAlg::addHcal( LHCb::ProtoParticle * proto ) const
 {
   LHCb::Calo2Track::ITrAccTable::Range                 aRange;
-  LHCb::Calo2Track::ITrHypoTable2D::Range              hRange;
-  LHCb::Calo2Track::IClusTrTable2D::InverseType::Range cRange;
   LHCb::Calo2Track::ITrEvalTable::Range                vRange;
 
   bool hasHcalPID = false;
@@ -550,8 +547,6 @@ bool ChargedProtoPAlg::addHcal( LHCb::ProtoParticle * proto ) const
 bool ChargedProtoPAlg::addPrs( LHCb::ProtoParticle * proto ) const
 {
   LHCb::Calo2Track::ITrAccTable::Range                 aRange;
-  LHCb::Calo2Track::ITrHypoTable2D::Range              hRange;
-  LHCb::Calo2Track::IClusTrTable2D::InverseType::Range cRange;
   LHCb::Calo2Track::ITrEvalTable::Range                vRange;
 
   bool hasPrsPID = false;
@@ -605,8 +600,6 @@ bool ChargedProtoPAlg::addPrs( LHCb::ProtoParticle * proto ) const
 bool ChargedProtoPAlg::addSpd( LHCb::ProtoParticle * proto ) const
 {
   LHCb::Calo2Track::ITrAccTable::Range                 aRange;
-  LHCb::Calo2Track::ITrHypoTable2D::Range              hRange;
-  LHCb::Calo2Track::IClusTrTable2D::InverseType::Range cRange;
   LHCb::Calo2Track::ITrEvalTable::Range                vRange;
 
   bool hasSpdPID = false;
