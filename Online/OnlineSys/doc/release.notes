@@ -1,12 +1,15 @@
 <PRE>
 !-----------------------------------------------------------------------------
 ! Package     : Online/OnlineSys
-! Responsible : Marco Cattaneo
+! Responsible : Markus Frank
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v3r3>2007-05-23 OnlineSys v3r3</A></H1><PRE>
+This version is identical to v3r2 but built against LHCb v22r5
+
 </PRE><H1><A NAME=v3r2>2007-04-30 OnlineSys v3r2</A></H1><PRE>
-This version uses Gaudi LHCb v22r4
+This version uses Gaudi v19r3, LHCb v22r4
  - Changes in Adder, CCPCHist, DIM, ExampleGaucho, GaudiOnline, OnlineHistDB,
    OnlineKernel, OnlineTasks, UPI, Writer
 
