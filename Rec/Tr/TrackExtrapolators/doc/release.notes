@@ -4,6 +4,10 @@
 ! Purpose     : Package for tracking extrapolators
 !-----------------------------------------------------------------------------
 
+! 2007-05-23 - Edwin Bos
+ - Moved propagate(state,z,pid) method to TrackExtrapolator and minor 
+ - improvements, o.a. misuse of gsl_pow_2
+
 ! 2007-05-21 Wouter Hulsbergen
 - introduced MaterialLocator instances and their use in MasterExtrapolator
 
