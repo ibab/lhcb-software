@@ -6,6 +6,7 @@
 #include <netdb.h>
 #include <sys/poll.h>
 #include <errno.h>
+#include <sys/signal.h>
 
 #include <stdexcept>
 
@@ -13,6 +14,17 @@
 #include "Writer/Utils.h"
 
 using namespace LHCb;
+
+/**
+ * Blocks some signals for threads that don't want to process them.
+ */
+void Utils::blockSignals(void)
+{
+	sigset_t signals;
+	sigemptyset(&signals);
+	sigaddset(&signals, SIGPIPE);
+	pthread_sigmask(SIG_BLOCK, &signals, NULL);
+}
 
 int Utils::nameLookup(const char *serverAddr,
   struct sockaddr_in *destAddr, MsgStream * /*log*/) {

@@ -44,6 +44,7 @@ namespace LHCb {
 			static int nameLookup(const char *serverAddr, struct sockaddr_in *destAddr, MsgStream *log);
 			static int setupSocket(int sndBufSize, int rcvBufSize, MsgStream *log);
 			static int closeSocket(int *sock, MsgStream *log);
+			static void blockSignals(void);
 	};
 }
 

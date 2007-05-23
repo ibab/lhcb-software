@@ -33,6 +33,7 @@ using namespace LHCb;
  */
 static void *ack_thread(void *args)
 {
+	Utils::blockSignals();
   AckThread *st;
   st = (AckThread*)args;
   //currThread = ACK_THREAD;

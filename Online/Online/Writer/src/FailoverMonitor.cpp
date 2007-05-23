@@ -195,7 +195,8 @@ int FailoverMonitor::getAddressList(std::list<NodeState*> &nodeStates)
  */
 static void *failover_thread(void *args)
 {
-	//currThread = FAILOVER_THREAD;
+	Utils::blockSignals();
+
 	FailoverMonitor *fm = (FailoverMonitor*)args;
 	fm->listenForUpdates();
 	return NULL;

@@ -34,6 +34,8 @@ using namespace LHCb;
  */
 static void *send_thread(void *args)
 {
+	Utils::blockSignals();
+
   SendThread *st;
   st = (SendThread*)args;
   //currThread = SEND_THREAD;
