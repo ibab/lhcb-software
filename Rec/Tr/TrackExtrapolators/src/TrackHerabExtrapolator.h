@@ -46,11 +46,6 @@ public:
                                 Gaudi::TrackMatrix* transMat,
                                 LHCb::ParticleID pid = LHCb::ParticleID(211) );
 
-  /// Propagate a state to a given z-position
-  virtual StatusCode propagate( LHCb::State& pState, 
-                                double z,
-                                LHCb::ParticleID partId = LHCb::ParticleID(211) );
-
 private:
  
   /// interface to Hera-b code

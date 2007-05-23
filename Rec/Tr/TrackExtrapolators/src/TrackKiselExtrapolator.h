@@ -42,13 +42,7 @@ public:
                                 Gaudi::TrackMatrix* transMat,
                                 LHCb::ParticleID pid = LHCb::ParticleID(211) );
 
-  /// Propagate a state to a given z-position
-  virtual StatusCode propagate( LHCb::State& pState, 
-                                double z,
-                                LHCb::ParticleID partId = LHCb::ParticleID(211) );
-
 private:
-
   
  void getCoefficients( const double x, const double y,
                        double Xi  [3][3]      , double Yi  [3][3],

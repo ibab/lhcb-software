@@ -76,15 +76,11 @@ StatusCode TrackExtrapolator::propagate( State& state,
                                          double z,
                                          ParticleID pid )
 {
-  StatusCode sc = StatusCode::FAILURE;
-
-  Warning( "Cannot propagate state to given Z position. See debug for details",
-           StatusCode::SUCCESS, 1 );
+  StatusCode sc = propagate( state.stateVector(), state.z(), z, &m_F, pid );
+  state.setZ(z);
+  state.setCovariance( ROOT::Math::Similarity<double,TrackMatrix::kRows,TrackMatrix::kCols>
+                       ( m_F, state.covariance() ) );
   
-  debug() << " can not propagate state at z" << state.z()
-          << " to the z position " << z
-          << " of pid " << pid.pid() << endmsg;
-
   return sc;
 }
 

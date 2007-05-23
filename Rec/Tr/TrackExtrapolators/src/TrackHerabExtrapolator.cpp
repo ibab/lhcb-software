@@ -1,4 +1,4 @@
-// $Id: TrackHerabExtrapolator.cpp,v 1.17 2007-05-03 11:55:28 ebos Exp $
+// $Id: TrackHerabExtrapolator.cpp,v 1.18 2007-05-23 16:40:53 ebos Exp $
 
 // from Gaudi
 #include "GaudiKernel/IMagneticFieldSvc.h"
@@ -77,7 +77,6 @@ StatusCode TrackHerabExtrapolator::propagate( TrackVector& stateVec,
 {
   const double dz = zNew - zOld;
   if( fabs(dz) < TrackParameters::hiTolerance ) { 
-    // already at required z position
     debug() << "already at required z position" << endreq;
     return StatusCode::SUCCESS; 
   }
@@ -118,63 +117,6 @@ StatusCode TrackHerabExtrapolator::propagate( TrackVector& stateVec,
   // Update the state vector
   for( i = 0; i < 5; ++i ) { stateVec[i] = pOut[i]; }
   
-  return StatusCode::SUCCESS;
-}
-
-
-StatusCode TrackHerabExtrapolator::propagate( State& state, 
-                                              double zNew,
-                                              ParticleID pid )
-{
-  // create transport matrix
-  m_F = TrackMatrix( ROOT::Math::SMatrixIdentity() );
-
-  // check current z-position
-  double dz = fabs(zNew - state.z());
-  if (dz < TrackParameters::hiTolerance) {
-    // already at required z position
-    return StatusCode::SUCCESS;
-  }
-
-  // prepare Q/p transport - note RK expects zStart as 1st argument
-  const TrackVector& tX = state.stateVector();
-  double pIn[5];
-  int i;
-  for ( i = 0; i < 5; ++i ) {
-    pIn[i] = tX[i];
-  }
-
-  // return parameters
-  double fQp[25];
-
-  for ( i = 0; i < 25; ++i ) {
-      fQp[i] = 0.;
-  }
-  double zIn     = state.z();
-  double pOut[5] = {0.,0.,0.,0.,0.};
-  int istat      = 0;
-
-  // transport
-  this->extrapolate(zIn,pIn,zNew,pOut,fQp,istat);
-
-  // check for sucess
-  if (istat != 0){
-    Warning( "Runga kutta: transport impossible ", StatusCode::FAILURE, 1 );
-    if (istat == 1) Warning( "curling track", StatusCode::FAILURE, 1 );
-    return StatusCode::FAILURE;
-  }
-
-  // update the state ( and transport the covariance matrix)
-  for ( i = 0; i < 5; ++i ) {
-    for ( int j = 0; j < 5; ++j ) {
-      m_F(i,j) = fQp[(5*j)+i];
-    }
-  }
-
-  state.setState( pOut[0], pOut[1], zNew, pOut[2], pOut[3], pOut[4] );
-  state.setCovariance( ROOT::Math::Similarity<double,TrackMatrix::kRows,TrackMatrix::kCols>
-                       ( m_F, state.covariance() ) );
-
   return StatusCode::SUCCESS;
 }
 

@@ -41,11 +41,6 @@ public:
                         Gaudi::TrackMatrix* transMat,
                         LHCb::ParticleID pid = LHCb::ParticleID(211) );
   
-  /// Propagate a state to a given z-position
-  StatusCode propagate( LHCb::State& state,
-                        double z,
-                        LHCb::ParticleID pid = LHCb::ParticleID(211) );
-  
   /// Propagate a state to the closest position to the specified point
   StatusCode propagate( LHCb::State& state,
                         const Gaudi::XYZPoint& point,
