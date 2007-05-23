@@ -4,6 +4,14 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+! 2007-05-23 - Chris Jones
+ - Update ChargedProtoPAlg
+  + Split up the handling of the CALO information so each CALO sub-det 
+    (ECAL, PRS etc.) are handled completely seperately.
+  + Fix crash when trying to recreate ProtoParticles with some CALO 
+    information missing
+  + Replace some internal use of StatusCodes with simplier bools
+
 !========================== GlobalReco v6r9 2007-03-30 =======================
 ! 2007-03-30 - Marco Cattaneo
  - Pick up ICaloElectron.h from new CaloUtils location

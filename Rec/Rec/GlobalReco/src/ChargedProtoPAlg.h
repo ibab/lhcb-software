@@ -4,7 +4,7 @@
  * Header file for algorithm ChargedProtoPAlg
  *
  * CVS Log :-
- * $Id: ChargedProtoPAlg.h,v 1.25 2007-03-30 07:16:55 cattanem Exp $
+ * $Id: ChargedProtoPAlg.h,v 1.26 2007-05-23 13:38:20 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 29/03/2006
@@ -69,17 +69,30 @@ private: // methods
   inline LHCb::ProtoParticles * protos() { return m_protos; }
 
   /// Load the RichPIDs and build reverse mappings
-  StatusCode getRichData();
+  bool getRichData();
 
   /// Load the MuonPIDs and build reverse mappings
-  StatusCode getMuonData();
+  bool getMuonData();
 
-  /// Load the Calo tables 
-  StatusCode getCaloData();
+  /// Load the Calo Ecal tables
+  bool getEcalData();
+
+  /// Load the Calo Brem tables
+  bool getBremData();
+
+  /// Load the Calo Spd tables
+  bool getSpdData();
+
+  /// Load the Calo Prs tables
+  bool getPrsData();
+
+  /// Load the Calo Hcal tables
+  bool getHcalData();
+
   // Add extra info from CaloDigits (Spd+Prs)
-  double CaloSpd       ( const LHCb::CaloHypo*  hypo  )  const ;
-  double CaloPrs       ( const LHCb::CaloHypo*  hypo  )  const ;
-  double CaloEcal      ( const LHCb::CaloHypo*  hypo  )  const ;
+  double CaloSpd       ( const LHCb::CaloHypo*  hypo  )  const ; ///< Returns Calo Spd value
+  double CaloPrs       ( const LHCb::CaloHypo*  hypo  )  const ; ///< Returns Calo Prs value
+  double CaloEcal      ( const LHCb::CaloHypo*  hypo  )  const ; ///< Returns Calo Ecal value
 
   /// Add Rich information to the given ProtoParticle
   bool addRich( LHCb::ProtoParticle * proto ) const;
@@ -87,11 +100,41 @@ private: // methods
   /// Add Muon information to the given ProtoParticle
   bool addMuon( LHCb::ProtoParticle * proto ) const;
 
-  /// Add Calo information to the given ProtoParticle
-  bool addCalo( LHCb::ProtoParticle * proto ) const;
+  /// Add Calo Ecal information to the given ProtoParticle
+  bool addEcal( LHCb::ProtoParticle * proto ) const;
+
+  /// Add Calo Brem information to the given ProtoParticle
+  bool addBrem( LHCb::ProtoParticle * proto ) const;
+
+  /// Add Calo Hcal information to the given ProtoParticle
+  bool addHcal( LHCb::ProtoParticle * proto ) const;
+
+  /// Add Calo Prs information to the given ProtoParticle
+  bool addPrs( LHCb::ProtoParticle * proto ) const;
+
+  /// Add Calo Spd information to the given ProtoParticle
+  bool addSpd( LHCb::ProtoParticle * proto ) const;
 
   /// Add Velo dE/dx information to the given ProtoParticle
   bool addVelodEdx( LHCb::ProtoParticle * proto ) const;
+
+  /// Loads a CALO relations table
+  template < typename TYPE >
+  inline bool loadCaloTable( TYPE *& table, const std::string & location ) const
+  {
+    const bool ok = exist<TYPE>(location);
+    if ( !ok )
+    {
+      table = NULL;
+      Warning("No CALO "+System::typeinfoName(typeid(TYPE))+
+              " table at '"+location+"'", StatusCode::SUCCESS );
+    }
+    else
+    {
+      table = get<TYPE>( location );
+    }
+    return ok;
+  }
 
 private: // data
 
@@ -150,20 +193,29 @@ private: // data
   /// Event count
   unsigned long m_nEvts;
 
+private:
+
   /// Simple utility tally class
   class TrackTally
   {
   public:
     /// Default constructor
-    TrackTally() : totTracks(0), selTracks(0), caloTracks(0), 
+    TrackTally() : totTracks(0), selTracks(0),
+                   ecalTracks(0), bremTracks(0), spdTracks(0), prsTracks(0), hcalTracks(0),
                    richTracks(0), muonTracks(0), velodEdxTracks(0) { }
     unsigned long totTracks;      ///< Number of considered tracks
     unsigned long selTracks;      ///< Number of tracks selected to creaste a ProtoParticle from
-    unsigned long caloTracks;     ///< Number of ProtoParticles created with CALO info
+    unsigned long ecalTracks;     ///< Number of ProtoParticles created with CALO ECAL info
+    unsigned long bremTracks;     ///< Number of ProtoParticles created with CALO BREM info
+    unsigned long spdTracks;      ///< Number of ProtoParticles created with CALO SPD info
+    unsigned long prsTracks;      ///< Number of ProtoParticles created with CALO PRS info
+    unsigned long hcalTracks;     ///< Number of ProtoParticles created with CALO HCAL info
     unsigned long richTracks;     ///< Number of ProtoParticles created with RICH info
     unsigned long muonTracks;     ///< Number of ProtoParticles created with MUON info
     unsigned long velodEdxTracks; ///< Number of ProtoParticles created with VELO dE/dx info
   };
+
+private:
 
   /// Map type containing tally for various track types
   typedef GaudiUtils::HashMap < const LHCb::Track::Types, TrackTally > TrackMap;

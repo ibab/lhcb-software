@@ -4,7 +4,7 @@
  * Implementation file for algorithm ChargedProtoPAlg
  *
  * CVS Log :-
- * $Id: ChargedProtoPAlg.cpp,v 1.54 2007-03-02 10:07:42 jonrob Exp $
+ * $Id: ChargedProtoPAlg.cpp,v 1.55 2007-05-23 13:38:20 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 29/03/2006
@@ -109,21 +109,22 @@ StatusCode ChargedProtoPAlg::execute()
   }
 
   // Load the RichPIDs
-  const StatusCode richSc = getRichData();
-  //if ( richSc.isFailure() ) return richSc;
+  const bool richSc = getRichData();
 
   // Load the MuonPIDs
-  const StatusCode muonSc = getMuonData();
-  //if ( muonSc.isFailure() ) return muonSc;
+  const bool muonSc = getMuonData();
 
-  // Load the CaloPIDs
-  const StatusCode caloSc = getCaloData();
-  //if ( caloSc.isFailure() ) return caloSc;
+  // Load the Calo info
+  const bool ecalSc = getEcalData();
+  const bool bremSc = getBremData();
+  const bool spdSc  = getSpdData();
+  const bool prsSc  = getPrsData();
+  const bool hcalSc = getHcalData();
 
   // Create the ProtoParticle container
   m_protos = new ProtoParticles();
   // give to Gaudi
-  put ( protos(), m_protoPath );
+  put ( m_protos, m_protoPath );
 
   // Loop over tracks
   for ( Tracks::const_iterator iTrack = tracks->begin();
@@ -159,27 +160,56 @@ StatusCode ChargedProtoPAlg::execute()
     proto->addInfo( ProtoParticle::TrackType,       (*iTrack)->type()       );
 
     // flag signifying if any PID info has been added for this track
-    bool hasRICHInfo(false), hasMUONInfo(false), hasCALOInfo(false) ;
+    bool hasRICHInfo(false), hasMUONInfo(false);
+    bool hasECALInfo(false), hasBREMInfo(false), hasSPDInfo(false), hasPRSInfo(false), hasHCALInfo(false);
 
     // Add RICH info
-    if ( richSc.isSuccess() && addRich(proto) )
+    if ( richSc && addRich(proto) )
     {
       hasRICHInfo = true;
       ++tally.richTracks;
     }
 
     // Add MUON info
-    if ( muonSc.isSuccess() && addMuon(proto) )
+    if ( muonSc && addMuon(proto) )
     {
       hasMUONInfo = true;
       ++tally.muonTracks;
     }
 
-    // Add CALO info
-    if ( caloSc.isSuccess() && addCalo(proto) )
+    // Add ECAL info
+    if ( ecalSc && addEcal(proto) )
     {
-      hasCALOInfo = true;
-      ++tally.caloTracks;
+      hasECALInfo = true;
+      ++tally.ecalTracks;
+    }
+
+    // Add Brem info
+    if ( bremSc && addBrem(proto) )
+    {
+      hasBREMInfo = true;
+      ++tally.bremTracks;
+    }
+
+    // Add Spd info
+    if ( spdSc && addSpd(proto) )
+    {
+      hasSPDInfo = true;
+      ++tally.spdTracks;
+    }
+
+    // Add Prs info
+    if ( prsSc && addPrs(proto) )
+    {
+      hasPRSInfo = true;
+      ++tally.prsTracks;
+    }
+
+    // Add Hcal info
+    if ( hcalSc && addHcal(proto) )
+    {
+      hasHCALInfo = true;
+      ++tally.hcalTracks;
     }
 
     // Add Velo dE/dx info
@@ -189,7 +219,8 @@ StatusCode ChargedProtoPAlg::execute()
     }
 
     // has any PID info been added ?
-    if ( !(hasRICHInfo || hasMUONInfo || hasCALOInfo) )
+    if ( !( hasRICHInfo || hasMUONInfo || 
+            hasECALInfo || hasBREMInfo || hasSPDInfo || hasPRSInfo || hasHCALInfo ) )
     {
       // NO PID was added, so add a flag confirming this to the proto
       proto->addInfo(ProtoParticle::NoPID,1);
@@ -266,11 +297,11 @@ bool ChargedProtoPAlg::addMuon( LHCb::ProtoParticle * proto ) const
 
   // store acceptance flag for those in acceptance (lack of flag signifies
   // track was outside acceptance)
-  if ( muonPID->InAcceptance() ) 
+  if ( muonPID->InAcceptance() )
   {
     proto->addInfo( ProtoParticle::InAccMuon, true );
   }
-  
+
   // check IsMuon flag - Reject non-muons
   if ( !muonPID->IsMuon() ) return false;
 
@@ -288,52 +319,36 @@ bool ChargedProtoPAlg::addMuon( LHCb::ProtoParticle * proto ) const
   return true;
 }
 
-
 //=============================================================================
-// Add Calo info to the protoparticle
+// Add Calo Ecal info to the protoparticle
 //=============================================================================
-bool ChargedProtoPAlg::addCalo( LHCb::ProtoParticle * proto ) const
+bool ChargedProtoPAlg::addEcal( LHCb::ProtoParticle * proto ) const
 {
-  // Does this track have a Calo PID result ?
-  typedef LHCb::Calo2Track::ITrHypoTable2D::Range              HypoRange;
-  typedef LHCb::Calo2Track::IClusTrTable2D::InverseType::Range ClusRange;
-  typedef LHCb::Calo2Track::ITrEvalTable::Range EvalRange;
-  typedef LHCb::Calo2Track::ITrAccTable::Range  AccRange;
-  EvalRange vRange ;
-  AccRange  aRange ;
-  HypoRange hRange;
-  ClusRange cRange ;
+  LHCb::Calo2Track::ITrAccTable::Range                 aRange;
+  LHCb::Calo2Track::ITrHypoTable2D::Range              hRange;
+  LHCb::Calo2Track::IClusTrTable2D::InverseType::Range cRange;
+  LHCb::Calo2Track::ITrEvalTable::Range                vRange;
 
   bool hasEcalPID = false;
-  bool hasHcalPID = false;
-  bool hasPrsPID  = false;
-  bool hasSpdPID  = false;
-  bool hasBremPID = false;
-
-
-
-  ////////////
-  // Ecal PID
-  ////////////
-  if (m_EcalPID){
+  if (m_EcalPID)
+  {
     aRange = m_InEcalTable -> relations ( proto->track() ) ;
-
-    if( !aRange.empty() ){
-
+    if ( !aRange.empty() )
+    {
       hasEcalPID = aRange.front().to();
 
-      if( hasEcalPID  ){
-
-        if ( msgLevel(MSG::VERBOSE) )verbose() << " -> The track is in Ecal acceptance"  << endreq;
-
-
+      if( hasEcalPID )
+      {
+        if ( msgLevel(MSG::VERBOSE) ) verbose() << " -> The track is in Ecal acceptance"  << endreq;
+        proto->addInfo(ProtoParticle::InAccEcal, true );
 
         // Get the highest weight associated electron CaloHypo (3D matching)
-        hRange =  m_elecTrTable ->relations ( proto->track() ) ;
-        if ( !hRange.empty() ){
+        hRange = m_elecTrTable ->relations ( proto->track() ) ;
+        if ( !hRange.empty() )
+        {
           proto->addToCalo ( hRange.front().to() );
           // CaloElectron->caloTrajectory must be after addToCalo
-          if( m_electron->set(proto) )
+          if ( m_electron->set(proto) )
             proto->addInfo(ProtoParticle::CaloTrajectoryL, m_electron->caloTrajectoryL(CaloPlane::ShowerMax,"hypo") );
           proto->addInfo(ProtoParticle::CaloChargedSpd, CaloSpd( hRange.front().to() ));
           proto->addInfo(ProtoParticle::CaloChargedPrs, CaloPrs( hRange.front().to() ));
@@ -342,29 +357,28 @@ bool ChargedProtoPAlg::addCalo( LHCb::ProtoParticle * proto ) const
         }
 
         // Get the highest weight associated CaloCluster (2D matching)
-        cRange =  m_clusTrTable -> inverse() ->relations ( proto->track() ) ;
-        if ( !cRange.empty() ){proto->addInfo(ProtoParticle::CaloTrMatch , cRange.front().weight() );}
+        cRange = m_clusTrTable -> inverse() ->relations ( proto->track() ) ;
+        if ( !cRange.empty() ) { proto->addInfo(ProtoParticle::CaloTrMatch , cRange.front().weight() ); }
 
         // Get EcalE (intermediate) estimator
         vRange = m_EcalETable -> relations ( proto->track() ) ;
-        if( !vRange.empty() ) {
-          proto->addInfo(ProtoParticle::CaloEcalE ,  vRange.front().to() );}
+        if ( !vRange.empty() ) { proto->addInfo(ProtoParticle::CaloEcalE ,  vRange.front().to() ); }
 
         // Get EcalChi2 (intermediate) estimator
         vRange = m_EcalChi2Table -> relations ( proto->track() ) ;
-        if( !vRange.empty() ){  proto->addInfo(ProtoParticle::CaloEcalChi2,  vRange.front().to() );}
+        if ( !vRange.empty() ) { proto->addInfo(ProtoParticle::CaloEcalChi2,  vRange.front().to() ); }
 
         // Get ClusChi2 (intermediate) estimator
         vRange = m_ClusChi2Table -> relations ( proto->track() ) ;
-        if( !vRange.empty() ){  proto->addInfo(ProtoParticle::CaloClusChi2,  vRange.front().to() );}
+        if ( !vRange.empty() ) { proto->addInfo(ProtoParticle::CaloClusChi2,  vRange.front().to() ); }
 
         // Get Ecal DLL(e)
         vRange = m_dlleEcalTable -> relations ( proto->track() ) ;
-        if( !vRange.empty() ){proto->addInfo(ProtoParticle::EcalPIDe , vRange.front().to() );}
+        if ( !vRange.empty() ) { proto->addInfo(ProtoParticle::EcalPIDe , vRange.front().to() ); }
 
         // Get Ecal DLL(mu)
         vRange = m_dllmuEcalTable -> relations ( proto->track() ) ;
-        if( !vRange.empty() ){proto->addInfo(ProtoParticle::EcalPIDmu , vRange.front().to() );}
+        if ( !vRange.empty() ) { proto->addInfo(ProtoParticle::EcalPIDmu , vRange.front().to() ); }
 
         if ( msgLevel(MSG::VERBOSE) )
           verbose() << " -> Ecal PID : "
@@ -382,36 +396,52 @@ bool ChargedProtoPAlg::addCalo( LHCb::ProtoParticle * proto ) const
                     << " TrajectoryL " <<  proto->info(ProtoParticle::CaloTrajectoryL, 0.)
                     << endreq;
 
-      }else{
+      }
+      else
+      {
         if ( msgLevel(MSG::VERBOSE) )verbose() << " -> The track is NOT in Ecal acceptance"  << endreq;
       }
-    }else{
+    }
+    else
+    {
       if ( msgLevel(MSG::VERBOSE) )verbose() << " -> No entry for that track in the Ecal acceptance table "  << endreq;
     }
-  }else{
+  }
+  else
+  {
     if ( msgLevel(MSG::VERBOSE) )verbose() << " -> Ecal PID has been disabled"  << endreq;
   }
 
-  //////////////
-  // Brem PID //
-  //////////////
-  if( m_BremPID  ){
+  return hasEcalPID;
+}
 
+//=============================================================================
+// Add Calo Brem info to the protoparticle
+//=============================================================================
+bool ChargedProtoPAlg::addBrem( LHCb::ProtoParticle * proto ) const
+{
+  LHCb::Calo2Track::ITrAccTable::Range                 aRange;
+  LHCb::Calo2Track::ITrHypoTable2D::Range              hRange;
+  LHCb::Calo2Track::IClusTrTable2D::InverseType::Range cRange;
+  LHCb::Calo2Track::ITrEvalTable::Range                vRange;
+
+  bool hasBremPID = false;
+  if (m_BremPID)
+  {
     aRange = m_InBremTable -> relations ( proto->track() ) ;
 
-    if( !aRange.empty() ){
-
+    if ( !aRange.empty() )
+    {
       hasBremPID = aRange.front().to();
-
-      if( hasBremPID ){
-
-        if ( msgLevel(MSG::VERBOSE) )verbose() << " -> The Brem. extrapolated line is in Ecal acceptance"  << endreq;
-
-
+      if ( hasBremPID )
+      {
+        if ( msgLevel(MSG::VERBOSE) ) verbose() << " -> The Brem. extrapolated line is in Ecal acceptance"  << endreq;
+        proto->addInfo(ProtoParticle::InAccBrem , true );
 
         // Get the highest weight associated brem. CaloHypo (3D matching)
-        hRange =  m_bremTrTable ->relations ( proto->track() ) ;
-        if ( !hRange.empty() ){
+        hRange = m_bremTrTable ->relations ( proto->track() ) ;
+        if ( !hRange.empty() )
+        {
           proto->addToCalo ( hRange.front().to() );
           proto->addInfo(ProtoParticle::CaloNeutralSpd, CaloSpd( hRange.front().to() ));
           proto->addInfo(ProtoParticle::CaloNeutralPrs, CaloPrs( hRange.front().to() ));
@@ -421,11 +451,11 @@ bool ChargedProtoPAlg::addCalo( LHCb::ProtoParticle * proto ) const
 
         // Get the BremChi2 (intermediate) estimator
         vRange = m_BremChi2Table -> relations ( proto->track() ) ;
-        if( !vRange.empty() ){  proto->addInfo(ProtoParticle::CaloBremChi2,  vRange.front().to() );}
+        if ( !vRange.empty() ) { proto->addInfo(ProtoParticle::CaloBremChi2,  vRange.front().to() ); }
 
         // Get the Brem DLL(e)
         vRange = m_dlleBremTable -> relations ( proto->track() ) ;
-        if( !vRange.empty() ){proto->addInfo(ProtoParticle::BremPIDe , vRange.front().to() );}
+        if ( !vRange.empty() ) { proto->addInfo(ProtoParticle::BremPIDe , vRange.front().to() ); }
 
         if ( msgLevel(MSG::VERBOSE) )
           verbose() << " -> BremStrahlung PID : "
@@ -436,44 +466,57 @@ bool ChargedProtoPAlg::addCalo( LHCb::ProtoParticle * proto ) const
                     << " Prs Digits " <<  proto->info(ProtoParticle::CaloNeutralPrs, 0.)
                     << " Ecal Cluster " <<  proto->info(ProtoParticle::CaloNeutralEcal, 0.)
                     << endreq;
-      }else{
-
-        if ( msgLevel(MSG::VERBOSE) )verbose() << " -> The Brem. extrapolated line is NOT in Ecal acceptance"  << endreq;
       }
-    }else{
-
-      if ( msgLevel(MSG::VERBOSE) )verbose() << " ->  No entry for that track in the Brem acceptance table"  << endreq;
+      else
+      {
+        if ( msgLevel(MSG::VERBOSE) ) verbose() << " -> The Brem. extrapolated line is NOT in Ecal acceptance"  << endreq;
+      }
     }
-  }else{
-    if ( msgLevel(MSG::VERBOSE) )verbose() << " -> Brem PID has been disabled"  << endreq;
+    else
+    {
+      if ( msgLevel(MSG::VERBOSE) ) verbose() << " ->  No entry for that track in the Brem acceptance table"  << endreq;
+    }
+  }
+  else
+  {
+    if ( msgLevel(MSG::VERBOSE) ) verbose() << " -> Brem PID has been disabled"  << endreq;
   }
 
-  //////////////
-  // HCAL PID //
-  //////////////
-  if( m_HcalPID  ){
+  return hasBremPID;
+}
 
-    aRange = m_InHcalTable -> relations ( proto->track() ) ;
+//=============================================================================
+// Add Calo Hcal info to the protoparticle
+//=============================================================================
+bool ChargedProtoPAlg::addHcal( LHCb::ProtoParticle * proto ) const
+{
+  LHCb::Calo2Track::ITrAccTable::Range                 aRange;
+  LHCb::Calo2Track::ITrHypoTable2D::Range              hRange;
+  LHCb::Calo2Track::IClusTrTable2D::InverseType::Range cRange;
+  LHCb::Calo2Track::ITrEvalTable::Range                vRange;
 
-    if( !aRange.empty() ) {
-
+  bool hasHcalPID = false;
+  if (m_HcalPID)
+  {
+   aRange = m_InHcalTable -> relations ( proto->track() ) ;
+    if ( !aRange.empty() ) 
+    {
       hasHcalPID = aRange.front().to();
-
-      if( hasHcalPID ){
-
+      if( hasHcalPID )
+      {
         if ( msgLevel(MSG::VERBOSE) )verbose() << " -> The track is in Hcal acceptance"  << endreq;
-
+        proto->addInfo(ProtoParticle::InAccHcal, true );
 
         // Get the HcalE (intermediate) estimator
         vRange = m_HcalETable -> relations ( proto->track() ) ;
-        if( !vRange.empty() ){  proto->addInfo(ProtoParticle::CaloHcalE,  vRange.front().to() );}
+        if ( !vRange.empty() ) { proto->addInfo(ProtoParticle::CaloHcalE,  vRange.front().to() ); }
         // Get the Hcal DLL(e)
         vRange = m_dlleHcalTable -> relations ( proto->track() ) ;
-        if( !vRange.empty() ){proto->addInfo(ProtoParticle::HcalPIDe , vRange.front().to() );}
+        if ( !vRange.empty() ) { proto->addInfo(ProtoParticle::HcalPIDe , vRange.front().to() ); }
 
         // Get the Hcal DLL(mu)
         vRange = m_dllmuHcalTable -> relations ( proto->track() ) ;
-        if( !vRange.empty() ){proto->addInfo(ProtoParticle::HcalPIDmu , vRange.front().to() );}
+        if ( !vRange.empty() ) { proto->addInfo(ProtoParticle::HcalPIDmu , vRange.front().to() ); }
 
         if ( msgLevel(MSG::VERBOSE) )
           verbose() << " -> Hcal PID  : "
@@ -482,41 +525,54 @@ bool ChargedProtoPAlg::addCalo( LHCb::ProtoParticle * proto ) const
                     << " Dllmu (Hcal) =" <<  proto->info(ProtoParticle::HcalPIDmu, -999.)
                     << endreq;
 
-
-      }else{
-
+      }
+      else
+      {
         if ( msgLevel(MSG::VERBOSE) )verbose() << " -> The track is NOT in Hcal acceptance"  << endreq;
       }
-    }else{
-
+    }
+    else
+    {
       if ( msgLevel(MSG::VERBOSE) )verbose() << " -> No entry for that track in the Hcal acceptance table"  << endreq;
     }
-  }else{
+  }
+  else
+  {
     if ( msgLevel(MSG::VERBOSE) )verbose() << " -> Hcal PID has been disabled"  << endreq;
   }
 
-  //////////////
-  // Prs PID //
-  //////////////
-  if(m_PrsPID){
+  return hasHcalPID;
+}
+
+//=============================================================================
+// Add Calo Prs info to the protoparticle
+//=============================================================================
+bool ChargedProtoPAlg::addPrs( LHCb::ProtoParticle * proto ) const
+{
+  LHCb::Calo2Track::ITrAccTable::Range                 aRange;
+  LHCb::Calo2Track::ITrHypoTable2D::Range              hRange;
+  LHCb::Calo2Track::IClusTrTable2D::InverseType::Range cRange;
+  LHCb::Calo2Track::ITrEvalTable::Range                vRange;
+
+  bool hasPrsPID = false;
+  if (m_PrsPID)
+  {
     aRange = m_InPrsTable -> relations ( proto->track() ) ;
-
-    if( !aRange.empty() ) {
-
+    if( !aRange.empty() ) 
+    {
       hasPrsPID = aRange.front().to();
-
-      if( hasPrsPID ){
-
+      if( hasPrsPID )
+      {
         if ( msgLevel(MSG::VERBOSE) )verbose() << " -> The track is in Prs acceptance"  << endreq;
-
+        proto->addInfo(ProtoParticle::InAccPrs , true );
 
         // Get the PrsE (intermediate) estimator
         vRange = m_PrsETable -> relations ( proto->track() ) ;
-        if( !vRange.empty() ){  proto->addInfo(ProtoParticle::CaloPrsE,  vRange.front().to() );}
+        if ( !vRange.empty() ) { proto->addInfo(ProtoParticle::CaloPrsE,  vRange.front().to() ); }
 
         // Get the Prs DLL(e)
         vRange = m_dllePrsTable -> relations ( proto->track() ) ;
-        if( !vRange.empty() ){proto->addInfo(ProtoParticle::PrsPIDe , vRange.front().to() );}
+        if ( !vRange.empty() ) { proto->addInfo(ProtoParticle::PrsPIDe , vRange.front().to() ); }
 
         if ( msgLevel(MSG::VERBOSE) )
           verbose() << " -> Prs PID : "
@@ -524,63 +580,73 @@ bool ChargedProtoPAlg::addCalo( LHCb::ProtoParticle * proto ) const
                     << " Dlle (Prs)  =" <<  proto->info(ProtoParticle::PrsPIDe , -999.)
                     << endreq;
 
-      }else{
-
+      }
+      else
+      {
         if ( msgLevel(MSG::VERBOSE) )verbose() << " -> The track is NOT in Prs acceptance"  << endreq;
       }
-    }else{
-
+    }
+    else
+    {
       if ( msgLevel(MSG::VERBOSE) )verbose() << " -> No entry for that track in the Prs acceptance table"  << endreq;
     }
-  }else{
+  }
+  else
+  {
     if ( msgLevel(MSG::VERBOSE) )verbose() << " -> Prs PID has been disabled"  << endreq;
   }
 
-  //////////////
-  // Spd PID //
-  //////////////
-  if(m_SpdPID){
+  return hasPrsPID;
+}
 
+//=============================================================================
+// Add Calo Spd info to the protoparticle
+//=============================================================================
+bool ChargedProtoPAlg::addSpd( LHCb::ProtoParticle * proto ) const
+{
+  LHCb::Calo2Track::ITrAccTable::Range                 aRange;
+  LHCb::Calo2Track::ITrHypoTable2D::Range              hRange;
+  LHCb::Calo2Track::IClusTrTable2D::InverseType::Range cRange;
+  LHCb::Calo2Track::ITrEvalTable::Range                vRange;
+
+  bool hasSpdPID = false;
+  if (m_SpdPID)
+  {
     aRange = m_InSpdTable -> relations ( proto->track() ) ;
-
-    if( !aRange.empty() ) {
-
-      hasSpdPID=aRange.front().to();
-
-      if( hasSpdPID ){
-
+    if ( !aRange.empty() ) 
+    {
+      hasSpdPID = aRange.front().to();
+      if( hasSpdPID )
+      {
         if ( msgLevel(MSG::VERBOSE) )verbose() << " -> The track is in Spd acceptance"  << endreq;
-
+        proto->addInfo(ProtoParticle::InAccSpd , true );
 
         // Get the PrsE (intermediate) estimator
         vRange = m_SpdETable -> relations ( proto->track() ) ;
-        if( !vRange.empty() ){  proto->addInfo(ProtoParticle::CaloSpdE,  vRange.front().to() );}
+        if ( !vRange.empty() ) { proto->addInfo(ProtoParticle::CaloSpdE,  vRange.front().to() ); }
 
         if ( msgLevel(MSG::VERBOSE) )
           verbose() << " -> Spd PID : "
                     << " SpdE       =" <<  proto->info(ProtoParticle::CaloSpdE, -999.)
                     << endreq;
 
-      }else{
-
+      }
+      else
+      {
         if ( msgLevel(MSG::VERBOSE) )verbose() << " -> The track is NOT in Spd acceptance"  << endreq;
       }
-    }else{
-
+    }
+    else
+    {
       if ( msgLevel(MSG::VERBOSE) )verbose() << " -> No entry for that track in the Spd acceptance table"  << endreq;
     }
-  }else{
+  }
+  else
+  {
     if ( msgLevel(MSG::VERBOSE) )verbose() << " -> Spd PID has been disabled"  << endreq;
   }
 
-
-  // acceptance flags
-  if (hasSpdPID ) proto->addInfo(ProtoParticle::InAccSpd  ,  true );
-  if (hasPrsPID ) proto->addInfo(ProtoParticle::InAccPrs  ,  true );
-  if (hasEcalPID) proto->addInfo(ProtoParticle::InAccEcal ,  true );
-  if (hasHcalPID) proto->addInfo(ProtoParticle::InAccHcal ,  true );
-  if (hasBremPID) proto->addInfo(ProtoParticle::InAccBrem ,  true );
-  return ( hasSpdPID || hasPrsPID || hasEcalPID || hasHcalPID || hasBremPID );
+  return hasSpdPID;
 }
 
 //=============================================================================
@@ -604,14 +670,17 @@ bool ChargedProtoPAlg::addVelodEdx( LHCb::ProtoParticle * proto ) const
 //=============================================================================
 // Loads the RICH data
 //=============================================================================
-StatusCode ChargedProtoPAlg::getRichData()
+bool ChargedProtoPAlg::getRichData()
 {
   // empty the map
   m_richMap.clear();
 
   // Do we have any RichPID results
   if ( !exist<RichPIDs>(m_richPath) )
-    return Warning( "No RichPIDs at '"+m_richPath+"'", StatusCode::SUCCESS );
+  {
+    Warning( "No RichPIDs at '"+m_richPath+"'", StatusCode::SUCCESS );
+    return false;
+  }
 
   // yes, so load them
   const RichPIDs * richpids = get<RichPIDs>( m_richPath );
@@ -628,20 +697,23 @@ StatusCode ChargedProtoPAlg::getRichData()
     m_richMap[ (*iR)->track() ] = *iR;
   }
 
-  return StatusCode::SUCCESS;
+  return true;
 }
 
 //=============================================================================
 // Loads the Muon data
 //=============================================================================
-StatusCode ChargedProtoPAlg::getMuonData()
+bool ChargedProtoPAlg::getMuonData()
 {
   // empty the map
   m_muonMap.clear();
 
   // Do we have any MuonPID results
   if ( !exist<MuonPIDs>(m_muonPath) )
-    return Warning( "No MuonPIDs at '"+m_muonPath+"'", StatusCode::SUCCESS );
+  {
+    Warning( "No MuonPIDs at '"+m_muonPath+"'", StatusCode::SUCCESS );
+    return false;
+  }
 
   // yes, so load them
   const MuonPIDs * muonpids = get<MuonPIDs>( m_muonPath );
@@ -658,172 +730,116 @@ StatusCode ChargedProtoPAlg::getMuonData()
     m_muonMap[ (*iM)->idTrack() ] = *iM;
   }
 
-  return StatusCode::SUCCESS;
+  return true;
 }
 
 //=============================================================================
-// Loads the Calo data
+// Loads the Calo Ecal data
 //=============================================================================
-StatusCode ChargedProtoPAlg::getCaloData()
+bool ChargedProtoPAlg::getEcalData()
 {
-
-  // Load inputs
   using namespace LHCb::Calo2Track;
+  if ( !m_EcalPID ) return false;
 
+  const bool sc1 = loadCaloTable(m_InEcalTable,CaloIdLocation::InEcal);
+  const bool sc2 = loadCaloTable(m_elecTrTable,CaloIdLocation::ElectronMatch);
+  const bool sc3 = loadCaloTable(m_clusTrTable,CaloIdLocation::ClusterMatch);
+  const bool sc4 = loadCaloTable(m_EcalChi2Table,CaloIdLocation::EcalChi2);
+  const bool sc5 = loadCaloTable(m_EcalETable,CaloIdLocation::EcalE);
+  const bool sc6 = loadCaloTable(m_ClusChi2Table,CaloIdLocation::ClusChi2);
+  const bool sc7 = loadCaloTable(m_dlleEcalTable,CaloIdLocation::EcalPIDe);
+  const bool sc8 = loadCaloTable(m_dllmuEcalTable,CaloIdLocation::EcalPIDmu);
+  const bool sc  = sc1 && sc2 && sc3 && sc4 && sc5 && sc6 && sc7 && sc8;
+  if ( sc ) debug() << "Ecal PID SUCCESSFULLY LOADED" << endreq;
 
-  /* Ecal PID */
-  if( m_EcalPID ){
+  return sc;
+}
 
-    if ( !exist<ITrAccTable>(CaloIdLocation::InEcal ) )
-      return Warning("No InEcal Acceptance table at     '"+CaloIdLocation::InEcal+"'", StatusCode::SUCCESS );
-    m_InEcalTable = get<ITrAccTable>( CaloIdLocation::InEcal );
+//=============================================================================
+// Loads the Calo Brem data
+//=============================================================================
+bool ChargedProtoPAlg::getBremData()
+{
+  using namespace LHCb::Calo2Track;
+  if ( !m_BremPID ) return false;
 
-    if ( !exist<ITrHypoTable2D>( CaloIdLocation::ElectronMatch )  )
-      return Warning( "No Electron-Track relation table at '"+ CaloIdLocation::ElectronMatch+"'", StatusCode::SUCCESS );
-    m_elecTrTable = get<ITrHypoTable2D>(  CaloIdLocation::ElectronMatch );
+  const bool sc1 = loadCaloTable(m_InBremTable,CaloIdLocation::InBrem);
+  const bool sc2 = loadCaloTable(m_bremTrTable,CaloIdLocation::BremMatch);
+  const bool sc3 = loadCaloTable(m_BremChi2Table,CaloIdLocation::BremChi2);
+  const bool sc4 = loadCaloTable(m_dlleBremTable,CaloIdLocation::BremPIDe);
+  const bool sc  = sc1 && sc2 && sc3 && sc4;
 
-    if ( !exist<IClusTrTable2D>( CaloIdLocation::ClusterMatch )  )
-      return Warning("No Cluster-Track relation table at  '"+CaloIdLocation::ClusterMatch+"'", StatusCode::SUCCESS );
-    m_clusTrTable = get<IClusTrTable2D>( CaloIdLocation::ClusterMatch );
+  if ( sc ) debug() << "BREM PID SUCCESSFULLY LOADED" << endreq;
 
-    if ( !exist<ITrEvalTable>( CaloIdLocation::EcalChi2 ) )
-      return Warning("No EcalChi2 relation table at     '"+CaloIdLocation::EcalChi2+"'", StatusCode::SUCCESS );
-    m_EcalChi2Table = get<ITrEvalTable>(  CaloIdLocation::EcalChi2 );
+  return sc;
+}
 
-    if ( !exist<ITrEvalTable>( CaloIdLocation::EcalE ) )
-      return Warning("No EcalE relation table at     '"+ CaloIdLocation::EcalE+"'", StatusCode::SUCCESS );
-    m_EcalETable = get<ITrEvalTable>(  CaloIdLocation::EcalE );
+//=============================================================================
+// Loads the Calo Spd data
+//=============================================================================
+bool ChargedProtoPAlg::getSpdData()
+{
+  using namespace LHCb::Calo2Track;
+  if ( !m_SpdPID ) return false;
 
-    if ( !exist<ITrEvalTable>( CaloIdLocation::ClusChi2 ) )
-      return Warning("No ClusChi2 relation table at     '"+CaloIdLocation::ClusChi2+"'", StatusCode::SUCCESS );
-    m_ClusChi2Table = get<ITrEvalTable>( CaloIdLocation::ClusChi2 );
+  const bool sc1 = loadCaloTable(m_InSpdTable,CaloIdLocation::InSpd);
+  const bool sc2 = loadCaloTable(m_SpdETable,CaloIdLocation::SpdE);
+  const bool sc  = sc1 && sc2;
 
-    if ( !exist<ITrEvalTable>( CaloIdLocation::EcalPIDe )  )
-      return Warning("No DlleEcal  relation table at     '"+ CaloIdLocation::EcalPIDe+"'", StatusCode::SUCCESS );
-    m_dlleEcalTable  = get<ITrEvalTable>(  CaloIdLocation::EcalPIDe );
+  if ( sc ) debug() << "SPD PID SUCCESSFULLY LOADED" << endreq;
 
-    if ( !exist<ITrEvalTable>( CaloIdLocation::EcalPIDmu ) )
-      return Warning("No DLLmuEcal relation table at     '"+ CaloIdLocation::EcalPIDmu+"'", StatusCode::SUCCESS );
-    m_dllmuEcalTable = get<ITrEvalTable>(  CaloIdLocation::EcalPIDmu );
+  return sc;
+}
 
-    debug() << "Ecal PID SUCCESFULLY LOADED" << endreq;
+//=============================================================================
+// Loads the Calo Prs data
+//=============================================================================
+bool ChargedProtoPAlg::getPrsData()
+{
+  using namespace LHCb::Calo2Track;
+  if ( !m_PrsPID ) return false;
 
-  }else{
-    debug() << "Ecal PID HAS BEEN DISABLED" << endreq;
-  }
+  const bool sc1 = loadCaloTable(m_InPrsTable,CaloIdLocation::InPrs);
+  const bool sc2 = loadCaloTable(m_PrsETable,CaloIdLocation::PrsE);
+  const bool sc3 = loadCaloTable(m_dllePrsTable,CaloIdLocation::PrsPIDe);
+  const bool sc  = sc1 && sc2 && sc3;
 
+  if ( sc ) debug() << "PRS PID SUCCESSFULLY LOADED" << endreq;
 
-  /* Brem PID */
-  if( m_BremPID ){
+  return sc;
+}
 
-    if ( !exist<ITrAccTable>( CaloIdLocation::InBrem )  )
-      return Warning("No InBrem Acceptance table at '"+ CaloIdLocation::InBrem+"'", StatusCode::SUCCESS );
-    m_InBremTable = get<ITrAccTable>(  CaloIdLocation::InBrem  );
+//=============================================================================
+// Loads the Calo Hcal data
+//=============================================================================
+bool ChargedProtoPAlg::getHcalData()
+{
+  using namespace LHCb::Calo2Track;
+  if ( !m_HcalPID ) return false;
 
-    if ( !exist<ITrHypoTable2D>( CaloIdLocation::BremMatch ) )
-      return Warning(" No Brem-Track relation table at '"+ CaloIdLocation::BremMatch +"'", StatusCode::SUCCESS );
-    m_bremTrTable = get<ITrHypoTable2D>(  CaloIdLocation::BremMatch );
+  const bool sc1 = loadCaloTable(m_InHcalTable,CaloIdLocation::InHcal);
+  const bool sc2 = loadCaloTable(m_HcalETable,CaloIdLocation::HcalE);
+  const bool sc3 = loadCaloTable(m_dlleHcalTable,CaloIdLocation::HcalPIDe);
+  const bool sc4 = loadCaloTable(m_dllmuHcalTable,CaloIdLocation::HcalPIDmu);
+  const bool sc  = sc1 && sc2 && sc3 && sc4;
 
-    if ( !exist<ITrEvalTable>( CaloIdLocation::BremChi2 ) )
-      return Warning("No BremlChi2 relation table at     '"+ CaloIdLocation::BremChi2+"'", StatusCode::SUCCESS );
-    m_BremChi2Table = get<ITrEvalTable>( CaloIdLocation::BremChi2  );
+  if ( sc ) debug() << "HCAL PID SUCCESSFULLY LOADED" << endreq;
 
-    if ( !exist<ITrEvalTable>( CaloIdLocation::BremPIDe ) )
-      return Warning("No DLLeBrem relation table at     '"+ CaloIdLocation::BremPIDe+"'", StatusCode::SUCCESS );
-    m_dlleBremTable = get<ITrEvalTable>( CaloIdLocation::BremPIDe  );
-
-    debug() << "BREM PID SUCCESFULLY LOADED" << endreq;
-
-  }else{
-    debug() << "BREM PID HAS BEEN DISABLED" << endreq;
-  }
-
-
-  /* Spd PID */
-  if( m_SpdPID ){
-
-    if ( !exist<ITrAccTable>( CaloIdLocation::InSpd ) )
-      return Warning("No InSpd Acceptance table at     '"+CaloIdLocation::InSpd+"'", StatusCode::SUCCESS );
-    m_InSpdTable = get<ITrAccTable>( CaloIdLocation::InSpd );
-
-    if ( !exist<ITrEvalTable>( CaloIdLocation::SpdE ) )
-      return Warning("No SpdE relation table at     '"+ CaloIdLocation::SpdE+"'", StatusCode::SUCCESS );
-    m_SpdETable = get<ITrEvalTable>(  CaloIdLocation::SpdE );
-
-    debug() << "SPD PID SUCCESFULLY LOADED" << endreq;
-
-  }else{
-    debug() << "SPD PID HAS BEEN DISABLED" << endreq;
-  }
-
-  /* Prs PID */
-  if( m_SpdPID ){
-
-    if ( !exist<ITrAccTable>( CaloIdLocation::InPrs ) )
-      return Warning("No InPrs Acceptance table at     '"+ CaloIdLocation::InPrs+"'", StatusCode::SUCCESS );
-    m_InPrsTable = get<ITrAccTable>(  CaloIdLocation::InPrs );
-
-    if ( !exist<ITrEvalTable>( CaloIdLocation::PrsE ) )
-      return Warning("No PrsE relation table at     '"+ CaloIdLocation::PrsE+"'", StatusCode::SUCCESS );
-    m_PrsETable = get<ITrEvalTable>(  CaloIdLocation::PrsE  );
-
-    if ( !exist<ITrEvalTable>( CaloIdLocation::PrsPIDe )   )
-      return Warning("No DLLePrs   relation table at     '"+ CaloIdLocation::PrsPIDe+"'", StatusCode::SUCCESS );
-    m_dllePrsTable   = get<ITrEvalTable>( CaloIdLocation::PrsPIDe );
-
-    debug() << "PRS PID SUCCESFULLY LOADED" << endreq;
-
-  }else{
-    debug() << "PRS PID HAS BEEN DISABLED" << endreq;
-  }
-
-
-
-  /* Hcal PID */
-  if( m_HcalPID ){
-
-    if ( !exist<ITrAccTable>( CaloIdLocation::InHcal ) )
-      return Warning("No InHcal Acceptance table at     '"+ CaloIdLocation::InHcal+"'", StatusCode::SUCCESS );
-    m_InHcalTable = get<ITrAccTable>(  CaloIdLocation::InHcal );
-
-    if ( !exist<ITrEvalTable>( CaloIdLocation::HcalE ) )
-      return Warning("No HcalE relation table at     '"+ CaloIdLocation::HcalE+"'", StatusCode::SUCCESS );
-    m_HcalETable = get<ITrEvalTable>(  CaloIdLocation::HcalE  );
-
-    if ( !exist<ITrEvalTable>( CaloIdLocation::HcalPIDe ) )
-      return Warning("No DLLeHcal  relation table at     '"+ CaloIdLocation::HcalPIDe +"'", StatusCode::SUCCESS );
-    m_dlleHcalTable  = get<ITrEvalTable>(  CaloIdLocation::HcalPIDe  );
-
-    if ( !exist<ITrEvalTable>( CaloIdLocation::HcalPIDmu ) )
-      return Warning("No DLLmuEcal relation table at     '"+ CaloIdLocation::HcalPIDe+"'", StatusCode::SUCCESS );
-    m_dllmuHcalTable = get<ITrEvalTable>( CaloIdLocation::HcalPIDmu );
-
-    debug() << "HCAL PID SUCCESFULLY LOADED" << endreq;
-
-  }else{
-
-    debug() << "HCAL PID HAS BEEN DISABLED" << endreq;
-
-  }
-
-
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 double ChargedProtoPAlg::CaloSpd  ( const LHCb::CaloHypo*  hypo  )  const
 {
-  //
-  if( 0 == hypo) return 0;
+  if ( NULL == hypo ) return 0;
   LHCb::CaloHypo::Digits digits = hypo->digits();
   LHCb::CaloDataFunctor::IsFromCalo< LHCb::CaloDigit* > isSpd( DeCalorimeterLocation::Spd );
   LHCb::CaloHypo::Digits::iterator it = std::stable_partition ( digits.begin(),digits.end(),isSpd );
-  return  ( it == digits.begin() ) ? 0. : +1.;
-};
+  return ( it == digits.begin() ) ? 0. : +1.;
+}
 
 double ChargedProtoPAlg::CaloPrs  ( const LHCb::CaloHypo*  hypo  )  const
 {
-  //
-  if( 0 == hypo) return 0;
+  if ( NULL == hypo) return 0;
   LHCb::CaloHypo::Digits digits = hypo->digits();
   LHCb::CaloDataFunctor::IsFromCalo< LHCb::CaloDigit* > isPrs( DeCalorimeterLocation::Prs );
   LHCb::CaloHypo::Digits::iterator it = std::stable_partition ( digits.begin(),digits.end(),isPrs );
@@ -832,19 +848,18 @@ double ChargedProtoPAlg::CaloPrs  ( const LHCb::CaloHypo*  hypo  )  const
     if(0 != *id)CaloPrs += (*id)->e();
   }
   return CaloPrs  ;
-};
+}
 
 double ChargedProtoPAlg::CaloEcal  ( const LHCb::CaloHypo*  hypo  )  const
 {
-  //
-  if( 0 == hypo) return 0;
+  if ( NULL == hypo) return 0;
   SmartRefVector<LHCb::CaloCluster> clusters = hypo->clusters();
-  if( 0 == clusters.size())return 0.;
+  if ( clusters.empty() ) return 0.;
   SmartRefVector<LHCb::CaloCluster>::iterator icluster = clusters.begin();
   LHCb::CaloCluster* cluster = *icluster;
-  if(NULL == cluster) return 0;
+  if ( NULL == cluster) return 0;
   return cluster->e();
-};
+}
 
 //=============================================================================
 //  Finalize
@@ -859,18 +874,31 @@ StatusCode ChargedProtoPAlg::finalize()
   {
     info() << "Track Type = '" << (*iT).first << "' :-" << endreq;
     const TrackTally & tally = (*iT).second;
+
     const double tkSel = 100 * ( tally.totTracks>0 ? (double)tally.selTracks/(double)tally.totTracks : 0 );
     const double protos = ( m_nEvts>0 ? (double)tally.selTracks/(double)m_nEvts : 0 );
+
     const double protoRICH = 100 * ( tally.selTracks>0 ? (double)tally.richTracks/(double)tally.selTracks : 0 );
-    const double protoCALO = 100 * ( tally.selTracks>0 ? (double)tally.caloTracks/(double)tally.selTracks : 0 );
+
+    const double protoECAL = 100 * ( tally.selTracks>0 ? (double)tally.ecalTracks/(double)tally.selTracks : 0 );
+    const double protoBREM = 100 * ( tally.selTracks>0 ? (double)tally.bremTracks/(double)tally.selTracks : 0 );
+    const double protoSPD  = 100 * ( tally.selTracks>0 ? (double)tally.spdTracks/(double)tally.selTracks : 0 );
+    const double protoPRS  = 100 * ( tally.selTracks>0 ? (double)tally.prsTracks/(double)tally.selTracks : 0 );
+    const double protoHCAL = 100 * ( tally.selTracks>0 ? (double)tally.hcalTracks/(double)tally.selTracks : 0 );
+
     const double protoMUON = 100 * ( tally.selTracks>0 ? (double)tally.muonTracks/(double)tally.selTracks : 0 );
+
     const double protoVELO = 100 * ( tally.selTracks>0 ? (double)tally.velodEdxTracks/(double)tally.selTracks : 0 );
 
     info() << " -> Created. = " << protos << " ProtoParticles/event : Track Sel. Eff. "
            << tkSel << "%" << endreq;
     info() << "  -> " << protoRICH << "% with RichPID information" << endreq;
     info() << "  -> " << protoMUON << "% with MuonPID information" << endreq;
-    info() << "  -> " << protoCALO << "% with CaloPID information" << endreq;
+    info() << "  -> " << protoECAL << "% with CaloPID ECAL information" << endreq;
+    info() << "  -> " << protoBREM << "% with CaloPID BREM information" << endreq;
+    info() << "  -> " << protoSPD  << "% with CaloPID SPD information" << endreq;
+    info() << "  -> " << protoPRS  << "% with CaloPID PRS information" << endreq;
+    info() << "  -> " << protoHCAL << "% with CaloPID HCAL information" << endreq;
     info() << "  -> " << protoVELO << "% with Velo dE/dx charge information" << endreq;
   }
 
