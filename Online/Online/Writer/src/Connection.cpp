@@ -186,8 +186,10 @@ int Connection::failover(int currThread)
   	m_ackThread->start();
   	m_sendThread->start();
   } else if(currThread == ACK_THREAD) {
+  	m_failoverMonitor->start();
   	m_sendThread->start();
 	} else if(currThread == SEND_THREAD) {
+		m_failoverMonitor->start();
   	m_ackThread->start();
   }
 

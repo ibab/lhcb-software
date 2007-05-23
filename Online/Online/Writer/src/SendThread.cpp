@@ -49,14 +49,14 @@ static void *send_thread(void *args)
 void SendThread::start()
 {
   int ret;
-  //*m_log << MSG::INFO << "Starting send thread. . .";
+  *m_log << MSG::INFO << "Starting send thread. . .";
   m_stopSending = 0;
   ret = pthread_create(&m_sendThread, NULL, send_thread, this);
   if(ret != 0) {
-    //*m_log << MSG::FATAL << "Could not create send thread " << errno << endmsg;
+    *m_log << MSG::FATAL << "Could not create send thread " << errno << endmsg;
     return;
   }
-  //*m_log << MSG::INFO << "Done." << endmsg;
+  *m_log << MSG::INFO << "Done." << endmsg;
 }
 
 /**
@@ -65,7 +65,7 @@ void SendThread::start()
 void SendThread::reInit(int sockFd) {
 	m_sockFd = sockFd;
 	m_mmObj->resetSendPointer();
-	//*m_log << MSG::INFO << "Reset send thread data." << endmsg;
+	*m_log << MSG::INFO << "Reset send thread data." << endmsg;
 }
 
 
@@ -75,14 +75,14 @@ void SendThread::reInit(int sockFd) {
 void SendThread::stop(int stopLevel)
 {
   int ret;
-  //*m_log << MSG::INFO << "Stopping send thread. . .";
+  *m_log << MSG::INFO << "Stopping send thread. . .";
   m_stopSending = stopLevel;
   ret = pthread_join(m_sendThread, NULL);
   if(ret != 0) {
-    //*m_log << MSG::ERROR << "Could not stop send thread " << errno << endmsg;
+    *m_log << MSG::ERROR << "Could not stop send thread " << errno << endmsg;
     return;
   }
-  //*m_log << MSG::INFO << "Done." << endmsg;
+  *m_log << MSG::INFO << "Done." << endmsg;
 }
 
 /** Processes elements from the send queue.
@@ -97,7 +97,7 @@ int SendThread::processSends(void)
 start:
   struct cmd_header *cmd_to_send = NULL;
 
-  //*m_log << MSG::INFO << "Started send thread." << endmsg;
+  *m_log << MSG::INFO << "Started send thread." << endmsg;
 
 	/*While either you don't need to stop, or you need to stop after purging entries.*/
   while((!m_stopSending) || (m_stopSending == STOP_AFTER_PURGE && cmd_to_send)) {
@@ -116,7 +116,7 @@ start:
     ret = sendBif.nbSendTimeout();
 
 		if(ret != totalSize) {
-				//*m_log << MSG::INFO << "Failing over from the Send thread." << errno << endmsg;
+				*m_log << MSG::INFO << "Failing over from the Send thread." << errno << endmsg;
         if(m_conn->failover(SEND_THREAD) == KILL_THREAD)
         	return 0;
         else
