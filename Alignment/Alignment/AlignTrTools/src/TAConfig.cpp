@@ -4,7 +4,7 @@
  *  Implementation file for Millepede configuration tool : TAConfig
  *
  *  CVS Log :-
- *  $Id: TAConfig.cpp,v 1.5 2007-05-15 13:53:08 jblouw Exp $
+ *  $Id: TAConfig.cpp,v 1.6 2007-05-23 12:14:23 cattanem Exp $
  *
  *  @author J. Blouw (johan.blouw@mpi-hd.mpg.de)
  *  @date   12/04/2007
@@ -19,6 +19,7 @@
 #include "Kernel/LHCbID.h"
 #include "Kernel/DifTraj.h"
 #include "Kernel/AlignTraj.h"
+#include "Kernel/SerializeStl.h"
 
 //#include "StringConvert.h"
 // Event
