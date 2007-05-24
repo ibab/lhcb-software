@@ -30,11 +30,12 @@ namespace LHCb {
 		public:
 			AckThread(Connection *conn, int sockfd, MM *mmObj, MsgStream *log) {
 				m_conn = conn;
-				m_log = log;
+				m_log = new MsgStream(*log);
 				m_mmObj = mmObj;
 				m_sockFd = sockfd;
 				m_notifyClient = NULL;
 			}
+			virtual ~AckThread() { delete m_log; }
 			int getState(void) { return m_stopAcking; }
 			void restoreState(int state) { m_stopAcking = state; }
 			void start(void);

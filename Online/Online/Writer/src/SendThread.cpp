@@ -5,6 +5,7 @@
 #include <cerrno>
 #include <stdexcept>
 #include <iostream>
+#include <memory>
 
 #include <sys/ioctl.h>
 #include <sys/socket.h>
@@ -93,34 +94,39 @@ int SendThread::processSends(void)
   int ret;
   char *ptr;
   int totalSize = 0;
-
-start:
-  struct cmd_header *cmd_to_send = NULL;
+  cmd_header *cmd_to_send = NULL;
+  std::auto_ptr<BIF> bif;
 
   *m_log << MSG::INFO << "Started send thread." << endmsg;
 
 	/*While either you don't need to stop, or you need to stop after purging entries.*/
   while((!m_stopSending) || (m_stopSending == STOP_AFTER_PURGE && cmd_to_send)) {
 
-		cmd_to_send = m_mmObj->moveSendPointer();
-    if(!cmd_to_send) {
-      continue;
+    if(!bif.get()) {
+      cmd_to_send = m_mmObj->moveSendPointer();
+      if(!cmd_to_send)
+        continue;
+
+      totalSize = sizeof(struct cmd_header);
+      if(cmd_to_send->cmd == CMD_WRITE_CHUNK)
+        totalSize += cmd_to_send->data.chunk_data.size;
+      ptr = (char *)cmd_to_send;
+      bif = std::auto_ptr<BIF>(new BIF(m_sockFd, ptr, totalSize));
     }
 
-    totalSize = sizeof(struct cmd_header);
-    if(cmd_to_send->cmd == CMD_WRITE_CHUNK)
-    	totalSize += cmd_to_send->data.chunk_data.size;
-
-    ptr = (char *)cmd_to_send;
-    BIF sendBif(m_sockFd, ptr, totalSize);
-    ret = sendBif.nbSendTimeout();
-
-		if(ret != totalSize) {
-				*m_log << MSG::INFO << "Failing over from the Send thread." << errno << endmsg;
-        if(m_conn->failover(SEND_THREAD) == KILL_THREAD)
+    ret = bif->nbSendTimeout();
+    if(ret == totalSize) {
+      bif = std::auto_ptr<BIF>();
+    } else if(ret == BIF::DISCONNECTED) {
+	*m_log << MSG::INFO << "Failing over from the Send thread." << errno << endmsg;
+        if(m_conn->failover(SEND_THREAD) == KILL_THREAD)  {
         	return 0;
-        else
-        	goto start;
+        }
+        else  {
+          cmd_to_send = 0;
+          bif = std::auto_ptr<BIF>();
+          continue;
+       }
     }
   }
   return 0;

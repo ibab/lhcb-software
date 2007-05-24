@@ -4,6 +4,7 @@
 #include <cerrno>
 #include <stdexcept>
 #include <iostream>
+#include <memory>
 
 #include <sys/ioctl.h>
 #include <sys/socket.h>
@@ -108,6 +109,7 @@ int AckThread::processAcks(void)
 {
   int ret;
   struct ack_header ackHeaderBuf;
+  std::auto_ptr<BIF> bif;
 
 start:
 	memset(&ackHeaderBuf, 0, sizeof(struct ack_header));
@@ -120,18 +122,24 @@ start:
     	//<< " : " << m_mmObj->getAllocByteCount() << "QLen = " <<
     	//m_mmObj->getQueueLength() << endmsg;
 
-  	BIF bif(m_sockFd, &ackHeaderBuf, sizeof(struct ack_header));
-  	ret = bif.nbRecv();
-		if(ret == BIF::AGAIN) {
-			continue;
-		} else if(ret == BIF::DISCONNECTED) {
-      *m_log << MSG::WARNING << "Failing over from the Ack Thread." << errno << endmsg;
-      if(m_conn->failover(ACK_THREAD) == KILL_THREAD)
-      	return 0;
-      else
-      	goto start;
-    }
+      if(!bif.get()) {
+        bif = std::auto_ptr<BIF>(new BIF(m_sockFd, &ackHeaderBuf, sizeof(struct ack_header)));
+      }
 
+      ret = bif->nbRecv();
+      if(ret == BIF::AGAIN) {
+        continue;
+      } else if(ret == BIF::DISCONNECTED) {
+        *m_log << MSG::WARNING << "Failing over from the Ack Thread." << errno << endmsg;
+        bif = std::auto_ptr<BIF>();
+        if(m_conn->failover(ACK_THREAD) == KILL_THREAD)
+      	  return 0;
+        else
+      	  goto start;
+      }
+
+    bif = std::auto_ptr<BIF>();
+    
     unsigned int totalNumAcked = 0;
     if(ackHeaderBuf.min_seq_num > ackHeaderBuf.max_seq_num) { /*Sequence wraparound?*/
       totalNumAcked = 0xffffffff - ackHeaderBuf.min_seq_num + 1;

@@ -27,7 +27,7 @@ namespace LHCb {
 		public:
 			SendThread(Connection *conn, int sockFd, MM *mmObj, MsgStream *log) {
 				m_conn = conn;
-				m_log = log;
+				m_log = new MsgStream(*log);
 				m_mmObj = mmObj;
 				m_sockFd = sockFd;
 			}
@@ -37,6 +37,7 @@ namespace LHCb {
 			void stop(int stopLevel);
 			void reInit(int sockFd);
 			int processSends(void);
+			virtual ~SendThread() { delete m_log; }
 	};
 
 

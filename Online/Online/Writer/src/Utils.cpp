@@ -117,21 +117,19 @@ int BIF::nbRecv()
 
 	struct pollfd fds[1];
 	fds[0].fd = m_sockFd;
-	fds[0].events = POLLIN|POLLERR;
+	fds[0].events = POLLIN;
 	fds[0].revents = 0;
 
 	ret = poll(fds, 1, RECV_TIMEOUT);
 	if(ret == 0) {
 		return AGAIN;
-	} else if(ret < 0 && (errno == EAGAIN || errno == EINTR)) {
+	} else if(ret < 0 && (errno == EAGAIN || errno == EINTR || errno == ENOENT)) {
 		return AGAIN;
 	}else if(ret < 0) {
 		return DISCONNECTED;
-	} else if(fds[0].revents & POLLERR) {
-		return DISCONNECTED;
 	} else if(fds[0].revents & POLLIN) {
 		ret = ::recv(m_sockFd, m_data+m_bytesRead, m_bufLen-m_bytesRead, MSG_DONTWAIT);
-		if(ret < 0 && (errno == EAGAIN || errno == EINTR)) {
+		if(ret < 0 && (errno == EAGAIN || errno == EINTR || errno == ENOENT)) {
 			return AGAIN;
 		} else if(ret == 0 || ret < 0) {
 			return DISCONNECTED;
@@ -172,34 +170,18 @@ int BIF::nbSend()
  */
 int BIF::nbSendTimeout()
 {
-	int ret;
-	struct pollfd fds[1];
-	time_t endTime;
-	fds[0].fd = m_sockFd;
-	fds[0].events = POLLOUT|POLLERR;
+	int ret = ::send(m_sockFd, m_data+m_bytesRead, m_bufLen-m_bytesRead, MSG_DONTWAIT);
+	if(ret < 0 && (errno == EAGAIN || errno == EINTR))
+		return AGAIN;
+	else if(ret <= 0)
+		return DISCONNECTED;
+	else
+		m_bytesRead += ret;
 
-	endTime = time(NULL) + SEND_TIMEOUT/1000;
-
-	while(time(NULL) < endTime) {
-		fds[0].revents = 0;
-		ret = ::poll(fds, 1, SEND_TIMEOUT);
-		if((ret < 0 && (errno == EAGAIN || errno == EINTR)) || ret == 0)
-			continue;
-		else if(ret < 0)
-			return DISCONNECTED;
-
-		int ret = ::send(m_sockFd, m_data+m_bytesRead, m_bufLen-m_bytesRead, MSG_DONTWAIT);
-		if(ret < 0 && (errno == EAGAIN || errno == EINTR))
-			continue;
-		else if(ret <= 0)
-			return DISCONNECTED;
-		else
-			m_bytesRead += ret;
-
-		if(m_bytesRead == m_bufLen)
-			return m_bytesRead;
-	}
-	return TIMEDOUT;
+	if(m_bytesRead == m_bufLen)
+		return m_bytesRead;
+	else
+		return AGAIN;
 }
 
 /**
@@ -212,7 +194,7 @@ int BIF::nbRecvTimeout()
 	struct pollfd fds[1];
 	time_t endTime;
 	fds[0].fd = m_sockFd;
-	fds[0].events = POLLIN|POLLERR;
+	fds[0].events = POLLIN;
 	fds[0].revents = 0;
 
 	endTime = time(NULL) + RECV_TIMEOUT/1000;

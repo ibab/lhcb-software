@@ -30,7 +30,7 @@ FailoverMonitor::FailoverMonitor(std::string &serverAddr, int serverPort,
 {
 	int ret;
 
-	m_log = log;
+	m_log = new MsgStream(*log);
 	m_conn = conn;
 
 	m_currAddr.sin_family = AF_INET;

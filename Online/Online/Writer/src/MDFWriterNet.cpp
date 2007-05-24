@@ -154,10 +154,20 @@ StatusCode MDFWriterNet::finalize(void)
  * the maximum size limit, then a RunDB call is executed, to which the
  * file name, MD5 sum, and the Adler32 sum are supplied.
  */
+#include "RTL/rtl.h"
 StatusCode MDFWriterNet::writeBuffer(void *const /*fd*/, const void *data, size_t len)
 {
   struct cmd_header header;
 
+  if ( len < 10 ) {
+    *m_log << MSG::FATAL << "1 Veerrryyy small message:" << len << endmsg;
+    *m_log << MSG::FATAL << "2 Veerrryyy small message:" << len << endmsg;
+    *m_log << MSG::FATAL << "3 Veerrryyy small message:" << len << endmsg;
+    *m_log << MSG::FATAL << "4 Veerrryyy small message:" << len << endmsg;
+    *m_log << MSG::FATAL << "5 Veerrryyy small message:" << len << endmsg;
+    *m_log << MSG::FATAL << "6 Veerrryyy small message:" << len << endmsg;
+    lib_rtl_sleep(500000);
+  }
   //Is a file already open?
   if(!m_fileOpen) {
     unsigned int runNumber = getRunNumber(data, len);
