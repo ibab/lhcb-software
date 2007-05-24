@@ -1,18 +1,16 @@
-// $Id: IVeloClusterPosition.h,v 1.6 2007-02-20 16:42:02 cattanem Exp $
+// $Id: IVeloClusterPosition.h,v 1.7 2007-05-24 10:09:09 szumlat Exp $
 #ifndef VELOALGORITHMS_IVELOCLUSTERPOSITION_H 
 #define VELOALGORITHMS_IVELOCLUSTERPOSITION_H 1
 
 // Include files
-// from STL
-#include <string>
 
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
 #include "Kernel/SiPositionInfo.h"
 
-static const InterfaceID IID_IVeloClusterPos ("IVeloClusterPos", 1, 0);
+static const InterfaceID IID_IVeloClusterPosition ("IVeloClusterPosition", 1, 0);
 
-/** @class IVeloClusterPosition IVeloClusterPosition.h
+/** @class IVeloClusterPos IVeloClusterPos.h VeloAlgorithms/IVeloClusterPos.h
  *  
  *
  *  @author Tomasz Szumlak
@@ -29,44 +27,52 @@ class IVeloClusterPosition : virtual public IAlgTool{
 public:
 
   // a new tool interface, common for Velo and ST 
-  // (defined inside Kernel/SiPositonInfo.h)
+  // (defined in Kernel/SiPositonInfo.h)
   typedef LHCb::SiPositionInfo<LHCb::VeloChannelID> toolInfo;
   typedef std::pair<double, double> Pair;
   
   // Return the interface ID
-  static const InterfaceID& interfaceID() {return IID_IVeloClusterPos;}
-  // the main methods to retrieve the cluster position and error
-  // userInfo is the input object that must be provided by user
-  // this is a pair that holds information of projected angle of
-  // a track (while not good enough parametrizations for the
-  // angled track are available set this to 0.) and a radius
-  // for clusters on the Phi sensor; the radius also could be
-  // set to 0., in that case default radius will be used 
-  // (depending on sensor zone)
+  static const InterfaceID& interfaceID() {return IID_IVeloClusterPosition;}
+  
+ /** calculate position of the VeloCluster
+  * @param aCluster pointer to a VeloCLuster cluster
+  * @return toolInfo (templated struct) 
+  * <br> strip = channel ID of a floored nearest strip
+  * <br> fractionalPosition = interstrip position (in fraction of strip)
+  * within range (0-1)
+  * <br> error = estimate of the error (in fraction of strip)
+  * The returned error estimate depends only on pitch
+  */
+  virtual toolInfo position(const LHCb::VeloCluster* aCluster) const=0;
+ 
+ /** calculate position of the VeloCluster
+  * @param aCluster pointer to a VeloCLuster cluster
+  * @param aPoint const reference to XYZPoint - XYZ position of track  
+  * in the sensor in global reference frame. 
+  * @param aDirection const reference to pair of doubles - directions of 
+  *        track xz slope and yz slope
+  * @return toolInfo (templated struct) 
+  * <br> strip = channel ID of a floored nearest strip
+  * <br> fractionalPosition = interstrip position (in fraction of strip)
+  * <br> error = estimate of the error (in fraction of strip)
+  * The returned error estimate depends both on pitch and 
+  * projected angle of a track
+  */
+  virtual toolInfo position(const LHCb::VeloCluster* aCluster,
+                            const Gaudi::XYZPoint& aPoint,
+                            const Pair& aDirection) const=0;
 
-  /// postion of the cluster given slopes
-  virtual toolInfo position(const LHCb::VeloCluster* cluster,
-                            Pair& userInfo) const =0;
-  /// postion of the cluster
-  virtual toolInfo position(const LHCb::VeloCluster* cluster) const =0;
-  /// postion of the cluster at known radius
-  virtual toolInfo position(const LHCb::VeloCluster* cluster,
-                            double radiusOfCluster)  const =0;
-  /// the method calculate the position using linear charge sharing 
-  /// approximation
-  virtual Pair fractionalPosMean(
-                   const LHCb::VeloCluster* cluster) const =0;
-  // cluster position calculation based on eta variabel - non linear
-  // charge sharing approximation (particularly useful for low angle 
-  // tracks
-  /// fractional position using eta fit.
-  virtual Pair fractionalPosEta(
-          const LHCb::VeloCluster* cluster,
-          double alphaOfTrack) const =0;
-  /// method used to calibration plots - eta variable vs. fractional position
-  virtual Pair etaFrac(
-                   const LHCb::VeloCluster* cluster,
-                   double fracPosTrue)const =0;
+  /** calculate fractional position
+  * @param aCluster pointer to a VeloCLuster cluster
+  * @return Pair - pair of doubles 
+  * The method is very useful for resolution studies
+  */
+  virtual Pair fracPosLA(const LHCb::VeloCluster* aCluster) const=0;
 
+  /** return projected angle
+  * @return double - value of projected angle in degree 
+  * Especially designed for resolution study for both MC and real data
+  */
+  virtual double projectedAngle() const=0;
 };
 #endif // VELOALGORITHMS_IVELOCLUSTERPOS_H
