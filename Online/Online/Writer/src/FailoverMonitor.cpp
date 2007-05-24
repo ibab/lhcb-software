@@ -26,32 +26,34 @@ using namespace LHCb;
  * @param conn The connection object to associate this failover object with.
  */
 FailoverMonitor::FailoverMonitor(std::string &serverAddr, int serverPort,
-	Connection *conn, MsgStream *log)
+  Connection *conn, MsgStream *log)
 {
-	int ret;
+  int ret;
 
-	m_log = new MsgStream(*log);
-	m_conn = conn;
+  m_log = new MsgStream(*log);
+  m_conn = conn;
+  m_stopUrgently = false;
 
-	m_currAddr.sin_family = AF_INET;
-	m_currAddr.sin_port = htons(serverPort);
+  m_currAddr.sin_family = AF_INET;
+  m_currAddr.sin_port = htons(serverPort);
 
-	for(int i=0;i<NUM_NAME_RETRIES;i++) {
-		ret = Utils::nameLookup(serverAddr, &m_currAddr, log);
-		if(ret == 0)
-			break;
-		*log << MSG::ERROR << "Name lookup failed for " << serverAddr << endmsg;
-	}
+  for(int i=0;i<NUM_NAME_RETRIES;i++) {
+    ret = Utils::nameLookup(serverAddr, &m_currAddr, log);
+    if(ret == 0)
+      break;
+    *log << MSG::ERROR << "Writer " << getpid() <<
+      "Name lookup failed for " << serverAddr << endmsg;
+  }
 
-	memcpy(&m_initAddr, &m_currAddr, sizeof(struct sockaddr_in));
+  memcpy(&m_initAddr, &m_currAddr, sizeof(struct sockaddr_in));
 
-	if(ret != 0) {
-		throw std::runtime_error("Could not look up host name.");
-	}
-	if(connect(m_nodeStates) != 0) {
-		throw std::runtime_error("Could not get address list.");
-	}
-	m_currState = m_nodeStates.begin();
+  if(ret != 0) {
+    throw std::runtime_error("Could not look up host name.");
+  }
+  if(connect(m_nodeStates) != 0) {
+    throw std::runtime_error("Could not get address list.");
+  }
+  m_currState = m_nodeStates.begin();
 }
 
 /**
@@ -61,22 +63,18 @@ FailoverMonitor::FailoverMonitor(std::string &serverAddr, int serverPort,
  */
 int FailoverMonitor::connect(std::list<NodeState*> &nodeStates)
 {
-	int ret;
-	m_sockFd = Utils::connectToAddress(&m_currAddr,
-		Utils::DEFAULT_BUF_SIZE, Utils::DEFAULT_BUF_SIZE, m_log);
-	if(m_sockFd < 0) {
-			*m_log << MSG::INFO << "Couldn't connect to " << (m_currAddr.sin_addr.s_addr & 0xff)  <<
-			((m_currAddr.sin_addr.s_addr & 0xff00) >> 8)  <<
-			((m_currAddr.sin_addr.s_addr & 0xff0000) >> 16)
-			<< ((m_currAddr.sin_addr.s_addr & 0xff000000) >> 24) << endmsg;
-		throw std::runtime_error("Could not connect to host.");
-	}
+  int ret;
+  m_sockFd = Utils::connectToAddress(&m_currAddr,
+    Utils::DEFAULT_BUF_SIZE, Utils::DEFAULT_BUF_SIZE, m_log);
+  if(m_sockFd < 0) {
+    throw std::runtime_error("Could not connect to host.");
+  }
 
-	/* Let's get the list of hosts now. */
-	ret = getAddressList(nodeStates);
-	if(ret < 1)
-		return -1;
-	return 0;
+  /* Let's get the list of hosts now. */
+  ret = getAddressList(nodeStates);
+  if(ret < 1)
+    return -1;
+  return 0;
 }
 
 /**
@@ -85,30 +83,30 @@ int FailoverMonitor::connect(std::list<NodeState*> &nodeStates)
 void FailoverMonitor::connectToAlternative(void)
 {
 
-	while(1) {
+  while(1) {
 
-		std::list<NodeState*> nodeStates;
+    std::list<NodeState*> nodeStates;
 
-		/*We're already on m_currState, so we move to the next one and try connecting.*/
-		if(m_nodeStates.size() == 0)
-			throw std::runtime_error("Could not get next address:empty.");	/*Nothing else.*/
+    /*We're already on m_currState, so we move to the next one and try connecting.*/
+    if(m_nodeStates.size() == 0)
+      throw std::runtime_error("Could not get next address:empty.");  /*Nothing else.*/
 
-		m_currState++;
-		if(m_currState == m_nodeStates.end())
-			m_currState = m_nodeStates.begin();
+    m_currState++;
+    if(m_currState == m_nodeStates.end())
+      m_currState = m_nodeStates.begin();
 
-		getAddress(&m_currAddr);
-		/*Now that we have a list, we can replace our old one.*/
-		if(connect(nodeStates) == 0) {
-			cleanAllNodeStates();
-			m_nodeStates = nodeStates;
-			break;
-		}
+    getAddress(&m_currAddr);
+    /*Now that we have a list, we can replace our old one.*/
+    if(connect(nodeStates) == 0) {
+      cleanAllNodeStates();
+      m_nodeStates = nodeStates;
+      break;
+    }
 
-		/*Sleep for a second between retries.*/
-		sleep(1);
-	}
-	m_currState = m_nodeStates.begin();
+    /*Sleep for a second between retries.*/
+    sleep(1);
+  }
+  m_currState = m_nodeStates.begin();
 
 }
 
@@ -117,14 +115,14 @@ void FailoverMonitor::connectToAlternative(void)
  */
 void FailoverMonitor::cleanAllNodeStates()
 {
-	std::list<NodeState*>::iterator nlIterator;
-	nlIterator = m_nodeStates.begin();
-	while(nlIterator != m_nodeStates.end()) {
-		NodeState *state = *nlIterator;
-		delete state;
-		nlIterator++;
-	}
-	m_nodeStates.erase(m_nodeStates.begin(), m_nodeStates.end());
+  std::list<NodeState*>::iterator nlIterator;
+  nlIterator = m_nodeStates.begin();
+  while(nlIterator != m_nodeStates.end()) {
+    NodeState *state = *nlIterator;
+    delete state;
+    nlIterator++;
+  }
+  m_nodeStates.erase(m_nodeStates.begin(), m_nodeStates.end());
 }
 
 /**
@@ -138,56 +136,53 @@ void FailoverMonitor::cleanAllNodeStates()
  */
 int FailoverMonitor::getAddressList(std::list<NodeState*> &nodeStates)
 {
-	struct failover_msg fmsg;
-	int ret;
-	unsigned int i;
-	int numHosts = 0;
-	int bRead = 0;
+  struct failover_msg fmsg;
+  int ret;
+  unsigned int i;
+  int numHosts = 0;
+  int bRead = 0;
 
-	BIF recvBif(m_sockFd, &fmsg, sizeof(struct failover_msg));
+  BIF recvBif(m_sockFd, &fmsg, sizeof(struct failover_msg));
+  ret = recvBif.nbRecvTimeout();
 
+  if(ret != sizeof(struct failover_msg))
+    throw std::runtime_error("Could not receive nodelist count from server.");
 
-	*m_log << MSG::INFO << "Want to receive num_msgs." << endmsg;
+  for(i=0;i<fmsg.num_nodes;i++) {
+    NodeState *nState = new NodeState();
+    bRead = 0;
 
-	ret = recvBif.nbRecvTimeout();
-	if(ret != sizeof(struct failover_msg))
-		throw std::runtime_error("Could not receive nodelist count from server.");
+    BIF recvBif(m_sockFd, &nState->state, sizeof(struct nodestate));
+    ret = recvBif.nbRecvTimeout();
 
-	for(i=0;i<fmsg.num_nodes;i++) {
-		NodeState *nState = new NodeState();
-		*m_log << MSG::INFO << "Received " << (i + 1) << " of " << fmsg.num_nodes << endmsg;
-		bRead = 0;
+    if(ret != sizeof(struct nodestate)) {
+      /*Free everything alloced so far, and get out.*/
+      std::list<NodeState*>::iterator ni;
+      for(ni = nodeStates.begin(); ni != nodeStates.end(); ni++) {
+        NodeState *ns = *ni;
+        delete ns;
+      }
+      delete nState;
+      cleanAllNodeStates();
+      return 0;
+    }
 
-		BIF recvBif(m_sockFd, &nState->state, sizeof(struct nodestate));
-		ret = recvBif.nbRecvTimeout();
+    *m_log << MSG::INFO << "Writer " << getpid() <<
+    " Read Server Addr = "
+    << (nState->state.n_ipaddr & 0xff)  << "."
+    << ((nState->state.n_ipaddr & 0xff00) >> 8) << "."
+    << ((nState->state.n_ipaddr & 0xff0000) >> 16)  << "."
+    <<  ((nState->state.n_ipaddr & 0xff000000) >> 24)  << endmsg;
 
-		if(ret != sizeof(struct nodestate)) {
-			/*Free everything alloced so far, and get out.*/
-			std::list<NodeState*>::iterator ni;
-			for(ni = nodeStates.begin(); ni != nodeStates.end(); ni++) {
-				NodeState *ns = *ni;
-				delete ns;
-			}
-			delete nState;
-			cleanAllNodeStates();
-			return 0;
-		}
+    //If it's the current host, push it to the top.
+    if(nState->state.n_ipaddr == m_currAddr.sin_addr.s_addr)
+      nodeStates.push_front(nState);
+    else
+      nodeStates.push_back(nState);
 
-		*m_log << MSG::INFO << " addr = "
-		<< (nState->state.n_ipaddr & 0xff)  << "."
-		<< ((nState->state.n_ipaddr & 0xff00) >> 8) << "."
-		<< ((nState->state.n_ipaddr & 0xff0000) >> 16)  << "."
-		<<  ((nState->state.n_ipaddr & 0xff000000) >> 24)  << endmsg;
-
-		//If it's the current host, push it to the top.
-		if(nState->state.n_ipaddr == m_currAddr.sin_addr.s_addr)
-			nodeStates.push_front(nState);
-		else
-			nodeStates.push_back(nState);
-
-		numHosts++;
-	}
-	return numHosts;
+    numHosts++;
+  }
+  return numHosts;
 }
 
 /**
@@ -195,109 +190,109 @@ int FailoverMonitor::getAddressList(std::list<NodeState*> &nodeStates)
  */
 static void *failover_thread(void *args)
 {
-	Utils::blockSignals();
+  Utils::blockSignals();
 
-	FailoverMonitor *fm = (FailoverMonitor*)args;
-	fm->listenForUpdates();
-	return NULL;
+  FailoverMonitor *fm = (FailoverMonitor*)args;
+  fm->listenForUpdates();
+  return NULL;
 }
 
 void FailoverMonitor::start(void)
 {
-	int ret;
-	m_stopThread = 0;
-	ret = pthread_create(&m_monitorThread, NULL, failover_thread, this);
-	if(ret != 0) {
-		throw std::runtime_error("Could not star the failover service thread.");
-	}
-	*m_log << MSG::INFO << "Started Failover thread." << endmsg;
+  int ret;
+  m_stopUrgently = false;
+  ret = pthread_create(&m_monitorThread, NULL, failover_thread, this);
+  if(ret != 0) {
+    throw std::runtime_error("Could not start the failover service thread.");
+  }
+  *m_log << MSG::INFO << "Writer " << getpid() <<
+    "Started Failover thread." << endmsg;
 }
 
 void FailoverMonitor::listenForUpdates(void)
 {
-	int ret;
-	struct failover_msg fmsg;
-	int bRead = 0;
+  int ret;
+  struct failover_msg fmsg;
+  int bRead = 0;
 
-	while(!m_stopThread) {
-		/*
-		 * Listen for new discovery message structs, which will
-		 * indicate that a server has either joined or left.
-		 */
-		BIF recvBif(m_sockFd, &fmsg, sizeof(struct failover_msg));
-		ret = recvBif.nbRecv();
-		if(ret == BIF::DISCONNECTED) {
-			bRead = 0;
-			if(m_conn->failover(FAILOVER_THREAD) == KILL_THREAD)
-				break;
-			else
-				continue;
-		} else if(ret == BIF::AGAIN || ret == BIF::TIMEDOUT) {
-			continue;
-		}
+  while(!m_stopUrgently) {
+    /*
+     * Listen for new discovery message structs, which will
+     * indicate that a server has either joined or left.
+     */
+    BIF recvBif(m_sockFd, &fmsg, sizeof(struct failover_msg));
+    ret = recvBif.nbRecv();
+    if(ret == BIF::DISCONNECTED) {
+      bRead = 0;
+      if(m_conn->failover(FAILOVER_THREAD) == KILL_THREAD)
+        break;
+      else
+        continue;
+    } else if(ret == BIF::AGAIN || ret == BIF::TIMEDOUT) {
+      continue;
+    }
 
-		/*Let's receive each one of the advertised nodes.*/
-		int die = 0;
-		struct nodestate nstate;
+    /*Let's receive each one of the advertised nodes.*/
+    int die = 0;
+    struct nodestate nstate;
 
-		*m_log << MSG::INFO << "Reading info on " << fmsg.num_nodes << "nodes" <<endmsg;
-		for(unsigned int i=0;i<fmsg.num_nodes;i++) {
-			bRead = 0;
-			BIF recvBif(m_sockFd, &nstate, sizeof(struct nodestate));
-			ret = recvBif.nbRecvTimeout();
-			if(ret == BIF::DISCONNECTED || ret == BIF::TIMEDOUT) {
-				if(m_conn->failover(FAILOVER_THREAD) == KILL_THREAD)
-					die = 1;
-				break;
-			}
-			update(&fmsg, &nstate);
-		}
+    for(unsigned int i=0;i<fmsg.num_nodes;i++) {
+      bRead = 0;
+      BIF recvBif(m_sockFd, &nstate, sizeof(struct nodestate));
+      ret = recvBif.nbRecvTimeout();
+      if(ret == BIF::DISCONNECTED || ret == BIF::TIMEDOUT) {
+        if(m_conn->failover(FAILOVER_THREAD) == KILL_THREAD)
+          die = 1;
+        break;
+      }
+      update(&fmsg, &nstate);
+    }
 
-		bRead = 0;
+    bRead = 0;
 
-		if(die)
-			break;
-	}
+    if(die)
+      break;
+  }
 }
 
 void FailoverMonitor::update(struct failover_msg *fmsg, struct nodestate *nstate)
 {
-	std::list<NodeState*>::iterator ni;
-	int found = 0;
-	for(ni=m_nodeStates.begin();ni!=m_nodeStates.end();ni++) {
-		NodeState *ns = *ni;
-		if((ns->state.n_ipaddr == nstate->n_ipaddr) && fmsg->msg_type == NODE_JOINED) {
-			/*Already existing node, someone joined. Update load.*/
-			memcpy(&ns->state.n_load, &nstate->n_load, sizeof(struct load));
-			m_nodeStates.sort();
-			restoreIterator();
-			return;
-		} else if((ns->state.n_id == nstate->n_id) && fmsg->msg_type == NODE_LEFT) {
+  std::list<NodeState*>::iterator ni;
+  int found = 0;
+  for(ni=m_nodeStates.begin();ni!=m_nodeStates.end();ni++) {
+    NodeState *ns = *ni;
+    if((ns->state.n_ipaddr == nstate->n_ipaddr) && fmsg->msg_type == NODE_JOINED) {
+      /*Already existing node, someone joined. Update load.*/
+      memcpy(&ns->state.n_load, &nstate->n_load, sizeof(struct load));
+      m_nodeStates.sort();
+      restoreIterator();
+      return;
+    } else if((ns->state.n_id == nstate->n_id) && fmsg->msg_type == NODE_LEFT) {
 
-			/*Remove this node from here.*/
-			found = 1;
-			m_nodeStates.erase(ni);
-			restoreIterator();
-			delete ns;
-			return;
-		}
-	}
+      /*Remove this node from here.*/
+      found = 1;
+      m_nodeStates.erase(ni);
+      restoreIterator();
+      delete ns;
+      return;
+    }
+  }
 
-	/*We have new node information.*/
-	if(fmsg->msg_type == NODE_JOINED) {
-		/*Doesn't exist, add it.*/
-		NodeState *nState = new NodeState();
-		memcpy(&nState->state, nstate, sizeof(struct nodestate));
-		if(nstate->n_ipaddr == m_initAddr.sin_addr.s_addr) {
-			/*Prioritize this node to trigger a failback, if it was initial node.*/
-			m_nodeStates.push_front(nState);
-		} else {
-			/*Just add, and reorder based on load.*/
-			m_nodeStates.push_back(nState);
-			m_nodeStates.sort();
-		}
-	}
-	restoreIterator();
+  /*We have new node information.*/
+  if(fmsg->msg_type == NODE_JOINED) {
+    /*Doesn't exist, add it.*/
+    NodeState *nState = new NodeState();
+    memcpy(&nState->state, nstate, sizeof(struct nodestate));
+    if(nstate->n_ipaddr == m_initAddr.sin_addr.s_addr) {
+      /*Prioritize this node to trigger a failback, if it was initial node.*/
+      m_nodeStates.push_front(nState);
+    } else {
+      /*Just add, and reorder based on load.*/
+      m_nodeStates.push_back(nState);
+      m_nodeStates.sort();
+    }
+  }
+  restoreIterator();
 }
 
 /**
@@ -308,30 +303,30 @@ void FailoverMonitor::update(struct failover_msg *fmsg, struct nodestate *nstate
  */
 void FailoverMonitor::restoreIterator()
 {
-	m_currState = m_nodeStates.begin();
-	while(m_currState!=m_nodeStates.end()) {
-		NodeState *curr = *m_currState;
-		if(curr->state.n_ipaddr == m_currAddr.sin_addr.s_addr)
-			return;
-		m_currState++;
-	}
-	m_currState = m_nodeStates.begin();
+  m_currState = m_nodeStates.begin();
+  while(m_currState!=m_nodeStates.end()) {
+    NodeState *curr = *m_currState;
+    if(curr->state.n_ipaddr == m_currAddr.sin_addr.s_addr)
+      return;
+    m_currState++;
+  }
+  m_currState = m_nodeStates.begin();
 }
 
 void FailoverMonitor::getAddress(struct sockaddr_in *saddr_in)
 {
-	NodeState *ns;
-	ns = *m_currState;
+  NodeState *ns;
+  ns = *m_currState;
 
-	saddr_in->sin_family = AF_INET;
-	saddr_in->sin_port = m_currAddr.sin_port;
-	saddr_in->sin_addr.s_addr = ns->state.n_ipaddr;
+  saddr_in->sin_family = AF_INET;
+  saddr_in->sin_port = m_currAddr.sin_port;
+  saddr_in->sin_addr.s_addr = ns->state.n_ipaddr;
 }
 
-void FailoverMonitor::stop(void)
+void FailoverMonitor::stopUrgently(void)
 {
-	m_stopThread = 1;
-	pthread_join(m_monitorThread, NULL);
+  m_stopUrgently = true;
+  pthread_join(m_monitorThread, NULL);
 }
 
 #endif

@@ -5,7 +5,6 @@
 #include <cerrno>
 #include <stdexcept>
 #include <iostream>
-#include <memory>
 
 #include <sys/ioctl.h>
 #include <sys/socket.h>
@@ -35,11 +34,10 @@ using namespace LHCb;
  */
 static void *send_thread(void *args)
 {
-	Utils::blockSignals();
+  Utils::blockSignals();
 
   SendThread *st;
   st = (SendThread*)args;
-  //currThread = SEND_THREAD;
   st->processSends();
   return NULL;
 }
@@ -49,41 +47,48 @@ static void *send_thread(void *args)
  */
 void SendThread::start()
 {
-  int ret;
-  *m_log << MSG::INFO << "Starting send thread. . .";
-  m_stopSending = 0;
-  ret = pthread_create(&m_sendThread, NULL, send_thread, this);
+  m_stopUrgently = false;
+
+  int ret = pthread_create(&m_sendThread, NULL, send_thread, this);
   if(ret != 0) {
     *m_log << MSG::FATAL << "Could not create send thread " << errno << endmsg;
     return;
   }
-  *m_log << MSG::INFO << "Done." << endmsg;
+  *m_log << MSG::INFO << " Writer " << getpid() <<
+    " Stared Send thread." << endmsg;
 }
 
 /**
  * Reinits the structures that the send thread uses,
  */
 void SendThread::reInit(int sockFd) {
-	m_sockFd = sockFd;
-	m_mmObj->resetSendPointer();
-	*m_log << MSG::INFO << "Reset send thread data." << endmsg;
+  m_sockFd = sockFd;
+  m_mmObj->resetSendPointer();
 }
-
 
 /**
  * Stops the send thread (blocking).
  */
-void SendThread::stop(int stopLevel)
+void SendThread::stopUrgently()
 {
-  int ret;
-  *m_log << MSG::INFO << "Stopping send thread. . .";
-  m_stopSending = stopLevel;
-  ret = pthread_join(m_sendThread, NULL);
+    m_stopUrgently = true;
+    stop();
+}
+
+void SendThread::stopAfterFinish()
+{
+    m_stopAfterFinish = true;
+}
+
+void SendThread::stop(void) {
+
+  int ret = pthread_join(m_sendThread, NULL);
   if(ret != 0) {
     *m_log << MSG::ERROR << "Could not stop send thread " << errno << endmsg;
     return;
   }
-  *m_log << MSG::INFO << "Done." << endmsg;
+  *m_log << MSG::INFO << " Writer " << getpid() <<
+    " Stopped Send Thread." << endmsg;
 }
 
 /** Processes elements from the send queue.
@@ -95,14 +100,12 @@ int SendThread::processSends(void)
   char *ptr;
   int totalSize = 0;
   cmd_header *cmd_to_send = NULL;
-  std::auto_ptr<BIF> bif;
+  BIF *bif = NULL;
 
-  *m_log << MSG::INFO << "Started send thread." << endmsg;
+  /*While either you don't need to stop, or you need to stop after purging entries.*/
+  do {
 
-	/*While either you don't need to stop, or you need to stop after purging entries.*/
-  while((!m_stopSending) || (m_stopSending == STOP_AFTER_PURGE && cmd_to_send)) {
-
-    if(!bif.get()) {
+    if(!bif) {
       cmd_to_send = m_mmObj->moveSendPointer();
       if(!cmd_to_send)
         continue;
@@ -111,24 +114,28 @@ int SendThread::processSends(void)
       if(cmd_to_send->cmd == CMD_WRITE_CHUNK)
         totalSize += cmd_to_send->data.chunk_data.size;
       ptr = (char *)cmd_to_send;
-      bif = std::auto_ptr<BIF>(new BIF(m_sockFd, ptr, totalSize));
+      bif = new BIF(m_sockFd, ptr, totalSize);
     }
 
-    ret = bif->nbSendTimeout();
+    ret = bif->nbSend();
     if(ret == totalSize) {
-      bif = std::auto_ptr<BIF>();
+      delete bif;
+      bif = NULL;
     } else if(ret == BIF::DISCONNECTED) {
-	*m_log << MSG::INFO << "Failing over from the Send thread." << errno << endmsg;
-        if(m_conn->failover(SEND_THREAD) == KILL_THREAD)  {
-        	return 0;
-        }
-        else  {
-          cmd_to_send = 0;
-          bif = std::auto_ptr<BIF>();
-          continue;
-       }
+      if(m_conn->failover(SEND_THREAD) == KILL_THREAD)  {
+        return 0;
+      } else {
+        cmd_to_send = 0;
+        delete bif;
+        bif = NULL;
+        continue;
+      }
     }
-  }
+  } while( (m_stopUrgently == false && m_stopAfterFinish == false) ||
+      (m_stopAfterFinish == true && cmd_to_send != NULL));
+
+  if(bif)
+    delete bif;
   return 0;
 }
 

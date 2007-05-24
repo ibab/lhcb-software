@@ -4,7 +4,6 @@
 #include <cerrno>
 #include <stdexcept>
 #include <iostream>
-#include <memory>
 
 #include <sys/ioctl.h>
 #include <sys/socket.h>
@@ -34,10 +33,9 @@ using namespace LHCb;
  */
 static void *ack_thread(void *args)
 {
-	Utils::blockSignals();
+  Utils::blockSignals();
   AckThread *st;
   st = (AckThread*)args;
-  //currThread = ACK_THREAD;
   st->processAcks();
   return NULL;
 }
@@ -47,47 +45,54 @@ static void *ack_thread(void *args)
  */
 void AckThread::start()
 {
-  int ret;
-  *m_log << MSG::INFO << "Starting ack thread. . .";
-  m_stopAcking = 0;
-  ret = pthread_create(&m_ackThread, NULL, ack_thread, this);
+  m_stopUrgently = false;
+
+  int ret = pthread_create(&m_ackThread, NULL, ack_thread, this);
   if(ret != 0) {
     *m_log << MSG::FATAL << "Could not create ack thread " << errno << endmsg;
     return;
   }
-  *m_log << MSG::INFO << "Done." << endmsg;
+  *m_log << MSG::INFO << "Writer " << getpid()
+    << " Started Ack Thread." << endmsg;
 }
 
 /**
  * Reinits the structures that the ack thread uses,
  */
 void AckThread::reInit(int sockfd) {
-	m_sockFd = sockfd;
-	*m_log << MSG::INFO << "Reset ack thread data." << endmsg;
+  m_sockFd = sockfd;
 }
-
 
 /**
  * Stops the ack thread (blocking).
  */
-void AckThread::stop(int stopLevel)
+void AckThread::stopUrgently()
 {
-  int ret;
-  *m_log << MSG::INFO << "Stopping ack thread. . .";
-  m_stopAcking = stopLevel;
-  ret = pthread_join(m_ackThread, NULL);
+  m_stopUrgently = true;
+  stop();
+}
+
+void AckThread::stopAfterFinish()
+{
+  m_stopAfterFinish = true;
+}
+
+void AckThread::stop(void)
+{
+  int ret = pthread_join(m_ackThread, NULL);
   if(ret != 0) {
     *m_log << MSG::ERROR << "Could not stop ack thread " << errno << endmsg;
     return;
   }
-  *m_log << MSG::INFO << "Done." << endmsg;
+  *m_log << MSG::INFO << "Writer " << getpid()
+    << " Stopped Ack Thread." << endmsg;
 }
 
 
 inline void AckThread::notify(struct cmd_header *cmd)
 {
   if(!m_notifyClient)
-  	return;
+    return;
   switch(cmd->cmd) {
     case CMD_CLOSE_FILE:
       m_notifyClient->notifyClose(cmd);
@@ -109,37 +114,34 @@ int AckThread::processAcks(void)
 {
   int ret;
   struct ack_header ackHeaderBuf;
-  std::auto_ptr<BIF> bif;
+  BIF *bif = NULL;
 
 start:
-	memset(&ackHeaderBuf, 0, sizeof(struct ack_header));
+  memset(&ackHeaderBuf, 0, sizeof(struct ack_header));
 
-	/*While either you don't need to stop, or you need to stop after purging entries.*/
-  while((!m_stopAcking) ||
-  	(m_stopAcking == STOP_AFTER_PURGE && m_mmObj->getQueueLength() != 0))
+  /*While either you don't need to stop, or you need to stop after purging entries.*/
+  while( (m_stopUrgently == false && m_stopAfterFinish == false) ||
+      (m_stopAfterFinish == true && m_mmObj->getQueueLength() > 0))
   {
-    //*m_log << MSG::INFO << "Backlog = " << m_mmObj->getAllocCmdCount()
-    	//<< " : " << m_mmObj->getAllocByteCount() << "QLen = " <<
-    	//m_mmObj->getQueueLength() << endmsg;
+    if(!bif) {
+      bif = new BIF(m_sockFd, &ackHeaderBuf, sizeof(struct ack_header));
+    }
 
-      if(!bif.get()) {
-        bif = std::auto_ptr<BIF>(new BIF(m_sockFd, &ackHeaderBuf, sizeof(struct ack_header)));
-      }
+    ret = bif->nbRecv();
+    if(ret == BIF::AGAIN) {
+      continue;
+    } else if(ret == BIF::DISCONNECTED) {
+      delete bif;
+      bif = NULL;
+      if(m_conn->failover(ACK_THREAD) == KILL_THREAD)
+        return 0;
+      else
+        goto start;
+    }
 
-      ret = bif->nbRecv();
-      if(ret == BIF::AGAIN) {
-        continue;
-      } else if(ret == BIF::DISCONNECTED) {
-        *m_log << MSG::WARNING << "Failing over from the Ack Thread." << errno << endmsg;
-        bif = std::auto_ptr<BIF>();
-        if(m_conn->failover(ACK_THREAD) == KILL_THREAD)
-      	  return 0;
-        else
-      	  goto start;
-      }
+    delete bif;
+    bif = NULL;
 
-    bif = std::auto_ptr<BIF>();
-    
     unsigned int totalNumAcked = 0;
     if(ackHeaderBuf.min_seq_num > ackHeaderBuf.max_seq_num) { /*Sequence wraparound?*/
       totalNumAcked = 0xffffffff - ackHeaderBuf.min_seq_num + 1;
@@ -154,13 +156,16 @@ start:
 
       struct cmd_header *cmd;
       if((cmd = m_mmObj->dequeueCommand(seqNum)) == NULL) {
-      	*m_log << MSG::ERROR << "FATAL, Received an unsolicited ack." << endmsg;
+        *m_log << MSG::ERROR << "DANGER: Received an unsolicited ack." << endmsg;
       } else {
-      	notify(cmd);
+        notify(cmd);
         m_mmObj->freeCommand(cmd);
       }
     }
   }
+
+  if(bif)
+    delete bif;
   return 0;
 }
 #endif /*BUILD_WRITER*/

@@ -29,15 +29,15 @@ namespace LHCb {
       URL(const char *url);
   };
 
-	/**
-	 * A wrapper over the "confirm" and "create" Run Database RPC calls.
-	 */
+  /**
+   * A wrapper over the "confirm" and "create" Run Database RPC calls.
+   */
   class RPCComm
   {
     private:
-    	/**
-    	 * Host, port, and protocol information in a URL object.
-    	 */
+      /**
+       * Host, port, and protocol information in a URL object.
+       */
       URL *m_serverURL;
 
       /**
@@ -65,10 +65,10 @@ namespace LHCb {
        */
       void createFile(char *fileName, unsigned int runNumber);
 
-			/**Simple constructor.*/
+      /**Simple constructor.*/
       RPCComm(const char *serverURL) { m_serverURL = new URL(serverURL); }
 
-			/**Simple destructor.*/
+      /**Simple destructor.*/
       ~RPCComm() { delete m_serverURL; }
   };
 }
@@ -81,39 +81,39 @@ namespace LHCb {
  * very specific XML-RPC commands to send.
  */
 #define CREATE_TEMPLATE  "<?xml version=\"1.0\"?>\n" \
-                         "<methodCall>\n" \
-                         "  <methodName>createNewFile</methodName>\n" \
-                         "  <params>\n"   \
-                         "    <param><value>\n" \
-                         "      <string>%s</string>\n" \
-                         "    </value></param>\n" \
-                         "    <param><value>\n" \
-                         "      <int>%d</int>\n" \
-                         "    </value></param>\n" \
-                         "  </params>\n"  \
-                         "</methodCall>\n"
+"<methodCall>\n" \
+  "  <methodName>createNewFile</methodName>\n" \
+  "  <params>\n"   \
+  "    <param><value>\n" \
+  "      <string>%s</string>\n" \
+  "    </value></param>\n" \
+  "    <param><value>\n" \
+  "      <int>%d</int>\n" \
+  "    </value></param>\n" \
+  "  </params>\n"  \
+  "</methodCall>\n"
 
 #define CONFIRM_TEMPLATE "<?xml version=\"1.0\"?>\n" \
-                         "<methodCall>\n" \
-                         "  <methodName>confirmFile</methodName>\n" \
-                         "  <params>\n"   \
-                         "    <param><value>\n" \
-                         "      <string>%s</string>\n" \
-                         "    </value></param>\n" \
-                         "    <param><value>\n" \
-                         "      <string>%s</string>\n" \
-                         "    </value></param>\n" \
-                         "    <param><value>\n" \
-                         "      <string>%s</string>\n" \
-                         "    </value></param>\n" \
-                         "  </params>\n"  \
-                         "</methodCall>\n"
+  "<methodCall>\n" \
+  "  <methodName>confirmFile</methodName>\n" \
+  "  <params>\n"   \
+  "    <param><value>\n" \
+  "      <string>%s</string>\n" \
+  "    </value></param>\n" \
+  "    <param><value>\n" \
+  "      <string>%s</string>\n" \
+  "    </value></param>\n" \
+  "    <param><value>\n" \
+  "      <string>%s</string>\n" \
+  "    </value></param>\n" \
+  "  </params>\n"  \
+  "</methodCall>\n"
 
 #define HEADER_TEMPLATE "POST /RPC2 HTTP/1.0\n" \
-                        "User-Agent: MDFWriterNet\n" \
-                        "Host: %s\n" \
-                        "Content-Type: text/xml\n" \
-                        "Content-Length: %d\n\n" \
+  "User-Agent: MDFWriterNet\n" \
+  "Host: %s\n" \
+  "Content-Type: text/xml\n" \
+  "Content-Length: %d\n\n" \
 
 
 #endif /*RPCCOMM_H*/

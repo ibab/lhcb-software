@@ -9,36 +9,39 @@
 
 namespace LHCb {
 
-	class Connection;
-	/**
-	 * Takes care of purging the queue and sending chunks to the server.
-	 */
-	class SendThread {
+  class Connection;
+  /**
+   * Takes care of purging the queue and sending chunks to the server.
+   */
+  class SendThread {
 
-		private:
+    private:
 
-			Connection *m_conn;
-			MsgStream *m_log;
-			MM *m_mmObj;
-			volatile int m_stopSending;
-			volatile int m_sockFd;
-			pthread_t m_sendThread;
+      Connection *m_conn;
+      MsgStream *m_log;
+      MM *m_mmObj;
+      volatile bool m_stopUrgently;
+      volatile bool m_stopAfterFinish;
+      volatile int m_sockFd;
+      pthread_t m_sendThread;
 
-		public:
-			SendThread(Connection *conn, int sockFd, MM *mmObj, MsgStream *log) {
-				m_conn = conn;
-				m_log = new MsgStream(*log);
-				m_mmObj = mmObj;
-				m_sockFd = sockFd;
-			}
-			int getState(void) { return m_stopSending; }
-			void restoreState(int state) { m_stopSending = state; }
-			void start(void);
-			void stop(int stopLevel);
-			void reInit(int sockFd);
-			int processSends(void);
-			virtual ~SendThread() { delete m_log; }
-	};
+    public:
+      SendThread(Connection *conn, int sockFd, MM *mmObj, MsgStream *log) {
+        m_conn = conn;
+        m_log = new MsgStream(*log);
+        m_mmObj = mmObj;
+        m_sockFd = sockFd;
+        m_stopUrgently = false;
+        m_stopAfterFinish = false;
+      }
+      void start(void);
+      void stop(void);
+      void stopUrgently(void);
+      void stopAfterFinish(void);
+      void reInit(int sockFd);
+      int processSends(void);
+      virtual ~SendThread() { delete m_log; }
+  };
 
 
 }

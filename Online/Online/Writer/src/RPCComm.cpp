@@ -42,9 +42,9 @@ void RPCComm::confirmFile(char *fileName, unsigned int adlerSum, const unsigned 
 
   /* Now we fill up templates. */
   snprintf(xmlData, sizeof(xmlData), CONFIRM_TEMPLATE,
-  	fileName, adler32String, md5CharString);
+      fileName, adler32String, md5CharString);
   snprintf(headerData, sizeof(headerData), HEADER_TEMPLATE,
-  	"WriterHost", strlen(xmlData));
+      "WriterHost", strlen(xmlData));
 
   memset(response, 0, sizeof(response));
   ret = requestResponse(headerData, xmlData, response, sizeof(response));
@@ -52,7 +52,7 @@ void RPCComm::confirmFile(char *fileName, unsigned int adlerSum, const unsigned 
   if(ret < 0)
     throw std::runtime_error("Could not run RPC call for confirm.");
   if(isError(response))
-  	throw std::runtime_error(response);
+    throw std::runtime_error(response);
 
   return;
 }
@@ -74,9 +74,9 @@ void RPCComm::createFile(char *fileName, unsigned int runNumber)
   char response[1024];
 
   snprintf(xmlData, sizeof(xmlData), CREATE_TEMPLATE,
-    fileName, runNumber);
+      fileName, runNumber);
   snprintf(headerData, sizeof(headerData), HEADER_TEMPLATE,
-    "WriterHost", strlen(xmlData));
+      "WriterHost", strlen(xmlData));
 
   memset(response, 0, sizeof(response));
   ret = requestResponse(headerData, xmlData, response, sizeof(response));
@@ -84,7 +84,7 @@ void RPCComm::createFile(char *fileName, unsigned int runNumber)
   if(ret < 0)
     throw std::runtime_error("Could not run RPC call for create.");
   if(isError(response))
-  	throw std::runtime_error(response);
+    throw std::runtime_error(response);
 
   return;
 }
@@ -95,22 +95,22 @@ void RPCComm::createFile(char *fileName, unsigned int runNumber)
  */
 int RPCComm::requestResponse(char *requestHeader, char *requestData, char *response, int responseLen)
 {
-	struct sockaddr_in destAddr;
-	int sockFd;
-	int ret;
+  struct sockaddr_in destAddr;
+  int sockFd;
+  int ret;
 
 
   if(Utils::nameLookup(m_serverURL->getHost(), &destAddr, NULL) != 0)
-		throw std::runtime_error("Could not resolve name.");
-	destAddr.sin_port = htons(m_serverURL->getPort());
-	destAddr.sin_family = AF_INET;
+    throw std::runtime_error("Could not resolve name.");
+  destAddr.sin_port = htons(m_serverURL->getPort());
+  destAddr.sin_family = AF_INET;
 
   sockFd = Utils::connectToAddress(&destAddr,
-    Utils::DEFAULT_BUF_SIZE, Utils::DEFAULT_BUF_SIZE, NULL);
+      Utils::DEFAULT_BUF_SIZE, Utils::DEFAULT_BUF_SIZE, NULL);
 
-	BIF sendBif1(sockFd, requestHeader, strlen(requestHeader));
-	BIF sendBif2(sockFd, requestData, strlen(requestData));
-	BIF recvBif(sockFd, response, responseLen);
+  BIF sendBif1(sockFd, requestHeader, strlen(requestHeader));
+  BIF sendBif2(sockFd, requestData, strlen(requestData));
+  BIF recvBif(sockFd, response, responseLen);
 
   if(sockFd < 0)
     throw std::runtime_error("Could not connect to RPC server.");
@@ -134,21 +134,21 @@ int RPCComm::requestResponse(char *requestHeader, char *requestData, char *respo
  */
 int RPCComm::isError(char *response)
 {
-	std::string responseStr(response);
-	std::string::size_type loc;
+  std::string responseStr(response);
+  std::string::size_type loc;
 
-	/*First check for HTTP response status.*/
-	loc = responseStr.find("200 OK");
-	if(loc > responseStr.length())
-		return 1;
+  /*First check for HTTP response status.*/
+  loc = responseStr.find("200 OK");
+  if(loc > responseStr.length())
+    return 1;
 
-	/*Then check for a fault string.*/
-	loc = responseStr.find("faultCode");
-	if(loc > responseStr.length())
-		return 0;
-	return 1;
+  /*Then check for a fault string.*/
+  loc = responseStr.find("faultCode");
+  if(loc > responseStr.length())
+    return 0;
+  return 1;
 
-	/*Dump the whole response if fault found.*/
+  /*Dump the whole response if fault found.*/
 }
 
 URL::URL(const char *url)
@@ -157,7 +157,7 @@ URL::URL(const char *url)
   char portStr[7];
 
   memset(protocol, 0, sizeof(protocol));
-	memset(host, 0, sizeof(host));
+  memset(host, 0, sizeof(host));
   memset(path, 0, sizeof(path));
   memset(portStr, 0, sizeof(portStr));
   port = 80;
@@ -172,17 +172,17 @@ URL::URL(const char *url)
   curr+=3; /*Skip "://" */
   currw = host;
   while(*curr != 0 && *curr != '/' && *curr != ':') {
-  	*currw = *curr;
-  	curr++; currw++;
+    *currw = *curr;
+    curr++; currw++;
   }
 
   if(*curr == ':') { /*There's a port.*/
-  	currw = portStr;
-  	curr++;
-  	while(*curr != 0 && *curr != '/') {
-		  *currw = *curr;
-	    currw++; curr++;
-	  }
+    currw = portStr;
+    curr++;
+    while(*curr != 0 && *curr != '/') {
+      *currw = *curr;
+      currw++; curr++;
+    }
     port = atoi(portStr);
   }
   snprintf(path, sizeof(path), "%s", curr);

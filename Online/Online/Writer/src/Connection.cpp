@@ -28,11 +28,6 @@ extern "C" {
 #define POLL_INTERVAL         5000   /*<< The interval for poll() calls in millis.*/
 #define FAILOVER_RETRY_SLEEP  20     /*<< Number of seconds between  retries.*/
 
-/**
- * A thread local variable to keep track of which thread we're in.
- */
-//__thread int currThread;
-
 using namespace LHCb;
 
 /**
@@ -52,32 +47,27 @@ Connection::Connection(std::string serverAddr, int serverPort, int sndRcvSizes,
   m_failoverMonitor = NULL;
 
   pthread_mutex_init(&m_failoverLock, NULL);
-  //currThread = MDFWRITER_THREAD;
 }
 
 /**
  * Connects to a storage cluster node.
  */
 void Connection::initialize(void) {
-	m_failoverMonitor = new FailoverMonitor(m_serverAddr, m_serverPort + 1, this, m_log);
-	*m_log << MSG::INFO << "Instantiated failover monitor" << endmsg;
+  m_failoverMonitor = new FailoverMonitor(m_serverAddr, m_serverPort + 1, this, m_log);
 
-	connect();
-	*m_log << MSG::INFO << "Connected stream." << endmsg;
+  connect();
 
-	m_failoverMonitor->start();
-	*m_log << MSG::INFO << "Started failover monitor." << endmsg;
+  m_failoverMonitor->start();
 
+  m_ackThread = new AckThread(this, m_sockfd, &m_mmObj, m_log);
+  m_ackThread->setNotifyClient(m_notifyClient);
+  m_ackThread->start();
 
-	m_ackThread = new AckThread(this, m_sockfd, &m_mmObj, m_log);
-	m_ackThread->setNotifyClient(m_notifyClient);
-	m_ackThread->start();
-	*m_log << MSG::INFO << "Started ack thread." << endmsg;
+  m_sendThread = new SendThread(this, m_sockfd, &m_mmObj, m_log);
+  m_sendThread->start();
 
-	m_sendThread = new SendThread(this, m_sockfd, &m_mmObj, m_log);
-	m_sendThread->start();
-	*m_log << MSG::INFO << "Started send thread." << endmsg;
-
+  *m_log << MSG::INFO << "Writer " <<
+    getpid() << " Started all threads." << endmsg;
 }
 
 /** Connects to a storage cluster node.
@@ -87,12 +77,13 @@ void Connection::connect() {
   m_sockfd = -1;
   m_state = Connection::STATE_CONN_CLOSED;
   m_failoverMonitor->getAddress(&destAddr);
-	/*Need to change port to the storage service port.*/
-	destAddr.sin_port = htons(m_serverPort);
-	m_sockfd = Utils::connectToAddress(&destAddr, m_sndRcvSizes, m_sndRcvSizes, m_log);
-	if(m_sockfd < 0)
-		throw std::runtime_error("Could not init stream to server (found fo).");
- 	m_state = Connection::STATE_CONN_OPEN;
+
+  /*Need to change port to the storage service port.*/
+  destAddr.sin_port = htons(m_serverPort);
+  m_sockfd = Utils::connectToAddress(&destAddr, m_sndRcvSizes, m_sndRcvSizes, m_log);
+  if(m_sockfd < 0)
+    throw std::runtime_error("Could not init stream to server.");
+  m_state = Connection::STATE_CONN_OPEN;
 }
 
 /** Closes the TCP connection.
@@ -101,11 +92,30 @@ void Connection::connect() {
  */
 void Connection::closeConnection()
 {
-	*m_log << MSG::INFO << "Stopping everything ..." << endmsg;
+  *m_log << MSG::INFO << "Writer " << getpid()
+    << " Closing connection." << endmsg;
 
-  m_sendThread->stop(STOP_AFTER_PURGE);	/*Stop after all messages are sent.*/
-  m_ackThread->stop(STOP_AFTER_PURGE);	/*Stop after all acks have been received.*/
-  m_failoverMonitor->stop();
+  m_sendThread->stopAfterFinish();  /*Stop after all messages are sent.*/
+  m_ackThread->stopAfterFinish();  /*Stop after all acks have been received.*/
+
+  /* stopAfterFinish() doesn't do a thread join. So we just wait till
+   * the queue is empty. If the queue is empty, then the threads will
+   * shut down almost immediately afterwards. getQueueLength() is locked,
+   * so no harm in calling it often.
+   */
+  int ret;
+  while((ret = m_mmObj.getQueueLength()) > 0) {
+    *m_log << MSG::INFO << "Waiting for queuelength to be zero. " << ret << endmsg;
+    sleep(2);
+  }
+
+  sleep(2);
+
+  /* By this time, the threads have all exited, except for the failover
+   * monitor. We simply stop this one as well, and just exit.
+   */
+
+  m_failoverMonitor->stopUrgently();
   delete m_sendThread;
   delete m_ackThread;
   delete m_failoverMonitor;
@@ -123,85 +133,74 @@ void Connection::closeConnection()
  */
 int Connection::failover(int currThread)
 {
-	int ret = 0;
+  int ret = 0;
 
-	ret = pthread_mutex_trylock(&m_failoverLock);
-	if(ret == EBUSY) /* Someone else is already in the failover routine. Die.*/
-		return KILL_THREAD;
+  ret = pthread_mutex_trylock(&m_failoverLock);
+  if(ret == EBUSY) /* Someone else is already in the failover routine. Die.*/
+    return KILL_THREAD;
 
-	switch(currThread) {
-		case ACK_THREAD:
-			*m_log << MSG::INFO << "Failover initiated by ACK thread." <<
-				errno << endmsg;
-			break;
-		case SEND_THREAD:
-			*m_log << MSG::INFO << "Failover initiated by SEND thread." <<
-				errno << endmsg;
-			break;
-		case FAILOVER_THREAD:
-			*m_log << MSG::INFO << "Failover initiated by FAILOVER thread." <<
-				errno << endmsg;
-			break;
-	}
-
-	/*m_stopSending could be STOP_PURGE or 0, we must save and restore. */
-	int oldSendStopLevel = m_sendThread->getState();
-	int oldAckStopLevel = m_ackThread->getState();
-
-	/*
-	 * This is called by one of the three threads. Stop the other two.
-	 */
-	if(currThread == ACK_THREAD) {
-		m_sendThread->stop(STOP_URGENT);
-		m_failoverMonitor->stop();
-	} else if(currThread == SEND_THREAD) {
-		m_ackThread->stop(STOP_URGENT);
-		m_failoverMonitor->stop();
-	} else if(currThread == FAILOVER_THREAD) {
-		m_sendThread->stop(STOP_URGENT);
-		m_ackThread->stop(STOP_URGENT);
-	}
-
-	Utils::closeSocket((int*)&m_sockfd, m_log);
-
-	while(1) {
-  	*m_log << MSG::INFO << "Reconnecting socket now..." << endmsg;
-	  try {
-		  m_failoverMonitor->connectToAlternative();
-  		connect();
-  		break;
-  	}catch(std::exception ex) {
-  		*m_log << MSG::WARNING << "Could not connect:" << ex.what() << endmsg;
-	  }
-	  sleep(1);
-	}
-
-  m_ackThread->reInit(m_sockfd);	/*Reinit ack thread's data.*/
-	m_sendThread->reInit(m_sockfd);	/*Reinit send thread's data.*/
-
-	/*
-	 * Start up the threads that we stopped.
-	 */
-  if(currThread == FAILOVER_THREAD) {
-  	m_ackThread->start();
-  	m_sendThread->start();
-  } else if(currThread == ACK_THREAD) {
-  	m_failoverMonitor->start();
-  	m_sendThread->start();
-	} else if(currThread == SEND_THREAD) {
-		m_failoverMonitor->start();
-  	m_ackThread->start();
+  switch(currThread) {
+    case ACK_THREAD:
+      *m_log << MSG::WARNING << "Writer " << getpid() <<
+        " Failover initiated by ACK thread." << errno << endmsg;
+      break;
+    case SEND_THREAD:
+      *m_log << MSG::WARNING << "Writer " << getpid() <<
+        " Failover initiated by SEND thread." << errno << endmsg;
+      break;
+    case FAILOVER_THREAD:
+      *m_log << MSG::WARNING << "Writer " << getpid() <<
+        " Failover initiated by FAILOVER thread." << errno << endmsg;
+      break;
   }
 
-  /* It could be possible that the failover is taking place
-   * during a finalize()/Connection::closeConnection(), where the
-   * threads were in STOP_AFTER_PURGE state. So for consistency,
-   * we just restore them to whatever state they were in.
+  /*
+   * This is called by one of the three threads. Stop the other two.
    */
-  m_ackThread->restoreState(oldAckStopLevel);
-  m_sendThread->restoreState(oldSendStopLevel);
+  if(currThread == ACK_THREAD) {
+    m_sendThread->stopUrgently();
+    m_failoverMonitor->stopUrgently();
+  } else if(currThread == SEND_THREAD) {
+    m_ackThread->stopUrgently();
+    m_failoverMonitor->stopUrgently();
+  } else if(currThread == FAILOVER_THREAD) {
+    m_sendThread->stopUrgently();
+    m_ackThread->stopUrgently();
+  }
 
-  *m_log << MSG::INFO << "Successfully failed over. " << endmsg;
+  Utils::closeSocket((int*)&m_sockfd, m_log);
+
+  while(1) {
+    try {
+      m_failoverMonitor->connectToAlternative();
+      connect();
+      break;
+    }catch(std::exception ex) {
+      *m_log << MSG::WARNING << "Writer " << getpid() <<
+        "Could not connect:" << ex.what() << endmsg;
+    }
+    sleep(1);
+  }
+
+  m_ackThread->reInit(m_sockfd);  /*Reinit ack thread's data.*/
+  m_sendThread->reInit(m_sockfd);  /*Reinit send thread's data.*/
+
+  /*
+   * Start up the threads that we stopped.
+   */
+  if(currThread == FAILOVER_THREAD) {
+    m_ackThread->start();
+    m_sendThread->start();
+  } else if(currThread == ACK_THREAD) {
+    m_failoverMonitor->start();
+    m_sendThread->start();
+  } else if(currThread == SEND_THREAD) {
+    m_failoverMonitor->start();
+    m_ackThread->start();
+  }
+
+  *m_log << MSG::WARNING << "Writer " << getpid() <<
+    "Successfully failed over. " << endmsg;
   pthread_mutex_unlock(&m_failoverLock);
 
   return 0;
@@ -246,7 +245,7 @@ void Connection::sendCommand(struct cmd_header *header, void *data)
   }
 
   header->data.chunk_data.seq_num = m_seqCounter++;
-  newHeader = m_mmObj.allocAndCopyCommand(header, data);	/* Will always succeed. */
+  newHeader = m_mmObj.allocAndCopyCommand(header, data);  /* Will always succeed. */
 
   m_mmObj.enqueueCommand(newHeader);
 }

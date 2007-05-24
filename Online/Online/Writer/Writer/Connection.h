@@ -16,19 +16,16 @@ extern "C" {
 #include "GaudiKernel/MsgStream.h"
 
 #define MDFWRITER_THREAD  0x01   /**<< MDF Writer GaudiAlgorithm thread identifier.*/
-#define ACK_THREAD   			0x02   /**<< Acknowledgement thread identifier.*/
+#define ACK_THREAD         0x02   /**<< Acknowledgement thread identifier.*/
 #define SEND_THREAD       0x03   /**<< Sender thread identifier.*/
-#define FAILOVER_THREAD   0x04	 /**<< Failover thread identifier.*/
-
-#define STOP_URGENT				0x01	/**<< Tells a thread to stop immediately.*/
-#define STOP_AFTER_PURGE	0x02	/**<< Tells a thread to stop after purging queue.*/
+#define FAILOVER_THREAD   0x04   /**<< Failover thread identifier.*/
 
 /**
  * Returned by Connection::failover() to tell a thread that failover is already done,
  * and that it must die to be respawned.
  */
-#define KILL_THREAD		(-1)
-#define RESUME_THREAD	0
+#define KILL_THREAD    (-1)
+#define RESUME_THREAD  0
 
 /**
  * A thread local variable to keep track of which thread we're in.
@@ -53,14 +50,14 @@ namespace LHCb {
   {
     private:
 
-    	/// A handle to the sender thread.
-    	SendThread *m_sendThread;
+      /// A handle to the sender thread.
+      SendThread *m_sendThread;
 
-    	/// A handle to the ack thread.
-    	AckThread *m_ackThread;
+      /// A handle to the ack thread.
+      AckThread *m_ackThread;
 
-    	/// A failover monitor object.
-    	FailoverMonitor *m_failoverMonitor;
+      /// A failover monitor object.
+      FailoverMonitor *m_failoverMonitor;
 
       /// Flag to tell the acking thread to shut down.
       volatile int m_stopAcking;
@@ -76,7 +73,7 @@ namespace LHCb {
       INotifyClient *m_notifyClient;
 
       /// One of the Connection::STATE_XXX values.
-      int m_state;
+      volatile int m_state;
 
       /// The address of the server to connect to.
       std::string m_serverAddr;
@@ -129,6 +126,8 @@ namespace LHCb {
       static const int STATE_FILE_OPEN  =  0x02;
       /// The connection is open, but no file is open.
       static const int STATE_CONN_OPEN  =  0x03;
+      /// The connection is being failed over.
+      static const int STATE_FAILING_OVER = 0x04;
 
       /// Fails over onto an alternative storage cluster node.
       int failover(int currThread);
@@ -156,7 +155,7 @@ namespace LHCb {
 
       /// Sets a notification listener for events on this connection.
       void setNotifyClient(INotifyClient *nClient) {
-      	m_ackThread->setNotifyClient(nClient);
+        m_ackThread->setNotifyClient(nClient);
       }
 
       /// Notifies the notification listener.

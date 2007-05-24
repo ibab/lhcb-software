@@ -58,11 +58,11 @@ namespace LHCb {
       pthread_mutex_t m_allocLock;
 
     public:
-    	/// Constructor.
-    	MM();
+      /// Constructor.
+      MM();
 
-    	/// Destructor.
-    	~MM();
+      /// Destructor.
+      ~MM();
 
       /// Allocates space for a command and makes a copy of it.
       struct cmd_header* allocAndCopyCommand(struct cmd_header *, void *data);

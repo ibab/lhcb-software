@@ -94,12 +94,13 @@ void MDFWriterNet::constructNet()
  */
 StatusCode MDFWriterNet::initialize(void)
 {
-	*m_log << "------------INITIALIZING MDFWriterNet----------------" << endmsg;
+  *m_log << MSG::INFO << " Writer " << getpid() <<
+    " Initializing." << endmsg;
 
   m_fileOpen = 0;
   m_bytesWritten = 0;
   m_connection = new Connection(m_serverAddr, m_serverPort,
-  	m_sndRcvSizes, m_log, this);
+      m_sndRcvSizes, m_log, this);
   m_rpcObj = new RPCComm(m_runDBURL.c_str());
   try {
 
@@ -110,7 +111,7 @@ StatusCode MDFWriterNet::initialize(void)
     return StatusCode::FAILURE;
   }
 
-	*m_log << "------------INITIALIZED MDFWriterNet----------------" << endmsg;
+  *m_log << " Writer " << getpid() << " Initialized." << endmsg;
   return StatusCode::SUCCESS;
 }
 
@@ -120,7 +121,8 @@ StatusCode MDFWriterNet::initialize(void)
  */
 StatusCode MDFWriterNet::finalize(void)
 {
-	*m_log << "------------FINALIZING MDFWriterNet----------------" << endmsg;
+  *m_log << MSG::INFO << " Writer " << getpid() <<
+    " Finalizing." << endmsg;
 
   if(m_fileOpen) {
     struct cmd_header header;
@@ -140,7 +142,8 @@ StatusCode MDFWriterNet::finalize(void)
   m_connection = NULL;
   m_rpcObj = NULL;
 
-	*m_log << "------------FINALIZED MDFWriterNet----------------" << endmsg;
+  *m_log << MSG::INFO << " Writer " << getpid() <<
+    " Finalized." << endmsg;
   return StatusCode::SUCCESS;
 }
 
@@ -154,20 +157,16 @@ StatusCode MDFWriterNet::finalize(void)
  * the maximum size limit, then a RunDB call is executed, to which the
  * file name, MD5 sum, and the Adler32 sum are supplied.
  */
-#include "RTL/rtl.h"
 StatusCode MDFWriterNet::writeBuffer(void *const /*fd*/, const void *data, size_t len)
 {
   struct cmd_header header;
 
   if ( len < 10 ) {
-    *m_log << MSG::FATAL << "1 Veerrryyy small message:" << len << endmsg;
-    *m_log << MSG::FATAL << "2 Veerrryyy small message:" << len << endmsg;
-    *m_log << MSG::FATAL << "3 Veerrryyy small message:" << len << endmsg;
-    *m_log << MSG::FATAL << "4 Veerrryyy small message:" << len << endmsg;
-    *m_log << MSG::FATAL << "5 Veerrryyy small message:" << len << endmsg;
-    *m_log << MSG::FATAL << "6 Veerrryyy small message:" << len << endmsg;
-    lib_rtl_sleep(500000);
+    *m_log << MSG::FATAL << "Writer " << getpid() <<
+      "Very small message received, not forwarding." << len << endmsg;
+     return StatusCode::SUCCESS;
   }
+
   //Is a file already open?
   if(!m_fileOpen) {
     unsigned int runNumber = getRunNumber(data, len);
@@ -179,9 +178,6 @@ StatusCode MDFWriterNet::writeBuffer(void *const /*fd*/, const void *data, size_
 
     m_md5 = new TMD5();
     m_adler32 = adler32(0, NULL, 0);
-
-    *m_log << MSG::INFO << "Opening a file." << endmsg;
-
   }
 
   INIT_WRITE_COMMAND(&header, len, m_bytesWritten, m_fileName.c_str());
@@ -196,8 +192,6 @@ StatusCode MDFWriterNet::writeBuffer(void *const /*fd*/, const void *data, size_
     //Write out close command; runDB record created upon receiving ack.
     struct cmd_header header;
     INIT_CLOSE_COMMAND(&header, m_fileName.c_str(), m_adler32, m_md5);
-
-    *m_log << MSG::INFO << "Closing a file." << endmsg;
 
     delete m_md5;
     m_connection->sendCommand(&header);
@@ -259,16 +253,13 @@ MDFWriterNet::~MDFWriterNet()
 void MDFWriterNet::notifyOpen(struct cmd_header *cmd)
 {
   try {
-  	*m_log << MSG::INFO << "Received open notify. . ." << cmd->file_name;
     m_rpcObj->createFile(cmd->file_name, cmd->data.start_data.run_num);
-
   } catch(std::exception& e) {
     *m_log << MSG::ERROR << "Could not create Run Database Record ";
     *m_log << "Cause: " << e.what() << std::endl;
     *m_log << "Record is: FileName=" << cmd->file_name;
     *m_log << " Run Number=" << cmd->data.start_data.run_num << endmsg;
   }
-  *m_log << "Done." << endmsg;
 }
 
 /** A notify listener callback, which is executed  when a close command is acked.
@@ -276,9 +267,6 @@ void MDFWriterNet::notifyOpen(struct cmd_header *cmd)
 void MDFWriterNet::notifyClose(struct cmd_header *cmd)
 {
   try {
-
-  	*m_log << MSG::INFO << "Received close notify. . ." << cmd->file_name;
-
     m_rpcObj->confirmFile(cmd->file_name,
         cmd->data.stop_data.adler32_sum,
         cmd->data.stop_data.md5_sum);
@@ -297,9 +285,6 @@ void MDFWriterNet::notifyClose(struct cmd_header *cmd)
     *m_log << " Adler32 Sum=" << cmd->data.stop_data.adler32_sum;
     *m_log << " MD5 Sum=" << md5buf << endmsg;
   }
-
-  *m_log << "Done." << endmsg;
-
 }
 
 /** A notify listener callback, which is executed  when an error occurs.

@@ -79,10 +79,10 @@ struct cmd_header* MM::allocAndCopyCommand(struct cmd_header *header, void *data
   newHeader = (struct cmd_header*)malloc_blocking(dataSize + sizeof(struct cmd_header));
   newData = ((unsigned char*)newHeader) + sizeof(struct cmd_header);
   if(newHeader) {
-  	pthread_mutex_lock(&m_allocLock);
+    pthread_mutex_lock(&m_allocLock);
     MM::m_allocByteCount+=dataSize + sizeof(struct cmd_header);
     MM::m_allocCmdCount++;
-  	pthread_mutex_unlock(&m_allocLock);
+    pthread_mutex_unlock(&m_allocLock);
     memcpy(newHeader, header, sizeof(struct cmd_header));
     if(dataSize > 0) {
       memcpy(newData, data, dataSize);
@@ -146,7 +146,7 @@ void MM::enqueueCommand(struct cmd_header *cmd)
     m_tail = newElem;
     /*In case everything in the queue has already been sent.*/
     if(m_sendPointer == NULL)
-    	m_sendPointer = newElem;
+      m_sendPointer = newElem;
   }
 
   m_queueLength++;
@@ -187,29 +187,29 @@ struct cmd_header* MM::moveSendPointer(void)
   tSpec.tv_nsec = 0;
 
   while(1) {
-  	/*Let's try to get the list lock and see if the list is empty.*/
-  	pthread_mutex_lock(&m_listLock);
-  	if(m_sendPointer != NULL)
-  		break;	/* We have the list lock, let's move the pointer forward. */
+    /*Let's try to get the list lock and see if the list is empty.*/
+    pthread_mutex_lock(&m_listLock);
+    if(m_sendPointer != NULL)
+      break;  /* We have the list lock, let's move the pointer forward. */
 
-  	/* There's nothing else for us to send, we now sleep and wait. */
-  	pthread_mutex_unlock(&m_listLock);
-  	pthread_mutex_lock(&m_emptyLock);
-  	tSpec.tv_sec = time(NULL) + LOCK_TIMEOUT;
+    /* There's nothing else for us to send, we now sleep and wait. */
+    pthread_mutex_unlock(&m_listLock);
+    pthread_mutex_lock(&m_emptyLock);
+    tSpec.tv_sec = time(NULL) + LOCK_TIMEOUT;
 
-  	ret = pthread_cond_timedwait(&m_emptyCondition, &m_emptyLock, &tSpec);
-  	if(ret != 0) {
-  		/* Timed out. Nothing in the list yet. Just exit.*/
-  		pthread_mutex_unlock(&m_emptyLock);
-  		return NULL;
-  	}
-	  pthread_mutex_unlock(&m_emptyLock);
+    ret = pthread_cond_timedwait(&m_emptyCondition, &m_emptyLock, &tSpec);
+    if(ret != 0) {
+      /* Timed out. Nothing in the list yet. Just exit.*/
+      pthread_mutex_unlock(&m_emptyLock);
+      return NULL;
+    }
+    pthread_mutex_unlock(&m_emptyLock);
 
-  	/*
-  	 * Condition changed, meaning we have something in the list.
-  	 * So just go over and get the listLock again, this time the sendpointer
-  	 * will be fine.
-  	 */
+    /*
+     * Condition changed, meaning we have something in the list.
+     * So just go over and get the listLock again, this time the sendpointer
+     * will be fine.
+     */
   }
 
   /* At this point we have the list lock. */
