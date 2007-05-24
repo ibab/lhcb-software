@@ -1,4 +1,4 @@
-// $Id: LongTrackReferenceCreator.h,v 1.4 2007-03-13 14:32:31 cattanem Exp $
+// $Id: LongTrackReferenceCreator.h,v 1.5 2007-05-24 06:56:59 mneedham Exp $
 #ifndef _LongTrackReferenceCreator_H
 #define _LongTrackReferenceCreator_H
 
@@ -44,7 +44,7 @@ public:
   StatusCode initialize();
 
   /** add reference info to the track */  
-  StatusCode execute(const LHCb::Track& aTrack) const;
+  StatusCode execute(LHCb::Track& aTrack) const;
 
 private:
 

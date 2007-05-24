@@ -1,4 +1,4 @@
-// $Id: LongTrackReferenceCreator.cpp,v 1.13 2007-03-20 13:11:42 mneedham Exp $
+// $Id: LongTrackReferenceCreator.cpp,v 1.14 2007-05-24 06:56:59 mneedham Exp $
 
 // from GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -70,7 +70,7 @@ StatusCode LongTrackReferenceCreator::initialize()
 //=============================================================================
 // 
 //=============================================================================
-StatusCode LongTrackReferenceCreator::execute(const LHCb::Track& aTrack) const{
+StatusCode LongTrackReferenceCreator::execute(LHCb::Track& aTrack) const{
 
   LHCb::State vState;
   LHCb::State tState;
