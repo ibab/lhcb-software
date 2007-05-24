@@ -6,6 +6,10 @@ Purpose: LHCb High Level Trigger packages.
          LHCb High Level Trigger 
 
 
+- J.A. Hernando 24/5/07 In HltSys/options 
+  * it uses LHCb v22r5, REC v4r5 *
+  . HltFullReco.opts HltReco.opts changed options to use PatVeloTT v2r11
+
 - In HltSys options
   . Added temporary clone killer in HltProtoParticles
   . Added HltSelectionsDecision algorithm in selections 

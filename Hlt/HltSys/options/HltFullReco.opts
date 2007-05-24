@@ -49,14 +49,14 @@ HltRecoVeloTT.HistogramUpdatePeriod = 0;
 HltRecoVeloTT.OutputLevel = 3;
 
 // Use online Pat-Conditions
-PatHltRecoVeloTT.triggerQuality = true;
-// Use global reduction factor and max chi2 cut to vary the track quality
-PatHltRecoVeloTT.globalReductionFactor = 1.;
-PatHltRecoVeloTT.maxChi2 = 256.;
-PatHltRecoVeloTT.minMomentum = 2000.;
-PatHltRecoVeloTT.DxGroupFactor = 0.0;
 
-PatHltRecoVeloTT.removeUsed = false;
+PatHltRecoVeloTT.removeUsedTracks = false;
+PatHltRecoVeloTT.fitTracks = false;
+PatHltRecoVeloTT.maxChi2 = 256.;
+PatHltRecoVeloTT.PatVeloTTTool.minMomentum = 2000.;
+PatHltRecoVeloTT.PatVeloTTTool.DxGroupFactor = 0.0;
+PatHltRecoVeloTT.PatVeloTTTool.maxPseudoChi2 = 256.;
+PatHltRecoVeloTT.PatVeloTTTool.maxSolutionsPerTrack = 1;
 PatHltRecoVeloTT.OutputLevel = 3;
 
 // HltRecoForward.InputTracksName = "Hlt/Track/Velo";

@@ -37,16 +37,13 @@ HltRecoVeloTT.RecoName = "VeloTT";
 HltRecoVeloTT.HistogramUpdatePeriod = 0;
 HltRecoVeloTT.OutputLevel = 3;
 
-// Use online Pat-Conditions
-PatHltRecoVeloTT.suppressSmallAngles = false;
-PatHltRecoVeloTT.triggerQuality = true;
-// Use global reduction factor and max chi2 cut to vary the track quality
-PatHltRecoVeloTT.globalReductionFactor = 1.;
+PatHltRecoVeloTT.removeUsedTracks = false;
+PatHltRecoVeloTT.fitTracks = false;
 PatHltRecoVeloTT.maxChi2 = 256.;
-PatHltRecoVeloTT.minMomentum = 2000.;
-PatHltRecoVeloTT.DxGroupFactor = 0.0;
-
-PatHltRecoVeloTT.removeUsed = false;
+PatHltRecoVeloTT.PatVeloTTTool.minMomentum = 2000.;
+PatHltRecoVeloTT.PatVeloTTTool.DxGroupFactor = 0.0;
+PatHltRecoVeloTT.PatVeloTTTool.maxPseudoChi2 = 256.;
+PatHltRecoVeloTT.PatVeloTTTool.maxSolutionsPerTrack = 1;
 PatHltRecoVeloTT.OutputLevel = 3;
 
 // HltRecoForward.InputTracksName = "Hlt/Track/Velo";
@@ -94,17 +91,15 @@ createITLiteClusters.detType = "IT";
 
 //TODO: should be this be here or in the sequencer?
 
-PatHltHadRecoIPVeloTT.suppressSmallAngles = false;
-PatHltHadRecoIPVeloTT.triggerQuality = true;
-// Use global reduction factor and max chi2 cut to vary the track quality
-PatHltHadRecoIPVeloTT.globalReductionFactor = 1.;
+PatHltHadRecoIPVeloTT.removeUsedTracks = false;
+PatHltHadRecoIPVeloTT.fitTracks = false;
 PatHltHadRecoIPVeloTT.maxChi2 = 256.;
-//
-PatHltHadRecoIPVeloTT.minMomentum = 2000.;
-PatHltHadRecoIPVeloTT.DxGroupFactor = 0.0;
-
-PatHltHadRecoIPVeloTT.removeUsed = false;
+PatHltHadRecoIPVeloTT.PatVeloTTTool.minMomentum = 2000.;
+PatHltHadRecoIPVeloTT.PatVeloTTTool.DxGroupFactor = 0.0;
+PatHltHadRecoIPVeloTT.PatVeloTTTool.maxPseudoChi2 = 256.;
+PatHltHadRecoIPVeloTT.PatVeloTTTool.maxSolutionsPerTrack = 1;
 PatHltHadRecoIPVeloTT.OutputLevel = 3;
+
 
 // Forward
 //----------------
