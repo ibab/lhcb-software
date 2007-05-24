@@ -4,6 +4,9 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2007-05-24 M. Needham
+ - Add sameChannel and sameTime members to OTChannelID
+
 !===================== LHCbKernel v7r4 2007-05-18 ========================
 ! 2007-05-18 - Marco Cattaneo
  - In LbAppInit, add pointer to ICondDBInfo interface of CondDBSvc

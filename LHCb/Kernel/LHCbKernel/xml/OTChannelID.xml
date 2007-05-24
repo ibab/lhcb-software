@@ -52,6 +52,20 @@
         <code> return (m_channelID &amp; uniqueStrawMask); </code>
       </method> 
 
+      <method type = 'bool' name='sameGeometry' 
+              argList = 'const OTChannelID testChannel' const = 'TRUE' 
+              desc = 'true if same geometric channel '>
+      
+         <code> return (geometry() == testChannel.geometry()); </code>
+      </method>  
+  
+      <method type = 'bool' name='sameTime' 
+              argList = 'const OTChannelID testChannel' const = 'TRUE' 
+              desc = 'true if same tdc counts'>
+      
+         <code> return (tdcTime() == testChannel.tdcTime()); </code>
+      </method> 
+
       <attribute type='bitfield' name='channelID' desc='OT Channel ID'>
         <bitfield name='tdcTime' length='8' desc='TDC-time'/>
         <bitfield name='straw' length='8' desc='Straw' setMeth='FALSE'/>
