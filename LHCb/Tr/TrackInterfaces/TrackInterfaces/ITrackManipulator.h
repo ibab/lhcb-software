@@ -1,4 +1,4 @@
-// $Id: ITrackManipulator.h,v 1.1 2006-05-19 14:16:53 mneedham Exp $ 
+// $Id: ITrackManipulator.h,v 1.2 2007-05-24 06:55:42 mneedham Exp $ 
 #ifndef _ITrackManipulator_H
 #define _ITrackManipulator_H
  
@@ -25,7 +25,7 @@ public:
   /** Retrieve interface ID */
   static const InterfaceID& interfaceID() { return IID_ITrackManipulator ; }                                                                                                
   /** Add the reference information */
-  virtual StatusCode execute(const LHCb::Track& aTrack) const = 0;
+  virtual StatusCode execute(LHCb::Track& aTrack) const = 0;
                                                                                 
 };
                                                                                 
