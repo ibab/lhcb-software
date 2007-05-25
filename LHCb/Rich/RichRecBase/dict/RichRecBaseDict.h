@@ -30,7 +30,6 @@
 #include "RichRecBase/IRichPixelCreator.h"
 #include "RichRecBase/IRichRayTraceCherenkovCone.h"
 #include "RichRecBase/IRichRecGeomTool.h"
-#include "RichRecBase/IRichRecMCTruthTool.h"
 #include "RichRecBase/IRichSegmentCreator.h"
 #include "RichRecBase/IRichStatusCreator.h"
 #include "RichRecBase/IRichTrackCreator.h"

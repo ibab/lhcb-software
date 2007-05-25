@@ -11,8 +11,6 @@
 
 // Interfaces
 #include "RichKernel/IRichDetParameters.h"
-#include "RichKernel/IRichMCTrackInfoTool.h"
-#include "RichKernel/IRichMCTruthTool.h"
 #include "RichKernel/IRichMirrorSegFinder.h"
 #include "RichKernel/IRichParticleProperties.h"
 #include "RichKernel/IRichPixelClusteringTool.h"

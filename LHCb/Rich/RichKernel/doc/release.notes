@@ -1,8 +1,14 @@
-! $Id: release.notes,v 1.148 2007-05-02 13:29:46 cattanem Exp $
+! $Id: release.notes,v 1.149 2007-05-25 16:26:47 cattanem Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 !----------------------------------------------------------------------
+
+!====================== RichKernel v7r6 2007-05-25 ====================
+! 2007-05-25 - Marco Cattaneo
+ - Removed IRichMCTruthTool and IRichMCTrackInfoTool interfaces, moved to new
+   MCInterfaces package
+ - Added missing dependency on DAQEvent
 
 !====================== RichKernel v7r5 2007-05-02 ====================
 ! 2007-05-02 - Marco Cattaneo

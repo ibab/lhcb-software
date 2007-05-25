@@ -55,7 +55,6 @@
   <class name = "Rich::Rec::IRayTraceCherenkovCone" />
   <class name = "Rich::Rec::IRayleighScatter" />
   <class name = "Rich::Rec::IGeomTool" />
-  <class name = "Rich::Rec::MC::IMCTruthTool" />
   <class name = "Rich::Rec::ISegmentCreator" />
   <class name = "Rich::Rec::ISellmeirFunc" />
   <class name = "Rich::Rec::ISignalDetectionEff" />

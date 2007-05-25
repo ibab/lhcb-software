@@ -4,6 +4,10 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+!===================== RichRecBase v3r5 2007-05-25 =======================
+! 2007-05-25 - Marco Cattaneo
+ - Move IRichRecMCTruthTool interface to new MCInterfaces package
+
 !===================== RichRecBase v3r4 2007-05-14 =======================
 ! 2007-05-14 - Marco Cattaneo
  - Add missing forward declaration in IRichRecMCTruthTool.h
