@@ -7,6 +7,14 @@
 !   Read README.txt !
 !
 !-----------------------------------------------------------------------------
+!===================== Tutorial/Analysis v6r3 2007-05-05 ======================
+! 2007-05-25 - Patrick Koppenburg
+ - solutions6: 
+   - Corrected location of DaVinciAssociator
+   - Write nTuple for each candidate
+   - Always fill columns, even if nothing is found (MC)
+   - Fill momentum in one go (Gaudi bug fixed)
+ - This version requres DaVinci v19rX 
 !===================== Tutorial/Analysis v6r2p1 2007-01-12 ======================
 ! 2007-01-12 - P. Koppenburg
   - added Trigger. NEEDS DaVinci v17r8 at least.
