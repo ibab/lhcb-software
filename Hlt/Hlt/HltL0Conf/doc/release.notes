@@ -4,6 +4,7 @@
 ! Purpose     : L0-Tsa Confirmation algorithms
 !-----------------------------------------------------------------------------
 
+!========================== HltL0Conf v1r2 2007-05-25 ===================
 ! 2007-05-25 - Patrick Koppenburg
  - Fix release.notes
  - Print covariance matrix in outputlevel = 1
