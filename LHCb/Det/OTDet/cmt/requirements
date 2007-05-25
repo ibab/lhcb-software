@@ -1,11 +1,11 @@
-# $Id: requirements,v 1.34 2007-02-02 12:11:46 cattanem Exp $
+# $Id: requirements,v 1.35 2007-05-25 12:40:10 cattanem Exp $
 # =========================================================================
 
 package  OTDet 
-version  v7r1
+version  v7r3
 
 # =============== structure ===============================================	
-branches         src cmt doc OTDet 
+branches         src cmt doc OTDet dict
 
 # =============== used packages ===========================================
 use DetDescCnv   v*   Det 
@@ -27,3 +27,12 @@ library          OTDet           component/*.cpp
 apply_pattern component_library library=OTDet
 apply_pattern linker_library    library=OTDetLib 
 
+# =============== LCG Dictionaries ============================================
+apply_pattern     reflex_dictionary                             \
+                  dictionary=OTDet                              \
+                  headerfiles=$(OTDETROOT)/dict/OTDetDict.h     \
+                  selectionfile=$(OTDETROOT)/dict/OTDetDict.xml \
+                  options="-U__MINGW32__"
+
+# Hack for cmt v1r19 bug to link dictionary on windows
+macro OTDetDict_use_linkopts $(use_linkopts)

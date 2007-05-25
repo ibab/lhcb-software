@@ -1,7 +1,12 @@
-! $Id: release.notes,v 1.81 2007-03-05 12:16:47 cattanem Exp $
+! $Id: release.notes,v 1.82 2007-05-25 12:40:10 cattanem Exp $
 ! Package     : OTDet
 ! Responsible : Jeroen van Tilburg, Jacopo Nardulli, Jan Amoraal
 !--------------------------------------------------------------------------
+
+!========================== OTDet v7r3 2007-05-25 =========================
+! 2007-05-25 - Marco Cattaneo
+ - Add LCG dictionaries (moved from DetSys)
+ - Add dictionary for DeOTDetectorLocation::*
 
 !========================== OTDet v7r2 2007-03-05 =========================
 ! 2007-03-05 - Jan Amoraal
