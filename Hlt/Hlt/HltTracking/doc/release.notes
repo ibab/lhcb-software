@@ -4,6 +4,12 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2007-05-25 - Patrick Koppenburg
+ - Even more verbose stuff: print covariance matrix in outputlevel =1
+
+! 2007-05-14 - Patrick Koppenburg
+ - Added some more verbose()
+
 ! ======================== HltTracking v1r3 2007-02-06 =======================
 ! 2007-01-16 - Jose A. Hernando
   - HltTracking: adding options OrderByPt (default false) to order or not

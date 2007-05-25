@@ -1,4 +1,4 @@
-// $Id: HltTracking.cpp,v 1.10 2007-02-06 08:43:37 cattanem Exp $
+// $Id: HltTracking.cpp,v 1.11 2007-05-25 12:57:20 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -189,9 +189,13 @@ void HltTracking::flag() {
   if (m_measureTime) m_timer->start(m_timeFlag);
 
   for (PatTrackContainer::iterator it = m_patInputTracks->begin();
-       it != m_patInputTracks->end(); ++it) 
+       it != m_patInputTracks->end(); ++it) {
     (*it)->setFlag(Track::IPSelected,false);
-
+    verbose() << "Flagged track " << (*it)->key() << " " 
+              << " " << (*it)->momentum() << ", Cov:\n" 
+              << (*it)->firstState().covariance() << endmsg ;
+  }
+  
   if (m_inputTracks) markTracks(*m_inputTracks);
   else markTracks(*m_patInputTracks);
 
@@ -207,7 +211,7 @@ void HltTracking::loadFrom(const Track& mon) {
   int keymon = mon.key();
   for (PatTrackContainer::iterator it = m_patOutputTracks->begin();
        it != m_patOutputTracks->end(); ++it) {
-    if ((*it)->nStates() <=0) continue; // TODO protection to bugy tracks
+    if ((*it)->nStates() <=0) continue; /// @todo protection to buggy tracks
     Track& son = **it;
     bool ok = false;
     int ikeymon = (int) son.info(m_prevrecoKey,-1);
@@ -216,6 +220,9 @@ void HltTracking::loadFrom(const Track& mon) {
     if (ok) {
       son.addInfo(m_prevrecoKey, keymon);
       if (m_outputTracks) m_outputTracks->push_back( (Track*) &son );
+      verbose() << "Added to output track " << son.key() << " " 
+                << son.momentum() << ", Cov:\n" 
+                << son.firstState().covariance() << endmsg ;
     }
   }
 }
