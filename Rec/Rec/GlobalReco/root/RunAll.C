@@ -6,7 +6,6 @@
   //gROOT->ProcessLine(".x Combined-ElectronID.C");
  
   //gROOT->ProcessLine(".x Rich-KaonID.C");
-  gROOT->ProcessLine(".x Mitesh-KaonID.C");
   //gROOT->ProcessLine(".x Rich-KaonID-withProtonCut.C");
   //gROOT->ProcessLine(".x Combined-KaonID.C");
   //gROOT->ProcessLine(".x Combined-KaonID-withElectronCut.C");
@@ -16,4 +15,6 @@
 
   //gROOT->ProcessLine(".x Combined-MuonID.C");
  
+  gROOT->ProcessLine(".x CompareTwoFiles-KaonID.C");
+
 }
