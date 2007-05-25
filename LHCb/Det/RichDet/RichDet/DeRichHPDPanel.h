@@ -4,7 +4,7 @@
  *
  *  Header file for detector description class : DeRichHPDPanel
  *
- *  $Id: DeRichHPDPanel.h,v 1.45 2007-04-23 12:28:13 jonrob Exp $
+ *  $Id: DeRichHPDPanel.h,v 1.46 2007-05-25 14:04:31 cattanem Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -112,8 +112,8 @@ public:
    *
    *  The point is assumed to be on the actual detection volume (silicon pixel sensor).
    *
-   *  @param[IN] globalPoint  The point in global coordinates
-   *  @param[OUT] id          The RichSmartID for the given point
+   *  @param[in]  globalPoint The point in global coordinates
+   *  @param[out] id          The RichSmartID for the given point
    *
    *  @return Status of conversion
    *  @retval StatusCode::FAILURE Point outside silicon pixel sensor
@@ -125,8 +125,8 @@ public:
    *
    *  The point is given on the inside of the HPD window, on the photocathode.
    *
-   *  @param[IN] smartID      The HPD channel ID
-   *  @param[OUT] detectPoint The detection point
+   *  @param[in]  smartID     The HPD channel ID
+   *  @param[out] detectPoint The detection point
    *
    *  @return Status of connersion
    *  @retval StatusCode::SUCCESS Conversion to photocathode was OK
@@ -136,7 +136,7 @@ public:
                              Gaudi::XYZPoint& detectPoint ) const;
 
   /** Converts a RichSmartID to a point on the anode in global coordinates.
-   *  @param[IN] smartID      The HPD channel ID
+   *  @param[in] smartID      The HPD channel ID
    *  @return The detection anode point in global coordinates
    */
   Gaudi::XYZPoint detPointOnAnode( const LHCb::RichSmartID smartID ) const;
@@ -148,11 +148,11 @@ public:
    *  to test if there would be an intersection with a flat circle instead
    *  of the HPD window.
    *
-   *  @param[IN] vGlobal  The intersection direction
-   *  @param[IN] pGlobal  The intersection start point
-   *  @param[OUT] windowPointGlobal The return point on the HPD window
-   *  @param[OUT] smartID  The returned smartID with hit HPD info
-   *  @param[IN] mode The ray-tracing configuration mode
+   *  @param[in]  vGlobal           The intersection direction
+   *  @param[in]  pGlobal           The intersection start point
+   *  @param[out] windowPointGlobal The return point on the HPD window
+   *  @param[out] smartID           The returned smartID with hit HPD info
+   *  @param[in]  mode              The ray-tracing configuration mode
    *
    *  @return Status of intersection
    *  @retval StatusCode::SUCCESS Intersection was successfully calculated
@@ -170,10 +170,10 @@ public:
    * If mode is tight, returns true only if point is within
    * the detector coverage.
    *
-   * @param[IN] vGlobal  The intersection direction
-   * @param[IN] pGlobal  The intersection start point
-   * @param[OUT] hitPosition The intersection point on the HPD plane
-   * @param[IN] mode The ray-tracing configuration mode
+   * @param[in]  vGlobal     The intersection direction
+   * @param[in]  pGlobal     The intersection start point
+   * @param[out] hitPosition The intersection point on the HPD plane
+   * @param[in]  mode        The ray-tracing configuration mode
    *
    * @return Intersection status
    * @retval true  Intersection was inside the acceptance as defined by mode
@@ -189,7 +189,7 @@ public:
    *
    *  The local coordinate system is shifted to allow placing panels side by side
    *
-   *  @param[IN] globalPoint The point in global coordinates
+   *  @param[in] globalPoint The point in global coordinates
    *
    *  @return Local (panel) point
    */

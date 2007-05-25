@@ -15,4 +15,5 @@
   <class name="Rich::TabulatedFunction1D" />
   <class name="Rich::TabulatedProperty1D" />
   <class name="Rich::MirrorSegPosition"   />
+  <variable pattern="DeRichLocations::*" />
 </lcgdict>

@@ -4,6 +4,11 @@
 ! Purpose     : interface to the xml description
 !-----------------------------------------------------------------------------
 
+!======================== RichDet v10r5 2007-05-25 ========================
+! 2007-05-25 - Marco Cattaneo
+ - Add DeRichLocations::* to dictionary
+ - Fix doxygen warnings
+
 !======================== RichDet v10r4 2007-04-23 ========================
 ! 2007-04-23 - Marco Cattaneo
  - Make LCG dictionaries for public classes (previously in DetSys)

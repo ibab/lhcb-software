@@ -4,7 +4,7 @@
  *  Header file for detector description class : DeRichHPD
  *
  *  CVS Log :-
- *  $Id: DeRichHPD.h,v 1.7 2007-04-23 12:28:13 jonrob Exp $
+ *  $Id: DeRichHPD.h,v 1.8 2007-05-25 14:04:31 cattanem Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2006-09-19
@@ -99,8 +99,8 @@ public:
 
   /** @brief Converts a RichSmartID to a point in global coordinates.
    *  The point is given on the inside of the HPD window, on the photocathode.
-   *  @param[IN] smartID The RichSmartID pixel channel ID
-   *  @param[OUT] detectPoint The position in global coordinates
+   *  @param[in]  smartID     The RichSmartID pixel channel ID
+   *  @param[out] detectPoint The position in global coordinates
    *  @return StatusCode indicating if the conversion was successful or not
    *  @retval StatusCoe::SUCCESS Conversion was successful
    *  @retval StatusCode::FAILURE Conversion failed
@@ -110,7 +110,7 @@ public:
 
 
   /** Converts a RichSmartID to a point on the anode in global coordinates.
-   *  @param[IN] smartID The RichSmartID for the HPD channel
+   *  @param[in] smartID The RichSmartID for the HPD channel
    *  @return The detection point on the anode in global coordinates
    */
   Gaudi::XYZPoint detPointOnAnode( const LHCb::RichSmartID smartID ) const;
@@ -153,7 +153,7 @@ public:
 
   /** Converts the given RichSmartID to the position on the silicon wafer,
    *  in the coordinate system of the wafer
-   *  @param[IN] smartID The RichSmartID
+   *  @param[in] smartID The RichSmartID
    *  @return The position on the wafer
    */
   inline Gaudi::XYZPoint pointOnSilicon ( const LHCb::RichSmartID smartID ) const
