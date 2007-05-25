@@ -1,13 +1,13 @@
-# $Id: requirements,v 1.22 2007-05-02 14:43:55 cattanem Exp $
+# $Id: requirements,v 1.23 2007-05-25 16:30:33 cattanem Exp $
 # Created    : 08/03/2002
 # Maintainer : Marco Cattaneo
 #
 package           MCEvent
-version           v2r3
+version           v2r4
 
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          cmt doc src xml Event Kernel dict
+branches          cmt doc src xml Event dict
 
 
 # Used packages. 
@@ -21,7 +21,7 @@ document obj2doth MCEventObj2Doth ../xml/*.xml
 
 # Include directories
 #============================================================================
-apply_pattern install_more_includes more=Event offset=Kernel
+apply_pattern install_more_includes more=Event
 
 # Make custom dictionary. Must be before GOD generation
 #============================================================================
