@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.91 2007-03-21 16:02:38 cattanem Exp $
+! $Id: release.notes,v 1.92 2007-05-25 14:20:54 cattanem Exp $
 ! Package     : MuonDet
 ! Responsible : Alessia Satta
 !----------------------------------------------------------------------------
+
+!========================= MuonDet v6r3 2007-05-25 ========================
+! 2007-05-25 - Marco Cattaneo
+ - Add LCG dictionaries (moved from DetSys)
 
 !========================= MuonDet v6r2 2007-03-21 ========================
 ! 2007-03-21 - Marco Clemencic

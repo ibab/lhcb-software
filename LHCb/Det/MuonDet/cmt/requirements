@@ -1,12 +1,12 @@
 # =========================================================================
-# $Id: requirements,v 1.36 2007-03-16 16:33:28 cattanem Exp $
+# $Id: requirements,v 1.37 2007-05-25 14:20:54 cattanem Exp $
 # =========================================================================
 
 package MuonDet
-version  v6r2
+version  v6r3
 
 # =============== structure ===============================================
-branches         src cmt doc MuonDet
+branches         src cmt doc MuonDet dict
 
 # =============== used packages ===========================================
 use LHCbKernel    v*  Kernel
@@ -25,3 +25,13 @@ library   MuonDet component/*.cpp
 #================ patterns ================================================
 apply_pattern component_library library=MuonDet
 apply_pattern linker_library    library=MuonDetLib
+
+# =============== LCG Dictionaries ============================================
+apply_pattern     reflex_dictionary                                 \
+                  dictionary=MuonDet                                \
+                  headerfiles=$(MUONDETROOT)/dict/MuonDetDict.h     \
+                  selectionfile=$(MUONDETROOT)/dict/MuonDetDict.xml \
+                  options="-U__MINGW32__"
+
+# Hack for cmt v1r19 bug to link dictionary on windows
+macro MuonDetDict_use_linkopts $(use_linkopts)
