@@ -1,0 +1,13 @@
+!-----------------------------------------------------------------------------
+! Package     : Kernel/MCInterfaces
+! Responsible : Marco Cattaneo
+! Purpose     : Interfaces with dependency on MC
+!-----------------------------------------------------------------------------
+
+!==================== MCInterfaces v1r0 2007-05-25 ===========================
+! 2007-05-25 - Matt Needham
+ - Update IMCReconstructible interface
+
+! 2007-05-25 - Marco Cattaneo
+ - First release, containing interfaces previously in MCEvent, RichKernel,
+   RichRecBase

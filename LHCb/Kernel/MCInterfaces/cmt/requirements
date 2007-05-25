@@ -1,0 +1,28 @@
+#============================================================================
+# Created    : 2007-05-25
+# Maintainer : Marco Cattaneo et al.
+#============================================================================
+package           MCInterfaces
+version           v1r0
+
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc MCInterfaces dict
+
+# =============== dependencies ==============================================
+use GaudiKernel      v*
+use RichKernel       v* Rich
+use MCEvent          v* Event
+
+# =============== include directories =======================================
+apply_pattern install_more_includes more=MCInterfaces
+
+# =============== LCG Dictionaries ============================================
+apply_pattern reflex_dictionary                                           \
+              dictionary=MCInterfaces                                     \
+              headerfiles=$(MCINTERFACESROOT)/dict/MCInterfacesDict.h     \
+              selectionfile=$(MCINTERFACESROOT)/dict/MCInterfacesDict.xml \
+              options="-U__MINGW32__"
+
+# Hack for cmt v1r19 bug to link dictionary on windows
+macro MCInterfacesDict_use_linkopts $(use_linkopts)

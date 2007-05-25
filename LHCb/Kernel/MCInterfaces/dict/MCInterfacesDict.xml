@@ -1,0 +1,21 @@
+<lcgdict>
+
+  <class name = "Rich::MC::IMCTrackInfoTool"  />
+  <class name = "Rich::MC::IMCTruthTool"      />
+  <class name = "Rich::Rec::MC::IMCTruthTool" />
+
+  <class name = "IIdealStateCreator"        />
+  <class name = "ITrackCriteriaSelector"    />
+  <class name = "ITrackReconstructible"     />
+  <class name = "ILHCbIDsToMCParticles"     />                               
+  <class name = "ILHCbIDsToMCHits"          />
+  <class name = "ITrackGhostClassification" />
+
+  <class name = "IForcedBDecayTool"  />
+  <class name = "IMCDecayFinder"     />
+  <class name = "IMCReconstructible" />
+  <class name = "IMuonPad2MCTool"    />
+  <class name = "ISiDepositedCharge" />
+  <class name = "IVisPrimVertTool"   />
+
+</lcgdict>
