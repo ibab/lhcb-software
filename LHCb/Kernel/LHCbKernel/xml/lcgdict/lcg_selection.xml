@@ -26,6 +26,7 @@
   <class name = "IEventTimeDecoder"    />
   <class name = "IEvtTypeSvc"          />
   <class name = "IGenericTool"         />
+  <class name = "IHltSummaryTool"      />
   <class name = "IInAcceptance"        />
   <class name = "IMCParticleSelector"  />
   <class name = "IMCVeloFEType"        />

@@ -1,6 +1,6 @@
-// $Id: IVeloClusterPosition.h,v 1.7 2007-05-24 10:09:09 szumlat Exp $
-#ifndef VELOALGORITHMS_IVELOCLUSTERPOSITION_H 
-#define VELOALGORITHMS_IVELOCLUSTERPOSITION_H 1
+// $Id: IVeloClusterPosition.h,v 1.8 2007-05-25 11:54:46 cattanem Exp $
+#ifndef KERNEL_IVELOCLUSTERPOSITION_H 
+#define KERNEL_IVELOCLUSTERPOSITION_H 1
 
 // Include files
 
@@ -10,7 +10,7 @@
 
 static const InterfaceID IID_IVeloClusterPosition ("IVeloClusterPosition", 1, 0);
 
-/** @class IVeloClusterPos IVeloClusterPos.h VeloAlgorithms/IVeloClusterPos.h
+/** @class IVeloClusterPosition IVeloClusterPosition.h Kernel/IVeloClusterPosition.h
  *  
  *
  *  @author Tomasz Szumlak
@@ -75,4 +75,4 @@ public:
   */
   virtual double projectedAngle() const=0;
 };
-#endif // VELOALGORITHMS_IVELOCLUSTERPOS_H
+#endif // KERNEL_IVELOCLUSTERPOSITION_H
