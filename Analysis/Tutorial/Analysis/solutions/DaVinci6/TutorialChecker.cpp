@@ -1,4 +1,4 @@
-// $Id: TutorialChecker.cpp,v 1.3 2007-01-12 13:18:38 pkoppenb Exp $
+// $Id: TutorialChecker.cpp,v 1.4 2007-05-25 14:43:31 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -71,11 +71,11 @@ StatusCode TutorialChecker::execute() {
     if (sc) sc = fillTagging(tuple,*b);
     if (sc) sc = fillTrigger(tuple);
     
+    sc = tuple->write();
     if (!sc) return sc ;
   }  
-  sc = tuple->write();
 
-  setFilterPassed(true);   // Mandatory. Set to true if event is accepted.
+  setFilterPassed(true).ignore();   // Mandatory. Set to true if event is accepted.
   return sc ;
 }
 //=============================================================================
@@ -102,10 +102,7 @@ StatusCode TutorialChecker::fillReco(Tuple& tuple,const LHCb::Particle* b) {
   // store momentum. This will work with the next version of Gaudi:
   //  tuple->column( "P", b->momentum()); // 4-vector!
   // in the meantime I do:
-  tuple->column( "PX", b->momentum().x());
-  tuple->column( "PY", b->momentum().y());
-  tuple->column( "PZ", b->momentum().z());
-  tuple->column( "E", b->momentum().e());
+  tuple->column( "P", b->momentum());
   // store IPs
   LHCb::RecVertex::ConstVector PVs = desktop()->primaryVertices();
   if (PVs.size()>20) {
@@ -124,8 +121,6 @@ StatusCode TutorialChecker::fillReco(Tuple& tuple,const LHCb::Particle* b) {
   tuple->farray( "IPe", ipes.begin(), ipes.end(), "PVs", 20);
   // One could think about going down to the daughters...
 
-
-
   return StatusCode::SUCCESS;
 }
 
@@ -142,13 +137,13 @@ StatusCode TutorialChecker::fillTruth(Tuple& tuple,const LHCb::Particle* b) {
   const LHCb::MCParticle* MC = m_pLinker->firstMCP( b );
   
   if ( NULL!=MC ){
-    //    tuple->column( "TP", MC->momentum() ); /// @todo restore
-    tuple->column( "TPX", MC->momentum().x());
-    tuple->column( "TPY", MC->momentum().y());
-    tuple->column( "TPZ", MC->momentum().z());
-    tuple->column( "TPE", MC->momentum().e());
+    tuple->column( "TP", MC->momentum());
     tuple->column( "TPt", MC->pt());
     tuple->column( "TPID", MC->particleID().pid() );
+  } else { // all columns should be filled even if there's nothing found
+    tuple->column( "TP", Gaudi::XYZTVector(-999,-999,-999,-999));
+    tuple->column( "TPt", -999);
+    tuple->column( "TPID", -1);    
   }
   
   // some looping in debug mode

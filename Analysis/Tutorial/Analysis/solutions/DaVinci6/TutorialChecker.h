@@ -1,4 +1,4 @@
-// $Id: TutorialChecker.h,v 1.3 2007-01-12 13:18:38 pkoppenb Exp $
+// $Id: TutorialChecker.h,v 1.4 2007-05-25 14:43:31 pkoppenb Exp $
 #ifndef TUTORIALCHECKER_H 
 #define TUTORIALCHECKER_H 1
 
@@ -7,7 +7,7 @@
 #include "Kernel/DVAlgorithm.h"
 
 #include "Kernel/IBackgroundCategory.h"
-#include "DaVinciAssociators/Particle2MCLinker.h"
+#include "Kernel/Particle2MCLinker.h"
 
 /** @class TutorialChecker TutorialChecker.h
  *   
