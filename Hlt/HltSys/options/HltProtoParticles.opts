@@ -10,6 +10,7 @@
 //---------------------------------------------------------------------
 HltFullReco.Members += { "GaudiSequencer/SeqHltCharged" } ;
 SeqHltCharged.MeasureTime = true ;
+SeqHltCharged.IgnoreFilterPassed = true ;
 
 /*
  * TEMPORARY clone killer - waiting to understand duplicated tracks
