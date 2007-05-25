@@ -11,12 +11,12 @@
 
 GlobalPID::PIDType GlobalPID::getMcType() const
 {
-  if      ( 0    == fabs(MCParticleType) ) { return NoMCInfo; }
-  else if ( 11   == fabs(MCParticleType) ) { return Electron; }
-  else if ( 13   == fabs(MCParticleType) ) { return Muon; }
-  else if ( 211  == fabs(MCParticleType) ) { return Pion; }
-  else if ( 321  == fabs(MCParticleType) ) { return Kaon; }
-  else if ( 2212 == fabs(MCParticleType) ) { return Proton; }
+  if      ( 0    == MCParticleType     ) { return NoMCInfo; }
+  else if ( 11   == MCParticleType || 11    == MCParticleType ) { return Electron; }
+  else if ( 13   == MCParticleType || -13   == MCParticleType ) { return Muon; }
+  else if ( 211  == MCParticleType || -211  == MCParticleType ) { return Pion; }
+  else if ( 321  == MCParticleType || -321  == MCParticleType ) { return Kaon; }
+  else if ( 2212 == MCParticleType || -2212 == MCParticleType ) { return Proton; }
   else    { return UnknownParticle; }
 }
 
@@ -493,7 +493,7 @@ void GlobalPID::saveFigures()
 
 //--------------------------------------------------------------------------------------------
 
-TTree * GlobalPID::loadTTree( const std::string & filename )
+void GlobalPID::loadTTree( const std::string & filename )
 {
   TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject(filename.c_str());
   if (!f)
@@ -502,19 +502,23 @@ TTree * GlobalPID::loadTTree( const std::string & filename )
     f = new TFile(filename.c_str());
     f->cd((filename+":/ChargedProtoParticleTupleAlg").c_str());
   }
-  return (TTree*)gDirectory->Get("protoPtuple");
+  fChain = (TTree*)gDirectory->Get("protoPtuple");
+  Init( fChain );
+}
+
+GlobalPID::GlobalPID()
+{
+  fChain = NULL;
 }
 
 GlobalPID::GlobalPID(const std::string & filename)
 {
-  fChain = loadTTree(filename);
-  Init( fChain );
+  loadTTree(filename);
 }
 
 GlobalPID::GlobalPID(TTree *tree)
 {
-  fChain = tree ? tree : loadTTree("gpid-Allevts.root");
-  Init ( fChain );
+  if ( tree ) Init( tree );
 }
 
 GlobalPID::~GlobalPID()

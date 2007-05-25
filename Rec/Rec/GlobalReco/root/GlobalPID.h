@@ -134,11 +134,12 @@ public:
 
   // Core root stuff
   //-------------------------------------------------------------
-  GlobalPID ( TTree *tree = NULL );
+  GlobalPID ( );
+  GlobalPID ( TTree *tree );
   GlobalPID ( const std::string & filename );
   virtual ~GlobalPID();
 
-  TTree * loadTTree( const std::string & filename );
+  void loadTTree( const std::string & filename );
 
   //virtual Int_t    Cut(Long64_t entry);
   virtual Int_t    GetEntry(Long64_t entry);
