@@ -1,5 +1,5 @@
 package DetSys
-version v9r5
+version v9r6
 
 branches cmt doc dict
 
@@ -7,21 +7,11 @@ use DetDesc             v17r3   Det
 use DetDescCnv          v4r3p1  Det
 use DetDescSvc          v1r11   Det
 use XmlTools            v5r1    Tools
-use VeloDet             v11r2   Det
-use OTDet               v7r2    Det
-use CaloDet             v8r1    Det
+use VeloDet             v11r3   Det
+use OTDet               v7r3    Det
+use CaloDet             v8r2    Det
 use CaloDetXmlCnv       v3r1    Det
-use MuonDet             v6r2    Det
+use MuonDet             v6r3    Det
 use Magnet              v3r6    Det
-use RichDet             v10r4   Det
-use STDet               v3r3    Det
-
-# =============== LCG Dictionaries ============================================
-apply_pattern     reflex_dictionary                            \
-                  dictionary=Det                               \
-                  headerfiles=$(DETSYSROOT)/dict/DetDict.h     \
-                  selectionfile=$(DETSYSROOT)/dict/DetDict.xml \
-                  options="-U__MINGW32__"
-
-# Hack for cmt v1r19 bug to link dictionary on windows
-macro DetDict_use_linkopts $(use_linkopts)
+use RichDet             v10r5   Det
+use STDet               v3r4    Det
