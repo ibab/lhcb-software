@@ -1,8 +1,14 @@
-! $Id: release.notes,v 1.73 2007-03-01 11:29:49 cattanem Exp $ 
+! $Id: release.notes,v 1.74 2007-05-25 12:59:04 cattanem Exp $ 
 ! =============================================================================
 Package         : CaloDet   
 Package manager : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
+
+!======================== CaloDet v8r2 2007-05-25 =============================
+! 2007-05-25 - Marco Cattaneo
+ - Add LCG dictionaries (moved from DetSys)
+ - Add dictionary for DeCalorimeterLocation::*
+ - Fix doxygen warnings
 
 !======================== CaloDet v8r1 2007-03-01 =============================
 ! 2007-03-01 - Marco Cattaneo

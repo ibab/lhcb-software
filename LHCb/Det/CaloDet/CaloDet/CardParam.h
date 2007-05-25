@@ -1,5 +1,5 @@
 /// ===========================================================================
-/// $Id: CardParam.h,v 1.5 2007-02-22 23:17:18 odescham Exp $
+/// $Id: CardParam.h,v 1.6 2007-05-25 12:59:01 cattanem Exp $
 /// ===========================================================================
 #ifndef CALODET_CARDPARAM_H 
 #define CALODET_CARDPARAM_H 1
@@ -24,6 +24,9 @@ public:
       @param iArea  calorimeter area 
       @param iRow   row 
       @param iCol   column
+      @param iNum
+      @param iCrate
+      @param iSlot
   */
   CardParam( int iArea = 0 , 
              int iRow  = 0 , 

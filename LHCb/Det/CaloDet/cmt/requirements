@@ -1,10 +1,10 @@
-# $Id: requirements,v 1.55 2007-03-01 11:29:49 cattanem Exp $ 
+# $Id: requirements,v 1.56 2007-05-25 12:59:02 cattanem Exp $ 
 # =============================================================================
 package  CaloDet 
-version  v8r1
+version  v8r2
 
 # =============== structure ===================================================
-branches         src cmt doc options CaloDet 
+branches         src cmt doc options CaloDet dict
 
 # =============== used packages ===============================================
 use GaudiAlg     v*
@@ -28,4 +28,13 @@ library          CaloDet           component/*.cpp
 apply_pattern component_library library=CaloDet
 apply_pattern linker_library    library=CaloDetLib
 
-# =============================================================================
+
+# =============== LCG Dictionaries ============================================
+apply_pattern     reflex_dictionary                                 \
+                  dictionary=CaloDet                                \
+                  headerfiles=$(CALODETROOT)/dict/CaloDetDict.h     \
+                  selectionfile=$(CALODETROOT)/dict/CaloDetDict.xml \
+                  options="-U__MINGW32__"
+
+# Hack for cmt v1r19 bug to link dictionary on windows
+macro CaloDetDict_use_linkopts $(use_linkopts)

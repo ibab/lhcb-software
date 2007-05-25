@@ -21,9 +21,7 @@ class Tell1Param
 public:
   
   /** constructor 
-      @param iArea  calorimeter area 
-      @param iRow   row 
-      @param iCol   column
+      @param num
   */
   Tell1Param( int num );
   

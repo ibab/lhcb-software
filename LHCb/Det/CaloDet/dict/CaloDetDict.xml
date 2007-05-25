@@ -1,0 +1,7 @@
+<lcgdict>
+  <class name="DeCalorimeter"    />
+  <class name="DeSubCalorimeter" />
+  <class name="CellParam"        />
+  <class name="CardParam"        />
+  <variable pattern="DeCalorimeterLocation::*" />
+</lcgdict>
