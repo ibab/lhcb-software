@@ -5,7 +5,7 @@
  *  Header file for class : IMCReconstructible
  *
  *  CVS Log :-
- *  $Id: IMCReconstructible.h,v 1.3 2007-03-05 12:49:44 jonrob Exp $
+ *  $Id: IMCReconstructible.h,v 1.4 2007-05-25 14:38:04 mneedham Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 28/02/2007
@@ -85,7 +85,17 @@ public:
    *  @return boolean indicating if the MCParticle is in acceptance or not
    */
   virtual bool inAcceptance( const LHCb::MCParticle* mcPart ) const = 0;
-
+ 
+  /** Check if given MCParticle can be reconstructed as given type
+  *
+  *  @param mcPart Pointer to the MCParticle
+  *  @param category type to check
+  *
+  *  @return The Reconstructibility category
+  */  
+  virtual bool isReconstructibleAs(const IMCReconstructible::RecCategory& category,
+                                   const LHCb::MCParticle* mcPart ) const = 0;
+  
 };
 
 #endif // KERNEL_IMCEFFRECONSTRUCTIBLE_H

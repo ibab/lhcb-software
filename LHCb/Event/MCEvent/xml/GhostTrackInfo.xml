@@ -9,7 +9,7 @@
     <class name='GhostTrackInfo' 
            author='M. Needham' 
            desc='info on ghost tracks' 
-           id='299' >
+           virtual = 'FALSE' >
 
   <import name="GaudiKernel/Map"/>
   <import name="Event/MCParticle"/>
