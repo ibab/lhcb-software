@@ -5,6 +5,11 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
 
+</PRE><H1><A NAME=v1r6>2007-05-25 HltSys v1r6</A></H1><PRE>
+This version uses Gaudi v19r3 and LHCb v22r5
+
+Packages modified: HltSelections v5r2, HltTracking v1r3p1, 
+HltL0Conf v1r1, HltL0MuonConf v1r0 (new)
 
 - J.A. Hernando 24/5/07 In HltSys/options 
   * it uses LHCb v22r5, REC v4r5 *
