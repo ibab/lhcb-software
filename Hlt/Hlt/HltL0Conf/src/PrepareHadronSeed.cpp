@@ -376,6 +376,7 @@ StatusCode PrepareHadronSeed::prepareSeed(const LHCb::L0CaloCandidate& hadL0Cand
   seedStatePos.setCovariance(stateCov);
   seedStateNeg.setCovariance(stateCov);
  
+  verbose() << "Set stateCov \n" << stateCov << endmsg ;
   
   return StatusCode::SUCCESS;
   

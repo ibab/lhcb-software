@@ -4,9 +4,14 @@
 ! Purpose     : L0-Tsa Confirmation algorithms
 !-----------------------------------------------------------------------------
 
-!=========================== HltL0Conf v1r1 2007-03-27 =======================
+! 2007-05-25 - Patrick Koppenburg
+ - Fix release.notes
+ - Print covariance matrix in outputlevel = 1
+ - Increment to v1r2
+
 ! 2007-05-22 - Alessia Satta 
-- add PrepareMuonTSeed.cpp PrepareMuonTSeed.h for muon segment T seed confirmation
+  - add PrepareMuonTSeed.cpp PrepareMuonTSeed.h for muon segment T seed confirmation
+
 ! 2007-04-27 - Johannes Albrecht
 	- src/L0ConfDataStore
 			- tool added for debugging purposes: 
@@ -24,8 +29,7 @@
 				(optional via the debugMode job option)
 			- tidy up the code
   		
-
-
+!=========================== HltL0Conf v1r1 2007-03-27 =======================
 ! 2007-03-27 - Marco Cattaneo
  - Add missing HltL0Conf_dll.cpp file
 

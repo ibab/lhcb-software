@@ -6,6 +6,7 @@
 
 ! 2007-05-25 - Patrick Koppenburg
  - Even more verbose stuff: print covariance matrix in outputlevel =1
+ - Increment to v1r3p1
 
 ! 2007-05-14 - Patrick Koppenburg
  - Added some more verbose()
