@@ -1,4 +1,4 @@
-// $Id: Particle2State.cpp,v 1.6 2007-03-05 10:08:34 pkoppenb Exp $
+// $Id: Particle2State.cpp,v 1.7 2007-05-25 13:27:21 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -51,16 +51,19 @@ StatusCode Particle2State::state2Particle( const LHCb::State& state, LHCb::Parti
   if (0 == particle.charge()) {
     return Error("Neutral particle given as input to state2Particle");
   }
+  verbose() << "New particle " << particle.particleID().pid() << endmsg ;
 
   
   // point on the track and error 
   particle.setReferencePoint( state.position() ) ;
+  verbose() << "    Ref Point is " << particle.referencePoint() << endmsg ;
   
   // momentum
   Gaudi::XYZVector mom = state.momentum();
   double mass = particle.measuredMass();
   double e = sqrt( state.p()*state.p()+mass*mass );
   particle.setMomentum(  Gaudi::XYZTVector(mom.X(),mom.Y(),mom.Z(),e) ) ;
+  verbose() << "    Momentum is " << particle.momentum() << endmsg ;
 
   // error 
   Gaudi::Matrix5x5 Jacob = stateJacobian(particle.charge(),mom);
@@ -74,23 +77,36 @@ StatusCode Particle2State::state2Particle( const LHCb::State& state, LHCb::Parti
   Jacob7.Place_at(Jacob.Sub<Matrix2x5>( 0, 0 ), 0, 0 );
   Jacob7.Place_at(Jacob.Sub<Matrix3x5>( 2, 0 ), 3, 0 );
   double q2p = state.qOverP();
+  verbose() << "    E=  " << e << " q/P = " << q2p << endmsg ;
   Jacob7(6,4) = -1./e/q2p/q2p/q2p;
+
+  verbose() << "    Jacob 7 is : \n" << Jacob7 << endmsg ;
+  verbose() << "    state.covariance() is \n" << state.covariance() << endmsg ;  
+
   Gaudi::SymMatrix7x7 cov = ROOT::Math::Similarity<double,7,5>(Jacob7, state.covariance() );
+
+  verbose() << "    Gets cov \n" << cov << endmsg ;  
 
   // error on position
   Gaudi::SymMatrix3x3 errPos;
   errPos.Place_at(cov.Sub<Gaudi::SymMatrix3x3>( 0, 0 ), 0, 0 );
   particle.setPosCovMatrix( errPos  ) ;
+  verbose() << "    Position Covariance Matrix is \n" 
+            << particle.posCovMatrix() << endmsg ;
 
   // error on momentum
   Gaudi::SymMatrix4x4 errMom;
   errMom.Place_at(cov.Sub<Gaudi::SymMatrix4x4>( 3, 3 ), 0, 0 );
   particle.setMomCovMatrix(errMom);
+  verbose() << "    Momentum Covariance Marix is \n" 
+            << particle.momCovMatrix() << endmsg ;
 
   // correlation
   Gaudi::Matrix4x3 errPosMom;
   errPosMom.Place_at(cov.Sub<Gaudi::Matrix4x3>( 3, 0 ), 0, 0 );
   particle.setPosMomCovMatrix(errPosMom);
+  verbose() << "    Position x Momentum Covariance Matrix is \n" 
+            << particle.posMomCovMatrix() << endmsg ;
   
   return StatusCode::SUCCESS ;
   
@@ -172,7 +188,7 @@ Gaudi::Matrix5x5 Particle2State::stateJacobian(int charge, const Gaudi::XYZVecto
   Jacob(4,3) = -charge*Py/(P*P*P) ; //  do/dPy  = -charge*Py/P^3
   Jacob(4,4) = -charge*Pz/(P*P*P) ; //  do/dPz  = -charge*Pz/P^3
   
-  verbose() << "Returning Jacobian\n " << Jacob << endmsg ;
+  verbose() << "Returning Jacobian\n" << Jacob << endmsg ;
   return Jacob;
       
 }

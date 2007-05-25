@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.260 2007-05-10 10:01:16 pkoppenb Exp $
+! $Id: release.notes,v 1.261 2007-05-25 13:27:21 pkoppenb Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2007-05-25 - Patrick Koppenburg
+ - Much more verbose printout in Particle2State
 
 ! 2007-05-10 - Patrick Koppenburg
  - src/CheckPV.cpp
