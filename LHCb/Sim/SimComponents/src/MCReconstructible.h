@@ -5,7 +5,7 @@
  *  Header file for class : MCReconstructible
  *
  *  CVS Log :-
- *  $Id: MCReconstructible.h,v 1.5 2007-05-15 07:47:18 mneedham Exp $
+ *  $Id: MCReconstructible.h,v 1.6 2007-05-25 14:38:40 mneedham Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 28/02/2007
@@ -22,6 +22,7 @@
 // Gaudi
 #include "GaudiKernel/IIncidentListener.h"
 #include "GaudiKernel/IIncidentSvc.h"
+#include "GaudiKernel/VectorMap.h"
 
 // base class
 #include "GaudiAlg/GaudiTool.h"
@@ -33,7 +34,11 @@
 #include "Kernel/IMCReconstructible.h"
 #include "Kernel/IMCParticleSelector.h"
 
+
 #include "Event/MCTrackGeomCriteria.h"
+
+
+
 
 //-----------------------------------------------------------------------------
 /** @class MCReconstructible MCReconstructible.h
@@ -68,13 +73,15 @@ public:
    */
   void handle( const Incident& incident );
 
-public:
-
   /// Get the reconstruction category for the given MCParticle
   virtual IMCReconstructible::RecCategory reconstructible( const LHCb::MCParticle* mcPart ) const;
 
   /// Is the MCParticle in the detector acceptance?
   virtual bool inAcceptance( const LHCb::MCParticle* mcPart ) const;
+
+  /// Is the MCParticle reconstructible as given type 
+  virtual bool isReconstructibleAs(const IMCReconstructible::RecCategory& category,
+                                   const LHCb::MCParticle* mcPart ) const;
 
 private: // methods
 
@@ -98,7 +105,11 @@ private: // methods
 private: // data
 
   /// Acceptance parameters (neutrals)
-  double m_zECAL, m_xECALInn, m_yECALInn, m_xECALOut, m_yECALOut;
+  double m_zECAL; 
+  double m_xECALInn; 
+  double m_yECALInn; 
+  double m_xECALOut; 
+  double m_yECALOut;
 
   /// Threshold for Et gammas reconstructibility
   double m_lowEt;
@@ -113,19 +124,13 @@ private: // data
   IMCParticleSelector * m_mcSel;
 
   std::vector<std::string> m_chargedLongCriteria;
-  LHCb::MC::MCTrackGeomCriteria* m_chargedLong;
-
   std::vector<std::string> m_chargedUpstreamCriteria;
-  LHCb::MC::MCTrackGeomCriteria* m_chargedUpstream;
-
   std::vector<std::string> m_chargedDownstreamCriteria;
-  LHCb::MC::MCTrackGeomCriteria* m_chargedDownstream;
-
   std::vector<std::string> m_chargedTCriteria;
-  LHCb::MC::MCTrackGeomCriteria* m_chargedT;
-
   std::vector<std::string> m_chargedVeloCriteria;
-  LHCb::MC::MCTrackGeomCriteria* m_chargedVelo;
+
+  typedef GaudiUtils::VectorMap<unsigned int,LHCb::MC::MCTrackGeomCriteria*> CriteriaMap;
+  CriteriaMap m_critMap;  
 
 };
 

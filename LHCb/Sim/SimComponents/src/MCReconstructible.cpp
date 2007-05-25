@@ -4,7 +4,7 @@
  *  Implementation file for class : MCReconstructible
  *
  *  CVS Log :-
- *  $Id: MCReconstructible.cpp,v 1.8 2007-05-16 15:02:18 cattanem Exp $
+ *  $Id: MCReconstructible.cpp,v 1.9 2007-05-25 14:38:40 mneedham Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 28/02/2007
@@ -67,12 +67,13 @@ MCReconstructible::MCReconstructible( const std::string& type,
 MCReconstructible::~MCReconstructible()
 {
   // clean up
-  delete m_tkInfo;
-  delete m_chargedLong;
-  delete m_chargedDownstream;
-  delete m_chargedUpstream;
-  delete m_chargedT;
-  delete m_chargedVelo;
+  CriteriaMap::iterator iterC = m_critMap.begin();
+  for (; iterC != m_critMap.end() ;++iterC){
+    LHCb::MC::MCTrackGeomCriteria* crit = iterC->second;
+    delete crit;
+    crit = 0;
+  } // iterC
+  m_critMap.clear();  
 }
 
 //=============================================================================
@@ -84,17 +85,17 @@ StatusCode MCReconstructible::initialize()
   if ( sc.isFailure() ) return sc;
 
   // tools
-  m_mcSel = tool<IMCParticleSelector>( "MCParticleSelector" );
+  m_mcSel = tool<IMCParticleSelector>( "MCParticleSelector", "Selector", this );
 
   // Setup incident services
   incSvc()->addListener( this, IncidentType::BeginEvent );
 
   using namespace LHCb::MC;
-  m_chargedLong = new MCTrackGeomCriteria(m_chargedLongCriteria);
-  m_chargedDownstream = new MCTrackGeomCriteria(m_chargedDownstreamCriteria);
-  m_chargedUpstream = new MCTrackGeomCriteria(m_chargedUpstreamCriteria);
-  m_chargedT = new MCTrackGeomCriteria(m_chargedTCriteria);
-  m_chargedVelo = new MCTrackGeomCriteria(m_chargedVeloCriteria);
+  m_critMap.insert(ChargedLong, new MCTrackGeomCriteria(m_chargedLongCriteria));
+  m_critMap.insert(ChargedDownstream, new MCTrackGeomCriteria(m_chargedDownstreamCriteria));
+  m_critMap.insert(ChargedUpstream, new MCTrackGeomCriteria(m_chargedUpstreamCriteria));
+  m_critMap.insert(ChargedTtrack, new MCTrackGeomCriteria(m_chargedTCriteria));
+  m_critMap.insert(ChargedVelo, new MCTrackGeomCriteria(m_chargedVeloCriteria));
 
   return sc;
 }
@@ -181,28 +182,25 @@ MCReconstructible::reconstructible( const LHCb::MCParticle* mcPart ) const
       if ( isCharged )
       {
 
-        // decide the type
-        if ( m_chargedLong->accepted(mcTkInfo(),mcPart) == true )
-        {
-          return ChargedLong;
-        }
-        else if (m_chargedUpstream->accepted(mcTkInfo(),mcPart) == true )
+        // n.b the order matters !
+        if (m_critMap[ChargedLong]->accepted(mcTkInfo(),mcPart) == true) 
+          return ChargedLong;       
+        else if (m_critMap[ChargedUpstream]->accepted(mcTkInfo(),mcPart) == true )
         {
           return ChargedUpstream;
         }
-        else if (m_chargedDownstream->accepted(mcTkInfo(),mcPart) == true)
+        else if (m_critMap[ChargedDownstream]->accepted(mcTkInfo(),mcPart) == true)
         {
           return ChargedDownstream;
         }
-        else if ( m_chargedVelo->accepted(mcTkInfo(),mcPart) == true )
+        else if( m_critMap[ChargedVelo]->accepted(mcTkInfo(),mcPart) == true )
         {
           return ChargedVelo;
         }
-        else if ( m_chargedT->accepted(mcTkInfo(),mcPart) == true )
+        else if ( m_critMap[ChargedTtrack]->accepted(mcTkInfo(),mcPart) == true )
         {
           return ChargedTtrack;
         }
-
       }
       else // neutral
       {
@@ -217,4 +215,27 @@ MCReconstructible::reconstructible( const LHCb::MCParticle* mcPart ) const
 
   // if get here, cannot reconstruct particle
   return NotReconstructible;
+}
+
+
+bool MCReconstructible:: isReconstructibleAs(
+        const IMCReconstructible::RecCategory& category,
+        const LHCb::MCParticle* mcPart ) const{
+  
+  if (!inAcceptance(mcPart)) return false;
+
+  const bool isCharged = mcPart->particleID().threeCharge() != 0;  
+  if (isCharged == true && category != Neutral){
+    LHCb::MC::MCTrackGeomCriteria* criteria = m_critMap[category];
+    return criteria->accepted(mcTkInfo(),mcPart) && m_mcSel->accept(mcPart);
+  }
+  else if (isCharged == false && category == Neutral) {
+    return true;
+  }
+  else if (category == NotReconstructible){
+    // stupid but true !
+    return true;
+  }
+
+  return false;
 }

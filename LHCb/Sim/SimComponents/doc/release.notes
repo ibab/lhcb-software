@@ -5,6 +5,9 @@
 !               processing stage accessing the MC event classes
 !-----------------------------------------------------------------------------
 
+! 2007-05-25 M. Needham
+ - Follow extension in IMCReconstructible interface
+
 !====================== SimComponents v2r2 2007-05-16 ========================
 ! 2007-05-15 M Needham
  - Add possibility to remove hadronic interactions to MCParticleSelector
