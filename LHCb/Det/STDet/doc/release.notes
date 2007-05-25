@@ -2,6 +2,10 @@
 !Package manager : M. Needham
 !-------------------------------------------------------------------------
 
+!======================== STDet v3r4 2007-05-25 ==========================
+! 2007-05-25 - Marco Cattaneo
+ - Add dictionary for DeSTDetLocation::*
+
 !======================== STDet v3r3 2007-04-20 ==========================
 ! 2007-04-20 - Marco Cattaneo
  - Add dictionaries also for return types in public interface

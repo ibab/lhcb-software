@@ -19,4 +19,5 @@
   <class name="std::vector<DeSTLayer*>"              /> <!-- STLayers    typedef -->
   <class name="std::vector<DeSTStation*>"            /> <!-- STStations  typedef -->
   <class name="std::pair<unsigned int, DeSTSector*>" /> <!-- STSectorMap typedef -->
+  <variable pattern="DeSTDetLocation::*" />
 </lcgdict>
