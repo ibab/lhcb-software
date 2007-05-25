@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.166 2007-04-20 14:27:19 cattanem Exp $
+! $Id: release.notes,v 1.167 2007-05-25 13:03:55 cattanem Exp $
 ! package VeloDet
 ! package manager : Velo Group
 !-----------------------------------------------------------------------------
+
+!======================== VeloDet v11r3 2007-05-25 ===========================
+! 2007-05-25 - Marco Cattaneo
+ - Add DeVeloLocation::* to dictionary
 
 !======================== VeloDet v11r2 2007-04-10 ===========================
 ! 2007-04-10 - Marco Cattaneo
