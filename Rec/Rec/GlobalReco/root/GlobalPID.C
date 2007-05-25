@@ -500,19 +500,21 @@ TTree * GlobalPID::loadTTree( const std::string & filename )
   {
     std::cout << "Opening file : " << filename << std::endl;
     f = new TFile(filename.c_str());
-    f->cd((filename+":/ChargedProtoTuple").c_str());
+    f->cd((filename+":/ChargedProtoParticleTupleAlg").c_str());
   }
   return (TTree*)gDirectory->Get("protoPtuple");
 }
 
 GlobalPID::GlobalPID(const std::string & filename)
 {
-  Init( loadTTree(filename) );
+  fChain = loadTTree(filename);
+  Init( fChain );
 }
 
 GlobalPID::GlobalPID(TTree *tree)
 {
-  Init ( NULL != tree ? tree : loadTTree("gpid-Allevts.root") );
+  fChain = tree ? tree : loadTTree("gpid-Allevts.root");
+  Init ( fChain );
 }
 
 GlobalPID::~GlobalPID()
@@ -654,4 +656,9 @@ void GlobalPID::saveImage ( TCanvas * canvas,
   }
   fileMap[name] = true;
   canvas->SaveAs( name.c_str() );
+}
+
+void GlobalPID::makeCode()
+{
+  if ( fChain ) fChain->MakeClass();
 }

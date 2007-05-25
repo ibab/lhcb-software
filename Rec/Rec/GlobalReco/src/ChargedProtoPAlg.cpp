@@ -4,7 +4,7 @@
  * Implementation file for algorithm ChargedProtoPAlg
  *
  * CVS Log :-
- * $Id: ChargedProtoPAlg.cpp,v 1.56 2007-05-23 13:58:10 jonrob Exp $
+ * $Id: ChargedProtoPAlg.cpp,v 1.57 2007-05-25 16:26:03 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 29/03/2006
@@ -121,10 +121,21 @@ StatusCode ChargedProtoPAlg::execute()
   const bool prsSc  = getPrsData();
   const bool hcalSc = getHcalData();
 
-  // Create the ProtoParticle container
-  m_protos = new ProtoParticles();
-  // give to Gaudi
-  put ( m_protos, m_protoPath );
+  // ProtoParticle container
+  if ( exist<ProtoParticles>(m_protoPath) )
+  {
+    // get existing contianer, clear, and reuse
+    Warning( "Existing ProtoParticle container at " + m_protoPath + 
+             " found -> Will replace", StatusCode::SUCCESS );
+    m_protos = get<ProtoParticles>(m_protoPath);
+    m_protos->clear();
+  }
+  else
+  {
+    // make new container and give to gaudi
+    m_protos = new ProtoParticles();
+    put ( m_protos, m_protoPath );
+  }
 
   // Loop over tracks
   for ( Tracks::const_iterator iTrack = tracks->begin();
@@ -349,7 +360,10 @@ bool ChargedProtoPAlg::addEcal( LHCb::ProtoParticle * proto ) const
           proto->addToCalo ( hRange.front().to() );
           // CaloElectron->caloTrajectory must be after addToCalo
           if ( m_electron->set(proto) )
-            proto->addInfo(ProtoParticle::CaloTrajectoryL, m_electron->caloTrajectoryL(CaloPlane::ShowerMax,"hypo") );
+          {
+            proto->addInfo( ProtoParticle::CaloTrajectoryL, 
+                            m_electron->caloTrajectoryL(CaloPlane::ShowerMax,"hypo") );
+          }
           proto->addInfo(ProtoParticle::CaloChargedSpd, CaloSpd( hRange.front().to() ));
           proto->addInfo(ProtoParticle::CaloChargedPrs, CaloPrs( hRange.front().to() ));
           proto->addInfo(ProtoParticle::CaloChargedEcal, CaloEcal( hRange.front().to() ));
@@ -626,17 +640,17 @@ bool ChargedProtoPAlg::addSpd( LHCb::ProtoParticle * proto ) const
       }
       else
       {
-        if ( msgLevel(MSG::VERBOSE) )verbose() << " -> The track is NOT in Spd acceptance"  << endreq;
+        if ( msgLevel(MSG::VERBOSE) ) verbose() << " -> The track is NOT in Spd acceptance"  << endreq;
       }
     }
     else
     {
-      if ( msgLevel(MSG::VERBOSE) )verbose() << " -> No entry for that track in the Spd acceptance table"  << endreq;
+      if ( msgLevel(MSG::VERBOSE) ) verbose() << " -> No entry for that track in the Spd acceptance table"  << endreq;
     }
   }
   else
   {
-    if ( msgLevel(MSG::VERBOSE) )verbose() << " -> Spd PID has been disabled"  << endreq;
+    if ( msgLevel(MSG::VERBOSE) ) verbose() << " -> Spd PID has been disabled"  << endreq;
   }
 
   return hasSpdPID;

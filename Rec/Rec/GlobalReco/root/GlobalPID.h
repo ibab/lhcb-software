@@ -146,6 +146,7 @@ public:
   virtual void     Init(TTree *tree);
   virtual Bool_t   Notify();
   virtual void     Show(Long64_t entry = -1);
+
   //-------------------------------------------------------------
 
 public: // User methods
@@ -161,6 +162,9 @@ public: // User methods
 
   /// Reset the object
   void reset();
+
+  /// make code
+  void makeCode();
 
 private: // methods
 
@@ -216,7 +220,7 @@ private: // inline methods
              ( config.secCutType == ">" ?
                (variable(config.secvar1)-variable(config.secvar2)) > config.secondaryCut :
                (variable(config.secvar1)-variable(config.secvar2)) < config.secondaryCut )
-               );
+             );
   }
 
   /// The Muon DLL
@@ -359,7 +363,7 @@ private: // data
   Float_t         MuonMuLL;
   Float_t         MuonNShared;
   Int_t           MuonIsMuon;
-  Int_t           MuonInAcc;
+  Float_t         MuonInAcc;
   Float_t         InAccSpd;
   Float_t         InAccPrs;
   Float_t         InAccEcal;
