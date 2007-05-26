@@ -12,7 +12,7 @@ use  FlavourTagging             v7r2p1   Phys   # Marco Musy
 
 ####################################################################
 use  DaVinciMCTools     	v9r2     Phys   # Juan Palacios
-use  DaVinciAssociators         v9r0p1   Phys   # Philippe Charpentier
+use  DaVinciAssociators         v9r1     Phys   # Philippe Charpentier
 use  MCStandardParticles        v1r2     Phys   # Juan Palacios
 use  FlavourTaggingChecker      v2r2p1   Phys   # Marco Musy
 use  DaVinciUser      	        v8r1     Phys   # Juan Palacios
@@ -59,7 +59,10 @@ use               LoKiAlgoMCTest   v1r0p1   Tests
 use               LoKiTests        v1r2     Tests
 
 ####################################################################
-use  Stripping          v6r1    Tools             # Juan Palacios
+use  Stripping          v6r1p1  Tools             # Juan Palacios
+
+####################################################################
+use  MicroDSTAlgorithm  v1r0    MicroDST          # Ulrich Kerzel
 
 ####################################################################
 use  KtJet              v2r1    External          # I. Belyaev
