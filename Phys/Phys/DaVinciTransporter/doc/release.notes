@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.47 2007-05-10 12:28:08 pkoppenb Exp $
+! $Id: release.notes,v 1.48 2007-05-26 11:57:49 jpalac Exp $
 ! Package     : DaVinciTransporter
 ! Responsible : P. Koppenburg, J. Palacios
 !==============================================================================
+
+!====================== DaVinciTransporter v3r6p1 2007-05-26 =================
+! 2007-05-26 - Juan PALACIOS
+  - Remove src/DaVinciTransporter_load.cpp
 
 ! 2007-05-10 - Patrick Koppenburg
  - Check StatusCodes
