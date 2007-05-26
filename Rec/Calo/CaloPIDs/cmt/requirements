@@ -1,10 +1,10 @@
-# $Id: requirements,v 1.29 2007-03-02 15:22:07 cattanem Exp $
+# $Id: requirements,v 1.30 2007-05-26 17:18:06 vegorych Exp $
 # =============================================================================
 # Created    : 2006-05-28
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu
 # =============================================================================
 package           CaloPIDs
-version           v4r6
+version           v4r7
 
 # =============== structure ===================================================
 branches          cmt doc src options 
@@ -34,6 +34,9 @@ apply_pattern     component_library library=CaloPIDs
 	
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.29  2007/03/02 15:22:07  cattanem
+# cleanups for Rec v4r2
+#
 # Revision 1.28  2006/11/27 17:06:48  cattanem
 # v4r5p1
 #

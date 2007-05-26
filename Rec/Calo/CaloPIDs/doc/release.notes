@@ -1,9 +1,17 @@
-! $Id: release.notes,v 1.45 2007-03-02 15:23:05 cattanem Exp $ 
+! $Id: release.notes,v 1.46 2007-05-26 17:13:45 vegorych Exp $ 
 !------------------------------------------------------------------------------
 ! Package     : Calo/CaloPIDs
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! Purpose     : Calorimeter PIDs 
 !------------------------------------------------------------------------------
+
+!========================== CaloPIDs v4r7 2007-05-26 ===================
+! 2007-05-26 - Victor Egorychev
+- DLL hist (DC07) for different BremPID added 
+- src/BremPIDeAlg.cpp
+  - new PIDs from DC06 added
+ - cmt/requirements 
+    version increment to v4r7
 
 !========================== CaloPIDs v4r6 2007-03-02 ==========================
 ! 2007-03-02 - Marco Cattaneo

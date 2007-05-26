@@ -1,6 +1,6 @@
-// $Id: BrunelPIDs.opts,v 1.2 2006-11-06 10:48:07 vegorych Exp $ 
+// $Id: BrunelPIDs.opts,v 1.3 2007-05-26 17:15:31 vegorych Exp $ 
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $ 
 // ============================================================================
 
 /** @file
@@ -101,6 +101,6 @@ SpdPID.Members = { "InSpdAcceptanceAlg/InSPD" ,
 
 /// Delta Log Likelihood  input histograms 
 HistogramDataSvc.Input += 
-  { "CaloPIDs DATAFILE='$PARAMFILESROOT/data/CaloPIDs_DC06_v1.root' TYP='ROOT'" } ;
-HistogramDataSvc.Input += 
-  { "CaloPIDsOLD DATAFILE='$PARAMFILESROOT/data/CaloPIDs.root' TYP='ROOT'" } ;
+  { "CaloPIDs DATAFILE='$PARAMFILESROOT/data/CaloPIDs_DC06_v2.root' TYP='ROOT'" } ;
+//HistogramDataSvc.Input += 
+//  { "CaloPIDsOLD DATAFILE='$PARAMFILESROOT/data/CaloPIDs.root' TYP='ROOT'" } ;

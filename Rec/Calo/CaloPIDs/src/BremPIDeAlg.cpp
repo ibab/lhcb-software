@@ -1,8 +1,11 @@
-// $Id: BremPIDeAlg.cpp,v 1.3 2006-11-06 11:05:24 vegorych Exp $
+// $Id: BremPIDeAlg.cpp,v 1.4 2007-05-26 17:13:45 vegorych Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2006/11/06 11:05:24  vegorych
+//  New PID tuning for DC06
+//
 // Revision 1.2  2006/06/22 15:40:39  ibelyaev
 //  fix incinsistencied for 'Brem'-algorithms
 //
@@ -41,9 +44,9 @@ protected:
     setProperty ( "nMlong" , Gaudi::Utils::toString(  50 * Gaudi::Units::GeV ) );
     setProperty ( "nMvelo" , Gaudi::Utils::toString(  50 * Gaudi::Units::GeV ) );
     setProperty ( "nMupstr" , Gaudi::Utils::toString(  50 * Gaudi::Units::GeV ) );
-    setProperty ( "HistogramU" , "CaloPIDsOLD/Calo/BremPIDe/3" ) ;
-    setProperty ( "HistogramL" , "CaloPIDsOLD/Calo/BremPIDe/3" ) ;
-    setProperty ( "HistogramV" , "CaloPIDsOLD/Calo/BremPIDe/3" ) ;
+    setProperty ( "HistogramU" , "CaloPIDs/CALO/BREMPIDE/h3" ) ;
+    setProperty ( "HistogramL" , "CaloPIDs/CALO/BREMPIDE/h3" ) ;
+    setProperty ( "HistogramV" , "CaloPIDs/CALO/BREMPIDE/h3" ) ;
     // track types 
     setProperty ( "AcceptedType" , Gaudi::Utils::toString<int>
                   ( LHCb::Track::Velo     ,
