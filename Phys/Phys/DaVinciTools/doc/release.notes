@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.261 2007-05-25 13:27:21 pkoppenb Exp $
+! $Id: release.notes,v 1.262 2007-05-26 12:05:33 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+!========================== DaVinciTools v15r4 2007-05-26 ===================
+
+! 2007-05-26 - Juan PALACIOS
+  - remove src/DaVinciTools_load.cpp
 
 ! 2007-05-25 - Patrick Koppenburg
  - Much more verbose printout in Particle2State
