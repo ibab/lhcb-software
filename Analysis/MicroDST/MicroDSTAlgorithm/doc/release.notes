@@ -1,7 +1,12 @@
-! $Id: release.notes,v 1.18 2007-05-22 16:05:57 ukerzel Exp $
+! $Id: release.notes,v 1.19 2007-05-26 13:10:37 jpalac Exp $
 ! Package     : MicroDST
 ! Responsible : Ulrich Kerzel
 !============================================================
+
+!======================== MicroDST v1r0 2007-05-26 ====================
+
+! 2007-05-26 - Juan PALACIOS
+  - remove src/MicroDST_load.cpp
 
 ! 2007-05-22 - Ulrich Kerzel
  - comment out POOL catalogue in example options file to create MicroDST
