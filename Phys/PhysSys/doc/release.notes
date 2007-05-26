@@ -3,6 +3,14 @@ Package     : PhysSys
 Package Coordinator : Juan Palacios
 Purpose     : LHCb physics packages
 
+</PRE><H1><A NAME=v6r3>2007-05-26 Phys v6r3 - updated DC06 stripping version</A></H1><PRE>
+
+ - Based on LHCb v22r5
+
+################################################################################
+#                                  PHYS v6r3                                   #
+################################################################################
+
 </PRE><H1><A NAME=v6r2>2007-04-27 Phys v6r2 - updated DC06 stripping version</A></H1><PRE>
 Minor changes:
  - Based on LHCb v22r4
