@@ -3,6 +3,159 @@ Package     : AnalysisSys
 Package Coordinator : Juan Palacios
 Purpose     : LHCb analysis packages
 
+</PRE><H1><A NAME=v1r3>2007-05-28 Analysis v1r3 - Potential DC06 Stripping version</A></H1><PRE>
+ - Uses LHCB_v22r5
+ - New MicroDST/MicroDSTAlgorithm package for making and reading MicroDSTs.
+
+#######################################MM#######################################
+#                                  ANALYSIS v1r3                               #
+################################################################################
+#################################### EXTERNAL ##################################
+!======================== MicroDST v1r0 2007-05-26 ====================
+
+! 2007-05-26 - Juan PALACIOS
+  - remove src/MicroDST_load.cpp
+
+! 2007-05-22 - Ulrich Kerzel
+ - comment out POOL catalogue in example options file to create MicroDST
+
+! 2007-05-17 - Ulrich Kerzel
+ - add a counter to CreateMicroDSTAlg how many 
+   particles in the input location (e.g. B cand)
+   were stored (not including the daughters, etc)
+
+
+! 2007-05-10 - Ulrich Kerzel
+ - add options file DVCreateMicroDSTExample.opts
+   creating a microDST for Bs->J/psi Phi using one
+   file from the tracking group
+
+
+! 2007-05-10 - Patrick Koppenburg
+ - Rename test.opts into DVTestMicroDST.opts to follow the
+   unwritten rule that main DaVinci option files are called
+   DV*.opts 
+
+! 2007-04-19 - Ulrich Kerzel
+ - add /Event/MC header to microDST
+
+! 2007-04-19 - Ulrich Kerzel
+ - add /Event/Rec header to microDST
+
+! 2007-04-13 - Ulrich Kerzel
+ - also write mother of MC particle to microDST
+ - encapsulate execution of composite associator 
+   in try{} catch(...){} to avoid incident manager
+   ending the algorithm in TestDST.cpp 
+   (not a bug!)
+
+! 2007-04-12 - Ulrich Kerzel
+ - treat endVertex()->outgoingParticles() and daughters() 
+   separately in CreateMicroDstAlg.cpp
+
+! 2007-04-12 - Ulrich Kerzel
+ - change in accordance with DaVinci v19r0:
+      DaVinciAssociators/Particle2MCLinker.h
+   moved to
+      Kernel/Particle2MCLinker.h
+  for TestDST.h, CreateMicroDstMCAlg.h
+
+! 2007-04-12 - Ulrich Kerzel
+ - change Warning() into debug() if storing user-created
+   primary vertex failed - most likely, it hadn't been created
+   by the user
+
+
+! 2007-04-12 - Ulrich Kerzel
+ - in TestDST: print some track-related information,
+   move information about daughter into 'PrintParticleInfo'
+   to descent the whole chain
+
+! 2007-02-21 - Ulrich Kerzel
+ - assume rootOnTes() ends with a "/", edit TestDST accordingly
+
+
+! 2007-02-21 - Ulrich Kerzel
+ - remove from microDST.opt
+   DSTStream.OptItemList      = {"/Event/Link/Rec/Track/Best#1"};
+
+
+
+! 2007-02-21 - Ulrich Kerzel
+ - CreateMicroDSTAlg
+  change sub-routine "StoreParticle" from StatusCode ... to LHCb::Particle *...
+  returning clone of the particle passed as argument.
+  Makes the handling of checking whether the daughters are already in the TES
+  easier als the check in now done only inside at the beginning of this routine
+  (and not also in another time when considering the daughters)
+
+
+
+! 2007-02-21 - Ulrich Kerzel
+ - CreateMicroDSTMCAlg
+   new templated function StoreLink to store a link between
+   the cloned object and corresponding MC particle
+
+
+
+! 2007-02-21 - Ulrich Kerzel
+
+ - CreateMicroDSTAlg
+   clone/store calorimeter information accessed via proto-particle
+   or set SmartRef (default) depending on alg.-property
+   Some Calorimeter information is accessible via extraInfo in
+   the proto-particle itself, thus by default just store SmartRef
+
+-  TestDST
+   put loops into smaller sub-routines
+
+- CreateMicroDSTMCAlg
+  initial revision - not yet to be used for physics analyses
+  - clone and store all directly associated particles/vertices
+  - do not follow all links up and down the chain of the particles/vertices
+    involved: would copy over many objects -> set SmartRef instead and
+    have property in case the user wants it
+
+
+! 2007-02-16 - Ulrich Kerzel
+ - let PhysDesktop handle all input locations
+   -> fixes issue with relatedPV() when creating microDST
+ - write linker table for particle -> PV to
+   /Event/Link/<prefix=microDST>/LHCb::RecVertex::Primary
+
+! 2007-02-15 - Ulrich Kerzel
+ - initial revision of MicroDST package.
+   Its purpose is to write out all "interesting" B candidates, etc. selected
+   by the user into a new DST file which allows then much faster re-analysis
+   do to its significant smaller size focus on only the few quantities of
+   interest. SmartRefs to the orignial DSTs are preserved, i.e. no information
+   is lost.
+
+##################################### PHYS #####################################
+!========================== DaVinciAssociators v9r1 2007-05-26 ================
+
+! 2007-05-26 - Juan PALACIOS
+  - Increment version to v9r1
+  - remove src/DaVinciAssociators_load.cpp
+
+! 2007-05-11 - Ulrich Kerzel
+ - DaVinciAssociators/src/CompositeParticle2MCLinks.cpp
+   - extend associator to look for direct link between LHCb::Particle -> LHCb::MCParticle
+     for use with microDST
+#################################### PHYSSEL ###################################
+##################################### TOOLS ####################################
+!======================== Stripping v6r1p1 2007-05-26 ===================
+
+! 2007-05-26 - Juan PALACIOS
+  - remove src/Stripping_load.cpp
+
+! 2007-05-10 - Patrick Koppenburg
+ - Corrected unchecked StatusCodes
+ - Increment to v6r1p1
+
+###################################### EX ######################################
+
+
 </PRE><H1><A NAME=v1r2>2007-04-26 Analysis v1r2 - Potential DC06 Stripping version</A></H1><PRE>
  - Same as v1r1 but adapted to LHCB_v22r4
 
