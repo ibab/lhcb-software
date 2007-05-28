@@ -11,6 +11,66 @@ Purpose     : LHCb physics packages
 #                                  PHYS v6r3                                   #
 ################################################################################
 
+!========================== DaVinciFilter v6r4 2007-05-26 ===================
+
+! 2007-05-26 - Juan PALACIOS
+  - remove src/DaVinciFilter_load.cpp
+
+! 2007-05-10 - Patrick Koppenburg
+ - src/BooleanFilterCriterion.cpp
+ - src/DaughterVertexFilterCriterion.cpp
+ - src/FilterDesktop.cpp
+ - src/NumberOfParticlesFilter.cpp
+   . Corrected unchecked StatusCode 
+   . Increment to v6r4
+
+! 2007-05-02 - Patrick Koppenburg for Wolfgang Manner
+ - Printout typo in initalisation of PVIPFilterCriterion fixed.
+ - incement to v6r3p1
+
+!========================== DaVinciTools v15r4 2007-05-26 ===================
+
+! 2007-05-26 - Juan PALACIOS
+  - remove src/DaVinciTools_load.cpp
+
+! 2007-05-25 - Patrick Koppenburg
+ - Much more verbose printout in Particle2State
+
+! 2007-05-10 - Patrick Koppenburg
+ - src/CheckPV.cpp
+ - src/CheckSelResult.cpp
+ - src/ConjugateNeutralPID.cpp
+ - src/DecodeSimpleDecayString.cpp
+ - src/MakeResonances.cpp
+ - src/MakeResonances.h
+ - src/OnOfflineTool.cpp
+ - src/PhysDesktop.cpp
+ - src/RelatedPVFinder.cpp
+ - src/SelResultCorrelations.cpp
+   . Corrected unchecked StatusCode
+   . Increment to v15r4
+
+!====================== DaVinciTransporter v3r6p1 2007-05-26 =================
+! 2007-05-26 - Juan PALACIOS
+  - Remove src/DaVinciTransporter_load.cpp
+
+! 2007-05-10 - Patrick Koppenburg
+ - Check StatusCodes
+ - Increment to v3r6p1
+
+!======================== ParticleMaker v3r2p1 2007-05-26 ===================
+
+! 2007-05-10 - Patrick Koppenburg
+ - Check StatusCodes
+ - increment to v3r2p1
+
+!========================== VertexFit v4r2p2 2007-05-26 ===================
+
+! 2007-05-10 - Patrick Koppenburg
+ - Check StatusCodes
+ - Increment to v4r2p2
+
+
 </PRE><H1><A NAME=v6r2>2007-04-27 Phys v6r2 - updated DC06 stripping version</A></H1><PRE>
 Minor changes:
  - Based on LHCb v22r4
