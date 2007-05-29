@@ -1,15 +1,16 @@
 package STCheckers
-version v2r1
+version v2r2
 
 branches cmt doc src options
 include_path none
 
-use MCEvent     v*   Event
-use DigiEvent   v*   Event
-use STDet       v*   Det
-use LinkerEvent v*   Event
-use GaudiAlg    v*
-use GSL         v*   LCG_Interfaces
+use MCEvent      v*   Event
+use MCInterfaces v*   Kernel
+use DigiEvent    v*   Event
+use STDet        v*   Det
+use LinkerEvent  v*   Event
+use GaudiAlg     v*
+use GSL          v*   LCG_Interfaces
 
 # ================= component library ====================
 library STCheckers ../src/*.cpp -import=AIDA

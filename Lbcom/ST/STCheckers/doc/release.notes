@@ -2,6 +2,10 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
+!=========================== STCheckers v2r2 2007-05-29 =======================
+! 2007-05-29 - Marco Cattaneo
+ - Adapt to new interfaces location in MCInterfaces
+
 !=========================== STCheckers v2r1 2007-03-23 =======================
 ! 2007-03-23 - Marco Cattaneo
  - Remove obsolete file STCheckers_load.cpp 

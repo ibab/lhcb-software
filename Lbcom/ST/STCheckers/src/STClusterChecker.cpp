@@ -1,4 +1,4 @@
-// $Id: STClusterChecker.cpp,v 1.13 2007-01-10 16:02:22 cattanem Exp $
+// $Id: STClusterChecker.cpp,v 1.14 2007-05-29 15:01:28 cattanem Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -14,7 +14,8 @@
 // LHCbKernel
 #include "Kernel/STDetSwitch.h"
 #include "Kernel/ISTSignalToNoiseTool.h"
-#include "Kernel/IMCParticleSelector.h"
+
+#include "MCInterfaces/IMCParticleSelector.h"
 
 // local
 #include "STClusterChecker.h"

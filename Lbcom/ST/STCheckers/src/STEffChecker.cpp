@@ -1,4 +1,4 @@
-// $Id: STEffChecker.cpp,v 1.3 2007-03-21 14:24:44 jvantilb Exp $
+// $Id: STEffChecker.cpp,v 1.4 2007-05-29 15:01:28 cattanem Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -16,8 +16,8 @@
 #include "Event/MCHit.h"
 #include "Event/MCParticle.h"
 
-// GaudiKernel
-#include "Kernel/IMCParticleSelector.h"
+// Kernel
+#include "MCInterfaces/IMCParticleSelector.h"
 #include "Kernel/STDetSwitch.h"
 
 // BOOST

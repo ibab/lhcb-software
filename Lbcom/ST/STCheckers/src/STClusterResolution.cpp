@@ -1,4 +1,4 @@
-// $Id: STClusterResolution.cpp,v 1.11 2007-03-21 14:24:44 jvantilb Exp $
+// $Id: STClusterResolution.cpp,v 1.12 2007-05-29 15:01:28 cattanem Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -14,9 +14,9 @@
 #include "STDet/DeSTDetector.h"
 #include "STDet/DeSTSector.h"
 
-// STTools interfaces from LHCbKernel
+// STTools interfaces from LHCbKernel and MCInterfaces
 #include "Kernel/STDetSwitch.h"
-#include "Kernel/IMCParticleSelector.h"
+#include "MCInterfaces/IMCParticleSelector.h"
 #include "Kernel/ISTClusterPosition.h"
 #include "Kernel/LineTraj.h"
 #include "Math/VectorUtil.h"
