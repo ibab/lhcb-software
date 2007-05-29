@@ -5,7 +5,7 @@
  *  Header file for RICH digitisation algorithm : Rich::MC::Digi::Signal
  *
  *  CVS Log :-
- *  $Id: RichSignal.h,v 1.14 2007-03-20 11:49:39 jonrob Exp $
+ *  $Id: RichSignal.h,v 1.15 2007-05-29 15:50:02 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @author Alex Howard   a.s.howard@ic.ac.uk
@@ -32,7 +32,7 @@
 
 // interfaces
 #include "RichKernel/IRichSmartIDTool.h"
-#include "RichKernel/IRichMCTruthTool.h"
+#include "MCInterfaces/IRichMCTruthTool.h"
 
 // kernel
 #include "Kernel/ParticleID.h"

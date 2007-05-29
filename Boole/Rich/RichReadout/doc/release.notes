@@ -4,6 +4,11 @@
 ! Purpose     : Rich Digitisation
 !-----------------------------------------------------------------------------
 
+!======================== RichReadout v2r7 2007-05-29 ========================
+! 2007-05-29 - Marco Cattaneo
+ - Adapt to move of interfaces to MCInterfaces
+ - Remove obsolete RichReadout_Event_load.cpp file
+
 !======================== RichReadout v2r6 2007-04-24 ========================
 ! 2007-04-23 - Chris Jones
  - Adapt to new interface for RichSmartID tool

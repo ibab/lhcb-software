@@ -1,4 +1,4 @@
-// $Id: RichDigiAlgMoni.h,v 1.13 2007-03-20 11:49:39 jonrob Exp $
+// $Id: RichDigiAlgMoni.h,v 1.14 2007-05-29 15:50:02 cattanem Exp $
 #ifndef RICHMONITOR_RICHDIGIALGMONI_H
 #define RICHMONITOR_RICHDIGIALGMONI_H 1
 
@@ -34,7 +34,7 @@
 
 // interfaces
 #include "RichKernel/IRichSmartIDTool.h"
-#include "RichKernel/IRichMCTruthTool.h"
+#include "MCInterfaces/IRichMCTruthTool.h"
 
 // boost
 #include "boost/lexical_cast.hpp"
