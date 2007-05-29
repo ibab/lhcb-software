@@ -1,4 +1,4 @@
-// $Id: VeloClusterPosition.h,v 1.4 2007-05-16 07:40:39 szumlat Exp $
+// $Id: VeloClusterPosition.h,v 1.5 2007-05-29 13:38:03 cattanem Exp $
 #ifndef VELOCLUSTERPOSITION_H 
 #define VELOCLUSTERPOSITION_H 1
 
@@ -9,7 +9,7 @@
 #include "Kernel/VeloChannelID.h"
 #include "Kernel/SiPositionInfo.h"
 
-/** @class VeloClusterPos VeloClusterPos.h
+/** @class VeloClusterPosition VeloClusterPosition.h
  *  
  *
  *  @author Tomasz Szumlak
