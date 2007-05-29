@@ -1,4 +1,4 @@
-// $Id: MCSTDepositCreator.cpp,v 1.16 2007-03-20 16:56:17 jvantilb Exp $
+// $Id: MCSTDepositCreator.cpp,v 1.17 2007-05-29 13:48:08 cattanem Exp $
 
 // GSL 
 #include "gsl/gsl_math.h"
@@ -13,7 +13,7 @@
 #include "Kernel/STDetSwitch.h"
 #include "LHCbMath/LHCbMath.h"
 #include "Kernel/ISiAmplifierResponse.h"
-#include "Kernel/ISiDepositedCharge.h"
+#include "MCInterfaces/ISiDepositedCharge.h"
 #include "Kernel/ISTSignalToNoiseTool.h"
 
 // xml geometry

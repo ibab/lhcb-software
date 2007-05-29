@@ -1,5 +1,5 @@
 package STAlgorithms
-version v2r1
+version v2r2
 
 branches cmt doc src options
 
@@ -10,6 +10,7 @@ use GaudiAlg            v*
 use STDet               v*    Det
 use DigiEvent           v*    Event
 use MCEvent             v*    Event
+use MCInterfaces        v*    Kernel
 use LHCbMath            v*    Kernel
 
 # ================= component library ====================
