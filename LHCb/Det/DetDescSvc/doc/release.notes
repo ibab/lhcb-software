@@ -1,10 +1,19 @@
 ! =============================================================================
-! $Id: release.notes,v 1.28 2007-03-19 15:15:32 cattanem Exp $ 
+! $Id: release.notes,v 1.29 2007-05-29 13:19:27 marcocle Exp $ 
 ! =============================================================================
 ! package DetDescSvc
 ! package manager : Marco Clemencic, Juan Palacios ?
 ! purpose:          Component library for Detector Description Services
 ! =============================================================================
+
+! 2007-05-29 - Marco Clemencic
+ - Fixed a bug in UpdateManagerSvc. Check if the setting of the user provided
+   pointers is successful or not. (Avoid segmentation fault if the object
+   cannot be dynamic casted to what the user wants)
+ - Improvement in conditions override. Now it respects the actual type of the
+   object in the transient store (was not working with AlignmentCondition), if
+   possible. It is also possible to specify only few parameters of the
+   condition, and the other are taken from the database.
 
 !========================= DetDescSvc v1r11 2007-03-19 ========================
 ! 2007-03-19 - Marco Cattaneo

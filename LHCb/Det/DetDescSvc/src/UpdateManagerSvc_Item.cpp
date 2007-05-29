@@ -1,10 +1,11 @@
-// $Id: UpdateManagerSvc_Item.cpp,v 1.2 2007-02-09 13:06:54 marcocle Exp $
+// $Id: UpdateManagerSvc_Item.cpp,v 1.3 2007-05-29 13:19:27 marcocle Exp $
 // Include files 
 
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/IRegistry.h"
 
 #include "DetDesc/ValidDataObject.h"
+#include "DetDesc/Condition.h"
 
 // local
 #include "UpdateManagerSvc.h"
@@ -69,25 +70,51 @@ StatusCode UpdateManagerSvc::Item::update(IDataProviderSvc *dp,const Gaudi::Time
     // Check if the requested condition is in the override list.
     if ( override ) {
       // yes, it is!
-      //   let's unregister the original object
-      sc = dp->unregisterObject(pObj);
-      if ( !sc.isSuccess() ) {
-        if (log) (*log) << MSG::ERROR << "Unable to unregister object at " << path << endmsg;
-        return sc;
-      }
-      //   and delete it
-      pObj->release();
-      //   Now I can register the user specified one
-      pObj = override;
-      sc = dp->registerObject(path,pObj);
-      if ( !sc.isSuccess() ) {
-        if (log) (*log) << MSG::ERROR << "Unable to register override object to " << path << endmsg;
-        return sc;
+      // First I check if I can update in place the object
+      ValidDataObject * vdo = dynamic_cast<ValidDataObject *>(pObj);
+      if (vdo) { // Good, we can update in place
+        vdo->update(*override);
+        Condition * cond = dynamic_cast<Condition *>(pObj);
+        if (cond) { // A condition needs to be initialized too
+          sc = cond->initialize();
+          if ( !sc.isSuccess() ) {
+            if (log) (*log) << MSG::ERROR
+                            << "Unable to initialize overridden condition at "
+                            << path << endmsg;
+            return sc;
+          }
+        }
+        // to avoid memory leaks, I have to delete the overriding object
+        delete override;
+        //override->release();
+        override = NULL;
+      } else { // I cannot update the object, so I replace it.
+        //   let's unregister the original object
+        sc = dp->unregisterObject(pObj);
+        if ( !sc.isSuccess() ) {
+          if (log) (*log) << MSG::ERROR << "Unable to unregister object at " << path << endmsg;
+          return sc;
+        }
+        //   and delete it
+        pObj->release();
+        //   Now I can register the user specified one
+        pObj = override;
+        sc = dp->registerObject(path,pObj);
+        if ( !sc.isSuccess() ) {
+          if (log) (*log) << MSG::ERROR << "Unable to register override object to " << path << endmsg;
+          return sc;
+        }
+        // I do not need to delete the overriding object because now it belongs to the T.S.
       }
     }
     
     // Set also internal pointers
-    setPointers(pObj);
+    sc = setPointers(pObj);
+    if ( !sc.isSuccess() ) {
+      if (log) (*log) << MSG::ERROR << "Failure setting the pointers for object at " << path << endmsg;
+      return sc;
+    }
+    
     // try to get the path to CondDB folder
     IOpaqueAddress *pAddr = pObj->registry()->address();
     if (pAddr != NULL) {

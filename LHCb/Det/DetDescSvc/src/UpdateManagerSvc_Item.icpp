@@ -1,4 +1,4 @@
-// $Id: UpdateManagerSvc_Item.icpp,v 1.5 2006-10-25 13:46:07 marcocle Exp $
+// $Id: UpdateManagerSvc_Item.icpp,v 1.6 2007-05-29 13:19:27 marcocle Exp $
 #ifndef UPDATEMANAGERSVC_ITEM_ICPP
 #define UPDATEMANAGERSVC_ITEM_ICPP 1
 
@@ -11,21 +11,26 @@ struct Item {
   // ------ Item Cons & Dest
   
   /// Constructor for an item representing an object in the data store.
-  Item(const std::string &objPath, DataObject *overrideObj = NULL):since(1),until(0),path(objPath),db_path(),
-                                                                   vdo(NULL),ptr(NULL),override(overrideObj),
-                                                                   updateLock(false),user_dest_ptrs() {}
+  Item(const std::string &objPath, ValidDataObject *overrideObj = NULL):
+    since(1),until(0),path(objPath),db_path(),
+    vdo(NULL),ptr(NULL),override(overrideObj),
+    updateLock(false),user_dest_ptrs() {}
 
   /// Constructor for an item representing an object in the data store.
-  Item(const std::string &objPath, BasePtrSetter *dest, DataObject *overrideObj = NULL):since(1),until(0),path(objPath),db_path(),
-                                                                                        vdo(NULL),ptr(NULL),override(overrideObj),
-                                                                                        updateLock(false),user_dest_ptrs() {
+  Item(const std::string &objPath, BasePtrSetter *dest, ValidDataObject *overrideObj = NULL):
+    since(1),until(0),path(objPath),db_path(),
+    vdo(NULL),ptr(NULL),override(overrideObj),
+    updateLock(false),user_dest_ptrs()
+  {
     if (dest) user_dest_ptrs.push_back(dest);
   }
 
   /// Constructor for an item representing a generic object.
-  Item(BaseObjectMemberFunction *mf): since(1),until(0),vdo(mf->castToValidDataObject()),
-                                      ptr(mf->castToVoid()),override(NULL),
-                                      updateLock(false),user_dest_ptrs() {
+  Item(BaseObjectMemberFunction *mf):
+    since(1),until(0),vdo(mf->castToValidDataObject()),
+    ptr(mf->castToVoid()),override(NULL),
+    updateLock(false),user_dest_ptrs()
+  {
     if (vdo && vdo->registry()) path = vdo->registry()->identifier();
     memFuncs.push_back(MembFunc(mf));
   }
@@ -129,7 +134,7 @@ struct Item {
   /// Void pointer to the represented object, obtained via dynamic_cast (used to unically identify the item)
   void             *ptr;
   /// Pointer to the object used to override the object retrieved from the data provider.
-  DataObject       *override;
+  ValidDataObject  *override;
   /// List of the registered member functions.
   MembFuncList     memFuncs;
 
@@ -139,21 +144,23 @@ struct Item {
   /// List op setters for user's pointers.
   UserPtrList user_dest_ptrs;
 
-  inline void setUserPointers(DataObject  *pObj)
+  inline StatusCode setUserPointers(DataObject  *pObj)
   {
     for (UserPtrList::iterator pi = user_dest_ptrs.begin(); pi != user_dest_ptrs.end(); ++pi){
       if ( (*pi)->isNull() ){
         (*pi)->set(pObj);
+        if ( (*pi)->isNull() ) return StatusCode::FAILURE; // cannot dynamic_cast
       }
     }
+    return StatusCode::SUCCESS;
   }
   
-  inline void setPointers(DataObject  *pObj)
+  inline StatusCode setPointers(DataObject  *pObj)
   {
     vdo = dynamic_cast<ValidDataObject*>(pObj);
     ptr = dynamic_cast<void*>(pObj);
     // This is the first time I get the DataObject, so I set the pointer the user asked me to set
-    setUserPointers(pObj);
+    return setUserPointers(pObj);
   }
 
   /// Main method. Used to update the object and all the used ones.
