@@ -24,5 +24,8 @@
 #include "MCInterfaces/ISiDepositedCharge.h"
 #include "MCInterfaces/IVisPrimVertTool.h"
 
+// Previously in LHCbKernel
+#include "MCInterfaces/IMCParticleSelector.h"
+
 #endif // DICT_MCINTERFACESDICT_H
 

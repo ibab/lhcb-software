@@ -5,24 +5,21 @@
  *  Header file for class : IMCReconstructible
  *
  *  CVS Log :-
- *  $Id: IMCReconstructible.h,v 1.1.1.1 2007-05-25 16:24:33 cattanem Exp $
+ *  $Id: IMCReconstructible.h,v 1.2 2007-05-29 07:36:11 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 28/02/2007
  */
 //-----------------------------------------------------------------------------
 
-#ifndef KERNEL_IMCEFFRECONSTRUCTIBLE_H 
-#define KERNEL_IMCEFFRECONSTRUCTIBLE_H 1
+#ifndef MCINTERFACES_IMCEFFRECONSTRUCTIBLE_H 
+#define MCINTERFACES_IMCEFFRECONSTRUCTIBLE_H 1
 
 // from STL
 #include <string>
 
 // Gaudi
 #include "GaudiKernel/IAlgTool.h"
-
-// base class
-#include "Kernel/IMCParticleSelector.h"
 
 // Event Model
 namespace LHCb
@@ -33,7 +30,7 @@ namespace LHCb
 /// Interface ID
 static const InterfaceID IID_IMCReconstructible ( "IMCReconstructible", 1, 0 );
 
-/** @class IMCReconstructible IMCReconstructible.h Kernel/IMCReconstructible.h
+/** @class IMCReconstructible IMCReconstructible.h MCInterfaces/IMCReconstructible.h
  *  
  *  Returns if an MCParticle should be reconstructible or not
  *
@@ -120,4 +117,4 @@ std::string IMCReconstructible::text( const RecCategory cat )
 }
 
 
-#endif // KERNEL_IMCEFFRECONSTRUCTIBLE_H
+#endif // MCINTERFACES_IMCEFFRECONSTRUCTIBLE_H
