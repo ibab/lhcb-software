@@ -4,6 +4,10 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH digitisation
 !-----------------------------------------------------------------------------
 
+!======================== RichDigiQC v3r7 2007-05-29 ========================
+! 2007-05-29 - Marco Cattaneo
+ - Adapt to new interfaces location in MCInterfaces
+
 !======================== RichDigiQC v3r6 2007-04-24 ========================
 ! 2007-04-23 - Chris Jones
  - Adapt to new RichSmartIDTool interface

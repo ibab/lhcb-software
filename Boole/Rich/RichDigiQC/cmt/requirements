@@ -2,11 +2,11 @@
 # Created    : 2002-06-13
 # Maintainer : Chris Jones
 #============================================================================
-# $Id: requirements,v 1.28 2007-04-24 06:59:33 cattanem Exp $
+# $Id: requirements,v 1.29 2007-05-29 15:58:58 cattanem Exp $
 #============================================================================
 
 package           RichDigiQC
-version           v3r6
+version           v3r7
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -23,6 +23,7 @@ use DigiEvent         v*    Event
 use DAQEvent          v*    Event
 use RichKernel        v*    Rich
 use RichDet           v*    Det
+use MCInterfaces      v*    Kernel
 
 # Component library building rule
 #============================================================================
