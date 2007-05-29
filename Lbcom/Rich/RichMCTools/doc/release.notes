@@ -4,6 +4,10 @@
 ! Purpose     : Provides basic tools for RICH MC information
 !-----------------------------------------------------------------------------
 
+!========================== RichMCTools v3r6 2007-05-29 =====================
+! 2007-05-29 - Marco Cattaneo
+ - Adapt to move of intefaces to MCInterfaces
+
 !========================== RichMCTools v3r5 2007-03-20 =====================
 ! 2007-03-20 - Marco Cattaneo
  - remove obsolete RichMCTools_load.cpp file

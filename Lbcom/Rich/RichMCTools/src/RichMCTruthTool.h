@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::MC::MCTruthTool
  *
  *  CVS Log :-
- *  $Id: RichMCTruthTool.h,v 1.33 2007-03-01 20:05:15 jonrob Exp $
+ *  $Id: RichMCTruthTool.h,v 1.34 2007-05-29 15:11:53 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -44,7 +44,7 @@
 #include "Linker/LinkedTo.h"
 
 // Interfaces
-#include "RichKernel/IRichMCTruthTool.h"
+#include "MCInterfaces/IRichMCTruthTool.h"
 
 // boost
 //#include "boost/lambda/bind.hpp"
