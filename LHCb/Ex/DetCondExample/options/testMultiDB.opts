@@ -1,4 +1,4 @@
-//$Id: testMultiDB.opts,v 1.15 2007-02-28 18:35:09 marcocle Exp $
+//$Id: testMultiDB.opts,v 1.16 2007-05-29 13:40:22 marcocle Exp $
 //==============================================================
 // Job options to test double CondDB usage in DetCondExample
 //==============================================================
@@ -43,6 +43,7 @@ MessageSvc.OutputLevel = 1;
 CondDBCnvSvc.CondDBReader = "CondDBDispatcherSvc";
 CondDBDispatcherSvc.MainAccessSvc =   "CondDBAccessSvc/DB1"  ;
 CondDBDispatcherSvc.Alternatives  = { "/multiDBTest/Folder2=CondDBAccessSvc/DB2" };
+CondDBDispatcherSvc.Alternatives  += { "/multiDBTest/Folder3=CondDBAccessSvc/DB2" };
 
 DB1.ConnectionString     = "$CONDDBCONNECTIONSTRING1";
 DB2.ConnectionString     = "$CONDDBCONNECTIONSTRING2";

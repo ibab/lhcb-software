@@ -1,4 +1,4 @@
-//$Id: TestConditionsOverride.opts,v 1.4 2007-02-28 18:35:09 marcocle Exp $
+//$Id: TestConditionsOverride.opts,v 1.5 2007-05-29 13:40:22 marcocle Exp $
 //==============================================================
 // Job options to test double CondDB usage in DetCondExample
 //==============================================================
@@ -56,3 +56,5 @@ UpdateManagerSvc.ConditionsOverride += {
      str S1 = hi there;
      string S2 = hi there again;
      string_v V=I am splitted"};
+UpdateManagerSvc.ConditionsOverride += {"multiDBTest/Align1 := dbl_v dRotXYZ = 0.1 0 0;"};
+     

@@ -5,6 +5,7 @@
     <catalog name="multiDBTest">
       <conditionref href="conddb:/multiDBTest/Folder1#Cond1"/>
       <conditionref href="conddb:/multiDBTest/Folder2#Cond2"/>
+      <conditionref href="conddb:/multiDBTest/Folder3#Align1"/>
     </catalog>
   </catalog>
 </DDDB>

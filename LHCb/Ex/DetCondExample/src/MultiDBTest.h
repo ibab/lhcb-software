@@ -1,4 +1,4 @@
-// $Id: MultiDBTest.h,v 1.3 2006-07-12 18:18:13 marcocle Exp $
+// $Id: MultiDBTest.h,v 1.4 2007-05-29 13:40:22 marcocle Exp $
 #ifndef MULTIDBTEST_H 
 #define MULTIDBTEST_H 1
 
@@ -6,6 +6,8 @@
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
 
+class Condition;
+class AlignmentCondition;
 
 /** @class MultiDBTest MultiDBTest.h
  *  
@@ -30,6 +32,7 @@ protected:
 private:
 
   Condition *m_cond1, *m_cond2;
+  AlignmentCondition *m_align1; 
   
 };
 #endif // MULTIDBTEST_H

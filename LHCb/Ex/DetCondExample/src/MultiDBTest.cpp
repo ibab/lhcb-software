@@ -1,4 +1,4 @@
-// $Id: MultiDBTest.cpp,v 1.9 2006-07-12 18:18:13 marcocle Exp $
+// $Id: MultiDBTest.cpp,v 1.10 2007-05-29 13:40:22 marcocle Exp $
 // Include files 
 
 // from Gaudi
@@ -6,6 +6,7 @@
 #include "GaudiKernel/DeclareFactoryEntries.h"
 
 #include "DetDesc/Condition.h"
+#include "DetDesc/AlignmentCondition.h"
 
 // local
 #include "MultiDBTest.h"
@@ -25,7 +26,8 @@ DECLARE_ALGORITHM_FACTORY( MultiDBTest );
 //=============================================================================
 MultiDBTest::MultiDBTest( const std::string& name,
                           ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator )
+  : GaudiAlgorithm ( name , pSvcLocator ),
+  m_cond1(NULL),m_cond2(NULL),m_align1(NULL)
 {}
 //=============================================================================
 // Destructor
@@ -46,6 +48,7 @@ StatusCode MultiDBTest::initialize() {
     info() << "*** register conditions ***" << endreq;
     registerCondition<MultiDBTest>("/dd/multiDBTest/Cond1",m_cond1);
     registerCondition<MultiDBTest>("/dd/multiDBTest/Cond2",m_cond2);
+    registerCondition<MultiDBTest>("/dd/multiDBTest/Align1",m_align1);
 
   }
   catch (GaudiException){
@@ -66,6 +69,9 @@ StatusCode MultiDBTest::execute() {
   
   info() << "Cond2: " << m_cond2->validSince() << " -> " << m_cond2->validTill() << endmsg;
   info() << "       DB = " << m_cond2->paramAsString("Database") << endmsg;
+
+  info() << "Align1: " << m_align1->validSince() << " -> " << m_align1->validTill() << endmsg;
+  info() << m_align1->matrix() << endmsg;
 
   return StatusCode::SUCCESS;
 };
