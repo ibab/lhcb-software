@@ -2,6 +2,9 @@
 ! Package manager : J. Amoraal
 !---------------------------------------------------------------------------
 
+! 2007-05-29 M Needham
+ - Add plot to checker
+
 !==================== OTMonitor v2r6 2007-05-15 =====================
 ! 2007-05-15 - Jan Amoraal
  - Added OTTime classification tool provided by M. Needham

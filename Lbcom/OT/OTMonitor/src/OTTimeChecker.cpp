@@ -1,4 +1,4 @@
-// $Id: OTTimeChecker.cpp,v 1.12 2007-04-08 17:00:48 janos Exp $
+// $Id: OTTimeChecker.cpp,v 1.13 2007-05-29 15:14:15 mneedham Exp $
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/SystemOfUnits.h"
@@ -39,7 +39,7 @@ OTTimeChecker::OTTimeChecker(const std::string& name,
                               ISvcLocator* pSvcLocator) :
   GaudiHistoAlg(name, pSvcLocator) {
   // constructor
-  declareProperty("doMomentumCut", m_doMomentumCut = false);
+  declareProperty("doMomentumCut", m_doMomentumCut = true);
   declareProperty("momentumCut", m_momentumCut = 1.500*Gaudi::Units::GeV);
 }
 
@@ -269,14 +269,15 @@ void OTTimeChecker::fillResolutionHistos(OTTime* time, const MCHit* aHit) {
   const Gaudi::XYZPoint entryP = aHit->entry();
   const Gaudi::XYZPoint exitP = aHit->exit();
   const Gaudi::XYZPoint middleP = aHit->midPoint();  
-  
+
+  plot(time->calibratedTime(),"12","time spectrum",0., 100., 100);
+ 
   double deltaZ = (exitP - entryP).z();
   // 2.45 == cell radius
   if (!(deltaZ < 2.45)) {
     const double tx = (exitP - entryP).x() / deltaZ;
     const double ty = (exitP - entryP).y() / deltaZ;
     double mcDist = module->distanceToWire(channel.straw(), entryP, tx, ty);
-
     // get the distance to the wire from the measurement
     double driftTime = time->calibratedTime() - 
       m_tracker->propagationTime(channel, middleP.x(), middleP.y() );
