@@ -1,4 +1,4 @@
-// $Id: IVeloExpectation.h,v 1.2 2007-03-13 13:38:46 cattanem Exp $ 
+// $Id: IVeloExpectation.h,v 1.3 2007-05-29 13:42:38 mneedham Exp $ 
 #ifndef _IVeloExpectation_H
 #define _IVeloExpectation_H
  
@@ -21,7 +21,18 @@ namespace LHCb{
 class IVeloExpectation: virtual public IAlgTool{
  
 public:
-                                                                                
+        
+
+  /** Helper struct
+  * nR - Number of R hits
+  * nPhi Number of Phi hits
+  */
+  typedef struct{
+    unsigned int nR;
+    unsigned int nPhi;
+  } Info;
+ 
+                                                                        
   /// Retrieve interface ID
   static const InterfaceID& interfaceID() { return IID_IVeloExpectation ; }
                                                                                
@@ -32,22 +43,56 @@ public:
   *  @return number of hits expected
   */
   virtual int nExpected ( const LHCb::Track& aTrack ) const = 0;
-
+                                                                           
+  /** Returns Info on hits expected, from zFirst to endVelo
+  *
+  *  @param aTrack Reference to the Track to test
+  *
+  *  @return Info
+  */
+  virtual IVeloExpectation::Info expectedInfo ( const LHCb::Track& aTrack ) const = 0;
 
   /** Returns number of hits expected, from zStart to zStop
    *
+   *  @code 
+   *     
+   *  IVeloExpectation* vTool;
+   *  IVeloExpectation::Info info = vTool->expectedInfo(aTrack);
+   *  std::cout << info.nR << " " << info.nPhi << std::endl;   
+   *
+   *  @endcode 
    *  @param aTrack Reference to the Track to test
    *  @param zStart --> start of scan range
    *  @param zStop --> end of scan range
    *
    *  @return number of hits expected
    */
-  virtual int nExpected ( const LHCb::Track& aTrack , const double zStart, const double zStop) const = 0;
+   virtual int nExpected ( const LHCb::Track& aTrack , const double zStart, const double zStop) const = 0;
+
+  /** Returns Info on hits expected, from zStart to zStop
+  *
+  *  @param aTrack Reference to the Track to test
+  *  @param zStart --> start of scan range
+  *  @param zStop --> end of scan range
+  *
+  *  @return Info
+  */
+  virtual IVeloExpectation::Info expectedInfo ( const LHCb::Track& aTrack , const double zStart, const double zStop) const = 0;
 
 
   /** Returns number of hits missed, from zBeamLine to firstHit
   *
+  *  @code 
+  *     
+  *  IVeloExpectation* vTool;
+  *  IVeloExpectation::Info info = vTool->expectedInfo(aTrack);
+  *  std::cout << info.nR << " " << info.nPhi << std::endl;   
+  *
+  *  @endcode 
+  *
   *  @param aTrack Reference to the Track to test
+  *  @param zStart --> start of scan range
+  *  @param zStop --> end of scan range
   *
   *  @return number of hits missed before first hit
   */

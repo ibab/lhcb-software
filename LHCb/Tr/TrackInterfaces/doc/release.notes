@@ -4,6 +4,10 @@
 ! Purpose     : package for tracking tools interfaces
 !-----------------------------------------------------------------------------
 
+ 2007-05-29 M. Needham
+ - Changes in IVeloExpectation:
+   * Method to return struct containing r and phi hits added
+
 ! 2007-05-23 M. Needham
  - Remove const from TrackManipulator interface
 
