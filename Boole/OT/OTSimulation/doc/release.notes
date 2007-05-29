@@ -2,6 +2,12 @@
 ! Package manager : Jan Amoraal
 !--------------------------------------------------------------------------
 
+! 2007-05-29 M. Needham
+ - Add possibility to smear in time instance of distance to IOTSmearer
+ - Tidy up IOTSmearer class (const, const, const)
+ - Add option to smear in time to MCOTDepositCreator (false by default)
+  --> Dont set the option to true unless you know what you are doing !
+
 !====================== OTSimulation v3r10 2007-04-10 =====================
 ! 2007-04-08 - Jan Amoraal
  - Fix unchecked status codes

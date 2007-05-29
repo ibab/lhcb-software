@@ -1,4 +1,4 @@
-// $Id: OTSmearer.cpp,v 1.12 2007-04-08 16:54:51 janos Exp $
+// $Id: OTSmearer.cpp,v 1.13 2007-05-29 15:10:56 mneedham Exp $
 
 // Gaudi files
 #include "GaudiKernel/ToolFactory.h"
@@ -51,37 +51,24 @@ StatusCode OTSmearer::initialize()
 {
  StatusCode sc = GaudiTool::initialize();
  if ( sc.isFailure() ) return Error( "Failed to initialize OTSmearer", sc );
+ // get interface to generator
+ IRndmGenSvc* randSvc = svc<IRndmGenSvc>("RndmGenSvc", true);
+ sc = randSvc->generator(Rndm::Gauss(0.,1.0),m_genDist.pRef()); 
+ if ( sc.isFailure() ) {
+   return Error ("Failed to generate random number distribution",sc);
+ }
+ release(randSvc);
 
- // retrieve pointer to random number service
-  IRndmGenSvc* randSvc = 0;
-  sc = serviceLocator()->service( "RndmGenSvc", randSvc, true ); 
-  if ( sc.isFailure() ) {
-    return Error ("Failed to retrieve random number service",sc);
-  }  
+ // retrieve pointer to magnetic field service
+ m_magFieldSvc = svc<IMagneticFieldSvc>( "MagneticFieldSvc", true );
 
-  // get interface to generator
-  sc = randSvc->generator(Rndm::Gauss(0.,1.0),m_genDist.pRef()); 
-  if ( sc.isFailure() ) {
-    return Error ("Failed to generate random number distribution",sc);
-  }
-  randSvc->release();
-
-  // retrieve pointer to magnetic field service
-  m_magFieldSvc = svc<IMagneticFieldSvc>( "MagneticFieldSvc", true );
-
-  // Loading OT Geometry from XML
-  IDataProviderSvc* detSvc; 
-  sc = serviceLocator()->service( "DetectorDataSvc", detSvc, true );
-  if ( sc.isFailure() ) {
-    return Error ("Failed to retrieve Detector data svc",sc);
-  }
-  m_tracker = getDet<DeOTDetector>(DeOTDetectorLocation::Default );
-  detSvc->release();
+ // Loading OT Geometry from XML
+ m_tracker = getDet<DeOTDetector>(DeOTDetectorLocation::Default );
  
-  return StatusCode::SUCCESS;  
+ return StatusCode::SUCCESS;  
 }
 
-void OTSmearer::smear(MCOTDeposit* aDeposit)
+void OTSmearer::smearDistance(MCOTDeposit* aDeposit) const
 {
   // retrieve MC info
   const MCHit* aMCHit = aDeposit->mcHit();
@@ -90,10 +77,10 @@ void OTSmearer::smear(MCOTDeposit* aDeposit)
   Gaudi::XYZPoint aPoint = aMCHit->midPoint();
 
   // get sigma (error on drift distance) for this point 
-  double driftDistError = resolution(aPoint);
+  const double driftDistError = resolution(aPoint);
 
   // get a random number (from Gaussian)
-  double smearVal = m_genDist->shoot();
+  const double smearVal = m_genDist->shoot();
  
   // smear
   double driftDist = aDeposit->driftDistance();
@@ -103,18 +90,49 @@ void OTSmearer::smear(MCOTDeposit* aDeposit)
   aDeposit->setDriftDistance(driftDist);
 }
 
-double OTSmearer::resolution()
+
+void OTSmearer::smearTime(MCOTDeposit* aDeposit) const
+{
+  // retrieve MC info
+  const MCHit* aMCHit = aDeposit->mcHit();
+
+  // average entrance and exit to get point in cell 
+  const Gaudi::XYZPoint& aPoint = aMCHit->midPoint();
+
+  // get sigma (error on drift distance) for this point 
+  const double driftTimeError = timeResolution(aPoint);
+
+  // get a random number (from Gaussian)
+  double smearVal = m_genDist->shoot();
+
+  // update digitization 
+  aDeposit->addTime(driftTimeError*smearVal);
+}
+
+double OTSmearer::resolution() const
 {
   // return sigma (without magnetic field correction)
   return m_tracker->resolution();
 }
 
-double OTSmearer::resolution(Gaudi::XYZPoint& aPoint)
+double OTSmearer::resolution(const Gaudi::XYZPoint& aPoint) const
 {
   // return sigma (error on drift distance) for this point 
-  Gaudi::XYZVector bField;
+  static Gaudi::XYZVector bField;
   /// fieldVector always returns success. Save to ignore
   m_magFieldSvc->fieldVector( aPoint, bField ).ignore();
   /// return sigma with magnetic field correction
   return m_tracker->resolution(bField.y());
+}
+
+double OTSmearer::timeResolution(const Gaudi::XYZPoint& aPoint) const{
+
+  // return sigma (error on drift distance) for this point 
+  static Gaudi::XYZVector bField;
+  /// fieldVector always returns success. Save to ignore
+  m_magFieldSvc->fieldVector( aPoint, bField ).ignore();
+  /// return sigma with magnetic field correction
+
+  const double maxDriftTime = m_tracker->maxDriftTimeFunc(bField.y() );
+  return maxDriftTime*m_tracker->resolution(bField.y())/m_tracker->driftDistance(maxDriftTime,bField.y());
 }

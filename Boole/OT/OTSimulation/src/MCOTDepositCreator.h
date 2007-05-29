@@ -1,4 +1,4 @@
-// $Id: MCOTDepositCreator.h,v 1.12 2007-04-08 16:54:51 janos Exp $
+// $Id: MCOTDepositCreator.h,v 1.13 2007-05-29 15:10:56 mneedham Exp $
 #ifndef OTSIMULATION_MCOTDEPOSITCREATOR_H
 #define OTSIMULATION_MCOTDEPOSITCREATOR_H 1
 
@@ -116,6 +116,8 @@ private:
 
   std::vector<double> m_startReadOutGate;  ///< start of readout gate
   double m_sizeOfReadOutGate;              ///< end of readout gate   
+
+  bool m_smearTime;
 
 };
 

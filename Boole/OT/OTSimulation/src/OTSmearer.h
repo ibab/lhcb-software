@@ -1,4 +1,4 @@
-// $Id: OTSmearer.h,v 1.7 2007-04-08 16:54:51 janos Exp $
+// $Id: OTSmearer.h,v 1.8 2007-05-29 15:10:56 mneedham Exp $
 #ifndef OTSIMULATION_OTSMEARER_H
 #define OTSIMULATION_OTSMEARER_H 1
 
@@ -43,15 +43,20 @@ public:
   virtual StatusCode initialize();
 
   /// tool 'operation' - returns smeared distance + sigma used
-  void smear(LHCb::MCOTDeposit* aDeposit);
+  void smearDistance(LHCb::MCOTDeposit* aDeposit) const;
+
+    /// tool 'operation' - returns smeared distance + sigma used
+  void smearTime(LHCb::MCOTDeposit* aDeposit) const;
 
   /// Get the resolution (without magnetic field correction)
-  double resolution();
+  double resolution() const;
 
   /// Get the resolution (with magnetic field correction)
-  double resolution( Gaudi::XYZPoint& aPoint );
+  double resolution( const Gaudi::XYZPoint& aPoint ) const;
   
 private:
+
+  double timeResolution(const Gaudi::XYZPoint& aPoint) const;
 
   /// pointer to magnetic field service
   IMagneticFieldSvc* m_magFieldSvc;

@@ -1,4 +1,4 @@
-// $Id: MCOTDepositCreator.cpp,v 1.22 2007-04-08 16:54:51 janos Exp $
+// $Id: MCOTDepositCreator.cpp,v 1.23 2007-05-29 15:10:56 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -33,6 +33,8 @@
 #include "boost/lexical_cast.hpp"
 #include "boost/lambda/bind.hpp"
 #include "boost/lambda/lambda.hpp"
+#include <boost/assign/std/vector.hpp>
+#include <boost/assign/list_of.hpp>
 
 /** @file MCOTDepositCreator.cpp 
  *
@@ -60,17 +62,14 @@ MCOTDepositCreator::MCOTDepositCreator(const std::string& name,
   // constructor 
 
   // jobOptions - defaults
-  m_spillVector.push_back("/PrevPrev/");
-  m_spillVector.push_back("/Prev/");
-  m_spillVector.push_back("/");
-  m_spillVector.push_back("/Next/");
-  m_spillVector.push_back("/NextNext/");
+  m_spillVector = boost::assign::list_of("/PrevPrev/")("/Prev/")("/")
+                         ("/Next/")("/NextNext/");
 
-  m_spillTimes.push_back(-50.0*Gaudi::Units::ns);
-  m_spillTimes.push_back(-25.0*Gaudi::Units::ns);
-  m_spillTimes.push_back(0.0*Gaudi::Units::ns);
-  m_spillTimes.push_back(25.0*Gaudi::Units::ns);
-  m_spillTimes.push_back(50.0*Gaudi::Units::ns);
+  m_spillTimes = boost::assign::list_of(-50.0*Gaudi::Units::ns)
+                        (-25.0*Gaudi::Units::ns)
+                        (0.0*Gaudi::Units::ns)
+                        (25.0*Gaudi::Units::ns)
+                        (50.0*Gaudi::Units::ns);
 
   declareProperty("spillVector", m_spillVector);
   declareProperty("spillTimes", m_spillTimes);
@@ -84,6 +83,8 @@ MCOTDepositCreator::MCOTDepositCreator(const std::string& name,
   declareProperty("PulseProbability", m_PulseProbability = 0.3);
 
   declareProperty("noiseToolName",m_noiseToolName = "OTRandomDepositCreator" );
+
+  declareProperty("smearTime", m_smearTime = false);
 
   // container for temporary digit storage 
   m_tempDeposits = new MCOTDepositVec();
@@ -318,18 +319,21 @@ void MCOTDepositCreator::applySmear()
     
     // number of tool - want 0,1,2 and not 1,2,3
     int iSmearTool = (aDeposit->channel()).station() - m_firstStation;
-    // smear      
-    m_smearerVector[iSmearTool]->smear(aDeposit);
-
-    /// hack as drift dist can be < 0 due to smearing
-    /// If < 0 then flip ambiguity
-    double driftDist = aDeposit->driftDistance();
-    if (driftDist < 0.0) {
-      aDeposit->setDriftDistance( std::abs(driftDist) );
-      int ambiguity = aDeposit->ambiguity();
-      aDeposit->setAmbiguity(-1 * ambiguity);
+    // smear     
+    if (m_smearTime == true){ 
+      m_smearerVector[iSmearTool]->smearTime(aDeposit);
     }
-
+    else {
+      m_smearerVector[iSmearTool]->smearDistance(aDeposit);
+      // hack as drift dist can be < 0 due to smearing
+      // If < 0 then flip ambiguity
+      double driftDist = aDeposit->driftDistance();
+      if (driftDist < 0.0) {
+       aDeposit->setDriftDistance( std::abs(driftDist) );
+       int ambiguity = aDeposit->ambiguity();
+       aDeposit->setAmbiguity(-1 * ambiguity);
+      } // negative distance
+    } 
     ++iterDeposit;
   } // loop m_tempDeposits
 }
