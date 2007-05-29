@@ -1,4 +1,4 @@
-// $Id: LoadDDDB.cpp,v 1.2 2007-02-06 13:50:56 cattanem Exp $
+// $Id: LoadDDDB.cpp,v 1.3 2007-05-29 16:32:59 marcocle Exp $
 // Include files 
 
 // from Gaudi
@@ -6,6 +6,9 @@
 
 #include "GaudiKernel/DataStoreItem.h"
 #include "GaudiKernel/MsgStream.h"
+
+// from LHCb
+#include "Kernel/ICondDBInfo.h"
 
 // local
 #include "LoadDDDB.h"
@@ -42,6 +45,14 @@ StatusCode LoadDDDB::initialize() {
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   debug() << "==> Initialize" << endmsg;  
+
+  std::vector<LHCb::CondDBNameTagPair> tmp;
+  svc<ICondDBInfo>("CondDBCnvSvc")->defaultTags(tmp);
+
+  std::vector<LHCb::CondDBNameTagPair>::iterator db;
+  for ( db = tmp.begin(); db != tmp.end(); ++db ) {
+    info() << "Database " << db->first << " tag " << db->second << endmsg;
+  }
 
   return StatusCode::SUCCESS;
 };
