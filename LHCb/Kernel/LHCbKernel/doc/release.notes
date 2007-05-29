@@ -4,7 +4,10 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
-!===================== LHCbKernel v7r5 2007-05-25 ========================
+!===================== LHCbKernel v7r5 2007-05-29 ========================
+! 2007-05-29 - Marco Cattaneo
+ - IMCParticleSelector interface removed, moved to MCInterfaces
+
 ! 2007-05-25 - Marco Cattaneo
  - Add IHltSummaryTool interface (moved from HltBase)
 
