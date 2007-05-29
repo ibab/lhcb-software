@@ -5,7 +5,7 @@
  *  Header file for algorithm : MCRichDigitSummaryAlg
  *
  *  CVS Log :-
- *  $Id: MCRichDigitSummaryAlg.h,v 1.6 2007-03-01 19:37:22 jonrob Exp $
+ *  $Id: MCRichDigitSummaryAlg.h,v 1.7 2007-05-29 15:37:19 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   04/10/2005
@@ -24,7 +24,7 @@
 #include "RichKernel/RichAlgBase.h"
 
 // interfaces
-#include "RichKernel/IRichMCTruthTool.h"
+#include "MCInterfaces/IRichMCTruthTool.h"
 
 namespace Rich
 {

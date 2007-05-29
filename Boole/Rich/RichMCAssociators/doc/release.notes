@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!======================= RichMCAssociators v2r5 2007-05-29 ===================
+! 2007-05-29 - Marco Cattaneo
+ - Adapt to move of interfaces to MCInterfaces 
+
 !======================= RichMCAssociators v2r4 2007-03-20 ===================
 ! 2007-03-20 - Marco Cattaneo
  - Remove obsolete RichMCAssocitors_load.cpp file
