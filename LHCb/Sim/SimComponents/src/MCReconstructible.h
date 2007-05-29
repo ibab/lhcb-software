@@ -5,7 +5,7 @@
  *  Header file for class : MCReconstructible
  *
  *  CVS Log :-
- *  $Id: MCReconstructible.h,v 1.6 2007-05-25 14:38:40 mneedham Exp $
+ *  $Id: MCReconstructible.h,v 1.7 2007-05-29 08:48:16 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 28/02/2007
@@ -29,16 +29,11 @@
 
 // Event
 #include "Event/MCTrackInfo.h"
-
-// Interface
-#include "Kernel/IMCReconstructible.h"
-#include "Kernel/IMCParticleSelector.h"
-
-
 #include "Event/MCTrackGeomCriteria.h"
 
-
-
+// Interface
+#include "MCInterfaces/IMCReconstructible.h"
+#include "MCInterfaces/IMCParticleSelector.h"
 
 //-----------------------------------------------------------------------------
 /** @class MCReconstructible MCReconstructible.h

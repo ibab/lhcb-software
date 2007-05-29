@@ -1,4 +1,4 @@
-// $Id: MCDecayFinder.h,v 1.3 2007-01-12 10:10:51 cattanem Exp $
+// $Id: MCDecayFinder.h,v 1.4 2007-05-29 08:48:16 cattanem Exp $
 #ifndef TOOLS_MCDECAYFINDER_H 
 #define TOOLS_MCDECAYFINDER_H 1
 
@@ -13,7 +13,7 @@
 #include <string>
 
 #include "GaudiAlg/GaudiTool.h"
-#include "Kernel/IMCDecayFinder.h"
+#include "MCInterfaces/IMCDecayFinder.h"
 #include "Event/MCParticle.h"
 
 class IParticlePropertySvc;

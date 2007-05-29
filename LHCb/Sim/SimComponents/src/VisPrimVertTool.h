@@ -1,4 +1,4 @@
-// $Id: VisPrimVertTool.h,v 1.1 2007-01-12 10:10:52 cattanem Exp $
+// $Id: VisPrimVertTool.h,v 1.2 2007-05-29 08:48:16 cattanem Exp $
 #ifndef VISPRIMVERTTOOL_VISPRIMVERTTOOL_H 
 #define VISPRIMVERTTOOL_VISPRIMVERTTOOL_H 1
 
@@ -9,8 +9,8 @@
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 
-// local 
-#include "Kernel/IVisPrimVertTool.h"
+// from LHCb 
+#include "MCInterfaces/IVisPrimVertTool.h"
 
 /** @class VisPrimVertTool VisPrimVertTool.h VisPrimVertTool.h
  *  

@@ -1,4 +1,4 @@
-// $Id: MCHitMonitor.cpp,v 1.4 2007-01-12 10:10:52 cattanem Exp $
+// $Id: MCHitMonitor.cpp,v 1.5 2007-05-29 08:48:16 cattanem Exp $
 //
 // This File contains the implementation of the MCHitMonitor
 //
@@ -27,7 +27,7 @@
 #include "GaudiKernel/SystemOfUnits.h"
 
 // Tools
-#include "Kernel/IMCParticleSelector.h"
+#include "MCInterfaces/IMCParticleSelector.h"
 
 #include "MCHitMonitor.h"
 

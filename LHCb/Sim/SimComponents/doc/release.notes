@@ -5,6 +5,10 @@
 !               processing stage accessing the MC event classes
 !-----------------------------------------------------------------------------
 
+!====================== SimComponents v2r3 2007-05-29 ========================
+! 2007-05-29 - Marco Cattaneo
+ - Adapt to new locations of MCInterfaces
+
 ! 2007-05-25 M. Needham
  - Follow extension in IMCReconstructible interface
 

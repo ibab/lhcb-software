@@ -3,7 +3,7 @@
 # Maintainer : Gloria CORTI
 #============================================================================
 package           SimComponents
-version           v2r2
+version           v2r3
 
 #============================================================================
 # Structure, i.e. directories to process. 
@@ -18,6 +18,7 @@ use   GaudiAlg     v*
 use   GenEvent     v*    Event
 use   MCEvent      v*    Event
 use   PackedEvent  v*    Event
+use   MCInterfaces v*    Kernel
 use   Boost        v*    LCG_Interfaces
 
 #============================================================================

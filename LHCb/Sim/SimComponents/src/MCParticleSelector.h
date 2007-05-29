@@ -1,15 +1,15 @@
-#ifndef _MCPARTICLESELECTOR_H
-#define _MCPARTICLESELECTOR_H
+#ifndef SIMCOMPONENTS_MCPARTICLESELECTOR_H
+#define SIMCOMPONENTS_MCPARTICLESELECTOR_H
 
 // base class
 #include "GaudiAlg/GaudiTool.h"
 
 // interface
-#include "Kernel/IMCParticleSelector.h"
+#include "MCInterfaces/IMCParticleSelector.h"
 
-/** @class MCParticleSelector MCParticleSelector.h MCTools/MCParticleSelector.h
+/** @class MCParticleSelector MCParticleSelector.h
  *
- *  Interface Class for selection of MCParticles given a criteria
+ *  Class for selection of MCParticles given a criteria
  *
  *  @author M.Needham
  *  @date   13/3/2002
@@ -51,4 +51,4 @@ private:
 
 };
 
-#endif // _MCPARTICLESELECTOR_H
+#endif // SIMCOMPONENTS_MCPARTICLESELECTOR_H

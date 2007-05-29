@@ -1,4 +1,4 @@
-// $Id: EvtTypeChecker.cpp,v 1.4 2007-01-12 10:10:51 cattanem Exp $
+// $Id: EvtTypeChecker.cpp,v 1.5 2007-05-29 08:48:16 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -10,6 +10,7 @@
 #include "Event/GenHeader.h"
 
 // from LHCb
+#include "MCInterfaces/IMCDecayFinder.h"
 
 // local
 #include "EvtTypeChecker.h"

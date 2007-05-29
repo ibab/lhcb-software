@@ -1,4 +1,4 @@
-// $Id: ForcedBDecayTool.h,v 1.1 2007-02-26 17:28:47 cattanem Exp $
+// $Id: ForcedBDecayTool.h,v 1.2 2007-05-29 08:48:16 cattanem Exp $
 #ifndef FORCEDBDECAYTOOL_H 
 #define FORCEDBDECAYTOOL_H 1
 // Include files
@@ -9,10 +9,10 @@
 #include "Event/MCParticle.h"
 #include "Event/GenHeader.h"
 
-//from Kernel (MCEvent)
-#include "Kernel/IForcedBDecayTool.h"            // Interface
+// Interface
+#include "MCInterfaces/IForcedBDecayTool.h"
 
-/** @class ForcedBDecayTool ForcedBDecayTool.h Kernel/ForcedBDecayTool.h
+/** @class ForcedBDecayTool ForcedBDecayTool.h
  *  
  *  v1.0
  *  @author Marco Musy

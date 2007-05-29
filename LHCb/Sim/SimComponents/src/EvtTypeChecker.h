@@ -1,4 +1,4 @@
-// $Id: EvtTypeChecker.h,v 1.1.1.1 2005-12-15 14:29:30 gcorti Exp $
+// $Id: EvtTypeChecker.h,v 1.2 2007-05-29 08:48:16 cattanem Exp $
 #ifndef EVTTYPECHECKER_H 
 #define EVTTYPECHECKER_H 1
 
@@ -11,7 +11,8 @@
 
 // from LHCb
 #include "Kernel/IEvtTypeSvc.h"
-#include "Kernel/IMCDecayFinder.h"
+
+class IMCDecayFinder;
 
 
 /** @class EvtTypeChecker EvtTypeChecker.h
