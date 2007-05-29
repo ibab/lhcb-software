@@ -4,6 +4,11 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2007-05-29 M. Needham
+ - Changes in VeloExpectation: 
+   * Follow change to interface
+   * Use closestState rather than firstState                            
+
 ! 2007-05-23 M. Needham
  - Follow change in TrackManipulator
 

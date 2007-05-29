@@ -1,4 +1,4 @@
-//  $Id: VeloExpectation.h,v 1.2 2007-03-13 14:32:31 cattanem Exp $
+//  $Id: VeloExpectation.h,v 1.3 2007-05-29 13:43:06 mneedham Exp $
 #ifndef TRACKTOOLS_VeloExpectation_H
 #define TRACKTOOLS_VeloExpectation_H
 
@@ -50,6 +50,15 @@ public:
    */
   virtual int nExpected ( const LHCb::Track& aTrack ) const;
 
+
+  /** Returns number of hits expected, from zFirst to endVelo
+   *
+   *  @param aTrack Reference to the Track to test
+   *
+   *  @return number of hits expected
+  */
+  virtual IVeloExpectation::Info expectedInfo ( const LHCb::Track& aTrack ) const;
+
   /** Returns number of hits expected, from zStart to zStop
    *
    *  @param aTrack Reference to the Track to test
@@ -59,6 +68,14 @@ public:
    */
   virtual int nExpected ( const LHCb::Track& aTrack , const double zStart, const double zStop) const;
 
+  /** Returns number of hits expected, from zStart to zStop
+   *
+   *  @param aTrack Reference to the Track to test
+   *  @param zStart --> start of scan range
+   *  @param zStop --> end of scan range
+   *  @return Info
+   */
+  virtual IVeloExpectation::Info expectedInfo ( const LHCb::Track& aTrack , const double zStart, const double zStop) const;
 
   /** Returns number of hits missed, from zBeamLine to firstHit
    *
@@ -91,8 +108,8 @@ public:
 
 private:
 
-  int scan(const Tsa::Line& xLine, const Tsa::Line& yLine, 
-	   const double zStart, const double zStop) const;
+  IVeloExpectation::Info scan(const LHCb::Track& aTrack, 
+                              const double zStart, const double zStop) const;
 
   bool isInside(const DeVeloSensor* sensor, const Tsa::Line& xLine, 
                 const Tsa::Line& yLine, const double z) const;
@@ -101,8 +118,11 @@ private:
 
   double zMax(const LHCb::Track& aTrack) const;
 
-  int scan(const LHCb::Track& aTrack,
-           const double zStart, const double zStop) const;
+  int nFound(const LHCb::Track& aTrack,
+             const double zStart, const double zStop) const;
+
+  void param(const LHCb::Track& aTrack, const double z, 
+             Tsa::Line& xLine, Tsa::Line& yLine) const;
 
   double zBeamLine(const LHCb::Track& aTrack) const;
  

@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : VeloExpectation
  *
  *  CVS Log :-
- *  $Id: VeloExpectation.cpp,v 1.2 2007-03-29 08:40:08 cattanem Exp $
+ *  $Id: VeloExpectation.cpp,v 1.3 2007-05-29 13:43:06 mneedham Exp $
  *
  *  @author M.Needham Matt.Needham@cern.ch
  *  @date   11/03/2007
@@ -58,8 +58,12 @@ StatusCode VeloExpectation::initialize()
 
 int VeloExpectation::nExpected ( const Track& aTrack ) const
 {
-
   // velo expectation from zFirst to endVelo
+  IVeloExpectation::Info expectedHits = expectedInfo(aTrack);
+  return expectedHits.nR + expectedHits.nPhi;
+}
+
+IVeloExpectation::Info VeloExpectation::expectedInfo ( const Track& aTrack ) const{
 
   // work out the first and last z on the track
   double zStart; double zStop;
@@ -73,20 +77,20 @@ int VeloExpectation::nExpected ( const Track& aTrack ) const
     zStop = zMax(aTrack)+ 1e-3;
   } 
 
-  return nExpected(aTrack, zStart, zStop);
-
-
+  return expectedInfo(aTrack, zStart, zStop);
 }
+
 
 int VeloExpectation::nExpected(const LHCb::Track& aTrack, 
                                const double zStart, const double zStop) const{
 
-  // make a line representing the track
-  const State& state = aTrack.firstState();
-  Tsa::Line xLine(state.tx(), state.x(),state.z());
-  Tsa::Line yLine(state.ty(), state.y(),state.z());
+  IVeloExpectation::Info expectedHits = expectedInfo(aTrack,zStart,zStop);
+  return expectedHits.nR + expectedHits.nPhi;
+}
 
-  return scan(xLine, yLine, zStart, zStop);
+IVeloExpectation::Info VeloExpectation::expectedInfo(const LHCb::Track& aTrack, 
+                               const double zStart, const double zStop) const{
+  return scan(aTrack,zStart, zStop);
 }
 
 bool VeloExpectation::isInside(const LHCb::Track& aTrack, 
@@ -108,11 +112,6 @@ int VeloExpectation::nMissed ( const Track& aTrack ) const
 
   // number of hits missed from zBeam to zFirst 
 
-  // line representing track
-  const State& state = aTrack.firstState();
-  Tsa::Line xLine(state.tx(), state.x(), state.z());
-  Tsa::Line yLine(state.ty(), state.y(), state.z());
-
   // forward or backward track ?
   double zStart; double zStop; 
   if ( aTrack.checkFlag( Track::Backward) == false){
@@ -125,21 +124,14 @@ int VeloExpectation::nMissed ( const Track& aTrack ) const
   }
 
   // number expected...
-  const int nHits = scan(xLine, yLine, zStart, zStop);
+  IVeloExpectation::Info expectedHits = scan(aTrack,zStart,zStop);
 
-  // how many did we find ?
-  const int nFound = scan(aTrack, zStart, zStop);
-
-  return nHits - nFound;
+  return expectedHits.nR + expectedHits.nPhi - nFound(aTrack,zStart,zStop);
 }
 
 int VeloExpectation::nMissed( const Track& aTrack, const double z ) const{
 
   // line representing track
-  const State& state = aTrack.firstState();
-  Tsa::Line xLine(state.tx(), state.x(), state.z());
-  Tsa::Line yLine(state.ty(), state.y(), state.z());
-
   double zStart; double zStop; 
   if ( aTrack.checkFlag( Track::Backward) == false){
     zStart = z;
@@ -151,24 +143,27 @@ int VeloExpectation::nMissed( const Track& aTrack, const double z ) const{
   }
 
   // number expected...
-  const int nHits = scan(xLine, yLine, zStart, zStop);
+  IVeloExpectation::Info expectedHits = scan(aTrack, zStart, zStop);
 
-  // how many did we find ?
-  const int nFound = scan(aTrack, zStart, zStop);
-
-  return nHits - nFound;
+  return expectedHits.nPhi + expectedHits.nR - nFound(aTrack,zStart,zStop);
 }
 
-int VeloExpectation::scan(const Tsa::Line& xLine, const Tsa::Line& yLine, 
-                                   const double zStart, const double zStop) const {
+IVeloExpectation::Info VeloExpectation::scan(const LHCb::Track& aTrack, 
+                          const double zStart, const double zStop) const {
 
-  int nHits = 0;
+  IVeloExpectation::Info nHits;
+  nHits.nR = 0; nHits.nPhi = 0;
+
+  Tsa::Line xLine(0.,0.); Tsa::Line yLine(0.,0.);
   std::vector<DeVeloSensor*>::const_iterator iterV = m_veloDet->rPhiSensorsBegin();
   for (; iterV != m_veloDet->rPhiSensorsEnd(); ++iterV){
     // only sensors the track could see
     const double z = (*iterV)->z();
-    if (z >= zStart && z <= zStop ) {         
-      if (isInside(*iterV,xLine,yLine,z) == true) ++nHits;
+    if (z >= zStart && z <= zStop ) {
+      param(aTrack,z,xLine,yLine);        
+      if (isInside(*iterV,xLine,yLine,z) == true){
+        (*iterV)->isR() ? ++nHits.nR : ++nHits.nPhi; 
+      }
     } // if 
   } // iterV
  
@@ -219,8 +214,8 @@ double VeloExpectation::zMax(const Track& aTrack) const{
  return z;
 }
 
-int VeloExpectation::scan(const Track& aTrack,
-                         const double zStart, const double zStop) const{
+int VeloExpectation::nFound(const Track& aTrack,
+                            const double zStart, const double zStop) const{
 
  int nFound = 0;
  const std::vector<LHCbID>& vids = aTrack.lhcbIDs();
@@ -235,6 +230,14 @@ int VeloExpectation::scan(const Track& aTrack,
  } // ids
 
  return nFound;
+}
+
+void VeloExpectation::param(const LHCb::Track& aTrack, const double z, 
+                            Tsa::Line& xLine, Tsa::Line& yLine) const{
+
+  const LHCb::State& state = aTrack.closestState(z);
+  xLine = Tsa::Line(state.tx(), state.x(), state.z());
+  yLine = Tsa::Line(state.ty(), state.y(), state.z());
 }
 
 double VeloExpectation::zBeamLine(const Track& aTrack) const{
