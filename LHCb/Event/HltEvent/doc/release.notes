@@ -4,6 +4,10 @@
 ! Purpose     : Event model for HLT tracks
 !-----------------------------------------------------------------------------
 
+! 2007-05-29 - Patrick Koppenburg
+ - Added an enum entry HltSelEntry=1000 which is always stored
+   in HltSummary when HltSelections are reached. 
+
 !======================== HltEvent v8r1 2007-05-14 ===========================
 ! 2007-05-14 - Marco Cattaneo
  - Fix requirements to copy also generated HltNames.h to InstallArea

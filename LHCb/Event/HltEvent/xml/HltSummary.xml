@@ -65,6 +65,7 @@
                   CalL0Conf=402,
                   CalPreTrigger=404,
 	          CalTrigger=406,
+	          HltSelEntry=1000,
                   HltSelDstar=1001,
 	          HltSelB2DiElectron=1002,
                   HltSelBd2MuMuKstar=1003,
