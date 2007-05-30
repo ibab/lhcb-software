@@ -5,7 +5,7 @@
  *  Implementation file for class : Rich::RawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.cpp,v 1.55 2007-05-30 08:41:36 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.cpp,v 1.56 2007-05-30 16:04:35 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2004-12-18
@@ -823,7 +823,7 @@ void RawDataFormatTool::decodeToSmartIDs_2007( const LHCb::RawBank & bank,
               OK = ( !m_checkDataIntegrity || hpdBank->checkDataIntegrity(newids,warning()) );
               if ( !OK ) Warning( "HPD data block failed integrity check" );
 
-              if ( msgLevel(MSG::VERBOSE) )
+              if ( msgLevel(MSG::VERBOSE) && hpdHitCount>0 )
               {
                 // printout decoded RichSmartIDs
                 verbose() << " Decoded RichSmartIDs :-" << endreq;
