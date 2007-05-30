@@ -1,4 +1,4 @@
-// $Id: DimInfoHisto.cpp,v 1.11 2006-10-26 08:08:42 jost Exp $
+// $Id: DimInfoHisto.cpp,v 1.12 2007-05-30 14:33:15 ukerzel Exp $
 
 // Include files 
 
@@ -85,6 +85,18 @@ DimInfoHisto::DimInfoHisto(std::string serviceName,
     // Server publishes the counter requested.
     m_serviceOK   = true;        
     m_serviceSize = getSize()/sizeof(float);
+
+    // wait until data has arrived
+    bool sendStdEndl = false;
+    while (m_serviceSize <= 0) {
+      m_serviceSize = getSize()/sizeof(float);
+      mysleep(100000);
+      std::cout << ".";
+      sendStdEndl = true;
+    }
+    if (sendStdEndl)
+      std::cout << std::endl;
+
   
     // assume integer type by default, now check for other types 
     char *dimService; 
@@ -469,7 +481,19 @@ void DimInfoHisto::infoHandler()  {
     std::cout << "DimInfoHisto::infoHandler service has been updated " << std::endl;
   m_serviceUpdated = true;
   
-  
+
+  // wait until data has arrived
+  bool sendStdEndl = false;
+  while (m_serviceSize <= 0) {
+    m_serviceSize = getSize()/sizeof(float);
+    mysleep(100000);
+    std::cout << ".";
+    sendStdEndl = true;
+  }
+  if (sendStdEndl)
+    std::cout << std::endl;
+
+
   m_histoData = (float*) getData();
 
   if (m_verbosity > 0)
