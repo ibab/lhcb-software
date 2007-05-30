@@ -1,19 +1,26 @@
 ! =============================================================================
-! $Id: release.notes,v 1.296 2007-05-30 14:52:06 jpalac Exp $ 
+! $Id: release.notes,v 1.297 2007-05-30 16:13:03 cattanem Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
 
+!====================== DetDesc v17r4 2007-05-30 ==============================
 ! 2007-05-30 - Juan PALACIOS
-
   - added temporary files in src/Lib:
-    . RotationZYX{.h, .cpp}   : Hacked from homonimous MathCore file in ROOT cvs. Describes a 3D rotation transformation about the Z, Y' and X" axes, which is what we use in LHCb.
-    . 3DConversions{.h, .cpp} : Hacked from homonymous MathCore file in ROOT cvs head. Provides conversions between RotationZYX and other MathCore 3D rotation representations.
+    . RotationZYX{.h, .cpp}   : Hacked from homonimous MathCore file in ROOT cvs.
+      Describes a 3D rotation transformation about the Z, Y' and X" axes, 
+      which is what we use in LHCb.
+    . 3DConversions{.h, .cpp} : Hacked from homonymous MathCore file in ROOT 
+      cvs head. Provides conversions between RotationZYX and other MathCore 3D
+      rotation representations.
 
   - DetDesc/AlignmentCondition.h, src/Lib/AlignmentCondition.cpp
-    . Use RotationZYX class internally. At the moment this is messy, as it is still not integrated with MathCore. So code will need ot be cleared up when RotatinZYX classes and co are released in MathCore.
-    . Provide functionality to get back and update the set of Z-Y-X Euler angles obtained each time the transformation matrix is modified.
+    . Use RotationZYX class internally. At the moment this is messy, as it is
+      still not integrated with MathCore. So code will need to be cleaned up when
+      RotationZYX classes and co are released in MathCore.
+    . Provide functionality to get back and update the set of Z-Y-X Euler angles
+      obtained each time the transformation matrix is modified.
 
 !====================== DetDesc v17r3 2007-05-03 ==============================
 ! 2007-05-03 - Marco Cattaneo
