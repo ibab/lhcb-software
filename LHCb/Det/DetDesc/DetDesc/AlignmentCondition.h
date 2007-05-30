@@ -1,4 +1,4 @@
-// $Id: AlignmentCondition.h,v 1.9 2007-01-17 12:10:07 cattanem Exp $
+// $Id: AlignmentCondition.h,v 1.10 2007-05-30 14:50:34 jpalac Exp $
 #ifndef DETDESC_ALIGNMENTCONDITION_H 
 #define DETDESC_ALIGNMENTCONDITION_H 1
 
@@ -49,15 +49,30 @@ public:
     return m_matrixInv;
   }
 
+  /**
+   * Set a new 3D transformation starting directly from from a Transform3D
+   * @param newMatrix new full transformation object.
+   */
   inline void matrix(const Gaudi::Transform3D& newMatrix) 
   {
     m_matrix=newMatrix;
     m_matrixInv=m_matrix.Inverse();
+    updateParams();
   }
+
+  /**
+   * Set a new 3D transformation starting from the basic set of parameters
+   * describing a rotation about Z, Y and X axes in that order.
+   * 
+   * @param translation vector containing X,Y,Z translation parameters.
+   * @param rotation    vector containing rotation angles about Z,Y,X.
+   * @param pivot       vector containing X,Y,Z pivot point for rotation.
+   * @return            StatusCode
+   */
 
   inline StatusCode setTransformation( const std::vector<double>& translation,
                                        const std::vector<double>& rotation,
-                                       const std::vector<double>& pivot ) 
+                                       const std::vector<double>& pivot) 
   {
     loadParams(translation, rotation, pivot);
     return makeMatrices();
@@ -81,10 +96,42 @@ private:
   
 
   StatusCode makeMatrices();
-  
+  /**
+   * Create a Transform3D out of three rotation angles. Rotation is applied
+   * about the Z, Y and X axes in that order. 
+   * @param coefficients vector with rotation angles about X, Y, Z.
+   * @return Transform3D object.
+   */
   const Gaudi::Transform3D XYZRotation(const std::vector<double>& coefficients) const;
+  /**
+   * Create a Transform3D object for a simple translation in X,Y,Z.
+   * @param coefficients vector with translation in X, Y and Z.
+   * @return Transform3D object.
+   */
   const Gaudi::Transform3D XYZTranslation(const std::vector<double>& coefficients) const;
 private:
+
+  void updateParams();
+
+  /**
+   * Starting from a new local delta transformation, 
+   * calculate the transformation parameters in the 
+   * standard representation of XYZ translation and pivot, plus 
+   * rotations about Z,Y,X.The pivot point remains the same.
+   * As there is a one to many mapping between transformation and
+   * parameter sets, an arbitrary convention is chosen.
+   * 
+   */
+  void recalculateParameters(const Gaudi::Transform3D& newMatrix,
+                             std::vector<double>& translation,
+                             std::vector<double>& rotation,
+                             const std::vector<double>& pivot);
+
+  void getRotationParameters(const Gaudi::Rotation3D& newRot,
+                             std::vector<double>& rotation);
+
+  void getTranslationParameters(const Gaudi::TranslationXYZ& newTrans,
+                                std::vector<double>& translation);
 
   DetDesc::Services* m_services;
   Gaudi::Transform3D m_matrix;

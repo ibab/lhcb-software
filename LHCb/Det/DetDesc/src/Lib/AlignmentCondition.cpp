@@ -1,4 +1,4 @@
-// $Id: AlignmentCondition.cpp,v 1.11 2006-03-08 11:05:25 jpalac Exp $
+// $Id: AlignmentCondition.cpp,v 1.12 2007-05-30 14:50:34 jpalac Exp $
 // Include files
 #include <algorithm>
 
@@ -7,6 +7,10 @@
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/IMessageSvc.h"
 #include "GaudiKernel/StatusCode.h"
+#include "GaudiKernel/Vector3DTypes.h"
+///@todo put RotationXYZ.h in GaudiKernel when it is released in MathCore.
+#include "RotationZYX.h"
+#include "3DConversions.h"
 //-----------------------------------------------------------------------------
 // Implementation file for class : AlignmentCondition
 //
@@ -59,8 +63,11 @@ StatusCode AlignmentCondition::initialize() {
 //=============================================================================
 const Gaudi::Transform3D AlignmentCondition::XYZTranslation(const std::vector<double>& coefficients) const
 {
+  // Calculate the inverse translation directly.
   Gaudi::TranslationXYZ trans = (coefficients.size()==3) ? 
-    Gaudi::TranslationXYZ(coefficients[0], coefficients[1], coefficients[2]) :
+    Gaudi::TranslationXYZ(-1.*coefficients[0],
+                          -1.*coefficients[1],
+                          -1.*coefficients[2]) :
     Gaudi::TranslationXYZ();
   return Gaudi::Transform3D( trans );
 }
@@ -68,11 +75,18 @@ const Gaudi::Transform3D AlignmentCondition::XYZTranslation(const std::vector<do
 const Gaudi::Transform3D AlignmentCondition::XYZRotation(const std::vector<double>& coefficients) const
 {
   if (coefficients.size()!=3) return Gaudi::Transform3D();
+  // calculate the inverse matrix directly. This means each angle *=-1 and
+  // swap Z for X.
+  Gaudi::RotationZYX rotZYX(-1.*coefficients[0],
+                            -1.*coefficients[1],
+                            -1.*coefficients[2]);
 
-  Gaudi::Rotation3D rot = Gaudi::RotationX(coefficients[0])*
-    Gaudi::RotationY(coefficients[1]) *
-    Gaudi::RotationZ(coefficients[2]);
-  return Gaudi::Transform3D(rot);
+//   Gaudi::Rotation3D rot = Gaudi::RotationZ(-1.*coefficients[2])*
+//     Gaudi::RotationY(-1.*coefficients[1]) *
+//     Gaudi::RotationX(-1.*coefficients[0]);
+  Gaudi::Rotation3D tmp;
+  Gaudi::Math::convert(tmp, rotZYX);
+  return Gaudi::Transform3D(tmp);
   
 }
 //=============================================================================
@@ -84,18 +98,16 @@ StatusCode AlignmentCondition::makeMatrices()
   std::vector<double> translations = paramAsDoubleVect (m_translationString);
   std::vector<double> rotations    = paramAsDoubleVect (m_rotationString);
   std::vector<double> pivot = (exists(m_pivotString) ) ? 
-    paramAsDoubleVect(m_pivotString) : std::vector<double>(3);
+    paramAsDoubleVect(m_pivotString) : std::vector<double>(3, 0);
 
-  std::transform(pivot.begin(), pivot.end(), 
-                 pivot.begin(), std::negate<double>());
-  
   if (translations.size()==3  && rotations.size()==3 && pivot.size()==3) {
 
-    m_matrixInv = XYZTranslation( translations ) *
-      (   XYZTranslation( pivot ).Inverse() *
-          ( XYZRotation( rotations ) * XYZTranslation( pivot ) )  );
+    m_matrix = ( XYZTranslation( pivot ).Inverse() 
+                 * XYZRotation( rotations ) 
+                 * XYZTranslation( pivot )         ) 
+      * XYZTranslation( translations );
 
-    m_matrix = m_matrixInv.Inverse();
+    m_matrixInv = m_matrix.Inverse();
     return StatusCode::SUCCESS;
   } else {
     log << MSG::ERROR << "Translations vector has funny size: "
@@ -105,6 +117,93 @@ StatusCode AlignmentCondition::makeMatrices()
     return StatusCode::FAILURE;
   }
 
+}
+//=============================================================================
+void AlignmentCondition::updateParams() 
+{
+  std::vector<double> newTrans(3,0);
+  std::vector<double> newRot(3,0);
+  const std::vector<double> pivot = (exists(m_pivotString) ) ? 
+    paramAsDoubleVect(m_pivotString) : std::vector<double>(3, 0);
+  recalculateParameters( m_matrix, newTrans, newRot, pivot );
+  
+  loadParams( newTrans, newRot, pivot );
+
+  return;
+  
+}
+//=============================================================================
+void AlignmentCondition::recalculateParameters(const Gaudi::Transform3D& newMatrix,
+                                               std::vector<double>& translation,
+                                               std::vector<double>& rotation,
+                                               const std::vector<double>& pivot) 
+{
+
+  using namespace Gaudi;
+
+  Rotation3D newRot;
+  TranslationXYZ newTrans;
+  newMatrix.GetDecomposition(newRot, newTrans);
+  const Transform3D pivotTrans = XYZTranslation(pivot);
+  
+  // Take the pivot out of the rotation.
+  const Transform3D newRotPart = pivotTrans * Transform3D(newRot) * pivotTrans.Inverse();
+  TranslationXYZ tmp;
+  newRotPart.GetDecomposition(newRot, tmp);
+
+  getRotationParameters(newRot, rotation);
+
+  getTranslationParameters(newTrans, translation);
+
+  return;
+}
+//=============================================================================
+void AlignmentCondition::getRotationParameters(const Gaudi::Rotation3D& rot,
+                                               std::vector<double>& newRot)
+{
+  using namespace Gaudi;
+
+  RotationZYX invRotation(rot);
+  // rot is the inverse matrix, so angles are swapped.
+  invRotation.GetComponents(newRot[0], newRot[1], newRot[2]);
+  // and angles are in opposite direction
+  // why does this not work??
+  // std::transform( newRot.begin(), newRot.end(), std::negate<double>() );
+  newRot[0] *= -1;
+  newRot[1] *= -1;
+  newRot[2] *= -1;
+//   std::vector<double> components(12,0.);
+  
+//   rot.GetComponents(components.begin(), components.end());
+  
+//   const double sinY     = -1.*components[Transform3D::kZX];
+//   const double Y = -1*std::asin(sinY);
+//   if (std::fabs(sinY)-1. < std::numeric_limits<double>::epsilon() ) {
+//     // One degree of freedom lost, set X transformation to 0.
+//     newRot[0] = 0.;
+//     newRot[2] = std::atan2(components[Transform3D::kYZ],
+//                            components[Transform3D::kYY]);
+//   } else {
+//     const double cosYsinX =     components[Transform3D::kZY];
+//     const double cosZcosY =     components[Transform3D::kXX];
+//     newRot[0]= -1*std::asin(cosYsinX)/std::cos(Y);
+//     newRot[2] = -1*std::acos(cosZcosY)/std::cos(Y);
+//   }
+  
+//   newRot[1] = Y;
+
+  return;
+}
+//=============================================================================
+void AlignmentCondition::getTranslationParameters(const Gaudi::TranslationXYZ& newTrans,
+                                                  std::vector<double>& translation)
+{
+
+  translation[0]=newTrans.X();
+  translation[1]=newTrans.Y();
+  translation[2]=newTrans.Z();
+  
+  return;
 }
 //=============================================================================
 IMessageSvc* AlignmentCondition::msgSvc() const {
