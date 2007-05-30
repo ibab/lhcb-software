@@ -1,7 +1,17 @@
-! $Id: release.notes,v 1.82 2007-03-30 06:55:54 cattanem Exp $
+! $Id: release.notes,v 1.83 2007-05-30 14:45:31 odescham Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !------------------------------------------------------------------------------
+
+
+! 2007-05-30 - Olivier Descha;p
+ - New tool : Calo2Calo --> connect 2 calorimeters
+ usage  :
+  std::vector<LHCb::CaloCellID> cellIDs = m_calo2calo->cellIDs( from, to);
+  std::vector<LHCb::CaloDigit>   digits = m_calo2calo->digits ( from, to);
+  double                         energy = m_calo2calo->energy ( from, to);
+with 'from' == LHCb::CaloCellID or LHCb::CaloCluster
+     'to'   == Calo name, i.e. "Hcal", "Ecal", "Prs", "Spd"
 
 !========================== CaloUtils v7r2 2007-03-30 =========================
 ! 2007-03-30 - Marco Cattaneo
