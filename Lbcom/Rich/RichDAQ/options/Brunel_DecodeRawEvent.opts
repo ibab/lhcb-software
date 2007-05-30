@@ -8,10 +8,10 @@ DataOnDemandSvc.Algorithms +=
 RichRawEventToDigits.DecodeBufferOnly = false; // make sure digits are actually produced
 
 // utility tools
-ToolSvc.RichToolRegistry.Tools += { "Rich::SmartIDTool/RichSmartIDTool" };
-ToolSvc.RichToolRegistry.Tools += { "Rich::DAQ::RawBufferToSmartIDsTool/RichSmartIDDecoder" };
-ToolSvc.RichToolRegistry.Tools += { "Rich::DAQ::RawDataFormatTool/RichRawDataFormatTool" };
-ToolSvc.RichToolRegistry.Tools += { "OdinTimeDecoder/OdinTimeDecoder" };
+//ToolSvc.RichToolRegistry.Tools += { "Rich::SmartIDTool/RichSmartIDTool" };
+//ToolSvc.RichToolRegistry.Tools += { "Rich::DAQ::RawBufferToSmartIDsTool/RichSmartIDDecoder" };
+//ToolSvc.RichToolRegistry.Tools += { "Rich::DAQ::RawDataFormatTool/RichRawDataFormatTool" };
+//ToolSvc.RichToolRegistry.Tools += { "OdinTimeDecoder/OdinTimeDecoder" };
 
 // Suppress HPDs with high occupancy
 // CRJ : For the moment, set high to disable whilst testing
