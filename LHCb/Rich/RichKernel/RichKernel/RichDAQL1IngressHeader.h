@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ utility class : Rich::DAQ::L1IngressHeader
  *
  *  CVS Log :-
- *  $Id: RichDAQL1IngressHeader.h,v 1.2 2007-05-02 13:29:46 cattanem Exp $
+ *  $Id: RichDAQL1IngressHeader.h,v 1.3 2007-05-30 16:00:53 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   19/01/2007
@@ -47,11 +47,11 @@ namespace Rich
     public: // Bit packing information
 
       // Number of bits for each data field in the word
-      static const ShortType BitsEventID        = 8; ///< Number of bits for Event ID
-      static const ShortType BitsBXID           = 8; ///< Number of bits for BX ID
-      static const ShortType BitsActiveHPDs     = 9; ///< Number of bits for Active HPD flags
-      static const ShortType BitsNotUsed1       = 2; ///< Some unused bits
-      static const ShortType BitsHPDsSuppressed = 1; ///< Number of bits for supression flag
+      static const ShortType BitsEventID        = 8;  ///< Number of bits for Event ID
+      static const ShortType BitsBXID           = 8;  ///< Number of bits for BX ID
+      static const ShortType BitsActiveHPDs     = 12; ///< Number of bits for Active HPD flags
+      static const ShortType BitsIngressID      = 2;  ///< Number of bits for ingress number
+      static const ShortType BitsHPDsSuppressed = 1;  ///< Number of bits for supression flag
 
     private:
 
@@ -59,44 +59,27 @@ namespace Rich
       static const ShortType ShiftEventID        = 0;
       static const ShortType ShiftBXID           = ShiftEventID    + BitsEventID;
       static const ShortType ShiftActiveHPDs     = ShiftBXID       + BitsBXID;
-      static const ShortType ShiftHPDsSuppressed = ShiftActiveHPDs + BitsActiveHPDs + BitsNotUsed1;
+      static const ShortType ShiftIngressID      = ShiftActiveHPDs + BitsActiveHPDs;
+      static const ShortType ShiftHPDsSuppressed = ShiftIngressID  + BitsIngressID;
 
       // The masks
       static const ShortType MaskEventID        = ((1 << BitsEventID)-1)        << ShiftEventID;
       static const ShortType MaskBXID           = ((1 << BitsBXID)-1)           << ShiftBXID;
       static const ShortType MaskActiveHPDs     = ((1 << BitsActiveHPDs)-1)     << ShiftActiveHPDs ;
+      static const ShortType MaskIngressID      = ((1 << BitsIngressID)-1)      << ShiftIngressID ;
       static const ShortType MaskHPDsSuppressed = ((1 << BitsHPDsSuppressed)-1) << ShiftHPDsSuppressed;
 
       // the max values storable
       static const ShortType MaxEventID        = ( 1 << BitsEventID        ) - 1;
       static const ShortType MaxBXID           = ( 1 << BitsBXID           ) - 1;
       static const ShortType MaxActiveHPDs     = ( 1 << BitsActiveHPDs     ) - 1;
+      static const ShortType MaxIngressID      = ( 1 << BitsIngressID      ) - 1;
       static const ShortType MaxHPDsSuppressed = ( 1 << BitsHPDsSuppressed ) - 1;
 
     public:
 
       /// Constructor from raw LongType
       explicit L1IngressHeader( const LongType data = 0 ) : m_data(data) { }
-
-      /*
-      /// Constructor from ODIN 
-      explicit L1IngressHeader( const LHCb::ODIN * odin ) : m_data(0)
-      {
-        // set the event and bxID bits
-        setEventID ( EventID ( odin ? odin->eventNumber() : 0 ) );
-        setBXID    ( BXID    ( odin ? odin->orbitNumber() : 0 ) );
-      }
-
-      /// Constructor from ODIN and inputs
-      explicit L1IngressHeader( const LHCb::ODIN * odin,
-                                const L1IngressInputs & inputs ) : m_data(0)
-      {
-        // set the event and bxID bits
-        setEventID ( EventID ( odin ? odin->eventNumber() : 0 ) );
-        setBXID    ( BXID    ( odin ? odin->orbitNumber() : 0 ) );
-        setHPDsActive(inputs);
-      }
-      */
 
       /// Destructor
       ~L1IngressHeader( ) { }
@@ -124,6 +107,12 @@ namespace Rich
       inline BXID bxID() const
       {
         return BXID( ((data() & MaskBXID) >> ShiftBXID), BitsBXID );
+      }
+
+      /// Access the ingress number
+      inline L1IngressID ingressID() const
+      {
+        return L1IngressID( ((data() & MaskIngressID) >> ShiftIngressID) );
       }
 
       /// Access the Active HPD bits
@@ -170,6 +159,12 @@ namespace Rich
         set( tmp, ShiftActiveHPDs, MaskActiveHPDs );
       }
 
+      /// Set the ingress number
+      inline void setIngressID( const L1IngressID num )
+      {
+        set( num.data(), ShiftIngressID, MaskIngressID  );
+      }
+
       /// Set the suppression flag
       inline void setHPDsSuppressed( const bool supp )
       {
@@ -186,6 +181,9 @@ namespace Rich
 
       /// Returns the number of active HPDs (0-9) in this particular ingress
       ShortType numActiveHPDs() const;
+
+      /// Returns a vector of the active HPD input numbers in this ingress
+      void activeHPDInputs( L1IngressInputs & inputs ) const;
 
     public:
 

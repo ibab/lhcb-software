@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.149 2007-05-25 16:26:47 cattanem Exp $
+! $Id: release.notes,v 1.150 2007-05-30 16:01:30 jonrob Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 !----------------------------------------------------------------------
+
+! 2007-05-30 - Chris Jones
+ - Update number of L1 inputs from 9 to 12, to match latest firmware
 
 !====================== RichKernel v7r6 2007-05-25 ====================
 ! 2007-05-25 - Marco Cattaneo

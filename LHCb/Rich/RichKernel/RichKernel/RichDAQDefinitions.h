@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ general definitions
  *
  *  CVS Log :-
- *  $Id: RichDAQDefinitions.h,v 1.15 2007-04-26 20:14:08 jonrob Exp $
+ *  $Id: RichDAQDefinitions.h,v 1.16 2007-05-30 16:00:47 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
@@ -62,7 +62,8 @@ namespace Rich
     static const ShortType NumIngressPerL1 = 4;
 
     /// Number of L1 inputs per ingress
-    static const ShortType NumL1InputsPerIngress = 9;
+    //static const ShortType NumL1InputsPerIngress = 9;
+    static const ShortType NumL1InputsPerIngress = 12;
 
     /// Total number of inputs to an L1 board
     static const ShortType MaxL1Inputs = NumIngressPerL1 * NumL1InputsPerIngress;
