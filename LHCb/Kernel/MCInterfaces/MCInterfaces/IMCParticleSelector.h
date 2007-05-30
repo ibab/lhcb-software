@@ -28,16 +28,16 @@ public:
   /** Method to select or reject a given MCParticle
    *  @param aParticle Pointer to the MCParticle to consider
    *  @return Boolean indicating if the given MCParticle is selected or not
-   *  @retval true MCParticle is selected
-   *  @retval true MCParticle is rejected
+   *  @retval true  MCParticle is selected
+   *  @retval false MCParticle is rejected
    */
   virtual bool accept( const LHCb::MCParticle* aParticle ) const = 0;
 
   /** Boolean operator to select or reject a given MCParticle
    *  @param aParticle Pointer to the MCParticle to consider
    *  @return Boolean indicating if the given MCParticle is selected or not
-   *  @retval true MCParticle is selected
-   *  @retval true MCParticle is rejected
+   *  @retval true  MCParticle is selected
+   *  @retval false MCParticle is rejected
    */
   inline bool operator() ( const LHCb::MCParticle* aParticle ) const
   {
