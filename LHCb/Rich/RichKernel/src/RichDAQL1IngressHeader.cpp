@@ -5,7 +5,7 @@
  *  Implementation file for RICH DAQ utility class : Rich::DAQ::L1IngressHeader
  *
  *  CVS Log :-
- *  $Id: RichDAQL1IngressHeader.cpp,v 1.1 2007-04-23 12:44:04 jonrob Exp $
+ *  $Id: RichDAQL1IngressHeader.cpp,v 1.2 2007-05-30 16:46:02 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   619/01/2007
@@ -27,19 +27,25 @@ void L1IngressHeader::setHPDsActive( const L1IngressInputs & inputs )
 
 ShortType L1IngressHeader::numActiveHPDs() const
 {
+  L1IngressInputs inputs;
+  activeHPDInputs(inputs);
+  return inputs.size();
+}
+
+void L1IngressHeader::activeHPDInputs( L1IngressInputs & inputs ) const
+{
+  inputs.clear();
   const ShortType hpdBits = activeHPDbits();
-  ShortType numHPDs(0);
-  for ( ShortType i =0; i < NumL1InputsPerIngress; ++i )
+  for ( ShortType i = 0; i < NumL1InputsPerIngress; ++i )
   {
-    if ( isBitOn(hpdBits,i) ) ++numHPDs;
+    if ( isBitOn(hpdBits,i) ) inputs.push_back( L1InputWithinIngress(i) );
   }
-  return numHPDs;
 }
 
 std::ostream& L1IngressHeader::fillStream( std::ostream& os ) const
 {
-  os << "[ EvtID=" << eventID() << " BXID=" << bxID()
-     << " ActiveHPDs=";
+  os << "[ ID=" << ingressID() << " EvtID=" << eventID() 
+     << " BXID=" << bxID() << " ActiveHPDs=";
   L1InputWithinIngress in(0);
   for ( ; in < L1InputWithinIngress(NumL1InputsPerIngress); ++in )
   {
