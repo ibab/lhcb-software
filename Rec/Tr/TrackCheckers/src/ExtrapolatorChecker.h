@@ -1,4 +1,4 @@
-// $Id: ExtrapolatorChecker.h,v 1.2 2006-11-02 15:34:45 jvantilb Exp $
+// $Id: ExtrapolatorChecker.h,v 1.3 2007-05-31 15:33:54 cattanem Exp $
 #ifndef EXTRAPOLATORCHECKER_H 
 #define EXTRAPOLATORCHECKER_H 1
 
@@ -7,9 +7,9 @@
 // from Gaudi
 #include "GaudiAlg/GaudiHistoAlg.h"
 
-// from Tr/TrackMCInterfaces
-#include "TrackMCInterfaces/ITrackCriteriaSelector.h"
-#include "TrackMCInterfaces/IIdealStateCreator.h"
+// from Kernel/MCInterfaces
+#include "MCInterfaces/ITrackCriteriaSelector.h"
+#include "MCInterfaces/IIdealStateCreator.h"
 
 // from Tr/TrackInterfaces
 #include "TrackInterfaces/ITrackExtrapolator.h"

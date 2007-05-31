@@ -3,7 +3,7 @@
 # Maintainer : Edwin Bos
 #============================================================================
 package           TrackCheckers
-version           v2r13
+version           v2r14
 
 #============================================================================
 # Structure, i.e. directories to process. 
@@ -23,7 +23,7 @@ use   LinkerEvent	v*	Event
 
 use   TrackFitEvent   	v*	Tr
 use   TrackInterfaces 	v*	Tr
-use   TrackMCInterfaces v*	Tr
+use   MCInterfaces      v*      Kernel
 
 #============================================================================
 # Component library building rule

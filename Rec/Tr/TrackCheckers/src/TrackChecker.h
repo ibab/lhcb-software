@@ -1,4 +1,4 @@
-// $Id: TrackChecker.h,v 1.11 2007-01-19 16:23:33 cattanem Exp $
+// $Id: TrackChecker.h,v 1.12 2007-05-31 15:33:54 cattanem Exp $
 #ifndef TRACKCHECKER_H 
 #define TRACKCHECKER_H 1
 
@@ -7,9 +7,9 @@
 // from Gaudi
 #include "GaudiAlg/GaudiHistoAlg.h"
 
-// from Tr/TrackMCInterfaces
-#include "TrackMCInterfaces/ITrackCriteriaSelector.h"
-#include "TrackMCInterfaces/IIdealStateCreator.h"
+// from Kernel/MCInterfaces
+#include "MCInterfaces/ITrackCriteriaSelector.h"
+#include "MCInterfaces/IIdealStateCreator.h"
 
 // from Tr/TrackInterfaces
 #include "TrackInterfaces/ITrackExtrapolator.h"

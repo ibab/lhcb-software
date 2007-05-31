@@ -1,4 +1,4 @@
-// $Id: TrackCheckerNT.h,v 1.1 2006-11-16 08:20:56 mschille Exp $
+// $Id: TrackCheckerNT.h,v 1.2 2007-05-31 15:33:54 cattanem Exp $
 #ifndef TRACKCHECKERNT_H 
 #define TRACKCHECKERNT_H 1
 
@@ -8,9 +8,9 @@
 #include "GaudiAlg/GaudiTupleAlg.h"
 #include "GaudiAlg/Tuples.h"
 
-// from Tr/TrackMCInterfaces
-#include "TrackMCInterfaces/ITrackCriteriaSelector.h"
-#include "TrackMCInterfaces/IIdealStateCreator.h"
+// from Kernel/MCInterfaces
+#include "MCInterfaces/ITrackCriteriaSelector.h"
+#include "MCInterfaces/IIdealStateCreator.h"
 
 // from Tr/TrackInterfaces
 #include "TrackInterfaces/ITrackExtrapolator.h"

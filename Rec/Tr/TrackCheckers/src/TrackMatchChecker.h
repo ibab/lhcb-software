@@ -1,4 +1,4 @@
-// $Id: TrackMatchChecker.h,v 1.3 2007-05-07 09:38:40 cattanem Exp $
+// $Id: TrackMatchChecker.h,v 1.4 2007-05-31 15:33:54 cattanem Exp $
 #ifndef TRACKMATCHING_TRACKMATCHCHECKER_H 
 #define TRACKMATCHING_TRACKMATCHCHECKER_H 1
 
@@ -13,8 +13,8 @@
 #include "TrackInterfaces/ITrackChi2Calculator.h"
 #include "TrackInterfaces/IAddTTClusterTool.h"
 
-// from TrackMCInterfaces
-#include "TrackMCInterfaces/IIdealStateCreator.h"
+// from MCInterfaces
+#include "MCInterfaces/IIdealStateCreator.h"
 
 /** @class TrackMatchChecker TrackMatchChecker.h
  *
