@@ -4,10 +4,10 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+!===================== LHCbKernel v7r5 2007-05-31 ========================
 ! 2007-05-31 M. Needham
  - Add isVeloR, isVeloPhi, isPileUp methods to LHCbID
 
-!===================== LHCbKernel v7r5 2007-05-29 ========================
 ! 2007-05-29 - Marco Cattaneo
  - IMCParticleSelector interface removed, moved to MCInterfaces
 
