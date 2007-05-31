@@ -1,10 +1,11 @@
 ! =============================================================================
-! $Id: release.notes,v 1.100 2007-05-29 13:41:49 marcocle Exp $
+! $Id: release.notes,v 1.101 2007-05-31 12:40:56 cattanem Exp $
 ! =============================================================================
 ! package Ex/DetCondExample
 ! package manager : Marco Clemencic
 ! =============================================================================
 
+!============ Ex/DetCondExample v11r1 2007-05-31 ==============================
 ! 2007-05-29 - Marco Clemencic
  - Added a test for conditions overriding with alignment conditions.
 
