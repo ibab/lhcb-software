@@ -5,6 +5,10 @@
 !-----------------------------------------------------------------------------
 
 ! 2007-05-31 - Ulrich Kerzel
+ - DimInfoHisto: count how often one has to wait for DIM, print message
+                 set status to notOK while waiting
+
+! 2007-05-31 - Ulrich Kerzel
  - new command line argument for monitor: histo "Hxx/../../../"
    if given, monitor will look for this object and auto-start
    the monitoring gui if connection to DIM DNS succeeded and

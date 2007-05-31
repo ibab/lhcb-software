@@ -1,4 +1,4 @@
-// $Id: DimInfoHisto.h,v 1.3 2006-10-23 08:30:39 ukerzel Exp $
+// $Id: DimInfoHisto.h,v 1.4 2007-05-31 15:21:49 ukerzel Exp $
 #ifndef DIMINFOHISTO_H 
 #define DIMINFOHISTO_H 1
 
@@ -70,6 +70,9 @@ private:
   TH1*        m_histogramProfile;  
   TH2*        m_histogram2D;
   ServiceType m_serviceType;
+
+  int         m_nWait;          // count how often waited for service.
+  int         m_waitTime;       // wait for service in usec
   
 
 }; // class DimInfoHisto

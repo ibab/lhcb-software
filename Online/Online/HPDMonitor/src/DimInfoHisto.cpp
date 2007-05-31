@@ -1,4 +1,4 @@
-// $Id: DimInfoHisto.cpp,v 1.12 2007-05-30 14:33:15 ukerzel Exp $
+// $Id: DimInfoHisto.cpp,v 1.13 2007-05-31 15:21:49 ukerzel Exp $
 
 // Include files 
 
@@ -45,7 +45,9 @@ DimInfoHisto::DimInfoHisto(std::string serviceName,
   m_bookedHistogram(false),
   m_serviceSize(0),
   m_serviceType(DimInfoHisto::unknown),
-  DimInfo(serviceName.c_str(), refreshTime, -1) {
+  DimInfo(serviceName.c_str(), refreshTime, -1),
+  m_nWait(0),
+  m_waitTime(0){
   
   if (m_verbosity > 0)
     std::cout << "*** initialising DIM histogram for service " << m_serviceName
@@ -83,21 +85,22 @@ DimInfoHisto::DimInfoHisto(std::string serviceName,
   if (nServices != 0) {
     
     // Server publishes the counter requested.
-    m_serviceOK   = true;        
     m_serviceSize = getSize()/sizeof(float);
 
     // wait until data has arrived
-    bool sendStdEndl = false;
-    while (m_serviceSize <= 0) {
-      m_serviceSize = getSize()/sizeof(float);
-      mysleep(100000);
-      std::cout << ".";
-      sendStdEndl = true;
-    }
-    if (sendStdEndl)
-      std::cout << std::endl;
+    m_waitTime = (double)refreshTime*1e5; // 10% of refresh time
+    if (m_verbosity > 0)
+      std::cout << "wait time " << m_waitTime << std::endl;
 
-  
+    while (m_serviceSize <= 0) {
+      m_nWait++;
+      std::cout << m_nWait << "th wait for service " << m_serviceName << std::endl;
+      mysleep(m_waitTime);
+      m_serviceSize = getSize()/sizeof(float);
+    }
+    m_serviceOK   = true;        
+    m_nWait       = 0; //reset
+
     // assume integer type by default, now check for other types 
     char *dimService; 
     char *dimFormat;
@@ -483,17 +486,17 @@ void DimInfoHisto::infoHandler()  {
   
 
   // wait until data has arrived
-  bool sendStdEndl = false;
+  m_serviceSize = getSize()/sizeof(float);
   while (m_serviceSize <= 0) {
+    m_serviceOK = false;
+    m_nWait++;
+    std::cout << m_nWait << "th wait for service " << m_serviceName << std::endl;
+    mysleep(m_waitTime);
     m_serviceSize = getSize()/sizeof(float);
-    mysleep(100000);
-    std::cout << ".";
-    sendStdEndl = true;
-  }
-  if (sendStdEndl)
-    std::cout << std::endl;
+  } //while
 
-
+  m_serviceOK = true;
+  m_nWait     = 0;                     //reset
   m_histoData = (float*) getData();
 
   if (m_verbosity > 0)
