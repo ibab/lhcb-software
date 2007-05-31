@@ -4,11 +4,11 @@
 ! Purpose     : Interfaces with dependency on MC
 !-----------------------------------------------------------------------------
 
+!==================== MCInterfaces v1r0 2007-05-31 ===========================
 ! 2007-05-30 - Chris Jones
  - Add bool operator() to IMCParticleSelector (To allow similarity of interface
    between the various 'selector' type tools).
 
-!==================== MCInterfaces v1r0 2007-05-29 ===========================
 ! 2007-05-25 - Matt Needham
  - Update IMCReconstructible interface
 
