@@ -3,7 +3,7 @@
 # Maintainer : Eduardo Rodrigues
 #============================================================================
 package           TrackSys
-version           v4r5
+version           v4r6
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -15,7 +15,6 @@ include_path      none
 use   TrackEvent           v4r*    Event
 use   TrackFitEvent        v3r*    Tr
 
-use   TrackMCInterfaces    v3r*    Tr
 use   TrackInterfaces      v3r*    Tr
 
 use   TrackExtrapolators   v2r*    Tr
