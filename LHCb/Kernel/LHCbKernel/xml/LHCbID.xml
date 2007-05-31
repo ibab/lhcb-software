@@ -71,6 +71,38 @@ m_lhcbID = (Velo &lt;&lt; detectorTypeBits) +
          </code>
        </method>
 
+       
+       <method
+         type  = "bool"
+         name  = "isVeloR"
+         const = 'TRUE'
+         desc  = "return true if this is a Velo R identifier">
+         <code>
+  return (isVelo() ? veloID().isRType(): false);
+         </code>
+       </method>
+
+       
+       <method
+         type  = "bool"
+         name  = "isVeloPhi"
+         const = 'TRUE'
+         desc  = "return true if this is a Velo Phi identifier">
+         <code>
+  return (isVelo() ? veloID().isPhiType(): false);
+         </code>
+       </method>
+
+        <method
+         type  = "bool"
+         name  = "isVeloPileUp"
+         const = 'TRUE'
+         desc  = "return true if this is a Velo Pile up identifier">
+         <code>
+  return (isVelo() ? veloID().isPileUp(): false);
+         </code>
+       </method>
+
        <method
          type  = "LHCb::VeloChannelID"
          name  = "veloID"
