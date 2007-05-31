@@ -1,4 +1,4 @@
-// $Id: OTTimeChecker.cpp,v 1.13 2007-05-29 15:14:15 mneedham Exp $
+// $Id: OTTimeChecker.cpp,v 1.14 2007-05-31 09:12:26 mneedham Exp $
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/SystemOfUnits.h"
@@ -39,7 +39,7 @@ OTTimeChecker::OTTimeChecker(const std::string& name,
                               ISvcLocator* pSvcLocator) :
   GaudiHistoAlg(name, pSvcLocator) {
   // constructor
-  declareProperty("doMomentumCut", m_doMomentumCut = true);
+  declareProperty("doMomentumCut", m_doMomentumCut = false);
   declareProperty("momentumCut", m_momentumCut = 1.500*Gaudi::Units::GeV);
 }
 
