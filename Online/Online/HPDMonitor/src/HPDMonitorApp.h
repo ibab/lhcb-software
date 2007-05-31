@@ -1,4 +1,4 @@
-// $Id: HPDMonitorApp.h,v 1.2 2006-09-21 07:26:49 ukerzel Exp $
+// $Id: HPDMonitorApp.h,v 1.3 2007-05-31 14:47:15 ukerzel Exp $
 #ifndef HPDMONITORAPP_H 
 #define HPDMONITORAPP_H 1
 
@@ -42,10 +42,11 @@ class HPDMonitorApp: public TObject {
 
 public:
   // N.B. timer rate in ms
-  HPDMonitorApp(int timerRate = 200,
-                int guiWidth  = 800,
-                int guiHeight = 600,
-                int verbose   = 0);
+  HPDMonitorApp(int         timerRate    = 200,
+                int         guiWidth     = 800,
+                int         guiHeight    = 600,
+                int         verbose      =   0,
+                std::string histoDimName = "");
   ~HPDMonitorApp();
 
   Bool_t HandleTimer(TTimer *timer);

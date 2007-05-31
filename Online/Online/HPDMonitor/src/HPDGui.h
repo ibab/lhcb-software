@@ -1,4 +1,4 @@
-// $Id: HPDGui.h,v 1.12 2006-10-23 08:30:39 ukerzel Exp $
+// $Id: HPDGui.h,v 1.13 2007-05-31 14:47:15 ukerzel Exp $
 #ifndef HPDGUI_H 
 #define HPDGUI_H 1
 
@@ -91,22 +91,23 @@ class HPDGui : public TGMainFrame {
   // ---------------------------------------------------------------
 public:
 
-  HPDGui(const TGWindow *p, UInt_t w, UInt_t h);  
+  HPDGui(const TGWindow *p, UInt_t w, UInt_t h, 
+         int verbose, 
+         TTimer* timer, 
+         std::string histoDimNameArgument = "");  
   virtual ~HPDGui(); 
 
   // ROOT functions from base classes, overloaded in here
   virtual Bool_t ProcessMessage(Long_t msg, Long_t parm1, Long_t);
   virtual void   CloseWindow();
 
-  void    SetTimer(TTimer* timer);
+  //  void    SetTimer(TTimer* timer);
   
   // sets the verbosity, zero means off, values 
   // greater than zero give more and more output
-  void    SetVerbose(int verbose);
-  
-  
-  void    Update();
+  // void    SetVerbose(int verbose);
 
+  void    Update();
 
   // ---------------------------------------------------------------
   //                PRIVATE 
@@ -266,6 +267,8 @@ private:
   std::vector<std::string>      m_DimServerNameVector;
 
   std::map<std::string,TGListTreeItem *> m_GaudiAlgNameMap; // for building up tree-like structure to browse DIM DNS
+
+  std::string                   m_histoDimNameArgument;     // DIM address of histogram to monitor specified at command line argument
   
 }; // class HPGui
 #endif // HPDGUI_H

@@ -4,8 +4,15 @@
 ! Purpose     : Online monitor for Gaudi
 !-----------------------------------------------------------------------------
 
+! 2007-05-31 - Ulrich Kerzel
+ - new command line argument for monitor: histo "Hxx/../../../"
+   if given, monitor will look for this object and auto-start
+   the monitoring gui if connection to DIM DNS succeeded and
+   the object has been found
+
+
 ! 2007-05-30 - Ulrich Kerzel
- - put in delday if data not yet there
+ - DimInfoHisto: put in delday if data not yet there
 
 
 ! 2006-09-28 - Ulrich Kerzel

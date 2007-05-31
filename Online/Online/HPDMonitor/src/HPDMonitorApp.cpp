@@ -1,4 +1,4 @@
-// $Id: HPDMonitorApp.cpp,v 1.5 2006-09-22 10:47:05 ukerzel Exp $
+// $Id: HPDMonitorApp.cpp,v 1.6 2007-05-31 14:47:15 ukerzel Exp $
 // Include files 
 
 #include <iostream>
@@ -20,10 +20,11 @@
 // 2006-08-07 : Ulrich Kerzel
 //-----------------------------------------------------------------------------
 
-HPDMonitorApp::HPDMonitorApp(int timerRate,
-                             int guiWidth,
-                             int guiHeight,
-                             int verbose) :
+HPDMonitorApp::HPDMonitorApp(int         timerRate,
+                             int         guiWidth,
+                             int         guiHeight,
+                             int         verbose,
+                             std::string histoDimName) :
   m_timerRate(timerRate)
 {
   int   dummy_argc   = 1;
@@ -34,12 +35,14 @@ HPDMonitorApp::HPDMonitorApp(int timerRate,
   m_Timer        = new TTimer(timerRate);
 
   // this takes some time
-  m_HPDGui = new HPDGui(gClient->GetRoot(),guiWidth,guiHeight);
+  m_HPDGui = new HPDGui(gClient->GetRoot(),guiWidth,guiHeight,
+                        verbose,
+                        m_Timer,
+                        histoDimName);
 
-  m_HPDGui -> SetTimer(m_Timer);
+  //  m_HPDGui -> SetTimer(m_Timer);
   
-  m_HPDGui -> SetVerbose(verbose);
-  
+  // m_HPDGui -> SetVerbose(verbose);
   
 } //constructor
 //-----------------------------------------------------------------------------
@@ -54,7 +57,7 @@ void HPDMonitorApp::Start() {
   m_Timer->SetObject(this);  
   
   m_TApplication->Run();
-  
+
   
 } //void Start
 //-----------------------------------------------------------------------------
@@ -83,12 +86,17 @@ int main(int argc, char **argv) {
   // - width
   // 
 
-  int verbose    =   0;
-  int height     = 600;
-  int width      = 800;
+  int         verbose    =   0;
+  int         height     = 600;
+  int         width      = 800;
+  std::string histoDimName;
   
   for (int i = 1; i < argc; i++) {
     std::string tmpString = argv[i];
+
+    //
+    // "verbose"
+    //
     if (tmpString.find("verbose",0) != std::string::npos ) {
       try {        
         verbose = boost::lexical_cast<int>(argv[i+1]);
@@ -99,10 +107,11 @@ int main(int argc, char **argv) {
                   << std::endl;        
         verbose = 0;
       } // catch
-      
-
     } // if found verbose
 
+    //
+    // "width"
+    //
     if (tmpString.find("width",0)  != std::string::npos ) {
       try {        
         width = boost::lexical_cast<int>(argv[i+1]);
@@ -117,6 +126,9 @@ int main(int argc, char **argv) {
       } // catch
     } // if found width
 
+    //
+    // "height"
+    //
     if (tmpString.find("height",0) != std::string::npos ) {
       try {        
         height = boost::lexical_cast<int>(argv[i+1]);
@@ -130,7 +142,14 @@ int main(int argc, char **argv) {
         verbose = 0;
       } // catch
     } // if found height
-
+    
+    //
+    // "histo"
+    //
+    if (tmpString.find("histo",0) != std::string::npos ) {
+      histoDimName = (argv[i+1]);
+      std::cout << "found histo to monitor " << histoDimName << std::endl;
+    }// if histo
 
     
   } //for  
@@ -143,7 +162,9 @@ int main(int argc, char **argv) {
   } // if verbose
   
 
-  HPDMonitorApp *theApp = new HPDMonitorApp(200, width, height, verbose);  
+  HPDMonitorApp *theApp = new HPDMonitorApp(200, width, height, verbose,histoDimName);  
   theApp->Start();
+  
+    
   return 0;
 }

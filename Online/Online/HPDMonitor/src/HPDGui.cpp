@@ -1,4 +1,4 @@
-// $Id: HPDGui.cpp,v 1.31 2006-10-26 08:08:42 jost Exp $
+// $Id: HPDGui.cpp,v 1.32 2007-05-31 14:47:15 ukerzel Exp $
 // Include files 
 
 #include <iostream>
@@ -34,7 +34,10 @@
 
 
 // constructor
-HPDGui::HPDGui(const TGWindow *p, UInt_t guiWidth, UInt_t guiHeight)  : 
+HPDGui::HPDGui(const TGWindow *p, UInt_t guiWidth, UInt_t guiHeight,
+               int verbose,
+               TTimer* timer,              
+               std::string histoDimNameArgument)  : 
   TGMainFrame(p,guiWidth,guiHeight),
   m_timerRuns(false),
   m_ZoomCanvasActive(false),
@@ -49,7 +52,9 @@ HPDGui::HPDGui(const TGWindow *p, UInt_t guiWidth, UInt_t guiHeight)  :
   m_nCanvasColumns(0),
   m_connectOK(false),
   m_histoOK(true),
-  m_verbose(0)
+  m_verbose(verbose),
+  m_externalTimer(timer),
+  m_histoDimNameArgument(histoDimNameArgument)
 {
   //
   // check if environment variable pointing to DIM DNS server is set
@@ -382,6 +387,23 @@ HPDGui::HPDGui(const TGWindow *p, UInt_t guiWidth, UInt_t guiHeight)  :
 
   gStyle->SetPalette(colNum, palette);
 
+  if (m_histoDimNameArgument != "") {
+    std::cout << "found command line argument for DIM service, auto-starting ..." << std::endl;
+    m_connectOK = HPDGui::Connect2DIM();
+    if (m_verbose > 0)
+      std::cout << "connected to DIM " << m_connectOK << std::endl;
+    if (m_connectOK) {
+      HPDGui::Update();
+      HPDGui::ActionButtonSelect();
+      m_externalTimer ->  TurnOn();
+      m_timerRuns     =   true;          
+      m_ButtonPause   ->  ChangeBackground(m_ROOTYellow);
+      m_ButtonPause   ->  SetText("&pause");
+    } else {
+      std::cout << "Could not connect to DIM DNS - autostart not possible" << std::endl;
+    } // if connectOK
+  }//if != ""
+
 } //HPDGui - constructor
 
 // ------------------------------------------------------------------------------------------
@@ -482,6 +504,7 @@ Bool_t HPDGui::ProcessMessage(Long_t msg, Long_t parm1, Long_t parm2) {
   //
   // local variables
   //
+
 
   //
   // handles all the events/messages sent from the buttons, etc
@@ -863,7 +886,7 @@ void HPDGui::Update() {
   std::vector<CounterHisto>::const_iterator counterIter;
   std::vector<CounterHisto>::const_iterator counterIterBegin = m_counterVector.begin();    
   std::vector<CounterHisto>::const_iterator counterIterEnd   = m_counterVector.end();    
-  float counterValue;
+  float counterValue = 0;
 
   if (m_verbose > 2)
     std::cout << "loop over counters and update if necessary" << std::endl;  
@@ -1409,12 +1432,12 @@ bool HPDGui::Connect2DIM() {
   return returnValue;
   
 }// bool Connect2DIM
-// -----------------------------------------------------------------------------------------
-void HPDGui::SetTimer(TTimer* timer) {
-
-  m_externalTimer = timer;
-  
-} // void SetTimer
+//// -----------------------------------------------------------------------------------------
+//void HPDGui::SetTimer(TTimer* timer) {
+//
+//  m_externalTimer = timer;
+//  
+//} // void SetTimer
 // -----------------------------------------------------------------------------------------
 void HPDGui::Pause() {
 
@@ -1768,15 +1791,15 @@ void HPDGui::SetupCanvas() {
 } // void SetupCanvas
 
 
-// -----------------------------------------------------------------------------------------
-void HPDGui::SetVerbose(int verbose){
-  
-  m_verbose = verbose;
-
-  if (m_verbose>0)
-    std::cout << "setting verbosity level to " << m_verbose << std::endl;
-
-} // void SetVerbose
+//// -----------------------------------------------------------------------------------------
+//void HPDGui::SetVerbose(int verbose){
+//  
+//  m_verbose = verbose;
+//
+//  if (m_verbose>0)
+//    std::cout << "setting verbosity level to " << m_verbose << std::endl;
+//
+//} // void SetVerbose
 // -----------------------------------------------------------------------------------------
 HPDGui::histStatOption HPDGui::DetermineStatOption() {
 
@@ -1830,6 +1853,29 @@ void HPDGui::ActionButtonSelect() {
   std::vector<TGListTreeItem *>::const_iterator serviceIterBegin = m_ListTreeItemVector.begin();
   std::vector<TGListTreeItem *>::const_iterator serviceIterEnd   = m_ListTreeItemVector.end();
   for (serviceIter = serviceIterBegin; serviceIter != serviceIterEnd; serviceIter++) {
+
+    std::string serviceName     = (*serviceIter)->GetText();      
+    std::string serviceType     = (*serviceIter)->GetParent()->GetText();
+    std::string GaudiAlgName    = (*serviceIter)->GetParent()->GetParent()->GetText();
+    std::string GaudiOnlineName = (*serviceIter)->GetParent()->GetParent()->GetParent()->GetText();
+    if (m_verbose > 2)
+      std::cout << "serviceName " << serviceName << " serviceType " << serviceType
+                << " GaudiAlgName " << GaudiAlgName
+                << " GaudiOnlineName " << GaudiOnlineName << std::endl;  
+
+      // try to determine if this DIM service has been specified on the command line
+      if (m_histoDimNameArgument != "") {
+        if (m_histoDimNameArgument.find(serviceName)      != std::string::npos &&
+            m_histoDimNameArgument.find(serviceType)      != std::string::npos &&
+            m_histoDimNameArgument.find(GaudiAlgName)     != std::string::npos &&
+            m_histoDimNameArgument.find(GaudiOnlineName)  != std::string::npos) {
+          if (m_verbose >0)
+            std::cout << "found requested service " << m_histoDimNameArgument << std::endl;
+          
+          (*serviceIter)->CheckItem(true); // set check-box for this item to select it
+        } //found service        
+      } // if != ""
+
     if ((*serviceIter)->IsChecked()) {
       // selected for display
       tmpString = (*serviceIter)->GetParent()->GetText();
@@ -1941,6 +1987,4 @@ void HPDGui::ActionButtonPrint() {
   cwd->cd();	
   
 } // void ActionButtonPrint
-// -----------------------------------------------------------------------------------------
 
-  
