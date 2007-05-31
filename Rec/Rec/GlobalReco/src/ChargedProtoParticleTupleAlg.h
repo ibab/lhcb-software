@@ -5,7 +5,7 @@
  * Header file for algorithm ChargedProtoParticleTupleAlg
  *
  * CVS Log :-
- * $Id: ChargedProtoParticleTupleAlg.h,v 1.1 2007-02-19 11:38:05 jonrob Exp $
+ * $Id: ChargedProtoParticleTupleAlg.h,v 1.2 2007-05-31 14:24:03 cattanem Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-11-15
@@ -25,7 +25,7 @@
 #include "Event/MCParticle.h"
 
 // Tool interfaces
-#include "RichRecBase/IRichRecMCTruthTool.h"
+#include "MCInterfaces/IRichRecMCTruthTool.h"
 
 //-----------------------------------------------------------------------------
 /** @class ChargedProtoParticleTupleAlg ChargedProtoParticleTupleAlg.h

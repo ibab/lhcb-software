@@ -4,6 +4,11 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+!========================== GlobalReco v6r10 2007-05-31 ======================
+! 2007-05-31 - Marco Cattaneo
+ - Add MCInterfaces dependency, remove RichRecBase dependency,  and adapt to new
+   location of IRichRecMCTruthTool
+
 ! 2007-05-23 - Chris Jones
  - Update ChargedProtoPAlg
   + Split up the handling of the CALO information so each CALO sub-det 

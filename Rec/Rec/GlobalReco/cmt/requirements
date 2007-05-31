@@ -5,7 +5,7 @@
 package           GlobalReco
 version           v6r10
 
-branches          cmt doc src options
+branches          cmt doc src options root
 include_path none
 
 set GLOBALRECOOPTS  ${GLOBALRECOROOT}/options
