@@ -37,7 +37,7 @@ public:
   virtual StatusCode initialize ();
   virtual StatusCode finalize   ();
   virtual const LHCb::CaloHypo::Hypothesis& hypothesis () const ; 
-  virtual double operator() (const LHCb::CaloHypo* hypo ) const ;
+  virtual double operator() (const LHCb::CaloHypo* cluster ) const ;
   virtual double likelihood (const LHCb::CaloHypo* hypo ) const ;
   
 

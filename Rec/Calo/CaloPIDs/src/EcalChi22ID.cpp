@@ -1,11 +1,4 @@
-// $Id: EcalChi22ID.cpp,v 1.2 2006-06-22 15:40:40 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.1  2006/06/18 18:35:28  ibelyaev
-//  the firstcommmit for DC06 branch
-// 
+// $Id: EcalChi22ID.cpp,v 1.3 2007-05-31 14:47:22 cattanem Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -14,9 +7,9 @@
 #include "CaloChi22ID.h"
 #include "ToVector.h"
 // ============================================================================
-/** @class EcalChi22ID EcalChi22ID.h
+/** @class EcalChi22ID EcalChi22D.cpp
  *  The preconfigured instance of class CaloChi22ID 
- *  @suthor Vanya BELYAEV ibelyaev@physics.syr.edu
+ *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  */
 // ============================================================================
 class EcalChi22ID: public CaloChi22ID 
