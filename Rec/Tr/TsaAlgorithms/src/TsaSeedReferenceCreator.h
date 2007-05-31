@@ -1,4 +1,4 @@
-// $Id: TsaSeedReferenceCreator.h,v 1.6 2007-03-21 14:35:02 cattanem Exp $
+// $Id: TsaSeedReferenceCreator.h,v 1.7 2007-05-31 16:09:06 cattanem Exp $
 #ifndef _TsaSeedReferenceCreator_H
 #define _TsaSeedReferenceCreator_H
 
@@ -45,7 +45,7 @@ public:
   StatusCode initialize();
 
   /** add reference info to the track */  
-  StatusCode execute(const LHCb::Track& aTrack) const;
+  StatusCode execute(LHCb::Track& aTrack) const;
 
   /** Implement the handle method for the Incident service.
   *  This is used to inform the tool of software incidents.

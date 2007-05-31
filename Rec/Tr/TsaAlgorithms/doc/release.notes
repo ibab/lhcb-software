@@ -4,7 +4,11 @@
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
 
-!======================= TsaAlgorithms v2r2 2007-05-21 ======================
+!======================= TsaAlgorithms v2r4 2007-05-31 ======================
+! 2007-05-31 - Marco Cattaneo
+ - Follow change in ITrackManipulator interface
+
+!======================= TsaAlgorithms v2r3 2007-05-21 ======================
 ! 2007-05-21 - Marco Cattaneo
  - Fix a few more doxygen warnings
 

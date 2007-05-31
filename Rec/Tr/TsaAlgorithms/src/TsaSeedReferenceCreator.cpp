@@ -1,4 +1,4 @@
-// $Id: TsaSeedReferenceCreator.cpp,v 1.8 2006-12-06 14:35:01 mneedham Exp $
+// $Id: TsaSeedReferenceCreator.cpp,v 1.9 2007-05-31 16:09:06 cattanem Exp $
 
 // from GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -59,7 +59,7 @@ StatusCode TsaSeedReferenceCreator::initialize()
   return StatusCode::SUCCESS;
 };
 
-StatusCode TsaSeedReferenceCreator::execute(const LHCb::Track& aTrack) const{
+StatusCode TsaSeedReferenceCreator::execute(LHCb::Track& aTrack) const{
 
   // get the input - seeds
   if (!m_configured) initEvent();
