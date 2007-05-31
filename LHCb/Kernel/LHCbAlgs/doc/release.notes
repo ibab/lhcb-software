@@ -4,6 +4,11 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+!======================== LHCbAlgs v2r9 2007-05-31 =======================
+! 2007-05-31 - Marco Cattaneo
+ - ProcessPhase "MeasureTime" property now defaults to GaudiSequencer default
+   (false)
+
 !======================== LHCbAlgs v2r8 2007-05-10 =======================
 ! 2007-05-10 - Patrick Koppenburg
  - Fix untested StatusCodes

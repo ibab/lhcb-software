@@ -1,4 +1,4 @@
-// $Id: ProcessPhase.cpp,v 1.6 2007-03-19 17:20:57 cattanem Exp $
+// $Id: ProcessPhase.cpp,v 1.7 2007-05-31 12:54:59 cattanem Exp $
 
 // Include files
 #include "ProcessPhase.h"
@@ -21,7 +21,6 @@ ProcessPhase::ProcessPhase( const std::string& name, ISvcLocator* pSvcLocator )
  : GaudiSequencer( name, pSvcLocator ) {
 	m_detList.clear();
 	declareProperty( "DetectorList", m_detList );
-  setProperty( "MeasureTime", "true" ).ignore(); // Overrides GaudiSequencer default
 }
 
 ProcessPhase::~ProcessPhase() { 
