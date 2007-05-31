@@ -1,13 +1,10 @@
-// $Id: VeloGhostClassification.cpp,v 1.2 2007-05-18 09:29:59 cattanem Exp $
+// $Id: VeloGhostClassification.cpp,v 1.3 2007-05-31 15:21:39 cattanem Exp $
 
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
 
 // LHCbKernel
 #include "Kernel/VeloChannelID.h"
-
-// TrackMCInterfaces
-#include "TrackMCInterfaces/ILHCbIDsToMCParticles.h"
 
 // Event model
 #include "Event/Track.h"

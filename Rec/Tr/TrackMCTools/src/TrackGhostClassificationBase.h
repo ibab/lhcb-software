@@ -4,8 +4,8 @@
 #include <vector>
 
 #include "GaudiAlg/GaudiTool.h"
-#include "TrackMCInterfaces/ITrackGhostClassification.h"
-#include "TrackMCInterfaces/ILHCbIDsToMCParticles.h"
+#include "MCInterfaces/ITrackGhostClassification.h"
+#include "MCInterfaces/ILHCbIDsToMCParticles.h"
 
 #include "Kernel/LHCbID.h"
 #include "Event/GhostTrackInfo.h"
@@ -42,7 +42,7 @@ public:
   *  Information on a list of LHCbIDs
   *  @param start first iterator
   *  @param stop  last  iterator
-  *  @param link info
+  *  @param tinfo link info
   */
   virtual void info(LHCbIDs::const_iterator& start, 
                     LHCbIDs::const_iterator& stop, LHCb::GhostTrackInfo& tinfo) const;

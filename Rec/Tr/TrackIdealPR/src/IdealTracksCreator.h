@@ -20,9 +20,9 @@
 #include "Event/TrackFunctor.h"
 #include "Event/Measurement.h"
 
-// from TrackMCInterfaces
-#include "TrackMCInterfaces/IIdealStateCreator.h"
-#include "TrackMCInterfaces/ITrackCriteriaSelector.h"
+// from MCInterfaces
+#include "MCInterfaces/IIdealStateCreator.h"
+#include "MCInterfaces/ITrackCriteriaSelector.h"
 
 // Forward declarations
 class DeVelo;

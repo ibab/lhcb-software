@@ -4,6 +4,10 @@
 ! Purpose     : Perfect pattern recognition
 !-----------------------------------------------------------------------------
 
+!======================= TrackIdealPR v2r11 2007-05-31 =======================
+! 2007-05-31 - Marco Cattaneo
+ - Follow change of interfaces location to Kernel/MCInterfaces package
+
 !======================= TrackIdealPR v2r10 2007-05-07 =======================
 ! 2007-05-06 M Needham
  - Follow changes in IIdealStateCreator interface

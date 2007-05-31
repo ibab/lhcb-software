@@ -4,6 +4,11 @@
 ! Purpose     : package for tracking tools accessing MC information
 !-----------------------------------------------------------------------------
 
+!======================= TrackMCTools v2r11 2007-05-31 =======================
+! 2007-05-31 - Marco Cattaneo
+ - Fix doxygen warnings
+ - Follow move of intefaces to MCInterfaces package
+
 !======================= TrackMCTools v2r10 2007-05-18 =======================
 ! 2007-05-18 - Marco Cattaneo
  - Adapt to move of ILHCbIDsToMCParticles.h fromTsaKernel to TrackMCInterfaces

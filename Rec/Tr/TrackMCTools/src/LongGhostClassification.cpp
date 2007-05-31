@@ -1,12 +1,10 @@
-// $Id: LongGhostClassification.cpp,v 1.2 2007-05-18 09:29:58 cattanem Exp $
+// $Id: LongGhostClassification.cpp,v 1.3 2007-05-31 15:21:38 cattanem Exp $
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
 
 #include "Kernel/VeloChannelID.h"
 
 #include "LongGhostClassification.h"
-
-#include "TrackMCInterfaces/ILHCbIDsToMCParticles.h"
 
 #include "Event/Track.h"
 

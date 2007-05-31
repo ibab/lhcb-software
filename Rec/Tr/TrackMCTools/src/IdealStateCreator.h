@@ -1,4 +1,4 @@
-// $Id: IdealStateCreator.h,v 1.10 2007-05-07 08:06:33 mneedham Exp $
+// $Id: IdealStateCreator.h,v 1.11 2007-05-31 15:21:38 cattanem Exp $
 #ifndef TRACKMCTOOLS_IDEALSTATECREATOR_H
 #define TRACKMCTOOLS_IDEALSTATECREATOR_H 1
 
@@ -7,8 +7,8 @@
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 
-// from TrackMCInterfacces
-#include "TrackMCInterfaces/IIdealStateCreator.h"
+// from MCInterfacces
+#include "MCInterfaces/IIdealStateCreator.h"
 
 // from TrackInterfacces
 #include "TrackInterfaces/ITrackExtrapolator.h"

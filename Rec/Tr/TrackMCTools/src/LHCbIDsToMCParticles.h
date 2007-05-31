@@ -9,9 +9,9 @@
 #include "Linker/LinkedTo.h"
 
 
-#include "TrackMCInterfaces/ILHCbIDsToMCParticles.h"
+#include "MCInterfaces/ILHCbIDsToMCParticles.h"
 
-/** @class LHCbIDsToMCParticles
+/** @class LHCbIDsToMCParticles LHCbIDsToMCParticles.h 
 *
 *  Link ids to MCParticles
 *
@@ -45,8 +45,8 @@ public:
 
   /**
     Trivial link from list of IDs to all particles contributing
-    @param iterator to first id
-    @param iterator to last id
+    @param start  iterator to first id
+    @param stop   iterator to last id
     @param output vector by reference
     @return StatusCode
   */
@@ -56,7 +56,7 @@ public:
 
   /**
     Trivial link from list of ALL ids in track to particles contributing
-    @param track
+    @param aTrack track
     @param output vector by reference
     @return StatusCode
   */

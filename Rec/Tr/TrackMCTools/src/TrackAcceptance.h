@@ -1,4 +1,4 @@
-// $Id: TrackAcceptance.h,v 1.7 2007-02-01 10:11:28 wouter Exp $
+// $Id: TrackAcceptance.h,v 1.8 2007-05-31 15:21:38 cattanem Exp $
 #ifndef TRACKMCTOOLS_TRACKACCEPTANCE_H
 #define TRACKMCTOOLS_TRACKACCEPTANCE_H 1
 
@@ -7,8 +7,8 @@
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 
-// Tr/TrackMCInterfaces
-#include "TrackMCInterfaces/ITrackReconstructible.h"
+// Kernel/MCInterfaces
+#include "MCInterfaces/ITrackReconstructible.h"
 
 // Det
 #include "VeloDet/DeVelo.h"
@@ -21,7 +21,7 @@ namespace LHCb
   class MCHit;
 }
 
-/** @class TrackAcceptance TrackAcceptance.h "TrackMCTools/TrackAcceptance.h"
+/** @class TrackAcceptance TrackAcceptance.h
  *
  *  TrackAcceptance is a ITrackReconstructible tool. It can be used
  *  to ask whether a MCParticle is in the @em tracking-acceptance. 

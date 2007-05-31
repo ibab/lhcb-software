@@ -1,4 +1,4 @@
-// $Id: TrackCriteriaSelector.h,v 1.10 2007-05-07 09:22:37 cattanem Exp $
+// $Id: TrackCriteriaSelector.h,v 1.11 2007-05-31 15:21:38 cattanem Exp $
 #ifndef TRACKMCTOOLS_TRACKCRITERIASELECTOR_H 
 #define TRACKMCTOOLS_TRACKCRITERIASELECTOR_H 1
 
@@ -6,9 +6,9 @@
 #include "GaudiAlg/GaudiTool.h"
 
 
-// from TrackMCInterfaces
-#include "TrackMCInterfaces/ITrackCriteriaSelector.h"
-#include "TrackMCInterfaces/ITrackReconstructible.h"
+// from MCInterfaces
+#include "MCInterfaces/ITrackCriteriaSelector.h"
+#include "MCInterfaces/ITrackReconstructible.h"
 
 #include "Event/MCVertex.h"
 
