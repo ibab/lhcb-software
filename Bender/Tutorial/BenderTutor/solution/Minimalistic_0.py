@@ -1,6 +1,6 @@
-# $Id: Minimalistic_0.py,v 1.4 2006-11-17 11:59:47 ibelyaev Exp $
+# $Id: Minimalistic_0.py,v 1.5 2007-05-31 11:29:46 ibelyaev Exp $
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ , verison $Revision: 1.4 $
+# CVS tag $Name: not supported by cvs2svn $ , verison $Revision: 1.5 $
 # =============================================================================
 
 from bendermodule import *

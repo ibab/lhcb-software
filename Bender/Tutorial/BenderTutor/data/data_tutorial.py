@@ -1,8 +1,8 @@
 #!/usr/bin/env python2.4 
 # =============================================================================
-# $Id: data_tutorial.py,v 1.1 2006-11-17 11:59:47 ibelyaev Exp $ 
+# $Id: data_tutorial.py,v 1.2 2007-05-31 11:29:45 ibelyaev Exp $ 
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.1 $
+# CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.2 $
 # =============================================================================
 """
 //-- GAUDI data cards generated on Nov 9, 2006 11:49:47 AM
@@ -23,7 +23,6 @@
 # =============================================================================
 __author__ = "Vanya BELYAEV ibelyaev@physics.syr.edu"
 # =============================================================================
-
 
 ## use castor tapes at CERN 
 prefix = "PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/v1-lumi2/00001395/DST/0000/"
@@ -60,8 +59,16 @@ _FILES = [
     '00001395_00000029_5.dst'  ,
     '00001395_00000030_5.dst'  ]
 
-## the actual list of files 
-FILES = [ prefix+file for file in _FILES ]
+## the actual list of files
+FILES = []
+for file in _FILES :
+    import os,sys
+    #
+    if 'win32' == sys.platform : local = 'C:\\Data\\JpsiPhi\\'    # my Windows laptop
+    else: local = '/afs/cern.ch/lhcb/group/calo/ecal/vol10/DATA/' # "prestage" at CERN AFS
+    #
+    if os.path.exists( local + file ) : FILES += [ local  + file ]
+    else : FILES += [ prefix + file ] # use CASTOR
 
 if __name__ == '__main__' :
     print '  #FILES to be used for BENDER Tutotial : %s'%len(FILES)
