@@ -1,11 +1,12 @@
 ! =============================================================================
-! $Id: release.notes,v 1.29 2007-05-29 13:19:27 marcocle Exp $ 
+! $Id: release.notes,v 1.30 2007-05-31 12:35:19 cattanem Exp $ 
 ! =============================================================================
 ! package DetDescSvc
 ! package manager : Marco Clemencic, Juan Palacios ?
 ! purpose:          Component library for Detector Description Services
 ! =============================================================================
 
+!========================= DetDescSvc v1r12 2007-05-31 ========================
 ! 2007-05-29 - Marco Clemencic
  - Fixed a bug in UpdateManagerSvc. Check if the setting of the user provided
    pointers is successful or not. (Avoid segmentation fault if the object
