@@ -1,11 +1,25 @@
 ! =============================================================================
-! $Id: release.notes,v 1.297 2007-05-30 16:13:03 cattanem Exp $ 
+! $Id: release.notes,v 1.298 2007-05-31 14:47:23 jpalac Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
 
+! 2007-05-31 - Juan PALACIOS
+  - DetDesc/AlignmentCondition.h, src/Lib/AlignmentCondition.cpp
+    . Fix bug in matrix(const Gaudi::Transform3D&) method. This method takes 
+      the matrix which moves the detector element from nominal to misalinged 
+      position. Internally, this is m_matrixInv. Since we do most operations 
+      with the misaligned -> nominal matrix, m_matrix is, confusingly,
+      actually the inverse of the misalign matrix.
+    . Move matrix(const Gaudi::Transform3D&) and StatusCode setTransformation( const std::vector<double>&, const std::vector<double>&, const std::vector<double>&); to .cpp file.
+  - Add DetDesc/GlobalToLocalDelta.h, src/Lib/GlobalToLocalDelta.cpp
+    . Simple standalone functions to convert a misalignment calculated in the global
+      frame to the corresponding misalignment in the frame of the parent of the 
+      detector element in question. 
+
 !====================== DetDesc v17r4 2007-05-30 ==============================
+
 ! 2007-05-30 - Juan PALACIOS
   - added temporary files in src/Lib:
     . RotationZYX{.h, .cpp}   : Hacked from homonimous MathCore file in ROOT cvs.
