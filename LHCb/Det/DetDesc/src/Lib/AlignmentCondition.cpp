@@ -1,4 +1,4 @@
-// $Id: AlignmentCondition.cpp,v 1.12 2007-05-30 14:50:34 jpalac Exp $
+// $Id: AlignmentCondition.cpp,v 1.13 2007-05-31 13:55:34 jpalac Exp $
 // Include files
 #include <algorithm>
 
@@ -59,7 +59,22 @@ StatusCode AlignmentCondition::initialize() {
   // it is up to the user to override this in a child of Condition
   return makeMatrices();
 }
-
+//=============================================================================
+void AlignmentCondition::matrix(const Gaudi::Transform3D& newMatrix) 
+{
+  m_matrix=newMatrix.Inverse();
+  m_matrixInv=m_matrix;
+  updateParams();
+}
+//=============================================================================
+StatusCode 
+AlignmentCondition::setTransformation( const std::vector<double>& translation,
+                                       const std::vector<double>& rotation,
+                                       const std::vector<double>& pivot) 
+{
+  loadParams(translation, rotation, pivot);
+  return makeMatrices();
+}
 //=============================================================================
 const Gaudi::Transform3D AlignmentCondition::XYZTranslation(const std::vector<double>& coefficients) const
 {

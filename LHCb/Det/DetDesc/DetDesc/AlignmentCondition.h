@@ -1,4 +1,4 @@
-// $Id: AlignmentCondition.h,v 1.10 2007-05-30 14:50:34 jpalac Exp $
+// $Id: AlignmentCondition.h,v 1.11 2007-05-31 13:55:34 jpalac Exp $
 #ifndef DETDESC_ALIGNMENTCONDITION_H 
 #define DETDESC_ALIGNMENTCONDITION_H 1
 
@@ -38,12 +38,16 @@ public:
   inline virtual const CLID& clID() const { return classID(); } 
   /// Class ID of this class
   inline static  const CLID& classID() { return CLID_AlignmentCondition; };
-  
+  /**
+   * Return the misaligned -> nominal 3D transformation matrix.
+   */
   inline const Gaudi::Transform3D& matrix() const
   {
     return m_matrix;
   }
-
+  /**
+   * Return the nominal -> misaligned 3D transformation matrix.
+   */
   inline const Gaudi::Transform3D& matrixInv() const
   {
     return m_matrixInv;
@@ -51,14 +55,10 @@ public:
 
   /**
    * Set a new 3D transformation starting directly from from a Transform3D
-   * @param newMatrix new full transformation object.
+   * @param newMatrix new full transformation object describing aligned to misalinged 
+   * transformation in the frame of the detector element..
    */
-  inline void matrix(const Gaudi::Transform3D& newMatrix) 
-  {
-    m_matrix=newMatrix;
-    m_matrixInv=m_matrix.Inverse();
-    updateParams();
-  }
+  void matrix(const Gaudi::Transform3D& newMatrix);
 
   /**
    * Set a new 3D transformation starting from the basic set of parameters
@@ -69,15 +69,9 @@ public:
    * @param pivot       vector containing X,Y,Z pivot point for rotation.
    * @return            StatusCode
    */
-
-  inline StatusCode setTransformation( const std::vector<double>& translation,
-                                       const std::vector<double>& rotation,
-                                       const std::vector<double>& pivot) 
-  {
-    loadParams(translation, rotation, pivot);
-    return makeMatrices();
-  }
-  
+  StatusCode setTransformation( const std::vector<double>& translation,
+                                const std::vector<double>& rotation,
+                                const std::vector<double>& pivot);
 
 protected:
 
@@ -134,8 +128,9 @@ private:
                                 std::vector<double>& translation);
 
   DetDesc::Services* m_services;
-  Gaudi::Transform3D m_matrix;
-  Gaudi::Transform3D m_matrixInv;
+
+  Gaudi::Transform3D m_matrix; /// The misaligned to aligned transformation matrix.
+  Gaudi::Transform3D m_matrixInv; /// The aligned to misaligned transformation matrix.
 
   const std::string m_translationString;
   const std::string m_rotationString;
