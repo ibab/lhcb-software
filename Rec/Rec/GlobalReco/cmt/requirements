@@ -3,7 +3,7 @@
 # Maintainer : Global PID Group ( Chris Jones et. al. )
 #============================================================================
 package           GlobalReco
-version           v6r9
+version           v6r10
 
 branches          cmt doc src options
 include_path none
@@ -13,9 +13,9 @@ set GLOBALRECOOPTS  ${GLOBALRECOROOT}/options
 # Used packages.
 #============================================================================
 use   GaudiAlg         v*
-use   RichRecBase      v*    Rich
 use   RecEvent         v*    Event
 use   MCEvent          v*    Event
+use   MCInterfaces     v*    Kernel
 use   TrackInterfaces  v*    Tr
 use   CaloInterfaces   v*    Calo
 use   CaloUtils        v*    Calo
