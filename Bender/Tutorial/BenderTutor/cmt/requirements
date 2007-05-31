@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.10 2007-05-31 11:29:45 ibelyaev Exp $ 
+# $Id: requirements,v 1.11 2007-05-31 11:39:22 ibelyaev Exp $ 
 # ============================================================================
 # CVS tag $Name: not supported by cvs2svn $
 # ============================================================================
@@ -24,6 +24,10 @@ path_remove       PATH  'BenderTutor'
 path_prepend      PATH  $(BENDERTUTORPYTHON)
 path_append       PATH  $(BENDERTUTORSOLUTION)
 
+## needed for Bender v7r0:
+macro ROOT_config_version "5.14.00e"
+macro ROOT_native_version "5.14.00e" 
+
 # =============== dependencies ===============================================
 use               Bender       v*    Phys 
 # ============================================================================
@@ -33,6 +37,9 @@ apply_pattern     application_path
 
 # ============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.10  2007/05/31 11:29:45  ibelyaev
+#  update for Bender_v7r0
+#
 #
 # ============================================================================
 # The END 
