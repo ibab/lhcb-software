@@ -1,4 +1,4 @@
-// $Id: SiDepositedCharge.h,v 1.4 2007-03-23 14:49:53 cattanem Exp $
+// $Id: SiDepositedCharge.h,v 1.5 2007-06-01 11:57:59 cattanem Exp $
 #ifndef SiDepositedCharge_H
 #define SiDepositedCharge_H 1
 
@@ -11,8 +11,8 @@
 #include "GaudiKernel/IRndmGen.h"
 #include "GaudiKernel/SystemOfUnits.h"
 
-// Interface from MCEvent
-#include "Kernel/ISiDepositedCharge.h"
+// Interface
+#include "MCInterfaces/ISiDepositedCharge.h"
 
 /** @class SiDepositedCharge SiDepositedCharge.h
  *

@@ -1,4 +1,4 @@
-// $Id: SiAmplifierResponse.h,v 1.2 2007-01-09 14:57:21 jvantilb Exp $
+// $Id: SiAmplifierResponse.h,v 1.3 2007-06-01 11:57:59 cattanem Exp $
 #ifndef SiAmplifierResponse_H
 #define SiAmplifierResponse_H 1
 
@@ -39,7 +39,7 @@ public:
   */
   virtual double response(const double time) const;
   
-  /** The response is only valid for a certain capacitance, Vfs, ..
+  /** The response is only valid for a certain capacitance, Vfs, etc.
   * This method allows you to find out when the curve is valid
   * @return validity info
   */

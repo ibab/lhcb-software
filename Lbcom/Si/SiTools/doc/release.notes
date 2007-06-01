@@ -2,6 +2,11 @@ Package         : Si/SiTools
 Package manager : Matt Needham
 !------------------------------------------------------------------------------
 
+!============================ SiTools v1r3 2007-05-29 =========================
+! 2007-05-29 - Marco Cattaneo
+ - Adapt to new location of MCInterfaces
+ - Fix a doxygen warning
+
 !============================ SiTools v1r2 2007-03-23 =========================
 ! 2007-03-23 - Marco Cattaneo
  - Remove obsolete fie SiTools_load.cpp
