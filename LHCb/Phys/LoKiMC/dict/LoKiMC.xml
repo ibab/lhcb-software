@@ -1,0 +1,100 @@
+<!-- 
+     * $Id: LoKiMC.xml,v 1.1 2007-06-01 11:57:36 ibelyaev Exp $ 
+     * ========================================================================
+     * CVS tag:$Name: not supported by cvs2svn $, version $Revision: 1.1 $ 
+     * ======================================================================== 
+     * @file
+     * The seleciton file to build Reflex dictionaries for Phys/LoKiGen package
+     * @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     * @date 2006-02-06
+     * ========================================================================
+-->
+
+<lcgdict>
+
+  <class name = "LoKi::MCFinderObj" />
+  <class name = "LoKi::MCFinder"    />
+
+  <class pattern   = "LoKi::Range_<*LHCb::MC*>"      />
+  <class pattern   = "LoKi::NamedRange_<*LHCb::MC*>" />
+  <class pattern   = "LoKi::RangeList_<*LHCb::MC*>"  />
+  
+  <class pattern   = "LoKi::Keeper<LHCb::MC*>"        />
+  <class pattern   = "LoKi::UniqueKeeper<LHCb::MC*>"  />
+  <class pattern   = "LoKi::Interface<*>"             />
+  
+  <class pattern   = "std::unary_function<*LHCb::MC*,double>"          />
+  <class pattern   = "std::unary_function<*LHCb::MC*,bool>"            />
+  <class pattern   = "std::binary_function<*LHcb::MC*,*LHCb::MC::*,bool>" />
+  
+  <class pattern   = "LoKi::Function<*LHCb::MC*>"         />
+  <class pattern   = "LoKi::Predicate<*LHCb::MC*>"        />
+  
+  <class pattern   = "LoKi::Constant<*LHCb::MC*>"         />
+  <class pattern   = "LoKi::BooleanConstant<*LHCb::MC*>"  />
+
+  <class pattern   = "LoKi::PredicateFromPredicate<*LHCb::MC*>"        />
+  <class pattern   = "LoKi::PredicateFromTwoPredicates<*LHCb::MC*>"    />
+  <class pattern   = "LoKi::PredicateFromTwoFunctions<*LHCb::MC*>"     />
+  <class pattern   = "LoKi::FunctionFromTwoFunctions<*LHCb::MC*>"      />
+  <class pattern   = "LoKi::FunctionFromFunction<*LHCb::MC*>"          />
+  <class pattern   = "LoKi::PredicateFromFunctionAndValue<*LHCb::MC*>" />
+
+  <class pattern   = "LoKi::And<*LHCb::MC*>"              />
+  <class pattern   = "LoKi::Or<*LHCb::MC*>"               />
+  <class pattern   = "LoKi::Not<*LHCb::MC*>"              />
+
+  <class pattern   = "LoKi::Less<*LHCb::MC*>"             />
+  <class pattern   = "LoKi::Equal<*LHCb::MC*>"            />
+  <class pattern   = "LoKi::LessOrEqual<*LHCb::MC*>"      />
+  <class pattern   = "LoKi::NotEqual<*LHCb::MC*>"         />
+
+  <class pattern   = "LoKi::Plus<*LHCb::MC*>"             />
+  <class pattern   = "LoKi::Minus<*LHCb::MC*>"            />
+  <class pattern   = "LoKi::Divide<*LHCb::MC*>"           />
+  <class pattern   = "LoKi::Multiply<*LHCb::MC*>"         />
+
+  <class pattern   = "LoKi::Min<*LHCb::MC*>"              />
+  <class pattern   = "LoKi::Max<*LHCb::MC*>"              />
+
+  <class pattern   = "LoKi::ComposeFunction<*LHCb::MC*>"  />
+  <class pattern   = "LoKi::ComposeFunction2<*LHCb::MC*>" />
+
+  <class pattern   = "LoKi::Compare<*LHCb::MC*>"          />
+
+  <class pattern   = "LoKi::SimpleSwitch<*LHCb::MC*>"     />
+  <class pattern   = "LoKi::Switch<*LHCb::MC*>"           />
+
+  <class pattern   = "LoKi::Valid<*LHCb::MC*>"            />
+  <class pattern   = "LoKi::TheSame<*LHCb::MC*>"          />
+  
+  
+  <class pattern   = "LoKi::MCParticles::*"                />
+  <class pattern   = "LoKi::MCVertices::*"                 />
+
+  <function pattern = "LoKi::Kinematics::*"                />
+  <function pattern = "LoKi::Print::*"                     />
+
+  <class pattern   = "LoKi::Dicts::FuncOps<*LHCb::MC*>"     />
+  <class pattern   = "LoKi::Dicts::PIDOps<LoKi::MC*>"       />
+  <class pattern   = "LoKi::Dicts::FunCalls<LHCb::MC*>"     />
+  <class pattern   = "LoKi::Dicts::CutCalls<LHCb::MC*>"     />
+
+  <class name = "std::vector<const LHCb::MCVertex*>"        /> 
+  
+  <exclusion>
+    <class name = "std::unary_function<char,bool>"                />
+    <class name = "std::unary_function<const char*,bool>"         /> 
+    <class name = "std::unary_function<const void*,bool>"         /> 
+    <class name = "std::vector<const ContainedObject*>"           /> 
+    <class name = "std::vector<const LHCb::MCParticle*>"          /> 
+    <class name = "LoKi::MCParticles::IsParticle::Objects"        />  
+    <class name = "LoKi::MCParticles::IsContainedObject::Objects" /> 
+    <class name = "LoKi::MCParticles::FromMCDecayTree::MCCont"    /> 
+    
+    <class name = "LoKi::Interface<LoKi::IReporter>" /> 
+    <class name = "LoKi::Interface<GaudiTool>"       /> 
+    <class name = "LoKi::Interface<GaudiAlgorithm>"  /> 
+ </exclusion>
+  
+</lcgdict>

@@ -1,6 +1,6 @@
-! $Id: release.notes,v 1.18 2007-04-19 13:51:00 pkoppenb Exp $ 
+! $Id: release.notes,v 1.19 2007-06-01 11:57:36 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.18 $
+! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.19 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -16,6 +16,30 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 !
 ! -----------------------------------------------------------------------------
+
+! 2007-06-01 - Vanya BELYAEV
+ - prepare for the major version v3r0 : 
+     all dictionaries are built locally 
+
+ - New files:
+
+   dict/LoKiMC.xml
+   dict/LoKiMCDict.h
+  
+   python/LoKiMC/__init__.py
+   python/LoKiMC/decorators.py
+   python/LoKiMC/functions.py
+   python/LoKiMC/tests.py
+
+ - Modified files:
+
+   LoKi/MCFinder.h
+   LoKi/MCFinderObj.h
+   LoKi/MCTypes.h
+
+ - cmt/requiremensts 
+    version increment to v3r0 
+
 
 !========================== LoKiMC v2r2p1 2007-04-19 ===================
 ! 2007-04-19 -  P. Koppenburg
@@ -265,6 +289,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.18  2007/04/19 13:51:00  pkoppenb
+! tagged as v2r2p1
+!
 ! Revision 1.17  2007/03/04 16:47:19  ibelyaev
 !  add DelatPhi/DelatEta/DeltaR2 for jet studies
 !

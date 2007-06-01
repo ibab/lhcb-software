@@ -1,13 +1,8 @@
-// $Id: MCTypes.h,v 1.8 2007-04-16 16:16:08 pkoppenb Exp $
+// $Id: MCTypes.h,v 1.9 2007-06-01 11:57:36 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.8 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.9 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.7  2006/11/27 11:58:37  ibelyaev
-//  prepare for LoKi v4r3
-//
-// Revision 1.6  2006/10/10 09:14:05  ibelyaev
-//  tiny fixes needed for good&valid dictionaries
 //
 // ============================================================================
 #ifndef LOKI_MCTYPES_H 
@@ -28,8 +23,7 @@
 // ============================================================================
 #include "LoKi/Functions.h"
 #include "LoKi/Selected.h"
-// ============================================================================
-
+#include "LoKi/RangeList.h"
 // ============================================================================
 /** @file
  *
@@ -45,7 +39,6 @@
  *  @date 2006-03-10 
  */
 // ============================================================================
-
 namespace LoKi
 {
   /** @namespace  LoKi::MCTypes MCTypes.h LoKi/MCTypes.h
@@ -90,17 +83,14 @@ namespace LoKi
     typedef LoKi::PredicateFromPredicate<const LHCb::MCVertex*>   MCVCut  ;
     /// type of 'functions' for Vertices (assignable)
     typedef LoKi::FunctionFromFunction<const LHCb::MCVertex*>     MCVFun  ;
-    
-  } // end of namespace MCTypes
-  
+    //
+  } // end of namespace MCTypes  
   namespace Types 
-  {
-    
+  { 
     /// the actual type of the sequence of MC-particles 
     typedef LoKi::MCTypes::MCRange  MCRange ;
     /// the actual type of the sequence of MC-vertices  
-    typedef LoKi::MCTypes::MCVRange MCVRange ;
-    
+    typedef LoKi::MCTypes::MCVRange MCVRange ; 
     /// type of 'cuts' for MCParticles       (interface)
     typedef LoKi::MCTypes::MCCuts  MCCuts ;
     /// type of 'functions' for <MCParticles  (interface)
@@ -109,7 +99,6 @@ namespace LoKi
     typedef LoKi::MCTypes::MCCut   MCCut  ;
     /// type of 'functions' for MCParticles  (assignable)
     typedef LoKi::MCTypes::MCFun   MCFun  ;
-    
     /// type of 'cuts' for MCVertices        (interface)
     typedef LoKi::MCTypes::MCVCuts MCVCuts ;
     /// type of 'functions' for MCVertices   (interface)
@@ -118,11 +107,13 @@ namespace LoKi
     typedef LoKi::MCTypes::MCVCut  MCVCut  ;
     /// type of 'functions' for Vertices     (assignable)
     typedef LoKi::MCTypes::MCVFun  MCVFun  ;
-    
+    /// the actual type of the range list  
+    typedef LoKi::RangeList_<MCRange>  MCRangeL  ;
+    /// the actual type of the range list 
+    typedef LoKi::RangeList_<MCVRange> MCVRangeL ; 
+    //
   }
-  
-} // end of namespace LoKi 
-
+} // end of namespace LoKi
 // ============================================================================
 // The END 
 // ============================================================================
