@@ -45,6 +45,7 @@ namespace MBM {
       ManagerImp      m_mgr;
       BUFFERS::BUFF*  m_buff;
       DISP_BMDES() : m_buff(0) {}
+      ~DISP_BMDES() {}
     };
     DISP_BMDES* m_bms;
     int  m_numBM;
@@ -52,8 +53,8 @@ namespace MBM {
     char m_buffID[32];
     char* m_bmid;
     lib_rtl_gbl_t m_bm_all;
-    WINDOW* m_window;
-    BUFFERS* m_buffers;
+    WINDOW*       m_window;
+    BUFFERS*      m_buffers;
     int m_color;
 
     int monitor();
@@ -99,7 +100,13 @@ namespace MBM {
       print_char(term_width(),m_currLine,RIGHT_UP_EDGE);      
       m_currLine = 2;
     }
-    void end_update() {
+    void end_update() { 
+      while(m_currLine<term_height()-1) {
+        //char buffer[1024];
+        //sprintf(buffer," Line:%d total:%d ------",m_currLine, term_height());
+        //draw_line(NORMAL,buffer);
+        draw_line(NORMAL,"");
+      }
       print_char(1,m_currLine,LEFT_LOW_EDGE);
       for(size_t i=1; i < term_width()-1; ++i)
         print_char(i+1,m_currLine,HORZ_BAR);
@@ -115,10 +122,18 @@ namespace MBM {
     int get_bm_list();
     int drop_bm_list();
     size_t draw_bar(float ratio,int full_scale);
-    Monitor(int argc , char** argv) : m_window(0)  {
-      m_bmid = 0;
+    static size_t print(void* ctxt, const char* format, va_list args) {
+      char buffer[1024];
+      Monitor* m = (Monitor*)ctxt;
+      size_t res = ::vsnprintf(buffer, sizeof(buffer), format, args);
+      m->draw_line(NORMAL,buffer);
+      return res;
+    }
+    Monitor(int argc , char** argv) 
+    : m_bms(0), m_bmid(0), m_bm_all(0), m_window(0), m_buffers(0), m_color(YELLOW)  
+    {
+      lib_rtl_install_printer(print,this);
       getOptions(argc, argv);
-      m_color = YELLOW;
     }
   };
 }
@@ -160,15 +175,15 @@ int MBM::Monitor::monitor() {
   if( cont )    {
     while( 0 != end )    {
       try {
-        get_bm_list();    
         begin_update();
+        get_bm_list();    
         put_inf();
-        end_update();
         drop_bm_list();
       }
       catch(...) {
         draw_line(NORMAL," Exception during buffer monitoring.");
       }
+      end_update();
       lib_rtl_sleep(1000);
     }      
   }
@@ -206,17 +221,20 @@ int MBM::Monitor::put_inf()   {
   int i, j, k;
   time_t nowt;
 #if defined(SHOW_TIMES)
-  const char* fmt_prod = " %-15s%4x%8d%5s%6s%11d   %3.0f%32s%7s  %7.1e %7.1e %d %d";
-  const char* fmt_cons = " %-15s%4x%8d%5s%6s               %12d%11d   %3.0f%5s%7s  %7.1e %7.1e %d %d";
-  const char* head=" Name      Partition     Pid Type State   Produced %%prod     #seen     #freed %%seen Reqs Buffer    UTime  STime";
+  static const char* fmt_def  = " %-15s%4x%8d%5s          %40s%5s%7s";
+  static const char* fmt_prod = " %-15s%4x%8d%5s%6s%11d   %3.0f%32s%7s  %7.1e %7.1e %d %d";
+  static const char* fmt_cons = " %-15s%4x%8d%5s%6s               %12d%11d   %3.0f%5s%7s  %7.1e %7.1e %d %d";
+  static const char* head=" Name      Partition     Pid Type State   Produced %%prod     #seen     #freed %%seen Reqs Buffer    UTime  STime";
 #elif defined(SHOW_SLEEPS)
-  const char* fmt_prod = " %-15s%4x%8d%5s%6s%11d   %3.0f%32s%7s %d";
-  const char* fmt_cons = " %-15s%4x%8d%5s%6s               %12d%11d   %3.0f%5s%7s %d";
-  const char* head=" Name      Partition     Pid Type State   Produced %%prod     #seen     #freed %%seen Reqs Buffer  Sleeps";
+  static const char* fmt_def  = " %-15s%4x%8d%5s          %40s%5s%7s";
+  static const char* fmt_prod = " %-15s%4x%8d%5s%6s%11d   %3.0f%32s%7s %d";
+  static const char* fmt_cons = " %-15s%4x%8d%5s%6s               %12d%11d   %3.0f%5s%7s %d";
+  static const char* head=" Name      Partition     Pid Type State   Produced %%prod     #seen     #freed %%seen Reqs Buffer  Sleeps";
 #else
-  const char* fmt_prod = " %-15s%4x%8d%5s%6s%11d   %3.0f%32s%7s";
-  const char* fmt_cons = " %-15s%4x%8d%5s%6s               %12d%11d   %3.0f%5s%7s";
-  const char* head=" Name      Partition     Pid Type State   Produced %%prod     #seen     #freed %%seen Reqs Buffer";
+  static const char* fmt_def  = " %-36s%4x%8d%5s          %40s%5s%7s";
+  static const char* fmt_prod = " %-36s%4x%8d%5s%6s%11d   %3.0f%32s%7s";
+  static const char* fmt_cons = " %-36s%4x%8d%5s%6s               %12d%11d   %3.0f%5s%7s";
+  static const char* head=" Name                           Partition     Pid Type State   Produced %%prod     #seen     #freed %%seen Reqs Buffer";
 #endif
   char line[256], tim[64];
   ::time(&nowt);
@@ -226,7 +244,7 @@ int MBM::Monitor::put_inf()   {
   draw_line(REVERSE,  "                               Buffer Manager Monitor [%s]  pid:%d", tim, lib_rtl_pid());
   draw_line();
   draw_line(NORMAL,"");
-  for (i=0;i<m_buffers->p_bmax;i++)  {
+  for (i=0;m_numBM>0 && i<m_buffers->p_bmax;i++)  {
     if ( m_bms[i].m_buff != 0 )  {
       BMDESCRIPT* dsc = m_bms[i].m_mgr.m_bm;
       draw_buffer(dsc->bm_name, dsc->ctrl);
@@ -237,7 +255,7 @@ int MBM::Monitor::put_inf()   {
   draw_line(NORMAL,m_numBM<=0 ? "               No active buffers present" : head);
   draw_line();
 
-  for (i=0;i<m_buffers->p_bmax;i++)  {
+  for (i=0;m_numBM>0 && i<m_buffers->p_bmax;i++)  {
     if ( m_bms[i].m_buff != 0 )  {
       USER *us, *utst=(USER*)~0x0;
       BMDESCRIPT* dsc = m_bms[i].m_mgr.m_bm;
@@ -278,15 +296,12 @@ int MBM::Monitor::put_inf()   {
             );
         }
         else        {
-          sprintf(line," %-15s%4x%8d%5s          %40s%5s%7s",us->name,us->partid,us->pid,"?","",
-            spy_val, dsc->bm_name);    
+          sprintf(line,fmt_def,us->name,us->partid,us->pid,"?","",spy_val, dsc->bm_name);    
         }
         draw_line(NORMAL,line);
       }
     }
   }
-  while(m_currLine<term_height()-1) 
-    draw_line(NORMAL,"");
   return 1;
 }
 
@@ -318,6 +333,16 @@ int MBM::Monitor::optparse (const char* c)  {
 
 int MBM::Monitor::get_bm_list()   {
   m_numBM = 0;
+  int status = ::mbm_map_global_buffer_info(&m_bm_all,false);
+  if( !lib_rtl_is_success(status) )   {   
+    lib_rtl_printf("Cannot map global buffer information....\n");
+    m_bm_all = 0;
+    m_buffers = 0;
+    m_bms = 0;
+    return 0;
+  }
+  m_buffers = (BUFFERS*)m_bm_all->address;
+  m_bms = new DISP_BMDES[m_buffers->p_bmax];
   for (int i = 0; i < m_buffers->p_bmax; ++i)  {
     if ( m_buffers->buffers[i].used == 1 )  {
       if ( m_bmid != 0 && strcmp(m_bmid,m_buffers->buffers[i].name) != 0 )  {
@@ -340,13 +365,26 @@ int MBM::Monitor::get_bm_list()   {
 }
 
 int MBM::Monitor::drop_bm_list()   {
-  m_numBM = 0;
-  for (int i = 0; i < m_buffers->p_bmax; ++i)  {
-    if ( m_buffers->buffers[i].used != 1 && m_bms[i].m_buff != 0 )  {
-      m_bms[i].m_mgr.unmapSections();
-      m_bms[i].m_buff = 0;
+  if ( m_numBM > 0 ) {
+    for (int i = 0; i < m_buffers->p_bmax; ++i)  {
+      //if ( m_buffers->buffers[i].used != 1 && m_bms[i].m_buff != 0 )  {
+      if ( m_bms[i].m_buff != 0 )  {
+        // char txt[144];
+        // sprintf(txt,"Unmap section:%s",m_buffers->buffers[i].name);
+        // draw_line(NORMAL,txt);
+        m_bms[i].m_mgr.unmapSections();
+        m_bms[i].m_buff = 0;
+      }
     }
   }
+  m_numBM = 0;
+  if ( m_bm_all ) {
+    ::mbm_unmap_global_buffer_info(m_bm_all,false);
+    m_bm_all = 0;
+  }
+  m_buffers = 0;
+  if ( m_bms ) delete [] m_bms;
+  m_bms = 0;
   return 1;
 }
 

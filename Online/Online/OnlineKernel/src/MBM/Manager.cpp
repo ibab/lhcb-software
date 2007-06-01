@@ -6,13 +6,14 @@
 #include "bm_internals.h"
 #include "Manager.h"
 
-MBM::Manager::Manager()  {
+MBM::Manager::Manager() : m_bm(0), bm_id(0), bm_all(0) {
   bm_id = (char*)getenv("BM_ID");
   if(!bm_id) bm_id = "0";
 }
 
 MBM::Manager::~Manager()  {
-  delete m_bm;
+  if ( m_bm ) mbm_unmap_memory(m_bm);
+  m_bm = 0;
 }
 
 void MBM::Manager::setup(const char* id)  {
@@ -39,7 +40,11 @@ int MBM::Manager::mapSections()  {
 }
 
 int MBM::Manager::unmapSections()  {
-  int sc = mbm_unmap_memory(m_bm);
-  return sc;
+  if ( m_bm ) {
+    int sc = mbm_unmap_memory(m_bm);
+    m_bm = 0;
+    return sc;
+  }
+  return MBM_NORMAL;
 }
 

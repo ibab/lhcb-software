@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/DimMessageSvc.h,v 1.2 2006-04-24 14:45:05 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/DimMessageSvc.h,v 1.3 2007-06-01 13:49:45 frankm Exp $
 #ifndef GAUDIONLINE_DIMMESSAGESVC_H
 #define GAUDIONLINE_DIMMESSAGESVC_H
 
@@ -21,19 +21,19 @@ namespace LHCb  {
   };
   class DimBuffer  {
   public:
-	  DimBuffer();
-	  virtual ~DimBuffer();
+    DimBuffer();
+    virtual ~DimBuffer();
     void *makeBuffer (int typ, const std::string& src, const std::string& message);
-	  char *buffer ()   { return m_data.m_buffer;   }
-	  int   size()      { return m_size;            }
+    char *buffer ()   { return m_data.m_buffer;   }
+    int   size()      { return m_size;            }
 
   private:
     union {
       DimMessage* m_msg;
-  	  char*       m_buffer;
+      char*       m_buffer;
     } m_data;
-	  int   m_size;
-	  int   m_length;
+    int   m_size;
+    int   m_length;
   };
 
   /**@class DimMessageSvc DimMessageSvc.h

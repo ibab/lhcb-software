@@ -1,11 +1,19 @@
 #ifndef GAUDIONLINE_MONITORINGCLIENT_H
 #define GAUDIONLINE_MONITORINGCLIENT_H
 
+// Framework include files
 #include "GaudiKernel/Service.h"
 #include "GaudiKernel/IMonitorSvc.h"
 #include "GaudiKernel/IIncidentSvc.h"
 #include "GaudiKernel/IIncidentListener.h"
+
+// C++ includes
+#include <stdexcept>
+
+// Forward declarations
 class MsgStream;
+
+
 
 namespace AIDA {  class IHistogram; }
 
@@ -83,6 +91,7 @@ namespace LHCb  {
     /// Error handling
     StatusCode error(const std::string& msg) const;
     StatusCode error(const char* msg,...) const;
+    StatusCode errorException(const std::string& msg, const std::exception& e) const;
     StatusCode throwError(const std::string& msg) const;
     StatusCode throwError(const char* msg,...) const;
   };

@@ -57,6 +57,11 @@ namespace LHCb  {
     /// Send data to target destination
     virtual StatusCode sendData(const Recipient& tar, const void* data, size_t len)  {
       std::string target = tar.name + "/Event";
+      if ( len <= 56 ) {
+        MsgStream err(msgSvc(),name());
+        err << MSG::ERROR << "Bad DataType option ? [Must be 2] event length:" 
+            << len << " for " << target << endmsg;
+      }
       if ( 1 != ::dic_cmnd_service((char*)target.c_str(),(void*)data,len) )
         return StatusCode::FAILURE;
       return StatusCode::SUCCESS;

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/NetworkDataReceiver.cpp,v 1.4 2007-05-18 13:58:55 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/NetworkDataReceiver.cpp,v 1.5 2007-06-01 13:49:45 frankm Exp $
 //  ====================================================================
 //  NetworkDataReceiver.cpp
 //  --------------------------------------------------------------------
@@ -27,7 +27,7 @@ static const std::string s_reqMsg("EVENT_REQUEST");
 // Standard algorithm constructor
 NetworkDataReceiver::NetworkDataReceiver(const std::string& nam, ISvcLocator* pSvc)
 : OnlineService(nam,pSvc), m_recvReq(0), m_recvError(0), m_recvBytes(0), 
-    m_mepMgr(0), m_prod(0), m_evtSelector(0)
+  m_backlog(0), m_lastbacklog(0), m_mepMgr(0), m_prod(0), m_evtSelector(0)
 {
   ::wtc_init();
   ::lib_rtl_create_lock(0,&m_lock);
@@ -60,8 +60,7 @@ StatusCode NetworkDataReceiver::initialize()   {
   declareInfo("RecvBytes",  m_recvBytes=0, "Total number of bytes received from clients.");
   sc = service("MEPManager",m_mepMgr);
   if ( !sc.isSuccess() )  {
-    MsgStream info(msgSvc(), name());
-    info << MSG::INFO << "Failed to access buffer manager service." << endmsg;
+    info("Failed to access buffer manager service.");
     return sc;
   }  
   sc = subscribeNetwork();
@@ -71,6 +70,8 @@ StatusCode NetworkDataReceiver::initialize()   {
   m_prod = m_mepMgr->createProducer(m_buffer,RTL::processName());
   ::wtc_subscribe(WT_FACILITY_DAQ_EVENT,0,rearm_net_request,this);
   incidentSvc()->addListener(this,"DAQ_CANCEL");
+  m_lastbacklog = 0;
+  m_backlog = 0;
   return sc;
 }
 
@@ -125,13 +126,11 @@ NetworkDataReceiver::handleSourceRequest(int clientID,
          << " [" << svc << "]" << endmsg;
     return StatusCode::SUCCESS;
   }
-  catch(std::exception& e)   {
-    MsgStream err(msgSvc(), name());
-    err << MSG::ERROR << "Exception during data source request" << e.what() << endmsg;
+  catch(const std::exception& e)   {
+    return errorException("Exception during data source request:",e);
   }
   catch(...)   {
-    MsgStream err(msgSvc(), name());
-    err << MSG::ERROR << "Unknown exception during data source request." << endmsg;
+    return error("Unknown exception during data source request.");
   }
   return StatusCode::FAILURE;
 }
@@ -181,17 +180,22 @@ NetworkDataReceiver::handleEventData(const std::string& src,void* buf,size_t len
       e->size = len;
       StatusCode sc = resetNetRequest(*entry);
       ::wtc_insert(WT_FACILITY_DAQ_EVENT,e);
+      int backlog = ++m_backlog;
+      if ( backlog%100 == 0 ) {
+        if ( m_lastbacklog != backlog ) {
+          m_lastbacklog = backlog;
+          error("Message backlog is now %d messages.",backlog);
+	}
+      }
       return sc;
     }
     error("Event receive entry from unknown source:"+src);
   }
   catch(std::exception& e)   {
-    MsgStream err(msgSvc(), name());
-    err << MSG::ERROR << "Exception during event receive request" << e.what() << endmsg;
+    return errorException("Exception during event receive request:",e);
   }
   catch(...)   {
-    MsgStream err(msgSvc(), name());
-    err << MSG::ERROR << "Unknown exception during event receive request." << endmsg;
+    return error("Unknown exception during event receive request.");
   }
   return StatusCode::FAILURE;
 }
@@ -217,6 +221,7 @@ StatusCode NetworkDataReceiver::declareEventData(RecvEntry& entry)  {
         ::memcpy(e.mask,h->subHeader().H1->triggerMask(),sizeof(e.mask));
         ret = m_prod->sendEvent();
         if ( MBM_NORMAL == ret )   {
+          m_backlog--;
           return rearmRequest(entry);
         }
       }
@@ -237,7 +242,6 @@ StatusCode NetworkDataReceiver::declareEventData(RecvEntry& entry)  {
     log << MSG::ERROR << "Got unknown exception when declaring event from:" << entry.name << endmsg;
   }
   return rearmRequest(entry);
-  //return StatusCode::FAILURE;
 }
 
 // Issue alarm message to error logger

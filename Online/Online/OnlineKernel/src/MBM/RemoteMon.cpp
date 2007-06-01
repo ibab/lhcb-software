@@ -39,21 +39,21 @@ namespace MBM {
       ManagerImp      m_mgr;
       BUFFERS::BUFF*  m_buff;
       DISP_BMDES() : m_buff(0) {}
-    };
-    DISP_BMDES* m_bms;
+      ~DISP_BMDES()  {}
+    }             *m_bms;
+    int           m_numBM;
     lib_rtl_gbl_t m_bm_all;
-    BUFFERS* m_buffers;
-
+    BUFFERS*      m_buffers;
     /// Smart pointer to hold the connection object
     NetworkConnection*   m_connection;
     /// Service port
     NetworkChannel::Port m_port;
-  /// Pointer to Accept Event handler
-  EventHandler*      m_pAccepthandler;
-  /// Pointer to TCP networkconnection
-  TcpConnection*     m_tcp;
-  /// Pointer to Network Channel
-  TcpNetworkChannel* m_pNetwork;
+    /// Pointer to Accept Event handler
+    EventHandler*      m_pAccepthandler;
+    /// Pointer to TCP networkconnection
+    TcpConnection*     m_tcp;
+    /// Pointer to Network Channel
+    TcpNetworkChannel* m_pNetwork;
 
     int monitor();
     void dumpBuffers(XMLStream& s);
@@ -63,7 +63,7 @@ namespace MBM {
     virtual int optparse (const char* c);
     int get_bm_list();
     int drop_bm_list();
-    XMLMonitorServer(int argc , char** argv)  {
+    XMLMonitorServer(int argc , char** argv) : m_bms(0), m_numBM(0), m_bm_all(0), m_buffers(0) {
       getOptions(argc, argv);
       ::wtc_init();
       m_tcp=new TcpConnection(10000);
@@ -95,14 +95,6 @@ void MBM::XMLMonitorServer::getOptions(int argc, char** argv)    {
 
 int MBM::XMLMonitorServer::monitor() {
   byte_offset(USER,next,USER_next_off);
-  int status = ::mbm_map_global_buffer_info(&m_bm_all);
-  if(!lib_rtl_is_success(status))   {   
-    printf("Cannot map global buffer information....\n");
-    exit(status);
-  }
-  m_buffers = (BUFFERS*)m_bm_all->address;
-  m_bms = new DISP_BMDES[m_buffers->p_bmax];
-
   while(1)    {
     void* par;
     unsigned int fac;
@@ -223,7 +215,8 @@ void MBM::XMLMonitorServer::dumpBuffers(XMLStream& o)   {
   ::strftime(tim,sizeof(tim),"%a %d %b %Y  %H:%M:%S",now);
   XML::Guard top(o, "MBM_SUMMARY");
   o << XML::item("TIME", XML::text(tim));
-  for (int j, i=0;i<m_buffers->p_bmax;i++)  {
+  o << XML::item("NODE", XML::text(RTL::nodeName()));
+  for (int j, i=0;i<m_numBM>0 && m_buffers->p_bmax;i++)  {
     if ( m_bms[i].m_buff != 0 )  {
       BMDESCRIPT* dsc = m_bms[i].m_mgr.m_bm;
       USER *us, *utst=(USER*)~0x0;
@@ -255,14 +248,29 @@ int MBM::XMLMonitorServer::optparse (const char* c)  {
 }
 
 int MBM::XMLMonitorServer::get_bm_list()   {
+  m_numBM = 0;
+  int status = ::mbm_map_global_buffer_info(&m_bm_all,false);
+  if( !lib_rtl_is_success(status) )   {   
+    lib_rtl_printf("Cannot map global buffer information....\n");
+    m_bm_all = 0;
+    m_buffers = 0;
+    m_bms = 0;
+    return 0;
+  }
+  m_buffers = (BUFFERS*)m_bm_all->address;
+  m_bms = new DISP_BMDES[m_buffers->p_bmax];
   for (int i = 0; i < m_buffers->p_bmax; ++i)  {
     if ( m_buffers->buffers[i].used == 1 )  {
       if ( m_bms[i].m_buff == 0 )  {
         m_bms[i].m_mgr.setup(m_buffers->buffers[i].name);
         int sc = m_bms[i].m_mgr.mapSections();
-        if ( !lib_rtl_is_success(sc) ) continue;
+        if ( !lib_rtl_is_success(sc) )   {
+          m_bms[i].m_mgr.unmapSections();
+          continue;
+        }
         m_bms[i].m_buff = &m_buffers->buffers[i];
       }
+      m_numBM++;
     }
     else if ( m_bms[i].m_buff != 0 )  {
       m_bms[i].m_mgr.unmapSections();
@@ -273,12 +281,22 @@ int MBM::XMLMonitorServer::get_bm_list()   {
 }
 
 int MBM::XMLMonitorServer::drop_bm_list()   {
-  for (int i = 0; i < m_buffers->p_bmax; ++i)  {
-    if ( m_buffers->buffers[i].used != 1 && m_bms[i].m_buff != 0 )  {
-      m_bms[i].m_mgr.unmapSections();
-      m_bms[i].m_buff = 0;
+  if ( m_numBM > 0 ) {
+    for (int i = 0; i < m_buffers->p_bmax; ++i)  {
+      if ( m_bms[i].m_buff != 0 )  {
+        m_bms[i].m_mgr.unmapSections();
+        m_bms[i].m_buff = 0;
+      }
     }
   }
+  m_numBM = 0;
+  if ( m_bm_all ) {
+    ::mbm_unmap_global_buffer_info(m_bm_all,false);
+    m_bm_all = 0;
+  }
+  m_buffers = 0;
+  if ( m_bms ) delete [] m_bms;
+  m_bms = 0;
   return 1;
 }
 

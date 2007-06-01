@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/OnlineService.cpp,v 1.4 2006-12-14 18:59:21 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/OnlineService.cpp,v 1.5 2007-06-01 13:49:45 frankm Exp $
 //  ====================================================================
 //  MEPManager.cpp
 //  --------------------------------------------------------------------
@@ -120,6 +120,13 @@ StatusCode LHCb::OnlineService::error(const std::string& msg)   const {
   MsgStream err(msgSvc(), name());
   err << MSG::ERROR;
   if ( err.isActive() ) err << msg << endmsg;
+  return StatusCode::FAILURE;
+}
+
+StatusCode LHCb::OnlineService::errorException(const std::string& msg, const std::exception& e)   const {
+  MsgStream err(msgSvc(), name());
+  err << MSG::ERROR;
+  if ( err.isActive() ) err << msg << e.what() << endmsg;
   return StatusCode::FAILURE;
 }
 

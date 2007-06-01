@@ -39,6 +39,11 @@ namespace LHCb  {
     static void i_evt_receive_handler(void* tag, void* buf, int* size)    {
       if ( *size <= 0 ) return;
       DimDataReceiver* h = *(DimDataReceiver**)tag;
+      if ( *size <= 56 ) {
+        MsgStream err(h->msgSvc(), h->name());
+        err << MSG::ERROR << "Bad DataType option of sender:" << i_client_name() 
+            << " [Must be 2] event length:" << *size << endmsg;
+      }
       h->handleEventData(i_client_name(), buf, *size);
     }
   public:

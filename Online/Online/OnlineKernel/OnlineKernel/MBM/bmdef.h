@@ -94,9 +94,9 @@ extern "C"  {
   /// Unmap buffer memory sections
   int mbm_unmap_memory(BMID bm);
   /// Map global buffer information on this machine
-  int mbm_map_global_buffer_info(lib_rtl_gbl_t* handle);
+  int mbm_map_global_buffer_info(lib_rtl_gbl_t* handle, bool create=true);
   /// Unmap global buffer information on this machine
-  int mbm_unmap_global_buffer_info(lib_rtl_gbl_t handle);
+  int mbm_unmap_global_buffer_info(lib_rtl_gbl_t handle, bool remove=true);
 #ifdef __cplusplus
 #undef __MBM_CONST
 }

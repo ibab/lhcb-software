@@ -1,4 +1,4 @@
-// $Id: DimMessageSvc.cpp,v 1.4 2007-01-24 20:42:24 frankb Exp $
+// $Id: DimMessageSvc.cpp,v 1.5 2007-06-01 13:49:45 frankm Exp $
 #if !defined(i386) && !defined(_WIN32)
 #define GAUDIKERNEL_KERNEL_H    // disable include
 #endif
@@ -44,7 +44,7 @@ LHCb::DimMessageSvc::DimMessageSvc( const std::string& name, ISvcLocator* svcloc
 : OnlineMessageSvc( name, svcloc ), m_logger(0)
 {
   setErrorLogger(this);
-  std::cout << "============ DIM MessageService constructed" << std::endl;
+  std::cout << "============ DIM MessageService constructed:" << name << std::endl;
 }
 
 /// Destructor.
@@ -66,7 +66,7 @@ StatusCode LHCb::DimMessageSvc::queryInterface(const InterfaceID& riid, void** p
 StatusCode LHCb::DimMessageSvc::initialize() {
   StatusCode sc = OnlineMessageSvc::initialize();
   if( sc.isFailure() ) return sc;
-  std::string srvcname = "/" + RTL::nodeNameShort() + "/" + RTL::processName() + "/Output";
+  std::string srvcname = /* "/" + RTL::nodeNameShort() + "/" + */ RTL::processName() + "/Output";
   m_mess.makeBuffer(MSG::INFO,srvcname,"DIM Service Starting up");
   m_logger = new DimService(srvcname.c_str(),"I:2;C:256;C",(void*)m_mess.buffer(),m_mess.size());
   return StatusCode::SUCCESS;

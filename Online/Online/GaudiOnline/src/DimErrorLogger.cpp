@@ -1,4 +1,4 @@
-// $Id: DimErrorLogger.cpp,v 1.12 2007-05-18 13:58:54 frankm Exp $
+// $Id: DimErrorLogger.cpp,v 1.13 2007-06-01 13:49:45 frankm Exp $
 
 #if !(defined(i386) || defined(_WIN32))
 #define GAUDIKERNEL_KERNEL_H    // disable include
@@ -31,15 +31,18 @@ namespace LHCb  {
     void addHandler(const std::string& svc, const std::string& node) {
       if ( strncasecmp(m_node.c_str(),node.c_str(),m_node.length()) == 0 )  {
         if ( svc != "DIS_DNS" && svc != m_process )  {
-          std::string s = "/"+m_node+"/"+svc+"/Output";
+          std::string s = /* "/"+node+"/"+ */ svc+"/Output";
           m_logger.addHandler(s);
         }
+      }
+      else {
+        std::cout << "Ignore service:" << node << "::" << svc << std::endl;
       }
     }
     /// Remove handler for a given message source
     void removeHandler(const std::string& svc, const std::string& node) {
       if ( strncasecmp(m_node.c_str(),node.c_str(),m_node.length()) == 0 )  {
-        std::string s = "/"+m_node+"/"+svc+"/Output";
+        std::string s = /* "/"+node+"/"+ */ svc+"/Output";
         m_logger.removeHandler(s);
       }
     }
@@ -76,7 +79,7 @@ namespace LHCb  {
   public :
     DnsInfo(DimErrorLogger& l) : DimInfo("DIS_DNS/SERVER_LIST","DEAD"), m_logger(l) {
       m_process = RTL::processName();
-      m_node = RTL::nodeNameShort();
+      m_node = "";//RTL::nodeNameShort();
     }
     virtual ~DnsInfo()  {}
   };
@@ -97,6 +100,7 @@ LHCb::DimErrorLogger::DimErrorLogger(const std::string& nam, ISvcLocator* svcLoc
   declareProperty("AcceptSuccessMessages", m_successMsg = true);
   declareProperty("PrintService",          m_printSvc   = true);
   declareProperty("OutputMessage",         m_outputMsg  = false);
+  declareProperty("MatchNodeName",         m_matchNode  = false);
   declareProperty("AcceptedSources",       m_acceptedSources);
   declareProperty("RefusedSources",        m_refusedSources);
   declareProperty("AcceptedClients",       m_acceptedClients);
@@ -123,10 +127,15 @@ StatusCode LHCb::DimErrorLogger::queryInterface(const InterfaceID& riid, void** 
 
 // Add handler for a given message source
 void LHCb::DimErrorLogger::addHandler(const std::string& nam)    {
+  const std::string node = RTL::nodeNameShort();
+  if ( m_matchNode && !::str_match_wild(nam.c_str(),std::string("*"+node+"*").c_str()) ) {
+    report(MSG::DEBUG, RTL::nodeNameShort()+"::"+name(), node+"> Messages from client "+nam+" denied.");
+    return;
+  }
   std::vector<std::string>::iterator i=m_refusedClients.begin();
   for(; i != m_refusedClients.end(); ++i)  {
     if ( ::str_match_wild(nam.c_str(), (*i).c_str()) )  {
-      msgSvc()->reportMessage(name(), MSG::INFO, "Messages from client "+nam+" denied.");
+      report(MSG::DEBUG, RTL::nodeNameShort()+"::"+name(), node+"> Messages from client "+nam+" denied.");
       return;
     }
   }
@@ -141,7 +150,7 @@ void LHCb::DimErrorLogger::addHandler(const std::string& nam)    {
         DimInfo* info = new DimInfo(nam.c_str(),(void*)def,sizeof(def),this);
         // std::cout << "Create DimInfo:" << (void*)info << std::endl;
         m_clients.insert(std::make_pair(nam, info));
-        msgSvc()->reportMessage(name(), MSG::INFO, "Added error handler for:"+nam);
+        report(MSG::INFO, RTL::nodeNameShort()+"::"+name(), node+"> Added error handler for:"+nam);
 	dim_unlock();
         return;
       }
@@ -158,7 +167,7 @@ void LHCb::DimErrorLogger::removeHandler(const std::string& nam)   {
     // std::cout << "Delete DimInfo:" << (void*)(*i).second << std::endl;
     delete (*i).second;
     m_clients.erase(i);
-    msgSvc()->reportMessage(name(), MSG::INFO, "Removed error handler for:"+nam);
+    report(MSG::INFO, RTL::nodeNameShort()+"::"+name(), RTL::nodeNameShort()+"> Removed error handler for:"+nam);
   }
   dim_unlock();
 }
@@ -254,7 +263,7 @@ void LHCb::DimErrorLogger::infoHandler() {
   if ( m->size > 0 )  {
     std::string task;
     if ( m_printSvc )  {
-      task = getInfo()->getName()+1;
+      task = getInfo()->getName();
       size_t idx = task.find_last_of("/");
       task = task.substr(0,idx);
       m->msg[m->size] = 0;

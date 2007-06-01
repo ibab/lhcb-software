@@ -1,4 +1,4 @@
-// $Id: DimErrorLogger.h,v 1.6 2007-05-18 13:58:54 frankm Exp $
+// $Id: DimErrorLogger.h,v 1.7 2007-06-01 13:49:45 frankm Exp $
 #ifndef GAUDISVC_DIMERRORLOGGER_H
 #define GAUDISVC_DIMERRORLOGGER_H 1
 
@@ -54,6 +54,8 @@ namespace LHCb  {
     bool        m_successMsg;
     /// Property: flag to print DIM service name
     bool        m_printSvc;
+    /// Property: Match node name with service name for subscription
+    bool        m_matchNode;
     /// Property: if true accept messages from wildcard matching sources  (Default: "*")
     std::vector<std::string> m_acceptedSources;
     /// Property: if true refuse messages from wildcard matching sources  (Default: "*")

@@ -669,11 +669,11 @@ int mbm_cancel_request (BMID bm)   {
 }
 
 // Map global buffer information on this machine
-int mbm_map_global_buffer_info(lib_rtl_gbl_t* handle)  {
+int mbm_map_global_buffer_info(lib_rtl_gbl_t* handle, bool create)  {
   lib_rtl_gbl_t h;
   size_t len = sizeof(BUFFERS)+(MBM_MAX_BUFF-1)*sizeof(BUFFERS::BUFF);
   int status = lib_rtl_map_section("bm_buffers", len, &h);
-  if( !lib_rtl_is_success(status))  {
+  if( !lib_rtl_is_success(status) && create )  {
     status = lib_rtl_create_section("bm_buffers", len, &h);
     if(!lib_rtl_is_success(status))   {   
       lib_rtl_signal_message(LIB_RTL_OS,"Cannot access section bm_buffers.");
@@ -683,6 +683,10 @@ int mbm_map_global_buffer_info(lib_rtl_gbl_t* handle)  {
     ::memset(buffs,0,len);
     buffs->nbuffer = 0;
   }
+  else if (!lib_rtl_is_success(status)) {
+    *handle = 0;
+    return MBM_ERROR;
+  }
   BUFFERS* b = (BUFFERS*)h->address;
   b->p_bmax = MBM_MAX_BUFF;
   *handle = h;
@@ -690,11 +694,11 @@ int mbm_map_global_buffer_info(lib_rtl_gbl_t* handle)  {
 }
 
 // Unmap global buffer information on this machine
-int mbm_unmap_global_buffer_info(lib_rtl_gbl_t handle)  {
+int mbm_unmap_global_buffer_info(lib_rtl_gbl_t handle, bool remove)  {
   if ( handle )  {
     int status;
     BUFFERS* buffs = (BUFFERS*)handle->address;
-    if ( buffs->nbuffer == 0 )  {
+    if ( buffs->nbuffer == 0 && remove )  {
       status = lib_rtl_delete_section(handle);
     }
     else {

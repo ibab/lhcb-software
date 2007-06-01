@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/NetworkDataReceiver.h,v 1.2 2007-05-18 13:58:54 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/NetworkDataReceiver.h,v 1.3 2007-06-01 13:49:45 frankm Exp $
 //  ====================================================================
 //  NetworkDataReceiver.h
 //  --------------------------------------------------------------------
@@ -83,6 +83,10 @@ namespace LHCb  {
     int             m_recvError;
     /// Monitoring item: Total number of bytes received from clients
     int             m_recvBytes;
+    /// Monitoring item: Backlog of buffered events
+    int             m_backlog;
+    /// Do not issue backlog messages too often
+    int             m_lastbacklog;
     /// Pointer to buffer manager service
     MEPManager*     m_mepMgr;
     /// Pointer to MBM producer, where received data should be delivered.

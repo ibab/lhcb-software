@@ -56,8 +56,11 @@ int lib_rtl_create_section(const char* sec_name, size_t size, lib_rtl_gbl_t* add
       *address = h.release();
       return 1;
     }
+    ::close(h->fd);
+    h->fd = 0;
   }
-  ::shm_unlink(h->name);
+  // lib_rtl_printf("lib_rtl_create_section> Unlink section:%s\n",sec_name ? sec_name : "Unknown");
+  // ::shm_unlink(h->name);
 #elif defined(_WIN32)
   // Setup inherited security attributes (FIXME: merge somewhere else)
   SECURITY_ATTRIBUTES   sa = {sizeof(SECURITY_ATTRIBUTES), 0, true};
@@ -76,7 +79,7 @@ int lib_rtl_create_section(const char* sec_name, size_t size, lib_rtl_gbl_t* add
   }
 #endif
   int err = lib_rtl_get_error();
-  ::lib_rtl_printf("error mapping section [%s]. Status %d [%s]\n",h->name,err,RTL::errorString(err));
+  ::lib_rtl_printf("Error creating section [%s]. Status %d [%s]\n",h->name,err,RTL::errorString(err));
   return 0;
 }
 
@@ -86,12 +89,14 @@ int lib_rtl_delete_section(lib_rtl_gbl_t h)    {
   int sc = 0;
   if ( dsc.get() )  {
 #ifdef __linux
+    //::lib_rtl_printf("lib_rtl_delete_section> Unlink section:%s\n",dsc->name ? dsc->name : "Unknown");
     sc = ::shm_unlink(dsc->name)==0 ? 1 : 0;
     lib_rtl_gbl_map_t& m = allSections();
     lib_rtl_gbl_map_t::iterator i=m.find(dsc->name);
     if ( i != m.end() ) {
       m.erase(i);
     }
+    if ( dsc->fd ) ::close(dsc->fd);
     if ( sc == 0 ) sc = 1;
 #else
     sc = lib_rtl_unmap_section(h);
@@ -114,8 +119,8 @@ int lib_rtl_map_section(const char* sec_name, size_t size, lib_rtl_gbl_t* addres
   h->fd = ::shm_open(h->name,O_RDWR|O_CREAT|O_EXCL,0666);
   if ( 0 == h->fd )  {
     ::close(h->fd);
-    ::shm_unlink(h->name);
-    return 0;
+    //::shm_unlink(h->name);
+    //return 0;
   }
   h->fd = ::shm_open(h->name,O_RDWR|O_CREAT,0644);
   if ( h->fd ) {
@@ -130,8 +135,9 @@ int lib_rtl_map_section(const char* sec_name, size_t size, lib_rtl_gbl_t* addres
     return 1;
   }
   int err = lib_rtl_get_error();
-  ::shm_unlink(h->name);
-  ::lib_rtl_printf("error mapping section [%s]. Status %d [%s]\n",h->name,err,RTL::errorString(err));
+  //::shm_unlink(h->name);
+  ::lib_rtl_printf("Error mapping section [%s]. Status %d [%s]\n",h->name,err,RTL::errorString(err));
+  if ( h->fd ) ::close(h->fd);
   return 0;
 #elif defined(_WIN32)
   h->addaux = ::OpenFileMapping(FILE_MAP_ALL_ACCESS,FALSE,h->name);
@@ -144,7 +150,7 @@ int lib_rtl_map_section(const char* sec_name, size_t size, lib_rtl_gbl_t* addres
     }
   }
   int err = lib_rtl_get_error();
-  ::lib_rtl_printf("error mapping section [%s]. Status %d [%s]\n",h->name,err,RTL::errorString(err));
+  ::lib_rtl_printf("Error mapping section [%s]. Status %d [%s]\n",h->name,err,RTL::errorString(err));
   return 0;
 #endif
 }
@@ -152,9 +158,16 @@ int lib_rtl_map_section(const char* sec_name, size_t size, lib_rtl_gbl_t* addres
 /// Unmap global section: address is quadword: void*[2]
 int lib_rtl_unmap_section(lib_rtl_gbl_t handle)   {
   if ( handle )  {
-    lib_rtl_gbl_desc* h = (lib_rtl_gbl_desc*)handle;
+    std::auto_ptr<lib_rtl_gbl_desc> h((lib_rtl_gbl_desc*)handle);
+    //lib_rtl_gbl_desc* h = (lib_rtl_gbl_desc*)handle;
 #if defined(__linux)
     int sc = ::munmap(h->address,h->size)==0 ? 1 : 0;
+    if ( h->fd >= 0 ) {
+      static int cnt = 0;
+      /* int ret = */ ::close(h->fd);
+      /* ::lib_rtl_printf("%d Close FD:%d err=%d\n",++cnt,h->fd,ret); */
+    }
+    h->fd = -1;
 #elif defined(_WIN32)
     int sc = (::UnmapViewOfFile(h->address) == 0) ? 0 : 1;
     if ( 0 != sc ) ::CloseHandle(h->addaux);
