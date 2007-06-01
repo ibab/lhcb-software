@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool : Rich::Rec::MCTruthTool
  *
  *  CVS Log :-
- *  $Id: RichRecMCTruthTool.h,v 1.24 2007-05-08 12:02:56 jonrob Exp $
+ *  $Id: RichRecMCTruthTool.h,v 1.25 2007-06-01 09:47:08 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -46,8 +46,8 @@
 #include "Linker/LinkerTool.h"
 
 // Interfaces
-#include "RichRecBase/IRichRecMCTruthTool.h"
-#include "RichKernel/IRichMCTruthTool.h"
+#include "MCInterfaces/IRichRecMCTruthTool.h"
+#include "MCInterfaces/IRichMCTruthTool.h"
 
 namespace Rich
 {

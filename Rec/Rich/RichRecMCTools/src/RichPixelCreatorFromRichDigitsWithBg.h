@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool : Rich::Rec::PixelCreatorFromRichDigitsWithBg
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromRichDigitsWithBg.h,v 1.14 2007-03-09 22:57:42 jonrob Exp $
+ *  $Id: RichPixelCreatorFromRichDigitsWithBg.h,v 1.15 2007-06-01 09:47:08 cattanem Exp $
  *
  *  @author Andy Buckley   buckley@hep.phy.cam.ac.uk
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
@@ -21,7 +21,7 @@
 
 // interfaces
 #include "RichKernel/IRichSmartIDTool.h"
-#include "RichKernel/IRichMCTruthTool.h"
+#include "MCInterfaces/IRichMCTruthTool.h"
 
 // RichKernel
 #include "RichKernel/RichMap.h"

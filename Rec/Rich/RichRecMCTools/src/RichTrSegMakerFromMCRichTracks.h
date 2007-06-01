@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::Rec::TrSegMakerFromMCRichTracks
  *
  *  CVS Log :-
- *  $Id: RichTrSegMakerFromMCRichTracks.h,v 1.7 2007-04-23 13:23:54 jonrob Exp $
+ *  $Id: RichTrSegMakerFromMCRichTracks.h,v 1.8 2007-06-01 09:47:08 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   14/01/2002
@@ -29,8 +29,8 @@
 
 // interfaces
 #include "RichRecBase/IRichTrSegMaker.h"
-#include "RichRecBase/IRichRecMCTruthTool.h"
-#include "RichKernel/IRichMCTruthTool.h"
+#include "MCInterfaces/IRichRecMCTruthTool.h"
+#include "MCInterfaces/IRichMCTruthTool.h"
 
 // RichKernel
 #include "RichKernel/RichTrackSegment.h"

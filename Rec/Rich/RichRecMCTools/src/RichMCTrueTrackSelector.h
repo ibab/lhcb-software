@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool : Rich::Rec::MCTrueTrackSelector
  *
  *  CVS Log :-
- *  $Id: RichMCTrueTrackSelector.h,v 1.3 2007-03-09 22:57:41 jonrob Exp $
+ *  $Id: RichMCTrueTrackSelector.h,v 1.4 2007-06-01 09:47:08 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/08/2006
@@ -19,7 +19,7 @@
 #include "RichRecBase/RichTrackSelectorBase.h"
 
 // interfaces
-#include "RichRecBase/IRichRecMCTruthTool.h"
+#include "MCInterfaces/IRichRecMCTruthTool.h"
 
 // Event model
 #include "Event/MCParticle.h"

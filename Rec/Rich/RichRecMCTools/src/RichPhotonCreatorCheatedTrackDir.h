@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::Rec::PhotonCreatorCheatedTrackDir
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreatorCheatedTrackDir.h,v 1.4 2007-03-09 22:57:41 jonrob Exp $
+ *  $Id: RichPhotonCreatorCheatedTrackDir.h,v 1.5 2007-06-01 09:47:08 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -19,7 +19,7 @@
 #include "RichRecBase/RichPhotonCreatorBase.h"
 
 // Interfaces
-#include "RichRecBase/IRichRecMCTruthTool.h"
+#include "MCInterfaces/IRichRecMCTruthTool.h"
 
 // Event model
 #include "Event/MCRichOpticalPhoton.h"

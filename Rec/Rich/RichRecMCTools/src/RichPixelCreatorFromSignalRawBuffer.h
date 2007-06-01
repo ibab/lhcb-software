@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool : Rich::Rec::PixelCreatorFromSignalRawBuffer
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromSignalRawBuffer.h,v 1.5 2007-03-09 22:57:42 jonrob Exp $
+ *  $Id: RichPixelCreatorFromSignalRawBuffer.h,v 1.6 2007-06-01 09:47:08 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -22,8 +22,8 @@
 #include "RichKernel/RichMap.h"
 
 // interfaces
-#include "RichRecBase/IRichRecMCTruthTool.h"
-#include "RichKernel/IRichMCTruthTool.h"
+#include "MCInterfaces/IRichRecMCTruthTool.h"
+#include "MCInterfaces/IRichMCTruthTool.h"
 
 // Event
 #include "Event/RichDigit.h"

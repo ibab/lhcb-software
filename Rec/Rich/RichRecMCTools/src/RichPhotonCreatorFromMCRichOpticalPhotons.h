@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool : Rich::Rec::PhotonCreatorFromMCRichOpticalPhotons
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreatorFromMCRichOpticalPhotons.h,v 1.10 2007-03-09 22:57:42 jonrob Exp $
+ *  $Id: RichPhotonCreatorFromMCRichOpticalPhotons.h,v 1.11 2007-06-01 09:47:08 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -20,7 +20,7 @@
 
 // Interfaces
 #include "RichRecBase/IRichPhotonCreator.h"
-#include "RichRecBase/IRichRecMCTruthTool.h"
+#include "MCInterfaces/IRichRecMCTruthTool.h"
 
 // Event model
 #include "Event/MCRichOpticalPhoton.h"

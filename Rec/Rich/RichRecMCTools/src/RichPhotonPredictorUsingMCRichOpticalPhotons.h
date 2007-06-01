@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool : Rich::Rec::PhotonPredictorUsingMCRichOpticalPhotons
  *
  *  CVS Log :-
- *  $Id: RichPhotonPredictorUsingMCRichOpticalPhotons.h,v 1.8 2007-03-09 22:57:42 jonrob Exp $
+ *  $Id: RichPhotonPredictorUsingMCRichOpticalPhotons.h,v 1.9 2007-06-01 09:47:08 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -25,7 +25,7 @@
 
 // Interfaces
 #include "RichRecBase/IRichPhotonPredictor.h"
-#include "RichRecBase/IRichRecMCTruthTool.h"
+#include "MCInterfaces/IRichRecMCTruthTool.h"
 
 namespace Rich
 {

@@ -4,6 +4,10 @@
 ! Purpose     : Monte Carlo Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+!====================== RichRecMCTools v2r12 2007-06-01 =======================
+! 2007-06-01 - Marco Cattaneo
+ - Adapt to move of some interfaces to MCInterfaces package
+
 !====================== RichRecMCTools v2r11 2007-05-08 =======================
 ! 2007-05-08 - Chris Jones
  - Add new method for MC CK rings

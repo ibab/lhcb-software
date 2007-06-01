@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool : Rich::Rec::PhotonCreatorWithGaussianCKSmear
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreatorWithGaussianCKSmear.h,v 1.9 2007-03-09 22:57:42 jonrob Exp $
+ *  $Id: RichPhotonCreatorWithGaussianCKSmear.h,v 1.10 2007-06-01 09:47:08 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/05/2005
@@ -24,7 +24,7 @@
 
 // Interfaces
 #include "RichRecBase/IRichPhotonCreator.h"
-#include "RichRecBase/IRichRecMCTruthTool.h"
+#include "MCInterfaces/IRichRecMCTruthTool.h"
 
 // RichKernel
 #include "RichKernel/BoostArray.h"
