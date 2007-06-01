@@ -33,7 +33,7 @@ class LoginDialog : public TGTransientFrame
     char         *m_input;
     TGTextButton *m_loginButton;
     TGTextButton *m_cancelButton;
-    PresenterMainFrame  *m_parent;
+    PresenterMainFrame  *m_mainFrame;
     
   ClassDef(LoginDialog, 0)
 };

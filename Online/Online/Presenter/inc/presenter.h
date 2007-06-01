@@ -6,9 +6,14 @@ namespace pres
 {  
   enum MsgLevel
   { 
-    SILENT,
-    VERBOSE,
-    DEBUG       
+    SILENT = 0,
+    VERBOSE = 1,
+    DEBUG = 2       
+  };
+  enum ExceptionLevel {
+    NEVER = 0,
+    SEVERE = 1,
+    ALL = 2    
   };
 }
 

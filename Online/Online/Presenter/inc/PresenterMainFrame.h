@@ -52,6 +52,8 @@ class PresenterMainFrame : public TGMainFrame
     void clearPage();
     void loginOnlineHistDB();
     void connectToDatabase(std::string, std::string, std::string);
+    bool isConnectedToDatabase();
+    OnlineHistDB* getDatabase();
     void logoutOnlineHistDB();
     void startPageRefresh();
     void stopPageRefresh();
