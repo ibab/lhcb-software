@@ -5,6 +5,61 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
+</PRE><H1><A NAME=v4r6>2007-05-31 RecSys v4r6</A></H1><PRE>
+This version uses Gaudi v19r3 and LHCb v22r6.
+
+- Packages modified: PatForward v2r14, PatVeloTT v2r12, PatKShort v1r6,
+    TrackSys v4r6, TrackTools v2r15, TrackMCTools v2r11, TrackIdealPR v2r11,
+    TrackCheckers v2r14, TrackPython v3r1, TsaAlgorithms v2r4, GlobalReco v6r10,
+    CaloReco v4r8, CaloPIDs v4r7, RichRecQC v2r12, RichRecMonitors v2r11,
+    RichLocalPID v3r4, RichRecMCTools v2r12, RichTrgGlobalPID v3r6
+
+- In PatForward v2r14
+  . Set uncertainties on q/p for all existing track states. Fixes pulls in HLT 
+
+- In PatVeloTT v2r12
+  . Fix HltVeloTT.opts
+
+- In PatKShort v1r6
+  . First release of PatMakeKShort, which identifies pairs of downstream tracks
+    that make a good KShort candidate. The output is tracks in Rec/Track/FromKs
+    where two (even+odd) tracks form a Ks
+  . New algorithm PatCalibKShort to produce plots useful to calibrate the 
+    PatMakeKShort algorithm, using MC truth.
+
+- In TsaAlgorithms v2r4
+  . Follow change in ITrackManipulator interface
+
+- In TrackTools v2r15
+  . Changes in VeloExpectation: 
+    + Follow change to interface
+    + Use closestState rather than firstState                            
+  . Follow change in TrackManipulator
+
+- In GlobalReco v6r10
+  . Update ChargedProtoPAlg
+    + Split up the handling of the CALO information so each CALO sub-det 
+      (ECAL, PRS etc.) are handled completely seperately.
+    + Fix crash when trying to recreate ProtoParticles with some CALO 
+      information missing
+    + Replace some internal use of StatusCodes with simplier bools
+
+- In CaloReco v4r8
+  . Modified Brunel.opts and BrunelPIDs.opts to pick up new DLL hist for Calo
+    PIDe/mu (CaloPIDs_DC06_v2.root, in ParamFiles v6r1) in ECAL, HCAL, Prs, Brem
+
+- In CaloPIDs v4r7
+  . DLL hist (DC06) for different BremPID added, needs ParamFiles v6r1 
+  . New PIDs from DC06 added in src/BremPIDeAlg.cpp
+
+- In GlobalReco v6r10, TrackSys v4r6, TrackMCTools v2r11, TrackIdealPR v2r11,
+     TrackCheckers v2r14, TrackPython v3r1, RichRecQC v2r12,  RichLocalPID v3r4,
+     RichRecMCTools v2r12, RichTrgGlobalPID v3r6, RichRecMonitors v2r11
+  . Adapt to new location of interfaces in MCInterfaces
+
+- In TrackMCTools v2r11, CaloPIDs v4r7
+  . Fixed doxygen warnings
+
 </PRE><H1><A NAME=v4r5>2007-05-21 RecSys v4r5</A></H1><PRE>
 This version uses Gaudi v19r3 and LHCb v22r5.
 
