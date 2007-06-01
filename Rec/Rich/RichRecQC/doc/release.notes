@@ -4,6 +4,10 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+!======================= RichRecQC v2r12 2007-06-01 ==========================
+! 2007-06-01 - Marco Cattaneo
+ - Adapt to move of some interfaces to MCInterfaces package
+
 !======================= RichRecQC v2r11 2007-05-08 ==========================
 ! 2007-05-08 - Chris Jones
  - Remove now obsolete settings for RichToolRegistry from options files

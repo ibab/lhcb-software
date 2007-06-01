@@ -5,7 +5,7 @@
  *  Header file for algorithm class : Rich::Rec::MC::PixelQC
  *
  *  CVS Log :-
- *  $Id: RichRecPixelQC.h,v 1.8 2007-03-09 23:14:27 jonrob Exp $
+ *  $Id: RichRecPixelQC.h,v 1.9 2007-06-01 06:50:12 cattanem Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -35,8 +35,8 @@
 #include "RichDet/DeRichSystem.h"
 
 // Interfaces
-#include "RichKernel/IRichMCTruthTool.h"
-#include "RichRecBase/IRichRecMCTruthTool.h"
+#include "MCInterfaces/IRichMCTruthTool.h"
+#include "MCInterfaces/IRichRecMCTruthTool.h"
 #include "RichKernel/IRichRawBufferToSmartIDsTool.h"
 
 namespace Rich

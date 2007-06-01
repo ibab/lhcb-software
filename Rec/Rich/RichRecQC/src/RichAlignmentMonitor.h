@@ -4,7 +4,7 @@
  *  Header file for algorithm class : Rich::Rec::MC::AlignmentMonitor
  *
  *  CVS Log :-
- *  $Id: RichAlignmentMonitor.h,v 1.1 2007-05-24 07:08:07 papanest Exp $
+ *  $Id: RichAlignmentMonitor.h,v 1.2 2007-06-01 06:50:12 cattanem Exp $
  *
  *  @author Antonis Papanestis   a.papanestis@rl.ac.uk
  *  @date   2004-02-19
@@ -30,7 +30,7 @@
 #include "AIDA/IProfile1D.h"
 
 // Interfaces
-#include "RichRecBase/IRichRecMCTruthTool.h"
+#include "MCInterfaces/IRichRecMCTruthTool.h"
 #include "RichKernel/IRichParticleProperties.h"
 #include "RichRecBase/IRichCherenkovAngle.h"
 #include "RichRecBase/IRichTrackSelector.h"

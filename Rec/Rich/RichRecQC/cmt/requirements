@@ -2,11 +2,11 @@
 # Created    : 2002-06-13
 # Maintainer : Chris Jones
 #============================================================================
-# $Id: requirements,v 1.32 2007-05-08 15:34:47 cattanem Exp $
+# $Id: requirements,v 1.33 2007-06-01 06:50:12 cattanem Exp $
 #============================================================================
 
 package           RichRecQC
-version           v2r11
+version           v2r12
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -20,6 +20,7 @@ set RICHRECQCOPTS $(RICHRECQCROOT)/options
 #============================================================================
 use MCEvent       v*    Event
 use RichRecBase   v*    Rich
+use MCInterfaces  v*    Kernel
 
 
 # Component library building rule

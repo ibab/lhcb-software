@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction monitoring algorithm : Rich::Rec::MC::SummaryQC
  *
  *  CVS Log :-
- *  $Id: RichRecSummaryQC.h,v 1.5 2007-03-09 23:14:27 jonrob Exp $
+ *  $Id: RichRecSummaryQC.h,v 1.6 2007-06-01 06:50:12 cattanem Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-02
@@ -24,7 +24,7 @@
 // interfaces
 #include "RichRecBase/IRichTrackSelector.h"
 #include "RichKernel/IRichParticleProperties.h"
-#include "RichRecBase/IRichRecMCTruthTool.h"
+#include "MCInterfaces/IRichRecMCTruthTool.h"
 #include "RichKernel/IRichParticleProperties.h"
 
 // RichKernel

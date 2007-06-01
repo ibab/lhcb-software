@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction monitoring algorithm : Rich::Rec::MC::RecoQC
  *
  *  CVS Log :-
- *  $Id: RichRecoQC.h,v 1.20 2007-03-09 23:14:27 jonrob Exp $
+ *  $Id: RichRecoQC.h,v 1.21 2007-06-01 06:50:12 cattanem Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-02
@@ -23,7 +23,7 @@
 #include "AIDA/IHistogram2D.h"
 
 // Interfaces
-#include "RichRecBase/IRichRecMCTruthTool.h"
+#include "MCInterfaces/IRichRecMCTruthTool.h"
 
 // temporary histogramming numbers
 #include "RichRecBase/RichDetParams.h"

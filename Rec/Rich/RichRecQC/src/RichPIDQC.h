@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction monitoring algorithm : Rich::Rec::MC::PIDQC
  *
  *  CVS Log :-
- *  $Id: RichPIDQC.h,v 1.29 2007-03-19 15:05:21 jonrob Exp $
+ *  $Id: RichPIDQC.h,v 1.30 2007-06-01 06:50:12 cattanem Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-06-13
@@ -38,7 +38,7 @@
 
 // interfaces
 #include "RichRecBase/IRichTrackSelector.h"
-#include "RichRecBase/IRichRecMCTruthTool.h"
+#include "MCInterfaces/IRichRecMCTruthTool.h"
 
 // Histogramming
 #include "AIDA/IHistogram1D.h"
