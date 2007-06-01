@@ -20,18 +20,18 @@ use OTAssociators     v4r1  OT          # Jan Amoraal
 # Rich
 use RichDAQ           v3r10 Rich        # Chris Jones
 use RichTools         v2r13 Rich        # Chris Jones
-use RichMCTools       v3r5  Rich        # Chris Jones
-use RichMCMonitors    v1r2  Rich        # Chris Jones
+use RichMCTools       v3r6  Rich        # Chris Jones
+use RichMCMonitors    v1r3  Rich        # Chris Jones
 
 # Silicon detectors
-use SiTools           v1r2  Si          # Matt Needham
+use SiTools           v1r3  Si          # Matt Needham
 
 # Silicon Tracker
 use STDAQ             v3r0  ST          # Jeroen van Tilburg
 use STTools           v3r1  ST          # Jeroen van Tilburg
-use STAlgorithms      v2r1  ST          # Jeroen van Tilburg
+use STAlgorithms      v2r2  ST          # Jeroen van Tilburg
 use STAssociators     v1r4  ST          # Jeroen van Tilburg
-use STCheckers        v2r1  ST          # Jeroen van Tilburg
+use STCheckers        v2r2  ST          # Jeroen van Tilburg
 
 # Calorimeter
 use CaloAssociators   v6r3  Calo        # Olivier Deschamps
@@ -41,10 +41,10 @@ use VeloDAQ           v3r5  Velo        # Kurt Rinnert
 use VeloAssociators   v2r2  Velo        # Tomasz Szumlak
 use VeloAlgorithms    v4r6  Velo        # Tomasz Szumlak
 use VeloSimulation    v2r5  Velo        # Tomasz Szumlak
-use VeloTools         v1r2  Velo        # Tomasz Szumlak
+use VeloTools         v2r0  Velo        # Tomasz Szumlak
 
 # Muon
-use MuonAssociators   v3r0  Muon        # Alessia Satta
+use MuonAssociators   v3r1  Muon        # Alessia Satta
 
 # Common
 use Associators       v3r5  Associators # Matt Needham
