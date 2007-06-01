@@ -1,0 +1,33 @@
+<!-- 
+     * $Id: LoKiAlgo.xml,v 1.1 2007-06-01 12:21:33 ibelyaev Exp $ 
+     * ========================================================================
+     * CVS tag:$Name: not supported by cvs2svn $, version $Revision: 1.1 $ 
+     * ======================================================================== 
+     * @file
+     * The seleciton file to build Reflex dictionaries for Phys/LoKiAlgo package
+     * @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     * @date 2006-02-06
+     * ========================================================================
+-->
+
+<lcgdict>
+  
+  <class name = "LoKi::Loop"    />
+  <class name = "LoKi::LoopObj" />
+  
+  <class name = "LoKi::Algo" >
+    <field name="m_reporters" transient="true" />
+  </class>
+  
+  <class pattern = "LoKi::Dicts::ExtFunCalls<LHCb::*>"  />
+  <class pattern = "LoKi::Dicts::ExtCutCalls<LHCb::*>"  />
+  
+  <class name="LoKi::Interface<LoKi::LoopObj>"     />
+  <class name="LoKi::Interface<LoKi::Algo>"        />
+  <class name="LoKi::Interface<IParticleCombiner>" />
+  <class name="LoKi::Interface<IParticleReFitter>" />
+  
+  <exclusion>
+  </exclusion>
+  
+</lcgdict>

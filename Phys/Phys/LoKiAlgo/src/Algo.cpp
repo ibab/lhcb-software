@@ -1,20 +1,14 @@
-// $Id: Algo.cpp,v 1.13 2007-04-16 16:16:39 pkoppenb Exp $
+// $Id: Algo.cpp,v 1.14 2007-06-01 12:21:33 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.13 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.14 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.12  2007/01/18 13:06:10  ibelyaev
-//  redesign the patterns
-//
-// Revision 1.11  2006/12/01 09:30:08  ibelyaev
-//  fix a bug
 //
 // ============================================================================
 // Include files 
 // ============================================================================
 // LoKiCore
 // ============================================================================
-#include "LoKi/Print.h"
 #include "LoKi/Tokens.h"
 #include "LoKi/IReporter.h"
 #include "LoKi/ILoKiSvc.h"
@@ -25,8 +19,6 @@
 #include "LoKi/Loop.h"
 #include "LoKi/LoopObj.h"
 #include "LoKi/Algo.h"
-// ============================================================================
-
 // ============================================================================
 /** @file
  *
@@ -112,8 +104,6 @@ LoKi::Algo::Algo
 /// virtual and protected destructor 
 // ============================================================================
 LoKi::Algo::~Algo(){} ;
-// ============================================================================
-
 // ============================================================================
 /** 'Select' the particles to be used in local storage
  *  
@@ -236,7 +226,7 @@ LoKi::Loop LoKi::Algo::loop
   const ParticleProperty* _pp = ppSvc()->findByStdHepID( pid.pid() ) ;
   if ( 0 == _pp ) 
   { Error ( "loop(" + formula + "): invaid particle ID '" + 
-            LoKi::Print::print( pid.pid() ) + "'!" ) ; }
+            Gaudi::Utils::toString( pid.pid() ) + "'!" ) ; }
   return loop ( formula , _pp , combiner )  ;
 };
 // ============================================================================  
@@ -287,7 +277,7 @@ LoKi::Loop LoKi::Algo::loop
   const ParticleProperty* _pp = ppSvc()->findByStdHepID( pid.pid() ) ;
   if ( 0 == _pp ) 
   { Error ( "loop(" + _formu ( formula ) + "): invaid particle ID '" + 
-            LoKi::Print::print( pid.pid() ) + "'!" ) ; }
+            Gaudi::Utils::toString ( pid.pid() ) + "'!" ) ; }
   return loop ( formula , _pp , combiner )  ;
 };
 // ============================================================================  
@@ -744,9 +734,6 @@ LoKi::Algo::geo ( const LoKi::Point3D& point ) const
   return LoKi::Vertices::ImpParBase ( point , t ) ;
 } ;
 // ============================================================================
-
-
-
 
 // ============================================================================
 // The END 

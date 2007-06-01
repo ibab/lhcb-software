@@ -1,11 +1,36 @@
-! $Id: release.notes,v 1.13 2007-04-19 16:17:45 pkoppenb Exp $ 
+! $Id: release.notes,v 1.14 2007-06-01 12:21:33 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.13 $
+! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.14 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiAlgo
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : LoKi-algorthm related stuff 
 ! -----------------------------------------------------------------------------
+
+! 2007-06-01 - Vanya BELYAEV
+
+ - prepare for the new major version: v4r0 
+
+ - New files:
+
+   LoKi/ExtCalls.h
+
+   dict/LoKiAlgo.xml
+   dict/LoKiAlgoDict.h
+
+   python/LoKiAlgo/__init__.py
+   python/LoKiAlgo/decorators.py
+   python/LoKiAlgo/functions.py
+   python/LoKiAlgo/tests.py
+
+ - Modified files:
+
+   LoKi/LoopObj.icpp
+   src/Algo.cpp
+
+ - cmt/requirements
+    version increment to v4r0 
+
 
 !========================== LoKiAlgo v3r2p1 2007-04-19 ===================
 ! 2007-04-19 -  P. Koppenburg
