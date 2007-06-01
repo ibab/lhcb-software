@@ -1,10 +1,11 @@
 ! =============================================================================
-! $Id: release.notes,v 1.298 2007-05-31 14:47:23 jpalac Exp $ 
+! $Id: release.notes,v 1.299 2007-06-01 06:32:51 cattanem Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
 
+!====================== DetDesc v17r4 2007-06-01 ==============================
 ! 2007-05-31 - Juan PALACIOS
   - DetDesc/AlignmentCondition.h, src/Lib/AlignmentCondition.cpp
     . Fix bug in matrix(const Gaudi::Transform3D&) method. This method takes 
@@ -14,11 +15,9 @@
       actually the inverse of the misalign matrix.
     . Move matrix(const Gaudi::Transform3D&) and StatusCode setTransformation( const std::vector<double>&, const std::vector<double>&, const std::vector<double>&); to .cpp file.
   - Add DetDesc/GlobalToLocalDelta.h, src/Lib/GlobalToLocalDelta.cpp
-    . Simple standalone functions to convert a misalignment calculated in the global
-      frame to the corresponding misalignment in the frame of the parent of the 
-      detector element in question. 
-
-!====================== DetDesc v17r4 2007-05-30 ==============================
+    . Simple standalone functions to convert a misalignment calculated in the
+      global frame to the corresponding misalignment in the frame of the parent
+      of the detector element in question. 
 
 ! 2007-05-30 - Juan PALACIOS
   - added temporary files in src/Lib:
