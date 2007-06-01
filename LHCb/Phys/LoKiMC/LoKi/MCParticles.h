@@ -1,13 +1,8 @@
-// $Id: MCParticles.h,v 1.10 2007-04-16 16:16:08 pkoppenb Exp $
+// $Id: MCParticles.h,v 1.11 2007-06-01 15:44:20 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.10 $ 
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.11 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.9  2007/03/04 16:47:19  ibelyaev
-//  add DelatPhi/DelatEta/DeltaR2 for jet studies
-//
-// Revision 1.8  2007/02/23 09:01:51  ibelyaev
-//  minor fix with struct/class
 //
 // ============================================================================
 #ifndef LOKI_MCPARTICLES_H 
@@ -31,6 +26,7 @@
 // ============================================================================
 #include "Kernel/IMCDecayFinder.h"
 #include "Kernel/IMCParticleSelector.h"
+#include "Kernel/IMCReconstructible.h"
 // ============================================================================
 // LoKi
 // ============================================================================
@@ -1221,10 +1217,93 @@ namespace LoKi
       // the selector itself
       LoKi::Interface<IMCParticleSelector> m_selector ; ///< the selector itself
     };
-
+    /** @class MCReconstructuble
+     *  Simple function which evaluates the "MCRecontructible" category
+     *  @see IMCRecontructible
+     *  @see LoKi::Cuts::MCREC
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2007-06-01
+     */
+    class MCReconstructible
+      : public LoKi::Function<const LHCb::MCParticle*>
+    {
+    public:
+      /// constructor from the tool 
+      MCReconstructible ( const IMCReconstructible*                  tool ) ;
+      /// constructor from the holder 
+      MCReconstructible ( const LoKi::Interface<IMCReconstructible>& tool ) ;
+      /// copy constructor
+      MCReconstructible ( const MCReconstructible&  copy ) ;
+      /// MANDATORY: virtual dectructor 
+      virtual ~MCReconstructible (){} ;
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  MCReconstructible* clone() const ;
+      /// MANDATORY: the only one essential method 
+      virtual  result_type operator() ( argument p ) const ;
+      /// OPTIONAL: "short representation"
+      virtual  std::ostream& fillStream ( std::ostream& s ) const ;
+    public:
+      /// cast operator to the underlying tool 
+      operator const LoKi::Interface<IMCReconstructible>& () const { return m_eval ; }
+    private:
+      // default constructor is disabled 
+      MCReconstructible () ; ///< default constructor is disabled
+    private:
+      // the underlying tool
+      LoKi::Interface<IMCReconstructible> m_eval ; ///< the underlying tool
+    } ;
+    /** @class MCReconstructubleAs
+     *  Simple function which checks 
+     *     the "MCRecontructible" category
+     *  @see IMCRecontructible
+     *  @see LoKi::Cuts::MCRECAS
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2007-06-01
+     */
+    class MCReconstructibleAs 
+      : public LoKi::Predicate<const LHCb::MCParticle*>
+    {
+    public:
+      /// constructor from the tool and category 
+      MCReconstructibleAs 
+      ( const IMCReconstructible*             tool , 
+        const IMCReconstructible::RecCategory cat  ) ;
+      /// constructor from the tool and category 
+      MCReconstructibleAs 
+      ( const IMCReconstructible::RecCategory cat  ,
+        const IMCReconstructible*             tool ) ;
+      /// constructor from the holder and category
+      MCReconstructibleAs 
+      ( const LoKi::Interface<IMCReconstructible>& tool , 
+        const IMCReconstructible::RecCategory      cat  ) ;
+      /// constructor from the holder and category
+      MCReconstructibleAs 
+      ( const IMCReconstructible::RecCategory      cat  ,
+        const LoKi::Interface<IMCReconstructible>& tool ) ;
+      /// copy constructor
+      MCReconstructibleAs ( const MCReconstructibleAs&  copy ) ;
+      /// MANDATORY: virtual dectructor 
+      virtual ~MCReconstructibleAs (){} ;
+      /// MAND ATORY: clone method ("virtual constructor")
+      virtual  MCReconstructibleAs* clone() const ;
+      /// MANDATORY: the only one essential method 
+      virtual  result_type operator() ( argument p ) const ;
+      /// OPTIONAL: "short representation"
+      virtual  std::ostream& fillStream ( std::ostream& s ) const ;
+    private:
+      /// cast operator to the underlying tool 
+      operator const LoKi::Interface<IMCReconstructible>& () const { return m_eval ; }
+    private:
+      // default constructor is disabled 
+      MCReconstructibleAs () ; ///< default constructor is disabled
+    private:
+      // the underlying tool
+      LoKi::Interface<IMCReconstructible> m_eval ; ///< the underlying tool
+      // the recontruction category 
+      IMCReconstructible::RecCategory     m_cat  ; ///< the recontruction category
+    } ;
   } // end of namespace LHCb::MCParticles 
 } // end of namespace LoKi
-
 // ============================================================================
 // The END 
 // ============================================================================

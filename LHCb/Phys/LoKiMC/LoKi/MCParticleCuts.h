@@ -1,25 +1,8 @@
-// $Id: MCParticleCuts.h,v 1.7 2007-04-16 16:16:08 pkoppenb Exp $
+// $Id: MCParticleCuts.h,v 1.8 2007-06-01 15:44:20 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.7 $
+// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.8 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.6  2007/03/04 16:47:19  ibelyaev
-//  add DelatPhi/DelatEta/DeltaR2 for jet studies
-//
-// Revision 1.5  2007/01/23 13:27:18  ibelyaev
-//  add MCVALID/MCVVALID
-//
-// Revision 1.4  2006/11/27 11:58:37  ibelyaev
-//  prepare for LoKi v4r3
-//
-// Revision 1.3  2006/02/18 18:10:57  ibelyaev
-//  fix a typo
-//
-// Revision 1.2  2006/02/07 17:14:02  ibelyaev
-//  regular update
-//
-// Revision 1.1.1.1  2006/01/26 16:13:39  ibelyaev
-// New Packaage: MC-dependent part of LoKi project 
 //
 // ============================================================================
 #ifndef LOKI_MCPARTICLECUTS_H 
@@ -32,8 +15,6 @@
 #include "LoKi/MCTypes.h"
 #include "LoKi/MCParticles.h"
 #include "LoKi/MCPIDOperators.h"
-// ============================================================================
-
 // ============================================================================
 /** @file
  *
@@ -49,7 +30,6 @@
  *  @date 2001-01-23 
  */
 // ============================================================================
-
 namespace LoKi
 {
   namespace Cuts
@@ -905,7 +885,6 @@ namespace LoKi
      *  @date 2005-05-16
      */
     typedef LoKi::MCParticles::MCDecayPattern        MCDECAY ;
-
     
     /** @typedef MCDPHI
      *  simple evaluator of "delta phi" of the particle momenta
@@ -1010,12 +989,59 @@ namespace LoKi
      *  @date 2007-03-03 
      */
     typedef LoKi::MCParticles::DeltaR2                     MCDELTAR2 ;
- 
-
-  } // end of namespace LoKi::Cuts 
-  //
+    
+    /** @typedef MCREC 
+     *  the simple function(wrapper for IMCRecontructible tool)
+     *  which return the recontruction category for the given MC-particle
+     *
+     *  @code
+     *  
+     *  const LHCb::MCParticle*  kaon = ... ;
+     *  const IMCRecontructible* tool = ... ;
+     *
+     *  // create the function to recontruction category
+     *
+     *  MCFun rec = MCREC(tool) ;
+     *
+     *  // use the function:
+     *
+     *  const bool recAsLong = rec ( kaon ) == IMCRecontructible::ChargedLong ;
+     *
+     *  @endcode 
+     *
+     *  @see IMCRecontructible
+     *  @see IMCRecontructible::RecCategory
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     */
+    typedef LoKi::MCParticles::MCReconstructible           MCREC ;
+    
+    /** @typedef MCRECAS
+     *  the simple predicate(wrapper for IMCRecontructible tool)
+     *  which checks the reocntruction category for the given MC-particle
+     *
+     *  @code
+     *  
+     *  const LHCb::MCParticle*  kaon = ... ;
+     *  const IMCRecontructible* tool = ... ;
+     *
+     *  // create the cut to check if it is recontructibleas long track:
+     *
+     *  MCCut asLong = MCRECAS ( tool , IMCRecontructible::ChargedLong ) ;
+     *
+     *  // use the predicate
+     *
+     *  const bool recAsLong = asLong ( kaon )
+     *
+     *  @endcode 
+     *
+     *  @see IMCRecontructible
+     *  @see IMCRecontructible::RecCategory
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     */
+    typedef LoKi::MCParticles::MCReconstructibleAs         MCRECAS ;
+    
+  } // end of namespace LoKi::Cuts
 } // end of namespace LoKi
-
 // ============================================================================
 // The END 
 // ============================================================================

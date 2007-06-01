@@ -1,8 +1,11 @@
 #!/usr/bin/env python
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
+# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.1  2007/06/01 11:57:36  ibelyaev
+#  prepare for v3r0
+#
 # =============================================================================
 ## @file functions.py LoKiMC/functions.py
 #  The set of basic functions from LoKiMC library
@@ -169,10 +172,12 @@ MCOVALID   = LoKi.MCParticles.ValidOrigin ()
 MCVFASPF   = LoKi.MCParticles.MCVertexFunAdapter
 ## @see LoKi::Cuts::MCDECAY
 MCDECAY    = LoKi.MCParticles.MCDecayPattern
-## @see LoKi::Cuts::FROMGTREE
-FROMGTREE  = LoKi.MCParticles.IsFromHepMC
-## @see LoKi::Cuts::RCTRUTH 
-RCTRUTH    = LoKi.MCParticles.RCTruth
+## @see LoKi::Cuts::MCREC
+MCREC      = LoKi.MCParticles.MCRecontructible
+## @see LoKi::Cuts::MCRECAS
+MCRECAS    = LoKi.MCParticles.MCRecontructibleAs
+
+
 ## @see LoKi::Cuts::CHARM
 CHARM      =  MCCHARM 
 ## @see LoKi::Cuts::BEAUTY

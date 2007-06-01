@@ -1,6 +1,6 @@
-! $Id: release.notes,v 1.19 2007-06-01 11:57:36 ibelyaev Exp $ 
+! $Id: release.notes,v 1.20 2007-06-01 15:44:20 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.19 $
+! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.20 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -16,6 +16,16 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 !
 ! -----------------------------------------------------------------------------
+
+! 2007-06-01 - Vanya BELYAEV
+ - add 2 new functions (wrappers for IMCRecontructioble tool)
+
+    LoKi::MCParticle::MCRecontructible    (alias MCREC)
+       the function which returns the recontruction category 
+    LoKi::MCParticle::MCRecontructibleAs  (alias MCRECAS)
+       the predicate which checks the recontruction category 
+
+  
 
 ! 2007-06-01 - Vanya BELYAEV
  - prepare for the major version v3r0 : 
@@ -289,6 +299,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.19  2007/06/01 11:57:36  ibelyaev
+!  prepare for v3r0
+!
 ! Revision 1.18  2007/04/19 13:51:00  pkoppenb
 ! tagged as v2r2p1
 !
