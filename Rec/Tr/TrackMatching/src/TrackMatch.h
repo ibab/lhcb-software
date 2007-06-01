@@ -1,10 +1,11 @@
-// $Id: TrackMatch.h,v 1.4 2006-08-03 09:14:38 mneedham Exp $
+// $Id: TrackMatch.h,v 1.5 2007-06-01 11:53:59 mneedham Exp $
 #ifndef TRACKMATCHING_TRACKMATCH_H
 #define TRACKMATCHING_TRACKMATCH_H 1
 
 // Include files
 // -------------
-#include "GaudiKernel/KeyedObject.h"
+#include "GaudiKernel/ContainedObject.h"
+#include "GaudiKernel/ObjectVector.h"
 
 // from TrackEvent
 #include "Event/Track.h"
@@ -31,67 +32,32 @@ namespace TrackMatchLocation {
  *  @date   11-07-2002
  */
 
-class TrackMatch: public KeyedObject<int>
+class TrackMatch: public ContainedObject
 {
 
 public: 
 
   /// constructor with arguments
   TrackMatch( LHCb::Track* veloTrack, LHCb::Track* seedTrack, double chi2 );
-  
-  /// constructor with arguments
-  TrackMatch( LHCb::Track* veloTrack, LHCb::Track* seedTrack, double chi2,
-              std::vector<LHCb::STCluster*> ttClusters );
-  
+   
   /// Default Constructor 
   TrackMatch() 
     : m_veloTrack(0),
       m_seedTrack(0),
-      m_chi2(0.0),
-      m_ttClusters(0) {};
+      m_chi2(0.0){}
 
   /// Destructor 
   ~TrackMatch() {}
 
-  /// set velo Track
-  void setVeloTrack( LHCb::Track* veloTrack );
-  
+ 
   /// get velo track
   const LHCb::Track* veloTrack() const;
 
-  /// set seed Track
-  void setSeedTrack( LHCb::Track* seedTrack );
-  
   /// get seed track
   const LHCb::Track* seedTrack() const;
-
-  /// set chi2
-  void setChi2( double chi2 );
   
   /// get chi2
   double chi2() const;
-
-  /// get the vector of TT Clusters
-  const std::vector<LHCb::STCluster*>& ttClusters() const;
-
-  /// get the number of TT Clusters
-  int numTTClusters() const;
-
-  /// set the vector of TT Clusters
-  void setTTClusters( const std::vector<LHCb::STCluster*>& ttClusters );
-
-  /// add a cluster to the vector of TT Clusters
-  void addTTCluster( LHCb::STCluster* cluster );
-
-  /// get the vector of TT Clusters chi2
-  const std::vector<double>& ttChi2s() const;
-
-  /// set the vector of TT Clusters chi2
-  void setTTChi2s( const std::vector<double>& ttChi2s );
-
-  /// add a chi2 to the vector of TT Cluster chi2.
-  void addTTChi2( double chi2 );
-
 
 #ifndef _WIN32
     /// operator new
@@ -134,8 +100,6 @@ private:
   LHCb::Track* m_veloTrack;    /// pointer to the velo track
   LHCb::Track* m_seedTrack;    /// pointer to the seed track
   double m_chi2;               /// chi2 of the matching between velo and seed
-  std::vector<LHCb::STCluster*> m_ttClusters; /// vector of TT clusters
-  std::vector<double> m_ttChi2s;              /// vector of chi2 of TT clusters
   
 };
 
@@ -148,29 +112,13 @@ inline TrackMatch::TrackMatch( LHCb::Track* veloTrack,
                                double chi2 )
   : m_veloTrack(veloTrack),
     m_seedTrack(seedTrack),
-    m_chi2(chi2),
-    m_ttClusters(0)
+    m_chi2(chi2)
 {
 }
-
-inline TrackMatch::TrackMatch( LHCb::Track* veloTrack, LHCb::Track* seedTrack, 
-                               double chi2,
-                               std::vector<LHCb::STCluster*> ttClusters ):
-m_veloTrack(veloTrack),
-m_seedTrack(seedTrack),
-m_chi2(chi2),
-m_ttClusters(ttClusters)
-{
-} 
 
 inline const LHCb::Track* TrackMatch::veloTrack() const 
 {
   return m_veloTrack;
-}
-
-inline void TrackMatch::setVeloTrack ( LHCb::Track* value )
-{
-  m_veloTrack = value; 
 }
 
 inline const LHCb::Track* TrackMatch::seedTrack() const 
@@ -178,58 +126,13 @@ inline const LHCb::Track* TrackMatch::seedTrack() const
   return m_seedTrack;
 }
 
-inline void TrackMatch::setSeedTrack( LHCb::Track* value )
-{
-  m_seedTrack = value; 
-}
-
 inline double TrackMatch::chi2() const 
 {
   return m_chi2;
 }
 
-inline void TrackMatch::setChi2( double value )
-{
-  m_chi2 = value; 
-}
-
-inline const std::vector<LHCb::STCluster*>& TrackMatch::ttClusters() const
-{
-  return m_ttClusters;
-}
-
-inline int TrackMatch::numTTClusters() const
-{
-  return m_ttClusters.size();
-}
-
-inline void
-TrackMatch::setTTClusters( const std::vector<LHCb::STCluster*>& value )
-{
-  m_ttClusters = value;
-}
-
-inline void TrackMatch::addTTCluster( LHCb::STCluster* cluster )
-{
-  m_ttClusters.push_back(cluster);
-}
-
-inline const std::vector<double>& TrackMatch::ttChi2s() const
-{
-  return m_ttChi2s;
-}
-
-inline void TrackMatch::setTTChi2s( const std::vector<double>& value )
-{
-  m_ttChi2s = value;
-}
-
-inline void TrackMatch::addTTChi2( double chi2 )
-{
-  m_ttChi2s.push_back(chi2);
-}
-
 //Defintion of keyed container for TrackMatch
-typedef KeyedContainer<TrackMatch, Containers::HashMap> TrackMatches;
+//typedef KeyedContainer<TrackMatch, Containers::HashMap> TrackMatches;
+typedef ObjectVector<TrackMatch> TrackMatches;
 
 #endif // TRACKMATCHING_TRACKMATCH_H

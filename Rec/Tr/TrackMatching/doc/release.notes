@@ -4,6 +4,11 @@
 ! Purpose     : Package for the track matching algorithms
 !-----------------------------------------------------------------------------
 
+! 2007-05-30 M Needham
+ - Faster version with less ghosts ---> see February 2006 Heidelberg
+   Workshop for details. 
+   Speeds is ~ 6 ms /event.
+
 !======================= TrackMatching v2r13 2007-05-18 ======================
 ! 2007-05-10 M. Needham
  - Set reference vector of velo measurements when adding to track
