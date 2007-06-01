@@ -4,7 +4,7 @@
  *
  *  Header file for RICH reconstruction tool interface : Rich::Rec::IMCTruthTool
  *
- *  $Id: IRichRecMCTruthTool.h,v 1.1.1.1 2007-05-25 16:24:33 cattanem Exp $
+ *  $Id: IRichRecMCTruthTool.h,v 1.2 2007-06-01 09:16:38 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -430,7 +430,7 @@ namespace Rich
 
         /** Access the RichRecRing representing the MC CK ring for te given RichRecSegment
          *
-         *  @param track Pointer to a RichRecSegment
+         *  @param segment Pointer to a RichRecSegment
          *
          *  @return Pointer to the RichRecRing
          */
