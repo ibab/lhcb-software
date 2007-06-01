@@ -1,9 +1,27 @@
-! $Id: release.notes,v 1.26 2007-04-19 16:20:03 pkoppenb Exp $ 
+! $Id: release.notes,v 1.27 2007-06-01 12:24:50 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhysMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : RC <--> MC part of LoKi 
 ! -----------------------------------------------------------------------------
+
+! 2007-06-01 - Vanya BELYAEV
+ - prepare for the new major version v5r0
+
+ - New files:
+
+   dict/LoKiPhysMC.xml
+   dict/LoKiPhysMCDict.h
+
+   python/LoKiPhysMC/__init__.py
+   python/LoKiPhysMC/decorators.py
+   python/LoKiPhysMC/functions.py
+   python/LoKiPhysMC/tests.py
+
+ - Modified files:
+
+ - cmt/requirements 
+    version increment to v5r0 
 
 !========================== LoKiPhysMC v4r1p1 2007-04-19 ===================
 ! 2007-04-19 -  P. Koppenburg
