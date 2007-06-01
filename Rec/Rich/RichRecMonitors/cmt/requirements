@@ -3,11 +3,11 @@
 # Maintainer : Christopher Rob Jones
 #            : Expert monitor algorithms for RICH reconstruction
 #============================================================================
-# $Id: requirements,v 1.17 2007-05-08 15:34:00 cattanem Exp $
+# $Id: requirements,v 1.18 2007-06-01 09:03:05 cattanem Exp $
 #============================================================================
 
 package RichRecMonitors
-version v2r10
+version v2r11
 
 # ================ structure ================================================
 branches src cmt doc options
@@ -20,6 +20,7 @@ set RICHRECMONITORSOPTS $(RICHRECMONITORSROOT)/options
 use RichRecBase       v*    Rich
 use MCEvent           v*    Event
 use LinkerEvent       v*    Event
+use MCInterfaces      v*    Kernel
 
 # ================ component library=========================================
 library           RichRecMonitors   ../src/*.cpp   -import=AIDA

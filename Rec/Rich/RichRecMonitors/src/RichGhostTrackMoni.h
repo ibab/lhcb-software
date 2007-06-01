@@ -5,7 +5,7 @@
  *  Header file for algorithm class : Rich::Rec::MC::GhostTrackMoni
  *
  *  CVS Log :-
- *  $Id: RichGhostTrackMoni.h,v 1.4 2007-03-09 22:59:34 jonrob Exp $
+ *  $Id: RichGhostTrackMoni.h,v 1.5 2007-06-01 09:03:05 cattanem Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -29,7 +29,7 @@
 
 // Interfaces
 #include "RichRecBase/IRichTrackSelector.h"
-#include "RichRecBase/IRichRecMCTruthTool.h"
+#include "MCInterfaces/IRichRecMCTruthTool.h"
 #include "RichRecBase/IRichExpectedTrackSignal.h"
 #include "RichRecBase/IRichCherenkovAngle.h"
 #include "RichRecBase/IRichCherenkovResolution.h"

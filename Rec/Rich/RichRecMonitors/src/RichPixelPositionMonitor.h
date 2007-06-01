@@ -5,7 +5,7 @@
  *  Header file for algorithm class : Rich::Rec::MC::PixelPositionMonitor
  *
  *  CVS Log :-
- *  $Id: RichPixelPositionMonitor.h,v 1.9 2007-04-24 13:35:42 cattanem Exp $
+ *  $Id: RichPixelPositionMonitor.h,v 1.10 2007-06-01 09:03:05 cattanem Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -32,8 +32,8 @@
 #include "RichRecBase/RichDetParams.h"
 
 // Interfaces
-#include "RichRecBase/IRichRecMCTruthTool.h"
-#include "RichKernel/IRichMCTruthTool.h"
+#include "MCInterfaces/IRichRecMCTruthTool.h"
+#include "MCInterfaces/IRichMCTruthTool.h"
 #include "RichKernel/IRichSmartIDTool.h"
 #include "RichRecBase/IRichRecGeomTool.h"
 

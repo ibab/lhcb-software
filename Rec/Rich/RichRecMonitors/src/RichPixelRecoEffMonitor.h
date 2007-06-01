@@ -5,7 +5,7 @@
  *  Header file for algorithm class : Rich::Rec::MC::PixelRecoEffMonitor
  *
  *  CVS Log :-
- *  $Id: RichPixelRecoEffMonitor.h,v 1.4 2007-03-09 22:59:34 jonrob Exp $
+ *  $Id: RichPixelRecoEffMonitor.h,v 1.5 2007-06-01 09:03:05 cattanem Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -34,8 +34,8 @@
 #include "RichDet/DeRichSystem.h"
 
 // Interfaces
-#include "RichKernel/IRichMCTruthTool.h"
-#include "RichRecBase/IRichRecMCTruthTool.h"
+#include "MCInterfaces/IRichMCTruthTool.h"
+#include "MCInterfaces/IRichRecMCTruthTool.h"
 #include "RichKernel/IRichRawBufferToSmartIDsTool.h"
 
 namespace Rich

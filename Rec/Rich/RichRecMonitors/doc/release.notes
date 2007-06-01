@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!====================== RichRecMonitors v2r11 2007-06-01 =====================
+! 2007-06-01 - Marco Cattaneo
+ - Adapt to move of some interfaces to MCInterfaces package
+
 !====================== RichRecMonitors v2r10 2007-05-08 =====================
 ! 2007-05-08 - Chris Jones
  - Update MC CK ring building algorithm to create a linker object to link

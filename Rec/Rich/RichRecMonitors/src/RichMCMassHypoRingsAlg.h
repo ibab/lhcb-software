@@ -4,7 +4,7 @@
  *  Header file for algorithm class : Rich::Rec::MC::MCMassHypoRingsAlg
  *
  *  CVS Log :-
- *  $Id: RichMCMassHypoRingsAlg.h,v 1.9 2007-05-08 12:12:57 jonrob Exp $
+ *  $Id: RichMCMassHypoRingsAlg.h,v 1.10 2007-06-01 09:03:05 cattanem Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   10/01/2003
@@ -24,8 +24,8 @@
 #include "RichKernel/RichHashMap.h"
 
 // Interfaces
-#include "RichKernel/IRichMCTruthTool.h"
-#include "RichKernel/IRichMCTrackInfoTool.h"
+#include "MCInterfaces/IRichMCTruthTool.h"
+#include "MCInterfaces/IRichMCTrackInfoTool.h"
 #include "RichRecBase/IRichMassHypothesisRingCreator.h"
 #include "RichRecBase/IRichRayTraceCherenkovCone.h"
 
