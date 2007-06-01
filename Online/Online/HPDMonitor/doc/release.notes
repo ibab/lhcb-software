@@ -4,6 +4,10 @@
 ! Purpose     : Online monitor for Gaudi
 !-----------------------------------------------------------------------------
 
+! 2007-06-01 - Ulrich Kerzel
+ - HPDGui: use status-bar for auto-start messages
+
+
 ! 2007-05-31 - Ulrich Kerzel
  - DimInfoHisto: count how often one has to wait for DIM, print message
                  set status to notOK while waiting

@@ -1,4 +1,4 @@
-// $Id: HPDGui.cpp,v 1.32 2007-05-31 14:47:15 ukerzel Exp $
+// $Id: HPDGui.cpp,v 1.33 2007-06-01 10:36:09 ukerzel Exp $
 // Include files 
 
 #include <iostream>
@@ -388,10 +388,10 @@ HPDGui::HPDGui(const TGWindow *p, UInt_t guiWidth, UInt_t guiHeight,
   gStyle->SetPalette(colNum, palette);
 
   if (m_histoDimNameArgument != "") {
-    std::cout << "found command line argument for DIM service, auto-starting ..." << std::endl;
+    m_StatusBar -> SetText("found command line argument for DIM service, auto-starting ...");
     m_connectOK = HPDGui::Connect2DIM();
     if (m_verbose > 0)
-      std::cout << "connected to DIM " << m_connectOK << std::endl;
+      m_StatusBar -> SetText("connected to DIM ");
     if (m_connectOK) {
       HPDGui::Update();
       HPDGui::ActionButtonSelect();
@@ -399,8 +399,9 @@ HPDGui::HPDGui(const TGWindow *p, UInt_t guiWidth, UInt_t guiHeight,
       m_timerRuns     =   true;          
       m_ButtonPause   ->  ChangeBackground(m_ROOTYellow);
       m_ButtonPause   ->  SetText("&pause");
+      m_StatusBar     ->  SetText("start updates");
     } else {
-      std::cout << "Could not connect to DIM DNS - autostart not possible" << std::endl;
+      m_StatusBar -> SetText("Could not connect to DIM DNS - autostart not possible");
     } // if connectOK
   }//if != ""
 
