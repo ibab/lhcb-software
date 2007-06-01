@@ -1,4 +1,4 @@
-// $Id: AlignmentCondition.cpp,v 1.13 2007-05-31 13:55:34 jpalac Exp $
+// $Id: AlignmentCondition.cpp,v 1.14 2007-06-01 15:26:33 jpalac Exp $
 // Include files
 #include <algorithm>
 
@@ -100,7 +100,7 @@ const Gaudi::Transform3D AlignmentCondition::XYZRotation(const std::vector<doubl
 //     Gaudi::RotationY(-1.*coefficients[1]) *
 //     Gaudi::RotationX(-1.*coefficients[0]);
   Gaudi::Rotation3D tmp;
-  Gaudi::Math::convert(tmp, rotZYX);
+  Gaudi::Math::convert(rotZYX, tmp);
   return Gaudi::Transform3D(tmp);
   
 }
