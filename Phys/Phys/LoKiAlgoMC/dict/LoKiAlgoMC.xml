@@ -1,0 +1,25 @@
+<!-- 
+     * $Id: LoKiAlgoMC.xml,v 1.1 2007-06-01 12:30:51 ibelyaev Exp $ 
+     * ========================================================================
+     * CVS tag:$Name: not supported by cvs2svn $, version $Revision: 1.1 $ 
+     * ======================================================================== 
+     * @file
+     * The seleciton file to build Reflex dictionaries for Phys/LoKiAlgo package
+     * @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     * @date 2006-02-06
+     * ========================================================================
+-->
+
+<lcgdict>
+  
+  <class name = "LoKi::AlgoMC" >
+    <field name = "m_P2MC"  transient="true" />
+    <field name = "m_P2MCW" transient="true" />
+    <field name = "m_PP2MC" transient="true" />
+    <field name = "m_T2MC"  transient="true" />
+    <field name = "m_T2MCW" transient="true" />
+  </class>
+
+  <class name = "LoKi::Interface<LoKi::AlgoMC>"  />
+  
+</lcgdict>

@@ -1,11 +1,30 @@
-! $Id: release.notes,v 1.5 2007-04-19 13:43:57 pkoppenb Exp $ 
+! $Id: release.notes,v 1.6 2007-06-01 12:30:51 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
+! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiAlgoMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : MC-analogue for the basic LoKi algorithm 
 ! -----------------------------------------------------------------------------
+
+! 2007-06-01 - Vanya BELYAEV
+ - prepare for the next major version v4r0 
+
+ - New files:
+
+   dict/LoKiAlgoMC.xml
+   dict/LoKiAlgoMCDict.h
+
+   python/LoKiAlgoMC/__init__.py
+   python/LoKiAlgoMC/decorators.py
+   python/LoKiAlgoMC/functions.py
+   python/LoKiAlgoMC/tests.py
+
+ - Modified files:
+
+ - cmt/requirements
+     version increment to v4r0 
+
 
 !========================== LoKiAlgoMC v3r0p1 2007-04-19 ===================
 ! 2007-04-19 -  P. Koppenburg
