@@ -5,6 +5,91 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v22r6>2007-05-31 LHCbSys v22r6</A></H1><PRE>
+This version uses Gaudi v19r3 and LCG_50b. Fully compatible with DC06 data
+
+- Packages removed: HltBase           - Moved to HLT project
+                    TrackMCInterfaces - All interfaces moved to MCInterfaces
+- Packages added:   MCInterfaces v1r0 - Interfaces with dependency on MC
+
+- Packages modified: KernelSys v6r6, LHCbKernel v7r5, RichKernel v7r6,
+    DetSys v9r6, DetDesc v17r4, OTDet v7r3, CaloDet v8r2, VeloDet v11r3,
+    STDet v3r4, RichDet v10r5, MuonDet v6r3, RichRecBase v3r5, DetDescSvc v1r12,
+    EventSys v23r6, MCEvent v2r4, HltEvent v8r2, SimComponents v2r3,
+    TrackInterfaces v3r5, LHCbAlgs v2r9, DetCondExample v11r1
+
+- In LHCbKernel v7r5
+  . Add isVeloR, isVeloPhi, isPileUp methods to LHCbID
+  . Add IHltSummaryTool interface (moved from HltBase)
+  . Add sameChannel and sameTime members to OTChannelID
+  . Updated IVeloClusterPosition interface to accept track state as argument
+  . IMCParticleSelector interface moved to MCInterfaces
+
+- In RichKernel v7r6
+  . IRichMCTruthTool and IRichMCTrackInfoTool interfaces moved to MCInterfaces
+  . Added missing dependency on DAQEvent
+
+- In RichRecBase v3r5
+  . IRichRecMCTruthTool interface moved to MCInterfaces
+
+- In MCEvent v2r4
+  . Move all interfaces to new MCInterfaces package and remove Kernel directory
+
+- In MCInterfaces v1r0
+  . Add bool operator() to IMCParticleSelector (To allow similarity of interface
+    between the various 'selector' type tools).
+  . Update IMCReconstructible interface
+
+- In SimComponents v2r3
+  . Adapt to new locations of MCInterfaces
+  . Follow extension in IMCReconstructible interface
+
+- In TrackInterfaces v3r5
+  . Add method to IVeloExpectation to return struct containing r and phi hits
+  . Remove const from TrackManipulator interface
+  . Add IMaterialLocator interface
+
+- In HltEvent v8r2
+  . Added an enum entry HltSelEntry=1000 which is always stored
+    in HltSummary when HltSelections are reached. 
+
+- In DetDesc v17r4
+  . Added temporary files in src/Lib:
+    + RotationZYX{.h, .cpp}   : Hacked from homonymous MathCore file in ROOT cvs.
+      Describes a 3D rotation transformation about the Z, Y' and X" axes 
+    + 3DConversions{.h, .cpp} : Hacked from homonymous MathCore file in ROOT 
+      cvs head. Provides conversions between RotationZYX and other MathCore 3D
+      rotation representations.
+  . DetDesc/AlignmentCondition.h, src/Lib/AlignmentCondition.cpp
+    + Use RotationZYX class internally. At the moment this is messy, as it is
+      still not integrated with MathCore. So code will need to be cleaned up when
+      RotationZYX classes and co are released in MathCore.
+    + Provide functionality to get back and update the set of Z-Y-X Euler angles
+      obtained each time the transformation matrix is modified.
+
+- In DetDescSvc v1r12
+  . Fixed a bug in UpdateManagerSvc. Check if the setting of the user provided
+    pointers is successful or not.
+  . Improvement in conditions override. Now it respects the actual type of the
+    object in the transient store (was not working with AlignmentCondition), if
+    possible. It is also possible to specify only few parameters of the
+    condition, and the other are taken from the database.
+
+- In OTDet v7r3, CaloDet v8r2, VeloDet v11r3, STDet v3r4, RichDet v10r5
+  . Add xxxLocation::* variables to dictionary 
+
+- In DetSys v9r6, OTDet v7r3, CaloDet v8r2, MuonDet v6r3
+  . Move lcg dictionary generation from DetSys to individual packages
+
+- In LHCbAlgs v2r9
+  . ProcessPhase "MeasureTime" property now defaults to GaudiSequencer default
+
+- In DetCondExample v11r1
+  . Added a test for conditions overriding with alignment conditions
+
+- In CaloDet v8r2, RichDet v10r5
+  . Fix doxygen warnings
+
 </PRE><H1><A NAME=v22r5>2007-05-16 LHCbSys v22r5</A></H1><PRE>
 This version uses Gaudi v19r3 and LCG_50b. Fully compatible with DC06 data
 
@@ -12,7 +97,7 @@ This version uses Gaudi v19r3 and LCG_50b. Fully compatible with DC06 data
     DetSys v9r5, DetDesc v17r3, EventSys v23r5, EventBase v2r3, MCEvent v2r3,
     TrackEvent v4r3, HltEvent v8r1, TrackInterfaces v3r4, TrackMCInterfaces v3r1,
     LHCbAlgs v2r6, DaVinciKernel v6r3, TsaKernel v2r4, SimComponents v2r2,
-    DetCond v11r3
+    DetCond v11r3, LHCbKernel v7r4
 
 - In LHCbSys v22r5
   . Add DoxyLHCbCommon.cfg file for use by doxygen of LHCb applications
