@@ -1,4 +1,4 @@
-// $Id: GlobalToLocalDelta.cpp,v 1.3 2007-06-01 15:29:32 jpalac Exp $
+// $Id: GlobalToLocalDelta.cpp,v 1.4 2007-06-01 16:14:46 jpalac Exp $
 // Include files 
 #include "DetDesc/IDetectorElement.h"
 #include "DetDesc/IGeometryInfo.h"
@@ -31,8 +31,8 @@ const Gaudi::Transform3D localToGlobalTransformation(std::vector<double>& pivotP
   const Gaudi::Transform3D rotation = DetDesc::ZYXRotation(rotationParams);
   const Gaudi::Transform3D translation = DetDesc::XYZTranslation(translationParams);
 
-  return translation*pivot.Inverse()*rotation*pivot;
-
+  return translation*pivot*rotation*(pivot.Inverse());
+  
 }
 
 const Gaudi::Transform3D XYZTranslation(const std::vector<double>& params) 
