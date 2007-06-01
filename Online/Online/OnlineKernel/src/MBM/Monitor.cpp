@@ -350,7 +350,7 @@ int MBM::Monitor::get_bm_list()   {
       if ( m_bms[i].m_buff == 0 )  {
         m_bms[i].m_mgr.setup(m_buffers->buffers[i].name);
         int sc = m_bms[i].m_mgr.mapSections();
-        if ( !lib_rtl_is_success(sc) ) exit(sc);
+        if ( !lib_rtl_is_success(sc) ) continue;
         m_bms[i].m_buff = &m_buffers->buffers[i];
       }
       m_numBM++;

@@ -233,6 +233,7 @@ namespace {
                 }
                 catch(...)  {
                   ::lib_rtl_printf("EntryMap::handle> Exception!\n");
+                  _asm int 3
                 }
               }
               if ( t == 1 && nb < 0 )  {

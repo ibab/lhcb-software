@@ -29,9 +29,13 @@ MBM::Installer::Installer(int argc, char **argv)  {
   p_size   = 10;
   p_force  = 0;
   p_bits   = 10;
-  m_bm = new BMDESCRIPT;
-  ::memset(m_bm,0,sizeof(BMDESCRIPT));
+  m_bm = new BMDESCRIPT();
   getOptions(argc, argv);
+}
+
+MBM::Installer::~Installer()  {
+  // We do NOT want to unload the global sections!
+  m_bm = 0;
 }
 
 int MBM::Installer::optparse (const char* c)  {

@@ -24,11 +24,19 @@ namespace MBM {
     int   p_bits;         // Block size 
     char  buff_id[16];    // Buffer identifier
   public:
+    /// Standard constructor
     Installer(int argc, char **argv);
-    bool startMonitor() const { return p_moni > 0;    }
+    /// Standard destructor
+    virtual ~Installer();
+    /// Flag to indicate the start of the monitor after installation
+    bool startMonitor() const { return p_moni > 0; }
+    /// Continue with installation by processing further options
     int  continueInstallation()  const { return p_continue!=0; }
+    /// Parse options
     virtual int  optparse (const char* c);
+    /// Deinstall buffers
     int  deinstall();
+    /// Install buffers
     int  install();
   };
 }

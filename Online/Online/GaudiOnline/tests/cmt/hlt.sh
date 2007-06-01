@@ -9,6 +9,7 @@ export MSGSVC=LHCb::DimMessageSvc
 
 export TAN_PORT=YES
 export TAN_NODE=$HOSTNAME
+export OPTS=$OPTS
 export test_exe="$ONLINEKERNELROOT/$CMTCONFIG/test.exe "
 export gaudi_run="$GAUDIONLINEROOT/$CMTCONFIG/Gaudi.exe libGaudiOnline.so OnlineStart "
 export gaudi_exe="$GAUDIONLINEROOT/$CMTCONFIG/Gaudi.exe libGaudiOnline.so OnlineTask -msgsvc=$MSGSVC -auto "
@@ -18,17 +19,17 @@ export BIGTERM='xterm  -ls -132 -geometry 132x45 -title '
 export WIDETERM='xterm  -ls -132 -geometry 160x50 -title '
 #
 #
-$MINITERM MBMInit@${HOST} -e "export UTGID=MEPInit   ; $gaudi_exe -main=$GAUDIONLINEROOT/options/MEPInit.opts -opt=$GAUDIONLINEROOT/options/Daemon.opts " &
+$MINITERM MBMInit@${HOST} -e "export UTGID=MEPInit   ; $gaudi_exe -main=$OPTS/MEPInit.opts -opt=$OPTS/Daemon.opts " &
 #
 #
 # $MINITERM OutputBuffer@${HOST} -e "export=UTGID OutBuff; $test_exe mbm_install -s=8096 -e=64 -u=64 -f -i=OUTPUT" &
-$MINITERM OutputBuffer@${HOST} -e "export UTGID=OutBuff   ; $gaudi_exe -main=$GAUDIONLINEROOT/options/MBMinit.opts -opt=$GAUDIONLINEROOT/options/Daemon.opts " &
+$MINITERM OutputBuffer@${HOST} -e "export UTGID=OutBuff   ; $gaudi_exe -main=$OPTS/MBMinit.opts -opt=$OPTS/Daemon.opts " &
 #
 #
 ##$BIGTERM ErrorLogger@${HOST}    -e "export UTGID=ErrLog_0; $gaudi_exe -opts=$GAUDIUPIROOT/options/Errlog.opts" &
-$WIDETERM ErrorLogger@${HOST}    -e "export UTGID=ErrLog; $gaudi_exe2 -opts=$GAUDIONLINEROOT/options/ErrorLogger.opts -main=$GAUDIONLINEROOT/options/Remap.opts " &
+$WIDETERM ErrorLogger@${HOST}    -e "export UTGID=ErrLog; $gaudi_exe2 -opts=$OPTS/ErrorLogger.opts -main=$OPTS/Remap.opts " &
 sleep 3
-$MINITERM ErrSrv@${HOST} -e "export UTGID=ErrSrv   ; $gaudi_exe -main=$GAUDIONLINEROOT/options/ErrorSrv.opts -opt=$GAUDIONLINEROOT/options/Daemon.opts " &
+$MINITERM ErrSrv@${HOST} -e "export UTGID=ErrSrv   ; $gaudi_exe -main=$OPTS/ErrorSrv.opts -opt=$OPTS/Daemon.opts " &
 #
 sleep 4
 #
@@ -39,16 +40,16 @@ $BIGTERM MBMMon@${HOST} -e "export UTGID=MBMMon; $gaudi_run libOnlineKernel.so m
 # $BIGTERM TANMon@${HOST} -e "export UTGID=TANMon; $gaudi_run libOnlineKernel.so tanmon -c" &
 #
 sleep 2
-$MINITERM EvtProd@${HOST}   -e "export UTGID=EvtProd  ; $gaudi_exe -opt=$GAUDIONLINEROOT/options/MEPConverter.opts -main=$GAUDIONLINEROOT/options/Main.opts "&
-$MINITERM EvtHolder@${HOST} -e "export UTGID=EvtHolder; $gaudi_exe -opt=$GAUDIONLINEROOT/options/MEPHolder.opts -main=$GAUDIONLINEROOT/options/Main.opts "&
-$MINITERM Moore_0@${HOST}   -e "export UTGID=Moore_0  ; $gaudi_exe -opt=$GAUDIONLINEROOT/options/ReadMBM.opts -main=$GAUDIONLINEROOT/options/Main.opts "&
-$MINITERM Moore_1@${HOST}   -e "export UTGID=Moore_1  ; $gaudi_exe -opt=$GAUDIONLINEROOT/options/ReadMBM.opts -main=$GAUDIONLINEROOT/options/Main.opts "&
-$MINITERM Moore_2@${HOST}   -e "export UTGID=Moore_2  ; $gaudi_exe -opt=$GAUDIONLINEROOT/options/ReadMBM.opts -main=$GAUDIONLINEROOT/options/Main.opts "&
-# $MINITERM Moore_3@${HOST}   -e "export UTGID=Moore_3  ; $gaudi_exe -opt=$GAUDIONLINEROOT/options/ReadMBM.opts -main=$GAUDIONLINEROOT/options/Main.opts "&
-$MINITERM Sender@${HOST}    -e "export UTGID=Sender   ; $gaudi_exe -opt=$GAUDIONLINEROOT/options/MDFSender.opts -main=$GAUDIONLINEROOT/options/Main.opts "&
+$MINITERM EvtProd@${HOST}   -e "export UTGID=EvtProd  ; $gaudi_exe -opt=$OPTS/MEPConverter.opts -main=$OPTS/Main.opts "&
+$MINITERM EvtHolder@${HOST} -e "export UTGID=EvtHolder; $gaudi_exe -opt=$OPTS/MEPHolder.opts -main=$OPTS/Main.opts "&
+$MINITERM Moore_0@${HOST}   -e "export UTGID=Moore_0  ; $gaudi_exe -opt=$OPTS/ReadMBM.opts -main=$OPTS/Main.opts "&
+$MINITERM Moore_1@${HOST}   -e "export UTGID=Moore_1  ; $gaudi_exe -opt=$OPTS/ReadMBM.opts -main=$OPTS/Main.opts "&
+$MINITERM Moore_2@${HOST}   -e "export UTGID=Moore_2  ; $gaudi_exe -opt=$OPTS/ReadMBM.opts -main=$OPTS/Main.opts "&
+# $MINITERM Moore_3@${HOST}   -e "export UTGID=Moore_3  ; $gaudi_exe -opt=$OPTS/ReadMBM.opts -main=$OPTS/Main.opts "&
+$MINITERM Sender@${HOST}    -e "export UTGID=Sender   ; $gaudi_exe -opt=$OPTS/MDFSender.opts -main=$OPTS/Main.opts "&
 #
-$MINITERM Receiver@${HOST}  -e "export UTGID=Receiver ; $gaudi_exe -opt=$GAUDIONLINEROOT/options/MDFReceiver.opts -main=$GAUDIONLINEROOT/options/Main.opts "&
-$MINITERM DiskWR@${HOST}    -e "export UTGID=DiskWR   ; $gaudi_exe -opt=$GAUDIONLINEROOT/options/DiskWR.opts -main=$GAUDIONLINEROOT/options/Main.opts "&
+$MINITERM Receiver@${HOST}  -e "export UTGID=Receiver ; $gaudi_exe -opt=$OPTS/MDFReceiver.opts -main=$OPTS/Main.opts "&
+$MINITERM DiskWR@${HOST}    -e "export UTGID=DiskWR   ; $gaudi_exe -opt=$OPTS/DiskWR.opts -main=$OPTS/Main.opts "&
 #
 #
 # For debugging enable this and disable any other

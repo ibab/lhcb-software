@@ -272,7 +272,7 @@ struct BMDESCRIPT : public qentry_t  {
   std::map<long long int,lib_rtl_event_t> us_wev_flags;
   std::map<long long int,lib_rtl_event_t> us_wes_flags;
   std::map<long long int,lib_rtl_event_t> us_wsp_flags;
-  BMDESCRIPT() : qentry_t(0,0) {}
+  BMDESCRIPT();
   ~BMDESCRIPT() {}
   inline USER* _user()  {
     return owner==-1 ? 0 : user + owner;

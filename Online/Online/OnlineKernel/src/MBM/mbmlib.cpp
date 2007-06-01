@@ -247,7 +247,8 @@ BMDESCRIPT::BMDESCRIPT() : qentry_t(0,0) {
 
 BMID mbm_map_memory(const char* bm_name)  {
   std::auto_ptr<BMDESCRIPT> bm(new BMDESCRIPT());
-  ::strcpy(bm->bm_name,bm_name);
+  ::strncpy(bm->bm_name,bm_name,sizeof(bm->bm_name));
+  bm->bm_name[sizeof(bm->bm_name)-1] = 0;
   bm->owner = -1;
   int sc = _mbm_map_sections(bm.get());
   if ( sc == MBM_NORMAL )  {
@@ -1503,7 +1504,7 @@ int _mbm_get_user_flag(std::map<long long int,lib_rtl_event_t>& flags, USER* us,
 int _mbm_wake_process (BMID bm, int reason, USER* us) {
   us->reason = reason;
   lib_rtl_event_t flag = 0;
-  int status = MBM_ERROR;
+  int status = MBM_NORMAL;
   switch(reason)  {
     case BM_K_INT_EVENT:
       status = _mbm_get_user_flag(bm->us_wev_flags, us, us->wev_flag, &flag);
@@ -1514,6 +1515,8 @@ int _mbm_wake_process (BMID bm, int reason, USER* us) {
     case BM_K_INT_SPACE:
       status = _mbm_get_user_flag(bm->us_wsp_flags, us, us->wsp_flag, &flag);
       break;
+    default:
+      status = MBM_ERROR;
   }
   if ( status == MBM_NORMAL ) {
     status = lib_rtl_set_event(flag);
@@ -1522,7 +1525,7 @@ int _mbm_wake_process (BMID bm, int reason, USER* us) {
     }
     return MBM_NORMAL;
   }
-  return MBM_ERROR;
+  return status;
 }
 #else
 int _mbm_wake_process (BMID, int reason, USER* us) {

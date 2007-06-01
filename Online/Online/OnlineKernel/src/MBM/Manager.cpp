@@ -13,7 +13,6 @@ MBM::Manager::Manager() : m_bm(0), bm_id(0), bm_all(0) {
 
 MBM::Manager::~Manager()  {
   if ( m_bm ) mbm_unmap_memory(m_bm);
-  m_bm = 0;
 }
 
 void MBM::Manager::setup(const char* id)  {
@@ -41,6 +40,7 @@ int MBM::Manager::mapSections()  {
 
 int MBM::Manager::unmapSections()  {
   if ( m_bm ) {
+    // Internally this deletes the buffer descriptor!
     int sc = mbm_unmap_memory(m_bm);
     m_bm = 0;
     return sc;

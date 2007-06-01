@@ -2,40 +2,41 @@ call %GAUDIONLINEROOT%\tests\cmt\preamble.bat
 set UTGID=MBMMon
 start "%UTGID%" %GAUDIONLINEROOT%\%CMTCONFIG%\Gaudi.exe OnlineKernel.dll mbm_mon
 set UTGID=MEPInit
-start "%UTGID%" %gaudi_exe% -main=%OPTS%/MEPinit.opts -opt=%OPTS%/Daemon.opts -msgsvc=%msg_svc%
+start "%UTGID%" %gaudi_exe% -main=%OPTS%/MEPinit.opts -opt=%OPTS%/Daemon.opts    -msgsvc=%msg_svc%
 set UTGID=ErrSrv
-start "%UTGID%" %gaudi_exe% -opt=%OPTS%/ErrorSrv.opts     -msgsvc=%msg_svc%
+start "%UTGID%" %gaudi_exe% -main=%OPTS%/Main.opts -opt=%OPTS%/ErrorSrv.opts     -msgsvc=%msg_svc%
 set UTGID=ErrLog
-start "%UTGID%" %gaudi_exe% -opt=%OPTS%/ErrorLogger.opts  -msgsvc=MessageSvc
-
-sleep 5
+start "%UTGID%" %gaudi_exe% -main=%OPTS%/Main.opts -opt=%OPTS%/ErrorLogger.opts  -msgsvc=MessageSvc
+sleep 10
 set UTGID=EvtProd
-start "%UTGID%" %gaudi_exe% -opt=%OPTS%/MEPConverter.opts -msgsvc=%msg_svc%
+start "%UTGID%" %gaudi_exe% -main=%OPTS%/Main.opts -opt=%OPTS%/MEPConverter.opts -msgsvc=%msg_svc%
 set UTGID=EvtHolder
-start "%UTGID%" %gaudi_exe% -opt=%OPTS%/MEPHolder.opts    -msgsvc=%msg_svc%
+start "%UTGID%" %gaudi_exe% -main=%OPTS%/Main.opts -opt=%OPTS%/MEPHolder.opts    -msgsvc=%msg_svc%
 set UTGID=Moore_0
-start "%UTGID%" %gaudi_exe% -opt=%OPTS%/ReadMBM.opts      -msgsvc=%msg_svc%
+start "%UTGID%" %gaudi_exe% -main=%OPTS%/Main.opts -opt=%OPTS%/ReadMBM.opts      -msgsvc=%msg_svc%
 set UTGID=Moore_1
-start "%UTGID%" %gaudi_exe% -opt=%OPTS%/ReadMBM.opts      -msgsvc=%msg_svc%
+start "%UTGID%" %gaudi_exe% -main=%OPTS%/Main.opts -opt=%OPTS%/ReadMBM.opts      -msgsvc=%msg_svc%
 set UTGID=Moore_2
-start "%UTGID%" %gaudi_exe% -opt=%OPTS%/ReadMBM.opts      -msgsvc=%msg_svc%
+start "%UTGID%" %gaudi_exe% -main=%OPTS%/Main.opts -opt=%OPTS%/ReadMBM.opts      -msgsvc=%msg_svc%
 set UTGID=Spy_0
-start "%UTGID%" %gaudi_exe% -opt=%OPTS%/SpyMBMSlow.opts   -msgsvc=%msg_svc%
+start "%UTGID%" %gaudi_exe% -main=%OPTS%/Main.opts -opt=%OPTS%/SpyMBMSlow.opts   -msgsvc=%msg_svc%
 set UTGID=Spy_1
-start "%UTGID%" %gaudi_exe% -opt=%OPTS%/SpyMBM.opts       -msgsvc=%msg_svc%
+start "%UTGID%" %gaudi_exe% -main=%OPTS%/Main.opts -opt=%OPTS%/SpyMBM.opts       -msgsvc=%msg_svc%
 set UTGID=Spy_2
-start "%UTGID%" %gaudi_exe% -opt=%OPTS%/SpyMBMFast.opts   -msgsvc=%msg_svc%
+start "%UTGID%" %gaudi_exe% -main=%OPTS%/Main.opts -opt=%OPTS%/SpyMBMFast.opts   -msgsvc=%msg_svc%
 rem
 set UTGID=OutputBuffer
-start "%UTGID%" %gaudi_exe% -main=%OPTS%/MBMinit.opts -opt=%OPTS%/Daemon.opts -msgsvc=%msg_svc%
-set UTGID=Sender
-start "%UTGID%" %gaudi_exe% -opt=%OPTS%/MDFSender.opts    -msgsvc=%msg_svc%
+start "%UTGID%" %gaudi_exe% -main=%OPTS%/MBMinit.opts -opt=%OPTS%/Daemon.opts    -msgsvc=%msg_svc%
+sleep 2
 set UTGID=Receiver
-start "%UTGID%" %gaudi_exe% -opt=%OPTS%/MDFReceiver.opts  -msgsvc=%msg_svc%
+start "%UTGID%" %gaudi_exe% -main=%OPTS%/Main.opts -opt=%OPTS%/MDFReceiver.opts  -msgsvc=%msg_svc%
+sleep 2
+set UTGID=Sender
+start "%UTGID%" %gaudi_exe% -main=%OPTS%/Main.opts -opt=%OPTS%/MDFSender.opts    -msgsvc=%msg_svc%
 set UTGID=DiskWR
-start "%UTGID%" %gaudi_exe% -opt=%OPTS%/DiskWR.opts       -msgsvc=%msg_svc%
+start "%UTGID%" %gaudi_exe% -main=%OPTS%/Main.opts -opt=%OPTS%/DiskWR.opts       -msgsvc=%msg_svc%
 set UTGID=MDFWriter
-rem start "%UTGID%" %gaudi_exe% -opt=%OPTS%/MDFWriter.opts    -msgsvc=%msg_svc%
+rem start "%UTGID%" %gaudi_exe% -main=%OPTS%/Main.opts -opt=%OPTS%/MDFWriter.opts    -msgsvc=%msg_svc%
 
 rem start /b xterm -132 -geometry 132x45  -title ErrorLogger  -e /bin/bash -l -c "export UTGID=ErrorLogger; cd J:/Gaudi/Online/UPI/cmt; ./upi.sh ../../GaudiOnline/%CMTCONFIG%/gaudi.exe ../../GaudiOnline/%CMTCONFIG%/GaudiOnline OnlineTask -opts=../../GaudiUPI/options/Errlog.opts -msgsvc=%msg_svc%"
 

@@ -1,12 +1,15 @@
 #include "$GAUDIONLINEROOT/options/OnlineEnvironment.opts"
 ApplicationMgr.HistogramPersistency  = "NONE";
 ApplicationMgr.EvtSel                = "NONE";
-ApplicationMgr.ExtSvc               += { "LHCb::AMSService/AMS", "IncidentSvc" };
-ApplicationMgr.TopAlg               += { "LHCb::SocketDataReceiver/Receiver" };
-ApplicationMgr.Runable               =   "LHCb::EventRunable/Runable";
-Runable.Wait                         = false;
-Runable.MEPManager                   = "LHCb::MEPManager/MEPManager";
+ApplicationMgr.SvcOptMapping        += {"LHCb::MEPManager/MEPManager"};
+ApplicationMgr.SvcOptMapping        += {"LHCb::OnlineEvtSelector/EventSelector"};
+ApplicationMgr.ExtSvc               += { "IncidentSvc" };
+ApplicationMgr.ExtSvc               += { "LHCb::SocketDataReceiver/Receiver" };
+ApplicationMgr.Runable               =   "LHCb::OnlineRunable/Runable";
+Runable.Wait                         = 3;
 Receiver.Buffer                      = "OUT";
-Receiver.PartitionID                 = @OnlineEnv.PartititonID;
-Receiver.PartitionBuffer             = true;
+MEPManager.PartitionID               = @OnlineEnv.PartititonID;
+MEPManager.Buffers                   = {"OUT"};
 MEPManager.PartitionBuffers          = true;
+//MessageSvc.OutputLevel = 1;
+//MessageSvc.LoggerOnly = false;
