@@ -1,6 +1,6 @@
-! $Id: release.notes,v 1.47 2007-03-05 10:58:40 cattanem Exp $ 
+! $Id: release.notes,v 1.48 2007-06-01 11:35:27 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.47 $
+! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.48 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -17,6 +17,47 @@
 ! 
 ! -----------------------------------------------------------------------------
 
+! 2007-06-01 - Vanya BELYAEV
+
+ - many changes: preparation for the next major LoKi version
+   now all LoKi's dictionaries are build with the packages
+
+ - New files (mainly copy from LoKiDict&Bender) 
+
+    LoKi/Calls.h
+    LoKi/Dicts.h
+    LoKi/FuncOps.h
+    LoKi/Funcs.h
+    LoKi/KeeperBase.h
+    LoKi/Maths.h
+    LoKi/PIDOps.h
+
+    python/LoKiCore/__init__.py
+    python/LoKiCore/decorators.py
+    python/LoKiCore/functions.py
+    python/LoKiCore/tests.py
+
+    dict/LoKiCore.xml
+    dict/LoKiCoreDict.h
+
+  - Modified Files:
+
+    LoKi/Base.h
+    LoKi/CoreTypes.h
+    LoKi/Functions.h
+    LoKi/Keeper.h
+    LoKi/LoKiCore.h
+    LoKi/Operators.h
+    LoKi/Print.h
+    LoKi/Range.h
+    LoKi/RangeList.h
+    LoKi/UniqueKeeper.h
+
+    src/ParticleProperties.cpp
+    src/Print.cpp
+
+ - cmt/requirement version increment to v3r0 
+ 
 !=========================== LoKiCore v2r1 2007-03-05 ======================
 ! 2007-03-05 - Marco Cattaneo
  - Remove obsolete LoKiCore_load.cpp file
@@ -259,6 +300,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.47  2007/03/05 10:58:40  cattanem
+! remove obsolete file
+!
 ! Revision 1.46  2007/02/26 13:13:09  cattanem
 ! fix doxygen warnings
 !

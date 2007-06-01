@@ -1,0 +1,44 @@
+<!-- 
+     * $Id: LoKiCore.xml,v 1.1 2007-06-01 11:35:27 ibelyaev Exp $ 
+     * ========================================================================
+     * CVS tag:$Name: not supported by cvs2svn $, version $Revision: 1.1 $ 
+     * ======================================================================== 
+     * @file
+     * The seleciton file to build Reflex dictionaries for Phys/LoKiCore package
+     * @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     * @date 2006-02-06
+     * ========================================================================
+-->
+
+<lcgdict>
+
+  <class name      = "LoKi::ILoKiSvc"        />
+  <class name      = "LoKi::IReporter"       />
+
+  <class name      = "LoKi::Welcome"         />
+  <class name      = "LoKi::Report"          />
+  <class name      = "LoKi::Base"            />
+
+  <class name      = "LoKi::RangeBase_"      />
+  <class name      = "LoKi::AuxFunBase"      />
+  <class name      = "LoKi::KeeperBase"      />
+  
+
+  <class pattern   = "LoKi::Interface<*>"    />
+  
+  <class pattern   = "std::unary_function<*,double>"  />
+  <class pattern   = "std::unary_function<*,bool>"    />
+  
+  <function pattern = "LoKi::Geometry::*"      />
+  <function pattern = "LoKi::Kinematics::*"    />
+  <function pattern = "LoKi::Particles::*"    />
+  
+  <exclusion>
+    <class    name    = "std::unary_function<char,bool>"        />
+    <class    name    = "std::unary_function<const char*,bool>" /> 
+    <class    name    = "std::unary_function<const void*,bool>" /> 
+    <function name    = "LoKi::tokenize" /> 
+    <function name    = "LoKi::Range_Local::rangeException" /> 
+  </exclusion>
+  
+</lcgdict>

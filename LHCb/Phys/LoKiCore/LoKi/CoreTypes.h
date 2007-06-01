@@ -1,10 +1,8 @@
-// $Id: CoreTypes.h,v 1.4 2006-11-25 19:12:55 ibelyaev Exp $
+// $Id: CoreTypes.h,v 1.5 2007-06-01 11:35:26 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.3  2006/05/02 14:29:09  ibelyaev
-//  censored
 //
 // ============================================================================
 #ifndef LOKI_CORETYPES_H 
@@ -15,8 +13,6 @@
 // LoKiCore 
 // ============================================================================
 #include "LoKi/Objects.h"
-// ============================================================================
-
 // ============================================================================
 /** @file
  *
@@ -32,7 +28,6 @@
  *  @date 2006-02-10
  */
 // ============================================================================
-
 namespace LoKi 
 {  
   /** @namespace LoKi::CoreTypes CoreTypes.h LoKi/CoreTypes.h
@@ -43,8 +38,7 @@ namespace LoKi
    */
   namespace CoreTypes 
   {
-  }  // end of namespace LoKi::CoreTypes 
-  
+  }  // end of namespace LoKi::CoreTypes
   /** @namespace LoKi::Types 
    *  The namespace to collect all basic LoKi types for 
    *  funtors and predicates 
@@ -54,10 +48,7 @@ namespace LoKi
   namespace Types 
   {
   }  // end of namespace LoKi::Types
-  
-}  // end of namespace LoKi 
-
-
+}  // end of namespace LoKi
 // ========================================================================
 // The END 
 // ========================================================================

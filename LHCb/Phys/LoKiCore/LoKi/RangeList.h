@@ -1,13 +1,9 @@
-// $Id: RangeList.h,v 1.6 2006-11-25 19:12:56 ibelyaev Exp $
+// $Id: RangeList.h,v 1.7 2007-06-01 11:35:27 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.6 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.7 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.5  2006/11/06 12:11:16  ibelyaev
-//  RangeList: add missing destructor
-//
-// Revision 1.4  2006/05/02 14:29:10  ibelyaev
-//  censored
+// Revision 1.6  2006/11/25 19:12:56  ibelyaev
 //
 // ============================================================================
 #ifndef LOKI_RANGELIST_H 
@@ -18,8 +14,6 @@
 // LoKi
 // ============================================================================
 #include "LoKi/NamedRange.h"
-// ============================================================================
-
 // ============================================================================
 /** @file
  *
@@ -38,8 +32,6 @@
 namespace LoKi
 { 
   /** @class RangeList RangeList.h LoKi/RangeList.h
-   *  
-   *
    *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
    *  @date   2004-11-18
    */
@@ -54,18 +46,16 @@ namespace LoKi
   protected:
     typedef RangeList_<RANGE>                      Self ;
   public:
-    
     /** Standard constructor
      *  create empty list of ranges 
      */
     RangeList_() : m_ranges() {}
-    
     /** constructor
      *  create list from 1 range
      *  @param range range 
      */
+    explicit 
     RangeList_( const Range& range ) : m_ranges( 1 , range ) {}
-    
     /** constructor
      *  create list from 2 ranges
      *  @param range1 range 
@@ -77,29 +67,23 @@ namespace LoKi
       m_ranges.push_back( range1 ) ;
       m_ranges.push_back( range2 ) ;
     };
-    
     /// destructor
     virtual ~RangeList_(){} ;
-    
   public:
-    
     /// empty list ? 
     bool          empty() const { return m_ranges.empty() ; }
     /// number of components 
     const size_t  size () const { return  m_ranges.size() ; }
-    
     /// indexing operator 
     const Range& operator[] ( size_t index ) const 
     { return m_ranges[ index ] ; }    
     /// indexing operator 
     const Range& operator() ( size_t index ) const 
     { return  (*this)[ index ] ; }
-    
     /// sequential access 
     iterator begin () const { return m_ranges.begin () ; }
     /// sequential access 
     iterator end   () const { return m_ranges.end   () ; }
-    
     /// add 
     void add ( const Range&      range ) { m_ranges.push_back( range ) ; }
     /// add 
@@ -107,50 +91,54 @@ namespace LoKi
     { for ( iterator it = range.begin() ; range.end() != it ; ++it ){ add( *it ) ; } }
     /// add 
     void add ( const Self&       range ) { add( range.ranges() ) ; }
-    
+    /// add 
     Self& operator+= ( const Range&  range ) { add ( range ) ; return *this ; }
+    /// add 
     Self& operator+= ( const Ranges& range ) { add ( range ) ; return *this ; }
+    /// add 
     Self& operator+= ( const Self&   range ) { add ( range ) ; return *this ; }
-    
   public:
-    
-    // RangeList + <OTHER>
-    template <class OTHER>
-    Self operator+( const OTHER& range ) const 
-    {
-      Self tmp(*this);
-      return tmp += range ;
-    } ;
-    
-    // Range + RangeList
-    friend Self operator+( const Range& range1 , 
-                           const Self&  range2 )
-    {
-      return Self(range1)+=range2 ;
-    } ;
-
   protected:
-    
     /// access to the underlying storage 
     const Ranges& ranges() const { return m_ranges ; }
-    
   private:
-    
     // list of ranges itself 
     Ranges m_ranges ;
   };
- 
 } // end of namespace LoKi 
-
-// Range + Range
+// ============================================================================
+// RangeList + <OTHER>
+// ============================================================================
+template <class RANGE,class OTHER>
+inline 
+LoKi::RangeList_<RANGE> 
+operator+( const LoKi::RangeList_<RANGE>& range1 ,
+           const OTHER&                   range2 )
+{
+  return LoKi::RangeList_<RANGE>(range1) += range2 ;
+} ;
+// ============================================================================
+// Range + RangeList
+// ============================================================================
 template <class RANGE> 
-inline LoKi::RangeList_<RANGE> 
+inline 
+LoKi::RangeList_<RANGE> 
+operator+( const typename LoKi::RangeList_<RANGE>::Range& range1 , 
+           const typename LoKi::RangeList_<RANGE>&        range2 ) 
+{
+  return LoKi::RangeList_<RANGE>( range1 )+= range2 ;
+} ;
+// ============================================================================
+// Range + Range
+// ============================================================================
+template <class RANGE> 
+inline 
+LoKi::RangeList_<RANGE> 
 operator+( const typename LoKi::RangeList_<RANGE>::Range& range1 , 
            const typename LoKi::RangeList_<RANGE>::Range& range2 ) 
 {
   return  LoKi::RangeList_<RANGE>( range1 , range2 ) ;
-};
-
+} ;
 // ============================================================================
 // The END 
 // ============================================================================

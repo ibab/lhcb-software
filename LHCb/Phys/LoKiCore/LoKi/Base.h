@@ -1,8 +1,11 @@
-// $Id: Base.h,v 1.2 2006-05-02 14:29:09 ibelyaev Exp $
+// $Id: Base.h,v 1.3 2007-06-01 11:35:26 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/05/02 14:29:09  ibelyaev
+//  censored
+//
 // ============================================================================
 #ifndef LOKI_BASE_H 
 #define LOKI_BASE_H 1
@@ -13,8 +16,6 @@
 // ============================================================================
 #include "LoKi/IReporter.h"
 #include "LoKi/Interface.h"
-// ============================================================================
-
 // ============================================================================
 /** @file
  *
@@ -30,10 +31,8 @@
  *  @date 2006-03-10
  */
 // ============================================================================
-
 namespace LoKi 
-{
-  
+{ 
   /** @class Base Base.h LoKi/Base.h
    *  
    *  the base class for complex LoKi objects 
@@ -66,7 +65,6 @@ namespace LoKi
     /// assignement 
     Base& operator=( const Base& ) ;
   protected:
-
     /** Print the error message and return with the given StatusCode.
      *
      *  Also performs statistical analysis of the error messages and
@@ -135,8 +133,7 @@ namespace LoKi
     StatusCode Print     
     ( const std::string& msg , 
       const StatusCode   st  = StatusCode::SUCCESS ,
-      const MSG::Level   lev = MSG::INFO           ) const ;
-    
+      const MSG::Level   lev = MSG::INFO           ) const ;    
     /** Assertion - throw exception, if condition is not fulfilled 
      *  @see CaloException
      *  @see GaudiException
@@ -153,7 +150,6 @@ namespace LoKi
     {
       return ok ? StatusCode::SUCCESS : Exception ( message , sc ) ;
     } ;
-
     /** Create and (re)-throw the exception  
      *  @see GaudiException
      *  @exception CaudiException always!
@@ -166,7 +162,6 @@ namespace LoKi
     ( const std::string    & msg                        ,  
       const GaudiException & exc                        , 
       const StatusCode       sc  = StatusCode::FAILURE  ) const ;
-    
     /** Create and (re)-throw the exception  
      *  @see GaudiException
      *  @exception GaudiException always!
@@ -179,7 +174,6 @@ namespace LoKi
     ( const std::string    & msg                        ,  
       const std::exception & exc                        , 
       const StatusCode       sc  = StatusCode::FAILURE  ) const ;
-    
     /** Create and throw the exception  
      *  @see GaudiException
      *  @exception GaudiException always!
@@ -190,16 +184,13 @@ namespace LoKi
     StatusCode Exception 
     ( const std::string& msg = "no message"        ,  
       const StatusCode   sc  = StatusCode::FAILURE ) const ;
-    
   public:
-    
     /// get the currect reference counter 
     long refCount   () const { return   m_refCount ; }
     /// increment the reference counter 
     long addRef     ()       { return ++m_refCount ; }
     /// decreemnt the reference counter 
     long release    ()   ; ///< ATTENTION! object is deleted if refCount==0
-    
   private:
     // object name 
     std::string                      m_name     ; ///<  object name 
@@ -210,9 +201,7 @@ namespace LoKi
     // reference counter 
     long                             m_refCount ; ///< reference counter 
   } ;
-
-} ; // end of namespace LoKi 
-
+}  // end of namespace LoKi
 // ============================================================================
 // The END 
 // ============================================================================

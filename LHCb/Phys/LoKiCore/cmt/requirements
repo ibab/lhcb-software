@@ -1,21 +1,23 @@
-# $Id: requirements,v 1.21 2007-02-26 13:13:09 cattanem Exp $ 
+# $Id: requirements,v 1.22 2007-06-01 11:35:27 ibelyaev Exp $ 
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.21 $
+# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.22 $
 # =============================================================================
 # Created    : 2006-01-16
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu 
 # =============================================================================
 package            LoKiCore
-version            v2r1
+version            v3r0
 
 # ================ structure ==================================================
-branches           cmt doc src LoKi 
+branches           cmt doc src dict python LoKi 
 
 # ================ dependencies ===============================================
 use                GaudiAlg         v* 
 use                LHCbKernel       v* Kernel 
 use                Boost            v* LCG_Interfaces 
 use                ROOT             v* LCG_Interfaces 
+use                RELAX            v* LCG_Interfaces 
+use                Reflex           v* LCG_Interfaces -no_auto_imports
 
 # ================ own includes ===============================================
 apply_pattern install_more_includes more=LoKi
@@ -24,19 +26,21 @@ apply_pattern install_more_includes more=LoKi
 library            LoKiCoreLib    ../src/*.cpp
 library            LoKiCore       ../src/Components/*.cpp
 
+# ============== Produce LCG dictionary =======================================
+apply_pattern    reflex_dictionary                                     \
+                 dictionary=LoKiCore                                   \
+                 headerfiles=$(LOKICOREROOT)/dict/LoKiCoreDict.h       \
+                 selectionfile=$(LOKICOREROOT)/dict/LoKiCore.xml       \  
+                 options=" -U__MINGW32__ "
+
 # ================ patterns ===================================================
 apply_pattern      linker_library    library=LoKiCoreLib
 apply_pattern      component_library library=LoKiCore
 
+macro LoKiCoreDict_use_linkopts $(use_linkopts)
 
 # =============================================================================
 # $Log: not supported by cvs2svn $
-# Revision 1.20  2006/12/15 08:37:19  ranjard
-# v2r0 - InstallArea and new Plugins
-#
-# Revision 1.19  2006/11/25 19:12:49  ibelyaev
-#  improve Doxygen
-#
 #
 # =============================================================================
 # The END

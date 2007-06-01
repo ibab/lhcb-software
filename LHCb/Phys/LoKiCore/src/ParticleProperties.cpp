@@ -1,13 +1,8 @@
-// $Id: ParticleProperties.cpp,v 1.5 2007-02-26 13:13:09 cattanem Exp $
+// $Id: ParticleProperties.cpp,v 1.6 2007-06-01 11:35:27 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.5 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.6 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.4  2006/05/08 09:04:27  cattanem
-// Units now in Gaudi::Units namespace
-//
-// Revision 1.3  2006/05/02 14:29:11  ibelyaev
-//  censored
 //
 // ============================================================================
 // Include files
@@ -20,6 +15,7 @@
 // ============================================================================
 #include "GaudiKernel/PhysicalConstants.h"
 #include "GaudiKernel/SystemOfUnits.h"
+#include "GaudiKernel/VectorMap.h"
 // ============================================================================
 // Kernel
 // ============================================================================
@@ -35,9 +31,6 @@
 // Boost 
 // ============================================================================
 #include "boost/lexical_cast.hpp"
-// ============================================================================
-
-
 // ============================================================================
 /** @file
  *
@@ -55,7 +48,20 @@
  *  @date 2001-01-23 
  */
 // ============================================================================
-
+namespace std
+{
+  template<>
+  struct less<LHCb::ParticleID>
+    : public std::binary_function<const LHCb::ParticleID,
+                                  const LHCb::ParticleID,bool>
+  {
+    inline bool operator() ( const LHCb::ParticleID& i , 
+                             const LHCb::ParticleID& j ) const
+    { return i.pid() < j.pid() ; }
+  } ;
+  template<>
+  struct less<const LHCb::ParticleID> : public std::less<LHCb::ParticleID> {};
+}
 // ============================================================================
 /** retrieve particle ID from Particle name 
  *  @param name particle name 
@@ -64,6 +70,27 @@
 // ============================================================================
 LHCb::ParticleID LoKi::Particles::pidFromName( const std::string& name ) 
 {
+  typedef GaudiUtils::VectorMap<std::string,LHCb::ParticleID> Map ;
+  // ATTENTION
+  static Map s_map ; ///< ATTENTION
+  if ( s_map.empty() ) 
+  {
+    s_map.insert (  "gamma" ,    22 ) ;
+    s_map.insert (  "e+"    ,   -11 ) ;
+    s_map.insert (  "e-"    ,    11 ) ;
+    s_map.insert (  "mu+"   ,   -13 ) ;
+    s_map.insert (  "mu-"   ,    13 ) ;
+    s_map.insert (  "pi+"   ,   211 ) ;
+    s_map.insert (  "pi0"   ,   111 ) ;
+    s_map.insert (  "pi-"   ,  -211 ) ;
+    s_map.insert (  "K+"    ,   321 ) ;
+    s_map.insert (  "K-"    ,  -321 ) ;
+    s_map.insert (  "p+"    ,  2212 ) ;
+    s_map.insert (  "p~-"   , -2212 ) ;
+  } 
+  Map::const_iterator ifind = s_map.find( name ) ;
+  if ( s_map.end() != ifind ) { return ifind->second ; }               // RETURN
+  //
   const ParticleProperty* pp = ppFromName( name ) ;
   if( 0 == pp ) 
   {
@@ -73,10 +100,10 @@ LHCb::ParticleID LoKi::Particles::pidFromName( const std::string& name )
         name + "' return ParticleID() " ) ;
     return LHCb::ParticleID();
   }
+  // update the map:
+  s_map.insert ( name , pp->jetsetID() ) ;
   return LHCb::ParticleID( pp->jetsetID() );
-};
-// ============================================================================
-
+}
 // ============================================================================
 /** retrieve particle ID from Particle name 
  *  @param name particle name 
@@ -98,10 +125,7 @@ const ParticleProperty* LoKi::Particles::_ppFromName
   }
   const ParticleProperty* pp = ppSvc -> find( name ) ;
   return pp ;
-};
-// ============================================================================
-
-
+}
 // ============================================================================
 /** retrieve particle ID from Particle name 
  *  @param name particle name 
@@ -121,10 +145,7 @@ const ParticleProperty* LoKi::Particles::ppFromName
     return 0 ;
   }
   return pp ;
-};
-// ============================================================================
-
-
+}
 // ============================================================================
 /** retrieve ParticleProperty from ParticleID 
  *  @param pid particle ID 
@@ -148,9 +169,7 @@ const ParticleProperty* LoKi::Particles::_ppFromPID
   const ParticleProperty* pp = ppSvc -> findByStdHepID( pid.pid() ) ;
   //
   return pp ;
-};
-// ============================================================================
-
+}
 // ============================================================================
 /** retrieve ParticleProperty from ParticleID 
  *  @param pid particle ID 
@@ -171,9 +190,7 @@ const ParticleProperty* LoKi::Particles::ppFromPID
     return 0 ;
   }
   return pp ;
-};
-// ============================================================================
-
+}
 // ============================================================================
 /** retrieve ParticleProperty from ParticleID 
  *  @param pid particle ID 
@@ -192,9 +209,7 @@ const double LoKi::Particles::massFromPID  ( const LHCb::ParticleID& pid   )
     return -1.0 * Gaudi::Units::TeV  ;
   }
   return pp->mass() ;
-};
-// ============================================================================
-
+}
 // ============================================================================
 /** retrieve ParticleProperty from ParticleID 
  *  @param pid particle ID 
@@ -213,9 +228,7 @@ const double LoKi::Particles::massFromName ( const std::string&  name )
     return -1.0 * Gaudi::Units::TeV  ;
   }
   return pp->mass() ;
-};
-// ============================================================================
-
+}
 // ============================================================================
 /** get name of 'antiparticle'
  *  @param name particlre name 
@@ -245,9 +258,7 @@ std::string LoKi::Particles::antiParticle( const std::string&      name )
     return s_InvalidPIDName ;
   }
   return pp->particle() ;
-};
-// ============================================================================
-
+}
 // ============================================================================
 /** get name of 'antiparticle'
  *  @param name particlre name 
@@ -280,9 +291,7 @@ LoKi::Particles::antiParticle ( const ParticleProperty* pp )
     return  0 ;
   }
   return antiPP ;
-};
-// ============================================================================
-
+}
 // ============================================================================
 /** get Particle ID for antiparticle 
  *  @param  pid particle 
@@ -308,9 +317,7 @@ LHCb::ParticleID LoKi::Particles::antiParticle( const LHCb::ParticleID& pid  )
   const ParticleProperty* p2   = LoKi::Particles::_ppFromPID( apid ) ;
   // 
   return 0 == p2 ? pid : apid ;
-};
-// ============================================================================
-
+}
 // ============================================================================
 /** retrieve particle name for given PID 
  *  @param pid particle PID 
@@ -319,6 +326,27 @@ LHCb::ParticleID LoKi::Particles::antiParticle( const LHCb::ParticleID& pid  )
 // ============================================================================
 std::string  LoKi::Particles::nameFromPID ( const LHCb::ParticleID& pid ) 
 {
+  typedef GaudiUtils::VectorMap<LHCb::ParticleID,std::string> Map ;
+  // ATTENTION
+  static Map s_map ;  ///< ATTENTION
+  if ( s_map.empty() ) 
+  {
+    s_map.insert (    22 , "gamma" ) ;
+    s_map.insert (   -11 , "e+"    ) ;
+    s_map.insert (    11 , "e-"    ) ;
+    s_map.insert (   -13 , "mu+"   ) ;
+    s_map.insert (    13 , "mu-"   ) ;
+    s_map.insert (   211 , "pi+"   ) ;
+    s_map.insert (   111 , "pi0"   ) ;
+    s_map.insert (  -211 , "pi-"   ) ;
+    s_map.insert (   321 , "K+"    ) ;
+    s_map.insert (  -321 , "K-"    ) ;
+    s_map.insert (  2212 , "p+"    ) ;
+    s_map.insert ( -2212 , "p~-"   ) ;
+  }
+  Map::const_iterator ifind = s_map.find( pid ) ;
+  if ( s_map.end() != ifind ) { return ifind->second ; }               // RETURN 
+  //
   const ParticleProperty* pp = LoKi::Particles::_ppFromPID( pid ) ;
   if ( 0 == pp ) 
   {
@@ -329,10 +357,10 @@ std::string  LoKi::Particles::nameFromPID ( const LHCb::ParticleID& pid )
         " return '" + s_InvalidPIDName + "'"           ) ;
     return s_InvalidPIDName ;
   }
+  // update the map
+  s_map.insert ( pid , pp->particle() ) ;                        // RETURN 
   return pp->particle() ;
-};
-// ============================================================================
-
+}
 // ============================================================================
 /** retrieve the lifetime for the particle form the name 
  *  @param name particle name 
@@ -352,9 +380,7 @@ const double LoKi::Particles::lifeTime
   }
   //
   return pp -> lifetime() * Gaudi::Units::c_light ;
-} ;
-// ============================================================================
-
+} 
 // ============================================================================
 /** retrieve the lifetime for the particle form the name 
  *  @param name particle name 
@@ -374,7 +400,7 @@ const double LoKi::Particles::lifeTime
   }
   //
   return pp -> lifetime() * Gaudi::Units::c_light ;
-} ;  
+} 
 // ============================================================================
 
 

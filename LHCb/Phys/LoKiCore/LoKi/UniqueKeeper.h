@@ -1,17 +1,8 @@
-// $Id: UniqueKeeper.h,v 1.6 2007-01-20 14:25:44 ibelyaev Exp $
+// $Id: UniqueKeeper.h,v 1.7 2007-06-01 11:35:27 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.5  2006/11/25 19:12:56  ibelyaev
-//  improve Doxygen
-//
-// Revision 1.4  2006/10/10 09:03:21  ibelyaev
-//  many tiny fixed needed for good&valid dictionaries
-//
-// Revision 1.3  2006/05/02 14:29:10  ibelyaev
-//  censored
-//
 // ============================================================================
 #ifndef LOKI_UNIQUEKEEPER_H 
 #define LOKI_UNIQUEKEEPER_H 1
@@ -21,9 +12,12 @@
 // STD & STL 
 // ============================================================================
 #include <set>
+#include <vector>
 #include <algorithm>
 // ============================================================================
-
+// LoKi
+// ============================================================================
+#include "LoKi/KeeperBase.h"
 // ============================================================================
 /** @file
  *
@@ -39,11 +33,9 @@
  *  @date 2006-02-20 
  */
 // ============================================================================
-
 namespace LoKi 
 {  
   template <class OBJECT> class Keeper ;
-  
   /** @class UniqueKeeper UniqueKeeper.h LoKi/UniqueKeeper.h
    *  
    *  Usefull class to keep valid UNIQUE pointer to the 
@@ -56,7 +48,7 @@ namespace LoKi
    *  @date   2006-02-21
    */
   template <class OBJECT>
-  class UniqueKeeper 
+  class UniqueKeeper : public KeeperBase 
   {
   public: 
     typedef typename std::set<const OBJECT*>                  Objects ;
@@ -126,6 +118,29 @@ namespace LoKi
     const OBJECT*  at         ( const int index ) const 
     { return object ( index ) ; }
   public:
+    /// get a "slice" of the keeper, in Python style   
+    inline UniqueKeeper slice( long index1 , long index2 ) const 
+    {
+      // trivial cases 
+      if ( empty() || index1 == index2 ) { return UniqueKeeper() ; } // RETURN
+      // adjust indices 
+      if ( index1 < 0      ) { index1 += size () ; }
+      if ( index2 < 0      ) { index2 += size () ; }
+      // check 
+      if ( index1 < 0      ) { return  UniqueKeeper () ; }            // RETURN 
+      if ( index2 < index1 ) { return  UniqueKeeper () ; }            // RETURN 
+      // adjust
+      if ( index1 > (long) size () ) { return  UniqueKeeper() ; }     // RETURN
+      if ( index2 > (long) size () ) { index2  = size() ; }
+      // create and advance the proper iterators 
+      iterator i1 = begin() ;
+      std::advance ( i1 , index1 ) ;
+      iterator i2 = begin() ;
+      std::advance ( i2 , index2 ) ;
+      // construct the final keeper 
+      return UniqueKeeper ( i1 , i2 ) ;    // RETURN 
+    }
+  public:
     /// clear the underlying container 
     void clear() { m_objects.clear() ; }
   public:
@@ -189,6 +204,10 @@ namespace LoKi
       return *this ;
     } ;
   public:
+    /// make the conversion to the vector (useful for iteration in python)
+    std::vector<const OBJECT*> toVector () const
+    { return std::vector<const OBJECT*> ( begin() , end() ) ; }
+  public:
     /// accessor to the objects (const)
     const   Objects&   objects() const { return m_objects ; }
   public:
@@ -249,24 +268,19 @@ namespace LoKi
     UniqueKeeper& operator=( const UniqueKeeper& other ) ;
   private:
     Objects m_objects ;
-  };
-  
-  
+  } ;  
 } // end of the namespace LoKi
-
-
 // ============================================================================
 // "POST"-include 
 // ============================================================================
 #include "LoKi/Keeper.h"
 // ============================================================================
-
-// ============================================================================
-/// templated constructor form other keeper 
+/// templated constructor form the other keeper 
 // ============================================================================
 template <class OBJECT>
 template <class OTHER> 
-inline LoKi::UniqueKeeper<OBJECT>::UniqueKeeper 
+inline 
+LoKi::UniqueKeeper<OBJECT>::UniqueKeeper 
 ( const LoKi::Keeper<OTHER>& o ) 
   : m_objects ( o.begin() , o.end() ) 
 {}
@@ -275,15 +289,35 @@ inline LoKi::UniqueKeeper<OBJECT>::UniqueKeeper
 // ============================================================================
 template <class OBJECT>
 template <class OTHER>
-inline LoKi::UniqueKeeper<OBJECT>& 
+inline 
+LoKi::UniqueKeeper<OBJECT>& 
 LoKi::UniqueKeeper<OBJECT>::operator+= 
 ( const LoKi::Keeper<OTHER>& o ) 
 {
-  addObjects( o.begin() , o.end() ) ;
+  addObjects ( o.begin() , o.end() ) ;
   return *this ;
 } ;
 // ============================================================================
-
+template <class OBJECT,class OTHER>
+inline 
+LoKi::UniqueKeeper<OBJECT> operator+ 
+(  const LoKi::UniqueKeeper<OBJECT>& first  , 
+   const LoKi::UniqueKeeper<OTHER>&  second )
+{
+  LoKi::UniqueKeeper<OBJECT> result( first ) ;
+  return result += second ;
+} ;
+// ============================================================================
+template <class OBJECT,class OTHER>
+inline 
+LoKi::UniqueKeeper<OBJECT> operator+ 
+(  const LoKi::UniqueKeeper<OBJECT>& first  , 
+   const LoKi::Keeper<OTHER>&        second )
+{
+  LoKi::UniqueKeeper<OBJECT> result( first ) ;
+  result.addObjects ( second.begin() , second.end() ) ;
+  return result ;
+} ;
 // ============================================================================
 // The END 
 // ============================================================================

@@ -1,16 +1,8 @@
-// $Id: LoKiCore.h,v 1.16 2007-02-26 13:13:09 cattanem Exp $
+// $Id: LoKiCore.h,v 1.17 2007-06-01 11:35:26 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.16 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.17 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.15  2006/11/25 19:12:55  ibelyaev
-//  improve Doxygen
-//
-// Revision 1.14  2006/10/10 09:03:21  ibelyaev
-//  many tiny fixed needed for good&valid dictionaries
-//
-// Revision 1.13  2006/05/02 14:29:09  ibelyaev
-//  censored
 //
 // ============================================================================
 // Include files 
@@ -44,7 +36,6 @@
 #include "LoKi/Objects.h"
 #include "LoKi/Algs.h"
 #include "LoKi/CoreTypes.h"
-#include "LoKi/Print.h"
 #include "LoKi/Geometry.h"
 #include "LoKi/Cast.h"
 #include "LoKi/Helpers.h"
@@ -87,17 +78,16 @@
  */
 namespace LoKi
 {
-  namespace Algs {} 
-  namespace  Cast {}
-  namespace Adapters {}
-  namespace Constants {}
+  namespace Algs       {} 
+  namespace Cast       {}
+  namespace Adapters   {}
+  namespace Constants  {}
   namespace Kinematics {}
-  namespace Geometry{}
-  namespace  Particles {}  
-  namespace Print {}
-  namespace Types {}
-  namespace Cuts  {}
-  namespace Objects {}
+  namespace Geometry   {}
+  namespace Particles  {}  
+  namespace Types      {}
+  namespace Cuts       {}
+  namespace Objects    {}
 }
 
 

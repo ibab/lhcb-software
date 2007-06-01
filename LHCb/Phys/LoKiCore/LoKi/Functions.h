@@ -1,25 +1,8 @@
-// $Id: Functions.h,v 1.16 2007-02-26 13:13:08 cattanem Exp $
+// $Id: Functions.h,v 1.17 2007-06-01 11:35:26 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.16 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.17 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.15  2006/11/25 19:12:55  ibelyaev
-//  improve Doxygen
-//
-// Revision 1.14  2006/10/27 13:34:18  ibelyaev
-//  v1r7p1: fix warnings for SLC4 platform
-//
-// Revision 1.13  2006/10/11 12:14:16  ibelyaev
-//  optimize the operators
-//
-// Revision 1.12  2006/10/10 09:03:20  ibelyaev
-//  many tiny fixed needed for good&valid dictionaries
-//
-// Revision 1.11  2006/10/05 11:52:05  ibelyaev
-//  fix compilation warnings for slc4_ia32_gcc345
-//
-// Revision 1.10  2006/06/13 09:05:02  ibelyaev
-//  fix compiler warnings for gcc3.4.5
 //
 // ============================================================================
 #ifndef LOKI_FUNCTIONS_H 
@@ -46,8 +29,6 @@
 // ============================================================================
 #include "boost/call_traits.hpp"
 // ============================================================================
-
-// ============================================================================
 /** @file
  *
  *  This file is a part of LoKi project - 
@@ -62,8 +43,6 @@
  *  @date 2001-01-23 
  */
 // ============================================================================
-
-
 namespace LoKi 
 {
   /** @class Function
@@ -714,7 +693,6 @@ namespace LoKi
     LoKi::FunctionFromFunction<TYPE> m_fun   ;
     value_type                       m_value ;
   } ;
-
   /** @struct And 
    *  helper function to implement logical AND of 2 predicates 
    *  
@@ -752,8 +730,7 @@ namespace LoKi
     /// the basic printout method 
     virtual std::ostream& fillStream( std::ostream& s ) const 
     { return s << "("  << this->pr1() << "&" << this->pr2() << ")" ; };
-  };
-  
+  };  
   /** @struct Or 
    *  helper function to implement logical OR of 2 predicates 
    *  
@@ -791,8 +768,7 @@ namespace LoKi
     /// the basic printout method 
     virtual std::ostream& fillStream( std::ostream& s ) const 
     { return s << "("  << this->pr1() << "|" << this->pr2() << ")" ; };
-  };
-  
+  };  
   /** @struct Not
    *
    *  The helper function to implement logical negation 
@@ -834,8 +810,7 @@ namespace LoKi
     { return s << "(!"  << m_pr << ")" ; };
   protected: 
     PredicateFromPredicate<TYPE> m_pr ;
-  };
-  
+  };  
   /** @struct Less 
    *  The helper function to implement Less of 2 functions 
    *
@@ -876,8 +851,7 @@ namespace LoKi
     /// the basic printout method 
     virtual std::ostream& fillStream( std::ostream& s ) const 
     { return s << "("  << _B::fun1() << "<" << _B::fun2() << ")" ; };
-  };
-  
+  };  
   /** @struct Equal 
    *  The helper function to implement Equal of 2 functions 
    *
@@ -919,7 +893,6 @@ namespace LoKi
     virtual std::ostream& fillStream( std::ostream& s ) const 
     { return s << "("  << this->fun1() << "==" << this->fun2() << ")" ; };
   };
-
   /** @struct LessOrEqual 
    *  The helper function to implement Less of 2 functions 
    *
@@ -959,8 +932,7 @@ namespace LoKi
     /// the basic printout method 
     virtual std::ostream& fillStream( std::ostream& s ) const 
     { return s << "("  << this->fun1() << "<=" << this->fun2() << ")" ; };
-  };
-  
+  };  
   /** @class NotEqual 
    *  The helper function to implement NotEqual of 2 functions 
    *
@@ -1005,8 +977,7 @@ namespace LoKi
     { return s << "("  << this->fun1() << "!=" << this->fun2() << ")" ; };
   private:
     NotEqual();
-  };
-  
+  };  
   /** @struct Plus 
    *  The helper function to implement addition of 2 function 
    *
@@ -1045,8 +1016,7 @@ namespace LoKi
     /// the basic printout method 
     virtual std::ostream& fillStream( std::ostream& s ) const 
     { return s << "("  << this->fun1() << "+" << this->fun2() << ")" ; };
-  };
-  
+  };  
   /** @struct Minus 
    *  The helper function to implement subtraction of 2 function 
    *
@@ -1086,8 +1056,7 @@ namespace LoKi
     /// the basic printout method 
     virtual std::ostream& fillStream( std::ostream& s ) const 
     { return s << "("  << this->fun1() << "-" << this->fun2() << ")" ; };
-  };
-  
+  };  
   /** @struct Divide
    *  The helper function to implement division of 2 function 
    *
@@ -1127,8 +1096,7 @@ namespace LoKi
     /// the basic printout method 
     virtual std::ostream& fillStream( std::ostream& s ) const 
     { return s << "("  << this->fun1() << "/" << this->fun2() << ")" ; };
-  };
-  
+  };  
   /** @struct Multiply
    *  The helper function to implement multiplication of 2 functions 
    *
@@ -1169,8 +1137,6 @@ namespace LoKi
     virtual std::ostream& fillStream( std::ostream& s ) const 
     { return s << "("  << this->fun1() << "*" << this->fun2() << ")" ; };
   };
-  
-
   /** @class Min 
    *  Return  the minunum from functions 
    */
@@ -1224,7 +1190,6 @@ namespace LoKi
   private:
     Min () ;
   };
-
   /** @class Max
    *  Return  the maximum from functions 
    */
@@ -1279,8 +1244,6 @@ namespace LoKi
   private:
     Max () ;
   };
-
-
   /** @struct ComposeFunction
    *  The helper structure to implement function of function
    *
@@ -1334,7 +1297,6 @@ namespace LoKi
     Func                             m_func ;
     std::string                      m_desc ;
   };
-
   /** @struct ComposeFunction2
    *
    *  The helper structure to implement function of function
@@ -1406,8 +1368,7 @@ namespace LoKi
   private:
     Func m_func        ;
     std::string m_desc ;
-  };
-  
+  };  
   /** compare 2 objects using cmparison criteria CMP , 
    *  applied to functions:
    *  <c> cmp( f1(a) , f2(b) ) </c>
@@ -1458,7 +1419,6 @@ namespace LoKi
     function* m_fun2 ;
     compare   m_cmp  ;
   };
-  
   /** @class SimpleSwitch
    *  It is a function with acts similar to switch:
    *  
@@ -1527,8 +1487,7 @@ namespace LoKi
     LoKi::PredicateFromPredicate<TYPE> m_cut  ;
     double                             m_val1 ;
     double                             m_val2 ;
-  };
-  
+  };  
   /** @class Switch
    *  
    *  It is a bit advances version fo SimpleSwitch function 
@@ -1569,8 +1528,7 @@ namespace LoKi
       , m_cut  ( cut  ) 
       , m_fun1 ( fun1 ) 
       , m_fun2 ( fun2 )
-    {};
-    
+    {};    
     /** constructor from predicate ,function and constant
      *
      *  The function return a value of the function 
@@ -1592,8 +1550,7 @@ namespace LoKi
       , m_cut  ( cut  ) 
       , m_fun1 ( fun1 ) 
       , m_fun2 ( LoKi::Constant<TYPE>( val2 )  )
-    {};
-    
+    {};    
     /** constructor from predicate ,function and constant 
      *
      *  The function return a value of the constant  
@@ -1615,8 +1572,7 @@ namespace LoKi
       , m_cut  ( cut  ) 
       , m_fun1 ( LoKi::Constant<TYPE>( val1 )  )
       , m_fun2 ( fun2 ) 
-    {};
-    
+    {};    
     /** constructor from predicate and 2 constants 
      *
      *  The function return a value of the first constant  
@@ -1671,8 +1627,7 @@ namespace LoKi
     LoKi::PredicateFromPredicate<TYPE> m_cut  ;
     LoKi::FunctionFromFunction<TYPE>   m_fun1 ;
     LoKi::FunctionFromFunction<TYPE>   m_fun2 ;
-  };
-  
+  };  
   /** @class Valid 
    *  The trivial predicate to check the validity of argument.
    *  It is OK for any pointer-like types or for types with
@@ -1705,8 +1660,7 @@ namespace LoKi
     /// the basic printout method 
     virtual std::ostream& fillStream( std::ostream& s ) const 
     { return s << "(Valid?)"; };
-  };
-  
+  };  
   /** @class TheSame 
    *  Trivial predicate to check if the argument 
    *  is equal to some predefined value. 
@@ -1749,8 +1703,7 @@ namespace LoKi
   private:
     // the predefined value 
     const typename LoKi::Predicate<TYPE>::argument_type m_value ;
-  };
-  
+  };  
   /** @class EqualToValue 
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date 2006-04-07
@@ -1804,8 +1757,7 @@ namespace LoKi
     EqualToValue();
     /// The assignement operator is disabled 
     EqualToValue& operator=( const  EqualToValue& ) ;
-  };
-  
+  };  
   /** @class NotEqualToValue 
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date 2006-04-07
@@ -1860,15 +1812,11 @@ namespace LoKi
     /// The assignement operator is disabled 
     NotEqualToValue& operator=( const  NotEqualToValue& ) ;
   };
-
 } // end of namespace LoKi
-
 // ============================================================================
 // LoKi
 // ============================================================================
 #include "LoKi/Math.h"
-// ============================================================================
-
 // ============================================================================
 // The END 
 // ============================================================================
