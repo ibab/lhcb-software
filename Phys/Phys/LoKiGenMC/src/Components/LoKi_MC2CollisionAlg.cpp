@@ -1,8 +1,11 @@
-// $Id: LoKi_MC2CollisionAlg.cpp,v 1.5 2007-04-16 16:16:45 pkoppenb Exp $
+// $Id: LoKi_MC2CollisionAlg.cpp,v 1.6 2007-06-01 11:53:46 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.5 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.6 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2007/04/16 16:16:45  pkoppenb
+// removed polemic comment
+//
 // Revision 1.4  2006/08/29 11:35:46  ibelyaev
 //  many fixes after detailed tests
 //
@@ -195,7 +198,7 @@ StatusCode LoKi_MC2CollisionAlg::execute()
     }
     // find the primary vertex with minimal distance 
     MCVFun fun = MCVDIST( LoKi::Point3D( vx->point3d() ) ) ;
-    
+    //
     PRIMARIES::const_iterator imin = 
       LoKi::select_min ( prims.begin() , prims.end  () , fun ) ;
     if ( prims.end() == imin ) 
@@ -203,7 +206,7 @@ StatusCode LoKi_MC2CollisionAlg::execute()
     if ( fun( *imin ) > m_threshold )
     {
       Warning ( "The minmum value is above the threshold "
-                + LoKi::Print::print( m_threshold / Gaudi::Units::micrometer ) 
+                + Gaudi::Utils::toString( m_threshold / Gaudi::Units::micrometer ) 
                 + "[um]") ;
       continue ;                                                   // CONTINUE 
     }

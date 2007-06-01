@@ -1,13 +1,8 @@
-// $Id: GenMCParticleCuts.h,v 1.4 2007-04-16 16:16:45 pkoppenb Exp $
+// $Id: GenMCParticleCuts.h,v 1.5 2007-06-01 11:53:46 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , verstion $Revision: 1.4 $
+// CVS tag $Name: not supported by cvs2svn $ , verstion $Revision: 1.5 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.3  2006/02/18 18:15:44  ibelyaev
-//  fix a typo
-//
-// Revision 1.2  2006/02/09 17:52:34  ibelyaev
-//  regular update: add *.opts configuration files
 //
 // ============================================================================
 #ifndef LOKI_GENMCPARTICLECUTS_H 
@@ -18,8 +13,6 @@
 // LoKiGenMC 
 // ============================================================================
 #include "LoKi/GenMCParticles.h"
-// ============================================================================
-
 // ============================================================================
 /** @file
  *
@@ -127,11 +120,9 @@ namespace LoKi
      *  @date 2005-05-16
      */
     typedef LoKi::MCParticles::IsFromHepMC         FROMGTREE ;
-    
-  } ; // end of namespace LoKi::Cuts 
-  
-} ; // end of namespace LoKi
-
+    //
+  }  // end of namespace LoKi::Cuts
+}  // end of namespace LoKi
 // ============================================================================
 // The END 
 // ============================================================================

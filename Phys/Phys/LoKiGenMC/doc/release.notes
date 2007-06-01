@@ -1,6 +1,6 @@
-! $Id: release.notes,v 1.15 2007-04-19 13:51:36 pkoppenb Exp $ 
+! $Id: release.notes,v 1.16 2007-06-01 11:53:46 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.15 $
+! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.16 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiGenMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -16,6 +16,31 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! 
 ! -----------------------------------------------------------------------------
+
+! 2007-06-01 - Vanya BELYAEV
+
+ - prepare for new major verson v3r0:
+
+    all dictionaries are built locally
+  
+ - New files:
+
+   dict/LoKiGenMC.xml
+   dict/LoKiGenMCDict.h
+
+   python/LoKiGenMC/__init__.py
+   python/LoKiGenMC/decorators.py
+   python/LoKiGenMC/functions.py
+   python/LoKiGenMC/tests.py
+
+ - Modified files:
+
+   LoKi/GenMCParticleCuts.h
+   LoKi/GenMCParticles.h
+   src/Components/LoKi_MC2CollisionAlg.cpp
+   
+ - cmt/requirements
+    version increment to v3r0 
 
 !========================== LoKiGenMC v2r1p1 2007-04-19 ===================
 ! 2007-04-19 -  P. Koppenburg
@@ -335,6 +360,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.15  2007/04/19 13:51:36  pkoppenb
+! tagged as v2r1p1
+!
 ! Revision 1.14  2007/03/04 16:33:27  ibelyaev
 !  v2r1: fix a bug .. need to think about the problme
 !

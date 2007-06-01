@@ -1,20 +1,9 @@
-// $Id: GenMCParticles.h,v 1.5 2007-04-16 16:16:45 pkoppenb Exp $
+// $Id: GenMCParticles.h,v 1.6 2007-06-01 11:53:46 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ version $Revision: 1.5 $
+// CVS tag $Name: not supported by cvs2svn $ version $Revision: 1.6 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.4  2007/02/06 12:44:35  ranjard
-// v2r0 - add some include statments to please WIN32
 //
-// Revision 1.3  2007/01/23 13:29:18  ibelyaev
-//  fix for Ex/LoKiExample
-//
-// Revision 1.2  2006/02/18 18:15:44  ibelyaev
-//  fix a typo
-//
-// Revision 1.1.1.1  2006/01/26 17:35:17  ibelyaev
-// New import: Generator/MC related part of LoKi project 
-// 
 // ============================================================================
 #ifndef LOKI_GENMCPARTICLES_H 
 #define LOKI_GENMCPARTICLES_H 1
@@ -31,8 +20,6 @@
 #include "LoKi/MCTypes.h"
 #include "LoKi/GenTypes.h"
 #include "LoKi/GenExtract.h"
-// ============================================================================
-
 // ============================================================================
 /** @file
  *
@@ -142,9 +129,7 @@ namespace LoKi
       MCPs                                          m_mcps  ;
       LoKi::Interface<LHCb::HepMC2MC>               m_table ;
     };
-    
-  } ;  // end of namespace GenParticles
-  
+  }   // end of namespace GenParticles
   namespace MCParticles 
   {
     /** @class IsFromHepMC
@@ -262,11 +247,8 @@ namespace LoKi
       GPs                                            m_gps   ;
       LoKi::Interface<LHCb::MC2HepMC>                m_table ;
     } ;
-    
-  } ; // end of namespace MCParticles
-  
-} ; // end of namespace LoKi
-
+  }  // end of namespace MCParticles
+}  // end of namespace LoKi
 // ============================================================================
 // The END 
 // ============================================================================
