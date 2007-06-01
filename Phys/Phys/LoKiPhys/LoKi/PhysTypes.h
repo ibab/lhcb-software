@@ -1,13 +1,8 @@
-// $Id: PhysTypes.h,v 1.5 2006-11-27 12:01:32 ibelyaev Exp $
+// $Id: PhysTypes.h,v 1.6 2007-06-01 12:07:03 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.4  2006/08/15 15:13:25  ibelyaev
-//  update for new inheritance scheme Vertex<--VertexBase-->RecVertex
-//
-// Revision 1.3  2006/03/14 19:32:44  ibelyaev
-//  minor fix
 //
 // ============================================================================
 #ifndef LOKI_PHYSTYPES_H 
@@ -26,12 +21,9 @@
 #include "Event/VertexBase.h"
 #include "Event/Vertex.h"
 // ============================================================================
-
 namespace LoKi 
 {
   /** @namespace LoKi::PhysTypes PhysTypes.h LoKi/PhysTypes.h
-   *  
-   *
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu 
    *  @date   2006-02-11
    */
@@ -53,9 +45,8 @@ namespace LoKi
     typedef LoKi::PredicateFromPredicate<const LHCb::VertexBase*> VCut  ; 
     /// type of 'functions' for LHCb::Vertex    (assignable)
     typedef LoKi::FunctionFromFunction<const LHCb::VertexBase*>   VFun  ;
-    
-  }  // end of namespace LoKi::PhysTypes 
-  
+    //
+  }  // end of namespace LoKi::PhysTypes
   namespace Types 
   {    
     /// type of 'cuts' for LHCb::Particle        (interface)
@@ -74,11 +65,9 @@ namespace LoKi
     typedef LoKi::PhysTypes::VCut                               VCut  ; 
     /// type of 'functions' for LHCb::VertexBase (assignable)
     typedef LoKi::PhysTypes::VFun                               VFun  ;  
-    
-  } 
-  
-} // end of namespace LoKi 
-
+    //
+  }  // end of namespace LoKi::Types 
+} // end of namespace LoKi
 // ============================================================================
 // The END 
 // ============================================================================

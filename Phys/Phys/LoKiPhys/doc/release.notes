@@ -1,9 +1,40 @@
-! $Id: release.notes,v 1.24 2007-04-19 16:19:08 pkoppenb Exp $ 
+! $Id: release.notes,v 1.25 2007-06-01 12:07:03 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhys
 ! Responsible : Vanya Belyaev
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
+
+! 2007-06-01 - Vanya BELYAEV
+
+ - prepare for the next major version: v4r0 
+
+ - New files:
+
+   dict/LoKiPhys.xml
+   dict/LoKiPhysDict.h
+ 
+   python/LoKiPhys/__init__.py
+   python/LoKiPhys/decorators.py
+   python/LoKiPhys/functions.py
+   python/LoKiPhys/tests.py
+
+ - Modified files:
+
+   LoKi/Particles15.h
+   LoKi/PhysRangeTypes.h
+   LoKi/PhysTypes.h
+
+   src/Particles0.cpp
+   src/Particles12.cpp
+   src/Particles4.cpp
+   src/Particles7.cpp
+   src/Vertices0.cpp
+   src/Vertices1.cpp
+
+ - cmt/requirements 
+    version increment to v4r0 
+
 
 !========================== LoKiPhys v3r2p1 2007-04-19 ===================
 ! 2007-04-19 -  P. Koppenburg
@@ -158,6 +189,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.24  2007/04/19 16:19:08  pkoppenb
+! tagged as v3r2p1
+!
 ! Revision 1.22  2007/03/09 11:27:05  pkoppenb
 ! tagged as v3r2
 !

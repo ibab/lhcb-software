@@ -1,8 +1,11 @@
-// $Id: Particles0.cpp,v 1.9 2007-04-16 16:16:27 pkoppenb Exp $
+// $Id: Particles0.cpp,v 1.10 2007-06-01 12:07:03 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.9 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.10 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.9  2007/04/16 16:16:27  pkoppenb
+// removed polemic comment
+//
 // Revision 1.8  2007/03/01 16:14:40  ibelyaev
 //  add PTREL and PTDIR functions
 //
@@ -16,6 +19,7 @@
 #include "GaudiKernel/ParticleProperty.h"
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/IRegistry.h"
+#include "GaudiKernel/ToStream.h"
 // ============================================================================
 // Event 
 // ============================================================================
@@ -29,7 +33,6 @@
 #include "LoKi/Report.h"
 #include "LoKi/Kinematics.h"
 #include "LoKi/Services.h"
-#include "LoKi/Print.h"
 // ============================================================================
 // LoKiPhys
 // ============================================================================
@@ -97,12 +100,14 @@ LoKi::Particles::Key::operator()
 {
   if ( 0 == p ) 
   {
-    Error(" Argument is invalid! return " + LoKi::Print::print( m_bad )  ) ;
+    Error(" Argument is invalid! return " + 
+          Gaudi::Utils::toString ( m_bad )  ) ;
     return m_bad ;
   }
   if ( !p->hasKey() ) 
   {
-    Error(" Key is not set! return " + LoKi::Print::print( m_nokey ) ) ;
+    Error(" Key is not set! return " + 
+          Gaudi::Utils::toString ( m_nokey ) ) ;
     return m_nokey ;
   }
   return result_type( p->key() ) ;
@@ -111,9 +116,6 @@ LoKi::Particles::Key::operator()
 std::ostream& 
 LoKi::Particles::Key::fillStream ( std::ostream& s ) const 
 { return s << "KEY" ; }
-// ============================================================================
-
-
 // ============================================================================
 LoKi::Particles::InTES::InTES 
 ( const std::string& path , 
@@ -168,8 +170,8 @@ std::ostream&
 LoKi::Particles::InTES::fillStream ( std::ostream& s ) const 
 { 
   return 
-    s << "INTES['" << location()  << "'," 
-      << LoKi::Print::print(fullpath())<< "]" ;
+    s << "INTES['"  << location()  << "'," 
+      << fullpath() << "]" ;
 } ;
 // ============================================================================
 
@@ -1195,8 +1197,6 @@ LoKi::Particles::IsBasic::fillStream
 ( std::ostream& s ) const 
 { return s << "BASIC" ; }
 // ============================================================================
-
-// ============================================================================
 LoKi::Particles::NumberOfDaughters* 
 LoKi::Particles::NumberOfDaughters::clone() const 
 { return new NumberOfDaughters( *this ) ; }
@@ -1249,8 +1249,6 @@ LoKi::Particles::HasInfo::fillStream
 ( std::ostream& s ) const 
 { return s << "HASINFO[" << m_info << "]" ; }
 // ============================================================================
-
-// ============================================================================
 LoKi::Particles::Info::Info
 ( const int    key , 
   const double def , 
@@ -1290,7 +1288,7 @@ LoKi::Particles::Info::operator()
   ( LoKi::Particles::Info::argument p ) const 
 {
   if ( 0 != p ) { return p -> info( m_key , m_def ) ; }      // RETURN 
-  Error ( " Invalid Particle, return " + LoKi::Print::print( m_bad ) ) ;
+  Error ( " Invalid Particle, return " + Gaudi::Utils::toString( m_bad ) ) ;
   return m_bad;                                              // RETURN 
 };
 // ============================================================================
@@ -1302,8 +1300,6 @@ LoKi::Particles::Info::fillStream
   if ( m_bad != m_def ) { s << "," << m_bad ; }
   return s << "]" ;
 }
-// ============================================================================
-
 // ============================================================================
 LoKi::Particles::HasProto* 
 LoKi::Particles::HasProto::clone() const 
@@ -1323,9 +1319,6 @@ LoKi::Particles::HasProto::fillStream
 ( std::ostream& s ) const 
 { return s << "HASPROTO" ; }
 // ============================================================================
-
-
-// ============================================================================
 LoKi::Particles::HasVertex* 
 LoKi::Particles::HasVertex::clone() const 
 { return new HasVertex( *this ) ; }
@@ -1343,8 +1336,6 @@ std::ostream&
 LoKi::Particles::HasVertex::fillStream
 ( std::ostream& s ) const 
 { return s << "HASVERTEX" ; }
-// ============================================================================
-
 // ============================================================================
 /// constructor from 3-vector 
 // ============================================================================

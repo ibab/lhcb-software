@@ -1,16 +1,8 @@
-// $Id: Vertices0.cpp,v 1.4 2007-04-16 16:16:28 pkoppenb Exp $
+// $Id: Vertices0.cpp,v 1.5 2007-06-01 12:07:03 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.3  2006/10/27 13:39:33  ibelyaev
-//  fix for SLC4 platform
-//
-// Revision 1.2  2006/08/15 15:13:26  ibelyaev
-//  update for new inheritance scheme Vertex<--VertexBase-->RecVertex
-//
-// Revision 1.1  2006/02/19 21:49:12  ibelyaev
-//  restructirisation + new funtions
 //
 // ============================================================================
 // Include files 
@@ -18,6 +10,10 @@
 // STD & STL 
 // ============================================================================
 #include <algorithm>
+// ============================================================================
+// GaudiKernel
+// ============================================================================
+#include "GaudiKernel/ToStream.h"
 // ============================================================================
 // Event
 // ============================================================================
@@ -35,9 +31,6 @@
 #include "LoKi/PhysTypes.h"
 #include "LoKi/VertexCast.h"
 #include "LoKi/Vertices0.h"
-#include "LoKi/Print.h"
-// ============================================================================
-
 // ============================================================================
 /** @file
  *
@@ -299,7 +292,7 @@ LoKi::Vertices::Info::operator()
 {
   if ( 0 != v ) { return v -> info( m_key , m_def ) ; }      // RETURN 
   Error ( " Invalid Vertex, return " 
-          + LoKi::Print::print( m_bad )  ) ;
+          + Gaudi::Utils::toString ( m_bad )  ) ;
   return m_bad;                                              // RETURN 
 };
 // ============================================================================
@@ -311,9 +304,6 @@ LoKi::Vertices::Info::fillStream
   if ( m_bad != m_def ) { s << "," << m_bad ; }
   return s << "]" ;
 }
-// ============================================================================
-
-
 // ============================================================================
 LoKi::Vertices::NumberOfTracks* 
 LoKi::Vertices::NumberOfTracks::clone() const 

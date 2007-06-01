@@ -1,10 +1,8 @@
-// $Id: Particles4.cpp,v 1.9 2007-04-16 16:16:27 pkoppenb Exp $
+// $Id: Particles4.cpp,v 1.10 2007-06-01 12:07:03 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.9 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.10 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.8  2006/11/27 12:01:32  ibelyaev
-//  prepare for LoKi v4r3
 //
 // ============================================================================
 // Include files 
@@ -17,6 +15,7 @@
 // GaudiKernel
 // ============================================================================
 #include "GaudiKernel/SystemOfUnits.h"
+#include "GaudiKernel/ToStream.h"
 // ============================================================================
 // DaVinciKernel
 // ============================================================================
@@ -32,14 +31,11 @@
 // ============================================================================
 #include "LoKi/Constants.h"
 #include "LoKi/Kinematics.h"
-#include "LoKi/Print.h"
 // ============================================================================
 // LoKiPhys
 // ============================================================================
 #include "LoKi/Particles4.h"
 #include "LoKi/PhysHelpers.h"
-// ============================================================================
-
 // ============================================================================
 /** @file
  *
@@ -150,7 +146,7 @@ LoKi::Particles::ImpPar::ip
     sc = tool() -> calcImpactPar( *p , position()  , impact , error ) ;
     break ;                                                  // BREAK
   default :
-    Error ( "Invalid switch! '" + LoKi::Print::print( long(type()) ) + "'") ;
+    Error ( "Invalid switch! '" + Gaudi::Utils::toString( type() ) + "'") ;
     return LoKi::Constants::InvalidDistance ;
     break ;                                                  // BREAK    
   }
@@ -262,7 +258,7 @@ LoKi::Particles::ImpParChi2::chi2
     sc = tool() -> calcImpactPar( *p , position()  , impact , error ) ;
     break ;                                                  // BREAK
   default :
-    Error ( "Invalid switch! '" + LoKi::Print::print( long(type()) ) + "'") ;
+    Error ( "Invalid switch! '" + Gaudi::Utils::toString( type() ) + "'") ;
     return LoKi::Constants::InvalidChi2 ;
     break ;                                                  // BREAK    
   }
@@ -275,7 +271,7 @@ LoKi::Particles::ImpParChi2::chi2
   if ( 0 >= error ) 
   {
     Error ( "Invalid 'Sigma'; return 'InvalidChi2'" 
-            + LoKi::Print::print ( error ) ) ;
+            + Gaudi::Utils::toString ( error ) ) ;
     return LoKi::Constants::InvalidChi2 ;                // RETURN 
   }
   

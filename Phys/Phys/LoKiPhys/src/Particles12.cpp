@@ -1,19 +1,8 @@
-// $Id: Particles12.cpp,v 1.5 2007-04-16 16:16:27 pkoppenb Exp $
+// $Id: Particles12.cpp,v 1.6 2007-06-01 12:07:03 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.4  2007/02/26 09:19:22  ibelyaev
-//  add LoKi::Particles::IsMuon (alias: ISMUON)
-//
-// Revision 1.3  2006/10/27 13:39:32  ibelyaev
-//  fix for SLC4 platform
-//
-// Revision 1.2  2006/03/08 14:14:52  ibelyaev
-//  add Particles14.h/.cpp
-//
-// Revision 1.1  2006/02/23 21:14:09  ibelyaev
-//   add new fuctors/predicates
 //
 // ============================================================================
 // Include files 
@@ -21,6 +10,10 @@
 // STD & STL 
 // ============================================================================
 #include <algorithm>
+// ============================================================================
+// GaudiKernel
+// ============================================================================
+#include "GaudiKernel/ToStream.h"
 // ============================================================================
 // Event 
 // ============================================================================
@@ -30,7 +23,6 @@
 // LoKiCore 
 // ============================================================================
 #include "LoKi/Constants.h"
-#include "LoKi/Print.h"
 // ============================================================================
 // LoKiPhys
 // ============================================================================
@@ -133,7 +125,8 @@ LoKi::Particles::ProtoInfo::operator()
   //
   if ( 0 == p ) 
   {
-    Error ( " Argument is invalid! return " + LoKi::Print::print (m_bad) ) ;
+    Error ( " Argument is invalid! return " + 
+            Gaudi::Utils::toString ( m_bad ) ) ;
     return m_bad ;                                          // RETURN 
   }  
   //
@@ -141,7 +134,8 @@ LoKi::Particles::ProtoInfo::operator()
   //
   if ( 0 == pp ) 
   {
-    Error ( " ProtoParticle is invalid! return " + LoKi::Print::print (m_bad) ) ;
+    Error ( " ProtoParticle is invalid! return " + 
+            Gaudi::Utils::toString ( m_bad ) ) ;
     return m_bad ;                                          // RETURN 
   }  
   //

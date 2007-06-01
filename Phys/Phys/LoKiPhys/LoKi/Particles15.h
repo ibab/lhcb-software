@@ -1,13 +1,8 @@
-// $Id: Particles15.h,v 1.3 2007-04-16 16:16:26 pkoppenb Exp $
+// $Id: Particles15.h,v 1.4 2007-06-01 12:07:03 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.2  2006/11/27 12:01:31  ibelyaev
-//  prepare for LoKi v4r3
-//
-// Revision 1.1  2006/03/20 20:36:16  ibelyaev
-//  LoKi::Particles::Filter (LoKi::Cuts::FILTER) is added
 // 
 // ============================================================================
 #ifndef LOKI_PARTICLES15_H 
@@ -29,9 +24,7 @@
 // ============================================================================
 // DaVinciKernel
 // ============================================================================
-class IFilterCriterion ;
-// ============================================================================
-
+#include "Kernel/IFilterCriterion.h"
 // ============================================================================
 /** @file
  *
@@ -47,8 +40,6 @@ class IFilterCriterion ;
  *  @date 2006-03-20 
  */
 // ============================================================================
-
-
 namespace LoKi
 {
   namespace Particles 
@@ -83,8 +74,7 @@ namespace LoKi
     private:
       // the tool itself 
       LoKi::Interface<IFilterCriterion> m_filter ; ///< the tool itself 
-    } ;
-    
+    } ;    
   }  // end of namespace LoKi::Particles
 } // end of namespace LoKi
 // ============================================================================

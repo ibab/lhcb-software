@@ -1,13 +1,8 @@
-// $Id: Vertices1.cpp,v 1.6 2007-04-16 16:16:28 pkoppenb Exp $
+// $Id: Vertices1.cpp,v 1.7 2007-06-01 12:07:03 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.5  2006/10/27 13:39:33  ibelyaev
-//  fix for SLC4 platform
-//
-// Revision 1.4  2006/08/15 15:13:26  ibelyaev
-//  update for new inheritance scheme Vertex<--VertexBase-->RecVertex
 //
 // ============================================================================
 // Include files 
@@ -15,6 +10,10 @@
 // STD & STL 
 // ============================================================================
 #include <algorithm>
+// ============================================================================
+// GaudiKernel
+// ============================================================================
+#include "GaudiKernel/ToStream.h"
 // ============================================================================
 // Event
 // ============================================================================
@@ -32,9 +31,6 @@
 #include "LoKi/PhysTypes.h"
 #include "LoKi/Vertices1.h"
 #include "LoKi/PhysHelpers.h"
-#include "LoKi/Print.h"
-// ============================================================================
-
 // ============================================================================
 /** @file
  *
@@ -51,8 +47,6 @@
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2006-02-16 
  */
-// ============================================================================
-
 // ============================================================================
 LoKi::Vertices::VertexDistance::VertexDistance
 ( const LHCb::VertexBase* vertex ) 
@@ -77,7 +71,7 @@ LoKi::Vertices::VertexDistance::VertexDistance
   : LoKi::AuxFunBase                       ( right )
   , LoKi::Function<const LHCb::VertexBase*>( right )  
   , LoKi::Vertices::VertexHolder ( right  )
-{} ;
+{} 
 // ============================================================================
 LoKi::Vertices::VertexDistance::~VertexDistance(){}
 // ============================================================================
@@ -98,45 +92,43 @@ LoKi::Vertices::VertexDistance::distance
   if ( 0 != v ) {  return ( v->position() - this->position()).R() ; } //RETURN 
   Error ( " Invalid Vertex, return 'InvalidDistance'") ;
   return LoKi::Constants::InvalidDistance ;      // RETURN 
-};
+}
 // ============================================================================
 std::ostream& 
 LoKi::Vertices::VertexDistance::fillStream
 ( std::ostream& s ) const 
 { return s << "VVDIST" ; }
 // ============================================================================
-
-// ============================================================================
 LoKi::Vertices::VertexSignedDistance::VertexSignedDistance
 ( const LHCb::VertexBase* vertex ) 
   : LoKi::Function<const LHCb::VertexBase*>()  
   , m_fun ( vertex )
-{} ;
+{} 
 // ============================================================================
 LoKi::Vertices::VertexSignedDistance::VertexSignedDistance
 ( const LoKi::Point3D&  point ) 
   : LoKi::Function<const LHCb::VertexBase*>()  
   , m_fun ( point )
-{} ;
+{} 
 // ============================================================================
 LoKi::Vertices::VertexSignedDistance::VertexSignedDistance
 ( const LoKi::Vertices::VertexHolder& right ) 
   : LoKi::Function<const LHCb::VertexBase*>()  
   , m_fun ( right )
-{} ;
+{} 
 // ============================================================================
 LoKi::Vertices::VertexSignedDistance::VertexSignedDistance
 ( const LoKi::Vertices::VertexDistance& right ) 
   : LoKi::Function<const LHCb::VertexBase*>()  
   , m_fun ( right ) 
-{} ;
+{} 
 // ============================================================================
 LoKi::Vertices::VertexSignedDistance::VertexSignedDistance
 ( const LoKi::Vertices::VertexSignedDistance& right ) 
   : LoKi::AuxFunBase                       ( right )
   , LoKi::Function<const LHCb::VertexBase*>( right )  
   , m_fun ( right.m_fun ) 
-{} ;
+{} 
 // ============================================================================
 LoKi::Vertices::VertexSignedDistance::~VertexSignedDistance(){}
 // ============================================================================
@@ -161,39 +153,37 @@ LoKi::Vertices::VertexSignedDistance::distance
   }
   Error ( " Invalid Vertex, return 'InvalidDistance'") ;
   return LoKi::Constants::InvalidDistance ;      // RETURN 
-};
+}
 // ============================================================================
 std::ostream& 
 LoKi::Vertices::VertexSignedDistance::fillStream
 ( std::ostream& s ) const 
 { return s << "VVDSIGN" ; }
 // ============================================================================
-
-// ============================================================================
 LoKi::Vertices::VertexChi2Distance::VertexChi2Distance
 ( const LHCb::VertexBase* vertex ) 
   : LoKi::Function<const LHCb::VertexBase*>()  
   , LoKi::Vertices::VertexHolder ( vertex )
-{} ;
+{} 
 // ============================================================================
 LoKi::Vertices::VertexChi2Distance::VertexChi2Distance
 ( const LoKi::Point3D&  point ) 
   : LoKi::Function<const LHCb::VertexBase*>()  
   , LoKi::Vertices::VertexHolder ( point )
-{} ;
+{} 
 // ============================================================================
 LoKi::Vertices::VertexChi2Distance::VertexChi2Distance
 ( const LoKi::Vertices::VertexHolder& right ) 
   : LoKi::Function<const LHCb::VertexBase*>()  
   , LoKi::Vertices::VertexHolder ( right  )
-{} ;
+{} 
 // ============================================================================
 LoKi::Vertices::VertexChi2Distance::VertexChi2Distance
 ( const LoKi::Vertices::VertexChi2Distance& right ) 
   : LoKi::AuxFunBase                       ( right )
   , LoKi::Function<const LHCb::VertexBase*>( right )  
   , LoKi::Vertices::VertexHolder ( right  )
-{} ;
+{} 
 // ============================================================================
 LoKi::Vertices::VertexChi2Distance::~VertexChi2Distance(){}
 // ============================================================================
@@ -242,67 +232,64 @@ LoKi::Vertices::VertexChi2Distance::chi2
   } ;
   if ( sc.isFailure() ) 
   { Error ( "Evaluation is invalid, return " + 
-            LoKi::Print::print ( _chi2 ) , sc ) ; }
+            Gaudi::Utils::toString ( _chi2 ) , sc ) ; }
   //
   return _chi2 ;
-};
+}
 // ============================================================================
 std::ostream& 
 LoKi::Vertices::VertexChi2Distance::fillStream
 ( std::ostream& s ) const 
 { return s << "VVDCHI2" ; }
 // ============================================================================
-
-
-// ============================================================================
 LoKi::Vertices::MinVertexDistance::MinVertexDistance 
 ( const LHCb::VertexBase::Vector& vs ) 
   : LoKi::Function<const LHCb::VertexBase*>()
   , LoKi::UniqueKeeper<LHCb::VertexBase> ( vs.begin() , vs.end() )
   , m_fun                            ( LoKi::Point3D()       )
-{} ;
+{} 
 // ============================================================================
 LoKi::Vertices::MinVertexDistance::MinVertexDistance 
 ( const LHCb::VertexBase::ConstVector& vs ) 
   : LoKi::Function<const LHCb::VertexBase*>()
   , LoKi::UniqueKeeper<LHCb::VertexBase> ( vs.begin() , vs.end() )
   , m_fun                            ( LoKi::Point3D()       )
-{} ;
+{} 
 // ============================================================================
 LoKi::Vertices::MinVertexDistance::MinVertexDistance 
 ( const LHCb::Vertex::Vector& vs ) 
   : LoKi::Function<const LHCb::VertexBase*>()
   , LoKi::UniqueKeeper<LHCb::VertexBase> ( vs.begin() , vs.end() )
   , m_fun                            ( LoKi::Point3D()       )
-{} ;
+{} 
 // ============================================================================
 LoKi::Vertices::MinVertexDistance::MinVertexDistance 
 ( const LHCb::Vertex::ConstVector& vs ) 
   : LoKi::Function<const LHCb::VertexBase*>()
   , LoKi::UniqueKeeper<LHCb::VertexBase> ( vs.begin() , vs.end() )
   , m_fun                            ( LoKi::Point3D()       )
-{} ;
+{} 
 // ============================================================================
 LoKi::Vertices::MinVertexDistance::MinVertexDistance 
 ( const SmartRefVector<LHCb::Vertex>& vs ) 
   : LoKi::Function<const LHCb::VertexBase*>()
   , LoKi::UniqueKeeper<LHCb::VertexBase> ( vs.begin() , vs.end() )
   , m_fun                            ( LoKi::Point3D()       )
-{} ;
+{} 
 // ============================================================================
 LoKi::Vertices::MinVertexDistance::MinVertexDistance 
 ( const LHCb::RecVertex::Vector& vs ) 
   : LoKi::Function<const LHCb::VertexBase*>()
   , LoKi::UniqueKeeper<LHCb::VertexBase> ( vs.begin() , vs.end() )
   , m_fun                            ( LoKi::Point3D()       )
-{} ;
+{} 
 // ============================================================================
 LoKi::Vertices::MinVertexDistance::MinVertexDistance 
 ( const LHCb::RecVertex::ConstVector& vs ) 
   : LoKi::Function<const LHCb::VertexBase*>()
   , LoKi::UniqueKeeper<LHCb::VertexBase> ( vs.begin() , vs.end() )
   , m_fun                            ( LoKi::Point3D()       )
-{} ;
+{} 
 // ============================================================================
 LoKi::Vertices::MinVertexDistance::MinVertexDistance 
 ( const LHCb::RecVertices* vs ) 
@@ -311,56 +298,56 @@ LoKi::Vertices::MinVertexDistance::MinVertexDistance
   , m_fun                            ( LoKi::Point3D()       )
 {
   if ( 0 != vs ) { addObjects( vs->begin() , vs->end() ) ; }
-} ;
+} 
 // ============================================================================
 LoKi::Vertices::MinVertexDistance::MinVertexDistance 
 ( const LoKi::PhysTypes::VRange& vs ) 
   : LoKi::Function<const LHCb::VertexBase*>()
   , LoKi::UniqueKeeper<LHCb::VertexBase> ( vs.begin() , vs.end() )
   , m_fun                            ( LoKi::Point3D()       )
-{} ;
+{} 
 // ============================================================================
 LoKi::Vertices::MinVertexDistance::MinVertexDistance 
 ( const LoKi::Keeper<LHCb::VertexBase>& vs ) 
   : LoKi::Function<const LHCb::VertexBase*>()
   , LoKi::UniqueKeeper<LHCb::VertexBase> ( vs )
   , m_fun                            ( LoKi::Point3D()       )
-{} ;
+{} 
 // ============================================================================
 LoKi::Vertices::MinVertexDistance::MinVertexDistance 
 ( const LoKi::UniqueKeeper<LHCb::VertexBase>& vs ) 
   : LoKi::Function<const LHCb::VertexBase*>()
   , LoKi::UniqueKeeper<LHCb::VertexBase> ( vs )
   , m_fun                            ( LoKi::Point3D()       )
-{} ;
+{} 
 // ============================================================================
 LoKi::Vertices::MinVertexDistance::MinVertexDistance 
 ( const LoKi::Keeper<LHCb::Vertex>& vs ) 
   : LoKi::Function<const LHCb::VertexBase*>()
   , LoKi::UniqueKeeper<LHCb::VertexBase> ( vs )
   , m_fun                            ( LoKi::Point3D()       )
-{} ;
+{} 
 // ============================================================================
 LoKi::Vertices::MinVertexDistance::MinVertexDistance 
 ( const LoKi::UniqueKeeper<LHCb::Vertex>& vs ) 
   : LoKi::Function<const LHCb::VertexBase*>()
   , LoKi::UniqueKeeper<LHCb::VertexBase> ( vs )
   , m_fun                            ( LoKi::Point3D()       )
-{} ;
+{} 
 // ============================================================================
 LoKi::Vertices::MinVertexDistance::MinVertexDistance 
 ( const LoKi::Keeper<LHCb::RecVertex>& vs ) 
   : LoKi::Function<const LHCb::VertexBase*>()
   , LoKi::UniqueKeeper<LHCb::VertexBase> ( vs )
   , m_fun                            ( LoKi::Point3D()       )
-{} ;
+{} 
 // ============================================================================
 LoKi::Vertices::MinVertexDistance::MinVertexDistance 
 ( const LoKi::UniqueKeeper<LHCb::RecVertex>& vs ) 
   : LoKi::Function<const LHCb::VertexBase*>()
   , LoKi::UniqueKeeper<LHCb::VertexBase> ( vs )
   , m_fun                            ( LoKi::Point3D()       )
-{} ;
+{} 
 // ============================================================================
 LoKi::Vertices::MinVertexDistance::MinVertexDistance 
 ( const LoKi::Vertices::MinVertexDistance& right ) 
@@ -368,7 +355,7 @@ LoKi::Vertices::MinVertexDistance::MinVertexDistance
   , LoKi::Function<const LHCb::VertexBase*> ( right        ) 
   , LoKi::UniqueKeeper<LHCb::VertexBase>    ( right        )
   , m_fun                               ( right.m_fun  ) 
-{} ;
+{} 
 // ============================================================================
 LoKi::Vertices::MinVertexDistance::result_type 
 LoKi::Vertices::MinVertexDistance::operator() 
@@ -389,50 +376,47 @@ LoKi::Vertices::MinVertexDistance::operator()
   }
   //
   return result ;                                           // RETURN 
-};
+}
 // ============================================================================
 std::ostream& 
 LoKi::Vertices::MinVertexDistance::fillStream
 ( std::ostream& s ) const 
 { return s << "MINVVD" ; }
 // ============================================================================
-
-
-// ============================================================================
 LoKi::Vertices::MinVertexChi2Distance::MinVertexChi2Distance 
 ( const LHCb::VertexBase::Vector& vs ) 
   : LoKi::Function<const LHCb::VertexBase*>()
   , LoKi::UniqueKeeper<LHCb::VertexBase> ( vs.begin() , vs.end() )
   , m_fun                            ( LoKi::Point3D()       )
-{} ;
+{} 
 // ============================================================================
 LoKi::Vertices::MinVertexChi2Distance::MinVertexChi2Distance 
 ( const LHCb::VertexBase::ConstVector& vs ) 
   : LoKi::Function<const LHCb::VertexBase*>()
   , LoKi::UniqueKeeper<LHCb::VertexBase> ( vs.begin() , vs.end() )
   , m_fun                            ( LoKi::Point3D()       )
-{} ;
+{} 
 // ============================================================================
 LoKi::Vertices::MinVertexChi2Distance::MinVertexChi2Distance 
 ( const LHCb::Vertex::Vector& vs ) 
   : LoKi::Function<const LHCb::VertexBase*>()
   , LoKi::UniqueKeeper<LHCb::VertexBase> ( vs.begin() , vs.end() )
   , m_fun                            ( LoKi::Point3D()       )
-{} ;
+{} 
 // ============================================================================
 LoKi::Vertices::MinVertexChi2Distance::MinVertexChi2Distance 
 ( const LHCb::Vertex::ConstVector& vs ) 
   : LoKi::Function<const LHCb::VertexBase*>()
   , LoKi::UniqueKeeper<LHCb::VertexBase> ( vs.begin() , vs.end() )
   , m_fun                            ( LoKi::Point3D()       )
-{} ;
+{} 
 // ============================================================================
 LoKi::Vertices::MinVertexChi2Distance::MinVertexChi2Distance 
 ( const SmartRefVector<LHCb::Vertex>& vs ) 
   : LoKi::Function<const LHCb::VertexBase*>()
   , LoKi::UniqueKeeper<LHCb::VertexBase> ( vs.begin() , vs.end() )
   , m_fun                            ( LoKi::Point3D()       )
-{} ;
+{} 
 // ============================================================================
 LoKi::Vertices::MinVertexChi2Distance::MinVertexChi2Distance 
 ( const LHCb::RecVertex::Vector& vs ) 

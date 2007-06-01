@@ -1,8 +1,11 @@
-// $Id: PhysRangeTypes.h,v 1.6 2007-04-16 16:16:26 pkoppenb Exp $
+// $Id: PhysRangeTypes.h,v 1.7 2007-06-01 12:07:03 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2007/04/16 16:16:26  pkoppenb
+// removed polemic comment
+//
 // Revision 1.5  2006/11/27 12:01:32  ibelyaev
 //  prepare for LoKi v4r3
 //
@@ -24,8 +27,7 @@
 // ============================================================================
 #include "LoKi/NamedRange.h"
 #include "LoKi/Selected.h"
-// ============================================================================
-
+#include "LoKi/RangeList.h"
 // ============================================================================
 /** @file
  *
@@ -41,8 +43,6 @@
  *  @date 2006-02-16 
  */
 // ============================================================================
-
-
 namespace LoKi
 {
   /** @namespace LoKi::PhysTypes LoKi/PhysRangeTypes.h
@@ -64,18 +64,19 @@ namespace LoKi
     typedef LoKi::Selected_<VContainer>           VSelected  ;
     /// the actual type of range of particles 
     typedef VSelected::Range                         VRange  ;
-  } 
-  
+  } // end of namespace LoKi::PhysTypes  
   namespace Types
   {
     /// the actual range of particles 
-    typedef LoKi::PhysTypes::Range                   Range ;
+    typedef LoKi::PhysTypes::Range                  Range   ;
     /// the actual range of particles 
-    typedef LoKi::PhysTypes::VRange                 VRange ;
-  }
-
-  /** @fn convert 
-   *  Trivial conversion function 
+    typedef LoKi::PhysTypes::VRange                 VRange  ;
+    /// the actual range of range list particles 
+    typedef LoKi::RangeList_<Range>                 RangeL  ;
+    /// the actual range of range list particles 
+    typedef LoKi::RangeList_<VRange>                VRangeL ;
+  } // end of namespace LoKi::Types  
+  /** Trivial conversion function 
    *  @param vct vector of noon-const particles 
    *  @param return vector of const particles 
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -85,9 +86,7 @@ namespace LoKi
   LHCb::Particle::ConstVector 
   convert ( LHCb::Particle::Vector&      vct ) 
   { return LHCb::Particle::ConstVector ( vct.begin() , vct.end() ) ; }
-  
-}  // end of namespace LoKi 
-
+}  // end of namespace LoKi
 // ============================================================================
 // The END 
 // ============================================================================
