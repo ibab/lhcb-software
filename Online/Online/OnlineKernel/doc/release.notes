@@ -1,6 +1,9 @@
 Package: OnlineKernel
 Author:  Markus Frank
 
+! 2007-05-30 Markus Frank
+  - Add OnlineKernel/NET/DataTransfer.cpp
+    Implement simple data transfer protocol using TAN nameserver.
 
 ! 2007-05-25 Markus Frank
   - Add OnlineKernel/CPP/XMLStream.h to easy the construction of

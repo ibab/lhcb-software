@@ -1,21 +1,23 @@
 #include <cstdio>
+#include <iostream>
 #include "RTL/rtl.h"
 #include "TAN/TanDB.h"
 #define LINE(ll,x)   { \
-  for ( int i=0; i < ll; i++ ) putchar(x);    \
-  putchar('\n');   \
+  for ( int i=0; i < ll; i++ ) std::cout << x;    \
+  std::cout << std::endl;   \
 }
 
 extern "C" int rtl_tandb_test( int /* argc */, char** /*argv */ )  {
   char buff[32];
-  ::printf("Sizees: TANDB_ENTRY=%ld TanMessage=%ld Bytes\n",
-    long(sizeof(TANDB_ENTRY)),long(sizeof(TanMessage)));
+  std::cout << "Sizes: TANDB_ENTRY=" << long(sizeof(TANDB_ENTRY))
+            << " TanMessage=" << long(sizeof(TanMessage)) << " Bytes"
+            << std::endl;
 
   // Start with clean pubarea...
   TanDataBase& db = TanDataBase::Instance();    
 
   LINE(80,'=');
-  db.Dump( stdout );
+  db.Dump( std::cout );
   LINE(80,'=');
 
   TANDB_ENTRY* entry[128];
@@ -38,13 +40,13 @@ extern "C" int rtl_tandb_test( int /* argc */, char** /*argv */ )  {
   }
   // Dump contents
   LINE(80,'=');
-  db.Dump( stdout );
+  db.Dump( std::cout );
   LINE(80,'=');
 
 #ifdef _VMS
   db.Close( entry[8] );
 
-  db.Dump( stdout );
+  db.Dump( std::cout );
   LINE(80,'=');
 
   db.Close( entry[9] );
@@ -54,16 +56,16 @@ extern "C" int rtl_tandb_test( int /* argc */, char** /*argv */ )  {
   db.Close( entry[4] );
 #endif
   db.Close( entry[3] );
-  db.Dump( stdout );
+  db.Dump( std::cout );
   LINE(80,'=');
   db.Close( entry[2] );
-  db.Dump( stdout );
+  db.Dump( std::cout );
   LINE(80,'=');
   db.Close( entry[1] );
-  db.Dump( stdout );
+  db.Dump( std::cout );
   LINE(80,'=');
   db.Close( entry[0] );
-  db.Dump( stdout );
+  db.Dump( std::cout );
   LINE(80,'=');
 
   LINE(80,'-');
@@ -80,7 +82,8 @@ extern "C" int rtl_tandb_test( int /* argc */, char** /*argv */ )  {
       NetworkChannel::Port port = db.allocatePort (e);
       NetworkChannel::Port fnd  = db.findPort(msg);
       if ( fnd != port ) {
-        printf("!!!!!!!!!!! Port allocated:%X found:%X\n",port,fnd);
+        std::cout << "!!!!!!!!!!! Port allocated:" << (void*)port 
+          << " found:" << (void*)fnd << std::endl;
       }
 
       // Insert alias(s)
@@ -90,7 +93,8 @@ extern "C" int rtl_tandb_test( int /* argc */, char** /*argv */ )  {
         int status = db.insertAlias (e);
         NetworkChannel::Port fnd  = db.findPort(msg);
         if ( fnd != port ) {
-          printf("!!!!!!!!!!! Port allocated:%X found:%X status:%X\n",port,fnd,status);
+        std::cout << "!!!!!!!!!!! Port allocated:" << (void*)port 
+                  << " found:" << (void*)fnd << " status:" << (void*)status << std::endl;
         }
       }
     }
@@ -106,8 +110,8 @@ extern "C" int rtl_tandb_test( int /* argc */, char** /*argv */ )  {
   LINE(80,'-');
   LINE(80,'=');
   LINE(80,'-');
-  db.Dump( stdout );
+  db.Dump( std::cout );
   LINE(80,'=');
-  printf("All done ....\n");
+  std::cout << "All done ...." << std::endl;
   return lib_rtl_default_return();
 }

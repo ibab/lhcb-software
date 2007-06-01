@@ -210,9 +210,43 @@ public:
   }
 };
 
+BMDESCRIPT::BMDESCRIPT() : qentry_t(0,0) {
+  ctrl = 0;
+  user = 0;
+  usDesc = 0;
+  event = 0;
+  evDesc = 0;
+  bitmap = 0;
+  bitmap_size = 0;
+  buffer_add = 0;
+  buffer_size = 0;
+  owner = 0;
+  lockid = 0;
+  bm_name[0] = 0;
+  mutexName[0] = 0;
+  free_event = 0;
+  free_event_param = 0;
+  alloc_event = 0;
+  alloc_event_param = 0;
+  ctrl_add = 0;
+  event_add = 0;
+  user_add = 0;
+  bitm_add = 0;
+  buff_add = 0;
+  WES_event_flag = 0;
+  WEV_event_flag = 0;
+  WSP_event_flag = 0;
+  WEVA_event_flag = 0;
+  WSPA_event_flag = 0;
+  pThread = 0;
+  cThread = 0;
+  pThreadState = 0;
+  cThreadState = 0;
+  lastVar = 0;
+}
+
 BMID mbm_map_memory(const char* bm_name)  {
   std::auto_ptr<BMDESCRIPT> bm(new BMDESCRIPT());
-  ::memset(&bm->ctrl,0,&bm->lastVar-(char*)&bm->ctrl);
   ::strcpy(bm->bm_name,bm_name);
   bm->owner = -1;
   int sc = _mbm_map_sections(bm.get());
@@ -311,8 +345,7 @@ BMID mbm_include (const char* bm_name, const char* name, int partid) {
   lib_rtl_create_event(0, &bm->WEVA_event_flag);
 
   if ( reference_count == 0 )  {
-    desc_head  = new qentry_t;
-    ::memset(desc_head,0,sizeof(qentry_t));
+    desc_head  = new qentry_t(0,0);
     lib_rtl_declare_exit (_mbm_shutdown, 0);
     lib_rtl_declare_rundown(_mbm_shutdown,0);
   }
@@ -1451,7 +1484,7 @@ int  mbm_wait_space_a(BMID bm)    {
 
 int _mbm_get_user_flag(std::map<long long int,lib_rtl_event_t>& flags, USER* us, const char* name, lib_rtl_event_t* flg)  {
   typedef std::map<long long int,lib_rtl_event_t> event_map;
-  long long int idx = ((long long int)us->uid)<<32 + (long long int)us->pid;
+  long long int idx = (((long long int)us->uid)<<32) + (long long int)us->pid;
   event_map::const_iterator i = flags.find(idx);
   if ( i == flags.end() ) {
     int sc = ::lib_rtl_create_event(name, flg);

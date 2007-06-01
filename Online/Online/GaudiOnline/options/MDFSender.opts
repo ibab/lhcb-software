@@ -1,24 +1,21 @@
 #include "$GAUDIONLINEROOT/options/OnlineEnvironment.opts"
 ApplicationMgr.HistogramPersistency  = "NONE";
-ApplicationMgr.ExtSvc               += {"LHCb::AMSService/AMS"};
 ApplicationMgr.ExtSvc               += {"IncidentSvc"};
-ApplicationMgr.ExtSvc               += {"LHCb::MEPManager/MEPManager"};
 ApplicationMgr.ExtSvc               += {"LHCb::OnlineEvtSelector/EventSelector"};
-//
 ApplicationMgr.Runable               = "LHCb::EventRunable/Runable";
-ApplicationMgr.SvcOptMapping        += { "LHCb::EventRunable/Runable"};
-ApplicationMgr.TopAlg               += {"StoreExplorerAlg", "LHCb::MDFSender/Sender" };
+ApplicationMgr.TopAlg               += {"StoreExplorerAlg", "LHCb::SocketDataSender/Sender" };
+Runable.MEPManager                   = "LHCb::MEPManager/MEPManager";
 StoreExplorerAlg.Load                = 0;
 StoreExplorerAlg.PrintFreq           = 0.001;
 MEPManager.PartitionID               = @OnlineEnv.PartititonID;
 MEPManager.Buffers                   = {"RESULT"};
-Sender.Recipients                    = {"Receiver"};
-Sender.PrintFreq                     = 0.001;
+MEPManager.PartitionBuffers          = true;
+Sender.DataSink                      = {"Receiver"};
+//Sender.PrintFreq                     = 0.001;
 Sender.Compress                      = 0;
 EventSelector.Input                  = "RESULT";
 EventDataSvc.RootCLID                = 1;
 EventDataSvc.EnableFaultHandler      = true ;
 EventPersistencySvc.CnvServices      = {"LHCb::RawDataCnvSvc/RawDataCnvSvc" };
-ApplicationMgr.SvcOptMapping        += {"LHCb::RawDataCnvSvc/RawDataCnvSvc" };
 EventSelector.REQ1 = "EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0";
 MessageSvc.OutputLevel = 1;

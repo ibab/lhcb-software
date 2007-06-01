@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MBMMonitorSvc.cpp,v 1.6 2007-02-23 12:42:09 scheruku Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MBMMonitorSvc.cpp,v 1.7 2007-06-01 17:28:55 frankb Exp $
 //  ====================================================================
 //  MBMMonitorSvc.cpp
 //  --------------------------------------------------------------------
@@ -124,7 +124,7 @@ void LHCb::MBMMonitorSvc::Info::publish()   {
     svc->declareInfo(b+"/SpaceFree",   spaceFree,   d+"Amount of total buffer space");
     svc->declareInfo(b+"/UserTotal",   userTotal,   d+"Total number of users");
     svc->declareInfo(b+"/userMax",     userMax,     d+"Maximal number of users");
-    svc->declareInfo(b+"/BMID",        bmid,        d+"Buffer identifier");
+    //svc->declareInfo(b+"/BMID",        bmid,        d+"Buffer identifier");
   }
   else  {
     const std::string fmt_BM = "I:8;C:32";

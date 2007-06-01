@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/NetworkDataReceiver.cpp,v 1.5 2007-06-01 13:49:45 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/NetworkDataReceiver.cpp,v 1.6 2007-06-01 17:28:55 frankb Exp $
 //  ====================================================================
 //  NetworkDataReceiver.cpp
 //  --------------------------------------------------------------------
@@ -54,25 +54,33 @@ StatusCode NetworkDataReceiver::initialize()   {
   if ( !sc.isSuccess() )  {
     return sc;
   }
-  // Do NOT call base class initialization: we are not writing to file/socket!
-  declareInfo("RecvCount",  m_recvReq=0,   "Total number of items received.");
-  declareInfo("RecvErrors", m_recvError=0, "Total number of receive errors.");
-  declareInfo("RecvBytes",  m_recvBytes=0, "Total number of bytes received from clients.");
-  sc = service("MEPManager",m_mepMgr);
-  if ( !sc.isSuccess() )  {
-    info("Failed to access buffer manager service.");
-    return sc;
-  }  
-  sc = subscribeNetwork();
-  if ( !sc.isSuccess() )  {
+  try {
+    // Do NOT call base class initialization: we are not writing to file/socket!
+    declareInfo("RecvCount",  m_recvReq=0,   "Total number of items received.");
+    declareInfo("RecvErrors", m_recvError=0, "Total number of receive errors.");
+    declareInfo("RecvBytes",  m_recvBytes=0, "Total number of bytes received from clients.");
+    sc = service("MEPManager",m_mepMgr);
+    if ( !sc.isSuccess() )  {
+      MsgStream info(msgSvc(), name());
+      info << MSG::INFO << "Failed to access buffer manager service." << endmsg;
+      return sc;
+    }
+    sc = subscribeNetwork();
+    if ( !sc.isSuccess() )  {
+      return sc;
+    }
+    m_prod = m_mepMgr->createProducer(m_buffer,RTL::processName());
+    ::wtc_subscribe(WT_FACILITY_DAQ_EVENT,0,rearm_net_request,this);
+    incidentSvc()->addListener(this,"DAQ_CANCEL");
     return sc;
   }
-  m_prod = m_mepMgr->createProducer(m_buffer,RTL::processName());
-  ::wtc_subscribe(WT_FACILITY_DAQ_EVENT,0,rearm_net_request,this);
-  incidentSvc()->addListener(this,"DAQ_CANCEL");
-  m_lastbacklog = 0;
-  m_backlog = 0;
-  return sc;
+  catch(const std::exception& e)  {
+    err << MSG::ERROR << "Exception during initialization:" << e.what() << endmsg;
+  }
+  catch(...)  {
+    err << MSG::ERROR << "Unknown exception during initialization:" << endmsg;
+  }
+  return StatusCode::FAILURE;
 }
 
 // Finalize the object: release all allocated resources

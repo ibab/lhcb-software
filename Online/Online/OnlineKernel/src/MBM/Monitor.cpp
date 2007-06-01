@@ -23,7 +23,9 @@
 #include "MBM/bmstruct.h"
 #include "bm_internals.h"
 #include "Manager.h"
-
+#ifdef _WIN32
+#define vsnprintf _vsnprintf
+#endif
 #define E_MNF  221
 
 namespace MBM {
@@ -219,7 +221,6 @@ size_t MBM::Monitor::draw_buffer(const char* name, CONTROL* ctr)  {
 
 int MBM::Monitor::put_inf()   {
   int i, j, k;
-  time_t nowt;
 #if defined(SHOW_TIMES)
   static const char* fmt_def  = " %-15s%4x%8d%5s          %40s%5s%7s";
   static const char* fmt_prod = " %-15s%4x%8d%5s%6s%11d   %3.0f%32s%7s  %7.1e %7.1e %d %d";
@@ -236,12 +237,10 @@ int MBM::Monitor::put_inf()   {
   static const char* fmt_cons = " %-36s%4x%8d%5s%6s               %12d%11d   %3.0f%5s%7s";
   static const char* head=" Name                           Partition     Pid Type State   Produced %%prod     #seen     #freed %%seen Reqs Buffer";
 #endif
-  char line[256], tim[64];
-  ::time(&nowt);
-  struct tm *now = ::localtime(&nowt);
-  ::strftime(tim,sizeof(tim),"%a %d %b %Y  %H:%M:%S",now);
+  char line[256];
   draw_line();
-  draw_line(REVERSE,  "                               Buffer Manager Monitor [%s]  pid:%d", tim, lib_rtl_pid());
+  draw_line(REVERSE,  "                               Buffer Manager Monitor [%s]  pid:%d", 
+    ::lib_rtl_timestr("%a %d %b %Y  %H:%M:%S",0), lib_rtl_pid());
   draw_line();
   draw_line(NORMAL,"");
   for (i=0;m_numBM>0 && i<m_buffers->p_bmax;i++)  {

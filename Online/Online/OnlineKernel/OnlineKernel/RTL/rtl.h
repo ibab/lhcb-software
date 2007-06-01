@@ -71,6 +71,8 @@ extern "C" {
   int lib_rtl_get_process_name(char* process, size_t len);
   /// Get system node name
   int lib_rtl_get_node_name(char* node, size_t len);
+  /// Access data interface name
+  int lib_rtl_get_datainterface_name(char* node, size_t len);
 
   /// disable intercepts
   int lib_rtl_disable_intercept();
@@ -220,6 +222,8 @@ namespace RTL  {
   const std::string& nodeName();
   /// Short node name (=computer name without domain)
   const std::string& nodeNameShort();
+  /// Access data interface name
+  const std::string& dataInterfaceName();
   /// Independent version of strerror
   const char* errorString();
   /// Access error string from integer error code.

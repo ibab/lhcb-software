@@ -2,10 +2,11 @@
 ApplicationMgr.HistogramPersistency  = "NONE";
 ApplicationMgr.EvtSel                = "NONE";
 ApplicationMgr.ExtSvc               += { "LHCb::AMSService/AMS", "IncidentSvc" };
-ApplicationMgr.TopAlg               += { "LHCb::MDFReceiver/Receiver" };
-ApplicationMgr.Runable               =   "LHCb::OnlineRunable/Runable";
-ApplicationMgr.SvcOptMapping        += { "LHCb::OnlineRunable/Runable"};
+ApplicationMgr.TopAlg               += { "LHCb::SocketDataReceiver/Receiver" };
+ApplicationMgr.Runable               =   "LHCb::EventRunable/Runable";
 Runable.Wait                         = false;
+Runable.MEPManager                   = "LHCb::MEPManager/MEPManager";
 Receiver.Buffer                      = "OUT";
 Receiver.PartitionID                 = @OnlineEnv.PartititonID;
 Receiver.PartitionBuffer             = true;
+MEPManager.PartitionBuffers          = true;

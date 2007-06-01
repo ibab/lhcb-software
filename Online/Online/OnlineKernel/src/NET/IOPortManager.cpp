@@ -174,6 +174,8 @@ namespace {
   }
   int EntryMap::handle()  {
     std::vector<__NetworkChannel__> channels;
+    IOPortManager mgr(m_port);
+    int term_in = fileno(stdin);
     while(1)  {
       int nsock = 0, mxsock = 0;
       size_t len = size();
@@ -196,7 +198,7 @@ namespace {
         }
       }
       if ( nsock > 0 )  {
-        timeval tv = { 0, 10 };
+        timeval tv = { 0, 100 };
         int res = 0;
         res = select(mxsock+1, &read_fds, 0, &exc_fds, &tv);
         if ( res == 0 )  {
@@ -211,32 +213,32 @@ namespace {
         ::select(nsock, 0, 0, 0, &tv);
         continue;
       }
+      RTL::Lock lock(m_mutex_id);
       for ( int j=0; j<nsock; ++j )  {
         __NetworkChannel__ fd = channels[j];      
-        if (FD_ISSET(fd, &read_fds))  {
-          RTL::Lock lock(m_mutex_id);
-          iterator k=find(fd);
+        if ( FD_ISSET(fd, &read_fds) )  {
+          iterator k = find(fd);
           if ( k != end() )  {
             PortEntry* e = (*k).second;
             if ( e )  {
-              int t = e->type, nb = IOPortManager(m_port).getAvailBytes(fd);
-              //::lib_rtl_printf("got read request: %d bytes!\n",nb);
+              int t = e->type, nb = mgr.getAvailBytes(fd);
               if ( e->callback )   {
-                if ( !(nb==0 && fd == fileno(stdin)) )
+                if ( !(nb==0 && fd == term_in) )
                   e->armed = 0;
                 int (*callback)(void*) = e->callback;
                 void* param = e->param;
-                RTL::Lock lock(m_mutex_id, true);
                 try  {
+                  RTL::Lock lock(m_mutex_id, true);
                   (*callback)(param);
                 }
                 catch(...)  {
                   ::lib_rtl_printf("EntryMap::handle> Exception!\n");
                 }
               }
-              if ( t == 1 && nb <= 0 )  {
+              if ( t == 1 && nb < 0 )  {
                 k = find(fd);
                 if ( k != end() )  {
+                  //_asm int 3
                   if ( (*k).second ) delete (*k).second;
                   erase(k);
                 }
@@ -308,9 +310,11 @@ int IOPortManager::getAvailBytes(int fd)  {
   if (ioctlsocket(fd, FIONREAD, &ret) != -1)
     return int(ret);
   else    {
-    if (errno == EINVAL) // Server socket
+    if (errno == EAGAIN)      // Some interrupt occurred
+      return 0;
+    else if (errno == EINVAL) // Server socket
       return -1;
-    return 0;
+    return -1;
   }
 }
 

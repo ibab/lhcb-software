@@ -1,6 +1,13 @@
 Package: GaudiOnline
 Author:  Markus Frank
 
+! 2007-05-30 Markus Frank
+ - Add SocketSender and SocketReceiver class for data transfer based on the
+   net library OnlineKernel/NET/DataTransfer.
+   Note: DIM monitoring does not work properly if the data network is not 
+   accessible from the controls network and data are transferred using DIM.
+   For such cases use OnlineKernel/NET/DataTransfer.
+
 ! 2007-05-10 Markus Frank
  - Fix bug to NOT free event on cancel.
  - Fix bug in DIM command handling to set state to error if initialization fails.

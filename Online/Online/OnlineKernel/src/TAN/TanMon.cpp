@@ -1,5 +1,7 @@
-#include <cstdio>
 #include <ctime>
+#include <cstdio>
+#include <iostream>
+#include <sstream>
 #include "RTL/rtl.h"
 #include "TAN/TanDB.h"
 
@@ -56,12 +58,14 @@ extern "C" int tanmon( int argc, char* argv[])   {
   }
   terminal_response();
   do  {
+    std::stringstream s;
     time(&curr);
     clear_scr; bold; inverse; 
     cursor(2,30);  printf("T A N   M O N I T O R");
     plain;      
     cursor(4,30);      printf(ctime(&curr));      
-    cursor(5,1);       TanDataBase::Instance().Dump(stdout);
+    cursor(5,1);       TanDataBase::Instance().Dump(s);
+    ::printf(s.str().c_str());
     if ( continuous )  lib_rtl_sleep(2000);
   } while ( continuous );
   return lib_rtl_default_return();

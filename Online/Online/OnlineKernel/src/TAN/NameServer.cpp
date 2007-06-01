@@ -1,7 +1,7 @@
 #include <ctime>
 #include <cstdio>
 #include <cstdlib>
-
+#include <iostream>
 #include "NET/UdpConnection.h"
 #include "NET/TcpConnection.h"
 #include "CPP/EventHandler.h"
@@ -245,7 +245,7 @@ void NameService::handleMessage( TanDataBase::Entry*& ent, TanMessage& rec_msg, 
       break;
     case TanMessage::DUMP:
       //::lib_rtl_printf("handle message: DUMP\n");
-      m_tandb.Dump(stdout);
+      m_tandb.Dump(std::cout);
       break;
     case TanMessage::INQUIRE:                                 // Inquire service...
       //::lib_rtl_printf("handle message: INQUIRE\n");

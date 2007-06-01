@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/NetworkDataSender.cpp,v 1.4 2007-05-18 13:58:55 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/NetworkDataSender.cpp,v 1.5 2007-06-01 17:28:55 frankb Exp $
 //  ====================================================================
 //  NetworkDataSender.cpp
 //  --------------------------------------------------------------------
@@ -49,21 +49,30 @@ StatusCode NetworkDataSender::initialize()   {
     output << MSG::INFO << "No data sink specified. "
            << "Clients will have to subscribe themselves." << endmsg;
   }
-  sc = suspendEvents();
-  if ( !sc.isSuccess() )  {
-    output << MSG::ERROR << "Failed to suspend event receival from event selector." << endmsg;
+  try  {
+    sc = suspendEvents();
+    if ( !sc.isSuccess() )  {
+      output << MSG::ERROR << "Failed to suspend event receival from event selector." << endmsg;
+      return sc;
+    }
+    output << MSG::DEBUG << "Register to data sink " << m_target << endmsg;
+    sc = subscribeNetwork();
+    if ( !sc.isSuccess() )  {
+      output << MSG::ERROR << "Failed to register to data sink " << m_target << endmsg;
+      return sc;
+    }
+    if ( !m_useEventRequests )  {
+      handleEventRequest(m_recipients.size(),m_target,"EVENT_REQUEST");
+    }
     return sc;
   }
-  output << MSG::DEBUG << "Register to data sink " << m_target << endmsg;
-  sc = subscribeNetwork();
-  if ( !sc.isSuccess() )  {
-    output << MSG::ERROR << "Failed to register to data sink " << m_target << endmsg;
-    return sc;
+  catch(const std::exception& e)  {
+    output << MSG::ERROR << "Exception during initialization:" << e.what() << endmsg;
   }
-  if ( !m_useEventRequests )  {
-    handleEventRequest(m_recipients.size(),m_target,"EVENT_REQUEST");
+  catch(...)  {
+    output << MSG::ERROR << "Unknown exception during initialization:" << endmsg;
   }
-  return sc;
+  return StatusCode::FAILURE;
 }
 
 // Finalize the object: release all allocated resources

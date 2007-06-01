@@ -375,16 +375,29 @@ int lib_rtl_get_process_name(char* process, size_t len)  {
 
 int lib_rtl_get_node_name(char* node, size_t len)  {
   char n[64];
+  const char *tmp = ::getenv("NODE");
 #if defined(_WIN32)
-  const char *tmp = getenv("NODE");
-  if ( !tmp ) tmp = getenv("COMPUTERNAME");
-  if ( !tmp && 0 == gethostname (n,sizeof(n)) ) tmp = n;
+  if ( !tmp ) tmp = ::getenv("COMPUTERNAME");
+  if ( !tmp && 0 == ::gethostname (n,sizeof(n)) ) tmp = n;
 #elif defined(_OSK)
-  const char *tmp = getenv("NODE");
 #else
-  const char *tmp = getenv("NODE");
-  if ( 0 == gethostname (n,sizeof(n)) ) tmp = n;
+  if ( 0 == ::gethostname (n,sizeof(n)) ) tmp = n;
 #endif
+  ::strncpy(node,tmp != 0 ? tmp : "UNKNOWN", len);
+  return 1;
+}
+
+int lib_rtl_get_datainterface_name(char* node, size_t len)  {
+  const char *tmp = ::getenv("DATAINTERFACE");
+  if ( !tmp )  {
+    char n[64];
+    if ( 0 == ::gethostname (n,sizeof(n)) )  {
+      hostent* h = ::gethostbyname(n);
+      if ( h ) {
+        tmp = inet_ntoa(*(in_addr*)h->h_addr);
+      }
+    }
+  }
   ::strncpy(node,tmp != 0 ? tmp : "UNKNOWN", len);
   return 1;
 }
@@ -445,6 +458,15 @@ namespace RTL {
     if ( s.empty() )  {
       char txt[64];
       ::lib_rtl_get_process_name(txt, sizeof(txt));
+      s = txt;
+    }
+    return s;
+  }
+  const std::string& dataInterfaceName()  {
+    static std::string s;
+    if ( s.empty() )  {
+      char txt[64];
+      ::lib_rtl_get_datainterface_name(txt, sizeof(txt));
       s = txt;
     }
     return s;

@@ -133,32 +133,32 @@ int MBM::XMLMonitorServer::handleAcceptRequest ( EventHandler* handler )  {
     }
     else {
       try {
-	char reply[1024];
-	std::stringstream buff;
-	XML::Stream o(buff.rdbuf());
+        char reply[1024];
+        std::stringstream buff;
+        XML::Stream o(buff.rdbuf());
         o << XML::Stream::header() << std::endl;
         if ( strncmp(buffer,"GET /?",6)==0 ) {
-	  char* p = buffer + 6;
+          char* p = buffer + 6;
           char* q = strchr(p,' ');
           if ( q ) {
-	    *q = 0;
-	    o << XML::style(p);
-	  }
-	}
-	get_bm_list();
-	dumpBuffers(o);
-	std::string text = buff.str();
-	sprintf(reply, "HTTP/1.0 200 OK\n"
-		"Content-Type: text/html\n"
-		"Content-Length: %d\n"
-		"\n",text.length());
-	std::string result = reply;
-	result += text;
-	num_byte = chan.send(result.c_str(),result.length());
-	drop_bm_list();
+            *q = 0;
+            o << XML::style(p);
+          }
+        }
+        get_bm_list();
+        dumpBuffers(o);
+        std::string text = buff.str();
+        sprintf(reply, "HTTP/1.0 200 OK\n"
+          "Content-Type: text/html\n"
+          "Content-Length: %d\n"
+          "\n",text.length());
+        std::string result = reply;
+        result += text;
+        num_byte = chan.send(result.c_str(),result.length());
+        drop_bm_list();
       }
       catch(...) {
-	std::cout << "Exception during buffer monitoring." << std::endl;
+        std::cout << "Exception during buffer monitoring." << std::endl;
       }
     }
   }
@@ -208,15 +208,10 @@ void MBM::XMLMonitorServer::dumpUser(XMLStream& o, const USER* us) {
 }
 
 void MBM::XMLMonitorServer::dumpBuffers(XMLStream& o)   {
-  time_t nowt;
-  char tim[64];
-  ::time(&nowt);
-  struct tm *now = ::localtime(&nowt);
-  ::strftime(tim,sizeof(tim),"%a %d %b %Y  %H:%M:%S",now);
   XML::Guard top(o, "MBM_SUMMARY");
-  o << XML::item("TIME", XML::text(tim));
+  o << XML::item("TIME", XML::text(::lib_rtl_timestr("%a %d %b %Y  %H:%M:%S",0)));
   o << XML::item("NODE", XML::text(RTL::nodeName()));
-  for (int j, i=0;i<m_numBM>0 && m_buffers->p_bmax;i++)  {
+  for (int j, i=0;i<m_numBM && m_buffers->p_bmax;i++)  {
     if ( m_bms[i].m_buff != 0 )  {
       BMDESCRIPT* dsc = m_bms[i].m_mgr.m_bm;
       USER *us, *utst=(USER*)~0x0;

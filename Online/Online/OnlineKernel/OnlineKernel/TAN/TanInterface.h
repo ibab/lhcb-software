@@ -63,9 +63,9 @@ public:
     /// Dump remote database on server node
     int      dumpDB           (const char* node);
     /// Get local host name
-    int      hostName(char* node, size_t size) const;
+    int      hostName         (char* node, size_t size) const;
     /// Get address of remote task givenb by name
-    int      addressByName (const char* name, NetworkChannel::Address& sin);
+    int      addressByName    (const char* name, NetworkChannel::Address& sin);
     /// Declare alias name to local nameserver
     int      declareAlias     (const char* name);
     /// Remove alias name from local nameserver

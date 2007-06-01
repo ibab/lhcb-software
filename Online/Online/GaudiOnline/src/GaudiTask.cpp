@@ -59,8 +59,8 @@ StatusCode LHCb::GaudiTask::run()  {
       m_appMgr = ui;
       StatusCode sc = m_appMgr->run();
       if ( !sc.isSuccess() ) {
-	declareState(ST_ERROR);
-	return sc;
+        declareState(ST_ERROR);
+        return sc;
       }
     }
   }
@@ -95,7 +95,7 @@ IMessageSvc* LHCb::GaudiTask::msgSvc()  {
 void LHCb::GaudiTask::handle(const Incident& inc)    {
   MsgStream log(msgSvc(), name());
   log << MSG::INFO << "Got incident:" << inc.source()
-      << " of type " << inc.type() << endmsg;
+    << " of type " << inc.type() << endmsg;
   if ( inc.type() == "DAQ_ERROR" )  {
     IOCSENSOR.send(this,ERROR);
   }
@@ -144,8 +144,8 @@ StatusCode LHCb::GaudiTask::configure()  {
     if ( sc.isSuccess() )  {
       sc = m_subMgr->configure();
       if ( sc.isSuccess() )  {
-	log << MSG::INFO << "2nd Level successfully configured." << endmsg;	
-	return DimTaskFSM::configure();
+        log << MSG::INFO << "2nd Level successfully configured." << endmsg;	
+        return DimTaskFSM::configure();
       }
       m_subMgr->terminate();
       m_subMgr->release();
@@ -265,7 +265,7 @@ StatusCode LHCb::GaudiTask::nextEvent(int /* num_event */)  {
   }
   return DimTaskFSM::nextEvent(1);
 }
-  
+
 StatusCode LHCb::GaudiTask::finalize()  {
 #if 0
   std::string nam, evtloop_name;

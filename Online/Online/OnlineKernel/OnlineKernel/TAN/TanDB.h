@@ -62,6 +62,7 @@ extern "C"  {
 /*                           */
 #ifdef __cplusplus                     /*  C++ ONLY!                */
 
+#include <ostream>
 #include "CPP/SmartObject.h"
 
 /// TAN Database entry definition
@@ -198,10 +199,13 @@ public:
   int Close                         ( Entry *ce );
 
   /// Find entry by name
-  Entry* FindEntry            ( const char* s);
+  Entry* FindEntry                  ( const char* s);
 
   /// Dump dbase content to FILE
-  int Dump                          ( FILE* fptr );
+  int Dump                          ( std::ostream& os );
+
+  /// Dump dbase content to FILE
+  int DumpXML                       ( std::ostream& os );
 
   /// Given a message, find the approprate port number in the database. If not existant, retrun 0.
   NetworkChannel::Port findPort     ( TanMessage& msg );

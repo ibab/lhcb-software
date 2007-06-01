@@ -42,17 +42,11 @@ namespace MBM {
       int cnt = 1;
       std::vector<std::string> words;
       std::string s;
-      time_t nowt;
-      char tim[64];
-      ::time(&nowt);
-      struct tm *now = ::localtime(&nowt);
-      ::strftime(tim,sizeof(tim),"%a %d %b %Y  %H:%M:%S",now);
-
       for(std::vector<BMID>::iterator j=m_bm.begin(); j != m_bm.end(); ++j)  {
         BMID id = *j;
         Bits::dumpWords(id->bitmap, id->bitmap_size>>3, words);
         draw_line(REVERSE,  "                          %s Buffer Bitmap Monitor [%s]  pid:%d", 
-          id->bm_name, tim, lib_rtl_pid());
+          id->bm_name, ::lib_rtl_timestr("%a %d %b %Y  %H:%M:%S",0), lib_rtl_pid());
         if ( m_bm.size() == 1 )  {
           draw_line();
           draw_line(NORMAL,"");
