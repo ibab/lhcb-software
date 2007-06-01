@@ -1,9 +1,21 @@
 ! =============================================================================
-! $Id: release.notes,v 1.299 2007-06-01 06:32:51 cattanem Exp $ 
+! $Id: release.notes,v 1.300 2007-06-01 15:29:42 jpalac Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
+
+! 2007-06-01 - Juan PALACIOS
+  - src/Lib/AlignmentCondition.cpp
+    . Fix small but in transformation matrix setter method.
+  - DetDesc/GlobalToLocalDelta.h, src/Lib/GlobalToLocalDelta.cpp
+    . Add functions to make Gaudi::Transform3D out of 3 parameters representing either a 
+      cartesian translation or three rotation angles about the cartesian axes.
+    . Add a function to construct a local to global Gaudi::Transform3D out of nine parameters
+      describing a pivot, a translation and a rotation about three cartesian axes.
+    . All these functions are independent of DetDesc and should be put elsewhere, but for the time 
+      being they rely on src/Lib/3DConversions.h, which will disappear when a version of
+      MathCore with a fully integrated ROOT::Math::RotationXYZ is released.
 
 !====================== DetDesc v17r4 2007-06-01 ==============================
 ! 2007-05-31 - Juan PALACIOS
