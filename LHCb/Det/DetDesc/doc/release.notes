@@ -1,9 +1,13 @@
 ! =============================================================================
-! $Id: release.notes,v 1.300 2007-06-01 15:29:42 jpalac Exp $ 
+! $Id: release.notes,v 1.301 2007-06-01 16:14:56 jpalac Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
+
+! 2007-06-01 - Juan PALACIOS
+  - src/Lib/GlobalToLocalDelta.h
+    . Fix bug in localToGlobalTransformation function.
 
 ! 2007-06-01 - Juan PALACIOS
   - src/Lib/AlignmentCondition.cpp
