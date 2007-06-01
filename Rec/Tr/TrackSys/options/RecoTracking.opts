@@ -44,10 +44,10 @@ RecoOTSeq.Members += { "OTTimeCreator" };
 RecoTrSeq.Members  += { "ProcessPhase/Track" };
 Track.DetectorList  = { "ForwardPat", "ForwardPreFit", "ForwardFit"
                       , "SeedPat",    "SeedPreFit",    "SeedFit"
-                      , "MatchPat",   "MatchPreFit",   "MatchFit"
+                      , "MatchPat",   "MatchPreFit",   "MatchFit", "PostFit"
                       , "KShortPat",  "KShortPreFit",  "KShortFit"
                       , "VeloTTPat",  "VeloTTPreFit",  "VeloTTFit"
-                      , "PostFit",    "VeloPreFit",    "VeloFit"
+//                      , "PostFit",    "VeloPreFit",    "VeloFit"
                       };
 
 // Forward pattern
@@ -55,7 +55,7 @@ TrackForwardPatSeq.Members += { "PatTCoordFromRaw", "PatForward" };
 #include "$PATFORWARDROOT/options/PatFwdTool.opts"
 
 // Forward fit
-TrackForwardFitSeq.Members += { "TrackEventFitter/FitForward" };
+TrackForwardFitSeq.Members += { "TrackEventFitter/FitForward", "TrackAddLikelihood/ForwardLikelihood" };
 FitForward.TracksInContainer  = "Rec/Track/Forward"; 
 FitForward.Fitter.NumberFitIterations = 3;
 
@@ -77,15 +77,22 @@ TrackMatchPatSeq.Members +={"TrackMatchVeloSeed/TrackMatch"};
 //TrackMatch.InputSeedTracks = "Rec/Track/Seed";
 
 // Match fit
-TrackMatchFitSeq.Members += { "TrackEventFitter/FitMatch" };
+TrackMatchFitSeq.Members += { "TrackEventFitter/FitMatch",  "TrackAddLikelihood/MatchLikelihood" };
 FitMatch.TracksInContainer  = "Rec/Track/Match"; 
 FitMatch.Fitter.NumberFitIterations = 3;
+
+MatchLikelihood.inputLocation = "Rec/Track/Match";
+MatchLikelihood.likelihood.otEff = 0.9;
+ForwardLikelihood.inputLocation = "Rec/Track/Forward";
+
+KsLikelihood.inputLocation = "Rec/Track/KsTrack";
+KsLikelihood.LikelihoodTool = "DownstreamTrackLikelihood";
 
 // KShort pattern
 TrackKShortPatSeq.Members += { "PatKShort" };
 
 // KShort fit
-TrackKShortFitSeq.Members += { "TrackEventFitter/FitKShort" };
+TrackKShortFitSeq.Members += { "TrackEventFitter/FitKShort", "TrackAddLikelihood/KsLikelihood" };
 FitKShort.TracksInContainer = "Rec/Track/KsTrack"; 
 FitKShort.Fitter.ZPositions      = { 990.0, 2165.0, 9450.0 };
 FitKShort.Fitter.StateAtBeamLine = false;
@@ -111,13 +118,10 @@ TrackPostFitSeq.Members += { "TrackEventCloneKiller" };
 // use this when running the seeding algorithm from Henk Jan Bulten
 // (the default "TracksInContainers" as defined in the cpp file
 //  uses the output of Roger Forty's seeding)
-/*TrackEventCloneKiller.TracksInContainers  = { 
-                                             "Rec/Track/VeloTT"
-                                           , "Rec/Track/Forward"
-                                           , "Rec/Track/Match"
-                                           , "Rec/Track/Seed"
-                                           , "Rec/Track/KsTrack" };
-*/
+TrackEventCloneKiller.TracksInContainers  = {"Rec/Track/Forward"
+                                           , "Rec/Track/Match"};
+//                                           , "Rec/Track/KsTrack" 
+
 
 // Prepare and fit velo tracks
 TrackVeloPreFitSeq.Members += { "TrackPrepareVelo" };

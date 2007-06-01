@@ -66,8 +66,13 @@ TsaSeed.stubExtender.tyCut = 0.1;
 TrackMatch.Chi2MatchingCut = 4000;
 TrackMatch.MomentumCut = 0.;
 TrackMatch.ptCut = 0;
+TrackMatch.maxStepSize = 10000.;
+TrackMatch.yParams = {2.5e7};
+TrackMatch.tyParams = {5e-4};
+TrackMatch.chi2T = 1000;
 TrackMatch.ExtrapolatorSeed = "TrackLinearExtrapolator";
-TrackMatch.TTClusterTool.Extrapolator =  "TrackLinearExtrapolator";
+//TrackMatch.TTClusterTool.Extrapolator =  "TrackLinearExtrapolator";
+
 
 // Forward pattern
 ToolSvc.PatForwardTool.WithoutBField = true;
