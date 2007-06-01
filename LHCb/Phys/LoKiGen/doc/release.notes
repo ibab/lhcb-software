@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.29 2007-03-05 08:44:36 cattanem Exp $ 
+! $Id: release.notes,v 1.30 2007-06-01 11:48:06 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiGen
 ! Responsible : Vanya BELYAEV
@@ -13,6 +13,32 @@
 !   contributions and advices from G.Raven, J.van Tilburg, 
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
+
+! 2007-06-01 - Vanya BELYAEV
+
+ - prepare for the version v3r0 :
+   all dictionaries are built locally 
+
+   - New files: 
+
+    LoKi/GetHepMC.h
+    src/GetHepMC.cpp
+
+    dict/LoKiGen.xml
+    dict/LoKiGenDict.h
+
+    python/LoKiGen/__init__.py
+    python/LoKiGen/decorators.py
+    python/LoKiGen/functions.py
+    python/LoKiGen/tests.py
+
+   - Modified files:
+
+    LoKi/GenPIDOperators.h
+    LoKi/GenTypes.h
+    LoKi/LoKiGen.h
+
+ - cmt/requirements version increment to v3r0 
 
 !=========================== LoKiGen v2r1 2007-03-05 ==========================
 ! 2007-03-04 - Vanya BELYAEV

@@ -1,0 +1,94 @@
+<!-- 
+     * $Id: LoKiGen.xml,v 1.1 2007-06-01 11:48:06 ibelyaev Exp $ 
+     * ========================================================================
+     * CVS tag:$Name: not supported by cvs2svn $, version $Revision: 1.1 $ 
+     * ======================================================================== 
+     * @file
+     * The seleciton file to build Reflex dictionaries for Phys/LoKiGen package
+     * @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     * @date 2006-02-06
+     * ========================================================================
+-->
+
+<lcgdict>
+  
+  <class name      = "LoKi::GetHepMC"                />
+
+  <class pattern   = "LoKi::Range_<*HepMC::*>"       />
+  <class pattern   = "LoKi::NamedRange_<*HepMC::*>"  />
+  <class pattern   = "LoKi::RangeList_<*HepMC::*>"   />
+  
+  <class pattern   = "LoKi::Keeper<HepMC::*>"        />
+  <class pattern   = "LoKi::UniqueKeeper<HepMC::*>"  />
+  <class pattern   = "LoKi::Interface<*>"            />
+  
+  <class pattern   = "std::unary_function<*HepMC::*,double>"          />
+  <class pattern   = "std::unary_function<*HepMC::*,bool>"            />
+  <class pattern   = "std::binary_function<*HepMC::*,*HepMC::*,bool>" />
+  
+  <class pattern   = "LoKi::Function<*HepMC::*>"         />
+  <class pattern   = "LoKi::Predicate<*HepMC::*>"        />
+  
+  <class pattern   = "LoKi::Constant<*HepMC::*>"         />
+  <class pattern   = "LoKi::BooleanConstant<*HepMC::*>"  />
+
+  <class pattern   = "LoKi::PredicateFromPredicate<*HepMC::*>"        />
+  <class pattern   = "LoKi::PredicateFromTwoPredicates<*HepMC::*>"    />
+  <class pattern   = "LoKi::PredicateFromTwoFunctions<*HepMC::*>"     />
+  <class pattern   = "LoKi::FunctionFromTwoFunctions<*HepMC::*>"      />
+  <class pattern   = "LoKi::FunctionFromFunction<*HepMC::*>"          />
+  <class pattern   = "LoKi::PredicateFromFunctionAndValue<*HepMC::*>" />
+
+  <class pattern   = "LoKi::And<*HepMC::*>"              />
+  <class pattern   = "LoKi::Or<*HepMC::*>"               />
+  <class pattern   = "LoKi::Not<*HepMC::*>"              />
+
+  <class pattern   = "LoKi::Less<*HepMC::*>"             />
+  <class pattern   = "LoKi::Equal<*HepMC::*>"            />
+  <class pattern   = "LoKi::LessOrEqual<*HepMC::*>"      />
+  <class pattern   = "LoKi::NotEqual<*HepMC::*>"         />
+
+  <class pattern   = "LoKi::Plus<*HepMC::*>"             />
+  <class pattern   = "LoKi::Minus<*HepMC::*>"            />
+  <class pattern   = "LoKi::Divide<*HepMC::*>"           />
+  <class pattern   = "LoKi::Multiply<*HepMC::*>"         />
+
+  <class pattern   = "LoKi::Min<*HepMC::*>"              />
+  <class pattern   = "LoKi::Max<*HepMC::*>"              />
+
+  <class pattern   = "LoKi::ComposeFunction<*HepMC::*>"  />
+  <class pattern   = "LoKi::ComposeFunction2<*HepMC::*>" />
+
+  <class pattern   = "LoKi::Compare<*HepMC::*>"          />
+
+  <class pattern   = "LoKi::SimpleSwitch<*HepMC::*>"     />
+  <class pattern   = "LoKi::Switch<*HepMC::*>"           />
+
+  <class pattern   = "LoKi::Valid<*HepMC::*>"            />
+  <class pattern   = "LoKi::TheSame<*HepMC::*>"          />
+  
+
+  <class pattern   = "LoKi::GenParticles::*"             />
+  <class pattern   = "LoKi::GenVertices::*"              />
+
+  <function pattern = "LoKi::Kinematics::*"              />
+  <function pattern = "LoKi::Print::*"                   />
+  
+  <class pattern   = "LoKi::Dicts::FuncOps<*HepMC::*>"    />
+  <class pattern   = "LoKi::Dicts::PIDOps<LoKi::Gen*>"    />
+  <class pattern   = "LoKi::Dicts::Maths<*HepMC*>"        />
+  <class pattern   = "LoKi::Dicts::FunCalls<HepMC::Gen*>" />
+  <class pattern   = "LoKi::Dicts::CutCalls<HepMC::Gen*>" />
+
+
+  <class name = "std::vector<const HepMC::GenParticle*>"  />
+  <class name = "std::vector<const HepMC::GenVertex*>"    />
+   
+  <exclusion>
+    <class    name    = "std::unary_function<char,bool>"        />
+    <class    name    = "std::unary_function<const char*,bool>" /> 
+    <class    name    = "std::unary_function<const void*,bool>" /> 
+    <class name ="LoKi::GenParticles::FromHepMCTree::VERTICES" />
+  </exclusion>
+  
+</lcgdict>

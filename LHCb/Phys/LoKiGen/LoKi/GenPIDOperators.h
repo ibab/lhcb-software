@@ -1,8 +1,11 @@
-// $Id: GenPIDOperators.h,v 1.3 2006-05-02 14:30:27 ibelyaev Exp $
+// $Id: GenPIDOperators.h,v 1.4 2007-06-01 11:48:06 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2006/05/02 14:30:27  ibelyaev
+//  censored
+//
 // ============================================================================
 #ifndef LOKI_GENPIDOPERATORS_H 
 #define LOKI_GENPIDOPERATORS_H 1
@@ -18,9 +21,6 @@
 #include "LoKi/Operators.h"
 #include "LoKi/GenParticles.h"
 // ============================================================================
-
-
-// ============================================================================
 /** @file
  *
  *  This file is a part of LoKi project - 
@@ -35,125 +35,117 @@
  *  @date 2001-01-23 
  */
 // ============================================================================
-
-
-// ============================================================================
-
 LoKi::PredicateFromPredicate<const HepMC::GenParticle*> 
 operator==( const LoKi::GenParticles::Identifier& id   , 
             const LHCb::ParticleID&               pid  ) ;
+// ============================================================================
 LoKi::PredicateFromPredicate<const HepMC::GenParticle*> 
 operator!=( const LoKi::GenParticles::Identifier& id   , 
             const LHCb::ParticleID&               pid  ) ;
+// ============================================================================
 LoKi::PredicateFromPredicate<const HepMC::GenParticle*> 
 operator==( const LHCb::ParticleID&               pid  ,
             const LoKi::GenParticles::Identifier& id   ) ;
+// ============================================================================
 LoKi::PredicateFromPredicate<const HepMC::GenParticle*> 
 operator!=( const LHCb::ParticleID&               pid  ,
             const LoKi::GenParticles::Identifier& id   ) ;
-
 // ============================================================================
-
 inline 
 LoKi::PredicateFromPredicate<const HepMC::GenParticle*> 
 operator==( const long                         pid  ,
             const LoKi::GenParticles::Identifier& id   ) 
 { return LHCb::ParticleID( pid ) == id ; }
-
+// ============================================================================
 inline
 LoKi::PredicateFromPredicate<const HepMC::GenParticle*> 
 operator!=( const long                         pid  ,
             const LoKi::GenParticles::Identifier& id   ) 
 { return LHCb::ParticleID( pid ) != id ; }
-
+// ============================================================================
 inline 
 LoKi::PredicateFromPredicate<const HepMC::GenParticle*> 
 operator==( const LoKi::GenParticles::Identifier& id   , 
             const long                         pid  ) 
 { return id == LHCb::ParticleID( pid ) ; }
-
+// ============================================================================
 inline 
 LoKi::PredicateFromPredicate<const HepMC::GenParticle*> 
 operator!=( const LoKi::GenParticles::Identifier& id   , 
             const long                         pid  ) 
 { return id != LHCb::ParticleID( pid ) ; }
-
 // ============================================================================
-
 LoKi::PredicateFromPredicate<const HepMC::GenParticle*> 
 operator==( const LoKi::GenParticles::Identifier& id   , 
             const std::string&                 name ) ;
+// ============================================================================
 LoKi::PredicateFromPredicate<const HepMC::GenParticle*> 
 operator!=( const LoKi::GenParticles::Identifier& id   , 
             const std::string&                 name ) ;
+// ============================================================================
 LoKi::PredicateFromPredicate<const HepMC::GenParticle*> 
 operator==( const std::string&                 name , 
             const LoKi::GenParticles::Identifier& id   ) ;
+// ============================================================================
 LoKi::PredicateFromPredicate<const HepMC::GenParticle*> 
 operator!=( const std::string&                 name , 
             const LoKi::GenParticles::Identifier& id   ) ;
-
 // ============================================================================
-
-// ============================================================================
-
 LoKi::PredicateFromPredicate<const HepMC::GenParticle*> 
 operator==( const LoKi::GenParticles::AbsIdentifier& id   , 
             const LHCb::ParticleID&                  pid  ) ;
+// ============================================================================
 LoKi::PredicateFromPredicate<const HepMC::GenParticle*> 
 operator!=( const LoKi::GenParticles::AbsIdentifier& id   , 
             const LHCb::ParticleID&                  pid  ) ;
+// ============================================================================
 LoKi::PredicateFromPredicate<const HepMC::GenParticle*> 
 operator==( const LHCb::ParticleID&                  pid  ,
             const LoKi::GenParticles::AbsIdentifier& id   ) ;
+// ============================================================================
 LoKi::PredicateFromPredicate<const HepMC::GenParticle*> 
 operator!=( const LHCb::ParticleID&                  pid  ,
             const LoKi::GenParticles::AbsIdentifier& id   ) ;
-
 // ============================================================================
-
 inline 
 LoKi::PredicateFromPredicate<const HepMC::GenParticle*> 
 operator==( const long                               pid  ,
             const LoKi::GenParticles::AbsIdentifier& id   ) 
 { return LHCb::ParticleID( pid ) == id ; }
-
+// ============================================================================
 inline
 LoKi::PredicateFromPredicate<const HepMC::GenParticle*> 
 operator!=( const long                               pid  ,
             const LoKi::GenParticles::AbsIdentifier& id   ) 
 { return LHCb::ParticleID( pid ) != id ; }
-
+// ============================================================================
 inline 
 LoKi::PredicateFromPredicate<const HepMC::GenParticle*> 
 operator==( const LoKi::GenParticles::AbsIdentifier& id   , 
             const long                               pid  ) 
 { return id == LHCb::ParticleID( pid ) ; }
-
+// ============================================================================
 inline 
 LoKi::PredicateFromPredicate<const HepMC::GenParticle*> 
 operator!=( const LoKi::GenParticles::AbsIdentifier& id   , 
             const long                               pid  ) 
 { return id != LHCb::ParticleID( pid ) ; }
-
 // ============================================================================
-
 LoKi::PredicateFromPredicate<const HepMC::GenParticle*> 
 operator==( const LoKi::GenParticles::AbsIdentifier& id   , 
             const std::string&                       name ) ;
+// ============================================================================
 LoKi::PredicateFromPredicate<const HepMC::GenParticle*> 
 operator!=( const LoKi::GenParticles::AbsIdentifier& id   , 
             const std::string&                       name ) ;
+// ============================================================================
 LoKi::PredicateFromPredicate<const HepMC::GenParticle*> 
 operator==( const std::string&                       name , 
             const LoKi::GenParticles::AbsIdentifier& id   ) ;
+// ============================================================================
 LoKi::PredicateFromPredicate<const HepMC::GenParticle*> 
 operator!=( const std::string&                       name , 
             const LoKi::GenParticles::AbsIdentifier& id   ) ;
-
-// ============================================================================
-
-
 // ============================================================================
 // The END 
 // ============================================================================

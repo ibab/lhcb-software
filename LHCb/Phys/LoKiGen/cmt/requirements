@@ -1,15 +1,15 @@
-# $Id: requirements,v 1.13 2007-01-23 10:59:05 ibelyaev Exp $ 
+# $Id: requirements,v 1.14 2007-06-01 11:48:06 ibelyaev Exp $ 
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.13 $
+# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.14 $
 # =============================================================================
 # Created    : 2006-01-16
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu 
 # =============================================================================
 package            LoKiGen
-version            v2r1
+version            v3r0
 
 # ================ structure ==================================================
-branches           cmt doc src LoKi 
+branches           cmt doc src dict python LoKi 
 
 # ================ dependencies ===============================================
 use   LoKiCore     v*    Phys 
@@ -21,8 +21,17 @@ apply_pattern install_more_includes more=LoKi
 # ================ constituents ===============================================
 library            LoKiGenLib    ../src/*.cpp 
 
+# ============== Produce LCG dictionary =======================================
+apply_pattern    reflex_dictionary                                   \
+                 dictionary=LoKiGen                                  \
+                 headerfiles=$(LOKIGENROOT)/dict/LoKiGenDict.h       \
+                 selectionfile=$(LOKIGENROOT)/dict/LoKiGen.xml       \  
+                 options=" -U__MINGW32__ "
+
 # ================ patterns ===================================================
 apply_pattern      linker_library library=LoKiGenLib
+
+macro LoKiGenDict_use_linkopts $(use_linkopts)
 
 # =============================================================================
 # $Log: not supported by cvs2svn $

@@ -1,13 +1,8 @@
-// $Id: LoKiGen.h,v 1.6 2007-01-19 13:11:47 ibelyaev Exp $
+// $Id: LoKiGen.h,v 1.7 2007-06-01 11:48:06 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.6 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.7 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.5  2006/05/27 11:38:44  ibelyaev
-//  add PrintHepMCDecay utilities
-//
-// Revision 1.4  2006/05/02 14:30:28  ibelyaev
-//  censored
 //
 // ============================================================================
 #ifndef LOKI_LOKIGEN_H 
@@ -25,8 +20,7 @@
 #include "LoKi/GenKinematics.h"
 #include "LoKi/PrintHepMCDecay.h"
 #include "LoKi/BuildGenTrees.h"
-// ============================================================================
-
+#include "LoKi/GetHepMC.h"
 // ============================================================================
 /** @file
  *
@@ -43,9 +37,6 @@
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2001-01-23 
  */
-// ============================================================================
-
-
 // ============================================================================
 // The END 
 // ============================================================================
