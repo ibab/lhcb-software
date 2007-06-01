@@ -1,4 +1,4 @@
-// $Id: VeloClusterPosition.h,v 1.5 2007-05-29 13:38:03 cattanem Exp $
+// $Id: VeloClusterPosition.h,v 1.6 2007-06-01 10:36:18 szumlat Exp $
 #ifndef VELOCLUSTERPOSITION_H 
 #define VELOCLUSTERPOSITION_H 1
 
@@ -57,6 +57,8 @@ protected:
   StatusCode createResParaTable();
   double errorOnR(const double projAngle, const double pitch) const;
   double errorOnPhi(const double projAngle, const double pitch) const;
+  void setOutsideFlag() const;
+  bool outsideFlag() const;
   
 private:
 
@@ -72,6 +74,7 @@ private:
   ResVector m_rParaTable;
   ResVector m_phiParaTable;
   mutable double m_projectedAngle;
-  
+  mutable bool m_isOutsideSensor;
+    
 };
 #endif // VELOCLUSTERPOS_H

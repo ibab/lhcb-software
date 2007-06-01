@@ -1,4 +1,4 @@
-// $Id: VeloClusterPosition.cpp,v 1.10 2007-05-29 13:38:03 cattanem Exp $
+// $Id: VeloClusterPosition.cpp,v 1.11 2007-06-01 10:36:17 szumlat Exp $
 // Include files
 
 // stl
@@ -45,7 +45,8 @@ static const Gaudi::XYZVector ZVersor(0., 0., 1.);
 VeloClusterPosition::VeloClusterPosition(const std::string& type,
                                const std::string& name,
                                const IInterface* parent)
-  : GaudiTool(type, name, parent)
+  : GaudiTool(type, name, parent),
+    m_isOutsideSensor ( false )
 {
   m_veloDet = getDet<DeVelo>( DeVeloLocation::Default );
   // default paramertrizations are of form error=slope*pitch+const
@@ -260,6 +261,20 @@ toolInfo VeloClusterPosition::position(const LHCb::VeloCluster* cluster,
   // transform global point to the local reference frame
   Gaudi::XYZPoint aLocalPoint=sensor->globalToLocal(aGlobalPoint);
   StatusCode pointStatus=sensor->isInActiveArea(aLocalPoint);
+  // local point is often outside active area - make a reasonable guess
+  if(pointStatus.isFailure()){
+    if(sensor->isR()||sensor->isPileUp()){
+      // easy to deal with - use cluster information for error estimate
+      Warning("Point outside active area - radius of the cluster will be used");
+      pointStatus.setCode(StatusCode::SUCCESS);
+    }
+    if(sensor->isPhi()){
+      // gues will be more coarse...
+      setOutsideFlag();
+      Warning("Point outside active area - rMin and rMax will be used to estimate error");
+      pointStatus.setCode(StatusCode::SUCCESS);
+    }
+  }
   // transform global slopes to local
   double localSlopeXZ=0., localSlopeYZ=0.;
   if(pointStatus.isSuccess()){
@@ -358,6 +373,16 @@ toolInfo VeloClusterPosition::position(const LHCb::VeloCluster* cluster,
     double x2=aLocalPoint.x()*aLocalPoint.x();
     double y2=aLocalPoint.y()*aLocalPoint.y();
     double radiusOnPhi=sqrt(x2+y2);
+    if(outsideFlag()){
+      unsigned int stripZone=phiSensor->zoneOfStrip(centreStrip);
+      if(stripZone){
+        // outer strip
+        radiusOnPhi=phiSensor->rMax(stripZone);
+      }else{
+        // inner strip
+        radiusOnPhi=phiSensor->rMin(stripZone);
+      }
+    }
     localPitch=phiSensor->phiPitch(radiusOnPhi);
     // get the centre strip geometry for phi sensor
     std::pair<Gaudi::XYZPoint, Gaudi::XYZPoint> stripLimits;
@@ -477,4 +502,16 @@ double VeloClusterPosition::projectedAngle() const
   //
   return ( m_projectedAngle/Gaudi::Units::degree );
 }
+//============================================================================
+void VeloClusterPosition::setOutsideFlag() const
+{
+  m_isOutsideSensor=true;
+}
+//============================================================================
+bool VeloClusterPosition::outsideFlag() const
+{
+  return ( m_isOutsideSensor );
+}
 //
+
+

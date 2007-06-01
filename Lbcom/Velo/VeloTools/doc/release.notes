@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 !========================== VeloTools v2r0 2007-05-16 ========================
+! 2007-06-01 - Tomasz Szumlak
+ - update some parts of code to deal with points outside the sensor
+
 ! 2007-05-16 - Tomasz Szumlak
  - new model of the Velo error estimate implemented, now returned error
    depends both on sensor pitch and projected angle of a track
