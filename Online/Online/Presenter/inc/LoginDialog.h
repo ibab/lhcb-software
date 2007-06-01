@@ -9,28 +9,32 @@ using namespace pres;
 class PresenterMainFrame;
 class TGComboBox;
 class TGTextButton;
+class OnlineHistDB;
+class TGTextBuffer;
+class TGTextEntry;
+
 
 class LoginDialog : public TGTransientFrame
 {
-public:
-  LoginDialog(PresenterMainFrame *gui, Int_t Width, Int_t Height);
-  
-  virtual ~LoginDialog();
-  
-  void build();
-  void ok();
-  void cancel();
-  //void OnElementSelected(TObject *obj); //*SIGNAL*
-
-  void CloseWindow();
-  
-private:
-  TGComboBox  *m_db;
-  TGComboBox  *m_user;
-  char        *m_inputUser;
-  char        *m_inputDB;
-  TGTextButton *m_Ok;  
-  
+  public:
+    LoginDialog(PresenterMainFrame *gui, Int_t Width, Int_t Height);    
+    virtual ~LoginDialog();
+    
+    void build();
+    void login();
+    void defaultPw(const char *);
+    //void connectToDatabase(int intp); //*SIGNAL*
+    
+  private:
+    TGTextEntry *m_dbPasswdInput;
+    TGTextBuffer *m_dbPasswd;
+    TGComboBox   *m_histogramDB;
+    TGComboBox   *m_dbUsername;
+    char         *m_input;
+    TGTextButton *m_loginButton;
+    TGTextButton *m_cancelButton;
+    PresenterMainFrame  *m_parent;
+    
   ClassDef(LoginDialog, 0)
 };
 

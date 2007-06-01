@@ -9,15 +9,15 @@
 //class TRootEmbeddedCanvas;
 //class TGTab;
 
-class TGPicture;
+class OnlineHistDB;
+class TGButton;
 class TGFrame;
+class TGMenuBar;
+class TGPicture;
+class TGPopupMenu;
 class TGToolBar;
 class ToolBarData_t;
-class TGMenuBar;
-class TGPopupMenu;
-class TGButton;
 class TString;
-class OnlineHistDB;
 
 using namespace pres;
 
@@ -35,7 +35,7 @@ class PresenterMainFrame : public TGMainFrame
     {
       X_ENIGMA_COMMAND,
       M_FILE_EXIT_COMMAND,
-//      M_FILE_CLOSE_COMMAND,
+//    M_FILE_CLOSE_COMMAND,
       M_FILE_LOGOUT_COMMAND,
       M_FILE_LOGIN_COMMAND,
       CLEAR_PAGE,
@@ -43,13 +43,11 @@ class PresenterMainFrame : public TGMainFrame
       B_START_COMMAND,
       B_STOP_COMMAND
     };
-    
 
     //slots
     void build();
-    void closeMainWindow();
+    void CloseWindow();
     void handleCommand(Command id = X_ENIGMA_COMMAND);
-//    virtual bool ProcessMessage(Long_t msg, Long_t parm1, Long_t parm2);
     void doSomething();
     void clearPage();
     void loginOnlineHistDB();
@@ -65,7 +63,7 @@ class PresenterMainFrame : public TGMainFrame
     MsgLevel            m_verbosity;
     TGCompositeFrame    *ef;
     TTimer              *m_refreshTimer;
-    bool                m_histosCleared;
+    bool                m_clearedHistos;
     bool                m_connectedToHistogramDatabase;
     OnlineHistDB        *m_histogramDB;
     
@@ -91,7 +89,7 @@ class PresenterMainFrame : public TGMainFrame
     TGButton          *m_startButton;
     TGButton          *m_stopButton;
     TGButton          *m_clearButton;
-    //TGButton          *m_quitButton;
+//  TGButton          *m_quitButton;
    
     ClassDef(PresenterMainFrame, 0) // main editor window        
 };

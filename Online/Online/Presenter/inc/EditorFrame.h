@@ -6,29 +6,29 @@
 
 using namespace pres;
 
-class TRootEmbeddedCanvas;
 class TGTab;
+class TRootEmbeddedCanvas;
 
 class EditorFrame : public TGCompositeFrame
 {
-public:
-  EditorFrame(const TGWindow *p, UInt_t w = 1, UInt_t h = 1, MsgLevel v = SILENT);
-  virtual ~EditorFrame();
-  
-//  EditorFrame (const EditorFrame & );
-//  EditorFrame & operator= (const EditorFrame &);  
-  
-private:
-   MsgLevel            m_verbosity;
-   TRootEmbeddedCanvas *m_mainEmbCanvas;
-    TGTab               *m_mainTab;
+  public:
+    EditorFrame(const TGWindow *p, UInt_t w = 1, UInt_t h = 1, MsgLevel v = SILENT);
+    virtual ~EditorFrame();
     
-    TGCompositeFrame    *m_onlineTab;
-    TGCompositeFrame    *m_offlineTab;
+  //  EditorFrame (const EditorFrame & );
+  //  EditorFrame & operator= (const EditorFrame &);  
     
-    TGVerticalFrame     *fF1;
-    TGCompositeFrame    *m_mainCanvasFrame;
-    TGLayoutHints       *m_mainCanvasLayout;
+  private:
+     MsgLevel            m_verbosity;
+     TRootEmbeddedCanvas *m_mainEmbCanvas;
+      TGTab               *m_mainTab;
+      
+      TGCompositeFrame    *m_onlineTab;
+      TGCompositeFrame    *m_offlineTab;
+      
+      TGVerticalFrame     *fF1;
+      TGCompositeFrame    *m_mainCanvasFrame;
+      TGLayoutHints       *m_mainCanvasLayout;
   
   ClassDef(EditorFrame, 0)
 };
