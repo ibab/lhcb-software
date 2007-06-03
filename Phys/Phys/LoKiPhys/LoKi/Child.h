@@ -1,11 +1,8 @@
-// $Id: Child.h,v 1.5 2007-04-16 16:16:26 pkoppenb Exp $
+// $Id: Child.h,v 1.6 2007-06-03 20:41:36 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.4  2006/11/27 12:01:31  ibelyaev
-//  prepare for LoKi v4r3
-//
 // 
 // ============================================================================
 #ifndef LOKI_CHILD_H 
@@ -16,8 +13,6 @@
 // Event 
 // ============================================================================
 #include "Event/Particle.h"
-// ============================================================================
-
 // ============================================================================
 /** @file
  *
@@ -32,40 +27,24 @@
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2006-02-10 
  */
-// ============================================================================
-
 namespace LoKi 
 {
   /** @namespace LoKi::Child Child.h LoKi/Child.h
-   *
    *  Namespace with collection of accessr to children  
    *  @see LHCb::Particle
-   * 
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date   2006-02-11
    */
   namespace Child
-  {
-    
-    /** @fn child 
-     *  Trivial accessor to the dautgher particles for the given particle.
-     *  It is not very useful in a"stand-alone-mode", but it coudl be very useful 
-     *  for non-trivial access:
-     *
-     *  @code 
-     *
-     *  for( Loop phi = loop( "kaon+ kaon-" , "pho(1020)" ) ; phi ; ++phi )
-     *   {
-     *    if( ..... ) { phi->save("phi") ; }
-     *   }
-     *  
-     *  for( Loop Bs = loop( "phi gamma" ) ; Bs ; ++Bs )
-     *   {
-     *       const Particle* kaon_plus  = child( Bs(1) , 1 ) ; 
-     *       const Particle* kaon_minus = child( Bs(1) , 2 ) ; 
-     *   }
-     *
-     *  @endcode 
+  { 
+    /** get the number of children 
+     *  @param mother poiunter to mother particle 
+     *  @return number of daugthter particles 
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date   2006-02-11
+     */
+    std::size_t nChildren ( const LHCb::Particle* mother ) ;
+    /** Trivial accessor to the daughter particles for the given particle.
      *
      *  @attention index starts with 1 , null index corresponds 
      *             to the original particle 
@@ -73,25 +52,66 @@ namespace LoKi
      *  @param  particle (const) pointer to mother particle 
      *  @param  index    index   index of the child particle 
      *  @return daughter particle with given index 
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date   2006-02-11
      */
     LHCb::Particle* child
     ( const LHCb::Particle*  particle , 
       const size_t           index    ) ;
-    
-    inline LHCb::Particle* child
+    /** Trivial accessor to the daughter particles for the given particle.
+     *
+     *  @attention index starts with 1 , null index corresponds 
+     *             to the original particle 
+     *
+     *  @param  particle (const) pointer to mother particle 
+     *  @param  index1   index   index of the child particle 
+     *  @param  index2   index   index of the child particle 
+     *  @return daughter particle with given index 
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date   2006-02-11
+     */    
+    inline 
+    LHCb::Particle* child
     ( const LHCb::Particle*  particle , 
       const size_t           index1   , 
       const size_t           index2   )
     { return child ( child ( particle , index1 ) , index2 ) ; }
-    
-    inline LHCb::Particle* child
+    /** Trivial accessor to the daughter particles for the given particle.
+     *
+     *  @attention index starts with 1 , null index corresponds 
+     *             to the original particle 
+     *
+     *  @param  particle (const) pointer to mother particle 
+     *  @param  index1   index   index of the child particle 
+     *  @param  index2   index   index of the child particle 
+     *  @param  index3   index   index of the child particle 
+     *  @return daughter particle with given index 
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date   2006-02-11
+     */    
+    inline
+    LHCb::Particle* child
     ( const LHCb::Particle*  particle , 
       const size_t           index1   , 
       const size_t           index2   ,
       const size_t           index3   )
     { return child ( child ( particle , index1 ) , index2 , index3 ) ; }
-    
-    inline LHCb::Particle* child
+    /** Trivial accessor to the daughter particles for the given particle.
+     *
+     *  @attention index starts with 1 , null index corresponds 
+     *             to the original particle 
+     *
+     *  @param  particle (const) pointer to mother particle 
+     *  @param  index1   index   index of the child particle 
+     *  @param  index2   index   index of the child particle 
+     *  @param  index3   index   index of the child particle 
+     *  @param  index4   index   index of the child particle 
+     *  @return daughter particle with given index 
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date   2006-02-11
+     */    
+    inline 
+    LHCb::Particle* child
     ( const LHCb::Particle*  particle , 
       const size_t           index1   , 
       const size_t           index2   ,

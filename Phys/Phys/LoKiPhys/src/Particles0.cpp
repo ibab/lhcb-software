@@ -1,8 +1,11 @@
-// $Id: Particles0.cpp,v 1.10 2007-06-01 12:07:03 ibelyaev Exp $
+// $Id: Particles0.cpp,v 1.11 2007-06-03 20:41:36 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.10 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.11 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.10  2007/06/01 12:07:03  ibelyaev
+//  prepare for version v4r0
+//
 // Revision 1.9  2007/04/16 16:16:27  pkoppenb
 // removed polemic comment
 //
@@ -57,8 +60,6 @@
  *  @date 2006-02-10 
  */
 // ============================================================================
-
-// ============================================================================
 LoKi::Particles::HasKey::result_type 
 LoKi::Particles::HasKey::operator() 
   ( LoKi::Particles::HasKey::argument p ) const 
@@ -68,15 +69,12 @@ std::ostream&
 LoKi::Particles::HasKey::fillStream ( std::ostream& s ) const 
 { return s << "HASKEY" ; }
 // ============================================================================
-
-
-// ============================================================================
 LoKi::Particles::Key::Key
 ( const LHCb::Particle::key_type bad ) 
   : LoKi::Function<const LHCb::Particle*> ()
   , m_bad   ( bad ) 
   , m_nokey ( bad ) 
-{} ;
+{} 
 // ============================================================================
 LoKi::Particles::Key::Key
 ( const LHCb::Particle::key_type bad   ,
@@ -84,7 +82,7 @@ LoKi::Particles::Key::Key
   : LoKi::Function<const LHCb::Particle*> ()
   , m_bad   ( bad   ) 
   , m_nokey ( nokey ) 
-{} ;
+{} 
 // ============================================================================
 LoKi::Particles::Key::Key
 ( const LoKi::Particles::Key& right ) 
@@ -92,7 +90,7 @@ LoKi::Particles::Key::Key
   , LoKi::Function<const LHCb::Particle*> ( right ) 
   , m_bad   ( right.m_bad   ) 
   , m_nokey ( right.m_nokey ) 
-{} ;
+{} 
 // ============================================================================
 LoKi::Particles::Key::result_type
 LoKi::Particles::Key::operator() 
@@ -111,7 +109,7 @@ LoKi::Particles::Key::operator()
     return m_nokey ;
   }
   return result_type( p->key() ) ;
-} ;
+} 
 // ============================================================================
 std::ostream& 
 LoKi::Particles::Key::fillStream ( std::ostream& s ) const 
@@ -123,7 +121,7 @@ LoKi::Particles::InTES::InTES
   : LoKi::Predicate<const LHCb::Particle*> ()
   , m_location ( path ) 
   , m_fullpath ( full ) 
-{} ;
+{} 
 // ============================================================================
 LoKi::Particles::InTES::InTES 
 ( const LoKi::Particles::InTES& right ) 
@@ -156,8 +154,8 @@ LoKi::Particles::InTES::operator()
     //
     if ( !location().empty() && '/' != location()[0] ) 
     {
-      if ( path == "/Event/"     + location() ) { return true ; } // RETURN 
-      if ( path == "/Event/Phys" + location() ) { return true ; } // RETURN
+      if ( path == "/Event/"      + location() ) { return true ; } // RETURN 
+      if ( path == "/Event/Phys/" + location() ) { return true ; } // RETURN
     }
     // compare fullpath 
     return path == location() ;                                   // RETURN 
@@ -170,11 +168,10 @@ std::ostream&
 LoKi::Particles::InTES::fillStream ( std::ostream& s ) const 
 { 
   return 
-    s << "INTES['"  << location()  << "'," 
-      << fullpath() << "]" ;
-} ;
-// ============================================================================
-
+    s << "INTES(" 
+      << Gaudi::Utils::toString ( location() ) << "," 
+      << Gaudi::Utils::toString ( fullpath() ) << "]" ;
+} 
 // ============================================================================
 LoKi::Particles::Identifier*
 LoKi::Particles::Identifier::clone() const 

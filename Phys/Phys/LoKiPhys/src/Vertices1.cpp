@@ -1,8 +1,11 @@
-// $Id: Vertices1.cpp,v 1.7 2007-06-01 12:07:03 ibelyaev Exp $
+// $Id: Vertices1.cpp,v 1.8 2007-06-03 20:41:36 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2007/06/01 12:07:03  ibelyaev
+//  prepare for version v4r0
+//
 //
 // ============================================================================
 // Include files 
@@ -52,19 +55,19 @@ LoKi::Vertices::VertexDistance::VertexDistance
 ( const LHCb::VertexBase* vertex ) 
   : LoKi::Function<const LHCb::VertexBase*>()  
   , LoKi::Vertices::VertexHolder ( vertex )
-{} ;
+{} 
 // ============================================================================
 LoKi::Vertices::VertexDistance::VertexDistance
 ( const LoKi::Point3D&  point ) 
   : LoKi::Function<const LHCb::VertexBase*>()  
   , LoKi::Vertices::VertexHolder ( point )
-{} ;
+{} 
 // ============================================================================
 LoKi::Vertices::VertexDistance::VertexDistance
 ( const LoKi::Vertices::VertexHolder& right ) 
   : LoKi::Function<const LHCb::VertexBase*>()  
   , LoKi::Vertices::VertexHolder ( right  )
-{} ;
+{} 
 // ============================================================================
 LoKi::Vertices::VertexDistance::VertexDistance
 ( const LoKi::Vertices::VertexDistance& right ) 
@@ -228,7 +231,7 @@ LoKi::Vertices::VertexChi2Distance::chi2
         v        -> position  () ,
         v        -> covMatrix () , _chi2 ) ; break ;
   default:
-    sc = Error ( "Warning, invalid switch/case ") ; break ;
+    sc = StatusCode::FAILURE ; break ;
   } ;
   if ( sc.isFailure() ) 
   { Error ( "Evaluation is invalid, return " + 
