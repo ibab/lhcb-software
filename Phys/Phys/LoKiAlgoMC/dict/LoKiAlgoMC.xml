@@ -1,7 +1,7 @@
 <!-- 
-     * $Id: LoKiAlgoMC.xml,v 1.1 2007-06-01 12:30:51 ibelyaev Exp $ 
+     * $Id: LoKiAlgoMC.xml,v 1.2 2007-06-03 20:44:06 ibelyaev Exp $ 
      * ========================================================================
-     * CVS tag:$Name: not supported by cvs2svn $, version $Revision: 1.1 $ 
+     * CVS tag:$Name: not supported by cvs2svn $, version $Revision: 1.2 $ 
      * ======================================================================== 
      * @file
      * The seleciton file to build Reflex dictionaries for Phys/LoKiAlgo package
@@ -19,7 +19,10 @@
     <field name = "m_T2MC"  transient="true" />
     <field name = "m_T2MCW" transient="true" />
   </class>
-
-  <class name = "LoKi::Interface<LoKi::AlgoMC>"  />
+  
+  <class name = "LoKi::Dicts::Alg<LoKi::AlgoMC>"   />
+  <class name = "GaudiPython::PyAlg<LoKi::AlgoMC>" />
+  
+  <class name = "LoKi::Interface<LoKi::AlgoMC>"    />
   
 </lcgdict>

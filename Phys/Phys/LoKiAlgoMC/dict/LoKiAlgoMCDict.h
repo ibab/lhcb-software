@@ -1,8 +1,11 @@
-// $Id: LoKiAlgoMCDict.h,v 1.1 2007-06-01 12:30:51 ibelyaev Exp $
+// $Id: LoKiAlgoMCDict.h,v 1.2 2007-06-03 20:44:06 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2007/06/01 12:30:51  ibelyaev
+//  prepare for v4r0
+// 
 // ============================================================================
 #ifndef LOKI_LOKICOREDICT_H 
 #define LOKI_LOKICOREDICT_H 1
@@ -12,12 +15,15 @@
 // LoKi
 // ============================================================================
 #include "LoKi/LoKiAlgoMC.h"
+#include "LoKi/AlgoDecorator.h"
 // ============================================================================
 namespace
 {
   struct __Instantiations
   {
     LoKi::Interface<LoKi::AlgoMC>  m_a1 ;
+    LoKi::Dicts::Alg<LoKi::AlgoMC> m_a2 ;
+    //
     __Instantiations();
   } ;
 }
