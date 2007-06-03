@@ -1,8 +1,11 @@
 #!/usr/bin/env python
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
+# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.2  2007/06/01 15:44:20  ibelyaev
+#  add MCREC and MCRECAS functors
+#
 # Revision 1.1  2007/06/01 11:57:36  ibelyaev
 #  prepare for v3r0
 #
@@ -176,7 +179,20 @@ MCDECAY    = LoKi.MCParticles.MCDecayPattern
 MCREC      = LoKi.MCParticles.MCRecontructible
 ## @see LoKi::Cuts::MCRECAS
 MCRECAS    = LoKi.MCParticles.MCRecontructibleAs
-
+## @see LoKi::Cuts::MCCHILD
+MCCHILD    = LoKi.MCParticles.ChildFunction 
+## @see LoKi::Cuts::MCCHILDFUN
+MCCHILDFUN = LoKi.MCParticles.ChildFunction 
+## @see LoKi::Cuts::MCCHILDCUT
+MCCHILDCUT = LoKi.MCParticles.ChildPredicate
+## @see LoKi::Cuts::MCINTREE
+MCINTREE   = LoKi.MCParticles.InTree
+## @see LoKi::Cuts::MCNINTREE
+MCNINTREE  = LoKi.MCParticles.NInTree
+## @see LoKi::Cuts::MCSUMTREE
+MCSUMTREE  = LoKi.MCParticles.SumTree
+## @see LoKi::Cuts::MCMULTTREE
+MCMULTTREE = LoKi.MCParticles.MultTree
 
 ## @see LoKi::Cuts::CHARM
 CHARM      =  MCCHARM 

@@ -1,6 +1,6 @@
-// $Id: MCParticles.h,v 1.11 2007-06-01 15:44:20 ibelyaev Exp $
+// $Id: MCParticles.h,v 1.12 2007-06-03 20:41:11 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.11 $ 
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.12 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
 //
@@ -533,14 +533,12 @@ namespace LoKi
       result_type operator() ( argument p ) const ;
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;      
-    public:
-          
+    public: 
       /** the add MCparticle into the list of tested particles 
        *  @param p pointe to the particle 
        *  @return status code 
        */
       StatusCode  add    ( const LHCb::MCParticle* p ) ;
-      
       /** add particles into the lst of particles 
        *  @param first begin of sequence 
        *  @param last  end of the sequence  
@@ -1301,7 +1299,466 @@ namespace LoKi
       LoKi::Interface<IMCReconstructible> m_eval ; ///< the underlying tool
       // the recontruction category 
       IMCReconstructible::RecCategory     m_cat  ; ///< the recontruction category
+    } ;    
+    /** @class ChildFunction
+     *  Simple adapter function which 
+     *  apply the function to a daughter MC-particle
+     * 
+     *  @code
+     *
+     *  const LHCb::MCParticle* B = ... ;
+     *
+     *  // the transverse momentum of the first daughter particle:
+     *  MCFun fun = MCCHILD( MCPT , 1 ) ;
+     *  const double pt1 = fun( B ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::Cuts::MCCHILD 
+     *  @see LoKi::Child::child 
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2007-06-02
+     */
+    class ChildFunction
+      : public LoKi::Function<const LHCb::MCParticle*>
+    {
+    public:
+      /** constructor from the function and daughter index 
+       *  @param fun    the function to be used 
+       *  @param index  the index of daughter particle
+       *  @param bad    the value to be returned for invalid particle 
+       */
+      ChildFunction 
+      ( const LoKi::MCTypes::MCFunc& fun                     , 
+        const size_t                                   index , 
+        const double bad = LoKi::Constants::NegativeInfinity ) ;
+      /** constructor from the function and daughter index 
+       *  @param index  the index of daughter particle
+       *  @param fun    the function to be used 
+       *  @param bad    the value to be returned for invalid particle 
+       */
+      ChildFunction
+      ( const size_t                 index ,
+        const LoKi::MCTypes::MCFunc& fun   ,
+        const double bad = LoKi::Constants::NegativeInfinity ) ;
+      /// copy 
+      ChildFunction ( const ChildFunction& right ) ;
+      /// MANDATORY: virtual destructor
+      virtual ~ChildFunction(){};
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  ChildFunction*  clone() const ;
+      /// MANDATORY: the only one essential method 
+      virtual result_type operator() ( argument p ) const ;
+      /// OPTIONAL:  specific printout 
+      virtual std::ostream& fillStream ( std::ostream& s ) const ;
+    private:
+      // no default constructor 
+      ChildFunction(); ///< no default constructor
+    private:
+      // the function itself 
+      LoKi::MCTypes::MCFun m_fun   ; ///< the function itself 
+      // index of daughter particle 
+      size_t               m_index ; ///< index of daughter particle 
+      // return value for invalid particle 
+      double               m_bad   ; ///< return value for invalid particle 
     } ;
+    /** @class ChildPredicate
+     *  Simple adapter predicate  which 
+     *  apply the predicate to a daughter  particle
+     * 
+     *  @code
+     *
+     *  const LHCb::MCParticle* B = ... ;
+     *
+     *  // ask if the first daughter is pi+
+     *  MCCut cut = MCCHILDCUT( "pi+" == MCID  , 1 ) ;
+     *  const bool pion = cut ( B ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::Cuts::MCCHILDCUT
+     *  @see LoKi::Child::child 
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2007-06-02
+     */
+    class ChildPredicate 
+      : public LoKi::Predicate<const LHCb::MCParticle*>
+    {
+    public:
+      /** constructor from the function and daughter index 
+       *  @param fun    the function to be used 
+       *  @param index  the index of daughter particle
+       *  @param bad    the return valeu for invalid particle 
+       */
+      ChildPredicate 
+      ( const LoKi::MCTypes::MCCuts& cut         , 
+        const size_t                 index       ,
+        const bool                   bad = false ) ;
+      /** constructor from the function and daughter index 
+       *  @param index  the index of daughter particle
+       *  @param fun    the function to be used 
+       *  @param bad    the return valeu for invalid particle 
+       */
+      ChildPredicate
+      ( const size_t                 index       ,
+        const LoKi::MCTypes::MCCuts& cut         ,
+        const bool                   bad = false ) ;
+      /// copy 
+      ChildPredicate ( const ChildPredicate& right ) ;
+      /// MANDATORY: virtual destructor
+      virtual ~ChildPredicate(){};
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  ChildPredicate*  clone() const ;
+      /// MANDATORY: the only one essential method 
+      virtual result_type operator() ( argument p ) const ;
+      /// OPTIONAL:  specific printout 
+      virtual std::ostream& fillStream ( std::ostream& s ) const ;
+    private:
+      // no default constructor 
+      ChildPredicate(); ///< no default constructor
+    private:
+      // the function itself 
+      LoKi::MCTypes::MCCut m_cut   ; ///< the function itself 
+      // index of daughter particle 
+      size_t               m_index ; ///< index of daughter particle 
+      // bad value to be returned for invalid particle 
+      bool                 m_bad   ;  ///< bad value
+    };
+    /** @class InTree
+     *  The trivial predicate which evaluates to true 
+     *  if there is at least one particle in the decay 
+     *  tree of the given particle which satisfies the 
+     *  certain criteria
+     *
+     *  The function uses the algorithm LoKi::MCAlgs::found 
+     *
+     *  @see LoKi::MCAlgs::found 
+     *  @see LoKi::Cuts::MCINTREE 
+     *  @see LHCb::MCParticle
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2004-05-05
+     */
+    class InTree 
+      : public LoKi::Predicate<const LHCb::MCParticle*> 
+    {
+    public:
+      /** standard constructor 
+       *  @param cut cut to be checked 
+       *  @param decayOnly flag to indicat the search through decay products only
+       */
+      InTree  ( const LoKi::MCTypes::MCCuts& cut               , 
+                const bool                   decayOnly = false ) ;
+      /// copy constructor 
+      InTree  ( const InTree& right ) ;
+      /// MANDATORY: virtual destructor 
+      virtual ~InTree (){};
+      /// MANDATORY: clone function ("virtual constructor")
+      virtual  InTree*       clone() const ;
+      /// MANDATORY: the only one essential method 
+      virtual  result_type   operator() ( argument p ) const ;
+      /// OPTIONAL: the specific printout 
+      virtual std::ostream& fillStream ( std::ostream& s ) const ;
+    private:
+      // default constructor is disabled 
+      InTree () ; ///< default constructor is disabled 
+    private:
+      LoKi::MCTypes::MCCut m_cut       ;
+      bool                 m_decayOnly ;
+    } ;
+    
+    /** @class NinTree
+     *  The simple funtion which evaluates the number 
+     *  of particle in decay tree which satisfies the certan criteria 
+     * 
+     *  The function uses the algorithm LoKi::MCAlgs::count_if 
+     *
+     *  @see LoKi::MCAlgs::count_if 
+     *  @see LoKi::Cuts::MCNINTREE 
+     *  @see LHCb::MCParticle
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2004-05-05
+     */
+    class NinTree 
+      : public LoKi::Function<const LHCb::MCParticle*>
+    {
+    public:
+      /** standard constructor 
+       *  @param cut cut to be applied 
+       */
+      NinTree  ( const LoKi::MCTypes::MCCuts& cut                , 
+                 const bool                   decayOnly = false  ) ;
+      /// copy constructor 
+      NinTree  ( const NinTree& right ) ;
+      /// destructor 
+      virtual ~NinTree (){} ;
+      /// MANDATORY: clone function (virtual destructor)
+      virtual  NinTree* clone() const ;
+      /// MANDATORY: the only one essential method 
+      virtual  result_type   operator() ( argument p ) const ;
+      /// OPTIONAL: the specific printout 
+      virtual std::ostream& fillStream( std::ostream& s ) const ;
+    private:
+      // the default constructor is disabled 
+      NinTree () ; ///< the default constructor is disabled 
+    private:
+      LoKi::MCTypes::MCCut m_cut       ;
+      bool                 m_decayOnly ;
+    };
+    
+    /** @class SumTree
+     *
+     *  The simple function which accumulated the 
+     *  value of certain function over the decay 
+     *  tree of the particle for the articles which 
+     *  satisfy the certain selection criteria
+     *  Accumulation is done throught summation
+     *
+     *  The function uses the algorithm LoKi::MCAlgs::accumulate
+     *
+     *  @see LoKi::MCAlgs::accumulate
+     *  @see LoKi::Cuts::MCSUMTREE 
+     *  @see LHCb::MCParticle
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2004-05-05
+     */
+    class SumTree
+      : public LoKi::Function<const LHCb::MCParticle*>
+    {
+    public:
+      /** standard constructor 
+       *  @param fun the function to be evaluated 
+       *  @param cut cut to be applied 
+       *  @param decayObnly flag to traverse only decay tree 
+       *  @param res initial value 
+       */
+      SumTree
+      ( const LoKi::MCTypes::MCFunc& fun               ,
+        const LoKi::MCTypes::MCCuts& cut               ,
+        const bool                   decayOnly = false , 
+        const double                 res       = 0.0   ) ;
+      /** standard constructor 
+       *  @param fun the function to be evaluated 
+       *  @param cut cut to be applied 
+       *  @param decayObnly flag to traverse only decay tree 
+       *  @param res initial value 
+       */
+      SumTree
+      ( const LoKi::MCTypes::MCCuts& cut               ,
+        const LoKi::MCTypes::MCFunc& fun               ,
+        const bool                   decayOnly = false , 
+        const double                 res       = 0.0   ) ;
+      /// copy constructor 
+      SumTree ( const SumTree& right ) ;
+      /// MANDATORY: virtual destructor 
+      virtual ~SumTree (){} ;
+      /// MANDATORY: clone function (virtual destructor)
+      virtual  SumTree* clone() const ;
+      /// MANDATORY: the only one essential method 
+      virtual  result_type   operator() ( argument p ) const ;
+      /// OPTIONAL: the specific printout 
+      virtual std::ostream& fillStream( std::ostream& s ) const ;
+    private:
+      // the default constructor is disabled 
+      SumTree() ; // the default constructor is disabled 
+    private:
+      LoKi::MCTypes::MCFun m_fun       ;
+      LoKi::MCTypes::MCCut m_cut       ;
+      bool                 m_decayOnly ;
+      double               m_res       ;
+    };
+    /** @class MultTree
+     *
+     *  The simple function which accumulated the 
+     *  value of certain function over the decay 
+     *  tree of the particle for the articles which 
+     *  satisfy the certain selection criteria
+     *  Accumulation is done throught summation
+     *
+     *  The function uses the algorithm LoKi::MCAlgs::accumulate
+     *
+     *  @see LoKi::MCAlgs::accumulate
+     *  @see LoKi::Cuts::MCMULTTREE 
+     *  @see LHCb::MCParticle
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2004-05-05
+     */
+    class MultTree
+      : public LoKi::Function<const LHCb::MCParticle*>
+    {
+    public:
+      /** standard constructor 
+       *  @param fun the function to be evaluated 
+       *  @param cut cut to be applied 
+       *  @param decayObnly flag to traverse only decay tree 
+       *  @param res initial value 
+       */
+      MultTree
+      ( const LoKi::MCTypes::MCFunc& fun               ,
+        const LoKi::MCTypes::MCCuts& cut               ,
+        const bool                   decayOnly = false , 
+        const double                 res       = 1.0   ) ;
+      /** standard constructor 
+       *  @param fun the function to be evaluated 
+       *  @param cut cut to be applied 
+       *  @param decayObnly flag to traverse only decay tree 
+       *  @param res initial value 
+       */
+      MultTree
+      ( const LoKi::MCTypes::MCCuts& cut               ,
+        const LoKi::MCTypes::MCFunc& fun               ,
+        const bool                   decayOnly = false , 
+        const double                 res       = 1.0   ) ;
+      /// copy constructor 
+      MultTree ( const MultTree& right ) ;
+      /// MANDATORY: virtual destructor 
+      virtual ~MultTree (){} ;
+      /// MANDATORY: clone function (virtual destructor)
+      virtual  MultTree* clone() const ;
+      /// MANDATORY: the only one essential method 
+      virtual  result_type   operator() ( argument p ) const ;
+      /// OPTIONAL: the specific printout 
+      virtual std::ostream& fillStream( std::ostream& s ) const ;
+    private:
+      // the default constructor is disabled 
+      MultTree() ; ///< the default constructor is disabled 
+    private:
+      LoKi::MCTypes::MCFun m_fun       ;
+      LoKi::MCTypes::MCCut m_cut       ;
+      bool                 m_decayOnly ;
+      double               m_res       ;
+    };
+    /** @class MinTree
+     *
+     *  The trivial algorithm which scans the decay 
+     *  tree of the particle and searches for the the 
+     *  minimal value for some functions for
+     *  particles which satisfy the certain criteria 
+     *
+     *  The function uses the algorithm LoKi::MCAlgs::min_value 
+     *
+     *  @see LoKi::MCAlgs::min_value  
+     *  @see LoKi::Cuts::MCMINTREE 
+     *  @see LHCb::Particle
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2004-05-05
+     */
+    class MinTree
+      : public LoKi::Function<const LHCb::MCParticle*>
+    {
+    public:
+      /** standard constructor 
+       *  @param fun the function to be evaluated 
+       *  @param cut cut to be applied 
+       *  @param decayObnly flag to traverse only decay tree 
+       *  @param res initial value 
+       */
+      MinTree
+      ( const LoKi::MCTypes::MCFunc& fun  ,
+        const LoKi::MCTypes::MCCuts& cut  ,
+        const bool                   decayOnly = false , 
+        const double                 res  = 
+        LoKi::Constants::PositiveInfinity ) ;
+      /** standard constructor 
+       *  @param fun the function to be evaluated 
+       *  @param cut cut to be applied 
+       *  @param decayObnly flag to traverse only decay tree 
+       *  @param res initial value 
+       */
+      MinTree
+      ( const LoKi::MCTypes::MCCuts& cut ,
+        const LoKi::MCTypes::MCFunc& fun ,
+        const bool                   decayOnly = false , 
+        const double                 res = 
+        LoKi::Constants::PositiveInfinity ) ;
+      /// copy constructor 
+      MinTree ( const MinTree& right ) ;
+      /// MANDATORY: virtual destructor 
+      virtual ~MinTree (){} ;
+      /// MANDATORY: clone function (virtual destructor)
+      virtual  MinTree* clone() const  ;
+      /// MANDATORY: the only one essential method 
+      virtual  result_type   operator() ( argument p ) const ;
+      /// OPTIONAL: the specific printout 
+      virtual std::ostream& fillStream( std::ostream& s ) const ;
+    private:
+      // the default constructor is disabled 
+      MinTree() ; ///< the default constructor is disabled 
+    private:
+      LoKi::MCTypes::MCFun m_fun       ;
+      LoKi::MCTypes::MCCut m_cut       ;
+      bool                 m_decayOnly ;
+      double               m_res       ;
+    };
+    /** @class MaxTree
+     *
+     *  The trivial algorithm which scans the decay 
+     *  tree of the particle and searches for the the 
+     *  minimal value for some functions for
+     *  particles which satisfy the certain criteria 
+     *
+     *  The function uses the algorithm LoKi::MCAlgs::max_value 
+     *
+     *  @see LoKi::MCAlgs::max_value  
+     *  @see LoKi::Cuts::MCMAXTREE 
+     *  @see LHCb::Particle
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2004-05-05
+     */
+    class MaxTree
+      : public LoKi::Function<const LHCb::MCParticle*>
+    {
+    public:
+      /** standard constructor 
+       *  @param fun the function to be evaluated 
+       *  @param cut cut to be applied 
+       *  @param decayObnly flag to traverse only decay tree 
+       *  @param res initial value 
+       */
+      MaxTree
+      ( const LoKi::MCTypes::MCFunc& fun  ,
+        const LoKi::MCTypes::MCCuts& cut  ,
+        const bool                   decayOnly = false , 
+        const double                 res  = 
+        LoKi::Constants::NegativeInfinity ) ;
+      /** standard constructor 
+       *  @param fun the function to be evaluated 
+       *  @param cut cut to be applied 
+       *  @param decayObnly flag to traverse only decay tree 
+       *  @param res initial value 
+       */
+      MaxTree
+      ( const LoKi::MCTypes::MCCuts& cut ,
+        const LoKi::MCTypes::MCFunc& fun ,
+        const bool                   decayOnly = false , 
+        const double                 res = 
+        LoKi::Constants::NegativeInfinity ) ;
+      /// copy constructor 
+      MaxTree ( const MaxTree& right ) ;
+      /// MANDATORY: virtual destructor 
+      virtual ~MaxTree (){} ;
+      /// MANDATORY: clone function (virtual destructor)
+      virtual  MaxTree* clone() const  ;
+      /// MANDATORY: the only one essential method 
+      virtual  result_type   operator() ( argument p ) const ;
+      /// OPTIONAL: the specific printout 
+      virtual std::ostream& fillStream( std::ostream& s ) const ;
+    private:
+      // the default constructor is disabled 
+      MaxTree() ; ///< the default constructor is disabled 
+    private:
+      LoKi::MCTypes::MCFun m_fun       ;
+      LoKi::MCTypes::MCCut m_cut       ;
+      bool                 m_decayOnly ;
+      double               m_res       ;
+    };
   } // end of namespace LHCb::MCParticles 
 } // end of namespace LoKi
 // ============================================================================

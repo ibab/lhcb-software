@@ -1,6 +1,6 @@
-// $Id: MCParticleCuts.h,v 1.8 2007-06-01 15:44:20 ibelyaev Exp $
+// $Id: MCParticleCuts.h,v 1.9 2007-06-03 20:41:11 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.8 $
+// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.9 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
 //
@@ -1039,7 +1039,138 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      */
     typedef LoKi::MCParticles::MCReconstructibleAs         MCRECAS ;
-    
+    /** @typedef MCCHILD 
+     *  Simple function which delegates the evaluation of 
+     *  another function to a daughter "decay" MC-particle 
+     * 
+     *  @code 
+     *  
+     *   const LHCb::MCParticle* phi = ... ;
+     * 
+     *   // construct the fuction, which evaluates to PT of the first decy daughter:
+     *   MCFun pt1 = MCCHILD ( MCPT , 1 ) ;
+     * 
+     *   // evaluate the PT of th efirst decay daughter:
+     *   
+     *   const double value = pt1 ( phi ) ;
+     *
+     *  @endcode 
+     * 
+     *  @attention index starts form 1, 
+     *   null-value corresponds to the particle itself
+     *
+     *  @see LoKi::Cuts::MCPT 
+     *  @see LoKi::Child::child  
+     *  @see LoKi::MCParticles::ChildFunction
+     *  @see LoKi::Cuts::MCCHILDFUN 
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2007-06-02
+     */
+    typedef LoKi::MCParticles::ChildFunction              MCCHILD    ;
+    /** @typedef MCCHILDFUN
+     *  Simple function which delegates the evaluation of 
+     *  another function to a daughter "decay" MC-particle 
+     * 
+     *  @code 
+     *  
+     *   const LHCb::MCParticle* phi = ... ;
+     * 
+     *   // construct the fuction, which evaluates to PT of the first decy daughter:
+     *   MCFun pt1 = MCCHILDFUN ( MCPT , 1 ) ;
+     * 
+     *   // evaluate the PT of th efirst decay daughter:
+     *   
+     *   const double value = pt1 ( phi ) ;
+     *
+     *  @endcode 
+     * 
+     *  @attention index starts form 1, 
+     *   null-value corresponds to the particle itself
+     *
+     *  @see LoKi::Cuts::MCPT 
+     *  @see LoKi::Child::child  
+     *  @see LoKi::MCParticles::ChildFunction
+     *  @see LoKi::Cuts::MCCHILD
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2007-06-02
+     */
+    typedef LoKi::MCParticles::ChildFunction              MCCHILDFUN ;    
+    /** @typedef MCCHILDCUT
+     *  Simple predicate which delegates the evaluation of 
+     *  another function to a daughter "decay" MC-particle 
+     * 
+     *  @code 
+     *  
+     *   const LHCb::MCParticle* phi = ... ;
+     * 
+     *   // construct the function, which checks PT of the first child 
+     *   MCCut pt1 = MCCHILDFUN ( MCPT > 1 * GeV  , 1 ) ;
+     * 
+     *   // check pt of th efirst daughter particle:
+     *   
+     *   const bool large  = pt1 ( phi ) ;
+     *
+     *  @endcode 
+     * 
+     *  @attention index starts form 1, 
+     *   null-value corresponds to the particle itself
+     *
+     *  @see LoKi::Cuts::MCPT 
+     *  @see LoKi::Child::child  
+     *  @see LoKi::MCParticles::ChildPredicate
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2007-06-02
+     */
+    typedef LoKi::MCParticles::ChildPredicate              MCCHILDCUT ;    
+    /** @typedef MCINTREE
+     *  Simple predicate to check the presence of a certain 
+     *  particle in the decay tree
+     *  @see LoKi::MCParticles::InTree
+     *  @see LoKi::MCAlgs::found 
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2007-06-02
+     */
+    typedef LoKi::MCParticles::InTree                     MCINTREE ;
+    /** @typedef MCNINTREE
+     *  Simple function to count a certain particles in the decay tree
+     *  @see LoKi::MCParticles::NinTree
+     *  @see LoKi::MCAlgs::count_if 
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2007-06-02
+     */
+    typedef LoKi::MCParticles::NinTree                    MCNINTREE ;
+    /** @typedef MCSUMTREE
+     *  Simple function to accumulate certain  values in the decay tree
+     *  @see LoKi::MCParticles::SumTree
+     *  @see LoKi::MCAlgs::accumulate 
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2007-06-02
+     */
+    typedef LoKi::MCParticles::SumTree                    MCSUMTREE ;
+    /** @typedef MCMULTTREE
+     *  Simple function to accumulate certain  values in the decay tree
+     *  @see LoKi::MCParticles::MultTree
+     *  @see LoKi::MCAlgs::accumulate 
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2007-06-02
+     */
+    typedef LoKi::MCParticles::MultTree                   MCMULTTREE ;
+    /** @typedef MCMINTREE
+     *  Simple function to find a minimum value in the decay tree
+     *  @see LoKi::MCParticles::MinTree
+     *  @see LoKi::MCAlgs::min_value
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2007-06-02
+     */
+    typedef LoKi::MCParticles::MinTree                    MCMINTREE ;    
+    /** @typedef MCMAXTREE
+     *  Simple function to find a maximum value in the decay tree
+     *  @see LoKi::MCParticles::MaxTree
+     *  @see LoKi::MCAlgs::min_value
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2007-06-02
+     */
+    typedef LoKi::MCParticles::MaxTree                    MCMAXTREE ;
   } // end of namespace LoKi::Cuts
 } // end of namespace LoKi
 // ============================================================================
