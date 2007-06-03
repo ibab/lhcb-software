@@ -1,7 +1,7 @@
 <!-- 
-     * $Id: LoKiAlgo.xml,v 1.1 2007-06-01 12:21:33 ibelyaev Exp $ 
+     * $Id: LoKiAlgo.xml,v 1.2 2007-06-03 20:43:42 ibelyaev Exp $ 
      * ========================================================================
-     * CVS tag:$Name: not supported by cvs2svn $, version $Revision: 1.1 $ 
+     * CVS tag:$Name: not supported by cvs2svn $, version $Revision: 1.2 $ 
      * ======================================================================== 
      * @file
      * The seleciton file to build Reflex dictionaries for Phys/LoKiAlgo package
@@ -18,9 +18,14 @@
   <class name = "LoKi::Algo" >
     <field name="m_reporters" transient="true" />
   </class>
+  <class name = "LoKi::Dicts::Alg<LoKi::Algo>"   />
+  <class name = "GaudiPython::PyAlg<LoKi::Algo>" />
+  <class name = "LoKi::Dicts::LoopDecorator"     />
   
   <class pattern = "LoKi::Dicts::ExtFunCalls<LHCb::*>"  />
   <class pattern = "LoKi::Dicts::ExtCutCalls<LHCb::*>"  />
+
+  <function pattern="LoKi::Child::*">"             />
   
   <class name="LoKi::Interface<LoKi::LoopObj>"     />
   <class name="LoKi::Interface<LoKi::Algo>"        />

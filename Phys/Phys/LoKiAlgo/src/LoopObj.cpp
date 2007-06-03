@@ -1,13 +1,8 @@
-// $Id: LoopObj.cpp,v 1.4 2007-04-16 16:16:40 pkoppenb Exp $
+// $Id: LoopObj.cpp,v 1.5 2007-06-03 20:43:42 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.3  2006/08/16 17:15:17  ibelyaev
-//  update for fixes in DVAlgorithm
-//
-// Revision 1.2  2006/05/26 12:14:19  ibelyaev
-//  v1r1: many fixes for LoKi::Algo and LoKi::LoopObj
 //
 // ============================================================================
 // Include files 
@@ -26,8 +21,6 @@
 #include "LoKi/LoopObj.icpp"
 #include "LoKi/Algo.h"
 // ============================================================================
-
-// ============================================================================
 /** @file
  *
  * Implementation file for class LoKi::LoopObj
@@ -44,11 +37,9 @@
  *  @date 2006-03-19
  */
 // ============================================================================
-
 namespace
 {
-  /** @fn cloneCompare
-   *  helper function which allows to effectively avoid the 
+  /** helper function which allows to effectively avoid the 
    *  double counting in the loops with identical particles, 
    *  e.g. D0 -> K-(pi+pi+)pi- 
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -124,7 +115,7 @@ namespace
     return p1 < p2 ;
   };
   
-  /// dereference & copy
+  //  dereference & copy
   template <class INPUT, class OUTPUT> 
   inline OUTPUT deref_copy 
   ( INPUT  first , 
@@ -134,12 +125,9 @@ namespace
     for ( ; first != last ; ++first ) { *out = **first ; ++out ; }
     return out ;
   } ;
-
-} ; // end of anonymous namespace 
-
-
+}  // end of anonymous namespace
 // ============================================================================
-/// default constructor 
+//  default constructor 
 // ============================================================================
 LoKi::LoopObj::LoopObj
 ( const std::string&       name     , 
@@ -171,9 +159,9 @@ LoKi::LoopObj::LoopObj
   , m_pv            ( 0       )
   //
   , m_clones        (         )
-{} ;
+{} 
 // ============================================================================
-/// destructor
+//  destructor
 // ============================================================================
 LoKi::LoopObj::~LoopObj()
 {
@@ -183,9 +171,7 @@ LoKi::LoopObj::~LoopObj()
   if ( m_vOwner && 0 != m_vertex   ) { delete m_vertex   ; m_vertex   = 0 ; }
 } ;
 // ============================================================================
-
-// ============================================================================
-/// advance to the next VALID combination 
+//  advance to the next VALID combination 
 // ============================================================================
 LoKi::LoopObj& LoKi::LoopObj::next      ()
 {
@@ -211,13 +197,13 @@ LoKi::LoopObj& LoKi::LoopObj::next      ()
   deref_copy ( current().begin() , current().end() , m_combination.begin() ) ;
   // return 
   return *this ;
-};
+}
 // ============================================================================
-/// backup the current state of the loop 
+//  backup the current state of the loop 
 // ============================================================================
 LoKi::LoopObj& LoKi::LoopObj::backup  () { m_combiner.backup(); return *this ; };
 // ============================================================================
-/// restore the loop from the last saved/backup state
+//  restore the loop from the last saved/backup state
 // ============================================================================
 LoKi::LoopObj& LoKi::LoopObj::restore () 
 {
@@ -229,9 +215,9 @@ LoKi::LoopObj& LoKi::LoopObj::restore ()
   m_valid = isValid();
   //
   return *this ;
-};
+}
 // ============================================================================
-/// estimate the validity of current combination
+//  estimate the validity of current combination
 // ============================================================================
 bool LoKi::LoopObj::isValid() 
 {    
@@ -251,16 +237,16 @@ bool LoKi::LoopObj::isValid()
   m_valid = true ;
   //
   return valid() ;
-};
+}
 // ============================================================================
-/// reset all temporary caches 
+//  reset all temporary caches 
 // ============================================================================
 LoKi::LoopObj& LoKi::LoopObj::resetCache() 
 {
-  /// delete the particle 
+  //  delete the particle 
   if ( 0 != m_particle && m_pOwner ) { delete m_particle ; }
   m_particle = 0 ;
-  /// delete the vertex 
+  //  delete the vertex 
   if ( 0 != m_vertex   && m_vOwner ) { delete m_vertex   ; }
   m_vertex   = 0 ;
   // clear primary vertex 
@@ -271,9 +257,9 @@ LoKi::LoopObj& LoKi::LoopObj::resetCache()
   m_status = StatusCode::SUCCESS ;
   ///
   return *this ;
-};
+}
 // ============================================================================
-/// find clone particles..
+//  find clone particles..
 // ============================================================================
 void LoKi::LoopObj::findClones() 
 {
@@ -297,9 +283,9 @@ void LoKi::LoopObj::findClones()
     }
     else { ++iclone ; }
   }
-};
+}
 // ============================================================================
-/// check the correct order of clones  to avoid the multiple count
+//  check the correct order of clones  to avoid the multiple count
 // ============================================================================
 bool LoKi::LoopObj::clonesOrdered () const 
 {
@@ -337,9 +323,9 @@ bool LoKi::LoopObj::clonesOrdered () const
     }
   }
   return true ;
-};
+}
 // ============================================================================
-/// make 'effective' particle from the current configuration
+//  make 'effective' particle from the current configuration
 // ============================================================================
 StatusCode LoKi::LoopObj::make ( const IParticleCombiner* comb ) const 
 {
@@ -407,9 +393,9 @@ StatusCode LoKi::LoopObj::make ( const IParticleCombiner* comb ) const
     return Error( "Error from IParticleCombiner" , m_status );
   }
   return StatusCode::SUCCESS  ;
-};
+}
 // ============================================================================
-/// make 'effective' particle from the current configuration
+//  make 'effective' particle from the current configuration
 // ============================================================================
 StatusCode LoKi::LoopObj::make ( const std::string& nick ) const 
 {
@@ -426,9 +412,9 @@ StatusCode LoKi::LoopObj::make ( const std::string& nick ) const
   }
   m_status = StatusCode::FAILURE ;
   return Error ( "make('" + nick + "'): no valid IParticleCombiner is available " );
-} ;
+} 
 // ============================================================================
-/// set the particle ID for the effective particle of the loop 
+//  set the particle ID for the effective particle of the loop 
 // ============================================================================
 LoKi::LoopObj& LoKi::LoopObj::setPID ( const LHCb::ParticleID& pid ) 
 {
@@ -437,9 +423,9 @@ LoKi::LoopObj& LoKi::LoopObj::setPID ( const LHCb::ParticleID& pid )
   Assert ( 0 != m_pp , "Invalid Particle ID is set!" ) ;
   m_pidname = m_pp->particle() ;
   return adaptToPID() ;
-};
+}
 // ============================================================================
-/// set the particle ID for the effectiev particle of the loop 
+//  set the particle ID for the effectiev particle of the loop 
 // ============================================================================
 LoKi::LoopObj& LoKi::LoopObj::setPID ( const std::string&      pid ) 
 {
@@ -448,9 +434,9 @@ LoKi::LoopObj& LoKi::LoopObj::setPID ( const std::string&      pid )
   Assert ( 0 != m_pp , "Invalid Particle name is set!" );
   m_pid = LHCb::ParticleID ( m_pp->jetsetID() ) ;
   return  adaptToPID() ;
-};
+}
 // ============================================================================
-/// set the particle ID for the effectiev particle of the loop 
+//  set the particle ID for the effectiev particle of the loop 
 // ============================================================================
 LoKi::LoopObj& LoKi::LoopObj::setPID ( const ParticleProperty* pid ) 
 {
@@ -459,9 +445,9 @@ LoKi::LoopObj& LoKi::LoopObj::setPID ( const ParticleProperty* pid )
   m_pid = LHCb::ParticleID( m_pp->jetsetID() ) ;
   m_pidname = m_pp->particle() ;
   return adaptToPID() ;
-} ;
+} 
 // ============================================================================
-/// make an adaptation for new PID
+//  make an adaptation for new PID
 // ============================================================================
 LoKi::LoopObj&  LoKi::LoopObj::adaptToPID() 
 {
@@ -470,15 +456,15 @@ LoKi::LoopObj&  LoKi::LoopObj::adaptToPID()
   // ID is correct
   else if ( m_pid == m_particle->particleID() ) {              return *this ; }
   // particle <--> antiparticle
-  else if ( m_pid.abspid() == m_particle->particleID().pid() )
+  else if ( int(m_pid.abspid()) == m_particle->particleID().pid() )
   { m_particle->setParticleID( m_pid ) ;                       return *this ; } 
-  /// the particle need to be remade
+  //  the particle need to be remade
   StatusCode sc = make() ;
   if ( sc.isFailure() ) { Error("adaptToPID, error from make" , sc ) ; }
   return *this ;
-};
+}
 // ============================================================================
-/// refit the particle using IParticleReFitter tool
+//  refit the particle using IParticleReFitter tool
 // ============================================================================
 StatusCode LoKi::LoopObj::reFit 
 ( const IParticleReFitter* fit ) const 
@@ -516,9 +502,9 @@ StatusCode LoKi::LoopObj::reFit
     return Error ( "reFit(): error from IParticleReFitter", sc );
   }
   return StatusCode::SUCCESS ;
-} ;
+} 
 // ============================================================================
-/// refit the particle using IParticleReFitter tool
+//  refit the particle using IParticleReFitter tool
 // ============================================================================
 StatusCode LoKi::LoopObj::reFit 
 ( const std::string& nick ) const 
@@ -532,7 +518,7 @@ StatusCode LoKi::LoopObj::reFit
   return Error("reFit('" + nick + "'): no valid IParticleReFitter is available " );
 }
 // ============================================================================
-/// add the component to the Loop obejcts
+//  add the component to the Loop obejcts
 // ============================================================================
 LoKi::LoopObj& LoKi::LoopObj::addComponent 
 ( const std::string&                    name  , 
@@ -560,9 +546,9 @@ LoKi::LoopObj& LoKi::LoopObj::addComponent
   m_combiner.backup();
   m_status = StatusCode::SUCCESS ;
   return *this ;
-};
+}
 // ============================================================================
-/// save the particle into LoKi storage
+//  save the particle into LoKi storage
 // ============================================================================
 StatusCode LoKi::LoopObj::save ( const std::string& tag ) const 
 {
@@ -603,7 +589,7 @@ StatusCode LoKi::LoopObj::save ( const std::string& tag ) const
   };
   //
   return StatusCode::SUCCESS ;
-};
+}
 // ============================================================================
 
 
