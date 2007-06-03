@@ -1,8 +1,11 @@
 #!/usr/bin/env python
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
+# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.1  2007/06/01 11:53:46  ibelyaev
+#  prepare for v3r0
+#
 # =============================================================================
 ## @file functions.py LoKiGenMC/functions.py
 #  The set of basic functions from LoKiGenMC library
@@ -25,6 +28,7 @@ LHCb   = _LoKiMC.LHCb
 
 GMCMOTH   = LoKi.GenParticles.IsAMotherForMC
 FROMGTREE = LoKi.MCParticles.IsFromHepMC
+
 
 # =============================================================================
 if '__main__' == __name__ :
