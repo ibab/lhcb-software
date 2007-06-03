@@ -1,16 +1,8 @@
-// $Id: GenExtract.h,v 1.7 2007-02-26 11:03:03 cattanem Exp $
+// $Id: GenExtract.h,v 1.8 2007-06-03 20:39:37 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.7 $ 
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.8 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.6  2006/10/10 09:04:49  ibelyaev
-//  tiny fix needed for good&valid dictionaries
-//
-// Revision 1.5  2006/06/09 09:01:46  cattanem
-// fix typo
-//
-// Revision 1.4  2006/05/02 14:30:27  ibelyaev
-//  censored
 //
 // ============================================================================
 #ifndef LOKI_GENEXTRACT_H 
@@ -30,8 +22,6 @@
 // ============================================================================
 #include "LoKi/select.h"
 // ============================================================================
-
-// ============================================================================
 /** @file
  *
  *  Collection of useful function to extract the information from  HepMC 
@@ -48,7 +38,6 @@
  *  @date 2001-01-23 
  */
 // ============================================================================
-
 namespace LoKi 
 {
   namespace Extract
@@ -98,8 +87,7 @@ namespace LoKi
         //
       }
       return output ;
-    };
-    
+    }    
     /** simple function which allows to extract a certain 
      *  particles from HepMC graph.
      *   
@@ -134,8 +122,7 @@ namespace LoKi
     {
       if ( 0 == event ) { return output ; }
       return getGenParticles ( event->pGenEvt() , output , predicate ) ;
-    };
-    
+    }
     /** simple function which allows to extract a certain 
      *  particles from HepMC graph.
      *   
@@ -173,8 +160,7 @@ namespace LoKi
       if ( 0 == events ) { return output ; }
       return getGenParticles 
         ( events->begin() , events->end () , output , predicate ) ; 
-    };
-    
+    }
     /** simple function which allows to extract a certain 
      *  particles from HepMC vertex 
      *   
@@ -198,8 +184,37 @@ namespace LoKi
       return  LoKi::select
         ( v->particles_begin( range ) , 
           v->particles_end  ( range ) , output , predicate ) ;
-    };
-    
+    }
+    /** simple function which allows to extract a certain 
+     *  particles from HepMC particle tree 
+     *   
+     *  @see HepMC::GenParticle
+     *  @see HepMC::GenVertex
+     *
+     *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
+     *  @date   2005-03-26
+     */
+    template <class OUTPUT, class PREDICATE> 
+    inline OUTPUT getGenParticles 
+    ( const HepMC::GenParticle* particle  , 
+      OUTPUT                    output    , 
+      const PREDICATE&          predicate ) 
+    { 
+      if ( 0 != particle ) 
+      {
+        output = genParticles 
+          ( particle->end_vertex () , 
+            HepMC::descendants      , 
+            output , predicate      ) ;                         // RECURSION
+      }
+      /// check the particle
+      if ( predicate ( particle ) ) 
+      {
+        *output = const_cast<HepMC::GenParticle*> ( particle ) ;
+        ++output ;                                              // NB!
+      }
+      return output ;                                           // RETURN
+    }    
     /** simple function which allow to extract a certain 
      *  particles from HepMC graph.
      *   
@@ -220,8 +235,7 @@ namespace LoKi
       for ( ; first != last ; ++first ) 
       { output = getGenParticles ( *first , output , predicate ) ; }  
       return output ;
-    };
-
+    }
     /** simple function which allow to extract a certain 
      *  particles from HepMC graph.
      *   
@@ -253,8 +267,7 @@ namespace LoKi
     ( const HepMC::GenEvent* event     , 
       OUTPUT                 output    , 
       const PREDICATE&       predicate )
-    { return getGenParticles ( event , output , predicate ) ; }
-    
+    { return getGenParticles ( event , output , predicate ) ; }    
     /** simple function which allows to extract a certain 
      *  particles from HepMC graph.
      *   
@@ -286,8 +299,7 @@ namespace LoKi
     ( const LHCb::HepMCEvent*  event     , 
       OUTPUT                   output    , 
       const PREDICATE&         predicate )
-    { return getGenParticles ( event , output , predicate ) ; } ;
-    
+    { return getGenParticles ( event , output , predicate ) ; } ;    
     /** simple function which allows to extract a certain 
      *  particles from HepMC graph.
      *   
@@ -321,8 +333,7 @@ namespace LoKi
     ( const LHCb::HepMCEvents* events    , 
       OUTPUT                   output    , 
       const PREDICATE&         predicate )
-    { return getGenParticles ( events , output , predicate ) ; } ;
-    
+    { return getGenParticles ( events , output , predicate ) ; } ;    
     /** simple function which allows to extract a certain 
      *  particles from HepMC vertex 
      *   
@@ -339,7 +350,21 @@ namespace LoKi
       OUTPUT                  output    , 
       const PREDICATE&        predicate ) 
     { return getGenParticles ( vertex , range , output , predicate ) ; } ;
-
+    /** simple function which allows to extract a certain 
+     *  particles from HepMC vertex 
+     *   
+     *  @see HepMC::GenParticle
+     *  @see HepMC::GenVertex
+     *
+     *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
+     *  @date   2005-03-26
+     */
+    template <class OUTPUT, class PREDICATE> 
+    inline OUTPUT genParticles 
+    ( const HepMC::GenParticle* particle  , 
+      OUTPUT                    output    , 
+      const PREDICATE&          predicate ) 
+    { return getGenParticles ( particle , output , predicate ) ; } ;
     /** simple function which allow to extract a certain 
      *  particles from HepMC graph.
      *   
@@ -357,9 +382,8 @@ namespace LoKi
       OUTPUT           output    , 
       const PREDICATE& predicate )
     { return getGenParticles ( first , last , output , predicate ) ; } ;    
-  };
-};
-
+  } // end of namespace LoKi::Extract
+} // end of namespace LoKi 
 // ============================================================================
 // The END 
 // ============================================================================

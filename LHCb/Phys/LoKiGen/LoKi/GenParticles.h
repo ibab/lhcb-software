@@ -1,6 +1,6 @@
-// $Id: GenParticles.h,v 1.14 2007-03-04 16:41:18 ibelyaev Exp $
+// $Id: GenParticles.h,v 1.15 2007-06-03 20:39:37 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.14 $ 
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.15 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
 //
@@ -26,8 +26,6 @@
 #include "LoKi/GenTypes.h"
 #include "LoKi/GenExtract.h"
 // ============================================================================
-
-// ============================================================================
 /** @file
  *
  *  This file is a part of LoKi project - 
@@ -42,7 +40,6 @@
  *  @date 2006-01-23 
  */
 // ============================================================================
-
 namespace LoKi 
 { 
   /** @namespace LoKi::GenParticles GenParticles.h LoKi/GenParticles.h
@@ -459,88 +456,7 @@ namespace LoKi
       MomentumDistance() ;
     private:
       LoKi::LorentzVector m_vct ;
-    };
-    
-    /** @class NinTree 
-     *  simple evaluator of number of particles in the tree 
-     *  which satisfy a certain predicate 
-     *
-     *  @warning current implementation is valid only for 
-     *       HepMC::parents, HepMC::children, 
-     *       HepMC::ancestors and HepMC::descendants 
-     *
-      *  @code
-     *
-     *  // get Generator information
-     *  const HepMCEvents* events = 
-     *          get<HepMCEvents>( HepMCEventLocation::Default ) ;
-     *
-     *  typedef std::vector<const HepMC::GenParticle*> GenParticles ;
-     *
-     *  // select b(and antib) quarks from decay of higgs 
-     *  GenParticles bquarks ;
-     *  LoKi::Extract::genParticles
-     *   ( events                         , 
-     *     std::back_inserter( bquarks )  , 
-     *     ( "b" == GABSID ) && 
-     *    1 == GNINTREE( "H_10" == GABSID , HepMC::parents ) ) ;
-     * 
-     *  @endcode 
-     *   
-     *  @see HepMC::IteratorRange 
-     *  @see HepMC::parents 
-     *  @see HepMC::GenParticle 
-     *  @see HepMC::GenVertex 
-     *  @see LoKi::Cuts::GABSID 
-     *  @see LoKi::Extract::getParticles 
-     *  @see LoKi::Cuts::GNINTREE 
-     *
-     *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
-     *  @date 2005-03-23 
-     */
-    class NInTree 
-      : public LoKi::Function<const HepMC::GenParticle*>
-    {
-    public:
-      typedef LoKi::Predicate<const HepMC::GenParticle*> GCut ;
-    protected:
-      typedef LoKi::PredicateFromPredicate<const HepMC::GenParticle*> _Cut ;
-    public:
-      /** constructor 
-       *  @param cut    predicate to be used for counting
-       *  @param range  "iterator range", see HepMC::IteratorRange
-       *  @see HepMC::IteratorRange 
-       */
-      NInTree ( const NInTree::GCut& cut                     , 
-                HepMC::IteratorRange range = HepMC::children ) ;
-      /** copy constructor 
-       *  @param right object to be copied 
-       */
-      NInTree ( const NInTree& right ) ;
-      /// MANDATORY: virtual contructor 
-      virtual ~NInTree();
-      /// MANDATORY: clone function ("virtual constructor")
-      virtual NInTree* clone() const ;
-      /// MANDATORY: the only one essential method 
-      virtual result_type operator() ( argument p ) const ;
-      /// "SHORT" representation, @see LoKi::AuxFunBase 
-      virtual  std::ostream& fillStream( std::ostream& s ) const ;      
-    protected:
-      /** count the particles in the tree according 
-       *  the predicat eand iterator range 
-       *  @see HepMC::GenVertex
-       *  @param vertex  root of the tree 
-       *  @return number of particles 
-       */
-      size_t count( HepMC::GenVertex* vertex ) const ;
-    private:
-      // default constructor is disabled 
-      NInTree();
-    private:
-      _Cut                  m_cut   ;
-      HepMC::IteratorRange  m_range ;
-    };
-
+    };    
     /** @class TransverseMomentumRel
      *  Trivial evaluator of the transverse momenrum, 
      *  relatve to the given direction 
@@ -1189,12 +1105,132 @@ namespace LoKi
       // the actual evaluator of delta eta
       LoKi::GenParticles::DeltaEta m_deta ; ///< the actual evaluator of delta eta
     } ;
-
+    // ========================================================================
+    /** @class NInTree 
+     *  simple evaluator of number of particles in the tree 
+     *  which satisfy a certain predicate 
+     *
+     *  @warning current implementation is valid only for 
+     *       HepMC::parents, HepMC::children, 
+     *       HepMC::ancestors and HepMC::descendants 
+     *
+     *  @code
+     *
+     *  // get Generator information
+     *  const HepMCEvents* events = 
+     *          get<HepMCEvents>( HepMCEventLocation::Default ) ;
+     *
+     *  typedef std::vector<const HepMC::GenParticle*> GenParticles ;
+     *
+     *  // select b(and antib) quarks from decay of higgs 
+     *  GenParticles bquarks ;
+     *  LoKi::Extract::genParticles
+     *   ( events                         , 
+     *     std::back_inserter( bquarks )  , 
+     *     ( "b" == GABSID ) && 
+     *    1 == GNINTREE( "H_10" == GABSID , HepMC::parents ) ) ;
+     * 
+     *  @endcode 
+     *   
+     *  @see HepMC::IteratorRange 
+     *  @see HepMC::parents 
+     *  @see HepMC::GenParticle 
+     *  @see HepMC::GenVertex 
+     *  @see LoKi::Cuts::GABSID 
+     *  @see LoKi::Extract::getParticles 
+     *  @see LoKi::Cuts::GNINTREE 
+     *
+     *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
+     *  @date 2005-03-23 
+     */
+    class NInTree 
+      : public LoKi::Function<const HepMC::GenParticle*>
+    {
+    public:
+      typedef LoKi::Predicate<const HepMC::GenParticle*> GCut ;
+    protected:
+      typedef LoKi::PredicateFromPredicate<const HepMC::GenParticle*> _Cut ;
+    public:
+      /** constructor 
+       *  @param cut    predicate to be used for counting
+       *  @param range  "iterator range", see HepMC::IteratorRange
+       *  @see HepMC::IteratorRange 
+       */
+      NInTree ( const NInTree::GCut& cut                     , 
+                HepMC::IteratorRange range = HepMC::children ) ;
+      /** copy constructor 
+       *  @param right object to be copied 
+       */
+      NInTree ( const NInTree& right ) ;
+      /// MANDATORY: virtual contructor 
+      virtual ~NInTree();
+      /// MANDATORY: clone function ("virtual constructor")
+      virtual NInTree* clone() const ;
+      /// MANDATORY: the only one essential method 
+      virtual result_type operator() ( argument p ) const ;
+      /// "SHORT" representation, @see LoKi::AuxFunBase 
+      virtual  std::ostream& fillStream( std::ostream& s ) const ;      
+    protected:
+      /** count the particles in the tree according 
+       *  the predicat eand iterator range 
+       *  @see HepMC::GenVertex
+       *  @param vertex  root of the tree 
+       *  @return number of particles 
+       */
+      size_t count( HepMC::GenVertex* vertex ) const ;
+    private:
+      // default constructor is disabled 
+      NInTree();
+    private:
+      _Cut                  m_cut   ;
+      HepMC::IteratorRange  m_range ;
+    } ;
+    // ========================================================================
+    /** @class InTree
+     *  The trivial predicate which evaluates to true 
+     *  if there is at least one particle in the decay 
+     *  tree of the given particle which satisfies the 
+     *  certain criteria
+     *
+     *  The function uses the algorithm LoKi::GenAlgs::found 
+     *
+     *  @see LoKi::GenAlgs::found 
+     *  @see LoKi::Cuts::GINTREE 
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2004-05-05
+     */
+    class InTree 
+      : public LoKi::Predicate<const HepMC::GenParticle*> 
+    {
+    public:
+      /** standard constructor 
+       *  @param cut cut to be checked 
+       */
+      InTree  ( const LoKi::GenTypes::GCuts& cut ) ;
+      /// copy constructor 
+      InTree  ( const InTree& right ) ;
+      /// MANDATORY: virtual destructor 
+      virtual ~InTree (){};
+      /// MANDATORY: clone function ("virtual constructor")
+      virtual  InTree*       clone() const ;
+      /// MANDATORY: the only one essential method 
+      virtual  result_type   operator() ( argument p ) const ;
+      /// OPTIONAL: the specific printout 
+      virtual std::ostream& fillStream ( std::ostream& s ) const ;
+    private:
+      // default constructor is disabled 
+      InTree () ; ///< default constructor is disabled 
+    private:
+      // the criteria itself:
+      LoKi::GenTypes::GCut m_cut       ; ///< the criteria itself:
+    } ;
     
-  } // end of namespace GenParticles
-  
+    
+    
+    
+  } // end of namespace GenParticles  
 } // end of namespace LoKi
-
 // ============================================================================
 // The END 
 // ============================================================================

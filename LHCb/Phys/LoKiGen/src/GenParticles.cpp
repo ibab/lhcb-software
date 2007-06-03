@@ -1,14 +1,8 @@
-// $Id: GenParticles.cpp,v 1.13 2007-03-04 16:41:18 ibelyaev Exp $
+// $Id: GenParticles.cpp,v 1.14 2007-06-03 20:39:38 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.13 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.14 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.12  2007/01/23 10:59:08  ibelyaev
-//  fixes to build Ex/LoKiExample
-//
-// Revision 1.11  2007/01/19 13:11:49  ibelyaev
-//  add BuildGenTrees.h file
-//
 //
 // ============================================================================
 // Include files 
@@ -30,8 +24,7 @@
 // ============================================================================
 #include "LoKi/GenParticles.h"
 #include "LoKi/GenExtract.h"
-// ============================================================================
-
+#include "LoKi/GenAlgs.h"
 // ============================================================================
 /** @file
  *
@@ -49,23 +42,17 @@
  *  @date 2001-01-23 
  */
 // ============================================================================
-
-// ============================================================================
-/// clone method (mandatory!)
+//  clone method (mandatory!)
 // ============================================================================
 LoKi::GenParticles::BarCode*
 LoKi::GenParticles::BarCode::clone() const 
 { return new LoKi::GenParticles::BarCode( *this ) ; }
 // ============================================================================
-
-// ============================================================================
-/// MANDATORY: virtual destructor 
+//  MANDATORY: virtual destructor 
 // ============================================================================
 LoKi::GenParticles::BarCode::~BarCode(){}
 // ============================================================================
-
-// ============================================================================
-/// the only one essential method 
+//  the only one essential method 
 // ============================================================================
 LoKi::GenParticles::BarCode::result_type
 LoKi::GenParticles::BarCode::operator() 
@@ -74,35 +61,25 @@ LoKi::GenParticles::BarCode::operator()
   if ( 0 != p ) { return p -> barcode() ; }    // RETURN 
   Error("Invalid HepMC::GenParticle, return 0 ");
   return 0 ;                   // RETURN 
-};
+}
 // ============================================================================
-
-// ============================================================================
-/// "SHORT" representation, @see LoKi::AuxFunBase 
+//  "SHORT" representation, @see LoKi::AuxFunBase 
 // ============================================================================
 std::ostream& 
 LoKi::GenParticles::BarCode::fillStream 
-( std::ostream& s ) const { return s << "GBAR" ; };
+( std::ostream& s ) const { return s << "GBAR" ; }
 // ============================================================================
-
-
-
-// ============================================================================
-/// MANDATORY: clone method ("virtual" constructor")
+//  MANDATORY: clone method ("virtual" constructor")
 // ============================================================================
 LoKi::GenParticles::Identifier* 
 LoKi::GenParticles::Identifier::clone() const
-{ return new LoKi::GenParticles::Identifier ( *this ) ; };
+{ return new LoKi::GenParticles::Identifier ( *this ) ; }
 // ============================================================================
-
+//  MANDATORY: virtual destructor 
 // ============================================================================
-/// MANDATORY: virtual destructor 
+LoKi::GenParticles::Identifier::~Identifier() {}
 // ============================================================================
-LoKi::GenParticles::Identifier::~Identifier() {};
-// ============================================================================
-
-// ============================================================================
-/// MANDATORY: the only one essential method 
+//  MANDATORY: the only one essential method 
 // ============================================================================
 LoKi::GenParticles::Identifier::result_type 
 LoKi::GenParticles::Identifier::operator() 
@@ -111,23 +88,21 @@ LoKi::GenParticles::Identifier::operator()
   if ( 0 != p ) { return LHCb::ParticleID( p->pdg_id() ).pid() ; }
   Error ( "HepMC::GenParticle* points to NULL, return InvalidID" ) ;
   return LoKi::Constants::InvalidID ;
-};
+}
 // ============================================================================
-/// "SHORT" representation, @see LoKi::AuxFunBase 
+//  "SHORT" representation, @see LoKi::AuxFunBase 
 // ============================================================================
 std::ostream& 
 LoKi::GenParticles::Identifier::fillStream 
-( std::ostream& s ) const { return s << "GID" ; };
+( std::ostream& s ) const { return s << "GID" ; }
 // ============================================================================
-
-// ============================================================================
-/// MANDATORY: clone method ("virtual" constructor")
+//  MANDATORY: clone method ("virtual" constructor")
 // ============================================================================
 LoKi::GenParticles::Status* 
 LoKi::GenParticles::Status::clone() const 
 { return new Status ( *this ) ; }
 // ============================================================================
-/// MANDATORY: the only one essential method 
+//  MANDATORY: the only one essential method 
 // ============================================================================
 LoKi::GenParticles::Status::result_type 
 LoKi::GenParticles::Status::operator() 
@@ -136,31 +111,25 @@ LoKi::GenParticles::Status::operator()
   if ( 0 != p ) { return p->status() ; }
   Error ( "HepMC::GenParticle* points to NULL, return -1000 " ) ;
   return -1000 ;
-};
+}
 // ============================================================================
-/// "SHORT" representation, @see LoKi::AuxFunBase 
+//  "SHORT" representation, @see LoKi::AuxFunBase 
 // ============================================================================
 std::ostream& 
 LoKi::GenParticles::Status::fillStream 
-( std::ostream& s ) const { return s << "GSTATUS" ; };
+( std::ostream& s ) const { return s << "GSTATUS" ; }
 // ============================================================================
-
-// ============================================================================
-/// MANDATORY: clone method ("virtual" constructor")
+//  MANDATORY: clone method ("virtual" constructor")
 // ============================================================================
 LoKi::GenParticles::Momentum* 
 LoKi::GenParticles::Momentum::clone() const
-{ return new LoKi::GenParticles::Momentum ( *this ) ; };
+{ return new LoKi::GenParticles::Momentum ( *this ) ; }
 // ============================================================================
-
+//  MANDATORY: virtual destructor 
 // ============================================================================
-/// MANDATORY: virtual destructor 
+LoKi::GenParticles::Momentum::~Momentum() {}
 // ============================================================================
-LoKi::GenParticles::Momentum::~Momentum() {};
-// ============================================================================
-
-// ============================================================================
-/// MANDATORY: the only one essential method 
+//  MANDATORY: the only one essential method 
 // ============================================================================
 LoKi::GenParticles::Momentum::result_type 
 LoKi::GenParticles::Momentum::operator() 
@@ -169,33 +138,25 @@ LoKi::GenParticles::Momentum::operator()
   if ( 0 != p ) { return LoKi::LorentzVector( p -> momentum() ).P() ; }
   Error ( "HepMC::GenParticle* points to NULL, return InvalidMomentum" ) ;
   return LoKi::Constants::InvalidMomentum ;
-};
+}
 // ============================================================================
-
-// ============================================================================
-/// "SHORT" representation, @see LoKi::AuxFunBase 
+//  "SHORT" representation, @see LoKi::AuxFunBase 
 // ============================================================================
 std::ostream& 
 LoKi::GenParticles::Momentum::fillStream 
-( std::ostream& s ) const { return s << "GP" ; };
+( std::ostream& s ) const { return s << "GP" ; }
 // ============================================================================
-
-// ============================================================================
-/// MANDATORY: clone method ("virtual" constructor")
+//  MANDATORY: clone method ("virtual" constructor")
 // ============================================================================
 LoKi::GenParticles::TransverseMomentum* 
 LoKi::GenParticles::TransverseMomentum::clone() const
-{ return new LoKi::GenParticles::TransverseMomentum ( *this ) ; };
+{ return new LoKi::GenParticles::TransverseMomentum ( *this ) ; }
 // ============================================================================
-
+//  MANDATORY: virtual destructor 
 // ============================================================================
-/// MANDATORY: virtual destructor 
+LoKi::GenParticles::TransverseMomentum::~TransverseMomentum() {}
 // ============================================================================
-LoKi::GenParticles::TransverseMomentum::~TransverseMomentum() {};
-// ============================================================================
-
-// ============================================================================
-/// MANDATORY: the only one essential method 
+//  MANDATORY: the only one essential method 
 // ============================================================================
 LoKi::GenParticles::TransverseMomentum::result_type 
 LoKi::GenParticles::TransverseMomentum::operator() 
@@ -204,33 +165,25 @@ LoKi::GenParticles::TransverseMomentum::operator()
   if ( 0 != p ) { return LoKi::LorentzVector( p -> momentum() ).Pt() ; }
   Error ( "HepMC::GenParticle* points to NULL, return InvalidMomentum" ) ;
   return LoKi::Constants::InvalidMomentum ;
-};
+}
 // ============================================================================
-
-// ============================================================================
-/// "SHORT" representation, @see LoKi::AuxFunBase 
+//  "SHORT" representation, @see LoKi::AuxFunBase 
 // ============================================================================
 std::ostream& 
 LoKi::GenParticles::TransverseMomentum::fillStream 
-( std::ostream& s ) const { return s << "GPT" ; };
+( std::ostream& s ) const { return s << "GPT" ; }
 // ============================================================================
-
-// ============================================================================
-/// MANDATORY: clone method ("virtual" constructor")
+//  MANDATORY: clone method ("virtual" constructor")
 // ============================================================================
 LoKi::GenParticles::Energy* 
 LoKi::GenParticles::Energy::clone() const
-{ return new LoKi::GenParticles::Energy ( *this ) ; };
+{ return new LoKi::GenParticles::Energy ( *this ) ; }
 // ============================================================================
-
+//  MANDATORY: virtual destructor 
 // ============================================================================
-/// MANDATORY: virtual destructor 
+LoKi::GenParticles::Energy::~Energy() {}
 // ============================================================================
-LoKi::GenParticles::Energy::~Energy() {};
-// ============================================================================
-
-// ============================================================================
-/// MANDATORY: the only one essential method 
+//  MANDATORY: the only one essential method 
 // ============================================================================
 LoKi::GenParticles::Energy::result_type 
 LoKi::GenParticles::Energy::operator() 
@@ -239,33 +192,25 @@ LoKi::GenParticles::Energy::operator()
   if ( 0 != p ) { return LoKi::LorentzVector( p -> momentum() ).E() ; }
   Error ( "HepMC::GenParticle* points to NULL, return InvalidMomentum" ) ;
   return LoKi::Constants::InvalidMomentum ;
-};
+}
 // ============================================================================
-
-// ============================================================================
-/// "SHORT" representation, @see LoKi::AuxFunBase 
+//  "SHORT" representation, @see LoKi::AuxFunBase 
 // ============================================================================
 std::ostream& 
 LoKi::GenParticles::Energy::fillStream 
-( std::ostream& s ) const { return s << "GE" ; };
+( std::ostream& s ) const { return s << "GE" ; }
 // ============================================================================
-
-// ============================================================================
-/// MANDATORY: clone method ("virtual" constructor")
+//  MANDATORY: clone method ("virtual" constructor")
 // ============================================================================
 LoKi::GenParticles::Mass* 
 LoKi::GenParticles::Mass::clone() const
-{ return new LoKi::GenParticles::Mass ( *this ) ; };
+{ return new LoKi::GenParticles::Mass ( *this ) ; }
 // ============================================================================
-
+//  MANDATORY: virtual destructor 
 // ============================================================================
-/// MANDATORY: virtual destructor 
+LoKi::GenParticles::Mass::~Mass() {}
 // ============================================================================
-LoKi::GenParticles::Mass::~Mass() {};
-// ============================================================================
-
-// ============================================================================
-/// MANDATORY: the only one essential method 
+//  MANDATORY: the only one essential method 
 // ============================================================================
 LoKi::GenParticles::Mass::result_type 
 LoKi::GenParticles::Mass::operator() 
@@ -274,34 +219,25 @@ LoKi::GenParticles::Mass::operator()
   if ( 0 != p ) { return LoKi::LorentzVector( p -> momentum() ).M() ; }
   Error ( "HepMC::GenParticle* points to NULL, return InvalidMomentum" ) ;
   return LoKi::Constants::InvalidMomentum ;
-};
+}
 // ============================================================================
-
-// ============================================================================
-/// "SHORT" representation, @see LoKi::AuxFunBase 
+//  "SHORT" representation, @see LoKi::AuxFunBase 
 // ============================================================================
 std::ostream& 
 LoKi::GenParticles::Mass::fillStream 
-( std::ostream& s ) const { return s << "GM" ; };
+( std::ostream& s ) const { return s << "GM" ; }
 // ============================================================================
-
-
-// ============================================================================
-/// MANDATORY: clone method ("virtual" constructor")
+//  MANDATORY: clone method ("virtual" constructor")
 // ============================================================================
 LoKi::GenParticles::MomentumX* 
 LoKi::GenParticles::MomentumX::clone() const
-{ return new LoKi::GenParticles::MomentumX ( *this ) ; };
+{ return new LoKi::GenParticles::MomentumX ( *this ) ; }
 // ============================================================================
-
+//  MANDATORY: virtual destructor 
 // ============================================================================
-/// MANDATORY: virtual destructor 
+LoKi::GenParticles::MomentumX::~MomentumX() {}
 // ============================================================================
-LoKi::GenParticles::MomentumX::~MomentumX() {};
-// ============================================================================
-
-// ============================================================================
-/// MANDATORY: the only one essential method 
+//  MANDATORY: the only one essential method 
 // ============================================================================
 LoKi::GenParticles::MomentumX::result_type 
 LoKi::GenParticles::MomentumX::operator() 
@@ -310,33 +246,25 @@ LoKi::GenParticles::MomentumX::operator()
   if ( 0 != p ) { return LoKi::LorentzVector( p -> momentum() ).X() ; }
   Error ( "HepMC::GenParticle* points to NULL, return InvalidMomentum" ) ;
   return LoKi::Constants::InvalidMomentum ;
-};
+}
 // ============================================================================
-
-// ============================================================================
-/// "SHORT" representation, @see LoKi::AuxFunBase 
+//  "SHORT" representation, @see LoKi::AuxFunBase 
 // ============================================================================
 std::ostream& 
 LoKi::GenParticles::MomentumX::fillStream 
-( std::ostream& s ) const { return s << "GPX" ; };
+( std::ostream& s ) const { return s << "GPX" ; }
 // ============================================================================
-
-// ============================================================================
-/// MANDATORY: clone method ("virtual" constructor")
+//  MANDATORY: clone method ("virtual" constructor")
 // ============================================================================
 LoKi::GenParticles::MomentumY* 
 LoKi::GenParticles::MomentumY::clone() const
-{ return new LoKi::GenParticles::MomentumY ( *this ) ; };
+{ return new LoKi::GenParticles::MomentumY ( *this ) ; }
 // ============================================================================
-
+//  MANDATORY: virtual destructor 
 // ============================================================================
-/// MANDATORY: virtual destructor 
+LoKi::GenParticles::MomentumY::~MomentumY() {}
 // ============================================================================
-LoKi::GenParticles::MomentumY::~MomentumY() {};
-// ============================================================================
-
-// ============================================================================
-/// MANDATORY: the only one essential method 
+//  MANDATORY: the only one essential method 
 // ============================================================================
 LoKi::GenParticles::MomentumY::result_type 
 LoKi::GenParticles::MomentumY::operator() 
@@ -345,35 +273,25 @@ LoKi::GenParticles::MomentumY::operator()
   if ( 0 != p ) { return LoKi::LorentzVector( p -> momentum() ).Y() ; }
   Error ( "HepMC::GenParticle* points to NULL, return InvalidMomentum" ) ;
   return LoKi::Constants::InvalidMomentum ;
-};
+}
 // ============================================================================
-
-// ============================================================================
-/// "SHORT" representation, @see LoKi::AuxFunBase 
+//  "SHORT" representation, @see LoKi::AuxFunBase 
 // ============================================================================
 std::ostream& 
 LoKi::GenParticles::MomentumY::fillStream 
-( std::ostream& s ) const { return s << "GPY" ; };
+( std::ostream& s ) const { return s << "GPY" ; }
 // ============================================================================
-
-
-
-// ============================================================================
-/// MANDATORY: clone method ("virtual" constructor")
+//  MANDATORY: clone method ("virtual" constructor")
 // ============================================================================
 LoKi::GenParticles::MomentumZ* 
 LoKi::GenParticles::MomentumZ::clone() const
-{ return new LoKi::GenParticles::MomentumZ ( *this ) ; };
+{ return new LoKi::GenParticles::MomentumZ ( *this ) ; }
 // ============================================================================
-
+//  MANDATORY: virtual destructor 
 // ============================================================================
-/// MANDATORY: virtual destructor 
+LoKi::GenParticles::MomentumZ::~MomentumZ() {}
 // ============================================================================
-LoKi::GenParticles::MomentumZ::~MomentumZ() {};
-// ============================================================================
-
-// ============================================================================
-/// MANDATORY: the only one essential method 
+//  MANDATORY: the only one essential method 
 // ============================================================================
 LoKi::GenParticles::MomentumZ::result_type 
 LoKi::GenParticles::MomentumZ::operator() 
@@ -382,36 +300,25 @@ LoKi::GenParticles::MomentumZ::operator()
   if ( 0 != p ) { return LoKi::LorentzVector( p -> momentum() ).Z() ; }
   Error ( "HepMC::GenParticle* points to NULL, return InvalidMomentum" ) ;
   return LoKi::Constants::InvalidMomentum ;
-};
+}
 // ============================================================================
-
-// ============================================================================
-/// "SHORT" representation, @see LoKi::AuxFunBase 
+//  "SHORT" representation, @see LoKi::AuxFunBase 
 // ============================================================================
 std::ostream& 
 LoKi::GenParticles::MomentumZ::fillStream 
-( std::ostream& s ) const { return s << "GPZ" ; };
+( std::ostream& s ) const { return s << "GPZ" ; }
 // ============================================================================
-
-
-
-
-// ============================================================================
-/// MANDATORY: clone method ("virtual" constructor")
+//  MANDATORY: clone method ("virtual" constructor")
 // ============================================================================
 LoKi::GenParticles::AbsIdentifier* 
 LoKi::GenParticles::AbsIdentifier::clone() const
-{ return new LoKi::GenParticles::AbsIdentifier ( *this ) ; };
+{ return new LoKi::GenParticles::AbsIdentifier ( *this ) ; }
 // ============================================================================
-
+//  MANDATORY: virtual destructor 
 // ============================================================================
-/// MANDATORY: virtual destructor 
+LoKi::GenParticles::AbsIdentifier::~AbsIdentifier() {}
 // ============================================================================
-LoKi::GenParticles::AbsIdentifier::~AbsIdentifier() {};
-// ============================================================================
-
-// ============================================================================
-/// MANDATORY: the only one essential method 
+//  MANDATORY: the only one essential method 
 // ============================================================================
 LoKi::GenParticles::AbsIdentifier::result_type 
 LoKi::GenParticles::AbsIdentifier::operator() 
@@ -420,33 +327,25 @@ LoKi::GenParticles::AbsIdentifier::operator()
   if ( 0 != p ) { return LHCb::ParticleID( p->pdg_id() ).abspid() ; }
   Error ( "HepMC::GenParticle* points to NULL, return InvalidID" ) ;
   return LoKi::Constants::InvalidID ;
-};
+}
 // ============================================================================
-
-// ============================================================================
-/// "SHORT" representation, @see LoKi::AuxFunBase 
+//  "SHORT" representation, @see LoKi::AuxFunBase 
 // ============================================================================
 std::ostream& 
 LoKi::GenParticles::AbsIdentifier::fillStream 
-( std::ostream& s ) const { return s << "GABSID" ; };
+( std::ostream& s ) const { return s << "GABSID" ; }
 // ============================================================================
-
-// ============================================================================
-/// clone method (mandatory!)
+//  clone method (mandatory!)
 // ============================================================================
 LoKi::GenParticles::PseudoRapidity*
 LoKi::GenParticles::PseudoRapidity::clone() const 
 { return new LoKi::GenParticles::PseudoRapidity( *this ) ; }
 // ============================================================================
-
-// ============================================================================
-/// MANDATORY: virtual destructor 
+//  MANDATORY: virtual destructor 
 // ============================================================================
 LoKi::GenParticles::PseudoRapidity::~PseudoRapidity(){}
 // ============================================================================
-
-// ============================================================================
-/// the only one essential method 
+//  the only one essential method 
 // ============================================================================
 LoKi::GenParticles::PseudoRapidity::result_type
 LoKi::GenParticles::PseudoRapidity::operator() 
@@ -455,33 +354,25 @@ LoKi::GenParticles::PseudoRapidity::operator()
   if( 0 != p ) { return p -> momentum () . pseudoRapidity () ; }    // RETURN 
   Error("Invalid HepMC::GenParticle, return 'InvalidMomenum'");
   return LoKi::Constants::InvalidMomentum;                   // RETURN 
-};
+}
 // ============================================================================
-
-// ============================================================================
-/// "SHORT" representation, @see LoKi::AuxFunBase 
+//  "SHORT" representation, @see LoKi::AuxFunBase 
 // ============================================================================
 std::ostream& 
 LoKi::GenParticles::PseudoRapidity::fillStream 
-( std::ostream& s ) const { return s << "GETA" ; };
+( std::ostream& s ) const { return s << "GETA" ; }
 // ============================================================================
-
-// ============================================================================
-/// clone method (mandatory!)
+//  clone method (mandatory!)
 // ============================================================================
 LoKi::GenParticles::Phi*
 LoKi::GenParticles::Phi::clone() const 
 { return new LoKi::GenParticles::Phi( *this ) ; }
 // ============================================================================
-
-// ============================================================================
-/// MANDATORY: virtual destructor 
+//  MANDATORY: virtual destructor 
 // ============================================================================
 LoKi::GenParticles::Phi::~Phi(){}
 // ============================================================================
-
-// ============================================================================
-/// the only one essential method 
+//  the only one essential method 
 // ============================================================================
 LoKi::GenParticles::Phi::result_type
 LoKi::GenParticles::Phi::operator() 
@@ -490,33 +381,25 @@ LoKi::GenParticles::Phi::operator()
   if( 0 != p ) { return p -> momentum () . phi() ; }    // RETURN 
   Error("Invalid HepMC::GenParticle, return 'InvalidMomenum'");
   return LoKi::Constants::InvalidMomentum;                   // RETURN 
-};
+}
 // ============================================================================
-
-// ============================================================================
-/// "SHORT" representation, @see LoKi::AuxFunBase 
+//  "SHORT" representation, @see LoKi::AuxFunBase 
 // ============================================================================
 std::ostream& 
 LoKi::GenParticles::Phi::fillStream 
-( std::ostream& s ) const { return s << "GPHI" ; };
+( std::ostream& s ) const { return s << "GPHI" ; }
 // ============================================================================
-
-// ============================================================================
-/// clone method (mandatory!)
+//  clone method (mandatory!)
 // ============================================================================
 LoKi::GenParticles::Theta*
 LoKi::GenParticles::Theta::clone() const 
 { return new LoKi::GenParticles::Theta( *this ) ; }
 // ============================================================================
-
-// ============================================================================
-/// MANDATORY: virtual destructor 
+//  MANDATORY: virtual destructor 
 // ============================================================================
 LoKi::GenParticles::Theta::~Theta(){}
 // ============================================================================
-
-// ============================================================================
-/// the only one essential method 
+//  the only one essential method 
 // ============================================================================
 LoKi::GenParticles::Theta::result_type
 LoKi::GenParticles::Theta::operator() 
@@ -525,33 +408,25 @@ LoKi::GenParticles::Theta::operator()
   if( 0 != p ) { return p -> momentum () . theta() ; }    // RETURN 
   Error("Invalid HepMC::GenParticle, return 'InvalidMomenum'");
   return LoKi::Constants::InvalidMomentum;                   // RETURN 
-};
+}
 // ============================================================================
-
-// ============================================================================
-/// "SHORT" representation, @see LoKi::AuxFunBase 
+//  "SHORT" representation, @see LoKi::AuxFunBase 
 // ============================================================================
 std::ostream& 
 LoKi::GenParticles::Theta::fillStream 
-( std::ostream& s ) const { return s << "GTHETA" ; };
+( std::ostream& s ) const { return s << "GTHETA" ; }
 // ============================================================================
-
-// ============================================================================
-/// MANDATORY: clone method ("virtual constructor")
+//  MANDATORY: clone method ("virtual constructor")
 // ============================================================================
 LoKi::GenParticles::ValidEndVertex*
 LoKi::GenParticles::ValidEndVertex::clone() const 
 { return new LoKi::GenParticles::ValidEndVertex(*this) ; }
 // ============================================================================
-
+//  MANDATORY: virtual destructor 
 // ============================================================================
-/// MANDATORY: virtual destructor 
+LoKi::GenParticles::ValidEndVertex::~ValidEndVertex() {}
 // ============================================================================
-LoKi::GenParticles::ValidEndVertex::~ValidEndVertex() {};
-// ============================================================================
-
-// ============================================================================
-/// MANDATORY: the only one essential method 
+//  MANDATORY: the only one essential method 
 // ============================================================================
 LoKi::GenParticles::ValidEndVertex::result_type 
 LoKi::GenParticles::ValidEndVertex::operator() 
@@ -560,19 +435,15 @@ LoKi::GenParticles::ValidEndVertex::operator()
   if ( 0 != p ) { return 0 != p->end_vertex() ; }
   Error ( "HepMC::GenParticle* points to NULL, return 'false'" ) ;
   return false ;
-};
+}
 // ============================================================================
-
-// ============================================================================
-/// "SHORT" representation, @see LoKi::AuxFunBase 
+//  "SHORT" representation, @see LoKi::AuxFunBase 
 // ============================================================================
 std::ostream& 
 LoKi::GenParticles::ValidEndVertex::fillStream 
-( std::ostream& s ) const { return s << "GVEV" ; };
-// ============================================================================
-
+( std::ostream& s ) const { return s << "GVEV" ; }
 // ============================================================================  
-/** constructor
+/*  constructor
  *  @param vct the reference 4-momentum 
  */
 // ============================================================================  
@@ -580,11 +451,9 @@ LoKi::GenParticles::MomentumDistance::MomentumDistance
 ( const LoKi::LorentzVector& vct ) 
   : LoKi::Function<const HepMC::GenParticle*>() 
   , m_vct ( vct ) 
-{};
+{}
 // ============================================================================
-
-// ============================================================================
-/** copy constructor
+/*  copy constructor
  *  @param right object to be copied 
  */
 // ============================================================================
@@ -593,25 +462,19 @@ LoKi::GenParticles::MomentumDistance::MomentumDistance
   : LoKi::AuxFunBase                         ( right ) 
   , LoKi::Function<const HepMC::GenParticle*>( right ) 
   , m_vct ( right.m_vct ) 
-{};
-// ============================================================================
-
+{}
 // ============================================================================  
-/// MANDATORY::virtual destructor
+//  MANDATORY::virtual destructor
 // ============================================================================  
-LoKi::GenParticles::MomentumDistance::~MomentumDistance(){};
+LoKi::GenParticles::MomentumDistance::~MomentumDistance(){}
 // ============================================================================
-
-// ============================================================================
-/// MANDATORY: clone function ("virtual constructor")
+//  MANDATORY: clone function ("virtual constructor")
 // ============================================================================
 LoKi::GenParticles::MomentumDistance*
 LoKi::GenParticles::MomentumDistance::clone() const 
-{ return new LoKi::GenParticles::MomentumDistance(*this) ; };
+{ return new LoKi::GenParticles::MomentumDistance(*this) ; }
 // ============================================================================
-
-// ============================================================================
-/// MANDATORY: the only one essential method 
+//  MANDATORY: the only one essential method 
 // ============================================================================
 LoKi::GenParticles::MomentumDistance::result_type 
 LoKi::GenParticles::MomentumDistance::operator() 
@@ -629,111 +492,15 @@ LoKi::GenParticles::MomentumDistance::operator()
   return 
     LoKi::Constants::InvalidMomentum * 
     LoKi::Constants::InvalidMomentum ;
-};
+}
 // ============================================================================
-
-// ============================================================================
-/// "SHORT" representation, @see LoKi::AuxFunBase 
+//  "SHORT" representation, @see LoKi::AuxFunBase 
 // ============================================================================
 std::ostream& 
 LoKi::GenParticles::MomentumDistance::fillStream 
-( std::ostream& s ) const { return s << "GMOMDIST" ; };
+( std::ostream& s ) const { return s << "GMOMDIST" ; }
 // ============================================================================
-
-// ============================================================================
-/** constructor 
- *  @param cut    predicate to be used for counting
- *  @param range  "iterator range", @see HepMC::IteratorRange
- *  @see HepMC::IteratorRange 
- */
-// ============================================================================
-LoKi::GenParticles::NInTree::NInTree 
-( const LoKi::GenParticles::NInTree::GCut&  cut   , 
-  HepMC::IteratorRange                      range ) 
-  : LoKi::Function<const HepMC::GenParticle*>()
-  , m_cut( cut )
-  , m_range ( range )
-{};
-// ============================================================================
-
-// ============================================================================
-/** copy constructor 
- *  @param right object to be copied 
- */
-// ============================================================================
-LoKi::GenParticles::NInTree::NInTree 
-( const LoKi::GenParticles::NInTree& right ) 
-  : LoKi::AuxFunBase                         ( right ) 
-  , LoKi::Function<const HepMC::GenParticle*>( right )
-  , m_cut   ( right.m_cut )
-  , m_range ( right.m_range )
-{};
-// ============================================================================
-
-// ============================================================================
-/// MANDATORY: virtual contructor 
-// ============================================================================
-LoKi::GenParticles::NInTree::~NInTree(){};
-// ============================================================================
-
-// ============================================================================
-/// MANDATORY: clone function ("virtual constructor")
-// ============================================================================
-LoKi::GenParticles::NInTree*
-LoKi::GenParticles::NInTree::clone() const 
-{ return new LoKi::GenParticles::NInTree( *this ) ; }
-// ============================================================================
-
-// ============================================================================
-/** count the particles in the tree according 
- *  the predicat eand iterator range 
- *  @see HepMC::GenVertex
- *  @param vertex  root of the tree 
- *  @return number of particles 
- */
-// ============================================================================
-size_t LoKi::GenParticles::NInTree::count
-( HepMC::GenVertex* vertex ) const 
-{
-  if ( 0 == vertex ) { return 0 ; }
-  return std::count_if ( vertex->particles_begin( m_range ) , 
-                         vertex->particles_end  ( m_range ) , m_cut ) ;
-};
-// ============================================================================
-
-// ============================================================================
-/// MANDATORY: the only one essential method 
-// ============================================================================
-LoKi::GenParticles::NInTree::result_type 
-LoKi::GenParticles::NInTree::operator() 
-  ( LoKi::GenParticles::NInTree::argument p ) const
-{
-  if ( 0 == p ) 
-  { 
-    Error ( "HepMC::GenParticle* points to NULL, return 0" ) ;
-    return 0 ;                                                    // RETURN 
-  };
-  if      ( HepMC::parents  == m_range || HepMC::ancestors   == m_range ) 
-  { return count ( p -> production_vertex() ) ; }  
-  else if ( HepMC::children == m_range || HepMC::descendants == m_range )
-  { return count ( p -> end_vertex       () ) ; }
-  
-  Error ("Unimplemented case: HepMC::IteratorRange, return 0 ;") ;
-  
-  return 0 ;
-};
-// ============================================================================
-
-// ============================================================================
-/// "SHORT" representation, @see LoKi::AuxFunBase 
-// ============================================================================
-std::ostream& 
-LoKi::GenParticles::NInTree::fillStream( std::ostream& s ) const 
-{ return s << "GNINTREE" ; }
-// ============================================================================
-
-// ============================================================================
-/** constructor
+/*  constructor
  *  @param vct direction vector 
  *  @see LoKi::ThreeVector 
  */
@@ -741,12 +508,10 @@ LoKi::GenParticles::NInTree::fillStream( std::ostream& s ) const
 LoKi::GenParticles::TransverseMomentumRel::TransverseMomentumRel 
 ( const LoKi::ThreeVector& vct ) 
   : LoKi::Function<const HepMC::GenParticle*>() 
-  , m_vct ( vct ) 
-{};
+    , m_vct ( vct ) 
+{}
 // ============================================================================
-
-// ============================================================================
-/** copy constructor 
+/*  copy constructor 
  *  @param right object to be copied 
  */
 // ============================================================================
@@ -755,25 +520,19 @@ LoKi::GenParticles::TransverseMomentumRel::TransverseMomentumRel
   : LoKi::AuxFunBase                         ( right ) 
   , LoKi::Function<const HepMC::GenParticle*>( right ) 
   , m_vct ( right.m_vct ) 
-{};
+{}
 // ============================================================================
-
+//  MANDATORY: virtual destructor
 // ============================================================================
-/// MANDATORY: virtual destructor
+LoKi::GenParticles::TransverseMomentumRel::~TransverseMomentumRel(){}
 // ============================================================================
-LoKi::GenParticles::TransverseMomentumRel::~TransverseMomentumRel(){};
-// ============================================================================
-
-// ============================================================================
-/// MANDATORY: clone function ("virtual constructor")
+//  MANDATORY: clone function ("virtual constructor")
 // ============================================================================
 LoKi::GenParticles::TransverseMomentumRel*
 LoKi::GenParticles::TransverseMomentumRel::clone() const
 { return new LoKi::GenParticles::TransverseMomentumRel(*this) ; }
 // ============================================================================
-
-// ============================================================================
-/// MANDATORY: the only one essential method 
+//  MANDATORY: the only one essential method 
 // ============================================================================
 LoKi::GenParticles::TransverseMomentumRel::result_type 
 LoKi::GenParticles::TransverseMomentumRel::operator() 
@@ -793,42 +552,38 @@ LoKi::GenParticles::TransverseMomentumRel::operator()
   }
   Error("Invalid HepMC::GenParticle*, return 'InvalidMomentum'") ; 
   return LoKi::Constants::InvalidMomentum ;
-};
+}
 // ============================================================================
-
-// ============================================================================
-/// "SHORT" representation, @see LoKi::AuxFunBase 
+//  "SHORT" representation, @see LoKi::AuxFunBase 
 // ============================================================================
 std::ostream& 
 LoKi::GenParticles::TransverseMomentumRel::fillStream
 ( std::ostream& s ) const { return s << "GPTDIR" ; }
 // ============================================================================
-
-// ============================================================================
-/** constructor from particle ("head")
+/*  constructor from particle ("head")
  *  @param p pointer to HepMC::GenParticle 
  */
 // ============================================================================
 LoKi::GenParticles::FromHepMCTree::FromHepMCTree 
 ( const HepMC::GenParticle* p ) 
   : LoKi::Predicate<const HepMC::GenParticle*> ()
-  , m_vertices () { _add ( p ) ; }
+    , m_vertices () { _add ( p ) ; }
 // ============================================================================
-/// constructor from range of particles 
+//  constructor from range of particles 
 // ============================================================================
 LoKi::GenParticles::FromHepMCTree::FromHepMCTree 
 ( const LoKi::Types::GRange& r  ) 
   : LoKi::Predicate<const HepMC::GenParticle*> ()
   , m_vertices () { _add ( r.begin() , r.end() ) ; }
 // ============================================================================
-/// constructor from range of particles 
+//  constructor from range of particles 
 // ============================================================================
 LoKi::GenParticles::FromHepMCTree::FromHepMCTree 
 ( const LoKi::GenTypes::GenContainer& r  ) 
   : LoKi::Predicate<const HepMC::GenParticle*> ()
   , m_vertices () { _add ( r.begin() , r.end() ) ; }
 // ============================================================================
-/** constructor from vertex  ("head")
+/*  constructor from vertex  ("head")
  *  @param v pointer to HepMC::GenParticle 
  */
 // ============================================================================
@@ -837,7 +592,7 @@ LoKi::GenParticles::FromHepMCTree::FromHepMCTree
   : LoKi::Predicate<const HepMC::GenParticle*> ()
   , m_vertices() { _add ( v ) ; } ;
 // ============================================================================
-/** copy constructor 
+/*  copy constructor 
  *  @param right object to be copied 
  */
 // ============================================================================
@@ -846,7 +601,7 @@ LoKi::GenParticles::FromHepMCTree::FromHepMCTree
   : LoKi::AuxFunBase                         ( right ) 
   , LoKi::Predicate<const HepMC::GenParticle*> ( right )
   , m_vertices( right.m_vertices ) 
-{};  
+{}  
 // ============================================================================
 void LoKi::GenParticles::FromHepMCTree::_add 
 ( const HepMC::GenParticle* p ) 
@@ -866,7 +621,7 @@ LoKi::GenParticles::FromHepMCTree::remove
     std::remove( m_vertices.begin() , m_vertices.end() , vertex ) ;
   m_vertices.erase ( ifind , m_vertices.end() ) ;
   return *this ;
-} ;
+} 
 // ============================================================================
 LoKi::GenParticles::FromHepMCTree&
 LoKi::GenParticles::FromHepMCTree::remove
@@ -874,15 +629,15 @@ LoKi::GenParticles::FromHepMCTree::remove
 {
   if ( 0 == particle ) { return *this ; }
   return remove ( particle->end_vertex() ) ;
-} ;
+} 
 // ============================================================================
-/// MANDATORY: clone method ("virtual constructor")
+//  MANDATORY: clone method ("virtual constructor")
 // ============================================================================
 LoKi::GenParticles::FromHepMCTree*
 LoKi::GenParticles::FromHepMCTree::clone() const 
 { return new LoKi::GenParticles::FromHepMCTree(*this) ; }
 // ============================================================================
-/// MANDATORY: the only one essential method 
+//  MANDATORY: the only one essential method 
 // ============================================================================
 LoKi::GenParticles::FromHepMCTree::result_type 
 LoKi::GenParticles::FromHepMCTree::operator() 
@@ -913,19 +668,15 @@ LoKi::GenParticles::FromHepMCTree::operator()
     //
   }
   return false ;                                                    // RETURN 
-};
+}
 // ============================================================================
-
-// ============================================================================
-/// "SHORT" representation, @see LoKi::AuxFunBase 
+//  "SHORT" representation, @see LoKi::AuxFunBase 
 // ============================================================================
 std::ostream& 
 LoKi::GenParticles::FromHepMCTree::fillStream
 ( std::ostream& s ) const { return s << "GFROMTREE" ; }
 // ============================================================================
-
-// ============================================================================
-/** constructor from particle ("head")
+/*  constructor from particle ("head")
  *  @param p pointer to HepMC::GenParticle 
  */
 // ============================================================================
@@ -935,9 +686,7 @@ LoKi::GenParticles::IsAnAncestor::IsAnAncestor
   , m_particle ( p ) 
 {}
 // ============================================================================
-
-// ============================================================================
-/** copy constructor 
+/*  copy constructor 
  *  @param right object to be copied 
  */
 // ============================================================================
@@ -948,23 +697,17 @@ LoKi::GenParticles::IsAnAncestor::IsAnAncestor
   , m_particle ( right.m_particle  ) 
 {}
 // ============================================================================
-
-// ============================================================================
-/// MANDATORY: virtual destructor 
+//  MANDATORY: virtual destructor 
 // ============================================================================
 LoKi::GenParticles::IsAnAncestor::~IsAnAncestor(){}
 // ============================================================================
-
-// ============================================================================
-/// MANDATORY: clone method ("virtual constructor")
+//  MANDATORY: clone method ("virtual constructor")
 // ============================================================================
 LoKi::GenParticles::IsAnAncestor*
 LoKi::GenParticles::IsAnAncestor::clone() const 
 { return new LoKi::GenParticles::IsAnAncestor(*this) ; }
 // ============================================================================
-
-// ============================================================================
-/// MANDATORY: the only one essential method 
+//  MANDATORY: the only one essential method 
 // ============================================================================
 LoKi::GenParticles::IsAnAncestor::result_type
 LoKi::GenParticles::IsAnAncestor::operator() 
@@ -984,33 +727,27 @@ LoKi::GenParticles::IsAnAncestor::operator()
   { if ( m_particle == (*ip) ) { return true ; } }                 // RETURN
   
   return false ;
-};
+}
 // ============================================================================
-
-// ============================================================================
-/// "SHORT" representation, @see LoKi::AuxFunBase 
+//  "SHORT" representation, @see LoKi::AuxFunBase 
 // ============================================================================
 std::ostream& 
 LoKi::GenParticles::IsAnAncestor::fillStream
 ( std::ostream& s ) const { return s << "GANCESTOR" ; }
 // ============================================================================
-
-// ============================================================================
-/// constructor from Quark 
+//  constructor from Quark 
 // ============================================================================
 LoKi::GenParticles::HasQuark::HasQuark ( const LHCb::ParticleID::Quark quark ) 
   : LoKi::Predicate<const HepMC::GenParticle*>() 
   , m_quark ( quark  )
-{};
+{}
 // ============================================================================
 LoKi::GenParticles::HasQuark::HasQuark 
 ( const LoKi::GenParticles::HasQuark& right ) 
   : LoKi::AuxFunBase                         ( right ) 
   , LoKi::Predicate<const HepMC::GenParticle*>( right ) 
   , m_quark ( right.m_quark  )
-{};
-// ============================================================================
-
+{}
 // ============================================================================
 // the only one essential method 
 // ============================================================================
@@ -1024,13 +761,11 @@ LoKi::GenParticles::HasQuark::operator()
     return false ;
   }
   return LHCb::ParticleID( p -> pdg_id() ).hasQuark( quark() ) ;
-};
+}
 // ============================================================================
 LoKi::GenParticles::HasQuark*
 LoKi::GenParticles::HasQuark::clone() const 
 { return new LoKi::GenParticles::HasQuark(*this) ; }
-// ============================================================================
-
 // ============================================================================
 std::ostream&
 LoKi::GenParticles::HasQuark::fillStream
@@ -1056,9 +791,7 @@ LoKi::GenParticles::HasQuark::fillStream
   }
   //
   return s ; 
-};
-// ============================================================================
-
+}
 // ============================================================================
 // the only one essential method 
 // ============================================================================
@@ -1072,20 +805,16 @@ LoKi::GenParticles::IsCharged::operator()
     return false ;
   }
   return 0 != LHCb::ParticleID( p->pdg_id() ) .threeCharge() ;
-};
+}
 // ============================================================================
 LoKi::GenParticles::IsCharged*
 LoKi::GenParticles::IsCharged::clone() const 
 { return new LoKi::GenParticles::IsCharged(*this) ; }
 // ============================================================================
-
-// ============================================================================
 std::ostream&
 LoKi::GenParticles::IsCharged::fillStream
 ( std::ostream& s ) const 
 { return s << "GCHARGED" ; }
-// ============================================================================
-
 // ============================================================================
 // the only one essential method 
 // ============================================================================
@@ -1099,20 +828,16 @@ LoKi::GenParticles::IsNeutral::operator()
     return false ;
   }
   return 0 == LHCb::ParticleID( p->pdg_id() ) .threeCharge() ;
-};
+}
 // ============================================================================
 LoKi::GenParticles::IsNeutral*
 LoKi::GenParticles::IsNeutral::clone() const 
 { return new LoKi::GenParticles::IsNeutral(*this) ; }
 // ============================================================================
-
-// ============================================================================
 std::ostream&
 LoKi::GenParticles::IsNeutral::fillStream
 ( std::ostream& s ) const 
 { return s << "GNEUTRAL" ; }
-// ============================================================================
-
 // ============================================================================
 // the only one essential method 
 // ============================================================================
@@ -1126,20 +851,16 @@ LoKi::GenParticles::IsLepton::operator()
     return false ;
   }
   return LHCb::ParticleID( p->pdg_id() ) .isLepton() ;
-};
+}
 // ============================================================================
 LoKi::GenParticles::IsLepton*
 LoKi::GenParticles::IsLepton::clone() const 
 { return new LoKi::GenParticles::IsLepton(*this) ; }
 // ============================================================================
-
-// ============================================================================
 std::ostream&
 LoKi::GenParticles::IsLepton::fillStream
 ( std::ostream& s ) const 
 { return s << "GLEPTON" ; }
-// ============================================================================
-
 // ============================================================================
 // the only one essential method 
 // ============================================================================
@@ -1153,20 +874,16 @@ LoKi::GenParticles::IsMeson::operator()
     return false ;
   }
   return LHCb::ParticleID( p->pdg_id() ) .isMeson() ;
-};
+}
 // ============================================================================
 LoKi::GenParticles::IsMeson*
 LoKi::GenParticles::IsMeson::clone() const 
 { return new LoKi::GenParticles::IsMeson(*this) ; }
 // ============================================================================
-
-// ============================================================================
 std::ostream&
 LoKi::GenParticles::IsMeson::fillStream
 ( std::ostream& s ) const 
 { return s << "GMESON" ; }
-// ============================================================================
-
 // ============================================================================
 // the only one essential method 
 // ============================================================================
@@ -1180,20 +897,16 @@ LoKi::GenParticles::IsBaryon::operator()
     return false ;
   }
   return LHCb::ParticleID( p->pdg_id() ) .isBaryon() ;
-};
+}
 // ============================================================================
 LoKi::GenParticles::IsBaryon*
 LoKi::GenParticles::IsBaryon::clone() const 
 { return new LoKi::GenParticles::IsBaryon(*this) ; }
 // ============================================================================
-
-// ============================================================================
 std::ostream&
 LoKi::GenParticles::IsBaryon::fillStream
 ( std::ostream& s ) const 
 { return s << "GBARYON" ; }
-// ============================================================================
-
 // ============================================================================
 // the only one essential method 
 // ============================================================================
@@ -1207,20 +920,16 @@ LoKi::GenParticles::IsHadron::operator()
     return false ;
   }
   return LHCb::ParticleID( p->pdg_id() ) .isHadron() ;
-};
+}
 // ============================================================================
 LoKi::GenParticles::IsHadron*
 LoKi::GenParticles::IsHadron::clone() const 
 { return new LoKi::GenParticles::IsHadron(*this) ; }
 // ============================================================================
-
-// ============================================================================
 std::ostream&
 LoKi::GenParticles::IsHadron::fillStream
 ( std::ostream& s ) const 
 { return s << "GHADRON" ; }
-// ============================================================================
-
 // ============================================================================
 // the only one essential method 
 // ============================================================================
@@ -1234,26 +943,22 @@ LoKi::GenParticles::IsNucleus::operator()
     return false ;
   }
   return LHCb::ParticleID( p->pdg_id() ) .isNucleus() ;
-};
+}
 // ============================================================================
 LoKi::GenParticles::IsNucleus*
 LoKi::GenParticles::IsNucleus::clone() const 
 { return new LoKi::GenParticles::IsNucleus(*this) ; }
-// ============================================================================
-
 // ============================================================================
 std::ostream&
 LoKi::GenParticles::IsNucleus::fillStream
 ( std::ostream& s ) const 
 { return s << "GNUCLEUS" ; }
 // ============================================================================
-
-// ============================================================================
 LoKi::GenParticles::ProperLifeTime::ProperLifeTime
 ( const double bad ) 
   : LoKi::Function<const HepMC::GenParticle*>() 
   , m_bad ( bad ) 
-{} ;
+{} 
 // ============================================================================
 LoKi::GenParticles::ProperLifeTime::ProperLifeTime
 ( const LoKi::GenParticles::ProperLifeTime& right ) 
@@ -1317,10 +1022,7 @@ LoKi::GenParticles::ProperLifeTime::operator()
   }  
   //
   return dist/betagamma ; 
-};
-// ============================================================================
-
-
+}
 // ============================================================================
 LoKi::GenParticles::NominalLifeTime* 
 LoKi::GenParticles::NominalLifeTime::clone() const 
@@ -1336,16 +1038,14 @@ LoKi::GenParticles::NominalLifeTime::operator()
     return LoKi::Constants::InvalidTime;                     // RETURN 
   }
   return LoKi::Particles::lifeTime ( LHCb::ParticleID ( p->pdg_id() ) ) ;
-};
+}
 // ============================================================================
 std::ostream& 
 LoKi::GenParticles::NominalLifeTime::fillStream 
 ( std::ostream& s ) const  
 { return s << "GNLT" ; }
 // ============================================================================
-
-// ============================================================================
-/** constructor from vertex function and "bad" value 
+/*  constructor from vertex function and "bad" value 
  *  @param fun verted function to be used 
  *  @param bad the value to be returnedd for invalid vertex 
  */
@@ -1356,9 +1056,9 @@ LoKi::GenParticles::AdapterToProductionVertex::AdapterToProductionVertex
   : LoKi::Function<const HepMC::GenParticle*>() 
   , m_fun ( fun ) 
   , m_bad ( bad ) 
-{};
+{}
 // ============================================================================
-/// copy constructor 
+//  copy constructor 
 // ============================================================================
 LoKi::GenParticles::AdapterToProductionVertex::AdapterToProductionVertex 
 ( const LoKi::GenParticles::AdapterToProductionVertex& right ) 
@@ -1366,26 +1066,26 @@ LoKi::GenParticles::AdapterToProductionVertex::AdapterToProductionVertex
   , LoKi::Function<const HepMC::GenParticle*>( right ) 
   , m_fun ( right.m_fun ) 
   , m_bad ( right.m_bad ) 
-{};
+{}
 // ============================================================================
-/// destructor 
+//  destructor 
 // ============================================================================
-LoKi::GenParticles::AdapterToProductionVertex::~AdapterToProductionVertex(){};
+LoKi::GenParticles::AdapterToProductionVertex::~AdapterToProductionVertex(){}
 // ============================================================================
-/// clone method (mandatory!)
+//  clone method (mandatory!)
 // ============================================================================
 LoKi::GenParticles::AdapterToProductionVertex*
 LoKi::GenParticles::AdapterToProductionVertex::clone() const
 { return new AdapterToProductionVertex(*this); }
 // ============================================================================
-/// "SHORT" representation, @see LoKi::AuxFunBase
+//  "SHORT" representation, @see LoKi::AuxFunBase
 // ============================================================================
 std::ostream& 
 LoKi::GenParticles::AdapterToProductionVertex::fillStream
 ( std::ostream& stream ) const 
 { return stream << "GFAPVX[" << m_fun << "]" ; }
 // ============================================================================
-/// the only one essential method 
+//  the only one essential method 
 // ============================================================================
 LoKi::GenParticles::AdapterToProductionVertex::result_type 
 LoKi::GenParticles::AdapterToProductionVertex::operator() 
@@ -1395,11 +1095,9 @@ LoKi::GenParticles::AdapterToProductionVertex::operator()
   HepMC::GenVertex* v = p->production_vertex() ;
   if ( 0 == v ) { return m_bad ; }
   return m_fun ( v ) ;
-} ;
+} 
 // ============================================================================
-
-// ============================================================================
-/** constructor from vertex function and "bad" value 
+/*  constructor from vertex function and "bad" value 
  *  @param fun verted function to be used 
  *  @param bad the value to be returnedd for invalid vertex 
  */
@@ -1410,9 +1108,9 @@ LoKi::GenParticles::AdapterToEndVertex::AdapterToEndVertex
   : LoKi::Function<const HepMC::GenParticle*>() 
   , m_fun ( fun ) 
   , m_bad ( bad ) 
-{};
+{}
 // ============================================================================
-/// copy constructor 
+//  copy constructor 
 // ============================================================================
 LoKi::GenParticles::AdapterToEndVertex::AdapterToEndVertex 
 ( const LoKi::GenParticles::AdapterToEndVertex& right ) 
@@ -1420,26 +1118,26 @@ LoKi::GenParticles::AdapterToEndVertex::AdapterToEndVertex
   , LoKi::Function<const HepMC::GenParticle*>( right ) 
   , m_fun ( right.m_fun ) 
   , m_bad ( right.m_bad ) 
-{};
+{} 
 // ============================================================================
-/// destructor 
+//  destructor 
 // ============================================================================
-LoKi::GenParticles::AdapterToEndVertex::~AdapterToEndVertex(){};
+LoKi::GenParticles::AdapterToEndVertex::~AdapterToEndVertex(){}
 // ============================================================================
-/// clone method (mandatory!)
+//  clone method (mandatory!)
 // ============================================================================
 LoKi::GenParticles::AdapterToEndVertex*
 LoKi::GenParticles::AdapterToEndVertex::clone() const
 { return new AdapterToEndVertex(*this); }
 // ============================================================================
-/// "SHORT" representation, @see LoKi::AuxFunBase
+//  "SHORT" representation, @see LoKi::AuxFunBase
 // ============================================================================
 std::ostream& 
 LoKi::GenParticles::AdapterToEndVertex::fillStream
 ( std::ostream& stream ) const 
 { return stream << "GFAEVX[" << m_fun << "]" ; }
 // ============================================================================
-/// the only one essential method 
+//  the only one essential method 
 // ============================================================================
 LoKi::GenParticles::AdapterToEndVertex::result_type 
 LoKi::GenParticles::AdapterToEndVertex::operator() 
@@ -1449,12 +1147,9 @@ LoKi::GenParticles::AdapterToEndVertex::operator()
   HepMC::GenVertex* v = p->end_vertex() ;
   if ( 0 == v ) { return m_bad ; }
   return m_fun ( v ) ;
-} ;
+} 
 // ============================================================================
-
-
-// ============================================================================
-/// MANDATORY: the only one essential method 
+//  MANDATORY: the only one essential method 
 // ============================================================================
 LoKi::GenParticles::ThreeCharge::result_type 
 LoKi::GenParticles::ThreeCharge::operator() 
@@ -1466,19 +1161,16 @@ LoKi::GenParticles::ThreeCharge::operator()
     return LoKi::Constants::InvalidCharge;                     // RETURN 
   }
   return LHCb::ParticleID( p->pdg_id() ).threeCharge() ;  
-};
+}
 // ============================================================================
-/// "SHORT" representation, @see LoKi::AuxFunBase
+//  "SHORT" representation, @see LoKi::AuxFunBase
 // ============================================================================
 std::ostream& 
 LoKi::GenParticles::ThreeCharge::fillStream
 ( std::ostream& stream ) const 
 { return stream << "G3Q" ; }
 // ============================================================================
-
-
-// ============================================================================
-/// constructor from the angle
+//  constructor from the angle
 // ============================================================================
 LoKi::GenParticles::DeltaPhi::DeltaPhi ( const double phi ) 
   : LoKi::Function<const HepMC::GenParticle*> () 
@@ -1486,9 +1178,9 @@ LoKi::GenParticles::DeltaPhi::DeltaPhi ( const double phi )
   , m_phi  ( phi )
 { 
   m_phi = adjust ( m_phi ) ; 
-} ; 
+} 
 // ============================================================================
-/// constructor from the vector 
+//  constructor from the vector 
 // ============================================================================
 LoKi::GenParticles::DeltaPhi::DeltaPhi ( const LoKi::ThreeVector& v ) 
   : LoKi::Function<const HepMC::GenParticle*> () 
@@ -1496,9 +1188,9 @@ LoKi::GenParticles::DeltaPhi::DeltaPhi ( const LoKi::ThreeVector& v )
   , m_phi  ( v.Phi() )
 { 
   m_phi = adjust ( m_phi ) ; 
-} ; 
+}  
 // ============================================================================
-/// constructor from the vector 
+//  constructor from the vector 
 // ============================================================================
 LoKi::GenParticles::DeltaPhi::DeltaPhi ( const LoKi::LorentzVector& v ) 
   : LoKi::Function<const HepMC::GenParticle*> () 
@@ -1506,9 +1198,9 @@ LoKi::GenParticles::DeltaPhi::DeltaPhi ( const LoKi::LorentzVector& v )
   , m_phi  ( v.Phi() )
 { 
   m_phi = adjust ( m_phi ) ; 
-} ; 
+}  
 // ============================================================================
-/// constructor from the particle
+//  constructor from the particle
 // ============================================================================
 LoKi::GenParticles::DeltaPhi::DeltaPhi ( const HepMC::GenParticle* p )
   : LoKi::Function<const HepMC::GenParticle*> () 
@@ -1518,9 +1210,9 @@ LoKi::GenParticles::DeltaPhi::DeltaPhi ( const HepMC::GenParticle* p )
   if ( 0 == p ) { Exception("Invalid HepMC::GenParticle*") ;}
   m_phi = p->momentum().phi() ;
   m_phi = adjust ( m_phi ) ; 
-} ; 
+}  
 // ============================================================================
-/// copy constructor
+//  copy constructor
 // ============================================================================
 LoKi::GenParticles::DeltaPhi::DeltaPhi 
 ( const LoKi::GenParticles::DeltaPhi& right ) 
@@ -1530,15 +1222,15 @@ LoKi::GenParticles::DeltaPhi::DeltaPhi
   , m_phi  ( right.m_phi  )
 { 
   m_phi = adjust ( m_phi ) ; 
-} ; 
+}  
 // ============================================================================
-/// MANDATORY: clone method ("virtual constructor")
+//  MANDATORY: clone method ("virtual constructor")
 // ============================================================================
 LoKi::GenParticles::DeltaPhi*
 LoKi::GenParticles::DeltaPhi::clone() const
 { return new LoKi::GenParticles::DeltaPhi(*this) ; }
 // ============================================================================
-/// MANDATORY: the only essential method 
+//  MANDATORY: the only essential method 
 // ============================================================================
 LoKi::GenParticles::DeltaPhi::result_type
 LoKi::GenParticles::DeltaPhi::operator() 
@@ -1550,14 +1242,14 @@ LoKi::GenParticles::DeltaPhi::operator()
     return LoKi::Constants::InvalidAngle ;
   }
   return adjust ( m_eval( p ) - m_phi ) ;
-} ;
+} 
 // ============================================================================
-/// OPTIONAL: "SHORT" representation
+//  OPTIONAL: "SHORT" representation
 // ============================================================================
 std::ostream& LoKi::GenParticles::DeltaPhi::fillStream ( std::ostream& s ) const 
 { return s << "GDPHI[" << m_phi << "]" ; }
 // ============================================================================
-/// adjust delta phi into the range of [-180:180]degrees 
+//  adjust delta phi into the range of [-180:180]degrees 
 // ============================================================================
 const double LoKi::GenParticles::DeltaPhi::adjust ( double phi ) const 
 {
@@ -1568,12 +1260,9 @@ const double LoKi::GenParticles::DeltaPhi::adjust ( double phi ) const
   while ( phi < -1 * s_180 ) { phi += s_360 ; }
   //
   return phi ; 
-} ;
+} 
 // ============================================================================
-
-
-// ============================================================================
-/// constructor from the angle
+//  constructor from the angle
 // ============================================================================
 LoKi::GenParticles::DeltaEta::DeltaEta ( const double eta ) 
   : LoKi::Function<const HepMC::GenParticle*> () 
@@ -1581,7 +1270,7 @@ LoKi::GenParticles::DeltaEta::DeltaEta ( const double eta )
   , m_eta  ( eta )
 {}
 // ============================================================================
-/// constructor from the vector 
+//  constructor from the vector 
 // ============================================================================
 LoKi::GenParticles::DeltaEta::DeltaEta ( const LoKi::ThreeVector& v ) 
   : LoKi::Function<const HepMC::GenParticle*> () 
@@ -1589,7 +1278,7 @@ LoKi::GenParticles::DeltaEta::DeltaEta ( const LoKi::ThreeVector& v )
   , m_eta  ( v.Eta() )
 {}
 // ============================================================================
-/// constructor from the vector 
+//  constructor from the vector 
 // ============================================================================
 LoKi::GenParticles::DeltaEta::DeltaEta ( const LoKi::LorentzVector& v ) 
   : LoKi::Function<const HepMC::GenParticle*> () 
@@ -1597,7 +1286,7 @@ LoKi::GenParticles::DeltaEta::DeltaEta ( const LoKi::LorentzVector& v )
   , m_eta  ( v.Eta() )
 {}
 // ============================================================================
-/// constructor from the particle
+//  constructor from the particle
 // ============================================================================
 LoKi::GenParticles::DeltaEta::DeltaEta ( const HepMC::GenParticle* p ) 
   : LoKi::Function<const HepMC::GenParticle*> () 
@@ -1606,9 +1295,9 @@ LoKi::GenParticles::DeltaEta::DeltaEta ( const HepMC::GenParticle* p )
 {
   if ( 0 == p ) { Exception("Invalid HepMC::GenParticle*") ;}
   m_eta = p->momentum().pseudoRapidity() ;
-} ;
+} 
 // ============================================================================
-/// copy constructor
+//  copy constructor
 // ============================================================================
 LoKi::GenParticles::DeltaEta::DeltaEta 
 ( const LoKi::GenParticles::DeltaEta& right ) 
@@ -1616,15 +1305,15 @@ LoKi::GenParticles::DeltaEta::DeltaEta
   , LoKi::Function<const HepMC::GenParticle*> ( right ) 
   , m_eval ( right.m_eval )
   , m_eta  ( right.m_eta  )
-{} ; 
+{}  
 // ============================================================================
-/// MANDATORY: clone method ("virtual constructor")
+//  MANDATORY: clone method ("virtual constructor")
 // ============================================================================
 LoKi::GenParticles::DeltaEta* 
 LoKi::GenParticles::DeltaEta::clone() const 
 { return new LoKi::GenParticles::DeltaEta(*this) ; }
 // ============================================================================
-/// MANDATORY: the only essential method 
+//  MANDATORY: the only essential method 
 // ============================================================================
 LoKi::GenParticles::DeltaEta::result_type
 LoKi::GenParticles::DeltaEta::operator() 
@@ -1636,17 +1325,14 @@ LoKi::GenParticles::DeltaEta::operator()
     return LoKi::Constants::InvalidAngle ;
   }
   return m_eval( p ) - m_eta ;
-} ;
+} 
 // ============================================================================
-/// OPTIONAL: "SHORT" representation
+//  OPTIONAL: "SHORT" representation
 // ============================================================================
 std::ostream& LoKi::GenParticles::DeltaEta::fillStream ( std::ostream& s ) const 
 { return s << "GDETA[" << m_eta << "]" ; }
 // ============================================================================
-
-
-// ============================================================================
-/// constructor from the vector 
+//  constructor from the vector 
 // ============================================================================
 LoKi::GenParticles::DeltaR2::DeltaR2 ( const LoKi::ThreeVector& v ) 
   : LoKi::Function<const HepMC::GenParticle*> () 
@@ -1654,7 +1340,7 @@ LoKi::GenParticles::DeltaR2::DeltaR2 ( const LoKi::ThreeVector& v )
   , m_deta ( v ) 
 {}
 // ============================================================================
-/// constructor from the vector 
+//  constructor from the vector 
 // ============================================================================
 LoKi::GenParticles::DeltaR2::DeltaR2 ( const LoKi::LorentzVector& v ) 
   : LoKi::Function<const HepMC::GenParticle*> () 
@@ -1662,7 +1348,7 @@ LoKi::GenParticles::DeltaR2::DeltaR2 ( const LoKi::LorentzVector& v )
   , m_deta ( v ) 
 {}
 // ============================================================================
-/// constructor from the particle
+//  constructor from the particle
 // ============================================================================
 LoKi::GenParticles::DeltaR2::DeltaR2 ( const HepMC::GenParticle* v ) 
   : LoKi::Function<const HepMC::GenParticle*> () 
@@ -1670,7 +1356,7 @@ LoKi::GenParticles::DeltaR2::DeltaR2 ( const HepMC::GenParticle* v )
   , m_deta ( v ) 
 {}
 // ============================================================================
-/// copy constructor
+//  copy constructor
 // ============================================================================
 LoKi::GenParticles::DeltaR2::DeltaR2 
 ( const LoKi::GenParticles::DeltaR2& right ) 
@@ -1678,15 +1364,15 @@ LoKi::GenParticles::DeltaR2::DeltaR2
   , LoKi::Function<const HepMC::GenParticle*> ( right ) 
   , m_dphi ( right.m_dphi )
   , m_deta ( right.m_deta )
-{} ; 
+{} 
 // ============================================================================
-/// MANDATORY: clone method ("virtual constructor")
+//  MANDATORY: clone method ("virtual constructor")
 // ============================================================================
 LoKi::GenParticles::DeltaR2*
 LoKi::GenParticles::DeltaR2::clone() const 
 { return new LoKi::GenParticles::DeltaR2(*this) ; }
 // ============================================================================
-/// MANDATORY: the only essential method 
+//  MANDATORY: the only essential method 
 // ============================================================================
 LoKi::GenParticles::DeltaR2::result_type
 LoKi::GenParticles::DeltaR2::operator() 
@@ -1696,13 +1382,144 @@ LoKi::GenParticles::DeltaR2::operator()
   const double deta = m_deta ( p ) ;
   //
   return dphi*dphi + deta*deta ;
-} ;
+} 
 // ============================================================================
-/// OPTIONAL: "SHORT" representation
+//  OPTIONAL: "SHORT" representation
 // ============================================================================
 std::ostream& LoKi::GenParticles::DeltaR2::fillStream ( std::ostream& s ) const 
-{ return s << "GDR2[]" ; }
+{ return s << "GDR2" ; }
 // ============================================================================
+/*  constructor 
+ *  @param cut    predicate to be used for counting
+ *  @param range  "iterator range", @see HepMC::IteratorRange
+ *  @see HepMC::IteratorRange 
+ */
+// ============================================================================
+LoKi::GenParticles::NInTree::NInTree 
+( const LoKi::GenParticles::NInTree::GCut&  cut   , 
+  HepMC::IteratorRange                      range ) 
+  : LoKi::Function<const HepMC::GenParticle*>()
+  , m_cut( cut )
+  , m_range ( range )
+{}
+// ============================================================================
+/*  copy constructor 
+ *  @param right object to be copied 
+ */
+// ============================================================================
+LoKi::GenParticles::NInTree::NInTree 
+( const LoKi::GenParticles::NInTree& right ) 
+  : LoKi::AuxFunBase                         ( right ) 
+  , LoKi::Function<const HepMC::GenParticle*>( right )
+  , m_cut   ( right.m_cut )
+  , m_range ( right.m_range )
+{}
+// ============================================================================
+//  MANDATORY: virtual contructor 
+// ============================================================================
+LoKi::GenParticles::NInTree::~NInTree(){}
+// ============================================================================
+//  MANDATORY: clone function ("virtual constructor")
+// ============================================================================
+LoKi::GenParticles::NInTree*
+LoKi::GenParticles::NInTree::clone() const 
+{ return new LoKi::GenParticles::NInTree( *this ) ; }
+// ============================================================================
+/*  count the particles in the tree according 
+ *  the predicat eand iterator range 
+ *  @see HepMC::GenVertex
+ *  @param vertex  root of the tree 
+ *  @return number of particles 
+ */
+// ============================================================================
+size_t LoKi::GenParticles::NInTree::count
+( HepMC::GenVertex* vertex ) const 
+{
+  if ( 0 == vertex ) { return 0 ; }
+  return std::count_if ( vertex->particles_begin( m_range ) , 
+                         vertex->particles_end  ( m_range ) , m_cut ) ;
+}
+// ============================================================================
+//  MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::GenParticles::NInTree::result_type 
+LoKi::GenParticles::NInTree::operator() 
+  ( LoKi::GenParticles::NInTree::argument p ) const
+{
+  if ( 0 == p ) 
+  { 
+    Error ( "HepMC::GenParticle* points to NULL, return 0" ) ;
+    return 0 ;                                                    // RETURN 
+  };
+  if      ( HepMC::parents  == m_range || HepMC::ancestors   == m_range ) 
+  { return count ( p -> production_vertex() ) ; }  
+  else if ( HepMC::children == m_range || HepMC::descendants == m_range )
+  { return count ( p -> end_vertex       () ) ; }
+  //
+  Error ("Unimplemented case: HepMC::IteratorRange, return 0 ;") ;
+  //
+  return 0 ;
+}
+// ============================================================================
+//  "SHORT" representation, @see LoKi::AuxFunBase 
+// ============================================================================
+std::ostream& 
+LoKi::GenParticles::NInTree::fillStream( std::ostream& s ) const 
+{ 
+  s << "GNINTREE(" << m_cut ;
+  if ( HepMC::children != m_range ) { s << "," << m_range ; }
+  return s << ")" ;
+}
+// ============================================================================
+/*  standard constructor 
+ *  @param cut cut to be checked 
+ */
+// ============================================================================
+LoKi::GenParticles::InTree::InTree
+( const LoKi::GenTypes::GCuts& cut )
+  : LoKi::Predicate<const HepMC::GenParticle*> ()
+  , m_cut ( cut )
+{}
+// ============================================================================
+//  copy constructor 
+// ============================================================================
+LoKi::GenParticles::InTree::InTree
+( const LoKi::GenParticles::InTree& right ) 
+  : LoKi::AuxFunBase                           ( right ) 
+  , LoKi::Predicate<const HepMC::GenParticle*> ( right )
+  , m_cut ( right.m_cut )
+{}
+// ============================================================================
+// MANDATORY: clone function ("virtual constructor")
+// ============================================================================
+LoKi::GenParticles::InTree*
+LoKi::GenParticles::InTree::clone() const 
+{ return new LoKi::GenParticles::InTree(*this) ; }
+// ============================================================================
+// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::GenParticles::InTree::result_type
+LoKi::GenParticles::InTree::operator() 
+  ( LoKi::GenParticles::InTree::argument p ) const 
+{
+  if ( 0 == p ) { Warning ( "HepMC::GenParticle* points to NULL" ) ; }
+  return LoKi::GenAlgs::found (  p , m_cut ) ;
+}
+// ============================================================================
+//  OPTIONAL: "SHORT" representation, @see LoKi::AuxFunBase 
+// ============================================================================
+std::ostream& 
+LoKi::GenParticles::InTree::fillStream( std::ostream& s ) const 
+{ return s << "GINTREE(" << m_cut << ")" ; }
+// ============================================================================
+
+
+
+
+  
+
+
+
 
 // ============================================================================
 // The END 

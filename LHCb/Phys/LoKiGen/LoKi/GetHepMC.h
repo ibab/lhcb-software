@@ -1,8 +1,11 @@
-// $Id: GetHepMC.h,v 1.1 2007-06-01 11:48:06 ibelyaev Exp $
+// $Id: GetHepMC.h,v 1.2 2007-06-03 20:39:37 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
 // ============================================================================
-//  $Log: not supported by cvs2svn $ 
+//  $Log: not supported by cvs2svn $
+//  Revision 1.1  2007/06/01 11:48:06  ibelyaev
+//  prepare for v3r0
+// 
 // ============================================================================
 #ifndef LOKI_GETHEPMC_H 
 #define LOKI_GETHEPMC_H 1
@@ -76,6 +79,14 @@ namespace LoKi
     std::vector<const HepMC::GenParticle*> 
     children
     ( const HepMC::GenVertex*    vertex ) ;
+    /** get all "children" particles form the given particle 
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date   2007-05-26
+     */    
+    static 
+    std::vector<const HepMC::GenParticle*> 
+    children 
+    ( const HepMC::GenParticle* particle ) ;
     /** get all "family" particles form the given vertex
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-05-26
@@ -92,6 +103,14 @@ namespace LoKi
     std::vector<const HepMC::GenParticle*> 
     ancestors
     ( const HepMC::GenVertex*    vertex ) ;
+    /** get all "ancestors" particles form the givel particlle 
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date   2007-05-26
+     */    
+    static 
+    std::vector<const HepMC::GenParticle*> 
+    ancestors 
+    ( const HepMC::GenParticle* particle ) ;
     /** get all "descendants" particles form the given vertex
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-05-26
@@ -100,6 +119,14 @@ namespace LoKi
     std::vector<const HepMC::GenParticle*> 
     descendants
     ( const HepMC::GenVertex*    vertex ) ;
+    /** get all "descendant" particles form the given particle 
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date   2007-05-26
+     */    
+    static 
+    std::vector<const HepMC::GenParticle*> 
+    descendants 
+    ( const HepMC::GenParticle* particle ) ;
     /** get all "relatives" particles form the given vertex
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-05-26

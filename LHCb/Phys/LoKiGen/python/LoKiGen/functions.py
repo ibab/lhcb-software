@@ -1,8 +1,11 @@
 #!/usr/bin/env python
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
+# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.1  2007/06/01 11:48:06  ibelyaev
+# prepare for v3r0
+#
 # =============================================================================
 ## @file decorators.py LoKiCore/decorators.py
 #  The set of basic decorator for objects from LoKiGen library
@@ -167,6 +170,11 @@ GFAPVX   = LoKi.GenParticles.AdapterToProductionVertex
 GFAEVX   = LoKi.GenParticles.AdapterToEndVertex
 ## @see LoKi::Cuts::G3Q
 G3Q      = LoKi.GenParticles.ThreeCharge() 
+## @see LoKi::Cuts::GINTREE
+GINTREE  = LoKi.GenParticles.InTree
+
+
+
 
 ## @see LoKi::Cuts::GVTRUE
 GVTRUE     = LoKi.BooleanConstant( _GV )(True)

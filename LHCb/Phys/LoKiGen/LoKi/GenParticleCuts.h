@@ -1,8 +1,11 @@
-// $Id: GenParticleCuts.h,v 1.9 2007-03-04 16:41:18 ibelyaev Exp $
+// $Id: GenParticleCuts.h,v 1.10 2007-06-03 20:39:37 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.9 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.10 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.9  2007/03/04 16:41:18  ibelyaev
+//  add 3 new functions for jet-studies
+//
 // Revision 1.8  2006/08/26 11:28:01  ibelyaev
 //  add GSTATUS functor: HepMC::GenParticle::status()
 //
@@ -24,8 +27,6 @@
 #include "LoKi/GenParticles.h"
 #include "LoKi/GenPIDOperators.h"
 // ============================================================================
-
-// ============================================================================
 /** @file
  *
  *  Collection of useful functions/predicates to deal with 
@@ -43,8 +44,6 @@
  *  @date 2006-01-23 
  */
 // ============================================================================
-
-
 namespace LoKi 
 {
   namespace Cuts 
@@ -1034,11 +1033,29 @@ namespace LoKi
      *  @date 2007-03-03 
      */
     typedef LoKi::GenParticles::DeltaR2                     GDELTAR2 ;
-    
-  } // end of namespace LoKi::Cuts 
-  
+    // ========================================================================
+    /** @typedef GINTREE
+     *  simple meta function to check the presence of the particl in the 
+     *  decay tree of the particle:
+     *
+     *  @code
+     *   // check for semiletonic decays of B-meson:
+     *   const HepMC::GenParticle* B = ... ;
+     *   // create the predicate:
+     *   GCut hasEorMu = GINTREE ( "e+" == GABSID || "mu+" == GABSID ) ;
+     *   // use the predicate!
+     *   const bool semileptonic = hasEorMu ( B ) ;
+     *
+     *  @endcode 
+     *  @see LoKi::GenAlgs::found 
+     *  @see LoKi::GenParticles::InTree
+     *  @author Vanya BELYAEV ibelyaev@physic.syr.edu
+     *  @date 2007-06-03
+     */
+    typedef LoKi::GenParticles::InTree                      GINTREE  ;
+    // ========================================================================   
+  } // end of namespace LoKi::Cuts  
 } // end of namespace LoKi
-
 // ============================================================================
 // The END 
 // ============================================================================

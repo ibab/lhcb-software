@@ -1,8 +1,11 @@
-// $Id: GetHepMC.cpp,v 1.1 2007-06-01 11:48:07 ibelyaev Exp $
+// $Id: GetHepMC.cpp,v 1.2 2007-06-03 20:39:38 ibelyaev Exp $
 // ============================================================================
-// CVS trag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
+// CVS trag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2007/06/01 11:48:07  ibelyaev
+// prepare for v3r0
+// 
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -15,6 +18,7 @@
 // Local
 // ============================================================================
 #include "LoKi/GetHepMC.h"
+#include "LoKi/GenChild.h"
 // ============================================================================
 /** @file
  *  Implementation file for class LoKi::GetHepMC
@@ -33,13 +37,7 @@ std::vector<const HepMC::GenParticle*>
 LoKi::GetHepMC::particles 
 ( const HepMC::GenVertex*    vertex , 
   const HepMC::IteratorRange range  )
-{
-  if ( 0 == vertex ) { return std::vector<const HepMC::GenParticle*>() ; }
-  HepMC::GenVertex* _v = const_cast<HepMC::GenVertex*> ( vertex ) ;
-  return std::vector<const HepMC::GenParticle*>
-    ( _v -> particles_begin ( range ) , 
-      _v -> particles_end   ( range ) ) ;
-}
+{ return LoKi::Child::particles ( vertex , range ) ; }
 // ============================================================================
 /*  get all "in"-particles for the given vertex 
  *  @see HepMC::GenVertex::particles_in_const_begin() 
@@ -51,12 +49,7 @@ LoKi::GetHepMC::particles
 std::vector<const HepMC::GenParticle*>
 LoKi::GetHepMC::particles_in 
 ( const HepMC::GenVertex* vertex ) 
-{
-  if ( 0 == vertex ) { return std::vector<const HepMC::GenParticle*>() ; }
-  return std::vector<const HepMC::GenParticle*>
-    ( vertex -> particles_in_const_begin () , 
-      vertex -> particles_in_const_end   () ) ;
-}
+{ return LoKi::Child::particles_in ( vertex ) ; }
 // ============================================================================
 /*  get all "out"-particles for the given vertex  
  *  @see HepMC::GenVertex::particles_in_const_begin() 
@@ -66,14 +59,8 @@ LoKi::GetHepMC::particles_in
  */
 // ============================================================================
 std::vector<const HepMC::GenParticle*>
-LoKi::GetHepMC::particles_out
-( const HepMC::GenVertex* vertex ) 
-{
-  if ( 0 == vertex ) { return std::vector<const HepMC::GenParticle*>() ; }
-  return std::vector<const HepMC::GenParticle*>
-    ( vertex -> particles_out_const_begin () , 
-      vertex -> particles_out_const_end   () ) ;
-}
+LoKi::GetHepMC::particles_out    ( const HepMC::GenVertex* vertex ) 
+{ return LoKi::Child::particles_out ( vertex ) ; }
 // ============================================================================
 /*  get all "parents" particles form the given vertex
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -81,9 +68,8 @@ LoKi::GetHepMC::particles_out
  */
 // ============================================================================
 std::vector<const HepMC::GenParticle*> 
-LoKi::GetHepMC::parents 
-( const HepMC::GenVertex*    vertex ) 
-{ return particles ( vertex , HepMC::parents ) ; }
+LoKi::GetHepMC::parents      ( const HepMC::GenVertex*    vertex ) 
+{ return LoKi::Child::parents ( vertex ) ; }
 // ============================================================================
 /*  get all "children" particles form the given vertex
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -91,9 +77,8 @@ LoKi::GetHepMC::parents
  */    
 // ============================================================================
 std::vector<const HepMC::GenParticle*> 
-LoKi::GetHepMC::children
-( const HepMC::GenVertex*    vertex ) 
-{ return particles ( vertex , HepMC::children ) ; }
+LoKi::GetHepMC::children     ( const HepMC::GenVertex*    vertex ) 
+{ return LoKi::Child::children ( vertex ) ; }
 // ============================================================================
 /*  get all "family" particles form the given vertex
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -101,9 +86,8 @@ LoKi::GetHepMC::children
  */    
 // ============================================================================
 std::vector<const HepMC::GenParticle*> 
-LoKi::GetHepMC::family
-( const HepMC::GenVertex*    vertex ) 
-{ return particles ( vertex , HepMC::family ) ; }
+LoKi::GetHepMC::family        ( const HepMC::GenVertex*    vertex ) 
+{ return LoKi::Child::family ( vertex ) ; }
 // ============================================================================
 /*  get all "ancestors" particles form the given vertex
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -111,9 +95,8 @@ LoKi::GetHepMC::family
  */    
 // ============================================================================
 std::vector<const HepMC::GenParticle*> 
-LoKi::GetHepMC::ancestors
-( const HepMC::GenVertex*    vertex ) 
-{ return particles ( vertex , HepMC::ancestors ) ; }
+LoKi::GetHepMC::ancestors     ( const HepMC::GenVertex*    vertex ) 
+{ return LoKi::Child::ancestors ( vertex ) ; }
 // ============================================================================
 /*  get all "descendants" particles form the given vertex
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -121,9 +104,8 @@ LoKi::GetHepMC::ancestors
  */    
 // ============================================================================
 std::vector<const HepMC::GenParticle*> 
-LoKi::GetHepMC::descendants
-( const HepMC::GenVertex*    vertex ) 
-{ return particles ( vertex , HepMC::descendants ) ; }
+LoKi::GetHepMC::descendants   ( const HepMC::GenVertex*    vertex ) 
+{ return LoKi::Child::descendants ( vertex ) ; }
 // ============================================================================
 /** get all "relatives" particles form the given vertex
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -131,9 +113,8 @@ LoKi::GetHepMC::descendants
  */    
 // ============================================================================
 std::vector<const HepMC::GenParticle*> 
-LoKi::GetHepMC::relatives
-( const HepMC::GenVertex*    vertex ) 
-{ return particles ( vertex , HepMC::relatives ) ; }
+LoKi::GetHepMC::relatives     ( const HepMC::GenVertex*    vertex ) 
+{ return LoKi::Child::relatives ( vertex ) ; }
 // ============================================================================
 /*  get all particles form the given event 
  *  @see HepMC::GenEvent::particles_begin
@@ -143,14 +124,8 @@ LoKi::GetHepMC::relatives
  */
 // ============================================================================
 std::vector<const HepMC::GenParticle*> 
-LoKi::GetHepMC::particles_all 
-( const HepMC::GenEvent* event )  
-{
-  if ( 0 == event ) { return std::vector<const HepMC::GenParticle*>() ; }
-  return std::vector<const HepMC::GenParticle*>
-    ( event -> particles_begin () , 
-      event -> particles_end   () ) ;
-}
+LoKi::GetHepMC::particles_all ( const HepMC::GenEvent* event )  
+{ return LoKi::Child::particles_all ( event ) ; }
 // ============================================================================
 /** get all vertices form the given event 
  *  @see HepMC::GenEvent::vertices_begin
@@ -160,14 +135,35 @@ LoKi::GetHepMC::particles_all
  */
 // ============================================================================
 std::vector<const HepMC::GenVertex*> 
-LoKi::GetHepMC::vertices_all 
-( const HepMC::GenEvent* event )  
-{
-  if ( 0 == event ) { return std::vector<const HepMC::GenVertex*>() ; }
-  return std::vector<const HepMC::GenVertex*>
-    ( event -> vertices_begin () , 
-      event -> vertices_end   () ) ;
-}
+LoKi::GetHepMC::vertices_all ( const HepMC::GenEvent* event )  
+{ return LoKi::Child::vertices_all ( event ) ; }
+// ============================================================================
+/*  get all "children" particles form the given particle 
+ *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+ *  @date   2007-05-26
+ */    
+// ============================================================================
+std::vector<const HepMC::GenParticle*> 
+LoKi::GetHepMC::children   ( const HepMC::GenParticle* particle ) 
+{ return LoKi::Child::children ( particle ) ; }
+// ============================================================================
+/*  get all "ancestors" particles form the givel particlle 
+ *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+ *  @date   2007-05-26
+ */    
+// ============================================================================
+std::vector<const HepMC::GenParticle*> 
+LoKi::GetHepMC::ancestors  ( const HepMC::GenParticle* particle ) 
+{ return LoKi::Child::ancestors ( particle ) ; } 
+// ============================================================================
+/*  get all "descendant" particles form the given particle 
+ *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+ *  @date   2007-05-26
+ */    
+// ============================================================================
+std::vector<const HepMC::GenParticle*> 
+LoKi::GetHepMC::descendants ( const HepMC::GenParticle* particle ) 
+{ return LoKi::Child::descendants ( particle ) ; }
 // ============================================================================
 
 

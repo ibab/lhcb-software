@@ -1,8 +1,11 @@
-// $Id: LoKiGenDict.h,v 1.1 2007-06-01 11:48:06 ibelyaev Exp $
+// $Id: LoKiGenDict.h,v 1.2 2007-06-03 20:39:37 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2007/06/01 11:48:06  ibelyaev
+// prepare for v3r0
+// 
 // ============================================================================
 #ifndef LOKI_LOKICOREDICT_H 
 #define LOKI_LOKICOREDICT_H 1
@@ -21,6 +24,8 @@
 #include "LoKi/UniqueKeeper.h"
 // ============================================================================
 #include "LoKi/Dicts.h"
+#include "LoKi/GenExtractDicts.h"
+#include "LoKi/GenAlgsDicts.h"
 // ============================================================================
 namespace LoKi
 {
