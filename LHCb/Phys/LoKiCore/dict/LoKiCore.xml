@@ -1,7 +1,7 @@
 <!-- 
-     * $Id: LoKiCore.xml,v 1.1 2007-06-01 11:35:27 ibelyaev Exp $ 
+     * $Id: LoKiCore.xml,v 1.2 2007-06-03 20:38:24 ibelyaev Exp $ 
      * ========================================================================
-     * CVS tag:$Name: not supported by cvs2svn $, version $Revision: 1.1 $ 
+     * CVS tag:$Name: not supported by cvs2svn $, version $Revision: 1.2 $ 
      * ======================================================================== 
      * @file
      * The seleciton file to build Reflex dictionaries for Phys/LoKiCore package
@@ -22,6 +22,8 @@
   <class name      = "LoKi::RangeBase_"      />
   <class name      = "LoKi::AuxFunBase"      />
   <class name      = "LoKi::KeeperBase"      />
+
+  <class name      = "LoKi::Services"        />
   
 
   <class pattern   = "LoKi::Interface<*>"    />
@@ -31,7 +33,9 @@
   
   <function pattern = "LoKi::Geometry::*"      />
   <function pattern = "LoKi::Kinematics::*"    />
-  <function pattern = "LoKi::Particles::*"    />
+  <function pattern = "LoKi::Particles::*"     />
+  
+  <variable pattern = "LoKi::Constants::*"     />
   
   <exclusion>
     <class    name    = "std::unary_function<char,bool>"        />

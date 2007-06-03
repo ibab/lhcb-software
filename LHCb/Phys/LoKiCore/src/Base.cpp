@@ -1,8 +1,11 @@
-// $Id: Base.cpp,v 1.2 2006-05-02 14:29:10 ibelyaev Exp $
+// $Id: Base.cpp,v 1.3 2007-06-03 20:38:24 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2006/05/02 14:29:10  ibelyaev
+//  censored
+//
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -20,8 +23,6 @@
 #include "LoKi/Base.h"
 #include "LoKi/Report.h"
 // ============================================================================
-
-// ============================================================================
 /** @file
  *
  * Implementation file for class LoKi::Base
@@ -38,8 +39,6 @@
  *  @date 2006-03-10 
  */
 // ============================================================================
-
-// ============================================================================
 namespace 
 { 
   // ==========================================================================
@@ -51,11 +50,9 @@ namespace
   // ==========================================================================
   InstanceCounter<LoKi::Base> s_BaseCounter ;
   // ==========================================================================
-} ;
+} 
 // ============================================================================
-
-// ============================================================================
-/// Standard constructor
+// Standard constructor
 // ============================================================================
 LoKi::Base::Base 
 ( const std::string& name     , 
@@ -66,9 +63,9 @@ LoKi::Base::Base
   , m_refCount   ( 0        ) 
 {
   s_BaseCounter.increment();
-};
+}
 // ============================================================================
-/// copy constructor 
+// copy constructor 
 // ============================================================================
 LoKi::Base::Base
 ( const LoKi::Base& right ) 
@@ -78,13 +75,13 @@ LoKi::Base::Base
   , m_refCount   ( 0 )
 {
   s_BaseCounter.increment();
-};
+}
 // ============================================================================
 // destructor 
 // ============================================================================
-LoKi::Base::~Base() { s_BaseCounter.decrement() ; } ;
+LoKi::Base::~Base() { s_BaseCounter.decrement() ; } 
 // ============================================================================
-/// ASSIGNEMENT operator : refCount is not affected!
+// ASSIGNEMENT operator : refCount is not affected!
 // ============================================================================
 LoKi::Base& LoKi::Base::operator=
 ( const LoKi::Base& right ) 
@@ -98,7 +95,7 @@ LoKi::Base& LoKi::Base::operator=
   m_reporter = right.m_reporter ;
   // m_refCount is not affected!!!              // ATTENTION! 
   return *this ;
-};
+}
 // ============================================================================
 /** Print the error message and return with the given StatusCode.
  *
@@ -121,7 +118,6 @@ LoKi::Base& LoKi::Base::operator=
  *  @param msg    Error message
  *  @param st     StatusCode to return
  *  @param mx     Maximum number of printouts for this message
- *  @return       StatusCode
  */
 // ============================================================================
 StatusCode LoKi::Base::Error
@@ -133,7 +129,7 @@ StatusCode LoKi::Base::Error
     m_reporter.validPointer() ?
     m_reporter->   Error (                               msg , st , mx ) :
     LoKi::Report:: Error ( type() + "/" + name() + ":" + msg , st , mx ) ;
-} ;
+} 
 // ============================================================================
 /** Print the warning message and return with the given StatusCode.
  *
@@ -168,7 +164,7 @@ StatusCode LoKi::Base::Warning
     m_reporter.validPointer() ?
     m_reporter->   Warning (                                 msg , st , mx ) :
     LoKi::Report:: Warning ( type() + "/" + name() + ": " +  msg , st , mx ) ;
-} ;
+} 
 // ============================================================================
 /** Print the message and return status code 
  *  @see MsgStream
@@ -180,91 +176,92 @@ StatusCode LoKi::Base::Warning
  *  @return       status code 
  */
 // ============================================================================
-StatusCode LoKi::Base::Print     
+void LoKi::Base::Print     
 ( const std::string& msg , 
   const StatusCode   st  ,
   const MSG::Level   lev ) const 
 {
-  return 
-    m_reporter.validPointer() ?
-    m_reporter->   Print  (                                msg , st , lev ) :
-    LoKi::Report:: Print  ( type() + "/" + name() + ": " + msg , st , lev ) ;
-} ;
+  st.ignore() ;
+  if ( m_reporter.validPointer() ) 
+  { m_reporter->   Print  ( msg , st , lev ).ignore() ; }
+  else 
+  { LoKi::Report:: Print  ( type() + "/" + name() + ": " + msg , st , lev ) ; }
+} 
 // ============================================================================
-/** Create and (re)-throw the exception  
+/*  Create and (re)-throw the exception  
  *  @see GaudiException
  *  @exception CaudiException always!
  *  @param msg    exception message 
  *  @param exc    (previous) exception of type GaudiException
  *  @param sc     status code  
- *  @return       status code (fictive) 
  */
 // ============================================================================
-StatusCode LoKi::Base::Exception 
+void LoKi::Base::Exception 
 ( const std::string    & msg ,  
   const GaudiException & exc , 
   const StatusCode       sc  ) const 
 {
-  return 
-    m_reporter.validPointer() ?
-    m_reporter->   Exception (                                msg , exc , sc ) :
-    LoKi::Report:: Exception ( type() + "/" + name() + ": " + msg , exc , sc ) ;
-} ;
+  sc.ignore() ;
+  if ( m_reporter.validPointer() ) 
+  { m_reporter->   Exception ( msg , exc , sc ).ignore() ; }
+  else 
+  { LoKi::Report:: Exception ( type() + "/" + name() + ": " + msg , exc , sc ) ; }
+} 
 // ============================================================================
-/** Create and (re)-throw the exception  
+/*  Create and (re)-throw the exception  
  *  @see GaudiException
  *  @exception GaudiException always!
  *  @param msg    exception message 
  *  @param exc    (previous) exception of type std::exception
  *  @param sc     status code  
- *  @return       status code (fictive) 
  */
 // ============================================================================
-StatusCode LoKi::Base::Exception 
+void LoKi::Base::Exception 
 ( const std::string    & msg ,  
   const std::exception & exc , 
   const StatusCode       sc  ) const 
 {
-  return 
-    m_reporter.validPointer() ?
-    m_reporter->   Exception (                                msg , exc , sc ) :
-    LoKi::Report:: Exception ( type() + "/" + name() + ": " + msg , exc , sc ) ;
-} ;
+  sc.ignore() ;
+  if ( m_reporter.validPointer() ) 
+  { m_reporter->   Exception ( msg , exc , sc ).ignore() ; }
+  else 
+  { LoKi::Report:: Exception ( type() + "/" + name() + ": " + msg , exc , sc ) ; }
+} 
 // ============================================================================
-/** Create and throw the exception  
+/*  Create and throw the exception  
  *  @see GaudiException
  *  @exception GaudiException always!
  *  @param msg    exception message 
  *  @param sc     status code  
- *  @return       status code (fictive) 
  */
 // ============================================================================
-StatusCode LoKi::Base::Exception
+void LoKi::Base::Exception
 ( const std::string& msg ,  
   const StatusCode   sc  ) const 
 {
-  return 
-    m_reporter.validPointer() ?
-    m_reporter->   Exception (                                msg , sc ) :
-    LoKi::Report:: Exception ( type() + "/" + name() + ": " + msg , sc ) ;
-} ;
+  sc.ignore() ;
+  if ( m_reporter.validPointer() ) 
+  { m_reporter->   Exception ( msg , sc ).ignore() ; }
+  else 
+  { LoKi::Report:: Exception ( type() + "/" + name() + ": " + msg , sc ) ; }
+} 
 // ============================================================================
-/// get the type of the base object 
+// get the type of the base object 
 // ============================================================================
 const std::string& LoKi::Base::type() const
 {
   static std::string s_type = "" ;
   if ( s_type.empty() ) { s_type = System::typeinfoName( typeid( *this ) ); }
   return s_type ;
-};
+} 
 // ============================================================================
-/// decreemnt the reference counter 
+// decreemnt the reference counter 
 // ============================================================================
 long LoKi::Base::release    ()
 {
   if ( 0 == --m_refCount ) { delete this ; }   ///< ATTENTION!
   return m_refCount ;
-} ;
+} 
 // ============================================================================
 
 // ============================================================================

@@ -1,8 +1,11 @@
-// $Id: ErrorReport.h,v 1.5 2006-11-25 19:12:55 ibelyaev Exp $
+// $Id: ErrorReport.h,v 1.6 2007-06-03 20:38:24 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2006/11/25 19:12:55  ibelyaev
+//  improve Doxygen
+//
 // Revision 1.4  2006/05/02 14:29:09  ibelyaev
 //  censored
 //
@@ -19,7 +22,6 @@
 #include "GaudiKernel/HashMap.h"
 // ============================================================================
 class GaudiException ;
-
 // ============================================================================
 /** @file
  *
@@ -35,41 +37,32 @@ class GaudiException ;
  *  @date 2001-01-23 
  */
 // ============================================================================
-
 namespace LoKi
 {
-  class IReporter;
-  
+  class IReporter; 
   /** @class ErrorReport ErrorReport.h LoKi/ErrorReport.h
-   *  
-   *
    *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
    *  @date   2003-04-15
    */
   class ErrorReport 
   {
-  public:
-    
+  public: 
     /** static function for the instance of the reporter 
      *  @return the refence to the unique static instance 
      */
     static ErrorReport& instance() ;
-    
     /** get the LoKi reporter
      *  @return pointer to currently active LoKi error reporter tool
      */
     const LoKi::IReporter* reporter    () const ;
-    
     /** set new active eporter 
      *  @return status code 
      */
     StatusCode             setReporter ( const LoKi::IReporter* reporter ) ;
-  
     /** make a report 
      *  @return status code 
      */
     StatusCode             report      () const ;
-    
     /** Print the error  message, return status code
      *  @param msg    error message 
      *  @param st     status code 
@@ -80,7 +73,6 @@ namespace LoKi
     ( const std::string&  msg                       , 
       const StatusCode    st  = StatusCode::FAILURE ,
       const size_t        mx  = 10                  ) const  ;
-    
     /** Print the warning  message, return status code 
      *  @param msg    warning message 
      *  @param st     status code  
@@ -91,7 +83,6 @@ namespace LoKi
     ( const std::string&  msg                       , 
       const StatusCode    st  = StatusCode::FAILURE , 
       const size_t        mx  = 10                  ) const  ;
-    
     /** Print the message and return status code 
      *  @param msg    warning message 
      *  @param st     status code 
@@ -102,7 +93,6 @@ namespace LoKi
     ( const std::string& msg                       , 
       const StatusCode   st  = StatusCode::FAILURE ,
       const MSG::Level   lev = MSG::INFO           ) const ;
-    
     /** Assertion - throw exception, if condition is not fulfilled 
      *  @see GaudiException
      *  @see LoKi::Exception
@@ -119,8 +109,7 @@ namespace LoKi
       const StatusCode   sc      = StatusCode::FAILURE ) const 
     {
       return ( ok ? StatusCode::SUCCESS : Exception( message , sc ) ) ;
-    } ;
-    
+    } 
     /** Create and (re)-throw the exception  
      *  @see LoKi::Exception
      *  @exception LoKi::Exception always!
@@ -133,7 +122,6 @@ namespace LoKi
     ( const std::string    & msg                        ,  
       const GaudiException & exc                        , 
       const StatusCode       sc  = StatusCode::FAILURE  ) const ;
-    
     /** Create and (re)-throw the exception  
      *  @see GaudiException
      *  @exception GaudiException always!
@@ -146,7 +134,6 @@ namespace LoKi
     ( const std::string    & msg                        ,  
       const std::exception & exc                        , 
       const StatusCode       sc  = StatusCode::FAILURE  ) const ;
-    
     /** Create and throw the exception  
      *  @see GaudiException
      *  @exception GaudiException always!
@@ -157,21 +144,15 @@ namespace LoKi
     StatusCode Exception 
     ( const std::string& msg = "no message"        ,  
       const StatusCode   sc  = StatusCode::FAILURE ) const ;
-    
   private:
-    
     /// private destructor 
-    ~ErrorReport( ); 
-    
+    ~ErrorReport( );
   private:
-    
     /// private default constructor
     ErrorReport();
     // private copy constructor
     ErrorReport( const ErrorReport&);
-    
   private:
-    
     typedef GaudiUtils::HashMap<std::string,unsigned long> Counter ;   
     /// counter of errorr 
     mutable Counter m_errors     ; ///< counter of errorr 
@@ -179,13 +160,10 @@ namespace LoKi
     mutable Counter m_warnings   ; ///< counter of warnings 
     /// counter of exception
     mutable Counter m_exceptions ; ///< counter of exceptions
-    
+    //
     const LoKi::IReporter* m_reporter ;    
   };
-
-} // end of namespace LoKi 
-
-
+} // end of namespace LoKi
 // ============================================================================
 // The END 
 // ============================================================================

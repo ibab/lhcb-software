@@ -1,10 +1,8 @@
-// $Id: Objects.h,v 1.6 2006-11-25 19:12:56 ibelyaev Exp $
+// $Id: Objects.h,v 1.7 2007-06-03 20:38:24 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.5  2006/05/02 14:29:10  ibelyaev
-//  censored
 //
 // ============================================================================
 #ifndef LOKI_OBJECTS_H 
@@ -17,8 +15,9 @@
 #include <utility>
 #include <functional>
 // ============================================================================
-
-
+// Boost
+// ============================================================================
+#include "boost/call_traits.hpp"
 // ============================================================================
 /** @file
  *
@@ -34,8 +33,6 @@
  *  @date 2006-02-06 
  */
 // ============================================================================
-
-
 namespace LoKi 
 {
   /** @namespace LoKi::Objects Objects.h LoKi/Objects.h
@@ -55,9 +52,10 @@ namespace LoKi
     template <class TYPE>
     struct _ALL  : public  std::unary_function<TYPE,bool>
     {
-      inline bool operator() ( TYPE /* arg */ ) const { return true   ; }
-    };
-    
+      /// type for the argument 
+      typedef typename boost::call_traits<TYPE>::param_type ARG ;  
+      inline bool operator() ( ARG /* arg */ ) const { return true   ; }
+    } ;
     /** @struct _NONE
      *  trivial class/functor/predicate which always evaluated to "false"
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -66,9 +64,10 @@ namespace LoKi
     template <class TYPE>
     struct _NONE : public  std::unary_function<TYPE,bool>
     {
-      inline bool operator() ( TYPE /* arg */ ) const { return false  ; }
-    };
-    
+      /// type for the argument 
+      typedef typename boost::call_traits<TYPE>::param_type ARG ;  
+      inline bool operator() ( ARG /* arg */ ) const { return false  ; }
+    } ;
     /** @struct _ONE
      *  trivial class/functor/predicate which always evaluated to "1"
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -77,30 +76,45 @@ namespace LoKi
     template <class TYPE>
     struct _ONE  : public  std::unary_function<TYPE,int>
     {
-      inline int operator() ( TYPE /* arg */ ) const { return 1 ; }
+      /// type for the argument 
+      typedef typename boost::call_traits<TYPE>::param_type ARG ;  
+      inline int operator() ( ARG /* arg */ ) const { return 1 ; }
+    };  
+    /** @struct _VALID
+     *  trivial class/functor/predicate which checks the validity of object
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date   2006-02-08
+     */
+    template <class TYPE> 
+    struct _VALID : public std::unary_function<TYPE,bool>
+    {
+      /// type for the argument 
+      typedef typename boost::call_traits<TYPE>::param_type ARG ;  
+      inline bool  operator() ( ARG arg ) const { return arg ; }
     };
-
     /** @var _ALL_
      *  helper objects which allows the efficient implementation 
      *  of selection algorithms 
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-08
      */
-    const _ALL<const void*> _ALL_ = _ALL<const void*>() ;
-    
+    const _ALL<const void*> _ALL_     = _ALL<const void*>  () ;
     /** @var _ONE_
      *  helper objects which allows the efficient implementation 
      *  of selection algorithms 
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-08
      */
-    const _ONE<const void*> _ONE_ = _ONE<const void*>() ;
-    
-  } // end of the namespace LoKi::Objects 
-  
+    const _ONE<const void*> _ONE_     = _ONE<const void*>  () ;
+    /** @var _VALID_
+     *  helper objects which allows the efficient implementation 
+     *  of selection algorithms 
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-02-08
+     */
+    const _VALID<const void*> _VALID_ = _VALID<const void*> () ;
+  } // end of the namespace LoKi::Objects
 } // end of the namespace LoKi
-
-
 // ============================================================================
 // The END 
 // ============================================================================

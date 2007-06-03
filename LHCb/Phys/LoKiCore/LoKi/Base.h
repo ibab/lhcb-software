@@ -1,8 +1,11 @@
-// $Id: Base.h,v 1.3 2007-06-01 11:35:26 ibelyaev Exp $
+// $Id: Base.h,v 1.4 2007-06-03 20:38:24 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2007/06/01 11:35:26  ibelyaev
+//  prepare for v3r0
+//
 // Revision 1.2  2006/05/02 14:29:09  ibelyaev
 //  censored
 //
@@ -91,8 +94,7 @@ namespace LoKi
     StatusCode Error
     ( const std::string& msg ,
       const StatusCode   st  = StatusCode::FAILURE ,
-      const size_t       mx  = 10                  ) const ;
-    
+      const size_t       mx  = 10                  ) const ;    
     /** Print the warning message and return with the given StatusCode.
      *
      *  Also performs statistical analysis of the error messages and
@@ -120,7 +122,6 @@ namespace LoKi
     ( const std::string& msg ,
       const StatusCode   st  = StatusCode::FAILURE ,
       const size_t       mx  = 10                  ) const ;
-    
     /** Print the message and return status code 
      *  @see MsgStream
      *  @see IMessageSvc 
@@ -128,9 +129,8 @@ namespace LoKi
      *  @param msg    warning message 
      *  @param st     status code 
      *  @param lev    print level 
-     *  @return       status code 
      */
-    StatusCode Print     
+    void Print     
     ( const std::string& msg , 
       const StatusCode   st  = StatusCode::SUCCESS ,
       const MSG::Level   lev = MSG::INFO           ) const ;    
@@ -143,22 +143,37 @@ namespace LoKi
      *  @param sc           status code to be returned (artificial) 
      *  @return             status code        
      */ 
-    inline StatusCode Assert 
+    inline void Assert 
     ( const bool         ok                            , 
       const std::string& message = ""                  , 
       const StatusCode   sc      = StatusCode::FAILURE ) const 
     {
-      return ok ? StatusCode::SUCCESS : Exception ( message , sc ) ;
-    } ;
+      if ( !ok ) { Exception ( message , sc ) ; } ; sc.ignore() ;
+    } 
+    /** Assertion - throw exception, if condition is not fulfilled 
+     *  @see CaloException
+     *  @see GaudiException
+     *  @exception CaloException for invalid condifition 
+     *  @param ok           condition which should be "true"
+     *  @param message      message to be associated with the exception 
+     *  @param sc           status code to be returned (artificial) 
+     *  @return             status code        
+     */ 
+    inline void Assert 
+    ( const bool         ok                            , 
+      const char*        message                       , 
+      const StatusCode   sc      = StatusCode::FAILURE ) const 
+    {
+      if ( !ok ) { Exception ( message , sc ) ; } ; sc.ignore() ;
+    } 
     /** Create and (re)-throw the exception  
      *  @see GaudiException
      *  @exception CaudiException always!
      *  @param msg    exception message 
      *  @param exc    (previous) exception of type GaudiException
      *  @param sc     status code  
-     *  @return       status code (fictive) 
      */
-    StatusCode Exception 
+    void Exception 
     ( const std::string    & msg                        ,  
       const GaudiException & exc                        , 
       const StatusCode       sc  = StatusCode::FAILURE  ) const ;
@@ -168,9 +183,8 @@ namespace LoKi
      *  @param msg    exception message 
      *  @param exc    (previous) exception of type std::exception
      *  @param sc     status code  
-     *  @return       status code (fictive) 
      */
-    StatusCode Exception 
+    void Exception 
     ( const std::string    & msg                        ,  
       const std::exception & exc                        , 
       const StatusCode       sc  = StatusCode::FAILURE  ) const ;
@@ -179,9 +193,8 @@ namespace LoKi
      *  @exception GaudiException always!
      *  @param msg    exception message 
      *  @param sc     status code  
-     *  @return       status code (fictive) 
      */
-    StatusCode Exception 
+    void Exception 
     ( const std::string& msg = "no message"        ,  
       const StatusCode   sc  = StatusCode::FAILURE ) const ;
   public:

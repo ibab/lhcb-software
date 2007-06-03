@@ -1,8 +1,11 @@
-// $Id: Report.h,v 1.5 2006-11-25 19:12:56 ibelyaev Exp $
+// $Id: Report.h,v 1.6 2007-06-03 20:38:24 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2006/11/25 19:12:56  ibelyaev
+//  improve Doxygen
+//
 // Revision 1.4  2006/05/02 14:29:10  ibelyaev
 //  censored
 //
@@ -18,7 +21,6 @@
 #include "GaudiKernel/IMessageSvc.h"
 // ============================================================================
 class GaudiException ;
-
 // ============================================================================
 /** @file
  *
@@ -34,7 +36,6 @@ class GaudiException ;
  *  @date 2001-01-23 
  */
 // ============================================================================
-
 namespace LoKi
 {
   /** @class Report
@@ -44,37 +45,33 @@ namespace LoKi
   class Report
   {
   public:    
-    /** Print the error  message, return status code
+    /** Print the error  message
      *  @param msg    error message 
      *  @param st     status code 
      *  @param mx     maximal number of printouts
-     *  @return       status code 
      */
     static StatusCode Error     
     ( const std::string&  msg                       , 
       const StatusCode    st  = StatusCode::FAILURE ,
       const size_t        mx  = 10                  ) ;    
-    /** Print the warning  message, return status code 
+    /** Print the warning  message
      *  @param msg    warning message 
      *  @param st     status code  
      *  @param mx     maximal number of printouts
-     *  @return       status code 
      */
     static StatusCode Warning   
     ( const std::string&  msg                       , 
       const StatusCode    st  = StatusCode::FAILURE , 
       const size_t        mx  = 10                  ) ;
-    /** Print the message and return status code 
+    /** Print the message 
      *  @param msg    warning message 
      *  @param st     status code 
      *  @param lev    print level 
-     *  @return       status code 
      */
-    static StatusCode Print     
+    static void Print     
     ( const std::string& msg                       , 
       const StatusCode   st  = StatusCode::FAILURE ,
-      const MSG::Level   lev = MSG::INFO           ) ;   
-    
+      const MSG::Level   lev = MSG::INFO           ) ;
     /** Assertion - throw exception, if condition is not fulfilled 
      *  @see GaudiException
      *  @see LoKi::Exception
@@ -83,29 +80,26 @@ namespace LoKi
      *  @param ok           condition which should be "true"
      *  @param message      message to be associated with the exception 
      *  @param sc           status code to be returned (artificial) 
-     *  @return             status code        
      */ 
-    inline static StatusCode Assert 
+    inline 
+    static void Assert 
     ( const bool         ok                            , 
       const std::string& message = ""                  , 
       const StatusCode   sc      = StatusCode::FAILURE ) 
     {
-      return ( ok ? StatusCode::SUCCESS : Exception( message , sc ) ) ;
-    } ;
-    
+      if ( !ok) { Exception( message , sc ) ; } ; sc.ignore() ;
+    }
     /** Create and (re)-throw the exception  
      *  @see LoKi::Exception
      *  @exception LoKi::Exception always!
      *  @param msg    exception message 
      *  @param exc    (previous) exception of type GaudiException
      *  @param sc     status code  
-     *  @return       status code (fictive) 
      */
-    static StatusCode Exception 
+    static void Exception 
     ( const std::string    & msg                        ,  
       const GaudiException & exc                        , 
       const StatusCode       sc  = StatusCode::FAILURE  ) ;
-    
     /** Create and (re)-throw the exception  
      *  @see GaudiException
      *  @exception GaudiException always!
@@ -114,11 +108,10 @@ namespace LoKi
      *  @param sc     status code  
      *  @return       status code (fictive) 
      */
-    static StatusCode Exception 
+    static void Exception 
     ( const std::string    & msg                        ,  
       const std::exception & exc                        , 
       const StatusCode       sc  = StatusCode::FAILURE  ) ;
-    
     /** Create and throw the exception  
      *  @see GaudiException
      *  @exception GaudiException always!
@@ -126,16 +119,12 @@ namespace LoKi
      *  @param sc     status code  
      *  @return       status code (fictive) 
      */
-    static StatusCode Exception 
+    static void Exception 
     ( const std::string& msg = "no message"        ,  
       const StatusCode   sc  = StatusCode::FAILURE ) ;
-    
-    /** make a report 
-     *  @return status code 
-     */
-    static StatusCode             report      () ;
+    /// make a report 
+    static void report      () ;
   } ;
-
 } // end of namespace LoKi 
 
 

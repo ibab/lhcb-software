@@ -1,8 +1,11 @@
-// $Id: Report.cpp,v 1.4 2006-05-02 14:29:11 ibelyaev Exp $
+// $Id: Report.cpp,v 1.5 2007-06-03 20:38:24 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2006/05/02 14:29:11  ibelyaev
+//  censored
+//
 // ============================================================================
 // GaudiKernel
 // ============================================================================
@@ -13,8 +16,6 @@
 // ============================================================================
 #include "LoKi/Report.h"
 #include "LoKi/ErrorReport.h"
-// ============================================================================
-
 // ============================================================================
 /** @file
  *
@@ -32,55 +33,53 @@
  *  @date 2001-01-23 
  */
 // ============================================================================
-
-// ============================================================================
-/** Print the error  message, return status code
+/*  Print the error  message, return status code
  *  @param msg    error message 
  *  @param st     status code 
  *  @param mx     maximal number of printouts
- *  @return       status code 
  */
 // ============================================================================
 StatusCode LoKi::Report::Error     
 ( const std::string&  msg , 
   const StatusCode    st  ,
   const size_t        mx  ) 
-{ return LoKi::ErrorReport::instance().Error( msg , st , mx ) ; } ;
+{ 
+  st.ignore() ;
+  return LoKi::ErrorReport::instance().Error( msg , st , mx ) ;
+} 
 // ============================================================================
-
-// ============================================================================
-/** Print the warning  message, return status code 
+/*  Print the warning  message, return status code 
  *  @param msg    warning message 
  *  @param st     status code  
  *  @param mx     maximal number of printouts
- *  @return       status code 
  */
 // ============================================================================
 StatusCode LoKi::Report::Warning   
 ( const std::string&  msg , 
   const StatusCode    st  , 
   const size_t        mx  ) 
-{ return LoKi::ErrorReport::instance().Warning( msg , st , mx ) ; } ;
+{
+  st.ignore() ;
+  return LoKi::ErrorReport::instance().Warning( msg , st , mx ) ;
+} 
 // ============================================================================
-
-
-// ============================================================================
-/** Print the message and return status code 
+/*  Print the message and return status code 
  *  @param msg    warning message 
  *  @param st     status code 
  *  @param lev    print level 
  *  @return       status code 
  */
 // ============================================================================
-StatusCode LoKi::Report::Print     
+void LoKi::Report::Print     
 ( const std::string& msg , 
   const StatusCode   st  ,
   const MSG::Level   lev )
-{ return LoKi::ErrorReport::instance().Print( msg , st , lev  ) ; } ; 
+{ 
+  st.ignore() ; 
+  LoKi::ErrorReport::instance().Print( msg , st , lev  ).ignore() ; 
+}  
 // ============================================================================
-
-// ============================================================================
-/** Create and (re)-throw the exception  
+/*  Create and (re)-throw the exception  
  *  @see LoKi::Exception
  *  @exception LoKi::Exception always!
  *  @param msg    exception message 
@@ -89,15 +88,16 @@ StatusCode LoKi::Report::Print
  *  @return       status code (fictive) 
  */
 // ============================================================================
-StatusCode LoKi::Report::Exception 
+void LoKi::Report::Exception 
 ( const std::string    & msg ,  
   const GaudiException & exc , 
   const StatusCode       sc  ) 
-{ return LoKi::ErrorReport::instance().Exception( msg , exc , sc ) ; } ; 
+{ 
+  sc.ignore() ; 
+  LoKi::ErrorReport::instance().Exception( msg , exc , sc ).ignore() ; 
+}  
 // ============================================================================
-
-// ============================================================================
-/** Create and (re)-throw the exception  
+/*  Create and (re)-throw the exception  
  *  @see GaudiException
  *  @exception GaudiException always!
  *  @param msg    exception message 
@@ -106,15 +106,16 @@ StatusCode LoKi::Report::Exception
  *  @return       status code (fictive) 
  */
 // ============================================================================
-StatusCode LoKi::Report::Exception 
+void LoKi::Report::Exception 
 ( const std::string    & msg ,  
   const std::exception & exc , 
   const StatusCode       sc  ) 
-{ return LoKi::ErrorReport::instance().Exception( msg , exc , sc ) ; } ; 
+{ 
+  sc.ignore() ;
+  LoKi::ErrorReport::instance().Exception( msg , exc , sc ).ignore() ; 
+} 
 // ============================================================================
-
-// ============================================================================
-/** Create and throw the exception  
+/*  Create and throw the exception  
  *  @see GaudiException
  *  @exception GaudiException always!
  *  @param msg    exception message 
@@ -122,20 +123,20 @@ StatusCode LoKi::Report::Exception
  *  @return       status code (fictive) 
  */
 // ============================================================================
-StatusCode LoKi::Report::Exception 
+void LoKi::Report::Exception 
 ( const std::string& msg ,  
   const StatusCode   sc  ) 
-{ return LoKi::ErrorReport::instance().Exception( msg , sc ) ; } ; 
+{ 
+  sc.ignore() ;
+  LoKi::ErrorReport::instance().Exception( msg , sc ).ignore() ; 
+}                                                                   
 // ============================================================================
-
-
+//  make a report 
 // ============================================================================
-/** make a report 
- *  @return status code 
- */
-// ============================================================================
-StatusCode LoKi::Report::report      () 
-{ return LoKi::ErrorReport::instance().report() ; } ; 
+void LoKi::Report::report      () 
+{ 
+  LoKi::ErrorReport::instance().report().ignore()  ; 
+}  
 // ============================================================================
 
 // ============================================================================
