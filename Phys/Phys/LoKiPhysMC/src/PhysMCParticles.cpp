@@ -1,22 +1,8 @@
-// $Id: PhysMCParticles.cpp,v 1.6 2007-04-16 16:16:48 pkoppenb Exp $
+// $Id: PhysMCParticles.cpp,v 1.7 2007-06-03 20:41:58 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.5  2007/01/20 14:47:25  ibelyaev
-//  add GenMCTrith function/ GMCTRUTH shortcut
-//
-// Revision 1.4  2006/10/27 13:41:27  ibelyaev
-//  fix for SLC4 platform
-//
-// Revision 1.3  2006/09/06 12:37:21  ibelyaev
-//  remove duplicated constructor
-//
-// Revision 1.2  2006/03/14 19:37:09  ibelyaev
-//  minor changes
-//
-// Revision 1.1.1.1  2006/03/14 19:12:21  ibelyaev
-// New package : RC <---> MC links for LoKi 
 // 
 // ============================================================================
 // Include files 
@@ -26,8 +12,6 @@
 #include "LoKi/MCMatchObj.h"
 #include "LoKi/MCMatch.h"
 #include "LoKi/PhysMCParticles.h"
-// ============================================================================
-
 // ============================================================================
 /** @file
  *
@@ -45,9 +29,7 @@
  *  @date 2006-03-13 
  */
 // ============================================================================
-
-// ============================================================================
-/** constructor 
+/*  constructor 
  *  @param match MCMatch object (working horse)
  *  @param particle  pointer to MC particle object 
  */
@@ -58,9 +40,9 @@ LoKi::Particles::MCTruth::MCTruth
   : LoKi::Predicate<const LHCb::Particle*> () 
   , LoKi::Keeper<LHCb::MCParticle> ( particle ) 
   , m_match ( match ) 
-{} ;
+{} 
 // ============================================================================
-/** constructor 
+/*  constructor 
  *  @param match MCMatch object (working horse)
  *  @param range range of MC particles 
  */
@@ -71,9 +53,9 @@ LoKi::Particles::MCTruth::MCTruth
   : LoKi::Predicate<const LHCb::Particle*> ()
   , LoKi::Keeper<LHCb::MCParticle>( range.begin() , range.end() )
   , m_match ( match ) 
-{} ;
+{} 
 // ============================================================================
-/** constructor 
+/*  constructor 
  *  @param match MCMatch object (working horse)
  *  @param range range of MC particles 
  */
@@ -84,9 +66,9 @@ LoKi::Particles::MCTruth::MCTruth
   : LoKi::Predicate<const LHCb::Particle*> ()
   , LoKi::Keeper<LHCb::MCParticle>( range.begin() , range.end() )
   , m_match     ( match ) 
-{} ;
+{} 
 // ============================================================================
-/** constructor 
+/*  constructor 
  *  @param match MCMatch object (working horse)
  *  @param range range of MC particles 
  */
@@ -99,7 +81,7 @@ LoKi::Particles::MCTruth::MCTruth
   , m_match     ( match ) 
 {} ;
 // ============================================================================
-/** constructor 
+/*  constructor 
  *  @param match MCMatch object (working horse)
  *  @param range range of MC particles 
  */
@@ -110,10 +92,9 @@ LoKi::Particles::MCTruth::MCTruth
   : LoKi::Predicate<const LHCb::Particle*> ()
   , LoKi::Keeper<LHCb::MCParticle>( range )
   , m_match     ( match ) 
-{} ;
-
+{} 
 // ============================================================================
-/** constructor 
+/*  constructor 
  *  @param match MCMatch object (working horse)
  *  @param range range of MC particles 
  */
@@ -124,9 +105,9 @@ LoKi::Particles::MCTruth::MCTruth
   : LoKi::Predicate<const LHCb::Particle*> ()
   , LoKi::Keeper<LHCb::MCParticle>( range )
   , m_match     ( match ) 
-{} ;
+{} 
 // ============================================================================
-/** constructor 
+/*  constructor 
  *  @param match MCMatch object (working horse)
  *  @param particle  pointer to MC particle object 
  */
@@ -137,9 +118,9 @@ LoKi::Particles::MCTruth::MCTruth
   : LoKi::Predicate<const LHCb::Particle*> () 
   , LoKi::Keeper<LHCb::MCParticle>( particle )
   , m_match     ( match ) 
-{} ;
+{} 
 // ============================================================================
-/** constructor 
+/*  constructor 
  *  @param match MCMatch object (working horse)
  *  @param range range of MC particles 
  */
@@ -150,9 +131,9 @@ LoKi::Particles::MCTruth::MCTruth
   : LoKi::Predicate<const LHCb::Particle*> ()
   , LoKi::Keeper<LHCb::MCParticle>( range.begin() , range.end() )
   , m_match     ( match ) 
-{} ;
+{} 
 // ============================================================================
-/** constructor 
+/*  constructor 
  *  @param match MCMatch object (working horse)
  *  @param range range of MC particles 
  */
@@ -163,9 +144,9 @@ LoKi::Particles::MCTruth::MCTruth
   : LoKi::Predicate<const LHCb::Particle*> () 
   , LoKi::Keeper<LHCb::MCParticle>( range.begin() , range.end() )
   , m_match     ( match ) 
-{} ;
+{} 
 // ============================================================================
-/** constructor 
+/*  constructor 
  *  @param match MCMatch object (working horse)
  *  @param range range of MC particles 
  */
@@ -176,9 +157,9 @@ LoKi::Particles::MCTruth::MCTruth
   : LoKi::Predicate<const LHCb::Particle*> () 
   , LoKi::Keeper<LHCb::MCParticle>( range.begin() , range.end() )
   , m_match     ( match                       ) 
-{} ;
+{} 
 // ============================================================================
-/** constructor 
+/*  constructor 
  *  @param match MCMatch object (working horse)
  *  @param range range of MC particles 
  */
@@ -189,9 +170,9 @@ LoKi::Particles::MCTruth::MCTruth
   : LoKi::Predicate<const LHCb::Particle*> ()
   , LoKi::Keeper<LHCb::MCParticle>( range )
   , m_match     ( match ) 
-{} ;
+{} 
 // ============================================================================
-/** constructor 
+/*  constructor 
  *  @param match MCMatch object (working horse)
  *  @param range range of MC particles 
  */
@@ -202,9 +183,9 @@ LoKi::Particles::MCTruth::MCTruth
   : LoKi::Predicate<const LHCb::Particle*> ()
   , LoKi::Keeper<LHCb::MCParticle>( range )
   , m_match     ( match ) 
-{} ;
+{} 
 // ============================================================================
-/// copy constructor
+//  copy constructor
 // ============================================================================
 LoKi::Particles::MCTruth::MCTruth 
 ( const LoKi::Particles::MCTruth& right ) 
@@ -212,19 +193,19 @@ LoKi::Particles::MCTruth::MCTruth
   , LoKi::Predicate<const LHCb::Particle*>( right ) 
   , LoKi::Keeper<LHCb::MCParticle>        ( right )
   , m_match ( right.m_match ) 
-{} ;
+{} 
 // ============================================================================
-/// MANDATORY: virual destructor 
+//  MANDATORY: virual destructor 
 // ============================================================================
 LoKi::Particles::MCTruth::~MCTruth(){}
 // ============================================================================
-/// MANDATORY: clone method ("virtual constructor")
+//  MANDATORY: clone method ("virtual constructor")
 // ============================================================================
 LoKi::Particles::MCTruth*
 LoKi::Particles::MCTruth::clone() const
 { return new MCTruth(*this) ; }
 // ============================================================================
-/// MANDATORY: the only one essential method ("function")
+//  MANDATORY: the only one essential method ("function")
 // ============================================================================
 LoKi::Particles::MCTruth::result_type 
 LoKi::Particles::MCTruth::operator() 
@@ -247,16 +228,14 @@ LoKi::Particles::MCTruth::operator()
   }
   //
   return end() != m_match->match( p , begin () , end   () ) ;
-} ;
+} 
 // ============================================================================
-/// OPTIONAL: the specific printout 
+//  OPTIONAL: the specific printout 
 // ============================================================================
 std::ostream& LoKi::Particles::MCTruth::fillStream 
 ( std::ostream& s ) const { return s << "MCTRUTH" ; }
 // ============================================================================
-
-// ============================================================================
-/** constructor 
+/*  constructor 
  *  @param match MCMatch object (working horse)
  *  @param particle  pointer to particle object 
  */
@@ -267,9 +246,9 @@ LoKi::MCParticles::RCTruth::RCTruth
   : LoKi::Predicate<const LHCb::MCParticle*> () 
   , LoKi::Keeper<LHCb::Particle> ( particle )
   , m_match ( match )
-{} ;
+{} 
 // ============================================================================
-/** constructor a
+/*  constructor a
  *  @param match MCMatch object (working horse)
  *  @param range "container" of particles 
  */
@@ -280,9 +259,9 @@ LoKi::MCParticles::RCTruth::RCTruth
   : LoKi::Predicate<const LHCb::MCParticle*> () 
   , LoKi::Keeper<LHCb::Particle> ( range.begin() , range.end() )
   , m_match ( match )
-{} ;
+{} 
 // ============================================================================
-/** constructor 
+/*  constructor 
  *  @param match MCMatch object (working horse)
  *  @param range container of particles 
  */
@@ -293,9 +272,9 @@ LoKi::MCParticles::RCTruth::RCTruth
   : LoKi::Predicate<const LHCb::MCParticle*> () 
   , LoKi::Keeper<LHCb::Particle> ( range.begin() , range.end() )
   , m_match ( match )
-{} ;
+{} 
 // ============================================================================
-/** constructor 
+/*  constructor 
  *  @param match MCMatch object (working horse)
  *  @param range container of particles 
  */
@@ -306,9 +285,9 @@ LoKi::MCParticles::RCTruth::RCTruth
   : LoKi::Predicate<const LHCb::MCParticle*> () 
   , LoKi::Keeper<LHCb::Particle> ( range.begin() , range.end() )
   , m_match ( match )
-{} ;
+{} 
 // ============================================================================
-/** constructor 
+/*  constructor 
  *  @param match MCMatch object (working horse)
  *  @param range container of particles 
  */
@@ -319,9 +298,9 @@ LoKi::MCParticles::RCTruth::RCTruth
   : LoKi::Predicate<const LHCb::MCParticle*> () 
   , LoKi::Keeper<LHCb::Particle> ( range )
   , m_match ( match )
-{} ;
+{} 
 // ============================================================================
-/** constructor 
+/*  constructor 
  *  @param match MCMatch object (working horse)
  *  @param range container of particles 
  */
@@ -332,9 +311,9 @@ LoKi::MCParticles::RCTruth::RCTruth
   : LoKi::Predicate<const LHCb::MCParticle*> () 
   , LoKi::Keeper<LHCb::Particle> ( range )
   , m_match ( match )
-{} ;
+{} 
 // ============================================================================
-/** constructor 
+/*  constructor 
  *  @param particle  pointer to particle object 
  *  @param match MCMatch object (working horse)
  */
@@ -345,9 +324,9 @@ LoKi::MCParticles::RCTruth::RCTruth
   : LoKi::Predicate<const LHCb::MCParticle*> () 
   , LoKi::Keeper<LHCb::Particle> ( particle )
   , m_match ( match )
-{} ;
+{} 
 // ============================================================================
-/** constructor 
+/*  constructor 
  *  @param range "container" of particles 
  *  @param match MCMatch object (working horse)
  */
@@ -358,9 +337,9 @@ LoKi::MCParticles::RCTruth::RCTruth
   : LoKi::Predicate<const LHCb::MCParticle*> () 
   , LoKi::Keeper<LHCb::Particle> ( range.begin() , range.end() )
   , m_match ( match )
-{} ;
+{} 
 // ============================================================================
-/** constructor 
+/*  constructor 
  *  @param range container of particles 
  *  @param match MCMatch object (working horse)
  */
@@ -371,9 +350,9 @@ LoKi::MCParticles::RCTruth::RCTruth
   : LoKi::Predicate<const LHCb::MCParticle*> () 
   , LoKi::Keeper<LHCb::Particle> ( range.begin() , range.end() )
   , m_match ( match )
-{} ;
+{} 
 // ============================================================================
-/** constructor 
+/*  constructor 
  *  @param range container of particles 
  *  @param match MCMatch object (working horse)
  */
@@ -384,9 +363,9 @@ LoKi::MCParticles::RCTruth::RCTruth
   : LoKi::Predicate<const LHCb::MCParticle*> () 
   , LoKi::Keeper<LHCb::Particle> ( range.begin() , range.end() )
   , m_match ( match )
-{} ;
+{} 
 // ============================================================================
-/** constructor 
+/*  constructor 
  *  @param range container of particles 
  *  @param match MCMatch object (working horse)
  */
@@ -397,9 +376,9 @@ LoKi::MCParticles::RCTruth::RCTruth
   : LoKi::Predicate<const LHCb::MCParticle*> () 
   , LoKi::Keeper<LHCb::Particle> ( range )
   , m_match ( match )
-{} ;
+{} 
 // ============================================================================
-/** constructor 
+/*  constructor 
  *  @param range container of particles 
  *  @param match MCMatch object (working horse)
  */
@@ -410,9 +389,9 @@ LoKi::MCParticles::RCTruth::RCTruth
   : LoKi::Predicate<const LHCb::MCParticle*> () 
   , LoKi::Keeper<LHCb::Particle> ( range )
   , m_match ( match )
-{} ;
+{} 
 // ============================================================================
-/// copy constructor
+//  copy constructor
 // ============================================================================
 LoKi::MCParticles::RCTruth::RCTruth
 ( const LoKi::MCParticles::RCTruth& right ) 
@@ -420,19 +399,19 @@ LoKi::MCParticles::RCTruth::RCTruth
   , LoKi::Predicate<const LHCb::MCParticle*> ( right ) 
   , LoKi::Keeper<LHCb::Particle> ( right )
   , m_match ( right.m_match )
-{} ;
+{} 
 // ============================================================================
-/// MANDATORY : virtual destructor destructor 
+//  MANDATORY : virtual destructor destructor 
 // ============================================================================
 LoKi::MCParticles::RCTruth::~RCTruth(){}
 // ============================================================================
-/// MANDATORY: clone method ("virtual constructor")
+//  MANDATORY: clone method ("virtual constructor")
 // ============================================================================
 LoKi::MCParticles::RCTruth*
 LoKi::MCParticles::RCTruth::clone() const 
 { return new RCTruth(*this) ; }
 // ============================================================================
-/// MANDATORY: the only one essential method ("function")
+//  MANDATORY: the only one essential method ("function")
 // ============================================================================
 LoKi::MCParticles::RCTruth::result_type 
 LoKi::MCParticles::RCTruth::operator() 
@@ -455,17 +434,14 @@ LoKi::MCParticles::RCTruth::operator()
   }
   //
   return end() != m_match->match( begin () , end () , p ) ;
-} ;
+} 
 // ============================================================================
-/// OPTIONAL: the specific printout 
+//  OPTIONAL: the specific printout 
 // ============================================================================
 std::ostream& LoKi::MCParticles::RCTruth::fillStream 
 ( std::ostream& s ) const { return s << "RCTRUTH" ; }
 // ============================================================================
-
-
-// ============================================================================
-/// constructor from HepMC::GenVertex
+//  constructor from HepMC::GenVertex
 // ============================================================================
 LoKi::Particles::GenMCTruth::GenMCTruth 
 ( const HepMC::GenVertex*             particle   , 
@@ -478,10 +454,10 @@ LoKi::Particles::GenMCTruth::GenMCTruth
   , m_mc    () 
 {
   _add ( particle ) ;
-  rebuild() ;
-} ;  
+  rebuild().ignore () ;
+} 
 // ============================================================================
-/// constructor from HepMC::GenParticle
+//  constructor from HepMC::GenParticle
 // ============================================================================
 LoKi::Particles::GenMCTruth::GenMCTruth 
 ( const HepMC::GenParticle*           particle   , 
@@ -494,10 +470,10 @@ LoKi::Particles::GenMCTruth::GenMCTruth
   , m_mc    () 
 {
   _add ( particle ) ;
-  rebuild() ;
-} ;  
+  rebuild().ignore() ;
+}   
 // ============================================================================
-/// constructor from container of HepMC::GenParticles
+//  constructor from container of HepMC::GenParticles
 // ============================================================================
 LoKi::Particles::GenMCTruth::GenMCTruth 
 ( const LoKi::GenTypes::GenContainer& particles  , 
@@ -510,10 +486,10 @@ LoKi::Particles::GenMCTruth::GenMCTruth
   , m_mc    () 
 {
   _add ( particles.begin() , particles.end() ) ;
-  rebuild() ;
-} ;
+  rebuild().ignore()  ;
+} 
 // ============================================================================
-/// constructor from range of HepMC::GenParticles
+//  constructor from range of HepMC::GenParticles
 // ============================================================================
 LoKi::Particles::GenMCTruth::GenMCTruth 
 ( const LoKi::Types::GRange&          particles  , 
@@ -526,10 +502,10 @@ LoKi::Particles::GenMCTruth::GenMCTruth
   , m_mc    () 
 {
   _add ( particles.begin() , particles.end() ) ;
-  rebuild() ;
-} ;
+  rebuild().ignore() ;
+} 
 // ============================================================================
-/// MANDATORY: copy constructor 
+//  MANDATORY: copy constructor 
 // ============================================================================
 LoKi::Particles::GenMCTruth::GenMCTruth
 ( const LoKi::Particles::GenMCTruth& right ) 
@@ -541,17 +517,17 @@ LoKi::Particles::GenMCTruth::GenMCTruth
   , m_mc    ( right.m_mc    ) 
 {}
 // ============================================================================
-/// MANDATORY: virtual destructor
+//  MANDATORY: virtual destructor
 // ============================================================================
 LoKi::Particles::GenMCTruth::~GenMCTruth() {}
 // ============================================================================
-/// MANDATORY: clone method ("virtual constructor")
+//  MANDATORY: clone method ("virtual constructor")
 // ============================================================================
 LoKi::Particles::GenMCTruth*
 LoKi::Particles::GenMCTruth::clone() const 
 { return new LoKi::Particles::GenMCTruth(*this) ; }
 // ============================================================================
-/// add HepMC::GenParticle
+//  add HepMC::GenParticle
 // ============================================================================
 void LoKi::Particles::GenMCTruth::_add ( const HepMC::GenParticle* p ) 
 {
@@ -560,7 +536,7 @@ void LoKi::Particles::GenMCTruth::_add ( const HepMC::GenParticle* p )
   _add ( p->end_vertex() ) ;
 }
 // ============================================================================
-/// add HepMC::GenVertex
+//  add HepMC::GenVertex
 // ============================================================================
 void LoKi::Particles::GenMCTruth::_add ( const HepMC::GenVertex* p ) 
 {
@@ -570,43 +546,43 @@ void LoKi::Particles::GenMCTruth::_add ( const HepMC::GenVertex* p )
          _p->particles_end   ( HepMC::children ) ) ;       
 }
 // ============================================================================
-/// add LoKi::GenTypes::GenContainer
+//  add LoKi::GenTypes::GenContainer
 // ============================================================================
 void LoKi::Particles::GenMCTruth::_add 
 ( const LoKi::GenTypes::GenContainer&    p ) 
 { _add ( p.begin() , p.end() ) ; }
 // ============================================================================
-/// add LoKi::Types::GRange 
+//  add LoKi::Types::GRange 
 // ============================================================================
 void LoKi::Particles::GenMCTruth::_add 
 ( const LoKi::Types::GRange&             p ) 
 { _add ( p.begin() , p.end() ) ; }
 // ============================================================================
-/// add HepMC::GenParticle
+//  add HepMC::GenParticle
 // ============================================================================
 LoKi::Particles::GenMCTruth& LoKi::Particles::GenMCTruth::add 
 ( const HepMC::GenParticle*           p ) 
-{ _add ( p ) ; rebuild() ; return *this ; }
+{ _add ( p ) ; rebuild().ignore() ; return *this ; }
 // ============================================================================
-/// add HepMC::GenVertex
+//  add HepMC::GenVertex
 // ============================================================================
 LoKi::Particles::GenMCTruth& LoKi::Particles::GenMCTruth::add 
 ( const HepMC::GenVertex*             p ) 
-{ _add ( p ) ; rebuild() ; return *this ; }
+{ _add ( p ) ; rebuild().ignore() ; return *this ; }
 // ============================================================================
-/// add LoKi::GenTypes::GenContainer
+//  add LoKi::GenTypes::GenContainer
 // ============================================================================
 LoKi::Particles::GenMCTruth& LoKi::Particles::GenMCTruth::add 
 ( const LoKi::GenTypes::GenContainer& p ) 
-{ _add ( p ) ; rebuild() ; return *this ; }
+{ _add ( p ) ; rebuild().ignore() ; return *this ; }
 // ============================================================================
-/// add LoKi::Types::GRange 
+//  add LoKi::Types::GRange 
 // ============================================================================
 LoKi::Particles::GenMCTruth& LoKi::Particles::GenMCTruth::add 
 ( const LoKi::Types::GRange&          p ) 
-{ _add ( p ) ; rebuild() ; return *this ; }
+{ _add ( p ) ; rebuild().ignore() ; return *this ; }
 // ============================================================================
-/// rebuild the internal storages 
+//  rebuild the internal storages 
 // ============================================================================
 StatusCode LoKi::Particles::GenMCTruth::rebuild() 
 {
@@ -614,7 +590,10 @@ StatusCode LoKi::Particles::GenMCTruth::rebuild()
   if( !m_table.validPointer() ) 
   { Exception ( "LHCb::HepMC2MC table is invalid" ) ; }
   if ( m_hepmc.empty() ) 
-  { return Warning ( "Empty container of input HepMC::GenParticles" ) ; }
+  { 
+    Warning ( "Empty container of input HepMC::GenParticles" ) ; 
+    return StatusCode::FAILURE ;
+  }
   //
   typedef LoKi::UniqueKeeper<HepMC::GenParticle> GPs ;
   for ( GPs::const_iterator igp = m_hepmc.begin() ; 
@@ -625,12 +604,15 @@ StatusCode LoKi::Particles::GenMCTruth::rebuild()
           links.end() != link ; ++link ) { m_mc.insert ( link->to() ) ; }
   }
   if ( m_mc.empty() ) 
-  { return Warning ( "Empty intermediate container of LHCb::MCPaticles" ) ; }  
+  { 
+    Warning ( "Empty intermediate container of LHCb::MCPaticles" ) ; 
+    return StatusCode::FAILURE ;
+  }  
   //
   return StatusCode::SUCCESS ;
-} ;
+} 
 // ============================================================================
-/// MANDATORY: the only one essential method ("function")
+//  MANDATORY: the only one essential method ("function")
 // ============================================================================
 LoKi::Particles::GenMCTruth::result_type 
 LoKi::Particles::GenMCTruth::operator() 
@@ -653,9 +635,9 @@ LoKi::Particles::GenMCTruth::operator()
   }
   //
   return m_mc.end() != m_match->match ( p , m_mc.begin () ,  m_mc.end() ) ; 
-} ;
+} 
 // ============================================================================
-/// OPTIONAL: the specific printout 
+//  OPTIONAL: the specific printout 
 // ============================================================================
 std::ostream& LoKi::Particles::GenMCTruth::fillStream 
 ( std::ostream& s ) const { return s << "GMCTRUTH" ; }
