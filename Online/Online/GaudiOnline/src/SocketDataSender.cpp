@@ -17,7 +17,7 @@ namespace LHCb  {
     *  @author Markus Frank
     */
   class SocketDataSender : public NetworkDataSender  {
-    static void handle_death(netentry_t* e, const netheader_t& hdr, void* param)  
+    static void handle_death(netentry_t* /* e */, const netheader_t& hdr, void* param)  
     {  ((SocketDataSender*)param)->taskDead(hdr.name);               }
     static void handle_req(netentry_t* e, const netheader_t& hdr, void* param)  {
       SocketDataSender* p = (SocketDataSender*)param;

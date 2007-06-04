@@ -19,7 +19,7 @@ namespace LHCb  {
     */
   class SocketDataReceiver : public NetworkDataReceiver  {
   protected:
-    static void handle_death(netentry_t* e, const netheader_t& hdr, void* param)  
+    static void handle_death(netentry_t* /* e */, const netheader_t& hdr, void* param)  
     {  ((SocketDataReceiver*)param)->taskDead(hdr.name);               }
     static void handle_request(netentry_t* e, const netheader_t& hdr, void* param)  {
       SocketDataReceiver* p = (SocketDataReceiver*)param;

@@ -596,7 +596,7 @@ namespace {
         }
       }
     }
-    static void handle_death(netentry_t* e, const netheader_t& hdr, void* param)
+    static void handle_death(netentry_t* e, const netheader_t& hdr, void* /* param */ )
     { ::printf("Task died: %s chan=%d addr=%s\n",hdr.name,e->chan,inet_ntoa(e->addr.sin_addr));  }
     NetSensor(const std::string& proc,bool bounce=false) : m_bounce(bounce) 
     { net_subscribe(m_net=net_init(proc),this,1,handle_data,handle_death);  }

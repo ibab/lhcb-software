@@ -110,4 +110,4 @@ SND_19.DataType                       = @SND_0.DataType;
 EventSelector.PrintFreq              = 5000;
 #pragma print off
 #include "data/data.opts"
-MessageSvc.OutputLevel = 1;
+MessageSvc.OutputLevel = 3;
