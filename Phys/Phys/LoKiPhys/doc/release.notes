@@ -1,10 +1,11 @@
-! $Id: release.notes,v 1.25 2007-06-01 12:07:03 ibelyaev Exp $ 
+! $Id: release.notes,v 1.26 2007-06-04 08:34:05 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhys
 ! Responsible : Vanya Belyaev
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+!========================== LoKiPhys v4r0 2007-06-04 ==========================
 ! 2007-06-01 - Vanya BELYAEV
 
  - prepare for the next major version: v4r0 
@@ -189,6 +190,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.25  2007/06/01 12:07:03  ibelyaev
+!  prepare for version v4r0
+!
 ! Revision 1.24  2007/04/19 16:19:08  pkoppenb
 ! tagged as v3r2p1
 !
