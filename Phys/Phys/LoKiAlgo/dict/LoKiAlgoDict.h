@@ -1,8 +1,11 @@
-// $Id: LoKiAlgoDict.h,v 1.2 2007-06-03 20:43:42 ibelyaev Exp $
+// $Id: LoKiAlgoDict.h,v 1.3 2007-06-04 14:31:17 cattanem Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2007/06/03 20:43:42  ibelyaev
+//  update LoKi::Child &
+//
 // Revision 1.1  2007/06/01 12:21:33  ibelyaev
 //  prepare for v4r0
 // 
@@ -32,6 +35,7 @@ namespace
     LoKi::Dicts::Alg<LoKi::Algo>               m_a1 ;
     // fictive constructor 
     __Instantiations();
+    ~__Instantiations();
   } ;    
 } // end of anonymous namespace 
 // ============================================================================
