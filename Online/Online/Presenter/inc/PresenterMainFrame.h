@@ -68,6 +68,7 @@ class PresenterMainFrame : public TGMainFrame
     bool                m_clearedHistos;
     bool                m_connectedToHistogramDatabase;
     OnlineHistDB        *m_histogramDB;
+    int                 m_msgBoxReturnCode;
     
     // icons
     const TGPicture     *m_icon1;

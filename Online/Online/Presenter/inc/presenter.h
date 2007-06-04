@@ -11,9 +11,9 @@ namespace pres
     DEBUG = 2       
   };
   enum ExceptionLevel {
-    NEVER = 0,
-    SEVERE = 1,
-    ALL = 2    
+    NO_EXCEPTIONS = 0,
+    SEVERE_EXCEPTIONS = 1,
+    ALL_EXCEPTIONS = 2    
   };
 }
 
