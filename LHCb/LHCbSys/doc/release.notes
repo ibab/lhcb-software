@@ -5,18 +5,26 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v22r6>2007-05-31 LHCbSys v22r6</A></H1><PRE>
+</PRE><H1><A NAME=v22r6>2007-06-04 LHCbSys v22r6</A></H1><PRE>
 This version uses Gaudi v19r3 and LCG_50b. Fully compatible with DC06 data
 
 - Packages removed: HltBase           - Moved to HLT project
                     TrackMCInterfaces - All interfaces moved to MCInterfaces
 - Packages added:   MCInterfaces v1r0 - Interfaces with dependency on MC
+                    LoKiMC       v3r0 - Moved from ANALYSIS project
+                    LoKiGenMC    v3r0 - Moved from ANALYSIS project
+                    LoKiPhys     v4r0 - Moved from ANALYSIS project
+                    LoKiPhysMC   v5r0 - Moved from ANALYSIS project
+                    LoKiAlgo     v4r0 - Moved from ANALYSIS project
+                    LoKiAlgoMC   v4r0 - Moved from ANALYSIS project
+                    LoKiHybrid   v2r0 - Moved from ANALYSIS project
 
 - Packages modified: KernelSys v6r6, LHCbKernel v7r5, RichKernel v7r6,
     DetSys v9r6, DetDesc v17r4, OTDet v7r3, CaloDet v8r2, VeloDet v11r3,
     STDet v3r4, RichDet v10r5, MuonDet v6r3, RichRecBase v3r5, DetDescSvc v1r12,
     EventSys v23r6, MCEvent v2r4, HltEvent v8r2, SimComponents v2r3,
-    TrackInterfaces v3r5, LHCbAlgs v2r9, DetCondExample v11r1
+    TrackInterfaces v3r5, LHCbAlgs v2r9, LoKiCore v3r0, LoKiGen v3r0,
+    DetCondExample v11r1
 
 - In LHCbKernel v7r5
   . Add isVeloR, isVeloPhi, isPileUp methods to LHCbID
@@ -66,6 +74,15 @@ This version uses Gaudi v19r3 and LCG_50b. Fully compatible with DC06 data
       RotationZYX classes and co are released in MathCore.
     + Provide functionality to get back and update the set of Z-Y-X Euler angles
       obtained each time the transformation matrix is modified.
+    + Fix bug in matrix(const Gaudi::Transform3D&) method.
+  . Add DetDesc/GlobalToLocalDelta.h, src/Lib/GlobalToLocalDelta.cpp
+    + Simple standalone functions to convert a misalignment calculated in the
+      global frame to the corresponding misalignment in the frame of the parent
+      of the detector element in question. 
+    + These functions are independent of DetDesc and should be put elsewhere, 
+      but for the time being they rely on src/Lib/3DConversions.h, which will
+      disappear when a version of MathCore with a fully integrated 
+      ROOT::Math::RotationXYZ is released.
 
 - In DetDescSvc v1r12
   . Fixed a bug in UpdateManagerSvc. Check if the setting of the user provided
@@ -86,6 +103,17 @@ This version uses Gaudi v19r3 and LCG_50b. Fully compatible with DC06 data
 
 - In DetCondExample v11r1
   . Added a test for conditions overriding with alignment conditions
+
+- In LoKiCore v3r0, LoKiMC v3r0, LoKiGen v3r0, LoKiGenMC v3r0, LoKiPhys v4r0,
+     LoKiPhysMC v5r0, LoKiAlgo v4r0, LoKiAlgoMC v4r0, LoKiHybrid v2r0
+  . Major new version, now all LoKi's dictionaries are build with the packages
+
+- In LoKiMC v3r0
+  . Add 2 new functions (wrappers for IMCReconstructible tool)
+  . Add many STL-like algorithms into namespace LoKi::MCAlgs
+  . Make a coherent  (with respect to generator/HepMC) treatment of "children"
+    (LoKi::Child). Add many functions into namespace LoKi::Child 
+  . Adapt to new location for MCInterfaces includes
 
 - In CaloDet v8r2, RichDet v10r5
   . Fix doxygen warnings
