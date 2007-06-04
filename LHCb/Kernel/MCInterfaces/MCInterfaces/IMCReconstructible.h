@@ -5,7 +5,7 @@
  *  Header file for class : IMCReconstructible
  *
  *  CVS Log :-
- *  $Id: IMCReconstructible.h,v 1.2 2007-05-29 07:36:11 cattanem Exp $
+ *  $Id: IMCReconstructible.h,v 1.3 2007-06-04 09:58:09 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 28/02/2007
@@ -99,7 +99,7 @@ public:
 // Implementation of enum printout
 //-----------------------------------------------------------------------------
 
-std::string IMCReconstructible::text( const RecCategory cat )
+inline std::string IMCReconstructible::text( const RecCategory cat )
 {
   switch ( cat )
   {
