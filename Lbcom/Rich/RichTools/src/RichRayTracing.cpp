@@ -5,7 +5,7 @@
  * Implementation file for class : RichRayTracing
  *
  * CVS Log :-
- * $Id: RichRayTracing.cpp,v 1.36 2007-04-23 13:08:01 jonrob Exp $
+ * $Id: RichRayTracing.cpp,v 1.37 2007-06-04 06:58:06 jonrob Exp $
  *
  * @author Antonis Papanestis
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -246,10 +246,10 @@ StatusCode Rich::RayTracing::reflectBothMirrors( const Rich::DetectorType rich,
                                                  const Rich::Side forcedSide ) const
 {
 
-  Gaudi::XYZPoint tmpPosition( position );
-  Gaudi::XYZVector tmpDirection( direction );
+  Gaudi::XYZPoint  tmpPosition  ( position  );
+  Gaudi::XYZVector tmpDirection ( direction );
 
-  // which side wre we on ?
+  // which side are we on ?
   Rich::Side side = ( mode.forcedSide() ? forcedSide : m_rich[rich]->side(tmpPosition) );
 
   // Spherical mirror reflection with nominal parameters
@@ -299,21 +299,21 @@ StatusCode Rich::RayTracing::reflectBothMirrors( const Rich::DetectorType rich,
       const RichMirrorSegPosition pos = m_rich[rich]->sphMirrorSegPos( sphSegment->mirrorNumber() );
       const Gaudi::XYZPoint & mirCentre = sphSegment->mirrorCentre();
       bool fail( false );
-      if ( pos.row() == 0 ) {                 // bottom segment
-        if ( tmpPosition.y() < mirCentre.y() )
-          fail = true;
+      if ( pos.row() == 0 ) 
+      { // bottom segment
+        if ( tmpPosition.y() < mirCentre.y() ) fail = true;
       }
-      if ( pos.row() == m_sphMirrorSegRows[rich]-1 ) { // top segment
-        if ( tmpPosition.y() > mirCentre.y() )
-          fail = true;
+      if ( pos.row() == m_sphMirrorSegRows[rich]-1 ) 
+      { // top segment
+        if ( tmpPosition.y() > mirCentre.y() ) fail = true;
       }
-      if ( pos.column() == 0 ) {                 // right side
-        if ( tmpPosition.x() < mirCentre.x() )
-          fail = true;
+      if ( pos.column() == 0 ) 
+      { // right side
+        if ( tmpPosition.x() < mirCentre.x() ) fail = true;
       }
-      if ( pos.column() == m_sphMirrorSegCols[rich]-1 ) {   // left side
-        if ( tmpPosition.x() > mirCentre.x() )
-          fail = true;
+      if ( pos.column() == m_sphMirrorSegCols[rich]-1 ) 
+      { // left side
+        if ( tmpPosition.x() > mirCentre.x() ) fail = true;
       }
       if (fail)
       {
