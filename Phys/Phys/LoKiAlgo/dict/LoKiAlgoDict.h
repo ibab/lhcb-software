@@ -1,14 +1,4 @@
-// $Id: LoKiAlgoDict.h,v 1.3 2007-06-04 14:31:17 cattanem Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.2  2007/06/03 20:43:42  ibelyaev
-//  update LoKi::Child &
-//
-// Revision 1.1  2007/06/01 12:21:33  ibelyaev
-//  prepare for v4r0
-// 
+// $Id: LoKiAlgoDict.h,v 1.4 2007-06-04 20:22:22 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_LOKICOREDICT_H 
 #define LOKI_LOKICOREDICT_H 1
@@ -22,6 +12,14 @@
 #include "LoKi/LoopChild.h"
 #include "LoKi/LoopDecorator.h"
 #include "LoKi/AlgoDecorator.h"
+// ============================================================================
+// Stefan Roiser's trick to allow compilation on Win32
+// ============================================================================
+#ifdef WIN32
+#ifdef CONST
+#undef CONST
+#endif 
+#endif
 // ============================================================================
 namespace 
 {

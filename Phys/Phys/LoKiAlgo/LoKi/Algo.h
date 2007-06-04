@@ -1,12 +1,4 @@
-// $Id: Algo.h,v 1.10 2007-04-16 16:16:39 pkoppenb Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.10 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.9  2007/01/18 13:06:09  ibelyaev
-//  redesign the patterns
-//
-//
+// $Id: Algo.h,v 1.11 2007-06-04 20:22:21 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_ALGO_H 
 #define LOKI_ALGO_H 1
@@ -42,8 +34,6 @@
 #include "LoKi/Loop.h"
 #include "LoKi/LoopObj.h"
 // ============================================================================
-
-// ============================================================================
 /** @file
  *
  *  This file is a part of LoKi project - 
@@ -58,24 +48,20 @@
  *  @date 2006-03-14 
  */
 // ============================================================================
-
 namespace LoKi 
 {
   class LoopObj ;
   class Loop    ;  
   /** @class Algo LoKi/Algo.h
-   *  
    *  The basic "working horse" of the whole LoKi project
-   *
    *  @see DVAlgorithm
-   *
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date   2006-03-14
    */
   class Algo : public DVAlgorithm
   {
-  public:
-    
+  public:    
+    // ========================================================================
     /** 'Select' the particles to be used in local storage
      *  
      *  - The Particles are selected from the desktop
@@ -105,7 +91,7 @@ namespace LoKi
     select    
     ( const std::string&        name ,
       const LoKi::Types::Cuts&  cut  ) ;
-    
+    // ========================================================================    
     /** 'Select' the particles to be used in local storage
      * 
      *  - Particles are selected from the "range"
@@ -145,8 +131,8 @@ namespace LoKi
       const LoKi::Types::Cuts&  cut   ) 
     { 
       return select ( name , range.begin() , range.end() , cut ) ; 
-    } ;
-    
+    } 
+    // ========================================================================
     /** 'Select' the particles to be used in local storage
      * 
      *  - particles are selected from the container 
@@ -182,8 +168,8 @@ namespace LoKi
       const LoKi::Types::Cuts&      cuts  ) 
     { 
       return select ( name , cont.begin() , cont.end() , cuts ) ; 
-    } ;
-    
+    } 
+    // ========================================================================    
     /** 'Select' the particles to be used in local storage
      * 
      *  - particles are selected from the container 
@@ -216,8 +202,8 @@ namespace LoKi
       const LoKi::Types::Cuts&           cuts  ) 
     { 
       return select ( name , cont.begin() , cont.end() , cuts ) ; 
-    } ;
-    
+    } 
+    // ========================================================================    
     /** 'Select' the particles to be used in local storage
      * 
      *  - particles are selected from the container 
@@ -258,8 +244,8 @@ namespace LoKi
         return LoKi::Types::Range() ;
       }
       return select ( name , cont->begin() , cont->end() , cuts ) ;
-    } ;
-
+    } 
+    // ========================================================================
     /** 'Select' the particles to be used in local storage
      * 
      *  - particles are selected from the container 
@@ -295,8 +281,8 @@ namespace LoKi
       const LoKi::Types::Cuts&  cuts  )
     {
       return select ( name , cont.begin() , cont.end() , cuts ) ;
-    } ;
-
+    } 
+    // ========================================================================
     /** 'Select' the particles to be used in local storage
      * 
      *  - particles are selected from the container 
@@ -332,8 +318,8 @@ namespace LoKi
       const LoKi::Types::Cuts&  cuts  )
     {
       return select ( name , cont.begin() , cont.end() , cuts ) ;
-    } ;
-
+    } 
+    // ========================================================================
     /** 'Select' the particles to be used in local storage
      * 
      *  - particles are selected from arbitrary sequence of particles 
@@ -375,8 +361,8 @@ namespace LoKi
       const CUT&         cut    ) 
     {
       return m_selected.add ( name , first , last , cut ) ;
-    } ;
-    
+    } 
+    // ========================================================================    
     /** 'Select' the vertices to be used in local storage
      *  - Vertices are selected from desktop
      *  @param name name/tag assigned to the selected vertices
@@ -387,7 +373,7 @@ namespace LoKi
     vselect   
     ( const std::string&         name  ,
       const LoKi::Types::VCuts&  cut   ) ;
-    
+    // ========================================================================    
     /** 'Select' the vertices to be used in local storage
      *  (Vertices are selected from the "range")
      *  @param name name/tag assigned to the selected particles
@@ -401,8 +387,8 @@ namespace LoKi
       const LoKi::Types::VCuts&  cut   ) 
     {
       return vselect ( name , range.begin() , range.end() , cut ) ;
-    } ;
-
+    } 
+    // ========================================================================
     /** 'Select' the vertices to be used in local storage
      *  (Vertices are selected from the "cont")
      *  @param name name/tag assigned to the selected particles
@@ -416,8 +402,8 @@ namespace LoKi
       const LoKi::Types::VCuts&            cuts ) 
     {
       return vselect ( name , cont.begin() , cont.end() , cuts ) ;
-    } ;
-    
+    } 
+    // ========================================================================    
     /** 'Select' the vertices to be used in local storage
      *  (Vertices are selected from the "cont")
      *  @param name name/tag assigned to the selected particles
@@ -431,8 +417,8 @@ namespace LoKi
       const LoKi::Types::VCuts&            cuts ) 
     {
       return vselect ( name , cont.begin() , cont.end() , cuts ) ;
-    } ;
-
+    } 
+    // ========================================================================
     /** 'Select' the vertices to be used in local storage
      *  (Vertices are selected from the "cont")
      *  @param name name/tag assigned to the selected particles
@@ -446,8 +432,8 @@ namespace LoKi
       const LoKi::Types::VCuts&        cuts ) 
     {
       return vselect ( name , cont.begin() , cont.end() , cuts ) ;
-    } ;
-    
+    } 
+    // ========================================================================    
     /** 'Select' the vertices to be used in local storage
      *  (Vertices are selected from the "cont")
      *  @param name name/tag assigned to the selected particles
@@ -461,8 +447,8 @@ namespace LoKi
       const LoKi::Types::VCuts&        cuts ) 
     {
       return vselect ( name , cont.begin() , cont.end() , cuts ) ;
-    } ;
-
+    } 
+    // ========================================================================
     /** 'Select' the vertices to be used in local storage
      *  (Vertices are selected from the "cont")
      *  @param name name/tag assigned to the selected particles
@@ -476,8 +462,8 @@ namespace LoKi
       const LoKi::Types::VCuts&       cuts ) 
     {
       return vselect ( name , cont.begin() , cont.end() , cuts ) ;
-    } ;
-    
+    } 
+    // ========================================================================    
     /** 'Select' the vertices to be used in local storage
      *  (Vertices are selected from the "cont")
      *  @param name name/tag assigned to the selected particles
@@ -491,8 +477,8 @@ namespace LoKi
       const LoKi::Types::VCuts&            cuts ) 
     {
       return vselect ( name , cont.begin() , cont.end() , cuts ) ;
-    } ;
-    
+    } 
+    // ========================================================================    
     /** 'Select' the vertices to be used in local storage
      *  (Vertices are selected from the "cont" )
      *  @param name name/tag assigned to the selected particles
@@ -511,8 +497,8 @@ namespace LoKi
         return LoKi::Types::VRange() ;
       }
       return vselect ( name , cont->begin() , cont->end() , cuts ) ;
-    } ;
-    
+    } 
+    // ========================================================================    
     /** 'Select' the vertices to be used in local storage
      * 
      *  - vertices are selected from arbitrary sequence of particles 
@@ -553,8 +539,8 @@ namespace LoKi
       const CUTS&        cut   ) 
     { 
       return m_vselected.add ( name , first , last , cut ) ; 
-    } ;
-    
+    } 
+    // ========================================================================    
     /** Extract the selected particles from local LoKi storage  
      *   by their name/tag
      *  
@@ -573,8 +559,8 @@ namespace LoKi
     ( const std::string& name ) const 
     {
       return m_selected ( name ) ; 
-    } ;
-    
+    } 
+    // ========================================================================    
     /** Extract the selected vertices from local LoKi storage  
      *   by their name/tag
      *  
@@ -592,10 +578,9 @@ namespace LoKi
     ( const std::string& name ) const 
     { 
       return m_vselected ( name ) ;
-    } ;
-
+    } 
+    // ========================================================================
   public:    
-    
     /** Create loop object 
      *
      *  @code
@@ -612,6 +597,7 @@ namespace LoKi
     ( const std::string&            formula      , 
       const std::string&            pid          , 
       const IParticleCombiner*      combiner = 0 ) ;
+    // ========================================================================
     /** Create loop object 
      *
      *  @code
@@ -629,6 +615,7 @@ namespace LoKi
     ( const std::string&            formula      , 
       const LHCb::ParticleID&       pid          , 
       const IParticleCombiner*      combiner = 0 ) ;    
+    // ========================================================================
     /** Create loop object 
      *
      *  @code
@@ -646,6 +633,7 @@ namespace LoKi
     ( const std::string&            formula      , 
       const ParticleProperty*       pid      = 0 , 
       const IParticleCombiner*      combiner = 0 ) ;
+    // ========================================================================
     /** Create loop object 
      *
      *  @code
@@ -665,6 +653,7 @@ namespace LoKi
     ( const LoKi::Types::RangeList& formula      , 
       const std::string&            pid          , 
       const IParticleCombiner*      combiner = 0 ) ;    
+    // ========================================================================
     /** Create loop object 
      *
      *  @code
@@ -684,6 +673,7 @@ namespace LoKi
     ( const LoKi::Types::RangeList& formula      , 
       const LHCb::ParticleID&       pid          , 
       const IParticleCombiner*      combiner = 0 ) ;
+    // ========================================================================
     /** Create loop object 
      *
      *  @code
@@ -704,9 +694,8 @@ namespace LoKi
     ( const LoKi::Types::RangeList& formula      , 
       const ParticleProperty*       pid      = 0 , 
       const IParticleCombiner*      combiner = 0 ) ;
-    
-  public:    
-    
+    // ========================================================================    
+  public:
     /** shortcut for the following symbolic expression:
      * 
      *  @code 
@@ -750,7 +739,7 @@ namespace LoKi
       const LoKi::Types::Cuts&  cut        , 
       const LoKi::Types::VCuts& vcut       , 
       const IParticleReFitter*  fitter = 0 ) ;
-    
+    // ========================================================================    
     /** shortcut for the following symbolic expression:
      * 
      *  @code 
@@ -792,7 +781,7 @@ namespace LoKi
       const LoKi::Types::Cuts&  cut        , 
       const LoKi::Types::VCuts& vcut       , 
       const IParticleReFitter*  fitter = 0 ) ;
-    
+    // ========================================================================    
     /** shortcut for the following expression:
      *
      *  @code 
@@ -844,7 +833,7 @@ namespace LoKi
       const IParticleReFitter*  fitter , 
       const LoKi::Types::Cuts&  cut2   , 
       const LoKi::Types::VCuts& vcut2  ) ;    
-
+    // ========================================================================
     /** shortcut for the following expression:
      *
      *  @code 
@@ -895,9 +884,8 @@ namespace LoKi
       const IParticleReFitter*  fitter , 
       const LoKi::Types::Cuts&  cut2   , 
       const LoKi::Types::VCuts& vcut2  ) ;    
-
+    // ========================================================================
   public:
-    
     /** save the particle  into LoKi storage
      *  The particle @c p will be saved to
      *  LoKi storage with the tag/name @v tag
@@ -908,10 +896,14 @@ namespace LoKi
     StatusCode  save 
     ( const std::string& tag      , 
       LHCb::Particle*    particle ) ;
+    // ========================================================================
   public:
+    // ========================================================================
     /// clear the internal LoKi storages 
     virtual StatusCode clear() ;
+    // ========================================================================
   public:
+    // ========================================================================
     /** get the helper "geometry" object
      *  (essentially it is a wrapper for IGeomDispCalculator tool 
      *  @param  vertex (input) vertex to ve used in the configuration
@@ -920,6 +912,7 @@ namespace LoKi
      *  @see LoKi::Vertices::ImpactParamTool
      *  @see IGeomDispCalculator
      */
+    // ========================================================================
     LoKi::Vertices::ImpParBase geo ( const LHCb::VertexBase* vertex = 0 ) const ;
     /** get the helper "geometry" object
      *  (essentially it is a wrapper for IGeomDispCalculator tool 
@@ -930,6 +923,7 @@ namespace LoKi
      *  @see IGeomDispCalculator
      */
     LoKi::Vertices::ImpParBase geo ( const LoKi::Point3D& point ) const ;
+    // ========================================================================
     /** get the helper "geometry" object
      *  (essentially it is a wrapper for IGeomDispCalculator tool 
      *  @param  vertex (input) vertex to ve used in the configuration
@@ -940,6 +934,7 @@ namespace LoKi
      */
     inline LoKi::Vertices::ImpParBase 
     point ( const LHCb::VertexBase* vertex ) const { return geo ( vertex ) ; }
+    // ========================================================================
     /** get the helper "geometry" object
      *  (essentially it is a wrapper for IGeomDispCalculator tool 
      *  @param  point (input) point to be used in the configuration
@@ -950,6 +945,7 @@ namespace LoKi
      */
     inline LoKi::Vertices::ImpParBase 
     point ( const LoKi::Point3D& point ) const { return geo ( point ) ; }
+    // ========================================================================
   public:
     /// helper method to get a proper ParticleProperty for the given name  
     const ParticleProperty* pid ( const std::string& name ) const 
@@ -958,7 +954,8 @@ namespace LoKi
       if ( 0 == pp ) 
       { Error ( "pid('" + name + "') : invalid ParticleProperty!" ) ; }
       return pp ;
-    } ;
+    } 
+    // ========================================================================
     /// helper method to get a proper ParticleProperty for the given pid
     inline const ParticleProperty* pid ( const LHCb::ParticleID& pid ) const 
     {
@@ -967,9 +964,9 @@ namespace LoKi
       { Error ( "pid('" + LoKi::Print::print( pid.pid() ) 
                 + "') : invalid ParticleProperty!" ) ; }
       return pp ;
-    } ;
+    } 
+    // ========================================================================
   public:
-    
     /** get the value for cut 
      *  
      *  @code 
@@ -995,7 +992,8 @@ namespace LoKi
       if ( m_cutValues.end() == ifind ) 
       { Exception ( "The value is not specified for cut='" + name + "'" ) ; }
       return ifind->second ;
-    } ;
+    } 
+    // ========================================================================
     /** get the value for cut 
      *  
      *  @code 
@@ -1028,14 +1026,20 @@ namespace LoKi
         return value ;
       }
       return ifind->second ;
-    } ;
+    } 
+    // ========================================================================
   public:
+    // ========================================================================
     /// static accessor to the current algorithm 
     static LoKi::Algo* currentAlgo    () ;
+    // ========================================================================
   protected:
+    // ========================================================================
     /// static  setter  to the current algorithm 
     static LoKi::Algo* setCurrentAlgo ( LoKi::Algo* ) ;
+    // ========================================================================
   protected:
+    // ========================================================================
     class Lock
     {
     public:
@@ -1047,19 +1051,28 @@ namespace LoKi
     private:
       LoKi::Algo* m_old ;       
     } ;
+    // ========================================================================
   public:
+    // ========================================================================
     /// get the proper error reporter 
     const LoKi::IReporter* reporter ( const std::string& name = "" ) const ;
+    // ========================================================================
   public:
+    // ========================================================================
     /// initialize the algorithm 
     virtual StatusCode initialize () ;
+    // ========================================================================
     /// make the execution of the algorithm 
     virtual StatusCode execute    () ;
+    // ========================================================================
     /// perform the real analysis 
     virtual StatusCode analyse    () ;
+    // ========================================================================
     /// finalize the algorithm 
     virtual StatusCode finalize   () ;
+    // ========================================================================
   protected:
+    // ========================================================================
     /** standard constructor 
      *  @param name algorithm instance name 
      *  @param pSvc pointer to Service Locator 
@@ -1067,36 +1080,50 @@ namespace LoKi
     Algo
     ( const std::string& name , 
       ISvcLocator*       pSvc ) ;
+    // ========================================================================
     /// virtual and protected destructor 
     virtual ~Algo() ;
+    // ========================================================================
   private:
+    // ========================================================================
     // the default constructor is disabled 
     Algo () ;
+    // ========================================================================
     // copy constructor is disabled 
     Algo           ( const Algo& ) ;
+    // ========================================================================
     // the assignement is disabled 
     Algo& operator=( const Algo& ) ;
+    // ========================================================================
   private:
+    // ========================================================================
     // the actual storage of selected particles
     LoKi::PhysTypes::Selected  m_selected  ; ///< the actual storage of particles
+    // ========================================================================
     // the actual storage of selected vertices 
     LoKi::PhysTypes::VSelected m_vselected ; ///< the actual storage of vertices
+    // ========================================================================
   private:
+    // ========================================================================
     /// collection of "error reporters"
     mutable GaudiUtils::HashMap<std::string,
                                 const LoKi::IReporter*> m_reporters ;
+    // ========================================================================
   private:
+    // ========================================================================
     /// the actual type of comtainer of cut values 
     typedef std::map<std::string,double> CutValues ;
+    // ========================================================================
     /// local storage of cut values 
     mutable CutValues m_cutValues ;
+    // ========================================================================
   private:
+    // ========================================================================
     // the static pointer to current algorithm 
     static LoKi::Algo* s_currentAlgo ;
+    // ========================================================================
   } ;  
-} ; // end of namespace LoKi
-// ============================================================================
-
+}  // end of namespace LoKi
 // ============================================================================
 /** @def LOKI_ALGORITHM_BODY 
  *

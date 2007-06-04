@@ -1,11 +1,25 @@
-! $Id: release.notes,v 1.15 2007-06-04 08:38:32 cattanem Exp $ 
+! $Id: release.notes,v 1.16 2007-06-04 20:22:22 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.15 $
+! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.16 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiAlgo
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : LoKi-algorthm related stuff 
 ! -----------------------------------------------------------------------------
+
+
+! 2007-06-04 - Vanya BELYAEV
+ - Solve the compilation problem on Win32 platform
+    (Many thanks to Stefan ROISER for solution!)
+ - Modified files 
+    LoKi/Loop.h
+    LoKi/LoopObj.h
+    LoKi/Algo.h
+    LoKi/LoopDecorator.h
+    LoKi/AlgoDecorator.h
+    dict/LoKiAlgo.xml
+    dict/LoKiAlgoDict.h
+
 
 !========================== LoKiAlgo v4r0 2007-06-04 ==========================
 ! 2007-06-01 - Vanya BELYAEV

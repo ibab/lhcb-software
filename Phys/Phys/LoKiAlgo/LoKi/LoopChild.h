@@ -1,8 +1,4 @@
-// $Id: LoopChild.h,v 1.1 2007-06-03 20:43:42 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Id: LoopChild.h,v 1.2 2007-06-04 20:22:21 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_LOOPCHILD_H 
 #define LOKI_LOOPCHILD_H 1

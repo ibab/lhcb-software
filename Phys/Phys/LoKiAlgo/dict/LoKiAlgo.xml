@@ -1,8 +1,6 @@
 <!-- 
-     * $Id: LoKiAlgo.xml,v 1.2 2007-06-03 20:43:42 ibelyaev Exp $ 
+     * $Id: LoKiAlgo.xml,v 1.3 2007-06-04 20:22:22 ibelyaev Exp $ 
      * ========================================================================
-     * CVS tag:$Name: not supported by cvs2svn $, version $Revision: 1.2 $ 
-     * ======================================================================== 
      * @file
      * The seleciton file to build Reflex dictionaries for Phys/LoKiAlgo package
      * @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -11,13 +9,19 @@
 -->
 
 <lcgdict>
-  
+
   <class name = "LoKi::Loop"    />
-  <class name = "LoKi::LoopObj" />
-  
+
+  <class name = "LoKi::LoopObj" >
+    <field name="m_formula"  transient="true" />
+    <field name="m_combiner" transient="true" />
+    <field name="m_clones"   transient="true" />
+  </class>
+
   <class name = "LoKi::Algo" >
     <field name="m_reporters" transient="true" />
   </class>
+
   <class name = "LoKi::Dicts::Alg<LoKi::Algo>"   />
   <class name = "GaudiPython::PyAlg<LoKi::Algo>" />
   <class name = "LoKi::Dicts::LoopDecorator"     />
@@ -31,6 +35,7 @@
   <class name="LoKi::Interface<LoKi::Algo>"        />
   <class name="LoKi::Interface<IParticleCombiner>" />
   <class name="LoKi::Interface<IParticleReFitter>" />
+
   
   <exclusion>
   </exclusion>

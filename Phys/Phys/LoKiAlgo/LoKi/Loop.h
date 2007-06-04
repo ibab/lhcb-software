@@ -1,8 +1,11 @@
-// $Id: Loop.h,v 1.2 2007-04-16 16:16:39 pkoppenb Exp $
+// $Id: Loop.h,v 1.3 2007-06-04 20:22:21 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2007/04/16 16:16:39  pkoppenb
+// removed polemic comment
+//
 // Revision 1.1  2006/04/09 08:51:49  ibelyaev
 //  update for LoKiAlgo
 //
@@ -41,10 +44,8 @@ namespace LoKi
 {  
   /// forward declaration 
   class LoopObj ;
-  
   /** @class Loop Loop.h LoKi/Loop.h
-   *  
-   *
+   *  Useful handler for easy ans saf eoperation with class LoKi::LoopObj
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date   2006-03-22
    */
@@ -70,6 +71,8 @@ namespace LoKi
     /// get child of the loop object 
     const LHCb::Particle* operator  () ( const size_t index ) const 
     { return child( index ) ; }
+    /// "check-validity" operator
+    bool                  operator! () const { return ! valid() ; }
   public:
     const Loop& operator++ ()      const 
     { if ( validPointer() ) { getObject()->next() ; } ; return *this ; };
@@ -87,9 +90,7 @@ namespace LoKi
     // the default constructior is disabled
     Loop();
   };
-  
-} ; // end of namespace LoKi
-
+} // end of namespace LoKi
 // ============================================================================
 // The END
 // ============================================================================

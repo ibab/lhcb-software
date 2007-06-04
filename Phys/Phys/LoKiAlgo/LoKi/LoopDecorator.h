@@ -1,8 +1,4 @@
-// $Id: LoopDecorator.h,v 1.1 2007-06-03 20:43:42 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
-// ============================================================================
-// $Log:
+// $Id: LoopDecorator.h,v 1.2 2007-06-04 20:22:21 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_LOOPDICT_H 
 #define LOKI_LOOPDICT_H 1
@@ -23,6 +19,9 @@ namespace LoKi
      */
     class LoopDecorator
     {
+    public:
+      /// contructor ("do-nothing") to Please Reflex at Win32
+      LoopDecorator() {}
     public:
       /// get the effective formula of the loop, see LoKi::LoopObj::formula
       static const LoKi::LoopObj::Formula& formula( const LoKi::Loop& l ) ;

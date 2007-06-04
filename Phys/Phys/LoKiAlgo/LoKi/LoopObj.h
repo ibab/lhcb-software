@@ -1,12 +1,4 @@
-// $Id: LoopObj.h,v 1.10 2007-04-16 16:16:39 pkoppenb Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.10 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.9  2007/01/18 13:06:09  ibelyaev
-//  redesign the patterns
-//
-//
+// $Id: LoopObj.h,v 1.11 2007-06-04 20:22:21 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_LOOPOBJ_H 
 #define LOKI_LOOPOBJ_H 1
@@ -35,8 +27,6 @@
 // ============================================================================
 #include "LoKi/PhysRangeTypes.h"
 // ============================================================================
-
-// ============================================================================
 /** @file
  *
  *  This file is a part of LoKi project - 
@@ -51,21 +41,16 @@
  *  @date 2006-03-14 
  */
 // ============================================================================
-
-
-
 namespace LoKi 
 {
   // forward declaration 
   class Algo ;
   /** @class LoopObj LoopObj.h LoKi/LoopObj.h
-   *  
-   *
+   *  The main horse of LoKi-package
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date   2006-03-15
    */
-  class LoopObj 
-    : public LoKi::Base 
+  class LoopObj : public LoKi::Base 
   {
   public: 
     /// the actual type of selection formula
@@ -396,13 +381,8 @@ namespace LoKi
     typedef std::vector<unsigned long>                 CloneList ; 
     typedef GaudiUtils::HashMap<std::string,CloneList> Clones    ;
     Clones                                             m_clones  ;
-    
-
   };
-  
-} ; // end of the namespace LoKi
-
-
+}  // end of the namespace LoKi
 // ============================================================================
 #endif // LOKI_LOOPOBJ_H
 // ============================================================================
