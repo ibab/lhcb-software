@@ -1,6 +1,6 @@
-! $Id: release.notes,v 1.16 2007-06-01 11:53:46 ibelyaev Exp $ 
+! $Id: release.notes,v 1.17 2007-06-04 08:32:13 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.16 $
+! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.17 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiGenMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -16,6 +16,10 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! 
 ! -----------------------------------------------------------------------------
+
+!========================== LoKiGenMC v3r0 2007-06-04 =========================
+! 2007-06-04 - Marco Cattaneo
+ - Remove obsolete file src/Components/LoKiGenMC_load.cpp
 
 ! 2007-06-01 - Vanya BELYAEV
 
@@ -360,6 +364,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.16  2007/06/01 11:53:46  ibelyaev
+!  prepare for v3r0
+!
 ! Revision 1.15  2007/04/19 13:51:36  pkoppenb
 ! tagged as v2r1p1
 !
