@@ -233,13 +233,17 @@ namespace {
                 }
                 catch(...)  {
                   ::lib_rtl_printf("EntryMap::handle> Exception!\n");
+#ifdef _WIN32
                   _asm int 3
+#endif
                 }
               }
               if ( t == 1 && nb < 0 )  {
                 k = find(fd);
                 if ( k != end() )  {
-                  //_asm int 3
+#ifdef _WIN32
+                  _asm int 3
+#endif
                   if ( (*k).second ) delete (*k).second;
                   erase(k);
                 }

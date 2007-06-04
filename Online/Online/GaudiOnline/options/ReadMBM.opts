@@ -6,10 +6,10 @@ EventSelector.REQ1                   = "EvType=2;TriggerMask=0xffffffff,0xffffff
 
 ApplicationMgr.TopAlg                = { "StoreExplorerAlg" };
 StoreExplorerAlg.Load                = 1;
-StoreExplorerAlg.PrintFreq           = 0.001;
+StoreExplorerAlg.PrintFreq           = 0.0005;
 
 // Prescale events declared to RESULT buffer
 ApplicationMgr.TopAlg               += { "Sequencer/SendSequence" };
 SendSequence.Members                 = {"Prescaler/Prescaler", "LHCb::DecisionSetterAlg/DecisionSetter"};
-Prescaler.PercentPass                = 5;
+Prescaler.PercentPass                = 25;
 Prescaler.OutputLevel                = 4;

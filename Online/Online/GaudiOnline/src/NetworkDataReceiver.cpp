@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/NetworkDataReceiver.cpp,v 1.6 2007-06-01 17:28:55 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/NetworkDataReceiver.cpp,v 1.7 2007-06-04 08:32:23 frankb Exp $
 //  ====================================================================
 //  NetworkDataReceiver.cpp
 //  --------------------------------------------------------------------
@@ -33,6 +33,7 @@ NetworkDataReceiver::NetworkDataReceiver(const std::string& nam, ISvcLocator* pS
   ::lib_rtl_create_lock(0,&m_lock);
   declareProperty("Buffer",           m_buffer);
   declareProperty("UseEventRequests", m_useEventRequests=false);
+  declareProperty("DeclareAsynchonously",m_declareAsynch=false);
 }
 
 // Standard Destructor
@@ -187,13 +188,18 @@ NetworkDataReceiver::handleEventData(const std::string& src,void* buf,size_t len
       e->buffer = (char*)buf;
       e->size = len;
       StatusCode sc = resetNetRequest(*entry);
-      ::wtc_insert(WT_FACILITY_DAQ_EVENT,e);
-      int backlog = ++m_backlog;
-      if ( backlog%100 == 0 ) {
-        if ( m_lastbacklog != backlog ) {
-          m_lastbacklog = backlog;
-          error("Message backlog is now %d messages.",backlog);
-	}
+      if ( m_declareAsynch )  {
+        ::wtc_insert(WT_FACILITY_DAQ_EVENT,e);
+        int backlog = ++m_backlog;
+        if ( backlog%100 == 0 ) {
+          if ( m_lastbacklog != backlog ) {
+            m_lastbacklog = backlog;
+            error("Message backlog is now %d messages.",backlog);
+          }
+        }
+      }
+      else  {
+        NetworkDataReceiver::rearm_net_request(WT_FACILITY_DAQ_EVENT,e);
       }
       return sc;
     }

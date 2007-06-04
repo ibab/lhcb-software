@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/NetworkDataReceiver.h,v 1.3 2007-06-01 13:49:45 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/NetworkDataReceiver.h,v 1.4 2007-06-04 08:32:23 frankb Exp $
 //  ====================================================================
 //  NetworkDataReceiver.h
 //  --------------------------------------------------------------------
@@ -77,6 +77,8 @@ namespace LHCb  {
     std::string     m_buffer;
     /// Property: Require event request from source before sending
     bool            m_useEventRequests;
+    /// Property: Declare event asynchronously to MBM after receiving
+    bool            m_declareAsynch;
     /// Monitoring item: Total number of items received
     int             m_recvReq; 
     /// Monitoring item: Total number of receive errors
@@ -119,6 +121,8 @@ namespace LHCb  {
     /// Incident handler implemenentation: Inform that a new incident has occured
     void handle(const Incident& inc);
 
+    /// Access to receivers queue
+    Receivers& receivers()  {  return m_receivers;  }
 
     /// Callback on task dead notification
     virtual StatusCode taskDead(const std::string& task_name);
