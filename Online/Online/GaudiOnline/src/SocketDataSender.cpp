@@ -17,24 +17,18 @@ namespace LHCb  {
     *  @author Markus Frank
     */
   class SocketDataSender : public NetworkDataSender  {
-    struct NetPlug : public Worker  {
-      SocketDataSender* m_parent;
-      NetPlug(const std::string& nam, SocketDataSender* par) : Worker(nam), m_parent(par) {}
-      virtual ~NetPlug() {}
-      virtual void receive(netentry_t* e, const netheader_t& hdr)  {
-        int typ = hdr.msg_type;
-        if ( typ == NET_TASKDIED || typ == NET_CONNCLOSED )  {
-          m_parent->taskDead(hdr.name);
-          return;
-        }
-        char* buff = new char[hdr.size];
-        get(e, buff);
-        m_parent->handleEventRequest(m_parent->m_recipients.size(),hdr.name,buff);
-        delete [] buff;
+    static void handle_death(netentry_t* e, const netheader_t& hdr, void* param)  
+    {  ((SocketDataSender*)param)->taskDead(hdr.name);               }
+    static void handle_req(netentry_t* e, const netheader_t& hdr, void* param)  {
+      SocketDataSender* p = (SocketDataSender*)param;
+      char buff[256];
+      int sc = net_receive(p->m_netPlug,e,buff);
+      if ( sc == NET_SUCCESS )  {
+        p->handleEventRequest(p->m_recipients.size(),hdr.name,hdr.name);
       }
-    };
+    }
     /// Pointer to netplug device
-    NetPlug*     m_netPlug;
+    NET*     m_netPlug;
   public:
     /// Standard algorithm constructor
     SocketDataSender(const std::string& nam, ISvcLocator* pSvc) 
@@ -43,24 +37,26 @@ namespace LHCb  {
     virtual ~SocketDataSender()   {}
     /// Subscribe to network requests
     virtual StatusCode subscribeNetwork()   {
-      std::string self = RTL::dataInterfaceName()+"::"+RTL::processName()+"_"+name();
-      m_netPlug = new NetPlug(self,this);
+      std::string self = RTL::dataInterfaceName()+"::"+RTL::processName();
+      m_netPlug = net_init(self);
+      net_subscribe(m_netPlug,this,WT_FACILITY_CBMREQEVENT,handle_req,handle_death);
       if ( !m_target.empty() )  {
         static const char* req = "EVENT_SOURCE";
-        NetErrorCode sc = m_netPlug->send(req,strlen(req)+1,m_target,WT_FACILITY_CBMCONNECT);
+        int sc = net_send(m_netPlug,req,strlen(req)+1,m_target,WT_FACILITY_CBMCONNECT);
         return sc==NET_SUCCESS ? StatusCode::SUCCESS : StatusCode::FAILURE;
       }
       return StatusCode::SUCCESS;
     }
     /// Unsubscribe from network requests
     virtual StatusCode unsubscribeNetwork() {
-      if ( m_netPlug ) delete m_netPlug;
+      net_unsubscribe(m_netPlug,this,WT_FACILITY_CBMREQEVENT);
+      net_close(m_netPlug);
       m_netPlug = 0;
       return StatusCode::SUCCESS;
     }
     /// Send data to target destination
     virtual StatusCode sendData(const Recipient& tar, const void* data, size_t len)  {
-      NetErrorCode sc = m_netPlug->send(data,len,tar.name,WT_FACILITY_CBMEVENT);
+      int sc = net_send(m_netPlug,data,len,tar.name,WT_FACILITY_CBMEVENT);
       return sc==NET_SUCCESS ? StatusCode::SUCCESS : StatusCode::FAILURE;
     }
   };

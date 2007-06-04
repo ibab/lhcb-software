@@ -33,17 +33,13 @@ namespace DataTransfer  {
     void net_to_host();
     void fill(const char* nam, unsigned int hash, size_t size, int fac, int mtype, const void *buf_ptr);
   };
-  class Worker  {
-  protected:
-    NET* m_net;
-    Worker(const std::string& proc);
-    virtual ~Worker();
-    virtual void receive(netentry_t* e, const netheader_t& hdr);
-    static void  recvAction(netentry_t* e, void* param);
-  public:
-    NetErrorCode send(const void* buff, size_t size, const std::string& dest, int fac);
-    NetErrorCode send(const void* buff, size_t size, netentry_t* dest, int fac);
-    NetErrorCode get(netentry_t* e, void* data);
-  };
+  typedef void (*net_handler_t)(netentry_t* e, const netheader_t& hdr, void* param);
+  NET* net_init(const std::string& proc);
+  void net_close(NET* net);
+  int net_subscribe(NET* net, void* param, unsigned int fac, net_handler_t data, net_handler_t death);
+  int net_unsubscribe(NET* net, void* param, unsigned int fac);
+  int net_receive(NET* net, netentry_t* e, void* buff);
+  int net_send(NET* net, const void* buff, size_t size, const std::string& dest, unsigned int fac);
+  int net_send(NET* net, const void* buff, size_t size, netentry_t* dest, unsigned int fac);
 }
 #endif  /* ONLINEKERNEL_NET_DATATRANSFER_H */
