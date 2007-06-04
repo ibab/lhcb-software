@@ -1,4 +1,4 @@
-// $Id: PrintHeader.cpp,v 1.2 2007-05-10 13:02:12 pkoppenb Exp $
+// $Id: PrintHeader.cpp,v 1.3 2007-06-04 14:37:39 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -52,7 +52,7 @@ StatusCode PrintHeader::execute() {
             << ", Event " << odin->eventNumber() << endmsg;
   } else Warning("No ODIN Header").ignore();
        
-  setFilterPassed(true).ignore();
+  setFilterPassed(true);
   
   return StatusCode::SUCCESS;
 };
