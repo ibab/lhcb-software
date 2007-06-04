@@ -9,7 +9,7 @@ export MSGSVC=LHCb::DimMessageSvc
 
 export TAN_PORT=YES
 export TAN_NODE=$HOSTNAME
-export OPTS=$OPTS
+export OPTS=$GAUDIONLINEROOT/options
 export test_exe="$ONLINEKERNELROOT/$CMTCONFIG/test.exe "
 export gaudi_run="$GAUDIONLINEROOT/$CMTCONFIG/Gaudi.exe libGaudiOnline.so OnlineStart "
 export gaudi_exe="$GAUDIONLINEROOT/$CMTCONFIG/Gaudi.exe libGaudiOnline.so OnlineTask -msgsvc=$MSGSVC -auto "

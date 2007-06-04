@@ -59,6 +59,7 @@ namespace DataTransfer  {
     typedef void (*user_callback_t)(netentry_t* hdr, void* param);
     NET(const std::string& proc, user_callback_t cb, void* param);
     ~NET();
+    unsigned int             m_refCount;
     IOPortManager            m_mgr;
     netentry_t               m_me;
     std::map<unsigned int,netentry_t*> m_db;
@@ -137,9 +138,10 @@ NetErrorCode netentry_t::setSendBuff(unsigned int siz) {
 }
 //----------------------------------------------------------------------------------
 void netentry_t::terminate () {
-  if (addr.sin_port)  {
+  if ( addr.sin_port )  {
     ::tan_deallocate_port_number(name.c_str());
     addr.sin_addr.s_addr = 0;
+    addr.sin_port = 0;
   }
   if ( chan )  {
     setSockopts(); 
@@ -221,7 +223,7 @@ NetErrorCode netentry_t::recv(void *buffer, size_t siz, unsigned int flag)  {
 }
 //----------------------------------------------------------------------------------
 NET::NET(const std::string& proc, user_callback_t cb, void* param) 
-: m_mgr(0), m_lockid(0), 
+: m_refCount(0), m_mgr(0), m_lockid(0), 
   user_callback_param(param), 
   user_callback(cb)  
 {
@@ -229,7 +231,7 @@ NET::NET(const std::string& proc, user_callback_t cb, void* param)
   m_me.sys = this;
   m_me.name = proc;
   m_me.hash = hash32(m_me.name.c_str());
-  m_me.addr.sin_port = ~0x0;
+  m_me.addr.sin_port = 0;
   m_me.addr.sin_family = AF_INET;
   m_me.addr.sin_addr.s_addr = INADDR_ANY; //IN_CLASSA_HOST; // 
 }
@@ -407,22 +409,25 @@ NetErrorCode NET::send(const void* buff, size_t size, const std::string& dest, i
 }
 //----------------------------------------------------------------------------------
 NetErrorCode NET::close()   {
-  RTL::Lock lock(m_lockid);
-  m_me.terminate();
-  for (std::map<unsigned int,netentry_t*>::iterator i=m_db.begin(); i!=m_db.end();++i)  {
-    netentry_t* e = (*i).second;
-    if ( e )    {
-      netheader_t h;
-      h.fill(m_me.name.c_str(),m_me.hash,0,0,NET_CONNCLOSED,0);
-      m_mgr.remove(e->chan);
-      e->setSendBuff(sizeof(h));
-      e->send(&h, sizeof(h), 0);
-      e->close();
-      delete e;
+  {
+    RTL::Lock lock(m_lockid);
+    m_me.terminate();
+    for (std::map<unsigned int,netentry_t*>::iterator i=m_db.begin(); i!=m_db.end();++i)  {
+      netentry_t* e = (*i).second;
+      if ( e )    {
+        netheader_t h;
+        h.fill(m_me.name.c_str(),m_me.hash,0,0,NET_CONNCLOSED,0);
+        m_mgr.remove(e->chan);
+        e->setSendBuff(sizeof(h));
+        e->send(&h, sizeof(h), 0);
+        e->close();
+        delete e;
+      }
     }
+    m_db.clear();
   }
-  m_db.clear();
   if (m_lockid) lib_rtl_delete_lock(m_lockid);
+  m_lockid = 0;
   return NET_SUCCESS;
 }
 //----------------------------------------------------------------------------------
@@ -432,6 +437,7 @@ NetErrorCode NET::init()  {
     ::lib_rtl_signal_message(LIB_RTL_OS,"Error creating NET lock. Status %d",status);
     return NET_ERROR;
   }
+  printf("%s\n\n",m_me.name.c_str());
   status = ::tan_allocate_port_number(m_me.name.c_str(),&m_me.addr.sin_port);
   if ( status != TAN_SS_SUCCESS )  {
     ::lib_rtl_signal_message(LIB_RTL_OS,"Allocating port number. Status %d",status);

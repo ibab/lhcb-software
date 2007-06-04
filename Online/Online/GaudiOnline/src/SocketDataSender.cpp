@@ -43,7 +43,7 @@ namespace LHCb  {
     virtual ~SocketDataSender()   {}
     /// Subscribe to network requests
     virtual StatusCode subscribeNetwork()   {
-      std::string self = RTL::dataInterfaceName()+"::"+RTL::processName();
+      std::string self = RTL::dataInterfaceName()+"::"+RTL::processName()+"_"+name();
       m_netPlug = new NetPlug(self,this);
       if ( !m_target.empty() )  {
         static const char* req = "EVENT_SOURCE";
