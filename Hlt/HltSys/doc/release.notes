@@ -5,6 +5,11 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
 
+
+
+! 2007-06-04 - Patrick Koppenburg
+ - Correceted typo in Muon T conf IPSelection. Thanks to Sandra.
+
 </PRE><H1><A NAME=v1r6>2007-05-25 HltSys v1r6</A></H1><PRE>
 This version uses Gaudi v19r3 and LHCb v22r5
 
