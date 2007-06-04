@@ -5,7 +5,7 @@
  * Implementation file for class : RichToolRegistry
  *
  * CVS Log :-
- * $Id: RichToolRegistry.cpp,v 1.14 2007-05-08 12:01:33 jonrob Exp $
+ * $Id: RichToolRegistry.cpp,v 1.15 2007-06-04 06:57:55 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -75,6 +75,7 @@ StatusCode Rich::ToolRegistry::initialize()
   // configure the default tools first
   setUpTools( defaultTools );
   // then the ones from the job options
+  // any settings here for default nicknames will override 
   setUpTools( m_names );
 
   return sc;
