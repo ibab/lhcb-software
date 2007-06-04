@@ -1,9 +1,4 @@
-// $Id: MCParticles.cpp,v 1.12 2007-06-03 20:41:11 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.12 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-//
+// $Id: MCParticles.cpp,v 1.13 2007-06-04 09:57:30 cattanem Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -17,10 +12,10 @@
 #include "LoKi/MCChild.h"
 #include "LoKi/MCAlgs.h"
 // ============================================================================
-// MCEvent
+// MCInterfaces
 // ============================================================================
-#include "Kernel/IMCDecayFinder.h"
-#include "Kernel/IMCParticleSelector.h"
+#include "MCInterfaces/IMCDecayFinder.h"
+#include "MCInterfaces/IMCParticleSelector.h"
 // ============================================================================
 /*  @file
  *

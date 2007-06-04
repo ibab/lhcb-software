@@ -1,11 +1,4 @@
-// $Id: LoKiMC.cpp,v 1.4 2007-04-16 16:16:08 pkoppenb Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.3  2006/03/22 10:33:16  ibelyaev
-//  Add MCFilter: adapter for IMCParticleSelector tool
-//
+// $Id: LoKiMC.cpp,v 1.5 2007-06-04 09:57:30 cattanem Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -14,10 +7,10 @@
 #include "GaudiAlg/GaudiAlgorithm.h"
 #include "GaudiAlg/GaudiTool.h"
 // ============================================================================
-// Kernel
+// MCInterfaces
 // ============================================================================
-#include "Kernel/IMCParticleSelector.h"
-#include "Kernel/IMCDecayFinder.h"
+#include "MCInterfaces/IMCParticleSelector.h"
+#include "MCInterfaces/IMCDecayFinder.h"
 // ============================================================================
 // LoKiMC
 // ============================================================================

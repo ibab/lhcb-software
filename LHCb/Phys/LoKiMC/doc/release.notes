@@ -1,6 +1,6 @@
-! $Id: release.notes,v 1.22 2007-06-04 09:22:56 ibelyaev Exp $ 
+! $Id: release.notes,v 1.23 2007-06-04 09:57:30 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.22 $
+! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.23 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -16,6 +16,10 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 !
 ! -----------------------------------------------------------------------------
+
+!========================== LoKiMC v3r0 2007-06-04 ============================
+! 2007-06-04 - Marco Cattaneo
+ - Adapt to new location for MCInterfaces includes
 
 ! 2007-06-04 - Vanya BELYAEV
  - add many STL-like algorithms into namespace LoKi::MCAlgs, 
@@ -34,7 +38,6 @@
     dict/LoKiMCDict.h
     src/MCChild.cpp
 
-!========================== LoKiMC v3r0 2007-06-04 ============================
 ! 2007-06-01 - Vanya BELYAEV
  - add 2 new functions (wrappers for IMCRecontructioble tool)
 
@@ -315,6 +318,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.22  2007/06/04 09:22:56  ibelyaev
+!  make a coherent interface for LoKi::Child&LoKi::Algs
+!
 ! Revision 1.21  2007/06/04 08:27:28  cattanem
 ! v3r0
 !

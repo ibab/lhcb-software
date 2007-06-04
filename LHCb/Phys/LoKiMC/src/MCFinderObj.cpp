@@ -1,14 +1,4 @@
-// $Id: MCFinderObj.cpp,v 1.4 2007-04-16 16:16:08 pkoppenb Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.3  2006/10/26 11:57:41  ibelyaev
-//  SLC4: fix error and many warnings
-//
-// Revision 1.2  2006/10/10 09:14:06  ibelyaev
-//  tiny fixes needed for good&valid dictionaries
-//
+// $Id: MCFinderObj.cpp,v 1.5 2007-06-04 09:57:30 cattanem Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -17,9 +7,9 @@
 #include "GaudiAlg/GaudiTool.h"
 #include "GaudiAlg/GaudiAlgorithm.h"
 // ============================================================================
-// MCEvent
+// MCInterfaces
 // ============================================================================
-#include "Kernel/IMCDecayFinder.h"
+#include "MCInterfaces/IMCDecayFinder.h"
 // ============================================================================
 // LoKiCore 
 // ============================================================================

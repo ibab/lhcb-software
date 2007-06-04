@@ -1,6 +1,6 @@
-# $Id: requirements,v 1.13 2007-06-01 11:57:36 ibelyaev Exp $ 
+# $Id: requirements,v 1.14 2007-06-04 09:57:30 cattanem Exp $ 
 # ============================================================================
-# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.13 $
+# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.14 $
 # ============================================================================
 # Created    : 2006-01-17
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu 
@@ -13,6 +13,7 @@ branches          cmt doc src dict python LoKi
 
 # =============== dependencies ===============================================
 use               MCEvent       v*    Event 
+use               MCInterfaces  v*    Kernel 
 use               LoKiCore      v*    Phys 
 
 # =============== own includes ===============================================
@@ -35,6 +36,9 @@ macro LoKiMCDict_use_linkopts $(use_linkopts)
 
 # ============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.13  2007/06/01 11:57:36  ibelyaev
+#  prepare for v3r0
+#
 #
 # ============================================================================
 # The END 

@@ -1,9 +1,4 @@
-// $Id: MCFinderObj.h,v 1.7 2007-06-01 11:57:36 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-//
+// $Id: MCFinderObj.h,v 1.8 2007-06-04 09:57:29 cattanem Exp $
 // ============================================================================
 #ifndef LOKI_MCFINDEROBJ_H 
 #define LOKI_MCFINDEROBJ_H 1
@@ -19,9 +14,9 @@
 #include "GaudiAlg/GaudiTool.h"
 #include "GaudiAlg/GaudiAlgorithm.h"
 // ============================================================================
-// MCEvent
+// MCInterfaces
 // ============================================================================
-#include "Kernel/IMCDecayFinder.h"
+#include "MCInterfaces/IMCDecayFinder.h"
 // ============================================================================
 // LoKiCore 
 // ============================================================================

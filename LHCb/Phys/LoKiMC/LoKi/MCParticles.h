@@ -1,14 +1,7 @@
-// $Id: MCParticles.h,v 1.12 2007-06-03 20:41:11 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.12 $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-//
+// $Id: MCParticles.h,v 1.13 2007-06-04 09:57:29 cattanem Exp $
 // ============================================================================
 #ifndef LOKI_MCPARTICLES_H 
 #define LOKI_MCPARTICLES_H 1
-// ============================================================================
-// Include files
 // ============================================================================
 // Include files
 // ============================================================================
@@ -22,11 +15,11 @@
 #include "Event/MCParticle.h"
 #include "Event/MCVertex.h"
 // ============================================================================
-// Kernel
+// MCInterfaces
 // ============================================================================
-#include "Kernel/IMCDecayFinder.h"
-#include "Kernel/IMCParticleSelector.h"
-#include "Kernel/IMCReconstructible.h"
+#include "MCInterfaces/IMCDecayFinder.h"
+#include "MCInterfaces/IMCParticleSelector.h"
+#include "MCInterfaces/IMCReconstructible.h"
 // ============================================================================
 // LoKi
 // ============================================================================
