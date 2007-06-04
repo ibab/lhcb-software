@@ -1,8 +1,4 @@
-// $Id: LoKiPhysDict.h,v 1.1 2007-06-01 12:07:03 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
-// ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Id: LoKiPhysDict.h,v 1.2 2007-06-04 18:25:37 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_LOKICOREDICT_H 
 #define LOKI_LOKICOREDICT_H 1
@@ -23,6 +19,8 @@
 #include "LoKi/UniqueKeeper.h"
 // ============================================================================
 #include "LoKi/Dicts.h"
+#include "LoKi/PhysAlgsDicts.h"
+#include "LoKi/PhysExtractDicts.h"
 // ============================================================================
 namespace LoKi 
 {

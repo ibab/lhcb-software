@@ -1,9 +1,4 @@
-// $Id: Child.h,v 1.6 2007-06-03 20:41:36 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// 
+// $Id: Child.h,v 1.7 2007-06-04 18:25:36 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_CHILD_H 
 #define LOKI_CHILD_H 1
@@ -37,6 +32,7 @@ namespace LoKi
    */
   namespace Child
   { 
+    // ========================================================================
     /** get the number of children 
      *  @param mother poiunter to mother particle 
      *  @return number of daugthter particles 
@@ -44,6 +40,7 @@ namespace LoKi
      *  @date   2006-02-11
      */
     std::size_t nChildren ( const LHCb::Particle* mother ) ;
+    // ========================================================================
     /** Trivial accessor to the daughter particles for the given particle.
      *
      *  @attention index starts with 1 , null index corresponds 
@@ -58,6 +55,7 @@ namespace LoKi
     LHCb::Particle* child
     ( const LHCb::Particle*  particle , 
       const size_t           index    ) ;
+    // ========================================================================
     /** Trivial accessor to the daughter particles for the given particle.
      *
      *  @attention index starts with 1 , null index corresponds 
@@ -76,6 +74,7 @@ namespace LoKi
       const size_t           index1   , 
       const size_t           index2   )
     { return child ( child ( particle , index1 ) , index2 ) ; }
+    // ========================================================================
     /** Trivial accessor to the daughter particles for the given particle.
      *
      *  @attention index starts with 1 , null index corresponds 
@@ -96,6 +95,7 @@ namespace LoKi
       const size_t           index2   ,
       const size_t           index3   )
     { return child ( child ( particle , index1 ) , index2 , index3 ) ; }
+    // ========================================================================
     /** Trivial accessor to the daughter particles for the given particle.
      *
      *  @attention index starts with 1 , null index corresponds 
@@ -118,10 +118,30 @@ namespace LoKi
       const size_t           index3   ,
       const size_t           index4   )
     { return child ( child ( particle , index1 ) , index2 , index3 , index4 ) ; }
-    
+    // ========================================================================
+    /** trivial function to access all children particles 
+     *  @see LHCb::Particle::daughters
+     *  @param particle pointer to particle 
+     *  @param return vector of children
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date   2007-06-04
+     */
+    LHCb::Particle::ConstVector 
+    children 
+    ( const LHCb::Particle* particle ) ;
+    // ========================================================================
+    /** trivial function to access all descendants particles 
+     *  @param particle pointer to particle 
+     *  @param return vector of descendants 
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date   2007-06-04
+     */
+    LHCb::Particle::ConstVector 
+    descendants
+    ( const LHCb::Particle* particle ) ;
+    // ========================================================================
   }  // end of the namespace LoKi:Child 
 }  // end of the namespace LoKi
-
 // ============================================================================
 // The END 
 // ============================================================================

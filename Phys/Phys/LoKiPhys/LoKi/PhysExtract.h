@@ -1,17 +1,4 @@
-// $Id: PhysExtract.h,v 1.4 2007-04-16 16:16:26 pkoppenb Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.3  2006/11/27 12:01:32  ibelyaev
-//  prepare for LoKi v4r3
-//
-// Revision 1.2  2006/02/18 18:09:14  ibelyaev
-//  fix a typo
-//
-// Revision 1.1.1.1  2006/02/17 19:17:26  ibelyaev
-// New package: "Phys"-part of restructurized LoKi project  
-// 
+// $Id: PhysExtract.h,v 1.5 2007-06-04 18:25:37 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PHYSEXTRACT_H 
 #define LOKI_PHYSEXTRACT_H 1
@@ -32,7 +19,6 @@ namespace LHCb
   class RichPID ;
   class MuonPID ;  
 }
-
 // ============================================================================
 /** @file
  *
@@ -48,14 +34,12 @@ namespace LHCb
  *  @date 2006-02-06 
  */
 // ============================================================================
-
 namespace LoKi
 {
   namespace Extract
   {    
     // ========================================================================
-    /** @fn getProtoParticles_if  
-     *  simple function to extract recursively all protoparticles, 
+    /** simple function to extract recursively all protoparticles, 
      *  which contributes to a given particle object, 
      * 
      *  @code 
@@ -107,12 +91,9 @@ namespace LoKi
       { output = getProtoParticles_if ( *idau , output , cut ) ; } // RECURSION
       //
       return output ;                                      // RETURN
-    };
+    }
     // ========================================================================
-
-    // ========================================================================
-    /** @fn protoParticles_if  
-     *  simple function to extract recursively all protoparticles, 
+    /** simple function to extract recursively all protoparticles, 
      *  which contributes to a given particle object, 
      * 
      *  @code 
@@ -142,12 +123,9 @@ namespace LoKi
     ( const LHCb::Particle* particle , 
       OUTPUT                output   , 
       const PREDICATE&      cut      ) 
-    { return getProtoParticles_if ( particle , output , cut ) ; } ;
+    { return getProtoParticles_if ( particle , output , cut ) ; } 
     // ========================================================================
-    
-    // ========================================================================
-    /** @fn getProtoParticles_if 
-     *  simple function to extract (recursively) all protoparticles, 
+    /** simple function to extract (recursively) all protoparticles, 
      *  which contributes to particles in the sequences 
      * 
      *  @code 
@@ -184,11 +162,9 @@ namespace LoKi
       for ( ; first != last ; ++first ) 
       { output = getProtoParticles_if ( *first , output , cut ) ; }
       return  output ;
-    };
-    
+    }
     // ========================================================================
-    /** @fn getProtoParticles 
-     *  simple function to extract recursively all protoparticles, 
+    /** simple function to extract recursively all protoparticles, 
      *  which contributes to a given particle object
      * 
      *  @code 
@@ -218,13 +194,9 @@ namespace LoKi
     {
       return  getProtoParticles_if 
         ( particle , output , LoKi::Objects::_ALL_ ) ;
-    } ;
+    } 
     // ========================================================================
-    
-    
-    // ========================================================================
-    /** @fn protoParticles_if 
-     *  simple function to extract (recursively) all protoparticles, 
+    /** simple function to extract (recursively) all protoparticles, 
      *  which contributes to particles in the sequences 
      * 
      *  @code 
@@ -259,10 +231,7 @@ namespace LoKi
       const PREDICATE& cut    )
     { return getProtoParticles_if ( first , last , output , cut ) ; }
     // ========================================================================
-    
-    // ========================================================================
-    /** @fn getProtoParticles 
-     *  simple function to extract (recursively) all protoparticles, 
+    /** simple function to extract (recursively) all protoparticles, 
      *  which contributes to particles in the sequences 
      * 
      *  @code 
@@ -296,11 +265,9 @@ namespace LoKi
     {
       return  getProtoParticles_if 
         ( first , last , output , LoKi::Objects::_ALL_ ) ;
-    } ;
-
+    } 
     // ========================================================================
-    /** @fn protoParticles 
-     *  simple function to extract recursively all protoparticles, 
+    /** simple function to extract recursively all protoparticles, 
      *  which contributes to a given particle object
      * 
      *  @code 
@@ -329,10 +296,7 @@ namespace LoKi
       OUTPUT                output   ) 
     { return getProtoParticles ( particle , output ) ; }
     // ========================================================================
-    
-    // ========================================================================
-    /** @fn protoParticles 
-     *  simple function to extract (recursively) all protoparticles, 
+    /** simple function to extract (recursively) all protoparticles, 
      *  which contributes to particles in the sequences 
      * 
      *  @code 
@@ -365,10 +329,7 @@ namespace LoKi
       OUTPUT     output )
     { return getProtoParticles ( first , last , output ) ; }
     // ========================================================================
-    
-    // ========================================================================
-    /** @fn getParticles 
-     *  Simple function to extract recursively all reconstructed 
+    /** Simple function to extract recursively all reconstructed 
      *  particles that make contribution to the given particle. 
      *  Indeed it is just a flat representation of the decay tree.
      * 
@@ -424,12 +385,9 @@ namespace LoKi
       { output = getParticles ( *idau , output ) ; }           // RECURSION
       //
       return output ;
-    };
+    }
     // ========================================================================
-    
-    // ========================================================================
-    /** @fn getParticles 
-     *  Simple function to extract recursively all reconstructed 
+    /** Simple function to extract recursively all reconstructed 
      *  particles that make contribution to the given particle. 
      *  Indeed it is just a flat representation of the decay tree.
      * 
@@ -469,13 +427,9 @@ namespace LoKi
       for ( ; begin != end ; ++begin ) 
       { output = getParticles ( *begin , output , cut ) ; }
       return output ;
-    };
+    }
     // ========================================================================
-    
-
-    // ========================================================================
-    /** @fn getParticles 
-     *  Simple function to extract recursively all reconstructed 
+    /** Simple function to extract recursively all reconstructed 
      *  particles that make contribution to the given particle. 
      *  Indeed it is just a flat representation of the decay tree.
      * 
@@ -506,12 +460,9 @@ namespace LoKi
     { 
       return getParticles 
         ( particle , output , LoKi::Objects::_ALL_ ) ;
-    } ;
+    }
     // ========================================================================
-    
-    // ========================================================================
-    /** @fn getParticles 
-     *  Simple function to extract recursively all reconstructed 
+    /** Simple function to extract recursively all reconstructed 
      *  particles that make contribution to the given particle. 
      *  Indeed it is just a flat representation of the decay tree.
      * 
@@ -549,12 +500,9 @@ namespace LoKi
     { 
       return getParticles 
         ( begin , end , output , LoKi::Objects::_ALL_ ) ;
-    } ;
+    } 
     // ========================================================================
-
-    // ========================================================================
-    /** @fn particles 
-     *  Simple function to extract recursively all reconstructed 
+    /** Simple function to extract recursively all reconstructed 
      *  particles that make contribution to the given particle. 
      *  Indeed it is just a flat representation of the decay tree.
      * 
@@ -592,12 +540,9 @@ namespace LoKi
     ( const LHCb::Particle*   particle , 
       OUTPUT                  output   , 
       const PREDICATE&        cut      )
-    { return getParticles ( particle , output , cut ) ; } ;
+    { return getParticles ( particle , output , cut ) ; } 
     // ========================================================================
-    
-    // ========================================================================
-    /** @fn particles 
-     *  Simple function to extract recursively all reconstructed 
+    /** Simple function to extract recursively all reconstructed 
      *  particles that make contribution to the given particle. 
      *  Indeed it is just a flat representation of the decay tree.
      * 
@@ -633,13 +578,9 @@ namespace LoKi
       PARTICLE         end    , 
       OUTPUT           output  , 
       const PREDICATE& cut     )
-    { return getParticles ( begin , end , output , cut ) ; } ;
+    { return getParticles ( begin , end , output , cut ) ; } 
     // ========================================================================
-    
-
-    // ========================================================================
-    /** @fn particles 
-     *  Simple function to extract recursively all reconstructed 
+    /** Simple function to extract recursively all reconstructed 
      *  particles that make contribution to the given particle. 
      *  Indeed it is just a flat representation of the decay tree.
      * 
@@ -667,12 +608,9 @@ namespace LoKi
     inline  OUTPUT particles 
     ( const LHCb::Particle* particle , 
       OUTPUT                output   )
-    { return getParticles ( particle , output ) ; } ;
+    { return getParticles ( particle , output ) ; } 
     // ========================================================================
-    
-    // ========================================================================
-    /** @fn particles 
-     *  Simple function to extract recursively all reconstructed 
+    /** Simple function to extract recursively all reconstructed 
      *  particles that make contribution to the given particle. 
      *  Indeed it is just a flat representation of the decay tree.
      * 
@@ -704,9 +642,7 @@ namespace LoKi
     ( PARTICLE         begin  , 
       PARTICLE         end    , 
       OUTPUT           output )
-    { return getParticles ( begin , end , output ) ; } ;
-    // ========================================================================
-    
+    { return getParticles ( begin , end , output ) ; } 
     // ========================================================================
     /** @struct Particle2ProtoParticle
      *  Helper trivial functor with coudl be used to 
@@ -715,7 +651,6 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-10
      */
-    // ========================================================================
     struct Particle2ProtoParticle
       : public std::unary_function<const LHCb::Particle*,LHCb::ProtoParticle*>
     {
@@ -724,8 +659,6 @@ namespace LoKi
       { return 0 != p ? const_cast<LHCb::ProtoParticle*> ( p->proto() ) : 0 ; }
     } ;
     // ========================================================================
-
-    // ========================================================================
     /** @struct Particle2Track
      *  Helper trivial functor with could be used to 
      *  "convert" Particle into Track or 
@@ -733,7 +666,6 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-10
      */
-    // ========================================================================
     struct Particle2Track
       : public std::unary_function<const LHCb::Particle*,LHCb::Track*>
     {
@@ -746,11 +678,7 @@ namespace LoKi
       Particle2ProtoParticle m_eval ;   
     } ;
     // ========================================================================
-
-
-    // ========================================================================
-    /** @fn getTracks_if 
-     *  simple funtion to get recursively all tracks, which 
+    /** Simple funtion to get recursively all tracks, which 
      *  makes contribution for a given particle 
      *  
      *  @code
@@ -797,12 +725,9 @@ namespace LoKi
       }
       //
       return output ;                                          // RETURN 
-    } ;
+    }
     // ========================================================================
-
-    // ========================================================================
-    /** @fn getTracks_if 
-     *  simple funtion to get recursively all tracks, which 
+    /** Simple funtion to get recursively all tracks, which 
      *  makes contribution for a given particle 
      *  
      *  @code
@@ -830,12 +755,9 @@ namespace LoKi
     {
       return getTracks_if 
         ( particle , output , LoKi::Objects::_ALL_ ) ;  
-    } ;
+    }
     // ========================================================================
-
-    // ========================================================================
-    /** @fn tracks_if 
-     *  simple funtion to get recursively all tracks, which 
+    /** Simple funtion to get recursively all tracks, which 
      *  makes contribution for a given particle 
      *  
      *  @code
@@ -863,10 +785,7 @@ namespace LoKi
       const PREDICATE&      cut      ) 
     { return getTracks_if ( particle , output , cut ) ; }
     // ========================================================================
-    
-    // ========================================================================
-    /** @fn tracks
-     *  simple funtion to get recursively all tracks, which 
+    /** Simple funtion to get recursively all tracks, which 
      *  makes contribution for a given particle 
      *  
      *  @code
@@ -893,10 +812,7 @@ namespace LoKi
       OUTPUT                output   ) 
     { return getTracks ( particle , output ) ; }
     // ========================================================================
-
-    // ========================================================================
-    /** @fn getTracks_if 
-     *  simple function to get recursively all tracks, which 
+    /** Simple function to get recursively all tracks, which 
      *  makes contribution for sequence of particles 
      *  
      *  @code
@@ -931,12 +847,9 @@ namespace LoKi
       for ( ; first != last ; ++first ) 
       { output = getTracks_if ( *first , output , cut ) ; }
       return output ;                                          // RETURN 
-    } ;
+    }
     // ========================================================================
-
-    // ========================================================================
-    /** @fn getTracks
-     *  simple function to get recursively all tracks, which 
+    /** Simple function to get recursively all tracks, which 
      *  makes contribution for sequence of particles 
      *  
      *  @code
@@ -969,12 +882,9 @@ namespace LoKi
     {
       return getTracks_if 
         ( first , last , output , LoKi::Objects::_ALL_ ) ;
-    } ;
+    }
     // ========================================================================
-    
-    // ========================================================================
-    /** @fn tracks_if 
-     *  simple function to get recursively all tracks, which 
+    /** Simple function to get recursively all tracks, which 
      *  makes contribution for sequence of particles 
      *  
      *  @code
@@ -1007,10 +917,7 @@ namespace LoKi
       const PREDICATE& cut ) 
     { return getTracks_if ( first , last , output , cut ) ; }
     // ========================================================================
-    
-    // ========================================================================
-    /** @fn tracks
-     *  simple funtion to get recursively all tracks, which 
+    /** Simple funtion to get recursively all tracks, which 
      *  makes contribution for a given particle 
      *  
      *  @code
@@ -1037,10 +944,7 @@ namespace LoKi
       OUTPUT                output   ) 
     { return getTracks ( particle , output ) ; }
     // ========================================================================
-
-    // ========================================================================
-    /** @fn tracks
-     *  simple function to get recursively all tracks, which 
+    /** simple function to get recursively all tracks, which 
      *  makes contribution for sequence of particles 
      *  
      *  @code
@@ -1070,12 +974,9 @@ namespace LoKi
     ( PARTICLE first    ,
       PARTICLE last     , 
       OUTPUT   output   ) 
-    { return getTracks ( first , last , output ) ; } ;
+    { return getTracks ( first , last , output ) ; } 
     // ========================================================================
-    
-    // ========================================================================
-    /** @fn getMuon
-     *  The most trivial function to extract LHCb::MuonPID object from 
+    /** The most trivial function to extract LHCb::MuonPID object from 
      *  the basic particle
      *  @see LHCb::MuonPID 
      *  @see LHCb::Particle
@@ -1085,10 +986,7 @@ namespace LoKi
     const LHCb::MuonPID* getMuon 
     ( const LHCb::Particle* particle ) ;
     // ========================================================================
-    
-    // ========================================================================
-    /** @fn muon
-     *  The most trivial function to extract LHCb::MuonPID object from 
+    /** The most trivial function to extract LHCb::MuonPID object from 
      *  the basic particle
      *  @see LoKi::Extract::getMuon
      *  @see LHCb::MuonPID 
@@ -1100,10 +998,7 @@ namespace LoKi
     const LHCb::MuonPID* muon ( const LHCb::Particle* particle ) 
     { return getMuon( particle ) ; }
     // ========================================================================
-    
-    // ========================================================================
-    /** @fn getRich
-     *  The most trivial function to extract LHCb::RichPID object from 
+    /** The most trivial function to extract LHCb::RichPID object from 
      *  the basic particle
      *  @see LHCb::RichPID 
      *  @see LHCb::Particle
@@ -1113,10 +1008,7 @@ namespace LoKi
     const LHCb::RichPID* getRich 
     ( const LHCb::Particle* particle ) ;
     // ========================================================================
-    
-    // ========================================================================
-    /** @fn rich
-     *  The most trivial function to extract LHCb::MuonPID object from 
+    /** The most trivial function to extract LHCb::MuonPID object from 
      *  the basic particle
      *  @see LoKi::Extract::getRich
      *  @see LHCb::RichPID 
@@ -1129,10 +1021,7 @@ namespace LoKi
     ( const LHCb::Particle* particle ) 
     { return getRich( particle ) ; }
     // ========================================================================
-    
-    // ========================================================================
-    /** @fn getMuons 
-     *  The simple function to extract (Recursively) all 
+    /** The simple function to extract (Recursively) all 
      *  LHCb::MuonPID objects from the tree 
      *
      *  Get all Muon PID information for muons from decay tree:
@@ -1181,7 +1070,7 @@ namespace LoKi
         ++output ;                                           // ADVANCE 
       } ;
       return output ;
-    } ;
+    }
     // ========================================================================
     template <class OUTPUT>
     inline OUTPUT getMuons 
@@ -1189,10 +1078,7 @@ namespace LoKi
       OUTPUT                output    ) 
     { return getMuons ( particle , output , LoKi::Objects::_ALL_ ) ; }
     // ========================================================================
-
-    // ========================================================================
-    /** @fn muons 
-     *  The simple function to extract (Recursively) all 
+    /** The simple function to extract (Recursively) all 
      *  LHCb::MuonPID objects from the tree 
      *
      *  Get all Muon PID information for muons from decay tree:
@@ -1232,10 +1118,7 @@ namespace LoKi
       OUTPUT                output    ) 
     { return getMuons ( particle , output ) ; }
     // ========================================================================
-    
-    // ========================================================================
-    /** @fn getRichs
-     *  The simple function to extract (Recursively) all 
+    /** The simple function to extract (Recursively) all 
      *  LHCb::RichPID objectd from the tree 
      *
      *  Get all Rich PID information for kaons from decay tree:
@@ -1283,7 +1166,7 @@ namespace LoKi
         ++output ;                                           // ADVANCE 
       } ;
       return output ;
-    } ;
+    }
     // ========================================================================
     template <class OUTPUT>
     inline OUTPUT getRichs  
@@ -1291,10 +1174,7 @@ namespace LoKi
       OUTPUT                output    ) 
     { return getRichs ( particle , output , LoKi::Objects::_ALL_ ) ; }
     // ========================================================================
-
-    // ========================================================================
-    /** @fn richs
-     *  The simple function to extract (Recursively) all 
+    /** The simple function to extract (Recursively) all 
      *  LHCb::RichPID objectd from the tree 
      *
      *  Get all Rich PID information for kaons from decay tree:

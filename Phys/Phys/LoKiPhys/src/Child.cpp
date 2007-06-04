@@ -1,6 +1,4 @@
-// $Id: Child.cpp,v 1.3 2007-04-16 16:16:27 pkoppenb Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $ 
+// $Id: Child.cpp,v 1.4 2007-06-04 18:25:37 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -10,9 +8,9 @@
 // ============================================================================
 // LoKiPhys
 // ============================================================================
+#include "LoKi/Objects.h"
 #include "LoKi/Child.h"
-// ============================================================================
-
+#include "LoKi/PhysExtract.h"
 // ============================================================================
 /** @file
  *
@@ -30,10 +28,7 @@
  *  @date 2006-02-10 
  */
 // ============================================================================
-
-// ============================================================================
-/** @fn child 
- *  Trivial accessor to the daughter particles for the given particle.
+/*  Trivial accessor to the daughter particles for the given particle.
  *  It is not very useful in a"stand-alone-mode", but it coudl be very useful 
  *  for non-trivial access:
  *
@@ -75,6 +70,47 @@ LHCb::Particle* LoKi::Child::child
   return const_cast<LHCb::Particle*>( d ) ;
 } ;
 // ============================================================================
+/*  trivial function to access all children particles 
+ *  @see LHCb::Particle::daughters
+ *  @param particle pointer to particle 
+ *  @param return vector of children
+ *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+ *  @date   2007-06-04
+ */
+// ============================================================================
+LHCb::Particle::ConstVector 
+LoKi::Child::children 
+( const LHCb::Particle* particle ) 
+{
+  if ( 0 == particle ) { return LHCb::Particle::ConstVector() ; } /// RETURN 
+  return LHCb::Particle::ConstVector ( particle -> daughters() . begin () , 
+                                       particle -> daughters() . end   () ) ;
+}
+// ============================================================================
+/*  trivial function to access all descendants particles 
+ *  @param particle pointer to particle 
+ *  @param return vector of descendants 
+ *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+ *  @date   2007-06-04
+ */
+// ========================================================================
+LHCb::Particle::ConstVector 
+LoKi::Child::descendants
+( const LHCb::Particle* particle ) 
+{
+  LHCb::Particle::ConstVector result ;
+  if ( 0 == particle ) { return result ; }
+  /// get all particles (skip NULLs only)
+  LoKi::Extract::getParticles 
+    ( particle , std::back_inserter ( result ) , LoKi::Objects::_VALID_ ) ;   
+  /// remove self
+  LHCb::Particle::ConstVector::iterator self = 
+    std::remove ( result.begin() , result.end () , particle ) ;
+  result.erase ( self , result.end() ) ;
+  return result ;
+}
+// ========================================================================
+
 
 // ============================================================================
 // The END 
