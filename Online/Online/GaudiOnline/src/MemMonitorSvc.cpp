@@ -151,7 +151,7 @@ StatusCode MonitoringEngine::finalize()  {
     MsgStream msg(msgSvc(),name());
     msg << MSG::ERROR << "Cannot deallocate publishing area." << endmsg;
   }
-  return Service::initialize();
+  return Service::finalize();
 }
 
 // Constructor
