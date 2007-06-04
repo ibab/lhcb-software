@@ -1,6 +1,6 @@
-! $Id: release.notes,v 1.21 2007-06-04 08:27:28 cattanem Exp $ 
+! $Id: release.notes,v 1.22 2007-06-04 09:22:56 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.21 $
+! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.22 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -16,6 +16,23 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 !
 ! -----------------------------------------------------------------------------
+
+! 2007-06-04 - Vanya BELYAEV
+ - add many STL-like algorithms into namespace LoKi::MCAlgs, 
+   the most suitbale instances are added into LoKi::Dicts::Algs 
+ - make a coherent  (with respect to generator/HepMC)
+   treatment of "children"   (LoKi::Child). Add many 
+   functions into namespace LoKi::Child 
+
+ - New files:
+    LoKi/MCAlgsDicts.h
+    src/MCAlgsDicts.cpp
+ - Modified files: 
+    LoKi/MCAlgs.h
+    LoKi/MCChild.h
+    dict/LoKiMC.xml
+    dict/LoKiMCDict.h
+    src/MCChild.cpp
 
 !========================== LoKiMC v3r0 2007-06-04 ============================
 ! 2007-06-01 - Vanya BELYAEV
@@ -298,6 +315,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.21  2007/06/04 08:27:28  cattanem
+! v3r0
+!
 ! Revision 1.20  2007/06/01 15:44:20  ibelyaev
 !  add MCREC and MCRECAS functors
 !

@@ -1,8 +1,11 @@
-// $Id: MCAlgs.h,v 1.6 2007-06-03 20:41:10 ibelyaev Exp $
+// $Id: MCAlgs.h,v 1.7 2007-06-04 09:22:55 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2007/06/03 20:41:10  ibelyaev
+//  update LoKi::Child namespace
+//
 //
 // ============================================================================
 #ifndef LOKI_MCALGS_H 
@@ -99,13 +102,13 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-02-20
      */
-    template <class OBJECT, class FUNCTION,class PREDICATE>
-    inline typename FUNCTION::result_type min_value 
+    template <class OBJECT, class FUNCTION,class PREDICATE, class RESULT>
+    inline RESULT                    min_value 
     ( OBJECT                         first     ,
       OBJECT                         last      , 
       const FUNCTION&                fun       ,
       const PREDICATE&               cut       , 
-      typename FUNCTION::result_type minval    , 
+      RESULT                         minval    , 
       const bool                     decayOnly ) ;
     /** The trivial algorithm which scans the decay 
      *  tree of the particle and searches for the the 
@@ -123,13 +126,13 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-02-20
      */
-    template <class OBJECT, class FUNCTION,class PREDICATE>
-    inline typename FUNCTION::result_type max_value 
+    template <class OBJECT, class FUNCTION,class PREDICATE,class RESULT>
+    inline RESULT max_value 
     ( OBJECT                         first     ,
       OBJECT                         last      , 
       const FUNCTION&                fun       ,
       const PREDICATE&               cut       , 
-      typename FUNCTION::result_type maxval    , 
+      RESULT                         maxval    , 
       const bool                     decayOnly ) ;
     /** The trivial algorithm which scans the decay tree   
      *  and accumulates the value for some function for 
@@ -144,13 +147,14 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-02-20
      */
-    template <class OBJECT, class FUNCTION,class PREDICATE,class OPERATION>
-    inline typename FUNCTION::result_type  accumulate 
+    template <class OBJECT, class FUNCTION,class PREDICATE,
+              class OPERATION,class RESULT>
+    inline RESULT accumulate 
     ( OBJECT                         first     , 
       OBJECT                         last      ,
       const FUNCTION&                fun       ,
       const PREDICATE&               cut       , 
-      typename FUNCTION::result_type result    ,
+      RESULT                         result    ,
       OPERATION                      binop     , 
       const bool                     decayOnly ) ;
     /** the trivial algorithm to count number of MC particles
@@ -373,12 +377,12 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-02-20
      */
-    template <class FUNCTION,class PREDICATE>
-    inline typename FUNCTION::result_type min_value 
+    template <class FUNCTION,class PREDICATE,class RESULT>
+    inline RESULT min_value 
     ( const LHCb::MCParticle*        particle          ,
       const FUNCTION&                fun               ,
       const PREDICATE&               cut               , 
-      typename FUNCTION::result_type minval            , 
+      RESULT                         minval            , 
       const bool                     decayOnly = false ) 
     { 
       // (1) traverse the tree if possible 
@@ -411,12 +415,12 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-02-20
      */
-    template <class FUNCTION,class PREDICATE>
-    inline typename FUNCTION::result_type min_value 
+    template <class FUNCTION,class PREDICATE,class RESULT>
+    inline RESULT min_value 
     ( const LHCb::MCVertex*          vertex            ,
       const FUNCTION&                fun               ,
       const PREDICATE&               cut               , 
-      typename FUNCTION::result_type minval            ,
+      RESULT                         minval            ,
       const bool                     decayOnly = false ) 
     { 
       /// check for "only" decay condition:
@@ -447,13 +451,13 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-02-20
      */
-    template <class OBJECT, class FUNCTION,class PREDICATE>
-    inline typename FUNCTION::result_type min_value 
+    template <class OBJECT, class FUNCTION,class PREDICATE,class RESULT>
+    inline RESULT min_value 
     ( OBJECT                         first     ,
       OBJECT                         last      , 
       const FUNCTION&                fun       ,
       const PREDICATE&               cut       , 
-      typename FUNCTION::result_type minval    , 
+      RESULT                         minval    , 
       const bool                     decayOnly ) 
     {
       for ( ; first != last ; ++first ) 
@@ -478,12 +482,12 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-02-20
      */
-    template <class FUNCTION,class PREDICATE>
-    inline typename FUNCTION::result_type max_value 
+    template <class FUNCTION,class PREDICATE,class RESULT>
+    inline RESULT max_value 
     ( const LHCb::MCParticle*        particle          ,
       const FUNCTION&                fun               ,
       const PREDICATE&               cut               , 
-      typename FUNCTION::result_type maxval            , 
+      RESULT                         maxval            , 
       const bool                     decayOnly = false ) 
     { 
       // (1) traverse the tree if possible 
@@ -516,12 +520,12 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-02-20
      */
-    template <class FUNCTION,class PREDICATE>
-    inline typename FUNCTION::result_type max_value 
+    template <class FUNCTION,class PREDICATE,class RESULT>
+    inline RESULT max_value 
     ( const LHCb::MCVertex*          vertex            ,
       const FUNCTION&                fun               ,
       const PREDICATE&               cut               , 
-      typename FUNCTION::result_type maxval            ,
+      RESULT                         maxval            ,
       const bool                     decayOnly = false ) 
     { 
       /// check for "only" decay condition:
@@ -552,13 +556,13 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-02-20
      */
-    template <class OBJECT, class FUNCTION,class PREDICATE>
-    inline typename FUNCTION::result_type max_value 
+    template <class OBJECT, class FUNCTION,class PREDICATE,class RESULT>
+    inline RESULT max_value 
     ( OBJECT                         first     ,
       OBJECT                         last      , 
       const FUNCTION&                fun       ,
       const PREDICATE&               cut       , 
-      typename FUNCTION::result_type maxval    , 
+      RESULT                         maxval    , 
       const bool                     decayOnly ) 
     {
       for ( ; first != last ; ++first ) 
@@ -582,12 +586,12 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-02-20
      */
-    template <class FUNCTION,class PREDICATE,class OPERATION>
-    inline typename FUNCTION::result_type  accumulate 
+    template <class FUNCTION,class PREDICATE,class OPERATION,class RESULT>
+    inline RESULT accumulate 
     ( const LHCb::MCParticle*        particle          , 
       const FUNCTION&                fun               ,
       const PREDICATE&               cut               , 
-      typename FUNCTION::result_type result            ,
+      RESULT                         result            ,
       OPERATION                      binop             , 
       const bool                     decayOnly = false ) 
     {
@@ -618,12 +622,12 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-02-20
      */
-    template <class FUNCTION,class PREDICATE,class OPERATION>
-    inline typename FUNCTION::result_type  accumulate 
+    template <class FUNCTION,class PREDICATE,class OPERATION,class RESULT>
+    inline RESULT accumulate 
     ( const LHCb::MCVertex*          vertex            , 
       const FUNCTION&                fun               ,
       const PREDICATE&               cut               , 
-      typename FUNCTION::result_type result            ,
+      RESULT                         result            ,
       OPERATION                      binop             , 
       const bool                     decayOnly = false ) 
     {
@@ -652,13 +656,14 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-02-20
      */
-    template <class OBJECT, class FUNCTION,class PREDICATE,class OPERATION>
-    inline typename FUNCTION::result_type  accumulate 
+    template <class OBJECT, class FUNCTION,class PREDICATE,
+              class OPERATION,class RESULT>
+    inline RESULT accumulate 
     ( OBJECT                         first     , 
       OBJECT                         last      ,
       const FUNCTION&                fun       ,
       const PREDICATE&               cut       , 
-      typename FUNCTION::result_type result    ,
+      RESULT                         result    ,
       OPERATION                      binop     , 
       const bool                     decayOnly ) 
     {
@@ -669,6 +674,180 @@ namespace LoKi
       }
       return result ;    
     }
+    // ========================================================================
+    /// search for minimal element in the tree 
+    template <class FUNCTION,class PREDICATE>
+    inline const LHCb::MCParticle* min_element 
+    ( const LHCb::MCParticle* particle          , 
+      const FUNCTION&         fun               , 
+      const PREDICATE&        cut               , 
+      const bool              decayOnly         ) ;
+    // ========================================================================
+    /// search for minimal element in the tree 
+    template <class FUNCTION,class PREDICATE>
+    inline const LHCb::MCParticle* min_element 
+    ( const LHCb::MCVertex*   vertex            , 
+      const FUNCTION&         fun               , 
+      const PREDICATE&        cut               , 
+      const bool              decayOnly         ) ;
+    // ========================================================================
+    /** simple algorithm to find a minimal element in the tree of MC-particle
+     *  @param particle MC-particle 
+     *  @param fun     function to be minimized 
+     *  @param cut     selector for the particles 
+     *  @param decayOnly flag to scal only teh decay vertcies 
+     *  @return the minimum element 
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2007-06-04
+     */
+    template <class FUNCTION,class PREDICATE>
+    inline const LHCb::MCParticle* min_element 
+    ( const LHCb::MCParticle* particle          , 
+      const FUNCTION&         fun               , 
+      const PREDICATE&        cut               , 
+      const bool              decayOnly         ) 
+    {
+      const LHCb::MCParticle* result = 0  ;
+      if ( 0 == particle    ) { return result ; }                  // RETURN
+      if ( cut ( particle ) ) { result = particle ; }
+      // loop over vertices 
+      typedef SmartRefVector<LHCb::MCVertex> EVs ;
+      const EVs& evs = particle->endVertices () ;
+      for ( EVs::const_iterator iev = evs.begin() ; evs.end() != iev ; ++iev )
+      {
+        const LHCb::MCVertex* ev = *iev ;
+        if ( decayOnly && !ev->isDecay()  ) { continue ; }      // CONTINUE 
+        /// get the minimum per vertex 
+        const LHCb::MCParticle* tmp = LoKi::MCAlgs::min_element 
+          ( ev , fun , cut , decayOnly ) ;
+        if ( 0 == tmp                     ) { continue ; }      // CONITNUE 
+        if ( 0 == result ||
+             fun ( tmp ) < fun ( result ) ) { result = tmp ; }  // ATTENTION!
+      }
+      return result ;                                           // RETURN  
+    }    
+    // ========================================================================
+    /** simple algorithm to find a minimal element in the tree of MC-particle
+     *  @param vertex   MC-vertex 
+     *  @param fun     function to be minimized 
+     *  @param cut     selector for the particles 
+     *  @param decayOnly flag to scal only teh decay vertcies 
+     *  @return the minimum element 
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2007-06-04
+     */
+    template <class FUNCTION,class PREDICATE>
+    inline const LHCb::MCParticle* min_element 
+    ( const LHCb::MCVertex*   vertex            , 
+      const FUNCTION&         fun               , 
+      const PREDICATE&        cut               , 
+      const bool              decayOnly         ) 
+    {
+      const LHCb::MCParticle* result = 0  ;
+      if ( 0 == vertex                     ) { return result ; } // RETURN
+      if ( decayOnly && !vertex->isDecay() ) { return result ; } // RETURN
+      // loop over products 
+      typedef SmartRefVector<LHCb::MCParticle> Ps ;
+      const Ps& ps = vertex->products() ;
+      for ( Ps::const_iterator ip = ps.begin() ; ps.end() != ip ; ++ip )
+      {
+        const LHCb::MCParticle* tmp = LoKi::MCAlgs::min_element 
+          ( *ip , fun , cut , decayOnly ) ;  
+        if ( 0 == tmp    ) { continue ; }                       // CONTINUE 
+        if ( 0 == result ||
+             fun ( tmp ) < fun ( result ) ) { result = tmp ; }  // ATTENTION!
+      }
+      return result ;
+    }
+    // ========================================================================
+    /// search for minimal element in the tree 
+    template <class FUNCTION,class PREDICATE>
+    inline const LHCb::MCParticle* max_element 
+    ( const LHCb::MCParticle* particle          , 
+      const FUNCTION&         fun               , 
+      const PREDICATE&        cut               , 
+      const bool              decayOnly         ) ;
+    // ========================================================================
+    /// search for minimal element in the tree 
+    template <class FUNCTION,class PREDICATE>
+    inline const LHCb::MCParticle* max_element 
+    ( const LHCb::MCVertex*   vertex            , 
+      const FUNCTION&         fun               , 
+      const PREDICATE&        cut               , 
+      const bool              decayOnly         ) ;
+    // ========================================================================
+    /** simple algorithm to find a minimal element in the tree of MC-particle
+     *  @param particle MC-particle 
+     *  @param fun     function to be maximized
+     *  @param cut     selector for the particles 
+     *  @param decayOnly flag to scal only teh decay vertcies 
+     *  @return the maximal element 
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2007-06-04
+     */
+    template <class FUNCTION,class PREDICATE>
+    inline const LHCb::MCParticle* max_element 
+    ( const LHCb::MCParticle* particle          , 
+      const FUNCTION&         fun               , 
+      const PREDICATE&        cut               , 
+      const bool              decayOnly         ) 
+    {
+      const LHCb::MCParticle* result = 0  ;
+      if ( 0 == particle    ) { return result ; }                  // RETURN
+      if ( cut ( particle ) ) { result = particle ; }
+      // loop over vertices 
+      typedef SmartRefVector<LHCb::MCVertex> EVs ;
+      const EVs& evs = particle->endVertices () ;
+      for ( EVs::const_iterator iev = evs.begin() ; evs.end() != iev ; ++iev )
+      {
+        const LHCb::MCVertex* ev = *iev ;
+        if ( decayOnly && !ev->isDecay()  ) { continue ; }      // CONTINUE 
+        /// get the minimum per vertex 
+        const LHCb::MCParticle* tmp = LoKi::MCAlgs::max_element 
+          ( ev , fun , cut , decayOnly ) ;
+        if ( 0 == tmp                     ) { continue ; }      // CONITNUE 
+        if ( 0 == result ||
+             fun ( result ) < fun ( tmp ) ) { result = tmp ; }  // ATTENTION!
+      }
+      return result ;                                           // RETURN  
+    }    
+    // ========================================================================
+    /** simple algorithm to find a maximal element in the tree of MC-particle
+     *  @param vertex   MC-vertex 
+     *  @param fun     function to be maximized
+     *  @param cut     selector for the particles 
+     *  @param decayOnly flag to scal only teh decay vertcies 
+     *  @return the maximum element 
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2007-06-04
+     */
+    template <class FUNCTION,class PREDICATE>
+    inline const LHCb::MCParticle* max_element 
+    ( const LHCb::MCVertex*   vertex            , 
+      const FUNCTION&         fun               , 
+      const PREDICATE&        cut               , 
+      const bool              decayOnly         ) 
+    {
+      const LHCb::MCParticle* result = 0  ;
+      if ( 0 == vertex                     ) { return result ; } // RETURN
+      if ( decayOnly && !vertex->isDecay() ) { return result ; } // RETURN
+      // loop over products 
+      typedef SmartRefVector<LHCb::MCParticle> Ps ;
+      const Ps& ps = vertex->products() ;
+      for ( Ps::const_iterator ip = ps.begin() ; ps.end() != ip ; ++ip )
+      {
+        const LHCb::MCParticle* tmp = LoKi::MCAlgs::max_element 
+          ( *ip , fun , cut , decayOnly ) ;  
+        if ( 0 == tmp    ) { continue ; }                       // CONTINUE 
+        if ( 0 == result ||
+             fun ( result ) < fun ( tmp ) ) { result = tmp ; }  // ATTENTION!
+      }
+      return result ;
+    }
+    // ========================================================================
+
+
+ 
   }  // end of namespace LoKi::MCTrees
 } // end of namespace LoKi 
 // ============================================================================
