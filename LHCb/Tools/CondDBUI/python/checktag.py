@@ -12,7 +12,7 @@ from time import sleep, asctime
 import conddbui
 
 if len(argv) < 3:
-    print "Usage: %s <tag> <connection_string> [connection_string ...]"
+    print "Usage: %s <tag> <connection_string> [connection_string ...]"%argv[0]
     exit(1)
 
 tag = argv[1]

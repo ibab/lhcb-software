@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # $ Id: $
-from PyCool import cool
+from PyCool import cool, walk
 
 class CondDBDiffError(RuntimeError):
     """
@@ -10,74 +10,6 @@ class CondDBDiffError(RuntimeError):
     def __init__(self,*args):
         RuntimeError.__init__(self,*args);
 
-class CondDBWalk:
-    """
-    Iterator to walk through the hierarchy of a COOL database.
-    It mimics the function os.walk, but the navigation cannot
-    be modified changing in place the returned directories.
-    
-    Example:
-        for root, foldersets, folders in CondDBWalk(db,'/'):
-            ...
-    """
-    def __init__(self,db,top="/"):
-        """
-        Construct a new iterator instance.
-        db has to be a COOL database instance, and top is the FolderSet
-        path where to start the navigation.
-        """
-        self.db = db
-        self.dirs = [ top ]
-    def __iter__(self):
-        return self
-    def next(self):
-        if self.dirs:
-            # get next folderset to process
-            root = self.dirs.pop()
-            fs = self.db.getFolderSet(root)
-            # get list of contained foldersets in reversed alfabetical order
-            dirs = [ f for f in fs.listFolderSets(False) ]
-            # prepend the found foldersets to the list of foldersets to process
-            self.dirs = dirs + self.dirs
-            
-            # get the legnth of the part of the name to strip
-            if root == '/':
-                to_remove = 1
-            else:
-                to_remove = len(root)+1
-            # sort alfabetically the foldersets and leave the FolderSet name
-            dirs.sort()
-            dirs = [  d[to_remove:] for d in dirs ]
-            # get the list of folders and leave only the Folder name
-            files = [ f[to_remove:] for f in fs.listFolders() ]
-            return (root, dirs, files)
-        else:
-            # we do not have any other folderset to process
-            raise StopIteration()
-
-class BrowseObjectIterator:
-    """
-    Python iterator to wrap cool::IObjectIterator.
-    
-    Example:
-        for object in BrowseObjectIterator(folder.browseObjects(since,until,
-                                                                CannelSelection.all())):
-            ...
-    """
-    def __init__(self,objectIterator):
-        """
-        Create a new instance of the iterator.
-        objectIterator is a cool::IObjectIterator object.
-        """
-        self.objectIterator = objectIterator
-    def __iter__(self):
-        return self
-    def next(self):
-        if self.objectIterator.hasNext():
-            return self.objectIterator.next()
-        else:
-            raise StopIteration()
-
 import logging
 
 _log = logging.getLogger( __name__ )
@@ -86,6 +18,14 @@ _log.setLevel( logging.INFO )
 _handler = logging.StreamHandler()
 _handler.setFormatter( logging.Formatter( "%(levelname)s:%(name)s: %(message)s" ) )
 _log.addHandler( _handler )
+
+# Initialize COOL Application
+_app = None
+
+if 'CORAL_LFC_BASEDIR' in os.environ:
+    # Load CORAL LFCReplicaService into the context of cool::Application
+    _app.loadComponent("CORAL/Services/LFCReplicaService")
+
 
 def diff( originalDB, modifiedDB, diffDB,
           nodeName = "/",
@@ -101,7 +41,13 @@ def diff( originalDB, modifiedDB, diffDB,
     originalDB, modifiedDB and diffDB have to be COOL connection strings.
     """
     _log.debug("Get COOL Database Service")
-    dbs = cool.DatabaseSvcFactory.databaseService()
+    if _app is None:
+        _app = cool.Application()
+        if 'CORAL_LFC_BASEDIR' in os.environ:
+            # Load CORAL LFCReplicaService into the context of cool::Application
+            _app.loadComponent("CORAL/Services/LFCReplicaService")
+
+    dbs = _app.databaseService()
     
     _log.info("Opening original database '%s'",originalDB)
     orig = dbs.openDatabase(originalDB)
@@ -117,7 +63,7 @@ def diff( originalDB, modifiedDB, diffDB,
     
     _log.debug("Entering the loop over the modified database")
     # walk throughout the database
-    for root, dirs, files in CondDBWalk(dest,nodeName):
+    for root, dirs, files in walk(dest,nodeName):
         for f in files:
             if root[-1] == '/':
                 folderPath = root + f
@@ -138,9 +84,8 @@ def diff( originalDB, modifiedDB, diffDB,
                 dest_local_tag = ''
             else:
                 dest_local_tag = dest_folder.resolveTag(modifiedTAG)
-            object_iterator = BrowseObjectIterator(
-                                  dest_folder.browseObjects( since, until, channels,
-                                                             dest_local_tag ) )
+            object_iterator = dest_folder.browseObjects( since, until, channels,
+                                                         dest_local_tag )
             # check if the folder is new or not
             if orig.existsFolder(folderPath):
                 orig_folder = orig.getFolder(folderPath)

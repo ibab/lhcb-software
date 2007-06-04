@@ -15,6 +15,13 @@ import os, md5, random, sys, re, time, datetime
 import PyCoolCopy
 from PyCool import cool
 
+# Initialize COOL Application
+_app = cool.Application()
+
+if 'CORAL_LFC_BASEDIR' in os.environ:
+    # Load CORAL LFCReplicaService into the context of cool::Application
+    _app.loadComponent("CORAL/Services/LFCReplicaService")
+
 #########################################################################################
 #                                    Tag Class                                          #
 #########################################################################################
@@ -263,7 +270,7 @@ class CondDB:
         self.readOnly = readOnly
 
         # Opening the Database access
-        dbsvc = cool.DatabaseSvcFactory.databaseService()
+        dbsvc = _app.databaseService()
         try:
             self.db = dbsvc.openDatabase(self.connectionString, self.readOnly)
         except Exception, details:
@@ -295,7 +302,7 @@ class CondDB:
             none
         '''
         # Opening the Database access
-        dbsvc = cool.DatabaseSvcFactory.databaseService()
+        dbsvc = _app.databaseService()
         try:
             self.db = dbsvc.createDatabase(connectionString)
         except Exception, details:
@@ -1031,7 +1038,7 @@ class CondDB:
         outputs:
             none
         '''
-        dbsvc = cool.DatabaseSvcFactory.databaseService()
+        dbsvc = _app.databaseService()
         try:
             dbsvc.dropDatabase(connectionString)
         except Exception, details:

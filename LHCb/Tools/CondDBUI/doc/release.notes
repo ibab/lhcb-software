@@ -1,9 +1,16 @@
 ! =============================================================================
-! $Id: release.notes,v 1.54 2007-04-23 08:26:13 cattanem Exp $
+! $Id: release.notes,v 1.55 2007-06-04 08:46:51 marcocle Exp $
 ! =============================================================================
 ! package Tools/CondDBUI
 ! package manager : Marco Clemencic / Nicolas Gilardi
 ! =============================================================================
+
+                            NEEDS LCGCMT >= 52
+
+! 2007-06-04 - Marco Clemencic
+ - Allow transparent usage of CORAL LFCReplicaService (enabled if the
+   environment variable CORAL_LFC_BASEDIR is set).
+ - Use Qt from LCG_Interfaces
 
 !===================== Tools/CondDBUI v2r2 2007-04-23 =========================
 ! 2007-03-30 - Marco Clemencic

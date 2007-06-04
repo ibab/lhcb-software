@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.20 2007-04-23 08:26:13 cattanem Exp $
+# $Id: requirements,v 1.21 2007-06-04 08:46:51 marcocle Exp $
 package CondDBUI
 
 version v2r2
@@ -24,7 +24,7 @@ use DDDB       v*    Det -no_auto_imports
 # use mysql         v*    LCG_Interfaces -no_auto_imports
 
 # library path needed for sqlite backend
-#use sqlite        v*    LCG_Interfaces -no_auto_imports
+# use sqlite        v*    LCG_Interfaces -no_auto_imports
 
 # library path needed for oracle backend
 # use oracle        v*    LCG_Interfaces -no_auto_imports
@@ -41,7 +41,7 @@ apply_tag    NEEDS_COOL_FACTORY
 use XercesC v* LCG_Interfaces -no_auto_imports
 
 # Needed because of a bug in PyCintex
-use CLHEP v* LCG_Interfaces -no_auto_imports
+#use CLHEP v* LCG_Interfaces -no_auto_imports
 
 # ============== Environment =========================================
 
@@ -49,17 +49,10 @@ use CLHEP v* LCG_Interfaces -no_auto_imports
 set  CORAL_AUTH_PATH       ${HOME}/private
 set  CORAL_DBLOOKUP_PATH   ${CONDDBUIROOT}/cmt
 
-# Qt libraries access
-#macro         qt_native_version "4.2.1"
-macro         qt_native_version "3.3.4"
-macro         qt_base         "$(LCG_external)/qt/$(qt_native_version)"
-macro         qt_home         "$(qt_base)/$(LCG_system)"
-#apply_pattern set_lib_path
-path_remove  LD_LIBRARY_PATH "/qt/" WIN32 ""
-path_prepend LD_LIBRARY_PATH "$(qt_home)/lib" WIN32 ""
+use Qt v* LCG_Interfaces -no_auto_imports
+#use pyqt v* LCG_Interfaces -no_auto_imports
 
-# python path update
-# python path update
+# Temporary fix for the broken pyqt installation
 #macro        pyqt_native_version "4.1"
 macro        pyqt_native_version "3.13_python234"
 macro        pyqt_base           "$(LCG_external)/pyqt/$(pyqt_native_version)"
