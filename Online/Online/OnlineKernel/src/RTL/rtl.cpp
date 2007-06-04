@@ -26,6 +26,8 @@ namespace {
 #else
 #include <cstdlib>
 #include <unistd.h>
+#include <netdb.h>
+#include <arpa/inet.h>
 #endif
 #include "RTL/strdef.h"
 

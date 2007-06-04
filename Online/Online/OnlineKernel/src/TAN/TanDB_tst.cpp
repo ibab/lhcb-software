@@ -82,8 +82,8 @@ extern "C" int rtl_tandb_test( int /* argc */, char** /*argv */ )  {
       NetworkChannel::Port port = db.allocatePort (e);
       NetworkChannel::Port fnd  = db.findPort(msg);
       if ( fnd != port ) {
-        std::cout << "!!!!!!!!!!! Port allocated:" << (void*)port 
-          << " found:" << (void*)fnd << std::endl;
+        std::cout << "!!!!!!!!!!! Port allocated:" << std::hex << port 
+		  << " found:" << std::hex << fnd << std::endl;
       }
 
       // Insert alias(s)
@@ -93,8 +93,9 @@ extern "C" int rtl_tandb_test( int /* argc */, char** /*argv */ )  {
         int status = db.insertAlias (e);
         NetworkChannel::Port fnd  = db.findPort(msg);
         if ( fnd != port ) {
-        std::cout << "!!!!!!!!!!! Port allocated:" << (void*)port 
-                  << " found:" << (void*)fnd << " status:" << (void*)status << std::endl;
+	  std::cout << "!!!!!!!!!!! Port allocated:" << std::hex << port 
+		    << " found:" << std::hex << fnd 
+		    << " status:" << std::hex << status << std::endl;
         }
       }
     }

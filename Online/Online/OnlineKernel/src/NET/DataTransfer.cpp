@@ -4,6 +4,7 @@
 #include <cerrno>
 #include <memory>
 #include <vector>
+#include <stdexcept>
 #include "RTL/que.h"
 #include "RTL/Lock.h"
 #include "NET/defs.h"
@@ -25,7 +26,7 @@ static unsigned int hash32(const char* key) {
 namespace DataTransfer  {
   struct netentry_t {
     int           chan;
-    int           sndBuffSize;
+    unsigned int  sndBuffSize;
     std::string   name;
     unsigned int  hash;
     sockaddr_in   addr;
@@ -36,8 +37,8 @@ namespace DataTransfer  {
     ~netentry_t() {}
     void terminate();
     NetErrorCode setSockopts();
-    NetErrorCode close(unsigned short master_port);
-    NetErrorCode setSendBuff(u_int siz);
+    NetErrorCode close();
+    NetErrorCode setSendBuff(unsigned int siz);
     NetErrorCode send(const void *buff, size_t siz, unsigned int flag);
     NetErrorCode recv(void *buffer, size_t siz, unsigned int flag);
   };
@@ -45,15 +46,14 @@ namespace DataTransfer  {
 
 using namespace DataTransfer;
 
-enum  {
- NET_K_COPY_LIMIT      = (8192*2),
- LINGER_VALUE          =  0,
- CHOP_SIZE             = (8192*4),
- LOWER_CHOP            = 4096,
- MAX_TCP_ERRORS        = 20,
-};
-static const int SNDBUF_VALUE = 8192;
-static const int RCVBUF_VALUE = CHOP_SIZE;
+static const unsigned int COPY_LIMIT   = (8192*2);
+static const int LINGER_VALUE          =  0;
+static const unsigned int CHOP_SIZE    = (8192*4);
+static const unsigned int LOWER_CHOP   = 4096;
+static const int MAX_TCP_ERRORS        = 20;
+static const int SNDBUF_VALUE          = 8192;
+static const int RCVBUF_VALUE          = CHOP_SIZE;
+
 namespace DataTransfer  {
   struct  NET  {
     typedef void (*user_callback_t)(netentry_t* hdr, void* param);
@@ -126,8 +126,8 @@ NetErrorCode netentry_t::setSockopts()  {
   return NET_SUCCESS;
 }
 //----------------------------------------------------------------------------------
-NetErrorCode netentry_t::setSendBuff(u_int siz) {
-  int sndbuf = (siz>CHOP_SIZE) ? CHOP_SIZE : (siz<LOWER_CHOP) ? LOWER_CHOP : siz;
+NetErrorCode netentry_t::setSendBuff(unsigned int siz) {
+  unsigned int sndbuf = (siz>CHOP_SIZE) ? CHOP_SIZE : (siz<LOWER_CHOP) ? LOWER_CHOP : siz;
   sndbuf *= 2;
   if ( sndbuf != sndBuffSize )     {
     ::setsockopt(chan, SOL_SOCKET, SO_SNDBUF, (const char*)&sndbuf, sizeof(int));
@@ -147,7 +147,7 @@ void netentry_t::terminate () {
   }
 }
 //----------------------------------------------------------------------------------
-NetErrorCode netentry_t::close(unsigned short master_port)  {
+NetErrorCode netentry_t::close()  {
   setSockopts();
   ::shutdown(chan,2);
   ::socket_close(chan);
@@ -229,7 +229,7 @@ NET::NET(const std::string& proc, user_callback_t cb, void* param)
   m_me.sys = this;
   m_me.name = proc;
   m_me.hash = hash32(m_me.name.c_str());
-  m_me.addr.sin_port = -1;
+  m_me.addr.sin_port = ~0x0;
   m_me.addr.sin_family = AF_INET;
   m_me.addr.sin_addr.s_addr = INADDR_ANY; //IN_CLASSA_HOST; // 
 }
@@ -261,19 +261,19 @@ netentry_t *NET::connect(const std::string& dest)  {
     return 0;
   }
   e->sys  = this;
-  e->chan = socket(AF_INET,SOCK_STREAM,0); 
+  e->chan = ::socket(AF_INET,SOCK_STREAM,0); 
   if (e->chan == -1)  {
     return 0;
   }
   e->setSockopts();
   sc = ::connect(e->chan,(sockaddr*)&e->addr,sizeof(sockaddr_in));
   if (sc == -1)  {
-    socket_close(e->chan);
+    ::socket_close(e->chan);
     return 0;
   }
   sc = e->send(m_me.name.c_str(),sizeof(e->header.name),0);
   if ( sc != NET_SUCCESS )  {
-    e->close(e->chan);
+    e->close();
     return 0;
   }
   m_mgr.add(1,e->chan,recvAction,e.get());
@@ -292,7 +292,7 @@ NetErrorCode NET::accept()   {
     e->name = h.name;
     e->hash = hash32(e->name.c_str());
     if ( status != NET_SUCCESS )  {
-      e->close(m_me.addr.sin_port);
+      e->close();
       return NET_ERROR;
     }
     RTL::Lock lock(m_lockid);
@@ -312,7 +312,7 @@ NetErrorCode NET::accept()   {
 NetErrorCode NET::disconnect(netentry_t *e)   {
   ::printf("Close connection: chan=%d addr=%s\n",e->chan,inet_ntoa(e->addr.sin_addr));
   m_mgr.remove(e->chan);
-  e->close(m_me.addr.sin_port);
+  e->close();
   remove(e);
   delete e;
   return NET_SUCCESS;
@@ -375,7 +375,7 @@ NetErrorCode NET::send(const void* buff, size_t size, netentry_t* e, int facilit
   size_t len = size+sizeof(netheader_t);
   e->setSendBuff(len);
   std::auto_ptr<netheader_t> h(new(::operator new(len)) netheader_t);
-  if (size <= NET_K_COPY_LIMIT)    {
+  if (size <= COPY_LIMIT)    {
     h->fill(m_me.name.c_str(),m_me.hash,size,facility,NET_MSG_DATA,buff);
     status = e->send(h.get(),len,0);
   }
@@ -406,7 +406,7 @@ NetErrorCode NET::send(const void* buff, size_t size, const std::string& dest, i
   return status;
 }
 //----------------------------------------------------------------------------------
-NetErrorCode NET::close ()   {
+NetErrorCode NET::close()   {
   RTL::Lock lock(m_lockid);
   m_me.terminate();
   for (std::map<unsigned int,netentry_t*>::iterator i=m_db.begin(); i!=m_db.end();++i)  {
@@ -417,7 +417,7 @@ NetErrorCode NET::close ()   {
       m_mgr.remove(e->chan);
       e->setSendBuff(sizeof(h));
       e->send(&h, sizeof(h), 0);
-      e->close(m_me.addr.sin_port);
+      e->close();
       delete e;
     }
   }
@@ -518,8 +518,8 @@ namespace {
       get(e, buff);
       cnt++;
       if ( cnt%1000 == 0 )  {
-        printf("%3d %s %d messages [%s]. chan:%d port:%d addr:%s\n",
-          time(0)-start,m_bounce ? "Bounced" : "Received",cnt,
+        printf("%3ld %s %d messages [%s]. chan:%d port:%d addr:%s\n",
+          time(0)-start, m_bounce ? "Bounced" : "Received",cnt,
           hdr.name,e->chan,e->addr.sin_port,inet_ntoa(e->addr.sin_addr));
       }
       if ( m_bounce )  {
@@ -575,7 +575,7 @@ extern "C" int net_send(int argc, char **argv)  {
       NetErrorCode sc = c1.send(wmessage, wsize, to, facility);
       if (sc != NET_SUCCESS)
         printf("Client::send Failed: Error=%d\n",sc);
-      if (i % 1000 == 0) printf ("%d Sent %d messages\n",time(0),i);
+      if (i % 1000 == 0) printf ("%ld Sent %d messages\n",time(0),i);
     }
     if ( bounce )  {
       while(1)  {
