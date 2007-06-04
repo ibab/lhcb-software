@@ -1,6 +1,6 @@
-! $Id: release.notes,v 1.48 2007-06-01 11:35:27 ibelyaev Exp $ 
+! $Id: release.notes,v 1.49 2007-06-04 08:24:10 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.48 $
+! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.49 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -17,6 +17,7 @@
 ! 
 ! -----------------------------------------------------------------------------
 
+!=========================== LoKiCore v3r0 2007-06-04 ======================
 ! 2007-06-01 - Vanya BELYAEV
 
  - many changes: preparation for the next major LoKi version
@@ -300,6 +301,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.48  2007/06/01 11:35:27  ibelyaev
+!  prepare for v3r0
+!
 ! Revision 1.47  2007/03/05 10:58:40  cattanem
 ! remove obsolete file
 !
