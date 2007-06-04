@@ -1,4 +1,4 @@
-// $Id: Particle2MCWithChi2.cpp,v 1.13 2007-01-12 13:58:54 ranjard Exp $
+// $Id: Particle2MCWithChi2.cpp,v 1.14 2007-06-04 15:25:14 pkoppenb Exp $
 // Include files 
 #include <math.h>
 
@@ -154,6 +154,7 @@ StatusCode Particle2MCWithChi2::execute() {
         
         double axz =  part->referencePoint().z();
         double pCharge = part->charge();
+        _verbose << "Particle " << part->key() << " " << part->momentum() << endreq;
         // Loop on MCParticles
         for( MCParticles::const_iterator mcIt=mcParts->begin();
              mcParts->end() != mcIt; mcIt++) {
@@ -172,10 +173,13 @@ StatusCode Particle2MCWithChi2::execute() {
           get6Vector( mcPart, axz, mcpVector);
           
           // Avoid long computations if momentum is too much different
-          if( fabs(mcpVector[5]-pVector[5]) > 1000. ) continue;
+          if( fabs(mcpVector[5]-pVector[5]) > 1000. && 
+              fabs(mcpVector[5]-pVector[5])>0.1*mcpVector[5] ) continue;
           
           double chi2 = ROOT::Math::Similarity( pVector - mcpVector, cov);
 
+          _verbose << "     & MCPart " << mcPart->key() << " " << mcPart->momentum() 
+                   << "-> Chi2 = " << chi2 << endreq;
           if( m_histos && chi2 > 0. ) {
             m_hisChi2vsDiffP->fill( fabs(mcpVector[5]-pVector[5])/pVector[5], 
                                     log10(chi2) );

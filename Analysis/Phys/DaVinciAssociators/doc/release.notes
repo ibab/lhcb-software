@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.109 2007-06-04 15:25:14 pkoppenb Exp $
+! $Id: release.notes,v 1.110 2007-06-04 15:27:02 pkoppenb Exp $
 !==============================================================================
 ! Package     : DaVinciAssociators
 ! Responsible : Philippe Charpentier
@@ -7,7 +7,7 @@
 ! 2007-06-04 - Patrick Koppenburg
  - Particle2MCWithChi2.cpp: Replace the hard-coded cut requiring
    Particle and MCParticle to be within 1 GeV P. Replace by 1 GeV
-   _or_ 10%. 
+   or 10%. 
    Also increased verbosity in verbose() level.
  - Increment to v9r2
 
