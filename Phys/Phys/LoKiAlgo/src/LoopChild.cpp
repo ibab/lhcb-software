@@ -1,8 +1,11 @@
-// $Id: LoopChild.cpp,v 1.1 2007-06-03 20:43:42 ibelyaev Exp $
+// $Id: LoopChild.cpp,v 1.2 2007-06-04 14:22:05 cattanem Exp $
 // ============================================================================
 // CVS tag $Nam:$ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2007/06/03 20:43:42  ibelyaev
+//  update LoKi::Child &
+//
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -15,6 +18,7 @@
 #include "LoKi/Child.h"
 #include "LoKi/Loop.h"
 #include "LoKi/LoopChild.h"
+#include "LoKi/Algo.h"
 // ============================================================================
 /*  get the number of children 
  *  @param mother poiunter to mother particle 
@@ -26,7 +30,7 @@
 std::size_t LoKi::Child::nChildren 
 ( const LoKi::Loop& particle )
 {
-  return !particle ? 0 : particle->dim() ;
+  return !particle.valid() ? 0 : particle->dim() ;
 }
 // ============================================================================
 /*  Trivial accessor to the dauthter particles for the given "particle"

@@ -1,8 +1,11 @@
-// $Id: LoopDecorator.cpp,v 1.1 2007-06-03 20:43:42 ibelyaev Exp $
+// $Id: LoopDecorator.cpp,v 1.2 2007-06-04 14:22:06 cattanem Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, verison $Revision: 1.1 $
+// CVS tag $Name: not supported by cvs2svn $, verison $Revision: 1.2 $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2007/06/03 20:43:42  ibelyaev
+//  update LoKi::Child &
+// 
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -11,6 +14,7 @@
 #include "LoKi/Loop.h"
 #include "LoKi/LoopObj.h"
 #include "LoKi/LoopDecorator.h"
+#include "LoKi/Algo.h"
 // ============================================================================
 /** @file 
  *  Implementation file for class LoKi::Dict::LoopDecorator 
