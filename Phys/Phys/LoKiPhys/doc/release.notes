@@ -1,12 +1,13 @@
-! $Id: release.notes,v 1.27 2007-06-04 18:25:37 ibelyaev Exp $ 
+! $Id: release.notes,v 1.28 2007-06-05 06:28:03 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhys
 ! Responsible : Vanya Belyaev
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+!========================== LoKiPhys v4r0 2007-06-04 ==========================
 ! 2007-06-04 - Vanya BELYAEV
- - provide mure coherent interraces for RC/MC/HepMC-particles 
+ - provide more coherent interfaces for RC/MC/HepMC-particles 
  - upgrade of various "STL-like" algorothms
  - New Files:
     LoKi/PhysAlgsDicts.h
@@ -21,9 +22,7 @@
     dict/LoKiPhysDict.h
     src/Child.cpp
 
-!========================== LoKiPhys v4r0 2007-06-04 ==========================
 ! 2007-06-01 - Vanya BELYAEV
-
  - prepare for the next major version: v4r0 
 
  - New files:
@@ -206,6 +205,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.27  2007/06/04 18:25:37  ibelyaev
+!  improve Algs&Extract
+!
 ! Revision 1.26  2007/06/04 08:34:05  cattanem
 ! v4r0
 !
