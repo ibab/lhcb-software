@@ -3,6 +3,13 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v14r2>2007-05-29 Boole v14r2</A></H1><PRE>
+ - Use ParamFiles v6r1
+ - Clean up use statements in requirements:
+   . Remove explicit versions since these are meaningless with InstallAreas
+     (leave explicit versions for databases)
+   . Use only packages needed to compile or to setup up run time environment
+
 </PRE><H1><A NAME=v14r1>2007-05-21 Boole v14r1</A></H1><PRE>
  - Adapt requirements to Lbcom v6r5, LHCb v22r5, Gaudi v19r3
  - Add OT detailed monitoring to ExpertCheck.opts
