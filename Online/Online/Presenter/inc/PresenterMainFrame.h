@@ -62,6 +62,7 @@ class PresenterMainFrame : public TGMainFrame
     void clearHistos();
     void refreshPage();
     void readFromHistoDatabase(TGListTree *listView, FilterCriteria filterCriteria, bool histograms);
+    std::string getDBName();
     
   private:
     
@@ -72,6 +73,7 @@ class PresenterMainFrame : public TGMainFrame
     bool                m_connectedToHistogramDatabase;
     OnlineHistDB        *m_histogramDB;
     int                 m_msgBoxReturnCode;
+    std::string         m_dbName;
     
     // icons
     const TGPicture     *m_icon1;
