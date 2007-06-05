@@ -7,10 +7,13 @@
 #include "NET/TcpNetworkChannel.h"
 
 #include "AMS/amsdef.h"
-#define SLEEP(x)  lib_rtl_sleep(1000*x);
+#define SLEEP(x)  lib_rtl_sleep(1000*x)
 
 #include <map>
 #include <string>
+// ----------------------------------------------------------------------------
+// C Interface: Access to the tan interface pointer
+// ----------------------------------------------------------------------------
 extern "C" TanInterface* taninterface() {
   return &TanInterface::instance();
 }
@@ -266,7 +269,7 @@ int TanInterface::addressByName(const char* name, NetworkChannel::Address& sad) 
       if ( !snd.isValid() )                    return snd.error();
       msg.sin.sin_port = radd.sin_port;
       for(int retry=0; retry<10; retry++ )  {   // Necessary to avaoid
-        if ( rcv.bind(radd) < 0 ) SLEEP(10)    // Clashes on the same
+        if ( rcv.bind(radd) < 0 ) SLEEP(10);    // Clashes on the same
         else                       break;       // node...
         if ( retry == 5 )                      return rcv.error();
       }
@@ -330,7 +333,7 @@ int TanInterface::deallocatePort(const char* name)  {
       int num_byte = m_channel->send(&msg,sizeof(msg));
       if ( num_byte != sizeof(msg) )            return fatalError(m_channel->error());
       num_byte = m_channel->recv (&msg,sizeof(msg),Receive_TMO);
-      if      ( m_channel->isCancelled() )     return errorCode(TAN_SS_RECV_TMO);
+      if      ( m_channel->isCancelled() )      return errorCode(TAN_SS_RECV_TMO);
       else if ( num_byte == sizeof(msg)  )      return fatalError(TAN_SS_SUCCESS);
       else                                      return fatalError(errorCode(TAN_SS_MADSRV));
     }                                           return errorCode(TAN_SS_NOTOPEN);
@@ -401,7 +404,7 @@ int TanInterface::dumpDB (const char* node)   {
       if ( !snd.isValid() )                    return snd.error();
       msg.m_sin.sin_port = radd.sin_port;
       for(int retry=0; retry<10; retry++ )  {   // Necessary to avaoid
-        if ( rcv.bind(radd) < 0 ) SLEEP(10)    // Clashes on the same
+        if ( rcv.bind(radd) < 0 ) SLEEP(10);    // Clashes on the same
         else                       break;       // node...
         if ( retry == 5 )                      return rcv.error();
       }

@@ -218,10 +218,9 @@ int TanDataBase::initialize()  {
 // ----------------------------------------------------------------------------
 TanDataBase& TanDataBase::Instance() {
   /// Pointer to object instance
-  static TanDataBase __instance;
-  return __instance;
+  static TanDataBase s_instance;
+  return s_instance;
 }
-
 // ----------------------------------------------------------------------------
 //  Given a message, find the approprate port number in the database. 
 //  If not existant, retrun 0.

@@ -263,7 +263,7 @@ static int _amsc_get_proc_info (char *proc, size_t length)  {
     strcpy (proc, s);
     return AMS_SUCCESS;
   }
-  int sc = lib_rtl_get_process_name(proc, length);
+  int sc = ::lib_rtl_get_process_name(proc, length);
   if ( !lib_rtl_is_success(sc) )  {
     errno = AMS_NONAME;
     return AMS_ERROR;
@@ -308,26 +308,26 @@ static int _amsc_tcp_set_sockopts(amsentry_t *db)  {
 
 static int _amsc_tcp_init (amsentry_t *db)   {
   int status;
-  WITHOUT_INTERCEPT(db->chan = socket (AF_INET, SOCK_STREAM, 0) )
+  WITHOUT_INTERCEPT(db->chan = ::socket (AF_INET, SOCK_STREAM, 0) )
   if (db->chan == -1)   {
     return lib_rtl_get_error();
   }
   _amsc_tcp_set_sockopts(db);
   db->address.sin_family = AF_INET;
   db->address.sin_addr.s_addr = INADDR_ANY;
-  status = tan_allocate_port_number (db->name, &db->address.sin_port);
+  status = ::tan_allocate_port_number (db->name, &db->address.sin_port);
   if (status != AMS_SUCCESS)  {
     return status;
   }
-  WITHOUT_INTERCEPT(status=bind(db->chan,(struct sockaddr*)&db->address,sizeof(struct sockaddr_in)))
+  WITHOUT_INTERCEPT(status=::bind(db->chan,(struct sockaddr*)&db->address,sizeof(struct sockaddr_in)))
   if (status == -1)  {
-    status  = lib_rtl_get_error();
+    status  = ::lib_rtl_get_error();
     WITHOUT_INTERCEPT(socket_close (db->chan));
     return status;
   }
-  WITHOUT_INTERCEPT(status = listen (db->chan, 5));
+  WITHOUT_INTERCEPT(status=::listen (db->chan, 5));
   if (status == -1)  {
-    status  = lib_rtl_get_error();
+    status  = ::lib_rtl_get_error();
     WITHOUT_INTERCEPT(socket_close (db->chan));
     return status;
   }
@@ -336,7 +336,7 @@ static int _amsc_tcp_init (amsentry_t *db)   {
 
 static void _amsc_tcp_terminate (amsentry_t *db) {
   if (db->address.sin_port)  {
-    tan_deallocate_port_number (db->name);
+    ::tan_deallocate_port_number (db->name);
     db->address.sin_addr.s_addr = 0;
     WITHOUT_INTERCEPT(
     _amsc_tcp_set_sockopts(db);
@@ -439,9 +439,9 @@ static int _amsc_tcp_recv_exact (amsentry_t *db, void *buffer, size_t siz, unsig
   size_t toget = siz;
   char* buff = (char*)buffer;
   while (got != siz)  {
-    WITHOUT_INTERCEPT(int got_now = recv (db->chan, buff + got, toget, flag));
+    WITHOUT_INTERCEPT(int got_now = ::recv (db->chan, buff + got, toget, flag));
     if (got_now <= 0)    {
-      errno = lib_rtl_socket_error();
+      errno = ::lib_rtl_socket_error();
       _amsc_printf("AMS: receive error errno=%d\n",errno);
       switch(errno)  {
         case ESOCK_CONNREFUSED:
@@ -474,7 +474,7 @@ static int _amsc_tcp_recv_exact (amsentry_t *db, void *buffer, size_t siz, unsig
 
 static int _amsc_tcp_get_host_name (char *nodename,int length) {
   char name [HOST_NAME_LENGTH];
-  WITHOUT_INTERCEPT(int status=tan_host_name(name, sizeof (name)));
+  WITHOUT_INTERCEPT(int status=::tan_host_name(name, sizeof (name)));
   if (status != AMS_SUCCESS) {
     return AMS_HOSTNOTFOUND;
   }
@@ -492,7 +492,7 @@ static int _amsc_tcp_set_send_buff(amsentry_t *db,u_int siz) {
   sndbuf *= 2;
   if ( sndbuf != db->sndBuffSize )     {
     lib_rtl_disable_intercept();
-    setsockopt(db->chan, SOL_SOCKET, SO_SNDBUF, (const char*)&sndbuf, sizeof(int));
+    ::setsockopt(db->chan, SOL_SOCKET, SO_SNDBUF, (const char*)&sndbuf, sizeof(int));
     lib_rtl_enable_intercept();
     db->sndBuffSize = sndbuf;
   }
@@ -514,18 +514,16 @@ static int _amsc_remove_duplicate_entry (amsentry_t **db, amsentry_t *e)  {
 
 static int _amsc_test_message (void)  {
   qentry_t *m;
-  if ( !lib_rtl_queue_success(remqhi(&_ams.message_Q,&m)) )    {
+  if ( !lib_rtl_queue_success(remqhi(&_ams.message_Q,&m)) )
     return AMS_ERROR;
-  }
   insqhi(m, &_ams.message_Q);
   return AMS_SUCCESS;
 }
 
 static int _amsc_stack_next_message(qentry_t *header) {
   qentry_t *e;
-  if ( lib_rtl_queue_success(remqhi(header, &e)) )  {
+  if ( lib_rtl_queue_success(remqhi(header, &e)) )
     insqhi (e, &_ams.park_Q);
-  }
   return AMS_SUCCESS;
 }
 
@@ -1280,8 +1278,7 @@ int amsc_release_message_long(void* buff) {
       return AMS_SUCCESS;
     }
   }
-  // _amsc_
-printf("Failed to release long message buffer:%p\n",buff);
+  printf("Failed to release long message buffer:%p\n",buff);
   return AMS_NODATA;
 }
 
@@ -1334,9 +1331,8 @@ int amsc_restore_stack(int *cnt)  {
 int amsc_test_input() {
   unsigned int fac;
   void* param;
-  if (AMS_SUCCESS == amsc_test_message())  {
+  if (AMS_SUCCESS == amsc_test_message())
     return true;
-  }
   int status = wtc_spy_next_entry( &fac, &param);
   if ( status == WT_SUCCESS )    {
     if ((fac ==WT_FACILITY_AMSSYNCH) || (fac ==WT_FACILITY_TCPAMS)) {
