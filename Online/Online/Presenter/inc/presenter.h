@@ -15,6 +15,17 @@ namespace pres
     SEVERE_EXCEPTIONS = 1,
     ALL_EXCEPTIONS = 2    
   };
+  enum FilterCriteria
+  {
+    byFolder,
+    bySubsystem,
+    byHistogramsWithAnalysis,
+    allHistos,
+    byAnalysisHistograms,      
+  };
+  static const bool withHistograms = true;
+  static const bool withoutHistograms = false;
+  
 }
 
 #endif /*PRESENTER_H_*/

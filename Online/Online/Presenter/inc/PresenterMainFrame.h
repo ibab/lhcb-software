@@ -2,6 +2,7 @@
 #define PRESENTERMAINFRAME_H_
 
 #include <TGFrame.h>
+#include <TGListTree.h>
 
 #include "../inc/LoginDialog.h"
 #include "../inc/presenter.h"
@@ -18,6 +19,7 @@ class TGPopupMenu;
 class TGToolBar;
 class ToolBarData_t;
 class TString;
+
 
 using namespace pres;
 
@@ -43,7 +45,7 @@ class PresenterMainFrame : public TGMainFrame
       B_START_COMMAND,
       B_STOP_COMMAND
     };
-
+    
     //slots
     void build();
     void CloseWindow();
@@ -59,6 +61,7 @@ class PresenterMainFrame : public TGMainFrame
     void stopPageRefresh();
     void clearHistos();
     void refreshPage();
+    void readFromHistoDatabase(TGListTree *listView, FilterCriteria filterCriteria, bool histograms);
     
   private:
     

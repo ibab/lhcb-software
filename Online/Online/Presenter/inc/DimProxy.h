@@ -1,11 +1,11 @@
-// $Id: DimProxy.h,v 1.3 2007-05-30 08:53:48 psomogyi Exp $
+// $Id: DimProxy.h,v 1.4 2007-06-05 16:18:07 psomogyi Exp $
 #ifndef DIMINFOHISTO_H 
 #define DIMINFOHISTO_H 1
 
 //#include <boost/tokenizer.hpp>  // Boost
 
 #include <string>
-#include "dic.hxx"  // DIM
+#include "dim/dic.hxx"
 
 class TH1;
 class TH2;

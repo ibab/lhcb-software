@@ -9,26 +9,36 @@ using namespace pres;
 class TGTab;
 class TRootEmbeddedCanvas;
 
+class DimBrowser;
+class PresenterMainFrame;
+class TGListTree;
+
 class EditorFrame : public TGCompositeFrame
 {
   public:
-    EditorFrame(const TGWindow *p, UInt_t w = 1, UInt_t h = 1, MsgLevel v = SILENT);
+    EditorFrame(TGWindow *p, UInt_t w = 1, UInt_t h = 1, MsgLevel v = SILENT);
     virtual ~EditorFrame();
+    void refreshHistoDBListTree();
+    
+    TGListTree *pagesFromHistoDBListTree;
+
     
   //  EditorFrame (const EditorFrame & );
   //  EditorFrame & operator= (const EditorFrame &);  
     
   private:
      MsgLevel            m_verbosity;
-     TRootEmbeddedCanvas *m_mainEmbCanvas;
-      TGTab               *m_mainTab;
+     PresenterMainFrame  *m_mainFrame;
+//     TRootEmbeddedCanvas *m_mainEmbCanvas;
+//      TGTab               *m_mainTab;
       
-      TGCompositeFrame    *m_onlineTab;
-      TGCompositeFrame    *m_offlineTab;
-      
-      TGVerticalFrame     *fF1;
-      TGCompositeFrame    *m_mainCanvasFrame;
-      TGLayoutHints       *m_mainCanvasLayout;
+//      TGCompositeFrame    *m_onlineTab;
+//      TGCompositeFrame    *m_offlineTab;
+//      
+//      TGVerticalFrame     *fF1;
+//      TGCompositeFrame    *m_mainCanvasFrame;
+//      TGLayoutHints       *m_mainCanvasLayout;
+      DimBrowser          *dimBrowser;
   
   ClassDef(EditorFrame, 0)
 };
