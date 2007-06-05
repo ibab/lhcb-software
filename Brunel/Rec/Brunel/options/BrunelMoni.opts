@@ -9,7 +9,7 @@ RootHistCnv.ForceAlphaIds = true;
 // Use TimingAuditor for timing, suppress printout from SequencerTimerTool
 ApplicationMgr.ExtSvc += { "ToolSvc", "AuditorSvc"};
 ApplicationMgr.AuditAlgorithms = True;
-AuditorSvc.Auditors += {"TimingAuditor/TIMER"}; 
+AuditorSvc.Auditors += { "TimingAuditor" }; 
 ToolSvc.SequencerTimerTool.OutputLevel = 4;
 
 

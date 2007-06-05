@@ -1,46 +1,42 @@
 package Brunel
-version v31r5
+version v31r6
 
 branches doc cmt job options
 
-#-- CMT and GaudiPolicy
-use GaudiPolicy v6r5
+# Set the default path for Brunel options.
+set BRUNELOPTS ${BRUNELROOT}/options
 
-#-- External libraries now taken from LCG, version defined by GaudiEnv
-use RELAX v* LCG_Interfaces          -no_auto_imports
+# Packages needed to compile and link the application
+use GaudiConf          v*                   -no_auto_imports
+use GaudiKernel        v*
 
-#-- Gaudi libraries (from GAUDI_v19r3)
-use GaudiKernel		v22r2
-use GaudiSvc 	        v15r3        -no_auto_imports
-use GaudiAlg 		v9r13        -no_auto_imports
-use GaudiAud 	        v8r1         -no_auto_imports
-use GaudiGSL		v6r6         -no_auto_imports
-use GaudiPoolDb	        v2r12        -no_auto_imports
-use RootHistCnv         v9r13        -no_auto_imports
+# Packages needed to resolve external dependencies at run time
+use Python             v*    LCG_Interfaces -no_auto_imports
+use HepMC              v*    LCG_Interfaces -no_auto_imports
 
-#-- Database
-use DDDB                v1r*    Det  -no_auto_imports
-use FieldMap		v4r7         -no_auto_imports
-use ParamFiles          v5r0         -no_auto_imports
+# Databases
+use DDDB               v1r*  Det            -no_auto_imports
+use ParamFiles         v6r1                 -no_auto_imports
+use FieldMap           v4r7                 -no_auto_imports
 
-#-- LHCb libraries (from LHCB_v22r5)
-use GaudiConf           v10r3          -no_auto_imports
-use GaudiObjDesc        v9r9           -no_auto_imports
-use KernelSys           v6r5    Kernel -no_auto_imports
-use DetSys              v9r5    Det    -no_auto_imports
-use EventSys            v23r5   Event  -no_auto_imports
-use DAQSys              v3r2    DAQ    -no_auto_imports
-use LHCbAlgs            v2r8    Kernel -no_auto_imports
-use SimComponents       v2r2    Sim    -no_auto_imports
-use PatTools            v3r1    Pat    -no_auto_imports
-use CaloInterfaces      v7r2    Calo   -no_auto_imports
-use CaloUtils           v7r2    Calo   -no_auto_imports
+# The rest are needed only to set up environment variables for job options
 
-#-- Lbcom packages (from LBCOM_v6r5)
-use LbcomSys            v6r5         -no_auto_imports
+# From GAUDI project
+use GaudiSvc           v*                   -no_auto_imports
+use GaudiPoolDb        v*                   -no_auto_imports
+use GaudiPython        v*                   -no_auto_imports
 
-#-- Rec packages (from REC_v4r5)
-use RecSys              v4r5         -no_auto_imports
+# From LHCB project
+use CaloDAQ            v*    Calo           -no_auto_imports
+
+# From LBCOM project
+use Associators        v*    Associators    -no_auto_imports
+use RichDAQ            v*    Rich           -no_auto_imports
+use STTools            v*    ST             -no_auto_imports
+use STCheckers         v*    ST             -no_auto_imports
+
+# The whole REC project
+use RecSys             v*                   -no_auto_imports
 
 #
 #===== build Brunel =========================
@@ -51,5 +47,3 @@ macro Brunel_linkopts    "$(application_linkopts)"
 
 apply_pattern application_path
 
-# Set the default path for Brunel options.
-set BRUNELOPTS ${BRUNELROOT}/options
