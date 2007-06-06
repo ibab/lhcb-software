@@ -1,4 +1,4 @@
-// $Id: CaloDigitAlg.cpp,v 1.16 2007-02-28 22:46:12 odescham Exp $
+// $Id: CaloDigitAlg.cpp,v 1.17 2007-06-06 15:04:24 cattanem Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -67,53 +67,53 @@ CaloDigitAlg::CaloDigitAlg( const std::string& name,
   
   std::string begName = name.substr( 0, 8 );
 
-  //== Get the previous MC Calo Digit contained according to rootOnTES and context
+  //== Get the previous MC Calo Digit contained according to rootInTES and context
   std::string prevRoot = "none";
-  if ( "Prev1/" == rootOnTES() ) {
+  if ( "Prev1/" == rootInTES() ) {
     prevRoot = "Prev2/";
-  } else if ( "" == rootOnTES() ) {
+  } else if ( "" == rootInTES() ) {
     if ( "TAE" == context() ) {
       prevRoot = "Prev1/";
     } else {
       prevRoot = "Prev";
     }
-  } else if ( "Next1/" == rootOnTES() ) {
+  } else if ( "Next1/" == rootInTES() ) {
     prevRoot = "";
-  } else if ( "Next2/" == rootOnTES() ) {
+  } else if ( "Next2/" == rootInTES() ) {
     prevRoot = "Next1/";
   }
 
   if ( "SpdDigit" == begName ) {
     m_detectorName     = DeCalorimeterLocation::Spd;
-    m_inputData        = rootOnTES() + LHCb::MCCaloDigitLocation::Spd;
-    m_outputData       = rootOnTES() + LHCb::CaloAdcLocation::Spd;
+    m_inputData        = LHCb::MCCaloDigitLocation::Spd;
+    m_outputData       = LHCb::CaloAdcLocation::Spd;
     if ( "none" != prevRoot ) m_inputPrevData = prevRoot + LHCb::MCCaloDigitLocation::Spd;
     m_pePerMeV         = 10.;
     m_coherentNoise    = 0.0;
     m_incoherentNoise  = 0.0;
     m_gainError        = 0.0;
-    m_triggerName      = rootOnTES() + LHCb::L0PrsSpdHitLocation::Spd;
+    m_triggerName      = LHCb::L0PrsSpdHitLocation::Spd;
     m_triggerThreshold = 0.1 * Gaudi::Units::MeV;
     m_triggerIsBit     = true;
     m_zSupThreshold    = 10;  //== No ADC for SPD, only trigger bit...
   } else if ( "PrsDigit" == begName ) {
     m_detectorName     = DeCalorimeterLocation::Prs;
-    m_inputData        = rootOnTES() + LHCb::MCCaloDigitLocation::Prs;
-    m_outputData       = rootOnTES() + LHCb::CaloAdcLocation::Prs;
+    m_inputData        = LHCb::MCCaloDigitLocation::Prs;
+    m_outputData       = LHCb::CaloAdcLocation::Prs;
     if ( "none" != prevRoot ) m_inputPrevData = prevRoot + LHCb::MCCaloDigitLocation::Prs;
     m_pePerMeV         = 10.;
     m_coherentNoise    = 0.0;
     m_incoherentNoise  = 1.0;
-    m_triggerName      = rootOnTES() + LHCb::L0PrsSpdHitLocation::Prs;
+    m_triggerName      = LHCb::L0PrsSpdHitLocation::Prs;
     m_triggerThreshold = 10. * Gaudi::Units::MeV;
     m_triggerIsBit     = true;
     m_zSupThreshold    = 15;
   } else if ( "EcalDigi" == begName ) {
     m_detectorName     = DeCalorimeterLocation::Ecal;
-    m_inputData        = rootOnTES() + LHCb::MCCaloDigitLocation::Ecal;
-    m_outputData       = rootOnTES() + LHCb::CaloAdcLocation::FullEcal;
+    m_inputData        = LHCb::MCCaloDigitLocation::Ecal;
+    m_outputData       = LHCb::CaloAdcLocation::FullEcal;
     m_pedShift         = 0.40;
-    m_triggerName      = rootOnTES() + LHCb::L0CaloAdcLocation::Ecal;
+    m_triggerName      = LHCb::L0CaloAdcLocation::Ecal;
     m_triggerIsBit     = false;
  
     m_corrArea.push_back( 1.00 );
@@ -122,10 +122,10 @@ CaloDigitAlg::CaloDigitAlg( const std::string& name,
     
  } else if ( "HcalDigi" == begName ) {
     m_detectorName     = DeCalorimeterLocation::Hcal;
-    m_inputData        = rootOnTES() + LHCb::MCCaloDigitLocation::Hcal;
-    m_outputData       = rootOnTES() + LHCb::CaloAdcLocation::FullHcal;
+    m_inputData        = LHCb::MCCaloDigitLocation::Hcal;
+    m_outputData       = LHCb::CaloAdcLocation::FullHcal;
     m_pedShift         = 0.40;
-    m_triggerName      = rootOnTES() + LHCb::L0CaloAdcLocation::Hcal;
+    m_triggerName      = LHCb::L0CaloAdcLocation::Hcal;
     m_triggerIsBit     = false;
 
     m_corrArea.push_back( 1.00 );
@@ -197,9 +197,9 @@ StatusCode CaloDigitAlg::execute() {
   //=== Get the previous BX's data if needed
   LHCb::MCCaloDigits* prevDigits = 0;
   if ( "" != m_inputPrevData ) {
-    if ( exist<LHCb::MCCaloDigits>( m_inputPrevData ) ) prevDigits = get<LHCb::MCCaloDigits>( m_inputPrevData );
+    if ( exist<LHCb::MCCaloDigits>( m_inputPrevData, IgnoreRootInTES ) ) 
+      prevDigits = get<LHCb::MCCaloDigits>( m_inputPrevData, IgnoreRootInTES );
   }
-
   
 
   //***  prepare and register the output container it into the Transient Store!

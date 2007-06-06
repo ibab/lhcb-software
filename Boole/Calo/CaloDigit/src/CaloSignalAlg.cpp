@@ -1,4 +1,4 @@
-// $Id: CaloSignalAlg.cpp,v 1.13 2007-03-01 17:08:43 cattanem Exp $
+// $Id: CaloSignalAlg.cpp,v 1.14 2007-06-06 15:04:24 cattanem Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -49,28 +49,28 @@ CaloSignalAlg::CaloSignalAlg( const std::string& name,
   declareProperty( "IgnoreTimeInfo"    , m_ignoreTimeInfo     = false) ;
 
   std::string begName = name.substr( 0, 8 );
-  bool normal =  "TAE" != context() && "" == rootOnTES();
+  bool normal =  "TAE" != context() && "" == rootInTES();
   if ( !normal ) m_backgroundScaling = 0.;  // no bkg in TAE events
 
   if ( "SpdSigna" == begName ) {
     m_detectorName   = DeCalorimeterLocation::Spd;
     m_inputData      = LHCb::MCCaloHitLocation::Spd ;
-    m_outputData     = rootOnTES() + LHCb::MCCaloDigitLocation::Spd ;
+    m_outputData     = LHCb::MCCaloDigitLocation::Spd ;
     if ( normal ) m_previousDigits = "Prev/" + LHCb::MCCaloDigitLocation::Spd;
     m_minimalDeposit = 0.0;   //== Full history
   } else if ( "PrsSigna" == begName ) {
     m_detectorName   = DeCalorimeterLocation::Prs;
     m_inputData      = LHCb::MCCaloHitLocation::Prs ;
-    m_outputData     = rootOnTES() + LHCb::MCCaloDigitLocation::Prs ;
+    m_outputData     = LHCb::MCCaloDigitLocation::Prs ;
     if ( normal ) m_previousDigits = "Prev/" + LHCb::MCCaloDigitLocation::Prs;
   } else if ( "EcalSign" == begName ) {
     m_detectorName   = DeCalorimeterLocation::Ecal;
     m_inputData      = LHCb::MCCaloHitLocation::Ecal ;
-    m_outputData     = rootOnTES() + LHCb::MCCaloDigitLocation::Ecal ;
+    m_outputData     = LHCb::MCCaloDigitLocation::Ecal ;
   } else if ( "HcalSign" == begName ) {
     m_detectorName   = DeCalorimeterLocation::Hcal;
     m_inputData      = LHCb::MCCaloHitLocation::Hcal ;
-    m_outputData     = rootOnTES() + LHCb::MCCaloDigitLocation::Hcal ;
+    m_outputData     = LHCb::MCCaloDigitLocation::Hcal ;
   }
   //== This is needed only for normal processing.
   if ( normal ) m_previousData   = "Prev/" + m_inputData;
@@ -117,7 +117,7 @@ StatusCode CaloSignalAlg::execute() {
 
   // some trivial printout
   debug() << "Perform signal processing from "
-          << m_inputData << " to " << m_outputData << endreq;
+          << m_inputData << " to " << m_outputData+rootInTES() << endmsg;
   
   // prepare the output container
   LHCb::MCCaloDigits* mcDigits = new LHCb::MCCaloDigits();
@@ -126,12 +126,13 @@ StatusCode CaloSignalAlg::execute() {
   LHCb::MCCaloDigits* mcPrevDigits = 0;
   if ( m_storePrevious ) {
     mcPrevDigits  = new LHCb::MCCaloDigits();
-    put( mcPrevDigits , m_previousDigits );
+    put( mcPrevDigits , m_previousDigits, IgnoreRootInTES );
   }
   
   // get the input data
-  if(!exist<LHCb::MCCaloHits>( m_inputData ))return StatusCode::SUCCESS;
-  LHCb::MCCaloHits* hits = get<LHCb::MCCaloHits>( m_inputData );
+  if(!exist<LHCb::MCCaloHits>( m_inputData, IgnoreRootInTES ))
+    return StatusCode::SUCCESS;
+  LHCb::MCCaloHits* hits = get<LHCb::MCCaloHits>( m_inputData, IgnoreRootInTES );
 
   // initialize the background random number
   Rndm::Numbers BackgroundFraction ( m_rndmSvc , Rndm::Flat( 0.0 , 1. ) );
@@ -224,8 +225,8 @@ StatusCode CaloSignalAlg::execute() {
   // == Process the spill-over data, but only if container specified
   //--------------------------------
   if( !m_previousData.empty() ) {
-    if ( exist<LHCb::MCCaloHits>( m_previousData ) ) {
-      LHCb::MCCaloHits* spillOver = get<LHCb::MCCaloHits>( m_previousData );
+    if ( exist<LHCb::MCCaloHits>( m_previousData, IgnoreRootInTES ) ) {
+      LHCb::MCCaloHits* spillOver = get<LHCb::MCCaloHits>( m_previousData, IgnoreRootInTES );
       for( hitIt = spillOver->begin(); spillOver->end() != hitIt ; ++hitIt ) {
         hit = *hitIt;
         const LHCb::CaloCellID id = hit->cellID() ;

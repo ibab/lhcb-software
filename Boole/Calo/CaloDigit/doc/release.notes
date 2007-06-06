@@ -4,6 +4,10 @@
 ! Purpose     : Digitisation and Zero-suppression of the Calorimeters
 !-----------------------------------------------------------------------------
 
+!======================== CaloDigit v2r4 2007-06-05 ==========================
+! 2007-06-05 - Marco Cattaneo
+ - Adapt to new rootInTES convention in Gaudi v19r4
+
 !======================== CaloDigit v2r3 2007-03-05 ==========================
 ! 2007-03-05 - Vanya BELYAEV
  -  src/MCCaloLED.h

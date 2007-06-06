@@ -1,4 +1,4 @@
-// $Id: CaloPinDigitAlg.cpp,v 1.4 2007-03-01 17:08:43 cattanem Exp $
+// $Id: CaloPinDigitAlg.cpp,v 1.5 2007-06-06 15:04:24 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -68,7 +68,7 @@ StatusCode CaloPinDigitAlg::initialize() {
 
   if ( "Spd" == m_detectorName ) {
     m_calo  = getDet<DeCalorimeter>( DeCalorimeterLocation::Spd );
-    m_data  = rootOnTES() + LHCb::CaloAdcLocation::Spd;
+    m_data  = LHCb::CaloAdcLocation::Spd;
     m_outputData = "None ";
     m_cNoise = 0.0;
     m_iNoise = 0.0;
@@ -80,7 +80,7 @@ StatusCode CaloPinDigitAlg::initialize() {
 
   } else if ( "Prs" == m_detectorName ) {
     m_calo  = getDet<DeCalorimeter>( DeCalorimeterLocation::Prs );
-    m_data  = rootOnTES() + LHCb::CaloAdcLocation::Prs;
+    m_data  = LHCb::CaloAdcLocation::Prs;
     m_outputData = "None ";
     m_cNoise = 0.0;
     m_iNoise = 1.0;
@@ -92,8 +92,8 @@ StatusCode CaloPinDigitAlg::initialize() {
 
   } else if ( "Ecal" == m_detectorName ) {
     m_calo  = getDet<DeCalorimeter>( DeCalorimeterLocation::Ecal );
-    m_data  = rootOnTES() + LHCb::CaloAdcLocation::FullEcal;    
-    m_outputData = rootOnTES() + LHCb::CaloAdcLocation::EcalPin;
+    m_data  = LHCb::CaloAdcLocation::FullEcal;    
+    m_outputData = LHCb::CaloAdcLocation::EcalPin;
     m_cNoise = 0.3;
     m_iNoise = 1.2;
 
@@ -104,8 +104,8 @@ StatusCode CaloPinDigitAlg::initialize() {
 
   } else if ( "Hcal" == m_detectorName ) {
     m_calo  = getDet<DeCalorimeter>( DeCalorimeterLocation::Hcal );
-    m_data  = rootOnTES() + LHCb::CaloAdcLocation::FullHcal;
-    m_outputData = rootOnTES() + LHCb::CaloAdcLocation::HcalPin;
+    m_data  = LHCb::CaloAdcLocation::FullHcal;
+    m_outputData = LHCb::CaloAdcLocation::HcalPin;
     m_cNoise = 0.3;
     m_iNoise = 1.2;
 
@@ -149,8 +149,8 @@ StatusCode CaloPinDigitAlg::execute() {
   LHCb::CaloAdcs* adcs = get<LHCb::CaloAdcs>( m_data );
   
   if( "Prs" == m_detectorName || "Spd" == m_detectorName ){
-    LHCb::L0PrsSpdHits* spdBank = get<LHCb::L0PrsSpdHits>( rootOnTES()+ LHCb::L0PrsSpdHitLocation::Spd );
-    LHCb::L0PrsSpdHits* prsBank = get<LHCb::L0PrsSpdHits>( rootOnTES()+ LHCb::L0PrsSpdHitLocation::Prs );
+    LHCb::L0PrsSpdHits* spdBank = get<LHCb::L0PrsSpdHits>( LHCb::L0PrsSpdHitLocation::Spd );
+    LHCb::L0PrsSpdHits* prsBank = get<LHCb::L0PrsSpdHits>( LHCb::L0PrsSpdHitLocation::Prs );
     prsBank->clear();// remove trigger on noise
     spdBank->clear();// remove trigger on noise
     debug() << "Name " << m_detectorName << adcs->size() << endreq;
