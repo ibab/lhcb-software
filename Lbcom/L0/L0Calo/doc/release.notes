@@ -2,6 +2,10 @@
 ! Package Manager : Olivier Callot
 !--------------------------------------------------------------------------
 
+!========================= L0Calo v9r8 2007-06-05 =========================
+! 2007-06-05 - Marco Cattaneo
+ - Adapt usage of rootInTES to Gaudi v19r4 conventions
+
 !========================= L0Calo v9r7 2007-03-01 =========================
 ! 2007-03-01 - Marco Cattaneo
  - Remove obsolete L0Calo_load.cpp file, and an LHCbDefinitions include

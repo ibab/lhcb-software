@@ -1,4 +1,4 @@
-// $Id: L0CaloCandidatesFromRawBank.cpp,v 1.3 2007-03-01 16:40:26 cattanem Exp $
+// $Id: L0CaloCandidatesFromRawBank.cpp,v 1.4 2007-06-06 14:59:26 cattanem Exp $
 // Include files
 
 // from Gaudi
@@ -67,10 +67,11 @@ void L0CaloCandidatesFromRawBank::convertRawBankToTES( std::vector<std::vector<u
                                                        std::string& nameInTES){
 
   debug() << "... entering conversion" << endreq;
+  // Assume that full path (including rootInTES) is given in nameInTES etc.
   LHCb::L0CaloCandidates* outFull = new LHCb::L0CaloCandidates();
-  put( outFull, nameFullInTES );
+  put( outFull, nameFullInTES, IgnoreRootInTES );
   LHCb::L0CaloCandidates* out     = new LHCb::L0CaloCandidates();
-  put( out, nameInTES );
+  put( out, nameInTES, IgnoreRootInTES );
   debug() << "Registered output in TES" << endreq;
 
   Gaudi::XYZPoint dummy( 0., 0., 0.);

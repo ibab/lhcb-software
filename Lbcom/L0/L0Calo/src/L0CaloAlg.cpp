@@ -1,4 +1,4 @@
-// $Id: L0CaloAlg.cpp,v 1.41 2007-02-22 23:55:10 odescham Exp $
+// $Id: L0CaloAlg.cpp,v 1.42 2007-06-06 14:59:26 cattanem Exp $
 
 /// Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -380,7 +380,7 @@ StatusCode L0CaloAlg::execute() {
   m_rawOutput[1].clear();
     
   LHCb::L0ProcessorDatas* L0Calo = new LHCb::L0ProcessorDatas();
-  put( L0Calo, rootOnTES() + m_nameOfOutputDataContainer );
+  put( L0Calo, m_nameOfOutputDataContainer );
   
   // Store the various candidates
 
@@ -452,12 +452,12 @@ StatusCode L0CaloAlg::execute() {
   if ( m_storeFlag ) {
     m_nbEvents++;
     m_totRawSize = m_totRawSize + m_rawOutput[0].size() + m_rawOutput[1].size();
-    LHCb::RawEvent* raw = get<LHCb::RawEvent>( rootOnTES() + LHCb::RawEventLocation::Default );
+    LHCb::RawEvent* raw = get<LHCb::RawEvent>( LHCb::RawEventLocation::Default );
     raw->addBank( 0, LHCb::RawBank::L0Calo, 0, m_rawOutput[0] );
     raw->addBank( 1, LHCb::RawBank::L0Calo, 0, m_rawOutput[1] );
   } else {
-    std::string name     = rootOnTES() + LHCb::L0CaloCandidateLocation::Default;
-    std::string nameFull = rootOnTES() + LHCb::L0CaloCandidateLocation::Full;
+    std::string name     = rootInTES() + LHCb::L0CaloCandidateLocation::Default;
+    std::string nameFull = rootInTES() + LHCb::L0CaloCandidateLocation::Full;
     m_bankToTES->convertRawBankToTES( m_rawOutput, nameFull, name );
   }
 
