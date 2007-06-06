@@ -6,7 +6,7 @@
 !-----------------------------------------------------------------------------
 
 </PRE><H1><A NAME=v22r6>2007-06-04 LHCbSys v22r6</A></H1><PRE>
-This version uses Gaudi v19r3 and LCG_50b. Fully compatible with DC06 data
+This version uses Gaudi v19r4 and LCG_52a. Fully compatible with DC06 data
 
 - Packages removed: HltBase           - Moved to HLT project
                     TrackMCInterfaces - All interfaces moved to MCInterfaces
@@ -22,9 +22,10 @@ This version uses Gaudi v19r3 and LCG_50b. Fully compatible with DC06 data
 - Packages modified: KernelSys v6r6, LHCbKernel v7r5, RichKernel v7r6,
     DetSys v9r6, DetDesc v17r4, OTDet v7r3, CaloDet v8r2, VeloDet v11r3,
     STDet v3r4, RichDet v10r5, MuonDet v6r3, RichRecBase v3r5, DetDescSvc v1r12,
-    EventSys v23r6, MCEvent v2r4, HltEvent v8r2, SimComponents v2r3,
+    EventSys v23r6, MCEvent v2r4, HltEvent v8r2, PackedEvent v6r2,
     TrackInterfaces v3r5, LHCbAlgs v2r9, LoKiCore v3r0, LoKiGen v3r0,
-    DetCondExample v11r1
+    DaVinciKernel v6r4, DAQSys v3r3, CaloDAQ v3r3, MuonDAQ v3r2, 
+    SimComponents v2r3, DetCondExample v11r1
 
 - In LHCbKernel v7r5
   . Add isVeloR, isVeloPhi, isPileUp methods to LHCbID
@@ -60,6 +61,9 @@ This version uses Gaudi v19r3 and LCG_50b. Fully compatible with DC06 data
 - In HltEvent v8r2
   . Added an enum entry HltSelEntry=1000 which is always stored
     in HltSummary when HltSelections are reached. 
+
+- In PackedEvent v6r2
+  . Standardize dict selection files
 
 - In DetDesc v17r4
   . Added temporary files in src/Lib:
@@ -100,6 +104,7 @@ This version uses Gaudi v19r3 and LCG_50b. Fully compatible with DC06 data
 
 - In LHCbAlgs v2r9
   . ProcessPhase "MeasureTime" property now defaults to GaudiSequencer default
+  . Adapt to Gaudi v19r4 change of setFilterPassed return type
 
 - In DetCondExample v11r1
   . Added a test for conditions overriding with alignment conditions
@@ -114,6 +119,20 @@ This version uses Gaudi v19r3 and LCG_50b. Fully compatible with DC06 data
   . Make a coherent  (with respect to generator/HepMC) treatment of "children"
     (LoKi::Child). Add many functions into namespace LoKi::Child 
   . Adapt to new location for MCInterfaces includes
+
+- In LoKiPhys v4r0
+  . Provide more coherent interfaces for RC/MC/HepMC-particles 
+  . Upgrade of various "STL-like" algorothms
+
+- In CaloDAQ v3r3
+  . CaloReadoutTool and decoding tools : add property to allow skipping the
+    Detector Specific Header when present
+
+- In CaloDAQ v3r3, MuonDAQ v3r2
+  . Remove rootOnTES() logic, now done in Gaudi base classes (Gaudi >= v19r4)
+
+- In DaVinciKernel v6r4
+  . DVAlgorithm::setFilterPassed now returns void, as in Gaudi v19r4 base class
 
 - In CaloDet v8r2, RichDet v10r5
   . Fix doxygen warnings
