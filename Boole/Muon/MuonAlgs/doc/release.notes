@@ -4,6 +4,10 @@
 ! Purpose     : Muon digitisation algorithms
 !-----------------------------------------------------------------------------
 
+!======================== MuonAlgs v6r4 2007-06-05 =========================
+! 2007-06-05 - Marco Cattaneo
+ - Adapat to new rootInTES convention of Gaudi v19r4
+
 !======================== MuonAlgs v6r3 2007-03-11 =========================
 ! 2007-03-09 - Alessia Satta
  - Fix bug in v6r2 change that was causing access to an unitialised pointer

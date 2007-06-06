@@ -2,6 +2,11 @@
 !Package manager : A Sarti
 !-----------------------------------------------------------------------------
 
+!======================= MuonMoniDigi v2r2 2007-06-05 ========================
+! 2007-06-05 - Marco Cattaneo
+ - Remove rootOnTES prefix, for use with Gaudi v19r4
+ - Remove obsolete file MuonMoniDigi_load.cpp
+
 !======================= MuonMoniDigi v2r1 2006-11-16 ========================
 ! 2006-11-16 - Alessia Satta
  - Modified for TAE

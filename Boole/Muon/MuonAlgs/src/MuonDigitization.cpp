@@ -1,4 +1,4 @@
-//$Id: MuonDigitization.cpp,v 1.33 2007-03-09 12:54:06 asatta Exp $
+//$Id: MuonDigitization.cpp,v 1.34 2007-06-06 15:05:22 cattanem Exp $
 
 #include <iostream>
 #include <algorithm>
@@ -268,14 +268,11 @@ MsgStream log(msgSvc(), name());
   }
 
 	if(sc.isFailure())return StatusCode::FAILURE;	 			
-	eventSvc()->registerObject(rootOnTES()+
-                             LHCb::MCMuonDigitLocation::MCMuonDigit,
-                             mcDigitContainer);
+	put( mcDigitContainer, LHCb::MCMuonDigitLocation::MCMuonDigit );
   LHCb::MuonDigits* digitContainer= new LHCb::MuonDigits;	
 	sc=createRAWFormat(*mcDigitContainer, *digitContainer);
 	if(sc.isFailure())return StatusCode::FAILURE;	 				
-	eventSvc()->registerObject(rootOnTES()+LHCb::MuonDigitLocation::MuonDigit,
-                             digitContainer);
+	put( digitContainer, LHCb::MuonDigitLocation::MuonDigit );
   
  	debug()<<"End of the Muon Digitization"<<endreq;
   return StatusCode::SUCCESS;

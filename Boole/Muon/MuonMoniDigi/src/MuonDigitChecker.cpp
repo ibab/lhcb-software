@@ -222,8 +222,8 @@ StatusCode MuonDigitChecker::execute() {
 
   // Loop on Digits (strips)
   // get the MCMuonDigits
-  LHCb::MuonDigits* digit = get<LHCb::MuonDigits>(rootOnTES()+LHCb::MuonDigitLocation::MuonDigit);
-  LHCb::MCMuonDigits* mcdigit = get<LHCb::MCMuonDigits>(rootOnTES()+LHCb::MCMuonDigitLocation::MCMuonDigit);
+  LHCb::MuonDigits* digit = get<LHCb::MuonDigits>(LHCb::MuonDigitLocation::MuonDigit);
+  LHCb::MCMuonDigits* mcdigit = get<LHCb::MCMuonDigits>(LHCb::MCMuonDigitLocation::MCMuonDigit);
   
   LHCb::MuonDigits::const_iterator jdigit;
   int Dsta, Dreg, Dcon;
