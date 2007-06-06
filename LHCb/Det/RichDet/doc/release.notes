@@ -4,6 +4,10 @@
 ! Purpose     : interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2007-06-06 - "Antonis Papanestis"
+ - small change to take into account the misalignmet of the Si sensor
+   in the conversion from smartID to detection point
+
 !======================== RichDet v10r5 2007-05-25 ========================
 ! 2007-05-25 - Marco Cattaneo
  - Add DeRichLocations::* to dictionary

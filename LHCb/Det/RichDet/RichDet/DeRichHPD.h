@@ -4,7 +4,7 @@
  *  Header file for detector description class : DeRichHPD
  *
  *  CVS Log :-
- *  $Id: DeRichHPD.h,v 1.8 2007-05-25 14:04:31 cattanem Exp $
+ *  $Id: DeRichHPD.h,v 1.9 2007-06-06 15:34:48 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2006-09-19
@@ -263,8 +263,9 @@ inline StatusCode DeRichHPD::detectionPoint ( const LHCb::RichSmartID smartID,
                                               Gaudi::XYZPoint& detectPoint ) const
 {
   // convert pixel number to silicon coordinates
-  detectPoint = pointOnSilicon(smartID);
-  // somehow transform the point to get the misalignment.
+  // and transform the point to get the misalignment of the Si sensor
+  detectPoint = m_deSiSensor->geometry()->localMatrix().Inverse()*pointOnSilicon(smartID);
+  detectPoint.SetZ(0.0);
   return ( m_UseHpdMagDistortions ?
            magnifyToGlobal_new( detectPoint ) :  // M.Musy 07/09/2006
            magnifyToGlobal_old( detectPoint ) ); // old demag parameters
