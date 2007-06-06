@@ -21,7 +21,7 @@
         desc = 'Constructor from an STCluster'>
         <arg type='LHCb::STCluster' name='stCluster' const='TRUE' />
         <arg type='DeSTDetector' name='det' const='TRUE' />
-        <arg type='ISTClusterPosition' name='stClusPosTool' />
+        <arg type='ISTClusterPosition' name='stClusPosTool' const='TRUE' />
         <arg type='Gaudi::TrackVector' name='refVector' const='TRUE'/>
       </constructor>
 
@@ -29,7 +29,7 @@
         desc = 'Constructor from an STCluster'>
         <arg type='LHCb::STCluster' name='stCluster' const='TRUE' />
         <arg type='DeSTDetector' name='det' const='TRUE' />
-        <arg type='ISTClusterPosition' name='stClusPosTool' />
+        <arg type='ISTClusterPosition' name='stClusPosTool' const='TRUE' />
       </constructor>
 
      <constructor
@@ -46,10 +46,10 @@
       <method
         name   = 'init'
         desc   = 'Initialize the data members'
-        access = 'PRIVATE'>
+        access = 'PUBLIC'>
         <arg type='LHCb::STCluster' name='stCluster' const='TRUE' />
         <arg type='DeSTDetector' name='det' const='TRUE' />
-        <arg type='ISTClusterPosition' name='stClusPosTool' />
+        <arg type='ISTClusterPosition' name='stClusPosTool' const='TRUE' />
         <arg type='bool' name='refIsSet'/>
       </method>
 

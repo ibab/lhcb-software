@@ -1,4 +1,4 @@
-// $Id: STMeasurement.cpp,v 1.7 2007-01-26 15:05:03 mneedham Exp $
+// $Id: STMeasurement.cpp,v 1.8 2007-06-06 15:05:06 wouter Exp $
 // Include files 
 
 // from STDet
@@ -20,7 +20,7 @@ using namespace LHCb;
 /// Standard constructor, initializes variables
 STMeasurement::STMeasurement( const STCluster& stCluster,
                               const DeSTDetector& geom,
-                              ISTClusterPosition& stClusPosTool,
+                              const ISTClusterPosition& stClusPosTool,
                               const Gaudi::TrackVector& refVector)
 {
   m_refVector = refVector; // reference trajectory
@@ -30,7 +30,7 @@ STMeasurement::STMeasurement( const STCluster& stCluster,
 /// Standard constructor, without the reference vector
 STMeasurement::STMeasurement( const STCluster& stCluster,
                               const DeSTDetector& geom,
-                              ISTClusterPosition& stClusPosTool )
+                              const ISTClusterPosition& stClusPosTool )
 {
   m_refVector = Gaudi::TrackVector(); // reference trajectory
   this->init(  stCluster, geom, stClusPosTool, false );
@@ -45,7 +45,7 @@ STMeasurement::STMeasurement( const STMeasurement& other )
 
 void STMeasurement::init( const STCluster& stCluster,
                           const DeSTDetector& geom,
-                          ISTClusterPosition& stClusPosTool,
+                          const ISTClusterPosition& stClusPosTool,
                           bool refIsSet ) 
 {
   // Fill the data members

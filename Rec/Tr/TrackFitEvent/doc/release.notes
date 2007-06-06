@@ -4,6 +4,11 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+! 2007-06-06 - Wouter Hulsbergen
+ - made init calls in OT,ST,Velo public for use in MeasurementCreator
+ - added support for calling velo position tool with reference vector
+ - added some missing consts in STMeasurement
+
 !========================== TrackFitEvent v3r4 2007-05-18 ====================
 ! 2007-05-18 - Marco Cattaneo
  - Fix compilation warning in MuonMeasurement.h

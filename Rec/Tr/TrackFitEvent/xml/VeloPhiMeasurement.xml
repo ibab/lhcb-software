@@ -55,7 +55,7 @@
       <method
         name   = 'init'
         desc   = 'Initialize the data members'
-        access = 'PRIVATE'>
+        access = 'PUBLIC'>
         <arg type = 'LHCb::VeloCluster' name = 'cluster' const='TRUE' />
         <arg type = 'DeVelo' name = 'det' const='TRUE' />
         <arg type = 'IVeloClusterPosition' name = 'clusPosTool' const='TRUE' />

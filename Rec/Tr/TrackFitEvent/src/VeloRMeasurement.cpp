@@ -1,4 +1,4 @@
-// $Id: VeloRMeasurement.cpp,v 1.14 2006-11-29 23:22:12 dhcroft Exp $
+// $Id: VeloRMeasurement.cpp,v 1.15 2007-06-06 15:05:06 wouter Exp $
 // Include files
 
 // local
@@ -53,7 +53,13 @@ void VeloRMeasurement::init( const VeloCluster& cluster,
   const DeVeloRType* rDet=det.rSensor( m_cluster->channelID().sensor() );
   m_z = rDet -> z();
   
-  IVeloClusterPosition::toolInfo clusInfo = clusPosTool.position( &cluster );
+  IVeloClusterPosition::toolInfo clusInfo ;
+  if(!refIsSet) {
+    clusInfo = clusPosTool.position( &cluster );
+  } else {
+    Gaudi::XYZPoint point( m_refVector[0], m_refVector[1], m_z ) ;
+    clusInfo = clusPosTool.position(&cluster,point,std::pair<double,double>(m_refVector[2],m_refVector[3]) );
+  }
   m_measure = rDet -> rOfStrip( clusInfo.strip.strip() ) +
     rDet -> rPitch( clusInfo.strip.strip() ) * clusInfo.fractionalPosition;
   m_errMeasure = rDet -> rPitch( clusInfo.strip.strip() )
