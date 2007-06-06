@@ -37,7 +37,7 @@ use PatUtils            v1r3    Pat   # Olivier Callot
 use PatVelo             v2r14   Pat   # David Hutchcroft
 use PatVeloTT           v2r12   Pat   # Mariusz Witek
 use PatForward          v2r14   Pat   # Stephanie Hansmann-Menzemer
-use PatPV               v2r7    Pat   # Mariusz Witek
+use PatPV               v2r8    Pat   # Mariusz Witek
 use PatChecker          v2r13   Pat   # Olivier Callot, David Hutchcroft
 use PatFitParams        v2r5    Pat   # Olivier Callot
 use TsaAlgorithms       v2r4    Tr    # Matt Needham
