@@ -201,14 +201,14 @@ StatusCode DVAlgorithm::sysExecute ()
   return sc ;
 }
 //=============================================================================
-StatusCode DVAlgorithm::setFilterPassed  (  bool    state  ) 
+void DVAlgorithm::setFilterPassed  (  bool    state  ) 
 {
   /// count number of "effective filters"  
   if ( state && !filterPassed() ) { counter ( "#accepted" ) += 1 ; }
   ///
-  StatusCode sc = this->Algorithm::setFilterPassed(state); 
+  this->Algorithm::setFilterPassed(state); 
   m_setFilterCalled = true;
-  return sc;
+  return;
 }
 //=============================================================================
 StatusCode DVAlgorithm::fillSelResult () {

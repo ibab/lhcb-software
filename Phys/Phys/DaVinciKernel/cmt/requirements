@@ -1,10 +1,10 @@
-# $Id: requirements,v 1.43 2007-03-21 12:43:12 pkoppenb Exp $
+# $Id: requirements,v 1.44 2007-06-06 14:20:19 cattanem Exp $
 # Created    : 05/02/2002
 # Maintainer : P. Koppenburg, J. Palcios
 #============================================================================
 
 package           DaVinciKernel
-version           v6r2
+version           v6r4
 
 
 # Structure, i.e. directories to process. 

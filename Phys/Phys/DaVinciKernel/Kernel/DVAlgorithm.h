@@ -95,7 +95,7 @@ public:
   virtual ~DVAlgorithm( ){ }; ///< Destructor
   
   /// Overridden from Gaudi Algo to produce a warning if not called by user
-  virtual StatusCode setFilterPassed (bool state);  
+  virtual void setFilterPassed (bool state);  
 
   /// Overridden from Gaudi Algorithm
   virtual StatusCode sysExecute ();  

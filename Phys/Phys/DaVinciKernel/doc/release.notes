@@ -3,6 +3,10 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+!========================= DaVinciKernel v6r4 2007-06-04 ====================
+! 2007-06-04 - Marco Cattaneo
+ - DVAlgorithm::setFilterPassed now returns void, as in Gaudi v19r4 base class
+
 !========================= DaVinciKernel v6r3 2007-05-10 ====================
 ! 2007-05-10 - Marco Cattaneo
  - Fix a doxygen warning
