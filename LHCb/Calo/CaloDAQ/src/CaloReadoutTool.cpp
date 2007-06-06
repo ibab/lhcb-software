@@ -1,4 +1,4 @@
-// $Id: CaloReadoutTool.cpp,v 1.12 2007-05-01 22:24:27 odescham Exp $
+// $Id: CaloReadoutTool.cpp,v 1.13 2007-06-06 14:25:11 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -46,12 +46,13 @@ CaloReadoutTool::~CaloReadoutTool() {}
 StatusCode CaloReadoutTool::getCaloBanksFromRaw( ) {
 
   LHCb::RawEvent* rawEvt = NULL ;
-  m_raw = rootOnTES() + LHCb::RawEventLocation::Default;
-  debug() << "raw location :: " << m_raw << endreq;  
+  m_raw = LHCb::RawEventLocation::Default;
+  debug() << "raw location :: " << rootInTES() + m_raw << endmsg;  
   if( exist<LHCb::RawEvent>( m_raw ) ){
     rawEvt= get<LHCb::RawEvent>( m_raw );
   }else  {
-    warning() << "rawEvent not found at location '" << m_raw << "'"<< endreq;
+    warning() << "rawEvent not found at location '" << rootInTES() + m_raw 
+              << "'" << endmsg;
     return StatusCode::FAILURE;
   }
       

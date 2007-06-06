@@ -1,4 +1,4 @@
-// $Id: CaloZSupAlg.cpp,v 1.6 2007-02-22 23:39:52 odescham Exp $
+// $Id: CaloZSupAlg.cpp,v 1.7 2007-06-06 14:25:11 cattanem Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -48,14 +48,14 @@ CaloZSupAlg::CaloZSupAlg( const std::string& name, ISvcLocator* pSvcLocator)
   m_inputToolName = name + "Tool";
   if ( "Ecal" == name.substr( 0 , 4 ) ) {
     m_detectorName     = DeCalorimeterLocation::Ecal;
-    m_outputADCData    = rootOnTES() + LHCb::CaloAdcLocation::Ecal + m_extension;
-    m_outputDigitData  = rootOnTES() + LHCb::CaloDigitLocation::Ecal + m_extension;
+    m_outputADCData    = LHCb::CaloAdcLocation::Ecal   + m_extension;
+    m_outputDigitData  = LHCb::CaloDigitLocation::Ecal + m_extension;
     m_zsupMethod       = "2D";
     m_zsupThreshold    = 20;
   } else if ( "Hcal" == name.substr( 0 , 4 ) ) {
     m_detectorName     = DeCalorimeterLocation::Hcal;
-    m_outputADCData    = rootOnTES() + LHCb::CaloAdcLocation::Hcal + m_extension;
-    m_outputDigitData  = rootOnTES() + LHCb::CaloDigitLocation::Hcal + m_extension;
+    m_outputADCData    = LHCb::CaloAdcLocation::Hcal   + m_extension;
+    m_outputDigitData  = LHCb::CaloDigitLocation::Hcal + m_extension;
     m_zsupMethod       = "1D";
     m_zsupThreshold    = 4;
   }
@@ -134,9 +134,9 @@ StatusCode CaloZSupAlg::execute() {
   //*** some trivial printout
 
   if ( isDebug && m_adcOnTES) debug() << "Perform zero suppression - return CaloAdcs on TES at "
-                                      << m_outputADCData << endreq;
+                                      << rootInTES() + m_outputADCData << endreq;
   if ( isDebug && m_digitOnTES) debug() << "Perform zero suppression - return CaloDigits on TES at "
-                                      << m_outputDigitData << endreq;
+                                      << rootInTES() + m_outputDigitData << endreq;
 
 
   //*** get the input data

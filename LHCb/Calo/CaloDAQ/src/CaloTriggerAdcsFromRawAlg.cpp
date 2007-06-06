@@ -1,4 +1,4 @@
-// $Id: CaloTriggerAdcsFromRawAlg.cpp,v 1.7 2007-02-22 23:39:52 odescham Exp $
+// $Id: CaloTriggerAdcsFromRawAlg.cpp,v 1.8 2007-06-06 14:25:11 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -32,11 +32,11 @@ CaloTriggerAdcsFromRawAlg::CaloTriggerAdcsFromRawAlg( const std::string& name,
   m_toolType = "CaloTriggerAdcsFromRaw";  
   m_toolName  = name + "Tool";  
   if ( "Ecal" == name.substr( 0 , 4 ) ) {
-    m_outputData =  rootOnTES() + LHCb::L0CaloAdcLocation::Ecal + m_extension;    
-    m_pinContainer = rootOnTES() + LHCb::L0CaloAdcLocation::EcalPin + m_extension; 
+    m_outputData   = LHCb::L0CaloAdcLocation::Ecal    + m_extension;    
+    m_pinContainer = LHCb::L0CaloAdcLocation::EcalPin + m_extension; 
   } else if ( "Hcal" == name.substr( 0 , 4 ) ) {
-    m_outputData =  rootOnTES() + LHCb::L0CaloAdcLocation::Hcal + m_extension;
-    m_pinContainer = rootOnTES() + LHCb::L0CaloAdcLocation::HcalPin + m_extension; 
+    m_outputData   = LHCb::L0CaloAdcLocation::Hcal    + m_extension;
+    m_pinContainer = LHCb::L0CaloAdcLocation::HcalPin + m_extension; 
   }
 
 }

@@ -4,12 +4,14 @@
 ! Purpose     : Convert Calo Digit and Trigger information to RawEvent banks.
 !-----------------------------------------------------------------------------
 
-
+!========================== CaloDAQ v3r3 2007-06-04 ==========================
+! 2007-06-04 - Marco Cattaneo
+ - Remove rootOnTES() logic, now done in GaudiAlg/Tool base class
+   (needs Gaudi >= v19r4)
 
 ! 2004-05-01 Olivier Deschamps
   - CaloReadoutTool and decoding tools : add property to allow skipping 
     the Detector Specific Header when present
-
 
 !========================== CaloDAQ v3r2 2007-04-25 ==========================
 ! 2004-04-25 Olivier Deschamps

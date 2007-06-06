@@ -77,7 +77,7 @@ StatusCode CaloDataProvider::initialize ( ) {
 }
 
 
-std::string CaloDataProvider::rawRoot(){return rootOnTES();}
+std::string CaloDataProvider::rawRoot(){return rootInTES();}
 //-------------------------------------
 StatusCode CaloDataProvider::setBank( ) {
   debug() << "==> Reset " << name() << endmsg;
