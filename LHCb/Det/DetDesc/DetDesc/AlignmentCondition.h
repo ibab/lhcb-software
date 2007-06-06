@@ -1,4 +1,4 @@
-// $Id: AlignmentCondition.h,v 1.11 2007-05-31 13:55:34 jpalac Exp $
+// $Id: AlignmentCondition.h,v 1.12 2007-06-06 17:43:21 jpalac Exp $
 #ifndef DETDESC_ALIGNMENTCONDITION_H 
 #define DETDESC_ALIGNMENTCONDITION_H 1
 
@@ -28,7 +28,7 @@ public:
   AlignmentCondition(const std::vector<double>& translation,
                      const std::vector<double>& rotation,
                      const std::vector<double>& pivot =
-                     std::vector<double>(3) ) ;
+                     std::vector<double>(3, 0.) ) ;
   
   virtual ~AlignmentCondition( ); ///< Destructor
 

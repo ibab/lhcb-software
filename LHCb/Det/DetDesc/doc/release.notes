@@ -1,9 +1,15 @@
 ! =============================================================================
-! $Id: release.notes,v 1.302 2007-06-04 08:11:06 cattanem Exp $ 
+! $Id: release.notes,v 1.303 2007-06-06 17:43:21 jpalac Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
+
+! 2007-06-01 - Juan PALACIOS
+
+  - DetDesc/GlobalToLocalDelta.h, src/Lib/GlobalToLocalDelta.h
+    . Add some more 3D transformation manipulation functions. GlobalToLocalDelta starts to become
+      a misnomer.
 
 !====================== DetDesc v17r4 2007-06-01 ==============================
 ! 2007-06-01 - Juan PALACIOS
