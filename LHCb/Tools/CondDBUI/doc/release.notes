@@ -1,11 +1,16 @@
 ! =============================================================================
-! $Id: release.notes,v 1.55 2007-06-04 08:46:51 marcocle Exp $
+! $Id: release.notes,v 1.56 2007-06-06 14:09:17 marcocle Exp $
 ! =============================================================================
 ! package Tools/CondDBUI
 ! package manager : Marco Clemencic / Nicolas Gilardi
 ! =============================================================================
 
                             NEEDS LCGCMT >= 52
+
+! 2007-06-06 - Marco Clemencic
+ - Fixed a problem in copy_files_do_db.py: the destination path was not taken
+   into account when correctinf the relative paths to included files (SYSTEM
+   tag)
 
 ! 2007-06-04 - Marco Clemencic
  - Allow transparent usage of CORAL LFCReplicaService (enabled if the

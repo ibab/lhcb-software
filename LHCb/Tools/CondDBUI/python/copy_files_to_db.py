@@ -112,7 +112,7 @@ def main():
                             collection[channel][k] = ""
             
                     collection[channel][key] = conddbui._fix_xml(open(nodes[folderset][folder][key][channel],"rb").read(),
-                                                                 "conddb:"+folderset)
+                                                                 "conddb:"+'/'.join([options.dest,folderset]))
                     
             xmllist = []
             for channel in collection:
