@@ -17,8 +17,9 @@ namespace pres
   };
   enum FilterCriteria
   {
-    byFolder,
+    byFolderAndPage,
     bySubsystem,
+    byTask,
     byHistogramsWithAnalysis,
     allHistos,
     byAnalysisHistograms,      
