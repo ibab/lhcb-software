@@ -1,4 +1,4 @@
-// $Id: GlobalToLocalDelta.cpp,v 1.4 2007-06-01 16:14:46 jpalac Exp $
+// $Id: GlobalToLocalDelta.cpp,v 1.5 2007-06-06 17:43:12 jpalac Exp $
 // Include files 
 #include "DetDesc/IDetectorElement.h"
 #include "DetDesc/IGeometryInfo.h"
@@ -53,6 +53,53 @@ const Gaudi::Transform3D ZYXRotation(const std::vector<double>& params)
   Gaudi::Math::convert(rotZYX, tmp);
 
   return Gaudi::Transform3D(tmp);
+}
+
+void getZYXTransformParameters(const Gaudi::Transform3D& CDM,
+                               std::vector<double>& rotationParams,
+                               std::vector<double>& translationParams,
+                               const std::vector<double>& pivotParams) 
+{
+
+  Gaudi::Rotation3D newRot;
+  Gaudi::TranslationXYZ newTrans;
+  CDM.GetDecomposition(newRot, newTrans);
+  const Gaudi::Transform3D pivotTrans = DetDesc::XYZTranslation(pivotParams);
+  
+  // Take the pivot out of the rotation.
+  const Gaudi::Transform3D newRotPart = 
+    pivotTrans.Inverse() * Gaudi::Transform3D(newRot) * pivotTrans;
+
+  Gaudi::TranslationXYZ tmp;
+  newRotPart.GetDecomposition(newRot, tmp);
+
+  getZYXRotationParameters(newRot, rotationParams);
+
+  getTranslationParameters(newTrans, translationParams);
+  
+}
+
+void getZYXRotationParameters(const Gaudi::Rotation3D& rot,
+                              std::vector<double>& rotParams)
+{
+
+  const Gaudi::RotationZYX rotation(rot);
+
+  rotation.GetComponents(rotParams[2], rotParams[1], rotParams[0]);
+
+  return;
+}
+
+
+void getTranslationParameters(const Gaudi::TranslationXYZ& trans,
+                              std::vector<double>& transParams)
+{
+
+  transParams[0]=trans.X();
+  transParams[1]=trans.Y();
+  transParams[2]=trans.Z();
+  
+  return;
 }
   
 } // namespace DetDesc
