@@ -16,6 +16,6 @@ use GenEvent    v5r0p1  Event
 use EventAssoc  v4r1    Event
 use LinkerEvent v3r0p1  Event
 use TrackEvent  v4r3    Event
-use PackedEvent v3r1    Event
+use PackedEvent v3r2    Event
 use VeloEvent   v15r0   Event
 use HltEvent    v8r2    Event

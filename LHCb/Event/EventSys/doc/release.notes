@@ -2,9 +2,9 @@
 ! package manager: Marco Cattaneo
 !-------------------------------------------------------------------------
 
-!======================== EventSys v23r6 2007-05-31 ======================
-! 2007-05-31 - Marco Cattaneo
- - Use MCEvent v2r4, HltEvent v8r2
+!======================== EventSys v23r6 2007-06-05 ======================
+! 2007-06-05 - Marco Cattaneo
+ - Use MCEvent v2r4, HltEvent v8r2, PackedEvent v6r2
 
 !======================== EventSys v23r5 2007-05-14 ======================
 ! 2007-05-14 - Marco Cattaneo
