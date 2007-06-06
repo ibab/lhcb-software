@@ -49,7 +49,7 @@ use DAQEvent              v7r3    Event   # Marco Cattaneo, Markus Frank
 use GenEvent              v5r0p1  Event   # Gloria Corti
 use EventAssoc            v4r1    Event   # Ivan Belyaev
 use LinkerEvent           v3r0p1  Event   # Olivier Callot
-use PackedEvent           v3r1    Event   # Marco Cattaneo, Olivier Callot
+use PackedEvent           v3r2    Event   # Marco Cattaneo, Olivier Callot
 use TrackEvent            v4r3    Event   # Eduardo Rodrigues, Jose Hernando
 use VeloEvent             v15r0   Event   # Tomasz Szumlak, Chris Parkes
 use HltEvent              v8r2    Event   # Jose Angel Hernando-Morata
