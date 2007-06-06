@@ -1,9 +1,14 @@
-# $Id: release.notes,v 1.103 2007-05-16 15:13:51 cattanem Exp $
+# $Id: release.notes,v 1.104 2007-06-06 15:13:18 marcocle Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Det/DetCond
 ! Responsible : Marco Clemencic
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
+
+                           NEEDS: LCGCMT >= 52
+                           
+! 2007-06-06 - Marco Clemencic
+ - Removed the check on macro CORAL_1_8_x (use always the new CORAL feature).
 
 !===================== Det/DetCond v11r3 2007-05-16 ==========================
                            NEEDS: LHCbKernel >= v7r3 (ICondDBInfo)
