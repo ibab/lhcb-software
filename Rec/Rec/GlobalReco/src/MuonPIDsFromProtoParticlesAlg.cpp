@@ -5,7 +5,7 @@
  * Implementation file for algorithm MuonPIDsFromProtoParticlesAlg
  *
  * CVS Log :-
- * $Id: MuonPIDsFromProtoParticlesAlg.cpp,v 1.6 2007-03-09 18:13:37 jonrob Exp $
+ * $Id: MuonPIDsFromProtoParticlesAlg.cpp,v 1.7 2007-06-06 15:06:01 cattanem Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 29/03/2006
@@ -33,8 +33,8 @@ MuonPIDsFromProtoParticlesAlg::MuonPIDsFromProtoParticlesAlg( const std::string&
                                                               ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
 {
-  declareProperty( "InputProtoParticles", m_protoPloc  = rootOnTES() + ProtoParticleLocation::Charged );
-  declareProperty( "OutputMuonPIDs",      m_muonPIDloc = MuonPIDLocation::Default                     );
+  declareProperty( "InputProtoParticles", m_protoPloc  = ProtoParticleLocation::Charged );
+  declareProperty( "OutputMuonPIDs",      m_muonPIDloc = MuonPIDLocation::Default       );
 }
 //=============================================================================
 // Destructor

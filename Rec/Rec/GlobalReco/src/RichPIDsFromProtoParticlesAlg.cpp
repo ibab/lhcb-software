@@ -5,7 +5,7 @@
  * Implementation file for algorithm RichPIDsFromProtoParticlesAlg
  *
  * CVS Log :-
- * $Id: RichPIDsFromProtoParticlesAlg.cpp,v 1.6 2007-03-09 18:13:42 jonrob Exp $
+ * $Id: RichPIDsFromProtoParticlesAlg.cpp,v 1.7 2007-06-06 15:06:01 cattanem Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 29/03/2006
@@ -33,8 +33,8 @@ RichPIDsFromProtoParticlesAlg::RichPIDsFromProtoParticlesAlg( const std::string&
                                                               ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
 {
-  declareProperty( "InputProtoParticles", m_protoPloc  = rootOnTES() + ProtoParticleLocation::Charged );
-  declareProperty( "OutputRichPIDs",      m_richPIDloc = RichPIDLocation::Default                     );
+  declareProperty( "InputProtoParticles", m_protoPloc  = ProtoParticleLocation::Charged );
+  declareProperty( "OutputRichPIDs",      m_richPIDloc = RichPIDLocation::Default       );
 }
 //=============================================================================
 // Destructor

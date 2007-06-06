@@ -4,7 +4,10 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
-!========================== GlobalReco v6r10 2007-05-31 ======================
+!========================== GlobalReco v6r10 2007-06-05 ======================
+! 2007-06-05 - Marco Cattaneo
+ - Adapt usage of rootOnTES for Gaudi v19r4
+
 ! 2007-05-31 - Marco Cattaneo
  - Add MCInterfaces dependency, remove RichRecBase dependency,  and adapt to new
    location of IRichRecMCTruthTool
