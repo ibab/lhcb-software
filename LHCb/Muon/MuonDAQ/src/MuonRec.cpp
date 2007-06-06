@@ -1,4 +1,4 @@
-// $Id: MuonRec.cpp,v 1.2 2006-11-16 09:59:20 asatta Exp $
+// $Id: MuonRec.cpp,v 1.3 2007-06-06 14:26:10 cattanem Exp $
 // Include files 
 #include <cstdio>
 
@@ -38,9 +38,8 @@ MuonRec::~MuonRec() {};
 // Initialisation. Check parameters
 //=============================================================================
 StatusCode MuonRec::initialize() {
-StatusCode sc=GaudiAlgorithm::initialize();
-if(sc.isFailure())return sc;
-
+  StatusCode sc=GaudiAlgorithm::initialize();
+  if(sc.isFailure())return sc;
 
   debug() << "==> Initialise" << endreq;
   m_muonDetector=getDet<DeMuonDetector>
@@ -62,7 +61,17 @@ if(sc.isFailure())return sc;
   m_NRegion = basegeometry.getRegions();
 
   m_muonBuffer=tool<IMuonRawBuffer>("MuonRawBuffer");
-  if(!m_muonBuffer)info()<<"error retriveing the toll "<<endreq;
+  if(!m_muonBuffer)info()<<"error retrieving the toll "<<endreq;
+
+  // Propagate RootInTES
+  IProperty* prop = dynamic_cast<IProperty*>( m_muonBuffer );
+  if( prop ) {
+    sc = prop->setProperty( "RootInTES", rootInTES() );
+    if( sc.isFailure() )
+      return Error( "Unable to set RootInTES property of MuonRawBuffer", sc );
+  }
+  else
+    return Error( "Unable to locate IProperty interface of MuonRawBuffer" );
   
   debug()<<" station number "<<m_NStation<<" "<<m_NRegion <<endreq;
   return StatusCode::SUCCESS;
@@ -78,7 +87,7 @@ StatusCode MuonRec::execute() {
 
   // need to loop over input vector of MuonDigits
   // and make output vectors of MuonCoords one for each station
-  std::vector<LHCb::MuonTileID> decoding=m_muonBuffer->getTile(rootOnTES());
+  std::vector<LHCb::MuonTileID> decoding=m_muonBuffer->getTile();
   debug()<<" digits number " <<decoding.size()<<" have been found "<<endreq;
   
   int station;
@@ -114,9 +123,7 @@ StatusCode MuonRec::execute() {
     }    
   }
   
-
-  eventSvc()->registerObject(rootOnTES()+LHCb::MuonCoordLocation::MuonCoords,
-                             coords);  
+  put( coords, LHCb::MuonCoordLocation::MuonCoords );
   return StatusCode::SUCCESS;
 };
 
@@ -125,10 +132,8 @@ StatusCode MuonRec::execute() {
 //=============================================================================
 StatusCode MuonRec::finalize() {
 
-
   debug() << "==> Finalize" << endreq;
   return GaudiAlgorithm::finalize();
-  return StatusCode::SUCCESS;
 }
 
 //=============================================================================

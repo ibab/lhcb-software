@@ -1,4 +1,4 @@
-// $Id: MuonRawBuffer.cpp,v 1.7 2006-11-16 16:15:45 cattanem Exp $
+// $Id: MuonRawBuffer.cpp,v 1.8 2007-06-06 14:26:10 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -155,11 +155,11 @@ StatusCode MuonRawBuffer::finalize() {
 };
 
 
-std::vector<MuonTileID>  MuonRawBuffer::getTile(std::string TES){
+std::vector<MuonTileID>  MuonRawBuffer::getTile(){
 
   std::vector<MuonTileID> storage;
   
-  LHCb::RawEvent* raw = get<LHCb::RawEvent>(TES+LHCb::RawEventLocation::Default);  
+  LHCb::RawEvent* raw = get<LHCb::RawEvent>(LHCb::RawEventLocation::Default);  
   const std::vector<RawBank*>& b = raw->banks(RawBank::Muon);
   std::vector<RawBank*>::const_iterator itB;  
   for( itB = b.begin(); itB != b.end(); itB++ ) {    
@@ -218,11 +218,11 @@ std::vector<MuonTileID>  MuonRawBuffer::getTile(std::string TES){
 return storage;
 };
 
-std::vector<std::pair<MuonTileID,unsigned int> > MuonRawBuffer::getTileAndTDC(std::string TES){
+std::vector<std::pair<MuonTileID,unsigned int> > MuonRawBuffer::getTileAndTDC(){
 
   std::vector<std::pair<MuonTileID, unsigned int> > storage;
   
-  LHCb::RawEvent* raw = get<LHCb::RawEvent>(TES+LHCb::RawEventLocation::Default);  
+  LHCb::RawEvent* raw = get<LHCb::RawEvent>(LHCb::RawEventLocation::Default);  
   const std::vector<RawBank*>& b = raw->banks(RawBank::Muon);
   std::vector<RawBank*>::const_iterator itB;  
   unsigned int chIterator=0;
@@ -516,12 +516,11 @@ std::vector<LHCb::MuonTileID> MuonRawBuffer::DoPad(std::vector<
 }
 
 
-std::vector<LHCb::MuonTileID> MuonRawBuffer::getPads(std::string TES)
+std::vector<LHCb::MuonTileID> MuonRawBuffer::getPads()
 {
   std::vector<MuonTileID> storage;
   
-  LHCb::RawEvent* raw = get<LHCb::RawEvent>(TES+
-                                            LHCb::RawEventLocation::Default);  
+  LHCb::RawEvent* raw = get<LHCb::RawEvent>(LHCb::RawEventLocation::Default);  
   const std::vector<RawBank*>& b = raw->banks(RawBank::Muon);
   std::vector<RawBank*>::const_iterator itB;  
   

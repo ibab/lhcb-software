@@ -4,6 +4,10 @@
 ! Purpose     : Muon System Raw Buffer coding and decoding algorithms
 !-----------------------------------------------------------------------------
 
+!========================== MuonDAQ v3r2 2007-06-05 ==========================
+! 2007-06-05 - Marco Cattaneo
+ - Adapt to RootInTES() being set in the GaudiAlg/GaudiTool base class
+
 !========================== MuonDAQ v3r1 2007-03-05 ==========================
 ! 2007-03-05 - Marco Cattaneo
  - Remove obsolete MuonDAQ_load.cpp file
