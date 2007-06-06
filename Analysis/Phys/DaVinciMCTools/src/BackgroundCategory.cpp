@@ -1,4 +1,4 @@
-// $Id: BackgroundCategory.cpp,v 1.24 2007-01-12 14:03:51 ranjard Exp $
+// $Id: BackgroundCategory.cpp,v 1.25 2007-06-06 08:20:30 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -67,32 +67,35 @@ BackgroundCategory::~BackgroundCategory() {};
 //=============================================================================
 const LHCb::MCParticle* BackgroundCategory::origin(const LHCb::Particle* reconstructed_mother)
 {
-
+  if ( NULL==reconstructed_mother){
+    Exception("Got NULL pointer").ignore();
+  }
+  
 	const LHCb::MCParticle* tmpmother;
 	const LHCb::MCParticle* newcommonmother;
 
 	int backcategory = category(reconstructed_mother);
 
 	if (backcategory < 60) {
-		verbose() << "Getting the mother step 1" << endreq;
+		verbose() << "Getting the mother step 1" << endmsg;
 		if (m_commonMother) {
-			verbose() << "Getting the mother step 2" << endreq;
+			verbose() << "Getting the mother step 2" << endmsg;
 			if ( m_commonMother->mother() ) {
 
-				verbose() << "Getting the mother step 3" << endreq;
+				verbose() << "Getting the mother step 3" << endmsg;
 
 				tmpmother = m_commonMother;
 
-				verbose() << "Getting the mother step 4" << endreq;
+				verbose() << "Getting the mother step 4" << endmsg;
 
 				do {
-					verbose() << "Getting the mother step 5" << endreq;
+					verbose() << "Getting the mother step 5" << endmsg;
 					newcommonmother = tmpmother;
-					verbose() << "Getting the mother step 6" << endreq;
+					verbose() << "Getting the mother step 6" << endmsg;
 					tmpmother = newcommonmother->mother(); 
-					verbose() << "Getting the mother step 7" << endreq;
+					verbose() << "Getting the mother step 7" << endmsg;
 				} while (tmpmother != 0); 
-				verbose() << "Getting the mother step 8" << endreq;
+				verbose() << "Getting the mother step 8" << endmsg;
 
 				return newcommonmother;
 			} else	return m_commonMother; 
@@ -101,8 +104,8 @@ const LHCb::MCParticle* BackgroundCategory::origin(const LHCb::Particle* reconst
 }
 //=============================================================================
 bool BackgroundCategory::isStable(int pid)
-//A cheap and cheerful list of particles considered stable for the purposes of 
-//this tool. Not the cleverest way to do this, but works OK.
+  //A cheap and cheerful list of particles considered stable for the purposes of 
+  //this tool. Not the cleverest way to do this, but works OK.
 {
 	if ( pid == 11 || //electron
        pid == 22 || //photon
@@ -118,201 +121,225 @@ bool BackgroundCategory::isStable(int pid)
 
 } 
 //=============================================================================
-MCParticleVector BackgroundCategory::get_mc_mothers(MCParticleVector mc_particles_linked_to_decay, const LHCb::Particle* reconstructed_mother)
-//This function is responsible for getting the original mother of each MCParticle associated to a final state product of
-//our candidate particle. If there is no such mother, a 0 is entered, and the same is done if there is no matching 
-//MCParticle in the first place (for ghosts)  
+MCParticleVector BackgroundCategory::get_mc_mothers(MCParticleVector mc_particles_linked_to_decay, 
+                                                    const LHCb::Particle* reconstructed_mother)
+  //This function is responsible for getting the original mother of each MCParticle associated to a final state product of
+  //our candidate particle. If there is no such mother, a 0 is entered, and the same is done if there is no matching 
+  //MCParticle in the first place (for ghosts)  
 {
-	//verbose() << "About to start getting the MC-mothers" << endreq;
+	//verbose() << "About to start getting the MC-mothers" << endmsg;
 	MCParticleVector mc_mothers;
 	MCParticleVector::iterator iP;
 	const LHCb::MCParticle* finalmother;
 	const LHCb::MCParticle* tmpmother; 
-	//verbose() << "Getting MC-mothers step 1" << endreq;
+	verbose() << "Getting MC-mothers step 1 " 
+            <<  mc_particles_linked_to_decay.size() << endmsg;
 
 	int debugs = 0;
+
 
 	for (iP = mc_particles_linked_to_decay.begin(); iP != mc_particles_linked_to_decay.end(); ++iP) {
 
 		++debugs;
-		verbose() << "Getting MC-mothers - loop step 1 - loop element " << debugs << endreq;
+		if ( *iP ) verbose() << "Getting MC-mothers - loop step 1 - loop element " 
+                         << (*iP)->particleID().pid() << " " << debugs << endmsg;
+    else verbose() << "Getting MC-mothers - loop step 1 - loop element NULL " << debugs << endmsg ;
 
 		tmpmother = *iP;
-		//verbose() << "Getting MC-mothers - loop step 2 - loop element " << debugs << endreq;
-		//verbose() << "tmpmother = " << tmpmother << endreq;
+		verbose() << "Getting MC-mothers - loop step 2 - loop element " << debugs << " " << endmsg;
+		verbose() << "tmpmother = " << tmpmother << endmsg;
 		if (tmpmother) {
 			do {
-				//verbose() << "Getting MC-mothers - loop step 3 - loop element " << debugs << endreq;
+        verbose() << "Getting MC-mothers - loop step 3 - loop element " << debugs << endmsg;
 				finalmother = tmpmother;
-				//verbose() << "Getting MC-mothers - loop step 4 - loop element " << debugs << endreq;
-				//verbose() << "finalmother = " << finalmother << endreq;
+				verbose() << "Getting MC-mothers - loop step 4 - loop element " << debugs << endmsg;
+				verbose() << "finalmother = " << finalmother << endmsg;
 				tmpmother = finalmother->mother();
-				//verbose() << "Getting MC-mothers - loop step 5 - loop element " << debugs << endreq;
-				//verbose() << "tmpmother = " << tmpmother << endreq;
+				verbose() << "Getting MC-mothers - loop step 5 - loop element " << debugs << endmsg;
+        verbose() << tmpmother << " " << finalmother << " " << reconstructed_mother << endmsg ;
+				if ( tmpmother ) verbose() << "tmpmother = " << tmpmother->particleID().pid() << endmsg;
+				if ( finalmother ) verbose() << "final mother = " << finalmother->particleID().pid() << endmsg;
+				if ( reconstructed_mother ) verbose() << "reconstructed mother = " << reconstructed_mother->particleID().pid() << endmsg;
 			} while (tmpmother != 0 && finalmother->particleID().abspid() != reconstructed_mother->particleID().abspid());
+      verbose() << "Out of loop" << endmsg ;
 			mc_mothers.push_back(finalmother);
-      			verbose() << "finalmother = " << finalmother << endreq;
+      verbose() << "finalmother = " << finalmother->particleID().pid() << endmsg;
 		} else {
-			verbose() << "finalmother = 0" << endreq;
+			verbose() << "finalmother = 0" << endmsg;
 			mc_mothers.push_back(0); //Ghosts have no mother!;
 		}
-		//verbose() << "Getting MC-mothers - loop step 6 - loop element " << debugs << endreq;
-		//verbose() << "Getting MC-mothers - loop step 7 - loop element " << debugs << endreq;
+		verbose() << "Getting MC-mothers - loop step 6 - loop element " << debugs << endmsg;
+		verbose() << "Getting MC-mothers - loop step 7 - loop element " << debugs << endmsg;
 	}
+  verbose() << "Out of loop" << endmsg ;
+  
 
+  verbose() << "get_mc_mothers retuns " << mc_mothers.size() << " mothers" << endmsg ;
 	return mc_mothers;
 }
 //=============================================================================
 MCParticleVector BackgroundCategory::create_finalstatedaughterarray_for_mcmother(const LHCb::MCParticle* topmother)
-//Uses Patrick's tool (ParticleDescendants) to create an array of the final state products of the MCParticle
-//determined to be the joint mother (if indeeed there is one) of the MCParticles associated to the final
-//state particle daughters of the candidate Particle. For obvious reasons, this function is only invoked for
-//background catgegories 0->50.
+  //Uses Patrick's tool (ParticleDescendants) to create an array of the final state products of the MCParticle
+  //determined to be the joint mother (if indeeed there is one) of the MCParticles associated to the final
+  //state particle daughters of the candidate Particle. For obvious reasons, this function is only invoked for
+  //background catgegories 0->50.
 {
-	verbose() << "Starting to create the array of final state daughters for the mc mother" << endreq;
+	verbose() << "Starting to create the array of final state daughters for the mc mother" << endmsg;
 	
 	MCParticleVector finalstateproducts;
-  //verbose() << "Creating final state array step 1" << endreq;
+  //verbose() << "Creating final state array step 1" << endmsg;
 	MCParticleVector tempfinalstateproducts;
-  //verbose() << "Creating final state array step 2" << endreq;
+  //verbose() << "Creating final state array step 2" << endmsg;
 	SmartRefVector<LHCb::MCParticle>::const_iterator iP;
-  //verbose() << "Creating final state array step 3" << endreq;
+  //verbose() << "Creating final state array step 3" << endmsg;
 	SmartRefVector<LHCb::MCVertex>::const_iterator iV = topmother->endVertices().begin(); 
-  //verbose() << "Creating final state array step 4" << endreq;
+  //verbose() << "Creating final state array step 4" << endmsg;
 
-  verbose() << "Mother has " << (*iV)->products().size() << " daughters" << endreq;
+  verbose() << "Mother " << topmother->particleID().pid() 
+            << " has " <<  (*iV)->products().size() << " daughters" << endmsg;
 	
 	for (iP = (*iV)->products().begin(); iP != (*iV)->products().end(); ++iP) {
 
-		//verbose() << "Creating final state array step 5" << endreq;
+		//verbose() << "Creating final state array step 5" << endmsg;
 
 		SmartRefVector<LHCb::MCVertex>::const_iterator iVV = (*iP)->endVertices().begin();
 
+    verbose() << (*iP)->particleID().abspid() << " stable: " << isStable( (*iP)->particleID().abspid() )
+              << " products: " << (*iVV)->products().size() << endmsg ;
+
 		if ( (*iVV)->products().size() == 0 || isStable( (*iP)->particleID().abspid() ) ) {
 
-			//verbose() << "Creating final state array step 6" << endreq;
+			//verbose() << "Creating final state array step 6" << endmsg;
 
 			finalstateproducts.push_back(*iP);
 
 		} else {
 
-      //verbose() << "Creating final state array step 7" << endreq;
+      verbose() << "Creating final state array step 7" << endmsg;
 			tempfinalstateproducts = create_finalstatedaughterarray_for_mcmother(*iP);
-      //verbose() << "Creating final state array step 8" << endreq;
+      verbose() << "Creating final state array step 8" << endmsg;
 			finalstateproducts.insert(finalstateproducts.end(),tempfinalstateproducts.begin(),tempfinalstateproducts.end()) ;
-      //verbose() << "Creating final state array step 9" << endreq;
+      verbose() << "Creating final state array step 9" << endmsg;
 		}
 
 	}
 
-	//verbose() << "Creating final state array step 10" << endreq;
+	//verbose() << "Creating final state array step 10" << endmsg;
+  verbose() << "returning " << finalstateproducts.size() << " final state products" << endmsg ;
 
 	return finalstateproducts;
 }
 //=============================================================================
 IBackgroundCategory::categories BackgroundCategory::category(const LHCb::Particle* reconstructed_mother)
-//The big "what is it?" switch. hopefully commented enough downstairs. For additional help with what 
-//all the categories mean, please visit IBackgroundCategory.h 
+  //The big "what is it?" switch. hopefully commented enough downstairs. For additional help with what 
+  //all the categories mean, please visit IBackgroundCategory.h 
 {
 	m_commonMother = 0;
 	//First of all, we use Patrick's tool to get all the particles in the decay tree
-	verbose() << "About to start processing the categorisation tree" << endreq;
+	verbose() << "About to start processing the categorisation tree for a " << 
+    reconstructed_mother->particleID().pid()  << endmsg;
 	ParticleVector particles_in_decay = m_particleDescendants->descendants(reconstructed_mother);
-	if (particles_in_decay.size() == 0) return Undefined; 
-	verbose() << "Categorising step 1" << endreq;
+  verbose() << "Back from ParticleDescendants" << endmsg ;
+	if (particles_in_decay.empty()) {
+    Warning("No descendants for Particle");
+    return Undefined; 
+	}
+  verbose() << "Categorising step 1" << endmsg;
 	//Now we have to associate each one of them to an MCParticle if possible
 	MCParticleVector mc_particles_linked_to_decay = associate_particles_in_decay(particles_in_decay);  
-	verbose() << "Categorising step 2" << endreq;
+	verbose() << "Categorising step 2" << endmsg;
 	//Now to create a vector with the final mothers of all these mc particles.
 	MCParticleVector mc_mothers_final = get_mc_mothers(mc_particles_linked_to_decay,reconstructed_mother);
-	verbose() << "Categorising step 3" << endreq;
+	verbose() << "Categorising step 3" << endmsg;
 	//First we test condition A;if it succeeds, we test conditions B->F else G->J 
 	//For a list of what the conditions are, see the respective test functions
 	if (condition_A(mc_mothers_final, particles_in_decay) ) {
-		verbose() << "Categorising step 4" << endreq;
+		verbose() << "Categorising step 4" << endmsg;
 		// Condition A has passed, so we are in the territory of signal decays and
 		// "physics" backgrounds (meaning we have reconstructed some actual decay 
 		// that occured, even if not the one we were after).
 		if (condition_B(mc_particles_linked_to_decay) ) {
-			verbose() << "Categorising step 5" << endreq;
+			verbose() << "Categorising step 5" << endmsg;
 			if (condition_C(particles_in_decay, mc_particles_linked_to_decay) ) {
-				verbose() << "Categorising step 6" << endreq;
+				verbose() << "Categorising step 6" << endmsg;
 				if (condition_D(reconstructed_mother) ) {
-					verbose() << "Categorising step 7" << endreq;
+					verbose() << "Categorising step 7" << endmsg;
 					if (condition_E() ) {
-						verbose() << "Categorising step 8" << endreq;
+						verbose() << "Categorising step 8" << endmsg;
 						//This is a signal decay
 						return Signal;
 					} else {
-						verbose() << "Categorising step 9" << endreq;
+						verbose() << "Categorising step 9" << endmsg;
 						//This is a quasi-signal decay
 						return QuasiSignal;
 					}
 				} else {
-					verbose() << "Categorising step 10" << endreq;
+					verbose() << "Categorising step 10" << endmsg;
 					//This is a fully reconstructed physics background
 					return FullyRecoPhysBkg;
 				}
 			} else {
-				verbose() << "Categorising step 11" << endreq;
+				verbose() << "Categorising step 11" << endmsg;
 				//This is a reflection
 				return Reflection;
 			}		
 		} else {
-			verbose() << "Categorising step 12" << endreq;
+			verbose() << "Categorising step 12" << endmsg;
 			
 			if (m_inclusiveDecay == 1) {
-        	                if (condition_C(particles_in_decay, mc_particles_linked_to_decay) && condition_D(reconstructed_mother)) {
-                	                return Signal;
-                                }
-                        }
+        if (condition_C(particles_in_decay, mc_particles_linked_to_decay) 
+            && condition_D(reconstructed_mother)) {
+          return Signal;
+        }
+      }
 
-			if (condition_C(particles_in_decay, mc_particles_linked_to_decay) && condition_F(reconstructed_mother) ) {
-				verbose() << "Categorising step 13" << endreq;
+			if (condition_C(particles_in_decay, mc_particles_linked_to_decay)
+          && condition_F(reconstructed_mother) ) {
+				verbose() << "Categorising step 13" << endmsg;
 				//This is a Low-mass background
 				return LowMassBkg;
 			} else {
-				verbose() << "Categorising step 14" << endreq;
+				verbose() << "Categorising step 14" << endmsg;
 				//This is a partially reconstructed physics background
 				return PartRecoPhysBkg;
 			}
 		}
 	} else {
-		verbose() << "Categorising step 15" << endreq;
+		verbose() << "Categorising step 15" << endmsg;
 		//Since condition A has failed, we are in the territory of combinatorics, pileup,
 		//ghost-based and other assortead junk background.
 		if ( condition_G(mc_particles_linked_to_decay,particles_in_decay) ) {
-			verbose() << "Categorising step 16" << endreq;
+			verbose() << "Categorising step 16" << endmsg;
 			//This is a ghost
 			return Ghost;
 		} else {
-			verbose() << "Categorising step 17" << endreq;
+			verbose() << "Categorising step 17" << endmsg;
 			if (!condition_H(mc_particles_linked_to_decay,particles_in_decay) ){
-				verbose() << "Categorising step 18" << endreq;
+				verbose() << "Categorising step 18" << endmsg;
 				//A pileup
 				return FromDifferentPV;
 			} else {
-				verbose() << "Categorising step 18b" << endreq;
+				verbose() << "Categorising step 18b" << endmsg;
 				int numFromPV = condition_PV(/*mc_mothers_final,*/mc_particles_linked_to_decay);
-				verbose() << "Categorising step 18c" << endreq;
+				verbose() << "Categorising step 18c" << endmsg;
 				if ( numFromPV > 0) {
-					 verbose() << "Categorising step 18d" << endreq;
-					 if (numFromPV == 1) return FromPV;
-					 else return AllFromSamePV;
+          verbose() << "Categorising step 18d" << endmsg;
+          if (numFromPV == 1) return FromPV;
+          else return AllFromSamePV;
 				} else {
-					verbose() << "Categorising step 19" << endreq;
+					verbose() << "Categorising step 19" << endmsg;
 					if (condition_I(mc_mothers_final) ){
-						verbose() << "Categorising step 20" << endreq;
+						verbose() << "Categorising step 20" << endmsg;
 						//This is a bbar event
 						return bbar;
 					} else {
-						verbose() << "Categorising step 22" << endreq;
+						verbose() << "Categorising step 22" << endmsg;
 						if (condition_J(mc_mothers_final) ){
-							verbose() << "Categorising step 23" << endreq;
+							verbose() << "Categorising step 23" << endmsg;
 							//This is a ccbar event
 							return ccbar;
 						} else {
-							verbose() << "Categorising step 24" << endreq;
+							verbose() << "Categorising step 24" << endmsg;
 							//This is a light flavour event
 							return uds;
 						}
@@ -324,8 +351,8 @@ IBackgroundCategory::categories BackgroundCategory::category(const LHCb::Particl
 }
 //=============================================================================
 bool BackgroundCategory::condition_A(MCParticleVector mc_mothers_final, ParticleVector particles_in_decay)
-//This condition checks that all the MCParticles associated to the final-state daughters of our
-//candidate Particle have a common MCParticle mother.   
+  //This condition checks that all the MCParticles associated to the final-state daughters of our
+  //candidate Particle have a common MCParticle mother.   
 {
   MCParticleVector::const_iterator iP = mc_mothers_final.begin();
   ParticleVector::const_iterator iPP = particles_in_decay.begin();
@@ -334,7 +361,10 @@ bool BackgroundCategory::condition_A(MCParticleVector mc_mothers_final, Particle
   const LHCb::MCParticle* tempmother = NULL;
 
   do {
-
+    verbose() << "Condition A looping on a " << (*iPP)->particleID().pid() << " " 
+              << (*iPP)->momentum() << endmsg ;
+    if ( NULL!=(*iP) ) verbose() << " ... going with a " << (*iP)->particleID().pid() 
+                                 << " " << (*iP)->momentum() << endmsg ;
     if ( (*iPP)->isBasicParticle()) { //final state particle
 
       if ((*iP) == 0 ) carryon = false; //final state particle has no mother - no need to go further
@@ -352,45 +382,56 @@ bool BackgroundCategory::condition_A(MCParticleVector mc_mothers_final, Particle
 
   } while (carryon && iP != mc_mothers_final.end() );
 
-  if (carryon) m_commonMother = tempmother; else m_commonMother = 0;
+  if (carryon){ 
+    m_commonMother = tempmother;
+    verbose() << "Found common mother " << m_commonMother->particleID().pid() << endmsg ;
+    if ( isStable(m_commonMother->particleID().abspid())){
+      debug() << "Common mothe is a stable " << m_commonMother->particleID().pid() << endmsg ;
+      Warning("Common mother is stable").ignore();
+      m_commonMother = 0 ;
+      carryon = false ;
+    }
+  }
+  else m_commonMother = 0;
 
   return carryon;
 }
 //=============================================================================
 bool BackgroundCategory::condition_B(MCParticleVector mc_particles_linked_to_decay)
-//This condition checks that all the final state daughters of the MCparticle
-//returned by condition A match up to the MCParticles associated to the  final state 
-//daughters of the candidate Particle. In effect, condition A checked whether all
-//the particles used to make our B came from on decay, and this checks if there 
-//are any particles coming from said decay which we missed out in our reconstruction. 
+  //This condition checks that all the final state daughters of the MCparticle
+  //returned by condition A match up to the MCParticles associated to the  final state 
+  //daughters of the candidate Particle. In effect, condition A checked whether all
+  //the particles used to make our B came from on decay, and this checks if there 
+  //are any particles coming from said decay which we missed out in our reconstruction. 
 {
-	//verbose() << "Beginning to check condition B" << endreq;
+	//verbose() << "Beginning to check condition B" << endmsg;
 	bool carryon;
-  	//verbose() << "Checking condition B step 1" << endreq;
+  verbose() << "Checking condition B step 1" << endmsg;
 	MCParticleVector finalstateproducts = create_finalstatedaughterarray_for_mcmother(m_commonMother);
-  	//verbose() << "Checking condition B step 2" << endreq;
+  verbose() << "Checking condition B step 2" << endmsg;
 	MCParticleVector::const_iterator iPP = finalstateproducts.begin();
-  	//verbose() << "Checking condition B step 3" << endreq;
+  verbose() << "Checking condition B step 3 " << endmsg;
+  if (finalstateproducts.empty() ) Exception("Condition B 3 : No final states").ignore();
 	MCParticleVector::const_iterator iP;
-  	//verbose() << "Checking condition B step 4" << endreq;
+  verbose() << "Checking condition B step 4" << endmsg;
 	
 	do {
 		carryon = false;
-		//verbose() << "Checking condition B step 5" << endreq;
+		verbose() << "Checking condition B step 5" << endmsg;
 		if (*iPP) {
 
 			if ( (*iPP)->particleID().abspid() == 12  || //neutrinos are ignored
-                             (*iPP)->particleID().abspid() == 14  || //neutrinos are ignored
-                             (*iPP)->particleID().abspid() == 16  || //neutrinos are ignored
-                             ( m_useSoftPhotonCut && (*iPP)->particleID().abspid() == 22 &&
-                               (*iPP)->momentum().e() < m_softPhotonCut ) ) {  //soft photons are ignored
+           (*iPP)->particleID().abspid() == 14  || //neutrinos are ignored
+           (*iPP)->particleID().abspid() == 16  || //neutrinos are ignored
+           ( m_useSoftPhotonCut && (*iPP)->particleID().abspid() == 22 &&
+             (*iPP)->momentum().e() < m_softPhotonCut ) ) {  //soft photons are ignored
 			
 				carryon = true;
 
 			}	
 
-			verbose() << "The MC final state particle has pid : " << (*iPP)->particleID().pid() << endreq;
-			//verbose() << "Checking condition B step 6" << endreq;
+			verbose() << "The MC final state particle has pid : " << (*iPP)->particleID().pid() << endmsg;
+			//verbose() << "Checking condition B step 6" << endmsg;
 			if (!carryon) { //if the particle is not to be ignored
 				for (iP = mc_particles_linked_to_decay.begin(); iP != mc_particles_linked_to_decay.end(); ++iP) {
 					if ( *iP == 0) continue; //if no matching MCParticle
@@ -398,37 +439,37 @@ bool BackgroundCategory::condition_B(MCParticleVector mc_particles_linked_to_dec
 					if ( (*iP)->particleID().abspid() == 14 ) continue; //neutrinos are ignored
 					if ( (*iP)->particleID().abspid() == 16 ) continue; //neutrinos are ignored
 					if ( m_useSoftPhotonCut && (*iP)->particleID().abspid() == 22 && 
-						(*iP)->momentum().e() < m_softPhotonCut ) continue; //soft photons are ignored
-					verbose() << "The MC-associated particle has pid : " << (*iP)->particleID().pid() << endreq;
-					//verbose() << "Checking condition B step 7" << endreq;
+               (*iP)->momentum().e() < m_softPhotonCut ) continue; //soft photons are ignored
+					verbose() << "The MC-associated particle has pid : " << (*iP)->particleID().pid() << endmsg;
+					//verbose() << "Checking condition B step 7" << endmsg;
 					SmartRefVector<LHCb::MCVertex>::const_iterator iVV = (*iP)->endVertices().begin();
-					//verbose() << "Checking condition B step 7b" << endreq;
-	        			if ( (*iVV)->products().size() == 0 || isStable( (*iP)->particleID().abspid() )  ) {
-						//verbose() << "Checking condition B step 8" << endreq;
-						verbose() << "Associated Particle:" << (*iP) << endreq;
-						verbose() << "MC-final state Particle:" << (*iPP) << endreq;
+					//verbose() << "Checking condition B step 7b" << endmsg;
+          if ( (*iVV)->products().empty() || isStable( (*iP)->particleID().abspid() )  ) {
+						//verbose() << "Checking condition B step 8" << endmsg;
+						verbose() << "Associated Particle:" << (*iP) << endmsg;
+						verbose() << "MC-final state Particle:" << (*iPP) << endmsg;
 						if ( carryon = ( *iP == *iPP ) ) break;
 					}
 				}
 			}
 		}
 
-		//verbose() << "Checking condition B step 8b" << endreq;
+		//verbose() << "Checking condition B step 8b" << endmsg;
 
 		++iPP;
 
-		//verbose() << "Checking condition B step 8c" << endreq;
+		//verbose() << "Checking condition B step 8c" << endmsg;
 
 	} while(carryon && iPP != finalstateproducts.end());
 
-	//verbose() << "Checking condition B step 9" << endreq;
+	//verbose() << "Checking condition B step 9" << endmsg;
 
   return carryon;
 }
 //=============================================================================
 bool BackgroundCategory::condition_C(ParticleVector particles_in_decay, MCParticleVector mc_particles_linked_to_decay)
-//This condition checks if all the final state particles used to make the candidate particle are correctly
-//identified (according to PID).
+  //This condition checks if all the final state particles used to make the candidate particle are correctly
+  //identified (according to PID).
 {
 	bool carryon = true;
 
@@ -448,7 +489,7 @@ bool BackgroundCategory::condition_C(ParticleVector particles_in_decay, MCPartic
 }
 //=============================================================================
 bool BackgroundCategory::condition_D(const LHCb::Particle* reconstructed_mother)
-//Checks whether the head of our decay chain has the "correct" PID.
+  //Checks whether the head of our decay chain has the "correct" PID.
 {
 	bool carryon;
 
@@ -461,16 +502,16 @@ bool BackgroundCategory::condition_D(const LHCb::Particle* reconstructed_mother)
 }
 //=============================================================================
 bool BackgroundCategory::condition_E()
-//Not implemented but meant to check whether we missed any resonances
-//in the decay chain. 
+  //Not implemented but meant to check whether we missed any resonances
+  //in the decay chain. 
 {
   return true;
 }
 //=============================================================================
 bool BackgroundCategory::condition_F(const LHCb::Particle* candidate)
-//This condtion checks whether the MCParticle head of the decay chain is at most 
-//a given mass (set by the property LowMassBackgroundCut) heavier than the average mass 
-//for a particle of its PID.  
+  //This condtion checks whether the MCParticle head of the decay chain is at most 
+  //a given mass (set by the property LowMassBackgroundCut) heavier than the average mass 
+  //for a particle of its PID.  
 {
 	bool carryon = false;
 	
@@ -481,7 +522,7 @@ bool BackgroundCategory::condition_F(const LHCb::Particle* candidate)
 }
 //=============================================================================
 bool BackgroundCategory::condition_G(MCParticleVector mc_particles_linked_to_decay, ParticleVector particles_in_decay)
-//Checks if there are any ghosts in our final state Particles used to make the candidate Particle
+  //Checks if there are any ghosts in our final state Particles used to make the candidate Particle
 {
 	bool carryon = true;
 	MCParticleVector::const_iterator iP = mc_particles_linked_to_decay.begin();
@@ -500,7 +541,7 @@ bool BackgroundCategory::condition_G(MCParticleVector mc_particles_linked_to_dec
 }
 //=============================================================================
 bool BackgroundCategory::condition_H(MCParticleVector mc_particles_linked_to_decay, ParticleVector particles_in_decay)
-//Checks if the event is a pileup (final state Particles come from at least 2 different collisions) or not.
+  //Checks if the event is a pileup (final state Particles come from at least 2 different collisions) or not.
 {
 	bool carryon = true;
 	MCParticleVector::const_iterator iP = mc_particles_linked_to_decay.begin();
@@ -533,38 +574,38 @@ bool BackgroundCategory::condition_H(MCParticleVector mc_particles_linked_to_dec
 }
 //=============================================================================
 bool BackgroundCategory::condition_I(MCParticleVector mc_mothers_final)
-//Checks if at least one of the final state MCParticles associated
-//to the decay products of the candidate Particle had a mother
-//with bottom content.  
+  //Checks if at least one of the final state MCParticles associated
+  //to the decay products of the candidate Particle had a mother
+  //with bottom content.  
 {
-	//verbose() << "Beginning to check condition J" << endreq;
+	//verbose() << "Beginning to check condition J" << endmsg;
 	bool carryon = false;
 	MCParticleVector::const_iterator iP = mc_mothers_final.begin();
 
-	//verbose() << "Checking condition J step 1" << endreq;
+	//verbose() << "Checking condition J step 1" << endmsg;
 
 	do {
 
-		//verbose() << "Checking condition J step 2" << endreq;
+		//verbose() << "Checking condition J step 2" << endmsg;
 
 		if (*iP) 
-		if ( (*iP)->particleID().hasBottom() ) carryon = true;
+      if ( (*iP)->particleID().hasBottom() ) carryon = true;
 
-		//verbose() << "Checking condition J step 4" << endreq;
+		//verbose() << "Checking condition J step 4" << endmsg;
 
 		++iP;
 
 	} while (!carryon && iP != mc_mothers_final.end() );
 
-	//verbose() << "Checking condition J step 5" << endreq;
+	//verbose() << "Checking condition J step 5" << endmsg;
 
 	return carryon;	
 }
 //=============================================================================
 bool BackgroundCategory::condition_J(MCParticleVector mc_mothers_final)
-//Checks if at least one of the final state MCParticles associated
-//to the decay products of the candidate Particle had a mother
-//with charm content.
+  //Checks if at least one of the final state MCParticles associated
+  //to the decay products of the candidate Particle had a mother
+  //with charm content.
 {
 	bool carryon = false;
 	MCParticleVector::const_iterator iP = mc_mothers_final.begin();
@@ -590,42 +631,43 @@ int BackgroundCategory::condition_PV(/*MCParticleVector mc_mothers_final, */MCPa
 	
 	//MCParticleVector::const_iterator iP = mc_mothers_final.begin();
 
-	for (MCParticleVector::const_iterator iPP = mc_particles_linked_to_decay.begin(); iPP != mc_particles_linked_to_decay.end(); ++iPP) {
+	for (MCParticleVector::const_iterator iPP = mc_particles_linked_to_decay.begin(); 
+       iPP != mc_particles_linked_to_decay.end(); ++iPP) {
 
 		if (*iPP) {
 			SmartRefVector<LHCb::MCVertex>::const_iterator iVV = (*iPP)->endVertices().begin();
 			if (*iVV) { 
-				if ( (*iVV)->products().size() == 0 || isStable( (*iPP)->particleID().abspid()) ) {
+				if ( (*iVV)->products().empty() || isStable( (*iPP)->particleID().abspid()) ) {
 					++howmanyfinalstate;
 					if ((*iPP)->originVertex()->isPrimary() || 
-						((*iPP)->primaryVertex()->position()-(*iPP)->originVertex()->position()).Mag2() < pow(m_rescut,2)) ++howmanyfromPV;
+              ((*iPP)->primaryVertex()->position()-(*iPP)->originVertex()->position()).Mag2() < pow(m_rescut,2)) ++howmanyfromPV;
 					/*if (*iP != *iPP) {
 						bool fromshortlivedmother = true;
 						const LHCb::MCParticle* tempdaughter = *iPP;
 						do {
 
-							const LHCb::MCParticle* tempmother = tempdaughter->mother();
-							if (tempmother) {
+            const LHCb::MCParticle* tempmother = tempdaughter->mother();
+            if (tempmother) {
 
-								SmartRefVector<LHCb::MCVertex>::const_iterator iVT = tempmother->endVertices().begin();
-								double motherflighttime = (*iVT)->timeOfFlight();
+            SmartRefVector<LHCb::MCVertex>::const_iterator iVT = tempmother->endVertices().begin();
+            double motherflighttime = (*iVT)->timeOfFlight();
 
-								if (motherflighttime > m_rescut) {
+            if (motherflighttime > m_rescut) {
 
-									fromshortlivedmother = false;
-								}
+            fromshortlivedmother = false;
+            }
 
-							}
+            }
 
-							tempdaughter = tempmother;
+            tempdaughter = tempmother;
 
 						} while (fromshortlivedmother && tempdaughter);
 						if (fromshortlivedmother) ++howmanyfromPV;
 						++iP;
 						continue;
-					} else {
+            } else {
 						++howmanyfromPV;
-					}*/
+            }*/
 				}
 			}
 		}
@@ -640,57 +682,59 @@ int BackgroundCategory::condition_PV(/*MCParticleVector mc_mothers_final, */MCPa
 }
 //=============================================================================
 MCParticleVector BackgroundCategory::associate_particles_in_decay(ParticleVector particles_in_decay)
-//Associates all the final state particles daughters of the candidate Particle. For composites, 
-//attempts to use the Chi2 associator, which has to be configured properly for this (utterly
-//non-essential) feature to work.
+  //Associates all the final state particles daughters of the candidate Particle. For composites, 
+  //attempts to use the Chi2 associator, which has to be configured properly for this (utterly
+  //non-essential) feature to work.
 {
-	//verbose() << "Beginning to associate descendants" << endreq; 
+	//verbose() << "Beginning to associate descendants" << endmsg; 
 	MCParticleVector associated_mcparts;
 	ParticleVector::iterator iP;
 
-	//verbose() << "Associating step 1" << endreq;
+	//verbose() << "Associating step 1" << endmsg;
 	int debugs = 0;
 
 	for (iP = particles_in_decay.begin() ; iP != particles_in_decay.end() ; ++iP){
 		++debugs;
-		//verbose() << "Associating step 2 - loop step " << debugs << endreq;
+		//verbose() << "Associating step 2 - loop step " << debugs << endmsg;
 		if ( (*iP)->isBasicParticle() ) {
-			//verbose() << "Associating step 3a - loop step " << debugs << endreq;
+			//verbose() << "Associating step 3a - loop step " << debugs << endmsg;
 			const LHCb::ProtoParticle* protoTemp = (*iP)->proto();//dynamic_cast<ProtoParticle*>((*iP)->origin());
-			//verbose() << "Associating step 4a - loop step " << debugs << endreq;
-			verbose() << "Protoparticle is at " << protoTemp << endreq;
+			//verbose() << "Associating step 4a - loop step " << debugs << endmsg;
+			verbose() << "Protoparticle of " << (*iP)->particleID().pid() << " is at " << protoTemp << endmsg;
 			const LHCb::MCParticle* mcTemp;
 			if ( (*iP)->particleID().pid() == 22 || (*iP)->particleID().pid() == 111) {
 				mcTemp = m_pNPPAsct->firstMCP(protoTemp);//associatedFrom(protoTemp);
-                                /*verbose() << "Neutral Particle has PID = " << (*iP)->particleID().pid() << endreq;
-                                verbose() << "N energy = " << (*iP)->momentum().e() << endreq;
-                                verbose() << "N pt = " << (*iP)->momentum().vect().perp() << endreq;
-                                verbose() << "N momentum = " << (*iP)->momentum().vect().mag() << endreq;
-				verbose() << "====================================================================" << endreq;
-				verbose() << "Neutral MCParticle is at " << mcTemp << endreq;
-				verbose() << "Neutral MCParticle has PID = " << mcTemp->particleID().pid() << endreq;
-				verbose() << "MCN energy = " << mcTemp->momentum().e() << endreq;
-				verbose() << "MCN pt = " << mcTemp->momentum().vect().perp() << endreq;
-				verbose() << "MCN momentum = " << mcTemp->momentum().vect().mag() << endreq; */
+        /*verbose() << "Neutral Particle has PID = " << (*iP)->particleID().pid() << endmsg;
+          verbose() << "N energy = " << (*iP)->momentum().e() << endmsg;
+          verbose() << "N pt = " << (*iP)->momentum().vect().perp() << endmsg;
+          verbose() << "N momentum = " << (*iP)->momentum().vect().mag() << endmsg;
+          verbose() << "====================================================================" << endmsg;
+          verbose() << "Neutral MCParticle is at " << mcTemp << endmsg;
+          verbose() << "Neutral MCParticle has PID = " << mcTemp->particleID().pid() << endmsg;
+          verbose() << "MCN energy = " << mcTemp->momentum().e() << endmsg;
+          verbose() << "MCN pt = " << mcTemp->momentum().vect().perp() << endmsg;
+          verbose() << "MCN momentum = " << mcTemp->momentum().vect().mag() << endmsg; */
 			} else {
 				mcTemp = m_pCPPAsct->firstMCP(protoTemp);//associatedFrom(protoTemp);
-				verbose() << "MCParticle is at " << mcTemp << endreq;
+				verbose() << "MCParticle is at " << mcTemp ; 
+        if ( NULL!=mcTemp) verbose() << " (" << mcTemp->particleID().pid() << ")" << endmsg;
+        else verbose() << endmsg;
 			}
 			if (!mcTemp) {
 				associated_mcparts.push_back(mcTemp);
 				continue;
 			}
 			if (mcTemp->particleID().pid() == (*iP)->particleID().pid()) {
-				//verbose() << "Associating step 5a - loop step " << debugs << endreq;
-                                //verbose() << "MCParticle is at " << mcTemp << endreq;
-                                associated_mcparts.push_back(mcTemp);
-                                //verbose() << "Associating step 6a - loop step " << debugs << endreq;
+				//verbose() << "Associating step 5a - loop step " << debugs << endmsg;
+        //verbose() << "MCParticle is at " << mcTemp << endmsg;
+        associated_mcparts.push_back(mcTemp);
+        //verbose() << "Associating step 6a - loop step " << debugs << endmsg;
 			} else {
 
 				associated_mcparts.push_back(mcTemp);
 
 			}
-				/*//New commands to look for a range of particles
+      /*//New commands to look for a range of particles
 				LHCb::MCParticle* mc_correctPID = 0;
 				LHCb::MCParticle* mc_bestQ = 0;
 				LHCb::MCParticle* mc_TempDeux = 0;
@@ -701,69 +745,69 @@ MCParticleVector BackgroundCategory::associate_particles_in_decay(ParticleVector
 				ProtoParticle2MCAsct::ToRange mcPartRange;
 
 				if ( (*iP)->particleID().pid() == 22 || (*iP)->particleID().pid() == 111) {
-					mcPartRange = m_pNPPAsct->rangeFrom(protoTemp);
-                        	} else {
-					mcPartRange = m_pCPPAsct->rangeFrom(protoTemp);
-                        	}
+        mcPartRange = m_pNPPAsct->rangeFrom(protoTemp);
+        } else {
+        mcPartRange = m_pCPPAsct->rangeFrom(protoTemp);
+        }
 
 				ProtoParticle2MCAsct::ToIterator mcPartIt;
 
 				for (mcPartIt = mcPartRange.begin(); mcPartIt!=mcPartRange.end(); ++mcPartIt) {
-					mc_TempDeux = mcPartIt->to();
-					verbose() << "Range MCParticle is at " << mc_TempDeux << endreq;
-	                                verbose() << "Range MCParticle has PID = " << mc_TempDeux->particleID().pid() << endreq;
-        	                        verbose() << "Range energy = " << mc_TempDeux->momentum().e() << endreq;
-                	                verbose() << "Range pt = " << mc_TempDeux->momentum().vect().perp() << endreq;
-                        	        verbose() << "Range momentum = " << mc_TempDeux->momentum().vect().mag() << endreq;
-					verbose() << "Range weight = " << mcPartIt->weight() << endreq; 
-					mc_weight = mcPartIt->weight();
-					if ( mc_weight > minimumweight ) {
-						minimumweight = mc_weight;
-						mc_bestQ = mc_TempDeux;
-					}
-					if (mc_TempDeux->particleID().pid() == (*iP)->particleID().pid()){
-						if (mc_weight > mc_correctPID_weight) {
-							mc_correctPID_weight = mc_weight;
-							mc_correctPID = mc_TempDeux;
-						}
-					}
+        mc_TempDeux = mcPartIt->to();
+        verbose() << "Range MCParticle is at " << mc_TempDeux << endmsg;
+        verbose() << "Range MCParticle has PID = " << mc_TempDeux->particleID().pid() << endmsg;
+        verbose() << "Range energy = " << mc_TempDeux->momentum().e() << endmsg;
+        verbose() << "Range pt = " << mc_TempDeux->momentum().vect().perp() << endmsg;
+        verbose() << "Range momentum = " << mc_TempDeux->momentum().vect().mag() << endmsg;
+        verbose() << "Range weight = " << mcPartIt->weight() << endmsg; 
+        mc_weight = mcPartIt->weight();
+        if ( mc_weight > minimumweight ) {
+        minimumweight = mc_weight;
+        mc_bestQ = mc_TempDeux;
+        }
+        if (mc_TempDeux->particleID().pid() == (*iP)->particleID().pid()){
+        if (mc_weight > mc_correctPID_weight) {
+        mc_correctPID_weight = mc_weight;
+        mc_correctPID = mc_TempDeux;
+        }
+        }
 				}
 				if (mc_correctPID) {
-					if (mc_correctPID == mc_bestQ) {
-						verbose() << "Pushing back best match" << endreq;
-                                                verbose() << "Best PID weight = " << minimumweight << endreq;
-						associated_mcparts.push_back(mc_bestQ);
-					} else {
-						if (mc_correctPID_weight > m_override) {
-							verbose() << "Pushing back best pid match" << endreq;
-							verbose() << "Best PID weight = " << mc_correctPID_weight << endreq;
-							associated_mcparts.push_back(mc_correctPID);
-						} else {
-							verbose() << "OVERRIDE! Pushing back best Q match" << endreq;
-							verbose() << "Best Q match has PID = " << mc_bestQ->particleID().pid() << endreq;
-							verbose() << "Best PID weight = " << mc_correctPID_weight << endreq;
-							verbose() << "Best Q = " << minimumweight << endreq;
-							associated_mcparts.push_back(mc_bestQ);
-						}
-					}
+        if (mc_correctPID == mc_bestQ) {
+        verbose() << "Pushing back best match" << endmsg;
+        verbose() << "Best PID weight = " << minimumweight << endmsg;
+        associated_mcparts.push_back(mc_bestQ);
+        } else {
+        if (mc_correctPID_weight > m_override) {
+        verbose() << "Pushing back best pid match" << endmsg;
+        verbose() << "Best PID weight = " << mc_correctPID_weight << endmsg;
+        associated_mcparts.push_back(mc_correctPID);
+        } else {
+        verbose() << "OVERRIDE! Pushing back best Q match" << endmsg;
+        verbose() << "Best Q match has PID = " << mc_bestQ->particleID().pid() << endmsg;
+        verbose() << "Best PID weight = " << mc_correctPID_weight << endmsg;
+        verbose() << "Best Q = " << minimumweight << endmsg;
+        associated_mcparts.push_back(mc_bestQ);
+        }
+        }
 				} else {
-					//No match with correct PID, we just match the best quality one there is
-					verbose() << "Pushing back best Q match" << endreq;
-                                        verbose() << "Best Q match has PID = " << mc_bestQ->particleID().pid() << endreq;
-                                        verbose() << "Best Q = " << minimumweight << endreq;
-					associated_mcparts.push_back(mc_bestQ);
+        //No match with correct PID, we just match the best quality one there is
+        verbose() << "Pushing back best Q match" << endmsg;
+        verbose() << "Best Q match has PID = " << mc_bestQ->particleID().pid() << endmsg;
+        verbose() << "Best Q = " << minimumweight << endmsg;
+        associated_mcparts.push_back(mc_bestQ);
 				}
-			}*/
+        }*/
 		} else {
-			//verbose() << "Associating step 3b - loop step " << debugs << endreq;
+			//verbose() << "Associating step 3b - loop step " << debugs << endmsg;
 			const LHCb::Particle* partTemp = *iP;
-			//verbose() << "Associating step 4b - loop step " << debugs << endreq;
-			verbose() << "Particle is at " << partTemp << endreq;
+			//verbose() << "Associating step 4b - loop step " << debugs << endmsg;
+			verbose() << "Particle is at " << partTemp << endmsg;
 			const LHCb::MCParticle* mcTemp = m_pChi2PPAsct->firstMCP(partTemp);//associatedFrom(partTemp);
-			//verbose() << "Associating step 5b - loop step " << debugs << endreq;
-			verbose() << "MCParticle is at " << mcTemp << endreq;
+			//verbose() << "Associating step 5b - loop step " << debugs << endmsg;
+			verbose() << "MCParticle is at " << mcTemp << endmsg;
 			associated_mcparts.push_back(mcTemp);
-			//verbose() << "Associating step 6b - loop step " << debugs << endreq;
+			//verbose() << "Associating step 6b - loop step " << debugs << endmsg;
 		}
 	} 
 
@@ -784,7 +828,7 @@ StatusCode BackgroundCategory::finalize(){
 //=============================================================================
 StatusCode BackgroundCategory::initialize(){
 
-  debug() << "Starting to initialise Background Categorisation" << endreq;
+  debug() << "Starting to initialise Background Categorisation" << endmsg;
 
   StatusCode sc = GaudiTool::initialize();
   if (!sc) return sc;
@@ -806,7 +850,7 @@ StatusCode BackgroundCategory::initialize(){
   //m_pChi2PPAsct = tool<Particle2MCWithChi2Asct::IAsct>("Particle2MCWithChi2Asct","Particle2MCWithChi2",this);
   m_particleDescendants = tool<IParticleDescendants>("ParticleDescendants",this);
 
-  debug() << "Done initializing" << endreq ;
+  debug() << "Done initializing" << endmsg ;
  
   return StatusCode::SUCCESS;
 }
