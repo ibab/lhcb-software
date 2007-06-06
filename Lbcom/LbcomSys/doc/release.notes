@@ -6,11 +6,12 @@
 !             : Contains packages shared by Boole and other applications   
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v6r6>2007-05-29 LbcomSys v6r6</A></H1><PRE>
-This version uses Gaudi v19r3 and LHCb v22r6
+</PRE><H1><A NAME=v6r6>2007-06-05 LbcomSys v6r6</A></H1><PRE>
+This version uses Gaudi v19r4 and LHCb v22r6
 
 - Packages modified: SiTools v1r3, VeloTools v2r0, STAlgorithms v2r2,
-    STCheckers v2r2, RichMCMonitors v1r3, RichMCTools v3r6, MuonAssociators v3r1
+    STCheckers v2r2, RichMCMonitors v1r3, RichMCTools v3r6, L0Calo v9r8,
+    MuonAssociators v3r1
 
 - In VeloTools v2r0
   . New model of the Velo error estimate implemented, now returned error
@@ -22,6 +23,9 @@ This version uses Gaudi v19r3 and LHCb v22r6
 
 - In SiTools v1r3, MuonAssociators v3r1
   . Fix doxygen warnings
+
+- In MuonAssociators v3r1, L0Calo v9r8
+  . Adapt to Gaudi v19r4 handling of rootInTES
 
 - In MuonAssociators v3r1
   . Remove obsolete MuonAssociatos_load.cpp file
