@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.23 2007-05-29 14:46:26 cattanem Exp $
+! $Id: release.notes,v 1.24 2007-06-06 14:59:58 cattanem Exp $
 ! Package     : MuonAssociators
 ! Responsible : Alessia Satta
 !---------------------------------------------------------------------------
 
-!==================== MuonAssociators v3r1 2007-05-29 ======================
+!==================== MuonAssociators v3r1 2007-06-05 ======================
+! 2007-06-05 - Marco Cattaneo
+ - Adapt to new rootInTES usage from Gaudi v19r4
+
 ! 2007-05-29 - Marco Cattaneo
  - Adapt to move of interface to MCInterfaces package
  - Fix a doxygen warning

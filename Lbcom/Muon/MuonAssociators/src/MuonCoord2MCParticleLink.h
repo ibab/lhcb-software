@@ -1,4 +1,4 @@
-// $Id: MuonCoord2MCParticleLink.h,v 1.2 2007-05-29 14:46:29 cattanem Exp $
+// $Id: MuonCoord2MCParticleLink.h,v 1.3 2007-06-06 14:59:58 cattanem Exp $
 #ifndef MUONCOORD2MCPARTICLELINK_H 
 #define MUONCOORD2MCPARTICLELINK_H 1
 
@@ -14,7 +14,7 @@
 #include "Linker/LinkedTo.h"
 #include "MuonDAQ/IMuonRawBuffer.h"
 
-/** @class MuonCoord2MCPartcileLink MuonCoord2MCPartcleLink.h
+/** @class MuonCoord2MCParticleLink MuonCoord2MCParticleLink.h
  *  
  *
  *  @author Alessia Satta

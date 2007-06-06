@@ -1,4 +1,4 @@
-// $Id: MuonDigit2MCParticleAlg.cpp,v 1.13 2007-01-16 07:17:05 cattanem Exp $
+// $Id: MuonDigit2MCParticleAlg.cpp,v 1.14 2007-06-06 14:59:58 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -53,10 +53,10 @@ StatusCode MuonDigit2MCParticleAlg::execute() {
 
   LinkerWithKey<LHCb::MCParticle,LHCb::MuonDigit> myLink(eventSvc(),
                                              msgSvc(),
-                                             rootOnTES()+LHCb::MuonDigitLocation::MuonDigit);
+                                             rootInTES()+LHCb::MuonDigitLocation::MuonDigit);
   
   LHCb::MuonDigits* digits =
-    get<LHCb::MuonDigits>(rootOnTES()+LHCb::MuonDigitLocation::MuonDigit);
+    get<LHCb::MuonDigits>(LHCb::MuonDigitLocation::MuonDigit);
   
   // loop and link MuonDigits to MC truth
   LHCb::MuonDigits::const_iterator iDigit;
@@ -92,10 +92,10 @@ StatusCode MuonDigit2MCParticleAlg:: associateToTruth(LHCb::MuonDigit* digit,
                                                       mcpart){
   mcpart=NULL;  
   LHCb::MCParticles* mcParticles = 
-    get<LHCb::MCParticles>(LHCb::MCParticleLocation::Default);
+    get<LHCb::MCParticles>(LHCb::MCParticleLocation::Default,IgnoreRootInTES);
 
   LHCb::MCMuonDigits* mcDigits = 
-    get<LHCb::MCMuonDigits>(rootOnTES()+LHCb::MCMuonDigitLocation::MCMuonDigit);
+    get<LHCb::MCMuonDigits>(LHCb::MCMuonDigitLocation::MCMuonDigit);
   
   // match the MCMuonDigit to the MuonDigit via the Key
   LHCb::MCMuonDigit * mcDigit = mcDigits->object(digit->key());

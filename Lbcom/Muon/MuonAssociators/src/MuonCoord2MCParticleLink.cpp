@@ -1,4 +1,4 @@
-// $Id: MuonCoord2MCParticleLink.cpp,v 1.2 2007-01-15 16:42:28 cattanem Exp $
+// $Id: MuonCoord2MCParticleLink.cpp,v 1.3 2007-06-06 14:59:58 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -56,7 +56,7 @@ StatusCode MuonCoord2MCParticleLink::execute() {
 
   LinkerWithKey<LHCb::MCParticle,LHCb::MuonCoord> myLink(eventSvc(),
                                              msgSvc(),
-                                             rootOnTES()+LHCb::MuonCoordLocation::MuonCoords);
+                                             rootInTES()+LHCb::MuonCoordLocation::MuonCoords);
   
   //get the digit link
   LinkedTo<LHCb::MCParticle,LHCb::MuonDigit>
@@ -67,7 +67,7 @@ StatusCode MuonCoord2MCParticleLink::execute() {
   //get the list of coords
 
   LHCb::MuonCoords* coords =
-    get<LHCb::MuonCoords>(rootOnTES()+LHCb::MuonCoordLocation::MuonCoords);
+    get<LHCb::MuonCoords>(LHCb::MuonCoordLocation::MuonCoords);
   
   // loop and link MuonDigits to MC truth
   LHCb::MuonCoords::const_iterator iCoord;
