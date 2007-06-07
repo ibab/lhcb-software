@@ -1,11 +1,11 @@
 ! =============================================================================
-! $Id: release.notes,v 1.304 2007-06-07 10:38:11 jpalac Exp $ 
+! $Id: release.notes,v 1.305 2007-06-07 10:38:40 jpalac Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
 
-! 2007-06-07 - Juan PAACIOS
+! 2007-06-07 - Juan PALACIOS
   - DetDesc/GlobalToLocalDelta.h, src/Lib/GlobalToLocalDelta.h
     . Add localDeltaParameters functions to go from deltas in global frame to ones in local frame.
 
