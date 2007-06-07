@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking extrapolators
 !-----------------------------------------------------------------------------
 
+! 2007-06-07 - Wouter Hulsbergen
+- added propagation of StateVector in TrackExtrapolator
+
 ! 2007-05-23 - Edwin Bos
  - Moved propagate(state,z,pid) method to TrackExtrapolator and minor 
  - improvements, o.a. misuse of gsl_pow_2
