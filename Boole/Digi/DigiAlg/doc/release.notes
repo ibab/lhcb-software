@@ -4,6 +4,10 @@
 ! Purpose     : Holds generic digitization algorithms
 !-----------------------------------------------------------------------------
 
+!========================== DigiAlg v4r8 2007-06-05 ==========================
+! 2007-06-05 - Marco Cattaneo
+ - Adapt to Gaudi v19r4 convention for rootInTES
+
 !========================== DigiAlg v4r7 2007-05-18 ==========================
 ! 2007-05-18 - Marco Cattaneo
  - In BooleInit.cpp, fill CondDBTags in Boole ProcessHeader

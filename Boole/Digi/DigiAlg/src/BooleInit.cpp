@@ -1,11 +1,10 @@
-// $Id: BooleInit.cpp,v 1.23 2007-05-18 08:38:02 cattanem Exp $
+// $Id: BooleInit.cpp,v 1.24 2007-06-07 06:22:35 cattanem Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
 
 // from LHCbKernel
-//#include "Kernel/ICondDBInfo.h"
 #include "Kernel/IEventTimeDecoder.h"
 #include "Kernel/IGenericTool.h"
 
@@ -58,7 +57,7 @@ StatusCode BooleInit::initialize() {
   debug() << "==> Initialize" << endmsg;
 
   // Private tool to plot the memory usage
-  if ( "" == rootOnTES() )
+  if ( "" == rootInTES() )
     m_memoryTool = tool<IGenericTool>( "MemoryTool", "BooleMemory", this, true );
 
   // Tool do put the ODIN object on the TES
@@ -78,14 +77,15 @@ StatusCode BooleInit::execute() {
   debug() << "==> Execute" << endmsg;
 
   // Plot the memory usage
-  if ( "" == rootOnTES() ) m_memoryTool->execute();
+  if ( "" == rootInTES() ) m_memoryTool->execute();
 
   // Get the run and event number from the MC Header
-  LHCb::MCHeader* evt = get<LHCb::MCHeader>( LHCb::MCHeaderLocation::Default );
-  if ( "" == rootOnTES() ) printEventRun( evt->evtNumber(), evt->runNumber() );
+  LHCb::MCHeader* evt = get<LHCb::MCHeader>( LHCb::MCHeaderLocation::Default,
+                                             IgnoreRootInTES                 );
+  if ( "" == rootInTES() ) printEventRun( evt->evtNumber(), evt->runNumber() );
   
   // Initialize the random number
-  if ( "" == rootOnTES() ) {
+  if ( "" == rootInTES() ) {
     std::vector<long int> seeds = getSeeds( evt->runNumber(), evt->evtNumber() );
     sc = this->initRndm( seeds );
     if ( sc.isFailure() ) return sc;  // error printed already by initRndm  
@@ -102,7 +102,7 @@ StatusCode BooleInit::execute() {
   
   // Create an empty RawEvent
   LHCb::RawEvent* raw = new LHCb::RawEvent();
-  put( raw, rootOnTES() + LHCb::RawEventLocation::Default );
+  put( raw, LHCb::RawEventLocation::Default );
 
   // Add the ODIN bank (EDMS 704084 v2.0)
   unsigned int odin[9];

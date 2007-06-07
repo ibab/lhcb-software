@@ -24,7 +24,7 @@ ITEffChecker.FullDetail = true;
 //--------------------------------------------------------------
 // Set up some profiling. Enable/Disable setting lines below to true/false
 //--------------------------------------------------------------
-AuditorSvc.Auditors  = { "NameAuditor", "ChronoAuditor", "MemoryAuditor" };
+AuditorSvc.Auditors += { "NameAuditor", "ChronoAuditor", "MemoryAuditor" };
 NameAuditor.Enable   = false;
-ChronoAuditor.Enable = true;
+ChronoAuditor.Enable = false;
 MemoryAuditor.Enable = false;

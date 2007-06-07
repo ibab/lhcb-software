@@ -3,8 +3,8 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-</PRE><H1><A NAME=v14r2>2007-05-29 Boole v14r2</A></H1><PRE>
-This version uses projects Gaudi v19r3, LHCb v22r6, Lbcom v6r6
+</PRE><H1><A NAME=v14r2>2007-06-05 Boole v14r2</A></H1><PRE>
+This version uses projects Gaudi v19r4, LHCb v22r6, Lbcom v6r6
  and databases DDDB v1r*, ParamFiles v6r1, FieldMap v4r7
 
 It can process DC06 data, but output format is different from DC06, requires
@@ -15,6 +15,11 @@ Brunel v31r5 or greater
     + Remove explicit versions since these are meaningless with InstallAreas
       (leave explicit versions for databases)
     + Use only packages needed to compile or to setup up run time environment
+  . Adapt to new rootInTES convention in Gaudi v19r4
+   (CaloDigit v9r4, MuonMoniDigi v2r2, MuonAlgs v6r4, DigiAlg v4r8)
+
+- Monitoring changes
+  . Improved format of counters printout (GaudiKernel v22r3)
 
 </PRE><H1><A NAME=v14r1>2007-05-21 Boole v14r1</A></H1><PRE>
 This version uses projects Gaudi v19r3, LHCb v22r5, Lbcom v6r5
