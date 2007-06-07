@@ -4,7 +4,7 @@
 ! Package manager: Stefan Roiser
 !-----------------------------------------------------------------------------
 
-! 2007-06-07 - Pere Mato
+!2007-06-07 - Pere Mato
  - added new two patterns to generate the headers and dictionaries. 
    god_headers: generates the header files using the existing document
    god_dictionary: generates the dictionary header file and selection file and calls the
@@ -43,6 +43,9 @@
 		-private
 		-use GaudiObjDesc v* -no_auto_imports
 
+
+!2007-06-01 Stefan
+- fix 'static' handling for method generation
 
 !=========================== GaudiObjDesc v9r9 =============================
 ! 2007-02-19 - Pere Mato
