@@ -11,6 +11,7 @@ make_fragment obj2dict -header=obj2dict_header -trailer=obj2dict_trailer
 
 pattern god_dictionary \
    document obj2dict <package>Obj2Dict <files> ;\
+   macro_append use_obj2dict_gccxmlflags "" WIN32 "-U__MINGW32__" ; \
    apply_pattern reflex_dictionary dictionary=<package> \
                                    headerfiles=$(<PACKAGE>ROOT)/$(tag)/dict/$(package)/<package>_dictionary.h \
                                    selectionfile=$(<PACKAGE>ROOT)/$(tag)/dict/$(package)/<package>_selection.xml \
