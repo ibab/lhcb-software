@@ -1,4 +1,4 @@
-// $Id: GlobalToLocalDelta.h,v 1.3 2007-06-06 17:43:12 jpalac Exp $
+// $Id: GlobalToLocalDelta.h,v 1.4 2007-06-07 10:38:02 jpalac Exp $
 #ifndef DETDESC_GLOBALTOLOCALDELTA_H 
 #define DETDESC_GLOBALTOLOCALDELTA_H 1
 
@@ -50,23 +50,64 @@ namespace DetDesc {
   const Gaudi::Transform3D localDeltaMatrix(const IGeometryInfo* GI,
                                             const Gaudi::Transform3D& globalDelta);
 
+
+  /**
+   * Transform the nine 3D transformation parameters from the global frame into the local one.
+   *
+   * @author Juan Palacios juan.palacios@nikhef.nl
+   * @date 2007-06-07
+   *
+   *
+   * @param DE Pointer to the IDetectorElement of the "local" detector element.
+   * @param trans global 3D translation parameters. Gets filled with local parameters.
+   * @param rot   global 3D ZYX rotation parameters. Gets filled with local parameters.
+   * @param pivot global 3D pivot parameters. Gets filled with local pivot parameters. These
+   *              are constant and get taken directly from the conditions database.
+   *
+   */
+  void localDeltaParameters(const IDetectorElement* DE,
+                            std::vector<double>& trans,
+                            std::vector<double>& rot,
+                            std::vector<double>& pivot);
+
+  /**
+   * Transform the nine 3D transformation parameters from the global frame into the local one.
+   *
+   * @author Juan Palacios juan.palacios@nikhef.nl
+   * @date 2007-06-07
+   *
+   * @param GI Pointer to the IGeometryInfo of the "local" detector element.
+   * @param trans global 3D translation parameters. Gets filled with local parameters.
+   * @param rot   global 3D ZYX rotation parameters. Gets filled with local parameters.
+   * @param pivot global 3D pivot parameters. Gets filled with local pivot parameters. These
+   *              are constant and get taken directly from the conditions database.
+   *
+   */
+  void localDeltaParameters(const IGeometryInfo* GI,
+                            std::vector<double>& trans,
+                            std::vector<double>& rot,
+                            std::vector<double>& pivot);
+
+
   /**
    * Build the local to global transformation matrix given 
    *
-   * @param pivotParams vector containing the X,Y,Z coordinates of a pivot point for the
-   *        rotation part of the transformation.
    * @param translationParams vector containing the X,Y,Z coordinates of the translation
    *        part of the transformation
    * @param rotationParams vector containing the rotation angles about the X,Y,Z axes. 
    *        The rotation is applied in the following order: Z-Y'-X"
+   * @param pivotParams vector containing the X,Y,Z coordinates of a pivot point for the
+   *        rotation part of the transformation.
    * @return The full 3D transformation object. 
    * @author Juan Palacios juan.palacios@nikhef.nl
    * @todo Move this function outside of DetDesc once the ROOT::Math::RotationZYX class
    *       is fully available in MathCore.
    */
-  const Gaudi::Transform3D localToGlobalTransformation(std::vector<double>& pivotParams,
-                                                       std::vector<double>& translationParams,
-                                                       std::vector<double>& rotationParams);
+  const Gaudi::Transform3D localToGlobalTransformation(const std::vector<double>& translationParams,
+                                                       const std::vector<double>& rotationParams,
+                                                       const std::vector<double>& pivotParams);
+
+ 
   /**
    * Make a 3D transformation object from a simple 3D translation
    * 
@@ -78,13 +119,14 @@ namespace DetDesc {
    *       is fully available in MathCore. 
    */
   const Gaudi::Transform3D XYZTranslation(const std::vector<double>& params);
+
   /**
    * Build a 3D rotation from three angles.
    *
    * @author Juan Palacios juan.palacios@nikhef.nl
    *
-   * @param params vector containing the rotations about the X,Y,Z axes. The rotations are applied
-   *        in the following order: Z-Y'-X"
+   * @param params vector containing the rotations about the X,Y,Z axes. 
+   *               The rotations are applied in the following order: Z-Y'-X"
    * @return 3D transformation object describing the rotation
    * @todo Move this function outside of DetDesc once the ROOT::Math::RotationZYX class
    *       is fully available in MathCore.  
@@ -99,16 +141,17 @@ namespace DetDesc {
    * @author Juan Palacios juan.palacios@nikhef.nl
    * 
    * @param CDM 3D transformation object AKA cosine direction matrix
+   * @param translationParams vector containing X,Y and Z of translation transformation.
    * @param rotationParams vector containing the rotations about the X,Y,Z axes. 
    *                       The rotations are applied in the following order: Z-Y'-X"
-   * @param translationParams vector containing X,Y and Z of translation transformation.
    * @param pivotParams    pivot point about which the 3D transformation is to be decomposed.
    *
    */
   void getZYXTransformParameters(const Gaudi::Transform3D& CDM,
-                                 std::vector<double>& rotationParams,
                                  std::vector<double>& translationParams,
+                                 std::vector<double>& rotationParams,
                                  const std::vector<double>& pivotParams = std::vector<double>(3,0.));
+
   /**
    *
    * Wrapper function to get the Z-X'-Y" rotation angles for a 3D rotation.
