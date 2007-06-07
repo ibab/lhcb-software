@@ -1,6 +1,6 @@
 <lcgdict>
   <class name    = "IAddTTClusterTool"       />
-  <class name    = "IMaterialLocator"   />
+  <class name    = "IMaterialLocator"        />
   <class name    = "IMeasurementProvider"    />
   <class name    = "IPatForwardTool"         />
   <class name    = "IStateCorrectionTool"    />
