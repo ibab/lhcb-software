@@ -1,4 +1,4 @@
-// $Id: IMeasurementProvider.h,v 1.6 2007-02-19 12:38:15 cattanem Exp $
+// $Id: IMeasurementProvider.h,v 1.7 2007-06-07 08:52:44 wouter Exp $
 #ifndef TRACKINTERFACES_IMEASUREMENTPROVIDER_H 
 #define TRACKINTERFACES_IMEASUREMENTPROVIDER_H 1
 
@@ -12,6 +12,7 @@ namespace LHCb {
  class LHCbID;
  class Track;
  class Measurement;
+ class StateVector;
 };
 
 static const InterfaceID IID_IMeasurementProvider ( "IMeasurementProvider", 1, 0 );
@@ -32,16 +33,10 @@ public:
 
   virtual StatusCode initialize() = 0;
 
-  /** Load the necessary VeloClusters, ITClusters and OTTimes.
-   *  Note: this method should be called for each event
-   *        before any call to load( Track& track )!
-   */
-  virtual void load() = 0;
-
   /** Load (=create) all the Measurements from the list of LHCbIDs
    *  on the input Track
    */
-  virtual StatusCode load( LHCb::Track& track ) = 0;
+  virtual StatusCode load( LHCb::Track& track ) const = 0;
 
   /** Construct a Measurement of the type of the input LHCbID
    *  Note: this method is not for general use. A user should preferably call
@@ -53,12 +48,25 @@ public:
    *  @param  par: extra parameter for the XxxMeasurement constructor
    *               (refer to XxxMeasurement.h for details)
    */
+  virtual LHCb::Measurement* measurement( const LHCb::LHCbID& id) const = 0;
+
+  /** Construct a measurement with a statevector. This takes care that
+      things like errors depending on track angle are correctly
+      set. */
+
   virtual LHCb::Measurement* measurement( const LHCb::LHCbID& id, 
-                                          double par = 0. ) = 0;
+					  const LHCb::StateVector& ref) const = 0;
 
-protected:
+  /** update a measurement with a statevector **/
+  virtual StatusCode update( LHCb::Measurement& m, const LHCb::StateVector& state ) const = 0 ;
 
-private:
+  /** get the z-position from the lhcb-id **/
+  virtual double nominalZ( const LHCb::LHCbID& id ) const = 0 ;
+
+  /** This method is depricated **/
+  virtual LHCb::Measurement* measurement( const LHCb::LHCbID& id, double /* par */ ) const { return measurement(id) ; }
+  /** This method is depricated **/
+  virtual void load() {}
 
 };
 #endif // TRACKINTERFACES_IMEASUREMENTPROVIDER_H
