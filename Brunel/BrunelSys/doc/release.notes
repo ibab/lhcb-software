@@ -10,6 +10,15 @@ This version uses projects Gaudi v19r3, LHCb v22r6, Lbcom v6r6, Rec v4r6
 It can process DC06 data, but output format is different from DC06, requires 
 programs based on LHCb v22r5 or later
 
+- Packaging changes
+  . Clean up use statements in Brunel requirements (Rec/Brunel v31r6):
+    + Remove explicit versions since these are meaningless with InstallAreas
+      (leave explicit versions for databases)
+    + Use only packages needed to compile or to setup up run time environment
+
+- Monitoring changes
+  . Improved format of counters printout (GaudiKernel v22r3)
+
 </PRE><H1><A NAME=v31r5>2007-05-21 Brunel v31r5</A></H1><PRE>
 This version uses projects Gaudi v19r3, LHCb v22r5, Lbcom v6r5, Rec v4r5
  and databases DDDB v1r*, ParamFiles v5r0, FieldMap v4r7
