@@ -6,10 +6,9 @@ else
 endif
 
 $(dest)${package}.lcgdict : ${OBJS} 
-	@echo Producing dictionaries using genreflex command
-	export LD_LIBRARY_PATH=$(Python_home)/lib; cd $(dest); $(genreflex_cmd) ${package}_dictionary.h --no_membertypedefs --selection_file ${package}_selection.xml --rootmap=$(rootmap) --rootmap-lib=$(libprefix)${package}Dict.$(shlibsuffix) --gccxmlpath=$(GCCXML_home)/bin $(pp_cppflags) $(includes) $(use_pp_cppflags) $(gccxmlopts) $(use_obj2dict_gccxmlflags)
 	@( if [ -e $(dest)${package}.lcgdict ]; then touch $(dest)${package}.lcgdict; \
 	else echo /dev/null > $(dest)${package}.lcgdict; fi ) 
+
 
 clean :: ${CONSTITUENT}clean
 	@cd .
@@ -21,7 +20,6 @@ ${CONSTITUENT}clean ::
 	-$(cleanup_silent) rm -f $(dtdfile)
 	-$(cleanup_silent) rm -f $(dest)${package}_dictionary.h
 	-$(cleanup_silent) rm -f $(dest)${package}_selection.xml 
-	-$(cleanup_silent) rm -f $(dest)${package}_dictionary.xml 
 	-$(cleanup_silent) rm -f $(dest)${package}.lcgdict
 
  

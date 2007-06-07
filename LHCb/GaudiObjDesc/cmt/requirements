@@ -5,13 +5,20 @@ version v9r9
 include_path none
 macro xmlsrc "xml"
 
-macro gccxmlopts "" \
-     slc3-ia32 "--gccxmlopt=\'--gccxml-cxxflags -m32\'" \
-     slc4-ia32 "--gccxmlopt=\'--gccxml-cxxflags -m32\'"
-
 # GOD fragments header file and dictionary production
 make_fragment obj2doth -header=obj2doth_header -trailer=obj2doth_trailer
 make_fragment obj2dict -header=obj2dict_header -trailer=obj2dict_trailer
+
+pattern god_dictionary \
+   document obj2dict <package>Obj2Dict <files> ;\
+   apply_pattern reflex_dictionary dictionary=<package> \
+                                   headerfiles=$(<PACKAGE>ROOT)/$(tag)/dict/$(package)/<package>_dictionary.h \
+                                   selectionfile=$(<PACKAGE>ROOT)/$(tag)/dict/$(package)/<package>_selection.xml \
+                                   options="--no_membertypedefs $(use_obj2dict_gccxmlflags)" ;\
+   macro <package>Gen_dependencies "<package>Obj2Doth <package>Obj2Dict"
+
+pattern god_headers \
+   document obj2dict <package>Obj2Doth <files>
 
 use Python v* LCG_Interfaces
 

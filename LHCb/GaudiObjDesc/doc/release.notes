@@ -4,6 +4,46 @@
 ! Package manager: Stefan Roiser
 !-----------------------------------------------------------------------------
 
+! 2007-06-07 - Pere Mato
+ - added new two patterns to generate the headers and dictionaries. 
+   god_headers: generates the header files using the existing document
+   god_dictionary: generates the dictionary header file and selection file and calls the
+                   standard relex_dictionary provided by the Reflex LCGCMT interface package
+   IMPORTANT!! All Event packages need to be adapted to this change
+   For example the TarckEvent package changes are:
+
+		--- requirements        8 May 2007 11:20:01 -0000       1.46
+		+++ requirements        7 Jun 2007 11:42:21 -0000
+		@@ -14,22 +14,20 @@
+		 use   LHCbKernel      v*    Kernel
+		 use   GSL             v*    LCG_Interfaces
+		 use   Boost           v*    LCG_Interfaces
+		+private
+		+use GaudiObjDesc v* -no_auto_imports
+		+end_private
+
+		 # Produce Header-Files from XML description
+		 #============================================================================
+		-document obj2doth TrackEventObj2Doth ../xml/*.xml
+		+apply_pattern god_headers files=../xml/*.xml
+		 apply_pattern install_more_includes more=Event
+
+		-document obj2dict TrackEventObj2Dict ../xml/*.xml
+		+apply_pattern god_dictionary files=../xml/*.xml
+
+		 library          TrackEvent         ../src/*.cpp
+		-library          TrackEventDict     ../$(tag)/dict/TrackEvent/*.cpp
+
+		 # define library link options
+		 #============================================================================
+		 apply_pattern linker_library   library=TrackEvent
+		-apply_pattern component_library library=TrackEventDict
+		-macro_remove constituents TrackEventDictRootMap
+
+		-private
+		-use GaudiObjDesc v* -no_auto_imports
+
+
 !=========================== GaudiObjDesc v9r9 =============================
 ! 2007-02-19 - Pere Mato
  - scripts/genClasses.py - replace the static const CLID& CLID_xxx = yyy
