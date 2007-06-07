@@ -4,6 +4,9 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !----------------------------------------------------------------------
 
+! 2007-07-07 - Olivier Deschamps
+ - Add error bank types for EcalPacked/HcalPacked/PrsPacked
+
 !================ DAQEvent v7r3 2007-04-19 ============================
 ! 2007-04-19 - Chris Jones
  - Add complete copy constructor for ODIN. 

@@ -82,6 +82,9 @@ namespace LHCb
                    VeloProcFull,
                    OTRaw,
                    OTError,
+                   EcalPackedError, //34
+                   HcalPackedError, //35  
+                   PrsPackedError,  //36
                    LastType    // LOOP Marker; add new bank types ONLY before!
     };
 
