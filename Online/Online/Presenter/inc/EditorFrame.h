@@ -18,10 +18,10 @@ class EditorFrame : public TGCompositeFrame
   public:
     EditorFrame(TGWindow *p, UInt_t w = 1, UInt_t h = 1, MsgLevel v = SILENT);
     virtual ~EditorFrame();
-    void refreshHistoDBListTree();
     
-    TGListTree *pagesFromHistoDBListTree;
-
+    // slots
+    void refreshHistoDBListTree(FilterCriteria filterCriteria);
+    void refreshPagesDBListTree();
     
   //  EditorFrame (const EditorFrame & );
   //  EditorFrame & operator= (const EditorFrame &);  
@@ -29,6 +29,9 @@ class EditorFrame : public TGCompositeFrame
   private:
      MsgLevel            m_verbosity;
      PresenterMainFrame  *m_mainFrame;
+     TGListTree          *m_databaseHistogramTreeList;
+     TGListTree          *m_pagesFromHistoDBListTree;
+     DimBrowser          *m_dimBrowser;
 //     TRootEmbeddedCanvas *m_mainEmbCanvas;
 //      TGTab               *m_mainTab;
       
@@ -38,7 +41,6 @@ class EditorFrame : public TGCompositeFrame
 //      TGVerticalFrame     *fF1;
 //      TGCompositeFrame    *m_mainCanvasFrame;
 //      TGLayoutHints       *m_mainCanvasLayout;
-      DimBrowser          *dimBrowser;
   
   ClassDef(EditorFrame, 0)
 };
