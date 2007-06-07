@@ -1,15 +1,8 @@
-// $Id: MeasurementProvider.cpp,v 1.28 2007-04-27 20:41:26 polye Exp $
+// $Id: MeasurementProvider.cpp,v 1.29 2007-06-07 08:57:18 wouter Exp $
 // Include files 
 // -------------
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
-
-// from TrackFitEvent
-#include "Event/VeloRMeasurement.h"
-#include "Event/VeloPhiMeasurement.h"
-#include "Event/STMeasurement.h"
-#include "Event/OTMeasurement.h"
-#include "Event/MuonMeasurement.h"
 
 // local
 #include "MeasurementProvider.h"
@@ -29,40 +22,21 @@ DECLARE_TOOL_FACTORY( MeasurementProvider );
 //=============================================================================
 MeasurementProvider::MeasurementProvider( const std::string& type,
                                           const std::string& name,
-                                          const IInterface* parent )
-  : GaudiTool ( type, name , parent )
+                                          const IInterface* parent ) : GaudiTool ( type, name , parent ),
+    m_veloRProvider(  "MeasurementProviderT<MeasurementProviderTypes::VeloR>/VeloRMeasurementProvider" ),
+    m_veloPhiProvider("MeasurementProviderT<MeasurementProviderTypes::VeloPhi>/VeloPhiMeasurementProvider" ),
+    m_ttProvider(     "MeasurementProviderT<MeasurementProviderTypes::TT>/TTMeasurementProvider" ),
+    m_itProvider(     "MeasurementProviderT<MeasurementProviderTypes::IT>/ITMeasurementProvider" ),
+    m_otProvider(     "MeasurementProviderT<MeasurementProviderTypes::OT>/OTMeasurementProvider" ),
+    m_muonProvider(   "MuonMeasurementProvider" )
 {
   declareInterface<IMeasurementProvider>(this);
-
-  declareProperty( "TTClusterPositionTool",
-                   m_ttPositionToolName = "STOfflinePosition" );
-  declareProperty( "ITClusterPositionTool",
-                   m_itPositionToolName = "STOfflinePosition/ITClusterPosition" );
-
-  declareProperty( "VeloPositionTool",
-                   m_veloPositionToolName = "VeloClusterPosition" );
-
-  declareProperty( "VeloGeometryPath",
-                   m_veloDetPath = DeVeloLocation::Default );
-
-  declareProperty( "TTGeometryPath",
-                   m_ttDetPath = DeSTDetLocation::location("TT") );
-  declareProperty( "ITGeometryPath",
-                   m_itDetPath = DeSTDetLocation::location("IT") );
-
-  declareProperty( "OTGeometryPath",
-                   m_otDetPath = DeOTDetectorLocation::Default );
-
-  declareProperty( "MuonGeometryPath",
-                   m_muDetPath = "/dd/Structure/LHCb/DownstreamRegion/Muon");
-  
-
   declareProperty( "IgnoreVelo", m_ignoreVelo = false );
   declareProperty( "IgnoreTT",   m_ignoreTT   = false );
   declareProperty( "IgnoreIT",   m_ignoreIT   = false );
   declareProperty( "IgnoreOT",   m_ignoreOT   = false );
-  declareProperty( "IgnoreMuon",   m_ignoreMuon   = false );
-
+  declareProperty( "IgnoreMuon", m_ignoreMuon = false );
+  declareProperty( "InitializeReference", m_initializeReference  = false ) ;
 }
 
 //=============================================================================
@@ -73,73 +47,62 @@ MeasurementProvider::~MeasurementProvider() {};
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode MeasurementProvider::initialize() {
-
+StatusCode MeasurementProvider::initialize() 
+{
+  info() << "MeasurementProvider::initialize()" << endreq ;
   StatusCode sc = GaudiTool::initialize();
   if (sc.isFailure()) return sc;  // error already reported by base class
 
-  // Retrieve the STClusterPosition tools
-  m_ttPositionTool = tool<ISTClusterPosition>( m_ttPositionToolName );
-  m_itPositionTool = tool<ISTClusterPosition>( m_itPositionToolName );
+  m_providermap.clear() ;
+  m_providermap.resize(LHCb::Measurement::Muon+1,0) ;
 
-  // Retrieve the VeloClusterPosition tool
-  m_veloPositionTool = tool<IVeloClusterPosition>( m_veloPositionToolName );
+  if(!m_ignoreVelo) {
+    sc = m_veloRProvider.retrieve() ;
+    if (sc.isFailure()) return sc;  
+    m_providermap[LHCb::Measurement::VeloR] = &(*m_veloRProvider) ;
+   
+    sc = m_veloPhiProvider.retrieve() ;
+    if (sc.isFailure()) return sc; 
+    m_providermap[LHCb::Measurement::VeloPhi] = &(*m_veloPhiProvider) ;
+  }
 
-  // Retrieve the Velo, ST and OT detector elements
-  if ( !m_ignoreVelo ) m_veloDet = getDet<DeVelo>( m_veloDetPath );
-
-  if ( !m_ignoreTT ) m_ttDet   = getDet<DeSTDetector>( m_ttDetPath );
-  if ( !m_ignoreIT ) m_itDet   = getDet<DeSTDetector>( m_itDetPath );
-
-  if ( !m_ignoreOT ) m_otDet   = getDet<DeOTDetector>( m_otDetPath );
-
-  if ( !m_ignoreMuon ) m_muDet   = getDet<DeMuonDetector>( m_muDetPath );
-  
-
-  return StatusCode::SUCCESS;
-}
-
-//=============================================================================
-// Load the necessary VeloClusters, STClusters and OTTimes
-//=============================================================================
-void MeasurementProvider::load()
-{
-  if ( !m_ignoreVelo ) {
-    if ( exist<VeloClusters>( VeloClusterLocation::Default ) )
-      m_veloClusters = get<VeloClusters>( VeloClusterLocation::Default );
-    else
-      error() << "VeloClusters asked to be loaded but not present!" << endreq;
+  if(!m_ignoreTT) {
+    sc = m_ttProvider.retrieve() ;
+    if (sc.isFailure()) return sc; 
+    m_providermap[LHCb::Measurement::TT] = &(*m_ttProvider) ;
   }
   
-  if ( !m_ignoreTT ) {
-    if ( exist<STClusters>( STClusterLocation::TTClusters ) )
-      m_ttClusters = get<STClusters>( STClusterLocation::TTClusters );
-    else
-      error() << "STClusters in TT asked to be loaded but not present!"
-              << endreq;
+  if(!m_ignoreIT) {
+    sc = m_itProvider.retrieve() ;
+    if (sc.isFailure()) return sc;    
+    m_providermap[LHCb::Measurement::IT] = &(*m_itProvider) ;
   }
-  
-  if ( !m_ignoreIT ) {
-    if ( exist<STClusters>( STClusterLocation::ITClusters ) )
-      m_itClusters = get<STClusters>( STClusterLocation::ITClusters );
-    else
-      error() << "STClusters in IT asked to be loaded but not present!"
-              << endreq;
+
+  if(!m_ignoreOT) {
+    sc = m_otProvider.retrieve() ;
+    if (sc.isFailure()) return sc; 
+    m_providermap[LHCb::Measurement::OT] = &(*m_otProvider) ;
   }
-  
-  if ( !m_ignoreOT ) {
-    if ( exist<OTTimes>( OTTimeLocation::Default ) )
-      m_otTimes = get<OTTimes>( OTTimeLocation::Default );
-    else
-      error() << "OTTimes asked to be loaded but not present!" << endreq;
+
+  if(!m_ignoreMuon) {
+    sc = m_muonProvider.retrieve() ;
+    if (sc.isFailure()) return sc; 
+    m_providermap[LHCb::Measurement::Muon] = &(*m_muonProvider) ;
   }
+  return sc ;
 }
 
 //=============================================================================
 // Load all the Measurements from the list of LHCbIDs on the input Track
 //=============================================================================
-StatusCode MeasurementProvider::load( Track& track ) 
-{
+StatusCode MeasurementProvider::load( Track& track ) const
+{ 
+  /// Some of the long tracks do not have a momentum assigned to the
+  /// velo states. Therefore, we need to keep track of the momentum.
+  bool hasTState = track.hasStateAt(LHCb::State::AtT) ;
+  LHCb::State tState;
+  if(hasTState) tState = track.stateAt(LHCb::State::AtT);
+  
   const std::vector<LHCbID>& ids = track.lhcbIDs();
   for ( std::vector<LHCbID>::const_iterator it = ids.begin();
         it != ids.end(); ++it ) {
@@ -155,9 +118,19 @@ StatusCode MeasurementProvider::load( Track& track )
 		continue;
     }
     Measurement* meas = measurement( id );
-    if ( meas != NULL ) track.addToMeasurements( *meas );
-    delete meas;
-    //if ( meas == NULL ) return StatusCode::FAILURE;
+    if( meas ) {
+      if( m_initializeReference ) {
+	// Of course we would prefer to call directly the constructor
+	// with reference, but unfortunatel we first need a generic
+	// way to get the z-position of an lhcb id.  Note:
+	// extrapolation is done by measurementproviders.
+	LHCb::State state = track.closestState( meas->z() ) ;
+	if( hasTState ) state.setQOverP(tState.qOverP());
+	m_providermap[meas->type()]->update( *meas, LHCb::StateVector(state.stateVector(),state.z()) ) ;
+     }
+      track.addToMeasurements( *meas );
+      delete meas;
+    }
   }
   // Update the status flag of the Track
   track.setPatRecStatus( Track::PatRecMeas );
@@ -171,92 +144,48 @@ StatusCode MeasurementProvider::load( Track& track )
   return StatusCode::SUCCESS;
 }
 
+inline LHCb::Measurement::Type measurementtype(const LHCb::LHCbID& id)
+{
+  LHCb::Measurement::Type rc = LHCb::Measurement::Unknown ;
+  switch( id.detectorType() ) {
+  case LHCb::LHCbID::Velo: 
+    rc = id.veloID().isRType() ? LHCb::Measurement::VeloR : LHCb::Measurement::VeloPhi ;
+    break ;
+  case LHCb::LHCbID::TT:   rc = LHCb::Measurement::TT ; break ;
+  case LHCb::LHCbID::IT:   rc = LHCb::Measurement::IT ; break ;
+  case LHCb::LHCbID::OT:   rc = LHCb::Measurement::OT ; break ;
+  case LHCb::LHCbID::Muon: rc = LHCb::Measurement::Muon ; break ;
+  default: {}
+  }
+  return rc ;
+}
+
 //=============================================================================
 // Construct a Measurement of the type of the input LHCbID
 //=============================================================================
-Measurement* MeasurementProvider::measurement ( const LHCbID& id,
-                                                double par )
+
+Measurement* MeasurementProvider::measurement ( const LHCbID& id ) const
 {
-  Measurement* meas = NULL;
-  if ( id.isVelo() && !m_ignoreVelo ) {
-    VeloChannelID vid = id.veloID();
-    VeloCluster* clus = m_veloClusters->object( vid );
-    if (clus != NULL) {
-      if (vid.isRType()) {
-        meas = new VeloRMeasurement( *clus, *m_veloDet, *m_veloPositionTool );
-      } else {
-        meas = new VeloPhiMeasurement(*clus, *m_veloDet, *m_veloPositionTool );
-      }
-    }
-    else {
-      error() << "VeloCluster is NULL! No correspondence to VeloChannelID = "
-              << vid << endreq;
-    }
-    if ( meas == NULL )
-      error() << "Unable to create Velo measurement!" << endreq;
-  }
-  else if ( id.isTT() && !m_ignoreTT ) {
-    STChannelID sid = id.stID();
-    STCluster* clus = m_ttClusters->object(sid);
-    if (clus != NULL)
-      meas = new STMeasurement( *clus, *m_ttDet, *m_ttPositionTool );
-    else {
-      error() << "STCluster of type TT is NULL! No correspondence to "
-              << "STChannelID = " << sid << endreq;
-    }
-    if ( meas == NULL )
-      error() << "Unable to create TT measurement!" << endreq;
-  }
-  else if ( id.isIT() && !m_ignoreIT ) {
-    STChannelID sid = id.stID();
-    STCluster* clus = m_itClusters->object(sid);
-    if (clus != NULL)
-      meas = new STMeasurement( *clus, *m_itDet, *m_itPositionTool );
-    else {
-      error() << "STCluster of type IT is NULL! No correspondence to "
-              << "STChannelID = " << sid << endreq;
-    }
-    if ( meas == NULL )
-      error() << "Unable to create IT measurement!" << endreq;
-  }
-  else if ( id.isOT() && !m_ignoreOT ) {
-    OTChannelID oid = id.otID();
-    OTTime* clus = m_otTimes->object(oid);
-    if (clus != NULL) {
-      meas = new OTMeasurement( *clus, *m_otDet, (int) par );
-    }
-    else {
-      error() << "OTTime is NULL! No correspondence to OTChannelID = "
-              << oid << endreq;
-    }
-    if ( meas == NULL )
-      error() << "Unable to create OT measurement!" << endreq;
-  }
-  else if ( id.isMuon() && !m_ignoreMuon ) {
-    MuonTileID muid = id.muonID();
-    double x,y,z,dx,dy,dz;
-    StatusCode sc = m_muDet->Tile2XYZ(muid,x,dx,y,dy,z,dz);
-    if (sc.isFailure()){
-      warning() << "Failed to get x,y,z of tile " << muid << endreq;
-    } else {
-      meas = new MuonMeasurement(id,Gaudi::XYZPoint(x,y,z),dx,dy);
-      debug() << " Created muon measurement! " << muid << endreq; 
-    }
-    
-  } else {
-    error() << "LHCbID is not of type Velo, OT, or ST"
-            << " (type is " << id.detectorType() << ")" << endreq
-            << " -> do not know how to create a Measurement!" << endreq;
-  }
+  const IMeasurementProvider* provider = m_providermap[measurementtype( id )] ;
+  return provider ? provider->measurement(id) : 0 ; 
+}
 
+Measurement* MeasurementProvider::measurement ( const LHCbID& id, const LHCb::StateVector& state ) const
+{
+  const IMeasurementProvider* provider = m_providermap[measurementtype( id )] ;
+  return provider ? provider->measurement(id,state) : 0 ; 
+}
 
-  if ( meas != NULL )
-    debug() << "Creating measurement of type " << meas -> type()
-            << " channel " << id.channelID() 
-            << " parameter : " << par
-            << " at z = " << meas -> z() << endreq;
+StatusCode  MeasurementProvider::update( LHCb::Measurement& m, const LHCb::StateVector& refvector ) const 
+{
+  const IMeasurementProvider* provider = m_providermap[m.type()] ;
+  return provider ? provider->update(m,refvector) : StatusCode::FAILURE ; 
+}
 
-  return meas;  
+double MeasurementProvider::nominalZ( const LHCb::LHCbID& id ) const 
+{
+  const IMeasurementProvider* provider = m_providermap[measurementtype( id )] ;
+  return provider ? provider->nominalZ(id) : 0 ; 
 }
 
 //=============================================================================
