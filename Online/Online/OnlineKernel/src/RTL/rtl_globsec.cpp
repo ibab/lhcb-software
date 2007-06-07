@@ -40,6 +40,7 @@ int lib_rtl_create_section(const char* sec_name, size_t size, lib_rtl_gbl_t* add
   sprintf(h->name,"/%s",sec_name);
   h->addaux = h.get();
   h->size = siz;
+  *address = 0;
   //::lib_rtl_printf("Create global section %s of size:%d\n",h->name, h->size);
 #if defined(__linux)
   int sysprot  = PROT_READ+PROT_WRITE;
@@ -112,22 +113,16 @@ int lib_rtl_map_section(const char* sec_name, size_t size, lib_rtl_gbl_t* addres
   sprintf(h->name,"/%s",sec_name);
   h->addaux = h.get();
   h->size = siz;
+  *address = 0;
   //::lib_rtl_printf("Map global section %s of size:%d\n",h->name, h->size);
 #if defined(__linux)
   int sysprot  = PROT_READ+PROT_WRITE;
   int sysflags = MAP_SHARED;
-  h->fd = ::shm_open(h->name,O_RDWR|O_CREAT|O_EXCL,0666);
+  h->fd = ::shm_open(h->name,O_RDWR,0666);
   if ( 0 == h->fd )  {
     ::close(h->fd);
-    //::shm_unlink(h->name);
-    //return 0;
-  }
-  h->fd = ::shm_open(h->name,O_RDWR|O_CREAT,0644);
-  if ( h->fd ) {
-    char path[1024];
-    sprintf(path,"/dev/shm%s",h->name);
-    chmod(path,0666);
-    ::ftruncate(h->fd, h->size);
+    ::shm_unlink(h->name);
+    return 0;
   }
   h->address = ::mmap (0, h->size, sysprot, sysflags, h->fd, 0);
   if ( h->address != MAP_FAILED && h->address != 0 )  {
@@ -163,7 +158,7 @@ int lib_rtl_unmap_section(lib_rtl_gbl_t handle)   {
 #if defined(__linux)
     int sc = ::munmap(h->address,h->size)==0 ? 1 : 0;
     if ( h->fd >= 0 ) {
-      static int cnt = 0;
+      //static int cnt = 0;
       /* int ret = */ ::close(h->fd);
       /* ::lib_rtl_printf("%d Close FD:%d err=%d\n",++cnt,h->fd,ret); */
     }

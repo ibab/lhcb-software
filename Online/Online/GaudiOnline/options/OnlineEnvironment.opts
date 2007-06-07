@@ -1,5 +1,5 @@
 #pragma print on
-OnlineEnv.PartititonID   = 333;
+OnlineEnv.PartitionID   = 333;
 // OnlineEnv.MonitoringSvcs = { "LHCb::MemMonitorSvc/MonitorSvc",
 //                              "LHCb::MemMonitoringEngine/MonitoringEngine" };
 // OnlineEnv.MonitoringSvcs = { "LHCb::MemMonitorSvc/MonitorSvc",

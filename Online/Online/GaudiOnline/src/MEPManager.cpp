@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MEPManager.cpp,v 1.13 2007-05-18 13:58:55 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MEPManager.cpp,v 1.14 2007-06-07 15:52:01 frankm Exp $
 //  ====================================================================
 //  MEPManager.cpp
 //  --------------------------------------------------------------------
@@ -157,6 +157,7 @@ StatusCode LHCb::MEPManager::initialize()  {
 
 StatusCode LHCb::MEPManager::finalize()  {
   m_buffMap.clear();
+  error("Finalizisation started");
   if ( m_mepID )  {
     mep_exclude(m_mepID);
   }
@@ -164,6 +165,7 @@ StatusCode LHCb::MEPManager::finalize()  {
     if ( *i != MBM_INV_DESC ) ::mbm_exclude(*i);
   }
   m_bmIDs.clear();
+  error("Finalizisation done...");
   return Service::finalize();
 }
 

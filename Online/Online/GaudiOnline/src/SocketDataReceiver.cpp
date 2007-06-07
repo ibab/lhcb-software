@@ -2,6 +2,10 @@
 #include "GaudiKernel/SvcFactory.h"
 #include "NET/DataTransfer.h"
 #include "WT/wt_facilities.h"
+#include "RTL/Lock.h"
+int gauditask_task_lock();
+int gauditask_task_trylock();
+int gauditask_task_unlock();
 
 /*
  *   LHCb namespace declaration
@@ -19,35 +23,53 @@ namespace LHCb  {
     */
   class SocketDataReceiver : public NetworkDataReceiver  {
   protected:
+    bool m_finish;
     static void handle_death(netentry_t* /* e */, const netheader_t& hdr, void* param)  
     {  ((SocketDataReceiver*)param)->taskDead(hdr.name);               }
     static void handle_request(netentry_t* e, const netheader_t& hdr, void* param)  {
-      SocketDataReceiver* p = (SocketDataReceiver*)param;
-      std::string source(hdr.name);
-      char buff[256];
-      int sc = net_receive(p->m_netPlug,e,buff);
-      if ( sc == NET_SUCCESS )  {
-        p->handleSourceRequest(p->receivers().size(),source,source);
+      int sc = gauditask_task_trylock();
+      if ( sc == 1 ) {
+	SocketDataReceiver* p = (SocketDataReceiver*)param;
+        std::string source(hdr.name);
+        char buff[256];
+        int sc = net_receive(p->m_netPlug,e,buff);
+        if ( sc == NET_SUCCESS )  {
+          p->handleSourceRequest(p->receivers().size(),source,source);
+        }
+	gauditask_task_unlock();
+	return;
       }
+      // Things go awfully wrong....e.g. finalize was called during data taking.
+      ::fprintf(stdout,"Loosing event request....was finailize called ?\n");
+      ::fflush(stdout);
     }
     static void handle_event(netentry_t* e, const netheader_t& hdr, void* param)  {
-      SocketDataReceiver* p = (SocketDataReceiver*)param;
-      std::string source(hdr.name);
-      char* buff = new char[hdr.size];
-      int sc = net_receive(p->m_netPlug,e,buff);
-      if ( sc == NET_SUCCESS )  {
-        p->handleEventData(source,buff,hdr.size);
+      int sc = gauditask_task_trylock();
+      if ( sc == 1 ) {
+	SocketDataReceiver* p = (SocketDataReceiver*)param;
+        std::string source(hdr.name);
+        char* buff = new char[hdr.size];
+        int sc = net_receive(p->m_netPlug,e,buff);
+        if ( sc == NET_SUCCESS )  {
+          p->handleEventData(source,buff,hdr.size);
+        }
+        gauditask_task_unlock();
+	return;
       }
+      // Things go awfully wrong....e.g. finalize was called during data taking.
+      ::fprintf(stdout,"Loosing event....was finailize called ?\n");
+      ::fflush(stdout);
     }
     /// Pointer to netplug device
     NET*         m_netPlug;
   public:
     /// Standard algorithm constructor
-    SocketDataReceiver(const std::string& nam, ISvcLocator* pSvc) : NetworkDataReceiver(nam, pSvc) {}
+    SocketDataReceiver(const std::string& nam, ISvcLocator* pSvc) : NetworkDataReceiver(nam, pSvc), m_finish(false) {}
     /// Standard Destructor
     virtual ~SocketDataReceiver()   { }
     /// Subscribe to network requests
     virtual StatusCode subscribeNetwork()  {
+      m_finish = false;
       std::string self = RTL::dataInterfaceName()+"::"+RTL::processName();
       m_netPlug = net_init(self);
       net_subscribe(m_netPlug,this,WT_FACILITY_CBMEVENT,handle_event,handle_death);
@@ -56,6 +78,8 @@ namespace LHCb  {
     }
     /// Unsubscribe from network requests
     virtual StatusCode unsubscribeNetwork()  {
+      m_finish = true;
+      //RTL::Lock lock(m_lock);
       net_unsubscribe(m_netPlug,this,WT_FACILITY_CBMEVENT);
       net_unsubscribe(m_netPlug,this,WT_FACILITY_CBMCONNECT);
       net_close(m_netPlug);

@@ -11,7 +11,7 @@ EventDataSvc.RootCLID                = 1;
 EventDataSvc.EnableFaultHandler      = true ;
 EventPersistencySvc.CnvServices      = { "LHCb::RawDataCnvSvc/RawDataCnvSvc" };
 EventSelector.REQ1 = "EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=ONE;Frequency=PERC;Perc=100.0";
-MEPManager.PartitionID               = @OnlineEnv.PartititonID;
+MEPManager.PartitionID               = @OnlineEnv.PartitionID;
 MEPManager.Buffers                   = { "EVENT", "RESULT" };
 // Prescale events declared to RESULT buffer
 ApplicationMgr.TopAlg               += { "Sequencer/SendSequence" };

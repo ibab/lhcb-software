@@ -42,7 +42,7 @@ typedef struct  {
   unsigned int       m_length;
   unsigned int       m_error;
   unsigned int       m_function;
-  char               m_name [32];
+  char               m_name[128];
   __NetworkAddress__ m_sin;
 #ifndef __cplusplus
 }  TAN_MSG, TanMessage;

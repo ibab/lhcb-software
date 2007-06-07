@@ -20,8 +20,8 @@ MBM::Producer::~Producer()    {
 void MBM::Producer::setNonBlocking(int facility, bool subscribe) {
   Client::setNonBlocking(facility,false);
   if ( subscribe ) {
-    int status = wtc_subscribe(facility, spaceRearm, spaceAction, this);
-    if( status != WT_SUCCESS ) {
+    int sc = wtc_subscribe(facility, spaceRearm, spaceAction, this);
+    if( sc != WT_SUCCESS ) {
       throw std::runtime_error("Failed to subscribe action:"+m_buffName+" [Internal Error]");
     }
   }
@@ -61,15 +61,31 @@ int MBM::Producer::spaceAction(unsigned int facility, void* param) {
 int MBM::Producer::spaceAction() {
   void *fadd;
   EventDesc& e = m_event;
-  int status = MBM_NORMAL, flen;
+  int sc = MBM_NORMAL, flen;
   if ( m_bmid != MBM_INV_DESC ) {
-    status = ::mbm_declare_event(m_bmid, e.len, e.type, e.mask, 0, &fadd, &flen, m_partID);
-    if ( status == MBM_NORMAL )  {
-      status = ::mbm_send_space(m_bmid);
-      if ( status == MBM_NORMAL )  {
-        return MBM_NORMAL;
+    sc = ::mbm_declare_event(m_bmid, e.len, e.type, e.mask, 0, &fadd, &flen, m_partID);
+    if ( sc == MBM_REQ_CANCEL ) {
+      ::lib_rtl_printf("Failed to declare event for MBM buffer %s. Request was cancelled.\n",
+	       m_buffName.c_str());
+      return sc;
+    }
+    else if ( sc == MBM_NORMAL )  {
+      sc = ::mbm_send_space(m_bmid);
+      if ( sc == MBM_REQ_CANCEL ) {
+	::lib_rtl_printf("Failed to declare event for MBM buffer %s. Request was cancelled.\n",
+		 m_buffName.c_str());
+	return sc;
       }
+      else if ( sc == MBM_NORMAL )  {
+        return sc;
+      }
+      ::lib_rtl_printf("Failed to send space for MBM buffer %s. status = %d %08X.\n",
+	       m_buffName.c_str(),sc,sc);
       throw std::runtime_error("Failed to send space for MBM buffer:"+m_buffName+" [Internal Error]");
+    }
+    else {
+      ::lib_rtl_printf("Failed to declare event for MBM buffer %s. status = %d %08X.\n",
+	       m_buffName.c_str(),sc,sc);
     }
     throw std::runtime_error("Failed to declare event for MBM buffer:"+m_buffName+" [Internal Error]");
   }
@@ -80,10 +96,10 @@ int MBM::Producer::spaceAction() {
 int MBM::Producer::declareEvent() {
   void *fadd;
   EventDesc& e = m_event;
-  int status = MBM_NORMAL, flen;
+  int sc = MBM_NORMAL, flen;
   if ( m_bmid != MBM_INV_DESC ) {
-    status = ::mbm_declare_event(m_bmid, e.len, e.type, e.mask, 0, &fadd, &flen, m_partID);
-    if ( status == MBM_NORMAL )  {
+    sc = ::mbm_declare_event(m_bmid, e.len, e.type, e.mask, 0, &fadd, &flen, m_partID);
+    if ( sc == MBM_NORMAL )  {
       return MBM_NORMAL;
     }
     throw std::runtime_error("Failed to declare event for MBM buffer:"+m_buffName+" [Internal Error]");
@@ -116,11 +132,11 @@ int MBM::Producer::spaceRearm(int new_length) {
   if ( m_bmid != MBM_INV_DESC ) {
     EventDesc& e = m_event;
     e.len = new_length;
-    int status = ::mbm_get_space_a(m_bmid, e.len, &e.data, spaceAst, this);
-    if ( status == MBM_NORMAL )  {
-      status = m_blocking ? ::mbm_wait_space(m_bmid) : ::mbm_wait_space_a(m_bmid);
-      if ( status == MBM_NORMAL || status == MBM_REQ_CANCEL )  {
-        return status;
+    int sc = ::mbm_get_space_a(m_bmid, e.len, &e.data, spaceAst, this);
+    if ( sc == MBM_NORMAL )  {
+      sc = m_blocking ? ::mbm_wait_space(m_bmid) : ::mbm_wait_space_a(m_bmid);
+      if ( sc == MBM_NORMAL || sc == MBM_REQ_CANCEL )  {
+        return sc;
       }
       throw std::runtime_error("Failed to wait space for MBM buffer:"+m_buffName+" [Internal Error]");
     }

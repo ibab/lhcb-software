@@ -101,6 +101,7 @@ namespace {
     lib_rtl_thread_t m_thread;
     __NetworkPort__  m_port;
     bool             m_dirty;
+    bool             m_stop;
     void*            m_mutex_id;
   public:
     static int threadCall(void* param);
@@ -108,6 +109,8 @@ namespace {
     EntryMap(__NetworkPort__ p);
     ~EntryMap();
     void setDirty() { m_dirty = true; }
+    void stop();
+    void join();
     int handle();
     int run();
   };
@@ -176,7 +179,7 @@ namespace {
     std::vector<__NetworkChannel__> channels;
     IOPortManager mgr(m_port);
     int term_in = fileno(stdin);
-    while(1)  {
+    while( !m_stop )  {
       int nsock = 0, mxsock = 0;
       size_t len = size();
       if(channels.size()<len) channels.resize(len+32);
@@ -214,7 +217,7 @@ namespace {
         continue;
       }
       RTL::Lock lock(m_mutex_id);
-      for ( int j=0; j<nsock; ++j )  {
+      for ( int j=0; !m_stop && j<nsock; ++j )  {
         __NetworkChannel__ fd = channels[j];      
         if ( FD_ISSET(fd, &read_fds) )  {
           iterator k = find(fd);
@@ -228,7 +231,6 @@ namespace {
                 int (*callback)(void*) = e->callback;
                 void* param = e->param;
                 try  {
-                  RTL::Lock lock(m_mutex_id, true);
                   (*callback)(param);
                 }
                 catch(...)  {
@@ -253,13 +255,23 @@ namespace {
         }
       }
     }
+    return 1;
   }
 
-  EntryMap::EntryMap(__NetworkPort__ p) : m_thread(0), m_port(p), m_dirty(false), m_mutex_id(0) {
+  EntryMap::EntryMap(__NetworkPort__ p) 
+  : m_thread(0), m_port(p), m_dirty(false), m_stop(false), m_mutex_id(0) {
     lib_rtl_create_lock(0, &m_mutex_id);
   }
   EntryMap::~EntryMap() {
     lib_rtl_delete_lock(m_mutex_id);
+  }
+  void EntryMap::stop() {
+    m_stop = true;
+  }
+  void EntryMap::join() {
+    ::lib_rtl_join_thread(m_thread);
+    m_thread = 0;
+    ::lib_rtl_printf("Thread for port %d stopped\n",m_port);
   }
   int EntryMap::run()  {
     static bool first = true;
@@ -330,35 +342,73 @@ int IOPortManager::add(int typ, NetworkChannel::Channel c, int (*callback)(void*
     portMap()[m_port] = em = new EntryMap(m_port);
   }
   em->setDirty();
-  RTL::Lock lock(em->m_mutex_id);
-  {
-    PortEntry* e = (*em)[c];
-    if ( !e ) {
-      //lib_rtl_printf("Install channel watcher for %d\n",c);
-      (*em)[c] = e = new PortEntry;
-    }
-    e->callback = callback;
-    e->param = param;
-    e->armed = 1;
-    e->type = typ;
+  bool locked = 0 != em->m_thread && !::lib_rtl_is_current_thread(em->m_thread);
+  if ( locked ) ::lib_rtl_lock(em->m_mutex_id);
+
+  PortEntry* e = (*em)[c];
+  if ( !e ) {
+    //lib_rtl_printf("Install channel watcher for %d\n",c);
+    (*em)[c] = e = new PortEntry;
   }
-  return em->run();
+  e->callback = callback;
+  e->param = param;
+  e->armed = 1;
+  e->type = typ;
+  int sc = em->run();
+  if ( locked ) ::lib_rtl_unlock(em->m_mutex_id);
+  return sc;
 }
 
-int IOPortManager::remove(NetworkChannel::Channel c)  {
+int IOPortManager::remove(NetworkChannel::Channel c, bool need_lock)  {
   EntryMap* em = portMap()[m_port];
   if ( em ) {
     EntryMap::iterator i = em->find(c);
     if ( i != em->end() )  {
-      RTL::Lock lock(em->m_mutex_id);
+      bool locked = need_lock && 0 != em->m_thread && !::lib_rtl_is_current_thread(em->m_thread);
+      if ( locked ) ::lib_rtl_lock(em->m_mutex_id);
       i = em->find(c);
       if ( i != em->end() )  {
         if ( (*i).second ) delete (*i).second;
         em->erase(i);
         em->setDirty();
       }
+      if ( locked ) ::lib_rtl_unlock(em->m_mutex_id);
     }
   }
   return 1;
 }
 
+void* IOPortManager::lock() {
+  EntryMap* em = portMap()[m_port];
+  if ( em ) {
+    bool locked = 0 != em->m_thread && !::lib_rtl_is_current_thread(em->m_thread);
+    if ( locked ) {
+      ::lib_rtl_lock(em->m_mutex_id);
+      return em;
+    }
+  }
+  return 0;
+}
+
+void IOPortManager::unlock(void* entry) {
+  if ( entry ) {
+    EntryMap* em = (EntryMap*)entry;
+    if ( em ) ::lib_rtl_unlock(em->m_mutex_id);
+  }
+}
+
+void IOPortManager::stop(void* entry) {
+  if ( entry ) {
+    EntryMap* em = (EntryMap*)entry;
+    em->stop();
+  }
+}
+
+void IOPortManager::join(void* entry) {
+  if ( entry ) {
+    EntryMap* em = (EntryMap*)entry;
+    em->join();
+    delete em;
+    portMap()[m_port] = 0;
+  }
+}

@@ -75,20 +75,31 @@ TanInterface& TanInterface::instance()   {
 // Note: The addresses are NOT in network byte ordering!
 //                                      M.Frank
 // ----------------------------------------------------------------------------
-TanInterface::TanInterface()  {
+TanInterface::TanInterface() : m_channel(0) {
   char* dot;
   const char* tan_host = ::getenv("TAN_NODE");
   int status = ::lib_rtl_get_node_name(m_pcHostName, sizeof (m_pcHostName));
   m_portAllocated = 0;
   if ( status < 0 )                                                  goto Error;
   if ( tan_host   ) ::strncpy(m_pcHostName, tan_host, sizeof (m_pcHostName));
-  m_pLocalHost = hostByName(m_pcHostName);
-  if ( m_pLocalHost == 0 )                                           goto Error;
+  hostent* h = hostByName(m_pcHostName);
+  if ( h == 0 )                                                      goto Error;
   dot  = strchr(m_pcHostName,'.');
-  if ( dot != 0   )  *dot = 0;
-  //lib_rtl_printf("Tan interface: Host=%s\n",m_pcHostName);
-  setLocalAddress(m_sinudp);
-  setLocalAddress(m_sintcp);
+  // Do not truncate host names in internet format like 192.168.xxx.yyy
+  if ( dot && !isdigit(m_pcHostName[0]) ) *dot = 0;
+
+#ifdef _VMS
+  memcpy (&m_sinudp.sin_addr, *h->h_addr_list, h->h_length);
+#else
+  memcpy (&m_sinudp.sin_addr, h->h_addr, h->h_length);
+#endif
+  m_sinudp.sin_family = AF_INET;
+  ::memset(m_sinudp.sin_zero,0,sizeof(m_sinudp.sin_zero));
+  ::memcpy(&m_sintcp,&m_sinudp,sizeof(m_sintcp));
+
+  //::fprintf(stdout,"%s> TAN interface [%s]: Host=%s [%s]\n",
+  //          RTL::nodeName().c_str(),RTL::processName().c_str(),
+  //          m_pcHostName,inet_ntoa(m_sintcp.sin_addr));
 #ifdef _SERVICE
   m_pServiceUDP       = ::getservbyname (NAME_SERVICE_NAME, "udp");
   m_pServiceTCP       = ::getservbyname (NAME_SERVICE_NAME, "tcp");
@@ -98,8 +109,7 @@ TanInterface::TanInterface()  {
 #else
   m_sintcp.sin_port   = m_sinudp.sin_port = NAME_SERVICE_PORT;
 #endif
-  m_channel          = 0;
-  m_status           = TAN_SS_SUCCESS;
+  m_status            = TAN_SS_SUCCESS;
   return;
 Error:
   m_status = TAN_SS_ERROR;
@@ -201,13 +211,7 @@ int TanInterface::setInquireAddr(const char* node, NetworkChannel::Address& sin,
 //                                      M.Frank
 // ----------------------------------------------------------------------------
 int TanInterface::setLocalAddress  ( NetworkChannel::Address& sin )       {
-#ifdef _VMS
-  memcpy (&sin.sin_addr, *m_pLocalHost->h_addr_list, m_pLocalHost->h_length);
-#else
-  memcpy (&sin.sin_addr, m_pLocalHost->h_addr, m_pLocalHost->h_length);
-#endif
-  sin.sin_family = AF_INET;
-  memset(sin.sin_zero,0,sizeof(sin.sin_zero));
+  memcpy(&sin,&m_sinudp,sizeof(m_sintcp));
   sin.sin_port = htons(m_sintcp.sin_port);
   return TAN_SS_SUCCESS;
 }
@@ -302,18 +306,23 @@ int TanInterface::allocatePort(const char* name, NetworkChannel::Port *port)  {
       setLocalAddress(msg.m_sin);
       if ( m_channel->connect(msg.m_sin,Connect_TMO) != -1 )  {
         nodeWithName(name, 0 , msg._Name());
+        //::fprintf(stdout,"%s> TAN:  ALLOCATE: %s [%s] Host:%s Port:%d %d %s\n",
+        //	  RTL::nodeName().c_str(),RTL::processName().c_str(), msg._Name(),m_pcHostName, 
+        //	  msg.m_sin.sin_port, ntohs(msg.m_sin.sin_port), inet_ntoa(msg.m_sin.sin_addr));
+        //::fflush(stdout);
         if ( m_channel->send(&msg,sizeof(msg)) == sizeof(msg) )  {
-          int num_byte = m_channel->recv ( &msg, sizeof(msg), Receive_TMO);
+          int num_byte = m_channel->recv ( &msg,sizeof(msg),Receive_TMO);
           if ( num_byte > 0 )  {
             msg.Convert();
             if ( num_byte != int(msg._Length()))return fatalError( errorCode(TAN_SS_ODDRESPONSE) );
             if ( msg.error() != TAN_SS_SUCCESS) return fatalError( errorCode(msg.error()) );
             m_portAllocated = ntohs(msg.m_sin.sin_port)+1;
-            *port = msg.m_sin.sin_port;         return errorCode( TAN_SS_SUCCESS );
+            *port = msg.m_sin.sin_port;         
+                                                return errorCode( TAN_SS_SUCCESS );
           }                                     // receive timeout fired
           else if ( m_channel->isCancelled())   return fatalError(errorCode(TAN_SS_RECV_TMO));
-          else                                  return fatalError(m_channel->error() );
-        }                                       return fatalError(m_channel->error() );
+          else                                  return fatalError(m_channel->error());
+        }                                       return fatalError(m_channel->error());
       }                                         // Connect timeout fired
       else if ( m_channel->isCancelled() )      return fatalError(m_channel->error());
       else                                      return fatalError(m_channel->error());
@@ -334,7 +343,11 @@ int TanInterface::deallocatePort(const char* name)  {
       if ( num_byte != sizeof(msg) )            return fatalError(m_channel->error());
       num_byte = m_channel->recv (&msg,sizeof(msg),Receive_TMO);
       if      ( m_channel->isCancelled() )      return errorCode(TAN_SS_RECV_TMO);
-      else if ( num_byte == sizeof(msg)  )      return fatalError(TAN_SS_SUCCESS);
+      else if ( num_byte == sizeof(msg)  )      {
+	int scc= fatalError(TAN_SS_SUCCESS);
+	::lib_rtl_printf("TAN connection closed. %p\n",(void*)m_channel);
+        return scc;
+      }
       else                                      return fatalError(errorCode(TAN_SS_MADSRV));
     }                                           return errorCode(TAN_SS_NOTOPEN);
   }                                             return errorCode(TAN_SS_ERROR);

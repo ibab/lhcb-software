@@ -245,14 +245,14 @@ NetworkChannel::Port TanDataBase::_allocatePort ( Entry* ce)   {
   static int current_port    = 0;
   static int ports_availible = OS9_PORT_FLIP-1;
 #endif
-  if(_pData->_ports >= (TanPaSlot::NumEntries-1)) {  /* JUST TO AVOID FILLING THE TABLE ... */
+  if(_pData->_ports >= (TanPaSlot::NumEntries-1)) {  // JUST TO AVOID FILLING THE TABLE ...
     _iError = TAN_SS_DATABASEFULL;
     return 0;
   }
   _pData->_ports++;
-  strup(ce->m_name, ce->m_msg.m_name);                  /* FIND INDEX             */
+  strup(ce->m_name, ce->m_msg.m_name);              // FIND INDEX
   Entry* entry = _findEntry(ce->m_name);
-  if ( entry != 0 )  {                             /* CHECK IF ENTRY ALREADY EXISTS       */
+  if ( entry != 0 )  {                              // CHECK IF ENTRY ALREADY EXISTS
     _iError = TAN_SS_DUPLNAM;
     return 0;
   }
@@ -317,7 +317,7 @@ Done:
   index = current_port;
 #endif
   ce->m_dead   = 0;
-  ce->m_port   = NAMESERVICE_BASE_PORT+index+1;   /* THAT'S MY PORT NUMBER          */
+  ce->m_port   = NAMESERVICE_BASE_PORT+index+1;   // THAT'S MY PORT NUMBER
   //fprintf(stdout, "%s [%s] Got port:%d %X -> current: %d remaining: %d \n", 
   //        ce->name, ce->m_msg.m_name, ce->port,ce->port, current_port, ports_availible-current_port);
   //fflush(stdout);

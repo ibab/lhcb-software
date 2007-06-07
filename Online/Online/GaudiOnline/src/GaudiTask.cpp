@@ -14,6 +14,18 @@
 
 DECLARE_NAMESPACE_OBJECT_FACTORY(LHCb,GaudiTask)
 
+static    lib_rtl_lock_t  s_lock = 0;
+
+int gauditask_task_lock() {
+  return lib_rtl_lock(s_lock);
+}
+int gauditask_task_trylock() {
+  return lib_rtl_trylock(s_lock);
+}
+int gauditask_task_unlock() {
+  return lib_rtl_unlock(s_lock);
+}
+
 // Static thread routine to execute a Gaudi runable
 static int execRunable(void* arg)  {
   IRunable* runable = (IRunable*)arg;
@@ -28,6 +40,7 @@ LHCb::GaudiTask::GaudiTask(IInterface*)
   propertyMgr().declareProperty("MessageSvcType", m_msgsvcType  = "MessageSvc");
   propertyMgr().declareProperty("JobOptionsPath", m_mainOptions = "");
   propertyMgr().declareProperty("OptionalOptions",m_optOptions  = "");
+  ::lib_rtl_create_lock(0,&s_lock);
 }
 
 LHCb::GaudiTask::~GaudiTask()  {
@@ -35,6 +48,7 @@ LHCb::GaudiTask::~GaudiTask()  {
   m_msgSvc = 0;
   if ( m_appMgr ) m_appMgr->release();
   m_appMgr= 0;
+  ::lib_rtl_delete_lock(s_lock);
 }
 
 /// Run the complete job (from intialize to terminate)
@@ -285,13 +299,16 @@ StatusCode LHCb::GaudiTask::finalize()  {
     ::lib_rtl_join_thread(m_handle);
     m_handle = 0;
   }
+  gauditask_task_lock();
   if ( m_incidentSvc ) m_incidentSvc->release();
   m_incidentSvc= 0;
   StatusCode sc = m_subMgr->finalize();
   if ( !sc.isSuccess() )   {
     declareState(ST_RUNNING);
+    gauditask_task_unlock();
     return sc;
   }
+  gauditask_task_unlock();
   return DimTaskFSM::finalize();
 }
 

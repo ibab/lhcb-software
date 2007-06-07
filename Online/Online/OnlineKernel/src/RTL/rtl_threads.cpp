@@ -19,6 +19,18 @@ void* lib_rtl_thread_id()  {
   return (void*)id;
 }
 
+int lib_rtl_is_current_thread(lib_rtl_thread_t handle)  {
+  if ( handle )  {
+#ifdef USE_PTHREADS
+    return ::pthread_equal(pthread_self(),handle->handle) != 0 ? 1 : 0;
+#elif defined(_WIN32)
+    return handle->handle == ::GetCurrentThread() ? 1 : 0;
+#endif
+  }
+  lib_rtl_signal_message(LIB_RTL_DEFAULT, "lib_rtl_suspend_thread failed [Invalid Handle]");
+  return 0;
+}
+
 int lib_rtl_start_thread(lib_rtl_thread_routine_t start_routine, void* thread_arg, lib_rtl_thread_t* handle)  {
 #ifdef USE_PTHREADS
   typedef void* (*pthread_fun)(void*);

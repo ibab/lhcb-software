@@ -227,39 +227,42 @@ int MBM::Installer::install()  {
 }
 
 int MBM::Installer::deinstall()  {
-  ::lib_rtl_gbl_t handle;
+  ::lib_rtl_gbl_t handle = 0;
   ::lib_rtl_printf("++bm_init++ Commencing BM deinstallation \n");
   int status = ::lib_rtl_map_section(ctrl_mod, sizeof(CONTROL), &handle);
-  if( !::lib_rtl_is_success(status)) 
-    return 1;
-  if (p_force != 1)  {
+  if (::lib_rtl_is_success(status) && p_force != 1)  {
     m_bm->ctrl = (CONTROL*)handle->address;
     if( m_bm->ctrl->i_users > 0 )    {
       ::lib_rtl_printf("++bm_init++ Unable to de-install BM (%d users still active)\n", m_bm->ctrl->i_users);
       return MBM_ERROR;
     }
   }
-  status = ::lib_rtl_delete_section(handle);
+  if (::lib_rtl_is_success(status))
+    status = ::lib_rtl_delete_section(handle);
   if (!::lib_rtl_is_success(status))  {
     ::lib_rtl_printf("problem deleting section %s status %d\n",ctrl_mod,status);
   }
   status = ::lib_rtl_map_section(user_mod, sizeof(USER), &handle);
-  status = ::lib_rtl_delete_section(handle);
+  if (::lib_rtl_is_success(status))
+    status = ::lib_rtl_delete_section(handle);
   if (!::lib_rtl_is_success(status))  {
     ::lib_rtl_printf("problem deleting section %s status %d\n",user_mod,status);
   }
   status = ::lib_rtl_map_section(buff_mod, 1, &handle);
-  status = ::lib_rtl_delete_section(handle);
+  if (::lib_rtl_is_success(status))
+    status = ::lib_rtl_delete_section(handle);
   if (!::lib_rtl_is_success(status))  {
     ::lib_rtl_printf("problem deleting section %s status %d\n",buff_mod,status);
   }
   status = ::lib_rtl_map_section(event_mod, 1, &handle);
-  status = ::lib_rtl_delete_section(handle);
+  if (::lib_rtl_is_success(status))
+    status = ::lib_rtl_delete_section(handle);
   if (!::lib_rtl_is_success(status))  {
     ::lib_rtl_printf("problem deleting section %s status %d\n",event_mod,status);
   }
   status = ::lib_rtl_map_section(bitmap_mod, 1, &handle);
-  status = ::lib_rtl_delete_section(handle);
+  if (::lib_rtl_is_success(status))
+    status = ::lib_rtl_delete_section(handle);
   if (!::lib_rtl_is_success(status))  {
     ::lib_rtl_printf("problem deleting section %s status %d\n",bitmap_mod,status);
   }

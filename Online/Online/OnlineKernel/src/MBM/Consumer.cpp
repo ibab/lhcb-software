@@ -24,8 +24,8 @@ MBM::Consumer::~Consumer()
 void MBM::Consumer::setNonBlocking(int facility, bool subscribe) {
   Client::setNonBlocking(facility,false);
   if ( subscribe ) {
-    int status = wtc_subscribe(facility, eventRearm, eventAction, this);
-    if( status != WT_SUCCESS ) {
+    int sc = wtc_subscribe(facility, eventRearm, eventAction, this);
+    if( sc != WT_SUCCESS ) {
       throw std::runtime_error("Failed to subscribe action:"+m_buffName+" [Internal Error]");
     }
   }
@@ -84,7 +84,7 @@ int MBM::Consumer::eventRearm() {
   int sc = ::mbm_get_event_a(m_bmid,&e.data,&e.len,&e.type,e.mask,m_partID,eventAst,this);
   if( sc == MBM_NORMAL || sc == MBM_NO_EVENT ) {
     sc = (m_blocking) ? ::mbm_wait_event(m_bmid) : ::mbm_wait_event_a(m_bmid);
-    if( sc == MBM_NORMAL ) {
+    if( sc == MBM_NORMAL || sc == MBM_REQ_CANCEL ) {
       return sc;
     }
     throw std::runtime_error("Failed to rearm event action:"+m_buffName+" [Internal Error]");
@@ -98,8 +98,8 @@ void MBM::Consumer::addRequest(const Requirement& r)  {
 
 void MBM::Consumer::addRequest(int evtype, const unsigned int trmask[4], const unsigned int vetomask[4], int masktype, int usertype, int freqmode, float freq)  {
   if ( m_bmid != (BMID)-1 ) {
-    int status = ::mbm_add_req(m_bmid,evtype,trmask,vetomask,masktype,usertype,freqmode,freq);
-    if ( status == MBM_NORMAL )  {
+    int sc = ::mbm_add_req(m_bmid,evtype,trmask,vetomask,masktype,usertype,freqmode,freq);
+    if ( sc == MBM_NORMAL )  {
       return;
     }
     throw std::runtime_error("Failed to add request to MBM buffer:"+m_buffName+" [Internal Error]");
@@ -114,8 +114,8 @@ void MBM::Consumer::delRequest(const Requirement& r)  {
 void MBM::Consumer::delRequest(int evtype, const unsigned int trmask[4], const unsigned int vetomask[4], int masktype, int usertype)
 {
   if ( m_bmid != (BMID)-1 ) {
-    int status = ::mbm_del_req(m_bmid,evtype,trmask,vetomask,masktype,usertype);
-    if ( status == MBM_NORMAL )  {
+    int sc = ::mbm_del_req(m_bmid,evtype,trmask,vetomask,masktype,usertype);
+    if ( sc == MBM_NORMAL )  {
       return;
     }
     throw std::runtime_error("Failed to delete request to MBM buffer:"+m_buffName+" [Internal Error]");
@@ -126,9 +126,9 @@ void MBM::Consumer::delRequest(int evtype, const unsigned int trmask[4], const u
 int MBM::Consumer::getEventAsync() {
   if ( m_bmid != (BMID)-1 ) {
     EventDesc& e = m_event;
-    int status = ::mbm_get_event_a(m_bmid,&e.data,&e.len,&e.type,e.mask,m_partID,eventAst,this);
-    if ( status == MBM_NORMAL )  {
-      return MBM_NORMAL;
+    int sc = ::mbm_get_event_a(m_bmid,&e.data,&e.len,&e.type,e.mask,m_partID,eventAst,this);
+    if ( sc == MBM_NORMAL || sc == MBM_REQ_CANCEL )  {
+      return sc;
     }
     throw std::runtime_error("Failed to get event from MBM buffer:"+m_buffName+" [Internal Error]");
   }
@@ -138,9 +138,9 @@ int MBM::Consumer::getEventAsync() {
 int MBM::Consumer::getEvent() {
   if ( m_bmid != (BMID)-1 ) {
     EventDesc& e = m_event;
-    int status = ::mbm_get_event(m_bmid,&e.data,&e.len,&e.type,e.mask,m_partID);
-    if ( status == MBM_NORMAL || status == MBM_REQ_CANCEL )  {
-      return status;
+    int sc = ::mbm_get_event(m_bmid,&e.data,&e.len,&e.type,e.mask,m_partID);
+    if ( sc == MBM_NORMAL || sc == MBM_REQ_CANCEL )  {
+      return sc;
     }
     throw std::runtime_error("Failed to get event from MBM buffer:"+m_buffName+" [Internal Error]");
   }
@@ -149,8 +149,8 @@ int MBM::Consumer::getEvent() {
 
 int MBM::Consumer::freeEvent() {
   if ( m_bmid != (BMID)-1 ) {
-    int status = ::mbm_free_event(m_bmid);
-    if ( status == MBM_NORMAL )  {
+    int sc = ::mbm_free_event(m_bmid);
+    if ( sc == MBM_NORMAL || sc == MBM_NO_EVENT )  {
       return MBM_NORMAL;
     }
     throw std::runtime_error("Failed to free event from MBM buffer:"+m_buffName+" [Internal Error]");
@@ -161,9 +161,9 @@ int MBM::Consumer::freeEvent() {
 // Pause event requests
 int MBM::Consumer::pause()  {
   if ( m_bmid != (BMID)-1 ) {
-    int status = ::mbm_pause(m_bmid);
-    if ( status == MBM_NORMAL )  {
-      return MBM_NORMAL;
+    int sc = ::mbm_pause(m_bmid);
+    if ( sc == MBM_NORMAL )  {
+      return sc;
     }
     throw std::runtime_error("Failed to pause access to MBM buffer:"+m_buffName+" [Internal Error]");
   }

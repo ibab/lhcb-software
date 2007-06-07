@@ -15,7 +15,7 @@ EventDataSvc.EnableFaultHandler      = true;
 EventPersistencySvc.CnvServices      = {"LHCb::MBMCnvSvc/MBMCnvSvc", "LHCb::RawDataCnvSvc/RawDataCnvSvc"};
 // This serializes /Event/DAQ/RawEvent to MBM buffer
 MBMCnvSvc.DataType                   = 3;     // MDF_BANKS
-MBMCnvSvc.PartitionID                = @OnlineEnv.PartititonID;
+MBMCnvSvc.PartitionID                = @OnlineEnv.PartitionID;
 ApplicationMgr.OutStream             = { "Writer_0"};
 Writer_0.Output                      = "DATAFILE='mbm://OUT_14d' SVC='LHCb::MBMCnvSvc/MBMCnvSvc' OPT='REC'";
 Writer_0.ItemList         = {"/Event#1" };

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/NetworkDataReceiver.cpp,v 1.7 2007-06-04 08:32:23 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/NetworkDataReceiver.cpp,v 1.8 2007-06-07 15:52:01 frankm Exp $
 //  ====================================================================
 //  NetworkDataReceiver.cpp
 //  --------------------------------------------------------------------
@@ -203,7 +203,7 @@ NetworkDataReceiver::handleEventData(const std::string& src,void* buf,size_t len
       }
       return sc;
     }
-    error("Event receive entry from unknown source:"+src);
+    return error("Event receive entry from unknown source:"+src);
   }
   catch(std::exception& e)   {
     return errorException("Exception during event receive request:",e);
@@ -258,12 +258,6 @@ StatusCode NetworkDataReceiver::declareEventData(RecvEntry& entry)  {
   return rearmRequest(entry);
 }
 
-// Issue alarm message to error logger
-void NetworkDataReceiver::sendAlarm(const std::string& msg)  {
-  MsgStream error(msgSvc(), name());
-  error << MSG::ERROR << msg << endmsg;
-}
-
 // Callback on task dead notification
 StatusCode NetworkDataReceiver::taskDead(const std::string& task_name)  {
   MsgStream info(msgSvc(), name());
@@ -274,6 +268,6 @@ StatusCode NetworkDataReceiver::taskDead(const std::string& task_name)  {
       break;
     }
   }
-  sendAlarm("Event provider:"+task_name+" died.");
+  error("Event provider:"+task_name+" died.");
   return StatusCode::SUCCESS;
 }

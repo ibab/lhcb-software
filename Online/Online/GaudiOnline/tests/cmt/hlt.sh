@@ -19,11 +19,11 @@ export BIGTERM='xterm  -ls -132 -geometry 132x45 -title '
 export WIDETERM='xterm  -ls -132 -geometry 160x50 -title '
 #
 #
-$MINITERM MBMInit@${HOST} -e "export UTGID=MEPInit   ; $gaudi_exe -main=$OPTS/MEPInit.opts -opt=$OPTS/Daemon.opts " &
+$MINITERM MBMInit@${HOST} -e "export UTGID=MEPInit   ; $gaudi_exe -opts=$OPTS/MEPInit.opts -main=$OPTS/Main.opts " &
 #
 #
 # $MINITERM OutputBuffer@${HOST} -e "export=UTGID OutBuff; $test_exe mbm_install -s=8096 -e=64 -u=64 -f -i=OUTPUT" &
-$MINITERM OutputBuffer@${HOST} -e "export UTGID=OutBuff   ; $gaudi_exe -main=$OPTS/MBMinit.opts -opt=$OPTS/Daemon.opts " &
+$MINITERM OutputBuffer@${HOST} -e "export UTGID=OutBuff   ; $gaudi_exe -opts=$OPTS/MBMinit.opts -main=$OPTS/Main.opts " &
 #
 #
 ##$BIGTERM ErrorLogger@${HOST}    -e "export UTGID=ErrLog_0; $gaudi_exe -opts=$GAUDIUPIROOT/options/Errlog.opts" &
@@ -47,6 +47,7 @@ $MINITERM Moore_1@${HOST}   -e "export UTGID=Moore_1  ; $gaudi_exe -opt=$OPTS/Re
 $MINITERM Moore_2@${HOST}   -e "export UTGID=Moore_2  ; $gaudi_exe -opt=$OPTS/ReadMBM.opts -main=$OPTS/Main.opts "&
 # $MINITERM Moore_3@${HOST}   -e "export UTGID=Moore_3  ; $gaudi_exe -opt=$OPTS/ReadMBM.opts -main=$OPTS/Main.opts "&
 $MINITERM Sender@${HOST}    -e "export UTGID=Sender   ; $gaudi_exe -opt=$OPTS/MDFSender.opts -main=$OPTS/Main.opts "&
+$MINITERM Sender2@${HOST}    -e "export UTGID=Sender2   ; $gaudi_exe -opt=$OPTS/MDFSender.opts -main=$OPTS/Main.opts "&
 #
 $MINITERM Receiver@${HOST}  -e "export UTGID=Receiver ; $gaudi_exe -opt=$OPTS/MDFReceiver.opts -main=$OPTS/Main.opts "&
 $MINITERM DiskWR@${HOST}    -e "export UTGID=DiskWR   ; $gaudi_exe -opt=$OPTS/DiskWR.opts -main=$OPTS/Main.opts "&

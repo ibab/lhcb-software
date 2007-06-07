@@ -73,7 +73,6 @@ namespace DataTransfer  {
     void sendShutdown(netentry_t *e);
     NetErrorCode disconnect(netentry_t *e);
     NetErrorCode accept();
-    NetErrorCode close();
     NetErrorCode init();
     NetErrorCode handleMessage(netentry_t* e);
     NetErrorCode getData(netentry_t* e, void* data);
@@ -126,6 +125,7 @@ int NET::recvAction (void* param)    {
 }
 //----------------------------------------------------------------------------------
 NetErrorCode netentry_t::setSockopts()  {
+  static int cnt = 0;
   int on = 1;
   struct linger Linger;
   Linger.l_onoff = 1;
@@ -156,8 +156,7 @@ void netentry_t::terminate () {
     addr.sin_port = 0;
   }
   if ( chan )  {
-    setSockopts(); 
-    ::socket_close(chan);
+    close();
   }
 }
 //----------------------------------------------------------------------------------
@@ -165,6 +164,7 @@ NetErrorCode netentry_t::close()  {
   setSockopts();
   ::shutdown(chan,2);
   ::socket_close(chan);
+  chan = 0;
   return NET_SUCCESS;
 }
 //----------------------------------------------------------------------------------
@@ -245,7 +245,28 @@ NET::NET(const std::string& proc) : m_refCount(0), m_mgr(0), m_lockid(0)  {
 }
 //----------------------------------------------------------------------------------
 NET::~NET() {
-  close();
+  if ( m_me.chan )  {
+    m_mgr.remove(m_me.chan, false);
+  }
+  m_me.terminate();
+  for (std::map<unsigned int,netentry_t*>::iterator i=m_db.begin(); i!=m_db.end();++i)  {
+    netentry_t* e = (*i).second;
+    if ( e )    {
+      netheader_t h;
+      h.fill(m_me.name.c_str(),m_me.hash,0,0,NET_CONNCLOSED,0);
+      m_mgr.remove(e->chan, false);
+      e->setSendBuff(sizeof(h));
+      e->send(&h, sizeof(h), 0);
+      e->close();
+      delete e;
+    }
+  }
+  m_db.clear();
+  if (m_lockid)  {
+    lib_rtl_unlock(m_lockid);
+    lib_rtl_delete_lock(m_lockid);
+  }
+  m_lockid = 0;
 }
 //----------------------------------------------------------------------------------
 int NET::acceptAction (void* param)    {
@@ -308,8 +329,8 @@ NetErrorCode NET::accept()   {
     RTL::Lock lock(m_lockid);
     e->setSockopts();
     m_db[e->hash] = e.get();
-    ::printf("New connection: %s chan=%d addr=%s\n",
-      e->name.c_str(),e->chan,inet_ntoa(e->addr.sin_addr));
+    //::printf("New connection: %s chan=%d addr=%s\n",
+    //  e->name.c_str(),e->chan,inet_ntoa(e->addr.sin_addr));
     m_mgr.add(0,m_me.chan,acceptAction, this);
     m_mgr.add(1,e->chan,recvAction,e.get());
     e.release();
@@ -428,36 +449,12 @@ NetErrorCode NET::send(const void* buff, size_t size, const std::string& dest, i
   return status;
 }
 //----------------------------------------------------------------------------------
-NetErrorCode NET::close()   {
-  {
-    RTL::Lock lock(m_lockid);
-    m_me.terminate();
-    for (std::map<unsigned int,netentry_t*>::iterator i=m_db.begin(); i!=m_db.end();++i)  {
-      netentry_t* e = (*i).second;
-      if ( e )    {
-        netheader_t h;
-        h.fill(m_me.name.c_str(),m_me.hash,0,0,NET_CONNCLOSED,0);
-        m_mgr.remove(e->chan);
-        e->setSendBuff(sizeof(h));
-        e->send(&h, sizeof(h), 0);
-        e->close();
-        delete e;
-      }
-    }
-    m_db.clear();
-  }
-  if (m_lockid) lib_rtl_delete_lock(m_lockid);
-  m_lockid = 0;
-  return NET_SUCCESS;
-}
-//----------------------------------------------------------------------------------
 NetErrorCode NET::init()  {
   int status = ::lib_rtl_create_lock(0, &m_lockid);
   if ( !lib_rtl_is_success(status) )  {
     ::lib_rtl_signal_message(LIB_RTL_OS,"Error creating NET lock. Status %d",status);
     return NET_ERROR;
   }
-  printf("%s\n\n",m_me.name.c_str());
   status = ::tan_allocate_port_number(m_me.name.c_str(),&m_me.addr.sin_port);
   if ( status != TAN_SS_SUCCESS )  {
     ::lib_rtl_signal_message(LIB_RTL_OS,"Allocating port number. Status %d",status);
@@ -467,6 +464,7 @@ NetErrorCode NET::init()  {
   m_me.chan = ::socket(AF_INET, SOCK_STREAM, 0);
   if (m_me.chan == -1)   {
     errno = ::lib_rtl_get_error();
+    m_me.chan = 0;
     m_me.terminate();
     return NET_ERROR;
   }
@@ -503,6 +501,7 @@ NET* NET::instance(const std::string& proc)  {
     }
     n = conn.release();
   }
+  RTL::Lock lock(n->m_lockid);
   n->m_refCount++;
   return n;
 }
@@ -510,17 +509,28 @@ NET* NET::instance(const std::string& proc)  {
 unsigned int NET::release()  {
   NET*& n = inst();
   if ( n )  {
+    void* lock = n->m_mgr.lock();
+    ::lib_rtl_lock(n->m_lockid);
     unsigned int cnt = --n->m_refCount;
     if ( cnt == 0 )  {
+      __NetworkPort__  port = n->m_mgr.port();
+      IOPortManager mgr(port);
       delete n;
+      mgr.stop(lock);
+      mgr.unlock(lock);
+      mgr.join(lock);
       n = 0;
+      return cnt;
     }
+    ::lib_rtl_unlock(n->m_lockid);
+    n->m_mgr.unlock(lock);
     return cnt;
   }
   return 0;
 }
 //----------------------------------------------------------------------------------
 NetErrorCode NET::subscribe(void* param, unsigned int fac, net_handler_t data, net_handler_t death) {
+  RTL::Lock lock(m_lockid);
   for(Clients::iterator i=m_clients.begin(); i != m_clients.end(); ++i)  {
     if ( (*i).fac == fac && (*i).param == param ) {
       (*i).data = data;
@@ -537,6 +547,7 @@ NetErrorCode NET::subscribe(void* param, unsigned int fac, net_handler_t data, n
 }
 //----------------------------------------------------------------------------------
 NetErrorCode NET::unsubscribe(void* param, unsigned int fac) {
+  RTL::Lock lock(m_lockid);
   for(Clients::iterator i=m_clients.begin(); i != m_clients.end(); ++i)  {
     if ( (*i).fac == fac && (*i).param == param ) {
       m_clients.erase(i);

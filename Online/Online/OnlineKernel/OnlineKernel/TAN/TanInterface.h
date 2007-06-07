@@ -27,8 +27,6 @@ protected:
     //@Man: protected member data
     /// Name of the local host
     char        m_pcHostName[32];
-    /// Pointer to hostentry of the local host
-    hostent*    m_pLocalHost;
     /// UDP name service address
     sockaddr_in m_sinudp;
     /// TCP name service address

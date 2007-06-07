@@ -1,6 +1,19 @@
 Package: OnlineKernel
 Author:  Markus Frank
 
+! 2007-06-10 Markus Frank
+  - Fix bug in TAN, since linux does not preserve the data of the pointer of
+    gethostbyname when called again.
+  - Then mapping gloabl sections do not create them.
+  - Fix locking mechanism in DataTransfer.
+  - Fix locking in IOPortManager.
+  - Fix incomplete return code checking from MBM in Consumer and Producer.
+  - Add entry in rtl_threads to check if a thread handle is from the current thread.
+  - Add trylock method to rtl_locks and lib_rtl_try_event in rtl_events.
+    iret=0 System failure
+    iret=1 Got lock/event is set
+    iret=2 Cannot aquire lock/event is not set
+
 ! 2007-05-30 Markus Frank
   - Add OnlineKernel/NET/DataTransfer.cpp
     Implement simple data transfer protocol using TAN nameserver.

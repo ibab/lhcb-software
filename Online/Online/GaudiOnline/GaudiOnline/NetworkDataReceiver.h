@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/NetworkDataReceiver.h,v 1.4 2007-06-04 08:32:23 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/NetworkDataReceiver.h,v 1.5 2007-06-07 15:52:00 frankm Exp $
 //  ====================================================================
 //  NetworkDataReceiver.h
 //  --------------------------------------------------------------------
@@ -102,8 +102,6 @@ namespace LHCb  {
 
     /// WT callback for asynchronous request rearm
     static int rearm_net_request(unsigned int facility,void* param);
-    /// Issue alarm message to error logger
-    virtual void sendAlarm(const std::string& msg);
     /// Retrieve receiver entry by name
     RecvEntry* receiver(const std::string& nam);
     /// Rearm network request for a single event source

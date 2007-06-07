@@ -211,7 +211,20 @@ void NameService::run()  {
     handle();
   }
 }
-
+static void _printEntry(const char* msg, TanDataBase::Entry* ent) {
+  if ( msg ) {
+    if ( ent ) {
+      /*
+      ::lib_rtl_printf("%s> handle message: %s Name:%s Port=%d [%d] %p\n",
+		       RTL::nodeName().c_str(),msg,ent->_Name(),ent->port(),
+		       ntohs(ent->port()),(void*)ent);
+    }
+    else {
+      ::lib_rtl_printf("%s> handle message: %s [No entry]\n",RTL::nodeName().c_str(),msg);
+      */
+    }
+  }
+}
 // ----------------------------------------------------------------------------
 //                                      M.Frank
 // ----------------------------------------------------------------------------
@@ -224,37 +237,37 @@ void NameService::handleMessage( TanDataBase::Entry*& ent, TanMessage& rec_msg, 
   snd_msg.m_length = sizeof(snd_msg);
   switch ( func )  {
     case TanMessage::ALLOCATE:                                // Allocation service...
-      //::lib_rtl_printf("handle message: ALLOCATE\n");
       if ( (port = m_tandb.allocatePort(ent)) == 0 )
         snd_msg.m_error = m_tandb.Error();
+      _printEntry("ALLOCATE",ent);
       break;
     case TanMessage::DEALLOCATE:
-      //::lib_rtl_printf("handle message: DEALLOCATE\n");
+      _printEntry("DEALLOCATE",ent);
       if ( TAN_SS_SUCCESS != m_tandb.freePort(ent) ) 
         snd_msg.m_error = m_tandb.Error();
       break;
     case TanMessage::ALIAS:
-      //::lib_rtl_printf("handle message: ALIAS\n");
+      _printEntry("ALIAS",ent);
       if ( TAN_SS_SUCCESS != m_tandb.insertAlias(ent) )
         snd_msg.m_error = m_tandb.Error();
       break;
     case TanMessage::DEALIAS:
-      //::lib_rtl_printf("handle message: DEALIAS\n");
+      _printEntry("DEALIAS",ent);
       if ( TAN_SS_SUCCESS != m_tandb.removeAlias(ent) )
         snd_msg.m_error = m_tandb.Error();
       break;
     case TanMessage::DUMP:
-      //::lib_rtl_printf("handle message: DUMP\n");
+      _printEntry("DUMP",ent);
       m_tandb.Dump(std::cout);
       break;
     case TanMessage::INQUIRE:                                 // Inquire service...
-      //::lib_rtl_printf("handle message: INQUIRE\n");
+      _printEntry("INQUIRE",ent);
       if ( (port=m_tandb.findPort(rec_msg)) == 0 )  {
         snd_msg.m_error = m_tandb.Error();
       }
       break;
     default:
-      //::lib_rtl_printf("handle message: TAN_SS_UNKNOWNMODE\n");
+      _printEntry("TAN_SS_UNKNOWNMODE",0);
       snd_msg.m_error = TAN_SS_UNKNOWNMODE;
       break;
   }
@@ -430,10 +443,10 @@ int TcpNameService::handleReceiveRequest ( EventHandler* handler )  {
   int status = NAME_SERVER_SUCCESS, num_byte;
 
   num_byte = chan->recv( &ent->_Message(), sizeof(ent->_Message()));
-  if ( num_byte <= 1 )  {           // Socket closed by Client
-    m_tandb.Close ( ent );          // No need to return error
-    //status = chan->error();      // condition in this case!
-    chan->_unqueueIO (m_port);
+  if ( num_byte <= 1 )  {          // Socket closed by Client
+      m_tandb.Close ( ent );         // No need to return error
+      //status = chan->error();      // condition in this case!
+      chan->_unqueueIO (m_port);
   }
   else {
     TanMessage reply;
@@ -445,6 +458,7 @@ int TcpNameService::handleReceiveRequest ( EventHandler* handler )  {
       chan->_unqueueIO (m_port);
     }
     else  {
+      TanMessage& m = ent->_Message();
       switch ( ntohl(reply.function()) )    
       {
       case TanMessage::DEALLOCATE:
@@ -455,7 +469,7 @@ int TcpNameService::handleReceiveRequest ( EventHandler* handler )  {
         if ( ntohl(reply.error()) == TAN_SS_SUCCESS )  {  // Only way to exit 
           status = chan->queueReceive (m_port, hand);     // with success!
           if ( !lib_rtl_is_success(status) ) {
-            lib_rtl_printf("Error rearming receive: %s",chan->errMsg());
+            ::lib_rtl_printf("Error rearming receive: %s",chan->errMsg());
           }
           return status;
         }

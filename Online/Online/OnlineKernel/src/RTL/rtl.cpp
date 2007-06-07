@@ -414,7 +414,8 @@ size_t lib_rtl_printf(const char* format, ...)   {
   va_start( args, format );
   result = (s_rtl_printer != 0)
     ? (*s_rtl_printer)(s_rtl_printer_arg, format, args)
-    : vfprintf(stdout, format, args);
+    : ::vfprintf(stdout, format, args);
+  if ( !s_rtl_printer ) ::fflush(stdout);
   va_end(args);
   return result;
 }

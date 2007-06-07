@@ -167,6 +167,30 @@ int lib_rtl_wait_for_event(lib_rtl_event_t h)    {
   return 0;
 }
 
+int lib_rtl_try_event(lib_rtl_event_t h)    {
+  if ( h )  {
+#if defined(USE_PTHREADS)
+    int sc = ::i_sem_trywait(h->handle);
+    if ( sc == 0 ) return 1;
+    else if ( errno == EAGAIN ) return 2;
+    else
+#elif defined(_WIN32)
+    DWORD sc = ::WaitForSingleObject(h->handle,0,TRUE);
+    if ( sc == WAIT_OBJECT_0 ) return 1;
+    else if ( sc == WAIT_ABANDONED || sc == WAIT_TIMEOUT ) return 2;
+    else
+#endif
+    {
+      return lib_rtl_signal_message(LIB_RTL_OS,"Error locking semaphore [%s]: %08X",
+        h->name,h->handle);
+    }
+    h->held = 1;
+    return 1;
+  }
+  ::lib_rtl_signal_message(LIB_RTL_DEFAULT,"Error in locking semaphore [INVALID MUTEX].");
+  return 0;
+}
+
 int lib_rtl_timedwait_for_event(lib_rtl_event_t h, int milliseconds)    {
   if ( h )  {
 #if defined(USE_PTHREADS)

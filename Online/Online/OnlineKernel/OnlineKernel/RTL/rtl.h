@@ -59,6 +59,19 @@ extern "C" {
     LIB_RTL_INFINITE = 0
   };
 
+  /**RTL: Online runtime library wrapper for OS specific functions.
+    *
+    *   All RTL routines return 1 if successful and
+    *   0 if an OS specific error occurred.
+    *   The error code can be examined using the fucntion:
+    *   lib_rtl_get_error() or lib_rtl_socket_error() in the
+    *   event the error occurred on calling a function
+    *   from the socket library.
+    *
+    *    @author M.Frank
+    *
+    */
+
   /// Access to error code
   int lib_rtl_get_error();
   /// Access to error code from socket library
@@ -90,7 +103,11 @@ extern "C" {
 
   /// Thread execution call signature
   typedef int (*lib_rtl_thread_routine_t)(void*);
+  /// Access the thread identifier of the current thread
   void* lib_rtl_thread_id();
+  /// Check if the thread identified by the handle is the current thread
+  int lib_rtl_is_current_thread(lib_rtl_thread_t handle);
+
   /// Start new thread.
   int lib_rtl_start_thread(lib_rtl_thread_routine_t exec, void* thread_arg, lib_rtl_thread_t* handle);
   /// Stop and kill executing thread
@@ -108,6 +125,8 @@ extern "C" {
   int lib_rtl_cancel_lock (lib_rtl_lock_t lock_handle);
   /// Aquire lock
   int lib_rtl_lock        (lib_rtl_lock_t lock_handle);
+  /// Try to aquire lock; returns immediately with return code 2 if unsuccessful.
+  int lib_rtl_trylock     (lib_rtl_lock_t lock_handle);
   /// Release lock
   int lib_rtl_unlock      (lib_rtl_lock_t lock_handle);
   /// Access lock count (linux only)
@@ -131,6 +150,8 @@ extern "C" {
   int lib_rtl_timedwait_for_event(lib_rtl_event_t event_flag, int milliseconds);
   /// Wait asynchronously for an event flag
   int lib_rtl_wait_for_event_a(lib_rtl_event_t flag, lib_rtl_thread_routine_t action, void* param);
+  /// Try to get event flag if set; returns immediately with return code 2 if event is not set.
+  int lib_rtl_try_event       (lib_rtl_lock_t lock_handle);
 
   /// Create named global section
   int lib_rtl_create_section(__CXX_CONST char* sec_name, size_t size, lib_rtl_gbl_t* handle);
