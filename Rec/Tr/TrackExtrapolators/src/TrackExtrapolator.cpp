@@ -51,6 +51,17 @@ StatusCode TrackExtrapolator::propagate( TrackVector& stateVec,
   return sc;
 }
 
+
+
+//=============================================================================
+// Propagate a state vector from zOld to zNew
+//=============================================================================
+StatusCode TrackExtrapolator::propagate(LHCb::StateVector& state, double z, Gaudi::TrackMatrix* transportmatrix,
+					LHCb::ParticleID pid) 
+{
+  return propagate(state.parameters(),state.z(),z,transportmatrix,pid) ;
+}
+
 //=============================================================================
 // Propagate a track to a given z-position
 //=============================================================================
@@ -171,6 +182,7 @@ StatusCode TrackExtrapolator::propagate( State& state,
   
   return sc;
 }
+
 
 //--------------------------------------------------------------------------
 //  ACCESS METHODS

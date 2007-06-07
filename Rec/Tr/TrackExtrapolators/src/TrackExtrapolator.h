@@ -12,6 +12,8 @@
 // from TrackEvent
 #include "Event/Track.h"
 #include "Event/State.h"
+#include "Event/StateVector.h"
+
 
 /** @class TrackExtrapolator TrackExtrapolator.h
  *  
@@ -52,6 +54,10 @@ public:
   virtual StatusCode propagate( LHCb::State& state,
                                 double z,
                                 LHCb::ParticleID pid = LHCb::ParticleID(211) );
+
+  /// Propagate a statevector to a given z-position
+  virtual StatusCode propagate(LHCb::StateVector& state, double z, Gaudi::TrackMatrix* transportmatrix,
+			       LHCb::ParticleID pid ) ;
 
   /// Propagate a track to the closest point to the specified point
   virtual StatusCode propagate( const LHCb::Track& track,
