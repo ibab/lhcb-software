@@ -4,7 +4,8 @@
 ! Package manager: Stefan Roiser
 !-----------------------------------------------------------------------------
 
-!2007-06-07 - Pere Mato
+!======================== GaudiObjDesc v10r0 2007-06-07 ======================
+! 2007-06-07 - Pere Mato
  - added new two patterns to generate the headers and dictionaries. 
    god_headers: generates the header files using the existing document
    god_dictionary: generates the dictionary header file and selection file and calls the
@@ -23,7 +24,7 @@
 		+end_private
 
 		 # Produce Header-Files from XML description
-		 #============================================================================
+		 #===========================================================================
 		-document obj2doth TrackEventObj2Doth ../xml/*.xml
 		+apply_pattern god_headers files=../xml/*.xml
 		 apply_pattern install_more_includes more=Event
@@ -43,8 +44,7 @@
 		-private
 		-use GaudiObjDesc v* -no_auto_imports
 
-
-!2007-06-01 Stefan
+! 2007-06-01 Stefan Roiser
 - fix 'static' handling for method generation
 
 !=========================== GaudiObjDesc v9r9 =============================
