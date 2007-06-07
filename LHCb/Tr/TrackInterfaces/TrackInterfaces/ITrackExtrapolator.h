@@ -1,4 +1,4 @@
-// $Id: ITrackExtrapolator.h,v 1.14 2007-05-03 11:51:51 ebos Exp $
+// $Id: ITrackExtrapolator.h,v 1.15 2007-06-07 08:53:15 wouter Exp $
 #ifndef TRACKINTERFACES_ITRACKEXTRAPOLATOR_H
 #define TRACKINTERFACES_ITRACKEXTRAPOLATOR_H 1
 
@@ -23,6 +23,7 @@
 namespace LHCb {
  class Track;
  class State;
+ class StateVector ;
 };
 
 static const InterfaceID IID_ITrackExtrapolator( "ITrackExtrapolator" , 2, 0 );
@@ -63,6 +64,10 @@ public:
                                 Gaudi::TrackMatrix* transMat,
                                 LHCb::ParticleID pid = LHCb::ParticleID(211) ) = 0;
 
+  /// Propagate a statevector
+  virtual StatusCode propagate(LHCb::StateVector& state, double z, Gaudi::TrackMatrix* transportmatrix=0,
+			       LHCb::ParticleID pid = LHCb::ParticleID(211) ) = 0;
+
   /// Propagate a track to a given z-position
   virtual StatusCode propagate( const LHCb::Track& track,
                                 double z,
@@ -95,6 +100,7 @@ public:
                                 Gaudi::Plane3D& plane,
                                 double tolerance = 0.01,
                                 LHCb::ParticleID pid = LHCb::ParticleID(211) ) = 0;
+
   
   //--------- ACCESS METHODS ---------------------------------------
 
@@ -167,6 +173,6 @@ public:
 
   /// Getters & setters
   virtual const Gaudi::TrackMatrix& transportMatrix() const = 0;
-
+  
 };
 #endif // TRACKINTERFACES_ITRACKEXTRAPOLATOR_H
