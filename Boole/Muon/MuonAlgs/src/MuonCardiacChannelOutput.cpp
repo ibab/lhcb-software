@@ -123,7 +123,9 @@ void MuonCardiacChannelOutput::calculateTileID(int & numberTileOutput,
       // FE ch address in the whole quadrant
         //
       LHCb::MuonTileID chaTile;
-      muonDetector-> Chamber2Tile(chamber, station,region,chaTile)   ;
+      StatusCode sc=
+        muonDetector-> Chamber2Tile(chamber, station,region,chaTile)   ;
+      if(sc.isFailure()&&debug)std::cout<<" non identified the tile "<<endreq;
       
       idXGlobal=newidX+chaTile.nX()*numberOfPCX;
       idYGlobal=newidY+chaTile.nY()*numberOfPCY;

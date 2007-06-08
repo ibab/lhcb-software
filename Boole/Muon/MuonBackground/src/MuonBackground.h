@@ -1,4 +1,4 @@
-// $Id: MuonBackground.h,v 1.13 2007-03-05 18:28:45 cattanem Exp $
+// $Id: MuonBackground.h,v 1.14 2007-06-08 15:35:41 asatta Exp $
 #ifndef MUONBACKGROUND_H 
 #define MUONBACKGROUND_H 1
 
@@ -148,8 +148,6 @@ entryGlobal,Gaudi::XYZPoint& exitGlobal,
   IHistogram1D * m_pointer1D[20];
   IHistogram2D * m_pointer2D[20];
   Rndm::Numbers* m_flatDistribution;
-  //  SmartDataPtr<DeMuonDetector> m_muonDetector (m_DDS,
-  //                                        "/dd/Structure/LHCb/Muon");
   
   DeMuonDetector* m_muonDetector;
   

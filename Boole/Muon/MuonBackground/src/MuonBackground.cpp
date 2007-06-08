@@ -1,4 +1,4 @@
-// $Id: MuonBackground.cpp,v 1.38 2007-03-05 18:28:45 cattanem Exp $
+// $Id: MuonBackground.cpp,v 1.39 2007-06-08 15:35:41 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -84,7 +84,7 @@ MuonBackground::~MuonBackground() {
 StatusCode MuonBackground::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by  GaudiAlgorithm	
-  m_muonDetector=getDet<DeMuonDetector>("/dd/Structure/LHCb/DownstreamRegion/Muon");
+  m_muonDetector=getDet<DeMuonDetector>(DeMuonLocation::Default);
   
 
   //MsgStream msg(msgSvc(), name());
@@ -125,8 +125,9 @@ StatusCode MuonBackground::initialize() {
 //  sc=toolSvc()->retrieveTool("MuonGetInfoTool",m_pGetInfo);
 //  if(sc.isFailure())return StatusCode::FAILURE;
   m_partition=basegeometry.getPartitions();
-  initializeGeometry();
- 
+  sc=initializeGeometry();
+  if(sc.isFailure())return sc;
+  
  
   m_correlation.resize(m_maxDimension);
   m_radial.resize(m_maxDimension);
@@ -137,7 +138,8 @@ StatusCode MuonBackground::initialize() {
   m_lintimevsradial.resize(m_maxDimension);
   m_hitgap.resize(m_maxDimension);
  
-  initializeParametrization();
+  sc=initializeParametrization();
+  if(sc.isFailure())return sc;
   m_flatDistribution =new Rndm::Numbers; 
   m_flatDistribution->initialize(randSvc(), Rndm::Flat(0.0,1.0));
   debug()<<" type input "<<m_typeOfBackground<<endreq;
@@ -263,7 +265,7 @@ StatusCode MuonBackground::execute() {
             }            
             
             for(int hitID=0;hitID< hitToAdd;hitID++){            
-              createHit(hitsContainer, station,multi,ispill);            
+              StatusCode asc=createHit(hitsContainer, station,multi,ispill);                  if(asc.isFailure())debug()<<"failing hit creation "<<endreq;      
             }
             if( m_histos ) {
               m_pointer1D[index]->fill(startingHits+0.00001,1.0);
@@ -296,7 +298,8 @@ StatusCode MuonBackground::execute() {
               " for multiplicity "<<multi<<" and spill"
                    <<fspill<<endreq;
             for(int hitID=0;hitID< hitToAdd;hitID++){            
-              createHit(hitsContainer, station,multi,fspill);            
+              StatusCode asc=createHit(hitsContainer, station,multi,fspill);   
+              if(asc.isFailure())debug()<<"failing hit creation "<<endreq;         
             }         
           }          
         }        
@@ -424,9 +427,11 @@ StatusCode MuonBackground::initializeParametrization()
               std::vector<Rndm::Numbers*>  distributions;
               double xmin,xmax;
               std::vector<bool>   pointerToFlags;
-              initializeRNDDistribution1D(histo1d,
+              StatusCode asc=initializeRNDDistribution1D(histo1d,
                                           distributions ,pointerToFlags,xmin, 
                                           xmax);
+              if(asc.isFailure())return asc;
+              
               MuBgDistribution* mubg = new MuBgDistribution( distributions,
                                                              pointerToFlags,
                                                              float(xmin),
@@ -462,9 +467,11 @@ StatusCode MuonBackground::initializeParametrization()
               double xmin,xmax,ymin,ymax;
               int nbinx;              
               std::vector<bool>   pointerToFlags;
-              initializeRNDDistribution2D(histo2d,
+              StatusCode asc=initializeRNDDistribution2D(histo2d,
                                          distributions ,pointerToFlags,xmin, 
                                           xmax, nbinx ,ymin, ymax);
+              if(asc.isFailure())return asc;
+              
               MuBgDistribution* mubg=new
                 MuBgDistribution(distributions,pointerToFlags,
                                  float(xmin), float(xmax), nbinx,
@@ -709,7 +716,9 @@ MuonBackground::initializeRNDDistribution1D(IHistogram1D*
   }
   else{
     pointerToFlags.push_back(true);
-    pdf->initialize(randSvc(), Rndm::DefinedPdf(content,0));            
+    StatusCode sc=pdf->initialize(randSvc(), Rndm::DefinedPdf(content,0));   
+    if(sc.isFailure())return sc;
+    
     //info()<<"extract two numbers "<<(*pdf)()<<" "<< (*pdf)()<<endreq;
     
   }  
@@ -743,8 +752,9 @@ MuonBackground::initializeRNDDistribution2D(IHistogram2D* histoPointer,
     if(entries<=0) {
       debug()<<" zero entries"<<endmsg;
     }
-    initializeRNDDistribution1D(ySlice,distributions , 
+    StatusCode sc=initializeRNDDistribution1D(ySlice,distributions , 
                                 pointerToFlags,ymin, ymax);
+    if(sc.isFailure())return sc;    
     histoSvc()->unregisterObject( ySlice );
     delete ySlice;
   }  

@@ -1,4 +1,4 @@
-// $Id: MuBgDistribution.cpp,v 1.4 2005-02-07 14:55:19 cattanem Exp $
+// $Id: MuBgDistribution.cpp,v 1.5 2007-06-08 15:35:40 asatta Exp $
 // Include files 
 #include <iostream>  
 
@@ -93,8 +93,9 @@ MuBgDistribution::~MuBgDistribution()
     
     Rndm::Numbers* pippo=m_pointerToDistributions.back();
     //cout<<" rnd "<< (*pippo)()<<endl;
-    pippo->finalize();
-    delete pippo;   
+    StatusCode sc=pippo->finalize();
+	if(sc.isFailure()){}
+    else {delete pippo; }  
     //cout<<" size dopo "<< m_pointerToDistributions.size()<<endl;
  
         m_pointerToDistributions.pop_back();

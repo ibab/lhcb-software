@@ -30,7 +30,7 @@ void MuonDetectorResponse::initialize(IToolSvc* toolSvc,IRndmGenSvc * randSvc,
                                       IDataProviderSvc* detSvc, 
                                       IMessageSvc * msgSvc){  
   	MsgStream log(msgSvc, "MuonDetectorResponse"); 
-  SmartDataPtr<DeMuonDetector>  mudd(detSvc,"/dd/Structure/LHCb/DownstreamRegion/Muon");
+  SmartDataPtr<DeMuonDetector>  mudd(detSvc,DeMuonLocation::Default);
   m_muonDetector=mudd;
   
   
@@ -83,7 +83,8 @@ void MuonDetectorResponse::initialize(IToolSvc* toolSvc,IRndmGenSvc * randSvc,
     double meanOfNoisePerChamber=newMean*totalArea*25*1.0E-9;
     log<<MSG::DEBUG<<"region name "<<regionName[indexRegion]
        <<" noise level "<<meanOfNoisePerChamber<<endreq;			
-    poissonDist->initialize( randSvc, Rndm::Poisson(meanOfNoisePerChamber));  
+    StatusCode sc=poissonDist->initialize( randSvc, Rndm::Poisson(meanOfNoisePerChamber));  
+    if(sc.isFailure())log<<MSG::DEBUG<<" not able to ini poisson dist "<<endreq;
     m_poissonDist.push_back(poissonDist);
     
     MuonChamberResponse* responseOfChamber= new 
@@ -101,7 +102,9 @@ void MuonDetectorResponse::initialize(IToolSvc* toolSvc,IRndmGenSvc * randSvc,
       log<<MSG::VERBOSE<<" time jitter "<<min<<" "<<max<<endreq;
       
       Rndm::Numbers*	m_time=new Rndm::Numbers;
-      m_time->initialize(randSvc, Rndm::DefinedPdf(timeJitterPDF,0));
+      StatusCode sc=m_time->initialize(randSvc, Rndm::DefinedPdf(timeJitterPDF,0));
+      if(sc.isFailure())log<<MSG::DEBUG<<" not able to ini time jitter "<<endreq;
+
       m_timeJitter.push_back(m_time);
       std::vector<double>::iterator itPDF;
       for (itPDF=timeJitterPDF.begin();itPDF<timeJitterPDF.end();itPDF++){		
@@ -112,8 +115,10 @@ void MuonDetectorResponse::initialize(IToolSvc* toolSvc,IRndmGenSvc * randSvc,
         m_muonDetector->getPhChannelNX( readout,station, region)*
         m_muonDetector->getPhChannelNY( readout,station, region)*25*1.0E-9;
 log<<MSG::VERBOSE<<"noisecounts "<<noiseCounts<<endreq;
-      p_electronicNoise->initialize( randSvc, Rndm::Poisson(noiseCounts));	
+      sc=p_electronicNoise->initialize( randSvc, Rndm::Poisson(noiseCounts));	
       m_electronicNoise.push_back(p_electronicNoise);	
+      if(sc.isFailure())log<<MSG::DEBUG<<" not able to ini ele noise dist "<<endreq;
+
       MuonPhysicalChannelResponse* response= new
         MuonPhysicalChannelResponse(&m_flatDist,&m_gaussDist,
                                     m_time,p_electronicNoise,min,max,

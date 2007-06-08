@@ -5,7 +5,10 @@
 !               low energy components, flatspillover
 !-----------------------------------------------------------------------------
 
-!====================== MuonBackground v2r3 2007-03-01 =====================
+!====================== MuonBackground v2r3 2007-06-08 =====================
+! 2007-06-08 - Alessia Satta
+ - Add several checks of StatusCode and acces the DeMuonDetector location via a variable 
+
 ! 2007-03-01 - Marco Cattaneo
  - Remove obsolete MuonBackground_load.cpp file and LHCbDefinitions includes
 

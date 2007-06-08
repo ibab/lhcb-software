@@ -4,7 +4,10 @@
 ! Purpose     : Muon digitisation algorithms
 !-----------------------------------------------------------------------------
 
-!======================== MuonAlgs v6r4 2007-06-05 =========================
+!======================== MuonAlgs v6r4 2007-06-08 =========================
+! 2007-06-05 - Alessia Satta
+ - add check of sereval StatusCode + access via a variale the DeMuonDetector Location
+
 ! 2007-06-05 - Marco Cattaneo
  - Adapat to new rootInTES convention of Gaudi v19r4
 

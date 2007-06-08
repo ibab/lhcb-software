@@ -1,4 +1,4 @@
-//$Id: MuonDigitization.cpp,v 1.34 2007-06-06 15:05:22 cattanem Exp $
+//$Id: MuonDigitization.cpp,v 1.35 2007-06-08 15:37:05 asatta Exp $
 
 #include <iostream>
 #include <algorithm>
@@ -116,7 +116,7 @@ StatusCode MuonDigitization::initialize()
   m_flatDist.initialize( randSvc(), Rndm::Flat(0.0,1.0));	 
   debug()<<"due "<<endreq; 
   detectorResponse.initialize( toolSvc(),randSvc(), detSvc(), msgSvc());
-debug()<<" detectorResponseInitialized "<<endreq;
+  debug()<<" detectorResponseInitialized "<<endreq;
   m_spill=6;
   m_container=4;
   unsigned int count=1;
@@ -126,7 +126,7 @@ debug()<<" detectorResponseInitialized "<<endreq;
   debug()<<"tre "<<endreq;
   m_timeBin=m_BXTime/(count);  
   debug()<<" fine "<<endreq;
-  m_muonDetector=getDet<DeMuonDetector>("/dd/Structure/LHCb/DownstreamRegion/Muon");
+  m_muonDetector=getDet<DeMuonDetector>(DeMuonLocation::Default);
   return StatusCode::SUCCESS;
 }
  
@@ -256,6 +256,7 @@ MsgStream log(msgSvc(), name());
     CardiacChannelOutput("MUCC",&log,eventSvc(),"MUCC") ;
   //debug()<<"pappa hk "<<endreq; 
 	sc=fillCardiacChannel(PhysicalChannelOutput,CardiacChannelOutput);
+	if(sc.isFailure())return StatusCode::FAILURE;	 	
   LHCb::MCMuonDigits* mcDigitContainer= new LHCb::MCMuonDigits;
   //bool test=true;
   // debug()<<"pappa rrr"<<endreq; 
@@ -579,7 +580,8 @@ MuonDigitization::createInput(
       MuonPhyChannelInput* phChPointer = 
         new MuonPhyChannelInput((iterPost)->phChID()->getID(),
                                 *((iterPost)->getHitTraceBack())) ;	
-      PhyChaInput.addMuonObject(iterRegion,phChPointer);		 	 
+      StatusCode asc=PhyChaInput.addMuonObject(iterRegion,phChPointer);
+      if(asc.isFailure())debug()<<" not able to add requested obj "<<endreq;
       keepTemporary[iterRegion].pop_back(); 	
     } 	  
   }
@@ -642,7 +644,8 @@ elaborateMuonPhyChannelInputs(
           
           outputPointer->hitsTraceBack().push_back(*pointerToHitTraceBack) ;
           prevFE=lastFE;
-          PhysicalChannel.addMuonObject(i,outputPointer);
+          StatusCode asc=PhysicalChannel.addMuonObject(i,outputPointer);
+          if(asc.isFailure())debug()<<"error in adding obj "<<endreq;        
         }			
       }						
     }
@@ -844,7 +847,9 @@ fillPhysicalChannel(MuonDigitizationData<MuonPhysicalChannel>&
         }
         // if(fired||interestingHit){  
         objToAdd->fillTimeList();
-        PhysicalChannelOutput.addMuonObject(i,objToAdd);
+        StatusCode asc=PhysicalChannelOutput.addMuonObject(i,objToAdd);
+        if(asc.isFailure())debug()<<" problem in adding obj "<<endreq;
+        
         //}
         //else {
         //  delete 	objToAdd;
@@ -901,7 +906,9 @@ fillCardiacChannel(MuonDigitizationData<MuonPhysicalChannelOutput>&
           MuonCardiacChannelOutput* objToAdd=new 
             MuonCardiacChannelOutput(cardiacChTileID);
           objToAdd->addPhyChannel(jout);
-          CardiacChannelOutput.addMuonObject(i,objToAdd);
+          StatusCode asc=CardiacChannelOutput.addMuonObject(i,objToAdd);
+          if(asc.isFailure())debug()<<"unable to add chardiac channel "<<endreq;
+          
         }
         
       }
@@ -1017,7 +1024,9 @@ applyPhysicalEffects(MuonDigitizationData<MuonPhysicalChannel>&
           //						 if(i==0)cout<<" giammai already found "<<endl;
         }
         else{
-          PhysicalChannel.addMuonObject(i,*iterOnSTD);
+          StatusCode asc=PhysicalChannel.addMuonObject(i,*iterOnSTD);
+          if(asc.isFailure())debug()<<" not able to add xt "<<endreq;
+          
           //						 if(i==0)cout<<" real new  "<<endl;
           std::vector<MuonHitTraceBack>::iterator hji ;
           if(i==0){
@@ -1553,8 +1562,10 @@ addElectronicNoise(MuonDigitizationData
                   newPhysicalChannel->setResponse
                     (detectorResponse.getResponse
                      (*(newPhysicalChannel->phChID())));
-                  PhysicalChannel.addMuonObject(partitionNumber,
-                                                newPhysicalChannel);	
+                  StatusCode asc=PhysicalChannel.addMuonObject(partitionNumber,
+                                                newPhysicalChannel);
+                  if(asc.isFailure())debug()<<" unable to add hit "<<endreq;
+                  
                 }
               }	 
             }	 
