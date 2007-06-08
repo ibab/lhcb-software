@@ -2,6 +2,10 @@ Package         : OTDAQ
 Package manager : J. Nardulli
 !---------------------------------------------------------------------
 
+!======================= OTDAQ v5r3 2007-06-07 ======================
+! 2007-06-07 - Marco Cattaneo
+ - Adapt requirements to new GaudiObjDesc v10r0 patterns
+
 !======================= OTDAQ v5r2 2007-04-10 ======================
 ! 2007-04-08 - Jan Amoraal
  - Fix unchecked status codes
