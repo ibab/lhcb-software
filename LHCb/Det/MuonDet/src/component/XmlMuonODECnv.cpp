@@ -1,4 +1,4 @@
-// $Id: XmlMuonODECnv.cpp,v 1.5 2006-12-14 13:27:07 ranjard Exp $
+// $Id: XmlMuonODECnv.cpp,v 1.6 2007-06-08 15:34:00 asatta Exp $
 // Include files 
 
 #include <vector>
@@ -158,12 +158,14 @@ XmlMuonODECnv::i_fillSpecificObj(xercesc::DOMElement* childElement,
     std::string tsQuadrantListString =
       dom2Std (childElement->getAttribute (TSQuadrantListString));
     std::vector<long> tsQuadrantValue;
-    splitList(tsQuadrantListString,tsQuadrantValue);
-
-    dataObj->update(tsLayoutXValue,tsLayoutYValue,tsNumberValue, 
+    StatusCode sc=splitList(tsQuadrantListString,tsQuadrantValue);
+    if(sc.isFailure())return sc;
+    sc=dataObj->update(tsLayoutXValue,tsLayoutYValue,tsNumberValue, 
                     tsGridXValue, tsGridYValue,
                     tsQuadrantValue);
-	dataObj->setQuadrants();
+    if(sc.isFailure())return sc;
+
+    dataObj->setQuadrants();
     
     xercesc::DOMNodeList* nodeChildren = childElement->getChildNodes();
     unsigned int i;
@@ -177,8 +179,9 @@ XmlMuonODECnv::i_fillSpecificObj(xercesc::DOMElement* childElement,
         std::string  TSReference = dom2Std (TSNode->getNodeValue());  
         unsigned int poundPosition = TSReference.find_last_of('#');
         std::string entryName = "/" + TSReference.substr(poundPosition + 1);
-        dataObj->addTSName(TSReference.substr(poundPosition + 1));    
-        
+        sc=dataObj->addTSName(TSReference.substr(poundPosition + 1));    
+        if(sc.isFailure())return sc;
+
       }      
     }    
   }

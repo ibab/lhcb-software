@@ -1,17 +1,19 @@
-// $Id: DeMuonDetector.h,v 1.20 2007-03-19 08:53:51 cattanem Exp $
+// $Id: DeMuonDetector.h,v 1.21 2007-06-08 15:34:00 asatta Exp $
 // ============================================================================
 #ifndef MUONDET_DEMUONDETECTOR_H
 #define MUONDET_DEMUONDETECTOR_H 1
 
 //Det Desc
 #include "DetDesc/DetectorElement.h"
-#include "DetDesc/SolidBox.h"   // Not needed here but used by many algorithms
+#include "DetDesc/SolidBox.h"
+// Not needed here but used by many algorithms
 
 //Gaudi
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "Kernel/Packer.h"
 
 //Muon Detector
+//#include "MuonDet/DeMuonChamber.h"
 #include "MuonDet/MuonChamberLayout.h"
 #include "MuonDet/MuonFrontEndID.h"
 
@@ -21,7 +23,7 @@
 #include "MuonDet/MuonODEBoard.h"
 #include "MuonDet/MuonTSMap.h"
 
-
+#include "MuonDet/MuonNamespace.h"
 /** @class DeMuonDetector DeMuonDetector.h MuonDet/DeMuonDetector.h
  *  
  *  Detector element class for the muon system
@@ -38,6 +40,8 @@
 #define nFE 2
 #define nLogMap 2
 static const CLID CLID_DEMuonDetector = 11009;  
+
+
 
 class DeMuonDetector: public DetectorElement {
 

@@ -1,4 +1,4 @@
-// $Id: MuonBasicGeometry.cpp,v 1.6 2006-05-09 14:21:32 cattanem Exp $
+// $Id: MuonBasicGeometry.cpp,v 1.7 2007-06-08 15:34:00 asatta Exp $
 
 // Include files
 #include "GaudiKernel/IDataProviderSvc.h"
@@ -10,6 +10,7 @@
 
 // local
 #include "MuonDet/MuonBasicGeometry.h"
+#include "MuonDet/MuonNamespace.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : MuonBasicGeometry
@@ -23,10 +24,9 @@
 MuonBasicGeometry::MuonBasicGeometry(IDataProviderSvc* detSvc ,
                                      IMessageSvc * msgSvc ) {
   MsgStream log(msgSvc, "MuonBasicGeometry");
-  std::string muonRootLocation="/dd/Structure/LHCb/DownstreamRegion/Muon";
   //log << MSG::INFO << "%%% " << "muon geom" << endreq;
   
-  SmartDataPtr<DetectorElement> muonSystem(detSvc,muonRootLocation); 
+  SmartDataPtr<DetectorElement> muonSystem(detSvc,DeMuonLocation::Default); 
   // log << MSG::INFO << "%%% " << muonSystem->name() << endreq;
   m_stationNumber=0; 
   m_regionNumber=4;   
@@ -48,7 +48,7 @@ MuonBasicGeometry::MuonBasicGeometry(IDataProviderSvc* detSvc ,
        <<(*itStation)->name() <<endreq;      
   }
   //log << MSG::INFO << "+ " << muStation->name() << endreq;
-  std::string stationName=findName(muStation->name(),muonRootLocation); 
+  std::string stationName=findName(muStation->name(),DeMuonLocation::Default); 
   //log << MSG::INFO << "+++ " << stationName << endreq;
    
   m_stationNumber=m_stationNumber+1;

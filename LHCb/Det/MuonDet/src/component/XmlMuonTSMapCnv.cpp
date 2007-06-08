@@ -1,4 +1,4 @@
-// $Id: XmlMuonTSMapCnv.cpp,v 1.4 2006-12-14 13:27:07 ranjard Exp $
+// $Id: XmlMuonTSMapCnv.cpp,v 1.5 2007-06-08 15:34:00 asatta Exp $
 // Include files 
 
 #include <vector>
@@ -139,7 +139,8 @@ XmlMuonTSMapCnv::i_fillSpecificObj(xercesc::DOMElement* childElement,
        tsgx[i]=gridXValue[i];
        tsgy[i]=gridYValue[i];       
      }
-     dataObj->initialize(LogLayoutNumberValue,tsgx,tsgy);
+     StatusCode sc=dataObj->initialize(LogLayoutNumberValue,tsgx,tsgy);
+     if(sc.isFailure())return sc;
      std::string outputSignalString =
        dom2Std (childElement->getAttribute (OutputSignalString));
      long outputSignalValue=atol(outputSignalString.c_str());
@@ -155,8 +156,9 @@ XmlMuonTSMapCnv::i_fillSpecificObj(xercesc::DOMElement* childElement,
        dom2Std (childElement->getAttribute (OutputGridYSeqString));
      std::vector<long> outputGridYSeq;
      splitList(outputGridYSeqString,outputGridYSeq);
-     dataObj->update(outputSignalValue,outputLayoutSeq,
+     sc=dataObj->update(outputSignalValue,outputLayoutSeq,
             outputGridXSeq,outputGridYSeq);
+     if(sc.isFailure())return sc;
 
   }
   return StatusCode::SUCCESS;  

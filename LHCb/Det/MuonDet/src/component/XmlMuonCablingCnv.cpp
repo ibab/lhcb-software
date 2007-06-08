@@ -1,4 +1,4 @@
-// $Id: XmlMuonCablingCnv.cpp,v 1.6 2007-03-05 07:19:37 cattanem Exp $
+// $Id: XmlMuonCablingCnv.cpp,v 1.7 2007-06-08 15:34:00 asatta Exp $
 // Include files 
 
 #include <vector>
@@ -136,7 +136,8 @@ XmlMuonCablingCnv::i_fillSpecificObj(xercesc::DOMElement* childElement,
     const std::string l1NumberString =
       dom2Std (childElement->getAttribute (L1NumberString));
     long l1NumberValue=atol(l1NumberString.c_str());
-    dataObj->update(l1NumberValue);
+    StatusCode sc=dataObj->update(l1NumberValue);
+    if(sc.isFailure())return sc;	
     msg<<MSG::DEBUG<<" number of L1 "<<l1NumberValue<<endreq;
     xercesc::DOMNodeList* nodeChildren = childElement->getChildNodes();
     unsigned int i;
@@ -150,8 +151,9 @@ XmlMuonCablingCnv::i_fillSpecificObj(xercesc::DOMElement* childElement,
         std::string  L1Reference = dom2Std (L1Node->getNodeValue());
         unsigned int poundPosition = L1Reference.find_last_of('#');
         std::string entryName = "/" + L1Reference.substr(poundPosition + 1);
-        dataObj->addL1Name(L1Reference.substr(poundPosition + 1));
- msg<<MSG::DEBUG<<"name of L1 "<<L1Reference.substr(poundPosition + 1)<<endreq;        
+        sc=dataObj->addL1Name(L1Reference.substr(poundPosition + 1));
+        if(sc.isFailure())return sc;	
+        msg<<MSG::DEBUG<<"name of L1 "<<L1Reference.substr(poundPosition + 1)<<endreq;        
       }
     }
     

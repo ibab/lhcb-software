@@ -1,4 +1,4 @@
-// $Id: DeMuonGasGap.h,v 1.7 2007-02-28 18:33:18 marcocle Exp $
+// $Id: DeMuonGasGap.h,v 1.8 2007-06-08 15:34:00 asatta Exp $
 // ============================================================================
 #ifndef MUONDET_DEMUONGASGAP_H
 #define MUONDET_DEMUONGASGAP_H 1
@@ -9,6 +9,7 @@
 
 #include "DetDesc/DetectorElement.h"
 #include "DetDesc/IGeometryInfo.h"
+#include "MuonDet/MuonNamespace.h"
 
 /** @class DeMuonGasGap DeMuonGasGap.h MuonDet/DeMuonGasGap.h
  *  

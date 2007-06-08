@@ -1,4 +1,4 @@
-// $Id: MuonChamberLayout.cpp,v 1.24 2007-03-16 16:25:22 marcocle Exp $
+// $Id: MuonChamberLayout.cpp,v 1.25 2007-06-08 15:34:00 asatta Exp $
 // Include files 
 
 // Gaudi
@@ -403,13 +403,16 @@ LHCb::MuonTileID MuonChamberLayout::tileChamber(DeMuonChamber* chmb)const{
 LHCb::MuonTileID MuonChamberLayout::tileChamberNumber(int sta, int reg, int chmbNum)const{
   
 
-  char pt[200];  LHCb::MuonTileID myTile;
-  sprintf(pt,"/dd/Structure/LHCb/DownstreamRegion/Muon/M%d/R%d/Cham%03d",sta+1,reg+1,chmbNum+1);  
-  SmartDataPtr<DeMuonChamber> deChmb(m_detSvc,pt);
+  char pt[200]; 
+  LHCb::MuonTileID myTile;
+  sprintf(pt,"/M%d/R%d/Cham%03d",sta+1,reg+1,chmbNum+1);  
+  std::string namech =DeMuonLocation::Default+pt;
+  
+  SmartDataPtr<DeMuonChamber> deChmb(m_detSvc,namech);
   if(deChmb) {
     myTile = tileChamber(deChmb);
   } else {
-    std::cout<<" Could not find the chamber "<<pt<<" in the TES. Check the configuration!"<<std::endl;
+    std::cout<<" Could not find the chamber "<<namech<<" in the TES. Check the configuration!"<<std::endl;
   }
   return myTile;
 }
@@ -470,8 +473,7 @@ std::vector<DeMuonChamber*>  MuonChamberLayout::fillChambersVector(IDataProvider
 
   StatusCode sc = StatusCode::SUCCESS;
   
-  SmartDataPtr<DetectorElement> muonSys (detSvc,
-                                         "/dd/Structure/LHCb/DownstreamRegion/Muon"); 
+  SmartDataPtr<DetectorElement> muonSys (detSvc,DeMuonLocation::Default); 
   
   //Getting stations
   IDetectorElement::IDEContainer::iterator itSt=muonSys->childBegin();
@@ -493,8 +495,15 @@ std::vector<DeMuonChamber*>  MuonChamberLayout::fillChambersVector(IDataProvider
   for(itSt=muonSys->childBegin(); itSt<muonSys->childEnd(); itSt++){
 
     //Are there any void Stations?
-    sscanf((*itSt)->name().c_str(),"/dd/Structure/LHCb/DownstreamRegion/Muon/M%d",&obtIS);
-    if(debug) std::cout<<"Station Name: "<<(*itSt)->name()<<" ::  "<<obtIS<<std::endl;    
+    std::string name=((*itSt)->name()).c_str();  
+    int len=name.size();
+    int start=(DeMuonLocation::Default).size();  
+    std::string substring;
+    substring.assign(name,start,len);
+
+    sscanf(substring.c_str(),"/M%d",&obtIS);
+    if(debug) std::cout<<"Station Name: "<<(*itSt)->name()<<" ::  "<<obtIS<<std::endl;  
+  std::cout<<"Station Name: "<<(*itSt)->name()<<" ::  "<<obtIS<<std::endl;    
     while(iS != obtIS-1) {
       std::cout<<"There is/are void stations. "<<std::endl;
       for(int ire = 0; ire<4; ire++) {
@@ -512,16 +521,23 @@ std::vector<DeMuonChamber*>  MuonChamberLayout::fillChambersVector(IDataProvider
     for(itRg=(*itSt)->childBegin(); itRg<(*itSt)->childEnd(); itRg++){
 
       //Are there any void Regions?
+      std::string name=((*itRg)->name()).c_str();  
+      int len=name.size();
+      int start=(DeMuonLocation::Default).size();  
+      std::string substring;
+      substring.assign(name,start,len);
       
-sscanf((*itRg)->name().c_str(),"/dd/Structure/LHCb/DownstreamRegion/Muon/M%d/R%d",&obtIS,&obtIR);
+      //sscanf(substring.c_str(),"/M%d",&obtIS);
+      
+      sscanf(substring.c_str(),"/M%d/R%d",&obtIS,&obtIR);
       if(debug) std::cout<<"Region Name: "<<(*itRg)->name()<<" ::  "<<obtIR<<std::endl;    
       while(iR != obtIR-1) {
-	std::cout<<"There is/are void regions. "<<std::endl;
-	for(int ich = 0; ich<MaxRegions[iR]; ich++) {
-	  m_ChVec.at(encode) = (DeMuonChamber*)0;
-	  encode++;	  
-	}
-	iR++;
+        std::cout<<"There is/are void regions. "<<std::endl;
+        for(int ich = 0; ich<MaxRegions[iR]; ich++) {
+          m_ChVec.at(encode) = (DeMuonChamber*)0;
+          encode++;	  
+        }
+        iR++;
       }
 
       //Index needed to fill the cache information

@@ -1,4 +1,4 @@
-// $Id: XmlMuonL1BoardCnv.cpp,v 1.1 2007-02-27 11:14:13 asatta Exp $
+// $Id: XmlMuonL1BoardCnv.cpp,v 1.2 2007-06-08 15:34:00 asatta Exp $
 // Include files 
 
 #include <vector>
@@ -163,8 +163,8 @@ XmlMuonL1BoardCnv::i_fillSpecificObj(xercesc::DOMElement* childElement,
                                    getNamedItem(ODEListString)
                                    ->getNodeValue());
     std::vector<long> ODEListValue;
-    splitList(ODEList,ODEListValue);
-    
+    StatusCode sc=splitList(ODEList,ODEListValue);
+    if(sc.isFailure())return sc;
     xercesc::DOMNodeList* nodeChildren = childElement->getChildNodes();
     unsigned int i;
     unsigned int iODE=0;

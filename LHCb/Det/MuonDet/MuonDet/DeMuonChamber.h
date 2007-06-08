@@ -1,4 +1,4 @@
-// $Id: DeMuonChamber.h,v 1.7 2007-02-28 18:33:17 marcocle Exp $
+// $Id: DeMuonChamber.h,v 1.8 2007-06-08 15:34:00 asatta Exp $
 // ============================================================================
 // CVS tag $Name:
 // ============================================================================
@@ -13,6 +13,7 @@
 #include <string>
 
 #include "DetDesc/DetectorElement.h"
+#include "MuonDet/MuonNamespace.h"
 
 /** @class DeMuonChamber DeMuonChamber.h MuonDet/DeMuonChamber.h
  *  

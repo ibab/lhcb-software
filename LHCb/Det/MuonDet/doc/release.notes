@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.92 2007-05-25 14:20:54 cattanem Exp $
+! $Id: release.notes,v 1.93 2007-06-08 15:34:00 asatta Exp $
 ! Package     : MuonDet
 ! Responsible : Alessia Satta
 !----------------------------------------------------------------------------
 
-!========================= MuonDet v6r3 2007-05-25 ========================
+!========================= MuonDet v6r3 2007-06-08 ========================
+! 2007-06-08 - Alessia Satta
+ - Add a default value for the muon detector location in /dd...
+   Clean up many StatusCodes
 ! 2007-05-25 - Marco Cattaneo
  - Add LCG dictionaries (moved from DetSys)
 

@@ -1,4 +1,4 @@
-// $Id: DeMuonDetector.cpp,v 1.34 2007-03-21 15:50:04 marcocle Exp $
+// $Id: DeMuonDetector.cpp,v 1.35 2007-06-08 15:34:00 asatta Exp $
 
 // Include files
 #include "MuonDet/DeMuonDetector.h"
@@ -91,6 +91,8 @@ StatusCode DeMuonDetector::Hit2GapNumber(Gaudi::XYZPoint myPoint,
   MsgStream msg( msgSvc(), name() );
 
   sc = Hit2ChamberNumber(myPoint,station,chamberNumber,regNum);
+  if(sc.isFailure())return sc;
+  
   DeMuonChamber * theChmb = getChmbPtr(station,regNum,chamberNumber);
 
   //Set SC to failure until gap is found
@@ -185,7 +187,7 @@ StatusCode DeMuonDetector::Hit2ChamberNumber(Gaudi::XYZPoint myPoint,
         int tmpRen = regs.at(idx);
         int tmpStn = station;
 
-	idx++;
+        idx++;
         //Accessing Geometry Info
         IGeometryInfo* geoOthChm = (getChmbPtr(tmpStn,tmpRen,tmpChn))
           ->geometry();  
@@ -298,6 +300,8 @@ StatusCode DeMuonDetector::Pos2StChamberPointer(const double x,
   Gaudi::XYZPoint hitPoint(x,y,0); 
   int chamberNumber(-1),regNum(-1);
   StatusCode sc = Hit2ChamberNumber(hitPoint,station,chamberNumber,regNum);
+  if(sc.isFailure())return sc;
+  
   if((regNum > -1) && (chamberNumber>-1)) {
     DeMuonChamber*  myPtr =  getChmbPtr(station,regNum,chamberNumber) ;
     chamberPointer = myPtr;
@@ -1131,17 +1135,19 @@ myPoint) const
   
   // retrieve station,region,chamber,gap:
   StatusCode sc = StatusCode::FAILURE;
- nsta=getStation(myPoint.z());
+  nsta=getStation(myPoint.z());
   
   
   sc = Hit2GapNumber(myPoint,nsta,ngap,nchm,nreg);
-  //  is(sc
+  if(sc.isFailure())return -1;
+  
   //retrieve the quadrant:
   double xPoi = myPoint.x();
   double yPoi = myPoint.y();
   double zPoi = myPoint.z();
   LHCb::MuonTileID tile;
   sc = Pos2ChamberTile(xPoi,yPoi,zPoi,tile);
+  if(sc.isFailure())return -1;
   nqua = tile.quarter();
     // pack the integer:
   int id = (nqua<<PackMCMuonHit::shiftQuadrantID) |

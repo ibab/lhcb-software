@@ -1,4 +1,4 @@
-// $Id: DeMuonChamber.cpp,v 1.13 2007-03-16 16:25:22 marcocle Exp $
+// $Id: DeMuonChamber.cpp,v 1.14 2007-06-08 15:34:00 asatta Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -55,9 +55,14 @@ StatusCode DeMuonChamber::initialize()
     return sc ; 
   }
   int sta(0),reg(0),chm(0);
+  std::string name=(this->name()).c_str();  
+  int len=name.size();
+  int start=(DeMuonLocation::Default).size();  
+  std::string substring;
+  substring.assign(name,start,len);
   char patt[400]; 
-  sprintf(patt,"%s",(this->name()).c_str());
-  sscanf(patt,"/dd/Structure/LHCb/DownstreamRegion/Muon/M%d/R%d/Cham%d",&sta,&reg,&chm);
+  sprintf(patt,"%s",substring.c_str());
+  sscanf(patt,"/M%d/R%d/Cham%d",&sta,&reg,&chm);
 
   this->setStationNumber(sta-1);
   this->setRegionNumber(reg-1);
@@ -68,6 +73,7 @@ StatusCode DeMuonChamber::initialize()
 
   // for now with MWPCs and RPCs this is a good formula
   setGridName(m_chmbGrid);
-
+  //msg<<MSG::INFO<<" test ale "<<name <<" "<<sta<<" "<<reg<<" "<<chm<<endreq;
   return sc;
 }
+
