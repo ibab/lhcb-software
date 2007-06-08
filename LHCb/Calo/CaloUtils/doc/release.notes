@@ -1,9 +1,10 @@
-! $Id: release.notes,v 1.83 2007-05-30 14:45:31 odescham Exp $
+! $Id: release.notes,v 1.84 2007-06-08 14:12:51 cattanem Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !------------------------------------------------------------------------------
 
 
+!========================== CaloUtils v7r3 2007-06-07 =========================
 ! 2007-05-30 - Olivier Descha;p
  - New tool : Calo2Calo --> connect 2 calorimeters
  usage  :
