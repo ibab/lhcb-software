@@ -4,12 +4,12 @@
 ! Purpose     : package for tracking tools interfaces
 !-----------------------------------------------------------------------------
 
-2007-06-07 W. Hulsbergen
-- extended IMeasurementProvider with 'update' function for a measurement
-- extended ITrackExtrapolator with propagation of a StateVector
+!====================== TrackInterfaces v3r5 2007-06-08 ======================
+! 2007-06-07 W. Hulsbergen
+ - extended IMeasurementProvider with 'update' function for a measurement
+ - extended ITrackExtrapolator with propagation of a StateVector
 
-!====================== TrackInterfaces v3r5 2007-05-31 ======================
- 2007-05-29 M. Needham
+! 2007-05-29 M. Needham
  - Changes in IVeloExpectation:
    * Method to return struct containing r and phi hits added
 
