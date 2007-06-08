@@ -1,4 +1,4 @@
-// $Id: MuonRec.cpp,v 1.3 2007-06-06 14:26:10 cattanem Exp $
+// $Id: MuonRec.cpp,v 1.4 2007-06-08 15:38:45 asatta Exp $
 // Include files 
 #include <cstdio>
 
@@ -43,7 +43,7 @@ StatusCode MuonRec::initialize() {
 
   debug() << "==> Initialise" << endreq;
   m_muonDetector=getDet<DeMuonDetector>
-    ("/dd/Structure/LHCb/DownstreamRegion/Muon");
+    (DeMuonLocation::Default);
   
   // TDS path to the Muon system  is of the form /dd/Structure/LHCb/Muon
   
