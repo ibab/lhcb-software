@@ -1,4 +1,4 @@
-// $Id: DimProxy.h,v 1.4 2007-06-05 16:18:07 psomogyi Exp $
+// $Id: DimProxy.h,v 1.1 2007-06-08 15:10:04 psomogyi Exp $
 #ifndef DIMINFOHISTO_H 
 #define DIMINFOHISTO_H 1
 
