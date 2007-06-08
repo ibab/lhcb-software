@@ -4,7 +4,11 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !----------------------------------------------------------------------
 
-! 2007-07-07 - Olivier Deschamps
+! 2007-06-08 - Pere Mato
+ - Adapted to use new GaudiObjDesc patterns. Since this package was very
+   special the dictionay is created by hand without the help of GOD.
+
+! 2007-06-07 - Olivier Deschamps
  - Add error bank types for EcalPacked/HcalPacked/PrsPacked
 
 !================ DAQEvent v7r3 2007-04-19 ============================
