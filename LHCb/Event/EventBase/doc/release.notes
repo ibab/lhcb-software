@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.15 2007-05-18 08:00:38 cattanem Exp $
+! $Id: release.notes,v 1.16 2007-06-08 14:26:26 cattanem Exp $
 ! Package     : Event/EventBase
 ! Responsible : Marco Cattaneo, Gloria Corti
 ! Purpose     : LHCb Event model
 !---------------------------------------------------------------------------
+
+!========================== EventBase v2r4 2007-06-07 ======================
+! 2007-06-07 - Marco Cattaneo
+ - Adapt requirements to new GaudiObjDesc v10r0 patterns
 
 !========================== EventBase v2r3 2007-05-14 ======================
 ! 2007-05-14 - Marco Cattaneo

@@ -1,9 +1,9 @@
-# $Id: requirements,v 1.19 2007-04-19 15:52:40 cattanem Exp $
+# $Id: requirements,v 1.20 2007-06-08 14:31:58 cattanem Exp $
 # Created    : 13/12/2005
 # Maintainer : Marco Cattaneo
 #
 package           RecEvent
-version           v2r3
+version           v2r4
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -13,26 +13,22 @@ branches          cmt doc xml Event src
 #============================================================================
 use EventBase    v*      Event
 use DigiEvent    v*      Event
-# Temporary, whilst Track Event is developed separately
 use TrackEvent   v*      Event
-
-# Produce Header-Files & dictionary from XML description
-#============================================================================
-document obj2doth RecEventObj2Doth ../xml/*.xml
-apply_pattern install_more_includes more=Event
-
-document obj2dict RecEventObj2Dict ../xml/*.xml
-
-# Build libraries (including dictionary)
-#============================================================================
-library          RecEvent      ../src/*.cpp
-library          RecEventDict  ../$(tag)/dict/RecEvent/*.cpp
-
-# Define link options
-#============================================================================
-apply_pattern linker_library    library=RecEvent
-apply_pattern component_library library=RecEventDict
-macro_remove constituents RecEventDictRootMap
-
 private
 use GaudiObjDesc v* -no_auto_imports
+end_private
+
+# Produce Header-Files from XML description
+#============================================================================
+apply_pattern god_headers files=../xml/*.xml
+apply_pattern install_more_includes more=Event
+
+# Generate dictionaries with lcgdict via GOD
+#============================================================================
+macro RecEventDict_dependencies RecEvent
+apply_pattern god_dictionary files=../xml/*.xml
+
+# Make the linker library
+#============================================================================
+library       RecEvent        *.cpp
+apply_pattern linker_library  library=RecEvent

@@ -3,7 +3,7 @@
 # Maintainer : Jose Hernando, Eduardo Rodrigues
 #============================================================================
 package           TrackEvent
-version           v4r3
+version           v4r4
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -14,22 +14,21 @@ branches          cmt doc Event xml
 use   LHCbKernel      v*    Kernel
 use   GSL             v*    LCG_Interfaces
 use   Boost           v*    LCG_Interfaces
+private
+use GaudiObjDesc v* -no_auto_imports
+end_private
 
 # Produce Header-Files from XML description
 #============================================================================
-document obj2doth TrackEventObj2Doth ../xml/*.xml
+apply_pattern god_headers files=../xml/*.xml
 apply_pattern install_more_includes more=Event
 
-document obj2dict TrackEventObj2Dict ../xml/*.xml
-
-library          TrackEvent         ../src/*.cpp
-library          TrackEventDict     ../$(tag)/dict/TrackEvent/*.cpp
-
-# define library link options
+# Generate dictionaries with lcgdict via GOD
 #============================================================================
-apply_pattern linker_library	library=TrackEvent
-apply_pattern component_library library=TrackEventDict
-macro_remove constituents TrackEventDictRootMap
+macro TrackEventDict_dependencies TrackEvent
+apply_pattern god_dictionary files=../xml/*.xml
 
-private
-use GaudiObjDesc v* -no_auto_imports
+# Make the linker library
+#============================================================================
+library       TrackEvent        *.cpp
+apply_pattern linker_library	library=TrackEvent

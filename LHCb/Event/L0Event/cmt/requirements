@@ -3,34 +3,29 @@
 # Maintainer : Olivier Callot
 #============================================================================
 package           L0Event
-version           v16r2
+version           v16r3
 
-# Structure, i.e. directories to process. 
-#============================================================================
 branches          cmt doc Event xml src
 
 # Used packages.
 #============================================================================
 use     LHCbKernel      v*      Kernel
 use     Boost           v*      LCG_Interfaces
+private
+use     GaudiObjDesc    v*      -no_auto_imports
+end_private
 
+# Produce Header-Files from XML description
 #============================================================================
-#---- Produce Header-Files from XML description
-
-document obj2doth L0EventObj2Doth ../xml/*.xml
+apply_pattern god_headers files=../xml/*.xml
 apply_pattern install_more_includes more=Event
 
-document obj2dict L0EventObj2Dict ../xml/*.xml
-
-library          L0Event         ../src/*.cpp
-library          L0EventDict     ../$(tag)/dict/L0Event/*.cpp
-
+# Generate dictionaries with lcgdict via GOD
 #============================================================================
-# define library link options
+macro L0EventDict_dependencies L0Event
+apply_pattern god_dictionary files=../xml/*.xml
+
+# Make the link library
 #============================================================================
+library       L0Event           *.cpp
 apply_pattern linker_library	library=L0Event
-apply_pattern component_library library=L0EventDict
-macro_remove constituents L0EventDictRootMap
-
-private
-use GaudiObjDesc v* -no_auto_imports

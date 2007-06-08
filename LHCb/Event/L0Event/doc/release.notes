@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.65 2007-03-01 15:53:55 cattanem Exp $
+! $Id: release.notes,v 1.66 2007-06-08 14:28:40 cattanem Exp $
 ! Package : L0Event
 ! Package manager : Olivier Callot
 !-----------------------------------------------------------------------------
+
+!======================== L0Event v16r3 2007-06-07 ===========================
+! 2007-06-07 - Marco Cattaneo
+ - Adapt requirements to new GaudiObjDesc v10r0 patterns
 
 !======================== L0Event v16r2 2007-03-01 ===========================
 ! 2007-02-22 - Olivier Deschamps

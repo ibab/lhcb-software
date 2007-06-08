@@ -4,6 +4,10 @@
 ! Purpose     : Event model classes related to Digitization
 !-----------------------------------------------------------------------------
 
+!========================== DigiEvent v2r2 2007-06-07 ========================
+! 2007-06-07 - Marco Cattaneo
+ - Adapt requirements to new GaudiObjDesc v10r0 patterns
+
 !========================== DigiEvent v2r1 2007-03-01 ========================
 ! 2007-02-22 - Olivier Deschamps
  - xml/CaloADC.xml : default location for Ecal/Hcal PIN CaloAdcs

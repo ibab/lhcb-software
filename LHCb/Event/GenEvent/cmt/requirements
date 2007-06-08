@@ -1,28 +1,25 @@
 package GenEvent
-version v5r0p1
+version v5r1
 
 branches cmt doc src xml Event
 
 use HepMC        v*	LCG_Interfaces
 use EventBase    v*     Event
+private
+use GaudiObjDesc v* -no_auto_imports
+end_private
 
 # Produce Header-Files from XML description
 #============================================================================
-document obj2doth GenEventObj2Doth ../xml/*.xml
+apply_pattern god_headers files=../xml/*.xml
 apply_pattern install_more_includes more=Event
 
 # Generate dictionaries with lcgdict via GOD
 #============================================================================
-document obj2dict GenEventObj2Dict ../xml/*.xml
+macro GenEventDict_dependencies GenEvent
+apply_pattern god_dictionary files=../xml/*.xml
 
-# Make the libraries
+# Make the linker library
 #============================================================================
-library GenEvent      *.cpp
-library GenEventDict  ../$(tag)/dict/GenEvent/*.cpp
-
-apply_pattern linker_library    library=GenEvent
-apply_pattern component_library library=GenEventDict
-macro_remove constituents GenEventDictRootMap
-
-private
-use GaudiObjDesc v* -no_auto_imports
+library       GenEvent        *.cpp
+apply_pattern linker_library  library=GenEvent

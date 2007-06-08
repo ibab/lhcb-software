@@ -1,9 +1,13 @@
 !-----------------------------------------------------------------------------
-! $Id: release.notes,v 1.60 2007-04-23 08:14:12 cattanem Exp $
+! $Id: release.notes,v 1.61 2007-06-08 14:31:58 cattanem Exp $
 ! Package     : Event/RecEvent
 ! Responsible : Marco Cattaneo
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
 !-----------------------------------------------------------------------------
+
+!========================= RecEvent v2r4 2007-06-07 ==========================
+! 2007-06-07 - Marco Cattaneo
+ - Adapt requirements to new GaudiObjDesc v10r0 patterns
 
 !========================= RecEvent v2r3 2007-04-20 ==========================
 ! 2007-04-20 - Marco Cattaneo
