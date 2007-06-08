@@ -4,6 +4,9 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2007-06-8 M. Needham
+ - Fix bug in zero field options, reported by S.Blusk
+
 !============================ TrackSys v4r6 2007-06-04 ======================
 ! 2007-05-30 M Needham
  - Update B = 0 Matching options
