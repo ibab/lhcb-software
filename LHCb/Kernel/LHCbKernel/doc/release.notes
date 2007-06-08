@@ -4,7 +4,10 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
-!===================== LHCbKernel v7r5 2007-05-31 ========================
+!===================== LHCbKernel v7r5 2007-06-07 ========================
+! 2007-06-07 - Marco Cattaneo
+ - Adapt requirements to new GaudiObjDesc v10r0 patterns
+
 ! 2007-05-31 M. Needham
  - Add isVeloR, isVeloPhi, isPileUp methods to LHCbID
 

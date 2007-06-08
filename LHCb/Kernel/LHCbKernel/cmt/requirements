@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.124 2007-05-25 11:54:46 cattanem Exp $
+# $Id: requirements,v 1.125 2007-06-08 14:24:58 cattanem Exp $
 # =============================================================================
 package LHCbKernel
 author  M.Frank    CERN/LHCb
@@ -12,12 +12,16 @@ use GaudiKernel     v*
 use Boost           v* LCG_Interfaces
 use ROOT            v* LCG_Interfaces
 
+private
+use GaudiObjDesc v* -no_auto_imports
+use GaudiAlg     v* -no_auto_imports
+end_private
+
 # Produce Header-Files from XML description, overriding default destination
 #============================================================================
 macro LHCbKernelObj2Doth_GODflags " -s ../Kernel/ " \
       WIN32                       " -s ..\Kernel\ "
-document obj2doth LHCbKernelObj2Doth ../xml/*.xml
-
+apply_pattern  god_headers files=../xml/*.xml
 apply_pattern  install_more_includes more=Kernel offset=Event
 
 # Declare fragment for adding custom dictionary to GOD generated ones
@@ -30,29 +34,19 @@ document customdict LHCbKernelCustomDict ../dict/LHCbKernelDict.h
 
 # Generate remaining dictionaries with lcgdict via GOD
 #============================================================================
+macro LHCbKernelDict_dependencies LHCbKernel
 macro LHCbKernelObj2Dict_GODflags " -s ../Kernel/ " \
       WIN32                       " -s ..\Kernel\ "
-document obj2dict LHCbKernelObj2Dict ../xml/*.xml
+apply_pattern god_dictionary files=../xml/*.xml
 
-# Build libraries (including dictionary)
+# Build linker library
 #============================================================================
 library LHCbKernel     *.cpp          -import=GaudiAlg
-library LHCbKernelDict ../$(tag)/dict/LHCbKernel/*.cpp
+apply_pattern linker_library    library=LHCbKernel
 
 # Debug flag for RichSmartID
 macro_append LHCbKernel_cppflags "" \
                    Linux&debug " -DRICHDEBUG "
 
-# Standard patterns (order is essential)
-#============================================================================
-apply_pattern linker_library    library=LHCbKernel
-apply_pattern component_library library=LHCbKernelDict
-macro_remove constituents LHCbKernelDictRootMap
-
 macro_append ROOT_linkopts " -lMathCore " \
              WIN32 " libMathCore.lib "
-
-private
-#============================================================================
-use GaudiObjDesc v* -no_auto_imports
-use GaudiAlg     v* -no_auto_imports
