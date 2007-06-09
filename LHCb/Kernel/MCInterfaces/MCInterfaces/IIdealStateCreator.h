@@ -10,6 +10,7 @@ namespace LHCb {
  class MCParticle;
  class MCHit;
  class State;
+ class StateVector;
 };
 
 /** @class IIdealStateCreator IIdealStateCreator.h "TrackMCInterfaces/IIdealStateCreator.h"
@@ -43,6 +44,24 @@ public:
   /// Create a state at an MCParticle's vertex
   virtual StatusCode createStateVertex( const LHCb::MCParticle* mcPart,
                                         LHCb::State& pState ) const = 0;
+
+
+  /// Create a statevector at a z-position from an MCParticle's entry/exit points
+  virtual StatusCode createStateVector( const LHCb::MCParticle* mcPart,
+                                  double zrec,
+                                  LHCb::StateVector& pVec ) const = 0;
+
+  /// Create a statevector at a z-position from an MCHits entry/exit points
+  virtual StatusCode createStateVector(const LHCb::MCHit* mcHit,
+                                  double zrec,
+                                  LHCb::StateVector& pVec ) const = 0;
+
+  /// Create a statevector at an MCParticle's vertex
+  virtual StatusCode createStateVectorVertex( const LHCb::MCParticle* mcPart,
+                                              LHCb::StateVector& pVec ) const = 0;
+
+
+
 };
 
 #endif // TRACKMCINTERFACES_IIDEALSTATECREATOR_H
