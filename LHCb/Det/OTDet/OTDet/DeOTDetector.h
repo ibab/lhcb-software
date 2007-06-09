@@ -1,4 +1,4 @@
-// $Id: DeOTDetector.h,v 1.35 2007-02-28 18:31:43 marcocle Exp $
+// $Id: DeOTDetector.h,v 1.36 2007-06-09 13:56:45 janos Exp $
 #ifndef OTDET_DEOTDETECTOR_H
 #define OTDET_DEOTDETECTOR_H 1
 
@@ -11,6 +11,13 @@
 /// Kernel
 #include "Kernel/OTChannelID.h"
 
+/// Local
+#include "OTDet/DeOTStation.h"
+#include "OTDet/DeOTLayer.h"
+#include "OTDet/DeOTQuarter.h"
+#include "OTDet/DeOTModule.h"
+#include "OTDet/IndexToDetElementMap.h"
+
 /** @class DeOTDetector DeOTDetector.h "OTDet/DeOTDetector.h"
  *
  *  This is the detector element class for the Outer Tracker. It 
@@ -22,12 +29,6 @@
  *  @author Jeroen van Tilburg jtilburg@nikhef.nl 
  *  @date   26-05-2002
  */
-
-/// Forward declarations
-class DeOTStation;
-class DeOTLayer;
-class DeOTQuarter;
-class DeOTModule;
 
 namespace LHCb
 {
@@ -51,10 +52,6 @@ public:
   typedef std::vector<DeOTLayer*> Layers;
   typedef std::vector<DeOTQuarter*> Quarters;
   typedef std::vector<DeOTModule*> Modules;
-  typedef GaudiUtils::VectorMap<unsigned int, DeOTStation*> MapIDStation;
-  typedef GaudiUtils::VectorMap<unsigned int, DeOTLayer*> MapIDLayer;
-  typedef GaudiUtils::VectorMap<unsigned int, DeOTQuarter*> MapIDQuarter;
-  typedef GaudiUtils::VectorMap<unsigned int, DeOTModule*> MapIDModule;
   
   /** Constructor */
   DeOTDetector(const std::string& name = "");
@@ -86,15 +83,9 @@ public:
   /** @return number of stations */
   unsigned int nStation() const; 
   
-  /** @return the station for a given channelID */
-  DeOTStation* findStation(const LHCb::OTChannelID aChannel) const;
-  
-  /** @return the station for a given XYZ point */
-  DeOTStation* findStation(const Gaudi::XYZPoint& aPoint) const;
-
-  /** Check contains channel
-   *  @param aChannel The channel to check
-   *  @return bool    True if channel is contained
+  /** Check if station  contains channel
+   *  @param an OT channel id
+   *  @return bool True if channel is contained
    */
   bool contains(const LHCb::OTChannelID aChannel) const;
 
@@ -103,27 +94,102 @@ public:
    * @return bool
    */
   /* bool isValid(const LHCb::OTChannelID aChannel); */
-  
-  /** @return the layer for a given channelID */
-  DeOTLayer* findLayer(const LHCb::OTChannelID aChannel) const;
 
-  /** @return the layer for a given XYZ point */
-  DeOTLayer* findLayer(const Gaudi::XYZPoint& aPoint) const;
-  
-  /** @return the layer for a given channelID/XYZ point */
-  /*  template <typename T> DeOTLayer* DeOTDetector::findLayer(const T& t)  const; */
+  /** Const method to return the station for a given channel id
+   * @param an OT channel id
+   * @return const pointer to detector element
+   */
+  const DeOTStation* findStation(const LHCb::OTChannelID& aChannel) const;
 
-  /** @return the quarter for a given channelID */
-  DeOTQuarter* findQuarter(const LHCb::OTChannelID aChannel) const;
+  /** Non const method to return the station for a given channel id
+   * @param an OT channel id
+   * @return pointer to detector element
+   */
+  DeOTStation* findStation(const LHCb::OTChannelID& aChannel);
 
-  /** @return the quarter for a given XYZ point */
-  DeOTQuarter* findQuarter(const Gaudi::XYZPoint& aPoint) const;
+  /** Const method to return the station for a given XYZ point
+   * @param an OT channel id
+   * @return const pointer to detector element
+   */
+  const DeOTStation* findStation(const Gaudi::XYZPoint& aPoint) const;
 
-  /** @return the module for a given channel ID */
-  DeOTModule* findModule(const LHCb::OTChannelID aChannel) const;
+  /** Non onst method to return the station for a given XYZ point
+   * @param an OT channel id
+   * @return const pointer to detector element
+   */
+  DeOTStation* findStation(const Gaudi::XYZPoint& aPoint);
 
-  /** @return the module for a given XYZ point */
-  DeOTModule* findModule(const Gaudi::XYZPoint& aPoint) const;
+  /** Const method to return the layer for a given channel id
+   * @param an OT channel id
+   * @return pointer to detector element
+   */
+  const DeOTLayer* findLayer(const LHCb::OTChannelID& aChannel) const;
+
+  /** Non const method to return the layer for a given channel id
+   * @param an OT channel id
+   * @return pointer to detector element
+   */
+  DeOTLayer* findLayer(const LHCb::OTChannelID& aChannel);
+
+  /** Const method to return the layer for a given XYZ point
+   * @param an OT channel id
+   * @return const pointer to detector element
+   */
+  const DeOTLayer* findLayer(const Gaudi::XYZPoint& aPoint) const;
+
+  /** Non const method to return the layer for a given XYZ point
+   * @param an OT channel id
+   * @return const pointer to detector element
+   */
+  DeOTLayer* findLayer(const Gaudi::XYZPoint& aPoint);
+
+  /** Const method to return the quarter for a given channel id
+   * @param an OT channel id
+   * @return pointer to detector element
+   */
+  const DeOTQuarter* findQuarter(const LHCb::OTChannelID& aChannel) const;
+
+  /** Non const method to return the quarter for a given channel id
+   * @param an OT channel id
+   * @return pointer to detector element
+   */
+  DeOTQuarter* findQuarter(const LHCb::OTChannelID& aChannel);
+
+  /** Const method to return the quarter for a given XYZ point
+   * @param an OT channel id
+   * @return const pointer to detector element
+   */
+  const DeOTQuarter* findQuarter(const Gaudi::XYZPoint& aPoint) const;
+
+  /** Non const method to return the quarter for a given XYZ point
+   * @param an OT channel id
+   * @return const pointer to detector element
+   */
+  DeOTQuarter* findQuarter(const Gaudi::XYZPoint& aPoint);
+
+  /** Const method to return the module for a given channel id
+   * @param an OT channel id
+   * @return pointer to detector element
+   */
+  const DeOTModule* findModule(const LHCb::OTChannelID& aChannel) const;
+
+  /** Non const method to return the module for a given channel id
+   * @param an OT channel id
+   * @return pointer to detector element
+   */
+  DeOTModule* findModule(const LHCb::OTChannelID& aChannel);
+
+  /** Const method to return the module for a given XYZ point
+   * @param an OT channel id
+   * @return const pointer to detector element
+   */
+  const DeOTModule* findModule(const Gaudi::XYZPoint& aPoint) const;
+
+  /** Non const method to return the module for a given XYZ point
+   * @param an OT channel id
+   * @return const pointer to detector element
+   */
+  DeOTModule* findModule(const Gaudi::XYZPoint& aPoint);
 
   /** @return the channel left from a given channel 
    *  @param aChannel The given channel
@@ -223,22 +289,24 @@ public:
    * @return trajectory
    */
   std::auto_ptr<LHCb::Trajectory> trajectoryFirstWire(const LHCb::LHCbID& id, 
-						      int monolayer=0) const;
+                                                      int monolayer=0) const;
   
   /** Get trajectory representing the most right wire in (second=0) monolayer
    * @return trajectory
    */
   std::auto_ptr<LHCb::Trajectory> trajectoryLastWire(const LHCb::LHCbID& id, 
-						     int monolayer=1) const;
+                                                     int monolayer=1) const;
 
   /** Get trajectory representing the wire identified by the LHCbID
    * The offset is zero for all OT Trajectories
    * @return trajecory
    */ 
   std::auto_ptr<LHCb::Trajectory> trajectory(const LHCb::LHCbID& id, 
-					     const double =0 /** offset */) const;
+                                             const double =0 /** offset */) const;
   
 private:
+  /// three stations; starting from 1
+  typedef OT::IndexToDetElementMap<DeOTStation, 3, 1> MapStations;
 
   /** set the first station */
   void setFirstStation(const unsigned int iStation);
@@ -246,16 +314,13 @@ private:
   Stations m_stations;             ///< flat vector of stations
   Layers m_layers;                 ///< flat vector of layers
   Quarters m_quarters;             ///< flat vector of quarters
-  Modules m_modules;               ///< flat vector of modules 
-  MapIDStation m_mapIDStation;     ///< map station id to station
-  MapIDLayer m_mapIDLayer;         ///< map layer id to layer
-  MapIDQuarter m_mapIDQuarter;     ///< map quarter id to quarter
-  MapIDModule m_mapIDModule;       ///< map module id to module
+  Modules m_modules;               ///< flat vector of modules
+  MapStations m_mapStations;       ///< map of stations
   unsigned int m_firstStation;     ///< number of first station
-  unsigned int m_nChannels;        ///< total number of channels in OT
-  unsigned int m_nMaxChanInModule; ///< the maximum # channels in 1 module
 
   /** General Outer Tracker pramaters */
+  unsigned int m_nChannels;        ///< total number of channels in OT
+  unsigned int m_nMaxChanInModule; ///< the maximum # channels in 1 module
   double m_cellRadius;             ///< cell radius
   double m_resolution;             ///< straw resolution
   double m_propagationDelay;       ///< Propagation time delay
@@ -280,7 +345,7 @@ inline unsigned int DeOTDetector::nStation() const {
   return m_stations.size();
 }
 
-inline bool DeOTDetector::contains(const LHCb::OTChannelID aChannel) const{
+inline bool DeOTDetector::contains(const LHCb::OTChannelID aChannel) const {
   return ((aChannel.station() >= firstStation()) && (aChannel.station() <= lastStation()));
 }
 
@@ -291,6 +356,64 @@ inline bool DeOTDetector::contains(const LHCb::OTChannelID aChannel) const{
 /*   } // iter */
 /*   return (iter != m_modules.end() ? (*iter)->isWire(aChannel.wire()) : false ); */
 /* } */
+
+/// Find station methods
+inline const DeOTStation* DeOTDetector::findStation(const LHCb::OTChannelID& aChannel) const {
+  return m_mapStations[aChannel.station()];
+}
+
+inline DeOTStation* DeOTDetector::findStation(const LHCb::OTChannelID& aChannel) {
+  return m_mapStations[aChannel.station()];
+}
+
+inline DeOTStation* DeOTDetector::findStation(const Gaudi::XYZPoint& aPoint) {
+  return const_cast<DeOTStation*>(static_cast<const DeOTDetector&>(*this).findStation(aPoint));
+}
+
+/// Find layer methods
+inline const DeOTLayer* DeOTDetector::findLayer(const LHCb::OTChannelID& aChannel) const {
+  const DeOTStation* s = findStation(aChannel);
+  return s ? s->findLayer(aChannel) : 0; 
+}
+
+inline DeOTLayer* DeOTDetector::findLayer(const LHCb::OTChannelID& aChannel) {
+  DeOTStation* s = findStation(aChannel);
+  return s ? s->findLayer(aChannel) : 0; 
+}
+
+inline DeOTLayer* DeOTDetector::findLayer(const Gaudi::XYZPoint& aPoint) {
+  return const_cast<DeOTLayer*>(static_cast<const DeOTDetector&>(*this).findLayer(aPoint));
+}
+
+/// Find quarter methods
+inline const DeOTQuarter* DeOTDetector::findQuarter(const LHCb::OTChannelID& aChannel) const {
+  const DeOTLayer* l = findLayer(aChannel);
+  return l ? l->findQuarter(aChannel) : 0; 
+}
+
+inline DeOTQuarter* DeOTDetector::findQuarter(const LHCb::OTChannelID& aChannel) {
+  DeOTLayer* l = findLayer(aChannel);
+  return l ? l->findQuarter(aChannel) : 0;
+}
+
+inline DeOTQuarter* DeOTDetector::findQuarter(const Gaudi::XYZPoint& aPoint) {
+  return const_cast<DeOTQuarter*>(static_cast<const DeOTDetector&>(*this).findQuarter(aPoint));
+}
+
+/// Find module methods
+inline const DeOTModule* DeOTDetector::findModule(const LHCb::OTChannelID& aChannel) const {
+  const DeOTQuarter* q = findQuarter(aChannel) ;
+  return q ? q->findModule(aChannel) : 0; 
+}
+
+inline DeOTModule* DeOTDetector::findModule(const LHCb::OTChannelID& aChannel) {
+  DeOTQuarter* q = findQuarter(aChannel) ;
+  return q ? q->findModule(aChannel) : 0;
+}
+
+inline DeOTModule* DeOTDetector::findModule(const Gaudi::XYZPoint& aPoint) {
+  return const_cast<DeOTModule*>(static_cast<const DeOTDetector&>(*this).findModule(aPoint));
+}
 
 inline double DeOTDetector::resolution() const {  
   return m_resolution;

@@ -1,4 +1,4 @@
-// $Id: DeOTQuarter.cpp,v 1.8 2007-02-02 09:25:04 janos Exp $
+// $Id: DeOTQuarter.cpp,v 1.9 2007-06-09 13:56:48 janos Exp $
 
 /// DetDesc
 #include "DetDesc/IGeometryInfo.h"
@@ -22,17 +22,20 @@
  *  @author Jeroen van Tilburg jtilburg@nikhef.nl
  */
 
-using namespace boost::lambda;
 using namespace LHCb;
+using namespace boost::lambda;
 
 DeOTQuarter::DeOTQuarter(const std::string& name) :
   DetectorElement(name),
   m_stationID(0u),
   m_layerID(0u),
   m_quarterID(0u),
+  m_elementID(0u),
   m_stereoAngle(0.0),
-  m_modules() { 
+  m_modules() 
+{ 
   /// Constructor
+  m_modules.reserve(9);
 }
 
 DeOTQuarter::~DeOTQuarter() {
@@ -50,10 +53,10 @@ StatusCode DeOTQuarter::initialize() {
     DeOTModule* module = dynamic_cast<DeOTModule*>(*iM);
     if (module)  {
       m_modules.push_back(module);
-      m_mapIDModule.insert((module->elementID()).uniqueModule(), module);
+      m_mapModules.insert((module->elementID()).module(), module);
     }
   } /// iModule
-    
+
   IDetectorElement* layer = this->parentIDetectorElement();
   IDetectorElement* station = layer->parentIDetectorElement();
   m_stationID = (unsigned int) station->params()->param<int>("stationID");
@@ -67,15 +70,8 @@ StatusCode DeOTQuarter::initialize() {
   return StatusCode::SUCCESS;
 }
 
-/// Find the module for a given channelID
-DeOTModule* DeOTQuarter::findModule(const OTChannelID aChannel) const {
-  /// Find the module and return a pointer to the module from channel
-  MapIDModule::iterator iM = m_mapIDModule.find(aChannel.uniqueModule());
-  return (iM != m_mapIDModule.end() ? iM->second: 0);
-}
-
 /// Find the module for a given XYZ point
-DeOTModule* DeOTQuarter::findModule(const Gaudi::XYZPoint& aPoint) const {
+const DeOTModule* DeOTQuarter::findModule(const Gaudi::XYZPoint& aPoint) const {
  /// Find the modules and return a pointer to the modules from channel
   Modules::const_iterator iM = std::find_if(m_modules.begin(), m_modules.end(),
                                             bind(&DetectorElement::isInside, _1, aPoint));

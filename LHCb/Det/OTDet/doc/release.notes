@@ -1,7 +1,12 @@
-! $Id: release.notes,v 1.82 2007-05-25 12:40:10 cattanem Exp $
+! $Id: release.notes,v 1.83 2007-06-09 13:56:47 janos Exp $
 ! Package     : OTDet
 ! Responsible : Jeroen van Tilburg, Jacopo Nardulli, Jan Amoraal
 !--------------------------------------------------------------------------
+
+! 2007-06-07 - Jan Amoraal
+ - Some minor changes requested by the A-Team: 
+   - Random access to detector elements
+   - Added const find methods for detector elements  
 
 !========================== OTDet v7r3 2007-05-25 =========================
 ! 2007-05-25 - Marco Cattaneo

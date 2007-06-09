@@ -1,4 +1,4 @@
-// $Id: DeOTLayer.h,v 1.14 2007-02-28 18:31:44 marcocle Exp $
+// $Id: DeOTLayer.h,v 1.15 2007-06-09 13:56:45 janos Exp $
 #ifndef OTDET_DEOTLAYER_H
 #define OTDET_DEOTLAYER_H 1
 
@@ -10,6 +10,10 @@
 #include "GaudiKernel/Plane3DTypes.h"
 #include "GaudiKernel/VectorMap.h"
 
+// Local
+#include "OTDet/DeOTQuarter.h"
+#include "OTDet/IndexToDetElementMap.h"
+
 /** @class DeOTLayer DeOTLayer.h "OTDet/DeOTLayer.h"
  *
  *  This is the detector element class for an Outer Tracker Layer.
@@ -17,10 +21,6 @@
  *  @author Jeroen van Tilburg jtilburg@nikhef.nl 
  *  @date   04-04-2003
  */
-
-// Forward declarations
-class DeOTQuarter;
-class DeOTModule;
 
 static const CLID CLID_DeOTLayer = 8103;
 
@@ -31,7 +31,6 @@ class DeOTLayer : public DetectorElement {
   /** Some typedefs */
   typedef std::vector<DeOTLayer*> Container;
   typedef std::vector<DeOTQuarter*> Quarters;
-  typedef GaudiUtils::VectorMap<unsigned int, DeOTQuarter*> MapIDQuarter;
 
   /** Constructor */
   DeOTLayer(const std::string& name = "") ;
@@ -70,22 +69,38 @@ class DeOTLayer : public DetectorElement {
    *  @return bool
    */
   bool contains(const LHCb::OTChannelID aChannel) const;
-    
+
+  /** Const method to return the quarter for a given channel id
+   * @param an OT channel id
+   * @return pointer to detector element
+   */
+  const DeOTQuarter* findQuarter(const LHCb::OTChannelID& aChannel) const;
+
+  /** Non const method to return the quarter for a given channel id
+   * @param an OT channel id
+   * @return pointer to detector element
+   */
+  DeOTQuarter* findQuarter(const LHCb::OTChannelID& aChannel);
+
+  /** Const method to return the quarter for a given XYZ point
+   * @param an OT channel id
+   * @return const pointer to detector element
+   */
+  const DeOTQuarter* findQuarter(const Gaudi::XYZPoint& aPoint) const;
+
+  /** Non const method to return the quarter for a given XYZ point
+   * @param an OT channel id
+   * @return const pointer to detector element
+   */
+  DeOTQuarter* findQuarter(const Gaudi::XYZPoint& aPoint);
+  
   /** @return stereo angle of the layer */
   double angle() const;
   
-  /** @return the quarter for a given channelID */
-  DeOTQuarter* findQuarter(const LHCb::OTChannelID aChannel) const;
-  
-  /** @return the quarter for a given XYZ point */
-  /** This method was depracated but I need it for the sensitive volume ID */
-  DeOTQuarter* findQuarter(const Gaudi::XYZPoint& aPoint) const;
-  
-   /** plane corresponding to the layer 
+  /** plane corresponding to the layer 
   * @return the plane 
   */
   Gaudi::Plane3D plane() const;
-
   StatusCode cachePlane();
 
   /** flat vector of quarters
@@ -94,13 +109,16 @@ class DeOTLayer : public DetectorElement {
   const Quarters& quarters() const;
   
  private:
-  unsigned int m_stationID;      ///< stationID
-  unsigned int m_layerID;        ///< layer ID number
-  LHCb::OTChannelID m_elementID; ///< element id
-  double m_stereoAngle;          ///< layer stereo angle 
-  Gaudi::Plane3D m_plane;        ///< plane corresponding to the layer
-  Quarters m_quarters;           ///< vector of quarters
-  MapIDQuarter m_mapIDQuarter;     ///< map quarter id to quarter
+   /// 4 quarters; starting from 0
+  typedef OT::IndexToDetElementMap<DeOTQuarter, 4, 0> MapQuarters;
+
+  unsigned int m_stationID;       ///< stationID
+  unsigned int m_layerID;         ///< layer ID number
+  LHCb::OTChannelID m_elementID;  ///< element id
+  double m_stereoAngle;           ///< layer stereo angle 
+  Gaudi::Plane3D m_plane;         ///< plane corresponding to the layer
+  Quarters m_quarters;            ///< vector of quarters
+  MapQuarters m_mapQuarters;      ///< map quarters
 };
 
 // -----------------------------------------------------------------------------
@@ -121,6 +139,19 @@ inline void DeOTLayer::setElementID(const LHCb::OTChannelID& chanID) {
 
 inline bool DeOTLayer::contains(const LHCb::OTChannelID aChannel) const {
   return (m_elementID.uniqueLayer() == aChannel.uniqueLayer());
+}
+
+/// Find quarter methods
+inline const DeOTQuarter* DeOTLayer::findQuarter(const LHCb::OTChannelID& aChannel) const {
+  return m_mapQuarters[aChannel.quarter()];
+}
+
+inline DeOTQuarter* DeOTLayer::findQuarter(const LHCb::OTChannelID& aChannel) {
+  return m_mapQuarters[aChannel.quarter()];
+}
+
+inline DeOTQuarter* DeOTLayer::findQuarter(const Gaudi::XYZPoint& aPoint) {
+  return const_cast<DeOTQuarter*>(static_cast<const DeOTLayer&>(*this).findQuarter(aPoint));
 }
 
 inline double DeOTLayer::angle() const {

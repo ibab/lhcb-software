@@ -1,4 +1,4 @@
-// $Id: DeOTQuarter.h,v 1.12 2007-02-28 18:31:44 marcocle Exp $
+// $Id: DeOTQuarter.h,v 1.13 2007-06-09 13:56:45 janos Exp $
 #ifndef OTDET_DEOTQUARTER_H
 #define OTDET_DEOTQUARTER_H 1
 
@@ -11,6 +11,10 @@
 /// Kernel
 #include "Kernel/OTChannelID.h"
 
+// Local
+#include "OTDet/DeOTModule.h"
+#include "OTDet/IndexToDetElementMap.h"
+
 /** @class DeOTQuarter DeOTQuarter.h "OTDet/DeOTQuarter.h"
  *
  *  This is the detector element class for a Outer Tracker Quarter.
@@ -19,9 +23,6 @@
  *  @date   04-04-2003
  */
 
-/// Forward declarations
-class DeOTModule;
-
 static const CLID CLID_DeOTQuarter = 8104;
 
 class DeOTQuarter : public DetectorElement {
@@ -29,7 +30,6 @@ class DeOTQuarter : public DetectorElement {
  public:
   /** Some typedefs */
   typedef std::vector<DeOTModule*> Modules;
-  typedef GaudiUtils::VectorMap<unsigned int, DeOTModule*> MapIDModule;
 
   /** Constructor */
   DeOTQuarter( const std::string& name = "");
@@ -66,15 +66,33 @@ class DeOTQuarter : public DetectorElement {
    *  @return bool
    */
   bool DeOTQuarter::contains(const LHCb::OTChannelID aChannel) const;
- 
+
+  /** Const method to return the module for a given channel id
+   * @param an OT channel id
+   * @return pointer to detector element
+   */
+  const DeOTModule* findModule(const LHCb::OTChannelID& aChannel) const;
+
+  /** Non const method to return the module for a given channel id
+   * @param an OT channel id
+   * @return pointer to detector element
+   */
+  DeOTModule* findModule(const LHCb::OTChannelID& aChannel);
+
+  /** Const method to return the module for a given XYZ point
+   * @param an OT channel id
+   * @return const pointer to detector element
+   */
+  const DeOTModule* findModule(const Gaudi::XYZPoint& aPoint) const;
+  
+  /** Non const method to return the module for a given XYZ point
+   * @param an OT channel id
+   * @return const pointer to detector element
+   */
+  DeOTModule* findModule(const Gaudi::XYZPoint& aPoint);
+
   /** @return stereo angle of the layer */
   double angle() const;
-
-  /** @return the module for a given channelID */
-  DeOTModule* findModule(const LHCb::OTChannelID aChannel) const;
-
-  /** @return the module for a given XYZ point */
-  DeOTModule* findModule(const Gaudi::XYZPoint& aPoint) const;
 
   /** Flat vector of all OT modules
    * @return vector of modules
@@ -82,13 +100,16 @@ class DeOTQuarter : public DetectorElement {
   const Modules& modules() const;
   
  private:
+   /// 9 modules; starting from 1
+  typedef OT::IndexToDetElementMap<DeOTModule, 9, 1> MapModules;
+
   unsigned int m_stationID;      ///< station ID number
   unsigned int m_layerID;        ///< layer ID number
   unsigned int m_quarterID;      ///< quarter ID number
   LHCb::OTChannelID m_elementID; ///< element id
   double m_stereoAngle;          ///< layer stereo angle 
   Modules m_modules;             ///< vector of modules
-  MapIDModule m_mapIDModule;       ///< map module id to module
+  MapModules m_mapModules;       ///< map module id to module
 };
 
 // -----------------------------------------------------------------------------
@@ -109,6 +130,19 @@ inline void DeOTQuarter::setElementID(const LHCb::OTChannelID& chanID) {
 
 inline bool DeOTQuarter::contains(const LHCb::OTChannelID aChannel) const {
   return (m_elementID.uniqueQuarter() == aChannel.uniqueQuarter());
+}
+
+/// Find module methods
+inline const DeOTModule* DeOTQuarter::findModule(const LHCb::OTChannelID& aChannel) const {
+  return  m_mapModules[aChannel.module()];
+}
+
+inline DeOTModule* DeOTQuarter::findModule(const LHCb::OTChannelID& aChannel) {
+    return  m_mapModules[aChannel.module()];
+}
+
+inline DeOTModule* DeOTQuarter::findModule(const Gaudi::XYZPoint& aPoint) {
+  return const_cast<DeOTModule*>(static_cast<const DeOTQuarter&>(*this).findModule(aPoint));
 }
 
 inline double DeOTQuarter::angle() const {

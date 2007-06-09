@@ -1,4 +1,4 @@
-// $Id: DeOTStation.h,v 1.9 2007-02-28 18:31:44 marcocle Exp $
+// $Id: DeOTStation.h,v 1.10 2007-06-09 13:56:46 janos Exp $
 #ifndef OTDET_DEOTSTATION_H
 #define OTDET_DEOTSTATION_H 1
 
@@ -11,6 +11,10 @@
 // Kernel
 #include "Kernel/OTChannelID.h"
 
+// Local
+#include "OTDet/DeOTLayer.h"
+#include "OTDet/IndexToDetElementMap.h"
+
 /** @class DeOTStation DeOTStation.h "OTDet/DeOTStation.h"
  *
  *  This is the detector element class for a Outer Tracker Station.
@@ -18,9 +22,6 @@
  *  @author Jeroen van Tilburg jtilburg@nikhef.nl 
  *  @date   04-04-2003
  */
-
-/// Forward declarations
-class DeOTLayer;
 
 static const CLID CLID_DeOTStation = 8102;
 
@@ -31,7 +32,6 @@ class DeOTStation : public DetectorElement {
   /** Some typedefs */
   typedef std::vector<DeOTStation*> Container;
   typedef std::vector<DeOTLayer*> Layers;
-  typedef GaudiUtils::VectorMap<unsigned int, DeOTLayer*> MapIDLayer;
 
   /** Constructor */
   DeOTStation(const std::string& name = "") ;
@@ -69,10 +69,28 @@ class DeOTStation : public DetectorElement {
    */
   bool contains(const LHCb::OTChannelID aChannel) const;
 
-  /** @return the layer for a given channelID */
-  DeOTLayer* findLayer(const LHCb::OTChannelID aChannel);
+  /** Const method to return the layer for a given channel id
+   * @param an OT channel id
+   * @return pointer to detector element
+   */
+  const DeOTLayer* findLayer(const LHCb::OTChannelID& aChannel) const;
 
-  /** @return the layer for a given 3D point */
+  /** Non const method to return the layer for a given channel id
+   * @param an OT channel id
+   * @return pointer to detector element
+   */
+  DeOTLayer* findLayer(const LHCb::OTChannelID& aChannel);
+
+  /** Const method to return the layer for a given XYZ point
+   * @param an OT channel id
+   * @return const pointer to detector element
+   */
+  const DeOTLayer* findLayer(const Gaudi::XYZPoint& aPoint) const;
+
+  /** Non const method to return the layer for a given XYZ point
+   * @param an OT channel id
+   * @return const pointer to detector element
+   */
   DeOTLayer* findLayer(const Gaudi::XYZPoint& aPoint);
 
   /** Flat vector of layers
@@ -81,10 +99,13 @@ class DeOTStation : public DetectorElement {
   const Layers& layers() const;
   
  private:
+  /// 4 layers; starting from 0
+  typedef OT::IndexToDetElementMap<DeOTLayer, 4, 0> MapLayers;
+
   unsigned int m_stationID;      ///< station ID number
   LHCb::OTChannelID m_elementID; ///< Element ID
   Layers m_layers;               ///< vector of layers
-  MapIDLayer m_mapIDLayer;       ///< map layer id to layer
+  MapLayers m_mapLayers;         ///< map of layers
 };
 
 // -----------------------------------------------------------------------------
@@ -105,6 +126,19 @@ inline void DeOTStation::setElementID(const LHCb::OTChannelID& chanID) {
 
 inline bool DeOTStation::contains(const LHCb::OTChannelID aChannel) const {
   return (m_stationID == aChannel.station());
+}
+
+/// Find layer methods
+inline const DeOTLayer* DeOTStation::findLayer(const LHCb::OTChannelID& aChannel) const {
+  return m_mapLayers[aChannel.layer()]; 
+}
+
+inline DeOTLayer* DeOTStation::findLayer(const LHCb::OTChannelID& aChannel) {
+  return m_mapLayers[aChannel.layer()]; 
+}
+
+inline DeOTLayer* DeOTStation::findLayer(const Gaudi::XYZPoint& aPoint) {
+  return const_cast<DeOTLayer*>(static_cast<const DeOTStation&>(*this).findLayer(aPoint));
 }
 
 inline const DeOTStation::Layers& DeOTStation::layers() const {

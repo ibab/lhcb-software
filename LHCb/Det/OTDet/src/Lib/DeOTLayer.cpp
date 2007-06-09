@@ -1,4 +1,4 @@
-// $Id: DeOTLayer.cpp,v 1.12 2007-02-13 11:56:18 janos Exp $
+// $Id: DeOTLayer.cpp,v 1.13 2007-06-09 13:56:48 janos Exp $
 
 /// GaudiKernel
 #include "GaudiKernel/SystemOfUnits.h"
@@ -23,8 +23,8 @@
  *  @author Jeroen van Tilburg jtilburg@nikhef.nl
  */
 
-using namespace boost::lambda;
 using namespace LHCb;
+using namespace boost::lambda;
 
 DeOTLayer::DeOTLayer(const std::string& name) :
   DetectorElement(name),
@@ -33,7 +33,9 @@ DeOTLayer::DeOTLayer(const std::string& name) :
   m_elementID(0u),
   m_stereoAngle(0.0),
   m_quarters()
-{ }
+{ 
+  m_quarters.reserve(4);
+}
 
 DeOTLayer::~DeOTLayer() {
 }
@@ -50,10 +52,10 @@ StatusCode DeOTLayer::initialize() {
     DeOTQuarter* quarter = dynamic_cast<DeOTQuarter*>(*iQ);
     if (quarter) {
       m_quarters.push_back(quarter);
-      m_mapIDQuarter.insert((quarter->elementID()).uniqueQuarter(), quarter);
+      m_mapQuarters.insert((quarter->elementID()).quarter(), quarter);
     }
   } /// iQ
-  
+
   IDetectorElement* station = this->parentIDetectorElement();
   m_stationID = (unsigned int) station->params()->param<int>("stationID");
   m_layerID = (unsigned int) param<int>("layerID");
@@ -80,15 +82,8 @@ StatusCode DeOTLayer::initialize() {
   return StatusCode::SUCCESS;
 }
 
-/// Find the quarter for a given channel
-DeOTQuarter* DeOTLayer::findQuarter(const OTChannelID aChannel)  const {  
-  /// Find the quarter and return a pointer to the layer from channel
-  MapIDQuarter::iterator iQ = m_mapIDQuarter.find(aChannel.uniqueQuarter());
-  return (iQ != m_mapIDQuarter.end() ? iQ->second: 0);
-}
-
 /// Find the quarter for a given XYZ point
-DeOTQuarter* DeOTLayer::findQuarter(const Gaudi::XYZPoint& aPoint) const {  
+const DeOTQuarter* DeOTLayer::findQuarter(const Gaudi::XYZPoint& aPoint) const {  
   Quarters::const_iterator iQ = std::find_if(m_quarters.begin(), m_quarters.end(),
                                              bind(&DetectorElement::isInside, _1, aPoint));
   return (iQ != m_quarters.end() ? (*iQ) : 0);
