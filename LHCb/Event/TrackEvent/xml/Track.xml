@@ -128,6 +128,8 @@
         <enumval name = "Likelihood" value = "1" desc=""/>
         <enumval name = "PatQuality" value = "2" desc="Quality variable from PatForward Tracking"/>
         <enumval name = "MatchChi2"  value = "16" desc="Chi2 from the velo-seed matching (TrackMatching)"/>
+        <enumval name = "VeloMissed"  value = "32" desc="Missed Velo hits"/>
+
        </enum>
 
    <typedef
@@ -684,6 +686,50 @@
   return ok;
         </code>
       </method>
+
+      <method
+        type    = 'bool'
+        name    = 'hasT'
+        desc    = 'Check if track is of a type that goes thro T stations'
+        const   = 'TRUE'>
+        <code>
+          bool hasTPart = false;
+          if (type() == Track::Ttrack 
+          || type() == Track::Downstream 
+          || type() == Track::Long) hasTPart = true;
+          return hasTPart;
+        </code>
+      </method>
+
+      <method
+        type    = 'bool'
+        name    = 'hasVelo'
+        desc    = 'Check if track is of a type that goes thro Velo'
+        const   = 'TRUE'>
+        <code>
+          bool hasVPart = false;
+          if (type() == Track::Velo 
+          || type() == Track::VeloR
+          || type() == Track::Upstream 
+          || type() == Track::Long) hasVPart = true;
+          return hasVPart;
+        </code>
+      </method>
+
+      <method
+        type    = 'bool'
+        name    = 'hasTT'
+        desc    = 'Check if track is of a type that goes thro TT'
+        const   = 'TRUE'>
+        <code>
+          bool hasTTPart = false;
+          if (type() == Track::Downstream 
+          || type() == Track::Upstream 
+          || type() == Track::Long) hasTTPart = true;
+          return hasTTPart;
+        </code>
+      </method>
+
 
       <method
         type    = 'unsigned int'

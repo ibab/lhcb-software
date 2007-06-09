@@ -4,11 +4,16 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+! 2007-06-9 M. Needham
+ - Add hasT, hasVelo and hasTT functions to track
+
+
 !======================= TrackEvent v4r4 2007-06-07 ==========================
 ! 2007-06-07 - Marco Cattaneo
  - Adapt requirements to new GaudiObjDesc v10r0 patterns
 
 ! 2007-05-21 - Wouter Hulsbergen
+
  - Add class StateVector
 
 !======================= TrackEvent v4r3 2007-05-08 ==========================

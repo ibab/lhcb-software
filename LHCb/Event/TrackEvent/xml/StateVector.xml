@@ -26,7 +26,7 @@
       <constructor 
 	desc     = "Constructor from a position and direction" 
 	argList  = " const Gaudi::XYZPoint&amp; position, const Gaudi::XYZVector&amp; direction, double qOverP=0">
-      </constructor>
+      </constructor>  
 
       <attribute
         type    = 'Gaudi::TrackVector'
